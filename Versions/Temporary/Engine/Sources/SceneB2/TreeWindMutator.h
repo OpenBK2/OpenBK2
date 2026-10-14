@@ -5,7 +5,7 @@
 
 using namespace NAnimation;
 
-class CTreeWindMutator: public ITreeWindMutator
+class CTreeWindMutator : public ITreeWindMutator
 {
 	OBJECT_BASIC_METHODS( CTreeWindMutator );
 
@@ -13,7 +13,7 @@ class CTreeWindMutator: public ITreeWindMutator
 	std::vector<int> leafBones;
 	CVec2 vPos;
 	NTimer::STime lastUpdateTime;
-	float fMagnitude;							//Cached
+	float fMagnitude; //Cached
 
 	void TransformRootBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot );
 	void TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot );

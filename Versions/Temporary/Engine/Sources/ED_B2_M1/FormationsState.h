@@ -16,7 +16,7 @@ class CSquadEditor;
 class CMaskManipulator;
 class CFormationsState : public CDefaultInputState, public ICommandHandler
 {
-	CSquadEditor* pSquadEditor;
+	CSquadEditor *pSquadEditor;
 	CPtr<CMaskManipulator> pMaskManipulator;
 
 	SFormationWindowDialogData currDialogData;

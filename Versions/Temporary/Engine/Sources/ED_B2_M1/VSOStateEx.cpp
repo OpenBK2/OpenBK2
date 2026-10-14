@@ -18,9 +18,9 @@
 
 bool CVSOStateEx::CanEdit()
 {
-	return ( ( GetMapInfoEditor()->pMapInfo != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) && ( GetParentState()->GetEditParameters() != 0 ) );
+	return ( ( GetMapInfoEditor()->pMapInfo != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) &&
+	         ( GetParentState()->GetEditParameters() != 0 ) );
 }
-
 
 void CVSOStateEx::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 {
@@ -36,7 +36,8 @@ void CVSOStateEx::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 			for ( int nVSOIndex = 0; nVSOIndex < pVSOList->size(); ++nVSOIndex )
 			{
 				std::list<CVec3> boundingPolygon;
-				CVSOManager::GetBoundingPolygon( &boundingPolygon, ( *pVSOList )[nVSOIndex].points, CVSOManager::PT_BOTH, 1.0f );
+				CVSOManager::GetBoundingPolygon(
+						&boundingPolygon, ( *pVSOList )[nVSOIndex].points, CVSOManager::PT_BOTH, 1.0f );
 				if ( ClassifyPolygon( boundingPolygon, rvPos ) != CP_OUTSIDE )
 				{
 					pPickVSOIDList->push_back( ( *pVSOList )[nVSOIndex].nVSOID );
@@ -48,15 +49,16 @@ void CVSOStateEx::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 	DebugTrace( "CVSOStateEx::PickVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-
 bool CVSOStateEx::CanInsertVSO()
 {
 	if ( CanEdit() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+						 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+		     ( !objectSet.objectNameSet.empty() ) )
 		{
-			if( objectSet.szObjectTypeName == GetVSOTypeName() )
+			if ( objectSet.szObjectTypeName == GetVSOTypeName() )
 			{
 				if ( const NDb::SVSODesc *pDescriptor = NDb::Get<NDb::SVSODesc>( objectSet.objectNameSet.begin()->first ) )
 				{
@@ -68,8 +70,7 @@ bool CVSOStateEx::CanInsertVSO()
 	return false;
 }
 
-
-NDb::SVSOInstance* CVSOStateEx::GetVSO( int nVSOID, int *pnVSOIndex )
+NDb::SVSOInstance *CVSOStateEx::GetVSO( int nVSOID, int *pnVSOIndex )
 {
 	if ( CanEdit() )
 	{
@@ -88,7 +89,6 @@ NDb::SVSOInstance* CVSOStateEx::GetVSO( int nVSOID, int *pnVSOIndex )
 	}
 	return 0;
 }
-
 
 int CVSOStateEx::GetFreeVSOID()
 {
@@ -109,8 +109,10 @@ int CVSOStateEx::GetFreeVSOID()
 	return nFreeVSOID;
 }
 
-
-void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags )
+void CVSOStateEx::UpdateVSO( int nVSOID,
+                             EUpdateType eEpdateType,
+                             CVSOManager::SVSOSelection::ESelectionType eSelectionType,
+                             unsigned nFlags )
 {
 	if ( CanEdit() )
 	{
@@ -181,14 +183,15 @@ void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::S
 	EditorScene()->GetTerraManager()->GetAIObserver()->FinalizeUpdates();
 }
 
-
 int CVSOStateEx::InsertVSO( const std::vector<CVec3> &rControlPointList )
 {
 	int nFreeVSOID = INVALID_NODE_ID;
 	if ( CanEdit() && CanInsertVSO() )
 	{
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+						 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+		     ( !objectSet.objectNameSet.empty() ) )
 		{
 			if ( objectSet.szObjectTypeName == GetVSOTypeName() )
 			{
@@ -242,7 +245,6 @@ int CVSOStateEx::InsertVSO( const std::vector<CVec3> &rControlPointList )
 	return nFreeVSOID;
 }
 
-
 void CVSOStateEx::RemoveVSO( int nVSOID )
 {
 	if ( CanEdit() )
@@ -277,8 +279,9 @@ void CVSOStateEx::RemoveVSO( int nVSOID )
 	EditorScene()->GetTerraManager()->GetAIObserver()->FinalizeUpdates();
 }
 
-
-bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO )
+bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController,
+                                   int nVSOIndex,
+                                   const NDb::SVSOInstance &rVSO )
 {
 	if ( CanEdit() )
 	{
@@ -291,7 +294,7 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 			//
 			NMapInfoEditor::CVSOInstanceList *pVSOList = GetVSOList();
 			const int nNewVSOIndex = ( nVSOIndex == NODE_ADD_INDEX ) ? ( pVSOList->size() - 1 ) : nVSOIndex;
-			const std::string szNewVSOLabel =	fmt::format( "{}.[{}].", GetVSOName().c_str(), nNewVSOIndex );
+			const std::string szNewVSOLabel = fmt::format( "{}.[{}].", GetVSOName().c_str(), nNewVSOIndex );
 			if ( !szVSODescName.empty() )
 			{
 				bool bResult = true;
@@ -299,9 +302,13 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 				//Add
 				bResult = bResult && pObjectController->AddInsertOperation( GetVSOName(), nVSOIndex, pManipulator );
 				//Set Descriptor name
-				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "Descriptor", std::string( fmt::format( "{}:{}", GetVSOTypeName().c_str(), szVSODescName.c_str() ) ), pManipulator );
+				bResult = bResult && pObjectController->AddChangeOperation(
+																 szNewVSOLabel + "Descriptor",
+																 std::string( fmt::format( "{}:{}", GetVSOTypeName().c_str(), szVSODescName.c_str() ) ),
+																 pManipulator );
 				//Set ID
-				bResult = bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "VSOID", rVSO.nVSOID, pManipulator );
+				bResult =
+						bResult && pObjectController->AddChangeOperation( szNewVSOLabel + "VSOID", rVSO.nVSOID, pManipulator );
 				// Add ControlPoints
 				if ( bResult )
 				{
@@ -309,9 +316,11 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 					{
 						const std::string szControlPointLabel = szNewVSOLabel + fmt::format( "ControlPoints.[{}]", nPointIndex );
 						//Add
-						bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "ControlPoints", NODE_ADD_INDEX, pManipulator );
+						bResult = bResult && pObjectController->AddInsertOperation(
+																		 szNewVSOLabel + "ControlPoints", NODE_ADD_INDEX, pManipulator );
 						//Set
-						bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( szControlPointLabel, rVSO.controlPoints[nPointIndex], pManipulator );
+						bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>(
+																		 szControlPointLabel, rVSO.controlPoints[nPointIndex], pManipulator );
 						if ( !bResult )
 						{
 							break;
@@ -323,22 +332,30 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 				{
 					for ( int nPointIndex = 0; nPointIndex < rVSO.points.size(); ++nPointIndex )
 					{
-						const std::string szPointLabel =  szNewVSOLabel + fmt::format( "points.[{}].", nPointIndex );
+						const std::string szPointLabel = szNewVSOLabel + fmt::format( "points.[{}].", nPointIndex );
 						//Add
-						bResult = bResult && pObjectController->AddInsertOperation( szNewVSOLabel + "points", NODE_ADD_INDEX, pManipulator );
+						bResult = bResult &&
+						          pObjectController->AddInsertOperation( szNewVSOLabel + "points", NODE_ADD_INDEX, pManipulator );
 						//Set Pos
-						bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( szPointLabel +"Pos", rVSO.points[nPointIndex].vPos, pManipulator );
+						bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>(
+																		 szPointLabel + "Pos", rVSO.points[nPointIndex].vPos, pManipulator );
 						//Set Norm
-						bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( szPointLabel +"Norm", rVSO.points[nPointIndex].vNorm, pManipulator );
+						bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>(
+																		 szPointLabel + "Norm", rVSO.points[nPointIndex].vNorm, pManipulator );
 						//Set Radius
-						bResult = bResult && pObjectController->AddChangeOperation( szPointLabel + "Radius", CVSOManager::DEFAULT_LEFT_BANK_HEIGHT, pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( szPointLabel + "Reserved", CVSOManager::DEFAULT_RIGHT_BANK_HEIGHT, pManipulator );
+						bResult = bResult && pObjectController->AddChangeOperation(
+																		 szPointLabel + "Radius", CVSOManager::DEFAULT_LEFT_BANK_HEIGHT, pManipulator );
+						bResult = bResult && pObjectController->AddChangeOperation(
+																		 szPointLabel + "Reserved", CVSOManager::DEFAULT_RIGHT_BANK_HEIGHT, pManipulator );
 						//Set Width
-						bResult = bResult && pObjectController->AddChangeOperation( szPointLabel + "Width", rVSO.points[nPointIndex].fWidth, pManipulator );
+						bResult = bResult && pObjectController->AddChangeOperation(
+																		 szPointLabel + "Width", rVSO.points[nPointIndex].fWidth, pManipulator );
 						//Set Opacity
-						bResult = bResult && pObjectController->AddChangeOperation( szPointLabel + "Opacity", rVSO.points[nPointIndex].fOpacity, pManipulator );
+						bResult = bResult && pObjectController->AddChangeOperation(
+																		 szPointLabel + "Opacity", rVSO.points[nPointIndex].fOpacity, pManipulator );
 						//Set Control Point Attribute
-						bResult = bResult && pObjectController->AddChangeOperation( szPointLabel + "KeyPoint", rVSO.points[nPointIndex].bKeyPoint, pManipulator );
+						bResult = bResult && pObjectController->AddChangeOperation(
+																		 szPointLabel + "KeyPoint", rVSO.points[nPointIndex].bKeyPoint, pManipulator );
 						if ( !bResult )
 						{
 							break;
@@ -353,7 +370,6 @@ bool CVSOStateEx::InsertVSOToBase( CObjectBaseController *pObjectController, int
 	return false;
 }
 
-
 bool CVSOStateEx::RemoveVSOFromBase( CObjectBaseController *pObjectController, int nVSOIndex )
 {
 	if ( CanEdit() )
@@ -364,7 +380,8 @@ bool CVSOStateEx::RemoveVSOFromBase( CObjectBaseController *pObjectController, i
 			NHPTimer::GetTime( &time );
 			//Delete
 			bool bResult = true;
-			bResult = bResult && pObjectController->AddRemoveOperation( GetVSOName(), nVSOIndex, GetMapInfoEditor()->GetViewManipulator() );
+			bResult = bResult && pObjectController->AddRemoveOperation(
+															 GetVSOName(), nVSOIndex, GetMapInfoEditor()->GetViewManipulator() );
 			DebugTrace( "CVSOStateEx::RemoveVSOFromBase(): %g", NHPTimer::GetTimePassed( &time ) );
 			return bResult;
 		}
@@ -372,8 +389,9 @@ bool CVSOStateEx::RemoveVSOFromBase( CObjectBaseController *pObjectController, i
 	return false;
 }
 
-
-bool CVSOStateEx::UpdateVSOInBase( CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO )
+bool CVSOStateEx::UpdateVSOInBase( CObjectBaseController *pObjectController,
+                                   int nVSOIndex,
+                                   const NDb::SVSOInstance &rVSO )
 {
 	if ( CanEdit() )
 	{
@@ -387,6 +405,5 @@ bool CVSOStateEx::UpdateVSOInBase( CObjectBaseController *pObjectController, int
 	}
 	return false;
 }
-
 
 // basement storage

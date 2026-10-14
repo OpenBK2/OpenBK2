@@ -56,7 +56,7 @@ static bool ReadShortChunkSave( CDataStream &file, chunk_id &dwID, CMemoryStream
 	file.Read( &dwID, sizeof( dwID ) );
 	file.Read( &dwLeng, 1 );
 	if ( dwLeng & 1 )
-		file.Read( ((char*)&dwLeng)+1, 3 );
+		file.Read( ( (char *)&dwLeng ) + 1, 3 );
 	dwLeng >>= 1;
 	if ( dwLeng > 500000000 )
 	{
@@ -75,7 +75,7 @@ static bool WriteShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream
 		CMemoryStream compressed;
 		CNetCompressor cmp;
 		cmp.Pack( chunk, compressed );
-		compressed.Seek(0);
+		compressed.Seek( 0 );
 #ifdef TEST_PACK
 		{
 			CNetCompressor cmptest;
@@ -86,7 +86,7 @@ static bool WriteShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream
 				CFileStream f( "SendThisNival.pls", CFileStream::WIN_CREATE );
 				if ( f.IsOk() )
 				{
-					chunk.Seek(0);
+					chunk.Seek( 0 );
 					f.WriteFrom( chunk );
 					compressed.Clear();
 					CNetCompressor cstore;
@@ -119,21 +119,21 @@ static bool GetShortChunkSave( CDataStream &file, chunk_id dwID, CMemoryStream &
 	if ( bPacked )
 	{
 		CMemoryStream packed;
-		while( ReadShortChunkSave( file, dwRid, packed ) )
+		while ( ReadShortChunkSave( file, dwRid, packed ) )
 		{
 			if ( dwRid == dwID )
 			{
 				chunk.SetSizeDiscard( 0 );
 				CNetCompressor cmp;
 				cmp.Unpack( packed, chunk );
-				chunk.Seek(0);
+				chunk.Seek( 0 );
 				return true;
 			}
 		}
 	}
 	else
 	{
-		while( ReadShortChunkSave( file, dwRid, chunk ) )
+		while ( ReadShortChunkSave( file, dwRid, chunk ) )
 		{
 			if ( dwRid == dwID )
 				return true;
@@ -171,7 +171,7 @@ bool CStructureSaver::ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &
 	ReadPtrData( pSrc, &res.idChunk, nPos, sizeof( res.idChunk ) );
 	ReadPtrData( pSrc, &dwLeng, nPos, 1 );
 	if ( dwLeng & 1 )
-		ReadPtrData( pSrc, ((char*)&dwLeng)+1, nPos, 3 );
+		ReadPtrData( pSrc, ( (char *)&dwLeng ) + 1, nPos, 3 );
 	dwLeng >>= 1;
 	if ( nPos + dwLeng > src.nLength )
 		return false;
@@ -181,14 +181,13 @@ bool CStructureSaver::ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &
 	return true;
 }
 
-bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID,
-																			const unsigned char *pData, int nLength )
+bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID, const unsigned char *pData, int nLength )
 {
-#if defined(_DEBUG) && !defined(_FASTDEBUG)
+#if defined( _DEBUG ) && !defined( _FASTDEBUG )
 	bool bFound = false;
 	for ( int i = 0; i < nLength; ++i )
 	{
-		if ( pData[i] != 0xcd && pData[i] != 0xad && pData[i] != 0xfd  )
+		if ( pData[i] != 0xcd && pData[i] != 0xad && pData[i] != 0xfd )
 		{
 			bFound = true;
 			break;
@@ -299,10 +298,10 @@ void CStructureSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize,
 	}
 	else
 	{
-#if defined(_DEBUG) && !defined(FAST_DEBUG)
+#if defined( _DEBUG ) && !defined( FAST_DEBUG )
 		ASSERT( CountShortChunks( last, idChunk ) == nChunkNumber - 1 );
 #endif
-		WriteShortChunk( last, idChunk, (const unsigned char*) pData, nSize );
+		WriteShortChunk( last, idChunk, (const unsigned char *)pData, nSize );
 	}
 }
 
@@ -310,10 +309,10 @@ void CStructureSaver::WriteRawData( const void *pData, int nSize )
 {
 // this can happen to be valid data, so making this assert is not entirely correct
 // this can produce false positive
-#if defined(_DEBUG) && !defined(FAST_DEBUG)
-	NI_ASSERT( ((int*)pData)[0] != 0xcdcdcdcd, "Unitialized data" );
-	NI_ASSERT( ((int*)pData)[0] != 0xadadadad, "Unitialized data" );
-	NI_ASSERT( ((int*)pData)[0] != 0xfdfdfdfd, "Unitialized data" );
+#if defined( _DEBUG ) && !defined( FAST_DEBUG )
+	NI_ASSERT( ( (int *)pData )[0] != 0xcdcdcdcd, "Unitialized data" );
+	NI_ASSERT( ( (int *)pData )[0] != 0xadadadad, "Unitialized data" );
+	NI_ASSERT( ( (int *)pData )[0] != 0xfdfdfdfd, "Unitialized data" );
 #endif
 
 	SChunkLevel &res = chunks.back();
@@ -341,7 +340,7 @@ void CStructureSaver::DataChunkString( stdString &str )
 	if ( IsReading() )
 	{
 		SChunkLevel &res = chunks.back();
-		const char *pStr = (const char*)( data.GetBuffer() + res.nStart );
+		const char *pStr = (const char *)( data.GetBuffer() + res.nStart );
 		str.assign( pStr, res.nLength );
 	}
 	else
@@ -375,38 +374,40 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 {
 	if ( pObject )
 	{
-		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, fmt::format( "trying to save unregistered object \"{}\"", typeid(*pObject).name() ) );
+		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1,
+		           fmt::format( "trying to save unregistered object \"{}\"", typeid( *pObject ).name() ) );
 	}
 	// the object's ID rather than its address, see storedObjects
 	void *pID = 0;
 	if ( pObject != 0 )
 	{
 		bool bNew = false;
-		pID = reinterpret_cast<void*>( GetStoredObjectID( pObject, &bNew ) );
+		pID = reinterpret_cast<void *>( GetStoredObjectID( pObject, &bNew ) );
 		if ( bNew )
 			toStore.push_back( pObject );
 	}
-	RawData( &pID, bMode64 ? sizeof(void*) : 4 );
+	RawData( &pID, bMode64 ? sizeof( void * ) : 4 );
 
 #ifndef _FINALRELEASE
 	for ( int i = 0; i < checkers.size(); ++i )
 	{
-		NI_ASSERT( checkers[i]->CheckObj( pObject ), fmt::format( "object {} checking failed", typeid( *pObject ).name() ) );
+		NI_ASSERT( checkers[i]->CheckObj( pObject ),
+		           fmt::format( "object {} checking failed", typeid( *pObject ).name() ) );
 	}
 #endif
 
 #ifdef CALC_SIZE
 	if ( pObject )
 	{
-		std::string szObjectName = typeid(*pObject).name();
+		std::string szObjectName = typeid( *pObject ).name();
 	}
 #endif
 }
 
-CObjectBase* CStructureSaver::LoadObject()
+CObjectBase *CStructureSaver::LoadObject()
 {
 	void *pServerPtr = 0;
-	RawData( &pServerPtr, bMode64 ? sizeof(void*) : 4 );
+	RawData( &pServerPtr, bMode64 ? sizeof( void * ) : 4 );
 	if ( pServerPtr != 0 )
 	{
 		CObjectsHash::iterator pFound = objects.find( pServerPtr );
@@ -438,7 +439,7 @@ void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 	{
 		CExternalHash::iterator i = externalObjects.find( nID );
 		if ( i != externalObjects.end() )
-			objects[ i->second ] = pObject;
+			objects[i->second] = pObject;
 	}
 	else
 	{
@@ -449,7 +450,7 @@ void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 			// the reader supplies external objects itself.
 			bool bNew = false;
 			GetStoredObjectID( pObject, &bNew );
-			externalObjects[ nID ] = pObject;
+			externalObjects[nID] = pObject;
 		}
 	}
 }
@@ -467,7 +468,7 @@ bool CStructureSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 	}
 	else
 	{
-#if defined(_DEBUG) && !defined(FAST_DEBUG)
+#if defined( _DEBUG ) && !defined( FAST_DEBUG )
 		ASSERT( CountShortChunks( last, idChunk ) == nChunkNumber - 1 );
 #endif
 		SChunkLevel &newChunk = chunks.back();
@@ -486,7 +487,8 @@ void CStructureSaver::FinishChunk()
 	else
 	{
 		CChunkLevelIterator it = --chunks.end(), it1;
-		it1 = it; --it1;
+		it1 = it;
+		--it1;
 		WriteShortChunk( *it1, it->idChunk, data.GetBuffer() + it->nStart, it->nLength );
 		chunks.pop_back();
 		AlignDataFileSize();
@@ -523,10 +525,10 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 		CMemoryStream version, compress;
 		GetShortChunkSave( res, 4, version, nBaseSeek, false );
 		nVersion = 0;
-		if ( version.GetSize() == sizeof(nVersion) )
+		if ( version.GetSize() == sizeof( nVersion ) )
 		{
-			version.Seek(0);
-			version.Read( &nVersion, sizeof(nVersion) );
+			version.Seek( 0 );
+			version.Read( &nVersion, sizeof( nVersion ) );
 		}
 		GetShortChunkSave( res, 3, compress, nBaseSeek, false );
 		bool bPacked = compress.GetSize() > 0;
@@ -537,14 +539,14 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 		{
 			CMemoryStream external;
 			GetShortChunkSave( res, 5, external, nBaseSeek, false );
-			external.Seek(0);
+			external.Seek( 0 );
 			while ( external.GetPosition() < external.GetSize() )
 			{
 				int nID;
 				CObjectBase *p;
-				external.Read( &nID, sizeof(nID) );
-				external.Read( &p, sizeof(p) );
-				externalObjects[ nID ] = p;
+				external.Read( &nID, sizeof( nID ) );
+				external.Read( &p, sizeof( p ) );
+				externalObjects[nID] = p;
 			}
 		}
 		for ( int k = 0; k < ext.size(); ++k )
@@ -558,10 +560,10 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			void *pServer = 0;
 			bool bValid;
 			obj.Read( &nTypeID, 4 );
-			obj.Read( &pServer, bMode64 ? sizeof(void*) : 4);
-			obj.Read( &bValid,1 );
+			obj.Read( &pServer, bMode64 ? sizeof( void * ) : 4 );
+			obj.Read( &bValid, 1 );
 			CObjectBase *pObject = NObjectFactory::MakeObject( nTypeID );
-			NI_ASSERT( pObject, fmt::format("Can't create object of type 0x{:08x}", static_cast<uint32_t>( nTypeID )) );
+			NI_ASSERT( pObject, fmt::format( "Can't create object of type 0x{:08x}", static_cast<uint32_t>( nTypeID ) ) );
 			if ( !pObject )
 			{
 				breakpoint_if_debugging();
@@ -572,7 +574,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 				// make object invalid
 				CPtr<CObjectBase> pTemp( pObject );
 				{
-					CObj<CObjectBase> pTempObj( (CObjectBase*)pObject );
+					CObj<CObjectBase> pTempObj( (CObjectBase *)pObject );
 				}
 				pTemp.Extract();
 			}
@@ -580,25 +582,25 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			objects[pServer] = pObject;
 		}
 		// read information about every created object
-		int nCount = CountChunks( (chunk_id) 1 );
+		int nCount = CountChunks( (chunk_id)1 );
 		for ( int i = 0; i < nCount; i++ )
 		{
 			void *pServer = 0;
 			CObjectBase *pObject;
-			const bool bStartChunkResult = StartChunk( (chunk_id) 1, i + 1 );
+			const bool bStartChunkResult = StartChunk( (chunk_id)1, i + 1 );
 			ASSERT( bStartChunkResult );
-			DataChunk( 0, &pServer, bMode64 ? sizeof(void*) : 4, 1 );
+			DataChunk( 0, &pServer, bMode64 ? sizeof( void * ) : 4, 1 );
 			pObject = objects[pServer];
 			ASSERT( pObject );
 			if ( pObject )
 			{
 				if ( StartChunk( 1, 1 ) )
 				{
-					(*pObject)&( *this );
+					( *pObject ) & ( *this );
 					// check if there are any unsaved fields
-#if defined(_DEBUG) && !defined(FAST_DEBUG)
+#if defined( _DEBUG ) && !defined( FAST_DEBUG )
 					{
-						static std::vector<const std::type_info*> ignores;
+						static std::vector<const std::type_info *> ignores;
 						bool bPerformCheck = true;
 						const std::type_info &ti = typeid( *pObject );
 						for ( int k = 0; k < ignores.size(); ++k )
@@ -610,7 +612,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 						{
 							bool bFound = false;
 							const int nSize = sizeof( *pObject );
-							const uint8_t *pObjAsArray = (const uint8_t*)pObject;
+							const uint8_t *pObjAsArray = (const uint8_t *)pObject;
 							for ( int i = 0; i < nSize; ++i )
 							{
 								if ( pObjAsArray[i] == 0xcd )
@@ -657,7 +659,7 @@ void CStructureSaver::Finish()
 		// save standard data
 		AlignDataFileSize();
 		CMemoryStream version;
-		version.Write( &nVersion, sizeof(nVersion) );
+		version.Write( &nVersion, sizeof( nVersion ) );
 		WriteShortChunkSave( res, 4, version, false );
 		WriteShortChunkSave( res, 1, data, bPackResult );
 
@@ -687,22 +689,22 @@ void CStructureSaver::Finish()
 			{
 				CFileStream f( "NotRegistered.txt", CFileStream::WIN_CREATE );
 				const char *psz = typeid( *pObject ).name();
-				f.Write( psz, strlen(psz) );
+				f.Write( psz, strlen( psz ) );
 				continue;
 			}
 			// the ID StoreObject assigned, not the address, see storedObjects
-			void *pID = reinterpret_cast<void*>( storedObjects[pObject] );
+			void *pID = reinterpret_cast<void *>( storedObjects[pObject] );
 			obj.Write( &nTypeID, 4 );
-			obj.Write( &pID, bMode64 ? sizeof(void*) : 4 );
+			obj.Write( &pID, bMode64 ? sizeof( void * ) : 4 );
 			obj.Write( &bValid, 1 );
 			// save object data
-			const bool bStartChunkResult = StartChunk( (chunk_id) 1, nObject );
+			const bool bStartChunkResult = StartChunk( (chunk_id)1, nObject );
 			ASSERT( bStartChunkResult );
-			DataChunk( 0, &pID, bMode64 ? sizeof(void*) : 4, 1 );
+			DataChunk( 0, &pID, bMode64 ? sizeof( void * ) : 4, 1 );
 			//
 			if ( StartChunk( 1, 1 ) )
 			{
-				(*pObject)&( *this );
+				( *pObject ) & ( *this );
 				FinishChunk();
 			}
 			FinishChunk();
@@ -733,9 +735,9 @@ void CStructureSaver::Finish()
 			for ( int k = 0; k < externalIDs.size(); ++k )
 			{
 				int nID = externalIDs[k];
-				CObjectBase *p = reinterpret_cast<CObjectBase*>( storedObjects[externalObjects[nID]] );
-				external.Write( &nID, sizeof(nID) );
-				external.Write( &p, sizeof(p) );
+				CObjectBase *p = reinterpret_cast<CObjectBase *>( storedObjects[externalObjects[nID]] );
+				external.Write( &nID, sizeof( nID ) );
+				external.Write( &p, sizeof( p ) );
 			}
 			WriteShortChunkSave( res, 5, external, false );
 		}
@@ -755,7 +757,9 @@ IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const std::vec
 	return pStream == 0 ? 0 : new CStructureSaver( pStream, mode, ext );
 }
 
-IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const std::vector<SBinSaverExternalObject> &external, std::vector< CPtr<IDebugSaveCheckObj> > &checkers )
+IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream,
+                                       const std::vector<SBinSaverExternalObject> &external,
+                                       std::vector<CPtr<IDebugSaveCheckObj>> &checkers )
 {
 	return pStream == 0 ? 0 : new CStructureSaver( pStream, SAVER_MODE_WRITE, external, checkers );
 }
@@ -778,7 +782,7 @@ static void ObjSizes( const std::string &szID, const std::vector<std::wstring> &
 		DbgTrc( "%s\t%d", iter->first.c_str(), iter->second );
 }
 
-START_REGISTER(MissionCommands)
+START_REGISTER( MissionCommands )
 REGISTER_CMD( "save_size", Size )
 REGISTER_CMD( "obj_sizes", ObjSizes )
 FINISH_REGISTER

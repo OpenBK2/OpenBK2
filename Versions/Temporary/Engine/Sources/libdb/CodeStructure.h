@@ -13,7 +13,7 @@ namespace NTypeDef
 
 namespace NLang
 {
-	class CFileNode;
+class CFileNode;
 }
 
 namespace NCodeGen
@@ -23,12 +23,16 @@ class CFile;
 class CCodeStructure : public CXmlResource
 {
 	OBJECT_NOCOPY_METHODS( CCodeStructure )
-	std::list< CObj<CFile> > files;
-public:
-	CCodeStructure() { }
-	CCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+	std::list<CObj<CFile>> files;
 
-	const std::list< CObj<CFile> > &GetFiles() const { return files; }
+public:
+	CCodeStructure() {}
+	CCodeStructure( NLang::CFileNode *pRootFile,
+	                const CNodes2TypeDefs &nodes2TypeDefs,
+	                const std::string &szRootDir,
+	                NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+
+	const std::list<CObj<CFile>> &GetFiles() const { return files; }
 
 	void GenerateCode( const std::string &szRootDir );
 

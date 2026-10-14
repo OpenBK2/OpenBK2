@@ -34,7 +34,8 @@ int CInterfaceSaveLoadMenu::CReactions::Check( const std::string &szCheckName ) 
 
 // CInterfaceSaveLoadMenu::SSortByName
 
-bool CInterfaceSaveLoadMenu::SSortByName::operator()( const NSaveLoad::SSavegameEntry &save1, const NSaveLoad::SSavegameEntry &save2 )
+bool CInterfaceSaveLoadMenu::SSortByName::operator()( const NSaveLoad::SSavegameEntry &save1,
+                                                      const NSaveLoad::SSavegameEntry &save2 )
 {
 	if ( save1.info.bQuickSave != save2.info.bQuickSave )
 		return save1.info.bQuickSave;
@@ -51,7 +52,8 @@ bool CInterfaceSaveLoadMenu::SSortByName::operator()( const NSaveLoad::SSavegame
 
 // CInterfaceSaveLoadMenu::SSortByDate
 
-bool CInterfaceSaveLoadMenu::SSortByDate::operator()( const NSaveLoad::SSavegameEntry &save1, const NSaveLoad::SSavegameEntry &save2 )
+bool CInterfaceSaveLoadMenu::SSortByDate::operator()( const NSaveLoad::SSavegameEntry &save1,
+                                                      const NSaveLoad::SSavegameEntry &save2 )
 {
 	// newest first, which is what converting both to FILETIME and comparing the two
 	// 64 bit values as unsigned did. The reversed operands are the descending order,
@@ -61,8 +63,7 @@ bool CInterfaceSaveLoadMenu::SSortByDate::operator()( const NSaveLoad::SSavegame
 
 // CInterfaceSaveLoadMenu
 
-CInterfaceSaveLoadMenu::CInterfaceSaveLoadMenu() :
-	CInterfaceScreenBase( "SaveLoadMenu", "save_load_menu" )
+CInterfaceSaveLoadMenu::CInterfaceSaveLoadMenu() : CInterfaceScreenBase( "SaveLoadMenu", "save_load_menu" )
 {
 	pScreenShotTexture = new CBackgroundMutableTexture;
 
@@ -141,7 +142,8 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 
 	pDescCustomPanel = GetChildChecked<IWindow>( pMain, "DescCustomPanel", true );
 	pDescCustomMissionView = GetChildChecked<ITextView>( pDescCustomPanel, "MissionView", true );
-	pDescCustomMissionBriefingCont = GetChildChecked<IScrollableContainer>( pDescCustomPanel, "DescMissionBriefingCont", true );
+	pDescCustomMissionBriefingCont =
+			GetChildChecked<IScrollableContainer>( pDescCustomPanel, "DescMissionBriefingCont", true );
 	pDescCustomMissionBriefingView = GetChildChecked<ITextView>( pDescCustomMissionBriefingCont, "ItemView", true );
 	if ( pDescCustomMissionBriefingCont && pDescCustomMissionBriefingView )
 		pDescCustomMissionBriefingCont->PushBack( pDescCustomMissionBriefingView, false );
@@ -151,7 +153,8 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 	pDescChapterPanel = GetChildChecked<IWindow>( pMain, "DescChapterPanel", true );
 	pDescChapterCampaignView = GetChildChecked<ITextView>( pDescChapterPanel, "CampaignView", true );
 	pDescChapterChapterView = GetChildChecked<ITextView>( pDescChapterPanel, "ChapterView", true );
-	pDescChapterBriefingCont = GetChildChecked<IScrollableContainer>( pDescChapterPanel, "DescChapterBriefingCont", true );
+	pDescChapterBriefingCont =
+			GetChildChecked<IScrollableContainer>( pDescChapterPanel, "DescChapterBriefingCont", true );
 	pDescChapterBriefingView = GetChildChecked<ITextView>( pDescChapterBriefingCont, "ItemView", true );
 	pChapterTexture = GetChildChecked<IWindow>( pMain, "ChapterPicture", true );
 	pChapterTextureBorder = GetChildChecked<IWindow>( pMain, "ChapterPictureBorder", true );
@@ -181,7 +184,8 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 	//Fill list for the first time
 	FillSaveList( SORT_BY_NAME );
 
-	if ( CWindow *pPic = dynamic_cast_ptr<CWindow *>(pPicture) ) // CRAP - don't use CWindow type out of UI implementation
+	if ( CWindow *pPic =
+	         dynamic_cast_ptr<CWindow *>( pPicture ) ) // CRAP - don't use CWindow type out of UI implementation
 		pPic->SetBackground( pScreenShotTexture );
 
 	UpdateButtons();
@@ -200,7 +204,7 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 		pSaveList = 0;
 	}
 
-	pSaveList = dynamic_cast<IScrollableContainer*>( AddWindowCopy( pListPanel, pListTemplate ) );
+	pSaveList = dynamic_cast<IScrollableContainer *>( AddWindowCopy( pListPanel, pListTemplate ) );
 	if ( pSaveList )
 		pSaveList->ShowWindow( true );
 	NI_ASSERT( pSaveList, "Unable to create list" );
@@ -216,7 +220,7 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 			save.pWindow->SetName( fmt::format( "Item{}", i ) );
 		}
 
-		IWindow *pFlag = GetChildChecked<IWindow>( save.pWindow, "SubItemFlag", true );		//Get subitems
+		IWindow *pFlag = GetChildChecked<IWindow>( save.pWindow, "SubItemFlag", true ); //Get subitems
 		ITextView *pName = GetChildChecked<ITextView>( save.pWindow, "SubItemName", true );
 		ITextView *pDate = GetChildChecked<ITextView>( save.pWindow, "SubItemDate", true );
 
@@ -230,9 +234,12 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 		if ( pName )
 			pName->SetText( pName->GetDBText() + save.wszName );
 
-		std::wstring wszDate = NStr::ToUnicode( fmt::format("{:02d}.{:02d}.{:04d} {:02d}:{:02d}",
-			save.time.wDay, save.time.wMonth, save.time.wYear,
-			save.time.wHour, save.time.wMinute ) );
+		std::wstring wszDate = NStr::ToUnicode( fmt::format( "{:02d}.{:02d}.{:04d} {:02d}:{:02d}",
+		                                                     save.time.wDay,
+		                                                     save.time.wMonth,
+		                                                     save.time.wYear,
+		                                                     save.time.wHour,
+		                                                     save.time.wMinute ) );
 		if ( pDate )
 			pDate->SetText( pDate->GetDBText() + wszDate );
 
@@ -273,9 +280,11 @@ void CInterfaceSaveLoadMenu::MsgDelete( const SGameMessage &msg )
 		return;
 	}
 	eConfirmAction = CONFIRM_DELETE;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-		InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_DELETE_QUESTION" ) ).c_str() );
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                     InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_DELETE_QUESTION" ) )
+					.c_str() );
 }
 
 void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
@@ -288,27 +297,27 @@ void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 			break;
 
 		case CONFIRM_DELETE:
-			{
-				//Delete file
-				bool bResult = NFile::RemoveFile( saves[nSelected].szFileName );
-				NI_ASSERT( bResult, "File removal failed");
+		{
+			//Delete file
+			bool bResult = NFile::RemoveFile( saves[nSelected].szFileName );
+			NI_ASSERT( bResult, "File removal failed" );
 
-				//Remove extra-info file
-				NFile::RemoveFile( saves[nSelected].szInfoFileName );		//Result is irrelevant
+			//Remove extra-info file
+			NFile::RemoveFile( saves[nSelected].szInfoFileName ); //Result is irrelevant
 
-				//Delete screen entry
-				NSaveLoad::CSaveList::iterator it = std::begin(saves) + nSelected;
-				saves.erase( it );
-				//nSelected = -1;
-				//Rebuild list
-				FillSaveList( SORT_BY_NAME );
-				if ( nSelected >= saves.size() )
-					nSelected = saves.size() - 1;
-				SelectItem( true, true );
+			//Delete screen entry
+			NSaveLoad::CSaveList::iterator it = std::begin( saves ) + nSelected;
+			saves.erase( it );
+			//nSelected = -1;
+			//Rebuild list
+			FillSaveList( SORT_BY_NAME );
+			if ( nSelected >= saves.size() )
+				nSelected = saves.size() - 1;
+			SelectItem( true, true );
 
-				UpdateButtons();
-			}
-			break;
+			UpdateButtons();
+		}
+		break;
 
 		case CONFIRM_LOAD:
 		{
@@ -366,9 +375,11 @@ void CInterfaceSaveLoadMenu::Load()
 		if ( bConfirmLoadQuestion )
 		{
 			eConfirmAction = CONFIRM_LOAD;
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-				InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_CONFIRM_LOAD" ) ).c_str() );
+			NMainLoop::Command(
+					ML_COMMAND_MESSAGE_BOX,
+					CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+			                                     InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_CONFIRM_LOAD" ) )
+							.c_str() );
 		}
 		else
 		{
@@ -392,27 +403,30 @@ void CInterfaceSaveLoadMenu::MsgSave( const SGameMessage &msg )
 	{
 		eConfirmAction = NO_SAVE_NAME;
 		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-			CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
-			InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_NO_NAME" ) ).c_str() );
+		                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
+		                                                     InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_NO_NAME" ) )
+		                        .c_str() );
 
 		return;
 	}
 	//Check if the game name already exists
 	for ( int i = 0; i < saves.size(); ++i )
 	{
-		if ( saves[i].wszName == wszSaveName )			//Already exists, ask
+		if ( saves[i].wszName == wszSaveName ) //Already exists, ask
 		{
 			eConfirmAction = CONFIRM_SAVE;
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-				InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_OVERWRITE_QUESTION" ) ).c_str() );
+			NMainLoop::Command(
+					ML_COMMAND_MESSAGE_BOX,
+					CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+			                                     InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_OVERWRITE_QUESTION" ) )
+							.c_str() );
 
 			return;
 		}
 	}
 
-	nSelected = -1;			// indicate that it is a new save
-	DoSaveGame();				// not found, fresh save
+	nSelected = -1; // indicate that it is a new save
+	DoSaveGame();   // not found, fresh save
 }
 
 void CInterfaceSaveLoadMenu::DoSaveGame()
@@ -437,15 +451,15 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 
 	GetLocalSystemTime( &sg.time );
 
-	if ( nSelected >= 0 && nSelected < saves.size() ) 				//if replacing a save
-	{																													//delete old files and entry
+	if ( nSelected >= 0 && nSelected < saves.size() ) //if replacing a save
+	{                                                 //delete old files and entry
 		sg.szFileTitle = saves[nSelected].szFileTitle;
 
 		NFile::RemoveFile( saves[nSelected].szFileName );
-		NFile::RemoveFile( saves[nSelected].szInfoFileName );		//Result is irrelevant
+		NFile::RemoveFile( saves[nSelected].szInfoFileName ); //Result is irrelevant
 
 		//Delete screen entry
-		NSaveLoad::CSaveList::iterator it = std::begin(saves) + nSelected;
+		NSaveLoad::CSaveList::iterator it = std::begin( saves ) + nSelected;
 		saves.erase( it );
 	}
 	else
@@ -460,7 +474,7 @@ void CInterfaceSaveLoadMenu::DoSaveGame()
 		IInterfaceBase *pPrevInterface = NMainLoop::GetPrevInterface( this );
 		if ( pPrevInterface )
 		{
-			CInterfaceScreenBase *pPrevScreen = dynamic_cast<CInterfaceScreenBase*>( pPrevInterface );
+			CInterfaceScreenBase *pPrevScreen = dynamic_cast<CInterfaceScreenBase *>( pPrevInterface );
 			if ( pPrevScreen )
 				pPrevScreen->Draw( 0 );
 		}
@@ -539,9 +553,9 @@ void CInterfaceSaveLoadMenu::SetMode( const std::string &szMode )
 		{
 			if ( const NDb::SMapInfo *pMapInfoDB = Singleton<IScenarioTracker>()->GetCurrentMission() )
 			{
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfoDB->,LocalizedName) )
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfoDB->, LocalizedName ) )
 				{
-					startSaveInfo.wszSaveName = GET_TEXT_PRE(pMapInfoDB->,LocalizedName);
+					startSaveInfo.wszSaveName = GET_TEXT_PRE( pMapInfoDB->, LocalizedName );
 				}
 			}
 		}
@@ -549,9 +563,9 @@ void CInterfaceSaveLoadMenu::SetMode( const std::string &szMode )
 		{
 			if ( const NDb::SChapter *pChapterDB = Singleton<IScenarioTracker>()->GetCurrentChapter() )
 			{
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(pChapterDB->,LocalizedName) )
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( pChapterDB->, LocalizedName ) )
 				{
-					startSaveInfo.wszSaveName = GET_TEXT_PRE(pChapterDB->,LocalizedName);
+					startSaveInfo.wszSaveName = GET_TEXT_PRE( pChapterDB->, LocalizedName );
 				}
 			}
 		}
@@ -559,8 +573,8 @@ void CInterfaceSaveLoadMenu::SetMode( const std::string &szMode )
 		startSaveInfo.GenerateInfo();
 
 		// show default name
-	 	if ( pEditLine )
-	 	{
+		if ( pEditLine )
+		{
 			pEditLine->SetText( startSaveInfo.wszSaveName.c_str() );
 			pEditLine->SetSelection( 0, startSaveInfo.wszSaveName.size() );
 		}
@@ -596,7 +610,7 @@ void CInterfaceSaveLoadMenu::ComposeDescription( const NSaveLoad::SSaveInfo &inf
 	std::wstring wszBriefing;
 	std::wstring wszChapterBriefing;
 
-  //Campaign
+	//Campaign
 	wszCampaign = info.GetCampaignName();
 
 	//Chapter
@@ -715,7 +729,7 @@ void CInterfaceSaveLoadMenu::SelectItem( bool bUpdateSelection, bool bClearEditL
 
 		//Fill associated controls
 		if ( pEditLine )
-			pEditLine->SetText( save.wszName.c_str() );		//EditLine
+			pEditLine->SetText( save.wszName.c_str() ); //EditLine
 
 		ShowSaveInfo( save.info );
 	}
@@ -729,7 +743,7 @@ void CInterfaceSaveLoadMenu::SelectItem( bool bUpdateSelection, bool bClearEditL
 void CInterfaceSaveLoadMenu::ShowSaveInfo( NSaveLoad::SSaveInfo &info )
 {
 	//Screenshot
-	CWindow *pPic = dynamic_cast_ptr<CWindow *>(pPicture);
+	CWindow *pPic = dynamic_cast_ptr<CWindow *>( pPicture );
 
 	CArray2D<NGfx::SPixel8888> &screenShot = info.screenShot;
 	if ( screenShot.IsEmpty() || ( screenShot.GetSizeX() * screenShot.GetSizeY() == 0 ) )
@@ -762,9 +776,7 @@ bool CInterfaceSaveLoadMenu::ProcessEvent( const SGameMessage &msg )
 
 // CICInterfaceSaveLoad
 
-void CICInterfaceSaveLoad::PreCreate()
-{
-}
+void CICInterfaceSaveLoad::PreCreate() {}
 
 void CICInterfaceSaveLoad::PostCreate( IInterface *pInterface )
 {

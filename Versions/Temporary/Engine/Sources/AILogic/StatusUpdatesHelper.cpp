@@ -6,18 +6,18 @@
 extern CEventUpdater updater;
 
 CStatusUpdatesHelper::CStatusUpdatesHelper( const EUnitStatus _eStatus )
-: __eStatus( _eStatus ), __pUnit( 0 ), __fRadius( 0.0f ), __bInited( false )
+		: __eStatus( _eStatus ), __pUnit( 0 ), __fRadius( 0.0f ), __bInited( false )
 {
 }
 
 CStatusUpdatesHelper::CStatusUpdatesHelper( const EUnitStatus _eStatus, CUpdatableObj *_pUnit )
-: __eStatus( _eStatus ), __pUnit( _pUnit ), __fRadius( 0.0f ), __bInited( false )
+		: __eStatus( _eStatus ), __pUnit( _pUnit ), __fRadius( 0.0f ), __bInited( false )
 {
 	NI_ASSERT( IsValid( __pUnit ), "CStatusUpdatesHelper created with invalid unit" );
 }
 
 CStatusUpdatesHelper::CStatusUpdatesHelper( const EUnitStatus _eStatus, CUpdatableObj *_pUnit, const float _fRadius )
-: __eStatus( _eStatus ), __pUnit( _pUnit ), __fRadius( _fRadius ), __bInited( false )
+		: __eStatus( _eStatus ), __pUnit( _pUnit ), __fRadius( _fRadius ), __bInited( false )
 {
 	NI_ASSERT( IsValid( __pUnit ), "CStatusUpdatesHelper created with invalid unit" );
 }

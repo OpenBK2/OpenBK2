@@ -2,7 +2,6 @@
 
 #include "SearchObjectView.h"
 
-
 #include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -30,12 +29,12 @@
 
 namespace
 {
-	class CSearchObjectWxDialog : public CWxToolDialog
-	{
-		wxTextCtrl *pText = nullptr;
+class CSearchObjectWxDialog : public CWxToolDialog
+{
+	wxTextCtrl *pText = nullptr;
 
-	public:
-		CSearchObjectWxDialog( wxWindow *pParent, const std::string &rszText )
+public:
+	CSearchObjectWxDialog( wxWindow *pParent, const std::string &rszText )
 			// "Find Object" is the CAPTION in the template. The class has always
 			// been called CSearchObjectDialog and the window has never said so.
 			//
@@ -43,60 +42,55 @@ namespace
 			// dialog has never been resizable and there is nothing in it that
 			// would use the room.
 			: CWxToolDialog( pParent, wxID_ANY, "Find Object" )
-		{
-			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
+	{
+		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 
-			// Label and edit on one row, the label vertically centred against it
-			// -- the template does that by hand, putting the label at y=8 and the
-			// edit at y=7 so their text lines up.
-			wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
-			pRow->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Name:" ),
-								 wxSizerFlags().Centre().Border( wxRIGHT, 6 ) );
-			// 320 is the template's 215 dialog units at this font, and it is the
-			// only hard number here: everything else comes out of Fit below.
-			pText = NWx::Child<wxTextCtrl>( this, wxID_ANY, wxString::FromUTF8( rszText.c_str() ),
-																			wxDefaultPosition, wxSize( 320, -1 ) );
-			pRow->Add( pText, wxSizerFlags( 1 ).Centre() );
-			pSizer->Add( pRow, wxSizerFlags().Expand().Border( wxALL, 8 ) );
+		// Label and edit on one row, the label vertically centred against it
+		// -- the template does that by hand, putting the label at y=8 and the
+		// edit at y=7 so their text lines up.
+		wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
+		pRow->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Name:" ), wxSizerFlags().Centre().Border( wxRIGHT, 6 ) );
+		// 320 is the template's 215 dialog units at this font, and it is the
+		// only hard number here: everything else comes out of Fit below.
+		pText = NWx::Child<wxTextCtrl>(
+				this, wxID_ANY, wxString::FromUTF8( rszText.c_str() ), wxDefaultPosition, wxSize( 320, -1 ) );
+		pRow->Add( pText, wxSizerFlags( 1 ).Centre() );
+		pSizer->Add( pRow, wxSizerFlags().Expand().Border( wxALL, 8 ) );
 
-			pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
-									 wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
+		pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
+		             wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
 
-			// Fit, not a size: a dialog that cannot be resized should be exactly
-			// as big as its contents need, and then the numbers in the template
-			// stop being something anyone has to maintain.
-			SetSizerAndFit( pSizer );
+		// Fit, not a size: a dialog that cannot be resized should be exactly
+		// as big as its contents need, and then the numbers in the template
+		// stop being something anyone has to maintain.
+		SetSizerAndFit( pSizer );
 
-			// What GotoDlgCtrl did. Focus alone is not the same thing: reaching an
-			// edit through the dialog manager selects its text, so typing replaces
-			// the previous search rather than appending to it.
-			pText->SetFocus();
-			pText->SelectAll();
-		}
+		// What GotoDlgCtrl did. Focus alone is not the same thing: reaching an
+		// edit through the dialog manager selects its text, so typing replaces
+		// the previous search rather than appending to it.
+		pText->SetFocus();
+		pText->SelectAll();
+	}
 
-		std::string GetText() const
-		{
-			return std::string( pText->GetValue().utf8_str() );
-		}
-	};
+	std::string GetText() const { return std::string( pText->GetValue().utf8_str() ); }
+};
 }
-
 
 namespace NSearchObject
 {
-	bool Run( IWidget *pParent, std::string *pszText )
+bool Run( IWidget *pParent, std::string *pszText )
+{
+	if ( pszText == 0 )
 	{
-		if ( pszText == 0 )
-		{
-			return false;
-		}
-		CSearchObjectWxDialog dialog( ToWxOwnerWindow( pParent ), *pszText );
-		dialog.CentreOnParent();
-		if ( dialog.ShowModal() != wxID_OK )
-		{
-			return false;
-		}
-		( *pszText ) = dialog.GetText();
-		return true;
+		return false;
 	}
+	CSearchObjectWxDialog dialog( ToWxOwnerWindow( pParent ), *pszText );
+	dialog.CentreOnParent();
+	if ( dialog.ShowModal() != wxID_OK )
+	{
+		return false;
+	}
+	( *pszText ) = dialog.GetText();
+	return true;
+}
 }

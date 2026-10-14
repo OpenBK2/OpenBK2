@@ -15,18 +15,17 @@
 // header each.
 namespace NMovieSettings
 {
-	// Asks for a movie's length in seconds, starting from *pfLength. True and
-	// *pfLength set on OK; false and *pfLength untouched on Cancel. What does
-	// not parse is 0, as it always was.
-	bool Run( IWidget *pParent, float *pfLength );
+// Asks for a movie's length in seconds, starting from *pfLength. True and
+// *pfLength set on OK; false and *pfLength untouched on Cancel. What does
+// not parse is 0, as it always was.
+bool Run( IWidget *pParent, float *pfLength );
 }
-
 
 namespace NMovieKeySettings
 {
-	// Asks for one movie key's tangents and parameter. rszName is shown and not
-	// edited -- the MFC dialog's name box is read-only and disabled. On OK the
-	// key's bIsTangentIn, bIsTangentOut and szKeyParam are set; on Cancel it is
-	// untouched.
-	bool Run( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName );
+// Asks for one movie key's tangents and parameter. rszName is shown and not
+// edited -- the MFC dialog's name box is read-only and disabled. On OK the
+// key's bIsTangentIn, bIsTangentOut and szKeyParam are set; on Cancel it is
+// untouched.
+bool Run( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName );
 }

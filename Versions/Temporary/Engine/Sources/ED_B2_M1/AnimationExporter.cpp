@@ -12,7 +12,6 @@
 
 REGISTER_EXPORTER_IN_DLL( AnimB2, CAnimationExporter )
 
-
 const char *CAnimationExporter::GetAddPath() const
 {
 	return "bin\\animations\\";
@@ -21,71 +20,78 @@ static const char PARAMS_AABBA[] = ".aabba";
 static const char PARAMS_AABBD[] = ".aabbd";
 
 bool CAnimationExporter::FormScript( std::string *pScriptText,
-																		const std::string &szTypeName,
-																		const std::string &szObjName,
-                                    const std::string &szDstPath,
-																		const std::string &szSrcPath,
-                                    IManipulator *pManipulator )
+                                     const std::string &szTypeName,
+                                     const std::string &szObjName,
+                                     const std::string &szDstPath,
+                                     const std::string &szSrcPath,
+                                     IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
 	const std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", szTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Granny exporter settings file is not specified\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "Check ConstUserData.xml in \"MayaExport\" section\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tExport type: {}\n", szTypeName.c_str() ) );
 		return false;
 	}
 	//
 	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" );
 	int nFirstFrame = 0, nLastFrame = 0;
-	CManipulatorManager::GetValue( &nFirstFrame, pManipulator , "FirstFrame" );
-	CManipulatorManager::GetValue( &nLastFrame, pManipulator , "LastFrame" );
+	CManipulatorManager::GetValue( &nFirstFrame, pManipulator, "FirstFrame" );
+	CManipulatorManager::GetValue( &nLastFrame, pManipulator, "LastFrame" );
 	// main script - export animation
 	std::string szScriptTemplate = GetScriptTemplate( "ExportAnimation" );
 	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
-		szDstPath.c_str(), szSrcPath.c_str(),
-		szRootJoint.c_str(), nFirstFrame, nLastFrame,
-		szSettingsFileName.c_str() );
+	                             szDstPath.c_str(),
+	                             szSrcPath.c_str(),
+	                             szRootJoint.c_str(),
+	                             nFirstFrame,
+	                             nLastFrame,
+	                             szSettingsFileName.c_str() );
 	*pScriptText += ";\n";
 	// additional script - export AABB_A & AABB_D params
 	const std::string szAttribSettingsFileName = GetGrannyExportSettingsFileName( "Attribs" );
 	if ( szAttribSettingsFileName.empty() )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", "Attribs") );
+		pLogger->Log( LT_ERROR, fmt::format( "Granny exporter settings file is not specified\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "Check ConstUserData.xml in \"MayaExport\" section\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tExport type: {}\n", "Attribs" ) );
 		return false;
 	}
 	//
 	szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
 	std::string szAABBAName;
-	if ( CManipulatorManager::GetValue( &szAABBAName, pManipulator , "AABBAName" ) && !szAABBAName.empty() )
+	if ( CManipulatorManager::GetValue( &szAABBAName, pManipulator, "AABBAName" ) && !szAABBAName.empty() )
 	{
 		const std::string szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
 		*pScriptText += fmt::sprintf( szScriptTemplate.c_str(),
-			(szDstPath + PARAMS_AABBA).c_str(), szSrcPath.c_str(),
-			szAABBAName.c_str(), "",
-			szAttribSettingsFileName.c_str() );
+		                              ( szDstPath + PARAMS_AABBA ).c_str(),
+		                              szSrcPath.c_str(),
+		                              szAABBAName.c_str(),
+		                              "",
+		                              szAttribSettingsFileName.c_str() );
 		*pScriptText += ";\n";
 	}
 	std::string szAABBDName;
-	if ( CManipulatorManager::GetValue( &szAABBDName, pManipulator , "AABBDName" ) && !szAABBDName.empty() )
+	if ( CManipulatorManager::GetValue( &szAABBDName, pManipulator, "AABBDName" ) && !szAABBDName.empty() )
 	{
 		*pScriptText += fmt::sprintf( szScriptTemplate.c_str(),
-			(szDstPath + PARAMS_AABBD).c_str(), szSrcPath.c_str(),
-			szAABBDName.c_str(), "",
-			szAttribSettingsFileName.c_str() );
+		                              ( szDstPath + PARAMS_AABBD ).c_str(),
+		                              szSrcPath.c_str(),
+		                              szAABBDName.c_str(),
+		                              "",
+		                              szAttribSettingsFileName.c_str() );
 		*pScriptText += ";\n";
 	}
 	return true;
 }
 
 bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
-																									 const std::string &szSrcScenePath,
-																									 const std::string &szDstFileName,
-															                     IManipulator *pManipulator )
+                                                   const std::string &szSrcScenePath,
+                                                   const std::string &szDstFileName,
+                                                   IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
 	bool bResult = true;
@@ -99,11 +105,11 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 			pManipulator->SetValue( "Length", nAnimLength );
 			// set action moment (msec)
 			int nFirstFrame = 0, nLastFrame = 0, nActionFrame = 0;
-			CManipulatorManager::GetValue( &nFirstFrame, pManipulator , "FirstFrame" );
-			CManipulatorManager::GetValue( &nLastFrame, pManipulator , "LastFrame" );
-			CManipulatorManager::GetValue( &nActionFrame, pManipulator , "ActionFrame" );
+			CManipulatorManager::GetValue( &nFirstFrame, pManipulator, "FirstFrame" );
+			CManipulatorManager::GetValue( &nLastFrame, pManipulator, "LastFrame" );
+			CManipulatorManager::GetValue( &nActionFrame, pManipulator, "ActionFrame" );
 			const int nActionTime = int( float( nActionFrame * nAnimLength ) / float( nLastFrame - nFirstFrame ) );
-			CManipulatorManager::SetValue( nActionTime, pManipulator , "Action" );
+			CManipulatorManager::SetValue( nActionTime, pManipulator, "Action" );
 		}
 		//
 		std::string szAABBAName;
@@ -153,43 +159,44 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 	}
 	catch ( ... )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Can't open attribs file to update animation or can't open base animation file\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tBase animation file: {}\n", szDstFileName.c_str()) );
+		pLogger->Log( LT_ERROR,
+		              fmt::format( "Can't open attribs file to update animation or can't open base animation file\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tBase animation file: {}\n", szDstFileName.c_str() ) );
 		bResult = false;
 	}
-	NFile::RemoveFile( (szDstFileName + PARAMS_AABBA).c_str() );
-	NFile::RemoveFile( (szDstFileName + PARAMS_AABBD).c_str() );
+	NFile::RemoveFile( ( szDstFileName + PARAMS_AABBA ).c_str() );
+	NFile::RemoveFile( ( szDstFileName + PARAMS_AABBD ).c_str() );
 	return bResult;
 }
 
 EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
-																							 const std::string &szObjName,
-																							 const std::string &szSrcScenePath,
-																							 const std::string &szDestinationPath,
-																							 IManipulator *pManipulator )
+                                               const std::string &szObjName,
+                                               const std::string &szSrcScenePath,
+                                               const std::string &szDestinationPath,
+                                               IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
 	CGrannyFileInfoGuard fileInfo( szDestinationPath );
 	// check for number of skeletons in file
 	if ( fileInfo->SkeletonCount != 1 )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Incorrect number of skeletons in file - check RootJoint uniquness\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tAnimation: {}\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSrcScenePath.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSkeletons count: {}\n", fileInfo->SkeletonCount) );
+		pLogger->Log( LT_ERROR, fmt::format( "Incorrect number of skeletons in file - check RootJoint uniquness\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tAnimation: {}\n", szObjName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSource file: {}\n", szSrcScenePath.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSkeletons count: {}\n", fileInfo->SkeletonCount ) );
 		if ( fileInfo->SkeletonCount > 1 )
 		{
 			for ( int i = 0; i < fileInfo->SkeletonCount; ++i )
-				pLogger->Log( LT_ERROR, fmt::format("\t\t{}\n", fileInfo->Skeletons[i]->Name) );
+				pLogger->Log( LT_ERROR, fmt::format( "\t\t{}\n", fileInfo->Skeletons[i]->Name ) );
 		}
 		return ER_FAIL;
 	}
 	// check for number of bones
 	if ( fileInfo->Skeletons[0]->BoneCount == 0 )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Empty bones list in skeleton - check \"RootJoint\"\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tAnimation: {}\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Empty bones list in skeleton - check \"RootJoint\"\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tAnimation: {}\n", szObjName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSource file: {}\n", szSrcScenePath.c_str() ) );
 		return ER_FAIL;
 	}
 	return ER_SUCCESS;
@@ -197,25 +204,27 @@ EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
 
 // basement storage
 
-
-
 bool CAnimationExporter::ImportGltfInfo( IManipulator *resource )
 {
-	const auto file = NEditorGltf::Load(resource);
-	if ( !file ) return false;
+	const auto file = NEditorGltf::Load( resource );
+	if ( !file )
+		return false;
 	// Optional attack/defence boxes are named mesh nodes in the same document.
-	for ( const auto &box : {std::make_pair("AABBAName", "aabb_a"), std::make_pair("AABBDName", "aabb_d")} )
+	for ( const auto &box : { std::make_pair( "AABBAName", "aabb_a" ), std::make_pair( "AABBDName", "aabb_d" ) } )
 	{
 		std::string name;
-		CManipulatorManager::GetValue(&name, resource, box.first);
-		if ( name.empty() ) continue;
+		CManipulatorManager::GetValue( &name, resource, box.first );
+		if ( name.empty() )
+			continue;
 		CVec3 minimum, maximum;
-		if ( !NGltf::GetMeshBoundingBox(file, name, true, &minimum, &maximum) ) return false;
-		CVec3 center = (minimum + maximum) * 0.5f, halfSize = (maximum - minimum) * 0.5f;
-		Vis2AI(&center);
-		Vis2AI(&halfSize);
-		if ( !CManipulatorManager::SetVec3(center, resource, std::string(box.second) + ".Center") ||
-			!CManipulatorManager::SetVec3(halfSize, resource, std::string(box.second) + ".HalfSize") ) return false;
+		if ( !NGltf::GetMeshBoundingBox( file, name, true, &minimum, &maximum ) )
+			return false;
+		CVec3 center = ( minimum + maximum ) * 0.5f, halfSize = ( maximum - minimum ) * 0.5f;
+		Vis2AI( &center );
+		Vis2AI( &halfSize );
+		if ( !CManipulatorManager::SetVec3( center, resource, std::string( box.second ) + ".Center" ) ||
+		     !CManipulatorManager::SetVec3( halfSize, resource, std::string( box.second ) + ".HalfSize" ) )
+			return false;
 	}
 	return true;
 }

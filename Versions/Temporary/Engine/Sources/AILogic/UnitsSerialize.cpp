@@ -30,11 +30,8 @@ int CUnits::operator&( IBinSaver &saver )
 				{
 					for ( int nType = 0; nType < 2; ++nType )
 					{
-						numUnits[k][nCellLevel][nDipl][nType].SetSizes
-						(
-							nBigCellsSizeX / ( 1 << (nCellLevel+1) ) + 1,
-							nBigCellsSizeY / ( 1 << (nCellLevel+1) ) + 1
-						);
+						numUnits[k][nCellLevel][nDipl][nType].SetSizes( nBigCellsSizeX / ( 1 << ( nCellLevel + 1 ) ) + 1,
+						                                                nBigCellsSizeY / ( 1 << ( nCellLevel + 1 ) ) + 1 );
 
 						numUnits[k][nCellLevel][nDipl][nType].FillZero();
 					}
@@ -51,7 +48,7 @@ int CUnits::operator&( IBinSaver &saver )
 				for ( int j = 0; j < 3; ++j )
 				{
 					for ( int k = 0; k < 2; ++k )
-						saver.Add( cnt++, &(numUnits[nVis][i][j][k]) );
+						saver.Add( cnt++, &( numUnits[nVis][i][j][k] ) );
 				}
 			}
 		}
@@ -69,7 +66,6 @@ int CUnits::operator&( IBinSaver &saver )
 
 int CPlanesIter::operator&( IBinSaver &saver )
 {
-
 
 	//saver.Add( 1, &iter );
 

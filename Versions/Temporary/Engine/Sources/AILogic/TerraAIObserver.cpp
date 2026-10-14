@@ -22,7 +22,7 @@ extern CGlobalWarFog theWarFog;
 extern SRailRoadSystem theRailRoadSystem;
 CRiverSounds CTerraAIObserverInGame::riverSounds;
 
-CTerraAIObserverInGame::CTerraAIObserverInGame( const int nSizeX, const int nSizeY  )
+CTerraAIObserverInGame::CTerraAIObserverInGame( const int nSizeX, const int nSizeY )
 {
 	pAIMap = GetAIMap();
 	pTerrain = pAIMap->GetTerrain();
@@ -33,9 +33,7 @@ CTerraAIObserverInGame::CTerraAIObserverInGame( const int nSizeX, const int nSiz
 	pMarkers->Init( pAIMap );
 }
 
-void CTerraAIObserverInGame::InitSizes( const int nSizeX, const int nSizeY )
-{
-}
+void CTerraAIObserverInGame::InitSizes( const int nSizeX, const int nSizeY ) {}
 
 void CTerraAIObserverInGame::AddVSO( const NDb::SVSOInstance *pInstance )
 {
@@ -48,8 +46,8 @@ void CTerraAIObserverInGame::AddVSO( const NDb::SVSOInstance *pInstance )
 	}
 }
 
-void CTerraAIObserverInGame::UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2,
-																						const CArray2D<float> &heights )
+void CTerraAIObserverInGame::UpdateHeights(
+		const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights )
 {
 	CTerraAIObserver::UpdateHeights( nX1, nY1, nX2, nY2, heights );
 
@@ -61,14 +59,14 @@ void CTerraAIObserverInGame::UpdateHeights( const int nX1, const int nY1, const 
 	{
 		CAIUnit *pUnit = *iter;
 		//if ( IsValidObj( pUnit ) )
-			updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, pUnit, -1 );
+		updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, pUnit, -1 );
 	}
 	theStatObjs.PostAllObjectsInit();
 	//}
 }
 
-void CTerraAIObserverInGame::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2,
-																					const CArray2D<uint8_t> &types )
+void CTerraAIObserverInGame::UpdateTypes(
+		const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types )
 {
 	CTerraAIObserver::UpdateTypes( nX1, nY1, nX2, nY2, types );
 
@@ -101,7 +99,7 @@ void CTerraAIObserverInGame::AddRiver( const NDb::SVSOInstance *pInstance )
 	float fDistSoFar = 0;
 	for ( int i = 0; i < pInstance->points.size() - 1; ++i )
 	{
-		CVec3 vDist( pInstance->points[i+1].vPos - pInstance->points[i].vPos );
+		CVec3 vDist( pInstance->points[i + 1].vPos - pInstance->points[i].vPos );
 		const float fSegmentLength = fabs( vDist.x, vDist.y );
 		vDist.z = 0;
 		Normalize( &vDist );
@@ -118,7 +116,7 @@ void CTerraAIObserverInGame::AddRiver( const NDb::SVSOInstance *pInstance )
 
 int CTerraAIObserverInGame::operator&( IBinSaver &saver )
 {
-	saver.Add( 2,(CTerraAIObserver*)this );
+	saver.Add( 2, (CTerraAIObserver *)this );
 	saver.Add( 3, &riverSounds );
 
 	if ( saver.IsReading() )

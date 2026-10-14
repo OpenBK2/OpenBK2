@@ -23,10 +23,11 @@
 class CDbRow
 {
 	const std::vector<std::string> *pValues;
-public:
-	explicit CDbRow( const std::vector<std::string> &values ) : pValues( &values ) { }
 
-	const std::string& operator[]( const int nColumn ) const { return (*pValues)[nColumn]; }
+public:
+	explicit CDbRow( const std::vector<std::string> &values ) : pValues( &values ) {}
+
+	const std::string &operator[]( const int nColumn ) const { return ( *pValues )[nColumn]; }
 };
 
 //! One fully read result set.
@@ -45,9 +46,14 @@ public:
 class CDbResult
 {
 	std::vector<std::string> columnNames;
-	std::vector<std::vector<std::string> > rows;
+	std::vector<std::vector<std::string>> rows;
+
 public:
-	void Clear() { columnNames.clear(); rows.clear(); }
+	void Clear()
+	{
+		columnNames.clear();
+		rows.clear();
+	}
 
 	//! Called by a backend as it reads a result set in.
 	void SetColumnNames( std::vector<std::string> names ) { columnNames = std::move( names ); }
@@ -56,7 +62,7 @@ public:
 	int GetRowCount() const { return static_cast<int>( rows.size() ); }
 	int GetColumnCount() const { return static_cast<int>( columnNames.size() ); }
 
-	const std::string& GetColumnName( const int nColumn ) const { return columnNames[nColumn]; }
+	const std::string &GetColumnName( const int nColumn ) const { return columnNames[nColumn]; }
 
 	//! The value at a cell.
 	//!
@@ -65,7 +71,7 @@ public:
 	//! std::string without checking, so a NULL was undefined behaviour rather
 	//! than a value they handled. SELECT MAX(xp) on an empty gamestats is the
 	//! case that reaches it.
-	const std::string& Get( const int nRow, const int nColumn ) const { return rows[nRow][nColumn]; }
+	const std::string &Get( const int nRow, const int nColumn ) const { return rows[nRow][nColumn]; }
 
 	CDbRow Row( const int nRow ) const { return CDbRow( rows[nRow] ); }
 };
@@ -80,12 +86,12 @@ struct SDbConnection
 	std::string szDatabase;
 	int nPort;
 
-	SDbConnection() : nPort( 0 ) { }
+	SDbConnection() : nPort( 0 ) {}
 };
 
 struct IDatabase : public CObjectBase
 {
-	virtual ~IDatabase() { }
+	virtual ~IDatabase() {}
 
 	virtual bool Connect( const SDbConnection &connection ) = 0;
 	virtual void Close() = 0;
@@ -120,9 +126,9 @@ struct IDatabase : public CObjectBase
 };
 
 //! The MariaDB and MySQL backend. Talks to either, being wire compatible.
-IDatabase* CreateMariaDbDatabase();
+IDatabase *CreateMariaDbDatabase();
 
 //! The embedded backend. SDbConnection::szDatabase is the file it opens, and
 //! the rest of that struct describes a daemon and does not apply. It creates
 //! its schema on first open, so a server can be run with nothing installed.
-IDatabase* CreateSqliteDatabase();
+IDatabase *CreateSqliteDatabase();

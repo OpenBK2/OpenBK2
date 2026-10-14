@@ -59,10 +59,12 @@ void SGradient::UpdateHeightRanges()
 	}
 }
 
-
-bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint<float> &rRange, const CTPoint<float> &rHeightRange )
+bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage,
+                                 const CTPoint<float> &rRange,
+                                 const CTPoint<float> &rHeightRange )
 {
-	NI_ASSERT( ( rRange.max - rRange.min ) > FP_EPSILON, fmt::format( "Invalid range: {:g} {:g}\n", rRange.min, rRange.max ) );
+	NI_ASSERT( ( rRange.max - rRange.min ) > FP_EPSILON,
+	           fmt::format( "Invalid range: {:g} {:g}\n", rRange.min, rRange.max ) );
 	if ( ( rRange.max - rRange.min ) <= FP_EPSILON )
 	{
 		return false;
@@ -79,11 +81,11 @@ bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint
 		for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 		{
 			const uint32_t dwColor = rImage[nYIndex][nXIndex];
-			if ( ( GetRedFromARGBColor( dwColor )		< 0x80 ) &&
-					 ( GetGreenFromARGBColor( dwColor )	< 0x80 ) &&
-					 ( GetBlueFromARGBColor( dwColor )	< 0x80 ) )
+			if ( ( GetRedFromARGBColor( dwColor ) < 0x80 ) && ( GetGreenFromARGBColor( dwColor ) < 0x80 ) &&
+			     ( GetBlueFromARGBColor( dwColor ) < 0x80 ) )
 			{
-				heightList.push_back( heightRange.min + ( ( size.y - nYIndex - 1 ) * ( heightRange.max - heightRange.min ) / ( size.y - 1 ) ) );
+				heightList.push_back( heightRange.min +
+				                      ( ( size.y - nYIndex - 1 ) * ( heightRange.max - heightRange.min ) / ( size.y - 1 ) ) );
 				isCompleted = true;
 				break;
 			}
@@ -92,28 +94,28 @@ bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint
 		{
 			heightList.push_back( heightRange.min );
 		}
-  }
+	}
 	//
 	UpdateHeightRanges();
 	return true;
 }
 
-
 bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated ) const
 {
 	NI_ASSERT( pfValue != 0, fmt::format( "Invalid parameter: pfValue == 0" ) );
 	NI_ASSERT( ( ( heightList.size() > 2 ) && isSquareInterpolated ) ||
-						 ( ( heightList.size() > 1 ) && !isSquareInterpolated ),
-						 fmt::format( "HeightList size not enough: {}", heightList.size() ) );
+	               ( ( heightList.size() > 1 ) && !isSquareInterpolated ),
+	           fmt::format( "HeightList size not enough: {}", heightList.size() ) );
 	NI_ASSERT( range.min != range.max, fmt::format( "Invalid range: ({:g}, {:g})", range.min, range.max ) );
-	NI_ASSERT( ( range.min <= fPosition ) && ( range.max >= fPosition ),
-						 fmt::format( "Invalid parameter: {:g}, must be in range: ({:g}, {:g})", fPosition, range.min, range.max ) );
+	NI_ASSERT(
+			( range.min <= fPosition ) && ( range.max >= fPosition ),
+			fmt::format( "Invalid parameter: {:g}, must be in range: ({:g}, {:g})", fPosition, range.min, range.max ) );
 	if ( pfValue == 0 )
 	{
 		return false;
 	}
 	if ( ( ( heightList.size() <= 2 ) || !isSquareInterpolated ) &&
-			 ( ( heightList.size() <= 1 ) || isSquareInterpolated ) )
+	     ( ( heightList.size() <= 1 ) || isSquareInterpolated ) )
 	{
 		return false;
 	}
@@ -142,7 +144,8 @@ bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated 
 			CTPoint<float> p2;
 			if ( nIndex == 0 )
 			{
-				p0.x = range.min + 0.0f * fGranularity;;
+				p0.x = range.min + 0.0f * fGranularity;
+				;
 				p0.y = heightList[0];
 				p1.x = range.min + 1.0f * fGranularity;
 				p1.y = heightList[1];
@@ -167,7 +170,8 @@ bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated 
 	}
 	else
 	{
-		( *pfValue ) = heightList[nIndex] + ( heightList[nIndex + 1] - heightList[nIndex] ) * ( fPosition - range.min - ( fGranularity * nIndex ) ) / fGranularity;
+		( *pfValue ) = heightList[nIndex] + ( heightList[nIndex + 1] - heightList[nIndex] ) *
+		                                        ( fPosition - range.min - ( fGranularity * nIndex ) ) / fGranularity;
 	}
 	return true;
 }

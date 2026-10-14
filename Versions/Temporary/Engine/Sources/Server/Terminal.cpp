@@ -28,7 +28,8 @@ static void TheTerminalThreadProc( CTerminal *pTerminal )
 	}
 }
 
-CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pCommands ), nPort( _nPort ), bClientIsOK( false )
+CTerminal::CTerminal( CCommands *_pCommands, const int _nPort )
+		: pCommands( _pCommands ), nPort( _nPort ), bClientIsOK( false )
 {
 	pTheTerminal = this;
 
@@ -41,9 +42,9 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 	WSAStartup( MAKEWORD( 1, 1 ), &wsaData );
 #endif
 
-	listeningSocket = socket( AF_INET,	// Go over TCP/IP
-		SOCK_STREAM,	// This is a stream-oriented socket
-		IPPROTO_TCP );	// Use TCP rather than UDP
+	listeningSocket = socket( AF_INET,       // Go over TCP/IP
+	                          SOCK_STREAM,   // This is a stream-oriented socket
+	                          IPPROTO_TCP ); // Use TCP rather than UDP
 
 	if ( listeningSocket == INVALID_SOCKET )
 	{
@@ -56,9 +57,9 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 	memset( &serverInfo, 0, sizeof( serverInfo ) );
 
 	serverInfo.sin_family = AF_INET;
-	serverInfo.sin_addr.s_addr = INADDR_ANY;	// Since this socket is listening for connections,
+	serverInfo.sin_addr.s_addr = INADDR_ANY; // Since this socket is listening for connections,
 	// any local address will do
-	serverInfo.sin_port = htons( nPort );		// Convert integer 8888 to network-byte order
+	serverInfo.sin_port = htons( nPort ); // Convert integer 8888 to network-byte order
 	// and insert into the port field
 
 	// sizeof( serverInfo ), not sizeof( sockaddr ): they are the same size for
@@ -144,7 +145,7 @@ void CTerminal::OutString( const std::string &szString )
 void CTerminal::ReadToCache()
 {
 	static std::vector<char> buffer( INPUT_BUFFER_SIZE + 1 );
-	buffer[ INPUT_BUFFER_SIZE ] = 0;
+	buffer[INPUT_BUFFER_SIZE] = 0;
 	int nBytesReceived = 0;
 	while ( bClientIsOK )
 	{
@@ -154,7 +155,7 @@ void CTerminal::ReadToCache()
 			bClientIsOK = false;
 			break;
 		}
-		buffer[ nBytesReceived ] = 0;
+		buffer[nBytesReceived] = 0;
 		{
 			std::lock_guard lock( csClientSocketReading );
 			readCache.push_back( &buffer[0] );
@@ -186,7 +187,7 @@ CTerminal::~CTerminal()
 // So stdout first and unconditionally, then the terminal if there is one. The
 // remote console keeps working exactly as it did; it is no longer the only
 // reader.
-void WriteMSG( const char* pszFormat, ... )
+void WriteMSG( const char *pszFormat, ... )
 {
 	char buff[1024];
 

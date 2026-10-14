@@ -16,15 +16,15 @@ struct ICollisionsCollector;
 
 namespace NDb
 {
-	enum EReinforcementType : int;
-	struct SUnitStatsModifier;
-	struct SAmphibianStats;
-	enum EUnitSpecialAbility : int;
-	struct SUnitBaseRPGStats;
+enum EReinforcementType : int;
+struct SUnitStatsModifier;
+struct SAmphibianStats;
+enum EUnitSpecialAbility : int;
+struct SUnitBaseRPGStats;
 };
 enum EActionNotify : unsigned int;
 
-class CAIUnit: public CCommonUnit
+class CAIUnit : public CCommonUnit
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	uint8_t player = {};
@@ -41,11 +41,11 @@ class CAIUnit: public CCommonUnit
 
 	//окоп, в котором этот юнит тусуется
 	CObj<CExistingObject> pTankPit;
-	bool bVirtualTankPit = {};									// unit cannot move like it is in tankpit, but don't have bonuses
+	bool bVirtualTankPit = {}; // unit cannot move like it is in tankpit, but don't have bonuses
 	bool bIsInTankPit = {};
 	NTimer::STime camouflateTime = {};
 
-	SAIAngle wWisibility;											// informatin about visibility for every player
+	SAIAngle wWisibility; // informatin about visibility for every player
 	NTimer::STime lastAckTime = {};
 	std::vector<int> visible4Party;
 	std::vector<NTimer::STime> lastTimeOfVis;
@@ -68,50 +68,65 @@ class CAIUnit: public CCommonUnit
 	int nVisIndexInUnits = {};
 	float fCamoflage = {};
 
-	uint32_t dwForbiddenGuns = {};									// some guns will be excluded from auto attack
+	uint32_t dwForbiddenGuns = {}; // some guns will be excluded from auto attack
 
 	bool bHoldingSector = {};
 	bool bTargetingTrack = {};
 	NDb::EReinforcementType eReinforcementType = {};
 	bool bRestInside = {}; // mech unit inside mech unit
 	SUnitProfile unitProfile;
-	std::list< CPtr<CAIUnit> > targetsCache;
+	std::list<CPtr<CAIUnit>> targetsCache;
 	NTimer::STime realScanDuration = {};
 	NTimer::STime lastScanTime = {};
 	bool bAmphibianWaterModifierApplied = {};
+
 protected:
 	CObjectBase *pObjInside = {};
-private:
 
+private:
 	CPtr<NDb::SUnitStatsModifier> pStatsModifiers;
 
 	CPtr<CExecutorUnitBonus> pShootInMovementExecutor;
 	bool bIgnoreAABBCoeff = {};
 
-	int nMultipleShots = {};					// Number of shells used in one shot (default=1). Used by LinkedGrenades ability
+	int nMultipleShots = {}; // Number of shells used in one shot (default=1). Used by LinkedGrenades ability
 	NTimer::STime timeLastAttackedAck = {};
 	NTimer::STime timeLastAttacked = {};
 
 	//int nAbilityLevel;
 	//
-	const SAINotifyHitInfo::EHitType ProcessExactHit( const SRect &combatRect, const CVec2 &explCoord, const int nRandPiercing, const int nRandArmor ) const;
+	const SAINotifyHitInfo::EHitType ProcessExactHit( const SRect &combatRect,
+	                                                  const CVec2 &explCoord,
+	                                                  const int nRandPiercing,
+	                                                  const int nRandArmor ) const;
 	// sends to general request according to units's current state; quite slow.
 	void UpdateUnitsRequestsForResupply();
-	const NDb::SAmphibianStats* GetAmphibianStats() const;
+	const NDb::SAmphibianStats *GetAmphibianStats() const;
 	bool IsAmphibianWaterTile( const SVector &tile ) const;
 	bool IsAmphibianWaterPoint( const CVec2 &point ) const;
 	void UpdateAmphibianWaterModifier();
-	void UpdateTankPitVisibility( const bool bVisibilityChanged, const bool bVisible  );
-	void InitializeShootArea( struct SShootArea *pArea, CBasicGun *pGun, const float fRangeMin, const float fRangeMax ) const;
+	void UpdateTankPitVisibility( const bool bVisibilityChanged, const bool bVisible );
+	void
+	InitializeShootArea( struct SShootArea *pArea, CBasicGun *pGun, const float fRangeMin, const float fRangeMax ) const;
 	void CheckForReveal();
 	void UpdateEnableAblitiy( const int nAbility );
 	void InitAbility( const NDb::EUnitSpecialAbility nAbility );
 	void UpdateUnitProfile();
-	uint8_t AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving );
-	bool LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun,
-		const float fRange, const bool bIteratePlanes, const bool bIterateBuildings );
+	uint8_t AnalyzeTargetScanInternal( CAIUnit *pCurTarget,
+	                                   const bool bDamageUpdated,
+	                                   const bool bScanForObstacles,
+	                                   CObjectBase *pCheckBuilding,
+	                                   const bool bOnlyShootWithoutMoving );
+	bool LookForTargetInRange( CAIUnit *pCurTarget,
+	                           const bool bDamageUpdated,
+	                           CAIUnit **pBestTarget,
+	                           CBasicGun **pGun,
+	                           const float fRange,
+	                           const bool bIteratePlanes,
+	                           const bool bIterateBuildings );
 	void SetTargetScanRandom();
 	const bool AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget );
+
 protected:
 	NTimer::STime timeToDeath = {};
 
@@ -121,7 +136,12 @@ protected:
 	void DieTrain( const float fDamage );
 
 	virtual void InitGuns() = 0;
-	void Init( const CVec2 &center, const int z, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
+	void Init( const CVec2 &center,
+	           const int z,
+	           const float fHP,
+	           const uint16_t dir,
+	           const uint8_t player,
+	           ICollisionsCollector *pCollisionsCollector );
 
 	const int GetRandArmorByDir( const int nArmorDir, const uint16_t wAttackDir, const SRect &unitRect );
 
@@ -134,12 +154,23 @@ protected:
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
 	// return | of guns, that are used for anti-aviation fire and should be excluded from ordinary target scan
 	virtual uint32_t InitSupportAntiAircraftGuns() { return 0; }
-	CObjectBase * GetObjInside() { return pObjInside; }
+	CObjectBase *GetObjInside() { return pObjInside; }
+
 public:
-	CAIUnit() : pObjInside( 0 ), bTrampled( false ), nMultipleShots(1), bTargetingTrack(false), bIgnoreAABBCoeff(false), timeLastAttackedAck( 0 ), timeLastAttacked( 0 ), bAmphibianWaterModifierApplied( false ) { }
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector ) = 0;
-	void InitSpecialAbilities( int nFromLevel = 0 );			// Parameter is used on level-up
-	static CAIUnit * GetUnitByUniqueID( const int nUniqueID );
+	CAIUnit()
+			: pObjInside( 0 ), bTrampled( false ), nMultipleShots( 1 ), bTargetingTrack( false ), bIgnoreAABBCoeff( false ),
+				timeLastAttackedAck( 0 ), timeLastAttacked( 0 ), bAmphibianWaterModifierApplied( false )
+	{
+	}
+	virtual void Init( const CVec2 &center,
+	                   const int z,
+	                   const SUnitBaseRPGStats *pStats,
+	                   const float fHP,
+	                   const uint16_t dir,
+	                   const uint8_t player,
+	                   ICollisionsCollector *pCollisionsCollector ) = 0;
+	void InitSpecialAbilities( int nFromLevel = 0 ); // Parameter is used on level-up
+	static CAIUnit *GetUnitByUniqueID( const int nUniqueID );
 	int operator&( IBinSaver &f );
 
 	virtual void PrepareToDelete();
@@ -151,19 +182,19 @@ public:
 	virtual const NTimer::STime GetTimeOfDeath() const { return timeToDeath; }
 
 	virtual const CVec2 GetGunCenter( const int nGun, const int nPlatform ) const;
-		// когда танк въехал в TankPit или его окопали вызывается эта функция
+	// когда танк въехал в TankPit или его окопали вызывается эта функция
 	void SetInTankPit( CExistingObject *pTankPit );
 	void SetOffTankPit();
 	void SetInVirtualTankPit() { bVirtualTankPit = true; }
 	bool IsVirtualTankPit() const { return bVirtualTankPit; }
-	class CExistingObject* GetTankPit() const { return pTankPit; }
+	class CExistingObject *GetTankPit() const { return pTankPit; }
 	bool IsInTankPit() const { return bIsInTankPit; }
 
 	void SetVisionAngle( const uint16_t wAngle ) { wVisionAngle = wAngle; }
 	uint16_t GetVisionAngle() const { return wVisionAngle; }
 
 	//
-	virtual const SUnitBaseRPGStats* GetStats() const = 0;
+	virtual const SUnitBaseRPGStats *GetStats() const = 0;
 
 	// в месте, где его никто не видит и он никого не видит
 	virtual bool IsInSolidPlace() const { return false; }
@@ -173,7 +204,7 @@ public:
 	// обработка команд
 	virtual void Segment();
 	virtual void FreezeSegment();
-	bool IsPossibleChangeAction() const	{ return IsAlive(); }
+	bool IsPossibleChangeAction() const { return IsAlive(); }
 	virtual void Die( const bool fromExplosion, const float fDamage );
 	virtual void Disappear();
 
@@ -190,15 +221,15 @@ public:
 	virtual const float GetTurnSpeed() const;
 	virtual const float GetMaxPossibleSpeed() const
 	{
-		float speed = GetStatsModifier()->speed.Get(GetStats()->fSpeed);
-		if (!IsGoForward() && CanGoBackward() && IsMech())
+		float speed = GetStatsModifier()->speed.Get( GetStats()->fSpeed );
+		if ( !IsGoForward() && CanGoBackward() && IsMech() )
 			speed *= GetStats()->fReverseSpeedModifier;
 		return speed;
 
 		//return GetStatsModifier()->speed.Get( GetStats()->fSpeed );
 	}
 	// Group forward move should use the "forward cap" and ignore temporary reverse-direction state.
-	virtual const float GetMaxPossibleForwardSpeed() const { return GetStatsModifier()->speed.Get(GetStats()->fSpeed); }
+	virtual const float GetMaxPossibleForwardSpeed() const { return GetStatsModifier()->speed.Get( GetStats()->fSpeed ); }
 	// Group reverse move should use the reverse cap even before the path switches direction.
 	virtual const float GetMaxPossibleBackwardSpeed() const
 	{
@@ -215,29 +246,46 @@ public:
 	const uint16_t GetDirAtTheBeginning() const;
 
 	// CPathUnit
-		virtual bool IsInOneTrain( CBasePathUnit *pUnit ) const { return false; }
+	virtual bool IsInOneTrain( CBasePathUnit *pUnit ) const { return false; }
 	virtual const bool IsTrain() const;
 
 	//
 	const float GetHitPoints() const { return fHitPoints; }
 	void IncreaseHitPoints( const float fInc = 1 );
-	virtual void TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit );
+	virtual void TakeDamage( const float fDamage,
+	                         const SWeaponRPGStats::SShell *pShell,
+	                         const int nPlayerOfShoot,
+	                         CAIUnit *pShotUnit );
 	// true при попадании
 	virtual bool ProcessCumulativeExpl( class CExplosion *pExpl, const int nArmorDir, const bool bFromExpl );
 	// true при точном попадании
-	virtual bool ProcessBurstExpl( class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
+	virtual bool
+	ProcessBurstExpl( class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
 	// true при попадании
-	virtual bool ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
+	virtual bool ProcessAreaDamage( const class CExplosion *pExpl,
+	                                const int nArmorDir,
+	                                const float fRadius,
+	                                const float fSmallRadius );
 
 	// вероятность, с которой нанесётся damage при попадании
 	virtual const float GetCover() const;
 	virtual bool IsSavedByCover() const;
 
-	virtual class CTurret* GetTurret( const int nTurret ) const { NI_ASSERT( false, "Wrong call of get turret" ); return 0; }
+	virtual class CTurret *GetTurret( const int nTurret ) const
+	{
+		NI_ASSERT( false, "Wrong call of get turret" );
+		return 0;
+	}
 
 	// для стрельбы
-	virtual void GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const { NI_ASSERT( false, "Wrong call of GetShotInfo" ); }
-	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const { NI_ASSERT( false, "Wrong call of GetShotInfo" ); }
+	virtual void GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const
+	{
+		NI_ASSERT( false, "Wrong call of GetShotInfo" );
+	}
+	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
+	{
+		NI_ASSERT( false, "Wrong call of GetShotInfo" );
+	}
 	virtual const EActionNotify GetShootAction() const = 0;
 	virtual const EActionNotify GetAimAction() const = 0;
 	virtual const EActionNotify GetDieAction() const = 0;
@@ -256,8 +304,8 @@ public:
 	virtual bool IsCamoulflated() const { return fCamoflage < 1.0f; }
 
 	//Camouflage needs to be removed, probably. Is made obsolete by the following method:
-	void ApplyStatsModifier( const NDb::SUnitStatsModifier * pModifier, const bool bForward );
-	const NDb::SUnitStatsModifier * GetStatsModifier() const { return pStatsModifiers; }
+	void ApplyStatsModifier( const NDb::SUnitStatsModifier *pModifier, const bool bForward );
+	const NDb::SUnitStatsModifier *GetStatsModifier() const { return pStatsModifiers; }
 	bool IsInWater() const;
 	const float GetAmphibianWaterCoeff( const CVec2 &point ) const;
 
@@ -279,7 +327,6 @@ public:
 	virtual const NTimer::STime GetTimeToCamouflage() const;
 	virtual void AnalyzeCamouflage();
 	virtual void StartCamouflating();
-
 
 	void CreateAntiArtillery( const float fMaxRevealRadius );
 	virtual void Fired( const float fGunRadius, const int nGun );
@@ -307,7 +354,7 @@ public:
 	// патроны
 	const int GetNCommonGuns() const;
 	int GetCommonGunIndex( const CBasicGun *pGun ) const;
-	const SBaseGunRPGStats& GetCommonGunStats( const int nCommonGun ) const;
+	const SBaseGunRPGStats &GetCommonGunStats( const int nCommonGun ) const;
 	virtual int GetNAmmo( const int nCommonGun ) const;
 	// nAmmo со знаком
 	virtual void ChangeAmmo( const int nCommonGun, const int nAmmo );
@@ -344,8 +391,8 @@ public:
 	virtual void UnRegisterAsBored( const enum EUnitAckType eBoredType );
 	virtual void RegisterAsBored( const enum EUnitAckType eBoredType );
 
-	virtual class CUnitGuns* GetGuns() = 0;
-	virtual const class CUnitGuns* GetGuns() const = 0;
+	virtual class CUnitGuns *GetGuns() = 0;
+	virtual const class CUnitGuns *GetGuns() const = 0;
 	virtual EUnitAckType GetGunsRejectReason() const;
 	bool DoesExistRejectGunsReason( const EUnitAckType &ackType ) const;
 
@@ -366,30 +413,42 @@ public:
 	virtual void ResetTargetScan();
 	// просканировать, если пора; если нашли цель, то атаковать
 	// возвращает: в младшем бите - была ли найдена цель, во втором бите - было ли произведено сканирование
-	virtual uint8_t AnalyzeTargetScan(	CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
-	uint8_t AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding = 0 );
+	virtual uint8_t AnalyzeTargetScan( CAIUnit *pCurTarget,
+	                                   const bool bDamageUpdated,
+	                                   const bool bScanForObstacles,
+	                                   CObjectBase *pCheckBuilding = 0 );
+	uint8_t AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget,
+	                                        const bool bDamageUpdated,
+	                                        const bool bScanForObstacles,
+	                                        CObjectBase *pCheckBuilding = 0 );
 	// поискать цель, текущая цель для атаки - pCurTarget
-	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
+	virtual void
+	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 	// поискать цель вдалеке для артиллерийского обстрела, текущая цель для атаки - pCurTarget
-	virtual void LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
-		// для того, чтобы искать врагов не только в секторе атаки, а во всём круге
+	virtual void
+	LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
+	// для того, чтобы искать врагов не только в секторе атаки, а во всём круге
 	void SetCircularAttack( const bool bCanAttack );
 	// поискать препятствие.
 	virtual struct IObstacle *LookForObstacle();
-	void UpdateNAttackingGrenages( const int nUpdate ) { nGrenades += nUpdate; NI_ASSERT( nGrenades >= 0, "Wrong number of grenades" ); }
+	void UpdateNAttackingGrenages( const int nUpdate )
+	{
+		nGrenades += nUpdate;
+		NI_ASSERT( nGrenades >= 0, "Wrong number of grenades" );
+	}
 	const int GetNAttackingGrenages() const { return nGrenades; }
 
 	// установать в curTime время для периодов выбора gun
 	virtual void ResetGunChoosing();
 	// если пора перевыбрать gun, то перевыбрать
-	CBasicGun* AnalyzeGunChoose( CAIUnit *pEnemy );
+	CBasicGun *AnalyzeGunChoose( CAIUnit *pEnemy );
 
 	void EnemyKilled( CAIUnit *pEnemy );
 
 	virtual bool CanMoveForGuard() const { return CanMove() && !GetStats()->IsTrain(); }
 	// время, через которое general забудет о невидимом юните
 	virtual const float GetTimeToForget() const;
-	CAIUnitInfoForGeneral* GetUnitInfoForGeneral() const;
+	CAIUnitInfoForGeneral *GetUnitInfoForGeneral() const;
 	void SetLastVisibleTime( const NTimer::STime time );
 
 	// радиус, в котром сканируются цели
@@ -407,9 +466,11 @@ public:
 	virtual const NTimer::STime GetBehUpdateDuration() const;
 
 	// killed: this unit + all units inside
-	virtual void SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforcementType eKillerType, NDb::EReinforcementType eDeadType );
+	virtual void SendNTotalKilledUnits( const int nPlayerOfShoot,
+	                                    NDb::EReinforcementType eKillerType,
+	                                    NDb::EReinforcementType eDeadType );
 
-//	const SAIExpLevel::SLevel& GetExpLevel() const;
+	//	const SAIExpLevel::SLevel& GetExpLevel() const;
 
 	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 
@@ -432,7 +493,7 @@ public:
 	// for planes
 	//void InitAviationPath();
 
-	virtual void InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone = false ) { }
+	virtual void InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone = false ) {}
 	virtual bool IsUninstalled() const { return true; }
 	virtual bool IsInstalled() const { return true; }
 
@@ -442,7 +503,7 @@ public:
 	void Stopped();
 	void StopCurAnimation();
 
-	virtual class CArtillery* GetArtilleryIfCrew() const { return 0; }
+	virtual class CArtillery *GetArtilleryIfCrew() const { return 0; }
 	virtual void TrackDamagedState( const bool bTrackDamaged ) {}
 
 	void WantedToReveal( CAIUnit *pWhoRevealed );
@@ -451,7 +512,7 @@ public:
 	virtual const bool IsInfantry() const;
 	virtual bool IsHelicopter() const { return false; }
 	// обстрелян юнитом pUnit
-	virtual void Grazed( CAIUnit *pUnit ) { }
+	virtual void Grazed( CAIUnit *pUnit ) {}
 
 	void NullCreationTime() { creationTime = 0; }
 
@@ -459,7 +520,7 @@ public:
 	void SetNVisIndexInUnits( const int _nVisIndexInUnits ) { nVisIndexInUnits = _nVisIndexInUnits; }
 
 	virtual bool CanMoveAfterUserCommand() const;
-	virtual void NotifyAbilityRun( class CAICommand * pCommand );
+	virtual void NotifyAbilityRun( class CAICommand *pCommand );
 
 	bool IsHoldingSector() const { return bHoldingSector; }
 	void SetHoldSector();
@@ -475,9 +536,9 @@ public:
 	bool IsRestInside() const;
 	void SetRestInside( const bool bInside, CAIUnit *pTransport );
 
-	const bool CanShootInMovement();			// For aviation and ShootInMovement special ability (shoot from priority-0 guns)
+	const bool CanShootInMovement(); // For aviation and ShootInMovement special ability (shoot from priority-0 guns)
 	const int GetXPLevel();
-	const int GetAbilityLevel();					// Introduced for leaders
+	const int GetAbilityLevel(); // Introduced for leaders
 	/*
 	void SetAbilityLevel( const int _nLevel ) { nAbilityLevel = _nLevel; }
 	void ResetAbilityLevel() { SetAbilityLevel( -1 ); }
@@ -487,10 +548,10 @@ public:
 	bool IsIgnoreAABBCoeff() const { return bIgnoreAABBCoeff; }
 
 	void SetMultiShot( const int nShells ) { nMultipleShots = nShells; }
-	const int GetMultiShot() const { return nMultipleShots;	}
+	const int GetMultiShot() const { return nMultipleShots; }
 
 	virtual const SUnitProfile &GetUnitProfile() const;
-	const SRect& GetUnitRect() const;
+	const SRect &GetUnitRect() const;
 	virtual const float GetTurnRadius() const { return GetStats()->GetTurnRadius(); }
 
 	// CBasePathUnit
@@ -502,7 +563,11 @@ public:
 	bool IsTrampled() const { return bTrampled; }
 	//
 	void UpdateVisibilityForced();
-	const bool IsStaticUnit() const { return GetStats()->fSpeed == 0.0f && (std::max)( GetStats()->vAABBHalfSize.x, GetStats()->vAABBHalfSize.y ) > 128.0f; }
+	const bool IsStaticUnit() const
+	{
+		return GetStats()->fSpeed == 0.0f &&
+		       (std::max)( GetStats()->vAABBHalfSize.x, GetStats()->vAABBHalfSize.y ) > 128.0f;
+	}
 
 	// real implementation of the method
 	const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType );

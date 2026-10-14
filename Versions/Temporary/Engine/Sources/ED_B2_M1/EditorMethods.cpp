@@ -23,102 +23,103 @@
 
 namespace NEditor
 {
-	const std::string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	std::string MakeMapPath( const CDBID &dbid )
+const std::string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::string MakeMapPath( const CDBID &dbid )
+{
+	return NDb::GetFolderName( dbid ); // + "/" + NScene::SZ_TERRA_BIN_FILE_NAME;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::string GetTerrainBinFileName( const NDb::STerrain *pDesc )
+{
+	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+	// new map location
+	std::string szMapFileName = MakeMapPath( pDesc->GetDBID() );
+	if ( NVFS::GetMainVFS()->DoesFileExist( szMapFileName ) )
+		return szMapFileName;
+	// unsuccessfull :(
+	return "";
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
+{
+	const std::string szMapFilePath = NDb::GetFolderName( pDesc->GetDBID() );
+	//
+	return NScene::CreateTerrain( pTerraManager, pDesc, szMapFilePath );
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
+{
+	pTerraManager->SetAIObserver( Singleton<IEditorAI>()->CreateTerraAIObserver(
+			pDesc->nNumPatchesX * AI_TILES_IN_PATCH, pDesc->nNumPatchesY * AI_TILES_IN_PATCH ) );
+	const std::string szMapFilePath = MakeMapPath( pDesc->GetDBID() );
+	//
+	return NScene::LoadTerrain( pTerraManager, pDesc, szMapFilePath );
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool SaveTerrain( struct ITerraManager *pTerraManager, std::string *pError )
+{
+	if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() )
 	{
-		return NDb::GetFolderName( dbid );// + "/" + NScene::SZ_TERRA_BIN_FILE_NAME;
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	std::string GetTerrainBinFileName( const NDb::STerrain *pDesc )
-	{
-		const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		// new map location
-		std::string szMapFileName = MakeMapPath( pDesc->GetDBID() );
-		if ( NVFS::GetMainVFS()->DoesFileExist(szMapFileName) )
-			return szMapFileName;
-		// unsuccessfull :(
-		return "";
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
-	{
-		const std::string szMapFilePath = NDb::GetFolderName( pDesc->GetDBID() );
-		//
-		return NScene::CreateTerrain( pTerraManager, pDesc, szMapFilePath );
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc )
-	{
-		pTerraManager->SetAIObserver( Singleton<IEditorAI>()->CreateTerraAIObserver(pDesc->nNumPatchesX * AI_TILES_IN_PATCH, pDesc->nNumPatchesY * AI_TILES_IN_PATCH) );
 		const std::string szMapFilePath = MakeMapPath( pDesc->GetDBID() );
 		//
-		return NScene::LoadTerrain( pTerraManager, pDesc, szMapFilePath );
+		return NScene::SaveTerrain( pTerraManager, szMapFilePath, pError );
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SaveTerrain( struct ITerraManager *pTerraManager, std::string *pError )
-	{
-		if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() )
-		{
-			const std::string szMapFilePath = MakeMapPath( pDesc->GetDBID() );
-			//
-			return NScene::SaveTerrain( pTerraManager, szMapFilePath, pError );
-		}
-		return false;
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInfoNameLoaded, CVec2 *pBgMapSize )
-	{
-		std::string szMapInfoNameLoaded = rszMapInfoNameLoaded;
-		NStr::ToLower( &szMapInfoNameLoaded );
-		IEditorScene *pScene = EditorScene();
-		if ( pScene == 0 )
-			return;
-		// get map and camera anchor from options
-		std::string szMapName = NEditorOptions::GetBgMap( szDesiredSeason );
-		NStr::ToLower( &szMapName );
-		/**
+	return false;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInfoNameLoaded, CVec2 *pBgMapSize )
+{
+	std::string szMapInfoNameLoaded = rszMapInfoNameLoaded;
+	NStr::ToLower( &szMapInfoNameLoaded );
+	IEditorScene *pScene = EditorScene();
+	if ( pScene == 0 )
+		return;
+	// get map and camera anchor from options
+	std::string szMapName = NEditorOptions::GetBgMap( szDesiredSeason );
+	NStr::ToLower( &szMapName );
+	/**
 		if ( szMapName == szMapInfoNameLoaded )
 			return;
 		/**/
-		CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( szDesiredSeason );
-		if ( vCameraAnchor == VNULL3 )
+	CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( szDesiredSeason );
+	if ( vCameraAnchor == VNULL3 )
+	{
+		vCameraAnchor.x = 16.0f * AI_TILE_SIZE;
+		vCameraAnchor.y = 16.0f * AI_TILE_SIZE;
+		AI2Vis( &vCameraAnchor );
+	}
+	// load map
+	if ( const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( CDBID( szMapName ) ) )
+	{
+		pScene->SetLight( pMapInfo->pLight );
+		if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
 		{
-			vCameraAnchor.x = 16.0f * AI_TILE_SIZE;
-			vCameraAnchor.y = 16.0f * AI_TILE_SIZE;
-			AI2Vis( &vCameraAnchor );
-		}
-		// load map
-		if ( const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( CDBID( szMapName ) ) )
-		{
-			pScene->SetLight( pMapInfo->pLight );
-			if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
-			{
-				pTerraManager->SetAIObserver( Singleton<IEditorAI>()->CreateTerraAIObserver(pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH) );
-				SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-				//pTerrain->SetStreamPathes( pUserData->szExportDestinationFolder, pUserData->szExportSourceFolder );
-				const std::string szMapFilePath = MakeMapPath( pMapInfo->GetDBID() );
-				//
-				NScene::LoadTerrain( pTerraManager, pMapInfo, szMapFilePath );
-				if ( pBgMapSize )
-				{
-					pBgMapSize->x = pMapInfo->nNumPatchesX;
-					pBgMapSize->y = pMapInfo->nNumPatchesY;
-				}
-			}
-		}
-		else
-		{
+			pTerraManager->SetAIObserver( Singleton<IEditorAI>()->CreateTerraAIObserver(
+					pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH ) );
+			SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+			//pTerrain->SetStreamPathes( pUserData->szExportDestinationFolder, pUserData->szExportSourceFolder );
+			const std::string szMapFilePath = MakeMapPath( pMapInfo->GetDBID() );
+			//
+			NScene::LoadTerrain( pTerraManager, pMapInfo, szMapFilePath );
 			if ( pBgMapSize )
 			{
-				pBgMapSize->x = 0;
-				pBgMapSize->y = 0;
+				pBgMapSize->x = pMapInfo->nNumPatchesX;
+				pBgMapSize->y = pMapInfo->nNumPatchesY;
 			}
 		}
-		Camera()->SetAnchor( vCameraAnchor );
 	}
+	else
+	{
+		if ( pBgMapSize )
+		{
+			pBgMapSize->x = 0;
+			pBgMapSize->y = 0;
+		}
+	}
+	Camera()->SetAnchor( vCameraAnchor );
 }
-
+}
 
 //
 //
@@ -133,8 +134,8 @@ bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 
 	// Native paths are case sensitive on Linux. This is the installed Editor
 	// directory, not the lower-case Windows spelling used by the old dialog.
-	const std::string szFileName = NFile::JoinPath(
-		Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor/BitFields/AIActions.xml" );
+	const std::string szFileName = NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder,
+	                                                "Editor/BitFields/AIActions.xml" );
 
 	pCmdTypes->clear();
 
@@ -147,13 +148,12 @@ bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	if ( pXS == 0 )
 	{
-		NI_ASSERT( pXS != 0, fmt::format("Can't open stream \"{}\" to read", szFileName.c_str()) );
+		NI_ASSERT( pXS != 0, fmt::format( "Can't open stream \"{}\" to read", szFileName.c_str() ) );
 		return false;
 	}
 	pXS->Add( "Fields", pCmdTypes );
 	return true;
 }
-
 
 bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax, const std::vector<CVec3> &rPoly )
 {
@@ -192,7 +192,6 @@ bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax
 	return true;
 }
 
-
 CVec3 GetNearestTileCenter( const CVec3 &p )
 {
 	const float F_AI_TILE_SIZE = AI_TILE_SIZE;
@@ -210,7 +209,6 @@ CVec3 GetNearestTileCenter( const CVec3 &p )
 	return r;
 }
 
-
 CVec3 GetNearestVisTileCorner( const CVec3 &p )
 {
 	const float F_VIS_TILE_SIZE = AI_TILE_SIZE * AI_TILES_IN_VIS_TILE;
@@ -224,7 +222,6 @@ CVec3 GetNearestVisTileCorner( const CVec3 &p )
 
 	return r;
 }
-
 
 int SUnitCommandTypeInfo::operator&( IXmlSaver &saver )
 {

@@ -16,24 +16,24 @@
 
 namespace NExtraDraw
 {
-	enum
-	{
-		EDM_SAMPS		= 0x0000000F,
-		EDM_RIDGES	= 0x000000F0,
-		EDM_VERTS		= 0x00000F00,
-		EDM_HEIGHTS	= 0x0000F000,
-		EDM_LOWS		= 0x000F0000,
-		EDM_UPS			= 0x00F00000,
-		EDM_ALL			= EDM_SAMPS | EDM_RIDGES | EDM_VERTS | EDM_HEIGHTS | EDM_LOWS | EDM_UPS,
-	};
-	const uint32_t EC_SAMPS		= 0xFFFF0000; // RED
-	const uint32_t EC_RIDGES		= 0xFF00FF00; // GREEN
-	const uint32_t EC_VERTS		= 0xFF0000FF; // BLUE
-	const uint32_t EC_HEIGHTS	= 0xFFFFFF00; // YELLOW
-	const uint32_t EC_LOWS			= 0xFF00FFFF; // CYAN
-	const uint32_t EC_UPS			= 0xFFFF00FF; // MAGENTA
+enum
+{
+	EDM_SAMPS = 0x0000000F,
+	EDM_RIDGES = 0x000000F0,
+	EDM_VERTS = 0x00000F00,
+	EDM_HEIGHTS = 0x0000F000,
+	EDM_LOWS = 0x000F0000,
+	EDM_UPS = 0x00F00000,
+	EDM_ALL = EDM_SAMPS | EDM_RIDGES | EDM_VERTS | EDM_HEIGHTS | EDM_LOWS | EDM_UPS,
+};
+const uint32_t EC_SAMPS = 0xFFFF0000;   // RED
+const uint32_t EC_RIDGES = 0xFF00FF00;  // GREEN
+const uint32_t EC_VERTS = 0xFF0000FF;   // BLUE
+const uint32_t EC_HEIGHTS = 0xFFFFFF00; // YELLOW
+const uint32_t EC_LOWS = 0xFF00FFFF;    // CYAN
+const uint32_t EC_UPS = 0xFFFF00FF;     // MAGENTA
 
-	void DrawExtraLines( CSceneDrawTool *pSceneDrawTool, unsigned uMode );
+void DrawExtraLines( CSceneDrawTool *pSceneDrawTool, unsigned uMode );
 }
 
 class CVSOSelectState : public CDefaultInputState
@@ -41,66 +41,64 @@ class CVSOSelectState : public CDefaultInputState
 	friend class CMultiInputState;
 	friend class CVSOState;
 
-	class CVSOState* pParentState;
+	class CVSOState *pParentState;
 
 	//конструкторы и операторы присваивания
 	CVSOSelectState() : pParentState( 0 )
-  {
+	{
 		NI_ASSERT( pParentState != 0, "CVSOSelectState(): Invalid parameter: pParentState == 0" );
 	}
-	CVSOSelectState( CVSOState* _pParentState ) : pParentState( _pParentState )
+	CVSOSelectState( CVSOState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOSelectState(): Invalid parameter: pParentState == 0" );
 	}
 
 	//IInputState interface
-	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
-
 
 class CVSOEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CVSOState;
 
-	class CVSOState* pParentState;
+	class CVSOState *pParentState;
 
 	//конструкторы и операторы присваивания
 	CVSOEditState() : pParentState( 0 )
-  {
+	{
 		NI_ASSERT( pParentState != 0, "CVSOEditState(): Invalid parameter: pParentState == 0" );
 	}
-	CVSOEditState( CVSOState* _pParentState ) : pParentState( _pParentState )
+	CVSOEditState( CVSOState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOEditState(): Invalid parameter: pParentState == 0" );
 	}
 
 	//IInputState interface
-	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
-
 
 class CVSOAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CVSOState;
 
-	class CVSOState* pParentState;
+	class CVSOState *pParentState;
 
 	//конструкторы и операторы присваивания
 	CVSOAddState() : pParentState( 0 )
-  {
+	{
 		NI_ASSERT( pParentState != 0, "CVSOAddState(): Invalid parameter: pParentState == 0" );
 	}
-	CVSOAddState( CVSOState* _pParentState ) : pParentState( _pParentState )
+	CVSOAddState( CVSOState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CVSOAddState(): Invalid parameter: pParentState == 0" );
 	}
@@ -108,16 +106,15 @@ class CVSOAddState : public CDefaultInputState
 	bool InsertVSO();
 
 	//IInputState interface
-	void OnSetFocus				( IWidget* pNewWnd );
-	void OnKillFocus			( IWidget* pOldWnd );
+	void OnSetFocus( IWidget *pNewWnd );
+	void OnKillFocus( IWidget *pOldWnd );
 
-	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
-
 
 class CVSOState : public CMultiInputState, public ICommandHandler
 {
@@ -130,9 +127,9 @@ private:
 	//
 	enum EInputStates
 	{
-		IS_SELECT	= 0,
-		IS_EDIT		= 1,
-		IS_ADD		= 2,
+		IS_SELECT = 0,
+		IS_EDIT = 1,
+		IS_ADD = 2,
 	};
 
 protected:
@@ -142,19 +139,19 @@ protected:
 public:
 	enum EUpdateType
 	{
-		UT_START								= 0,
-		UT_START_MOVE						= 1,
-		UT_CONTINUE_MOVE				= 2,
-		UT_FINISH_MOVE					= 3,
-		UT_CHANGE_POINT_NUMBER	= 4,
-		UT_FINISH								= 5,
-		UT_CANCEL								= 6,
+		UT_START = 0,
+		UT_START_MOVE = 1,
+		UT_CONTINUE_MOVE = 2,
+		UT_FINISH_MOVE = 3,
+		UT_CHANGE_POINT_NUMBER = 4,
+		UT_FINISH = 5,
+		UT_CANCEL = 6,
 	};
 	//
 
 private:
 	// общие внутренние переменные
-	class CVSOMultiState* pParentState;
+	class CVSOMultiState *pParentState;
 	CMapInfoStoreInputState *pStoreInputState;
 	CSceneDrawTool sceneDrawTool;
 
@@ -205,7 +202,7 @@ protected:
 			return pickVSOIDList[nSelectedIndex];
 		}
 	}
-	inline class CVSOMultiState* GetParentState() { return pParentState; }
+	inline class CVSOMultiState *GetParentState() { return pParentState; }
 
 	void ClearSelection();
 
@@ -214,7 +211,7 @@ protected:
 	virtual void Leave();
 	virtual void Draw( IPaintContext *pPaintDC );
 
-	virtual void OnSetFocus( IWidget* pNewWnd );
+	virtual void OnSetFocus( IWidget *pNewWnd );
 
 	// CVSOState
 	// При постановке нового VSO необходимо использовать эту функуцию
@@ -259,9 +256,12 @@ protected:
 	// Можно ли удалить указанный VSO
 	virtual bool CanRemoveVSO( int nVSOID ) = 0;
 	// Получить доступ к VSO
-	virtual NDb::SVSOInstance* GetVSO( int nVSOID, int *pnVSOIndex ) = 0;
+	virtual NDb::SVSOInstance *GetVSO( int nVSOID, int *pnVSOIndex ) = 0;
 	// Обновить геометрические данные ( они были изменены )
-	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags ) = 0;
+	virtual void UpdateVSO( int nVSOID,
+	                        EUpdateType eEpdateType,
+	                        CVSOManager::SVSOSelection::ESelectionType eSelectionType,
+	                        unsigned nFlags ) = 0;
 	// Подготовить данные для вставки
 	virtual void PrepareInsertVSO() = 0;
 	// Добавить VSO	( возвращает nVSOID добавленного VSO
@@ -272,7 +272,8 @@ protected:
 public:
 	//
 	//конструкторы и операторы присваивания
-	CVSOState( class CVSOMultiState *_pParentState = 0 ) : pParentState( _pParentState ), nSelectedIndex( INVALID_NODE_ID ), mapRect( 0.0f, 0.0f, 0.0f, 0.0f )
+	CVSOState( class CVSOMultiState *_pParentState = 0 )
+			: pParentState( _pParentState ), nSelectedIndex( INVALID_NODE_ID ), mapRect( 0.0f, 0.0f, 0.0f, 0.0f )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CVSOState(): pStoreInputState == 0" ) );
@@ -281,15 +282,18 @@ public:
 
 		CVSOSelectState *pVSOSelectState = new CVSOSelectState( this );
 		nStateIndex = AddInputState( pVSOSelectState );
-		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CVSOState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
+		NI_ASSERT( nStateIndex == IS_SELECT,
+		           fmt::format( "CVSOState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
 
 		CVSOEditState *pVSOEditState = new CVSOEditState( this );
 		nStateIndex = AddInputState( pVSOEditState );
-		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
+		NI_ASSERT( nStateIndex == IS_EDIT,
+		           fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
 
 		CVSOAddState *pVSOAddState = new CVSOAddState( this );
 		nStateIndex = AddInputState( pVSOAddState );
-		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );
+		NI_ASSERT( nStateIndex == IS_ADD,
+		           fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}
@@ -306,7 +310,7 @@ public:
 	void SwitchToAddState();
 	void RemoveSelectedVSO();
 	//
-	virtual class CMapInfoEditor* GetMapInfoEditor();
+	virtual class CMapInfoEditor *GetMapInfoEditor();
 
 	bool PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	void EmulateSelectLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );

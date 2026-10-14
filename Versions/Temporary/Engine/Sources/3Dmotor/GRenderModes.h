@@ -1,7 +1,7 @@
 #pragma once
 namespace NGfx
 {
-	class CTexture;
+class CTexture;
 }
 namespace NGScene
 {
@@ -17,22 +17,25 @@ enum ESceneRenderMode
 enum ERenderPath : int
 {
 	RP_TNL,
-//	RP_FASTEST,
+	//	RP_FASTEST,
 	RP_GF3_FAST,
-//	RP_SHOWOCCLUDERS,
-//	RP_GF2,
-//	RP_UPDATE_CL,
-//	RP_SHOW_PL_OVERDRAW,
+	//	RP_SHOWOCCLUDERS,
+	//	RP_GF2,
+	//	RP_UPDATE_CL,
+	//	RP_SHOW_PL_OVERDRAW,
 	RP_SHOWOVERDRAW,
 	RP_SHOWLIGHTMAP,
-//	RP_GF2_CL,
-//	RP_GF3_CL,
-//	RP_R300
+	//	RP_GF2_CL,
+	//	RP_GF3_CL,
+	//	RP_R300
 	RP_SHOWPOLYCOUNT,
 };
 //inline bool IsUingRegisters( ERenderPath rp ) { return rp >= RP_GF2; }
 //inline bool IsUsingCacheLighting( ERenderPath rp ) { return rp >= RP_UPDATE_CL; }
-inline bool IsUsingShadows( ERenderPath rp ) { return rp == RP_GF3_FAST; }
+inline bool IsUsingShadows( ERenderPath rp )
+{
+	return rp == RP_GF3_FAST;
+}
 
 enum EHSRMode
 {
@@ -97,8 +100,13 @@ struct SRTClearParams
 	EClearType ct = {};
 	CVec4 vColor;
 
-	SRTClearParams() : ct(CT_FULL), vColor(0,0,0,1) {}
+	SRTClearParams() : ct( CT_FULL ), vColor( 0, 0, 0, 1 ) {}
 };
 
-inline SBound MakeLargeHintBound() { SBound b; b.SphereInit( CVec3(0,0,0), 1e6 ); return b; }
+inline SBound MakeLargeHintBound()
+{
+	SBound b;
+	b.SphereInit( CVec3( 0, 0, 0 ), 1e6 );
+	return b;
+}
 }

@@ -1,30 +1,24 @@
 // WindowMSButton.h: interface for the CWindowMSButton class.
 //
 
-
-
 #pragma once
 
 #include "Window.h"
 
-
 class CButtonSubStateVisual
 {
 public:
-	CObj<IWindowPart> pBackground;									// background for this substats
-	CObj<IWindowPart> pForeground;									// drawed after all window contents
-	CObj<CForegroundTextString> pTextString;				// text string
+	CObj<IWindowPart> pBackground;           // background for this substats
+	CObj<IWindowPart> pForeground;           // drawed after all window contents
+	CObj<CForegroundTextString> pTextString; // text string
 	CDBPtr<NDb::STextFormat> pTextFormat;
 
-	CButtonSubStateVisual() {  }
+	CButtonSubStateVisual() {}
 
 	void Init( const NDb::SButtonVisualSubState &substate );
 	void SetupTextString( const NDb::SForegroundTextString *pTextString );
 
-	bool IsValid() const
-	{
-		return pBackground || pForeground || pTextString;
-	}
+	bool IsValid() const { return pBackground || pForeground || pTextString; }
 
 	int operator&( IBinSaver &saver )
 	{
@@ -46,7 +40,7 @@ public:
 	CButtonSubStateVisual rightButtonDown;
 	NDb::EButtonSubstateType eSubState;
 
-	CButtonState() : eSubState( NDb::BST_NORMAL ) { }
+	CButtonState() : eSubState( NDb::BST_NORMAL ) {}
 	void Init( const NDb::SButtonVisualState &state )
 	{
 		normal.Init( state.normal );
@@ -85,25 +79,25 @@ public:
 		saver.Add( 6, &rightButtonDown );
 		return 0;
 	}
-	CButtonSubStateVisual & Substates( const NDb::EButtonSubstateType _eSubState )
+	CButtonSubStateVisual &Substates( const NDb::EButtonSubstateType _eSubState )
 	{
-		switch( _eSubState )
+		switch ( _eSubState )
 		{
-		case NDb::BST_NORMAL:
-			return normal;
-		case NDb::BST_MOUSE_OVER:
-			return mouseOver;
-		case NDb::BST_PUSHED_DEEP:
-			return pushed;
-		case NDb::BST_DISABLED:
-			return disabled;
-		case NDb::BST_RIGHT_DOWN:
-			return rightButtonDown;
-		default:
-			return normal;
+			case NDb::BST_NORMAL:
+				return normal;
+			case NDb::BST_MOUSE_OVER:
+				return mouseOver;
+			case NDb::BST_PUSHED_DEEP:
+				return pushed;
+			case NDb::BST_DISABLED:
+				return disabled;
+			case NDb::BST_RIGHT_DOWN:
+				return rightButtonDown;
+			default:
+				return normal;
 		}
 	}
-	CButtonSubStateVisual & Substates( const int _eSubState )
+	CButtonSubStateVisual &Substates( const int _eSubState )
 	{
 		return Substates( static_cast<const NDb::EButtonSubstateType>( _eSubState ) );
 	}
@@ -139,8 +133,9 @@ class CWindowMSButton : public CWindow, public IButton
 	NDb::EButtonSubstateType eEffectSubState = NDb::BST_NORMAL;
 	NDb::EButtonSubstateType eOrigSubState = NDb::BST_NORMAL;
 
-//	CObj<class CPlacedText> pPlacedText;
+	//	CObj<class CPlacedText> pPlacedText;
 	std::wstring wszCustomText;
+
 private:
 	void OnEnter( const int nButton );
 	void OnLeave( const int nButton );
@@ -157,16 +152,14 @@ private:
 	void BackAnimation();
 
 	void ApplySubstateText( const CButtonSubStateVisual &substate );
+
 protected:
-	NDb::SWindow* GetInstance()
-	{
-		return pInstance;
-	}
+	NDb::SWindow *GetInstance() { return pInstance; }
 
 	//{ overrided
-	const std::wstring& GetDBFormatText() const;
-	const std::wstring& GetDBInstanceText() const;
-	const NDb::SWindowPlacement* GetDBTextPlacement() const;
+	const std::wstring &GetDBFormatText() const;
+	const std::wstring &GetDBInstanceText() const;
+	const NDb::SWindowPlacement *GetDBTextPlacement() const;
 	//}
 public:
 	void SetTextString( const std::wstring &wszText );
@@ -175,7 +168,7 @@ public:
 
 	void OnActivatePushedState( const SGameMessage &msg );
 
-	CWindowMSButton() : bPressed( 4, false ), pButtonNotify( 0 ), bMouseEntered( false ), nAnimationID( 0 ) {  }
+	CWindowMSButton() : bPressed( 4, false ), pButtonNotify( 0 ), bMouseEntered( false ), nAnimationID( 0 ) {}
 
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );
@@ -196,8 +189,8 @@ public:
 	void SetNextState();
 	void SetState( const int nState );
 	void SetStateWithVisual( const int nState );
-	int GetState() const { return pInstance->nState;	}
-	class CButtonGroup* GetButtonGroup();
+	int GetState() const { return pInstance->nState; }
+	class CButtonGroup *GetButtonGroup();
 	void SetButtonGroup( const int nGroup );
 	void SetEffectSubState( const NDb::EButtonSubstateType eSubState, bool bEffect );
 	int GetState( const std::string &szName );

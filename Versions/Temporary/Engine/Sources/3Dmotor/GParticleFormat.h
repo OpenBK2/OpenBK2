@@ -18,16 +18,25 @@ inline void Interpolate( const TValue &v1, const TValue &v2, float f1, float f2,
 {
 	*pRes = v1 * f1 + v2 * f2;
 }
-template<>
-inline void Interpolate( const short &v1, const short &v2, float f1, float f2, short *pRes ) { *pRes = v1; }
-template<>
+template <>
+inline void Interpolate( const short &v1, const short &v2, float f1, float f2, short *pRes )
+{
+	*pRes = v1;
+}
+template <>
 void Interpolate( const uint32_t &v1, const uint32_t &v2, float f1, float f2, uint32_t *pRes );
 
-template<class TValue>
-inline void Scale( const TValue &v, float f, TValue *pRes ) { *pRes = v * f; }
-template<>
-inline void Scale( const short &v, float f, short *pRes ) { *pRes = v; }
-template<>
+template <class TValue>
+inline void Scale( const TValue &v, float f, TValue *pRes )
+{
+	*pRes = v * f;
+}
+template <>
+inline void Scale( const short &v, float f, short *pRes )
+{
+	*pRes = v;
+}
+template <>
 void Scale( const uint32_t &v, float f, uint32_t *pRes );
 
 #pragma pack( push, 2 )
@@ -48,7 +57,7 @@ public:
 	// untouched, which matters twice over: these arrays are reinterpreted in
 	// place out of a file, and TKeyVector serializes a vector of them as one
 	// block of bytes because TKey has no operator& of its own.
-	unsigned char valueBytes[sizeof(TValue)];
+	unsigned char valueBytes[sizeof( TValue )];
 
 	TValue GetValue() const
 	{
@@ -67,9 +76,8 @@ template <class TValue>
 struct SKeyLayoutCheck
 {
 	static_assert( sizeof( TKey<TValue> ) == sizeof( short ) + sizeof( TValue ),
-		"TKey is the time followed by the value with nothing padding it" );
-	static_assert( offsetof( TKey<TValue>, valueBytes ) == sizeof( short ),
-		"the value follows the time immediately" );
+	               "TKey is the time followed by the value with nothing padding it" );
+	static_assert( offsetof( TKey<TValue>, valueBytes ) == sizeof( short ), "the value follows the time immediately" );
 };
 template struct SKeyLayoutCheck<CVec3>;
 template struct SKeyLayoutCheck<CVec2>;
@@ -103,14 +111,15 @@ public:
 		}
 		GetValueBinSearch( fT, fScale, pRes );
 	}
+
 private:
 	BOOST_FORCEINLINE void GetValueBinSearch( float fT, float fScale, TValue *pRes ) const
 	{
 		int s = 0, e = nKeys - 1;
 		short nT = Float2Int( fT - 0.5f );
-		while( e - s > 1 )
+		while ( e - s > 1 )
 		{
-			int n = (s + e) / 2;
+			int n = ( s + e ) / 2;
 			if ( keys[n].nT <= nT )
 				s = n;
 			else
@@ -118,7 +127,7 @@ private:
 		}
 		const TKey<TValue> &start = keys[s];
 		const TKey<TValue> &end = keys[e];
-		float fAlpha = fScale * Clamp( (fT - start.nT) / (end.nT - start.nT), 0.0f, 1.0f );
+		float fAlpha = fScale * Clamp( ( fT - start.nT ) / ( end.nT - start.nT ), 0.0f, 1.0f );
 		Interpolate( start.GetValue(), end.GetValue(), fScale - fAlpha, fAlpha, pRes );
 	}
 };
@@ -136,9 +145,10 @@ struct SParticle
 
 #pragma pack( pop )
 
-class _3DMOTOR_EXPORT CParticlesInfo: public CObjectBase
+class _3DMOTOR_EXPORT CParticlesInfo : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CParticlesInfo);
+	OBJECT_BASIC_METHODS( CParticlesInfo );
+
 public:
 	CObj<CFileRequest> pData;
 	//vector<char> pData;
@@ -149,14 +159,20 @@ public:
 	int nParticles;
 	std::vector<SParticle> particles;
 
-	CParticlesInfo() { nBytes = 0; nParticles = 0; fTEnd = 0; fFrameRate = 1; }
+	CParticlesInfo()
+	{
+		nBytes = 0;
+		nParticles = 0;
+		fTEnd = 0;
+		fFrameRate = 1;
+	}
 	void CalcBound( SBound *pRes );
 };
 
-class _3DMOTOR_EXPORT CParticlesLoader: public CLazyResourceLoader<int, CParticlesInfo>
+class _3DMOTOR_EXPORT CParticlesLoader : public CLazyResourceLoader<int, CParticlesInfo>
 {
-	OBJECT_BASIC_METHODS(CParticlesLoader);
-	virtual CFileRequest* CreateRequest();
+	OBJECT_BASIC_METHODS( CParticlesLoader );
+	virtual CFileRequest *CreateRequest();
 	virtual void RecalcValue( CFileRequest *p );
 };
 

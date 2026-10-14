@@ -54,7 +54,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 std::filesystem::path TempFile( const char *pszName )
 {
@@ -149,8 +150,8 @@ double RMSE( const CArray2D<uint32_t> &a, const CArray2D<uint32_t> &b )
 		{
 			for ( int nShift = 0; nShift <= 16; nShift += 8 )
 			{
-				const double d = static_cast<double>( ( a[y][x] >> nShift ) & 0xff )
-				               - static_cast<double>( ( b[y][x] >> nShift ) & 0xff );
+				const double d =
+						static_cast<double>( ( a[y][x] >> nShift ) & 0xff ) - static_cast<double>( ( b[y][x] >> nShift ) & 0xff );
 				fSum += d * d;
 				++nCount;
 			}
@@ -160,14 +161,14 @@ double RMSE( const CArray2D<uint32_t> &a, const CArray2D<uint32_t> &b )
 }
 
 //! Writes the image through the writer under test and reads the file back.
-std::vector<uint8_t> WriteAndRead( const char *pszName, const CArray2D<uint32_t> &image,
-	NGfx::EPixelFormat format, int nMips )
+std::vector<uint8_t>
+WriteAndRead( const char *pszName, const CArray2D<uint32_t> &image, NGfx::EPixelFormat format, int nMips )
 {
 	const std::filesystem::path path = TempFile( pszName );
 	std::error_code ec;
 	std::filesystem::remove( path, ec );
-	EXPECT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), image, NImage::IMAGE_TYPE_PICTURE,
-		format, nMips, true, true, 1024.0f ) );
+	EXPECT_TRUE( NImage::ConvertAndSaveAsDDS(
+			path.string(), image, NImage::IMAGE_TYPE_PICTURE, format, nMips, true, true, 1024.0f ) );
 	std::vector<uint8_t> bytes = ReadFile( path );
 	std::filesystem::remove( path, ec );
 	return bytes;
@@ -189,11 +190,12 @@ void DecodeLevel0( CArray2D<uint32_t> *pRes, const std::vector<uint8_t> &bytes, 
 	const SDDSHeader &hdr = HeaderOf( bytes );
 	const int nWidth = static_cast<int>( hdr.dwWidth );
 	const int nHeight = static_cast<int>( hdr.dwHeight );
-	const int nFlags = ( format == NGfx::CF_DXT1 ) ? squish::kDxt1
-	                 : ( format == NGfx::CF_DXT3 ) ? squish::kDxt3 : squish::kDxt5;
+	const int nFlags = ( format == NGfx::CF_DXT1 )   ? squish::kDxt1
+	                   : ( format == NGfx::CF_DXT3 ) ? squish::kDxt3
+	                                                 : squish::kDxt5;
 
 	std::vector<squish::u8> rgba( static_cast<size_t>( nWidth ) * nHeight * 4 );
-	squish::DecompressImage( &rgba[0], nWidth, nHeight, &bytes[sizeof(SDDSFileHeader)], nFlags );
+	squish::DecompressImage( &rgba[0], nWidth, nHeight, &bytes[sizeof( SDDSFileHeader )], nFlags );
 
 	pRes->SetSizes( nWidth, nHeight );
 	for ( int y = 0; y < nHeight; ++y )
@@ -201,8 +203,8 @@ void DecodeLevel0( CArray2D<uint32_t> *pRes, const std::vector<uint8_t> &bytes, 
 		for ( int x = 0; x < nWidth; ++x )
 		{
 			const squish::u8 *p = &rgba[( static_cast<size_t>( y ) * nWidth + x ) * 4];
-			(*pRes)[y][x] = ( static_cast<uint32_t>( p[3] ) << 24 ) | ( static_cast<uint32_t>( p[0] ) << 16 )
-			              | ( static_cast<uint32_t>( p[1] ) << 8 ) | static_cast<uint32_t>( p[2] );
+			( *pRes )[y][x] = ( static_cast<uint32_t>( p[3] ) << 24 ) | ( static_cast<uint32_t>( p[0] ) << 16 ) |
+			                  ( static_cast<uint32_t>( p[1] ) << 8 ) | static_cast<uint32_t>( p[2] );
 		}
 	}
 }
@@ -212,11 +214,11 @@ void DecodeLevel0( CArray2D<uint32_t> *pRes, const std::vector<uint8_t> &bytes, 
 TEST( DDSWrite, Signature )
 {
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_sig.dds", MakeImage( 32, 32, false ), NGfx::CF_DXT1, 1 );
-	ASSERT_GE( bytes.size(), sizeof(SDDSFileHeader) );
+	ASSERT_GE( bytes.size(), sizeof( SDDSFileHeader ) );
 	EXPECT_EQ( 0x20534444u, reinterpret_cast<const SDDSFileHeader *>( &bytes[0] )->dwSignature );
 	EXPECT_EQ( 124u, HeaderOf( bytes ).dwSize );
-	EXPECT_EQ( 32u, sizeof(SDDSPixelFormat) );
-	EXPECT_EQ( 128u, sizeof(SDDSFileHeader) );
+	EXPECT_EQ( 32u, sizeof( SDDSPixelFormat ) );
+	EXPECT_EQ( 128u, sizeof( SDDSFileHeader ) );
 }
 
 // A single level texture announces no mip chain at all rather than a chain of
@@ -224,7 +226,7 @@ TEST( DDSWrite, Signature )
 TEST( DDSWrite, HeaderSingleLevel )
 {
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_one.dds", MakeImage( 64, 64, false ), NGfx::CF_DXT1, 1 );
-	ASSERT_GE( bytes.size(), sizeof(SDDSFileHeader) );
+	ASSERT_GE( bytes.size(), sizeof( SDDSFileHeader ) );
 	const SDDSHeader &hdr = HeaderOf( bytes );
 	EXPECT_EQ( 0x00001007u, hdr.dwHeaderFlags );
 	EXPECT_EQ( 0x00001000u, hdr.dwSurfaceFlags );
@@ -236,13 +238,13 @@ TEST( DDSWrite, HeaderSingleLevel )
 TEST( DDSWrite, HeaderMipped )
 {
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_mip.dds", MakeImage( 64, 64, false ), NGfx::CF_DXT1, 4 );
-	ASSERT_GE( bytes.size(), sizeof(SDDSFileHeader) );
+	ASSERT_GE( bytes.size(), sizeof( SDDSFileHeader ) );
 	const SDDSHeader &hdr = HeaderOf( bytes );
 	EXPECT_EQ( 0x00021007u, hdr.dwHeaderFlags );
 	EXPECT_EQ( 0x00401008u, hdr.dwSurfaceFlags );
 	EXPECT_EQ( 4u, hdr.dwMipMapCount );
 	EXPECT_EQ( 0u, hdr.dwPitchOrLinearSize );
-	EXPECT_EQ( MAKEFOURCC('D','X','T','1'), hdr.ddspf.dwFourCC );
+	EXPECT_EQ( MAKEFOURCC( 'D', 'X', 'T', '1' ), hdr.ddspf.dwFourCC );
 }
 
 // DDSCAPS_ALPHA goes on uncompressed formats that carry alpha and on no DXT
@@ -250,30 +252,36 @@ TEST( DDSWrite, HeaderMipped )
 // an existing texture differs from it in as few bytes as possible.
 TEST( DDSWrite, HeaderAlphaCapsOnlyForUncompressed )
 {
-	const std::vector<uint8_t> argb = WriteAndRead( "obk2_dds_argb.dds", MakeImage( 32, 32, true ), NGfx::CF_A8R8G8B8, 1 );
-	ASSERT_GE( argb.size(), sizeof(SDDSFileHeader) );
+	const std::vector<uint8_t> argb =
+			WriteAndRead( "obk2_dds_argb.dds", MakeImage( 32, 32, true ), NGfx::CF_A8R8G8B8, 1 );
+	ASSERT_GE( argb.size(), sizeof( SDDSFileHeader ) );
 	EXPECT_EQ( 0x00001002u, HeaderOf( argb ).dwSurfaceFlags );
 
 	// DXT3 has an alpha channel and still does not get the flag.
 	const std::vector<uint8_t> dxt3 = WriteAndRead( "obk2_dds_dxt3.dds", MakeImage( 32, 32, true ), NGfx::CF_DXT3, 1 );
-	ASSERT_GE( dxt3.size(), sizeof(SDDSFileHeader) );
+	ASSERT_GE( dxt3.size(), sizeof( SDDSFileHeader ) );
 	EXPECT_EQ( 0x00001000u, HeaderOf( dxt3 ).dwSurfaceFlags );
 }
 
 TEST( DDSWrite, MipChainSizes )
 {
-	struct { int w, h; NGfx::EPixelFormat fmt; int mips; } cases[] = {
-		{  64,  64, NGfx::CF_DXT1,     4 },
-		{  64,  64, NGfx::CF_DXT3,     4 },
-		{ 256, 128, NGfx::CF_DXT1,     9 },
-		{  32,  32, NGfx::CF_A8R8G8B8, 1 },
-		{  16,  16, NGfx::CF_R5G6B5,   5 },
+	struct
+	{
+		int w, h;
+		NGfx::EPixelFormat fmt;
+		int mips;
+	} cases[] = {
+		{ 64, 64, NGfx::CF_DXT1, 4 },
+		{ 64, 64, NGfx::CF_DXT3, 4 },
+		{ 256, 128, NGfx::CF_DXT1, 9 },
+		{ 32, 32, NGfx::CF_A8R8G8B8, 1 },
+		{ 16, 16, NGfx::CF_R5G6B5, 5 },
 	};
 	for ( const auto &c : cases )
 	{
 		const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_chain.dds", MakeImage( c.w, c.h, true ), c.fmt, c.mips );
-		EXPECT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( c.w, c.h, c.fmt, c.mips ), bytes.size() )
-			<< c.w << "x" << c.h << " format " << static_cast<int>( c.fmt ) << " mips " << c.mips;
+		EXPECT_EQ( sizeof( SDDSFileHeader ) + ExpectedSize( c.w, c.h, c.fmt, c.mips ), bytes.size() )
+				<< c.w << "x" << c.h << " format " << static_cast<int>( c.fmt ) << " mips " << c.mips;
 	}
 }
 
@@ -282,8 +290,8 @@ TEST( DDSWrite, A8R8G8B8IsLossless )
 {
 	const CArray2D<uint32_t> src = MakeImage( 37, 23, true );
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_lossless.dds", src, NGfx::CF_A8R8G8B8, 1 );
-	ASSERT_EQ( sizeof(SDDSFileHeader) + 37u * 23u * 4u, bytes.size() );
-	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof(SDDSFileHeader)] );
+	ASSERT_EQ( sizeof( SDDSFileHeader ) + 37u * 23u * 4u, bytes.size() );
+	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof( SDDSFileHeader )] );
 	for ( int y = 0; y < src.GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < src.GetSizeX(); ++x )
@@ -295,7 +303,7 @@ TEST( DDSWrite, Dxt1RoundTripQuality )
 {
 	const CArray2D<uint32_t> src = MakeImage( 64, 64, false );
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_q1.dds", src, NGfx::CF_DXT1, 1 );
-	ASSERT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( 64, 64, NGfx::CF_DXT1, 1 ), bytes.size() );
+	ASSERT_EQ( sizeof( SDDSFileHeader ) + ExpectedSize( 64, 64, NGfx::CF_DXT1, 1 ), bytes.size() );
 	CArray2D<uint32_t> decoded;
 	DecodeLevel0( &decoded, bytes, NGfx::CF_DXT1 );
 	// 4 bits per pixel over a deliberately awkward image. The bound is loose
@@ -325,7 +333,7 @@ TEST( DDSWrite, ChannelOrderSurvives )
 	for ( int y = 0; y < 16; ++y )
 	{
 		for ( int x = 0; x < 16; ++x )
-			src[y][x] = 0xffc03010u;	// strongly red, mid green, little blue
+			src[y][x] = 0xffc03010u; // strongly red, mid green, little blue
 	}
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_chan.dds", src, NGfx::CF_DXT1, 1 );
 	CArray2D<uint32_t> decoded;
@@ -356,15 +364,15 @@ TEST( DDSWrite, Dxt1PunchThroughAlpha )
 			src[y][x] = ( x < 8 ) ? 0x00000000u : 0xff3080c0u;
 	}
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_punch.dds", src, NGfx::CF_DXT1, 1 );
-	ASSERT_GE( bytes.size(), sizeof(SDDSFileHeader) + 8u );
+	ASSERT_GE( bytes.size(), sizeof( SDDSFileHeader ) + 8u );
 
 	bool bAnyThreeColour = false;
-	const uint8_t *pBlocks = &bytes[sizeof(SDDSFileHeader)];
-	const size_t nBlocks = ( bytes.size() - sizeof(SDDSFileHeader) ) / 8;
+	const uint8_t *pBlocks = &bytes[sizeof( SDDSFileHeader )];
+	const size_t nBlocks = ( bytes.size() - sizeof( SDDSFileHeader ) ) / 8;
 	for ( size_t i = 0; i < nBlocks; ++i )
 	{
-		const uint16_t c0 = static_cast<uint16_t>( pBlocks[i*8+0] | ( pBlocks[i*8+1] << 8 ) );
-		const uint16_t c1 = static_cast<uint16_t>( pBlocks[i*8+2] | ( pBlocks[i*8+3] << 8 ) );
+		const uint16_t c0 = static_cast<uint16_t>( pBlocks[i * 8 + 0] | ( pBlocks[i * 8 + 1] << 8 ) );
+		const uint16_t c1 = static_cast<uint16_t>( pBlocks[i * 8 + 2] | ( pBlocks[i * 8 + 3] << 8 ) );
 		if ( c0 <= c1 )
 			bAnyThreeColour = true;
 	}
@@ -397,7 +405,8 @@ TEST( DDSWrite, ReEncodingShippedIsNearLossless )
 	double fWorst = 0;
 	std::string szWorst;
 	std::error_code ec;
-	for ( std::filesystem::recursive_directory_iterator it( root, ec ), end; it != end && nChecked < 40; it.increment( ec ) )
+	for ( std::filesystem::recursive_directory_iterator it( root, ec ), end; it != end && nChecked < 40;
+	      it.increment( ec ) )
 	{
 		if ( ec || !it->is_regular_file( ec ) )
 			continue;
@@ -405,15 +414,15 @@ TEST( DDSWrite, ReEncodingShippedIsNearLossless )
 		if ( p.extension() != ".dds" && p.extension() != ".DDS" )
 			continue;
 		const std::vector<uint8_t> bytes = ReadFile( p );
-		if ( bytes.size() < sizeof(SDDSFileHeader) )
+		if ( bytes.size() < sizeof( SDDSFileHeader ) )
 			continue;
 		const SDDSHeader &hdr = HeaderOf( bytes );
 		if ( hdr.dwWidth > 128 || hdr.dwHeight > 128 || !( hdr.ddspf.dwFlags & DDS_FOURCC ) )
 			continue;
 		NGfx::EPixelFormat format;
-		if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','1') )
+		if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) )
 			format = NGfx::CF_DXT1;
-		else if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','3') )
+		else if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '3' ) )
 			format = NGfx::CF_DXT3;
 		else
 			continue;
@@ -424,7 +433,7 @@ TEST( DDSWrite, ReEncodingShippedIsNearLossless )
 
 		// Compress that again and decode it back.
 		const std::vector<uint8_t> ours = WriteAndRead( "obk2_dds_requant.dds", original, format, 1 );
-		ASSERT_GE( ours.size(), sizeof(SDDSFileHeader) ) << p.string();
+		ASSERT_GE( ours.size(), sizeof( SDDSFileHeader ) ) << p.string();
 		CArray2D<uint32_t> again;
 		DecodeLevel0( &again, ours, format );
 
@@ -453,16 +462,16 @@ TEST( DDSWrite, ReEncodingAFlatTextureReproducesTheOriginalBlock )
 	if ( !std::filesystem::exists( p ) )
 		GTEST_SKIP() << "no " << p.string();
 	const std::vector<uint8_t> bytes = ReadFile( p );
-	ASSERT_GT( bytes.size(), sizeof(SDDSFileHeader) );
+	ASSERT_GT( bytes.size(), sizeof( SDDSFileHeader ) );
 	CArray2D<uint32_t> original;
 	DecodeLevel0( &original, bytes, NGfx::CF_DXT1 );
 
 	const std::vector<uint8_t> ours = WriteAndRead( "obk2_dds_flat.dds", original, NGfx::CF_DXT1, 1 );
-	ASSERT_GE( ours.size(), sizeof(SDDSFileHeader) + 8u );
+	ASSERT_GE( ours.size(), sizeof( SDDSFileHeader ) + 8u );
 
 	// Byte for byte against the shipped block, which is the whole point.
-	EXPECT_EQ( 0, memcmp( &bytes[sizeof(SDDSFileHeader)], &ours[sizeof(SDDSFileHeader)], 8 ) )
-		<< "flat block differs from the one S3TC chose";
+	EXPECT_EQ( 0, memcmp( &bytes[sizeof( SDDSFileHeader )], &ours[sizeof( SDDSFileHeader )], 8 ) )
+			<< "flat block differs from the one S3TC chose";
 
 	CArray2D<uint32_t> again;
 	DecodeLevel0( &again, ours, NGfx::CF_DXT1 );
@@ -474,11 +483,12 @@ TEST( DDSWrite, ReEncodingAFlatTextureReproducesTheOriginalBlock )
 // These use A8R8G8B8 so the levels can be read straight out of the file with no
 // compression in the way. Mip 1 of a 16x16 image starts at 128 + 16*16*4.
 
-namespace {
+namespace
+{
 
 const uint32_t *MipLevel( const std::vector<uint8_t> &bytes, int nSizeX, int nSizeY, int nLevel )
 {
-	size_t nOffset = sizeof(SDDSFileHeader);
+	size_t nOffset = sizeof( SDDSFileHeader );
 	for ( int i = 0; i < nLevel; ++i )
 	{
 		nOffset += static_cast<size_t>( (std::max)( 1, nSizeX >> i ) ) * (std::max)( 1, nSizeY >> i ) * 4;
@@ -519,11 +529,11 @@ TEST( DDSWrite, TransparentIsStoredPremultiplied )
 	const std::filesystem::path path = TempFile( "obk2_dds_cutout.dds" );
 	std::error_code ec;
 	std::filesystem::remove( path, ec );
-	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_TRANSPARENT,
-		NGfx::CF_A8R8G8B8, 3, false, false, 1024.0f ) );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS(
+			path.string(), src, NImage::IMAGE_TYPE_TRANSPARENT, NGfx::CF_A8R8G8B8, 3, false, false, 1024.0f ) );
 	const std::vector<uint8_t> bytes = ReadFile( path );
 	std::filesystem::remove( path, ec );
-	ASSERT_GT( bytes.size(), sizeof(SDDSFileHeader) );
+	ASSERT_GT( bytes.size(), sizeof( SDDSFileHeader ) );
 
 	const uint32_t *pLevel0 = MipLevel( bytes, nSize, nSize, 0 );
 	for ( int y = 0; y < nSize; ++y )
@@ -555,14 +565,14 @@ TEST( DDSWrite, TransparentAddZeroesAlpha )
 	const std::filesystem::path path = TempFile( "obk2_dds_add.dds" );
 	std::error_code ec;
 	std::filesystem::remove( path, ec );
-	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_TRANSPARENT_ADD,
-		NGfx::CF_A8R8G8B8, 2, true, true, 1024.0f ) );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS(
+			path.string(), src, NImage::IMAGE_TYPE_TRANSPARENT_ADD, NGfx::CF_A8R8G8B8, 2, true, true, 1024.0f ) );
 	const std::vector<uint8_t> bytes = ReadFile( path );
 	std::filesystem::remove( path, ec );
-	ASSERT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 2 ), bytes.size() );
+	ASSERT_EQ( sizeof( SDDSFileHeader ) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 2 ), bytes.size() );
 
-	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof(SDDSFileHeader)] );
-	const size_t nCount = ( bytes.size() - sizeof(SDDSFileHeader) ) / 4;
+	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof( SDDSFileHeader )] );
+	const size_t nCount = ( bytes.size() - sizeof( SDDSFileHeader ) ) / 4;
 	for ( size_t i = 0; i < nCount; ++i )
 		ASSERT_EQ( 0u, pPixels[i] >> 24 ) << "alpha survived at texel " << i;
 }
@@ -578,13 +588,13 @@ TEST( DDSWrite, BumpIsConvertedToNormals )
 	const std::filesystem::path path = TempFile( "obk2_dds_bump.dds" );
 	std::error_code ec;
 	std::filesystem::remove( path, ec );
-	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_BUMP,
-		NGfx::CF_A8R8G8B8, 1, true, true, 1024.0f ) );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS(
+			path.string(), src, NImage::IMAGE_TYPE_BUMP, NGfx::CF_A8R8G8B8, 1, true, true, 1024.0f ) );
 	const std::vector<uint8_t> bytes = ReadFile( path );
 	std::filesystem::remove( path, ec );
-	ASSERT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 1 ), bytes.size() );
+	ASSERT_EQ( sizeof( SDDSFileHeader ) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 1 ), bytes.size() );
 
-	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof(SDDSFileHeader)] );
+	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof( SDDSFileHeader )] );
 	bool bDiffers = false;
 	for ( int y = 0; y < nSize && !bDiffers; ++y )
 	{
@@ -618,11 +628,11 @@ TEST( DDSWrite, FastMipStillProducesAFullChain )
 	const std::filesystem::path path = TempFile( "obk2_dds_fast.dds" );
 	std::error_code ec;
 	std::filesystem::remove( path, ec );
-	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_PICTURE_FASTMIP,
-		NGfx::CF_A8R8G8B8, 3, true, true, 1024.0f ) );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS(
+			path.string(), src, NImage::IMAGE_TYPE_PICTURE_FASTMIP, NGfx::CF_A8R8G8B8, 3, true, true, 1024.0f ) );
 	const std::vector<uint8_t> bytes = ReadFile( path );
 	std::filesystem::remove( path, ec );
-	ASSERT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 3 ), bytes.size() );
+	ASSERT_EQ( sizeof( SDDSFileHeader ) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 3 ), bytes.size() );
 	EXPECT_EQ( 3u, HeaderOf( bytes ).dwMipMapCount );
 
 	const uint32_t *pLevel2 = MipLevel( bytes, nSize, nSize, 2 );
@@ -630,8 +640,7 @@ TEST( DDSWrite, FastMipStillProducesAFullChain )
 	{
 		const int nWant = ( 0xff4080c0u >> nShift ) & 0xff;
 		const int nGot = ( pLevel2[0] >> nShift ) & 0xff;
-		EXPECT_LE( std::abs( nWant - nGot ), 4 )
-			<< "a flat colour drifted too far, channel at bit " << nShift;
+		EXPECT_LE( std::abs( nWant - nGot ), 4 ) << "a flat colour drifted too far, channel at bit " << nShift;
 	}
 }
 
@@ -658,8 +667,8 @@ TEST( DDSWrite, UnpackDXTMatchesReference )
 	int nDxt1 = 0;
 	int nDxt3 = 0;
 	std::error_code ec;
-	for ( std::filesystem::recursive_directory_iterator it( root, ec ), end;
-		it != end && ( nDxt1 < 60 || nDxt3 < 60 ); it.increment( ec ) )
+	for ( std::filesystem::recursive_directory_iterator it( root, ec ), end; it != end && ( nDxt1 < 60 || nDxt3 < 60 );
+	      it.increment( ec ) )
 	{
 		if ( ec || !it->is_regular_file( ec ) )
 			continue;
@@ -667,7 +676,7 @@ TEST( DDSWrite, UnpackDXTMatchesReference )
 		if ( p.extension() != ".dds" && p.extension() != ".DDS" )
 			continue;
 		const std::vector<uint8_t> bytes = ReadFile( p );
-		if ( bytes.size() < sizeof(SDDSFileHeader) )
+		if ( bytes.size() < sizeof( SDDSFileHeader ) )
 			continue;
 		const SDDSHeader &hdr = HeaderOf( bytes );
 		if ( !( hdr.ddspf.dwFlags & DDS_FOURCC ) || hdr.dwWidth > 256 || hdr.dwHeight > 256 )
@@ -677,12 +686,12 @@ TEST( DDSWrite, UnpackDXTMatchesReference )
 			continue;
 
 		NGfx::EPixelFormat format;
-		if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','1') && nDxt1 < 60 )
+		if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) && nDxt1 < 60 )
 		{
 			format = NGfx::CF_DXT1;
 			++nDxt1;
 		}
-		else if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','3') && nDxt3 < 60 )
+		else if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '3' ) && nDxt3 < 60 )
 		{
 			format = NGfx::CF_DXT3;
 			++nDxt3;
@@ -696,8 +705,8 @@ TEST( DDSWrite, UnpackDXTMatchesReference )
 		DecodeLevel0( &reference, bytes, format );
 
 		CArray2D<uint32_t> engine;
-		NImage::UnpackDXT( static_cast<int>( format ), hdr.dwWidth, hdr.dwHeight,
-			&bytes[sizeof(SDDSFileHeader)], &engine );
+		NImage::UnpackDXT(
+				static_cast<int>( format ), hdr.dwWidth, hdr.dwHeight, &bytes[sizeof( SDDSFileHeader )], &engine );
 
 		ASSERT_EQ( reference.GetSizeX(), engine.GetSizeX() ) << p.string();
 		ASSERT_EQ( reference.GetSizeY(), engine.GetSizeY() ) << p.string();
@@ -705,8 +714,7 @@ TEST( DDSWrite, UnpackDXTMatchesReference )
 		{
 			for ( int x = 0; x < reference.GetSizeX(); ++x )
 			{
-				ASSERT_EQ( reference[y][x], engine[y][x] )
-					<< p.string() << " at " << x << "," << y;
+				ASSERT_EQ( reference[y][x], engine[y][x] ) << p.string() << " at " << x << "," << y;
 			}
 		}
 	}
@@ -727,9 +735,9 @@ TEST( DDSWrite, UnpackDXTReachesFullWhite )
 			src[y][x] = 0xffffffffu;
 	}
 	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_white.dds", src, NGfx::CF_DXT1, 1 );
-	ASSERT_GE( bytes.size(), sizeof(SDDSFileHeader) + 8u );
+	ASSERT_GE( bytes.size(), sizeof( SDDSFileHeader ) + 8u );
 	CArray2D<uint32_t> engine;
-	NImage::UnpackDXT( 1, 4, 4, &bytes[sizeof(SDDSFileHeader)], &engine );
+	NImage::UnpackDXT( 1, 4, 4, &bytes[sizeof( SDDSFileHeader )], &engine );
 	EXPECT_EQ( 0xffu, ( engine[0][0] >> 16 ) & 0xff ) << "red short of full range";
 	EXPECT_EQ( 0xffu, ( engine[0][0] >> 8 ) & 0xff ) << "green short of full range";
 	EXPECT_EQ( 0xffu, engine[0][0] & 0xff ) << "blue short of full range";
@@ -749,7 +757,8 @@ TEST( DDSWrite, ShippedHeadersMatch )
 	int nChecked = 0;
 	int nSkippedDialect = 0;
 	std::error_code ec;
-	for ( std::filesystem::recursive_directory_iterator it( root, ec ), end; it != end && nChecked < 150; it.increment( ec ) )
+	for ( std::filesystem::recursive_directory_iterator it( root, ec ), end; it != end && nChecked < 150;
+	      it.increment( ec ) )
 	{
 		if ( ec || !it->is_regular_file( ec ) )
 			continue;
@@ -757,7 +766,7 @@ TEST( DDSWrite, ShippedHeadersMatch )
 		if ( p.extension() != ".dds" && p.extension() != ".DDS" )
 			continue;
 		const std::vector<uint8_t> bytes = ReadFile( p );
-		if ( bytes.size() < sizeof(SDDSFileHeader) )
+		if ( bytes.size() < sizeof( SDDSFileHeader ) )
 			continue;
 		const SDDSHeader &hdr = HeaderOf( bytes );
 		// Keep the files to something a block compressor can chew through
@@ -775,9 +784,9 @@ TEST( DDSWrite, ShippedHeadersMatch )
 		NGfx::EPixelFormat format = NGfx::CF_A8R8G8B8;
 		if ( hdr.ddspf.dwFlags & DDS_FOURCC )
 		{
-			if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','1') )
+			if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) )
 				format = NGfx::CF_DXT1;
-			else if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','3') )
+			else if ( hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '3' ) )
 				format = NGfx::CF_DXT3;
 			else
 				continue;
@@ -788,11 +797,11 @@ TEST( DDSWrite, ShippedHeadersMatch )
 		}
 
 		const int nMips = (std::max)( 1u, hdr.dwMipMapCount );
-		const std::vector<uint8_t> ours = WriteAndRead( "obk2_dds_corpus.dds",
-			MakeImage( hdr.dwWidth, hdr.dwHeight, true ), format, nMips );
-		ASSERT_GE( ours.size(), sizeof(SDDSFileHeader) ) << p.string();
-		EXPECT_EQ( 0, memcmp( &bytes[0], &ours[0], sizeof(SDDSFileHeader) ) )
-			<< "header differs from shipped " << p.string();
+		const std::vector<uint8_t> ours =
+				WriteAndRead( "obk2_dds_corpus.dds", MakeImage( hdr.dwWidth, hdr.dwHeight, true ), format, nMips );
+		ASSERT_GE( ours.size(), sizeof( SDDSFileHeader ) ) << p.string();
+		EXPECT_EQ( 0, memcmp( &bytes[0], &ours[0], sizeof( SDDSFileHeader ) ) )
+				<< "header differs from shipped " << p.string();
 		EXPECT_EQ( bytes.size(), ours.size() ) << "payload length differs from shipped " << p.string();
 		++nChecked;
 	}

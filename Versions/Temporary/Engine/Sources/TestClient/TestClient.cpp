@@ -30,8 +30,7 @@ const int TESTER_CREATION_TIMEOUT = 2000;
 // The ## was a no-op that only MSVC accepted: FuncName is already a
 // complete token here, and a conforming preprocessor rejects a ## with
 // nothing on its left to paste onto.
-#define REGISTER_CMD_FUNC( cmd, FuncName ) \
-processCmdsFuncs[cmd] = &CTestClient::FuncName;
+#define REGISTER_CMD_FUNC( cmd, FuncName ) processCmdsFuncs[cmd] = &CTestClient::FuncName;
 
 void ForcePacketRegistration(); // For too smart linker
 
@@ -109,12 +108,15 @@ void CTestClient::CommandLogin( const SCommand &cmd )
 	pServerClient->SendPacket( pPacket );
 
 	Singleton<IConsoleBuffer>()->WriteASCII(
-		CONSOLE_STREAM_CONSOLE,
-		fmt::format( "logging in server {}, port {}, gameversion {}, nickname {}, password {}...\n",
-						szIP, nPort, nNetVersion, cmd.GetStr( 0 ), cmd.GetStr( 1 ) ).c_str()
-	);
+			CONSOLE_STREAM_CONSOLE,
+			fmt::format( "logging in server {}, port {}, gameversion {}, nickname {}, password {}...\n",
+	                 szIP,
+	                 nPort,
+	                 nNetVersion,
+	                 cmd.GetStr( 0 ),
+	                 cmd.GetStr( 1 ) )
+					.c_str() );
 	pTestClientProcessor->SetServerClient( pServerClient );
-
 }
 
 void CTestClient::CommandRegister( const SCommand &cmd )
@@ -125,10 +127,17 @@ void CTestClient::CommandRegister( const SCommand &cmd )
 	pServerClient->SendPacket( pPacket );
 
 	Singleton<IConsoleBuffer>()->WriteASCII(
-		CONSOLE_STREAM_CONSOLE,
-		fmt::format( "registering to server {}, port {}, gameversion {}, nickname {}, password {}, cdkey {}, email {}...\n",
-		szIP, nPort, nNetVersion, cmd.GetStr( 0 ), cmd.GetStr( 1 ), cmd.GetStr( 2 ), cmd.GetStr( 3 ) ).c_str()
-	);
+			CONSOLE_STREAM_CONSOLE,
+			fmt::format(
+					"registering to server {}, port {}, gameversion {}, nickname {}, password {}, cdkey {}, email {}...\n",
+					szIP,
+					nPort,
+					nNetVersion,
+					cmd.GetStr( 0 ),
+					cmd.GetStr( 1 ),
+					cmd.GetStr( 2 ),
+					cmd.GetStr( 3 ) )
+					.c_str() );
 
 	pTestClientProcessor->SetServerClient( pServerClient );
 }
@@ -148,7 +157,8 @@ void CTestClient::CommandChatPrivate( const SCommand &cmd )
 {
 	if ( pServerClient )
 	{
-		CNetPacket *pPacket = new CChatPacket( 0, NStr::ToUnicode( cmd.GetStr( 1 ).c_str() ), cmd.GetStr( 0 ).c_str(), 0, false );
+		CNetPacket *pPacket =
+				new CChatPacket( 0, NStr::ToUnicode( cmd.GetStr( 1 ).c_str() ), cmd.GetStr( 0 ).c_str(), 0, false );
 		pServerClient->SendPacket( pPacket );
 	}
 	else
@@ -193,8 +203,11 @@ void CTestClient::CommandChatIgnore( const SCommand &cmd )
 {
 	if ( pServerClient )
 	{
-		CNetPacket *pPacket = new CChatModifyIgnoreFriendListPacket( 0, cmd.GetStr( 0 ),
-			( cmd.GetInt( 1 ) == 1 ) ? CChatModifyIgnoreFriendListPacket::ADD_IGNORE : CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE );
+		CNetPacket *pPacket = new CChatModifyIgnoreFriendListPacket(
+				0,
+				cmd.GetStr( 0 ),
+				( cmd.GetInt( 1 ) == 1 ) ? CChatModifyIgnoreFriendListPacket::ADD_IGNORE
+																 : CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE );
 		pServerClient->SendPacket( pPacket );
 		pPacket = new CChatGetIgnoreFriendListPacket( 0 );
 		pServerClient->SendPacket( pPacket );
@@ -207,8 +220,11 @@ void CTestClient::CommandChatFriend( const SCommand &cmd )
 {
 	if ( pServerClient )
 	{
-		CNetPacket *pPacket = new CChatModifyIgnoreFriendListPacket( 0, cmd.GetStr( 0 ),
-			( cmd.GetInt( 1 ) == 1 ) ? CChatModifyIgnoreFriendListPacket::ADD_FRIEND : CChatModifyIgnoreFriendListPacket::REMOVE_FRIEND );
+		CNetPacket *pPacket = new CChatModifyIgnoreFriendListPacket(
+				0,
+				cmd.GetStr( 0 ),
+				( cmd.GetInt( 1 ) == 1 ) ? CChatModifyIgnoreFriendListPacket::ADD_FRIEND
+																 : CChatModifyIgnoreFriendListPacket::REMOVE_FRIEND );
 		pServerClient->SendPacket( pPacket );
 		pPacket = new CChatGetIgnoreFriendListPacket( 0 );
 		pServerClient->SendPacket( pPacket );
@@ -301,11 +317,11 @@ void CTestClient::CommandSendGameInfo( const SCommand &cmd )
 	if ( pServerClient )
 	{
 		CUpdateGameInfo *pPacket = new CUpdateGameInfo();
-		pPacket->gameInfo.szName = cmd.GetStr(0);
-		pPacket->gameInfo.nMaxPlayers = cmd.GetInt(1);
-		pPacket->gameInfo.szPassword = cmd.GetStr(2);
-		pPacket->gameInfo.bHasPassword = cmd.GetStr(2) != "";
-		pPacket->gameInfo.bCanConnect = cmd.GetInt(3);
+		pPacket->gameInfo.szName = cmd.GetStr( 0 );
+		pPacket->gameInfo.nMaxPlayers = cmd.GetInt( 1 );
+		pPacket->gameInfo.szPassword = cmd.GetStr( 2 );
+		pPacket->gameInfo.bHasPassword = cmd.GetStr( 2 ) != "";
+		pPacket->gameInfo.bCanConnect = cmd.GetInt( 3 );
 		consoleCommandPackets.push_back( pPacket );
 	}
 }
@@ -325,14 +341,14 @@ void CTestClient::CommandLeaveGame( const SCommand &cmd )
 void CTestClient::CommandConnectGame( const SCommand &cmd )
 {
 	if ( pServerClient )
-		consoleCommandPackets.push_back( new CConnectGamePacket( 0, cmd.GetInt(0), cmd.GetStr(1) ) );
+		consoleCommandPackets.push_back( new CConnectGamePacket( 0, cmd.GetInt( 0 ), cmd.GetStr( 1 ) ) );
 }
 
 void CTestClient::CommandGameBroadcastMsg( const SCommand &cmd )
 {
 	if ( pServerClient )
 	{
-		CPtr<CGameTestBroadcastMsg> pPacket = new CGameTestBroadcastMsg( cmd.GetInt(0), cmd.GetStr(1) );
+		CPtr<CGameTestBroadcastMsg> pPacket = new CGameTestBroadcastMsg( cmd.GetInt( 0 ), cmd.GetStr( 1 ) );
 		pServerClient->SendGamePacket( pPacket, true );
 	}
 }
@@ -341,8 +357,7 @@ void CTestClient::CommandGameDirectMsg( const SCommand &cmd )
 {
 	if ( pServerClient )
 	{
-		CPtr<CGameTestDirectMsg> pPacket =
-			new CGameTestDirectMsg( cmd.GetInt(0), cmd.GetInt(1), cmd.GetStr(2) );
+		CPtr<CGameTestDirectMsg> pPacket = new CGameTestDirectMsg( cmd.GetInt( 0 ), cmd.GetInt( 1 ), cmd.GetStr( 2 ) );
 		pServerClient->SendGamePacket( pPacket, false );
 	}
 }
@@ -397,25 +412,25 @@ void CTestClient::CommandPauseClient( const SCommand &cmd )
 
 void RandomizeList( std::list<int> *pList )
 {
-	std::unordered_map< int, int > tempHash;
+	std::unordered_map<int, int> tempHash;
 	int nSize = pList->size();
 	int nMaxRand = nSize - 1;
 	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	for ( int i = 0; i < dwTime % 100; ++i )
 		NRandom::Random( 0, nMaxRand );
-	for( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
+	for ( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
 	{
 		int nRandNum = NRandom::Random( 0, nMaxRand );
-		while( tempHash.find( nRandNum ) != tempHash.end() )
+		while ( tempHash.find( nRandNum ) != tempHash.end() )
 		{
 			nRandNum = NRandom::Random( 0, nMaxRand );
 		}
-		tempHash[ nRandNum ] = *it;
+		tempHash[nRandNum] = *it;
 	}
 	pList->clear();
-	for( int i = nMaxRand; i >= 0; --i )
+	for ( int i = nMaxRand; i >= 0; --i )
 	{
-		pList->push_back( tempHash[ i ] );
+		pList->push_back( tempHash[i] );
 	}
 }
 
@@ -431,7 +446,7 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 	{
 		CFileStream stream( "../laddertest.xml", CFileStream::WIN_READ_ONLY );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
-		pSaver->Add( "LadderInfo", &(*pPacket) );
+		pSaver->Add( "LadderInfo", &( *pPacket ) );
 	}
 
 	RandomizeList( &pPacket->maps );
@@ -447,8 +462,8 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 		pPacket->techLevels.pop_front();
 	}
 
-	CPtr<CLadderInfoPacket> pPacketToSend = new CLadderInfoPacket( 0, pPacket->nSide, pPacket->bHistoricity,
-		pPacket->nTeamSize, pPacket->techLevels, pPacket->maps, 0 );
+	CPtr<CLadderInfoPacket> pPacketToSend = new CLadderInfoPacket(
+			0, pPacket->nSide, pPacket->bHistoricity, pPacket->nTeamSize, pPacket->techLevels, pPacket->maps, 0 );
 
 #ifdef LADDER_TEST_LOG
 	int nTime = GetCurrentTimeMilliseconds();
@@ -457,7 +472,7 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_WRITE );
 
-		pSaver->Add( "LadderInfo", &(*pPacketToSend) );
+		pSaver->Add( "LadderInfo", &( *pPacketToSend ) );
 	}
 #endif
 
@@ -482,7 +497,7 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 		winners.insert( nID );
 	}
 
-	std::unordered_map<int,int> races;
+	std::unordered_map<int, int> races;
 	races.clear();
 
 	for ( std::list<int>::iterator it = ladderGameTeam1.begin(); it != ladderGameTeam1.end(); ++it )
@@ -506,7 +521,7 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_WRITE );
 
-		pSaver->Add( "LadderInfo", &(*pResultPacket) );
+		pSaver->Add( "LadderInfo", &( *pResultPacket ) );
 	}
 #endif
 }
@@ -524,10 +539,7 @@ void CTestClient::CommandForgotPassword( const SCommand &cmd )
 	CNetPacket *pPacket = new CForgottenPasswordPacket( cmd.GetStr( 0 ), cmd.GetStr( 1 ) );
 	pServerClient->SendPacket( pPacket );
 
-	Singleton<IConsoleBuffer>()->WriteASCII(
-		CONSOLE_STREAM_CONSOLE,
-		"Forgotten password request sent.\n"
-		);
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Forgotten password request sent.\n" );
 
 	pTestClientProcessor->SetServerClient( pServerClient );
 }
@@ -549,8 +561,7 @@ void CTestClient::CommandPing( const SCommand &cmd )
 	}
 	CNetPacket *pPacket = new CPingPacket( 0, pTestClientProcessor->GetMyID(), GetCurrentTimeMilliseconds() );
 	pServerClient->SendPacket( pPacket );
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Ping sent.\n"	);
-
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Ping sent.\n" );
 }
 
 void CTestClient::ProcessCommands()
@@ -560,13 +571,13 @@ void CTestClient::ProcessCommands()
 	while ( pCommands->GetCommand( &cmd ) )
 	{
 		std::unordered_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
-//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
+		//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
 			continue;
 
 		PROCESS_CMD_FUNC pfnFunc = iter->second;
-		(this->*pfnFunc)( cmd );
+		( this->*pfnFunc )( cmd );
 	}
 
 	while ( !consoleCommandPackets.empty() )
@@ -605,7 +616,7 @@ void CTestClient::Segment()
 			}
 			else if ( bCanCreateTester )
 			{
-				std::string szName = std::to_string(  i + nTestersNameShift );
+				std::string szName = std::to_string( i + nTestersNameShift );
 				testers[i] = CreateMultiTester();
 				testers[i]->Init( szIP, nNetVersion, nPort, 30, szName, szName, szName, MTM_LADDER | MTM_CHAT );
 				testers[i]->Segment();
@@ -614,7 +625,6 @@ void CTestClient::Segment()
 			}
 		}
 	}
-
 }
 
 #undef REGISTER_CMD_FUNC

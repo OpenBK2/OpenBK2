@@ -8,11 +8,10 @@
 
 namespace
 {
-	CObj<CInteractiveMaya> pInteractiveMayaInstance;
+CObj<CInteractiveMaya> pInteractiveMayaInstance;
 }
 
-
-CInteractiveMaya * CInteractiveMaya::Get()
+CInteractiveMaya *CInteractiveMaya::Get()
 {
 	if ( !pInteractiveMayaInstance )
 	{
@@ -21,31 +20,25 @@ CInteractiveMaya * CInteractiveMaya::Get()
 	return pInteractiveMayaInstance;
 }
 
-
-const std::string CInteractiveMaya::INTERACTIVE_MAYA_PROMPT("mel: ");         // leading space is important
-const std::string CInteractiveMaya::INTERACTIVE_MAYA_RESULT_MARK("Result: "); // leading space is important
-
+const std::string CInteractiveMaya::INTERACTIVE_MAYA_PROMPT( "mel: " );         // leading space is important
+const std::string CInteractiveMaya::INTERACTIVE_MAYA_RESULT_MARK( "Result: " ); // leading space is important
 
 CInteractiveMaya::CInteractiveMaya()
-	: INTERACTIVE_MAYA_INVOKE("mayabatch -prompt"),
-	  INTERACTIVE_MAYA_QUIT_DIRECTIVE("quit -f\n"), // leading \n is important
-	  nExecutionQuota(0),
-	  nExecutionCounter(0)
+		: INTERACTIVE_MAYA_INVOKE( "mayabatch -prompt" ),
+			INTERACTIVE_MAYA_QUIT_DIRECTIVE( "quit -f\n" ), // leading \n is important
+			nExecutionQuota( 0 ), nExecutionCounter( 0 )
 {
 }
-
 
 void CInteractiveMaya::SetResponseTimeout( int nResponseWaitTimeout )
 {
 	process.SetResponseTimeout( nResponseWaitTimeout );
 }
 
-
 void CInteractiveMaya::SetExecutionQuota( int n )
 {
-	nExecutionCounter = nExecutionQuota = (std::max)(0, n);
+	nExecutionCounter = nExecutionQuota = (std::max)( 0, n );
 }
-
 
 bool CInteractiveMaya::Start()
 {
@@ -70,7 +63,6 @@ bool CInteractiveMaya::Start()
 	return false;
 }
 
-
 bool CInteractiveMaya::Execute( const std::string &szScript, std::string *pszOutput, std::string *pszErrorOutput )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -81,7 +73,7 @@ bool CInteractiveMaya::Execute( const std::string &szScript, std::string *pszOut
 		pLogger->Log( LT_NORMAL, *pszOutput );
 		pLogger->Log( LT_ERROR, *pszErrorOutput );
 
-		if ( nExecutionQuota && (--nExecutionCounter) == 0 )
+		if ( nExecutionQuota && ( --nExecutionCounter ) == 0 )
 		{
 			pLogger->Log( LT_IMPORTANT, INTERACTIVE_MAYA_QUIT_DIRECTIVE );
 			if ( process.Stop( INTERACTIVE_MAYA_QUIT_DIRECTIVE ) )
@@ -98,7 +90,6 @@ bool CInteractiveMaya::Execute( const std::string &szScript, std::string *pszOut
 	pLogger->Log( LT_ERROR, szErrorMessage );
 	return false;
 }
-
 
 bool CInteractiveMaya::Stop()
 {
@@ -117,10 +108,10 @@ bool CInteractiveMaya::Stop()
 	return true;
 }
 
-
 bool CInteractiveMaya::ExtractResult( std::string *pszResult, const std::string &szOutput )
 {
-	const size_t promptPos = szOutput.find( INTERACTIVE_MAYA_PROMPT, (szOutput.size() - INTERACTIVE_MAYA_PROMPT.size()) );
+	const size_t promptPos =
+			szOutput.find( INTERACTIVE_MAYA_PROMPT, ( szOutput.size() - INTERACTIVE_MAYA_PROMPT.size() ) );
 	if ( promptPos != std::string::npos )
 	{
 		const char *pBlockFirst = szOutput.c_str();
@@ -154,7 +145,6 @@ bool CInteractiveMaya::ExtractResult( std::string *pszResult, const std::string 
 	return false;
 }
 
-
 bool CInteractiveMaya::TransactCommand( const std::string &szScript, const std::string &szExpectedResult )
 {
 	std::string szOutput;
@@ -172,14 +162,14 @@ bool CInteractiveMaya::TransactCommand( const std::string &szScript, const std::
 			else
 			{
 				pLogger->Log( LT_ERROR,
-						fmt::format("\nCommand FAILED: result must be \"{}\" (actual: \"{}\")\n", szExpectedResult.c_str(), szResult.c_str())
-						);
+				              fmt::format( "\nCommand FAILED: result must be \"{}\" (actual: \"{}\")\n",
+				                           szExpectedResult.c_str(),
+				                           szResult.c_str() ) );
 			}
 		}
 	}
 	return false;
 }
-
 
 bool CInteractiveMaya::TransactQuery( const std::string &szScript, std::string *pszResult )
 {

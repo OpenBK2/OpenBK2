@@ -14,64 +14,62 @@ class CPolygonSelectState : public CDefaultInputState
 	friend class CMultiInputState;
 	friend class CPolygonState;
 
-	class CPolygonState* pParentState;
+	class CPolygonState *pParentState;
 
 	//конструкторы и операторы присваивания
 	CPolygonSelectState() : pParentState( 0 )
-  {
+	{
 		NI_ASSERT( pParentState != 0, "CPolygonSelectState(): Invalid parameter: pParentState == 0" );
 	}
-	CPolygonSelectState( CPolygonState* _pParentState ) : pParentState( _pParentState )
+	CPolygonSelectState( CPolygonState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonSelectState(): Invalid parameter: pParentState == 0" );
 	}
 
 	//IInputState interface
-	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 };
-
 
 class CPolygonEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CPolygonState;
 
-	class CPolygonState* pParentState;
+	class CPolygonState *pParentState;
 
 	//конструкторы и операторы присваивания
 	CPolygonEditState() : pParentState( 0 )
-  {
+	{
 		NI_ASSERT( pParentState != 0, "CPolygonEditState(): Invalid parameter: pParentState == 0" );
 	}
-	CPolygonEditState( CPolygonState* _pParentState ) : pParentState( _pParentState )
+	CPolygonEditState( CPolygonState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonEditState(): Invalid parameter: pParentState == 0" );
 	}
 
 	//IInputState interface
-	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
-
 
 class CPolygonAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CPolygonState;
 
-	class CPolygonState* pParentState;
+	class CPolygonState *pParentState;
 
 	//конструкторы и операторы присваивания
 	CPolygonAddState() : pParentState( 0 )
-  {
+	{
 		NI_ASSERT( pParentState != 0, "CPolygonAddState(): Invalid parameter: pParentState == 0" );
 	}
-	CPolygonAddState( CPolygonState* _pParentState ) : pParentState( _pParentState )
+	CPolygonAddState( CPolygonState *_pParentState ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CPolygonAddState(): Invalid parameter: pParentState == 0" );
 	}
@@ -79,13 +77,12 @@ class CPolygonAddState : public CDefaultInputState
 	void InsertPolygon();
 
 	//IInputState interface
-	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
-
 
 class CPolygonState : public CMultiInputState, public ICommandHandler
 {
@@ -96,9 +93,9 @@ class CPolygonState : public CMultiInputState, public ICommandHandler
 	//
 	enum EInputStates
 	{
-		IS_SELECT	= 0,
-		IS_EDIT		= 1,
-		IS_ADD		= 2,
+		IS_SELECT = 0,
+		IS_EDIT = 1,
+		IS_ADD = 2,
 	};
 
 protected:
@@ -114,13 +111,13 @@ protected:
 public:
 	enum EUpdateType
 	{
-		UT_START								= 0,
-		UT_START_MOVE						= 1,
-		UT_CONTINUE_MOVE				= 2,
-		UT_FINISH_MOVE					= 3,
-		UT_CHANGE_POINT_NUMBER	= 4,
-		UT_FINISH								= 5,
-		UT_CANCEL								= 6,
+		UT_START = 0,
+		UT_START_MOVE = 1,
+		UT_CONTINUE_MOVE = 2,
+		UT_FINISH_MOVE = 3,
+		UT_CHANGE_POINT_NUMBER = 4,
+		UT_FINISH = 5,
+		UT_CANCEL = 6,
 	};
 	//
 	enum EMoveType
@@ -135,11 +132,11 @@ protected:
 	// для работы SelectState
 	// для работы AddState
 	// для работы EditState
-	CPolygonIDList pickPolygonIDList;							// список ID выделенных полигонов
-	CControlPointList controlPointList;						// контрольные точки полигона при добавлении,
-																								// сохраняем начальное положение контрольных точек при редактировании
-	int nSelectedIndex;														// текущий выделенный полигон (индекс его ID в массиве выделенных полигонов)
-	int nSelectedControlPoint;										// текущая выделенная точка в полигоне
+	CPolygonIDList pickPolygonIDList;   // список ID выделенных полигонов
+	CControlPointList controlPointList; // контрольные точки полигона при добавлении,
+																			// сохраняем начальное положение контрольных точек при редактировании
+	int nSelectedIndex;                 // текущий выделенный полигон (индекс его ID в массиве выделенных полигонов)
+	int nSelectedControlPoint;          // текущая выделенная точка в полигоне
 	CMapInfoStoreInputState *pStoreInputState;
 	CSceneDrawTool sceneDrawTool;
 
@@ -169,7 +166,7 @@ protected:
 	virtual void Enter();
 	virtual void Leave();
 	virtual void Draw( IPaintContext *pPaintDC );
-	virtual void OnSetFocus( IWidget* pNewWnd );
+	virtual void OnSetFocus( IWidget *pNewWnd );
 
 	//virtual void OnSetFocus( IWidget* pNewWnd );
 	// CPolygonState
@@ -188,7 +185,7 @@ protected:
 	// Получить минимальное и максимальное количество control points
 	virtual void GetBounds( int *pnMinCount, int *pnMaxCount ) = 0;
 	// Получить контрольные точки указанного полигона
-	virtual CControlPointList* GetControlPoints( int nPolygonID ) = 0;
+	virtual CControlPointList *GetControlPoints( int nPolygonID ) = 0;
 	// Обработать массив контрольных точек перед добавлением полигона
 	virtual bool PrepareControlPoints( CControlPointList *pControlPointList ) = 0;
 	// По точке получить выделенные полигоны (набор их ID)
@@ -199,6 +196,7 @@ protected:
 	virtual unsigned InsertPolygon( const CControlPointList &rControlPointList ) = 0;
 	// Удалить полигон по указанному ID
 	virtual void RemovePolygon( int nPolygonID ) = 0;
+
 public:
 	//
 	//конструкторы и операторы присваивания
@@ -211,15 +209,21 @@ public:
 
 		CPolygonSelectState *pPolygonSelectState = new CPolygonSelectState( this );
 		nStateIndex = AddInputState( pPolygonSelectState );
-		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CPolygonState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
+		NI_ASSERT(
+				nStateIndex == IS_SELECT,
+				fmt::format( "CPolygonState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
 
 		CPolygonEditState *pPolygonEditState = new CPolygonEditState( this );
 		nStateIndex = AddInputState( pPolygonEditState );
-		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
+		NI_ASSERT(
+				nStateIndex == IS_EDIT,
+				fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
 
 		CPolygonAddState *pPolygonAddState = new CPolygonAddState( this );
 		nStateIndex = AddInputState( pPolygonAddState );
-		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );
+		NI_ASSERT(
+				nStateIndex == IS_ADD,
+				fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}

@@ -4,16 +4,16 @@
 
 // texture draw only part that will fit to background size
 // texture alignment may be
-class CBackgroundSimpleTexture :	public CBackground
+class CBackgroundSimpleTexture : public CBackground
 {
-	OBJECT_BASIC_METHODS(CBackgroundSimpleTexture);
+	OBJECT_BASIC_METHODS( CBackgroundSimpleTexture );
 
 	CDBPtr<NDb::SBackgroundSimpleTexture> pStats;
 	CDBPtr<NDb::STexture> pTexture;
 	CObj<CIconOutliner> pIcon;
 
 public:
-	virtual void Visit( struct IUIVisitor * pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual int operator&( struct IBinSaver &ss );
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );

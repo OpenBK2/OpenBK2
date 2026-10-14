@@ -13,8 +13,6 @@ const int SCommand::GetInt( const int nIndex ) const
 	return NStr::ToInt( params[nIndex] );
 }
 
-
-
 bool CCommandsBase::GetCommand( SCommand *pCmd )
 {
 	if ( cmds.empty() )
@@ -47,5 +45,5 @@ void CCommandsBase::PreprocessLine( std::string *pszLine, std::vector<std::strin
 			++iter;
 	}
 
-	NStr::ToLower( &(*pszWords)[0] );
+	NStr::ToLower( &( *pszWords )[0] );
 }

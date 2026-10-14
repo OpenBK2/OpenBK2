@@ -9,20 +9,26 @@
 #include "Sound/SoundScene.h"
 #include "Sound/DBSound.h"
 
-
 BASIC_REGISTER_CLASS( SCENEB2, IAttachedObject );
 
 //*******************************************************************
 //*										 IAttachedObject														 *
 //*******************************************************************
 
-IAttachedObject* IAttachedObject::CreateStaticObj( const NDb::SModel *pModel, CFuncBase<SFBTransform> *pTransform, const int nBoneIndex, CFuncBase<SBound> *pBound, bool bUseLOD )
+IAttachedObject *IAttachedObject::CreateStaticObj( const NDb::SModel *pModel,
+                                                   CFuncBase<SFBTransform> *pTransform,
+                                                   const int nBoneIndex,
+                                                   CFuncBase<SBound> *pBound,
+                                                   bool bUseLOD )
 {
 	return new CStaticAttachedObj( pModel, pTransform, nBoneIndex, pBound, bUseLOD );
 }
 
-IAttachedObject* IAttachedObject::CreateAnimatedObj( const NDb::SModel *pModel, CFuncBase<SFBTransform> *pTransform,
-																										 CFuncBase<STime> *pTime, const int nBoneIndex, CFuncBase<SBound> *pBound )
+IAttachedObject *IAttachedObject::CreateAnimatedObj( const NDb::SModel *pModel,
+                                                     CFuncBase<SFBTransform> *pTransform,
+                                                     CFuncBase<STime> *pTime,
+                                                     const int nBoneIndex,
+                                                     CFuncBase<SBound> *pBound )
 {
 	if ( pModel->pSkeleton )
 	{
@@ -38,24 +44,32 @@ IAttachedObject* IAttachedObject::CreateAnimatedObj( const NDb::SModel *pModel, 
 	return 0;
 }
 
-IAttachedObject* IAttachedObject::CreateEffect( const NDb::SEffect *pEffect, CFuncBase<SFBTransform> *pTransform,
-																							  const NTimer::STime nStartTime, const int nBoneIndex, bool bVertical )
+IAttachedObject *IAttachedObject::CreateEffect( const NDb::SEffect *pEffect,
+                                                CFuncBase<SFBTransform> *pTransform,
+                                                const NTimer::STime nStartTime,
+                                                const int nBoneIndex,
+                                                bool bVertical )
 {
 	if ( bVertical )
-		return new CAttachedEffect( pEffect, new CAlwaysVerticalTransform( pTransform, bVertical ), nStartTime, nBoneIndex );
+		return new CAttachedEffect(
+				pEffect, new CAlwaysVerticalTransform( pTransform, bVertical ), nStartTime, nBoneIndex );
 	else
 		return new CAttachedEffect( pEffect, pTransform, nStartTime, nBoneIndex );
 }
 
-IAttachedObject* IAttachedObject::CreateAnimatedLightEffect( const NDb::SAttachedLightEffect *pEffect,
-																														 CFuncBase<SFBTransform> *pTransform, const NTimer::STime nStartTime,
-																														 const int nBoneIndex, const bool bInEditor )
+IAttachedObject *IAttachedObject::CreateAnimatedLightEffect( const NDb::SAttachedLightEffect *pEffect,
+                                                             CFuncBase<SFBTransform> *pTransform,
+                                                             const NTimer::STime nStartTime,
+                                                             const int nBoneIndex,
+                                                             const bool bInEditor )
 {
 	return new CAttachedLightEffect( pEffect, pTransform, nStartTime, nBoneIndex, bInEditor );
 }
 
-IAttachedObject* IAttachedObject::CreateStaticLightEffect( const NDb::SAttachedLightEffect *pEffect, const int nObjectID,
-																													 const NTimer::STime nStartTime, const bool bInEditor )
+IAttachedObject *IAttachedObject::CreateStaticLightEffect( const NDb::SAttachedLightEffect *pEffect,
+                                                           const int nObjectID,
+                                                           const NTimer::STime nStartTime,
+                                                           const bool bInEditor )
 {
 	return new CAttachedStaticLightEffect( pEffect, nObjectID, nStartTime, bInEditor );
 }
@@ -84,7 +98,7 @@ void CStaticAttachedObj::Visit( IAIVisitor *pAIVisitor )
 	}
 }
 
-const NDb::SModel* CStaticAttachedObj::GetModel() const
+const NDb::SModel *CStaticAttachedObj::GetModel() const
 {
 	return pModel;
 }
@@ -95,7 +109,11 @@ void CStaticAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer 
 	{
 		NGScene::IGameView::SMeshInfo meshInfo;
 		pGScene->CreateMeshInfo( pModel, &meshInfo, false );
-		SetHolder( pGScene->CreateMesh( meshInfo, GetTransform(), GetBounder(), 0, bUseLOD ? NGScene::SFullRoomInfo(0, NGScene::N_MASK_LOD_HIGH) : 0 ) );
+		SetHolder( pGScene->CreateMesh( meshInfo,
+		                                GetTransform(),
+		                                GetBounder(),
+		                                0,
+		                                bUseLOD ? NGScene::SFullRoomInfo( 0, NGScene::N_MASK_LOD_HIGH ) : 0 ) );
 
 		if ( pModel->pGeometry->pAIGeometry )
 		{
@@ -118,7 +136,7 @@ void CAnimatedAttachedObj::Visit( IAIVisitor *pAIVisitor )
 	}
 }
 
-const NDb::SModel* CAnimatedAttachedObj::GetModel() const
+const NDb::SModel *CAnimatedAttachedObj::GetModel() const
 {
 	return pModel;
 }
@@ -130,7 +148,11 @@ void CAnimatedAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 		pAnimator->SetGlobalTransform( GetTransform() );
 		NGScene::IGameView::SMeshInfo meshInfo;
 		pGScene->CreateMeshInfo( pModel, &meshInfo, true );
-		SetHolder( pGScene->CreateMesh( meshInfo, GetTransform(), GetBounder(), NGScene::CMeshAnimStuff( pModel, pAnimator ), NGScene::SFullRoomInfo(0, NGScene::N_MASK_LOD_HIGH) ) );
+		SetHolder( pGScene->CreateMesh( meshInfo,
+		                                GetTransform(),
+		                                GetBounder(),
+		                                NGScene::CMeshAnimStuff( pModel, pAnimator ),
+		                                NGScene::SFullRoomInfo( 0, NGScene::N_MASK_LOD_HIGH ) ) );
 
 		if ( pModel->pGeometry->pAIGeometry )
 		{
@@ -170,14 +192,15 @@ void CAttachedEffect::Clear( const NTimer::STime time )
 
 CAttachedEffect::~CAttachedEffect()
 {
-//	if ( pEffect != 0 && IsValid( GetHolder() ) )
-//		Destroy( Singleton<IGameTimer>()->GetGameTime() );
+	//	if ( pEffect != 0 && IsValid( GetHolder() ) )
+	//		Destroy( Singleton<IGameTimer>()->GetGameTime() );
 }
 
 // CAlwaysVerticalTransform
 
-CAlwaysVerticalTransform::CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical )
-: pBaseTransform(_pBaseTransform), bKeepVertical(_bKeepVertical)
+CAlwaysVerticalTransform::CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform,
+                                                    const bool _bKeepVertical )
+		: pBaseTransform( _pBaseTransform ), bKeepVertical( _bKeepVertical )
 {
 }
 
@@ -187,15 +210,9 @@ void CAlwaysVerticalTransform::Recalc()
 	if ( bKeepVertical )
 	{
 		const SHMatrix &mf = pBaseTransform->GetValue().forward;
-		value.forward.Set(	1, 0, 0, mf.xw,
-			0, 1, 0, mf.yw,
-			0, 0, 1, mf.zw,
-			0, 0, 0, 1 );
+		value.forward.Set( 1, 0, 0, mf.xw, 0, 1, 0, mf.yw, 0, 0, 1, mf.zw, 0, 0, 0, 1 );
 		const SHMatrix &mb = pBaseTransform->GetValue().backward;
-		value.backward.Set(	1, 0, 0, mb.xw,
-			0, 1, 0, mb.yw,
-			0, 0, 1, mb.zw,
-			0, 0, 0, 1 );
+		value.backward.Set( 1, 0, 0, mb.xw, 0, 1, 0, mb.yw, 0, 0, 1, mb.zw, 0, 0, 0, 1 );
 	}
 	else
 	{
@@ -206,8 +223,9 @@ void CAlwaysVerticalTransform::Recalc()
 
 // CAttachedLightEffectTransform
 
-CAttachedLightEffectTransform::CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier )
-: pBaseTransform(_pBaseTransform), mMultiplier(_mMultiplier)
+CAttachedLightEffectTransform::CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform,
+                                                              const SHMatrix &_mMultiplier )
+		: pBaseTransform( _pBaseTransform ), mMultiplier( _mMultiplier )
 {
 	pvTranslatePart = new CCCVec3();
 }
@@ -224,24 +242,22 @@ void CAttachedLightEffectTransform::Recalc()
 
 // CConstantOffsetTransform
 
-CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const std::string &_szBoneName, CFuncBase<SFBTransform> *_pBaseTransform )
-	: pBaseTransform( _pBaseTransform ),
-	nTargetID( _nTargetID ),
-	szBoneName( _szBoneName ),
-	bNeedCalcMatrix( true ),
-	pParentTransform( 0 )
+CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID,
+                                                    const std::string &_szBoneName,
+                                                    CFuncBase<SFBTransform> *_pBaseTransform )
+		: pBaseTransform( _pBaseTransform ), nTargetID( _nTargetID ), szBoneName( _szBoneName ), bNeedCalcMatrix( true ),
+			pParentTransform( 0 )
 {
 	Identity( &mMultiplier );
 }
 
-CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID, const std::string &_szBoneName,
-																									  CFuncBase<SFBTransform> *_pBaseTransform, CFuncBase<SFBTransform> *_pParentTransform )
-	: pBaseTransform( _pBaseTransform ),
-	nTargetID( _nTargetID ),
-	szBoneName( _szBoneName ),
-	bNeedCalcMatrix( true )
+CConstantOffsetTransform::CConstantOffsetTransform( const int _nTargetID,
+                                                    const std::string &_szBoneName,
+                                                    CFuncBase<SFBTransform> *_pBaseTransform,
+                                                    CFuncBase<SFBTransform> *_pParentTransform )
+		: pBaseTransform( _pBaseTransform ), nTargetID( _nTargetID ), szBoneName( _szBoneName ), bNeedCalcMatrix( true )
 {
-	pParentTransform = dynamic_cast<CConstantOffsetTransform*>( _pParentTransform );
+	pParentTransform = dynamic_cast<CConstantOffsetTransform *>( _pParentTransform );
 	Identity( &mMultiplier );
 }
 
@@ -274,11 +290,10 @@ void CConstantOffsetTransform::Recalc()
 
 // CCenterOffsetTransform
 
-CCenterOffsetTransform::CCenterOffsetTransform( const int _nTargetID, CFuncBase<SFBTransform> *_pBaseTransform,
-	const SHMatrix &_mMultiplier ) :
-	pBaseTransform( _pBaseTransform ),
-	nTargetID( _nTargetID ),
-	mMultiplier( _mMultiplier )
+CCenterOffsetTransform::CCenterOffsetTransform( const int _nTargetID,
+                                                CFuncBase<SFBTransform> *_pBaseTransform,
+                                                const SHMatrix &_mMultiplier )
+		: pBaseTransform( _pBaseTransform ), nTargetID( _nTargetID ), mMultiplier( _mMultiplier )
 {
 	mMultiplierInv.HomogeneousInverse( mMultiplier );
 }
@@ -315,14 +330,13 @@ void CAttachedLightEffectDir::Recalc()
 
 // CAttachedLightEffect
 
-CAttachedLightEffect::CAttachedLightEffect( const NDb::SAttachedLightEffect *_pEffect, CFuncBase<SFBTransform> *pTransform,
-																					  const NTimer::STime _nStartTime, const int nBoneIndex, const bool _bInEditor )
-	: CAttachedObject( pTransform, nBoneIndex, 0 ),
-	nStartTime( _nStartTime ),
-	nPointLightID( OBJECT_ID_GENERATE ),
-	pFlareHolder( 0 ),
-	nSoundID(-1),
-	bInEditor(_bInEditor)
+CAttachedLightEffect::CAttachedLightEffect( const NDb::SAttachedLightEffect *_pEffect,
+                                            CFuncBase<SFBTransform> *pTransform,
+                                            const NTimer::STime _nStartTime,
+                                            const int nBoneIndex,
+                                            const bool _bInEditor )
+		: CAttachedObject( pTransform, nBoneIndex, 0 ), nStartTime( _nStartTime ), nPointLightID( OBJECT_ID_GENERATE ),
+			pFlareHolder( 0 ), nSoundID( -1 ), bInEditor( _bInEditor )
 {
 	lightEffect = *_pEffect;
 	////
@@ -342,10 +356,7 @@ void CAttachedLightEffect::RegeneratePositions()
 {
 	const float fDummyConeSize = lightEffect.fConeSize ? lightEffect.fConeSize : 1.0f;
 	const float fDummyConeLength = lightEffect.fConeLength ? lightEffect.fConeLength : 1.0f;
-	SHMatrix mScale( fDummyConeSize, 0, 0, 0,
-									 0, fDummyConeSize, 0, 0,
-									 0, 0, fDummyConeLength, 0,
-									 0, 0, 0, 1 );
+	SHMatrix mScale( fDummyConeSize, 0, 0, 0, 0, fDummyConeSize, 0, 0, 0, 0, fDummyConeLength, 0, 0, 0, 0, 1 );
 	pConeTransform = new CAttachedLightEffectTransform( GetTransform(), mScale );
 
 	SHMatrix mIdentity;
@@ -376,12 +387,16 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 	//																				Flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f /*&& !pFlareHolder*/ )
 	{
-		const NDb::STexture *pTexture = ( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture
-			: pSceneConsts->lightFX.pFlareTexture;
+		const NDb::STexture *pTexture =
+				( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture : pSceneConsts->lightFX.pFlareTexture;
 
-		pFlareHolder = pGScene->AddFlare( pFlarePos, Scene()->GetAbsTimer(), 0,
-				lightEffect.fFlareSize, pTexture, pSceneConsts->lightFX.fFlareAppearTime,
-				pSceneConsts->lightFX.fFlareAppearTime );
+		pFlareHolder = pGScene->AddFlare( pFlarePos,
+		                                  Scene()->GetAbsTimer(),
+		                                  0,
+		                                  lightEffect.fFlareSize,
+		                                  pTexture,
+		                                  pSceneConsts->lightFX.fFlareAppearTime,
+		                                  pSceneConsts->lightFX.fFlareAppearTime );
 	}
 	//																				Point light
 	if ( !bInEditor && lightEffect.fPointLightSize > 0.0f )
@@ -397,13 +412,16 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 		if ( !pTexture )
 			pTexture = pSceneConsts->lightFX.pLightConeTexture;
 		////
-		pDirFlareHolder = pGScene->AddDirFlare( pFlarePos/*new CAttachedLightEffectPos( GetTransform(), mDummy )*/,
-			new CAttachedLightEffectDir( GetTransform() ), CVec2( lightEffect.fConeLength, lightEffect.fConeSize ), pTexture, 0 );
+		pDirFlareHolder = pGScene->AddDirFlare( pFlarePos /*new CAttachedLightEffectPos( GetTransform(), mDummy )*/,
+		                                        new CAttachedLightEffectDir( GetTransform() ),
+		                                        CVec2( lightEffect.fConeLength, lightEffect.fConeSize ),
+		                                        pTexture,
+		                                        0 );
 	}
 	//																				Additional (particle) effect
 	if ( !bInEditor && lightEffect.pAdditionalEffect )
 	{
-		const NDb::SEffect *pEffect =  lightEffect.pAdditionalEffect->GetSceneEffect();
+		const NDb::SEffect *pEffect = lightEffect.pAdditionalEffect->GetSceneEffect();
 		if ( pEffect )
 			SetHolder( pGScene->CreateParticles( pEffect, nStartTime, pTimer, pParticleTransform ) );
 	}
@@ -413,7 +431,6 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 	{
 		AddSound( lightEffect.pAdditionalEffect->pSoundEffect );
 	}
-
 }
 
 void CAttachedLightEffect::AddSound( const NDb::SComplexSoundDesc *pSound )
@@ -421,7 +438,8 @@ void CAttachedLightEffect::AddSound( const NDb::SComplexSoundDesc *pSound )
 	if ( nSoundID != -1 )
 		RemoveSound();
 
-	nSoundID = SoundScene()->AddSound( pSound, pSoundPos, SFX_MIX_SUBSTITUTE, pSound->bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID, 0, 2 );
+	nSoundID = SoundScene()->AddSound(
+			pSound, pSoundPos, SFX_MIX_SUBSTITUTE, pSound->bLooped ? SAM_LOOPED_NEED_ID : SAM_NEED_ID, 0, 2 );
 }
 
 void CAttachedLightEffect::RemoveSound()
@@ -466,18 +484,17 @@ void CAttachedLightEffect::Destroy( const NTimer::STime time )
 
 // CAttachedStaticLightEffect
 
-CAttachedStaticLightEffect::CAttachedStaticLightEffect( const NDb::SAttachedLightEffect *_pEffect, const int _nObjectID,
-																											  const NTimer::STime _nStartTime, const bool _bInEditor )
-	: nStartTime( _nStartTime ),
-	nPointLightID( OBJECT_ID_GENERATE ),
-	nObjectUniqueID( _nObjectID ),
-	nConeID( OBJECT_ID_GENERATE ),
-	bInEditor( _bInEditor )
+CAttachedStaticLightEffect::CAttachedStaticLightEffect( const NDb::SAttachedLightEffect *_pEffect,
+                                                        const int _nObjectID,
+                                                        const NTimer::STime _nStartTime,
+                                                        const bool _bInEditor )
+		: nStartTime( _nStartTime ), nPointLightID( OBJECT_ID_GENERATE ), nObjectUniqueID( _nObjectID ),
+			nConeID( OBJECT_ID_GENERATE ), bInEditor( _bInEditor )
 {
-	lightEffect	= *_pEffect;
+	lightEffect = *_pEffect;
 
 	if ( bInEditor && lightEffect.fConeSize == 0.0f )
-	{		// Since only the cone is shown in editor, show a dummy cone
+	{ // Since only the cone is shown in editor, show a dummy cone
 		lightEffect.fConeLength = 1.0f;
 		lightEffect.fConeSize = 1.0f;
 	}
@@ -498,10 +515,7 @@ void CAttachedStaticLightEffect::RegeneratePositions()
 	SHMatrix mLocal( lightEffect.vPos, lightEffect.qRot );
 	const float fDummyConeSize = lightEffect.fConeSize ? lightEffect.fConeSize : 1.0f;
 	const float fDummyConeLength = lightEffect.fConeLength ? lightEffect.fConeLength : 1.0f;
-	SHMatrix mScale(	fDummyConeSize, 0, 0, 0,
-		0, fDummyConeSize, 0, 0,
-		0, 0, fDummyConeLength, 0,
-		0, 0, 0, 1 );
+	SHMatrix mScale( fDummyConeSize, 0, 0, 0, 0, fDummyConeSize, 0, 0, 0, 0, fDummyConeLength, 0, 0, 0, 0, 1 );
 
 	SFBTransform globalTransform;
 	Scene()->GetVisObjPlacement( nObjectUniqueID, &globalTransform );
@@ -541,19 +555,24 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 	//																				Flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f )
 	{
-		const NDb::STexture *pTexture = ( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture
-			: pSceneConsts->lightFX.pFlareTexture;
+		const NDb::STexture *pTexture =
+				( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture : pSceneConsts->lightFX.pFlareTexture;
 
-		pFlareHolder = pGScene->AddFlare( pvFlarePlace, Scene()->GetAbsTimer(), 0,
-			lightEffect.fFlareSize, pTexture,
-			pSceneConsts->lightFX.fFlareAppearTime, pSceneConsts->lightFX.fFlareAppearTime );
+		pFlareHolder = pGScene->AddFlare( pvFlarePlace,
+		                                  Scene()->GetAbsTimer(),
+		                                  0,
+		                                  lightEffect.fFlareSize,
+		                                  pTexture,
+		                                  pSceneConsts->lightFX.fFlareAppearTime,
+		                                  pSceneConsts->lightFX.fFlareAppearTime );
 	}
 	//																				Point light
 	if ( !bInEditor && lightEffect.fPointLightSize > 0.0f )
 	{
 		if ( nPointLightID != OBJECT_ID_GENERATE )
 			Scene()->RemoveObject( nPointLightID );
-		nPointLightID = Scene()->AddPointLight( nPointLightID, lightEffect.vColour, vPointLightPos, lightEffect.fPointLightSize );
+		nPointLightID =
+				Scene()->AddPointLight( nPointLightID, lightEffect.vColour, vPointLightPos, lightEffect.fPointLightSize );
 	}
 	//																				Light cone
 	if ( !bInEditor && lightEffect.fConeSize > 0.0f )
@@ -565,16 +584,18 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 			pTexture = pSceneConsts->lightFX.pLightConeTexture;
 		////
 		pDirFlareHolder = pGScene->AddDirFlare( new CAttachedLightEffectPos( pConeTransform, mDummy ),
-			new CAttachedLightEffectDir( pConeTransform ), CVec2( lightEffect.fConeLength, lightEffect.fConeSize ), pTexture, 0 );
+		                                        new CAttachedLightEffectDir( pConeTransform ),
+		                                        CVec2( lightEffect.fConeLength, lightEffect.fConeSize ),
+		                                        pTexture,
+		                                        0 );
 	}
 	//																				Particle effect
 	if ( !bInEditor && lightEffect.pAdditionalEffect && lightEffect.pAdditionalEffect->pSceneEffect )
 	{
-		const NDb::SEffect *pEffect =  lightEffect.pAdditionalEffect->GetSceneEffect();
+		const NDb::SEffect *pEffect = lightEffect.pAdditionalEffect->GetSceneEffect();
 		if ( pEffect )
 			SetHolder( pGScene->CreateParticles( pEffect, nStartTime, pTimer, pConeTransform ) );
 	}
-
 }
 
 void CAttachedStaticLightEffect::Destroy( const NTimer::STime time )

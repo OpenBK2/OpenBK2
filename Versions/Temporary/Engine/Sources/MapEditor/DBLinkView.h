@@ -20,46 +20,46 @@
 // read and write.
 namespace NDBLink
 {
-	enum EType
-	{
-		// Opening an object: no previous selection shown, no Set Empty.
-		TYPE_OPEN = 0,
-		// Pointing a reference at one.
-		TYPE_LINK = 1,
-	};
+enum EType
+{
+	// Opening an object: no previous selection shown, no Set Empty.
+	TYPE_OPEN = 0,
+	// Pointing a reference at one.
+	TYPE_LINK = 1,
+};
 
-	struct SRequest
-	{
-		EType eType = TYPE_LINK;
-		// The selections are shown as "Table:Object", for a reference that may
-		// point into several tables.
-		bool bMultiRef = false;
-		// A multiline editor for the selected field under the grid:
-		// IDD_PC_DB_LINK_EX.
-		bool bTextEditor = false;
-		// The list's width, and with the editor the grid's height, in pixels;
-		// 0 leaves the template's.
-		int nFixedWidth = 0;
-		int nFixedHeight = 0;
-		// Whether the fields and the tables' trees may be edited.
-		bool bEnableEdit = true;
-		// The tables the object may come from.
-		CTableSet selectedTables;
-		// Where the picker opens, which it also shows as the previous selection.
-		std::string szTable;
-		std::string szObject;
-	};
+struct SRequest
+{
+	EType eType = TYPE_LINK;
+	// The selections are shown as "Table:Object", for a reference that may
+	// point into several tables.
+	bool bMultiRef = false;
+	// A multiline editor for the selected field under the grid:
+	// IDD_PC_DB_LINK_EX.
+	bool bTextEditor = false;
+	// The list's width, and with the editor the grid's height, in pixels;
+	// 0 leaves the template's.
+	int nFixedWidth = 0;
+	int nFixedHeight = 0;
+	// Whether the fields and the tables' trees may be edited.
+	bool bEnableEdit = true;
+	// The tables the object may come from.
+	CTableSet selectedTables;
+	// Where the picker opens, which it also shows as the previous selection.
+	std::string szTable;
+	std::string szObject;
+};
 
-	struct SResult
-	{
-		// The table and object selected when the picker closed.
-		std::string szTable;
-		std::string szObject;
-		// Closed by Set Empty rather than OK.
-		bool bEmpty = false;
-	};
+struct SResult
+{
+	// The table and object selected when the picker closed.
+	std::string szTable;
+	std::string szObject;
+	// Closed by Set Empty rather than OK.
+	bool bEmpty = false;
+};
 
-	// Runs the picker modally over pParent. True on OK or Set Empty, with what
-	// was selected in *pResult.
-	bool Run( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
+// Runs the picker modally over pParent. True on OK or Set Empty, with what
+// was selected in *pResult.
+bool Run( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
 }

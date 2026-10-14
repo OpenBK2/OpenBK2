@@ -3,7 +3,7 @@
 #include "Interface_View.h"
 #include "DefaultController.h"
 
-bool CDefaultController::Undo(  bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
+bool CDefaultController::Undo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
 {
 	// самостоятельно выполнить команду
 	bool bResult = true;
@@ -12,7 +12,7 @@ bool CDefaultController::Undo(  bool bUpdateManipulator, bool bUpdateViews, IVie
 		bResult = UndoWithoutUpdateViews();
 	}
 	// Обновить Views
-	if ( bResult &&	bUpdateViews )
+	if ( bResult && bUpdateViews )
 	{
 		CViewSet viewSet;
 		Singleton<IViewContainer>()->GetViewSet( &viewSet, objectSet, pViewToExlude );
@@ -24,8 +24,7 @@ bool CDefaultController::Undo(  bool bUpdateManipulator, bool bUpdateViews, IVie
 	return bResult;
 }
 
-
-bool CDefaultController::Redo(  bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
+bool CDefaultController::Redo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
 {
 	// самостоятельно выполнить команду
 	bool bResult = true;
@@ -47,8 +46,9 @@ bool CDefaultController::Redo(  bool bUpdateManipulator, bool bUpdateViews, IVie
 	return false;
 }
 
-
-void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const std::string &rszName ) const
+void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap,
+                                              const IManipulator::CNameMap &rManipulatorNameMap,
+                                              const std::string &rszName ) const
 {
 	if ( pNameMap )
 	{
@@ -61,7 +61,9 @@ void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, 
 				( *pNameMap )[posName->first + rszName] = 0;
 			}
 			// это может быть прямая команда
-			for ( IManipulator::CNameMap::const_iterator posName = rManipulatorNameMap.begin(); posName != rManipulatorNameMap.end(); ++posName )
+			for ( IManipulator::CNameMap::const_iterator posName = rManipulatorNameMap.begin();
+			      posName != rManipulatorNameMap.end();
+			      ++posName )
 			{
 				if ( rszName.compare( 0, posName->first.size(), posName->first ) == 0 )
 				{

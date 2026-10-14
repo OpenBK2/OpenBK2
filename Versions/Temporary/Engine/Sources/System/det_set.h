@@ -7,227 +7,219 @@
 #include <cstddef>
 #include <functional>
 
-template <
-    class T,
-    class Hash = std::hash<T>,
-    class KeyEqual = std::equal_to<T>
->
-class det_set {
+template <class T, class Hash = std::hash<T>, class KeyEqual = std::equal_to<T>>
+class det_set
+{
 public:
-    using key_type        = T;
-    using value_type      = T;
-    using size_type       = std::size_t;
-    using hasher          = Hash;
-    using key_equal       = KeyEqual;
+	using key_type = T;
+	using value_type = T;
+	using size_type = std::size_t;
+	using hasher = Hash;
+	using key_equal = KeyEqual;
 
 private:
-    using list_type       = std::list<T>;
-    using list_iterator   = typename list_type::iterator;
+	using list_type = std::list<T>;
+	using list_iterator = typename list_type::iterator;
 
-    list_type items_;
+	list_type items_;
 
-    // Value is duplicated here.
-    // The hash table gives O(1) average lookup.
-    std::unordered_map<T, list_iterator, Hash, KeyEqual> index_;
-
-public:
-    // Important: expose only const iterators.
-    // Set elements must not be mutated through iteration,
-    // otherwise the hash index would become invalid.
-    using iterator       = typename list_type::const_iterator;
-    using const_iterator = typename list_type::const_iterator;
+	// Value is duplicated here.
+	// The hash table gives O(1) average lookup.
+	std::unordered_map<T, list_iterator, Hash, KeyEqual> index_;
 
 public:
-    det_set() = default;
+	// Important: expose only const iterators.
+	// Set elements must not be mutated through iteration,
+	// otherwise the hash index would become invalid.
+	using iterator = typename list_type::const_iterator;
+	using const_iterator = typename list_type::const_iterator;
 
-    det_set(const det_set& other)
-        : items_(other.items_),
-          index_(other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq()) {
-        // Rebuild lookup iterators for the copied nodes; source iterators cannot
-        // be used to erase from this list or survive destruction of the source.
-        index_.max_load_factor(other.index_.max_load_factor());
-        for (auto it = items_.begin(); it != items_.end(); ++it) {
-            index_.emplace(*it, it);
-        }
-    }
+public:
+	det_set() = default;
 
-    det_set& operator=(const det_set& other) {
-        if (this != &other) {
-            det_set copy(other);
-            swap(copy);
-        }
-        return *this;
-    }
+	det_set( const det_set &other )
+			: items_( other.items_ ),
+				index_( other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq() )
+	{
+		// Rebuild lookup iterators for the copied nodes; source iterators cannot
+		// be used to erase from this list or survive destruction of the source.
+		index_.max_load_factor( other.index_.max_load_factor() );
+		for ( auto it = items_.begin(); it != items_.end(); ++it )
+		{
+			index_.emplace( *it, it );
+		}
+	}
 
-    // Moving the list transfers its nodes, so the transferred index remains valid.
-    det_set(det_set&&) = default;
-    det_set& operator=(det_set&&) = default;
+	det_set &operator=( const det_set &other )
+	{
+		if ( this != &other )
+		{
+			det_set copy( other );
+			swap( copy );
+		}
+		return *this;
+	}
 
-    void swap(det_set& other) noexcept(noexcept(items_.swap(other.items_)) && noexcept(index_.swap(other.index_))) {
-        items_.swap(other.items_);
-        index_.swap(other.index_);
-    }
+	// Moving the list transfers its nodes, so the transferred index remains valid.
+	det_set( det_set && ) = default;
+	det_set &operator=( det_set && ) = default;
 
-    det_set(std::initializer_list<T> init) {
-        reserve(init.size());
-        for (const auto& value : init) {
-            insert(value);
-        }
-    }
+	void swap( det_set &other ) noexcept( noexcept( items_.swap( other.items_ ) ) &&
+	                                      noexcept( index_.swap( other.index_ ) ) )
+	{
+		items_.swap( other.items_ );
+		index_.swap( other.index_ );
+	}
 
-    // ------------------------------------------------------------
-    // basic capacity
-    // ------------------------------------------------------------
+	det_set( std::initializer_list<T> init )
+	{
+		reserve( init.size() );
+		for ( const auto &value : init )
+		{
+			insert( value );
+		}
+	}
 
-    bool empty() const noexcept {
-        return items_.empty();
-    }
+	// ------------------------------------------------------------
+	// basic capacity
+	// ------------------------------------------------------------
 
-    size_type size() const noexcept {
-        return items_.size();
-    }
+	bool empty() const noexcept { return items_.empty(); }
 
-    void clear() noexcept {
-        index_.clear();
-        items_.clear();
-    }
+	size_type size() const noexcept { return items_.size(); }
 
-    // ------------------------------------------------------------
-    // iteration: deterministic insertion order
-    // ------------------------------------------------------------
+	void clear() noexcept
+	{
+		index_.clear();
+		items_.clear();
+	}
 
-    const_iterator begin() const noexcept {
-        return items_.begin();
-    }
+	// ------------------------------------------------------------
+	// iteration: deterministic insertion order
+	// ------------------------------------------------------------
 
-    const_iterator end() const noexcept {
-        return items_.end();
-    }
+	const_iterator begin() const noexcept { return items_.begin(); }
 
-    const_iterator cbegin() const noexcept {
-        return items_.cbegin();
-    }
+	const_iterator end() const noexcept { return items_.end(); }
 
-    const_iterator cend() const noexcept {
-        return items_.cend();
-    }
+	const_iterator cbegin() const noexcept { return items_.cbegin(); }
 
-    // ------------------------------------------------------------
-    // lookup
-    // ------------------------------------------------------------
+	const_iterator cend() const noexcept { return items_.cend(); }
 
-    const_iterator find(const T& value) const {
-        auto found = index_.find(value);
-        if (found == index_.end()) {
-            return items_.end();
-        }
-        return found->second;
-    }
+	// ------------------------------------------------------------
+	// lookup
+	// ------------------------------------------------------------
 
-    bool contains(const T& value) const {
-        return index_.find(value) != index_.end();
-    }
+	const_iterator find( const T &value ) const
+	{
+		auto found = index_.find( value );
+		if ( found == index_.end() )
+		{
+			return items_.end();
+		}
+		return found->second;
+	}
 
-    size_type count(const T& value) const {
-        return contains(value) ? 1u : 0u;
-    }
+	bool contains( const T &value ) const { return index_.find( value ) != index_.end(); }
 
-    // ------------------------------------------------------------
-    // insertion
-    // Returns {iterator, true} if inserted.
-    // Returns {existing_iterator, false} if value already existed.
-    // Existing values keep their original insertion position.
-    // ------------------------------------------------------------
+	size_type count( const T &value ) const { return contains( value ) ? 1u : 0u; }
 
-    std::pair<const_iterator, bool> insert(const T& value) {
-        auto found = index_.find(value);
-        if (found != index_.end()) {
-            return {found->second, false};
-        }
+	// ------------------------------------------------------------
+	// insertion
+	// Returns {iterator, true} if inserted.
+	// Returns {existing_iterator, false} if value already existed.
+	// Existing values keep their original insertion position.
+	// ------------------------------------------------------------
 
-        items_.push_back(value);
-        auto it = std::prev(items_.end());
-        index_.emplace(*it, it);
-        return {it, true};
-    }
+	std::pair<const_iterator, bool> insert( const T &value )
+	{
+		auto found = index_.find( value );
+		if ( found != index_.end() )
+		{
+			return { found->second, false };
+		}
 
-    std::pair<const_iterator, bool> insert(T&& value) {
-        auto found = index_.find(value);
-        if (found != index_.end()) {
-            return {found->second, false};
-        }
+		items_.push_back( value );
+		auto it = std::prev( items_.end() );
+		index_.emplace( *it, it );
+		return { it, true };
+	}
 
-        items_.push_back(std::move(value));
-        auto it = std::prev(items_.end());
-        index_.emplace(*it, it);
-        return {it, true};
-    }
+	std::pair<const_iterator, bool> insert( T &&value )
+	{
+		auto found = index_.find( value );
+		if ( found != index_.end() )
+		{
+			return { found->second, false };
+		}
 
-    template <class... Args>
-    std::pair<const_iterator, bool> emplace(Args&&... args) {
-        T value(std::forward<Args>(args)...);
+		items_.push_back( std::move( value ) );
+		auto it = std::prev( items_.end() );
+		index_.emplace( *it, it );
+		return { it, true };
+	}
 
-        auto found = index_.find(value);
-        if (found != index_.end()) {
-            return {found->second, false};
-        }
+	template <class... Args>
+	std::pair<const_iterator, bool> emplace( Args &&...args )
+	{
+		T value( std::forward<Args>( args )... );
 
-        items_.push_back(std::move(value));
-        auto it = std::prev(items_.end());
-        index_.emplace(*it, it);
-        return {it, true};
-    }
+		auto found = index_.find( value );
+		if ( found != index_.end() )
+		{
+			return { found->second, false };
+		}
 
-    // ------------------------------------------------------------
-    // erase
-    // ------------------------------------------------------------
+		items_.push_back( std::move( value ) );
+		auto it = std::prev( items_.end() );
+		index_.emplace( *it, it );
+		return { it, true };
+	}
 
-    bool erase(const T& value) {
-        auto found = index_.find(value);
-        if (found == index_.end()) {
-            return false;
-        }
+	// ------------------------------------------------------------
+	// erase
+	// ------------------------------------------------------------
 
-        items_.erase(found->second);
-        index_.erase(found);
-        return true;
-    }
+	bool erase( const T &value )
+	{
+		auto found = index_.find( value );
+		if ( found == index_.end() )
+		{
+			return false;
+		}
 
-    const_iterator erase(const_iterator pos) {
-        if (pos == items_.end()) {
-            return pos;
-        }
+		items_.erase( found->second );
+		index_.erase( found );
+		return true;
+	}
 
-        // std::list::erase needs a non-const iterator in C++17.
-        // Convert const_iterator to iterator by walking from begin().
-        auto mutable_pos = items_.begin();
-        std::advance(mutable_pos, std::distance(items_.cbegin(), pos));
+	const_iterator erase( const_iterator pos )
+	{
+		if ( pos == items_.end() )
+		{
+			return pos;
+		}
 
-        index_.erase(*mutable_pos);
-        return items_.erase(mutable_pos);
-    }
+		// std::list::erase needs a non-const iterator in C++17.
+		// Convert const_iterator to iterator by walking from begin().
+		auto mutable_pos = items_.begin();
+		std::advance( mutable_pos, std::distance( items_.cbegin(), pos ) );
 
-    // ------------------------------------------------------------
-    // hash-table management
-    // ------------------------------------------------------------
+		index_.erase( *mutable_pos );
+		return items_.erase( mutable_pos );
+	}
 
-    void reserve(size_type count) {
-        index_.reserve(count);
-    }
+	// ------------------------------------------------------------
+	// hash-table management
+	// ------------------------------------------------------------
 
-    size_type bucket_count() const {
-        return index_.bucket_count();
-    }
+	void reserve( size_type count ) { index_.reserve( count ); }
 
-    float load_factor() const {
-        return index_.load_factor();
-    }
+	size_type bucket_count() const { return index_.bucket_count(); }
 
-    void max_load_factor(float value) {
-        index_.max_load_factor(value);
-    }
+	float load_factor() const { return index_.load_factor(); }
 
-    float max_load_factor() const {
-        return index_.max_load_factor();
-    }
+	void max_load_factor( float value ) { index_.max_load_factor( value ); }
+
+	float max_load_factor() const { return index_.max_load_factor(); }
 };

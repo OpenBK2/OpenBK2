@@ -25,19 +25,18 @@ const int nMAX_PLAYERS = 8;
 
 // CInterfaceMPCustomGame
 
-CInterfaceMPCustomGame::CInterfaceMPCustomGame() :
-CInterfaceMPScreenBase( "MPCustomGame", "custom_game" ), nSelectedID(-1)
+CInterfaceMPCustomGame::CInterfaceMPCustomGame()
+		: CInterfaceMPScreenBase( "MPCustomGame", "custom_game" ), nSelectedID( -1 )
 {
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, &CInterfaceMPCustomGame::OnUpdateGameList );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, &CInterfaceMPCustomGame::OnUpdateGameList );
 }
 
-CInterfaceMPCustomGame::~CInterfaceMPCustomGame()
-{
-}
+CInterfaceMPCustomGame::~CInterfaceMPCustomGame() {}
 
 bool CInterfaceMPCustomGame::Init()
 {
-	if ( CInterfaceScreenBase::	Init() == false )
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	AddScreen( this );
@@ -52,25 +51,23 @@ bool CInterfaceMPCustomGame::Init()
 	return true;
 }
 
-void CInterfaceMPCustomGame::RegisterObservers()
-{
-}
+void CInterfaceMPCustomGame::RegisterObservers() {}
 
 void CInterfaceMPCustomGame::SetFiltersData()
 {
 	CPtr<CTextData> pData;
 
-	std::wstring wszAnyText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_ANY");
+	std::wstring wszAnyText = InterfaceState()->GetTextEntry( "T_MP_GAME_ROOM_ANY" );
 	if ( pMapSizeBox )
 	{
 		pData = new CTextData( wszAnyText );
-		std::wstring wszSmallText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_SMALL_MAP");
+		std::wstring wszSmallText = InterfaceState()->GetTextEntry( "T_MP_GAME_ROOM_SMALL_MAP" );
 		pMapSizeBox->AddItem( pData );
 		pData = new CTextData( wszSmallText );
-		std::wstring wszMediumText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_MEDIUM_MAP");
+		std::wstring wszMediumText = InterfaceState()->GetTextEntry( "T_MP_GAME_ROOM_MEDIUM_MAP" );
 		pMapSizeBox->AddItem( pData );
 		pData = new CTextData( wszMediumText );
-		std::wstring wszLargeText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_LARGE_MAP");
+		std::wstring wszLargeText = InterfaceState()->GetTextEntry( "T_MP_GAME_ROOM_LARGE_MAP" );
 		pMapSizeBox->AddItem( pData );
 		pData = new CTextData( wszLargeText );
 		pMapSizeBox->AddItem( pData );
@@ -87,9 +84,9 @@ void CInterfaceMPCustomGame::SetFiltersData()
 	{
 		pData = new CTextData( wszAnyText );
 		pTechLevel->AddItem( pData );
-		for( int i = 0; i < NGameX::GetMPConsts()->techLevels.size(); ++i )
+		for ( int i = 0; i < NGameX::GetMPConsts()->techLevels.size(); ++i )
 		{
-			pData = new CTextData( 	GET_TEXT_PRE( NGameX::GetMPConsts()->techLevels[i]., Name ) );
+			pData = new CTextData( GET_TEXT_PRE( NGameX::GetMPConsts()->techLevels[i]., Name ) );
 			pTechLevel->AddItem( pData );
 		}
 		pTechLevel->Select( 0 );
@@ -112,23 +109,23 @@ void CInterfaceMPCustomGame::SetControls()
 {
 	IButton *pBtn = pBtn = GetChildChecked<IButton>( pMain, "ButtonJoinGame", true );
 	pBtn->Enable( false );
-	pFilters = GetChildChecked<IWindow> ( pMain, "Filters", true );
+	pFilters = GetChildChecked<IWindow>( pMain, "Filters", true );
 	if ( pFilters )
 		pFilters->ShowWindow( false );
-	pMapSizeBox = GetChildChecked<IComboBox> ( pFilters, "MapSize", true );
+	pMapSizeBox = GetChildChecked<IComboBox>( pFilters, "MapSize", true );
 	if ( pMapSizeBox )
 		pMapSizeBox->SetViewer( new CTextDataViewer() );
-	pGameTypeBox = GetChildChecked<IComboBox> ( pFilters, "GameType", true );
+	pGameTypeBox = GetChildChecked<IComboBox>( pFilters, "GameType", true );
 	if ( pGameTypeBox )
 		pGameTypeBox->SetViewer( new CTextDataViewer() );
-	pTechLevel = GetChildChecked<IComboBox> ( pFilters, "TechLevel", true );
+	pTechLevel = GetChildChecked<IComboBox>( pFilters, "TechLevel", true );
 	if ( pTechLevel )
 		pTechLevel->SetViewer( new CTextDataViewer() );
-	pNumPlayersBox = GetChildChecked<IComboBox> ( pFilters, "NumPlayers", true );
+	pNumPlayersBox = GetChildChecked<IComboBox>( pFilters, "NumPlayers", true );
 	if ( pNumPlayersBox )
 		pNumPlayersBox->SetViewer( new CTextDataViewer() );
 
-	pList = GetChildChecked<IListControl> ( pMain, "CustomGame", false );
+	pList = GetChildChecked<IListControl>( pMain, "CustomGame", false );
 	if ( pList )
 	{
 		pList->SetViewer( new CItemCustomGameListViewer() );
@@ -145,10 +142,11 @@ void CInterfaceMPCustomGame::SetControls()
 		pRefresh->Enable( false );
 }
 
-void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
+void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBase *pWindow,
+                                                                      const CObjectBase *pData ) const
 {
-//	DebugTrace("Make interior for listviewer");
- 	CDynamicCast<IListControlItem> pItem = pWindow;
+	//	DebugTrace("Make interior for listviewer");
+	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
 
 	CDynamicCast<CCustomGameListData> pInfo = pData;
@@ -160,17 +158,19 @@ void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBas
 	NMPSetData::SetChildText( pItem, "ItemMapName", wStr );
 
 	std::wstring wszTechText;
-	if ( info.nTechLevel >= 0 && info.nTechLevel < NGameX::GetMPConsts()->techLevels.size()
-		&& CHECK_TEXT_NOT_EMPTY_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name ) )
+	if ( info.nTechLevel >= 0 && info.nTechLevel < NGameX::GetMPConsts()->techLevels.size() &&
+	     CHECK_TEXT_NOT_EMPTY_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name ) )
 		wszTechText = GET_TEXT_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name );
 	NMPSetData::SetChildText( pItem, "ItemTechLevel", wszTechText );
 
-	ITextView *pTxt = GetChildChecked<ITextView> ( pItem, "ItemGameType", true );
+	ITextView *pTxt = GetChildChecked<ITextView>( pItem, "ItemGameType", true );
 	//NMPSetData::SetGameType( pTxt, info.pMPMap->pMap, 0/*info.nGameType*/ );
 
-	NMPSetData::SetChildText( pItem, "ItemMapSize", NStr::ToUnicode( fmt::format( "{} x {}", info.nSizeX, info.nSizeY ) ) );
+	NMPSetData::SetChildText(
+			pItem, "ItemMapSize", NStr::ToUnicode( fmt::format( "{} x {}", info.nSizeX, info.nSizeY ) ) );
 
-	NMPSetData::SetChildText( pItem, "ItemNumPlayers", NStr::ToUnicode( fmt::format( "{} / {}", info.nPlayers, info.nPlayersMax ) ) );
+	NMPSetData::SetChildText(
+			pItem, "ItemNumPlayers", NStr::ToUnicode( fmt::format( "{} / {}", info.nPlayers, info.nPlayersMax ) ) );
 	//NMPSetData::SetChildText( pItem, "ItemPing", NStr::ToUnicode( std::to_string(  info.nPing ) ) );
 
 	CPtr<IWindow> pPassword = GetChildChecked<IWindow>( pItem, "ItemPassword", true );
@@ -318,7 +318,7 @@ bool CInterfaceMPCustomGame::OnJoinGameReaction( const std::string &szSender )
 		if ( it == items.end() )
 			return true;
 
-		CCustomGameListData *pData = dynamic_cast<CCustomGameListData*>( it->second.pItem->GetUserData() );
+		CCustomGameListData *pData = dynamic_cast<CCustomGameListData *>( it->second.pItem->GetUserData() );
 		SMPGameInfo &game = pData->info;
 		if ( game.bPwdReq )
 		{
@@ -337,13 +337,13 @@ bool CInterfaceMPCustomGame::OnFiltersReaction( const std::string &szSender )
 	pFilters->ShowWindow( true );
 
 	if ( pMapSizeBox )
-		 pMapSizeBox->Select( filter.nMapSize );
+		pMapSizeBox->Select( filter.nMapSize );
 	if ( pGameTypeBox )
-		 pGameTypeBox->Select( filter.nGameType );
+		pGameTypeBox->Select( filter.nGameType );
 	if ( pTechLevel )
-		 pTechLevel->Select( filter.nTechLevel );
+		pTechLevel->Select( filter.nTechLevel );
 	if ( pNumPlayersBox )
-		 pNumPlayersBox->Select( filter.nPlayers );
+		pNumPlayersBox->Select( filter.nPlayers );
 
 	return true;
 }
@@ -409,7 +409,7 @@ bool CInterfaceMPCustomGame::OnPasswordOk( const std::string &szSender )
 	return true;
 }
 
-bool CInterfaceMPCustomGame::OnPasswordCancel( const std::string &szSender )\
+bool CInterfaceMPCustomGame::OnPasswordCancel( const std::string &szSender )
 {
 	pPasswordPopup->ShowWindow( false );
 	return true;
@@ -470,15 +470,15 @@ bool CInterfaceMPCustomGame::IsAllowedByFilter( const SMPGameInfo &game )
 		const int nMLBound = 15 * 15;
 		switch ( filter.nMapSize )
 		{
-			case 1:			// SMALL
+			case 1: // SMALL
 				if ( game.nSizeX * game.nSizeY > nSMBound )
 					return false;
 				break;
-			case 2:			// MEDIUM
+			case 2: // MEDIUM
 				if ( game.nSizeX * game.nSizeY < nSMBound || game.nSizeX * game.nSizeY > nMLBound )
 					return false;
 				break;
-			case 3:			// LARGE
+			case 3: // LARGE
 				if ( game.nSizeX * game.nSizeY < nMLBound )
 					return false;
 				break;
@@ -490,18 +490,14 @@ bool CInterfaceMPCustomGame::IsAllowedByFilter( const SMPGameInfo &game )
 
 // CICMPCustomGame
 
-void CICMPCustomGame::PreCreate()
-{
-}
+void CICMPCustomGame::PreCreate() {}
 
 void CICMPCustomGame::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMPCustomGame::Configure( const char *pszConfig )
-{
-}
+void CICMPCustomGame::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x32194C00, CInterfaceMPCustomGame );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_CUSTOM_GAME_MENU, CICMPCustomGame );

@@ -5,20 +5,23 @@
 inline bool DoesIntersect( const SSphere &a, const SSphere &b )
 {
 	CVec3 ptDif = a.ptCenter - b.ptCenter;
-	return fabs2(ptDif) < sqr( a.fRadius + b.fRadius );
+	return fabs2( ptDif ) < sqr( a.fRadius + b.fRadius );
 }
 namespace NGScene
 {
 
 // CSceneFragments
 
-CSceneFragments::CSceneFragments() : nSceneTris(0), bNeedHSR(false)//, pRejected(0), nRejectedUsed(0)
+CSceneFragments::CSceneFragments() : nSceneTris( 0 ), bNeedHSR( false ) //, pRejected(0), nRejectedUsed(0)
 {
 	fragments.push_back( fragmentInfos.Alloc() );
 	ASSERT( fragments.size() == 1 );
 }
 
-int CSceneFragments::AddGeometry( CObjectBase *pHandle, SRenderGeometryInfo *pGeometry, const SBound &_bv, bool bNotAddBound )
+int CSceneFragments::AddGeometry( CObjectBase *pHandle,
+                                  SRenderGeometryInfo *pGeometry,
+                                  const SBound &_bv,
+                                  bool bNotAddBound )
 {
 	SRenderStaticInfo *pRes = staticInfos.Alloc();
 	pRes->pHandle = pHandle;
@@ -32,8 +35,10 @@ int CSceneFragments::AddGeometry( CObjectBase *pHandle, SRenderGeometryInfo *pGe
 	return geometries.size() - 1;
 }
 
-void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts,
-	IMaterial *pMaterial, const SPerPartVariables &_vars )
+void CSceneFragments::AddElement( int _nGeometryIndex,
+                                  const CPartFlags &_parts,
+                                  IMaterial *pMaterial,
+                                  const SPerPartVariables &_vars )
 {
 	if ( _parts.IsEmpty() )
 		return;
@@ -55,7 +60,7 @@ void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts,
 		pFragment->elements.reserve( 8 );
 	}
 	else
-		pFragment = fragments[ i->second ];
+		pFragment = fragments[i->second];
 	for ( int i = 0; i < _parts.GetBlocksNumber(); ++i )
 	{
 		int nFlags = _parts.GetBlock( i );
@@ -64,7 +69,10 @@ void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts,
 	}
 }
 
-void CSceneFragments::AddLitParticles( IVBCombiner *pCombiner, CFuncBase<std::vector<NGfx::STriangleList> > *pTris, int nPart, const SBound &_bv )
+void CSceneFragments::AddLitParticles( IVBCombiner *pCombiner,
+                                       CFuncBase<std::vector<NGfx::STriangleList>> *pTris,
+                                       int nPart,
+                                       const SBound &_bv )
 {
 	SRenderGeometryInfo *pGeom = geometryInfos.Alloc();
 	pGeom->pTriLists[TLT_POSITION] = pTris;
@@ -73,7 +81,7 @@ void CSceneFragments::AddLitParticles( IVBCombiner *pCombiner, CFuncBase<std::ve
 	pGeom->pVertices.Refresh();
 	int nGeom = AddGeometry( 0, pGeom, _bv, false );
 	int nBlock = nPart / 32, nShift = nPart & 31;
-	fragments[0]->elements.push_back( SRenderFragmentInfo::SElement( nGeom, nBlock, 1<<nShift ) );
+	fragments[0]->elements.push_back( SRenderFragmentInfo::SElement( nGeom, nBlock, 1 << nShift ) );
 }
 
 void CSceneFragments::SetLitParticlesMaterial( IMaterial *p )
@@ -130,7 +138,7 @@ void CSceneFragments::HideGeometry( const std::vector<CPartFlags> &flags )
 	{
 		CPartFlags filter = flags[k];
 		filter.Invert(); // taken are set
-		char &f = filterGeometry[ k ];
+		char &f = filterGeometry[k];
 		if ( f == FST_REJECT )
 			continue;
 		if ( f == FST_SPLIT )
@@ -140,27 +148,25 @@ void CSceneFragments::HideGeometry( const std::vector<CPartFlags> &flags )
 		else
 		{
 			f = FST_SPLIT;
-			selectedParts[ k ] = filter;
+			selectedParts[k] = filter;
 		}
 	}
 }
-
 
 inline EFragmentsSplit GetIntersectLevel( const SBound &bound, const SBound &test )
 {
 	CVec3 ptDif = bound.s.ptCenter - test.s.ptCenter;
 	// fast outside
-	float fDif2 = fabs2(ptDif);
+	float fDif2 = fabs2( ptDif );
 	if ( fDif2 > sqr( bound.s.fRadius + test.s.fRadius ) )
 		return FST_REJECT;
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
 	float fRDif = bound.s.fRadius - test.s.fRadius;
 	if ( fDif2 < fRDif * fabs( fRDif ) )
 		return FST_ACCEPT;
-	if (
-		fabs(ptDif.x) + test.ptHalfBox.x < bound.ptHalfBox.x &&
-		fabs(ptDif.y) + test.ptHalfBox.y < bound.ptHalfBox.y &&
-		fabs(ptDif.z) + test.ptHalfBox.z < bound.ptHalfBox.z )
+	if ( fabs( ptDif.x ) + test.ptHalfBox.x < bound.ptHalfBox.x &&
+	     fabs( ptDif.y ) + test.ptHalfBox.y < bound.ptHalfBox.y &&
+	     fabs( ptDif.z ) + test.ptHalfBox.z < bound.ptHalfBox.z )
 		return FST_ACCEPT;
 	return FST_SPLIT;
 }
@@ -169,7 +175,7 @@ inline EFragmentsSplit GetIntersectLevel( const SSphere &bound, const SSphere &t
 {
 	CVec3 ptDif = bound.ptCenter - test.ptCenter;
 	// fast outside
-	float fDif2 = fabs2(ptDif);
+	float fDif2 = fabs2( ptDif );
 	if ( fDif2 > sqr( bound.fRadius + test.fRadius ) )
 		return FST_REJECT;
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
@@ -181,7 +187,8 @@ inline EFragmentsSplit GetIntersectLevel( const SSphere &bound, const SSphere &t
 
 // Filter ops
 
-EFragmentsSplit SBoundIntersectFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
+EFragmentsSplit
+SBoundIntersectFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	EFragmentsSplit res = GetIntersectLevel( bv, pStatic->bv );
 	if ( res == FST_SPLIT )
@@ -198,7 +205,8 @@ EFragmentsSplit SBoundIntersectFilter::operator()( SRenderStaticInfo *pStatic, S
 	return res;
 }
 
-EFragmentsSplit SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
+EFragmentsSplit
+SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	if ( !pTS->PushClipHint( pStatic->bv ) )
 		return FST_REJECT;
@@ -219,14 +227,15 @@ EFragmentsSplit SFrustrumFilter::operator()( SRenderStaticInfo *pStatic, SRender
 	return FST_SPLIT;
 }
 
-EFragmentsSplit SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
+EFragmentsSplit
+SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
-//	EFragmentsSplit res = GetIntersectLevel( sph, pStatic->bv.s );
+	//	EFragmentsSplit res = GetIntersectLevel( sph, pStatic->bv.s );
 	EFragmentsSplit res = GetIntersectLevel( bound, pStatic->bv );
 	if ( res == FST_SPLIT )
 	{
 		const std::vector<SSphere> &bounds = pGeom->pVertices->GetBounds();
-/*		CPartFlags res1 = *pRes;
+		/*		CPartFlags res1 = *pRes;
 		for ( int k = 0; k < bounds.size(); ++k )
 		{
 			if ( !res1.IsSet( k ) )
@@ -255,13 +264,13 @@ EFragmentsSplit SSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGe
 			}
 			res2.SetBlock( k >> 5, nBlock );
 		}
-//		ASSERT( res1 == res2 );
+		//		ASSERT( res1 == res2 );
 		//*pRes = res2;
 	}
 	return res;
 }
 
-void SIgnorePartsInfo::Init( const CPartFlags &_flags, const std::vector<CPtr<IPart> > *pParts )
+void SIgnorePartsInfo::Init( const CPartFlags &_flags, const std::vector<CPtr<IPart>> *pParts )
 {
 	flags = _flags;
 	ignore.resize( pParts->size() );
@@ -269,39 +278,40 @@ void SIgnorePartsInfo::Init( const CPartFlags &_flags, const std::vector<CPtr<IP
 	for ( int k = 0; k < pParts->size(); ++k )
 	{
 		if ( !_flags.IsSet( k ) )
-			ignore[nRes++] = (*pParts)[k];
+			ignore[nRes++] = ( *pParts )[k];
 	}
 	ignore.resize( nRes );
 }
 
-EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
+EFragmentsSplit
+SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SRenderGeometryInfo *pGeom, CPartFlags *pRes ) const
 {
 	if ( !pIgnoreList )
 		return sph( pStatic, pGeom, pRes );
 	CFullIgnorePartsHash::iterator i = pIgnoreList->find( pStatic->pHandle );
 	if ( i == pIgnoreList->end() )
-		return FST_REJECT;//sph( pStatic, pGeom, pRes );
+		return FST_REJECT; //sph( pStatic, pGeom, pRes );
 	SIgnorePartsInfo &ipi = i->second;
 	if ( !ipi.pTrackCombiner )
 		ipi.pTrackCombiner = pGeom->pVertices->GetCombiner();
 	ASSERT( ipi.pTrackCombiner == pGeom->pVertices->GetCombiner() );
 	if ( ipi.pTrackCombiner == 0 )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		pIgnoreList->erase( i );
 		return FST_ACCEPT;
 	}
 	if ( ipi.pTrackCombiner != 0 && ipi.pTrackCombiner.Refresh() )
 	{
 		ipi.flags.TakeAll();
-		const std::vector< CPtr<IPart> > &parts = ipi.pTrackCombiner->GetValue();
-		typedef std::unordered_map<IPart*, bool> CPtrSet;
+		const std::vector<CPtr<IPart>> &parts = ipi.pTrackCombiner->GetValue();
+		typedef std::unordered_map<IPart *, bool> CPtrSet;
 		CPtrSet ignore;
 		int nDst = 0;
 		for ( int k = 0; k < ipi.ignore.size(); ++k )
 		{
 			IPart *p = ipi.ignore[k];
-			ipi.ignore[ nDst ] = p;
+			ipi.ignore[nDst] = p;
 			if ( !IsValid( p ) )
 				continue;
 			ignore[p];
@@ -321,15 +331,18 @@ EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SR
 	return FST_SPLIT;
 }
 
-
-void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitParticles, float fMinFade,
-	SPerspDirectionalDepthInfo *pDepthInfo, unsigned char op,
-	CRenderCmdList::UParameter _p1,
-	CRenderCmdList::UParameter _p2,
-	CRenderCmdList::UParameter _p3,
-	int nStencilOp )
+void MakeSingleOp( CRenderCmdList *pRes,
+                   CSceneFragments &src,
+                   bool bTakeLitParticles,
+                   float fMinFade,
+                   SPerspDirectionalDepthInfo *pDepthInfo,
+                   unsigned char op,
+                   CRenderCmdList::UParameter _p1,
+                   CRenderCmdList::UParameter _p2,
+                   CRenderCmdList::UParameter _p3,
+                   int nStencilOp )
 {
-	const std::vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
+	const std::vector<SRenderFragmentInfo *> &fragments = src.GetFragments();
 	for ( int k = bTakeLitParticles ? 0 : 1; k < fragments.size(); ++k )
 	{
 		if ( src.IsFilteredFragment( k ) )
@@ -342,22 +355,22 @@ void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitPart
 		if ( f.pMaterial )
 		{
 			f.pMaterial->AddATOperations( &fi, pDepthInfo );
-			if ( fi.HasAddedOps() )//bAlphaTest )
+			if ( fi.HasAddedOps() ) //bAlphaTest )
 			{
-				fi.AddOperation( op, 100, nStencilOp|DPM_EQUAL, 0, _p1, _p2, _p3 );
+				fi.AddOperation( op, 100, nStencilOp | DPM_EQUAL, 0, _p1, _p2, _p3 );
 				continue;
 			}
 
 			extern bool bNewShadows;
-			if( !bNewShadows )
+			if ( !bNewShadows )
 			{
 
-			if ( f.pMaterial->DoesBackFaceCastShadow() )
-				fi.AddOperation( op, 100, nStencilOp|SHADOW_CULL_CCW, 0, _p1, _p2, _p3 );
-			else
-				fi.AddOperation( op, 100, nStencilOp, 0, _p1, _p2, _p3 );
+				if ( f.pMaterial->DoesBackFaceCastShadow() )
+					fi.AddOperation( op, 100, nStencilOp | SHADOW_CULL_CCW, 0, _p1, _p2, _p3 );
+				else
+					fi.AddOperation( op, 100, nStencilOp, 0, _p1, _p2, _p3 );
 
-			continue;
+				continue;
 			}
 		}
 

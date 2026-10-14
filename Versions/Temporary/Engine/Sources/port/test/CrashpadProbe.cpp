@@ -7,7 +7,7 @@
 #include <string>
 #include <thread>
 
-#if defined(_WIN32)
+#if defined( _WIN32 )
 #include <crtdbg.h>
 #endif
 
@@ -22,11 +22,11 @@ void AccessViolation()
 	*reinterpret_cast<volatile unsigned char *>( crashAddress ) = 1;
 }
 
-#if defined(_WIN32)
+#if defined( _WIN32 )
 LONG WINAPI SwallowHeapCorruption( EXCEPTION_POINTERS *exception )
 {
-	return exception->ExceptionRecord->ExceptionCode == 0xC0000374
-		? EXCEPTION_CONTINUE_EXECUTION : EXCEPTION_CONTINUE_SEARCH;
+	return exception->ExceptionRecord->ExceptionCode == 0xC0000374 ? EXCEPTION_CONTINUE_EXECUTION
+	                                                               : EXCEPTION_CONTINUE_SEARCH;
 }
 #endif
 }
@@ -36,7 +36,7 @@ int main( int argc, char **argv )
 	if ( argc != 2 )
 		return 2;
 
-#if defined(_WIN32)
+#if defined( _WIN32 )
 	// Intentional test failures must not wait for an unattended debug CRT box.
 	SetErrorMode( SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX );
 	_CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
@@ -74,7 +74,7 @@ int main( int argc, char **argv )
 			return 0;
 		}
 	}
-#if defined(_WIN32)
+#if defined( _WIN32 )
 	else if ( mode == "heap-corruption" )
 	{
 		// A later handler swallows this exception just as Windows can. A plain

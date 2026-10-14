@@ -5,7 +5,7 @@
 
 namespace NGfx
 {
-	class CGeometry;
+class CGeometry;
 }
 struct SDiscretePos;
 struct SBoundCalcer;
@@ -35,71 +35,119 @@ enum ECombinerType
 	CT_DYNAMIC
 };
 
-class CMMXAnimationMatrices : public CFuncBase<std::vector<NGfx::SCompactTransformer> >
+class CMMXAnimationMatrices : public CFuncBase<std::vector<NGfx::SCompactTransformer>>
 {
-	OBJECT_NOCOPY_METHODS(CMMXAnimationMatrices);
+	OBJECT_NOCOPY_METHODS( CMMXAnimationMatrices );
 	ZDATA
-	CDGPtr<CFuncBase< std::vector<SHMatrix> > > pAnimation;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimation); return 0; }
+	CDGPtr<CFuncBase<std::vector<SHMatrix>>> pAnimation;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pAnimation );
+		return 0;
+	}
+
 protected:
 	virtual bool NeedUpdate() { return pAnimation.Refresh(); }
 	virtual void Recalc();
+
 public:
-	CMMXAnimationMatrices( CFuncBase< std::vector<SHMatrix> > *p = 0 ) : pAnimation(p) {}
+	CMMXAnimationMatrices( CFuncBase<std::vector<SHMatrix>> *p = 0 ) : pAnimation( p ) {}
 };
 
-template<class T>
+template <class T>
 class CBuffer
 {
 	T *pBuffer;
 	int nSize;
-	CBuffer(const CBuffer& ) {ASSERT(0);}
-	void operator=(const CBuffer&) {ASSERT(0);}
+	CBuffer( const CBuffer & ) { ASSERT( 0 ); }
+	void operator=( const CBuffer & ) { ASSERT( 0 ); }
+
 public:
-	CBuffer() : pBuffer(0), nSize(0) {}
+	CBuffer() : pBuffer( 0 ), nSize( 0 ) {}
 	~CBuffer() { delete[] pBuffer; }
-	void Clear() { if ( pBuffer ) delete[] pBuffer; pBuffer = 0; nSize = 0; }
-	void Resize( int n ) { if ( nSize == n ) return; if( n == 0 ) Clear(); else { delete[] pBuffer; pBuffer = new T[n]; nSize = n; } }
+	void Clear()
+	{
+		if ( pBuffer )
+			delete[] pBuffer;
+		pBuffer = 0;
+		nSize = 0;
+	}
+	void Resize( int n )
+	{
+		if ( nSize == n )
+			return;
+		if ( n == 0 )
+			Clear();
+		else
+		{
+			delete[] pBuffer;
+			pBuffer = new T[n];
+			nSize = n;
+		}
+	}
 	int GetSize() const { return nSize; }
-	T* GetData() const { return pBuffer; }
-	T& operator[]( int i ) { ASSERT( i >= 0 && i < nSize ); return pBuffer[i]; }
-	const T& operator[]( int i ) const { ASSERT( i >= 0 && i < nSize ); return pBuffer[i]; }
+	T *GetData() const { return pBuffer; }
+	T &operator[]( int i )
+	{
+		ASSERT( i >= 0 && i < nSize );
+		return pBuffer[i];
+	}
+	const T &operator[]( int i ) const
+	{
+		ASSERT( i >= 0 && i < nSize );
+		return pBuffer[i];
+	}
 };
 
 class CPerMaterialCombiner;
 class CAnimationWatch;
-class IPart: public CObjectBase
+class IPart : public CObjectBase
 {
 	ZDATA
 	CPtr<CPerMaterialCombiner> pCombiner;
-	CDGPtr< CPtrFuncBase<CObjectInfo> > pObjInfo;
+	CDGPtr<CPtrFuncBase<CObjectInfo>> pObjInfo;
+
 public:
 	SCacheLightingInfo cacheLighting;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCombiner); f.Add(3,&pObjInfo); f.Add(4,&cacheLighting); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pCombiner );
+		f.Add( 3, &pObjInfo );
+		f.Add( 4, &cacheLighting );
+		return 0;
+	}
+
 public:
 	std::vector<CVec3> xformedPositions;
 	CBuffer<char> gfxData;
 	CVec3 vBVMin, vBVMax;
 	float fAverageTriArea;
 
-	IPart() : fAverageTriArea(0) {}
+	IPart() : fAverageTriArea( 0 ) {}
 	IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner );
 	~IPart();
 	void SetCombiner( CPerMaterialCombiner *_pCombiner );
 	CPerMaterialCombiner *GetCombiner() const { return pCombiner; }
-	bool HasLoadedObjectInfo() { pObjInfo.Refresh(); return IsValid( pObjInfo->GetValue() ); }
+	bool HasLoadedObjectInfo()
+	{
+		pObjInfo.Refresh();
+		return IsValid( pObjInfo->GetValue() );
+	}
 	void RefreshObjectInfo();
-	CObjectInfo* GetObjectInfo() { return pObjInfo->GetValue(); }
-	CPtrFuncBase<CObjectInfo>* GetObjectInfoNode() const { return pObjInfo; }
-	void SetObjectInfoNode( CPtrFuncBase<CObjectInfo>* ); // for tests, using of this function is not recommended
+	CObjectInfo *GetObjectInfo() { return pObjInfo->GetValue(); }
+	CPtrFuncBase<CObjectInfo> *GetObjectInfoNode() const { return pObjInfo; }
+	void SetObjectInfoNode( CPtrFuncBase<CObjectInfo> * ); // for tests, using of this function is not recommended
 	virtual ETransformType GetTransformType() const = 0;
-	virtual const SFBTransform& GetSimplePos() { return *(SFBTransform*)0; }
-	virtual const std::vector<SHMatrix>& GetAnimation() { return *(std::vector<SHMatrix>*)0; }
-	virtual const std::vector<NGfx::SCompactTransformer>& GetMMXAnimation() { return *(std::vector<NGfx::SCompactTransformer>*)0; }
+	virtual const SFBTransform &GetSimplePos() { return *(SFBTransform *)0; }
+	virtual const std::vector<SHMatrix> &GetAnimation() { return *(std::vector<SHMatrix> *)0; }
+	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation()
+	{
+		return *(std::vector<NGfx::SCompactTransformer> *)0;
+	}
 	virtual bool Is2Sided() const { return false; }
 	virtual intptr_t GetSortValue() const { return 0; }
 	virtual void AddChangeTrackers( CAnimationWatch *p, bool bVertices ) {}
-	void ResetCachedTransform(); // for CVBCombiner only
+	void ResetCachedTransform();                    // for CVBCombiner only
 	void ResetCachedLighting() { gfxData.Clear(); } // for CVBCombiner only
 };
 
@@ -109,33 +157,42 @@ void TransformPart( IPart *p, std::vector<CVec3> *pRes, std::vector<STriangle> *
 
 class CAnimationWatch : public CVersioningBase
 {
-	typedef CFuncBase< std::vector< CPtr<IPart> > > TMaterialCombiner;
-	typedef std::vector<CDGPtr<CVersioningBase> > TWatchSet;
-	OBJECT_NOCOPY_METHODS(CAnimationWatch);
+	typedef CFuncBase<std::vector<CPtr<IPart>>> TMaterialCombiner;
+	typedef std::vector<CDGPtr<CVersioningBase>> TWatchSet;
+	OBJECT_NOCOPY_METHODS( CAnimationWatch );
 	ZDATA
-	CDGPtr<TMaterialCombiner, CPtr<TMaterialCombiner> > pCombiner;
+	CDGPtr<TMaterialCombiner, CPtr<TMaterialCombiner>> pCombiner;
 	TWatchSet watch;
 	std::vector<int> indices;
 	bool bAnimationOnly;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCombiner); f.Add(3,&watch); f.Add(4,&indices); f.Add(5,&bAnimationOnly); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pCombiner );
+		f.Add( 3, &watch );
+		f.Add( 4, &indices );
+		f.Add( 5, &bAnimationOnly );
+		return 0;
+	}
 	bool NeedUpdate();
 	void Recalc() {}
+
 public:
 	CAnimationWatch() {}
-	CAnimationWatch( TMaterialCombiner *_p, bool _bAnimationOnly ) : pCombiner(_p), bAnimationOnly(_bAnimationOnly) {}
+	CAnimationWatch( TMaterialCombiner *_p, bool _bAnimationOnly ) : pCombiner( _p ), bAnimationOnly( _bAnimationOnly ) {}
 	void AddHandle( CVersioningBase *p ) { watch.push_back( p ); }
 };
 
-class CPerMaterialCombiner: public CFuncBase< std::vector< CPtr<IPart> > >
+class CPerMaterialCombiner : public CFuncBase<std::vector<CPtr<IPart>>>
 {
-	OBJECT_NOCOPY_METHODS(CPerMaterialCombiner);
+	OBJECT_NOCOPY_METHODS( CPerMaterialCombiner );
 	bool bHasChanged;
 	CObj<CAnimationWatch> pAnimation, pFullChange;
 
 	virtual bool NeedUpdate();
 	virtual void Recalc();
+
 public:
-	CPerMaterialCombiner() : bHasChanged(false) {}
+	CPerMaterialCombiner() : bHasChanged( false ) {}
 	CPerMaterialCombiner( int );
 	// for use with IPart like objects only
 	void AddPart( IPart *pPart );
@@ -149,36 +206,71 @@ public:
 
 // CVBCombiner
 
-class CVBCombiner: public IVBCombiner
+class CVBCombiner : public IVBCombiner
 {
-	OBJECT_BASIC_METHODS(CVBCombiner);
-	ZDATA_(IVBCombiner)
-	CDGPtr< CFuncBase< std::vector< CPtr<IPart> > > > pCombiner;
+	OBJECT_BASIC_METHODS( CVBCombiner );
+	ZDATA_( IVBCombiner )
+	CDGPtr<CFuncBase<std::vector<CPtr<IPart>>>> pCombiner;
 	ECombinerType ct;
 	CDGPtr<CVersioningBase> pAnimation;
-	CDGPtr<CFuncBase<SPerVertexLightState> > pLightState;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IVBCombiner*)this); f.Add(2,&pCombiner); f.Add(3,&ct); f.Add(4,&pAnimation); f.Add(5,&pLightState); return 0; }
+	CDGPtr<CFuncBase<SPerVertexLightState>> pLightState;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (IVBCombiner *)this );
+		f.Add( 2, &pCombiner );
+		f.Add( 3, &ct );
+		f.Add( 4, &pAnimation );
+		f.Add( 5, &pLightState );
+		return 0;
+	}
 	// NeedXForm reads bNeedXForm to or a fresh result into it, and the default
 	// constructor set none of the three, so the first call read whatever the
 	// allocation held: UBSan reports a bool loaded as 190, which is the fill an
 	// ASan allocation arrives with.
 	bool bNeedXForm = false, bNeedRecalc = false, bDroppedXForm = false;
-	template<class TTrans>
-		void SimpleTransform( TTrans *p );
+	template <class TTrans>
+	void SimpleTransform( TTrans *p );
+
 protected:
 	void XFormPosition();
-	bool RealNeedUpdate() { if ( pAnimation ) return pAnimation.Refresh() | pCombiner.Refresh(); return pCombiner.Refresh(); }
-	bool NeedXForm() { bool bRes = RealNeedUpdate(); bNeedXForm |= bRes; return bNeedXForm; }
+	bool RealNeedUpdate()
+	{
+		if ( pAnimation )
+			return pAnimation.Refresh() | pCombiner.Refresh();
+		return pCombiner.Refresh();
+	}
+	bool NeedXForm()
+	{
+		bool bRes = RealNeedUpdate();
+		bNeedXForm |= bRes;
+		return bNeedXForm;
+	}
 	virtual bool NeedUpdate();
 	void DoRecalc();
 	virtual void Recalc();
+
 public:
 	CVBCombiner() {}
-	CVBCombiner( CFuncBase< std::vector< CPtr<IPart> > > *_pCombiner, ECombinerType _ct, CVersioningBase *_pAnimation, CFuncBase<SPerVertexLightState> *_pLightState )
-		: pCombiner(_pCombiner), ct(_ct), pAnimation(_pAnimation), pLightState(_pLightState) {}
-	virtual const SBound& GetBound() { if ( NeedXForm() ) XFormPosition(); return bound; }
-	virtual const std::vector<SSphere>& GetBounds() { if ( NeedXForm() ) XFormPosition(); return partBVs; }
-	virtual CFuncBase<std::vector< CPtr<IPart> > > * GetCombiner() const { return pCombiner; }
+	CVBCombiner( CFuncBase<std::vector<CPtr<IPart>>> *_pCombiner,
+	             ECombinerType _ct,
+	             CVersioningBase *_pAnimation,
+	             CFuncBase<SPerVertexLightState> *_pLightState )
+			: pCombiner( _pCombiner ), ct( _ct ), pAnimation( _pAnimation ), pLightState( _pLightState )
+	{
+	}
+	virtual const SBound &GetBound()
+	{
+		if ( NeedXForm() )
+			XFormPosition();
+		return bound;
+	}
+	virtual const std::vector<SSphere> &GetBounds()
+	{
+		if ( NeedXForm() )
+			XFormPosition();
+		return partBVs;
+	}
+	virtual CFuncBase<std::vector<CPtr<IPart>>> *GetCombiner() const { return pCombiner; }
 	virtual void FreeMemory();
 };
 
@@ -189,22 +281,37 @@ enum EIBTargetType
 	IBTT_POSITIONS,
 	IBTT_VERTICES,
 };
-class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList> >
+class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 {
-	OBJECT_BASIC_METHODS(CIBCombiner);
+	OBJECT_BASIC_METHODS( CIBCombiner );
 	ZDATA
-	CDGPtr< CFuncBase< std::vector< CPtr<IPart> > > > pCombiner;
+	CDGPtr<CFuncBase<std::vector<CPtr<IPart>>>> pCombiner;
 	CDGPtr<CVersioningBase> pAnimation;
 	EIBTargetType ibt;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCombiner); f.Add(3,&pAnimation); f.Add(4,&ibt); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pCombiner );
+		f.Add( 3, &pAnimation );
+		f.Add( 4, &ibt );
+		return 0;
+	}
 	std::vector<STriangle> triBuffer;
+
 protected:
-	virtual bool NeedUpdate() {  if ( pAnimation ) return pAnimation.Refresh() | pCombiner.Refresh(); return pCombiner.Refresh(); }
+	virtual bool NeedUpdate()
+	{
+		if ( pAnimation )
+			return pAnimation.Refresh() | pCombiner.Refresh();
+		return pCombiner.Refresh();
+	}
 	virtual void Recalc();
+
 public:
 	CIBCombiner() {}
-	CIBCombiner( CFuncBase< std::vector< CPtr<IPart> > > *_pCombiner, CVersioningBase *_pAnimation, EIBTargetType _ibt )
-		: pCombiner(_pCombiner), pAnimation(_pAnimation), ibt(_ibt) {}
+	CIBCombiner( CFuncBase<std::vector<CPtr<IPart>>> *_pCombiner, CVersioningBase *_pAnimation, EIBTargetType _ibt )
+			: pCombiner( _pCombiner ), pAnimation( _pAnimation ), ibt( _ibt )
+	{
+	}
 };
 
 }

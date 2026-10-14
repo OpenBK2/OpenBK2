@@ -17,7 +17,7 @@ class CWindowRoundProgressBar : public CWindow, public IWindowRoundProgressBar
 {
 	OBJECT_BASIC_METHODS( CWindowRoundProgressBar );
 
-	ZDATA_(CWindow)
+	ZDATA_( CWindow )
 	CPtr<NDb::SWindowRoundProgressBar> pInstance;
 	CDBPtr<NDb::SWindowRoundProgressBarShared> pShared;
 	float fStartAngle;
@@ -25,10 +25,24 @@ class CWindowRoundProgressBar : public CWindow, public IWindowRoundProgressBar
 	CTextureRoundSegmentVisitor roundVisitor;
 	CTextureRoundSegmentVisitor roundVisitor2;
 	float fPosition;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pInstance); f.Add(3,&pShared); f.Add(4,&fStartAngle); f.Add(5,&fFinishAngle); f.Add(6,&roundVisitor); f.Add(7,&roundVisitor2); f.Add(8,&fPosition); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CWindow *)this );
+		f.Add( 2, &pInstance );
+		f.Add( 3, &pShared );
+		f.Add( 4, &fStartAngle );
+		f.Add( 5, &fFinishAngle );
+		f.Add( 6, &roundVisitor );
+		f.Add( 7, &roundVisitor2 );
+		f.Add( 8, &fPosition );
+		return 0;
+	}
+
 protected:
-	NDb::SWindow* GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance() { return pInstance; }
+
 public:
 	CWindowRoundProgressBar();
 

@@ -27,21 +27,21 @@ static double fProcFreq1 = 1;
 
 namespace
 {
-	// The clock the TSC is calibrated against. This was QueryPerformanceCounter,
-	// which is what MSVC implements steady_clock on, so on Windows the reference
-	// has not actually changed.
-	//
-	// The TSC stays the thing being read: it is a register read of a few
-	// nanoseconds, where clock_gettime is only comparable while the kernel's
-	// clocksource is tsc. When it falls back to hpet or acpi_pm the vDSO cannot
-	// serve the call from user space and every reading becomes a syscall, which
-	// is exactly the cost this timer exists to avoid.
-	using CRefClock = std::chrono::steady_clock;
+// The clock the TSC is calibrated against. This was QueryPerformanceCounter,
+// which is what MSVC implements steady_clock on, so on Windows the reference
+// has not actually changed.
+//
+// The TSC stays the thing being read: it is a register read of a few
+// nanoseconds, where clock_gettime is only comparable while the kernel's
+// clocksource is tsc. When it falls back to hpet or acpi_pm the vDSO cannot
+// serve the call from user space and every reading becomes a syscall, which
+// is exactly the cost this timer exists to avoid.
+using CRefClock = std::chrono::steady_clock;
 }
 
 double NHPTimer::GetSeconds( const NHPTimer::STime &a )
 {
-	return (static_cast<double>(a)) * fProcFreq1;
+	return ( static_cast<double>( a ) ) * fProcFreq1;
 }
 
 // Time counters
@@ -63,7 +63,7 @@ void NHPTimer::GetTime( STime *pTime )
 
 double NHPTimer::GetTimePassed( STime *pTime )
 {
-	STime old(*pTime );
+	STime old( *pTime );
 	GetTime( pTime );
 	return GetSeconds( *pTime - old );
 }
@@ -78,8 +78,7 @@ void NHPTimer::UpdateHPTimerFrequency()
 	static bool bUpdateInitiated = false;
 	if ( bUpdateInitiated )
 	{
-		const double fRefPassed =
-			std::chrono::duration<double>( CRefClock::now() - refStart ).count();
+		const double fRefPassed = std::chrono::duration<double>( CRefClock::now() - refStart ).count();
 		// Too short to be useful: keep the baseline where it is and let the next
 		// call measure across a longer span rather than restarting the sample.
 		if ( fRefPassed < F_MIN_SAMPLE_SECONDS )
@@ -97,12 +96,12 @@ void NHPTimer::UpdateHPTimerFrequency()
 
 static void InitHPTimer()
 {
-	for(;;)
+	for ( ;; )
 	{
 		UpdateHPTimerFrequency();
 		if ( fProcFreq1 != 1 )
 			break;
-		std::this_thread::sleep_for( std::chrono::milliseconds(100) );
+		std::this_thread::sleep_for( std::chrono::milliseconds( 100 ) );
 	}
 	//cout << "freq = " << fpProcFreq / 1000000 <<  "Mhz" << endl;
 }

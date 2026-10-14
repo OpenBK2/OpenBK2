@@ -14,9 +14,9 @@ namespace NML
 
 // CLineBreakObject
 
-class CLineBreakObject: public IReflowObject
+class CLineBreakObject : public IReflowObject
 {
-	OBJECT_BASIC_METHODS(CLineBreakObject)
+	OBJECT_BASIC_METHODS( CLineBreakObject )
 private:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
@@ -27,21 +27,28 @@ public:
 	void Update( IReflowState *pState ) { pState->CreateLine( true ); }
 };
 
-IReflowObject* CreateLineBreakObject() { return new CLineBreakObject; }
+IReflowObject *CreateLineBreakObject()
+{
+	return new CLineBreakObject;
+}
 
 // CColorObject
 
-class CColorObject: public IReflowObject
+class CColorObject : public IReflowObject
 {
-	OBJECT_BASIC_METHODS(CColorObject)
+	OBJECT_BASIC_METHODS( CColorObject )
 private:
 	ZDATA
 	NGfx::SPixel8888 color;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&color); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &color );
+		return 0;
+	}
 
 public:
 	CColorObject() {}
-	CColorObject( const NGfx::SPixel8888 &_color ): color(_color) {}
+	CColorObject( const NGfx::SPixel8888 &_color ) : color( _color ) {}
 
 	void Update( IReflowState *pState );
 };
@@ -53,21 +60,28 @@ void CColorObject::Update( IReflowState *pState )
 	pState->SetState( state );
 }
 
-IReflowObject* CreateColorObject( const NGfx::SPixel8888 &color ) { return new CColorObject( color ); }
+IReflowObject *CreateColorObject( const NGfx::SPixel8888 &color )
+{
+	return new CColorObject( color );
+}
 
 // CHAlignObject
 
-class CHAlignObject: public IReflowObject
+class CHAlignObject : public IReflowObject
 {
-	OBJECT_BASIC_METHODS(CHAlignObject)
+	OBJECT_BASIC_METHODS( CHAlignObject )
 private:
 	ZDATA
 	EHAlign nAlign;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nAlign); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nAlign );
+		return 0;
+	}
 
 public:
 	CHAlignObject() {}
-	CHAlignObject( EHAlign _nAlign ): nAlign(_nAlign) {}
+	CHAlignObject( EHAlign _nAlign ) : nAlign( _nAlign ) {}
 
 	void Update( IReflowState *pState );
 };
@@ -79,21 +93,28 @@ void CHAlignObject::Update( IReflowState *pState )
 	pState->SetState( state );
 }
 
-IReflowObject* CreateHAlignObject( EHAlign nAlign ) { return new CHAlignObject( nAlign ); }
+IReflowObject *CreateHAlignObject( EHAlign nAlign )
+{
+	return new CHAlignObject( nAlign );
+}
 
 // CVAlignObject
 
-class CVAlignObject: public IReflowObject
+class CVAlignObject : public IReflowObject
 {
-	OBJECT_BASIC_METHODS(CVAlignObject)
+	OBJECT_BASIC_METHODS( CVAlignObject )
 private:
 	ZDATA
 	EVAlign nAlign;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nAlign); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nAlign );
+		return 0;
+	}
 
 public:
 	CVAlignObject() {}
-	CVAlignObject( EVAlign _nAlign ): nAlign(_nAlign) {}
+	CVAlignObject( EVAlign _nAlign ) : nAlign( _nAlign ) {}
 
 	void Update( IReflowState *pState );
 };
@@ -105,13 +126,16 @@ void CVAlignObject::Update( IReflowState *pState )
 	pState->SetState( state );
 }
 
-IReflowObject* CreateVAlignObject( EVAlign nAlign ) { return new CVAlignObject( nAlign ); }
+IReflowObject *CreateVAlignObject( EVAlign nAlign )
+{
+	return new CVAlignObject( nAlign );
+}
 
 // CFontObject
 
-class CFontObject: public IReflowObject
+class CFontObject : public IReflowObject
 {
-	OBJECT_BASIC_METHODS(CFontObject)
+	OBJECT_BASIC_METHODS( CFontObject )
 private:
 	ZDATA
 	int nFlags;
@@ -119,12 +143,27 @@ private:
 	bool bForceFontSize;
 	NGScene::SFont font;
 	NGfx::SPixel8888 outlineColor;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nFlags); f.Add(3,&nOutlineSize); f.Add(4,&bForceFontSize); f.Add(5,&font); f.Add(6,&outlineColor); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nFlags );
+		f.Add( 3, &nOutlineSize );
+		f.Add( 4, &bForceFontSize );
+		f.Add( 5, &font );
+		f.Add( 6, &outlineColor );
+		return 0;
+	}
 
 public:
 	CFontObject() {}
-	CFontObject( int _nFlags, const NGScene::SFont &_font, const NGfx::SPixel8888 &_outlineColor, int _nOutlineSize, bool _bForceFontSize ):
-		nFlags(_nFlags), font(_font), outlineColor(_outlineColor), nOutlineSize(_nOutlineSize), bForceFontSize(_bForceFontSize) {}
+	CFontObject( int _nFlags,
+	             const NGScene::SFont &_font,
+	             const NGfx::SPixel8888 &_outlineColor,
+	             int _nOutlineSize,
+	             bool _bForceFontSize )
+			: nFlags( _nFlags ), font( _font ), outlineColor( _outlineColor ), nOutlineSize( _nOutlineSize ),
+				bForceFontSize( _bForceFontSize )
+	{
+	}
 
 	void Update( IReflowState *pState );
 };
@@ -147,24 +186,32 @@ void CFontObject::Update( IReflowState *pState )
 	pState->SetState( state );
 }
 
-IReflowObject* CreateFontObject( int nFlags, const NGScene::SFont &font, const NGfx::SPixel8888 &outlineColor, int nOutlineSize, bool bForceFontSize )
+IReflowObject *CreateFontObject( int nFlags,
+                                 const NGScene::SFont &font,
+                                 const NGfx::SPixel8888 &outlineColor,
+                                 int nOutlineSize,
+                                 bool bForceFontSize )
 {
 	return new CFontObject( nFlags, font, outlineColor, nOutlineSize, bForceFontSize );
 }
 
 // CMinFontSizeObject
 
-class CMinFontSizeObject: public IReflowObject
+class CMinFontSizeObject : public IReflowObject
 {
-	OBJECT_BASIC_METHODS(CMinFontSizeObject)
+	OBJECT_BASIC_METHODS( CMinFontSizeObject )
 private:
 	ZDATA
 	int nSize;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSize); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSize );
+		return 0;
+	}
 
 public:
 	CMinFontSizeObject() {}
-	CMinFontSizeObject( int _nSize ): nSize(_nSize) {}
+	CMinFontSizeObject( int _nSize ) : nSize( _nSize ) {}
 
 	void Update( IReflowState *pState );
 };
@@ -176,7 +223,10 @@ void CMinFontSizeObject::Update( IReflowState *pState )
 	pState->SetState( state );
 }
 
-IReflowObject* CreateMinFontSizeObject( int nSize ) { return new CMinFontSizeObject( nSize ); }
+IReflowObject *CreateMinFontSizeObject( int nSize )
+{
+	return new CMinFontSizeObject( nSize );
+}
 
 } // NAMESPACE
 

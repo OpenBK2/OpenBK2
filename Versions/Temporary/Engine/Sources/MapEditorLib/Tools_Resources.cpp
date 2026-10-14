@@ -16,24 +16,23 @@
 
 namespace
 {
-	// Whether this names a file on disk rather than an entry in the VFS.
-	//
-	// The test used to be "does it contain a colon", which is a drive letter and
-	// nothing else on Windows: "C:\bk2\Editor\..." is a file, "bin\Textures\17"
-	// is a VFS name. Off Windows an absolute path has no colon in it, so every
-	// one of them came out a VFS name and was then taken as relative to the VFS
-	// root: the editor's icon cache and its dialog states went to
-	// Data/home/<user>/bk2/... instead of to the install, and nothing said so.
-	//
-	// Asking whether the path is absolute says the same thing on Windows, where
-	// only a drive letter or a leading separator makes one, and says it off
-	// Windows too.
-	bool IsFilePath( const std::string &rszPath )
-	{
-		return !rszPath.empty() && !NFile::IsPathRelative( rszPath );
-	}
+// Whether this names a file on disk rather than an entry in the VFS.
+//
+// The test used to be "does it contain a colon", which is a drive letter and
+// nothing else on Windows: "C:\bk2\Editor\..." is a file, "bin\Textures\17"
+// is a VFS name. Off Windows an absolute path has no colon in it, so every
+// one of them came out a VFS name and was then taken as relative to the VFS
+// root: the editor's icon cache and its dialog states went to
+// Data/home/<user>/bk2/... instead of to the install, and nothing said so.
+//
+// Asking whether the path is absolute says the same thing on Windows, where
+// only a drive letter or a leading separator makes one, and says it off
+// Windows too.
+bool IsFilePath( const std::string &rszPath )
+{
+	return !rszPath.empty() && !NFile::IsPathRelative( rszPath );
 }
-
+}
 
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath )
 {
@@ -50,7 +49,6 @@ void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszT
 	}
 }
 
-
 void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath )
 {
 	if ( pStreamHolder )
@@ -66,8 +64,12 @@ void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rs
 	}
 }
 
-
-bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const std::string &rszPathPrefix, bool *pbAbsolutePath )
+bool NormalizePath( std::string *pszPath,
+                    bool bFile,
+                    bool bExists,
+                    bool bReturnAbsolutePath,
+                    const std::string &rszPathPrefix,
+                    bool *pbAbsolutePath )
 {
 	bool bResult = true;
 	NI_ASSERT( pszPath != 0, "NormalizePath() pszPath == 0" );
@@ -180,7 +182,6 @@ bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturn
 	return bResult;
 }
 
-
 bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath )
 {
 	if ( rszFileName.find_first_of( "*?<>|" ) != std::string::npos )
@@ -233,20 +234,21 @@ bool CheckLatestBINResource( const std::string &rszResourceFileName, const std::
 }
 /**/
 
-
-bool SEnumFolderStructureParameter::IsFolderRelative( const std::string &rszFolder, const std::string &rszRelativeFolder )
+bool SEnumFolderStructureParameter::IsFolderRelative( const std::string &rszFolder,
+                                                      const std::string &rszRelativeFolder )
 {
 	return IsFolderRelative( enumFolderMap, rszFolder, rszRelativeFolder );
 }
 
-
-void SEnumFolderStructureParameter::SetRelativeFolder( const std::string &rszFolder, const std::string &rszRelativeFolder )
+void SEnumFolderStructureParameter::SetRelativeFolder( const std::string &rszFolder,
+                                                       const std::string &rszRelativeFolder )
 {
 	SetRelativeFolder( &enumFolderMap, rszFolder, rszRelativeFolder );
 }
 
-
-bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder )
+bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnumFolderMap,
+                                                      const std::string &rszFolder,
+                                                      const std::string &rszRelativeFolder )
 {
 	CEnumFolderMap::const_iterator folderIterator = rEnumFolderMap.find( rszFolder );
 	if ( folderIterator != rEnumFolderMap.end() )
@@ -256,8 +258,9 @@ bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnu
 	return false;
 }
 
-
-void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder )
+void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFolderMap,
+                                                       const std::string &rszFolder,
+                                                       const std::string &rszRelativeFolder )
 {
 	NI_ASSERT( pEnumFolderMap != 0, fmt::format( "Wrong parameter: {}\n", fmt::ptr( pEnumFolderMap ) ) );
 	if ( pEnumFolderMap )
@@ -266,8 +269,8 @@ void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFold
 	}
 }
 
-
-void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pParameters, SEnumFolderStructureParameter *pEnumFolderStructureParameter )
+void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pParameters,
+                             SEnumFolderStructureParameter *pEnumFolderStructureParameter )
 {
 	if ( pParameters || pEnumFolderStructureParameter )
 	{
@@ -287,7 +290,8 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 		NVFS::GetMainVFS()->GetAllFileNames( &fileNameList, std::string() );
 		std::vector<std::string> stringList;
 		int nCount = 0;
-		for ( std::vector<std::string>::const_iterator itFileName = fileNameList.begin(); itFileName != fileNameList.end(); ++itFileName )
+		for ( std::vector<std::string>::const_iterator itFileName = fileNameList.begin(); itFileName != fileNameList.end();
+		      ++itFileName )
 		{
 			const std::string szFileName = ( *itFileName );
 			if ( !szFileName.empty() )
@@ -301,11 +305,13 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 						SEnumFilesInDataStorageParameter &rParameter = ( *pParameters )[nParameterElement];
 
 						if ( ( rParameter.nPathLength < nStatsLength ) &&
-								 ( strncmp( szFileName.c_str(), rParameter.szPath.c_str(), rParameter.nPathLength ) == 0 ) )
+						     ( strncmp( szFileName.c_str(), rParameter.szPath.c_str(), rParameter.nPathLength ) == 0 ) )
 						{
 							if ( rParameter.nExtentionLength > 0 )
 							{
-								if ( strncmp( szFileName.c_str() + nStatsLength - rParameter.nExtentionLength, rParameter.szExtention.c_str(), rParameter.nExtentionLength ) == 0 )
+								if ( strncmp( szFileName.c_str() + nStatsLength - rParameter.nExtentionLength,
+								              rParameter.szExtention.c_str(),
+								              rParameter.nExtentionLength ) == 0 )
 								{
 									rParameter.fileNameList.push_back( szFileName );
 								}
@@ -318,7 +324,7 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 								{
 									rParameter.fileNameList.push_back( szFileName );
 								}
-								else if ( (  nSlashPositon != std::string::npos ) && ( nDotPositon < nSlashPositon ) )
+								else if ( ( nSlashPositon != std::string::npos ) && ( nDotPositon < nSlashPositon ) )
 								{
 									rParameter.fileNameList.push_back( szFileName );
 								}
@@ -329,18 +335,24 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 				if ( pEnumFolderStructureParameter )
 				{
 					stringList.clear();
-					NStr::SplitString( szFileName, &stringList, '\\' ) ;
+					NStr::SplitString( szFileName, &stringList, '\\' );
 					if ( stringList.size() > ( pEnumFolderStructureParameter->nIgnoreFolderCount + 1 ) )
 					{
-						for ( int nStringIndex = 0; nStringIndex < ( stringList.size() - pEnumFolderStructureParameter->nIgnoreFolderCount - 1 ); ++nStringIndex )
+						for ( int nStringIndex = 0;
+						      nStringIndex < ( stringList.size() - pEnumFolderStructureParameter->nIgnoreFolderCount - 1 );
+						      ++nStringIndex )
 						{
 							if ( !NStr::IsDecNumber( stringList[nStringIndex] ) )
 							{
-								for ( int nRelativeStringIndex = 0; nRelativeStringIndex < ( stringList.size() - pEnumFolderStructureParameter->nIgnoreFolderCount - 1 ); ++nRelativeStringIndex )
+								for ( int nRelativeStringIndex = 0;
+								      nRelativeStringIndex <
+								      ( stringList.size() - pEnumFolderStructureParameter->nIgnoreFolderCount - 1 );
+								      ++nRelativeStringIndex )
 								{
 									if ( !NStr::IsDecNumber( stringList[nRelativeStringIndex] ) )
 									{
-										pEnumFolderStructureParameter->SetRelativeFolder( stringList[nStringIndex], stringList[nRelativeStringIndex] );
+										pEnumFolderStructureParameter->SetRelativeFolder( stringList[nStringIndex],
+										                                                  stringList[nRelativeStringIndex] );
 									}
 								}
 							}
@@ -353,8 +365,10 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 	}
 }
 
-
-bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLine, const std::string &rszDirectory, bool bWait )
+bool ExecuteProcess( const std::string &rszCommand,
+                     const std::string &rszCmdLine,
+                     const std::string &rszDirectory,
+                     bool bWait )
 {
 	// The 2048 byte stack buffer and the strcpy into it are gone with the
 	// CreateProcess call that needed a writable command line: a longer command
@@ -365,7 +379,6 @@ bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLin
 	}
 	return LaunchDetachedIn( rszCommand, rszCmdLine, rszDirectory );
 }
-
 
 // std::string, not CString, since MFC is on its way out of the editor; the
 // narrow side is UTF-8 either way. The code page these used to take was never
@@ -379,7 +392,6 @@ void Unicode2MBSC( std::string *pszText, const std::wstring &rwszText )
 	}
 }
 
-
 void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText )
 {
 	if ( pwszText )
@@ -388,57 +400,60 @@ void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText )
 	}
 }
 
-
 namespace
 {
-	std::wstring DecodeUnicodeResource( const std::vector<uint8_t> &buffer, bool *needsRepair = nullptr )
+std::wstring DecodeUnicodeResource( const std::vector<uint8_t> &buffer, bool *needsRepair = nullptr )
+{
+	// Early Linux editors wrote a UTF-16 BOM followed by native UTF-32LE.
+	// Recover that specific pattern for editing, but only rewrite it after
+	// the user accepts the editor and confirms saving the file.
+	const size_t size = buffer.size() - 2;
+	bool legacy = size >= 4 && size % 4 == 0;
+	bool hasPadding = false;
+	std::string recovered;
+	auto appendUnit = [&recovered]( uint32_t unit )
 	{
-		// Early Linux editors wrote a UTF-16 BOM followed by native UTF-32LE.
-		// Recover that specific pattern for editing, but only rewrite it after
-		// the user accepts the editor and confirms saving the file.
-		const size_t size = buffer.size() - 2;
-		bool legacy = size >= 4 && size % 4 == 0;
-		bool hasPadding = false;
-		std::string recovered;
-		auto appendUnit = [&recovered]( uint32_t unit ) {
-			recovered.push_back( char(unit & 0xff) );
-			recovered.push_back( char((unit >> 8) & 0xff) );
-		};
-		for ( size_t i = 2; legacy && i < buffer.size(); i += 4 )
+		recovered.push_back( char( unit & 0xff ) );
+		recovered.push_back( char( ( unit >> 8 ) & 0xff ) );
+	};
+	for ( size_t i = 2; legacy && i < buffer.size(); i += 4 )
+	{
+		uint32_t code = uint32_t( buffer[i] ) | ( uint32_t( buffer[i + 1] ) << 8 ) | ( uint32_t( buffer[i + 2] ) << 16 ) |
+		                ( uint32_t( buffer[i + 3] ) << 24 );
+		if ( code == 0 || code > 0x10ffff || ( code >= 0xd800 && code <= 0xdfff ) )
 		{
-			uint32_t code = uint32_t(buffer[i]) | (uint32_t(buffer[i + 1]) << 8) |
-				(uint32_t(buffer[i + 2]) << 16) | (uint32_t(buffer[i + 3]) << 24);
-			if ( code == 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff) )
-			{
-				legacy = false;
-				break;
-			}
-			hasPadding |= code <= 0xffff;
-			if ( code > 0xffff )
-			{
-				code -= 0x10000;
-				appendUnit( 0xd800 + (code >> 10) );
-				appendUnit( 0xdc00 + (code & 0x3ff) );
-			}
-			else appendUnit( code );
+			legacy = false;
+			break;
 		}
-		legacy &= hasPadding;
-		if ( needsRepair ) *needsRepair = legacy;
-		return legacy ? UTF16LEToWide( recovered.data(), recovered.size() ) :
-			UTF16LEToWide( buffer.data() + 2, size );
+		hasPadding |= code <= 0xffff;
+		if ( code > 0xffff )
+		{
+			code -= 0x10000;
+			appendUnit( 0xd800 + ( code >> 10 ) );
+			appendUnit( 0xdc00 + ( code & 0x3ff ) );
+		}
+		else
+			appendUnit( code );
 	}
+	legacy &= hasPadding;
+	if ( needsRepair )
+		*needsRepair = legacy;
+	return legacy ? UTF16LEToWide( recovered.data(), recovered.size() ) : UTF16LEToWide( buffer.data() + 2, size );
+}
 }
 
-void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, bool bRemove_0D, bool *pbNeedsUnicodeRepair )
+void File2String( std::string *pstrText,
+                  bool *pbUnicode,
+                  const std::vector<uint8_t> &rBuffer,
+                  bool bRemove_0D,
+                  bool *pbNeedsUnicodeRepair )
 {
-	if ( pbNeedsUnicodeRepair ) *pbNeedsUnicodeRepair = false;
+	if ( pbNeedsUnicodeRepair )
+		*pbNeedsUnicodeRepair = false;
 	if ( pstrText )
 	{
 		pstrText->clear();
-		if ( ( pstrText != 0 ) &&
-				 ( rBuffer.size() > 1 ) &&
-				 ( rBuffer[0] == 0xFF ) &&
-				 ( rBuffer[1] == 0xFE ) )
+		if ( ( pstrText != 0 ) && ( rBuffer.size() > 1 ) && ( rBuffer[0] == 0xFF ) && ( rBuffer[1] == 0xFE ) )
 		{
 			// Disk characters are UTF-16LE, regardless of native wchar_t width.
 			std::wstring wszText = DecodeUnicodeResource( rBuffer, pbNeedsUnicodeRepair );
@@ -500,10 +515,14 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint
 	}
 }
 
-
-void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rszTextPath, bool bRemove_0D, bool *pbNeedsUnicodeRepair )
+void File2String( std::string *pstrText,
+                  bool *pbUnicode,
+                  const std::string &rszTextPath,
+                  bool bRemove_0D,
+                  bool *pbNeedsUnicodeRepair )
 {
-	if ( pbNeedsUnicodeRepair ) *pbNeedsUnicodeRepair = false;
+	if ( pbNeedsUnicodeRepair )
+		*pbNeedsUnicodeRepair = false;
 	if ( pstrText != 0 )
 	{
 		pstrText->clear();
@@ -523,15 +542,12 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rsz
 	}
 }
 
-
 void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D )
 {
 	if ( pwszText != 0 )
 	{
 		pwszText->clear();
-		if ( ( rBuffer.size() > 1 ) &&
-				 ( rBuffer[0] == 0xFF ) &&
-				 ( rBuffer[1] == 0xFE ) )
+		if ( ( rBuffer.size() > 1 ) && ( rBuffer[0] == 0xFF ) && ( rBuffer[1] == 0xFE ) )
 		{
 			*pwszText = DecodeUnicodeResource( rBuffer );
 			if ( bRemove_0D )
@@ -558,7 +574,6 @@ void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, b
 	}
 }
 
-
 void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D )
 {
 	if ( pwszText != 0 )
@@ -579,7 +594,6 @@ void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool b
 		}
 	}
 }
-
 
 void String2File( std::vector<uint8_t> *pBuffer, const std::string &rstrText, bool bUnicode, bool bAdd_0D )
 {
@@ -635,7 +649,6 @@ void String2File( std::vector<uint8_t> *pBuffer, const std::string &rstrText, bo
 	}
 }
 
-
 void String2File( const std::string &rstrText, bool bUnicode, const std::string &rszTextPath, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
@@ -650,7 +663,6 @@ void String2File( const std::string &rstrText, bool bUnicode, const std::string 
 		}
 	}
 }
-
 
 void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D )
 {
@@ -694,7 +706,6 @@ void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, b
 	}
 }
 
-
 void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
@@ -709,6 +720,5 @@ void String2File( const std::wstring &rwszText, const std::string &rszTextPath, 
 		}
 	}
 }
-
 
 // basement storage

@@ -14,9 +14,18 @@ class CDamageToEnemyUpdater
 	float fTakenDamagePower = {};
 
 	CPtr<CAIUnit> pCurEnemy;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&nTakenDamageUpdated); f.Add(3,&fTakenDamagePower); f.Add(4,&pCurEnemy); return 0; }
+
 public:
-	CDamageToEnemyUpdater() : nTakenDamageUpdated( 0 ), fTakenDamagePower( 0.0f ) { }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nTakenDamageUpdated );
+		f.Add( 3, &fTakenDamagePower );
+		f.Add( 4, &pCurEnemy );
+		return 0;
+	}
+
+public:
+	CDamageToEnemyUpdater() : nTakenDamageUpdated( 0 ), fTakenDamagePower( 0.0f ) {}
 
 	void SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, const uint32_t dwGuns );
 	void SetDamageToEnemy( class CAIUnit *pOwner, class CAIUnit *pEnemy, class CBasicGun *pGun );

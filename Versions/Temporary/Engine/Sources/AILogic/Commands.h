@@ -20,9 +20,18 @@ struct SGroupPathInfo
 	int nSubGroup = {};
 	uint8_t cTileSize = {};
 	EAIClasses aiClass = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPath); f.Add(3,&pPathFinder); f.Add(4,&nSubGroup); f.Add(5,&cTileSize); f.Add(6,&aiClass); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pPath );
+		f.Add( 3, &pPathFinder );
+		f.Add( 4, &nSubGroup );
+		f.Add( 5, &cTileSize );
+		f.Add( 6, &aiClass );
+		return 0;
+	}
+
 public:
-	SGroupPathInfo() : nSubGroup( -1 ), cTileSize( 0 ), aiClass( EAC_NONE ) { }
+	SGroupPathInfo() : nSubGroup( -1 ), cTileSize( 0 ), aiClass( EAC_NONE ) {}
 };
 
 class CAICommand : public CObjectBase
@@ -33,27 +42,41 @@ class CAICommand : public CObjectBase
 	static CFreeIds cmdIds;
 
 	ZDATA
-		SAIUnitCmd unitCmd;
-		int id = {};
-		int nFlag = {};
-		CObj<CGroupMover> pMover;
+	SAIUnitCmd unitCmd;
+	int id = {};
+	int nFlag = {};
+	CObj<CGroupMover> pMover;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&unitCmd); f.Add(3,&id); f.Add(4,&nFlag); f.Add(5,&pMover); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &unitCmd );
+		f.Add( 3, &id );
+		f.Add( 4, &nFlag );
+		f.Add( 5, &pMover );
+		return 0;
+	}
+
 private:
 	//
 	void InitCmdId();
+
 public:
-	CAICommand() : id( 0 ), nFlag( -1 ) { }
+	CAICommand() : id( 0 ), nFlag( -1 ) {}
 	CAICommand( const SAIUnitCmd &unitCmd );
 	CAICommand( const CAICommand &cmd );
 
-	static void Clear() { paths.Clear(); cmdIds.Clear(); }
+	static void Clear()
+	{
+		paths.Clear();
+		cmdIds.Clear();
+	}
 
-	SAIUnitCmd& ToUnitCmd() { return unitCmd; }
-	const SAIUnitCmd& ToUnitCmd() const { return unitCmd; }
+	SAIUnitCmd &ToUnitCmd() { return unitCmd; }
+	const SAIUnitCmd &ToUnitCmd() const { return unitCmd; }
 
-	bool IsFromAI()const{return unitCmd.bFromAI;}
-	void SetFromAI( const bool bFromAI ){ unitCmd.bFromAI = bFromAI; }
+	bool IsFromAI() const { return unitCmd.bFromAI; }
+	void SetFromAI( const bool bFromAI ) { unitCmd.bFromAI = bFromAI; }
 
 	~CAICommand()
 	{
@@ -67,7 +90,7 @@ public:
 	const int GetID() const { return id; }
 
 	CVec2 GetMoveTarget( class CCommonUnit *pUnit );
-	struct IStaticPath* CreateStaticPath( class CCommonUnit *pUnit );
+	struct IStaticPath *CreateStaticPath( class CCommonUnit *pUnit );
 
 	const int GetFlag() const { return nFlag; }
 	const void SetFlag( const int _nFlag ) { nFlag = _nFlag; }

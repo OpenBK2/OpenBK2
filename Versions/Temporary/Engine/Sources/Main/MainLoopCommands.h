@@ -10,12 +10,13 @@ MAIN_EXPORT IInterfaceCommand *CreateICSave( const std::string &szName );
 MAIN_EXPORT IInterfaceCommand *CreateICCloseInterface();
 
 MAIN_EXPORT IBinSaver *CreateSaveLoadSaver( CDataStream *pStream, ESaverMode mode );
-IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector< CPtr<IDebugSaveCheckObj> > &checkers );
+IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector<CPtr<IDebugSaveCheckObj>> &checkers );
 
 class MAIN_EXPORT CICLoadBase : public IInterfaceCommand
 {
 	std::wstring szTitleName;
 	std::string szFileName;
+
 public:
 	enum EStage
 	{
@@ -32,7 +33,11 @@ public:
 
 	virtual void OnProgress( EStage eStage ) {}
 
-	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Wrong call" ); return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		NI_ASSERT( 0, "Wrong call" );
+		return 0;
+	}
 };
 
 class MAIN_EXPORT CICSaveBase : public IInterfaceCommand
@@ -40,11 +45,19 @@ class MAIN_EXPORT CICSaveBase : public IInterfaceCommand
 	ZDATA
 	std::wstring szTitleName;
 	std::string szFileName;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szTitleName); f.Add(3,&szFileName); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szTitleName );
+		f.Add( 3, &szFileName );
+		return 0;
+	}
+
 protected:
 	const std::string &GetFileName() const { return szFileName; }
 	const std::string GetPathName();
+
 public:
 	enum EStage
 	{

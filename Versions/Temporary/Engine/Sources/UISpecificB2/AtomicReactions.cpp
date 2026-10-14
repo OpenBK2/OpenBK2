@@ -10,13 +10,15 @@
 
 //		CARSetForcedAction
 
-
-bool CARSetForcedAction::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
+bool CARSetForcedAction::Execute( struct IScreen *pScreen,
+                                  struct IScriptWrapper *pScript,
+                                  struct IProgrammedReactionsAndChecks *pProg,
+                                  uint16_t wKeyboardFlags ) const
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 )
-		NInput::PostEvent( "set_forced_action", static_cast<int>(pDesc->eUserAction), 0 );
+		NInput::PostEvent( "set_forced_action", static_cast<int>( pDesc->eUserAction ), 0 );
 	else
-		NInput::PostEvent( "set_forced_action", static_cast<int>(pDesc->eM1UserAction), 0 );
+		NInput::PostEvent( "set_forced_action", static_cast<int>( pDesc->eM1UserAction ), 0 );
 	//IGameEvent *pEvent = Input()->GetEvent( "set_forced_action" );
 	//pEvent->RaiseEvent( static_cast<int>(pDesc->eUserAction), 0 );
 	return true;
@@ -30,16 +32,18 @@ int CARSetForcedAction::operator&( IBinSaver &saver )
 
 void CARSetForcedAction::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	pDesc = checked_cast<const NDb::SARSetForcedAction*>( _pDesc );
+	pDesc = checked_cast<const NDb::SARSetForcedAction *>( _pDesc );
 }
-
 
 //		CARSetSpecialAbility
 
-
-bool CARSetSpecialAbility::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
+bool CARSetSpecialAbility::Execute( struct IScreen *pScreen,
+                                    struct IScriptWrapper *pScript,
+                                    struct IProgrammedReactionsAndChecks *pProg,
+                                    uint16_t wKeyboardFlags ) const
 {
-	NInput::PostEvent( "set_special_ability", static_cast<int>(pDesc->eAbility), static_cast<int>(pDesc->eAbilityParam) );
+	NInput::PostEvent(
+			"set_special_ability", static_cast<int>( pDesc->eAbility ), static_cast<int>( pDesc->eAbilityParam ) );
 	//IGameEvent *pEvent = Input()->GetEvent( "set_special_ability" );
 	//pEvent->RaiseEvent( static_cast<int>(pDesc->eAbility), static_cast<int>(pDesc->eAbilityParam) );
 	return true;
@@ -53,7 +57,7 @@ int CARSetSpecialAbility::operator&( IBinSaver &saver )
 
 void CARSetSpecialAbility::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	pDesc = checked_cast<const NDb::SARSetSpecialAbility*>( _pDesc );
+	pDesc = checked_cast<const NDb::SARSetSpecialAbility *>( _pDesc );
 }
 
 int CRAPTooSmartCompilator_UISpecificB2_2();
@@ -62,5 +66,5 @@ int CRAPTooSmartCompilator_UISpecific()
 	return CRAPTooSmartCompilator_UISpecificB2_2();
 }
 
-REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1508A301, CARSetForcedAction)
-REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1508D340, CARSetSpecialAbility)
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x1508A301, CARSetForcedAction )
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x1508D340, CARSetSpecialAbility )

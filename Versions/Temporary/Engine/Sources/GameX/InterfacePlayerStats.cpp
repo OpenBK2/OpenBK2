@@ -13,10 +13,7 @@
 
 // CInterfacePlayerStats
 
-CInterfacePlayerStats::CInterfacePlayerStats() :
-	CInterfaceScreenBase( "PlayerStats", "player_stats_menu" )
-{
-}
+CInterfacePlayerStats::CInterfacePlayerStats() : CInterfaceScreenBase( "PlayerStats", "player_stats_menu" ) {}
 
 bool CInterfacePlayerStats::Init()
 {
@@ -80,8 +77,8 @@ void CInterfacePlayerStats::MakeInterior()
 			pPlayerRankPicture->SetTexture( pRank->pStrap );
 
 		std::wstring wszRank;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pRank->,RankName) )
-			wszRank = GET_TEXT_PRE(pRank->,RankName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pRank->, RankName ) )
+			wszRank = GET_TEXT_PRE( pRank->, RankName );
 		if ( pRankNameView )
 			pRankNameView->SetText( pRankNameView->GetDBText() + wszRank );
 	}
@@ -89,13 +86,14 @@ void CInterfacePlayerStats::MakeInterior()
 	int nKilled = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_UNITS_KILLED );
 	int nLost = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_UNITS_LOST );
 	if ( pUnitsKilledView )
-		pUnitsKilledView->SetText( pUnitsKilledView->GetDBText() + NStr::ToUnicode( std::to_string(  nKilled ) ) );
+		pUnitsKilledView->SetText( pUnitsKilledView->GetDBText() + NStr::ToUnicode( std::to_string( nKilled ) ) );
 	if ( pUnitsLostView )
-		pUnitsLostView->SetText( pUnitsLostView->GetDBText() + NStr::ToUnicode( std::to_string(  nLost ) ) );
+		pUnitsLostView->SetText( pUnitsLostView->GetDBText() + NStr::ToUnicode( std::to_string( nLost ) ) );
 
 	int nMissionsPassed = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_MISSIONS_PASSED );
 	if ( pMissionsPassedView )
-		pMissionsPassedView->SetText( pMissionsPassedView->GetDBText() + NStr::ToUnicode( std::to_string(  nMissionsPassed ) ) );
+		pMissionsPassedView->SetText( pMissionsPassedView->GetDBText() +
+		                              NStr::ToUnicode( std::to_string( nMissionsPassed ) ) );
 
 	int nInGameTime = pST->GetStatistics( nLocalPlayer, IScenarioTracker::ESK_CAMPAIGN_TIME );
 	int nSec = nInGameTime % 60;
@@ -103,7 +101,7 @@ void CInterfacePlayerStats::MakeInterior()
 	int nMin = nInGameTime % 60;
 	nInGameTime = nInGameTime / 60;
 	int nHour = nInGameTime;
-//	wstring wszInGameTime = NStr::ToUnicode( StrFmt( "%2d : %02d : %02d", nHour, nMin, nSec ) );
+	//	wstring wszInGameTime = NStr::ToUnicode( StrFmt( "%2d : %02d : %02d", nHour, nMin, nSec ) );
 	std::wstring wszInGameTime;
 	if ( IScreen *pScreen = GetScreen() )
 	{
@@ -120,26 +118,30 @@ void CInterfacePlayerStats::MakeInterior()
 	expProgressCareer.Init();
 	expProgressRank.Init();
 
-	expProgressCareer.fStart = (std::min)( expProgressCareer.fTarget, (std::max)( expProgressCareer.fStart, fLastVisiblePlayerStatsExpCareer ) );
+	expProgressCareer.fStart =
+			(std::min)( expProgressCareer.fTarget, (std::max)( expProgressCareer.fStart, fLastVisiblePlayerStatsExpCareer ) );
 	expProgressCareer.fCur = (std::max)( expProgressCareer.fCur, expProgressCareer.fStart );
-	expProgressRank.fStart = (std::min)( expProgressRank.fTarget, (std::max)( expProgressRank.fStart, fLastVisiblePlayerStatsExpNextRank ) );
+	expProgressRank.fStart =
+			(std::min)( expProgressRank.fTarget, (std::max)( expProgressRank.fStart, fLastVisiblePlayerStatsExpNextRank ) );
 	expProgressRank.fCur = (std::max)( expProgressRank.fCur, expProgressRank.fStart );
 
 	ExpProgressStep();
 
-	std::wstring wszRankHP = NStr::ToUnicode( fmt::format( "{}/{}",
-		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
-		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
+	std::wstring wszRankHP =
+			NStr::ToUnicode( fmt::format( "{}/{}",
+	                                  (int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
+	                                  (int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pNextRankProgressView )
 		pNextRankProgressView->SetText( pNextRankProgressView->GetDBText() + wszRankHP );
 
-	std::vector<const IScenarioTracker::SMissionStats*> missions;
+	std::vector<const IScenarioTracker::SMissionStats *> missions;
 	pST->GetAllMissionStats( &missions );
 	for ( int i = 0; i < missions.size(); ++i )
 	{
 		const IScenarioTracker::SMissionStats *pMission = missions[i];
 
-		for ( std::list< CDBPtr<NDb::SMedal> >::const_iterator it = pMission->medals.begin(); it != pMission->medals.end(); ++it )
+		for ( std::list<CDBPtr<NDb::SMedal>>::const_iterator it = pMission->medals.begin(); it != pMission->medals.end();
+		      ++it )
 		{
 			const NDb::SMedal *pMedal = *it;
 			if ( !pMedal )
@@ -148,10 +150,10 @@ void CInterfacePlayerStats::MakeInterior()
 			medals.push_back( SMedal() );
 			SMedal &medal = medals.back();
 
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedName) )
-				medal.wszName = GET_TEXT_PRE(pMedal->,LocalizedName);
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedDesc) )
-				medal.wszDesc = GET_TEXT_PRE(pMedal->,LocalizedDesc);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedName ) )
+				medal.wszName = GET_TEXT_PRE( pMedal->, LocalizedName );
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedDesc ) )
+				medal.wszDesc = GET_TEXT_PRE( pMedal->, LocalizedDesc );
 			medal.pIcon = pMedal->pIconTexture;
 			medal.pPicture = pMedal->pPictureTexture;
 
@@ -299,18 +301,14 @@ void CInterfacePlayerStats::SelectMedal( int nIndex, bool bForce )
 
 // CICPlayerStats
 
-void CICPlayerStats::PreCreate()
-{
-}
+void CICPlayerStats::PreCreate() {}
 
 void CICPlayerStats::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICPlayerStats::Configure( const char *pszConfig )
-{
-}
+void CICPlayerStats::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1722A301, CInterfacePlayerStats )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_PLAYER_STATS, CICPlayerStats )

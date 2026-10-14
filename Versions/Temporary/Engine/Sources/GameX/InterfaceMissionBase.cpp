@@ -25,6 +25,7 @@
 class CVisualNotificationsEmpty : public IVisualNotifications
 {
 	OBJECT_NOCOPY_METHODS( CVisualNotificationsEmpty );
+
 public:
 	bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos ) { return true; }
 	bool Notify( EVisualNotification eType, class CMapObj *pMO ) { return true; }
@@ -33,8 +34,8 @@ public:
 
 // CInterfaceMissionBase
 
-CInterfaceMissionBase::CInterfaceMissionBase( const std::string &szInterfaceType, const std::string &szBindSection ) :
-	CInterfaceScreenBase( szInterfaceType, szBindSection ), bFrozen( false )
+CInterfaceMissionBase::CInterfaceMissionBase( const std::string &szInterfaceType, const std::string &szBindSection )
+		: CInterfaceScreenBase( szInterfaceType, szBindSection ), bFrozen( false )
 {
 }
 
@@ -71,7 +72,9 @@ void CInterfaceMissionBase::Freeze( const bool bFreeze )
 	bFrozen = bFreeze;
 }
 
-void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *_pScenarioTracker )
+void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap,
+                                    ITransceiver *_pTransceiver,
+                                    IScenarioTracker *_pScenarioTracker )
 {
 	pTransceiver = _pTransceiver;
 
@@ -83,8 +86,8 @@ void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	//Scene()->SetFOV( NGameX::GetClientConsts()->pCamera->fFOV );
 
 	// Loading world
-	pWorld = new CWorldClient( pTransceiver, new CVisualNotificationsEmpty(), Singleton<IAILogic>(),
-		_pScenarioTracker, 0 );
+	pWorld =
+			new CWorldClient( pTransceiver, new CVisualNotificationsEmpty(), Singleton<IAILogic>(), _pScenarioTracker, 0 );
 
 	if ( pMap->pMusic )
 		Singleton<IMusicSystem>()->Init( pMap->pMusic, 0 );
@@ -99,7 +102,9 @@ void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	pWorld->Update();
 }
 
-void CInterfaceMissionBase::StartNewMap( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *pScenarioTracker )
+void CInterfaceMissionBase::StartNewMap( const NDb::SMapInfo *_pMap,
+                                         ITransceiver *_pTransceiver,
+                                         IScenarioTracker *pScenarioTracker )
 {
 	_pTransceiver->StartMission( _pMap, Singleton<IAILogic>() );
 	NewMap( _pMap, _pTransceiver, pScenarioTracker );
@@ -130,10 +135,10 @@ void CInterfaceMissionBase::AfterLoad()
 
 int CInterfaceMissionBase::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, (CInterfaceScreenBase*)this );
+	saver.Add( 1, (CInterfaceScreenBase *)this );
 
 	saver.Add( 2, &pWorld );
-//	saver.Add( 3, &nMapDBID );
+	//	saver.Add( 3, &nMapDBID );
 	//saver.Add( 4, &camera );
 	saver.Add( 5, &bFrozen );
 	saver.Add( 6, &pTransceiver );

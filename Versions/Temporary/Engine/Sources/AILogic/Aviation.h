@@ -15,12 +15,12 @@ class CAviation : public CMilitaryCar, public IPlane
 	OBJECT_NOCOPY_METHODS( CAviation );
 
 protected:
-		ZDATA_(CMilitaryCar)
+	ZDATA_( CMilitaryCar )
 	CDBPtr<SMechUnitRPGStats> pStats;
 
 	// для формации самолетов
 	CObj<CPlanesFormation> pFormation;
-	CVec3 vPlanesShift;										// shift in formation
+	CVec3 vPlanesShift; // shift in formation
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float fFuel = {};
 	CVec3 vSpeed;
@@ -28,28 +28,54 @@ protected:
 	CVec3 vNormale;
 	bool bBombsAutocast = {};
 
-	CVec2 vInitialPoint;										// plane will leave to appear point
+	CVec2 vInitialPoint; // plane will leave to appear point
 	// Preserve the RNG scan schedule across saves; old saves read the new chunk as zero.
 	NTimer::STime timeNextGroundScan = 0;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&pStats); f.Add(3,&pFormation); f.Add(4,&vPlanesShift); f.Add(5,&fFuel); f.Add(6,&vSpeed); f.Add(7,&vPos); f.Add(8,&vNormale); f.Add(9,&bBombsAutocast); f.Add(10,&vInitialPoint); f.Add(11,&timeNextGroundScan); return 0; }
+
 public:
-	CAviation() : bBombsAutocast( false ), fFuel( 0.0f ), vPlanesShift( VNULL3 ), vSpeed( VNULL3 ), vPos( VNULL3 ),
-		vNormale( VNULL3 ), vInitialPoint( VNULL2 ) {  }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CMilitaryCar *)this );
+		f.Add( 2, &pStats );
+		f.Add( 3, &pFormation );
+		f.Add( 4, &vPlanesShift );
+		f.Add( 5, &fFuel );
+		f.Add( 6, &vSpeed );
+		f.Add( 7, &vPos );
+		f.Add( 8, &vNormale );
+		f.Add( 9, &bBombsAutocast );
+		f.Add( 10, &vInitialPoint );
+		f.Add( 11, &timeNextGroundScan );
+		return 0;
+	}
+
+public:
+	CAviation()
+			: bBombsAutocast( false ), fFuel( 0.0f ), vPlanesShift( VNULL3 ), vSpeed( VNULL3 ), vPos( VNULL3 ),
+				vNormale( VNULL3 ), vInitialPoint( VNULL2 )
+	{
+	}
 	virtual ~CAviation();
 
-	const CVec2 & GetAppearPoint() const { return vInitialPoint; }
+	const CVec2 &GetAppearPoint() const { return vInitialPoint; }
 	bool IsBombsAutocast() const { return bBombsAutocast; }
 	void SetBombAutocast( const bool _bBombsAutocast ) { bBombsAutocast = _bBombsAutocast; }
 
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center,
+	                   const int z,
+	                   const SUnitBaseRPGStats *pStats,
+	                   const float fHP,
+	                   const uint16_t dir,
+	                   const uint8_t player,
+	                   ICollisionsCollector *pCollisionsCollector );
 
-	virtual void GetSpeed3( CVec3 *pSpeed ) const ;
+	virtual void GetSpeed3( CVec3 *pSpeed ) const;
 
 	virtual void Segment();
 	virtual void SecondSegment( const NTimer::STime timeDiff );
 
-	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }
-	virtual IStatesFactory* GetStatesFactory() const;
+	virtual const SUnitBaseRPGStats *GetStats() const { return pStats; }
+	virtual IStatesFactory *GetStatesFactory() const;
 	// для стрельбы
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
 	{
@@ -83,22 +109,22 @@ public:
 	virtual const float GetSightRadius() const;
 	virtual void Die( const bool fromExplosion, const float fDamage );
 
-	virtual void Stop() { }
+	virtual void Stop() {}
 	virtual void Disappear();
 
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
-	virtual void Lock( const CBasicGun *pGun ) { }
+	virtual void Lock( const CBasicGun *pGun ) {}
 	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
-	virtual void Unlock( const CBasicGun *pGun ) { }
+	virtual void Unlock( const CBasicGun *pGun ) {}
 	// залокан ли каким-либо gun-ом, не равным pGun
 	virtual bool IsLocked( const CBasicGun *pGun ) const { return true; }
 
 	// plane's formation, to force planes keep parade during flight.
 	void SetPlanesFormation( class CPlanesFormation *pFormation, const CVec3 &vShift );
-	CPlanesFormation * GetPlanesFormation();
+	CPlanesFormation *GetPlanesFormation();
 	const CVec3 GetPlaneShift() const { return vPlanesShift; }
 
-	const SRect & GetUnitRect() const;
+	const SRect &GetUnitRect() const;
 	virtual const uint16_t GetDir() const;
 	virtual const CVec2 GetDirVector() const;
 	virtual const float GetSpeed() const;
@@ -109,7 +135,7 @@ public:
 	virtual CVec3 GetSpeedB2() const;
 	virtual CVec3 GetPosB2() const;
 	virtual CVec3 GetNormalB2() const;
-	virtual const struct IManuver * GetManuver() const;
+	virtual const struct IManuver *GetManuver() const;
 
 	// next calculated position
 	virtual CVec3 GetPosNext() const;
@@ -121,14 +147,14 @@ public:
 		NI_ASSERT( false, "wrong call" );
 	}
 	virtual bool IsBeingAttackedB2() { return false; }
-	virtual void NotifyAttackedB2(IPlane & attacker, bool bAttack) {}
-	virtual const class CPlanePreferences & GetPreferencesB2() const;
+	virtual void NotifyAttackedB2( IPlane &attacker, bool bAttack ) {}
+	virtual const class CPlanePreferences &GetPreferencesB2() const;
 
 	// fuel control
 	virtual void DecFuel( const bool bEconomyMode );
 	float GetFuel() const;
 
-	virtual class CArtillery* GetTowedArtillery() const { return 0; }
+	virtual class CArtillery *GetTowedArtillery() const { return 0; }
 	virtual const bool CanLockTiles() const { return false; }
 
 	virtual const float GetZ() const { return GetCenter().z; }

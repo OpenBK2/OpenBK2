@@ -5,16 +5,37 @@
 namespace NGScene
 {
 
-template<int N_SIZE>
+template <int N_SIZE>
 struct SVxCache
 {
 	uint16_t nData[N_SIZE];
 	int nPos;
 
-	SVxCache() { memset( nData, 0xffff, sizeof(nData) ); nPos = 0; }
-	void Push( uint16_t n ) { if ( IsIn( n ) ) return; nData[(++nPos)%N_SIZE] = n; }
-	bool IsIn( uint16_t n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return true; return false; }
-	int GetPos( uint16_t n ) const { for ( int k = 0; k < N_SIZE; ++k ) if ( nData[k] == n ) return (nPos - k + N_SIZE ) % N_SIZE; return -1; }
+	SVxCache()
+	{
+		memset( nData, 0xffff, sizeof( nData ) );
+		nPos = 0;
+	}
+	void Push( uint16_t n )
+	{
+		if ( IsIn( n ) )
+			return;
+		nData[( ++nPos ) % N_SIZE] = n;
+	}
+	bool IsIn( uint16_t n ) const
+	{
+		for ( int k = 0; k < N_SIZE; ++k )
+			if ( nData[k] == n )
+				return true;
+		return false;
+	}
+	int GetPos( uint16_t n ) const
+	{
+		for ( int k = 0; k < N_SIZE; ++k )
+			if ( nData[k] == n )
+				return ( nPos - k + N_SIZE ) % N_SIZE;
+		return -1;
+	}
 };
 
 //const int N_VX_TRI_CACHE_SIZE = 10;//24;
@@ -43,14 +64,17 @@ private:
 		CTriVertexCacheOptimizer *pOptimizer;
 		const std::vector<STriangle> &tris;
 
-		SStartSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris ) : nBestIdx(-1), nBestFreeLinks(1000000), pOptimizer(pO), tris(_tris) {}
+		SStartSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris )
+				: nBestIdx( -1 ), nBestFreeLinks( 1000000 ), pOptimizer( pO ), tris( _tris )
+		{
+		}
 		void Try( int nTri )
 		{
 			const STriangle &q = tris[nTri];
 			int nFreeLinks = 0;
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i1 ] );
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i2 ] );
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i3 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i1] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i2] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i3] );
 
 			if ( nFreeLinks < nBestFreeLinks )
 			{
@@ -64,7 +88,10 @@ private:
 		int nBestIdx, nBestCached, nBestFreeLinks, nBestDistance;
 		CTriVertexCacheOptimizer *pOptimizer;
 		const std::vector<STriangle> &tris;
-		SBestSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris ) : nBestIdx( -1 ), nBestCached( -1 ), pOptimizer(pO), tris(_tris) {}
+		SBestSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris )
+				: nBestIdx( -1 ), nBestCached( -1 ), pOptimizer( pO ), tris( _tris )
+		{
+		}
 		bool GetL( int *pnResDistance, int n, int nVertex, int nVCacheSize )
 		{
 			if ( n <= *pnResDistance )
@@ -81,7 +108,7 @@ private:
 			if ( n + nFL + 1 >= nVCacheSize )
 				return false;
 			*pnResDistance = n;
-			return true;// - 0 * fl;// - 3 * fl;
+			return true; // - 0 * fl;// - 3 * fl;
 		}
 		bool HasFound() const { return nBestCached == 3; }
 		void Try( int nTri )
@@ -118,9 +145,9 @@ private:
 
 			int nCachePos = pOptimizer->cache.size() - 1;
 			int nQDistance1, nQDistance2, nQDistance3;
-			nQDistance1 = nCachePos - pOptimizer->cachePos[ q.i1 ];
-			nQDistance2 = nCachePos - pOptimizer->cachePos[ q.i2 ];
-			nQDistance3 = nCachePos - pOptimizer->cachePos[ q.i3 ];
+			nQDistance1 = nCachePos - pOptimizer->cachePos[q.i1];
+			nQDistance2 = nCachePos - pOptimizer->cachePos[q.i2];
+			nQDistance3 = nCachePos - pOptimizer->cachePos[q.i3];
 			int nDistanceGuess = 0;
 			if ( nQDistance1 + 1 < nVCacheSize )
 				nDistanceGuess = nQDistance1;
@@ -137,20 +164,20 @@ private:
 			}
 
 			ASSERT( !pOptimizer->isUsed[nTri] );
-			pOptimizer->isUsed[ nTri ] = 1;
+			pOptimizer->isUsed[nTri] = 1;
 
 			GetL( &nDistance, nQDistance1, q.i1, nVCacheSize );
 			GetL( &nDistance, nQDistance2, q.i2, nVCacheSize );
 			GetL( &nDistance, nQDistance3, q.i3, nVCacheSize );
 
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i1 ] );
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i2 ] );
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[ q.i3 ] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i1] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i2] );
+			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i3] );
 
 			pOptimizer->ReverseVertex();
 			pOptimizer->ReverseVertex();
 			pOptimizer->ReverseVertex();
-			pOptimizer->isUsed[ nTri ] = 0;
+			pOptimizer->isUsed[nTri] = 0;
 
 			if ( nCached > nBestCached )
 			{
@@ -184,15 +211,20 @@ private:
 	void ReverseVertex();
 	int CountNotCachedFL( const std::vector<STriangle> &tris, int nVertex );
 	void OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<uint16_t> *pVertexReorder );
+
 public:
-	void Optimize( std::vector<STriangle> *pTris, std::vector<uint16_t> *pVertexReorder, int *pnResVerts, int nVCacheSize );
+	void
+	Optimize( std::vector<STriangle> *pTris, std::vector<uint16_t> *pVertexReorder, int *pnResVerts, int nVCacheSize );
 };
 
 struct SEdgeInfo
 {
 	int nU, nV, nXSize, nYSize;
 };
-inline bool operator==( const SEdgeInfo &a, const SEdgeInfo &b ) { return memcmp( &a, &b, sizeof(a) ) == 0; }
+inline bool operator==( const SEdgeInfo &a, const SEdgeInfo &b )
+{
+	return memcmp( &a, &b, sizeof( a ) ) == 0;
+}
 struct SEdgeInfoHash
 {
 	int operator()( const SEdgeInfo &e ) const { return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize; }

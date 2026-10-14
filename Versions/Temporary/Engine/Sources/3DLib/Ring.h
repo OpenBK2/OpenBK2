@@ -7,7 +7,7 @@ struct SRingNode
 	SRingNode<Type> *pPrev;
 	SRingNode<Type> *pNext;
 
-	SRingNode( const Type &_sData ): sData( _sData ) {}
+	SRingNode( const Type &_sData ) : sData( _sData ) {}
 };
 
 template <class Type, class TNode>
@@ -15,40 +15,40 @@ struct SRingIterator
 {
 	typedef SRingIterator<Type, TNode> TSelf;
 
-	TNode* pNode;
+	TNode *pNode;
 
-	SRingIterator(): pNode( 0 ) {}
-	SRingIterator( TNode* pStart ): pNode( pStart ) {}
-	SRingIterator( const TSelf &sIter ): pNode( sIter.pNode ) {}
+	SRingIterator() : pNode( 0 ) {}
+	SRingIterator( TNode *pStart ) : pNode( pStart ) {}
+	SRingIterator( const TSelf &sIter ) : pNode( sIter.pNode ) {}
 
-	TSelf& operator++()
+	TSelf &operator++()
 	{
-    pNode = pNode->pNext;
-    return *this;
-  }
-  TSelf operator++(int)
+		pNode = pNode->pNext;
+		return *this;
+	}
+	TSelf operator++( int )
 	{
-    TSelf sTmp = *this;
-    pNode = pNode->pNext;
-    return sTmp;
-  }
-  TSelf& operator--()
+		TSelf sTmp = *this;
+		pNode = pNode->pNext;
+		return sTmp;
+	}
+	TSelf &operator--()
 	{
-    pNode = pNode->pPrev;
-    return *this;
-  }
-  TSelf operator--(int)
+		pNode = pNode->pPrev;
+		return *this;
+	}
+	TSelf operator--( int )
 	{
-    TSelf sTmp = *this;
-    pNode = pNode->pPrev;
-    return sTmp;
-  }
+		TSelf sTmp = *this;
+		pNode = pNode->pPrev;
+		return sTmp;
+	}
 
-  Type& operator*() const { return pNode->sData; }
-	Type* operator->() const { return &(operator*()); }
+	Type &operator*() const { return pNode->sData; }
+	Type *operator->() const { return &( operator*() ); }
 
-  bool operator==( const TSelf &sIn ) const { return pNode == sIn.pNode; }
-  bool operator!=( const TSelf &sIn ) const { return pNode != sIn.pNode; }
+	bool operator==( const TSelf &sIn ) const { return pNode == sIn.pNode; }
+	bool operator!=( const TSelf &sIn ) const { return pNode != sIn.pNode; }
 
 	TSelf GetPrev() const { return TSelf( pNode->pPrev ); }
 	TSelf GetNext() const { return TSelf( pNode->pNext ); }
@@ -59,18 +59,15 @@ class CRing
 {
 protected:
 	int nCount;
-	SRingNode<Type>* pList;
+	SRingNode<Type> *pList;
 
 public:
 	typedef SRingNode<Type> node;
-	typedef SRingIterator<Type, SRingNode<Type> > iterator;
-	typedef SRingIterator<const Type, const SRingNode<Type> > const_iterator;
+	typedef SRingIterator<Type, SRingNode<Type>> iterator;
+	typedef SRingIterator<const Type, const SRingNode<Type>> const_iterator;
 
-	CRing(): nCount( 0 ), pList( 0 ) {}
-	~CRing()
-	{
-		clear();
-	}
+	CRing() : nCount( 0 ), pList( 0 ) {}
+	~CRing() { clear(); }
 
 	void clear()
 	{
@@ -116,14 +113,14 @@ public:
 		return iterator( pNew );
 	}
 
-	CRing<Type>& operator=( const CRing<Type> &ringList )
+	CRing<Type> &operator=( const CRing<Type> &ringList )
 	{
-		if ( this != &ringList)
+		if ( this != &ringList )
 		{
 			clear();
 
 			CRing<Type>::const_iterator iTemp = ringList.begin();
-			for( int nTemp = 0; nTemp < ringList.size(); nTemp++, iTemp++ )
+			for ( int nTemp = 0; nTemp < ringList.size(); nTemp++, iTemp++ )
 			{
 				add( *iTemp );
 			}

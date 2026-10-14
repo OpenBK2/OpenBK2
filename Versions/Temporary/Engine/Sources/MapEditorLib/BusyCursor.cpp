@@ -4,10 +4,9 @@
 
 namespace
 {
-	CBusyCursor::TCursorHandler s_pfnBegin = nullptr;
-	CBusyCursor::TCursorHandler s_pfnEnd = nullptr;
+CBusyCursor::TCursorHandler s_pfnBegin = nullptr;
+CBusyCursor::TCursorHandler s_pfnEnd = nullptr;
 }
-
 
 CBusyCursor::CBusyCursor()
 {
@@ -18,7 +17,6 @@ CBusyCursor::CBusyCursor()
 	}
 }
 
-
 CBusyCursor::~CBusyCursor()
 {
 	if ( bShown && ( s_pfnEnd != nullptr ) )
@@ -26,7 +24,6 @@ CBusyCursor::~CBusyCursor()
 		s_pfnEnd();
 	}
 }
-
 
 void CBusyCursor::SetHandlers( TCursorHandler pfnBegin, TCursorHandler pfnEnd )
 {

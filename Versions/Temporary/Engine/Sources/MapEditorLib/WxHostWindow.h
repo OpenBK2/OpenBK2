@@ -14,7 +14,6 @@
 // still stand. Both end at BeforeTearDown once, and the destructor tears down
 // once more for the case where an object is deleted having never been created.
 
-
 #include "Interface_Widget.h"
 #include "WxOwnership.h"
 #include "WxWidget.h"
@@ -37,35 +36,27 @@ class CWxHostWindow : public IWidget, public IWxWidget
 		bTornDown = false;
 		// The parent's destruction destroys the panel with it, and this is the
 		// word of that: sent while the panel's children still stand.
-		pPanel->Bind( wxEVT_DESTROY, [this]( wxWindowDestroyEvent &rEvent )
-		{
-			rEvent.Skip();
-			if ( ( rEvent.GetEventObject() == pPanel.get() ) && !bTornDown )
-			{
-				bTornDown = true;
-				BeforeTearDown();
-			}
-		} );
+		pPanel->Bind( wxEVT_DESTROY,
+		              [this]( wxWindowDestroyEvent &rEvent )
+		              {
+										rEvent.Skip();
+										if ( ( rEvent.GetEventObject() == pPanel.get() ) && !bTornDown )
+										{
+											bTornDown = true;
+											BeforeTearDown();
+										}
+									} );
 		return true;
 	}
 
 public:
 	// IWidget. The panel's handle.
-	virtual void* GetNativeWidget()
-	{
-		return pPanel ? pPanel->GetHandle() : nullptr;
-	}
+	virtual void *GetNativeWidget() { return pPanel ? pPanel->GetHandle() : nullptr; }
 
 	// IWxWidget. The panel, which is what the parent lays out.
-	virtual wxWindow* GetWxWindow()
-	{
-		return pPanel.get();
-	}
+	virtual wxWindow *GetWxWindow() { return pPanel.get(); }
 
-	virtual ~CWxHostWindow()
-	{
-		TearDownWx();
-	}
+	virtual ~CWxHostWindow() { TearDownWx(); }
 
 	// Creates the host: a panel of pParent, which has to be wx's -- a pane, the
 	// document window, or a shortcut bar page. False, with nothing made, for
@@ -80,10 +71,7 @@ public:
 	}
 
 	// The wx window to parent content on, or null before CreateHost succeeded.
-	wxWindow* Root() const
-	{
-		return pPanel.get();
-	}
+	wxWindow *Root() const { return pPanel.get(); }
 
 	// Shows or hides the host.
 	void ShowHost( bool bShow )
@@ -100,17 +88,11 @@ public:
 	}
 
 	// Takes the host down.
-	void DestroyHost()
-	{
-		TearDownWx();
-	}
+	void DestroyHost() { TearDownWx(); }
 
 	// Takes the wx side down now, while whatever it calls back into is still
 	// there. The same as DestroyHost, since there is no MFC window to leave.
-	void DestroyContents()
-	{
-		TearDownWx();
-	}
+	void DestroyContents() { TearDownWx(); }
 
 	// A surface filling the host that scrolls vertically and never
 	// horizontally, for a palette to put its controls on. Null before
@@ -136,7 +118,7 @@ public:
 	//
 	// With the horizontal bar ruled out the width is always the tab's, and a
 	// row that stretches stretches to that.
-	wxScrolledWindow* CreateScrolledRoot()
+	wxScrolledWindow *CreateScrolledRoot()
 	{
 		wxWindow *const pHostRoot = Root();
 		if ( pHostRoot == 0 )
@@ -157,9 +139,7 @@ protected:
 	// otherwise read controls that are no longer there. Called once, while the
 	// derived object still exists, except when the host is deleted without ever
 	// being torn down, when there is nothing to stop.
-	virtual void BeforeTearDown()
-	{
-	}
+	virtual void BeforeTearDown() {}
 
 	// Safe to call more than once, and safe to call having never created.
 	void TearDownWx()

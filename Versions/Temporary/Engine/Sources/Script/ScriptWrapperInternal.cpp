@@ -6,14 +6,14 @@
 
 CPtr<NScript::CScriptWrapper> pScript;
 
-IScriptWrapper* CreateScriptWrapper()
+IScriptWrapper *CreateScriptWrapper()
 {
 	return new NScript::CScriptWrapper;
 }
 
 namespace NScript
 {
-	extern SRegFunction pCommonRegList[];
+extern SRegFunction pCommonRegList[];
 
 void AddScriptFunctionsToSaveLoad( const SRegFunction *pRegList )
 {
@@ -32,8 +32,7 @@ void RegisterCommonFunctionsToSaveLoad()
 // pointer constant and C++11 narrowed to an integer literal, leaving this an int.
 SRegFunction pLuaPtrTagFuncList[] = { { 0, 0 } };
 
-
-Script * GetScript()
+Script *GetScript()
 {
 	if ( !IsValid( pScript ) )
 		return 0;
@@ -50,13 +49,13 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 		return -1;
 
 	const int nNumRetArgs = script.GetTop();
-	std::string szAnswer("");
+	std::string szAnswer( "" );
 
 	int nResult = 0;
 	if ( nNumRetArgs == 1 )
 	{
 		Script::Object obj = script.GetObject( 1 );
-		if( obj.IsNumber() )
+		if ( obj.IsNumber() )
 			nResult = obj.GetNumber();
 	}
 
@@ -65,7 +64,7 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 		Script::Object obj = pScript->GetScript()->GetObject( i );
 
 		if ( obj.IsNumber() )
-			szAnswer += std::to_string( int(obj) );
+			szAnswer += std::to_string( int( obj ) );
 		else if ( const char *pszAnswer = obj.GetString() )
 			szAnswer += pszAnswer;
 
@@ -73,7 +72,7 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 			szAnswer += ", ";
 	}
 
-	script.SetTop(oldtop);
+	script.SetTop( oldtop );
 
 	if ( bLogToConsole )
 	{
@@ -119,8 +118,9 @@ int CScriptWrapper::RunScriptByID( int nID )
 
 int CScriptWrapper::RunScript( const char *pszScriptText )
 {
-	if ( pszScriptText == 0 || !strlen( pszScriptText ) ) return 0;
-	return (script.DoBuffer( &(pszScriptText[0]), strlen(pszScriptText), "Script" ) == 0) ;
+	if ( pszScriptText == 0 || !strlen( pszScriptText ) )
+		return 0;
+	return ( script.DoBuffer( &( pszScriptText[0] ), strlen( pszScriptText ), "Script" ) == 0 );
 }
 
 int CScriptWrapper::RunScriptFile( const char *pszFileName )
@@ -130,11 +130,11 @@ int CScriptWrapper::RunScriptFile( const char *pszFileName )
 	const int nSize = stream.GetSize();
 	// +10 на всякий случай
 	std::vector<char> buffer( nSize + 10 );
-	stream.Read( &(buffer[0]), nSize );
-	return (script.DoBuffer( &(buffer[0]), nSize, "Script" ) == 0) ;
+	stream.Read( &( buffer[0] ), nSize );
+	return ( script.DoBuffer( &( buffer[0] ), nSize, "Script" ) == 0 );
 }
 
 } // namespace
 using namespace NScript;
 REGISTER_SAVELOAD_CLASS( SCRIPT, 0x11061C00, CScriptWrapper )
-BASIC_REGISTER_CLASS(SCRIPT, IScriptWrapper)
+BASIC_REGISTER_CLASS( SCRIPT, IScriptWrapper )

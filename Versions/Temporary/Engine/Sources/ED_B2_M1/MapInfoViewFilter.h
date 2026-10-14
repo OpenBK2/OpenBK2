@@ -15,12 +15,12 @@
 // left it at; either way the scene already agrees with it.
 namespace NMapInfoViewFilter
 {
-	// Runs the dialog modally over pParent. True on OK.
-	bool Run( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter );
+// Runs the dialog modally over pParent. True on OK.
+bool Run( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter );
 
-	// What every change calls: the map editor's ID_VIEW_APPLY_MI_FILTER, which
-	// applies the filter to the scene and redraws it. Here so both
-	// implementations send the same command the same way.
-	void Apply();
+// What every change calls: the map editor's ID_VIEW_APPLY_MI_FILTER, which
+// applies the filter to the scene and redraws it. Here so both
+// implementations send the same command the same way.
+void Apply();
 
 }

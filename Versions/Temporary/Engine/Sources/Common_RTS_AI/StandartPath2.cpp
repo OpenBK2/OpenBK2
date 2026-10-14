@@ -14,7 +14,7 @@ static const int MAX_LOOK_FORWARD_POINTS = 7;
 //максимальная длина короткого пути в тайлах
 static const int MAX_PATH_TILES_COUNT = 64;
 //а вообще путь будет строиться именно на столько тайлов
-static const int SMALL_PATH_TILES_COUNT = MAX_PATH_TILES_COUNT/4;
+static const int SMALL_PATH_TILES_COUNT = MAX_PATH_TILES_COUNT / 4;
 //стандартный сдвиг точек на статическом пути
 static const int STATIC_PATH_SHIFT = 10;
 // p.s. максимальное количество тайлов, которое можно записать - MAX_PATH_TILES_COUNT - ( 2 x MAX_LOOK_FORWARD_POINTS )
@@ -33,30 +33,38 @@ inline const bool CompareDistance( const SVector &vEndPoint1, const SVector &vEn
 	return mDistance( vEndPoint1, vPoint ) < mDistance( vEndPoint2, vPoint );
 }
 
-CStandartPath2::CStandartPath2() : pPathFinder( 0 ), pAIMap( 0 ), nBoundTileRadius( -1 ), aiClass( EAC_NONE ), pStaticPath( 0 ),
-  nCurStaticPathTile( -1 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), vShift( VNULL2 ), nCurInsTile( 0 ), nCurPathTile( 0 ),
-	nLastPathTile( -1 ), vShiftTile( 0, 0 ), vFinishTile( 0, 0 ), nUnitID( -1 )
+CStandartPath2::CStandartPath2()
+		: pPathFinder( 0 ), pAIMap( 0 ), nBoundTileRadius( -1 ), aiClass( EAC_NONE ), pStaticPath( 0 ),
+			nCurStaticPathTile( -1 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), vShift( VNULL2 ), nCurInsTile( 0 ),
+			nCurPathTile( 0 ), nLastPathTile( -1 ), vShiftTile( 0, 0 ), vFinishTile( 0, 0 ), nUnitID( -1 )
 {
 	pathTiles.resize( MAX_PATH_TILES_COUNT, SVector( 0, 0 ) );
 }
 
-CStandartPath2::CStandartPath2( const CBasePathUnit *pUnit, IStaticPath *_pStaticPath, const CVec2 &_vStartPoint, const CVec2 &_vFinishPoint, CAIMap *_pAIMap )
-: pPathFinder( pUnit->GetPathFinder() ), pAIMap( _pAIMap ), nBoundTileRadius( pUnit->GetBoundTileRadius() ), aiClass( pUnit->GetAIPassabilityClass() ),
-	nCurInsTile( 0 ), vFinishTile( 0, 0 ), nUnitID( pUnit->GetUniqueID() )
+CStandartPath2::CStandartPath2( const CBasePathUnit *pUnit,
+                                IStaticPath *_pStaticPath,
+                                const CVec2 &_vStartPoint,
+                                const CVec2 &_vFinishPoint,
+                                CAIMap *_pAIMap )
+		: pPathFinder( pUnit->GetPathFinder() ), pAIMap( _pAIMap ), nBoundTileRadius( pUnit->GetBoundTileRadius() ),
+			aiClass( pUnit->GetAIPassabilityClass() ), nCurInsTile( 0 ), vFinishTile( 0, 0 ), nUnitID( pUnit->GetUniqueID() )
 {
 	const int nUnitID = pUnit->GetUniqueID();
 	pathTiles.resize( MAX_PATH_TILES_COUNT );
 	InitByStaticPath( dynamic_cast<CCommonStaticPath *>( _pStaticPath ), _vStartPoint, _vFinishPoint, false );
 }
 
-void CStandartPath2::InitByStaticPath( CCommonStaticPath *_pStaticPath, const CVec2 &_vStartPoint, const CVec2 &_vFinishPoint, const bool bResetShift )
+void CStandartPath2::InitByStaticPath( CCommonStaticPath *_pStaticPath,
+                                       const CVec2 &_vStartPoint,
+                                       const CVec2 &_vFinishPoint,
+                                       const bool bResetShift )
 {
 	pStaticPath = _pStaticPath;
 	vStartPoint = _vStartPoint;
 	SetFinishPoint( _vFinishPoint );
 	vShift = ( bResetShift || pStaticPath == 0 ) ? VNULL2 : vFinishPoint - pStaticPath->GetFinishPoint();
-	vShiftTile.x = vShift.x/pAIMap->GetTileSize();
-	vShiftTile.y = vShift.y/pAIMap->GetTileSize();
+	vShiftTile.x = vShift.x / pAIMap->GetTileSize();
+	vShiftTile.y = vShift.y / pAIMap->GetTileSize();
 	nCurPathTile = 0;
 	nLastPathTile = 1;
 	nCurStaticPathTile = 0;
@@ -111,14 +119,16 @@ void CStandartPath2::CopyPath( const int nLength )
 {
 	if ( nLength < 0 )
 		return;
-	pPathFinder->GetTiles( &(pathBuffer[0]), nLength );
+	pPathFinder->GetTiles( &( pathBuffer[0] ), nLength );
 	const int nCopyTiles = (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile );
-	memcpy( &(pathTiles[0]) + nLastPathTile, &(pathBuffer[0]), sizeof(SVector) * (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile ) );
+	memcpy( &( pathTiles[0] ) + nLastPathTile,
+	        &( pathBuffer[0] ),
+	        sizeof( SVector ) * (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile ) );
 	if ( nLength > nCopyTiles )
-		memcpy( &(pathTiles[0]), &(pathBuffer[0]) + nCopyTiles, sizeof(SVector) * ( nLength - nCopyTiles ) );
-	nLastPathTile = (nLastPathTile+nLength)%MAX_PATH_TILES_COUNT;
+		memcpy( &( pathTiles[0] ), &( pathBuffer[0] ) + nCopyTiles, sizeof( SVector ) * ( nLength - nCopyTiles ) );
+	nLastPathTile = ( nLastPathTile + nLength ) % MAX_PATH_TILES_COUNT;
 	// чтоб можно было спрашивать
-	pathTiles[nLastPathTile] = pathBuffer[nLength-1];
+	pathTiles[nLastPathTile] = pathBuffer[nLength - 1];
 }
 
 const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLastKnownGoodTile )
@@ -130,7 +140,7 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 	const int nPrevStaticPathTile = nCurStaticPathTile;
 	// выбираем точку на текущем статическом пути
 	if ( bShift )
-		nCurStaticPathTile = (std::min)( nCurStaticPathTile + STATIC_PATH_SHIFT, pStaticPath->GetLength()-2 );
+		nCurStaticPathTile = (std::min)( nCurStaticPathTile + STATIC_PATH_SHIFT, pStaticPath->GetLength() - 2 );
 
 	SVector vNextTile = GetTileWithShift( pStaticPath->GetTile( nCurStaticPathTile ) );
 	bool bNextTileValid = true;
@@ -139,7 +149,7 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 		int nShift = 1;
 		while ( nShift < STATIC_PATH_SHIFT && !IsValidTile( vNextTile ) )
 		{
-			if ( nCurStaticPathTile + nShift < pStaticPath->GetLength()-1 )
+			if ( nCurStaticPathTile + nShift < pStaticPath->GetLength() - 1 )
 				vNextTile = GetTileWithShift( pStaticPath->GetTile( nCurStaticPathTile + nShift ) );
 			if ( IsValidTile( vNextTile ) )
 				nCurStaticPathTile += nShift;
@@ -162,12 +172,22 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 	if ( IsValidTile( vLastKnownGoodTile ) )
 	{
 		//DebugTrace( ">>>> CalculatePath: %d x %d - %d x %d (%s) (valid: %d x %d) for unit %d (%d & %d)", pathTiles[nLastPathTile].x, pathTiles[nLastPathTile].y, vNextTile.x, vNextTile.y, bNextTileValid ? "true" : "false", vLastKnownGoodTile.x, vLastKnownGoodTile.y, nUnitID, aiClass, nBoundTileRadius );
-		pPathFinder->SetPathParameters( nBoundTileRadius, aiClass, GetPoint( pathTiles[nLastPathTile] ), GetPoint( vNextTile ), vLastKnownGoodTile, pAIMap );
+		pPathFinder->SetPathParameters( nBoundTileRadius,
+		                                aiClass,
+		                                GetPoint( pathTiles[nLastPathTile] ),
+		                                GetPoint( vNextTile ),
+		                                vLastKnownGoodTile,
+		                                pAIMap );
 	}
 	else
 	{
 		//DebugTrace( ">>>> CalculatePath: %d x %d - %d x %d (%s) (valid: none) for unit %d (%d & %d)", pathTiles[nLastPathTile].x, pathTiles[nLastPathTile].y, vNextTile.x, vNextTile.y, bNextTileValid ? "true" : "false", nUnitID, aiClass, nBoundTileRadius );
-		pPathFinder->SetPathParameters( nBoundTileRadius, aiClass, GetPoint( pathTiles[nLastPathTile] ), GetPoint( vNextTile ), pathTiles[nLastPathTile], pAIMap );
+		pPathFinder->SetPathParameters( nBoundTileRadius,
+		                                aiClass,
+		                                GetPoint( pathTiles[nLastPathTile] ),
+		                                GetPoint( vNextTile ),
+		                                pathTiles[nLastPathTile],
+		                                pAIMap );
 	}
 	CPtr<IStaticPath> pFoundStaticPath = pPathFinder->CreatePath( false );
 	pPathHistory2 = pPathHistory1;
@@ -189,28 +209,29 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 	{
 		CopyPath( pFoundStaticPath->GetLength() );
 		// это был последний шаг - корректируем конечную точку
-		if ( nCurStaticPathTile == pStaticPath->GetLength()-2 )
+		if ( nCurStaticPathTile == pStaticPath->GetLength() - 2 )
 			SetFinishTile( pathTiles[nLastPathTile] );
 	}
 	else
 	{
 		// подбираем nCurStaticPathTile и тайл на пути, чтобы они были максимально близки
-		int nLength = (std::min)( pFoundStaticPath->GetLength()-1, MAX_PATH_TILES_COUNT - 2*MAX_LOOK_FORWARD_POINTS );
+		int nLength = (std::min)( pFoundStaticPath->GetLength() - 1, MAX_PATH_TILES_COUNT - 2 * MAX_LOOK_FORWARD_POINTS );
 		bool bCloseToFinish = false;
 		do
 		{
 			bCloseToFinish = CompareDistance( vFinishTile, vNextTile, pFoundStaticPath->GetTile( nLength ) );
 			if ( !bCloseToFinish )
 				--nLength;
-		} while( nLength > SMALL_PATH_TILES_COUNT && !bCloseToFinish );
-    CopyPath( nLength );
+		} while ( nLength > SMALL_PATH_TILES_COUNT && !bCloseToFinish );
+		CopyPath( nLength );
 
 		// попалась точка, которая ближе к финишу, чем к желаемой
 		if ( bCloseToFinish )
 		{
 			int nBestStaticPathTile = nCurStaticPathTile;
-			int nBestDistance = mDistance( pStaticPath->GetTile( nBestStaticPathTile ) + vShiftTile, pathTiles[nLastPathTile] );
-			for ( int i = nCurStaticPathTile+1; i < pStaticPath->GetLength()-1; ++i )
+			int nBestDistance =
+					mDistance( pStaticPath->GetTile( nBestStaticPathTile ) + vShiftTile, pathTiles[nLastPathTile] );
+			for ( int i = nCurStaticPathTile + 1; i < pStaticPath->GetLength() - 1; ++i )
 			{
 				const int nThisDistance = mDistance( pStaticPath->GetTile( i ) + vShiftTile, pathTiles[nLastPathTile] );
 				if ( nThisDistance < nBestDistance )
@@ -222,7 +243,7 @@ const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLas
 			nCurStaticPathTile = nBestStaticPathTile;
 		}
 		// это был последний шаг - корректируем конечную точку
-		if ( nCurStaticPathTile == pStaticPath->GetLength()-2 )
+		if ( nCurStaticPathTile == pStaticPath->GetLength() - 2 )
 			SetFinishTile( pFoundStaticPath->GetFinishTile() );
 	}
 	return true;
@@ -234,16 +255,17 @@ const CVec2 CStandartPath2::PeekPoint( const int _nShift ) const
 		return vFinishPoint;
 
 	if ( nCurInsTile + _nShift < insTiles.size() )
-		return GetPoint( insTiles[nCurInsTile+_nShift] );
+		return GetPoint( insTiles[nCurInsTile + _nShift] );
 
 	int nShift = nCurInsTile + _nShift - insTiles.size();
-	NI_VERIFY( nShift <= MAX_LOOK_FORWARD_POINTS, "Cannot predict point. Shift too far", nShift = MAX_LOOK_FORWARD_POINTS );
+	NI_VERIFY(
+			nShift <= MAX_LOOK_FORWARD_POINTS, "Cannot predict point. Shift too far", nShift = MAX_LOOK_FORWARD_POINTS );
 
 	const int nLastPathTile2 = ( nCurPathTile < nLastPathTile ) ? nLastPathTile : nLastPathTile + MAX_PATH_TILES_COUNT;
 	if ( nCurPathTile + nShift > nLastPathTile2 )
 		return vFinishPoint;
 
-	const int nTile = ( nCurPathTile + nShift )%MAX_PATH_TILES_COUNT;
+	const int nTile = ( nCurPathTile + nShift ) % MAX_PATH_TILES_COUNT;
 	return GetPoint( pathTiles[nTile] );
 }
 
@@ -260,7 +282,7 @@ void CStandartPath2::Shift( const int _nShift )
 	const int nShift = nCurInsTile + _nShift - insTiles.size();
 	nCurInsTile = insTiles.size();
 
-	nCurPathTile = ( nCurPathTile + nShift )%MAX_PATH_TILES_COUNT;
+	nCurPathTile = ( nCurPathTile + nShift ) % MAX_PATH_TILES_COUNT;
 	const int nLastPathTile2 = ( nCurPathTile < nLastPathTile ) ? nLastPathTile : nLastPathTile + MAX_PATH_TILES_COUNT;
 	if ( nCurPathTile + MAX_LOOK_FORWARD_POINTS >= nLastPathTile2 )
 	{
@@ -278,7 +300,8 @@ void CStandartPath2::InsertTiles( const std::list<SVector> &tiles )
 
 const bool CStandartPath2::CanGoBackward( const CBasePathUnit *pUnit ) const
 {
-	return pUnit->CanGoBackward() && pStaticPath->GetLength() * float( pAIMap->GetTileSize() ) <= pUnit->GetUnitProfile().GetHalfLength() * 5.0f;
+	return pUnit->CanGoBackward() &&
+	       pStaticPath->GetLength() * float( pAIMap->GetTileSize() ) <= pUnit->GetUnitProfile().GetHalfLength() * 5.0f;
 }
 
 void CStandartPath2::RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile )
@@ -290,13 +313,19 @@ void CStandartPath2::RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWate
 		pPathFinder->SetPathParameters( nBoundTileRadius, aiClass, vPoint, vFinishPoint, vLastKnownGoodTile, pAIMap );
 		pNewStaticPath = pPathFinder->CreatePath( false );
 	}
-	if ( IsValid( pStaticPath ) && IsValid( pNewStaticPath ) && nCurStaticPathTile < pStaticPath->GetLength()-2 )
+	if ( IsValid( pStaticPath ) && IsValid( pNewStaticPath ) && nCurStaticPathTile < pStaticPath->GetLength() - 2 )
 	{
 		CPtr<IStaticPath> pBackStaticPath = 0;
 		STerrainModeSetter modeSetter( ELM_STATIC, pAIMap->GetTerrain() );
-		pPathFinder->SetPathParameters( nBoundTileRadius, aiClass, vPoint, GetPoint( pStaticPath->GetTile( nCurStaticPathTile ) ), vLastKnownGoodTile, pAIMap );
+		pPathFinder->SetPathParameters( nBoundTileRadius,
+		                                aiClass,
+		                                vPoint,
+		                                GetPoint( pStaticPath->GetTile( nCurStaticPathTile ) ),
+		                                vLastKnownGoodTile,
+		                                pAIMap );
 		pBackStaticPath = pPathFinder->CreatePath( false );
-		if ( IsValid( pBackStaticPath ) && pBackStaticPath->GetLength() + pStaticPath->GetLength() - nCurStaticPathTile < pNewStaticPath->GetLength()+STATIC_PATH_SHIFT )
+		if ( IsValid( pBackStaticPath ) && pBackStaticPath->GetLength() + pStaticPath->GetLength() - nCurStaticPathTile <
+		                                       pNewStaticPath->GetLength() + STATIC_PATH_SHIFT )
 		{
 			if ( pBackStaticPath->MergePath( pStaticPath, nCurStaticPathTile ) )
 				pNewStaticPath = pBackStaticPath;
@@ -308,7 +337,8 @@ void CStandartPath2::RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWate
 	if ( !pNewStaticPath )
 		pNewStaticPath = pPathFinder->CreatePath( false );
 
-	InitByStaticPath( dynamic_cast_ptr<CCommonStaticPath*>( pNewStaticPath ), vPoint, pNewStaticPath->GetFinishPoint(), true );
+	InitByStaticPath(
+			dynamic_cast_ptr<CCommonStaticPath *>( pNewStaticPath ), vPoint, pNewStaticPath->GetFinishPoint(), true );
 }
 
 void CStandartPath2::RecalcPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile )

@@ -2,16 +2,16 @@
 
 namespace NLang
 {
-	class CLangNode;
+class CLangNode;
 }
 
 namespace NDb
 {
-	namespace NTypeDef
-	{
-		struct STypeDef;
-	}
+namespace NTypeDef
+{
+	struct STypeDef;
+}
 }
 
-typedef std::unordered_map< NLang::CLangNode*, CObj<NDb::NTypeDef::STypeDef> > CNodes2TypeDefs;
-typedef std::unordered_map<NDb::NTypeDef::STypeDef*, CPtr<NDb::NTypeDef::STypeDef>> CClasses2Refs;
+typedef std::unordered_map<NLang::CLangNode *, CObj<NDb::NTypeDef::STypeDef>> CNodes2TypeDefs;
+typedef std::unordered_map<NDb::NTypeDef::STypeDef *, CPtr<NDb::NTypeDef::STypeDef>> CClasses2Refs;

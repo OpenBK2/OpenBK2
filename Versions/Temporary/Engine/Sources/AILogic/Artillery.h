@@ -25,7 +25,7 @@ class CArtillery : public CAIUnit
 	CPtr<CMechUnitGuns> pGuns;
 
 	// вращающаяся пушка
-	std::vector< CObj<CTurret> > turrets;
+	std::vector<CObj<CTurret>> turrets;
 
 	EActionNotify eCurInstallAction = {}, eNextInstallAction = {};
 	// в каком из install/uninstall мы сейчас находимся
@@ -33,18 +33,18 @@ class CArtillery : public CAIUnit
 
 	bool bInstalled = {};
 	NTimer::STime installActionTime = {};
-	bool bInstallActionInstant = {};						// для того, чтобы артиллерию можно было создать в непроинсталлированном состоянии
+	bool bInstallActionInstant = {}; // для того, чтобы артиллерию можно было создать в непроинсталлированном состоянии
 
 	CPtr<IStaticPath> pStaticPathToSend;
 	CVec2 vShift;
 	CPtr<IPath> pIPathToSend;
 
-	CPtr<CFormation> pCapturingUnit;			// взвод, который бежит захватывать пушку.
-	CPtr<CFormation> pCrew;								// взвод, который пушку обслуживает
-	float fOperable = {}; // часть команды, которая обслуживает пушку
+	CPtr<CFormation> pCapturingUnit; // взвод, который бежит захватывать пушку.
+	CPtr<CFormation> pCrew;          // взвод, который пушку обслуживает
+	float fOperable = {};            // часть команды, которая обслуживает пушку
 
-	CPtr<CAIUnit> pSlaveTransport; // транспорт, который работает на эту пушку
-	CPtr<CAIUnit> pHookingTransport;	// transport, that is hooking this artillery.
+	CPtr<CAIUnit> pSlaveTransport;   // транспорт, который работает на эту пушку
+	CPtr<CAIUnit> pHookingTransport; // transport, that is hooking this artillery.
 
 	CObj<CArtilleryBulletStorage> pBulletStorage;
 	bool bBulletStorageVisible = {};
@@ -61,17 +61,25 @@ class CArtillery : public CAIUnit
 	//
 	bool IsInstallActionFinished();
 	bool ShouldSendInstallAction( const EActionNotify &eAction ) const;
+
 protected:
 	virtual void InitGuns();
-	virtual const CUnitGuns* GetGuns() const;
-	virtual CUnitGuns* GetGuns();
+	virtual const CUnitGuns *GetGuns() const;
+	virtual CUnitGuns *GetGuns();
+
 public:
-	CArtillery() : bBulletStorageVisible( false ) { }
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t _dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
+	CArtillery() : bBulletStorageVisible( false ) {}
+	virtual void Init( const CVec2 &center,
+	                   const int z,
+	                   const SUnitBaseRPGStats *pStats,
+	                   const float fHP,
+	                   const uint16_t _dir,
+	                   const uint8_t player,
+	                   ICollisionsCollector *pCollisionsCollector );
 	int operator&( IBinSaver &f );
 
-	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }
-	virtual IStatesFactory* GetStatesFactory() const;
+	virtual const SUnitBaseRPGStats *GetStats() const { return pStats; }
+	virtual IStatesFactory *GetStatesFactory() const;
 
 	virtual void Segment();
 	virtual void SetSelectable( bool bSelectable, bool bSendToWorld );
@@ -79,7 +87,7 @@ public:
 	virtual void SetCamoulfage();
 	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
 
-	virtual class CTurret* GetTurret( const int nTurret ) const { return turrets[nTurret]; }
+	virtual class CTurret *GetTurret( const int nTurret ) const { return turrets[nTurret]; }
 	virtual const int GetNTurrets() const { return turrets.size(); }
 
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
@@ -96,13 +104,22 @@ public:
 
 	//
 	virtual int GetNGuns() const;
-	virtual class CBasicGun* GetGun( const int n ) const;
+	virtual class CBasicGun *GetGun( const int n ) const;
 
-	virtual class CBasicGun* ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
+	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
 
-	virtual bool IsInstalled() const { return bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE; }
-	virtual bool IsUninstalled() const { return !bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE; }
-	bool IsInInstallAction() const { return eCurInstallAction != ACTION_NOTIFY_NONE || eNextInstallAction != ACTION_NOTIFY_NONE; }
+	virtual bool IsInstalled() const
+	{
+		return bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE;
+	}
+	virtual bool IsUninstalled() const
+	{
+		return !bInstalled && eCurInstallAction == ACTION_NOTIFY_NONE && eNextInstallAction == ACTION_NOTIFY_NONE;
+	}
+	bool IsInInstallAction() const
+	{
+		return eCurInstallAction != ACTION_NOTIFY_NONE || eNextInstallAction != ACTION_NOTIFY_NONE;
+	}
 
 	void InstallBack( bool bAlreadyDone ); // инсталлировать артиллерию обратно, если она не деинсталлирована - то ошибка.
 	virtual void InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone = false );
@@ -111,8 +128,11 @@ public:
 
 	virtual const bool NeedDeinstall() const;
 	virtual const bool CanShoot() const { return IsInstalled(); }
-	virtual class CBasicGun* GetFirstArtilleryGun() const;
-	virtual void TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit );
+	virtual class CBasicGun *GetFirstArtilleryGun() const;
+	virtual void TakeDamage( const float fDamage,
+	                         const SWeaponRPGStats::SShell *pShell,
+	                         const int nPlayerOfShoot,
+	                         CAIUnit *pShotUnit );
 
 	bool IsLightGun() const;
 	virtual const bool CanShootToPlanes() const;
@@ -133,11 +153,11 @@ public:
 
 	// обслуживание пушки артиллеристами
 	virtual void ChangePlayer( const uint8_t cPlayer );
-	virtual void SetCrew( class CFormation * _pCrew, const bool bCapture = true );
+	virtual void SetCrew( class CFormation *_pCrew, const bool bCapture = true );
 	virtual void DelCrew();
 	virtual bool HasServeCrew() const;
 	virtual bool MustHaveCrewToOperate() const;
-	virtual class CFormation* GetCrew() const;
+	virtual class CFormation *GetCrew() const;
 	virtual bool IsOperable() const { return fOperable != 0.0f; }
 	virtual void SetOperable( float fOperable );
 
@@ -147,9 +167,9 @@ public:
 	virtual CVec2 GetTowPoint();
 
 	//CRAP { к майлстоуну заплатка
-	virtual void SetSlaveTransport( class CAIUnit* _pSlaveTransport ){ pSlaveTransport = _pSlaveTransport; }
+	virtual void SetSlaveTransport( class CAIUnit *_pSlaveTransport ) { pSlaveTransport = _pSlaveTransport; }
 	virtual bool HasSlaveTransport();
-	virtual class CAIUnit* GetSlaveTransport() { return pSlaveTransport; }
+	virtual class CAIUnit *GetSlaveTransport() { return pSlaveTransport; }
 	//CRAP }
 
 	const CVec3 GetAmmoBoxCoordinates();
@@ -178,18 +198,19 @@ public:
 
 	EActionNotify GetCurUninstallAction() const { return eCurrentStateOfInstall; }
 
-	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
+	virtual void
+	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
 
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
 
 	int GetInitialPlayer() const { return nInitialPlayer; }
 	void SetInitialPlayer( const int nPlayer ) { nInitialPlayer = nPlayer; }
-	virtual const NTimer::STime GetBehUpdateDuration() const ;
+	virtual const NTimer::STime GetBehUpdateDuration() const;
 	//
-	bool IsBeingCaptured() const ;
-	void SetCapturingUnit( CFormation * pFormation ) ;
-	CFormation * GetCapturedUnit() { return pCapturingUnit; }
+	bool IsBeingCaptured() const;
+	void SetCapturingUnit( CFormation *pFormation );
+	CFormation *GetCapturedUnit() { return pCapturingUnit; }
 
 	// to allow only one transport to hook artillery
 	bool IsBeingHooked() const;

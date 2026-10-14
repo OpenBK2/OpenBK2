@@ -27,10 +27,7 @@ static float s_fValidateTime = 3000.0f;
 static float s_fValidateDifference = 0.0001f;
 
 CCamera::CCamera()
-	: bMayaHandleType( false ),
-	bIsMovieFinished( false ),
-	bUseMovieMutator( false ),
-	bIsPlayingFinal( false )
+		: bMayaHandleType( false ), bIsMovieFinished( false ), bUseMovieMutator( false ), bIsPlayingFinal( false )
 {
 	SetupDefaultMouseMutator();
 	//
@@ -50,7 +47,7 @@ CCamera::CCamera()
 	AddObserver( "camera_control_off", &CCamera::MsgMouseRotation, false );
 }
 
-void CCamera::SetHandleType(	bool _bMayaHandleType )
+void CCamera::SetHandleType( bool _bMayaHandleType )
 {
 	bMayaHandleType = _bMayaHandleType;
 	if ( bMayaHandleType )
@@ -65,20 +62,20 @@ void CCamera::SetHandleType(	bool _bMayaHandleType )
 
 void CCamera::SetupDefaultMouseMutator()
 {
-	SetHandleType( NGlobal::GetVar("camera_mode").GetString() == L"camera_mode_maya" );
+	SetHandleType( NGlobal::GetVar( "camera_mode" ).GetString() == L"camera_mode_maya" );
 }
 
 void CCamera::MsgMouseRotation( const SGameMessage &msg, bool bBegin )
 {
 	if ( bBegin )
 	{
-//		Cursor()->Show( false );
+		//		Cursor()->Show( false );
 		const CVec2 vPos = Cursor()->GetPos();
 		Cursor()->SetBounds( vPos.x, vPos.y, vPos.x + 1, vPos.y + 1 );
 	}
 	else
 	{
-//		Cursor()->Show( true );
+		//		Cursor()->Show( true );
 		const CVec2 vSize = NGfx::GetScreenRect();
 		Cursor()->SetBounds( 0, 0, vSize.x, vSize.y );
 	}
@@ -90,7 +87,7 @@ void CCamera::ResetToDefault()
 	{
 		pMouseMutator->ResetToDefault();
 		const CVec3 &vAnchor = pMouseMutator->GetAnchor();
-		pMouseMutator->SetAnchor( CVec3(vAnchor.x, vAnchor.y, 0) );
+		pMouseMutator->SetAnchor( CVec3( vAnchor.x, vAnchor.y, 0 ) );
 	}
 	bWasUpdatedExternally = true;
 }
@@ -210,8 +207,9 @@ void CCamera::SetOrthographicTransform( float _fWidth, float _fHeight, float _fN
 
 void CCamera::GetProjectiveRay( CVec3 *pvOrig, CVec3 *pvDir, const CVec2 &vScreenPos ) const
 {
-	MakeProjectiveRay( pvDir, pvOrig, transformStack, CVec2(fScreenWidth, fScreenHeight), vScreenPos );
-	if ( fabs2(*pvDir) < 0.000001 || !std::isfinite( pvDir->x ) || !std::isfinite( pvDir->y ) || !std::isfinite( pvDir->z ) )
+	MakeProjectiveRay( pvDir, pvOrig, transformStack, CVec2( fScreenWidth, fScreenHeight ), vScreenPos );
+	if ( fabs2( *pvDir ) < 0.000001 || !std::isfinite( pvDir->x ) || !std::isfinite( pvDir->y ) ||
+	     !std::isfinite( pvDir->z ) )
 	{
 		*pvDir = VNULL3;
 		return;
@@ -260,7 +258,7 @@ void CCamera::Update()
 	const float fYaw = placement.fYaw;
 	const float fPitch = placement.fPitch;
 	const float fFOV = placement.fFOV;
-	const float fRoll = placement.fRoll + FP_PI;	// Mutators must hold fRoll in [-PI, PI).
+	const float fRoll = placement.fRoll + FP_PI; // Mutators must hold fRoll in [-PI, PI).
 
 	CVec3 vPosition = placement.vPosition;
 	float fTimeDiff = timeLastUpdate;
@@ -273,7 +271,7 @@ void CCamera::Update()
 		for ( std::list<NCamera::SEarthQuake>::iterator it = earthquakes.begin(); it != earthquakes.end(); )
 		{
 			const float fTime = it->fTime / 1000.0f;
-			fVal += exp( -fTime*it->fAttenuation ) * cos( s_fQuakePeriod*FP_2PI*fTime ) * it->fAmplitude;
+			fVal += exp( -fTime * it->fAttenuation ) * cos( s_fQuakePeriod * FP_2PI * fTime ) * it->fAmplitude;
 			it->fTime += fTimeDiff;
 			if ( it->fTime >= it->fDuration )
 				it = earthquakes.erase( it );
@@ -288,10 +286,10 @@ void CCamera::Update()
 	quat.GetZAxis( &vDir );
 
 	// build view matrix
-	const int nPitch = Float2Int( floor(fPitch/FP_PI) );
-	if ( nPitch%2 == 0 )
+	const int nPitch = Float2Int( floor( fPitch / FP_PI ) );
+	if ( nPitch % 2 == 0 )
 	{
-		float fpTang = atan2( vDir.z, sqrt(sqr(vDir.x) + sqr(vDir.y)) );
+		float fpTang = atan2( vDir.z, sqrt( sqr( vDir.x ) + sqr( vDir.y ) ) );
 		float fpRisk = atan2( vDir.y, vDir.x ) - FP_PI2;
 		MakeMatrix( &matView, fpTang, fpRisk, fRoll, vPosition );
 	}
@@ -301,7 +299,7 @@ void CCamera::Update()
 	// build projection matrix
 	transformStack.Clear();
 	if ( bPerspectiveTransform )
-		transformStack.MakeProjective( CVec2(fScreenWidth, fScreenHeight), fFOV, fNearClipPlane, fFarClipPlane );
+		transformStack.MakeProjective( CVec2( fScreenWidth, fScreenHeight ), fFOV, fNearClipPlane, fFarClipPlane );
 	else
 		transformStack.MakeParallel( fScreenWidth, fScreenHeight, fNearClipPlane, fFarClipPlane );
 
@@ -322,7 +320,7 @@ void CCamera::SetAnchor( const CVec3 &_vAnchor )
 void CCamera::SetPlacement( const float _fDist, const float _fPitch, const float _fYaw )
 {
 	if ( pMouseMutator )
-		pMouseMutator->SetPlacement( _fDist, ToRadian(270.0f - _fPitch), ToRadian(_fYaw) );
+		pMouseMutator->SetPlacement( _fDist, ToRadian( 270.0f - _fPitch ), ToRadian( _fYaw ) );
 	bWasUpdatedExternally = true;
 }
 
@@ -348,14 +346,14 @@ void CCamera::GetPlacement( float *pfDist, float *pfPitch, float *pfYaw )
 	if ( IsScriptHolderActive() )
 	{
 		pScriptMutatorsHolder->GetPlacement( pfDist, pfPitch, pfYaw );
-		(*pfPitch) = 270.0f - ToDegree( *pfPitch );
-		(*pfYaw) = ToDegree( *pfYaw );
+		( *pfPitch ) = 270.0f - ToDegree( *pfPitch );
+		( *pfYaw ) = ToDegree( *pfYaw );
 	}
 	else if ( pMouseMutator )
 	{
 		pMouseMutator->GetPlacement( pfDist, pfPitch, pfYaw );
-		(*pfPitch) = 270.0f - ToDegree( *pfPitch );
-		(*pfYaw) = ToDegree( *pfYaw );
+		( *pfPitch ) = 270.0f - ToDegree( *pfPitch );
+		( *pfYaw ) = ToDegree( *pfYaw );
 	}
 }
 
@@ -365,11 +363,11 @@ void CCamera::GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float 
 	{
 		NCamera::CCameraPlacement placement = pScriptMutatorsHolder->GetValue();
 
-		(*pvPos) = placement.vPosition;
-		(*pfYaw) = placement.fYaw;
-		(*pfPitch) = placement.fPitch;
-		(*pfRoll) = placement.fRoll;
-		(*pfFOV) = placement.fFOV;
+		( *pvPos ) = placement.vPosition;
+		( *pfYaw ) = placement.fYaw;
+		( *pfPitch ) = placement.fPitch;
+		( *pfRoll ) = placement.fRoll;
+		( *pfFOV ) = placement.fFOV;
 	}
 	if ( pMouseMutator )
 	{
@@ -377,15 +375,16 @@ void CCamera::GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float 
 		if ( !pPlacement )
 			return;
 
-		(*pvPos) = pPlacement->vPosition;
-		(*pfYaw) = pPlacement->fYaw;
-		(*pfPitch) = pPlacement->fPitch;
-		(*pfRoll) = pPlacement->fRoll;
-		(*pfFOV) = pPlacement->fFOV;
+		( *pvPos ) = pPlacement->vPosition;
+		( *pfYaw ) = pPlacement->fYaw;
+		( *pfPitch ) = pPlacement->fPitch;
+		( *pfRoll ) = pPlacement->fRoll;
+		( *pfFOV ) = pPlacement->fFOV;
 	}
 }
 
-void CCamera::SetCameraState( const CVec3 &vPos, const float fYaw, const float fPitch, const float fRoll, const float fFOV )
+void CCamera::SetCameraState(
+		const CVec3 &vPos, const float fYaw, const float fPitch, const float fRoll, const float fFOV )
 {
 	if ( pMouseMutator )
 	{
@@ -423,7 +422,6 @@ const CVec3 CCamera::GetPos() const
 		return VNULL3;
 }
 
-
 void CCamera::ResetScrolling()
 {
 	if ( pMouseMutator )
@@ -450,15 +448,15 @@ void CCamera::SetYawSpeed( const float fSpeed )
 
 bool CCamera::ProcessEvent( const SGameMessage &msg )
 {
-	if ( !CGMORegContainer::ProcessEvent(msg, this) )
+	if ( !CGMORegContainer::ProcessEvent( msg, this ) )
 	{
 		if ( IsScriptHolderActive() )
 		{
 			NCamera::CCameraPlacement placement = pScriptMutatorsHolder->GetValue();
-			if ( placement.ProcessEvent(msg) )
+			if ( placement.ProcessEvent( msg ) )
 				return true;
 		}
-		else if ( pMouseMutator && pMouseMutator->ProcessEvent(msg) )
+		else if ( pMouseMutator && pMouseMutator->ProcessEvent( msg ) )
 			return true;
 	}
 	return false;
@@ -476,7 +474,8 @@ void CCamera::AddEarthquake( const CVec3 &vPos, const float fPower )
 		float fCoeff = fPower;
 		if ( fDist > s_fQuakeMinRadius )
 			fCoeff *= ( 1.0f - ( fDist - s_fQuakeMinRadius ) / ( s_fQuakeMaxRadius - s_fQuakeMinRadius ) );
-		earthquakes.push_back( NCamera::SEarthQuake(fPower*fCoeff*s_fQuakePowerCoeff, s_fQuakeAttenuation, s_fQuakeDuration) );
+		earthquakes.push_back(
+				NCamera::SEarthQuake( fPower * fCoeff * s_fQuakePowerCoeff, s_fQuakeAttenuation, s_fQuakeDuration ) );
 	}
 }
 
@@ -497,9 +496,8 @@ void CCamera::ConformMouseMutator2ScriptMutator()
 	pMouseMutator->SetFOV( placement.fFOV );
 
 	const float fFakePitch = ToRadian( 270.0f ) - placement.fPitch;
-	const CVec3 vDir( sin(placement.fYaw)*cos(fFakePitch),
-										-cos(placement.fYaw)*cos(fFakePitch),
-										sin(fFakePitch) );
+	const CVec3 vDir(
+			sin( placement.fYaw ) * cos( fFakePitch ), -cos( placement.fYaw ) * cos( fFakePitch ), sin( fFakePitch ) );
 
 	const float fDistance = fabs( placement.vPosition.z / vDir.z );
 	pMouseMutator->SetDistance( fDistance );
@@ -522,7 +520,7 @@ bool CCamera::ValidateScriptPlacement( NCamera::CCameraPlacement *pPlacement ) c
 	const float fRealDistance = pPlacement->GetDistance();
 	const CVec3 vRealPosition = pPlacement->vPosition;
 
-	const float fValidYaw = fRealYaw;	// limits not used
+	const float fValidYaw = fRealYaw; // limits not used
 	const float fValidPitch = Clamp( fRealPitch, pitchLimits.fMin, pitchLimits.fMax );
 	const float fValidFOV = DEF_FOV;
 	const float fValidDistance = Clamp( fRealDistance, distLimits.fMin, distLimits.fMax );
@@ -531,23 +529,23 @@ bool CCamera::ValidateScriptPlacement( NCamera::CCameraPlacement *pPlacement ) c
 	validPlacement.fPitch = fValidPitch;
 	validPlacement.fFOV = fValidFOV;
 	const CVec3 vValidAnchor = pPlacement->GetAnchor();
-	const CVec3 vValidPosition = vValidAnchor + validPlacement.GetDirection()*fValidDistance;
+	const CVec3 vValidPosition = vValidAnchor + validPlacement.GetDirection() * fValidDistance;
 	validPlacement.vPosition = vValidPosition;
 
 	// rPlacement is already valid
-	if ( fabs(fRealYaw - fValidYaw) < s_fValidateDifference &&
-			 fabs(fRealPitch - fValidPitch) < s_fValidateDifference &&
-			 fabs(fRealFOV - fValidFOV) < s_fValidateDifference &&
-			 fabs(fRealDistance - fValidDistance) < s_fValidateDifference )
+	if ( fabs( fRealYaw - fValidYaw ) < s_fValidateDifference &&
+	     fabs( fRealPitch - fValidPitch ) < s_fValidateDifference &&
+	     fabs( fRealFOV - fValidFOV ) < s_fValidateDifference &&
+	     fabs( fRealDistance - fValidDistance ) < s_fValidateDifference )
 	{
 		return false;
 	}
 
-	(*pPlacement) = validPlacement;
+	( *pPlacement ) = validPlacement;
 	return true;
 }
 
-void CCamera::FinishMovie( bool bSmoothEnd /* = false	*/)
+void CCamera::FinishMovie( bool bSmoothEnd /* = false	*/ )
 {
 	if ( !pScriptMutatorsHolder )
 		return;
@@ -558,7 +556,7 @@ void CCamera::FinishMovie( bool bSmoothEnd /* = false	*/)
 	realPlacement.fPitch = 270.0f - ToDegree( realPlacement.fPitch );
 	NCamera::CCameraPlacement finalPlacement = realPlacement;
 
-	if ( ValidateScriptPlacement(&finalPlacement) )
+	if ( ValidateScriptPlacement( &finalPlacement ) )
 	{
 		NDb::SScriptMovies finalMovie;
 		{
@@ -586,7 +584,7 @@ void CCamera::FinishMovie( bool bSmoothEnd /* = false	*/)
 			startPos.nPositionIndex = 0;
 
 			NDb::SScriptMovieKeyPos finishPos;
-			finishPos.fStartTime = s_fValidateTime / 1000.0f;	// time to validate camera placement
+			finishPos.fStartTime = s_fValidateTime / 1000.0f; // time to validate camera placement
 			finishPos.nPositionIndex = 1;
 
 			finalSequence.posKeys.push_back( startPos );
@@ -660,7 +658,7 @@ int CCamera::operator&( IBinSaver &saver )
 // **
 // ************************************************************************************************************************ //
 
-ICamera* CreateCamera()
+ICamera *CreateCamera()
 {
 	return new CCamera();
 }
@@ -674,17 +672,18 @@ static void SetCameraLimits( NCamera::ELimitsType eType, const std::vector<std::
 		return;
 	}
 	//
-	NCamera::SCameraLimits limits = NCamera::SCameraLimits(
-		NStr::ToFloat( NStr::ToMBCS(szParams[0]) ),
-		NStr::ToFloat( NStr::ToMBCS(szParams[1]) ),
-		NStr::ToFloat( NStr::ToMBCS(szParams[2]) ),
-		NStr::ToFloat( NStr::ToMBCS(szParams[3]) ),
-		NStr::ToFloat( NStr::ToMBCS(szParams[4]) ), false );
+	NCamera::SCameraLimits limits = NCamera::SCameraLimits( NStr::ToFloat( NStr::ToMBCS( szParams[0] ) ),
+	                                                        NStr::ToFloat( NStr::ToMBCS( szParams[1] ) ),
+	                                                        NStr::ToFloat( NStr::ToMBCS( szParams[2] ) ),
+	                                                        NStr::ToFloat( NStr::ToMBCS( szParams[3] ) ),
+	                                                        NStr::ToFloat( NStr::ToMBCS( szParams[4] ) ),
+	                                                        false );
 	//
 	Camera()->SetLimits( eType, limits );
 }
 
-static void CmdSetCameraPitchLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void
+CmdSetCameraPitchLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_PITCH, paramsSet );
 }
@@ -694,12 +693,14 @@ static void CmdSetCameraYawLimits( const std::string &szID, const std::vector<st
 	SetCameraLimits( NCamera::CAMERA_LIMITS_YAW, paramsSet );
 }
 
-static void CmdSetCameraDistanceLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void
+CmdSetCameraDistanceLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_DISTANCE, paramsSet );
 }
 
-static void CmdResetCameraToDefault( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void
+CmdResetCameraToDefault( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	Camera()->ResetToDefault();
 }
@@ -711,8 +712,10 @@ REGISTER_CMD( "camera_yaw_limits", CmdSetCameraYawLimits )
 REGISTER_CMD( "camera_distance_limits", CmdSetCameraDistanceLimits )
 REGISTER_CMD( "camera_reset", CmdResetCameraToDefault )
 
-REGISTER_VAR_EX( "camera_quake_min_radius", NGlobal::VarFloatHandler, &s_fQuakeMinRadius, 8.0f*VIS_TILE_SIZE, STORAGE_NONE );
-REGISTER_VAR_EX( "camera_quake_max_radius", NGlobal::VarFloatHandler, &s_fQuakeMaxRadius, 200.0f*VIS_TILE_SIZE, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"camera_quake_min_radius", NGlobal::VarFloatHandler, &s_fQuakeMinRadius, 8.0f * VIS_TILE_SIZE, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"camera_quake_max_radius", NGlobal::VarFloatHandler, &s_fQuakeMaxRadius, 200.0f * VIS_TILE_SIZE, STORAGE_NONE );
 REGISTER_VAR_EX( "camera_quake_attenuation", NGlobal::VarFloatHandler, &s_fQuakeAttenuation, 5.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "camera_quake_period", NGlobal::VarFloatHandler, &s_fQuakePeriod, 8.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "camera_quake_duration", NGlobal::VarFloatHandler, &s_fQuakeDuration, 1000.0f, STORAGE_NONE );

@@ -16,7 +16,7 @@ struct IScriptWrapper : public CObjectBase
 	virtual int operator&( IBinSaver &saver ) = 0;
 };
 
-SCRIPT_EXPORT IScriptWrapper* CreateScriptWrapper();
+SCRIPT_EXPORT IScriptWrapper *CreateScriptWrapper();
 //
 namespace NScript
 {

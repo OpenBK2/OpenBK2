@@ -14,6 +14,7 @@ class CAnimationBuilder : public CDefaultBuilderBase, public IBuildDataCallback,
 	~CAnimationBuilder();
 
 	bool UpdateAminations( const std::string &rszAnimationFolder );
+
 protected:
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
@@ -23,5 +24,5 @@ protected:
 	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
 
 	// methods
-	uint32_t GetWeaponBits( const SGrannyBoneAttributes & gba ) const;
+	uint32_t GetWeaponBits( const SGrannyBoneAttributes &gba ) const;
 };

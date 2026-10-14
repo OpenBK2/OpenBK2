@@ -22,7 +22,7 @@ void InitRoller( IPlayer *pRoller )
 	}
 }
 
-void PlayRollerAnim( std::vector<IPlayer*> &rollers, int _nStart, int _nEnd, float fRollerTime )
+void PlayRollerAnim( std::vector<IPlayer *> &rollers, int _nStart, int _nEnd, float fRollerTime )
 {
 	std::vector<int> digStart;
 	std::vector<int> digEnd;
@@ -55,7 +55,7 @@ void PlayRollerAnim( std::vector<IPlayer*> &rollers, int _nStart, int _nEnd, flo
 
 		if ( digStart[i] < digEnd[i] )
 		{
-			frameStart[i] = digStart[i] + 1;			// Sequence starts with 9-0, so add 1
+			frameStart[i] = digStart[i] + 1; // Sequence starts with 9-0, so add 1
 			frameEnd[i] = digEnd[i] + 1;
 		}
 		else if ( digStart[i] > digEnd[i] )

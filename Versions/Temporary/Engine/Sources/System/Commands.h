@@ -3,7 +3,6 @@
 // Defensive member defaults; explicit constructor values still take precedence.
 #include "System_export.h"
 
-
 namespace NGlobal
 {
 

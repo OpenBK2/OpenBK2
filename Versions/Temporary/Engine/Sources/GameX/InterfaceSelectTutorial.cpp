@@ -13,8 +13,7 @@
 
 // CInterfaceSelectTutorial
 
-CInterfaceSelectTutorial::CInterfaceSelectTutorial() :
-	CInterfaceScreenBase( "SelectTutorial", "select_tutorial_menu" )
+CInterfaceSelectTutorial::CInterfaceSelectTutorial() : CInterfaceScreenBase( "SelectTutorial", "select_tutorial_menu" )
 {
 }
 
@@ -75,8 +74,8 @@ void CInterfaceSelectTutorial::MakeInterior()
 
 			SMapInfo mapInfo;
 			mapInfo.pMapInfo = dbMap.pMapInfo;
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(dbMap.,Difficulty) )
-				mapInfo.wszDifficulty = GET_TEXT_PRE(dbMap.,Difficulty);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( dbMap., Difficulty ) )
+				mapInfo.wszDifficulty = GET_TEXT_PRE( dbMap., Difficulty );
 			maps.push_back( mapInfo );
 		}
 	}
@@ -92,8 +91,8 @@ void CInterfaceSelectTutorial::MakeInterior()
 			mapInfo.pDifficultyView = GetChildChecked<ITextView>( mapInfo.pWnd, "Difficulty", true );
 
 			std::wstring wszName;
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(mapInfo.pMapInfo->,LocalizedName) )
-				wszName = GET_TEXT_PRE(mapInfo.pMapInfo->,LocalizedName);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( mapInfo.pMapInfo->, LocalizedName ) )
+				wszName = GET_TEXT_PRE( mapInfo.pMapInfo->, LocalizedName );
 			if ( mapInfo.pNameView )
 				mapInfo.pNameView->SetText( mapInfo.pNameView->GetDBText() + wszName );
 
@@ -188,8 +187,8 @@ bool CInterfaceSelectTutorial::OnSelect()
 			}
 
 			std::wstring wszName;
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(mapInfo.pMapInfo->,LocalizedName) )
-				wszName = GET_TEXT_PRE(mapInfo.pMapInfo->,LocalizedName);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( mapInfo.pMapInfo->, LocalizedName ) )
+				wszName = GET_TEXT_PRE( mapInfo.pMapInfo->, LocalizedName );
 			if ( pMissionNameView )
 				pMissionNameView->SetText( pMissionNameView->GetDBText() + wszName );
 
@@ -198,8 +197,8 @@ bool CInterfaceSelectTutorial::OnSelect()
 				pMissionSeasonView->SetText( pMissionSeasonView->GetDBText() + wszSeason );
 
 			std::wstring wszDesc;
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(mapInfo.pMapInfo->,LoadingDescription) )
-				wszDesc = GET_TEXT_PRE(mapInfo.pMapInfo->,LoadingDescription);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( mapInfo.pMapInfo->, LoadingDescription ) )
+				wszDesc = GET_TEXT_PRE( mapInfo.pMapInfo->, LoadingDescription );
 			if ( pMissionDescView )
 				pMissionDescView->SetText( pMissionDescView->GetDBText() + wszDesc );
 			if ( pMissionDescCont )
@@ -218,7 +217,6 @@ bool CInterfaceSelectTutorial::StepLocal( bool bAppActive )
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
 
-
 void CInterfaceSelectTutorial::Select( int nIndex )
 {
 	if ( nIndex < 0 || nIndex >= maps.size() )
@@ -231,18 +229,14 @@ void CInterfaceSelectTutorial::Select( int nIndex )
 
 // CICSelectTutorial
 
-void CICSelectTutorial::PreCreate()
-{
-}
+void CICSelectTutorial::PreCreate() {}
 
 void CICSelectTutorial::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICSelectTutorial::Configure( const char *pszConfig )
-{
-}
+void CICSelectTutorial::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17255300, CInterfaceSelectTutorial )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SELECT_TUTORIAL, CICSelectTutorial )

@@ -1,4 +1,4 @@
-#if !defined(__COAST_STATE__)
+#if !defined( __COAST_STATE__ )
 #define __COAST_STATE__
 #pragma once
 
@@ -54,16 +54,23 @@ protected:
 	bool CanInsertVSO();
 	bool CanUpdateVSO( int nVSOID ) { return false; }
 	bool CanRemoveVSO( int nVSOID ) { return false; }
-	NDb::SVSOInstance* GetVSO( int nVSOID, int *pnVSOIndex );
-	void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags );
+	NDb::SVSOInstance *GetVSO( int nVSOID, int *pnVSOIndex );
+	void UpdateVSO( int nVSOID,
+	                EUpdateType eEpdateType,
+	                CVSOManager::SVSOSelection::ESelectionType eSelectionType,
+	                unsigned nFlags );
 	void PrepareInsertVSO() {}
 	int InsertVSO( const std::vector<CVec3> &rControlPointList );
 	void RemoveVSO( int nVSOID );
 	//
-	const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const { return CMapInfoController::SVSOUndoData::VSO_COAST; }
+	const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const
+	{
+		return CMapInfoController::SVSOUndoData::VSO_COAST;
+	}
 
 public:
-	static void GetWaterPos( const NDb::SMapInfo *pMapInfo, const std::vector<NDb::SVSOPoint> &rPoints, CVec3 *pWaterPos );
+	static void
+	GetWaterPos( const NDb::SMapInfo *pMapInfo, const std::vector<NDb::SVSOPoint> &rPoints, CVec3 *pWaterPos );
 };
 
 #endif // !defined(__COAST_VSO_STATE__)

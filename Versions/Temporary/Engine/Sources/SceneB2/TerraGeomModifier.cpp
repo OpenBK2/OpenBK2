@@ -9,12 +9,14 @@ static int nDiffHeightsX2 = -1;
 static int nDiffHeightsY2 = -1;
 static CArray2D<float> diffHeights;
 
-void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisTileY, bool bCenter,
-																						const CArray2D<float> &brush,
-																						const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
+void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX,
+                                            const int nVisTileY,
+                                            bool bCenter,
+                                            const CArray2D<float> &brush,
+                                            const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
 {
-	if ( (terrainInfo.heights.GetSizeX() != diffHeights.GetSizeX()) ||
-			 (terrainInfo.heights.GetSizeY() != diffHeights.GetSizeY()) )
+	if ( ( terrainInfo.heights.GetSizeX() != diffHeights.GetSizeX() ) ||
+	     ( terrainInfo.heights.GetSizeY() != diffHeights.GetSizeY() ) )
 	{
 		diffHeights.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 		diffHeights.FillEvery( 0.0f );
@@ -23,8 +25,8 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 	//const int nTileX = Clamp( nVisTileX, 0, terrainInfo.heights.GetSizeX() - 1 );
 	//const int nTileY = Clamp( nVisTileY, 0, terrainInfo.heights.GetSizeY() - 1 );
 	//
-	const int nOffsX = bCenter ? ( nVisTileX - (brush.GetSizeX() >> 1) ) : nVisTileX;
-	const int nOffsY = bCenter ? ( nVisTileY - (brush.GetSizeY() >> 1) ) : nVisTileY;
+	const int nOffsX = bCenter ? ( nVisTileX - ( brush.GetSizeX() >> 1 ) ) : nVisTileX;
+	const int nOffsY = bCenter ? ( nVisTileY - ( brush.GetSizeY() >> 1 ) ) : nVisTileY;
 	//
 	const int nBrushStartX = nOffsX >= 0 ? 0 : -nOffsX;
 	const int nBrushStartY = nOffsY >= 0 ? 0 : -nOffsY;
@@ -57,19 +59,19 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 			const int nIndX = i + nOffsX;
 			const int nIndY = g + nOffsY;
 
-			const float fVal = ( terraBrushUpdate != NTerraBrush::TERRA_BRUSH_SUB ) ?
-													 (std::max)( terrainInfo.heights[nIndY][nIndX] + brush[g][i], 0.0f ) :
-													 (std::max)( terrainInfo.heights[nIndY][nIndX] - brush[g][i], 0.0f );
+			const float fVal = ( terraBrushUpdate != NTerraBrush::TERRA_BRUSH_SUB )
+			                       ? (std::max)( terrainInfo.heights[nIndY][nIndX] + brush[g][i], 0.0f )
+			                       : (std::max)( terrainInfo.heights[nIndY][nIndX] - brush[g][i], 0.0f );
 
 			const float fReallyAdded = fVal - terrainInfo.heights[nIndY][nIndX];
 			if ( terraBrushUpdate == NTerraBrush::TERRA_BRUSH_OVERRIDE )
 				diffHeights[nIndY][nIndX] += fReallyAdded;
 
 			terrainInfo.heights[nIndY][nIndX] = fVal;
-			if ( terrainInfo.waterHeightCoeffs[nIndY][nIndX] < (1.0f - EPS_VALUE) )
+			if ( terrainInfo.waterHeightCoeffs[nIndY][nIndX] < ( 1.0f - EPS_VALUE ) )
 				terrainInfo.waterAddHeights[nIndY][nIndX] = fReallyAdded;
 
-			terrainAIInfo.heights[nIndY][nIndX] = Vis2AI( GetFullTerraHeight(nIndX, nIndY) );
+			terrainAIInfo.heights[nIndY][nIndX] = Vis2AI( GetFullTerraHeight( nIndX, nIndY ) );
 		}
 	}
 
@@ -113,7 +115,6 @@ void CTerraGen::ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisT
 	if ( IScene *pScene = Scene() )
 		pScene->UpdateGrid( nFirstTileX, nFirstTileY, nLastTileX, nLastTileY );
 }
-
 
 void CTerraGen::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs )
 {
@@ -189,7 +190,7 @@ void CTerraGen::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CAr
 				break;
 		}*/
 
-		if ( (nDiffHeightsX1 <= nDiffHeightsX2) && (nDiffHeightsY1 <= nDiffHeightsY2) )
+		if ( ( nDiffHeightsX1 <= nDiffHeightsX2 ) && ( nDiffHeightsY1 <= nDiffHeightsY2 ) )
 		{
 			pDiffs->SetSizes( nDiffHeightsX2 - nDiffHeightsX1 + 1, nDiffHeightsY2 - nDiffHeightsY1 + 1 );
 			*pOffsX = nDiffHeightsX1 + ( pDiffs->GetSizeX() >> 1 );
@@ -198,7 +199,7 @@ void CTerraGen::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CAr
 			{
 				for ( int i = 0; i < pDiffs->GetSizeX(); ++i )
 				{
-					(*pDiffs)[g][i] = diffHeights[g + nDiffHeightsY1][i + nDiffHeightsX1];
+					( *pDiffs )[g][i] = diffHeights[g + nDiffHeightsY1][i + nDiffHeightsX1];
 					diffHeights[g + nDiffHeightsY1][i + nDiffHeightsX1] = 0.0f;
 				}
 			}
@@ -212,16 +213,14 @@ void CTerraGen::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CAr
 	nDiffHeightsX1 = nDiffHeightsY1 = nDiffHeightsX2 = nDiffHeightsY2 = -1;
 }
 
-
 static bool IsBrushTrue( const int nX, const int nY, const CArray2D<float> &brush )
 {
-	if ( (nX >= 0) && (nX < brush.GetSizeX()) && (nY >= 0) && (nY < brush.GetSizeY()) )
+	if ( ( nX >= 0 ) && ( nX < brush.GetSizeX() ) && ( nY >= 0 ) && ( nY < brush.GetSizeY() ) )
 	{
-		return ( fabs(brush[nY][nX]) > DEF_EPS );
+		return ( fabs( brush[nY][nX] ) > DEF_EPS );
 	}
 	return false;
 }
-
 
 void CTerraGen::UpdateTileHeights( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 )
 {
@@ -238,33 +237,33 @@ void CTerraGen::UpdateTileHeights( const int nTileX1, const int nTileY1, const i
 	}
 }
 
-
 void CTerraGen::UpdateAllObjectsInGeomModifyingArea()
 {
 	if ( vGeomModAreaMin.x == -1 )
 		return;
 
-	UpdateVectorAreaInfo( vGeomModAreaMin.x, vGeomModAreaMin.y, vGeomModAreaMax.x, vGeomModAreaMax.y, TERRAIN_UPDATE_ALL);
+	UpdateVectorAreaInfo(
+			vGeomModAreaMin.x, vGeomModAreaMin.y, vGeomModAreaMax.x, vGeomModAreaMax.y, TERRAIN_UPDATE_ALL );
 
 	vGeomModAreaMin.Set( -1, -1 );
 	vGeomModAreaMax.Set( -1, -1 );
 }
 
-
-void CTerraGen::GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 )
+void CTerraGen::GetAreaHeights(
+		CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
-	const int nTileX1 = (std::max)( (std::min)(nX1, nX2), 0 );
-	const int nTileY1 = (std::max)( (std::min)(nY1, nY2), 0 );
-	const int nTileX2 = (std::min)( (std::max)(nX1, nX2), terrainInfo.heights.GetSizeX() - 1 );
-	const int nTileY2 = (std::min)( (std::max)(nY1, nY2), terrainInfo.heights.GetSizeY() - 1 );
-	if ( (nTileX1 <= nTileX2) && (nTileY1 <= nTileY2) )
+	const int nTileX1 = (std::max)( (std::min)( nX1, nX2 ), 0 );
+	const int nTileY1 = (std::max)( (std::min)( nY1, nY2 ), 0 );
+	const int nTileX2 = (std::min)( (std::max)( nX1, nX2 ), terrainInfo.heights.GetSizeX() - 1 );
+	const int nTileY2 = (std::min)( (std::max)( nY1, nY2 ), terrainInfo.heights.GetSizeY() - 1 );
+	if ( ( nTileX1 <= nTileX2 ) && ( nTileY1 <= nTileY2 ) )
 	{
 		pAreaHeights->SetSizes( nTileX2 - nTileX1 + 1, nTileY2 - nTileY1 + 1 );
 		for ( int g = 0; g < pAreaHeights->GetSizeY(); ++g )
 		{
 			for ( int i = 0; i < pAreaHeights->GetSizeX(); ++i )
 			{
-				(*pAreaHeights)[g][i] = terrainInfo.heights[g + nTileY1][i + nTileX1];
+				( *pAreaHeights )[g][i] = terrainInfo.heights[g + nTileY1][i + nTileX1];
 			}
 		}
 	}
@@ -273,7 +272,6 @@ void CTerraGen::GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, co
 		pAreaHeights->SetSizes( 0, 0 );
 	}
 }
-
 
 void CTerraGen::UpdateAfterTilesModifying()
 {

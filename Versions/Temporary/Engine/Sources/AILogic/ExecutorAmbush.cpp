@@ -6,12 +6,13 @@
 
 #include <cstdint>
 
-CExecutorAmbush::CExecutorAmbush( CAIUnit *_pUnit	) :
-CExecutorUnitCombatBonus ( NDb::ABILITY_AMBUSH, _pUnit, TID_AMBUSH )
+CExecutorAmbush::CExecutorAmbush( CAIUnit *_pUnit )
+		: CExecutorUnitCombatBonus( NDb::ABILITY_AMBUSH, _pUnit, TID_AMBUSH )
 {
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAmbush::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAmbush::OnModeChange( const uint16_t oldModeFlags,
+                                                                                const uint16_t newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && newModeFlags )
 	{
@@ -26,7 +27,7 @@ CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAmbush::OnModeChange( 
 
 int CExecutorAmbush::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CExecutorUnitCombatBonus*>( this ) );
+	saver.Add( 1, static_cast<CExecutorUnitCombatBonus *>( this ) );
 
 	return 0;
 }

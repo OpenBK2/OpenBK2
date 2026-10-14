@@ -17,23 +17,23 @@ struct SEntranceData
 struct SStaticObjectLockInfo
 {
 	bool bNewLockingWay = {};
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > oldLock;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> oldLock;
 	const std::vector<SVector> *pNewLock = {};
 	CArray2D<uint8_t> &lockInfo;
 	std::list<SObjTileInfo> &lockedTiles;
 
-	SStaticObjectLockInfo ( CArray2D<uint8_t> &_lockInfo, std::list<SObjTileInfo> &_lockedTiles )
-		: lockInfo( _lockInfo ), lockedTiles( _lockedTiles ), bNewLockingWay( true ), pNewLock( 0 )
+	SStaticObjectLockInfo( CArray2D<uint8_t> &_lockInfo, std::list<SObjTileInfo> &_lockedTiles )
+			: lockInfo( _lockInfo ), lockedTiles( _lockedTiles ), bNewLockingWay( true ), pNewLock( 0 )
 	{
 	}
 };
 
 template <class TAccess>
 void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
-	std::vector<SEntranceData> &entrances,
-	EAIClasses ePassClass,
-	SStaticObjectLockInfo &lockInfo,
-	TAccess & access )
+                                        std::vector<SEntranceData> &entrances,
+                                        EAIClasses ePassClass,
+                                        SStaticObjectLockInfo &lockInfo,
+                                        TAccess &access )
 {
 	pTiles->clear();
 
@@ -55,9 +55,10 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 
 	if ( lockInfo.bNewLockingWay == false )
 	{
-		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > &pass = lockInfo.oldLock;
+		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> &pass = lockInfo.oldLock;
 
-		lockInfo.lockInfo.SetSizes( (pass.GetMaxX() - pass.GetMinX() ) / SConsts::TILE_SIZE + 2, (pass.GetMaxY() - pass.GetMinY())/SConsts::TILE_SIZE +2 );
+		lockInfo.lockInfo.SetSizes( ( pass.GetMaxX() - pass.GetMinX() ) / SConsts::TILE_SIZE + 2,
+		                            ( pass.GetMaxY() - pass.GetMinY() ) / SConsts::TILE_SIZE + 2 );
 		lockInfo.lockInfo.FillZero();
 
 		const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );

@@ -24,7 +24,11 @@ struct SStates
 	vector<SRS> rs;
 	vector<STSS> tss;
 
-	void Clear() { rs.clear(); tss.clear(); }
+	void Clear()
+	{
+		rs.clear();
+		tss.clear();
+	}
 };
 
 struct SPShader

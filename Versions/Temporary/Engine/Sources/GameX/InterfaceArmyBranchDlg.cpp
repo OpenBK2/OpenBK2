@@ -11,10 +11,7 @@
 
 // CInterfaceArmyBranchDlg
 
-CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg() :
-	CInterfaceScreenBase( "ArmyBranchDlg", "army_branch_dlg" )
-{
-}
+CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg() : CInterfaceScreenBase( "ArmyBranchDlg", "army_branch_dlg" ) {}
 
 bool CInterfaceArmyBranchDlg::Init()
 {
@@ -50,12 +47,12 @@ void CInterfaceArmyBranchDlg::MakeInterior()
 	pDescView = GetChildChecked<ITextView>( pMainWnd, "DescView", true );
 
 	if ( pDescView && pDescCont )
-			pDescCont->PushBack( pDescView, false );
+		pDescCont->PushBack( pDescView, false );
 
 	IWindow *pBranchesBlock = GetChildChecked<IWindow>( pMainWnd, "BranchesBlock", true );
 	if ( pBranchesBlock )
 	{
-		for ( int i = 0; ; ++i )
+		for ( int i = 0;; ++i )
 		{
 			IWindow *pWnd = pBranchesBlock->GetChild( fmt::format( "Branch{:02d}", i + 1 ), true );
 			if ( !pWnd )
@@ -79,7 +76,7 @@ void CInterfaceArmyBranchDlg::MakeInterior()
 		}
 	}
 
-/*	for ( int i = 0; i < 12; ++i )
+	/*	for ( int i = 0; i < 12; ++i )
 	{
 		SBranch branch;
 		branch.wszName = NStr::ToUnicode( StrFmt( "Name%d", i ) );
@@ -125,7 +122,7 @@ void CInterfaceArmyBranchDlg::UpdateInterior()
 			if ( visSlot.pIconWnd )
 				visSlot.pIconWnd->SetTexture( branch.pIconTexture );
 			if ( visSlot.pSelectionWnd )
-				visSlot.pSelectionWnd->ShowWindow( (nLeftBranch + i == nSelectedBranch) );
+				visSlot.pSelectionWnd->ShowWindow( ( nLeftBranch + i == nSelectedBranch ) );
 		}
 	}
 
@@ -220,9 +217,7 @@ CICArmyBranchDlg::CICArmyBranchDlg( const std::vector<CInterfaceArmyBranchDlg::S
 	branches = _branches;
 }
 
-void CICArmyBranchDlg::PreCreate()
-{
-}
+void CICArmyBranchDlg::PreCreate() {}
 
 void CICArmyBranchDlg::PostCreate( IInterface *pInterface )
 {
@@ -230,9 +225,7 @@ void CICArmyBranchDlg::PostCreate( IInterface *pInterface )
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICArmyBranchDlg::Configure( const char *pszConfig )
-{
-}
+void CICArmyBranchDlg::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17267B81, CInterfaceArmyBranchDlg )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ARMY_BRANCH_DLG, CICArmyBranchDlg )

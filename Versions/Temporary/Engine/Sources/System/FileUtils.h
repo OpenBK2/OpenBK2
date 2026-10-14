@@ -22,20 +22,21 @@ namespace NFile
 // its end rather than throwing, matching the INVALID_HANDLE_VALUE this used to get.
 class SYSTEM_EXPORT CFileIterator
 {
-	std::filesystem::directory_iterator it;	// default constructed is the end
-	std::string szMask;															// the pattern, without the directory
+	std::filesystem::directory_iterator it; // default constructed is the end
+	std::string szMask;                     // the pattern, without the directory
 
 	CFileIterator( const CFileIterator &a ) = delete;
 	void operator=( const CFileIterator &a ) = delete;
 	void Open( const std::string &szFullMask );
 	void SkipToMatch();
+
 public:
-	CFileIterator() {  }
+	CFileIterator() {}
 	CFileIterator( const std::string &szFullMask ) { Open( szFullMask ); }
 	// file enumeration
-	const CFileIterator& Next();
+	const CFileIterator &Next();
 	bool IsEnd() const { return it == std::filesystem::directory_iterator(); }
-	const CFileIterator& operator++() { return Next(); }
+	const CFileIterator &operator++() { return Next(); }
 	bool IsDirectory() const
 	{
 		std::error_code ec;
@@ -57,12 +58,12 @@ public:
 	int GetLength() const
 	{
 		std::error_code ec;
-		return static_cast< int >( it->file_size( ec ) );
+		return static_cast<int>( it->file_size( ec ) );
 	}
 	// file name (title + ext), full path (absolute path + name)
 	std::string GetFileName() const { return it->path().filename().string(); }
 	std::string GetFullName() const { return it->path().string(); }
-	const std::string& GetBaseMask() const { return szMask; }
+	const std::string &GetBaseMask() const { return szMask; }
 };
 
 // enumerate all files by mask.
@@ -72,13 +73,13 @@ void EnumerateFiles( const std::string &szStartDir, const char *pszMask, TEnumFu
 {
 	std::string szDir = szStartDir;
 	// iterate throug all files by mask
-	for ( CFileIterator it( (szDir + pszMask).c_str() ); !it.IsEnd(); ++it )
+	for ( CFileIterator it( ( szDir + pszMask ).c_str() ); !it.IsEnd(); ++it )
 	{
 		if ( !it.IsDirectory() )
 			callback( it );
 	}
 	// iterate throug all dirs by "*.*"
-	for ( CFileIterator it( (szDir + "*.*").c_str() ); !it.IsEnd(); ++it )
+	for ( CFileIterator it( ( szDir + "*.*" ).c_str() ); !it.IsEnd(); ++it )
 	{
 		if ( it.IsDirectory() && !it.IsDots() )
 		{
@@ -86,14 +87,15 @@ void EnumerateFiles( const std::string &szStartDir, const char *pszMask, TEnumFu
 			if ( bRecurse )
 				// '/' rather than a backslash: off Windows a backslash is an ordinary
 				// character in a file name, and this path is about to be split again
-				EnumerateFiles( (it.GetFullName() + "/").c_str(), pszMask, callback, bRecurse );
+				EnumerateFiles( ( it.GetFullName() + "/" ).c_str(), pszMask, callback, bRecurse );
 			//
 			callback( it );
 		}
 	}
 }
 
-SYSTEM_EXPORT void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse = true );
+SYSTEM_EXPORT void
+GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse = true );
 void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive );
 SYSTEM_EXPORT void DeleteDirectory( const std::string &szDir );
 
@@ -127,8 +129,7 @@ SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );
 // copy file. create dst path before copying
 SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName );
 // The same, saying why it failed. See RemoveFile above for why these exist.
-SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName,
-														 std::error_code *pError );
+SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName, std::error_code *pError );
 // move one file over another, replacing it. Not MoveFile, for the reason
 // RemoveFile is not DeleteFile: windows.h rewrites that name.
 //
@@ -141,8 +142,7 @@ SYSTEM_EXPORT bool RenameFile( const std::string &szSrcName, const std::string &
 // error reported is the copy's rather than the rename's, because the rename
 // failing is expected there and says only that the two are on different
 // volumes.
-SYSTEM_EXPORT bool RenameFile( const std::string &szSrcName, const std::string &szDstName,
-															 std::error_code *pError );
+SYSTEM_EXPORT bool RenameFile( const std::string &szSrcName, const std::string &szDstName, std::error_code *pError );
 
 SYSTEM_EXPORT std::string GetFullName( const std::string &szPath );
 SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath );
@@ -176,7 +176,10 @@ SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath 
 //! Always false on Windows, where the filesystem has already done this and a
 //! miss means the file is genuinely absent, so scanning would only cost time.
 SYSTEM_EXPORT bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath );
-SYSTEM_EXPORT bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath, bool bAllowMissing );
+SYSTEM_EXPORT bool ResolveDataPathCase( std::string *pRes,
+                                        const std::string &szBaseDir,
+                                        const std::string &szRelPath,
+                                        bool bAllowMissing );
 
 SYSTEM_EXPORT std::string GetTempPath();
 SYSTEM_EXPORT std::string GetTempFileName();
@@ -202,6 +205,7 @@ SYSTEM_EXPORT void SetCurrDir( const std::string &szDir );
 class CCurrDirHolder
 {
 	std::string szDir;
+
 public:
 	CCurrDirHolder() { szDir = GetCurrDir(); }
 	~CCurrDirHolder() { SetCurrDir( szDir ); }

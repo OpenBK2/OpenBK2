@@ -19,10 +19,10 @@ const int CBSpline::N_ITERS_TO_FORWARD = CBSpline::DELTA_FORWARD / CBSpline::DEL
 
 void CBSpline::Init( const CVec2 &p3, const CVec2 &p2, const CVec2 &p1, const CVec2 &p0 )
 {
-	a = 1.0f/6.0f * ( -p3 + 3 * p2 - 3 * p1 + p0 );
-	b = 1.0f/6.0f * ( 3 * p3 - 6 * p2 + 3 * p1 );
-	c = 1.0f/6.0f * ( -3 * p3 + 3 * p1 );
-	d = 1.0f/6.0f * ( p3 + 4 * p2 + p1 );
+	a = 1.0f / 6.0f * ( -p3 + 3 * p2 - 3 * p1 + p0 );
+	b = 1.0f / 6.0f * ( 3 * p3 - 6 * p2 + 3 * p1 );
+	c = 1.0f / 6.0f * ( -3 * p3 + 3 * p1 );
+	d = 1.0f / 6.0f * ( p3 + 4 * p2 + p1 );
 
 	// для построения сплайна
 	d3x = a * sqr( DELTA ) * DELTA;
@@ -118,10 +118,17 @@ int CBSpline ::operator&( IBinSaver &saver )
 
 void CBSpline::DumpState() const
 {
-	const auto message = fmt::format("spline: x=({:g},{:g}), dx=({:g},{:g}), d2x=({:g},{:g}), d3x=({:g},{:g})", x.x, x.y, dx.x, dx.y, d2x.x, d2x.y, d3x.x, d3x.y );
+	const auto message = fmt::format( "spline: x=({:g},{:g}), dx=({:g},{:g}), d2x=({:g},{:g}), d3x=({:g},{:g})",
+	                                  x.x,
+	                                  x.y,
+	                                  dx.x,
+	                                  dx.y,
+	                                  d2x.x,
+	                                  d2x.y,
+	                                  d3x.x,
+	                                  d3x.y );
 	Singleton<IConsoleBuffer>()->WriteASCII( 500, message.c_str(), 0, true );
 }
-
 
 //*******************************************************************
 //*														CCircle																*
@@ -129,23 +136,23 @@ void CBSpline::DumpState() const
 
 float CCirclePath::Iterate( const float fLength )
 {
-	const float fDelta = fLength/fRadius;
+	const float fDelta = fLength / fRadius;
 	fCurrentDelta += fDelta;
 	float fResult = 0.0f;
 
 	if ( fCurrentDelta > fDirDiff )
 	{
-		fResult = fLength -	( fDirDiff - fCurrentDelta ) * fRadius;
+		fResult = fLength - ( fDirDiff - fCurrentDelta ) * fRadius;
 		fCurrentDelta = fDirDiff;
 	}
 
-	const float fCurrentDir =  ( bClockWise ) ? ( fStartDir - fCurrentDelta ) : ( fStartDir + fCurrentDelta );
+	const float fCurrentDir = ( bClockWise ) ? ( fStartDir - fCurrentDelta ) : ( fStartDir + fCurrentDelta );
 	vDX = CVec2( NMath::Cos( fCurrentDir ), NMath::Sin( fCurrentDir ) );
 	if ( !bForwardDir )
 		vDX = -vDX;
 
-	const float fCurrentPerp =  ( bClockWise == bForwardDir ) ? ( fCurrentDir + FP_PI2 ) : ( fCurrentDir - FP_PI2 );
-	vX = CVec2( fRadius*NMath::Cos( fCurrentPerp ), fRadius*NMath::Sin( fCurrentPerp ) ) + vCenter;
+	const float fCurrentPerp = ( bClockWise == bForwardDir ) ? ( fCurrentDir + FP_PI2 ) : ( fCurrentDir - FP_PI2 );
+	vX = CVec2( fRadius * NMath::Cos( fCurrentPerp ), fRadius * NMath::Sin( fCurrentPerp ) ) + vCenter;
 
 	return fResult;
 }
@@ -172,25 +179,27 @@ const SRect GetUnitFullSpeedRect( const CBasePathUnit *pUnit, const bool bForInf
 	const SUnitProfile profile( pUnit->GetUnitProfile() );
 	const CVec2 vAABBHalfSize( profile.GetHalfWidth(), profile.GetHalfLength() );
 
-	const float width = vAABBHalfSize.x * BOUND_RECT_FACTOR;// * 1.3f;
+	const float width = vAABBHalfSize.x * BOUND_RECT_FACTOR; // * 1.3f;
 	const float lengthBack = vAABBHalfSize.y * BOUND_RECT_FACTOR;
 	float lengthAhead;
 
 	if ( !pUnit->IsIdle() )
 	{
 		if ( bForInfantry )
-			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(), vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
+			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetMaxPossibleSpeed(),
+			                          vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
 		else
-			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetSpeed(), vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
+			lengthAhead = (std::max)( vAABBHalfSize.y * BOUND_RECT_FACTOR + SPEED_FACTOR * pUnit->GetSpeed(),
+			                          vAABBHalfSize.y * BOUND_RECT_FACTOR * 1.5f );
 	}
 	else
 		lengthAhead = vAABBHalfSize.y * BOUND_RECT_FACTOR;
 
 	SRect speedRect;
-	speedRect.InitRect( pUnit->GetCenterPlain() + pUnit->GetCenterShift(), pUnit->GetDirectionVector(), lengthAhead, lengthBack, width );
+	speedRect.InitRect(
+			pUnit->GetCenterPlain() + pUnit->GetCenterShift(), pUnit->GetDirectionVector(), lengthAhead, lengthBack, width );
 
 	return speedRect;
-
 }
 
 const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantry )
@@ -198,7 +207,7 @@ const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantr
 	const SUnitProfile profile( pUnit->GetUnitProfile() );
 	const CVec2 vAABBHalfSize( profile.GetHalfWidth(), profile.GetHalfLength() );
 
-	const float width = vAABBHalfSize.x * BOUND_RECT_FACTOR;// * 1.3f;
+	const float width = vAABBHalfSize.x * BOUND_RECT_FACTOR; // * 1.3f;
 	const float lengthBack = vAABBHalfSize.y * BOUND_RECT_FACTOR;
 	float lengthAhead;
 	if ( !pUnit->IsIdle() )
@@ -212,8 +221,12 @@ const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantr
 		lengthAhead = 0;
 
 	SRect speedRect;
-	speedRect.InitRect( pUnit->GetCenterPlain()  + pUnit->GetCenterShift() + 2 * pUnit->GetDirectionVector() * vAABBHalfSize.y,
-		pUnit->GetDirectionVector(), lengthAhead, lengthBack, width );
+	speedRect.InitRect( pUnit->GetCenterPlain() + pUnit->GetCenterShift() +
+	                        2 * pUnit->GetDirectionVector() * vAABBHalfSize.y,
+	                    pUnit->GetDirectionVector(),
+	                    lengthAhead,
+	                    lengthBack,
+	                    width );
 
 	return speedRect;
 }
@@ -228,7 +241,8 @@ const SRect GetUnitSmallRect( const CBasePathUnit *pUnit )
 	const float fWidth = vAABBHalfSize.x * fCoeff;
 
 	SRect smallRect;
-	smallRect.InitRect( pUnit->GetCenterPlain() + pUnit->GetCenterShift(), pUnit->GetFrontDirectionVector(), fLength, fWidth );
+	smallRect.InitRect(
+			pUnit->GetCenterPlain() + pUnit->GetCenterShift(), pUnit->GetFrontDirectionVector(), fLength, fWidth );
 
 	return smallRect;
 }
@@ -242,7 +256,8 @@ const SRect GetUnitNormalRect( const CBasePathUnit *pUnit )
 	const float fWidth = vAABBHalfSize.x * BOUND_RECT_FACTOR;
 
 	SRect unitRect;
-	unitRect.InitRect( pUnit->GetCenterPlain() + pUnit->GetCenterShift(), pUnit->GetFrontDirectionVector(), fLength, fWidth );
+	unitRect.InitRect(
+			pUnit->GetCenterPlain() + pUnit->GetCenterShift(), pUnit->GetFrontDirectionVector(), fLength, fWidth );
 
 	return unitRect;
 }

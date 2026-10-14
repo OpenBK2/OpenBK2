@@ -67,7 +67,7 @@ extern CStaticObjects theStatObjs;
 
 CPtr<CTransportStatesFactory> CTransportStatesFactory::pFactory = 0;
 
-IStatesFactory* CTransportStatesFactory::Instance()
+IStatesFactory *CTransportStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CTransportStatesFactory();
@@ -78,121 +78,96 @@ IStatesFactory* CTransportStatesFactory::Instance()
 bool CTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		(
-			cmdType == ACTION_COMMAND_DIE					||
-			cmdType == ACTION_COMMAND_MOVE_TO			||
-			cmdType == ACTION_COMMAND_REVERSE_TO		||
-			cmdType == ACTION_COMMAND_WAIT_FOR_UNITS ||
-			cmdType == ACTION_COMMAND_ROTATE_TO		||
-			cmdType == ACTION_MOVE_BY_DIR					||
-			cmdType == ACTION_COMMAND_UNLOAD			||
-			cmdType == ACTION_COMMAND_GUARD				||
-			cmdType == ACTION_COMMAND_DISAPPEAR		||
-			cmdType == ACTION_COMMAND_RESUPPLY_HR ||
-			cmdType == ACTION_COMMAND_RESUPPLY ||
-			cmdType == ACTION_COMMAND_REPAIR ||
-			cmdType == ACTION_MOVE_LOAD_RU ||
-			cmdType == ACTION_COMMAND_TAKE_ARTILLERY ||
-			cmdType == ACTION_COMMAND_DEPLOY_ARTILLERY ||
-			cmdType == ACTION_COMMAND_FOLLOW ||
-			cmdType == ACTION_COMMAND_FOLLOW_NOW ||
-			cmdType == ACTION_COMMAND_ENTRENCH_SELF ||
-			cmdType == ACTION_COMMAND_ENTRENCH_BEGIN ||
-			cmdType == ACTION_COMMAND_ENTRENCH_END ||
-			cmdType == ACTION_COMMAND_BUILD_FENCE_BEGIN ||
-			cmdType == ACTION_COMMAND_BUILD_FENCE_END ||
-			cmdType == ACTION_COMMAND_CLEARMINE ||
-			cmdType == ACTION_COMMAND_PLACEMINE ||
-			cmdType == ACTION_COMMAND_PLACE_ANTITANK ||
-			cmdType == ACTION_COMMAND_REPEAR_OBJECT ||
-			cmdType == ACTION_COMMAND_BUILD_BRIDGE ||
-			cmdType == ACTION_MOVE_TO_NOT_PRESIZE ||
-			cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
-			cmdType == ACTION_COMMAND_STAND_GROUND ||
-			cmdType == ACTION_COMMAND_FILL_RU ||
-			cmdType == ACTION_COMMAND_MOVE_TO_GRID ||
-			cmdType == ACTION_COMMAND_ATTACK_UNIT ||
-			cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||
-			cmdType == ACTION_COMMAND_SWARM_ATTACK_OBJECT ||
-			cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
-			cmdType == ACTION_COMMAND_WAIT ||
-			cmdType == ACTION_COMMAND_UNLOAD_NOW ||
-			cmdType == ACTION_COMMAND_MECH_ENTER||
-			cmdType == ACTION_MOVE_MECH_ENTER_NOW ||
-			cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT ||
-			cmdType == ACTION_COMMAND_HOLD_SECTOR ||
-			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
-			cmdType == ACTION_COMMAND_PATROL ||
-			cmdType == ACTION_MOVE_BY_FORMATION
-		);
+	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_MOVE_TO || cmdType == ACTION_COMMAND_REVERSE_TO ||
+	         cmdType == ACTION_COMMAND_WAIT_FOR_UNITS || cmdType == ACTION_COMMAND_ROTATE_TO ||
+	         cmdType == ACTION_MOVE_BY_DIR || cmdType == ACTION_COMMAND_UNLOAD || cmdType == ACTION_COMMAND_GUARD ||
+	         cmdType == ACTION_COMMAND_DISAPPEAR || cmdType == ACTION_COMMAND_RESUPPLY_HR ||
+	         cmdType == ACTION_COMMAND_RESUPPLY || cmdType == ACTION_COMMAND_REPAIR || cmdType == ACTION_MOVE_LOAD_RU ||
+	         cmdType == ACTION_COMMAND_TAKE_ARTILLERY || cmdType == ACTION_COMMAND_DEPLOY_ARTILLERY ||
+	         cmdType == ACTION_COMMAND_FOLLOW || cmdType == ACTION_COMMAND_FOLLOW_NOW ||
+	         cmdType == ACTION_COMMAND_ENTRENCH_SELF || cmdType == ACTION_COMMAND_ENTRENCH_BEGIN ||
+	         cmdType == ACTION_COMMAND_ENTRENCH_END || cmdType == ACTION_COMMAND_BUILD_FENCE_BEGIN ||
+	         cmdType == ACTION_COMMAND_BUILD_FENCE_END || cmdType == ACTION_COMMAND_CLEARMINE ||
+	         cmdType == ACTION_COMMAND_PLACEMINE || cmdType == ACTION_COMMAND_PLACE_ANTITANK ||
+	         cmdType == ACTION_COMMAND_REPEAR_OBJECT || cmdType == ACTION_COMMAND_BUILD_BRIDGE ||
+	         cmdType == ACTION_MOVE_TO_NOT_PRESIZE || cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
+	         cmdType == ACTION_COMMAND_STAND_GROUND || cmdType == ACTION_COMMAND_FILL_RU ||
+	         cmdType == ACTION_COMMAND_MOVE_TO_GRID || cmdType == ACTION_COMMAND_ATTACK_UNIT ||
+	         cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT || cmdType == ACTION_COMMAND_SWARM_ATTACK_OBJECT ||
+	         cmdType == ACTION_COMMAND_ATTACK_OBJECT || cmdType == ACTION_COMMAND_WAIT ||
+	         cmdType == ACTION_COMMAND_UNLOAD_NOW || cmdType == ACTION_COMMAND_MECH_ENTER ||
+	         cmdType == ACTION_MOVE_MECH_ENTER_NOW || cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT ||
+	         cmdType == ACTION_COMMAND_HOLD_SECTOR || cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
+	         cmdType == ACTION_COMMAND_PATROL || cmdType == ACTION_MOVE_BY_FORMATION );
 }
 
-IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand )
+IUnitState *CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CAITransportUnit*>( pObj ) != 0, "Wrong unit type" );
-	CAITransportUnit *pUnit = checked_cast<CAITransportUnit*>( pObj );
+	NI_ASSERT( dynamic_cast<CAITransportUnit *>( pObj ) != 0, "Wrong unit type" );
+	CAITransportUnit *pUnit = checked_cast<CAITransportUnit *>( pObj );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 
 	bool bSwarmAttack = false;
 
 	switch ( cmd.nCmdType )
 	{
-	case ACTION_COMMAND_MECH_ENTER:
-	case ACTION_MOVE_MECH_ENTER_NOW:
+		case ACTION_COMMAND_MECH_ENTER:
+		case ACTION_MOVE_MECH_ENTER_NOW:
 		{
-			CObjectBase * pObj = GetObjectByCmd( cmd );
+			CObjectBase *pObj = GetObjectByCmd( cmd );
 			if ( pObj )
 			{
-				CMilitaryCar * pTransport = checked_cast<CMilitaryCar*>( pObj );
+				CMilitaryCar *pTransport = checked_cast<CMilitaryCar *>( pObj );
 				pResult = new CMechUnitInsideMechUnitState( pUnit, pTransport, cmd.nCmdType == ACTION_MOVE_MECH_ENTER_NOW );
 			}
 		}
 
 		break;
-	case ACTION_COMMAND_WAIT:
-		pResult = CMechUnitRestState::Instance( pUnit, cmd.vPos, pUnit->GetDirection(), 0, cmd.fNumber );
+		case ACTION_COMMAND_WAIT:
+			pResult = CMechUnitRestState::Instance( pUnit, cmd.vPos, pUnit->GetDirection(), 0, cmd.fNumber );
 
-		break;
-	case ACTION_COMMAND_UNLOAD_NOW:
-		pResult = CTransportWaitForUnload::Instance( pUnit, cmd.vPos );
-		break;
-	case ACTION_COMMAND_UNLOAD:
+			break;
+		case ACTION_COMMAND_UNLOAD_NOW:
+			pResult = CTransportWaitForUnload::Instance( pUnit, cmd.vPos );
+			break;
+		case ACTION_COMMAND_UNLOAD:
 		{
 			if ( pUnit->GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD )
 			{
-				CMechUnitInsideMechUnitState *pState ( checked_cast<CMechUnitInsideMechUnitState*>( pUnit->GetState() ) );
+				CMechUnitInsideMechUnitState *pState( checked_cast<CMechUnitInsideMechUnitState *>( pUnit->GetState() ) );
 				pState->Unload( pUnit->GetCenterPlain() );
 				pResult = pState;
 			}
 			else
 			{
-				CCommonUnit * pUnitToUnload = checked_cast<CCommonUnit*>( GetObjectByCmd( cmd ) );
+				CCommonUnit *pUnitToUnload = checked_cast<CCommonUnit *>( GetObjectByCmd( cmd ) );
 				if ( pUnitToUnload )
 				{
 					if ( pUnitToUnload->IsFormation() )
 					{
-						CFormation *formation = checked_cast<CFormation*>(GetObjectByCmd(cmd));
+						CFormation *formation = checked_cast<CFormation *>( GetObjectByCmd( cmd ) );
 						// the old pUnitToUnload->IsSelectable() is NOT a deterministic data, so it was replaced by the usage of more fitting
 						// UniqueID comparison, which is a deterministic variable
-						if ( pUnit->IsTowing() && formation->GetUniqueID() == pUnit->GetTowedArtilleryCrew()->GetUniqueID())
+						if ( pUnit->IsTowing() && formation->GetUniqueID() == pUnit->GetTowedArtilleryCrew()->GetUniqueID() )
 						{
 							// This is a gun crew, unhook
 							pResult = CTransportUnhookArtilleryState::Instance( pUnit, VNULL2, true );
 						}
 						else
 						{
-							EActionLeaveParam eLeaveParam = EActionLeaveParam ( int( cmd.fNumber ) );
-							pResult = new CTransportLandState( pUnit, eLeaveParam, cmd.vPos, checked_cast<CFormation*>( GetObjectByCmd( cmd ) ) );
+							EActionLeaveParam eLeaveParam = EActionLeaveParam( int( cmd.fNumber ) );
+							pResult = new CTransportLandState(
+									pUnit, eLeaveParam, cmd.vPos, checked_cast<CFormation *>( GetObjectByCmd( cmd ) ) );
 						}
 					}
 					else // mech unit
 					{
 						if ( pUnitToUnload->GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD )
 						{
-							CMechUnitInsideMechUnitState *pState ( checked_cast<CMechUnitInsideMechUnitState*>( pUnitToUnload->GetState() ) );
+							CMechUnitInsideMechUnitState *pState(
+									checked_cast<CMechUnitInsideMechUnitState *>( pUnitToUnload->GetState() ) );
 							if ( pState )
 								pState->Unload( pUnit->GetCenterPlain() );
 						}
@@ -200,141 +175,142 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 					}
 				}
 				else
-					pResult = new CTransportLandState( pUnit, ALP_POSITION_VALID, cmd.vPos, checked_cast<CFormation*>( GetObjectByCmd( cmd ) ) );
+					pResult = new CTransportLandState(
+							pUnit, ALP_POSITION_VALID, cmd.vPos, checked_cast<CFormation *>( GetObjectByCmd( cmd ) ) );
 			}
 		}
 
 		break;
-	case ACTION_MOVE_ONBOARD_ATTACK_UNIT:
+		case ACTION_MOVE_ONBOARD_ATTACK_UNIT:
 		{
-			CObjectBase * pObj = GetObjectByCmd( cmd );
-			CMechUnitInsideMechUnitState *pState ( checked_cast<CMechUnitInsideMechUnitState*>( pUnit->GetState() ) );
+			CObjectBase *pObj = GetObjectByCmd( cmd );
+			CMechUnitInsideMechUnitState *pState( checked_cast<CMechUnitInsideMechUnitState *>( pUnit->GetState() ) );
 			if ( pObj )
 			{
-				CAIUnit * pEnemy = checked_cast<CMilitaryCar*>( pObj );
+				CAIUnit *pEnemy = checked_cast<CMilitaryCar *>( pObj );
 				pState->AttackTarget( pEnemy );
 			}
 			pResult = pState;
 		}
 
 		break;
-	case ACTION_COMMAND_FILL_RU:
-		if ( auto target = dynamic_cast<CBuilding*>( GetObjectByCmd( cmd ) ) )
-			pResult = CTransportLoadRuState::Instance( pUnit, false, target );
+		case ACTION_COMMAND_FILL_RU:
+			if ( auto target = dynamic_cast<CBuilding *>( GetObjectByCmd( cmd ) ) )
+				pResult = CTransportLoadRuState::Instance( pUnit, false, target );
 
-		break;
-	case ACTION_MOVE_TO_NOT_PRESIZE:
-		pResult = CMoveToPointNotPresize::Instance( pUnit, cmd.vPos, cmd.fNumber );
+			break;
+		case ACTION_MOVE_TO_NOT_PRESIZE:
+			pResult = CMoveToPointNotPresize::Instance( pUnit, cmd.vPos, cmd.fNumber );
 
-		break;
-	case ACTION_COMMAND_REPEAR_OBJECT:
+			break;
+		case ACTION_COMMAND_REPEAR_OBJECT:
 		{
-			CStaticObject * pObject = checked_cast<CStaticObject*>( GetObjectByCmd( cmd ) );
+			CStaticObject *pObject = checked_cast<CStaticObject *>( GetObjectByCmd( cmd ) );
 			if ( ESOT_BRIDGE_SPAN == pObject->GetObjectType() )
 			{
-				CBridgeSpan * pSpan = checked_cast<CBridgeSpan*>(GetObjectByCmd( cmd ));
+				CBridgeSpan *pSpan = checked_cast<CBridgeSpan *>( GetObjectByCmd( cmd ) );
 				pResult = CTransportRepairBridgeState::Instance( pUnit, pSpan );
 			}
 			else if ( ESOT_BUILDING == pObject->GetObjectType() )
 			{
-				CBuilding * pBuilding = checked_cast<CBuilding*>(GetObjectByCmd( cmd ));
+				CBuilding *pBuilding = checked_cast<CBuilding *>( GetObjectByCmd( cmd ) );
 				pResult = CTransportRepairBuildingState::Instance( pUnit, pBuilding );
 			}
 		}
 
 		break;
-	case ACTION_COMMAND_BUILD_BRIDGE:
+		case ACTION_COMMAND_BUILD_BRIDGE:
 		{
-			CBridgeSpan * pSpan = checked_cast<CBridgeSpan*>(GetObjectByCmd( cmd ));
+			CBridgeSpan *pSpan = checked_cast<CBridgeSpan *>( GetObjectByCmd( cmd ) );
 			pResult = CTransportBuildBridgeState::Instance( pUnit, pSpan->GetFullBridge() );
 		}
 
 		break;
-	case ACTION_COMMAND_ENTRENCH_BEGIN:
+		case ACTION_COMMAND_ENTRENCH_BEGIN:
 		{
-			CTransportBuildEntrenchmentState * pState = new CTransportBuildEntrenchmentState( pUnit, cmd.vPos );
+			CTransportBuildEntrenchmentState *pState = new CTransportBuildEntrenchmentState( pUnit, cmd.vPos );
 			pResult = pState;
 		}
 		break;
-	case ACTION_COMMAND_ENTRENCH_END:
-		if ( pUnit->GetState()->GetName() == EUSN_BUILD_ENTRENCHMENT )
-		{
-			NI_ASSERT( dynamic_cast<CTransportBuildEntrenchmentState*>( pUnit->GetState()) != 0, "bad state sequence" );
-
-			if ( cmd.nNumber > 0 )			// if it is a cancellation command, nNumber=-1, do not set endpoint
-				checked_cast<CTransportBuildEntrenchmentState*>( pUnit->GetState() )->SetEndPoint( cmd.vPos );
-
-			pResult = pUnit->GetState();
-		}
-		break;
-	case ACTION_COMMAND_PLACE_ANTITANK:
-		pResult = CTransportPlaceAntitankState::Instance( pUnit, cmd.vPos );
-
-		break;
-	case ACTION_COMMAND_PLACEMINE:
-		pResult = CTransportPlaceMineState::Instance( pUnit, cmd.vPos );
-
-		break;
-	case ACTION_COMMAND_CLEARMINE:
-		pResult = CTransportClearMineState::Instance( pUnit, cmd.vPos );
-
-		break;
-	case ACTION_COMMAND_BUILD_FENCE_BEGIN:
-		pResult = new CTransportBuildFenceState( pUnit, cmd.vPos );
-		break;
-	case ACTION_COMMAND_BUILD_FENCE_END:
-		if ( pUnit->GetState()->GetName() == EUSN_BUILD_FENCE )
-		{
-			NI_ASSERT( dynamic_cast<CTransportBuildFenceState*>( pUnit->GetState())!=0, "bad state sequence" );
-
-			if ( cmd.nNumber > 0 )			// if it is a cancellation command, nNumber=-1, do not set endpoint
-				checked_cast<CTransportBuildFenceState*>( pUnit->GetState() )->SetEndPoint( cmd.vPos );
-
-			pResult = pUnit->GetState();
-		}
-
-		break;
-	case ACTION_COMMAND_ENTRENCH_SELF:
-		pResult = CMechUnitEntrenchSelfState::Instance( pUnit );
-
-		break;
-	case ACTION_COMMAND_HOLD_SECTOR:
-		switch ( cmd.nNumber )
-		{
-		case 0:
+		case ACTION_COMMAND_ENTRENCH_END:
+			if ( pUnit->GetState()->GetName() == EUSN_BUILD_ENTRENCHMENT )
 			{
-				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, cmd.vPos ), pUnit );
-				SAIUnitCmd newCmd( ACTION_COMMAND_HOLD_SECTOR );
-				newCmd.nNumber = 2;
-				theGroupLogic.InsertUnitCommand( newCmd, pUnit );
+				NI_ASSERT( dynamic_cast<CTransportBuildEntrenchmentState *>( pUnit->GetState() ) != 0, "bad state sequence" );
+
+				if ( cmd.nNumber > 0 ) // if it is a cancellation command, nNumber=-1, do not set endpoint
+					checked_cast<CTransportBuildEntrenchmentState *>( pUnit->GetState() )->SetEndPoint( cmd.vPos );
+
+				pResult = pUnit->GetState();
 			}
 			break;
-		case 1:
-			pUnit->ResetHoldSector();
-			break;
-		case 2:
-			pResult = CSoldierEnterHoldSectorState::Instance( pUnit );
-			break;
-		default:
-			NI_ASSERT( false, "Wrong param to ACTION_COMMAND_HOLD_SECTOR" );
-			break;
-		}
-		break;
-	case ACTION_COMMAND_USE_FLAMETHROWER:
-		// Armed transports share the flame-only point-burst path with other ground vehicles.
-		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
+		case ACTION_COMMAND_PLACE_ANTITANK:
+			pResult = CTransportPlaceAntitankState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_MOVE_LOAD_RU:
-		pResult = CTransportLoadRuState::Instance( pUnit );
+			break;
+		case ACTION_COMMAND_PLACEMINE:
+			pResult = CTransportPlaceMineState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_DEPLOY_ARTILLERY:
-		if ( pUnit->IsTowing() )
-			pResult = CTransportUnhookArtilleryState::Instance( pUnit, cmd.vPos, bool(cmd.fNumber) );
+			break;
+		case ACTION_COMMAND_CLEARMINE:
+			pResult = CTransportClearMineState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_TAKE_ARTILLERY:
+			break;
+		case ACTION_COMMAND_BUILD_FENCE_BEGIN:
+			pResult = new CTransportBuildFenceState( pUnit, cmd.vPos );
+			break;
+		case ACTION_COMMAND_BUILD_FENCE_END:
+			if ( pUnit->GetState()->GetName() == EUSN_BUILD_FENCE )
+			{
+				NI_ASSERT( dynamic_cast<CTransportBuildFenceState *>( pUnit->GetState() ) != 0, "bad state sequence" );
+
+				if ( cmd.nNumber > 0 ) // if it is a cancellation command, nNumber=-1, do not set endpoint
+					checked_cast<CTransportBuildFenceState *>( pUnit->GetState() )->SetEndPoint( cmd.vPos );
+
+				pResult = pUnit->GetState();
+			}
+
+			break;
+		case ACTION_COMMAND_ENTRENCH_SELF:
+			pResult = CMechUnitEntrenchSelfState::Instance( pUnit );
+
+			break;
+		case ACTION_COMMAND_HOLD_SECTOR:
+			switch ( cmd.nNumber )
+			{
+				case 0:
+				{
+					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, cmd.vPos ), pUnit );
+					SAIUnitCmd newCmd( ACTION_COMMAND_HOLD_SECTOR );
+					newCmd.nNumber = 2;
+					theGroupLogic.InsertUnitCommand( newCmd, pUnit );
+				}
+				break;
+				case 1:
+					pUnit->ResetHoldSector();
+					break;
+				case 2:
+					pResult = CSoldierEnterHoldSectorState::Instance( pUnit );
+					break;
+				default:
+					NI_ASSERT( false, "Wrong param to ACTION_COMMAND_HOLD_SECTOR" );
+					break;
+			}
+			break;
+		case ACTION_COMMAND_USE_FLAMETHROWER:
+			// Armed transports share the flame-only point-burst path with other ground vehicles.
+			pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
+
+			break;
+		case ACTION_MOVE_LOAD_RU:
+			pResult = CTransportLoadRuState::Instance( pUnit );
+
+			break;
+		case ACTION_COMMAND_DEPLOY_ARTILLERY:
+			if ( pUnit->IsTowing() )
+				pResult = CTransportUnhookArtilleryState::Instance( pUnit, cmd.vPos, bool( cmd.fNumber ) );
+
+			break;
+		case ACTION_COMMAND_TAKE_ARTILLERY:
 		{
 			if ( 0 == cmd.nObjectID )
 			{
@@ -343,17 +319,17 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 				break;
 			}
 			// clicked on gunner near gun
-			CObjectBase * pB = GetObjectByCmd( cmd );
-			if ( CInfantry * pInf = dynamic_cast<CInfantry*>( pB ) )
+			CObjectBase *pB = GetObjectByCmd( cmd );
+			if ( CInfantry *pInf = dynamic_cast<CInfantry *>( pB ) )
 			{
 				CFormation *pForm = pInf->GetFormation();
 				if ( pForm && pForm->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 				{
 					CFormationGunCrewState *pGSState = dynamic_cast<CFormationGunCrewState *>( pForm->GetState() );
-					if (!pGSState)
+					if ( !pGSState )
 						break;
 
-					CArtillery * pArtillery = pGSState->GetArtillery();
+					CArtillery *pArtillery = pGSState->GetArtillery();
 					pResult = CTransportHookArtilleryState::Instance( pUnit, pArtillery, VNULL2 );
 				}
 			}
@@ -365,42 +341,44 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 		}
 
 		break;
-		/*
+			/*
 	case ACTION_COMMAND_RESUPPLY_HR:
 		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast_ptr<CArtillery*>( GetObjectByCmd( cmd ) ) != 0 : true, StrFmt( "Wrong preferred unit %s",typeid( *pObj ).name()) );
 		pResult = CTransportResupplyHumanResourcesState::Instance( pUnit, cmd.vPos, static_cast_ptr<CArtillery*>(GetObjectByCmd( cmd )) );
 
 		break;*/
-	case ACTION_COMMAND_REPAIR:
-		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, fmt::format( "Wrong preferred unit {}",typeid( *pObj ).name()) );
-		pResult = CTransportRepairState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
+		case ACTION_COMMAND_REPAIR:
+			NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) ) != 0 : true,
+			           fmt::format( "Wrong preferred unit {}", typeid( *pObj ).name() ) );
+			pResult = CTransportRepairState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) ) );
 
-		break;
-	case ACTION_COMMAND_RESUPPLY:
-		NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) != 0 : true, fmt::format( "Wrong preferred unit {}",typeid( *pObj ).name()) );
-		pResult = CTransportResupplyState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit*>(GetObjectByCmd( cmd )) );
+			break;
+		case ACTION_COMMAND_RESUPPLY:
+			NI_ASSERT( GetObjectByCmd( cmd ) ? dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) ) != 0 : true,
+			           fmt::format( "Wrong preferred unit {}", typeid( *pObj ).name() ) );
+			pResult = CTransportResupplyState::Instance( pUnit, cmd.vPos, dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) ) );
 
-		break;
-	case ACTION_COMMAND_DIE:
-		NI_ASSERT( false, "Command to die in the queue" );
+			break;
+		case ACTION_COMMAND_DIE:
+			NI_ASSERT( false, "Command to die in the queue" );
 
-		break;
-	case ACTION_COMMAND_MOVE_TO:
-	case ACTION_COMMAND_REVERSE_TO:
-		pUnit->UnsetFollowState();
-		//pResult = CTransportPlaceMineState::Instance( pUnit, cmd.vPos );
-		pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
+			break;
+		case ACTION_COMMAND_MOVE_TO:
+		case ACTION_COMMAND_REVERSE_TO:
+			pUnit->UnsetFollowState();
+			//pResult = CTransportPlaceMineState::Instance( pUnit, cmd.vPos );
+			pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
 
-		break;
-	case ACTION_COMMAND_WAIT_FOR_UNITS:
-		pResult = CTransportWaitPassengerState::Instance( pUnit, dynamic_cast<CFormation*>(GetObjectByCmd( cmd )) );
+			break;
+		case ACTION_COMMAND_WAIT_FOR_UNITS:
+			pResult = CTransportWaitPassengerState::Instance( pUnit, dynamic_cast<CFormation *>( GetObjectByCmd( cmd ) ) );
 
-		break;
-	case ACTION_COMMAND_ROTATE_TO:
-		pResult = CSoldierTurnToPointState::Instance( pUnit, cmd.vPos );
+			break;
+		case ACTION_COMMAND_ROTATE_TO:
+			pResult = CSoldierTurnToPointState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_ROTATE_TO_DIR:
+			break;
+		case ACTION_COMMAND_ROTATE_TO_DIR:
 		{
 			CVec2 vDir = cmd.vPos;
 			Normalize( &vDir );
@@ -408,41 +386,41 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 		}
 
 		break;
-	case ACTION_MOVE_BY_DIR:
-		pResult = CSoldierMoveByDirState::Instance( pUnit, cmd.vPos );
+		case ACTION_MOVE_BY_DIR:
+			pResult = CSoldierMoveByDirState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_GUARD:
-		pResult = CMechUnitRestState::Instance( pUnit, cmd.vPos, cmd.fNumber, 0, -1 );
+			break;
+		case ACTION_COMMAND_GUARD:
+			pResult = CMechUnitRestState::Instance( pUnit, cmd.vPos, cmd.fNumber, 0, -1 );
 
-		break;
-	case ACTION_COMMAND_FOLLOW:
+			break;
+		case ACTION_COMMAND_FOLLOW:
 		{
 			CONVERT_OBJECT( CCommonUnit, pUnitToFollow, GetObjectByCmd( cmd ), "Wrong unit to follow" );
 			pUnit->SetFollowState( pUnitToFollow );
 		}
 
 		break;
-	case ACTION_COMMAND_FOLLOW_NOW:
+		case ACTION_COMMAND_FOLLOW_NOW:
 		{
 			CONVERT_OBJECT( CCommonUnit, pUnitToFollow, GetObjectByCmd( cmd ), "Wrong unit to follow" );
 			pResult = CFollowState::Instance( pUnit, pUnitToFollow );
 		}
 
 		break;
-	case ACTION_COMMAND_STAND_GROUND:
-		pUnit->Stop();
-		pUnit->UnsetFollowState();
-		pUnit->SetBehaviourMoving( SBehaviour::EMHoldPos );
+		case ACTION_COMMAND_STAND_GROUND:
+			pUnit->Stop();
+			pUnit->UnsetFollowState();
+			pUnit->SetBehaviourMoving( SBehaviour::EMHoldPos );
 
-		break;
-	case ACTION_COMMAND_MOVE_TO_GRID:
-		pResult = CCommonMoveToGridState::Instance( pUnit, cmd.vPos, GetVectorByDirection( cmd.fNumber ) );
+			break;
+		case ACTION_COMMAND_MOVE_TO_GRID:
+			pResult = CCommonMoveToGridState::Instance( pUnit, cmd.vPos, GetVectorByDirection( cmd.fNumber ) );
 
-		break;
-	case ACTION_COMMAND_SWARM_ATTACK_UNIT:
-		bSwarmAttack = true;
-	case ACTION_COMMAND_ATTACK_UNIT:
+			break;
+		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
+			bSwarmAttack = true;
+		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			if ( GetObjectByCmd( cmd ) && IsValid( GetObjectByCmd( cmd ) ) )
 			{
@@ -450,10 +428,12 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 				if ( pTarget->IsAlive() )
 				{
-					if ( pTarget->GetStats()->IsInfantry() && dynamic_cast<CSoldier*>(pTarget)->IsInBuilding() )
-						pResult = CSoldierAttackUnitInBuildingState::Instance( pUnit, dynamic_cast<CSoldier*>(pTarget), cmd.fNumber == 0, bSwarmAttack );
+					if ( pTarget->GetStats()->IsInfantry() && dynamic_cast<CSoldier *>( pTarget )->IsInBuilding() )
+						pResult = CSoldierAttackUnitInBuildingState::Instance(
+								pUnit, dynamic_cast<CSoldier *>( pTarget ), cmd.fNumber == 0, bSwarmAttack );
 					else
-						pResult = CMechAttackUnitState::Instance( pUnit, dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ), cmd.fNumber == 0, bSwarmAttack );
+						pResult = CMechAttackUnitState::Instance(
+								pUnit, dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) ), cmd.fNumber == 0, bSwarmAttack );
 				}
 			}
 			else
@@ -461,16 +441,17 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 		}
 
 		break;
-	case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
-		bSwarmAttack = true;
-	case ACTION_COMMAND_ATTACK_OBJECT:
+		case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
+			bSwarmAttack = true;
+		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
 			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong object to attack" );
 			// attack the artillery
 			if ( pStaticObj->GetObjectType() == ESOT_ARTILLERY_BULLET_STORAGE )
 			{
 				pCommand->ToUnitCmd().nCmdType = bSwarmAttack ? ACTION_COMMAND_SWARM_ATTACK_UNIT : ACTION_COMMAND_ATTACK_UNIT;
-				pCommand->ToUnitCmd().nObjectID = checked_cast<CArtilleryBulletStorage*>(pStaticObj)->GetOwner()->GetUniqueId();
+				pCommand->ToUnitCmd().nObjectID =
+						checked_cast<CArtilleryBulletStorage *>( pStaticObj )->GetOwner()->GetUniqueId();
 				pCommand->ToUnitCmd().fNumber = 0;
 				pResult = ProduceState( pObj, pCommand );
 			}
@@ -479,7 +460,7 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 		}
 
 		break;
-	case ACTION_COMMAND_PATROL:
+		case ACTION_COMMAND_PATROL:
 		{
 			CVec2 vTarget( cmd.vPos );
 			if ( pUnit->CanMove() )
@@ -490,12 +471,12 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 			}
 		}
 		break;
-	case ACTION_MOVE_BY_FORMATION:
-		pResult = CMoveByFormationState::Instance( pUnit, cmd.nObjectID );
-		break;
+		case ACTION_MOVE_BY_FORMATION:
+			pResult = CMoveByFormationState::Instance( pUnit, cmd.nObjectID );
+			break;
 
- 	default:
-		NI_ASSERT( false, "Wrong command" );
+		default:
+			NI_ASSERT( false, "Wrong command" );
 	}
 
 	if ( pResult )
@@ -504,22 +485,22 @@ IUnitState* CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 	return pResult;
 }
 
-IUnitState* CTransportStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CTransportStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	return CMechUnitRestState::Instance( checked_cast<CAITransportUnit*>( pUnit ), CVec2( -1, -1 ), 0, 0, -1 );
+	return CMechUnitRestState::Instance( checked_cast<CAITransportUnit *>( pUnit ), CVec2( -1, -1 ), 0, 0, -1 );
 }
 
 //*******************************************************************
 //*									 CTransportWaitPassengerState										*
 //*******************************************************************
 
-IUnitState* CTransportWaitPassengerState::Instance( CMilitaryCar *pTransport, CFormation *pFormation )
+IUnitState *CTransportWaitPassengerState::Instance( CMilitaryCar *pTransport, CFormation *pFormation )
 {
 	return new CTransportWaitPassengerState( pTransport, pFormation );
 }
 
 CTransportWaitPassengerState::CTransportWaitPassengerState( CMilitaryCar *_pTransport, CFormation *pFormation )
-: pTransport( _pTransport )
+		: pTransport( _pTransport )
 {
 	for ( int i = 0; i < pTransport->GetNTurrets(); ++i )
 		pTransport->GetTurret( i )->SetCanReturn();
@@ -529,10 +510,10 @@ CTransportWaitPassengerState::CTransportWaitPassengerState( CMilitaryCar *_pTran
 
 void CTransportWaitPassengerState::Segment()
 {
-	std::list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
+	std::list<CPtr<CFormation>>::iterator iter = formationsToWait.begin();
 	while ( iter != formationsToWait.end() )
 	{
-		if ( !IsValidObj( *iter ) || (*iter)->GetState()->GetName() != EUSN_ENTER_TRANSPORT )
+		if ( !IsValidObj( *iter ) || ( *iter )->GetState()->GetName() != EUSN_ENTER_TRANSPORT )
 			iter = formationsToWait.erase( iter );
 		else
 			++iter;
@@ -553,9 +534,9 @@ ETryStateInterruptResult CTransportWaitPassengerState::TryInterruptState( CAICom
 	return TSIR_YES_WAIT;
 }
 
-void CTransportWaitPassengerState::AddFormationToWait( CFormation *pFormation  )
+void CTransportWaitPassengerState::AddFormationToWait( CFormation *pFormation )
 {
-	std::list< CPtr<CFormation> >::iterator iter = formationsToWait.begin();
+	std::list<CPtr<CFormation>>::iterator iter = formationsToWait.begin();
 	while ( iter != formationsToWait.end() && *iter != pFormation )
 		++iter;
 
@@ -572,9 +553,12 @@ const CVec2 CTransportWaitPassengerState::GetPurposePoint() const
 //*											CTransportLandState													*
 //*******************************************************************
 
-
-CTransportLandState::CTransportLandState( CMilitaryCar *_pTransport, const enum EActionLeaveParam param, const CVec2 &_vLandPoint, CFormation *_pUnload )
-: CStatusUpdatesHelper( EUS_UNLOAD, _pTransport ), pTransport( _pTransport ), vLandPoint( _vLandPoint ), state( ELS_STARTING ), pUnload( _pUnload )
+CTransportLandState::CTransportLandState( CMilitaryCar *_pTransport,
+                                          const enum EActionLeaveParam param,
+                                          const CVec2 &_vLandPoint,
+                                          CFormation *_pUnload )
+		: CStatusUpdatesHelper( EUS_UNLOAD, _pTransport ), pTransport( _pTransport ), vLandPoint( _vLandPoint ),
+			state( ELS_STARTING ), pUnload( _pUnload )
 {
 	if ( ALP_POSITION_VALID == param )
 		vLandPoint = _vLandPoint + pTransport->GetGroupShift();
@@ -605,23 +589,24 @@ void CTransportLandState::Segment()
 	switch ( state )
 	{
 		case ELS_STARTING:
+		{
+			if ( CPtr<IStaticPath> pPath = pTransport->GetCurCmd()->CreateStaticPath( pTransport ) )
 			{
-				if ( CPtr<IStaticPath> pPath = pTransport->GetCurCmd()->CreateStaticPath( pTransport ) )
-				{
-					pTransport->SendAlongPath( pPath, pTransport->GetGroupShift(), true );
-					state = ELS_MOVING;
-					InitStatus();
-				}
-				else
-				{
-					pTransport->SendAcknowledgement( ACK_NEGATIVE );
-					pTransport->SetCommandFinished();
-				}
+				pTransport->SendAlongPath( pPath, pTransport->GetGroupShift(), true );
+				state = ELS_MOVING;
+				InitStatus();
 			}
+			else
+			{
+				pTransport->SendAcknowledgement( ACK_NEGATIVE );
+				pTransport->SetCommandFinished();
+			}
+		}
 
-			break;
+		break;
 		case ELS_MOVING:
-			if ( fabs2( pTransport->GetCenterPlain() - vLandPoint ) <= sqr( 2 * pTransport->GetDistanceToLandPoint() ) || pTransport->IsIdle() )
+			if ( fabs2( pTransport->GetCenterPlain() - vLandPoint ) <= sqr( 2 * pTransport->GetDistanceToLandPoint() ) ||
+			     pTransport->IsIdle() )
 			{
 				const CVec2 vEntrancePoint( pTransport->GetEntrancePoint() );
 				const SVector tile( AICellsTiles::GetTile( vEntrancePoint ) );
@@ -630,12 +615,15 @@ void CTransportLandState::Segment()
 				bool bCanLandInfantry = false;
 				for ( int i = 0; i < nOnBoard; ++i )
 				{
-					CAIUnit * pUnit = pTransport->GetBoarded( i );
-					if ( IsValidObj( pUnit ) )//&& GetTerrain()->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) == FREE_TERRAIN )
+					CAIUnit *pUnit = pTransport->GetBoarded( i );
+					if (
+							IsValidObj(
+									pUnit ) ) //&& GetTerrain()->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) == FREE_TERRAIN )
 					{
-						NI_ASSERT( pUnit->GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD, "UNIT is inside but not in mech rest inside mech state" );
+						NI_ASSERT( pUnit->GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD,
+						           "UNIT is inside but not in mech rest inside mech state" );
 						if ( pUnit->GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD )
-							checked_cast<CMechUnitInsideMechUnitState*>( pUnit->GetState() )->Unload( vLandPoint );
+							checked_cast<CMechUnitInsideMechUnitState *>( pUnit->GetState() )->Unload( vLandPoint );
 						bCanLand = true;
 					}
 				}
@@ -645,7 +633,7 @@ void CTransportLandState::Segment()
 				{
 					// unload from sea unit is always allowed
 					const ETerrainTypes eTerraType = GetTerrain()->GetTerrainType( tile );
-					if(  eTerraType == ETT_WATER_TERRAIN || eTerraType == ETT_MARINE_TERRAIN )
+					if ( eTerraType == ETT_WATER_TERRAIN || eTerraType == ETT_MARINE_TERRAIN )
 						bCanLand = true;
 					else if ( !( eLock & EAC_HUMAN ) )
 						bCanLand = true;
@@ -668,73 +656,75 @@ void CTransportLandState::Segment()
 
 			break;
 		case ELS_LANDING:
+		{
+			InitStatus();
+			// найти все формации в транспорте, которые не принадлежат пушке, которая болтается сзади
+			// find all formations in the transport that do not belong to the gun hanging out at the back
+			CPtr<CArtillery> pArt = pTransport->GetTowedArtillery();
+			CFormation *pGunCrew = !IsValidObj( pArt ) ? 0 : pTransport->GetTowedArtilleryCrew();
+			const int nGunCrew = pGunCrew == 0 ? 0 : pGunCrew->Size();
+
+			while ( pTransport->GetNPassengers() != nGunCrew )
 			{
-				InitStatus();
-				// найти все формации в транспорте, которые не принадлежат пушке, которая болтается сзади
-				// find all formations in the transport that do not belong to the gun hanging out at the back
-				CPtr<CArtillery> pArt = pTransport->GetTowedArtillery();
-				CFormation *pGunCrew = !IsValidObj( pArt ) ? 0 : pTransport->GetTowedArtilleryCrew();
-				const int nGunCrew = pGunCrew == 0 ? 0 : pGunCrew->Size();
+				CFormation *pFormation = pUnload;
+				const int nPassangers = pTransport->GetNPassengers();
 
-				while ( pTransport->GetNPassengers() != nGunCrew )
+				if ( !pFormation )
 				{
-					CFormation *pFormation = pUnload;
-					const int nPassangers = pTransport->GetNPassengers();
-
-					if ( !pFormation )
+					// найти формацию, которую нужно высадить
+					// find a formation to land
+					for ( int i = 0; i < nPassangers && pFormation == 0; ++i )
 					{
-						// найти формацию, которую нужно высадить
-						// find a formation to land
-						for ( int i = 0; i < nPassangers && pFormation == 0; ++i )
-						{
-							CFormation *pTmp = pTransport->GetPassenger( i )->GetFormation();
-							if ( pTmp != pGunCrew )
-								pFormation = pTmp;
-						}
-					}
-
-					// check if still can unload
-					CVec2 vDropPoint = pTransport->GetEntrancePoint();
-					if ( FindAllowedDropPoint( pFormation, &vDropPoint ) )
-					{
-
-						NI_ASSERT( pFormation != 0, "Something wrong inside this transport" );
-						const int nFormSize = pFormation->Size();
-
-						CVec3 vGoToPoint( GetHeights()->Get3DPoint( vDropPoint ) );
-						for ( int i = 0; i < nFormSize ; ++i )
-						{
-							CSoldier *pSoldier = (*pFormation)[i];
-							if ( pSoldier->IsInTransport() )
-								LandPassenger( pSoldier, vGoToPoint );
-						}
-						pFormation->SetCenter( vGoToPoint, true );
-
-						CVec2 vRand;
-						RandUniformlyInCircle( 3.5f * SConsts::TILE_SIZE, &vRand );
-						theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vLandPoint.x + vRand.x, vLandPoint.y + vRand.y ), pFormation, false );
-						pFormation->SetSelectable( pFormation->GetPlayer() == theDipl.GetMyNumber(), true );
-						if ( pUnload )
-							break;
-					}
-					else
-					{
-						pTransport->SetCommandFinished();
-						break;
+						CFormation *pTmp = pTransport->GetPassenger( i )->GetFormation();
+						if ( pTmp != pGunCrew )
+							pFormation = pTmp;
 					}
 				}
 
-				pTransport->SetCommandFinished();
+				// check if still can unload
+				CVec2 vDropPoint = pTransport->GetEntrancePoint();
+				if ( FindAllowedDropPoint( pFormation, &vDropPoint ) )
+				{
+
+					NI_ASSERT( pFormation != 0, "Something wrong inside this transport" );
+					const int nFormSize = pFormation->Size();
+
+					CVec3 vGoToPoint( GetHeights()->Get3DPoint( vDropPoint ) );
+					for ( int i = 0; i < nFormSize; ++i )
+					{
+						CSoldier *pSoldier = ( *pFormation )[i];
+						if ( pSoldier->IsInTransport() )
+							LandPassenger( pSoldier, vGoToPoint );
+					}
+					pFormation->SetCenter( vGoToPoint, true );
+
+					CVec2 vRand;
+					RandUniformlyInCircle( 3.5f * SConsts::TILE_SIZE, &vRand );
+					theGroupLogic.UnitCommand(
+							SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vLandPoint.x + vRand.x, vLandPoint.y + vRand.y ), pFormation, false );
+					pFormation->SetSelectable( pFormation->GetPlayer() == theDipl.GetMyNumber(), true );
+					if ( pUnload )
+						break;
+				}
+				else
+				{
+					pTransport->SetCommandFinished();
+					break;
+				}
 			}
 
-			break;
+			pTransport->SetCommandFinished();
+		}
+
+		break;
 	}
 }
 
 bool CTransportLandState::FindAllowedDropPoint( CFormation *pUnit, CVec2 *vDropPoint )
 {
 	// search by radius
-	uint16_t wStartDir = NRandom::Random( 0, 65535 ); RecordRandomCall();
+	uint16_t wStartDir = NRandom::Random( 0, 65535 );
+	RecordRandomCall();
 	CVec2 vCenterPoint = *vDropPoint;
 	const int nIterations = 8;
 	for ( float fRadius = 150; fRadius < 1000; fRadius += 50 )
@@ -791,26 +781,32 @@ const CVec2 CTransportLandState::GetPurposePoint() const
 //*											CTransportHookArtilleryState								*
 //*******************************************************************
 
-IUnitState* CTransportHookArtilleryState::Instance( CAITransportUnit *pTransport, CArtillery *pArtillery, const CVec2 &vHookPoint )
+IUnitState *
+CTransportHookArtilleryState::Instance( CAITransportUnit *pTransport, CArtillery *pArtillery, const CVec2 &vHookPoint )
 {
 	return new CTransportHookArtilleryState( pTransport, pArtillery, vHookPoint );
 }
 
-CTransportHookArtilleryState::CTransportHookArtilleryState( class CAITransportUnit *_pTransport, class CArtillery * _pArtillery, const CVec2 &vHookPoint )
-: CStatusUpdatesHelper( EUS_HOOK_ARTILLERY, _pTransport ), pArtillery( _pArtillery ), pTransport( _pTransport ), eState( TTGS_ESTIMATING ),
-	timeLast( 0 ), wDesiredTransportDir( 0 ), bInterrupted( false ), vArtilleryPoint( _pArtillery ? _pArtillery->GetCenterPlain() : vHookPoint )
+CTransportHookArtilleryState::CTransportHookArtilleryState( class CAITransportUnit *_pTransport,
+                                                            class CArtillery *_pArtillery,
+                                                            const CVec2 &vHookPoint )
+		: CStatusUpdatesHelper( EUS_HOOK_ARTILLERY, _pTransport ), pArtillery( _pArtillery ), pTransport( _pTransport ),
+			eState( TTGS_ESTIMATING ), timeLast( 0 ), wDesiredTransportDir( 0 ), bInterrupted( false ),
+			vArtilleryPoint( _pArtillery ? _pArtillery->GetCenterPlain() : vHookPoint )
 {
 	// find nearest artillery and hook it
 	if ( pArtillery == 0 )
 	{
 		float fDist = 100000000;
-		CArtillery * pCurArtillery = 0;
-		for ( CUnitsIter<0,2> iter( pTransport->GetParty(), EDI_FRIEND, vHookPoint, SConsts::RESUPPLY_RADIUS ); !iter.IsFinished(); iter.Iterate() )
+		CArtillery *pCurArtillery = 0;
+		for ( CUnitsIter<0, 2> iter( pTransport->GetParty(), EDI_FRIEND, vHookPoint, SConsts::RESUPPLY_RADIUS );
+		      !iter.IsFinished();
+		      iter.Iterate() )
 		{
-			CAIUnit * pRawUnit = *iter;
+			CAIUnit *pRawUnit = *iter;
 			if ( pRawUnit->GetStats()->IsArtillery() )
 			{
-				CArtillery * pUnit = checked_cast<CArtillery*>( pRawUnit );
+				CArtillery *pUnit = checked_cast<CArtillery *>( pRawUnit );
 				if ( pUnit->MustHaveCrewToOperate() && !pUnit->IsBeingHooked() && pUnit->CanHook() )
 				{
 					const float fCurDist = fabs( pUnit->GetCenterPlain() - vHookPoint );
@@ -837,9 +833,7 @@ CTransportHookArtilleryState::CTransportHookArtilleryState( class CAITransportUn
 
 bool CTransportHookArtilleryState::CanInterrupt()
 {
-	return eState == TTGS_ESTIMATING ||
-				eState == TTGS_APPROACHING ||
-				eState == TTGS_APPROACH_BY_MOVE_BACK;
+	return eState == TTGS_ESTIMATING || eState == TTGS_APPROACHING || eState == TTGS_APPROACH_BY_MOVE_BACK;
 }
 
 void CTransportHookArtilleryState::InterruptBecauseOfPath()
@@ -856,15 +850,13 @@ void CTransportHookArtilleryState::InterruptBecauseOfPath()
 
 void CTransportHookArtilleryState::Segment()
 {
-	if ( !IsValidObj( pArtillery ) || ( pArtillery->IsBeingHooked() && pArtillery->GetHookingTransport() != pTransport ))
+	if ( !IsValidObj( pArtillery ) || ( pArtillery->IsBeingHooked() && pArtillery->GetHookingTransport() != pTransport ) )
 	{
 		pTransport->SetCommandFinished();
 		return;
 	}
-	if (	eState != TTGS_WAIT_FOR_TURN &&
-				eState != TTGS_SEND_CREW_TO_TRANSPORT &&
-				eState != TTGS_WAIT_FOR_CREW &&
-				fabs2( vArtilleryPoint - pArtillery->GetCenterPlain() ) > 1.0f  )
+	if ( eState != TTGS_WAIT_FOR_TURN && eState != TTGS_SEND_CREW_TO_TRANSPORT && eState != TTGS_WAIT_FOR_CREW &&
+	     fabs2( vArtilleryPoint - pArtillery->GetCenterPlain() ) > 1.0f )
 	{
 		InterruptBecauseOfPath();
 		return;
@@ -876,7 +868,7 @@ void CTransportHookArtilleryState::Segment()
 		bRepeat = false;
 		switch ( eState )
 		{
-		case TTGS_ESTIMATING:
+			case TTGS_ESTIMATING:
 			{
 				if ( !pTransport->CanHookUnit( pArtillery ) )
 				{
@@ -891,7 +883,7 @@ void CTransportHookArtilleryState::Segment()
 				}
 				else
 				{
-					if ( fabs2( pArtillery->GetCenter() - pTransport->GetCenter()) < SConsts::TRANSPORT_MOVE_BACK_DISTANCE )
+					if ( fabs2( pArtillery->GetCenter() - pTransport->GetCenter() ) < SConsts::TRANSPORT_MOVE_BACK_DISTANCE )
 					{
 						eState = TTGS_APPROACHING;
 						InitStatus();
@@ -899,7 +891,8 @@ void CTransportHookArtilleryState::Segment()
 					else
 					{
 						// подъехать передом.
-						CPtr<IStaticPath> pPath = CreateStaticPathToPoint( pArtillery->GetCenterPlain(), VNULL2, pTransport, true, GetAIMap() );
+						CPtr<IStaticPath> pPath =
+								CreateStaticPathToPoint( pArtillery->GetCenterPlain(), VNULL2, pTransport, true, GetAIMap() );
 						if ( pPath )
 						{
 							eState = TTGS_APPROACHING;
@@ -913,86 +906,88 @@ void CTransportHookArtilleryState::Segment()
 			}
 
 			break;
-		case TTGS_APPROACHING:
-			if ( !pArtillery->HasServeCrew() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
-			{
-				//not possible, cannot take nither other player's artillery nor free artillery
-				pTransport->SetCommandFinished();
-			}
-			else if ( fabs2( pArtillery->GetCenter() - pTransport->GetCenter()) < SConsts::TRANSPORT_MOVE_BACK_DISTANCE ||
-								pTransport->IsIdle() )
-			{
-				pTransport->Stop();
-
-				CPtr<IStaticPath> pPath = CreateStaticPathToPoint( pArtillery->GetCenterPlain(), VNULL2, pTransport, true, GetAIMap() );
-				if ( pPath )
+			case TTGS_APPROACHING:
+				if ( !pArtillery->HasServeCrew() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
 				{
-					eState = TTGS_APPROACH_BY_MOVE_BACK;
-					pArtillery->SetBeingHooked( pTransport );
-					pTransport->SendAlongPath( pPath, VNULL2, true );
-					pTransport->SetGoForward( false );
+					//not possible, cannot take nither other player's artillery nor free artillery
+					pTransport->SetCommandFinished();
+				}
+				else if ( fabs2( pArtillery->GetCenter() - pTransport->GetCenter() ) < SConsts::TRANSPORT_MOVE_BACK_DISTANCE ||
+				          pTransport->IsIdle() )
+				{
+					pTransport->Stop();
+
+					CPtr<IStaticPath> pPath =
+							CreateStaticPathToPoint( pArtillery->GetCenterPlain(), VNULL2, pTransport, true, GetAIMap() );
+					if ( pPath )
+					{
+						eState = TTGS_APPROACH_BY_MOVE_BACK;
+						pArtillery->SetBeingHooked( pTransport );
+						pTransport->SendAlongPath( pPath, VNULL2, true );
+						pTransport->SetGoForward( false );
+					}
+					else
+						InterruptBecauseOfPath();
+				}
+
+				break;
+			case TTGS_APPROACH_BY_MOVE_BACK:
+				// расстояние между пушкой и грузовиком почти равно размерам грузовичка и пушки
+				if ( !pArtillery->HasServeCrew() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
+				{
+					//not possible, cannot take nither other player's artillery nor free artillery
+					pArtillery->SetBeingHooked( 0 );
+					pTransport->SetCommandFinished();
 				}
 				else
-					InterruptBecauseOfPath();
-			}
-
-			break;
-		case TTGS_APPROACH_BY_MOVE_BACK:
-			// расстояние между пушкой и грузовиком почти равно размерам грузовичка и пушки
-			if ( !pArtillery->HasServeCrew() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
-			{
-				//not possible, cannot take nither other player's artillery nor free artillery
-				pArtillery->SetBeingHooked( 0 );
-				pTransport->SetCommandFinished();
-			}
-			else
-			{
-				// подъезжаем на нужное расстояние к пушке
-				const float dist2 = fabs( pArtillery->GetCenterPlain() - pArtillery->GetHookPoint() ) +
-														fabs( pTransport->GetCenterPlain() - pTransport->GetHookPoint() );
-				const float dist1 = fabs( pArtillery->GetCenterPlain() - pTransport->GetCenterPlain() );
-				const float diff = fabs( dist2 - dist1 );
-
-				if ( !pArtillery->IsInTankPit() && diff < SConsts::GUN_CREW_TELEPORT_RADIUS )
 				{
-					pTransport->RestoreSmoothPath();
-					pTransport->Stop();
-					eState = TTGS_START_UNINSTALL;
+					// подъезжаем на нужное расстояние к пушке
+					const float dist2 = fabs( pArtillery->GetCenterPlain() - pArtillery->GetHookPoint() ) +
+					                    fabs( pTransport->GetCenterPlain() - pTransport->GetHookPoint() );
+					const float dist1 = fabs( pArtillery->GetCenterPlain() - pTransport->GetCenterPlain() );
+					const float diff = fabs( dist2 - dist1 );
+
+					if ( !pArtillery->IsInTankPit() && diff < SConsts::GUN_CREW_TELEPORT_RADIUS )
+					{
+						pTransport->RestoreSmoothPath();
+						pTransport->Stop();
+						eState = TTGS_START_UNINSTALL;
+					}
+					else if ( pTransport->IsIdle() && ( pArtillery->IsInTankPit() || diff < SConsts::TILE_SIZE * 3 ) )
+					{
+						eState = TTGS_START_APPROACH_BY_CHEAT_PATH;
+					}
+					else if ( pTransport->IsIdle() )
+					{
+						pTransport->SetGoForward( true );
+						InterruptBecauseOfPath();
+					}
 				}
- 				else if ( pTransport->IsIdle() && ( pArtillery->IsInTankPit() || diff < SConsts::TILE_SIZE * 3 ) )
-				{
+
+				break;
+			case TTGS_WAIT_FOR_LEAVE_TANKPIT:
+				if ( !pArtillery->IsInTankPit() )
+					eState = TTGS_APPROACHING;
+				else if ( pArtillery->GetState()->GetName() != EUSN_LEAVE_SELF_ENTRENCH )
 					eState = TTGS_START_APPROACH_BY_CHEAT_PATH;
-				}
-				else if ( pTransport->IsIdle() )
-				{
-					pTransport->SetGoForward( true );
-					InterruptBecauseOfPath();
-				}
-			}
 
-			break;
-		case TTGS_WAIT_FOR_LEAVE_TANKPIT:
-			if ( !pArtillery->IsInTankPit() )
-				eState = TTGS_APPROACHING;
-			else if ( pArtillery->GetState()->GetName() != EUSN_LEAVE_SELF_ENTRENCH )
-				eState = TTGS_START_APPROACH_BY_CHEAT_PATH;
-
-			break;
-		case TTGS_START_APPROACH_BY_CHEAT_PATH:
+				break;
+			case TTGS_START_APPROACH_BY_CHEAT_PATH:
 			{
 				if ( pArtillery->IsInTankPit() )
 				{
-					theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_LEAVE_SELF_ENTRENCH), pArtillery, false );
+					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery, false );
 					//theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF), pArtillery, false );
 					eState = TTGS_WAIT_FOR_LEAVE_TANKPIT;
 				}
 				else
 				{
 					const float dist2 = fabs( pArtillery->GetCenterPlain() - pArtillery->GetHookPoint() ) +
-															fabs( pTransport->GetCenterPlain() - pTransport->GetHookPoint() );
+					                    fabs( pTransport->GetCenterPlain() - pTransport->GetHookPoint() );
 
 					// Approach the end carrying the authored towing point, with the truck's rear toward it.
-					const CVec2 vTowDir = pArtillery->IsForwardTowed() ? pArtillery->GetFrontDirectionVector() : -pArtillery->GetFrontDirectionVector();
+					const CVec2 vTowDir = pArtillery->IsForwardTowed() ? pArtillery->GetFrontDirectionVector()
+					                                                   : -pArtillery->GetFrontDirectionVector();
 					CVec2 vDestPoint( pArtillery->GetCenterPlain() + vTowDir * dist2 );
 
 					pTransport->SetGoForward( false );
@@ -1000,7 +995,8 @@ void CTransportHookArtilleryState::Segment()
 					if ( pPath && pTransport->SendAlongPath( pPath, VNULL2, true ) )
 					{
 						// Wrap the initialized approach; constructing a static path alone never starts it.
-						pTransport->SetSmoothPath( new CPresizePath( pTransport, vDestPoint, vTowDir, pTransport->GetSmoothPath() ) );
+						pTransport->SetSmoothPath(
+								new CPresizePath( pTransport, vDestPoint, vTowDir, pTransport->GetSmoothPath() ) );
 						eState = TTGS_APPROACH_BY_CHEAT_PATH;
 					}
 					else
@@ -1011,51 +1007,51 @@ void CTransportHookArtilleryState::Segment()
 				}
 			}
 			break;
-		case TTGS_APPROACH_BY_CHEAT_PATH:
-			// Use the final hookup tolerance: the crew radius can stop this path too early forever.
-			if ( fabs( pTransport->GetHookPoint() - pArtillery->GetHookPoint() ) <= SConsts::TILE_SIZE )
-			{
-				pTransport->RestoreSmoothPath();
-				///eState = TTGS_APPROACHING;
-				eState = TTGS_START_UNINSTALL;
-				bRepeat = true;
-			}
-			else if ( pTransport->GetSmoothPath()->IsFinished() )
-			{
-				pTransport->RestoreSmoothPath();
-				eState = TTGS_APPROACHING;
-				bRepeat = true;
-			}
+			case TTGS_APPROACH_BY_CHEAT_PATH:
+				// Use the final hookup tolerance: the crew radius can stop this path too early forever.
+				if ( fabs( pTransport->GetHookPoint() - pArtillery->GetHookPoint() ) <= SConsts::TILE_SIZE )
+				{
+					pTransport->RestoreSmoothPath();
+					///eState = TTGS_APPROACHING;
+					eState = TTGS_START_UNINSTALL;
+					bRepeat = true;
+				}
+				else if ( pTransport->GetSmoothPath()->IsFinished() )
+				{
+					pTransport->RestoreSmoothPath();
+					eState = TTGS_APPROACHING;
+					bRepeat = true;
+				}
 
-			break;
-		case TTGS_START_UNINSTALL:
-			pTransport->Stop();
-			pArtillery->GetState()->TryInterruptState( 0 );
-			theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_UNINSTALL), pArtillery, false );
-			theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_IDLE), pArtillery, true );
-			//theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_BEING_TOWED, pTransport ), pArtillery, false );
-			eState = TTGS_WAIT_FOR_UNINSTALL;
+				break;
+			case TTGS_START_UNINSTALL:
+				pTransport->Stop();
+				pArtillery->GetState()->TryInterruptState( 0 );
+				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_UNINSTALL ), pArtillery, false );
+				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_IDLE ), pArtillery, true );
+				//theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_BEING_TOWED, pTransport ), pArtillery, false );
+				eState = TTGS_WAIT_FOR_UNINSTALL;
 
-			break;
-		case TTGS_WAIT_FOR_UNINSTALL:
-			if ( !pArtillery->HasServeCrew() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
-			{
-				//not possible, cannot take nither other player's artillery nor free artillery
-				pArtillery->SetBeingHooked( 0 );
-				pTransport->SetCommandFinished();
-			}
-			else if ( pArtillery->IsUninstalled() &&
-								pArtillery->GetCurUninstallAction() == ACTION_NOTIFY_UNINSTALL_TRANSPORT )
-			{
+				break;
+			case TTGS_WAIT_FOR_UNINSTALL:
+				if ( !pArtillery->HasServeCrew() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
+				{
+					//not possible, cannot take nither other player's artillery nor free artillery
+					pArtillery->SetBeingHooked( 0 );
+					pTransport->SetCommandFinished();
+				}
+				else if ( pArtillery->IsUninstalled() &&
+				          pArtillery->GetCurUninstallAction() == ACTION_NOTIFY_UNINSTALL_TRANSPORT )
+				{
 					// повернуть пушку к грузовичку
-				pTransport->SetGoForward( true );
-				eState = TTGS_WAIT_FOR_TURN;
-				timeLast = curTime;
-				wDesiredTransportDir = GetDirectionByVector( pTransport->GetCenterPlain() - pArtillery->GetCenterPlain() );
-			}
+					pTransport->SetGoForward( true );
+					eState = TTGS_WAIT_FOR_TURN;
+					timeLast = curTime;
+					wDesiredTransportDir = GetDirectionByVector( pTransport->GetCenterPlain() - pArtillery->GetCenterPlain() );
+				}
 
-			break;
-		case TTGS_WAIT_FOR_TURN:
+				break;
+			case TTGS_WAIT_FOR_TURN:
 			{
 				CFormation *pArtCrew = pArtillery->GetCrew();
 				if ( !IsValidObj( pArtCrew ) || !pArtCrew->IsFree() || pArtillery->GetPlayer() != pTransport->GetPlayer() )
@@ -1069,7 +1065,8 @@ void CTransportHookArtilleryState::Segment()
 					const bool trTurn = pTransport->TurnToDirection( wDesiredTransportDir, false, true );
 					// Front-towed artillery faces the truck; keep the legacy rear-towing angle otherwise.
 					// Convert before the conditional arithmetic: SAIAngle and int convert both ways.
-					const uint16_t wArtilleryDir = static_cast<int>( wDesiredTransportDir ) - ( pArtillery->IsForwardTowed() ? 0 : 65535/2 );
+					const uint16_t wArtilleryDir =
+							static_cast<int>( wDesiredTransportDir ) - ( pArtillery->IsForwardTowed() ? 0 : 65535 / 2 );
 					const bool arTurn = pArtillery->TurnToDirection( wArtilleryDir, false, true );
 
 					if ( trTurn && arTurn )
@@ -1085,7 +1082,8 @@ void CTransportHookArtilleryState::Segment()
 							pTransport->SetTowedArtillery( pArtillery );
 							pTransport->SetTowedArtilleryCrew( pArtCrew );
 							pArtillery->SetBeingHooked( 0 );
-							theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_BEING_TOWED, pTransport->GetUniqueId() ), pArtillery, false );
+							theGroupLogic.UnitCommand(
+									SAIUnitCmd( ACTION_MOVE_BEING_TOWED, pTransport->GetUniqueId() ), pArtillery, false );
 						}
 						else
 						{
@@ -1093,7 +1091,8 @@ void CTransportHookArtilleryState::Segment()
 							pTransport->SetTowedArtillery( pArtillery );
 							pTransport->SetTowedArtilleryCrew( pArtCrew );
 							pArtillery->SetBeingHooked( 0 );
-							theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_BEING_TOWED, pTransport->GetUniqueId() ), pArtillery, false );
+							theGroupLogic.UnitCommand(
+									SAIUnitCmd( ACTION_MOVE_BEING_TOWED, pTransport->GetUniqueId() ), pArtillery, false );
 						}
 					}
 					else
@@ -1102,23 +1101,24 @@ void CTransportHookArtilleryState::Segment()
 			}
 
 			break;
-		case TTGS_SEND_CREW_TO_TRANSPORT:
-			if ( EUSN_BEING_TOWED == pArtillery->GetState()->GetName() )
-			{
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_ENTER_TRANSPORT_CHEAT_PATH, pTransport->GetUniqueId() ), pTransport->GetTowedArtilleryCrew(), false );
-				eState = TTGS_WAIT_FOR_CREW;
-			}
+			case TTGS_SEND_CREW_TO_TRANSPORT:
+				if ( EUSN_BEING_TOWED == pArtillery->GetState()->GetName() )
+				{
+					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_ENTER_TRANSPORT_CHEAT_PATH, pTransport->GetUniqueId() ),
+					                           pTransport->GetTowedArtilleryCrew(),
+					                           false );
+					eState = TTGS_WAIT_FOR_CREW;
+				}
 
-			break;
-		case TTGS_WAIT_FOR_CREW:
-			if ( !pTransport->HasTowedArtilleryCrew() ||
-						pTransport->GetTowedArtilleryCrew()->IsEveryUnitInTransport() )
-			{
-				pArtillery->SetBeingHooked( 0 );
-				pTransport->SetCommandFinished();
-			}
+				break;
+			case TTGS_WAIT_FOR_CREW:
+				if ( !pTransport->HasTowedArtilleryCrew() || pTransport->GetTowedArtilleryCrew()->IsEveryUnitInTransport() )
+				{
+					pArtillery->SetBeingHooked( 0 );
+					pTransport->SetCommandFinished();
+				}
 
-			break;
+				break;
 		}
 	}
 }
@@ -1134,18 +1134,19 @@ ETryStateInterruptResult CTransportHookArtilleryState::TryInterruptState( class 
 	}
 
 	// не по смерти разрещается прерывать только если не начали крутить пушку
-	if ( !pTransport->IsAlive () )
+	if ( !pTransport->IsAlive() )
 	{
-		theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_STOP_THIS_ACTION), pArtillery, false );
+		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP_THIS_ACTION ), pArtillery, false );
 		if ( pArtillery->HasServeCrew() )
 		{
- 			theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_STOP_THIS_ACTION), pArtillery->GetCrew(), false );
-			theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_CATCH_ARTILLERY, pArtillery->GetUniqueId()), pArtillery->GetCrew(), false );
+			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP_THIS_ACTION ), pArtillery->GetCrew(), false );
+			theGroupLogic.UnitCommand(
+					SAIUnitCmd( ACTION_COMMAND_CATCH_ARTILLERY, pArtillery->GetUniqueId() ), pArtillery->GetCrew(), false );
 		}
 		pTransport->SetCommandFinished();
 		bInterrupted = true;
 		pArtillery->SetBeingHooked( 0 );
-		return TSIR_YES_IMMIDIATELY ;
+		return TSIR_YES_IMMIDIATELY;
 	}
 	else if ( CanInterrupt() && !bInterrupted )
 	{
@@ -1153,12 +1154,12 @@ ETryStateInterruptResult CTransportHookArtilleryState::TryInterruptState( class 
 		pTransport->SetGoForward( true );
 		bInterrupted = true;
 		pArtillery->SetBeingHooked( 0 );
-		return TSIR_YES_IMMIDIATELY ;
+		return TSIR_YES_IMMIDIATELY;
 	}
 	else
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 
-//	return TSIR_YES_WAIT;
+	//	return TSIR_YES_WAIT;
 }
 
 const CVec2 CTransportHookArtilleryState::GetPurposePoint() const
@@ -1170,27 +1171,32 @@ const CVec2 CTransportHookArtilleryState::GetPurposePoint() const
 //*											CTransportUnhookArtilleryState							*
 //*******************************************************************
 
-IUnitState* CTransportUnhookArtilleryState::Instance( CAITransportUnit *pTransport, const CVec2 &vDestPoint, const bool _bNow )
+IUnitState *
+CTransportUnhookArtilleryState::Instance( CAITransportUnit *pTransport, const CVec2 &vDestPoint, const bool _bNow )
 {
 	return new CTransportUnhookArtilleryState( pTransport, vDestPoint, _bNow );
 }
 
-CTransportUnhookArtilleryState::CTransportUnhookArtilleryState ( CAITransportUnit *_pTransport, const CVec2 &_vDestPoint, const bool _bNow )
-: CStatusUpdatesHelper( EUS_DEPLOY_ARTILLERY, _pTransport ), pTransport( _pTransport ), eState( TUAS_START_APPROACH ),	vDestPoint( _vDestPoint ), bInterrupted( false ), nAttempt( 0 ), bNow( _bNow )
+CTransportUnhookArtilleryState::CTransportUnhookArtilleryState( CAITransportUnit *_pTransport,
+                                                                const CVec2 &_vDestPoint,
+                                                                const bool _bNow )
+		: CStatusUpdatesHelper( EUS_DEPLOY_ARTILLERY, _pTransport ), pTransport( _pTransport ),
+			eState( TUAS_START_APPROACH ), vDestPoint( _vDestPoint ), bInterrupted( false ), nAttempt( 0 ), bNow( _bNow )
 {
-	NI_ASSERT( pTransport->IsTowing(), "wrong towed artillery");
+	NI_ASSERT( pTransport->IsTowing(), "wrong towed artillery" );
 	// if clicked near current transport position, then unload now
-	CArtillery * pArt = pTransport->GetTowedArtillery();
+	CArtillery *pArt = pTransport->GetTowedArtillery();
 	if ( !IsValidObj( pArt ) )
 		return;
-	const float fDist = 2.0f * ( pTransport->GetBoundTileRadius() * SConsts::TILE_SIZE + pArt->GetBoundTileRadius() * SConsts::TILE_SIZE );
-	if ( fabs( vDestPoint - (pTransport->GetCenterPlain() + pArt->GetCenterPlain()) / 2.0f ) < fDist )
+	const float fDist = 2.0f * ( pTransport->GetBoundTileRadius() * SConsts::TILE_SIZE +
+	                             pArt->GetBoundTileRadius() * SConsts::TILE_SIZE );
+	if ( fabs( vDestPoint - ( pTransport->GetCenterPlain() + pArt->GetCenterPlain() ) / 2.0f ) < fDist )
 	{
 		bNow = true;
 	}
 }
 
-bool CTransportUnhookArtilleryState::CanPlaceUnit( const class CAIUnit * pUnit ) const
+bool CTransportUnhookArtilleryState::CanPlaceUnit( const class CAIUnit *pUnit ) const
 {
 	pTransport->UnlockTiles();
 	SRect rect( pUnit->GetUnitRect() );
@@ -1198,9 +1204,9 @@ bool CTransportUnhookArtilleryState::CanPlaceUnit( const class CAIUnit * pUnit )
 
 	std::list<SVector> tiles;
 	GetAIMap()->GetTilesCoveredByRect( rect, &tiles );
-	for ( std::list<SVector>::iterator i = tiles.begin(); i !=tiles.end(); ++i )
+	for ( std::list<SVector>::iterator i = tiles.begin(); i != tiles.end(); ++i )
 	{
-		if ( GetTerrain()->IsLocked( (*i), aiClass ) )
+		if ( GetTerrain()->IsLocked( ( *i ), aiClass ) )
 			return false;
 	}
 	//return theStaticMap.CanUnitGoToPoint( pUnit->GetBoundTileRadius(), pUnit->GetCenter(), )
@@ -1219,7 +1225,7 @@ void CTransportUnhookArtilleryState::Segment()
 
 	switch ( eState )
 	{
-	case TUAS_START_APPROACH:
+		case TUAS_START_APPROACH:
 		{
 			if ( bNow )
 			{
@@ -1248,28 +1254,28 @@ void CTransportUnhookArtilleryState::Segment()
 		}
 
 		break;
-	case TUAS_APPROACHING:
-		if ( IsUnitNearPoint( pTransport, vDestPoint, SConsts::TILE_SIZE ) ||
-				 pTransport->IsIdle() && IsUnitNearPoint( pTransport, vDestPoint, 6 * SConsts::TILE_SIZE ) )
-		{
-			const SMechUnitRPGStats *pArtStats = checked_cast<const SMechUnitRPGStats *>(pArt->GetStats());
-			const SMechUnitRPGStats *pTranspStats = checked_cast<const SMechUnitRPGStats *>(pTransport->GetStats());
-			float fLenght = pArtStats->vAABBHalfSize.y + pTranspStats->vAABBHalfSize.y;
-			CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vDestPoint+pTransport->GetDirectionVector()*fLenght,
-																												 VNULL2, pTransport, true, GetAIMap() );
-			if ( pPath )
+		case TUAS_APPROACHING:
+			if ( IsUnitNearPoint( pTransport, vDestPoint, SConsts::TILE_SIZE ) ||
+			     pTransport->IsIdle() && IsUnitNearPoint( pTransport, vDestPoint, 6 * SConsts::TILE_SIZE ) )
 			{
-				pTransport->SendAlongPath( pPath, VNULL2, true );
-				eState = TUAS_MOVE_ARTILLERY_TO_THIS_POINT;
+				const SMechUnitRPGStats *pArtStats = checked_cast<const SMechUnitRPGStats *>( pArt->GetStats() );
+				const SMechUnitRPGStats *pTranspStats = checked_cast<const SMechUnitRPGStats *>( pTransport->GetStats() );
+				float fLenght = pArtStats->vAABBHalfSize.y + pTranspStats->vAABBHalfSize.y;
+				CPtr<IStaticPath> pPath = CreateStaticPathToPoint(
+						vDestPoint + pTransport->GetDirectionVector() * fLenght, VNULL2, pTransport, true, GetAIMap() );
+				if ( pPath )
+				{
+					pTransport->SendAlongPath( pPath, VNULL2, true );
+					eState = TUAS_MOVE_ARTILLERY_TO_THIS_POINT;
+				}
+				else
+					eState = TUAS_ESTIMATING;
 			}
-			else
-				eState = TUAS_ESTIMATING;
-		}
-		else if ( pTransport->IsIdle() )
-			TryInterruptState( 0 );
+			else if ( pTransport->IsIdle() )
+				TryInterruptState( 0 );
 
-		break;
-	case TUAS_ESTIMATING:
+			break;
+		case TUAS_ESTIMATING:
 		{
 			nAttempt++;
 			pTransport->UnlockTiles();
@@ -1285,51 +1291,51 @@ void CTransportUnhookArtilleryState::Segment()
 		}
 
 		break;
-	case TUAS_MOVE_ARTILLERY_TO_THIS_POINT:
-		if ( pTransport->IsIdle() )
-			eState = TUAS_ESTIMATING;
+		case TUAS_MOVE_ARTILLERY_TO_THIS_POINT:
+			if ( pTransport->IsIdle() )
+				eState = TUAS_ESTIMATING;
 
-		break;
-	case TUAS_ADVANCE_A_LITTLE:
-		if ( nAttempt > SConsts::TRIES_TO_UNHOOK_ARTILLERY )
-		{
-			pTransport->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
-			TryInterruptState( 0 );
-		}
-		else
-		{
-			const SMechUnitRPGStats *pArtStats = checked_cast<const SMechUnitRPGStats *>(pArt->GetStats());
-			const SMechUnitRPGStats *pTranspStats = checked_cast<const SMechUnitRPGStats *>(pTransport->GetStats());
-			float fLenght = pArtStats->vAABBHalfSize.y + pTranspStats->vAABBHalfSize.y;
-			CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vDestPoint+pTransport->GetDirectionVector()*fLenght,
-																												 VNULL2, pTransport, true, GetAIMap() );
-			if ( pPath )
+			break;
+		case TUAS_ADVANCE_A_LITTLE:
+			if ( nAttempt > SConsts::TRIES_TO_UNHOOK_ARTILLERY )
 			{
-				pTransport->SendAlongPath( pPath, VNULL2, true );
-				eState = TUAS_MOVE_A_LITTLE;
+				pTransport->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
+				TryInterruptState( 0 );
 			}
 			else
-				eState = TUAS_ESTIMATING;
-		}
+			{
+				const SMechUnitRPGStats *pArtStats = checked_cast<const SMechUnitRPGStats *>( pArt->GetStats() );
+				const SMechUnitRPGStats *pTranspStats = checked_cast<const SMechUnitRPGStats *>( pTransport->GetStats() );
+				float fLenght = pArtStats->vAABBHalfSize.y + pTranspStats->vAABBHalfSize.y;
+				CPtr<IStaticPath> pPath = CreateStaticPathToPoint(
+						vDestPoint + pTransport->GetDirectionVector() * fLenght, VNULL2, pTransport, true, GetAIMap() );
+				if ( pPath )
+				{
+					pTransport->SendAlongPath( pPath, VNULL2, true );
+					eState = TUAS_MOVE_A_LITTLE;
+				}
+				else
+					eState = TUAS_ESTIMATING;
+			}
 
-		break;
-	case TUAS_MOVE_A_LITTLE:
-		pTransport->UnlockTiles();
-		pTransport->GetTowedArtillery()->UnlockTiles();
-		if ( CanPlaceUnit( pTransport->GetTowedArtillery() ) )
-		{
-			pTransport->Stop();
-			eState = TUAS_START_UNHOOK;
-			pArt->LockTiles();
-		}
-		else if ( pTransport->IsIdle() )
-		{
-			nAttempt++;
-			eState = TUAS_ADVANCE_A_LITTLE;
-		}
+			break;
+		case TUAS_MOVE_A_LITTLE:
+			pTransport->UnlockTiles();
+			pTransport->GetTowedArtillery()->UnlockTiles();
+			if ( CanPlaceUnit( pTransport->GetTowedArtillery() ) )
+			{
+				pTransport->Stop();
+				eState = TUAS_START_UNHOOK;
+				pArt->LockTiles();
+			}
+			else if ( pTransport->IsIdle() )
+			{
+				nAttempt++;
+				eState = TUAS_ADVANCE_A_LITTLE;
+			}
 
-		break;
-	case TUAS_START_UNHOOK:
+			break;
+		case TUAS_START_UNHOOK:
 		{
 			CArtillery *pArt = pTransport->GetTowedArtillery();
 
@@ -1352,7 +1358,7 @@ void CTransportUnhookArtilleryState::Segment()
 
 				for ( int i = 0; i < pCrew->Size(); ++i )
 				{
-					pSold = (*pCrew)[i];
+					pSold = ( *pCrew )[i];
 					pTransport->DelPassenger( pSold );
 					pSold->SetFree();
 					pSold->GetState()->TryInterruptState( 0 );
@@ -1375,7 +1381,6 @@ void CTransportUnhookArtilleryState::Segment()
 		}
 
 		break;
-
 	}
 }
 
@@ -1390,20 +1395,24 @@ ETryStateInterruptResult CTransportUnhookArtilleryState::TryInterruptState( clas
 //*										  CMoveToPointNotPresize											*
 //*******************************************************************
 
-IUnitState* CMoveToPointNotPresize::Instance( class CAIUnit *_pTransport, const CVec2 &_vGeneralCell, const float _fRadius )
+IUnitState *
+CMoveToPointNotPresize::Instance( class CAIUnit *_pTransport, const CVec2 &_vGeneralCell, const float _fRadius )
 {
 	return new CMoveToPointNotPresize( _pTransport, _vGeneralCell, _fRadius );
 }
 
-CMoveToPointNotPresize::CMoveToPointNotPresize( class CAIUnit *_pTransport, const CVec2 &vGeneralCell, const float _fRadius )
-: vPurposePoint( vGeneralCell ), fRadius( _fRadius ), pTransport( _pTransport )
+CMoveToPointNotPresize::CMoveToPointNotPresize( class CAIUnit *_pTransport,
+                                                const CVec2 &vGeneralCell,
+                                                const float _fRadius )
+		: vPurposePoint( vGeneralCell ), fRadius( _fRadius ), pTransport( _pTransport )
 {
 	SendToPurposePoint();
 }
 
 void CMoveToPointNotPresize::SendToPurposePoint()
 {
-	CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vPurposePoint, pTransport->GetGroupShift(), pTransport, true, GetAIMap() );
+	CPtr<IStaticPath> pPath =
+			CreateStaticPathToPoint( vPurposePoint, pTransport->GetGroupShift(), pTransport, true, GetAIMap() );
 	if ( pPath )
 		pTransport->SendAlongPath( pPath, pTransport->GetGroupShift(), false );
 }
@@ -1436,16 +1445,16 @@ ETryStateInterruptResult CMoveToPointNotPresize::TryInterruptState( class CAICom
 //*										  CTransportWaitForUnload											*
 //*******************************************************************
 
-IUnitState* CTransportWaitForUnload::Instance( class CAIUnit *_pTransport, const CVec2 &vTarget )
+IUnitState *CTransportWaitForUnload::Instance( class CAIUnit *_pTransport, const CVec2 &vTarget )
 {
-	NI_VERIFY( dynamic_cast<CMilitaryCar*>( _pTransport ) != 0, "Wrong unit type", return 0 );
-	CMilitaryCar *pTransport = checked_cast<CMilitaryCar*>( _pTransport );
+	NI_VERIFY( dynamic_cast<CMilitaryCar *>( _pTransport ) != 0, "Wrong unit type", return 0 );
+	CMilitaryCar *pTransport = checked_cast<CMilitaryCar *>( _pTransport );
 
 	return new CTransportWaitForUnload( pTransport, vTarget );
 }
 
-CTransportWaitForUnload::CTransportWaitForUnload( class CMilitaryCar *_pTransport, const CVec2 &vTarget ) :
-pTransport( _pTransport ), vPurposePoint( vTarget )
+CTransportWaitForUnload::CTransportWaitForUnload( class CMilitaryCar *_pTransport, const CVec2 &vTarget )
+		: pTransport( _pTransport ), vPurposePoint( vTarget )
 {
 	pTransport->Stop();
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, "Transport unloading started" );
@@ -1462,7 +1471,7 @@ pTransport( _pTransport ), vPurposePoint( vTarget )
 	}
 
 	// Tell infantry to unload
-	std::map<int, bool> formations;	// use map instead of unorderd_map for better determinism
+	std::map<int, bool> formations; // use map instead of unorderd_map for better determinism
 	for ( int i = 0; i < pTransport->GetNPassengers(); ++i )
 	{
 		CSoldier *pPass = pTransport->GetPassenger( i );
@@ -1472,7 +1481,7 @@ pTransport( _pTransport ), vPurposePoint( vTarget )
 	}
 	for ( std::map<int, bool>::iterator it = formations.begin(); it != formations.end(); ++it )
 	{
-		CFormation *pPass = checked_cast<CFormation*>( CLinkObject::GetObjectByUniqueId( it->first ) );
+		CFormation *pPass = checked_cast<CFormation *>( CLinkObject::GetObjectByUniqueId( it->first ) );
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_UNLOAD, pTransport->GetUniqueId() ), pPass, false );
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, vPurposePoint ), pPass, true );
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vPurposePoint ), pPass, true );

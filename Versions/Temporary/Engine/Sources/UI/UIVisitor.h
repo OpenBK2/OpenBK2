@@ -4,18 +4,19 @@
 
 #include <cstdint>
 
-template<class T> class CPtrFuncBase;
+template <class T>
+class CPtrFuncBase;
 namespace NGfx
 {
-	class CTexture;
+class CTexture;
 }
 namespace NGScene
 {
-	class CFileTexture;
+class CFileTexture;
 }
 namespace NDb
 {
-	struct STexture;
+struct STexture;
 }
 
 struct IUIVisitor
@@ -25,6 +26,7 @@ struct IUIVisitor
 private:
 	CTRect<float> textClip = CTRect<float>( 0, 0, 0, 0 );
 	bool bTextClipApplied = false;
+
 public:
 	CTRect<float> GetTextClip( const CTRect<float> &box ) const
 	{
@@ -39,11 +41,20 @@ public:
 	virtual void SetLowerLevel() {}
 	virtual void SetUpperLevel() {}
 	//
-	virtual void VisitZClearRect( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow, float fZ=1.0f ) = 0;
-	virtual void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rect ) = 0;
-  virtual void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect,
-		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture ) = 0;
-	virtual void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects ) = 0;
+	virtual void VisitZClearRect( const CRectLayout &sLayout,
+	                              const CTPoint<float> &sPosition,
+	                              const CTRect<float> &sClipWindow,
+	                              float fZ = 1.0f ) = 0;
+	virtual void
+	VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rect ) = 0;
+	virtual void VisitUIRect( const NDb::STexture *pTexture,
+	                          const int nShadingEffect,
+	                          const CVec2 *pPos4,
+	                          const NGfx::SPixel8888 *pColors4,
+	                          const CTRect<float> &rectTexture ) = 0;
+	virtual void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture,
+	                                 const int nShadingEffect,
+	                                 const class CRectLayout &rects ) = 0;
 	virtual void VisitUIText( struct IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 	//virtual void VisitUIText( struct IGFXText *pText, const CTRect<float> &rcRect, const int nY, const uint32_t dwColor, const uint32_t dwFlags ) = 0;
 	//virtual void VisitStringW( const wstring &szString, const int nFont, const int nX, const int nY, const uint32_t dwColor = 0xFFFFFFFF ) = 0;
@@ -56,10 +67,11 @@ class CClipStore
 	IUIVisitor *pVisitor;
 	CTRect<float> previousTextClip;
 	bool bPreviousTextClipApplied;
+
 public:
-	CClipStore( IUIVisitor * _pVisitor, const CTRect<float> &rNewClip, bool bScrollViewport = false )
-		: pVisitor( _pVisitor ), previousTextClip( _pVisitor->textClip ),
-		bPreviousTextClipApplied( _pVisitor->bTextClipApplied )
+	CClipStore( IUIVisitor *_pVisitor, const CTRect<float> &rNewClip, bool bScrollViewport = false )
+			: pVisitor( _pVisitor ), previousTextClip( _pVisitor->textClip ),
+				bPreviousTextClipApplied( _pVisitor->bTextClipApplied )
 	{
 		if ( bScrollViewport )
 			pVisitor->bTextClipApplied = false;

@@ -5,12 +5,9 @@
 #include <cstdint>
 
 #define MAX_CHANGES 8192
-#define MASK (MAX_CHANGES - 1)
+#define MASK ( MAX_CHANGES - 1 )
 
-CUpdatableList::CUpdatableList()
-: dwVersion( 0 ), changes( MAX_CHANGES )
-{
-}
+CUpdatableList::CUpdatableList() : dwVersion( 0 ), changes( MAX_CHANGES ) {}
 
 void CUpdatableList::Add( const int nID )
 {
@@ -71,12 +68,12 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const uint32_t dwOldVers
 			const int nID = changes[dwNow].nID;
 			switch ( changes[dwNow].change )
 			{
-			case EC_ADDED:
-				added.insert( nID );
-				changed.erase( nID );
+				case EC_ADDED:
+					added.insert( nID );
+					changed.erase( nID );
 
-				break;
-			case EC_REMOVED:
+					break;
+				case EC_REMOVED:
 				{
 					std::unordered_set<int>::iterator iter = added.find( nID );
 					if ( iter == added.end() )
@@ -87,15 +84,15 @@ void CUpdatableList::GetUpdate( const int nNoIncludeID, const uint32_t dwOldVers
 					changed.erase( nID );
 				}
 				break;
-			case EC_CHANGED:
-				if ( added.find( nID ) == added.end() )
-					changed.insert( nID );
+				case EC_CHANGED:
+					if ( added.find( nID ) == added.end() )
+						changed.insert( nID );
 
-				break;
+					break;
 			}
 		}
 
-		dwNow = (dwNow + 1) & MASK;
+		dwNow = ( dwNow + 1 ) & MASK;
 	}
 
 	for ( std::unordered_set<int>::iterator iter = added.begin(); iter != added.end(); ++iter )

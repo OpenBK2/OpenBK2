@@ -13,14 +13,19 @@
 // the same system dialogs, owned by the frame pOwner belongs to.
 namespace NFileDialog
 {
-	// An existing file. rszFilter is in MFC's form, "Text (*.txt)|*.txt|All
-	// Files (*.*)|*.*||", which is also how the property descriptors write it.
-	// rszInitialDir may be empty. True, with the full path in *pszPath, on OK.
-	bool OpenFile( IWidget *pOwner, const std::string &rszTitle, const std::string &rszFilter,
-								 const std::string &rszInitialDir, std::string *pszPath );
+// An existing file. rszFilter is in MFC's form, "Text (*.txt)|*.txt|All
+// Files (*.*)|*.*||", which is also how the property descriptors write it.
+// rszInitialDir may be empty. True, with the full path in *pszPath, on OK.
+bool OpenFile( IWidget *pOwner,
+               const std::string &rszTitle,
+               const std::string &rszFilter,
+               const std::string &rszInitialDir,
+               std::string *pszPath );
 
-	// An existing folder. rszInitialDir may be empty. True, with the full path
-	// in *pszPath and no trailing separator, on OK.
-	bool ChooseFolder( IWidget *pOwner, const std::string &rszTitle, const std::string &rszInitialDir,
-										 std::string *pszPath );
+// An existing folder. rszInitialDir may be empty. True, with the full path
+// in *pszPath and no trailing separator, on OK.
+bool ChooseFolder( IWidget *pOwner,
+                   const std::string &rszTitle,
+                   const std::string &rszInitialDir,
+                   std::string *pszPath );
 }

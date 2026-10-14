@@ -10,8 +10,15 @@ class CAntiArtilleryManager
 	typedef std::set<int> CAntiArtilleries;
 	ZDATA
 	std::vector<CAntiArtilleries> antiArtilleries;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&antiArtilleries); return 0; }
+
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &antiArtilleries );
+		return 0;
+	}
 	static bool IsHeardForParty( CAntiArtillery *pAntiArt, const int nParty );
+
 public:
 	void Init();
 	void Clear();
@@ -28,14 +35,14 @@ public:
 		int nCurParty = {};
 		CAntiArtilleries::iterator curIter;
 
-		public:
-			CIterator( const int nParty );
+	public:
+		CIterator( const int nParty );
 
-			const CCircle operator*() const;
-			CAntiArtillery* GetAntiArtillery() const;
+		const CCircle operator*() const;
+		CAntiArtillery *GetAntiArtillery() const;
 
-			void Iterate();
-			bool IsFinished() const;
+		void Iterate();
+		bool IsFinished() const;
 	};
 
 	friend class CIterator;

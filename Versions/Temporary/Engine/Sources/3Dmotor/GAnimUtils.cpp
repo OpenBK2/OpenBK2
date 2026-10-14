@@ -12,15 +12,13 @@ void CAddBoneFilter::Recalc()
 {
 	pAnimation.Refresh();
 	const SSkeletonPose &pose = pAnimation->GetValue();
-	if ( nAddBone < 0 || nAddBone >= static_cast<int>(pose.worldPose.size()) )
+	if ( nAddBone < 0 || nAddBone >= static_cast<int>( pose.worldPose.size() ) )
 		return;
 	value.forward = pose.worldPose[nAddBone];
 	value.backward.HomogeneousInverse( value.forward );
 }
 
-CAddBoneFilter::~CAddBoneFilter()
-{
-}
+CAddBoneFilter::~CAddBoneFilter() {}
 
 }
 using namespace NAnimation;

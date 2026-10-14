@@ -4,9 +4,16 @@
 // so, look functions have to be members
 
 #ifdef _NSTL_HELP_DEBUG
-#define LOOK_INIT( a ) NHelpDebug::LookInit( (a) )
-#define LOOK_FUNC const char* Look() const { return NHelpDebug::Look( *this ); } \
-									value_type& LookIter( iterator *pIter ) { return *(*pIter); }
+#define LOOK_INIT( a ) NHelpDebug::LookInit( ( a ) )
+#define LOOK_FUNC                         \
+	const char *Look() const                \
+	{                                       \
+		return NHelpDebug::Look( *this );     \
+	}                                       \
+	value_type &LookIter( iterator *pIter ) \
+	{                                       \
+		return *( *pIter );                   \
+	}
 #else
 #define LOOK_INIT( a )
 #define LOOK_FUNC

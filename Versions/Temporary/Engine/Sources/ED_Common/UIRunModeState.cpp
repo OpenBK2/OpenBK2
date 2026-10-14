@@ -11,16 +11,14 @@
 #include "UIScene.h"
 #include "port/vkcodes.h"
 
-CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor, const std::string &rszTypeName, const CDBID &rDBID )
-	: pEditor( _pEditor ), szTypeName( rszTypeName ), dbid( rDBID )
+CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor,
+                                  const std::string &rszTypeName,
+                                  const CDBID &rDBID )
+		: pEditor( _pEditor ), szTypeName( rszTypeName ), dbid( rDBID )
 {
 }
 
-
-CUIRunModeState::~CUIRunModeState()
-{
-}
-
+CUIRunModeState::~CUIRunModeState() {}
 
 void CUIRunModeState::Enter()
 {
@@ -31,15 +29,12 @@ void CUIRunModeState::Enter()
 	// clear the scene
 	Singleton<IUIScene>()->Create();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_RUN_MODE, 15 );
-	CUIRunModeInterface * pInterface = new CUIRunModeInterface( szTypeName,
-																															dbid,
-																															pEditor->editorSettings.templateWindowDBID,
-																															pEditor->editorSettings.templateScreenDBID );
+	CUIRunModeInterface *pInterface = new CUIRunModeInterface(
+			szTypeName, dbid, pEditor->editorSettings.templateWindowDBID, pEditor->editorSettings.templateScreenDBID );
 	NMainLoop::Command( new CUIRunModeIC( pInterface ) );
 
 	CDefaultInputState::Enter();
 }
-
 
 void CUIRunModeState::Leave()
 {
@@ -51,16 +46,15 @@ void CUIRunModeState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_RUN_MODE, 0 );
 }
 
-
 void CUIRunModeState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	switch( nChar )
+	switch ( nChar )
 	{
-	case VK_TAB:
-		pEditor->PopRunModeState();
-		break;
-	default:
-		break;
+		case VK_TAB:
+			pEditor->PopRunModeState();
+			break;
+		default:
+			break;
 	}
 	CDefaultInputState::OnKeyDown( nChar, nRepCnt, nFlags );
 }

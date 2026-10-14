@@ -1,6 +1,6 @@
 #pragma once
 
-class ILoadingCounter: public CObjectBase
+class ILoadingCounter : public CObjectBase
 {
 public:
 	virtual void LeftToLoad( int nCount ) = 0;

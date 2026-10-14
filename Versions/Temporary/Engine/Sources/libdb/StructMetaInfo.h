@@ -12,115 +12,121 @@ namespace NDb
 namespace NMetaInfo
 {
 
-void ConstructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize );
-void DestructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize );
+	void ConstructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize );
+	void DestructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize );
 
-//! struct meta info, obtained from code! NOTE: Don't forget to add any new field to MakeDeepCopy functions here!
-struct SStructMetaInfo : public CObjectBase
-{
-	OBJECT_BASIC_METHODS( SStructMetaInfo );
-public:
-	struct SField
+	//! struct meta info, obtained from code! NOTE: Don't forget to add any new field to MakeDeepCopy functions here!
+	struct SStructMetaInfo : public CObjectBase
 	{
-		struct STypeSize
+		OBJECT_BASIC_METHODS( SStructMetaInfo );
+
+	public:
+		struct SField
 		{
-			uint32_t type : 8;
-			uint32_t size : 24;
+			struct STypeSize
+			{
+				uint32_t type : 8;
+				uint32_t size : 24;
+				//
+				STypeSize() : type( 0 ), size( 0 ) {}
+			};
 			//
-			STypeSize(): type(0), size(0) {}
+			int nShift;                       // binary field shift
+			STypeSize main;                   // main data type & size
+			STypeSize contained;              // contained data type & size
+			CObj<SStructMetaInfo> pContained; // in the case of array-of-structs, this field will contain struct descriptor
+			CPtr<NTypeDef::STypeDef>
+					pTypeDef; // link to type descriptor. this field will be filled during linking struct meta info with type definition
+#ifdef FAST_DEBUG
+			std::string szFieldName;
+#endif
+			//
+			typedef bool ( SField::*SetValue )( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			typedef bool ( SField::*GetValue )( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			SetValue pfnSetValue;
+			GetValue pfnGetValue;
+			//
+			SField() : nShift( 0x0000ffff ), pfnSetValue( 0 ), pfnGetValue( 0 ) {}
+			//
+			NTypeDef::ETypeType GetType() const { return NTypeDef::ETypeType( main.type ); }
+			int GetOwnValueIndex() const { return ( nShift & 0x80000000 ) != 0 ? uint32_t( nShift & 0x7fff0000 ) >> 16 : -1; }
+			int GetBinaryShift() const { return nShift & 0x0000ffff; }
+			//
+			void ConstructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const;
+			void DestructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const;
+			//
+			bool SetValueToStructInt( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToStructDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			//
+			bool GetValueFromStructInt( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromStructFloat( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromStructBool( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromStructString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromStructWString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromStructGUIDorBinary( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromStructEnum( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromStructDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			//
+			bool SetValueToOwnInt( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool SetValueToOwnDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			//
+			bool GetValueFromOwnInt( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnFloat( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnBool( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnWString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnGUID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnBinary( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnEnum( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			bool GetValueFromOwnDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			//
+			bool SetValueArraySize( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
+			bool GetValueArraySize( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
+			//
+			void MakeDeepCopy( SField *pRes ) const;
 		};
 		//
-		int nShift;													// binary field shift
-		STypeSize main;											// main data type & size
-		STypeSize contained;								// contained data type & size
-		CObj<SStructMetaInfo> pContained;		// in the case of array-of-structs, this field will contain struct descriptor
-		CPtr<NTypeDef::STypeDef> pTypeDef;	// link to type descriptor. this field will be filled during linking struct meta info with type definition
-#ifdef FAST_DEBUG
-		std::string szFieldName;
-#endif
+		typedef std::unordered_map<std::string, SField> CFieldsMap;
+		CFieldsMap fields;
+		SField singleField; // for simple arrays
+		int nStructSize;
+		int nNumOwnValues;
+		int nNumCodeValues;
+		const SArrayOperations *pArrayOperations = nullptr; // operations on the containing vector, for array elements
+		CPtr<NTypeDef::STypeStructBase> pStructTypeDef;
 		//
-		typedef bool (SField::*SetValue)( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		typedef bool (SField::*GetValue)( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		SetValue pfnSetValue;
-		GetValue pfnGetValue;
+		SStructMetaInfo() : nStructSize( 0 ), nNumOwnValues( 0 ), nNumCodeValues( 0 ) {}
 		//
-		SField(): nShift(0x0000ffff), pfnSetValue(0), pfnGetValue(0) {}
+		void AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType );
+		void AddField( const std::string &szName,
+		               int nShift,
+		               int nSize,
+		               NTypeDef::ETypeType eType,
+		               int nContainedSize,
+		               NTypeDef::ETypeType eContainedType );
+		// meta constructor/destructor
+		void ConstructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn );
+		void DestructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn );
 		//
-		NTypeDef::ETypeType GetType() const { return NTypeDef::ETypeType( main.type ); }
-		int GetOwnValueIndex() const { return (nShift & 0x80000000) != 0 ? uint32_t(nShift & 0x7fff0000) >> 16 : -1; }
-		int GetBinaryShift() const { return nShift & 0x0000ffff; }
+		void LinkWithTypeDef( const std::string &szAddName, NTypeDef::STypeStructBase *pType );
+		void LinkField( const std::string &szAddName, const std::string &szFieldName, NTypeDef::STypeDef *pType );
 		//
-		void ConstructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const;
-		void DestructBinary( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn ) const;
-		//
-		bool SetValueToStructInt( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToStructDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		//
-		bool GetValueFromStructInt( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromStructFloat( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromStructBool( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromStructString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromStructWString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromStructGUIDorBinary( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromStructEnum( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromStructDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		//
-		bool SetValueToOwnInt( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnFloat( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnBool( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnWString( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnGUID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnBinary( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnEnum( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool SetValueToOwnDBID( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		//
-		bool GetValueFromOwnInt( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnFloat( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnBool( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnWString( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnGUID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnBinary( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnEnum( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		bool GetValueFromOwnDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		//
-		bool SetValueArraySize( const CVariant &value, uint8_t *pThis, NBind::UValue *ownValues );
-		bool GetValueArraySize( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const;
-		//
-		void MakeDeepCopy( SField *pRes ) const;
+		void MakeDeepCopy( SStructMetaInfo *pRes ) const;
 	};
-	//
-	typedef std::unordered_map<std::string, SField> CFieldsMap;
-	CFieldsMap fields;
-	SField singleField;	// for simple arrays
-	int nStructSize;
-	int nNumOwnValues;
-	int nNumCodeValues;
-	const SArrayOperations *pArrayOperations = nullptr; // operations on the containing vector, for array elements
-	CPtr<NTypeDef::STypeStructBase> pStructTypeDef;
-	//
-	SStructMetaInfo(): nStructSize(0), nNumOwnValues(0), nNumCodeValues(0) {}
-	//
-	void AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType );
-	void AddField( const std::string &szName, int nShift, int nSize, NTypeDef::ETypeType eType,
-		             int nContainedSize, NTypeDef::ETypeType eContainedType );
-	// meta constructor/destructor
-	void ConstructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn );
-	void DestructStruct( uint8_t *pThis, NBind::UValue *values, bool bOnlyOwn );
-	//
-	void LinkWithTypeDef( const std::string &szAddName, NTypeDef::STypeStructBase *pType );
-	void LinkField( const std::string &szAddName, const std::string &szFieldName, NTypeDef::STypeDef *pType );
-	//
-	void MakeDeepCopy( SStructMetaInfo *pRes ) const;
-};
 
 }
 }

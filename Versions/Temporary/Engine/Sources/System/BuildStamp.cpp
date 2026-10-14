@@ -29,16 +29,15 @@ namespace NBuildStamp
 // 3Dmotor, Sound, UI and the editor libraries are deliberately absent: they are
 // presentation, and a replay recorded before a renderer change is still a valid
 // recording of the simulation.
-static const char *SIMULATION_MODULES[] =
-{
-	"AILogic",				// the simulation itself
-	"Common_RTS_AI",	// pathfinding, the AI map, checksums
-	"B2_M1_World",		// the world the simulation updates
-	"B2_M1_Terrain",	// terrain the simulation reads
-	"Stats_B2_M1",		// unit and weapon statistics, and the RPG stats
-	"GameX",					// the transceiver, the commands history, the replay itself
-	"System",					// the random generator, the savers, the checksum log
-	"Misc",						// shared arithmetic reached from the simulation
+static const char *SIMULATION_MODULES[] = {
+	"AILogic",       // the simulation itself
+	"Common_RTS_AI", // pathfinding, the AI map, checksums
+	"B2_M1_World",   // the world the simulation updates
+	"B2_M1_Terrain", // terrain the simulation reads
+	"Stats_B2_M1",   // unit and weapon statistics, and the RPG stats
+	"GameX",         // the transceiver, the commands history, the replay itself
+	"System",        // the random generator, the savers, the checksum log
+	"Misc",          // shared arithmetic reached from the simulation
 };
 
 // FNV-1a over each module's name and raw build id, which only has to separate
@@ -63,8 +62,8 @@ static std::string ToHex( const uint8_t *pBytes, const size_t nSize )
 	szResult.reserve( nSize * 2 );
 	for ( size_t i = 0; i < nSize; ++i )
 	{
-		szResult += szDigits[ pBytes[i] >> 4 ];
-		szResult += szDigits[ pBytes[i] & 0x0f ];
+		szResult += szDigits[pBytes[i] >> 4];
+		szResult += szDigits[pBytes[i] & 0x0f];
 	}
 	return szResult;
 }
@@ -92,7 +91,7 @@ static bool ReadModuleId( std::vector<uint8_t> *pResult, const char *pszModule )
 	if ( pNt->Signature != IMAGE_NT_SIGNATURE )
 		return false;
 
-	const IMAGE_DATA_DIRECTORY &dir = pNt->OptionalHeader.DataDirectory[ IMAGE_DIRECTORY_ENTRY_DEBUG ];
+	const IMAGE_DATA_DIRECTORY &dir = pNt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG];
 	if ( dir.VirtualAddress == 0 || dir.Size < sizeof( IMAGE_DEBUG_DIRECTORY ) )
 		return false;
 
@@ -148,9 +147,9 @@ static int OnPhdr( struct dl_phdr_info *pInfo, size_t nSize, void *pData )
 	if ( szBase.compare( 0, pSearch->szWanted.size(), pSearch->szWanted ) != 0 )
 		return 0;
 
-	for ( ElfW(Half) i = 0; i < pInfo->dlpi_phnum; ++i )
+	for ( ElfW( Half ) i = 0; i < pInfo->dlpi_phnum; ++i )
 	{
-		const ElfW(Phdr) &phdr = pInfo->dlpi_phdr[i];
+		const ElfW( Phdr ) &phdr = pInfo->dlpi_phdr[i];
 		if ( phdr.p_type != PT_NOTE )
 			continue;
 
@@ -159,15 +158,15 @@ static int OnPhdr( struct dl_phdr_info *pInfo, size_t nSize, void *pData )
 		// Notes are a chain of (header, name, descriptor), each of the two
 		// trailing parts padded to four bytes. NT_GNU_ABI_TAG shares the "GNU"
 		// owner name, so the type is what selects the right one.
-		while ( pNote + sizeof( ElfW(Nhdr) ) <= pEnd )
+		while ( pNote + sizeof( ElfW( Nhdr ) ) <= pEnd )
 		{
-			const ElfW(Nhdr) *pHdr = reinterpret_cast<const ElfW(Nhdr) *>( pNote );
-			const uint8_t *pName = pNote + sizeof( ElfW(Nhdr) );
+			const ElfW( Nhdr ) *pHdr = reinterpret_cast<const ElfW( Nhdr ) *>( pNote );
+			const uint8_t *pName = pNote + sizeof( ElfW( Nhdr ) );
 			const uint8_t *pDesc = pName + ( ( pHdr->n_namesz + 3 ) & ~3u );
 			if ( pDesc + pHdr->n_descsz > pEnd )
 				break;
-			if ( pHdr->n_type == NT_GNU_BUILD_ID && pHdr->n_namesz == 4 &&
-			     memcmp( pName, "GNU", 4 ) == 0 && pHdr->n_descsz > 0 )
+			if ( pHdr->n_type == NT_GNU_BUILD_ID && pHdr->n_namesz == 4 && memcmp( pName, "GNU", 4 ) == 0 &&
+			     pHdr->n_descsz > 0 )
 			{
 				pSearch->pResult->assign( pDesc, pDesc + pHdr->n_descsz );
 				pSearch->bFound = true;

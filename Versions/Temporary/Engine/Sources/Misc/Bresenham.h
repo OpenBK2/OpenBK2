@@ -9,29 +9,31 @@ class CBresenham2
 	int xlen = 0, ylen = 0, len = 0;
 	int xinc = 0, yinc = 0;
 	int xerr = 0, yerr = 0;
+
 public:
 	CBresenham2( int _x1, int _y1, int _x2, int _y2 )
-		: x1( _x1 ), y1( _y1 ), x2( _x2 ), y2( _y2 ),
-		xlen( abs(x2 - x1) + 1 ), ylen( abs(y2 - y1) + 1 ), len( (std::max)(xlen, ylen) ),
-		xinc( boost::math::sign(x2 - x1) ), yinc( boost::math::sign(y2 - y1) ),
-		xerr( 0 ), yerr( 0 ) {  }
-		//
-		void Next()
-		{
-			// x component
-			xerr += xlen;
-			if ( xerr >= len )
-				x1 += xinc, xerr -= len;
-			// y component
-			yerr += ylen;
-			if ( yerr >= len )
-				y1 += yinc, yerr -= len;
-		}
-		// check for line's end
-		bool IsEnd() const { return (x1 == x2) && (y1 == y2); }
-		// coords access
-		int GetX() const { return x1; }
-		int GetY() const { return y1; }
+			: x1( _x1 ), y1( _y1 ), x2( _x2 ), y2( _y2 ), xlen( abs( x2 - x1 ) + 1 ), ylen( abs( y2 - y1 ) + 1 ),
+				len( (std::max)( xlen, ylen ) ), xinc( boost::math::sign( x2 - x1 ) ), yinc( boost::math::sign( y2 - y1 ) ),
+				xerr( 0 ), yerr( 0 )
+	{
+	}
+	//
+	void Next()
+	{
+		// x component
+		xerr += xlen;
+		if ( xerr >= len )
+			x1 += xinc, xerr -= len;
+		// y component
+		yerr += ylen;
+		if ( yerr >= len )
+			y1 += yinc, yerr -= len;
+	}
+	// check for line's end
+	bool IsEnd() const { return ( x1 == x2 ) && ( y1 == y2 ); }
+	// coords access
+	int GetX() const { return x1; }
+	int GetY() const { return y1; }
 };
 template <class TFunctional>
 void MakeLine2( int x1, int y1, int x2, int y2, TFunctional &func )
@@ -88,7 +90,7 @@ class CBres
 
 public:
 	// для того, чтобы выдавал направления
-	void Init( const SVector &start, const SVector &finish)
+	void Init( const SVector &start, const SVector &finish )
 	{
 		xlen = finish.x - start.x;
 		ylen = finish.y - start.y;
@@ -97,7 +99,7 @@ public:
 	}
 
 	// для того, чтобы выдавал точки
-	void InitPointByDirection( const SVector& start, const SVector &direction )
+	void InitPointByDirection( const SVector &start, const SVector &direction )
 	{
 		dir = start;
 		xlen = direction.x;
@@ -107,7 +109,7 @@ public:
 	}
 
 	// для того, чтобы выдавал точки
-	void InitPoint( const SVector &start, const SVector &finish)
+	void InitPoint( const SVector &start, const SVector &finish )
 	{
 		dir = start;
 		xlen = finish.x - start.x;
@@ -143,5 +145,5 @@ public:
 			dir.y += yinc, yerr -= len;
 	}
 
-	const SVector& GetDirection() const { return dir; }
+	const SVector &GetDirection() const { return dir; }
 };

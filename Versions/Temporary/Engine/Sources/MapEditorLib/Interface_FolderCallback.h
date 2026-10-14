@@ -6,7 +6,10 @@
 // это значить, что объект на который ссылаются необходимо создавать позже
 struct IFolderCallback : public CObjectBase
 {
-	enum { tidTypeID = 0x140A7000 };
+	enum
+	{
+		tidTypeID = 0x140A7000
+	};
 
 	// lock and unlock objects for Remove (not for rename)
 	virtual void LockObjects( const SObjectSet &rObjectSet ) = 0;
@@ -24,11 +27,17 @@ struct IFolderCallback : public CObjectBase
 	// Создать объект в базе ( и в дереве )
 	virtual bool InsertObject( const std::string &rszObjectTypeName, const std::string &rszObjectName ) = 0;
 	// Скопировать объект
-	virtual bool CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource ) = 0;
+	virtual bool CopyObject( const std::string &rszObjectTypeName,
+	                         const std::string &rszDestination,
+	                         const std::string &rszSource ) = 0;
 	// Переименовать объект
-	virtual bool RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource ) = 0;
+	virtual bool RenameObject( const std::string &rszObjectTypeName,
+	                           const std::string &rszDestination,
+	                           const std::string &rszSource ) = 0;
 	// Удалить объект из базы ( и из дерева )
-	virtual bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, bool bRecursive ) = 0;
+	virtual bool
+	RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, bool bRecursive ) = 0;
 	// Установить свойство объекта
-	virtual bool SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor ) = 0;
+	virtual bool
+	SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor ) = 0;
 };

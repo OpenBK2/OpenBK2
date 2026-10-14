@@ -25,33 +25,40 @@
 // That is how this dialog has always behaved.
 namespace NReinfPointsTemplates
 {
-	// The typed templates of one reinforcement point: a list of type and
-	// template, with Add and Remove. True on OK, with *pTemplates holding what
-	// the list showed; on Cancel the caller's copy is left as it was.
-	bool Run( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
-						CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint );
+// The typed templates of one reinforcement point: a list of type and
+// template, with Add and Remove. True on OK, with *pTemplates holding what
+// the list showed; on Cancel the caller's copy is left as it was.
+bool Run( IWidget *pParent,
+          CReinfPointsState::CTypedTemplateType *pTemplates,
+          CMapInfoEditor *pMapInfoEditor,
+          int nPlayer,
+          int nReinfPoint );
 
+// The Add button: makes a node, asks the add dialog to fill it in, and takes
+// the node out again if that dialog is cancelled. True when a template was
+// added, which is when *pTemplates has grown by one and the list wants
+// rebuilding.
+bool Add( IWidget *pParent,
+          CReinfPointsState::CTypedTemplateType *pTemplates,
+          CMapInfoEditor *pMapInfoEditor,
+          int nPlayer,
+          int nReinfPoint );
 
-	// The Add button: makes a node, asks the add dialog to fill it in, and takes
-	// the node out again if that dialog is cancelled. True when a template was
-	// added, which is when *pTemplates has grown by one and the list wants
-	// rebuilding.
-	bool Add( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
-						CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint );
-
-	// The Remove button, after the user has confirmed it: takes the node out of
-	// the map and the template out of *pTemplates. Asking the question stays
-	// with the dialogs, because a message box is a toolkit's.
-	void Remove( CReinfPointsState::CTypedTemplateType *pTemplates,
-							 CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint, int nSelected );
+// The Remove button, after the user has confirmed it: takes the node out of
+// the map and the template out of *pTemplates. Asking the question stays
+// with the dialogs, because a message box is a toolkit's.
+void Remove( CReinfPointsState::CTypedTemplateType *pTemplates,
+             CMapInfoEditor *pMapInfoEditor,
+             int nPlayer,
+             int nReinfPoint,
+             int nSelected );
 }
-
 
 namespace NReinfPointsAddTemplate
 {
-	// Fills in one typed template node, named by its path in the map:
-	// its type, from the reinforcement type mnemonics, and its template, typed
-	// in or picked through the database link browser. Both are written through
-	// the manipulator on OK, and nothing is written on Cancel.
-	bool Run( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
+// Fills in one typed template node, named by its path in the map:
+// its type, from the reinforcement type mnemonics, and its template, typed
+// in or picked through the database link browser. Both are written through
+// the manipulator on OK, and nothing is written on Cancel.
+bool Run( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
 }

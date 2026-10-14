@@ -13,12 +13,11 @@
 
 REGISTER_EXPORTER_IN_DLL( SoundDesc, CSoundDescExporter )
 
-
-EXPORT_RESULT CSoundDescExporter::ExportObject( IManipulator* pManipulator,
-																			const std::string &rszObjectTypeName,
-																			const std::string &rszObjectName,
-																			bool bForce,
-																			EXPORT_TYPE exportType )
+EXPORT_RESULT CSoundDescExporter::ExportObject( IManipulator *pManipulator,
+                                                const std::string &rszObjectTypeName,
+                                                const std::string &rszObjectName,
+                                                bool bForce,
+                                                EXPORT_TYPE exportType )
 {
 	return ER_SUCCESS;
 	//
@@ -39,9 +38,11 @@ EXPORT_RESULT CSoundDescExporter::ExportObject( IManipulator* pManipulator,
 	//
 	ILogger *pLogger = NLog::GetLogger();
 	std::string szSoundPath;
-	if ( !CManipulatorManager::GetValue( &szSoundPath, pManipulator, "SoundPath" ) || szSoundPath.empty() || szSoundPath == " " )
+	if ( !CManipulatorManager::GetValue( &szSoundPath, pManipulator, "SoundPath" ) || szSoundPath.empty() ||
+	     szSoundPath == " " )
 	{
-		const std::string szError = fmt::format( "Can't get sound path or sound path empty for sound desc object \"{}\"\n", rszObjectName.c_str() );
+		const std::string szError =
+				fmt::format( "Can't get sound path or sound path empty for sound desc object \"{}\"\n", rszObjectName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
@@ -52,26 +53,26 @@ EXPORT_RESULT CSoundDescExporter::ExportObject( IManipulator* pManipulator,
 		return ER_FAIL;
 	}
 	const std::string szSourceFolder = pUserData->constUserData.szExportSourceFolder;
-	const std::string szDestinationFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION );
+	const std::string szDestinationFolder =
+			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION );
 	std::string szSource = szSourceFolder + szSoundPath;
 	std::string szDestination = szDestinationFolder + szSoundPath;
 	//
 	// check for source and destination times if not forced mode
-	if ( (szSource == szDestination) || CheckFilesUpdated( szSource, szDestination, bForce ) )
+	if ( ( szSource == szDestination ) || CheckFilesUpdated( szSource, szDestination, bForce ) )
 		return ER_SUCCESS;
 	//
 	std::error_code copyError;
 	if ( NFile::CopyFile( szSource, szDestination, &copyError ) == false )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Can't copy sound desc object\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tSound desc: {}\n", rszObjectName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSource.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tDestination file: {}\n", szDestination.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Can't copy sound desc object\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSound desc: {}\n", rszObjectName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSource file: {}\n", szSource.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tDestination file: {}\n", szDestination.c_str() ) );
 		// The copy's own reason. This used to be ::GetLastError(), which answers
 		// for the last Win32 call on this thread and so reported something
 		// unrelated: std::filesystem's error_code overloads set no last error.
-		pLogger->Log( LT_ERROR, fmt::format("\tReason: {} ({})\n",
-																				copyError.message(), copyError.value()) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tReason: {} ({})\n", copyError.message(), copyError.value() ) );
 		return ER_FAIL;
 	}
 	//

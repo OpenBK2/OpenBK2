@@ -13,42 +13,42 @@ int nID = 0;
 bool bConsoleUpdated = false;
 std::list<SConsoleLine> consoleLines;
 
-CLogStream csSystem( CONSOLE_STREAM_CONSOLE );	// Ответы на консольные комманды
-CLogStream csScript( CONSOLE_STREAM_CONSOLE );//CONSOLE_STREAM_SCRIPT );		// сообщения скрипта
+CLogStream csSystem( CONSOLE_STREAM_CONSOLE ); // Ответы на консольные комманды
+CLogStream csScript( CONSOLE_STREAM_CONSOLE ); //CONSOLE_STREAM_SCRIPT );		// сообщения скрипта
 // максимальное кол-во строк в консоле
 const int CONSOLE_MAX_SIZE = 256;
 
 // Console stream
 
-CLogStream& CLogStream::operator<< ( const bool &bVal )
+CLogStream &CLogStream::operator<<( const bool &bVal )
 {
 	bConsoleUpdated = true;
 	wsStreamBuffer += bVal ? L"<green>true<white>" : L"<red>false<white>";
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const std::size_t &nVal )
+CLogStream &CLogStream::operator<<( const std::size_t &nVal )
 {
 	bConsoleUpdated = true;
 	wsStreamBuffer += std::to_wstring( nVal );
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const int &nVal )
+CLogStream &CLogStream::operator<<( const int &nVal )
 {
 	bConsoleUpdated = true;
 	wsStreamBuffer += std::to_wstring( nVal );
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const long &lVal )
+CLogStream &CLogStream::operator<<( const long &lVal )
 {
 	bConsoleUpdated = true;
 	wsStreamBuffer += std::to_wstring( lVal );
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const double &dVal )
+CLogStream &CLogStream::operator<<( const double &dVal )
 {
 	bConsoleUpdated = true;
 	// {:g} is fmt's spelling of printf's %g; to_wstring would give %f, which
@@ -57,7 +57,7 @@ CLogStream& CLogStream::operator<< ( const double &dVal )
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const char* szText )
+CLogStream &CLogStream::operator<<( const char *szText )
 {
 	// same overrun as the two in Logger.cpp: wchar_t[1024] handed to
 	// MultiByteToWideChar as its own size, then indexed at the result
@@ -67,7 +67,7 @@ CLogStream& CLogStream::operator<< ( const char* szText )
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const wchar_t* szText )
+CLogStream &CLogStream::operator<<( const wchar_t *szText )
 {
 	bConsoleUpdated = true;
 
@@ -76,7 +76,7 @@ CLogStream& CLogStream::operator<< ( const wchar_t* szText )
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const std::wstring &szText )
+CLogStream &CLogStream::operator<<( const std::wstring &szText )
 {
 	bConsoleUpdated = true;
 	for ( int nTemp = 0; nTemp < szText.length(); nTemp++ )
@@ -84,12 +84,12 @@ CLogStream& CLogStream::operator<< ( const std::wstring &szText )
 		if ( szText[nTemp] == L'\n' )
 		{
 			nID++;
-//			AddConsoleLine( SConsoleLine( nID, eType, false, wsStreamBuffer ) );
+			//			AddConsoleLine( SConsoleLine( nID, eType, false, wsStreamBuffer ) );
 			DebugTrace( "%s", WideToUTF8( wsStreamBuffer ).c_str() );
 			Singleton<IConsoleBuffer>()->Write( nStream, wsStreamBuffer.c_str() );
 			wsStreamBuffer.clear();
 		}
-	/*
+		/*
 		else if ( szText[nTemp] == L'<' )
 			wsStreamBuffer.append( L"<lb>" );
 		else if ( szText[nTemp] == L'>' )
@@ -103,9 +103,9 @@ CLogStream& CLogStream::operator<< ( const std::wstring &szText )
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const EConsoleColor &eColor )
+CLogStream &CLogStream::operator<<( const EConsoleColor &eColor )
 {
-	switch( eColor )
+	switch ( eColor )
 	{
 		case CC_WHITE:
 			wsStreamBuffer.append( L"<color=white>" );
@@ -141,7 +141,7 @@ CLogStream& CLogStream::operator<< ( const EConsoleColor &eColor )
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( CLogStream& (*Func)( CLogStream& csStream ) )
+CLogStream &CLogStream::operator<<( CLogStream &( *Func )( CLogStream &csStream ) )
 {
 	return Func( *this );
 }

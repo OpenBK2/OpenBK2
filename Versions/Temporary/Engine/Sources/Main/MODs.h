@@ -10,7 +10,7 @@
 struct IXmlSaver;
 namespace NDb
 {
-	enum EDatabaseMode : int;
+enum EDatabaseMode : int;
 }
 namespace NMOD
 {
@@ -18,11 +18,18 @@ namespace NMOD
 struct SMOD
 {
 	ZDATA
-	std::wstring wszName;											// MOD short name
-	std::wstring wszDesc;											// MOD long description
-	NFile::CFilePath szFullFolderPath;		// full folder path to MOD
-	NFile::CFilePath szRelativePath;			// path, relative to MODs base
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&wszDesc); f.Add(4,&szFullFolderPath); f.Add(5,&szRelativePath); return 0; }
+	std::wstring wszName;              // MOD short name
+	std::wstring wszDesc;              // MOD long description
+	NFile::CFilePath szFullFolderPath; // full folder path to MOD
+	NFile::CFilePath szRelativePath;   // path, relative to MODs base
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &wszName );
+		f.Add( 3, &wszDesc );
+		f.Add( 4, &szFullFolderPath );
+		f.Add( 5, &szRelativePath );
+		return 0;
+	}
 };
 
 //! get list of all available mods

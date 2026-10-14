@@ -1,14 +1,14 @@
 #pragma once
 
-
 class CListControlSorterAlphabet : public IWindowSorter
 {
-	OBJECT_BASIC_METHODS(CListControlSorterAlphabet)
+	OBJECT_BASIC_METHODS( CListControlSorterAlphabet )
 
 	bool bAscending;
 	int nColumn;
+
 public:
-	CListControlSorterAlphabet() : bAscending ( true ) {  }
+	CListControlSorterAlphabet() : bAscending( true ) {}
 
 	int operator&( IBinSaver &saver )
 	{

@@ -14,7 +14,7 @@ struct ISound;
 
 class CWindowConsole : public CWindow, public IConsole
 {
-	OBJECT_BASIC_METHODS(CWindowConsole)
+	OBJECT_BASIC_METHODS( CWindowConsole )
 
 	CUIMORegConttainer impotantMsgs;
 
@@ -25,9 +25,15 @@ class CWindowConsole : public CWindow, public IConsole
 		std::wstring szString;
 		uint32_t dwColor;
 		CPtr<IML> pGfxText;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szString); f.Add(3,&dwColor); f.Add(4,&pGfxText); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &szString );
+			f.Add( 3, &dwColor );
+			f.Add( 4, &pGfxText );
+			return 0;
+		}
 
-		SColorString() : dwColor( 0xffffffff ) {  }
+		SColorString() : dwColor( 0xffffffff ) {}
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 	};
 
@@ -35,32 +41,49 @@ class CWindowConsole : public CWindow, public IConsole
 	typedef std::vector<SColorString> CVectorOfColorStrings;
 	typedef std::unordered_set<std::string> CConsoleFunctions;
 
-	ZDATA_ (CWindow)
+	ZDATA_( CWindow )
 	CDBPtr<NDb::SWindowConsoleShared> pShared;
 	CPtr<NDb::SWindowConsole> pInstance;
 	CPtr<IML> pUpperSign;
-	CVectorOfColorStrings vectorOfStrings;		//все строчки в консоли
-	CVectorOfStrings vectorOfCommands;				//выполненные команды в консоли, для выбора предыдущих команд по стрелочкам вверх/вниз
+	CVectorOfColorStrings vectorOfStrings; //все строчки в консоли
+	CVectorOfStrings
+			vectorOfCommands; //выполненные команды в консоли, для выбора предыдущих команд по стрелочкам вверх/вниз
 	CConsoleFunctions consoleFunctions;
 	CObj<CWindowEditLine> pEditLine;
 	int currTime;
-	int nBeginString;						//начальная отображаемая строка из списка строк. 0 считается самой свежей строчкой
-	int nBeginCommand;					//текущая команда из лога команд
+	int nBeginString;  //начальная отображаемая строка из списка строк. 0 считается самой свежей строчкой
+	int nBeginCommand; //текущая команда из лога команд
 	int nConsoleSequenceID;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pShared); f.Add(3,&pInstance); f.Add(4,&pUpperSign); f.Add(5,&vectorOfStrings); f.Add(6,&vectorOfCommands); f.Add(7,&consoleFunctions); f.Add(8,&pEditLine); f.Add(9,&currTime); f.Add(10,&nBeginString); f.Add(11,&nBeginCommand); f.Add(12,&nConsoleSequenceID); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CWindow *)this );
+		f.Add( 2, &pShared );
+		f.Add( 3, &pInstance );
+		f.Add( 4, &pUpperSign );
+		f.Add( 5, &vectorOfStrings );
+		f.Add( 6, &vectorOfCommands );
+		f.Add( 7, &consoleFunctions );
+		f.Add( 8, &pEditLine );
+		f.Add( 9, &currTime );
+		f.Add( 10, &nBeginString );
+		f.Add( 11, &nBeginCommand );
+		f.Add( 12, &nConsoleSequenceID );
+		return 0;
+	}
 
 	//это дело вызывается после считывания новой комманды из буфера
 	void ParseCommand( const std::wstring &szCommand );
 	void ReadConsoleStrings();
+
 protected:
-	virtual NDb::SWindow* GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance() { return pInstance; }
 
 public:
 	// The developer console stays at the GUI scale when moved between screens.
 	bool UsesHudFontScale() const override { return false; }
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 
-	CWindowConsole();// : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ) {  }
+	CWindowConsole(); // : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ) {  }
 	virtual void NotifyStateSequenceFinished();
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	virtual void SetParent( CWindow *_pParent );
@@ -99,8 +122,9 @@ class CDebugSingleton : public IDebugSingleton
 	void CreateDebugInfo();
 	void CreateConsole();
 	void CreateStatsWindow();
+
 public:
-	CDebugSingleton() : bDebugShown( false ) {  }
+	CDebugSingleton() : bDebugShown( false ) {}
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &pConsole );
@@ -109,10 +133,10 @@ public:
 		saver.Add( 4, &bDebugShown );
 		return 0;
 	}
-	struct IWindow * GetConsole();
-	struct IWindow * GetDebug();
-	struct IWindow * GetDebugInfoWindow( const int nWindow );
+	struct IWindow *GetConsole();
+	struct IWindow *GetDebug();
+	struct IWindow *GetDebugInfoWindow( const int nWindow );
 	void ShowDebugInfo( const bool bShow );
 	void ShowStatsWindow( const bool bShow );
-	struct IStatsSystemWindow * GetStatsWindow();
+	struct IStatsSystemWindow *GetStatsWindow();
 };

@@ -33,7 +33,7 @@ struct SFontInfo
 	}
 };
 
-static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFontInfo *pFontInfo )
+static void GetFontFormatInfo( const NGScene::SFont &sFont, int nMinSize, SFontInfo *pFontInfo )
 {
 	int nx, ny;
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->GetResolution( &nx, &ny );
@@ -65,7 +65,7 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 		return;
 
 	NI_VERIFY( pFont, fmt::format( "Font not found: {}", sSearch.szName ), return );
-	CDGPtr< CPtrFuncBase<CFontFormatInfo> > pInfo( pFont->GetFormatInfo() );
+	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pInfo( pFont->GetFormatInfo() );
 	pInfo.Refresh();
 	pFontInfo->pFont = pFont;
 	pFontInfo->pInfo = pInfo->GetValue();
@@ -73,7 +73,9 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 	// Runtime glyphs already contain both screen scales. Resizing their
 	// enlarged accent cells back to the requested line height shrinks the text.
 	const bool bRasterized = pFont->IsRasterized();
-	pFontInfo->scale.x = bRasterized ? 1.0f : (float)( sSearch.nWidth > 0 ? sSearch.nWidth : sSearch.nSize ) / pFontInfo->pInfo->GetLineSpace();
+	pFontInfo->scale.x =
+			bRasterized ? 1.0f
+									: (float)( sSearch.nWidth > 0 ? sSearch.nWidth : sSearch.nSize ) / pFontInfo->pInfo->GetLineSpace();
 	pFontInfo->scale.y = bRasterized ? 1.0f : (float)sSearch.nSize / pFontInfo->pInfo->GetLineSpace();
 }
 
@@ -99,9 +101,9 @@ void CMLStream::InsertString( const std::wstring &wsInsertText )
 
 // CMLTextObject
 
-class CMLTextObject: public IMLObject
+class CMLTextObject : public IMLObject
 {
-	OBJECT_BASIC_METHODS(CMLTextObject)
+	OBJECT_BASIC_METHODS( CMLTextObject )
 private:
 	int nStrSize;
 	int nStrStart;
@@ -114,44 +116,47 @@ private:
 	std::list<float> edges;
 	CRectLayout sNormal;
 	CRectLayout sOutline;
-	CObj<CPtrFuncBase<NGfx::CTexture> > pTexture;
+	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
 	CTRect<float> sInkBounds = CTRect<float>( 0, 0, 0, 0 );
 	CTRect<float> sLetterBounds = CTRect<float>( 0, 0, 0, 0 );
 
 public:
 	CMLTextObject() : sPosition( 0.0f, 0.0f ) {}
 	CMLTextObject( CMLStream *pStream, int nStart, int nSize );
-	CTRect<float> GetInkBounds( bool bIncludeOutline ) const override { return bIncludeOutline ? sInkBounds : sLetterBounds; }
+	CTRect<float> GetInkBounds( bool bIncludeOutline ) const override
+	{
+		return bIncludeOutline ? sInkBounds : sLetterBounds;
+	}
 
-	void Generate(  );
-	void DynamicGenerate(  const SReflowInfo &sInfo ) {}
+	void Generate();
+	void DynamicGenerate( const SReflowInfo &sInfo ) {}
 
-	const CTPoint<float>& GetSize() const;
+	const CTPoint<float> &GetSize() const;
 
-	const SState& GetState() const;
+	const SState &GetState() const;
 	void SetState( const SState &sState );
 
-	const CTPoint<float>& GetPosition() const;
+	const CTPoint<float> &GetPosition() const;
 	void SetPosition( const CTPoint<float> &sPosition );
 
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
 };
 
-IMLObject* CreateIMLTextObject( CMLStream *pStream, int nStart, int nSize )
+IMLObject *CreateIMLTextObject( CMLStream *pStream, int nStart, int nSize )
 {
 	return new CMLTextObject( pStream, nStart, nSize );
 }
 
-CMLTextObject::CMLTextObject( CMLStream *_pStream, int _nStart, int _nSize ):
-	pStream( _pStream ), nStrStart( _nStart ), nStrSize( _nSize ), sPosition( 0.0f, 0.0f )
+CMLTextObject::CMLTextObject( CMLStream *_pStream, int _nStart, int _nSize )
+		: pStream( _pStream ), nStrStart( _nStart ), nStrSize( _nSize ), sPosition( 0.0f, 0.0f )
 {
 	sSize = CTPoint<float>( 20, 20 );
 }
 
-void CMLTextObject::Generate(  )
+void CMLTextObject::Generate()
 {
 	sInkBounds.SetEmpty();
 	sLetterBounds.SetEmpty();
@@ -208,8 +213,10 @@ void CMLTextObject::Generate(  )
 			const CTRect<int> *pInk = sFontInfo.pInfo->GetInkBounds( wcChar );
 			if ( pInk && !pInk->IsEmpty() )
 			{
-				CTRect<float> ink( fX + pInk->x1 * sFontInfo.scale.x, pInk->y1 * sFontInfo.scale.y,
-					fX + pInk->x2 * sFontInfo.scale.x, pInk->y2 * sFontInfo.scale.y );
+				CTRect<float> ink( fX + pInk->x1 * sFontInfo.scale.x,
+				                   pInk->y1 * sFontInfo.scale.y,
+				                   fX + pInk->x2 * sFontInfo.scale.x,
+				                   pInk->y2 * sFontInfo.scale.y );
 				// forcefontsize deliberately leaves no room for a decorative
 				// border. Losing that border must not shrink otherwise readable
 				// headings, buttons or loading advice. Outline-only text still
@@ -226,7 +233,7 @@ void CMLTextObject::Generate(  )
 				}
 			}
 
- 			if ( sState.nOutlineBorder )
+			if ( sState.nOutlineBorder )
 			{
 				sOutline.AddRect( fX, +fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
 				sOutline.AddRect( fX, -fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
@@ -263,12 +270,12 @@ void CMLTextObject::Generate(  )
 	sSize.x = fX;
 }
 
-const CTPoint<float>& CMLTextObject::GetSize() const
+const CTPoint<float> &CMLTextObject::GetSize() const
 {
 	return sSize;
 }
 
-const SState& CMLTextObject::GetState() const
+const SState &CMLTextObject::GetState() const
 {
 	return sState;
 }
@@ -278,7 +285,7 @@ void CMLTextObject::SetState( const SState &_sState )
 	sState = _sState;
 }
 
-const CTPoint<float>& CMLTextObject::GetPosition() const
+const CTPoint<float> &CMLTextObject::GetPosition() const
 {
 	return sPosition;
 }
@@ -288,7 +295,9 @@ void CMLTextObject::SetPosition( const CTPoint<float> &_sPosition )
 	sPosition = _sPosition;
 }
 
-void CMLTextObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+void CMLTextObject::Render( std::list<CTRect<float>> *pRender,
+                            const CTPoint<float> &sGlobalPosition,
+                            const CTRect<float> &sWindow )
 {
 	CTPoint<float> sPos = sGlobalPosition + sPosition;
 
@@ -300,7 +309,9 @@ void CMLTextObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<fl
 	}
 }
 
-void CMLTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+void CMLTextObject::Render( NGScene::ILayoutFakeView *pView,
+                            const CTPoint<float> &sGlobalPosition,
+                            const CTRect<float> &sWindow )
 {
 	if ( !sOutline.rects.empty() )
 		pView->CreateDynamicRects( pTexture, sOutline, sGlobalPosition + sPosition, sWindow );
@@ -329,9 +340,9 @@ int CMLTextObject::operator&( IBinSaver &saver )
 
 // CMLImageObject
 
-class CMLImageObject: public IMLObject
+class CMLImageObject : public IMLObject
 {
-	OBJECT_BASIC_METHODS(CMLImageObject)
+	OBJECT_BASIC_METHODS( CMLImageObject )
 private:
 	int nBorder;
 	int nWidth;
@@ -349,34 +360,37 @@ public:
 	CMLImageObject() {}
 	CMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight );
 
-	void Generate(  );
-	void DynamicGenerate(  const SReflowInfo &sInfo ) {}
+	void Generate();
+	void DynamicGenerate( const SReflowInfo &sInfo ) {}
 
-	const CTPoint<float>& GetSize() const;
+	const CTPoint<float> &GetSize() const;
 
-	const SState& GetState() const;
+	const SState &GetState() const;
 	void SetState( const SState &sState );
 
-	const CTPoint<float>& GetPosition() const;
+	const CTPoint<float> &GetPosition() const;
 	void SetPosition( const CTPoint<float> &sPosition );
 
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
 };
 
-IMLObject* CreateIMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight )
+IMLObject *
+CreateIMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight )
 {
 	return new CMLImageObject( pTexture, eAlign, nBorder, nWidth, nHeight );
 }
 
-CMLImageObject::CMLImageObject( NDb::STexture *_pTexture, SState::EHORAlign _eAlign, int _nBorder, int _nWidth, int _nHeight ):
-	pTexture( _pTexture ), eAlign( _eAlign ), nBorder( _nBorder ), nWidth( _nWidth ), nHeight( _nHeight ), sSize( 0, 0 )
+CMLImageObject::CMLImageObject(
+		NDb::STexture *_pTexture, SState::EHORAlign _eAlign, int _nBorder, int _nWidth, int _nHeight )
+		: pTexture( _pTexture ), eAlign( _eAlign ), nBorder( _nBorder ), nWidth( _nWidth ), nHeight( _nHeight ),
+			sSize( 0, 0 )
 {
 }
 
-void CMLImageObject::Generate(  )
+void CMLImageObject::Generate()
 {
 	if ( pTexture )
 	{
@@ -399,12 +413,12 @@ void CMLImageObject::Generate(  )
 	}
 }
 
-const CTPoint<float>& CMLImageObject::GetSize() const
+const CTPoint<float> &CMLImageObject::GetSize() const
 {
 	return sSize;
 }
 
-const SState& CMLImageObject::GetState() const
+const SState &CMLImageObject::GetState() const
 {
 	return sState;
 }
@@ -416,7 +430,7 @@ void CMLImageObject::SetState( const SState &_sState )
 		sState.eHAlign = eAlign;
 }
 
-const CTPoint<float>& CMLImageObject::GetPosition() const
+const CTPoint<float> &CMLImageObject::GetPosition() const
 {
 	return sPosition;
 }
@@ -426,12 +440,17 @@ void CMLImageObject::SetPosition( const CTPoint<float> &_sPosition )
 	sPosition = _sPosition;
 }
 
-void CMLImageObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+void CMLImageObject::Render( std::list<CTRect<float>> *pRender,
+                             const CTPoint<float> &sGlobalPosition,
+                             const CTRect<float> &sWindow )
 {
-	pRender->push_back( CTRect<float>( sGlobalPosition.x, sGlobalPosition.y, sSize.x + sGlobalPosition.x, sSize.y + sGlobalPosition.y ) );
+	pRender->push_back(
+			CTRect<float>( sGlobalPosition.x, sGlobalPosition.y, sSize.x + sGlobalPosition.x, sSize.y + sGlobalPosition.y ) );
 }
 
-void CMLImageObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+void CMLImageObject::Render( NGScene::ILayoutFakeView *pView,
+                             const CTPoint<float> &sGlobalPosition,
+                             const CTRect<float> &sWindow )
 {
 	pView->CreateDynamicRects( pTexture, sLayout, sGlobalPosition + sPosition, sWindow );
 }
@@ -454,9 +473,9 @@ int CMLImageObject::operator&( IBinSaver &saver )
 
 // CMLImageObject
 
-class CMLTabObject: public IMLObject
+class CMLTabObject : public IMLObject
 {
-	OBJECT_BASIC_METHODS(CMLTabObject)
+	OBJECT_BASIC_METHODS( CMLTabObject )
 private:
 	SState sState;
 	CTPoint<float> sSize;
@@ -465,34 +484,33 @@ private:
 public:
 	CMLTabObject();
 
-	void Generate(  ) {}
-	void DynamicGenerate(  const SReflowInfo &sInfo );
+	void Generate() {}
+	void DynamicGenerate( const SReflowInfo &sInfo );
 
-	const CTPoint<float>& GetSize() const;
+	const CTPoint<float> &GetSize() const;
 
-	const SState& GetState() const;
+	const SState &GetState() const;
 	void SetState( const SState &sState );
 
-	const CTPoint<float>& GetPosition() const;
+	const CTPoint<float> &GetPosition() const;
 	void SetPosition( const CTPoint<float> &sPosition );
 
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow ) {}
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow )
+	{
+	}
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) {}
 
 	int operator&( IBinSaver &saver );
 };
 
-IMLObject* CreateIMLTabObject()
+IMLObject *CreateIMLTabObject()
 {
 	return new CMLTabObject();
 }
 
-CMLTabObject::CMLTabObject():
-	sSize( 0, 0 )
-{
-}
+CMLTabObject::CMLTabObject() : sSize( 0, 0 ) {}
 
-void CMLTabObject::DynamicGenerate(  const SReflowInfo &sInfo )
+void CMLTabObject::DynamicGenerate( const SReflowInfo &sInfo )
 {
 	SFontInfo sFontInfo;
 	GetFontFormatInfo( sState.sFont, sState.nMinFontSize, &sFontInfo );
@@ -503,12 +521,12 @@ void CMLTabObject::DynamicGenerate(  const SReflowInfo &sInfo )
 	sSize.y = sInfo.fLastLineHeight;
 }
 
-const CTPoint<float>& CMLTabObject::GetSize() const
+const CTPoint<float> &CMLTabObject::GetSize() const
 {
 	return sSize;
 }
 
-const SState& CMLTabObject::GetState() const
+const SState &CMLTabObject::GetState() const
 {
 	return sState;
 }
@@ -518,7 +536,7 @@ void CMLTabObject::SetState( const SState &_sState )
 	sState = _sState;
 }
 
-const CTPoint<float>& CMLTabObject::GetPosition() const
+const CTPoint<float> &CMLTabObject::GetPosition() const
 {
 	return sPosition;
 }
@@ -538,9 +556,9 @@ int CMLTabObject::operator&( IBinSaver &saver )
 
 // CMLLayout
 
-class CMLLayout: public IMLLayout
+class CMLLayout : public IMLLayout
 {
-	OBJECT_BASIC_METHODS(CMLLayout)
+	OBJECT_BASIC_METHODS( CMLLayout )
 private:
 	struct SCmdPair
 	{
@@ -548,7 +566,7 @@ private:
 		CPtr<IMLObject> pObject;
 
 		SCmdPair() {}
-		SCmdPair( ECommand _eCmd, IMLObject *_pObject ): eCmd( _eCmd ), pObject( _pObject ) {}
+		SCmdPair( ECommand _eCmd, IMLObject *_pObject ) : eCmd( _eCmd ), pObject( _pObject ) {}
 
 		int operator&( IBinSaver &saver )
 		{
@@ -577,25 +595,27 @@ public:
 	void AddObject( IMLObject *pObject );
 	void AddCommand( ECommand eCommand, IMLObject *pObject = 0 );
 
-	const CTPoint<float>& GetSize() const;
+	const CTPoint<float> &GetSize() const;
 
-	const SState& GetState();
+	const SState &GetState();
 	void SetState( const SState &sState );
 	void PushState();
 	void PopState();
 
 	bool IsSingleLine() const { return nLineCount == 1; }
-	const CTRect<float>& GetInkBounds( bool bIncludeOutline = true ) const { return bIncludeOutline ? sInkBounds : sLetterBounds; }
-	void Generate(  float fWidth );
+	const CTRect<float> &GetInkBounds( bool bIncludeOutline = true ) const
+	{
+		return bIncludeOutline ? sInkBounds : sLetterBounds;
+	}
+	void Generate( float fWidth );
 
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
 };
 
-CMLLayout::CMLLayout():
-	sSize( 0, 0 )
+CMLLayout::CMLLayout() : sSize( 0, 0 )
 {
 	sState.sFont = NGScene::SFont( 16 | FONT_SIZE_POINTS, s_DefaultFontName );
 	sState.sColor = NGfx::SPixel8888( 0xFF, 0xFF, 0xFF, 0xFF );
@@ -616,12 +636,12 @@ void CMLLayout::AddCommand( ECommand eCommand, IMLObject *pObject )
 		pObject->SetState( sState );
 }
 
-const CTPoint<float>& CMLLayout::GetSize() const
+const CTPoint<float> &CMLLayout::GetSize() const
 {
 	return sSize;
 }
 
-const SState& CMLLayout::GetState()
+const SState &CMLLayout::GetState()
 {
 	return sState;
 }
@@ -648,15 +668,15 @@ void CMLLayout::PopState()
 	states.pop_back();
 }
 
-void CMLLayout::Generate(  float fWidth )
+void CMLLayout::Generate( float fWidth )
 {
 	nLineCount = 0;
-	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for ( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
 		if ( IsValid( pObject ) )
-			pObject->Generate( );
+			pObject->Generate();
 	}
 
 	SReflowInfo sInfo;
@@ -666,7 +686,7 @@ void CMLLayout::Generate(  float fWidth )
 	sInfo.fLastLineHeight = 0;
 	sInfo.sLeft = SRange( 0, -1 );
 	sInfo.sRight = SRange( fWidth, -1 );
-	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for ( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		ECommand eCommand = iTemp->eCmd;
 		if ( eCommand == CMD_BREAKLINE )
@@ -680,40 +700,40 @@ void CMLLayout::Generate(  float fWidth )
 			const CTPoint<float> &sSize = pObject->GetSize();
 			const SState &sState = pObject->GetState();
 
-			switch( sState.eHAlign )
+			switch ( sState.eHAlign )
 			{
-			case SState::HORALIGN_DEFAULT:
-			case SState::HORALIGN_LEFT:
-			case SState::HORALIGN_RIGHT:
-			case SState::HORALIGN_CENTER:
-			case SState::HORALIGN_JUSTIFY:
-				if ( ( sInfo.fLineWidth + sSize.x ) > ( sInfo.sRight.fValue - sInfo.sLeft.fValue ) )
-					CreateLine( &sInfo, fWidth, false );
+				case SState::HORALIGN_DEFAULT:
+				case SState::HORALIGN_LEFT:
+				case SState::HORALIGN_RIGHT:
+				case SState::HORALIGN_CENTER:
+				case SState::HORALIGN_JUSTIFY:
+					if ( ( sInfo.fLineWidth + sSize.x ) > ( sInfo.sRight.fValue - sInfo.sLeft.fValue ) )
+						CreateLine( &sInfo, fWidth, false );
 
-				if ( ( eCommand == CMD_SPACE ) && sInfo.line.empty() )
+					if ( ( eCommand == CMD_SPACE ) && sInfo.line.empty() )
+						break;
+
+					sInfo.line.push_back( pObject );
+					sInfo.fLineWidth += sSize.x;
+					sInfo.fLineHeight = (std::max)( sSize.y, sInfo.fLineHeight );
 					break;
+				case SState::HORALIGN_NOWRAP:
+					if ( ( eCommand == CMD_SPACE ) && sInfo.line.empty() )
+						break;
 
-				sInfo.line.push_back( pObject );
-				sInfo.fLineWidth += sSize.x;
-				sInfo.fLineHeight = (std::max)( sSize.y, sInfo.fLineHeight );
-				break;
-			case SState::HORALIGN_NOWRAP:
-				if ( ( eCommand == CMD_SPACE ) && sInfo.line.empty() )
+					sInfo.line.push_back( pObject );
+					sInfo.fLineWidth += sSize.x;
+					sInfo.fLineHeight = (std::max)( sSize.y, sInfo.fLineHeight );
 					break;
-
-				sInfo.line.push_back( pObject );
-				sInfo.fLineWidth += sSize.x;
-				sInfo.fLineHeight = (std::max)( sSize.y, sInfo.fLineHeight );
-				break;
-			case SState::HORALIGN_WRAP_LEFT:
-				sInfo.leftWraped.push_back( pObject );
-				break;
-			case SState::HORALIGN_WRAP_RIGHT:
-				sInfo.rightWraped.push_back( pObject );
-				break;
-			default:
-				ASSERT( 0 );
-				break;
+				case SState::HORALIGN_WRAP_LEFT:
+					sInfo.leftWraped.push_back( pObject );
+					break;
+				case SState::HORALIGN_WRAP_RIGHT:
+					sInfo.rightWraped.push_back( pObject );
+					break;
+				default:
+					ASSERT( 0 );
+					break;
 			}
 		}
 	}
@@ -742,9 +762,11 @@ void CMLLayout::Generate(  float fWidth )
 		}
 }
 
-void CMLLayout::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+void CMLLayout::Render( std::list<CTRect<float>> *pRender,
+                        const CTPoint<float> &sPosition,
+                        const CTRect<float> &sWindow )
 {
-	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for ( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
@@ -755,7 +777,7 @@ void CMLLayout::Render( std::list<CTRect<float> > *pRender, const CTPoint<float>
 
 void CMLLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
-	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
+	for ( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		CPtr<IMLObject> pObject = iTemp->pObject;
 
@@ -824,16 +846,16 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 	SState::EHORAlign eHAlign = pInfo->line.front()->GetState().eHAlign;
 	if ( bEndBlock && ( eHAlign == SState::HORALIGN_JUSTIFY ) )
 		eHAlign = SState::HORALIGN_LEFT;
-	switch( eHAlign )
+	switch ( eHAlign )
 	{
-	case SState::HORALIGN_RIGHT:
+		case SState::HORALIGN_RIGHT:
 		{
 			float fTotalWidth = pInfo->sRight.fValue - pInfo->sLeft.fValue;
 			fX = pInfo->sLeft.fValue + fTotalWidth - pInfo->fLineWidth;
 			fSpace = 0;
 		}
 		break;
-	case SState::HORALIGN_CENTER:
+		case SState::HORALIGN_CENTER:
 		{
 			float fTotalWidth = pInfo->sRight.fValue - pInfo->sLeft.fValue;
 			fX = pInfo->sLeft.fValue + Float2Int( ( fTotalWidth - pInfo->fLineWidth ) / 2 );
@@ -841,34 +863,34 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 			fSpace = 0;
 			break;
 		}
-	case SState::HORALIGN_JUSTIFY:
+		case SState::HORALIGN_JUSTIFY:
 		{
 			const float fTotalWidth = pInfo->sRight.fValue - pInfo->sLeft.fValue;
 			fX = pInfo->sLeft.fValue;
-			fSpace = float( fTotalWidth - pInfo->fLineWidth ) / (pInfo->line.size() > 1 ? pInfo->line.size() - 1 : 1);
+			fSpace = float( fTotalWidth - pInfo->fLineWidth ) / ( pInfo->line.size() > 1 ? pInfo->line.size() - 1 : 1 );
 			break;
 		}
 	}
 
-	for( std::list<CPtr<IMLObject> >::iterator iTemp = pInfo->line.begin(); iTemp != pInfo->line.end(); iTemp++ )
+	for ( std::list<CPtr<IMLObject>>::iterator iTemp = pInfo->line.begin(); iTemp != pInfo->line.end(); iTemp++ )
 	{
-		const CTPoint<float> &sSize = (*iTemp)->GetSize();
-		SState::EVERTAlign eVAlign = (*iTemp)->GetState().eVAlign;
+		const CTPoint<float> &sSize = ( *iTemp )->GetSize();
+		SState::EVERTAlign eVAlign = ( *iTemp )->GetState().eVAlign;
 
-		switch( eVAlign )
+		switch ( eVAlign )
 		{
-		case SState::VERTALIGN_TOP:
-			(*iTemp)->SetPosition( CTPoint<float>( fX, pInfo->fY ) );
-			break;
-		case SState::VERTALIGN_BOTTOM:
-			(*iTemp)->SetPosition( CTPoint<float>( fX, pInfo->fY + pInfo->fLineHeight - sSize.y ) );
-			break;
-		default:
-			(*iTemp)->SetPosition( CTPoint<float>( fX, pInfo->fY + ( pInfo->fLineHeight - sSize.y ) / 2 ) );
-			break;
+			case SState::VERTALIGN_TOP:
+				( *iTemp )->SetPosition( CTPoint<float>( fX, pInfo->fY ) );
+				break;
+			case SState::VERTALIGN_BOTTOM:
+				( *iTemp )->SetPosition( CTPoint<float>( fX, pInfo->fY + pInfo->fLineHeight - sSize.y ) );
+				break;
+			default:
+				( *iTemp )->SetPosition( CTPoint<float>( fX, pInfo->fY + ( pInfo->fLineHeight - sSize.y ) / 2 ) );
+				break;
 		}
 
-		fX += (*iTemp)->GetSize().x;
+		fX += ( *iTemp )->GetSize().x;
 		pInfo->fMaxX = (std::max)( pInfo->fMaxX, fX );
 		fX += fSpace;
 	}
@@ -876,21 +898,23 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 
 void CMLLayout::ProcessWraped( SReflowInfo *pInfo )
 {
-	for( std::list<CPtr<IMLObject> >::iterator iTemp = pInfo->leftWraped.begin(); iTemp != pInfo->leftWraped.end(); iTemp++ )
+	for ( std::list<CPtr<IMLObject>>::iterator iTemp = pInfo->leftWraped.begin(); iTemp != pInfo->leftWraped.end();
+	      iTemp++ )
 	{
-		const CTPoint<float> &sSize = (*iTemp)->GetSize();
+		const CTPoint<float> &sSize = ( *iTemp )->GetSize();
 
-		(*iTemp)->SetPosition( CTPoint<float>( pInfo->sLeft.fValue, pInfo->fY ) );
+		( *iTemp )->SetPosition( CTPoint<float>( pInfo->sLeft.fValue, pInfo->fY ) );
 		pInfo->fMaxX = (std::max)( pInfo->fMaxX, pInfo->sLeft.fValue + sSize.x );
 
 		pInfo->sLeft.fValue += sSize.x;
 		pInfo->sLeft.fHeight = (std::max)( pInfo->sLeft.fHeight, pInfo->fY + sSize.y );
 	}
-	for( std::list<CPtr<IMLObject> >::iterator iTemp = pInfo->rightWraped.begin(); iTemp != pInfo->rightWraped.end(); iTemp++ )
+	for ( std::list<CPtr<IMLObject>>::iterator iTemp = pInfo->rightWraped.begin(); iTemp != pInfo->rightWraped.end();
+	      iTemp++ )
 	{
-		const CTPoint<float> &sSize = (*iTemp)->GetSize();
+		const CTPoint<float> &sSize = ( *iTemp )->GetSize();
 
-		(*iTemp)->SetPosition( CTPoint<float>( pInfo->sRight.fValue - sSize.x, pInfo->fY ) );
+		( *iTemp )->SetPosition( CTPoint<float>( pInfo->sRight.fValue - sSize.x, pInfo->fY ) );
 		pInfo->fMaxX = (std::max)( pInfo->fMaxX, pInfo->sRight.fValue );
 
 		pInfo->sRight.fValue -= sSize.x;
@@ -915,15 +939,15 @@ int CMLLayout::operator&( IBinSaver &saver )
 
 // CML
 
-class CML: public IML
+class CML : public IML
 {
-	OBJECT_BASIC_METHODS(CML)
+	OBJECT_BASIC_METHODS( CML )
 private:
 	CTPoint<int> sSize;
 	std::wstring wsText;
 	CObj<CMLLayout> pLayout;
 	CObj<CMLStream> pStream;
-	std::unordered_map<std::wstring,CObj<IMLHandler> > tagsMap;
+	std::unordered_map<std::wstring, CObj<IMLHandler>> tagsMap;
 	int nIDForHandler;
 	CObj<SFadeValue> sFadeValue;
 	// Keep the wrapping constraint, not the resulting text width, when a
@@ -940,6 +964,7 @@ private:
 	bool UsesHudFontScale() const { return pFontScaleWindow && pFontScaleWindow->UsesHudFontScale(); }
 	void UpdateFontScale();
 	void GenerateLayout();
+
 public:
 	CML();
 	void SetFontScaleWindow( IWindow *pWindow ) override { pFontScaleWindow = pWindow; }
@@ -950,23 +975,27 @@ public:
 	int GetIDForHandler() const;
 	void SetFade( float fFade );
 
-	CMLStream* GetStream() { return pStream; }
-	const CTPoint<int>& GetSize();
-	CTPoint<int> GetPreferredSize() override { UpdateFontScale(); return sPreferredSize; }
+	CMLStream *GetStream() { return pStream; }
+	const CTPoint<int> &GetSize();
+	CTPoint<int> GetPreferredSize() override
+	{
+		UpdateFontScale();
+		return sPreferredSize;
+	}
 	bool IsSingleLine();
 	CTPoint<float> FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip ) override;
-	bool HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline ) override;
+	bool
+	HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline ) override;
 
 	void Generate( int nWidth );
 
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 
 	int operator&( IBinSaver &saver );
 };
 
-CML::CML()
-: sSize( 0, 0 ), nIDForHandler( -1 )
+CML::CML() : sSize( 0, 0 ), nIDForHandler( -1 )
 {
 	sFadeValue = new SFadeValue( 1.0f );
 	pLayout = new CMLLayout();
@@ -1032,7 +1061,7 @@ bool CML::IsSingleLine()
 	return pLayout->IsSingleLine();
 }
 
-const CTPoint<int>& CML::GetSize()
+const CTPoint<int> &CML::GetSize()
 {
 	UpdateFontScale();
 	const CTPoint<float> &sFPSize = pLayout->GetSize();
@@ -1058,8 +1087,8 @@ static bool InkOutside( CTRect<float> ink, const CTPoint<float> &position, const
 	// Coordinate conversions can differ by a small floating-point rounding
 	// error. Do not confuse that with losing a visible pixel at the boundary.
 	const float epsilon = 0.01f;
-	return ink.x1 < box.x1 - epsilon || ink.y1 < box.y1 - epsilon ||
-		ink.x2 > box.x2 + epsilon || ink.y2 > box.y2 + epsilon;
+	return ink.x1 < box.x1 - epsilon || ink.y1 < box.y1 - epsilon || ink.x2 > box.x2 + epsilon ||
+	       ink.y2 > box.y2 + epsilon;
 }
 
 bool CML::HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline )
@@ -1071,7 +1100,8 @@ bool CML::HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<f
 CTPoint<float> CML::FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip )
 {
 	UpdateFontScale();
-	const CTPoint<float> preferredOrigin = TextOrigin( sBox, sPreferredSize.y, bCenterSingleLine && bPreferredSingleLine );
+	const CTPoint<float> preferredOrigin =
+			TextOrigin( sBox, sPreferredSize.y, bCenterSingleLine && bPreferredSingleLine );
 	// Alignment belongs to the label's box; clipping may be tighter because
 	// an ordinary parent panel also clips its children at draw time.
 	CTRect<float> clip = sBox;
@@ -1079,8 +1109,7 @@ CTPoint<float> CML::FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine,
 		clip.Intersect( *pClip );
 	// Only undo enlargement, never grow a user's smaller font or loop trying
 	// to fix a box that cannot fit even at 1.0. The global settings stay intact.
-	const bool bFallback = fFontScale > 1.0f && !clip.IsEmpty() &&
-		InkOutside( sPreferredInk, preferredOrigin, clip );
+	const bool bFallback = fFontScale > 1.0f && !clip.IsEmpty() && InkOutside( sPreferredInk, preferredOrigin, clip );
 	if ( bFallback != bOriginalScale )
 	{
 		bOriginalScale = bFallback;
@@ -1147,9 +1176,9 @@ void CML::GenerateLayout()
 			eThisChar = CHAR_ALNUM;
 		else if ( iswpunct( wcChar ) )
 			eThisChar = bTAG ? CHAR_PUNCTUATION : CHAR_ALNUM; //// CRAP: Tag need to separate '='
-		else if  ( !bBracketsBlock && ( wcChar == L' ' ) )
+		else if ( !bBracketsBlock && ( wcChar == L' ' ) )
 			eThisChar = CHAR_SPACE;
-		else if  ( bBracketsBlock && ( wcChar == L' ' ) )
+		else if ( bBracketsBlock && ( wcChar == L' ' ) )
 			eThisChar = eLastChar;
 		else if ( ( wcChar == L'\0' ) || ( wcChar == L'\n' ) )
 			eThisChar = CHAR_EOL;
@@ -1184,7 +1213,7 @@ void CML::GenerateLayout()
 
 			if ( !paramsSet.empty() )
 			{
-				std::unordered_map<std::wstring,CObj<IMLHandler> >::const_iterator iTemp = tagsMap.find( paramsSet.front() );
+				std::unordered_map<std::wstring, CObj<IMLHandler>>::const_iterator iTemp = tagsMap.find( paramsSet.front() );
 				if ( ( iTemp != tagsMap.end() ) && ( iTemp->second != 0 ) )
 					iTemp->second->Exec( this, pLayout, paramsSet );
 			}
@@ -1209,7 +1238,7 @@ void CML::GenerateLayout()
 	}
 }
 
-void CML::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+void CML::Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	UpdateFontScale();
 	pLayout->Render( pRender, sPosition, sWindow );
@@ -1241,14 +1270,14 @@ int CML::operator&( IBinSaver &saver )
 
 // CreateML
 
-IML* CreateML( IWindow *pFontScaleWindow )
+IML *CreateML( IWindow *pFontScaleWindow )
 {
 	CML *pText = new CML;
 	pText->SetFontScaleWindow( pFontScaleWindow );
 	return pText;
 }
 
-START_REGISTER(MLText)
+START_REGISTER( MLText )
 
 REGISTER_VAR_EX( "ml_text_default_font_name", NGlobal::VarStrHandler, &s_DefaultFontName, "System", STORAGE_NONE );
 

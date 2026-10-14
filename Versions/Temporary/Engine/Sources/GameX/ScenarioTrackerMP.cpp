@@ -21,10 +21,10 @@
 #include <zconf.h>
 
 extern int N_MAX_XP_LEVEL; // [0..]  defined in ScenarioTracker.cpp
-const int NEUTRAL_COLOR_INDEX	= 3;
-const int MP_COLOR_INDEX_BASE	= 4;
+const int NEUTRAL_COLOR_INDEX = 3;
+const int MP_COLOR_INDEX_BASE = 4;
 
-IScenarioTracker * CreateScenarioTrackerMultiplayer()
+IScenarioTracker *CreateScenarioTrackerMultiplayer()
 {
 	return new NScenarioTracker::CScenarioTrackerMultiplayer;
 }
@@ -32,16 +32,12 @@ IScenarioTracker * CreateScenarioTrackerMultiplayer()
 namespace NScenarioTracker
 {
 
-
 // CScenarioTrackerMultiplayer
 
+CScenarioTrackerMultiplayer::CScenarioTrackerMultiplayer() : nLocalPlayer( -1 ), eType( EGT_MULTI_FLAG_CONTROL ) {}
 
-CScenarioTrackerMultiplayer::CScenarioTrackerMultiplayer() :
-	nLocalPlayer( -1 ), eType( EGT_MULTI_FLAG_CONTROL )
-{
-}
-
-const NDb::SReinforcement * CScenarioTrackerMultiplayer::GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const
+const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetReinforcement( int nPlayer,
+                                                                          NDb::EReinforcementType eType ) const
 {
 	if ( players.size() <= nPlayer )
 		return 0;
@@ -98,7 +94,7 @@ void CScenarioTrackerMultiplayer::GetReinforcementCallsInfo( int nPlayer, std::v
 	}
 }
 
-void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission, const int _nTechLevel )
+void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, const int _nTechLevel )
 {
 	const NDb::SUIConstsB2 *pUIConsts = NGameX::GetUIConsts();
 
@@ -159,13 +155,13 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 		}
 		player.nReinforcementCallsUsed = 0;
 
-		if ( pMission->players[i].nDiplomacySide == 2 )			// Neutral side is always present
+		if ( pMission->players[i].nDiplomacySide == 2 ) // Neutral side is always present
 		{
 			players[i].bPresent = true;
 			nNeutralPlayer = i;
 		}
 		else
-			players[i].bPresent = false;											// The rest have to be added explicitly
+			players[i].bPresent = false; // The rest have to be added explicitly
 
 		players[i].timeKeyPointsOwned = 0;
 
@@ -174,9 +170,9 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 
 		// Set multiplayer sides
 		players[i].nDiplomacySide = pMission->players[i].nDiplomacySide;
-		players[i].nMultiplayerSide = -1;			// Default: use from map-info
+		players[i].nMultiplayerSide = -1; // Default: use from map-info
 
-		for ( int j = 0; j < pMPConsts->sides.size(); ++j )				// Find the side with the same PartyDependentInfo
+		for ( int j = 0; j < pMPConsts->sides.size(); ++j ) // Find the side with the same PartyDependentInfo
 		{
 			if ( pMPConsts->sides[j].pPartyInfo == pMission->players[i].pPartyInfo )
 			{
@@ -188,7 +184,8 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 		UpdateReinforcements( i );
 	}
 
-	NI_ASSERT( nNeutralPlayer != -1, fmt::format( "No neutral player present on map \"{}\"", NDb::GetResName(pMission) ) );
+	NI_ASSERT( nNeutralPlayer != -1,
+	           fmt::format( "No neutral player present on map \"{}\"", NDb::GetResName( pMission ) ) );
 
 	bNoKeyBuildings = true;
 	// Init key buildings
@@ -224,7 +221,7 @@ void CScenarioTrackerMultiplayer::MissionWin()
 
 void CScenarioTrackerMultiplayer::UpdateStatistics()
 {
-	for( int i = 0; i < players.size(); ++i )
+	for ( int i = 0; i < players.size(); ++i )
 	{
 		if ( GetPlayerSide( i ) != 2 )
 			CalculateScore( i );
@@ -236,7 +233,7 @@ bool CScenarioTrackerMultiplayer::IsMissionActive() const
 	return pMission != 0;
 }
 
-const NDb::SMapInfo * CScenarioTrackerMultiplayer::GetCurrentMission() const
+const NDb::SMapInfo *CScenarioTrackerMultiplayer::GetCurrentMission() const
 {
 	return pMission;
 }
@@ -303,7 +300,7 @@ void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLin
 	if ( !pMission || !IsPlayerPresent( nNewOwnerPlayer ) )
 		return;
 
-	std::unordered_map<int,int>::iterator pos = flags.find( nBuildingLinkID );
+	std::unordered_map<int, int>::iterator pos = flags.find( nBuildingLinkID );
 	if ( pos == flags.end() )
 		return;
 	int nOldPlayer = pos->second;
@@ -321,26 +318,26 @@ void CScenarioTrackerMultiplayer::KeyBuildingOwnerChange( const int nBuildingLin
 
 const int CScenarioTrackerMultiplayer::GetKeyBuildingOwner( const int nBuildingLinkID )
 {
-	std::unordered_map<int,int>::const_iterator pos = flags.find( nBuildingLinkID );
+	std::unordered_map<int, int>::const_iterator pos = flags.find( nBuildingLinkID );
 	if ( pos == flags.end() )
 		return nNeutralPlayer;
 	else
 		return pos->second;
 }
 
-const std::pair<int,int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
+const std::pair<int, int> CScenarioTrackerMultiplayer::GetKeyBuildingSummary()
 {
 	int nOwned0 = 0;
 	int nOwned1 = 0;
 
-	for ( std::unordered_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
+	for ( std::unordered_map<int, int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
 	{
 		if ( GetPlayerSide( it->second ) == 0 )
 			++nOwned0;
 		else if ( GetPlayerSide( it->second ) == 1 )
 			++nOwned1;
 	}
-	return std::pair<int,int>( nOwned0, nOwned1 );
+	return std::pair<int, int>( nOwned0, nOwned1 );
 }
 
 #define FULL_RECYCLE_TIME 215.0f
@@ -357,7 +354,7 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		int nFlags = 0;
 		int nOwnFlags = 0;
 
-		for ( std::unordered_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
+		for ( std::unordered_map<int, int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
 		{
 			++nFlags;
 			if ( GetPlayerSide( it->second ) == nSide )
@@ -373,16 +370,16 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		if ( fMinTime == 0.0f )
 			fMinTime = MIN_RECYCLE_TIME;
 
-		fCoeff = ( fFullTime - ( fFullTime - fMinTime ) * nOwnFlags / nFlags )/* / fFullTime*/;
+		fCoeff = ( fFullTime - ( fFullTime - fMinTime ) * nOwnFlags / nFlags ) /* / fFullTime*/;
 
-		return fCoeff;	// Time of recycle in seconds
+		return fCoeff; // Time of recycle in seconds
 	}
 
 	if ( nSide == 2 || bNoKeyBuildings )
 		return 1.0f;
 
 	float fCoeff = -1.0f;
-	for ( std::unordered_map<int,int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
+	for ( std::unordered_map<int, int>::const_iterator it = flags.begin(); it != flags.end(); ++it )
 	{
 		if ( GetPlayerSide( it->second ) == nSide )
 		{
@@ -423,7 +420,8 @@ void CScenarioTrackerMultiplayer::SetStatistics( int nPlayer, EStatisticsKind eK
 
 CPtr<IScenarioTracker::SLeaderInfo> pInfo;
 
-const IScenarioTracker::SLeaderInfo* CScenarioTrackerMultiplayer::GetLeaderInfo( const NDb::EReinforcementType eReinf ) const
+const IScenarioTracker::SLeaderInfo *
+CScenarioTrackerMultiplayer::GetLeaderInfo( const NDb::EReinforcementType eReinf ) const
 {
 	pInfo = new IScenarioTracker::SLeaderInfo();
 	pInfo->info.fExp = GetReinforcementXP( GetLocalPlayer(), eReinf );
@@ -443,7 +441,7 @@ const IScenarioTracker::SLeaderInfo* CScenarioTrackerMultiplayer::GetLeaderInfo(
 
 float CScenarioTrackerMultiplayer::GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const
 {
-	if ( nPlayer == nLocalPlayer && eType == NDb::_RT_NONE )			// CRAP for designers' bastard baby - the recycle tooltip
+	if ( nPlayer == nLocalPlayer && eType == NDb::_RT_NONE ) // CRAP for designers' bastard baby - the recycle tooltip
 	{
 		if ( bNoKeyBuildings )
 			return -1.0f;
@@ -464,7 +462,7 @@ float CScenarioTrackerMultiplayer::GetReinforcementXP( int nPlayer, NDb::EReinfo
 
 void CScenarioTrackerMultiplayer::SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP )
 {
-	if ( nPlayer == nLocalPlayer && eType == NDb::_RT_NONE )			// CRAP for designers' bastard baby - the recycle tooltip
+	if ( nPlayer == nLocalPlayer && eType == NDb::_RT_NONE ) // CRAP for designers' bastard baby - the recycle tooltip
 	{
 		nSecondsToReinf = fXP;
 	}
@@ -483,24 +481,18 @@ int CScenarioTrackerMultiplayer::GetReinforcementXPLevel( int nPlayer, NDb::ERei
 		return N_MAX_XP_LEVEL;
 #endif // _FINALRELEASE
 	if ( eType == NDb::RT_ENGINEERING
-		// --- Extra Max Level Ground ---
-		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_1
-		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_2
-		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_3
-		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_4
-		|| eType == NDb::RT_EXTRA_MAXLVL_GROUND_5
-		// --- Extra Max Level Air ---
-		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_1
-		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_2
-		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_3
-		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_4
-		|| eType == NDb::RT_EXTRA_MAXLVL_AIR_5
-		// --- Extra Max Level Mixed ---
-		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_1
-		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_2
-		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_3
-		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_4
-		|| eType == NDb::RT_EXTRA_MAXLVL_MIXED_5 )
+	     // --- Extra Max Level Ground ---
+	     || eType == NDb::RT_EXTRA_MAXLVL_GROUND_1 || eType == NDb::RT_EXTRA_MAXLVL_GROUND_2 ||
+	     eType == NDb::RT_EXTRA_MAXLVL_GROUND_3 || eType == NDb::RT_EXTRA_MAXLVL_GROUND_4 ||
+	     eType == NDb::RT_EXTRA_MAXLVL_GROUND_5
+	     // --- Extra Max Level Air ---
+	     || eType == NDb::RT_EXTRA_MAXLVL_AIR_1 || eType == NDb::RT_EXTRA_MAXLVL_AIR_2 ||
+	     eType == NDb::RT_EXTRA_MAXLVL_AIR_3 || eType == NDb::RT_EXTRA_MAXLVL_AIR_4 ||
+	     eType == NDb::RT_EXTRA_MAXLVL_AIR_5
+	     // --- Extra Max Level Mixed ---
+	     || eType == NDb::RT_EXTRA_MAXLVL_MIXED_1 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_2 ||
+	     eType == NDb::RT_EXTRA_MAXLVL_MIXED_3 || eType == NDb::RT_EXTRA_MAXLVL_MIXED_4 ||
+	     eType == NDb::RT_EXTRA_MAXLVL_MIXED_5 )
 	{
 		return N_MAX_XP_LEVEL;
 	}
@@ -517,7 +509,7 @@ float CScenarioTrackerMultiplayer::GetReinforcementXPForLevel( NDb::EReinforceme
 	if ( !pMPConsts )
 		return 0.0f;
 
-		for ( int i = 0; i < pMPConsts->expLevels.size(); ++i )
+	for ( int i = 0; i < pMPConsts->expLevels.size(); ++i )
 	{
 		const NDb::SAIExpLevel *pLevels = pMPConsts->expLevels[i];
 		if ( !pLevels )
@@ -545,14 +537,14 @@ bool CScenarioTrackerMultiplayer::AddReinfExp( float *pExp, const int nPlayer, N
 		{
 			const float fXP = GetReinforcementXP( nPlayer, eReinfType );
 			const float fXPToNextLevel = GetReinforcementXPForLevel( eReinfType, nLevel + 1 ) - fXP;
-      const float fXPToAdd = (std::min)( *pExp, fXPToNextLevel );
+			const float fXPToAdd = (std::min)( *pExp, fXPToNextLevel );
 			SetReinforcementXP( nPlayer, eReinfType, fXP + fXPToAdd );
 			if ( fXPToNextLevel == fXPToAdd )
 			{
 				bResult = true;
 				++nLevel;
 			}
-      *pExp -= fXPToAdd;
+			*pExp -= fXPToAdd;
 		}
 		players[nPlayer].reinfLevels[eReinfType] = nLevel;
 	}
@@ -589,7 +581,8 @@ bool CScenarioTrackerMultiplayer::RegisterUnitKill( const SKillInfo &info )
 	{
 		int nCount = 0;
 		for ( CReinforcementTypes::iterator it = players[info.nPlayer].reinforcementTypes.begin();
-			it != players[info.nPlayer].reinforcementTypes.end(); ++it )
+		      it != players[info.nPlayer].reinforcementTypes.end();
+		      ++it )
 		{
 			const int nReinfType = it->first;
 			if ( GetReinforcementXPLevel( info.nPlayer, (NDb::EReinforcementType)nReinfType ) < N_MAX_XP_LEVEL )
@@ -600,7 +593,8 @@ bool CScenarioTrackerMultiplayer::RegisterUnitKill( const SKillInfo &info )
 			const float fExpPart = fRestReinfExp / nCount;
 			fRestReinfExp = 0.0f;
 			for ( CReinforcementTypes::iterator it = players[info.nPlayer].reinforcementTypes.begin();
-				it != players[info.nPlayer].reinforcementTypes.end(); ++it )
+			      it != players[info.nPlayer].reinforcementTypes.end();
+			      ++it )
 			{
 				const int nReinfType = it->first;
 				if ( GetReinforcementXPLevel( info.nPlayer, (NDb::EReinforcementType)nReinfType ) < N_MAX_XP_LEVEL )
@@ -646,7 +640,7 @@ void CScenarioTrackerMultiplayer::CalculateScore( const int nPlayer )
 		/*if ( bNoKeyBuildings )
 			SetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED, pMission->players[nPlayer].nReinforcementCalls - GetReinforcementCallsLeft( nPlayer ) );
 		else*/
-			SetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED, players[nPlayer].nReinforcementCallsUsed );
+		SetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED, players[nPlayer].nReinforcementCallsUsed );
 	}
 
 	// ESK_KEY_BUILDINGS_CAPTURED
@@ -739,7 +733,6 @@ void CScenarioTrackerMultiplayer::CalculateScore( const int nPlayer )
 
 		SetStatistics( nPlayer, ESK_SCORE, fScore );
 	}
-
 }
 
 int CScenarioTrackerMultiplayer::GetScoreWithUpdate( int nPlayer )
@@ -754,7 +747,7 @@ void CScenarioTrackerMultiplayer::SetMultiplayerInfo( const SMultiplayerInfo &in
 	multiplayerInfo = info;
 }
 
-IScenarioTracker::SMultiplayerInfo* CScenarioTrackerMultiplayer::GetMultiplayerInfo()
+IScenarioTracker::SMultiplayerInfo *CScenarioTrackerMultiplayer::GetMultiplayerInfo()
 {
 	return &multiplayerInfo;
 }
@@ -764,7 +757,9 @@ void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int n
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
 		return;
 
-	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ), return );
+	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(),
+	           fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ),
+	           return );
 	players[nPlayer].nMultiplayerSide = nNewSide;
 
 	if ( players[nPlayer].nMultiplayerSide < 0 || players[nPlayer].nMultiplayerSide >= pMPConsts->sides.size() )
@@ -773,11 +768,13 @@ void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int n
 	UpdateReinforcements( nPlayer );
 }
 
-const NDb::SPartyDependentInfo* CScenarioTrackerMultiplayer::GetPlayerParty( const int nPlayer )
+const NDb::SPartyDependentInfo *CScenarioTrackerMultiplayer::GetPlayerParty( const int nPlayer )
 {
-	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ), return 0 );
+	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(),
+	           fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ),
+	           return 0 );
 
-	if ( GetPlayerSide( nPlayer ) == 2 )			// Neutral party is taken from map
+	if ( GetPlayerSide( nPlayer ) == 2 ) // Neutral party is taken from map
 	{
 		CDBPtr<NDb::SMapInfo> pMapInfo;
 		if ( IsMissionActive() )
@@ -799,7 +796,9 @@ const NDb::SPartyDependentInfo* CScenarioTrackerMultiplayer::GetPlayerParty( con
 
 void CScenarioTrackerMultiplayer::SetPlayerSide( const int nPlayer, const int nNewTeam )
 {
-	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ), return );
+	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(),
+	           fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ),
+	           return );
 	if ( nNewTeam < 0 || nNewTeam > 2 )
 		players[nPlayer].nDiplomacySide = 2;
 	else
@@ -821,20 +820,21 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 
 		NDb::EReinforcementType eType = pReinf->eType;
 
-		if ( nTechLevel < 0 || players[nPlayer].nMultiplayerSide == -1 )				// keep default if side (or techlevel) is undefined
+		if ( nTechLevel < 0 || players[nPlayer].nMultiplayerSide == -1 ) // keep default if side (or techlevel) is undefined
 			continue;
 
 		// Use only the current tech level to assign reinfs - no more inheritance from old ones!
-		const std::vector<NDb::STechLevelReinfSet> &techLevels = pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
+		const std::vector<NDb::STechLevelReinfSet> &techLevels =
+				pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
 
 		if ( nTechLevel >= techLevels.size() )
 			continue;
 
-		const std::vector< CDBPtr<NDb::SReinforcement> > &reinfSet = techLevels[nTechLevel].reinforcements;
+		const std::vector<CDBPtr<NDb::SReinforcement>> &reinfSet = techLevels[nTechLevel].reinforcements;
 
 		for ( int k = 0; k < reinfSet.size(); ++k )
 		{
-			if ( reinfSet[k]->eType == eType )			// Found a reinf of this type in this tech level
+			if ( reinfSet[k]->eType == eType ) // Found a reinf of this type in this tech level
 			{
 				reinfs[eType] = reinfSet[k];
 				break;
@@ -863,12 +863,13 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 	}
 }
 
-const NDb::SReinforcement * CScenarioTrackerMultiplayer::GetStartUnits( int nPlayer ) const
+const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetStartUnits( int nPlayer ) const
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 || nTechLevel < 0 )
 		return 0;
 
-	const NDb::STechLevelReinfSet &curTechLevel = pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels[nTechLevel];
+	const NDb::STechLevelReinfSet &curTechLevel =
+			pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels[nTechLevel];
 
 	return curTechLevel.pStartingUnits;
 }
@@ -883,7 +884,7 @@ void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, i
 	CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1, message.c_str() );
 }
 
-const IScenarioTracker::SPlayerColor& CScenarioTrackerMultiplayer::GetPlayerColor( int nPlayer ) const
+const IScenarioTracker::SPlayerColor &CScenarioTrackerMultiplayer::GetPlayerColor( int nPlayer ) const
 {
 	if ( nPlayer < 0 || nPlayer >= players.size() )
 		return playerColorNeutral;
@@ -893,7 +894,8 @@ const IScenarioTracker::SPlayerColor& CScenarioTrackerMultiplayer::GetPlayerColo
 
 void CScenarioTrackerMultiplayer::SetPlayerColour( const int nPlayer, const int nNewColour )
 {
-	if ( !IsMissionActive() || nPlayer < 0 || nPlayer >= players.size() || nNewColour < 0 || nNewColour >= pMPConsts->playerColorInfos.size() )
+	if ( !IsMissionActive() || nPlayer < 0 || nPlayer >= players.size() || nNewColour < 0 ||
+	     nNewColour >= pMPConsts->playerColorInfos.size() )
 		return;
 
 	players[nPlayer].playerColor.dwColor = pMPConsts->playerColorInfos[nNewColour].nColor | 0xFF000000;
@@ -905,7 +907,8 @@ const NDb::SObjectBaseRPGStats *CScenarioTrackerMultiplayer::GetKeyBuildingFlagO
 {
 	int nSide = GetPlayerSide( nPlayer );
 
-	NI_ASSERT( nSide >= 0 && nSide < pMPConsts->diplomacyInfo.size(), fmt::format( "DATA: No info in MPConsts.diplomacyInfo for diplomacy side {}", nSide ) );
+	NI_ASSERT( nSide >= 0 && nSide < pMPConsts->diplomacyInfo.size(),
+	           fmt::format( "DATA: No info in MPConsts.diplomacyInfo for diplomacy side {}", nSide ) );
 	if ( nSide >= 0 && nSide < pMPConsts->diplomacyInfo.size() )
 	{
 		if ( pMPConsts->diplomacyInfo[nSide] )

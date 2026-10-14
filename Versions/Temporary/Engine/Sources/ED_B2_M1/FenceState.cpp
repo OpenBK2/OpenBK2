@@ -26,7 +26,6 @@ void CFenceState::ClearData()
 	designTool.Clear();
 }
 
-
 void CFenceState::InsertFence()
 {
 	if ( CanEdit() )
@@ -58,9 +57,10 @@ void CFenceState::InsertFence()
 			pEditParameters->nFlags = MIMOSEP_PLAYER_INDEX;
 			GetEditParameters( pEditParameters, CHID_MAPINFO_MAPOBJECT_WINDOW );
 			//
-			for ( std::vector<CFenceDesignTool::SFenceSectionInfo>::iterator itTE = segInfo.begin(); itTE!= segInfo.end(); ++itTE )
+			for ( std::vector<CFenceDesignTool::SFenceSectionInfo>::iterator itTE = segInfo.begin(); itTE != segInfo.end();
+			      ++itTE )
 			{
-				CFenceDesignTool::SFenceSectionInfo *pSectionInfo = &(*itTE);
+				CFenceDesignTool::SFenceSectionInfo *pSectionInfo = &( *itTE );
 				pSectionInfo->vPosition.z = 0.0f;
 				//
 				// записываем секцию забора в базу и добавляем во внутренние структуры CMapInfoEditor
@@ -76,7 +76,8 @@ void CFenceState::InsertFence()
 				objectCreateInfo.bRotateTo90Degree = GetMapInfoEditor()->editorSettings.bRotateTo90Degree;
 				//
 				unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
-				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
+				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = GetMapInfoEditor()->objectInfoCollector.Insert(
+								 static_cast<NMapInfoEditor::SSimpleObjectInfo *>( 0 ), &nSimpleObjectInfoID ) )
 				{
 					if ( !pSimpleObjectInfo->Create( &objectCreateInfo, pScene, pObjectController, pManipulator ) )
 					{
@@ -94,7 +95,6 @@ void CFenceState::InsertFence()
 	}
 }
 
-
 bool CFenceState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
@@ -102,9 +102,9 @@ bool CFenceState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		return true;
 	}
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
-	case ID_TOOLS_FIT_TO_GRID:
+		case ID_TOOLS_FIT_TO_GRID:
 		{ // изменена настройка редактора FitToAIGrid
 			designTool.Clear();
 			ClearData();
@@ -113,13 +113,12 @@ bool CFenceState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			designTool.SetUp( GetMapInfoEditor()->editorSettings.bFitToGrid, selectedFenceInfo.pFenceRPGStats );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
-		return true;
-	default:
-		return false;
+			return true;
+		default:
+			return false;
 	}
 	return false;
 }
-
 
 bool CFenceState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
@@ -131,17 +130,16 @@ bool CFenceState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 		return true;
 	}
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
-	case ID_TOOLS_FIT_TO_GRID:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
+		case ID_TOOLS_FIT_TO_GRID:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		default:
+			return false;
 	}
 }
-
 
 void CFenceState::RefreshSelectedFenceInfo()
 {
@@ -149,7 +147,9 @@ void CFenceState::RefreshSelectedFenceInfo()
 	selectedFenceInfo = SSelectedFenceInfo();
 	//
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+					 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+	     ( !objectSet.objectNameSet.empty() ) )
 	{
 		bool bRes = ( objectSet.szObjectTypeName == "FenceRPGStats" ) && ( !objectSet.objectNameSet.empty() );
 		if ( !bRes )
@@ -158,10 +158,10 @@ void CFenceState::RefreshSelectedFenceInfo()
 		}
 		selectedFenceInfo.szRPGStatsTypeName = objectSet.szObjectTypeName;
 		selectedFenceInfo.rpgStatsDBID = objectSet.objectNameSet.begin()->first;
-		selectedFenceInfo.pFenceRPGStats = dynamic_cast<const NDb::SFenceRPGStats*>( NDb::GetObject( selectedFenceInfo.rpgStatsDBID ) );
+		selectedFenceInfo.pFenceRPGStats =
+				dynamic_cast<const NDb::SFenceRPGStats *>( NDb::GetObject( selectedFenceInfo.rpgStatsDBID ) );
 	}
 }
-
 
 void CFenceState::InsertObjectEnter()
 {
@@ -176,7 +176,6 @@ void CFenceState::InsertObjectEnter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CFenceState::InsertObjectLeave()
 {
 	sceneDrawTool.Clear();
@@ -188,7 +187,6 @@ void CFenceState::InsertObjectLeave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CFenceState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
 	if ( !designTool.bRay )
@@ -196,11 +194,18 @@ void CFenceState::InsertObjectDraw( IPaintContext *pPaintDC )
 		CVec3 vPlacementPosition = pStoreInputState->lastEventInfo.vTerrainPos;
 		vPlacementPosition.z = GetTerrainHeight( vPlacementPosition.x, vPlacementPosition.y );
 		CVec3 vPlacementSelectorPosition = vPlacementPosition;
-		sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS0, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
-		sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS1, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
+		sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+		                          NMapInfoEditor::PLACEMENT_RADIUS0,
+		                          NMapInfoEditor::PLACEMENT_PARTS,
+		                          NMapInfoEditor::PLACEMENT_COLOR,
+		                          false );
+		sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+		                          NMapInfoEditor::PLACEMENT_RADIUS1,
+		                          NMapInfoEditor::PLACEMENT_PARTS,
+		                          NMapInfoEditor::PLACEMENT_COLOR,
+		                          false );
 	}
 }
-
 
 void CFenceState::FillScene( unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -221,14 +226,17 @@ void CFenceState::FillScene( unsigned nFlags, const CVec3 &rTerrainPos )
 			//
 			if ( !sectionsInfo.empty() )
 			{
-				for ( std::vector<CFenceDesignTool::SFenceSectionInfo>::iterator it = sectionsInfo.begin(); it != sectionsInfo.end(); ++it )
+				for ( std::vector<CFenceDesignTool::SFenceSectionInfo>::iterator it = sectionsInfo.begin();
+				      it != sectionsInfo.end();
+				      ++it )
 				{
 					CFenceDesignTool::SFenceSectionInfo *pSectionInfo = &*it;
 					pSectionInfo->vPosition.z = GetTerrainHeight( pSectionInfo->vPosition.x, pSectionInfo->vPosition.y );
 
 					uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
 					CQuat qRotation = CQuat( pSectionInfo->fDirection, V3_AXIS_Z );
-					if ( SSimpleObjectInfo::NeedMakeOrientation( selectedFenceInfo.szRPGStatsTypeName, selectedFenceInfo.rpgStatsDBID ) )
+					if ( SSimpleObjectInfo::NeedMakeOrientation( selectedFenceInfo.szRPGStatsTypeName,
+					                                             selectedFenceInfo.rpgStatsDBID ) )
 					{
 						dwNormal = EditorScene()->GetNormal( CVec2( pSectionInfo->vPosition.x, pSectionInfo->vPosition.y ) );
 						MakeOrientation( &qRotation, DWORDToVec3( dwNormal ) );
@@ -271,7 +279,6 @@ void CFenceState::FillScene( unsigned nFlags, const CVec3 &rTerrainPos )
 	}
 }
 
-
 bool CFenceState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
@@ -287,7 +294,6 @@ bool CFenceState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainP
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	return false;
 }
-
 
 bool CFenceState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -316,7 +322,6 @@ bool CFenceState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrai
 	return false;
 }
 
-
 bool CFenceState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( designTool.bRay )
@@ -334,7 +339,6 @@ bool CFenceState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainP
 		return true;
 	}
 }
-
 
 bool CFenceState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -380,14 +384,15 @@ bool CFenceState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CV
 	return false;
 }
 
-
 void CFenceState::ClearScene()
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
 		if ( !tmpSceneObjectsIDList.empty() )
 		{
-			for ( NMapInfoEditor::CSceneIDList::const_iterator itSceneID = tmpSceneObjectsIDList.begin(); itSceneID != tmpSceneObjectsIDList.end(); ++itSceneID )
+			for ( NMapInfoEditor::CSceneIDList::const_iterator itSceneID = tmpSceneObjectsIDList.begin();
+			      itSceneID != tmpSceneObjectsIDList.end();
+			      ++itSceneID )
 			{
 				if ( CPtr<SAIDissapearObjUpdate> pUpdate = new SAIDissapearObjUpdate() )
 				{
@@ -404,7 +409,6 @@ void CFenceState::ClearScene()
 	}
 }
 
-
 //
 //
 //				FENCE DESIGN TOOL
@@ -413,7 +417,7 @@ void CFenceState::ClearScene()
 
 static CVec3 AlignToAIGridCellCenter( const CVec3 &p )
 {
-	const float F_AI_TILE_SIZE = Vis2AI( float(VIS_TILE_SIZE / AI_TILES_IN_VIS_TILE) );
+	const float F_AI_TILE_SIZE = Vis2AI( float( VIS_TILE_SIZE / AI_TILES_IN_VIS_TILE ) );
 	const float F_AI_TILE_SIZE_2 = F_AI_TILE_SIZE / 2.0f;
 
 	CVec3 r = p;
@@ -428,7 +432,6 @@ static CVec3 AlignToAIGridCellCenter( const CVec3 &p )
 	return r;
 }
 
-
 CVec3 CFenceDesignTool::GetFencePlace( const CVec3 &p )
 {
 	if ( !bFitToAIGrid )
@@ -436,7 +439,6 @@ CVec3 CFenceDesignTool::GetFencePlace( const CVec3 &p )
 
 	return AlignToAIGridCellCenter( p );
 }
-
 
 void CFenceDesignTool::SetUp( bool _bFitToAIGrid, const NDb::SFenceRPGStats *pStats )
 {
@@ -454,7 +456,6 @@ void CFenceDesignTool::SetUp( bool _bFitToAIGrid, const NDb::SFenceRPGStats *pSt
 	fSectionLen = AI_TILE_SIZE * AI_TILES_IN_VIS_TILE;
 }
 
-
 void CFenceDesignTool::Clear()
 {
 	bComplete = false;
@@ -468,7 +469,6 @@ void CFenceDesignTool::Clear()
 	vLastPos = VNULL3;
 }
 
-
 bool CFenceDesignTool::ProcessLClickPoint( const CVec3 &p )
 {
 	if ( !bEnabled || bComplete )
@@ -478,23 +478,20 @@ bool CFenceDesignTool::ProcessLClickPoint( const CVec3 &p )
 	if ( !bRay )
 	{
 		bRay = true;
-		vRayOrigin = GetFencePlace(p);
+		vRayOrigin = GetFencePlace( p );
 	}
 	return false;
 }
-
 
 bool CFenceDesignTool::ProcessRClickPoint( const CVec3 &p )
 {
 	return false;
 }
 
-
 bool CFenceDesignTool::ProcessEscape()
 {
 	return false;
 }
-
 
 bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 {
@@ -536,7 +533,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 				fExactDir = -FP_PI2;
 				break;
 		}
-		float fADiff = ADiff(fExactDir,fRayDir);
+		float fADiff = ADiff( fExactDir, fRayDir );
 		fRayDir = fExactDir;
 		nNumSections = ( fabs( fLen * cos( fADiff ) ) ) / fSectionLen;
 		if ( nNumSections == 0 )
@@ -579,9 +576,8 @@ bool CFenceDesignTool::IsComplete()
 	return bComplete;
 }
 
-
 void CFenceDesignTool::GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo,
-																			  NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode )
+                                        NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode )
 {
 	if ( ( !bEnabled ) || ( !bRay ) )
 	{

@@ -18,13 +18,13 @@ struct SEditorState
 	CDefaultInputState *pState;
 };
 
-
 class CWindowSimpleSharedController : public CObjectBaseController
 {
 	OBJECT_NOCOPY_METHODS( CWindowSimpleSharedController );
+
 public:
-	CObjectController * GetInternalController() { return &internalController; }
-	static const std::string GetTemporaryLabel()     { return "CWindowSimpleSharedController::TEMPORARY_LABEL"; }
+	CObjectController *GetInternalController() { return &internalController; }
+	static const std::string GetTemporaryLabel() { return "CWindowSimpleSharedController::TEMPORARY_LABEL"; }
 	//
 	// IController
 	virtual bool IsEmpty() const { return internalController.IsEmpty(); }
@@ -33,20 +33,19 @@ public:
 		internalController.GetDescription( pszDescription );
 	}
 	//
-	void SetChildDesc( const std::string & szTypeName, const CDBID &rDBID )
+	void SetChildDesc( const std::string &szTypeName, const CDBID &rDBID )
 	{
 		szChildTypeName = szTypeName;
 		dbid = rDBID;
 	}
-	inline const std::string & GetChildTypeName() const { return szChildTypeName; }
-	inline const CDBID& GetChildID() const { return dbid; }
+	inline const std::string &GetChildTypeName() const { return szChildTypeName; }
+	inline const CDBID &GetChildID() const { return dbid; }
 	//
 private:
 	CObjectController internalController;
 	std::string szChildTypeName;
 	CDBID dbid;
 };
-
 
 class CWindowSimpleSharedEditorSettings
 {
@@ -57,7 +56,6 @@ public:
 	// serializing...
 	int operator&( IXmlSaver &xs );
 };
-
 
 class ED_COMMON_EXPORT CWindowSimpleSharedEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
@@ -78,13 +76,16 @@ public:
 
 	//IEditor
 	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView* GetView() { return this;  }
-	IInputState* GetInputState() { return states.back().pState; }
-	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	IView *GetView() { return this; }
+	IInputState *GetInputState() { return states.back().pState; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	{
+		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
+	}
 	void CreateControls() {}
 	void PostCreateControls() {}
 	void PreDestroyControls() {}
-	void DestroyControls() { 	Destroy(); }
+	void DestroyControls() { Destroy(); }
 	void Create();
 	void Destroy();
 
@@ -92,14 +93,15 @@ public:
 	void RemoveViewManipulator();
 
 	// Создание Undo Operation
-	CWindowSimpleSharedController* CreateUndoController()
+	CWindowSimpleSharedController *CreateUndoController()
 	{
-		return CDefaultView::CreateController<CWindowSimpleSharedController>( static_cast<CWindowSimpleSharedController*>( 0 ) );
+		return CDefaultView::CreateController<CWindowSimpleSharedController>(
+				static_cast<CWindowSimpleSharedController *>( 0 ) );
 	}
 
 	//CDefaultView
-	void Undo( IController* pController );
-	void Redo( IController* pController );
+	void Undo( IController *pController );
+	void Redo( IController *pController );
 
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) { return false; }
@@ -108,17 +110,17 @@ public:
 	// methods
 	bool UOBegin( IManipulator *pManipulator, const std::string &rObjectTypeName, const CDBID &rDBID );
 	bool UOEnd();
-	bool UOSetValue( const std::string & szName, const CVariant &newValue );
+	bool UOSetValue( const std::string &szName, const CVariant &newValue );
 	bool UOInsertNode( const std::string &szName, const std::string &szChildTypeName, const CDBID &rDBID );
 	bool UORemoveNode( const std::string &szName, int nIndex, const std::string &szChildTypeName, const CDBID &rDBID );
 	bool InsertObject( IManipulator *pManipulator, const std::string &szName );
 	bool RemoveObject( IManipulator *pManipulator, const std::string &szName );
 
-	void PushState( const SObjectSet & _objectSet, CDefaultInputState * pState, bool bCallEnterLeave = true );
+	void PushState( const SObjectSet &_objectSet, CDefaultInputState *pState, bool bCallEnterLeave = true );
 	void PopState();
 	bool HasPushedStates() const { return !states.empty(); }
 	bool HasMoreThanOnePushedStates() const { return states.size() > 1; }
-	bool SetupState( const SObjectSet & _objectSet );
+	bool SetupState( const SObjectSet &_objectSet );
 
 	void PushRunModeState( const std::string &rszEditorTypeName, const CDBID &rDBID );
 	void PopRunModeState();

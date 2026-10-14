@@ -30,7 +30,7 @@ struct ISound : public CObjectBase
 
 	// 0.0f ... 1.0f
 	virtual void SetVolume( float nVolume ) = 0;
-	virtual float GetVolume()const = 0;
+	virtual float GetVolume() const = 0;
 
 	virtual void SetVolumeType( int nVolumeType ) = 0;
 	virtual int GetVolumeType() const = 0;
@@ -48,22 +48,25 @@ struct ISound : public CObjectBase
 	virtual void SetMinMax( const float fMinDist, const float fMaxDist ) = 0;
 
 	// продолжительность звука в самплах
-	virtual unsigned int GetLenght() =0;
-	virtual unsigned int GetSampleRate() =0;
+	virtual unsigned int GetLenght() = 0;
+	virtual unsigned int GetSampleRate() = 0;
 };
 
 struct ISFX : public CObjectBase
 {
-	enum { tidTypeID = 0x110BDC40 };
+	enum
+	{
+		tidTypeID = 0x110BDC40
+	};
 	//
-	virtual CObjectBase* QI( int nInterfaceTypeID ) = 0;
+	virtual CObjectBase *QI( int nInterfaceTypeID ) = 0;
 	// Init and close sound system
 	virtual bool IsInitialized() = 0;
 	virtual bool Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMixRate, int nMaxChannels ) = 0;
 	//
 	// enable SFXes and streaming
 	virtual void EnableSFX( bool bEnable ) = 0;
-	virtual bool IsSFXEnabled()const=0;
+	virtual bool IsSFXEnabled() const = 0;
 	//
 	// setup
 	virtual void SetDistanceFactor( float fFactor ) = 0;
@@ -87,8 +90,8 @@ struct ISFX : public CObjectBase
 	virtual bool IsPlaying( ISound *pSound ) = 0;
 
 	// текущая позиция прогирыша
-	virtual unsigned int GetCurrentPosition( ISound * pSound ) = 0;
-	virtual void SetCurrentPosition( ISound * pSound, unsigned int pos ) = 0;
+	virtual unsigned int GetCurrentPosition( ISound *pSound ) = 0;
+	virtual void SetCurrentPosition( ISound *pSound, unsigned int pos ) = 0;
 };
 
 SOUND_EXPORT ISFX *CreateSoundEngine();

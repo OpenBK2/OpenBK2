@@ -4,19 +4,19 @@
 
 namespace NDb
 {
-	struct SVoice;
-	struct SMapMusic;
+struct SVoice;
+struct SMapMusic;
 }
 enum EMusicSystemVolume
 {
-	EMS_MASTER,													// master volume
+	EMS_MASTER, // master volume
 
-	EMS_MUSIC_MASTER,										// MUSIC STREAM volume
-	EMS_MUSIC_FADE_SELF,								// MUSIC STREAM volume, set by "fader" that launch MUSIC stream
-	EMS_MUSIC_FADE_FROM_VOICE,					// MUSIC STREAM volume, set by voice stream faders
+	EMS_MUSIC_MASTER,          // MUSIC STREAM volume
+	EMS_MUSIC_FADE_SELF,       // MUSIC STREAM volume, set by "fader" that launch MUSIC stream
+	EMS_MUSIC_FADE_FROM_VOICE, // MUSIC STREAM volume, set by voice stream faders
 
-	EMS_VOICE_MASTER,										// VOICE STREAM volume
-	EMS_VOICE_SELF,										  // VOICE STREAM volume, set by voice stream faders
+	EMS_VOICE_MASTER, // VOICE STREAM volume
+	EMS_VOICE_SELF,   // VOICE STREAM volume, set by voice stream faders
 
 	_EMS_COUNT,
 };
@@ -33,7 +33,10 @@ enum EStreamType
 // VOICE STREAM is running periodically, it is launched through specific functions.
 struct IMusicSystem : public CObjectBase
 {
-	enum { tidTypeID = 0x11181340 };
+	enum
+	{
+		tidTypeID = 0x11181340
+	};
 
 	virtual void Update() = 0;
 	virtual void Clear() = 0;
@@ -60,4 +63,4 @@ struct IMusicSystem : public CObjectBase
 	virtual void OnResetTimer() = 0;
 };
 
-SOUND_EXPORT IMusicSystem * CreateMusicSystem();
+SOUND_EXPORT IMusicSystem *CreateMusicSystem();

@@ -2,7 +2,7 @@
 #pragma once
 
 template <class T>
-void SerializeOwner( const int nChunk, T **pOwner, IBinSaver* pSaver )
+void SerializeOwner( const int nChunk, T **pOwner, IBinSaver *pSaver )
 {
 	CPtr<T> pSaverUnit;
 	if ( pSaver->IsReading() )

@@ -12,13 +12,9 @@ struct SPointListDialogData
 	bool bChkPropmask;
 	NDb::ESeason eSeason;
 
-	SPointListDialogData() :
-		nInstanceID(-1),
-		nNumPoints(0),
-		nSelectedPoint(-1),
-		bChkPassability(false),
-		bChkPropmask(false),
-		eSeason(NDb::ESeason(-1))
+	SPointListDialogData()
+			: nInstanceID( -1 ), nNumPoints( 0 ), nSelectedPoint( -1 ), bChkPassability( false ), bChkPropmask( false ),
+				eSeason( NDb::ESeason( -1 ) )
 	{
 	}
 };
@@ -29,9 +25,8 @@ struct SFormationWindowDialogData
 	std::vector<NDb::SSquadRPGStats::SFormation::EFormationMoveType> squadFormations;
 	bool bChkPropmask;
 
-	SFormationWindowDialogData() :
-		eSelectedFormation(NDb::SSquadRPGStats::SFormation::EFormationMoveType(-1)),
-		bChkPropmask(false)
+	SFormationWindowDialogData()
+			: eSelectedFormation( NDb::SSquadRPGStats::SFormation::EFormationMoveType( -1 ) ), bChkPropmask( false )
 	{
 	}
 
@@ -42,6 +37,6 @@ struct SFormationWindowDialogData
 			if ( squadFormations[k] == e )
 				return;
 		}
-		squadFormations.push_back(e);
+		squadFormations.push_back( e );
 	}
 };

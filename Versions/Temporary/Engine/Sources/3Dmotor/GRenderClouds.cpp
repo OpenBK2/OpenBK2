@@ -15,7 +15,7 @@ static std::vector<STriangle> cloudTrisBuf;
 const int N_GRID_SIZE = 64;
 static void RefreshGeometry()
 {
-	if ( IsValid(pCloudGrid) )
+	if ( IsValid( pCloudGrid ) )
 		return;
 	NGfx::CBufferLock<NGfx::SGeomVecFull> geom( &pCloudGrid, N_GRID_SIZE * N_GRID_SIZE );
 	NGfx::SGeomVecFull v;
@@ -24,10 +24,10 @@ static void RefreshGeometry()
 	{
 		for ( int x = 0; x < N_GRID_SIZE; ++x )
 		{
-			float fX = ((float)x) / ( N_GRID_SIZE - 1 );
-			float fY = ((float)y) / ( N_GRID_SIZE - 1 );
+			float fX = ( (float)x ) / ( N_GRID_SIZE - 1 );
+			float fY = ( (float)y ) / ( N_GRID_SIZE - 1 );
 			v.pos = CVec3( fX, fY, 0 );
-			geom[ y * N_GRID_SIZE + x ] = v;
+			geom[y * N_GRID_SIZE + x] = v;
 		}
 	}
 
@@ -47,11 +47,15 @@ static void RefreshGeometry()
 	cloudTris.pTri = &cloudTrisBuf[0];
 }
 
-void RenderClouds( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &renderInfo, const SPerspDirectionalDepthInfo &depthInfo, NGfx::CTexture *pCloud, const SHMatrix &proj )
+void RenderClouds( NGfx::CRenderContext *pRC,
+                   const SPerspDirectionalDepthInfo &renderInfo,
+                   const SPerspDirectionalDepthInfo &depthInfo,
+                   NGfx::CTexture *pCloud,
+                   const SHMatrix &proj )
 {
-	if ( !IsValid(pCloud) )
+	if ( !IsValid( pCloud ) )
 		return;
-	NGfx::CRenderContext rc(*pRC);
+	NGfx::CRenderContext rc( *pRC );
 	rc.SetDepth( NGfx::DEPTH_NONE );
 	rc.SetAlphaCombine( NGfx::COMBINE_NONE );
 	rc.SetStencil( NGfx::STENCIL_NONE );
@@ -69,11 +73,11 @@ void RenderClouds( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &
 
 	const SNLProjectionInfo &nlp = depthInfo.nlp;
 	float fDet = 1 / ( nlp.vTexU.x * nlp.vTexV.y - nlp.vTexU.y * nlp.vTexV.x );
-	float fCx = -( + nlp.vTexV.y * nlp.vTexU.w - nlp.vTexU.y * nlp.vTexV.w ) * fDet;
-	float fCy = -( - nlp.vTexV.x * nlp.vTexU.w + nlp.vTexU.x * nlp.vTexV.w ) * fDet;
+	float fCx = -( +nlp.vTexV.y * nlp.vTexU.w - nlp.vTexU.y * nlp.vTexV.w ) * fDet;
+	float fCy = -( -nlp.vTexV.x * nlp.vTexU.w + nlp.vTexU.x * nlp.vTexV.w ) * fDet;
 	CVec4 vC( fCx, fCy, 0, 1 );
 	CVec4 vU( nlp.vTexV.y * fDet, -nlp.vTexV.x * fDet, 0, 0 );
-	CVec4 vV(-nlp.vTexU.y * fDet,  nlp.vTexU.x * fDet, 0, 0 );
+	CVec4 vV( -nlp.vTexU.y * fDet, nlp.vTexU.x * fDet, 0, 0 );
 
 	CVec4 v1 = vC + vU, v2 = vC + vV, v12 = vC + vU + vV;
 	rc.SetVSConst( 30, vC + vU * nlp.vMinMax.x + vV * nlp.vMinMax.z );
@@ -99,8 +103,8 @@ void CCloudMover::Recalc()
 	float fX = cos( ToRadian( fAngle ) ), fY = sin( ToRadian( fAngle ) );
 	float fDeltaX = fmod( fX * fScroll, 1 );
 	float fDeltaY = fmod( fY * fScroll, 1 );
-	value.SetX(CVec4( 1 / vWrapSize.x, 0, 0, fDeltaX ));
-	value.SetY(CVec4( 0, 1 / vWrapSize.y, 0, fDeltaY ));
+	value.SetX( CVec4( 1 / vWrapSize.x, 0, 0, fDeltaX ) );
+	value.SetY( CVec4( 0, 1 / vWrapSize.y, 0, fDeltaY ) );
 }
 }
 using namespace NGScene;

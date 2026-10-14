@@ -5,7 +5,7 @@
 
 namespace NDb
 {
-	enum ESelectionType : int;
+enum ESelectionType : int;
 };
 
 class CTerrainManager;
@@ -17,11 +17,18 @@ struct SSelectionInfo
 	CVec3 vMin, vMax;
 	//
 	SSelectionInfo() {}
-	SSelectionInfo( const CVec3 &_vCenter, const CVec3 &_vSize ) { vMin = _vCenter - _vSize; vMax = _vCenter + _vSize; }
+	SSelectionInfo( const CVec3 &_vCenter, const CVec3 &_vSize )
+	{
+		vMin = _vCenter - _vSize;
+		vMax = _vCenter + _vSize;
+	}
 	void MakeBound( SBound *pRes ) { pRes->BoxInit( vMin, vMax ); }
 };
 
-inline bool operator==( const SSelectionInfo &a, const SSelectionInfo &b ) { return a.vMin == b.vMin && a.vMax == b.vMax; }
+inline bool operator==( const SSelectionInfo &a, const SSelectionInfo &b )
+{
+	return a.vMin == b.vMin && a.vMax == b.vMax;
+}
 
 class CVisObjSelectionInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 {
@@ -32,14 +39,16 @@ class CVisObjSelectionInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bUpdate = {};
 	NDb::ESelectionType eSelType = {};
+
 protected:
 	void Recalc();
 	bool NeedUpdate() { return bUpdate; }
+
 public:
 	NMeshData::SMeshData data;
 	//
 	CVisObjSelectionInfo() {}
-	CVisObjSelectionInfo( CTerrainManager *_pTerraManager ): pTerraManager( _pTerraManager ), bUpdate( true ) {}
+	CVisObjSelectionInfo( CTerrainManager *_pTerraManager ) : pTerraManager( _pTerraManager ), bUpdate( true ) {}
 	//
 	void SetInfo( const SSelectionInfo &_info );
 	void SetSelectionType( const NDb::ESelectionType _eSelType ) { eSelType = _eSelType; }
@@ -47,7 +56,7 @@ public:
 	//
 	int operator&( IBinSaver &saver )
 	{
-		saver.Add( 1, static_cast<CPtrFuncBase<NGScene::CObjectInfo>*>(this) );
+		saver.Add( 1, static_cast<CPtrFuncBase<NGScene::CObjectInfo> *>( this ) );
 		saver.Add( 2, &pTerraManager );
 		saver.Add( 3, &info );
 		saver.Add( 4, &bUpdate );
@@ -81,7 +90,11 @@ struct SVisObjSelection
 		return 0;
 	}
 
-	void Recreate() { SVisObjSelection::~SVisObjSelection(); new(this) SVisObjSelection(); }
+	void Recreate()
+	{
+		SVisObjSelection::~SVisObjSelection();
+		new ( this ) SVisObjSelection();
+	}
 };
 
 struct SVisObjSelectionHandler : public CObjectBase
@@ -103,7 +116,19 @@ public:
 	float fScale = {};
 	NDb::ESelectionType eSelType = {};
 	NTimer::STime timeStart = {};
-	int nFadeIn = {}; // msec
+	int nFadeIn = {};  // msec
 	int nFadeOut = {}; // msec
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&eState); f.Add(4,&visObjSelection); f.Add(5,&vPos); f.Add(6,&fScale); f.Add(7,&eSelType); f.Add(8,&timeStart); f.Add(9,&nFadeIn); f.Add(10,&nFadeOut); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nID );
+		f.Add( 3, &eState );
+		f.Add( 4, &visObjSelection );
+		f.Add( 5, &vPos );
+		f.Add( 6, &fScale );
+		f.Add( 7, &eSelType );
+		f.Add( 8, &timeStart );
+		f.Add( 9, &nFadeIn );
+		f.Add( 10, &nFadeOut );
+		return 0;
+	}
 };

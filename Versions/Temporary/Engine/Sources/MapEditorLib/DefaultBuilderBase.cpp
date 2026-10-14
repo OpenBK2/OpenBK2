@@ -5,7 +5,12 @@
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/StringManager.h"
 
-bool CDefaultBuilderBase::InsertObject( std::string *pszObjectTypeName, std::string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
+bool CDefaultBuilderBase::InsertObject( std::string *pszObjectTypeName,
+                                        std::string *pszUniqueObjectName,
+                                        bool bFromMainMenu,
+                                        bool *pbCanChangeObjectName,
+                                        bool *pbNeedExport,
+                                        bool *pbNeedEdit )
 {
 	if ( ( pszObjectTypeName != 0 ) && ( pszUniqueObjectName != 0 ) && ( pbNeedExport != 0 ) && ( pbNeedEdit != 0 ) )
 	{
@@ -15,9 +20,9 @@ bool CDefaultBuilderBase::InsertObject( std::string *pszObjectTypeName, std::str
 		SBuildDataParams buildDataParams;
 		buildDataParams.szObjectTypeName = ( *pszObjectTypeName );
 		CStringManager::SplitFileName( &( buildDataParams.szObjectNamePrefix ),
-																	 &( buildDataParams.szObjectName ),
-																	 &( buildDataParams.szObjectNameExtention ),
-																	 ( *pszUniqueObjectName ) );
+		                               &( buildDataParams.szObjectName ),
+		                               &( buildDataParams.szObjectNameExtention ),
+		                               ( *pszUniqueObjectName ) );
 		buildDataParams.bNeedExport = ( *pbNeedExport );
 		buildDataParams.bNeedEdit = ( *pbNeedEdit );
 		//
@@ -27,7 +32,8 @@ bool CDefaultBuilderBase::InsertObject( std::string *pszObjectTypeName, std::str
 			buildDataParams.GetObjectName( pszUniqueObjectName );
 			( *pbNeedExport ) = buildDataParams.bNeedExport;
 			( *pbNeedEdit ) = buildDataParams.bNeedEdit;
-			return CBuilderBase::InsertObject( pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit );
+			return CBuilderBase::InsertObject(
+					pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit );
 		}
 	}
 	return false;

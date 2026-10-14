@@ -28,7 +28,9 @@ void SUnitBaseRPGStats::CountShellTypes( const int nUniqueID, const int nPlatfor
 		const SBaseGunRPGStats &gun = GetGun( nUniqueID, nPlatform, i );
 		if ( gun.pWeapon )
 		{
-			for ( std::vector<SWeaponRPGStats::SShell>::const_iterator shell = gun.pWeapon->shells.begin(); shell != gun.pWeapon->shells.end(); ++shell )
+			for ( std::vector<SWeaponRPGStats::SShell>::const_iterator shell = gun.pWeapon->shells.begin();
+			      shell != gun.pWeapon->shells.end();
+			      ++shell )
 				nDamagetypes[shell->eDamageType] = 1;
 		}
 	}
@@ -74,7 +76,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 	// convert AI price
 	if ( !bInEditor )
 	{
-		const std::string szVarName = fmt::format( "AIPrice.{:x}", int(etype) );
+		const std::string szVarName = fmt::format( "AIPrice.{:x}", int( etype ) );
 		fPrice *= NGlobal::GetVar( szVarName.c_str(), 1.0f );
 	}
 
@@ -89,7 +91,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 		boundCircle.bIsRound = true;
 		boundCircle.fRadius = fabs( vAABBHalfSize );
 	}
-	nBoundTileRadius = IsInfantry() ? 0 : int(ceil( (2 * vAABBHalfSize.x) / float(32.0f) )) / 2;
+	nBoundTileRadius = IsInfantry() ? 0 : int( ceil( ( 2 * vAABBHalfSize.x ) / float( 32.0f ) ) ) / 2;
 	// transfer animation information to animdescs
 	if ( bInEditor == false )
 	{
@@ -99,7 +101,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 		animdescs.resize( NDb::__ANIMATION_TYPE_COUNTER );
 		const SSkeleton *pSkeleton = 0;
 
-		if (!pvisualObject)
+		if ( !pvisualObject )
 			return;
 
 		for ( int i = 0; i < pvisualObject->models.size(); ++i )
@@ -118,7 +120,8 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 			for ( int i = 0; i < pSkeleton->animations.size(); ++i )
 			{
 				const SAnimB2 *pAnim = checked_cast_ptr<const SAnimB2 *>( pSkeleton->animations[i] );
-				std::vector<SAnimDesc>::iterator pos = animdescs[pAnim->eType].anims.insert( animdescs[pAnim->eType].anims.end(), SAnimDesc() );
+				std::vector<SAnimDesc>::iterator pos =
+						animdescs[pAnim->eType].anims.insert( animdescs[pAnim->eType].anims.end(), SAnimDesc() );
 				pos->nLength = pAnim->nLength;
 				pos->nAction = pAnim->nAction;
 				if ( IsInfantry() )

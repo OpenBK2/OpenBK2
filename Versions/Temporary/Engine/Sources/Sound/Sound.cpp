@@ -10,30 +10,20 @@ REGISTER_SAVELOAD_CLASS( SOUND, 0x110793C1, CSound );
 //*															CSound*
 //*******************************************************************
 
-
-CSound::CSound(	int wID,
-							 const NDb::SSoundDesc *_pDesc,
-														struct ISound *pSound,
-														const enum ESoundMixType eMixType,
-														const CVec3 &vPos,
-														const bool bLooped,
-														const NDb::ESoundType eCombatType,
-														float fMinRadius,
-														float fMaxRadius )
-: pSample( pSound ),
-	eMixType( eMixType ),
-	bLooped( bLooped ),
-	wID( wID ),
-	timeBegin( 0 ),
-	timeBeginDim( 0 ) ,
-	bStartedMark( false ),
-	bFinishedMark( false ),
-	bDimMark( false ),
-	vPos( vPos ), vSpeed( VNULL3 ),
-	pDesc( _pDesc ),
-	nMinRadius( fMinRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE  ),
-	nMaxRadius( fMaxRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE ),
-	eCombatType( eCombatType ), timeLastPosUpdate( CSoundScene2D::GetCurTime() )
+CSound::CSound( int wID,
+                const NDb::SSoundDesc *_pDesc,
+                struct ISound *pSound,
+                const enum ESoundMixType eMixType,
+                const CVec3 &vPos,
+                const bool bLooped,
+                const NDb::ESoundType eCombatType,
+                float fMinRadius,
+                float fMaxRadius )
+		: pSample( pSound ), eMixType( eMixType ), bLooped( bLooped ), wID( wID ), timeBegin( 0 ), timeBeginDim( 0 ),
+			bStartedMark( false ), bFinishedMark( false ), bDimMark( false ), vPos( vPos ), vSpeed( VNULL3 ), pDesc( _pDesc ),
+			nMinRadius( fMinRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE ),
+			nMaxRadius( fMaxRadius / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE ),
+			eCombatType( eCombatType ), timeLastPosUpdate( CSoundScene2D::GetCurTime() )
 {
 	nMaxRadius = nMaxRadius == 0 ? 1 : nMaxRadius;
 	nMinRadius = nMinRadius == 0 ? 1 : nMinRadius;
@@ -60,14 +50,15 @@ float CSound::GetVolume( const NTimer::STime time, const float fDist ) const
 	// сначала - затухание удаленного звука
 	float fVolDim = 0.0f;
 	if ( bDimMark )
-		fVolDim = 1.0f * (time - timeBeginDim) / SSoundSceneConsts::SS_SOUND_DIM_TIME;
+		fVolDim = 1.0f * ( time - timeBeginDim ) / SSoundSceneConsts::SS_SOUND_DIM_TIME;
 	if ( fVolDim > 1.0f )
 		return 0.0f;
 
 	// теперь зависимость от расстояния
 	float fVolDist = 0.0f;
 	if ( fDist / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE > nMinRadius )
-		fVolDist = 1.0f * ( fDist - SSoundSceneConsts::SS_SOUND_CELL_SIZE * SSoundSceneConsts::SS_TILE_SIZE * nMinRadius ) / ( nMaxRadius - nMinRadius ) / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
+		fVolDist = 1.0f * ( fDist - SSoundSceneConsts::SS_SOUND_CELL_SIZE * SSoundSceneConsts::SS_TILE_SIZE * nMinRadius ) /
+		           ( nMaxRadius - nMinRadius ) / SSoundSceneConsts::SS_SOUND_CELL_SIZE / SSoundSceneConsts::SS_TILE_SIZE;
 	if ( fVolDist > 1.0f )
 		return 0.0f;
 
@@ -81,7 +72,7 @@ void CSound::MarkToDim( const NTimer::STime time )
 	wID = 0; // звук теперь управляется сценой
 }
 
-const NDb::SSoundDesc* CSound::GetDesc() const
+const NDb::SSoundDesc *CSound::GetDesc() const
 {
 	return pDesc;
 }
@@ -89,13 +80,13 @@ const NDb::SSoundDesc* CSound::GetDesc() const
 void CSound::UnSubstitute()
 {
 	pSubstitute = 0;
-	timeToPlay = pSample== 0 ? 0 : 1000 * pSample->GetLenght() / pSample->GetSampleRate();
+	timeToPlay = pSample == 0 ? 0 : 1000 * pSample->GetLenght() / pSample->GetSampleRate();
 }
 
 void CSound::Substitute( CSubstSound *_pSubstitute, NTimer::STime nStartTime )
 {
 	pSubstitute = _pSubstitute;
-	ISound * pSound = pSubstitute->GetSound();
+	ISound *pSound = pSubstitute->GetSound();
 	int nSampleRate = pSound->GetSampleRate();
 	timeBegin = nStartTime;
 	timeToPlay = pSound == 0 ? 0 : 1000 * pSound->GetLenght() / nSampleRate;
@@ -130,12 +121,12 @@ void CSound::MarkStarted()
 	bStartedMark = true;
 }
 
-CSubstSound * CSound::GetSubst()
+CSubstSound *CSound::GetSubst()
 {
 	return pSubstitute;
 }
 
-ISound * CSound::GetSound()
+ISound *CSound::GetSound()
 {
 	if ( pSubstitute )
 		return pSubstitute->GetSound();

@@ -9,10 +9,10 @@ void LegacyLoadTileMap( const std::string &szMapFilesPath, int nX, int nY, CArra
 {
 	CFileStream streamTileMap( szMapFilesPath + "zonemap.tga", CFileStream::WIN_READ_ONLY );
 	if ( streamTileMap.IsOk() )
-		NImage::LoadTGAImage( (*pTileTerraMap), &streamTileMap );
+		NImage::LoadTGAImage( ( *pTileTerraMap ), &streamTileMap );
 
-	if ( (pTileTerraMap->GetSizeX() != (nX * DEF_PATCH_SIZE + 1)) ||
-			 (pTileTerraMap->GetSizeY() != (nY * DEF_PATCH_SIZE + 1)) )
+	if ( ( pTileTerraMap->GetSizeX() != ( nX * DEF_PATCH_SIZE + 1 ) ) ||
+	     ( pTileTerraMap->GetSizeY() != ( nY * DEF_PATCH_SIZE + 1 ) ) )
 	{
 		//ConvertZoneMaskToTileMap();
 		//SaveTileMap();

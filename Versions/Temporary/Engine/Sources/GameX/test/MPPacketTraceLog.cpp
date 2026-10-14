@@ -100,7 +100,9 @@ TEST_F( MPPacketTraceLog, FinalFlushKeepsExistingFormatAndStopsLogging )
 	const std::string complete = ReadTrace();
 	EXPECT_NE( complete.find( "flush_reason=match_end" ), std::string::npos );
 	EXPECT_EQ( complete.find( "in_progress" ), std::string::npos );
-	EXPECT_NE( complete.find( "final_present_mask=0x00000001 final_laggers_mask=0x00000000 final_transceiver_mask=0x00000001" ), std::string::npos );
+	EXPECT_NE(
+			complete.find( "final_present_mask=0x00000001 final_laggers_mask=0x00000000 final_transceiver_mask=0x00000001" ),
+			std::string::npos );
 	EXPECT_NE( complete.find( "-- events (2) --" ), std::string::npos );
 	EXPECT_NE( complete.find( "one two three" ), std::string::npos );
 	EXPECT_NE( complete.find( "-- event_type_counts --\nSTATE=1\nTX=1" ), std::string::npos );

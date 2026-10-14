@@ -28,7 +28,7 @@
 
 namespace NDb
 {
-	struct SFont;
+struct SFont;
 }
 
 namespace NGScene
@@ -48,13 +48,15 @@ class CGlyphAtlas : public CPtrFuncBase<NGfx::CTexture>
 	// Absent in older saves: rebuild those atlases with their original sizing,
 	// since saved text already holds their glyph coordinates.
 	bool bMatchBakedSize = false;
-	std::vector<uint16_t> order;					// characters in the order they were placed
+	std::vector<uint16_t> order; // characters in the order they were placed
 
 	bool Rebuild();
 	bool AddGlyph( uint16_t wChar );
+
 protected:
 	bool NeedUpdate();
 	void Recalc();
+
 public:
 	CGlyphAtlas();
 	~CGlyphAtlas();
@@ -76,8 +78,10 @@ class CRuntimeFontFormat : public CPtrFuncBase<CFontFormatInfo>
 {
 	OBJECT_NOCOPY_METHODS( CRuntimeFontFormat );
 	CObj<CGlyphAtlas> pAtlas;
+
 protected:
 	void Recalc();
+
 public:
 	CRuntimeFontFormat() {}
 	explicit CRuntimeFontFormat( CGlyphAtlas *_pAtlas ) : pAtlas( _pAtlas ) {}
@@ -91,6 +95,7 @@ class CRuntimeFontInfo : public CFontInfo
 {
 	OBJECT_NOCOPY_METHODS( CRuntimeFontInfo );
 	CObj<CGlyphAtlas> pAtlas;
+
 public:
 	CRuntimeFontInfo() {}
 	CRuntimeFontInfo( const SFont &sFont, CGlyphAtlas *pAtlas );

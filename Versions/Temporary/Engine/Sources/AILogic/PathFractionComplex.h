@@ -2,14 +2,14 @@
 
 #include "PlanePathFraction.h"
 
-typedef std::pair< const IPathFraction*, float> CCurFraction;
+typedef std::pair<const IPathFraction *, float> CCurFraction;
 
 //	CPathFractionComplexBase
 
 class CPathFractionComplexBase : public IPathFraction
 {
 protected:
-	typedef std::vector< CPtr<IPathFraction> > CSubstitutes;
+	typedef std::vector<CPtr<IPathFraction>> CSubstitutes;
 	CSubstitutes substitute;
 
 	CCurFraction GetCur( const float fDist ) const;
@@ -17,6 +17,7 @@ protected:
 
 	CPathFractionComplexBase( const CPathList &pathList );
 	CPathFractionComplexBase() {}
+
 public:
 	int operator&( IBinSaver &saver )
 	{
@@ -37,13 +38,13 @@ class CPathFractionComplex : public CPathFractionComplexBase
 	OBJECT_BASIC_METHODS( CPathFractionComplex )
 
 public:
-	CPathFractionComplex() {  }
-	CPathFractionComplex( const CPathList &pathList ) : CPathFractionComplexBase( pathList ) {  }
+	CPathFractionComplex() {}
+	CPathFractionComplex( const CPathList &pathList ) : CPathFractionComplexBase( pathList ) {}
 
-	virtual void GetSimplePath( CPathList *paths ) { NI_ASSERT( false, "wrong call" );}
+	virtual void GetSimplePath( CPathList *paths ) { NI_ASSERT( false, "wrong call" ); }
 	int operator&( IBinSaver &saver )
 	{
-		saver.Add( 1, static_cast<CPathFractionComplexBase*>( this ) );
+		saver.Add( 1, static_cast<CPathFractionComplexBase *>( this ) );
 		return 0;
 	}
 };

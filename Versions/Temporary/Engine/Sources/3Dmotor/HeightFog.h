@@ -1,10 +1,10 @@
 #pragma once
 
-# include "../System/Dg.h"
+#include "../System/Dg.h"
 
 namespace NDb
 {
-	struct SHeightFog;
+struct SHeightFog;
 }
 
 namespace NGScene
@@ -12,10 +12,11 @@ namespace NGScene
 
 class CObjectInfo;
 
-CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog,
-																								  const SFBTransform &place );
+CPtrFuncBase<CObjectInfo> *
+CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog, const SFBTransform &place );
 
-CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog,
-																								  CFuncBase<SFBTransform> *pPlace );
+CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom,
+                                                  const NDb::SHeightFog *pHeightFog,
+                                                  CFuncBase<SFBTransform> *pPlace );
 
 } // namespace NGScene

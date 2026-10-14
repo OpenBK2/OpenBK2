@@ -30,9 +30,10 @@ namespace NPortDetail
 class CIconv
 {
 	iconv_t cd;
+
 public:
-	CIconv( const CIconv& ) = delete;
-	void operator=( const CIconv& ) = delete;
+	CIconv( const CIconv & ) = delete;
+	void operator=( const CIconv & ) = delete;
 
 	CIconv( const char *pszTo, const char *pszFrom ) : cd( ::iconv_open( pszTo, pszFrom ) ) {}
 	// Marked closed as well as closed, so that a conversion asked for after this
@@ -45,7 +46,14 @@ public:
 	// log line, and the line is converted here. Without the store that was an
 	// iconv call on a closed descriptor and a segfault at every exit, after the
 	// game had already shut down cleanly.
-	~CIconv() { if ( IsOk() ) { ::iconv_close( cd ); cd = (iconv_t)-1; } }
+	~CIconv()
+	{
+		if ( IsOk() )
+		{
+			::iconv_close( cd );
+			cd = (iconv_t)-1;
+		}
+	}
 
 	bool IsOk() const { return cd != (iconv_t)-1; }
 
@@ -59,7 +67,7 @@ public:
 		}
 		// drop any state left by a previous partial conversion
 		::iconv( cd, 0, 0, 0, 0 );
-		char *pInCur = const_cast< char * >( pIn );
+		char *pInCur = const_cast<char *>( pIn );
 		char *pOutCur = pOut;
 		size_t nInLeft = nInBytes, nOutLeft = nOutBytes;
 		if ( ::iconv( cd, &pInCur, &nInLeft, &pOutCur, &nOutLeft ) == (size_t)-1 )
@@ -99,13 +107,14 @@ inline std::wstring UTF16LEToWide( const void *pData, size_t nBytes )
 #if BOOST_OS_WINDOWS
 	// wchar_t is UTF-16LE here, so this is the copy it has always been
 	static_assert( sizeof( wchar_t ) == sizeof( uint16_t ), "Windows wchar_t is expected to be UTF-16" );
-	return std::wstring( static_cast< const wchar_t * >( pData ), nBytes / sizeof( wchar_t ) );
+	return std::wstring( static_cast<const wchar_t *>( pData ), nBytes / sizeof( wchar_t ) );
 #else
 	static thread_local NPortDetail::CIconv conv( "WCHAR_T", "UTF-16LE" );
 	// one UTF-16 code unit can never produce more than one wchar_t
 	std::wstring result( nBytes / sizeof( uint16_t ), L'\0' );
-	const size_t nWritten = conv.Convert( static_cast< const char * >( pData ), nBytes & ~size_t( 1 ),
-	                                      reinterpret_cast< char * >( &result[0] ),
+	const size_t nWritten = conv.Convert( static_cast<const char *>( pData ),
+	                                      nBytes & ~size_t( 1 ),
+	                                      reinterpret_cast<char *>( &result[0] ),
 	                                      result.size() * sizeof( wchar_t ) );
 	result.resize( nWritten / sizeof( wchar_t ) );
 	return result;
@@ -124,15 +133,14 @@ inline std::string WideToUTF16LE( const std::wstring &value )
 	}
 #if BOOST_OS_WINDOWS
 	static_assert( sizeof( wchar_t ) == sizeof( uint16_t ), "Windows wchar_t is expected to be UTF-16" );
-	return std::string( reinterpret_cast< const char * >( value.data() ), value.size() * sizeof( wchar_t ) );
+	return std::string( reinterpret_cast<const char *>( value.data() ), value.size() * sizeof( wchar_t ) );
 #else
 	static thread_local NPortDetail::CIconv conv( "UTF-16LE", "WCHAR_T" );
 	// a code point outside the basic plane becomes a surrogate pair, so two
 	// UTF-16 code units is the most any single wchar_t can produce
 	std::string result( value.size() * 2 * sizeof( uint16_t ), '\0' );
-	const size_t nWritten = conv.Convert( reinterpret_cast< const char * >( value.data() ),
-	                                      value.size() * sizeof( wchar_t ),
-	                                      &result[0], result.size() );
+	const size_t nWritten = conv.Convert(
+			reinterpret_cast<const char *>( value.data() ), value.size() * sizeof( wchar_t ), &result[0], result.size() );
 	result.resize( nWritten );
 	return result;
 #endif
@@ -149,21 +157,20 @@ inline std::string WideToUTF8( const std::wstring &value )
 #if BOOST_OS_WINDOWS
 	// ask for the length first, so the result is exactly the right size rather
 	// than the four-bytes-per-character worst case
-	const int nBytes = ::WideCharToMultiByte( CP_UTF8, 0, value.data(), static_cast< int >( value.size() ), 0, 0, 0, 0 );
+	const int nBytes = ::WideCharToMultiByte( CP_UTF8, 0, value.data(), static_cast<int>( value.size() ), 0, 0, 0, 0 );
 	if ( nBytes <= 0 )
 	{
 		return std::string();
 	}
-	std::string result( static_cast< size_t >( nBytes ), '\0' );
-	::WideCharToMultiByte( CP_UTF8, 0, value.data(), static_cast< int >( value.size() ), &result[0], nBytes, 0, 0 );
+	std::string result( static_cast<size_t>( nBytes ), '\0' );
+	::WideCharToMultiByte( CP_UTF8, 0, value.data(), static_cast<int>( value.size() ), &result[0], nBytes, 0, 0 );
 	return result;
 #else
 	static thread_local NPortDetail::CIconv conv( "UTF-8", "WCHAR_T" );
 	// a code point is at most 4 bytes in UTF-8, and at least one wchar_t
 	std::string result( value.size() * 4, '\0' );
-	const size_t nBytes = conv.Convert( reinterpret_cast< const char * >( value.data() ),
-	                                    value.size() * sizeof( wchar_t ),
-	                                    &result[0], result.size() );
+	const size_t nBytes = conv.Convert(
+			reinterpret_cast<const char *>( value.data() ), value.size() * sizeof( wchar_t ), &result[0], result.size() );
 	result.resize( nBytes );
 	return result;
 #endif
@@ -177,21 +184,20 @@ inline std::wstring UTF8ToWide( const std::string &value )
 		return std::wstring();
 	}
 #if BOOST_OS_WINDOWS
-	const int nChars = ::MultiByteToWideChar( CP_UTF8, 0, value.data(), static_cast< int >( value.size() ), 0, 0 );
+	const int nChars = ::MultiByteToWideChar( CP_UTF8, 0, value.data(), static_cast<int>( value.size() ), 0, 0 );
 	if ( nChars <= 0 )
 	{
 		return std::wstring();
 	}
-	std::wstring result( static_cast< size_t >( nChars ), L'\0' );
-	::MultiByteToWideChar( CP_UTF8, 0, value.data(), static_cast< int >( value.size() ), &result[0], nChars );
+	std::wstring result( static_cast<size_t>( nChars ), L'\0' );
+	::MultiByteToWideChar( CP_UTF8, 0, value.data(), static_cast<int>( value.size() ), &result[0], nChars );
 	return result;
 #else
 	static thread_local NPortDetail::CIconv conv( "WCHAR_T", "UTF-8" );
 	// one byte of UTF-8 can never produce more than one code point
 	std::wstring result( value.size(), L'\0' );
-	const size_t nBytes = conv.Convert( value.data(), value.size(),
-	                                    reinterpret_cast< char * >( &result[0] ),
-	                                    result.size() * sizeof( wchar_t ) );
+	const size_t nBytes = conv.Convert(
+			value.data(), value.size(), reinterpret_cast<char *>( &result[0] ), result.size() * sizeof( wchar_t ) );
 	result.resize( nBytes / sizeof( wchar_t ) );
 	return result;
 #endif

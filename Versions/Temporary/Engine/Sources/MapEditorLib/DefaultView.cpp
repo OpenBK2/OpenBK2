@@ -3,9 +3,9 @@
 #include "DefaultView.h"
 #include "Interface_FolderCallback.h"
 
-void CDefaultView::SetViewManipulator( IManipulator* _pViewManipulator,
-																			 const SObjectSet &rObjectSet,
-																			 const std::string &rszTemporaryLabel )
+void CDefaultView::SetViewManipulator( IManipulator *_pViewManipulator,
+                                       const SObjectSet &rObjectSet,
+                                       const std::string &rszTemporaryLabel )
 {
 	//DebugTrace( "CDefaultView::SetViewManipulator:<%s>:%d, UOLabel:<%s>, controller:%d", rObjectSet.szObjectTypeName.c_str(), rObjectSet.objectNameSet.size(), rszTemporaryLabel.c_str(), bController );
 	Singleton<IViewContainer>()->Remove( this, objectSet );
@@ -16,7 +16,6 @@ void CDefaultView::SetViewManipulator( IManipulator* _pViewManipulator,
 	//
 	Singleton<IViewContainer>()->Add( this, objectSet );
 }
-
 
 void CDefaultView::RemoveViewManipulator()
 {
@@ -33,17 +32,14 @@ void CDefaultView::RemoveViewManipulator()
 	szTemporaryLabel.clear();
 }
 
-
 void CDefaultView::Enter()
 {
 	Singleton<IFolderCallback>()->LockObjects( objectSet );
 }
 
-
 void CDefaultView::Leave()
 {
 	Singleton<IFolderCallback>()->UnockObjects( objectSet );
 }
-
 
 // basement storage

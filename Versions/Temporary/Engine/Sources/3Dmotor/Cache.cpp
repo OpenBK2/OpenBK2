@@ -23,11 +23,11 @@ struct SCacheInit
 			// table instead of stopping. Clamping keeps the tail monotonic and
 			// larger than any size that can be asked for, and every term that fit
 			// before is unchanged.
-			const int64_t nSum = static_cast<int64_t>( nFibbonachiSeries[i-1] ) + nFibbonachiSeries[i-2];
+			const int64_t nSum = static_cast<int64_t>( nFibbonachiSeries[i - 1] ) + nFibbonachiSeries[i - 2];
 			nFibbonachiSeries[i] = nSum > INT_MAX ? INT_MAX : static_cast<int>( nSum );
 		}
 		for ( int i = 1; i < N_MAX_FIB; ++i )
-			nFibbonachiSeries[i-1] = nFibbonachiSeries[i];
+			nFibbonachiSeries[i - 1] = nFibbonachiSeries[i];
 	}
 } init;
 }

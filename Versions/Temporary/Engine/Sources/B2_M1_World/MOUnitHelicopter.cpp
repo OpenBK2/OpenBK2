@@ -12,17 +12,19 @@ class CHelicopterDeviationProcess : public IClientUpdatableProcess
 	OBJECT_NOCOPY_METHODS( CHelicopterDeviationProcess );
 
 	ZDATA
-		CPtr<CMOUnitHelicopter> pUnit;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); return 0; }
+	CPtr<CMOUnitHelicopter> pUnit;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pUnit );
+		return 0;
+	}
 
 	CHelicopterDeviationProcess() {}
+
 public:
 	CHelicopterDeviationProcess( CMOUnitHelicopter *_pUnit ) : pUnit( _pUnit ) {}
 
-	bool Update( const NTimer::STime &time )
-	{
-		return IsValid( pUnit ) && pUnit->UpdateStandingDeviation( time );
-	}
+	bool Update( const NTimer::STime &time ) { return IsValid( pUnit ) && pUnit->UpdateStandingDeviation( time ); }
 };
 
 // Keep the existing process ID so helicopter hover deviation remains serializable.
@@ -34,8 +36,11 @@ const NDb::SHelicopterStats *CMOUnitHelicopter::GetHelicopterStats() const
 	return pStats->pHelicopterStats ? pStats->pHelicopterStats.GetPtr() : 0;
 }
 
-bool CMOUnitHelicopter::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason,
-	const NDb::EDayNight eDayTime, bool bInEditor )
+bool CMOUnitHelicopter::Create( const int nUniqueID,
+                                const SAIBasicUpdate *_pUpdate,
+                                NDb::ESeason eSeason,
+                                const NDb::EDayNight eDayTime,
+                                bool bInEditor )
 {
 	vStandingDeviationBasePlacement = VNULL3;
 	vStandingDeviationOffset = VNULL3;
@@ -71,12 +76,11 @@ void CMOUnitHelicopter::SetupSpecialAnimationMutator( NAnimation::ISkeletonAnima
 	// The shared mutator lets helicopter propeller rotations compose with Basis jogging.
 	CMOUnitMechanical::SetupSpecialAnimationMutator( pAnimator );
 	const NDb::SHelicopterStats *pHelicopterStats = GetHelicopterStats();
-	if ( !pHelicopterStats || pHelicopterStats->propellerObjects.empty() ||
-		pHelicopterStats->propellerSpeedsRad.empty() )
+	if ( !pHelicopterStats || pHelicopterStats->propellerObjects.empty() || pHelicopterStats->propellerSpeedsRad.empty() )
 		return;
 
-	GetOrCreateJoggingMutator()->SetupPropellers( pAnimator, pHelicopterStats->propellerObjects,
-		pHelicopterStats->propellerSpeedsRad );
+	GetOrCreateJoggingMutator()->SetupPropellers(
+			pAnimator, pHelicopterStats->propellerObjects, pHelicopterStats->propellerSpeedsRad );
 }
 
 float CMOUnitHelicopter::NextStandingDeviationRandom()
@@ -93,8 +97,8 @@ CVec3 CMOUnitHelicopter::GetRandomStandingDeviationPoint( const float fRadius )
 	for ( int i = 0; i < 16; ++i )
 	{
 		const CVec3 vPoint( NextStandingDeviationRandom() * 2.0f - 1.0f,
-			NextStandingDeviationRandom() * 2.0f - 1.0f,
-			NextStandingDeviationRandom() * 2.0f - 1.0f );
+		                    NextStandingDeviationRandom() * 2.0f - 1.0f,
+		                    NextStandingDeviationRandom() * 2.0f - 1.0f );
 		if ( fabs2( vPoint ) <= 1.0f )
 			return vPoint * fRadius;
 	}
@@ -112,10 +116,12 @@ void CMOUnitHelicopter::ChooseStandingDeviationTarget( const float fRadius )
 		vDirection = CVec3( 1.0f, 0.0f, 0.0f );
 	Normalize( &vDirection );
 
-	const float fDirectionDotOffset = vDirection.x * vStandingDeviationOffset.x
-		+ vDirection.y * vStandingDeviationOffset.y + vDirection.z * vStandingDeviationOffset.z;
-	const float fDiscriminant = (std::max)( 0.0f, fDirectionDotOffset * fDirectionDotOffset
-		+ fRadius * fRadius - fabs2( vStandingDeviationOffset ) );
+	const float fDirectionDotOffset = vDirection.x * vStandingDeviationOffset.x +
+	                                  vDirection.y * vStandingDeviationOffset.y +
+	                                  vDirection.z * vStandingDeviationOffset.z;
+	const float fDiscriminant =
+			(std::max)( 0.0f,
+	                fDirectionDotOffset * fDirectionDotOffset + fRadius * fRadius - fabs2( vStandingDeviationOffset ) );
 	const float fDistanceToBoundary = -fDirectionDotOffset + float( sqrt( fDiscriminant ) );
 	vStandingDeviationTarget = vStandingDeviationOffset + vDirection * fDistanceToBoundary;
 }
@@ -123,12 +129,12 @@ void CMOUnitHelicopter::ChooseStandingDeviationTarget( const float fRadius )
 void CMOUnitHelicopter::AdjustVisualPlacement( SAINotifyPlacement *pPlacement )
 {
 	const NDb::SHelicopterStats *pHeliStats = GetHelicopterStats();
-	const bool bShouldDeviate = pPlacement->bNewFormat && IsAlive() && pHeliStats
-		&& pHeliStats->fStandingDeviationRadius > 0.0f && pHeliStats->fStandingDeviationSpeed > 0.0f
-		&& !HasMoved() && pPlacement->fSpeed <= 0.001f;
+	const bool bShouldDeviate = pPlacement->bNewFormat && IsAlive() && pHeliStats &&
+	                            pHeliStats->fStandingDeviationRadius > 0.0f &&
+	                            pHeliStats->fStandingDeviationSpeed > 0.0f && !HasMoved() && pPlacement->fSpeed <= 0.001f;
 
-	vStandingDeviationBasePlacement = pPlacement->bNewFormat
-		? pPlacement->vPlacement : CVec3( pPlacement->center, pPlacement->z );
+	vStandingDeviationBasePlacement =
+			pPlacement->bNewFormat ? pPlacement->vPlacement : CVec3( pPlacement->center, pPlacement->z );
 
 	if ( bShouldDeviate && !bStandingDeviationActive )
 	{

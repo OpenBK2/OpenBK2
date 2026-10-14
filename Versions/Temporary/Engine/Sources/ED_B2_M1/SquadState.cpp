@@ -33,21 +33,25 @@ const char *GetDesiredMapSeason()
 //
 //
 
-CSquadState::CSquadState(  CSquadEditor *_pSquadEditor ) :
-	pSquadEditor( _pSquadEditor ),
-	bNeedLoadEnterConfig( true )
+CSquadState::CSquadState( CSquadEditor *_pSquadEditor ) : pSquadEditor( _pSquadEditor ), bNeedLoadEnterConfig( true )
 {
 	int nStateIndex = INVALID_INPUT_STATE_INDEX;
 	// IS_FORMATION
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_FORMATION, fmt::format( "CSquadState(): Wrong state number IS_FORMATION: {} ({})", nStateIndex, static_cast<int>( IS_FORMATION ) ) );
+		NI_ASSERT( nStateIndex == IS_FORMATION,
+		           fmt::format( "CSquadState(): Wrong state number IS_FORMATION: {} ({})",
+		                        nStateIndex,
+		                        static_cast<int>( IS_FORMATION ) ) );
 		// IS_FORMATION_ISS_FORMATION
 		{
 			CFormationsState *pObjectState = new CFormationsState( pSquadEditor );
 			nStateIndex = pMultiInputState->AddInputState( pObjectState );
-			NI_ASSERT( nStateIndex == FORMATION_ISS_FORMATION, fmt::format( "CSquadState(): Wrong state number FORMATION_ISS_FORMATION: {}, ({})", nStateIndex, static_cast<int>( FORMATION_ISS_FORMATION ) ) );
+			NI_ASSERT( nStateIndex == FORMATION_ISS_FORMATION,
+			           fmt::format( "CSquadState(): Wrong state number FORMATION_ISS_FORMATION: {}, ({})",
+			                        nStateIndex,
+			                        static_cast<int>( FORMATION_ISS_FORMATION ) ) );
 		}
 	}
 }
@@ -69,7 +73,7 @@ void CSquadState::LoadEnterConfig()
 	if ( bNeedLoadEnterConfig )
 	{
 		{
-			CMultiInputState *pMultiInputState = checked_cast<CMultiInputState*>( GetInputState( IS_FORMATION ) );
+			CMultiInputState *pMultiInputState = checked_cast<CMultiInputState *>( GetInputState( IS_FORMATION ) );
 			pMultiInputState->SetActiveInputState( FORMATION_ISS_FORMATION, false, false );
 			SetActiveInputState( IS_FORMATION, false, false );
 		}
@@ -82,7 +86,10 @@ void CSquadState::LoadEnterConfig()
 void CSquadState::Enter()
 {
 	NI_ASSERT( pSquadEditor != 0, "CSquadState::Enter(), pSquadEditor == 0" );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CSquadInterfaceCommand( new CSquadInterface() ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_SCENE,
+			ID_SCENE_ENABLE_GAME_INPUT,
+			reinterpret_cast<uintptr_t>( new CSquadInterfaceCommand( new CSquadInterface() ) ) );
 	//
 	pSquadEditor->ReloadTerrain();
 	//
@@ -91,7 +98,6 @@ void CSquadState::Enter()
 	Singleton<ICommandHandlerContainer>()->Set( CHID_BUILDING_STATE, this );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-
 
 void CSquadState::Leave()
 {
@@ -111,28 +117,23 @@ void CSquadState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 }
 
-
 bool CSquadState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
- 	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_SQUAD_CHANGE_STATE:
 		{
 			unsigned nShortcutIndex = HIWORD( dwData );
 			unsigned nTabIndex = LOWORD( dwData );
-			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) &&
-					 ( nShortcutIndex >= 0 ) &&
-					 ( nShortcutIndex < GetCount() ) )
+			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) && ( nShortcutIndex >= 0 ) && ( nShortcutIndex < GetCount() ) )
 			{
 				SetActiveInputState( nShortcutIndex, true, false );
 			}
-			if ( ( nTabIndex != INVALID_TAB_INDEX ) &&
-					 IsMultiInputState( nShortcutIndex ) )
+			if ( ( nTabIndex != INVALID_TAB_INDEX ) && IsMultiInputState( nShortcutIndex ) )
 			{
-				CMultiInputState *pMultiInputState = checked_cast<CMultiInputState*>( GetInputState( nShortcutIndex ) );
+				CMultiInputState *pMultiInputState = checked_cast<CMultiInputState *>( GetInputState( nShortcutIndex ) );
 				NI_ASSERT( pMultiInputState != 0, "CSquadState::HandleCommand(), pMultiInputState == 0" );
-				if ( ( nTabIndex >= 0 ) &&
-						 ( nTabIndex < pMultiInputState->GetCount() ) )
+				if ( ( nTabIndex >= 0 ) && ( nTabIndex < pMultiInputState->GetCount() ) )
 				{
 					pMultiInputState->SetActiveInputState( nTabIndex, true, false );
 				}
@@ -144,13 +145,12 @@ bool CSquadState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CSquadState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CSquadState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CSquadState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_SQUAD_CHANGE_STATE:
 			( *pbEnable ) = true;

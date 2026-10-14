@@ -31,12 +31,9 @@ struct SReinfPointsWindowData
 		std::string szDeployTemplate;
 		std::vector<STypedTemplate> typedTemplates;
 		//
-		SReinfPoint() :
-			vPosition( VNULL2 ),
-			eType( NDb::EReinforcementType(-1) ),
-			bIsDefault( false ),
-			nNumPoints( 0 ),
-			szDeployTemplate( "" )
+		SReinfPoint()
+				: vPosition( VNULL2 ), eType( NDb::EReinforcementType( -1 ) ), bIsDefault( false ), nNumPoints( 0 ),
+					szDeployTemplate( "" )
 		{
 		}
 	};
@@ -58,12 +55,9 @@ struct SReinfPointsWindowData
 	};
 	EReinfWndLastAction eLastAction;
 	//
-	SReinfPointsWindowData() :
-		nPlayerIndex(-1),
-		nPlayerCount( 0 ),
-		nSelectedPoint(-1),
-		bAviationPointSelected( false ),
-		eLastAction(RWA_NO_ACTIONS)
+	SReinfPointsWindowData()
+			: nPlayerIndex( -1 ), nPlayerCount( 0 ), nSelectedPoint( -1 ), bAviationPointSelected( false ),
+				eLastAction( RWA_NO_ACTIONS )
 	{
 	}
 	//
@@ -77,7 +71,6 @@ struct SReinfPointsWindowData
 		eLastAction = RWA_NO_ACTIONS;
 	}
 };
-
 
 // CMapInfoState drives this palette with the two window commands every palette
 // takes, so the dispatch is CPaletteCommands' and only the reading and writing

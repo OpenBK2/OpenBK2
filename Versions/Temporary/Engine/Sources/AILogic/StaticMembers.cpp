@@ -34,25 +34,25 @@ int CStaticMembers::operator&( IBinSaver &saver )
 	if ( saver.IsReading() )
 	{
 
-		det_map<int, CPtr<CLinkObject> > objs;
-		saver.Add( 18 ,&objs );
+		det_map<int, CPtr<CLinkObject>> objs;
+		saver.Add( 18, &objs );
 		int nMax = 0;
-		for ( det_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )
+		for ( det_map<int, CPtr<CLinkObject>>::iterator it = objs.begin(); it != objs.end(); ++it )
 			nMax = (std::max)( nMax, it->first );
 
 		SLinkObjDataAutoMagic::pLinkObjData->link2object.resize( nMax + 1, 0 );
-		for ( det_map<int, CPtr<CLinkObject> >::iterator it = objs.begin(); it != objs.end(); ++it )
+		for ( det_map<int, CPtr<CLinkObject>>::iterator it = objs.begin(); it != objs.end(); ++it )
 			SLinkObjDataAutoMagic::pLinkObjData->link2object[it->first] = it->second;
 	}
 	else if ( !saver.IsChecksum() )
 	{
-		det_map<int, CPtr<CLinkObject> > objs;
+		det_map<int, CPtr<CLinkObject>> objs;
 		for ( int i = 0; i < SLinkObjDataAutoMagic::pLinkObjData->link2object.size(); ++i )
 		{
 			if ( SLinkObjDataAutoMagic::pLinkObjData->link2object[i] != 0 )
 				objs[i] = SLinkObjDataAutoMagic::pLinkObjData->link2object[i];
 		}
-		saver.Add( 18 ,&objs );
+		saver.Add( 18, &objs );
 	}
 	saver.Add( 19, &SLinkObjDataAutoMagic::pLinkObjData->deletedObjects );
 	saver.Add( 20, &SLinkObjDataAutoMagic::pLinkObjData->unitsID2object );
@@ -62,7 +62,7 @@ int CStaticMembers::operator&( IBinSaver &saver )
 	if ( !saver.IsChecksum() )
 	{
 		saver.Add( 23, &CArtilleryStatesFactory::pFactory );
-		saver.Add( 24, &CArtRocketStatesFactory::pFactory	);
+		saver.Add( 24, &CArtRocketStatesFactory::pFactory );
 		saver.Add( 25, &CHelicopterStatesFactory::pFactory );
 	}
 	saver.Add( 26, &CExistingObject::globalMark );

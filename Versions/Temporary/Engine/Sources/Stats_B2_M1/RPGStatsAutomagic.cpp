@@ -7,7 +7,6 @@ REGISTER_SAVELOAD_CLASS( STATS_B2_M1, 0x11078380, CRPGStatsAutomagic )
 
 int CRAP_LinkerTooSmart_FeedBackUpdates();
 
-
 CRPGStatsAutomagic::CRPGStatsAutomagic()
 {
 	// infantry
@@ -70,7 +69,7 @@ CRPGStatsAutomagic::CRPGStatsAutomagic()
 	int a = CRAP_LinkerTooSmart_FeedBackUpdates();
 }
 
-const char* CRPGStatsAutomagic::GetFirstStr() const
+const char *CRPGStatsAutomagic::GetFirstStr() const
 {
 	return s2i.begin()->first.c_str();
 }
@@ -80,7 +79,7 @@ const int CRPGStatsAutomagic::GetFirstInt() const
 	return i2s.begin()->first;
 }
 
-bool CRPGStatsAutomagic::IsLastStr( const char* pszVal ) const
+bool CRPGStatsAutomagic::IsLastStr( const char *pszVal ) const
 {
 	CS2IMap::const_iterator iter = s2i.find( pszVal );
 	return iter == s2i.end() || ++iter == s2i.end();
@@ -92,14 +91,14 @@ bool CRPGStatsAutomagic::IsLastInt( const int nVal ) const
 	return iter == i2s.end() || ++iter == i2s.end();
 }
 
-const char* CRPGStatsAutomagic::GetNextStr( const char* pszVal )
+const char *CRPGStatsAutomagic::GetNextStr( const char *pszVal )
 {
 	if ( IsLastStr( pszVal ) )
 		return szUnknown.c_str();
 	else
 	{
 		CS2IMap::const_iterator iter = s2i.find( pszVal );
-		return (++iter)->first.c_str();
+		return ( ++iter )->first.c_str();
 	}
 }
 
@@ -110,7 +109,7 @@ const int CRPGStatsAutomagic::GetNextInt( const int nVal )
 	else
 	{
 		CI2SMap::const_iterator iter = i2s.find( nVal );
-		return (++iter)->first;
+		return ( ++iter )->first;
 	}
 }
 

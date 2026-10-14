@@ -13,7 +13,7 @@ struct IMessageReactionB2;
 // Message Reaction is a set basic actions
 class CMessageReactions
 {
-	typedef std::unordered_map<std::string, CPtr<IMessageReactionB2> > CReactions;
+	typedef std::unordered_map<std::string, CPtr<IMessageReactionB2>> CReactions;
 	CReactions reactions;
 
 	// script that does all complex checks and complex behaviour
@@ -21,11 +21,20 @@ class CMessageReactions
 
 	void InitScript( const std::string &szScriptFileName );
 	void RunScriptText( const std::string &szScriptBody );
+
 public:
-	CMessageReactions() {  }
+	CMessageReactions() {}
 	void InitByDesc( const NDb::SMessageReactionsDesc &instance );
-	bool Execute( const std::string &szSender, const std::string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags );
-	bool Execute( const std::string &szSender, const NDb::SUIDesc *pReaction, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags );
+	bool Execute( const std::string &szSender,
+	              const std::string &szReactionKey,
+	              struct IScreen *pScreen,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags );
+	bool Execute( const std::string &szSender,
+	              const NDb::SUIDesc *pReaction,
+	              struct IScreen *pScreen,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags );
 	void Register( const std::string &szReactionKey, IMessageReactionB2 *pReaction );
 	int operator&( IBinSaver &saver );
 };

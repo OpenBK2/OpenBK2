@@ -11,5 +11,8 @@ public:
 template <class TYPE>
 struct SKnownEnum
 {
-	enum { isKnown = 0 };
+	enum
+	{
+		isKnown = 0
+	};
 };

@@ -11,54 +11,54 @@ const char *ConvertEditorType2String( EEditorType eEditorType )
 {
 	switch ( eEditorType )
 	{
-	case EDITOR_TYPE_INT_INPUT:
-		return "int_input";
-	case EDITOR_TYPE_INT_SLIDER:
-		return "int_slider";
-	case EDITOR_TYPE_INT_COMBO:
-		return "int_combo";
-	case EDITOR_TYPE_INT_COLOR:
-		return "int_color";
-	case EDITOR_TYPE_INT_COLOR_WITH_ALPHA:
-		return "int_color_with_alpha";
-	case EDITOR_TYPE_FLOAT_INPUT:
-		return "float_input";
-	case EDITOR_TYPE_FLOAT_SLIDER:
-		return "float_slider";
-	case EDITOR_TYPE_FLOAT_COMBO:
-		return "float_combo";
-	case EDITOR_TYPE_BOOL_COMBO:
-		return "bool_combo";
-	case EDITOR_TYPE_BOOL_CHECKBOX:
-		return "bool_checkbox";
-	case EDITOR_TYPE_BOOL_SWITCHER:
-		return "bool_switcher";
-	case EDITOR_TYPE_GUID:
-		return "guid";
-	case EDITOR_TYPE_STRING_REF:
-		return "string_ref";
-	case EDITOR_TYPE_STRING_MULTI_REF:
-		return "string_multi_ref";
-	case EDITOR_TYPE_STRING_INPUT:
-		return "string_input";
-	case EDITOR_TYPE_STRING_BIG_INPUT:
-		return "string_big_input";
-	case EDITOR_TYPE_STRING_COMBO:
-		return "string_combo";
-	case EDITOR_TYPE_STRING_COMBO_REF:
-		return "string_combo_ref";
-	case EDITOR_TYPE_STRING_COMBO_MULTI_REF:
-		return "string_combo_multi_ref";
-	case EDITOR_TYPE_STRING_FILE_REF:
-		return "string_file_ref";
-	case EDITOR_TYPE_STRING_DIR_REF:
-		return "string_dir_ref";
-	case EDITOR_TYPE_BIT_FIELD:
-		return "bit_field";
-	case EDITOR_TYPE_STRING_NEW_REF:
-		return "string_new_ref";
-	case EDITOR_TYPE_STRING_NEW_MULTI_REF:
-		return "string_new_multi_ref";
+		case EDITOR_TYPE_INT_INPUT:
+			return "int_input";
+		case EDITOR_TYPE_INT_SLIDER:
+			return "int_slider";
+		case EDITOR_TYPE_INT_COMBO:
+			return "int_combo";
+		case EDITOR_TYPE_INT_COLOR:
+			return "int_color";
+		case EDITOR_TYPE_INT_COLOR_WITH_ALPHA:
+			return "int_color_with_alpha";
+		case EDITOR_TYPE_FLOAT_INPUT:
+			return "float_input";
+		case EDITOR_TYPE_FLOAT_SLIDER:
+			return "float_slider";
+		case EDITOR_TYPE_FLOAT_COMBO:
+			return "float_combo";
+		case EDITOR_TYPE_BOOL_COMBO:
+			return "bool_combo";
+		case EDITOR_TYPE_BOOL_CHECKBOX:
+			return "bool_checkbox";
+		case EDITOR_TYPE_BOOL_SWITCHER:
+			return "bool_switcher";
+		case EDITOR_TYPE_GUID:
+			return "guid";
+		case EDITOR_TYPE_STRING_REF:
+			return "string_ref";
+		case EDITOR_TYPE_STRING_MULTI_REF:
+			return "string_multi_ref";
+		case EDITOR_TYPE_STRING_INPUT:
+			return "string_input";
+		case EDITOR_TYPE_STRING_BIG_INPUT:
+			return "string_big_input";
+		case EDITOR_TYPE_STRING_COMBO:
+			return "string_combo";
+		case EDITOR_TYPE_STRING_COMBO_REF:
+			return "string_combo_ref";
+		case EDITOR_TYPE_STRING_COMBO_MULTI_REF:
+			return "string_combo_multi_ref";
+		case EDITOR_TYPE_STRING_FILE_REF:
+			return "string_file_ref";
+		case EDITOR_TYPE_STRING_DIR_REF:
+			return "string_dir_ref";
+		case EDITOR_TYPE_BIT_FIELD:
+			return "bit_field";
+		case EDITOR_TYPE_STRING_NEW_REF:
+			return "string_new_ref";
+		case EDITOR_TYPE_STRING_NEW_MULTI_REF:
+			return "string_new_multi_ref";
 	}
 	return "";
 }
@@ -159,17 +159,17 @@ bool CObjectManipulatorWrapper::GetType( const std::string &rszName, std::string
 
 IManipulatorIterator *CObjectManipulatorWrapper::Iterate( bool bShowHidden, ECacheType eCache )
 {
-	return new CObjectManipulatorIteratorWrapper( pObjMan->CreateIterator(bShowHidden) );
+	return new CObjectManipulatorIteratorWrapper( pObjMan->CreateIterator( bShowHidden ) );
 }
 
 typedef std::unordered_map<void *, SPropertyDesc> CPropertyDescMap;
 static CPropertyDescMap s_propertyDescMap;
 const SPropertyDesc *GetPropertyDesc( const STypeStructBase::SField *pField )
 {
-	CPropertyDescMap::const_iterator pos = s_propertyDescMap.find( (void*)pField );
+	CPropertyDescMap::const_iterator pos = s_propertyDescMap.find( (void *)pField );
 	if ( pos != s_propertyDescMap.end() )
 		return &( pos->second );
-	SPropertyDesc *pDesc = &( s_propertyDescMap[(void*)pField] );
+	SPropertyDesc *pDesc = &( s_propertyDescMap[(void *)pField] );
 	FillPropertyDescFromField( pDesc, *pField );
 	return pDesc;
 }
@@ -192,7 +192,7 @@ bool CObjectManipulatorWrapper::GetValue( const std::string &szName, CVariant *p
 			const CDBID &dbid = pValue->GetDBID().ToString();
 			std::string szString = pValue->GetDBID().ToString();
 			NStr::ReplaceAllChars( &szString, '/', '\\' );
-			*pValue = CDBID(szString);
+			*pValue = CDBID( szString );
 		}
 		// CRAP}
 		return true;
@@ -236,10 +236,7 @@ bool CObjectManipulatorWrapper::IsNameExists( const std::string &rszName ) const
 	return pObjMan->GetDesc( rszName ) != 0;
 }
 
-
-void CObjectManipulatorWrapper::ClearCache()
-{
-}
+void CObjectManipulatorWrapper::ClearCache() {}
 
 bool CObjectManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) const
 {
@@ -256,7 +253,7 @@ bool CObjectManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) co
 // **
 // ************************************************************************************************************************ //
 
-const SIteratorDesc* CObjectManipulatorIteratorWrapper::GetDesc() const
+const SIteratorDesc *CObjectManipulatorIteratorWrapper::GetDesc() const
 {
 	const STypeStructBase::SField *pField = pIterator->GetDesc();
 	if ( pField == 0 )
@@ -282,7 +279,7 @@ bool CObjectManipulatorIteratorWrapper::GetName( std::string *pszName ) const
 
 bool CObjectManipulatorIteratorWrapper::GetType( std::string *pszType ) const
 {
-	const SPropertyDesc *pDesc = static_cast<const SPropertyDesc*>( GetDesc() );
+	const SPropertyDesc *pDesc = static_cast<const SPropertyDesc *>( GetDesc() );
 	NI_ASSERT( pDesc != 0, "Unable to get property desc" );
 	*pszType = pDesc->szPropControlType;
 	return true;

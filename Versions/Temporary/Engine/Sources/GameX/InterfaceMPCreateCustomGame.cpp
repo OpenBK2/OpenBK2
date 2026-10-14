@@ -26,8 +26,8 @@
 
 // CInterfaceMPCreateCustomGame
 
-CInterfaceMPCreateCustomGame::CInterfaceMPCreateCustomGame() :
-CInterfaceMPScreenBase( "MPCreateCustomGame", "create_custom_game" )
+CInterfaceMPCreateCustomGame::CInterfaceMPCreateCustomGame()
+		: CInterfaceMPScreenBase( "MPCreateCustomGame", "create_custom_game" )
 {
 }
 
@@ -58,9 +58,7 @@ bool CInterfaceMPCreateCustomGame::Init()
 	return true;
 }
 
-void CInterfaceMPCreateCustomGame::RegisterObservers()
-{
-}
+void CInterfaceMPCreateCustomGame::RegisterObservers() {}
 
 void CInterfaceMPCreateCustomGame::FillMapData()
 {
@@ -90,21 +88,21 @@ void CInterfaceMPCreateCustomGame::FillMapData()
 void CInterfaceMPCreateCustomGame::InitControls()
 {
 	pButtonCreateGame = GetChildChecked<IButton>( pMain, "ButtonCreateGame", true );
-	pTechLevelBox = GetChildChecked<IComboBox> ( pMain, "TechLevel", true );
-	pNumPlayersBox = GetChildChecked<IComboBox> ( pMain, "NumPlayers", true );
+	pTechLevelBox = GetChildChecked<IComboBox>( pMain, "TechLevel", true );
+	pNumPlayersBox = GetChildChecked<IComboBox>( pMain, "NumPlayers", true );
 	pSessionName = GetChildChecked<IEditLine>( pMain, "SessionName", true );
-	pList = GetChildChecked<IListControl> ( pMain, "Maps", false );
-	pTimeLimit = GetChildChecked<IEditLine> ( pMain, "TimeLimit", true );
-	pCaptureTime = GetChildChecked<IEditLine> ( pMain, "CaptureTime", true );
+	pList = GetChildChecked<IListControl>( pMain, "Maps", false );
+	pTimeLimit = GetChildChecked<IEditLine>( pMain, "TimeLimit", true );
+	pCaptureTime = GetChildChecked<IEditLine>( pMain, "CaptureTime", true );
 	pSliderGameSpeed = GetChildChecked<ISlider>( pMain, "GameSpeed", true );
 	pGameSpeedText = GetChildChecked<ITextView>( pMain, "GameSpeedText", true );
 	pButtonUnitExperience = GetChildChecked<IButton>( pMain, "UnitExperience", true );
 	pButtonStartPosition = GetChildChecked<IButton>( pMain, "RandomPlacement", true );
-	pMapName = GetChildChecked<ITextView>( pMain,  "MapName", true );
+	pMapName = GetChildChecked<ITextView>( pMain, "MapName", true );
 
 	pAdvancedPopup = GetChildChecked<IWindow>( pMain, "AdvancedPopup", true );
 	pAdvancedPassword = GetChildChecked<IEditLine>( pAdvancedPopup, "AdvancedPassword", true );
-	pChecksumPWL = GetChildChecked<IWindow>( pMain,  "ChecksumPWL", true );
+	pChecksumPWL = GetChildChecked<IWindow>( pMain, "ChecksumPWL", true );
 	if ( pChecksumPWL )
 		pChecksumPWL->ShowWindow( false );
 	SetControls();
@@ -124,8 +122,8 @@ void CInterfaceMPCreateCustomGame::SetControls()
 		const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
 		for ( int i = 0; i < pMPConsts->techLevels.size(); ++i )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pMPConsts->techLevels[i].,Name) )
-				pData = new CTextData( GET_TEXT_PRE(pMPConsts->techLevels[i].,Name) );
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pMPConsts->techLevels[i]., Name ) )
+				pData = new CTextData( GET_TEXT_PRE( pMPConsts->techLevels[i]., Name ) );
 			else
 				pData = new CTextData( NStr::ToUnicode( fmt::format( "!Level{}!", i ) ) );
 			pTechLevelBox->AddItem( pData );
@@ -183,13 +181,13 @@ void CInterfaceMPCreateCustomGame::SliderPosition( const float fPosition, CWindo
 		return;
 	int nPos = fPosition; //
 	int nShown = nPos - pSliderGameSpeed->GetNSpecialPositions() / 2;
-	std::wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( fmt::format("  {:+d}", nShown ) );
+	std::wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( fmt::format( "  {:+d}", nShown ) );
 	pGameSpeedText->SetText( newtext );
 }
 
 bool CInterfaceMPCreateCustomGame::OnSessionEnter()
 {
-/*	if ( pSessionName )
+	/*	if ( pSessionName )
 	{
 		wszSessionName = pSessionName->GetText();
 		pSessionName->SetText(L"");
@@ -203,7 +201,7 @@ void CInterfaceMPCreateCustomGame::UpdateInterior()
 
 	pList->RemoveAllElements();
 
-	for ( CMPMaps::iterator it = maps.begin(); it!= maps.end(); it++ )
+	for ( CMPMaps::iterator it = maps.begin(); it != maps.end(); it++ )
 	{
 		SMPMapInfo &info = *it;
 		CPtr<CCustomGameListData> pData = new CCustomGameListData( info );
@@ -219,7 +217,8 @@ void CInterfaceMPCreateCustomGame::UpdateInterior()
 	pList->Update();
 }
 
-void CInterfaceMPCreateCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
+void CInterfaceMPCreateCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBase *pWindow,
+                                                                            const CObjectBase *pData ) const
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
@@ -228,12 +227,11 @@ void CInterfaceMPCreateCustomGame::CItemCustomGameListViewer::MakeInterior( CObj
 	NI_VERIFY( pInfo, "Wrong data", return );
 	SMPMapInfo &info = pInfo->info;
 
-	NMPSetData::SetChildText( pItem,  "ItemMapName", info.wszMapName );
-	NMPSetData::SetChildText( pItem,  "ItemGameType", info.wszGameType );
-	NMPSetData::SetChildText( pItem,  "ItemMapSize",
-		NStr::ToUnicode( fmt::format( "{} x {}", info.nMapSizeX, info.nMapSizeY ) ) );
-	NMPSetData::SetChildText( pItem,  "ItemMaxPlayers",
-		NStr::ToUnicode( std::to_string( info.nPlayersMax ) ) );
+	NMPSetData::SetChildText( pItem, "ItemMapName", info.wszMapName );
+	NMPSetData::SetChildText( pItem, "ItemGameType", info.wszGameType );
+	NMPSetData::SetChildText(
+			pItem, "ItemMapSize", NStr::ToUnicode( fmt::format( "{} x {}", info.nMapSizeX, info.nMapSizeY ) ) );
+	NMPSetData::SetChildText( pItem, "ItemMaxPlayers", NStr::ToUnicode( std::to_string( info.nPlayersMax ) ) );
 }
 
 void CInterfaceMPCreateCustomGame::OnGetFocus( bool bFocus )
@@ -307,8 +305,8 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 	std::wstring wszTime = L"???";
 	if ( pTimeLimit )
 		wszTime = pTimeLimit->GetText();
-	int nTime = NStr::ToInt( NStr::ToMBCS ( wszTime ) );
-  pCreateMsg->specificInfo.nTimeLimit = (std::max)( nTime, 5 );
+	int nTime = NStr::ToInt( NStr::ToMBCS( wszTime ) );
+	pCreateMsg->specificInfo.nTimeLimit = (std::max)( nTime, 5 );
 
 	if ( pSliderGameSpeed )
 	{
@@ -326,7 +324,7 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 		pCreateMsg->specificInfo.bRandomPlacement = ( pButtonStartPosition->GetState() == 1 );
 
 	wszTime = pCaptureTime->GetText();
-	int nCaptureTime = NStr::ToInt( NStr::ToMBCS ( wszTime ) );
+	int nCaptureTime = NStr::ToInt( NStr::ToMBCS( wszTime ) );
 	pCreateMsg->specificInfo.nCaptureTime = nCaptureTime;
 
 	std::string szPassword = NStr::ToMBCS( pAdvancedPassword->GetText() );
@@ -352,7 +350,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	bool bEnableGameType = false;
 	bool bEnableNumPlayers = false;
 	std::wstring wszName = L"";
-	CDBPtr <NDb::STexture> pMiniMapTexture = 0;
+	CDBPtr<NDb::STexture> pMiniMapTexture = 0;
 
 	CPtr<IMiniMap> pWindowMiniMap = GetChildChecked<IMiniMap>( pMain, "Minimap", true );
 
@@ -377,7 +375,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 			if ( pWindowMiniMap )
 			{
 				pWindowMiniMap->SetLoadingMapParams( pSelected->pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-					pSelected->pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
+				                                     pSelected->pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
 				pWindowMiniMap->SetMaterial( pMiniMap );
 				pWindowMiniMap->ShowWindow( true );
 			}
@@ -386,7 +384,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 
 	CPtr<CTextData> pData;
 
-	NMPSetData::SetText( pMapName, wszName);
+	NMPSetData::SetText( pMapName, wszName );
 
 	if ( pPicture )
 		pPicture->SetTexture( pMiniMapTexture );
@@ -442,18 +440,14 @@ bool CInterfaceMPCreateCustomGame::OnShowAdvanced( const bool bShow )
 
 // CICMPCreateCustomGame
 
-void CICMPCreateCustomGame::PreCreate()
-{
-}
+void CICMPCreateCustomGame::PreCreate() {}
 
 void CICMPCreateCustomGame::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMPCreateCustomGame::Configure( const char *pszConfig )
-{
-}
+void CICMPCreateCustomGame::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x32197340, CInterfaceMPCreateCustomGame );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_CREATE_CUSTOM_GAME_MENU, CICMPCreateCustomGame );

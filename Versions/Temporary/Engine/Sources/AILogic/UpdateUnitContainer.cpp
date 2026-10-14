@@ -3,8 +3,8 @@
 
 void CUpdateUnitContainer::Init( const float fMaxRadius )
 {
-	f2MaxRadius = 2*fMaxRadius;
-	fMaxRadius2 = fMaxRadius/2;
+	f2MaxRadius = 2 * fMaxRadius;
+	fMaxRadius2 = fMaxRadius / 2;
 	updateLists.resize( 6 );
 }
 
@@ -16,25 +16,25 @@ void CUpdateUnitContainer::Clear()
 void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag updateFlag, const float fDist )
 {
 	int nNewLevel = -1;
-	switch( updateFlag )
+	switch ( updateFlag )
 	{
-	case UPD_DELETE_UNIT:
-	case UPD_CREATE_NEW_UNIT:
-	case UPD_CHANGE_PARTY:
-		nNewLevel = 0;
-		break;
-	case UPD_UPDATE_VISIBILITY:
-		nNewLevel = 1;
-		break;
-	case UPD_UPDATE_PROPERTIES:
-		nNewLevel = 2;
-	case UPD_UPDATE_POSITION:
-		if ( fDist > f2MaxRadius )
-			nNewLevel = 3;
-		else if ( fDist > fMaxRadius2 )
-			nNewLevel = 4;
-		else if ( fDist > 0 )
-			nNewLevel = 5;
+		case UPD_DELETE_UNIT:
+		case UPD_CREATE_NEW_UNIT:
+		case UPD_CHANGE_PARTY:
+			nNewLevel = 0;
+			break;
+		case UPD_UPDATE_VISIBILITY:
+			nNewLevel = 1;
+			break;
+		case UPD_UPDATE_PROPERTIES:
+			nNewLevel = 2;
+		case UPD_UPDATE_POSITION:
+			if ( fDist > f2MaxRadius )
+				nNewLevel = 3;
+			else if ( fDist > fMaxRadius2 )
+				nNewLevel = 4;
+			else if ( fDist > 0 )
+				nNewLevel = 5;
 	}
 
 	for ( int nLevel = 0; nLevel < updateLists.size(); ++nLevel )
@@ -56,7 +56,7 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 				{
 					if ( updateFlag == UPD_UPDATE_POSITION )
 						pos->second.fDist = fDist;
-					pos->second.updateFlag  = updateFlag;
+					pos->second.updateFlag = updateFlag;
 				}
 				return;
 			}
@@ -80,10 +80,10 @@ int CUpdateUnitContainer::Pop()
 			// Remove the unit with the smallest uniqueID for better determinism
 			// CUpdateUnitList::iterator pos = updateLists[i].begin();
 			CUpdateUnitList::iterator pos = updateLists[i].end();
-			for (CUpdateUnitList::iterator it = updateLists[i].begin(); it != updateLists[i].end(); ++it)
-				if (pos == updateLists[i].end())
+			for ( CUpdateUnitList::iterator it = updateLists[i].begin(); it != updateLists[i].end(); ++it )
+				if ( pos == updateLists[i].end() )
 					pos = it;
-				else if (pos->first > it->first)
+				else if ( pos->first > it->first )
 					pos = it;
 
 			const int nResult = pos->first;

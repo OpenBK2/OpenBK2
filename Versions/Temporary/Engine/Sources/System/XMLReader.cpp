@@ -8,7 +8,7 @@
 namespace NXml
 {
 
-static const char* FindNodeStart( const char *p )
+static const char *FindNodeStart( const char *p )
 {
 	while ( *p && *p != '<' )
 		++p;
@@ -19,7 +19,7 @@ static const char* FindNodeStart( const char *p )
 	return p;
 }
 
-static const char* FindNodeEnd( const char *p )
+static const char *FindNodeEnd( const char *p )
 {
 	while ( *p && *p != '>' )
 		++p;
@@ -30,12 +30,12 @@ static const char* FindNodeEnd( const char *p )
 	return p;
 }
 
-static  bool IsWhiteSpace( const char chr )
+static bool IsWhiteSpace( const char chr )
 {
-	return (chr == ' ') || ( chr == '\n' ) || ( chr =='\r' ) || ((chr >= 0x09) && (chr <= 0x0d));
+	return ( chr == ' ' ) || ( chr == '\n' ) || ( chr == '\r' ) || ( ( chr >= 0x09 ) && ( chr <= 0x0d ) );
 }
 
-static const char* FindNotText( const char *p )
+static const char *FindNotText( const char *p )
 {
 	while ( *p && !IsWhiteSpace( *p ) && *p != '>' && *p != '/' && *p != '=' && *p != '<' )
 		++p;
@@ -43,7 +43,7 @@ static const char* FindNotText( const char *p )
 	return p;
 }
 
-static const char* FindEndOfNodeText( const char *p )
+static const char *FindEndOfNodeText( const char *p )
 {
 	while ( *p && *p != '<' )
 		++p;
@@ -51,15 +51,15 @@ static const char* FindEndOfNodeText( const char *p )
 	return p;
 }
 
-static  const char* SkipWhiteSpace( const char *p )
+static const char *SkipWhiteSpace( const char *p )
 {
-	while ( *p != 0 && IsWhiteSpace(*p) )
+	while ( *p != 0 && IsWhiteSpace( *p ) )
 		++p;
 	//
 	return p;
 }
 
-static const char* SkipComments( const char *p )
+static const char *SkipComments( const char *p )
 {
 	while ( true )
 	{
@@ -69,10 +69,10 @@ static const char* SkipComments( const char *p )
 		++p;
 		while ( true )
 		{
-			if ( !(*p) || !(*(p+1)) || !(*(p+2)) )
+			if ( !( *p ) || !( *( p + 1 ) ) || !( *( p + 2 ) ) )
 				break;
 
-			if ( *p == '-' && *(p+1) == '-' && *(p+2) == '>' )
+			if ( *p == '-' && *( p + 1 ) == '-' && *( p + 2 ) == '>' )
 			{
 				p += 3;
 				break;
@@ -81,14 +81,14 @@ static const char* SkipComments( const char *p )
 			++p;
 		}
 		p = SkipWhiteSpace( p );
-		if ( !(*p) )
+		if ( !( *p ) )
 			return p;
 
 		++p;
 	}
 }
 
-const char* CXmlNode::ParseNodeAttributes( const char *p )
+const char *CXmlNode::ParseNodeAttributes( const char *p )
 {
 	while ( true )
 	{
@@ -122,7 +122,7 @@ const char* CXmlNode::ParseNodeAttributes( const char *p )
 		if ( *p )
 			++p;
 
-		if  ( pAttr->name == HREF_ATTRIBUTE_NAME )
+		if ( pAttr->name == HREF_ATTRIBUTE_NAME )
 			pHRefAttr = pAttr;
 		if ( pAttr->name == DATA_ATTRIBUTE_NAME )
 			pHDataAttr = pAttr;
@@ -131,7 +131,7 @@ const char* CXmlNode::ParseNodeAttributes( const char *p )
 	}
 }
 
-const char* CXmlNode::ParseNodeInternal( const char *p )
+const char *CXmlNode::ParseNodeInternal( const char *p )
 {
 	while ( true )
 	{
@@ -141,12 +141,12 @@ const char* CXmlNode::ParseNodeInternal( const char *p )
 
 		if ( *p == '<' )
 		{
-			if ( *(p+1) == '/' )
+			if ( *( p + 1 ) == '/' )
 			{
 				p = FindNodeEnd( p );
 				return p;
 			}
-			if ( *(p+1) == '!' )
+			if ( *( p + 1 ) == '!' )
 			{
 				p = SkipComments( p + 1 );
 				--p;
@@ -161,7 +161,7 @@ const char* CXmlNode::ParseNodeInternal( const char *p )
 		{
 			value.pszBegin = p;
 			p = FindEndOfNodeText( p );
-/*
+			/*
 			if ( p != value.pszBegin && IsWhiteSpace( *p ) )
 			{
 				while ( p - 1 != value.pszBegin && IsWhiteSpace( *(p-1) ) )
@@ -175,7 +175,7 @@ const char* CXmlNode::ParseNodeInternal( const char *p )
 	return p;
 }
 
-const char* CXmlNode::Parse( const char *p, SPool *_pPool )
+const char *CXmlNode::Parse( const char *p, SPool *_pPool )
 {
 	nBestNodeToRead = 0;
 	nBestAttrToRead = 0;
@@ -220,7 +220,7 @@ const char* CXmlNode::Parse( const char *p, SPool *_pPool )
 	return p;
 }
 
-const CXmlNode* CXmlNode::FindChild( const char *pszChild ) const
+const CXmlNode *CXmlNode::FindChild( const char *pszChild ) const
 {
 	if ( nodes.empty() )
 		return 0;
@@ -250,17 +250,17 @@ const CXmlNode* CXmlNode::FindChild( const char *pszChild ) const
 	return 0;
 }
 
-const SXmlAttribute* CXmlNode::GetHRefAttribute() const
+const SXmlAttribute *CXmlNode::GetHRefAttribute() const
 {
 	return pHRefAttr;
 }
 
-const SXmlAttribute* CXmlNode::GetDataAttribute() const
+const SXmlAttribute *CXmlNode::GetDataAttribute() const
 {
 	return pHDataAttr;
 }
 
-const SXmlAttribute* CXmlNode::GetAttribute( const char *pszAttr ) const
+const SXmlAttribute *CXmlNode::GetAttribute( const char *pszAttr ) const
 {
 	if ( attributes.empty() )
 		return 0;

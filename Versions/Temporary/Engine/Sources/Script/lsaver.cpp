@@ -21,7 +21,7 @@ static void lua_GetID( CLuaFuncID *pID, lua_CFunction func )
 	// экземпляра lua-машины (pLUASaverState->szName)
 	intptr_t nFunc = reinterpret_cast<intptr_t>( func );
 	CLuaFuncToIDMap::iterator i = luaFuncToIDMap.find( nFunc );
-	ASSERT( i != luaFuncToIDMap.end() );  // unregistered lua C function!
+	ASSERT( i != luaFuncToIDMap.end() ); // unregistered lua C function!
 	*pID = i->second;
 }
 
@@ -31,42 +31,42 @@ static void lua_GetID( CLuaFuncID *pID, lua_Hook func )
 	// экземпляра lua-машины (pLUASaverState->szName)
 	intptr_t nFunc = reinterpret_cast<intptr_t>( func );
 	CLuaFuncToIDMap::iterator i = luaFuncToIDMap.find( nFunc );
-	ASSERT( i != luaFuncToIDMap.end() );  // unregistered lua C function!
+	ASSERT( i != luaFuncToIDMap.end() ); // unregistered lua C function!
 	*pID = i->second;
 }
 
-static lua_CFunction lua_GetFunc( const CLuaFuncID& id )
+static lua_CFunction lua_GetFunc( const CLuaFuncID &id )
 {
 	CLuaIDToFuncMap::iterator i = luaIDToFuncMap.find( id );
 	if ( i == luaIDToFuncMap.end() )
 	{
-		ASSERT(0); // unregistered lua C function!
+		ASSERT( 0 ); // unregistered lua C function!
 		return 0;
 	}
 	intptr_t nFunc = i->second;
-	return ( lua_CFunction )nFunc;
+	return (lua_CFunction)nFunc;
 }
 
-static lua_Hook lua_GetHook( const CLuaFuncID& id )
+static lua_Hook lua_GetHook( const CLuaFuncID &id )
 {
 	CLuaIDToFuncMap::iterator i = luaIDToFuncMap.find( id );
-	ASSERT( i != luaIDToFuncMap.end() );  // unregistered lua C function!
+	ASSERT( i != luaIDToFuncMap.end() ); // unregistered lua C function!
 	intptr_t nFunc = i->second;
-	return ( lua_Hook )nFunc;
+	return (lua_Hook)nFunc;
 }
 
-void lua_RegisterFunc( lua_CFunction func, const CLuaFuncID& id )
+void lua_RegisterFunc( lua_CFunction func, const CLuaFuncID &id )
 {
 	intptr_t nFunc = reinterpret_cast<intptr_t>( func );
-	luaFuncToIDMap[ nFunc ] = id;
-	luaIDToFuncMap[ id ] = nFunc;
+	luaFuncToIDMap[nFunc] = id;
+	luaIDToFuncMap[id] = nFunc;
 }
 
-void lua_RegisterFunc( lua_Hook func, const CLuaFuncID& id )
+void lua_RegisterFunc( lua_Hook func, const CLuaFuncID &id )
 {
 	intptr_t nFunc = reinterpret_cast<intptr_t>( func );
-	luaFuncToIDMap[ nFunc ] = id;
-	luaIDToFuncMap[ id ] = nFunc;
+	luaFuncToIDMap[nFunc] = id;
+	luaIDToFuncMap[id] = nFunc;
 }
 
 int lua_AddCFunc( lua_CFunction *pFunc, IBinSaver &f, int nChunk )
@@ -111,7 +111,7 @@ void lua_AddString( IBinSaver &f, IBinSaver::chunk_id idChunk, TString **ppszStr
 	}
 	else
 	{
-		std::string str = (*ppszStr)->GetStr();
+		std::string str = ( *ppszStr )->GetStr();
 		f.Add( idChunk, &str, nChunk );
 	}
 }

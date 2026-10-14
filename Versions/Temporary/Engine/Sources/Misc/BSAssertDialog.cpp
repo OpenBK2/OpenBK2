@@ -19,10 +19,9 @@
 
 namespace NBSU
 {
-static int  nSplitter = -1;
+static int nSplitter = -1;
 static bool isMore = false;
 static bool needSaveLog = true;
-
 
 static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam );
 static bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNotifCode, LPARAM lParam );
@@ -37,12 +36,17 @@ struct SAssertionDlgParams
 	SIgnoresList &ignores;
 	const char *pszExtInfo;
 	//
-	SAssertionDlgParams( const char *pszNewFileName, int nNewLineNumber,
-		const char *pszNewCondition, const char *pszNewDescription,
-		const std::vector<SCallStackEntry> &_entries, SIgnoresList &newIgnores, const char *szExtInfo )
-		: pszFileName( pszNewFileName ), nLineNumber( nNewLineNumber ),
-		szCondition( pszNewCondition ), szDescription( pszNewDescription ),
-		entries(_entries), ignores( newIgnores ), pszExtInfo( szExtInfo ) {  }
+	SAssertionDlgParams( const char *pszNewFileName,
+	                     int nNewLineNumber,
+	                     const char *pszNewCondition,
+	                     const char *pszNewDescription,
+	                     const std::vector<SCallStackEntry> &_entries,
+	                     SIgnoresList &newIgnores,
+	                     const char *szExtInfo )
+			: pszFileName( pszNewFileName ), nLineNumber( nNewLineNumber ), szCondition( pszNewCondition ),
+				szDescription( pszNewDescription ), entries( _entries ), ignores( newIgnores ), pszExtInfo( szExtInfo )
+	{
+	}
 };
 
 // The longest int is "-2147483648". digits10 is the number of digits that
@@ -50,16 +54,21 @@ struct SAssertionDlgParams
 // then room for the sign and the terminator, so 12.
 static constexpr size_t nIntStrSize = std::numeric_limits<int>::digits10 + 1 + 1 + 1;
 
-EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
-																		const char *pszFileName, int nLineNumber,
-																		const char *_pszCondition, const char *_pszDescription,
-																		const std::vector<SCallStackEntry> &entries, SIgnoresList &ignores,
-																		const char *pszExtInfo )
+EBSUReport ShowAssertionDlg( HINSTANCE hInstance,
+                             HWND hWnd,
+                             const char *pszFileName,
+                             int nLineNumber,
+                             const char *_pszCondition,
+                             const char *_pszDescription,
+                             const std::vector<SCallStackEntry> &entries,
+                             SIgnoresList &ignores,
+                             const char *pszExtInfo )
 {
 	char szLineNumber[nIntStrSize];
 	// to_chars returns the end of the range on failure, so leave the last
 	// byte for the terminator and *res.ptr is always in bounds
-	const std::to_chars_result resLine = std::to_chars( szLineNumber, szLineNumber + sizeof( szLineNumber ) - 1, nLineNumber );
+	const std::to_chars_result resLine =
+			std::to_chars( szLineNumber, szLineNumber + sizeof( szLineNumber ) - 1, nLineNumber );
 	*resLine.ptr = '\0';
 	std::string szDescription = std::string( pszFileName ) + "(" + szLineNumber + "): " + _pszDescription;
 
@@ -67,40 +76,41 @@ EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
 	// remember old cursor before dialog box call
 	HCURSOR hCursor = GetCursor();
 	// fill start params and execute dialog
-	SAssertionDlgParams params( pszFileName, nLineNumber, _pszCondition, szDescription.c_str(), entries, ignores, pszExtInfo );
+	SAssertionDlgParams params(
+			pszFileName, nLineNumber, _pszCondition, szDescription.c_str(), entries, ignores, pszExtInfo );
 	int nRetVal = DialogBoxParam( hInstance,
-		"IDD_ASSERTION_REPORT",
-		hWnd,
-		reinterpret_cast<DLGPROC>( ReportAssertionDlgProc ),
-		reinterpret_cast<LPARAM>( &params ) );
+	                              "IDD_ASSERTION_REPORT",
+	                              hWnd,
+	                              reinterpret_cast<DLGPROC>( ReportAssertionDlgProc ),
+	                              reinterpret_cast<LPARAM>( &params ) );
 	// restore old cursor after message box usage
 	SetCursor( hCursor );
 
 	switch ( nRetVal )
 	{
-	case IDC_ASSERTION_DEBUG:
-		return BSU_DEBUG;
-	case IDC_ASSERTION_ABORT:
-		return BSU_ABORT;
-	case IDC_ASSERTION_CONTINUE:
-		return BSU_CONTINUE;
-	case IDC_ASSERTION_IGNORE:
-		return BSU_IGNORE;
-	default:
-		return BSU_DEBUG;
+		case IDC_ASSERTION_DEBUG:
+			return BSU_DEBUG;
+		case IDC_ASSERTION_ABORT:
+			return BSU_ABORT;
+		case IDC_ASSERTION_CONTINUE:
+			return BSU_CONTINUE;
+		case IDC_ASSERTION_IGNORE:
+			return BSU_IGNORE;
+		default:
+			return BSU_DEBUG;
 	}
 }
 
 inline SAssertionDlgParams *GetParams( LPARAM lParam )
 {
-	return reinterpret_cast<SAssertionDlgParams*>(lParam);
+	return reinterpret_cast<SAssertionDlgParams *>( lParam );
 }
 
 static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam )
 {
-	switch (message)
+	switch ( message )
 	{
-	case WM_INITDIALOG:
+		case WM_INITDIALOG:
 		{
 			// Calculate splitter
 			RECT rcDlg, rc;
@@ -109,11 +119,14 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPA
 			nSplitter = rcDlg.bottom - rcDlg.top - rc.top;
 			if ( !isMore )
 				rcDlg.bottom -= nSplitter;
-			MoveWindow( hwndDlg, (GetSystemMetrics(SM_CXFULLSCREEN) - rcDlg.right + rcDlg.left) / 2,
-				(GetSystemMetrics(SM_CYFULLSCREEN) - rcDlg.bottom + rcDlg.top) / 2,
-				rcDlg.right - rcDlg.left, rcDlg.bottom - rcDlg.top, true );
+			MoveWindow( hwndDlg,
+			            ( GetSystemMetrics( SM_CXFULLSCREEN ) - rcDlg.right + rcDlg.left ) / 2,
+			            ( GetSystemMetrics( SM_CYFULLSCREEN ) - rcDlg.bottom + rcDlg.top ) / 2,
+			            rcDlg.right - rcDlg.left,
+			            rcDlg.bottom - rcDlg.top,
+			            true );
 
-			SAssertionDlgParams *pParams = GetParams(lParam);
+			SAssertionDlgParams *pParams = GetParams( lParam );
 			SetDlgUserData( hwndDlg, pParams );
 
 			SetWindowText( hwndDlg, IDC_ASSERTION_CONDITION, pParams->szCondition.c_str() );
@@ -124,20 +137,20 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPA
 			FillStackList( hwndCallStack, pParams->entries );
 
 			// Fill ingnore list
-			SetWindowUserData( hwndDlg, IDC_ASSERTION_IGNORES_LIST, &(pParams->ignores) );
+			SetWindowUserData( hwndDlg, IDC_ASSERTION_IGNORES_LIST, &( pParams->ignores ) );
 			HWND hwndList = GetDlgItem( hwndDlg, IDC_ASSERTION_IGNORES_LIST );
 			SendMessage( hwndList, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM)LVS_EX_FULLROWSELECT );
 			GetClientRect( hwndList, &rc );
-			int nPart10 = (rc.right - rc.left) / 10;
+			int nPart10 = ( rc.right - rc.left ) / 10;
 			ListView_AddColumn( hwndList, "File", nPart10 * 3 );
 			ListView_AddColumn( hwndList, "Method", nPart10 * 3 );
 			ListView_AddColumn( hwndList, "Line", nPart10 );
 			ListView_AddColumn( hwndList, "Condition", nPart10 * 3 );
-			for( SIgnoresList::iterator it = pParams->ignores.begin(); it != pParams->ignores.end(); ++it )
+			for ( SIgnoresList::iterator it = pParams->ignores.begin(); it != pParams->ignores.end(); ++it )
 			{
-				int nNewLine = ListView_AddItem( hwndList, GetFileName(it->szFileName), LPARAM(&(*it)) );
-				ListView_SetItemText( hwndList, nNewLine, 3, const_cast<char*>(it->szCondition.c_str()) );
-				ListView_SetItemText( hwndList, nNewLine, 1, const_cast<char*>(it->szFunctionName.c_str()) );
+				int nNewLine = ListView_AddItem( hwndList, GetFileName( it->szFileName ), LPARAM( &( *it ) ) );
+				ListView_SetItemText( hwndList, nNewLine, 3, const_cast<char *>( it->szCondition.c_str() ) );
+				ListView_SetItemText( hwndList, nNewLine, 1, const_cast<char *>( it->szFunctionName.c_str() ) );
 				char buf[nIntStrSize];
 				const std::to_chars_result resLine = std::to_chars( buf, buf + sizeof( buf ) - 1, it->nLineNumber );
 				*resLine.ptr = '\0';
@@ -146,25 +159,26 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPA
 		}
 		break;
 
-	case WM_NOTIFY:
+		case WM_NOTIFY:
 		{
-			int idCtrl = (int) wParam;
+			int idCtrl = (int)wParam;
 			if ( IDC_ASSERTION_IGNORES_LIST == idCtrl )
 			{
 				LPNMITEMACTIVATE lpnmitem = (LPNMITEMACTIVATE)lParam;
 				HWND hwndList = GetDlgItem( hwndDlg, IDC_ASSERTION_IGNORES_LIST );
-				switch( lpnmitem->hdr.code )
+				switch ( lpnmitem->hdr.code )
 				{
-				case NM_DBLCLK:
+					case NM_DBLCLK:
 					{
 						LVITEM Item;
-						memset( &Item, 0, sizeof(Item) );
+						memset( &Item, 0, sizeof( Item ) );
 						Item.mask = LVIF_PARAM | LVIF_TEXT;
 						Item.iItem = lpnmitem->iItem;
-						SIgnoresList *pIgnores = reinterpret_cast<SIgnoresList*>( GetWindowUserData( hwndDlg, IDC_ASSERTION_IGNORES_LIST ) );
+						SIgnoresList *pIgnores =
+								reinterpret_cast<SIgnoresList *>( GetWindowUserData( hwndDlg, IDC_ASSERTION_IGNORES_LIST ) );
 						ListView_GetItem( hwndList, &Item );
-						SIgnoresEntry* pIEnt = reinterpret_cast<SIgnoresEntry*>(Item.lParam);
-						pIgnores->remove(*pIEnt);
+						SIgnoresEntry *pIEnt = reinterpret_cast<SIgnoresEntry *>( Item.lParam );
+						pIgnores->remove( *pIEnt );
 						ListView_DeleteItem( hwndList, lpnmitem->iItem );
 					}
 					break;
@@ -173,24 +187,24 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPA
 		}
 		break;
 
-	case WM_COMMAND:
-		return ReportAssertionDlgProcCommand( hwndDlg, LOWORD(wParam), HIWORD(wParam), lParam );
+		case WM_COMMAND:
+			return ReportAssertionDlgProcCommand( hwndDlg, LOWORD( wParam ), HIWORD( wParam ), lParam );
 	}
 	return false;
 }
 
 bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNotifCode, LPARAM lParam )
 {
-	switch(wCtrlID)
+	switch ( wCtrlID )
 	{
-	case IDC_ASSERTION_DETAILS:
+		case IDC_ASSERTION_DETAILS:
 		{
-			SAssertionDlgParams *pParams = reinterpret_cast<SAssertionDlgParams*>( GetDlgUserData( hwndDlg ) );
+			SAssertionDlgParams *pParams = reinterpret_cast<SAssertionDlgParams *>( GetDlgUserData( hwndDlg ) );
 			if ( pParams->pszExtInfo )
 				MessageBox( hwndDlg, pParams->pszExtInfo, "Details", MB_OK | MB_ICONINFORMATION );
 		}
 		break;
-	case IDC_BUTTON_MORE:
+		case IDC_BUTTON_MORE:
 		{
 			RECT rc;
 			GetWindowRect( hwndDlg, &rc );
@@ -199,36 +213,37 @@ bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNo
 			SetWindowText( hwndDlg, IDC_BUTTON_MORE, isMore ? "&More <<" : "&More >>" );
 		}
 		break;
-	case IDC_ASSERTION_SAVE_LOG:
-		needSaveLog = IsDlgButtonChecked( hwndDlg, IDC_ASSERTION_SAVE_LOG ) == 1;
-		break;
+		case IDC_ASSERTION_SAVE_LOG:
+			needSaveLog = IsDlgButtonChecked( hwndDlg, IDC_ASSERTION_SAVE_LOG ) == 1;
+			break;
 
-		//case IDC_ASSERTION_DETAILS:
-		//{
-		//	SExternalDebugAllocStat str[4];
-		//	str[0].pszFileName = "AAA";
-		//	str[1].pszFileName = "BB";
-		//	str[2].pszFileName = "AA";
-		//	str[3].pszFileName = "BB";
-		//	CDialogMemory dlg( str, 4 );
-		//	dlg.DoModal( g_hInstance );
-		//}
-		//break;
+			//case IDC_ASSERTION_DETAILS:
+			//{
+			//	SExternalDebugAllocStat str[4];
+			//	str[0].pszFileName = "AAA";
+			//	str[1].pszFileName = "BB";
+			//	str[2].pszFileName = "AA";
+			//	str[3].pszFileName = "BB";
+			//	CDialogMemory dlg( str, 4 );
+			//	dlg.DoModal( g_hInstance );
+			//}
+			//break;
 
-	case IDC_ASSERTION_DEBUG:
-	case IDC_ASSERTION_ABORT:
-	case IDC_ASSERTION_CONTINUE:
-		EndDialog( hwndDlg, wCtrlID );
-		return true;
+		case IDC_ASSERTION_DEBUG:
+		case IDC_ASSERTION_ABORT:
+		case IDC_ASSERTION_CONTINUE:
+			EndDialog( hwndDlg, wCtrlID );
+			return true;
 
-	case IDC_ASSERTION_IGNORE: // add current assertion to the ignores list
+		case IDC_ASSERTION_IGNORE: // add current assertion to the ignores list
 		{
-			SIgnoresList *pIgnores = reinterpret_cast<SIgnoresList*>( GetWindowUserData( hwndDlg, IDC_ASSERTION_IGNORES_LIST ) );
+			SIgnoresList *pIgnores =
+					reinterpret_cast<SIgnoresList *>( GetWindowUserData( hwndDlg, IDC_ASSERTION_IGNORES_LIST ) );
 			if ( pIgnores )
 			{
 				SIgnoresEntry ignore;
 				//GetCheckButtonState( hwndDlg, IDC_ASSERTION_IGNORE_THIS );
-				SAssertionDlgParams *pParams = reinterpret_cast<SAssertionDlgParams*>( GetDlgUserData( hwndDlg ) );
+				SAssertionDlgParams *pParams = reinterpret_cast<SAssertionDlgParams *>( GetDlgUserData( hwndDlg ) );
 				if ( pParams )
 				{
 					if ( !pParams->entries.empty() )
@@ -249,12 +264,12 @@ bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNo
 				}
 			}
 		}
-		EndDialog( hwndDlg, IDC_ASSERTION_CONTINUE );
-		return true;
-	case IDC_ASSERTION_EMERGENCY:
-		//NBSU::ExecuteEmergencyCommands();
-		EndDialog( hwndDlg, IDC_ASSERTION_ABORT );
-		return true;
+			EndDialog( hwndDlg, IDC_ASSERTION_CONTINUE );
+			return true;
+		case IDC_ASSERTION_EMERGENCY:
+			//NBSU::ExecuteEmergencyCommands();
+			EndDialog( hwndDlg, IDC_ASSERTION_ABORT );
+			return true;
 	}
 	return false;
 }

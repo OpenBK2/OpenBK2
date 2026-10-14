@@ -37,7 +37,8 @@ static int s_nBorderWidth = 10;
 void CWindowChapterMapLayer::Recalc()
 {
 	if ( !IsValid( pValue ) )
-		pValue = NGfx::MakeTexture( GetNextPow2( nWidth ), GetNextPow2( nHeight ), 1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
+		pValue = NGfx::MakeTexture(
+				GetNextPow2( nWidth ), GetNextPow2( nHeight ), 1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
 
 	NGfx::CTextureLock<NGfx::SPixel8888> lock( pValue, 0, NGfx::INPLACE );
 	const int nSize = sizeof( NGfx::SPixel8888 ) * nWidth;
@@ -103,7 +104,7 @@ static float GetOctoDistance( float fX1, float fX2, float fY1, float fY2 )
 	const float fV = abs( fY1 - fY2 );
 	const float fOrto = (std::max)( fH, fV );
 
-	return (std::min) ( fOrto, ( fH + fV ) * 0.666f );
+	return (std::min)( fOrto, ( fH + fV ) * 0.666f );
 }
 
 #define LINE_BLUR_PART 0.3f
@@ -145,8 +146,7 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 /*#define s_nPotentialGridSize 16
 #define STEP2 8*/
 #define STEP_TWIN_OFFSET 0
-CWindowPotentialLines::CWindowPotentialLines()
-: bValid ( false ), bLayerInit( false ), bDrawDashes( false )
+CWindowPotentialLines::CWindowPotentialLines() : bValid( false ), bLayerInit( false ), bDrawDashes( false )
 {
 	pTerritoryLayer = new CWindowChapterMapLayer;
 }
@@ -156,10 +156,7 @@ struct STextureEntryEqual
 	std::string szID;
 
 	STextureEntryEqual( const std::string &_szID ) { szID = _szID; }
-	bool operator()( const NDb::SUITextureEntry &value ) const
-	{
-		return szID == value.szTextID;
-	}
+	bool operator()( const NDb::SUITextureEntry &value ) const { return szID == value.szTextID; }
 };
 
 void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )
@@ -176,8 +173,12 @@ void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )
 
 	const CTRect<float> rectTexture = CTRect<float>( 0.0f, 0.0f, vTextureSize.x, vTextureSize.y );
 	CRectLayout rects;
-	rects.AddRect( vPos.x, vPos.y,
-		pInstance->placement.size.Get().x, pInstance->placement.size.Get().y, rectTexture, FadeColor( 0xFFFFFFFF, GetTotalFadeValue() ) );
+	rects.AddRect( vPos.x,
+	               vPos.y,
+	               pInstance->placement.size.Get().x,
+	               pInstance->placement.size.Get().y,
+	               rectTexture,
+	               FadeColor( 0xFFFFFFFF, GetTotalFadeValue() ) );
 	VirtualToScreen( &rects );
 
 	pVisitor->VisitUITextureRect( pTerritoryLayer, 3, rects );
@@ -187,7 +188,7 @@ void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )
 
 void CWindowPotentialLines::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
-	const NDb::SWindowPotentialLines *pWindowDesc( checked_cast<const NDb::SWindowPotentialLines*>( pDesc ) );
+	const NDb::SWindowPotentialLines *pWindowDesc( checked_cast<const NDb::SWindowPotentialLines *>( pDesc ) );
 	pInstance = pWindowDesc->Duplicate();
 	CWindow::InitByDesc( pDesc );
 
@@ -240,7 +241,7 @@ void CWindowPotentialLines::Recalculate()
 		{
 			pts[i][j].fValue = GetValue( nX + s_nPotentialGridSize, nY + s_nPotentialGridSize );
 
-			if ( i > 0 && j > 0 )			// Quad is filled, determine intersection type
+			if ( i > 0 && j > 0 ) // Quad is filled, determine intersection type
 			{
 				SPointDesc &pt = pts[i - 1][j - 1];
 
@@ -274,11 +275,11 @@ void CWindowPotentialLines::Recalculate()
 					{
 						bool bUse1 = false;
 
-						if ( nType == 0 )					// All < 0
+						if ( nType == 0 ) // All < 0
 							bUse1 = false;
-						else if ( nType == 15 )		// All > 0
+						else if ( nType == 15 ) // All > 0
 							bUse1 = true;
-						else											// Intersection, compare
+						else // Intersection, compare
 							if ( GetValue( nDarkX, nDarkY ) > 0.0f )
 								bUse1 = true;
 							else
@@ -299,73 +300,73 @@ void CWindowPotentialLines::Recalculate()
 				// Add (draw if not dashed) lines
 				switch ( nType )
 				{
-				case 1:
-				case 14:
+					case 1:
+					case 14:
 					{
 						pt.eType = EIT_CORNER_SW;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) );		// S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) );		// W wall
+						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
 						MakeLine2( nX, nY + fPart2, nX + fPart1, nY + s_nPotentialGridSize, funcDraw1 );
 						break;
 					}
-				case 2:
-				case 13:
+					case 2:
+					case 13:
 					{
 						pt.eType = EIT_CORNER_NW;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) );		// N wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) );		// W wall
+						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
+						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
 						MakeLine2( nX, nY + fPart2, nX + fPart1, nY, funcDraw1 );
 						break;
 					}
-				case 3:
-				case 12:
+					case 3:
+					case 12:
 					{
 						pt.eType = EIT_LINE_V;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) );		// S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) );		// N wall
+						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
 						MakeLine2( nX + fPart2, nY, nX + fPart1, nY + s_nPotentialGridSize, funcDraw1 );
 						break;
 					}
-				case 4:
-				case 11:
+					case 4:
+					case 11:
 					{
 						pt.eType = EIT_CORNER_NE;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) );		// N wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) );		// E wall
+						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
+						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX + fPart1, nY, nX + s_nPotentialGridSize, nY + fPart2, funcDraw1 );
 						break;
 					}
-				case 5:
-				case 10:
+					case 5:
+					case 10:
 					{
 						pt.eType = EIT_CROSS;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) );		// S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) );		// W wall
-						const float fPart3 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) );		// N wall
-						const float fPart4 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) );		// E wall
+						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
+						const float fPart3 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) ); // N wall
+						const float fPart4 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX, nY + fPart2, nX + fPart1, nY + s_nPotentialGridSize, funcDraw1 );
 						MakeLine2( nX + fPart3, nY, nX + s_nPotentialGridSize, nY + fPart4, funcDraw1 );
 						break;
 					}
-				case 6:
-				case 9:
+					case 6:
+					case 9:
 					{
 						pt.eType = EIT_LINE_H;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) );		// W wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) );		// E wall
+						const float fPart1 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) ); // W wall
+						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX, nY + fPart1, nX + s_nPotentialGridSize, nY + fPart2, funcDraw1 );
 						break;
 					}
-				case 7:
-				case 8:
+					case 7:
+					case 8:
 					{
 						pt.eType = EIT_CORNER_SE;
-						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) );		// S wall
-						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) );		// E wall
+						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) ); // S wall
+						const float fPart2 = s_nPotentialGridSize * fabs( fValues[1] / ( fValues[1] - fValues[0] ) ); // E wall
 						MakeLine2( nX + fPart1, nY + s_nPotentialGridSize, nX + s_nPotentialGridSize, nY + fPart2, funcDraw1 );
 						break;
 					}
-				default:
+					default:
 					{
 						pt.eType = EIT_NONE;
 					}
@@ -389,7 +390,7 @@ const float CWindowPotentialLines::GetValue( int nX, int nY ) const
 	{
 		const SNodeDesc &node = *it;
 
-		fResult += s_fWeightNodes * node.fValue / ( 1.0f + GetSquaredDistanceToSegment( node, nX, nY ) );		// Quadratic
+		fResult += s_fWeightNodes * node.fValue / ( 1.0f + GetSquaredDistanceToSegment( node, nX, nY ) ); // Quadratic
 	}
 
 	return fResult;
@@ -443,7 +444,11 @@ void CWindowPotentialLines::SetNode( int nX, int nY, int nEndOffsetX, int nEndOf
 	bValid = false;
 }
 
-void CWindowPotentialLines::SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const uint32_t _dwBorderColour1, const uint32_t _dwBorderColour2 )
+void CWindowPotentialLines::SetParams( const std::string &szMask,
+                                       const std::string &szDiffColourMap,
+                                       const CVec2 &_vMainStrike,
+                                       const uint32_t _dwBorderColour1,
+                                       const uint32_t _dwBorderColour2 )
 {
 	vMainStrike = _vMainStrike;
 	szMaskFile = szMask;
@@ -455,7 +460,10 @@ void CWindowPotentialLines::SetParams( const std::string &szMask, const std::str
 	SetupNoise();
 }
 
-void CWindowPotentialLines::AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, uint32_t dwArrowColour  )
+void CWindowPotentialLines::AddArrow( const std::vector<CVec2> &arrowTraj,
+                                      float fArrowWidth,
+                                      const NDb::STexture *pArrowTexture,
+                                      uint32_t dwArrowColour )
 {
 	if ( pArrowTexture->IsRefInvalid() )
 		return;
@@ -485,7 +493,7 @@ void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 		SArrowDesc &arrow = *itArrow;
 		std::vector<CVec2> &arrowPts = arrow.pts;
 		NGfx::SPixel8888 sColors[4] = { arrow.dwColour, arrow.dwColour, arrow.dwColour, arrow.dwColour };
-		float fArrowWidth = arrow.fWidth / 2.0f;		// Half-width, actually
+		float fArrowWidth = arrow.fWidth / 2.0f; // Half-width, actually
 		float fArrowTextureLength = arrow.pTexture->nHeight - 4.0f;
 
 		//rect.Set( 0.5f, 0.5f, arrow.pTexture->nWidth - 1.5f, fArrowTextureLength + 0.5f );
@@ -511,12 +519,13 @@ void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 			// Test show Center line
 			//MakeLine2( arrowPts[i].x, arrowPts[i].y, arrowPts[i + 1].x, arrowPts[i + 1].y, funcDraw );
 
-			CVec2 vTmp( arrowPts[i + 1].y - arrowPts[i].y, arrowPts[i].x - arrowPts[i + 1].x );	// Perpendicular to the segment
+			CVec2 vTmp( arrowPts[i + 1].y - arrowPts[i].y,
+			            arrowPts[i].x - arrowPts[i + 1].x ); // Perpendicular to the segment
 
 			Normalize( &vTmp );
 			vTmp *= fArrowWidth;
 
-			if ( i == 0 )		// Init first points
+			if ( i == 0 ) // Init first points
 			{
 				sPos[0] = arrowPts[i] + vTmp;
 				sPos[1] = arrowPts[i] - vTmp;
@@ -524,7 +533,7 @@ void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 				// Test show First points
 				//MakeLine2( sPos[0].x, sPos[0].y, sPos[1].x, sPos[1].y, funcDraw );
 			}
-			else						// Copy points from previous iteration
+			else // Copy points from previous iteration
 			{
 				sPos[0] = sPos[3];
 				sPos[1] = sPos[2];
@@ -571,14 +580,14 @@ void CWindowPotentialLines::DrawNoise( const CVec2 &vMainStrike )
 	int nRandValue = 0;
 
 	const int nMaxX = noise.GetSizeX();
-	const int nMaxY	= noise.GetSizeY();
+	const int nMaxY = noise.GetSizeY();
 
 	gridVectors.SetSizes( nMaxX / s_nPerlinGridSize + 2, nMaxX / s_nPerlinGridSize + 2 );
 	for ( nX = 0; nX < gridVectors.GetSizeX(); ++nX )
 	{
 		for ( nY = 0; nY < gridVectors.GetSizeY(); ++nY )
 		{
-			nRandValue = ( nRandValue * 17 + 111 ) & 0xffff;			// Pseudorandom, but repeatable
+			nRandValue = ( nRandValue * 17 + 111 ) & 0xffff; // Pseudorandom, but repeatable
 
 			gridVectors[nY][nX] = GetVectorByDirection( nRandValue );
 		}
@@ -610,7 +619,7 @@ void CWindowPotentialLines::DrawNoise( const CVec2 &vMainStrike )
 			float fA = fS + fSx * ( fT - fS );
 			float fB = fU + fSx * ( fV - fU );
 
-			fNoiseValue = fA + fSy * ( fB - fA );			// Is between -1 and 1
+			fNoiseValue = fA + fSy * ( fB - fA ); // Is between -1 and 1
 
 			noise[nY][nX] += fNoiseValue * s_fWeightPerlinNoise + ( fXGrad + fYGrad ) * s_fWeightMainStrike;
 		}
@@ -696,10 +705,11 @@ void CWindowPotentialLines::SetupNoise()
 REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x191B5380, CWindowPotentialLines )
 REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x191B5B80, CWindowChapterMapLayer )
 
-START_REGISTER(WindowPotentialLines)
+START_REGISTER( WindowPotentialLines )
 REGISTER_VAR_EX( "frontlines_weight_mask", NGlobal::VarFloatHandler, &s_fWeightMaskNoise, 0.00001f, STORAGE_NONE );
 REGISTER_VAR_EX( "frontlines_weight_nodes", NGlobal::VarFloatHandler, &s_fWeightNodes, 1.0f, STORAGE_NONE );
-REGISTER_VAR_EX( "frontlines_weight_perlin", NGlobal::VarFloatHandler, &s_fWeightPerlinNoise, 0.0f /*0.0002f*/, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"frontlines_weight_perlin", NGlobal::VarFloatHandler, &s_fWeightPerlinNoise, 0.0f /*0.0002f*/, STORAGE_NONE );
 REGISTER_VAR_EX( "frontlines_weight_gradient", NGlobal::VarFloatHandler, &s_fWeightMainStrike, 0.007f, STORAGE_NONE );
 REGISTER_VAR_EX( "frontlines_perlin_gridsize", NGlobal::VarIntHandler, &s_nPerlinGridSize, 20, STORAGE_NONE );
 REGISTER_VAR_EX( "frontlines_gridsize", NGlobal::VarIntHandler, &s_nPotentialGridSize, 10, STORAGE_NONE );

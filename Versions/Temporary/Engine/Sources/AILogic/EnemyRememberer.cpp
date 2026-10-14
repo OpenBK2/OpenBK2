@@ -15,10 +15,7 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4A0, CEnemyRememberer );
 //*											CEnemyRememberer*
 //*******************************************************************
 
-CEnemyRememberer::CEnemyRememberer( const int timeBeforeForget )
-: timeBeforeForget( timeBeforeForget )
-{
-}
+CEnemyRememberer::CEnemyRememberer( const int timeBeforeForget ) : timeBeforeForget( timeBeforeForget ) {}
 
 void CEnemyRememberer::SetVisible( const class CCommonUnit *pUnit, const bool bVisible )
 {
@@ -35,7 +32,7 @@ void CEnemyRememberer::SetVisible( const class CCommonUnit *pUnit, const bool bV
 
 const CVec2 CEnemyRememberer::GetPos( const class CCommonUnit *pUnit ) const
 {
-	if ( timeLastSeen == 0  )
+	if ( timeLastSeen == 0 )
 		return pUnit->GetCenterPlain();
 	else
 		return vPosition;

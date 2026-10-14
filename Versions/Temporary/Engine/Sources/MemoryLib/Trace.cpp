@@ -2,6 +2,4 @@
 
 #include "MemoryLib_export.h"
 
-MEMORYLIB_EXPORT void DumpMemoryStats()
-{
-}
+MEMORYLIB_EXPORT void DumpMemoryStats() {}

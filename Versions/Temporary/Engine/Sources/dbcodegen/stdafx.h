@@ -3,7 +3,6 @@
 //      are changed infrequently
 //
 
-
 #pragma once
 #ifndef __AFX__
 
@@ -21,12 +20,12 @@
 #else
 //#define _STLP_USE_MFC 1
 
-#include <afxwin.h>											// MFC core and standard components
-#include <afxext.h>											// MFC extensions
-#include <afxdtctl.h>										// MFC support for Internet Explorer 4 Common Controls
+#include <afxwin.h>   // MFC core and standard components
+#include <afxext.h>   // MFC extensions
+#include <afxdtctl.h> // MFC support for Internet Explorer 4 Common Controls
 #ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>											// MFC support for Windows Common Controls
-#endif // _AFX_NO_AFXCMN_SUPPORT
+#include <afxcmn.h> // MFC support for Windows Common Controls
+#endif              // _AFX_NO_AFXCMN_SUPPORT
 #include <comutil.h>
 #endif // __AFX__
 
@@ -36,10 +35,10 @@
 //
 #include "Misc/Asserts.h"
 //
-#pragma warning( disable: 4018 4355 4800 4244 4267 )
-#pragma warning( disable: 4127 4100 4201 4512 4389 )
+#pragma warning( disable : 4018 4355 4800 4244 4267 )
+#pragma warning( disable : 4127 4100 4201 4512 4389 )
 #ifdef NIVAL_DLL
-#pragma warning( disable: 4273)
+#pragma warning( disable : 4273 )
 #endif
 
 #include <list>
@@ -52,7 +51,7 @@
 
 namespace NTimer
 {
-	typedef uint32_t STime;
+typedef uint32_t STime;
 }
 //
 #include "System/System.h"

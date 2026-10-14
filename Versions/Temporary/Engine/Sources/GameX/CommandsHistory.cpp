@@ -27,8 +27,8 @@
 
 bool g_nSaveToSameSpace;
 
-START_REGISTER(CommandHistory)
-REGISTER_VAR_EX( "checksum_overwrite",	NGlobal::VarBoolHandler, &g_nSaveToSameSpace, false, STORAGE_NONE );
+START_REGISTER( CommandHistory )
+REGISTER_VAR_EX( "checksum_overwrite", NGlobal::VarBoolHandler, &g_nSaveToSameSpace, false, STORAGE_NONE );
 FINISH_REGISTER
 
 // Verification output has to reach a run that shows no window and never opens
@@ -46,8 +46,9 @@ static void ReportReplayLine( const std::string &szLine )
 
 // CCommandsHistory
 
-CCommandsHistory::CCommandsHistory() : bFinishedHistory( false ), bGameFinished( true ), bLoadedHistory( false ),
-	bCanAddCommand( true ), dwLastCheckSum( 0 )
+CCommandsHistory::CCommandsHistory()
+		: bFinishedHistory( false ), bGameFinished( true ), bLoadedHistory( false ), bCanAddCommand( true ),
+			dwLastCheckSum( 0 )
 {
 	pStartSeed = NRandom::CreateRandomSeedCopy();
 	pStartSeed->Init();
@@ -74,7 +75,8 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 
 const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, const bool bRead )
 {
-	CFileStream streamMain( fmt::format( "{}{}{}", NSaveLoad::GetReplayPath(), szFileName, NSaveLoad::REPLAY_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
+	CFileStream streamMain( fmt::format( "{}{}{}", NSaveLoad::GetReplayPath(), szFileName, NSaveLoad::REPLAY_EXTENSION ),
+	                        bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaverMain = CreateBinSaver( &streamMain, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
 	if ( !IsValid( pSaverMain ) )
 		return false;
@@ -110,7 +112,7 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 		pSaverMain->Add( 5, &pStartSeed );
 	}
 
-  if ( !bRead )
+	if ( !bRead )
 		return NSaveLoad::SerializeReplayInfo( &replayInfo, szFileName, bRead );
 
 	return true;
@@ -143,10 +145,10 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		NGlobal::SetVar( "light_checksum_count", recordedCheckSums.nLightMode );
 		if ( NGlobal::GetVar( "checksum_verify", 0 ) != 0 )
 		{
-			ReportReplayLine( fmt::format(
-				"replay verify: {} samples recorded every {} ms, {} state",
-				recordedCheckSums.Size(), recordedCheckSums.nPeriod,
-				recordedCheckSums.nLightMode != 0 ? "per unit" : "full" ) );
+			ReportReplayLine( fmt::format( "replay verify: {} samples recorded every {} ms, {} state",
+			                               recordedCheckSums.Size(),
+			                               recordedCheckSums.nPeriod,
+			                               recordedCheckSums.nLightMode != 0 ? "per unit" : "full" ) );
 		}
 	}
 
@@ -183,21 +185,28 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 			if ( replayInfo.szConfiguration == szConfiguration )
 			{
 				ReportReplayLine( fmt::format(
-					"replay: recorded by {} build {}, this is {} build {}. Same configuration, so the simulation modules were rebuilt since: a divergence may be that change rather than a defect",
-					szRecordedCfg, replayInfo.szImageId, szConfiguration, szImageId ) );
+						"replay: recorded by {} build {}, this is {} build {}. Same configuration, so the simulation modules were rebuilt since: a divergence may be that change rather than a defect",
+						szRecordedCfg,
+						replayInfo.szImageId,
+						szConfiguration,
+						szImageId ) );
 			}
 			else
 			{
 				ReportReplayLine( fmt::format(
-					"replay: recorded by {} build {}, this is {} build {}. Build ids always differ between configurations, so this says nothing about whether the sources did",
-					szRecordedCfg, replayInfo.szImageId, szConfiguration, szImageId ) );
+						"replay: recorded by {} build {}, this is {} build {}. Build ids always differ between configurations, so this says nothing about whether the sources did",
+						szRecordedCfg,
+						replayInfo.szImageId,
+						szConfiguration,
+						szImageId ) );
 			}
 		}
 		if ( replayInfo.uMapCheckSum != 0 && uMapCheckSum != 0 && replayInfo.uMapCheckSum != uMapCheckSum )
 		{
-			ReportReplayLine( fmt::format(
-				"replay: recorded against map checksum {:#x}, this map is {:#x}. The map has been edited since",
-				replayInfo.uMapCheckSum, uMapCheckSum ) );
+			ReportReplayLine(
+					fmt::format( "replay: recorded against map checksum {:#x}, this map is {:#x}. The map has been edited since",
+			                 replayInfo.uMapCheckSum,
+			                 uMapCheckSum ) );
 		}
 	}
 
@@ -286,10 +295,14 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	return true;
 }
 
-bool CCommandsHistory::SaveReplay( const std::string &szFileName, const SB2GameSpecificData &gameDesc, const std::vector<SMPSlot> &slots, const int nWinningSide )
+bool CCommandsHistory::SaveReplay( const std::string &szFileName,
+                                   const SB2GameSpecificData &gameDesc,
+                                   const std::vector<SMPSlot> &slots,
+                                   const int nWinningSide )
 {
 	replayInfo.bUnitExperience = gameDesc.bUnitExp;
-	replayInfo.nCaptureTime = gameDesc.nCaptureTime;;
+	replayInfo.nCaptureTime = gameDesc.nCaptureTime;
+	;
 	replayInfo.nTechLevel = gameDesc.nTechLevel;
 	replayInfo.bUnitExperience = gameDesc.bUnitExp;
 	replayInfo.nWinningSide = nWinningSide;
@@ -320,7 +333,7 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName, const SB2GameS
 	if ( !SerializeHistory( szFileName, false ) )
 		return false;
 
-//	WriteToPipe( PIPE_CHAT, StrFmt( "Replay \"%s\" succesfully saved", szFileName ), 0xFF00FF00, true );
+	//	WriteToPipe( PIPE_CHAT, StrFmt( "Replay \"%s\" succesfully saved", szFileName ), 0xFF00FF00, true );
 	return true;
 }
 
@@ -331,8 +344,8 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 		dwLastCheckSum = ulChecksum;
 		// Entry zero is the whole-state value. nGameTime is game time, not a
 		// segment number, whatever the CSegmentChecksum typedef above calls it.
-		recordedCheckSums.Add( nGameTime, static_cast<uint32_t>( ulChecksum ),
-			static_cast<uint32_t>( NRandom::GetRandomCallsCounter() ) );
+		recordedCheckSums.Add(
+				nGameTime, static_cast<uint32_t>( ulChecksum ), static_cast<uint32_t>( NRandom::GetRandomCallsCounter() ) );
 	}
 
 	if ( bLoadedHistory && nEntry == 0 )
@@ -342,8 +355,8 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 	// total partway through the walk and there are thousands of them per sample.
 	if ( nEntry == 0 && NGlobal::GetVar( "checksum_trace", 0 ) != 0 )
 	{
-		ReportReplayLine( fmt::format( "checksum {} t={} {:#010x}",
-			bLoadedHistory ? "playback" : "record", nGameTime, ulChecksum ) );
+		ReportReplayLine(
+				fmt::format( "checksum {} t={} {:#010x}", bLoadedHistory ? "playback" : "record", nGameTime, ulChecksum ) );
 	}
 
 	// Every entry of one chosen sample, which is the one thing nothing else can
@@ -419,8 +432,11 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 		{
 			bCheckSumModeReported = true;
 			ReportReplayLine( fmt::format(
-				"replay verify: recorded with light_checksum_count={} every {} ms but running with {} every {} ms, not comparable",
-				recordedCheckSums.nLightMode, recordedCheckSums.nPeriod, nMode, nPeriod ) );
+					"replay verify: recorded with light_checksum_count={} every {} ms but running with {} every {} ms, not comparable",
+					recordedCheckSums.nLightMode,
+					recordedCheckSums.nPeriod,
+					nMode,
+					nPeriod ) );
 		}
 		return true;
 	}
@@ -447,16 +463,19 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 		if ( uRecordedCalls != uCalls )
 		{
 			bRngCallsMismatch = true;
-			ReportReplayLine( fmt::format(
-				"replay verify: random draw count parts company at t={} ms, recorded {} but made {}",
-				nGameTime, uRecordedCalls, uCalls ) );
+			ReportReplayLine(
+					fmt::format( "replay verify: random draw count parts company at t={} ms, recorded {} but made {}",
+			                 nGameTime,
+			                 uRecordedCalls,
+			                 uCalls ) );
 			// Said every time, because it is the explanation that costs the least
 			// to rule out and the one that looks most like a real divergence when
 			// it is not: a replay carries no record of what built it, so one
 			// recorded before a change to the simulation diverges against a build
 			// that has the change, and does so identically on every run, which is
 			// exactly how a reproducible bug presents.
-			ReportReplayLine( "replay verify: if this replay was recorded by a different build, re-record it before reading anything into that" );
+			ReportReplayLine(
+					"replay verify: if this replay was recorded by a different build, re-record it before reading anything into that" );
 			// Dumped here rather than only where the state difference shows up,
 			// because this is the earlier moment and the call sites are kept in a
 			// 512 entry ring: by the time the state differs the ring has rolled
@@ -490,10 +509,14 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 
 	bCheckSumMismatch = true;
 	ReportReplayLine( fmt::format(
-		"replay verify: DIVERGED at t={} ms, recorded {:#010x} but got {:#010x} ({} samples matched before it, random draw count {})",
-		nGameTime, uRecorded, uValue, nCheckSumsMatched,
-		!recordedCheckSums.HasRngCalls() ? "not recorded"
-			: bRngCallsMismatch ? "already differed" : "still agrees" ) );
+			"replay verify: DIVERGED at t={} ms, recorded {:#010x} but got {:#010x} ({} samples matched before it, random draw count {})",
+			nGameTime,
+			uRecorded,
+			uValue,
+			nCheckSumsMatched,
+			!recordedCheckSums.HasRngCalls() ? "not recorded"
+			: bRngCallsMismatch              ? "already differed"
+																			 : "still agrees" ) );
 
 	// The same bundle the multiplayer ASYNC path writes, which is the state
 	// worth having at the moment the two runs parted: the RNG counters and
@@ -507,7 +530,7 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 
 CHistory CCommandsHistory::GetCommandsHistory() const
 {
-	if (savingHistory.size() > 0)
+	if ( savingHistory.size() > 0 )
 		return savingHistory;
 	return loadedHistory;
 }
@@ -540,13 +563,15 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 				// to the commands that ran inside the window it appeared in.
 				// The same type name and description the dump file uses.
 				const bool bTrace = NGlobal::GetVar( "replay_trace", 0 ) != 0;
-				for ( std::list< CPtr<IAILogicCommandB2> >::iterator iter = loadedHistory[nSegment].begin(); iter != loadedHistory[nSegment].end(); ++iter )
+				for ( std::list<CPtr<IAILogicCommandB2>>::iterator iter = loadedHistory[nSegment].begin();
+				      iter != loadedHistory[nSegment].end();
+				      ++iter )
 				{
 					if ( bTrace )
 					{
 						IAILogicCommandB2 *pCmd = *iter;
-						ReportReplayLine( fmt::format( "replay segment {}: {} {{{}}}",
-							nSegment, pCmd->GetFullTypeName(), pCmd->GetDebugInfo() ) );
+						ReportReplayLine( fmt::format(
+								"replay segment {}: {} {{{}}}", nSegment, pCmd->GetFullTypeName(), pCmd->GetDebugInfo() ) );
 					}
 					pTranceiver->SendCommand( *iter );
 				}
@@ -554,7 +579,7 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 			bCanAddCommand = true;
 			if ( nSegment >= replayInfo.nLastCommandSegment )
 			{
-//				WriteToPipe( PIPE_CHAT, "Replay finished: No more commands", 0xFF00FF00, true );
+				//				WriteToPipe( PIPE_CHAT, "Replay finished: No more commands", 0xFF00FF00, true );
 				bFinishedHistory = true;
 			}
 		}
@@ -562,7 +587,7 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 		{
 			if ( nSegment >= replayInfo.nLastGameSegment )
 			{
-//				WriteToPipe( PIPE_CHAT, "Replay finished: Last game segment executed", 0xFF00FF00, true );
+				//				WriteToPipe( PIPE_CHAT, "Replay finished: Last game segment executed", 0xFF00FF00, true );
 				// Reaching the end is necessary but not sufficient: a run that
 				// played out while diverging, or one that compared nothing at
 				// all because the replay carries no samples, has not verified
@@ -570,12 +595,12 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 				// when there is something to claim, so every other outcome
 				// reports failure.
 				const bool bVerified = !bCheckSumMismatch && nCheckSumsMatched > 0;
-				const auto szResult = fmt::format(
-					"replay played out at segment {}: {}", nSegment,
-					bCheckSumMismatch ? "DIVERGED"
-						: nCheckSumsMatched > 0
-							? fmt::format( "{} checksums matched", nCheckSumsMatched )
-							: std::string( "nothing to compare, no recorded checksums" ) );
+				const auto szResult =
+						fmt::format( "replay played out at segment {}: {}",
+				                 nSegment,
+				                 bCheckSumMismatch       ? "DIVERGED"
+				                 : nCheckSumsMatched > 0 ? fmt::format( "{} checksums matched", nCheckSumsMatched )
+				                                         : std::string( "nothing to compare, no recorded checksums" ) );
 				ReportReplayLine( szResult );
 
 				if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
@@ -588,8 +613,9 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 				{
 					Singleton<IGameTimer>()->Pause( true, PAUSE_TYPE_USER_PAUSE );
 					NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-						CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
-						InterfaceState()->GetTextEntry( "T_REPLAY_FINISHED" ) ).c_str() );
+					                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
+					                                                     InterfaceState()->GetTextEntry( "T_REPLAY_FINISHED" ) )
+					                        .c_str() );
 				}
 
 				bGameFinished = true;

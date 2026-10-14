@@ -29,11 +29,14 @@ class CTurret : public CLinkObject
 		bool bFinished = {};
 
 		// Finished turrets are serialized before their first turn, too.
-		SRotating() : wRotationSpeed( 0 ), wCurAngle( 0 ), wFinalAngle( 0 ),
-			sign( 0 ), startTime( 0 ), endTime( 0 ), bFinished( true ) { }
+		SRotating()
+				: wRotationSpeed( 0 ), wCurAngle( 0 ), wFinalAngle( 0 ), sign( 0 ), startTime( 0 ), endTime( 0 ),
+					bFinished( true )
+		{
+		}
 	};
 
-	ZDATA_(CLinkObject)
+	ZDATA_( CLinkObject )
 	// горизонтальная наводка
 	SRotating hor;
 	// вертикальная наводка
@@ -50,20 +53,24 @@ class CTurret : public CLinkObject
 
 	SAIAngle wDefaultHorAngle;
 	bool bReturnToNULLVerAngle = {};
+
 public:
 	ZEND int operator&( IBinSaver &f );
+
 private:
 	static void SerializeRotation( IBinSaver &saver, const int nChunk, SRotating &rotation );
 	//
 	uint16_t GetCurAngle( const SRotating &rotateInfo ) const;
 	void SetTurnParameters( SRotating *pRotateInfo, const uint16_t wAngle, const bool bInstantly );
 	uint16_t ConstraintAngle( const uint16_t wDesAngle, const uint16_t wTurnConstraint ) const;
+
 protected:
 	virtual void CheckAlive() = 0;
 	virtual const bool IsBackGunsDirection() const { return false; }
 	virtual const CVec2 &GetPlatformOffset() const { return VNULL2; }
+
 public:
-	CTurret() { }
+	CTurret() {}
 	CTurret( const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, bool bReturnToNULLVerAngle );
 
 	const float GetHorRotationSpeed() const { return hor.wRotationSpeed; }
@@ -91,15 +98,15 @@ public:
 	uint16_t GetHorFinalAngle() const { return hor.wFinalAngle; }
 	uint16_t GetVerFinalAngle() const { return ver.wFinalAngle; }
 
-	const NTimer::STime& GetHorEndTime() const { return hor.endTime; }
-	const NTimer::STime& GetVerEndTime() const { return ver.endTime; }
+	const NTimer::STime &GetHorEndTime() const { return hor.endTime; }
+	const NTimer::STime &GetVerEndTime() const { return ver.endTime; }
 	const NTimer::STime GetEndTurnTime() const { return (std::max)( GetHorEndTime(), GetVerEndTime() ); }
 
 	void Segment();
 
 	// сопровождать пушкой врага
 	void TraceAim( class CAIUnit *pUnit, class CBasicGun *pGun );
-	class CAIUnit* GetTracedUnit() { return pTracedUnit; }
+	class CAIUnit *GetTracedUnit() { return pTracedUnit; }
 	void StopTracing();
 
 	const float GetHorRotateSpeed() const { return hor.wRotationSpeed; }
@@ -145,27 +152,47 @@ class CUnitTurret : public CTurret
 {
 	OBJECT_BASIC_METHODS( CUnitTurret );
 
-	ZDATA_(CTurret)
+	ZDATA_( CTurret )
 	CPtr<CAIUnit> pOwner;
-//	int nModelPart;
+	//	int nModelPart;
 	int nPlatform = {};
-//	uint32_t nGunCarriageParts;
+	//	uint32_t nGunCarriageParts;
 	SAIAngle wHorConstraint;
 	SAIAngle wVerConstraint;
 	SAIAngle wOldHorConstraint;
 
 	bool bCanRotateTurret = {};
 	bool bBuckGunsDirection = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTurret*)this); f.Add(2,&pOwner); f.Add(3,&nPlatform); f.Add(4,&wHorConstraint); f.Add(5,&wVerConstraint); f.Add(6,&wOldHorConstraint); f.Add(7,&bCanRotateTurret); f.Add(8,&bBuckGunsDirection); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CTurret *)this );
+		f.Add( 2, &pOwner );
+		f.Add( 3, &nPlatform );
+		f.Add( 4, &wHorConstraint );
+		f.Add( 5, &wVerConstraint );
+		f.Add( 6, &wOldHorConstraint );
+		f.Add( 7, &bCanRotateTurret );
+		f.Add( 8, &bBuckGunsDirection );
+		return 0;
+	}
+
 private:
 	void CheckAlive() { SetAlive( pOwner && pOwner->IsAlive() ); }
+
 protected:
 	const bool IsBackGunsDirection() const { return bBuckGunsDirection; }
+
 public:
-	CUnitTurret() { }
-	CUnitTurret( class CAIUnit *pOwner, const int nPlatform, const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, const uint16_t wHorConstraint,
-		const uint16_t wVerConstraint, const bool bBuckGunsDirection );
+	CUnitTurret() {}
+	CUnitTurret( class CAIUnit *pOwner,
+	             const int nPlatform,
+	             const uint16_t wHorRotationSpeed,
+	             const uint16_t wVerRotationSpeed,
+	             const uint16_t wHorConstraint,
+	             const uint16_t wVerConstraint,
+	             const bool bBuckGunsDirection );
 
 	// возвращает - был произведён поворот, или turret уже в нужном положении
 	virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
@@ -196,23 +223,36 @@ class CMountedTurret : public CTurret
 {
 	OBJECT_BASIC_METHODS( CMountedTurret );
 
-	ZDATA_(CTurret)
-		CPtr<CBuilding> pBuilding;
-		CVec2 center;
-		SAIAngle dir;
-		SAIAngle wHorTurnConstraint;
-		SAIAngle wVerTurnConstraint;
-		SAIAngle wOldHorConstraint;
+	ZDATA_( CTurret )
+	CPtr<CBuilding> pBuilding;
+	CVec2 center;
+	SAIAngle dir;
+	SAIAngle wHorTurnConstraint;
+	SAIAngle wVerTurnConstraint;
+	SAIAngle wOldHorConstraint;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTurret*)this); f.Add(2,&pBuilding); f.Add(3,&center); f.Add(4,&dir); f.Add(5,&wHorTurnConstraint); f.Add(6,&wVerTurnConstraint); f.Add(7,&wOldHorConstraint); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CTurret *)this );
+		f.Add( 2, &pBuilding );
+		f.Add( 3, &center );
+		f.Add( 4, &dir );
+		f.Add( 5, &wHorTurnConstraint );
+		f.Add( 6, &wVerTurnConstraint );
+		f.Add( 7, &wOldHorConstraint );
+		return 0;
+	}
+
 private:
 	void CheckAlive() { SetAlive( IsValidObj( pBuilding ) ); }
+
 public:
-	CMountedTurret() { }
+	CMountedTurret() {}
 	CMountedTurret( CBuilding *_pBuilding, const int _nSlot );
 
-	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) { }
-	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) { }
+	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) {}
+	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) {}
 
 	virtual CVec2 GetOwnerCenter() { return center; }
 	virtual uint16_t GetOwnerFrontDir() { return dir; }

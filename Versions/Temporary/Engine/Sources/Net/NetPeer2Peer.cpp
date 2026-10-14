@@ -9,7 +9,7 @@
 
 #include <fmt/format.h>
 
-#if !defined(_FINALRELEASE) || defined(_DEVVERSION)
+#if !defined( _FINALRELEASE ) || defined( _DEVVERSION )
 //#define __LOG__
 #endif // !defined(_FINALRELEASE) || defined(_DEVVERSION)
 
@@ -31,17 +31,27 @@ enum EPacket
 	PKT_KICK_ADDR
 };
 /////////////////////////////////////////////////////////////////////////////////////
-void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from,
-		const CMemoryStream *pData, std::vector<UCID> *pReceived )
+void CP2PTracker::AddOutputMessage( EOutMessage msg,
+                                    const UCID _from,
+                                    const CMemoryStream *pData,
+                                    std::vector<UCID> *pReceived )
 {
 #ifdef LOG
 	cout << "OUT ";
 	switch ( msg )
 	{
-		case NEW_CIENT: cout << "new client " << _from.GetFastName() << endl; break;
-		case REMOVE_CLIENT: cout << "del client " << _from.GetFastName() << endl; break;
-		case DIRECT: cout << "direct from " << _from.GetFastName() << endl; break;
-		case BROADCAST: cout << "broadcast from " << _from.GetFastName() << endl; break;
+		case NEW_CIENT:
+			cout << "new client " << _from.GetFastName() << endl;
+			break;
+		case REMOVE_CLIENT:
+			cout << "del client " << _from.GetFastName() << endl;
+			break;
+		case DIRECT:
+			cout << "direct from " << _from.GetFastName() << endl;
+			break;
+		case BROADCAST:
+			cout << "broadcast from " << _from.GetFastName() << endl;
+			break;
 		default:
 			ASSERT( 0 );
 			break;
@@ -59,31 +69,28 @@ void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from,
 	switch ( msg )
 	{
 		case DIRECT:
+		{
+			uint8_t cMsgID = 0xff;
+			if ( pData )
 			{
-				uint8_t cMsgID = 0xff;
-				if ( pData )
-				{
-					CMemoryStream streamCopy( *pData );
-					streamCopy.Seek( 0 );
-					streamCopy >> cMsgID;
-				}
-
-				Singleton<IConsoleBuffer>()->WriteASCII(
-					CONSOLE_STREAM_CONSOLE,
-					fmt::format( "p2p: direct from {}, msg {}", _from, (int)cMsgID ), 0xffffff00, true );
+				CMemoryStream streamCopy( *pData );
+				streamCopy.Seek( 0 );
+				streamCopy >> cMsgID;
 			}
 
-			break;
+			Singleton<IConsoleBuffer>()->WriteASCII(
+					CONSOLE_STREAM_CONSOLE, fmt::format( "p2p: direct from {}, msg {}", _from, (int)cMsgID ), 0xffffff00, true );
+		}
+
+		break;
 		case NEW_CIENT:
 			Singleton<IConsoleBuffer>()->WriteASCII(
-				CONSOLE_STREAM_CONSOLE,
-				fmt::format( "p2p: new client from {}", _from ), 0xffffff00, true );
+					CONSOLE_STREAM_CONSOLE, fmt::format( "p2p: new client from {}", _from ), 0xffffff00, true );
 
 			break;
 		case REMOVE_CLIENT:
 			Singleton<IConsoleBuffer>()->WriteASCII(
-				CONSOLE_STREAM_CONSOLE,
-				fmt::format( "p2p: del client {}", _from ), 0xffffff00, true );
+					CONSOLE_STREAM_CONSOLE, fmt::format( "p2p: del client {}", _from ), 0xffffff00, true );
 
 			break;
 	}
@@ -99,22 +106,22 @@ bool CP2PTracker::GetMessage( SMessage *pRes )
 	return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-CP2PTracker::SPeer* CP2PTracker::GetClient( UCID addr )
+CP2PTracker::SPeer *CP2PTracker::GetClient( UCID addr )
 {
-	std::unordered_map<UCID,SPeer>::iterator it = clients.find( addr );
+	std::unordered_map<UCID, SPeer>::iterator it = clients.find( addr );
 	if ( it != clients.end() )
-		return &(it->second);
+		return &( it->second );
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-CP2PTracker::SPeer* CP2PTracker::GetClientByPeerID( PEER_ID id )
+CP2PTracker::SPeer *CP2PTracker::GetClientByPeerID( PEER_ID id )
 {
-	std::unordered_map<PEER_ID,UCID>::iterator it = peersByID.find( id );
+	std::unordered_map<PEER_ID, UCID>::iterator it = peersByID.find( id );
 	if ( it != peersByID.end() )
 	{
-		std::unordered_map<UCID,SPeer>::iterator it2 = clients.find( it->second );
+		std::unordered_map<UCID, SPeer>::iterator it2 = clients.find( it->second );
 		if ( it2 != clients.end() )
-			return &(it2->second);
+			return &( it2->second );
 		else
 			return 0;
 	}
@@ -156,7 +163,7 @@ void CP2PTracker::CheckQueuedMessages( const UCID who )
 void CP2PTracker::CheckCorpses()
 {
 	std::list<UCID> idsToDel;
-	for ( std::unordered_map<UCID,SPeer>::iterator i = clients.begin(); i != clients.end(); ++i )
+	for ( std::unordered_map<UCID, SPeer>::iterator i = clients.begin(); i != clients.end(); ++i )
 	{
 		if ( !i->second.IsActive() && i->second.messages.empty() && i->second.requireKick.empty() )
 		{
@@ -192,7 +199,6 @@ void CP2PTracker::ApproveKick( UCID victim, UCID from )
 	}
 	else
 		ASSERT( 0 );
-
 }
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ReceiveDirect( const UCID peer, CMemoryStream &data )
@@ -297,12 +303,13 @@ void CP2PTracker::ReceiveAck( const UCID from, int nID, PEER_ID id )
 		ASSERT( !pSender ); // sender was erased too early
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void CP2PTracker::ReceiveAddClient( const UCID peer, const UCID clientAddr, PEER_ID id, CMemoryStream &_addrInfo, bool bIsBroadcast )
+void CP2PTracker::ReceiveAddClient(
+		const UCID peer, const UCID clientAddr, PEER_ID id, CMemoryStream &_addrInfo, bool bIsBroadcast )
 {
 #ifdef LOG
 	cout << "RECV add client " << clientAddr.GetFastName() << " from " << pWho->addr.GetFastName() << endl;
 #endif
-		//if this is client being kicked then respond with kick addr and do nothing more
+	//if this is client being kicked then respond with kick addr and do nothing more
 	SPeer *pTest = GetClient( clientAddr );
 	if ( pTest )
 	{
@@ -393,7 +400,7 @@ void CP2PTracker::ReceiveRemoveClient( const UCID peer, const UCID corpse, bool 
 static int nBroadcastID = 1;
 void CP2PTracker::SendBroadcast( CMemoryStream &pkt )
 {
-	for ( std::unordered_map<UCID,SPeer>::iterator i = clients.begin(); i != clients.end(); ++i )
+	for ( std::unordered_map<UCID, SPeer>::iterator i = clients.begin(); i != clients.end(); ++i )
 	{
 		if ( i->second.IsActive() )
 			SendBroadcast( i->second.addr, nBroadcastID, pkt );
@@ -421,7 +428,8 @@ void CP2PTracker::SendDirect( UCID addr, CMemoryStream &data )
 
 	uint8_t cMsgID;
 	data >> cMsgID;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "p2p: send direct to {}, msg {}", addr, (int)cMsgID ), 0xffffff00, true );
+	Singleton<IConsoleBuffer>()->WriteASCII(
+			CONSOLE_STREAM_CONSOLE, fmt::format( "p2p: send direct to {}, msg {}", addr, (int)cMsgID ), 0xffffff00, true );
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -436,7 +444,7 @@ void CP2PTracker::AddNewClient( const UCID addr, CMemoryStream &_addrInfo, bool 
 	cout << "ADD attempt, client " << addr.GetFastName() << endl;
 #endif
 	SPeer *pTest = GetClient( addr );
-//	ASSERT( !pTest );
+	//	ASSERT( !pTest );
 	if ( pTest )
 		return;
 
@@ -446,7 +454,7 @@ void CP2PTracker::AddNewClient( const UCID addr, CMemoryStream &_addrInfo, bool 
 #endif
 	AddOutputMessage( NEW_CIENT, addr, &_addrInfo );
 	// new client addr is added and for every existing channel info about that is sent
-	for ( std::unordered_map<UCID,SPeer>::iterator i1 = clients.begin(); i1 != clients.end(); ++i1 )
+	for ( std::unordered_map<UCID, SPeer>::iterator i1 = clients.begin(); i1 != clients.end(); ++i1 )
 	{
 		if ( bIsBroadcast && ( i1->second.IsActive() ) )
 			SendAddClient( i1->second.addr, addr, newID, _addrInfo );
@@ -456,7 +464,7 @@ void CP2PTracker::AddNewClient( const UCID addr, CMemoryStream &_addrInfo, bool 
 	res.addr = addr;
 	res.bActive = true;
 	res.addrInfo = _addrInfo;
-	for ( std::unordered_map<UCID,SPeer>::iterator i2 = clients.begin(); i2 != clients.end(); ++i2 )
+	for ( std::unordered_map<UCID, SPeer>::iterator i2 = clients.begin(); i2 != clients.end(); ++i2 )
 	{
 		if ( bIsBroadcast && ( i2->second.IsActive() ) )
 		{
@@ -484,14 +492,14 @@ void CP2PTracker::KickClient( const UCID addr, bool bIsBroadcast )
 		kicks.push_back( addr );
 
 		pVictim->bActive = false;
-		for ( std::unordered_map<UCID,SPeer>::iterator i1 = clients.begin(); i1 != clients.end(); ++i1 )
+		for ( std::unordered_map<UCID, SPeer>::iterator i1 = clients.begin(); i1 != clients.end(); ++i1 )
 		{
-			ApproveKick( (i1->second).addr, addr ); // мертвые не кусаются и вряд ли пришлют подтверждение о kick
+			ApproveKick( ( i1->second ).addr, addr ); // мертвые не кусаются и вряд ли пришлют подтверждение о kick
 			if ( bIsBroadcast && ( i1->second.IsActive() ) )
 				SendRemoveClient( i1->second.addr, addr );
 		}
 		// every fast ack received about messages from victim should be deleted
-		for ( std::unordered_map<UCID,SPeer>::iterator i2 = clients.begin(); i2 != clients.end(); ++i2 )
+		for ( std::unordered_map<UCID, SPeer>::iterator i2 = clients.begin(); i2 != clients.end(); ++i2 )
 		{
 			for ( std::list<SFastAck>::iterator k = i2->second.fastacks.begin(); k != i2->second.fastacks.end(); )
 			{
@@ -547,10 +555,12 @@ void CP2PTracker::SendBroadcast( const UCID dest, int nID, CMemoryStream &data )
 
 	uint8_t cMsgID;
 	data >> cMsgID;
-	if ( cMsgID != 9 ) {}
-		const auto message = fmt::format( "p2p: send broadcast, msg {}", (int)cMsgID );
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str(), 0xffffff00, true );
+	if ( cMsgID != 9 )
+	{
 	}
+	const auto message = fmt::format( "p2p: send broadcast, msg {}", (int)cMsgID );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str(), 0xffffff00, true );
+}
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -577,62 +587,62 @@ void CP2PTracker::ProcessPacket( const UCID addr, CMemoryStream &pkt, bool bIsBr
 	SPeer *pWho = GetClient( addr );
 	if ( !pWho || !pWho->IsActive() )
 		return;
-	pkt.Seek(0);
+	pkt.Seek( 0 );
 	EPacket t = (EPacket)0;
 	pkt.Read( &t, 1 );
 	switch ( t )
 	{
 		case PKT_ADD_CLIENT:
+		{
+			UCID clientAddr;
+			PEER_ID id;
+			CMemoryStream addrInfo;
+			pkt >> clientAddr;
+			pkt >> id;
+			int nSize;
+			pkt >> nSize;
+			if ( nSize < 1024 )
 			{
-				UCID clientAddr;
-				PEER_ID id;
-				CMemoryStream addrInfo;
-				pkt >> clientAddr;
-				pkt >> id;
-				int nSize;
-				pkt >> nSize;
-				if ( nSize < 1024 )
-				{
-					addrInfo.SetSize( nSize );
-					pkt.Read( addrInfo.GetBufferForWrite(), nSize );
-					addrInfo.Seek(0);
-				}
-				ReceiveAddClient( addr, clientAddr, id, addrInfo, bIsBroadcast );
+				addrInfo.SetSize( nSize );
+				pkt.Read( addrInfo.GetBufferForWrite(), nSize );
+				addrInfo.Seek( 0 );
 			}
-			break;
+			ReceiveAddClient( addr, clientAddr, id, addrInfo, bIsBroadcast );
+		}
+		break;
 		case PKT_REMOVE_CLIENT:
-			{
-				UCID clientAddr;
-				pkt >> clientAddr;
-				ReceiveRemoveClient( addr, clientAddr, bIsBroadcast );
-			}
-			break;
+		{
+			UCID clientAddr;
+			pkt >> clientAddr;
+			ReceiveRemoveClient( addr, clientAddr, bIsBroadcast );
+		}
+		break;
 		case PKT_BROADCAST_MSG:
-			{
-				CMemoryStream data;
-				int nID;
-				pkt >> nID;
-				ReadRest( pkt, &data );
-				ReceiveBroadcast( addr, data, nID );
-			}
-			break;
+		{
+			CMemoryStream data;
+			int nID;
+			pkt >> nID;
+			ReadRest( pkt, &data );
+			ReceiveBroadcast( addr, data, nID );
+		}
+		break;
 		case PKT_DIRECT_MSG:
-			{
-				CMemoryStream data;
-				ReadRest( pkt, &data );
-				ReceiveDirect( addr, data );
-			}
-			break;
+		{
+			CMemoryStream data;
+			ReadRest( pkt, &data );
+			ReceiveDirect( addr, data );
+		}
+		break;
 		case PKT_ACK:
-			{
-				int nID;
-				PEER_ID peerID;
-				pkt >> nID;
-				pkt >> peerID;
-				// The sender's connection ID and its ID for the broadcast peer are distinct.
-				ReceiveAck( addr, nID, peerID );
-			}
-			break;
+		{
+			int nID;
+			PEER_ID peerID;
+			pkt >> nID;
+			pkt >> peerID;
+			// The sender's connection ID and its ID for the broadcast peer are distinct.
+			ReceiveAck( addr, nID, peerID );
+		}
+		break;
 		default:
 			ASSERT( 0 );
 			break;

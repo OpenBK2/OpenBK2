@@ -12,17 +12,19 @@ extern CUnitCreation theUnitCreation;
 
 bool IsCellInExcludingCircle( const CVec2 &vCellCenter, const CCircle &circle )
 {
-	return fabs2( vCellCenter - circle.center ) <= sqr( circle.r + SGeneralConsts::RESISTANCE_CELL_SIZE * SConsts::TILE_SIZE / 3 );
+	return fabs2( vCellCenter - circle.center ) <=
+	       sqr( circle.r + SGeneralConsts::RESISTANCE_CELL_SIZE * SConsts::TILE_SIZE / 3 );
 }
 
 const CVec2 SResistance::GetResistanceCellCenter( const int nCell )
 {
 	const SVector cell( nCell >> 12, nCell & 0xfff );
-	const SVector tile( cell.x * SGeneralConsts::RESISTANCE_CELL_SIZE + SGeneralConsts::RESISTANCE_CELL_SIZE / 2, cell.y * SGeneralConsts::RESISTANCE_CELL_SIZE + SGeneralConsts::RESISTANCE_CELL_SIZE / 2 );
+	const SVector tile( cell.x * SGeneralConsts::RESISTANCE_CELL_SIZE + SGeneralConsts::RESISTANCE_CELL_SIZE / 2,
+	                    cell.y * SGeneralConsts::RESISTANCE_CELL_SIZE + SGeneralConsts::RESISTANCE_CELL_SIZE / 2 );
 	return AICellsTiles::GetPointByTile( tile );
 }
 
-const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats )
+const float GetWeightOfUnit( const SUnitBaseRPGStats *pStats )
 {
 	NI_VERIFY( pStats != 0, "", return 0 );
 
@@ -30,8 +32,7 @@ const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats )
 	const float fPrice = pStats->fPrice;
 	const float fUnitTypeCoeff = pStats->IsInfantry() ? 0.1f : 1.0f;
 
-	return
-		fUnitTypeCoeff * ( 1.0f * fPrice + 1.0f * fArmorMember );
+	return fUnitTypeCoeff * ( 1.0f * fPrice + 1.0f * fArmorMember );
 }
 
 const float GetCoeffByDeltaTime( const float fDeltaTime, const float fUpperBound, bool bNeedDeinstall, bool bCanMove )
@@ -53,7 +54,8 @@ const float GetWeightByVisiblePos( CAIUnit *pUnit, const NTimer::STime deltaTime
 	else
 	{
 		// коэффициент, обеспечивающий вероятность того, что юнит ушёл
-		const float fTimeCoeff = GetCoeffByDeltaTime( deltaTime, fTimeToForgetUnit, pUnit->NeedDeinstall(), pUnit->CanMove() );
+		const float fTimeCoeff =
+				GetCoeffByDeltaTime( deltaTime, fTimeToForgetUnit, pUnit->NeedDeinstall(), pUnit->CanMove() );
 		const float fWeight = GetWeightOfUnit( pUnit->GetStats() );
 		const float fFreeCoeff = pUnit->GetCover();
 		const float fResult = fWeight * fTimeCoeff * fFreeCoeff;
@@ -62,7 +64,8 @@ const float GetWeightByVisiblePos( CAIUnit *pUnit, const NTimer::STime deltaTime
 	}
 }
 
-const float GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime, const float fDistToLastVisibleAntiArt )
+const float
+GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime, const float fDistToLastVisibleAntiArt )
 {
 	const float fTimeToForget = SGeneralConsts::TIME_TO_FORGET_ANTI_ARTILLERY;
 	if ( deltaTime > fTimeToForget )
@@ -72,12 +75,11 @@ const float GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime
 		// коэффициент, обеспечивающий вероятность того, что юнит ушёл
 		const float fTimeCoeff = GetCoeffByDeltaTime( deltaTime, fTimeToForget, pUnit->NeedDeinstall(), pUnit->CanMove() );
 		// коэффициент, отвечающий за точность круга антиартиллерии
-//		const float fAccuracyCoeff = Max( 1.0f, fDistToLastVisibleAntiArt / 320.0f );
+		//		const float fAccuracyCoeff = Max( 1.0f, fDistToLastVisibleAntiArt / 320.0f );
 		// вес юнита
 		const float fWeight = GetWeightOfUnit( theUnitCreation.Get152mmML20Stats() );
 
-		return
-			fWeight * fTimeCoeff;// * fAccuracyCoeff;
+		return fWeight * fTimeCoeff; // * fAccuracyCoeff;
 	}
 }
 
@@ -93,12 +95,15 @@ const int CResistancesContainer::GetResistanceCellNumber( const CVec2 &vPos )
 	return ( cell.x << 12 ) | cell.y;
 }
 
-void CResistancesContainer::UpdateEnemyUnitInfo(
-	CAIUnitInfoForGeneral *pInfo,
-	const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
-	const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt )
+void CResistancesContainer::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
+                                                 const NTimer::STime lastVisibleTimeDelta,
+                                                 const CVec2 &vLastVisiblePos,
+                                                 const NTimer::STime lastAntiArtTimeDelta,
+                                                 const CVec2 &vLastVisibleAntiArtCenter,
+                                                 const float fDistToLastVisibleAntiArt )
 {
-	if ( !pInfo->GetOwner()->GetStats()->IsAviation() && ( vLastVisiblePos != VNULL2 || fDistToLastVisibleAntiArt != -1.0f ) )
+	if ( !pInfo->GetOwner()->GetStats()->IsAviation() &&
+	     ( vLastVisiblePos != VNULL2 || fDistToLastVisibleAntiArt != -1.0f ) )
 	{
 		const int nLastCell = GetResistanceCellNumber( pInfo->GetRegisteredPos() );
 
@@ -136,7 +141,8 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 
 		if ( posCells == cellsWeights.end() )
 		{
-			cellsWeights[nNewCell] = SSellInfo( fNewWeight, false, !IsCellExcluded( SResistance::GetResistanceCellCenter( nNewCell ) ) );
+			cellsWeights[nNewCell] =
+					SSellInfo( fNewWeight, false, !IsCellExcluded( SResistance::GetResistanceCellCenter( nNewCell ) ) );
 			posCells = cellsWeights.find( nNewCell );
 		}
 		else
@@ -156,7 +162,7 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 	{
 		for ( CResistance::iterator iter1 = resistances.begin(); iter1 != resistances.end(); ++iter1 )
 		{
-				if ( iter != iter1 )
+			if ( iter != iter1 )
 			{
 				NI_ASSERT( iter->GetCellNumber() != iter1->GetCellNumber(), "Same resistance cells" );
 			}
@@ -173,7 +179,7 @@ void CResistancesContainer::UnitDied( CAIUnitInfoForGeneral *pInfo )
 		if ( pos == resistances.end() )
 			return;
 		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
-		pos->SetWeight( cellsWeights[nCell].fCellWeight	);
+		pos->SetWeight( cellsWeights[nCell].fCellWeight );
 		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
 			--goodWeight[nCell];
 	}
@@ -189,7 +195,7 @@ void CResistancesContainer::UnitChangedParty( CAIUnitInfoForGeneral *pInfo )
 			return;
 
 		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
-		pos->SetWeight( cellsWeights[nCell].fCellWeight	);
+		pos->SetWeight( cellsWeights[nCell].fCellWeight );
 		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
 			--goodWeight[nCell];
 	}
@@ -267,7 +273,7 @@ bool CResistancesContainer::IsInResistanceCircle( const CVec2 &vCenter ) const
 
 void CResistancesContainer::CIter::IterateToNotInUse()
 {
-	while ( iter != pContainter->resistances.end() && pContainter->IsInUse( (*iter).GetCellNumber() ) )
+	while ( iter != pContainter->resistances.end() && pContainter->IsInUse( ( *iter ).GetCellNumber() ) )
 		++iter;
 }
 

@@ -24,12 +24,10 @@ void CEntrenchmentState::ClearData()
 	designTool.Clear();
 }
 
-
 bool CEntrenchmentState::CanBuildEntrenchment()
 {
 	return ( selectedEntrenchmentInfo.pEntrenchmentRPGStats != 0 );
 }
-
 
 void CEntrenchmentState::InsertObjectEnter()
 {
@@ -40,13 +38,11 @@ void CEntrenchmentState::InsertObjectEnter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CEntrenchmentState::InsertObjectLeave()
 {
 	ClearData();
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_ENTRENCHMENTS_STATE );
 }
-
 
 void CEntrenchmentState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
@@ -55,11 +51,18 @@ void CEntrenchmentState::InsertObjectDraw( IPaintContext *pPaintDC )
 		CVec3 vPlacementPosition = pStoreInputState->lastEventInfo.vTerrainPos;
 		vPlacementPosition.z = GetTerrainHeight( vPlacementPosition.x, vPlacementPosition.y );
 		CVec3 vPlacementSelectorPosition = vPlacementPosition;
-		sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS0, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
-		sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS1, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
+		sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+		                          NMapInfoEditor::PLACEMENT_RADIUS0,
+		                          NMapInfoEditor::PLACEMENT_PARTS,
+		                          NMapInfoEditor::PLACEMENT_COLOR,
+		                          false );
+		sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+		                          NMapInfoEditor::PLACEMENT_RADIUS1,
+		                          NMapInfoEditor::PLACEMENT_PARTS,
+		                          NMapInfoEditor::PLACEMENT_COLOR,
+		                          false );
 	}
 }
-
 
 bool CEntrenchmentState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -68,14 +71,12 @@ bool CEntrenchmentState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rT
 	return false;
 }
 
-
 bool CEntrenchmentState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	bool bResult = designTool.ProcessLClickPoint( rTerrainPos );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	return bResult;
 }
-
 
 bool CEntrenchmentState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -84,14 +85,12 @@ bool CEntrenchmentState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rT
 	return bResult;
 }
 
-
 bool CEntrenchmentState::InsertObjectLButtonDblClk( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	designTool.Complete();
 	InsertEntrenchment();
 	return false;
 }
-
 
 bool CEntrenchmentState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -106,7 +105,6 @@ bool CEntrenchmentState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, c
 	}
 	return false;
 }
-
 
 void CEntrenchmentState::InsertEntrenchment()
 {
@@ -145,8 +143,8 @@ void CEntrenchmentState::InsertEntrenchment()
 		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 		{
 			unsigned nEntrenchmentInfoID = INVALID_NODE_ID;
-			if ( NMapInfoEditor::SEntrenchmentInfo *pEntrenchmentInfo =
-				GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SEntrenchmentInfo*>( 0 ), &nEntrenchmentInfoID ) )
+			if ( NMapInfoEditor::SEntrenchmentInfo *pEntrenchmentInfo = GetMapInfoEditor()->objectInfoCollector.Insert(
+							 static_cast<NMapInfoEditor::SEntrenchmentInfo *>( 0 ), &nEntrenchmentInfoID ) )
 			{
 				if ( pEntrenchmentInfo->Create( &createInfo, pScene, pObjectController, pManipulator ) )
 				{
@@ -167,7 +165,6 @@ void CEntrenchmentState::InsertEntrenchment()
 	}
 }
 
-
 bool CEntrenchmentState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
@@ -186,7 +183,6 @@ bool CEntrenchmentState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	*/
 	return false;
 }
-
 
 bool CEntrenchmentState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
@@ -210,22 +206,23 @@ bool CEntrenchmentState::UpdateCommand( unsigned nCommandID, bool *pbEnable, boo
 	return false;
 }
 
-
 void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 {
 	CBusyCursor waitCursor;
 	selectedEntrenchmentInfo = SSelectedEntrenchmentInfo();
 	//
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE,
-		ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+					 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+	     ( !objectSet.objectNameSet.empty() ) )
 	{
 		bool bRes = ( objectSet.szObjectTypeName == "EntrenchmentRPGStats" ) && ( !objectSet.objectNameSet.empty() );
 		if ( !bRes )
 			return;
 		selectedEntrenchmentInfo.szRPGStatsTypeName = objectSet.szObjectTypeName;
 		selectedEntrenchmentInfo.rpgStatsDBID = objectSet.objectNameSet.begin()->first;
-		selectedEntrenchmentInfo.pEntrenchmentRPGStats= dynamic_cast<const NDb::SEntrenchmentRPGStats*>( NDb::GetObject( selectedEntrenchmentInfo.rpgStatsDBID ) );
+		selectedEntrenchmentInfo.pEntrenchmentRPGStats =
+				dynamic_cast<const NDb::SEntrenchmentRPGStats *>( NDb::GetObject( selectedEntrenchmentInfo.rpgStatsDBID ) );
 		if ( selectedEntrenchmentInfo.pEntrenchmentRPGStats == 0 )
 		{
 			return;
@@ -233,7 +230,7 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 		for ( int i = 0; i < selectedEntrenchmentInfo.pEntrenchmentRPGStats->segments.size(); ++i )
 		{
 			const NDb::SEntrenchmentRPGStats::SEntrenchSegmentRPGStats &seg =
-				selectedEntrenchmentInfo.pEntrenchmentRPGStats->segments[i];
+					selectedEntrenchmentInfo.pEntrenchmentRPGStats->segments[i];
 			CVec3 vSize = 2.0f * seg.vAABBHalfSize;
 			CVec2 vCenter = seg.vAABBCenter;
 
@@ -243,10 +240,6 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 	}
 }
 
-
-
-
-
 //
 //
 //
@@ -254,24 +247,18 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 //
 //
 
-const uint32_t CEntrenchmentDesignTool::segColors[CEntrenchmentDesignTool::ST_COUNT] =
-{
-	NMapInfoEditor::PLACEMENT_COLOR,
-	NMapInfoEditor::PLACEMENT_COLOR,
-	0xFF00FF00,
-	0xFF00FF00
-};
+const uint32_t CEntrenchmentDesignTool::segColors[CEntrenchmentDesignTool::ST_COUNT] = {
+	NMapInfoEditor::PLACEMENT_COLOR, NMapInfoEditor::PLACEMENT_COLOR, 0xFF00FF00, 0xFF00FF00 };
 
 CEntrenchmentDesignTool::CEntrenchmentDesignTool()
 {
 	Clear();
 }
 
-
 void CEntrenchmentDesignTool::Clear()
 {
 	// половина острого угла в модели Arc (15градусов)
-	const float F_ARC_ANGLE = (15.0f * FP_2PI)/360.0f;
+	const float F_ARC_ANGLE = ( 15.0f * FP_2PI ) / 360.0f;
 	fArcDeltaAngle = F_ARC_ANGLE;
 	segments.clear();
 	bComplete = false;
@@ -279,9 +266,8 @@ void CEntrenchmentDesignTool::Clear()
 	vStartPos = VNULL3;
 	fStartDir = 0;
 	vDirMarker = VNULL3;
-	memset( segAABBSizes, 0, sizeof(CVec3)*ST_COUNT );
+	memset( segAABBSizes, 0, sizeof( CVec3 ) * ST_COUNT );
 }
-
 
 bool CEntrenchmentDesignTool::Draw( CSceneDrawTool *pDrawTool )
 {
@@ -319,7 +305,6 @@ bool CEntrenchmentDesignTool::Draw( CSceneDrawTool *pDrawTool )
 	return true;
 }
 
-
 void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &cp, const CVec3 &dp, uint32_t clr )
 {
 	CVec3 vNormale = GetNormal( dp - cp );
@@ -344,7 +329,6 @@ void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &c
 	pDrawTool->DrawPolyline( pointList, clr, true, false );
 }
 
-
 float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 {
 	if ( nSegIndex < 0 || nSegIndex >= segments.size() )
@@ -368,49 +352,49 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 		ESegType eSegType = segments[i];
 		switch ( eSegType )
 		{
-		case ST_TERMINATOR:
-		case ST_LINE:
+			case ST_TERMINATOR:
+			case ST_LINE:
 			{
 				switch ( ePrevSegType )
 				{
-				case ST_LEFT_ARC:
-					fAngle += fArcDeltaAngle;
-					break;
-				case ST_RIGHT_ARC:
-					fAngle -= fArcDeltaAngle;
-					break;
+					case ST_LEFT_ARC:
+						fAngle += fArcDeltaAngle;
+						break;
+					case ST_RIGHT_ARC:
+						fAngle -= fArcDeltaAngle;
+						break;
 				}
 			}
 			break;
-		case ST_LEFT_ARC:
+			case ST_LEFT_ARC:
 			{
 				switch ( ePrevSegType )
 				{
-				case ST_TERMINATOR:
-					fAngle += fArcDeltaAngle;
-					break;
-				case ST_LINE:
-					fAngle += fArcDeltaAngle;
-					break;
-				case ST_LEFT_ARC:
-					fAngle += 2.0f * fArcDeltaAngle;
-					break;
+					case ST_TERMINATOR:
+						fAngle += fArcDeltaAngle;
+						break;
+					case ST_LINE:
+						fAngle += fArcDeltaAngle;
+						break;
+					case ST_LEFT_ARC:
+						fAngle += 2.0f * fArcDeltaAngle;
+						break;
 				}
 			}
 			break;
-		case ST_RIGHT_ARC:
+			case ST_RIGHT_ARC:
 			{
 				switch ( ePrevSegType )
 				{
-				case ST_TERMINATOR:
-					fAngle -= fArcDeltaAngle;
-					break;
-				case ST_LINE:
-					fAngle -= fArcDeltaAngle;
-					break;
-				case ST_RIGHT_ARC:
-					fAngle -= 2.0f * fArcDeltaAngle;
-					break;
+					case ST_TERMINATOR:
+						fAngle -= fArcDeltaAngle;
+						break;
+					case ST_LINE:
+						fAngle -= fArcDeltaAngle;
+						break;
+					case ST_RIGHT_ARC:
+						fAngle -= 2.0f * fArcDeltaAngle;
+						break;
 				}
 			}
 			break;
@@ -421,7 +405,6 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 
 	return fAngle;
 }
-
 
 CVec3 CEntrenchmentDesignTool::GetSegPos( int nSegIndex, bool bStart )
 {
@@ -445,7 +428,6 @@ CVec3 CEntrenchmentDesignTool::GetSegPos( int nSegIndex, bool bStart )
 	return cp;
 }
 
-
 bool CEntrenchmentDesignTool::ProcessLClickPoint( const CVec3 &p )
 {
 	if ( bComplete )
@@ -468,7 +450,6 @@ bool CEntrenchmentDesignTool::ProcessLClickPoint( const CVec3 &p )
 		return false;
 	}
 }
-
 
 bool CEntrenchmentDesignTool::ProcessRClickPoint( const CVec3 &p )
 {
@@ -512,7 +493,6 @@ bool CEntrenchmentDesignTool::ProcessRClickPoint( const CVec3 &p )
 	return false;
 }
 
-
 bool CEntrenchmentDesignTool::ProcessEscape()
 {
 	if ( bComplete )
@@ -528,22 +508,21 @@ bool CEntrenchmentDesignTool::ProcessEscape()
 	return false;
 }
 
-
 void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 {
-	if ( bComplete  || segments.empty() )
+	if ( bComplete || segments.empty() )
 	{
 		return;
 	}
 	segments.resize( nLock + 1 );
 	//
 	CVec3 vLockPos = GetSegPos( nLock, nLock == 0 );
-	CVec3 vLockDir = GetVecDir( GetSegDir( nLock ) );					// направление последнего блокированного сегмента
-	CVec3 dir = p - vLockPos;							// направление от блока к курсору мыши
+	CVec3 vLockDir = GetVecDir( GetSegDir( nLock ) ); // направление последнего блокированного сегмента
+	CVec3 dir = p - vLockPos;                         // направление от блока к курсору мыши
 	//
 	if ( fabs( dir ) <= FLT_EPSILON )
 	{
-		if ( nLock == 0 )									// первый линейный сегмент вращается вокруг первого терминатора
+		if ( nLock == 0 ) // первый линейный сегмент вращается вокруг первого терминатора
 		{
 			segments.push_back( ST_LINE );
 		}
@@ -553,7 +532,7 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 	vDirMarker = dir;
 	DebugTrace( "Angle: %g", atan2( dir.y, dir.x ) * 180 / FP_PI );
 
-	if ( nLock == 0 )									// первый линейный сегмент вращается вокруг первого терминатора
+	if ( nLock == 0 ) // первый линейный сегмент вращается вокруг первого терминатора
 	{
 		fStartDir = atan2( dir.y, dir.x );
 		vLockDir = dir;
@@ -562,7 +541,7 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 
 	float fDA = AngleDiff( dir, vLockDir );
 
-	int n = fabs( fDA ) / ( 2.0f * fArcDeltaAngle );			// сколько arc-ов нужно добавить, чтобы (приблизительно)
+	int n = fabs( fDA ) / ( 2.0f * fArcDeltaAngle ); // сколько arc-ов нужно добавить, чтобы (приблизительно)
 	// выйти на текущее направление мыши
 	float fSign = fDA < 0 ? -1.0f : 1.0f;
 	for ( int i = 0; i < n; ++i )
@@ -592,7 +571,6 @@ void CEntrenchmentDesignTool::ProcessMovePoint( const CVec3 &p )
 	}
 }
 
-
 void CEntrenchmentDesignTool::Complete()
 {
 	if ( bComplete )
@@ -607,14 +585,13 @@ void CEntrenchmentDesignTool::Complete()
 	bComplete = true;
 }
 
-
 bool CEntrenchmentDesignTool::IsComplete()
 {
 	return bComplete;
 }
 
-
-void CEntrenchmentDesignTool::GetSegmentsInfo( std::list<NMapInfoEditor::SEntrenchmentSegInfo> *pEntrenchmentElementsInfo )
+void CEntrenchmentDesignTool::GetSegmentsInfo(
+		std::list<NMapInfoEditor::SEntrenchmentSegInfo> *pEntrenchmentElementsInfo )
 {
 	pEntrenchmentElementsInfo->clear();
 
@@ -624,7 +601,7 @@ void CEntrenchmentDesignTool::GetSegmentsInfo( std::list<NMapInfoEditor::SEntren
 
 		sg.vPos0 = GetSegPos( i, true );
 
-		sg.fDirAngle = GetSegDir(i);
+		sg.fDirAngle = GetSegDir( i );
 
 		CQuat q( sg.fDirAngle, V3_AXIS_Z );
 		CVec3 dir = V3_AXIS_X;
@@ -653,30 +630,29 @@ void CEntrenchmentDesignTool::GetSegmentsInfo( std::list<NMapInfoEditor::SEntren
 
 		switch ( segments[i] )
 		{
-		case ST_TERMINATOR:
-			sg.eSegType = NDb::EST_TERMINATOR;
-			if ( i == 0 )
-			{
-				// первый терминатор
-				sg.fDirAngle += FP_PI;
-				sg.vAABBCenter = -sg.vAABBCenter;
-			}
-			break;
-		case ST_LINE:
-			sg.eSegType = NDb::EST_LINE;
-			break;
-		case ST_LEFT_ARC:
-			sg.eSegType = NDb::EST_ARC;
-			break;
-		case ST_RIGHT_ARC:
-			sg.eSegType = NDb::EST_ARC;
-			sg.fDirAngle += FP_PI;	// ST_RIGHT_ARC и ST_LEFT_ARC - одна модель но развернутая на 180 град.
-			break;
+			case ST_TERMINATOR:
+				sg.eSegType = NDb::EST_TERMINATOR;
+				if ( i == 0 )
+				{
+					// первый терминатор
+					sg.fDirAngle += FP_PI;
+					sg.vAABBCenter = -sg.vAABBCenter;
+				}
+				break;
+			case ST_LINE:
+				sg.eSegType = NDb::EST_LINE;
+				break;
+			case ST_LEFT_ARC:
+				sg.eSegType = NDb::EST_ARC;
+				break;
+			case ST_RIGHT_ARC:
+				sg.eSegType = NDb::EST_ARC;
+				sg.fDirAngle += FP_PI; // ST_RIGHT_ARC и ST_LEFT_ARC - одна модель но развернутая на 180 град.
+				break;
 		}
-		pEntrenchmentElementsInfo->push_back(sg);
+		pEntrenchmentElementsInfo->push_back( sg );
 	}
 }
-
 
 CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 {
@@ -687,7 +663,6 @@ CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 	return segAABBSizes[eSegType];
 }
 
-
 CVec2 CEntrenchmentDesignTool::GetSegAABBCenter( ESegType eSegType )
 {
 	if ( eSegType < 0 || eSegType >= ST_COUNT )
@@ -696,38 +671,36 @@ CVec2 CEntrenchmentDesignTool::GetSegAABBCenter( ESegType eSegType )
 	return segAABBCentr[eSegType];
 }
 
-
 void CEntrenchmentDesignTool::SetSegAABBSize( NDb::EEntrenchSegmType eSegType, const CVec3 &v )
 {
 	switch ( eSegType )
 	{
-	case NDb::EST_LINE:
-		segAABBSizes[ST_LINE] = v;
-		break;
-	case NDb::EST_ARC:
-		segAABBSizes[ST_LEFT_ARC] = v;
-		segAABBSizes[ST_RIGHT_ARC] = v;
-		break;
-	case NDb::EST_TERMINATOR:
-		segAABBSizes[ST_TERMINATOR] = v;
-		break;
+		case NDb::EST_LINE:
+			segAABBSizes[ST_LINE] = v;
+			break;
+		case NDb::EST_ARC:
+			segAABBSizes[ST_LEFT_ARC] = v;
+			segAABBSizes[ST_RIGHT_ARC] = v;
+			break;
+		case NDb::EST_TERMINATOR:
+			segAABBSizes[ST_TERMINATOR] = v;
+			break;
 	}
 }
-
 
 void CEntrenchmentDesignTool::SetSegAABBCenter( NDb::EEntrenchSegmType eSegType, const CVec2 &v )
 {
 	switch ( eSegType )
 	{
-	case NDb::EST_LINE:
-		segAABBCentr[ST_LINE] = v;
-		break;
-	case NDb::EST_ARC:
-		segAABBCentr[ST_LEFT_ARC] = v;
-		segAABBCentr[ST_RIGHT_ARC] = v;
-		break;
-	case NDb::EST_TERMINATOR:
-		segAABBCentr[ST_TERMINATOR] = v;
-		break;
+		case NDb::EST_LINE:
+			segAABBCentr[ST_LINE] = v;
+			break;
+		case NDb::EST_ARC:
+			segAABBCentr[ST_LEFT_ARC] = v;
+			segAABBCentr[ST_RIGHT_ARC] = v;
+			break;
+		case NDb::EST_TERMINATOR:
+			segAABBCentr[ST_TERMINATOR] = v;
+			break;
 	}
 }

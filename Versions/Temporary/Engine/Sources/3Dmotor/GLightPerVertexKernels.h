@@ -40,45 +40,51 @@ struct SLightingKernels
 	const char *pszName;
 
 	// pNormals and both outputs hold nCount entries.
-	void ( *pCalcDirectionalLighting )(
-		const NGfx::SCompactVector *pNormals, int nCount,
-		const SPerVertexLightState &ls, const NGfx::SMMXWord &translucentShade,
-		uint32_t *pResColors, uint32_t *pResShadow );
+	void ( *pCalcDirectionalLighting )( const NGfx::SCompactVector *pNormals,
+	                                    int nCount,
+	                                    const SPerVertexLightState &ls,
+	                                    const NGfx::SMMXWord &translucentShade,
+	                                    uint32_t *pResColors,
+	                                    uint32_t *pResShadow );
 
 	// Scales nVertices positions into 2 * nVertices 16.14 fixed point x/y pairs.
-	void ( *pSampleWarFogCoords )(
-		const CVec3 *pSrcPos, int nVertices, float fScale, int *pIntCoords );
+	void ( *pSampleWarFogCoords )( const CVec3 *pSrcPos, int nVertices, float fScale, int *pIntCoords );
 
 	// pFog is a square nFogSizeX by nFogSizeX array with contiguous rows, as laid
 	// out by CArray2D. pRes holds nVertices bytes.
 	void ( *pSampleWarFogInt )(
-		const int *pIntCoords, const unsigned char *pFog, int nFogSizeX,
-		unsigned char *pRes, int nVertices );
+			const int *pIntCoords, const unsigned char *pFog, int nFogSizeX, unsigned char *pRes, int nVertices );
 
 	void ( *pCalcPointLightAttenuation )(
-		NGfx::SMMXWord *pRes, const CVec3 *pSrcPos, int nCount,
-		const CVec3 &vCenter, float fRadius );
+			NGfx::SMMXWord *pRes, const CVec3 *pSrcPos, int nCount, const CVec3 &vCenter, float fRadius );
 
 	// Per vertex attenuation, looked up as pAttenuation[pPosIndices[k]].
-	void ( *pCalcPointLightColorsIndexed )(
-		NGfx::SMMXWord *pRes, const NGfx::SMMXWord *pAttenuation,
-		const uint16_t *pPosIndices, const NGfx::SCompactVector *pNormals, int nCount,
-		const NGfx::SMMXWord &lightColor );
+	void ( *pCalcPointLightColorsIndexed )( NGfx::SMMXWord *pRes,
+	                                        const NGfx::SMMXWord *pAttenuation,
+	                                        const uint16_t *pPosIndices,
+	                                        const NGfx::SCompactVector *pNormals,
+	                                        int nCount,
+	                                        const NGfx::SMMXWord &lightColor );
 
 	// One attenuation for every vertex, normals strided through a larger struct.
-	void ( *pCalcPointLightColorsUniform )(
-		NGfx::SMMXWord *pRes, const NGfx::SMMXWord &attenuation,
-		const NGfx::SCompactVector *pNormals, int nNormalStride, int nCount,
-		const NGfx::SMMXWord &lightColor );
+	void ( *pCalcPointLightColorsUniform )( NGfx::SMMXWord *pRes,
+	                                        const NGfx::SMMXWord &attenuation,
+	                                        const NGfx::SCompactVector *pNormals,
+	                                        int nNormalStride,
+	                                        int nCount,
+	                                        const NGfx::SMMXWord &lightColor );
 
-	void ( *pAddColors )(
-		uint32_t *pRes, const uint32_t *pSrc, const NGfx::SMMXWord *pAdd, int nCount );
+	void ( *pAddColors )( uint32_t *pRes, const uint32_t *pSrc, const NGfx::SMMXWord *pAdd, int nCount );
 
-	void ( *pScaleColors )(
-		uint32_t *pRes, const uint32_t *pSrc, int nSrcStride,
-		const unsigned char *pScale, int nScaleMask,
-		const uint16_t *pPosIndices, const NGfx::SCompactVector *pTransp, int nCount,
-		bool bMultiplyOnTransparency );
+	void ( *pScaleColors )( uint32_t *pRes,
+	                        const uint32_t *pSrc,
+	                        int nSrcStride,
+	                        const unsigned char *pScale,
+	                        int nScaleMask,
+	                        const uint16_t *pPosIndices,
+	                        const NGfx::SCompactVector *pTransp,
+	                        int nCount,
+	                        bool bMultiplyOnTransparency );
 };
 
 // The three implementations. All three are always linked, so tests and benchmarks

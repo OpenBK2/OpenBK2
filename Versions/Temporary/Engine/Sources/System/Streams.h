@@ -12,8 +12,8 @@
 
 namespace NVFS
 {
-	struct IVFS;
-	struct IFileCreator;
+struct IVFS;
+struct IFileCreator;
 }
 
 class SYSTEM_EXPORT CDataStream
@@ -23,17 +23,18 @@ class SYSTEM_EXPORT CDataStream
 		unsigned char *pBuffer = nullptr, *pBufferEnd = nullptr, *pFileEnd = nullptr, *pCurrent = nullptr;
 		int nFlags = 0;
 
-		SData() : pBuffer( 0 ), pBufferEnd( 0 ), pFileEnd( 0 ), pCurrent( 0 ) { }
+		SData() : pBuffer( 0 ), pBufferEnd( 0 ), pFileEnd( 0 ), pCurrent( 0 ) {}
 	};
 
 	SData data;
+
 protected:
 	enum EFlags
 	{
-		F_Broken   = 1,
-		F_CanRead  = 2,
+		F_Broken = 1,
+		F_CanRead = 2,
 		F_CanWrite = 4,
-		F_CanRW    = F_CanWrite | F_CanRead,
+		F_CanRW = F_CanWrite | F_CanRead,
 	};
 
 	void SetBuffer( unsigned char *_pBuffer, int nBufSize, int nPos, int nSize, int _nFlags );
@@ -57,6 +58,7 @@ protected:
 
 	int GetFlags() const { return data.nFlags; }
 	void SetFlags( int _nFlags ) { data.nFlags = _nFlags; }
+
 public:
 	CDataStream( int _nFlags ) { data.nFlags = _nFlags; }
 	virtual ~CDataStream() {}
@@ -64,9 +66,18 @@ public:
 	void SyncWith( const CDataStream &stream ) { data = stream.data; }
 	virtual void AllocBuf( int nOldFileSize, int nSize ) = 0;
 
-	void Clear() { ASSERT( CanWrite() ); data.pFileEnd = data.pBuffer; data.pCurrent = data.pBuffer; }
+	void Clear()
+	{
+		ASSERT( CanWrite() );
+		data.pFileEnd = data.pBuffer;
+		data.pCurrent = data.pBuffer;
+	}
 	bool Seek( int nPos ) { return Seek( data.pBuffer + nPos ); }
-	void Trunc() { ASSERT( CanWrite() ); data.pFileEnd = data.pCurrent; }
+	void Trunc()
+	{
+		ASSERT( CanWrite() );
+		data.pFileEnd = data.pCurrent;
+	}
 
 	// обычные функции для чтения/записи из/в поток
 	void Read( void *pDest, int nSize )
@@ -99,14 +110,32 @@ public:
 		Seek( nPos );
 	}
 	// direct buffer access
-	const unsigned char* GetBuffer() const { ASSERT( CanRead() ); return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer; }
-	unsigned char* GetBufferForWrite() const { ASSERT( CanWrite() ); return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer; }
+	const unsigned char *GetBuffer() const
+	{
+		ASSERT( CanRead() );
+		return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer;
+	}
+	unsigned char *GetBufferForWrite() const
+	{
+		ASSERT( CanWrite() );
+		return ( data.nFlags & F_Broken ) != 0 ? 0 : data.pBuffer;
+	}
 	//
 	// стандартные операции ввода/вывода
 	void ReadString( std::string &res, int nMaxSize = -1 );
 	void WriteString( const std::string &res );
-	template<class T> CDataStream& operator>>( T &res ) { Read( &res, sizeof(res) ); return *this; }
-	template<class T> CDataStream& operator<<( const T &res ) { Write( &res, sizeof(res) ); return *this; }
+	template <class T>
+	CDataStream &operator>>( T &res )
+	{
+		Read( &res, sizeof( res ) );
+		return *this;
+	}
+	template <class T>
+	CDataStream &operator<<( const T &res )
+	{
+		Write( &res, sizeof( res ) );
+		return *this;
+	}
 	bool IsOk() const { return ( data.nFlags & F_Broken ) == 0; }
 	bool CanRead() const { return ( data.nFlags & F_CanRead ) != 0; }
 	bool CanWrite() const { return ( data.nFlags & F_CanWrite ) != 0; }
@@ -116,30 +145,42 @@ public:
 	void SetBroken() { data.nFlags |= F_Broken; }
 };
 
-template<> inline CDataStream& CDataStream::operator>>( std::string &res ) { ReadString( res ); return *this; }
-template<> inline CDataStream& CDataStream::operator<<( const std::string &res ) { WriteString( res ); return *this; }
+template <>
+inline CDataStream &CDataStream::operator>>( std::string &res )
+{
+	ReadString( res );
+	return *this;
+}
+template <>
+inline CDataStream &CDataStream::operator<<( const std::string &res )
+{
+	WriteString( res );
+	return *this;
+}
 
 class SYSTEM_EXPORT CMemoryStream : public CDataStream
 {
 protected:
 	void CopyMemoryStream( const CMemoryStream &src );
 	void AllocBuf( int nOldFileSize, int nSize );
+
 public:
 	CMemoryStream() : CDataStream( F_CanRW ) { AllocBuf( 0, 32 ); }
 	~CMemoryStream();
 	CMemoryStream( const CMemoryStream &src );
-	CMemoryStream& operator=( const CMemoryStream &src );
+	CMemoryStream &operator=( const CMemoryStream &src );
 	// old contents of memory stream are not preserved, current position is reset to start
 	void SetSizeDiscard( int nSize );
 };
 
 class CMappedStream : public CDataStream
 {
-	CMappedStream( const CMappedStream &a ) : CDataStream(0) { ASSERT(0); }
-	void operator=( const CMappedStream &a ) { ASSERT(0); }
+	CMappedStream( const CMappedStream &a ) : CDataStream( 0 ) { ASSERT( 0 ); }
+	void operator=( const CMappedStream &a ) { ASSERT( 0 ); }
 	void AllocBufImpl( int nBufSize, int nPos, int nSize );
 	virtual void AllocBuf( int nOldFileSize, int nSize );
 	void ReleaseBuf();
+
 protected:
 	virtual int GetFileSize() = 0;
 	virtual void SetFileSize( int nSize ) = 0;
@@ -149,8 +190,9 @@ protected:
 
 	void StartAccess( int _nFlags );
 	void FinishAccess() { ReleaseBuf(); }
+
 public:
-	CMappedStream() : CDataStream(0) {}
+	CMappedStream() : CDataStream( 0 ) {}
 	void Flush();
 	//void CloseFile();
 };
@@ -158,13 +200,19 @@ public:
 class SYSTEM_EXPORT CFileStream : public CDataStream
 {
 public:
-	enum EWinMode { WIN_READ_ONLY, WIN_CREATE };
+	enum EWinMode
+	{
+		WIN_READ_ONLY,
+		WIN_CREATE
+	};
+
 private:
 	CDataStream *pStream = nullptr;
 
 	//
 	CFileStream( const CFileStream &stream );
 	void operator=( const CFileStream &stream );
+
 public:
 	// open file
 	CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName );
@@ -180,14 +228,24 @@ public:
 class CTextStream
 {
 	CDataStream &f;
+
 public:
-	typedef CTextStream& (*OpFunc)( CTextStream& );
-	CTextStream( CDataStream &_f ) : f(_f) {}
-	CTextStream& operator<<( const char *p ) { f.Write( p, strlen(p) ); return *this; }
-	CTextStream& operator<<( int n ) { std::string tmp = std::to_string(n); f.Write( tmp.c_str(), tmp.length() ); return *this; }
+	typedef CTextStream &( *OpFunc )( CTextStream & );
+	CTextStream( CDataStream &_f ) : f( _f ) {}
+	CTextStream &operator<<( const char *p )
+	{
+		f.Write( p, strlen( p ) );
+		return *this;
+	}
+	CTextStream &operator<<( int n )
+	{
+		std::string tmp = std::to_string( n );
+		f.Write( tmp.c_str(), tmp.length() );
+		return *this;
+	}
 	// gcvt is not standard and its decimal point follows LC_NUMERIC. to_chars
 	// ignores the locale; general with a precision of 7 is what gcvt( n, 7 ) did.
-	CTextStream& operator<<( double n )
+	CTextStream &operator<<( double n )
 	{
 		// general with precision P needs at most: sign, leading digit, point,
 		// P-1 more digits, 'e', exponent sign and three exponent digits for a
@@ -195,7 +253,8 @@ public:
 		constexpr int nPrecision = 7;
 		constexpr size_t nBufSize = 1 + 1 + 1 + ( nPrecision - 1 ) + 1 + 1 + 3 + 1;
 		char buf[nBufSize];
-		const std::to_chars_result res = std::to_chars( buf, buf + sizeof( buf ), n, std::chars_format::general, nPrecision );
+		const std::to_chars_result res =
+				std::to_chars( buf, buf + sizeof( buf ), n, std::chars_format::general, nPrecision );
 		// on failure to_chars sets ptr to the end of the range, so check
 		// rather than write whatever the buffer happened to hold
 		if ( res.ec == std::errc() )
@@ -204,21 +263,30 @@ public:
 		}
 		return *this;
 	}
-	CTextStream& operator<<( const std::string &s ) { f.Write( s.c_str(), s.length() ); return *this; }
-	CTextStream& operator<<( OpFunc func ) { return func(*this); }
+	CTextStream &operator<<( const std::string &s )
+	{
+		f.Write( s.c_str(), s.length() );
+		return *this;
+	}
+	CTextStream &operator<<( OpFunc func ) { return func( *this ); }
 };
-inline CTextStream& endl( CTextStream& sStream ) { sStream << "\n"; return sStream; }
+inline CTextStream &endl( CTextStream &sStream )
+{
+	sStream << "\n";
+	return sStream;
+}
 
 class CStreamHolder
 {
 	CDataStream *pStream = nullptr;
 
-	CStreamHolder( const CStreamHolder &a ) {ASSERT(0);}
-	void operator=( const CStreamHolder &a ) {ASSERT(0);}
+	CStreamHolder( const CStreamHolder &a ) { ASSERT( 0 ); }
+	void operator=( const CStreamHolder &a ) { ASSERT( 0 ); }
+
 public:
-	CStreamHolder( CDataStream *_pStream ) : pStream(_pStream) {}
+	CStreamHolder( CDataStream *_pStream ) : pStream( _pStream ) {}
 	~CStreamHolder() { delete pStream; }
-	CDataStream* operator->() { return pStream; }
-	const CDataStream* operator->() const { return pStream; }
-	operator CDataStream*() { return pStream; }
+	CDataStream *operator->() { return pStream; }
+	const CDataStream *operator->() const { return pStream; }
+	operator CDataStream *() { return pStream; }
 };

@@ -11,18 +11,19 @@
 
 REGISTER_BUILDER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsBuilder )
 
-
 const std::string CBuildingRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "BuildingRPGStatsBuilder";
 
-
-bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
+                                                 std::string *pszDescription,
+                                                 IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CBuildingRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CBuildingRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();
 	// Считываем данные
 	std::string szVisualObject;
-	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
+	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) ||
+	     szVisualObject.empty() )
 	{
 		( *pszDescription ) = "<VisualObject> must be filled.";
 		return false;
@@ -44,7 +45,9 @@ bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 		{
 			if ( pBuildDataView )
 			{
-				CPtr<CObjectBaseController> pObjectController = dynamic_cast<CDefaultView*>(pBuildDataView)->CDefaultView::CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) );
+				CPtr<CObjectBaseController> pObjectController =
+						dynamic_cast<CDefaultView *>( pBuildDataView )
+								->CDefaultView::CreateController<CObjectController>( static_cast<CObjectController *>( 0 ) );
 				if ( pObjectController->AddChangeOperation( "Source", posBuildingDBType->second, pBuildDataManipulator ) )
 				{
 					pObjectController->Redo( false, true, 0 );
@@ -61,18 +64,18 @@ bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 	return true;
 }
 
-
 bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeName,
-																										 std::string *pszUniqueObjectName,
-																										 bool bFromMainMenu,
-																										 bool *pbCanChangeObjectName,
-																										 bool *pbNeedExport,
-																										 bool *pbNeedEdit,
-																										 IManipulator *pBuildDataManipulator )
+                                                     std::string *pszUniqueObjectName,
+                                                     bool bFromMainMenu,
+                                                     bool *pbCanChangeObjectName,
+                                                     bool *pbNeedExport,
+                                                     bool *pbNeedEdit,
+                                                     IManipulator *pBuildDataManipulator )
 {
 	NI_ASSERT( pszObjectTypeName != 0, "CBuildingRPGStatsBuilder::InternalInsertObject() pszObjectTypeName == 0" );
 	NI_ASSERT( pszUniqueObjectName != 0, "CBuildingRPGStatsBuilder::InternalInsertObject() pszUniqueObjectName == 0" );
-	NI_ASSERT( pBuildDataManipulator != 0, "CBuildingRPGStatsBuilder::InternalInsertObject() pBuildDataManipulator == 0" );
+	NI_ASSERT( pBuildDataManipulator != 0,
+	           "CBuildingRPGStatsBuilder::InternalInsertObject() pBuildDataManipulator == 0" );
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	//
@@ -102,14 +105,18 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 	bool bResult = pFolderCallback->InsertObject( *pszObjectTypeName, *pszUniqueObjectName );
 	if ( bResult )
 	{
-		CPtr<IManipulator> pBuildingRPGStatsManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
-		NI_ASSERT( pBuildingRPGStatsManipulator != 0, "CBuildingRPGStatsBuilder::InternalInsertObject() pBuildingRPGStatsManipulator == 0" );
+		CPtr<IManipulator> pBuildingRPGStatsManipulator =
+				pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
+		NI_ASSERT( pBuildingRPGStatsManipulator != 0,
+		           "CBuildingRPGStatsBuilder::InternalInsertObject() pBuildingRPGStatsManipulator == 0" );
 		if ( !szSource.empty() )
 		{
-			CPtr<IManipulator> pSourceBuildingRPGStatsManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szSource );
+			CPtr<IManipulator> pSourceBuildingRPGStatsManipulator =
+					pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szSource );
 			if ( pSourceBuildingRPGStatsManipulator )
 			{
-				CManipulatorManager::CloneDBManipulator( pBuildingRPGStatsManipulator, pSourceBuildingRPGStatsManipulator, true );
+				CManipulatorManager::CloneDBManipulator(
+						pBuildingRPGStatsManipulator, pSourceBuildingRPGStatsManipulator, true );
 			}
 		}
 		// Проставляем основные параметры
@@ -129,9 +136,11 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 		if ( szDefaultWindowNight != "" )
 			bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.NightObj", szDefaultWindowNight );
 		if ( szDefaultWindowDestroyed != "" )
-			bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyedObj", szDefaultWindowDestroyed );
+			bResult =
+					bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyedObj", szDefaultWindowDestroyed );
 		if ( szDefaultWindowEffect != "" )
-			bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyEffect", szDefaultWindowEffect );
+			bResult =
+					bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyEffect", szDefaultWindowEffect );
 	}
 	return bResult;
 }

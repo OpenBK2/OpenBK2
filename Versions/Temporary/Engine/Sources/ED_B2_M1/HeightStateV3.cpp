@@ -26,17 +26,16 @@
 
 #define HEIGHT_MARK ( 1.0f )
 
-const int CHeightStateV3::BRUSH_MIN_SIZE	= 3;
-const int CHeightStateV3::BRUSH_SIZE_STEP	= 2;
-const float CHeightStateV3::MAX_HEIGHT		= AI_TILE_SIZE * 10.0f;
-const float CHeightStateV3::HEIGHT_SPEED	= 15.0f * VIS_TILE_SIZE / ( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
-const float CHeightStateV3::ROUND_RATIO		= 0.1f;
-const float CHeightStateV3::PLATO_RATIO		= 0.5f;
-const uint32_t CHeightStateV3::BRUSH_COLOR		= 0xFFFF0000;
-const int CHeightStateV3::BRUSH_PARTS			= 32;
+const int CHeightStateV3::BRUSH_MIN_SIZE = 3;
+const int CHeightStateV3::BRUSH_SIZE_STEP = 2;
+const float CHeightStateV3::MAX_HEIGHT = AI_TILE_SIZE * 10.0f;
+const float CHeightStateV3::HEIGHT_SPEED = 15.0f * VIS_TILE_SIZE / ( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
+const float CHeightStateV3::ROUND_RATIO = 0.1f;
+const float CHeightStateV3::PLATO_RATIO = 0.5f;
+const uint32_t CHeightStateV3::BRUSH_COLOR = 0xFFFF0000;
+const int CHeightStateV3::BRUSH_PARTS = 32;
 const int CHeightStateV3::HEIGHT_BRUSH_SIZE[5] = { 3, 5, 9, 13, 17 };
-const int	CHeightStateV3::TILE_BRUSH_SIZE[5] = { 2, 4, 8, 12, 16 };
-
+const int CHeightStateV3::TILE_BRUSH_SIZE[5] = { 2, 4, 8, 12, 16 };
 
 void CHeightTileStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -46,10 +45,9 @@ void CHeightTileStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 	}
 }
 
-
 void CHeightTileStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
-	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
+	if ( pParentState->CanEdit() && !pParentState->bEscaped )
 	{
 		if ( nFlags & MK_LBUTTON )
 		{
@@ -57,7 +55,6 @@ void CHeightTileStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMous
 		}
 	}
 }
-
 
 // CHeightUpStateV3
 
@@ -68,16 +65,17 @@ void CHeightUpStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMous
 		if ( nFlags & MK_RBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 		else
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_UP );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
 		}
 	}
 }
-
 
 void CHeightUpStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -86,49 +84,52 @@ void CHeightUpStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMous
 		if ( nFlags & MK_LBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 		else
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_DOWN );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
 		}
 	}
 }
-
 
 void CHeightUpStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
 		pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 	}
 }
 
-
 void CHeightUpStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
-	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
+	if ( pParentState->CanEdit() && !pParentState->bEscaped )
 	{
 		if ( ( ( nFlags & MK_LBUTTON ) && ( nFlags & MK_RBUTTON ) ) || ( nFlags & MK_MBUTTON ) )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 		else if ( nFlags & MK_LBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_UP );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
 		}
 		else if ( nFlags & MK_RBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_DOWN );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
 		}
 	}
 }
-
 
 // CHeightDownState
 
@@ -139,16 +140,17 @@ void CHeightDownStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 		if ( nFlags & MK_RBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 		else
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_DOWN );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
 		}
 	}
 }
-
 
 void CHeightDownStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -157,49 +159,52 @@ void CHeightDownStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 		if ( nFlags & MK_LBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 		else
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_UP );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
 		}
 	}
 }
-
 
 void CHeightDownStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
 		pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 	}
 }
 
-
 void CHeightDownStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
-	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
+	if ( pParentState->CanEdit() && !pParentState->bEscaped )
 	{
 		if ( ( ( nFlags & MK_LBUTTON ) && ( nFlags & MK_RBUTTON ) ) || ( nFlags & MK_MBUTTON ) )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 		else if ( nFlags & MK_LBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_DOWN );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_DOWN );
 		}
 		else if ( nFlags & MK_RBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_UP );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_UP );
 		}
 	}
 }
-
 
 // CHeightRoundState
 
@@ -211,16 +216,17 @@ void CHeightRoundStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		{
 			pParentState->UpdatePlatoHeight();
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 		else
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 	}
 }
-
 
 void CHeightRoundStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -230,7 +236,8 @@ void CHeightRoundStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		{
 			pParentState->UpdatePlatoHeight();
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 		else
 		{
@@ -239,31 +246,32 @@ void CHeightRoundStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CHeightRoundStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
 		pParentState->UpdatePlatoHeight();
 		pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 	}
 }
 
-
 void CHeightRoundStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
-	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
+	if ( pParentState->CanEdit() && !pParentState->bEscaped )
 	{
 		if ( ( ( nFlags & MK_LBUTTON ) && ( nFlags & MK_RBUTTON ) ) || ( nFlags & MK_MBUTTON ) )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 		else if ( nFlags & MK_LBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_ROUND );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_ROUND );
 		}
 		else if ( nFlags & MK_RBUTTON )
 		{
@@ -271,7 +279,6 @@ void CHeightRoundStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMou
 		}
 	}
 }
-
 
 // CHeightPlatoState
 
@@ -283,16 +290,17 @@ void CHeightPlatoStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		{
 			pParentState->UpdatePlatoHeight();
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 		else
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 	}
 }
-
 
 void CHeightPlatoStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -302,7 +310,8 @@ void CHeightPlatoStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		{
 			pParentState->UpdatePlatoHeight();
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 		else
 		{
@@ -311,31 +320,32 @@ void CHeightPlatoStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CHeightPlatoStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
 		pParentState->UpdatePlatoHeight();
 		pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 	}
 }
 
-
 void CHeightPlatoStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
-	if ( pParentState->CanEdit()  && !pParentState->bEscaped )
+	if ( pParentState->CanEdit() && !pParentState->bEscaped )
 	{
 		if ( ( ( nFlags & MK_LBUTTON ) && ( nFlags & MK_RBUTTON ) ) || ( nFlags & MK_MBUTTON ) )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 		else if ( nFlags & MK_LBUTTON )
 		{
 			pParentState->ProcessTerrain( CHeightStateV3::SEditParameters::B_PLATO );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_SET_TIMER, CHeightStateV3::SEditParameters::B_PLATO );
 		}
 		else if ( nFlags & MK_RBUTTON )
 		{
@@ -343,7 +353,6 @@ void CHeightPlatoStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMou
 		}
 	}
 }
-
 
 // Версии с проверкой на балланс красного и черного c простым уровнем
 // Simple Plane SP
@@ -361,13 +370,11 @@ struct S_SP_CRBB_CHPTL_Functional
 	float fLevelRatio;
 	//
 	S_SP_CRBB_CHPTL_Functional( CHeightContainer *_pHeightContainer,
-															SHeightPattern *_pHeightPattern,
-															float _fAverageHeight,
-															float _fLevelRatio )
-		:	pHeightContainer( _pHeightContainer ),
-			pHeightPattern( _pHeightPattern ),
-			fAverageHeight( _fAverageHeight ),
-			fLevelRatio( _fLevelRatio )
+	                            SHeightPattern *_pHeightPattern,
+	                            float _fAverageHeight,
+	                            float _fLevelRatio )
+			: pHeightContainer( _pHeightContainer ), pHeightPattern( _pHeightPattern ), fAverageHeight( _fAverageHeight ),
+				fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightContainer != 0, "Wrong parameter: pHeightContainer == 0" );
@@ -379,7 +386,8 @@ struct S_SP_CRBB_CHPTL_Functional
 	{
 		if ( ( fValue == HEIGHT_MARK ) && pHeightContainer->Compare( nXIndex, nYIndex ) )
 		{
-			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = ( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
+			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] =
+					( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
 		}
 		else
 		{
@@ -388,7 +396,6 @@ struct S_SP_CRBB_CHPTL_Functional
 		return true;
 	}
 };
-
 
 // паттерн для вычисления средней высоты TerrainHeight
 struct S_SP_CRBB_CAH_Functional
@@ -399,9 +406,7 @@ struct S_SP_CRBB_CAH_Functional
 	int nPointCount;
 	//
 	S_SP_CRBB_CAH_Functional( CHeightContainer *_pHeightContainer )
-		: pHeightContainer( _pHeightContainer ),
-			fTotalHeight( 0.0f ),
-			nPointCount( 0 )
+			: pHeightContainer( _pHeightContainer ), fTotalHeight( 0.0f ), nPointCount( 0 )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightContainer != 0, "Wrong parameter: pHeightContainer == 0" );
@@ -421,18 +426,25 @@ struct S_SP_CRBB_CAH_Functional
 	inline float GetAverageHeight() const { return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f ); }
 };
 
-
-void CalculateMatrix( CArray2D<double> *pMatrix, SDoubleVec3 *pvRightSide, int nXIndex, int nYIndex, ITerraManager *pTerraManager )
+void CalculateMatrix(
+		CArray2D<double> *pMatrix, SDoubleVec3 *pvRightSide, int nXIndex, int nYIndex, ITerraManager *pTerraManager )
 {
 	const double fX = nXIndex * VIS_TILE_SIZE;
 	const double fY = nYIndex * VIS_TILE_SIZE;
 	const double fZ = pTerraManager->GetTerraHeightFast( nXIndex, nYIndex );
-	( *pMatrix )[0][0] += fX * fX; ( *pMatrix )[0][1] += fX * fY; ( *pMatrix )[0][2] += fX;
-	( *pMatrix )[1][0] += fX * fY; ( *pMatrix )[1][1] += fY * fY; ( *pMatrix )[1][2] += fY;
-	( *pMatrix )[2][0] += fX; ( *pMatrix )[2][1] += fY; ( *pMatrix )[2][2] += 1.0f;
-	( pvRightSide->x ) += fZ * fX; ( pvRightSide->y ) += fZ * fY; ( pvRightSide->z ) += fZ;
+	( *pMatrix )[0][0] += fX * fX;
+	( *pMatrix )[0][1] += fX * fY;
+	( *pMatrix )[0][2] += fX;
+	( *pMatrix )[1][0] += fX * fY;
+	( *pMatrix )[1][1] += fY * fY;
+	( *pMatrix )[1][2] += fY;
+	( *pMatrix )[2][0] += fX;
+	( *pMatrix )[2][1] += fY;
+	( *pMatrix )[2][2] += 1.0f;
+	( pvRightSide->x ) += fZ * fX;
+	( pvRightSide->y ) += fZ * fY;
+	( pvRightSide->z ) += fZ;
 }
-
 
 // Версии без проверки на балланс красного и черного c простым уровнем
 // Simple Plane SP
@@ -447,12 +459,8 @@ struct S_SP_CHPTL_Functional
 	float fAverageHeight;
 	float fLevelRatio;
 	//
-	S_SP_CHPTL_Functional( SHeightPattern *_pHeightPattern,
-												 float _fAverageHeight,
-												 float _fLevelRatio )
-		:	pHeightPattern( _pHeightPattern ),
-			fAverageHeight( _fAverageHeight ),
-			fLevelRatio( _fLevelRatio )
+	S_SP_CHPTL_Functional( SHeightPattern *_pHeightPattern, float _fAverageHeight, float _fLevelRatio )
+			: pHeightPattern( _pHeightPattern ), fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
@@ -463,7 +471,8 @@ struct S_SP_CHPTL_Functional
 	{
 		if ( fValue == HEIGHT_MARK )
 		{
-			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = ( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
+			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] =
+					( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
 		}
 		else
 		{
@@ -473,7 +482,6 @@ struct S_SP_CHPTL_Functional
 	}
 };
 
-
 // паттерн для вычисления средней высоты TerrainHeight
 struct S_SP_CAH_Functional
 {
@@ -481,9 +489,7 @@ struct S_SP_CAH_Functional
 	float fTotalHeight;
 	int nPointCount;
 	//
-	S_SP_CAH_Functional()
-		:	fTotalHeight( 0.0f ),
-			nPointCount( 0 )
+	S_SP_CAH_Functional() : fTotalHeight( 0.0f ), nPointCount( 0 )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pTerraManager != 0, "Wrong parameter: pHeightPattern == 0" );
@@ -501,7 +507,6 @@ struct S_SP_CAH_Functional
 	//
 	inline float GetAverageHeight() const { return ( ( nPointCount > 0 ) ? ( fTotalHeight / nPointCount ) : 0.0f ); }
 };
-
 
 // Версии с проверкой на балланс красного и черного c простым уровнем
 // Complex Plane CP
@@ -519,13 +524,11 @@ struct S_CP_CRBB_CHPTL_Functional
 	float fLevelRatio;
 	//
 	S_CP_CRBB_CHPTL_Functional( CHeightContainer *_pHeightContainer,
-															SHeightPattern *_pHeightPattern,
-															const SDoubleVec3 &rvPlane,
-															float _fLevelRatio )
-		:	pHeightContainer( _pHeightContainer ),
-			pHeightPattern( _pHeightPattern ),
-			vPlane( rvPlane ),
-			fLevelRatio( _fLevelRatio )
+	                            SHeightPattern *_pHeightPattern,
+	                            const SDoubleVec3 &rvPlane,
+	                            float _fLevelRatio )
+			: pHeightContainer( _pHeightContainer ), pHeightPattern( _pHeightPattern ), vPlane( rvPlane ),
+				fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightContainer != 0, "Wrong parameter: pHeightContainer == 0" );
@@ -537,8 +540,10 @@ struct S_CP_CRBB_CHPTL_Functional
 	{
 		if ( ( fValue == HEIGHT_MARK ) && pHeightContainer->Compare( nXIndex, nYIndex ) )
 		{
-			const double fAverageHeight = vPlane.x * ( nXIndex * VIS_TILE_SIZE ) + vPlane.y * ( nYIndex * VIS_TILE_SIZE ) + vPlane.z;
-			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = ( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
+			const double fAverageHeight =
+					vPlane.x * ( nXIndex * VIS_TILE_SIZE ) + vPlane.y * ( nYIndex * VIS_TILE_SIZE ) + vPlane.z;
+			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] =
+					( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
 		}
 		else
 		{
@@ -548,7 +553,6 @@ struct S_CP_CRBB_CHPTL_Functional
 	}
 };
 
-
 // паттерн для вычисления параметров плоскости TerrainHeight
 struct S_CP_CRBB_CAP_Functional
 {
@@ -557,8 +561,7 @@ struct S_CP_CRBB_CAP_Functional
 	CArray2D<double> matrix;
 	SDoubleVec3 vRightSide;
 	//
-	S_CP_CRBB_CAP_Functional( CHeightContainer *_pHeightContainer )
-		: pHeightContainer( _pHeightContainer )
+	S_CP_CRBB_CAP_Functional( CHeightContainer *_pHeightContainer ) : pHeightContainer( _pHeightContainer )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		//
@@ -599,7 +602,6 @@ struct S_CP_CRBB_CAP_Functional
 	}
 };
 
-
 // Версии без проверки на балланс красного и черного c простым уровнем
 // Cimple Plane CP
 // Create Height Pattern To Level CHPTL
@@ -613,12 +615,8 @@ struct S_CP_CHPTL_Functional
 	SDoubleVec3 vPlane;
 	float fLevelRatio;
 	//
-	S_CP_CHPTL_Functional( SHeightPattern *_pHeightPattern,
-												 const SDoubleVec3 &rvPlane,
-												 float _fLevelRatio )
-		:	pHeightPattern( _pHeightPattern ),
-			vPlane( rvPlane ),
-			fLevelRatio( _fLevelRatio )
+	S_CP_CHPTL_Functional( SHeightPattern *_pHeightPattern, const SDoubleVec3 &rvPlane, float _fLevelRatio )
+			: pHeightPattern( _pHeightPattern ), vPlane( rvPlane ), fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
@@ -629,8 +627,10 @@ struct S_CP_CHPTL_Functional
 	{
 		if ( fValue == HEIGHT_MARK )
 		{
-			const double fAverageHeight = vPlane.x * ( nXIndex * VIS_TILE_SIZE ) + vPlane.y * ( nYIndex * VIS_TILE_SIZE ) + vPlane.z;
-			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = ( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
+			const double fAverageHeight =
+					vPlane.x * ( nXIndex * VIS_TILE_SIZE ) + vPlane.y * ( nYIndex * VIS_TILE_SIZE ) + vPlane.z;
+			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] =
+					( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
 		}
 		else
 		{
@@ -639,7 +639,6 @@ struct S_CP_CHPTL_Functional
 		return true;
 	}
 };
-
 
 // паттерн для вычисления параметров плоскости TerrainHeight
 struct S_CP_CAP_Functional
@@ -688,20 +687,17 @@ struct S_CP_CAP_Functional
 	}
 };
 
-
 // CHeightStateV3
 
-CHeightStateV3::SEditParameters* CHeightStateV3::GetEditParameters()
+CHeightStateV3::SEditParameters *CHeightStateV3::GetEditParameters()
 {
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epHeightStateV3 ) : 0 );
 }
-
 
 bool CHeightStateV3::CanEdit()
 {
 	return true;
 }
-
 
 int CHeightStateV3::GetTileBrushSize( SEditParameters::EBrushSize eBrushSize )
 {
@@ -720,7 +716,6 @@ int CHeightStateV3::GetTileBrushSize( SEditParameters::EBrushSize eBrushSize )
 	return TILE_BRUSH_SIZE[nSizeIndex];
 }
 
-
 int CHeightStateV3::GetHeightBrushSize( SEditParameters::EBrushSize eBrushSize )
 {
 	const int nSizeIndex = Clamp<int>( eBrushSize, 0, 4 );
@@ -738,17 +733,17 @@ int CHeightStateV3::GetHeightBrushSize( SEditParameters::EBrushSize eBrushSize )
 	return HEIGHT_BRUSH_SIZE[nSizeIndex];
 }
 
-
 void CHeightStateV3::UpdatePlatoHeight()
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
-		pEditParameters->fLevelTo = GetTerrainHeight( pStoreInputState->lastEventInfo.vTerrainPos.x, pStoreInputState->lastEventInfo.vTerrainPos.y )  * VIS_TILE_SIZE / ( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
+		pEditParameters->fLevelTo = GetTerrainHeight( pStoreInputState->lastEventInfo.vTerrainPos.x,
+		                                              pStoreInputState->lastEventInfo.vTerrainPos.y ) *
+		                            VIS_TILE_SIZE / ( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
 		pEditParameters->nFlags = MITHV3EP_LEVEL_TO;
 		::SetEditParameters( *pEditParameters, CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3 );
 	}
 }
-
 
 void CHeightStateV3::SetCornerTile( SHeightPattern *pPattern, const CTPoint<int> &rPatternPos )
 {
@@ -770,7 +765,6 @@ void CHeightStateV3::SetCornerTile( SHeightPattern *pPattern, const CTPoint<int>
 		//DebugTrace( "CHeightStateV3::SetCornerTile: (%d, %d)", pPattern->pos.x, pPattern->pos.y );
 	}
 }
-
 
 void CHeightStateV3::GetEditParameters( unsigned nFlags )
 {
@@ -798,7 +792,10 @@ void CHeightStateV3::GetEditParameters( unsigned nFlags )
 		}
 		if ( pEditParameters->nFlags & MITHV3EP_TILE_INDEX )
 		{
-			CreateTileBrush( &tileBrush, GetTileBrushSize( pEditParameters->eBrushSize ), pEditParameters->nTileIndex, pEditParameters->eBrushType == SEditParameters::BT_CIRCLE );
+			CreateTileBrush( &tileBrush,
+			                 GetTileBrushSize( pEditParameters->eBrushSize ),
+			                 pEditParameters->nTileIndex,
+			                 pEditParameters->eBrushType == SEditParameters::BT_CIRCLE );
 			if ( pEditParameters->eBrush != SEditParameters::B_TILE )
 			{
 				pEditParameters->eBrush = SEditParameters::B_TILE;
@@ -809,7 +806,6 @@ void CHeightStateV3::GetEditParameters( unsigned nFlags )
 		}
 	}
 }
-
 
 void CHeightStateV3::SetEditParameters( unsigned nFlags )
 {
@@ -832,10 +828,12 @@ void CHeightStateV3::SetEditParameters( unsigned nFlags )
 		{
 			//if ( pEditParameters->tileList.empty() )
 			{
-				if ( CPtr<IManipulator> pTerrainSetManipulator = CManipulatorManager::CreateManipulatorFromReference( "TerraSet", pMapInfoEditor->GetViewManipulator(), 0, 0, 0 ) )
+				if ( CPtr<IManipulator> pTerrainSetManipulator = CManipulatorManager::CreateManipulatorFromReference(
+								 "TerraSet", pMapInfoEditor->GetViewManipulator(), 0, 0, 0 ) )
 				{
 					pEditParameters->tileList.clear();
-					CManipulatorManager::GetArray<std::vector<std::string>, std::string>( &( pEditParameters->tileList ), pTerrainSetManipulator, "TerraTypes" );
+					CManipulatorManager::GetArray<std::vector<std::string>, std::string>(
+							&( pEditParameters->tileList ), pTerrainSetManipulator, "TerraTypes" );
 				}
 			}
 		}
@@ -848,7 +846,6 @@ void CHeightStateV3::SetEditParameters( unsigned nFlags )
 		}
 	}
 }
-
 
 void CHeightStateV3::UpdateCommonPatterns()
 {
@@ -863,10 +860,12 @@ void CHeightStateV3::UpdateCommonPatterns()
 				negativePattern.heights[y][x] = negativePattern.heights[y][x] * ( -1.0f );
 			}
 		}
-		CreateTileBrush( &tileBrush, GetTileBrushSize( pEditParameters->eBrushSize ), pEditParameters->nTileIndex, pEditParameters->eBrushType == SEditParameters::BT_CIRCLE );
+		CreateTileBrush( &tileBrush,
+		                 GetTileBrushSize( pEditParameters->eBrushSize ),
+		                 pEditParameters->nTileIndex,
+		                 pEditParameters->eBrushType == SEditParameters::BT_CIRCLE );
 	}
 }
-
 
 void CHeightStateV3::UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditParameters::EBrush eBrush )
 {
@@ -879,7 +878,10 @@ void CHeightStateV3::UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditP
 		//
 		NWin32Helper::CPrecisionControl precisionControl( NWin32Helper::CPrecisionControl::PCM_HIGH );
 		const int nBrushSize = GetHeightBrushSize( pEditParameters->eBrushSize );
-		const CTRect<int> heightsRect( 0, 0, pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH + 1, pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH + 1 );
+		const CTRect<int> heightsRect( 0,
+		                               0,
+		                               pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH + 1,
+		                               pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH + 1 );
 		bool bUseSimplePlaneMethod = ( nBrushSize < 5 ) || ( eBrush == SEditParameters::B_PLATO );
 		SDoubleVec3 vPlane;
 		vPlane.x = 0.0;
@@ -890,12 +892,13 @@ void CHeightStateV3::UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditP
 		heightPattern.CreateByValue( HEIGHT_MARK, nBrushSize, pEditParameters->eBrushType == SEditParameters::BT_CIRCLE );
 		SetCornerTile( &heightPattern, rPatternPos );
 		//
-		bool bBlackRedBallance = pMapInfoEditor->heightContainer.GetBlackRedBallance( CTRect<int>( heightPattern.pos.x,
-																																															heightPattern.pos.y,
-																																															heightPattern.pos.x + heightPattern.heights.GetSizeX(),
-																																															heightPattern.pos.y + heightPattern.heights.GetSizeY() ) );
+		bool bBlackRedBallance = pMapInfoEditor->heightContainer.GetBlackRedBallance(
+				CTRect<int>( heightPattern.pos.x,
+		                 heightPattern.pos.y,
+		                 heightPattern.pos.x + heightPattern.heights.GetSizeX(),
+		                 heightPattern.pos.y + heightPattern.heights.GetSizeY() ) );
 		//
-		switch( eBrush )
+		switch ( eBrush )
 		{
 			case SEditParameters::B_TILE:
 			{
@@ -955,16 +958,16 @@ void CHeightStateV3::UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditP
 			if ( bBlackRedBallance )
 			{
 				S_SP_CRBB_CHPTL_Functional functional( &( pMapInfoEditor->heightContainer ),
-																							&levelPattern,
-																							pEditParameters->fLevelTo,
-																							( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
+				                                       &levelPattern,
+				                                       pEditParameters->fLevelTo,
+				                                       ( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
 				ApplyHeightPattern( heightsRect, levelPattern, functional, true );
 			}
 			else
 			{
 				S_SP_CHPTL_Functional functional( &levelPattern,
-																					pEditParameters->fLevelTo,
-																					( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
+				                                  pEditParameters->fLevelTo,
+				                                  ( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
 				ApplyHeightPattern( heightsRect, levelPattern, functional, true );
 			}
 		}
@@ -973,22 +976,20 @@ void CHeightStateV3::UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditP
 			if ( bBlackRedBallance )
 			{
 				S_CP_CRBB_CHPTL_Functional functional( &( pMapInfoEditor->heightContainer ),
-																							&levelPattern,
-																							vPlane,
-																							( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
+				                                       &levelPattern,
+				                                       vPlane,
+				                                       ( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
 				ApplyHeightPattern( heightsRect, levelPattern, functional, true );
 			}
 			else
 			{
-				S_CP_CHPTL_Functional functional( &levelPattern,
-																					vPlane,
-																					( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
+				S_CP_CHPTL_Functional functional(
+						&levelPattern, vPlane, ( eBrush == SEditParameters::B_PLATO ) ? PLATO_RATIO : ROUND_RATIO );
 				ApplyHeightPattern( heightsRect, levelPattern, functional, true );
 			}
 		}
 	}
 }
-
 
 void CHeightStateV3::CreatePatternAndModifyGeometry( const SHeightPattern &rPattern )
 {
@@ -997,9 +998,9 @@ void CHeightStateV3::CreatePatternAndModifyGeometry( const SHeightPattern &rPatt
 		if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
 		{
 			SHeightPattern pattern = rPattern;
-			for ( int y = 0;  y < pattern.heights.GetSizeY(); ++y )
+			for ( int y = 0; y < pattern.heights.GetSizeY(); ++y )
 			{
-				for ( int x = 0;  x < pattern.heights.GetSizeX(); ++x )
+				for ( int x = 0; x < pattern.heights.GetSizeX(); ++x )
 				{
 					if ( !pMapInfoEditor->heightContainer.Compare( x + pattern.pos.x, y + pattern.pos.y ) )
 					{
@@ -1007,15 +1008,11 @@ void CHeightStateV3::CreatePatternAndModifyGeometry( const SHeightPattern &rPatt
 					}
 				}
 			}
-			pTerraManager->ModifyTerraGeometryByBrush( pattern.pos.x,
-																								 pattern.pos.y,
-																								 false,
-																								 pattern.heights,
-																								 NTerraBrush::TERRA_BRUSH_OVERRIDE );
+			pTerraManager->ModifyTerraGeometryByBrush(
+					pattern.pos.x, pattern.pos.y, false, pattern.heights, NTerraBrush::TERRA_BRUSH_OVERRIDE );
 		}
 	}
 }
-
 
 void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 {
@@ -1045,26 +1042,27 @@ void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 						pTerraManager->GetTerraGeometryUpdateDifferences( &( heightDiffPos.x ), &( heightDiffPos.y ), &heightDiff );
 						bHeightEditStarted = true;
 					}
-					switch( eBrush )
+					switch ( eBrush )
 					{
 						default:
 						case SEditParameters::B_UP:
 						{
 							SetCornerTile( &positivePattern, pStoreInputState->lastEventInfo.gridPos );
-							if ( pMapInfoEditor->heightContainer.GetBlackRedBallance( CTRect<int>( positivePattern.pos.x,
-																																										positivePattern.pos.y,
-																																										positivePattern.pos.x + positivePattern.heights.GetSizeX(),
-																																										positivePattern.pos.y + positivePattern.heights.GetSizeY() ) ) )
+							if ( pMapInfoEditor->heightContainer.GetBlackRedBallance(
+											 CTRect<int>( positivePattern.pos.x,
+							                      positivePattern.pos.y,
+							                      positivePattern.pos.x + positivePattern.heights.GetSizeX(),
+							                      positivePattern.pos.y + positivePattern.heights.GetSizeY() ) ) )
 							{
 								CreatePatternAndModifyGeometry( positivePattern );
 							}
 							else
 							{
 								pTerraManager->ModifyTerraGeometryByBrush( positivePattern.pos.x,
-																													 positivePattern.pos.y,
-																													 false,
-																													 positivePattern.heights,
-																													 NTerraBrush::TERRA_BRUSH_OVERRIDE );
+								                                           positivePattern.pos.y,
+								                                           false,
+								                                           positivePattern.heights,
+								                                           NTerraBrush::TERRA_BRUSH_OVERRIDE );
 							}
 							//pMapInfoEditor->bNeedSave = true;
 							break;
@@ -1072,20 +1070,21 @@ void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 						case SEditParameters::B_DOWN:
 						{
 							SetCornerTile( &negativePattern, pStoreInputState->lastEventInfo.gridPos );
-							if ( pMapInfoEditor->heightContainer.GetBlackRedBallance( CTRect<int>( negativePattern.pos.x,
-																																										negativePattern.pos.y,
-																																										negativePattern.pos.x + negativePattern.heights.GetSizeX(),
-																																										negativePattern.pos.y + negativePattern.heights.GetSizeY() ) ) )
+							if ( pMapInfoEditor->heightContainer.GetBlackRedBallance(
+											 CTRect<int>( negativePattern.pos.x,
+							                      negativePattern.pos.y,
+							                      negativePattern.pos.x + negativePattern.heights.GetSizeX(),
+							                      negativePattern.pos.y + negativePattern.heights.GetSizeY() ) ) )
 							{
 								CreatePatternAndModifyGeometry( negativePattern );
 							}
 							else
 							{
 								pTerraManager->ModifyTerraGeometryByBrush( negativePattern.pos.x,
-																													 negativePattern.pos.y,
-																													 false,
-																													 negativePattern.heights,
-																													 NTerraBrush::TERRA_BRUSH_OVERRIDE );
+								                                           negativePattern.pos.y,
+								                                           false,
+								                                           negativePattern.heights,
+								                                           NTerraBrush::TERRA_BRUSH_OVERRIDE );
 							}
 							//pMapInfoEditor->bNeedSave = true;
 							break;
@@ -1095,10 +1094,10 @@ void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 						{
 							UpdateLevelPattern( pStoreInputState->lastEventInfo.gridPos, eBrush );
 							pTerraManager->ModifyTerraGeometryByBrush( levelPattern.pos.x,
-																												 levelPattern.pos.y,
-																												 false,
-																												 levelPattern.heights,
-																												 NTerraBrush::TERRA_BRUSH_OVERRIDE );
+							                                           levelPattern.pos.y,
+							                                           false,
+							                                           levelPattern.heights,
+							                                           NTerraBrush::TERRA_BRUSH_OVERRIDE );
 							//pMapInfoEditor->bNeedSave = true;
 							break;
 						}
@@ -1137,7 +1136,6 @@ void CHeightStateV3::ProcessTerrain( SEditParameters::EBrush eBrush )
 	}
 }
 
-
 void CHeightStateV3::CreateMapInfoController()
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1149,7 +1147,7 @@ void CHeightStateV3::CreateMapInfoController()
 			{
 				bool bSaveChanges = false;
 				pTerraManager->GetTileTypeUpdateDifferences( &( vTileDiffPos.x ), &( vTileDiffPos.y ), &tileDiff );
-				if ( ( tileDiff.GetSizeX() > 0 ) && (tileDiff.GetSizeY() > 0 ) )
+				if ( ( tileDiff.GetSizeX() > 0 ) && ( tileDiff.GetSizeY() > 0 ) )
 				{
 					pMapInfoController->AddChangeTileOperation( tileDiff, vTileDiffPos );
 					bSaveChanges = true;
@@ -1174,11 +1172,10 @@ void CHeightStateV3::CreateMapInfoController()
 				}
 			}
 		}
-		bTileEditStarted =false;
+		bTileEditStarted = false;
 		bHeightEditStarted = false;
 	}
 }
-
 
 void CHeightStateV3::CreateTileBrush( CArray2D<uint8_t> *pBrush, int nSize, int nTileIndex, bool bCircle )
 {
@@ -1203,7 +1200,6 @@ void CHeightStateV3::CreateTileBrush( CArray2D<uint8_t> *pBrush, int nSize, int 
 	}
 }
 
-
 void CHeightStateV3::Enter()
 {
 	heightDiffPos = CTPoint<int>( 0, 0 );
@@ -1218,8 +1214,8 @@ void CHeightStateV3::Enter()
 	// создаем градиент
 	// Keep height brushes usable without the optional editor profile image.
 	// The three samples give a smooth falloff from the center to the edge.
-	gradient = SGradient( SGradient::CHeightList{ 1.0f, 0.75f, 0.0f },
-		CTPoint<float>( 0.0f, 1.0f ), CTPoint<float>( 0.0f, 1.0f ) );
+	gradient = SGradient(
+			SGradient::CHeightList{ 1.0f, 0.75f, 0.0f }, CTPoint<float>( 0.0f, 1.0f ), CTPoint<float>( 0.0f, 1.0f ) );
 	CArray2D<uint32_t> image;
 	{
 		// JoinPath, because a separator written into the string is a backslash
@@ -1227,7 +1223,7 @@ void CHeightStateV3::Enter()
 		// gradient above when the image will not read, which is why a path that
 		// could never open looked like a deliberate default.
 		CFileStream stream( NFile::JoinPath( pUserData->constUserData.szStartFolder, "Editor", "profile.tga" ),
-												CFileStream::WIN_READ_ONLY );
+		                    CFileStream::WIN_READ_ONLY );
 		if ( stream.IsOk() )
 		{
 			if ( NImage::LoadTGAImage( image, &stream ) && image.GetSizeX() > 2 && image.GetSizeY() > 1 )
@@ -1238,20 +1234,21 @@ void CHeightStateV3::Enter()
 	}
 	UpdateCommonPatterns();
 	pStoreInputState->SetSizes( CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
-																						pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
-															true );
+	                                          pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
+	                            true );
 	sceneDrawTool.Clear();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	//
 	CMultiInputState::Enter();
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
 }
-
 
 void CHeightStateV3::Leave()
 {
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
 	CMultiInputState::Leave();
 	//
 	heightDiffPos = CTPoint<int>( 0, 0 );
@@ -1263,7 +1260,6 @@ void CHeightStateV3::Leave()
 	//
 	sceneDrawTool.Clear();
 }
-
 
 void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 {
@@ -1278,15 +1274,33 @@ void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 
 				const float fRadius = GetTileBrushSize( pEditParameters->eBrushSize ) * AI_TILE_SIZE;
 				//
-				sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( -fRadius, 0.0f, 0.0f ), vSceneBrushPos + CVec3( fRadius, 0.0f, 0.0f ), BRUSH_COLOR, false );
-				sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( 0.0f, -fRadius, 0.0f ), vSceneBrushPos + CVec3( 0.0f, fRadius, 0.0f ), BRUSH_COLOR, false );
+				sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( -fRadius, 0.0f, 0.0f ),
+				                        vSceneBrushPos + CVec3( fRadius, 0.0f, 0.0f ),
+				                        BRUSH_COLOR,
+				                        false );
+				sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( 0.0f, -fRadius, 0.0f ),
+				                        vSceneBrushPos + CVec3( 0.0f, fRadius, 0.0f ),
+				                        BRUSH_COLOR,
+				                        false );
 				//
 				if ( pEditParameters->eBrushType == SEditParameters::BT_SQUARE )
 				{
-					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( -fRadius, -fRadius, 0.0f ), vSceneBrushPos + CVec3(  fRadius, -fRadius, 0.0f ), BRUSH_COLOR, false );
-					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3(  fRadius, -fRadius, 0.0f ), vSceneBrushPos + CVec3(  fRadius,  fRadius, 0.0f ), BRUSH_COLOR, false );
-					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3(  fRadius,  fRadius, 0.0f ), vSceneBrushPos + CVec3( -fRadius,  fRadius, 0.0f ), BRUSH_COLOR, false );
-					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( -fRadius,  fRadius, 0.0f ), vSceneBrushPos + CVec3( -fRadius, -fRadius, 0.0f ), BRUSH_COLOR, false );
+					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( -fRadius, -fRadius, 0.0f ),
+					                        vSceneBrushPos + CVec3( fRadius, -fRadius, 0.0f ),
+					                        BRUSH_COLOR,
+					                        false );
+					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( fRadius, -fRadius, 0.0f ),
+					                        vSceneBrushPos + CVec3( fRadius, fRadius, 0.0f ),
+					                        BRUSH_COLOR,
+					                        false );
+					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( fRadius, fRadius, 0.0f ),
+					                        vSceneBrushPos + CVec3( -fRadius, fRadius, 0.0f ),
+					                        BRUSH_COLOR,
+					                        false );
+					sceneDrawTool.DrawLine( vSceneBrushPos + CVec3( -fRadius, fRadius, 0.0f ),
+					                        vSceneBrushPos + CVec3( -fRadius, -fRadius, 0.0f ),
+					                        BRUSH_COLOR,
+					                        false );
 				}
 				else
 				{
@@ -1298,8 +1312,8 @@ void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 				const int nBrushSize = GetHeightBrushSize( pEditParameters->eBrushSize ) / 2;
 				//
 				const float fRadius = nBrushSize * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE;
-				const CVec2	center( pStoreInputState->lastEventInfo.gridPos.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-														pStoreInputState->lastEventInfo.gridPos.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
+				const CVec2 center( pStoreInputState->lastEventInfo.gridPos.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
+				                    pStoreInputState->lastEventInfo.gridPos.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
 				if ( pEditParameters->eBrushType == SEditParameters::BT_CIRCLE )
 				{
 					sceneDrawTool.Draw3DCircle( center, fRadius, BRUSH_PARTS, BRUSH_COLOR, false );
@@ -1307,42 +1321,42 @@ void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 				else
 				{
 					sceneDrawTool.Draw3DLine( CVec2( center.x - fRadius, center.y - fRadius ),
-																		CVec2( center.x + fRadius, center.y - fRadius ),
-																		BRUSH_COLOR,
-																		false,
-																		BRUSH_PARTS / 4 );
+					                          CVec2( center.x + fRadius, center.y - fRadius ),
+					                          BRUSH_COLOR,
+					                          false,
+					                          BRUSH_PARTS / 4 );
 					sceneDrawTool.Draw3DLine( CVec2( center.x + fRadius, center.y - fRadius ),
-																		CVec2( center.x + fRadius, center.y + fRadius ),
-																		BRUSH_COLOR,
-																		false,
-																		BRUSH_PARTS / 4 );
+					                          CVec2( center.x + fRadius, center.y + fRadius ),
+					                          BRUSH_COLOR,
+					                          false,
+					                          BRUSH_PARTS / 4 );
 					sceneDrawTool.Draw3DLine( CVec2( center.x + fRadius, center.y + fRadius ),
-																		CVec2( center.x - fRadius, center.y + fRadius ),
-																		BRUSH_COLOR,
-																		false,
-																		BRUSH_PARTS / 4 );
+					                          CVec2( center.x - fRadius, center.y + fRadius ),
+					                          BRUSH_COLOR,
+					                          false,
+					                          BRUSH_PARTS / 4 );
 					sceneDrawTool.Draw3DLine( CVec2( center.x - fRadius, center.y + fRadius ),
-																		CVec2( center.x - fRadius, center.y - fRadius ),
-																		BRUSH_COLOR,
-																		false,
-																		BRUSH_PARTS / 4 );
+					                          CVec2( center.x - fRadius, center.y - fRadius ),
+					                          BRUSH_COLOR,
+					                          false,
+					                          BRUSH_PARTS / 4 );
 				}
 				sceneDrawTool.Draw3DLine( CTPoint<int>( pStoreInputState->lastEventInfo.gridPos.x - nBrushSize,
-																								pStoreInputState->lastEventInfo.gridPos.y ),
-																	CTPoint<int>( pStoreInputState->lastEventInfo.gridPos.x + nBrushSize,
-																								pStoreInputState->lastEventInfo.gridPos.y ),
-																	BRUSH_COLOR,
-																	true,
-																	true,
-																	false );
+				                                        pStoreInputState->lastEventInfo.gridPos.y ),
+				                          CTPoint<int>( pStoreInputState->lastEventInfo.gridPos.x + nBrushSize,
+				                                        pStoreInputState->lastEventInfo.gridPos.y ),
+				                          BRUSH_COLOR,
+				                          true,
+				                          true,
+				                          false );
 				sceneDrawTool.Draw3DLine( CTPoint<int>( pStoreInputState->lastEventInfo.gridPos.x,
-																								pStoreInputState->lastEventInfo.gridPos.y - nBrushSize ),
-																	CTPoint<int>( pStoreInputState->lastEventInfo.gridPos.x,
-																								pStoreInputState->lastEventInfo.gridPos.y + nBrushSize ),
-																	BRUSH_COLOR,
-																	true,
-																	true,
-																	false );
+				                                        pStoreInputState->lastEventInfo.gridPos.y - nBrushSize ),
+				                          CTPoint<int>( pStoreInputState->lastEventInfo.gridPos.x,
+				                                        pStoreInputState->lastEventInfo.gridPos.y + nBrushSize ),
+				                          BRUSH_COLOR,
+				                          true,
+				                          true,
+				                          false );
 			}
 		}
 	}
@@ -1454,12 +1468,11 @@ void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-
 bool CHeightStateV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
-		switch( nCommandID )
+		switch ( nCommandID )
 		{
 			case ID_GET_EDIT_PARAMETERS:
 			{
@@ -1477,7 +1490,8 @@ bool CHeightStateV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			}
 			case ID_MITHV3_ON_TIMER:
 			{
-				ProcessTerrain( static_cast<SEditParameters::EBrush>( Clamp<uint32_t>( dwData, SEditParameters::B_TILE, SEditParameters::B_PLATO ) ) );
+				ProcessTerrain( static_cast<SEditParameters::EBrush>(
+						Clamp<uint32_t>( dwData, SEditParameters::B_TILE, SEditParameters::B_PLATO ) ) );
 				return true;
 			}
 			case ID_MITHV3_UPDATE_HEIGHT:
@@ -1494,7 +1508,6 @@ bool CHeightStateV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return true;
 }
 
-
 bool CHeightStateV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CHeightStateV3::UpdateCommand(), pbEnable == 0" );
@@ -1502,7 +1515,7 @@ bool CHeightStateV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	( *pbEnable ) = false;
 	( *pbCheck ) = false;
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_GET_EDIT_PARAMETERS:
 		case ID_SET_EDIT_PARAMETERS:
@@ -1523,7 +1536,6 @@ bool CHeightStateV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	return false;
 }
 
-
 void CHeightStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMouseMove( nFlags, rMousePoint );
@@ -1538,7 +1550,6 @@ void CHeightStateV3::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-
 void CHeightStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnLButtonDown( nFlags, rMousePoint );
@@ -1546,7 +1557,8 @@ void CHeightStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMouseP
 	{
 		if ( CanEdit() )
 		{
-			pMapInfoEditor->heightContainer.Mark( pStoreInputState->lastEventInfo.gridPos.x, pStoreInputState->lastEventInfo.gridPos.y );
+			pMapInfoEditor->heightContainer.Mark( pStoreInputState->lastEventInfo.gridPos.x,
+			                                      pStoreInputState->lastEventInfo.gridPos.y );
 		}
 		bEscaped = false;
 		CMultiInputState::OnLButtonDown( nFlags, rMousePoint );
@@ -1555,7 +1567,6 @@ void CHeightStateV3::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-
 void CHeightStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnRButtonDown( nFlags, rMousePoint );
@@ -1563,7 +1574,8 @@ void CHeightStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMouseP
 	{
 		if ( CanEdit() )
 		{
-			pMapInfoEditor->heightContainer.Mark( pStoreInputState->lastEventInfo.gridPos.x, pStoreInputState->lastEventInfo.gridPos.y );
+			pMapInfoEditor->heightContainer.Mark( pStoreInputState->lastEventInfo.gridPos.x,
+			                                      pStoreInputState->lastEventInfo.gridPos.y );
 		}
 		bEscaped = false;
 		CMultiInputState::OnRButtonDown( nFlags, rMousePoint );
@@ -1572,7 +1584,6 @@ void CHeightStateV3::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-
 void CHeightStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMButtonDown( nFlags, rMousePoint );
@@ -1580,7 +1591,8 @@ void CHeightStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMouseP
 	{
 		if ( CanEdit() )
 		{
-			pMapInfoEditor->heightContainer.Mark( pStoreInputState->lastEventInfo.gridPos.x, pStoreInputState->lastEventInfo.gridPos.y );
+			pMapInfoEditor->heightContainer.Mark( pStoreInputState->lastEventInfo.gridPos.x,
+			                                      pStoreInputState->lastEventInfo.gridPos.y );
 		}
 		bEscaped = false;
 		CMultiInputState::OnMButtonDown( nFlags, rMousePoint );
@@ -1589,7 +1601,6 @@ void CHeightStateV3::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-
 void CHeightStateV3::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnLButtonUp( nFlags, rMousePoint );
@@ -1597,7 +1608,8 @@ void CHeightStateV3::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoi
 	{
 		if ( CanEdit() )
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
 			CreateMapInfoController();
 		}
 		bEscaped = false;
@@ -1611,7 +1623,6 @@ void CHeightStateV3::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-
 void CHeightStateV3::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnRButtonUp( nFlags, rMousePoint );
@@ -1619,7 +1630,8 @@ void CHeightStateV3::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoi
 	{
 		if ( CanEdit() )
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
 			CreateMapInfoController();
 		}
 		bEscaped = false;
@@ -1633,7 +1645,6 @@ void CHeightStateV3::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-
 void CHeightStateV3::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	pStoreInputState->OnMButtonUp( nFlags, rMousePoint );
@@ -1641,7 +1652,8 @@ void CHeightStateV3::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoi
 	{
 		if ( CanEdit() )
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
 			CreateMapInfoController();
 		}
 		bEscaped = false;
@@ -1655,7 +1667,6 @@ void CHeightStateV3::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoi
 	}
 }
 
-
 void CHeightStateV3::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	pStoreInputState->OnKeyDown( nChar, nRepCnt, nFlags );
@@ -1665,7 +1676,8 @@ void CHeightStateV3::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlag
 		{
 			if ( ( nChar >= 0x31 ) && ( nChar <= 0x35 ) )
 			{
-				pEditParameters->eBrush = static_cast<SEditParameters::EBrush>( Clamp<uint32_t>( nChar - 0x31, SEditParameters::B_TILE, SEditParameters::B_PLATO ) );
+				pEditParameters->eBrush = static_cast<SEditParameters::EBrush>(
+						Clamp<uint32_t>( nChar - 0x31, SEditParameters::B_TILE, SEditParameters::B_PLATO ) );
 				SetActiveInputState( pEditParameters->eBrush, true, false );
 				pEditParameters->nFlags = MITHV3EP_BRUSH;
 				::SetEditParameters( *pEditParameters, CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3 );
@@ -1680,22 +1692,22 @@ void CHeightStateV3::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlag
 						if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
 						{
 							bEscaped = true;
-							Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
+							Singleton<ICommandHandlerContainer>()->HandleCommand(
+									CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3, ID_MITHV3_KILL_TIMER, 0 );
 							pTerraManager->GetTileTypeUpdateDifferences( &( vTileDiffPos.x ), &( vTileDiffPos.y ), &tileDiff );
 							if ( ( tileDiff.GetSizeX() > 0 ) && ( tileDiff.GetSizeY() > 0 ) )
 							{
-								pTerraManager->UpdateTileAreaType( vTileDiffPos.x, vTileDiffPos.y, tileDiff, NTerraBrush::TERRA_BRUSH_SUB );
+								pTerraManager->UpdateTileAreaType(
+										vTileDiffPos.x, vTileDiffPos.y, tileDiff, NTerraBrush::TERRA_BRUSH_SUB );
 							}
-							pTerraManager->GetTerraGeometryUpdateDifferences( &( heightDiffPos.x ), &( heightDiffPos.y ), &heightDiff );
+							pTerraManager->GetTerraGeometryUpdateDifferences(
+									&( heightDiffPos.x ), &( heightDiffPos.y ), &heightDiff );
 							if ( ( heightDiff.GetSizeX() > 0 ) && ( heightDiff.GetSizeY() > 0 ) )
 							{
-								pTerraManager->ModifyTerraGeometryByBrush( heightDiffPos.x,
-																													 heightDiffPos.y,
-																													 true,
-																													 heightDiff,
-																													 NTerraBrush::TERRA_BRUSH_SUB );
+								pTerraManager->ModifyTerraGeometryByBrush(
+										heightDiffPos.x, heightDiffPos.y, true, heightDiff, NTerraBrush::TERRA_BRUSH_SUB );
 							}
-							bTileEditStarted =false;
+							bTileEditStarted = false;
 							bHeightEditStarted = false;
 						}
 					}
@@ -1705,7 +1717,6 @@ void CHeightStateV3::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlag
 		CMultiInputState::OnKeyDown( nChar, nRepCnt, nFlags );
 	}
 }
-
 
 void CHeightStateV3::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -1718,7 +1729,6 @@ void CHeightStateV3::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags 
 		}
 	}
 }
-
 
 int CHeightStateV3::SEditParameters::operator&( IXmlSaver &xs )
 {

@@ -12,30 +12,29 @@ struct IView;
 #define DEFAULT_BUILDER_LABEL __DEFAULT__BUILDER__
 #define DEFAULT_BUILDER_LABEL_TXT "__DEFAULT__BUILDER__"
 
-
 // BDF = build data flag
-#define BDF_EXPORT_CHECK_BOX	0x00000001
-#define BDF_EDIT_CHECK_BOX		0x00000002
+#define BDF_EXPORT_CHECK_BOX 0x00000001
+#define BDF_EDIT_CHECK_BOX 0x00000002
 //
-#define BDF_CHECK_FILE_NAME		0x00000010
-#define BDF_CHECK_PROPERTIES	0x00000020
-#define BDF_ALL								0xFFFFFFFF
+#define BDF_CHECK_FILE_NAME 0x00000010
+#define BDF_CHECK_PROPERTIES 0x00000020
+#define BDF_ALL 0xFFFFFFFF
 
 struct SBuildDataParams
 {
-	unsigned nFlags;										// Параметры редактрования
-	std::string szObjectTypeName;				// Тип объекта
+	unsigned nFlags;              // Параметры редактрования
+	std::string szObjectTypeName; // Тип объекта
 	// имя формируется следующим образом:
 	// std::string szFileName = szObjectNamePrefix + szObjectName + szObjectNamePostfix;
 	// CStringManager::ExtendFileExtention( &szFileName, szObjectNameExtention );
 	// Если установлено, что редактируем каталог - не забудте в szObjectNamePostfix в начале поставить слеш
-	std::string szObjectNamePrefix;			// Нередактируемая часть
-	std::string szObjectName;						// Объект редактирования
-	std::string szObjectNamePostfix;			// Нерадактируемая часть
-	std::string szObjectNameExtention;		// Расширение (необходимо разделять)
+	std::string szObjectNamePrefix;    // Нередактируемая часть
+	std::string szObjectName;          // Объект редактирования
+	std::string szObjectNamePostfix;   // Нерадактируемая часть
+	std::string szObjectNameExtention; // Расширение (необходимо разделять)
 	//
-	bool bNeedExport;								// Необходимо ли экспортировать объект после создания
-	bool bNeedEdit;									// Необходимо ли загружать одъект после экспорта или создания
+	bool bNeedExport; // Необходимо ли экспортировать объект после создания
+	bool bNeedEdit;   // Необходимо ли загружать одъект после экспорта или создания
 	SBuildDataParams() : nFlags( BDF_ALL ), bNeedExport( false ), bNeedEdit( false ) {}
 	void GetObjectName( std::string *pszObjectName )
 	{
@@ -49,22 +48,20 @@ struct SBuildDataParams
 	inline bool DoesNameEmpty() { return szObjectName.empty(); }
 };
 
-
 // CRAP{ HASH_SET
 typedef std::unordered_map<std::string, uint32_t> CTableSet;
 typedef std::unordered_map<int, CTableSet> CTableSetMap;
 // CRAP} HASH_SET
 
-
 struct IBuildDataCallback
 {
 	// проверить данные на правильность заполнения, если данные не верны вернуть краткое описание ошибки
 	// pszDescription - может быть нулевой
-	virtual bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView ) = 0;
+	virtual bool
+	IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView ) = 0;
 	// проверить имя объекта на уникальность
 	virtual bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName ) = 0;
 };
-
 
 // в cpp файле написать макрос: REGISTER_EDITOR_IN_...( typeName, className )
 
@@ -82,30 +79,37 @@ struct IBuilder : public CObjectBase
 	// Создать и скомпоновать объекты ( может быть добавлено сразу много объектов )
 	// true - создали какие либо объекты ( необходимо обработать ситуацию дальше )
 	// false - нажали Cancel ( ситуацию обрабатывать нет необходимости )
-	virtual bool InsertObject( std::string *pszObjectTypeName,											// Необходимо для создания Builder'ов для несколько типов объектов
-														 std::string *pszUniqueObjectName,										// Имя выбранное пользователем ( полное )
-														 bool bFromMainMenu,
-														 bool *pbCanChangeObjectName,										// Можно ли после создания объекта менять его имя
-														 bool *pbNeedExport,														// Нужно ли экспортить сразу после создания
-														 bool *pbNeedEdit ) = 0;
+	virtual bool
+	InsertObject( std::string *pszObjectTypeName,   // Необходимо для создания Builder'ов для несколько типов объектов
+	              std::string *pszUniqueObjectName, // Имя выбранное пользователем ( полное )
+	              bool bFromMainMenu,
+	              bool *pbCanChangeObjectName, // Можно ли после создания объекта менять его имя
+	              bool *pbNeedExport,          // Нужно ли экспортить сразу после создания
+	              bool *pbNeedEdit ) = 0;
 	// Скопировать объект
-	virtual bool CopyObject( const std::string &rszObjectTypeName,									// Необходимо для создания Builder'ов для несколько типов объектов
-													 const std::string &rszDestination,										// Имя куда копировать
-													 const std::string &rszSource ) = 0;										// Имя откуда копировать
+	virtual bool
+	CopyObject( const std::string &rszObjectTypeName, // Необходимо для создания Builder'ов для несколько типов объектов
+	            const std::string &rszDestination,    // Имя куда копировать
+	            const std::string &rszSource ) = 0;   // Имя откуда копировать
 	// Переименовать объект
-	virtual bool RenameObject( const std::string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const std::string &rszDestination,									// Имя куда копировать
-														 const std::string &rszSource ) = 0;									// Имя откуда копировать
+	virtual bool
+	RenameObject( const std::string &rszObjectTypeName, // Необходимо для создания Builder'ов для несколько типов объектов
+	              const std::string &rszDestination,    // Имя куда копировать
+	              const std::string &rszSource ) = 0;   // Имя откуда копировать
 	// Удалить объект
-	virtual bool RemoveObject( const std::string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const std::string &rszObjectName ) = 0;							// Имя выбранное пользователем ( полное )
+	virtual bool
+	RemoveObject( const std::string &rszObjectTypeName, // Необходимо для создания Builder'ов для несколько типов объектов
+	              const std::string &rszObjectName ) = 0; // Имя выбранное пользователем ( полное )
 	//
 	virtual void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder ) = 0;
 };
 
 struct IBuilderContainer : public CObjectBase
 {
-	enum { tidTypeID = 0x1408A3C3 };
+	enum
+	{
+		tidTypeID = 0x1408A3C3
+	};
 	//
 	// Проверить на существование компоновщика
 	virtual bool CanBuildObject( const std::string &rszObjectTypeName ) = 0;
@@ -114,25 +118,29 @@ struct IBuilderContainer : public CObjectBase
 	virtual void Create( const std::string &rszObjectTypeName ) = 0;
 	virtual void Destroy( const std::string &rszObjectTypeName ) = 0;
 	//
-	virtual bool InsertObject( std::string *pszObjectTypeName,											// Необходимо для создания Builder'ов для несколько типов объектов
-														 std::string *pszUniqueObjectName,										// Имя выбранное пользователем ( полное )
-														 bool bFromMainMenu,
-														 bool *pbCanChangeObjectName,										// Можно ли после создания объекта менять его имя
-														 bool *pbNeedExport,														// Нужно ли экспортить сразу после создания
-														 bool *pbNeedEdit ) = 0;												// Нужно ли загружать редактор после экспорта или после создания объекта
-	virtual bool CopyObject( const std::string &rszObjectTypeName,									// Необходимо для создания Builder'ов для несколько типов объектов
-													 const std::string &rszDestination,										// Имя куда копировать
-													 const std::string &rszSource ) = 0;										// Имя откуда копировать
-	virtual bool RenameObject( const std::string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const std::string &rszDestination,									// Имя куда копировать
-														 const std::string &rszSource ) = 0;									// Имя откуда копировать
-	virtual bool RemoveObject( const std::string &rszObjectTypeName,								// Необходимо для создания Builder'ов для несколько типов объектов
-														 const std::string &rszObjectName ) = 0;							// Имя выбранное пользователем ( полное )
+	virtual bool
+	InsertObject( std::string *pszObjectTypeName,   // Необходимо для создания Builder'ов для несколько типов объектов
+	              std::string *pszUniqueObjectName, // Имя выбранное пользователем ( полное )
+	              bool bFromMainMenu,
+	              bool *pbCanChangeObjectName, // Можно ли после создания объекта менять его имя
+	              bool *pbNeedExport,          // Нужно ли экспортить сразу после создания
+	              bool *pbNeedEdit ) = 0;      // Нужно ли загружать редактор после экспорта или после создания объекта
+	virtual bool
+	CopyObject( const std::string &rszObjectTypeName, // Необходимо для создания Builder'ов для несколько типов объектов
+	            const std::string &rszDestination,    // Имя куда копировать
+	            const std::string &rszSource ) = 0;   // Имя откуда копировать
+	virtual bool
+	RenameObject( const std::string &rszObjectTypeName, // Необходимо для создания Builder'ов для несколько типов объектов
+	              const std::string &rszDestination,    // Имя куда копировать
+	              const std::string &rszSource ) = 0;   // Имя откуда копировать
+	virtual bool
+	RemoveObject( const std::string &rszObjectTypeName, // Необходимо для создания Builder'ов для несколько типов объектов
+	              const std::string &rszObjectName ) = 0; // Имя выбранное пользователем ( полное )
 	virtual void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder ) = 0;
 	// заполнить BuildData
-	virtual bool FillBuildData(	std::string *pszBuildDataTypeName,
-															std::string *pszBuildDataName,
-															SBuildDataParams *pBuildDataParams,
-															IBuildDataCallback *pBuildDataCallback ) = 0;
+	virtual bool FillBuildData( std::string *pszBuildDataTypeName,
+	                            std::string *pszBuildDataName,
+	                            SBuildDataParams *pBuildDataParams,
+	                            IBuildDataCallback *pBuildDataCallback ) = 0;
 	virtual bool FillNewObjectName( SBuildDataParams *pBuildDataParams ) = 0;
 };

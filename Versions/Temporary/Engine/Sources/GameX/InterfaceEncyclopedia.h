@@ -5,7 +5,7 @@
 
 namespace NDb
 {
-	struct SUnitBaseRPGStats;
+struct SUnitBaseRPGStats;
 }
 
 class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
@@ -42,48 +42,68 @@ class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedRe
 		ZDATA
 		CPtr<IButton> pBtn;
 		std::string szBtnName;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBtn); f.Add(3,&szBtnName); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pBtn );
+			f.Add( 3, &szBtnName );
+			return 0;
+		}
 	};
 
 public:
 	class CUnitData : public CObjectBase
 	{
 		OBJECT_NOCOPY_METHODS( CUnitData );
+
 	public:
 		ZDATA
 		CDBPtr<NDb::SUnitBaseRPGStats> pStats;
 		std::wstring wszBriefDesc;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pStats); f.Add(3,&wszBriefDesc); return 0; }
-
-		bool operator==( const CUnitData &data ) const
+		ZEND int operator&( IBinSaver &f )
 		{
-			return pStats == data.pStats;
+			f.Add( 2, &pStats );
+			f.Add( 3, &wszBriefDesc );
+			return 0;
 		}
+
+		bool operator==( const CUnitData &data ) const { return pStats == data.pStats; }
 	};
 
 	class CDataViewer : public IDataViewer
 	{
 		OBJECT_NOCOPY_METHODS( CDataViewer );
+
 	public:
 		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	};
-private:
 
+private:
 	struct SSelectedUnit
 	{
 		ZDATA
 		CPtr<CUnitData> pData;
 		EFilterCountries eCountry;
 		EFilterUnitTypes eUnitType;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); f.Add(3,&eCountry); f.Add(4,&eUnitType); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pData );
+			f.Add( 3, &eCountry );
+			f.Add( 4, &eUnitType );
+			return 0;
+		}
 	};
 
 	struct SFilterCache
 	{
 		ZDATA
 		CPtr<IListControl> pUnitListCont;
-		std::vector< CPtr<CUnitData> > filteredUnits;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnitListCont); f.Add(3,&filteredUnits); return 0; }
+		std::vector<CPtr<CUnitData>> filteredUnits;
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pUnitListCont );
+			f.Add( 3, &filteredUnits );
+			return 0;
+		}
 	};
 
 	struct SDataSorter
@@ -91,7 +111,7 @@ private:
 		bool operator()( const CUnitData *pData1, const CUnitData *pData2 ) const;
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<ITextView> pUnitNameView;
 	CPtr<IScrollableContainer> pUnitDescCont;
 	CPtr<ITextView> pUnitDescView;
@@ -99,13 +119,13 @@ private:
 	CPtr<IButton> pStepBackward;
 	CPtr<IButton> pStepForward;
 
-	std::vector< SFilterBtn > filterCountries;
-	std::vector< SFilterBtn > filterUnitTypes;
+	std::vector<SFilterBtn> filterCountries;
+	std::vector<SFilterBtn> filterUnitTypes;
 	EFilterCountries eSelCountry;
 	EFilterUnitTypes eSelUnitType;
 
-	std::unordered_map< CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash > knownUnits;
-	std::vector< SSelectedUnit > selectedUnits; // array for undo purpose
+	std::unordered_map<CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash> knownUnits;
+	std::vector<SSelectedUnit> selectedUnits; // array for undo purpose
 	int nSelUnit;
 
 	CObj<CDataViewer> pDataViewer;
@@ -114,11 +134,35 @@ private:
 
 	ZSKIP //CPtr<IWindow> pBackground;
 
-	bool bEffectEnter;
+			bool bEffectEnter;
 	int nEffectCounter;
 	bool bEffectBorder;
 	int nLoading;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pUnitNameView); f.Add(3,&pUnitDescCont); f.Add(4,&pUnitDescView); f.Add(5,&p3DCtrl); f.Add(6,&pStepBackward); f.Add(7,&pStepForward); f.Add(8,&filterCountries); f.Add(9,&filterUnitTypes); f.Add(10,&eSelCountry); f.Add(11,&eSelUnitType); f.Add(12,&knownUnits); f.Add(13,&selectedUnits); f.Add(14,&nSelUnit); f.Add(15,&pDataViewer); f.Add(16,&filterCache); f.Add(18,&bEffectEnter); f.Add(19,&nEffectCounter); f.Add(20,&bEffectBorder); f.Add(21,&nLoading); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pUnitNameView );
+		f.Add( 3, &pUnitDescCont );
+		f.Add( 4, &pUnitDescView );
+		f.Add( 5, &p3DCtrl );
+		f.Add( 6, &pStepBackward );
+		f.Add( 7, &pStepForward );
+		f.Add( 8, &filterCountries );
+		f.Add( 9, &filterUnitTypes );
+		f.Add( 10, &eSelCountry );
+		f.Add( 11, &eSelUnitType );
+		f.Add( 12, &knownUnits );
+		f.Add( 13, &selectedUnits );
+		f.Add( 14, &nSelUnit );
+		f.Add( 15, &pDataViewer );
+		f.Add( 16, &filterCache );
+		f.Add( 18, &bEffectEnter );
+		f.Add( 19, &nEffectCounter );
+		f.Add( 20, &bEffectBorder );
+		f.Add( 21, &nLoading );
+		return 0;
+	}
+
 private:
 	void MsgBack( const SGameMessage &msg );
 	void MsgStepBackward( const SGameMessage &msg );
@@ -140,12 +184,13 @@ private:
 	void SetFiltersBySelection();
 	void UpdateListCtrlSelection();
 
-	CUnitData* GetUnitData( const NDb::SUnitBaseRPGStats *pStats );
+	CUnitData *GetUnitData( const NDb::SUnitBaseRPGStats *pStats );
 
 	void EffectStart( bool bEnter );
 	void EffectFinish();
 	void EffectBorderStart( bool bEnter );
 	void EffectBorderFinish();
+
 public:
 	CInterfaceEncyclopedia();
 	~CInterfaceEncyclopedia();
@@ -166,9 +211,15 @@ class CInterfaceEncyclopediaWait : public CInterfaceScreenBase, public IProgramm
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceEncyclopediaWait );
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	int nLoading;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&nLoading); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &nLoading );
+		return 0;
+	}
+
 public:
 	CInterfaceEncyclopediaWait();
 
@@ -188,6 +239,7 @@ class CICEncyclopedia : public CInterfaceCommandBase<CInterfaceEncyclopedia>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };
@@ -198,6 +250,7 @@ class CICEncyclopediaWait : public CInterfaceCommandBase<CInterfaceEncyclopediaW
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

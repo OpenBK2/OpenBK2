@@ -11,7 +11,7 @@
 
 namespace NGScene
 {
-	class CFileTexture;
+class CFileTexture;
 };
 
 // fFade[0..1]
@@ -21,16 +21,19 @@ class UI_EXPORT CBackground : public IWindowPart
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float fFadeValue = {};
+
 protected:
 	CTRect<float> pos;
+
 protected:
 	float GetFadeValue() const { return fFadeValue; }
+
 public:
 	CBackground();
 
 	virtual void SetPos( const CVec2 &vPos, const CVec2 &vSize );
 	virtual int operator&( struct IBinSaver &ss );
-	virtual void Init() {  }
+	virtual void Init() {}
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 	// return true if pixel under vPos is visible (alpha is not full)

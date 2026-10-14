@@ -25,7 +25,7 @@ void CMPUIMessageProcessor::PushMessage( SMPUIMessage *pMsg )
 	messages.push_back( pMsg );
 }
 
-SMPUIMessage* CMPUIMessageProcessor::GetMessage()
+SMPUIMessage *CMPUIMessageProcessor::GetMessage()
 {
 	if ( messages.empty() )
 		return 0;
@@ -35,7 +35,7 @@ SMPUIMessage* CMPUIMessageProcessor::GetMessage()
 	return pMsg.Extract();
 }
 
-SMPUIMessage* CMPUIMessageProcessor::PeekMessage()
+SMPUIMessage *CMPUIMessageProcessor::PeekMessage()
 {
 	if ( messages.empty() )
 		return 0;

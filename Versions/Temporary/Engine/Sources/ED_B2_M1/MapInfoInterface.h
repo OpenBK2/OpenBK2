@@ -8,6 +8,7 @@ class CMapInfoInterface : public CEditorInterfaceBase
 	void ToggleCameraControl( const SGameMessage &msg, bool bEnableCameraControl );
 
 	class CMapInfoState *pMapInfoState;
+
 public:
 	CMapInfoInterface( class CMapInfoState *_pMapInfoState = 0 ) : pMapInfoState( _pMapInfoState ) {}
 };

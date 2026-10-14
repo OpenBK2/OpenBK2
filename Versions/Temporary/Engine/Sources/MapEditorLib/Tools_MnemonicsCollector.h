@@ -1,9 +1,9 @@
-#if !defined(__COMMON_TOOLS__MNEMONICS_COLLECTOR__)
+#if !defined( __COMMON_TOOLS__MNEMONICS_COLLECTOR__ )
 #define __COMMON_TOOLS__MNEMONICS_COLLECTOR__
 #pragma once
 
-
-template <class TValue> class CMnemonicsCollector
+template <class TValue>
+class CMnemonicsCollector
 {
 	std::unordered_map<TValue, std::string> direct;
 	std::unordered_map<std::string, TValue> reverse;
@@ -14,7 +14,9 @@ public:
 	//
 	CMnemonicsCollector() {}
 	CMnemonicsCollector( const TValue &rDefaultValue, const std::string &rszDefaultMnemonic )
-		: defaultValue( rDefaultValue ), defaultMnemonic( rszDefaultMnemonic ) {}
+			: defaultValue( rDefaultValue ), defaultMnemonic( rszDefaultMnemonic )
+	{
+	}
 	//
 	void Clear( const TValue &rDefaultValue, const std::string &rszDefaultMnemonic )
 	{
@@ -31,12 +33,9 @@ public:
 		reverse[rszMnemonic] = rValue;
 	}
 	//
-	int Size()
-	{
-		return direct.size();
-	}
+	int Size() { return direct.size(); }
 	//
-	const std::string& GetMnemonic( const TValue &rValue ) const
+	const std::string &GetMnemonic( const TValue &rValue ) const
 	{
 		typename std::unordered_map<TValue, std::string>::const_iterator it = direct.find( rValue );
 		if ( it == direct.end() )
@@ -65,7 +64,8 @@ public:
 	void Trace() const
 	{
 		DebugTrace( "mnemonic collector, begin" );
-		for ( typename std::unordered_map<std::string, TValue>::const_iterator it = reverse.begin(); it != reverse.end(); ++it )
+		for ( typename std::unordered_map<std::string, TValue>::const_iterator it = reverse.begin(); it != reverse.end();
+		      ++it )
 		{
 			DebugTrace( "<%s>, %d", it->first.c_str(), it->second );
 		}

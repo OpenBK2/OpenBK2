@@ -31,19 +31,24 @@ public:
 	int GetRejectReason() const { return nLastReject; }
 	void WriteLogin( CBitStream *pBits, const CNodeAddressSet &localAddr );
 	bool ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SLoginInfo *pRes );
-	void AcceptLogin( const CNodeAddress &addr, CBitStream *pBits, const SLoginInfo &info, int *pnClientID, const CNodeAddressSet &localAddr );
+	void AcceptLogin( const CNodeAddress &addr,
+	                  CBitStream *pBits,
+	                  const SLoginInfo &info,
+	                  int *pnClientID,
+	                  const CNodeAddressSet &localAddr );
 	void RejectLogin( const CNodeAddress &addr, CBitStream *pBits, const SLoginInfo &info, int nReason );
 	bool HasAccepted( const CNodeAddress &addr, const SLoginInfo &info );
 	void ProcessAccepted( const CNodeAddress &addr, CBitStream &bits );
 	void ProcessRejected( const CNodeAddress &addr, CBitStream &bits );
 	void StartLogin( const CNodeAddress &addr, const CMemoryStream &buf );
-	const CNodeAddress& GetLoginTarget() const { return server; }
+	const CNodeAddress &GetLoginTarget() const { return server; }
 	int GetSelfClientID() const { return nSelfClientID; }
-	const CNodeAddressSet& GetTargetLocalAddr() const { return serverLocalAddr; }
+	const CNodeAddressSet &GetTargetLocalAddr() const { return serverLocalAddr; }
 	TServerID GetUniqueServerID() const { return uniqueServerID; }
 
 	CLoginSupport( APPLICATION_ID _applicationID );
 	void Init( APPLICATION_ID _applicationID ) { applicationID = _applicationID; }
+
 private:
 	struct SAcceptedLogin
 	{
@@ -65,7 +70,7 @@ private:
 	CNodeAddressSet serverLocalAddr;
 	TServerID uniqueServerID;
 
-	SAcceptedLogin& GetAcceptedLogin( const CNodeAddress &addr, const SLoginInfo &info );
+	SAcceptedLogin &GetAcceptedLogin( const CNodeAddress &addr, const SLoginInfo &info );
 };
 /////////////////////////////////////////////////////////////////////////////////////
 }

@@ -12,9 +12,9 @@
 
 extern std::vector<uint8_t> buffer;
 
-template< class TYPE>
-TYPE* GetLocalTempBuffer( int nAmount )
+template <class TYPE>
+TYPE *GetLocalTempBuffer( int nAmount )
 {
-	buffer.reserve( nAmount*sizeof(TYPE) );
-	return reinterpret_cast<TYPE*>( &buffer[0] );
+	buffer.reserve( nAmount * sizeof( TYPE ) );
+	return reinterpret_cast<TYPE *>( &buffer[0] );
 }

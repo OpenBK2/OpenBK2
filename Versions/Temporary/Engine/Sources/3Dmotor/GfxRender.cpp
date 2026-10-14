@@ -19,43 +19,54 @@ namespace NGfx
 extern SRenderTargetsInfo rtInfo;
 class CQuery : public IQuery
 {
-	OBJECT_NOCOPY_METHODS(CQuery);
+	OBJECT_NOCOPY_METHODS( CQuery );
 	NWin32Helper::com_ptr<IDirect3DQuery9> pQuery;
+
 public:
 	CQuery() {}
-	CQuery( IDirect3DQuery9 *p ) : pQuery(p) {}
+	CQuery( IDirect3DQuery9 *p ) : pQuery( p ) {}
 	virtual void Start() { pQuery->Issue( D3DISSUE_BEGIN ); }
 	virtual void Finish() { pQuery->Issue( D3DISSUE_END ); }
 	virtual int GetData()
 	{
 		int nRes = 10000;
-		for (;;)
+		for ( ;; )
 		{
-			HRESULT hr = pQuery->GetData( &nRes, sizeof(nRes), D3DGETDATA_FLUSH );
+			HRESULT hr = pQuery->GetData( &nRes, sizeof( nRes ), D3DGETDATA_FLUSH );
 			if ( S_FALSE != hr )
 				break;
 		}
 		return nRes;
 	}
-	virtual void Flush() { int nRes; pQuery->GetData( &nRes, sizeof(nRes), D3DGETDATA_FLUSH ); }
+	virtual void Flush()
+	{
+		int nRes;
+		pQuery->GetData( &nRes, sizeof( nRes ), D3DGETDATA_FLUSH );
+	}
 };
 static bool operator==( const SFBTransform &a, const SFBTransform &b )
 {
-	return memcmp( &a, &b, sizeof(SFBTransform) ) == 0;
+	return memcmp( &a, &b, sizeof( SFBTransform ) ) == 0;
 }
-template<class T>
+template <class T>
 void Apply( const T &a );
-template<class T>
+template <class T>
 struct SRenderParam
 {
 	T value;
-	SRenderParam( const T &_a ): value(_a) {}
-	void Set( const T &_a ) { if ( _a == value ) return; value = _a; Apply( _a ); }
+	SRenderParam( const T &_a ) : value( _a ) {}
+	void Set( const T &_a )
+	{
+		if ( _a == value )
+			return;
+		value = _a;
+		Apply( _a );
+	}
 	void DoApply() { Apply( value ); }
 };
-typedef std::unordered_map<int, NWin32Helper::com_ptr<IDirect3DSurface9> > CDepthHash;
+typedef std::unordered_map<int, NWin32Helper::com_ptr<IDirect3DSurface9>> CDepthHash;
 
-const int N_MAX_REGISTERS =	5;
+const int N_MAX_REGISTERS = 5;
 const int N_MAX_ALLOWED_LAG = 10;
 const int N_MAX_SHADERS_COUNT = 256;
 static int nScreenRegisters;
@@ -78,11 +89,11 @@ static CMObj<CTexture> pDepthRegister;
 static CTPoint<int> ptRegisterBufferSize, ptScreenSize;
 // Unset rather than zero initialized, which would read as FILTER_POINT and make
 // the first genuine request for point filtering look like a redundant one.
-static EFilterMode TSFilterMode[8] = { FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET,
-	FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET };
+static EFilterMode TSFilterMode[8] = {
+	FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET };
 static EWrap lastUsedAddressMode[8];
-static NWin32Helper::com_ptr<IDirect3DPixelShader9> pixelShaders[ N_MAX_SHADERS_COUNT ];
-static NWin32Helper::com_ptr<IDirect3DVertexShader9> vertexShaders[ N_MAX_SHADERS_COUNT ];
+static NWin32Helper::com_ptr<IDirect3DPixelShader9> pixelShaders[N_MAX_SHADERS_COUNT];
+static NWin32Helper::com_ptr<IDirect3DVertexShader9> vertexShaders[N_MAX_SHADERS_COUNT];
 static NWin32Helper::com_ptr<IDirect3DVertexDeclaration9> vertexDeclarations[200];
 static int nLastUsedVShader, nLastUsedVDeclaration;
 static const SPShader *pCurrentPixelShader;
@@ -90,9 +101,9 @@ const int N_RENDER_STATES = 210;
 const int N_TSS_STATES = 33;
 const int N_SAMPLER_STATES = 14;
 static uint32_t renderStates[210], tssStates[8][33], samplerStates[8][14];
-static std::vector<CMObj<CQuery> > queries;
+static std::vector<CMObj<CQuery>> queries;
 static bool bDoesSupportOcclusionQueries = false, bDoesSupportEventQueries = false;
-static std::deque<CObj<IQuery> > lagQueries;
+static std::deque<CObj<IQuery>> lagQueries;
 static int nMaxLag = 1;
 static float fRegisterResolution = 1;
 
@@ -106,7 +117,8 @@ EVideoCard GetVideoCard()
 	for ( int nTemp = 0; nTemp < std::size( videoCardsArray ); nTemp++ )
 	{
 		const SVideoCardType &sType = videoCardsArray[nTemp];
-		if ( ( sID.VendorId == sType.dwVendorID ) && ( ( sID.DeviceId & sType.dwDeviceIDMask ) == ( sType.dwDeviceID & sType.dwDeviceIDMask ) ) )
+		if ( ( sID.VendorId == sType.dwVendorID ) &&
+		     ( ( sID.DeviceId & sType.dwDeviceIDMask ) == ( sType.dwDeviceID & sType.dwDeviceIDMask ) ) )
 			return sType.eType;
 	}
 
@@ -127,8 +139,7 @@ EHardwareLevel GetHardwareLevel()
 	if ( bHardwarePixelShaders )
 		return HL_GFORCE3; // not exactly GF3, but GF3 class
 
-
-	ASSERT(0); // not supported situation, without shaders tnl device should be used and bTnLDevice should be true
+	ASSERT( 0 ); // not supported situation, without shaders tnl device should be used and bTnLDevice should be true
 	return HL_TNL_DEVICE;
 }
 
@@ -142,11 +153,11 @@ bool DoesSupportOcclusionQueries()
 	return bDoesSupportOcclusionQueries;
 }
 
-IQuery* CreateOcclusionQuery()
+IQuery *CreateOcclusionQuery()
 {
 	NWin32Helper::com_ptr<IDirect3DQuery9> pQuery;
 	HRESULT hr = NGfx::pDevice->CreateQuery( D3DQUERYTYPE_OCCLUSION, pQuery.GetAddr() );
-	if ( FAILED(hr) )
+	if ( FAILED( hr ) )
 		return 0;
 	EraseInvalidRefs( &queries );
 	CQuery *pRes = new CQuery( pQuery );
@@ -154,11 +165,11 @@ IQuery* CreateOcclusionQuery()
 	return pRes;
 }
 
-IQuery* CreateEventQuery()
+IQuery *CreateEventQuery()
 {
 	NWin32Helper::com_ptr<IDirect3DQuery9> pQuery;
 	HRESULT hr = NGfx::pDevice->CreateQuery( D3DQUERYTYPE_EVENT, pQuery.GetAddr() );
-	if ( FAILED(hr) )
+	if ( FAILED( hr ) )
 		return 0;
 	EraseInvalidRefs( &queries );
 	CQuery *pRes = new CQuery( pQuery );
@@ -183,7 +194,7 @@ void ReduceHWLag()
 	if ( !lagQueries.empty() )
 	{
 		IQuery *p = lagQueries.front();
-		if ( IsValid(p) )
+		if ( IsValid( p ) )
 			p->Finish();
 	}
 	CObj<IQuery> pFrameMark;
@@ -191,18 +202,22 @@ void ReduceHWLag()
 	{
 		pFrameMark = lagQueries.back();
 		lagQueries.pop_back();
-		if ( !IsValid(pFrameMark) )
+		if ( !IsValid( pFrameMark ) )
 			continue;
 		pFrameMark->GetData();
 	}
 	// put query in front of the queue
-	if ( !IsValid(pFrameMark) )
+	if ( !IsValid( pFrameMark ) )
 		pFrameMark = CreateEventQuery();
 	//pFrameMark->Start(); // start is not supported for this type of query
 	lagQueries.push_front( pFrameMark );
 }
 
-#define ZERO_ARRAY(a) { for ( int k = 0; k < std::size(a); ++k ) a[k] = 0; }
+#define ZERO_ARRAY( a )                        \
+	{                                            \
+		for ( int k = 0; k < std::size( a ); ++k ) \
+			a[k] = 0;                                \
+	}
 
 // Vertex formats description
 
@@ -223,14 +238,11 @@ void ReduceHWLag()
 	D3DVSD_REG(3, D3DVSDT_FLOAT2),
 	D3DVSD_END()
 };*/
-static D3DVERTEXELEMENT9 dwVecT2C1[] =
-{
-	{0,  0, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-	{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
-	{0, 16, D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
-	{0, 24, D3DDECLTYPE_FLOAT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1},
-	D3DDECL_END()
-};
+static D3DVERTEXELEMENT9 dwVecT2C1[] = { { 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+                                         { 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
+                                         { 0, 16, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+                                         { 0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+                                         D3DDECL_END() };
 /*static uint32_t dwVecNT[] = {
 	D3DVSD_STREAM(0),
 	D3DVSD_REG(0, D3DVSDT_FLOAT3),
@@ -238,16 +250,14 @@ static D3DVERTEXELEMENT9 dwVecT2C1[] =
 	D3DVSD_REG(3, D3DVSDT_FLOAT2),
 	D3DVSD_END()
 };*/
-static D3DVERTEXELEMENT9 dwVecFull[] =
-{
-	{0,  0, D3DDECLTYPE_FLOAT3,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-	{0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
-	{0, 16, D3DDECLTYPE_SHORT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
-	{0, 20, D3DDECLTYPE_SHORT2,   D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1},
-	{0, 24, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
-	{0, 28, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 1 },
-	D3DDECL_END()
-};
+static D3DVERTEXELEMENT9 dwVecFull[] = {
+	{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
+	{ 0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
+	{ 0, 16, D3DDECLTYPE_SHORT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
+	{ 0, 20, D3DDECLTYPE_SHORT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 1 },
+	{ 0, 24, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 0 },
+	{ 0, 28, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TANGENT, 1 },
+	D3DDECL_END() };
 /*static uint32_t dwVecFull[] = {
 	D3DVSD_STREAM(0),
 	D3DVSD_REG(0, D3DVSDT_FLOAT3),
@@ -258,15 +268,13 @@ static D3DVERTEXELEMENT9 dwVecFull[] =
 	D3DVSD_REG(5, D3DVSDT_D3DCOLOR),
 	D3DVSD_END()
 };*/
-SGeomFormatInfo geometryFormatInfo[6] =
-{
-	{ 0, 0, dwVecFull, 0 },//SGeomVec::ID, sizeof(SGeomVec), dwVec },
-	{ 0, 0, dwVecFull, 0 },//{ SGeomVecT1::ID, sizeof(SGeomVecT1), dwVecT },
-	{ 0, 0, dwVecFull, 0 },//SGeomVecT1C1::ID, sizeof(SGeomVecT1C1), dwVecTC, D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1 },
-	{ 0, 0, dwVecFull, 0 },//{ SGeomVecT2C1::ID, sizeof(SGeomVecT2C1), dwVecT2C },
-	{ SGeomVecT2C1::ID, sizeof(SGeomVecT2C1), dwVecT2C1,  D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX2 },
-	{ SGeomVecFull::ID, sizeof(SGeomVecFull), dwVecFull, 0 }
-};
+SGeomFormatInfo geometryFormatInfo[6] = {
+	{ 0, 0, dwVecFull, 0 }, //SGeomVec::ID, sizeof(SGeomVec), dwVec },
+	{ 0, 0, dwVecFull, 0 }, //{ SGeomVecT1::ID, sizeof(SGeomVecT1), dwVecT },
+	{ 0, 0, dwVecFull, 0 }, //SGeomVecT1C1::ID, sizeof(SGeomVecT1C1), dwVecTC, D3DFVF_XYZ|D3DFVF_DIFFUSE|D3DFVF_TEX1 },
+	{ 0, 0, dwVecFull, 0 }, //{ SGeomVecT2C1::ID, sizeof(SGeomVecT2C1), dwVecT2C },
+	{ SGeomVecT2C1::ID, sizeof( SGeomVecT2C1 ), dwVecT2C1, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX2 },
+	{ SGeomVecFull::ID, sizeof( SGeomVecFull ), dwVecFull, 0 } };
 
 static void ApplyRenderState( D3DRENDERSTATETYPE state, uint32_t dwVal )
 {
@@ -274,7 +282,7 @@ static void ApplyRenderState( D3DRENDERSTATETYPE state, uint32_t dwVal )
 	if ( renderStates[state] != dwVal )
 	{
 		pDevice->SetRenderState( state, dwVal );
-		renderStates[ state ] = dwVal;
+		renderStates[state] = dwVal;
 	}
 }
 
@@ -312,13 +320,13 @@ static void ApplyRenderStates( STextureStageState *pRS )
 
 static void SetVSConst( int nReg, const CVec4 *pData, int nSize )
 {
-	pDevice->SetVertexShaderConstantF( nReg, (const float*)pData, nSize );
+	pDevice->SetVertexShaderConstantF( nReg, (const float *)pData, nSize );
 }
 
 static void SetPSConst( int nReg, const CVec4 *pData, int nSize )
 {
 	if ( bHardwarePixelShaders )
-		pDevice->SetPixelShaderConstantF( nReg, (const float*)pData, nSize );
+		pDevice->SetPixelShaderConstantF( nReg, (const float *)pData, nSize );
 	else
 	{
 		ASSERT( nReg == 0 && nSize == 1 );
@@ -337,7 +345,7 @@ static void SetPixelShader( const SPShader &s )
 	ApplyRenderStates( pCurrentPixelShader->pStateTSS );
 	if ( bHardwarePixelShaders )
 	{
-		hr = pDevice->SetPixelShader( pixelShaders[ s.nID - 1 ] );
+		hr = pDevice->SetPixelShader( pixelShaders[s.nID - 1] );
 		ASSERT( D3D_OK == hr );
 	}
 	else
@@ -365,24 +373,24 @@ static void SetVertexShader( CGeometry *pVB, int nShaderID )
 			//pDevice->SetRenderState( D3DRS_LIGHTING, (dwFVF & D3DFVF_DIFFUSE) ? FALSE : TRUE );
 			switch ( nShaderID )
 			{
-			case TNLVS_NONE:
-				ApplyRenderState( D3DRS_LIGHTING, FALSE );
-				ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
-				break;
-			case TNLVS_TEXTRANS:
-				ApplyRenderState( D3DRS_LIGHTING, FALSE );
-				ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2 );
-				break;
-			case TNLVS_VERTEX_COLOR:
-				ApplyRenderState( D3DRS_LIGHTING, TRUE );
-				ApplyRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL );
-				ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
-				break;
-			case TNLVS_VERTEX_COLOR_AND_ALPHA:
-				ApplyRenderState( D3DRS_LIGHTING, TRUE );
-				ApplyRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1 );
-				ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
-				break;
+				case TNLVS_NONE:
+					ApplyRenderState( D3DRS_LIGHTING, FALSE );
+					ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
+					break;
+				case TNLVS_TEXTRANS:
+					ApplyRenderState( D3DRS_LIGHTING, FALSE );
+					ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2 );
+					break;
+				case TNLVS_VERTEX_COLOR:
+					ApplyRenderState( D3DRS_LIGHTING, TRUE );
+					ApplyRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL );
+					ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
+					break;
+				case TNLVS_VERTEX_COLOR_AND_ALPHA:
+					ApplyRenderState( D3DRS_LIGHTING, TRUE );
+					ApplyRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1 );
+					ApplyRenderState( 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE );
+					break;
 			}
 		}
 		return;
@@ -391,39 +399,39 @@ static void SetVertexShader( CGeometry *pVB, int nShaderID )
 	if ( nFormatID != nLastUsedVDeclaration )
 	{
 		nLastUsedVDeclaration = nFormatID;
-		HRESULT hRes = pDevice->SetVertexDeclaration( vertexDeclarations[ nFormatID ] );
+		HRESULT hRes = pDevice->SetVertexDeclaration( vertexDeclarations[nFormatID] );
 		ASSERT( hRes == D3D_OK );
 	}
 	if ( nLastUsedVShader != nShaderID )
 	{
 		nLastUsedVShader = nShaderID;
-		HRESULT hRes = pDevice->SetVertexShader( vertexShaders[ nShaderID - 1 ] );
+		HRESULT hRes = pDevice->SetVertexShader( vertexShaders[nShaderID - 1] );
 		ASSERT( hRes == D3D_OK );
 	}
 }
 
 // render modes application
 
-template<>
+template <>
 void Apply( const SFBTransform &trans )
 {
 	if ( bTnLDevice )
 	{
 		SHMatrix m;
 		Transpose( &m, trans.forward );
-		pDevice->SetTransform( D3DTS_PROJECTION, (const D3DMATRIX*)&m );
+		pDevice->SetTransform( D3DTS_PROJECTION, (const D3DMATRIX *)&m );
 		return;
 	}
-	SetVSConst( 10, (CVec4*)&trans.forward, 4 );
+	SetVSConst( 10, (CVec4 *)&trans.forward, 4 );
 	// calculate world space camera pos and store it to c6
 	CVec4 ptRes;
-	trans.backward.RotateHVector( &ptRes, CVec4(0,0,1,0) );
+	trans.backward.RotateHVector( &ptRes, CVec4( 0, 0, 1, 0 ) );
 	if ( ptRes.w <= 0 )
 		ptRes = -ptRes;
 	SetVSConst( 9, &ptRes, 1 );
 }
 
-template<>
+template <>
 void Apply( const EWireframe &wireFrame )
 {
 	if ( wireFrame == WIREFRAME_ON )
@@ -432,7 +440,7 @@ void Apply( const EWireframe &wireFrame )
 		ApplyRenderState( D3DRS_FILLMODE, D3DFILL_SOLID );
 }
 
-template<>
+template <>
 void Apply( const EDithering &a )
 {
 	if ( a == DITHER_ON )
@@ -441,7 +449,7 @@ void Apply( const EDithering &a )
 		ApplyRenderState( D3DRS_DITHERENABLE, FALSE );
 }
 
-template<>
+template <>
 void Apply( const EAlphaCombineMode &alphaMode )
 {
 	switch ( alphaMode )
@@ -497,7 +505,7 @@ void Apply( const EAlphaCombineMode &alphaMode )
 	}
 }
 
-template<>
+template <>
 void Apply( const SStencilMode &m )
 {
 	switch ( m.mode )
@@ -593,7 +601,7 @@ void Apply( const SStencilMode &m )
 			ApplyRenderState( D3DRS_STENCILREF, m.nVal );
 			ApplyRenderState( D3DRS_STENCILWRITEMASK, m.nMask );
 			break;
-/*		case STENCIL_TEST:
+			/*		case STENCIL_TEST:
 			ApplyRenderState( D3DRS_STENCILENABLE, TRUE );
 			ApplyRenderState( D3DRS_STENCILFUNC, D3DCMP_EQUAL );
 			ApplyRenderState( D3DRS_STENCILPASS, D3DSTENCILOP_KEEP );
@@ -623,11 +631,11 @@ void Apply( const SStencilMode &m )
 		case STENCIL_TEST_REPLACE:
 			ApplyRenderState( D3DRS_STENCILENABLE, TRUE );
 			ApplyRenderState( D3DRS_STENCILFUNC, D3DCMP_EQUAL );
-			ApplyRenderState( D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE );//INVERT );
+			ApplyRenderState( D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE ); //INVERT );
 			ApplyRenderState( D3DRS_STENCILFAIL, D3DSTENCILOP_KEEP );
 			ApplyRenderState( D3DRS_STENCILREF, m.nVal );
 			ApplyRenderState( D3DRS_STENCILMASK, m.nMask );
-			ApplyRenderState( D3DRS_STENCILWRITEMASK, 0xffffffff );//0x80 );
+			ApplyRenderState( D3DRS_STENCILWRITEMASK, 0xffffffff ); //0x80 );
 			break;
 		case STENCIL_GREATER:
 			ApplyRenderState( D3DRS_STENCILENABLE, TRUE );
@@ -640,7 +648,7 @@ void Apply( const SStencilMode &m )
 	}
 }
 
-template<>
+template <>
 void Apply( const EDepthMode &depth )
 {
 	switch ( depth )
@@ -688,35 +696,34 @@ void Apply( const EDepthMode &depth )
 	}
 }
 
-template<>
+template <>
 void Apply( const ECullMode &cull )
 {
-  switch ( cull )
-  {
-    case CULL_CW:
-      ApplyRenderState( D3DRS_CULLMODE, D3DCULL_CW );
-      break;
-    case CULL_CCW:
-      ApplyRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
-      break;
-    case CULL_NONE:
-      ApplyRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
-      break;
-  }
+	switch ( cull )
+	{
+		case CULL_CW:
+			ApplyRenderState( D3DRS_CULLMODE, D3DCULL_CW );
+			break;
+		case CULL_CCW:
+			ApplyRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
+			break;
+		case CULL_NONE:
+			ApplyRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
+			break;
+	}
 }
 
-template<>
+template <>
 void Apply( const EColorWriteMask &colorMode )
 {
-	uint32_t dwFlags =
-		(( colorMode & COLORWRITE_RED ) ? D3DCOLORWRITEENABLE_RED : 0) |
-		(( colorMode & COLORWRITE_GREEN ) ? D3DCOLORWRITEENABLE_GREEN : 0) |
-		(( colorMode & COLORWRITE_BLUE ) ? D3DCOLORWRITEENABLE_BLUE : 0) |
-		(( colorMode & COLORWRITE_ALPHA ) ? D3DCOLORWRITEENABLE_ALPHA : 0);
+	uint32_t dwFlags = ( ( colorMode & COLORWRITE_RED ) ? D3DCOLORWRITEENABLE_RED : 0 ) |
+	                   ( ( colorMode & COLORWRITE_GREEN ) ? D3DCOLORWRITEENABLE_GREEN : 0 ) |
+	                   ( ( colorMode & COLORWRITE_BLUE ) ? D3DCOLORWRITEENABLE_BLUE : 0 ) |
+	                   ( ( colorMode & COLORWRITE_ALPHA ) ? D3DCOLORWRITEENABLE_ALPHA : 0 );
 	ApplyRenderState( D3DRS_COLORWRITEENABLE, dwFlags );
 }
 
-template<>
+template <>
 void Apply( const SFogParams &fog )
 {
 	if ( IsTnLDevice() )
@@ -724,14 +731,12 @@ void Apply( const SFogParams &fog )
 
 	CVec4 v19[2]; // v19[1] = vColor
 
-	float fMaxDist =  10.0f;
+	float fMaxDist = 10.0f;
 	float fMinDist = +20.0f;
-
 
 	float fAlpha = 1.0f / ( fog.fMaxDist - fog.fMinDist );
 	float fAlph2 = 1.0f / ( fog.fMaxZDis - fog.fMinZDis );
-	v19[0].Set( -fAlpha, fAlpha * fog.fMaxDist,
-	            -fAlph2, fAlph2 * fog.fMaxZDis );
+	v19[0].Set( -fAlpha, fAlpha * fog.fMaxDist, -fAlph2, fAlph2 * fog.fMaxZDis );
 	v19[1].Set( fog.vColor, 1 );
 	nFogModeColor = GetDWORDColor( CVec4( fog.vColor, 1 ) );
 
@@ -747,7 +752,7 @@ void Apply( const SFogParams &fog )
 		ApplyRenderState( D3DRS_FOGCOLOR, nFogModeColor );
 }
 
-template<>
+template <>
 void Apply( const EFogMode &fog )
 {
 	if ( IsTnLDevice() )
@@ -755,17 +760,17 @@ void Apply( const EFogMode &fog )
 
 	switch ( fog )
 	{
-	case FOG_NONE:
-		ApplyRenderState( D3DRS_FOGENABLE, FALSE );
-		break;
-	case FOG_BLACK:
-		ApplyRenderState( D3DRS_FOGCOLOR, 0 );
-		ApplyRenderState( D3DRS_FOGENABLE, TRUE );
-		break;
-	case FOG_NORMAL:
-		ApplyRenderState( D3DRS_FOGCOLOR, nFogModeColor );
-		ApplyRenderState( D3DRS_FOGENABLE, TRUE );
-		break;
+		case FOG_NONE:
+			ApplyRenderState( D3DRS_FOGENABLE, FALSE );
+			break;
+		case FOG_BLACK:
+			ApplyRenderState( D3DRS_FOGCOLOR, 0 );
+			ApplyRenderState( D3DRS_FOGENABLE, TRUE );
+			break;
+		case FOG_NORMAL:
+			ApplyRenderState( D3DRS_FOGCOLOR, nFogModeColor );
+			ApplyRenderState( D3DRS_FOGENABLE, TRUE );
+			break;
 	}
 }
 
@@ -803,7 +808,7 @@ static void SetTextureFilter( int n, EFilterMode filter )
 	{
 		ApplySamplerState( n, D3DSAMP_MAGFILTER, D3DTEXF_POINT );
 		ApplySamplerState( n, D3DSAMP_MINFILTER, D3DTEXF_POINT );
-		ApplySamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_POINT );//D3DTEXF_POINT );
+		ApplySamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_POINT ); //D3DTEXF_POINT );
 	}
 	else
 	{
@@ -812,7 +817,7 @@ static void SetTextureFilter( int n, EFilterMode filter )
 			nUseAnisotropy = (std::min)( nUseAnisotropy, (int)devCaps.MaxAnisotropy );
 			TrySetAnisotropicMagFilter( n );
 			TrySetAnisotropicMinFilter( n );
-			ApplySamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );//D3DTEXF_LINEAR );//D3DTEXF_POINT );
+			ApplySamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR ); //D3DTEXF_LINEAR );//D3DTEXF_POINT );
 			ApplySamplerState( n, D3DSAMP_MAXANISOTROPY, nUseAnisotropy );
 		}
 		else
@@ -871,10 +876,9 @@ static void SetRT( IDirect3DSurface9 *pTB, IDirect3DSurface9 *pZB )
 
 static const CRenderContext *pCurrentRenderContext;
 CRenderContext::CRenderContext()
-	: alpha(COMBINE_NONE), stencil( SStencilMode(STENCIL_NONE) ), depth(DEPTH_NORMAL),
-	cull(CULL_CW), colorWrite( COLORWRITE_ALL ), targetMode( RTM_SCREEN ), fog(FOG_NONE),
-	pTarget(0), nMipLevel(0), pPixelShader(&psDiffuse), nVertexShader(1),
-	nRegister(0), pOutstandingStream(0)
+		: alpha( COMBINE_NONE ), stencil( SStencilMode( STENCIL_NONE ) ), depth( DEPTH_NORMAL ), cull( CULL_CW ),
+			colorWrite( COLORWRITE_ALL ), targetMode( RTM_SCREEN ), fog( FOG_NONE ), pTarget( 0 ), nMipLevel( 0 ),
+			pPixelShader( &psDiffuse ), nVertexShader( 1 ), nRegister( 0 ), pOutstandingStream( 0 )
 {
 	Identity( &transform.forward );
 	Identity( &transform.backward );
@@ -1001,17 +1005,17 @@ void CRenderContext::SetRegister( int _nRegister )
 {
 	ASSERT( pOutstandingStream == 0 );
 	ASSERT( targetMode == RTM_REGISTERS );
-	if ( _nRegister >= 0 && (_nRegister & N_REGISTER_MASK ) < nScreenRegisters )
+	if ( _nRegister >= 0 && ( _nRegister & N_REGISTER_MASK ) < nScreenRegisters )
 		nRegister = _nRegister;
 	else
-		ASSERT(0);
+		ASSERT( 0 );
 	if ( pCurrentRenderContext == this )
 		ApplyRenderTarget();
 }
 
 bool CopyScreenToRegister( int _nRegister )
 {
-	if ( _nRegister >= 0 && (_nRegister & N_REGISTER_MASK ) < nScreenRegisters )
+	if ( _nRegister >= 0 && ( _nRegister & N_REGISTER_MASK ) < nScreenRegisters )
 	{
 		ReplaceTextureSurface( pRegisters[_nRegister], 0, pScreenColor );
 		return true;
@@ -1053,23 +1057,23 @@ void CRenderContext::ApplyRenderTarget() const
 {
 	switch ( targetMode )
 	{
-	case RTM_SCREEN:
-		SetRT( pScreenColor, pScreenDepth );
-		break;
-	case RTM_TEXTURE:
-		if ( IsValid( pTarget ) )
-		{
-			NWin32Helper::com_ptr<IDirect3DSurface9> pTB;
-			GetSurface( pTarget, nMipLevel, &pTB );
-			//D3DSURFACE_DESC ddsd;
-			//pTB->GetDesc( &ddsd );
-			CDynamicCast<I2DBuffer> pTargetBuf( pTarget );
-			SetRT( pTB, pTargetBuf->GetSizeX() );
-		}
-		else
-			ASSERT(0);
-		break;
-	case RTM_REGISTERS:
+		case RTM_SCREEN:
+			SetRT( pScreenColor, pScreenDepth );
+			break;
+		case RTM_TEXTURE:
+			if ( IsValid( pTarget ) )
+			{
+				NWin32Helper::com_ptr<IDirect3DSurface9> pTB;
+				GetSurface( pTarget, nMipLevel, &pTB );
+				//D3DSURFACE_DESC ddsd;
+				//pTB->GetDesc( &ddsd );
+				CDynamicCast<I2DBuffer> pTargetBuf( pTarget );
+				SetRT( pTB, pTargetBuf->GetSizeX() );
+			}
+			else
+				ASSERT( 0 );
+			break;
+		case RTM_REGISTERS:
 		{
 			NWin32Helper::com_ptr<IDirect3DSurface9> pTB;
 			GetSurface( pRegisters[nRegister & N_REGISTER_MASK], 0, &pTB );
@@ -1090,19 +1094,19 @@ void CRenderContext::ApplyRenderTarget() const
 			}*/
 		}
 		break;
-	case RTM_CUBETEXTURE:
-		if ( IsValid( pCubeTarget ) )
-		{
-			NWin32Helper::com_ptr<IDirect3DSurface9> pTB;
-			GetSurface( pCubeTarget, (EFace)nRegister, nMipLevel, &pTB );
-			//D3DSURFACE_DESC ddsd;
-			//pTB->GetDesc( &ddsd );
-			CDynamicCast<ICubeBuffer> pTargetBuf( pCubeTarget );
-			SetRT( pTB, pTargetBuf->GetSize() );
-		}
-		else
-			ASSERT(0);
-		break;
+		case RTM_CUBETEXTURE:
+			if ( IsValid( pCubeTarget ) )
+			{
+				NWin32Helper::com_ptr<IDirect3DSurface9> pTB;
+				GetSurface( pCubeTarget, (EFace)nRegister, nMipLevel, &pTB );
+				//D3DSURFACE_DESC ddsd;
+				//pTB->GetDesc( &ddsd );
+				CDynamicCast<ICubeBuffer> pTargetBuf( pCubeTarget );
+				SetRT( pTB, pTargetBuf->GetSize() );
+			}
+			else
+				ASSERT( 0 );
+			break;
 	}
 }
 
@@ -1120,7 +1124,8 @@ void CRenderContext::ClearBuffers( uint32_t dwColor )
 	ASSERT( pOutstandingStream == 0 );
 	HRESULT hr;
 	Use();
-	uint32_t dwFlags = b16BitMode ? D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER : D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL;
+	uint32_t dwFlags =
+			b16BitMode ? D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER : D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL;
 	hr = pDevice->Clear( 0, 0, dwFlags, dwColor, 1, 0 );
 	ASSERT( D3D_OK == hr );
 }
@@ -1130,7 +1135,7 @@ void CRenderContext::ClearZBuffer()
 	ASSERT( pOutstandingStream == 0 );
 	HRESULT hr;
 	Use();
-	uint32_t dwFlags = b16BitMode ? D3DCLEAR_ZBUFFER : D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL;
+	uint32_t dwFlags = b16BitMode ? D3DCLEAR_ZBUFFER : D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL;
 	hr = pDevice->Clear( 0, 0, dwFlags, 0, 1, 0 );
 	ASSERT( D3D_OK == hr );
 }
@@ -1204,7 +1209,7 @@ void CRenderContext::SetTnlTexTransform( const SHMatrix &_m )
 {
 	SHMatrix m;
 	Transpose( &m, _m );
-	pDevice->SetTransform( D3DTS_TEXTURE0, (const D3DMATRIX*)&m );
+	pDevice->SetTransform( D3DTS_TEXTURE0, (const D3DMATRIX *)&m );
 }
 
 void CRenderContext::SetPSConst( int nReg, const CVec4 *pData, int nSize )
@@ -1275,7 +1280,6 @@ static void DoValidateDevice( int nPID, int nVID )
 	ASSERT( D3D_OK == hr && dwPasses == 1 );
 }
 
-
 void CRenderContext::StartStream( CGeometry *pGeom )
 {
 	ASSERT( pOutstandingStream == 0 );
@@ -1288,7 +1292,7 @@ void CRenderContext::StartStream( CGeometry *pGeom )
 	pGeom->SetVertexStream();
 	pOutstandingStream = pGeom->GetVertexStream();
 
-	NGfx::SetVertexShader( pGeom, nVertexShader);
+	NGfx::SetVertexShader( pGeom, nVertexShader );
 
 	if ( bDoValidateDevice )
 		DoValidateDevice( pPixelShader->nID, nVertexShader );
@@ -1357,7 +1361,6 @@ void CRenderContext::AddLineStrip( CGeometry *pGeom, const unsigned short *pIndi
 	NGfx::AddLineStrip( pGeom, pIndices, nLines );
 }
 
-
 // GLOBAL FUNCTIONS
 
 void SetWireframe( EWireframe wire )
@@ -1372,17 +1375,19 @@ void SetDithering( EDithering a )
 
 void GetRegisterSize( CTRect<float> *pRes )
 {
-	pRes->x1 = 0; pRes->x2 = ptRegisterBufferSize.x;
-	pRes->y1 = 0; pRes->y2 = ptRegisterBufferSize.y;
+	pRes->x1 = 0;
+	pRes->x2 = ptRegisterBufferSize.x;
+	pRes->y1 = 0;
+	pRes->y2 = ptRegisterBufferSize.y;
 }
 
-CTexture* GetRegisterTexture( int nRegister )
+CTexture *GetRegisterTexture( int nRegister )
 {
 	ASSERT( nRegister >= 0 && nRegister < nScreenRegisters );
 	return pRegisters[nRegister];
 }
 
-CTexture* GetDepthRegisterTexture()
+CTexture *GetDepthRegisterTexture()
 {
 	return pDepthRegister;
 }
@@ -1392,7 +1397,6 @@ bool IsNVidiaNP2Bug()
 	return bNVHackNP2;
 }
 
-
 // INITIALISATION / FINALISATION CODE
 
 static bool AddZBuffer( D3DFORMAT format, int nSize )
@@ -1401,9 +1405,9 @@ static bool AddZBuffer( D3DFORMAT format, int nSize )
 	if ( i == sharedZBuffers.end() )
 	{
 		HRESULT hr;
-		hr = pDevice->CreateDepthStencilSurface( nSize, nSize, format, D3DMULTISAMPLE_NONE, 0,
-			TRUE, sharedZBuffers[ nSize ].GetAddr(), 0 );
-		if FAILED(hr)
+		hr = pDevice->CreateDepthStencilSurface(
+				nSize, nSize, format, D3DMULTISAMPLE_NONE, 0, TRUE, sharedZBuffers[nSize].GetAddr(), 0 );
+		if FAILED ( hr )
 			return false;
 	}
 	return true;
@@ -1421,22 +1425,23 @@ bool InitZBuffer( D3DFORMAT format )
 		ptScreenSize = CTPoint<int>( nXRSize, nYRSize );
 		nXSize = 1024;
 		nYSize = 512;
-		if ( !bBanNP2 && (devCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) != 0 || (devCaps.TextureCaps & D3DPTEXTURECAPS_POW2) == 0 )
+		if ( !bBanNP2 && ( devCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL ) != 0 ||
+		     ( devCaps.TextureCaps & D3DPTEXTURECAPS_POW2 ) == 0 )
 		{
 #ifdef _MAPEDIT
-			nXSize = Float2Int( nXRSize * sqrt(fRegisterResolution) );
-			nYSize = Float2Int( nYRSize * sqrt(fRegisterResolution) );
+			nXSize = Float2Int( nXRSize * sqrt( fRegisterResolution ) );
+			nYSize = Float2Int( nYRSize * sqrt( fRegisterResolution ) );
 #else
-			nXSize = Float2Int( nXRSize * sqrt(fRegisterResolution) );
-			nYSize = Float2Int( nYRSize * (564.0f / 768.0f ) * sqrt(fRegisterResolution) );
+			nXSize = Float2Int( nXRSize * sqrt( fRegisterResolution ) );
+			nYSize = Float2Int( nYRSize * ( 564.0f / 768.0f ) * sqrt( fRegisterResolution ) );
 #endif
 		}
 		nXSize = (std::min)( nXSize, (int)devCaps.MaxTextureWidth );
 		nYSize = (std::min)( nYSize, (int)devCaps.MaxTextureHeight );
 		ptRegisterBufferSize = CTPoint<int>( nXSize, nYSize );
-		hr = pDevice->CreateDepthStencilSurface( nXSize, nYSize, format, D3DMULTISAMPLE_NONE, 0,
-			FALSE, pRegisterDepth.GetAddr(), 0 );
-		if FAILED(hr)
+		hr = pDevice->CreateDepthStencilSurface(
+				nXSize, nYSize, format, D3DMULTISAMPLE_NONE, 0, FALSE, pRegisterDepth.GetAddr(), 0 );
+		if FAILED ( hr )
 			return false;
 		ASSERT( nScreenRegisters <= N_MAX_REGISTERS );
 		for ( int k = 0; k < nScreenRegisters; ++k )
@@ -1460,12 +1465,12 @@ bool InitZBuffer( D3DFORMAT format )
 	hr = pDevice->GetDepthStencilSurface( pScreenDepth.GetAddr() );
 	D3DASSERT( hr, "GetDepthStencilSurface failed" );
 	// обрядовый ритуал, без которого nVidia не работает
-	for ( int k = 0; k < nScreenRegisters; ++ k )
+	for ( int k = 0; k < nScreenRegisters; ++k )
 	{
 		NWin32Helper::com_ptr<IDirect3DSurface9> pTB;
 		GetSurface( pRegisters[k], 0, &pTB );
 		SetRT( pTB, pRegisterDepth );
-		hr = pDevice->Clear( 0, 0, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER, 0, 1, 0 );
+		hr = pDevice->Clear( 0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0, 1, 0 );
 		ASSERT( D3D_OK == hr );
 	}
 	SetRT( pScreenColor, pScreenDepth );
@@ -1505,8 +1510,8 @@ static void InitTextureStage( int n )
 
 	pDevice->SetSamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
 
-	float fMipBias = 0;//-1;
-	pDevice->SetSamplerState( n, D3DSAMP_MIPMAPLODBIAS, *(uint32_t*)&fMipBias );
+	float fMipBias = 0; //-1;
+	pDevice->SetSamplerState( n, D3DSAMP_MIPMAPLODBIAS, *(uint32_t *)&fMipBias );
 	lastUsedAddressMode[n] = CLAMP;
 	TSFilterMode[n] = FILTER_BEST;
 	pDevice->SetSamplerState( n, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );
@@ -1516,18 +1521,18 @@ static void InitTextureStage( int n )
 
 static void InitStateBlocks()
 {
-	ASSERT( std::size(pixelShaders) >= std::size(psAllShaders) );
-	ASSERT( std::size(vertexShaders) >= std::size(vsAllShaders) );
-	ASSERT( std::size(vertexDeclarations) >= std::size(geometryFormatInfo) );
+	ASSERT( std::size( pixelShaders ) >= std::size( psAllShaders ) );
+	ASSERT( std::size( vertexShaders ) >= std::size( vsAllShaders ) );
+	ASSERT( std::size( vertexDeclarations ) >= std::size( geometryFormatInfo ) );
 	ZERO_ARRAY( pixelShaders );
 	ZERO_ARRAY( vertexShaders );
 	ZERO_ARRAY( vertexDeclarations );
 	if ( bHardwarePixelShaders )
 	{
-		for ( int k = 0; k < std::size(psAllShaders); ++k )
+		for ( int k = 0; k < std::size( psAllShaders ); ++k )
 		{
 			const SPShader &sha = *psAllShaders[k];
-			DWORD *pShader = sha.pShader11;//bHardwarePixelShaders14 ? psAllShaders[k]->pShader14 : psAllShaders[k]->pShader;
+			DWORD *pShader = sha.pShader11; //bHardwarePixelShaders14 ? psAllShaders[k]->pShader14 : psAllShaders[k]->pShader;
 			if ( bHardwarePixelShaders14 && sha.pShader14 != 0 )
 				pShader = sha.pShader14;
 			if ( bHardwarePixelShaders20a && pShader == 0 )
@@ -1541,55 +1546,58 @@ static void InitStateBlocks()
 			if ( pShader && *pShader == 0xffff0200 && !bHardwarePixelShaders20 )
 				continue;
 			HRESULT hr;
-			hr = pDevice->CreatePixelShader(
-				pShader,
-				pixelShaders[k].GetAddr() );
+			hr = pDevice->CreatePixelShader( pShader, pixelShaders[k].GetAddr() );
 			D3DASSERT( hr, "CreatePixelShader failed" );
 		}
 	}
 	if ( !bTnLDevice )
 	{
-		for ( int k = 0; k < std::size(vsAllShaders); ++k )
+		for ( int k = 0; k < std::size( vsAllShaders ); ++k )
 		{
 			const SVShader &sha = *vsAllShaders[k];
 			DWORD *pShader = sha.pShader11;
 			if ( !pShader )
 				continue;
 			HRESULT hr;
-			hr = pDevice->CreateVertexShader(
-				pShader,
-				vertexShaders[k].GetAddr() );
+			hr = pDevice->CreateVertexShader( pShader, vertexShaders[k].GetAddr() );
 			D3DASSERT( hr, "CreateVertexShader failed" );
 		}
 
-		for ( int k = 0; k < std::size(geometryFormatInfo); ++k )
+		for ( int k = 0; k < std::size( geometryFormatInfo ); ++k )
 		{
 			const D3DVERTEXELEMENT9 *p = geometryFormatInfo[k].pdwVSD;
 			if ( p )
 			{
 				HRESULT hr;
-				hr = pDevice->CreateVertexDeclaration(
-					p,
-					vertexDeclarations[k].GetAddr() );
+				hr = pDevice->CreateVertexDeclaration( p, vertexDeclarations[k].GetAddr() );
 				D3DASSERT( hr, "CreateVertexDeclaration failed" );
 			}
 		}
 	}
 }
 
-inline bool IsPow2( int n ) { return GetNextPow2(n) == n; }
-inline bool IsPow2( const CTPoint<int> &t ) { return IsPow2(t.x) && IsPow2(t.y); }
+inline bool IsPow2( int n )
+{
+	return GetNextPow2( n ) == n;
+}
+inline bool IsPow2( const CTPoint<int> &t )
+{
+	return IsPow2( t.x ) && IsPow2( t.y );
+}
 static CVec4 GetRegisterMapScale( const CTPoint<int> &vRegSize )
 {
 	//const CTRect<int> &vp = ptRegisterBufferSize; //rViewport;//ptRegisterSize;
 	//float fXHalf = vp.Width() * 0.5f, fYHalf = vp.Height() * 0.5f;
 	CTPoint<int> buf;
-	if ( !IsPow2(vRegSize) && bNVHackNP2 )
-		buf = CTPoint<int>(1,1);
+	if ( !IsPow2( vRegSize ) && bNVHackNP2 )
+		buf = CTPoint<int>( 1, 1 );
 	else
 		buf = vRegSize; // true register size
 	float fXHalf = vRegSize.x * 0.5f, fYHalf = vRegSize.y * 0.5f;
-	return CVec4( fXHalf/buf.x, -fYHalf/buf.y, fXHalf/buf.x + 0.5/buf.x, fYHalf/buf.y + 0.5/buf.y );// + (1-600.0/1024) );
+	return CVec4( fXHalf / buf.x,
+	              -fYHalf / buf.y,
+	              fXHalf / buf.x + 0.5 / buf.x,
+	              fYHalf / buf.y + 0.5 / buf.y ); // + (1-600.0/1024) );
 }
 
 static CVec4 GetRegisterMapScale()
@@ -1607,9 +1615,9 @@ static void InitEffects()
 	pDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 	pDevice->SetRenderState( D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_COLOR1 );
 	pDevice->SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_MATERIAL );
-	memset( renderStates, 0xcc, sizeof(renderStates) );
-	memset( tssStates, 0xcc, sizeof(tssStates) );
-	memset( samplerStates, 0xcc, sizeof(samplerStates) );
+	memset( renderStates, 0xcc, sizeof( renderStates ) );
+	memset( tssStates, 0xcc, sizeof( tssStates ) );
+	memset( samplerStates, 0xcc, sizeof( samplerStates ) );
 	for ( int nTemp = 0; nTemp < 8; nTemp++ )
 		InitTextureStage( nTemp );
 
@@ -1631,13 +1639,13 @@ static void InitEffects()
 	else
 	{
 		CVec4 c[9];
-		c[0] = CVec4(0,0,0,0);
-		c[1] = CVec4(1,1,1,1);
-		c[2] = CVec4(0.5f, 1, 2, 4);
+		c[0] = CVec4( 0, 0, 0, 0 );
+		c[1] = CVec4( 1, 1, 1, 1 );
+		c[2] = CVec4( 0.5f, 1, 2, 4 );
 		c[3] = CVec4( 2.0f * 255 / 254, -256.0f / 254, 7, 0 );
-		c[4] = CVec4(0.25, 1/16.0, 0, 4096 );
+		c[4] = CVec4( 0.25, 1 / 16.0, 0, 4096 );
 		//c[5] = ?
-		c[6] = CVec4( 1.0f / N_VEC_FULL_TEX_SIZE, 1.0f/65536, 0.5f, 0 );
+		c[6] = CVec4( 1.0f / N_VEC_FULL_TEX_SIZE, 1.0f / 65536, 0.5f, 0 );
 		c[7] = GetRegisterMapScale();
 		SetVSConst( 0, &c[0], 8 );
 	}
@@ -1673,7 +1681,6 @@ void DoneEffects()
 	ZERO_ARRAY( vertexDeclarations );
 }
 
-
 bool IsUingRegisters()
 {
 	return rtInfo.nRegisters > 0;
@@ -1691,8 +1698,8 @@ void DoneRender()
 	pDevice->SetVertexDeclaration( 0 );
 }
 
-START_REGISTER(GfxRender)
-	REGISTER_VAR_EX( "gfx_lag", NGlobal::VarIntHandler, &nMaxLag, 1, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_register_resolution", NGlobal::VarFloatHandler, &fRegisterResolution, 1.0f, STORAGE_USER )
+START_REGISTER( GfxRender )
+REGISTER_VAR_EX( "gfx_lag", NGlobal::VarIntHandler, &nMaxLag, 1, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_register_resolution", NGlobal::VarFloatHandler, &fRegisterResolution, 1.0f, STORAGE_USER )
 FINISH_REGISTER
 }

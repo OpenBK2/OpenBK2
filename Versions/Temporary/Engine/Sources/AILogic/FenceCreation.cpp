@@ -31,14 +31,12 @@ float CFenceCreation::GetPrice()
 }
 
 CFenceCreation::CFenceCreation( const int nPlayer, const bool bAllowAIModification )
-: CLongObjectCreation ( nPlayer, bAllowAIModification ), bCannot( false ),
-	bSayAck( false ), bTmpNonCheatPath( false ), line( 0, 0, 0 ), nCurIndex( -1 ), wAngle( 0 )
+		: CLongObjectCreation( nPlayer, bAllowAIModification ), bCannot( false ), bSayAck( false ),
+			bTmpNonCheatPath( false ), line( 0, 0, 0 ), nCurIndex( -1 ), wAngle( 0 )
 {
 }
 
-void CFenceCreation::LockNext()
-{
-}
+void CFenceCreation::LockNext() {}
 
 void CFenceCreation::BuildNext()
 {
@@ -70,7 +68,7 @@ bool CFenceCreation::CanPlaceOnTerrain( CGivenPassabilityStObject *pObj ) const
 	return true;
 }
 
-void CFenceCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate )
+void CFenceCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate )
 {
 	if ( vPoints.empty() )
 		return;
@@ -88,10 +86,10 @@ void CFenceCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate 
 		for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
 			if ( !GetAIMap()->IsTileInside( *it ) || ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
-				pUpdate->impossibleToBuildTiles.push_back( CVec2(it->x, it->y) );
+				pUpdate->impossibleToBuildTiles.push_back( CVec2( it->x, it->y ) );
 			else
 			{
-				pUpdate->buildTiles.push_back( CVec2(it->x, it->y) );
+				pUpdate->buildTiles.push_back( CVec2( it->x, it->y ) );
 				bCanBuildCurrent = false;
 			}
 		}
@@ -114,15 +112,16 @@ bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool
 	fenceSegements.clear();
 
 	const SFenceRPGStats *pRPG = theUnitCreation.GetWireFence();
-	SplitLineToSegrments( &vPoints, vFrom, vTo, SConsts::TILE_SIZE *2 );
+	SplitLineToSegrments( &vPoints, vFrom, vTo, SConsts::TILE_SIZE * 2 );
 	const uint16_t wDir = GetDirectionByVector( vTo - vFrom );
 	wAngle = GetLineAngle( vFrom, vTo );
-	if ( vPoints.size() <= 1 ) return false;
+	if ( vPoints.size() <= 1 )
+		return false;
 
 	bool switcher = false;
 	for ( int i = 0; i < vPoints.size() - 1; ++i )
 	{
-		CObj<CFence> pObj = new CFence( pRPG, CVec3(vPoints[i],0.0f), pRPG->fMaxHP, wDir, GetPlayer(), 0 );
+		CObj<CFence> pObj = new CFence( pRPG, CVec3( vPoints[i], 0.0f ), pRPG->fMaxHP, wDir, GetPlayer(), 0 );
 		//
 		if ( !bCheckLock || CanPlaceOnTerrain( pObj ) )
 		{
@@ -153,18 +152,24 @@ bool CFenceCreation::IsCegmentToBeBuilt( class CFence *pObj ) const
 	pObj->GetBoundRect( &r1 );
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + SConsts::TILE_SIZE * 5;
 
-	for ( CUnitsIter<0,2> iter( 0, ANY_PARTY, CVec2(pObj->GetCenter().x,pObj->GetCenter().y), fRadius ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0, 2> iter( 0, ANY_PARTY, CVec2( pObj->GetCenter().x, pObj->GetCenter().y ), fRadius );
+	      !iter.IsFinished();
+	      iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
 		if ( !pUnit->GetStats()->IsInfantry() )
 		{
 			SRect rect = pUnit->GetUnitRect();
-			rect.InitRect( rect.center, rect.dir, rect.lengthAhead + SConsts::TILE_SIZE, rect.lengthBack + SConsts::TILE_SIZE, rect.width + SConsts::TILE_SIZE );
+			rect.InitRect( rect.center,
+			               rect.dir,
+			               rect.lengthAhead + SConsts::TILE_SIZE,
+			               rect.lengthBack + SConsts::TILE_SIZE,
+			               rect.width + SConsts::TILE_SIZE );
 
 			if ( r1.IsIntersected( rect ) )
 			{
 				if ( pUnit->GetPlayer() == GetPlayer() && EUSN_REST == pUnit->GetState()->GetName() && pUnit->CanMove() )
-					(*iter)->UnlockTiles();
+					( *iter )->UnlockTiles();
 			}
 		}
 	}
@@ -172,14 +177,14 @@ bool CFenceCreation::IsCegmentToBeBuilt( class CFence *pObj ) const
 	pObj->GetCoveredTiles( &tiles );
 	for ( std::list<SVector>::iterator it = tiles.begin(); it != tiles.end(); ++it )
 	{
-		const SStaticObjectRPGStats * pStats = checked_cast<const SStaticObjectRPGStats *>(pObj->GetStats());
+		const SStaticObjectRPGStats *pStats = checked_cast<const SStaticObjectRPGStats *>( pObj->GetStats() );
 		if ( GetTerrain()->IsLocked( *it, (EAIClasses)pStats->nAIPassabilityClass ) )
 			return false;
 	}
 	return true;
 }
 
-void CFenceCreation::GetUnitsPreventing( std::list< CPtr<CAIUnit> > *units )
+void CFenceCreation::GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units )
 {
 	SRect r1;
 	fenceSegements[nCurIndex]->GetBoundRect( &r1 );
@@ -222,11 +227,11 @@ const CVec2 CFenceCreation::GetNextPoint( const int nPlace, const int nMaxPlace 
 {
 	NI_ASSERT( nMaxPlace, "builders number = 0" );
 
-	const CVec2 vDir			= GetVectorByDirection( wAngle );
-	const CVec2 vDirPerp	( vDir.y, -vDir.x );
+	const CVec2 vDir = GetVectorByDirection( wAngle );
+	const CVec2 vDirPerp( vDir.y, -vDir.x );
 
 	SRect rect;
 	fenceSegements[nCurIndex]->GetBoundRect( &rect );
 
-	return vPoints[nCurIndex]  + vDirPerp * SConsts::TILE_SIZE * 2.0f * nPlace / nMaxPlace;
+	return vPoints[nCurIndex] + vDirPerp * SConsts::TILE_SIZE * 2.0f * nPlace / nMaxPlace;
 }

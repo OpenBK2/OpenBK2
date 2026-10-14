@@ -18,7 +18,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 std::vector<uint8_t> ReadFile( const std::string &szPath )
 {
@@ -28,7 +29,8 @@ std::vector<uint8_t> ReadFile( const std::string &szPath )
 
 uint32_t ReadU32( const std::vector<uint8_t> &data, size_t nOffset )
 {
-	return ( uint32_t( data[nOffset] ) << 24 ) | ( uint32_t( data[nOffset + 1] ) << 16 ) | ( uint32_t( data[nOffset + 2] ) << 8 ) | data[nOffset + 3];
+	return ( uint32_t( data[nOffset] ) << 24 ) | ( uint32_t( data[nOffset + 1] ) << 16 ) |
+	       ( uint32_t( data[nOffset + 2] ) << 8 ) | data[nOffset + 3];
 }
 
 // The bytes of one table of an sfnt font, from its table directory
@@ -38,7 +40,7 @@ std::vector<uint8_t> ReadTable( const std::vector<uint8_t> &font, const char *ps
 	for ( int i = 0; i < nTables; ++i )
 	{
 		const size_t nRecord = 12 + i * 16;
-		if ( std::string( reinterpret_cast<const char*>( &font[nRecord] ), 4 ) == pszTag )
+		if ( std::string( reinterpret_cast<const char *>( &font[nRecord] ), 4 ) == pszTag )
 		{
 			const uint32_t nOffset = ReadU32( font, nRecord + 8 );
 			const uint32_t nLength = ReadU32( font, nRecord + 12 );
@@ -57,13 +59,25 @@ struct SPair
 
 // HarfBuzz's answers, see the top of the file; the Cyrillic pairs are named in
 // Latin transliteration
-const SPair PAIRS[] =
-{
-	{ "AV", 1, 198, -39 }, { "VA", 198, 1, -39 }, { "To", 170, 338, -63 }, { "Ta", 170, 218, -65 },
-	{ "LT", 103, 170, -78 }, { "Yo", 205, 338, -60 }, { "P,", 152, 706, -103 }, { "Te", 170, 261, -63 },
-	{ "Ty", 170, 423, -60 }, { "g.", 566, 705, 0 }, { "Ta (Cyrillic)", 473, 563, -65 }, { "TA (Cyrillic)", 473, 445, -41 },
-	{ "Ku (Cyrillic)", 464, 592, -3 }, { "G. (Cyrillic)", 448, 705, -53 }, { "AU (Cyrillic)", 445, 474, 0 },
-	{ "av", 218, 416, -3 }, { "rv", 373, 416, 0 }, { "f.", 284, 705, -13 },
+const SPair PAIRS[] = {
+	{ "AV", 1, 198, -39 },
+	{ "VA", 198, 1, -39 },
+	{ "To", 170, 338, -63 },
+	{ "Ta", 170, 218, -65 },
+	{ "LT", 103, 170, -78 },
+	{ "Yo", 205, 338, -60 },
+	{ "P,", 152, 706, -103 },
+	{ "Te", 170, 261, -63 },
+	{ "Ty", 170, 423, -60 },
+	{ "g.", 566, 705, 0 },
+	{ "Ta (Cyrillic)", 473, 563, -65 },
+	{ "TA (Cyrillic)", 473, 445, -41 },
+	{ "Ku (Cyrillic)", 464, 592, -3 },
+	{ "G. (Cyrillic)", 448, 705, -53 },
+	{ "AU (Cyrillic)", 445, 474, 0 },
+	{ "av", 218, 416, -3 },
+	{ "rv", 373, 416, 0 },
+	{ "f.", 284, 705, -13 },
 };
 
 // The font is game data, which a checkout of the sources alone does not have;

@@ -8,7 +8,7 @@ namespace NGScene
 
 // CLightLoader
 
-CFileRequest* CLightLoader::CreateRequest()
+CFileRequest *CLightLoader::CreateRequest()
 {
 	return CreateFileRequiest( "Lights", SIntResKey( GetKey().tKey->uid, -1 ) );
 }
@@ -42,7 +42,7 @@ void CLightAnimator::Recalc()
 		value.bEnd = false;
 		return;
 	}
-	float fTObject = (time - stBeginTime) * pInstance->fSpeed / 1000.f - pInstance->fOffset * pInstance->fSpeed;
+	float fTObject = ( time - stBeginTime ) * pInstance->fSpeed / 1000.f - pInstance->fOffset * pInstance->fSpeed;
 	if ( fTObject < 0 )
 	{
 		value.bEnd = false;
@@ -66,9 +66,9 @@ void CLightAnimator::Recalc()
 		int nCurCycle = int( fTObject / pInstance->fEndCycle ) + 1;
 		if ( pInstance->nCycleCount && nCurCycle > pInstance->nCycleCount )
 			nCurCycle = pInstance->nCycleCount;
-		fTAnim = fTObject - (nCurCycle - 1) * pInstance->fEndCycle;
-		if ( pInstance->nCycleCount == 0
-			|| fTObject < pLight->fTEnd + (pInstance->nCycleCount - 1) * pInstance->fEndCycle )
+		fTAnim = fTObject - ( nCurCycle - 1 ) * pInstance->fEndCycle;
+		if ( pInstance->nCycleCount == 0 ||
+		     fTObject < pLight->fTEnd + ( pInstance->nCycleCount - 1 ) * pInstance->fEndCycle )
 			value.bEnd = false;
 	}
 	if ( fTAnim >= pLight->fTStart && fTAnim < pLight->fTEnd )

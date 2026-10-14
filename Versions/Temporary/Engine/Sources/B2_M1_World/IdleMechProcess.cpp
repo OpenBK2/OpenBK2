@@ -12,8 +12,11 @@
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x12118C80, CIdleMechProcess );
 
-CIdleMechProcess::CIdleMechProcess( int nObjectID, const std::vector<std::string> &effectBones, const NDb::SComplexEffect *pComplexEffect, const bool _bRandomLocator ) :
-	nID( nObjectID ), pEffect( pComplexEffect->GetSceneEffect() ), times( 0 ), bRandomLocator( _bRandomLocator )
+CIdleMechProcess::CIdleMechProcess( int nObjectID,
+                                    const std::vector<std::string> &effectBones,
+                                    const NDb::SComplexEffect *pComplexEffect,
+                                    const bool _bRandomLocator )
+		: nID( nObjectID ), pEffect( pComplexEffect->GetSceneEffect() ), times( 0 ), bRandomLocator( _bRandomLocator )
 {
 	bones.resize( effectBones.size() );
 	for ( int i = 0; i < effectBones.size(); ++i )
@@ -53,7 +56,7 @@ bool CIdleMechProcess::Update( const NTimer::STime &time )
 		}
 		else
 		{
-			for ( int i = 0; i< times.size(); ++i )
+			for ( int i = 0; i < times.size(); ++i )
 			{
 				if ( times[i] <= time )
 				{

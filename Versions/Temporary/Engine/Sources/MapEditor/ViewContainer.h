@@ -5,7 +5,6 @@
 typedef std::unordered_map<CDBID, CViewSet> CViewSetMap;
 typedef std::unordered_map<std::string, CViewSetMap> CViewSetMapTypeMap;
 
-
 class CViewContainer : public IViewContainer
 {
 	OBJECT_NOCOPY_METHODS( CViewContainer );

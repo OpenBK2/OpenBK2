@@ -35,20 +35,19 @@ void CAnimUnitMech::Stopped()
 	}
 }
 
-void CAnimUnitMech::AnimationSet( int nAnimation )
-{
-}
+void CAnimUnitMech::AnimationSet( int nAnimation ) {}
 
 void CAnimUnitMech::Segment()
 {
 	if ( pOwner->IsAlive() )
 	{
-		if ( movingState.state == SMovingState::EMS_STOPPED_TO_MOVING || movingState.state == SMovingState::EMS_MOVING_TO_STOPPED )
+		if ( movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ||
+		     movingState.state == SMovingState::EMS_MOVING_TO_STOPPED )
 		{
 			if ( movingState.timeOfIntentionStart + 200 < curTime )
 			{
-				movingState.state =
-					movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ? SMovingState::EMS_MOVING : SMovingState::EMS_STOPPED;
+				movingState.state = movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ? SMovingState::EMS_MOVING
+				                                                                             : SMovingState::EMS_STOPPED;
 
 				if ( movingState.state == SMovingState::EMS_STOPPED )
 				{

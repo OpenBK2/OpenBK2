@@ -11,11 +11,11 @@
 
 REGISTER_EXPORTER_IN_DLL( ClientGameConsts, CClientGameConstsExporter )
 
-EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator* pManipulator,
-																												const std::string &rszObjectTypeName,
-																												const std::string &rszObjectName,
-																												bool bForce,
-																												EXPORT_TYPE exportType )
+EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator *pManipulator,
+                                                       const std::string &rszObjectTypeName,
+                                                       const std::string &rszObjectName,
+                                                       bool bForce,
+                                                       EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
 	{
@@ -35,7 +35,8 @@ EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator* pManipulato
 			if ( CManipulatorManager::GetValue( &szFileName, pManipulator, szName ) )
 			{
 				const std::string szSrcFileName = pUserData->constUserData.szExportSourceFolder + szFileName;
-				const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szFileName;
+				const std::string szDstFileName =
+						Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szFileName;
 				if ( CheckFilesUpdated( szSrcFileName, szDstFileName, bForce ) == false )
 					NFile::CopyFile( szSrcFileName, szDstFileName );
 			}
@@ -43,7 +44,8 @@ EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator* pManipulato
 	}
 	// copy noises
 	std::string szNoisesFileName;
-	if ( CManipulatorManager::GetValue(&szNoisesFileName, pManipulator, "Noises") != false && !szNoisesFileName.empty() )
+	if ( CManipulatorManager::GetValue( &szNoisesFileName, pManipulator, "Noises" ) != false &&
+	     !szNoisesFileName.empty() )
 		ExportFilesList( szNoisesFileName, bForce, "Noises" );
 	//
 	return ER_SUCCESS;

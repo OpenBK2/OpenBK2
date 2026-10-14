@@ -5,7 +5,7 @@
 namespace NDb
 {
 
-template<class T>
+template <class T>
 class CRndInstance
 {
 	struct SDbElement
@@ -30,12 +30,12 @@ class CRndInstance
 		float fValue;
 		int nIndex;
 
-		SSector() : fValue( 0.0f ), nIndex( 0 ) { }
-		SSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) { }
+		SSector() : fValue( 0.0f ), nIndex( 0 ) {}
+		SSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) {}
 	};
 
-	template<class TGetFloatRandomFunc>
-	const T* Get( TGetFloatRandomFunc randomFunc, const vector<int> &filter, bool bWithFilter ) const
+	template <class TGetFloatRandomFunc>
+	const T *Get( TGetFloatRandomFunc randomFunc, const vector<int> &filter, bool bWithFilter ) const
 	{
 		vector<SSector> sectors;
 		sectors.reserve( elements.size() );
@@ -60,7 +60,7 @@ class CRndInstance
 		int nRight = sectors.size() - 1;
 		while ( nLeft < nRight )
 		{
-			int nMed = (nLeft + nRight) / 2;
+			int nMed = ( nLeft + nRight ) / 2;
 			if ( fValue >= sectors[nMed].fValue )
 				nLeft = nMed + 1;
 			else
@@ -72,17 +72,17 @@ class CRndInstance
 	}
 
 public:
-	CRndInstance() { }
+	CRndInstance() {}
 
-	template<class TGetFloatRandomFunc>
-	const T* Get( TGetFloatRandomFunc randomFunc ) const
+	template <class TGetFloatRandomFunc>
+	const T *Get( TGetFloatRandomFunc randomFunc ) const
 	{
 		vector<int> filter;
 		return Get( randomFunc, filter, false );
 	}
 
-	template<class TGetFloatRandomFunc>
-	const T* Get( TGetFloatRandomFunc randomFunc, const vector<int> &filter ) const
+	template <class TGetFloatRandomFunc>
+	const T *Get( TGetFloatRandomFunc randomFunc, const vector<int> &filter ) const
 	{
 		return Get( randomFunc, filter, true );
 	}
@@ -104,7 +104,8 @@ public:
 
 				elements[i].pObj = 0;
 				if ( dbElements[i].nTypeID != 0 && dbElements[i].nObjectID != 0 )
-					elements[i].pObj = const_cast<T*>( CastToDBUserObject( NDb::GetResource(dbElements[i].nTypeID, dbElements[i].nObjectID), (T*)0 ) );
+					elements[i].pObj = const_cast<T *>(
+							CastToDBUserObject( NDb::GetResource( dbElements[i].nTypeID, dbElements[i].nObjectID ), (T *)0 ) );
 			}
 		}
 		else
@@ -130,19 +131,20 @@ public:
 	}
 };
 
-
-
 struct SDBRndSector
 {
 	float fValue;
 	int nIndex;
 
-	SDBRndSector() : fValue( 0.0f ), nIndex( 0 ) { }
-	SDBRndSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) { }
+	SDBRndSector() : fValue( 0.0f ), nIndex( 0 ) {}
+	SDBRndSector( int _nIndex, float _fValue ) : fValue( _fValue ), nIndex( _nIndex ) {}
 };
 
-template<class TRndType, class TGetFloatRandomFunc>
-const typename TRndType::TRefType* GetRnd( const TRndType &rndType, TGetFloatRandomFunc randomFunc, const vector<typename TRndType::EFlagType> &filter, bool bWithFilter )
+template <class TRndType, class TGetFloatRandomFunc>
+const typename TRndType::TRefType *GetRnd( const TRndType &rndType,
+                                           TGetFloatRandomFunc randomFunc,
+                                           const vector<typename TRndType::EFlagType> &filter,
+                                           bool bWithFilter )
 {
 	vector<SDBRndSector> sectors;
 	sectors.reserve( rndType.elements.size() );
@@ -167,7 +169,7 @@ const typename TRndType::TRefType* GetRnd( const TRndType &rndType, TGetFloatRan
 	int nRight = sectors.size() - 1;
 	while ( nLeft < nRight )
 	{
-		int nMed = (nLeft + nRight) / 2;
+		int nMed = ( nLeft + nRight ) / 2;
 		if ( fValue >= sectors[nMed].fValue )
 			nLeft = nMed + 1;
 		else
@@ -178,22 +180,23 @@ const typename TRndType::TRefType* GetRnd( const TRndType &rndType, TGetFloatRan
 	return rndType.elements[sectors[nLeft].nIndex].pObj;
 }
 
-template<class TRndType, class TGetFloatRandomFunc>
-const typename TRndType::TRefType* GetRnd( const TRndType &rndType, TGetFloatRandomFunc randomFunc )
+template <class TRndType, class TGetFloatRandomFunc>
+const typename TRndType::TRefType *GetRnd( const TRndType &rndType, TGetFloatRandomFunc randomFunc )
 {
 	vector<typename TRndType::EFlagType> filter;
 	return GetRnd( rndType, randomFunc, filter, false );
 }
 
-template<class TRndType, class TGetFloatRandomFunc>
-const typename TRndType::TRefType* GetRnd( const TRndType &rndType, TGetFloatRandomFunc randomFunc, const vector<typename TRndType::EFlagType> &filter )
+template <class TRndType, class TGetFloatRandomFunc>
+const typename TRndType::TRefType *
+GetRnd( const TRndType &rndType, TGetFloatRandomFunc randomFunc, const vector<typename TRndType::EFlagType> &filter )
 {
 	return GetRnd( rndType, randomFunc, filter, true );
 }
 
 struct SRndReference
 {
-	void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const { }
+	void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const {}
 };
 
 }

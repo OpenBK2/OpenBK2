@@ -11,7 +11,7 @@
 extern CGroupLogic theGroupLogic;
 
 CExecutorFormationFirstAid::CExecutorFormationFirstAid( CFormation *_pUnit )
-: CExecutorUnitBase( TID_FIRST_AID, 10, NDb::ABILITY_FIRST_AID ), pFormation( _pUnit )
+		: CExecutorUnitBase( TID_FIRST_AID, 10, NDb::ABILITY_FIRST_AID ), pFormation( _pUnit )
 {
 	SetAbilityDesc( pFormation->GetUnitAbilityDesc( NDb::ABILITY_FIRST_AID ) );
 }
@@ -36,13 +36,12 @@ void CExecutorFormationFirstAid::SwitchingOffStart()
 	//theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pFormation, false );
 }
 
-void CExecutorFormationFirstAid::SwitchOnEnd()
-{
-}
+void CExecutorFormationFirstAid::SwitchOnEnd() {}
 
 void CExecutorFormationFirstAid::SwitchOnStart( const class CAICommand *pCommand )
 {
-	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_FIRST_AID, pCommand ? pCommand->ToUnitCmd().nObjectID : 0 ), pFormation, false );
+	theGroupLogic.UnitCommand(
+			SAIUnitCmd( ACTION_MOVE_FIRST_AID, pCommand ? pCommand->ToUnitCmd().nObjectID : 0 ), pFormation, false );
 }
 
 bool CExecutorFormationFirstAid::ActivateDuringDisable()
@@ -53,11 +52,11 @@ bool CExecutorFormationFirstAid::ActivateDuringDisable()
 int CExecutorFormationFirstAid::Segment()
 {
 	// if autocast on - check if units around need healing.
-	if ( IsAutocast() && pFormation->GetState()->IsRestState() &&
-			 pFormation->IsFree() &&
-		 CFormationFirstAidState::IsAnyNeedHealing( pFormation->GetParty(), pFormation->GetCenter() ) )
+	if ( IsAutocast() && pFormation->GetState()->IsRestState() && pFormation->IsFree() &&
+	     CFormationFirstAidState::IsAnyNeedHealing( pFormation->GetParty(), pFormation->GetCenter() ) )
 	{
-		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_FIRST_AID, float(EID_ABILITY_ACTIVATE) ), pFormation, false );
+		theGroupLogic.UnitCommand(
+				SAIUnitCmd( ACTION_COMMAND_FIRST_AID, float( EID_ABILITY_ACTIVATE ) ), pFormation, false );
 	}
 	return CExecutorUnitBase::Segment();
 }
@@ -93,7 +92,7 @@ void CExecutorFormationFirstAid::RegisterOnEvents( IExecutorContainer *pContaine
 
 int CExecutorFormationFirstAid::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CExecutorUnitBase*>( this ) );
+	saver.Add( 1, static_cast<CExecutorUnitBase *>( this ) );
 	saver.Add( 2, &pFormation );
 	return 0;
 }

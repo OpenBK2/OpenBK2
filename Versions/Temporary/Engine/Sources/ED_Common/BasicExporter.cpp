@@ -16,13 +16,12 @@ bool CBasicExporter::LoadExporterSettings() const
 		if ( szObjectTypeName.empty() )
 			return false;
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		pUserData->SerializeSettings( textMapSettings, szObjectTypeName, SUserData::EXPORTER_SETINGS, SUserData::ST_LOAD	);
+		pUserData->SerializeSettings( textMapSettings, szObjectTypeName, SUserData::EXPORTER_SETINGS, SUserData::ST_LOAD );
 		if ( textMapSettings.IsEmpty() )
 		{
-			std::string szText = fmt::format("Can't get {} exporter settings,\n"
-				"check UserData.xml in \"ObjectTypeDataMap\" section.\n",
-				szObjectTypeName.c_str()
-				);
+			std::string szText = fmt::format( "Can't get {} exporter settings,\n"
+			                                  "check UserData.xml in \"ObjectTypeDataMap\" section.\n",
+			                                  szObjectTypeName.c_str() );
 			Log( LT_ERROR, szText );
 			return false;
 		}

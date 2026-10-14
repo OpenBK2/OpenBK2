@@ -15,7 +15,6 @@ void PostLoad( bool bInEditor )
 	vGroundAmbientColor *= 0.25f;
 	*/
 
-
 	if ( !bWhitening )
 	{
 		vLightColor *= 0.25f;

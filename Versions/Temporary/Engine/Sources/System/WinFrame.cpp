@@ -29,11 +29,11 @@
 
 using namespace NWinFrame;
 
-static HWND hWnd = 0;                            // window handle
+static HWND hWnd = 0; // window handle
 static volatile bool bExit = false;
 static volatile bool bActive = true;
 static std::mutex msgs;
-static std::list< SWindowsMsg > msgList;
+static std::list<SWindowsMsg> msgList;
 static NWinCursor::TFrame hCursor;
 static bool bManageCursor = true;
 static bool bGameWindow = false;
@@ -143,8 +143,8 @@ static void ApplyMouseBounds()
 	GameToClient( &right, &bottom );
 	// Round inward so the pointer cannot enter a black bar. Camera dragging
 	// still locks to one physical pixel even when a game pixel is scaled up.
-	RECT rect = { LONG( std::ceil( left ) ), LONG( std::ceil( top ) ),
-		LONG( std::floor( right ) ), LONG( std::floor( bottom ) ) };
+	RECT rect = {
+		LONG( std::ceil( left ) ), LONG( std::ceil( top ) ), LONG( std::floor( right ) ), LONG( std::floor( bottom ) ) };
 	rect.right = bCameraDrag ? rect.left + 1 : (std::max)( rect.left + 1, rect.right );
 	rect.bottom = bCameraDrag ? rect.top + 1 : (std::max)( rect.top + 1, rect.bottom );
 #if BOOST_OS_WINDOWS
@@ -164,11 +164,11 @@ static void ApplyMouseBounds()
 	const SDL_WindowFlags flags = SDL_GetWindowFlags( pWindow );
 	// The simulation can stay active while alt-tabbed, but cursor confinement
 	// must follow actual window focus, including bounds updates during a reset.
-	if ( bMouseAcquired && (flags & SDL_WINDOW_INPUT_FOCUS) != 0 &&
-		(flags & (SDL_WINDOW_MINIMIZED | SDL_WINDOW_HIDDEN)) == 0 )
+	if ( bMouseAcquired && ( flags & SDL_WINDOW_INPUT_FOCUS ) != 0 &&
+	     ( flags & ( SDL_WINDOW_MINIMIZED | SDL_WINDOW_HIDDEN ) ) == 0 )
 	{
-		const SDL_Rect sdlRect = { int( rect.left ), int( rect.top ),
-			int( rect.right - rect.left ), int( rect.bottom - rect.top ) };
+		const SDL_Rect sdlRect = {
+			int( rect.left ), int( rect.top ), int( rect.right - rect.left ), int( rect.bottom - rect.top ) };
 		if ( bCameraDrag )
 		{
 			SDL_SetWindowMouseRect( pWindow, &sdlRect );
@@ -207,8 +207,13 @@ void NWinFrame::FitGameWindowToMonitor()
 	if ( GetMonitorInfo( MonitorFromWindow( hWnd, MONITOR_DEFAULTTONEAREST ), &monitor ) )
 	{
 		const RECT &rect = monitor.rcMonitor;
-		SetWindowPos( hWnd, HWND_NOTOPMOST, rect.left, rect.top,
-			rect.right - rect.left, rect.bottom - rect.top, SWP_NOACTIVATE | SWP_SHOWWINDOW );
+		SetWindowPos( hWnd,
+		              HWND_NOTOPMOST,
+		              rect.left,
+		              rect.top,
+		              rect.right - rect.left,
+		              rect.bottom - rect.top,
+		              SWP_NOACTIVATE | SWP_SHOWWINDOW );
 	}
 #else
 	// Desktop fullscreen keeps the desktop mode and also works on Wayland,
@@ -223,8 +228,8 @@ void NWinFrame::FitGameWindowToMonitor()
 using namespace NWin32Helper;
 
 static HWND hWndSplashScreen;
-static HINSTANCE hInstance = 0;                  // instance handle
-static ATOM atomWndClassName = 0;                // atom window class name identification (assigned during registration)
+static HINSTANCE hInstance = 0;   // instance handle
+static ATOM atomWndClassName = 0; // atom window class name identification (assigned during registration)
 
 // Force disable app minimisation - alt + tab is still ok though
 static bool s_bMinimizeOnDeactivate = false;
@@ -232,7 +237,7 @@ static bool bAppAlwaysActive = true;
 
 struct SSaveCursorClip
 {
-	~SSaveCursorClip() { ClipCursor(0); }
+	~SSaveCursorClip() { ClipCursor( 0 ); }
 } doSaveCursorClip;
 
 static void Report( const char *pszText, int nVal = -0x7fffffff )
@@ -313,10 +318,10 @@ static void SetActive( bool _bActive )
 {
 	return; // no mimising/sleep allowed!
 
- 	if ( bAppAlwaysActive )
+	if ( bAppAlwaysActive )
 		return;
 
-	bActive = _bActive;        // activation flag
+	bActive = _bActive; // activation flag
 	if ( s_bMinimizeOnDeactivate )
 	{
 		if ( !bActive )
@@ -326,8 +331,8 @@ static void SetActive( bool _bActive )
 
 void NWinFrame::PumpMessages()
 {
-  // Now we are ready to recieve and process Windows messages.
-  MSG msg;
+	// Now we are ready to recieve and process Windows messages.
+	MSG msg;
 	// Keep character messages Unicode throughout retrieval and dispatch.
 	while ( PeekMessageW( &msg, 0, 0, 0, PM_NOREMOVE ) )
 	{
@@ -359,49 +364,62 @@ void SetEditorWnd( HWND _hWnd )
 
 void NWinFrame::Exit()
 {
-	PostQuitMessage(0);
+	PostQuitMessage( 0 );
 	//bClientExitReq = true;
 }
 
 static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam );
 bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned dwHeight, LPCSTR nIcon )
 {
-  // create and register class style
-        // Register the windows class
-  // An ANSI window delivers encoded bytes, which cannot be converted one
-  // WM_CHAR at a time when the process code page is UTF-8.
-  const std::wstring wszApp = UTF8ToWide( pszApp );
-  const std::wstring wszWnd = UTF8ToWide( pszWnd );
-  WNDCLASSW wndClass = { 0, WndProc, 0, 0, hInstance,
-                        LoadIconA( hInstance, nIcon ),
-                        0,//LoadCursor( NULL, IDC_ARROW ),
-                        (HBRUSH)GetStockObject(NULL_BRUSH), // NULL_BRUSH // WHITE_BRUSH
-                        NULL, wszWnd.c_str() };
+	// create and register class style
+	// Register the windows class
+	// An ANSI window delivers encoded bytes, which cannot be converted one
+	// WM_CHAR at a time when the process code page is UTF-8.
+	const std::wstring wszApp = UTF8ToWide( pszApp );
+	const std::wstring wszWnd = UTF8ToWide( pszWnd );
+	WNDCLASSW wndClass = { 0,
+	                       WndProc,
+	                       0,
+	                       0,
+	                       hInstance,
+	                       LoadIconA( hInstance, nIcon ),
+	                       0,                                    //LoadCursor( NULL, IDC_ARROW ),
+	                       (HBRUSH)GetStockObject( NULL_BRUSH ), // NULL_BRUSH // WHITE_BRUSH
+	                       NULL,
+	                       wszWnd.c_str() };
 	wndClass.style |= CS_DBLCLKS;
- atomWndClassName = RegisterClassW( &wndClass );
+	atomWndClassName = RegisterClassW( &wndClass );
 
-  // Set the window's initial style
-  uint32_t dwWinStyle = WS_POPUP|WS_SYSMENU|WS_VISIBLE;//WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_THICKFRAME|WS_MINIMIZEBOX|WS_VISIBLE;
+	// Set the window's initial style
+	uint32_t dwWinStyle =
+			WS_POPUP | WS_SYSMENU | WS_VISIBLE; //WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_THICKFRAME|WS_MINIMIZEBOX|WS_VISIBLE;
 
-  // Create the render window
-  hWnd = CreateWindowW( wszWnd.c_str(), wszApp.c_str(), dwWinStyle,
-                         0, 0, dwWidth, dwHeight, 0L,
-                         0,//LoadMenu( hInstance, MAKEINTRESOURCE(IDR_MENU) ),
-                         hInstance, 0L );
+	// Create the render window
+	hWnd = CreateWindowW( wszWnd.c_str(),
+	                      wszApp.c_str(),
+	                      dwWinStyle,
+	                      0,
+	                      0,
+	                      dwWidth,
+	                      dwHeight,
+	                      0L,
+	                      0, //LoadMenu( hInstance, MAKEINTRESOURCE(IDR_MENU) ),
+	                      hInstance,
+	                      0L );
 
-  if ( !hWnd )
+	if ( !hWnd )
 	{
 		//ThrowException( "Can't create main app window\n" );
 		return false;
 	}
-  bGameWindow = true;
-  // show & update window
-  ShowWindow( hWnd, SW_SHOW );
-  UpdateWindow( hWnd );
-  // eliminate cursor once for this widow
+	bGameWindow = true;
+	// show & update window
+	ShowWindow( hWnd, SW_SHOW );
+	UpdateWindow( hWnd );
+	// eliminate cursor once for this widow
 	::SetCursor( hCursor );
 
-  return true;
+	return true;
 }
 
 static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam )
@@ -409,7 +427,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 	//Report( "WndProc_", uMsg );
 	//
 	bool bCallDefWindowProc = false;
-	NGlobal::CValue always_active = NGlobal::GetVar("force_app_always_active");
+	NGlobal::CValue always_active = NGlobal::GetVar( "force_app_always_active" );
 	switch ( uMsg )
 	{
 		case WM_PAINT:
@@ -417,59 +435,59 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			if ( GetUpdateRect(hWnd, &rect, FALSE) )
 				ValidateRect( hWnd, &rect );*/
 			break;
-    case WM_GETMINMAXINFO:
-      ((MINMAXINFO*)lParam)->ptMinTrackSize.x = 100;
-      ((MINMAXINFO*)lParam)->ptMinTrackSize.y = 100;
-      break;
-    case WM_ENTERSIZEMOVE:
-    // Halt frame movement while the app is sizing or moving
-			ASSERT(0);
-      break;
-    case WM_EXITSIZEMOVE:
-      break;
+		case WM_GETMINMAXINFO:
+			( (MINMAXINFO *)lParam )->ptMinTrackSize.x = 100;
+			( (MINMAXINFO *)lParam )->ptMinTrackSize.y = 100;
+			break;
+		case WM_ENTERSIZEMOVE:
+			// Halt frame movement while the app is sizing or moving
+			ASSERT( 0 );
+			break;
+		case WM_EXITSIZEMOVE:
+			break;
 		case WM_SETCURSOR:
 			::SetCursor( hCursor );
 			break;
-    case WM_NCHITTEST:
-      // Prevent the user from selecting the menu in fullscreen mode
-      //if( !m_bWindowed )
-      return HTCLIENT;
-      break;
-    case WM_POWERBROADCAST:
-      switch( wParam )
-      {
-        case PBT_APMQUERYSUSPEND:
-          // At this point, the app should save any data for open
-          // network connections, files, etc., and prepare to go into
-          // a suspended mode.
-          return TRUE;
+		case WM_NCHITTEST:
+			// Prevent the user from selecting the menu in fullscreen mode
+			//if( !m_bWindowed )
+			return HTCLIENT;
+			break;
+		case WM_POWERBROADCAST:
+			switch ( wParam )
+			{
+				case PBT_APMQUERYSUSPEND:
+					// At this point, the app should save any data for open
+					// network connections, files, etc., and prepare to go into
+					// a suspended mode.
+					return TRUE;
 
-        case PBT_APMRESUMESUSPEND:
-          // At this point, the app should recover any data, network
-          // connections, files, etc., and resume running from when
-          // the app was suspended.
-          return TRUE;
-      }
-      break;
-    case WM_SYSCOMMAND:
-      // Prevent moving/sizing and power loss in fullscreen mode
-      switch( wParam )
-      {
-        case SC_MOVE:
-        case SC_SIZE:
-        case SC_MAXIMIZE:
-        case SC_KEYMENU:
-        case SC_MONITORPOWER:
+				case PBT_APMRESUMESUSPEND:
+					// At this point, the app should recover any data, network
+					// connections, files, etc., and resume running from when
+					// the app was suspended.
+					return TRUE;
+			}
+			break;
+		case WM_SYSCOMMAND:
+			// Prevent moving/sizing and power loss in fullscreen mode
+			switch ( wParam )
+			{
+				case SC_MOVE:
+				case SC_SIZE:
+				case SC_MAXIMIZE:
+				case SC_KEYMENU:
+				case SC_MONITORPOWER:
 				case SC_SCREENSAVE:
-          //if( FALSE == m_bWindowed )
-          return 1; // in both modes is prevented
-          break;
-/*				case SC_RESTORE:
+					//if( FALSE == m_bWindowed )
+					return 1; // in both modes is prevented
+					break;
+					/*				case SC_RESTORE:
 					ShowWindow( hWnd, SW_RESTORE );
 					break;*/
-      }
-      break;
-/*
+			}
+			break;
+			/*
     case WM_CLOSE:
 			NInput::PostEvent( "try_exit_windows", 0, 0 );
       //PostQuitMessage(0);
@@ -477,9 +495,9 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 */
 		case WM_ACTIVATEAPP:
 			//Report( "WndProc::WM_activateapp ", wParam );
-			if (always_active.GetFloat() != 0)
+			if ( always_active.GetFloat() != 0 )
 			{
-				SetActive(true);
+				SetActive( true );
 				break;
 			}
 			SetActive( wParam != 0 );
@@ -497,20 +515,20 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 		case WM_ACTIVATE:
 			//if ( !(HIWORD(wParam)) )          // if window is not minimized
 			{
-				switch ( LOWORD(wParam) )
+				switch ( LOWORD( wParam ) )
 				{
-					case WA_CLICKACTIVE:					// activate window
+					case WA_CLICKACTIVE: // activate window
 					case WA_ACTIVE:
-						if ( (HIWORD(wParam)) == 0 )
+						if ( ( HIWORD( wParam ) ) == 0 )
 						{
 							if ( hWnd )
 								ApplyMouseBounds();
 						}
 						break;
-					case WA_INACTIVE:						// deactivate window
+					case WA_INACTIVE: // deactivate window
 						// Keeping simulation active must not trap the desktop pointer.
-						ClipCursor(0);
-						if (always_active.GetFloat() != 0)
+						ClipCursor( 0 );
+						if ( always_active.GetFloat() != 0 )
 							break;
 						SetActive( false );
 						//Report( "WndProc::WM_activate, WA_INACTIVE ", wParam );
@@ -549,18 +567,17 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			break;
 		}
 		case WM_KEYDOWN:
-			AddMsg( SWindowsMsg::KEY_DOWN, wParam, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF );
+			AddMsg( SWindowsMsg::KEY_DOWN, wParam, lParam & 0xFFFF, ( lParam >> 16 ) & 0xFFFF );
 			break;
 		case WM_KEYUP:
-			AddMsg( SWindowsMsg::KEY_UP, wParam, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF );
+			AddMsg( SWindowsMsg::KEY_UP, wParam, lParam & 0xFFFF, ( lParam >> 16 ) & 0xFFFF );
 			break;
 		case WM_CHAR:
-			AddMsg( SWindowsMsg::CHAR, wParam, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF );
+			AddMsg( SWindowsMsg::CHAR, wParam, lParam & 0xFFFF, ( lParam >> 16 ) & 0xFFFF );
 			break;
 		case WM_CLOSE:
-			AddMsg( SWindowsMsg::CLOSE, wParam, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF );
+			AddMsg( SWindowsMsg::CLOSE, wParam, lParam & 0xFFFF, ( lParam >> 16 ) & 0xFFFF );
 			return 0;
-
 	}
 	return DefWindowProcW( hWnd, uMsg, wParam, lParam );
 }
@@ -615,14 +632,14 @@ void NWinFrame::ShowCursor( bool bShow )
 void NWinFrame::FlashTaskbarIfInactive()
 {
 	HWND hwnd = NWinFrame::GetWnd();
-	if (!IsWindowVisible(hwnd) || GetForegroundWindow() != hwnd)
+	if ( !IsWindowVisible( hwnd ) || GetForegroundWindow() != hwnd )
 	{
 		FLASHWINFO fi = { 0 };
-		fi.cbSize = sizeof(FLASHWINFO);
+		fi.cbSize = sizeof( FLASHWINFO );
 		fi.hwnd = hwnd;
 		fi.dwFlags = FLASHW_TRAY;
 
-		FlashWindowEx(&fi);
+		FlashWindowEx( &fi );
 	}
 }
 
@@ -746,8 +763,7 @@ void NWinFrame::SetIcon( const std::string &szFileName )
 	// a filesystem path, not a VFS one, the same as the splash image: this file
 	// is installed beside the executable's data rather than packed
 	std::ifstream file( szFileName.c_str(), std::ios::binary );
-	const std::vector<uint8_t> buffer( ( std::istreambuf_iterator<char>( file ) ),
-	                                   std::istreambuf_iterator<char>() );
+	const std::vector<uint8_t> buffer( ( std::istreambuf_iterator<char>( file ) ), std::istreambuf_iterator<char>() );
 	std::vector<NWinImage::SImageInfo> infos;
 	if ( buffer.empty() || !NWinImage::GetImages( &infos, &buffer[0], buffer.size(), 0 ) )
 	{
@@ -777,9 +793,11 @@ void NWinFrame::SetIcon( const std::string &szFileName )
 	// vector holding them has stopped growing and moving them about
 	for ( int i = 0; i < images.size(); ++i )
 	{
-		SDL_Surface *pSurface = SDL_CreateSurfaceFrom( images[i].nWidth, images[i].nHeight,
-			SDL_PIXELFORMAT_ARGB8888, &images[i].pixels[0],
-			images[i].nWidth * static_cast<int>( sizeof( uint32_t ) ) );
+		SDL_Surface *pSurface = SDL_CreateSurfaceFrom( images[i].nWidth,
+		                                               images[i].nHeight,
+		                                               SDL_PIXELFORMAT_ARGB8888,
+		                                               &images[i].pixels[0],
+		                                               images[i].nWidth * static_cast<int>( sizeof( uint32_t ) ) );
 		if ( pSurface != 0 )
 		{
 			surfaces.push_back( pSurface );
@@ -827,67 +845,67 @@ void NWinFrame::PumpMessages()
 	{
 		switch ( event.type )
 		{
-		case SDL_EVENT_QUIT:
-			bExit = true;
-			break;
+			case SDL_EVENT_QUIT:
+				bExit = true;
+				break;
 
-		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-			AddMsg( SWindowsMsg::CLOSE, 0, 0, 0 );
-			break;
+			case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+				AddMsg( SWindowsMsg::CLOSE, 0, 0, 0 );
+				break;
 
-		case SDL_EVENT_MOUSE_MOTION:
-			AddMsg( SWindowsMsg::MOUSE_MOVE, static_cast<int>( event.motion.x ),
-			        static_cast<int>( event.motion.y ), 0 );
-			break;
+			case SDL_EVENT_MOUSE_MOTION:
+				AddMsg( SWindowsMsg::MOUSE_MOVE, static_cast<int>( event.motion.x ), static_cast<int>( event.motion.y ), 0 );
+				break;
 
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-		case SDL_EVENT_MOUSE_BUTTON_UP:
-			AddMouseButton( event.button );
-			break;
+			case SDL_EVENT_MOUSE_BUTTON_DOWN:
+			case SDL_EVENT_MOUSE_BUTTON_UP:
+				AddMouseButton( event.button );
+				break;
 
-		case SDL_EVENT_MOUSE_WHEEL:
-			// Posted for the same reason the Windows path posts it, and read by
-			// as much: ConvertMessage has no case for MOUSE_WHEEL, so it is
-			// dropped. The wheel the game acts on is the bindings' MOUSE_AXIS_Z.
-			AddMsg( SWindowsMsg::MOUSE_WHEEL, static_cast<int>( event.wheel.mouse_x ),
-			        static_cast<int>( event.wheel.mouse_y ), 0 );
-			break;
+			case SDL_EVENT_MOUSE_WHEEL:
+				// Posted for the same reason the Windows path posts it, and read by
+				// as much: ConvertMessage has no case for MOUSE_WHEEL, so it is
+				// dropped. The wheel the game acts on is the bindings' MOUSE_AXIS_Z.
+				AddMsg( SWindowsMsg::MOUSE_WHEEL,
+				        static_cast<int>( event.wheel.mouse_x ),
+				        static_cast<int>( event.wheel.mouse_y ),
+				        0 );
+				break;
 
-		case SDL_EVENT_KEY_DOWN:
-		case SDL_EVENT_KEY_UP:
-		{
-			// From the scancode. port/virtualkey.h says why not from the keycode.
-			const int nKey = SdlScancodeToVirtualKey( event.key.scancode );
-			if ( nKey != 0 )
+			case SDL_EVENT_KEY_DOWN:
+			case SDL_EVENT_KEY_UP:
 			{
-				// Windows folds auto-repeat into a count that the readers loop
-				// over; SDL sends one event per repeat, so the count is one.
-				AddMsg( event.key.down ? SWindowsMsg::KEY_DOWN : SWindowsMsg::KEY_UP, nKey, 1,
-				        event.key.scancode );
+				// From the scancode. port/virtualkey.h says why not from the keycode.
+				const int nKey = SdlScancodeToVirtualKey( event.key.scancode );
+				if ( nKey != 0 )
+				{
+					// Windows folds auto-repeat into a count that the readers loop
+					// over; SDL sends one event per repeat, so the count is one.
+					AddMsg( event.key.down ? SWindowsMsg::KEY_DOWN : SWindowsMsg::KEY_UP, nKey, 1, event.key.scancode );
+				}
+				break;
 			}
-			break;
-		}
 
-		case SDL_EVENT_TEXT_INPUT:
-			AddText( event.text.text );
-			break;
+			case SDL_EVENT_TEXT_INPUT:
+				AddText( event.text.text );
+				break;
 
-		case SDL_EVENT_WINDOW_MOVED:
-		case SDL_EVENT_WINDOW_RESIZED:
-		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
-		case SDL_EVENT_WINDOW_SHOWN:
-		case SDL_EVENT_WINDOW_HIDDEN:
-		case SDL_EVENT_WINDOW_MINIMIZED:
-		case SDL_EVENT_WINDOW_RESTORED:
-		case SDL_EVENT_WINDOW_FOCUS_GAINED:
-		case SDL_EVENT_WINDOW_FOCUS_LOST:
-			// Release on focus loss and restore the requested bounds on return.
-			if ( hWnd && event.window.windowID == SDL_GetWindowID( AsSdlWindow( hWnd ) ) )
-				ApplyMouseBounds();
-			break;
+			case SDL_EVENT_WINDOW_MOVED:
+			case SDL_EVENT_WINDOW_RESIZED:
+			case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+			case SDL_EVENT_WINDOW_SHOWN:
+			case SDL_EVENT_WINDOW_HIDDEN:
+			case SDL_EVENT_WINDOW_MINIMIZED:
+			case SDL_EVENT_WINDOW_RESTORED:
+			case SDL_EVENT_WINDOW_FOCUS_GAINED:
+			case SDL_EVENT_WINDOW_FOCUS_LOST:
+				// Release on focus loss and restore the requested bounds on return.
+				if ( hWnd && event.window.windowID == SDL_GetWindowID( AsSdlWindow( hWnd ) ) )
+					ApplyMouseBounds();
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 }

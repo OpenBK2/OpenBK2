@@ -20,9 +20,7 @@ CInterfaceMPLoading2D::CInterfaceMPLoading2D( const SParams &params )
 	MakeInterior( params );
 }
 
-CInterfaceMPLoading2D::~CInterfaceMPLoading2D()
-{
-}
+CInterfaceMPLoading2D::~CInterfaceMPLoading2D() {}
 
 void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 {
@@ -75,7 +73,8 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 
 			int nSizeX, nSizeY;
 			pWnd->GetPlacement( 0, 0, &nSizeX, &nSizeY );
-			pWnd->SetPlacement( nMinimapX + vPos.x - nSizeX * 0.5f, nMinimapY + vPos.y - nSizeY * 0.5f, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+			pWnd->SetPlacement(
+					nMinimapX + vPos.x - nSizeX * 0.5f, nMinimapY + vPos.y - nSizeY * 0.5f, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 
 			CPtr<CColorBackground> pColourBgr = new CColorBackground();
 			pColourBgr->nColor = pScenarioTracker->GetPlayerColor( player.nPlayerIndex ).dwColor;

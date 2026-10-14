@@ -9,34 +9,54 @@
 
 namespace NDb
 {
-	struct SMaterial;
-	struct STerrain;
-	struct STerrainSpotInstance;
-	struct SVSOInstance;
-	struct SVSOPoint;
-	struct SWater;
+struct SMaterial;
+struct STerrain;
+struct STerrainSpotInstance;
+struct SVSOInstance;
+struct SVSOPoint;
+struct SWater;
 };
 namespace NMeshData
 {
-	struct SMeshData;
+struct SMeshData;
 };
 namespace NGScene
 {
-	class IGameView;
-	class IMaterial;
+class IGameView;
+class IMaterial;
 };
 namespace NDebrisBuilder
 {
-	enum EMaskSmoothType { MASK_SMOOTH_SHARP, MASK_SMOOTH_MEDIUM, MASK_SMOOTH_BLUR };
-	enum EMaskType { MASK_STATIC, MASK_DYNAMIC, MASK_AI_PASSABILITY };
-	// Offline exporters share the existing mask algorithm with decoded GLTF meshes.
-	SCENEB2_EXPORT bool CreateMask( const std::vector<CVec3> &vertices, const std::vector<SModelTriangle> &triangles,
-		const CVec3 &minimum, const CVec3 &maximum, CArray2D<uint8_t> *image, CVec2 *origin,
-		EMaskType type, int smoothRadius );
+enum EMaskSmoothType
+{
+	MASK_SMOOTH_SHARP,
+	MASK_SMOOTH_MEDIUM,
+	MASK_SMOOTH_BLUR
+};
+enum EMaskType
+{
+	MASK_STATIC,
+	MASK_DYNAMIC,
+	MASK_AI_PASSABILITY
+};
+// Offline exporters share the existing mask algorithm with decoded GLTF meshes.
+SCENEB2_EXPORT bool CreateMask( const std::vector<CVec3> &vertices,
+                                const std::vector<SModelTriangle> &triangles,
+                                const CVec3 &minimum,
+                                const CVec3 &maximum,
+                                CArray2D<uint8_t> *image,
+                                CVec2 *origin,
+                                EMaskType type,
+                                int smoothRadius );
 };
 namespace NTerraBrush
 {
-	enum ETerraBrushUpdate { TERRA_BRUSH_ADD, TERRA_BRUSH_SUB, TERRA_BRUSH_OVERRIDE };
+enum ETerraBrushUpdate
+{
+	TERRA_BRUSH_ADD,
+	TERRA_BRUSH_SUB,
+	TERRA_BRUSH_OVERRIDE
+};
 }
 struct SRoadGFXInfo;
 struct SCragGFXInfo;
@@ -52,7 +72,10 @@ struct STerrainInfo;
 
 struct ITerraManager : public CObjectBase
 {
-	enum { tidTypeID = 0x10096401 };
+	enum
+	{
+		tidTypeID = 0x10096401
+	};
 	//
 	//virtual void SetStreamPathes( const string &szDstPath, const string &szSrcPath ) = 0;
 	virtual void Load( const NDb::STerrain *pDesc, CDataStream *pStream ) = 0;
@@ -87,12 +110,19 @@ struct ITerraManager : public CObjectBase
 	// entrenchment
 	virtual void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth ) = 0;
 	// debris creation
-	virtual void CreateDebris( const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin,
-														 const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
-														 const NDebrisBuilder::EMaskSmoothType smoothType = NDebrisBuilder::MASK_SMOOTH_SHARP ) = 0;
+	virtual void CreateDebris( const std::string &szFileName,
+	                           CArray2D<uint8_t> *pImage,
+	                           CVec2 *pOrigin,
+	                           const NDebrisBuilder::EMaskType maskType,
+	                           const int nSmoothRadius,
+	                           const NDebrisBuilder::EMaskSmoothType smoothType = NDebrisBuilder::MASK_SMOOTH_SHARP ) = 0;
 	// geometry editor
-	virtual void ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisTileY, bool bCenter, const CArray2D<float> &brush,
-																					 const NTerraBrush::ETerraBrushUpdate terraBrushUpdate = NTerraBrush::TERRA_BRUSH_OVERRIDE ) = 0;
+	virtual void ModifyTerraGeometryByBrush(
+			const int nVisTileX,
+			const int nVisTileY,
+			bool bCenter,
+			const CArray2D<float> &brush,
+			const NTerraBrush::ETerraBrushUpdate terraBrushUpdate = NTerraBrush::TERRA_BRUSH_OVERRIDE ) = 0;
 	virtual void GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs ) = 0;
 	virtual void UpdateAllObjectsInGeomModifyingArea() = 0;
 	// water placement
@@ -111,23 +141,31 @@ struct ITerraManager : public CObjectBase
 	virtual void UpdateRiversDepthes() = 0;
 	//
 	// dynamic debris
-	virtual void AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize, const float fAngle, const int nSmoothRad,
-		const NDb::SMaterial *pMaterial ) = 0;
+	virtual void AddDynamicDebris( const CVec2 &vPos,
+	                               const CVec2 &vSize,
+	                               const float fAngle,
+	                               const int nSmoothRad,
+	                               const NDb::SMaterial *pMaterial ) = 0;
 	//
 	// terra former
 	virtual void ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight ) = 0;
 	virtual void ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 ) = 0;
 	//
-	virtual void UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<uint8_t> &mask,
-																	 const NTerraBrush::ETerraBrushUpdate terraBrushUpdate = NTerraBrush::TERRA_BRUSH_OVERRIDE ) = 0;
+	virtual void
+	UpdateTileAreaType( const float fXo,
+	                    const float fYo,
+	                    const CArray2D<uint8_t> &mask,
+	                    const NTerraBrush::ETerraBrushUpdate terraBrushUpdate = NTerraBrush::TERRA_BRUSH_OVERRIDE ) = 0;
 	virtual void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs ) = 0;
 	virtual void FinalizeTexModifying() = 0;
 	//
 	// reflections
 	virtual void ClampUnderRivers( NMeshData::SMeshData *pData ) = 0;
 	//
-	virtual void GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 ) = 0;
-	virtual void GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 ) = 0;
+	virtual void
+	GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 ) = 0;
+	virtual void
+	GetAreaHeights( CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 ) = 0;
 	//
 	virtual void UpdateAfterTilesModifying() = 0;
 
@@ -144,7 +182,7 @@ struct ITerraManager : public CObjectBase
 	virtual int GetTilesCountX() const = 0;
 	virtual int GetTilesCountY() const = 0;
 	//
-	virtual const STerrainInfo* const GetTerraInfo() const = 0;
+	virtual const STerrainInfo *const GetTerraInfo() const = 0;
 };
 
 struct ITerraGfxObserver : public CObjectBase
@@ -190,12 +228,14 @@ struct ITerraGfxObserver : public CObjectBase
 
 namespace NScene
 {
-	extern const std::string SZ_TERRA_BIN_FILE_NAME;
-	//
-	SCENEB2_EXPORT void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
-	SCENEB2_EXPORT bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
-	SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
-	SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError );
+extern const std::string SZ_TERRA_BIN_FILE_NAME;
+//
+SCENEB2_EXPORT void
+CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
+SCENEB2_EXPORT bool
+LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
+SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
+SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError );
 };
 
 #define DEF_DEBRIS_SMOOTH_RADIUS 20

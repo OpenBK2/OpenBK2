@@ -13,8 +13,8 @@
 
 #include <cstdint>
 
-UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc );
-UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample );
+UISPECIFICB2_EXPORT IWindow *AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc );
+UISPECIFICB2_EXPORT IWindow *AddWindowCopy( IWindow *pParent, const IWindow *pSample );
 
 struct SMiniMapUnitInfo
 {
@@ -25,9 +25,11 @@ struct SMiniMapUnitInfo
 	uint8_t player = {};
 	uint8_t radius = {}; // tiles
 
-	SMiniMapUnitInfo() : radius( 0 )  { }
+	SMiniMapUnitInfo() : radius( 0 ) {}
 	SMiniMapUnitInfo( const uint16_t _x, const uint16_t _y, const float _z, const uint8_t _player, uint8_t _radius )
-		: x( _x ), y( _y ), z( _z ), player( _player ), radius( _radius ) { }
+			: x( _x ), y( _y ), z( _z ), player( _player ), radius( _radius )
+	{
+	}
 };
 
 struct IMiniMap : virtual public IWindow
@@ -38,7 +40,13 @@ struct IMiniMap : virtual public IWindow
 		CVec2 vPos;
 		CDBPtr<NDb::STexture> pTexture;
 		CVec2 vTexturePoint;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPos); f.Add(3,&pTexture); f.Add(4,&vTexturePoint); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &vPos );
+			f.Add( 3, &pTexture );
+			f.Add( 4, &vTexturePoint );
+			return 0;
+		}
 	};
 
 	struct SFigure
@@ -49,19 +57,27 @@ struct IMiniMap : virtual public IWindow
 		float fSize = {};
 		float fAngle = {};
 		NGfx::SPixel8888 color;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); f.Add(3,&vPos); f.Add(4,&fSize); f.Add(5,&fAngle); f.Add(6,&color); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &eType );
+			f.Add( 3, &vPos );
+			f.Add( 4, &fSize );
+			f.Add( 5, &fAngle );
+			f.Add( 6, &color );
+			return 0;
+		}
 	};
 
 	virtual void LoadMap( const int nWidth, const int nHeight, const int nWarFogLevel ) = 0;
 	// Set some initial params for loading screen
 	virtual void SetLoadingMapParams( int nWidth, int nHeight ) = 0;
 	virtual CVec2 GetAIToScreen( const CVec2 &vPos ) const = 0;
-	virtual void SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits ) = 0;
-	virtual void SetViewport( const std::vector< CVec2 > &vPoints ) = 0;
+	virtual void SetUnits( const std::vector<SMiniMapUnitInfo> &vUnits ) = 0;
+	virtual void SetViewport( const std::vector<CVec2> &vPoints ) = 0;
 	virtual void SetWarFog( const CArray2D<uint8_t> *pWarFogInfo ) = 0;
 	virtual void SetMarkers( const std::vector<SMarker> &markers ) = 0;
 	virtual void SetFigures( const std::vector<SFigure> &figures ) = 0;
-	virtual void SetMaterial( CDBPtr< NDb::SMaterial > pMaterial ) = 0;
+	virtual void SetMaterial( CDBPtr<NDb::SMaterial> pMaterial ) = 0;
 	virtual void SetTexture( const NDb::STexture *pTexture ) = 0;
 	virtual void SetPlayerColor( const int nPlayer, const NGfx::SPixel8888 &color ) = 0;
 	virtual void SetAdditionalScale( float fAdditionalScale ) = 0;
@@ -73,13 +89,24 @@ struct IMiniMap : virtual public IWindow
 
 struct IPotentialLines : virtual public IWindow
 {
-	virtual void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &vMainStrike, const uint32_t _dwBorderColour1, const uint32_t _dwBorderColour2 ) = 0;
+	virtual void SetParams( const std::string &szMask,
+	                        const std::string &szDiffColourMap,
+	                        const CVec2 &vMainStrike,
+	                        const uint32_t _dwBorderColour1,
+	                        const uint32_t _dwBorderColour2 ) = 0;
 
 	virtual void ClearNodes() = 0;
-	virtual void SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue ) = 0;		// If such node exists, it is altered
+	virtual void SetNode( int nX,
+	                      int nY,
+	                      int nEndOffsetX,
+	                      int nEndOffsetY,
+	                      float fValue ) = 0; // If such node exists, it is altered
 
 	virtual void ClearArrows() = 0;
-	virtual void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, uint32_t dwArrowColour ) = 0;
+	virtual void AddArrow( const std::vector<CVec2> &arrowTraj,
+	                       float fArrowWidth,
+	                       const NDb::STexture *pArrowTexture,
+	                       uint32_t dwArrowColour ) = 0;
 };
 
 struct ISelection : virtual public IWindow
@@ -100,7 +127,12 @@ struct IWindow3DControl : virtual public IWindow
 		ZDATA
 		CVec2 vPos;
 		CVec2 vSize;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPos); f.Add(3,&vSize); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &vPos );
+			f.Add( 3, &vSize );
+			return 0;
+		}
 	};
 
 	struct SObject
@@ -111,12 +143,20 @@ struct IWindow3DControl : virtual public IWindow
 		CVec2 vPos;
 		CVec2 vSize;
 		CDBPtr<NDb::SAnimB2> pAnim;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&pModel); f.Add(4,&vPos); f.Add(5,&vSize); f.Add(6,&pAnim); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nID );
+			f.Add( 3, &pModel );
+			f.Add( 4, &vPos );
+			f.Add( 5, &vSize );
+			f.Add( 6, &pAnim );
+			return 0;
+		}
 
 		bool operator==( const SObject &object ) const
 		{
-			return nID == object.nID && pModel == object.pModel &&
-				vPos == object.vPos && vSize == object.vSize && pAnim == object.pAnim;
+			return nID == object.nID && pModel == object.pModel && vPos == object.vPos && vSize == object.vSize &&
+			       pAnim == object.pAnim;
 		}
 	};
 

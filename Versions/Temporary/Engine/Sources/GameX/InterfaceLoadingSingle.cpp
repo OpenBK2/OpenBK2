@@ -35,7 +35,7 @@ void FitDescription( IWindow *pMaxPanel, IWindow *pPanel, ITextView *pDesc )
 	int nDescSizeY;
 	pDesc->GetPlacement( 0, 0, 0, &nDescSizeY );
 
-	if ( nTextSizeY > nDescSizeY  )
+	if ( nTextSizeY > nDescSizeY )
 	{
 		int nX, nY, nSizeX, nSizeY;
 		pPanel->GetPlacement( &nX, &nY, &nSizeX, &nSizeY );
@@ -48,7 +48,7 @@ void FitDescription( IWindow *pMaxPanel, IWindow *pPanel, ITextView *pDesc )
 			nTextSizeY = pDesc->GetSize().y;
 		}
 
-		if ( nTextSizeY > nDescSizeY  )
+		if ( nTextSizeY > nDescSizeY )
 		{
 			int nDeltaY = nTextSizeY - nDescSizeY;
 			if ( nDeltaY > nMaxSizeY - nSizeY )
@@ -63,13 +63,15 @@ void FitDescription( IWindow *pMaxPanel, IWindow *pPanel, ITextView *pDesc )
 
 class CInterfaceLoadingBase::CLoadingScene : public CObjectBase
 {
-	OBJECT_NOCOPY_METHODS(CLoadingScene);
+	OBJECT_NOCOPY_METHODS( CLoadingScene );
 
 	CUIVisitor *pUIVisitor;
 	CObj<NGScene::I2DGameView> p2DView;
 	CPtr<IWindow> pScreen;
+
 protected:
 	~CLoadingScene();
+
 public:
 	CLoadingScene();
 
@@ -77,19 +79,29 @@ public:
 
 	void Draw( NGfx::CTexture *pTexture = 0 );
 
-	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Can't be saved/loaded" ); return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		NI_ASSERT( 0, "Can't be saved/loaded" );
+		return 0;
+	}
 };
 
 // CInterfaceLoadingBase::CReactions
 
 class CInterfaceLoadingBase::CReactions : public IProgrammedReactionsAndChecks
 {
-	OBJECT_NOCOPY_METHODS(CReactions);
+	OBJECT_NOCOPY_METHODS( CReactions );
 
 	ZDATA
 	CPtr<IWindow> pScreen;
 	bool bIsEffectFinished;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pScreen); f.Add(3,&bIsEffectFinished); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pScreen );
+		f.Add( 3, &bIsEffectFinished );
+		return 0;
+	}
+
 public:
 	CReactions();
 	CReactions( IWindow *pScreen );
@@ -143,20 +155,11 @@ void CInterfaceLoadingBase::CLoadingScene::Draw( NGfx::CTexture *pTexture )
 
 // CInterfaceLoadingBase::CReactions
 
-CInterfaceLoadingBase::CReactions::CReactions() :
-	bIsEffectFinished( false )
-{
-}
+CInterfaceLoadingBase::CReactions::CReactions() : bIsEffectFinished( false ) {}
 
-CInterfaceLoadingBase::CReactions::CReactions( IWindow *_pScreen ) :
-	pScreen( _pScreen ),
-	bIsEffectFinished( false )
-{
-}
+CInterfaceLoadingBase::CReactions::CReactions( IWindow *_pScreen ) : pScreen( _pScreen ), bIsEffectFinished( false ) {}
 
-CInterfaceLoadingBase::CReactions::~CReactions()
-{
-}
+CInterfaceLoadingBase::CReactions::~CReactions() {}
 
 bool CInterfaceLoadingBase::CReactions::Execute( const std::string &szSender, const std::string &szReaction )
 {
@@ -182,11 +185,8 @@ void CInterfaceLoadingBase::ShowFirstElement()
 
 // CInterfaceLoadingBase
 
-CInterfaceLoadingBase::CInterfaceLoadingBase() :
-	nTotalFrames( 2 ),
-	nCurrFrame( 1 ),
-	fCurrProgress( 0.0f ),
-	bInitialized( false )
+CInterfaceLoadingBase::CInterfaceLoadingBase()
+		: nTotalFrames( 2 ), nCurrFrame( 1 ), fCurrProgress( 0.0f ), bInitialized( false )
 {
 }
 
@@ -206,7 +206,7 @@ void CInterfaceLoadingBase::InitInternal( const std::string &szScreenName )
 	const CDBID dbidScreen = InterfaceState()->GetScreenEntryDBID( szScreenName );
 
 	pScreen->SetGView( Scene()->GetG2DView() );
-	pScreen->Load( NDb::Get<NDb::SWindowScreen>(dbidScreen), pReactions );
+	pScreen->Load( NDb::Get<NDb::SWindowScreen>( dbidScreen ), pReactions );
 
 	pLoadingScene = new CLoadingScene();
 	pLoadingScene->SetScreen( pScreen );
@@ -219,7 +219,7 @@ void CInterfaceLoadingBase::MakeInterior()
 	IWindow *pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 
 	pProgress = GetChildChecked<IProgressBar>( pMain, "Progress", true );
-//	pVideo = GetChildChecked<IPlayer>( pMain, "Video", true );
+	//	pVideo = GetChildChecked<IPlayer>( pMain, "Video", true );
 
 	if ( pVideo && !pVideo->IsVisible() )
 		pVideo = 0;
@@ -243,7 +243,7 @@ void CInterfaceLoadingBase::UpdateInterior()
 
 	float fProgress = GetProgress();
 
-	if ( pProgress && (fProgress - fCurrProgress >= MIN_PROGRESS_DELTA) )
+	if ( pProgress && ( fProgress - fCurrProgress >= MIN_PROGRESS_DELTA ) )
 	{
 		bUpdated = true;
 		fCurrProgress = fProgress;
@@ -252,7 +252,7 @@ void CInterfaceLoadingBase::UpdateInterior()
 
 	if ( pVideo )
 	{
-		int nNewFrame = ceilf( fProgress * (nTotalFrames - 1) + 0.5f ) + 1;
+		int nNewFrame = ceilf( fProgress * ( nTotalFrames - 1 ) + 0.5f ) + 1;
 		if ( nNewFrame > nCurrFrame )
 		{
 			bUpdated = true;
@@ -333,7 +333,7 @@ void CInterfaceLoadingBase::PlayOnEnterTransitEffect()
 
 bool CInterfaceLoadingBase::IsEffectFinished() const
 {
-	return dynamic_cast_ptr<CReactions*>( pReactions )->IsEffectFinished();
+	return dynamic_cast_ptr<CReactions *>( pReactions )->IsEffectFinished();
 }
 
 // CInterfaceLoadingSingle2D
@@ -344,7 +344,10 @@ CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D()
 		return;
 
 	InitInternal( "LoadingSingle" );
-	MakeInterior( NDb::Get<NDb::STexture>( NSaveLoad::g_WaitLoadData.dbidMinimap ), NSaveLoad::g_WaitLoadData.wszDesc, InterfaceState()->GetRandomCitation(), NSaveLoad::g_WaitLoadData.bChapter );
+	MakeInterior( NDb::Get<NDb::STexture>( NSaveLoad::g_WaitLoadData.dbidMinimap ),
+	              NSaveLoad::g_WaitLoadData.wszDesc,
+	              InterfaceState()->GetRandomCitation(),
+	              NSaveLoad::g_WaitLoadData.bChapter );
 	if ( InterfaceState()->IsTransitEffectFlag() )
 		PlayOnEnterTransitEffect();
 
@@ -353,7 +356,10 @@ CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D()
 	ShowOnEnterMoveEffect();
 }
 
-CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D( const NDb::STexture *pMinimap, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter )
+CInterfaceLoadingSingle2D::CInterfaceLoadingSingle2D( const NDb::STexture *pMinimap,
+                                                      const std::wstring &wszDesc,
+                                                      const std::wstring &wszCitation,
+                                                      bool bChapter )
 {
 	InitInternal( "LoadingSingle" );
 	MakeInterior( pMinimap, wszDesc, wszCitation, bChapter );
@@ -371,14 +377,17 @@ CInterfaceLoadingSingle2D::~CInterfaceLoadingSingle2D()
 		RunFinishScreen();
 }
 
-void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter )
+void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture,
+                                              const std::wstring &wszDesc,
+                                              const std::wstring &wszCitation,
+                                              bool bChapter )
 {
 	IWindow *pMain = GetChildChecked<IWindow>( GetScreen(), "Main", true );
 
 	ITextView *pDescView = GetChildChecked<ITextView>( pMain, "Desc", true );
 	IWindow *pMapPictureWnd = GetChildChecked<IWindow>( pMain, "Map", true );
 	pCitation = GetChildChecked<IWindow>( GetScreen(), "BottomPanel", true );
-	ITextView * pCitationText = GetChildChecked<ITextView>( pMain, "Citation", true );
+	ITextView *pCitationText = GetChildChecked<ITextView>( pMain, "Citation", true );
 	pPressKeyView = GetChildChecked<ITextView>( pMain, "PressKeyView", true );
 	pInfoPanel = GetChildChecked<IWindow>( pMain, "InfoPanel", true );
 	IWindow *pMaxInfoPanel = GetChildChecked<IWindow>( pMain, "MaxInfoPanel", true );
@@ -395,7 +404,7 @@ void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture, con
 
 	FitDescription( pMaxInfoPanel, pInfoPanel, pDescView );
 
-	if ( pCitationText)
+	if ( pCitationText )
 		pCitationText->SetText( pCitationText->GetDBText() + wszCitation );
 
 	if ( pCitation )
@@ -500,8 +509,8 @@ float CProgressHookHelper::GetProgress() const
 	for ( int i = 0; i < ranges.size(); ++i )
 	{
 		const SRange &range = ranges[i];
-		fProgress += fSubRange * (float)range.nStep / (float)(range.nNumSteps);
-		fSubRange *= (float)range.nLockedRange / (float)(range.nNumSteps);
+		fProgress += fSubRange * (float)range.nStep / (float)( range.nNumSteps );
+		fSubRange *= (float)range.nLockedRange / (float)( range.nNumSteps );
 	}
 	return fProgress;
 }
@@ -513,11 +522,8 @@ int CProgressHookHelper::GetProgress( int nMin, int nMax ) const
 
 // CInterfaceLoadingSingleFinished
 
-CInterfaceLoadingSingleFinished::CInterfaceLoadingSingleFinished() :
-	CInterfaceScreenBase( "no_interface", "no_section" ),
-	eUIState( EUIS_NORMAL ),
-	timeAbs( 0 ),
-	bFormat1( true )
+CInterfaceLoadingSingleFinished::CInterfaceLoadingSingleFinished()
+		: CInterfaceScreenBase( "no_interface", "no_section" ), eUIState( EUIS_NORMAL ), timeAbs( 0 ), bFormat1( true )
 {
 }
 
@@ -533,7 +539,7 @@ bool CInterfaceLoadingSingleFinished::Init()
 		return true;
 	}
 
-	pScreen = dynamic_cast_ptr<IScreen*>( g_pLoadingSingleScreen );
+	pScreen = dynamic_cast_ptr<IScreen *>( g_pLoadingSingleScreen );
 	g_pLoadingSingleScreen = 0;
 
 	pScreen->SetGView( Scene()->GetG2DView() );
@@ -579,7 +585,6 @@ bool CInterfaceLoadingSingleFinished::StepLocal( bool bAppActive )
 			ShowPressKey( bFormat1 );
 		}
 	}
-
 
 	return bResult;
 }
@@ -631,7 +636,6 @@ bool CInterfaceLoadingSingleFinished::ProcessEvent( const struct SGameMessage &m
 void CInterfaceLoadingSingleFinished::StartTransitToMission()
 {
 	eUIState = EUIS_START_TRANSIT_TO_MISSION;
-
 }
 
 void CInterfaceLoadingSingleFinished::StartTransitToMissionDone()
@@ -683,22 +687,22 @@ void CInterfaceLoadingSingleFinished::Draw( NGScene::CRTPtr *pTexture )
 
 // CICLoadingSingleFinished
 
-void CICLoadingSingleFinished::PreCreate()
-{
-}
+void CICLoadingSingleFinished::PreCreate() {}
 
 void CICLoadingSingleFinished::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICLoadingSingleFinished::Configure( const char *pszConfig )
-{
-}
+void CICLoadingSingleFinished::Configure( const char *pszConfig ) {}
 
-START_REGISTER(PWLSingleCommands)
+START_REGISTER( PWLSingleCommands )
 
-REGISTER_VAR_EX( "transition_effect_to_mission_duration", NGlobal::VarIntHandler, &s_nTransitionEffectToMissionDuration, 300, STORAGE_NONE );
+REGISTER_VAR_EX( "transition_effect_to_mission_duration",
+                 NGlobal::VarIntHandler,
+                 &s_nTransitionEffectToMissionDuration,
+                 300,
+                 STORAGE_NONE );
 REGISTER_VAR_EX( "pwl_blink_time_sec", NGlobal::VarFloatHandler, &s_fBlinkTime, 1.0f, STORAGE_NONE );
 
 FINISH_REGISTER

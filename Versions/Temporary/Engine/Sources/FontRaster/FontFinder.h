@@ -18,12 +18,12 @@ namespace NFontRaster
 struct SFontMatch
 {
 	std::string szFile;
-	int nFaceIndex = 0;					// as SOptions::nFaceIndex takes it, named instance included
-	std::string szFamily;				// what the file calls itself
+	int nFaceIndex = 0;   // as SOptions::nFaceIndex takes it, named instance included
+	std::string szFamily; // what the file calls itself
 	std::string szStyle;
 	int nWeight = 400;
 	bool bItalic = false;
-	int nWidthClass = 5;				// OS/2 usWidthClass: 5 is normal, 3 condensed, 7 expanded
+	int nWidthClass = 5; // OS/2 usWidthClass: 5 is normal, 3 condensed, 7 expanded
 };
 
 // Where fonts are installed on this system: %WINDIR%\Fonts and the per-user
@@ -38,6 +38,7 @@ std::vector<std::string> GetSystemFontDirectories();
 class CFontCatalog
 {
 	std::vector<SFontMatch> faces;
+
 public:
 	explicit CFontCatalog( const std::vector<std::string> &directories );
 	// as FindFont below
@@ -54,8 +55,11 @@ public:
 // "Arial". Variable fonts are searched by their named instances.
 // Returns false when no face has that family name. The choice is deterministic:
 // files are visited in sorted order and ties go to the first.
-bool FindFont( const std::string &szFamily, int nWeight, bool bItalic, const std::vector<std::string> &directories,
-	SFontMatch *pMatch );
+bool FindFont( const std::string &szFamily,
+               int nWeight,
+               bool bItalic,
+               const std::vector<std::string> &directories,
+               SFontMatch *pMatch );
 
 // The face index, named instance included, in a font already in memory that
 // is closest to nWeight and bItalic, scored as FindFont scores: how a game font

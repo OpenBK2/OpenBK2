@@ -16,28 +16,49 @@
 
 namespace NDb
 {
-	struct SPassProfile;
+struct SPassProfile;
 }
 
-namespace NEditorGltf { struct SMeshData; }
-bool CreateObjectStaticDebris( const NEditorGltf::SMeshData &mesh, const std::string &imageName, CVec2 *origin, int smoothRadius );
-bool CreateObjectDynamicDebris( const NEditorGltf::SMeshData &mesh, const std::string &imageName, CVec2 *origin, float width );
+namespace NEditorGltf
+{
+struct SMeshData;
+}
+bool CreateObjectStaticDebris( const NEditorGltf::SMeshData &mesh,
+                               const std::string &imageName,
+                               CVec2 *origin,
+                               int smoothRadius );
+bool CreateObjectDynamicDebris( const NEditorGltf::SMeshData &mesh,
+                                const std::string &imageName,
+                                CVec2 *origin,
+                                float width );
 bool CreateObjectPassability( const NEditorGltf::SMeshData &mesh, CArray2D<uint8_t> *passability, CVec2 *origin );
 bool CreateObjectPassabilityProfile( const NEditorGltf::SMeshData &mesh, float zEpsilon, NDb::SPassProfile *profile );
 
 #define ANIMATIONS_ROOT_JOINT "Animations"
 
-bool CreateObjectStaticDebris( const std::string &rszGrannyFileName, const std::string &rszImageFileName, CVec2 *pvOrigin, const int nSmoothRadius );
-bool CreateObjectDynamicDebris( const std::string &rszGrannyFileName, const std::string &rszImageFileName, CVec2 *pvOrigin, float fWidth );
-bool CreateObjectPassability( const std::string &rszGrannyFileName, CArray2D<uint8_t> *pPassabilityArray, CVec2 *pvOrigin );
-bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
-void SavePassProfile( const NDb::SPassProfile &profile, const std::string &szPrefix, const std::string &szFieldName, IManipulator *pManipulator );
+bool CreateObjectStaticDebris( const std::string &rszGrannyFileName,
+                               const std::string &rszImageFileName,
+                               CVec2 *pvOrigin,
+                               const int nSmoothRadius );
+bool CreateObjectDynamicDebris( const std::string &rszGrannyFileName,
+                                const std::string &rszImageFileName,
+                                CVec2 *pvOrigin,
+                                float fWidth );
+bool CreateObjectPassability( const std::string &rszGrannyFileName,
+                              CArray2D<uint8_t> *pPassabilityArray,
+                              CVec2 *pvOrigin );
+bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName,
+                                     const float fZEps,
+                                     NDb::SPassProfile *pPassProfile );
+void SavePassProfile( const NDb::SPassProfile &profile,
+                      const std::string &szPrefix,
+                      const std::string &szFieldName,
+                      IManipulator *pManipulator );
 
 // Правильное расположение bounding box
 bool NormalizePassabilityOrigin( CVec2 *pvOrigin, const CTPoint<int> &rSize, const CVec3 &rvMin, const CVec3 &rvMax );
 // Правильные размеры bounding box
 bool NormalizePassabilityArray( CArray2D<uint8_t> *pDestination, CVec2 *pvOrigin );
-
 
 //
 //
@@ -63,68 +84,73 @@ struct SLocatorQInfo
 	SSkeletonLocatorInfo inf;
 	int nQIdx;
 
-	bool operator<( const SLocatorQInfo &rOther ) const
-	{
-		return nQIdx < rOther.nQIdx;
-	}
+	bool operator<( const SLocatorQInfo &rOther ) const { return nQIdx < rOther.nQIdx; }
 };
 typedef std::vector<SSkeletonLocatorInfo>::const_iterator CLocatorInfoConstIter;
 typedef std::vector<SSkeletonLocatorInfo>::iterator CLocatorInfoIter;
 typedef std::vector<SLocatorQInfo>::const_iterator CLocatorQInfoConstIter;
 struct IManipulator;
-void GetModelLocators(	std::vector<SSkeletonLocatorInfo> *pLocatorsInfo,
-						IManipulator* pRPGStatsManipulator,
-						const char *pszModelSrcField );
+void GetModelLocators( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo,
+                       IManipulator *pRPGStatsManipulator,
+                       const char *pszModelSrcField );
 void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, const CDBID &dbidSkeleton );
-int PatMat(const char *raw,const char *pat);
+int PatMat( const char *raw, const char *pat );
 bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern );
-void SearchLocators(	std::vector<SLocatorQInfo> *pQLocInfo,
-						const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
-						const char *pszLocatorNamePattern );
-bool SearchLocator(	SSkeletonLocatorInfo *pLocInfo,
-					const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
-					const char *pszLocatorName );
+void SearchLocators( std::vector<SLocatorQInfo> *pQLocInfo,
+                     const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
+                     const char *pszLocatorNamePattern );
+bool SearchLocator( SSkeletonLocatorInfo *pLocInfo,
+                    const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
+                    const char *pszLocatorName );
 float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadian );
-void SetPointValueForVec2Field(	IManipulator* pManipulator,
-								const char *pszLocatorName,
-								const char *pszFieldName,
-								const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointValueForStringField(	IManipulator* pManipulator,
-									const char *pszLocatorName,
-									const char *pszFieldName,
-									const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForVec2Array(	IManipulator* pManipulator,
-									const char *pszLocatorNamePattern,
-									const char *pszFieldName,
-									const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForStringArray(	IManipulator* pManipulator,
-									const char *pszLocatorNamePattern,
-									const char *pszFieldName,
-									const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator,
-										const char *pszLocatorNamePattern,
-										const char *pszArrayName,
-										const char *pszStructFieldName,
-										const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
-										const char *pszLocatorNamePattern,
-										const char *pszArrayName,
-										const char *pszStructFieldName,
-										const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
-										bool bClear );
+void SetPointValueForVec2Field( IManipulator *pManipulator,
+                                const char *pszLocatorName,
+                                const char *pszFieldName,
+                                const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
+void SetPointValueForStringField( IManipulator *pManipulator,
+                                  const char *pszLocatorName,
+                                  const char *pszFieldName,
+                                  const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
+void SetPointsValuesForVec2Array( IManipulator *pManipulator,
+                                  const char *pszLocatorNamePattern,
+                                  const char *pszFieldName,
+                                  const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
+void SetPointsValuesForStringArray( IManipulator *pManipulator,
+                                    const char *pszLocatorNamePattern,
+                                    const char *pszFieldName,
+                                    const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
+void SetPointsValuesForVec2StructArray( IManipulator *pManipulator,
+                                        const char *pszLocatorNamePattern,
+                                        const char *pszArrayName,
+                                        const char *pszStructFieldName,
+                                        const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
+void SetPointsValuesForVec3StructArray( IManipulator *pManipulator,
+                                        const char *pszLocatorNamePattern,
+                                        const char *pszArrayName,
+                                        const char *pszStructFieldName,
+                                        const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
+                                        bool bClear );
 //
 void GetPassability( CArray2D<uint8_t> *pPassability, IManipulator *pBuildingRPGStatsManipulator );
 //
 // fix locators of object set
-bool FixLocators( const struct SObjectSet &objectSet, const std::string &szLocatorNamePattern, const std::string &szArrayName );
+bool FixLocators( const struct SObjectSet &objectSet,
+                  const std::string &szLocatorNamePattern,
+                  const std::string &szArrayName );
 
 // Acquire attributes for a given model
-bool GetGeometryAttributes( IManipulator* pGeomMan, CGrannyBoneAttributesList *pAttributeList );
+bool GetGeometryAttributes( IManipulator *pGeomMan, CGrannyBoneAttributesList *pAttributeList );
 
-struct IManipulator* CreateModelManipulatorFromVisObj( struct IManipulator *pVisObjectManipulator, std::string *pModelName );
+struct IManipulator *CreateModelManipulatorFromVisObj( struct IManipulator *pVisObjectManipulator,
+                                                       std::string *pModelName );
 
-template<class TValue>
-bool GetSeasonedValue( TValue *pData, struct IManipulator *pManipulator, const std::string &rszName, const std::string &rszSeasonArrayName, NDb::ESeason eSeason, std::string *pszDataPrefix )
+template <class TValue>
+bool GetSeasonedValue( TValue *pData,
+                       struct IManipulator *pManipulator,
+                       const std::string &rszName,
+                       const std::string &rszSeasonArrayName,
+                       NDb::ESeason eSeason,
+                       std::string *pszDataPrefix )
 {
 	NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -138,9 +164,15 @@ bool GetSeasonedValue( TValue *pData, struct IManipulator *pManipulator, const s
 		{
 			for ( int nSeasonIndex = 0; nSeasonIndex < nSeasonCount; ++nSeasonIndex )
 			{
-				szDataPrefix = fmt::format( "{}{:c}{:c}{}{:c}", rszSeasonArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nSeasonIndex, ARRAY_NODE_END_CHAR );
+				szDataPrefix = fmt::format( "{}{:c}{:c}{}{:c}",
+				                            rszSeasonArrayName.c_str(),
+				                            LEVEL_SEPARATOR_CHAR,
+				                            ARRAY_NODE_START_CHAR,
+				                            nSeasonIndex,
+				                            ARRAY_NODE_END_CHAR );
 				std::string szSeasonName;
-				bResult = bResult && CManipulatorManager::GetValue( &szSeasonName, pManipulator, szDataPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
+				bResult = bResult && CManipulatorManager::GetValue(
+																 &szSeasonName, pManipulator, szDataPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
 				if ( !bResult )
 					break;
 				if ( eSeason == typeSeasonMnemonics.GetValue( szSeasonName ) )
@@ -157,9 +189,10 @@ bool GetSeasonedValue( TValue *pData, struct IManipulator *pManipulator, const s
 				eSeason = NDB_DEFAULT_SEASON;
 			else
 				break;
-		} while( eSeason != NDB_DEFAULT_SEASON );
+		} while ( eSeason != NDB_DEFAULT_SEASON );
 		bResult = bResult && ( !bSeasonMissed );
-		bResult = bResult && CManipulatorManager::GetValue( pData, pManipulator, szDataPrefix + LEVEL_SEPARATOR_CHAR + rszName );
+		bResult =
+				bResult && CManipulatorManager::GetValue( pData, pManipulator, szDataPrefix + LEVEL_SEPARATOR_CHAR + rszName );
 		if ( bResult && ( pszDataPrefix != 0 ) )
 			( *pszDataPrefix ) = szDataPrefix;
 	}

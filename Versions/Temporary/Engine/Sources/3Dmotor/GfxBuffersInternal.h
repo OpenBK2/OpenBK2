@@ -27,11 +27,14 @@ inline uint32_t GetUsageFlags( ETrueBufferUsage eUsage )
 {
 	switch ( eUsage )
 	{
-	case TBU_STATIC:    return D3DUSAGE_WRITEONLY;
-	case TBU_DYNAMIC:   return D3DUSAGE_DYNAMIC|D3DUSAGE_WRITEONLY;
-	case TBU_SOFTWARE:  return D3DUSAGE_SOFTWAREPROCESSING | D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
-	default:
-		ASSERT( 0 );
+		case TBU_STATIC:
+			return D3DUSAGE_WRITEONLY;
+		case TBU_DYNAMIC:
+			return D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
+		case TBU_SOFTWARE:
+			return D3DUSAGE_SOFTWAREPROCESSING | D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY;
+		default:
+			ASSERT( 0 );
 	}
 	return 0;
 }
@@ -39,16 +42,19 @@ inline D3DPOOL GetPool( ETrueBufferUsage eUsage )
 {
 	switch ( eUsage )
 	{
-	case TBU_STATIC:    return D3DPOOL_DEFAULT;
-	case TBU_DYNAMIC:   return D3DPOOL_DEFAULT;
-	case TBU_SOFTWARE:  return D3DPOOL_SYSTEMMEM;
-	default:
-		ASSERT( 0 );
+		case TBU_STATIC:
+			return D3DPOOL_DEFAULT;
+		case TBU_DYNAMIC:
+			return D3DPOOL_DEFAULT;
+		case TBU_SOFTWARE:
+			return D3DPOOL_SYSTEMMEM;
+		default:
+			ASSERT( 0 );
 	}
 	return D3DPOOL_DEFAULT;
 }
 
-class CLockable: public CObjectBase
+class CLockable : public CObjectBase
 {
 public:
 	virtual void Free() = 0;
@@ -59,16 +65,16 @@ void FreeLinearBuffers();
 // general actions on linear DX buffers
 // dwFlags = bDiscard ? D3DLOCK_DISCARD: D3DLOCK_NOOVERWRITE
 template <class TDXobj>
-class CRBase: public CLockable
+class CRBase : public CLockable
 {
 public:
-	NWin32Helper::com_ptr< TDXobj > obj;
+	NWin32Helper::com_ptr<TDXobj> obj;
 	int nLockCount;
 	unsigned char *pLocked;
-	int nSize;  // size in bytes
+	int nSize; // size in bytes
 
-	CRBase(): nLockCount(0), pLocked(0) {}
-	CRBase( int _nSize ): nSize(_nSize), nLockCount(0), pLocked(0) {}
+	CRBase() : nLockCount( 0 ), pLocked( 0 ) {}
+	CRBase( int _nSize ) : nSize( _nSize ), nLockCount( 0 ), pLocked( 0 ) {}
 	~CRBase() { Free(); }
 	int GetSize() const { return nSize; }
 	void Lock( uint32_t dwFlags )
@@ -105,7 +111,7 @@ public:
 	}
 };
 
-template<class T>
+template <class T>
 inline void TryLockBuffer( T *p, ETrueBufferUsage eUsage )
 {
 	if ( eUsage == TBU_DYNAMIC )
@@ -116,24 +122,19 @@ inline void TryLockBuffer( T *p, ETrueBufferUsage eUsage )
 }
 
 // large vertex buffer
-class CVB: public CRBase<IDirect3DVertexBuffer9>
+class CVB : public CRBase<IDirect3DVertexBuffer9>
 {
 	OBJECT_NOCOPY_METHODS( CVB );
+
 public:
 	CVB() {}
 	// size in bytes
-	CVB( int _nSize, ETrueBufferUsage eUsage ): CRBase<IDirect3DVertexBuffer9>(_nSize)
+	CVB( int _nSize, ETrueBufferUsage eUsage ) : CRBase<IDirect3DVertexBuffer9>( _nSize )
 	{
-		HRESULT hRes = pDevice->CreateVertexBuffer(
-			nSize,
-			GetUsageFlags( eUsage ),
-			0,
-			GetPool( eUsage ),
-			obj.GetAddr(),
-			0
-			);
+		HRESULT hRes =
+				pDevice->CreateVertexBuffer( nSize, GetUsageFlags( eUsage ), 0, GetPool( eUsage ), obj.GetAddr(), 0 );
 		D3DASSERT( hRes, "CreateVertexBuffer failed with SIZE: %d USAGE: %d", nSize, fmt::underlying( eUsage ) );
-		bInitOk &= SUCCEEDED(hRes);
+		bInitOk &= SUCCEEDED( hRes );
 
 		if ( bInitOk )
 			TryLockBuffer( this, eUsage );
@@ -142,29 +143,28 @@ public:
 
 // large index buffer
 template <int TFormat>
-class CIBFast: public CObjectBase
+class CIBFast : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CIBFast );
-public:
-	NWin32Helper::com_ptr< IDirect3DIndexBuffer9 > obj;
-	unsigned char *pLocked;
-	int nSize;  // size in bytes
 
-	CIBFast() : pLocked(0) {}
+public:
+	NWin32Helper::com_ptr<IDirect3DIndexBuffer9> obj;
+	unsigned char *pLocked;
+	int nSize; // size in bytes
+
+	CIBFast() : pLocked( 0 ) {}
 	// size in bytes
-	CIBFast( int _nSize, ETrueBufferUsage eUsage ) : nSize(_nSize)
+	CIBFast( int _nSize, ETrueBufferUsage eUsage ) : nSize( _nSize )
 	{
 		pLocked = 0;
 		HRESULT hRes = pDevice->CreateIndexBuffer(
-			_nSize,
-			GetUsageFlags( eUsage ),
-			(D3DFORMAT)TFormat,
-			GetPool( eUsage ),
-			obj.GetAddr(),
-			0
-			);
-		D3DASSERT( hRes, "CreateIndexBuffer failed with SIZE: %d FORMAT: %d USAGE: %d", _nSize, TFormat, fmt::underlying( eUsage ) );
-		bInitOk &= SUCCEEDED(hRes);
+				_nSize, GetUsageFlags( eUsage ), (D3DFORMAT)TFormat, GetPool( eUsage ), obj.GetAddr(), 0 );
+		D3DASSERT( hRes,
+		           "CreateIndexBuffer failed with SIZE: %d FORMAT: %d USAGE: %d",
+		           _nSize,
+		           TFormat,
+		           fmt::underlying( eUsage ) );
+		bInitOk &= SUCCEEDED( hRes );
 
 		if ( bInitOk )
 			TryLockBuffer( this, eUsage );

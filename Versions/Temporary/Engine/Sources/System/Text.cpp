@@ -63,7 +63,7 @@ const std::wstring &GetText( const std::string &szTextFileName )
 		return pos->second;
 	//
 	std::wstring wszText;
-	if ( LoadUnicodeText(&wszText, filePath) == false )
+	if ( LoadUnicodeText( &wszText, filePath ) == false )
 		unicodeTextMap[filePath] = L"";
 	else
 		unicodeTextMap[filePath] = wszText;
@@ -75,7 +75,7 @@ void Reload( const std::string &szTextFileName )
 {
 	const NFile::CFilePath filePath = szTextFileName;
 	std::wstring wszText;
-	if ( LoadUnicodeText(&wszText, filePath) == false )
+	if ( LoadUnicodeText( &wszText, filePath ) == false )
 		unicodeTextMap[filePath] = L"";
 	else
 		unicodeTextMap[filePath] = wszText;

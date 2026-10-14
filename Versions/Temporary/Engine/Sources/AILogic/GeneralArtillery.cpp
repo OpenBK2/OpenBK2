@@ -32,9 +32,8 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AF, CGeneralArtillery );
 bool HasTruck( CAIUnit *pUnit )
 {
 	CAIUnit *pTruck = pUnit->GetTruck();
-	return
-		pTruck && pTruck->IsRefValid() && pTruck->IsAlive() &&
-		theDipl.GetDiplStatusForParties( pUnit->GetParty(), pTruck->GetParty() ) != EDI_ENEMY;
+	return pTruck && pTruck->IsRefValid() && pTruck->IsAlive() &&
+	       theDipl.GetDiplStatusForParties( pUnit->GetParty(), pTruck->GetParty() ) != EDI_ENEMY;
 }
 
 bool CanUnitBombardRegion( CAIUnit *pUnit, const CVec2 &vRegionCenter )
@@ -55,7 +54,7 @@ bool CanUnitBombardRegion( CAIUnit *pUnit, const CVec2 &vRegionCenter )
 bool IsArtilleryFree( CAIUnit *pUnit )
 {
 	return !pUnit->GetState() ||
-				 ( pUnit->GetState()->GetName() == EUSN_REST || pUnit->GetState()->GetName() == EUSN_AMBUSH );
+	       ( pUnit->GetState()->GetName() == EUSN_REST || pUnit->GetState()->GetName() == EUSN_AMBUSH );
 }
 
 bool IsArtilleryBeingTowed( CAIUnit *pUnit )
@@ -69,10 +68,7 @@ bool IsArtilleryBeingTowed( CAIUnit *pUnit )
 
 //BASIC_REGISTER_CLASS( CGeneralArtillery );
 
-CGeneralArtillery::CGeneralArtillery( CGeneral *_pOwner )
-: pOwner( _pOwner )
-{
-}
+CGeneralArtillery::CGeneralArtillery( CGeneral *_pOwner ) : pOwner( _pOwner ) {}
 
 void CGeneralArtillery::Segment()
 {
@@ -81,7 +77,7 @@ void CGeneralArtillery::Segment()
 	{
 		if ( IsValidObj( *it ) )
 		{
-			if ( !checked_cast_ptr<CAITransportUnit*>( *it )->IsMustTow() )
+			if ( !checked_cast_ptr<CAITransportUnit *>( *it )->IsMustTow() )
 			{
 				pOwner->Give( *it );
 				it = trucks.erase( it );
@@ -115,7 +111,7 @@ void CGeneralArtillery::Segment()
 		if ( iter->IsTaskFinished() )
 			iter = tasks.erase( iter );
 		else
-			(iter++)->Segment();
+			( iter++ )->Segment();
 	}
 }
 
@@ -136,16 +132,21 @@ bool CGeneralArtillery::CanBombardRegion( const CVec2 &vRegionCenter )
 	return false;
 }
 
-int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter, const float fRadius, bool bIsAntiArtilleryFight, const int nCellNumber )
+int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter,
+                                          const float fRadius,
+                                          bool bIsAntiArtilleryFight,
+                                          const int nCellNumber )
 {
-	std::list<CAIUnit*> bombardmentUnits;
+	std::list<CAIUnit *> bombardmentUnits;
 	// сформировать список атакующей артиллерии
-	int nMaxUnits = (std::min)( (int)freeUnits.size(), (int)NRandom::Random( 4, 8 ) ); RecordRandomCall();
+	int nMaxUnits = (std::min)( (int)freeUnits.size(), (int)NRandom::Random( 4, 8 ) );
+	RecordRandomCall();
 	int cnt = 0;
 	for ( CUnitsList::iterator iter = freeUnits.begin(); iter != freeUnits.end() && cnt < nMaxUnits; )
 	{
 		CAIUnit *pUnit = *iter;
-		if ( pUnit->GetParty() == pOwner->GetParty() && CanUnitBombardRegion( pUnit, vCenter ) && ( IsArtilleryFree( pUnit ) || IsArtilleryBeingTowed( pUnit ) ) )
+		if ( pUnit->GetParty() == pOwner->GetParty() && CanUnitBombardRegion( pUnit, vCenter ) &&
+		     ( IsArtilleryFree( pUnit ) || IsArtilleryBeingTowed( pUnit ) ) )
 		{
 			bombardmentUnits.push_back( pUnit );
 			iter = freeUnits.erase( iter );
@@ -159,19 +160,16 @@ int CGeneralArtillery::RequestForSupport( const CVec2 &vCenter, const float fRad
 		return 0;
 	else
 	{
-		tasks.push_back( CGeneralArtilleryTask( this, bombardmentUnits, bIsAntiArtilleryFight, vCenter, fRadius, nCellNumber ) );
+		tasks.push_back(
+				CGeneralArtilleryTask( this, bombardmentUnits, bIsAntiArtilleryFight, vCenter, fRadius, nCellNumber ) );
 	}
 
 	return 0;
 }
 
-void CGeneralArtillery::CancelRequest( int nRequestID, enum EForceType eType )
-{
-}
+void CGeneralArtillery::CancelRequest( int nRequestID, enum EForceType eType ) {}
 
-void CGeneralArtillery::SetEnemyContainer( IEnemyContainer *pEnemyContainer )
-{
-}
+void CGeneralArtillery::SetEnemyContainer( IEnemyContainer *pEnemyContainer ) {}
 
 bool CGeneralArtillery::EnumEnemy( CAIUnit *pEnemy )
 {
@@ -196,8 +194,11 @@ void CGeneralArtillery::SetCellInUse( const int nResistanceCell, bool bInUse )
 //*									CGeneralArtilleryGoToPosition										*
 //*******************************************************************
 
-CGeneralArtilleryGoToPosition::CGeneralArtilleryGoToPosition( CAIUnit *_pUnit, const CVec2 &_vPos, bool _bToReservePosition )
-: pUnit( _pUnit ), vPos( _vPos ), bToReservePosition( _bToReservePosition ), eState( EBS_START ), bFinished( false ), startTime( curTime )
+CGeneralArtilleryGoToPosition::CGeneralArtilleryGoToPosition( CAIUnit *_pUnit,
+                                                              const CVec2 &_vPos,
+                                                              bool _bToReservePosition )
+		: pUnit( _pUnit ), vPos( _vPos ), bToReservePosition( _bToReservePosition ), eState( EBS_START ),
+			bFinished( false ), startTime( curTime )
 {
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
 }
@@ -221,7 +222,8 @@ void CGeneralArtilleryGoToPosition::StartState()
 	{
 		eState = EBS_WAIT_FOR_TRUCK;
 		startTime = curTime;
-		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_TAKE_ARTILLERY, pUnit->GetUniqueId() ), pUnit->GetTruck(), false );
+		theGroupLogic.UnitCommand(
+				SAIUnitCmd( ACTION_COMMAND_TAKE_ARTILLERY, pUnit->GetUniqueId() ), pUnit->GetTruck(), false );
 	}
 }
 
@@ -237,8 +239,8 @@ void CGeneralArtilleryGoToPosition::WaitForTruck()
 		else
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DEPLOY_ARTILLERY, vPos ), pUnit->GetTruck(), false );
 	}
-	else if ( startTime + 2000 < curTime &&
-						pUnit->GetTruck()->GetState() && pUnit->GetTruck()->GetState()->IsRestState() )
+	else if ( startTime + 2000 < curTime && pUnit->GetTruck()->GetState() &&
+	          pUnit->GetTruck()->GetState()->IsRestState() )
 		bFinished = true;
 }
 
@@ -262,8 +264,8 @@ void CGeneralArtilleryGoToPosition::Finishing()
 {
 	if ( curTime - timeOfFinish >= 1500 )
 	{
-		NI_ASSERT( dynamic_cast_ptr<CArtillery*>(pUnit) != 0, "Wrong unit" );
-		CArtillery *pArtillery = checked_cast_ptr<CArtillery*>(pUnit);
+		NI_ASSERT( dynamic_cast_ptr<CArtillery *>( pUnit ) != 0, "Wrong unit" );
+		CArtillery *pArtillery = checked_cast_ptr<CArtillery *>( pUnit );
 
 		if ( !pArtillery->IsInInstallAction() )
 			bFinished = true;
@@ -299,7 +301,6 @@ void CGeneralArtilleryGoToPosition::Segment()
 				break;
 			default:
 				NI_ASSERT( false, "Wrong state" );
-
 		}
 	}
 }
@@ -308,8 +309,7 @@ void CGeneralArtilleryGoToPosition::Segment()
 //*							CGeneralArtilleryTask::SBombardmentUnitState				*
 //*******************************************************************
 
-CGeneralArtilleryTask::SBombardmentUnitState::SBombardmentUnitState( CAIUnit *_pUnit )
-: pUnit( _pUnit )
+CGeneralArtilleryTask::SBombardmentUnitState::SBombardmentUnitState( CAIUnit *_pUnit ) : pUnit( _pUnit )
 {
 	vReservePosition = pUnit->GetCenterPlain();
 }
@@ -318,13 +318,17 @@ CGeneralArtilleryTask::SBombardmentUnitState::SBombardmentUnitState( CAIUnit *_p
 //*											CGeneralArtilleryTask												*
 //*******************************************************************
 
-CGeneralArtilleryTask::CGeneralArtilleryTask( CGeneralArtillery *_pOwner, std::list<CAIUnit*> &givenUnits, bool bAntiArtilleryFight, const CVec2 &vCenter, const float fRadius, const int _nCellNumber )
-: pOwner( _pOwner ), bIsAntiArtilleryFight( bAntiArtilleryFight ),
-	bBombardmentFinished( false ), eState( EBS_START ), vBombardmentCenter( vCenter ),
-	fBombardmentRadius( fRadius ), timeToSendAntiArtilleryAck( 0 ),
-	nCellNumber( _nCellNumber )
+CGeneralArtilleryTask::CGeneralArtilleryTask( CGeneralArtillery *_pOwner,
+                                              std::list<CAIUnit *> &givenUnits,
+                                              bool bAntiArtilleryFight,
+                                              const CVec2 &vCenter,
+                                              const float fRadius,
+                                              const int _nCellNumber )
+		: pOwner( _pOwner ), bIsAntiArtilleryFight( bAntiArtilleryFight ), bBombardmentFinished( false ),
+			eState( EBS_START ), vBombardmentCenter( vCenter ), fBombardmentRadius( fRadius ),
+			timeToSendAntiArtilleryAck( 0 ), nCellNumber( _nCellNumber )
 {
-	for ( std::list<CAIUnit*>::iterator iter = givenUnits.begin(); iter != givenUnits.end(); ++iter )
+	for ( std::list<CAIUnit *>::iterator iter = givenUnits.begin(); iter != givenUnits.end(); ++iter )
 	{
 		bombardmentUnits.push_back( SBombardmentUnitState( *iter ) );
 	}
@@ -364,7 +368,8 @@ void CGeneralArtilleryTask::StartBombardment()
 	const float fShift = ( nUnits == 0 ) ? 0.0f : fBombardmentRadius / 2.0f;
 	uint16_t wDir = 0;
 
-	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter, wDir += 65536.0f / float(nUnits) )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+	      ++iter, wDir += 65536.0f / float( nUnits ) )
 	{
 		const CVec2 vCenter = vBombardmentCenter + GetVectorByDirection( wDir ) * fShift;
 		CAIUnit *pUnit = iter->pUnit;
@@ -389,7 +394,8 @@ void CGeneralArtilleryTask::StartBombardment()
 void CGeneralArtilleryTask::GoingToBattle()
 {
 	bool bFinished = true;
-	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+	      ++iter )
 	{
 		if ( iter->pGoToPosition )
 		{
@@ -425,7 +431,8 @@ void CGeneralArtilleryTask::GoingToBattle()
 		eState = EBS_ROTATING;
 		startRotatingTime = curTime;
 
-		for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+		for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+		      ++iter )
 		{
 			if ( iter->pGoToPosition == 0 )
 			{
@@ -433,7 +440,11 @@ void CGeneralArtilleryTask::GoingToBattle()
 				if ( HasTruck( pUnit ) )
 				{
 					CAIUnit *pTruck = pUnit->GetTruck();
-					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_RESUPPLY, pTruck->GetCenterPlain() + pTruck->GetDirectionVector() * 2.0f * pTruck->GetStats()->vAABBHalfSize.y ), pTruck, false );
+					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_RESUPPLY,
+					                                       pTruck->GetCenterPlain() + pTruck->GetDirectionVector() * 2.0f *
+					                                                                      pTruck->GetStats()->vAABBHalfSize.y ),
+					                           pTruck,
+					                           false );
 				}
 			}
 		}
@@ -450,19 +461,21 @@ void CGeneralArtilleryTask::Rotating()
 		{
 			startRotatingTime = 0;
 
-			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+			      ++iter )
 			{
 				if ( !iter->pGoToPosition )
 				{
 					CAIUnit *pUnit = iter->pUnit;
 					if ( !pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( iter->vAttackPos, 0 ) )
-							theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, iter->vAttackPos ), pUnit, false );
+						theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, iter->vAttackPos ), pUnit, false );
 				}
 			}
 		}
 		else
 		{
-			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+			      ++iter )
 			{
 				if ( !iter->pGoToPosition )
 				{
@@ -477,7 +490,8 @@ void CGeneralArtilleryTask::Rotating()
 			eState = EBS_FIRING;
 			NTimer::STime maxTimeToShoot = 0;
 			CalculateTimeToSendAntiArtilleryAck();
-			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+			for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+			      ++iter )
 			{
 				if ( !iter->pGoToPosition )
 				{
@@ -506,7 +520,8 @@ void CGeneralArtilleryTask::Firing()
 	{
 		eState = EBS_ESCAPING;
 
-		for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+		for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+		      ++iter )
 		{
 			if ( !iter->pGoToPosition )
 				iter->pGoToPosition = new CGeneralArtilleryGoToPosition( iter->pUnit, iter->vReservePosition, true );
@@ -541,7 +556,8 @@ void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
 	vAntiArtilleryAckCenter = VNULL2;
 	int cnt = 0;
 	NTimer::STime maxTimeToWait = 0;
-	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
+	for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end();
+	      ++iter )
 	{
 		if ( !iter->pGoToPosition )
 		{
@@ -553,9 +569,8 @@ void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
 			if ( CBasicGun *pGun = pUnit->GetFirstArtilleryGun() )
 			{
 				CPtr<IBallisticTraj> pTraj = pGun->CreateTraj( CVec3( iter->vAttackPos, 0 ) );
-				const NTimer::STime localTimeToWait =
-						pTraj->GetExplTime() - pTraj->GetStartTime() +
-						2 * ( pGun->GetAimTime( false ) + pGun->GetRelaxTime( false ) );
+				const NTimer::STime localTimeToWait = pTraj->GetExplTime() - pTraj->GetStartTime() +
+				                                      2 * ( pGun->GetAimTime( false ) + pGun->GetRelaxTime( false ) );
 
 				if ( localTimeToWait > maxTimeToWait )
 					maxTimeToWait = localTimeToWait;
@@ -610,24 +625,28 @@ void CGeneralArtilleryTask::Segment()
 
 				break;
 			case EBS_FIRING:
+			{
+				Firing();
+
+				if ( bIsAntiArtilleryFight && timeToSendAntiArtilleryAck != 0 && timeToSendAntiArtilleryAck <= curTime )
 				{
-					Firing();
-
-					if ( bIsAntiArtilleryFight && timeToSendAntiArtilleryAck != 0 && timeToSendAntiArtilleryAck <= curTime )
-					{
-						NI_ASSERT( vAntiArtilleryAckCenter.x >= 0.0f && vAntiArtilleryAckCenter.y >= 0.0f, fmt::format( "Wrong vAntiArtilleryAckCenter ({:g},{:g})", vAntiArtilleryAckCenter.x, vAntiArtilleryAckCenter.y ) );
-						updater.AddUpdate( EFB_ENEMY_STARTED_ANTIARTILLERY, MAKELONG( vAntiArtilleryAckCenter.x, vAntiArtilleryAckCenter.y ) );
-						timeToSendAntiArtilleryAck = 0;
-					}
+					NI_ASSERT( vAntiArtilleryAckCenter.x >= 0.0f && vAntiArtilleryAckCenter.y >= 0.0f,
+					           fmt::format( "Wrong vAntiArtilleryAckCenter ({:g},{:g})",
+					                        vAntiArtilleryAckCenter.x,
+					                        vAntiArtilleryAckCenter.y ) );
+					updater.AddUpdate( EFB_ENEMY_STARTED_ANTIARTILLERY,
+					                   MAKELONG( vAntiArtilleryAckCenter.x, vAntiArtilleryAckCenter.y ) );
+					timeToSendAntiArtilleryAck = 0;
 				}
+			}
 
-				break;
+			break;
 			case EBS_ESCAPING:
 				Escaping();
 
 				break;
 			default:
-				NI_ASSERT( false, fmt::format( "Wrong bombardment state ({})", int(eState) ) );
+				NI_ASSERT( false, fmt::format( "Wrong bombardment state ({})", int( eState ) ) );
 		}
 	}
 }

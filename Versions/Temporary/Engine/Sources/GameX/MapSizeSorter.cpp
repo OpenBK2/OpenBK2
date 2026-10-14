@@ -9,20 +9,20 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 0x1927ABC1, CListControlSorterMapSize )
 
 bool CListControlSorterMapSize::Compare( IWindow *pSubItem1, IWindow *pSubItem2 )
 {
-	IListControlItem *p1 = dynamic_cast<IListControlItem*>( pSubItem1 );
-	IListControlItem *p2 = dynamic_cast<IListControlItem*>( pSubItem2 );
+	IListControlItem *p1 = dynamic_cast<IListControlItem *>( pSubItem1 );
+	IListControlItem *p2 = dynamic_cast<IListControlItem *>( pSubItem2 );
 	IWindow *pColumnItem1 = p1->GetSubItem( nColumn );
 	IWindow *pColumnItem2 = p2->GetSubItem( nColumn );
 	std::string szItem1;
 	std::string szItem2;
 
-	ITextView *pTextItem1 = dynamic_cast<ITextView*>( pColumnItem1 );
+	ITextView *pTextItem1 = dynamic_cast<ITextView *>( pColumnItem1 );
 	if ( pTextItem1 )
 		szItem1 = NStr::ToMBCS( pTextItem1->GetText() );
 	else
 		szItem1 = NStr::ToMBCS( pColumnItem1->GetTextString() );
 
-	ITextView *pTextItem2 = dynamic_cast<ITextView*>( pColumnItem2 );
+	ITextView *pTextItem2 = dynamic_cast<ITextView *>( pColumnItem2 );
 	if ( pTextItem2 )
 		szItem2 = NStr::ToMBCS( pTextItem2->GetText() );
 	else
@@ -48,9 +48,9 @@ bool CListControlSorterMapSize::Compare( IWindow *pSubItem1, IWindow *pSubItem2 
 
 	int nCompare = nSize1 - nSize2;
 	if ( bAscending )
-		return (nCompare != 0) ? nCompare < 0 : pColumnItem1 < pColumnItem2;
+		return ( nCompare != 0 ) ? nCompare < 0 : pColumnItem1 < pColumnItem2;
 	else
-		return (nCompare != 0) ? nCompare > 0 : pColumnItem1 > pColumnItem2;
+		return ( nCompare != 0 ) ? nCompare > 0 : pColumnItem1 > pColumnItem2;
 }
 
 void CListControlSorterMapSize::SetDirection( const bool _bAscending )

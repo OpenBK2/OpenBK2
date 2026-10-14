@@ -12,8 +12,15 @@ class CDeadHouseAnimation : public IClientUpdatableProcess
 	ZDATA
 	int nID = 0;
 	NTimer::STime nEndTime = 0;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&nEndTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nID );
+		f.Add( 3, &nEndTime );
+		return 0;
+	}
+
 private:
 public:
 	void Init( int nObjectID, const NTimer::STime &time, const NDb::SAnimB2 *pAnimation );

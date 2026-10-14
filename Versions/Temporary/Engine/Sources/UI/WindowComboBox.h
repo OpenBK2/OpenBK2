@@ -8,14 +8,18 @@ class CWindowListItem;
 class CWindowMSButton;
 class CWindowListCtrl;
 
-class CWindowComboBox : public CWindow, public IComboBox,
-	public IButtonNotify, public ISelectNotify, public IClickNotify, public IFocusNotify
+class CWindowComboBox : public CWindow,
+												public IComboBox,
+												public IButtonNotify,
+												public ISelectNotify,
+												public IClickNotify,
+												public IFocusNotify
 {
-	OBJECT_BASIC_METHODS(CWindowComboBox);
+	OBJECT_BASIC_METHODS( CWindowComboBox );
 
-	typedef std::vector< CPtr<IListControlItem> > CItems;
+	typedef std::vector<CPtr<IListControlItem>> CItems;
 
-	ZDATA_(CWindow)
+	ZDATA_( CWindow )
 	CDBPtr<NDb::SWindowComboBoxShared> pShared;
 	CPtr<NDb::SWindowComboBox> pInstance;
 	CObj<CWindowListItem> pLine;
@@ -29,14 +33,33 @@ class CWindowComboBox : public CWindow, public IComboBox,
 	int nMaxVisibleRows; // use 0 for fixed list size
 	int nListBaseHeight;
 	int nRowHeight;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pShared); f.Add(3,&pInstance); f.Add(4,&pLine); f.Add(5,&pIcon); f.Add(6,&pList); f.Add(7,&vListPos); f.Add(8,&pViewer); f.Add(9,&items); f.Add(10,&nSelected); f.Add(11,&pLineData); f.Add(12,&nMaxVisibleRows); f.Add(13,&nListBaseHeight); f.Add(14,&nRowHeight); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CWindow *)this );
+		f.Add( 2, &pShared );
+		f.Add( 3, &pInstance );
+		f.Add( 4, &pLine );
+		f.Add( 5, &pIcon );
+		f.Add( 6, &pList );
+		f.Add( 7, &vListPos );
+		f.Add( 8, &pViewer );
+		f.Add( 9, &items );
+		f.Add( 10, &nSelected );
+		f.Add( 11, &pLineData );
+		f.Add( 12, &nMaxVisibleRows );
+		f.Add( 13, &nListBaseHeight );
+		f.Add( 14, &nRowHeight );
+		return 0;
+	}
 
 	bool bSuppressPopupList;
+
 private:
 	void ResizeList();
+
 protected:
 	//{ CWindow
-	NDb::SWindow* GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance() { return pInstance; }
 	bool IsRelatedFocus( IWindow *pWindow ) const;
 	//}
 
@@ -45,6 +68,7 @@ protected:
 	// Returns true for visible "modal" drop-down list, false otherwise
 	bool IsModalList() const;
 	void ShowList( bool bShow );
+
 public:
 	CWindowComboBox();
 
@@ -63,7 +87,7 @@ public:
 	void RemoveItem( CObjectBase *pData );
 	void RemoveAllItems();
 	int GetItemCount() const { return items.size(); }
-	IListControlItem* GetItem( int nIndex ) const;
+	IListControlItem *GetItem( int nIndex ) const;
 	int GetSelectedIndex() const { return nSelected; }
 	void Select( int nIndex );
 

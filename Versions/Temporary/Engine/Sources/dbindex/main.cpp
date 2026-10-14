@@ -46,7 +46,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
-	if ( argc >= 2 && std::string(argv[1]) == "-show-version"  )
+	if ( argc >= 2 && std::string( argv[1] ) == "-show-version" )
 	{
 		printf( "Version: %s\n", REVISION_NUMBER_STR );
 		printf( "Build date/time: %s\n", BUILD_DATE_TIME_STR );
@@ -56,16 +56,16 @@ int PORT_CDECL main( int argc, char *argv[] )
 	std::string szDataDirectory;
 	switch ( argc )
 	{
-	case 1:
+		case 1:
 		{
 			szDataDirectory = szCWD;
 		}
 		break;
-	case 2:
+		case 2:
 		{
 			szDataDirectory = argv[1];
 			NFile::AppendSlash( &szDataDirectory, '/' );
-			if ( NFile::IsPathRelative(szDataDirectory) )
+			if ( NFile::IsPathRelative( szDataDirectory ) )
 			{
 				NFile::MakeFullPath( &szDataDirectory, szDataDirectory, szCWD );
 			}
@@ -73,26 +73,26 @@ int PORT_CDECL main( int argc, char *argv[] )
 		}
 		break;
 	}
-	if ( szDataDirectory.empty())
+	if ( szDataDirectory.empty() )
 	{
 		return PrintUsage();
 	}
-	if ( !NFile::DoesFolderExist(szDataDirectory) )
+	if ( !NFile::DoesFolderExist( szDataDirectory ) )
 	{
 		PrintUsage();
-		printf( "\nERROR: Specified database root directory does not exist.\n\n");
+		printf( "\nERROR: Specified database root directory does not exist.\n\n" );
 		return 0xDEAD;
 	}
 	//
-	std::string szIndexFile = (szCWD + "index.bin");
-	std::string szIndexFileBackup = (szCWD + "index.bin.backup");
+	std::string szIndexFile = ( szCWD + "index.bin" );
+	std::string szIndexFileBackup = ( szCWD + "index.bin.backup" );
 	printf( "Building index for database root \"%s\"\n", szDataDirectory.c_str() );
 	printf( "Index will be stored as \"%s\"\n", szIndexFile.c_str() );
 	//
 	NHPTimer::STime hptime;
 	NHPTimer::GetTime( &hptime );
 	//
-	if ( NFile::DoesFileExist(szIndexFile) )
+	if ( NFile::DoesFileExist( szIndexFile ) )
 		// NFile::RenameFile, not MoveFile: windows.h rewrites that name, and this
 		// is the tree's portable spelling of the same move.
 		NFile::RenameFile( szIndexFile, szIndexFileBackup );
@@ -115,10 +115,8 @@ int PORT_CDECL main( int argc, char *argv[] )
 		if ( it->size() < 4 )
 			continue;
 		//
-		if ( (*it)[nSize - 4] == '.' &&
-			   NStr::ASCII_tolower((*it)[nSize - 3]) == 'x' &&
-				 NStr::ASCII_tolower((*it)[nSize - 2]) == 'd' &&
-				 NStr::ASCII_tolower((*it)[nSize - 1]) == 'b' )
+		if ( ( *it )[nSize - 4] == '.' && NStr::ASCII_tolower( ( *it )[nSize - 3] ) == 'x' &&
+		     NStr::ASCII_tolower( ( *it )[nSize - 2] ) == 'd' && NStr::ASCII_tolower( ( *it )[nSize - 1] ) == 'b' )
 		{
 			if ( NDb::RegisterResourceFile( *it ) == false )
 				printf( "ERROR: can't register resource \"%s\"\n", it->c_str() );
@@ -131,10 +129,10 @@ int PORT_CDECL main( int argc, char *argv[] )
 	pMainVFS = 0;
 	pMainFileCreator = 0;
 	//
-	if ( NFile::DoesFileExist(szIndexFile) == false )
+	if ( NFile::DoesFileExist( szIndexFile ) == false )
 	{
 		printf( "Building database index failed!\n" );
-		if ( NFile::DoesFileExist(szIndexFileBackup) )
+		if ( NFile::DoesFileExist( szIndexFileBackup ) )
 		{
 			printf( "Restoring previous index\n" );
 			NFile::RenameFile( szIndexFileBackup, szIndexFile );

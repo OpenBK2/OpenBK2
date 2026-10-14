@@ -21,32 +21,32 @@
 // copy.
 namespace NPointListView
 {
-	// One list, whichever toolkit draws it: what the shared dispatch needs.
-	class IPointList
-	{
-	public:
-		virtual ~IPointList() {}
+// One list, whichever toolkit draws it: what the shared dispatch needs.
+class IPointList
+{
+public:
+	virtual ~IPointList() {}
 
-		virtual unsigned GetInstanceID() const = 0;
-		// ID_WINDOW_GET_DIALOG_DATA and ID_WINDOW_SET_DIALOG_DATA, for the list
-		// whose instance ID the data names.
-		virtual void GetDialogData( SPointListDialogData *pData ) = 0;
-		virtual void SetDialogData( const SPointListDialogData *pData ) = 0;
-		// Setting one list's data moves every other list's season selection to
-		// match -- the season is the building's, not the list's.
-		virtual void FollowSeason( NDb::ESeason eSeason ) = 0;
-	};
+	virtual unsigned GetInstanceID() const = 0;
+	// ID_WINDOW_GET_DIALOG_DATA and ID_WINDOW_SET_DIALOG_DATA, for the list
+	// whose instance ID the data names.
+	virtual void GetDialogData( SPointListDialogData *pData ) = 0;
+	virtual void SetDialogData( const SPointListDialogData *pData ) = 0;
+	// Setting one list's data moves every other list's season selection to
+	// match -- the season is the building's, not the list's.
+	virtual void FollowSeason( NDb::ESeason eSeason ) = 0;
+};
 
-	// Called by a list as it is constructed and destroyed. While any list is
-	// registered, CHID_POINTS_LIST_DIALOG answers for all of them.
-	void Register( IPointList *pList );
-	void Unregister( IPointList *pList );
-	// Every registered list except pSource follows eSeason.
-	void FollowSeason( IPointList *pSource, NDb::ESeason eSeason );
+// Called by a list as it is constructed and destroyed. While any list is
+// registered, CHID_POINTS_LIST_DIALOG answers for all of them.
+void Register( IPointList *pList );
+void Unregister( IPointList *pList );
+// Every registered list except pSource follows eSeason.
+void FollowSeason( IPointList *pSource, NDb::ESeason eSeason );
 
-	// Creates the list for nInstanceID in pPage, registers it in pPalettes,
-	// which owns it from then on, and returns it. rszLabel names its
-	// rows: "<label>   0", "<label>   1", ... Null if it could not be created.
-	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage, unsigned nInstanceID, const std::string &rszLabel );
+// Creates the list for nInstanceID in pPage, registers it in pPalettes,
+// which owns it from then on, and returns it. rszLabel names its
+// rows: "<label>   0", "<label>   1", ... Null if it could not be created.
+IWidget *Create( CPaletteList *pPalettes, IWidget *pPage, unsigned nInstanceID, const std::string &rszLabel );
 
 }

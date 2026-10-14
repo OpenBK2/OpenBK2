@@ -24,8 +24,14 @@ class CMPManagerModeLAN : public CMPManagerMode
 		CDBPtr<NDb::SMultiplayerMap> pMPMap;
 		int nGameType;
 		int nTechLevel;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMPMap); f.Add(3,&nGameType); f.Add(4,&nTechLevel); return 0; }
-		SGameSettings() : nGameType(0), nTechLevel(0) {}
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pMPMap );
+			f.Add( 3, &nGameType );
+			f.Add( 4, &nTechLevel );
+			return 0;
+		}
+		SGameSettings() : nGameType( 0 ), nTechLevel( 0 ) {}
 	};
 
 	CPtr<CLANClient> pLANClient;
@@ -73,5 +79,5 @@ public:
 	bool Segment();
 
 	virtual const ENetMode GetMode() const { return ENM_LAN; }
-	virtual void SetLanTester( CLANTester *_pLANTester ) { pLanTester = _pLANTester ; }
+	virtual void SetLanTester( CLANTester *_pLANTester ) { pLanTester = _pLANTester; }
 };

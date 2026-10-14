@@ -18,7 +18,7 @@ virtual void ToAIUnits( bool bInEditor )
 		fRevealRadius *= 32.0f;
 	}
 	// градусы <=> градусы65535
-	wDeltaAngle = ( uint32_t( float( fDeltaAngle / 2 ) * (65536.0f / 360.0f) ) ) % 65536;
+	wDeltaAngle = ( uint32_t( float( fDeltaAngle / 2 ) * ( 65536.0f / 360.0f ) ) ) % 65536;
 	// shell types
 	for ( int i = 0; i < shells.size(); ++i )
 		shells[i].ToAIUnits( bInEditor );

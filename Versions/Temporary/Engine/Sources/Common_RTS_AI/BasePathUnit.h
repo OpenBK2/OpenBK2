@@ -21,9 +21,9 @@ struct IPointChecking;
 //! параметры для выравнивания скорости
 enum EAdjustSpeedParam
 {
-	ADJUST_SLOW,	//! уменьшить скорость в указанное количество раз
-	ADJUST_FAST,	//! увеличить скорость в указанное количество раз
-	ADJUST_SET,		//! задать скорость
+	ADJUST_SLOW, //! уменьшить скорость в указанное количество раз
+	ADJUST_FAST, //! увеличить скорость в указанное количество раз
+	ADJUST_SET,  //! задать скорость
 };
 
 //! "плоскость" движения юнита
@@ -59,67 +59,112 @@ class COMMON_RTS_AI_EXPORT CBasePathUnit
 	CPtr<CCommonPathFinder> pPathFinder;
 
 	ZDATA
-		ZONSERIALIZE
-		ZSKIP
+	ZONSERIALIZE
+	ZSKIP
 
-		SAIAngle wDirection;					//! направление куда едем
-		SAIAngle wFrontDirection;			//! направление переда
+	SAIAngle wDirection;      //! направление куда едем
+	SAIAngle wFrontDirection; //! направление переда
 
-		SAIAngle wLastDirection;			//! предыдущее направление
-		bool bGoForward = false;					//! едем передом
+	SAIAngle wLastDirection; //! предыдущее направление
+	bool bGoForward = false; //! едем передом
 
-		bool bTurning = false;						//! поворачиваем
-		bool bTurnCalled = false;					//! на этом сегменте поворачивались
+	bool bTurning = false;    //! поворачиваем
+	bool bTurnCalled = false; //! на этом сегменте поворачивались
 
-		CVec3 vCenter;						//! положение юнита (с учетом высоты)
-		SVector vTile;						//! положение юнита на плоскости карты в AI тайлах
-		SVector vLastKnownGoodTile;
+	CVec3 vCenter; //! положение юнита (с учетом высоты)
+	SVector vTile; //! положение юнита на плоскости карты в AI тайлах
+	SVector vLastKnownGoodTile;
 
-		float fSpeed = 0.0f;							//! скорость юнита
-		float fDesiredSpeed = 0.0f;			//! желаемая скорость движения
+	float fSpeed = 0.0f;        //! скорость юнита
+	float fDesiredSpeed = 0.0f; //! желаемая скорость движения
 
-		bool bLocking = false;						//! юнит залокал тайлы под собой
-		bool bOnLockedTiles = false;			//! юнит на залоканых тайлах
-		bool bIdle = false;								//! нет пути по которому нужно ехать
-		bool bFixUnlocking = false;
+	bool bLocking = false;       //! юнит залокал тайлы под собой
+	bool bOnLockedTiles = false; //! юнит на залоканых тайлах
+	bool bIdle = false;          //! нет пути по которому нужно ехать
+	bool bFixUnlocking = false;
 
-		int nCollisionsCount = 0;
+	int nCollisionsCount = 0;
 
-		CPtr<ISmoothPath> pSmoothPath;
-		CPtr<ISmoothPath> pDefaultPath;
+	CPtr<ISmoothPath> pSmoothPath;
+	CPtr<ISmoothPath> pDefaultPath;
 
-		CPtr<IMemento>		pPathMemento;
+	CPtr<IMemento> pPathMemento;
 
-		CPtr<ICollision>  pCurrentCollision;
-		CPtr<ICollision>  pInterruptedCollision;
-		bool bNoCollision = false;
+	CPtr<ICollision> pCurrentCollision;
+	CPtr<ICollision> pInterruptedCollision;
+	bool bNoCollision = false;
 
-		NTimer::STime stayTime = 0;
-		NTimer::STime collStayTime = 0;
-		NTimer::STime nextSecondPathSegmTime = 0;
-		NTimer::STime checkOnLockedTime = 0;
+	NTimer::STime stayTime = 0;
+	NTimer::STime collStayTime = 0;
+	NTimer::STime nextSecondPathSegmTime = 0;
+	NTimer::STime checkOnLockedTime = 0;
 
-		bool bMaxSlowed = false, bMinSlowed = false, bNotified = false;
+	bool bMaxSlowed = false, bMinSlowed = false, bNotified = false;
 
-		bool bTurningToDirContinuesly = false;
-		SAIAngle wDirToContinueslyTurn;
+	bool bTurningToDirContinuesly = false;
+	SAIAngle wDirToContinueslyTurn;
 
-		EMovementPlane eMovementPlane{};
-		CPtr<CAIMap> pAIMap;
-		CPtr<CStaticMapHeights> pHeights;
-		CPtr<ICollisionsCollector> pCollisionsCollector;
+	EMovementPlane eMovementPlane{};
+	CPtr<CAIMap> pAIMap;
+	CPtr<CStaticMapHeights> pHeights;
+	CPtr<ICollisionsCollector> pCollisionsCollector;
 
-		CPtr<ISmoothPath> pInterruptedPath;
-		ZSKIP
-		bool bPlacementUpdated = false;
-		bool bStoppedSent = false;
-		ZSKIP
-		CVec3 vOldPlacement;
-		uint16_t wOldDirection = 0;
-	public:
-	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&wDirection); f.Add(4,&wFrontDirection); f.Add(5,&wLastDirection); f.Add(6,&bGoForward); f.Add(7,&bTurning); f.Add(8,&bTurnCalled); f.Add(9,&vCenter); f.Add(10,&vTile); f.Add(11,&vLastKnownGoodTile); f.Add(12,&fSpeed); f.Add(13,&fDesiredSpeed); f.Add(14,&bLocking); f.Add(15,&bOnLockedTiles); f.Add(16,&bIdle); f.Add(17,&bFixUnlocking); f.Add(18,&nCollisionsCount); f.Add(19,&pSmoothPath); f.Add(20,&pDefaultPath); f.Add(21,&pPathMemento); f.Add(22,&pCurrentCollision); f.Add(23,&pInterruptedCollision); f.Add(24,&bNoCollision); f.Add(25,&stayTime); f.Add(26,&collStayTime); f.Add(27,&nextSecondPathSegmTime); f.Add(28,&checkOnLockedTime); f.Add(29,&bMaxSlowed); f.Add(30,&bMinSlowed); f.Add(31,&bNotified); f.Add(32,&bTurningToDirContinuesly); f.Add(33,&wDirToContinueslyTurn); f.Add(34,&eMovementPlane); f.Add(35,&pAIMap); f.Add(36,&pHeights); f.Add(37,&pCollisionsCollector); f.Add(38,&pInterruptedPath); f.Add(40,&bPlacementUpdated); f.Add(41,&bStoppedSent); f.Add(43,&vOldPlacement); f.Add(44,&wOldDirection); return 0; }
-	private:
+	CPtr<ISmoothPath> pInterruptedPath;
+	ZSKIP
+	bool bPlacementUpdated = false;
+	bool bStoppedSent = false;
+	ZSKIP
+	CVec3 vOldPlacement;
+	uint16_t wOldDirection = 0;
 
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		OnSerialize( f );
+		f.Add( 3, &wDirection );
+		f.Add( 4, &wFrontDirection );
+		f.Add( 5, &wLastDirection );
+		f.Add( 6, &bGoForward );
+		f.Add( 7, &bTurning );
+		f.Add( 8, &bTurnCalled );
+		f.Add( 9, &vCenter );
+		f.Add( 10, &vTile );
+		f.Add( 11, &vLastKnownGoodTile );
+		f.Add( 12, &fSpeed );
+		f.Add( 13, &fDesiredSpeed );
+		f.Add( 14, &bLocking );
+		f.Add( 15, &bOnLockedTiles );
+		f.Add( 16, &bIdle );
+		f.Add( 17, &bFixUnlocking );
+		f.Add( 18, &nCollisionsCount );
+		f.Add( 19, &pSmoothPath );
+		f.Add( 20, &pDefaultPath );
+		f.Add( 21, &pPathMemento );
+		f.Add( 22, &pCurrentCollision );
+		f.Add( 23, &pInterruptedCollision );
+		f.Add( 24, &bNoCollision );
+		f.Add( 25, &stayTime );
+		f.Add( 26, &collStayTime );
+		f.Add( 27, &nextSecondPathSegmTime );
+		f.Add( 28, &checkOnLockedTime );
+		f.Add( 29, &bMaxSlowed );
+		f.Add( 30, &bMinSlowed );
+		f.Add( 31, &bNotified );
+		f.Add( 32, &bTurningToDirContinuesly );
+		f.Add( 33, &wDirToContinueslyTurn );
+		f.Add( 34, &eMovementPlane );
+		f.Add( 35, &pAIMap );
+		f.Add( 36, &pHeights );
+		f.Add( 37, &pCollisionsCollector );
+		f.Add( 38, &pInterruptedPath );
+		f.Add( 40, &bPlacementUpdated );
+		f.Add( 41, &bStoppedSent );
+		f.Add( 43, &vOldPlacement );
+		f.Add( 44, &wOldDirection );
+		return 0;
+	}
+
+private:
 	void OnSerialize( IBinSaver &f );
 	const bool MakeTurnToDirection( const uint16_t wDirection );
 
@@ -131,7 +176,7 @@ class COMMON_RTS_AI_EXPORT CBasePathUnit
 protected:
 	//! обновить позицию юнита, это должен делать кто-то из AI
 	//virtual void UpdatePlacement( const CVec3 &vOldPosition )	{ NI_ASSERT( false, "Illegal call of CBasePathUnit::UpdatePlacement" ); }
-	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate )	= 0;
+	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate ) = 0;
 	virtual void UpdateTile() = 0;
 	//! создать путь при инициализации юнита (для формации создаются свои пути)
 	virtual ISmoothPath *CreateSmoothPath();
@@ -144,17 +189,22 @@ protected:
 	virtual void OnIdle() {}
 	// called when unit stopped (no placement update)
 	virtual void OnStopped() {}
+
 public:
 	CBasePathUnit();
-	void Init( const CVec3 &vCenter, const uint16_t wDirection, CAIMap *pAIMap, ICollisionsCollector *pCollisionsCollector, CCommonPathFinder *pPathFinder );
+	void Init( const CVec3 &vCenter,
+	           const uint16_t wDirection,
+	           CAIMap *pAIMap,
+	           ICollisionsCollector *pCollisionsCollector,
+	           CCommonPathFinder *pPathFinder );
 
 	//! информация о позиции юнита в пространстве (3D)
-	const CVec3 & GetCenter() const {	return vCenter; }
+	const CVec3 &GetCenter() const { return vCenter; }
 	//! информация о позиции юнита на плоскости (2D)
 	// hack to increase FPS :)
-	const CVec2 & GetCenterPlain() const { return *( reinterpret_cast<const CVec2 *>( &vCenter ) ); }
+	const CVec2 &GetCenterPlain() const { return *( reinterpret_cast<const CVec2 *>( &vCenter ) ); }
 
-	CCommonPathFinder* GetPathFinder() const { return pPathFinder; }
+	CCommonPathFinder *GetPathFinder() const { return pPathFinder; }
 
 	//! информация о позиции юнита в AI тайлах
 	const SVector GetCenterTile() const { return vTile; }
@@ -169,10 +219,13 @@ public:
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении
 	const bool IsValidDirection( const uint16_t wDirection );
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении (направление задается вектором)
-	const bool IsValidDirection( const CVec2 &vDirection ) { return IsValidDirection( GetDirectionByVector( vDirection ) ); }
+	const bool IsValidDirection( const CVec2 &vDirection )
+	{
+		return IsValidDirection( GetDirectionByVector( vDirection ) );
+	}
 	//! получить направление движения юнита,
 	const uint16_t GetDirection() const { return wDirection; }
-	const float GetDir() const { return float(wFrontDirection) / 65536.0f * FP_2PI; }
+	const float GetDir() const { return float( wFrontDirection ) / 65536.0f * FP_2PI; }
 
 	//! куда смотрит перед юнита
 	const uint16_t GetFrontDirection() const { return wFrontDirection; }
@@ -199,7 +252,8 @@ public:
 	bool CanMake180DegreesTurn( SRect rect ) const;
 
 	//! проверить, можно ли развернуться в направлении vDir, fRectCoeff - коеффициент "растяжения" профайла юнита
-	virtual const bool CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const;
+	virtual const bool
+	CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const;
 	//! установить скорость
 	void SetSpeed( const float _fSpeed ) { fSpeed = _fSpeed; }
 	//! установить скорость, при помощи параметры eAdjust можно определить как именно менять скорость
@@ -207,7 +261,7 @@ public:
 	//! получить текущую скорость
 	const float GetSpeed() const { return fSpeed; }
 	//! задать желаемую скорость
-	void SetDesiredSpeed( const float _fSpeed ) {	fDesiredSpeed = _fSpeed; }
+	void SetDesiredSpeed( const float _fSpeed ) { fDesiredSpeed = _fSpeed; }
 	//! желаемая скорость
 	const float GetDesiredSpeed() const { return fDesiredSpeed; }
 	//! установить желаемую скорость равную максимальной
@@ -278,7 +332,10 @@ public:
 	virtual void SetCollisionOld( ICollisionOld *pCollision, IPath *pPath ) {}
 
 	const int GetStayTime() const { return stayTime; }
-	void UpdateCollisionStayTime( const NTimer::STime time ) { collStayTime = (std::max)( collStayTime, (std::min)( stayTime, time ) ); }
+	void UpdateCollisionStayTime( const NTimer::STime time )
+	{
+		collStayTime = (std::max)( collStayTime, (std::min)( stayTime, time ) );
+	}
 
 	void SetLastPushUnit( CBasePathUnit *pUnit ) { pLastPushUnit = pUnit; }
 	CBasePathUnit *GetLastPushUnit() const { return pLastPushUnit; }
@@ -288,10 +345,7 @@ public:
 	void ResetCollisionsCount() { nCollisionsCount = 0; }
 	const int GetCollisionsCount() { return nCollisionsCount; }
 
-	virtual void SetSmoothPath( ISmoothPath *_pSmoothPath )
-	{
-		pSmoothPath = _pSmoothPath;
-	}
+	virtual void SetSmoothPath( ISmoothPath *_pSmoothPath ) { pSmoothPath = _pSmoothPath; }
 	virtual void RestoreSmoothPath();
 
 	const bool IsPathFinished() const { return GetSmoothPath()->IsFinished(); }
@@ -304,7 +358,7 @@ public:
 	virtual const float GetTurnRadius() const = 0;
 	virtual const float GetTurnSpeed() const = 0;
 	virtual const SUnitProfile &GetUnitProfile() const = 0;
-	virtual const SRect & GetUnitRect() const = 0;
+	virtual const SRect &GetUnitRect() const = 0;
 	virtual const CVec2 &GetAABBHalfSize() const = 0;
 	virtual const CVec2 GetCenterShift() const = 0;
 	virtual const bool CanGoBackward() const = 0;
@@ -321,14 +375,12 @@ public:
 	virtual const bool IsInfantry() const { return false; }
 	virtual const bool IsAviation() const { return false; }
 
-
 	//! может ли юнит двигаться
 	virtual const bool CanMove() const { return true; }
 	//! может ли юнит двигаться если ОЧЕНЬ надо
 	virtual const bool CanMoveCritical() const { return true; }
 	//! может ли юнит поворачиваться
 	virtual const bool CanRotate() const { return true; }
-
 
 	//! юнит задавлен другим юнитом (pTramplerUnit - юнит, который задавил this)
 	virtual void UnitTrampled( const CBasePathUnit *pTramplerUnit ) = 0;
@@ -346,7 +398,10 @@ public:
 	//! провести итерацию по юнитам CUnitsIter< 0, 0 >, для каждого юнита будет вызвана функция iterFunc,
 	//! итерирование продолжается до тех пор пока есть юниты и пока iterFunc возвращает true. Возвращаемое
 	//! значение равно последнему значение iterFunc, сам юнит (this) никогда не пройдет через итератор
-	virtual const bool IterateUnits( const CVec2 &vCenter, const float fRadius,	const bool bOnlyMech, const SIterateUnitsCallback &callback ) const = 0;
+	virtual const bool IterateUnits( const CVec2 &vCenter,
+	                                 const float fRadius,
+	                                 const bool bOnlyMech,
+	                                 const SIterateUnitsCallback &callback ) const = 0;
 
 	virtual void TurnToDirectionContinuesly( const uint16_t _wDirection );
 
@@ -357,7 +412,8 @@ public:
 	//! послать юнит вдоль пути, возвращает true, если юнит поехал
 	virtual void SendAlongSmoothPath( ISmoothPath *pPath );
 
-	virtual IStaticPath *CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, IPointChecking *pChecking );
+	virtual IStaticPath *
+	CreateBigStaticPath( const CVec2 &vStartPoint, const CVec2 &vFinishPoint, IPointChecking *pChecking );
 	virtual const NTimer::STime GetCollStayTime() { return collStayTime; }
 	virtual void ResetCollStayTime() { collStayTime = 0; }
 

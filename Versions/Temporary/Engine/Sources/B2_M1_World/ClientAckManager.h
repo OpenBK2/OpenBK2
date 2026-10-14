@@ -1,22 +1,30 @@
 
 #pragma once
 
-
 #include "B2_M1_World_export.h"
 
 namespace NDb
 {
-	enum EUnitAckType : int;
-	struct SComplexSoundDesc;
-	struct SClientGameConsts;
+enum EUnitAckType : int;
+struct SComplexSoundDesc;
+struct SClientGameConsts;
 };
 
 struct IClientAckManager : public CObjectBase
 {
 	// type ID
-	enum { tidTypeID = 0x110AE400 };
-	virtual void AddDeathAcknowledgement( const CVec3 &vPos, const NDb::SComplexSoundDesc *pSound, const unsigned int nTimeSiceStart ) = 0;
-	virtual void AddAcknowledgement( struct IMOUnit *pUnit, const NDb::EUnitAckType eType, const NDb::SComplexSoundDesc *pSound, const int nSet, const unsigned int nTimeSiceStart ) = 0;
+	enum
+	{
+		tidTypeID = 0x110AE400
+	};
+	virtual void AddDeathAcknowledgement( const CVec3 &vPos,
+	                                      const NDb::SComplexSoundDesc *pSound,
+	                                      const unsigned int nTimeSiceStart ) = 0;
+	virtual void AddAcknowledgement( struct IMOUnit *pUnit,
+	                                 const NDb::EUnitAckType eType,
+	                                 const NDb::SComplexSoundDesc *pSound,
+	                                 const int nSet,
+	                                 const unsigned int nTimeSiceStart ) = 0;
 	virtual void UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSoundScene ) = 0;
 	virtual void Update( struct ISoundScene *pSoundScene ) = 0;
 	virtual void RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject ) = 0;
@@ -27,5 +35,5 @@ struct IClientAckManager : public CObjectBase
 	virtual bool IsNegative( const NDb::EUnitAckType eAck ) = 0;
 };
 
-B2_M1_WORLD_EXPORT IClientAckManager * AckManager();
+B2_M1_WORLD_EXPORT IClientAckManager *AckManager();
 B2_M1_WORLD_EXPORT IClientAckManager *CreateAckManager();

@@ -19,8 +19,8 @@ struct IPath : public CAIObjectBase
 	virtual const CVec2 PeekPoint( const int nShift ) const = 0;
 	virtual void Shift( const int nShift ) = 0;
 
-	virtual const CVec2& GetFinishPoint() const = 0;
-	virtual const CVec2& GetStartPoint() const = 0;
+	virtual const CVec2 &GetFinishPoint() const = 0;
+	virtual const CVec2 &GetStartPoint() const = 0;
 
 	//! восстановить путь из новой точки ( vPoint )
 	virtual void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) = 0;
@@ -56,7 +56,7 @@ struct ISmoothPath : public CAIObjectBase
 	virtual void SetForceGoBackward( const bool bForce ) {}
 
 	virtual const CVec2 PeekPathPoint( const int nShift ) const = 0;
-	virtual IMemento* CreateMemento() const = 0;
+	virtual IMemento *CreateMemento() const = 0;
 
 	virtual const float GetSpeed() const { return -1.0f; }
 

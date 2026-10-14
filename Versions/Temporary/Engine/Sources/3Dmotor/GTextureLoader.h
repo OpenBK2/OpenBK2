@@ -1,7 +1,7 @@
 #pragma once
 namespace NGfx
 {
-	class CTexture;
+class CTexture;
 }
 namespace NGScene
 {

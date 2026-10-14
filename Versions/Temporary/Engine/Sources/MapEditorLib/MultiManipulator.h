@@ -13,7 +13,7 @@ class MAPEDITORLIB_EXPORT CMultiManipulator : public IManipulator
 
 	OBJECT_BASIC_METHODS( CMultiManipulator )
 
-	typedef std::unordered_map<CDBID, CPtr<IManipulator> > CManipulatorMap;
+	typedef std::unordered_map<CDBID, CPtr<IManipulator>> CManipulatorMap;
 	typedef std::list<std::string> CNameMap;
 	typedef CUniqueList<CNameMap, std::string> CUniqueNameList;
 
@@ -39,7 +39,7 @@ public:
 	CMultiManipulator() : pActiveManipulator( 0 ), pPropertyDescManipulator( 0 ), pFirstManipulator( 0 ) {}
 
 	// Добавить манипулятор в список
-	void InsertManipulator( const CDBID &rDBID, IManipulator* pManipulator, bool bActive, bool bPropertyDesc );
+	void InsertManipulator( const CDBID &rDBID, IManipulator *pManipulator, bool bActive, bool bPropertyDesc );
 	// Удалить манипулятор из списка
 	void RemoveManipulator( const CDBID &rDBID );
 	// установить активный манипулятор
@@ -49,17 +49,17 @@ public:
 	//
 	int IsEmpty() { return manipulatorMap.empty(); }
 	// вернуть текущий активный манипулятор
-	inline const CDBID& GetActiveDBID() { return activeDBID; }
-	inline IManipulator* GetActiveManipulator() { return pActiveManipulator; }
+	inline const CDBID &GetActiveDBID() { return activeDBID; }
+	inline IManipulator *GetActiveManipulator() { return pActiveManipulator; }
 	// вернуть текущий активный манипулятор
-	inline const CDBID& GetPropertyDescDBID() { return propertyDescDBID; }
-	inline IManipulator* GetPropertyDescManipulator() { return pPropertyDescManipulator; }
+	inline const CDBID &GetPropertyDescDBID() { return propertyDescDBID; }
+	inline IManipulator *GetPropertyDescManipulator() { return pPropertyDescManipulator; }
 	// вернуть манипулятор, который определяет ID и прочее (при отсутствии первых двух )
-	inline IManipulator* GetFirstManipulator() { return pFirstManipulator; }
+	inline IManipulator *GetFirstManipulator() { return pFirstManipulator; }
 
 	// IManipulator
-	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc* GetDesc( const std::string &rszName ) const;
+	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
+	const SIteratorDesc *GetDesc( const std::string &rszName ) const;
 	bool GetType( const std::string &rszName, std::string *pszType ) const;
 	unsigned GetID( const std::string &rszName ) const;
 	bool GetName( unsigned nID, std::string *pszName ) const;
@@ -72,11 +72,10 @@ public:
 	bool GetValue( const std::string &rszName, CVariant *pValue ) const;
 	bool SetValue( const std::string &rszName, const CVariant &rValue );
 	bool CheckValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const;
-	NDb::IObjMan* GetObjMan();
+	NDb::IObjMan *GetObjMan();
 	bool IsNameExists( const std::string &rszName ) const;
 	void GetNameList( IManipulator::CNameMap *pNameMap ) const;
 };
-
 
 class CMultiManipulatorIterator : public IManipulatorIterator
 {
@@ -86,13 +85,14 @@ class CMultiManipulatorIterator : public IManipulatorIterator
 	CPtr<IManipulatorIterator> pManipulatorIterator;
 
 	CMultiManipulatorIterator() {}
+
 public:
 	CMultiManipulatorIterator( CMultiManipulator *_pMultiManipulator, bool bShowHidden, ECacheType eCache );
 
 	//IManipulatorIterator
 	bool Next();
 	bool IsEnd() const;
-	const SIteratorDesc* GetDesc() const;
+	const SIteratorDesc *GetDesc() const;
 	bool GetName( std::string *pszName ) const;
 	bool GetType( std::string *pszType ) const;
 	unsigned GetID() const;

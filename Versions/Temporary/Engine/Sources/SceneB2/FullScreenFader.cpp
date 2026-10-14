@@ -12,10 +12,13 @@ class CFullScreenFader : public IFullScreenFader
 {
 	struct SColorModificatorDescr
 	{
-		CDGPtr<CFuncBase<CVec3> > pModificator;
+		CDGPtr<CFuncBase<CVec3>> pModificator;
 		bool bModifyInterfaces;
-		SColorModificatorDescr() : pModificator(0), bModifyInterfaces( true ) {}
-		SColorModificatorDescr( CFuncBase<CVec3> *pColor, bool _bModifyInterfaces ) : pModificator( pColor ), bModifyInterfaces( _bModifyInterfaces ) {}
+		SColorModificatorDescr() : pModificator( 0 ), bModifyInterfaces( true ) {}
+		SColorModificatorDescr( CFuncBase<CVec3> *pColor, bool _bModifyInterfaces )
+				: pModificator( pColor ), bModifyInterfaces( _bModifyInterfaces )
+		{
+		}
 	};
 
 	OBJECT_NOCOPY_METHODS( CFullScreenFader );
@@ -26,12 +29,23 @@ class CFullScreenFader : public IFullScreenFader
 	float fStartValue;
 	float fEndValue;
 	bool bFadeInterfaces;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&startTime); f.Add(3,&fDuration); f.Add(4,&fStartValue); f.Add(5,&fEndValue); f.Add(6,&bFadeInterfaces); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &startTime );
+		f.Add( 3, &fDuration );
+		f.Add( 4, &fStartValue );
+		f.Add( 5, &fEndValue );
+		f.Add( 6, &bFadeInterfaces );
+		return 0;
+	}
 
 	std::list<SColorModificatorDescr> colorModificatos;
 	//
 public:
-	CFullScreenFader(): startTime( 0 ), fDuration( 0.0f ), fStartValue( 1.0f ), fEndValue( 1.0f ), bFadeInterfaces( true ) {}
+	CFullScreenFader()
+			: startTime( 0 ), fDuration( 0.0f ), fStartValue( 1.0f ), fEndValue( 1.0f ), bFadeInterfaces( true )
+	{
+	}
 
 	// IFullScreenFader
 	virtual void Start( float _fDuration, float _fStartValue, float _fEndValue, bool bFadeInterfaces = true );
@@ -43,7 +57,7 @@ public:
 	virtual void Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces );
 
 private:
-	float GetValue( const NTimer::STime & _time );
+	float GetValue( const NTimer::STime &_time );
 };
 
 void CFullScreenFader::Start( float _fDuration, float _fStartValue, float _fEndValue, bool _bFadeInterfaces )
@@ -58,22 +72,22 @@ void CFullScreenFader::Start( float _fDuration, float _fStartValue, float _fEndV
 
 float CFullScreenFader::GetValue( const NTimer::STime &currentTime )
 {
-	if  ( fDuration < FP_EPSILON )
+	if ( fDuration < FP_EPSILON )
 	{
 		fDuration = 0.0f;
 		return fEndValue;
 	}
 
-	if (startTime == 0 )
+	if ( startTime == 0 )
 		startTime = currentTime;
 
-	const float fFraction = 0.001f * (currentTime - startTime) / fDuration;
+	const float fFraction = 0.001f * ( currentTime - startTime ) / fDuration;
 	if ( fFraction >= 1.0f )
 	{
 		fDuration = 0.0f;
 		return fEndValue;
 	}
-	return fFraction * fEndValue + (1.0f - fFraction) * fStartValue;
+	return fFraction * fEndValue + ( 1.0f - fFraction ) * fStartValue;
 }
 
 void CFullScreenFader::Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces )
@@ -116,7 +130,7 @@ void CFullScreenFader::Draw( const NTimer::STime &time, bool bAfterDrawingInterf
 		quadRender.SetTarget( rc, vScreenSize, NGfx::QRM_DEPTH_NONE );
 
 		CTRect<float> rectTarget( 0, 0, vScreenSize.x, vScreenSize.y );
-		const NGfx::SPixel8888 color( rgb, rgb, rgb, 255);
+		const NGfx::SPixel8888 color( rgb, rgb, rgb, 255 );
 		quadRender.AddRect( rectTarget, 0, rectTarget, color );
 	}
 }

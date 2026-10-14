@@ -14,12 +14,17 @@ class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsA
 		ZDATA
 		std::string szFileName;
 		float fDelay;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szFileName); f.Add(3,&fDelay); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &szFileName );
+			f.Add( 3, &fDelay );
+			return 0;
+		}
 
 		int operator&( IXmlSaver &saver );
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
 	std::vector<SFrame> frames;
 	float fDelay;
@@ -27,7 +32,18 @@ class CInterfaceDemo : public CInterfaceScreenBase, public IProgrammedReactionsA
 	CObj<CBackgroundMutableTexture> pPictureTexture;
 	int nNextPicture;
 	bool bFinal;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&frames); f.Add(4,&fDelay); f.Add(5,&bFinished); f.Add(6,&pPictureTexture); f.Add(7,&nNextPicture); f.Add(8,&bFinal); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 3, &frames );
+		f.Add( 4, &fDelay );
+		f.Add( 5, &bFinished );
+		f.Add( 6, &pPictureTexture );
+		f.Add( 7, &nNextPicture );
+		f.Add( 8, &bFinal );
+		return 0;
+	}
 
 	NTimer::STime timeAbs; // don't save
 private:
@@ -35,6 +51,7 @@ private:
 	void LoadSequence();
 	bool LoadImage( const std::string &szFileName );
 	void NextPicture();
+
 public:
 	CInterfaceDemo();
 
@@ -54,12 +71,19 @@ class CICInterfaceDemo : public CInterfaceCommandBase<CInterfaceDemo>
 {
 	OBJECT_BASIC_METHODS( CICInterfaceDemo );
 
-	ZDATA_(CInterfaceCommandBase<CInterfaceDemo>)
+	ZDATA_( CInterfaceCommandBase<CInterfaceDemo> )
 	bool bFinal;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceDemo>*)this); f.Add(2,&bFinal); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceCommandBase<CInterfaceDemo> *)this );
+		f.Add( 2, &bFinal );
+		return 0;
+	}
+
 private:
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

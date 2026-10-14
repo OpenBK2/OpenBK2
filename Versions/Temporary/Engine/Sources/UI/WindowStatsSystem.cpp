@@ -36,7 +36,7 @@ void CWindowStatsSystem::SColorString::Init( const wchar_t *pszStr, uint32_t col
 
 void CWindowStatsSystem::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowStatsSystem *pDesc( checked_cast<const NDb::SWindowStatsSystem*>( _pDesc ) );
+	const NDb::SWindowStatsSystem *pDesc( checked_cast<const NDb::SWindowStatsSystem *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 	CWindow::InitByDesc( _pDesc );
 

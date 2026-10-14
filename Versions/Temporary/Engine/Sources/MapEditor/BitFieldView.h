@@ -25,38 +25,36 @@ struct IXmlSaver;
 // is here, and both dialogs use it.
 namespace NBitField
 {
-	// Runs the dialog over the nSize bytes at pData. On OK the bytes are
-	// rewritten from the checks and the answer is true; Cancel leaves them alone.
-	bool Run( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize );
+// Runs the dialog over the nSize bytes at pData. On OK the bytes are
+// rewritten from the checks and the answer is true; Cancel leaves them alone.
+bool Run( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize );
 
+// ---- the part that is not drawing ----
 
+struct SField
+{
+	std::string szName;
+	int nValue;
 
-	// ---- the part that is not drawing ----
+	SField() : nValue( -1 ) {}
+	int operator&( IXmlSaver &saver );
+};
 
-	struct SField
-	{
-		std::string szName;
-		int nValue;
+// The names, in the file's order, which is the list's order in both dialogs.
+// False when the file cannot be read; the dialog then opens empty, as the MFC
+// one always has.
+bool LoadFields( const std::string &rszFieldsFile, std::vector<SField> *pFields );
 
-		SField() : nValue( -1 ) {}
-		int operator&( IXmlSaver &saver );
-	};
+// Whether bit nValue is set. False for a bit outside the nSize bytes, which
+// is also what the MFC dialog showed for one.
+bool IsSet( const uint8_t *pData, int nSize, int nValue );
 
-	// The names, in the file's order, which is the list's order in both dialogs.
-	// False when the file cannot be read; the dialog then opens empty, as the MFC
-	// one always has.
-	bool LoadFields( const std::string &rszFieldsFile, std::vector<SField> *pFields );
-
-	// Whether bit nValue is set. False for a bit outside the nSize bytes, which
-	// is also what the MFC dialog showed for one.
-	bool IsSet( const uint8_t *pData, int nSize, int nValue );
-
-	// Clears the bytes and sets the bit of every checked field; rChecked is
-	// indexed like rFields. A field whose bit lies outside the bytes is skipped,
-	// where the MFC dialog wrote past the end of the buffer.
-	//
-	// Checks are matched to fields by position. The MFC dialog matched them by
-	// name, so in a file that gave two fields the same name both of its checks
-	// set the later one's bit; no file under Editor/BitFields does.
-	void Store( const std::vector<SField> &rFields, const std::vector<bool> &rChecked, uint8_t *pData, int nSize );
+// Clears the bytes and sets the bit of every checked field; rChecked is
+// indexed like rFields. A field whose bit lies outside the bytes is skipped,
+// where the MFC dialog wrote past the end of the buffer.
+//
+// Checks are matched to fields by position. The MFC dialog matched them by
+// name, so in a file that gave two fields the same name both of its checks
+// set the later one's bit; no file under Editor/BitFields does.
+void Store( const std::vector<SField> &rFields, const std::vector<bool> &rChecked, uint8_t *pData, int nSize );
 }

@@ -17,6 +17,7 @@
 class CPacketsConvertor : public CPacketProcessor
 {
 	OBJECT_NOCOPY_METHODS( CPacketsConvertor );
+
 public:
 	CPacketsConvertor();
 
@@ -49,8 +50,11 @@ void CServerClient::PushPacket( CNetPacket *pPacket )
 	packets.push_back( pPacket );
 }
 
-CServerClient::CServerClient( const char* pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int _nTimeOut )
-: bDebugPaused( false ), nTimeOut( _nTimeOut )
+CServerClient::CServerClient( const char *pServerIPAddress,
+                              const int nNetGameVersion,
+                              const int nServerPort,
+                              const int _nTimeOut )
+		: bDebugPaused( false ), nTimeOut( _nTimeOut )
 {
 	pNet = new CNet( nNetGameVersion, nServerPort, nTimeOut );
 	pNet->InitAsClient();
@@ -69,7 +73,8 @@ CServerClient::CServerClient( const char* pServerIPAddress, const int nNetGameVe
 		processors.push_back( pProcessor );
 	}
 	else
-		PushPacket( new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_CANT_RESOLVE_ADDRESS ) );
+		PushPacket(
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_CANT_RESOLVE_ADDRESS ) );
 
 	GetNetLogger()->OpenLogFile( "client" );
 }
@@ -79,7 +84,7 @@ CServerClient::~CServerClient()
 	GetNetLogger()->CloseLogFile( "client" );
 }
 
-CNetPacket* CServerClient::GetPacket()
+CNetPacket *CServerClient::GetPacket()
 {
 	if ( bDebugPaused )
 		return 0;
@@ -94,7 +99,7 @@ CNetPacket* CServerClient::GetPacket()
 	{
 		CNetPacket *pPacket = pPlayGameProcessor->GetPacket();
 		if ( pPacket && pPacket->nClientID == 0 )
-			GetNetLogger()->Log( "client", fmt::format("from net {}", GetPacketInfo( pPacket )) );
+			GetNetLogger()->Log( "client", fmt::format( "from net {}", GetPacketInfo( pPacket ) ) );
 
 		return pPacket;
 	}
@@ -107,14 +112,14 @@ void CServerClient::GetPacketsFromNet()
 
 	while ( CPtr<CNetPacket> pPacket = pNet->ReceivePacket() )
 	{
-		GetNetLogger()->Log( "client", fmt::format("receive net {}", GetPacketInfo( pPacket )) );
+		GetNetLogger()->Log( "client", fmt::format( "receive net {}", GetPacketInfo( pPacket ) ) );
 
 		bool bProcessed = false;
 
-		std::list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
+		std::list<CPtr<CPacketProcessor>>::iterator iter = processors.begin();
 		while ( iter != processors.end() && !bProcessed )
 		{
-			bProcessed = (*iter)->ProcessPacket( pPacket );
+			bProcessed = ( *iter )->ProcessPacket( pPacket );
 			++iter;
 		}
 
@@ -134,16 +139,15 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 	bool bProcessed = false;
 	CPtr<CNetPacket> pPacket = pPacket2Process;
 
-	GetNetLogger()->Log( "client", fmt::format("send {}", GetPacketInfo( pPacket )) );
+	GetNetLogger()->Log( "client", fmt::format( "send {}", GetPacketInfo( pPacket ) ) );
 
 	// direct packet to client
 	if ( pPacket->nClientID != 0 )
 	{
-		CPtr<CDirectPacketToClient> pPacket2Server =
-			new CDirectPacketToClient( 0, pPacket->nClientID, pPacket );
+		CPtr<CDirectPacketToClient> pPacket2Server = new CDirectPacketToClient( 0, pPacket->nClientID, pPacket );
 		pNet->SendPacket( pPacket2Server );
 	}
-	else if ( dynamic_cast<CDirectPacketToClient*>( pPacket.GetPtr() ) )
+	else if ( dynamic_cast<CDirectPacketToClient *>( pPacket.GetPtr() ) )
 	{
 		// An explicit relay envelope is outgoing. Passing it through the receive
 		// converter would unwrap it locally instead of delivering it to the server.
@@ -152,10 +156,10 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 	// packet to server
 	else
 	{
-		std::list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
+		std::list<CPtr<CPacketProcessor>>::iterator iter = processors.begin();
 		while ( iter != processors.end() && !bProcessed )
 		{
-			bProcessed = (*iter)->ProcessPacket( pPacket );
+			bProcessed = ( *iter )->ProcessPacket( pPacket );
 			++iter;
 		}
 
@@ -171,7 +175,7 @@ void CServerClient::Segment()
 
 	GetPacketsFromNet();
 
-	std::list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
+	std::list<CPtr<CPacketProcessor>>::iterator iter = processors.begin();
 	while ( iter != processors.end() )
 	{
 		CPacketProcessor *pProcessor = *iter;
@@ -196,9 +200,9 @@ void CServerClient::SendGamePacket( CNetPacket *_pPacket, bool bBroadcast )
 		return;
 	}
 
-
 	CPtr<CNetPacket> pPacket = _pPacket;
-	GetNetLogger()->Log( "client", fmt::format("send game {}, broadcast {}", GetPacketInfo( pPacket ), int(bBroadcast)) );
+	GetNetLogger()->Log( "client",
+	                     fmt::format( "send game {}, broadcast {}", GetPacketInfo( pPacket ), int( bBroadcast ) ) );
 	pPlayGameProcessor->SendGamePacket( pPacket, bBroadcast );
 }
 
@@ -225,17 +229,22 @@ void CServerClient::TogglePause( bool bPause )
 	bDebugPaused = bPause;
 	if ( !bDebugPaused )
 	{
-		for ( std::list< CPtr<class CNetPacket> >::iterator iter = pausedPackets.begin(); iter != pausedPackets.end(); ++iter )
+		for ( std::list<CPtr<class CNetPacket>>::iterator iter = pausedPackets.begin(); iter != pausedPackets.end();
+		      ++iter )
 			SendPacket( *iter );
 		pausedPackets.clear();
 
-		for ( std::list<SPausedGamePacket>::iterator iter = pausedGamePackets.begin(); iter != pausedGamePackets.end(); ++iter )
+		for ( std::list<SPausedGamePacket>::iterator iter = pausedGamePackets.begin(); iter != pausedGamePackets.end();
+		      ++iter )
 			SendGamePacket( iter->pPacket, iter->bBroadcast );
 		pausedGamePackets.clear();
 	}
 }
 
-IServerClient* IServerClient::Create( const char* pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int nTimeOut )
+IServerClient *IServerClient::Create( const char *pServerIPAddress,
+                                      const int nNetGameVersion,
+                                      const int nServerPort,
+                                      const int nTimeOut )
 {
 	return new CServerClient( pServerIPAddress, nNetGameVersion, nServerPort, nTimeOut );
 }

@@ -16,11 +16,11 @@
 
 struct SStartCommand
 {
-	int nCmdType;											// тип команды
-	std::vector<int> unitLinkIDs;				// LinkID юнитов, для которых эта команда
-	int nTgtLinkID;										// LinkID объекта назначения команды (допустим грузовика для посадки взводов)
-	CVec2 vTgtPos;										// точка назначения для команды
-	int nData;														// добавочный параметр (интерпретация зависит от типа команды)
+	int nCmdType;                 // тип команды
+	std::vector<int> unitLinkIDs; // LinkID юнитов, для которых эта команда
+	int nTgtLinkID;               // LinkID объекта назначения команды (допустим грузовика для посадки взводов)
+	CVec2 vTgtPos;                // точка назначения для команды
+	int nData;                    // добавочный параметр (интерпретация зависит от типа команды)
 	///
 	SStartCommand();
 	void Init();
@@ -57,14 +57,14 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 
-	std::unordered_map<int,SUnitCommandTypeInfo> commandTypesMnemonic;
+	std::unordered_map<int, SUnitCommandTypeInfo> commandTypesMnemonic;
 	//
 	bool bEdCmdVisible;
 	NUnitStartCmdDialog::IDialog *pEdUnitStartCmd;
 	//
 	CMapInfoEditor *pMapInfoEditor;
 	//
-	CUnitStartCmdState( CMapInfoEditor* _pMapInfoEditor = 0 );
+	CUnitStartCmdState( CMapInfoEditor *_pMapInfoEditor = 0 );
 	// The dialog is owned here, plainly: it is made on the first Enter and
 	// destroyed with the state, which destroys its window.
 	virtual ~CUnitStartCmdState();
@@ -82,21 +82,16 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 	void RefreshDockingWindow( const std::vector<int> *pSelection );
 	void FilterCommandsyBySelection();
 	//
-	bool GetLinkIDs( std::vector<int> *pLinkIDs  );
+	bool GetLinkIDs( std::vector<int> *pLinkIDs );
 	//
 	struct SCmdMarker
 	{
 		std::vector<CVec3> unitPositions;
-    CVec3 vTargetPos;
+		CVec3 vTargetPos;
 		bool bTargetIsUnit; // false -- target is position
 		bool bTargetSelected;
 		//
-		SCmdMarker() :
-			vTargetPos( VNULL3 ),
-			bTargetIsUnit( false ),
-			bTargetSelected( false )
-		{
-		}
+		SCmdMarker() : vTargetPos( VNULL3 ), bTargetIsUnit( false ), bTargetSelected( false ) {}
 	};
 	std::vector<SCmdMarker> markers;
 	SCmdMarker currentCmdMarker;
@@ -108,7 +103,7 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 	std::string GetMapObjectName( SObjectInfo *pMOI );
 	bool GetMapObjectElementIDs( int nObjectID, std::vector<int> *pRes );
 	//
-	const SUnitCommandTypeInfo* GetCurrentCommandType();
+	const SUnitCommandTypeInfo *GetCurrentCommandType();
 
 protected:
 	// IInputState
@@ -129,8 +124,8 @@ protected:
 	bool CanInsertMapObject() { return false; }
 	bool IsDrawSceneDrawTool() { return false; }
 	//
-	NMapInfoEditor::SObjectInfoCollector* GetObjectInfoCollector();
-	CMapInfoEditor* GetMapInfoEditor();
+	NMapInfoEditor::SObjectInfoCollector *GetObjectInfoCollector();
+	CMapInfoEditor *GetMapInfoEditor();
 
 	// ICommandHandler
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );

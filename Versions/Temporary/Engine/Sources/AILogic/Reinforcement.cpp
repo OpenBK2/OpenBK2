@@ -10,19 +10,20 @@
 namespace NReinforcement
 {
 
-static det_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType> reinfTypes;
+static det_map<int /*NDb::EUnitRPGType*/, NDb::EReinforcementType> reinfTypes;
 
 // reinf.type X beats reinf.type Y with effectiveness eV[X][Y]  (0..1)
 // 0 is completely inefficient, 1 is "eliminates without losses", 0.5 is "balance each other"
 // These are default values, real values are taken from DB (AIConsts base)
 // (NB: Table is not exactly symmetric, to allow for ineffective calls, i.e. fighter planes vs land units)
-#define NUMBER_OF_REINF_TYPES			((int)EReinforcementType::_RT_NONE - 1)	// Changed to better method
+#define NUMBER_OF_REINF_TYPES ( (int)EReinforcementType::_RT_NONE - 1 ) // Changed to better method
 static CArray2D<float> expediencyValues;
 
 void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 {
 	for ( int i = 0; i < _pConsts->reinforcementTypes.size(); ++i )
-		reinfTypes[int(ReMapRPGType(_pConsts->reinforcementTypes[i].eUnitRPGType))] = _pConsts->reinforcementTypes[i].eReinfType;
+		reinfTypes[int( ReMapRPGType( _pConsts->reinforcementTypes[i].eUnitRPGType ) )] =
+				_pConsts->reinforcementTypes[i].eReinfType;
 
 	// Helicopters use the first extra air reinforcement slot unless the DB remaps them elsewhere.
 	if ( reinfTypes.find( NDb::RPG_TYPE_AVIA_HELICOPTER ) == reinfTypes.end() )
@@ -37,9 +38,9 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 		int nSize = expSet.size();
 		for ( int j = 0; j < nSize; ++j )
 		{
-			float fValue = expSet[ j ];
+			float fValue = expSet[j];
 			if ( fValue >= 0.0f && fValue <= 1.0f )
-				expediencyValues[ i ][ j ] = fValue;
+				expediencyValues[i][j] = fValue;
 			else
 				NI_ASSERT( false, fmt::format( "Invalid Expediency value ({}, {})", i, j ) );
 		}
@@ -48,7 +49,7 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 
 const NDb::EReinforcementType GetReinforcementTypeByUnitRPGType( const NDb::EUnitRPGType eType )
 {
-	det_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( eType );
+	det_map<int /*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( eType );
 	if ( pos == reinfTypes.end() )
 	{
 		NI_ASSERT( 0, fmt::format( "Reinforcement type not found for NDb::EUnitRPGType: {}", int( eType ) ) );
@@ -59,14 +60,16 @@ const NDb::EReinforcementType GetReinforcementTypeByUnitRPGType( const NDb::EUni
 
 const NDb::EReinforcementType GetReinforcementType( const NDb::EDBUnitRPGType eUnitRpgType )
 {
-	det_map<int/*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos = reinfTypes.find( int(ReMapRPGType(eUnitRpgType)) );
+	det_map<int /*NDb::EUnitRPGType*/, NDb::EReinforcementType>::const_iterator pos =
+			reinfTypes.find( int( ReMapRPGType( eUnitRpgType ) ) );
 	if ( pos != reinfTypes.end() )
 		return pos->second;
 	NI_ASSERT( 0, fmt::format( "Reinforcement type not found for NDb::EDBUnitRPGType: {}", int( eUnitRpgType ) ) );
 	return NDb::_RT_NONE;
 }
 
-const float GetReinforcementExpediency( const NDb::EReinforcementType eMyType, const NDb::EReinforcementType eEnemyType )
+const float GetReinforcementExpediency( const NDb::EReinforcementType eMyType,
+                                        const NDb::EReinforcementType eEnemyType )
 {
 	if ( NUMBER_OF_REINF_TYPES > eEnemyType && NUMBER_OF_REINF_TYPES > eMyType )
 		return expediencyValues[eMyType][eEnemyType];

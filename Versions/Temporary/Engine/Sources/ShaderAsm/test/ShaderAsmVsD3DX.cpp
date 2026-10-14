@@ -33,14 +33,15 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 struct SProfileCases
 {
 	const char *pszName;
 	const char *pszPrologue;
 	const char *pszEpilogue;
-	std::vector<const char *> binary;	// takes a destination and two sources
+	std::vector<const char *> binary; // takes a destination and two sources
 	std::vector<const char *> unary;
 	std::vector<const char *> ternary;
 	std::vector<const char *> dsts;
@@ -54,8 +55,7 @@ struct SProfileCases
 	std::vector<std::vector<const char *>> defaults;
 };
 
-const SProfileCases profiles[] =
-{
+const SProfileCases profiles[] = {
 	{
 		"vs.1.1",
 		"vs.1.1\ndcl_position v0\ndcl_normal v1\ndcl_texcoord0 v2\ndcl_tangent1 v5\nmov r0, v0\nmov r1, v1\n",
@@ -63,8 +63,34 @@ const SProfileCases profiles[] =
 		{ "add", "sub", "mul", "dp3", "dp4", "min", "max", "slt", "sge", "dst", "m4x4", "m4x3", "m3x4", "m3x3", "m3x2" },
 		{ "mov", "rcp", "rsq", "exp", "log", "expp", "logp", "lit", "frc" },
 		{ "mad" },
-		{ "r2", "r2.x", "r2.y", "r2.xy", "r2.xz", "r2.yzw", "r2.w", "oD0", "oD1.xyz", "oT0.xy", "oT7", "oFog", "oPts", "oPos" },
-		{ "r0", "r1.x", "r1.w", "-r0", "r0.yzxw", "-r1.xyz", "r0.zw", "c5", "c95.y", "-c0.wzyx", "v0", "v1.x", "-v2.yx", "v5" },
+		{ "r2",
+      "r2.x",
+      "r2.y",
+      "r2.xy",
+      "r2.xz",
+      "r2.yzw",
+      "r2.w",
+      "oD0",
+      "oD1.xyz",
+      "oT0.xy",
+      "oT7",
+      "oFog",
+      "oPts",
+      "oPos" },
+		{ "r0",
+      "r1.x",
+      "r1.w",
+      "-r0",
+      "r0.yzxw",
+      "-r1.xyz",
+      "r0.zw",
+      "c5",
+      "c95.y",
+      "-c0.wzyx",
+      "v0",
+      "v1.x",
+      "-v2.yx",
+      "v5" },
 		{},
 		{ "nop", "mov r2, c0\nmul oD0, r2.x, v1" },
 		{
@@ -83,7 +109,24 @@ const SProfileCases profiles[] =
 		{ "mov" },
 		{ "mad", "lrp", "cnd" },
 		{ "r1", "r1.rgb", "r1.a", "t0", "t1.rgb" },
-		{ "r1", "r1.a", "-r1", "1-r1", "r1_bx2", "-r1_bx2", "r1_bias", "-r1_bias", "t0", "t1.a", "-t2.b", "v0", "v1_bx2", "c3", "c7.a", "-c0", "1-c2.a", "t0.a" },
+		{ "r1",
+      "r1.a",
+      "-r1",
+      "1-r1",
+      "r1_bx2",
+      "-r1_bx2",
+      "r1_bias",
+      "-r1_bias",
+      "t0",
+      "t1.a",
+      "-t2.b",
+      "v0",
+      "v1_bx2",
+      "c3",
+      "c7.a",
+      "-c0",
+      "1-c2.a",
+      "t0.a" },
 		{ "_x2", "_x4", "_d2", "_sat", "_x2_sat", "_x4_sat", "_d2_sat" },
 		{
 			"mul r1.rgb, t0, v0\n+add r1.a, t1, c0",
@@ -109,7 +152,23 @@ const SProfileCases profiles[] =
 		{ "mov" },
 		{ "mad", "lrp", "cnd", "cmp" },
 		{ "r1", "r1.rgb", "r1.a", "r1.r", "r1.rg", "r1.gba", "r3", "r5.b" },
-		{ "r0", "r1.a", "r2.b", "r0.r", "r0.g", "-r0", "1-r1", "r0_bx2", "-r1_bx2", "r1_bias", "-r1_bias", "r0_x2", "-r0_x2", "v0", "v1.a", "c0", "-c7.b" },
+		{ "r0",
+      "r1.a",
+      "r2.b",
+      "r0.r",
+      "r0.g",
+      "-r0",
+      "1-r1",
+      "r0_bx2",
+      "-r1_bx2",
+      "r1_bias",
+      "-r1_bias",
+      "r0_x2",
+      "-r0_x2",
+      "v0",
+      "v1.a",
+      "c0",
+      "-c7.b" },
 		{ "_x2", "_x4", "_x8", "_d2", "_d4", "_d8", "_sat", "_x4_sat", "_d8_sat" },
 		{
 			"texcrd r3.rgb, t3.xyw",
@@ -133,7 +192,21 @@ const SProfileCases profiles[] =
 		{ "mov", "rcp", "rsq", "exp", "log", "frc", "abs", "nrm" },
 		{ "mad", "lrp", "cmp", "dp2add" },
 		{ "r2", "r2.x", "r2.y", "r2.xy", "r2.xyz", "r2.xz", "r2.yw", "r2.w", "r31", "oC0" },
-		{ "r0", "r1.x", "r1.w", "-r0", "r0.yzxw", "-r1.xyz", "r0.zw", "r0.wzyx", "c5", "c31.y", "-c0.wzyx", "t0", "t1.xy", "v0.a", "-v0" },
+		{ "r0",
+      "r1.x",
+      "r1.w",
+      "-r0",
+      "r0.yzxw",
+      "-r1.xyz",
+      "r0.zw",
+      "r0.wzyx",
+      "c5",
+      "c31.y",
+      "-c0.wzyx",
+      "t0",
+      "t1.xy",
+      "v0.a",
+      "-v0" },
 		{ "_sat", "_pp", "_sat_pp" },
 		{
 			"texld r2, t0, s0",
@@ -166,7 +239,8 @@ const SProfileCases profiles[] =
 	},
 };
 
-typedef HRESULT ( WINAPI *TD3DXAssembleShader )( LPCSTR, UINT, CONST D3DXMACRO *, LPD3DXINCLUDE, DWORD, LPD3DXBUFFER *, LPD3DXBUFFER * );
+typedef HRESULT( WINAPI *TD3DXAssembleShader )(
+		LPCSTR, UINT, CONST D3DXMACRO *, LPD3DXINCLUDE, DWORD, LPD3DXBUFFER *, LPD3DXBUFFER * );
 
 // D3DXAssembleShader from d3dx9_43.dll, the June 2010 SDK's, or null where it
 // is not installed
@@ -302,7 +376,8 @@ TEST( ShaderAsm, MatchesD3DXOnGeneratedShaders )
 		for ( const std::string &szCase : cases )
 		{
 			const bool bWhole = szCase.compare( 0, 3, std::string( p.pszName, 3 ) ) == 0;
-			const std::string szShader = bWhole ? szCase + "\n" : std::string( p.pszPrologue ) + szCase + "\n" + p.pszEpilogue;
+			const std::string szShader =
+					bWhole ? szCase + "\n" : std::string( p.pszPrologue ) + szCase + "\n" + p.pszEpilogue;
 			std::vector<uint32_t> expected;
 			if ( !AssembleD3DX( szShader, &expected ) )
 			{
@@ -322,7 +397,8 @@ TEST( ShaderAsm, MatchesD3DXOnGeneratedShaders )
 			else if ( tokens != expected )
 			{
 				++nFailed;
-				ADD_FAILURE() << p.pszName << " \"" << OneLine( szCase ) << "\"\n  ShaderAsm " << Hex( tokens ) << "\n  D3DX      " << Hex( expected );
+				ADD_FAILURE() << p.pszName << " \"" << OneLine( szCase ) << "\"\n  ShaderAsm " << Hex( tokens )
+											<< "\n  D3DX      " << Hex( expected );
 			}
 		}
 		// a profile where D3DX accepted almost nothing would mean the prologue is wrong

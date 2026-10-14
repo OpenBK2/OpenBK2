@@ -7,8 +7,8 @@
 
 namespace NDb
 {
-	struct SPlayTime;
-	struct SMusicTrack;
+struct SPlayTime;
+struct SMusicTrack;
 }
 
 namespace NMusicSystem
@@ -18,7 +18,7 @@ class CTrack : public IPlayListElement
 {
 	OBJECT_NOCOPY_METHODS( CTrack )
 
-	FSOUND_STREAM * pStreamingSound;
+	FSOUND_STREAM *pStreamingSound;
 	enum ETrackState
 	{
 		ETS_NOT_STARTED,
@@ -36,14 +36,15 @@ class CTrack : public IPlayListElement
 
 	void PlayTrack( int nTrackTime );
 	void OpenTrack();
+
 public:
 	int operator&( IBinSaver &f );
 
 public:
-	CTrack(): pStreamingSound(0), pTrackStream( 0 ) { }
+	CTrack() : pStreamingSound( 0 ), pTrackStream( 0 ) {}
 	CTrack( const NDb::SMusicTrack *_pTrack, const NDb::SPlayTime *_pPlayTime, EStreamType _eType )
-		: playTime( _pPlayTime, _pTrack ), eType( _eType ), pTrack( _pTrack ), pStreamingSound( 0 ), eState( ETS_NOT_STARTED ),
-		timePlayed( 0 ), timeLastCall( 0 ), pTrackStream( 0 )
+			: playTime( _pPlayTime, _pTrack ), eType( _eType ), pTrack( _pTrack ), pStreamingSound( 0 ),
+				eState( ETS_NOT_STARTED ), timePlayed( 0 ), timeLastCall( 0 ), pTrackStream( 0 )
 	{
 	}
 	~CTrack();

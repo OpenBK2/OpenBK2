@@ -8,7 +8,7 @@ class CMemObject;
 
 namespace NDb
 {
-	struct SAIGeometry;
+struct SAIGeometry;
 }
 
 namespace NAI
@@ -22,15 +22,22 @@ struct SAISkinKey
 	ZDATA
 	CDBPtr<NDb::SAIGeometry> pGeometry;
 	NAnimation::SSkeletonHandle skeletonH;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGeometry); f.Add(3,&skeletonH); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pGeometry );
+		f.Add( 3, &skeletonH );
+		return 0;
+	}
 
 	SAISkinKey() {}
-	SAISkinKey( const NDb::SAIGeometry *_pGeometry, const NAnimation::SSkeletonHandle &_skeletonH ) :
-		pGeometry( _pGeometry ), skeletonH( _skeletonH ) {}
+	SAISkinKey( const NDb::SAIGeometry *_pGeometry, const NAnimation::SSkeletonHandle &_skeletonH )
+			: pGeometry( _pGeometry ), skeletonH( _skeletonH )
+	{
+	}
 	bool operator==( const SAISkinKey &other ) const
 	{
 		return pGeometry == other.pGeometry && skeletonH.pSkeleton == other.skeletonH.pSkeleton &&
-			skeletonH.nModelInFile == other.skeletonH.nModelInFile;
+		       skeletonH.nModelInFile == other.skeletonH.nModelInFile;
 	}
 };
 
@@ -41,7 +48,8 @@ struct SAISkinKeyHash
 
 class CLoadAIGeometryFromA5Exporter : public NGScene::CResourceLoader<int, CGeometryInfo>
 {
-	OBJECT_BASIC_METHODS(CLoadAIGeometryFromA5Exporter);
+	OBJECT_BASIC_METHODS( CLoadAIGeometryFromA5Exporter );
+
 protected:
 	virtual void Recalc();
 };
@@ -49,14 +57,20 @@ protected:
 class CLoadAIGeometryFromGranny : public CHoldedPtrFuncBase<CGeometryInfo>
 {
 	typedef CHoldedPtrFuncBase<CGeometryInfo> TParent;
-	OBJECT_BASIC_METHODS(CLoadAIGeometryFromGranny);
+	OBJECT_BASIC_METHODS( CLoadAIGeometryFromGranny );
 
 	ZDATA
-	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pData;
+	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pData;
 	CDBPtr<NDb::SAIGeometry> pGeometry;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); f.Add(3,&pGeometry); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pData );
+		f.Add( 3, &pGeometry );
+		return 0;
+	}
 	bool NeedUpdate();
 	void Recalc();
+
 public:
 	void SetKey( const NDb::SAIGeometry *pGeometry );
 };
@@ -72,19 +86,26 @@ public:
 
 class CMemGeometryInfo : public CPtrFuncBase<CGeometryInfo>
 {
-	OBJECT_BASIC_METHODS(CMemGeometryInfo);
+	OBJECT_BASIC_METHODS( CMemGeometryInfo );
+
 protected:
 	ZDATA
 	CPtr<CMemObject> pMemObject;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMemObject); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pMemObject );
+		return 0;
+	}
 	virtual void Recalc();
+
 public:
-	CMemGeometryInfo( CMemObject *p = 0 ): pMemObject(p) {}
+	CMemGeometryInfo( CMemObject *p = 0 ) : pMemObject( p ) {}
 };
 
 class CFileSkinPoints : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CFileSkinPoints);
+	OBJECT_BASIC_METHODS( CFileSkinPoints );
+
 public:
 	std::vector<SMassSphere> spheres;
 	CVec3 massCenter;
@@ -100,7 +121,8 @@ public:
 
 class CFileSkinPointsLoadFromA5Exporter : public NGScene::CResourceLoader<int, CFileSkinPoints>
 {
-	OBJECT_BASIC_METHODS(CFileSkinPointsLoadFromA5Exporter);
+	OBJECT_BASIC_METHODS( CFileSkinPointsLoadFromA5Exporter );
+
 protected:
 	virtual void Recalc();
 };
@@ -108,37 +130,53 @@ protected:
 class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 {
 	typedef CHoldedPtrFuncBase<CFileSkinPoints> TParent;
-	OBJECT_BASIC_METHODS(CFileSkinPointsLoadFromGranny);
+	OBJECT_BASIC_METHODS( CFileSkinPointsLoadFromGranny );
 
 	ZDATA
-	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pData;
-	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pSkeletonData;
+	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pData;
+	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo>> pSkeletonData;
 	SAISkinKey key;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); f.Add(3,&pSkeletonData); f.Add(4,&key); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pData );
+		f.Add( 3, &pSkeletonData );
+		f.Add( 4, &key );
+		return 0;
+	}
 	bool NeedUpdate();
 	void Recalc();
+
 public:
 	// Legacy Granny cache key overload retained for save/replay compatibility.
 	void SetKey( const NDb::SAIGeometry *pGeometry );
 	void SetKey( const SAISkinKey &_key );
 };
 
-class CSkinner: public CPtrFuncBase<CGeometryInfo>
+class CSkinner : public CPtrFuncBase<CGeometryInfo>
 {
-	OBJECT_BASIC_METHODS(CSkinner);
+	OBJECT_BASIC_METHODS( CSkinner );
 	ZDATA
-	CDGPtr< CFuncBase<NGScene::SSkeletonMatrices> > pAnimation;
-	CDGPtr< CPtrFuncBase<CFileSkinPoints> > pSkin;
+	CDGPtr<CFuncBase<NGScene::SSkeletonMatrices>> pAnimation;
+	CDGPtr<CPtrFuncBase<CFileSkinPoints>> pSkin;
 	//bool bDoPrecalc;
 	//CPrecalcPieces setTrees;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimation); f.Add(3,&pSkin); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pAnimation );
+		f.Add( 3, &pSkin );
+		return 0;
+	}
+
 protected:
 	virtual bool NeedUpdate() { return pAnimation.Refresh() | pSkin.Refresh(); }
 	virtual void Recalc();
+
 public:
 	CSkinner() {}
 	CSkinner( CPtrFuncBase<CFileSkinPoints> *_pSkin, CFuncBase<NGScene::SSkeletonMatrices> *_pAnimation )
-		:pSkin(_pSkin), pAnimation(_pAnimation) {}//, bDoPrecalc(false) {}
+			: pSkin( _pSkin ), pAnimation( _pAnimation )
+	{
+	} //, bDoPrecalc(false) {}
 	//void CreatePrecalcInfo() { bDoPrecalc = true; }
 	//void SetPrecalcInfo( const CPrecalcPieces &trees ) { bDoPrecalc = false; setTrees = trees; }
 };

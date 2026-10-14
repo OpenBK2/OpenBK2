@@ -28,7 +28,6 @@ int SDialogState::operator&( IBinSaver &bs )
 	return 0;
 }
 
-
 int SDialogState::operator&( IXmlSaver &xs )
 {
 	xs.Add( "Rect", &rect );
@@ -38,52 +37,49 @@ int SDialogState::operator&( IXmlSaver &xs )
 	return 0;
 }
 
-
 namespace
 {
-	// The path CResizeDialog builds, in one place so the two callers cannot
-	// disagree about it.
-	bool GetStatePath( const std::string &rszDialogName, std::string *pszPath )
+// The path CResizeDialog builds, in one place so the two callers cannot
+// disagree about it.
+bool GetStatePath( const std::string &rszDialogName, std::string *pszPath )
+{
+	if ( rszDialogName.empty() )
 	{
-		if ( rszDialogName.empty() )
-		{
-			return false;
-		}
-		IUserDataContainer *pContainer = Singleton<IUserDataContainer>();
-		if ( pContainer == 0 || pContainer->Get() == 0 )
-		{
-			// Before the user data singleton exists there is nowhere to read
-			// from, which is not an error: a dialog opening that early just gets
-			// its defaults.
-			return false;
-		}
-		( *pszPath ) = NFile::JoinPath( pContainer->Get()->constUserData.szStartFolder,
-																		"Editor", RESIZE_DIALOG_OPTIONS_FOLDER, rszDialogName );
-		return true;
+		return false;
 	}
+	IUserDataContainer *pContainer = Singleton<IUserDataContainer>();
+	if ( pContainer == 0 || pContainer->Get() == 0 )
+	{
+		// Before the user data singleton exists there is nowhere to read
+		// from, which is not an error: a dialog opening that early just gets
+		// its defaults.
+		return false;
+	}
+	( *pszPath ) = NFile::JoinPath(
+			pContainer->Get()->constUserData.szStartFolder, "Editor", RESIZE_DIALOG_OPTIONS_FOLDER, rszDialogName );
+	return true;
 }
-
+}
 
 namespace NDialogState
 {
-	bool Load( const std::string &rszDialogName, SDialogState *pState )
+bool Load( const std::string &rszDialogName, SDialogState *pState )
+{
+	std::string szPath;
+	if ( pState == 0 || !GetStatePath( rszDialogName, &szPath ) )
 	{
-		std::string szPath;
-		if ( pState == 0 || !GetStatePath( rszDialogName, &szPath ) )
-		{
-			return false;
-		}
-		return LoadXMLResource( szPath, ".xml", rszDialogName, *pState );
+		return false;
 	}
+	return LoadXMLResource( szPath, ".xml", rszDialogName, *pState );
+}
 
-
-	bool Save( const std::string &rszDialogName, SDialogState *pState )
+bool Save( const std::string &rszDialogName, SDialogState *pState )
+{
+	std::string szPath;
+	if ( pState == 0 || !GetStatePath( rszDialogName, &szPath ) )
 	{
-		std::string szPath;
-		if ( pState == 0 || !GetStatePath( rszDialogName, &szPath ) )
-		{
-			return false;
-		}
-		return SaveXMLResource( szPath, ".xml", rszDialogName, *pState );
+		return false;
 	}
+	return SaveXMLResource( szPath, ".xml", rszDialogName, *pState );
+}
 }

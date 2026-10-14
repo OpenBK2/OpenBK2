@@ -21,7 +21,6 @@ bool SHeightPattern::CreateByGradient( float fValue, int nGridLines, const SGrad
 	return bResult;
 }
 
-
 bool SHeightPattern::CreateByValue( float fValue, int nGridLines, bool bEllipse )
 {
 	NI_ASSERT( nGridLines > 0, fmt::format( "Invalid GridLines Number: {}\n", nGridLines ) );

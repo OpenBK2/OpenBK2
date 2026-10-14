@@ -18,227 +18,230 @@ namespace NGltf
 {
 namespace
 {
-std::mutex fileCacheMutex;
+	std::mutex fileCacheMutex;
 
-// Parsing also copies GLB buffer data, so keep one immutable document per VFS path instead
-// of reparsing it independently for every mesh/material part.
-//
-// The reference here is deliberately weak. A document lives as long as a loader, a mesh or
-// an animator holds its TGltfFilePtr, which is how CBasicShare keeps a CPtr and recreates
-// the value once it has died. Holding it strongly meant every GLB the process ever touched
-// stayed parsed, with its buffers and decoded accessors, until the process exited.
-//
-// The recorded file stats are what makes an edited .glb reload: a document is reused only
-// while the file behind it still looks the same.
-struct SCachedFile
-{
-	std::weak_ptr<CGltfFile> file;
-	std::size_t nSourceBytes = 0;
-	uint32_t dwModified = 0;
-	bool bHaveStats = false;
-};
-std::unordered_map<NFile::CFilePath, SCachedFile> fileCache;
-
-// Weak references on their own would reparse a document between two owners that each drop
-// it, and one map load resolves geometry, AI geometry and animation against the same GLB in
-// turn. Keeping the most recently loaded documents alive covers those gaps. The budget
-// counts source bytes, which is what is known at load time rather than the parsed footprint,
-// and one document is always kept however large it is, so nothing can thrash on its own.
-std::deque< std::pair<TGltfFilePtr, std::size_t> > recentFiles;
-std::size_t nRecentBytes = 0;
-const std::size_t MAX_RECENT_BYTES = 16 * 1024 * 1024;
-
-// Call with fileCacheMutex held.
-void KeepRecent( const TGltfFilePtr &file, std::size_t nBytes )
-{
-	for ( auto it = recentFiles.begin(); it != recentFiles.end(); ++it )
+	// Parsing also copies GLB buffer data, so keep one immutable document per VFS path instead
+	// of reparsing it independently for every mesh/material part.
+	//
+	// The reference here is deliberately weak. A document lives as long as a loader, a mesh or
+	// an animator holds its TGltfFilePtr, which is how CBasicShare keeps a CPtr and recreates
+	// the value once it has died. Holding it strongly meant every GLB the process ever touched
+	// stayed parsed, with its buffers and decoded accessors, until the process exited.
+	//
+	// The recorded file stats are what makes an edited .glb reload: a document is reused only
+	// while the file behind it still looks the same.
+	struct SCachedFile
 	{
-		if ( it->first == file )
+		std::weak_ptr<CGltfFile> file;
+		std::size_t nSourceBytes = 0;
+		uint32_t dwModified = 0;
+		bool bHaveStats = false;
+	};
+	std::unordered_map<NFile::CFilePath, SCachedFile> fileCache;
+
+	// Weak references on their own would reparse a document between two owners that each drop
+	// it, and one map load resolves geometry, AI geometry and animation against the same GLB in
+	// turn. Keeping the most recently loaded documents alive covers those gaps. The budget
+	// counts source bytes, which is what is known at load time rather than the parsed footprint,
+	// and one document is always kept however large it is, so nothing can thrash on its own.
+	std::deque<std::pair<TGltfFilePtr, std::size_t>> recentFiles;
+	std::size_t nRecentBytes = 0;
+	const std::size_t MAX_RECENT_BYTES = 16 * 1024 * 1024;
+
+	// Call with fileCacheMutex held.
+	void KeepRecent( const TGltfFilePtr &file, std::size_t nBytes )
+	{
+		for ( auto it = recentFiles.begin(); it != recentFiles.end(); ++it )
 		{
-			nRecentBytes -= it->second;
-			recentFiles.erase( it );
-			break;
-		}
-	}
-	recentFiles.push_front( std::make_pair(file, nBytes) );
-	nRecentBytes += nBytes;
-	while ( recentFiles.size() > 1 && nRecentBytes > MAX_RECENT_BYTES )
-	{
-		nRecentBytes -= recentFiles.back().second;
-		recentFiles.pop_back();
-	}
-}
-
-bool ReadVfsFile( const std::string &path, std::vector<std::byte> *pBytes )
-{
-	CFileStream stream( NVFS::GetMainVFS(), path );
-	if ( !stream.IsOk() || !stream.CanRead() )
-		return false;
-	pBytes->resize( stream.GetSize() );
-	if ( !pBytes->empty() )
-		memcpy( pBytes->data(), stream.GetBuffer(), pBytes->size() );
-	return true;
-}
-
-SHMatrix IdentityMatrix()
-{
-	SHMatrix result;
-	Identity( &result );
-	return result;
-}
-
-void CollectMeshNodes( const fastgltf::Asset &asset, std::size_t nodeIndex,
-	std::vector<bool> *pVisited, std::vector<std::size_t> *pResult )
-{
-	if ( nodeIndex >= asset.nodes.size() || (*pVisited)[nodeIndex] )
-		return;
-	(*pVisited)[nodeIndex] = true;
-	const fastgltf::Node &node = asset.nodes[nodeIndex];
-	if ( node.meshIndex.has_value() )
-		pResult->push_back( nodeIndex );
-	for ( std::size_t child : node.children )
-		CollectMeshNodes( asset, child, pVisited, pResult );
-}
-
-void CollectNodeHierarchy( const fastgltf::Asset &asset, std::size_t nodeIndex,
-	std::vector<bool> *pVisited, std::vector<std::size_t> *pResult )
-{
-	if ( nodeIndex >= asset.nodes.size() || (*pVisited)[nodeIndex] )
-		return;
-	(*pVisited)[nodeIndex] = true;
-	pResult->push_back( nodeIndex );
-	for ( std::size_t child : asset.nodes[nodeIndex].children )
-		CollectNodeHierarchy( asset, child, pVisited, pResult );
-}
-
-bool FindUniqueNode( const TGltfFilePtr &file, const std::string &nodeName,
-	std::size_t *pResult )
-{
-	bool found = false;
-	for ( std::size_t i = 0; i < file->asset.nodes.size(); ++i )
-	{
-		if ( std::string(file->asset.nodes[i].name) != nodeName )
-			continue;
-		if ( found )
-		{
-			DebugTrace( "glTF: node selector %s is ambiguous in %s", nodeName.c_str(),
-				file->sourcePath.c_str() );
-			return false;
-		}
-		found = true;
-		*pResult = i;
-	}
-	if ( !found )
-		DebugTrace( "glTF: node selector %s was not found in %s", nodeName.c_str(),
-			file->sourcePath.c_str() );
-	return found;
-}
-
-void CollectSkinIndices( const fastgltf::Asset &asset, std::size_t nodeIndex,
-	std::vector<bool> *pVisited, std::unordered_set<std::size_t> *pResult )
-{
-	if ( nodeIndex >= asset.nodes.size() || (*pVisited)[nodeIndex] )
-		return;
-	(*pVisited)[nodeIndex] = true;
-	const fastgltf::Node &node = asset.nodes[nodeIndex];
-	if ( node.skinIndex.has_value() && *node.skinIndex < asset.skins.size() )
-		pResult->insert( *node.skinIndex );
-	for ( std::size_t child : node.children )
-		CollectSkinIndices( asset, child, pVisited, pResult );
-}
-
-bool IsAncestorOf( const CGltfFile &file, std::size_t ancestor, std::size_t nodeIndex )
-{
-	int current = static_cast<int>(nodeIndex);
-	while ( current >= 0 && current < static_cast<int>(file.nodeParents.size()) )
-	{
-		if ( static_cast<std::size_t>(current) == ancestor )
-			return true;
-		current = file.nodeParents[current];
-	}
-	return false;
-}
-
-bool ResolveSkinIndex( const TGltfFilePtr &file, const std::string &rootNodeName,
-	int nFallbackSkin, int *pResult )
-{
-	if ( rootNodeName.empty() )
-	{
-		*pResult = nFallbackSkin;
-		return true;
-	}
-
-	std::size_t rootNode = 0;
-	if ( !FindUniqueNode(file, rootNodeName, &rootNode) )
-		return false;
-	std::unordered_set<std::size_t> candidates;
-	std::vector<bool> visited( file->asset.nodes.size(), false );
-	// RootJoint may name either the armature/joint hierarchy or its skinned mesh.
-	CollectSkinIndices( file->asset, rootNode, &visited, &candidates );
-	for ( std::size_t skinIndex = 0; skinIndex < file->asset.skins.size(); ++skinIndex )
-	{
-		const fastgltf::Skin &skin = file->asset.skins[skinIndex];
-		if ( skin.skeleton.has_value() && *skin.skeleton == rootNode )
-			candidates.insert( skinIndex );
-		for ( std::size_t joint : skin.joints )
-		{
-			if ( IsAncestorOf(*file, rootNode, joint) )
+			if ( it->first == file )
 			{
-				candidates.insert( skinIndex );
+				nRecentBytes -= it->second;
+				recentFiles.erase( it );
 				break;
 			}
 		}
+		recentFiles.push_front( std::make_pair( file, nBytes ) );
+		nRecentBytes += nBytes;
+		while ( recentFiles.size() > 1 && nRecentBytes > MAX_RECENT_BYTES )
+		{
+			nRecentBytes -= recentFiles.back().second;
+			recentFiles.pop_back();
+		}
 	}
-	if ( candidates.size() != 1 )
+
+	bool ReadVfsFile( const std::string &path, std::vector<std::byte> *pBytes )
 	{
-		DebugTrace( "glTF: RootJoint %s resolves to %d skins in %s; exactly one is required",
-			rootNodeName.c_str(), static_cast<int>(candidates.size()), file->sourcePath.c_str() );
+		CFileStream stream( NVFS::GetMainVFS(), path );
+		if ( !stream.IsOk() || !stream.CanRead() )
+			return false;
+		pBytes->resize( stream.GetSize() );
+		if ( !pBytes->empty() )
+			memcpy( pBytes->data(), stream.GetBuffer(), pBytes->size() );
+		return true;
+	}
+
+	SHMatrix IdentityMatrix()
+	{
+		SHMatrix result;
+		Identity( &result );
+		return result;
+	}
+
+	void CollectMeshNodes( const fastgltf::Asset &asset,
+	                       std::size_t nodeIndex,
+	                       std::vector<bool> *pVisited,
+	                       std::vector<std::size_t> *pResult )
+	{
+		if ( nodeIndex >= asset.nodes.size() || ( *pVisited )[nodeIndex] )
+			return;
+		( *pVisited )[nodeIndex] = true;
+		const fastgltf::Node &node = asset.nodes[nodeIndex];
+		if ( node.meshIndex.has_value() )
+			pResult->push_back( nodeIndex );
+		for ( std::size_t child : node.children )
+			CollectMeshNodes( asset, child, pVisited, pResult );
+	}
+
+	void CollectNodeHierarchy( const fastgltf::Asset &asset,
+	                           std::size_t nodeIndex,
+	                           std::vector<bool> *pVisited,
+	                           std::vector<std::size_t> *pResult )
+	{
+		if ( nodeIndex >= asset.nodes.size() || ( *pVisited )[nodeIndex] )
+			return;
+		( *pVisited )[nodeIndex] = true;
+		pResult->push_back( nodeIndex );
+		for ( std::size_t child : asset.nodes[nodeIndex].children )
+			CollectNodeHierarchy( asset, child, pVisited, pResult );
+	}
+
+	bool FindUniqueNode( const TGltfFilePtr &file, const std::string &nodeName, std::size_t *pResult )
+	{
+		bool found = false;
+		for ( std::size_t i = 0; i < file->asset.nodes.size(); ++i )
+		{
+			if ( std::string( file->asset.nodes[i].name ) != nodeName )
+				continue;
+			if ( found )
+			{
+				DebugTrace( "glTF: node selector %s is ambiguous in %s", nodeName.c_str(), file->sourcePath.c_str() );
+				return false;
+			}
+			found = true;
+			*pResult = i;
+		}
+		if ( !found )
+			DebugTrace( "glTF: node selector %s was not found in %s", nodeName.c_str(), file->sourcePath.c_str() );
+		return found;
+	}
+
+	void CollectSkinIndices( const fastgltf::Asset &asset,
+	                         std::size_t nodeIndex,
+	                         std::vector<bool> *pVisited,
+	                         std::unordered_set<std::size_t> *pResult )
+	{
+		if ( nodeIndex >= asset.nodes.size() || ( *pVisited )[nodeIndex] )
+			return;
+		( *pVisited )[nodeIndex] = true;
+		const fastgltf::Node &node = asset.nodes[nodeIndex];
+		if ( node.skinIndex.has_value() && *node.skinIndex < asset.skins.size() )
+			pResult->insert( *node.skinIndex );
+		for ( std::size_t child : node.children )
+			CollectSkinIndices( asset, child, pVisited, pResult );
+	}
+
+	bool IsAncestorOf( const CGltfFile &file, std::size_t ancestor, std::size_t nodeIndex )
+	{
+		int current = static_cast<int>( nodeIndex );
+		while ( current >= 0 && current < static_cast<int>( file.nodeParents.size() ) )
+		{
+			if ( static_cast<std::size_t>( current ) == ancestor )
+				return true;
+			current = file.nodeParents[current];
+		}
 		return false;
 	}
-	*pResult = static_cast<int>(*candidates.begin());
-	return true;
+
+	bool ResolveSkinIndex( const TGltfFilePtr &file, const std::string &rootNodeName, int nFallbackSkin, int *pResult )
+	{
+		if ( rootNodeName.empty() )
+		{
+			*pResult = nFallbackSkin;
+			return true;
+		}
+
+		std::size_t rootNode = 0;
+		if ( !FindUniqueNode( file, rootNodeName, &rootNode ) )
+			return false;
+		std::unordered_set<std::size_t> candidates;
+		std::vector<bool> visited( file->asset.nodes.size(), false );
+		// RootJoint may name either the armature/joint hierarchy or its skinned mesh.
+		CollectSkinIndices( file->asset, rootNode, &visited, &candidates );
+		for ( std::size_t skinIndex = 0; skinIndex < file->asset.skins.size(); ++skinIndex )
+		{
+			const fastgltf::Skin &skin = file->asset.skins[skinIndex];
+			if ( skin.skeleton.has_value() && *skin.skeleton == rootNode )
+				candidates.insert( skinIndex );
+			for ( std::size_t joint : skin.joints )
+			{
+				if ( IsAncestorOf( *file, rootNode, joint ) )
+				{
+					candidates.insert( skinIndex );
+					break;
+				}
+			}
+		}
+		if ( candidates.size() != 1 )
+		{
+			DebugTrace( "glTF: RootJoint %s resolves to %d skins in %s; exactly one is required",
+			            rootNodeName.c_str(),
+			            static_cast<int>( candidates.size() ),
+			            file->sourcePath.c_str() );
+			return false;
+		}
+		*pResult = static_cast<int>( *candidates.begin() );
+		return true;
+	}
+
+	SHMatrix ResolveNodeWorld( const fastgltf::Asset &asset,
+	                           const std::vector<int> &parents,
+	                           std::size_t nodeIndex,
+	                           std::vector<SHMatrix> *pWorld,
+	                           std::vector<unsigned char> *pState )
+	{
+		if ( ( *pState )[nodeIndex] == 2 )
+			return ( *pWorld )[nodeIndex];
+		if ( ( *pState )[nodeIndex] == 1 )
+			return IdentityMatrix();
+		( *pState )[nodeIndex] = 1;
+
+		const fastgltf::TRS &trs = std::get<fastgltf::TRS>( asset.nodes[nodeIndex].transform );
+		NAnimation::SBoneTransform bone;
+		const CVec3 position = ConvertPosition( trs.translation );
+		const CQuat rotation = ConvertRotation( trs.rotation );
+		const CVec3 scale = ConvertScale( trs.scale );
+		memcpy( bone.Position, &position, sizeof( bone.Position ) );
+		memcpy( bone.Orientation, &rotation, sizeof( bone.Orientation ) );
+		bone.ScaleShear[0][0] = scale.x;
+		bone.ScaleShear[1][1] = scale.y;
+		bone.ScaleShear[2][2] = scale.z;
+		SHMatrix local = MakeLocalMatrix( bone );
+
+		const int parent = parents[nodeIndex];
+		( *pWorld )[nodeIndex] = parent >= 0 ? ResolveNodeWorld( asset, parents, parent, pWorld, pState ) * local : local;
+		( *pState )[nodeIndex] = 2;
+		return ( *pWorld )[nodeIndex];
+	}
 }
 
-SHMatrix ResolveNodeWorld( const fastgltf::Asset &asset, const std::vector<int> &parents,
-	std::size_t nodeIndex, std::vector<SHMatrix> *pWorld, std::vector<unsigned char> *pState )
-{
-	if ( (*pState)[nodeIndex] == 2 )
-		return (*pWorld)[nodeIndex];
-	if ( (*pState)[nodeIndex] == 1 )
-		return IdentityMatrix();
-	(*pState)[nodeIndex] = 1;
-
-	const fastgltf::TRS &trs = std::get<fastgltf::TRS>( asset.nodes[nodeIndex].transform );
-	NAnimation::SBoneTransform bone;
-	const CVec3 position = ConvertPosition( trs.translation );
-	const CQuat rotation = ConvertRotation( trs.rotation );
-	const CVec3 scale = ConvertScale( trs.scale );
-	memcpy( bone.Position, &position, sizeof(bone.Position) );
-	memcpy( bone.Orientation, &rotation, sizeof(bone.Orientation) );
-	bone.ScaleShear[0][0] = scale.x;
-	bone.ScaleShear[1][1] = scale.y;
-	bone.ScaleShear[2][2] = scale.z;
-	SHMatrix local = MakeLocalMatrix( bone );
-
-	const int parent = parents[nodeIndex];
-	(*pWorld)[nodeIndex] = parent >= 0
-		? ResolveNodeWorld( asset, parents, parent, pWorld, pState ) * local
-		: local;
-	(*pState)[nodeIndex] = 2;
-	return (*pWorld)[nodeIndex];
-}
-}
-
-CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourcePath ) :
-	asset( std::move(_asset) ),
-	sourcePath( _sourcePath ),
-	nodeParents( asset.nodes.size(), -1 ),
-	nodeWorldTransforms( asset.nodes.size() )
+CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourcePath )
+		: asset( std::move( _asset ) ), sourcePath( _sourcePath ), nodeParents( asset.nodes.size(), -1 ),
+			nodeWorldTransforms( asset.nodes.size() )
 {
 	for ( std::size_t parent = 0; parent < asset.nodes.size(); ++parent )
 		for ( std::size_t child : asset.nodes[parent].children )
 			if ( child < nodeParents.size() )
-				nodeParents[child] = static_cast<int>(parent);
+				nodeParents[child] = static_cast<int>( parent );
 
 	std::vector<unsigned char> state( asset.nodes.size(), 0 );
 	for ( std::size_t i = 0; i < asset.nodes.size(); ++i )
@@ -265,32 +268,33 @@ CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourceP
 
 namespace
 {
-// Decode an accessor once and keep it. An index past the end yields an empty vector, which
-// is what the callers already treated as "this channel has nothing to sample".
-template <class TValue>
-const std::vector<TValue> &MemoizeAccessor( std::mutex &mutex,
-	std::unordered_map<std::size_t, std::vector<TValue>> *pCache,
-	const fastgltf::Asset &asset, std::size_t accessorIndex )
-{
-	std::lock_guard<std::mutex> lock( mutex );
-	const auto it = pCache->find( accessorIndex );
-	if ( it != pCache->end() )
+	// Decode an accessor once and keep it. An index past the end yields an empty vector, which
+	// is what the callers already treated as "this channel has nothing to sample".
+	template <class TValue>
+	const std::vector<TValue> &MemoizeAccessor( std::mutex &mutex,
+	                                            std::unordered_map<std::size_t, std::vector<TValue>> *pCache,
+	                                            const fastgltf::Asset &asset,
+	                                            std::size_t accessorIndex )
 	{
-		return it->second;
-	}
-
-	std::vector<TValue> decoded;
-	if ( accessorIndex < asset.accessors.size() )
-	{
-		const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
-		decoded.reserve( accessor.count );
-		for ( const TValue &value : fastgltf::iterateAccessor<TValue>(asset, accessor) )
+		std::lock_guard<std::mutex> lock( mutex );
+		const auto it = pCache->find( accessorIndex );
+		if ( it != pCache->end() )
 		{
-			decoded.push_back( value );
+			return it->second;
 		}
+
+		std::vector<TValue> decoded;
+		if ( accessorIndex < asset.accessors.size() )
+		{
+			const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
+			decoded.reserve( accessor.count );
+			for ( const TValue &value : fastgltf::iterateAccessor<TValue>( asset, accessor ) )
+			{
+				decoded.push_back( value );
+			}
+		}
+		return pCache->emplace( accessorIndex, std::move( decoded ) ).first->second;
 	}
-	return pCache->emplace( accessorIndex, std::move(decoded) ).first->second;
-}
 }
 
 const std::vector<float> &CGltfFile::ScalarAccessor( std::size_t accessorIndex ) const
@@ -298,14 +302,12 @@ const std::vector<float> &CGltfFile::ScalarAccessor( std::size_t accessorIndex )
 	return MemoizeAccessor( accessorMutex, &scalarAccessors, asset, accessorIndex );
 }
 
-const std::vector<fastgltf::math::fvec3> &CGltfFile::Vec3Accessor(
-	std::size_t accessorIndex ) const
+const std::vector<fastgltf::math::fvec3> &CGltfFile::Vec3Accessor( std::size_t accessorIndex ) const
 {
 	return MemoizeAccessor( accessorMutex, &vec3Accessors, asset, accessorIndex );
 }
 
-const std::vector<fastgltf::math::fvec4> &CGltfFile::Vec4Accessor(
-	std::size_t accessorIndex ) const
+const std::vector<fastgltf::math::fvec4> &CGltfFile::Vec4Accessor( std::size_t accessorIndex ) const
 {
 	return MemoizeAccessor( accessorMutex, &vec4Accessors, asset, accessorIndex );
 }
@@ -316,8 +318,7 @@ int SSkeletonDefinition::FindBone( const std::string &name ) const
 	return it == boneByName.end() ? -1 : it->second;
 }
 
-NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
-	const NFile::CFilePath &modelFileRef )
+NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef )
 {
 	if ( modelFileRef.empty() )
 		return NFile::CFilePath();
@@ -328,20 +329,19 @@ NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
 	if ( !pOwner || !pVFS )
 		return normalizedRef;
 
-	const bool bAbsolute = NFile::IsFolderSeparator(normalizedRef[0]) ||
-		(normalizedRef.size() > 2 && normalizedRef[1] == ':' &&
-			NFile::IsFolderSeparator(normalizedRef[2]));
-	const std::string ownerFolder = NFile::GetFilePath( NDb::GetFileName(pOwner->GetDBID()) );
-	const int nOwnerFolderLength = static_cast<int>(ownerFolder.size());
-	const bool bAlreadyInOwnerFolder = !ownerFolder.empty() &&
-		normalizedRef.size() >= ownerFolder.size() &&
-		NFile::ComparePathEq( 0, nOwnerFolderLength, ownerFolder,
-			0, nOwnerFolderLength, normalizedRef );
+	const bool bAbsolute =
+			NFile::IsFolderSeparator( normalizedRef[0] ) ||
+			( normalizedRef.size() > 2 && normalizedRef[1] == ':' && NFile::IsFolderSeparator( normalizedRef[2] ) );
+	const std::string ownerFolder = NFile::GetFilePath( NDb::GetFileName( pOwner->GetDBID() ) );
+	const int nOwnerFolderLength = static_cast<int>( ownerFolder.size() );
+	const bool bAlreadyInOwnerFolder =
+			!ownerFolder.empty() && normalizedRef.size() >= ownerFolder.size() &&
+			NFile::ComparePathEq( 0, nOwnerFolderLength, ownerFolder, 0, nOwnerFolderLength, normalizedRef );
 	if ( !bAbsolute && !ownerFolder.empty() && !bAlreadyInOwnerFolder )
 	{
 		NFile::CFilePath localPath = NFile::JoinPath( ownerFolder, normalizedRef );
 		NFile::NormalizePath( &localPath );
-		if ( pVFS->DoesFileExist(localPath) )
+		if ( pVFS->DoesFileExist( localPath ) )
 			return localPath;
 	}
 
@@ -349,15 +349,13 @@ NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
 	return normalizedRef;
 }
 
-bool DoesModelFileExist( const NDb::CResource *pOwner,
-	const NFile::CFilePath &modelFileRef )
+bool DoesModelFileExist( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef )
 {
 	NVFS::IVFS *pVFS = NVFS::GetMainVFS();
-	return pVFS && pVFS->DoesFileExist( ResolveModelFilePath(pOwner, modelFileRef) );
+	return pVFS && pVFS->DoesFileExist( ResolveModelFilePath( pOwner, modelFileRef ) );
 }
 
-TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
-	const NFile::CFilePath &modelFileRef )
+TGltfFilePtr LoadFile( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef )
 {
 	const NFile::CFilePath path = ResolveModelFilePath( pOwner, modelFileRef );
 	if ( path.empty() )
@@ -377,8 +375,8 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 			// Without stats from either side there is nothing to compare, so fall back to
 			// trusting the entry rather than reparsing on every single call.
 			const bool bUnchanged = !bHaveStats || !it->second.bHaveStats ||
-				(it->second.dwModified == stats.mtime.dwFulltime &&
-					it->second.nSourceBytes == static_cast<std::size_t>((std::max)(stats.nSize, 0)));
+			                        ( it->second.dwModified == stats.mtime.dwFulltime &&
+			                          it->second.nSourceBytes == static_cast<std::size_t>( (std::max)( stats.nSize, 0 ) ) );
 			if ( cached && bUnchanged )
 			{
 				KeepRecent( cached, it->second.nSourceBytes );
@@ -398,26 +396,24 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 	auto dataResult = fastgltf::GltfDataBuffer::FromBytes( bytes.data(), bytes.size() );
 	if ( !dataResult )
 	{
-		DebugTrace( "glTF: invalid input buffer for %s (error %llu)", path.c_str(),
-			static_cast<unsigned long long>(dataResult.error()) );
+		DebugTrace( "glTF: invalid input buffer for %s (error %llu)",
+		            path.c_str(),
+		            static_cast<unsigned long long>( dataResult.error() ) );
 		return TGltfFilePtr();
 	}
 
 	fastgltf::Parser parser;
-	const fastgltf::Options options =
-		fastgltf::Options::DecomposeNodeMatrices | fastgltf::Options::GenerateMeshIndices;
+	const fastgltf::Options options = fastgltf::Options::DecomposeNodeMatrices | fastgltf::Options::GenerateMeshIndices;
 	const fastgltf::Category categories =
-		fastgltf::Category::Asset | fastgltf::Category::Buffers |
-		fastgltf::Category::BufferViews | fastgltf::Category::Accessors |
-		fastgltf::Category::Animations | fastgltf::Category::Meshes |
-		fastgltf::Category::Skins | fastgltf::Category::Nodes |
-		fastgltf::Category::Scenes;
+			fastgltf::Category::Asset | fastgltf::Category::Buffers | fastgltf::Category::BufferViews |
+			fastgltf::Category::Accessors | fastgltf::Category::Animations | fastgltf::Category::Meshes |
+			fastgltf::Category::Skins | fastgltf::Category::Nodes | fastgltf::Category::Scenes;
 	fastgltf::GltfDataBuffer data = std::move( dataResult.get() );
 	auto assetResult = parser.loadGltf( data, std::filesystem::path(), options, categories );
 	if ( !assetResult )
 	{
-		DebugTrace( "glTF: failed to parse %s (error %llu)", path.c_str(),
-			static_cast<unsigned long long>(assetResult.error()) );
+		DebugTrace(
+				"glTF: failed to parse %s (error %llu)", path.c_str(), static_cast<unsigned long long>( assetResult.error() ) );
 		return TGltfFilePtr();
 	}
 
@@ -434,7 +430,7 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 			return TGltfFilePtr();
 		}
 		std::vector<std::byte> externalBytes;
-		const std::string bufferPath = NFile::JoinPath( basePath, std::string(pUri->uri.path()) );
+		const std::string bufferPath = NFile::JoinPath( basePath, std::string( pUri->uri.path() ) );
 		if ( !ReadVfsFile( bufferPath, &externalBytes ) || pUri->fileByteOffset > externalBytes.size() )
 		{
 			DebugTrace( "glTF: could not open buffer %s through the main VFS", bufferPath.c_str() );
@@ -442,10 +438,10 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 		}
 		if ( pUri->fileByteOffset != 0 )
 			externalBytes.erase( externalBytes.begin(), externalBytes.begin() + pUri->fileByteOffset );
-		buffer.data = fastgltf::sources::Vector{ std::move(externalBytes), pUri->mimeType };
+		buffer.data = fastgltf::sources::Vector{ std::move( externalBytes ), pUri->mimeType };
 	}
 
-	TGltfFilePtr result = std::make_shared<CGltfFile>( std::move(asset), path );
+	TGltfFilePtr result = std::make_shared<CGltfFile>( std::move( asset ), path );
 	{
 		std::lock_guard<std::mutex> lock( fileCacheMutex );
 		SCachedFile &entry = fileCache[path];
@@ -458,8 +454,7 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 	return result;
 }
 
-bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
-	std::vector<std::size_t> *pResult )
+bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName, std::vector<std::size_t> *pResult )
 {
 	if ( !file || !pResult )
 		return false;
@@ -471,27 +466,29 @@ bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
 	}
 
 	std::size_t rootNode = 0;
-	if ( !FindUniqueNode(file, rootNodeName, &rootNode) )
+	if ( !FindUniqueNode( file, rootNodeName, &rootNode ) )
 		return false;
 	std::vector<bool> visited( file->asset.nodes.size(), false );
 	CollectMeshNodes( file->asset, rootNode, &visited, pResult );
 	if ( pResult->empty() )
 	{
-		DebugTrace( "glTF: RootMesh %s has no mesh-bearing nodes in %s",
-			rootNodeName.c_str(), file->sourcePath.c_str() );
+		DebugTrace( "glTF: RootMesh %s has no mesh-bearing nodes in %s", rootNodeName.c_str(), file->sourcePath.c_str() );
 		return false;
 	}
 	return true;
 }
 
-bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeName,
-	bool bApplyNodeTransformsToSkinnedMeshes, CVec3 *pMin, CVec3 *pMax )
+bool GetMeshBoundingBox( const TGltfFilePtr &file,
+                         const std::string &rootNodeName,
+                         bool bApplyNodeTransformsToSkinnedMeshes,
+                         CVec3 *pMin,
+                         CVec3 *pMax )
 {
 	if ( !file || !pMin || !pMax )
 		return false;
 
 	std::vector<std::size_t> meshNodes;
-	if ( !GetMeshNodes(file, rootNodeName, &meshNodes) )
+	if ( !GetMeshNodes( file, rootNodeName, &meshNodes ) )
 		return false;
 
 	bool bHaveVertex = false;
@@ -508,8 +505,8 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeNa
 		{
 			// These are the primitive types consumed by both GLB geometry loaders.
 			if ( primitive.type != fastgltf::PrimitiveType::Triangles &&
-				primitive.type != fastgltf::PrimitiveType::TriangleStrip &&
-				primitive.type != fastgltf::PrimitiveType::TriangleFan )
+			     primitive.type != fastgltf::PrimitiveType::TriangleStrip &&
+			     primitive.type != fastgltf::PrimitiveType::TriangleFan )
 				continue;
 			const auto position = primitive.findAttribute( "POSITION" );
 			if ( position == primitive.attributes.end() || position->accessorIndex >= file->asset.accessors.size() )
@@ -517,7 +514,7 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeNa
 			const fastgltf::Accessor &positionAccessor = file->asset.accessors[position->accessorIndex];
 
 			for ( const fastgltf::math::fvec3 &source :
-				fastgltf::iterateAccessor<fastgltf::math::fvec3>(file->asset, positionAccessor) )
+			      fastgltf::iterateAccessor<fastgltf::math::fvec3>( file->asset, positionAccessor ) )
 			{
 				CVec3 point = ConvertPosition( source );
 				if ( bApplyNodeTransform )
@@ -534,30 +531,33 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeNa
 				}
 				else
 				{
-					if ( point.x < pMin->x ) pMin->x = point.x;
-					if ( point.y < pMin->y ) pMin->y = point.y;
-					if ( point.z < pMin->z ) pMin->z = point.z;
-					if ( point.x > pMax->x ) pMax->x = point.x;
-					if ( point.y > pMax->y ) pMax->y = point.y;
-					if ( point.z > pMax->z ) pMax->z = point.z;
+					if ( point.x < pMin->x )
+						pMin->x = point.x;
+					if ( point.y < pMin->y )
+						pMin->y = point.y;
+					if ( point.z < pMin->z )
+						pMin->z = point.z;
+					if ( point.x > pMax->x )
+						pMax->x = point.x;
+					if ( point.y > pMax->y )
+						pMax->y = point.y;
+					if ( point.z > pMax->z )
+						pMax->z = point.z;
 				}
 			}
 		}
 	}
 
 	if ( !bHaveVertex )
-		DebugTrace( "glTF: selected meshes have no supported POSITION vertices in %s",
-			file->sourcePath.c_str() );
+		DebugTrace( "glTF: selected meshes have no supported POSITION vertices in %s", file->sourcePath.c_str() );
 	return bHaveVertex;
 }
 
-int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef,
-	const std::string &rootNodeName )
+int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef, const std::string &rootNodeName )
 {
 	const TGltfFilePtr file = LoadFile( pOwner, modelFileRef );
 	std::vector<std::size_t> meshNodes;
-	return GetMeshNodes(file, rootNodeName, &meshNodes)
-		? static_cast<int>(meshNodes.size()) : 0;
+	return GetMeshNodes( file, rootNodeName, &meshNodes ) ? static_cast<int>( meshNodes.size() ) : 0;
 }
 
 CVec3 ConvertPosition( const fastgltf::math::fvec3 &value )
@@ -590,11 +590,22 @@ CVec3 ConvertScale( const fastgltf::math::fvec3 &value )
 SHMatrix ConvertMatrix( const fastgltf::math::fmat4x4 &value )
 {
 	SHMatrix source;
-	source.Set(
-		value[0][0], value[1][0], value[2][0], value[3][0],
-		value[0][1], value[1][1], value[2][1], value[3][1],
-		value[0][2], value[1][2], value[2][2], value[3][2],
-		value[0][3], value[1][3], value[2][3], value[3][3] );
+	source.Set( value[0][0],
+	            value[1][0],
+	            value[2][0],
+	            value[3][0],
+	            value[0][1],
+	            value[1][1],
+	            value[2][1],
+	            value[3][1],
+	            value[0][2],
+	            value[1][2],
+	            value[2][2],
+	            value[3][2],
+	            value[0][3],
+	            value[1][3],
+	            value[2][3],
+	            value[3][3] );
 	SHMatrix basis = IdentityMatrix();
 	// Apply the same basis on both sides, including inverse bind matrices.
 	basis._11 = -1.0f;
@@ -607,11 +618,9 @@ SHMatrix MakeLocalMatrix( const NAnimation::SBoneTransform &value )
 {
 	CVec3 position( value.Position[0], value.Position[1], value.Position[2] );
 	CQuat rotation;
-	rotation.FromComponents( value.Orientation[0], value.Orientation[1],
-		value.Orientation[2], value.Orientation[3] );
+	rotation.FromComponents( value.Orientation[0], value.Orientation[1], value.Orientation[2], value.Orientation[3] );
 	SHMatrix result( position, rotation );
-	MultiplyScale( &result, result, value.ScaleShear[0][0],
-		value.ScaleShear[1][1], value.ScaleShear[2][2] );
+	MultiplyScale( &result, result, value.ScaleShear[0][0], value.ScaleShear[1][1], value.ScaleShear[2][2] );
 	return result;
 }
 
@@ -619,7 +628,7 @@ NAnimation::SBoneTransform MakeBoneTransform( const SHMatrix &value )
 {
 	NAnimation::SBoneTransform result;
 	const CVec3 position = value.GetTranslation();
-	memcpy( result.Position, &position, sizeof(result.Position) );
+	memcpy( result.Position, &position, sizeof( result.Position ) );
 
 	const float sx = sqrtf( value._11 * value._11 + value._21 * value._21 + value._31 * value._31 );
 	const float sy = sqrtf( value._12 * value._12 + value._22 * value._22 + value._32 * value._32 );
@@ -641,93 +650,91 @@ NAnimation::SBoneTransform MakeBoneTransform( const SHMatrix &value )
 	CQuat quaternion;
 	quaternion.FromEulerMatrix( rotation );
 	quaternion.Normalize();
-	memcpy( result.Orientation, &quaternion, sizeof(result.Orientation) );
+	memcpy( result.Orientation, &quaternion, sizeof( result.Orientation ) );
 	return result;
 }
 
 namespace
 {
-bool BuildNodeSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
-	SSkeletonDefinition *pResult )
-{
-	if ( !file || !pResult )
-		return false;
-	if ( rootNodeName.empty() )
+	bool BuildNodeSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName, SSkeletonDefinition *pResult )
 	{
-		DebugTrace( "glTF: RootJoint is required for a node-animated file without skins: %s",
-			file->sourcePath.c_str() );
-		return false;
-	}
-
-	std::size_t rootNode = 0;
-	if ( !FindUniqueNode(file, rootNodeName, &rootNode) )
-		return false;
-	std::vector<std::size_t> nodes;
-	std::vector<bool> visited( file->asset.nodes.size(), false );
-	CollectNodeHierarchy( file->asset, rootNode, &visited, &nodes );
-	if ( nodes.empty() || nodes.size() > 256 )
-	{
-		DebugTrace( "glTF: RootJoint %s in %s has an unsupported node count (%d)",
-			rootNodeName.c_str(), file->sourcePath.c_str(), static_cast<int>(nodes.size()) );
-		return false;
-	}
-
-	pResult->boneNames.clear();
-	pResult->parents.assign( nodes.size(), -1 );
-	pResult->restPose.resize( nodes.size() );
-	pResult->inverseBindMatrices.resize( nodes.size() );
-	pResult->boneByName.clear();
-
-	std::unordered_map<std::size_t, int> boneByNode;
-	for ( std::size_t i = 0; i < nodes.size(); ++i )
-		boneByNode[nodes[i]] = static_cast<int>(i);
-
-	for ( std::size_t i = 0; i < nodes.size(); ++i )
-	{
-		const std::size_t nodeIndex = nodes[i];
-		const fastgltf::Node &node = file->asset.nodes[nodeIndex];
-		const std::string name = node.name.empty()
-			? "Node_" + std::to_string(nodeIndex) : std::string(node.name);
-		if ( pResult->boneByName.find(name) != pResult->boneByName.end() )
+		if ( !file || !pResult )
+			return false;
+		if ( rootNodeName.empty() )
 		{
-			DebugTrace( "glTF: duplicate node name %s in rigid hierarchy %s",
-				name.c_str(), file->sourcePath.c_str() );
+			DebugTrace( "glTF: RootJoint is required for a node-animated file without skins: %s", file->sourcePath.c_str() );
 			return false;
 		}
-		pResult->boneNames.push_back( name );
-		pResult->boneByName[name] = static_cast<int>(i);
 
-		const int parentNode = file->nodeParents[nodeIndex];
-		if ( parentNode >= 0 )
+		std::size_t rootNode = 0;
+		if ( !FindUniqueNode( file, rootNodeName, &rootNode ) )
+			return false;
+		std::vector<std::size_t> nodes;
+		std::vector<bool> visited( file->asset.nodes.size(), false );
+		CollectNodeHierarchy( file->asset, rootNode, &visited, &nodes );
+		if ( nodes.empty() || nodes.size() > 256 )
 		{
-			const auto found = boneByNode.find( static_cast<std::size_t>(parentNode) );
-			if ( found != boneByNode.end() )
-				pResult->parents[i] = found->second;
+			DebugTrace( "glTF: RootJoint %s in %s has an unsupported node count (%d)",
+			            rootNodeName.c_str(),
+			            file->sourcePath.c_str(),
+			            static_cast<int>( nodes.size() ) );
+			return false;
 		}
 
-		SHMatrix local = file->nodeWorldTransforms[nodeIndex];
-		if ( pResult->parents[i] >= 0 )
-		{
-			const std::size_t parentIndex = nodes[pResult->parents[i]];
-			SHMatrix inverseParent;
-			inverseParent.HomogeneousInverse( file->nodeWorldTransforms[parentIndex] );
-			local = inverseParent * local;
-		}
-		pResult->restPose[i] = MakeBoneTransform( local );
+		pResult->boneNames.clear();
+		pResult->parents.assign( nodes.size(), -1 );
+		pResult->restPose.resize( nodes.size() );
+		pResult->inverseBindMatrices.resize( nodes.size() );
+		pResult->boneByName.clear();
 
-		// Rigid mesh vertices remain baked in model space, so the inverse rest
-		// transform makes the synthetic bone's bind-pose composite an identity.
-		SHMatrix inverse;
-		inverse.HomogeneousInverse( file->nodeWorldTransforms[nodeIndex] );
-		pResult->inverseBindMatrices[i] = inverse;
+		std::unordered_map<std::size_t, int> boneByNode;
+		for ( std::size_t i = 0; i < nodes.size(); ++i )
+			boneByNode[nodes[i]] = static_cast<int>( i );
+
+		for ( std::size_t i = 0; i < nodes.size(); ++i )
+		{
+			const std::size_t nodeIndex = nodes[i];
+			const fastgltf::Node &node = file->asset.nodes[nodeIndex];
+			const std::string name = node.name.empty() ? "Node_" + std::to_string( nodeIndex ) : std::string( node.name );
+			if ( pResult->boneByName.find( name ) != pResult->boneByName.end() )
+			{
+				DebugTrace( "glTF: duplicate node name %s in rigid hierarchy %s", name.c_str(), file->sourcePath.c_str() );
+				return false;
+			}
+			pResult->boneNames.push_back( name );
+			pResult->boneByName[name] = static_cast<int>( i );
+
+			const int parentNode = file->nodeParents[nodeIndex];
+			if ( parentNode >= 0 )
+			{
+				const auto found = boneByNode.find( static_cast<std::size_t>( parentNode ) );
+				if ( found != boneByNode.end() )
+					pResult->parents[i] = found->second;
+			}
+
+			SHMatrix local = file->nodeWorldTransforms[nodeIndex];
+			if ( pResult->parents[i] >= 0 )
+			{
+				const std::size_t parentIndex = nodes[pResult->parents[i]];
+				SHMatrix inverseParent;
+				inverseParent.HomogeneousInverse( file->nodeWorldTransforms[parentIndex] );
+				local = inverseParent * local;
+			}
+			pResult->restPose[i] = MakeBoneTransform( local );
+
+			// Rigid mesh vertices remain baked in model space, so the inverse rest
+			// transform makes the synthetic bone's bind-pose composite an identity.
+			SHMatrix inverse;
+			inverse.HomogeneousInverse( file->nodeWorldTransforms[nodeIndex] );
+			pResult->inverseBindMatrices[i] = inverse;
+		}
+		return true;
 	}
-	return true;
-}
 }
 
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult )
 {
-	if ( !file || !pResult || nSkin < 0 || nSkin >= static_cast<int>(file->asset.skins.size()) )
+	if ( !file || !pResult || nSkin < 0 || nSkin >= static_cast<int>( file->asset.skins.size() ) )
 		return false;
 	const fastgltf::Skin &skin = file->asset.skins[nSkin];
 	if ( skin.joints.empty() || skin.joints.size() > 256 )
@@ -744,7 +751,7 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 
 	std::unordered_map<std::size_t, int> boneByNode;
 	for ( std::size_t i = 0; i < skin.joints.size(); ++i )
-		boneByNode[skin.joints[i]] = static_cast<int>(i);
+		boneByNode[skin.joints[i]] = static_cast<int>( i );
 
 	for ( std::size_t i = 0; i < skin.joints.size(); ++i )
 	{
@@ -752,19 +759,19 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 		if ( nodeIndex >= file->asset.nodes.size() )
 			return false;
 		const fastgltf::Node &node = file->asset.nodes[nodeIndex];
-		std::string name = node.name.empty() ? "Node_" + std::to_string(nodeIndex) : std::string(node.name);
-		if ( pResult->boneByName.find(name) != pResult->boneByName.end() )
+		std::string name = node.name.empty() ? "Node_" + std::to_string( nodeIndex ) : std::string( node.name );
+		if ( pResult->boneByName.find( name ) != pResult->boneByName.end() )
 		{
 			DebugTrace( "glTF: duplicate joint name %s in %s", name.c_str(), file->sourcePath.c_str() );
 			return false;
 		}
 		pResult->boneNames.push_back( name );
-		pResult->boneByName[name] = static_cast<int>(i);
+		pResult->boneByName[name] = static_cast<int>( i );
 
 		int parentNode = file->nodeParents[nodeIndex];
 		while ( parentNode >= 0 )
 		{
-			const auto found = boneByNode.find( static_cast<std::size_t>(parentNode) );
+			const auto found = boneByNode.find( static_cast<std::size_t>( parentNode ) );
 			if ( found != boneByNode.end() )
 			{
 				pResult->parents[i] = found->second;
@@ -788,13 +795,12 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 		pResult->inverseBindMatrices[i] = inverse;
 	}
 
-	if ( skin.inverseBindMatrices.has_value() &&
-		*skin.inverseBindMatrices < file->asset.accessors.size() )
+	if ( skin.inverseBindMatrices.has_value() && *skin.inverseBindMatrices < file->asset.accessors.size() )
 	{
 		const fastgltf::Accessor &accessor = file->asset.accessors[*skin.inverseBindMatrices];
 		std::size_t index = 0;
 		for ( const fastgltf::math::fmat4x4 &matrix :
-			fastgltf::iterateAccessor<fastgltf::math::fmat4x4>(file->asset, accessor) )
+		      fastgltf::iterateAccessor<fastgltf::math::fmat4x4>( file->asset, accessor ) )
 		{
 			if ( index >= pResult->inverseBindMatrices.size() )
 				break;
@@ -804,8 +810,10 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 	return true;
 }
 
-bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
-	int nFallbackSkin, SSkeletonDefinition *pResult )
+bool BuildSkeleton( const TGltfFilePtr &file,
+                    const std::string &rootNodeName,
+                    int nFallbackSkin,
+                    SSkeletonDefinition *pResult )
 {
 	if ( !file )
 		return false;
@@ -814,7 +822,7 @@ bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
 	if ( file->asset.skins.empty() )
 		return BuildNodeSkeleton( file, rootNodeName, pResult );
 	int skinIndex = nFallbackSkin;
-	if ( !ResolveSkinIndex(file, rootNodeName, nFallbackSkin, &skinIndex) )
+	if ( !ResolveSkinIndex( file, rootNodeName, nFallbackSkin, &skinIndex ) )
 		return false;
 	return BuildSkeleton( file, skinIndex, pResult );
 }

@@ -43,7 +43,7 @@ struct SImageInfo
 	// because knowing an image is there and unreadable is worth more than a gap.
 	bool bSupported;
 
-	SImageInfo() : nWidth( 0 ), nHeight( 0 ), nBpp( 0 ), nHotX( 0 ), nHotY( 0 ), bSupported( false ) { }
+	SImageInfo() : nWidth( 0 ), nHeight( 0 ), nBpp( 0 ), nHotX( 0 ), nHotY( 0 ), bSupported( false ) {}
 };
 
 // One decoded image. 32-bit ARGB, top-down, nWidth pixels per row, so
@@ -56,7 +56,7 @@ struct SImage
 	int nHotY;
 	std::vector<uint32_t> pixels;
 
-	SImage() : nWidth( 0 ), nHeight( 0 ), nHotX( 0 ), nHotY( 0 ) { }
+	SImage() : nWidth( 0 ), nHeight( 0 ), nHotX( 0 ), nHotY( 0 ) {}
 };
 
 // What a .ani says about its animation, once the RIFF has been walked.
@@ -93,8 +93,7 @@ SYSTEM_EXPORT bool ReadAni( SAniInfo *pInfo, const uint8_t *pData, size_t nSize 
 
 // Read the directory of the ICO container at nBase, without decoding anything.
 // False when the data is not that container.
-SYSTEM_EXPORT bool GetImages( std::vector<SImageInfo> *pImages, const uint8_t *pData,
-                              size_t nSize, size_t nBase );
+SYSTEM_EXPORT bool GetImages( std::vector<SImageInfo> *pImages, const uint8_t *pData, size_t nSize, size_t nBase );
 
 // Which entry to draw at nDesiredSize pixels, or -1 when none can be decoded.
 //
@@ -116,7 +115,6 @@ SYSTEM_EXPORT int SelectImage( const std::vector<SImageInfo> &images, int nDesir
 //
 // False for an index that is out of range, an entry that is compressed, one
 // holding a PNG, or one at a bit depth this does not read.
-SYSTEM_EXPORT bool DecodeImage( SImage *pResult, const uint8_t *pData, size_t nSize,
-                                size_t nBase, int nIndex );
+SYSTEM_EXPORT bool DecodeImage( SImage *pResult, const uint8_t *pData, size_t nSize, size_t nBase, int nIndex );
 
 }

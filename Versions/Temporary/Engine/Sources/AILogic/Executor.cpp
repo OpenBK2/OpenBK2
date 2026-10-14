@@ -8,8 +8,7 @@
 extern IExecutorContainer *pTheExecutorsContainer;
 
 CExecutor::CExecutor( const EExecutorTypeID _eTypeID, const int _nNextTime )
-	: eTypeID( _eTypeID ), nNextTime( _nNextTime ),
-	nID( 0 ), bActive( true ), nUniqueID( -1 )
+		: eTypeID( _eTypeID ), nNextTime( _nNextTime ), nID( 0 ), bActive( true ), nUniqueID( -1 )
 {
 	if ( pTheExecutorsContainer )
 		nUniqueID = pTheExecutorsContainer->CreateID();
@@ -18,22 +17,18 @@ CExecutor::CExecutor( const EExecutorTypeID _eTypeID, const int _nNextTime )
 	// disagree about something earlier.
 	if ( NAsyncTrace::IsEnabled() )
 	{
-		NAsyncTrace::Write( "exec", fmt::format( "created uid={} type={} next={}",
-			nUniqueID, static_cast<int>( eTypeID ), nNextTime ) );
+		NAsyncTrace::Write(
+				"exec", fmt::format( "created uid={} type={} next={}", nUniqueID, static_cast<int>( eTypeID ), nNextTime ) );
 	}
 }
 
-CExecutor::CExecutor()
-: nUniqueID( -1 ), nID( 0 ), nNextTime( 0 ), bActive( true ), eTypeID( TID_NONE )
-{
-}
+CExecutor::CExecutor() : nUniqueID( -1 ), nID( 0 ), nNextTime( 0 ), bActive( true ), eTypeID( TID_NONE ) {}
 
 CExecutor::~CExecutor()
 {
 	if ( NAsyncTrace::IsEnabled() )
 	{
-		NAsyncTrace::Write( "exec", fmt::format( "destroyed uid={} type={}",
-			nUniqueID, static_cast<int>( eTypeID ) ) );
+		NAsyncTrace::Write( "exec", fmt::format( "destroyed uid={} type={}", nUniqueID, static_cast<int>( eTypeID ) ) );
 	}
 	if ( -1 != nUniqueID && pTheExecutorsContainer )
 		pTheExecutorsContainer->ReturnID( nUniqueID );

@@ -30,9 +30,9 @@ namespace
 // auto_increment becomes INTEGER PRIMARY KEY AUTOINCREMENT, which is the only
 // form SQLite assigns for, and int(10) unsigned becomes INTEGER, which is what
 // every one of these is read back as.
-const char * const SZ_SCHEMA =
+const char *const SZ_SCHEMA =
 #include "SqliteSchema.inc"
-;
+		;
 
 class CSqliteDatabase : public IDatabase
 {
@@ -43,8 +43,9 @@ class CSqliteDatabase : public IDatabase
 
 	bool Exec( const char *pszSql );
 	bool CreateSchema();
+
 public:
-	CSqliteDatabase() : pDb( 0 ) { }
+	CSqliteDatabase() : pDb( 0 ) {}
 	virtual ~CSqliteDatabase() { Close(); }
 
 	virtual bool Connect( const SDbConnection &connection );
@@ -169,8 +170,7 @@ bool CSqliteDatabase::Query( const std::string &szQuery, CDbResult *pResult )
 				// MariaDB backend does and what CDbResult::Get documents.
 				const unsigned char *pValue = sqlite3_column_text( pStatement, i );
 				const int nBytes = sqlite3_column_bytes( pStatement, i );
-				values.push_back( pValue ? std::string( reinterpret_cast<const char *>( pValue ), nBytes )
-					: std::string() );
+				values.push_back( pValue ? std::string( reinterpret_cast<const char *>( pValue ), nBytes ) : std::string() );
 			}
 			pResult->AddRow( std::move( values ) );
 			continue;
@@ -236,7 +236,7 @@ std::unordered_set<std::string> CSqliteDatabase::GetColumns( const std::string &
 
 }
 
-IDatabase* CreateSqliteDatabase()
+IDatabase *CreateSqliteDatabase()
 {
 	return new CSqliteDatabase();
 }

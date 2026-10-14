@@ -28,7 +28,7 @@
 
 namespace NImage
 {
-	typedef CArray2D<CVec4> CImage;
+typedef CArray2D<CVec4> CImage;
 }
 
 // CFontGen
@@ -36,13 +36,17 @@ namespace NImage
 class CFontGen
 {
 public:
-	static void CreateFontFormat( const char *pszDestFile, const NFontRaster::SFont &font, uint8_t cCharSet, uint16_t wDefaultChar );
+	static void
+	CreateFontFormat( const char *pszDestFile, const NFontRaster::SFont &font, uint8_t cCharSet, uint16_t wDefaultChar );
 };
 
 // FontRaster already works in the conventions CFontFormatInfo has always used,
 // GDI's cell and ABC widths, so this is a field for field copy, with the
 // characters keyed by code point as the engine looks them up.
-void CFontGen::CreateFontFormat( const char *pszDestFile, const NFontRaster::SFont &font, uint8_t cCharSet, uint16_t wDefaultChar )
+void CFontGen::CreateFontFormat( const char *pszDestFile,
+                                 const NFontRaster::SFont &font,
+                                 uint8_t cCharSet,
+                                 uint16_t wDefaultChar )
 {
 	CObj<CFontFormatInfo> pFormat( new CFontFormatInfo );
 	CFontFormatInfo &format = *pFormat;
@@ -82,8 +86,11 @@ const uint16_t W_DEFAULT_CHAR = 0x1F;
 
 // Bakes chars, code page bytes in nCharset, with options into the two output
 // files. Returns false when the font cannot be rasterised.
-bool Generate( const char *pszDstPngFile, const char *pszDstFile, const NFontRaster::SOptions &options,
-	int nCharset, std::vector<uint16_t> *pChars )
+bool Generate( const char *pszDstPngFile,
+               const char *pszDstFile,
+               const NFontRaster::SOptions &options,
+               int nCharset,
+               std::vector<uint16_t> *pChars )
 {
 	std::vector<uint16_t> &chars = *pChars;
 	if ( find( chars.begin(), chars.end(), W_DEFAULT_CHAR ) == chars.end() )
@@ -111,7 +118,9 @@ bool Generate( const char *pszDstPngFile, const char *pszDstFile, const NFontRas
 		// a double byte character from a characters file lands here too: the
 		// tables hold single bytes, which is all the translation ever handled
 		fmt::print( "WARNING: {} of {} characters have no mapping in code page {}\n",
-		        nUnmapped, static_cast<int>( chars.size() ), NCodePages::GetCodePage( nCharset ) );
+		            nUnmapped,
+		            static_cast<int>( chars.size() ),
+		            NCodePages::GetCodePage( nCharset ) );
 	}
 
 	NFontRaster::SFont font;
@@ -121,20 +130,31 @@ bool Generate( const char *pszDstPngFile, const char *pszDstFile, const NFontRas
 		fmt::print( "ERROR: {}\n", szError );
 		return false;
 	}
-	fmt::print( "cell {} = ascent {} + descent {}, external leading {}, average width {}, max width {}, {:.3f} px per em\n",
-	        font.nCellHeight, font.nAscent, font.nDescent, font.nExternalLeading, font.nAveCharWidth, font.nMaxCharWidth,
-	        font.fPixelsPerEm );
-	fmt::print( "{} glyphs, {} kerning pairs, atlas {}x{}\n", static_cast<int>( font.glyphs.size() ),
-	        static_cast<int>( font.kerns.size() ), font.nAtlasWidth, font.nAtlasHeight );
+	fmt::print(
+			"cell {} = ascent {} + descent {}, external leading {}, average width {}, max width {}, {:.3f} px per em\n",
+			font.nCellHeight,
+			font.nAscent,
+			font.nDescent,
+			font.nExternalLeading,
+			font.nAveCharWidth,
+			font.nMaxCharWidth,
+			font.fPixelsPerEm );
+	fmt::print( "{} glyphs, {} kerning pairs, atlas {}x{}\n",
+	            static_cast<int>( font.glyphs.size() ),
+	            static_cast<int>( font.kerns.size() ),
+	            font.nAtlasWidth,
+	            font.nAtlasHeight );
 	// .notdef for the default character is expected; anything more is a
 	// character set the font does not cover
 	for ( const uint32_t nCodePoint : font.missing )
 	{
 		if ( nCodePoint != W_DEFAULT_CHAR )
-			fmt::print( "WARNING: U+{:04X} is not in the font and got its .notdef glyph\n", static_cast<unsigned>( nCodePoint ) );
+			fmt::print( "WARNING: U+{:04X} is not in the font and got its .notdef glyph\n",
+			            static_cast<unsigned>( nCodePoint ) );
 	}
 	for ( const uint32_t nCodePoint : font.clipped )
-		fmt::print( "WARNING: U+{:04X} reaches outside its cell and was clipped to it\n", static_cast<unsigned>( nCodePoint ) );
+		fmt::print( "WARNING: U+{:04X} reaches outside its cell and was clipped to it\n",
+		            static_cast<unsigned>( nCodePoint ) );
 
 	fmt::print( "image...\n" );
 	// white, with the coverage as alpha
@@ -159,12 +179,13 @@ bool Generate( const char *pszDstPngFile, const char *pszDstFile, const NFontRas
 	return true;
 }
 
-#if !defined(ELK)
+#if !defined( ELK )
 
 static void ShowUsage()
 {
 	fmt::print( "FontGenerator utility\n(C) Nival Interactive, 2000\n" );
-	fmt::print( "Usage: FontGen [options] <\"Font Face Name\" | font file> <BinDstName> <PicDstName> [<CharsSrcName>]\n" );
+	fmt::print(
+			"Usage: FontGen [options] <\"Font Face Name\" | font file> <BinDstName> <PicDstName> [<CharsSrcName>]\n" );
 	fmt::print( "   -h# \t\t cell height in pixels, exactly\n" );
 	fmt::print( "   -w# \t\t font weight (400 = normal. 100 <= w <= 900), for finding the face\n" );
 	fmt::print( "   -it \t\t italic, for finding the face\n" );
@@ -197,7 +218,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 	// kept as given: lower-casing them was harmless on Windows and names a file
 	// that does not exist anywhere else.
 	std::vector<std::string> szParams( argc - 1 );
-	for ( int i=0; i<argc - 1; ++i )
+	for ( int i = 0; i < argc - 1; ++i )
 	{
 		szParams[i] = argv[i + 1];
 		if ( !szParams[i].empty() && szParams[i][0] == '-' )
@@ -217,24 +238,24 @@ int PORT_CDECL main( int argc, char *argv[] )
 		return 0xDEAD;
 	}
 	std::unordered_map<std::string, int> charsets;
-	charsets["-ansi"]        = NCodePages::CHARSET_ANSI;
-	charsets["-baltic"]      = NCodePages::CHARSET_BALTIC;
+	charsets["-ansi"] = NCodePages::CHARSET_ANSI;
+	charsets["-baltic"] = NCodePages::CHARSET_BALTIC;
 	charsets["-chinesebig5"] = NCodePages::CHARSET_CHINESEBIG5;
-	charsets["-default"]     = NCodePages::CHARSET_DEFAULT;
+	charsets["-default"] = NCodePages::CHARSET_DEFAULT;
 	charsets["-def_charset"] = NCodePages::CHARSET_DEFAULT;
-	charsets["-easteurope"]  = NCodePages::CHARSET_EASTEUROPE;
-	charsets["-gb2312"]      = NCodePages::CHARSET_GB2312;
-	charsets["-greek"]       = NCodePages::CHARSET_GREEK;
-	charsets["-hangul"]      = NCodePages::CHARSET_HANGUL;
-	charsets["-mac"]         = NCodePages::CHARSET_MAC;
-	charsets["-oem"]         = NCodePages::CHARSET_OEM;
-	charsets["-russian"]     = NCodePages::CHARSET_RUSSIAN;
-	charsets["-shiftjis"]    = NCodePages::CHARSET_SHIFTJIS;
-	charsets["-symbol"]      = NCodePages::CHARSET_SYMBOL;
-	charsets["-turkish"]     = NCodePages::CHARSET_TURKISH;
-	charsets["-hebrew"]      = NCodePages::CHARSET_HEBREW;
-	charsets["-arabic"]      = NCodePages::CHARSET_ARABIC;
-	charsets["-thai"]        = NCodePages::CHARSET_THAI;
+	charsets["-easteurope"] = NCodePages::CHARSET_EASTEUROPE;
+	charsets["-gb2312"] = NCodePages::CHARSET_GB2312;
+	charsets["-greek"] = NCodePages::CHARSET_GREEK;
+	charsets["-hangul"] = NCodePages::CHARSET_HANGUL;
+	charsets["-mac"] = NCodePages::CHARSET_MAC;
+	charsets["-oem"] = NCodePages::CHARSET_OEM;
+	charsets["-russian"] = NCodePages::CHARSET_RUSSIAN;
+	charsets["-shiftjis"] = NCodePages::CHARSET_SHIFTJIS;
+	charsets["-symbol"] = NCodePages::CHARSET_SYMBOL;
+	charsets["-turkish"] = NCodePages::CHARSET_TURKISH;
+	charsets["-hebrew"] = NCodePages::CHARSET_HEBREW;
+	charsets["-arabic"] = NCodePages::CHARSET_ARABIC;
+	charsets["-thai"] = NCodePages::CHARSET_THAI;
 
 	int nHeight = 20;
 	int nWeight = 400;
@@ -307,12 +328,12 @@ int PORT_CDECL main( int argc, char *argv[] )
 			fontDirectories.push_back( argv[1 + ( pos - szParams.begin() )] + 9 );
 			continue;
 		}
-		if ( charsets.find(*pos) != charsets.end() )
+		if ( charsets.find( *pos ) != charsets.end() )
 			nCharset = charsets[*pos];
 		else if ( pos->find( "-h" ) == 0 )
-			nHeight = atoi( &((*pos)[2]) );
+			nHeight = atoi( &( ( *pos )[2] ) );
 		else if ( pos->find( "-w" ) == 0 )
-			nWeight = atoi( &((*pos)[2]) );
+			nWeight = atoi( &( ( *pos )[2] ) );
 		else if ( *pos == "-it" )
 			bItalic = true;
 		else if ( *pos == "-aa" )
@@ -325,12 +346,20 @@ int PORT_CDECL main( int argc, char *argv[] )
 		else
 		{
 			nOrdinaryParamCount++;
-			switch( nOrdinaryParamCount )
+			switch ( nOrdinaryParamCount )
 			{
-				case 1: szFaceName = *pos; break;
-				case 2: szDstFile = *pos; break;
-				case 3: szDstPngFile = *pos; break;
-				case 4: szCharsSrcName = *pos; break;
+				case 1:
+					szFaceName = *pos;
+					break;
+				case 2:
+					szDstFile = *pos;
+					break;
+				case 3:
+					szDstPngFile = *pos;
+					break;
+				case 4:
+					szCharsSrcName = *pos;
+					break;
 			}
 		}
 	}
@@ -365,9 +394,14 @@ int PORT_CDECL main( int argc, char *argv[] )
 				fmt::print( "   {}\n", szDirectory );
 			return 1;
 		}
-		fmt::print( "face \"{} {}\", weight {}{}, from {}{}\n", match.szFamily, match.szStyle, match.nWeight,
-		        match.bItalic ? ", italic" : "", match.szFile,
-		        ( match.nFaceIndex >> 16 ) != 0 ? fmt::format( " instance {}", match.nFaceIndex >> 16 ) : std::string() );
+		fmt::print( "face \"{} {}\", weight {}{}, from {}{}\n",
+		            match.szFamily,
+		            match.szStyle,
+		            match.nWeight,
+		            match.bItalic ? ", italic" : "",
+		            match.szFile,
+		            ( match.nFaceIndex >> 16 ) != 0 ? fmt::format( " instance {}", match.nFaceIndex >> 16 )
+		                                            : std::string() );
 		// GDI would have synthesised a bold or slanted face from a regular one;
 		// FreeType rasterises what the file holds, so say when that differs
 		if ( std::abs( match.nWeight - nWeight ) > 150 || match.bItalic != bItalic )
@@ -399,7 +433,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 	if ( chars.empty() )
 	{
 		chars.reserve( 256 );
-		for ( int i=32; i<256; ++i )
+		for ( int i = 32; i < 256; ++i )
 		{
 			chars.push_back( i );
 		}

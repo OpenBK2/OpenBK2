@@ -3,20 +3,29 @@
 #include "InterfaceScreenBase.h"
 #include "UIElementsHelper.h"
 
-
 struct SHallOfFameEntry
 {
 	ZDATA
 	int nScore;
 	std::wstring wszName;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nScore); f.Add(3,&wszName); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nScore );
+		f.Add( 3, &wszName );
+		return 0;
+	}
 };
 
 class CHallOfFame
 {
 	ZDATA
 	std::vector<SHallOfFameEntry> entries;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&entries); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &entries );
+		return 0;
+	}
+
 public:
 	CHallOfFame();
 	void AddRecord( const std::wstring &wszName, int nScore )
@@ -34,21 +43,25 @@ public:
 		operator&( *pSaver.GetPtr() );
 	}
 	int GetNRecords() const { return entries.size(); }
-	const SHallOfFameEntry & GetEntry( int i ) const { return  entries[i]; }
+	const SHallOfFameEntry &GetEntry( int i ) const { return entries[i]; }
 };
 
 struct SHallOfFameEntryCompare
 {
-	bool operator()( const SHallOfFameEntry &s1, const SHallOfFameEntry &s2 ) const
-		{	return s1.nScore > s2.nScore; }
+	bool operator()( const SHallOfFameEntry &s1, const SHallOfFameEntry &s2 ) const { return s1.nScore > s2.nScore; }
 };
 
 class CInterfaceHallOfFame : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceHallOfFame );
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMain );
+		return 0;
+	}
 	void MakeInterior();
 
 public:
@@ -72,6 +85,7 @@ class CICHallOfFame : public CInterfaceCommandBase<CInterfaceHallOfFame>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

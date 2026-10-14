@@ -21,35 +21,35 @@ static void InitSolidTexture( CObj<NGfx::CTexture> *pTexture, const NGfx::SPixel
 	}
 }
 
-NGfx::CTexture* GetUniformBump()
+NGfx::CTexture *GetUniformBump()
 {
-	if ( IsValid(pUniformBump) )
+	if ( IsValid( pUniformBump ) )
 		return pUniformBump;
 	InitSolidTexture( &pUniformBump, NGfx::SPixel8888( 128, 128, 255, 255 ), 1 );
 	return pUniformBump;
 }
 
-NGfx::CTexture* GetBlackTexture()
+NGfx::CTexture *GetBlackTexture()
 {
-	if ( IsValid(pBlackTexture) )
+	if ( IsValid( pBlackTexture ) )
 		return pBlackTexture;
-	InitSolidTexture( &pBlackTexture, NGfx::SPixel8888( 0,0,0,0 ), 1 );
+	InitSolidTexture( &pBlackTexture, NGfx::SPixel8888( 0, 0, 0, 0 ), 1 );
 	return pBlackTexture;
 }
 
-NGfx::CTexture* GetWhiteTexture()
+NGfx::CTexture *GetWhiteTexture()
 {
-	if ( IsValid(pWhiteTexture) )
+	if ( IsValid( pWhiteTexture ) )
 		return pWhiteTexture;
-	InitSolidTexture( &pWhiteTexture, NGfx::SPixel8888( 255,255,255,255 ), 1 );
+	InitSolidTexture( &pWhiteTexture, NGfx::SPixel8888( 255, 255, 255, 255 ), 1 );
 	return pWhiteTexture;
 }
 
-NGfx::CTexture* GetDefaultLightmap()
+NGfx::CTexture *GetDefaultLightmap()
 {
-	if ( IsValid(pDefaultLightmap) )
+	if ( IsValid( pDefaultLightmap ) )
 		return pDefaultLightmap;
-	InitSolidTexture( &pDefaultLightmap, NGfx::SPixel8888( 0,0,0,255 ), 1 );
+	InitSolidTexture( &pDefaultLightmap, NGfx::SPixel8888( 0, 0, 0, 255 ), 1 );
 	return pDefaultLightmap;
 }
 
@@ -62,29 +62,29 @@ static void RefreshSpecularResponse()
 	NGfx::CTextureLock<NGfx::SPixel8888> lock( pSpecularResponse, 0, NGfx::INPLACE );
 	for ( int y = 0; y < N_SIZE; ++y )
 	{
-		float fRo = (y + 0.5f) / N_SIZE;
-		float fPower = triple( fabs(fRo) ) * 256;
+		float fRo = ( y + 0.5f ) / N_SIZE;
+		float fPower = triple( fabs( fRo ) ) * 256;
 		float fResMul;
-		fResMul = sqrt(sqrt( (std::max)( fPower, 1.0f ) ));
+		fResMul = sqrt( sqrt( (std::max)( fPower, 1.0f ) ) );
 		if ( fRo == 0 )
 			fResMul = 1;
 		for ( int x = 0; x < N_SIZE; ++x )
 		{
-			float fX = (x + 0.5f) / (N_SIZE);
+			float fX = ( x + 0.5f ) / ( N_SIZE );
 			if ( fX > 0.5f )
 			{
 				fX = ( fX - 0.5f ) * 2;
 				fX = sqrt( fX * 4 ); // fX = length(N-H)
-				fX = (std::max)( fX, (float)sqrt(0.5f) );
+				fX = (std::max)( fX, (float)sqrt( 0.5f ) );
 			}
 			else
-				fX = sqrt( fX ); // fX = length(N-H)
+				fX = sqrt( fX );                 // fX = length(N-H)
 			fX = cos( 2 * asin( fX * 0.5f ) ); // fX = (N*H)
 			float fRes;
 
-			fX = fabs(fX);
+			fX = fabs( fX );
 			if ( fX > 0 )
-				fRes = (float)(pow(fX, fPower)) * fResMul;
+				fRes = (float)( pow( fX, fPower ) ) * fResMul;
 			else
 				fRes = 0;
 			fRes = Clamp( fRes * 128, 0.0f, 255.0f );
@@ -104,20 +104,20 @@ static void RefreshSpecularResponseR300()
 	NGfx::CTextureLock<NGfx::SPixelFloat> lock( pSpecularResponseR300, 0, NGfx::INPLACE );
 	for ( int y = 0; y < N_SIZE; ++y )
 	{
-		float fRo = (y + 0.5f) / N_SIZE;
-		float fPower = triple( fabs(fRo) ) * 256;
+		float fRo = ( y + 0.5f ) / N_SIZE;
+		float fPower = triple( fabs( fRo ) ) * 256;
 		float fResMul;
-		fResMul = sqrt(sqrt( (std::max)( fPower, 1.0f ) ));
+		fResMul = sqrt( sqrt( (std::max)( fPower, 1.0f ) ) );
 		if ( fRo == 0 )
 			fResMul = 1;
 		for ( int x = 0; x < N_SIZE; ++x )
 		{
-			float fX = (x + 0.5f) / (N_SIZE); // fX = (N*H)
+			float fX = ( x + 0.5f ) / ( N_SIZE ); // fX = (N*H)
 			float fRes;
 
-			fX = fabs(fX);
+			fX = fabs( fX );
 			if ( fX > 0 )
-				fRes = (float)(pow(fX, fPower)) * fResMul;
+				fRes = (float)( pow( fX, fPower ) ) * fResMul;
 			else
 				fRes = 0;
 			lock[y][x].r = fRes;
@@ -125,13 +125,13 @@ static void RefreshSpecularResponseR300()
 	}
 }
 
-NGfx::CTexture* GetSpecularResponse()
+NGfx::CTexture *GetSpecularResponse()
 {
 	RefreshSpecularResponse();
 	return pSpecularResponse;
 }
 
-NGfx::CTexture* GetSpecularResponseR300()
+NGfx::CTexture *GetSpecularResponseR300()
 {
 	RefreshSpecularResponseR300();
 	return pSpecularResponseR300;
@@ -151,36 +151,48 @@ static void NormaliseFace( NGfx::CCubeTexture *pTex, NGfx::EFace f )
 	NGfx::CTextureLock<NGfx::SPixel8888> lock( pTex, f, 0, NGfx::INPLACE );
 	for ( int x = 0; x < N_CUBE_SIZE; ++x )
 	{
-		float w = ((float)x) / (N_CUBE_SIZE - 1) * 2 - 1;
+		float w = ( (float)x ) / ( N_CUBE_SIZE - 1 ) * 2 - 1;
 		for ( int y = 0; y < N_CUBE_SIZE; ++y )
 		{
-			float h = ((float)y) / (N_CUBE_SIZE - 1) * 2 - 1;
-			switch( f )
+			float h = ( (float)y ) / ( N_CUBE_SIZE - 1 ) * 2 - 1;
+			switch ( f )
 			{
-				case NGfx::POSITIVE_X: n = CVec3( 1.0f,    -h,    -w); break;
-				case NGfx::NEGATIVE_X: n = CVec3(-1.0f,    -h,     w); break;
-				case NGfx::POSITIVE_Y: n = CVec3(    w,  1.0f,     h); break;
-				case NGfx::NEGATIVE_Y: n = CVec3(    w, -1.0f,    -h); break;
-				case NGfx::POSITIVE_Z: n = CVec3(    w,    -h,  1.0f); break;
-				case NGfx::NEGATIVE_Z: n = CVec3(   -w,    -h, -1.0f); break;
-				default: ASSERT( 0 ); break;
+				case NGfx::POSITIVE_X:
+					n = CVec3( 1.0f, -h, -w );
+					break;
+				case NGfx::NEGATIVE_X:
+					n = CVec3( -1.0f, -h, w );
+					break;
+				case NGfx::POSITIVE_Y:
+					n = CVec3( w, 1.0f, h );
+					break;
+				case NGfx::NEGATIVE_Y:
+					n = CVec3( w, -1.0f, -h );
+					break;
+				case NGfx::POSITIVE_Z:
+					n = CVec3( w, -h, 1.0f );
+					break;
+				case NGfx::NEGATIVE_Z:
+					n = CVec3( -w, -h, -1.0f );
+					break;
+				default:
+					ASSERT( 0 );
+					break;
 			}
-			if ( fabs2(n) > 0 )
+			if ( fabs2( n ) > 0 )
 				Normalize( &n );
 			float fZ = n.z;
-			n += CVec3(1,1,1);
+			n += CVec3( 1, 1, 1 );
 			n *= 127;
-			lock[y][x] = NGfx::SPixel8888(
-				Float2Int(n.x + Rnd()),
-				Float2Int(n.y + Rnd()),
-				Float2Int(n.z + Rnd()),
-				fZ > 0 ? pow( fZ, 8 ) * 255 : 0
-				);
+			lock[y][x] = NGfx::SPixel8888( Float2Int( n.x + Rnd() ),
+			                               Float2Int( n.y + Rnd() ),
+			                               Float2Int( n.z + Rnd() ),
+			                               fZ > 0 ? pow( fZ, 8 ) * 255 : 0 );
 		}
 	}
 }
 
-NGfx::CCubeTexture* GetNormalizeTexture()
+NGfx::CCubeTexture *GetNormalizeTexture()
 {
 	if ( IsValid( pNormalize ) )
 		return pNormalize;
@@ -201,8 +213,8 @@ static void Normalize( CArray2D<float> *pRes )
 	{
 		for ( int x = 0; x < pRes->GetSizeX(); ++x )
 		{
-			fM += sqr( (*pRes)[y][x] );
-			fA += (*pRes)[y][x];
+			fM += sqr( ( *pRes )[y][x] );
+			fA += ( *pRes )[y][x];
 		}
 	}
 	fA /= pRes->GetSizeX() * pRes->GetSizeY();
@@ -211,14 +223,14 @@ static void Normalize( CArray2D<float> *pRes )
 	{
 		for ( int x = 0; x < pRes->GetSizeX(); ++x )
 		{
-			float f = ( (*pRes)[y][x] - fA ) / fM;
+			float f = ( ( *pRes )[y][x] - fA ) / fM;
 			f = ( f / 6 + 0.5f ) * 256;
-			(*pRes)[y][x] = Clamp( f, 0.0f, 255.0f );
+			( *pRes )[y][x] = Clamp( f, 0.0f, 255.0f );
 		}
 	}
 }
 
-NGfx::CTexture* GetLightFallLookup()
+NGfx::CTexture *GetLightFallLookup()
 {
 	if ( IsValid( pFalloffLookup ) )
 		return pFalloffLookup;
@@ -242,7 +254,7 @@ NGfx::CTexture* GetLightFallLookup()
 	return pFalloffLookup;
 }
 
-NGfx::CTexture* GetCheckerTexture()
+NGfx::CTexture *GetCheckerTexture()
 {
 	if ( IsValid( pChecker ) )
 		return pChecker;
@@ -260,7 +272,7 @@ NGfx::CTexture* GetCheckerTexture()
 	return pChecker;
 }
 
-NGfx::CTexture* Get16bitDepthLookup()
+NGfx::CTexture *Get16bitDepthLookup()
 {
 	if ( IsValid( p16bitDepthLookup ) )
 		return p16bitDepthLookup;

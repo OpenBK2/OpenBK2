@@ -17,7 +17,7 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B4, CObstacleStaticObject );
 //*											 CObstacleStaticObject											*
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CBasicGun* CObstacleStaticObject::ChooseGunToShootToSelf( CCommonUnit *pUnit, NTimer::STime *pTime )
+CBasicGun *CObstacleStaticObject::ChooseGunToShootToSelf( CCommonUnit *pUnit, NTimer::STime *pTime )
 {
 	return pUnit->ChooseGunForStatObj( pObj, pTime );
 }
@@ -44,7 +44,7 @@ bool CObstacleStaticObject::IsAlive() const
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CObstacleStaticObject::IssueUnitAttackCommand( CCommonUnit *pUnit )
 {
-	theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_SWARM_ATTACK_OBJECT, pObj->GetUniqueId()), pUnit );
+	theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_ATTACK_OBJECT, pObj->GetUniqueId() ), pUnit );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool CObstacleStaticObject::CanDeleteByMovingOver( CAIUnit *pUnit )
@@ -52,7 +52,7 @@ bool CObstacleStaticObject::CanDeleteByMovingOver( CAIUnit *pUnit )
 	return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CUpdatableObj * CObstacleStaticObject::GetObject() const
+class CUpdatableObj *CObstacleStaticObject::GetObject() const
 {
 	return pObj.GetPtr();
 }

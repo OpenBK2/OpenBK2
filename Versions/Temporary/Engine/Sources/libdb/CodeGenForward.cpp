@@ -16,11 +16,15 @@ namespace NCodeGen
 CForwardDefinition::CForwardDefinition( NLang::CTypeNode *pTypeNode, const CNodes2TypeDefs &nodes2TypeDefs )
 {
 	CNodes2TypeDefs::const_iterator iter = nodes2TypeDefs.find( pTypeNode->GetRealType() );
-	NI_VERIFY( iter != nodes2TypeDefs.end(), fmt::format( "can't find typedef for node {}", pTypeNode->GetName() ), return );
+	NI_VERIFY(
+			iter != nodes2TypeDefs.end(), fmt::format( "can't find typedef for node {}", pTypeNode->GetName() ), return );
 	pType = GetRealType( iter->second );
 }
 
-void CForwardDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
+void CForwardDefinition::GenerateCode( SCodeStreams *pCode,
+                                       const std::string &szTabs,
+                                       NDb::NTypeDef::STypeDef *pParentType,
+                                       const std::string &szQualifiedName )
 {
 	if ( IsNoCode( pType->GetAttributes() ) )
 		return;

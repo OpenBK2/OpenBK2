@@ -20,7 +20,7 @@ static std::wstring s_wszMultiplayerName;
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19245AC0, CSlotNumberPacket );
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19260C00, CB2GameLostPacket );
-START_REGISTER(MultiplayerVars)
+START_REGISTER( MultiplayerVars )
 // This GVar is here to force it to be saved in user.cfg
 // Do not remove, please
 REGISTER_VAR_EX( "Multiplayer.PlayerName", NGlobal::VarWStrHandler, &s_wszMultiplayerName, L"Player", STORAGE_NONE );
@@ -30,9 +30,7 @@ FINISH_REGISTER
 
 // CMPManagerMode - general methods
 
-
-CMPManagerMode::CMPManagerMode()
-: nGameID( -1 ), nHostClientID( -1 ), dwUserPausedPlayers( 0 )
+CMPManagerMode::CMPManagerMode() : nGameID( -1 ), nHostClientID( -1 ), dwUserPausedPlayers( 0 )
 {
 	// Messages
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CREATE_GAME, SMPUICreateGameMessage, &CMPManagerMode::OnCreateGameMessage );
@@ -41,10 +39,12 @@ CMPManagerMode::CMPManagerMode()
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_LEAVE_GAME, SMPUIMessage, &CMPManagerMode::OnLeaveGameMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_INTERRUPT, SMPUIMessage, &CMPManagerMode::OnInterruptMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_SLOT, SMPUIUpdateSlotMessage, &CMPManagerMode::OnUpdateSlotMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, &CMPManagerMode::OnUpdateGameListMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, &CMPManagerMode::OnUpdateGameListMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_WAITING_FOR_PLAYERS, SMPUILagMessage, &CMPManagerMode::OnLagMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_MP_PAUSE, SMPUIMessage, &CMPManagerMode::OnPauseMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_IN_GAME_CHAT_MESSAGE, SMPUIInGameChatMessage, &CMPManagerMode::OnInGameChatMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_IN_GAME_CHAT_MESSAGE, SMPUIInGameChatMessage, &CMPManagerMode::OnInGameChatMessage );
 	// Packets
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnGameClientRemoved );
 	REGISTER_PACKET_PROCESSOR( &CMPManagerMode::OnB2SlotInfoPacket );
@@ -78,9 +78,7 @@ bool CMPManagerMode::SAutoUpdate::CheckNeedUpdate()
 	return true;
 }
 
-CMPManagerMode::~CMPManagerMode()
-{
-}
+CMPManagerMode::~CMPManagerMode() {}
 
 void CMPManagerMode::BroadcastGameControlPacket( CNetPacket *pPacket )
 {
@@ -117,7 +115,7 @@ bool CMPManagerMode::Segment()
 			if ( bResult )
 				continue;
 		}
-		else if ( CMPTransceiver::IsGamePacket( pPacket ) )		// Game packet, but no game, ignore
+		else if ( CMPTransceiver::IsGamePacket( pPacket ) ) // Game packet, but no game, ignore
 			continue;
 
 		bool bResult = ProcessPacket( pPacket );
@@ -218,7 +216,8 @@ void CMPManagerMode::OnCriticalNetworkError( const std::wstring &wszMessage )
 	NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 	NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 	NMainLoop::Command( ML_COMMAND_MULTIPLAYER_MENU, "" );
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszMessage ).c_str() );
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+	                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszMessage ).c_str() );
 	pClient = 0;
 	pClient = new CEmptyServerClient;
 }

@@ -2,15 +2,16 @@
 #pragma once
 namespace NDb
 {
-	enum EUnitRPGType : int;
+enum EUnitRPGType : int;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CScanLimiter
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nScannedUnits = {};
+
 public:
-	CScanLimiter() : nScannedUnits( 0 ) { }
+	CScanLimiter() : nScannedUnits( 0 ) {}
 
 	void SegmentsFinished();
 	void TargetScanning( const EUnitRPGType &scanUnitType );

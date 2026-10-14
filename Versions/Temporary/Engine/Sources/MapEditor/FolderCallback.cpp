@@ -12,13 +12,13 @@
 
 void CFolderCallback::UndoChanges()
 {
-	for ( CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
+	for ( CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end();
+	      ++itUndoData )
 	{
 		RemoveObject( itUndoData->szObjectTypeName, itUndoData->szObjectName, false );
 	}
 	ClearUndoData();
 }
-
 
 void CFolderCallback::LockObjects( const SObjectSet &rObjectSet )
 {
@@ -31,14 +31,15 @@ void CFolderCallback::LockObjects( const SObjectSet &rObjectSet )
 		}
 		else
 		{
-			for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin(); itObjectName != rObjectSet.objectNameSet.end(); ++itObjectName )
+			for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin();
+			      itObjectName != rObjectSet.objectNameSet.end();
+			      ++itObjectName )
 			{
 				InsertHashSetElement( &( itLockObject->second ), itObjectName->first );
 			}
 		}
 	}
 }
-
 
 void CFolderCallback::UnockObjects( const SObjectSet &rObjectSet )
 {
@@ -47,7 +48,9 @@ void CFolderCallback::UnockObjects( const SObjectSet &rObjectSet )
 		CLockObjectMap::iterator itLockObject = lockObjectMap.find( rObjectSet.szObjectTypeName );
 		if ( itLockObject != lockObjectMap.end() )
 		{
-			for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin(); itObjectName != rObjectSet.objectNameSet.end(); ++itObjectName )
+			for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin();
+			      itObjectName != rObjectSet.objectNameSet.end();
+			      ++itObjectName )
 			{
 				itLockObject->second.erase( itObjectName->first );
 			}
@@ -58,7 +61,6 @@ void CFolderCallback::UnockObjects( const SObjectSet &rObjectSet )
 		}
 	}
 }
-
 
 bool CFolderCallback::IsObjectLocked( const std::string &rszTypeName, const CDBID &rDBID ) const
 {
@@ -73,7 +75,6 @@ bool CFolderCallback::IsObjectLocked( const std::string &rszTypeName, const CDBI
 	return false;
 }
 
-
 bool CFolderCallback::IsUniqueName( const std::string &rszTypeName, const std::string &rszName )
 {
 	if ( rszTypeName.empty() || rszName.empty() )
@@ -82,7 +83,6 @@ bool CFolderCallback::IsUniqueName( const std::string &rszTypeName, const std::s
 	}
 	return !NDb::DoesObjectExist( CDBID( rszName ) );
 }
-
 
 bool CFolderCallback::UniqueName( const std::string &szTypeName, std::string *pszName )
 {
@@ -119,7 +119,6 @@ bool CFolderCallback::UniqueName( const std::string &szTypeName, std::string *ps
 	return !bExists;
 }
 
-
 bool CFolderCallback::InsertObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
@@ -146,8 +145,9 @@ bool CFolderCallback::InsertObject( const std::string &rszObjectTypeName, const 
 	return false;
 }
 
-
-bool CFolderCallback::CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
+bool CFolderCallback::CopyObject( const std::string &rszObjectTypeName,
+                                  const std::string &rszDestination,
+                                  const std::string &rszSource )
 {
 	if ( rszObjectTypeName.empty() || rszDestination.empty() || rszSource.empty() )
 	{
@@ -173,8 +173,9 @@ bool CFolderCallback::CopyObject( const std::string &rszObjectTypeName, const st
 	return false;
 }
 
-
-bool CFolderCallback::RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
+bool CFolderCallback::RenameObject( const std::string &rszObjectTypeName,
+                                    const std::string &rszDestination,
+                                    const std::string &rszSource )
 {
 	if ( rszObjectTypeName.empty() || rszDestination.empty() || rszSource.empty() )
 	{
@@ -193,20 +194,25 @@ bool CFolderCallback::RenameObject( const std::string &rszObjectTypeName, const 
 	return folderController.Redo( true, true, 0 );
 }
 
-
-bool CFolderCallback::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, bool bRecursive )
+bool CFolderCallback::RemoveObject( const std::string &rszObjectTypeName,
+                                    const std::string &rszObjectName,
+                                    bool bRecursive )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
 	{
 		return false;
 	}
 	//
-	if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( rszObjectTypeName ) )
+	if ( CPtr<IManipulator> pFolderManipulator =
+	         Singleton<IResourceManager>()->CreateFolderManipulator( rszObjectTypeName ) )
 	{
 		bool bFolder = ( !rszObjectName.empty() && ( rszObjectName[rszObjectName.size() - 1] == PATH_SEPARATOR_CHAR ) );
 		if ( !bFolder && IsObjectLocked( rszObjectTypeName, CDBID( rszObjectName ) ) )
 		{
-			NLog::Log( LT_IMPORTANT, "Can't remove object. Object is locked. %s:%s\n", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+			NLog::Log( LT_IMPORTANT,
+			           "Can't remove object. Object is locked. %s:%s\n",
+			           rszObjectTypeName.c_str(),
+			           rszObjectName.c_str() );
 			return false;
 		}
 	}
@@ -248,8 +254,9 @@ bool CFolderCallback::RemoveObject( const std::string &rszObjectTypeName, const 
 	return bResult;
 }
 
-
-bool CFolderCallback::SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor )
+bool CFolderCallback::SetColor( const std::string &rszObjectTypeName,
+                                const std::string &rszObjectName,
+                                const int nNewColor )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
 	{

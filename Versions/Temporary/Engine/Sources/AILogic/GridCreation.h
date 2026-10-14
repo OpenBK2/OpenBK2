@@ -3,7 +3,7 @@
 
 class CSortedGridUnits
 {
-	std::vector<class CCommonUnit*> units;
+	std::vector<class CCommonUnit *> units;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nUnits = {};
 
@@ -19,9 +19,10 @@ class CSortedGridUnits
 	std::vector<CVec2> rotatedUnitsCoord;
 
 	bool bSorted = {};
+
 public:
 	CSortedGridUnits();
-	void AddUnit( class CCommonUnit* pUnit );
+	void AddUnit( class CCommonUnit *pUnit );
 
 	void Sort();
 
@@ -31,7 +32,7 @@ public:
 	const CVec2 GetAABB( const int n ) const;
 	const int GetUnitByOrderNumber( const int n ) const;
 
-	CCommonUnit* GetUnit( const int n ) const;
+	CCommonUnit *GetUnit( const int n ) const;
 
 	bool IsFormation( const int n ) const;
 
@@ -57,7 +58,18 @@ class CGrid
 	float fMaxWidth = {};
 
 	CSortedGridUnits sortedUnits;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&sortedColumns); f.Add(3,&columns); f.Add(4,&vCenter); f.Add(5,&newCenters); f.Add(6,&fMaxWidth); f.Add(7,&sortedUnits); return 0; }
+
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &sortedColumns );
+		f.Add( 3, &columns );
+		f.Add( 4, &vCenter );
+		f.Add( 5, &newCenters );
+		f.Add( 6, &fMaxWidth );
+		f.Add( 7, &sortedUnits );
+		return 0;
+	}
 	//
 	bool CanPlaceUnitToColumn( const int nColumn, const CVec2 &vAABBUnitSize );
 	void SetUnitCenterByColumn( const int nUnit, const int nColumn );
@@ -70,6 +82,7 @@ class CGrid
 	const float GetColumnWidth() const;
 
 	void CreateGrid();
+
 public:
 	CGrid( const CVec2 &vGridCenter, const int nGroup, const CVec2 &vGridDir );
 
@@ -77,7 +90,7 @@ public:
 
 	const int GetNUnitsInGrid() const;
 	const CVec2 GetUnitCenter( const int n ) const;
-	class CCommonUnit* GetUnit( const int n ) const;
+	class CCommonUnit *GetUnit( const int n ) const;
 
 	friend struct SColumnCompare;
 };

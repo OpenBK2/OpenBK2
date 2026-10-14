@@ -13,11 +13,15 @@ class CObjectHeaderXmlSaxVisitor : public NLXML::IXmlSaxVisitor
 	// Constructors still enable parsing and select the supplied destination header.
 	bool bNeedMoreChunks = false;
 	STypeObjectHeader *pHeader = nullptr;
+
 public:
-	CObjectHeaderXmlSaxVisitor(): bNeedMoreChunks( true ), pHeader( 0 ) {}
-	CObjectHeaderXmlSaxVisitor( STypeObjectHeader *_pHeader ): bNeedMoreChunks( true ), pHeader( _pHeader ) {}
+	CObjectHeaderXmlSaxVisitor() : bNeedMoreChunks( true ), pHeader( 0 ) {}
+	CObjectHeaderXmlSaxVisitor( STypeObjectHeader *_pHeader ) : bNeedMoreChunks( true ), pHeader( _pHeader ) {}
 	//
-	bool VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone ) { return true; }
+	bool VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone )
+	{
+		return true;
+	}
 	bool VisitComment( const std::string &szText ) { return bNeedMoreChunks; }
 	bool VisitAttribute( const std::string &szName, const std::string &szValue ) { return true; }
 	bool VisitChunkStart( const std::string &szName )

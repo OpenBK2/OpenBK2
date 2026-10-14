@@ -1,11 +1,9 @@
 #pragma once
 //
 
-
 ////	от этих констант надо будет аккуратно избавляться
 ////	по мере переделки TerraGen'a,
 ////	заменяя их пользовательскими настройками данных
-
 
 //
 
@@ -94,7 +92,6 @@
 //#define DEF_ROAD_PATCH_TRGS_RESERVE 256
 
 //#define DEF_ROAD_VERT_EPS 0.001f
-
 
 inline int GetVSOSeed( const NDb::SVSOInstance *pInstance )
 {

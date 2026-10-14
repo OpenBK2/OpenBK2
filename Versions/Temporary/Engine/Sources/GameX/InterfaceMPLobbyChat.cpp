@@ -8,7 +8,6 @@
 #include "GameRoomData.h"
 #include "InterfaceState.h"
 
-
 // Chat-related methods for MP Lobby
 
 void CInterfaceMPLobby::TryToJoinChatChannel( const std::string &szChannel )
@@ -39,7 +38,7 @@ bool CInterfaceMPLobby::OnChatSelectChannel()
 	IListControlItem *pItem = pChannelsList->GetSelectedListItem();
 	if ( pItem )
 	{
-		CTextData *pData = dynamic_cast<CTextData*>( pItem->GetUserData() );
+		CTextData *pData = dynamic_cast<CTextData *>( pItem->GetUserData() );
 		if ( pData )
 			pChannelNameEdit->SetText( pData->wszText.c_str() );
 	}
@@ -128,7 +127,8 @@ bool CInterfaceMPLobby::OnChatMessage( SMPUIChatMessage *pMsg )
 		std::wstring wszPrivate;
 		if ( pMsg->bPrivate )
 			wszPrivate = InterfaceState()->GetTextEntry( "T_PRIVATE_MESSAGE_PREFIX" );
-		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
+		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" +
+		          NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
 	}
 	pChatOutput->AddItem( wszText );
 
@@ -158,7 +158,7 @@ bool CInterfaceMPLobby::OnChatChannelNicksMessage( struct SMPUIChatChannelNicksM
 	{
 		bJoiningChannel = false;
 		pChannelNameEdit->SetText( NStr::ToUnicode( szCurrentChannel ).c_str() );
-		pChatOutput->AddItem(  GetScreen()->GetTextEntry( "T_ENTER_CHAT_CHANNEL" ) + NStr::ToUnicode( szCurrentChannel )  );
+		pChatOutput->AddItem( GetScreen()->GetTextEntry( "T_ENTER_CHAT_CHANNEL" ) + NStr::ToUnicode( szCurrentChannel ) );
 	}
 
 	CChatClientsList *pList = &chatClients;
@@ -176,7 +176,7 @@ bool CInterfaceMPLobby::OnChatChannelNicksMessage( struct SMPUIChatChannelNicksM
 	for ( std::list<std::string>::iterator it = pMsg->nicks.begin(); it != pMsg->nicks.end(); ++it )
 	{
 		CPtr<CClientListData> pData = new CClientListData( *it, eDefaultStatus );
-		(*pList)[*it] = pData;
+		( *pList )[*it] = pData;
 	}
 	RebuildClientList();
 	pChatInput->SetFocus( true );
@@ -228,12 +228,12 @@ int CInterfaceMPLobby::GetButtonState( const std::string &szNick )
 		EMPChatStatus eFriendStatus = itFriend->second->eStatus;
 		switch ( eFriendStatus )
 		{
-		case EMPS_ONLINE:
-			return 2;
-		case EMPS_OFFLINE:
-			return 3;
-		case EMPS_BUSY:
-			return 4;
+			case EMPS_ONLINE:
+				return 2;
+			case EMPS_OFFLINE:
+				return 3;
+			case EMPS_BUSY:
+				return 4;
 		}
 	}
 

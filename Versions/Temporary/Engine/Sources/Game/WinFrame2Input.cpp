@@ -2,7 +2,6 @@
 #include "WinFrame2Input.h"
 #include "Input/GameMessage.h"
 
-
 /**
 void CWinToInputMessageConverter::ParseChars()
 {
@@ -30,19 +29,19 @@ void CWinToInputMessageConverter::Do()
 		{
 			for ( int nIndex = 0; nIndex < nCount; ++nIndex )
 			{
-				switch( eControlType )
+				switch ( eControlType )
 				{
 					case NInput::CT_WINDOWS:
-					 NInput::PostWinEvent( szGameMessage, nParam1, nParam2 );
-					 break;
+						NInput::PostWinEvent( szGameMessage, nParam1, nParam2 );
+						break;
 					default:
-					 NInput::PostEvent( szGameMessage, nParam1, nParam2 );
-					 break;
+						NInput::PostEvent( szGameMessage, nParam1, nParam2 );
+						break;
 				}
 			}
 		}
 	}
-/**
+	/**
 	NWinFrame::SWindowsMsg wMsg;
 	while ( NWinFrame::GetMessage( &wMsg ) )
 	{

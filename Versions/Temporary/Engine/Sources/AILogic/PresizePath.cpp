@@ -10,21 +10,24 @@
 #include <cstdint>
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C4, CPresizePath );
-REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11123400, CMechUnitRestOnBoardPath);
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11123400, CMechUnitRestOnBoardPath );
 
 //*******************************************************************
 //*												CPresizePath															*
 //*******************************************************************
 
-CPresizePath::CPresizePath( CBasePathUnit *_pUnit, const class CVec2 &vEndPoint, const class CVec2 &vEndDir, ISmoothPath *pApproachPath )
-:	vEndPoint( vEndPoint ), vEndDir( vEndDir ), eState( EPPS_APPROACH_BY_STANDART ), fSpeedLen( 0.0f ),
-	pUnit( _pUnit ), pPathStandart( pApproachPath )
+CPresizePath::CPresizePath( CBasePathUnit *_pUnit,
+                            const class CVec2 &vEndPoint,
+                            const class CVec2 &vEndDir,
+                            ISmoothPath *pApproachPath )
+		: vEndPoint( vEndPoint ), vEndDir( vEndDir ), eState( EPPS_APPROACH_BY_STANDART ), fSpeedLen( 0.0f ),
+			pUnit( _pUnit ), pPathStandart( pApproachPath )
 {
-	wDesiredDir = GetDirectionByVector(vEndDir);
+	wDesiredDir = GetDirectionByVector( vEndDir );
 
 	// Continue the truck's initialized approach before the final precision movement and turn.
 	NI_ASSERT( pPathStandart != 0, "Precision approach requires an initialized path" );
-/*
+	/*
 
 	if ( pUnit->GetTurnSpeed() == 0.0f )
 		pPathStandart = new CStandartSmoothPath();
@@ -37,7 +40,7 @@ CPresizePath::CPresizePath( CBasePathUnit *_pUnit, const class CVec2 &vEndPoint,
 
 bool CPresizePath::Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 {
-	pUnit =_pUnit;
+	pUnit = _pUnit;
 	CPtr<IPath> p = pPath;
 	pPathStandart->Init( pUnit, pPath, bSmoothTurn, bCheckTurn, GetAIMap() );
 	eState = EPPS_APPROACH_BY_STANDART;
@@ -48,7 +51,7 @@ bool CPresizePath::Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, 
 bool CPresizePath::InitByFormationPath( CFormation *pFormation, CBasePathUnit *_pUnit )
 {
 	pUnit = _pUnit;
-	if ( eState == EPPS_APPROACH_BY_STANDART)
+	if ( eState == EPPS_APPROACH_BY_STANDART )
 		pPathStandart->InitByFormationPath( pFormation, pUnit );
 
 	return true;
@@ -91,22 +94,22 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 
 			break;
 		case EPPS_TURN_TO_DESIRED_POINT:
+		{
+			if ( vEndPoint == pUnit->GetCenterPlain() )
 			{
-				if ( vEndPoint == pUnit->GetCenterPlain() )
-				{
-					eState = EPPS_TURN_TO_DESIRED_DIR;
-					break;
-				}
-				// TurnToDirection takes a travel direction. Keep it stable while backing
-				// up; deriving it from IsGoForward can flip the goal as that flag changes.
-				const uint16_t dir = GetDirectionByVector( vEndPoint - pUnit->GetCenterPlain() );
-				if ( pUnit->TurnToDirection( dir, true, false ) )
-				{
-					pPathCheat = new CTankPitPath( pUnit, pUnit->GetCenterPlain(), vEndPoint );
-					eState = EPPS_APPROACH_DESIRED_POINT;
-				}
+				eState = EPPS_TURN_TO_DESIRED_DIR;
+				break;
 			}
-			break;
+			// TurnToDirection takes a travel direction. Keep it stable while backing
+			// up; deriving it from IsGoForward can flip the goal as that flag changes.
+			const uint16_t dir = GetDirectionByVector( vEndPoint - pUnit->GetCenterPlain() );
+			if ( pUnit->TurnToDirection( dir, true, false ) )
+			{
+				pPathCheat = new CTankPitPath( pUnit, pUnit->GetCenterPlain(), vEndPoint );
+				eState = EPPS_APPROACH_DESIRED_POINT;
+			}
+		}
+		break;
 		case EPPS_APPROACH_DESIRED_POINT:
 			if ( !pPathCheat->IsFinished() )
 			{
@@ -124,12 +127,12 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 
 			break;
 	}
-//	return CVec3( pUnit->GetCenter(), 0 );
+	//	return CVec3( pUnit->GetCenter(), 0 );
 }
 
 void CPresizePath::Stop()
 {
-	if ( eState == EPPS_APPROACH_BY_STANDART)
+	if ( eState == EPPS_APPROACH_BY_STANDART )
 		pPathStandart->Stop();
 }
 
@@ -162,14 +165,14 @@ void CPresizePath::SlowDown()
 
 const bool CPresizePath::CanGoBackward() const
 {
-	if ( eState == EPPS_APPROACH_BY_STANDART)
+	if ( eState == EPPS_APPROACH_BY_STANDART )
 		return pPathStandart->CanGoBackward();
 	return false;
 }
 
 const bool CPresizePath::CanGoForward() const
 {
-	if ( eState == EPPS_APPROACH_BY_STANDART)
+	if ( eState == EPPS_APPROACH_BY_STANDART )
 		return pPathStandart->CanGoForward();
 	return false;
 }
@@ -184,14 +187,14 @@ void CPresizePath::GetNextTiles( list<SVector> *pTiles )
 
 const CVec2 CPresizePath::PeekPathPoint( const int nToShift ) const
 {
-	if ( eState == EPPS_APPROACH_BY_STANDART)
+	if ( eState == EPPS_APPROACH_BY_STANDART )
 		return pPathStandart->PeekPathPoint( nToShift );
 	return VNULL2;
 }
 
-IMemento* CPresizePath::CreateMemento() const
+IMemento *CPresizePath::CreateMemento() const
 {
-	if ( eState == EPPS_APPROACH_BY_STANDART)
+	if ( eState == EPPS_APPROACH_BY_STANDART )
 		return pPathStandart->CreateMemento();
 	return 0;
 }
@@ -213,20 +216,20 @@ void CPresizePath::SetOwner( CBasePathUnit *_pUnit )
 //*******************************************************************
 
 CMechUnitRestOnBoardPath::CMechUnitRestOnBoardPath( CBasePathUnit *_pUnit, CMilitaryCar *_pTransport )
-: pUnit( _pUnit ), pTransport( _pTransport ), fSpeedLen( 0.0f )
+		: pUnit( _pUnit ), pTransport( _pTransport ), fSpeedLen( 0.0f )
 {
-	vFormerPlacement = vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit*>( pUnit ), 0 );
+	vFormerPlacement = vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit *>( pUnit ), 0 );
 }
 
 void CMechUnitRestOnBoardPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( pUnit )
 	{
-		pUnit->SetDirection( pTransport->GetBoardedDirection( checked_cast<CAIUnit*>( pUnit ), 0 ) );
+		pUnit->SetDirection( pTransport->GetBoardedDirection( checked_cast<CAIUnit *>( pUnit ), 0 ) );
 		vFormerPlacement = vCurrentPlacement;
-		vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit*>( pUnit ), 0 );
+		vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit *>( pUnit ), 0 );
 		vCurrentPlacement.z += 1;
-		pUnit->SetCenter( vCurrentPlacement, true );			// Set unit to where it belongs
+		pUnit->SetCenter( vCurrentPlacement, true ); // Set unit to where it belongs
 	}
 }
 
@@ -235,11 +238,11 @@ void CMechUnitRestOnBoardPath::Advance()
 	//CRAP{ UNTILL
 	if ( pUnit )
 	{
-		pUnit->SetDirection( pTransport->GetBoardedDirection( checked_cast<CAIUnit*>( pUnit ), 0 ) );
+		pUnit->SetDirection( pTransport->GetBoardedDirection( checked_cast<CAIUnit *>( pUnit ), 0 ) );
 		vFormerPlacement = vCurrentPlacement;
-		vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit*>( pUnit ), 0 );
+		vCurrentPlacement = pTransport->GetBoardedPosition( checked_cast<CAIUnit *>( pUnit ), 0 );
 		vCurrentPlacement.z += 1;
-		pUnit->SetCenter( vCurrentPlacement, true );			// Set unit to where it belongs
+		pUnit->SetCenter( vCurrentPlacement, true ); // Set unit to where it belongs
 	}
 	//CRAP}
 }
@@ -256,5 +259,5 @@ void CMechUnitRestOnBoardPath::GetSpeed3( CVec3 *vSpeed ) const
 
 void CMechUnitRestOnBoardPath::OnSerialize( IBinSaver &saver )
 {
-  SerializeBasePathUnit( saver, 127, &pUnit );
+	SerializeBasePathUnit( saver, 127, &pUnit );
 }

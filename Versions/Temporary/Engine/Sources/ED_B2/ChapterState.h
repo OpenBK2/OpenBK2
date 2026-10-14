@@ -13,7 +13,7 @@ struct IButton;
 struct ITextView;
 namespace NDb
 {
-	struct SWindowMSButton;
+struct SWindowMSButton;
 }
 
 class CChapterState : public CDefaultInputState
@@ -36,6 +36,7 @@ class CChapterState : public CDefaultInputState
 	CPtr<ITextView> pNumberView;
 	CPtr<ITextView> pBigNumberView;
 	CDBPtr<NDb::SChapter> pChapter;
+
 private:
 	void LoadChapterMap();
 	void CreateScreen();
@@ -46,9 +47,10 @@ private:
 	void SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArrow );
 	void ClearMaskManipulator();
 	void UpdateMaskManipulator();
-	IView* ClearView();
+	IView *ClearView();
 	void SetView( IView *pView );
 	void OnKeyArrows( int nDeltaX, int nDeltaY );
+
 public:
 	CChapterState( CChapterEditor *pChapterEditor );
 

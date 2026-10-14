@@ -3,26 +3,25 @@
 namespace NCollider
 {
 
-bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1,
-	const CVec3 &ptCenter, float fR )
+bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1, const CVec3 &ptCenter, float fR )
 {
 	// distance to vertices
 	float fR2 = sqr( fR );
 	CVec3 a = ptCenter - a1;
-	if ( fabs2(a) < fR2 )
+	if ( fabs2( a ) < fR2 )
 		return true;
 	CVec3 b = ptCenter - b1;
-	if ( fabs2(b) < fR2 )
+	if ( fabs2( b ) < fR2 )
 		return true;
 	CVec3 c = ptCenter - c1;
-	if ( fabs2(c) < fR2 )
+	if ( fabs2( c ) < fR2 )
 		return true;
 	CVec3 sideAB = b1 - a1;
 	CVec3 sideBC = c1 - b1;
 	CVec3 sideCA = a1 - c1;
-	float fAB2 = fabs2(sideAB);
-	float fBC2 = fabs2(sideBC);
-	float fCA2 = fabs2(sideCA);
+	float fAB2 = fabs2( sideAB );
+	float fBC2 = fabs2( sideBC );
+	float fCA2 = fabs2( sideCA );
 	if ( fAB2 < 1e-6f )
 	{
 		if ( fBC2 < 1e-6f ) // degenerated triangle -> point
@@ -71,11 +70,11 @@ bool DoesTriSphereIntersect( const CVec3 &a1, const CVec3 &b1, const CVec3 &c1,
 	float fDist2 = sqr( a * normal );
 	if ( fDist2 >= fR2 * fLeng2 ) // distance to triangle plane check
 		return false;
-	if ( (a ^ sideAB) * normal > 0 ) // projection outside of triangle
+	if ( ( a ^ sideAB ) * normal > 0 )                                  // projection outside of triangle
 		return ( tAB > 0 && tAB < 1 && fabs2( a - tAB * sideAB ) < fR2 ); // edge cylinder
-	if ( (b ^ sideBC) * normal > 0 ) // projection outside of triangle
+	if ( ( b ^ sideBC ) * normal > 0 )                                  // projection outside of triangle
 		return ( tBC > 0 && tBC < 1 && fabs2( b - tBC * sideBC ) < fR2 ); // edge cylinder
-	if ( (c ^ sideCA) * normal > 0 ) // projection outside of triangle
+	if ( ( c ^ sideCA ) * normal > 0 )                                  // projection outside of triangle
 		return ( tCA > 0 && tCA < 1 && fabs2( c - tCA * sideCA ) < fR2 ); // edge cylinder
 	return true;
 }
@@ -99,7 +98,7 @@ static void ClosestPointOnSegment( CVec3 *pRes, const CVec3 &p, const CVec3 &a, 
 	// a-b is the line, p the point in question
 	CVec3 c = p - a;
 	const CVec3 &v = ba;
-	float d = fabs2(v);
+	float d = fabs2( v );
 	if ( d < 1e-6f )
 	{
 		*pRes = a;
@@ -107,30 +106,32 @@ static void ClosestPointOnSegment( CVec3 *pRes, const CVec3 &p, const CVec3 &a, 
 	}
 	float t = v * c;
 	// Check to see if 't' is beyond the extents of the line segment
-	if (t < 0)
+	if ( t < 0 )
 	{
 		*pRes = a;
 		return;
 	}
-	if (t > d)
+	if ( t > d )
 	{
 		*pRes = b;
 		return;
 	}
-	CalcAplusBC( pRes, a, t/d, v );
+	CalcAplusBC( pRes, a, t / d, v );
 }
 
 // CSuperCollider
 
 // returns distance to collision and triangle point to collide (pIntersect)
-float CSuperCollider::CollideSphereTriangle( const SSphere &sphere, const SVelocity &velocity,
-	const SGlobalTriangle &tri, CVec3 *pIntersect )
+float CSuperCollider::CollideSphereTriangle( const SSphere &sphere,
+                                             const SVelocity &velocity,
+                                             const SGlobalTriangle &tri,
+                                             CVec3 *pIntersect )
 {
 	const SPlane &plane = tri.plane;
 	float scal;
 	scal = plane.n * velocity.normVel;
 	if ( scal > -1e-6f )
-		return F_NO_COLLISION;  // velocity parallel to plane or in opposite direction
+		return F_NO_COLLISION; // velocity parallel to plane or in opposite direction
 	CVec3 spherePoint;
 	CalcAplusBC( &spherePoint, sphere.ptCenter, -sphere.fRadius, plane.n );
 	// calculate plane contact point
@@ -141,7 +142,7 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere, const SVeloc
 	else if ( fDistToPlane < 0 )
 		CalcAplusBC( &planePoint, spherePoint, -fDistToPlane, plane.n ); // embedded sphere
 	else
-		CalcAplusBC( &planePoint, spherePoint, -(fDistToPlane / scal), velocity.normVel );
+		CalcAplusBC( &planePoint, spherePoint, -( fDistToPlane / scal ), velocity.normVel );
 
 	const CVec3 &v0 = points[tri.n1];
 	const CVec3 &v1 = points[tri.n2];
@@ -155,7 +156,7 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere, const SVeloc
 	CalcDif( &side12, v2, v1 );
 	CalcDif( &side20, v0, v2 );
 	CVec3 *pTriPoint = &planePoint;
-	if ( (p0 ^ side01) * plane.n > 0 || (p1 ^ side12) * plane.n > 0 || (p2 ^ side20) * plane.n > 0 )
+	if ( ( p0 ^ side01 ) * plane.n > 0 || ( p1 ^ side12 ) * plane.n > 0 || ( p2 ^ side20 ) * plane.n > 0 )
 	{
 		// calculate closest triangle point
 		ClosestPointOnSegment( &p0, planePoint, v0, v1, side01 );
@@ -175,14 +176,14 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere, const SVeloc
 	}
 	CVec3 q;
 	CalcDif( &q, *pTriPoint, sphere.ptCenter );
-	float c = fabs2(q);
+	float c = fabs2( q );
 	float v = q * velocity.normVel;
 	if ( v < 0 )
 		return F_NO_COLLISION; // different direction
 	float d = sphere.fRadius * sphere.fRadius - c + v * v;
 	if ( d < 0 )
 		return F_NO_COLLISION; // no intersection
-	float fDistToSphere = v - sqrt(d);
+	float fDistToSphere = v - sqrt( d );
 	if ( fDistToSphere > velocity.fVel )
 		return F_NO_COLLISION; // too far
 	*pIntersect = *pTriPoint;
@@ -194,8 +195,10 @@ bool CSuperCollider::DoesTriSphereIntersect( const CVec3 &ptCenter, float fR, co
 	return NCollider::DoesTriSphereIntersect( points[tri.n1], points[tri.n2], points[tri.n3], ptCenter, fR );
 }
 
-void CSuperCollider::AddEntity( const SHMatrix &pos, const std::vector<CVec3> &_points,
-	const std::vector<STriangle> &_tris, int nUserDataIndex )
+void CSuperCollider::AddEntity( const SHMatrix &pos,
+                                const std::vector<CVec3> &_points,
+                                const std::vector<STriangle> &_tris,
+                                int nUserDataIndex )
 {
 	int nStartIndex = points.size();
 	points.resize( points.size() + _points.size() );
@@ -204,8 +207,8 @@ void CSuperCollider::AddEntity( const SHMatrix &pos, const std::vector<CVec3> &_
 	for ( int k = 0; k < _points.size(); ++k )
 	{
 		CVec3 p;
-		pos.RotateHVector( &p, _points[ k ] );
-		points[ k + nStartIndex ] = p;
+		pos.RotateHVector( &p, _points[k] );
+		points[k + nStartIndex] = p;
 		volume.GetCoords( &clipped[k], p );
 	}
 	for ( int j = 0; j < _tris.size(); ++j )

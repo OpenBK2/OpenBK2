@@ -5,17 +5,17 @@ bool ToAIUnits( bool bInEditor )
 	//Vis2AI( &vAABBCenter );
 	//Vis2AI( &vAABBHalfSize );
 	//for ( vector<CVec2>::iterator it = fireplaces.begin(); it != fireplaces.end(); ++it )
-		//Vis2AI( &(*it) );
+	//Vis2AI( &(*it) );
 	return true;
 }
 
 float GetLength() const
 {
-	return vAABBHalfSize.x*2.0f*AI_TO_VIS;
+	return vAABBHalfSize.x * 2.0f * AI_TO_VIS;
 }
 float GetHalfLength() const
 {
-	return vAABBHalfSize.x*AI_TO_VIS;
+	return vAABBHalfSize.x * AI_TO_VIS;
 }
 /*const CVec2 GetVisFirePlace() const
 {

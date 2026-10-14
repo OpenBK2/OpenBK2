@@ -13,8 +13,12 @@ namespace
 std::vector<uint32_t> SizingCharacters()
 {
 	std::vector<uint32_t> result;
-	for ( int charset : { NCodePages::CHARSET_ANSI, NCodePages::CHARSET_EASTEUROPE,
-		NCodePages::CHARSET_RUSSIAN, NCodePages::CHARSET_GREEK, NCodePages::CHARSET_TURKISH, NCodePages::CHARSET_BALTIC } )
+	for ( int charset : { NCodePages::CHARSET_ANSI,
+	                      NCodePages::CHARSET_EASTEUROPE,
+	                      NCodePages::CHARSET_RUSSIAN,
+	                      NCodePages::CHARSET_GREEK,
+	                      NCodePages::CHARSET_TURKISH,
+	                      NCodePages::CHARSET_BALTIC } )
 	{
 		const auto chars = NCodePages::GetPrintableCodePoints( charset );
 		result.insert( result.end(), chars.begin(), chars.end() );
@@ -27,7 +31,8 @@ std::vector<uint32_t> SizingCharacters()
 std::shared_ptr<std::vector<uint8_t>> ReadFont( const char *name )
 {
 	std::ifstream file( std::string( FONT_DATA_DIR ) + "/" + name, std::ios::binary );
-	return std::make_shared<std::vector<uint8_t>>( std::istreambuf_iterator<char>( file ), std::istreambuf_iterator<char>() );
+	return std::make_shared<std::vector<uint8_t>>( std::istreambuf_iterator<char>( file ),
+	                                               std::istreambuf_iterator<char>() );
 }
 }
 
@@ -35,7 +40,12 @@ TEST( FontSizing, KeepsLegacyCapHeightAndFitsEuropeanAccents )
 {
 	// Ratios measured from H in the shipped Body, Header2 and Numeric atlases.
 	// In particular Oswald's Baltic accents must not reduce all its capitals.
-	const struct { const char *file; int weight; double capRatio; } fonts[] = {
+	const struct
+	{
+		const char *file;
+		int weight;
+		double capRatio;
+	} fonts[] = {
 		{ "PTSans-Regular.ttf", 400, 10.0 / 16 },
 		{ "Oswald-Variable.ttf", 700, 13.0 / 20 },
 		{ "LiberationSans-Regular.ttf", 400, 8.0 / 14 },

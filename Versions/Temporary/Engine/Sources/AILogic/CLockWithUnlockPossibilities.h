@@ -21,30 +21,39 @@ class CLockWithUnlockPossibilities
 	uint8_t bAIClass = {}; //
 protected:
 	SRect bigRect; // весь этот Rect будет пройден танком.
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&formerTilesType); f.Add(3,&pathTiles); f.Add(4,&bLocked); f.Add(5,&bAIClass); f.Add(6,&bigRect); return 0; }
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &formerTilesType );
+		f.Add( 3, &pathTiles );
+		f.Add( 4, &bLocked );
+		f.Add( 5, &bAIClass );
+		f.Add( 6, &bigRect );
+		return 0;
+	}
+
 protected:
-	bool TryLockAlongTheWay( const bool bLock, const uint8_t _bAIClass ) ;
+	bool TryLockAlongTheWay( const bool bLock, const uint8_t _bAIClass );
 
 public:
-	CLockWithUnlockPossibilities()
-		: bLocked(false){}
+	CLockWithUnlockPossibilities() : bLocked( false ) {}
 
 	bool LockRect( const SRect &rect, const uint8_t _bAIClass )
 	{
 		if ( bLocked )
 		{
-			TryLockAlongTheWay(false, bAIClass );
+			TryLockAlongTheWay( false, bAIClass );
 		}
 		bigRect = rect;
 		bLocked = TryLockAlongTheWay( true, _bAIClass );
-		return bLocked ;
+		return bLocked;
 	}
 	void UnlockIfLocked()
 	{
 		if ( bLocked )
 		{
 			bLocked = false;
-			TryLockAlongTheWay(false, bAIClass);
+			TryLockAlongTheWay( false, bAIClass );
 		}
 	}
 };

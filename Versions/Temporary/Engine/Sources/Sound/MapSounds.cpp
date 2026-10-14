@@ -9,7 +9,11 @@
 //*															CMapSounds
 //*******************************************************************
 
-void CMapSounds::CMapSoundCell::AddSound( const uint16_t wSoundID, const CVec3 &vPos, const CMapSounds::RegisteredSounds &registeredSounds, const uint16_t wInstanceID, const bool bLooped )
+void CMapSounds::CMapSoundCell::AddSound( const uint16_t wSoundID,
+                                          const CVec3 &vPos,
+                                          const CMapSounds::RegisteredSounds &registeredSounds,
+                                          const uint16_t wInstanceID,
+                                          const bool bLooped )
 {
 	if ( bLooped )
 	{
@@ -23,10 +27,10 @@ void CMapSounds::CMapSoundCell::AddSound( const uint16_t wSoundID, const CVec3 &
 	}
 }
 
-void CMapSounds::CMapSoundCell::RemoveSound( const uint16_t wInstanceID, struct ISoundScene * pScene )
+void CMapSounds::CMapSoundCell::RemoveSound( const uint16_t wInstanceID, struct ISoundScene *pScene )
 {
 	// if removed sound is playing - remove it from sound scene
-	if ( wInstanceID == playingLoopedSound.wInstanceID && 0 != playingLoopedSound.wSceneID)
+	if ( wInstanceID == playingLoopedSound.wInstanceID && 0 != playingLoopedSound.wSceneID )
 	{
 		pScene->RemoveSound( playingLoopedSound.wSceneID );
 		playingLoopedSound.Clear();
@@ -42,13 +46,13 @@ void CMapSounds::CMapSoundCell::RemoveSound( const uint16_t wInstanceID, struct 
 	RemoveSound( &cellLoopedSounds, wInstanceID );
 	//else
 	RemoveSound( &cellSounds, wInstanceID );
-
 }
 
-void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSounds *pCellSounds, const uint16_t wInstanceID )
+void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSounds *pCellSounds,
+                                             const uint16_t wInstanceID )
 {
 	// remove this sound from types list
-	for ( CellSounds::iterator it = pCellSounds->begin(); pCellSounds->end() != it ; ++it )
+	for ( CellSounds::iterator it = pCellSounds->begin(); pCellSounds->end() != it; ++it )
 	{
 		if ( it->second.nCount != 0 )
 		{
@@ -65,12 +69,14 @@ void CMapSounds::CMapSoundCell::RemoveSound( CMapSounds::CMapSoundCell::CellSoun
 	}
 }
 
-void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapSounds::RegisteredSounds &registeredSounds )
+void CMapSounds::CMapSoundCell::Update( struct ISoundScene *pScene,
+                                        const CMapSounds::RegisteredSounds &registeredSounds )
 {
 	if ( timeNextRun < CSoundScene2D::GetCurTime() )
 	{
 		// if sounds currently playing cannot be played amymore
-		if ( 0 != playingLoopedSound.wSoundTypeID && cellSounds[playingLoopedSound.wSoundTypeID].nCount < SSoundSceneConsts::MIN_SOUND_COUNT_TO_PLAY_LOOPED )
+		if ( 0 != playingLoopedSound.wSoundTypeID &&
+		     cellSounds[playingLoopedSound.wSoundTypeID].nCount < SSoundSceneConsts::MIN_SOUND_COUNT_TO_PLAY_LOOPED )
 		{
 			pScene->RemoveSound( playingLoopedSound.wSceneID );
 			playingLoopedSound.Clear();
@@ -82,17 +88,18 @@ void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapS
 			// if there is no sounds plaing or looped run them ( if have to )
 			SMaxCountPredicate pr;
 			CellSounds::iterator maxElement = max_element( cellLoopedSounds.begin(), cellLoopedSounds.end(), pr );
-			if ( maxElement != cellLoopedSounds.end() &&
-				!maxElement->second.instanceIDs.empty() &&
-				maxElement->second.nCount >= SSoundSceneConsts::MIN_SOUND_COUNT_TO_PLAY_LOOPED )
+			if ( maxElement != cellLoopedSounds.end() && !maxElement->second.instanceIDs.empty() &&
+			     maxElement->second.nCount >= SSoundSceneConsts::MIN_SOUND_COUNT_TO_PLAY_LOOPED )
 			{
-				std::unordered_map<uint16_t,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
+				std::unordered_map<uint16_t, CVec3>::iterator element = maxElement->second.instanceIDs.begin();
 				playingLoopedSound.wInstanceID = element->first;
 				playingLoopedSound.wSoundTypeID = maxElement->first;
-				playingLoopedSound.wSceneID = pScene->AddSound( registeredSounds.ToT1(playingLoopedSound.wSoundTypeID),
-					element->second,
-					SFX_MIX_IF_TIME_EQUALS,
-					SAM_LOOPED_NEED_ID, 0, 1.0f );
+				playingLoopedSound.wSceneID = pScene->AddSound( registeredSounds.ToT1( playingLoopedSound.wSoundTypeID ),
+				                                                element->second,
+				                                                SFX_MIX_IF_TIME_EQUALS,
+				                                                SAM_LOOPED_NEED_ID,
+				                                                0,
+				                                                1.0f );
 			}
 		}
 
@@ -111,18 +118,20 @@ void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapS
 
 			if ( maxElement != cellSounds.end() && !maxElement->second.instanceIDs.empty() )
 			{
-				std::unordered_map<uint16_t,CVec3>::iterator element = maxElement->second.instanceIDs.begin();
+				std::unordered_map<uint16_t, CVec3>::iterator element = maxElement->second.instanceIDs.begin();
 				playingSound.wInstanceID = element->first;
 				playingSound.wSoundTypeID = maxElement->first;
 				playingSound.wSceneID = pScene->AddSound( registeredSounds.ToT1( playingSound.wSoundTypeID ),
-					element->second,
-					SFX_MIX_IF_TIME_EQUALS,
-					SAM_NEED_ID, 0, 1.0f );
-
+				                                          element->second,
+				                                          SFX_MIX_IF_TIME_EQUALS,
+				                                          SAM_NEED_ID,
+				                                          0,
+				                                          1.0f );
 			}
 		}
 		// set next run time
-		timeNextRun = CSoundScene2D::GetCurTime() + SSoundSceneConsts::SS_MAP_SOUND_PERIOND + rand() * SSoundSceneConsts::SS_MAP_SOUND_PERIOND_RANDOM / RAND_MAX;
+		timeNextRun = CSoundScene2D::GetCurTime() + SSoundSceneConsts::SS_MAP_SOUND_PERIOND +
+		              rand() * SSoundSceneConsts::SS_MAP_SOUND_PERIOND_RANDOM / RAND_MAX;
 	}
 }
 
@@ -145,21 +154,25 @@ void CMapSounds::InitSizes( const int nSizeX, const int nSizeY )
 
 void CMapSounds::RemoveSound( const uint16_t wInstanceID )
 {
-	if ( 0 == wInstanceID ) return ;
+	if ( 0 == wInstanceID )
+		return;
 	std::unordered_map<uint16_t, SIntThree>::iterator pos = cells.find( wInstanceID );
 	NI_ASSERT( pos != cells.end(), "wrong instace deleted" );
 	if ( pos == cells.end() )
 		return;
-	const SIntThree & vPos = pos->second;;
+	const SIntThree &vPos = pos->second;
+	;
 	mapCells[vPos.y][vPos.x].RemoveSound( wInstanceID, pSoundScene );
 	instanceIDs.Return( wInstanceID );
 	cells.erase( wInstanceID );
 }
 
-uint16_t CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pStats )
+uint16_t CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc *pStats )
 {
 	// определить к какой клетке он относится.
-	const SIntThree vCellPos( vPos.x / SSoundSceneConsts::MAP_SOUND_CELL, vPos.y / SSoundSceneConsts::MAP_SOUND_CELL, vPos.z / SSoundSceneConsts::MAP_SOUND_CELL );
+	const SIntThree vCellPos( vPos.x / SSoundSceneConsts::MAP_SOUND_CELL,
+	                          vPos.y / SSoundSceneConsts::MAP_SOUND_CELL,
+	                          vPos.z / SSoundSceneConsts::MAP_SOUND_CELL );
 	// check, can we add this sound, or it out of bounds
 	if ( vCellPos.x < 0 || vCellPos.x >= mapCells.GetSizeX() )
 		return 0;
@@ -194,10 +207,16 @@ void CMapSounds::Update( const CVec3 &vListener, const float fViewRadius )
 {
 	if ( timeNextUpdate < CSoundScene2D::GetCurTime() )
 	{
-		const int nMinX = (std::max)( 0, int(vListener.x - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL) ) / SSoundSceneConsts::MAP_SOUND_CELL;
-		const int nMaxX = (std::min)( mapCells.GetSizeX()-1, int(vListener.x + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL) / SSoundSceneConsts::MAP_SOUND_CELL );
-		const int nMinY = (std::max)( 0, int(vListener.y - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL) ) / SSoundSceneConsts::MAP_SOUND_CELL;
-		const int nMaxY = (std::min)( mapCells.GetSizeY()-1, int(vListener.y + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL) / SSoundSceneConsts::MAP_SOUND_CELL );
+		const int nMinX = (std::max)( 0, int( vListener.x - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL ) ) /
+		                  SSoundSceneConsts::MAP_SOUND_CELL;
+		const int nMaxX = (std::min)( mapCells.GetSizeX() - 1,
+		                              int( vListener.x + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL ) /
+		                                  SSoundSceneConsts::MAP_SOUND_CELL );
+		const int nMinY = (std::max)( 0, int( vListener.y - fViewRadius - SSoundSceneConsts::MAP_SOUND_CELL ) ) /
+		                  SSoundSceneConsts::MAP_SOUND_CELL;
+		const int nMaxY = (std::min)( mapCells.GetSizeY() - 1,
+		                              int( vListener.y + fViewRadius + SSoundSceneConsts::MAP_SOUND_CELL ) /
+		                                  SSoundSceneConsts::MAP_SOUND_CELL );
 
 		//scan only through cells near screen
 		for ( int x = nMinX; x <= nMaxX; ++x )

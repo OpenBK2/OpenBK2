@@ -9,16 +9,12 @@
 #include "ChildFrameWndBase.h"
 #include "SceneSurface.h"
 
-CChildFrameBase::CChildFrameBase() : pSurface( 0 ), pwndChildFrame( 0 ), pChildWnd( 0 )
-{
-}
-
+CChildFrameBase::CChildFrameBase() : pSurface( 0 ), pwndChildFrame( 0 ), pChildWnd( 0 ) {}
 
 CChildFrameBase::~CChildFrameBase()
 {
 	Destroy();
 }
-
 
 void CChildFrameBase::DeleteSurface()
 {
@@ -27,7 +23,6 @@ void CChildFrameBase::DeleteSurface()
 	delete pSurface;
 	pSurface = 0;
 }
-
 
 bool CChildFrameBase::Create()
 {
@@ -63,7 +58,6 @@ bool CChildFrameBase::Create()
 	return false;
 }
 
-
 void CChildFrameBase::Destroy()
 {
 	ClearHoldQueue();
@@ -77,7 +71,6 @@ void CChildFrameBase::Destroy()
 	DeleteSurface();
 }
 
-
 void CChildFrameBase::Enter()
 {
 	DebugTrace( "CChildFrameBase::Enter()" );
@@ -86,7 +79,6 @@ void CChildFrameBase::Enter()
 		pwndChildFrame->Focus();
 	}
 }
-
 
 void CChildFrameBase::Leave()
 {

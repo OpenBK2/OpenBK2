@@ -9,7 +9,7 @@ class CMapObj;
 class CMOUnitInfantry;
 namespace NDb
 {
-	struct SAnimB2;
+struct SAnimB2;
 }
 //
 class CParatrooperAnimationProcess : public IClientUpdatableProcess
@@ -17,21 +17,35 @@ class CParatrooperAnimationProcess : public IClientUpdatableProcess
 	OBJECT_NOCOPY_METHODS( CParatrooperAnimationProcess );
 	//
 	ZDATA
-		CPtr<CMapObj> pInfantry;
-		NTimer::STime timeToChange = 0;
-		ZSKIP
-		int nParachuteID = 0;
-		ZSKIP
-		CDBPtr<NDb::SAnimB2> pUnitAnim;
-		CDBPtr<NDb::SAnimB2> pParaAnim;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pInfantry); f.Add(3,&timeToChange); f.Add(5,&nParachuteID); f.Add(7,&pUnitAnim); f.Add(8,&pParaAnim); return 0; }
+	CPtr<CMapObj> pInfantry;
+	NTimer::STime timeToChange = 0;
+	ZSKIP
+	int nParachuteID = 0;
+	ZSKIP
+	CDBPtr<NDb::SAnimB2> pUnitAnim;
+	CDBPtr<NDb::SAnimB2> pParaAnim;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pInfantry );
+		f.Add( 3, &timeToChange );
+		f.Add( 5, &nParachuteID );
+		f.Add( 7, &pUnitAnim );
+		f.Add( 8, &pParaAnim );
+		return 0;
+	}
 	//
 	CParatrooperAnimationProcess() {}
+
 public:
-	CParatrooperAnimationProcess( CMapObj *_pInfantry, NTimer::STime _timeToChange, const NDb::SAnimB2 *_pUnitAnim,
-		int _nParachuteID, const NDb::SAnimB2 *_pParaAnim )
-		: pInfantry( _pInfantry ), timeToChange( _timeToChange ),
-	    nParachuteID( _nParachuteID ), pUnitAnim( _pUnitAnim ),pParaAnim( _pParaAnim ) {}
+	CParatrooperAnimationProcess( CMapObj *_pInfantry,
+	                              NTimer::STime _timeToChange,
+	                              const NDb::SAnimB2 *_pUnitAnim,
+	                              int _nParachuteID,
+	                              const NDb::SAnimB2 *_pParaAnim )
+			: pInfantry( _pInfantry ), timeToChange( _timeToChange ), nParachuteID( _nParachuteID ), pUnitAnim( _pUnitAnim ),
+				pParaAnim( _pParaAnim )
+	{
+	}
 	bool Update( const NTimer::STime &time );
 };
 
@@ -40,17 +54,30 @@ class CParachuteFinishProcess : public IClientUpdatableProcess
 	OBJECT_NOCOPY_METHODS( CParachuteFinishProcess );
 	//
 	ZDATA
-		CPtr<CMOUnitInfantry> pInfantry;
-		NTimer::STime timeToChange = 0;
-		ZSKIP
-		NDb::ESeason eSeason{};
-		CDBPtr<NDb::SAnimB2> pIdleAnim;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pInfantry); f.Add(3,&timeToChange); f.Add(5,&eSeason); f.Add(6,&pIdleAnim); return 0; }
+	CPtr<CMOUnitInfantry> pInfantry;
+	NTimer::STime timeToChange = 0;
+	ZSKIP
+	NDb::ESeason eSeason{};
+	CDBPtr<NDb::SAnimB2> pIdleAnim;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pInfantry );
+		f.Add( 3, &timeToChange );
+		f.Add( 5, &eSeason );
+		f.Add( 6, &pIdleAnim );
+		return 0;
+	}
 	//
 	CParachuteFinishProcess() {}
+
 public:
-	CParachuteFinishProcess( CMOUnitInfantry *_pInfantry, NTimer::STime _timeToChange, const NDb::SAnimB2 *_pIdleAnim, NDb::ESeason _eSeason )
-		: pInfantry( _pInfantry ), timeToChange( _timeToChange ), pIdleAnim( _pIdleAnim ), eSeason( _eSeason ) {}
+	CParachuteFinishProcess( CMOUnitInfantry *_pInfantry,
+	                         NTimer::STime _timeToChange,
+	                         const NDb::SAnimB2 *_pIdleAnim,
+	                         NDb::ESeason _eSeason )
+			: pInfantry( _pInfantry ), timeToChange( _timeToChange ), pIdleAnim( _pIdleAnim ), eSeason( _eSeason )
+	{
+	}
 	//
 	bool Update( const NTimer::STime &time );
 };

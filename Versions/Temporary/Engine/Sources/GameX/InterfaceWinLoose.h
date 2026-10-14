@@ -5,6 +5,7 @@
 class CInterfaceWinLoose : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceWinLoose );
+
 private:
 	enum EUIState
 	{
@@ -14,7 +15,7 @@ private:
 		EUIS_END_GAME_STATISTICS,
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	bool bWin;
 	EUIState eUIState;
 	float fEndGameRestTime;
@@ -23,7 +24,19 @@ private:
 	CPtr<IWindow> pLostView;
 	int nSetYawSpeedStep;
 	float fSetYawSpeedTime;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&bWin); f.Add(3,&eUIState); f.Add(4,&fEndGameRestTime); f.Add(5,&pMainWnd); f.Add(6,&pWinView); f.Add(7,&pLostView); f.Add(8,&nSetYawSpeedStep); f.Add(9,&fSetYawSpeedTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &bWin );
+		f.Add( 3, &eUIState );
+		f.Add( 4, &fEndGameRestTime );
+		f.Add( 5, &pMainWnd );
+		f.Add( 6, &pWinView );
+		f.Add( 7, &pLostView );
+		f.Add( 8, &nSetYawSpeedStep );
+		f.Add( 9, &fSetYawSpeedTime );
+		return 0;
+	}
 
 	NTimer::STime timeAbsLast; // don't save
 private:
@@ -39,6 +52,7 @@ private:
 	void EndGameStatistics();
 
 	CVec3 GetAnchor() const;
+
 public:
 	CInterfaceWinLoose();
 
@@ -57,12 +71,18 @@ class CICWinLooseDialog : public CInterfaceCommandBase<CInterfaceWinLoose>
 {
 	OBJECT_BASIC_METHODS( CICWinLooseDialog );
 
-	ZDATA_(CInterfaceCommandBase<CInterfaceWinLoose>)
+	ZDATA_( CInterfaceCommandBase<CInterfaceWinLoose> )
 	bool bWin;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceWinLoose>*)this); f.Add(2,&bWin); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceCommandBase<CInterfaceWinLoose> *)this );
+		f.Add( 2, &bWin );
+		return 0;
+	}
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

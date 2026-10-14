@@ -6,7 +6,7 @@
 
 namespace NDb
 {
-	struct SModel;
+struct SModel;
 //	struct SRPGArmor;
 }
 struct IVisObj;
@@ -26,11 +26,17 @@ class CFloorsSet
 protected:
 	std::vector<int> floors;
 	friend class CAIMap;
+
 public:
 	CFloorsSet() {}
 	CFloorsSet( int nFloor ) { floors.push_back( nFloor ); }
-	CFloorsSet( int nFloor1, int nFloor2 ) { floors.push_back( nFloor1 ); if ( nFloor2 != nFloor1 ) floors.push_back( nFloor2 ); }
-	CFloorsSet( const std::vector<int> &_floors ): floors(_floors) {}
+	CFloorsSet( int nFloor1, int nFloor2 )
+	{
+		floors.push_back( nFloor1 );
+		if ( nFloor2 != nFloor1 )
+			floors.push_back( nFloor2 );
+	}
+	CFloorsSet( const std::vector<int> &_floors ) : floors( _floors ) {}
 };
 
 struct SObjectInfo
@@ -42,14 +48,14 @@ struct SObjectInfo
 	int nTSFlags;
 };
 
-struct IAIMapTracker: public CObjectBase
+struct IAIMapTracker : public CObjectBase
 {
 public:
 	virtual void OnChange() = 0;
 };
 
 class CBSPTree;
-struct IAIMap: public CObjectBase, public IAIVisitor
+struct IAIMap : public CObjectBase, public IAIVisitor
 {
 public:
 	enum ESplitTerrainHGroups
@@ -75,19 +81,35 @@ public:
 	};
 	virtual void Sync( ESyncType st = ST_NORMAL ) = 0;
 	virtual void GetEntities( std::vector<SObjectInfo> *pRes, int nMask, const CFloorsSet &hg = CFloorsSet() ) = 0;
-	virtual void Trace( const CRay &, std::vector<SInterval> *pIntersections, int nMask, const CFloorsSet &hg = CFloorsSet(), ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) = 0;
-	virtual void TraceGrid( CFastRenderer *pRes, int nMask, ESort sort, const CFloorsSet &fs = CFloorsSet(), ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) = 0;
+	virtual void Trace( const CRay &,
+	                    std::vector<SInterval> *pIntersections,
+	                    int nMask,
+	                    const CFloorsSet &hg = CFloorsSet(),
+	                    ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) = 0;
+	virtual void TraceGrid( CFastRenderer *pRes,
+	                        int nMask,
+	                        ESort sort,
+	                        const CFloorsSet &fs = CFloorsSet(),
+	                        ESplitTerrainHGroups shg = STH_UNION_TERR_HG ) = 0;
 	// fRadiusKoef - (1 - touches frustrum, 0 - center inside, -1 - whole inside)
-	virtual void Select( std::vector<SSelectedObject> *pRes, const CTransformStack &ts, float fRadiusKoef, int nMask, const CFloorsSet &hg = CFloorsSet() ) = 0;
+	virtual void Select( std::vector<SSelectedObject> *pRes,
+	                     const CTransformStack &ts,
+	                     float fRadiusKoef,
+	                     int nMask,
+	                     const CFloorsSet &hg = CFloorsSet() ) = 0;
 	virtual bool CalcIntersection( const CVec3 &ptCenter, float fRadius, int s, CObjectBase *pIgnoreUser = 0 ) = 0;
 	virtual void AddTracker( IAIMapTracker *pTracker, const SBound &b, int nMask, bool bInformOnDoorFlip = false ) = 0;
-	virtual void SelectHullPointers( std::vector<CPtr<CObjectBase> > *pRes, const SBound &b, int nMaskOr, int nMaskNot ) = 0;
+	virtual void
+	SelectHullPointers( std::vector<CPtr<CObjectBase>> *pRes, const SBound &b, int nMaskOr, int nMaskNot ) = 0;
 	//virtual void DebugInformTrackers( const SBound &b ) = 0;
 };
-void GetGeometry( std::vector<SObjectInfo> *pRes, std::vector<SMassSphere> *pSpheres, const NDb::SAIGeometry * pAIGeom, bool *pbClosed = 0 );
+void GetGeometry( std::vector<SObjectInfo> *pRes,
+                  std::vector<SMassSphere> *pSpheres,
+                  const NDb::SAIGeometry *pAIGeom,
+                  bool *pbClosed = 0 );
 void GetSpheres( const NDb::SModel *pModel, std::vector<SMassSphere> *pRes, CVec3 *pMassCenter );
 
-_3DMOTOR_EXPORT IAIMap* CreateAIMap();
+_3DMOTOR_EXPORT IAIMap *CreateAIMap();
 
 void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, int nFlags );
 } // namespace

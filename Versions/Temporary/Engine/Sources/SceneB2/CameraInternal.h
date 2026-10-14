@@ -8,18 +8,20 @@
 
 namespace NCamera
 {
-	struct SEarthQuake
+struct SEarthQuake
+{
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fAmplitude = {};
+	float fAttenuation = {};
+	float fDuration = {};
+	float fTime = {};
+	//
+	SEarthQuake() {}
+	SEarthQuake( float _fAmplitude, float _fAttenuation, float _fDuration )
+			: fAmplitude( _fAmplitude ), fAttenuation( _fAttenuation ), fDuration( _fDuration ), fTime( 0 )
 	{
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		float fAmplitude = {};
-		float fAttenuation = {};
-		float fDuration = {};
-		float fTime = {};
-		//
-		SEarthQuake() {	}
-		SEarthQuake( float _fAmplitude, float _fAttenuation, float _fDuration )
-			: fAmplitude( _fAmplitude ), fAttenuation( _fAttenuation ), fDuration( _fDuration ), fTime( 0 ) {	}
-	};
+	}
+};
 }
 
 class CCamera : public ICamera, protected NInput::CGMORegContainer
@@ -34,18 +36,18 @@ class CCamera : public ICamera, protected NInput::CGMORegContainer
 	float fFarClipPlane = {};
 	bool bPerspectiveTransform = {};
 	// transform matrices, built from data above
-	SHMatrix matView;											// view matrix
-	SHMatrix matProj;											// projective matrix
+	SHMatrix matView; // view matrix
+	SHMatrix matProj; // projective matrix
 	CTransformStack transformStack;
 	//
 	//CDGPtr<NCamera::CCameraPlacement> pScriptMutator;
 	CDGPtr<NCamera::CCameraBasicMouseMutator> pMouseMutator;
 	CDGPtr<CScriptMoviesMutatorHolder> pScriptMutatorsHolder;
 	bool bUseMovieMutator = {};
-	bool bWasUpdated = {};						// camera was updated from input
+	bool bWasUpdated = {};           // camera was updated from input
 	bool bWasUpdatedExternally = {}; // camera was updated from external
-	bool bIsMovieFinished = {};			// the movie segment has reached it`s finish
-	bool bIsPlayingFinal = {};				// the current movie segment is the final one
+	bool bIsMovieFinished = {};      // the movie segment has reached it`s finish
+	bool bIsPlayingFinal = {};       // the current movie segment is the final one
 	std::list<NCamera::SEarthQuake> earthquakes;
 	NTimer::STime timeLastUpdate = {};
 	//
@@ -76,22 +78,29 @@ public:
 	void GetPlacement( float *pfDist, float *pfPitch, float *pfYaw );
 	void GetCameraParams( float *pfNear, float *pfFar, float *pfFOV ) const
 	{
-		(*pfNear) = fNearClipPlane;
-		(*pfFar) = fFarClipPlane;
-		(*pfFOV) = GetFOV();
+		( *pfNear ) = fNearClipPlane;
+		( *pfFar ) = fFarClipPlane;
+		( *pfFOV ) = GetFOV();
 	}
 
-	virtual void GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float *pfRoll, float *pfFOV )	const;
-	virtual void SetCameraState( const CVec3 &vPos, const float fYaw, const float fPitch, const float fRoll, const float fFOV );
+	virtual void GetCameraState( CVec3 *pvPos, float *pfYaw, float *pfPitch, float *pfRoll, float *pfFOV ) const;
+	virtual void
+	SetCameraState( const CVec3 &vPos, const float fYaw, const float fPitch, const float fRoll, const float fFOV );
 
 	const CVec3 GetPos() const;
 	const CVec3 GetAnchor() const;
 
 	// script movies engine
-	void SetScriptMutatorsHolder( CScriptMoviesMutatorHolder *_pScriptMutatorsHolder ) { pScriptMutatorsHolder = _pScriptMutatorsHolder; }
-	CScriptMoviesMutatorHolder* GetScriptMutatorsHolder() { return pScriptMutatorsHolder; }
+	void SetScriptMutatorsHolder( CScriptMoviesMutatorHolder *_pScriptMutatorsHolder )
+	{
+		pScriptMutatorsHolder = _pScriptMutatorsHolder;
+	}
+	CScriptMoviesMutatorHolder *GetScriptMutatorsHolder() { return pScriptMutatorsHolder; }
 
-	bool IsScriptHolderActive() const { return ( (pScriptMutatorsHolder != 0) && (!pScriptMutatorsHolder->IsStopped()) ); }
+	bool IsScriptHolderActive() const
+	{
+		return ( ( pScriptMutatorsHolder != 0 ) && ( !pScriptMutatorsHolder->IsStopped() ) );
+	}
 
 	void FinishMovie( bool bSmoothEnd = false );
 	bool ValidateScriptPlacement( NCamera::CCameraPlacement *pPlacement ) const;
@@ -124,9 +133,9 @@ public:
 	//
 	// get view volume planes
 	// get transform matrices: result transform, projection, viewport
-	const SHMatrix& GetViewMatrix() const { return matView; }
-	const SHMatrix& GetProjectiveMatrix() const { return matProj; }
-	class CTransformStack& GetTransform() { return transformStack; }
+	const SHMatrix &GetViewMatrix() const { return matView; }
+	const SHMatrix &GetProjectiveMatrix() const { return matProj; }
+	class CTransformStack &GetTransform() { return transformStack; }
 	// projective ray
 	void GetProjectiveRay( CVec3 *pvOrig, CVec3 *pvDir, const CVec2 &vScreenPos ) const;
 	void GetProjectiveRayPoints( CVec3 *pvNear, CVec3 *pvFar, const CVec2 &vScreenPos ) const;
@@ -138,7 +147,7 @@ public:
 	void AddEarthquake( const CVec3 &vPos, float fPower );
 	void ClearEarthquakes();
 
-	virtual void SetCameraPosition( const CQuat &quat ) { }
+	virtual void SetCameraPosition( const CQuat &quat ) {}
 	virtual const CQuat GetCameraPosition() { return CQuat( 0.0f, 0.0f, 0.0f, 0.0f ); }
 
 	int operator&( IBinSaver &saver );

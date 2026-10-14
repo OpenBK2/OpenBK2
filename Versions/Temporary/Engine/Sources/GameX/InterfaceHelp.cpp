@@ -9,14 +9,9 @@
 
 // CInterfaceHelp
 
-CInterfaceHelp::CInterfaceHelp() :
-	CInterfaceScreenBase( "Help", "help" )
-{
-}
+CInterfaceHelp::CInterfaceHelp() : CInterfaceScreenBase( "Help", "help" ) {}
 
-CInterfaceHelp::~CInterfaceHelp()
-{
-}
+CInterfaceHelp::~CInterfaceHelp() {}
 
 bool CInterfaceHelp::Init()
 {
@@ -41,15 +36,13 @@ void CInterfaceHelp::MakeInterior( const std::wstring &wszHeader, const std::wst
 		pHeader->SetText( pHeader->GetDBText() + wszHeader );
 	if ( pDescCont && pDesc )
 	{
-		pDescCont->PushBack( dynamic_cast_ptr<IWindow*>( pDesc ), false );
+		pDescCont->PushBack( dynamic_cast_ptr<IWindow *>( pDesc ), false );
 		pDesc->SetText( pDesc->GetDBText() + wszDesc );
 		pDescCont->Update();
 	}
 }
 
-void CInterfaceHelp::RegisterObservers()
-{
-}
+void CInterfaceHelp::RegisterObservers() {}
 
 void CInterfaceHelp::OnGetFocus( bool bFocus )
 {
@@ -104,21 +97,20 @@ void CInterfaceHelp::AfterLoad()
 
 // CICHelp
 
-void CICHelp::PreCreate()
-{
-}
+void CICHelp::PreCreate() {}
 
 void CICHelp::PostCreate( IInterface *pInterface )
 {
 	const NDb::SUIScreenEntry *pEntry = InterfaceState()->GetScreenEntry( szInterfaceType );
-	if ( pEntry && (CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpHeader) || CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpDesc)))
+	if ( pEntry &&
+	     ( CHECK_TEXT_NOT_EMPTY_PRE( pEntry->, HelpHeader ) || CHECK_TEXT_NOT_EMPTY_PRE( pEntry->, HelpDesc ) ) )
 	{
 		std::wstring szHeader;
 		std::wstring szDesc;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpHeader) )
-			szHeader = GET_TEXT_PRE(pEntry->,HelpHeader);
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pEntry->,HelpDesc) )
-			szDesc = GET_TEXT_PRE(pEntry->,HelpDesc);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pEntry->, HelpHeader ) )
+			szHeader = GET_TEXT_PRE( pEntry->, HelpHeader );
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pEntry->, HelpDesc ) )
+			szDesc = GET_TEXT_PRE( pEntry->, HelpDesc );
 		pInterface->MakeInterior( szHeader, szDesc );
 	}
 	NMainLoop::PushInterface( pInterface );

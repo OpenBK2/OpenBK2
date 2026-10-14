@@ -53,7 +53,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 TEST( DatabaseDefaults, EmptyRecordChecksumIgnoresPreviousStorageContents )
 {
@@ -97,7 +98,8 @@ public:
 		NVFS::SetMainVFS( NVFS::CreateWinVFS( szDir ) );
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( szDir ) );
 		ASSERT_TRUE( NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), NDb::DATABASE_MODE_EDITOR ) );
-		for ( const char *pszFile : { "object.xdb", "object2.xdb", "Weapons/USSR/Heavy/A20.xdb", "Weapons/USSR/Light/PPSh.xdb" } )
+		for ( const char *pszFile :
+		      { "object.xdb", "object2.xdb", "Weapons/USSR/Heavy/A20.xdb", "Weapons/USSR/Light/PPSh.xdb" } )
 		{
 			EXPECT_TRUE( NDb::RegisterResourceFile( pszFile ) ) << pszFile;
 		}
@@ -192,7 +194,10 @@ std::vector<SFieldValues> ScalarFields()
 		{ "nocodeBool", false, true, false },
 		{ "nocodeString", false, "nocode string 1", "nocode string 2" },
 		{ "nocodeWString", false, L"nocode wstring 1", L"nocode wstring 2" },
-		{ "nocodeGUID", false, Uuid( "51A5BCA0-B663-41a7-8DED-0673AD1C7F60" ), Uuid( "A86000C4-9F09-4241-AA78-F9DA96F3D897" ) },
+		{ "nocodeGUID",
+	    false,
+	    Uuid( "51A5BCA0-B663-41a7-8DED-0673AD1C7F60" ),
+	    Uuid( "A86000C4-9F09-4241-AA78-F9DA96F3D897" ) },
 		{ "nocodeEnumUnitType", false, "UNIT_TYPE_ARMOR_HEAVY", "UNIT_TYPE_AVIA_FIGHTER" },
 		{ "nocodeBinaryFlags", false, Flags( 0x0f0f0f0f, 0xf0f0f0f0 ), Flags( 0x11223344, 0x55667788 ) },
 	};
@@ -228,9 +233,7 @@ TEST_F( CEditorDatabase, SetByPathReachesTheStruct )
 		ASSERT_TRUE( pMan->SetValue( field.pszName, field.second ) ) << field.pszName;
 	}
 	auto expect = [&]( const CVariant &member, const char *pszName )
-	{
-		EXPECT_TRUE( member == FindField( fields, pszName ).second ) << pszName;
-	};
+	{ EXPECT_TRUE( member == FindField( fields, pszName ).second ) << pszName; };
 	expect( pUnit->wszName, "Name" );
 	expect( pUnit->fHP, "HP" );
 	expect( pUnit->bHasPassability, "HasPassability" );
@@ -273,11 +276,13 @@ TEST_F( CEditorDatabase, StructWritesAreReadByPath )
 	pUnit->jx.fAmplitude = float( value( "Jx.Amplitude" ) );
 	pUnit->jx.fPhase = float( value( "Jx.Phase" ) );
 	pUnit->jx.fShift = float( value( "Jx.Shift" ) );
-	pUnit->jx.vTremble = CVec3( float( value( "Jx.Tremble.x" ) ), float( value( "Jx.Tremble.y" ) ), float( value( "Jx.Tremble.z" ) ) );
+	pUnit->jx.vTremble =
+			CVec3( float( value( "Jx.Tremble.x" ) ), float( value( "Jx.Tremble.y" ) ), float( value( "Jx.Tremble.z" ) ) );
 	pUnit->jy.fAmplitude = float( value( "Jy.Amplitude" ) );
 	pUnit->jy.fPhase = float( value( "Jy.Phase" ) );
 	pUnit->jy.fShift = float( value( "Jy.Shift" ) );
-	pUnit->jy.vTremble = CVec3( float( value( "Jy.Tremble.x" ) ), float( value( "Jy.Tremble.y" ) ), float( value( "Jy.Tremble.z" ) ) );
+	pUnit->jy.vTremble =
+			CVec3( float( value( "Jy.Tremble.x" ) ), float( value( "Jy.Tremble.y" ) ), float( value( "Jy.Tremble.z" ) ) );
 	memcpy( &pUnit->guid, value( "guid" ).GetPtr(), sizeof( pUnit->guid ) );
 	pUnit->pWeapon = static_cast<NDb::SWeapon *>( NDb::GetObject( value( "Weapon" ).GetDBID() ) );
 	for ( const SFieldValues &field : fields )
@@ -299,13 +304,16 @@ struct SArrayValues
 
 std::vector<SArrayValues> SimpleArrays()
 {
-	const CVariant guids[5] = {
-		Uuid( "C0968E41-7392-4c8a-9AE7-D20CDDE48BD3" ), Uuid( "83F99F40-717C-4598-B18F-959F37FCACEA" ),
-		Uuid( "24EAE67F-21F0-4e7f-AB58-A2591DA1DC9E" ), Uuid( "96855F55-EF5B-4acc-8770-8D4A1EB57271" ),
-		Uuid( "BF101B1E-8FDD-47a2-8AA1-E179BFA88177" ) };
-	const CVariant flags[5] = {
-		Flags( 0x0f0f0f0f, 0xf0f0f0f0 ), Flags( 0x11223344, 0x55667788 ), Flags( 0x12345678, 0x9abcdef0 ),
-		Flags( 0x87654321, 0x0fedcba9 ), Flags( 0x44332211, 0x88776655 ) };
+	const CVariant guids[5] = { Uuid( "C0968E41-7392-4c8a-9AE7-D20CDDE48BD3" ),
+	                            Uuid( "83F99F40-717C-4598-B18F-959F37FCACEA" ),
+	                            Uuid( "24EAE67F-21F0-4e7f-AB58-A2591DA1DC9E" ),
+	                            Uuid( "96855F55-EF5B-4acc-8770-8D4A1EB57271" ),
+	                            Uuid( "BF101B1E-8FDD-47a2-8AA1-E179BFA88177" ) };
+	const CVariant flags[5] = { Flags( 0x0f0f0f0f, 0xf0f0f0f0 ),
+	                            Flags( 0x11223344, 0x55667788 ),
+	                            Flags( 0x12345678, 0x9abcdef0 ),
+	                            Flags( 0x87654321, 0x0fedcba9 ),
+	                            Flags( 0x44332211, 0x88776655 ) };
 	std::vector<SArrayValues> arrays;
 	for ( const char *pszSuffix : { "", "Nocode" } )
 	{
@@ -323,12 +331,26 @@ std::vector<SArrayValues> SimpleArrays()
 		add( "SimpleArrayFloat", { 1.1f, 2.2f, 3.3f, 4.4f, 5.5f } );
 		add( "SimpleArrayGUID", { guids[0], guids[1], guids[2], guids[3], guids[4] } );
 		add( "SimpleArrayBinaryFlags", { flags[0], flags[1], flags[2], flags[3], flags[4] } );
-		add( "SimpleArrayEnumUnitType", { "UNIT_TYPE_INFANTRY_SNIPER", "UNIT_TYPE_ARMOR_MEDIUM", "UNIT_TYPE_ARMOR_HEAVY", "UNIT_TYPE_AVIA_FIGHTER", "UNIT_TYPE_AUTO_ENGINEER" } );
+		add( "SimpleArrayEnumUnitType",
+		     { "UNIT_TYPE_INFANTRY_SNIPER",
+		       "UNIT_TYPE_ARMOR_MEDIUM",
+		       "UNIT_TYPE_ARMOR_HEAVY",
+		       "UNIT_TYPE_AVIA_FIGHTER",
+		       "UNIT_TYPE_AUTO_ENGINEER" } );
 		add( "SimpleArrayString", { "Test string 0", "Test string 1", "Test string 2", "Test string 3", "Test string 4" } );
-		add( "SimpleArrayWString", { L"Очень клёвый wstring 0", L"Очень клёвый wstring 1", L"Очень клёвый wstring 2", L"Очень клёвый wstring 3", L"Очень клёвый wstring 4" } );
+		add( "SimpleArrayWString",
+		     { L"Очень клёвый wstring 0",
+		       L"Очень клёвый wstring 1",
+		       L"Очень клёвый wstring 2",
+		       L"Очень клёвый wstring 3",
+		       L"Очень клёвый wstring 4" } );
 	}
-	arrays.push_back( { "Weapons", { CDBID( "weapons/ussr/heavy/a20.xdb" ), CDBID( "weapons/ussr/light/ppsh.xdb" ),
-		CDBID( "weapons/ussr/heavy/a20.xdb" ), CDBID( "weapons/ussr/light/ppsh.xdb" ), CDBID( "weapons/ussr/heavy/a20.xdb" ) } } );
+	arrays.push_back( { "Weapons",
+	                    { CDBID( "weapons/ussr/heavy/a20.xdb" ),
+	                      CDBID( "weapons/ussr/light/ppsh.xdb" ),
+	                      CDBID( "weapons/ussr/heavy/a20.xdb" ),
+	                      CDBID( "weapons/ussr/light/ppsh.xdb" ),
+	                      CDBID( "weapons/ussr/heavy/a20.xdb" ) } } );
 	return arrays;
 }
 
@@ -383,20 +405,27 @@ TEST_F( CEditorDatabase, SimpleArraysInsertAndRemove )
 	for ( const SArrayValues &array : SimpleArrays() )
 	{
 		SCOPED_TRACE( array.pszName );
-		InsertAndRemove( pMan, array.pszName,
-			[&]( int nIndex, int nValue ) { SetAndExpect( Element( array.pszName, nIndex ), array.values[nValue] ); },
-			[&]( int nIndex, int nValue ) { ExpectValue( Element( array.pszName, nIndex ), array.values[nValue] ); } );
+		InsertAndRemove(
+				pMan,
+				array.pszName,
+				[&]( int nIndex, int nValue ) { SetAndExpect( Element( array.pszName, nIndex ), array.values[nValue] ); },
+				[&]( int nIndex, int nValue ) { ExpectValue( Element( array.pszName, nIndex ), array.values[nValue] ); } );
 	}
 }
 
 // The fields of one Struct1, with every field distinct across the five.
 std::vector<std::pair<std::string, CVariant>> Struct1Fields( int nValue )
 {
-	static const char *const unitTypes[5] = {
-		"UNIT_TYPE_INFANTRY_SNIPER", "UNIT_TYPE_ARMOR_MEDIUM", "UNIT_TYPE_ARMOR_HEAVY", "UNIT_TYPE_AVIA_FIGHTER", "UNIT_TYPE_SPG_ASSAULT" };
-	static const char *const guids[5] = {
-		"A3965C8E-B3EA-472f-8289-4117D37BC8AA", "D355FB02-F8C8-4b16-A387-73F3FCBE4A5B", "368B1489-11B0-45d5-9BE2-28148111A71A",
-		"4EC8482F-C39F-41fb-AA5D-1900E43D6BE6", "C6DA102B-7AE6-4ce8-AB94-C222A7A2721E" };
+	static const char *const unitTypes[5] = { "UNIT_TYPE_INFANTRY_SNIPER",
+	                                          "UNIT_TYPE_ARMOR_MEDIUM",
+	                                          "UNIT_TYPE_ARMOR_HEAVY",
+	                                          "UNIT_TYPE_AVIA_FIGHTER",
+	                                          "UNIT_TYPE_SPG_ASSAULT" };
+	static const char *const guids[5] = { "A3965C8E-B3EA-472f-8289-4117D37BC8AA",
+	                                      "D355FB02-F8C8-4b16-A387-73F3FCBE4A5B",
+	                                      "368B1489-11B0-45d5-9BE2-28148111A71A",
+	                                      "4EC8482F-C39F-41fb-AA5D-1900E43D6BE6",
+	                                      "C6DA102B-7AE6-4ce8-AB94-C222A7A2721E" };
 	const int n = nValue + 1;
 	return {
 		{ "TypeInt", n },
@@ -426,16 +455,20 @@ void Struct1InsertAndRemove( CEditorDatabase *pTest, NDb::IObjMan *pMan, const s
 		ASSERT_TRUE( pMan->GetValue( szName, &value ) ) << szName;
 		EXPECT_TRUE( value == expected ) << szName;
 	};
-	InsertAndRemove( pMan, szArray,
-		[&]( int nIndex, int nValue )
-		{
-			forEachField( nIndex, nValue, [&]( const std::string &szName, const CVariant &value )
+	InsertAndRemove(
+			pMan,
+			szArray,
+			[&]( int nIndex, int nValue )
 			{
-				ASSERT_TRUE( pMan->SetValue( szName, value ) ) << szName;
-				expectField( szName, value );
-			} );
-		},
-		[&]( int nIndex, int nValue ) { forEachField( nIndex, nValue, expectField ); } );
+				forEachField( nIndex,
+		                  nValue,
+		                  [&]( const std::string &szName, const CVariant &value )
+		                  {
+												ASSERT_TRUE( pMan->SetValue( szName, value ) ) << szName;
+												expectField( szName, value );
+											} );
+			},
+			[&]( int nIndex, int nValue ) { forEachField( nIndex, nValue, expectField ); } );
 }
 
 TEST_F( CEditorDatabase, StructArrayInsertAndRemove )
@@ -520,28 +553,30 @@ std::vector<SIteratedField> Object2IteratedFields()
 	for ( const char *pszJogging : { "Jx", "Jy" } )
 	{
 		const std::string sz = pszJogging;
-		fields.insert( fields.end(), {
-			{ sz, TYPE_TYPE_STRUCT, "Jogging", false },
-			{ sz + ".Amplitude", TYPE_TYPE_FLOAT, "float", false },
-			{ sz + ".Phase", TYPE_TYPE_FLOAT, "float", false },
-			{ sz + ".Shift", TYPE_TYPE_FLOAT, "float", false },
-			{ sz + ".Tremble", TYPE_TYPE_STRUCT, "Vec3", false },
-			{ sz + ".Tremble.x", TYPE_TYPE_FLOAT, "float", false },
-			{ sz + ".Tremble.y", TYPE_TYPE_FLOAT, "float", false },
-			{ sz + ".Tremble.z", TYPE_TYPE_FLOAT, "float", false },
-		} );
+		fields.insert( fields.end(),
+		               {
+										 { sz, TYPE_TYPE_STRUCT, "Jogging", false },
+										 { sz + ".Amplitude", TYPE_TYPE_FLOAT, "float", false },
+										 { sz + ".Phase", TYPE_TYPE_FLOAT, "float", false },
+										 { sz + ".Shift", TYPE_TYPE_FLOAT, "float", false },
+										 { sz + ".Tremble", TYPE_TYPE_STRUCT, "Vec3", false },
+										 { sz + ".Tremble.x", TYPE_TYPE_FLOAT, "float", false },
+										 { sz + ".Tremble.y", TYPE_TYPE_FLOAT, "float", false },
+										 { sz + ".Tremble.z", TYPE_TYPE_FLOAT, "float", false },
+									 } );
 	}
-	fields.insert( fields.end(), {
-		{ "guid", TYPE_TYPE_GUID, "GUID", false },
-		{ "nocodeInt", TYPE_TYPE_INT, "int", false },
-		{ "nocodeFloat", TYPE_TYPE_FLOAT, "float", false },
-		{ "nocodeBool", TYPE_TYPE_BOOL, "bool", false },
-		{ "nocodeString", TYPE_TYPE_STRING, "string", false },
-		{ "nocodeWString", TYPE_TYPE_WSTRING, "wstring", false },
-		{ "nocodeGUID", TYPE_TYPE_GUID, "GUID", false },
-		{ "nocodeEnumUnitType", TYPE_TYPE_ENUM, "UnitType", false },
-		{ "nocodeBinaryFlags", TYPE_TYPE_BINARY, "Flags", false },
-	} );
+	fields.insert( fields.end(),
+	               {
+									 { "guid", TYPE_TYPE_GUID, "GUID", false },
+									 { "nocodeInt", TYPE_TYPE_INT, "int", false },
+									 { "nocodeFloat", TYPE_TYPE_FLOAT, "float", false },
+									 { "nocodeBool", TYPE_TYPE_BOOL, "bool", false },
+									 { "nocodeString", TYPE_TYPE_STRING, "string", false },
+									 { "nocodeWString", TYPE_TYPE_WSTRING, "wstring", false },
+									 { "nocodeGUID", TYPE_TYPE_GUID, "GUID", false },
+									 { "nocodeEnumUnitType", TYPE_TYPE_ENUM, "UnitType", false },
+									 { "nocodeBinaryFlags", TYPE_TYPE_BINARY, "Flags", false },
+								 } );
 	const std::pair<const char *, std::pair<int, const char *>> simpleArrays[] = {
 		{ "SimpleArrayInt", { TYPE_TYPE_INT, "int" } },
 		{ "SimpleArrayFloat", { TYPE_TYPE_FLOAT, "float" } },
@@ -681,7 +716,8 @@ TEST( EditorDatabaseIterator, DescribesAFieldByPath )
 	{
 		const STypeStructBase::SField *pField = pSubject->GetDesc( expected.szName );
 		ASSERT_NE( pField, nullptr ) << expected.szName;
-		EXPECT_EQ( ( SReportedField{ expected.szName, int( pField->pType->eType ), pField->pType->GetTypeName() } ), expected );
+		EXPECT_EQ( ( SReportedField{ expected.szName, int( pField->pType->eType ), pField->pType->GetTypeName() } ),
+		           expected );
 	}
 }
 
@@ -712,7 +748,7 @@ TEST_F( CEditorDatabase, NewObjectIsSaved )
 	EXPECT_EQ( pSaved->GetAttribute( "MOD" ), L"Мой любимый MOD" );
 }
 
-template<class T>
+template <class T>
 uint32_t Checksum( const T &value )
 {
 	NDb::CCheckSum sum;

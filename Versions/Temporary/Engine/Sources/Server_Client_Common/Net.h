@@ -2,15 +2,14 @@
 
 #include "Server_Client_Common_export.h"
 
-
 class CNetPacket;
 
 namespace NNet
 {
-	struct ILinksManager;
-	struct IDriver;
-	class CNodeAddress;
-	struct SNetDriverConsts;
+struct ILinksManager;
+struct IDriver;
+class CNodeAddress;
+struct SNetDriverConsts;
 }
 
 class SERVER_CLIENT_COMMON_EXPORT CNet : public CObjectBase
@@ -25,13 +24,14 @@ class SERVER_CLIENT_COMMON_EXPORT CNet : public CObjectBase
 	static float fTimeOut;
 
 	bool bDebugNetPaused;
-	std::list< CPtr<CNetPacket> > pausePackets;
+	std::list<CPtr<CNetPacket>> pausePackets;
 	int nTimeOut;
 
 	void SendZipped( const int nClientID, const CMemoryStream &memStream );
-	CNetPacket* UnzipPacketIfNecessary( CNetPacket *pPacket );
+	CNetPacket *UnzipPacketIfNecessary( CNetPacket *pPacket );
+
 public:
-	CNet() { }
+	CNet() {}
 	CNet( const int nApplicationID, const int nServerPort, const int nTimeout );
 
 	bool InitAsServer();
@@ -51,11 +51,11 @@ public:
 	const int GetPort( const int nClientID ) const;
 
 	void SendPacket( CNetPacket *pPacket );
-	CNetPacket* ReceivePacket();
+	CNetPacket *ReceivePacket();
 
 	static const float GetTimeOut();
 	static void SetTimeOut( const float fTimeOut );
 
-// debug functions
+	// debug functions
 	void DebugTogglePause( bool bPause );
 };

@@ -26,65 +26,70 @@
 // completion words, and the colours the Lua lexer paints with.
 namespace NTextEditor
 {
-	// The script editor. rszTitle replaces the dialog's caption when it is not
-	// empty. True on OK with bEnableEdit set, with the text in *pszNewText; a
-	// read-only editor still opens and still answers false, as the callers have
-	// always treated it.
-	bool RunScript( IWidget *pParent, const std::string &rszTitle, const std::string &rszText,
-									bool bEnableEdit, std::string *pszNewText );
+// The script editor. rszTitle replaces the dialog's caption when it is not
+// empty. True on OK with bEnableEdit set, with the text in *pszNewText; a
+// read-only editor still opens and still answers false, as the callers have
+// always treated it.
+bool RunScript( IWidget *pParent,
+                const std::string &rszTitle,
+                const std::string &rszText,
+                bool bEnableEdit,
+                std::string *pszNewText );
 
-	// The plain text editor. rszEditor is the "editor:" value the property named,
-	// which chooses the file its size and position are remembered in -- "lua" has
-	// its own, and everything else shares one.
-	bool RunText( IWidget *pParent, const std::string &rszTitle, const std::string &rszEditor,
-								const std::string &rszText, bool bEnableEdit, std::string *pszNewText );
+// The plain text editor. rszEditor is the "editor:" value the property named,
+// which chooses the file its size and position are remembered in -- "lua" has
+// its own, and everything else shares one.
+bool RunText( IWidget *pParent,
+              const std::string &rszTitle,
+              const std::string &rszEditor,
+              const std::string &rszText,
+              bool bEnableEdit,
+              std::string *pszNewText );
 
+// ---- the part that is not drawing ----
 
+// Parses rszText as Lua and answers what the parser complained about, with
+// line ends as CRLF for an edit box; empty when it parses.
+std::string CheckLuaSyntax( const std::string &rszText );
 
-	// ---- the part that is not drawing ----
+// One set of words the Lua lexer colours as a group. Set 1 is the words from
+// the user's keywords file and keeps the lexer's own colour; sets 2 and up
+// come from the script dictionary, each with its own colour.
+struct SKeywordSet
+{
+	int nSet;
+	std::string szWords; // space separated, as SCI_SETKEYWORDS takes them
+	bool bHasColor;
+	uint32_t nColor; // 0x00BBGGRR
+};
 
-	// Parses rszText as Lua and answers what the parser complained about, with
-	// line ends as CRLF for an edit box; empty when it parses.
-	std::string CheckLuaSyntax( const std::string &rszText );
+struct SLuaKeywords
+{
+	std::vector<SKeywordSet> sets;
+	// What completion offers: every word from every set, sorted, and the same
+	// words as the one space-separated list SCI_AUTOCSHOW wants.
+	std::vector<std::string> completionWords;
+	std::string szCompletionList;
+};
 
-	// One set of words the Lua lexer colours as a group. Set 1 is the words from
-	// the user's keywords file and keeps the lexer's own colour; sets 2 and up
-	// come from the script dictionary, each with its own colour.
-	struct SKeywordSet
-	{
-		int nSet;
-		std::string szWords;				// space separated, as SCI_SETKEYWORDS takes them
-		bool bHasColor;
-		uint32_t nColor;						// 0x00BBGGRR
-	};
+// The keywords file named in the user data and every script dictionary set.
+// A missing or unreadable file gives no words, not an error.
+void LoadLuaKeywords( SLuaKeywords *pKeywords );
 
-	struct SLuaKeywords
-	{
-		std::vector<SKeywordSet> sets;
-		// What completion offers: every word from every set, sorted, and the same
-		// words as the one space-separated list SCI_AUTOCSHOW wants.
-		std::vector<std::string> completionWords;
-		std::string szCompletionList;
-	};
+// How the Lua lexer paints one style. -1 leaves a colour alone; an empty face
+// leaves the font alone.
+struct SLuaStyle
+{
+	int nStyle;
+	const char *pszFace;
+	int nSize;
+	int nFore; // 0x00BBGGRR, or -1
+	int nBack; // 0x00BBGGRR, or -1
+	bool bEolFilled;
+};
 
-	// The keywords file named in the user data and every script dictionary set.
-	// A missing or unreadable file gives no words, not an error.
-	void LoadLuaKeywords( SLuaKeywords *pKeywords );
-
-	// How the Lua lexer paints one style. -1 leaves a colour alone; an empty face
-	// leaves the font alone.
-	struct SLuaStyle
-	{
-		int nStyle;
-		const char *pszFace;
-		int nSize;
-		int nFore;									// 0x00BBGGRR, or -1
-		int nBack;									// 0x00BBGGRR, or -1
-		bool bEolFilled;
-	};
-
-	// Every style CLuaEditor::SetLuaLexer set, in its order, plus the reserved
-	// keywords the lexer's set 0 is given.
-	const std::vector<SLuaStyle>& LuaStyles();
-	const char* LuaReservedWords();
+// Every style CLuaEditor::SetLuaLexer set, in its order, plus the reserved
+// keywords the lexer's set 0 is given.
+const std::vector<SLuaStyle> &LuaStyles();
+const char *LuaReservedWords();
 }

@@ -12,10 +12,10 @@
 #include <zconf.h>
 
 int g_nProjectileFallSoundMaxTime = 2000;
-START_REGISTER(ProjectileConsts)
-REGISTER_VAR_EX( "Sound.ProjectileFallSoundMaxTime", NGlobal::VarIntHandler, &g_nProjectileFallSoundMaxTime, 2000, STORAGE_NONE );
+START_REGISTER( ProjectileConsts )
+REGISTER_VAR_EX(
+		"Sound.ProjectileFallSoundMaxTime", NGlobal::VarIntHandler, &g_nProjectileFallSoundMaxTime, 2000, STORAGE_NONE );
 FINISH_REGISTER
-
 
 CMOProjectile::~CMOProjectile()
 {
@@ -28,9 +28,12 @@ void CMOProjectile::CreateAttachedEffect()
 	{
 		if ( const NDb::SEffect *pEffect = pComplexEffect->GetSceneEffect() )
 		{
-			Scene()->AttachEffect(
-				GetID(), ESSOT_PROJECTILE, pProjectile->szAttachedEffectLocator,
-				pEffect, Singleton<IGameTimer>()->GetGameTime(), ESAT_REPLACE_ON_BONE );
+			Scene()->AttachEffect( GetID(),
+			                       ESSOT_PROJECTILE,
+			                       pProjectile->szAttachedEffectLocator,
+			                       pEffect,
+			                       Singleton<IGameTimer>()->GetGameTime(),
+			                       ESAT_REPLACE_ON_BONE );
 		}
 		//
 		if ( pComplexEffect->pSoundEffect )
@@ -51,20 +54,37 @@ void CMOProjectile::InitSmokyExhaustInfo( const CVec3 &vVisPos, const CQuat &qRo
 		SHMatrix mLocalSmokyPos;
 		if ( pAnimator && !pProjectile->szSmokyEffectLocator.empty() )
 		{
-			CalcRelativePos( &mLocalSmokyPos, SHMatrix(vVisPos, qRot), pProjectile->szSmokyEffectLocator, pAnimator );
-			pTrailEffect = new CSmokeTrailEffect( mLocalSmokyPos, pProjectile->fSmokyExhaustEffectInterval, pProjectile->pSmokyExhaustEffect, vVisPos, qRot, currTime, IsVisible() );
+			CalcRelativePos( &mLocalSmokyPos, SHMatrix( vVisPos, qRot ), pProjectile->szSmokyEffectLocator, pAnimator );
+			pTrailEffect = new CSmokeTrailEffect( mLocalSmokyPos,
+			                                      pProjectile->fSmokyExhaustEffectInterval,
+			                                      pProjectile->pSmokyExhaustEffect,
+			                                      vVisPos,
+			                                      qRot,
+			                                      currTime,
+			                                      IsVisible() );
 		}
 		else
 		{
 			Identity( &mLocalSmokyPos );
-			pTrailEffect = new CSmokeTrailEffect( mLocalSmokyPos, pProjectile->fSmokyExhaustEffectInterval, pProjectile->pSmokyExhaustEffect, vVisPos, qRot, currTime, IsVisible() );
+			pTrailEffect = new CSmokeTrailEffect( mLocalSmokyPos,
+			                                      pProjectile->fSmokyExhaustEffectInterval,
+			                                      pProjectile->pSmokyExhaustEffect,
+			                                      vVisPos,
+			                                      qRot,
+			                                      currTime,
+			                                      IsVisible() );
 		}
 	}
 	else
 		pTrailEffect = 0;
 }
 
-bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate, const NDb::SProjectile *_pProjectile, const CVec3 &vVisPos, const CQuat &qRot, const NDb::SComplexEffect *_pTrajectoryEffect, const CVec3 &_vRotationSpeedRad )
+bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate,
+                            const NDb::SProjectile *_pProjectile,
+                            const CVec3 &vVisPos,
+                            const CQuat &qRot,
+                            const NDb::SComplexEffect *_pTrajectoryEffect,
+                            const CVec3 &_vRotationSpeedRad )
 {
 	pProjectile = _pProjectile;
 	pTrajectoryEffect = _pTrajectoryEffect;
@@ -86,11 +106,11 @@ bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate, const NDb::SP
 
 	if ( bModelExists )
 	{
-		Scene()->AddObject( GetID(), pProjectile->pModel, vPos, qRot, CVec3(1, 1, 1), OBJ_ANIM_MODE_FORCE_ANIMATED, 0 );
+		Scene()->AddObject( GetID(), pProjectile->pModel, vPos, qRot, CVec3( 1, 1, 1 ), OBJ_ANIM_MODE_FORCE_ANIMATED, 0 );
 
 		if ( pProjectile->pModel->pSkeleton )
 		{
-			if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator(GetID()) )
+			if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
 				RunDefaultObjectAnimation( pProjectile->pModel->pSkeleton, pAnimator );
 		}
 
@@ -108,7 +128,10 @@ void CMOProjectile::GetStatus( SObjectStatus *pStatus ) const
 	CMapObj::GetStatus( pStatus );
 }
 
-void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, IScene *pScene, ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement,
+                                       IScene *pScene,
+                                       ISoundScene *pSoundScene,
+                                       NDb::ESeason eSeason )
 {
 	if ( bHitTarget )
 		return;
@@ -121,12 +144,15 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 		{
 			if ( const NDb::SEffect *pEffect = pComplexEffect->GetSceneEffect() )
 			{
-				Scene()->AttachEffect(
-					GetID(), ESSOT_PROJECTILE, pProjectile->szAttachedEffectLocator,
-					pEffect, Singleton<IGameTimer>()->GetGameTime(), ESAT_REPLACE_ON_BONE );
+				Scene()->AttachEffect( GetID(),
+				                       ESSOT_PROJECTILE,
+				                       pProjectile->szAttachedEffectLocator,
+				                       pEffect,
+				                       Singleton<IGameTimer>()->GetGameTime(),
+				                       ESAT_REPLACE_ON_BONE );
 			}
 			if ( pComplexEffect->pSoundEffect )
-					AttachSound( EAST_FALLING, pComplexEffect->pSoundEffect, pComplexEffect->pSoundEffect->bLooped );
+				AttachSound( EAST_FALLING, pComplexEffect->pSoundEffect, pComplexEffect->pSoundEffect->bLooped );
 		}
 	}
 
@@ -142,27 +168,25 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 		projPlacement.vPlacement = CVec3( placement.center, placement.z );
 		projPlacement.rotation.FromAngleAxis( ToRadian( float( placement.dir ) / 65536.0f * 360.0f ), 0, 0, 1 );
 		// move main object
-		MakeOrientation( &projPlacement.rotation, DWORDToVec3(placement.dwNormal) );
+		MakeOrientation( &projPlacement.rotation, DWORDToVec3( placement.dwNormal ) );
 	}
 
 	// Apply an absolute local-space Euler spin on top of the flight-path orientation.
 	const float fElapsedSeconds = (std::max)( 0.0f, ( curTime - startTime ) / 1000.0f );
 	const CQuat qLocalSpin = CQuat( vRotationSpeedRad.x * fElapsedSeconds, V3_AXIS_X ) *
-		CQuat( vRotationSpeedRad.y * fElapsedSeconds, V3_AXIS_Y ) *
-		CQuat( vRotationSpeedRad.z * fElapsedSeconds, V3_AXIS_Z );
+	                         CQuat( vRotationSpeedRad.y * fElapsedSeconds, V3_AXIS_Y ) *
+	                         CQuat( vRotationSpeedRad.z * fElapsedSeconds, V3_AXIS_Z );
 	projPlacement.rotation = projPlacement.rotation * qLocalSpin;
-
-
 
 	if ( bTraceTargetIntersection || bModelExists )
 	{
 		if ( curTime < startTime + timeToEqualizePos )
 		{
-			const float fTimeCoeff = (curTime - startTime) / (float)timeToEqualizePos;
+			const float fTimeCoeff = ( curTime - startTime ) / (float)timeToEqualizePos;
 			projPlacement.vPlacement += ( 1.0f - fTimeCoeff ) * vPosDiff;
 
-//			const CQuat rot( projPlacement.rotation );
-//			projPlacement.rotation.Slerp( fTimeCoeff, qStartRot, rot );
+			//			const CQuat rot( projPlacement.rotation );
+			//			projPlacement.rotation.Slerp( fTimeCoeff, qStartRot, rot );
 		}
 	}
 
@@ -210,7 +234,10 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 	}
 }
 
-void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason eSeason, const CVec3 &vCenter, const CVec3 &vDir )
+void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType,
+                             NDb::ESeason eSeason,
+                             const CVec3 &vCenter,
+                             const CVec3 &vDir )
 {
 	if ( bHitTarget )
 		return;
@@ -223,30 +250,30 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason e
 			pComplexEffect = pWeapon->shells[nShell].pEffectHitDirect;
 			break;
 		case SAINotifyHitInfo::EHitType::EHT_GROUND:
-			{
-				const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[nShell];
-				pComplexEffect = shell.pEffectHitGround;
-				if ( shell.pCraters != 0 )
-					PlaceCrater( shell.pCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
-			}
-			break;
+		{
+			const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[nShell];
+			pComplexEffect = shell.pEffectHitGround;
+			if ( shell.pCraters != 0 )
+				PlaceCrater( shell.pCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
+		}
+		break;
 		case SAINotifyHitInfo::EHitType::EHT_WATER:
 			pComplexEffect = pWeapon->shells[nShell].pEffectHitWater;
 			break;
 		case SAINotifyHitInfo::EHitType::EHT_AIR_WITH_CRATER:
-			{
-				// Match the authoritative hit update if this combined outcome reaches projectile prediction.
-				const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[nShell];
-				pComplexEffect = shell.pEffectHitAir;
-				if ( shell.pCraters != 0 )
-					PlaceCrater( shell.pCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
-			}
-			break;
+		{
+			// Match the authoritative hit update if this combined outcome reaches projectile prediction.
+			const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[nShell];
+			pComplexEffect = shell.pEffectHitAir;
+			if ( shell.pCraters != 0 )
+				PlaceCrater( shell.pCraters, eSeason, CVec2( vCenter.x, vCenter.y ) );
+		}
+		break;
 		case SAINotifyHitInfo::EHitType::EHT_AIR:
 			pComplexEffect = pWeapon->shells[nShell].pEffectHitAir;
 			break;
 		default:
-			NI_VERIFY( false, fmt::format( "Invalid hit type {}", int( eHitType )), return );
+			NI_VERIFY( false, fmt::format( "Invalid hit type {}", int( eHitType ) ), return );
 	}
 
 	if ( pComplexEffect != 0 )
@@ -263,19 +290,29 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason e
 
 				// ( M,N,O )
 				CVec3 vO( vDir );
-				CVec3 vN( (vDir ^ V3_AXIS_Z) ^ vDir );
+				CVec3 vN( ( vDir ^ V3_AXIS_Z ) ^ vDir );
 				CVec3 vM( vN ^ vO );
 
 				Normalize( &vO );
 				Normalize( &vN );
 				Normalize( &vM );
 
-				SHMatrix mPlace
-					(
-						vM.x,	vN.x, vO.x,	vVisCenter.x,
-						vM.y,	vN.y,	vO.y,	vVisCenter.y,
-						vM.z,	vN.z,	vO.z,	vVisCenter.z,
-							 0,		 0,		 0,					   1 );
+				SHMatrix mPlace( vM.x,
+				                 vN.x,
+				                 vO.x,
+				                 vVisCenter.x,
+				                 vM.y,
+				                 vN.y,
+				                 vO.y,
+				                 vVisCenter.y,
+				                 vM.z,
+				                 vN.z,
+				                 vO.z,
+				                 vVisCenter.z,
+				                 0,
+				                 0,
+				                 0,
+				                 1 );
 
 				PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, Singleton<IGameTimer>()->GetGameTime(), mPlace );
 			}
@@ -285,7 +322,11 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason e
 	}
 }
 
-void CMOProjectile::SetM1Info( CMapObj *_pTarget, const NDb::SWeaponRPGStats* _pWeapon, int _nShell, bool _bTraceTargetIntersection, float _fDamage )
+void CMOProjectile::SetM1Info( CMapObj *_pTarget,
+                               const NDb::SWeaponRPGStats *_pWeapon,
+                               int _nShell,
+                               bool _bTraceTargetIntersection,
+                               float _fDamage )
 {
 	pTarget = _pTarget;
 	pWeapon = _pWeapon;

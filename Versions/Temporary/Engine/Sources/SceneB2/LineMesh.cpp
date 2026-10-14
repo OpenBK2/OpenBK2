@@ -14,8 +14,8 @@ void CLineMesh::Recalc()
 	pValue->Assign( &objData, true );
 }
 
-CLineMesh::CLineMesh( const CVec2 &_vStart, const CVec2 &_vEnd, CTerrainManager *_pTerraManager ) :
-	vStart( _vStart ), vEnd( _vEnd ), pTerraManager( _pTerraManager )
+CLineMesh::CLineMesh( const CVec2 &_vStart, const CVec2 &_vEnd, CTerrainManager *_pTerraManager )
+		: vStart( _vStart ), vEnd( _vEnd ), pTerraManager( _pTerraManager )
 {
 }
 
@@ -57,9 +57,9 @@ void CLineMesh::BuildLine( std::vector<NGScene::SVertex> &verts, std::vector<STr
 void CLineMesh::FillVertexData( NGScene::SVertex &vertex )
 {
 	vertex.tex.Set( 0, 0 );
-	CalcCompactVector( &(vertex.normal), CVec3(0, 0, 1) );
-	CalcCompactVector( &(vertex.texU), CVec3(0, 0, 0) );
-	CalcCompactVector( &(vertex.texV), CVec3(0, 0, 0) );
+	CalcCompactVector( &( vertex.normal ), CVec3( 0, 0, 1 ) );
+	CalcCompactVector( &( vertex.texU ), CVec3( 0, 0, 0 ) );
+	CalcCompactVector( &( vertex.texV ), CVec3( 0, 0, 0 ) );
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101554C1, CLineMesh )

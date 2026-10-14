@@ -7,7 +7,11 @@
 // последняя party обязательно должна быть нейтральна ко всем
 class CDiplomacy
 {
-	public: int operator&( IBinSaver &saver ); private:;
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
 
 	// 0, 1 - игровые стороны, 2 - нейтралы
 	std::vector<int> playerParty;
@@ -17,13 +21,18 @@ class CDiplomacy
 	std::vector<int> isPlayerExist;
 
 	bool bNetGame = {};
+
 public:
-	CDiplomacy() : nMyNumber( 0 ), bNetGame( false ) { }
+	CDiplomacy() : nMyNumber( 0 ), bNetGame( false ) {}
 
 	void Load( const std::vector<int> &playerParty );
-	void SetNPlayers( const int nPlayers ) { playerParty.resize( nPlayers + 1, 0 ); playerParty[nPlayers] = 2; }
+	void SetNPlayers( const int nPlayers )
+	{
+		playerParty.resize( nPlayers + 1, 0 );
+		playerParty[nPlayers] = 2;
+	}
 
-	void Clear() { }
+	void Clear() {}
 
 	const int GetNPlayers() const { return playerParty.size(); }
 
@@ -41,11 +50,10 @@ public:
 	{
 		if ( nParty1 == 2 || nParty2 == 2 )
 			return EDI_NEUTRAL;
+		else if ( nParty1 != nParty2 )
+			return EDI_ENEMY;
 		else
-			if ( nParty1 != nParty2 )
-				return EDI_ENEMY;
-			else
-				return EDI_FRIEND;
+			return EDI_FRIEND;
 	}
 
 	const uint8_t GetNParty( const uint8_t cPlayer ) const { return playerParty[cPlayer]; }

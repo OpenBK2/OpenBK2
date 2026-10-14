@@ -24,8 +24,8 @@ extern SCheats theCheats;
 
 //CUpdateData
 
-det_map< int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer> > CEventUpdater::CUpdateData::clientTransformers;
-REGISTER_SAVELOAD_CLASS_NM( AILOGIC, 0x110B2C80, CUpdateData , CEventUpdater );
+det_map<int, CPtr<CEventUpdater::CUpdateData::IUpdateTransformer>> CEventUpdater::CUpdateData::clientTransformers;
+REGISTER_SAVELOAD_CLASS_NM( AILOGIC, 0x110B2C80, CUpdateData, CEventUpdater );
 //REGISTER_SAVELOAD_CLASS_NM( AILOGIC, 0x110B94C0, CInterpolatableUpdate, CEventUpdater );
 
 const int DIVIDER_CONST = AI_TILES_IN_VIS_TILE * 2;
@@ -38,7 +38,7 @@ void CEventUpdater::CUpdateData::Init()
 
 	clientTransformers[ACTION_NOTIFY_ST_OBJ_PLACEMENT] = new CPlacementUpdateTransformer;
 	clientTransformers[ACTION_NOTIFY_PLACEMENT] = new CPlacementUpdateTransformer;
-//	static_cast<CPlacementUpdateTransformer*>( clientTransformers[ACTION_NOTIFY_PLACEMENT].GetPtr() )->SetTimer();
+	//	static_cast<CPlacementUpdateTransformer*>( clientTransformers[ACTION_NOTIFY_PLACEMENT].GetPtr() )->SetTimer();
 	clientTransformers[ACTION_NOTIFY_RPG_CHANGED] = new CRPGUpdateTransformer;
 	clientTransformers[ACTION_NOTIFY_MECH_SHOOT] = new CStructCopierUpdateTransformer;
 	clientTransformers[ACTION_NOTIFY_INFANTRY_SHOOT] = new CStructCopierUpdateTransformer;
@@ -85,9 +85,9 @@ void CEventUpdater::CUpdateData::Init()
 	clientTransformers[ACTION_NOTIFY_SUPERWEAPON_RECYCLE] = new CUpdateSuperWeaponRecycleTransform;
 }
 
-SAIBasicUpdate* CEventUpdater::CUpdateData::GetClientStruct( int nReturnTime )
+SAIBasicUpdate *CEventUpdater::CUpdateData::GetClientStruct( int nReturnTime )
 {
-	det_map< int, CPtr<IUpdateTransformer> >::const_iterator it = clientTransformers.find( eUpdateType );
+	det_map<int, CPtr<IUpdateTransformer>>::const_iterator it = clientTransformers.find( eUpdateType );
 	if ( it != clientTransformers.end() )
 	{
 		SAIBasicUpdate *pUpdate = it->second->Transform( this, nReturnTime );
@@ -114,7 +114,7 @@ CEventUpdater::CEventUpdater()
 void CEventUpdater::DestroyContents()
 {
 	CEventUpdater::~CEventUpdater();
-	new(this) CEventUpdater();
+	new ( this ) CEventUpdater();
 }
 
 void CEventUpdater::Init( const int nStaticMapSizeX, const int nStaticMapSizeY )
@@ -136,13 +136,13 @@ void CEventUpdater::Init( const int nStaticMapSizeX, const int nStaticMapSizeY )
 	suspended.SetSizes( nStaticMapSizeX / DIVIDER_CONST, nStaticMapSizeY / DIVIDER_CONST );
 }
 
-CEventUpdater::CUpdateData* CEventUpdater::CreateAnimationUpdate( CUpdatableObj *pObj, int nAnimation )
+CEventUpdater::CUpdateData *CEventUpdater::CreateAnimationUpdate( CUpdatableObj *pObj, int nAnimation )
 {
-	const SUnitBaseRPGStats *pStats = dynamic_cast<const SUnitBaseRPGStats*>( pObj->GetStats() );
+	const SUnitBaseRPGStats *pStats = dynamic_cast<const SUnitBaseRPGStats *>( pObj->GetStats() );
 	if ( pStats == 0 )
 		return 0;
 	int nAnimIndex = -1;
-	if ( CSoldier *pSoldier = dynamic_cast<CSoldier*>( pObj ) )
+	if ( CSoldier *pSoldier = dynamic_cast<CSoldier *>( pObj ) )
 	{
 		if ( nAnimation == NDb::ANIMATION_MOVE )
 		{
@@ -190,9 +190,8 @@ CEventUpdater::CUpdateData* CEventUpdater::CreateAnimationUpdate( CUpdatableObj 
 
 bool CEventUpdater::IsInterpolatableEvent( EActionNotify eUpdateType ) const
 {
-	return eUpdateType == ACTION_NOTIFY_PLACEMENT ||
-		eUpdateType == ACTION_NOTIFY_TURRET_VERT_TURN ||
-		eUpdateType == ACTION_NOTIFY_TURRET_HOR_TURN;
+	return eUpdateType == ACTION_NOTIFY_PLACEMENT || eUpdateType == ACTION_NOTIFY_TURRET_VERT_TURN ||
+	       eUpdateType == ACTION_NOTIFY_TURRET_HOR_TURN;
 }
 
 bool CEventUpdater::IsOneCopyEvent( EActionNotify eUpdateType ) const
@@ -218,7 +217,8 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 			updatedPlacements.insert( pObj->GetUniqueId() );
 	}
 
-	bool bSuspend = ( pObj != 0 && ( IsInterpolatableEvent( eUpdateType ) || pObj->ShouldSuspendAction( eUpdateType ) ) && !pObj->IsVisible( nMyParty ) );
+	bool bSuspend = ( pObj != 0 && ( IsInterpolatableEvent( eUpdateType ) || pObj->ShouldSuspendAction( eUpdateType ) ) &&
+	                  !pObj->IsVisible( nMyParty ) );
 
 	if ( eUpdateType == ACTION_NOTIFY_PLACEMENT && bSuspend )
 		return;
@@ -227,15 +227,15 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	CUpdateData *pData = new CUpdateData( nTime, nCounter, eUpdateType, pObj, nParam );
 
 	// animation processing
-	static std::vector<CPtr<CUpdateData> > updatesBush(3);
-	updatesBush.resize(0);
+	static std::vector<CPtr<CUpdateData>> updatesBush( 3 );
+	updatesBush.resize( 0 );
 
 	updatesBush.push_back( pData );
 	const int nAnimation = GetAnimationFromAction( eUpdateType );
 	if ( nAnimation != -1 )
 	{
 		pObj->AnimationSet( nAnimation );
-		if ( (eUpdateType & 1) == 1 )
+		if ( ( eUpdateType & 1 ) == 1 )
 		{
 			if ( pObj->IsAlive() || IsDeathAnimation( nAnimation ) )
 			{
@@ -250,13 +250,13 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_DISSAPEAR_OBJ, pObj, 0 );
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_ST_OBJ, pObj, -1 );
-		updatesBush.resize(0);
+		updatesBush.resize( 0 );
 		return;
 	}
 	else if ( eUpdateType == ACTION_NOTIFY_MECH_SHOOT )
 	{
 		SAIMechShotUpdate *pInternalData = new SAIMechShotUpdate;
-		pObj->GetMechShotInfo( &(pInternalData->info), nTime );
+		pObj->GetMechShotInfo( &( pInternalData->info ), nTime );
 		pInternalData->eUpdateType = ACTION_NOTIFY_MECH_SHOOT;
 		pInternalData->nUpdateTime = nTime;
 		const int nShotAnimation = GetAnimationFromAction( pInternalData->info.typeID );
@@ -265,26 +265,27 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 			CUpdatableObj *pObj = GetObjectByUniqueIdSafe<CUpdatableObj>( pInternalData->info.nObjUniqueID );
 			if ( pObj && pObj->IsRefValid() )
 				pObj->AnimationSet( nShotAnimation );
-//			checked_cast<CUpdatableObj*>(pInternalData->info.pObj.GetPtr())->AnimationSet( nShotAnimation );
+			//			checked_cast<CUpdatableObj*>(pInternalData->info.pObj.GetPtr())->AnimationSet( nShotAnimation );
 		}
 		pData->pData = pInternalData;
 	}
 	else if ( eUpdateType == ACTION_NOTIFY_INFANTRY_SHOOT )
 	{
 		SAIInfantryShotUpdate *pInternalData = new SAIInfantryShotUpdate;
-		pObj->GetInfantryShotInfo( &(pInternalData->info), nTime );
+		pObj->GetInfantryShotInfo( &( pInternalData->info ), nTime );
 		pInternalData->eUpdateType = ACTION_NOTIFY_INFANTRY_SHOOT;
 		pInternalData->nUpdateTime = nTime;
 		const int nShotAnimation = GetAnimationFromAction( pInternalData->info.typeID );
 		if ( nShotAnimation != -1 )
 		{
-			CSoldier *pSoldier = GetObjectByUniqueIdSafe<CSoldier>(pInternalData->info.nObjUniqueID);
+			CSoldier *pSoldier = GetObjectByUniqueIdSafe<CSoldier>( pInternalData->info.nObjUniqueID );
 			if ( pSoldier )
 			{
 				pSoldier->AnimationSet( nShotAnimation );
 				if ( !pSoldier->IsInSolidPlace() )
 				{
-					if ( CUpdateData *pAnimUpdate = CreateAnimationUpdate( pSoldier, GetAnimationFromAction( pInternalData->info.typeID ) ) )
+					if ( CUpdateData *pAnimUpdate =
+					         CreateAnimationUpdate( pSoldier, GetAnimationFromAction( pInternalData->info.typeID ) ) )
 						updatesBush.push_back( pAnimUpdate );
 				}
 			}
@@ -311,23 +312,24 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 		pObj->GetTilesForVisibility( &tiles );
 		for ( CTilesSet::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
-			for ( std::vector< CPtr<CUpdateData> >::iterator itUpdate = updatesBush.begin(); itUpdate != updatesBush.end(); ++itUpdate )
+			for ( std::vector<CPtr<CUpdateData>>::iterator itUpdate = updatesBush.begin(); itUpdate != updatesBush.end();
+			      ++itUpdate )
 				InsertSuspendedUpdate( *itUpdate, *it );
 		}
 	}
 	else
 	{
-		for ( std::vector< CPtr<CUpdateData> >::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
+		for ( std::vector<CPtr<CUpdateData>>::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
 			pendingUpdates.push_back( *it );
 	}
 
-	for ( std::vector< CPtr<CUpdateData> >::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
+	for ( std::vector<CPtr<CUpdateData>>::iterator it = updatesBush.begin(); it != updatesBush.end(); ++it )
 		updatesHash[pObj].push_back( *it );
 
-	updatesBush.resize(0);
+	updatesBush.resize( 0 );
 }
 
-void CEventUpdater::InsertSuspendedUpdate( CUpdateData* pUpdate, const SVector &_vPosition )
+void CEventUpdater::InsertSuspendedUpdate( CUpdateData *pUpdate, const SVector &_vPosition )
 {
 	const SVector vPosition( _vPosition.x / DIVIDER_CONST, _vPosition.y / DIVIDER_CONST );
 	suspended[vPosition.y][vPosition.x].push_back( pUpdate );
@@ -342,13 +344,13 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 		CUpdateMap::iterator it = updatesHash.find( pObj );
 		if ( it != updatesHash.end() )
 		{
-			std::list< CPtr< CUpdateData > > &lst = it->second;
-			for ( std::list< CPtr< CUpdateData > >::iterator iit = lst.begin(); iit != lst.end(); )
+			std::list<CPtr<CUpdateData>> &lst = it->second;
+			for ( std::list<CPtr<CUpdateData>>::iterator iit = lst.begin(); iit != lst.end(); )
 			{
 				pData = *iit;
 				if ( eUpdateType == ACTION_NOTIFY_NONE || pData->eUpdateType == eUpdateType )
 				{
-					pData->bValid = false;			// We need this, since the update is also referenced elsewhere
+					pData->bValid = false; // We need this, since the update is also referenced elsewhere
 					iit = lst.erase( iit );
 				}
 				else
@@ -362,13 +364,13 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 	{
 		for ( CUpdateMap::iterator it = updatesHash.begin(); it != updatesHash.end(); )
 		{
-			std::list< CPtr< CUpdateData > > &lst = it->second;
-			for ( std::list< CPtr< CUpdateData > >::iterator iit = lst.begin(); iit != lst.end(); )
+			std::list<CPtr<CUpdateData>> &lst = it->second;
+			for ( std::list<CPtr<CUpdateData>>::iterator iit = lst.begin(); iit != lst.end(); )
 			{
 				pData = *iit;
 				if ( eUpdateType == ACTION_NOTIFY_NONE || pData->eUpdateType == eUpdateType )
 				{
-					pData->bValid = false;			// We need this, since the update is also referenced elsewhere
+					pData->bValid = false; // We need this, since the update is also referenced elsewhere
 					iit = lst.erase( iit );
 				}
 				else
@@ -382,14 +384,14 @@ void CEventUpdater::ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType
 	}
 }
 
-CEventUpdater::CUpdateData* CEventUpdater::PopUpdate()
+CEventUpdater::CUpdateData *CEventUpdater::PopUpdate()
 {
 	CPtr<CUpdateData> pData = 0;
-  do
+	do
 	{
 		CUpdateList::iterator it = pendingUpdates.begin();
 		// try to get update from common queue
-		if ( it != pendingUpdates.end() && ( nReturnTime == 0 || (*it)->nUpdateTime <= nReturnTime ) )
+		if ( it != pendingUpdates.end() && ( nReturnTime == 0 || ( *it )->nUpdateTime <= nReturnTime ) )
 		{
 			pData = *it;
 			pendingUpdates.erase( it );
@@ -415,7 +417,7 @@ CEventUpdater::CUpdateData* CEventUpdater::PopUpdate()
 		}
 
 		return pData.Extract();
-  } while( true );
+	} while ( true );
 }
 
 void CEventUpdater::UpdateTime( const NTimer::STime &nNewTime )
@@ -427,7 +429,7 @@ void CEventUpdater::UpdateTime( const NTimer::STime &nNewTime )
 	nCounter = 0;
 	if ( bShowAreas )
 	{
-		for ( std::list< CPtr<CUpdatableObj> >::iterator it = shootGroupUnits.begin(); it != shootGroupUnits.end(); ++it )
+		for ( std::list<CPtr<CUpdatableObj>>::iterator it = shootGroupUnits.begin(); it != shootGroupUnits.end(); ++it )
 			updater.AddUpdate( 0, eAreaType, it->GetPtr(), -1 );
 	}
 	shootGroupUnits.clear();
@@ -451,10 +453,10 @@ void CEventUpdater::PumpUpdates()
 	// find updates, that became visible
 	for ( det_set<SVector, STilesHash>::const_iterator it = visibleTiles.begin(); it != visibleTiles.end(); ++it )
 	{
-		TUpdatesList &lst = suspended[(*it).y][(*it).x];
+		TUpdatesList &lst = suspended[( *it ).y][( *it ).x];
 		for ( TUpdatesList::const_iterator lit = lst.begin(); lit != lst.end(); ++lit )
 		{
-			pUpdate = (*lit);
+			pUpdate = ( *lit );
 
 			EActionNotify eType = pUpdate->eUpdateType;
 			if ( !pUpdate->bValid )
@@ -489,7 +491,7 @@ void CEventUpdater::PumpUpdates()
 void CEventUpdater::ClearInterpolatable()
 {
 	for ( CUpdateList::iterator it = interpolatableUpdates.begin(); it != interpolatableUpdates.end(); ++it )
-		(*it)->bValid = false;
+		( *it )->bValid = false;
 	interpolatableUpdates.clear();
 }
 
@@ -501,7 +503,7 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 
 	for ( CUpdateList::iterator it = pendingSuspendableUpdates.begin(); it != pendingSuspendableUpdates.end(); )
 	{
-		if ( (*it)->bValid )
+		if ( ( *it )->bValid )
 			++it;
 		else
 			it = pendingSuspendableUpdates.erase( it );
@@ -513,14 +515,14 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 
 	if ( nUpTo - lastTimeUpTo > 1000 )
 	{
-		lastTimeUpTo =  nUpTo;
+		lastTimeUpTo = nUpTo;
 		for ( CUpdateMap::iterator it = updatesHash.begin(); it != updatesHash.end(); )
 		{
 			CUpdateList &lst = it->second;
 
 			for ( CUpdateList::iterator itUpdate = lst.begin(); itUpdate != lst.end(); )
 			{
-				if ( (*itUpdate)->bValid )
+				if ( ( *itUpdate )->bValid )
 					++itUpdate;
 				else
 					itUpdate = lst.erase( itUpdate );
@@ -537,10 +539,10 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 void CEventUpdater::UpdateAreasGroup( const bool bShow, EActionNotify eType )
 {
 	bShowAreas = bShow;
- 	eAreaType = eType;
+	eAreaType = eType;
 	shootGroupUnits.clear();
-	ClearUpdates( (CUpdatableObj*)0, ACTION_NOTIFY_SHOOT_AREA );
-	ClearUpdates( (CUpdatableObj*)0, ACTION_NOTIFY_RANGE_AREA );
+	ClearUpdates( (CUpdatableObj *)0, ACTION_NOTIFY_SHOOT_AREA );
+	ClearUpdates( (CUpdatableObj *)0, ACTION_NOTIFY_RANGE_AREA );
 }
 
 bool CEventUpdater::IsPlacementUpdated( CUpdatableObj *pObj ) const
@@ -561,7 +563,7 @@ void CEventUpdater::PrepareUpdates()
 	CollectUpdates( CAITimer::GetGameTime() );
 }
 
-SAIBasicUpdate* CEventUpdater::GetUpdate()
+SAIBasicUpdate *CEventUpdater::GetUpdate()
 {
 	if ( CAITimer::GetGameTime() > nReturnTime )
 		CollectUpdates( CAITimer::GetGameTime() );
@@ -570,7 +572,7 @@ SAIBasicUpdate* CEventUpdater::GetUpdate()
 	if ( pData == 0 )
 		return 0;
 
-	return pData->GetClientStruct( nReturnTime ) ;
+	return pData->GetClientStruct( nReturnTime );
 }
 
 struct SUpdateInfo
@@ -601,9 +603,9 @@ void CEventUpdater::DumpSizes()
 			{
 				if ( IsValid( *it ) )
 				{
-					const int nID = IsValid( (*it)->pObj ) ? (*it)->pObj->GetUniqueId() : -1;
-					const EActionNotify eType =  (*it)->eUpdateType;
-					const bool bValid = (*it)->bValid;
+					const int nID = IsValid( ( *it )->pObj ) ? ( *it )->pObj->GetUniqueId() : -1;
+					const EActionNotify eType = ( *it )->eUpdateType;
+					const bool bValid = ( *it )->bValid;
 
 					TDumpObjectsHash::const_iterator pos = objects.find( nID );
 					if ( pos == objects.end() )
@@ -611,13 +613,13 @@ void CEventUpdater::DumpSizes()
 
 					if ( bValid )
 					{
-						++(allUpdates[eType].nValidCount);
-						++(objects[nID][eType].nValidCount);
+						++( allUpdates[eType].nValidCount );
+						++( objects[nID][eType].nValidCount );
 					}
 					else
 					{
-						++(allUpdates[eType].nInvalidCount);
-						++(objects[nID][eType].nInvalidCount);
+						++( allUpdates[eType].nInvalidCount );
+						++( objects[nID][eType].nInvalidCount );
 					}
 				}
 			}
@@ -629,7 +631,7 @@ void CEventUpdater::DumpSizes()
 	std::string str2 = "Total";
 	for ( TDumpUpdatesHash::const_iterator itUpd = allUpdates.begin(); itUpd != allUpdates.end(); ++itUpd )
 	{
-		str1 = str1 + fmt::format( "\t0x{:04x}", static_cast<int>(itUpd->first) );
+		str1 = str1 + fmt::format( "\t0x{:04x}", static_cast<int>( itUpd->first ) );
 		str2 = str2 + fmt::format( "\t{}/{}", itUpd->second.nValidCount, itUpd->second.nInvalidCount );
 	}
 
@@ -640,7 +642,7 @@ void CEventUpdater::DumpSizes()
 		if ( *it == -1 )
 			str = "Invalid";
 		else
-			str = std::to_string(  *it );
+			str = std::to_string( *it );
 
 		TDumpObjectsHash::const_iterator pos = objects.find( *it );
 		const TDumpUpdatesHash &thisUpdates = pos->second;
@@ -650,7 +652,7 @@ void CEventUpdater::DumpSizes()
 			if ( posUpd != thisUpdates.end() )
 				str = str + fmt::format( "\t{}/{}", posUpd->second.nValidCount, posUpd->second.nInvalidCount );
 			else
-				str = str +  "\t-/-" ;
+				str = str + "\t-/-";
 		}
 		DebugTrace( "%s", str.c_str() );
 	}

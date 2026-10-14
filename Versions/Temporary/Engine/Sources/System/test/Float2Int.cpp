@@ -16,7 +16,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 int Convert( const float fVal )
 {
@@ -28,6 +29,7 @@ int Convert( const float fVal )
 class CRoundingModeGuard
 {
 	const int nPrevMode;
+
 public:
 	explicit CRoundingModeGuard( const int nMode ) : nPrevMode( std::fegetround() ) { std::fesetround( nMode ); }
 	~CRoundingModeGuard() { std::fesetround( nPrevMode ); }

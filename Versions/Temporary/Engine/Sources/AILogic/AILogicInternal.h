@@ -9,9 +9,9 @@
 
 namespace NDb
 {
-	struct SMapInfo;
-	struct SAIGameConsts;
-	struct STerrain;
+struct SMapInfo;
+struct SAIGameConsts;
+struct STerrain;
 }
 
 class CCommonUnit;
@@ -22,12 +22,17 @@ struct SAIBasicUpdate;
 struct ICheckSumLog;
 struct ICollisionsCollector;
 
-typedef det_map< int, SMapObjectInfo::SLinkInfo> LinkInfo;
+typedef det_map<int, SMapObjectInfo::SLinkInfo> LinkInfo;
 
 class CAILogic : public IAILogic
 {
 	OBJECT_NOCOPY_METHODS( CAILogic );
-	public: int operator&( IBinSaver &saver ); private:;
+
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
 
 	CDBPtr<NDb::SAIGameConsts> pConsts;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -35,19 +40,19 @@ class CAILogic : public IAILogic
 	bool bFirstTime = {};
 
 	// мосты
-	typedef std::list< std::list<CPtr<CBridgeSpan> > > Bridges;
+	typedef std::list<std::list<CPtr<CBridgeSpan>>> Bridges;
 	Bridges bridges;
 	CAITimer timer;
 
 	//
-	std::list< CObj<CCommonUnit> > garbage;
+	std::list<CObj<CCommonUnit>> garbage;
 
 	// скрипты
 	CScripts scripts;
 	bool bMissionLoaded = {};
 
-	std::vector< SAIStartCommand > startCmds;
-	std::vector< SBattlePosition > reservePositions;
+	std::vector<SAIStartCommand> startCmds;
+	std::vector<SBattlePosition> reservePositions;
 
 	NTimer::STime nextCheckSumTime = {};
 	NTimer::STime periodToCheckSum = {};
@@ -81,13 +86,14 @@ class CAILogic : public IAILogic
 	// проверить, не является ли object грузовиком, подцеплённым к сценарийной артиллерии
 	// если да, ищет подходящий к артиллерии грузовик (в pNewStats) и возвращает true, если артиллерия не найдена - возвращает false
 	// если это не является таким грузовиком, возвращает true
-	bool CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *linksInfo, const SMechUnitRPGStats **pNewStats ) const;
+	bool
+	CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *linksInfo, const SMechUnitRPGStats **pNewStats ) const;
 
 	// Loading
 	// часть инициализации, общая для игры и редактора
 	void CommonInit( const NDb::STerrain *pTerrainInfo );
 
-	void LoadUnits( const struct NDb::SMapInfo* pMapInfo, LinkInfo *linksInfo );
+	void LoadUnits( const struct NDb::SMapInfo *pMapInfo, LinkInfo *linksInfo );
 	void UpdateUnitsOnBridges();
 	void InitReservePositions();
 	void InitStartCommands();
@@ -114,7 +120,7 @@ class CAILogic : public IAILogic
 
 	bool CanShowVisibilities() const;
 
-	void LinkArtilleryWithTransport( class CArtillery * pArtillery, class CAITransportUnit *pTransport );
+	void LinkArtilleryWithTransport( class CArtillery *pArtillery, class CAITransportUnit *pTransport );
 
 public:
 	CAILogic();
@@ -132,9 +138,12 @@ public:
 	virtual bool IsSuspended() const { return bSuspended; }
 
 	void SetProgressHook( IProgressHook *pProgress );
-	virtual void Init( ICheckSumLog *_pCheckSumLog, const struct NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *_pConsts, IAIScenarioTracker *_pScenarioTracker );
+	virtual void Init( ICheckSumLog *_pCheckSumLog,
+	                   const struct NDb::SMapInfo *pMapInfo,
+	                   const NDb::SAIGameConsts *_pConsts,
+	                   IAIScenarioTracker *_pScenarioTracker );
 	virtual void LogCheckSum( ICheckSumLog *pCheckSumLog );
-	virtual void InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo/*, IProgressHook * pProgress = 0 */);
+	virtual void InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo /*, IProgressHook * pProgress = 0 */ );
 	virtual void PostMapLoad();
 	virtual void ClearAI();
 
@@ -149,22 +158,27 @@ public:
 	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eType, bool bShow );
 	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas );
 
-	virtual const bool GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits );
+	virtual const bool GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits );
 	virtual bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime );
 	virtual int GetMiniMapWarFogSizeX() const;
 	virtual int GetMiniMapWarFogSizeY() const;
 	virtual void CallScriptFunction( const char *pszCommand );
 
 	virtual int GetUniqueIDOfObject( CObjectBase *pObj );
-	virtual CObjectBase* GetObjByUniqueID( const int id );
+	virtual CObjectBase *GetObjByUniqueID( const int id );
 
 	virtual void Segment();
 
-	CObjectBase* AddObject( const int nUniqueID, const SMapObjectInfo &object, LinkInfo *linksInfo, bool bInitialization, const SHPObjectRPGStats *pPassedStats, NDb::EReinforcementType eType = _RT_NONE );
+	CObjectBase *AddObject( const int nUniqueID,
+	                        const SMapObjectInfo &object,
+	                        LinkInfo *linksInfo,
+	                        bool bInitialization,
+	                        const SHPObjectRPGStats *pPassedStats,
+	                        NDb::EReinforcementType eType = _RT_NONE );
 
 	void InitLinks( LinkInfo &linksInfo );
 	void LoadEntrenchments( const std::vector<struct SEntrenchmentInfo> &entrenchments );
-	void LoadBridges( const std::vector< NDb::SIntArray > &bridgesInfo );
+	void LoadBridges( const std::vector<NDb::SIntArray> &bridgesInfo );
 
 	virtual void SetMyDiplomacyInfo( const int nParty, const int nNumber );
 	virtual void SetNPlayers( const int nPlayers );
@@ -185,7 +199,7 @@ public:
 
 	bool IsSegment() const { return bSegment; }
 
-		// difficuly levels
+	// difficuly levels
 	virtual void SetDifficultyLevel( const int nLevel );
 	virtual void SetCheatDifficultyLevel( const int nCheatLevel );
 
@@ -200,20 +214,20 @@ public:
 	virtual void NetGameStarted();
 	virtual bool IsNetGameStarted() const;
 
-	virtual const class CDifficultyLevel* GetDifficultyLevel() const;
+	virtual const class CDifficultyLevel *GetDifficultyLevel() const;
 
 	virtual void NeutralizePlayer( const int nPlayer );
 
-	virtual CObjectBase* GetUnitState( CObjectBase *pObj );
+	virtual CObjectBase *GetUnitState( CObjectBase *pObj );
 	virtual bool IsFrozen( CObjectBase *pObj ) const;
 	virtual bool IsFrozenByState( CObjectBase *pObj ) const;
 
 	virtual void GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCenter, CVec2 **pCoord, int *pnLen );
 
-	virtual CObjectBase* GetUpdate();
+	virtual CObjectBase *GetUpdate();
 	virtual void PrepareUpdates();
 	virtual void ToggleWarFog( const bool bWarFog );
-	struct ITerraAIObserver * CreateTerraAIObserver( const int nSizeX, const int nSizeY );
+	struct ITerraAIObserver *CreateTerraAIObserver( const int nSizeX, const int nSizeY );
 
 	virtual void PickedObj( const int nObjID );
 	virtual void PickEmpty();
@@ -221,14 +235,17 @@ public:
 	virtual const int WAR_FOG_FULL_UPDATE() const;
 	virtual const int VIS_POWER() const;
 
-	void RequestBuildPreview( const EActionCommand eBuildCommand, const CVec2 &vStart, const CVec2 &vEnd, bool bFinished = false );
+	void RequestBuildPreview( const EActionCommand eBuildCommand,
+	                          const CVec2 &vStart,
+	                          const CVec2 &vEnd,
+	                          bool bFinished = false );
 
 	virtual bool IsMissionLoaded() const { return bMissionLoaded; }
 
 	virtual void SetGlobeScriptHandler( IGlobeScriptHandler *pHandler );
 
-	class CAIMap* GetAIMap() const { return pAIMap; }
-	virtual class CStaticMapHeights* GetHeights() const;
+	class CAIMap *GetAIMap() const { return pAIMap; }
+	virtual class CStaticMapHeights *GetHeights() const;
 
 	virtual const int GetPlayerDiplomacy( const int nPlayer ) const;
 

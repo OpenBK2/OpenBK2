@@ -14,13 +14,13 @@ class CGameServer : public CObjectBase
 	CObj<class CClients> pClients;
 	CObj<class CTerminal> pTerminal;
 
-	std::vector< CPtr<CPacketProcessor> > lobbies;
+	std::vector<CPtr<CPacketProcessor>> lobbies;
 	uint64_t nLastStatisticsLogTime;
 	int nServerStatisticsLogPeriod;
 
-	typedef void (CGameServer::*PROCESS_CMD_FUNC)( const SCommand &cmd );
+	typedef void ( CGameServer::*PROCESS_CMD_FUNC )( const SCommand &cmd );
 	std::unordered_map<int, PROCESS_CMD_FUNC> processCmdsFuncs;
-	std::list< CPtr<class CNetPacket> > consoleCommandPackets;
+	std::list<CPtr<class CNetPacket>> consoleCommandPackets;
 
 	// Owned here and handed to CClients, which is the only thing that queries
 	// it. Kept alive past the lobbies, which hold pointers into CClients.
@@ -38,17 +38,19 @@ class CGameServer : public CObjectBase
 	void ProcessCommands();
 	void RecievePackets();
 	void SendPackets();
+
 public:
-	CGameServer() { }
+	CGameServer() {}
 	// szBackend selects the database: "mysql" for a MariaDB or MySQL daemon,
 	// "sqlite" for a file. Empty takes what server.xml says, and what that says
 	// by default is mysql, which is what the shipped configuration expects.
 	// szDatabaseFile overrides the file name the sqlite backend opens.
-	CGameServer( class CCommands *pCommands, const std::string &szCfgFile,
-		const std::string &szBackend = std::string(),
-		const std::string &szDatabaseFile = std::string() );
+	CGameServer( class CCommands *pCommands,
+	             const std::string &szCfgFile,
+	             const std::string &szBackend = std::string(),
+	             const std::string &szDatabaseFile = std::string() );
 	virtual ~CGameServer();
-	class CClients* GetClients() { return pClients; }
+	class CClients *GetClients() { return pClients; }
 
 	void AddLobby( CPacketProcessor *pLobby );
 

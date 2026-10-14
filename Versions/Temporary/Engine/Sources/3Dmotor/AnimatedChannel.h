@@ -4,48 +4,52 @@
 
 namespace NAnimation
 {
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CIdentityFunc
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CIdentityFunc
+{
+public:
+	float operator()( float fValue ) { return fValue; }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+template <class TTransformFunc = CIdentityFunc>
+class CAnimatedChannel : public CFuncBase<float>
+{
+	OBJECT_NOCOPY_METHODS( CAnimatedChannel );
+
+private:
+	ZDATA
+	CDGPtr<ISkeletonAnimator> pAnimator;
+	std::string szChannelName;
+	int nChannelID;
+	ZEND int operator&( IBinSaver &f )
 	{
-	public:
-		float operator()( float fValue ) { return fValue; }
-	};
+		f.Add( 2, &pAnimator );
+		f.Add( 3, &szChannelName );
+		f.Add( 4, &nChannelID );
+		return 0;
+	}
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	template<class TTransformFunc = CIdentityFunc>
-	class CAnimatedChannel : public CFuncBase<float>
+	bool ChannelBinded() { return ( nChannelID != INVALID_CHANNEL_ID ); }
+
+protected:
+	CAnimatedChannel() : nChannelID( INVALID_CHANNEL_ID ), CFuncBase<float>( 0.f ) {}
+
+	virtual bool NeedUpdate() { return pAnimator.Refresh(); }
+	virtual void Recalc()
 	{
-		OBJECT_NOCOPY_METHODS(CAnimatedChannel);
-
-	private:
-		ZDATA
-		CDGPtr<ISkeletonAnimator> pAnimator;
-		std::string szChannelName;
-		int nChannelID;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimator); f.Add(3,&szChannelName); f.Add(4,&nChannelID); return 0; }
-
-		bool ChannelBinded() { return (nChannelID != INVALID_CHANNEL_ID); }
-
-	protected:
-		CAnimatedChannel() : nChannelID(INVALID_CHANNEL_ID), CFuncBase<float>(0.f) {}
-
-		virtual bool NeedUpdate()
+		if ( !ChannelBinded() )
 		{
-			return pAnimator.Refresh();
+			nChannelID = pAnimator->GetChannelIndex( szChannelName );
 		}
-		virtual void Recalc()
-		{
-			if ( !ChannelBinded() )
-			{
-				nChannelID = pAnimator->GetChannelIndex( szChannelName );
-			}
-			value = TTransformFunc()( pAnimator->GetChannelValue( nChannelID ) );
-		}
+		value = TTransformFunc()( pAnimator->GetChannelValue( nChannelID ) );
+	}
 
-	public:
-		CAnimatedChannel( ISkeletonAnimator *_pAnimator, const std::string &_szChannelName, float fDefaultValue = 0.f )
-			: CFuncBase<float>(fDefaultValue), pAnimator(_pAnimator), szChannelName(_szChannelName), nChannelID(INVALID_CHANNEL_ID)
-		{
-		}
-	};
+public:
+	CAnimatedChannel( ISkeletonAnimator *_pAnimator, const std::string &_szChannelName, float fDefaultValue = 0.f )
+			: CFuncBase<float>( fDefaultValue ), pAnimator( _pAnimator ), szChannelName( _szChannelName ),
+				nChannelID( INVALID_CHANNEL_ID )
+	{
+	}
+};
 }

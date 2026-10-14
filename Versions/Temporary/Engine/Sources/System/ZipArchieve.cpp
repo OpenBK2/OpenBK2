@@ -35,21 +35,26 @@
 #pragma pack( 1 )
 struct CZipFile::SZipLocalFileHeader
 {
-	enum { SIGNATURE = 0x04034b50, COMP_STORE = 0, COMP_DEFLAT = 8 };
-	uint32_t dwSignature;										// local file header signature
-	uint16_t  version;												// version needed to extract
-	uint16_t  flag;														// general purpose bit flag
-	uint16_t  wCompression;										// compression method: COMP_xxxx
-	uint16_t  wModTime;												// last mod file time (MS-DOS)
-	uint16_t  wModDate;												// last mod file date (MS-DOS)
-	uint32_t dwCRC32;												// CRC-32
-	uint32_t dwCSize;												// compressed size
-	uint32_t dwUSize;												// uncompressed size
-	uint16_t  wFileNameLen;										// filename length (w/o zero terminator!)
-	uint16_t  wExtraLen;											// extra field length
+	enum
+	{
+		SIGNATURE = 0x04034b50,
+		COMP_STORE = 0,
+		COMP_DEFLAT = 8
+	};
+	uint32_t dwSignature;  // local file header signature
+	uint16_t version;      // version needed to extract
+	uint16_t flag;         // general purpose bit flag
+	uint16_t wCompression; // compression method: COMP_xxxx
+	uint16_t wModTime;     // last mod file time (MS-DOS)
+	uint16_t wModDate;     // last mod file date (MS-DOS)
+	uint32_t dwCRC32;      // CRC-32
+	uint32_t dwCSize;      // compressed size
+	uint32_t dwUSize;      // uncompressed size
+	uint16_t wFileNameLen; // filename length (w/o zero terminator!)
+	uint16_t wExtraLen;    // extra field length
 	// here filename follows (wFileNameLen bytes)
 	// here extra field follows (wExtraLen bytes)
-	bool IsDataDescriptorExist() const { return (flag & 4) != 0; }
+	bool IsDataDescriptorExist() const { return ( flag & 4 ) != 0; }
 };
 
 // NOTE: data descriptor exist only, if bit 3 of general purpose flag of the corresponding local file header is set
@@ -57,53 +62,61 @@ struct CZipFile::SZipLocalFileHeader
 // if data descriptor exist, then one must get CRC32, CSize and USize from the data descriptor instead of from local file header
 struct CZipFile::SZipDataDescriptor
 {
-	uint32_t dwCRC32;												// CRC-32
-	uint32_t dwCSize;												// compressed size
-	uint32_t dwUSize;												// uncompressed size
+	uint32_t dwCRC32; // CRC-32
+	uint32_t dwCSize; // compressed size
+	uint32_t dwUSize; // uncompressed size
 };
 
 struct CZipFile::SZipCentralDirHeader
 {
-	enum { SIGNATURE = 0x06054b50 };
-	uint32_t dwSignature;										// end of central dir signature
-	uint16_t  wDisk;													// number of this disk
-	uint16_t  wStartDisk;											// number of disk with start central dir
-	uint16_t  wDirEntries;										// total number of entries in central dir on this disk
-	uint16_t  wTotalDirEntries;								// total number entries in central dir
-	uint32_t dwDirSize;											// size of central directory
-	uint32_t dwDirOffset;										// offset of start of central directory with respect to the starting disk nuber
-	uint16_t  wCommentLen;										// zipfile comment length
-	// comment follows here (wCommentLen bytes)
+	enum
+	{
+		SIGNATURE = 0x06054b50
+	};
+	uint32_t dwSignature;      // end of central dir signature
+	uint16_t wDisk;            // number of this disk
+	uint16_t wStartDisk;       // number of disk with start central dir
+	uint16_t wDirEntries;      // total number of entries in central dir on this disk
+	uint16_t wTotalDirEntries; // total number entries in central dir
+	uint32_t dwDirSize;        // size of central directory
+	uint32_t dwDirOffset;      // offset of start of central directory with respect to the starting disk nuber
+	uint16_t wCommentLen;      // zipfile comment length
+														 // comment follows here (wCommentLen bytes)
 };
 
 struct CZipFile::SZipFileHeader
 {
-	enum { SIGNATURE = 0x02014b50, COMP_STORE = 0, COMP_DEFLAT = 8 };
-	uint32_t dwSignature;										// central file header signature
-	uint8_t  verMade;												// version made by
-	uint8_t  os;															// host operating system
-	uint8_t  verNeeded;											// version needed to extract
-	uint8_t  osNeeded;												// OS of version needed for extraction
-	uint16_t  flag;														// general purpose bit flag
-	uint16_t  wCompression;										// compression method: COMP_xxxx
-	uint16_t  wModTime;												// last mode file time (MS-DOS)
-	uint16_t  wModDate;												// last mode file date (MS-DOS)
-	uint32_t dwCRC32;												// CRC-32
-	uint32_t dwCSize;												// compressed size
-	uint32_t dwUSize;												// uncompressed size
-	uint16_t  wFileNameLen;										// filename length
-	uint16_t  wExtraLen;											// extra field length
-	uint16_t  wCommentLen;										// file comment length
-	uint16_t  wDiskStart;											// disk number start
-	uint16_t  wIntAttr;												// internal file attributes: bit0 == 1 => ASCII or text file, == 0 => binary data
-	uint32_t wExtAttr;												// external file attributes, host system dependent
-	uint32_t dwHdrOffset;										// relative offset of local header from the start of the first disk, on which this file appears
+	enum
+	{
+		SIGNATURE = 0x02014b50,
+		COMP_STORE = 0,
+		COMP_DEFLAT = 8
+	};
+	uint32_t dwSignature;  // central file header signature
+	uint8_t verMade;       // version made by
+	uint8_t os;            // host operating system
+	uint8_t verNeeded;     // version needed to extract
+	uint8_t osNeeded;      // OS of version needed for extraction
+	uint16_t flag;         // general purpose bit flag
+	uint16_t wCompression; // compression method: COMP_xxxx
+	uint16_t wModTime;     // last mode file time (MS-DOS)
+	uint16_t wModDate;     // last mode file date (MS-DOS)
+	uint32_t dwCRC32;      // CRC-32
+	uint32_t dwCSize;      // compressed size
+	uint32_t dwUSize;      // uncompressed size
+	uint16_t wFileNameLen; // filename length
+	uint16_t wExtraLen;    // extra field length
+	uint16_t wCommentLen;  // file comment length
+	uint16_t wDiskStart;   // disk number start
+	uint16_t wIntAttr;     // internal file attributes: bit0 == 1 => ASCII or text file, == 0 => binary data
+	uint32_t wExtAttr;     // external file attributes, host system dependent
+	uint32_t dwHdrOffset;  // relative offset of local header from the start of the first disk, on which this file appears
 	// filename follows here (wFileNameLen bytes)
 	// extra field follows here (wExtraLen bytes)
 	// file comment follows here (wCommentLen bytes)
-	const char* GetName() const { return (const char *)(this + 1); }
-	const char* GetExtra() const { return GetName() + wFileNameLen; }
-	const char* GetComment() const { return GetExtra() + wExtraLen; }
+	const char *GetName() const { return (const char *)( this + 1 ); }
+	const char *GetExtra() const { return GetName() + wFileNameLen; }
+	const char *GetComment() const { return GetExtra() + wExtraLen; }
 };
 // host operating system codes
 // 0  - MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)
@@ -134,20 +147,18 @@ struct CZipFile::SZipFileHeader
 // 9  - Enhanced Deflating using Deflate64(tm)
 // 10 - PKWARE Date Compression Library Imploding
 
-
 #pragma pack()
-
 
 void CZipFile::SFileHeader::Init( const SZipFileHeader &hdr )
 {
-	dwModDateTime = uint32_t( (hdr.wModDate) << 16 ) | uint32_t( hdr.wModTime );
+	dwModDateTime = uint32_t( ( hdr.wModDate ) << 16 ) | uint32_t( hdr.wModTime );
 	dwCSize = hdr.dwCSize == 0 ? hdr.dwUSize : hdr.dwCSize;
 	dwUSize = hdr.dwUSize;
 	wExtAttr = hdr.wExtAttr;
 	dwHdrOffset = hdr.dwHdrOffset;
 	pszFileName = new char[hdr.wFileNameLen + 1];
-	memcpy( (void*)pszFileName, hdr.GetName(), hdr.wFileNameLen );
-	((char*)pszFileName)[hdr.wFileNameLen] = 0;
+	memcpy( (void *)pszFileName, hdr.GetName(), hdr.wFileNameLen );
+	( (char *)pszFileName )[hdr.wFileNameLen] = 0;
 }
 
 CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
@@ -166,14 +177,14 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 	if ( cdhOffset < 0 )
 		return;
 	CMemoryMappedFileFragment cdhRead( &mmf, cdhOffset, sizeof( SZipCentralDirHeader ) );
-	const SZipCentralDirHeader &cdh = *(const SZipCentralDirHeader*) cdhRead.GetBuffer();
+	const SZipCentralDirHeader &cdh = *(const SZipCentralDirHeader *)cdhRead.GetBuffer();
 
 	// Check
 	NI_ASSERT( cdh.dwSignature == SZipCentralDirHeader::SIGNATURE, "Can't recognize zip dir header" );
 	if ( cdh.dwSignature != SZipCentralDirHeader::SIGNATURE )
 		return;
 
-	int nDirStart = cdh.dwDirOffset;//cdhOffset - cdh.dwDirSize;
+	int nDirStart = cdh.dwDirOffset; //cdhOffset - cdh.dwDirSize;
 	int nDirSize = cdh.dwDirSize;
 
 	CMemoryMappedFileFragment dirData( &mmf, nDirStart, nDirSize );
@@ -185,11 +196,12 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 	int nNumEntries = 0;
 	while ( pfh - pfhStart < nDirSize )
 	{
-		const SZipFileHeader &hdr = *reinterpret_cast<const SZipFileHeader*>( pfh );
+		const SZipFileHeader &hdr = *reinterpret_cast<const SZipFileHeader *>( pfh );
 		// Check the directory entry integrity.
 		if ( hdr.dwSignature != SZipFileHeader::SIGNATURE )
 			return;
-		else if ( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT || hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
+		else if ( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT ||
+		          hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
 		{
 			pfh += sizeof( hdr ) + hdr.wFileNameLen + hdr.wExtraLen + hdr.wCommentLen;
 			++nNumEntries;
@@ -201,23 +213,28 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 	pfh = pfhStart;
 	while ( pfh - pfhStart < nDirSize )
 	{
-		const SZipFileHeader &hdr = *reinterpret_cast<const SZipFileHeader*>( pfh );
+		const SZipFileHeader &hdr = *reinterpret_cast<const SZipFileHeader *>( pfh );
 		// Check the directory entry integrity.
 		if ( hdr.dwSignature != SZipFileHeader::SIGNATURE )
 		{
 			papDir.clear();
 			return;
 		}
-		else if ( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT || hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
+		else if ( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT ||
+		          hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
 		{
 			std::vector<SFileHeader>::iterator posFileHeader = papDir.insert( papDir.end(), SFileHeader() );
 			posFileHeader->Init( hdr );
 			//
-			pfh += sizeof(hdr) + hdr.wFileNameLen + hdr.wExtraLen + hdr.wCommentLen;
+			pfh += sizeof( hdr ) + hdr.wFileNameLen + hdr.wExtraLen + hdr.wCommentLen;
 		}
 		else
 		{
-			NI_ASSERT( false, fmt::format("File \"{}\" has wrong compression! Only Deflate and Store methods allowed (-9 and -0 options for zip.exe)", hdr.GetName()) );
+			NI_ASSERT(
+					false,
+					fmt::format(
+							"File \"{}\" has wrong compression! Only Deflate and Store methods allowed (-9 and -0 options for zip.exe)",
+							hdr.GetName() ) );
 		}
 	}
 }
@@ -251,7 +268,7 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 {
 	CMemoryMappedFileFragment fLocalHdr( &mmf, ghdr.dwHdrOffset, sizeof( SZipLocalFileHeader ) );
 
-	const SZipLocalFileHeader &hdr = *(const SZipLocalFileHeader*)fLocalHdr.GetBuffer();
+	const SZipLocalFileHeader &hdr = *(const SZipLocalFileHeader *)fLocalHdr.GetBuffer();
 	NI_ASSERT( hdr.dwSignature == SZipLocalFileHeader::SIGNATURE, "can't recognize zip local header" );
 
 	// Skip extra fields
@@ -279,17 +296,18 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 	pDstStream->SetSizeDiscard( dwUSize );
 	const void *pBuf = pDstStream->GetBuffer();
 	// proceed with DEFLAT unpacking
-	NI_ASSERT( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT, "Can support only STORE and DEFLAT cpmpression methods" );
+	NI_ASSERT( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT,
+	           "Can support only STORE and DEFLAT cpmpression methods" );
 
 	// Alloc compressed data buffer and read the whole stream
 	CMemoryMappedFileFragment cprData( &mmf, nBeginPos, dwCSize );
-	const unsigned char *pcData = cprData.GetBuffer();//new char[dwCSize];
+	const unsigned char *pcData = cprData.GetBuffer(); //new char[dwCSize];
 
 	// Setup the inflate stream.
 	z_stream stream;
-	stream.next_in = (Bytef*)pcData;
+	stream.next_in = (Bytef *)pcData;
 	stream.avail_in = (uInt)dwCSize;
-	stream.next_out = (Bytef*)pBuf;
+	stream.next_out = (Bytef *)pBuf;
 	stream.avail_out = dwUSize;
 	stream.zalloc = (alloc_func)0;
 	stream.zfree = (free_func)0;
@@ -301,7 +319,7 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 		err = inflate( &stream, Z_FINISH );
 		inflateEnd( &stream );
 		// CRAP{ почему-то иногда при распаковке возвращается "buffer error" всесто "stream end"...
-		if ( (err == Z_STREAM_END) || (err == Z_BUF_ERROR) )
+		if ( ( err == Z_STREAM_END ) || ( err == Z_BUF_ERROR ) )
 			err = Z_OK;
 		// CRAP}
 		inflateEnd( &stream );

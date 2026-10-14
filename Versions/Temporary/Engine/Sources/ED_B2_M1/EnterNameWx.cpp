@@ -2,7 +2,6 @@
 
 #include "EnterName.h"
 
-
 #include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -33,56 +32,62 @@
 
 namespace
 {
-	class CEnterNameWxDialog : public CWxToolDialog
+class CEnterNameWxDialog : public CWxToolDialog
+{
+	wxTextCtrl *pName = nullptr;
+
+public:
+	CEnterNameWxDialog( wxWindow *pParent,
+	                    const std::string &rszCaption,
+	                    const std::string &rszLabel,
+	                    const std::string &rszName )
+			: CWxToolDialog( pParent,
+	                     wxID_ANY,
+	                     wxString::FromUTF8( rszCaption.c_str() ),
+	                     wxDefaultPosition,
+	                     wxDefaultSize,
+	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 	{
-		wxTextCtrl *pName = nullptr;
-
-	public:
-		CEnterNameWxDialog( wxWindow *pParent, const std::string &rszCaption, const std::string &rszLabel, const std::string &rszName )
-			: CWxToolDialog( pParent, wxID_ANY, wxString::FromUTF8( rszCaption.c_str() ), wxDefaultPosition,
-											 wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
+		wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
+		pRow->Add( NWx::Child<wxStaticText>( this, wxID_ANY, wxString::FromUTF8( rszLabel.c_str() ) ),
+		           wxSizerFlags().CentreVertical().Border( wxRIGHT, 6 ) );
+		// The template's 135 dialog units, at this dialog's font.
+		pName = NWx::Child<wxTextCtrl>( this,
+		                                wxID_ANY,
+		                                wxString::FromUTF8( rszName.c_str() ),
+		                                wxDefaultPosition,
+		                                wxSize( ConvertDialogToPixels( wxSize( 135, 0 ) ).x, -1 ) );
+		pRow->Add( pName, wxSizerFlags( 1 ).CentreVertical() );
+		pSizer->Add( pRow, wxSizerFlags().Expand().Border( wxALL, 8 ) );
+		pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
+		             wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
+		SetSizerAndFit( pSizer );
+		// Wider, never smaller or taller: only the edit box has anywhere to go.
+		SetMinSize( GetSize() );
+		SetMaxSize( wxSize( -1, GetSize().y ) );
+		if ( wxWindow *pOk = FindWindow( wxID_OK ) )
 		{
-			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
-			wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
-			pRow->Add( NWx::Child<wxStaticText>( this, wxID_ANY, wxString::FromUTF8( rszLabel.c_str() ) ),
-								 wxSizerFlags().CentreVertical().Border( wxRIGHT, 6 ) );
-			// The template's 135 dialog units, at this dialog's font.
-			pName = NWx::Child<wxTextCtrl>( this, wxID_ANY, wxString::FromUTF8( rszName.c_str() ), wxDefaultPosition,
-																			wxSize( ConvertDialogToPixels( wxSize( 135, 0 ) ).x, -1 ) );
-			pRow->Add( pName, wxSizerFlags( 1 ).CentreVertical() );
-			pSizer->Add( pRow, wxSizerFlags().Expand().Border( wxALL, 8 ) );
-			pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
-									 wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
-			SetSizerAndFit( pSizer );
-			// Wider, never smaller or taller: only the edit box has anywhere to go.
-			SetMinSize( GetSize() );
-			SetMaxSize( wxSize( -1, GetSize().y ) );
-			if ( wxWindow *pOk = FindWindow( wxID_OK ) )
-			{
-				pOk->SetFocus();
-			}
+			pOk->SetFocus();
 		}
+	}
 
-		// Not GetName: wxWindow has one, and this would hide it.
-		std::string EnteredName() const
-		{
-			return std::string( pName->GetValue().utf8_str() );
-		}
-	};
+	// Not GetName: wxWindow has one, and this would hide it.
+	std::string EnteredName() const { return std::string( pName->GetValue().utf8_str() ); }
+};
 }
-
 
 namespace NEnterName
 {
-	bool RunWx( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName )
+bool RunWx( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName )
+{
+	CEnterNameWxDialog dialog( ToWxOwnerWindow( pParent ), rszCaption, rszLabel, *pszName );
+	dialog.CentreOnParent();
+	if ( dialog.ShowModal() != wxID_OK )
 	{
-		CEnterNameWxDialog dialog( ToWxOwnerWindow( pParent ), rszCaption, rszLabel, *pszName );
-		dialog.CentreOnParent();
-		if ( dialog.ShowModal() != wxID_OK )
-		{
-			return false;
-		}
-		( *pszName ) = dialog.EnteredName();
-		return true;
+		return false;
 	}
+	( *pszName ) = dialog.EnteredName();
+	return true;
+}
 }

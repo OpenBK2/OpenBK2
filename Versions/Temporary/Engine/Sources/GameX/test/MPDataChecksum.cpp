@@ -47,7 +47,7 @@ protected:
 		std::filesystem::remove_all( directory, error );
 	}
 
-	template<class T>
+	template <class T>
 	T *CreateRecord( const char *name )
 	{
 		CObj<NDb::IObjMan> record = NDb::CreateNewObject( name );

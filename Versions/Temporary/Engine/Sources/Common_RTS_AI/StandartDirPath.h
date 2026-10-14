@@ -4,7 +4,6 @@
 
 #include "Common_RTS_AI_export.h"
 
-
 #include "BasePathUnit.h"
 
 class COMMON_RTS_AI_EXPORT CStandartDirPath : public IPath
@@ -12,22 +11,34 @@ class COMMON_RTS_AI_EXPORT CStandartDirPath : public IPath
 	OBJECT_NOCOPY_METHODS( CStandartDirPath );
 
 	ZDATA
-		CVec2 dir;
-		CVec2 startPoint, finishPoint;
-		CVec2 curPoint;
-		int nTileSize = 0;
+	CVec2 dir;
+	CVec2 startPoint, finishPoint;
+	CVec2 curPoint;
+	int nTileSize = 0;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dir); f.Add(3,&startPoint); f.Add(4,&finishPoint); f.Add(5,&curPoint); f.Add(6,&nTileSize); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &dir );
+		f.Add( 3, &startPoint );
+		f.Add( 4, &finishPoint );
+		f.Add( 5, &curPoint );
+		f.Add( 6, &nTileSize );
+		return 0;
+	}
+
 private:
 public:
-	CStandartDirPath() : dir( VNULL2 ), startPoint( VNULL2 ), finishPoint( VNULL2 ), curPoint( VNULL2 ), nTileSize( -1 ) { }
+	CStandartDirPath() : dir( VNULL2 ), startPoint( VNULL2 ), finishPoint( VNULL2 ), curPoint( VNULL2 ), nTileSize( -1 )
+	{
+	}
 	CStandartDirPath( const CVec2 &startPoint, const CVec2 &dir, const CVec2 &finishPoint, const int nTileSize );
 	CStandartDirPath( const CVec2 &startPoint, const CVec2 &finishPoint, const int nTileSize );
 
 	virtual bool IsFinished() const;
 
-	virtual const CVec2& GetStartPoint() const { return startPoint; }
-	virtual const CVec2& GetFinishPoint() const { return finishPoint; };
+	virtual const CVec2 &GetStartPoint() const { return startPoint; }
+	virtual const CVec2 &GetFinishPoint() const { return finishPoint; };
 
 	virtual const CVec2 PeekPoint( const int nShift ) const;
 	virtual void Shift( const int nShift );

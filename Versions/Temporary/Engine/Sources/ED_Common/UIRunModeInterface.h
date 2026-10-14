@@ -11,7 +11,10 @@ class CUIRunModeInterface : public CRunModeInterfaceBase
 public:
 	// lifecycle
 	CUIRunModeInterface() {}
-	CUIRunModeInterface( const std::string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID );
+	CUIRunModeInterface( const std::string &rszTypeName,
+	                     const CDBID &rDBID,
+	                     const CDBID &rTemplateWindowDBID,
+	                     const CDBID &rTemplateScreenDBID );
 	virtual ~CUIRunModeInterface();
 
 	// IInterfaceBase
@@ -20,7 +23,10 @@ public:
 
 	// methods
 protected:
-	void LoadWindow( const std::string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID );
+	void LoadWindow( const std::string &rszTypeName,
+	                 const CDBID &rDBID,
+	                 const CDBID &rTemplateWindowDBID,
+	                 const CDBID &rTemplateScreenDBID );
 
 	// members
 protected:

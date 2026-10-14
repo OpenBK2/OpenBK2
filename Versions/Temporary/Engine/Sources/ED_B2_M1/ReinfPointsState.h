@@ -13,7 +13,7 @@ class CReinfPointsState : public CDefaultInputState, public ICommandHandler
 	CMapInfoEditor *pMapInfoEditor;
 	//
 	int nSelectedPlayer;
-  int nSelectedReinfPoint;
+	int nSelectedReinfPoint;
 	CSceneDrawTool sceneDrawTool;
 	bool bIsAvia;
 	bool bMove;
@@ -39,7 +39,7 @@ public:
 	};
 
 private:
-	std::vector<SReinfPoint> reinfPoints;						// описание reinforcement-ов текущего выбранного игрока
+	std::vector<SReinfPoint> reinfPoints; // описание reinforcement-ов текущего выбранного игрока
 
 	bool CreateReinfPoint();
 	bool DeleteSelectedReinfPoint();
@@ -47,12 +47,12 @@ private:
 	bool SaveCurrentReinfPoint( const std::vector<SReinfPoint> &rReinfPoints, int nPlayerIndex, int nSelectedReinfPoint );
 
 public:
-	CReinfPointsState( CMapInfoEditor* _pMapInfoEditor = 0 );
+	CReinfPointsState( CMapInfoEditor *_pMapInfoEditor = 0 );
 	virtual ~CReinfPointsState() {}
 	//
 	void Enter();
 	void Leave();
-	virtual void OnSetFocus( IWidget* pNewWnd );
+	virtual void OnSetFocus( IWidget *pNewWnd );
 	void Draw( IPaintContext *pPaintDC );
 	void PostDraw( IPaintContext *pPaintDC );
 

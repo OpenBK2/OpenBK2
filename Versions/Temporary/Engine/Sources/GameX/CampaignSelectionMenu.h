@@ -4,8 +4,8 @@
 
 namespace NDb
 {
-	struct SCampaign;
-	struct SDifficultyLevel;
+struct SCampaign;
+struct SDifficultyLevel;
 }
 
 void StartCampaign( const NDb::SCampaign *pCampaignDB, int nDifficulty, bool bCustom );
@@ -13,6 +13,7 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int nDifficulty, bool bCu
 class CInterfaceCampaignSelectionMenu : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceCampaignSelectionMenu );
+
 private:
 	enum EPlay
 	{
@@ -35,21 +36,50 @@ private:
 		CPtr<IWindow> pBackgroundWnd;
 		std::string szOutro;
 		EPlay ePlay;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pBtn); f.Add(4,&pPictureWnd); f.Add(5,&pNameView); f.Add(6,&pDescCont); f.Add(7,&pDescView); f.Add(8,&szBtnName); f.Add(9,&nDBCampaign); f.Add(10,&pBackgroundWnd); f.Add(11,&szOutro); f.Add(12,&ePlay); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &pBtn );
+			f.Add( 4, &pPictureWnd );
+			f.Add( 5, &pNameView );
+			f.Add( 6, &pDescCont );
+			f.Add( 7, &pDescView );
+			f.Add( 8, &szBtnName );
+			f.Add( 9, &nDBCampaign );
+			f.Add( 10, &pBackgroundWnd );
+			f.Add( 11, &szOutro );
+			f.Add( 12, &ePlay );
+			return 0;
+		}
 	};
+
 private:
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
-	std::vector< CPtr<IWindow> > campaignWnds;
+	std::vector<CPtr<IWindow>> campaignWnds;
 	std::vector<SCampaign> campaigns;
 	int nSelected;
 	ZSKIP //vector< CPtr<IButton> > playButtons;
-	EPlay ePlay;
+			EPlay ePlay;
 	CPtr<IComboBox> pDifficulty;
 	CPtr<IButton> pPlayBtn;
 	CPtr<IButton> pPlayOutroBtn;
 	CPtr<IScrollableContainer> pCampaignList;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&campaignWnds); f.Add(4,&campaigns); f.Add(5,&nSelected); f.Add(7,&ePlay); f.Add(8,&pDifficulty); f.Add(9,&pPlayBtn); f.Add(10,&pPlayOutroBtn); f.Add(11,&pCampaignList); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 3, &campaignWnds );
+		f.Add( 4, &campaigns );
+		f.Add( 5, &nSelected );
+		f.Add( 7, &ePlay );
+		f.Add( 8, &pDifficulty );
+		f.Add( 9, &pPlayBtn );
+		f.Add( 10, &pPlayOutroBtn );
+		f.Add( 11, &pCampaignList );
+		return 0;
+	}
+
 private:
 	bool OnSelectCampaign( const std::string &szSender );
 	bool OnBack();
@@ -62,6 +92,7 @@ private:
 	void CreateCampaignList();
 	void AddCampaignWindow( int nWndIndex, int nCampaignIndex );
 	void AddDifficultyLevel( const NDb::SDifficultyLevel *pDifficultyLevel );
+
 public:
 	CInterfaceCampaignSelectionMenu();
 
@@ -85,6 +116,7 @@ class CICCampaignSelectionMenu : public CInterfaceCommandBase<CInterfaceCampaign
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

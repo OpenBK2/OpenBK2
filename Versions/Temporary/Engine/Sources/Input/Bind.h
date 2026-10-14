@@ -8,13 +8,13 @@
 
 namespace NInput
 {
-	struct SCommand;
+struct SCommand;
 }
 
 struct SGameMessage
 {
 	NInput::SMessage mMessage;
-	std::vector<NInput::SCommand*> commands;
+	std::vector<NInput::SCommand *> commands;
 #ifndef _FINALRELEASE
 	std::string szEventName;
 #endif
@@ -22,10 +22,10 @@ struct SGameMessage
 	struct
 	{
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		int nParam1 = {};//union { int nParam1; uint32_t dwParam1; float fParam1; };
+		int nParam1 = {}; //union { int nParam1; uint32_t dwParam1; float fParam1; };
 		int nParam2 = {}; //union { int nParam2; uint32_t dwParam2; float fParam2; };
 	};
-	SGameMessage() : nParam1(0), nParam2(0) {}
+	SGameMessage() : nParam1( 0 ), nParam2( 0 ) {}
 };
 
 namespace NInput
@@ -49,7 +49,7 @@ struct SBind
 class INPUT_EXPORT CBind
 {
 	float fDelta = {};
-	SCommand* pBindCommand = {};
+	SCommand *pBindCommand = {};
 #ifndef _FINALRELEASE
 	std::string szBindName;
 #endif
@@ -63,7 +63,7 @@ public:
 	bool ProcessEvent( const SGameMessage &eEvent );
 };
 
-const std::vector<std::string>& GetSections();
+const std::vector<std::string> &GetSections();
 INPUT_EXPORT void SetSection( const std::string &_szSection, bool bUpdate = true );
 INPUT_EXPORT void SetSection( const std::vector<std::string> &sections, bool bUpdate = true );
 
@@ -79,7 +79,7 @@ float GetCommandCoeff( const std::string &szControl );
 void SetCommandCoeff( const std::string &szControl, float fCoeff );
 
 INPUT_EXPORT bool GetEvent( SGameMessage *pGameMessage );
-void MakeEvent( SGameMessage *pMSG,  const std::string &szGameMessage, int nParam1, int nParam2, EControlType ct );
+void MakeEvent( SGameMessage *pMSG, const std::string &szGameMessage, int nParam1, int nParam2, EControlType ct );
 INPUT_EXPORT void PostEvent( const std::string &szGameMessage, int nParam1, int nParam2 );
 INPUT_EXPORT void PostWinEvent( const std::string &szGameMessage, int nParam1, int nParam2 );
 INPUT_EXPORT void PurgeEvents();

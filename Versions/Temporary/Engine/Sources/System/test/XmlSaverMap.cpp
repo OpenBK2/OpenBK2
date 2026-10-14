@@ -30,7 +30,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 template <class TContainer>
 std::string Save( TContainer container )

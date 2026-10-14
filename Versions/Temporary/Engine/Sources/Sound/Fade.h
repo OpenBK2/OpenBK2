@@ -4,7 +4,7 @@
 
 namespace NDb
 {
-	struct SFade;
+struct SFade;
 }
 
 namespace NMusicSystem
@@ -30,11 +30,22 @@ class CFade : public IPlayListElement
 
 	NTimer::STime timeFaded;
 	NTimer::STime timeLastCall;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFade); f.Add(3,&eVolumeType); f.Add(4,&fStartVolume); f.Add(5,&eState); f.Add(6,&pTrackToEnd); f.Add(7,&timeFaded); f.Add(8,&timeLastCall); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pFade );
+		f.Add( 3, &eVolumeType );
+		f.Add( 4, &fStartVolume );
+		f.Add( 5, &eState );
+		f.Add( 6, &pTrackToEnd );
+		f.Add( 7, &timeFaded );
+		f.Add( 8, &timeLastCall );
+		return 0;
+	}
 
 	void SetCurrentVolume();
+
 public:
-	CFade() {  }
+	CFade() {}
 	// if fade have to be at the end of track, then track is given
 	CFade( const NDb::SFade *_pFade, EMusicSystemVolume _eVolumeType, class CTrack *_pTrackToEnd );
 	void Segment();
@@ -44,11 +55,16 @@ public:
 	void OnResetTimer();
 };
 
-class CFades : public std::list<CPtr<CFade> >
+class CFades : public std::list<CPtr<CFade>>
 {
-	ZDATA_( list<CPtr<CFade> > )
+	ZDATA_( list<CPtr<CFade>> )
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( std::list<CPtr<CFade> > *)this); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (std::list<CPtr<CFade>> *)this );
+		return 0;
+	}
+
 public:
 	void Update();
 };

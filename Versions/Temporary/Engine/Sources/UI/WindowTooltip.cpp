@@ -2,33 +2,38 @@
 #include "WindowTooltip.h"
 #include "System/Text.h"
 
-REGISTER_SAVELOAD_CLASS( UI, 0x11075B8D, CWindowTooltip)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B8D, CWindowTooltip )
 
-void CWindowTooltip::InitByDesc( const struct NDb::SUIDesc* pDesc )
+void CWindowTooltip::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
-	pInstance = checked_cast<const NDb::SWindowTooltip*>( pDesc )->Duplicate();
-	pShared = checked_cast_ptr<const NDb::SWindowTooltipShared*>( pInstance->pShared );
+	pInstance = checked_cast<const NDb::SWindowTooltip *>( pDesc )->Duplicate();
+	pShared = checked_cast_ptr<const NDb::SWindowTooltipShared *>( pInstance->pShared );
 	CWindow::InitByDesc( pDesc );
 }
 
-void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const std::wstring &_szText, IScreen *_pScreen,
-																	const int nTooltipWidth, const float fHorisontalToVerticalRatio, int nIDForMLHandler )
+void CWindowTooltip::InitTooltip( const CVec2 &vPos,
+                                  const CTRect<float> &wndRect,
+                                  const std::wstring &_szText,
+                                  IScreen *_pScreen,
+                                  const int nTooltipWidth,
+                                  const float fHorisontalToVerticalRatio,
+                                  int nIDForMLHandler )
 {
 	wszText = _szText;
 
 	std::wstring szText;
 	if ( const NDb::SForegroundTextString *pForeground = pInstance->pTextString )
 	{
-		if ( pForeground->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pForeground->pShared->,FormatString) )
-			szText = GET_TEXT_PRE(pForeground->pShared->,FormatString); // format
+		if ( pForeground->pShared && CHECK_TEXT_NOT_EMPTY_PRE( pForeground->pShared->, FormatString ) )
+			szText = GET_TEXT_PRE( pForeground->pShared->, FormatString ); // format
 	}
 	szText += _szText;
 
-	CWindow * pChild = dynamic_cast<CWindow*>(GetChild( "TooltipText", false ));
-	ITextView *pText = dynamic_cast<ITextView*>( pChild );
+	CWindow *pChild = dynamic_cast<CWindow *>( GetChild( "TooltipText", false ) );
+	ITextView *pText = dynamic_cast<ITextView *>( pChild );
 	NI_ASSERT( pText != 0, "tooltip window must have TextView child" );
 
-	CWindow *pScreen = dynamic_cast<CWindow*>( _pScreen );
+	CWindow *pScreen = dynamic_cast<CWindow *>( _pScreen );
 	if ( pText && pScreen )
 	{
 		bInitializedByText = true;
@@ -77,7 +82,7 @@ void CWindowTooltip::AdjustPosByMousePos( const CVec2 &vMousePos )
 
 	if ( bInitializedByText )
 	{
-		nX = Clamp( int(vMousePos.x), 0, nMaxXPos );
+		nX = Clamp( int( vMousePos.x ), 0, nMaxXPos );
 		nY = nDesiredYPos;
 		if ( nY < 0 )
 			nY = vMousePos.y + 32;

@@ -6,7 +6,7 @@
 
 namespace NDb
 {
-	struct SScriptArea;
+struct SScriptArea;
 }
 class CUpdatableObj;
 class CAIUnit;
@@ -28,13 +28,17 @@ struct IScriptAreaEnumerator : public IEnumerator
 	virtual const NDb::SScriptArea &GetArea() const = 0;
 };
 
-typedef std::list<CPtr<CUpdatableObj> > CScriptGroup;
-typedef det_map<int, CScriptGroup > CScriptGroups;
-typedef det_map<int/*attackGroupID*/, int/*ExecutorID*/> CAttackGroup;
+typedef std::list<CPtr<CUpdatableObj>> CScriptGroup;
+typedef det_map<int, CScriptGroup> CScriptGroups;
+typedef det_map<int /*attackGroupID*/, int /*ExecutorID*/> CAttackGroup;
 
 class CScripts
 {
-	public: int operator&( IBinSaver &saver ); private:;
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
 
 	static const int TIME_TO_CHECK_SUSPENDED_REINF;
 
@@ -47,7 +51,14 @@ class CScripts
 		int nRepetitions = {};
 
 		std::string szName;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&period); f.Add(3,&lastUpdate); f.Add(4,&nRepetitions); f.Add(5,&szName); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &period );
+			f.Add( 3, &lastUpdate );
+			f.Add( 4, &nRepetitions );
+			f.Add( 5, &szName );
+			return 0;
+		}
 
 		SScriptInfo() : period( 0 ), lastUpdate( 0 ), nRepetitions( -1 ), szName( "" ) {}
 	};
@@ -65,10 +76,18 @@ class CScripts
 		ZDATA
 		SMapObjectInfo mapObject;
 		CDBPtr<SHPObjectRPGStats> pStats;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&mapObject); f.Add(3,&pStats); return 0; }
-		SReinforcementObject() { }
-		SReinforcementObject( const SMapObjectInfo &_mapObject, const SHPObjectRPGStats *_pStats/*, IScenarioUnit *_pScenarioUnit*/ )
-			: mapObject( _mapObject ), pStats( _pStats )/*, pScenarioUnit( _pScenarioUnit ) */{ }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &mapObject );
+			f.Add( 3, &pStats );
+			return 0;
+		}
+		SReinforcementObject() {}
+		SReinforcementObject( const SMapObjectInfo &_mapObject,
+		                      const SHPObjectRPGStats *_pStats /*, IScenarioUnit *_pScenarioUnit*/ )
+				: mapObject( _mapObject ), pStats( _pStats ) /*, pScenarioUnit( _pScenarioUnit ) */
+		{
+		}
 	};
 	typedef std::list<SReinforcementObject> CReinfList;
 	det_map<int, CReinfList> reinforcs;
@@ -80,7 +99,7 @@ class CScripts
 	det_map<int, int> reservePositions;
 
 	// юнит - номер скриптовой группы
-	det_map< int, int> groupUnits;
+	det_map<int, int> groupUnits;
 
 	// для сегмента
 	det_map<int, SScriptInfo>::iterator segmIter;
@@ -91,7 +110,7 @@ class CScripts
 	bool bShowErrors = {};
 	static CDBPtr<NDb::SMapInfo> pMapInfo;
 	static CAttackGroup attackGroups;
-	static std::list<CObj<CAIUnit> > rememberedUnits;
+	static std::list<CObj<CAIUnit>> rememberedUnits;
 
 	//
 	// удалить все невалидные юниты в начале данной группы
@@ -125,27 +144,31 @@ class CScripts
 
 	static void EnumUnitsInScriptArea( IScriptAreaEnumerator *pEnumerator, const int nPlayer, bool bCountPlanes );
 	static void EnumUnitsInRect( IEnumerator *pEnumerator, const int nPlayer, bool bCountPlanes, const SRect &rect );
-	static void EnumUnitsInCircle( IEnumerator *pEnumerator, const int nPlayer, bool bCountPlanes, const CVec2 &vCenter, const float fRadius );
+	static void EnumUnitsInCircle(
+			IEnumerator *pEnumerator, const int nPlayer, bool bCountPlanes, const CVec2 &vCenter, const float fRadius );
 	static bool IsUnitInCirlceArea( CAIUnit *pUnit, const CVec2 &vCenter, const int fR, const int nPlayer );
 	static bool IsUnitInRectArea( CAIUnit *pUnit, const SRect &rect, const int nPlayer );
 
 	static void SendUpdateToObjects( int nScriptID, EActionNotify eUpdateType, int nParam );
 
-	static void AttackGroupAddUnit( class CCommonUnit * pUnit, int nAttackGroupID );
-	static void RemoveUnit( CAIUnit * pUnit );
+	static void AttackGroupAddUnit( class CCommonUnit *pUnit, int nAttackGroupID );
+	static void RemoveUnit( CAIUnit *pUnit );
 	//
 	void RunScriptFromFile( const std::string &szScriptFileName );
+
 public:
 	~CScripts();
 	static void RegisterScriptForSaveLoad();
 
 	int GetScriptID( CUpdatableObj *pObj ) const;
 	void AddObjToScriptGroup( CUpdatableObj *pObj, const int nGroup );
-	void AddUnitToReinforcGroup( const SMapObjectInfo &mapObject, const int nGroup, const struct SHPObjectRPGStats *pStats/*, IScenarioUnit *pScenarioUnit */);
+	void AddUnitToReinforcGroup( const SMapObjectInfo &mapObject,
+	                             const int nGroup,
+	                             const struct SHPObjectRPGStats *pStats /*, IScenarioUnit *pScenarioUnit */ );
 	// удалить все невалидные юниты в группе,
 	void DelInvalidUnits( const int scriptId );
 
-	void Init( const NDb::SMapInfo* pMapInfo );
+	void Init( const NDb::SMapInfo *pMapInfo );
 	void Clear();
 	void InitAreas( const NDb::SScriptArea scriptAreas[], const int nLen );
 	void Load( const std::string &szScriptFileName, const NDb::SAIGameConsts *pConsts );
@@ -155,7 +178,7 @@ public:
 	void CallScriptFunction( const char *pszCommand );
 
 	void SetGlobeScriptHandler( IGlobeScriptHandler *pHandler ) { pGlobeScriptHandler = pHandler; }
-	IGlobeScriptHandler* GetGlobeScriptHandler() const { return pGlobeScriptHandler; }
+	IGlobeScriptHandler *GetGlobeScriptHandler() const { return pGlobeScriptHandler; }
 
 	//
 	// script functions
@@ -188,7 +211,7 @@ public:
 
 	// params: <number of player> <"name of script area">; returns: number of units;
 	static int GetNUnitsInArea( struct lua_State *state );
-	static int IsSomeUnitInArea ( struct lua_State *state );
+	static int IsSomeUnitInArea( struct lua_State *state );
 	static int IsSomeBodyAlive( struct lua_State *pState );
 	// params: <number of player> <"name of script area">; returns: units in script area link ids ;
 	static int GetUnitListInArea( struct lua_State *state );
@@ -228,7 +251,6 @@ public:
 	static int GiveUnitCommand( struct lua_State *state );
 	// params: <command> <unit unique ID> <necessary command parameters>; returns: none;
 	static int GiveUnitQCommand( struct lua_State *state );
-
 
 	// params: none; returns: none;
 	static int ShowActiveScripts( struct lua_State *state );
@@ -463,7 +485,6 @@ public:
 	// params: <player no>; returns: side of the player (0, 1 or 2)
 	static int GetPlayerSide( struct lua_State *pState );
 
-
 	static int GlobeCommand( struct lua_State *pState );
 	//
 	// script camera
@@ -486,7 +507,7 @@ public:
 	static int PlayEffect( struct lua_State *pState );
 	static int GetAmmo( struct lua_State *pState );
 
-	static int IsImmobilized( struct lua_State * pState );
+	static int IsImmobilized( struct lua_State *pState );
 	static int EnablePlayerReinforcement( struct lua_State *pState );
 	static int EnablePlayerSuperWeapon( struct lua_State *pState );
 	static int GiveReinforcementCalls( struct lua_State *pState );

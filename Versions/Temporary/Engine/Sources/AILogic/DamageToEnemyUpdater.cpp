@@ -18,7 +18,8 @@ void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, 
 {
 	UnsetDamageFromEnemy( pCurEnemy );
 	pCurEnemy = pEnemy;
-	if ( nTakenDamageUpdated == 0 && fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) <= sqr( 1.3f * pOwner->GetMaxFireRange() ) )
+	if ( nTakenDamageUpdated == 0 &&
+	     fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) <= sqr( 1.3f * pOwner->GetMaxFireRange() ) )
 	{
 		nTakenDamageUpdated = 2;
 
@@ -35,7 +36,8 @@ void CDamageToEnemyUpdater::SetDamageToEnemy( CAIUnit *pOwner, CAIUnit *pEnemy, 
 
 	UnsetDamageFromEnemy( pCurEnemy );
 	pCurEnemy = pEnemy;
-	if ( nTakenDamageUpdated == 0 && fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) <= sqr( 1.3f * pOwner->GetMaxFireRange() ) && pGun != 0 )
+	if ( nTakenDamageUpdated == 0 &&
+	     fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) <= sqr( 1.3f * pOwner->GetMaxFireRange() ) && pGun != 0 )
 	{
 		if ( pGun->IsGrenade() )
 		{

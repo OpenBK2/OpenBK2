@@ -39,12 +39,12 @@ void CScene::SelectObject( const int nID, const CVec3 &vPos, const float fSelSca
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
 		return;
-	SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second );
+	SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second );
 	if ( pVOD == 0 )
 		return;
 
 	//pos->second->selection.selHolder.pHolder = 0;
-	if ( pVOD->bHidden )						//Invisible objects (i.e. infantry in containers) do not display selections
+	if ( pVOD->bHidden ) //Invisible objects (i.e. infantry in containers) do not display selections
 	{
 		pVOD->bSelected = false;
 		return;
@@ -56,8 +56,13 @@ void CScene::SelectObject( const int nID, const CVec3 &vPos, const float fSelSca
 	MakeSelection( selection, pVOD, vPos, fSelScale, eSelType, -1.0f, false );
 }
 
-void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD, const CVec3 &vPos,
-	float fSelScale, NDb::ESelectionType eSelType, float fDeltaTime, bool bOn )
+void CScene::MakeSelection( SVisObjSelection &selection,
+                            SModelVisObjDesc *pVOD,
+                            const CVec3 &vPos,
+                            float fSelScale,
+                            NDb::ESelectionType eSelType,
+                            float fDeltaTime,
+                            bool bOn )
 {
 	selection.fSelScale = fSelScale;
 	selection.eSelType = eSelType;
@@ -68,8 +73,9 @@ void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD,
 	if ( pVOD )
 	{
 		//const float fMaxSize = max( pVOD->pModel->pGeometry->vSize.x, pVOD->pModel->pGeometry->vSize.y ) * fSelScale * 0.5f;
-		const float fMaxSize = sqrt( fabs2( pVOD->pModel->pGeometry->vSize.x ) +
-			fabs2( pVOD->pModel->pGeometry->vSize.y ) ) * fSelScale * 0.5f;
+		const float fMaxSize =
+				sqrt( fabs2( pVOD->pModel->pGeometry->vSize.x ) + fabs2( pVOD->pModel->pGeometry->vSize.y ) ) * fSelScale *
+				0.5f;
 		selection.fSelSize = fMaxSize;
 
 		const SFBTransform &transform = pVOD->GetPlacement();
@@ -110,7 +116,7 @@ void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD,
 		const NDb::SMaterial *pSelectionMaterial = data[eScene]->pSceneConsts->selectionMaterials.pGround;
 		NI_ASSERT( pSelectionMaterial != 0, "Selection material empty" );
 
-		CDGPtr<CFuncBase<STime> > pTime = GetAbsTimer();
+		CDGPtr<CFuncBase<STime>> pTime = GetAbsTimer();
 		pTime.Refresh();
 		CPtr<NGScene::IFader> pFader = 0;
 		if ( fDeltaTime >= 0.0f )
@@ -120,8 +126,13 @@ void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD,
 		}
 
 		selection.selHolder.pHolder = data[eScene]->GetGScene()->CreateDynamicMesh(
-			data[eScene]->GetGScene()->MakeMeshInfo( selection.selHolder.pPatch, data[eScene]->pSceneConsts->selectionMaterials.pGround ),
-			0, selection.pBound, NGScene::MakeLargeHintBound(), room, pFader );
+				data[eScene]->GetGScene()->MakeMeshInfo( selection.selHolder.pPatch,
+		                                             data[eScene]->pSceneConsts->selectionMaterials.pGround ),
+				0,
+				selection.pBound,
+				NGScene::MakeLargeHintBound(),
+				room,
+				pFader );
 	}
 	else
 	{
@@ -138,7 +149,7 @@ void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD,
 		patchData.vertices.resize( 0 );
 		patchData.triangles.resize( 2 );
 		NGScene::SVertex vert;
-		CalcCompactVector( &(vert.normal), CVec3(0, 0, 1) );
+		CalcCompactVector( &( vert.normal ), CVec3( 0, 0, 1 ) );
 		vert.texU.dw = 0xffffffff;
 		vert.texV.dw = 0xffffffff;
 		//CalcCompactVector( &(vert.texU), CVec3(1, 0, 0) );
@@ -162,13 +173,17 @@ void CScene::MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD,
 		patchData.triangles[1].i2 = 1;
 		patchData.triangles[1].i3 = 0;
 
-		const NDb::SMaterial *pSelectionMaterial = eSelType == NDb::SELECTION_TYPE_AIR ?
-			data[eScene]->pSceneConsts->selectionMaterials.pAir : data[eScene]->pSceneConsts->selectionMaterials.pWater;
+		const NDb::SMaterial *pSelectionMaterial = eSelType == NDb::SELECTION_TYPE_AIR
+		                                               ? data[eScene]->pSceneConsts->selectionMaterials.pAir
+		                                               : data[eScene]->pSceneConsts->selectionMaterials.pWater;
 		NI_ASSERT( pSelectionMaterial != 0, "Selection material empty" );
 
 		selection.selHolder.pHolder = data[eScene]->GetGScene()->CreateMesh(
-			data[eScene]->GetGScene()->MakeMeshInfo( selection.selHolder.pPatch, pSelectionMaterial ),
-			selection.pTransform.GetPtr(), 0, 0, room );
+				data[eScene]->GetGScene()->MakeMeshInfo( selection.selHolder.pPatch, pSelectionMaterial ),
+				selection.pTransform.GetPtr(),
+				0,
+				0,
+				room );
 
 		selection.selHolder.pPatch->ForceUpdate();
 	}
@@ -181,7 +196,8 @@ void CScene::UpdateSelectionHandlers()
 	std::vector<int> obsoletes;
 	obsoletes.reserve( 100 );
 	for ( SSceneData::CSelectionMap::iterator it = data[eScene]->selectionHandlers.begin();
-		it != data[eScene]->selectionHandlers.end(); ++it )
+	      it != data[eScene]->selectionHandlers.end();
+	      ++it )
 	{
 		SVisObjSelectionHandler *pHandler = it->second;
 
@@ -197,8 +213,13 @@ void CScene::UpdateSelectionHandlers()
 				pHandler->timeStart += pHandler->nFadeIn;
 
 				pHandler->visObjSelection.Recreate();
-				MakeSelection( pHandler->visObjSelection, 0, pHandler->vPos, pHandler->fScale,
-					pHandler->eSelType, (std::max)(0.001f, pHandler->nFadeOut * 0.001f), false );
+				MakeSelection( pHandler->visObjSelection,
+				               0,
+				               pHandler->vPos,
+				               pHandler->fScale,
+				               pHandler->eSelType,
+				               (std::max)( 0.001f, pHandler->nFadeOut * 0.001f ),
+				               false );
 			}
 		}
 
@@ -225,20 +246,20 @@ void CScene::UnselectObject( const int nID )
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
 		return;
-	SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second );
+	SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second );
 	if ( pVOD == 0 )
 		return;
 	pVOD->bSelected = false;
 	pVOD->selection.selHolder.pHolder = 0;
 }
 
-int CScene::AddSelection( int nID, const CVec3 &vPos, float fSelScale, NDb::ESelectionType eSelType,
-	float fFadeInTime, float fFadeOutTime )
+int CScene::AddSelection(
+		int nID, const CVec3 &vPos, float fSelScale, NDb::ESelectionType eSelType, float fFadeInTime, float fFadeOutTime )
 {
 	SModelVisObjDesc *pVOD = 0;
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos != data[eScene]->visObjects.end() )
-		pVOD = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second );
+		pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second );
 
 	SVisObjSelectionHandler *pHandler = data[eScene]->GetNewSelection();
 	pHandler->eState = SVisObjSelectionHandler::ESS_FADE_IN;

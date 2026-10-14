@@ -16,19 +16,19 @@ const char *CGeometryExporter::GetAddPath() const
 }
 
 bool CGeometryExporter::FormScript( std::string *pScriptText,
-																		const std::string &szTypeName,
-																		const std::string &szObjName,
-																		const std::string &szDstPath,
-																		const std::string &szSrcPath,
-																		IManipulator *pManipulator )
+                                    const std::string &szTypeName,
+                                    const std::string &szObjName,
+                                    const std::string &szDstPath,
+                                    const std::string &szSrcPath,
+                                    IManipulator *pManipulator )
 {
 	const std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() )
 	{
 		ILogger *pLogger = NLog::GetLogger();
-		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", szTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Granny exporter settings file is not specified\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "Check ConstUserData.xml in \"MayaExport\" section\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tExport type: {}\n", szTypeName.c_str() ) );
 		return false;
 	}
 	//
@@ -43,18 +43,20 @@ bool CGeometryExporter::FormScript( std::string *pScriptText,
 		szRootJoint.clear();
 
 	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
-		szDstPath.c_str(), szSrcPath.c_str(),
-		szRootMesh.c_str(), szRootJoint.c_str(),
-		szSettingsFileName.c_str() );
+	                             szDstPath.c_str(),
+	                             szSrcPath.c_str(),
+	                             szRootMesh.c_str(),
+	                             szRootJoint.c_str(),
+	                             szSettingsFileName.c_str() );
 	*pScriptText += ";\n";
 	//
 	return true;
 }
 
 bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
-																									const std::string &szSrcScenePath,
-																									const std::string &szDstFileName,
-																									IManipulator *pManipulator )
+                                                  const std::string &szSrcScenePath,
+                                                  const std::string &szDstFileName,
+                                                  IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -66,19 +68,22 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		CGrannyFileInfoGuard fileInfo( szDstFileName );
 		if ( fileInfo->MeshCount == 0 )
 		{
-			pLogger->Log( LT_ERROR, fmt::format("Geometry has 0 meshes - invalid scene or root mesh name\n") );
-			pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
-			pLogger->Log( LT_ERROR, fmt::format("\tDestination file: {}\n", szDstFileName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format( "Geometry has 0 meshes - invalid scene or root mesh name\n" ) );
+			pLogger->Log( LT_ERROR, fmt::format( "\tGeometry: {}\n", szObjName.c_str() ) );
+			pLogger->Log( LT_ERROR, fmt::format( "\tDestination file: {}\n", szDstFileName.c_str() ) );
 			return false;
 		}
 		for ( int i = 0; i < fileInfo->MeshCount; ++i )
 		{
 			if ( fileInfo->Meshes[i]->PrimaryTopology->GroupCount != 1 )
 			{
-				pLogger->Log( LT_ERROR, fmt::format("Geometry has invalid number of topology groups in mesh, (must have 1)\n") );
-				pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
-				pLogger->Log( LT_ERROR, fmt::format("\tNumber of topology groups: {}\n", fileInfo->Meshes[i]->PrimaryTopology->GroupCount) );
-				pLogger->Log( LT_ERROR, fmt::format("\tMesh: {}\n", fileInfo->Meshes[i]->Name) );
+				pLogger->Log( LT_ERROR,
+				              fmt::format( "Geometry has invalid number of topology groups in mesh, (must have 1)\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tGeometry: {}\n", szObjName.c_str() ) );
+				pLogger->Log(
+						LT_ERROR,
+						fmt::format( "\tNumber of topology groups: {}\n", fileInfo->Meshes[i]->PrimaryTopology->GroupCount ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tMesh: {}\n", fileInfo->Meshes[i]->Name ) );
 			}
 		}
 		CVariant value;
@@ -86,7 +91,7 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		pManipulator->SetValue( "NumMeshes", value );
 		// calculate AABB of the model
 		CVec3 vMin( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE ), vMax( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-		if ( GetGrannyMeshBoundingBox(&vMin, &vMax, fileInfo) != false )
+		if ( GetGrannyMeshBoundingBox( &vMin, &vMax, fileInfo ) != false )
 		{
 			CVec3 vCenter = ( vMax + vMin ) / 2.0f;
 			CVec3 vHalfSize = ( vMax - vMin ) / 2.0f;
@@ -96,46 +101,46 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 	}
 	catch ( ... )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("General fail during importing DB data for geometry\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tFile name: {}\n", szDstFileName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "General fail during importing DB data for geometry\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tGeometry: {}\n", szObjName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tFile name: {}\n", szDstFileName.c_str() ) );
 		return false;
 	}
 	return true;
 }
 
 EXPORT_RESULT CGeometryExporter::CustomCheck( const std::string &szTypeName,
-																						  const std::string &szObjName,
-																							const std::string &szSrcScenePath,
-																							const std::string &szDestinationPath,
-																							IManipulator *pManipulator )
+                                              const std::string &szObjName,
+                                              const std::string &szSrcScenePath,
+                                              const std::string &szDestinationPath,
+                                              IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
 	CGrannyFileInfoGuard fileInfo( szDestinationPath );
 	// check for number of skeletons in file
 	if ( fileInfo->SkeletonCount != 1 )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Incorrect number of skeletons\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSkeletons count: {}\n", fileInfo->SkeletonCount) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSource File: {}\n", szSrcScenePath.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tDestination File: {}\n", szDestinationPath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Incorrect number of skeletons\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tGeometry: {}\n", szObjName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSkeletons count: {}\n", fileInfo->SkeletonCount ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSource File: {}\n", szSrcScenePath.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tDestination File: {}\n", szDestinationPath.c_str() ) );
 		return ER_FAIL;
 	}
 	// check for number of bones
 	if ( fileInfo->Skeletons[0]->BoneCount == 0 )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Empty bones list - check \"RootMesh\" and \"RootJoint\"\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSource File: {}\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Empty bones list - check \"RootMesh\" and \"RootJoint\"\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tGeometry: {}\n", szObjName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSource File: {}\n", szSrcScenePath.c_str() ) );
 		return ER_FAIL;
 	}
 	// check number of meshes
 	if ( fileInfo->MeshCount == 0 )
 	{
-		pLogger->Log( LT_ERROR, fmt::format("Empty meshes list - check \"RootMesh\"\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tSource File: {}\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Empty meshes list - check \"RootMesh\"\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tGeometry: {}\n", szObjName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tSource File: {}\n", szSrcScenePath.c_str() ) );
 		return ER_FAIL;
 	}
 	return ER_SUCCESS;

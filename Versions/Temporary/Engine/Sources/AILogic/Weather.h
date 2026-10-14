@@ -5,15 +5,21 @@
 class CWeather
 {
 	ZDATA
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		NDb::EWeatherState eState = {};
-		bool bAutoChangeWeather = {};							// from AI, not from script
-		NTimer::STime timeNextCheck = {};
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NDb::EWeatherState eState = {};
+	bool bAutoChangeWeather = {}; // from AI, not from script
+	NTimer::STime timeNextCheck = {};
 
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bAutoChangeWeather); f.Add(4,&timeNextCheck); return 0; }
-private:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &eState );
+		f.Add( 3, &bAutoChangeWeather );
+		f.Add( 4, &timeNextCheck );
+		return 0;
+	}
 
+private:
 	void Off();
 	void On();
 	const float GetNextTimeRandom();

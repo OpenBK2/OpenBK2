@@ -7,7 +7,6 @@
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11097AC0, CPathFractionComposite )
 
-
 void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) const
 {
 	pParams->p0 = p0;
@@ -15,7 +14,7 @@ void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) co
 	pParams->p2 = p2;
 	pParams->vNormale = vNormale;
 
-/*
+	/*
 	if ( nIndex >= points.size() - 2 )
 	{
 		pParams->p0 = p0;
@@ -37,10 +36,8 @@ void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) co
 }
 
 CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath )
-: vSpeed ( pPlane->GetSpeedB2() ),
-	vNormale( pPlane->GetNormalB2() ),
-	pInitialPath( pPath ),
-	nIndex( 0 ), fSplineProgress( 0 )
+		: vSpeed( pPlane->GetSpeedB2() ), vNormale( pPlane->GetNormalB2() ), pInitialPath( pPath ), nIndex( 0 ),
+			fSplineProgress( 0 )
 {
 	Normalize( &vSpeed );
 	CPathList pathList;
@@ -85,7 +82,7 @@ CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IP
 		{
 			CSegment segm;
 			NDebugInfo::SArrowHead a1( points[i] );
-			NDebugInfo::SArrowHead a2( points[i+1] );
+			NDebugInfo::SArrowHead a2( points[i + 1] );
 			NDebugInfo::SArrowHead a3( points[i] + normales[i] * 100, 50, 5 );
 			DebugInfoManager()->DrawLine( NDebugInfo::OBJECT_ID_GENERATE, a1, a2, NDebugInfo::BLUE );
 			DebugInfoManager()->DrawLine( NDebugInfo::OBJECT_ID_GENERATE, a1, a3, NDebugInfo::WHITE );
@@ -119,10 +116,10 @@ CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IP
 	if ( NGlobal::GetVar( "plane_path_markers", 0 ) )
 	{
 		CSegment segm;
-		for ( int i = 0; i < points.size() -1; ++i )
+		for ( int i = 0; i < points.size() - 1; ++i )
 		{
 			segm.p1 = CVec2( points[i].x, points[i].y );
-			segm.p2 = CVec2( points[i+1].x, points[i+1].y );
+			segm.p2 = CVec2( points[i + 1].x, points[i + 1].y );
 			segm.dir = segm.p2 - segm.p1;
 			DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 1, NDebugInfo::WHITE );
 		}
@@ -137,7 +134,7 @@ bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 
 	const float fDistToGo = fDist;
 
-	while( true )
+	while ( true )
 	{
 		// iterate one step trough spline
 
@@ -159,7 +156,7 @@ bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 				fSplineProgress = 0.0f;
 				continue;
 			}
-			else	// no points, whole path is finished
+			else // no points, whole path is finished
 			{
 				nIndex = points.size() - 1;
 				fSplineProgress = 1.0f;
@@ -176,11 +173,11 @@ bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 		{
 			fSplineProgress += SConsts::PLANE_SPLINE_STEP;
 			vNew = spline.Get( fSplineProgress );
-			fPassed = fabs( vPos - vNew );	// distance passed for segment duration.
+			fPassed = fabs( vPos - vNew ); // distance passed for segment duration.
 		}
 
 		// check
-		if ( fDistToGo <= fPassed )		// reach needed distance on this step.
+		if ( fDistToGo <= fPassed ) // reach needed distance on this step.
 		{
 			// recalculate plane parameters
 			if ( fPassed == 0.0f )

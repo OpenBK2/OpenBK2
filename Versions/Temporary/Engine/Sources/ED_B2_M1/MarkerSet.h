@@ -20,11 +20,7 @@ struct SMarkerPoint
 	CVec3 pos;
 	float fDir;
 
-	SMarkerPoint() :
-		pos( VNULL3 ),
-		fDir( 0 )
-	{
-	}
+	SMarkerPoint() : pos( VNULL3 ), fDir( 0 ) {}
 };
 
 struct SMarkerSet : public CObjectBase
@@ -32,8 +28,9 @@ struct SMarkerSet : public CObjectBase
 	OBJECT_NOCOPY_METHODS( SMarkerSet );
 
 	void AttachToScene( bool bActive, const std::vector<SMarkerPoint> &points );
+
 public:
-	SMarkerSet(){}
+	SMarkerSet() {}
 	//
 	int xAxisID[2];
 	int yAxisID[2];
@@ -54,12 +51,16 @@ public:
 	void AttachToScene();
 	void DetachFromScene();
 	//
-	void AddMarker( const CVec3 &rPos, const float fDir, EDirMeasure eDirMeasure,
-					bool bActive, bool bUseBuildingPos, bool bUseOrigin );
+	void AddMarker( const CVec3 &rPos,
+	                const float fDir,
+	                EDirMeasure eDirMeasure,
+	                bool bActive,
+	                bool bUseBuildingPos,
+	                bool bUseOrigin );
 	//
 };
 
-inline IEditorScene* GetEditorScene()
+inline IEditorScene *GetEditorScene()
 {
 	IEditorScene *pScene = EditorScene();
 	NI_ASSERT( pScene != 0, "GetScene(): pScene == 0" );

@@ -23,11 +23,12 @@ namespace
 class CDatabaseGuard
 {
 	bool bSuccessfullyOpened;
+
 public:
 	explicit CDatabaseGuard( const std::string &szCWD, NDb::EDatabaseMode eDBMode )
 	{
-		NVFS::SetMainVFS( NVFS::CreateWinVFS(szCWD) );
-		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator(szCWD) );
+		NVFS::SetMainVFS( NVFS::CreateWinVFS( szCWD ) );
+		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( szCWD ) );
 		bSuccessfullyOpened = NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), eDBMode );
 	}
 	~CDatabaseGuard()
@@ -55,12 +56,11 @@ public:
 // pane, so a console would have shown every line of this twice. What it mirrors
 // is this tool's entire output, not debug tracing, and stdout is where that
 // belongs.
-template < typename... TArgs >
-void Log( const char *pszFormat, const TArgs &... args )
+template <typename... TArgs>
+void Log( const char *pszFormat, const TArgs &...args )
 {
 	fmt::print( "{}\n", fmt::sprintf( pszFormat, args... ) );
 }
-
 
 enum EDBStructMode
 {
@@ -77,16 +77,21 @@ struct ILoadObjectCallback
 
 int LoadAllObjects( ILoadObjectCallback *pCallback )
 {
-	std::vector<NDb::NTypeDef::STypeClass*> classes;
-	if ( NDb::GetClassesList(&classes) && !classes.empty() )
+	std::vector<NDb::NTypeDef::STypeClass *> classes;
+	if ( NDb::GetClassesList( &classes ) && !classes.empty() )
 	{
 		int nCounter = 0;
-		for ( std::vector<NDb::NTypeDef::STypeClass*>::const_iterator itClass = classes.begin(); itClass != classes.end(); ++itClass, ++nCounter )
+		for ( std::vector<NDb::NTypeDef::STypeClass *>::const_iterator itClass = classes.begin(); itClass != classes.end();
+		      ++itClass, ++nCounter )
 		{
 			std::vector<CDBID> objects;
-			if ( NDb::GetObjectsList(&objects, (*itClass)->szTypeName) && !objects.empty() )
+			if ( NDb::GetObjectsList( &objects, ( *itClass )->szTypeName ) && !objects.empty() )
 			{
-				Log( "(%d of %d): Loading objects of type \"%s\" (total %d objects)", nCounter, classes.size(), (*itClass)->szTypeName.c_str(), objects.size() );
+				Log( "(%d of %d): Loading objects of type \"%s\" (total %d objects)",
+				     nCounter,
+				     classes.size(),
+				     ( *itClass )->szTypeName.c_str(),
+				     objects.size() );
 				for ( std::vector<CDBID>::const_iterator itDBID = objects.begin(); itDBID != objects.end(); ++itDBID )
 				{
 					NDb::IObjMan *pObjMan = NDb::GetManipulator( *itDBID );
@@ -96,7 +101,7 @@ int LoadAllObjects( ILoadObjectCallback *pCallback )
 			}
 			else
 			{
-				Log( "WARNING: no objects of type \"%s\"", (*itClass)->szTypeName.c_str() );
+				Log( "WARNING: no objects of type \"%s\"", ( *itClass )->szTypeName.c_str() );
 			}
 		}
 	}
@@ -118,10 +123,7 @@ int LoadAllObjects( ILoadObjectCallback *pCallback )
 
 class CMarkChangedCallback : public ILoadObjectCallback
 {
-	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid )
-	{
-		NDb::MarkChanged( dbid );
-	}
+	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) { NDb::MarkChanged( dbid ); }
 };
 
 int UpdateStruct()
@@ -150,19 +152,17 @@ int UpdateStruct()
 
 class CMakeBinCallback : public ILoadObjectCallback
 {
-	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid )
-	{
-	}
+	void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) {}
 };
 
 int MakeBin()
 {
 	printf( "make bin functionality not realized\n" );
 	return 0xDEAD;
-//	CMakeBinCallback callbackMakeBin;
-//	int nRetCode = LoadAllObjects( &callbackMakeBin );
-//	if ( nRetCode != 0 )
-//		return nRetCode;
+	//	CMakeBinCallback callbackMakeBin;
+	//	int nRetCode = LoadAllObjects( &callbackMakeBin );
+	//	if ( nRetCode != 0 )
+	//		return nRetCode;
 }
 
 }
@@ -174,13 +174,11 @@ int PORT_CDECL main( int argc, char *argv[] )
 	std::string szDataPath = szCWD;
 
 	po::options_description options( "Options" );
-	options.add_options()
-		( "show-version",   "show current product version" )
-		( "update-struct",  "update all database objects to new structure in accordance with types" )
-		( "make-bin",       "convert .xdb files to packed binary" )
-		( "data-path",      po::value<std::string>( &szDataPath ),
-		                    "set data path to operate (default: current dir)" )
-		( "help",           "show this message" );
+	options.add_options()( "show-version", "show current product version" )(
+			"update-struct", "update all database objects to new structure in accordance with types" )(
+			"make-bin", "convert .xdb files to packed binary" )(
+			"data-path", po::value<std::string>( &szDataPath ), "set data path to operate (default: current dir)" )(
+			"help", "show this message" );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
@@ -195,8 +193,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 		// parse too, which is what anyone would try first.
 		po::store( po::command_line_parser( argc, argv )
 		               .options( options )
-		               .style( po::command_line_style::default_style
-		                       | po::command_line_style::allow_long_disguise )
+		               .style( po::command_line_style::default_style | po::command_line_style::allow_long_disguise )
 		               .run(),
 		           args );
 		po::notify( args );
@@ -210,10 +207,10 @@ int PORT_CDECL main( int argc, char *argv[] )
 		return 0xDEAD;
 	}
 	//
-	const EDBStructMode eMode = args.count( "update-struct" ) ? MODE_UPDATE_STRUCT
-	                          : args.count( "make-bin" )      ? MODE_MAKE_BIN
-	                          : args.count( "show-version" )  ? MODE_SHOW_VERSION
-	                          :                                 MODE_UNKNOWN;
+	const EDBStructMode eMode = args.count( "update-struct" )  ? MODE_UPDATE_STRUCT
+	                            : args.count( "make-bin" )     ? MODE_MAKE_BIN
+	                            : args.count( "show-version" ) ? MODE_SHOW_VERSION
+	                                                           : MODE_UNKNOWN;
 	if ( eMode == MODE_UNKNOWN || args.count( "help" ) )
 	{
 		printf( "Usage: dbstruct [options]\n\n" );

@@ -1,7 +1,7 @@
 #pragma once
 
-typedef void (*RegisterEditorType)( const std::string &szName, ObjectFactoryNewFunc pfnNewFunc );
-typedef void (*UnRegisterEditorType)( const std::string &szName );
+typedef void ( *RegisterEditorType )( const std::string &szName, ObjectFactoryNewFunc pfnNewFunc );
+typedef void ( *UnRegisterEditorType )( const std::string &szName );
 
 struct IEditorModuleRegistrator
 {
@@ -22,13 +22,13 @@ struct IEditorModule
 	virtual void ModulePostCreateMainFrame() = 0;
 };
 
-typedef const IEditorModuleRegistrator* (*GETEDITORMODULEREGISTRATOR)();
-typedef void (*EDITORMODULESTARTUP)();
-typedef void (*EDITORMODULESHUTDOWN)();
-typedef void (*EDITORMODULECREATE)();
-typedef void (*EDITORMODULEDESTROY)();
-typedef void (*EDITORMODULECREATECONTROLS)();
-typedef void (*EDITORMODULEPOSTCREATECONTROLS)();
-typedef void (*EDITORMODULEPREDESTROYCONTROLS)();
-typedef void (*EDITORMODULEDESTROYCONTROLS)();
-typedef void (*EDITORMODULEPOSTCREATEMAINFRAME)();
+typedef const IEditorModuleRegistrator *( *GETEDITORMODULEREGISTRATOR )();
+typedef void ( *EDITORMODULESTARTUP )();
+typedef void ( *EDITORMODULESHUTDOWN )();
+typedef void ( *EDITORMODULECREATE )();
+typedef void ( *EDITORMODULEDESTROY )();
+typedef void ( *EDITORMODULECREATECONTROLS )();
+typedef void ( *EDITORMODULEPOSTCREATECONTROLS )();
+typedef void ( *EDITORMODULEPREDESTROYCONTROLS )();
+typedef void ( *EDITORMODULEDESTROYCONTROLS )();
+typedef void ( *EDITORMODULEPOSTCREATEMAINFRAME )();

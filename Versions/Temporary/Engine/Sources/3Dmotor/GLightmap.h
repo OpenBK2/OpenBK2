@@ -6,8 +6,8 @@
 
 namespace NGfx
 {
-	struct SPixel8888;
-	class CTexture;
+struct SPixel8888;
+class CTexture;
 }
 namespace NCache
 {
@@ -21,7 +21,8 @@ class CLightmapTextureCache;
 class CSingleTexAlloc
 {
 	CObj<CLightmapTextureCache> pCache;
-	std::vector<CObj<CObjectBase> > regions;
+	std::vector<CObj<CObjectBase>> regions;
+
 public:
 	CSingleTexAlloc( int _nSize );
 	bool AllocRegion( const CTPoint<int> &size, CTPoint<int> *pPos );
@@ -35,9 +36,13 @@ class CLMAlloc
 		CArray2D<NGfx::SPixel8888> data;
 	};
 	std::vector<STex> textures;
-	std::vector<CObj<CObjectBase> > regions;
+	std::vector<CObj<CObjectBase>> regions;
 
-	bool TryAlloc( const NCache::CQuadTreeElement &elem, int nTexture, const CArray2D<NGfx::SPixel8888> &_data, CTPoint<int> *pPos );
+	bool TryAlloc( const NCache::CQuadTreeElement &elem,
+	               int nTexture,
+	               const CArray2D<NGfx::SPixel8888> &_data,
+	               CTPoint<int> *pPos );
+
 public:
 	bool AllocRegion( const CArray2D<NGfx::SPixel8888> &_data, CTPoint<int> *pPos, int *pnTexture );
 	int GetTexturesNum() const { return textures.size(); }
@@ -48,13 +53,19 @@ class CLightmapTexture : public CPtrFuncBase<NGfx::CTexture>
 {
 	OBJECT_NOCOPY_METHODS( CLightmapTexture );
 	ZDATA
-	CObj< NGScene::CLightmapsLoader> pLD;
+	CObj<NGScene::CLightmapsLoader> pLD;
 	int nTex;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pLD);f.Add(3,&nTex); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pLD );
+		f.Add( 3, &nTex );
+		return 0;
+	}
 	void Recalc();
+
 public:
-	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex): pLD(_pLD), nTex(_nTex){};
-	CLightmapTexture() { }
+	CLightmapTexture( CObj<CLightmapsLoader> _pLD, int _nTex ) : pLD( _pLD ), nTex( _nTex ) {};
+	CLightmapTexture() {}
 	//CLightmapTexture( const CArray2D<NGfx::SPixel8888> &_tex ) : tex(_tex) {}
 	//void SetData( const CArray2D<NGfx::SPixel8888> &_data ) { tex = _data; Updated(); }
 };
@@ -64,23 +75,38 @@ class CLMGeometryGen : public CPtrFuncBase<CObjectInfo>
 {
 	OBJECT_NOCOPY_METHODS( CLMGeometryGen );
 	ZDATA
-	CDGPtr< CPtrFuncBase<CObjectInfo> > pSrc;
+	CDGPtr<CPtrFuncBase<CObjectInfo>> pSrc;
 	bool bLMCalc;
 	CTPoint<int> shift;
 	float fLMResolution;
 	bool bDump;
 
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSrc); f.Add(3,&bLMCalc); f.Add(4,&shift); f.Add(5,&fLMResolution);f.Add(6,&bDump); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pSrc );
+		f.Add( 3, &bLMCalc );
+		f.Add( 4, &shift );
+		f.Add( 5, &fLMResolution );
+		f.Add( 6, &bDump );
+		return 0;
+	}
 
 	virtual bool NeedUpdate() { return pSrc.Refresh(); }
 	virtual void Recalc();
+
 public:
-	CLMGeometryGen() : shift(0,0), bLMCalc(false) {}
-	CLMGeometryGen( CPtrFuncBase<CObjectInfo> *p, const CTPoint<int> &_shift, float _fLMResolution, bool _bLMCalc, bool _bDump = false )
-		: pSrc(p), shift(_shift), bLMCalc(_bLMCalc), fLMResolution(_fLMResolution), bDump(_bDump) {}
+	CLMGeometryGen() : shift( 0, 0 ), bLMCalc( false ) {}
+	CLMGeometryGen( CPtrFuncBase<CObjectInfo> *p,
+	                const CTPoint<int> &_shift,
+	                float _fLMResolution,
+	                bool _bLMCalc,
+	                bool _bDump = false )
+			: pSrc( p ), shift( _shift ), bLMCalc( _bLMCalc ), fLMResolution( _fLMResolution ), bDump( _bDump )
+	{
+	}
 	CPtrFuncBase<CObjectInfo> *GetSrc() const { return pSrc; }
 };
-void EnableLMGeometryDump(bool flag);
+void EnableLMGeometryDump( bool flag );
 bool GetDumpFlag();
-void SetDumpDirectory(const std::string &szDirectoryName);
+void SetDumpDirectory( const std::string &szDirectoryName );
 }

@@ -9,7 +9,7 @@ namespace NRectPacker
 struct SRectOrder
 {
 	const std::vector<SRect> &s;
-	SRectOrder( const std::vector<SRect> &_s ) : s(_s) {}
+	SRectOrder( const std::vector<SRect> &_s ) : s( _s ) {}
 	bool operator()( int a, int b )
 	{
 		return s[a].nYSize > s[b].nYSize || ( s[a].nYSize == s[b].nYSize && s[a].nXSize > s[b].nXSize );
@@ -31,8 +31,7 @@ struct SStripeBuilder
 	int nWidth;
 	int nTotalHeight;
 
-	SStripeBuilder( std::vector<SRect> &_res )
-		: res(_res), indices(_res.size())
+	SStripeBuilder( std::vector<SRect> &_res ) : res( _res ), indices( _res.size() )
 	{
 		for ( int k = 0; k < indices.size(); ++k )
 			indices[k] = k;
@@ -41,13 +40,13 @@ struct SStripeBuilder
 	void FillStripe( SStripe *pRes, int nStartFrom )
 	{
 		ASSERT( pRes->rects.size() == 1 );
-		int nTail = pRes->nXShift + res[ pRes->rects[0] ].nXSize;
+		int nTail = pRes->nXShift + res[pRes->rects[0]].nXSize;
 		int nHeight = pRes->nHeight;
 		for ( int i = nStartFrom; i < taken.size(); ++i )
 		{
 			if ( taken[i] )
 				continue;
-			const SRect &r = res[ indices[i] ];
+			const SRect &r = res[indices[i]];
 			ASSERT( r.nYSize <= nHeight );
 			if ( r.nYSize * 2 <= nHeight )
 				break;
@@ -64,7 +63,7 @@ struct SStripeBuilder
 		if ( nHeight == 1 )
 			return;
 		int nOriginalHeight = nHeight, nYShift = 0, nYStart = pRes->nYShift;
-		for(;;)
+		for ( ;; )
 		{
 			nHeight /= 2;
 			if ( nHeight == 0 )
@@ -84,7 +83,7 @@ struct SStripeBuilder
 		{
 			if ( taken[i] )
 				continue;
-			const SRect &r = res[ indices[i] ];
+			const SRect &r = res[indices[i]];
 			if ( r.nYSize > nHeight )
 				continue;
 			if ( r.nYSize * 2 <= nHeight )
@@ -106,12 +105,12 @@ struct SStripeBuilder
 	void Pack( int _nWidth )
 	{
 		nWidth = _nWidth;
-		taken.resize(0);
+		taken.resize( 0 );
 		taken.resize( indices.size(), 0 );
 		int nYShift = 0;
 		for ( int i = taken.size() - 1; i >= 0; --i )
 		{
-			SRect &r = res[ indices[i] ];
+			SRect &r = res[indices[i]];
 			int nHeight = r.nYSize;
 			if ( nHeight == 0 )
 			{
@@ -121,11 +120,11 @@ struct SStripeBuilder
 			else
 				break;
 		}
-		for( int i = 0; i < taken.size(); ++i )
+		for ( int i = 0; i < taken.size(); ++i )
 		{
 			if ( taken[i] )
 				continue;
-			const SRect &r = res[ indices[i] ];
+			const SRect &r = res[indices[i]];
 			int nHeight = r.nYSize;
 			bool bTest = BuildStripe( 0, nYShift, nHeight, i );
 			ASSERT( bTest );
@@ -147,7 +146,7 @@ struct SStripeBuilder
 				int nXShift = s.nXShift;
 				for ( int i = 0; i < s.rects.size(); ++i )
 				{
-					SRect &r = res[ s.rects[i] ];
+					SRect &r = res[s.rects[i]];
 					r.nXShift = nXShift;
 					r.nYShift = s.nYShift;
 					ASSERT( r.nYSize <= s.nHeight );
@@ -176,7 +175,7 @@ void PackRects( std::vector<SRect> *pRes, CTPoint<int> *pSize )
 	int nArea = 0, nMaxWidth = 0;
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
-		const SRect &r = (*pRes)[k];
+		const SRect &r = ( *pRes )[k];
 		nMaxWidth = (std::max)( nMaxWidth, (int)r.nXSize );
 		nArea += r.nXSize * r.nYSize;
 	}

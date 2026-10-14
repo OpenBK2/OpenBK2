@@ -12,7 +12,14 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 {
 	OBJECT_BASIC_METHODS( CGeneralArtilleryGoToPosition );
 
-	enum EBombardmentState { EBS_START, EBS_MOVING, EBS_WAIT_FOR_TRUCK, EBS_MOVING_WITH_TRUCK, EBS_FINISHING };
+	enum EBombardmentState
+	{
+		EBS_START,
+		EBS_MOVING,
+		EBS_WAIT_FOR_TRUCK,
+		EBS_MOVING_WITH_TRUCK,
+		EBS_FINISHING
+	};
 
 	ZDATA
 	CPtr<CAIUnit> pUnit;
@@ -24,14 +31,25 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 	bool bFinished = {};
 	NTimer::STime timeOfFinish = {};
 	NTimer::STime startTime = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&vPos); f.Add(5,&bToReservePosition); f.Add(6,&bFinished); f.Add(7,&timeOfFinish); f.Add(8,&startTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pUnit );
+		f.Add( 3, &eState );
+		f.Add( 4, &vPos );
+		f.Add( 5, &bToReservePosition );
+		f.Add( 6, &bFinished );
+		f.Add( 7, &timeOfFinish );
+		f.Add( 8, &startTime );
+		return 0;
+	}
 	//
 	void StartState();
 	void WaitForTruck();
 	void MovingWithTruck();
 	void Finishing();
+
 public:
-	CGeneralArtilleryGoToPosition() { }
+	CGeneralArtilleryGoToPosition() {}
 	CGeneralArtilleryGoToPosition( CAIUnit *pUnit, const CVec2 &vPos, bool bToReservePosition );
 
 	void Segment();
@@ -52,13 +70,28 @@ class CGeneralArtilleryTask
 
 		CPtr<CAIUnit> pUnit;
 		CPtr<CGeneralArtilleryGoToPosition> pGoToPosition;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&vReservePosition); f.Add(3,&vAttackPos); f.Add(4,&pUnit); f.Add(5,&pGoToPosition); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &vReservePosition );
+			f.Add( 3, &vAttackPos );
+			f.Add( 4, &pUnit );
+			f.Add( 5, &pGoToPosition );
+			return 0;
+		}
+
 	public:
-		SBombardmentUnitState() { }
+		SBombardmentUnitState() {}
 		explicit SBombardmentUnitState( CAIUnit *pUnit );
 	};
 
-	enum EBombardmentState { EBS_START, EBS_ROTATING, EBS_GOING_TO_BATTLE, EBS_FIRING, EBS_ESCAPING };
+	enum EBombardmentState
+	{
+		EBS_START,
+		EBS_ROTATING,
+		EBS_GOING_TO_BATTLE,
+		EBS_FIRING,
+		EBS_ESCAPING
+	};
 
 	ZDATA
 	CPtr<CGeneralArtillery> pOwner;
@@ -78,8 +111,24 @@ class CGeneralArtilleryTask
 	std::list<SBombardmentUnitState> bombardmentUnits;
 
 	int nCellNumber = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&bBombardmentFinished); f.Add(4,&vBombardmentCenter); f.Add(5,&fBombardmentRadius); f.Add(6,&timeToFinishBombardment); f.Add(7,&timeToSendAntiArtilleryAck); f.Add(8,&vAntiArtilleryAckCenter); f.Add(9,&bIsAntiArtilleryFight); f.Add(10,&startRotatingTime); f.Add(11,&eState); f.Add(12,&bombardmentUnits); f.Add(13,&nCellNumber); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pOwner );
+		f.Add( 3, &bBombardmentFinished );
+		f.Add( 4, &vBombardmentCenter );
+		f.Add( 5, &fBombardmentRadius );
+		f.Add( 6, &timeToFinishBombardment );
+		f.Add( 7, &timeToSendAntiArtilleryAck );
+		f.Add( 8, &vAntiArtilleryAckCenter );
+		f.Add( 9, &bIsAntiArtilleryFight );
+		f.Add( 10, &startRotatingTime );
+		f.Add( 11, &eState );
+		f.Add( 12, &bombardmentUnits );
+		f.Add( 13, &nCellNumber );
+		return 0;
+	}
 
 	//
 	// начало обстрела - дать команды подцепиться к грузовикам и ехать
@@ -99,9 +148,15 @@ public:
 	void CalculateTimeToSendAntiArtilleryAck();
 
 	void SetBombardmentFinished();
+
 public:
-	CGeneralArtilleryTask() : bBombardmentFinished( true ), bIsAntiArtilleryFight( false ) { }
-	CGeneralArtilleryTask( CGeneralArtillery *pOwner, std::list<CAIUnit*> &givenUnits, bool bAntiArtilleryFight, const CVec2 &vCenter, const float fRadius, const int nCellNumber );
+	CGeneralArtilleryTask() : bBombardmentFinished( true ), bIsAntiArtilleryFight( false ) {}
+	CGeneralArtilleryTask( CGeneralArtillery *pOwner,
+	                       std::list<CAIUnit *> &givenUnits,
+	                       bool bAntiArtilleryFight,
+	                       const CVec2 &vCenter,
+	                       const float fRadius,
+	                       const int nCellNumber );
 
 	void Segment();
 
@@ -112,7 +167,7 @@ class CGeneralArtillery : public CAIObjectBase, public IEnemyEnumerator
 {
 	OBJECT_BASIC_METHODS( CGeneralArtillery );
 
-	typedef std::list< CPtr<CAIUnit> > CUnitsList;
+	typedef std::list<CPtr<CAIUnit>> CUnitsList;
 
 	ZDATA
 	CPtr<CGeneral> pOwner;
@@ -120,11 +175,20 @@ class CGeneralArtillery : public CAIObjectBase, public IEnemyEnumerator
 	CUnitsList trucks;
 
 	std::list<CGeneralArtilleryTask> tasks;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&freeUnits); f.Add(4,&trucks); f.Add(5,&tasks); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pOwner );
+		f.Add( 3, &freeUnits );
+		f.Add( 4, &trucks );
+		f.Add( 5, &tasks );
+		return 0;
+	}
 	void OnSerialize( IBinSaver &saver );
+
 public:
-	CGeneralArtillery() { }
+	CGeneralArtillery() {}
 	CGeneralArtillery( CGeneral *pGeneralOwner );
 
 	// дать генералу юнит для использования в качестве артиллерии

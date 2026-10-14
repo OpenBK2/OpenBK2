@@ -15,23 +15,25 @@ class CSimpleConnection : public IConnection
 	int nMyServerID;
 	bool bConnectionTested;
 
-	std::list<class CPtr<CNetPacket> > packets;
+	std::list<class CPtr<CNetPacket>> packets;
 	CPtr<class CPacketProcessor> pFinishConnection;
 
 	//
 	int CheckTestConnection( CNetPacket *pPacket );
+
 public:
-	CSimpleConnection() { }
-	CSimpleConnection( CNet *pNet, bool bAsClient, const int nClientServerID, const int nClientLocalID, const int nMyServerID );
+	CSimpleConnection() {}
+	CSimpleConnection(
+			CNet *pNet, bool bAsClient, const int nClientServerID, const int nClientLocalID, const int nMyServerID );
 	virtual bool IsAlive() const;
 
-	virtual CNet* GetNet() { return pNet; }
+	virtual CNet *GetNet() { return pNet; }
 
 	virtual void SendGamePacket( CNetPacket *pPacket );
 	virtual bool ProcessPacketFromPlayersNet( CNetPacket *pPacket );
 	virtual bool ProcessPacketFromServer( CNetPacket *pPacket ) { return false; }
 
-	virtual CNetPacket* GetPacket();
+	virtual CNetPacket *GetPacket();
 
 	virtual void TogglePauseNet( const bool bPause ) const;
 };
@@ -45,18 +47,19 @@ class CThroughServerConnection : public IConnection
 	CPtr<CNet> pNet;
 	bool bConnectionTested;
 
-	std::list<class CPtr<CNetPacket> > packets;
+	std::list<class CPtr<CNetPacket>> packets;
+
 public:
-	CThroughServerConnection() { }
+	CThroughServerConnection() {}
 	CThroughServerConnection( const int nClientServerID, CNet *pNet );
 
-	virtual CNet* GetNet() { return pNet; }
+	virtual CNet *GetNet() { return pNet; }
 
 	virtual void SendGamePacket( CNetPacket *pPacket );
 	virtual bool ProcessPacketFromPlayersNet( CNetPacket *pPacket ) { return false; }
 	virtual bool ProcessPacketFromServer( CNetPacket *pPacket );
 
-	virtual CNetPacket* GetPacket();
+	virtual CNetPacket *GetPacket();
 
 	virtual bool IsAlive() const { return true; }
 

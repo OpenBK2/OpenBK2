@@ -14,7 +14,7 @@ struct STriangleCreator
 	std::vector<STriangle> *pDst;
 	int nRoot, nPrev;
 
-	STriangleCreator( std::vector<STriangle> *_pDst ) : pDst(_pDst), nRoot(-1), nPrev(-1) {}
+	STriangleCreator( std::vector<STriangle> *_pDst ) : pDst( _pDst ), nRoot( -1 ), nPrev( -1 ) {}
 	void AddVertex( int n )
 	{
 		if ( nRoot == -1 )
@@ -43,13 +43,13 @@ struct SQuadProjection
 
 	bool CheckSphere( const CVec3 &ptCenter, float fRadius )
 	{
-		float fV = fV0 + ptCenter *  vVecV;
+		float fV = fV0 + ptCenter * vVecV;
 		float fDV = fRadius * fVleng;
 		if ( fV - fDV > 1 || fV + fDV < 0 )
 			return false;
-		float fU = fU0 + ptCenter *  vVecU;
+		float fU = fU0 + ptCenter * vVecU;
 		float fDU = fRadius * fUleng;
-		if ( fU-fDU > 1 || fU + fDU < 0 )
+		if ( fU - fDU > 1 || fU + fDU < 0 )
 			return false;
 		return true;
 	}
@@ -108,11 +108,12 @@ class CShadowBuilder
 		pRes->uv = projection.Project( pnt );
 	}
 	uint16_t AddPoint( SSPoint &pnt );
+
 public:
 	CShadowBuilder( CObjectInfo *_pRes, float _fNormalEdge, float _fDepthMargin )
-		: pRes(_pRes), fNormalEdge(_fNormalEdge), fDepthMargin(_fDepthMargin)
+			: pRes( _pRes ), fNormalEdge( _fNormalEdge ), fDepthMargin( _fDepthMargin )
 	{
-		info.geometry.resize(0);
+		info.geometry.resize( 0 );
 	}
 	~CShadowBuilder() { pRes->Assign( &info, false ); }
 	void Setup( const CVec3 &vOrigin, const CVec3 &vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift );
@@ -121,7 +122,7 @@ public:
 
 inline float mixedMult( const CVec3 &a, const CVec3 &b, const CVec3 &c )
 {
-	return a.x*b.y*c.z + a.y*b.z*c.x + a.z*b.x*c.y - a.z*b.y*c.x - a.y*b.x*c.z - a.x*b.z*c.y;
+	return a.x * b.y * c.z + a.y * b.z * c.x + a.z * b.x * c.y - a.z * b.y * c.x - a.y * b.x * c.z - a.x * b.z * c.y;
 }
 
 static void CalcWeighted( CVec3 *pRes, const CVec3 &a, float fA, const CVec3 &b, float fB )
@@ -187,7 +188,7 @@ static bool DoSplit( SShadowPoly *pRes, const SShadowPoly &src, const CVec3 &vUV
 inline void ProjectNormalized( NGfx::SCompactVector *pRes, const CVec3 &src, const CVec3 &vNormal )
 {
 	CVec3 vRes;
-	vRes = src - vNormal * (src * vNormal);
+	vRes = src - vNormal * ( src * vNormal );
 	Normalize( &vRes );
 	NGfx::CalcCompactVector( pRes, vRes );
 }
@@ -206,7 +207,7 @@ uint16_t CShadowBuilder::AddPoint( SSPoint &pnt )
 }
 
 // clip by planes
-float fClipPlanes[4][3] = { {1,0,0}, {0,1,0}, {-1,0,1}, {0,-1, 1} };
+float fClipPlanes[4][3] = { { 1, 0, 0 }, { 0, 1, 0 }, { -1, 0, 1 }, { 0, -1, 1 } };
 static SShadowPoly tBuf;
 void CShadowBuilder::AddShadowTriangle( SShadowPoly *pTri )
 {
@@ -238,11 +239,11 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 	for ( int k = 0; k < projPoints.size(); ++k )
 	{
 		CVec3 pos;
-		trans.forward.RotateHVector( &pos, infoPositions[ k ] );
+		trans.forward.RotateHVector( &pos, infoPositions[k] );
 		SSPoint &dst = projPoints[k];
 		GeneratePointPosition( &dst, pos + vShift );
-		int nU = *(int*)&dst.uv.u, nV = *(int*)&dst.uv.v;
-		nTest |= ( nU  > 0 );
+		int nU = *(int *)&dst.uv.u, nV = *(int *)&dst.uv.v;
+		nTest |= ( nU > 0 );
 		nTest |= ( nU < 0x3f800000 ) << 1; // < 1
 		nTest |= ( nV > 0 ) << 2;
 		nTest |= ( nV < 0x3f800000 ) << 3; // < 1
@@ -258,11 +259,12 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 		int nIndices[3] = { t.i1, t.i2, t.i3 };
 		// check normal
 		{
-			int n0 = info.GetPositionIndices()[ nIndices[0] ];
-			int n1 = info.GetPositionIndices()[ nIndices[1] ];
-			int n2 = info.GetPositionIndices()[ nIndices[2] ];
+			int n0 = info.GetPositionIndices()[nIndices[0]];
+			int n1 = info.GetPositionIndices()[nIndices[1]];
+			int n2 = info.GetPositionIndices()[nIndices[2]];
 			// calc normal
-			CVec3 vTriNormal = ( projPoints[n2].point - projPoints[n0].point ) ^ ( projPoints[n1].point - projPoints[n0].point );
+			CVec3 vTriNormal =
+					( projPoints[n2].point - projPoints[n0].point ) ^ ( projPoints[n1].point - projPoints[n0].point );
 			float fLeng = fabs( vTriNormal );
 			if ( fLeng > 0 )
 			{
@@ -275,9 +277,9 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 		for ( int i = 0; i < 3; ++i )
 		{
 			CVec3 normal;
-			trans.backward.RotateVectorTransposed( &normal, NGfx::GetVector( info.GetVertices()[ nIndices[i] ].normal ) );
-			SSPoint &dst = tri.points[ i ];
-			dst = projPoints[ info.GetPositionIndices()[ nIndices[i] ] ];
+			trans.backward.RotateVectorTransposed( &normal, NGfx::GetVector( info.GetVertices()[nIndices[i]].normal ) );
+			SSPoint &dst = tri.points[i];
+			dst = projPoints[info.GetPositionIndices()[nIndices[i]]];
 			dst.normal = normal;
 		}
 		if ( fDepthMargin < 1e10f )
@@ -297,7 +299,8 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 	//DebugTrace( "%d src polygons, %d res polygons\n", infoPolys.size() - 1, CShadowBuilder::info.geometry.polys.size() - 1 );
 }
 
-void CShadowBuilder::Setup( const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift )
+void CShadowBuilder::Setup(
+		const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 &_vShift )
 {
 	projection.Setup( _vOrigin, _vNormal, vSize, fRotation, _vShift );
 	vShift = projection.vProjectDirection * F_SHIFT;
@@ -305,11 +308,17 @@ void CShadowBuilder::Setup( const CVec3 &_vOrigin, const CVec3 &_vNormal, const 
 
 // CDecalGeometry
 
-CDecalGeometry::CDecalGeometry( CPtrFuncBase<CObjectInfo> *p, const SDiscretePos &_srcPos,
-	const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &_vSize, float _fR, const CVec2 &_vShift,
-	float _fNormalEdge, float _fDepthMargin )
-	: pSource(p), srcPos(_srcPos), vOrigin(_vOrigin), vNormal(_vNormal), vSize(_vSize), fRotation(_fR), vShift(_vShift),
-	fNormalEdge(_fNormalEdge), fDepthMargin(_fDepthMargin)
+CDecalGeometry::CDecalGeometry( CPtrFuncBase<CObjectInfo> *p,
+                                const SDiscretePos &_srcPos,
+                                const CVec3 &_vOrigin,
+                                const CVec3 &_vNormal,
+                                const CVec2 &_vSize,
+                                float _fR,
+                                const CVec2 &_vShift,
+                                float _fNormalEdge,
+                                float _fDepthMargin )
+		: pSource( p ), srcPos( _srcPos ), vOrigin( _vOrigin ), vNormal( _vNormal ), vSize( _vSize ), fRotation( _fR ),
+			vShift( _vShift ), fNormalEdge( _fNormalEdge ), fDepthMargin( _fDepthMargin )
 {
 }
 
@@ -326,28 +335,29 @@ void CDecalGeometry::Recalc()
 
 // CPerPolyDecal
 
-CPerPolyDecal::CPerPolyDecal( IPart *_pPart, const std::vector<CVec3> &_srcPositions ) : pPart(_pPart), srcPositions(_srcPositions)
+CPerPolyDecal::CPerPolyDecal( IPart *_pPart, const std::vector<CVec3> &_srcPositions )
+		: pPart( _pPart ), srcPositions( _srcPositions )
 {
-	data.geometry.resize(0);
+	data.geometry.resize( 0 );
 }
 
 void CPerPolyDecal::Recalc()
 {
-	if ( !IsValid(pPart) )
+	if ( !IsValid( pPart ) )
 	{
 		pPart = 0;
-		data = CObjectInfo::SData();//.Clear();
+		data = CObjectInfo::SData(); //.Clear();
 		pValue = new CObjectInfo;
 		pValue->Assign( &data, false );
 		return;
 	}
 	if ( !pPart->HasLoadedObjectInfo() )
 		return;
-	CDGPtr<CPtrFuncBase<CObjectInfo> > pSource( pPart->GetObjectInfoNode() );
+	CDGPtr<CPtrFuncBase<CObjectInfo>> pSource( pPart->GetObjectInfoNode() );
 	pSource.Refresh();
 	if ( !pSource->GetValue() )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		return;
 	}
 
@@ -366,18 +376,19 @@ class CObjectInfoProcessor
 {
 	CObjectInfo::SData &info;
 	std::vector<int> vertMap;
+
 protected:
 	const std::vector<CVec3> &srcPositions;
 	const std::vector<SUVInfo> &srcVertices;
 	const std::vector<uint16_t> &posIndices;
 	const std::vector<STriangle> &srcTris;
 	const std::vector<SRealVertexWeight> &srcWeights;
+
 public:
 	CObjectInfoProcessor( CObjectInfo::SData *pInfo, const CObjectInfo &src )
-		: info(*pInfo), srcPositions( src.GetPositions() ), srcVertices( src.GetVertices() ),
-		posIndices( src.GetPositionIndices() ), vertMap( src.GetVertices().size(), -1 ),
-		srcTris( src.GetGeometry() ),
-		srcWeights( src.GetWeights() )
+			: info( *pInfo ), srcPositions( src.GetPositions() ), srcVertices( src.GetVertices() ),
+				posIndices( src.GetPositionIndices() ), vertMap( src.GetVertices().size(), -1 ), srcTris( src.GetGeometry() ),
+				srcWeights( src.GetWeights() )
 	{
 		info = CObjectInfo::SData();
 	}
@@ -386,12 +397,12 @@ public:
 		std::vector<SVertex> polygon;
 		std::vector<int> polygonIndices;
 	};
-	bool HasResIndex( int nIdx ) const { return vertMap[ nIdx ] >= 0; }
-	int GetResIndex( int nIdx ) const { return vertMap[ nIdx ]; }
+	bool HasResIndex( int nIdx ) const { return vertMap[nIdx] >= 0; }
+	int GetResIndex( int nIdx ) const { return vertMap[nIdx]; }
 	void AddVertex( SPolygon *pRes, int nIdx )
 	{
 		ASSERT( HasResIndex( nIdx ) );
-		pRes->polygon.push_back( info.verts[ GetResIndex( nIdx ) ] );
+		pRes->polygon.push_back( info.verts[GetResIndex( nIdx )] );
 		pRes->polygonIndices.push_back( nIdx );
 	}
 	void AddVertex( SPolygon *pRes, int nIdx, const SVertex &v )
@@ -400,7 +411,7 @@ public:
 		pRes->polygon.push_back( v );
 		pRes->polygonIndices.push_back( nIdx );
 	}
-	bool IsOutside( const SPolygon &poly )//vector<SVertex> &polygon, const vector<int> &polygonIndices )
+	bool IsOutside( const SPolygon &poly ) //vector<SVertex> &polygon, const vector<int> &polygonIndices )
 	{
 		bool bXPos = false, bXNeg = false, bYPos = false, bYNeg = false;
 		for ( int k = 0; k < poly.polygon.size(); ++k )
@@ -425,8 +436,8 @@ public:
 				nRes = info.verts.size();
 				info.verts.push_back( poly.polygon[i] );
 				if ( !srcWeights.empty() )
-					info.weights.push_back( GetWeight( srcWeights[ posIndices[ nIdx ] ] ) );
-				vertMap[ nIdx ] = nRes;
+					info.weights.push_back( GetWeight( srcWeights[posIndices[nIdx]] ) );
+				vertMap[nIdx] = nRes;
 			}
 			else
 				nRes = GetResIndex( nIdx );
@@ -438,35 +449,43 @@ public:
 class CExplosionShadowBuilder : CObjectInfoProcessor
 {
 public:
-	CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &positions,
-		const CVec3 &_vOrigin, float _fSize, float _fRotation );
+	CExplosionShadowBuilder( CObjectInfo::SData *pInfo,
+	                         const CObjectInfo &src,
+	                         const std::vector<CVec3> &positions,
+	                         const CVec3 &_vOrigin,
+	                         float _fSize,
+	                         float _fRotation );
 };
 
-CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &xformed,
-	const CVec3 &vOrigin, float fSize, float _fRotation )
-: CObjectInfoProcessor( pInfo, src )
+CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo,
+                                                  const CObjectInfo &src,
+                                                  const std::vector<CVec3> &xformed,
+                                                  const CVec3 &vOrigin,
+                                                  float fSize,
+                                                  float _fRotation )
+		: CObjectInfoProcessor( pInfo, src )
 {
-	float fSin = sin(_fRotation), fCos = cos(_fRotation);
+	float fSin = sin( _fRotation ), fCos = cos( _fRotation );
 	for ( int k = 0; k < srcTris.size(); ++k )
 	{
 		const STriangle &t = srcTris[k];
 		int nIndices[3] = { t.i1, t.i2, t.i3 };
-		int np0 = posIndices[ t.i1 ];
-		int np1 = posIndices[ t.i2 ];
-		int np2 = posIndices[ t.i3 ];
+		int np0 = posIndices[t.i1];
+		int np1 = posIndices[t.i2];
+		int np2 = posIndices[t.i3];
 		CVec3 vTriNormal = ( xformed[np2] - xformed[np0] ) ^ ( xformed[np1] - xformed[np0] );
-		CVec3 vXNormal(0,0,1), vXTexU(1,0,0), vXTexV(0,1,0);
+		CVec3 vXNormal( 0, 0, 1 ), vXTexU( 1, 0, 0 ), vXTexV( 0, 1, 0 );
 		float fLeng = fabs( vTriNormal );
 		if ( fLeng > 0 )
 		{
-//			float fTest = vTriNormal * ( vRealOrigin - srcPositions[np0] );
-//			if ( fTest >= -0.01f * fLeng )
-//				continue;
+			//			float fTest = vTriNormal * ( vRealOrigin - srcPositions[np0] );
+			//			if ( fTest >= -0.01f * fLeng )
+			//				continue;
 			vXNormal = vTriNormal;
 			Normalize( &vXNormal );
-			vXTexU = vXNormal ^ CVec3(0.5f,0.23f,0);
-			if ( fabs2(vXTexU) == 0 )
-				vXTexU = vXNormal ^ CVec3(0,0,1);
+			vXTexU = vXNormal ^ CVec3( 0.5f, 0.23f, 0 );
+			if ( fabs2( vXTexU ) == 0 )
+				vXTexU = vXNormal ^ CVec3( 0, 0, 1 );
 			Normalize( &vXTexU );
 			vXTexV = vXNormal ^ vXTexU;
 			Normalize( &vXTexV );
@@ -479,9 +498,9 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, con
 			// calc uv
 			if ( !HasResIndex( nIdx ) )
 			{
-				const SUVInfo &uv = srcVertices[ nIdx ];
-				const CVec3 &pos = srcPositions[ posIndices[ nIdx ] ];
-				const CVec3 &vXformed = xformed[ posIndices[ nIdx ] ];
+				const SUVInfo &uv = srcVertices[nIdx];
+				const CVec3 &pos = srcPositions[posIndices[nIdx]];
+				const CVec3 &vXformed = xformed[posIndices[nIdx]];
 				const CVec3 vTexU = NGfx::GetVector( uv.texU );
 				const CVec3 vTexV = NGfx::GetVector( uv.texV );
 				SVertex res;
@@ -490,12 +509,12 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, con
 				//res.texV = CVec3(0,0,0);
 
 				CVec3 vLightDir = vXformed - vOrigin;
-				float fH = (vLightDir * vXNormal) / fSize;
+				float fH = ( vLightDir * vXNormal ) / fSize;
 				float fS = (std::max)( 0.0001f, 1 - sqr( fH ) );
 				NGfx::CalcCompactVector( &res.texU, CVec3( 1, 0, 0 ) );
-				NGfx::CalcCompactVector( &res.texV, CVec3( fS, sqrt(1-sqr(fS)), 0 ) );
-				float fU = (vLightDir * vXTexU) / fS / fSize;
-				float fV = (vLightDir * vXTexV) / fS / fSize;
+				NGfx::CalcCompactVector( &res.texV, CVec3( fS, sqrt( 1 - sqr( fS ) ), 0 ) );
+				float fU = ( vLightDir * vXTexU ) / fS / fSize;
+				float fV = ( vLightDir * vXTexV ) / fS / fSize;
 				res.tex.u = fU * fCos - fV * fSin;
 				res.tex.v = fU * fSin + fV * fCos;
 				res.tex.u = Clamp( res.tex.u * 0.5f + 0.5f, -15.0f, 15.0f );
@@ -512,7 +531,9 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, con
 	}
 }
 
-void CExplosionDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions )
+void CExplosionDecalGeometry::Recalc( CObjectInfo::SData *pRes,
+                                      const CObjectInfo &info,
+                                      const std::vector<CVec3> &positions )
 {
 	CExplosionShadowBuilder sb( pRes, info, positions, vOrigin, fSize, fRotation );
 }
@@ -522,23 +543,36 @@ void CExplosionDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInf
 class CPerPolyDecalBuilder : CObjectInfoProcessor
 {
 	SQuadProjection projection;
+
 public:
-	CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &positions,
-		const CVec3 &vOrigin, const CVec3 &vNormal, const CVec2 &vSize, float fRotation, const CVec2 vShift );
+	CPerPolyDecalBuilder( CObjectInfo::SData *pInfo,
+	                      const CObjectInfo &src,
+	                      const std::vector<CVec3> &positions,
+	                      const CVec3 &vOrigin,
+	                      const CVec3 &vNormal,
+	                      const CVec2 &vSize,
+	                      float fRotation,
+	                      const CVec2 vShift );
 };
 
-CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const CObjectInfo &src, const std::vector<CVec3> &xformed,
-	const CVec3 &vOrigin, const CVec3 &_vNormal, const CVec2 &vSize, float fRotation, const CVec2 vShift )
-	: CObjectInfoProcessor( pInfo, src )
+CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo,
+                                            const CObjectInfo &src,
+                                            const std::vector<CVec3> &xformed,
+                                            const CVec3 &vOrigin,
+                                            const CVec3 &_vNormal,
+                                            const CVec2 &vSize,
+                                            float fRotation,
+                                            const CVec2 vShift )
+		: CObjectInfoProcessor( pInfo, src )
 {
 	projection.Setup( vOrigin, _vNormal, vSize, fRotation, vShift );
 	for ( int k = 0; k < srcTris.size(); ++k )
 	{
 		const STriangle &t = srcTris[k];
 		int nIndices[3] = { t.i1, t.i2, t.i3 };
-		int np0 = posIndices[ t.i1 ];
-		int np1 = posIndices[ t.i2 ];
-		int np2 = posIndices[ t.i3 ];
+		int np0 = posIndices[t.i1];
+		int np1 = posIndices[t.i2];
+		int np2 = posIndices[t.i3];
 		CVec3 vTriNormal = ( xformed[np2] - xformed[np0] ) ^ ( xformed[np1] - xformed[np0] );
 		//CVec3 vXNormal(0,0,1), vXTexU(1,0,0), vXTexV(0,1,0);
 		float fLeng = fabs( vTriNormal );
@@ -554,14 +588,14 @@ CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const COb
 		{
 			int nIdx = nIndices[i];
 			// calc uv
-			const CVec3 &vXformed = xformed[ posIndices[ nIdx ] ];
+			const CVec3 &vXformed = xformed[posIndices[nIdx]];
 			float fDepth = ( vXformed - vOrigin ) * projection.vProjectDirection;
 			fDepthMin = (std::min)( fDepth, fDepthMin );
 			fDepthMax = (std::max)( fDepth, fDepthMax );
 			if ( !HasResIndex( nIdx ) )
 			{
-				const SUVInfo &uv = srcVertices[ nIdx ];
-				const CVec3 &pos = srcPositions[ posIndices[ nIdx ] ];
+				const SUVInfo &uv = srcVertices[nIdx];
+				const CVec3 &pos = srcPositions[posIndices[nIdx]];
 				//const CVec3 vTexU = NGfx::GetVector( uv.texU );
 				//const CVec3 vTexV = NGfx::GetVector( uv.texV );
 				SVertex res;
@@ -587,7 +621,9 @@ CPerPolyDecalBuilder::CPerPolyDecalBuilder( CObjectInfo::SData *pInfo, const COb
 	}
 }
 
-void CPerPolyDecalGeometry::Recalc( CObjectInfo::SData *pRes, const CObjectInfo &info, const std::vector<CVec3> &positions )
+void CPerPolyDecalGeometry::Recalc( CObjectInfo::SData *pRes,
+                                    const CObjectInfo &info,
+                                    const std::vector<CVec3> &positions )
 {
 	CPerPolyDecalBuilder ppb( pRes, info, positions, vOrigin, vNormal, vSize, fRotation, vShift );
 }

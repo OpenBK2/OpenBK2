@@ -36,12 +36,13 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 struct SCase
 {
-	std::string szName;			// the directory name, "007.fail"
-	std::string szDir;			// its full path
+	std::string szName; // the directory name, "007.fail"
+	std::string szDir;  // its full path
 	bool bExpectSuccess;
 };
 
@@ -91,14 +92,16 @@ TEST_P( CParserCase, Parses )
 	EXPECT_EQ( bSuccess, c.bExpectSuccess ) << c.szDir;
 }
 
-INSTANTIATE_TEST_SUITE_P( Corpus, CParserCase, testing::ValuesIn( CollectCases() ),
-	[]( const testing::TestParamInfo<SCase> &info )
-	{
-		// "007.fail" -> "c007_fail"; a test name may only hold letters, digits and '_'
-		std::string szName = "c" + info.param.szName;
-		std::replace( szName.begin(), szName.end(), '.', '_' );
-		return szName;
-	} );
+INSTANTIATE_TEST_SUITE_P( Corpus,
+                          CParserCase,
+                          testing::ValuesIn( CollectCases() ),
+                          []( const testing::TestParamInfo<SCase> &info )
+                          {
+														// "007.fail" -> "c007_fail"; a test name may only hold letters, digits and '_'
+														std::string szName = "c" + info.param.szName;
+														std::replace( szName.begin(), szName.end(), '.', '_' );
+														return szName;
+													} );
 
 // Guards the instantiation above against a moved or empty corpus, which would
 // otherwise pass by running nothing.

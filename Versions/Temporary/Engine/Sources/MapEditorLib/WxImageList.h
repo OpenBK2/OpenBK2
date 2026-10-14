@@ -20,7 +20,6 @@
 // Header-only, like the other Wx*.h here; see WxWidget.h for why these stay
 // out of MapEditorLib's own translation units.
 
-
 #include "Interface_Widget.h"
 #include "Misc/2Darray.h"
 
@@ -33,39 +32,38 @@
 
 namespace NWxImageList
 {
-	// A block of pixels as a wxImage.
-	//
-	// DDS decoding and the icon cache carry 0xAARRGGBB pixels. Preserve the
-	// alpha channel: masking black instead punches holes in opaque details
-	// and exposes the grey RGB stored behind transparent pixels.
-	inline wxImage ToWxImage( const CArray2D<uint32_t> &rPixels )
+// A block of pixels as a wxImage.
+//
+// DDS decoding and the icon cache carry 0xAARRGGBB pixels. Preserve the
+// alpha channel: masking black instead punches holes in opaque details
+// and exposes the grey RGB stored behind transparent pixels.
+inline wxImage ToWxImage( const CArray2D<uint32_t> &rPixels )
+{
+	const int nWidth = rPixels.GetSizeX();
+	const int nHeight = rPixels.GetSizeY();
+	if ( ( nWidth <= 0 ) || ( nHeight <= 0 ) )
 	{
-		const int nWidth = rPixels.GetSizeX();
-		const int nHeight = rPixels.GetSizeY();
-		if ( ( nWidth <= 0 ) || ( nHeight <= 0 ) )
-		{
-			return wxImage();
-		}
-		wxImage image( nWidth, nHeight, false );
-		image.InitAlpha();
-		unsigned char *const pRGB = image.GetData();
-		unsigned char *const pAlpha = image.GetAlpha();
-		for ( int nY = 0; nY < nHeight; ++nY )
-		{
-			for ( int nX = 0; nX < nWidth; ++nX )
-			{
-				const uint32_t nPixel = rPixels[nY][nX];
-				unsigned char *const pTexel = pRGB + ( ( static_cast<size_t>( nY ) * nWidth ) + nX ) * 3;
-				pTexel[0] = static_cast<unsigned char>( ( nPixel >> 16 ) & 0xFF );
-				pTexel[1] = static_cast<unsigned char>( ( nPixel >> 8 ) & 0xFF );
-				pTexel[2] = static_cast<unsigned char>( nPixel & 0xFF );
-				pAlpha[static_cast<size_t>(nY) * nWidth + nX] = static_cast<unsigned char>( nPixel >> 24 );
-			}
-		}
-		return image;
+		return wxImage();
 	}
+	wxImage image( nWidth, nHeight, false );
+	image.InitAlpha();
+	unsigned char *const pRGB = image.GetData();
+	unsigned char *const pAlpha = image.GetAlpha();
+	for ( int nY = 0; nY < nHeight; ++nY )
+	{
+		for ( int nX = 0; nX < nWidth; ++nX )
+		{
+			const uint32_t nPixel = rPixels[nY][nX];
+			unsigned char *const pTexel = pRGB + ( ( static_cast<size_t>( nY ) * nWidth ) + nX ) * 3;
+			pTexel[0] = static_cast<unsigned char>( ( nPixel >> 16 ) & 0xFF );
+			pTexel[1] = static_cast<unsigned char>( ( nPixel >> 8 ) & 0xFF );
+			pTexel[2] = static_cast<unsigned char>( nPixel & 0xFF );
+			pAlpha[static_cast<size_t>( nY ) * nWidth + nX] = static_cast<unsigned char>( nPixel >> 24 );
+		}
+	}
+	return image;
 }
-
+}
 
 class CWxImageList : public IImageList
 {
@@ -74,8 +72,8 @@ class CWxImageList : public IImageList
 
 public:
 	CWxImageList() = default;
-	CWxImageList( const CWxImageList& ) = delete;
-	CWxImageList& operator=( const CWxImageList& ) = delete;
+	CWxImageList( const CWxImageList & ) = delete;
+	CWxImageList &operator=( const CWxImageList & ) = delete;
 
 	// Masked, as ImageList_Create was asked for: every icon in these lists is
 	// added with a mask colour. nGrow is wx's allocation hint, as it was Win32's.
@@ -96,10 +94,7 @@ public:
 	}
 
 	// DDS thumbnails already have alpha; a colour mask would discard it.
-	int Add( const wxBitmap &bitmap )
-	{
-		return ( bCreated && bitmap.IsOk() ) ? imageList.Add( bitmap ) : -1;
-	}
+	int Add( const wxBitmap &bitmap ) { return ( bCreated && bitmap.IsOk() ) ? imageList.Add( bitmap ) : -1; }
 
 	void RemoveAll()
 	{
@@ -109,17 +104,16 @@ public:
 		}
 	}
 
-	wxImageList* GetList() { return &imageList; }
-	virtual void* GetNativeImageList() { return &imageList; }
+	wxImageList *GetList() { return &imageList; }
+	virtual void *GetNativeImageList() { return &imageList; }
 };
 
-
 // The list behind a widget's image list token, or null for none.
-inline wxImageList* ToWxImageList( IImageList *pImageList )
+inline wxImageList *ToWxImageList( IImageList *pImageList )
 {
 	if ( pImageList == 0 )
 	{
 		return nullptr;
 	}
-	return static_cast<wxImageList*>( pImageList->GetNativeImageList() );
+	return static_cast<wxImageList *>( pImageList->GetNativeImageList() );
 }

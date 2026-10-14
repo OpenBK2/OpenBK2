@@ -23,7 +23,7 @@ static void WriteShader( ofstream &f, const uint32_t *pRes )
 	f << "{ 0x";
 	f << hex;
 	int i;
-	for ( i = 0; (pRes[i] & 0xffff ) != 0xffff; ++i )
+	for ( i = 0; ( pRes[i] & 0xffff ) != 0xffff; ++i )
 		f << pRes[i] << ", 0x";
 	f << pRes[i] << " };" << dec << endl;
 }
@@ -45,7 +45,7 @@ static void WriteShader( ofstream &f, const string &szName, const vector<uint32_
 	*pszDeclaration += szName;
 }
 
-static bool AreFilesDifferent( const string & szFileName0, const string & szFileName1 )
+static bool AreFilesDifferent( const string &szFileName0, const string &szFileName1 )
 {
 	// Ripped STL force me to create this shit
 	FILE *pFile0 = fopen( szFileName0.c_str(), "rb" );
@@ -84,8 +84,8 @@ static bool AreFilesDifferent( const string & szFileName0, const string & szFile
 				}
 			}
 
-			delete [] pBuffer0;
-			delete [] pBuffer1;
+			delete[] pBuffer0;
+			delete[] pBuffer1;
 		}
 		else
 			bDifferent = true;
@@ -100,13 +100,12 @@ static bool AreFilesDifferent( const string & szFileName0, const string & szFile
 	return bDifferent;
 }
 
-
 void WriteResult( const char *pszOutput )
 {
 	// write .h file
 	{
-		const string szTempFileName( string(pszOutput) + ".tmp" );
-		const string szDestFileName( string(pszOutput) + ".h" );
+		const string szTempFileName( string( pszOutput ) + ".tmp" );
+		const string szDestFileName( string( pszOutput ) + ".h" );
 
 		// Binary, so the output has LF line endings on every platform rather than
 		// CRLF on Windows only, the same as the committed file.
@@ -142,8 +141,8 @@ void WriteResult( const char *pszOutput )
 
 	// write .cpp file
 	{
-		const string szTempFileName( string(pszOutput) + ".tmp" );
-		const string szDestFileName( string(pszOutput) + ".cpp" );
+		const string szTempFileName( string( pszOutput ) + ".tmp" );
+		const string szDestFileName( string( pszOutput ) + ".cpp" );
 
 		ofstream f( szTempFileName.c_str(), std::ios::binary );
 

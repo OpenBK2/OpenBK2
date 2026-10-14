@@ -7,11 +7,11 @@
 #include "Tools_HashSet.h"
 
 bool CBuildDataBuilder::InsertObject( std::string *pszObjectTypeName,
-																			std::string *pszUniqueObjectName,
-																			bool bFromMainMenu,
-																			bool *pbCanChangeObjectName,
-																			bool *pbNeedExport,
-																			bool *pbNeedEdit )
+                                      std::string *pszUniqueObjectName,
+                                      bool bFromMainMenu,
+                                      bool *pbCanChangeObjectName,
+                                      bool *pbNeedExport,
+                                      bool *pbNeedEdit )
 {
 	NI_ASSERT( pszObjectTypeName != 0, "CBuildDataBuilder::InsertObject() pszObjectTypeName == 0" );
 	NI_ASSERT( pszUniqueObjectName != 0, "CBuildDataBuilder::InsertObject() pszUniqueObjectName == 0" );
@@ -22,7 +22,8 @@ bool CBuildDataBuilder::InsertObject( std::string *pszObjectTypeName,
 	if ( !NeedBuildDataDialog() )
 	{
 		// call default implementation
-		return CBuilderBase::InsertObject( pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit );
+		return CBuilderBase::InsertObject(
+				pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit );
 	}
 	//
 	( *pbCanChangeObjectName ) = false;
@@ -31,9 +32,9 @@ bool CBuildDataBuilder::InsertObject( std::string *pszObjectTypeName,
 	SBuildDataParams buildDataParams;
 	buildDataParams.szObjectTypeName = ( *pszObjectTypeName );
 	CStringManager::SplitFileName( &( buildDataParams.szObjectNamePrefix ),
-																 &( buildDataParams.szObjectName ),
-																 &( buildDataParams.szObjectNameExtention ),
-																 ( *pszUniqueObjectName ) );
+	                               &( buildDataParams.szObjectName ),
+	                               &( buildDataParams.szObjectNameExtention ),
+	                               ( *pszUniqueObjectName ) );
 	buildDataParams.bNeedExport = ( *pbNeedExport );
 	buildDataParams.bNeedEdit = ( *pbNeedEdit );
 	//
@@ -45,18 +46,24 @@ bool CBuildDataBuilder::InsertObject( std::string *pszObjectTypeName,
 		buildDataParams.GetObjectName( pszUniqueObjectName );
 		( *pbNeedExport ) = buildDataParams.bNeedExport;
 		( *pbNeedEdit ) = buildDataParams.bNeedEdit;
-		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
+		if ( CPtr<IManipulator> pBuildDataManipulator =
+		         Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
 			std::string szDescription;
 			if ( IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 			{
-				return InternalInsertObject( pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit, pBuildDataManipulator );
+				return InternalInsertObject( pszObjectTypeName,
+				                             pszUniqueObjectName,
+				                             bFromMainMenu,
+				                             pbCanChangeObjectName,
+				                             pbNeedExport,
+				                             pbNeedEdit,
+				                             pBuildDataManipulator );
 			}
 		}
 	}
 	return false;
 }
-
 
 bool CBuildDataBuilder::IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName )
 {

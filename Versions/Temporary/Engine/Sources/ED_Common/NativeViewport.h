@@ -77,5 +77,5 @@ public:
 	// The handle itself: an HWND on Windows, an SDL_Window* off it, and null
 	// before Attach or after Detach. void* rather than HWND so that this
 	// header needs no windows.h.
-	void* GetHandle() const;
+	void *GetHandle() const;
 };

@@ -27,8 +27,7 @@ void CAntiArtilleryManager::RemoveAA( CAntiArtillery *pAA )
 bool CAntiArtilleryManager::IsHeardForParty( CAntiArtillery *pAntiArt, const int nParty )
 {
 	const NTimer::STime lastShotTime = pAntiArt->lastShotTime[nParty];
-	return
-		lastShotTime != 0 && curTime - lastShotTime <= SConsts::AUDIBILITY_TIME;
+	return lastShotTime != 0 && curTime - lastShotTime <= SConsts::AUDIBILITY_TIME;
 }
 
 void CAntiArtilleryManager::Segment()
@@ -73,10 +72,10 @@ void CAntiArtilleryManager::Clear()
 //*									CAntiArtilleryManager::SIterator								*
 //*******************************************************************
 
-CAntiArtilleryManager::CIterator::CIterator( const int nParty )
-: nIterParty( nParty ), nCurParty( 0 )
+CAntiArtilleryManager::CIterator::CIterator( const int nParty ) : nIterParty( nParty ), nCurParty( 0 )
 {
-	while ( nCurParty < 3 && ( theDipl.GetDiplStatusForParties( nCurParty, nIterParty ) != EDI_ENEMY || theAAManager.antiArtilleries[nCurParty].empty() ) )
+	while ( nCurParty < 3 && ( theDipl.GetDiplStatusForParties( nCurParty, nIterParty ) != EDI_ENEMY ||
+	                           theAAManager.antiArtilleries[nCurParty].empty() ) )
 		++nCurParty;
 
 	if ( !IsFinished() )
@@ -94,7 +93,7 @@ const CCircle CAntiArtilleryManager::CIterator::operator*() const
 	return pAntiArt->GetRevealCircle( nIterParty );
 }
 
-CAntiArtillery* CAntiArtilleryManager::CIterator::GetAntiArtillery() const
+CAntiArtillery *CAntiArtilleryManager::CIterator::GetAntiArtillery() const
 {
 	return GetObjectByUniqueIdSafe<CAntiArtillery>( *curIter );
 }
@@ -109,8 +108,8 @@ void CAntiArtilleryManager::CIterator::Iterate()
 		if ( curIter != theAAManager.antiArtilleries[nCurParty].end() )
 			pAntiArt = GetObjectByUniqueIdSafe<CAntiArtillery>( *curIter );
 
-		if ( curIter == theAAManager.antiArtilleries[nCurParty].end() ||
-				 !pAntiArt || !pAntiArt->IsRefValid() || !IsHeardForParty( pAntiArt, nIterParty ) )
+		if ( curIter == theAAManager.antiArtilleries[nCurParty].end() || !pAntiArt || !pAntiArt->IsRefValid() ||
+		     !IsHeardForParty( pAntiArt, nIterParty ) )
 		{
 			if ( curIter != theAAManager.antiArtilleries[nCurParty].end() )
 				++curIter;
@@ -119,7 +118,8 @@ void CAntiArtilleryManager::CIterator::Iterate()
 				do
 				{
 					++nCurParty;
-				} while ( nCurParty < 3 && ( theDipl.GetDiplStatusForParties( nCurParty, nIterParty ) != EDI_ENEMY || theAAManager.antiArtilleries[nCurParty].empty() ) );
+				} while ( nCurParty < 3 && ( theDipl.GetDiplStatusForParties( nCurParty, nIterParty ) != EDI_ENEMY ||
+				                             theAAManager.antiArtilleries[nCurParty].empty() ) );
 
 				if ( nCurParty < 3 )
 					curIter = theAAManager.antiArtilleries[nCurParty].begin();

@@ -14,8 +14,8 @@
 
 enum EDiplomacyInfo
 {
-	EDI_ENEMY		=	0x01,
-	EDI_FRIEND	=	0x02,
+	EDI_ENEMY = 0x01,
+	EDI_FRIEND = 0x02,
 	EDI_NEUTRAL = 0x04
 };
 
@@ -23,25 +23,43 @@ enum EDiplomacyInfo
 struct SSegment2Trench
 {
 	ZDATA
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		int nSegmentID = {};													// маленький кусочек
-		int nEntrenchID = {};												// весь окоп
-	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nSegmentID); f.Add(3,&nEntrenchID); return 0; } private:
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nSegmentID = {};  // маленький кусочек
+	int nEntrenchID = {}; // весь окоп
+ZEND public : int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSegmentID );
+		f.Add( 3, &nEntrenchID );
+		return 0;
+	}
+
+private:
 public:
-	SSegment2Trench() : nSegmentID( 0 ), nEntrenchID( 0 ) { }
+	SSegment2Trench() : nSegmentID( 0 ), nEntrenchID( 0 ) {}
 	SSegment2Trench( const int _nSegmentID, const int _nEntrenchID )
-		: nSegmentID( _nSegmentID ), nEntrenchID( _nEntrenchID ) { }
+			: nSegmentID( _nSegmentID ), nEntrenchID( _nEntrenchID )
+	{
+	}
 };
 struct SSoldier2Formation
 {
 	ZDATA
-		int nSoldierID = {};
-		int nFormationID = {};
-	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nSoldierID); f.Add(3,&nFormationID); return 0; } private:
+	int nSoldierID = {};
+	int nFormationID = {};
+ZEND public : int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSoldierID );
+		f.Add( 3, &nFormationID );
+		return 0;
+	}
+
+private:
 public:
-	SSoldier2Formation() : nSoldierID( 0 ), nFormationID( 0 ) { }
+	SSoldier2Formation() : nSoldierID( 0 ), nFormationID( 0 ) {}
 	SSoldier2Formation( const int _nSoldierID, const int _nFormationID )
-		: nSoldierID( _nSoldierID ), nFormationID( _nFormationID ) { }
+			: nSoldierID( _nSoldierID ), nFormationID( _nFormationID )
+	{
+	}
 };
 struct SShootArea
 {
@@ -64,8 +82,10 @@ struct SShootArea
 
 	//
 	SShootArea()
-		: vCenter3D( VNULL3 ), fMinR( 0.0f ), fMaxR( 0.0f ),
-			wStartAngle( 65535 ), wFinishAngle( 65535 ), eType( ESAT_LINE ) { }
+			: vCenter3D( VNULL3 ), fMinR( 0.0f ), fMaxR( 0.0f ), wStartAngle( 65535 ), wFinishAngle( 65535 ),
+				eType( ESAT_LINE )
+	{
+	}
 
 	const uint32_t GetColor() const
 	{
@@ -91,7 +111,7 @@ struct SShootArea
 	bool operator!=( const SShootArea &arg ) const
 	{
 		return eType != arg.eType || vCenter3D != arg.vCenter3D || fMinR != arg.fMinR || fMaxR != arg.fMaxR ||
-			wStartAngle != arg.wStartAngle || wFinishAngle != arg.wFinishAngle;
+		       wStartAngle != arg.wStartAngle || wFinishAngle != arg.wFinishAngle;
 	}
 
 	int operator&( IBinSaver &saver )

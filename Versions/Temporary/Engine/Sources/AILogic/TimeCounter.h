@@ -20,6 +20,7 @@ class CTimeCounter
 
 	std::vector<float> variables;
 	int nMaxVar = {};
+
 public:
 	CTimeCounter();
 

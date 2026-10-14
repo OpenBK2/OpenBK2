@@ -6,8 +6,8 @@
 #include "Tools.h"
 #include "System/Text.h"
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075B43, CForegroundTextString)
-REGISTER_SAVELOAD_CLASS(UI, 0x1715A340, CPlacedText)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B43, CForegroundTextString )
+REGISTER_SAVELOAD_CLASS( UI, 0x1715A340, CPlacedText )
 extern CVec2 vScreenRect;
 
 // The size of generated text in virtual units, kept fractional.
@@ -32,7 +32,8 @@ static CTPoint<int> GetVirtualTextSizeCeil( IML *pGfxText )
 	return CTPoint<int>( static_cast<int>( ceilf( vSize.x ) ), static_cast<int>( ceilf( vSize.y ) ) );
 }
 
-static CTRect<float> PlaceText( const CTPoint<int> &pixelSize, const CTRect<float> &parent, const NDb::SWindowPlacement *pPlacement )
+static CTRect<float>
+PlaceText( const CTPoint<int> &pixelSize, const CTRect<float> &parent, const NDb::SWindowPlacement *pPlacement )
 {
 	const CVec2 size = ScreenToVirtual( CVec2( pixelSize.x, pixelSize.y ) ) - ScreenToVirtual( VNULL2 );
 	CTRect<float> place( parent.x1, parent.y1, parent.x1 + size.x, parent.y1 + size.y );
@@ -43,7 +44,10 @@ static CTRect<float> PlaceText( const CTPoint<int> &pixelSize, const CTRect<floa
 	return result;
 }
 
-static void VisitPlacedText( IUIVisitor *pVisitor, IML *pText, const CTRect<float> &parent, const NDb::SWindowPlacement *pPlacement )
+static void VisitPlacedText( IUIVisitor *pVisitor,
+                             IML *pText,
+                             const CTRect<float> &parent,
+                             const NDb::SWindowPlacement *pPlacement )
 {
 	// Always test the preferred size/placement, even while drawing at 1.0;
 	// otherwise a smaller centered caption can make fallback stick forever.
@@ -58,7 +62,7 @@ static void VisitPlacedText( IUIVisitor *pVisitor, IML *pText, const CTRect<floa
 
 void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SForegroundTextString *pDesc ( checked_cast<const NDb::SForegroundTextString*>( _pDesc ) );
+	const NDb::SForegroundTextString *pDesc( checked_cast<const NDb::SForegroundTextString *>( _pDesc ) );
 	//NI_ASSERT( pDesc->pShared, StrFmt( "no shared window found for ForegroundTextString (%s)", pDesc->GetDBID().ToString().c_str() ) );
 	pInstance = pDesc->Duplicate();
 	wszCustomText = GetDBFormatText() + GetDBInstanceText();
@@ -85,27 +89,27 @@ int CForegroundTextString::GetOptimalWidth() const
 	return GetVirtualTextSizeCeil( pGfxText ).x;
 }
 
-const std::wstring& CForegroundTextString::GetDBInstanceText() const
+const std::wstring &CForegroundTextString::GetDBInstanceText() const
 {
 	static std::wstring szEmpty;
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pInstance->,TextString) )
-		return GET_TEXT_PRE(pInstance->,TextString);
-	else if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pInstance->pShared->,TextString) )
-		return GET_TEXT_PRE(pInstance->pShared->,TextString);
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pInstance->, TextString ) )
+		return GET_TEXT_PRE( pInstance->, TextString );
+	else if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE( pInstance->pShared->, TextString ) )
+		return GET_TEXT_PRE( pInstance->pShared->, TextString );
 	else
 		return szEmpty;
 }
 
-const std::wstring& CForegroundTextString::GetDBFormatText() const
+const std::wstring &CForegroundTextString::GetDBFormatText() const
 {
 	static std::wstring szEmpty;
-	if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pInstance->pShared->,FormatString) )
-		return GET_TEXT_PRE(pInstance->pShared->,FormatString);
+	if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE( pInstance->pShared->, FormatString ) )
+		return GET_TEXT_PRE( pInstance->pShared->, FormatString );
 	else
 		return szEmpty;
 }
 
-const std::wstring & CForegroundTextString::GetText() const
+const std::wstring &CForegroundTextString::GetText() const
 {
 	return wszCustomText;
 }
@@ -116,7 +120,7 @@ void CForegroundTextString::SetText( const std::wstring &_szText )
 	InitText();
 }
 
-const NDb::SWindowPlacement* CForegroundTextString::GetPlacement() const
+const NDb::SWindowPlacement *CForegroundTextString::GetPlacement() const
 {
 	if ( pInstance->pShared )
 		return &pInstance->pShared->position;
@@ -140,25 +144,18 @@ void CForegroundTextString::SetPos( const CVec2 &vPos, const CVec2 &vSize )
 	InitText();
 }
 
-void CForegroundTextString::SetFadeValue( float fValue )
-{
-}
+void CForegroundTextString::SetFadeValue( float fValue ) {}
 
-void CForegroundTextString::SetInternalFadeValue( float fValue )
-{
-}
+void CForegroundTextString::SetInternalFadeValue( float fValue ) {}
 
 // CPlacedText
 
-CPlacedText::CPlacedText()
-: vScreenRect( VNULL2 )
+CPlacedText::CPlacedText() : vScreenRect( VNULL2 )
 {
 	rcParent.SetEmpty();
 }
 
-void CPlacedText::Init()
-{
-}
+void CPlacedText::Init() {}
 
 void CPlacedText::Visit( struct IUIVisitor *pVisitor )
 {

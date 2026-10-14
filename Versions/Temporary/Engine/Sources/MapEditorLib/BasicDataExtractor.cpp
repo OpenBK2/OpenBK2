@@ -17,9 +17,9 @@
 #include <cstdint>
 
 bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
-																							  CArray2D<uint32_t> *pNormalImage,
-																								const std::string &szFileName,
-																								ELoadImageMethod eMethod )
+                                                CArray2D<uint32_t> *pNormalImage,
+                                                const std::string &szFileName,
+                                                ELoadImageMethod eMethod )
 {
 	if ( szFileName.empty() || ( szFileName == " " ) )
 	{
@@ -39,14 +39,14 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
 			//
 			switch ( eMethod )
 			{
-			case LOAD_IMAGE_COPY:
-				NImage::Copy( pSmallImage, imageSource, CTPoint<int>( 0, 0 ) );
-				NImage::Copy( pNormalImage, imageSource, CTPoint<int>( 0, 0 ) );
-				break;
-			case LOAD_IMAGE_SCALE:
-				NImage::Scale( pSmallImage, imageSource, NImage::IMAGE_SCALE_METHOD_LANCZOS3 );
-				NImage::Scale( pNormalImage, imageSource, NImage::IMAGE_SCALE_METHOD_LANCZOS3 );
-				break;
+				case LOAD_IMAGE_COPY:
+					NImage::Copy( pSmallImage, imageSource, CTPoint<int>( 0, 0 ) );
+					NImage::Copy( pNormalImage, imageSource, CTPoint<int>( 0, 0 ) );
+					break;
+				case LOAD_IMAGE_SCALE:
+					NImage::Scale( pSmallImage, imageSource, NImage::IMAGE_SCALE_METHOD_LANCZOS3 );
+					NImage::Scale( pNormalImage, imageSource, NImage::IMAGE_SCALE_METHOD_LANCZOS3 );
+					break;
 			}
 			return true;
 		}
@@ -54,36 +54,34 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
 	return false;
 }
 
-
 namespace
 {
-	// Where one object's two icons are kept between sessions.
-	//
-	// The object name is a database name, and those separate with a backslash:
-	// "Units\Technics\GB\Aviation\lysander\MechUnitRPGStats.xdb". Here it is
-	// being used as a path, one directory per part, which is what the backslashes
-	// in the format string were for - they are directory separators on Windows
-	// and ordinary characters everywhere else, so off Windows the whole cache
-	// went into single files whose names contained backslashes, under whatever
-	// the VFS took the absolute start folder to be relative to.
-	//
-	// So: the name folded to this tree's separator, and the path built with
-	// JoinPath. The layout on disk is the one Windows has always written.
-	std::string CacheFileName( const SUserData *pUserData, const std::string &rszObjectTypeName,
-														 const std::string &rszObjectName )
-	{
-		std::string szObjectPath = rszObjectName;
-		NFile::NormalizePath( &szObjectPath );
-		return NFile::JoinPath( pUserData->constUserData.szStartFolder, "Editor", "IconCache",
-														rszObjectTypeName, szObjectPath );
-	}
+// Where one object's two icons are kept between sessions.
+//
+// The object name is a database name, and those separate with a backslash:
+// "Units\Technics\GB\Aviation\lysander\MechUnitRPGStats.xdb". Here it is
+// being used as a path, one directory per part, which is what the backslashes
+// in the format string were for - they are directory separators on Windows
+// and ordinary characters everywhere else, so off Windows the whole cache
+// went into single files whose names contained backslashes, under whatever
+// the VFS took the absolute start folder to be relative to.
+//
+// So: the name folded to this tree's separator, and the path built with
+// JoinPath. The layout on disk is the one Windows has always written.
+std::string
+CacheFileName( const SUserData *pUserData, const std::string &rszObjectTypeName, const std::string &rszObjectName )
+{
+	std::string szObjectPath = rszObjectName;
+	NFile::NormalizePath( &szObjectPath );
+	return NFile::JoinPath(
+			pUserData->constUserData.szStartFolder, "Editor", "IconCache", rszObjectTypeName, szObjectPath );
+}
 }
 
-
 bool CBasicDataExtractor::LoadImagesFromCache( CArray2D<uint32_t> *pNormalImage,
-																	 CArray2D<uint32_t> *pSmallImage,
-																							 const std::string &rszObjectTypeName,
-																							 const std::string &rszObjectName )
+                                               CArray2D<uint32_t> *pSmallImage,
+                                               const std::string &rszObjectTypeName,
+                                               const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	const std::string szCacheFileName = CacheFileName( pUserData, rszObjectTypeName, rszObjectName );
@@ -104,7 +102,7 @@ bool CBasicDataExtractor::LoadImagesFromCache( CArray2D<uint32_t> *pNormalImage,
 				pSaver->Add( 2, &imageNormal );
 				//
 				if ( ( imageSmall.GetSizeX() == SMALL_IMAGE_SIZE_X ) && ( imageSmall.GetSizeY() == SMALL_IMAGE_SIZE_Y ) &&
-						 ( imageNormal.GetSizeX() == NORMAL_IMAGE_SIZE_X ) && ( imageNormal.GetSizeY() == NORMAL_IMAGE_SIZE_Y ) )
+				     ( imageNormal.GetSizeX() == NORMAL_IMAGE_SIZE_X ) && ( imageNormal.GetSizeY() == NORMAL_IMAGE_SIZE_Y ) )
 				{
 					( *pNormalImage ) = imageNormal;
 					( *pSmallImage ) = imageSmall;
@@ -116,11 +114,10 @@ bool CBasicDataExtractor::LoadImagesFromCache( CArray2D<uint32_t> *pNormalImage,
 	return false;
 }
 
-
 void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
-																						 CArray2D<uint32_t> &rImageNormal,
-																						 const std::string &rszObjectTypeName,
-																						 const std::string &rszObjectName )
+                                             CArray2D<uint32_t> &rImageNormal,
+                                             const std::string &rszObjectTypeName,
+                                             const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	const std::string szCacheFileName = CacheFileName( pUserData, rszObjectTypeName, rszObjectName );
@@ -137,8 +134,10 @@ void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
 	}
 }
 
-
-bool CBasicDataExtractor::GetLabel( std::string *pszLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
+bool CBasicDataExtractor::GetLabel( std::string *pszLabel,
+                                    const std::string &rszObjectTypeName,
+                                    const std::string &rszObjectName,
+                                    IManipulator *pObjectManipulator )
 {
 	int nPos = rszObjectName.rfind( PATH_SEPARATOR_CHAR );
 	if ( nPos != std::string::npos )
@@ -149,16 +148,16 @@ bool CBasicDataExtractor::GetLabel( std::string *pszLabel, const std::string &rs
 	return false;
 }
 
-
 unsigned CBasicDataExtractor::GetObjectData( CArray2D<uint32_t> *pNormalImage,
-																		 CArray2D<uint32_t> *pSmallImage,
-																		 std::string *pszLabel,
-																				 const std::string &rszObjectTypeName,
-																				 const std::string &rszObjectName,
-																				 const std::string &rszDataExtractorType )
+                                             CArray2D<uint32_t> *pSmallImage,
+                                             std::string *pszLabel,
+                                             const std::string &rszObjectTypeName,
+                                             const std::string &rszObjectName,
+                                             const std::string &rszDataExtractorType )
 {
 	unsigned nResult = 0;
-	CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, rszObjectName );
+	CPtr<IManipulator> pObjectManipulator =
+			Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, rszObjectName );
 	if ( pObjectManipulator == 0 )
 	{
 		return 0;

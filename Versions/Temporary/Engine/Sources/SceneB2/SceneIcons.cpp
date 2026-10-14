@@ -11,10 +11,7 @@
 void CSceneIconInfo::Visit( IAIVisitor *pVisitor )
 {
 	const float fMaxSize = (std::max)( vHalfSize.x * 2.0f, vHalfSize.y * 2.0f );
-	const SHMatrix matr( fMaxSize, 0,				0,				vCenter.x,
-											 0,				fMaxSize, 0,				vCenter.y,
-											 0,				0,				fMaxSize, vCenter.z,
-											 0,				0,				0,				1 );
+	const SHMatrix matr( fMaxSize, 0, 0, vCenter.x, 0, fMaxSize, 0, vCenter.y, 0, 0, fMaxSize, vCenter.z, 0, 0, 0, 1 );
 
 	//pVisitor->AddHull( NDb::Get<NDb::SAIGeometry>( 1136 ), trans, 0, 0, 1 );
 	pVisitor->AddHull( pAIGeometry, matr, 0, 0, 1 );
@@ -29,9 +26,9 @@ void CSceneIconInfo::OrientToViewer()
 	CalcCompactVector( &vNorm, -pCamera->GetViewMatrix().GetZAxis3() );
 
 	matrix.RotateVector( &s[0], CVec3( -vHalfSize.x, 0, -vHalfSize.y ) );
-	matrix.RotateVector( &s[1], CVec3(	vHalfSize.x, 0, -vHalfSize.y ) );
-	matrix.RotateVector( &s[2], CVec3(	vHalfSize.x, 0,	vHalfSize.y ) );
-	matrix.RotateVector( &s[3], CVec3( -vHalfSize.x, 0,	vHalfSize.y ) );
+	matrix.RotateVector( &s[1], CVec3( vHalfSize.x, 0, -vHalfSize.y ) );
+	matrix.RotateVector( &s[2], CVec3( vHalfSize.x, 0, vHalfSize.y ) );
+	matrix.RotateVector( &s[3], CVec3( -vHalfSize.x, 0, vHalfSize.y ) );
 
 	data.vertices[0].pos = vCenter + s[0];
 	data.vertices[0].normal = vNorm;
@@ -63,9 +60,14 @@ inline bool CSceneIconInfo::NeedUpdate()
 	return bUpdate || pCamera->WasUpdated();
 }
 
-void CSceneIconInfo::CreateIcon( const int _nID, const CVec3 &_vCenter, const CVec2 &_vSize,
-																 const CVec2 &_vTexMin, const CVec2 &_vTexMax, const NDb::SMaterial *_pMaterial,
-																 const NDb::SAIGeometry *_pAIGeometry, CSyncSrc<CSceneIconInfo> *pSyncSrc )
+void CSceneIconInfo::CreateIcon( const int _nID,
+                                 const CVec3 &_vCenter,
+                                 const CVec2 &_vSize,
+                                 const CVec2 &_vTexMin,
+                                 const CVec2 &_vTexMax,
+                                 const NDb::SMaterial *_pMaterial,
+                                 const NDb::SAIGeometry *_pAIGeometry,
+                                 CSyncSrc<CSceneIconInfo> *pSyncSrc )
 {
 	nID = _nID;
 	pAIGeometry = _pAIGeometry;
@@ -119,20 +121,34 @@ inline void CSceneIconInfo::MoveIcon( const CVec3 &_vCenter )
 	pBound->Set( bound );
 }
 
-int CScene::AddSceneIcon( const int nID, const CVec3 &vCenter, const CVec2 &vSize, const CVec2 &vTexMin, const CVec2 &vTexMax,
-													const NDb::SMaterial *pMaterial )
+int CScene::AddSceneIcon( const int nID,
+                          const CVec3 &vCenter,
+                          const CVec2 &vSize,
+                          const CVec2 &vTexMin,
+                          const CVec2 &vTexMax,
+                          const NDb::SMaterial *pMaterial )
 {
 	NI_ASSERT( nID >= 0, fmt::format( "Wrong icon id ({})", nID ) );
 
 	CSceneIconHolder &iconsHolder = data[eScene]->iconsMap[nID];
 
 	iconsHolder.pPatch = new CSceneIconInfo( Camera() );
-	iconsHolder.pPatch->CreateIcon( nID, vCenter, vSize, vTexMin, vTexMax, pMaterial,
-		data[eScene]->pSceneConsts->iconAIGeometry.pIcon, data[eScene]->pIconSyncSrc );
+	iconsHolder.pPatch->CreateIcon( nID,
+	                                vCenter,
+	                                vSize,
+	                                vTexMin,
+	                                vTexMax,
+	                                pMaterial,
+	                                data[eScene]->pSceneConsts->iconAIGeometry.pIcon,
+	                                data[eScene]->pIconSyncSrc );
 
 	NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
-	iconsHolder.pHolder = data[eScene]->GetGScene()->CreateDynamicMesh( data[eScene]->GetGScene()->MakeMeshInfo( iconsHolder.pPatch,
-		pMaterial ), 0, iconsHolder.pPatch->GetBound(), NGScene::MakeLargeHintBound(), room );
+	iconsHolder.pHolder = data[eScene]->GetGScene()->CreateDynamicMesh(
+			data[eScene]->GetGScene()->MakeMeshInfo( iconsHolder.pPatch, pMaterial ),
+			0,
+			iconsHolder.pPatch->GetBound(),
+			NGScene::MakeLargeHintBound(),
+			room );
 
 	iconsHolder.pPatch->ForceUpdate();
 

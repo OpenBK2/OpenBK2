@@ -4,7 +4,7 @@
 
 class CMayaWeaponMnemonics : public CMnemonicsCollector<int>
 {
-	public:
+public:
 	CMayaWeaponMnemonics();
 };
 

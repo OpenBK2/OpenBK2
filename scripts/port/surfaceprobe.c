@@ -51,8 +51,12 @@ static int nFailures = 0;
 
 static void Step( int nStep, const char *pszWhat, int bOk, const char *pszDetail )
 {
-	printf( "%d. %-44s %s%s%s\n", nStep, pszWhat, bOk ? "ok" : "FAILED",
-					( pszDetail && *pszDetail ) ? " -- " : "", pszDetail ? pszDetail : "" );
+	printf( "%d. %-44s %s%s%s\n",
+	        nStep,
+	        pszWhat,
+	        bOk ? "ok" : "FAILED",
+	        ( pszDetail && *pszDetail ) ? " -- " : "",
+	        pszDetail ? pszDetail : "" );
 	if ( !bOk )
 	{
 		++nFailures;
@@ -86,8 +90,7 @@ int main( int argc, char **argv )
 	gdk_window_ensure_native( pGdk );
 	if ( !GDK_IS_X11_WINDOW( pGdk ) )
 	{
-		Step( 2, "child window is an X11 window", 0,
-					"not the X11 backend -- run with GDK_BACKEND=x11" );
+		Step( 2, "child window is an X11 window", 0, "not the X11 backend -- run with GDK_BACKEND=x11" );
 		return 1;
 	}
 	const Window xid = gdk_x11_window_get_xid( pGdk );
@@ -123,11 +126,18 @@ int main( int argc, char **argv )
 	int nW = -1, nH = -1, nPixW = -1, nPixH = -1;
 	const bool bSize = SDL_GetWindowSize( pWindow, &nW, &nH );
 	const bool bPix = SDL_GetWindowSizeInPixels( pWindow, &nPixW, &nPixH );
-	snprintf( szDetail, sizeof( szDetail ),
-						"SDL_Window %p; gtk alloc %dx%d; SDL size %dx%d (%s); in pixels %dx%d (%s)",
-						(void*)pWindow, allocation.width, allocation.height,
-						nW, nH, bSize ? "ok" : SDL_GetError(),
-						nPixW, nPixH, bPix ? "ok" : SDL_GetError() );
+	snprintf( szDetail,
+	          sizeof( szDetail ),
+	          "SDL_Window %p; gtk alloc %dx%d; SDL size %dx%d (%s); in pixels %dx%d (%s)",
+	          (void *)pWindow,
+	          allocation.width,
+	          allocation.height,
+	          nW,
+	          nH,
+	          bSize ? "ok" : SDL_GetError(),
+	          nPixW,
+	          nPixH,
+	          bPix ? "ok" : SDL_GetError() );
 	Step( 4, "SDL3 wraps the foreign X11 window", 1, szDetail );
 
 	/* Whether telling SDL the size after the fact puts it right. */
@@ -135,14 +145,18 @@ int main( int argc, char **argv )
 	SDL_SyncWindow( pWindow );
 	int nSetW = -1, nSetH = -1;
 	SDL_GetWindowSize( pWindow, &nSetW, &nSetH );
-	snprintf( szDetail, sizeof( szDetail ), "SDL size now %dx%d, wanted %dx%d",
-						nSetW, nSetH, allocation.width, allocation.height );
-	Step( 5, "SDL_SetWindowSize corrects it",
-				( nSetW == allocation.width ) && ( nSetH == allocation.height ), szDetail );
+	snprintf( szDetail,
+	          sizeof( szDetail ),
+	          "SDL size now %dx%d, wanted %dx%d",
+	          nSetW,
+	          nSetH,
+	          allocation.width,
+	          allocation.height );
+	Step( 5, "SDL_SetWindowSize corrects it", ( nSetW == allocation.width ) && ( nSetH == allocation.height ), szDetail );
 
 	/* The instance extensions SDL says this window needs. */
 	Uint32 nExtensions = 0;
-	char const * const *ppExtensions = SDL_Vulkan_GetInstanceExtensions( &nExtensions );
+	char const *const *ppExtensions = SDL_Vulkan_GetInstanceExtensions( &nExtensions );
 	if ( ppExtensions == NULL )
 	{
 		Step( 6, "SDL names its instance extensions", 0, SDL_GetError() );
@@ -179,8 +193,7 @@ int main( int argc, char **argv )
 	/* The question the whole probe exists for. */
 	VkSurfaceKHR surface = VK_NULL_HANDLE;
 	const bool bSurface = SDL_Vulkan_CreateSurface( pWindow, instance, NULL, &surface );
-	Step( 8, "a Vulkan surface on the wrapped window", bSurface,
-				bSurface ? "" : SDL_GetError() );
+	Step( 8, "a Vulkan surface on the wrapped window", bSurface, bSurface ? "" : SDL_GetError() );
 
 	if ( bSurface )
 	{

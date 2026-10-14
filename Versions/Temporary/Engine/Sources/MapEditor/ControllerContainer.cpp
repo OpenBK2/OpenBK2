@@ -16,7 +16,6 @@ CControllerContainer::CControllerContainer() : pMenuDropDown( 0 )
 	Singleton<ICommandHandlerContainer>()->Set( CHID_CONTROLLER_CONTAINER, this );
 }
 
-
 CControllerContainer::~CControllerContainer()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_CONTROLLER_CONTAINER );
@@ -24,13 +23,10 @@ CControllerContainer::~CControllerContainer()
 	pMenuDropDown = 0;
 }
 
-
-CControllerContainer::CEditSession::CEditSession( CControllerContainer *_pContainer )
-	: pContainer( _pContainer )
+CControllerContainer::CEditSession::CEditSession( CControllerContainer *_pContainer ) : pContainer( _pContainer )
 {
 	pContainer->BeginEditSession();
 }
-
 
 CControllerContainer::CEditSession::~CEditSession()
 {
@@ -41,7 +37,6 @@ CControllerContainer::CEditSession::~CEditSession()
 		Finish( true );
 	}
 }
-
 
 bool CControllerContainer::CEditSession::Finish( bool bAccept )
 {
@@ -57,14 +52,12 @@ bool CControllerContainer::CEditSession::Finish( bool bAccept )
 	return true;
 }
 
-
 void CControllerContainer::BeginEditSession()
 {
 	editSessions.emplace_back();
 	controllerList.swap( editSessions.back().savedUndo );
 	redoOperationList.swap( editSessions.back().savedRedo );
 }
-
 
 void CControllerContainer::SetEditOperationApplied( IController *pOperation, bool bApplied )
 {
@@ -80,7 +73,6 @@ void CControllerContainer::SetEditOperationApplied( IController *pOperation, boo
 		}
 	}
 }
-
 
 bool CControllerContainer::EndEditSession( bool bAccept )
 {
@@ -138,7 +130,6 @@ bool CControllerContainer::EndEditSession( bool bAccept )
 	return true;
 }
 
-
 void CControllerContainer::Add( IController *pOperation )
 {
 	if ( !pOperation->IsEmpty() )
@@ -167,7 +158,6 @@ void CControllerContainer::Add( IController *pOperation )
 	}
 }
 
-
 void CControllerContainer::Clear()
 {
 	controllerList.clear();
@@ -181,18 +171,15 @@ void CControllerContainer::Clear()
 	}
 }
 
-
 bool CControllerContainer::CanUndo() const
 {
 	return !( controllerList.empty() );
 }
 
-
 bool CControllerContainer::CanRedo() const
 {
 	return !( redoOperationList.empty() );
 }
-
 
 bool CControllerContainer::Undo( int nCount )
 {
@@ -225,7 +212,6 @@ bool CControllerContainer::Undo( int nCount )
 	return true;
 }
 
-
 bool CControllerContainer::Redo( int nCount )
 {
 	if ( nCount >= 0 )
@@ -257,18 +243,15 @@ bool CControllerContainer::Redo( int nCount )
 	return true;
 }
 
-
 bool CControllerContainer::UndoArrow()
 {
 	return ShowOperationList( true );
 }
 
-
 bool CControllerContainer::RedoArrow()
 {
 	return ShowOperationList( false );
 }
-
 
 bool CControllerContainer::ShowOperationList( bool bUndo )
 {
@@ -276,7 +259,8 @@ bool CControllerContainer::ShowOperationList( bool bUndo )
 
 	const unsigned nButtonID = bUndo ? ID_CC_UNDO : ID_CC_REDO;
 	CTPoint<int> leftBottomPos;
-	if ( Singleton<IMainFrameContainer>()->Get()->GetToolBarButtonLeftBottomPos( mouseCursorPos, nButtonID, &leftBottomPos ) )
+	if ( Singleton<IMainFrameContainer>()->Get()->GetToolBarButtonLeftBottomPos(
+					 mouseCursorPos, nButtonID, &leftBottomPos ) )
 	{
 		CDescriptionList descriptionList;
 		GetDescriptionList( &descriptionList, bUndo );
@@ -293,14 +277,14 @@ bool CControllerContainer::ShowOperationList( bool bUndo )
 	return true;
 }
 
-
 int CControllerContainer::GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const
 {
 	int nCount = 0;
 	std::string szDescription;
 	if ( bUndoList )
 	{
-		for ( CControllerList::const_iterator itController = controllerList.begin(); itController != controllerList.end(); ++itController )
+		for ( CControllerList::const_iterator itController = controllerList.begin(); itController != controllerList.end();
+		      ++itController )
 		{
 			if ( pDescriptionList )
 			{
@@ -313,7 +297,9 @@ int CControllerContainer::GetDescriptionList( CDescriptionList *pDescriptionList
 	}
 	else
 	{
-		for ( CControllerList::const_iterator itRedoOperation = redoOperationList.begin(); itRedoOperation != redoOperationList.end(); ++itRedoOperation )
+		for ( CControllerList::const_iterator itRedoOperation = redoOperationList.begin();
+		      itRedoOperation != redoOperationList.end();
+		      ++itRedoOperation )
 		{
 			if ( pDescriptionList )
 			{
@@ -326,7 +312,6 @@ int CControllerContainer::GetDescriptionList( CDescriptionList *pDescriptionList
 	}
 	return nCount;
 }
-
 
 int CControllerContainer::RemoveTemporaryControllers( const std::string &rszTemporaryLabel )
 {
@@ -351,7 +336,8 @@ int CControllerContainer::RemoveTemporaryControllers( const std::string &rszTemp
 	}
 	// Redo list
 	{
-		for ( CControllerList::iterator itRedoOperation = redoOperationList.begin(); itRedoOperation != redoOperationList.end(); )
+		for ( CControllerList::iterator itRedoOperation = redoOperationList.begin();
+		      itRedoOperation != redoOperationList.end(); )
 		{
 			szTemporaryLabel.clear();
 			( *itRedoOperation )->GetTemporaryLabel( &szTemporaryLabel );
@@ -378,15 +364,15 @@ int CControllerContainer::RemoveTemporaryControllers( const std::string &rszTemp
 		};
 		rSession.savedUndo.remove_if( matches );
 		rSession.savedRedo.remove_if( matches );
-		rSession.operations.remove_if( [&matches]( const SEditOperation &rOperation ) { return matches( rOperation.pController ); } );
+		rSession.operations.remove_if( [&matches]( const SEditOperation &rOperation )
+		                               { return matches( rOperation.pController ); } );
 	}
 	return nCount;
 }
 
-
 bool CControllerContainer::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_CC_UNDO:
 			return Undo( dwData );
@@ -401,13 +387,12 @@ bool CControllerContainer::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 	}
 }
 
-
 bool CControllerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CControllerContainer::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CControllerContainer::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_CC_UNDO:
 		case ID_CC_UNDO_ARROW:
@@ -423,6 +408,5 @@ bool CControllerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnable, b
 			return false;
 	}
 }
-
 
 // basement storage

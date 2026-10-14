@@ -7,12 +7,21 @@ class CInterfaceMainMenu : public CInterfaceScreenBase, public CProgrammedReacti
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMainMenu );
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pSinglePlayerMenuWnd;
 	CPtr<IButton> pTutorialBtn;
 	CPtr<IButton> pLoadGameBtn;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pSinglePlayerMenuWnd); f.Add(4,&pTutorialBtn); f.Add(5,&pLoadGameBtn); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMainWnd );
+		f.Add( 3, &pSinglePlayerMenuWnd );
+		f.Add( 4, &pTutorialBtn );
+		f.Add( 5, &pLoadGameBtn );
+		return 0;
+	}
+
 private:
 	void MsgOptionsMenu( const SGameMessage &msg );
 	void MsgCreditsScreen( const SGameMessage &msg );
@@ -52,12 +61,19 @@ class CICMainMenu : public CInterfaceCommandBase<CInterfaceMainMenu>
 {
 	OBJECT_BASIC_METHODS( CICMainMenu );
 
-	ZDATA_(CInterfaceCommandBase<CInterfaceMainMenu>)
+	ZDATA_( CInterfaceCommandBase<CInterfaceMainMenu> )
 	std::string szConfig;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceMainMenu>*)this); f.Add(2,&szConfig); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceCommandBase<CInterfaceMainMenu> *)this );
+		f.Add( 2, &szConfig );
+		return 0;
+	}
+
 private:
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

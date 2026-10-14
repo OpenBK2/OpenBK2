@@ -40,8 +40,8 @@
 // ignored, which is also what they amount to on a fullscreen window.
 #define HWND_TOP ( (HWND)0 )
 #define HWND_BOTTOM ( (HWND)1 )
-#define HWND_TOPMOST ( (HWND)-1 )
-#define HWND_NOTOPMOST ( (HWND)-2 )
+#define HWND_TOPMOST ( ( HWND ) - 1 )
+#define HWND_NOTOPMOST ( ( HWND ) - 2 )
 
 //! The SDL window an HWND stands for. DXVK types HWND as HANDLE, so this is the
 //! one place that knows what is actually behind it.

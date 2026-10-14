@@ -67,14 +67,14 @@ indent_style = unset
 indent_size = unset
 tab_width = unset
 
-# The test and benchmark directories are indented with spaces end to end, not
-# with tabs like the engine sources, so they keep spaces. Each has a nested
-# .clang-format saying the same thing to the formatter. 3Dmotor/test/original
-# holds verbatim copies of the implementations the ported routines are checked
-# against, where being byte-identical is the point.
-[Versions/Temporary/Engine/Sources/{3Dmotor/test,3Dmotor/benchmark,MemoryLib/test}/**]
-indent_style = space
-indent_size = 2
+# Verbatim transcriptions of the original implementations the ported SIMD
+# routines are checked against. Being diffable against the .asm and the 2005
+# C++ they came from is their purpose, so nothing restyles them; the nested
+# .clang-format there says the same to the formatter.
+[Versions/Temporary/Engine/Sources/3Dmotor/test/original/**]
+indent_style = unset
+indent_size = unset
+tab_width = unset
 
 # The .cll type descriptions are source, but dbcodegen copies a tooltip comment
 # into types.xml verbatim, trailing space included. Trimming one is a game data

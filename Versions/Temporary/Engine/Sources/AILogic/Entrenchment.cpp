@@ -43,11 +43,16 @@ extern CStatistics theStatistics;
 //BASIC_REGISTER_CLASS( CEntrenchmentPart );
 //BASIC_REGISTER_CLASS( CEntrenchmentTankPit );
 
-CEntrenchmentPart::CEntrenchmentPart( const SEntrenchmentRPGStats *_pStats, const CVec3 &_center, const uint16_t _dir, const int nFrameIndex,  float fHP, int nPlayer, bool _bPlayerCreates )
-:	CExistingObject( nFrameIndex, fHP ), pStats( _pStats ), center( _center ), dir( _dir ),
-	bDigBySegment( false ), bOwnerChanged( false ), bVisible( false ), nextSegmTime( 0 ),
-	bSuspendedAppear( nPlayer != theDipl.GetMyNumber() ),
-	bPlayerCreates( _bPlayerCreates )
+CEntrenchmentPart::CEntrenchmentPart( const SEntrenchmentRPGStats *_pStats,
+                                      const CVec3 &_center,
+                                      const uint16_t _dir,
+                                      const int nFrameIndex,
+                                      float fHP,
+                                      int nPlayer,
+                                      bool _bPlayerCreates )
+		: CExistingObject( nFrameIndex, fHP ), pStats( _pStats ), center( _center ), dir( _dir ), bDigBySegment( false ),
+			bOwnerChanged( false ), bVisible( false ), nextSegmTime( 0 ),
+			bSuspendedAppear( nPlayer != theDipl.GetMyNumber() ), bPlayerCreates( _bPlayerCreates )
 {
 	boundRect.InitRect( VNULL2, VNULL2, 0, 0, 0 );
 }
@@ -62,7 +67,7 @@ const int CEntrenchmentPart::GetNDefenders() const
 
 void CEntrenchmentPart::Init()
 {
-	boundRect = CalcBoundRect( CVec2(GetCenter().x, GetCenter().y), dir, GetSegmStats() );
+	boundRect = CalcBoundRect( CVec2( GetCenter().x, GetCenter().y ), dir, GetSegmStats() );
 	//DEBUG{
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "show_entrenchment_boundrects", 0 ) )
@@ -137,25 +142,28 @@ void CEntrenchmentPart::Segment()
 		theStatObjs.UnregisterSegment( this );
 
 	// random вызывать всегда - для mutliplayer
-	nextSegmTime = curTime + NRandom::Random( 500, 2000 ); RecordRandomCall();
+	nextSegmTime = curTime + NRandom::Random( 500, 2000 );
+	RecordRandomCall();
 }
 
 void CEntrenchmentPart::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 {
 	pPlacement->nObjUniqueID = GetUniqueId();
 	pPlacement->dir = GetDir();
-	pPlacement->center = CVec2(GetCenter().x, GetCenter().y);
+	pPlacement->center = CVec2( GetCenter().x, GetCenter().y );
 	pPlacement->z = GetTerrainHeight( pPlacement->center.x, pPlacement->center.y, timeDiff ) + center.z;
 	pPlacement->fSpeed = 0;
 	pPlacement->dwNormal = GetHeights()->GetNormal( pPlacement->center.x, pPlacement->center.y );
 }
 
-SRect CEntrenchmentPart::CalcBoundRect( const CVec2 & center, const uint16_t _dir, const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats& stats)
+SRect CEntrenchmentPart::CalcBoundRect( const CVec2 &center,
+                                        const uint16_t _dir,
+                                        const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats &stats )
 {
 	SRect r;
-	const CVec2 vDir( GetVectorByDirection( _dir + 65535/4 ) );
+	const CVec2 vDir( GetVectorByDirection( _dir + 65535 / 4 ) );
 	const CVec2 dirPerp( vDir.y, -vDir.x );
-	const CVec2 vShift( vDir * (stats.vAABBCenter.x /*-stats.vAABBHalfSize.x*/) + dirPerp * stats.vAABBCenter.y );
+	const CVec2 vShift( vDir * ( stats.vAABBCenter.x /*-stats.vAABBHalfSize.x*/ ) + dirPerp * stats.vAABBCenter.y );
 	r.InitRect( center + vShift, vDir, stats.vAABBHalfSize.x, stats.vAABBHalfSize.y );
 	return r;
 }
@@ -187,7 +195,10 @@ void CEntrenchmentPart::GetCoveredTiles( std::list<SVector> *pTiles ) const
 	GetAIMap()->GetTilesCoveredByRect( boundRect, pTiles );
 }
 
-void CEntrenchmentPart::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CEntrenchmentPart::TakeDamage( const float fDamage,
+                                    const bool bFromExplosion,
+                                    const int nPlayerOfShoot,
+                                    CAIUnit *pShotUnit )
 {
 	// trenches must not die
 	if ( pOwner )
@@ -199,7 +210,7 @@ bool CEntrenchmentPart::IsPointInside( const CVec2 &point ) const
 	return boundRect.IsPointInside( point );
 }
 
-void CEntrenchmentPart::SetVisible( const bool bLastSegment /*=false*/)
+void CEntrenchmentPart::SetVisible( const bool bLastSegment /*=false*/ )
 {
 	if ( !bVisible )
 	{
@@ -217,7 +228,7 @@ void CEntrenchmentPart::SetVisible( const bool bLastSegment /*=false*/)
 		bOwnerChanged = false;
 		int nParam = ( bLastSegment ? 1 : -1 ) * ( bDigBySegment ? 2 : 1 );
 
-		if ( GetType() == EST_TERMINATOR && bDigBySegment )			//CRAP: force terminators to dig every time when digging in-game
+		if ( GetType() == EST_TERMINATOR && bDigBySegment ) //CRAP: force terminators to dig every time when digging in-game
 			nParam = 2;
 
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_ENTRENCHMENT, this, nParam );
@@ -236,8 +247,11 @@ const NTimer::STime CEntrenchmentPart::GetNextSegmentTime() const
 
 //BASIC_REGISTER_CLASS( CEntrenchment );
 
-CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntrenchment *pFullEntrenchment, const bool bPiecewise )
-: nBusyFireplaces( 0 ), nextSegmTime( 0 )
+CEntrenchment::CEntrenchment( CObjectBase **_segments,
+                              const int nLen,
+                              CFullEntrenchment *pFullEntrenchment,
+                              const bool bPiecewise )
+		: nBusyFireplaces( 0 ), nextSegmTime( 0 )
 {
 	SetAlive( true );
 	NI_ASSERT( nLen != 0, "Окоп из нуля сегментов" );
@@ -250,9 +264,9 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 	CVec2 vDir( VNULL2 ), vDirPerp( VNULL2 ), center( VNULL2 );
 	for ( int i = 0; i < nLen; ++i )
 	{
-		NI_ASSERT( dynamic_cast<const CEntrenchmentPart*>( _segments[i] ) != 0, "Wrong part of entrenchment" );
-		CEntrenchmentPart *pPart = checked_cast<CEntrenchmentPart*>( _segments[i] );
-	//	NI_ASSERT( pPart->GetOwner() == 0, "Segment of entrenchment exists in two sections" );
+		NI_ASSERT( dynamic_cast<const CEntrenchmentPart *>( _segments[i] ) != 0, "Wrong part of entrenchment" );
+		CEntrenchmentPart *pPart = checked_cast<CEntrenchmentPart *>( _segments[i] );
+		//	NI_ASSERT( pPart->GetOwner() == 0, "Segment of entrenchment exists in two sections" );
 		const CVec2 vPartCenter( pPart->GetCenter().x, pPart->GetCenter().y );
 		vDir = GetVectorByDirection( pPart->GetDir() );
 		vDirPerp = CVec2( -vDir.y, vDir.x );
@@ -267,11 +281,12 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 
 				center = vPartCenter + GetShift( pPart->GetSegmStats().vAABBCenter, vDir );
 				z = 2 * pPart->GetSegmStats().vAABBHalfSize.z;
-				pStats = checked_cast<const SEntrenchmentRPGStats*>(pPart->GetStats());
+				pStats = checked_cast<const SEntrenchmentRPGStats *>( pPart->GetStats() );
 			}
 			else
 			{
-				const float fToCenter = ( vPartCenter + GetShift( pPart->GetSegmStats().vAABBCenter, vDir ) - center ) * vDirPerp;
+				const float fToCenter =
+						( vPartCenter + GetShift( pPart->GetSegmStats().vAABBCenter, vDir ) - center ) * vDirPerp;
 
 				float fLength = fToCenter + pPart->GetSegmStats().vAABBHalfSize.y;
 				if ( fLength > 0 && fLength > fLengthAhead )
@@ -283,7 +298,8 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 			}
 
 			for ( int i = 0; i < pPart->GetSegmStats().fireplaces.size(); ++i )
-				fireplaces.push_back( SFireplaceInfo( vPartCenter + GetShift( pPart->GetSegmStats().fireplaces[i], vDir ), 0, pPart->GetFrameIndex() ) );
+				fireplaces.push_back( SFireplaceInfo(
+						vPartCenter + GetShift( pPart->GetSegmStats().fireplaces[i], vDir ), 0, pPart->GetFrameIndex() ) );
 		}
 
 		pPart->SetOwner( this, bPiecewise );
@@ -332,7 +348,7 @@ const NTimer::STime CEntrenchment::GetNextSegmentTime() const
 	return nextSegmTime > curTime ? nextSegmTime : curTime;
 }
 
-CAIUnit* CEntrenchment::GetIteratedUnit()
+CAIUnit *CEntrenchment::GetIteratedUnit()
 {
 	NI_VERIFY( !IsIterateFinished(), "Wrong fire unit to get", return 0 );
 	return iter->pUnit;
@@ -382,7 +398,9 @@ void CEntrenchment::AddSoldier( CSoldier *pUnit )
 		NI_ASSERT( nFireplace < fireplaces.size(), "Wrong fireplace number" );
 
 		fireplaces[nFireplace].pUnit = pUnit;
-		pUnit->MoveToEntrenchFireplace( CVec3( fireplaces[nFireplace].center, GetHeights()->GetZ( fireplaces[nFireplace].center ) - z ), fireplaces[nFireplace].nFrameIndex );
+		pUnit->MoveToEntrenchFireplace(
+				CVec3( fireplaces[nFireplace].center, GetHeights()->GetZ( fireplaces[nFireplace].center ) - z ),
+				fireplaces[nFireplace].nFrameIndex );
 		insiders.push_front( SInsiderInfo( pUnit, nFireplace ) );
 	}
 	else
@@ -431,7 +449,9 @@ void CEntrenchment::ProcessEmptyFireplace( const int nFireplace )
 		insiders.back().nFireplace = nFireplace;
 		fireplaces[nFireplace].pUnit = pUnit;
 
-		pUnit->MoveToEntrenchFireplace( CVec3( fireplaces[nFireplace].center, GetHeights()->GetZ( fireplaces[nFireplace].center ) - z ), fireplaces[nFireplace].nFrameIndex );
+		pUnit->MoveToEntrenchFireplace(
+				CVec3( fireplaces[nFireplace].center, GetHeights()->GetZ( fireplaces[nFireplace].center ) - z ),
+				fireplaces[nFireplace].nFrameIndex );
 
 		insiders.push_front( insiders.back() );
 		insiders.pop_back();
@@ -445,7 +465,7 @@ void CEntrenchment::ProcessEmptyFireplace( const int nFireplace )
 
 void CEntrenchment::DelSoldier( CSoldier *pUnit, const bool bFillEmptyFireplace )
 {
-	std::list< SInsiderInfo >::iterator iter = insiders.begin();
+	std::list<SInsiderInfo>::iterator iter = insiders.begin();
 	while ( iter != insiders.end() && iter->pUnit != pUnit )
 		++iter;
 
@@ -469,7 +489,10 @@ void CEntrenchment::DelSoldier( CSoldier *pUnit, const bool bFillEmptyFireplace 
 	}
 }
 
-void CEntrenchment::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CEntrenchment::TakeDamage( const float fDamage,
+                                const bool bFromExplosion,
+                                const int nPlayerOfShoot,
+                                CAIUnit *pShotUnit )
 {
 	// Designers requested this feature removed - 06.04-2005
 	return;
@@ -528,7 +551,7 @@ const int CEntrenchment::GetNDefenders() const
 	return insiders.size();
 }
 
-CSoldier* CEntrenchment::GetUnit( const int n ) const
+CSoldier *CEntrenchment::GetUnit( const int n ) const
 {
 	NI_ASSERT( n < GetNDefenders(), "Wrong unit to get from entrenchment" );
 
@@ -539,7 +562,7 @@ CSoldier* CEntrenchment::GetUnit( const int n ) const
 
 const uint8_t CEntrenchment::GetPlayer() const
 {
-	if ( GetNDefenders() ==0 || insiders.empty() )
+	if ( GetNDefenders() == 0 || insiders.empty() )
 		return theDipl.GetNeutralPlayer();
 	else
 		return insiders.begin()->pUnit->GetPlayer();
@@ -547,7 +570,8 @@ const uint8_t CEntrenchment::GetPlayer() const
 
 void CEntrenchment::Segment()
 {
-	nextSegmTime = curTime + NRandom::Random( 200, 1000 ); RecordRandomCall();
+	nextSegmTime = curTime + NRandom::Random( 200, 1000 );
+	RecordRandomCall();
 
 	if ( !IsUnitsInside() )
 		theStatObjs.UnregisterSegment( this );
@@ -576,14 +600,14 @@ bool CEntrenchment::CanRotateSoldier( CSoldier *pSoldier ) const
 
 void CEntrenchment::ExchangeUnitToFireplace( CSoldier *pSoldier, int nFirePlace )
 {
-	NI_ASSERT( nFirePlace < GetNFirePlaces(), fmt::format( "Wrong number of fireplace ({}), number of fireplaces ({})", nFirePlace, GetNFirePlaces() ) );
+	NI_ASSERT( nFirePlace < GetNFirePlaces(),
+	           fmt::format( "Wrong number of fireplace ({}), number of fireplaces ({})", nFirePlace, GetNFirePlaces() ) );
 
 	CSoldier *pDeletedSoldier = GetSoldierInFireplace( nFirePlace );
 
 	if ( pDeletedSoldier )
 		DelSoldier( pDeletedSoldier, false );
 	DelSoldier( pSoldier, false );
-
 
 	AddSoldierToFirePlace( pSoldier, nFirePlace );
 	if ( pDeletedSoldier )
@@ -595,12 +619,12 @@ const int CEntrenchment::GetNFirePlaces() const
 	return fireplaces.size();
 }
 
-CSoldier* CEntrenchment::GetSoldierInFireplace( const int nFireplace) const
+CSoldier *CEntrenchment::GetSoldierInFireplace( const int nFireplace ) const
 {
 	return fireplaces[nFireplace].pUnit;
 }
 
-const CVec3& CEntrenchment::GetCenter() const
+const CVec3 &CEntrenchment::GetCenter() const
 {
 	static CVec3 vCenter;
 	vCenter = CVec3( rect.center, z );
@@ -615,10 +639,10 @@ void CEntrenchment::SetVisible()
 		if ( pPrevIter )
 			pPrevIter->SetVisible();
 
-		pPrevIter = (*iter);
+		pPrevIter = ( *iter );
 	}
 
-	if ( pPrevIter )			//Display last part
+	if ( pPrevIter ) //Display last part
 		pPrevIter->SetVisible( true );
 }
 
@@ -627,21 +651,20 @@ void CEntrenchment::SetVisible()
 //*******************************************************************
 
 CEntrenchmentTankPit::CEntrenchmentTankPit( const SMechUnitRPGStats *_pStats,
-												const CVec3& center,
-												const uint16_t dir,
-												const int nFrameIndex,  const class CVec2 &vHalfSize,
-												const std::list<SObjTileInfo> &tiles,
-												class CAIUnit *_pOwner )
-: wDir( dir ), vHalfSize( vHalfSize ), pStats( _pStats ), pOwner( _pOwner ), tilesToLock( tiles ),
-	CGivenPassabilityStObject( center, 1.0f, dir, nFrameIndex )
+                                            const CVec3 &center,
+                                            const uint16_t dir,
+                                            const int nFrameIndex,
+                                            const class CVec2 &vHalfSize,
+                                            const std::list<SObjTileInfo> &tiles,
+                                            class CAIUnit *_pOwner )
+		: wDir( dir ), vHalfSize( vHalfSize ), pStats( _pStats ), pOwner( _pOwner ), tilesToLock( tiles ),
+			CGivenPassabilityStObject( center, 1.0f, dir, nFrameIndex )
 {
-	boundRect.InitRect( CVec2(center.x, center.y), GetVectorByDirection(dir), vHalfSize.y, vHalfSize.x );
+	boundRect.InitRect( CVec2( center.x, center.y ), GetVectorByDirection( dir ), vHalfSize.y, vHalfSize.x );
 	SetUniqueIdForObjects();
 }
 
-CEntrenchmentTankPit::~CEntrenchmentTankPit()
-{
-}
+CEntrenchmentTankPit::~CEntrenchmentTankPit() {}
 
 void CEntrenchmentTankPit::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
@@ -686,7 +709,7 @@ void CEntrenchmentTankPit::LockTiles()
 bool CEntrenchmentTankPit::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return //eAction == ACTION_NOTIFY_NEW_ST_OBJ ||
-		CGivenPassabilityStObject::ShouldSuspendAction( eAction );
+			CGivenPassabilityStObject::ShouldSuspendAction( eAction );
 }
 
 void CEntrenchmentTankPit::UnlockTiles()
@@ -699,7 +722,10 @@ void CEntrenchmentTankPit::Die( const float fDamage )
 	Delete();
 }
 
-void CEntrenchmentTankPit::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CEntrenchmentTankPit::TakeDamage( const float fDamage,
+                                       const bool bFromExplosion,
+                                       const int nPlayerOfShoot,
+                                       CAIUnit *pShotUnit )
 {
 	//не разрушается
 }

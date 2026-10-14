@@ -92,7 +92,7 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 	NGfx::SPixel8888 outlineColor;
 
 	int nTemp = 1;
-	while( nTemp < paramsSet.size() )
+	while ( nTemp < paramsSet.size() )
 	{
 		if ( nTemp + 2 >= paramsSet.size() )
 			break;
@@ -101,7 +101,7 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 
 		const std::wstring &wsID = paramsSet[nTemp];
 		const std::wstring &wsParam = paramsSet[nTemp + 2];
-		if ( wsID.compare( L"size" ) == 0  )
+		if ( wsID.compare( L"size" ) == 0 )
 		{
 			nFlags |= N_FONTOBJECT_SIZE;
 
@@ -118,24 +118,23 @@ void CFontHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, const std::
 			}
 			else
 				font.nSize |= FONT_SIZE_POINTS;
-
 		}
-		else if ( wsID.compare( L"face" ) == 0  )
+		else if ( wsID.compare( L"face" ) == 0 )
 		{
 			nFlags |= N_FONTOBJECT_NAME;
 			font.szName = WideToUTF8( wsParam );
 		}
-		else if ( wsID.compare( L"outlinesize" ) == 0  )
+		else if ( wsID.compare( L"outlinesize" ) == 0 )
 		{
 			nFlags |= N_FONTOBJECT_OUTLINESIZE;
 			nOutlineSize = NStr::ToIntDec( wsParam );
 		}
-		else if ( wsID.compare( L"outlinecolor" ) == 0  )
+		else if ( wsID.compare( L"outlinecolor" ) == 0 )
 		{
 			nFlags |= N_FONTOBJECT_OUTLINECOLOR;
 			outlineColor = StringToColor( wsParam );
 		}
-		else if ( wsID.compare( L"forcefontsize" ) == 0  )
+		else if ( wsID.compare( L"forcefontsize" ) == 0 )
 		{
 			nFlags |= N_FONTOBJECT_FORCEFONTSIZE;
 			bForceFontSize = true;
@@ -153,9 +152,9 @@ void CMinFontSizeHandler::Exec( CMLStream *pStream, IReflowLayout *pLayout, cons
 {
 	if ( paramsSet.size() != 4 )
 		return;
-	if ( paramsSet[1].compare( L"size" ) == 0  )
+	if ( paramsSet[1].compare( L"size" ) == 0 )
 		return;
-	if ( paramsSet[2].compare( L"=" ) == 0  )
+	if ( paramsSet[2].compare( L"=" ) == 0 )
 		return;
 
 	int nMinFontSize = NStr::ToIntDec( paramsSet[3] );

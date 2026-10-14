@@ -7,15 +7,15 @@
 
 bool CConstructorInfo::GetUnitPlatforms( const int nUniqueID, const std::vector<SUnitPlatform> **pPlatforms )
 {
-	std::unordered_map<int, std::vector<SUnitPlatform> >::iterator posUnits = units.find( nUniqueID );
+	std::unordered_map<int, std::vector<SUnitPlatform>>::iterator posUnits = units.find( nUniqueID );
 	if ( posUnits == units.end() )
 		return false;
-	*pPlatforms = &(posUnits->second);
+	*pPlatforms = &( posUnits->second );
 
 	return true;
 }
 
-template<class T>
+template <class T>
 static void ConstructPlatforms( std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms, const T *pProfile )
 {
 	pPlatforms->reserve( pProfile->platforms.size() );
@@ -24,8 +24,10 @@ static void ConstructPlatforms( std::vector<CConstructorInfo::SUnitPlatform> *pP
 		if ( pProfile->platforms[i].bAttached )
 		{
 			CConstructorInfo::SUnitPlatform &platform =
-				pPlatforms->size() <= i ? pPlatforms->emplace_back() :
-				(*pPlatforms)[i].nPlatformIndex > i ? *(pPlatforms->insert( pPlatforms->begin() + i, CConstructorInfo::SUnitPlatform() )) : (*pPlatforms)[i];
+					pPlatforms->size() <= i ? pPlatforms->emplace_back()
+					: ( *pPlatforms )[i].nPlatformIndex > i
+							? *( pPlatforms->insert( pPlatforms->begin() + i, CConstructorInfo::SUnitPlatform() ) )
+							: ( *pPlatforms )[i];
 
 			NI_VERIFY( platform.nPlatformIndex == -1 || platform.nPlatformIndex == i, "Wrong platform index", return );
 
@@ -40,8 +42,10 @@ static void ConstructPlatforms( std::vector<CConstructorInfo::SUnitPlatform> *pP
 					else if ( platform.gunIndexes[j] > j )
 						platform.gunIndexes.insert( platform.gunIndexes.begin() + j, j );
 
-					NI_VERIFY( platform.gunIndexes.size() > j || platform.gunIndexes[platform.gunIndexes.size()-1] == j, "Wrong gun index" ,return );
-					NI_VERIFY( platform.gunIndexes.size() <= j || platform.gunIndexes[j] == j, "Wrong gun index" ,return );
+					NI_VERIFY( platform.gunIndexes.size() > j || platform.gunIndexes[platform.gunIndexes.size() - 1] == j,
+					           "Wrong gun index",
+					           return );
+					NI_VERIFY( platform.gunIndexes.size() <= j || platform.gunIndexes[j] == j, "Wrong gun index", return );
 				}
 			}
 		}
@@ -70,7 +74,8 @@ void CConstructorInfo::ApplyProfile( const int nUniqueID, const NDb::SDBConstruc
 		slots[nUniqueID].clear();
 		slots[nUniqueID].resize( profileSlots.size() + oldSlots.size(), -1 );
 
-		std::vector<int>::iterator iter = merge( oldSlots.begin(), oldSlots.end(), profileSlots.begin(), profileSlots.end(), slots[nUniqueID].begin() );
+		std::vector<int>::iterator iter =
+				merge( oldSlots.begin(), oldSlots.end(), profileSlots.begin(), profileSlots.end(), slots[nUniqueID].begin() );
 		slots[nUniqueID].erase( iter, slots[nUniqueID].end() );
 	}
 }
@@ -80,14 +85,14 @@ void CConstructorInfo::SetPlayerUnit( const int nUniqueID, CObjectBase *pPlayerU
 	playerUnits[nUniqueID] = pPlayerUnit;
 }
 
-CObjectBase* CConstructorInfo::GetPlayerUnit( const int nUniqueID )
+CObjectBase *CConstructorInfo::GetPlayerUnit( const int nUniqueID )
 {
 	return playerUnits[nUniqueID];
 }
 
 int CConstructorInfo::GetSlotsSize( const int nUniqueID ) const
 {
-	std::unordered_map<int, std::vector<int> >::const_iterator pos = slots.find( nUniqueID );
+	std::unordered_map<int, std::vector<int>>::const_iterator pos = slots.find( nUniqueID );
 	if ( pos == slots.end() )
 		return 0;
 	else
@@ -96,7 +101,7 @@ int CConstructorInfo::GetSlotsSize( const int nUniqueID ) const
 
 int CConstructorInfo::GetSlotObject( const int nUniqueID, const int nSlot ) const
 {
-	std::unordered_map<int, std::vector<int> >::const_iterator pos = slots.find( nUniqueID );
+	std::unordered_map<int, std::vector<int>>::const_iterator pos = slots.find( nUniqueID );
 	if ( pos == slots.end() )
 		return -1;
 	else if ( nSlot < 0 || nSlot >= pos->second.size() )
@@ -105,7 +110,7 @@ int CConstructorInfo::GetSlotObject( const int nUniqueID, const int nSlot ) cons
 		return pos->second[nSlot];
 }
 
-CConstructorInfo* CreateConstructorInfo()
+CConstructorInfo *CreateConstructorInfo()
 {
 	return new CConstructorInfo();
 }

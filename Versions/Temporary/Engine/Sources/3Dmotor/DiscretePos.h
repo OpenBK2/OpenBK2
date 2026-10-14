@@ -1,16 +1,21 @@
 #pragma once
 
-class CFBTransform: public CObjectBase
+class CFBTransform : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CFBTransform);
+	OBJECT_BASIC_METHODS( CFBTransform );
+
 public:
 	ZDATA
 	SFBTransform pos;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pos); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &pos );
+		return 0;
+	}
 
 	CFBTransform() {}
-	CFBTransform( const SFBTransform &_pos ): pos(_pos) {}
-	const SFBTransform& GetValue() const { return pos; }
+	CFBTransform( const SFBTransform &_pos ) : pos( _pos ) {}
+	const SFBTransform &GetValue() const { return pos; }
 	void Set( const SFBTransform &_pos ) { pos = _pos; }
 };
 
@@ -18,26 +23,34 @@ struct SDiscretePos
 {
 	enum
 	{
-		TURN_0   = 0,
-		TURN_90  = 1,
+		TURN_0 = 0,
+		TURN_90 = 1,
 		TURN_180 = 2,
 		TURN_270 = 3,
 		FLIP = 4,
 	};
 	ZDATA
 	CVec3 ptMove;
-	int   nRotation;
+	int nRotation;
 	CObj<CFBTransform> pTransform;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&ptMove); f.Add(3,&nRotation); f.Add(4,&pTransform); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &ptMove );
+		f.Add( 3, &nRotation );
+		f.Add( 4, &pTransform );
+		return 0;
+	}
 
 	SDiscretePos() {}
 	SDiscretePos( CFBTransform *_pTransform, const CVec3 &_ptMove, int nRotationID )
-		: ptMove(_ptMove), nRotation(nRotationID), pTransform(_pTransform) {}
+			: ptMove( _ptMove ), nRotation( nRotationID ), pTransform( _pTransform )
+	{
+	}
 	void MakeMatrix( SFBTransform *pRes ) const;
 	void MoveAndRotate( CVec3 *pPoint ) const;
 	void InvMoveAndRotate( CVec3 *pPoint ) const;
 	void MoveAndRotate( std::vector<CVec3> *pPoints ) const;
-	CFBTransform* GetTransform() const;
+	CFBTransform *GetTransform() const;
 };
 
 inline int AngleToRotationID( int nRotation )
@@ -104,7 +117,7 @@ inline void SDiscretePos::MoveAndRotate( std::vector<CVec3> *pPoints ) const
 {
 	ASSERT( pPoints );
 	for ( int i = 0; i < pPoints->size(); ++i )
-		MoveAndRotate( &(*pPoints)[i] );
+		MoveAndRotate( &( *pPoints )[i] );
 }
 
 inline void SDiscretePos::InvMoveAndRotate( CVec3 *pPoint ) const
@@ -114,8 +127,12 @@ inline void SDiscretePos::InvMoveAndRotate( CVec3 *pPoint ) const
 	int nInvR = nRotation;
 	switch ( nRotation )
 	{
-		case TURN_90: nInvR = TURN_270; break;
-		case TURN_270: nInvR = TURN_90; break;
+		case TURN_90:
+			nInvR = TURN_270;
+			break;
+		case TURN_270:
+			nInvR = TURN_90;
+			break;
 	}
 	SDiscretePos pos( 0, VNULL3, nInvR );
 	pos.MoveAndRotate( pPoint );

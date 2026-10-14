@@ -2,7 +2,7 @@
 
 #include <boost/config.hpp>
 
-template<class T, int N_BLOCK_SIZE = 4096>
+template <class T, int N_BLOCK_SIZE = 4096>
 class CPool
 {
 	struct SBlock
@@ -12,15 +12,20 @@ class CPool
 	std::list<SBlock> data;
 	T *pCurrent, *pLast;
 
-	CPool( const CPool &a ) { ASSERT(0); }
-	void operator=( const CPool &a ) { ASSERT(0); }
-	int operator&( IBinSaver &f ) { ASSERT(0); return 0; }
+	CPool( const CPool &a ) { ASSERT( 0 ); }
+	void operator=( const CPool &a ) { ASSERT( 0 ); }
+	int operator&( IBinSaver &f )
+	{
+		ASSERT( 0 );
+		return 0;
+	}
 	BOOST_NOINLINE void AllocNewBlock()
 	{
 		SBlock *pBlock = &data.emplace_back();
 		pCurrent = &pBlock->data[-1];
 		pLast = &pBlock->data[N_BLOCK_SIZE - 1];
 	}
+
 public:
 	struct SIterator
 	{
@@ -28,7 +33,7 @@ public:
 		typename std::list<SBlock>::iterator i;
 		CPool *pPool;
 
-		SIterator(): pPool(0), p(0), pBlockStart(0) {}
+		SIterator() : pPool( 0 ), p( 0 ), pBlockStart( 0 ) {}
 		SIterator( CPool *_pPool ) { Assign( _pPool ); }
 		void Assign( CPool *_pPool )
 		{
@@ -45,7 +50,7 @@ public:
 		}
 		void operator--()
 		{
-			ASSERT(pPool);
+			ASSERT( pPool );
 			--p;
 			if ( p == pBlockStart )
 			{
@@ -63,12 +68,16 @@ public:
 		bool operator==( const SIterator &a ) const { return p == a.p; }
 		bool operator!=( const SIterator &a ) const { return p != a.p; }
 	};
-	CPool(): pCurrent(0), pLast(0) {}
-	T* Alloc()
+	CPool() : pCurrent( 0 ), pLast( 0 ) {}
+	T *Alloc()
 	{
 		if ( pCurrent == pLast )
 			AllocNewBlock();
 		return ++pCurrent;
 	}
-	void Clear() { data.clear(); pCurrent = pLast = 0; }
+	void Clear()
+	{
+		data.clear();
+		pCurrent = pLast = 0;
+	}
 };

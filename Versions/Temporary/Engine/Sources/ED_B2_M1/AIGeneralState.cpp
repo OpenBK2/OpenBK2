@@ -40,7 +40,6 @@ static uint32_t CalcColor( NDb::EParcelType eType )
 	return PARCEL_COLOR_UNKNOWN;
 }
 
-
 //
 //
 //		AI GENERAL POINTS STATE
@@ -48,16 +47,12 @@ static uint32_t CalcColor( NDb::EParcelType eType )
 //
 
 CAIGeneralPointsState::CAIGeneralPointsState( CMapInfoEditor *_pMapInfoEditor )
-	:	pMapInfoEditor( _pMapInfoEditor ),
-	bMoveParcel( false ),
-	bMovePoint( false ),
-	bRotateParcel( false ),
-	bRotatePoint( false )
+		: pMapInfoEditor( _pMapInfoEditor ), bMoveParcel( false ), bMovePoint( false ), bRotateParcel( false ),
+			bRotatePoint( false )
 {
 	NI_ASSERT( pMapInfoEditor, "CAIGeneralPointsState::CAIGeneralPointsState(): pMapInfoEditor == 0" );
 	dialogData.nCurrentPlayer = 0;
 }
-
 
 void CAIGeneralPointsState::Enter()
 {
@@ -68,12 +63,11 @@ void CAIGeneralPointsState::Enter()
 	//
 	Singleton<ICommandHandlerContainer>()->Set( CHID_AIGEN_POINTS_STATE, this );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_SCENE, ID_SCENE_GET_FOCUS, 0) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_GET_FOCUS, 0 ) )
 	{
 		Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 	}
 }
-
 
 void CAIGeneralPointsState::Leave()
 {
@@ -85,13 +79,11 @@ void CAIGeneralPointsState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SELECTION, this );
 }
 
-
-void CAIGeneralPointsState::OnSetFocus( IWidget* pNewWnd )
+void CAIGeneralPointsState::OnSetFocus( IWidget *pNewWnd )
 {
 	CDefaultInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
-
 
 void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 {
@@ -108,9 +100,12 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 
 	const SAIGeneralPointsWindowData::SAIPlayerInfo &currentPlayer = dialogData.players[dialogData.nCurrentPlayer];
 	int nParcel = 0;
-	for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::const_iterator itParcel = currentPlayer.parcels.begin(); itParcel < currentPlayer.parcels.end(); ++itParcel, ++nParcel )
+	for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::const_iterator itParcel =
+	          currentPlayer.parcels.begin();
+	      itParcel < currentPlayer.parcels.end();
+	      ++itParcel, ++nParcel )
 	{
-		const SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = (*itParcel);
+		const SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = ( *itParcel );
 		//
 		const uint32_t dwParcelColor = CalcColor( currentParcel.eType );
 
@@ -122,8 +117,10 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 			fDir -= FP_2PI;
 		const CVec3 vDirPos = CreateFromPolarCoord( currentParcel.fRadius, fDir, 0 ) + vPos;
 
-		sceneDrawTool.DrawCircle( vPos, currentParcel.fRadius+SELECTION_POINT_RADIUS/2, PARCEL_PARTS, dwParcelColor, false );
-		sceneDrawTool.DrawCircle( vPos, currentParcel.fRadius-SELECTION_POINT_RADIUS/2, PARCEL_PARTS, dwParcelColor, false );
+		sceneDrawTool.DrawCircle(
+				vPos, currentParcel.fRadius + SELECTION_POINT_RADIUS / 2, PARCEL_PARTS, dwParcelColor, false );
+		sceneDrawTool.DrawCircle(
+				vPos, currentParcel.fRadius - SELECTION_POINT_RADIUS / 2, PARCEL_PARTS, dwParcelColor, false );
 		sceneDrawTool.DrawCircle( vPos, SELECTION_POINT_RADIUS, PARCEL_PARTS, dwParcelColor, false );
 		sceneDrawTool.DrawLine( vPos, vDirPos, dwParcelColor, false );
 		sceneDrawTool.DrawCircle( vDirPos, SELECTION_POINT_RADIUS, PARCEL_PARTS, dwParcelColor, false );
@@ -133,25 +130,29 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 			{
 				for ( int i = 0; i < 10; ++i )
 				{
-					sceneDrawTool.DrawCircle( vPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
+					sceneDrawTool.DrawCircle(
+							vPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
 				}
 			}
 			if ( bRotateParcel )
 			{
 				for ( int i = 0; i < 10; ++i )
 				{
-					sceneDrawTool.DrawCircle( vDirPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
+					sceneDrawTool.DrawCircle(
+							vDirPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
 				}
 			}
 		}
 		//
 		int nPoint = 0;
-		for ( std::vector<NDb::SReinforcePoint>::const_iterator itReinfPoint = currentParcel.reinforcePoints.begin(); itReinfPoint < currentParcel.reinforcePoints.end(); ++itReinfPoint, ++nPoint )
+		for ( std::vector<NDb::SReinforcePoint>::const_iterator itReinfPoint = currentParcel.reinforcePoints.begin();
+		      itReinfPoint < currentParcel.reinforcePoints.end();
+		      ++itReinfPoint, ++nPoint )
 		{
-			const NDb::SReinforcePoint &currentReinfPoint = (*itReinfPoint);
+			const NDb::SReinforcePoint &currentReinfPoint = ( *itReinfPoint );
 
 			CVec3 vPos( currentParcel.vCenter + currentReinfPoint.vCenter, 0 );
-			vPos.z = GetTerrainHeight(vPos.x, vPos.y );
+			vPos.z = GetTerrainHeight( vPos.x, vPos.y );
 			float fDir = AI2VisRad( currentReinfPoint.fDirection );
 			fDir += FP_PI2;
 			if ( fDir >= FP_2PI )
@@ -163,19 +164,21 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 			sceneDrawTool.DrawLine( vPos, vDirPos, dwParcelColor, false );
 			sceneDrawTool.DrawCircle( vDirPos, SELECTION_POINT_RADIUS, PARCEL_POINT_PARTS, dwParcelColor, false );
 
-			if ( (nParcel == currentPlayer.nCurrentParcel) && (nPoint == currentParcel.nCurrentPoint) )
+			if ( ( nParcel == currentPlayer.nCurrentParcel ) && ( nPoint == currentParcel.nCurrentPoint ) )
 			{
 				{
 					for ( int i = 0; i < 10; ++i )
 					{
-						sceneDrawTool.DrawCircle( vPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
+						sceneDrawTool.DrawCircle(
+								vPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
 					}
 				}
 				if ( bRotatePoint )
 				{
 					for ( int i = 0; i < 10; ++i )
 					{
-						sceneDrawTool.DrawCircle( vDirPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
+						sceneDrawTool.DrawCircle(
+								vDirPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
 					}
 				}
 			}
@@ -184,10 +187,9 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-
 bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_UPDATE_EDIT_PARAMETERS:
 		{
@@ -197,9 +199,8 @@ bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData
 		}
 		case ID_AIGEN_POINTS_WINDOW_UI_EVENT:
 		{
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_AIGEN_POINTS_WINDOW,
-																																ID_WINDOW_GET_DIALOG_DATA,
-																																reinterpret_cast<uintptr_t>(&dialogData)) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+							 CHID_AIGEN_POINTS_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &dialogData ) ) )
 			{
 				switch ( dialogData.eLastAction )
 				{
@@ -251,31 +252,30 @@ bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData
 	return false;
 }
 
-
 bool CAIGeneralPointsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAIGeneralPointsState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAIGeneralPointsState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_UPDATE_EDIT_PARAMETERS:
 		{
-			(*pbEnable) = true;
-			(*pbCheck) = false;
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
 			return true;
 		}
 		case ID_AIGEN_POINTS_WINDOW_UI_EVENT:
 		{
-			(*pbEnable) = true;
-			(*pbCheck) = false;
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
 			return true;
 		}
 		//
 		case ID_SELECTION_CLEAR:
 		{
-			(*pbEnable) = true;
-			(*pbCheck) = false;
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
 			return true;
 		}
 		default:
@@ -285,24 +285,26 @@ bool CAIGeneralPointsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, 
 	return false;
 }
 
-
 void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( dialogData.players[dialogData.nCurrentPlayer].parcels.size() == 0 )
 		return;
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
-	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2(rMousePoint.x, rMousePoint.y) );
+	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
 	vPickedPosOnTerrain.z = 0;
 
 	SAIGeneralPointsWindowData::SAIPlayerInfo &currentPlayer = dialogData.players[dialogData.CurrentPlayer()];
 	//
 	int nParcel = 0;
-	for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::iterator itParcel = currentPlayer.parcels.begin(); itParcel < currentPlayer.parcels.end(); ++itParcel, ++nParcel )
+	for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::iterator itParcel =
+	          currentPlayer.parcels.begin();
+	      itParcel < currentPlayer.parcels.end();
+	      ++itParcel, ++nParcel )
 	{
-		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = (*itParcel);
+		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = ( *itParcel );
 		//
-		if ( fabs(CVec3(currentParcel.vCenter, 0) - vPickedPosOnTerrain) < SELECTION_POINT_RADIUS )
+		if ( fabs( CVec3( currentParcel.vCenter, 0 ) - vPickedPosOnTerrain ) < SELECTION_POINT_RADIUS )
 		{
 			currentPlayer.nCurrentParcel = nParcel;
 			bMoveParcel = true;
@@ -314,7 +316,7 @@ void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &
 		if ( fDir >= FP_2PI )
 			fDir -= FP_2PI;
 		const CVec2 vDirRad = CreateFromPolarCoord( currentParcel.fRadius, fDir );
-		if ( fabs(CVec3(currentParcel.vCenter + vDirRad, 0) - vPickedPosOnTerrain) < SELECTION_POINT_RADIUS )
+		if ( fabs( CVec3( currentParcel.vCenter + vDirRad, 0 ) - vPickedPosOnTerrain ) < SELECTION_POINT_RADIUS )
 		{
 			currentPlayer.nCurrentParcel = nParcel;
 			bRotateParcel = true;
@@ -323,16 +325,22 @@ void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &
 		}
 	}
 	nParcel = 0;
-	for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::iterator itParcel = currentPlayer.parcels.begin(); itParcel < currentPlayer.parcels.end(); ++itParcel, ++nParcel )
+	for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::iterator itParcel =
+	          currentPlayer.parcels.begin();
+	      itParcel < currentPlayer.parcels.end();
+	      ++itParcel, ++nParcel )
 	{
-		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = (*itParcel);
+		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = ( *itParcel );
 		//
 		int nPoint = 0;
-		for ( std::vector<NDb::SReinforcePoint>::iterator itReinfPoint = currentParcel.reinforcePoints.begin(); itReinfPoint < currentParcel.reinforcePoints.end(); ++itReinfPoint, ++nPoint )
+		for ( std::vector<NDb::SReinforcePoint>::iterator itReinfPoint = currentParcel.reinforcePoints.begin();
+		      itReinfPoint < currentParcel.reinforcePoints.end();
+		      ++itReinfPoint, ++nPoint )
 		{
-			NDb::SReinforcePoint &currentPoint = (*itReinfPoint);
+			NDb::SReinforcePoint &currentPoint = ( *itReinfPoint );
 			//
-			if ( fabs(CVec3(currentParcel.vCenter + currentPoint.vCenter, 0) - vPickedPosOnTerrain) < SELECTION_POINT_RADIUS )
+			if ( fabs( CVec3( currentParcel.vCenter + currentPoint.vCenter, 0 ) - vPickedPosOnTerrain ) <
+			     SELECTION_POINT_RADIUS )
 			{
 				currentPlayer.nCurrentParcel = nParcel;
 				currentParcel.nCurrentPoint = nPoint;
@@ -345,7 +353,8 @@ void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &
 			if ( fDir >= FP_2PI )
 				fDir -= FP_2PI;
 			const CVec2 vDirRad = CreateFromPolarCoord( PARCEL_REINFORCE_RAD, fDir );
-			if ( fabs(CVec3(currentParcel.vCenter + currentPoint.vCenter + vDirRad, 0) - vPickedPosOnTerrain) < SELECTION_POINT_RADIUS )
+			if ( fabs( CVec3( currentParcel.vCenter + currentPoint.vCenter + vDirRad, 0 ) - vPickedPosOnTerrain ) <
+			     SELECTION_POINT_RADIUS )
 			{
 				currentPlayer.nCurrentParcel = nParcel;
 				currentParcel.nCurrentPoint = nPoint;
@@ -359,7 +368,6 @@ void CAIGeneralPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &
 	dialogData.players[dialogData.nCurrentPlayer].nCurrentParcel = -1;
 	RefreshWindowData();
 }
-
 
 void CAIGeneralPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -375,7 +383,6 @@ void CAIGeneralPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CAIGeneralPointsState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	bMoveParcel = false;
@@ -388,18 +395,18 @@ void CAIGeneralPointsState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rM
 	RefreshWindowData();
 }
 
-
 void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
-	if ( !(bMoveParcel || bMovePoint || bRotateParcel || bRotatePoint) )
+	if ( !( bMoveParcel || bMovePoint || bRotateParcel || bRotatePoint ) )
 		return;
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
-	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2(rMousePoint.x, rMousePoint.y) );
+	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
 	CVec2 vPickPos( vPickedPosOnTerrain.x, vPickedPosOnTerrain.y );
 
 	SAIGeneralPointsWindowData::SAIPlayerInfo &currentPlayer = dialogData.players[dialogData.CurrentPlayer()];
-	SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = currentPlayer.parcels[dialogData.CurrentParcel()];
+	SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel =
+			currentPlayer.parcels[dialogData.CurrentParcel()];
 
 	if ( bMoveParcel )
 	{
@@ -414,7 +421,9 @@ void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 		float fOldParcelDir = AI2VisRad( currentParcel.fDefenceDirection );
 		const float fDirOff = GetPolarAngle( vPickPos - currentParcel.vCenter ) - FP_PI2 - fOldParcelDir;
 
-		for ( std::vector<NDb::SReinforcePoint>::iterator itReinfPoint = currentParcel.reinforcePoints.begin(); itReinfPoint < currentParcel.reinforcePoints.end(); ++itReinfPoint )
+		for ( std::vector<NDb::SReinforcePoint>::iterator itReinfPoint = currentParcel.reinforcePoints.begin();
+		      itReinfPoint < currentParcel.reinforcePoints.end();
+		      ++itReinfPoint )
 		{
 			const float fOldPointDir = AI2VisRad( itReinfPoint->fDirection );
 
@@ -423,7 +432,7 @@ void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 				fNewPointDir += FP_2PI;
 			else if ( fNewPointDir >= FP_2PI )
 				fNewPointDir -= FP_2PI;
-			itReinfPoint->vCenter = CreateFromPolarCoord( fabs(itReinfPoint->vCenter), fNewPointDir );
+			itReinfPoint->vCenter = CreateFromPolarCoord( fabs( itReinfPoint->vCenter ), fNewPointDir );
 
 			float fNewDir = fOldPointDir + fDirOff;
 			if ( fNewDir < 0 )
@@ -445,7 +454,9 @@ void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 	}
 	else if ( bRotatePoint )
 	{
-		float fNewDir = GetPolarAngle( vPickPos - (currentParcel.vCenter + currentParcel.reinforcePoints[dialogData.CurrentPoint()].vCenter) ) - FP_PI2;
+		float fNewDir = GetPolarAngle( vPickPos - ( currentParcel.vCenter +
+		                                            currentParcel.reinforcePoints[dialogData.CurrentPoint()].vCenter ) ) -
+		                FP_PI2;
 		if ( fNewDir < 0 )
 			fNewDir += FP_2PI;
 		else if ( fNewDir >= FP_2PI )
@@ -454,20 +465,22 @@ void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CAIGeneralPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	switch ( nChar )
 	{
 		case VK_SPACE:
 		{
-			if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentParcel() < 0) )
+			if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentParcel() < 0 ) )
 				return;
 
 			SAIGeneralPointsWindowData::SAIPlayerInfo &currentPlayer = dialogData.players[dialogData.CurrentPlayer()];
-			SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = currentPlayer.parcels[dialogData.CurrentParcel()];
+			SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel =
+					currentPlayer.parcels[dialogData.CurrentParcel()];
 
-			for ( std::vector<NDb::SReinforcePoint>::iterator itReinfPoint = currentParcel.reinforcePoints.begin(); itReinfPoint < currentParcel.reinforcePoints.end(); ++itReinfPoint )
+			for ( std::vector<NDb::SReinforcePoint>::iterator itReinfPoint = currentParcel.reinforcePoints.begin();
+			      itReinfPoint < currentParcel.reinforcePoints.end();
+			      ++itReinfPoint )
 			{
 				itReinfPoint->fDirection = currentParcel.fDefenceDirection;
 			}
@@ -477,22 +490,23 @@ void CAIGeneralPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 	}
 }
 
-
 void CAIGeneralPointsState::GetDataFromDB()
 {
 	dialogData.Clear();
 
 	for ( std::vector<NDb::SMapPlayerInfo>::const_iterator itPlayer = GetMapInfoEditor()->pMapInfo->players.begin();
-																										itPlayer != GetMapInfoEditor()->pMapInfo->players.end(); ++itPlayer )
+	      itPlayer != GetMapInfoEditor()->pMapInfo->players.end();
+	      ++itPlayer )
 	{
-		const NDb::SMapPlayerInfo &player = (*itPlayer);
+		const NDb::SMapPlayerInfo &player = ( *itPlayer );
 
 		SAIGeneralPointsWindowData::SAIPlayerInfo newPlayer;
 
 		for ( std::vector<NDb::SAIGeneralParcel>::const_iterator itParcel = player.general.parcels.begin();
-																												itParcel != player.general.parcels.end(); ++itParcel )
+		      itParcel != player.general.parcels.end();
+		      ++itParcel )
 		{
-			const NDb::SAIGeneralParcel &parcel = (*itParcel);
+			const NDb::SAIGeneralParcel &parcel = ( *itParcel );
 
 			SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel newParcel;
 			newParcel.eType = parcel.eType;
@@ -509,12 +523,11 @@ void CAIGeneralPointsState::GetDataFromDB()
 
 		dialogData.players.push_back( newPlayer );
 	}
-	if( dialogData.nCurrentPlayer >= GetMapInfoEditor()->pMapInfo->players.size() )
+	if ( dialogData.nCurrentPlayer >= GetMapInfoEditor()->pMapInfo->players.size() )
 	{
 		dialogData.nCurrentPlayer = 0;
 	}
 }
-
 
 void CAIGeneralPointsState::SaveDataToDB()
 {
@@ -530,25 +543,57 @@ void CAIGeneralPointsState::SaveDataToDB()
 				for ( int nParcel = 0; nParcel < player.parcels.size(); ++nParcel )
 				{
 					const SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = player.parcels[nParcel];
-					const std::string szType = typeAIGeneralParcel.GetMnemonic((int)dialogData.players[nPlayer].parcels[nParcel].eType).c_str();
+					const std::string szType =
+							typeAIGeneralParcel.GetMnemonic( (int)dialogData.players[nPlayer].parcels[nParcel].eType ).c_str();
 
-					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Type", nPlayer, nParcel), std::string(szType), pManipulator );
-					bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].Center", nPlayer, nParcel), CVec2(parcel.vCenter.x, parcel.vCenter.y), pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Radius", nPlayer, nParcel), float(parcel.fRadius) , pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].DefenceDirection", nPlayer, nParcel), float(parcel.fDefenceDirection) , pManipulator );
-					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Importance", nPlayer, nParcel), float(parcel.fImportance) , pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation(
+																	 fmt::format( "Players.[{}].general.parcels.[{}].Type", nPlayer, nParcel ),
+																	 std::string( szType ),
+																	 pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>(
+																	 fmt::format( "Players.[{}].general.parcels.[{}].Center", nPlayer, nParcel ),
+																	 CVec2( parcel.vCenter.x, parcel.vCenter.y ),
+																	 pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation(
+																	 fmt::format( "Players.[{}].general.parcels.[{}].Radius", nPlayer, nParcel ),
+																	 float( parcel.fRadius ),
+																	 pManipulator );
+					bResult =
+							bResult && pObjectController->AddChangeOperation(
+														 fmt::format( "Players.[{}].general.parcels.[{}].DefenceDirection", nPlayer, nParcel ),
+														 float( parcel.fDefenceDirection ),
+														 pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation(
+																	 fmt::format( "Players.[{}].general.parcels.[{}].Importance", nPlayer, nParcel ),
+																	 float( parcel.fImportance ),
+																	 pManipulator );
 
 					for ( int nReinforcePoint = 0; nReinforcePoint < parcel.reinforcePoints.size(); ++nReinforcePoint )
 					{
 						const NDb::SReinforcePoint &reinfPoint = parcel.reinforcePoints[nReinforcePoint];
 
-						bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Center", nPlayer, nParcel, nReinforcePoint), CVec2(reinfPoint.vCenter.x, reinfPoint.vCenter.y), pManipulator );
-						bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Direction", nPlayer, nParcel, nReinforcePoint), float(reinfPoint.fDirection), pManipulator );
+						bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>(
+																		 fmt::format( "Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Center",
+						                                      nPlayer,
+						                                      nParcel,
+						                                      nReinforcePoint ),
+																		 CVec2( reinfPoint.vCenter.x, reinfPoint.vCenter.y ),
+																		 pManipulator );
+						bResult = bResult && pObjectController->AddChangeOperation(
+																		 fmt::format( "Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Direction",
+						                                      nPlayer,
+						                                      nParcel,
+						                                      nReinforcePoint ),
+																		 float( reinfPoint.fDirection ),
+																		 pManipulator );
 					}
 				}
 				for ( int nScriptID = 0; nScriptID < dialogData.players[nPlayer].mobileScriptIDs.size(); ++nScriptID )
 				{
-					bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.mobileScriptIDs.[{}]", nPlayer, nScriptID), int(player.mobileScriptIDs[nScriptID]), pManipulator );
+					bResult = bResult && pObjectController->AddChangeOperation(
+																	 fmt::format( "Players.[{}].general.mobileScriptIDs.[{}]", nPlayer, nScriptID ),
+																	 int( player.mobileScriptIDs[nScriptID] ),
+																	 pManipulator );
 				}
 			}
 			if ( bResult )
@@ -560,18 +605,15 @@ void CAIGeneralPointsState::SaveDataToDB()
 	}
 }
 
-
 void CAIGeneralPointsState::RefreshWindowData()
 {
 	if ( dialogData.nCurrentPlayer == -1 )
 		return;
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_AIGEN_POINTS_WINDOW,
-																												ID_WINDOW_SET_DIALOG_DATA,
-																												reinterpret_cast<uintptr_t>(&dialogData) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_AIGEN_POINTS_WINDOW, ID_WINDOW_SET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &dialogData ) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-
 
 void CAIGeneralPointsState::AddID()
 {
@@ -587,10 +629,18 @@ void CAIGeneralPointsState::AddID()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddInsertOperation(fmt::format("Players.[{}].general.mobileScriptIDs", dialogData.CurrentPlayer()), NODE_ADD_INDEX, pManipulator) )
+				if ( pObjectController->AddInsertOperation(
+								 fmt::format( "Players.[{}].general.mobileScriptIDs", dialogData.CurrentPlayer() ),
+								 NODE_ADD_INDEX,
+								 pManipulator ) )
 				{
-					bool bResult = pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.mobileScriptIDs.[{}]", dialogData.CurrentPlayer(), dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.size() - 1),
-																																dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs[dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.size() - 1], pManipulator );
+					bool bResult = pObjectController->AddChangeOperation(
+							fmt::format( "Players.[{}].general.mobileScriptIDs.[{}]",
+					                 dialogData.CurrentPlayer(),
+					                 dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.size() - 1 ),
+							dialogData.players[dialogData.CurrentPlayer()]
+									.mobileScriptIDs[dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.size() - 1],
+							pManipulator );
 
 					if ( bResult )
 					{
@@ -602,7 +652,6 @@ void CAIGeneralPointsState::AddID()
 		}
 	}
 }
-
 
 void CAIGeneralPointsState::AddParcel()
 {
@@ -620,7 +669,7 @@ void CAIGeneralPointsState::AddParcel()
 	newParcel.fRadius = 500;
 	newParcel.fDefenceDirection = 0;
 	newParcel.fImportance = 0;
-	newParcel.vCenter = CVec2(vCamAnchor.x, vCamAnchor.y);
+	newParcel.vCenter = CVec2( vCamAnchor.x, vCamAnchor.y );
 	dialogData.players[dialogData.CurrentPlayer()].parcels.push_back( newParcel );
 
 	if ( CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController() )
@@ -629,18 +678,38 @@ void CAIGeneralPointsState::AddParcel()
 		{
 			bool bResult = true;
 
-			if ( pObjectController->AddInsertOperation(fmt::format("Players.[{}].general.parcels", dialogData.CurrentPlayer()), NODE_ADD_INDEX, pManipulator) )
+			if ( pObjectController->AddInsertOperation(
+							 fmt::format( "Players.[{}].general.parcels", dialogData.CurrentPlayer() ),
+							 NODE_ADD_INDEX,
+							 pManipulator ) )
 			{
-				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Type", dialogData.CurrentPlayer(), nParcel),
-																																		std::string(typeAIGeneralParcel.GetMnemonic((int)newParcel.eType).c_str()), pManipulator );
-				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].Center", dialogData.CurrentPlayer(), nParcel),
-																																											newParcel.vCenter, pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Radius", dialogData.CurrentPlayer(), nParcel),
-																																		float(newParcel.fRadius), pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].DefenceDirection", dialogData.CurrentPlayer(), nParcel),
-																																		float(newParcel.fDefenceDirection), pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Importance", dialogData.CurrentPlayer(), nParcel),
-																																		float(newParcel.fImportance), pManipulator );
+				bResult =
+						bResult && pObjectController->AddChangeOperation(
+													 fmt::format( "Players.[{}].general.parcels.[{}].Type", dialogData.CurrentPlayer(), nParcel ),
+													 std::string( typeAIGeneralParcel.GetMnemonic( (int)newParcel.eType ).c_str() ),
+													 pManipulator );
+				bResult = bResult &&
+				          pObjectController->AddChangeVec2Operation<CVec2, float>(
+											fmt::format( "Players.[{}].general.parcels.[{}].Center", dialogData.CurrentPlayer(), nParcel ),
+											newParcel.vCenter,
+											pManipulator );
+				bResult = bResult &&
+				          pObjectController->AddChangeOperation(
+											fmt::format( "Players.[{}].general.parcels.[{}].Radius", dialogData.CurrentPlayer(), nParcel ),
+											float( newParcel.fRadius ),
+											pManipulator );
+				bResult = bResult &&
+				          pObjectController->AddChangeOperation(
+											fmt::format(
+													"Players.[{}].general.parcels.[{}].DefenceDirection", dialogData.CurrentPlayer(), nParcel ),
+											float( newParcel.fDefenceDirection ),
+											pManipulator );
+				bResult =
+						bResult &&
+						pObjectController->AddChangeOperation(
+								fmt::format( "Players.[{}].general.parcels.[{}].Importance", dialogData.CurrentPlayer(), nParcel ),
+								float( newParcel.fImportance ),
+								pManipulator );
 			}
 			if ( bResult )
 			{
@@ -651,18 +720,19 @@ void CAIGeneralPointsState::AddParcel()
 	}
 }
 
-
 void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 {
-	if ( (dialogData.CurrentParcel() < 0) || (dialogData.CurrentParcel() >= dialogData.players[dialogData.CurrentPlayer()].parcels.size()) )
+	if ( ( dialogData.CurrentParcel() < 0 ) ||
+	     ( dialogData.CurrentParcel() >= dialogData.players[dialogData.CurrentPlayer()].parcels.size() ) )
 		return;
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
-	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2(rMousePoint.x, rMousePoint.y) );
+	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
 	NDb::SReinforcePoint newReinfPoint;
 
-	SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
-	newReinfPoint.vCenter = CVec2(vPickedPosOnTerrain.x, vPickedPosOnTerrain.y) - parcel.vCenter;
+	SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel =
+			dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
+	newReinfPoint.vCenter = CVec2( vPickedPosOnTerrain.x, vPickedPosOnTerrain.y ) - parcel.vCenter;
 	newReinfPoint.fDirection = parcel.fDefenceDirection;
 	parcel.reinforcePoints.push_back( newReinfPoint );
 
@@ -670,16 +740,36 @@ void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 	{
 		if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 		{
-			if ( pObjectController->AddInsertOperation(fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints", dialogData.CurrentPlayer(), dialogData.CurrentParcel()), NODE_ADD_INDEX, pManipulator) )
+			if ( pObjectController->AddInsertOperation( fmt::format( "Players.[{}].general.parcels.[{}].reinforcePoints",
+			                                                         dialogData.CurrentPlayer(),
+			                                                         dialogData.CurrentParcel() ),
+			                                            NODE_ADD_INDEX,
+			                                            pManipulator ) )
 			{
-				int nPointsNewCount = GetMapInfoEditor()->pMapInfo->players[dialogData.CurrentPlayer()].general.parcels[dialogData.CurrentParcel()].reinforcePoints.size();
+				int nPointsNewCount = GetMapInfoEditor()
+				                          ->pMapInfo->players[dialogData.CurrentPlayer()]
+				                          .general.parcels[dialogData.CurrentParcel()]
+				                          .reinforcePoints.size();
 
 				bool bResult = true;
 
-				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Center", dialogData.CurrentPlayer(), dialogData.CurrentParcel(), nPointsNewCount - 1),newReinfPoint.vCenter, pManipulator );
-				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Direction", dialogData.CurrentPlayer(), dialogData.CurrentParcel(), nPointsNewCount - 1), newReinfPoint.fDirection, pManipulator );
+				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>(
+																 fmt::format( "Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Center",
+				                                      dialogData.CurrentPlayer(),
+				                                      dialogData.CurrentParcel(),
+				                                      nPointsNewCount - 1 ),
+																 newReinfPoint.vCenter,
+																 pManipulator );
+				bResult = bResult && pObjectController->AddChangeOperation(
+																 fmt::format( "Players.[{}].general.parcels.[{}].reinforcePoints.[{}].Direction",
+				                                      dialogData.CurrentPlayer(),
+				                                      dialogData.CurrentParcel(),
+				                                      nPointsNewCount - 1 ),
+																 newReinfPoint.fDirection,
+																 pManipulator );
 
-				dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].nCurrentPoint = nPointsNewCount - 1;
+				dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].nCurrentPoint =
+						nPointsNewCount - 1;
 
 				if ( bResult )
 				{
@@ -691,18 +781,20 @@ void CAIGeneralPointsState::AddPoint( const CTPoint<int> &rMousePoint )
 	}
 }
 
-
 void CAIGeneralPointsState::DeletePoint()
 {
-	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentParcel() < 0) || (dialogData.CurrentPoint() < 0) )
+	if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentParcel() < 0 ) || ( dialogData.CurrentPoint() < 0 ) )
 		return;
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( NMessage::AskYesNo( strMessage ) )
 	{
-		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
+		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel =
+				dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
 		int i = 0;
-		for ( std::vector<NDb::SReinforcePoint>::iterator itPoint = parcel.reinforcePoints.begin(); itPoint < parcel.reinforcePoints.end(); ++itPoint, ++i )
+		for ( std::vector<NDb::SReinforcePoint>::iterator itPoint = parcel.reinforcePoints.begin();
+		      itPoint < parcel.reinforcePoints.end();
+		      ++itPoint, ++i )
 		{
 			if ( i == dialogData.CurrentPoint() )
 			{
@@ -715,7 +807,11 @@ void CAIGeneralPointsState::DeletePoint()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.parcels.[{}].reinforcePoints", dialogData.CurrentPlayer(), dialogData.CurrentParcel()), dialogData.CurrentID(), pManipulator) )
+				if ( pObjectController->AddRemoveOperation( fmt::format( "Players.[{}].general.parcels.[{}].reinforcePoints",
+				                                                         dialogData.CurrentPlayer(),
+				                                                         dialogData.CurrentParcel() ),
+				                                            dialogData.CurrentID(),
+				                                            pManipulator ) )
 				{
 					pObjectController->Redo( false, true, GetMapInfoEditor() );
 					Singleton<IControllerContainer>()->Add( pObjectController );
@@ -725,10 +821,9 @@ void CAIGeneralPointsState::DeletePoint()
 	}
 }
 
-
 void CAIGeneralPointsState::DeleteID()
 {
-	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentID() < 0) )
+	if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentID() < 0 ) )
 		return;
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
@@ -736,7 +831,8 @@ void CAIGeneralPointsState::DeleteID()
 	{
 		SAIGeneralPointsWindowData::SAIPlayerInfo &player = dialogData.players[dialogData.CurrentPlayer()];
 		int i = 0;
-		for ( std::vector<int>::iterator itID = player.mobileScriptIDs.begin(); itID < player.mobileScriptIDs.end(); ++itID, ++i )
+		for ( std::vector<int>::iterator itID = player.mobileScriptIDs.begin(); itID < player.mobileScriptIDs.end();
+		      ++itID, ++i )
 		{
 			if ( i == dialogData.CurrentID() )
 			{
@@ -750,7 +846,10 @@ void CAIGeneralPointsState::DeleteID()
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
 				// Include the selected player in the database path used for deletion.
-				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.mobileScriptIDs", dialogData.CurrentPlayer()), dialogData.CurrentID(), pManipulator) )
+				if ( pObjectController->AddRemoveOperation(
+								 fmt::format( "Players.[{}].general.mobileScriptIDs", dialogData.CurrentPlayer() ),
+								 dialogData.CurrentID(),
+								 pManipulator ) )
 				{
 					pObjectController->Redo( false, true, GetMapInfoEditor() );
 					Singleton<IControllerContainer>()->Add( pObjectController );
@@ -760,10 +859,9 @@ void CAIGeneralPointsState::DeleteID()
 	}
 }
 
-
 void CAIGeneralPointsState::DeleteParcel()
 {
-	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentParcel() < 0) )
+	if ( ( dialogData.CurrentPlayer() < 0 ) || ( dialogData.CurrentParcel() < 0 ) )
 		return;
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
@@ -771,7 +869,9 @@ void CAIGeneralPointsState::DeleteParcel()
 	{
 		SAIGeneralPointsWindowData::SAIPlayerInfo &player = dialogData.players[dialogData.CurrentPlayer()];
 		int i = 0;
-		for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::iterator itParcel = player.parcels.begin(); itParcel < player.parcels.end(); ++itParcel, ++i )
+		for ( std::vector<SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel>::iterator itParcel = player.parcels.begin();
+		      itParcel < player.parcels.end();
+		      ++itParcel, ++i )
 		{
 			if ( i == dialogData.CurrentParcel() )
 			{
@@ -784,7 +884,10 @@ void CAIGeneralPointsState::DeleteParcel()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.parcels", dialogData.CurrentPlayer()), dialogData.CurrentParcel(), pManipulator) )
+				if ( pObjectController->AddRemoveOperation(
+								 fmt::format( "Players.[{}].general.parcels", dialogData.CurrentPlayer() ),
+								 dialogData.CurrentParcel(),
+								 pManipulator ) )
 				{
 					pObjectController->Redo( false, true, GetMapInfoEditor() );
 					Singleton<IControllerContainer>()->Add( pObjectController );
@@ -794,14 +897,15 @@ void CAIGeneralPointsState::DeleteParcel()
 	}
 }
 
-
 void CAIGeneralPointsState::EditParcel()
 {
-	NDb::EParcelType newParcelType = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].eType;
+	NDb::EParcelType newParcelType =
+			dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].eType;
 	float fNewImportance = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].fImportance;
 	if ( NAIGenParcelDialog::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &newParcelType, &fNewImportance ) )
 	{
-		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
+		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel =
+				dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
 		//
 		parcel.eType = newParcelType;
 		parcel.fImportance = fNewImportance;

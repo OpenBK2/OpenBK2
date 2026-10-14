@@ -15,21 +15,10 @@ struct SDefMaterials
 
 #define N_DEF_MATERIAL_GROUPS 3
 
-const SDefMaterials defMaterials[N_DEF_MATERIAL_GROUPS] =
-{
-	{
-		"Flag_Hero_Haven",
-		{ 8863, 8861, 8856, 8857, 8858, 8859, 8860, 8862, 8864 }
-	},
-	{
-		"Flag_Hero_Inferno",
-		{ 13554, 13560, 13559, 13553, 13555, 13558, 13552, 13556, 13557 }
-	},
-	{
-		"Flag",
-		{ 7892, 7890, 7885, 7886, 7887, 7888, 7889, 7891, 7893 }
-	}
-};
+const SDefMaterials defMaterials[N_DEF_MATERIAL_GROUPS] = {
+	{ "Flag_Hero_Haven", { 8863, 8861, 8856, 8857, 8858, 8859, 8860, 8862, 8864 } },
+	{ "Flag_Hero_Inferno", { 13554, 13560, 13559, 13553, 13555, 13558, 13552, 13556, 13557 } },
+	{ "Flag", { 7892, 7890, 7885, 7886, 7887, 7888, 7889, 7891, 7893 } } };
 
 const NDb::SMaterial *GetReplacedMaterial( const string &szName, int nInd )
 {

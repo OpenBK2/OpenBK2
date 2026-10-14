@@ -5,9 +5,10 @@
 namespace NGScene
 {
 
-class CFileFont: public CResourceLoader<int, CFontFormatInfo>
+class CFileFont : public CResourceLoader<int, CFontFormatInfo>
 {
-	OBJECT_BASIC_METHODS(CFileFont);
+	OBJECT_BASIC_METHODS( CFileFont );
+
 protected:
 	virtual void Recalc();
 };

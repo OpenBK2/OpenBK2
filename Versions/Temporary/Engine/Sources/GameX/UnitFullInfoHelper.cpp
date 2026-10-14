@@ -19,7 +19,7 @@ void AddWeapon( std::vector<SWeapon> &weapons, const SWeapon &weapon );
 void MakeMechArmors( std::vector<int> &armors, const NDb::SMechUnitRPGStats *pStats );
 void MakeSquadArmors( std::vector<int> &armors, const NDb::SSquadRPGStats *pStats );
 
-const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason );
+const NDb::SModel *GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason );
 
 // SWeaponsSort
 
@@ -109,8 +109,8 @@ void MakeMechWeapons( std::vector<SWeapon> &weapons, const NDb::SMechUnitRPGStat
 			weapon.nCount = 1;
 			weapon.bPrimary = gun.bIsPrimary;
 
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(gun.pWeapon->,LocalizedName) )
-				weapon.wszLocalizedName = GET_TEXT_PRE(gun.pWeapon->,LocalizedName);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( gun.pWeapon->, LocalizedName ) )
+				weapon.wszLocalizedName = GET_TEXT_PRE( gun.pWeapon->, LocalizedName );
 
 			weapon.nDamage = pShell->fDamagePower;
 			weapon.nPenetration = pShell->nPiercing;
@@ -126,8 +126,9 @@ void MakeSquadWeapons( std::vector<SWeapon> &weapons, const NDb::SSquadRPGStats 
 {
 	weapons.clear();
 
-	for ( std::vector< CDBPtr< NDb::SInfantryRPGStats > >::const_iterator it = pStats->members.begin();
-		it != pStats->members.end(); ++it )
+	for ( std::vector<CDBPtr<NDb::SInfantryRPGStats>>::const_iterator it = pStats->members.begin();
+	      it != pStats->members.end();
+	      ++it )
 	{
 		const NDb::SInfantryRPGStats *pInfantryStats = *it;
 
@@ -153,15 +154,16 @@ void AddInfantryWeapons( std::vector<SWeapon> &weapons, const NDb::SInfantryRPGS
 		weapon.nCount = 1;
 		weapon.bPrimary = gun.bIsPrimary;
 
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(gun.pWeapon->,LocalizedName) )
-			weapon.wszLocalizedName = GET_TEXT_PRE(gun.pWeapon->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( gun.pWeapon->, LocalizedName ) )
+			weapon.wszLocalizedName = GET_TEXT_PRE( gun.pWeapon->, LocalizedName );
 
 		weapon.nDamage = pShell->fDamagePower;
 		weapon.nPenetration = pShell->nPiercing;
 		weapon.nMaxAmmo = gun.nAmmo;
 		weapon.nAmmo = weapon.nMaxAmmo;
 
-		if ( weapon.pWeapon && weapon.pWeapon->eWeaponType != NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON ) // exclude grenades
+		if ( weapon.pWeapon &&
+		     weapon.pWeapon->eWeaponType != NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON ) // exclude grenades
 			AddWeapon( weapons, weapon );
 	}
 }
@@ -187,11 +189,11 @@ void AddWeapon( std::vector<SWeapon> &weapons, const SWeapon &weapon )
 
 void MakeWeapons( std::vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *pStats )
 {
-	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats*>( pStats ) )
+	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( pStats ) )
 	{
 		MakeMechWeapons( weapons, pMechStats );
 	}
-	else if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats*>( pStats ) )
+	else if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats *>( pStats ) )
 	{
 		MakeSquadWeapons( weapons, pSquadStats );
 	}
@@ -199,11 +201,11 @@ void MakeWeapons( std::vector<SWeapon> &weapons, const NDb::SHPObjectRPGStats *p
 
 void MakeArmors( std::vector<int> &armors, const NDb::SHPObjectRPGStats *pStats )
 {
-	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats*>( pStats ) )
+	if ( const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( pStats ) )
 	{
 		MakeMechArmors( armors, pMechStats );
 	}
-	else if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats*>( pStats ) )
+	else if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats *>( pStats ) )
 	{
 		MakeSquadArmors( armors, pSquadStats );
 	}
@@ -213,11 +215,12 @@ void MakeMechArmors( std::vector<int> &armors, const NDb::SMechUnitRPGStats *pSt
 {
 	if ( pStats->armors.size() >= ARMOR_COUNT )
 	{
-		int nArmorFront = (pStats->armors[ARMOR_FRONT].fMin + pStats->armors[ARMOR_FRONT].fMax) / 2;
-		int nArmorSize = (pStats->armors[ARMOR_SIDE_1].fMin + pStats->armors[ARMOR_SIDE_1].fMax +
-			pStats->armors[ARMOR_SIDE_2].fMin + pStats->armors[ARMOR_SIDE_2].fMax) / 4;
-		int nArmorBack = (pStats->armors[ARMOR_BACK].fMin + pStats->armors[ARMOR_BACK].fMax) / 2;
-		int nArmorTop = (pStats->armors[ARMOR_TOP].fMin + pStats->armors[ARMOR_TOP].fMax) / 2;
+		int nArmorFront = ( pStats->armors[ARMOR_FRONT].fMin + pStats->armors[ARMOR_FRONT].fMax ) / 2;
+		int nArmorSize = ( pStats->armors[ARMOR_SIDE_1].fMin + pStats->armors[ARMOR_SIDE_1].fMax +
+		                   pStats->armors[ARMOR_SIDE_2].fMin + pStats->armors[ARMOR_SIDE_2].fMax ) /
+		                 4;
+		int nArmorBack = ( pStats->armors[ARMOR_BACK].fMin + pStats->armors[ARMOR_BACK].fMax ) / 2;
+		int nArmorTop = ( pStats->armors[ARMOR_TOP].fMin + pStats->armors[ARMOR_TOP].fMax ) / 2;
 
 		if ( nArmorFront + nArmorSize + nArmorBack + nArmorTop > 0 )
 		{
@@ -240,8 +243,9 @@ void MakeSquadArmors( std::vector<int> &armors, const NDb::SSquadRPGStats *pStat
 	armors[ES_ARMOR_BACK] = 0;
 	armors[ES_ARMOR_TOP] = 0;
 
-	for ( std::vector< CDBPtr< NDb::SInfantryRPGStats > >::const_iterator it = pStats->members.begin();
-		it != pStats->members.end(); ++it )
+	for ( std::vector<CDBPtr<NDb::SInfantryRPGStats>>::const_iterator it = pStats->members.begin();
+	      it != pStats->members.end();
+	      ++it )
 	{
 		const NDb::SInfantryRPGStats *pStats = *it;
 		armors[ES_ARMOR_FRONT] += pStats->fArmor;
@@ -262,7 +266,7 @@ void MakeSquadArmors( std::vector<int> &armors, const NDb::SSquadRPGStats *pStat
 
 int MakeHP( const NDb::SHPObjectRPGStats *pStats )
 {
-	if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats*>( pStats ) )
+	if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats *>( pStats ) )
 	{
 		return pSquadStats->members.size();
 	}
@@ -272,7 +276,7 @@ int MakeHP( const NDb::SHPObjectRPGStats *pStats )
 	}
 }
 
-const NDb::SAnimB2* FindAnimation( const NDb::SInfantryRPGStats *pStats )
+const NDb::SAnimB2 *FindAnimation( const NDb::SInfantryRPGStats *pStats )
 {
 	if ( !pStats )
 		return 0;
@@ -301,11 +305,13 @@ const NDb::SAnimB2* FindAnimation( const NDb::SInfantryRPGStats *pStats )
 	return pAnim;
 }
 
-const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
+const NDb::SModel *GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	if ( pVisObj )
 	{
-		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
+		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin();
+		      it != pVisObj->models.end();
+		      ++it )
 		{
 			if ( it->eSeason == eSeason )
 				return it->pModel;
@@ -315,7 +321,7 @@ const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSea
 	return 0;
 }
 
-const NDb::SModel* GetModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
+const NDb::SModel *GetModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 {
 	const NDb::SModel *pExactModel = GetExactModel( pVisObj, eSeason );
 	return pExactModel != 0 ? pExactModel : GetExactModel( pVisObj, NDb::SEASON_SUMMER );
@@ -324,13 +330,13 @@ const NDb::SModel* GetModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 bool IsResourcesCarrier( const CUserActions &userActions )
 {
 	return userActions.HasAction( NDb::USER_ACTION_ENGINEER_REPAIR ) ||
-		userActions.HasAction( NDb::USER_ACTION_SUPPORT_RESUPPLY ) ||
-		userActions.HasAction( NDb::USER_ACTION_FILL_RU ) ||
-		userActions.HasAction( NDb::USER_ACTION_ENGINEER_BUILD_DEFENSE ) ||
-		userActions.HasAction( NDb::USER_ACTION_ENGINEER_BUILD_ENTRENCHMENT ) ||
-		userActions.HasAction( NDb::USER_ACTION_ENGINEER_BUILD_FENCE ) ||
-		userActions.HasAction( NDb::USER_ACTION_ENGINEER_PLACE_MINES ) ||
-		userActions.HasAction( NDb::USER_ACTION_ENGINEER_CLEAR_MINES );
+	       userActions.HasAction( NDb::USER_ACTION_SUPPORT_RESUPPLY ) ||
+	       userActions.HasAction( NDb::USER_ACTION_FILL_RU ) ||
+	       userActions.HasAction( NDb::USER_ACTION_ENGINEER_BUILD_DEFENSE ) ||
+	       userActions.HasAction( NDb::USER_ACTION_ENGINEER_BUILD_ENTRENCHMENT ) ||
+	       userActions.HasAction( NDb::USER_ACTION_ENGINEER_BUILD_FENCE ) ||
+	       userActions.HasAction( NDb::USER_ACTION_ENGINEER_PLACE_MINES ) ||
+	       userActions.HasAction( NDb::USER_ACTION_ENGINEER_CLEAR_MINES );
 }
 
 } //namespace NUnitFullInfo

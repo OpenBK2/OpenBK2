@@ -16,19 +16,30 @@ class CExecutorUnitBonus : public CExecutorUnitBase
 {
 	OBJECT_BASIC_METHODS( CExecutorUnitBonus );
 
-	ZDATA_(CExecutorUnitBase)
+	ZDATA_( CExecutorUnitBase )
 protected:
-	CPtr<CAIUnit>										pUnit;
+	CPtr<CAIUnit> pUnit;
+
 private:
 	CDBPtr<NDb::SUnitStatsModifier> pModifier;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	NTimer::STime										timeLastUpdate = {};
-	bool														bBonusApplied = {};
-	EUnitStatus											eStatus = {};
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorUnitBase*)this); f.Add(2,&pUnit); f.Add(3,&pModifier); f.Add(4,&timeLastUpdate); f.Add(5,&bBonusApplied); f.Add(6,&eStatus); return 0; }
-protected:
+	NTimer::STime timeLastUpdate = {};
+	bool bBonusApplied = {};
+	EUnitStatus eStatus = {};
 
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutorUnitBase *)this );
+		f.Add( 2, &pUnit );
+		f.Add( 3, &pModifier );
+		f.Add( 4, &timeLastUpdate );
+		f.Add( 5, &bBonusApplied );
+		f.Add( 6, &eStatus );
+		return 0;
+	}
+
+protected:
 	float OnAbilityActive();
 
 	float OnAbilityOff();
@@ -48,7 +59,7 @@ protected:
 
 public:
 	CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID = TID_BONUS );
-	CExecutorUnitBonus() { }
+	CExecutorUnitBonus() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	bool NotifyEvent( const CExecutorEvent &event );

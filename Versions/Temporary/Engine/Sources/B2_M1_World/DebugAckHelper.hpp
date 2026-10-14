@@ -7,11 +7,10 @@
 struct SAckDebugHelper
 {
 	NDb::EUnitAckType eAckType{};
-	const char* pszName = nullptr;
+	const char *pszName = nullptr;
 };
 
-static SAckDebugHelper debugAckNames[] =
-{
+static SAckDebugHelper debugAckNames[] = {
 	{ NDb::ACK_BORED_ATTACK, "ACK_BORED_ATTACK" },
 	{ NDb::ACK_BORED_IDLE, "ACK_BORED_IDLE" },
 	{ NDb::ACK_BUILDING_FINISHED, "ACK_BUILDING_FINISHED" },

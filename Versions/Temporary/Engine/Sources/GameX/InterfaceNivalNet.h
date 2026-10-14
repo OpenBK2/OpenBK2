@@ -3,8 +3,7 @@
 
 #include "InterfaceMPBase.h"
 
-class CInterfaceNivalNet : public CInterfaceMPScreenBase,
-	public IProgrammedReactionsAndChecks
+class CInterfaceNivalNet : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceNivalNet );
 
@@ -16,7 +15,7 @@ class CInterfaceNivalNet : public CInterfaceMPScreenBase,
 		ES_RECOVER
 	};
 
-	ZDATA_(CInterfaceMPScreenBase)
+	ZDATA_( CInterfaceMPScreenBase )
 	CPtr<IWindow> pMain;
 
 	CPtr<IWindow> pFrameRegister; //three main windows.
@@ -48,7 +47,36 @@ class CInterfaceNivalNet : public CInterfaceMPScreenBase,
 
 	EState eState;
 	CPtr<IButton> pRememberPassword;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceMPScreenBase*)this); f.Add(2,&pMain); f.Add(3,&pFrameRegister); f.Add(4,&pFrameLogin); f.Add(5,&pFrameRecovery); f.Add(6,&pLogin); f.Add(7,&pBack); f.Add(8,&pRegistration); f.Add(9,&pRecovery); f.Add(10,&pRegisterOk); f.Add(11,&pRegisterCancel); f.Add(12,&pRecoverCancel); f.Add(13,&pRecoverOk); f.Add(14,&pLoginLoginEdit); f.Add(15,&pLoginPasswordEdit); f.Add(16,&pUserNameRecovery); f.Add(17,&pCDKey); f.Add(18,&pConfirmEmail); f.Add(19,&pConfirmPassword); f.Add(20,&pEmail); f.Add(21,&pRegistrationPassword); f.Add(22,&pRegistrationUserName); f.Add(23,&pWaitWindow); f.Add(24,&eState); f.Add(25,&pRememberPassword); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceMPScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 3, &pFrameRegister );
+		f.Add( 4, &pFrameLogin );
+		f.Add( 5, &pFrameRecovery );
+		f.Add( 6, &pLogin );
+		f.Add( 7, &pBack );
+		f.Add( 8, &pRegistration );
+		f.Add( 9, &pRecovery );
+		f.Add( 10, &pRegisterOk );
+		f.Add( 11, &pRegisterCancel );
+		f.Add( 12, &pRecoverCancel );
+		f.Add( 13, &pRecoverOk );
+		f.Add( 14, &pLoginLoginEdit );
+		f.Add( 15, &pLoginPasswordEdit );
+		f.Add( 16, &pUserNameRecovery );
+		f.Add( 17, &pCDKey );
+		f.Add( 18, &pConfirmEmail );
+		f.Add( 19, &pConfirmPassword );
+		f.Add( 20, &pEmail );
+		f.Add( 21, &pRegistrationPassword );
+		f.Add( 22, &pRegistrationUserName );
+		f.Add( 23, &pWaitWindow );
+		f.Add( 24, &eState );
+		f.Add( 25, &pRememberPassword );
+		return 0;
+	}
+
 private:
 	void RegisterObservers();
 
@@ -80,6 +108,7 @@ private:
 	//}
 protected:
 	~CInterfaceNivalNet();
+
 public:
 	CInterfaceNivalNet();
 
@@ -101,6 +130,7 @@ class CICNivalNet : public CInterfaceCommandBase<CInterfaceNivalNet>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

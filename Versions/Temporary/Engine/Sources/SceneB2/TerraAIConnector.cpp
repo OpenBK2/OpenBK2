@@ -8,52 +8,51 @@
 
 namespace
 {
-	// Matches DEF_MIN_PRECIPICE_HEIGHT in PrecipicesRender.cpp: only visible
-	// river-bank precipices should become forbidden amphibious transition tiles.
-	static const float RIVER_CLIFF_MASK_MIN_HEIGHT = 0.025f;
+// Matches DEF_MIN_PRECIPICE_HEIGHT in PrecipicesRender.cpp: only visible
+// river-bank precipices should become forbidden amphibious transition tiles.
+static const float RIVER_CLIFF_MASK_MIN_HEIGHT = 0.025f;
 
-	SVector GetAIRiverCliffTile( const CVec3 &vPos )
+SVector GetAIRiverCliffTile( const CVec3 &vPos )
+{
+	return SVector( int( Vis2AIFast( vPos.x ) / AI_TILE_SIZE ), int( Vis2AIFast( vPos.y ) / AI_TILE_SIZE ) );
+}
+
+void AddRiverCliffSegmentTiles( std::list<SVector> *pTiles, const SVector &vStart, const SVector &vEnd )
+{
+	CBres bres;
+	bres.InitPoint( vStart, vEnd );
+	pTiles->push_back( bres.GetDirection() );
+
+	while ( bres.GetDirection() != vEnd )
 	{
-		return SVector( int( Vis2AIFast( vPos.x ) / AI_TILE_SIZE ), int( Vis2AIFast( vPos.y ) / AI_TILE_SIZE ) );
-	}
-
-
-	void AddRiverCliffSegmentTiles( std::list<SVector> *pTiles, const SVector &vStart, const SVector &vEnd )
-	{
-		CBres bres;
-		bres.InitPoint( vStart, vEnd );
+		bres.MakePointStep();
 		pTiles->push_back( bres.GetDirection() );
-
-		while ( bres.GetDirection() != vEnd )
-		{
-			bres.MakePointStep();
-			pTiles->push_back( bres.GetDirection() );
-		}
 	}
+}
 
+void AddRiverCliffBankTiles( std::list<SVector> *pTiles,
+                             const std::vector<CVec3> &verts,
+                             const std::vector<float> &heights )
+{
+	const int nCount = (std::min)( int( verts.size() ), int( heights.size() ) );
+	if ( nCount < 2 )
+		return;
 
-	void AddRiverCliffBankTiles( std::list<SVector> *pTiles, const std::vector<CVec3> &verts, const std::vector<float> &heights )
+	for ( int i = 0; i < nCount - 1; ++i )
 	{
-		const int nCount = (std::min)( int( verts.size() ), int( heights.size() ) );
-		if ( nCount < 2 )
-			return;
+		const bool bCliffStart = fabs( verts[i].z - heights[i] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
+		const bool bCliffEnd = fabs( verts[i + 1].z - heights[i + 1] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
 
-		for ( int i = 0; i < nCount - 1; ++i )
-		{
-			const bool bCliffStart = fabs( verts[i].z - heights[i] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
-			const bool bCliffEnd = fabs( verts[i + 1].z - heights[i + 1] ) > RIVER_CLIFF_MASK_MIN_HEIGHT;
-
-			if ( bCliffStart || bCliffEnd )
-				AddRiverCliffSegmentTiles( pTiles, GetAIRiverCliffTile( verts[i] ), GetAIRiverCliffTile( verts[i + 1] ) );
-		}
+		if ( bCliffStart || bCliffEnd )
+			AddRiverCliffSegmentTiles( pTiles, GetAIRiverCliffTile( verts[i] ), GetAIRiverCliffTile( verts[i + 1] ) );
 	}
+}
 }
 
 bool CTerraGen::IsPointOnBridge( float x, float y ) const
 {
-	return ( pAIObserver ? pAIObserver->IsBridge(x, y) : false );
+	return ( pAIObserver ? pAIObserver->IsBridge( x, y ) : false );
 }
-
 
 void CTerraGen::RegenerateAIInfo()
 {
@@ -65,19 +64,17 @@ void CTerraGen::RegenerateAIInfo()
 		pAIObserver->FinalizeUpdates();
 }
 
-
 void CTerraGen::UpdateAIInfo()
 {
 	// clear ai info
 	PutAllFeaturesToAI();
 }
 
-
 void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 {
 	//NI_VERIFY( pAIObserver, "UpdateAITerraTypes - AI Observer does not exist", return )
 	//
-	if ( !bForceUpdateAll && (vTexModMin.x < 0) )
+	if ( !bForceUpdateAll && ( vTexModMin.x < 0 ) )
 		return;
 
 	if ( bForceUpdateAll )
@@ -86,8 +83,8 @@ void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 		vTexModMax.Set( terrainInfo.tiles.GetSizeX() - 1, terrainInfo.tiles.GetSizeY() - 1 );
 	}
 
-	if ( (terrainAIInfo.terrTypes.GetSizeX() != terrainInfo.tiles.GetSizeX()) ||
-			 (terrainAIInfo.terrTypes.GetSizeX() != terrainInfo.tiles.GetSizeX()) )
+	if ( ( terrainAIInfo.terrTypes.GetSizeX() != terrainInfo.tiles.GetSizeX() ) ||
+	     ( terrainAIInfo.terrTypes.GetSizeX() != terrainInfo.tiles.GetSizeX() ) )
 	{
 		terrainAIInfo.terrTypes.SetSizes( terrainInfo.tiles.GetSizeX(), terrainInfo.tiles.GetSizeY() );
 		terrainAIInfo.terrTypes.FillZero();
@@ -97,14 +94,14 @@ void CTerraGen::UpdateAITerraTypes( const bool bForceUpdateAll )
 	{
 		for ( int i = vTexModMin.x; i <= vTexModMax.x; ++i )
 		{
-			terrainAIInfo.terrTypes[g][i] = ( terrainInfo.seaMask[g][i] ) ? DEF_WATER_TYPE : ( terrainInfo.tileTerraMap[g][i] );
+			terrainAIInfo.terrTypes[g][i] =
+					( terrainInfo.seaMask[g][i] ) ? DEF_WATER_TYPE : ( terrainInfo.tileTerraMap[g][i] );
 		}
 	}
 
 	if ( pAIObserver )
 		pAIObserver->UpdateTypes( vTexModMin.x, vTexModMin.y, vTexModMax.x + 1, vTexModMax.y + 1, terrainAIInfo.terrTypes );
 }
-
 
 void CTerraGen::SetTerraTypesToAI( const std::vector<NDb::STerrainAIProperties> &params ) const
 {
@@ -116,7 +113,6 @@ void CTerraGen::SetTerraTypesToAI( const std::vector<NDb::STerrainAIProperties> 
 	}
 }
 
-
 void CTerraGen::UpdateAIInfo( const int nX1, const int nY1, const int nX2, const int nY2 ) const
 {
 	//NI_VERIFY( pAIObserver, "UpdateAIInfo - AI Observer does not exist", return )
@@ -127,7 +123,6 @@ void CTerraGen::UpdateAIInfo( const int nX1, const int nY1, const int nX2, const
 		pAIObserver->UpdateTypes( nX1, nY1, nX2, nY2, terrainAIInfo.terrTypes );
 	}
 }
-
 
 void CTerraGen::UpdateAllAIInfo()
 {
@@ -143,15 +138,17 @@ void CTerraGen::UpdateAllAIInfo()
 	{
 		for ( int i = 0; i < nMaxX; ++i )
 		{
-			terrainAIInfo.heights[g][i] = (std::max)( Vis2AI(GetFullTerraHeight(i, g)), 0.0f );
+			terrainAIInfo.heights[g][i] = (std::max)( Vis2AI( GetFullTerraHeight( i, g ) ), 0.0f );
 		}
 	}
 
 	std::vector<NDb::STerrainAIProperties> params;
 	params.reserve( pDesc->pTerraSet->terraTypes.size() );
 	params.resize( 0 );
-	for ( std::vector< CDBPtr< NDb::STGTerraType > >::const_iterator it = pDesc->pTerraSet->terraTypes.begin(); it != pDesc->pTerraSet->terraTypes.end(); ++it )
-		params.push_back( (*it)->aIProperty );
+	for ( std::vector<CDBPtr<NDb::STGTerraType>>::const_iterator it = pDesc->pTerraSet->terraTypes.begin();
+	      it != pDesc->pTerraSet->terraTypes.end();
+	      ++it )
+		params.push_back( ( *it )->aIProperty );
 	if ( pAIObserver )
 		pAIObserver->SetTerraTypes( params );
 
@@ -162,7 +159,6 @@ void CTerraGen::UpdateAllAIInfo()
 
 	TIME_STAT_FINISH( CTerraGen__UpdateAllAIInfo )
 }
-
 
 void CTerraGen::PutCragToAI( const NDb::SVSOInstance *pCragInstance ) const
 {
@@ -175,7 +171,6 @@ void CTerraGen::PutCragToAI( const NDb::SVSOInstance *pCragInstance ) const
 	}
 }
 
-
 void CTerraGen::PutRiverToAI( const NDb::SVSOInstance *pRiverInstance ) const
 {
 	//NI_VERIFY( pAIObserver, "PutRiverToAI - AI Observer does not exist", return )
@@ -186,7 +181,6 @@ void CTerraGen::PutRiverToAI( const NDb::SVSOInstance *pRiverInstance ) const
 		pAIObserver->AddRiver( pRiverInstance );
 	}
 }
-
 
 void CTerraGen::PutRiverCliffsToAI( const STerrainInfo::SRiver &river ) const
 {
@@ -201,7 +195,6 @@ void CTerraGen::PutRiverCliffsToAI( const STerrainInfo::SRiver &river ) const
 		pAIObserver->AddRiverCliffTiles( tiles );
 }
 
-
 void CTerraGen::PutRoadToAI( const NDb::SVSOInstance *pRoadInstance ) const
 {
 	//NI_VERIFY( pAIObserver, "PutRoadToAI - AI Observer does not exist", return )
@@ -213,14 +206,14 @@ void CTerraGen::PutRoadToAI( const NDb::SVSOInstance *pRoadInstance ) const
 	}
 }
 
-
 void CTerraGen::PutAllCragsToAI() const
 {
 	//NI_VERIFY( pAIObserver, "PutAllCragsToAI - AI Observer does not exist", return )
 	//
 	//if ( pAIObserver )
 	{
-		for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+		for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end();
+		      ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindCrag( it->nID );
 			if ( pInstance )
@@ -229,14 +222,15 @@ void CTerraGen::PutAllCragsToAI() const
 	}
 }
 
-
 void CTerraGen::PutAllRiversToAI() const
 {
 	//NI_VERIFY( pAIObserver, "PutAllRiversToAI - AI Observer does not exist", return )
 	//
 	//if ( pAIObserver )
 	{
-		for ( std::list<STerrainInfo::SRiver>::const_iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
+		for ( std::list<STerrainInfo::SRiver>::const_iterator it = terrainInfo.rivers.begin();
+		      it != terrainInfo.rivers.end();
+		      ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRiver( it->nID );
 			if ( pInstance )
@@ -248,14 +242,14 @@ void CTerraGen::PutAllRiversToAI() const
 	}
 }
 
-
 void CTerraGen::PutAllRoadsToAI() const
 {
 	//NI_VERIFY( pAIObserver, "PutAllRoadsToAI - AI Observer does not exist", return )
 	//
 	//if ( pAIObserver )
 	{
-		for ( std::list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
+		for ( std::list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end();
+		      ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRoad( it->nID );
 			if ( pInstance )
@@ -263,7 +257,6 @@ void CTerraGen::PutAllRoadsToAI() const
 		}
 	}
 }
-
 
 void CTerraGen::PutAllWaterToAI() const
 {
@@ -273,19 +266,18 @@ void CTerraGen::PutAllWaterToAI() const
 	{
 		// coast
 		if ( pDesc->coast.points.size() >= 2 )
-			pAIObserver->AddWaterLine( &(pDesc->coast), false );
+			pAIObserver->AddWaterLine( &( pDesc->coast ), false );
 		// lakes & islands
 		for ( int i = 0; i < pDesc->lakes.size(); ++i )
 		{
 			if ( pDesc->lakes[i].points.size() >= 2 )
 			{
 				const NDb::SLakeDesc *pLakeDesc = static_cast<const NDb::SLakeDesc *>( pDesc->lakes[i].pDescriptor.GetPtr() );
-				pAIObserver->AddWaterLine( &(pDesc->lakes[i]), true /*pLakeDesc->bIsLake*/ );
+				pAIObserver->AddWaterLine( &( pDesc->lakes[i] ), true /*pLakeDesc->bIsLake*/ );
 			}
 		}
 	}
 }
-
 
 void CTerraGen::PutAllFeaturesToAI() const
 {

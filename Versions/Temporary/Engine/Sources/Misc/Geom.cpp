@@ -11,9 +11,9 @@ void CQuat::DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll )
 	const float z2 = vec4.z * vec4.z;
 	const float w2 = vec4.w * vec4.w;
 
-	*pfYaw = atan2( 2 * (vec4.w * vec4.z + vec4.x * vec4.y), w2 - z2 + x2 - y2 );
-	*pfPitch = -asin( 2 * (vec4.z * vec4.x - vec4.w * vec4.y) );
-	*pfRoll = atan2( 2 * (vec4.z * vec4.y + vec4.w * vec4.x), w2 + z2 - x2 - y2 );
+	*pfYaw = atan2( 2 * ( vec4.w * vec4.z + vec4.x * vec4.y ), w2 - z2 + x2 - y2 );
+	*pfPitch = -asin( 2 * ( vec4.z * vec4.x - vec4.w * vec4.y ) );
+	*pfRoll = atan2( 2 * ( vec4.z * vec4.y + vec4.w * vec4.x ), w2 + z2 - x2 - y2 );
 }
 
 const uint16_t GetDirectionByVector( float x, float y )
@@ -62,8 +62,8 @@ const uint16_t GetDirectionByVector( const CVec2 &vec )
 
 const CVec2 GetVectorByDirection( const uint16_t dir )
 {
-	const float fDir = float(dir % 16384) / 16384.0f;
-	CVec2 result( 1-fDir, fDir );
+	const float fDir = float( dir % 16384 ) / 16384.0f;
+	CVec2 result( 1 - fDir, fDir );
 
 	if ( dir < 16384 )
 	{
@@ -87,30 +87,29 @@ const CVec2 GetVectorByDirection( const uint16_t dir )
 
 const uint16_t DirsDifference( const uint16_t dir1, const uint16_t dir2 )
 {
-	const	uint16_t clockWise = dir1-dir2;
-	const	uint16_t antiClockWise = dir2-dir1;
+	const uint16_t clockWise = dir1 - dir2;
+	const uint16_t antiClockWise = dir2 - dir1;
 
 	return (std::min)( clockWise, antiClockWise );
 }
 
 const int DifferenceSign( const uint16_t dir1, const uint16_t dir2 )
 {
-	const	uint16_t clockWise = dir1-dir2;
-	const	uint16_t antiClockWise = dir2-dir1;
+	const uint16_t clockWise = dir1 - dir2;
+	const uint16_t antiClockWise = dir2 - dir1;
 
-	return boost::math::sign(int(antiClockWise) - int(clockWise));
+	return boost::math::sign( int( antiClockWise ) - int( clockWise ) );
 }
 
 bool IsInTheAngle( const uint16_t dir, const uint16_t startAngleDir, const uint16_t finishAngleDir )
 {
-	return
-		uint16_t( dir - startAngleDir ) + uint16_t( finishAngleDir - dir ) == uint16_t( finishAngleDir - startAngleDir );
+	return uint16_t( dir - startAngleDir ) + uint16_t( finishAngleDir - dir ) ==
+	       uint16_t( finishAngleDir - startAngleDir );
 }
 
 bool IsInTheMinAngle( const uint16_t dir, const uint16_t dir1, const uint16_t dir2 )
 {
-	return
-		(int)DirsDifference( dir, dir1 ) + (int)DirsDifference( dir, dir2 ) == DirsDifference( dir1, dir2 );
+	return (int)DirsDifference( dir, dir1 ) + (int)DirsDifference( dir, dir2 ) == DirsDifference( dir1, dir2 );
 }
 
 const uint16_t GetZDirectionBy3DVector( const float x, const float y, const float z )
@@ -185,7 +184,8 @@ void SRect::InitRect( const CVec2 &_center, const CVec2 &_dir, const float lengt
 	v[3] = pointForward - dirPerp * width;
 }
 
-void SRect::InitRect( const CVec2 &_center, const CVec2 &_dir, const float _lengthAhead, const float _lengthBack, const float _width )
+void SRect::InitRect(
+		const CVec2 &_center, const CVec2 &_dir, const float _lengthAhead, const float _lengthBack, const float _width )
 {
 	center = _center;
 	dir = _dir;
@@ -206,7 +206,13 @@ void SRect::InitRect( const CVec2 &_center, const CVec2 &_dir, const float _leng
 	v[3] = pointForward - dirPerp * width;
 }
 
-bool SRect::IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, const CVec2 &dir, const float min, const float max ) const
+bool SRect::IsIntersectProject( const CVec2 &v1,
+                                const CVec2 &v2,
+                                const CVec2 &v3,
+                                const CVec2 &v4,
+                                const CVec2 &dir,
+                                const float min,
+                                const float max ) const
 {
 	const float proj1 = v1 * dir;
 	const float proj2 = v2 * dir;
@@ -218,8 +224,7 @@ bool SRect::IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v
 	const float max12 = (std::max)( proj1, proj2 );
 	const float max34 = (std::max)( proj3, proj4 );
 
-	return
-		!( (std::min)( min12, min34 ) >= max || (std::max)( max12, max34 ) <= min );
+	return !( (std::min)( min12, min34 ) >= max || (std::max)( max12, max34 ) <= min );
 }
 
 bool SRect::IsIntersected( const CSegment &segment ) const
@@ -231,18 +236,42 @@ bool SRect::IsIntersected( const CSegment &segment ) const
 	const CVec2 vYDir( 0.0f, 1.0f );
 	const CVec2 vSegmentDirPerp = vSegmetDir ^ vYDir;
 
-	return
-		IsIntersectProject( v1() - segment.p1, v2() - segment.p1, v3() - segment.p1, v4() - segment.p1, vSegmetDir, 0.0f, fSegmLength ) &&
-		IsIntersectProject( v1() - segment.p1, v2() - segment.p1, v3() - segment.p1, v4() - segment.p1, vSegmentDirPerp, 0.0f, 0.0f );
+	return IsIntersectProject( v1() - segment.p1,
+	                           v2() - segment.p1,
+	                           v3() - segment.p1,
+	                           v4() - segment.p1,
+	                           vSegmetDir,
+	                           0.0f,
+	                           fSegmLength ) &&
+	       IsIntersectProject(
+						 v1() - segment.p1, v2() - segment.p1, v3() - segment.p1, v4() - segment.p1, vSegmentDirPerp, 0.0f, 0.0f );
 }
 
 bool SRect::IsIntersected( const SRect &rect ) const
 {
-	return
-		IsIntersectProject( v1() - rect.center, v2() - rect.center, v3() - rect.center, v4() - rect.center, rect.dir, -rect.lengthBack, rect.lengthAhead ) &&
-		IsIntersectProject( v1() - rect.center, v2() - rect.center, v3() - rect.center, v4() - rect.center, rect.dirPerp, -rect.width, rect.width ) &&
-		IsIntersectProject( rect.v1() - center, rect.v2() - center, rect.v3() - center, rect.v4() - center, dir, -lengthBack, lengthAhead ) &&
-		IsIntersectProject( rect.v1() - center, rect.v2() - center, rect.v3() - center, rect.v4() - center, dirPerp, -width, width );
+	return IsIntersectProject( v1() - rect.center,
+	                           v2() - rect.center,
+	                           v3() - rect.center,
+	                           v4() - rect.center,
+	                           rect.dir,
+	                           -rect.lengthBack,
+	                           rect.lengthAhead ) &&
+	       IsIntersectProject( v1() - rect.center,
+	                           v2() - rect.center,
+	                           v3() - rect.center,
+	                           v4() - rect.center,
+	                           rect.dirPerp,
+	                           -rect.width,
+	                           rect.width ) &&
+	       IsIntersectProject( rect.v1() - center,
+	                           rect.v2() - center,
+	                           rect.v3() - center,
+	                           rect.v4() - center,
+	                           dir,
+	                           -lengthBack,
+	                           lengthAhead ) &&
+	       IsIntersectProject(
+						 rect.v1() - center, rect.v2() - center, rect.v3() - center, rect.v4() - center, dirPerp, -width, width );
 }
 
 bool SRect::IsPointInside( const CVec2 &point ) const
@@ -254,9 +283,10 @@ bool SRect::IsPointInside( const CVec2 &point ) const
 	if ( rightSign == 0 )
 		return fabs2( point - center ) < 0.001f;
 
-	return
-		boost::math::sign( TriangleAAA ( v1(), v2(), point ) ) == rightSign && boost::math::sign( TriangleAAA ( v2(), v3(), point ) ) == rightSign &&
-		boost::math::sign( TriangleAAA ( v3(), v4(), point ) ) == rightSign && boost::math::sign( TriangleAAA ( v4(), v1(), point ) ) == rightSign;
+	return boost::math::sign( TriangleAAA( v1(), v2(), point ) ) == rightSign &&
+	       boost::math::sign( TriangleAAA( v2(), v3(), point ) ) == rightSign &&
+	       boost::math::sign( TriangleAAA( v3(), v4(), point ) ) == rightSign &&
+	       boost::math::sign( TriangleAAA( v4(), v1(), point ) ) == rightSign;
 }
 
 bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
@@ -265,17 +295,18 @@ bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 		return true;
 
 	const CVec2 vNewCenter = circleCenter - center;
-	const CVec2 vLocalCoordCenter( vNewCenter.x * dir.x + vNewCenter.y * dir.y, -vNewCenter.x * dir.y + vNewCenter.y * dir.x );
+	const CVec2 vLocalCoordCenter( vNewCenter.x * dir.x + vNewCenter.y * dir.y,
+	                               -vNewCenter.x * dir.y + vNewCenter.y * dir.x );
 
 	float fDist = 0;
 
 	if ( vLocalCoordCenter.x < -lengthBack )
-		fDist += sqr( vLocalCoordCenter.x - (-lengthBack) );
+		fDist += sqr( vLocalCoordCenter.x - ( -lengthBack ) );
 	else if ( vLocalCoordCenter.x > lengthAhead )
 		fDist += sqr( vLocalCoordCenter.x - lengthAhead );
 
 	if ( vLocalCoordCenter.y < -width )
-		fDist += sqr( vLocalCoordCenter.y - (-width) );
+		fDist += sqr( vLocalCoordCenter.y - ( -width ) );
 	else if ( vLocalCoordCenter.y > width )
 		fDist += sqr( vLocalCoordCenter.y - width );
 
@@ -285,8 +316,8 @@ bool SRect::IsIntersectCircle( const CVec2 &circleCenter, const float r ) const
 bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVec2 &vTr3 ) const
 {
 	if ( IsPointInsideTriangle( vTr1, vTr2, vTr3, v1() ) || IsPointInsideTriangle( vTr1, vTr2, vTr3, v2() ) ||
-			 IsPointInsideTriangle( vTr1, vTr2, vTr3, v3() ) || IsPointInsideTriangle( vTr1, vTr2, vTr3, v4() ) )
-		 return true;
+	     IsPointInsideTriangle( vTr1, vTr2, vTr3, v3() ) || IsPointInsideTriangle( vTr1, vTr2, vTr3, v4() ) )
+		return true;
 
 	CSegment segment1( vTr1, vTr2 );
 	if ( IsIntersected( segment1 ) )
@@ -394,26 +425,30 @@ const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const 
 	const int nPrevPoint = nNearestPoint == 0 ? 3 : nNearestPoint - 1;
 	const int nNextPoint = nNearestPoint == 3 ? 0 : nNearestPoint + 1;
 
-	const float dPrev = ( rect.v[nNearestPoint].x - rect.v[nPrevPoint].x )*vDirNorm.y - ( rect.v[nNearestPoint].y - rect.v[nPrevPoint].y )*vDirNorm.x;
+	const float dPrev = ( rect.v[nNearestPoint].x - rect.v[nPrevPoint].x ) * vDirNorm.y -
+	                    ( rect.v[nNearestPoint].y - rect.v[nPrevPoint].y ) * vDirNorm.x;
 	if ( dPrev != 0.0f )
 	{
-		const float tr = ( ( vPoint.x - rect.v[nPrevPoint].x )*vDirNorm.y - ( vPoint.y - rect.v[nPrevPoint].y )*vDirNorm.x )/dPrev;
+		const float tr =
+				( ( vPoint.x - rect.v[nPrevPoint].x ) * vDirNorm.y - ( vPoint.y - rect.v[nPrevPoint].y ) * vDirNorm.x ) / dPrev;
 		if ( tr >= 0.0f && tr <= 1.0f )
 		{
 			if ( pvResult )
-				*pvResult = rect.v[nPrevPoint] + ( rect.v[nNearestPoint] - rect.v[nPrevPoint] )*tr;
+				*pvResult = rect.v[nPrevPoint] + ( rect.v[nNearestPoint] - rect.v[nPrevPoint] ) * tr;
 			return true;
 		}
 	}
 
-	const float dNext = ( rect.v[nNearestPoint].x - rect.v[nNextPoint].x )*vDirNorm.y - ( rect.v[nNearestPoint].y - rect.v[nNextPoint].y )*vDirNorm.x;
+	const float dNext = ( rect.v[nNearestPoint].x - rect.v[nNextPoint].x ) * vDirNorm.y -
+	                    ( rect.v[nNearestPoint].y - rect.v[nNextPoint].y ) * vDirNorm.x;
 	if ( dNext != 0.0f )
 	{
-		const float tr = ( ( vPoint.x - rect.v[nNextPoint].x )*vDirNorm.y - ( vPoint.y - rect.v[nNextPoint].y )*vDirNorm.x )/dNext;
+		const float tr =
+				( ( vPoint.x - rect.v[nNextPoint].x ) * vDirNorm.y - ( vPoint.y - rect.v[nNextPoint].y ) * vDirNorm.x ) / dNext;
 		if ( tr >= 0.0f && tr <= 1.0f )
 		{
 			if ( pvResult )
-				*pvResult = rect.v[nNextPoint] + ( rect.v[nNearestPoint] - rect.v[nNextPoint] )*tr;
+				*pvResult = rect.v[nNextPoint] + ( rect.v[nNearestPoint] - rect.v[nNextPoint] ) * tr;
 			return true;
 		}
 	}
@@ -434,5 +469,5 @@ const uint16_t GetVisibleAngle( const CVec2 &point, const SRect rect )
 	const uint16_t diff5 = DirsDifference( wAngle4, wAngle2 );
 	const uint16_t diff6 = DirsDifference( wAngle4, wAngle3 );
 
-	return (std::max)( (std::max) ( (std::max)( diff1, diff2 ), (std::max)( diff3, diff4 ) ), (std::max)( diff5, diff6 ) );
+	return (std::max)( (std::max)( (std::max)( diff1, diff2 ), (std::max)( diff3, diff4 ) ), (std::max)( diff5, diff6 ) );
 }

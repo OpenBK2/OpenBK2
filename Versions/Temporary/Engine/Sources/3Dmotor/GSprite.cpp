@@ -10,9 +10,10 @@ namespace NGScene
 
 // CSpriteEffect
 
-class CSpriteEffect: public CParticleEffect
+class CSpriteEffect : public CParticleEffect
 {
-	OBJECT_BASIC_METHODS(CSpriteEffect);
+	OBJECT_BASIC_METHODS( CSpriteEffect );
+
 public:
 	CVec3 sPos;
 	CVec3 sDir;
@@ -38,7 +39,7 @@ void CSpriteEffect::AddParticles( IParticleOutput *pRender )
 	sRes[2] = sPos + sDir + sNormal;
 	sRes[3] = sPos + sNormal;
 	////
-	CDGPtr<CPtrFuncBase<NGfx::CTexture> > pTex( textures[0] );
+	CDGPtr<CPtrFuncBase<NGfx::CTexture>> pTex( textures[0] );
 	if ( !IsValid( pTex ) )
 		return;
 	pTex.Refresh();
@@ -49,8 +50,12 @@ void CSpriteEffect::AddParticles( IParticleOutput *pRender )
 
 // CSpriteAnimator
 
-CSpriteAnimator::CSpriteAnimator( IGScene *_pScene, CFuncBase<CVec3> *_pPosition, CFuncBase<CVec3> *_pDir, CPtrFuncBase<NGfx::CTexture> *_pTexture, CFuncBase<CVec2> *_pSize ):
-	pScene(_pScene), pPosition(_pPosition), pDir(_pDir), pTexture(_pTexture), pSize(_pSize)
+CSpriteAnimator::CSpriteAnimator( IGScene *_pScene,
+                                  CFuncBase<CVec3> *_pPosition,
+                                  CFuncBase<CVec3> *_pDir,
+                                  CPtrFuncBase<NGfx::CTexture> *_pTexture,
+                                  CFuncBase<CVec2> *_pSize )
+		: pScene( _pScene ), pPosition( _pPosition ), pDir( _pDir ), pTexture( _pTexture ), pSize( _pSize )
 {
 	pCamera = pScene->GetCamera();
 }

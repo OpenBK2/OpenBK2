@@ -18,7 +18,6 @@ bool CMODContainer::CanNewMOD()
 	return true;
 }
 
-
 bool CMODContainer::CanOpenMOD()
 {
 	std::vector<NMOD::SMOD> modList;
@@ -26,12 +25,10 @@ bool CMODContainer::CanOpenMOD()
 	return ( !modList.empty() );
 }
 
-
 bool CMODContainer::CanCloseMOD()
 {
 	return ( NMOD::DoesAnyMODAttached() );
 }
-
 
 bool CMODContainer::NewMOD()
 {
@@ -80,7 +77,6 @@ bool CMODContainer::NewMOD()
 	return false;
 }
 
-
 bool CMODContainer::OpenMOD()
 {
 	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
@@ -120,7 +116,6 @@ bool CMODContainer::OpenMOD()
 	return false;
 }
 
-
 void CMODContainer::CloseMOD()
 {
 	if ( NMOD::DoesAnyMODAttached() )
@@ -131,7 +126,8 @@ void CMODContainer::CloseMOD()
 		}
 		NProgress::Create( true );
 		std::string strPM = NResources::GetString( IDS_PM_CLOSE_MOD );
-		NProgress::SetMessage( fmt::sprintf( strPM.c_str(), Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder.c_str() ) );
+		NProgress::SetMessage(
+				fmt::sprintf( strPM.c_str(), Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder.c_str() ) );
 		NProgress::SetRange( 0, 2 );
 		//
 		NMOD::InstantAttachMOD( "", NDb::DATABASE_MODE_EDITOR );

@@ -25,11 +25,12 @@ class CFileDumper : public ILogDumper
 	//
 	const std::string szFullFileName;
 	CFileDumper() {}
+
 public:
-	CFileDumper( const std::string &_szFullFileName ): szFullFileName( _szFullFileName ) {}
+	CFileDumper( const std::string &_szFullFileName ) : szFullFileName( _szFullFileName ) {}
 	void Dump( const std::wstring &wszString )
 	{
-		if ( FILE *f = fopen(szFullFileName.c_str(), "a") )
+		if ( FILE *f = fopen( szFullFileName.c_str(), "a" ) )
 		{
 			// the buffer this used to fill was char[1024] and was passed to
 			// WideCharToMultiByte as its own size, so a line of exactly 1024
@@ -41,7 +42,10 @@ public:
 		}
 	}
 };
-ILogDumper *CreateFileDumper( const std::string &szFullFileName ) { return new CFileDumper( szFullFileName ); }
+ILogDumper *CreateFileDumper( const std::string &szFullFileName )
+{
+	return new CFileDumper( szFullFileName );
+}
 
 class CDebugDumper : public ILogDumper
 {
@@ -71,7 +75,10 @@ class CDebugDumper : public ILogDumper
 #endif
 	}
 };
-ILogDumper *CreateDebugDumper() { return new CDebugDumper(); }
+ILogDumper *CreateDebugDumper()
+{
+	return new CDebugDumper();
+}
 
 ILogDumper *CreateAssertDumper()
 {
@@ -143,7 +150,7 @@ CLogger &CLogger::operator<<( const wchar_t *pwszText )
 	return *this;
 }
 
-CLogger& CLogger::operator<<( const std::wstring &wszText )
+CLogger &CLogger::operator<<( const std::wstring &wszText )
 {
 	wszLogBuffer += wszText;
 	return *this;
@@ -162,7 +169,7 @@ CLogger &CLogger::Dump()
 {
 	if ( !wszLogBuffer.empty() )
 	{
-		if ( Dump(GetLoggerFullName(), wszLogBuffer) )
+		if ( Dump( GetLoggerFullName(), wszLogBuffer ) )
 			wszLogBuffer.clear();
 	}
 	return *this;
@@ -172,8 +179,8 @@ bool CLogger::Dump( const std::string &szLoggerFullName, const std::wstring &wsz
 {
 	for ( CDumpersList::iterator it = dumpers.begin(); it != dumpers.end(); ++it )
 	{
-		if ( (*it) )
-			(*it)->Dump( wszString );
+		if ( ( *it ) )
+			( *it )->Dump( wszString );
 	}
 	bool bRes = !dumpers.empty();
 	if ( pParent )

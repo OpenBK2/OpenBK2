@@ -13,19 +13,19 @@ class CButtonStateSaver : public IBinSaver
 	CPtr<NDb::SWindowMSButton> instance;
 	std::vector<std::pair<chunk_id, int>> chunks;
 
-	template<class T> void Transfer( void *data, int size, T &value )
+	template <class T>
+	void Transfer( void *data, int size, T &value )
 	{
-		ASSERT_EQ( size, sizeof(T) );
+		ASSERT_EQ( size, sizeof( T ) );
 		if ( reading )
-			memcpy( data, &value, sizeof(T) );
+			memcpy( data, &value, sizeof( T ) );
 		else
-			memcpy( &value, data, sizeof(T) );
+			memcpy( &value, data, sizeof( T ) );
 	}
 
 	bool StartChunk( chunk_id id, int number ) override
 	{
-		if ( ( chunks.empty() && ( id == 2 || id == 8 ) ) ||
-			( chunks.size() == 1 && chunks[0].first == 8 && id == 1 ) )
+		if ( ( chunks.empty() && ( id == 2 || id == 8 ) ) || ( chunks.size() == 1 && chunks[0].first == 8 && id == 1 ) )
 		{
 			chunks.emplace_back( id, number );
 			return true;
@@ -63,20 +63,23 @@ public:
 	std::vector<NDb::EButtonSubstateType> substates;
 	NDb::EButtonSubstateType originalSubstate = NDb::BST_NORMAL;
 
-	CButtonStateSaver( bool read, NDb::SWindowMSButton *desc = nullptr,
-		std::vector<NDb::EButtonSubstateType> states = {} )
-		: reading( read ), instance( desc ), substates( std::move( states ) ) {}
+	CButtonStateSaver( bool read,
+	                   NDb::SWindowMSButton *desc = nullptr,
+	                   std::vector<NDb::EButtonSubstateType> states = {} )
+			: reading( read ), instance( desc ), substates( std::move( states ) )
+	{
+	}
 	bool IsReading() override { return reading; }
 	int GetVersion() const override { return 4; }
-	int GetSizeOf() const override { return sizeof(*this); }
+	int GetSizeOf() const override { return sizeof( *this ); }
 };
 
 class CAfterLoadChild : public CWindow
 {
 	OBJECT_NOCOPY_METHODS( CAfterLoadChild );
-	CPtr<NDb::SWindowSimple> instance =
-		MakeObject<NDb::SWindowSimple>( NDb::SWindowSimple::typeID );
+	CPtr<NDb::SWindowSimple> instance = MakeObject<NDb::SWindowSimple>( NDb::SWindowSimple::typeID );
 	NDb::SWindow *GetInstance() override { return instance; }
+
 public:
 	int afterLoadCalls = 0;
 	void AfterLoad() override
@@ -117,33 +120,30 @@ protected:
 
 TEST_F( WindowAfterLoad, EmptySavedStatesStillRestoreChildren )
 {
-	CPtr<NDb::SWindowMSButton> instance =
-		MakeObject<NDb::SWindowMSButton>( NDb::SWindowMSButton::typeID );
+	CPtr<NDb::SWindowMSButton> instance = MakeObject<NDb::SWindowMSButton>( NDb::SWindowMSButton::typeID );
 	instance->nState = 0;
 	instance->buttonStates.resize( 1 );
 	// A rejected logical/visual state count mismatch leaves exactly this saved
 	// combination: a valid instance with one logical state and no runtime states.
 	CButtonStateSaver reader( true, instance );
-	(*button) & reader;
+	( *button ) & reader;
 	RestoreAndCheckChildren();
 	CButtonStateSaver writer( false );
-	(*button) & writer;
+	( *button ) & writer;
 	EXPECT_TRUE( writer.substates.empty() );
 	EXPECT_EQ( instance->nState, 0 );
 }
 
 TEST_F( WindowAfterLoad, ValidSavedSubstateIsRetained )
 {
-	CPtr<NDb::SWindowMSButton> instance =
-		MakeObject<NDb::SWindowMSButton>( NDb::SWindowMSButton::typeID );
+	CPtr<NDb::SWindowMSButton> instance = MakeObject<NDb::SWindowMSButton>( NDb::SWindowMSButton::typeID );
 	instance->nState = 1;
-	const std::vector<NDb::EButtonSubstateType> saved =
-		{ NDb::BST_MOUSE_OVER, NDb::BST_PUSHED_DEEP };
+	const std::vector<NDb::EButtonSubstateType> saved = { NDb::BST_MOUSE_OVER, NDb::BST_PUSHED_DEEP };
 	CButtonStateSaver reader( true, instance, saved );
-	(*button) & reader;
+	( *button ) & reader;
 	RestoreAndCheckChildren();
 	CButtonStateSaver writer( false );
-	(*button) & writer;
+	( *button ) & writer;
 	EXPECT_EQ( instance->nState, 1 );
 	EXPECT_EQ( writer.substates, saved );
 	EXPECT_EQ( writer.originalSubstate, NDb::BST_PUSHED_DEEP );

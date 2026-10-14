@@ -14,7 +14,8 @@ namespace NStr
 
 // разделить строку на массив строк по заданному разделителю
 template <class T1>
-static void SplitStringT( const std::basic_string<T1> &szString, std::vector< std::basic_string<T1> > *pVector, const T1 tSeparator )
+static void
+SplitStringT( const std::basic_string<T1> &szString, std::vector<std::basic_string<T1>> *pVector, const T1 tSeparator )
 {
 	int nPos = 0, nLastPos = 0;
 	//
@@ -23,9 +24,9 @@ static void SplitStringT( const std::basic_string<T1> &szString, std::vector< st
 		nPos = szString.find( tSeparator, nLastPos );
 		// add string
 		pVector->push_back( szString.substr( nLastPos, nPos - nLastPos ) );
-		nLastPos = nPos + 1;//szString.find_first_not_of( cSeparator, nPos );
-		//
-	} while( nPos != std::basic_string<T1>::npos );
+		nLastPos = nPos + 1; //szString.find_first_not_of( cSeparator, nPos );
+												 //
+	} while ( nPos != std::basic_string<T1>::npos );
 }
 void SplitString( const std::string &szString, std::vector<std::string> *pVector, const char cSeparator )
 {
@@ -37,17 +38,26 @@ void SplitString( const std::wstring &szString, std::vector<std::wstring> *pVect
 }
 
 template <class TChar>
-void SplitStringWithMultipleBracketsT( const std::basic_string<TChar> &szString, std::vector<std::basic_string<TChar> > &szVector, const TChar cSeparator )
+void SplitStringWithMultipleBracketsT( const std::basic_string<TChar> &szString,
+                                       std::vector<std::basic_string<TChar>> &szVector,
+                                       const TChar cSeparator )
 {
-	for ( CStringIterator<TChar, const std::basic_string<TChar>&, CBracketSeparator<TChar, SBracketsQuoteTest<TChar> > > it(szString, cSeparator); !it.IsEnd(); it.Next() )
+	for ( CStringIterator<TChar, const std::basic_string<TChar> &, CBracketSeparator<TChar, SBracketsQuoteTest<TChar>>>
+	          it( szString, cSeparator );
+	      !it.IsEnd();
+	      it.Next() )
 		szVector.push_back( it.Get() );
 }
 
-void SplitStringWithMultipleBrackets( const std::string &szString, std::vector<std::string> &szVector, const char cSeparator )
+void SplitStringWithMultipleBrackets( const std::string &szString,
+                                      std::vector<std::string> &szVector,
+                                      const char cSeparator )
 {
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
 }
-void SplitStringWithMultipleBrackets( const std::wstring &szString, std::vector<std::wstring> &szVector, const wchar_t cSeparator )
+void SplitStringWithMultipleBrackets( const std::wstring &szString,
+                                      std::vector<std::wstring> &szVector,
+                                      const wchar_t cSeparator )
 {
 	SplitStringWithMultipleBracketsT( szString, szVector, cSeparator );
 }
@@ -79,22 +89,23 @@ void TrimRight( std::string &szString, const char *pszTrim )
 class CSymbolCheckFunctional
 {
 private:
-  const char *pszSymbols;
+	const char *pszSymbols;
+
 public:
-  explicit CSymbolCheckFunctional( const char *pszNewSymbols ) : pszSymbols( pszNewSymbols ) {  }
-  bool operator()( const char cSymbol )
-  {
-    for ( const char *p = pszSymbols; *p != 0; ++p )
-    {
-      if ( *p == cSymbol )
-        return true;
-    }
-    return false;
-  }
+	explicit CSymbolCheckFunctional( const char *pszNewSymbols ) : pszSymbols( pszNewSymbols ) {}
+	bool operator()( const char cSymbol )
+	{
+		for ( const char *p = pszSymbols; *p != 0; ++p )
+		{
+			if ( *p == cSymbol )
+				return true;
+		}
+		return false;
+	}
 };
 void TrimInside( std::string &szString, const char *pszTrim )
 {
-  szString.erase( remove_if(szString.begin(), szString.end(), CSymbolCheckFunctional(pszTrim)), szString.end() );
+	szString.erase( remove_if( szString.begin(), szString.end(), CSymbolCheckFunctional( pszTrim ) ), szString.end() );
 }
 
 // sscanf took the decimal point from LC_NUMERIC and said nothing when the
@@ -235,11 +246,14 @@ bool IsDecNumber( const std::string &szString )
 	int i, nFirstDigit = IsSign( szString[0] ) ? 1 : 0;
 	int nNumDigits = szString.size() - nFirstDigit;
 	if ( nNumDigits == 0 )
-		return false;												// this is not a number at all => zero length digits
-	if ( (nNumDigits > 1) && (szString[nFirstDigit] == '0') )
-		return false;												// hex number
-	for ( i=nFirstDigit; (i < szString.size()) && IsDecDigit(szString[i]); ++i ) { ; }
-	return ( (i > nFirstDigit) && (i == szString.size()) );
+		return false; // this is not a number at all => zero length digits
+	if ( ( nNumDigits > 1 ) && ( szString[nFirstDigit] == '0' ) )
+		return false; // hex number
+	for ( i = nFirstDigit; ( i < szString.size() ) && IsDecDigit( szString[i] ); ++i )
+	{
+		;
+	}
+	return ( ( i > nFirstDigit ) && ( i == szString.size() ) );
 }
 // <[+/-]>[0][oct digit]*
 bool IsOctNumber( const std::string &szString )
@@ -255,8 +269,11 @@ bool IsOctNumber( const std::string &szString )
 	if ( nNumDigits < 2 )
 		return false;
 
-	for ( i=nFirstDigit; (i < szString.size()) && IsOctDigit(szString[i]); ++i ) { ; }
-	return ( (i > nFirstDigit) && (i == szString.size()) );
+	for ( i = nFirstDigit; ( i < szString.size() ) && IsOctDigit( szString[i] ); ++i )
+	{
+		;
+	}
+	return ( ( i > nFirstDigit ) && ( i == szString.size() ) );
 }
 // <[+/-]>[0x][hex digit]*
 bool IsHexNumber( const std::string &szString )
@@ -267,10 +284,13 @@ bool IsHexNumber( const std::string &szString )
 	int nNumDigits = szString.size() - nFirstDigit;
 	if ( nNumDigits < 3 )
 		return false;
-	if ( (szString[nFirstDigit] != '0') || (szString[nFirstDigit + 1] != 'x') )
+	if ( ( szString[nFirstDigit] != '0' ) || ( szString[nFirstDigit + 1] != 'x' ) )
 		return false;
-	for ( i=nFirstDigit + 2; (i < szString.size()) && IsHexDigit(szString[i]); ++i ) { ; }
-	return ( (i > nFirstDigit) && (i == szString.size()) );
+	for ( i = nFirstDigit + 2; ( i < szString.size() ) && IsHexDigit( szString[i] ); ++i )
+	{
+		;
+	}
+	return ( ( i > nFirstDigit ) && ( i == szString.size() ) );
 }
 
 // ************************************************************************************************************************ //
@@ -281,23 +301,23 @@ bool IsHexNumber( const std::string &szString )
 // **
 // ************************************************************************************************************************ //
 
-const char* BinToString( const void *pData, int nSize, char *pszBuffer )
+const char *BinToString( const void *pData, int nSize, char *pszBuffer )
 {
 	char *pszCurr = pszBuffer;
-	for ( const unsigned char *it = (unsigned char*)pData; it != (unsigned char*)pData + nSize; ++it )
+	for ( const unsigned char *it = (unsigned char *)pData; it != (unsigned char *)pData + nSize; ++it )
 	{
-		*pszCurr++ = HalfByteToHexSymbol( ((*it) >> 4) & 0x0f );
-		*pszCurr++ = HalfByteToHexSymbol( (*it) & 0x0f );
+		*pszCurr++ = HalfByteToHexSymbol( ( ( *it ) >> 4 ) & 0x0f );
+		*pszCurr++ = HalfByteToHexSymbol( ( *it ) & 0x0f );
 	}
 	return pszBuffer;
 }
-void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
+void *StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 {
-	uint8_t *pData = (uint8_t*)pBuffer;
+	uint8_t *pData = (uint8_t *)pBuffer;
 	for ( const char *it = pszData; *it != 0; it += 2 )
-		*pData++ = ( HexSymbolToHalfByte( *it ) << 4 ) | HexSymbolToHalfByte( *(it +1) );
+		*pData++ = ( HexSymbolToHalfByte( *it ) << 4 ) | HexSymbolToHalfByte( *( it + 1 ) );
 	if ( pnSize )
-		*pnSize = int( pData - (uint8_t*)pBuffer );
+		*pnSize = int( pData - (uint8_t *)pBuffer );
 	return pBuffer;
 }
 

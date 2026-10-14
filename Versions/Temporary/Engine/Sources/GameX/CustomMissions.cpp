@@ -18,10 +18,10 @@ void GetObjectsFromFolderByType( std::vector<CDBID> *pDBIDs, const NFile::CFileP
 	for ( std::vector<std::string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
 	{
 		NFile::CFilePath filePath = *it;
-		if ( filePath.size() > 4 && NFile::ComparePathEq(filePath.size() - 4, 4, filePath, 0, 4, szXDB) )
+		if ( filePath.size() > 4 && NFile::ComparePathEq( filePath.size() - 4, 4, filePath, 0, 4, szXDB ) )
 		{
 			const CDBID dbidObject = CDBID( *it );
-			if ( NDb::GetClassTypeName(dbidObject) == szType )
+			if ( NDb::GetClassTypeName( dbidObject ) == szType )
 				pDBIDs->push_back( dbidObject );
 		}
 	}

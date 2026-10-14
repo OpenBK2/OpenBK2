@@ -8,7 +8,7 @@ namespace NGScene
 enum EFadeType
 {
 	E_FADE_NONE,
-  E_FADE_TO_BLACK,
+	E_FADE_TO_BLACK,
 	E_FADE_TO_WHITE,
 	E_FORCE_HIDE,
 	E_FORCE_SHOW
@@ -18,10 +18,10 @@ enum EFadeType
 
 class CSimpleFader : public IFader
 {
-	OBJECT_BASIC_METHODS(CSimpleFader)
+	OBJECT_BASIC_METHODS( CSimpleFader )
 	//
 	ZDATA
-	CDGPtr<CFuncBase<STime> > pTimer;
+	CDGPtr<CFuncBase<STime>> pTimer;
 	NGScene::SExpFader expFader;
 	bool bHide;
 	ZSKIP
@@ -29,8 +29,19 @@ class CSimpleFader : public IFader
 	int nStartTime;
 	CPtr<CObjectBase> pOwner;
 	bool bForceWOTimer;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTimer); f.Add(3,&expFader); f.Add(4,&bHide); f.Add(6,&eFadeType); f.Add(7,&nStartTime); f.Add(8,&pOwner); f.Add(9,&bForceWOTimer); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pTimer );
+		f.Add( 3, &expFader );
+		f.Add( 4, &bHide );
+		f.Add( 6, &eFadeType );
+		f.Add( 7, &nStartTime );
+		f.Add( 8, &pOwner );
+		f.Add( 9, &bForceWOTimer );
+		return 0;
+	}
 	bool bNeedUpdate;
+
 protected:
 	bool NeedUpdate() { return bNeedUpdate && ( !pTimer || pTimer.Refresh() || bForceWOTimer ); }
 	void Recalc()
@@ -94,19 +105,26 @@ protected:
 		nStartTime = t;
 		expFader.SetPrevTime( nStartTime );
 	}
+
 private:
-	CSimpleFader() : nStartTime(0), bHide(false), eFadeType(E_FADE_NONE), bForceWOTimer(false), expFader(0), bNeedUpdate(false) { value = 1.0f; }
+	CSimpleFader()
+			: nStartTime( 0 ), bHide( false ), eFadeType( E_FADE_NONE ), bForceWOTimer( false ), expFader( 0 ),
+				bNeedUpdate( false )
+	{
+		value = 1.0f;
+	}
+
 public:
-	CSimpleFader( EFadeType _eFadeType, CObjectBase *_pOwner ) : nStartTime(0), eFadeType(_eFadeType), bHide(false), bNeedUpdate(true),
-		expFader( _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ),
-		pOwner(_pOwner), bForceWOTimer(false)
+	CSimpleFader( EFadeType _eFadeType, CObjectBase *_pOwner )
+			: nStartTime( 0 ), eFadeType( _eFadeType ), bHide( false ), bNeedUpdate( true ),
+				expFader( _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ), pOwner( _pOwner ), bForceWOTimer( false )
 	{
 		value = 1;
 	}
 	//
-	CSimpleFader( EFadeType _eFadeType, int _nStartTime, float _fLatency, CObjectBase *_pOwner ) :
-		expFader(_fLatency, _fLatency, _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ),
-		eFadeType(_eFadeType), bHide(false), bNeedUpdate(true), pOwner(_pOwner), bForceWOTimer(false)
+	CSimpleFader( EFadeType _eFadeType, int _nStartTime, float _fLatency, CObjectBase *_pOwner )
+			: expFader( _fLatency, _fLatency, _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ), eFadeType( _eFadeType ),
+				bHide( false ), bNeedUpdate( true ), pOwner( _pOwner ), bForceWOTimer( false )
 	{
 		value = 1;
 		SetStartTime( _nStartTime );
@@ -176,7 +194,8 @@ IFader *CreateSimpleFader( const SFaderInfo &faderInfo )
 	{
 		const float fOnTime = -faderInfo.fLatency / log( 0.01f );
 		//return new CSimpleFader( faderInfo.bFadeToBlack ? E_FADE_TO_BLACK : E_FADE_TO_WHITE, faderInfo.nStartTime, faderInfo.fLatency/*fOnTime*/ );
-		return new CSimpleFader( faderInfo.bFadeToBlack ? E_FADE_TO_BLACK : E_FADE_TO_WHITE, faderInfo.nStartTime, fOnTime, faderInfo.pOwner );
+		return new CSimpleFader(
+				faderInfo.bFadeToBlack ? E_FADE_TO_BLACK : E_FADE_TO_WHITE, faderInfo.nStartTime, fOnTime, faderInfo.pOwner );
 	}
 	else
 		return new CSimpleFader( E_FADE_NONE, faderInfo.pOwner );
@@ -185,5 +204,5 @@ IFader *CreateSimpleFader( const SFaderInfo &faderInfo )
 } // namespace NGScene
 
 using namespace NGScene;
-REGISTER_SAVELOAD_CLASS(_3DMOTOR, 0x13168C40, CSimpleFader)
+REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x13168C40, CSimpleFader )
 BASIC_REGISTER_CLASS( _3DMOTOR, IFader )

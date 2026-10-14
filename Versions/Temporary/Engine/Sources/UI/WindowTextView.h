@@ -16,36 +16,37 @@ struct ISound;
 // and Window parameters
 class UI_EXPORT CWindowTextView : public CWindow, public ITextView
 {
-	OBJECT_BASIC_METHODS(CWindowTextView);
+	OBJECT_BASIC_METHODS( CWindowTextView );
 
 	CPtr<NDb::SWindowTextView> pInstance;
 	CDBPtr<NDb::SWindowTextViewShared> pShared;
 
-	CObj<IML> pGfxText;								// text to display
+	CObj<IML> pGfxText; // text to display
 	std::wstring wszCustomText;
 	CVec2 vScreenRect;
 	int nIDForMLHandler;
 	// Track control sizing separately: GetSize can refresh the markup before
 	// Visit has updated a ResizeOnTextSet window's height.
 	float fFontScale = 0;
+
 private:
 	bool InitText();
 	//{ overrided
-	const std::wstring& GetDBFormatText() const;
-	const std::wstring& GetDBInstanceText() const;
+	const std::wstring &GetDBFormatText() const;
+	const std::wstring &GetDBInstanceText() const;
 	//}
 protected:
-	virtual NDb::SWindow* GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance() { return pInstance; }
 
 public:
-	CWindowTextView() : vScreenRect( VNULL2  ), nIDForMLHandler( -1 ) {}
+	CWindowTextView() : vScreenRect( VNULL2 ), nIDForMLHandler( -1 ) {}
 
 	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual int operator&( struct IBinSaver &saver );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 	virtual std::wstring GetDBText() const;
-	virtual const std::wstring& GetText() const;
+	virtual const std::wstring &GetText() const;
 	// return true if height of window is updated
 	virtual bool SetText( const std::wstring &szText );
 	virtual void SetWidth( const int nWidth );

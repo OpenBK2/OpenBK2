@@ -44,7 +44,7 @@ extern NTimer::STime curTime;
 // The same interval separates soldiers and the last/first soldiers of successive squads.
 static const NTimer::STime HELICOPTER_DROP_INTERVAL = 2000;
 
-IStatesFactory* CHelicopterStatesFactory::Instance()
+IStatesFactory *CHelicopterStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CHelicopterStatesFactory();
@@ -54,106 +54,98 @@ IStatesFactory* CHelicopterStatesFactory::Instance()
 bool CHelicopterStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		cmdType == ACTION_COMMAND_MOVE_TO ||
-		cmdType == ACTION_COMMAND_SWARM_TO ||
-		cmdType == ACTION_COMMAND_ROTATE_TO ||
-		cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
-		cmdType == ACTION_COMMAND_STAND_GROUND ||
-		cmdType == ACTION_COMMAND_GUARD ||
-		cmdType == ACTION_COMMAND_PATROL ||
-		cmdType == ACTION_COMMAND_UNLOAD ||
-		cmdType == ACTION_COMMAND_ATTACK_UNIT ||
-		cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||
-		cmdType == ACTION_MOVE_PLANE_LEAVE ||
-		cmdType == ACTION_MOVE_FLY_DEAD ||
-		cmdType == ACTION_COMMAND_DISAPPEAR ||
-		cmdType == ACTION_COMMAND_STOP_THIS_ACTION ||
-		cmdType == ACTION_COMMAND_DIE;
+	return cmdType == ACTION_COMMAND_MOVE_TO || cmdType == ACTION_COMMAND_SWARM_TO ||
+	       cmdType == ACTION_COMMAND_ROTATE_TO || cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
+	       cmdType == ACTION_COMMAND_STAND_GROUND || cmdType == ACTION_COMMAND_GUARD ||
+	       cmdType == ACTION_COMMAND_PATROL || cmdType == ACTION_COMMAND_UNLOAD ||
+	       cmdType == ACTION_COMMAND_ATTACK_UNIT || cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||
+	       cmdType == ACTION_MOVE_PLANE_LEAVE || cmdType == ACTION_MOVE_FLY_DEAD || cmdType == ACTION_COMMAND_DISAPPEAR ||
+	       cmdType == ACTION_COMMAND_STOP_THIS_ACTION || cmdType == ACTION_COMMAND_DIE;
 }
 
-IUnitState* CHelicopterStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand *pCommand )
+IUnitState *CHelicopterStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CHelicopter*>( pObj ) != 0, "Wrong unit type" );
-	CHelicopter *pHelicopter = checked_cast<CHelicopter*>( pObj );
+	NI_ASSERT( dynamic_cast<CHelicopter *>( pObj ) != 0, "Wrong unit type" );
+	CHelicopter *pHelicopter = checked_cast<CHelicopter *>( pObj );
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 
 	switch ( cmd.nCmdType )
 	{
-	case ACTION_COMMAND_MOVE_TO:
-		return new CHelicopterMoveState( pHelicopter, pCommand->GetMoveTarget( pHelicopter ), false );
-	case ACTION_COMMAND_SWARM_TO:
-		return new CHelicopterMoveState( pHelicopter, pCommand->GetMoveTarget( pHelicopter ), true );
-	case ACTION_COMMAND_ROTATE_TO:
-		return new CHelicopterRotateState( pHelicopter, cmd.vPos );
-	case ACTION_COMMAND_ROTATE_TO_DIR:
+		case ACTION_COMMAND_MOVE_TO:
+			return new CHelicopterMoveState( pHelicopter, pCommand->GetMoveTarget( pHelicopter ), false );
+		case ACTION_COMMAND_SWARM_TO:
+			return new CHelicopterMoveState( pHelicopter, pCommand->GetMoveTarget( pHelicopter ), true );
+		case ACTION_COMMAND_ROTATE_TO:
+			return new CHelicopterRotateState( pHelicopter, cmd.vPos );
+		case ACTION_COMMAND_ROTATE_TO_DIR:
 		{
 			CVec2 vDir = cmd.vPos;
 			Normalize( &vDir );
 			return new CHelicopterRotateState( pHelicopter, pHelicopter->GetCenterPlain() + vDir );
 		}
-	case ACTION_COMMAND_STAND_GROUND:
-		pHelicopter->Stop();
-		pHelicopter->SetBehaviourMoving( SBehaviour::EMHoldPos );
-		return new CHelicopterRestState( pHelicopter );
-	case ACTION_COMMAND_GUARD:
-		pHelicopter->Stop();
-		return new CHelicopterRotateState( pHelicopter,
-			pHelicopter->GetCenterPlain() + GetVectorByDirection( uint16_t( cmd.fNumber ) ) );
-	case ACTION_COMMAND_PATROL:
+		case ACTION_COMMAND_STAND_GROUND:
+			pHelicopter->Stop();
+			pHelicopter->SetBehaviourMoving( SBehaviour::EMHoldPos );
+			return new CHelicopterRestState( pHelicopter );
+		case ACTION_COMMAND_GUARD:
+			pHelicopter->Stop();
+			return new CHelicopterRotateState(
+					pHelicopter, pHelicopter->GetCenterPlain() + GetVectorByDirection( uint16_t( cmd.fNumber ) ) );
+		case ACTION_COMMAND_PATROL:
 		{
 			CVec2 vTarget( cmd.vPos );
 			return CCommonPatrolState::Instance( pHelicopter, vTarget );
 		}
-	case ACTION_COMMAND_SWARM_ATTACK_UNIT:
-	case ACTION_COMMAND_ATTACK_UNIT:
+		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
+		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			CObjectBase *pObj = GetObjectByCmd( cmd );
 			if ( IsValid( pObj ) )
 			{
 				CONVERT_OBJECT( CAIUnit, pTarget, pObj, "Wrong unit to attack" );
 				if ( pTarget->IsAlive() )
-					return new CHelicopterAttackUnitState( pHelicopter, pTarget, cmd.nCmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT );
+					return new CHelicopterAttackUnitState(
+							pHelicopter, pTarget, cmd.nCmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT );
 			}
 			pHelicopter->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, !pCommand->IsFromAI() );
 			return 0;
 		}
-	case ACTION_COMMAND_UNLOAD:
+		case ACTION_COMMAND_UNLOAD:
 		{
 			// Passenger slots specify a squad and no destination; ground clicks unload all.
-			CFormation *pSquad = dynamic_cast<CFormation*>( GetObjectByCmd( cmd ) );
+			CFormation *pSquad = dynamic_cast<CFormation *>( GetObjectByCmd( cmd ) );
 			if ( cmd.nObjectID != 0 && !IsValidObj( pSquad ) )
 			{
 				pHelicopter->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, !pCommand->IsFromAI() );
 				return 0;
 			}
-			const CVec2 vTarget = int( cmd.fNumber ) == ALP_POSITION_INVALID ?
-				pHelicopter->GetCenterPlain() : pCommand->GetMoveTarget( pHelicopter );
+			const CVec2 vTarget = int( cmd.fNumber ) == ALP_POSITION_INVALID ? pHelicopter->GetCenterPlain()
+			                                                                 : pCommand->GetMoveTarget( pHelicopter );
 			return new CHelicopterUnloadState( pHelicopter, vTarget, pSquad );
 		}
-	case ACTION_MOVE_PLANE_LEAVE:
-		return new CHelicopterLeaveState( pHelicopter, pHelicopter->GetLeavePoint(), false );
-	case ACTION_MOVE_FLY_DEAD:
-		return new CHelicopterFlyDeadState( pHelicopter );
-	case ACTION_COMMAND_DISAPPEAR:
-		pHelicopter->Disappear();
-		return 0;
-	case ACTION_COMMAND_STOP_THIS_ACTION:
-		pHelicopter->Stop();
-		return new CHelicopterRestState( pHelicopter );
-	case ACTION_COMMAND_DIE:
-		NI_ASSERT( false, "Command to die in the queue" );
-		return 0;
+		case ACTION_MOVE_PLANE_LEAVE:
+			return new CHelicopterLeaveState( pHelicopter, pHelicopter->GetLeavePoint(), false );
+		case ACTION_MOVE_FLY_DEAD:
+			return new CHelicopterFlyDeadState( pHelicopter );
+		case ACTION_COMMAND_DISAPPEAR:
+			pHelicopter->Disappear();
+			return 0;
+		case ACTION_COMMAND_STOP_THIS_ACTION:
+			pHelicopter->Stop();
+			return new CHelicopterRestState( pHelicopter );
+		case ACTION_COMMAND_DIE:
+			NI_ASSERT( false, "Command to die in the queue" );
+			return 0;
 	}
 
 	NI_ASSERT( false, "Wrong helicopter command" );
 	return 0;
 }
 
-IUnitState* CHelicopterStatesFactory::ProduceRestState( CQueueUnit *pUnit )
+IUnitState *CHelicopterStatesFactory::ProduceRestState( CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CHelicopter*>( pUnit ) != 0, "Wrong unit type" );
-	return new CHelicopterRestState( checked_cast<CHelicopter*>( pUnit ) );
+	NI_ASSERT( dynamic_cast<CHelicopter *>( pUnit ) != 0, "Wrong unit type" );
+	return new CHelicopterRestState( checked_cast<CHelicopter *>( pUnit ) );
 }
 
 void CHelicopterBaseState::Finish()
@@ -167,8 +159,9 @@ void CHelicopterBaseState::Finish()
 
 bool CHelicopterBaseState::ShouldLeaveMap() const
 {
-	return pHelicopter && ( pHelicopter->GetFuel() <= 0.0f ||
-		( theWeather.IsActive() && pHelicopter->GetUnitAbilityDesc( NDb::ABILITY_MASTER_PILOT ) == 0 ) );
+	return pHelicopter &&
+	       ( pHelicopter->GetFuel() <= 0.0f ||
+	         ( theWeather.IsActive() && pHelicopter->GetUnitAbilityDesc( NDb::ABILITY_MASTER_PILOT ) == 0 ) );
 }
 
 ETryStateInterruptResult CHelicopterBaseState::TryInterruptState( CAICommand *pCommand )
@@ -201,7 +194,7 @@ void CHelicopterRestState::Segment()
 }
 
 CHelicopterMoveState::CHelicopterMoveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets )
-: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
+		: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
 {
 	pHelicopter->BeginMoveTo( vTarget );
 	// A swarm order must inspect its route immediately instead of inheriting an old scan cooldown.
@@ -234,18 +227,18 @@ void CHelicopterMoveState::Segment()
 }
 
 CHelicopterUnloadState::CHelicopterUnloadState( CHelicopter *pUnit, const CVec2 &_vTarget, CFormation *_pUnload )
-: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), pUnload( _pUnload ),
-	bUnloadOneSquad( _pUnload != 0 ), timeNextDrop( 0 ), nNextPassenger( 0 ), bFinishAfterSquad( false )
+		: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), pUnload( _pUnload ), bUnloadOneSquad( _pUnload != 0 ),
+			timeNextDrop( 0 ), nNextPassenger( 0 ), bFinishAfterSquad( false )
 {
 }
 
 bool CHelicopterUnloadState::IsPassengerAboard( CSoldier *pSoldier ) const
 {
 	return IsValidObj( pSoldier ) && pSoldier->IsAlive() && pSoldier->IsInTransport() &&
-		pSoldier->GetTransportUnit() == pHelicopter;
+	       pSoldier->GetTransportUnit() == pHelicopter;
 }
 
-CFormation* CHelicopterUnloadState::GetNextSquad() const
+CFormation *CHelicopterUnloadState::GetNextSquad() const
 {
 	// Search this helicopter's manifest, never another transport's members of a squad.
 	for ( int i = 0; i < pHelicopter->GetNPassengers(); ++i )
@@ -270,9 +263,8 @@ bool CHelicopterUnloadState::FindDropPoint( const CVec2 &vPreferred, CVec3 *pDro
 	{
 		const SVector tile = AICellsTiles::GetTile( vPoint );
 		// The parachute path divides by its fall time, so require positive altitude too.
-		if ( vPoint.x < 0.0f || vPoint.y < 0.0f ||
-			!GetAIMap()->IsTileInside( tile ) || GetTerrain()->IsLocked( tile, EAC_HUMAN ) ||
-			fDropZ - GetHeights()->GetZ( vPoint ) < 1.0f )
+		if ( vPoint.x < 0.0f || vPoint.y < 0.0f || !GetAIMap()->IsTileInside( tile ) ||
+		     GetTerrain()->IsLocked( tile, EAC_HUMAN ) || fDropZ - GetHeights()->GetZ( vPoint ) < 1.0f )
 			return false;
 		*pDropPoint = CVec3( vPoint, fDropZ );
 		return true;
@@ -292,7 +284,7 @@ bool CHelicopterUnloadState::PrepareSquad( CFormation *pSquad )
 	// Validate the complete squad only before its first soldier jumps.
 	for ( int i = 0; i < pSquad->Size(); ++i )
 	{
-		CSoldier *pSoldier = (*pSquad)[i];
+		CSoldier *pSoldier = ( *pSquad )[i];
 		if ( IsValidObj( pSoldier ) && pSoldier->IsAlive() && !IsPassengerAboard( pSoldier ) )
 			return false;
 	}
@@ -301,7 +293,7 @@ bool CHelicopterUnloadState::PrepareSquad( CFormation *pSquad )
 	// mid-drop neither rerolls the squad nor consumes additional random numbers.
 	CVec2 vSquadOffset;
 	RandUniformlyInCircle( 4.0f * SConsts::TILE_SIZE, &vSquadOffset );
-	std::vector<CPtr<CSoldier> > passengers;
+	std::vector<CPtr<CSoldier>> passengers;
 	std::vector<CVec3> positions;
 	for ( int i = 0; i < pHelicopter->GetNPassengers(); ++i )
 	{
@@ -311,7 +303,7 @@ bool CHelicopterUnloadState::PrepareSquad( CFormation *pSquad )
 
 		const int nPassenger = passengers.size();
 		const CVec2 vOffset = GetVectorByDirection( uint16_t( pHelicopter->GetFrontDirection() + nPassenger * 8192 ) ) *
-			( ( 1 + nPassenger / 8 ) * SConsts::TILE_SIZE );
+		                      ( ( 1 + nPassenger / 8 ) * SConsts::TILE_SIZE );
 		CVec3 vDropPoint;
 		if ( !FindDropPoint( pHelicopter->GetCenterPlain() + vSquadOffset + vOffset, &vDropPoint ) )
 			return false;
@@ -339,7 +331,7 @@ void CHelicopterUnloadState::Segment()
 	{
 		CFormation *pSquad = GetNextSquad();
 		if ( !pSquad || vTarget.x < 0.0f || vTarget.y < 0.0f ||
-			!GetAIMap()->IsTileInside( AICellsTiles::GetTile( vTarget ) ) )
+		     !GetAIMap()->IsTileInside( AICellsTiles::GetTile( vTarget ) ) )
 		{
 			pHelicopter->Stop();
 			pHelicopter->SendAcknowledgement( ACK_NEGATIVE );
@@ -406,10 +398,9 @@ ETryStateInterruptResult CHelicopterUnloadState::TryInterruptState( CAICommand *
 {
 	// Death and forced departure must still run immediately. Ordinary orders, including
 	// Stop (passed as a null command), wait for the current squad's final passenger.
-	const bool bForcedDeparture = pCommand &&
-		( pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_FLY_DEAD ||
-			pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR ||
-			pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_PLANE_LEAVE );
+	const bool bForcedDeparture = pCommand && ( pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_FLY_DEAD ||
+	                                            pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR ||
+	                                            pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_PLANE_LEAVE );
 	if ( !bForcedDeparture && pHelicopter && pHelicopter->IsAlive() && !dropPassengers.empty() )
 	{
 		bFinishAfterSquad = true;
@@ -419,7 +410,7 @@ ETryStateInterruptResult CHelicopterUnloadState::TryInterruptState( CAICommand *
 }
 
 CHelicopterRotateState::CHelicopterRotateState( CHelicopter *pUnit, const CVec2 &_vTarget )
-: CHelicopterBaseState( pUnit ), vTarget( _vTarget )
+		: CHelicopterBaseState( pUnit ), vTarget( _vTarget )
 {
 }
 
@@ -436,12 +427,16 @@ void CHelicopterRotateState::Segment()
 	pHelicopter->AimAtPoint( vTarget );
 	pHelicopter->DecFuel( true );
 
-	if ( DirsDifference( pHelicopter->GetFrontDirection(), GetDirectionByVector( vTarget - pHelicopter->GetCenterPlain() ) ) < 256 )
+	if ( DirsDifference( pHelicopter->GetFrontDirection(),
+	                     GetDirectionByVector( vTarget - pHelicopter->GetCenterPlain() ) ) < 256 )
 		Finish();
 }
 
-CHelicopterAttackUnitState::CHelicopterAttackUnitState( CHelicopter *pUnit, CAIUnit *_pTarget, const bool _bSwarmAttack )
-: CHelicopterBaseState( pUnit ), pTarget( _pTarget ), pGun( 0 ), bSwarmAttack( _bSwarmAttack ), bAirModifierApplied( false )
+CHelicopterAttackUnitState::CHelicopterAttackUnitState( CHelicopter *pUnit,
+                                                        CAIUnit *_pTarget,
+                                                        const bool _bSwarmAttack )
+		: CHelicopterBaseState( pUnit ), pTarget( _pTarget ), pGun( 0 ), bSwarmAttack( _bSwarmAttack ),
+			bAirModifierApplied( false )
 {
 	RefreshGun();
 }
@@ -461,7 +456,8 @@ void CHelicopterAttackUnitState::OnFinish()
 
 void CHelicopterAttackUnitState::ApplyAirModifier( const bool bApply )
 {
-	const SMechUnitRPGStats *pStats = pHelicopter ? checked_cast<const SMechUnitRPGStats*>( pHelicopter->GetStats() ) : 0;
+	const SMechUnitRPGStats *pStats =
+			pHelicopter ? checked_cast<const SMechUnitRPGStats *>( pHelicopter->GetStats() ) : 0;
 	if ( !pStats || !pStats->pGAPAirAttackModifier )
 		return;
 	if ( bAirModifierApplied == bApply )
@@ -477,12 +473,10 @@ bool CHelicopterAttackUnitState::IsGunCompatible( CBasicGun *pCheckGun ) const
 		return false;
 
 	const NDb::SWeaponRPGStats::SShell &shell = pCheckGun->GetShell();
-	return
-		pCheckGun->GetNAmmo() > 0 &&
-		shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
-		shell.etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
-		( pTarget->IsAviation() || ( !pCheckGun->GetGun().bTargetAAOnly && !shell.IsSAMTrajectory() ) ) &&
-		( pCheckGun->CanBreakArmor( pTarget ) || pHelicopter->IsTargetingTrack() );
+	return pCheckGun->GetNAmmo() > 0 && shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
+	       shell.etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
+	       ( pTarget->IsAviation() || ( !pCheckGun->GetGun().bTargetAAOnly && !shell.IsSAMTrajectory() ) ) &&
+	       ( pCheckGun->CanBreakArmor( pTarget ) || pHelicopter->IsTargetingTrack() );
 }
 
 bool CHelicopterAttackUnitState::RefreshGun()
@@ -498,9 +492,8 @@ bool CHelicopterAttackUnitState::RefreshGun()
 
 	// The normal estimator treats an aviation unit as locked, so a gun can be rejected
 	// merely because the helicopter has not yet moved into range or turned into its arc.
-	const bool bCanPursue =
-		pHelicopter->DoesExistRejectGunsReason( ACK_NOT_IN_FIRE_RANGE ) ||
-		pHelicopter->DoesExistRejectGunsReason( ACK_NOT_IN_ATTACK_ANGLE );
+	const bool bCanPursue = pHelicopter->DoesExistRejectGunsReason( ACK_NOT_IN_FIRE_RANGE ) ||
+	                        pHelicopter->DoesExistRejectGunsReason( ACK_NOT_IN_ATTACK_ANGLE );
 	if ( !bCanPursue )
 		return false;
 
@@ -508,8 +501,7 @@ bool CHelicopterAttackUnitState::RefreshGun()
 	for ( int i = 0; i < pHelicopter->GetNGuns(); ++i )
 	{
 		CBasicGun *pCandidate = pHelicopter->GetGun( i );
-		if ( ( dwForbiddenGuns & ( 1UL << i ) ) != 0 ||
-			!IsGunCompatible( pCandidate ) )
+		if ( ( dwForbiddenGuns & ( 1UL << i ) ) != 0 || !IsGunCompatible( pCandidate ) )
 			continue;
 
 		// Keep this weapon selected while movement and body rotation make the shot possible.
@@ -526,11 +518,8 @@ void CHelicopterAttackUnitState::StartAvailableGuns()
 	for ( int i = 0; i < pHelicopter->GetNGuns(); ++i )
 	{
 		CBasicGun *pAvailableGun = pHelicopter->GetGun( i );
-		if ( ( dwForbiddenGuns & ( 1UL << i ) ) != 0 ||
-			!IsGunCompatible( pAvailableGun ) ||
-			pAvailableGun->IsFiring() ||
-			pAvailableGun->IsRelaxing() ||
-			!pAvailableGun->CanShootToUnitWOMove( pTarget ) )
+		if ( ( dwForbiddenGuns & ( 1UL << i ) ) != 0 || !IsGunCompatible( pAvailableGun ) || pAvailableGun->IsFiring() ||
+		     pAvailableGun->IsRelaxing() || !pAvailableGun->CanShootToUnitWOMove( pTarget ) )
 		{
 			continue;
 		}
@@ -620,7 +609,7 @@ const CVec2 CHelicopterAttackUnitState::GetPurposePoint() const
 }
 
 CHelicopterLeaveState::CHelicopterLeaveState( CHelicopter *pUnit, const CVec2 &_vTarget, const bool _bScanTargets )
-: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
+		: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), bScanTargets( _bScanTargets )
 {
 	// The target is serialized with the state so save/load and multiplayer keep the same exit route.
 }
@@ -634,7 +623,7 @@ void CHelicopterLeaveState::Segment()
 }
 
 CHelicopterFlyDeadState::CHelicopterFlyDeadState( CHelicopter *pUnit )
-: CHelicopterBaseState( pUnit ), bStarted( false )
+		: CHelicopterBaseState( pUnit ), bStarted( false )
 {
 }
 
@@ -654,9 +643,17 @@ void CHelicopterFlyDeadState::Segment()
 		if ( pConsts->pAviationGroundCrashExplosion )
 		{
 			const CVec2 vGroundPoint( pHelicopter->GetCenterPlain() );
-			theShellsStore.AddShell
-				( new CInvisShell( curTime, new CBurstExpl( 0, pConsts->pAviationGroundCrashExplosion,
-				CVec3( vGroundPoint, GetHeights()->GetZ( vGroundPoint ) ), VNULL3, 0, false, 1, true ), 0 ) );
+			theShellsStore.AddShell(
+					new CInvisShell( curTime,
+			                     new CBurstExpl( 0,
+			                                     pConsts->pAviationGroundCrashExplosion,
+			                                     CVec3( vGroundPoint, GetHeights()->GetZ( vGroundPoint ) ),
+			                                     VNULL3,
+			                                     0,
+			                                     false,
+			                                     1,
+			                                     true ),
+			                     0 ) );
 		}
 		pHelicopter->Disappear();
 	}

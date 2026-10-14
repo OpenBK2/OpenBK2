@@ -20,7 +20,7 @@
 
 static bool s_bCampaignAutostartMission = false;
 
-const wchar_t* NO_DIFFICULTY_INFO = L"******";
+const wchar_t *NO_DIFFICULTY_INFO = L"******";
 const int CAMPAIGN_DEFAULT_DIFFICULTY = 1;
 
 class CTextData : public CObjectBase
@@ -29,7 +29,11 @@ class CTextData : public CObjectBase
 public:
 	ZDATA
 	std::wstring szText;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szText); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szText );
+		return 0;
+	}
 
 	CTextData() {}
 	CTextData( const std::wstring &_szText ) { szText = _szText; }
@@ -37,7 +41,7 @@ public:
 
 class CListItemTextViewer : public IDataViewer
 {
-	OBJECT_NOCOPY_METHODS(CListItemTextViewer)
+	OBJECT_NOCOPY_METHODS( CListItemTextViewer )
 public:
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 };
@@ -65,8 +69,8 @@ void CListItemTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase 
 
 // CInterfaceCampaignSelectionMenu
 
-CInterfaceCampaignSelectionMenu::CInterfaceCampaignSelectionMenu() :
- CInterfaceScreenBase( "CampaignSelectionMenu2", "campaign_selection_menu" )
+CInterfaceCampaignSelectionMenu::CInterfaceCampaignSelectionMenu()
+		: CInterfaceScreenBase( "CampaignSelectionMenu2", "campaign_selection_menu" )
 {
 }
 
@@ -116,7 +120,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 			continue;
 		}
 
-		bool bEnableCampaign = !bDemo || NGlobal::GetVar( fmt::format("DEMO_CAMPAIGN_ENABLE_{}", i), 0 );
+		bool bEnableCampaign = !bDemo || NGlobal::GetVar( fmt::format( "DEMO_CAMPAIGN_ENABLE_{}", i ), 0 );
 		if ( campaign.pBtn )
 			campaign.pBtn->Enable( bEnableCampaign );
 
@@ -126,21 +130,22 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 		else
 			campaign.ePlay = PT_CAMPAIGN;
 
-		const NDb::STexture *pPicture = (campaign.ePlay == PT_CAMPAIGN) ? pDBCampaign->pTextureNotStarted : pDBCampaign->pTextureCompleted;
+		const NDb::STexture *pPicture =
+				( campaign.ePlay == PT_CAMPAIGN ) ? pDBCampaign->pTextureNotStarted : pDBCampaign->pTextureCompleted;
 		campaign.szOutro = pDBCampaign->szOutroMovie;
 
 		if ( campaign.pPictureWnd )
 			campaign.pPictureWnd->SetTexture( pPicture );
 
 		std::wstring wszName;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBCampaign->,LocalizedName) )
-			wszName = GET_TEXT_PRE(pDBCampaign->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBCampaign->, LocalizedName ) )
+			wszName = GET_TEXT_PRE( pDBCampaign->, LocalizedName );
 		if ( campaign.pNameView )
 			campaign.pNameView->SetText( campaign.pNameView->GetDBText() + wszName );
 
 		std::wstring wszDesc;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBCampaign->,LocalizedDesc) )
-			wszDesc = GET_TEXT_PRE(pDBCampaign->,LocalizedDesc);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBCampaign->, LocalizedDesc ) )
+			wszDesc = GET_TEXT_PRE( pDBCampaign->, LocalizedDesc );
 		if ( campaign.pDescView )
 			campaign.pDescView->SetText( campaign.pDescView->GetDBText() + wszDesc );
 		if ( campaign.pDescCont )
@@ -181,7 +186,7 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignWindows( int nCampaignCount 
 	// Reuse the original panel placements for the standard three-campaign menu.
 	// Discover the available templates without treating their count as a limit.
 	campaignWnds.clear();
-	for ( int i = 1; ; ++i )
+	for ( int i = 1;; ++i )
 	{
 		IWindow *pWnd = pMain->GetChild( fmt::format( "CampaignPanel{}", i ), true );
 		if ( !pWnd )
@@ -197,8 +202,7 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignWindows( int nCampaignCount 
 		if ( i >= campaignWnds.size() )
 		{
 			// Copy the descriptor, so every added campaign gets independent controls.
-			const NDb::SWindowSimple *pTemplate =
-				checked_cast<const NDb::SWindowSimple*>( campaignWnds[0]->GetDesc() );
+			const NDb::SWindowSimple *pTemplate = checked_cast<const NDb::SWindowSimple *>( campaignWnds[0]->GetDesc() );
 			CPtr<NDb::SWindowSimple> pPanel = pTemplate->Duplicate();
 			pPanel->szName = fmt::format( "CampaignPanel{}", i + 1 );
 			IWindow *pWnd = AddWindowCopy( pMain, pPanel );
@@ -219,20 +223,19 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignList()
 	// while widgets still hold CDBPtr references, resetting the slider to vertical.
 	// These copies must remain intact until the widgets release their references.
 	const NDb::SWindowScrollableContainer *pTemplate =
-		checked_cast<const NDb::SWindowScrollableContainer*>( campaigns[0].pDescCont->GetDesc() );
+			checked_cast<const NDb::SWindowScrollableContainer *>( campaigns[0].pDescCont->GetDesc() );
 	CPtr<NDb::SWindowScrollableContainer> pListDesc = pTemplate->Duplicate();
 	CPtr<NDb::SWindowScrollableContainerShared> pListShared =
-		checked_cast_ptr<const NDb::SWindowScrollableContainerShared*>( pTemplate->pShared )->Duplicate();
-	CPtr<NDb::SWindowSimple> pBorder =
-		checked_cast_ptr<const NDb::SWindowSimple*>( pListShared->pBorder )->Duplicate();
+			checked_cast_ptr<const NDb::SWindowScrollableContainerShared *>( pTemplate->pShared )->Duplicate();
+	CPtr<NDb::SWindowSimple> pBorder = checked_cast_ptr<const NDb::SWindowSimple *>( pListShared->pBorder )->Duplicate();
 	CPtr<NDb::SWindowScrollBar> pBar = pListShared->pScrollBar->Duplicate();
 	CPtr<NDb::SWindowScrollBarShared> pBarShared =
-		checked_cast_ptr<const NDb::SWindowScrollBarShared*>( pBar->pShared )->Duplicate();
+			checked_cast_ptr<const NDb::SWindowScrollBarShared *>( pBar->pShared )->Duplicate();
 	CPtr<NDb::SWindowSlider> pSlider = pBarShared->pSlider->Duplicate();
 
 	// Reuse the game's horizontal track and thumb rather than vertical arrow art.
 	CDBPtr<NDb::SWindowSliderShared> pHorizontal = NDb::Get<NDb::SWindowSliderShared>(
-		CDBID( "UI/Game/Menu/MPCreateCustomGame/CommonSlider_WindowSliderShared.xdb" ) );
+			CDBID( "UI/Game/Menu/MPCreateCustomGame/CommonSlider_WindowSliderShared.xdb" ) );
 	NI_VERIFY( pHorizontal, "Campaign menu: horizontal slider template is missing", return );
 	CPtr<NDb::SWindowSliderShared> pSliderShared = pHorizontal->Duplicate();
 	pSliderShared->fMaxLeverSize = 0; // Size the thumb to the visible fraction of the row.
@@ -242,10 +245,10 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignList()
 	// caps intact so the visible artwork fills the thumb at every resolution.
 	CPtr<NDb::SWindowMSButton> pLever = pSliderShared->pLever->Duplicate();
 	CPtr<NDb::SWindowMSButtonShared> pLeverShared =
-		checked_cast_ptr<const NDb::SWindowMSButtonShared*>( pLever->pShared )->Duplicate();
+			checked_cast_ptr<const NDb::SWindowMSButtonShared *>( pLever->pShared )->Duplicate();
 	const NDb::SBackground *pLeverBackground = pLeverShared->visualStates[0].normal.pBackground;
 	CPtr<NDb::SBackgroundTiledTexture> pLeverTiles =
-		checked_cast_ptr<const NDb::SBackgroundTiledTexture*>( pSliderShared->pBackground )->Duplicate();
+			checked_cast_ptr<const NDb::SBackgroundTiledTexture *>( pSliderShared->pBackground )->Duplicate();
 	pLeverTiles->pTexture = pLeverBackground->pTexture;
 	pLeverTiles->nColor = pLeverBackground->nColor;
 	const float fWidth = pLeverTiles->pTexture->nWidth;
@@ -297,7 +300,7 @@ void CInterfaceCampaignSelectionMenu::CreateCampaignList()
 	campaigns[0].pWnd->GetPlacement( 0, 0, 0, &nPanelHeight );
 	pListDesc->placement.size = CVec2( 0, nPanelHeight + 20 );
 
-	pCampaignList = dynamic_cast<IScrollableContainer*>( AddWindowCopy( pMain, pListDesc ) );
+	pCampaignList = dynamic_cast<IScrollableContainer *>( AddWindowCopy( pMain, pListDesc ) );
 	NI_VERIFY( pCampaignList, "Campaign menu: cannot create scroll container", return );
 	for ( SCampaign &campaign : campaigns )
 	{
@@ -425,7 +428,7 @@ bool CInterfaceCampaignSelectionMenu::OnPlay()
 		return true;
 	}
 	//
-#if !defined(_SINGLE_DEMO) && !defined(_MP_DEMO)
+#if !defined( _SINGLE_DEMO ) && !defined( _MP_DEMO )
 	const NDb::SGameRoot *pGameRoot = InterfaceState()->GetGameRoot();
 	int nDifficulty = pDifficulty ? pDifficulty->GetSelectedIndex() : 0;
 	const NDb::SCampaign *pCampaign = pGameRoot->campaigns[nSelected];
@@ -474,8 +477,11 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 	if ( pDifficulty )
 	{
 		const int nOldDifficulty = bFirstTime ? CAMPAIGN_DEFAULT_DIFFICULTY : pDifficulty->GetSelectedIndex();
-		const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < pCampaign->difficultyLevels.size() ) ? nOldDifficulty :
-			(std::max)( 0, (std::min)( CAMPAIGN_DEFAULT_DIFFICULTY, (int)( pCampaign->difficultyLevels.size() ) - 1 ) );
+		const int nNewDifficulty =
+				( nOldDifficulty >= 0 && nOldDifficulty < pCampaign->difficultyLevels.size() )
+						? nOldDifficulty
+						: (std::max)( 0,
+		                      (std::min)( CAMPAIGN_DEFAULT_DIFFICULTY, (int)( pCampaign->difficultyLevels.size() ) - 1 ) );
 
 		pDifficulty->RemoveAllItems();
 		if ( pCampaign->difficultyLevels.empty() )
@@ -527,7 +533,7 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 	{
 		SCampaign &campaign = campaigns[i];
 		IButton *pButton = campaign.pBtn;
-		bool bSelected = (i == nSelected);
+		bool bSelected = ( i == nSelected );
 		if ( bSelected )
 			ePlay = campaign.ePlay;
 		if ( campaign.pBtn )
@@ -540,8 +546,8 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 void CInterfaceCampaignSelectionMenu::AddDifficultyLevel( const NDb::SDifficultyLevel *pDifficultyLevel )
 {
 	std::wstring wszText;
-	if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE(pDifficultyLevel->,LocalizedName) )
-		wszText = GET_TEXT_PRE(pDifficultyLevel->,LocalizedName);
+	if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE( pDifficultyLevel->, LocalizedName ) )
+		wszText = GET_TEXT_PRE( pDifficultyLevel->, LocalizedName );
 	else
 		wszText = NO_DIFFICULTY_INFO;
 	if ( pDifficulty )
@@ -551,19 +557,14 @@ void CInterfaceCampaignSelectionMenu::AddDifficultyLevel( const NDb::SDifficulty
 #ifndef _MP_DEMO
 // CICCampaignSelectionMenu
 
-void CICCampaignSelectionMenu::PreCreate()
-{
-}
+void CICCampaignSelectionMenu::PreCreate() {}
 
 void CICCampaignSelectionMenu::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICCampaignSelectionMenu::Configure( const char *pszConfig )
-{
-}
-
+void CICCampaignSelectionMenu::Configure( const char *pszConfig ) {}
 
 void CampaignSelectionNothing( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
@@ -589,8 +590,8 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 
 	Singleton<IScenarioTracker>()->CampaignStart( pCampaignDB, nDifficulty, false, bCustom );
 
-//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" ); // уберем подложку с миссией
+	//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+	//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" ); // уберем подложку с миссией
 
 	std::string szIntro = pCampaignDB->szIntroMovie;
 	if ( szIntro.empty() )
@@ -614,7 +615,9 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 	}
 }
 
-void BackAndChapterMapAutostartMission( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void BackAndChapterMapAutostartMission( const std::string &szID,
+                                        const std::vector<std::wstring> &paramsSet,
+                                        void *pContext )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NGlobal::ProcessCommand( L"chapter_map_autostart_mission" );
@@ -643,9 +646,10 @@ void DemoCampaignSelectionMenu( const std::string &szID, const std::vector<std::
 	}
 }
 
-START_REGISTER(CampaignCommands)
+START_REGISTER( CampaignCommands )
 
-REGISTER_VAR_EX( "campaign_autostart_mission", NGlobal::VarBoolHandler, &s_bCampaignAutostartMission, false, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"campaign_autostart_mission", NGlobal::VarBoolHandler, &s_bCampaignAutostartMission, false, STORAGE_NONE );
 REGISTER_CMD( "campaign_selection_nothing", CampaignSelectionNothing );
 REGISTER_CMD( "back_and_chapter_map_autostart_mission", BackAndChapterMapAutostartMission );
 REGISTER_CMD( "back_and_chapter_map", BackAndChapterMap );

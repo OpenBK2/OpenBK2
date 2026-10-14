@@ -10,11 +10,11 @@
 #define DEF_PATCH_SIZE ( 1 << DEF_PATCH_SIZE_BITS )
 #define DEF_PATCH_PIX_PER_TILE 32
 #define DEF_PATCH_PIX_PER_TILE_BITS 5
-#define DEF_PATCH_PIX_PER_TILE_INV (1.0f / DEF_PATCH_PIX_PER_TILE)
-#define DEF_PATCH_TEX_SIZE (DEF_PATCH_SIZE * DEF_PATCH_PIX_PER_TILE)
-#define DEF_PATCH_TEX_SIZE_BITS (DEF_PATCH_SIZE_BITS + DEF_PATCH_PIX_PER_TILE_BITS)
+#define DEF_PATCH_PIX_PER_TILE_INV ( 1.0f / DEF_PATCH_PIX_PER_TILE )
+#define DEF_PATCH_TEX_SIZE ( DEF_PATCH_SIZE * DEF_PATCH_PIX_PER_TILE )
+#define DEF_PATCH_TEX_SIZE_BITS ( DEF_PATCH_SIZE_BITS + DEF_PATCH_PIX_PER_TILE_BITS )
 #define DEF_TILE_SIZE VIS_TILE_SIZE
-#define DEF_INV_TILE_SIZE (1.0f / DEF_TILE_SIZE)
+#define DEF_INV_TILE_SIZE ( 1.0f / DEF_TILE_SIZE )
 
 #define DEF_PATCH_WORLD_SIZE ( (float)DEF_PATCH_SIZE * DEF_TILE_SIZE )
 #define DEF_INV_PATCH_WORLD_SIZE ( 1.0f / DEF_PATCH_WORLD_SIZE )
@@ -25,7 +25,7 @@
 #define DEF_WATER_BLENDING_NONZERO_COEFF ( 1.0f / ( 1.0f - DEF_WATER_BLENDING_ZERO_COEFF ) )
 
 #define DEF_BREAK_TERRA_PATCHES_ONE_AXIS 4
-#define DEF_BREAK_TERRA_PATCHES (DEF_BREAK_TERRA_PATCHES_ONE_AXIS * DEF_BREAK_TERRA_PATCHES_ONE_AXIS)
+#define DEF_BREAK_TERRA_PATCHES ( DEF_BREAK_TERRA_PATCHES_ONE_AXIS * DEF_BREAK_TERRA_PATCHES_ONE_AXIS )
 #define DEF_BREAK_TERRA_PATCHES_STEP ( DEF_PATCH_SIZE / DEF_BREAK_TERRA_PATCHES_ONE_AXIS )
 
 struct STerrainInfo
@@ -45,11 +45,11 @@ struct STerrainInfo
 		}
 	};
 	//
-	CArray2D<STile> tiles;						// terrain tiles													[N]x[M]
-	CArray2D<float> heights;					// terrain heights												[N+1]x[M+1]
-	CArray2D<float> addHeights;				// increased heights											[N+1]x[M+1]
-	int nNumPatchesX, nNumPatchesY;		// number of patches on X & Y dimensions
-	int nDescID;											// ID of terrain descriptor
+	CArray2D<STile> tiles;          // terrain tiles													[N]x[M]
+	CArray2D<float> heights;        // terrain heights												[N+1]x[M+1]
+	CArray2D<float> addHeights;     // increased heights											[N+1]x[M+1]
+	int nNumPatchesX, nNumPatchesY; // number of patches on X & Y dimensions
+	int nDescID;                    // ID of terrain descriptor
 
 	// roads part
 	struct SRoad
@@ -57,7 +57,7 @@ struct STerrainInfo
 		int nID;
 		CVec2 vBBMin, vBBMax;
 		//
-		bool operator == ( const SRoad &v ) const { return nID == v.nID; }
+		bool operator==( const SRoad &v ) const { return nID == v.nID; }
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -79,25 +79,17 @@ struct STerrainInfo
 		float fReserved;
 
 		SVSOPoint()
-			: vPos( VNULL3 ),
-			vNorm( VNULL3 ),
-			fWidth( 0.0f ),
-			fOpacity( 0.0f ),
-			bKeyPoint( false ),
-			fRadius( 0.0f ),
-			fReserved( 0.0f )
-		{}
+				: vPos( VNULL3 ), vNorm( VNULL3 ), fWidth( 0.0f ), fOpacity( 0.0f ), bKeyPoint( false ), fRadius( 0.0f ),
+					fReserved( 0.0f )
+		{
+		}
 		SVSOPoint( const NDb::SVSOPoint &rPoint )
-			: vPos( rPoint.vPos ),
-			vNorm( rPoint.vNorm ),
-			fWidth( rPoint.fWidth ),
-			fOpacity( rPoint.fOpacity ),
-			bKeyPoint( rPoint.bKeyPoint ),
-			fRadius( rPoint.fRadius ),
-			fReserved( rPoint.fReserved )
-		{}
+				: vPos( rPoint.vPos ), vNorm( rPoint.vNorm ), fWidth( rPoint.fWidth ), fOpacity( rPoint.fOpacity ),
+					bKeyPoint( rPoint.bKeyPoint ), fRadius( rPoint.fRadius ), fReserved( rPoint.fReserved )
+		{
+		}
 
-		SVSOPoint& operator= ( const NDb::SVSOPoint &rPoint )
+		SVSOPoint &operator=( const NDb::SVSOPoint &rPoint )
 		{
 			this->vPos = rPoint.vPos;
 			this->vNorm = rPoint.vNorm;
@@ -138,7 +130,7 @@ struct STerrainInfo
 		std::vector<CVec3> precNorms;
 		CDBPtr<NDb::SCragDesc> pDesc;
 		//
-		bool operator == ( const SCrag &v ) const { return nID == v.nID; }
+		bool operator==( const SCrag &v ) const { return nID == v.nID; }
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -164,10 +156,10 @@ struct STerrainInfo
 	struct SPeak
 	{
 		int nID;
-		std::vector< std::vector<STerrainInfo::SVSOPoint> > points;
+		std::vector<std::vector<STerrainInfo::SVSOPoint>> points;
 		CVec2 vBBMin, vBBMax;
 		//
-		bool operator == ( const SPeak &v ) const { return nID == v.nID; }
+		bool operator==( const SPeak &v ) const { return nID == v.nID; }
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -182,11 +174,11 @@ struct STerrainInfo
 	struct SFoot
 	{
 		int nID;
-		std::vector< std::vector<STerrainInfo::SVSOPoint> > points;
+		std::vector<std::vector<STerrainInfo::SVSOPoint>> points;
 		float fTexGeomScale;
 		CDBPtr<NDb::SMaterial> pFootMaterial;
 		//
-		bool operator == ( const SFoot &v ) const { return nID == v.nID; }
+		bool operator==( const SFoot &v ) const { return nID == v.nID; }
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -214,7 +206,7 @@ struct STerrainInfo
 		int nWaterSamplesNum;
 		int nWater2SamplesNum;
 		//
-		bool operator == ( const SRiver &v ) const { return nID == v.nID; }
+		bool operator==( const SRiver &v ) const { return nID == v.nID; }
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -245,7 +237,7 @@ struct STerrainInfo
 		int nID;
 		CVec2i vMin, vMax;
 		//
-		bool operator == ( const STerraSpot &v ) const { return nID == v.nID; }
+		bool operator==( const STerraSpot &v ) const { return nID == v.nID; }
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -269,7 +261,7 @@ struct STerrainInfo
 		float fDepthRand;
 		float fRandX, fRandY;
 		//
-		int operator &( IBinSaver &saver )
+		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &vPos );
 			saver.Add( 2, &vNorm );
@@ -306,9 +298,9 @@ struct STerrainInfo
 		float fRandX, fRandY;
 		bool bHasNotPeak;
 		//
-		bool operator == ( const SPrecipice &v ) const { return nID == v.nID; }
+		bool operator==( const SPrecipice &v ) const { return nID == v.nID; }
 		//
-		int operator &( IBinSaver &saver )
+		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &nID );
 			saver.Add( 2, &nExcludeRiverID );
@@ -333,14 +325,14 @@ struct STerrainInfo
 		}
 	};
 
-	std::list<SRoad> roads;									// roads array
-	std::list<SCrag> crags;									// crags array
-	std::list<SPeak> peaks;									// peaks array
+	std::list<SRoad> roads; // roads array
+	std::list<SCrag> crags; // crags array
+	std::list<SPeak> peaks; // peaks array
 	std::list<SFoot> foots;
-	std::list<SRiver> rivers;								// rivers array
-	std::list<STerraSpot> terraspots;				// terraspots array
-	std::vector<SPrecipiceNode> precNodes;		// precipice nodes
-	std::list<SPrecipice> precipices;				// precipices
+	std::list<SRiver> rivers;              // rivers array
+	std::list<STerraSpot> terraspots;      // terraspots array
+	std::vector<SPrecipiceNode> precNodes; // precipice nodes
+	std::list<SPrecipice> precipices;      // precipices
 	CArray2D<uint8_t> seaMask;
 
 	struct SOptimizedTile

@@ -8,7 +8,7 @@
 
 extern CUnits units;
 
-template<uint8_t cOnlyOneTypeVisibility, int NSize>
+template <uint8_t cOnlyOneTypeVisibility, int NSize>
 class CUnitsIter
 {
 	CVec2 vDownLeft;
@@ -26,7 +26,7 @@ class CUnitsIter
 
 	int nXCell = {}, nYCell = {};
 
-	CUnitsIter<1, NSize-1> iter;
+	CUnitsIter<1, NSize - 1> iter;
 
 	//
 	void Init( uint8_t _cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
@@ -80,29 +80,39 @@ class CUnitsIter
 
 	void InitLowIterator()
 	{
-		const CVec2 vCellDownLeft( nXCell * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF, nYCell * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF );
-		const CVec2 vCellUpRight( (nXCell + 1 ) * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF - 1, (nYCell + 1) * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF - 1 );
+		const CVec2 vCellDownLeft( nXCell * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF,
+		                           nYCell * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF );
+		const CVec2 vCellUpRight( ( nXCell + 1 ) * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF - 1,
+		                          ( nYCell + 1 ) * ( 1 << NSize ) * SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF - 1 );
 
-		const CVec2 vLowIterDownLeft( (std::max)( vCellDownLeft.x, vDownLeft.x ), (std::max)( vCellDownLeft.y, vDownLeft.y ) );
+		const CVec2 vLowIterDownLeft( (std::max)( vCellDownLeft.x, vDownLeft.x ),
+		                              (std::max)( vCellDownLeft.y, vDownLeft.y ) );
 		const CVec2 vLowIterUpRight( (std::min)( vCellUpRight.x, vUpRight.x ), (std::min)( vCellUpRight.y, vUpRight.y ) );
 
 		iter.Init4HighIter( vLowIterDownLeft, vLowIterUpRight, cCurDipl, 1, cCurMech, 1, cCurVis );
 	}
 
-	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
+	void InitAll( const CVec2 &vCenter,
+	              const CVec2 &vAABBHalfSize,
+	              uint8_t cStartDipl,
+	              uint8_t cDiplomacies,
+	              uint8_t cStartMech,
+	              uint8_t cMechs )
 	{
-		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
-		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
-		vUpRight.x = Clamp( vCenter.x + vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
-		vUpRight.y = Clamp( vCenter.y + vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
+		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1 ) );
+		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float( GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1 ) );
+		vUpRight.x = Clamp( vCenter.x + vAABBHalfSize.x, 0.0f, float( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1 ) );
+		vUpRight.y = Clamp( vCenter.y + vAABBHalfSize.y, 0.0f, float( GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1 ) );
 
 		Init( cStartDipl, cDiplomacies, cStartMech, cMechs );
 		Iterate();
 	}
-public:
-	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) { }
 
-	CUnitsIter( const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
+public:
+	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+
+	CUnitsIter(
+			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
 		uint8_t cStartMech = 0;
 		uint8_t cMechs = 1;
@@ -112,25 +122,48 @@ public:
 
 		uint8_t cStartDipl = 0;
 		uint8_t cDiplomacies = 0;
-		if ( cDiplFilter == ANY_PARTY ) { cStartDipl = 0; cDiplomacies = 3; }
+		if ( cDiplFilter == ANY_PARTY )
+		{
+			cStartDipl = 0;
+			cDiplomacies = 3;
+		}
 		else if ( _cStartDipl == 2 )
 		{
 			if ( cDiplFilter == EDI_ENEMY )
 			{
-				cCurMech = 1; cMechEnd = 0;
+				cCurMech = 1;
+				cMechEnd = 0;
 				return;
 			}
-			else { cStartDipl = 0; cDiplomacies = 2; }
+			else
+			{
+				cStartDipl = 0;
+				cDiplomacies = 2;
+			}
 		}
-		else if ( cDiplFilter == EDI_FRIEND ) { cStartDipl = _cStartDipl; cDiplomacies = 1; }
-		else if ( cDiplFilter == EDI_ENEMY ) { cStartDipl = 1 - _cStartDipl; cDiplomacies = 1; }
+		else if ( cDiplFilter == EDI_FRIEND )
+		{
+			cStartDipl = _cStartDipl;
+			cDiplomacies = 1;
+		}
+		else if ( cDiplFilter == EDI_ENEMY )
+		{
+			cStartDipl = 1 - _cStartDipl;
+			cDiplomacies = 1;
+		}
 
 		cCurVis = cOnlyOneTypeVisibility;
 
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
 
-	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
+	void Init4HighIter( const CVec2 &_vDownLeft,
+	                    const CVec2 &_vUpRight,
+	                    uint8_t cStartDipl,
+	                    uint8_t cDiplomacies,
+	                    uint8_t cStartMech,
+	                    uint8_t cMechs,
+	                    uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
 		vUpRight = _vUpRight;
@@ -154,7 +187,7 @@ public:
 				if ( iter.IsFinished() )
 					IterateByCells();
 
-				while ( !IsFinished() && units.numUnits[cCurVis][NSize-1][cCurDipl][cCurMech][nYCell][nXCell] == 0 )
+				while ( !IsFinished() && units.numUnits[cCurVis][NSize - 1][cCurDipl][cCurMech][nYCell][nXCell] == 0 )
 					IterateByCells();
 				if ( !IsFinished() )
 					InitLowIterator();
@@ -169,11 +202,11 @@ public:
 		}
 	}
 
-	class CAIUnit* operator*() const { return *iter; }
+	class CAIUnit *operator*() const { return *iter; }
 	const bool IsFinished() const { return cCurMech >= cMechEnd; }
 };
 
-template<>
+template <>
 class CUnitsIter<1, 0>
 {
 	enum
@@ -207,8 +240,8 @@ class CUnitsIter<1, 0>
 
 			if ( nYCell > nUpY )
 			{
-				if ( !cOnlyOneTypeVisibility && cCurVis < 1)
-				 cCurVis = 1;
+				if ( !cOnlyOneTypeVisibility && cCurVis < 1 )
+					cCurVis = 1;
 				else
 				{
 					if ( !cOnlyOneTypeVisibility )
@@ -260,18 +293,25 @@ class CUnitsIter<1, 0>
 			nIter = GetCurCellIter();
 	}
 
-	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
+	void InitAll( const CVec2 &vCenter,
+	              const CVec2 &vAABBHalfSize,
+	              uint8_t cStartDipl,
+	              uint8_t cDiplomacies,
+	              uint8_t cStartMech,
+	              uint8_t cMechs )
 	{
-		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
-		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
-		vUpRight.x = Clamp( vCenter.x + vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
-		vUpRight.y = Clamp( vCenter.y + vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
+		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1 ) );
+		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float( GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1 ) );
+		vUpRight.x = Clamp( vCenter.x + vAABBHalfSize.x, 0.0f, float( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1 ) );
+		vUpRight.y = Clamp( vCenter.y + vAABBHalfSize.y, 0.0f, float( GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1 ) );
 
 		Init( cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
+
 public:
-	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) { }
-	CUnitsIter( const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
+	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+	CUnitsIter(
+			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
 		uint8_t cStartMech = 0;
 		uint8_t cMechs = 1;
@@ -280,25 +320,48 @@ public:
 			cMechs = 2;
 
 		uint8_t cStartDipl, cDiplomacies;
-		if ( cDiplFilter == ANY_PARTY ) { cStartDipl = 0; cDiplomacies = 3; }
+		if ( cDiplFilter == ANY_PARTY )
+		{
+			cStartDipl = 0;
+			cDiplomacies = 3;
+		}
 		else if ( _cStartDipl == 2 )
 		{
 			if ( cDiplFilter == EDI_ENEMY )
 			{
-				cCurMech = 1; cMechEnd = 0;
+				cCurMech = 1;
+				cMechEnd = 0;
 				return;
 			}
-			else { cStartDipl = 0; cDiplomacies = 2; }
+			else
+			{
+				cStartDipl = 0;
+				cDiplomacies = 2;
+			}
 		}
-		else if ( cDiplFilter == EDI_FRIEND ) { cStartDipl = _cStartDipl; cDiplomacies = 1; }
-		else if ( cDiplFilter == EDI_ENEMY ) { cStartDipl = 1 - _cStartDipl; cDiplomacies = 1; }
+		else if ( cDiplFilter == EDI_FRIEND )
+		{
+			cStartDipl = _cStartDipl;
+			cDiplomacies = 1;
+		}
+		else if ( cDiplFilter == EDI_ENEMY )
+		{
+			cStartDipl = 1 - _cStartDipl;
+			cDiplomacies = 1;
+		}
 
 		cCurVis = cOnlyOneTypeVisibility;
 
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
 
-	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
+	void Init4HighIter( const CVec2 &_vDownLeft,
+	                    const CVec2 &_vUpRight,
+	                    uint8_t cStartDipl,
+	                    uint8_t cDiplomacies,
+	                    uint8_t cStartMech,
+	                    uint8_t cMechs,
+	                    uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
 		vUpRight = _vUpRight;
@@ -333,14 +396,11 @@ public:
 		}
 	}
 
-	class CAIUnit* operator*() const
-	{
-		return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue];
-	}
+	class CAIUnit *operator*() const { return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue]; }
 	const bool IsFinished() const { return cCurMech >= cMechEnd; }
 };
 
-template<>
+template <>
 class CUnitsIter<0, 0>
 {
 	enum
@@ -374,8 +434,8 @@ class CUnitsIter<0, 0>
 
 			if ( nYCell > nUpY )
 			{
-				if ( !cOnlyOneTypeVisibility && cCurVis < 1)
-				 cCurVis = 1;
+				if ( !cOnlyOneTypeVisibility && cCurVis < 1 )
+					cCurVis = 1;
 				else
 				{
 					if ( !cOnlyOneTypeVisibility )
@@ -427,18 +487,25 @@ class CUnitsIter<0, 0>
 			nIter = GetCurCellIter();
 	}
 
-	void InitAll( const CVec2 &vCenter, const CVec2 &vAABBHalfSize, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
+	void InitAll( const CVec2 &vCenter,
+	              const CVec2 &vAABBHalfSize,
+	              uint8_t cStartDipl,
+	              uint8_t cDiplomacies,
+	              uint8_t cStartMech,
+	              uint8_t cMechs )
 	{
-		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
-		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
-		vUpRight.x = Clamp( vCenter.x + vAABBHalfSize.x, 0.0f, float(GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1) );
-		vUpRight.y = Clamp( vCenter.y + vAABBHalfSize.y, 0.0f, float(GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1) );
+		vDownLeft.x = Clamp( vCenter.x - vAABBHalfSize.x, 0.0f, float( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1 ) );
+		vDownLeft.y = Clamp( vCenter.y - vAABBHalfSize.y, 0.0f, float( GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1 ) );
+		vUpRight.x = Clamp( vCenter.x + vAABBHalfSize.x, 0.0f, float( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE - 1 ) );
+		vUpRight.y = Clamp( vCenter.y + vAABBHalfSize.y, 0.0f, float( GetAIMap()->GetSizeY() * SConsts::TILE_SIZE - 1 ) );
 
 		Init( cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
+
 public:
-	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) { }
-	CUnitsIter( const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
+	CUnitsIter() : cMechEnd( 0 ), cCurMech( 1 ) {}
+	CUnitsIter(
+			const uint8_t _cStartDipl, uint8_t cDiplFilter, const CVec2 &vCenter, const float &fR, bool bOnlyMech = false )
 	{
 		uint8_t cStartMech = 0;
 		uint8_t cMechs = 1;
@@ -447,25 +514,48 @@ public:
 			cMechs = 2;
 
 		uint8_t cStartDipl = 0, cDiplomacies = 0;
-		if ( cDiplFilter == ANY_PARTY ) { cStartDipl = 0; cDiplomacies = 3; }
+		if ( cDiplFilter == ANY_PARTY )
+		{
+			cStartDipl = 0;
+			cDiplomacies = 3;
+		}
 		else if ( _cStartDipl == 2 )
 		{
 			if ( cDiplFilter == EDI_ENEMY )
 			{
-				cCurMech = 1; cMechEnd = 0;
+				cCurMech = 1;
+				cMechEnd = 0;
 				return;
 			}
-			else { cStartDipl = 0; cDiplomacies = 2; }
+			else
+			{
+				cStartDipl = 0;
+				cDiplomacies = 2;
+			}
 		}
-		else if ( cDiplFilter == EDI_FRIEND ) { cStartDipl = _cStartDipl; cDiplomacies = 1; }
-		else if ( cDiplFilter == EDI_ENEMY ) { cStartDipl = 1 - _cStartDipl; cDiplomacies = 1; }
+		else if ( cDiplFilter == EDI_FRIEND )
+		{
+			cStartDipl = _cStartDipl;
+			cDiplomacies = 1;
+		}
+		else if ( cDiplFilter == EDI_ENEMY )
+		{
+			cStartDipl = 1 - _cStartDipl;
+			cDiplomacies = 1;
+		}
 
 		cCurVis = cOnlyOneTypeVisibility;
 
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
 
-	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
+	void Init4HighIter( const CVec2 &_vDownLeft,
+	                    const CVec2 &_vUpRight,
+	                    uint8_t cStartDipl,
+	                    uint8_t cDiplomacies,
+	                    uint8_t cStartMech,
+	                    uint8_t cMechs,
+	                    uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
 		vUpRight = _vUpRight;
@@ -501,6 +591,6 @@ public:
 		}
 	}
 
-	class CAIUnit* operator*() const { return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue]; }
+	class CAIUnit *operator*() const { return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue]; }
 	const bool IsFinished() const { return cCurMech >= cMechEnd; }
 };

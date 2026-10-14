@@ -3,15 +3,20 @@
 
 #include "port/cpuid.h"
 
-namespace {
-	bool IsSSEPresent() {
+namespace
+{
+bool IsSSEPresent()
+{
 
-		enum { CPUID_SSE_FEATURE_PRESENT = 1 << 25 };
+	enum
+	{
+		CPUID_SSE_FEATURE_PRESENT = 1 << 25
+	};
 
-		int cpuinfo[4];
-		cpuid(cpuinfo, 1);
-		return 0 != (cpuinfo[3] & CPUID_SSE_FEATURE_PRESENT);
-	}
+	int cpuinfo[4];
+	cpuid( cpuinfo, 1 );
+	return 0 != ( cpuinfo[3] & CPUID_SSE_FEATURE_PRESENT );
+}
 }
 
 bool bIsSSEPresent = IsSSEPresent();
@@ -24,9 +29,9 @@ static struct SNormalizeInit
 	SNormalizeInit()
 	{
 		nNormalizeTable[0] = 0x7fff;
-		for ( int k = 1; k < std::size(nNormalizeTable); ++k )
-			nNormalizeTable[k] = (std::min)( 0x7fff, Float2Int( (64 * (127 * 16)) / sqrt( k + 0.99f ) ) );
-		for ( int k = 0; k < std::size(mmxWeights); ++k )
+		for ( int k = 1; k < std::size( nNormalizeTable ); ++k )
+			nNormalizeTable[k] = (std::min)( 0x7fff, Float2Int( ( 64 * ( 127 * 16 ) ) / sqrt( k + 0.99f ) ) );
+		for ( int k = 0; k < std::size( mmxWeights ); ++k )
 		{
 			NGfx::SMMXWord &a = mmxWeights[k];
 			a.nZ = a.nY = a.nX = a.nW = k << 6;
@@ -34,9 +39,9 @@ static struct SNormalizeInit
 		for ( int k = 0; k < 16384; ++k )
 		{
 			float f = k * 1.0f / 16384;
-			nCubicRoot[k] = Float2Int( exp( log(f) / 3 ) * 255 );
+			nCubicRoot[k] = Float2Int( exp( log( f ) / 3 ) * 255 );
 			f = f / 16384;
-			nCubicRoot[k + 16384] = Float2Int( exp( log(f) / 3 ) * 255 );
+			nCubicRoot[k + 16384] = Float2Int( exp( log( f ) / 3 ) * 255 );
 		}
 	}
 } normalizeInit;

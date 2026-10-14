@@ -14,7 +14,11 @@
 
 namespace NGScene
 {
-struct SCfgValue { const char *pszName; float fValue; };
+struct SCfgValue
+{
+	const char *pszName;
+	float fValue;
+};
 
 // Jerky
 
@@ -58,8 +62,7 @@ static SCfgValue speed0[] = {
 	{ "gfx_noshadows", 0 },
 	//{ "gfx_point_specular", 1 },
 	//{ "gfx_cl_blur", 1 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue speed1[] = {
 	//{ "gfx_fog", 1 },
 	//{ "gfx_specular", 1 },
@@ -72,8 +75,7 @@ static SCfgValue speed1[] = {
 	{ "gfx_noshadows", 0 },
 	//{ "gfx_point_specular", 0 },
 	//{ "gfx_cl_blur", 1 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue speed2[] = {
 	//{ "gfx_fog", 0 },
 	//{ "gfx_specular", 0 },
@@ -86,8 +88,7 @@ static SCfgValue speed2[] = {
 	{ "gfx_noshadows", 1 },
 	//{ "gfx_point_specular", 0 },
 	//{ "gfx_cl_blur", 0 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue speed3[] = {
 	//{ "gfx_fog", 0 },
 	//{ "gfx_specular", 0 },
@@ -100,8 +101,7 @@ static SCfgValue speed3[] = {
 	{ "gfx_noshadows", 1 },
 	//{ "gfx_point_specular", 0 },
 	//{ "gfx_cl_blur", 0 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue *speedConfig[4] = { speed0, speed1, speed2, speed3 };
 
 // Texture
@@ -112,55 +112,37 @@ static SCfgValue texture0[] = {
 	{ "gfx_depth_tex_resolution", 1024 },
 	{ "gfx_texture_mip", 2 },
 	//{ "gfx_terrain_565", 1 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue texture1[] = {
 	//{ "gfx_cl_cube_resolution", 32 },
 	//{ "gfx_texture_usedxt", 1 },
 	{ "gfx_depth_tex_resolution", 1024 },
 	{ "gfx_texture_mip", 1 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue texture2[] = {
 	//{ "gfx_cl_cube_resolution", 64 },
 	//{ "gfx_texture_usedxt", 1 },
 	{ "gfx_depth_tex_resolution", 1024 },
 	//{ "gfx_terrain_565", 1 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue texture3[] = {
 	//{ "gfx_cl_cube_resolution", 128 },
 	//{ "gfx_texture_usedxt", 0 },
 	{ "gfx_depth_tex_resolution", 2048 },
 	{ "gfx_texture_mip", 0 },
 	//{ "gfx_terrain_565", 0 },
-	{ 0, 0 }
-};
+	{ 0, 0 } };
 static SCfgValue *textureConfig[4] = { texture0, texture1, texture2, texture3 };
 
 // FSAA
 
-static SCfgValue fsaa0[] = {
-	{ "gfx_fsaa", 0 },
-	{ "gfx_register_resolution", 0.5f },
-	{ 0, 0 }
-};
-static SCfgValue fsaa1[] = {
-	{ "gfx_fsaa", 0 },
-	{ "gfx_register_resolution", 1 },
-	{ 0, 0 }
-};
-static SCfgValue fsaa2[] = {
-	{ "gfx_fsaa", 2 },
-	{ "gfx_register_resolution", 2 },
-	{ 0, 0 }
-};
-static SCfgValue fsaa3[] = {
-	{ "gfx_fsaa", 4 },
-	//{ "gfx_register_resolution", 4 },
-	{ "gfx_register_resolution", 2 },
-	{ 0, 0 }
-};
+static SCfgValue fsaa0[] = { { "gfx_fsaa", 0 }, { "gfx_register_resolution", 0.5f }, { 0, 0 } };
+static SCfgValue fsaa1[] = { { "gfx_fsaa", 0 }, { "gfx_register_resolution", 1 }, { 0, 0 } };
+static SCfgValue fsaa2[] = { { "gfx_fsaa", 2 }, { "gfx_register_resolution", 2 }, { 0, 0 } };
+static SCfgValue fsaa3[] = { { "gfx_fsaa", 4 },
+                             //{ "gfx_register_resolution", 4 },
+                             { "gfx_register_resolution", 2 },
+                             { 0, 0 } };
 static SCfgValue *fsaaConfig[4] = { fsaa0, fsaa1, fsaa2, fsaa3 };
 
 static void ApplyCfgValues( SCfgValue **pCfg, int nCfgEntries, int nValue )
@@ -171,7 +153,7 @@ static void ApplyCfgValues( SCfgValue **pCfg, int nCfgEntries, int nValue )
 	nValue = Clamp( nValue, -1, nCfgEntries );
 	if ( nValue >= 0 )
 	{
-		SCfgValue *pCfgEntry = pCfg[ nValue ];
+		SCfgValue *pCfgEntry = pCfg[nValue];
 
 		for ( ; pCfgEntry->pszName; ++pCfgEntry )
 			NGlobal::SetVar( pCfgEntry->pszName, pCfgEntry->fValue );
@@ -182,7 +164,7 @@ static EConfigValue FindCfgMode( SCfgValue **pCfg, int nCfgEntries )
 {
 	for ( int nTemp = 0; nTemp < nCfgEntries; nTemp++ )
 	{
-		SCfgValue *pCfgEntry = pCfg[ nTemp ];
+		SCfgValue *pCfgEntry = pCfg[nTemp];
 
 		bool bSame = true;
 		for ( ; pCfgEntry->pszName; ++pCfgEntry )
@@ -227,7 +209,8 @@ void AutoDetectVideoConfig()
 		if ( bDoTest )
 			NGfx::PerformBenchmark();
 		const NGfx::SPerformanceInfo &perf = NGfx::GetPerformanceInfo();
-		csSystem << CC_GREEN << "PSRate = " << perf.fPSRate << ";  FillRate = " << perf.fFillRate << ";  TriRate = " << perf.fTriangleRate << ";  CPUclock = " << perf.fCPUclock << endl;
+		csSystem << CC_GREEN << "PSRate = " << perf.fPSRate << ";  FillRate = " << perf.fFillRate
+						 << ";  TriRate = " << perf.fTriangleRate << ";  CPUclock = " << perf.fCPUclock << endl;
 	}
 	int nDefaultSpeed = -1, nDefaultTexture = -1, nDefaultFSAA = -1;
 	int nDefault16bppMode = 1;
@@ -290,7 +273,7 @@ void AutoDetectVideoConfig()
 
 	int nDesktopWidth = systemInfo.nDesktopWidth;
 	int nDesktopHeight = systemInfo.nDesktopHeight;
-	NGlobal::SetVar( "gfx_resolution", fmt::format("{}x{}", nDesktopWidth, nDesktopHeight) );
+	NGlobal::SetVar( "gfx_resolution", fmt::format( "{}x{}", nDesktopWidth, nDesktopHeight ) );
 
 	if ( !NGfx::CanStreamGeometry() || perf.fCPUclock < 1400 )
 		nDefaultSpeed = CV_VHIGH;
@@ -298,7 +281,8 @@ void AutoDetectVideoConfig()
 	// Disable 16 bit mode by default
 	NGlobal::SetVar( "gfx_16bit_mode", 0 );
 
-	csSystem << CC_GREEN << "AUTODETECTED: Speed: " << nDefaultSpeed << " Texture: " << nDefaultTexture << " FSAA: " << nDefaultFSAA << endl;
+	csSystem << CC_GREEN << "AUTODETECTED: Speed: " << nDefaultSpeed << " Texture: " << nDefaultTexture
+					 << " FSAA: " << nDefaultFSAA << endl;
 	SetSpeedMode( (EConfigValue)nDefaultSpeed );
 	SetTextureMode( (EConfigValue)nDefaultTexture );
 	SetFSAAMode( (EConfigValue)nDefaultFSAA );
@@ -362,8 +346,8 @@ static void CommandGfxAutodetect( const std::string &szID, const std::vector<std
 	AutoDetectVideoConfig();
 }
 
-START_REGISTER(GAutoDetect)
-	REGISTER_CMD( "gfx_autodetect", CommandGfxAutodetect )
+START_REGISTER( GAutoDetect )
+REGISTER_CMD( "gfx_autodetect", CommandGfxAutodetect )
 FINISH_REGISTER
 
 } // namespace

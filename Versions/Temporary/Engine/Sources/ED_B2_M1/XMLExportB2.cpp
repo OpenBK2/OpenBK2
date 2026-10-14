@@ -63,120 +63,79 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 		*pszPrefix = "Mines/";
 		*pszPostfix = '/' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "ComplexSoundDesc" ) ||
-		( szTypeName == "Composition" ) ||
-		( szTypeName == "MusicTrack" ) ||
-		( szTypeName == "PlayList" ) ||
-		( szTypeName == "PlayTime" ) ||
-		( szTypeName == "SoundDesc" ) ||
-		( szTypeName == "MapMusic" ) )
+	else if ( ( szTypeName == "ComplexSoundDesc" ) || ( szTypeName == "Composition" ) || ( szTypeName == "MusicTrack" ) ||
+	          ( szTypeName == "PlayList" ) || ( szTypeName == "PlayTime" ) || ( szTypeName == "SoundDesc" ) ||
+	          ( szTypeName == "MapMusic" ) )
 	{
 		*pszPrefix = "SoundAndMusic/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "AIGameConsts" ) ||
-		( szTypeName == "CameraLimits" ) ||
-		( szTypeName == "ClientGameConsts" ) ||
-		( szTypeName == "GameConsts" ) ||
-		( szTypeName == "MultiplayerConsts" ) ||
-		( szTypeName == "NetGameConsts" ) ||
-		( szTypeName == "SceneConsts" ) ||
-		( szTypeName == "UIConstsB2" ) )
+	else if ( ( szTypeName == "AIGameConsts" ) || ( szTypeName == "CameraLimits" ) ||
+	          ( szTypeName == "ClientGameConsts" ) || ( szTypeName == "GameConsts" ) ||
+	          ( szTypeName == "MultiplayerConsts" ) || ( szTypeName == "NetGameConsts" ) ||
+	          ( szTypeName == "SceneConsts" ) || ( szTypeName == "UIConstsB2" ) )
 	{
 		*pszPrefix = "Consts/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName.size() > 6 && szTypeName.compare(0, 6, "Window") == 0 ) ||
-		( szTypeName.size() > 2 && szTypeName.compare(0, 2, "AR") == 0 ) ||
-		( szTypeName.size() > 2 && szTypeName.compare(0, 2, "UI") == 0 ) ||
-		( szTypeName == "BackgroundSimpleScallingTexture" ) ||
-		( szTypeName == "BackgroundSimpleTexture" ) ||
-		( szTypeName == "BackgroundTiledTexture" ) ||
-		( szTypeName == "BackgroundFrameSequence" ) ||
-		( szTypeName == "CheckIsTabActive" ) ||
-		( szTypeName == "CheckIsWindowEnabled" ) ||
-		( szTypeName == "CheckIsWindowVisible" ) ||
-		( szTypeName == "CheckPreprogrammed" ) ||
-		( szTypeName == "ForegroundTextString" ) ||
-		( szTypeName == "ForegroundTextStringShared" ) ||
-		( szTypeName == "TextFormat" ) ||
-		( szTypeName == "TooltipContext" ) ||
-		( szTypeName == "MessageReactionComplex" )  )
+	else if ( ( szTypeName.size() > 6 && szTypeName.compare( 0, 6, "Window" ) == 0 ) ||
+	          ( szTypeName.size() > 2 && szTypeName.compare( 0, 2, "AR" ) == 0 ) ||
+	          ( szTypeName.size() > 2 && szTypeName.compare( 0, 2, "UI" ) == 0 ) ||
+	          ( szTypeName == "BackgroundSimpleScallingTexture" ) || ( szTypeName == "BackgroundSimpleTexture" ) ||
+	          ( szTypeName == "BackgroundTiledTexture" ) || ( szTypeName == "BackgroundFrameSequence" ) ||
+	          ( szTypeName == "CheckIsTabActive" ) || ( szTypeName == "CheckIsWindowEnabled" ) ||
+	          ( szTypeName == "CheckIsWindowVisible" ) || ( szTypeName == "CheckPreprogrammed" ) ||
+	          ( szTypeName == "ForegroundTextString" ) || ( szTypeName == "ForegroundTextStringShared" ) ||
+	          ( szTypeName == "TextFormat" ) || ( szTypeName == "TooltipContext" ) ||
+	          ( szTypeName == "MessageReactionComplex" ) )
 	{
 		*pszPrefix = "UI/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
 	// SCENE{
-	else if ( ( szTypeName == "AnimLight" ) ||
-		( szTypeName == "LightInstance" ) ||
-		( szTypeName == "Particle" ) ||
-		( szTypeName == "ParticleInstance" ) ||
-		( szTypeName == "ComplexEffect" ) ||
-		( szTypeName == "ComplexSeasonedEffect" ) ||
-		( szTypeName == "Effect" ) )
+	else if ( ( szTypeName == "AnimLight" ) || ( szTypeName == "LightInstance" ) || ( szTypeName == "Particle" ) ||
+	          ( szTypeName == "ParticleInstance" ) || ( szTypeName == "ComplexEffect" ) ||
+	          ( szTypeName == "ComplexSeasonedEffect" ) || ( szTypeName == "Effect" ) )
 	{
 		*pszPrefix = "Scene/Effects/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "TwoSidedLight" ) ||
-		( szTypeName == "AmbientLight" ) )
+	else if ( ( szTypeName == "TwoSidedLight" ) || ( szTypeName == "AmbientLight" ) )
 	{
 		*pszPrefix = "Scene/Lights/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "Material" ) ||
-		        ( szTypeName == "Texture" ) ||
-						( szTypeName == "CubeTexture" ) )
+	else if ( ( szTypeName == "Material" ) || ( szTypeName == "Texture" ) || ( szTypeName == "CubeTexture" ) )
 	{
 		*pszPrefix = "Scene/TexAndMats/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "AIGeometry" ) ||
-		( szTypeName == "Geometry" ) ||
-		( szTypeName == "Skeleton" ) ||
-		( szTypeName == "Model" ) ||
-		( szTypeName == "AnimB2" ) ||
-		( szTypeName == "VisObj" ) )
+	else if ( ( szTypeName == "AIGeometry" ) || ( szTypeName == "Geometry" ) || ( szTypeName == "Skeleton" ) ||
+	          ( szTypeName == "Model" ) || ( szTypeName == "AnimB2" ) || ( szTypeName == "VisObj" ) )
 	{
 		*pszPrefix = "Scene/Geoms/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
 	// SCENE}
-	else if ( ( szTypeName == "Campaign" ) ||
-		( szTypeName == "Chapter" ) ||
-		( szTypeName == "ChapterBonus" ) ||
-		( szTypeName == "PartyDependentInfo" ) ||
-		( szTypeName == "PlayerRank" ) ||
-		( szTypeName == "DifficultyLevel" ) ||
-		( szTypeName == "GameRoot" )  )
+	else if ( ( szTypeName == "Campaign" ) || ( szTypeName == "Chapter" ) || ( szTypeName == "ChapterBonus" ) ||
+	          ( szTypeName == "PartyDependentInfo" ) || ( szTypeName == "PlayerRank" ) ||
+	          ( szTypeName == "DifficultyLevel" ) || ( szTypeName == "GameRoot" ) )
 	{
 		*pszPrefix = "Scenario/" + szTypeName + '/';
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "CragDesc" ) ||
-		( szTypeName == "CoastDesc" ) ||
-		( szTypeName == "LakeDesc" ) ||
-		( szTypeName == "RiverDesc" ) ||
-		( szTypeName == "RoadDesc" ) ||
-		( szTypeName == "TerraObjSetRPGStats" ) ||
-		( szTypeName == "TGNoise" ) ||
-		( szTypeName == "PreLight" ) ||
-		( szTypeName == "TGTerraSet" ) ||
-		( szTypeName == "TGTerraType" ) ||
-		( szTypeName == "Water" ) ||
-		( szTypeName == "WaterSet" ) ||
-		( szTypeName == "WeatherDesc" )  )
+	else if ( ( szTypeName == "CragDesc" ) || ( szTypeName == "CoastDesc" ) || ( szTypeName == "LakeDesc" ) ||
+	          ( szTypeName == "RiverDesc" ) || ( szTypeName == "RoadDesc" ) || ( szTypeName == "TerraObjSetRPGStats" ) ||
+	          ( szTypeName == "TGNoise" ) || ( szTypeName == "PreLight" ) || ( szTypeName == "TGTerraSet" ) ||
+	          ( szTypeName == "TGTerraType" ) || ( szTypeName == "Water" ) || ( szTypeName == "WaterSet" ) ||
+	          ( szTypeName == "WeatherDesc" ) )
 	{
 		*pszPrefix = "Terrain/" + szTypeName + '/';
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if (
-		( szTypeName == "DeployTemplate" ) ||
-		( szTypeName == "Reinforcement" ) ||
-		( szTypeName == "ReinforcementChange" ) ||
-		( szTypeName == "ReinforcementDisable" ) ||
-		( szTypeName == "ReinforcementEnable" ) ||
-		( szTypeName == "ReinforcementTypes" ) )
+	else if ( ( szTypeName == "DeployTemplate" ) || ( szTypeName == "Reinforcement" ) ||
+	          ( szTypeName == "ReinforcementChange" ) || ( szTypeName == "ReinforcementDisable" ) ||
+	          ( szTypeName == "ReinforcementEnable" ) || ( szTypeName == "ReinforcementTypes" ) )
 	{
 		*pszPrefix = "Reinforcements/" + szTypeName + '/';
 		*pszPostfix = '_' + szTypeName + ".xdb";
@@ -196,8 +155,6 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 // **
 // ************************************************************************************************************************ //
 
-
-
 // ************************************************************************************************************************ //
 // **
 // **
@@ -211,14 +168,19 @@ class CXmlExporterB2 : public CXmlExporter
 	typedef std::unordered_map<std::string, std::string> CNamesMap;
 	CNamesMap namesMap;
 	//
-	std::string MakePathNameOther( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName );
+	std::string MakePathNameOther( const std::string &szObjectName,
+	                               const std::string &szClassTypeName,
+	                               const std::string &szFieldName );
 	//
-	std::string MakePathName( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName );
+	std::string
+	MakePathName( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName );
 };
 
-std::string CXmlExporterB2::MakePathName( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
+std::string CXmlExporterB2::MakePathName( const std::string &szObjectName,
+                                          const std::string &szClassTypeName,
+                                          const std::string &szFieldName )
 {
-	std::string szFullName = szClassTypeName + ':' + szObjectName;// + ':' + szFieldName;
+	std::string szFullName = szClassTypeName + ':' + szObjectName; // + ':' + szFieldName;
 	NStr::ToLowerASCII( &szFullName );
 	CNamesMap::const_iterator pos = namesMap.find( szFullName );
 	if ( pos == namesMap.end() )
@@ -229,7 +191,7 @@ std::string CXmlExporterB2::MakePathName( const std::string &szObjectName, const
 		// correct non-english file names
 		for ( int i = 0; i < szFullPathName.size(); ++i )
 		{
-			if ( ((szFullPathName[i] & 0x80) != 0) || (szFullPathName[i] < 0x20) )
+			if ( ( ( szFullPathName[i] & 0x80 ) != 0 ) || ( szFullPathName[i] < 0x20 ) )
 				szFullPathName[i] = '_';
 		}
 		//
@@ -240,7 +202,9 @@ std::string CXmlExporterB2::MakePathName( const std::string &szObjectName, const
 		return pos->second;
 }
 
-std::string CXmlExporterB2::MakePathNameOther( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
+std::string CXmlExporterB2::MakePathNameOther( const std::string &szObjectName,
+                                               const std::string &szClassTypeName,
+                                               const std::string &szFieldName )
 {
 	std::string szPrefix, szPostfix;
 	MakePrefixAndPostfix( &szPrefix, &szPostfix, szClassTypeName );
@@ -248,6 +212,9 @@ std::string CXmlExporterB2::MakePathNameOther( const std::string &szObjectName, 
 }
 
 static CXmlExporterB2 theExporter;
-CXmlExporter *GetExporter() { return &theExporter; }
+CXmlExporter *GetExporter()
+{
+	return &theExporter;
+}
 
 }

@@ -21,7 +21,7 @@ struct IObstacle : public CAIObjectBase
 	virtual void IssueUnitAttackCommand( class CCommonUnit *pUnit ) = 0;
 
 	// может ли юнит разрушить объект просто проехав по нему.
-	virtual bool CanDeleteByMovingOver( class CAIUnit * pUnit ) = 0;
+	virtual bool CanDeleteByMovingOver( class CAIUnit *pUnit ) = 0;
 	virtual class CUpdatableObj *GetObject() const = 0;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

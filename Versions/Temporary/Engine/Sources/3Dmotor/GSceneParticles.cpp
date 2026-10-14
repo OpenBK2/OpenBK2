@@ -2,7 +2,6 @@
 #include "GSceneParticles.h"
 #include "GfxUtils.h"
 
-
 namespace NGScene
 {
 

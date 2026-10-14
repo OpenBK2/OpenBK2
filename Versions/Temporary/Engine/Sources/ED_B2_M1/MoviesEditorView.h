@@ -19,24 +19,23 @@
 // hand it over, take it down.
 namespace NMoviesEditorView
 {
-	class IView
-	{
-	public:
-		virtual ~IView() {}
+class IView
+{
+public:
+	virtual ~IView() {}
 
-		// Builds the window inside pPane, and registers it as the
-		// CHID_MOVIES_EDITOR_WINDOW command handler, which is how everything
-		// else reaches it.
-		virtual bool Create( IWidget *pPane ) = 0;
-		// Unregisters and destroys the window. The pane is not touched.
-		virtual void Destroy() = 0;
-		virtual void Show( bool bShow ) = 0;
+	// Builds the window inside pPane, and registers it as the
+	// CHID_MOVIES_EDITOR_WINDOW command handler, which is how everything
+	// else reaches it.
+	virtual bool Create( IWidget *pPane ) = 0;
+	// Unregisters and destroys the window. The pane is not touched.
+	virtual void Destroy() = 0;
+	virtual void Show( bool bShow ) = 0;
 
-		// What the pane is given as its contents. Null before Create.
-		virtual IWidget* GetWidget() = 0;
-	};
+	// What the pane is given as its contents. Null before Create.
+	virtual IWidget *GetWidget() = 0;
+};
 
-
-	// The pane's view. The caller owns the result and destroys it with delete.
-	IView* Create();
+// The pane's view. The caller owns the result and destroys it with delete.
+IView *Create();
 }

@@ -31,7 +31,7 @@ void CAAFeedBacks::Fired( CAIUnit *pAA, CAIUnit *pTarget )
 	const int nAAID = pAA->GetUniqueId();
 	const int nTargetID = pTarget->GetUniqueId();
 
-	CTargetList &targets = feedbacks[nAAID];	// yes, explisit creation. i need it.
+	CTargetList &targets = feedbacks[nAAID]; // yes, explisit creation. i need it.
 
 	if ( find( targets.begin(), targets.end(), nTargetID ) == targets.end() )
 	{

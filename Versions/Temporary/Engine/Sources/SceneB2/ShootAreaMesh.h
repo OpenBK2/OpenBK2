@@ -12,7 +12,7 @@ class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	OBJECT_BASIC_METHODS( CShootAreaMesh )
 
-	CDGPtr<CFuncBase<SFBTransform> > pTransform;
+	CDGPtr<CFuncBase<SFBTransform>> pTransform;
 	float fStartAngle;
 	float fEndAngle;
 	float fMinRadius;
@@ -34,8 +34,20 @@ protected:
 	CShootAreaMesh() {}
 
 public:
-	CShootAreaMesh( const CVec2 &vCenter, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, CTerrainManager *_pTerraManager, float fWidth = 1.0f );
-	CShootAreaMesh( CFuncBase<SFBTransform> *pTransform, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, CTerrainManager *_pTerraManager, float fWidth = 1.0f );
+	CShootAreaMesh( const CVec2 &vCenter,
+	                float fStartAngle,
+	                float fEndAngle,
+	                float fMinRadius,
+	                float fMaxRadius,
+	                CTerrainManager *_pTerraManager,
+	                float fWidth = 1.0f );
+	CShootAreaMesh( CFuncBase<SFBTransform> *pTransform,
+	                float fStartAngle,
+	                float fEndAngle,
+	                float fMinRadius,
+	                float fMaxRadius,
+	                CTerrainManager *_pTerraManager,
+	                float fWidth = 1.0f );
 
 	int operator&( IBinSaver &saver )
 	{

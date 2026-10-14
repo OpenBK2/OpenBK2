@@ -5,7 +5,7 @@
 // для Hash таблицы
 struct SIntThreeHash
 {
-	size_t operator() ( const struct SIntThree &v ) const;
+	size_t operator()( const struct SIntThree &v ) const;
 };
 
 struct SUpdatedCell
@@ -14,14 +14,16 @@ struct SUpdatedCell
 	int nNewRadius;
 	SIntThree vCell;
 	SUpdatedCell( const SIntThree &vCell, const int nFormerRadius, const int nNewRadius )
-		: vCell( vCell ), nFormerRadius( nFormerRadius ), nNewRadius( nNewRadius ) {  }
+			: vCell( vCell ), nFormerRadius( nFormerRadius ), nNewRadius( nNewRadius )
+	{
+	}
 };
 
 // для сортировки звуков по времени старта
 class CSoundStartTimePredicate
 {
 public:
-	bool operator()( class CSound* one, class CSound *two ) const;
+	bool operator()( class CSound *one, class CSound *two ) const;
 };
 
 //для поиска звуков, начало которых лежит не дальше, чем timeDelta
@@ -29,8 +31,10 @@ public:
 class CSoundsWithinDeltaPredicate
 {
 	NTimer::STime timeToCompare;
+
 public:
-	CSoundsWithinDeltaPredicate( NTimer::STime timeBase, NTimer::STime timeDelta)
-		: timeToCompare( timeBase+timeDelta ) {  }
-	bool operator()( const CSound * sound ) const;
+	CSoundsWithinDeltaPredicate( NTimer::STime timeBase, NTimer::STime timeDelta ) : timeToCompare( timeBase + timeDelta )
+	{
+	}
+	bool operator()( const CSound *sound ) const;
 };

@@ -7,23 +7,14 @@
 namespace NSingleton
 {
 
-typedef det_map< int, CObj<CObjectBase> > CObjectsMap;
+typedef det_map<int, CObj<CObjectBase>> CObjectsMap;
 static CObjectsMap objects;
 
 struct SSingletonAutoMagic
 {
-	SSingletonAutoMagic()
-	{
-		RegisterSingleton( new CConsoleBuffer(), IConsoleBuffer::tidTypeID );
-	}
-	~SSingletonAutoMagic()
-	{
-		SSingletonAutoMagic::Clear();
-	}
-	static void Clear()
-	{
-		objects.clear();
-	}
+	SSingletonAutoMagic() { RegisterSingleton( new CConsoleBuffer(), IConsoleBuffer::tidTypeID ); }
+	~SSingletonAutoMagic() { SSingletonAutoMagic::Clear(); }
+	static void Clear() { objects.clear(); }
 };
 static SSingletonAutoMagic singletonautomagic;
 
@@ -35,7 +26,8 @@ CObjectBase *Singleton( const int nTypeID )
 
 void RegisterSingleton( CObjectBase *pObj, const int nTypeID )
 {
-	NI_ASSERT( objects.find(nTypeID) == objects.end(), fmt::format("Object ({}) (\"{}\") already registered", nTypeID, typeid(*pObj).name()) );
+	NI_ASSERT( objects.find( nTypeID ) == objects.end(),
+	           fmt::format( "Object ({}) (\"{}\") already registered", nTypeID, typeid( *pObj ).name() ) );
 	objects[nTypeID] = pObj;
 }
 
@@ -60,15 +52,16 @@ void GetAllSingletonIDs( std::vector<int> *pRes )
 struct SSingletonSerializer
 {
 	class CSingleObject;
-	static std::unordered_map<CObjectBase*, bool> saved;
+	static std::unordered_map<CObjectBase *, bool> saved;
 
 	class CSingleObject
 	{
 		int nID;
 		CObjectBase *pObject;
+
 	public:
-		CSingleObject(): nID(0), pObject( 0 ) {}
-		CSingleObject( int _nID, CObjectBase *_pObject ): nID(_nID), pObject( _pObject ) {}
+		CSingleObject() : nID( 0 ), pObject( 0 ) {}
+		CSingleObject( int _nID, CObjectBase *_pObject ) : nID( _nID ), pObject( _pObject ) {}
 		//
 		int operator&( IBinSaver &saver )
 		{
@@ -100,7 +93,7 @@ struct SSingletonSerializer
 	}
 };
 
-std::unordered_map<CObjectBase*, bool> SSingletonSerializer::saved;
+std::unordered_map<CObjectBase *, bool> SSingletonSerializer::saved;
 
 void Serialize( const char chunkID, IBinSaver &saver )
 {

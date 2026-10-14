@@ -6,10 +6,10 @@
 
 #include <cstdint>
 
-void CPlanePreferences::Init( const SMechUnitRPGStats* _pStats, bool _bCanViolateHeghtLimits )
+void CPlanePreferences::Init( const SMechUnitRPGStats *_pStats, bool _bCanViolateHeghtLimits )
 {
 	bCanViolateHeghtLimits = _bCanViolateHeghtLimits;
-	pStats =  _pStats;
+	pStats = _pStats;
 }
 uint16_t CPlanePreferences::GetDivingAngle() const
 {
@@ -34,9 +34,7 @@ float CPlanePreferences::GetStallSpeed() const
 
 bool CPlanePreferences::CanFlip() const
 {
-	return bCanViolateHeghtLimits ||
-				 pStats->etype == RPG_TYPE_AVIA_ATTACK ||
-				 pStats->etype == RPG_TYPE_AVIA_FIGHTER;
+	return bCanViolateHeghtLimits || pStats->etype == RPG_TYPE_AVIA_ATTACK || pStats->etype == RPG_TYPE_AVIA_FIGHTER;
 }
 
 float CPlanePreferences::GetMaxSpeed() const
@@ -57,9 +55,8 @@ float CPlanePreferences::GetTiltAccell() const
 float CPlanePreferences::GetSpeed( const float fZ ) const
 {
 	return GetMaxSpeed() -
-		( Clamp( fZ, SPlanesConsts::MIN_HEIGHT, SPlanesConsts::MAX_HEIGHT ) - SPlanesConsts::GetMinHeight() ) /
-		( SPlanesConsts::MAX_HEIGHT - SPlanesConsts::GetMinHeight() ) *
-		( GetMaxSpeed() - GetStallSpeed() );
+	       ( Clamp( fZ, SPlanesConsts::MIN_HEIGHT, SPlanesConsts::MAX_HEIGHT ) - SPlanesConsts::GetMinHeight() ) /
+	           ( SPlanesConsts::MAX_HEIGHT - SPlanesConsts::GetMinHeight() ) * ( GetMaxSpeed() - GetStallSpeed() );
 }
 
 bool CPlanePreferences::IsManuverAllowed( const enum NDb::EManuverID eManuver ) const

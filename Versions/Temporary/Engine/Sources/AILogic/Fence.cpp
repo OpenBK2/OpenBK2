@@ -20,22 +20,26 @@ extern SCheats theCheats;
 extern NAI::CTimeCounter timeCounter;
 int ConvertToNAngle( const uint16_t _wAngle );
 
-CFence::CFence( const SFenceRPGStats *_pStats, const CVec3 &center, const float fHP, const uint16_t wDir, const int nDiplomacy, const int nFrameIndex )
-: pStats( _pStats ), CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FENCE ), eLifeType( NDb::SFenceRPGStats::ETOL_SAFE )
+CFence::CFence( const SFenceRPGStats *_pStats,
+                const CVec3 &center,
+                const float fHP,
+                const uint16_t wDir,
+                const int nDiplomacy,
+                const int nFrameIndex )
+		: pStats( _pStats ), CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FENCE ),
+			eLifeType( NDb::SFenceRPGStats::ETOL_SAFE )
 {
 	eLifeType = pStats->GetDamageTypeByFrameIndex( GetFrameIndex() );
 	SetAlive( eLifeType != NDb::SFenceRPGStats::ETOL_DESTROYED && CCommonStaticObject::IsAlive() );
-	nCreator = (nDiplomacy == -1 || nDiplomacy == 0xff)? theDipl.GetNeutralPlayer() : nDiplomacy;
+	nCreator = ( nDiplomacy == -1 || nDiplomacy == 0xff ) ? theDipl.GetNeutralPlayer() : nDiplomacy;
 	bSuspendAppear = !theDipl.IsNetGame() && theDipl.GetDiplStatus( nCreator, theDipl.GetMyNumber() ) == EDI_ENEMY;
 	rightTile = leftTile = AICellsTiles::GetTile( center.x, center.y );
 }
 
 bool CFence::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
-	return
-		( CCommonStaticObject::ShouldSuspendAction( eAction ) ||
-		eAction == ACTION_NOTIFY_DISSAPEAR_OBJ ||
-		eAction == ACTION_NOTIFY_NEW_ST_OBJ && bSuspendAppear );
+	return ( CCommonStaticObject::ShouldSuspendAction( eAction ) || eAction == ACTION_NOTIFY_DISSAPEAR_OBJ ||
+	         eAction == ACTION_NOTIFY_NEW_ST_OBJ && bSuspendAppear );
 }
 
 void CFence::InitDirectionInfo()
@@ -71,10 +75,8 @@ void CFence::AnalyzeConnection( CFence *pFence )
 	// такого нет
 	if ( find( neighFences.begin(), neighFences.end(), pFence ) == neighFences.end() )
 	{
-		if ( rightTile == pFence->leftTile ||
-				rightTile == pFence->rightTile ||
-				leftTile == pFence->leftTile ||
-				leftTile == pFence->rightTile )
+		if ( rightTile == pFence->leftTile || rightTile == pFence->rightTile || leftTile == pFence->leftTile ||
+		     leftTile == pFence->rightTile )
 		{
 			neighFences.push_back( pFence );
 			pFence->AnalyzeConnection( this );
@@ -92,13 +94,13 @@ void CFence::Init()
 	SRect boundRect;
 	GetBoundRect( &boundRect );
 	const float fR = fabs( boundRect.v1() - boundRect.v3() ) * 2.0f;
-	for ( CStObjCircleIter<false> iter( CVec2(GetCenter().x,GetCenter().y), fR ); !iter.IsFinished(); iter.Iterate() )
+	for ( CStObjCircleIter<false> iter( CVec2( GetCenter().x, GetCenter().y ), fR ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CExistingObject *pObj = *iter;
 		if ( pObj->GetObjectType() == ESOT_FENCE && pObj != this )
 		{
-			NI_ASSERT( dynamic_cast<CFence*>( pObj ) != 0, "Wrong fence" );
-			AnalyzeConnection( checked_cast<CFence*>( pObj ) );
+			NI_ASSERT( dynamic_cast<CFence *>( pObj ) != 0, "Wrong fence" );
+			AnalyzeConnection( checked_cast<CFence *>( pObj ) );
 		}
 	}
 
@@ -124,8 +126,8 @@ void CFence::Delete()
 		LockTiles();
 	}
 
-	for ( std::list< CPtr<CFence> >::iterator it = neighFences.begin(); it != neighFences.end(); ++it )
-		(*it)->DamagePartially( this );
+	for ( std::list<CPtr<CFence>>::iterator it = neighFences.begin(); it != neighFences.end(); ++it )
+		( *it )->DamagePartially( this );
 }
 
 void CFence::Die( const float fDamage )
@@ -133,16 +135,22 @@ void CFence::Die( const float fDamage )
 	Delete();
 }
 
-void CFence::GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
+void CFence::GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *visibility ) const
 {
 	const CVec3 vCenter( GetCenter() );
-	visibility->Init( pStats->GetVisibility( GetFrameIndex() ), GetDir(), pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
+	visibility->Init( pStats->GetVisibility( GetFrameIndex() ),
+	                  GetDir(),
+	                  pStats->GetVisOrigin( GetFrameIndex() ),
+	                  CVec2( vCenter.x, vCenter.y ) );
 }
 
-void CFence::GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *passability ) const
+void CFence::GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const
 {
 	const CVec3 vCenter( GetCenter() );
-	passability->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
+	passability->Init( pStats->GetPassability( GetFrameIndex() ),
+	                   GetDir(),
+	                   pStats->GetOrigin( GetFrameIndex() ),
+	                   CVec2( vCenter.x, vCenter.y ) );
 }
 
 void CFence::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
@@ -185,7 +193,7 @@ void CFence::DamagePartially( CFence *pFence )
 			{
 				const CVec3 vCenter( GetCenter() );
 				const CVec2 vNewCenter = GetVectorByDirection( GetDir() ) * SConsts::TILE_SIZE * 2;
-				RotateFence( CVec3( vNewCenter.x + vCenter.x, vNewCenter.y + vCenter.y, 0) );
+				RotateFence( CVec3( vNewCenter.x + vCenter.x, vNewCenter.y + vCenter.y, 0 ) );
 			}
 		}
 		else

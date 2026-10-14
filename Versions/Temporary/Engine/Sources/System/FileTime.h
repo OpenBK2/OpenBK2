@@ -11,12 +11,12 @@ struct SWin32Time
 	{
 		struct
 		{
-			uint32_t seconds : 5;								// seconds (0..29 with 2 sec. interval)
-			uint32_t minutes : 6;								// minutes (0..59)
-			uint32_t hours   : 5;								// hours (0..23)
-			uint32_t day     : 5;								// day (1..31)
-			uint32_t month   : 4;								// month(1..12)
-			uint32_t year    : 7;								// year (0..119 relative to 1980)
+			uint32_t seconds : 5; // seconds (0..29 with 2 sec. interval)
+			uint32_t minutes : 6; // minutes (0..59)
+			uint32_t hours : 5;   // hours (0..23)
+			uint32_t day : 5;     // day (1..31)
+			uint32_t month : 4;   // month(1..12)
+			uint32_t year : 7;    // year (0..119 relative to 1980)
 		};
 		struct
 		{
@@ -27,8 +27,8 @@ struct SWin32Time
 		uint32_t dwFulltime = 0;
 	};
 	//
-	SWin32Time() {  }
-	SWin32Time( const uint32_t _dwFulltime ) : dwFulltime( _dwFulltime ) {  }
+	SWin32Time() {}
+	SWin32Time( const uint32_t _dwFulltime ) : dwFulltime( _dwFulltime ) {}
 	uint16_t GetDate() const { return wDate; }
 	uint16_t GetTime() const { return wTime; }
 	operator uint32_t() const { return dwFulltime; }
@@ -53,12 +53,12 @@ inline uint32_t PackFileTime( std::time_t fileTime )
 		return 0;
 	}
 	SWin32Time packed;
-	packed.year    = nYear > 127 ? 127 : nYear;
-	packed.month   = local.tm_mon + 1;		// std::tm counts months from 0, this layout from 1
-	packed.day     = local.tm_mday;			// 1..31
-	packed.hours   = local.tm_hour;			// 0..23
-	packed.minutes = local.tm_min;			// 0..59
-	packed.seconds = local.tm_sec / 2;		// two second resolution, so 0..29
+	packed.year = nYear > 127 ? 127 : nYear;
+	packed.month = local.tm_mon + 1;   // std::tm counts months from 0, this layout from 1
+	packed.day = local.tm_mday;        // 1..31
+	packed.hours = local.tm_hour;      // 0..23
+	packed.minutes = local.tm_min;     // 0..59
+	packed.seconds = local.tm_sec / 2; // two second resolution, so 0..29
 
 	return packed;
 }
@@ -72,12 +72,12 @@ inline time_t UnpackFileTime( const uint32_t _w32time )
 		{
 			struct
 			{
-				uint32_t seconds : 5;								// seconds (0..29 with 2 sec. interval)
-				uint32_t minutes : 6;								// minutes (0..59)
-				uint32_t hours   : 5;								// hours (0..23)
-				uint32_t day     : 5;								// day (1..31)
-				uint32_t month   : 4;								// month(1..12)
-				uint32_t year    : 7;								// year (0..119 relative to 1980)
+				uint32_t seconds : 5; // seconds (0..29 with 2 sec. interval)
+				uint32_t minutes : 6; // minutes (0..59)
+				uint32_t hours : 5;   // hours (0..23)
+				uint32_t day : 5;     // day (1..31)
+				uint32_t month : 4;   // month(1..12)
+				uint32_t year : 7;    // year (0..119 relative to 1980)
 			};
 			uint32_t dwFullTime = 0;
 		};
@@ -88,11 +88,11 @@ inline time_t UnpackFileTime( const uint32_t _w32time )
 	tm tmTime;
 	Zero( tmTime );
 	tmTime.tm_year = int( w32time.year ) + 80;
-	tmTime.tm_mon  = int( w32time.month ) - 1;
+	tmTime.tm_mon = int( w32time.month ) - 1;
 	tmTime.tm_mday = int( w32time.day );
 	tmTime.tm_hour = int( w32time.hours );
-	tmTime.tm_min  = int( w32time.minutes );
-	tmTime.tm_sec  = int( w32time.seconds ) * 2;
+	tmTime.tm_min = int( w32time.minutes );
+	tmTime.tm_sec = int( w32time.seconds ) * 2;
 	// convert 'tm' to 'time_t'
 	time_t result = mktime( &tmTime );
 	return result;

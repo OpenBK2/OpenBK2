@@ -25,9 +25,7 @@
 
 REGISTER_EDITOR_IN_DLL( Model, CModelEditor )
 
-
-ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT] =
-{
+ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT] = {
 	ID_MODEL_RELOAD_EDITOR,
 	NMainFrameBar::SEPARATOR,
 	ID_MODEL_DRAW_TERRAIN,
@@ -43,38 +41,36 @@ ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_
 	ID_MODEL_SPEED_UP,
 };
 
-
-CModelEditor::CModelEditor() : pModelState( 0 ), nModelToolbarID( 0xFFFFFFFF ), pwndTool( 0 ), bPreviousCameraHandleType( false ), fFOV( 26.0f )
+CModelEditor::CModelEditor()
+		: pModelState( 0 ), nModelToolbarID( 0xFFFFFFFF ), pwndTool( 0 ), bPreviousCameraHandleType( false ), fFOV( 26.0f )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_EDITOR, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MODEL_EDITOR, ID_MODEL_VIEW_TOOLBAR, ID_MODEL_VIEW_TOOL );
 }
 
-
 void CModelEditor::ResetGUI( bool bActive )
 {
-    const CModelEditorSettings defaults;
-    editorSettings.bShowTool = defaults.bShowTool;
-    editorSettings.bShowToolbar = defaults.bShowToolbar;
-    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-    // The model and unit-stats views share controls but have separate profiles.
-    // Patch both profiles so switching objects cannot bring back old visibility.
-    for ( const char *profile : { "Model", "UnitStats" } )
-    {
-        CModelEditorSettings saved;
-        if ( std::string( profile ) == "UnitStats" )
-            saved.bDrawAnimations = saved.bDrawTerrain = false;
-        pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
-        saved.bShowTool = defaults.bShowTool;
-        saved.bShowToolbar = defaults.bShowToolbar;
-        pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
-    }
-    if ( pwndTool )
-        pwndTool->Show( bActive && editorSettings.bShowTool );
-    if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
-        pToolbar->Show( bActive && editorSettings.bShowToolbar );
+	const CModelEditorSettings defaults;
+	editorSettings.bShowTool = defaults.bShowTool;
+	editorSettings.bShowToolbar = defaults.bShowToolbar;
+	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+	// The model and unit-stats views share controls but have separate profiles.
+	// Patch both profiles so switching objects cannot bring back old visibility.
+	for ( const char *profile : { "Model", "UnitStats" } )
+	{
+		CModelEditorSettings saved;
+		if ( std::string( profile ) == "UnitStats" )
+			saved.bDrawAnimations = saved.bDrawTerrain = false;
+		pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+		saved.bShowTool = defaults.bShowTool;
+		saved.bShowToolbar = defaults.bShowToolbar;
+		pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+	}
+	if ( pwndTool )
+		pwndTool->Show( bActive && editorSettings.bShowTool );
+	if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
+		pToolbar->Show( bActive && editorSettings.bShowToolbar );
 }
-
 
 void CModelEditor::CreateControls()
 {
@@ -84,7 +80,8 @@ void CModelEditor::CreateControls()
 	// создаем minimap docking window
 	unsigned nID = ID_MODEL_EDITOR_DW;
 	std::string strPaneLabel = NResources::GetString( IDS_MODEL_TOOL_WINDOW_NAME );
-	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, strPaneLabel.c_str(), NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 265 ) )
+	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+					 &nID, strPaneLabel.c_str(), NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 265 ) )
 	{
 		// Which toolkit draws the palette is NModelView's business. The pane is
 		// shown whether or not it could be created, as it always was.
@@ -107,16 +104,15 @@ void CModelEditor::CreateControls()
 	std::string strToolbarName = NResources::GetString( IDS_TOOLBAR_MODEL );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MODEL, IDT_MODEL );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nModelToolbarID,
-																													strToolbarName.c_str(),
-																													TOOLBAR_MODEL_ELEMENTS_COUNT,
-																													TOOLBAR_MODEL_ELEMENTS_ID,
- 																													NMainFrameBar::ALIGN_ANY,
-																													NMainFrameBar::DOCK_TOP,
-																													true,
-																													false,
-																													false );
+	                                                        strToolbarName.c_str(),
+	                                                        TOOLBAR_MODEL_ELEMENTS_COUNT,
+	                                                        TOOLBAR_MODEL_ELEMENTS_ID,
+	                                                        NMainFrameBar::ALIGN_ANY,
+	                                                        NMainFrameBar::DOCK_TOP,
+	                                                        true,
+	                                                        false,
+	                                                        false );
 }
-
 
 void CModelEditor::PostCreateControls()
 {
@@ -129,7 +125,6 @@ void CModelEditor::PostCreateControls()
 		pToolbar->Show( false );
 	}
 }
-
 
 void CModelEditor::PreDestroyControls()
 {
@@ -146,7 +141,6 @@ void CModelEditor::PreDestroyControls()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MODEL_EDITOR );
 	Destroy();
 }
-
 
 void CModelEditor::DestroyControls()
 {
@@ -170,7 +164,6 @@ void CModelEditor::DestroyControls()
 	}
 }
 
-
 void CModelEditor::Create()
 {
 	IEditorScene *pScene = EditorScene();
@@ -189,12 +182,10 @@ void CModelEditor::Create()
 	//
 }
 
-
 void CModelEditor::Destroy()
 {
-	if ( Singleton<IMainFrameContainer>() &&
-			 Singleton<IMainFrameContainer>()->Get() &&
-			 Singleton<IMainFrameContainer>()->GetMainWindow() )
+	if ( Singleton<IMainFrameContainer>() && Singleton<IMainFrameContainer>()->Get() &&
+	     Singleton<IMainFrameContainer>()->GetMainWindow() )
 	{
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );
 		//
@@ -212,10 +203,9 @@ void CModelEditor::Destroy()
 	}
 }
 
-
 bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MODEL_VIEW_TOOLBAR:
 		{
@@ -243,7 +233,7 @@ bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 	NI_ASSERT( pbEnable != 0, "CModelEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CModelEditor::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MODEL_VIEW_TOOLBAR:
 		{
@@ -279,6 +269,5 @@ bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 	}
 	return false;
 }
-
 
 // basement storage

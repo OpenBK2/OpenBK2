@@ -3,7 +3,7 @@
 
 namespace NDb
 {
-	struct SPlayPause;
+struct SPlayPause;
 }
 
 namespace NMusicSystem
@@ -11,7 +11,7 @@ namespace NMusicSystem
 
 class CPause : public IPlayListElement
 {
-	OBJECT_BASIC_METHODS(CPause)
+	OBJECT_BASIC_METHODS( CPause )
 	enum EPauseState
 	{
 		EPS_NOT_STARTED,
@@ -23,17 +23,24 @@ class CPause : public IPlayListElement
 	NTimer::STime timeLastCall;
 	NTimer::STime timePaused;
 	EPauseState eState;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&timeToPause); f.Add(3,&timeLastCall); f.Add(4,&timePaused); f.Add(5,&eState); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &timeToPause );
+		f.Add( 3, &timeLastCall );
+		f.Add( 4, &timePaused );
+		f.Add( 5, &eState );
+		return 0;
+	}
+
 public:
-	CPause() { }
+	CPause() {}
 	CPause( const NDb::SPlayPause &_Pause );
 
 	void Segment();
-	bool IsFinished() const ;
+	bool IsFinished() const;
 	void Stop() {}
 
 	void Play();
 	void OnResetTimer();
-
 };
 }

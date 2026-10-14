@@ -25,7 +25,6 @@
 
 REGISTER_BUILDER_IN_DLL( MapInfo, CMapInfoBuilder )
 
-
 const int CMapInfoBuilder::MIN_PLAYER_COUNT = 3;
 const int CMapInfoBuilder::MAX_PLAYER_COUNT = 17;
 const int CMapInfoBuilder::MIN_TERRAIN_SIZE_X = 1;
@@ -59,8 +58,6 @@ const std::string CMapInfoBuilder::COPY_DATA_TYPE_NAME = "MapInfoCopier";
 const std::string CMapInfoBuilder::MAPINFO_TYPE_NAME = "MapInfo";
 const std::string CMapInfoBuilder::MAPINFO_DEFAULT_FOLDER = "Custom\\Missions\\";
 
-
-
 bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectManipulator, const CDBID &dbid )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -70,7 +67,8 @@ bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectMani
 	CManipulatorManager::GetValue( &szMiniMapMaterialName, pObjectManipulator, "MiniMap" );
 	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " )
 	{
-		if ( CPtr<IManipulator> pMaterialMan = pResourceManager->CreateObjectManipulator( "Material", szMiniMapMaterialName ) )
+		if ( CPtr<IManipulator> pMaterialMan =
+		         pResourceManager->CreateObjectManipulator( "Material", szMiniMapMaterialName ) )
 		{
 			std::string szMiniMapTextureName;
 			CManipulatorManager::GetValue( &szMiniMapTextureName, pMaterialMan, "Texture" );
@@ -80,7 +78,8 @@ bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectMani
 				if ( CPtr<IManipulator> pTexMan = pResourceManager->CreateObjectManipulator( "Texture", szMiniMapTextureName ) )
 				{
 					std::string szSrcName;
-					if ( CManipulatorManager::GetValue( &szSrcName, pTexMan, "SrcName" ) != false && !szSrcName.empty() && szSrcName != " " )
+					if ( CManipulatorManager::GetValue( &szSrcName, pTexMan, "SrcName" ) != false && !szSrcName.empty() &&
+					     szSrcName != " " )
 					{
 						bResult = true;
 					}
@@ -99,14 +98,13 @@ bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectMani
 			std::string szMiniMapMaterialName;
 			//
 			const std::string szFolderName = NDb::GetFolderName( dbid );
-//			bResult = bResult && CManipulatorManager::GetValue( &szMapFilesPath, pObjectManipulator, "MapFilesPath" );
+			//			bResult = bResult && CManipulatorManager::GetValue( &szMapFilesPath, pObjectManipulator, "MapFilesPath" );
 			bResult = bResult && MakeMinimapMaterialAndTexture( &szMiniMapMaterialName, szFolderName );
 			bResult = bResult && CManipulatorManager::SetValue( szMiniMapMaterialName, pObjectManipulator, "MiniMap", true );
 		}
 	}
 	return bResult;
 }
-
 
 bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName, const std::string &szFolder )
 {
@@ -117,7 +115,7 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 		bool bResult = true;
 		// create texture
 		const std::string szTextureName = szFolder + "minimap_texture.xdb";
-		if ( pFolderCallback->InsertObject(TEXTURE_TYPE_NAME, szTextureName) == false )
+		if ( pFolderCallback->InsertObject( TEXTURE_TYPE_NAME, szTextureName ) == false )
 			return false;
 		CPtr<IManipulator> pTexMan = pRM->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTextureName );
 		bResult = bResult && CManipulatorManager::SetValue( "TEXTURE_2D", pTexMan, "Type", false );
@@ -132,19 +130,21 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 			image.FillEvery( 0xffffffff );
 			// New maps need the source in the same mod layer as later saves.
 			CMemoryStream stream;
-			if ( !NImage::SaveAsTGA( image, &stream ) ) stream.SetBroken();
+			if ( !NImage::SaveAsTGA( image, &stream ) )
+				stream.SetBroken();
 			std::string error;
 			if ( !NVFS::WriteFile( NVFS::GetMainFileCreator(), szFolder + "minimap.tga", stream, &error ) )
 			{
 				NLog::Log( LT_ERROR, "%s\n", error.c_str() );
 				return false;
 			}
-			if ( Singleton<IExporterContainer>()->ExportObject( pTexMan, TEXTURE_TYPE_NAME, szTextureName, true, false ) != ER_SUCCESS )
+			if ( Singleton<IExporterContainer>()->ExportObject( pTexMan, TEXTURE_TYPE_NAME, szTextureName, true, false ) !=
+			     ER_SUCCESS )
 				return false;
 		}
 		// create material
 		const std::string szMaterialName = szFolder + "minimap_material.xdb";
-		if ( pFolderCallback->InsertObject(MATERIAL_TYPE_NAME, szMaterialName) == false )
+		if ( pFolderCallback->InsertObject( MATERIAL_TYPE_NAME, szMaterialName ) == false )
 			return false;
 		CPtr<IManipulator> pMatMan = pRM->CreateObjectManipulator( MATERIAL_TYPE_NAME, szMaterialName );
 		bResult = bResult && CManipulatorManager::SetValue( szTextureName, pMatMan, "Texture", true );
@@ -159,7 +159,9 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 	}
 }
 
-bool CMapInfoBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CMapInfoBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
+                                        std::string *pszDescription,
+                                        IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
@@ -180,42 +182,46 @@ bool CMapInfoBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std
 	return false;
 }
 
-
 //CRAP{ PLAIN_TEXT
-bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator,
+                                          std::string *pszDescription,
+                                          IView *pBuildDataView )
 {
 	// Считываем данные
 	int nPlayerCount = 0;
 	if ( !CManipulatorManager::GetValue( &nPlayerCount, pBuildDataManipulator, "Players" ) ||
-			 ( nPlayerCount < MIN_PLAYER_COUNT ) ||
-			 ( nPlayerCount > MAX_PLAYER_COUNT ) )
+	     ( nPlayerCount < MIN_PLAYER_COUNT ) || ( nPlayerCount > MAX_PLAYER_COUNT ) )
 	{
-		( *pszDescription ) = fmt::format( "<Players> count must be in range [{}...{}].", MIN_PLAYER_COUNT, MAX_PLAYER_COUNT );
+		( *pszDescription ) =
+				fmt::format( "<Players> count must be in range [{}...{}].", MIN_PLAYER_COUNT, MAX_PLAYER_COUNT );
 		return false;
 	}
 	else
 	{
 		for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 		{
-			if ( CheckStringValue(pszDescription, fmt::format("Players.[{}]", nPlayerIndex), pBuildDataManipulator) == false )
+			if ( CheckStringValue( pszDescription, fmt::format( "Players.[{}]", nPlayerIndex ), pBuildDataManipulator ) ==
+			     false )
 			{
 				return false;
 			}
 		}
 	}
-	if ( CheckIntValue(pszDescription, "SizeX", MIN_TERRAIN_SIZE_X, MAX_TERRAIN_SIZE_X, pBuildDataManipulator) == false )
+	if ( CheckIntValue( pszDescription, "SizeX", MIN_TERRAIN_SIZE_X, MAX_TERRAIN_SIZE_X, pBuildDataManipulator ) ==
+	     false )
 	{
 		return false;
 	}
-	if ( CheckIntValue(pszDescription, "SizeY", MIN_TERRAIN_SIZE_Y, MAX_TERRAIN_SIZE_Y, pBuildDataManipulator) == false )
+	if ( CheckIntValue( pszDescription, "SizeY", MIN_TERRAIN_SIZE_Y, MAX_TERRAIN_SIZE_Y, pBuildDataManipulator ) ==
+	     false )
 	{
 		return false;
 	}
-	if ( CheckStringValue(pszDescription, "Season", pBuildDataManipulator) == false )
+	if ( CheckStringValue( pszDescription, "Season", pBuildDataManipulator ) == false )
 	{
 		return false;
 	}
-	if ( CheckStringValue(pszDescription, "DayTime", pBuildDataManipulator) == false )
+	if ( CheckStringValue( pszDescription, "DayTime", pBuildDataManipulator ) == false )
 	{
 		return false;
 	}
@@ -223,20 +229,20 @@ bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, s
 }
 //CRAP} PLAIN_TEXT
 
-
-bool CMapInfoBuilder::IsValidDataCopier( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CMapInfoBuilder::IsValidDataCopier( IManipulator *pBuildDataManipulator,
+                                         std::string *pszDescription,
+                                         IView *pBuildDataView )
 {
 	return true;
 }
 
-
 bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
-																						std::string *pszUniqueObjectName,
-																						bool bFromMainMenu,
-																						bool *pbCanChangeObjectName,
-																						bool *pbNeedExport,
-																						bool *pbNeedEdit,
-																						IManipulator *pBuildDataManipulator )
+                                            std::string *pszUniqueObjectName,
+                                            bool bFromMainMenu,
+                                            bool *pbCanChangeObjectName,
+                                            bool *pbNeedExport,
+                                            bool *pbNeedEdit,
+                                            IManipulator *pBuildDataManipulator )
 {
 	NI_ASSERT( pszObjectTypeName != 0, "CMapInfoBuilder::InternalInsertObject() pszObjectTypeName == 0" );
 	NI_ASSERT( pszUniqueObjectName != 0, "CMapInfoBuilder::InternalInsertObject() pszUniqueObjectName == 0" );
@@ -263,8 +269,9 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 	CManipulatorManager::GetValue( &szSeasonName, pBuildDataManipulator, "Season" );
 	CManipulatorManager::GetValue( &szDayTimeName, pBuildDataManipulator, "DayTime" );
 	CManipulatorManager::GetValue( &nPlayerCount, pBuildDataManipulator, "Players" );
-	NFile::CreatePath( (pUserData->constUserData.szExportSourceFolder + szMapInfoFolder).c_str() );
-	NFile::CreatePath( (Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szMapInfoFolder).c_str() );
+	NFile::CreatePath( ( pUserData->constUserData.szExportSourceFolder + szMapInfoFolder ).c_str() );
+	NFile::CreatePath(
+			( Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szMapInfoFolder ).c_str() );
 	// retrieve from options
 	const std::string szTilesetName = NEditorOptions::GetTileset( szSeasonName );
 	const std::string szLightName = NEditorOptions::GetLight( szSeasonName, szDayTimeName );
@@ -293,7 +300,7 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 		bResult = bResult && pMapInfoManipulator->SetValue( "OceanWater", szOceanWater );
 		// Добавляем информацию о игроках
 		const int nNeutralPlayerIndex = nPlayerCount - 1;
-		const int nNumFriendlyPlayers = int( (nPlayerCount - 1) / 2 );
+		const int nNumFriendlyPlayers = int( ( nPlayerCount - 1 ) / 2 );
 
 		int nExistingPlayersNumber = 0;
 		bResult = bResult && CManipulatorManager::GetValue( &nExistingPlayersNumber, pMapInfoManipulator, "Players" );
@@ -302,38 +309,48 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 			for ( int nPlayerIndex = nExistingPlayersNumber; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 			{
 				bResult = bResult && pMapInfoManipulator->InsertNode( "Players" );
-				if ( !bResult ) break;
+				if ( !bResult )
+					break;
 			}
 			for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 			{
 				std::string szParty;
-				bResult = bResult && CManipulatorManager::GetValue( &szParty, pBuildDataManipulator, fmt::format( "Players.[{}]", nPlayerIndex ) );
-				bResult = bResult && CManipulatorManager::SetValue( szParty, pMapInfoManipulator, fmt::format( "Players.[{}].PartyInfo", nPlayerIndex ), true );
+				bResult = bResult && CManipulatorManager::GetValue(
+																 &szParty, pBuildDataManipulator, fmt::format( "Players.[{}]", nPlayerIndex ) );
+				bResult =
+						bResult && CManipulatorManager::SetValue(
+													 szParty, pMapInfoManipulator, fmt::format( "Players.[{}].PartyInfo", nPlayerIndex ), true );
 				// set automatic diplomacy
 				int nPlayerDiplomacySide = 1;
 				if ( nPlayerIndex < nNumFriendlyPlayers )
 					nPlayerDiplomacySide = 0;
 				else if ( nPlayerIndex == nNeutralPlayerIndex )
 					nPlayerDiplomacySide = 2;
-				bResult = bResult && CManipulatorManager::SetValue( nPlayerDiplomacySide, pMapInfoManipulator, fmt::format( "Players.[{}].DiplomacySide", nPlayerIndex ) );
-				if ( !bResult ) break;
+				bResult = bResult && CManipulatorManager::SetValue( nPlayerDiplomacySide,
+				                                                    pMapInfoManipulator,
+				                                                    fmt::format( "Players.[{}].DiplomacySide", nPlayerIndex ) );
+				if ( !bResult )
+					break;
 			}
 		}
 		// Добавляем информацию о дипломатических отношениях
 		int nExistingDiplomaciesNumber = 0;
-		bResult = bResult && CManipulatorManager::GetValue( &nExistingDiplomaciesNumber, pMapInfoManipulator, "Diplomacies" );
+		bResult =
+				bResult && CManipulatorManager::GetValue( &nExistingDiplomaciesNumber, pMapInfoManipulator, "Diplomacies" );
 		if ( bResult )
 		{
 			for ( int nDiplomacyIndex = nExistingDiplomaciesNumber; nDiplomacyIndex < nPlayerCount; ++nDiplomacyIndex )
 			{
 				bResult = bResult && pMapInfoManipulator->InsertNode( "Diplomacies" );
-				if ( !bResult ) break;
+				if ( !bResult )
+					break;
 			}
 			bResult = bResult && pMapInfoManipulator->SetValue( "Diplomacies.[0]", 0 );
 			for ( int nDiplomacyIndex = 1; nDiplomacyIndex < ( nPlayerCount - 1 ); ++nDiplomacyIndex )
 			{
 				bResult = bResult && pMapInfoManipulator->SetValue( fmt::format( "Diplomacies.[{}]", nDiplomacyIndex ), 1 );
-				if ( !bResult ) break;
+				if ( !bResult )
+					break;
 			}
 			bResult = bResult && pMapInfoManipulator->SetValue( fmt::format( "Diplomacies.[{}]", ( nPlayerCount - 1 ) ), 2 );
 		}
@@ -355,12 +372,13 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 			}
 		}
 	}
-  //
+	//
 	return bResult;
 }
 
-
-bool CMapInfoBuilder::CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
+bool CMapInfoBuilder::CopyObject( const std::string &rszObjectTypeName,
+                                  const std::string &rszDestination,
+                                  const std::string &rszSource )
 {
 	SBuildDataParams buildDataParams;
 	buildDataParams.szObjectTypeName = rszObjectTypeName;
@@ -375,7 +393,8 @@ bool CMapInfoBuilder::CopyObject( const std::string &rszObjectTypeName, const st
 	std::string szBuildDataName;
 	if ( Singleton<IBuilderContainer>()->FillBuildData( &szBuildDataTypeName, &szBuildDataName, &buildDataParams, this ) )
 	{
-		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
+		if ( CPtr<IManipulator> pBuildDataManipulator =
+		         Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
 			std::string szDescription;
 			if ( IsValidDataCopier( pBuildDataManipulator, &szDescription, 0 ) )
@@ -393,7 +412,6 @@ bool CMapInfoBuilder::CopyObject( const std::string &rszObjectTypeName, const st
 	return false;
 }
 
-
 void TrippleCopy( const std::string &szSrcFileName, const std::string &szDstFileName, const SUserData *pUserData )
 {
 	NFile::CopyFile( szSrcFileName, pUserData->constUserData.szDataStorageFolder + szDstFileName );
@@ -401,8 +419,10 @@ void TrippleCopy( const std::string &szSrcFileName, const std::string &szDstFile
 	//NFile::CopyFile( szSrcFileName, pUserData->constUserData.szExportSourceFolder + szDstFileName );
 }
 
-
-bool CMapInfoBuilder::InternalCopy( const std::string &rszObjectTypeName, const std::string &_szDestination, const std::string &rszSource, IManipulator *pBuildDataManipulator )
+bool CMapInfoBuilder::InternalCopy( const std::string &rszObjectTypeName,
+                                    const std::string &_szDestination,
+                                    const std::string &rszSource,
+                                    IManipulator *pBuildDataManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -417,8 +437,8 @@ bool CMapInfoBuilder::InternalCopy( const std::string &rszObjectTypeName, const 
 	if ( !pMapInfo )
 		return false;
 
-	const std::string szOldFolderName = rszSource.substr( 0, rszSource.rfind('\\') + 1 );
-	const std::string szNewFolderName = szDestination.substr( 0, szDestination.rfind('\\') + 1 );
+	const std::string szOldFolderName = rszSource.substr( 0, rszSource.rfind( '\\' ) + 1 );
+	const std::string szNewFolderName = szDestination.substr( 0, szDestination.rfind( '\\' ) + 1 );
 	// copy file with map
 	{
 		std::string szSourceMapFileName;
@@ -442,21 +462,21 @@ bool CMapInfoBuilder::InternalCopy( const std::string &rszObjectTypeName, const 
 	// copy raw script file
 	{
 		std::string szSrcScriptFileName = pUserData->constUserData.szExportSourceFolder + szOldFolderName + "script.lua";
-		if ( NFile::DoesFileExist(szSrcScriptFileName) )
+		if ( NFile::DoesFileExist( szSrcScriptFileName ) )
 			TrippleCopy( szSrcScriptFileName, szNewFolderName + "script.lua", pUserData );
 		else
 		{
-			szSrcScriptFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szOldFolderName + "script.lua";
-			if ( NFile::DoesFileExist(szSrcScriptFileName) )
+			szSrcScriptFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) +
+			                      szOldFolderName + "script.lua";
+			if ( NFile::DoesFileExist( szSrcScriptFileName ) )
 				TrippleCopy( szSrcScriptFileName, szNewFolderName + "script.lua", pUserData );
 			else
 			{
 				szSrcScriptFileName = pUserData->constUserData.szDataStorageFolder + szOldFolderName + "script.lua";
-				if ( NFile::DoesFileExist(szSrcScriptFileName) )
+				if ( NFile::DoesFileExist( szSrcScriptFileName ) )
 					TrippleCopy( szSrcScriptFileName, szNewFolderName + "script.lua", pUserData );
 			}
 		}
-
 	}
 	return bResult;
 }
@@ -473,17 +493,17 @@ bool CMapInfoBuilder::RemoveObject( const std::string &rszObjectTypeName, const 
 	CManipulatorManager::GetValue( &szMiniMapMaterialName, pMapInfoMan, "MiniMap" );
 	// remove map.b2m
 	{
-		const std::string szMapFileName = NDb::GetFileName( CDBID(rszObjectName) );
+		const std::string szMapFileName = NDb::GetFileName( CDBID( rszObjectName ) );
 		const std::string szDstFolderPath = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION );
 		const std::string szFilePath = NFile::GetFilePath( szDstFolderPath + szMapFileName );
-		NFile::RemoveFile( (szFilePath + "map.b2m").c_str() );
+		NFile::RemoveFile( ( szFilePath + "map.b2m" ).c_str() );
 	}
 	// remove MapInfo object
 	CBuilderBase::RemoveObject( rszObjectTypeName, rszObjectName );
 	// remove minimap
 	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " )
 	{
-		if ( CPtr<IManipulator> pMaterialMan = pRM->CreateObjectManipulator(MATERIAL_TYPE_NAME, szMiniMapMaterialName) )
+		if ( CPtr<IManipulator> pMaterialMan = pRM->CreateObjectManipulator( MATERIAL_TYPE_NAME, szMiniMapMaterialName ) )
 		{
 			std::string szMiniMapTextureName;
 			CManipulatorManager::GetValue( &szMiniMapTextureName, pMaterialMan, "Texture" );
@@ -493,17 +513,19 @@ bool CMapInfoBuilder::RemoveObject( const std::string &rszObjectTypeName, const 
 			if ( !szMiniMapTextureName.empty() && szMiniMapTextureName != " " )
 			{
 				// delete texture source and destination
-				if ( CPtr<IManipulator> pTextureMan = pRM->CreateObjectManipulator(TEXTURE_TYPE_NAME, szMiniMapTextureName) )
+				if ( CPtr<IManipulator> pTextureMan = pRM->CreateObjectManipulator( TEXTURE_TYPE_NAME, szMiniMapTextureName ) )
 				{
 					std::string szSrcName;
-					if ( CManipulatorManager::GetValue(&szSrcName, pTextureMan, "SrcName") != false && !szSrcName.empty() )
+					if ( CManipulatorManager::GetValue( &szSrcName, pTextureMan, "SrcName" ) != false && !szSrcName.empty() )
 					{
-						NFile::RemoveFile( (pUserData->constUserData.szExportSourceFolder + szSrcName).c_str() );
+						NFile::RemoveFile( ( pUserData->constUserData.szExportSourceFolder + szSrcName ).c_str() );
 					}
 					std::string szDstName;
-					if ( CManipulatorManager::GetValue(&szDstName, pTextureMan, "DestName") != false && !szDstName.empty() )
+					if ( CManipulatorManager::GetValue( &szDstName, pTextureMan, "DestName" ) != false && !szDstName.empty() )
 					{
-						NFile::RemoveFile( (Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDstName).c_str() );
+						NFile::RemoveFile(
+								( Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDstName )
+										.c_str() );
 					}
 				}
 				// remove minimap texture
@@ -514,7 +536,6 @@ bool CMapInfoBuilder::RemoveObject( const std::string &rszObjectTypeName, const 
 	//
 	return true;
 }
-
 
 void CMapInfoBuilder::GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder )
 {
@@ -527,15 +548,12 @@ void CMapInfoBuilder::GetDefaultFolder( const std::string &rszObjectTypeName, st
 	}
 }
 
-
-
-
 bool CMapInfoBuilder::InsertObject( std::string *pszObjectTypeName,
-																		std::string *pszUniqueObjectName,
-																		bool bFromMainMenu,
-																		bool *pbCanChangeObjectName,
-																		bool *pbNeedExport,
-																		bool *pbNeedEdit )
+                                    std::string *pszUniqueObjectName,
+                                    bool bFromMainMenu,
+                                    bool *pbCanChangeObjectName,
+                                    bool *pbNeedExport,
+                                    bool *pbNeedEdit )
 {
 	NI_ASSERT( pszObjectTypeName != 0, "CBuildDataBuilder::InsertObject() pszObjectTypeName == 0" );
 	NI_ASSERT( pszUniqueObjectName != 0, "CBuildDataBuilder::InsertObject() pszUniqueObjectName == 0" );
@@ -546,7 +564,8 @@ bool CMapInfoBuilder::InsertObject( std::string *pszObjectTypeName,
 	if ( !NeedBuildDataDialog() )
 	{
 		// call default implementation
-		return CBuilderBase::InsertObject( pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit );
+		return CBuilderBase::InsertObject(
+				pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit );
 	}
 	//
 	( *pbCanChangeObjectName ) = false;
@@ -569,12 +588,19 @@ bool CMapInfoBuilder::InsertObject( std::string *pszObjectTypeName,
 		buildDataParams.GetObjectName( pszUniqueObjectName );
 		( *pbNeedExport ) = buildDataParams.bNeedExport;
 		( *pbNeedEdit ) = buildDataParams.bNeedEdit;
-		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
+		if ( CPtr<IManipulator> pBuildDataManipulator =
+		         Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
 			std::string szDescription;
 			if ( IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 			{
-				return InternalInsertObject( pszObjectTypeName, pszUniqueObjectName, bFromMainMenu, pbCanChangeObjectName, pbNeedExport, pbNeedEdit, pBuildDataManipulator );
+				return InternalInsertObject( pszObjectTypeName,
+				                             pszUniqueObjectName,
+				                             bFromMainMenu,
+				                             pbCanChangeObjectName,
+				                             pbNeedExport,
+				                             pbNeedEdit,
+				                             pBuildDataManipulator );
 			}
 		}
 	}

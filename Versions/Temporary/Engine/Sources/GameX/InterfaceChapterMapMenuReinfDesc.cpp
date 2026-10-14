@@ -66,7 +66,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf 
 			reinfDescSingleItem.pButton->SetState( 0 );
 			reinfDescSingleItem.pIcon->ShowWindow( true );
 			reinfDescSingleItem.pIcon->SetTexture( pUIC->reinfButtons[i].pTexture );
-      break;
+			break;
 		}
 	}
 
@@ -179,7 +179,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SMechUnitRPGStats *pMec
 	}
 	else
 	{
-		OnReinfDescOK();		// Cancel
+		OnReinfDescOK(); // Cancel
 		return;
 	}
 
@@ -247,7 +247,7 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 		ITextView *pUnitQty = GetChildChecked<ITextView>( units[j].pButton, "UnitNumber", true );
 		if ( pUnitQty )
 			pUnitQty->SetText( L"" );
-}
+	}
 	ITextView *pReinfName = GetChildChecked<ITextView>( GetCurrentReinfDescPopup(), "ReinforcementName", true );
 	pReinfName->SetText( L"" );
 
@@ -257,8 +257,8 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 		return;
 	}
 
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pReinf->,LocalizedName) )
-		pReinfName->SetText( pReinfName->GetDBText() + GET_TEXT_PRE(pReinf->,LocalizedName) );
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+		pReinfName->SetText( pReinfName->GetDBText() + GET_TEXT_PRE( pReinf->, LocalizedName ) );
 
 	int nUsedSlots = 0;
 	for ( int i = 0; i < pReinf->entries.size(); ++i )
@@ -275,7 +275,7 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 			}
 		}
 
-		if ( nIndex < 0 && nUsedSlots < 5 )		// not found, create new
+		if ( nIndex < 0 && nUsedSlots < 5 ) // not found, create new
 		{
 			nIndex = nUsedSlots;
 			++nUsedSlots;
@@ -294,7 +294,9 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 			}
 			else
 			{
-				NI_ASSERT( false, fmt::format( "DESIGN: Invalid reinforcement entry ReinfID \"{}\", entry {}", NDb::GetResName(pReinf), i ) );
+				NI_ASSERT( false,
+				           fmt::format(
+											 "DESIGN: Invalid reinforcement entry ReinfID \"{}\", entry {}", NDb::GetResName( pReinf ), i ) );
 			}
 		}
 		else
@@ -366,8 +368,8 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 	if ( reinfDescSingleItem.pMechUnit )
 	{
 		const NDb::SMechUnitRPGStats *pUnit = reinfDescSingleItem.pMechUnit;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pUnit->,LocalizedName) )
-			wszUnitName = GET_TEXT_PRE(pUnit->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pUnit->, LocalizedName ) )
+			wszUnitName = GET_TEXT_PRE( pUnit->, LocalizedName );
 		nHP = pUnit->fMaxHP;
 		nArmor = pUnit->nMaxArmor;
 
@@ -375,7 +377,7 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 		{
 			for ( int j = 0; j < pUnit->GetGunsSize( -1, i ); ++j )
 			{
-				const NDb::SWeaponRPGStats *pWeapon = pUnit->GetGun( -1, i, j ).pWeapon ;
+				const NDb::SWeaponRPGStats *pWeapon = pUnit->GetGun( -1, i, j ).pWeapon;
 
 				if ( !pWeapon )
 					continue;
@@ -383,7 +385,7 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 				for ( int k = 0; k < pWeapon->shells.size(); ++k )
 				{
 					if ( pWeapon->shells[k].eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
-						   pWeapon->shells[k].fDamagePower > nDamage )
+					     pWeapon->shells[k].fDamagePower > nDamage )
 					{
 						nDamage = pWeapon->shells[k].fDamagePower;
 						nPiercing = pWeapon->shells[k].nPiercing;
@@ -395,8 +397,8 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 	else if ( reinfDescSingleItem.pSquad )
 	{
 		const NDb::SSquadRPGStats *pSquad = reinfDescSingleItem.pSquad;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pSquad->,LocalizedName) )
-			wszUnitName = GET_TEXT_PRE(pSquad->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pSquad->, LocalizedName ) )
+			wszUnitName = GET_TEXT_PRE( pSquad->, LocalizedName );
 		nHP = pSquad->members.size();
 
 		for ( int i = 0; i < pSquad->members.size(); ++i )
@@ -414,13 +416,12 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 			for ( int k = 0; k < pWeapon->shells.size(); ++k )
 			{
 				if ( pWeapon->shells[k].eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
-					   pWeapon->shells[k].fDamagePower > nDamage )
+				     pWeapon->shells[k].fDamagePower > nDamage )
 				{
 					nDamage = pWeapon->shells[k].fDamagePower;
 					nPiercing = pWeapon->shells[k].nPiercing;
 				}
 			}
-
 		}
 	}
 
@@ -445,9 +446,10 @@ void CInterfaceChapterMapMenu::OnReinfDescEncyclopedia()
 	}
 	else
 	{
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
-		NStr::ToUnicode( "No Encyclopedia for infantry" ) ).c_str() );
+		NMainLoop::Command(
+				ML_COMMAND_MESSAGE_BOX,
+				CICMessageBox::MakeConfigString( "MessageBoxWindowOk", NStr::ToUnicode( "No Encyclopedia for infantry" ) )
+						.c_str() );
 	}
 }
 
@@ -455,16 +457,16 @@ IWindow *CInterfaceChapterMapMenu::GetCurrentReinfDescPopup()
 {
 	switch ( eReinfDescState )
 	{
-	case ERDWS_UNIT:
-		return pReinfDesc1Unit;
-	case ERDWS_REINF:
-		return pReinfDesc1Reinf;
-	case ERDWS_MULTIREINF:
-		return pReinfDescMultiReinf;
-	case ERDWS_UPGRADE:
-		return pReinfDescUpgrade;
-	default:
-		return 0;
+		case ERDWS_UNIT:
+			return pReinfDesc1Unit;
+		case ERDWS_REINF:
+			return pReinfDesc1Reinf;
+		case ERDWS_MULTIREINF:
+			return pReinfDescMultiReinf;
+		case ERDWS_UPGRADE:
+			return pReinfDescUpgrade;
+		default:
+			return 0;
 	}
 }
 
@@ -475,7 +477,7 @@ void CInterfaceChapterMapMenu::ReinfDescScrollRight()
 
 	pButtonScrollRight->Enable( false );
 	pButtonScrollLeft->Enable( false );
-	ReinfDescFillUnits( 0, reinfDescUnits );			// Hide old info
+	ReinfDescFillUnits( 0, reinfDescUnits ); // Hide old info
 
 	reinfDescReinfs[0].pButton->GetPlacement( &nFirstButtonPosX, 0, 0, 0 );
 	nFirstButtonPosX -= nButtonStep;
@@ -491,7 +493,7 @@ void CInterfaceChapterMapMenu::ReinfDescScrollLeft()
 
 	pButtonScrollRight->Enable( false );
 	pButtonScrollLeft->Enable( false );
-	ReinfDescFillUnits( 0, reinfDescUnits );			// Hide old info
+	ReinfDescFillUnits( 0, reinfDescUnits ); // Hide old info
 
 	reinfDescReinfs[0].pButton->GetPlacement( &nFirstButtonPosX, 0, 0, 0 );
 	nFirstButtonPosX += nButtonStep;
@@ -502,7 +504,7 @@ void CInterfaceChapterMapMenu::ReinfDescScrollLeft()
 
 void CInterfaceChapterMapMenu::ReinfDescProcessScroll( const int nStep )
 {
-	if ( nStep == 0 )						// Finished scroll
+	if ( nStep == 0 ) // Finished scroll
 	{
 		int nPosX = nFirstButtonPosX;
 		for ( int i = 0; i < reinfDescReinfs.size(); ++i )
@@ -528,9 +530,9 @@ void CInterfaceChapterMapMenu::ReinfDescProcessScroll( const int nStep )
 	else
 	{
 		int nDX = 0;
-		if ( nStep > 0 )					// Scrolling right
+		if ( nStep > 0 ) // Scrolling right
 			nDX = -nButtonStep / 8;
-		else											// Scrolling left
+		else // Scrolling left
 			nDX = nButtonStep / 8;
 
 		for ( int i = 0; i < reinfDescReinfs.size(); ++i )
@@ -580,12 +582,13 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bo
 	std::vector<IScenarioTracker::SChapterReinf> reinfs;
 	Singleton<IScenarioTracker>()->GetChapterCurrentReinforcements( &reinfs, nLocalPlayer );
 
-	for( int nRType = 0; nRType < reinfButtons.size(); ++nRType )
+	for ( int nRType = 0; nRType < reinfButtons.size(); ++nRType )
 	{
 		if ( !reinfButtons[nRType].pButton )
 			continue;
 
-		if ( /*reinfButtons[nRType].pButton->GetName() == szSender ||*/ reinfButtons[nRType].pBonusWnd->GetName() == szSender )
+		if ( /*reinfButtons[nRType].pButton->GetName() == szSender ||*/ reinfButtons[nRType].pBonusWnd->GetName() ==
+		     szSender )
 		{
 			if ( !reinfButtons[nRType].pIcon->IsVisible() )
 				continue;
@@ -596,7 +599,8 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bo
 
 				for ( int j = 0; j < target.rewards.size(); ++j )
 				{
-					if ( target.rewardDescs[j]->eBonusType == NDb::CBT_REINF_CHANGE && target.rewardDescs[j]->eReinforcementType == nRType )
+					if ( target.rewardDescs[j]->eBonusType == NDb::CBT_REINF_CHANGE &&
+					     target.rewardDescs[j]->eReinforcementType == nRType )
 					{
 						SReward &reward = target.rewards[j];
 
@@ -610,7 +614,7 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bo
 							if ( reward.pBtn )
 								reward.pBtn->ShowWindow( bEnter );
 							if ( reward.pBonusWnd )
-								reward.pBonusWnd->ShowWindow( false/*bEnter*/ );
+								reward.pBonusWnd->ShowWindow( false /*bEnter*/ );
 						}
 					}
 				}

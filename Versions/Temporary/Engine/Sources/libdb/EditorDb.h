@@ -26,7 +26,7 @@ LIBDB_EXPORT bool RemoveObject( const CDBID &dbid );
 bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
 //! rename several objects at once. Scans for references a single time, which a
 //! loop over RenameObject would do once per object.
-bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames );
+bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames );
 //! every object in the database whose fields point at dbid.
 //! Reads every registered object, so it costs a pass over the database and is
 //! meant for the things a person asks for explicitly: renaming an object, and
@@ -41,7 +41,7 @@ LIBDB_EXPORT uint64_t GetPropertyChangeVersion();
 //! save all objects, marked as changed
 LIBDB_EXPORT void SaveChanges();
 //! First failure from the last save, including its destination. Empty on success.
-LIBDB_EXPORT const std::string& GetLastSaveError();
+LIBDB_EXPORT const std::string &GetLastSaveError();
 //! Persist newly registered files without saving unrelated edited resources.
 LIBDB_EXPORT bool SaveChangedIndex();
 //! drop all cached resources
@@ -49,7 +49,7 @@ void DropCachedResources();
 //! check, have we changed DB objects?
 bool HasChangedObjects();
 //! retrieve all terminal classes list
-LIBDB_EXPORT bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes );
+LIBDB_EXPORT bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes );
 //! retrieve all objects by type
 LIBDB_EXPORT bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
 

@@ -69,13 +69,13 @@
 
 namespace NDb
 {
-	void SaveChanges();
+void SaveChanges();
 }
 
 namespace NGameX
 {
-	bool Initialize();
-	GAMEX_EXPORT void PostStorageInitialize();
+bool Initialize();
+GAMEX_EXPORT void PostStorageInitialize();
 };
 
 // Explicit editor arguments are kept outside profile variables so loading a
@@ -88,14 +88,15 @@ static std::string szReplayFile;
 // because arguments are read long before autoexec.cfg and game.cfg are, and
 // anything set here would be overwritten by them.
 static bool bReplayVerify = false;
-static std::vector< std::pair<std::string, std::string> > commandLineVars;
+static std::vector<std::pair<std::string, std::string>> commandLineVars;
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
 static int RunGame( const std::vector<std::string> &arguments );
 static int RunGameGuarded( const std::vector<std::string> &arguments );
 static void StoreBuildInfo()
 {
-	const std::string szVersion = fmt::format( "Build {}, {} {}", NVersionInfo::nBuild, NVersionInfo::szDate, NVersionInfo::szTime );
+	const std::string szVersion =
+			fmt::format( "Build {}, {} {}", NVersionInfo::nBuild, NVersionInfo::szDate, NVersionInfo::szTime );
 	NGlobal::SetVar( "version.info", szVersion );
 }
 
@@ -219,8 +220,10 @@ static int RunGameGuarded( const std::vector<std::string> &arguments )
 static std::vector<std::string> SplitCommandLine( LPSTR lpCmdLine )
 {
 	std::vector<std::string> arguments;
-	for ( NStr::CStringIterator<char, std::string, NStr::CBracketSeparator<char, NStr::SBracketsQuoteTest<char> > > it( lpCmdLine, ' ' );
-	      !it.IsEnd(); it.Next() )
+	for ( NStr::CStringIterator<char, std::string, NStr::CBracketSeparator<char, NStr::SBracketsQuoteTest<char>>> it(
+						lpCmdLine, ' ' );
+	      !it.IsEnd();
+	      it.Next() )
 	{
 		std::string szArgument;
 		it.Get( &szArgument );
@@ -261,8 +264,8 @@ int main( int argc, char *argv[] )
 static int RunGame( const std::vector<std::string> &arguments )
 {
 #if USE_MIMALLOC
-    // Retain the non-Windows allocator dependency even with link-time pruning.
-    (void)mi_version();
+	// Retain the non-Windows allocator dependency even with link-time pruning.
+	(void)mi_version();
 #endif
 
 	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "startup.cfg" ) );
@@ -302,11 +305,12 @@ static int RunGame( const std::vector<std::string> &arguments )
 
 	NGScene::SFLB3_RunResourceLoadingThread();
 	// show splash screen during program starting
-//	NWinFrame::ShowSplashScreen( true );
+	//	NWinFrame::ShowSplashScreen( true );
 	// load and initialize all dll modules, register and initialize singletons
 	NGameX::Initialize();
 	//
-	CObj<CObjectBase> pSplashScreen = is_debugger_present() ? 0 :NSplash::CreateSplashScreen( NMainLoop::GetBaseDir() + "splash.bmp", true );
+	CObj<CObjectBase> pSplashScreen =
+			is_debugger_present() ? 0 : NSplash::CreateSplashScreen( NMainLoop::GetBaseDir() + "splash.bmp", true );
 	//
 	CreateAI();
 	//
@@ -320,7 +324,7 @@ static int RunGame( const std::vector<std::string> &arguments )
 	// the same picture is set from a file once the window exists
 	LPCSTR pIcon = 0;
 #endif
-	if ( !NWinFrame::SFLB1_InitApplication(" Blitzkrieg II", "NIVAL_RTS_ENGINE", pIcon) )
+	if ( !NWinFrame::SFLB1_InitApplication( " Blitzkrieg II", "NIVAL_RTS_ENGINE", pIcon ) )
 	{
 		MessageBox( 0, "InitApplication", "Error", MB_OK );
 		return 0xDEAD;
@@ -329,9 +333,9 @@ static int RunGame( const std::vector<std::string> &arguments )
 	// on Windows, where the resource above already covered it.
 	NWinFrame::SetIcon( NMainLoop::GetBaseDir() + "main.ico" );
 	// init graphics
-	if ( !NGfx::Init3D(NWinFrame::GetWnd()) )
+	if ( !NGfx::Init3D( NWinFrame::GetWnd() ) )
 	{
-		ASSERT(0); // DX not found
+		ASSERT( 0 ); // DX not found
 		MessageBox( 0, "Failed to initialize Direct3D9", "Error", MB_OK );
 		return 0xDEAD;
 	}
@@ -346,11 +350,11 @@ static int RunGame( const std::vector<std::string> &arguments )
 	NMOD::InstantAttachMOD( "", NDb::DATABASE_MODE_GAME );
 	NProfile::LoadProfile();
 	//
-	std::string szMOD2Attach = szEditorMap.empty()
-		? NStr::ToMBCS( NGlobal::GetVar("current_attached_mod", "") ) : szEditorMod;
+	std::string szMOD2Attach =
+			szEditorMap.empty() ? NStr::ToMBCS( NGlobal::GetVar( "current_attached_mod", "" ) ) : szEditorMod;
 	if ( szEditorMap.empty() && !szMOD2Attach.empty() )
 		szMOD2Attach = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS, szMOD2Attach );
-	if ( NMOD::DoesMODAttached(szMOD2Attach) == false )
+	if ( NMOD::DoesMODAttached( szMOD2Attach ) == false )
 		NMOD::InstantAttachMOD( szMOD2Attach, NDb::DATABASE_MODE_GAME );
 	//
 	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "autoexec.cfg" ) );
@@ -363,7 +367,7 @@ static int RunGame( const std::vector<std::string> &arguments )
 	//
 	pSplashScreen = 0;
 	// setup video mode
-	if ( !Scene()->SetupMode(SCENE_MODE_WINDOWED, false) )
+	if ( !Scene()->SetupMode( SCENE_MODE_WINDOWED, false ) )
 	{
 		MessageBox( 0, "Can't setup scene mode from config", "Error", MB_OK );
 		return 0xDEAD;
@@ -384,18 +388,18 @@ static int RunGame( const std::vector<std::string> &arguments )
 	// same line in a .cfg would be.
 	for ( size_t i = 0; i < commandLineVars.size(); ++i )
 	{
-		NGlobal::ProcessCommand( L"setvar " + UTF8ToWide( commandLineVars[i].first ) +
-			L" = " + UTF8ToWide( commandLineVars[i].second ) );
+		NGlobal::ProcessCommand( L"setvar " + UTF8ToWide( commandLineVars[i].first ) + L" = " +
+		                         UTF8ToWide( commandLineVars[i].second ) );
 	}
 	// Run the normal mission command only after the game, profile and mod DB
 	// are initialized. Quoting preserves map folders and filenames with spaces.
 	if ( !szEditorMap.empty() )
-		NGlobal::ProcessCommand( L"map \"" + UTF8ToWide(szEditorMap) + L"\"" );
+		NGlobal::ProcessCommand( L"map \"" + UTF8ToWide( szEditorMap ) + L"\"" );
 	// Same point in startup for the same reason: the replay command reaches
 	// CICMission, which needs the database loaded. The file name is resolved by
 	// ReplayHistory, so this passes it through unchanged.
 	else if ( !szReplayFile.empty() )
-		NGlobal::ProcessCommand( L"replay \"" + UTF8ToWide(szReplayFile) + L"\"" );
+		NGlobal::ProcessCommand( L"replay \"" + UTF8ToWide( szReplayFile ) + L"\"" );
 	// start
 	Cursor()->Acquire( true );
 	while ( 1 )
@@ -419,12 +423,12 @@ static int RunGame( const std::vector<std::string> &arguments )
 		if ( NWinFrame::IsExit() )
 		{
 			NWinFrame::ResetExit();
-			NMainLoop::Command( CreateICExitGame() );				// generate 'EXIT' command
+			NMainLoop::Command( CreateICExitGame() ); // generate 'EXIT' command
 		}
 		if ( bAppActive )
 			NGfx::CheckBackBufferSize();
-		NGfx::SetGamma( bAppActive );//bSetGamma );
-		if ( !NMainLoop::StepApp(bAppActive) )
+		NGfx::SetGamma( bAppActive ); //bSetGamma );
+		if ( !NMainLoop::StepApp( bAppActive ) )
 			break;
 		if ( !bAppActive )
 			std::this_thread::sleep_for( std::chrono::milliseconds( 40 ) );
@@ -465,18 +469,18 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		// arguments. WinMain retains quotes; POSIX shells already remove them.
 		const std::string mapPrefix = "--editor-map=";
 		const std::string modPrefix = "--editor-mod=";
-		if ( szString.compare(0, mapPrefix.size(), mapPrefix) == 0 ||
-			 szString.compare(0, modPrefix.size(), modPrefix) == 0 )
+		if ( szString.compare( 0, mapPrefix.size(), mapPrefix ) == 0 ||
+		     szString.compare( 0, modPrefix.size(), modPrefix ) == 0 )
 		{
-			const bool bMap = szString.compare(0, mapPrefix.size(), mapPrefix) == 0;
+			const bool bMap = szString.compare( 0, mapPrefix.size(), mapPrefix ) == 0;
 			std::string value = szString.substr( bMap ? mapPrefix.size() : modPrefix.size() );
 			NStr::TrimBoth( value, '"' );
-			if ( value.find_first_of("\"\r\n;") != std::string::npos || (bMap && value.empty()) )
+			if ( value.find_first_of( "\"\r\n;" ) != std::string::npos || ( bMap && value.empty() ) )
 			{
 				MessageBox( 0, "Invalid editor map/mod argument.", "Start Mission in Game", MB_OK | MB_ICONERROR );
 				return false;
 			}
-			(bMap ? szEditorMap : szEditorMod) = value;
+			( bMap ? szEditorMap : szEditorMod ) = value;
 			continue;
 		}
 		// Play back a recorded replay without going through the menus, the same
@@ -496,14 +500,12 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		// overrides them, which is the only way to reach a variable in a run
 		// that never shows a console.
 		const std::string varPrefix = "--setvar";
-		if ( szString.compare(0, varPrefix.size(), varPrefix) == 0 &&
-			 szString.size() > varPrefix.size() + 1 )
+		if ( szString.compare( 0, varPrefix.size(), varPrefix ) == 0 && szString.size() > varPrefix.size() + 1 )
 		{
 			std::string value = szString.substr( varPrefix.size() + 1 );
 			NStr::TrimBoth( value, '"' );
 			const std::string::size_type nEq = value.find( '=' );
-			if ( nEq == std::string::npos || nEq == 0 ||
-				 value.find_first_of("\"\r\n;") != std::string::npos )
+			if ( nEq == std::string::npos || nEq == 0 || value.find_first_of( "\"\r\n;" ) != std::string::npos )
 			{
 				MessageBox( 0, "Invalid --setvar argument, expected name=value.", "Set variable", MB_OK | MB_ICONERROR );
 				return false;
@@ -512,11 +514,11 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 			continue;
 		}
 		const std::string replayPrefix = "--replay=";
-		if ( szString.compare(0, replayPrefix.size(), replayPrefix) == 0 )
+		if ( szString.compare( 0, replayPrefix.size(), replayPrefix ) == 0 )
 		{
 			std::string value = szString.substr( replayPrefix.size() );
 			NStr::TrimBoth( value, '"' );
-			if ( value.empty() || value.find_first_of("\"\r\n;") != std::string::npos )
+			if ( value.empty() || value.find_first_of( "\"\r\n;" ) != std::string::npos )
 			{
 				MessageBox( 0, "Invalid --replay argument.", "Replay", MB_OK | MB_ICONERROR );
 				return false;
@@ -527,13 +529,15 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		// check for '-' at the begining
 		if ( szString == "-show-version" )
 		{
-			std::string szVersion = fmt::format( "Version: {}\nBuild date/time: {}\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
+			std::string szVersion =
+					fmt::format( "Version: {}\nBuild date/time: {}\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
 			fmt::print( "{}", szVersion );
 			return false;
 		}
 		else if ( szString == "-show-version-mb" )
 		{
-			std::string szVersion = fmt::format( "Version: {}\nBuild date/time: {}\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
+			std::string szVersion =
+					fmt::format( "Version: {}\nBuild date/time: {}\n", REVISION_NUMBER_STR, BUILD_DATE_TIME_STR );
 			::MessageBox( 0, szVersion.c_str(), "Build version", MB_OK | MB_ICONEXCLAMATION );
 			return false;
 		}
@@ -557,7 +561,7 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 					NGlobal::SetVar( "LoadSavedFile", szString );
 					continue;
 				}
-				else if ( (szExt == ".b2m") || (szExt == ".b2x") )
+				else if ( ( szExt == ".b2m" ) || ( szExt == ".b2x" ) )
 				{
 					NGlobal::SetVar( "StartNewMap", szString );
 					continue;
@@ -569,7 +573,8 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		if ( nFirstQuotePos != std::string::npos )
 		{
 			const int nLastQuotePos = szString.rfind( '\"' );
-			NI_ASSERT( nLastQuotePos != std::string::npos, fmt::format("Can't read string from cmd line string entry \"{}\"", szString) );
+			NI_ASSERT( nLastQuotePos != std::string::npos,
+			           fmt::format( "Can't read string from cmd line string entry \"{}\"", szString ) );
 			const std::string szVarName = szString.substr( 0, nFirstQuotePos );
 			const std::string szValue = szString.substr( nFirstQuotePos + 1, nLastQuotePos - nFirstQuotePos );
 			NGlobal::SetVar( szVarName, szValue );
@@ -582,7 +587,7 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		{
 			const std::string szVarName = szString.substr( 0, nNumberPos );
 			const std::string szValue = szString.substr( nNumberPos );
-			NGlobal::SetVar( szVarName, NStr::ToInt(szValue) );
+			NGlobal::SetVar( szVarName, NStr::ToInt( szValue ) );
 			continue;
 		}
 		// no special preferences for parsing - just store this var as integer '1'

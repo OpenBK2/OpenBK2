@@ -8,11 +8,10 @@
 #include "VSOMultiState.h"
 #include "System/XmlSaver.h"
 
-
 class CMapInfoEditorSettings
 {
 public:
-	typedef std::unordered_map<int,int> CActiveStateMap;
+	typedef std::unordered_map<int, int> CActiveStateMap;
 	//
 	bool bFitToGrid;
 	bool bRotateTo90Degree;

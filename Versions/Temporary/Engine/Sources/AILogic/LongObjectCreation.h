@@ -9,18 +9,26 @@ struct SAIObjectsUnderConstructionUpdate;
 
 class CLongObjectCreation : public CLinkObject
 {
-	ZDATA_(CLinkObject)
+	ZDATA_( CLinkObject )
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float fWorkAccumulated = {};
 	int nPlayer = {};
-	bool bAllowAIModification = {};						// if false, then class must not change anything in AI.
+	bool bAllowAIModification = {}; // if false, then class must not change anything in AI.
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&fWorkAccumulated); f.Add(3,&nPlayer); f.Add(4,&bAllowAIModification); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CLinkObject *)this );
+		f.Add( 2, &fWorkAccumulated );
+		f.Add( 3, &nPlayer );
+		f.Add( 4, &bAllowAIModification );
+		return 0;
+	}
+
 protected:
 	const uint8_t GetPlayer() const { return nPlayer; }
 	bool IsAnyUnitPrevent( const SRect &r1 ) const;
-	void GetUnitsPreventing( const SRect &r1, std::list< CPtr<CAIUnit> > *units ) const;
-	void UnlockPreventingUnits( std::list<CPtr<CAIUnit> > &preventing ) const;
+	void GetUnitsPreventing( const SRect &r1, std::list<CPtr<CAIUnit>> *units ) const;
+	void UnlockPreventingUnits( std::list<CPtr<CAIUnit>> &preventing ) const;
 	bool CanBuildOnRect( SRect r1, const std::list<SVector> &tilesUnder ) const;
 	bool IsAIModificationAllowed() const { return bAllowAIModification; }
 
@@ -30,7 +38,7 @@ protected:
 
 public:
 	CLongObjectCreation( const int _nPlayer, const bool _bAllowAIModification )
-		: nPlayer( _nPlayer ), fWorkAccumulated( 0.0f ), bAllowAIModification ( _bAllowAIModification )
+			: nPlayer( _nPlayer ), fWorkAccumulated( 0.0f ), bAllowAIModification( _bAllowAIModification )
 	{
 		if ( bAllowAIModification )
 		{
@@ -49,7 +57,7 @@ public:
 	// для первого сегмента ставит начальный терминатор
 	virtual void BuildNext() { fWorkAccumulated = 0.0f; }
 	// находит юнитов, которые мещают дальнейшему строительству
-	virtual void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units ) = 0;
+	virtual void GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units ) = 0;
 	// есть ли хоть 1 юнит, который мешает
 	virtual bool IsAnyUnitPrevent() const = 0;
 	// может лт следуюший сегмент быть построен ( без учета юнитов )
@@ -68,7 +76,7 @@ public:
 	// work accumulation
 	virtual void AddWork( const float fAdd ) { fWorkAccumulated += fAdd; }
 	virtual float GetWorkDone() const { return fWorkAccumulated; }
-	virtual void CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate ) { }
+	virtual void CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate ) {}
 };
 
 namespace NLongObjectCreation
@@ -81,7 +89,7 @@ struct SCreationData
 	CPtr<CLongObjectCreation> pCreation;
 
 	SCreationData( const CVec2 &_vStart, CPtr<CLongObjectCreation> _pCreation )
-		: vStart( _vStart ), pCreation( _pCreation ), vFinish( -1, -1 )
+			: vStart( _vStart ), pCreation( _pCreation ), vFinish( -1, -1 )
 	{
 	}
 };
@@ -98,7 +106,7 @@ void PreCreate( const CVec2 &vFinish, CObj<CLongObjectCreation> *_pCreation, boo
 		{
 			if ( it->pCreation == *_pCreation )
 			{
-				if ( it->vFinish == CVec2(-1,-1 ) )
+				if ( it->vFinish == CVec2( -1, -1 ) )
 				{
 					// pre create (first call)
 					it->vFinish = vFinish;
@@ -111,11 +119,11 @@ void PreCreate( const CVec2 &vFinish, CObj<CLongObjectCreation> *_pCreation, boo
 				else
 				{
 					// create new and return
-					SCreationData obj( it->vStart, dynamic_cast_ptr<CCreation*>(it->pCreation)->Duplicate() );
+					SCreationData obj( it->vStart, dynamic_cast_ptr<CCreation *>( it->pCreation )->Duplicate() );
 					obj.vFinish = vFinish;
 					obj.pCreation->PreCreate( obj.vStart, obj.vFinish, bCheckLock );
 					creations.push_back( obj );
-					*_pCreation = dynamic_cast_ptr<CCreation*>( obj.pCreation );
+					*_pCreation = dynamic_cast_ptr<CCreation *>( obj.pCreation );
 				}
 				return;
 			}
@@ -125,7 +133,7 @@ void PreCreate( const CVec2 &vFinish, CObj<CLongObjectCreation> *_pCreation, boo
 }
 template <class CCreation>
 
-CLongObjectCreation * Create( const CVec2 &vPos, int nPlayer, bool bAllowModification )
+CLongObjectCreation *Create( const CVec2 &vPos, int nPlayer, bool bAllowModification )
 {
 	for ( CCreations::iterator it = creations.begin(); it != creations.end(); )
 	{

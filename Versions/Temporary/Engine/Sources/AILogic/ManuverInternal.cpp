@@ -25,23 +25,18 @@ extern NTimer::STime curTime;
 
 //	SPlanesConsts
 
-
-START_REGISTER(PlaneConsts)
-REGISTER_VAR_EX( "temp.plane_min_height", NGlobal::VarFloatHandler, &SPlanesConsts::MIN_HEIGHT_TEMP, 0.0f, STORAGE_SAVE );
+START_REGISTER( PlaneConsts )
+REGISTER_VAR_EX(
+		"temp.plane_min_height", NGlobal::VarFloatHandler, &SPlanesConsts::MIN_HEIGHT_TEMP, 0.0f, STORAGE_SAVE );
 FINISH_REGISTER
 
 float SPlanesConsts::MIN_HEIGHT = 300.0f;
 float SPlanesConsts::MIN_HEIGHT_TEMP = 300.0f;
 float SPlanesConsts::MAX_HEIGHT = 1500.0f;
 
-
 //	CManuverBuilder ::
 
-
-
-
 //	CManuver
-
 
 void CManuver::GetManuverParams( struct SPrevPathParams *pParams ) const
 {
@@ -71,7 +66,7 @@ CVec3 CManuver::GetProspectiveSpeed( NTimer::STime nTime ) const
 {
 	// assume that speed is constant
 	const float fAdd = nTime * fSpeed;
-	const float fDiff = fAdd + fProgress  - pPath->GetLength();
+	const float fDiff = fAdd + fProgress - pPath->GetLength();
 
 	if ( fDiff > 0.0f ) // assume that further movement is by line
 		return pPath->GetEndTangent();
@@ -83,7 +78,7 @@ CVec3 CManuver::GetProspectivePoint( const NTimer::STime nTime ) const
 {
 	// assume that speed is constant
 	const float fAdd = nTime * fSpeed;
-	const float fDiff = fAdd + fProgress  - pPath->GetLength();
+	const float fDiff = fAdd + fProgress - pPath->GetLength();
 
 	if ( fDiff > 0.0f ) // assume that further movement is by line
 		return pPath->GetEndPoint() + pPath->GetEndTangent() * fSpeed * fDiff;
@@ -98,7 +93,11 @@ void CManuver::InitCommon( struct IPathFraction *_pPath, CPlanesFormation *_pPla
 	fProgress = 0;
 }
 
-void CManuver::InitInternal( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const float _fSpeed, const CVec3 &_vNormale, const bool _bToHorisontal )
+void CManuver::InitInternal( struct IPathFraction *_pPath,
+                             CPlanesFormation *_pPlane,
+                             const float _fSpeed,
+                             const CVec3 &_vNormale,
+                             const bool _bToHorisontal )
 {
 	bToHorisontal = _bToHorisontal;
 	CPtr<IPathFraction> pTmp = _pPath; // to ensure deletion
@@ -131,7 +130,11 @@ void CManuver::CalcPoint()
 	vCenter = pPath->GetPoint();
 }
 
-void CManuver::AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesiredNormale, CVec3 *vNormal, int *pnRotation, float *pfTiltToGo ) const
+void CManuver::AdjustNormale( const NTimer::STime timeDiff,
+                              const CVec3 &vDesiredNormale,
+                              CVec3 *vNormal,
+                              int *pnRotation,
+                              float *pfTiltToGo ) const
 {
 	// adjust normal according to speed direction change
 	*vNormal -= vSpeed * ( *vNormal * vSpeed );
@@ -167,7 +170,7 @@ void CManuver::AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesire
 	{
 		// continue tilt
 		*pnRotation = DifferenceSign( wDesiredDir, wCur );
-		const uint16_t wCalculatedDir( wCur + uint16_t(timeDiff * fCurTiltSpeed) );
+		const uint16_t wCalculatedDir( wCur + uint16_t( timeDiff * fCurTiltSpeed ) );
 		CVec2 vCalculatedNormale( GetVectorByDirection( wCalculatedDir ) );
 		if ( timeDiff != 0 )
 			*vNormal = vCalculatedNormale.x * vDesiredNormale + vCalculatedNormale.y * k;
@@ -180,8 +183,8 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 	CVec3 vDesiredNormale = pPath->GetNormale();
 	Normalize( &vDesiredNormale );
 
-	int nRotation = 0;										// if dirs difference is positive, then 1.
-	float fTiltToGo = 0;									// additional tilt angle to reach desired tilt
+	int nRotation = 0;   // if dirs difference is positive, then 1.
+	float fTiltToGo = 0; // additional tilt angle to reach desired tilt
 	AdjustNormale( timeDiff, vDesiredNormale, &vNormal, &nRotation, &fTiltToGo );
 
 	float fPositiveAccel = 0.0f;
@@ -197,7 +200,8 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 		fPositiveAccel = -1.0f;
 
 	const float fTiltSpeedDelta = fPositiveAccel * fTiltAccel * timeDiff;
-	if ( /*0.0f == fTiltToGo && */ 0 != fCurTiltSpeed && boost::math::sign( fCurTiltSpeed + fTiltSpeedDelta ) != boost::math::sign( fCurTiltSpeed ) )
+	if ( /*0.0f == fTiltToGo && */ 0 != fCurTiltSpeed &&
+	     boost::math::sign( fCurTiltSpeed + fTiltSpeedDelta ) != boost::math::sign( fCurTiltSpeed ) )
 		fCurTiltSpeed = 0;
 	else
 	{
@@ -209,13 +213,16 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 
 const float CManuver::CalcHeightToEnterHorisontal( const CVec3 &_vSpeed, const CPlanePreferences &pref ) const
 {
-	const float fTurnRadius = pref.GetR( fabs(_vSpeed) );
+	const float fTurnRadius = pref.GetR( fabs( _vSpeed ) );
 	const float fAlpha = NMath::ASin( vSpeed.z / fabs( vSpeed ) );
 	const float fSinAHalf = NMath::Sin( 0.5f * fAlpha );
 	return 2.0f * fTurnRadius * sqr( fSinAHalf );
 }
 
-bool CManuver::IsChangeHeightPossible( const CVec3 &_vSpeed, const CVec3 &_vPos, const CPlanePreferences &pref, CVec3 *pvNewPoint ) const
+bool CManuver::IsChangeHeightPossible( const CVec3 &_vSpeed,
+                                       const CVec3 &_vPos,
+                                       const CPlanePreferences &pref,
+                                       CVec3 *pvNewPoint ) const
 {
 	const float fCrit = CalcHeightToEnterHorisontal( _vSpeed, pref );
 
@@ -223,23 +230,24 @@ bool CManuver::IsChangeHeightPossible( const CVec3 &_vSpeed, const CVec3 &_vPos,
 	const float fHeight = GetHeights()->GetTileHeight( tile.x, tile.y );
 	const CVec3 vPos( _vPos.x, _vPos.y, _vPos.z - fHeight );
 
-	if ( !bToHorisontal &&
-			 (_vSpeed.z < 0 && fCrit > vPos.z - SPlanesConsts::GetMinHeight() ) ||
-			 (_vSpeed.z > 0 && fCrit > SPlanesConsts::MAX_HEIGHT - vPos.z ) )
+	if ( !bToHorisontal && ( _vSpeed.z < 0 && fCrit > vPos.z - SPlanesConsts::GetMinHeight() ) ||
+	     ( _vSpeed.z > 0 && fCrit > SPlanesConsts::MAX_HEIGHT - vPos.z ) )
 	{
 		CVec2 vHorDirection( _vSpeed.x, _vSpeed.y );
 		if ( vHorDirection == VNULL2 )
-			{ vHorDirection = GetVectorByDirection( NRandom::Random( 65535 ) ); RecordRandomCall(); }
+		{
+			vHorDirection = GetVectorByDirection( NRandom::Random( 65535 ) );
+			RecordRandomCall();
+		}
 		Normalize( &vHorDirection );
 
 		// calculate offset to exit from dive
 		const CVec2 vHorisontalOffset( 2.1f * vHorDirection * pref.GetR( pref.GetMaxSpeed() ) );
-		*pvNewPoint = CVec3 (vPos.x, vPos.y, 0.0f) + CVec3( vHorisontalOffset, fHeight + pref.GetPatrolHeight() );
+		*pvNewPoint = CVec3( vPos.x, vPos.y, 0.0f ) + CVec3( vHorisontalOffset, fHeight + pref.GetPatrolHeight() );
 		return false;
 	}
 	return true;
 }
-
 
 bool CManuver::AdvanceCommon( const NTimer::STime timeDiff )
 {
@@ -273,16 +281,21 @@ void CManuver::CheckToHorisontal()
 
 	CVec3 vNewTarget;
 	const CPlanePreferences &pref = pPlane->GetPreferencesB2();
-	if ( !pref.CanViolateHeghtLimits() && vSpeed.z != 0.0f && !IsChangeHeightPossible( vSpeed, vCenter, pref, &vNewTarget ) )
+	if ( !pref.CanViolateHeghtLimits() && vSpeed.z != 0.0f &&
+	     !IsChangeHeightPossible( vSpeed, vCenter, pref, &vNewTarget ) )
 	{
 		//DEBUG{
 		static int nRedirect = 0;
-		const auto message = fmt::format( "Change Height impossible, redirect #{} ({:.2f},{:.2f},{:.2f})", nRedirect, vNewTarget.x, vNewTarget.y, vNewTarget.z );
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str());
+		const auto message = fmt::format( "Change Height impossible, redirect #{} ({:.2f},{:.2f},{:.2f})",
+		                                  nRedirect,
+		                                  vNewTarget.x,
+		                                  vNewTarget.y,
+		                                  vNewTarget.z );
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str() );
 		++nRedirect;
 		//DEBUG}
 
-		CPathFractionArcLine3D * pNewPath = new CPathFractionArcLine3D;
+		CPathFractionArcLine3D *pNewPath = new CPathFractionArcLine3D;
 		SPrevPathParams param( pPlane );
 		pNewPath->Init( param, vNewTarget, pPlane->GetPreferencesB2().GetR( fSpeed ) );
 		InitCommon( pNewPath, pPlane, true );
@@ -294,11 +307,11 @@ CVec3 CManuver::GetNormale() const
 	return vNormal + 2.0f * V3_AXIS_Z * !pPlane->GetPreferencesB2().CanFlip();
 }
 
-
 //	CManuverSteepClimb
 
-
-void CManuverSteepClimb::Init( const NDb::EManuverDestination dest, CPlanesFormation *_pPlane, CPlanesFormation *pEnemy )
+void CManuverSteepClimb::Init( const NDb::EManuverDestination dest,
+                               CPlanesFormation *_pPlane,
+                               CPlanesFormation *pEnemy )
 {
 	NI_ASSERT( EMD_MANUVER_DEPENDENT == dest, "CANNOT DO GORKA ANYWERE OTHER THEN EMD_MANUVER_DEPENDENT" );
 	//CRAP{ SOME DIFFERENCES BASED ON DISTANCE WILL BE GOOD
@@ -310,18 +323,18 @@ void CManuverSteepClimb::Init( CPlanesFormation *pPos )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
 
-	CPathFractionArcLine3D *pNewPath = new CPathFractionArcLine3D ;
+	CPathFractionArcLine3D *pNewPath = new CPathFractionArcLine3D;
 
 	const CVec3 vPos( pPos->GetPosB2() );
-	CVec3 vSpeed ( pPos->GetSpeedB2() );
+	CVec3 vSpeed( pPos->GetSpeedB2() );
 	CVec2 vHorSpeed( vSpeed.x, vSpeed.y );
 
-	float fPathLength = pref.GetR( fabs(vSpeed) ) * 2.0f;
+	float fPathLength = pref.GetR( fabs( vSpeed ) ) * 2.0f;
 	Normalize( &vHorSpeed );
 	const CVec3 vDesiredPos( vPos + CVec3( fPathLength * vHorSpeed, fPathLength / 2.0f ) );
 
 	SPrevPathParams param( pPos );
-	pNewPath->Init( param, vDesiredPos, pref.GetR( fabs(vSpeed) ) );
+	pNewPath->Init( param, vDesiredPos, pref.GetR( fabs( vSpeed ) ) );
 
 	InitCommon( pNewPath, pPos, false );
 }
@@ -333,9 +346,7 @@ bool CManuverSteepClimb::Advance( const NTimer::STime timeDiff )
 	return bRet;
 }
 
-
 //	CManuverToHorisontal
-
 
 void CManuverToHorisontal::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 {
@@ -347,7 +358,7 @@ void CManuverToHorisontal::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 	CVec3 vDesiredDir( vPos - vCurrentPos );
 	Normalize( &vDesiredDir );
 
-	const float fR ( pref.GetR( fabs(pPos->GetSpeedB2()) ) );
+	const float fR( pref.GetR( fabs( pPos->GetSpeedB2() ) ) );
 	SPrevPathParams param( pPos );
 
 	if ( vCurrentSpeed.z < 0.00001f && fabs( vPos.z - vCurrentPos.z ) < 0.00001f )
@@ -371,9 +382,7 @@ bool CManuverToHorisontal::Advance( const NTimer::STime timeDiff )
 	return bRet;
 }
 
-
 //	CManuverPrepareGroundAttack::
-
 
 void CManuverPrepareGroundAttack::Init( CPlanesFormation *pPos, const CVec3 &vPos, const CVec3 &vDirection )
 {
@@ -384,7 +393,7 @@ void CManuverPrepareGroundAttack::Init( CPlanesFormation *pPos, const CVec3 &vPo
 	CVec3 vDesiredDir( vDirection );
 	Normalize( &vDesiredDir );
 
-	const float fR ( pref.GetR( fabs(pPos->GetSpeedB2()) ) );
+	const float fR( pref.GetR( fabs( pPos->GetSpeedB2() ) ) );
 	SPrevPathParams param( pPos );
 
 	CPtr<CPahtFractionArcLineArc3D> pNewPath = new CPahtFractionArcLineArc3D;
@@ -398,16 +407,14 @@ bool CManuverPrepareGroundAttack::Advance( const NTimer::STime timeDiff )
 	return bRet;
 }
 
-
 //	CManuverGeneric::
-
 
 void CManuverGeneric::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
 	CPtr<CPathFractionArcLine3D> pNewPath = new CPathFractionArcLine3D();
 	SPrevPathParams param( pPos );
-	pNewPath->Init( param, vPos, pref.GetR( fabs(pPos->GetSpeedB2()) ) );
+	pNewPath->Init( param, vPos, pref.GetR( fabs( pPos->GetSpeedB2() ) ) );
 	InitCommon( pNewPath, pPos, false );
 }
 

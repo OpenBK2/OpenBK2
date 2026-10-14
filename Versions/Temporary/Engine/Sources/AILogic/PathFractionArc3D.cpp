@@ -8,9 +8,7 @@
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11095C02, CPathFractionArc3D )
 
-
 //	CPathFractionArc3D
-
 
 void CPathFractionArc3D::GetSimplePath( CPathList *pPaths )
 {
@@ -46,7 +44,7 @@ CVec3 CPathFractionArc3D::GetTangent( const float _fDist ) const
 	const float fDist = bNegative ? fLength - _fDist : _fDist;
 
 	const CVec2 vt = GetVectorByDirection( GetDirectionByVector( -circle.center ) + nDiff * fDist / fLength );
-	return CVec3( - vt.y  * i + vt.x  * j );
+	return CVec3( -vt.y * i + vt.x * j );
 }
 
 CVec3 CPathFractionArc3D::GetStartTangent() const
@@ -64,8 +62,14 @@ CVec3 CPathFractionArc3D::GetEndPoint() const
 	return GetPoint( fLength );
 }
 
-void CPathFractionArc3D::Init( const CVec3 &_i, const CVec3 &_j, const CVec3 &_k,
-															const CDirectedCircle &_circle, const CVec3 &_x0, const CVec3 &_x1, const float _fLength, const uint16_t _nDiff )
+void CPathFractionArc3D::Init( const CVec3 &_i,
+                               const CVec3 &_j,
+                               const CVec3 &_k,
+                               const CDirectedCircle &_circle,
+                               const CVec3 &_x0,
+                               const CVec3 &_x1,
+                               const float _fLength,
+                               const uint16_t _nDiff )
 {
 	bNegative = false;
 	i = _i;

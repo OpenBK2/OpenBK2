@@ -13,7 +13,7 @@
 
 namespace NGfx
 {
-	_3DLIB_EXPORT int nVCacheSize = 10;
+_3DLIB_EXPORT int nVCacheSize = 10;
 }
 
 namespace NGScene
@@ -24,12 +24,12 @@ void FilterTrinagles( std::vector<STriangle> *pRes, const std::vector<uint16_t> 
 	int nTarget = 0;
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
-		const STriangle &src = (*pRes)[k];
-		STriangle &res = (*pRes)[nTarget];
-		res.i1 = filter[ src.i1 ];
-		res.i2 = filter[ src.i2 ];
-		res.i3 = filter[ src.i3 ];
-		nTarget += (res.i1 != res.i2) & (res.i1 != res.i3) & (res.i2 != res.i3);
+		const STriangle &src = ( *pRes )[k];
+		STriangle &res = ( *pRes )[nTarget];
+		res.i1 = filter[src.i1];
+		res.i2 = filter[src.i2];
+		res.i3 = filter[src.i3];
+		nTarget += ( res.i1 != res.i2 ) & ( res.i1 != res.i3 ) & ( res.i2 != res.i3 );
 	}
 	pRes->resize( nTarget );
 }
@@ -41,7 +41,7 @@ void MergePositions( std::vector<uint16_t> *pMatches, std::vector<CVec3> *pPosit
 	std::vector<uint16_t> &posIndices = *pMatches;
 	posIndices.resize( positions.size() );
 	mergedPositions.reserve( pPositions->size() );
-	typedef std::unordered_map<CVec3,int,SVec3Hash> CPosHash;
+	typedef std::unordered_map<CVec3, int, SVec3Hash> CPosHash;
 	CPosHash posHash;
 	for ( int k = 0; k < positions.size(); ++k )
 	{
@@ -51,7 +51,7 @@ void MergePositions( std::vector<uint16_t> *pMatches, std::vector<CVec3> *pPosit
 		{
 			nRes = mergedPositions.size();
 			mergedPositions.push_back( positions[k] );
-			posHash[ positions[k] ] = nRes;
+			posHash[positions[k]] = nRes;
 		}
 		else
 			nRes = i->second;
@@ -74,7 +74,7 @@ struct SRefTracker
 	}
 	int GetRef( int nIndex, int nPos )
 	{
-		int &nRef = temp[ nIndex ];
+		int &nRef = temp[nIndex];
 		if ( nRef == -1 )
 		{
 			nRef = nPos;
@@ -99,12 +99,16 @@ struct SCompoundPosKey
 	SRealVertexWeight w;
 
 	SCompoundPosKey() {}
-	SCompoundPosKey( const CVec3 &_v, const SRealVertexWeight &_w ) : v(_v), w(_w) {}
-	bool operator== ( const SCompoundPosKey &k ) const { return v == k.v && w == k.w; }
+	SCompoundPosKey( const CVec3 &_v, const SRealVertexWeight &_w ) : v( _v ), w( _w ) {}
+	bool operator==( const SCompoundPosKey &k ) const { return v == k.v && w == k.w; }
 };
 struct CalcCompoundKeyHash
 {
-	int operator()( const SCompoundPosKey &k ) const { SVec3Hash v; return v(k.v); }
+	int operator()( const SCompoundPosKey &k ) const
+	{
+		SVec3Hash v;
+		return v( k.v );
+	}
 };
 void CObjectInfo::MergePositions()
 {
@@ -119,7 +123,7 @@ void CObjectInfo::MergePositions()
 	mergedPositions.reserve( positions.size() );
 	mergedWeights.reserve( weights.size() );
 	posIndices.resize( positions.size() );
-	typedef std::unordered_map<SCompoundPosKey,int,CalcCompoundKeyHash> CPosHash;
+	typedef std::unordered_map<SCompoundPosKey, int, CalcCompoundKeyHash> CPosHash;
 	CPosHash posHash;
 	for ( int k = 0; k < positions.size(); ++k )
 	{
@@ -131,7 +135,7 @@ void CObjectInfo::MergePositions()
 			nRes = mergedPositions.size();
 			mergedPositions.push_back( positions[k] );
 			mergedWeights.push_back( weights[k] );
-			posHash[ key ] = nRes;
+			posHash[key] = nRes;
 		}
 		else
 			nRes = i->second;
@@ -163,17 +167,18 @@ void CObjectInfo::AssignGeometry( const SData &data, std::vector<STriangle> *pGe
 		{
 			for ( int k = i - 1; k >= 0; --k )
 			{
-				if ( res.fWeights[k] < res.fWeights[k+1] )
+				if ( res.fWeights[k] < res.fWeights[k + 1] )
 				{
-					std::swap( res.fWeights[k], res.fWeights[k+1] );
-					std::swap( res.nWeights[k], res.nWeights[k+1] );
-					std::swap( res.cBoneIndices[k], res.cBoneIndices[k+1] );
+					std::swap( res.fWeights[k], res.fWeights[k + 1] );
+					std::swap( res.nWeights[k], res.nWeights[k + 1] );
+					std::swap( res.cBoneIndices[k], res.cBoneIndices[k + 1] );
 				}
 				else
 					break;
 			}
 		}
-		ASSERT( res.fWeights[0] >= res.fWeights[1] && res.fWeights[1] >= res.fWeights[2] && res.fWeights[2] >= res.fWeights[3] );
+		ASSERT( res.fWeights[0] >= res.fWeights[1] && res.fWeights[1] >= res.fWeights[2] &&
+		        res.fWeights[2] >= res.fWeights[3] );
 	}
 	for ( int k = 0; k < data.verts.size(); ++k )
 	{
@@ -200,12 +205,12 @@ void CObjectInfo::AssignGeometry( const SData &data, std::vector<STriangle> *pGe
 	geometry.swap( *pGeom );
 }
 
-template<class T>
+template <class T>
 static void Reorder( std::vector<T> *pRes, const std::vector<int> &newPlaces )
 {
 	std::vector<T> tmp( pRes->size() );
 	for ( int k = 0; k < tmp.size(); ++k )
-		tmp[k] = (*pRes)[ newPlaces[k] ];
+		tmp[k] = ( *pRes )[newPlaces[k]];
 	*pRes = tmp;
 }
 
@@ -253,15 +258,16 @@ void CObjectInfo::SetAttribute( int nID, const std::vector<uint32_t> &attr )
 	it->data = attr;
 }
 
-template<class T>
-static void Shuffle( std::vector<T> *pRes, const std::vector<T> &src, const std::vector<uint16_t> &vxReorder, int nResVertices )
+template <class T>
+static void
+Shuffle( std::vector<T> *pRes, const std::vector<T> &src, const std::vector<uint16_t> &vxReorder, int nResVertices )
 {
 	pRes->resize( nResVertices );
 	ASSERT( vxReorder.size() <= src.size() );
-  for ( int k = 0; k < vxReorder.size(); ++k )
+	for ( int k = 0; k < vxReorder.size(); ++k )
 	{
 		if ( vxReorder[k] < nResVertices )
-			(*pRes)[ vxReorder[k] ] = src[k];
+			( *pRes )[vxReorder[k]] = src[k];
 	}
 }
 void CObjectInfo::Assign( const SData &data, std::vector<STriangle> *pGeom, bool bOptimizeVCache )
@@ -269,7 +275,7 @@ void CObjectInfo::Assign( const SData &data, std::vector<STriangle> *pGeom, bool
 	if ( bOptimizeVCache )
 	{
 		SData optimizedData;
-		if ( data.geometry.size() > 0  )
+		if ( data.geometry.size() > 0 )
 		{
 			// optimize for vertex cache
 			std::vector<STriangle> &tris = optimizedData.geometry;
@@ -369,7 +375,10 @@ struct SVertexShift
 {
 	int nVertex;
 	int nXShift, nYShift;
-	SVertexShift( int _nVertex, int _nXShift, int _nYShift ) : nVertex(_nVertex), nXShift(_nXShift), nYShift(_nYShift) {}
+	SVertexShift( int _nVertex, int _nXShift, int _nYShift )
+			: nVertex( _nVertex ), nXShift( _nXShift ), nYShift( _nYShift )
+	{
+	}
 };
 inline bool operator==( const SVertexShift &a, const SVertexShift &b )
 {
@@ -377,21 +386,25 @@ inline bool operator==( const SVertexShift &a, const SVertexShift &b )
 }
 struct SVertexShiftHash
 {
-	int operator()( const SVertexShift &a ) const { return a.nVertex ^ (( a.nXShift + a.nYShift ) << 16); }
+	int operator()( const SVertexShift &a ) const { return a.nVertex ^ ( ( a.nXShift + a.nYShift ) << 16 ); }
 };
 
-template<class TGetTex>
-static int GetVertex( CObjectInfo::SData *pData, std::unordered_map<SVertexShift,int,SVertexShiftHash> *pShifted,
-	int _nXShift, int _nYShift, int _nVertex, TGetTex f )
+template <class TGetTex>
+static int GetVertex( CObjectInfo::SData *pData,
+                      std::unordered_map<SVertexShift, int, SVertexShiftHash> *pShifted,
+                      int _nXShift,
+                      int _nYShift,
+                      int _nVertex,
+                      TGetTex f )
 {
 	if ( _nXShift == 0 && _nYShift == 0 )
 		return _nVertex;
 	SVertexShift idx( _nVertex, _nXShift, _nYShift );
-	std::unordered_map<SVertexShift,int,SVertexShiftHash>::iterator i = pShifted->find( idx );
+	std::unordered_map<SVertexShift, int, SVertexShiftHash>::iterator i = pShifted->find( idx );
 	if ( i != pShifted->end() )
 		return i->second;
 	int nRes = pData->verts.size();
-	(*pShifted)[idx] = nRes;
+	( *pShifted )[idx] = nRes;
 	SVertex v = pData->verts[_nVertex];
 	pData->verts.push_back( v );
 	if ( !pData->weights.empty() )
@@ -406,21 +419,21 @@ static int GetVertex( CObjectInfo::SData *pData, std::unordered_map<SVertexShift
 
 static int GetShift( float fX1, float fX2, float fX3 )
 {
-	int nX1 = Float2Int( fX1 - 0.5f );//* ( 0.5f / F_MAX_TEX_WRAP ) );
-	int nX2 = Float2Int( fX2 - 0.5f );//* ( 0.5f / F_MAX_TEX_WRAP ) );
-	int nX3 = Float2Int( fX3 - 0.5f );//* ( 0.5f / F_MAX_TEX_WRAP ) );
+	int nX1 = Float2Int( fX1 - 0.5f ); //* ( 0.5f / F_MAX_TEX_WRAP ) );
+	int nX2 = Float2Int( fX2 - 0.5f ); //* ( 0.5f / F_MAX_TEX_WRAP ) );
+	int nX3 = Float2Int( fX3 - 0.5f ); //* ( 0.5f / F_MAX_TEX_WRAP ) );
 	int nXMin = (std::min)( (std::min)( nX1, nX2 ), nX3 );
 	int nXMax = (std::max)( (std::max)( nX1, nX2 ), nX3 );
 	int nDif = nXMax - nXMin;
 	if ( nDif < N_MAX_TEX_WRAP )
-		return ( nXMin & ~(N_MAX_TEX_WRAP - 1) ) + N_MAX_TEX_WRAP;// ;
+		return ( nXMin & ~( N_MAX_TEX_WRAP - 1 ) ) + N_MAX_TEX_WRAP; // ;
 	else if ( nDif < N_MAX_TEX_WRAP * 2 )
 		return nXMin + N_MAX_TEX_WRAP;
-  ASSERT(0);
+	ASSERT( 0 );
 	return nXMin + N_MAX_TEX_WRAP * 2 - 1;
 }
 
-template<class TGetTex>
+template <class TGetTex>
 void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 {
 	// for test
@@ -452,7 +465,7 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 	}
 	fXMin = floor( fXMin );
 	fYMin = floor( fYMin );
-	bool bNeedSplit = ( (fXMax - fXMin) > N_MAX_TEX_WRAP * 2 ) | ( (fYMax - fYMin) > N_MAX_TEX_WRAP );
+	bool bNeedSplit = ( ( fXMax - fXMin ) > N_MAX_TEX_WRAP * 2 ) | ( ( fYMax - fYMin ) > N_MAX_TEX_WRAP );
 	if ( !bNeedSplit )
 	{
 		fXMin += N_MAX_TEX_WRAP;
@@ -469,7 +482,7 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 	CObjectInfo::SData res( *pData );
 	std::vector<STriangle> &tris = res.geometry;
 	tris = pData->geometry;
-	std::unordered_map<SVertexShift,int,SVertexShiftHash> shifted;
+	std::unordered_map<SVertexShift, int, SVertexShiftHash> shifted;
 	for ( int k = 0; k < tris.size(); ++k )
 	{
 		STriangle &t = tris[k];
@@ -488,25 +501,25 @@ void SplitWrapping( CObjectInfo::SData *pData, TGetTex f )
 
 struct SGetTex
 {
-	CVec2& GetTex( CObjectInfo::SData *pData, int k ) { return pData->verts[k].tex; }
+	CVec2 &GetTex( CObjectInfo::SData *pData, int k ) { return pData->verts[k].tex; }
 };
 
 struct SGetTex2
 {
-	CVec2& GetTex( CObjectInfo::SData *pData, int k ) { return pData->secondTex[k]; }
+	CVec2 &GetTex( CObjectInfo::SData *pData, int k ) { return pData->secondTex[k]; }
 };
 
 void SplitWrapping( CObjectInfo::SData *pData )
 {
-  if ( pData->verts.empty() )
-    return;
+	if ( pData->verts.empty() )
+		return;
 	SplitWrapping( pData, SGetTex() );
 }
 
 void SplitWrapping2( CObjectInfo::SData *pData )
 {
-  if ( pData->secondTex.empty() )
-    return;
+	if ( pData->secondTex.empty() )
+		return;
 	SplitWrapping( pData, SGetTex2() );
 }
 }

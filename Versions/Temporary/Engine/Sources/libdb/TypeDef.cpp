@@ -21,334 +21,341 @@ namespace NDb
 namespace NTypeDef
 {
 
-// ************************************************************************************************************************ //
-// **
-// ** string <=> variant convertors
-// **
-// **
-// **
-// ************************************************************************************************************************ //
+	// ************************************************************************************************************************ //
+	// **
+	// ** string <=> variant convertors
+	// **
+	// **
+	// **
+	// ************************************************************************************************************************ //
 
-void STypeInt::ToString( std::string *pRes, const CVariant &value ) const
-{
-	*pRes = std::to_string(  (int)value );
-}
-void STypeInt::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	*pRes = NStr::ToInt( szValue );
-}
-
-void STypeFloat::ToString( std::string *pRes, const CVariant &value ) const
-{
-	*pRes = fmt::format( "{:g}", (float)value );
-}
-void STypeFloat::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	*pRes = NStr::ToFloat( szValue );
-}
-
-void STypeBool::ToString( std::string *pRes, const CVariant &value ) const
-{
-	*pRes = (bool)value == false ? "false" : "true";
-}
-void STypeBool::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	if ( szValue.empty() || szValue[0] == '0' || szValue == "false" )
-		*pRes = false;
-	else if ( szValue[0] == '1' || szValue == "true" )
-		*pRes = true;
-	else
+	void STypeInt::ToString( std::string *pRes, const CVariant &value ) const
 	{
-		NI_ASSERT( false, fmt::format("Unknown string value \"{}\" for 'bool' type (can be: 0, 1, true, false)", szValue) );
-		*pRes = false;
+		*pRes = std::to_string( (int)value );
 	}
-}
+	void STypeInt::FromString( CVariant *pRes, const std::string &szValue ) const
+	{
+		*pRes = NStr::ToInt( szValue );
+	}
 
-void STypeString::ToString( std::string *pRes, const CVariant &value ) const
-{
-	*pRes = value.GetStr();
-}
-void STypeString::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	*pRes = szValue;
-}
+	void STypeFloat::ToString( std::string *pRes, const CVariant &value ) const
+	{
+		*pRes = fmt::format( "{:g}", (float)value );
+	}
+	void STypeFloat::FromString( CVariant *pRes, const std::string &szValue ) const
+	{
+		*pRes = NStr::ToFloat( szValue );
+	}
 
-void STypeWString::ToString( std::string *pRes, const CVariant &value ) const
-{
-	*pRes = WideToUTF8( value.GetWStr() );
-}
-void STypeWString::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	std::wstring wszRes;
-	wszRes = UTF8ToWide( szValue );
-	*pRes = wszRes;
-}
+	void STypeBool::ToString( std::string *pRes, const CVariant &value ) const
+	{
+		*pRes = (bool)value == false ? "false" : "true";
+	}
+	void STypeBool::FromString( CVariant *pRes, const std::string &szValue ) const
+	{
+		if ( szValue.empty() || szValue[0] == '0' || szValue == "false" )
+			*pRes = false;
+		else if ( szValue[0] == '1' || szValue == "true" )
+			*pRes = true;
+		else
+		{
+			NI_ASSERT( false,
+			           fmt::format( "Unknown string value \"{}\" for 'bool' type (can be: 0, 1, true, false)", szValue ) );
+			*pRes = false;
+		}
+	}
 
-void STypeGUID::ToString( std::string *pRes, const CVariant &value ) const
-{
-	*pRes = boost::uuids::to_string(*static_cast<const boost::uuids::uuid*>(value.GetPtr()));
-}
-
-void STypeGUID::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	const boost::uuids::uuid guid = boost::uuids::string_generator()(szValue);
-	*pRes = CVariant( &guid, sizeof(guid) );
-}
-
-void STypeBinary::ToString( std::string *pRes, const CVariant &value ) const
-{
-	NI_ASSERT( value.GetBlobSize() == nBinaryObjectSize, "Wrong binary object size" );
-	const int nSize = (std::min)( (int)value.GetBlobSize(), nBinaryObjectSize );
-	NI_VERIFY( nSize > 0, "Binary object size can't have size < 0", return );
-	pRes->resize( nSize * 2 );
-	NStr::BinToString( value.GetPtr(), nSize, (char*)pRes->data() );
-}
-void STypeBinary::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	const int nSize = szValue.size() / 2;
-	uint8_t *pData = new uint8_t[nSize];
-	NStr::StringToBin( szValue.c_str(), pData, 0 );
-	*pRes = CVariant( pData, nSize );
-	delete []pData;
-}
-
-void STypeEnum::ToString( std::string *pRes, const CVariant &value ) const
-{
-	if ( value.GetType() == CVariant::VT_STR )
+	void STypeString::ToString( std::string *pRes, const CVariant &value ) const
 	{
 		*pRes = value.GetStr();
-		return;
 	}
-	else if ( value.GetType() == CVariant::VT_INT )
+	void STypeString::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
-		const int nValue = value;
+		*pRes = szValue;
+	}
+
+	void STypeWString::ToString( std::string *pRes, const CVariant &value ) const
+	{
+		*pRes = WideToUTF8( value.GetWStr() );
+	}
+	void STypeWString::FromString( CVariant *pRes, const std::string &szValue ) const
+	{
+		std::wstring wszRes;
+		wszRes = UTF8ToWide( szValue );
+		*pRes = wszRes;
+	}
+
+	void STypeGUID::ToString( std::string *pRes, const CVariant &value ) const
+	{
+		*pRes = boost::uuids::to_string( *static_cast<const boost::uuids::uuid *>( value.GetPtr() ) );
+	}
+
+	void STypeGUID::FromString( CVariant *pRes, const std::string &szValue ) const
+	{
+		const boost::uuids::uuid guid = boost::uuids::string_generator()( szValue );
+		*pRes = CVariant( &guid, sizeof( guid ) );
+	}
+
+	void STypeBinary::ToString( std::string *pRes, const CVariant &value ) const
+	{
+		NI_ASSERT( value.GetBlobSize() == nBinaryObjectSize, "Wrong binary object size" );
+		const int nSize = (std::min)( (int)value.GetBlobSize(), nBinaryObjectSize );
+		NI_VERIFY( nSize > 0, "Binary object size can't have size < 0", return );
+		pRes->resize( nSize * 2 );
+		NStr::BinToString( value.GetPtr(), nSize, (char *)pRes->data() );
+	}
+	void STypeBinary::FromString( CVariant *pRes, const std::string &szValue ) const
+	{
+		const int nSize = szValue.size() / 2;
+		uint8_t *pData = new uint8_t[nSize];
+		NStr::StringToBin( szValue.c_str(), pData, 0 );
+		*pRes = CVariant( pData, nSize );
+		delete[] pData;
+	}
+
+	void STypeEnum::ToString( std::string *pRes, const CVariant &value ) const
+	{
+		if ( value.GetType() == CVariant::VT_STR )
+		{
+			*pRes = value.GetStr();
+			return;
+		}
+		else if ( value.GetType() == CVariant::VT_INT )
+		{
+			const int nValue = value;
+			for ( std::vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
+			{
+				if ( it->nVal == nValue )
+				{
+					*pRes = it->szName;
+					return;
+				}
+			}
+		}
+		*pRes = entries.empty() ? "" : entries[0].szName;
+	}
+	void STypeEnum::FromString( CVariant *pRes, const std::string &szValue ) const
+	{
 		for ( std::vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 		{
-			if ( it->nVal == nValue )
+			if ( it->szName == szValue )
 			{
-				*pRes = it->szName;
+				*pRes = it->nVal;
 				return;
 			}
 		}
+		*pRes = entries.empty() ? CVariant() : CVariant( entries[0].nVal );
 	}
-	*pRes = entries.empty() ? "" : entries[0].szName;
-}
-void STypeEnum::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	for ( std::vector<SEnumEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
+
+	void STypeArray::ToString( std::string *pRes, const CVariant &value ) const
 	{
-		if ( it->szName == szValue )
-		{
-			*pRes = it->nVal;
-			return;
-		}
+		*pRes = std::to_string( (int)value );
 	}
-	*pRes = entries.empty() ? CVariant() : CVariant( entries[0].nVal );
-}
-
-void STypeArray::ToString( std::string *pRes, const CVariant &value ) const
-{
-	*pRes = std::to_string(  (int)value );
-}
-void STypeArray::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	*pRes = NStr::ToInt( szValue );
-}
-
-void STypeRef::ToString( std::string *pRes, const CVariant &value ) const
-{
-	NI_VERIFY( value.GetType() == CVariant::VT_DBID || value.GetType() == CVariant::VT_NULL, fmt::format("Can't convert type {} to DBID", int( value.GetType() )), return );
-	if ( value.GetType() == CVariant::VT_NULL )
-		pRes->clear();
-	else
-		*pRes = value.GetDBID().ToString();
-}
-void STypeRef::FromString( CVariant *pRes, const std::string &szValue ) const
-{
-	*pRes = CDBID( szValue );
-}
-void STypeRef::GetRefTypesList( std::vector<const STypeClass *> *pTypesList ) const
-{
-	if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>(pRefType) )
+	void STypeArray::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
-		pTypesList->resize( 0 );
-		if ( pTypeClass->derivedTerminalTypes.empty() )
-			pTypesList->push_back( pTypeClass );
+		*pRes = NStr::ToInt( szValue );
+	}
+
+	void STypeRef::ToString( std::string *pRes, const CVariant &value ) const
+	{
+		NI_VERIFY( value.GetType() == CVariant::VT_DBID || value.GetType() == CVariant::VT_NULL,
+		           fmt::format( "Can't convert type {} to DBID", int( value.GetType() ) ),
+		           return );
+		if ( value.GetType() == CVariant::VT_NULL )
+			pRes->clear();
 		else
-		{
-			pTypesList->reserve( pTypeClass->derivedTerminalTypes.size() );
-			pTypesList->insert( pTypesList->end(), pTypeClass->derivedTerminalTypes.begin(), pTypeClass->derivedTerminalTypes.end() );
-		}
+			*pRes = value.GetDBID().ToString();
 	}
-}
-
-bool STypeRef::CheckRefType( const int nClassTypeID ) const
-{
-	if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>(pRefType) )
+	void STypeRef::FromString( CVariant *pRes, const std::string &szValue ) const
 	{
-		if ( pTypeClass->derivedTerminalTypes.empty() )
-			return pTypeClass->nClassTypeID == nClassTypeID;
-		else
+		*pRes = CDBID( szValue );
+	}
+	void STypeRef::GetRefTypesList( std::vector<const STypeClass *> *pTypesList ) const
+	{
+		if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>( pRefType ) )
 		{
-			for ( STypeClass::CDerivedTerminalTypesList::const_iterator it = pTypeClass->derivedTerminalTypes.begin();
-				    it != pTypeClass->derivedTerminalTypes.end(); ++it )
+			pTypesList->resize( 0 );
+			if ( pTypeClass->derivedTerminalTypes.empty() )
+				pTypesList->push_back( pTypeClass );
+			else
 			{
-				if ( (*it)->nClassTypeID == nClassTypeID )
-					return true;
+				pTypesList->reserve( pTypeClass->derivedTerminalTypes.size() );
+				pTypesList->insert(
+						pTypesList->end(), pTypeClass->derivedTerminalTypes.begin(), pTypeClass->derivedTerminalTypes.end() );
 			}
 		}
 	}
-	return false;
-}
 
-// ************************************************************************************************************************ //
-// **
-// **
-// **
-// **
-// **
-// ************************************************************************************************************************ //
-
-CVariant STypeGUID::GetDefaultValue() const
-{
-	return boost::uuids::random_generator()();
-}
-
-CVariant STypeBinary::GetDefaultValue() const
-{
-	std::vector<uint8_t> buffer( nBinaryObjectSize );
-	fill( buffer.begin(), buffer.end(), 0 );
-	CVariant var( &(buffer[0]), nBinaryObjectSize );
-	return var;
-}
-
-// ************************************************************************************************************************ //
-// **
-// **
-// **
-// **
-// **
-// ************************************************************************************************************************ //
-
-void STypeStructBase::AddField( STypeDef *pType,
-																const std::string &szName,
-																const int nChunkID,
-																const std::wstring &wszDesc,
-							                  SConstraints *pConstraints,
-																SAttributes *pAttributes,
-																const CVariant &_vtDefVal )
-{
-	CFieldsList::iterator posField = fields.insert( fields.end(), SField() );
-	posField->pType = pType;
-	posField->szName = szName;
-	posField->nChunkID = nChunkID;
-	posField->wszDesc = wszDesc;
-	posField->constraints.push_back( pConstraints );
-	posField->pAttributes = pAttributes;
-	posField->defaultValue = _vtDefVal;
-}
-
-bool STypeStructBase::SField::CheckValueCorrect( const CVariant &value ) const
-{
-	for ( int i = 0; i < constraints.size(); ++i )
+	bool STypeRef::CheckRefType( const int nClassTypeID ) const
 	{
-		if ( !constraints[i]->CheckValueCorrect( value ) )
-			return false;
+		if ( const STypeClass *pTypeClass = dynamic_cast_ptr<const STypeClass *>( pRefType ) )
+		{
+			if ( pTypeClass->derivedTerminalTypes.empty() )
+				return pTypeClass->nClassTypeID == nClassTypeID;
+			else
+			{
+				for ( STypeClass::CDerivedTerminalTypesList::const_iterator it = pTypeClass->derivedTerminalTypes.begin();
+				      it != pTypeClass->derivedTerminalTypes.end();
+				      ++it )
+				{
+					if ( ( *it )->nClassTypeID == nClassTypeID )
+						return true;
+				}
+			}
+		}
+		return false;
 	}
-	return true;
-}
 
-EEditorType STypeStructBase::SField::GetEditorType() const
-{
-	return pType->GetDefaultEditorType();
-	/*
+	// ************************************************************************************************************************ //
+	// **
+	// **
+	// **
+	// **
+	// **
+	// ************************************************************************************************************************ //
+
+	CVariant STypeGUID::GetDefaultValue() const
+	{
+		return boost::uuids::random_generator()();
+	}
+
+	CVariant STypeBinary::GetDefaultValue() const
+	{
+		std::vector<uint8_t> buffer( nBinaryObjectSize );
+		fill( buffer.begin(), buffer.end(), 0 );
+		CVariant var( &( buffer[0] ), nBinaryObjectSize );
+		return var;
+	}
+
+	// ************************************************************************************************************************ //
+	// **
+	// **
+	// **
+	// **
+	// **
+	// ************************************************************************************************************************ //
+
+	void STypeStructBase::AddField( STypeDef *pType,
+	                                const std::string &szName,
+	                                const int nChunkID,
+	                                const std::wstring &wszDesc,
+	                                SConstraints *pConstraints,
+	                                SAttributes *pAttributes,
+	                                const CVariant &_vtDefVal )
+	{
+		CFieldsList::iterator posField = fields.insert( fields.end(), SField() );
+		posField->pType = pType;
+		posField->szName = szName;
+		posField->nChunkID = nChunkID;
+		posField->wszDesc = wszDesc;
+		posField->constraints.push_back( pConstraints );
+		posField->pAttributes = pAttributes;
+		posField->defaultValue = _vtDefVal;
+	}
+
+	bool STypeStructBase::SField::CheckValueCorrect( const CVariant &value ) const
+	{
+		for ( int i = 0; i < constraints.size(); ++i )
+		{
+			if ( !constraints[i]->CheckValueCorrect( value ) )
+				return false;
+		}
+		return true;
+	}
+
+	EEditorType STypeStructBase::SField::GetEditorType() const
+	{
+		return pType->GetDefaultEditorType();
+		/*
 	if ( pAttributes != 0 && pAttributes->attributes.find( "editorControl" ) != pAttributes->attributes.end() )
 		return GetEditorType( pAttributes->attributes["editorControl"] );
 	else
 		return pType->GetDefaultEditorType();
 	*/
-}
+	}
 
-CVariant STypeStructBase::SField::GetDefaultValue() const
-{
-	if ( defaultValue.GetType() != CVariant::VT_NULL || !pType->IsSimpleType() )
-		return defaultValue;
-	else
-		return checked_cast_ptr<STypeSimple *>(pType)->GetDefaultValue();
-}
-
-bool STypeStructBase::SField::HasAttribute( const std::string &szName ) const
-{
-	// check field's attribs
-	if ( pAttributes && pAttributes->attributes.find( szName ) != pAttributes->attributes.end() )
-		return true;
-	// check type's attribs
-	if ( pType->eType == TYPE_TYPE_BINARY )
+	CVariant STypeStructBase::SField::GetDefaultValue() const
 	{
-		const STypeBinary *pTypeBinary = checked_cast_ptr<const STypeBinary *>( pType );
-		if ( pTypeBinary->pAttributes && pTypeBinary->pAttributes->attributes.find(szName) != pTypeBinary->pAttributes->attributes.end() )
+		if ( defaultValue.GetType() != CVariant::VT_NULL || !pType->IsSimpleType() )
+			return defaultValue;
+		else
+			return checked_cast_ptr<STypeSimple *>( pType )->GetDefaultValue();
+	}
+
+	bool STypeStructBase::SField::HasAttribute( const std::string &szName ) const
+	{
+		// check field's attribs
+		if ( pAttributes && pAttributes->attributes.find( szName ) != pAttributes->attributes.end() )
 			return true;
-	}
-	else if ( pType->eType == TYPE_TYPE_STRUCT )
-	{
-		const STypeStructBase *pTypeStruct = checked_cast_ptr<const STypeStructBase *>( pType );
-		if ( pTypeStruct->pAttributes && pTypeStruct->pAttributes->attributes.find(szName) != pTypeStruct->pAttributes->attributes.end() )
-			return true;
-	}
-	return false;
-}
-
-const CVariant *STypeStructBase::SField::GetAttribute( const std::string &szName ) const
-{
-	// check field's attribs
-	if ( pAttributes )
-	{
-		std::map<std::string, CVariant>::const_iterator pos = pAttributes->attributes.find( szName );
-		if ( pos != pAttributes->attributes.end() )
-			return &( pos->second );
-	}
-	// check type's attribs
-	if ( pType->eType == TYPE_TYPE_BINARY )
-	{
-		const STypeBinary *pTypeBinary = checked_cast_ptr<const STypeBinary *>( pType );
-		if ( pTypeBinary->pAttributes )
+		// check type's attribs
+		if ( pType->eType == TYPE_TYPE_BINARY )
 		{
-			std::map<std::string, CVariant>::const_iterator pos = pTypeBinary->pAttributes->attributes.find( szName );
-			if ( pos != pTypeBinary->pAttributes->attributes.end() )
+			const STypeBinary *pTypeBinary = checked_cast_ptr<const STypeBinary *>( pType );
+			if ( pTypeBinary->pAttributes &&
+			     pTypeBinary->pAttributes->attributes.find( szName ) != pTypeBinary->pAttributes->attributes.end() )
+				return true;
+		}
+		else if ( pType->eType == TYPE_TYPE_STRUCT )
+		{
+			const STypeStructBase *pTypeStruct = checked_cast_ptr<const STypeStructBase *>( pType );
+			if ( pTypeStruct->pAttributes &&
+			     pTypeStruct->pAttributes->attributes.find( szName ) != pTypeStruct->pAttributes->attributes.end() )
+				return true;
+		}
+		return false;
+	}
+
+	const CVariant *STypeStructBase::SField::GetAttribute( const std::string &szName ) const
+	{
+		// check field's attribs
+		if ( pAttributes )
+		{
+			std::map<std::string, CVariant>::const_iterator pos = pAttributes->attributes.find( szName );
+			if ( pos != pAttributes->attributes.end() )
 				return &( pos->second );
 		}
-	}
-	else if ( pType->eType == TYPE_TYPE_STRUCT )
-	{
-		const STypeStructBase *pTypeStruct = checked_cast_ptr<const STypeStructBase *>( pType );
-		if ( pTypeStruct->pAttributes )
+		// check type's attribs
+		if ( pType->eType == TYPE_TYPE_BINARY )
 		{
-			std::map<std::string, CVariant>::const_iterator pos = pTypeStruct->pAttributes->attributes.find( szName );
-			if ( pos != pTypeStruct->pAttributes->attributes.end() )
-				return &( pos->second );
+			const STypeBinary *pTypeBinary = checked_cast_ptr<const STypeBinary *>( pType );
+			if ( pTypeBinary->pAttributes )
+			{
+				std::map<std::string, CVariant>::const_iterator pos = pTypeBinary->pAttributes->attributes.find( szName );
+				if ( pos != pTypeBinary->pAttributes->attributes.end() )
+					return &( pos->second );
+			}
 		}
+		else if ( pType->eType == TYPE_TYPE_STRUCT )
+		{
+			const STypeStructBase *pTypeStruct = checked_cast_ptr<const STypeStructBase *>( pType );
+			if ( pTypeStruct->pAttributes )
+			{
+				std::map<std::string, CVariant>::const_iterator pos = pTypeStruct->pAttributes->attributes.find( szName );
+				if ( pos != pTypeStruct->pAttributes->attributes.end() )
+					return &( pos->second );
+			}
+		}
+		return 0;
 	}
-	return 0;
-}
 
-void STypeClass::RegisterTerminalType( STypeClass *pClass )
-{
-	if ( nClassTypeID == -1 )
+	void STypeClass::RegisterTerminalType( STypeClass *pClass )
 	{
-		if ( pClass != 0 )
+		if ( nClassTypeID == -1 )
 		{
-			derivedTerminalTypes.push_back( pClass );
-			if ( STypeClass *pBaseClass = checked_cast_ptr<STypeClass*>( pBaseType ) )
-				pBaseClass->RegisterTerminalType( pClass );
+			if ( pClass != 0 )
+			{
+				derivedTerminalTypes.push_back( pClass );
+				if ( STypeClass *pBaseClass = checked_cast_ptr<STypeClass *>( pBaseType ) )
+					pBaseClass->RegisterTerminalType( pClass );
+			}
+		}
+		else
+		{
+			NI_ASSERT( derivedTerminalTypes.empty(), fmt::format( "Terminal class {} has derived classes!!!", szTypeName ) );
+			if ( STypeClass *pBaseClass = checked_cast_ptr<STypeClass *>( pBaseType ) )
+				pBaseClass->RegisterTerminalType( this );
 		}
 	}
-	else
-	{
-		NI_ASSERT( derivedTerminalTypes.empty(), fmt::format("Terminal class {} has derived classes!!!", szTypeName) );
-		if ( STypeClass *pBaseClass = checked_cast_ptr<STypeClass*>( pBaseType ) )
-			pBaseClass->RegisterTerminalType( this );
-	}
-}
 
 }
 }

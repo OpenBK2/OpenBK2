@@ -3,12 +3,12 @@
 
 #include <algorithm>
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075B88, CWindowProgressBar)
-REGISTER_SAVELOAD_CLASS(UI, 0x170A53C0, CWindowMultiTextureProgressBar)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B88, CWindowProgressBar )
+REGISTER_SAVELOAD_CLASS( UI, 0x170A53C0, CWindowMultiTextureProgressBar )
 
 int CWindowProgressBar::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 2, &pForward );
 	saver.Add( 3, &pBackward );
 	saver.Add( 4, &pInstance );
@@ -26,7 +26,7 @@ void CWindowProgressBar::Reposition( const CTRect<float> &parentRect )
 
 void CWindowProgressBar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowProgressBar *pDesc( checked_cast<const NDb::SWindowProgressBar*>( _pDesc ) );
+	const NDb::SWindowProgressBar *pDesc( checked_cast<const NDb::SWindowProgressBar *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 
 	CWindow::InitByDesc( _pDesc );
@@ -45,8 +45,8 @@ void CWindowProgressBar::Visit( struct IUIVisitor *pVisitor )
 		pForward->Visit( pVisitor );
 	if ( pBackward )
 		pBackward->Visit( pVisitor );
-	VisitText(pVisitor);
-	if ( pGlow && GetPosition() > 0.f && GetPosition() < 1.f)
+	VisitText( pVisitor );
+	if ( pGlow && GetPosition() > 0.f && GetPosition() < 1.f )
 		pGlow->Visit( pVisitor );
 }
 
@@ -62,8 +62,8 @@ void CWindowProgressBar::SetPosition( const float fPos )
 	{
 		if ( bShowFirstElement )
 		{
-			fProgressSize = (rect.Width() - fStepSize) * pInstance->fProgress;
-			fProgressSize = fStepSize * (floorf( fProgressSize / fStepSize ) + 1.0f);
+			fProgressSize = ( rect.Width() - fStepSize ) * pInstance->fProgress;
+			fProgressSize = fStepSize * ( floorf( fProgressSize / fStepSize ) + 1.0f );
 		}
 		else
 			fProgressSize = fStepSize * floorf( fProgressSize / fStepSize );
@@ -71,12 +71,13 @@ void CWindowProgressBar::SetPosition( const float fPos )
 	}
 
 	const CVec2 vForwardPos( rect.x1, rect.y1 );
-	const CVec2 vForwardSize ( fProgressSize, rect.Height() );
+	const CVec2 vForwardSize( fProgressSize, rect.Height() );
 
 	const CVec2 vBackwardPos( vForwardPos.x + vForwardSize.x, vForwardPos.y );
 	const CVec2 vBackwardSize( rect.Width() - vForwardSize.x, rect.Height() );
 
-	const CVec2 vGlowPos( vForwardPos.x + vForwardSize.x - pShared->vGlowSize.x / 2.f, rect.GetCenter().y - pShared->vGlowSize.y / 2.f );
+	const CVec2 vGlowPos( vForwardPos.x + vForwardSize.x - pShared->vGlowSize.x / 2.f,
+	                      rect.GetCenter().y - pShared->vGlowSize.y / 2.f );
 
 	if ( pForward )
 		pForward->SetPos( vForwardPos, vForwardSize );
@@ -103,7 +104,7 @@ void CWindowProgressBar::SetForward( const NDb::SBackground *_pForward )
 
 int CWindowMultiTextureProgressBar::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 2, &parts );
 	saver.Add( 4, &pInstance );
 	saver.Add( 5, &pShared );
@@ -117,14 +118,16 @@ void CWindowMultiTextureProgressBar::Reposition( const CTRect<float> &parentRect
 
 void CWindowMultiTextureProgressBar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowMultiTextureProgressBar *pDesc( checked_cast<const NDb::SWindowMultiTextureProgressBar*>( _pDesc ) );
+	const NDb::SWindowMultiTextureProgressBar *pDesc(
+			checked_cast<const NDb::SWindowMultiTextureProgressBar *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 
 	CWindow::InitByDesc( _pDesc );
 	pShared = checked_cast_ptr<const NDb::SWindowMultiTextureProgressBarShared *>( pDesc->pShared );
 	parts.reserve( pShared->states.size() );
-	for ( std::vector< NDb::SMultiTextureProgressBarSharedState >::const_iterator it = pShared->states.begin();
-		it != pShared->states.end(); ++it )
+	for ( std::vector<NDb::SMultiTextureProgressBarSharedState>::const_iterator it = pShared->states.begin();
+	      it != pShared->states.end();
+	      ++it )
 	{
 		const NDb::SMultiTextureProgressBarSharedState &state = *it;
 		parts.push_back( CUIFactory::MakeWindowPart( state.pBackground ) );
@@ -144,7 +147,7 @@ void CWindowMultiTextureProgressBar::Visit( struct IUIVisitor *pVisitor )
 		int nStateIndex = FindStateIndex( pInstance->progresses.front() );
 
 		const CVec2 vPos( rect.x1, rect.y1 );
-		const CVec2 vSize ( rect.Width() * pInstance->progresses.front(), rect.Height() );
+		const CVec2 vSize( rect.Width() * pInstance->progresses.front(), rect.Height() );
 		parts[nStateIndex]->SetPos( vPos, vSize );
 		parts[nStateIndex]->Visit( pVisitor );
 	}
@@ -183,8 +186,9 @@ void CWindowMultiTextureProgressBar::SetPositions( const std::vector<float> &pos
 int CWindowMultiTextureProgressBar::FindStateIndex( float fProgress )
 {
 	int nIndex = 0;
-	for ( std::vector< NDb::SMultiTextureProgressBarSharedState >::const_iterator it = pShared->states.begin();
-		it != pShared->states.end(); ++it, ++nIndex )
+	for ( std::vector<NDb::SMultiTextureProgressBarSharedState>::const_iterator it = pShared->states.begin();
+	      it != pShared->states.end();
+	      ++it, ++nIndex )
 	{
 		const NDb::SMultiTextureProgressBarSharedState &state = *it;
 		if ( fProgress <= state.fValue )

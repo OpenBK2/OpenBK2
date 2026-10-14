@@ -31,7 +31,7 @@ public:
 		CMemoryStream pkt;
 
 		SPacket() {}
-		SPacket( UCID _addr, CMemoryStream &_pkt ): addr(_addr), pkt(_pkt) {}
+		SPacket( UCID _addr, CMemoryStream &_pkt ) : addr( _addr ), pkt( _pkt ) {}
 	};
 	std::vector<SPacket> packets;
 	std::vector<UCID> kicks;
@@ -45,6 +45,7 @@ public:
 	bool IsActive( UCID addr );
 
 	CP2PTracker() : maxPeerID( 0 ) {}
+
 private:
 	struct SAck
 	{
@@ -70,12 +71,12 @@ private:
 		PEER_ID id;
 
 		SPeerClient() {}
-		SPeerClient( UCID _addr, PEER_ID _id ): addr(_addr), id(_id) {}
+		SPeerClient( UCID _addr, PEER_ID _id ) : addr( _addr ), id( _id ) {}
 	};
 	struct SPeer
 	{
 		UCID addr;
-		bool bActive;    // not active when peer is being dropped
+		bool bActive;                   // not active when peer is being dropped
 		std::list<SPeerClient> clients; // current clients from peer view
 		std::list<SQMessage> messages;
 		std::list<SFastAck> fastacks; // acks received from this peer before message itself
@@ -113,14 +114,14 @@ private:
 		}
 	};
 	std::list<SMessage> output;
-	std::unordered_map<UCID,SPeer> clients;
-	std::unordered_map<PEER_ID,UCID> peersByID;
+	std::unordered_map<UCID, SPeer> clients;
+	std::unordered_map<PEER_ID, UCID> peersByID;
 	PEER_ID maxPeerID;
 
-	SPeer* GetClient( UCID addr );
-	SPeer* GetClientByPeerID( PEER_ID id );
-	void AddOutputMessage( EOutMessage msg, UCID _from,
-		const CMemoryStream *pData = 0, std::vector<UCID> *pReceived = 0 );
+	SPeer *GetClient( UCID addr );
+	SPeer *GetClientByPeerID( PEER_ID id );
+	void
+	AddOutputMessage( EOutMessage msg, UCID _from, const CMemoryStream *pData = 0, std::vector<UCID> *pReceived = 0 );
 	void AddKickApprove( UCID victim, UCID kickFrom );
 	void ApproveKick( UCID victim, UCID from );
 	PEER_ID GetUnusedID();

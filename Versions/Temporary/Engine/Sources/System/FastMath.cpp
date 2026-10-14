@@ -1,10 +1,8 @@
 #include "stdafx.h"
 #include "FastMath.h"
 
-
 namespace NMath
 {
-
 
 // ************************************************************************************************************************ //
 // **
@@ -16,6 +14,8 @@ namespace NMath
 
 const int N_SIN_TABLE_PERIOD = 512;
 const float F_SIN_TABLE_MULT = N_SIN_TABLE_PERIOD / FP_2PI;
+// Laid out as a table on purpose: sin( i * 2pi / 512 ), eight to a row
+// clang-format off
 static float fSinTable[ N_SIN_TABLE_PERIOD + 1 ] =
 {
 	0, 0.0122715f, 0.0245412f, 0.0368072f, 0.0490677f, 0.0613207f, 0.0735646f, 0.0857973f,
@@ -84,6 +84,7 @@ static float fSinTable[ N_SIN_TABLE_PERIOD + 1 ] =
 	-0.0980168f, -0.0857969f, -0.0735646f, -0.0613207f, -0.0490676f, -0.0368072f, -0.0245411f, -0.0122714f,
 	0
 };
+// clang-format on
 // CKO 1e-5
 float Sin( float fAngle )
 {
@@ -91,7 +92,7 @@ float Sin( float fAngle )
 	int n = fA - 0.5f;
 	float fResidual = fA - n;
 	n &= N_SIN_TABLE_PERIOD - 1;
-	return fSinTable[n] + ( fSinTable[n+1] - fSinTable[n] ) * fResidual;
+	return fSinTable[n] + ( fSinTable[n + 1] - fSinTable[n] ) * fResidual;
 }
 
 float FastSin( float fAngle )
@@ -100,9 +101,11 @@ float FastSin( float fAngle )
 	int n = Float2Int( fA - 0.5f );
 	float fResidual = fA - n;
 	n &= N_SIN_TABLE_PERIOD - 1;
-	return fSinTable[n] + ( fSinTable[n+1] - fSinTable[n] ) * fResidual;
+	return fSinTable[n] + ( fSinTable[n + 1] - fSinTable[n] ) * fResidual;
 }
 
+// Laid out as a table on purpose: asin( i * 2 / 512 - 1 ), eight to a row
+// clang-format off
 static float fASinTable[ N_SIN_TABLE_PERIOD + 2 ] =
 {
 	0, 0.00195313f, 0.00390626f, 0.00585941f, 0.00781258f, 0.00976578f, 0.011719f, 0.0136723f,
@@ -171,6 +174,7 @@ static float fASinTable[ N_SIN_TABLE_PERIOD + 2 ] =
 	1.39379f, 1.40525f, 1.41755f, 1.43093f, 1.44571f, 1.46249f, 1.48238f, 1.50829f,
 	1.5708f, 1.5708f,
 };
+// clang-format on
 // CKO 0.0005
 float ASin( float f )
 {
@@ -182,7 +186,7 @@ float ASin( float f )
 	if ( n > N_SIN_TABLE_PERIOD )
 		n = N_SIN_TABLE_PERIOD;
 	n &= N_SIN_TABLE_PERIOD - 1;
-	return fASinTable[n] + ( fASinTable[n+1] - fASinTable[n] ) * fResidual;
+	return fASinTable[n] + ( fASinTable[n + 1] - fASinTable[n] ) * fResidual;
 }
 
 float FastASin( float f )
@@ -195,7 +199,7 @@ float FastASin( float f )
 	if ( n > N_SIN_TABLE_PERIOD )
 		n = N_SIN_TABLE_PERIOD;
 	n &= N_SIN_TABLE_PERIOD - 1;
-	return fASinTable[n] + ( fASinTable[n+1] - fASinTable[n] ) * fResidual;
+	return fASinTable[n] + ( fASinTable[n + 1] - fASinTable[n] ) * fResidual;
 }
 
 // ************************************************************************************************************************ //
@@ -206,12 +210,12 @@ float FastASin( float f )
 // **
 // ************************************************************************************************************************ //
 
-static unsigned int gs_FastSqrtTable[0x10000];  // declare table of square roots
+static unsigned int gs_FastSqrtTable[0x10000]; // declare table of square roots
 
 union UFastSqrt
 {
-  float f;
-  unsigned int i;
+	float f;
+	unsigned int i;
 };
 
 static struct SFastMathInit
@@ -226,33 +230,34 @@ static struct SFastMathInit
 			// Build a float with the bit pattern i as mantissa
 			//  and an exponent of 0, stored as 127
 
-			s.i = (i << 8) | (0x7F << 23);
-			s.f = (float)sqrt(s.f);
+			s.i = ( i << 8 ) | ( 0x7F << 23 );
+			s.f = (float)sqrt( s.f );
 
 			// Take the square root then strip the first 7 bits of
 			//  the mantissa into the table
 
-			gs_FastSqrtTable[i + 0x8000] = (s.i & 0x7FFFFF);
+			gs_FastSqrtTable[i + 0x8000] = ( s.i & 0x7FFFFF );
 
 			// Repeat the process, this time with an exponent of 1,
 			//  stored as 128
 
-			s.i = (i << 8) | (0x80 << 23);
-			s.f = (float)sqrt(s.f);
+			s.i = ( i << 8 ) | ( 0x80 << 23 );
+			s.f = (float)sqrt( s.f );
 
-			gs_FastSqrtTable[i] = (s.i & 0x7FFFFF);
+			gs_FastSqrtTable[i] = ( s.i & 0x7FFFFF );
 		}
 	}
 } performSqrtInit;
 
 float Sqrt( float n )
 {
-  if ( FP_BITS(n) == 0 )
-    return 0.0f;                 // check for square root of 0
+	if ( FP_BITS( n ) == 0 )
+		return 0.0f; // check for square root of 0
 
-  FP_BITS(n) = gs_FastSqrtTable[(FP_BITS(n) >> 8) & 0xFFFF] | ((((FP_BITS(n) - 0x3F800000) >> 1) + 0x3F800000) & 0x7F800000);
+	FP_BITS( n ) = gs_FastSqrtTable[( FP_BITS( n ) >> 8 ) & 0xFFFF] |
+	               ( ( ( ( FP_BITS( n ) - 0x3F800000 ) >> 1 ) + 0x3F800000 ) & 0x7F800000 );
 
-  return n;
+	return n;
 }
 
 }

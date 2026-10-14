@@ -13,16 +13,8 @@ struct SCameraPos
 	float fDistance;
 	bool bUseAnchorOnly;
 	//
-	SCameraPos()
-		: vAnchor( VNULL3 ),
-			fYaw( 45.0f ),
-			fPitch( 45.0f ),
-			fDistance( 170.0f ),
-			bUseAnchorOnly( true )
-	{
-	}
+	SCameraPos() : vAnchor( VNULL3 ), fYaw( 45.0f ), fPitch( 45.0f ), fDistance( 170.0f ), bUseAnchorOnly( true ) {}
 };
-
 
 //
 //
@@ -51,7 +43,6 @@ class CCameraPositionState : public CDefaultInputState, public ICommandHandler
 	CSceneDrawTool sceneDrawTool;
 
 public:
-
 	//	CDefaultInputState
 	void Enter();
 	void Leave();
@@ -67,5 +58,5 @@ public:
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	//	CCameraPositionState
-	CCameraPositionState( CMapInfoEditor* _pMapInfoEditor = 0 );
+	CCameraPositionState( CMapInfoEditor *_pMapInfoEditor = 0 );
 };

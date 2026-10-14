@@ -13,7 +13,7 @@ struct IMPAICommandPacker;
 class CNetPacket;
 namespace NDb
 {
-	struct SMapInfo;
+struct SMapInfo;
 }
 
 //#define CHECKSUM_LIST_DEBUG
@@ -26,16 +26,29 @@ struct SB2StartGameParams
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nClientID = {};
 		int nPlayer = {}; // logic player
-		int nTeam = {}; // 0 or 1
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nClientID); f.Add(3,&nPlayer); f.Add(4,&nTeam); return 0; }
+		int nTeam = {};   // 0 or 1
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nClientID );
+			f.Add( 3, &nPlayer );
+			f.Add( 4, &nTeam );
+			return 0;
+		}
 	};
 
 	ZDATA
-	std::vector< SClient > clients;
+	std::vector<SClient> clients;
 	CDBPtr<NDb::SMapInfo> pMapInfo;
 	int nGameID = {};
 	int nSpeedAdjustment = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&clients); f.Add(3,&pMapInfo); f.Add(4,&nGameID); f.Add(5,&nSpeedAdjustment); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &clients );
+		f.Add( 3, &pMapInfo );
+		f.Add( 4, &nGameID );
+		f.Add( 5, &nSpeedAdjustment );
+		return 0;
+	}
 };
 
 class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
@@ -55,14 +68,15 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	int nLatency = {};
 	int nSegmentsPackSize = {};
 
-	int nSegment = {};													// номер текущего сегмента
+	int nSegment = {}; // номер текущего сегмента
 	long nCommonSegment = {};
-	int nMyLogicID = {};												// номер "нашего" игрока
+	int nMyLogicID = {}; // номер "нашего" игрока
 	bool bCommandsFromHistory = {};
 	std::vector<uint16_t> segmFinished;
 	uint16_t wMask = {};
 	uint16_t wWaitMask = {};
-	typedef std::list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
+	typedef std::list<CPtr<IAILogicCommandB2>>
+			CAILogicCommandsList; // команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
 	CArray2D<CAILogicCommandsList> cmds;
 
 	CDBPtr<NDb::SNetGameConsts> pConsts;
@@ -75,10 +89,16 @@ public:
 		ZDATA
 		int nTypeID = {};
 		CMemoryStream cmd;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nTypeID); f.Add(3,&cmd); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nTypeID );
+			f.Add( 3, &cmd );
+			return 0;
+		}
 	};
+
 private:
-	std::list< CPtr<IAILogicCommandB2> > aiCommandsToSend;
+	std::list<CPtr<IAILogicCommandB2>> aiCommandsToSend;
 
 	struct SPlayer
 	{
@@ -102,6 +122,7 @@ private:
 
 	int nFinalSegment = {};
 	std::vector<int> playerRemovalSegments;
+
 private:
 	bool Segment() { return false; }
 	bool IsSegmentPackFinished();
@@ -113,7 +134,7 @@ private:
 	bool IsAsyncDetected( int nSegment );
 	void SetLagState( int nSegment, bool bOn );
 
-	void ReportAsnycToFile(int segment);
+	void ReportAsnycToFile( int segment );
 
 	bool OnTransciverCommonPacket( class CTransciverCommonPacket *pPacket );
 	bool OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *pPacket );
@@ -128,6 +149,7 @@ private:
 	int GetSegmentToExecute( const int nSegment ) const;
 	void StopWaitingForPlayer( int nPlayer, int nDropSegment );
 	void ApplyScheduledPlayerRemovals();
+
 public:
 	CMPTransceiver();
 	void StartMission( const NDb::SMapInfo *pMap, IAILogic *pAI ) {}
@@ -158,7 +180,4 @@ public:
 	ICommandsHistory *GetCommandsHistory() { return pCmdsHistory; }
 };
 
-
-
-CMPTransceiver* CreateMPTransceiver( IServerClient *pClient,
-																				const SB2StartGameParams &params, int nMySlot );
+CMPTransceiver *CreateMPTransceiver( IServerClient *pClient, const SB2StartGameParams &params, int nMySlot );

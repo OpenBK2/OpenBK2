@@ -5,17 +5,23 @@ virtual void ToAIUnits( bool bInEditor )
 	visibility.PostLoad( bInEditor );
 }
 //
-virtual const CVec2& GetOrigin( const int nIndex = -1 ) const { return vOrigin; }
-virtual const SByteArray2& GetPassability( const int nIndex = -1 ) const { return passability; }
+virtual const CVec2 &GetOrigin( const int nIndex = -1 ) const
+{
+	return vOrigin;
+}
+virtual const SByteArray2 &GetPassability( const int nIndex = -1 ) const
+{
+	return passability;
+}
 
-virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const
+virtual const CVec2 &GetVisOrigin( const int nIndex = -1 ) const
 {
 	if ( bUsePassabilityForVisibility )
 		return vOrigin;
 	else
 		return vVisOrigin;
 }
-virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
+virtual const SByteArray2 &GetVisibility( const int nIndex = -1 ) const
 {
 	if ( bUsePassabilityForVisibility )
 		return passability;
@@ -23,12 +29,12 @@ virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
 		return visibility;
 }
 
-virtual const SPassProfile& GetPassProfile( const int nIndex = -1 ) const
+virtual const SPassProfile &GetPassProfile( const int nIndex = -1 ) const
 {
 	return passProfile;
 }
 
-virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
+virtual const SPassProfile &GetVisProfile( const int nIndex = -1 ) const
 {
 	if ( bUsePassabilityForVisibility )
 		return passProfile;
@@ -39,7 +45,8 @@ virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 	}
 }
 
-virtual const NDb::SComplexSoundDesc* GetAmbientSoundDesc( const NDb::ESeason season, const NDb::EDayNight daytime ) const
+virtual const NDb::SComplexSoundDesc *GetAmbientSoundDesc( const NDb::ESeason season,
+                                                           const NDb::EDayNight daytime ) const
 {
 	const int nDayTimeMask = 0x01 << (int)daytime;
 	for ( std::vector<SAmbientSound>::const_iterator it = ambientSounds.begin(); it != ambientSounds.end(); ++it )

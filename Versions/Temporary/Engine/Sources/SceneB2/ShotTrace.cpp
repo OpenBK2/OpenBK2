@@ -7,10 +7,10 @@
 
 namespace NShotTrace
 {
-	//static float s_fShotTraceLength = 200.0f;
-	//static float s_fShotTraceSpeedCoeff = 0.5f;
-	//static float s_fShotTraceThikness = 0.1f;
-	static bool s_bDisableTracers = false;
+//static float s_fShotTraceLength = 200.0f;
+//static float s_fShotTraceSpeedCoeff = 0.5f;
+//static float s_fShotTraceThikness = 0.1f;
+static bool s_bDisableTracers = false;
 }
 
 void CShotTraceObj::Recalc()
@@ -62,8 +62,8 @@ void CShotTraceObj::Recalc()
 	//
 	for ( std::vector<NGScene::SVertex>::iterator itVert = data.verts.begin(); itVert != data.verts.end(); ++itVert )
 	{
-		CalcCompactVector( &(itVert->normal), V3_AXIS_Z );
-		itVert->normal.w = 255;	// absolutely opaque
+		CalcCompactVector( &( itVert->normal ), V3_AXIS_Z );
+		itVert->normal.w = 255; // absolutely opaque
 	}
 	//
 	data.geometry[0].i1 = 0;
@@ -77,10 +77,10 @@ void CShotTraceObj::Recalc()
 }
 
 START_REGISTER( ShotTrace )
-	//REGISTER_VAR_EX( "shot_trace_lenght", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceLength, 5.0f, STORAGE_NONE )
-	//REGISTER_VAR_EX( "shot_trace_speed_coeff", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceSpeedCoeff, 1.0f, STORAGE_NONE )
-	//REGISTER_VAR_EX( "shot_trace_thikness", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceThikness, 0.1f, STORAGE_NONE )
-	REGISTER_VAR_EX( "shot_trace_disable", NGlobal::VarBoolHandler, &NShotTrace::s_bDisableTracers, false, STORAGE_NONE )
+//REGISTER_VAR_EX( "shot_trace_lenght", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceLength, 5.0f, STORAGE_NONE )
+//REGISTER_VAR_EX( "shot_trace_speed_coeff", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceSpeedCoeff, 1.0f, STORAGE_NONE )
+//REGISTER_VAR_EX( "shot_trace_thikness", NGlobal::VarFloatHandler, &NShotTrace::s_fShotTraceThikness, 0.1f, STORAGE_NONE )
+REGISTER_VAR_EX( "shot_trace_disable", NGlobal::VarBoolHandler, &NShotTrace::s_bDisableTracers, false, STORAGE_NONE )
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1B173C00, CShotTraceObj )

@@ -21,6 +21,7 @@ struct SMeshData
 	CVec3 minimum = VNULL3, maximum = VNULL3;
 };
 ED_COMMON_EXPORT bool LoadGeometry( IManipulator *resource, SMeshData *mesh );
-ED_COMMON_EXPORT bool ReadAttributes( IManipulator *resource, CGrannyBoneAttributesList *attributes,
-	const std::string &rootNode = std::string() );
+ED_COMMON_EXPORT bool ReadAttributes( IManipulator *resource,
+                                      CGrannyBoneAttributesList *attributes,
+                                      const std::string &rootNode = std::string() );
 }

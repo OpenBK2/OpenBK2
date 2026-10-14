@@ -2,7 +2,7 @@
 #include "EffectorButtonState.h"
 #include "WindowMSButton.h"
 
-REGISTER_SAVELOAD_CLASS(UI, 0x170AE341, CEffectorButtonState)
+REGISTER_SAVELOAD_CLASS( UI, 0x170AE341, CEffectorButtonState )
 
 int CEffectorButtonState::operator&( IBinSaver &saver )
 {
@@ -21,14 +21,17 @@ bool CEffectorButtonState::IsFinished() const
 	return bFinished;
 }
 
-void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
+void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd,
+                                      struct IScreen *pScreen,
+                                      SWindowContext *pContext,
+                                      const std::string &szAnimatedWindow )
 {
-	const NDb::SUISButtonSubstate *pCmd( checked_cast<const NDb::SUISButtonSubstate*>( _pCmd ) );
+	const NDb::SUISButtonSubstate *pCmd( checked_cast<const NDb::SUISButtonSubstate *>( _pCmd ) );
 	eSubstate = pCmd->eSubstate;
 	fWaitTime = pCmd->fWaitTime;
 	fElapsedTime = 0;
-	pWindow = dynamic_cast<CWindow*>( pScreen->GetVisibleElement(
-		szAnimatedWindow.empty() ? pCmd->szButton.first : szAnimatedWindow, true ) );
+	pWindow = dynamic_cast<CWindow *>(
+			pScreen->GetVisibleElement( szAnimatedWindow.empty() ? pCmd->szButton.first : szAnimatedWindow, true ) );
 	bStarted = false;
 
 	// NI_ASSERT( pWindow != 0, StrFmt( "no window (button) \"%s\"", pCmd->szButton.first.c_str() ) );
@@ -49,7 +52,7 @@ const int CEffectorButtonState::Segment( const int timeDiff, struct IScreen *pSc
 {
 	if ( !bStarted )
 	{
-		CWindowMSButton *pButton = dynamic_cast_ptr<CWindowMSButton*>( pWindow );
+		CWindowMSButton *pButton = dynamic_cast_ptr<CWindowMSButton *>( pWindow );
 		NI_ASSERT( pButton != 0, "window is not a button" );
 		pButton->SetEffectSubState( eSubstate, true );
 		bStarted = true;
@@ -61,7 +64,7 @@ const int CEffectorButtonState::Segment( const int timeDiff, struct IScreen *pSc
 	if ( fElapsedTime >= fWaitTime )
 	{
 		nConsumedTime -= fElapsedTime - fWaitTime;
-		CWindowMSButton *pButton = dynamic_cast_ptr<CWindowMSButton*>( pWindow );
+		CWindowMSButton *pButton = dynamic_cast_ptr<CWindowMSButton *>( pWindow );
 		NI_ASSERT( pButton != 0, "window is not a button" );
 		pButton->SetEffectSubState( eSubstate, false );
 		bFinished = true;

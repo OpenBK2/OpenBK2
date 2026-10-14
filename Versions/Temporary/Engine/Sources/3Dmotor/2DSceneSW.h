@@ -1,16 +1,15 @@
 #pragma once
 #include "3Dmotor_export.h"
 
-
 #include "System/Dg.h"
 
 namespace NDb
 {
-	struct STexture;
+struct STexture;
 };
 namespace NGfx
 {
-	class CTexture;
+class CTexture;
 }
 
 class CRectLayout;
@@ -19,13 +18,14 @@ namespace NGScene
 class CSWTextureData;
 class CSWTexture;
 
-_3DMOTOR_EXPORT CSWTexture* GetSWTex( const NDb::STexture *pTex );
+_3DMOTOR_EXPORT CSWTexture *GetSWTex( const NDb::STexture *pTex );
 
-class ISW2DScene: public CObjectBase
+class ISW2DScene : public CObjectBase
 {
 public:
-	virtual CObjectBase* CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout ) = 0;
-	virtual CObjectBase* CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture, const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle ) = 0;
+	virtual CObjectBase *CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout ) = 0;
+	virtual CObjectBase *
+	CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture, const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle ) = 0;
 
 	virtual void AddPostFilter( CPtrFuncBase<CSWTextureData> *pTexture, int _nCenterX, int _nCenterY ) = 0;
 	virtual void AddGrayingFilter( const CVec4 &vConvolution ) = 0;
@@ -35,6 +35,6 @@ public:
 	virtual void DrawBump( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, float fScale ) = 0;
 };
 
-_3DMOTOR_EXPORT ISW2DScene* Make2DSWScene();
+_3DMOTOR_EXPORT ISW2DScene *Make2DSWScene();
 
 } // NAMESPACE

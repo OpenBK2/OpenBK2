@@ -12,7 +12,7 @@ det_map<int, bool> CPlanesFormation::existence;
 
 int CPlanesFormation::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CBasePathUnit*>(this) );
+	saver.Add( 1, static_cast<CBasePathUnit *>( this ) );
 	saver.Add( 2, &pathHistory );
 	saver.Add( 3, &preferences );
 	saver.Add( 4, &vPos );
@@ -61,7 +61,7 @@ void CPlanesFormation::SerializeIDs( const int nChunk, IBinSaver &saver )
 //*														CPlaneManuverHistory*
 //*******************************************************************
 
-IManuver * CPlaneManuverHistory::GetCurManuver() const
+IManuver *CPlaneManuverHistory::GetCurManuver() const
 {
 	//NI_ASSERT( !pathHistory.empty(), "unitialized path" );
 	if ( pathHistory.empty() )
@@ -86,10 +86,10 @@ void CPlaneManuverHistory::ClearUnised()
 		}
 		else
 			pathHistory.pop_back();
-	} while( true );
+	} while ( true );
 }
 
-const SFormationMemberInfo & CPlaneManuverHistory::GetValues( const CVec3 &vOffset )
+const SFormationMemberInfo &CPlaneManuverHistory::GetValues( const CVec3 &vOffset )
 {
 	IManuver *pManuver( *pathHistory.begin() );
 	SFormationMemberInfo &cacheValue = memberCache[vOffset];
@@ -176,19 +176,19 @@ void CPlanesFormation::CreatePointManuver( const CVec3 &vPos, const bool bToHori
 	pathHistory.StartManuver( theManuverBuilder.CreatePointManuver( this, vPos, bToHorisontal ) );
 }
 
-const CVec3 & CPlanesFormation::GetSpeed( const CVec3 &vFormationOffset )
+const CVec3 &CPlanesFormation::GetSpeed( const CVec3 &vFormationOffset )
 {
 	NI_ASSERT( !pathHistory.IsEmpty(), "tried to use unitialized path " );
 	return pathHistory.GetValues( vFormationOffset ).vSpeed;
 }
 
-const CVec3 & CPlanesFormation::GetPoint( const CVec3 &vFormationOffset )
+const CVec3 &CPlanesFormation::GetPoint( const CVec3 &vFormationOffset )
 {
 	NI_ASSERT( !pathHistory.IsEmpty(), "tried to use unitialized path " );
 	return pathHistory.GetValues( vFormationOffset ).vWorldPosition;
 }
 
-const CVec3 & CPlanesFormation::GetNormale( const CVec3 &vFormationOffset )
+const CVec3 &CPlanesFormation::GetNormale( const CVec3 &vFormationOffset )
 {
 	NI_ASSERT( !pathHistory.IsEmpty(), "tried to use unitialized path " );
 	return pathHistory.GetValues( vFormationOffset ).vNormal;
@@ -218,12 +218,19 @@ void CPlanesFormation::SecondSegment( const NTimer::STime timeDiff )
 {
 	vSpeed = vNewSpeed;
 	vNormal = vNewNormal;
-	vPos= vNewPos;
+	vPos = vNewPos;
 
 	pathHistory.ClearUnised();
 }
 
-void CPlanesFormation::Init( const NDb::SMechUnitRPGStats *pStats, const CVec3 &vCenter, const float fTurnRadiusMin, const float fTurnRadiusMax, const CVec3 &_vSpeed, const CVec3 &_vNormale, const float _fBombPointOffset, bool bCanViolateHeghtLimits )
+void CPlanesFormation::Init( const NDb::SMechUnitRPGStats *pStats,
+                             const CVec3 &vCenter,
+                             const float fTurnRadiusMin,
+                             const float fTurnRadiusMax,
+                             const CVec3 &_vSpeed,
+                             const CVec3 &_vNormale,
+                             const float _fBombPointOffset,
+                             bool bCanViolateHeghtLimits )
 {
 	preferences.Init( pStats, bCanViolateHeghtLimits );
 	nAlive = nProcessed = 0;

@@ -7,7 +7,7 @@ namespace NGScene
 
 //	CParticles
 
-CParticleEffect* CParticles::GetEffect()
+CParticleEffect *CParticles::GetEffect()
 {
 	pParticles.Refresh();
 	return pParticles->GetValue();
@@ -17,7 +17,7 @@ void CParticles::Unlink()
 {
 	if ( IsValid( pNode ) )
 	{
-		std::vector<CPtr<CParticles> >::iterator i = std::find( pNode->particles.begin(), pNode->particles.end(), this );
+		std::vector<CPtr<CParticles>>::iterator i = std::find( pNode->particles.begin(), pNode->particles.end(), this );
 		if ( i != pNode->particles.end() )
 		{
 			// Rendering may unlink this particle while iterating the vector; defer compaction until that pass ends.
@@ -44,7 +44,7 @@ bool CParticles::Update( CVolumeNode *pVolume )
 			pNewNode->particles.push_back( this );
 			if ( pNode )
 			{
-				std::vector<CPtr<CParticles> >::iterator i = std::find( pNode->particles.begin(), pNode->particles.end(), this );
+				std::vector<CPtr<CParticles>>::iterator i = std::find( pNode->particles.begin(), pNode->particles.end(), this );
 				if ( i != pNode->particles.end() )
 					pNode->particles.erase( i );
 			}

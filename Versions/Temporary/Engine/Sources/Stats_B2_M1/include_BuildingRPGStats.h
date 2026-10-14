@@ -1,6 +1,6 @@
-std::vector< SSlot > aiSlots;
+std::vector<SSlot> aiSlots;
 
-std::vector<int> aiSlotToSlot;		// index - AI slot, value - index in slot[]
+std::vector<int> aiSlotToSlot; // index - AI slot, value - index in slot[]
 
 void ToAIUnits( bool bInEditor )
 {
@@ -13,11 +13,11 @@ void ToAIUnits( bool bInEditor )
 			visibility.SetSizes( passability.GetSizeX() - 2, passability.GetSizeY() - 2 );
 		for ( int x = 0; x < visibility.GetSizeX(); ++x )
 		{
-			for	 ( int y = 0; y < visibility.GetSizeY(); ++y )
+			for ( int y = 0; y < visibility.GetSizeY(); ++y )
 			{
-				visibility[y][x] = passability[y][x]			&& passability[y][x]		&& passability[y][x] &&
-													 passability[y][x+1]		&& passability[y+1][x+1]&& passability[y+2][x+1]	&&
-													 passability[y][x+2]		&& passability[y+1][x+2]&& passability[y+2][x+2];
+				visibility[y][x] = passability[y][x] && passability[y][x] && passability[y][x] && passability[y][x + 1] &&
+				                   passability[y + 1][x + 1] && passability[y + 2][x + 1] && passability[y][x + 2] &&
+				                   passability[y + 1][x + 2] && passability[y + 2][x + 2];
 			}
 		}
 		bUsePassabilityForVisibility = false;

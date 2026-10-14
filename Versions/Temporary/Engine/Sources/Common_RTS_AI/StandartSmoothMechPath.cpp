@@ -7,15 +7,19 @@
 
 #include <cstdint>
 
-const float MIN_LENGTH_FOR_LARGE_TURN = 1024.0f;  //! минимальное расстояние с которого начинает строиться большой разворот
-const float MIN_LENGTH_FOR_SMALL_TURN = 256.0f;   //! минимальное расстояние с которого начинает строиться серий маленьких разворотов
-const float THRESHOLD_FOR_LARGE_TURN = 0.95f;			//! минимальное значение косинуса угла между обратным направлением юнита и сплайном, при котором возможет большой разворот
-const uint16_t  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! при какой разнице в угле нужно гладко поворачиваться
+const float MIN_LENGTH_FOR_LARGE_TURN =
+		1024.0f; //! минимальное расстояние с которого начинает строиться большой разворот
+const float MIN_LENGTH_FOR_SMALL_TURN =
+		256.0f; //! минимальное расстояние с которого начинает строиться серий маленьких разворотов
+const float THRESHOLD_FOR_LARGE_TURN =
+		0.95f; //! минимальное значение косинуса угла между обратным направлением юнита и сплайном, при котором возможет большой разворот
+const uint16_t DIR_DIFF_TO_SMOOTH_TURNING = 2000; //! при какой разнице в угле нужно гладко поворачиваться
 
 class CPushTileFunctional
 {
 	// Defensive pointer defaults retain each callback's explicit constructor binding.
 	std::list<SVector> *pTiles = nullptr;
+
 public:
 	CPushTileFunctional( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) {}
 
@@ -30,13 +34,14 @@ class CCheckTileFunctional
 {
 	CBasePathUnit *pUnit = nullptr;
 	CTerrain *pTerrain = nullptr;
+
 public:
 	CCheckTileFunctional( CBasePathUnit *_pUnit, CTerrain *_pTerrain ) : pUnit( _pUnit ), pTerrain( _pTerrain ) {}
 
 	bool operator()( const SVector tile )
 	{
 		return pUnit->CanMoveBetweenTiles( pUnit->GetCenterTile(), tile ) &&
-			( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
+		       ( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
 	}
 };
 
@@ -45,19 +50,27 @@ class CCheckTileFunctionalWithMark
 	CBasePathUnit *pUnit = nullptr;
 	std::vector<SVector> *pTiles = nullptr;
 	CTerrain *pTerrain = nullptr;
+
 public:
 	CCheckTileFunctionalWithMark( CBasePathUnit *_pUnit, std::vector<SVector> *_pTiles, CTerrain *_pTerrain )
-		: pUnit( _pUnit ), pTiles( _pTiles ), pTerrain( _pTerrain ) {}
+			: pUnit( _pUnit ), pTiles( _pTiles ), pTerrain( _pTerrain )
+	{
+	}
 
 	bool operator()( const SVector tile )
 	{
 		pTiles->push_back( tile );
 		return pUnit->CanMoveBetweenTiles( pUnit->GetCenterTile(), tile ) &&
-			( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
+		       ( pTerrain->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) != FREE_NONE );
 	}
 };
 
-uint16_t CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const uint16_t wStartAngle, const uint16_t wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward )
+uint16_t CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit,
+                                            const uint16_t wStartAngle,
+                                            const uint16_t wDiffAngle,
+                                            const float fRadius,
+                                            const bool bClockWise,
+                                            const bool bForward )
 {
 	//DEBUG{
 	/*
@@ -73,7 +86,9 @@ uint16_t CStandartSmoothMechPath::CheckArc( const CVec2 &vUnit, const uint16_t w
 }
 
 // построить большой разворот
-bool CStandartSmoothMechPath::BuildLargeTurn( const uint16_t wStartDir, const uint16_t wEndDir, const CVec2 &vFinishPoint )
+bool CStandartSmoothMechPath::BuildLargeTurn( const uint16_t wStartDir,
+                                              const uint16_t wEndDir,
+                                              const CVec2 &vFinishPoint )
 {
 	if ( GetUnit()->GetMovementPlane() != PLANE_WATER || GetUnit()->GetTurnRadius() == 0.0f )
 	{
@@ -97,16 +112,18 @@ bool CStandartSmoothMechPath::BuildLargeTurn( const uint16_t wStartDir, const ui
 	}
 	*/
 	circles.clear();
-	const	uint16_t clockWise = wStartDir - wEndDir;
-	const	uint16_t antiClockWise = wEndDir - wStartDir;
+	const uint16_t clockWise = wStartDir - wEndDir;
+	const uint16_t antiClockWise = wEndDir - wStartDir;
 	bool bClockWise = ( clockWise < antiClockWise );
-	uint16_t dirDiff = (bClockWise) ? clockWise : antiClockWise;
+	uint16_t dirDiff = ( bClockWise ) ? clockWise : antiClockWise;
 
-	if ( CheckArc( GetUnit()->GetCenterPlain(), wStartDir, dirDiff, GetUnit()->GetTurnRadius(), bClockWise, true ) < dirDiff )
+	if ( CheckArc( GetUnit()->GetCenterPlain(), wStartDir, dirDiff, GetUnit()->GetTurnRadius(), bClockWise, true ) <
+	     dirDiff )
 	{
 		bClockWise = !bClockWise;
-		dirDiff = (bClockWise) ? clockWise : antiClockWise;
-		if ( CheckArc( GetUnit()->GetCenterPlain(), wStartDir, dirDiff, GetUnit()->GetTurnRadius(), bClockWise, true ) < dirDiff )
+		dirDiff = ( bClockWise ) ? clockWise : antiClockWise;
+		if ( CheckArc( GetUnit()->GetCenterPlain(), wStartDir, dirDiff, GetUnit()->GetTurnRadius(), bClockWise, true ) <
+		     dirDiff )
 		{
 			//DebugTrace( "BuildLargeTurn returns false (4)" );
 			return false;
@@ -115,8 +132,12 @@ bool CStandartSmoothMechPath::BuildLargeTurn( const uint16_t wStartDir, const ui
 
 	if ( dirDiff > DIR_DIFF_TO_SMOOTH_TURNING )
 	{
-		circles.push_back( CCirclePath( wStartDir, dirDiff, GetUnit()->GetCenterPlain(), GetUnit()->GetTurnRadius(), bClockWise, true ) );
-		GetPath()->RecoverPath( circles.back().GetLastX(), GetUnit()->GetProbablePlane( GetAIMap()->GetTile( circles.back().GetLastX() ) ) == PLANE_WATER , GetAIMap()->GetTile( circles.back().GetLastX() ) );
+		circles.push_back(
+				CCirclePath( wStartDir, dirDiff, GetUnit()->GetCenterPlain(), GetUnit()->GetTurnRadius(), bClockWise, true ) );
+		GetPath()->RecoverPath( circles.back().GetLastX(),
+		                        GetUnit()->GetProbablePlane( GetAIMap()->GetTile( circles.back().GetLastX() ) ) ==
+		                            PLANE_WATER,
+		                        GetAIMap()->GetTile( circles.back().GetLastX() ) );
 		SetSplinePoints( GetPath()->GetStartPoint() );
 		InitSpline();
 		BuildSmoothTurn( circles.back().GetLastDX(), false );
@@ -126,7 +147,10 @@ bool CStandartSmoothMechPath::BuildLargeTurn( const uint16_t wStartDir, const ui
 	return true;
 }
 
-bool CStandartSmoothMechPath::BuildSmallTurns( const uint16_t wStartDir, const uint16_t wEndDir, const CVec2 &vFinishPoint, const bool bPrefereForward )
+bool CStandartSmoothMechPath::BuildSmallTurns( const uint16_t wStartDir,
+                                               const uint16_t wEndDir,
+                                               const CVec2 &vFinishPoint,
+                                               const bool bPrefereForward )
 {
 	return false;
 	/*
@@ -226,7 +250,8 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 			bres.MakePointStep();
 		}
 
-		if ( bres.GetDirection() == tile && ( GetAIMap()->GetTerrain()->CanUnitGo( nTileRadius, bres.GetDirection(), cAIClass ) != FREE_NONE ) )
+		if ( bres.GetDirection() == tile &&
+		     ( GetAIMap()->GetTerrain()->CanUnitGo( nTileRadius, bres.GetDirection(), cAIClass ) != FREE_NONE ) )
 		{
 			std::list<SVector> insertedTiles;
 
@@ -240,7 +265,8 @@ bool CStandartSmoothMechPath::BuildSmoothTurn( const CVec2 &vUnitMoveDir, const 
 				bres.MakePointStep();
 			}
 
-			if ( bres.GetDirection() == tile && ( GetAIMap()->GetTerrain()->CanUnitGo( nTileRadius, bres.GetDirection(), cAIClass ) != FREE_NONE ) )
+			if ( bres.GetDirection() == tile &&
+			     ( GetAIMap()->GetTerrain()->CanUnitGo( nTileRadius, bres.GetDirection(), cAIClass ) != FREE_NONE ) )
 			{
 				GetPath()->InsertTiles( insertedTiles );
 
@@ -261,10 +287,14 @@ void CStandartSmoothMechPath::AddSmoothTurn()
 	if ( !BuildSmoothTurn( GetUnit()->GetDirectionVector(), true ) )
 	{
 		// Поворот достаточно большой, необходимо хитро разворачиваться, сначала по большому полукругу
-		if ( !BuildLargeTurn( GetUnit()->GetFrontDirection(), GetDirectionByVector( GetSplineDX() ), GetPath()->GetFinishPoint() ) )
+		if ( !BuildLargeTurn(
+						 GetUnit()->GetFrontDirection(), GetDirectionByVector( GetSplineDX() ), GetPath()->GetFinishPoint() ) )
 		{
 			// Ну и напоследок через серею маленьких разворотов
-			if ( !BuildSmallTurns( GetUnit()->GetFrontDirection(), GetDirectionByVector( GetSplineDX() ), GetPath()->GetFinishPoint(), true ) )
+			if ( !BuildSmallTurns( GetUnit()->GetFrontDirection(),
+			                       GetDirectionByVector( GetSplineDX() ),
+			                       GetPath()->GetFinishPoint(),
+			                       true ) )
 			{
 			}
 		}
@@ -278,15 +308,18 @@ bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 	const uint16_t wRightDirsDiff = DirsDifference( wUnitDir, wNewDir );
 	const uint16_t wBackDirsDiff = DirsDifference( wUnitDir + 32768, wNewDir );
 	// поворот небольшой
-	if ( wRightDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING ||
-		bCanBackward && wBackDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING )
+	if ( wRightDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING || bCanBackward && wBackDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING )
 		return true;
 	else
 	{
 		const CVec2 vNewDir = GetVectorByDirection( wNewDir );
 		int nResult = -1;
 
-		CTemporaryUnitProfileUnlocker unlocker( GetUnit()->GetUniqueID(), GetUnit()->GetUnitProfile(), GetUnit()->IsLockingTiles(), false, GetAIMap()->GetTerrain() );
+		CTemporaryUnitProfileUnlocker unlocker( GetUnit()->GetUniqueID(),
+		                                        GetUnit()->GetUnitProfile(),
+		                                        GetUnit()->IsLockingTiles(),
+		                                        false,
+		                                        GetAIMap()->GetTerrain() );
 
 		bool bCanRotateForward = GetUnit()->CheckTurn( 1.0f, vNewDir, false, false );
 		bool bCanRotateBackward = GetUnit()->CheckTurn( 1.0f, -vNewDir, false, false );
@@ -297,8 +330,7 @@ bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 			{
 				const uint16_t wDangerousDir = GetUnit()->GetDangerousDir();
 
-				bCanRotateForward =
-					DirsDifference( wNewDir, wDangerousDir ) < DirsDifference( wNewDir + 32768, wDangerousDir );
+				bCanRotateForward = DirsDifference( wNewDir, wDangerousDir ) < DirsDifference( wNewDir + 32768, wDangerousDir );
 				bCanRotateBackward = !bCanRotateForward;
 			}
 		}
@@ -332,7 +364,7 @@ bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 bool CStandartSmoothMechPath::RideAway()
 {
 	return false;
-/*
+	/*
 	CVec2 vDir = GetSplineDX();
 	Normalize( &vDir );
 
@@ -389,7 +421,8 @@ bool CStandartSmoothMechPath::RideAway()
 */
 }
 
-bool CStandartSmoothMechPath::Init( CBasePathUnit *_pUnit, IPath *_pPath, bool _bSmoothTurn, bool _bCheckTurn, CAIMap *pAIMap )
+bool CStandartSmoothMechPath::Init(
+		CBasePathUnit *_pUnit, IPath *_pPath, bool _bSmoothTurn, bool _bCheckTurn, CAIMap *pAIMap )
 {
 	lastCheckToRightTurn = 0;
 	bSmoothTurn = _bSmoothTurn;
@@ -424,18 +457,26 @@ bool CStandartSmoothMechPath::Init( CBasePathUnit *_pUnit, IPath *_pPath, bool _
 
 const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, const CVec2 &vNewPoint )
 {
-	if ( !IsFinished() && circles.empty() && ( fabs2( vCenter - vLastValidatedPoint ) >= sqr( GetAIMap()->GetTileSize() / 2.0f ) /* || GetUnit()->IsTurning()*/ ) )
+	if ( !IsFinished() && circles.empty() &&
+	     ( fabs2( vCenter - vLastValidatedPoint ) >=
+	       sqr( GetAIMap()->GetTileSize() / 2.0f ) /* || GetUnit()->IsTurning()*/ ) )
 	{
 		vLastValidatedPoint = vCenter;
 
 		SUnitProfile unitProfile( GetUnit()->GetUnitProfile() );
 		SRect unitRect;
 		if ( unitProfile.bRect )
-			unitRect.InitRect( vCenter, GetUnit()->GetDirectionVector(), unitProfile.rect.lengthAhead + GetAIMap()->GetTileSize() * 0.85f,
-			0, unitProfile.rect.width * 0.9f );
+			unitRect.InitRect( vCenter,
+			                   GetUnit()->GetDirectionVector(),
+			                   unitProfile.rect.lengthAhead + GetAIMap()->GetTileSize() * 0.85f,
+			                   0,
+			                   unitProfile.rect.width * 0.9f );
 		else
-			unitRect.InitRect( vCenter, GetUnit()->GetDirectionVector(), unitProfile.circle.r + GetAIMap()->GetTileSize() * 0.85f,
-			0, unitProfile.circle.r * 0.6f );
+			unitRect.InitRect( vCenter,
+			                   GetUnit()->GetDirectionVector(),
+			                   unitProfile.circle.r + GetAIMap()->GetTileSize() * 0.85f,
+			                   0,
+			                   unitProfile.circle.r * 0.6f );
 
 		const EAIClasses aiClass = GetUnit()->GetAIPassabilityClass();
 		if ( GetAIMap()->IsRectOnLockedTiles( unitRect, aiClass ) )
@@ -451,14 +492,14 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 			{
 				const SVector &tile = iter->tile;
 				if ( abs( tile.x - unitTileCenter.x ) <= nBoundTileRadius ||
-					   abs( tile.y - unitTileCenter.y ) <= nBoundTileRadius )
+				     abs( tile.y - unitTileCenter.y ) <= nBoundTileRadius )
 					iter = tiles.erase( iter );
 				else
 				{
 					const CVec2 vTileCenter = GetAIMap()->GetPointByTile( tile );
 					CVec2 vDiff = vTileCenter - vCenter;
 					Normalize( &vDiff );
-					if ( fabs( vDiff * GetUnit()->GetDirectionVector() ) > 1/FP_SQRT_2 )
+					if ( fabs( vDiff * GetUnit()->GetDirectionVector() ) > 1 / FP_SQRT_2 )
 						iter = tiles.erase( iter );
 					else
 					{
@@ -474,10 +515,13 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 			else
 			{
 				const int nLockID = GetAIMap()->GetTerrain()->TemporaryLockTiles( tiles );
-				GetPath()->RecalcPath( vNewPoint, GetUnit()->GetProbablePlane( GetAIMap()->GetTile( vNewPoint ) ) == PLANE_WATER, GetUnit()->GetLastKnownGoodTile() );
+				GetPath()->RecalcPath( vNewPoint,
+				                       GetUnit()->GetProbablePlane( GetAIMap()->GetTile( vNewPoint ) ) == PLANE_WATER,
+				                       GetUnit()->GetLastKnownGoodTile() );
 				if ( GetPath()->IsFinished() || !Init( GetUnit(), GetPath(), false, false, GetAIMap() ) )
 				{
-					if ( GetUnit()->GetCollision()->GetName() == NCollision::ECN_FREE && ( vLastStopPosition.x == -1 || mDistance( vLastStopPosition, GetUnit()->GetCenterTile() ) > 4 ) )
+					if ( GetUnit()->GetCollision()->GetName() == NCollision::ECN_FREE &&
+					     ( vLastStopPosition.x == -1 || mDistance( vLastStopPosition, GetUnit()->GetCenterTile() ) > 4 ) )
 						CPtr<ICollision> pCollison = CreateCollision( GetUnit(), 0, -1, NCollision::ECN_STOP );
 					else
 						FinishPath();
@@ -507,7 +551,7 @@ bool CStandartSmoothMechPath::UpdateDirection()
 
 		// слишком велика разница между старым и новым направлениями, нужно повернуться
 		const uint16_t wDirsDiff = DirsDifference( GetUnit()->GetDirection(), GetDirectionByVector( GetSplineDX() ) );
-		if ( wDirsDiff != 0 && ( GetUnit()->IsTurning() || wDirsDiff	> DIR_DIFF_TO_SMOOTH_TURNING ) )
+		if ( wDirsDiff != 0 && ( GetUnit()->IsTurning() || wDirsDiff > DIR_DIFF_TO_SMOOTH_TURNING ) )
 		{
 			if ( !GetUnit()->TurnToDirection( GetDirectionByVector( GetSplineDX() ), true, !bForceGoBackward ) )
 				return true;
@@ -577,8 +621,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 			if ( GetUnit()->IsDangerousDirExist() )
 			{
 				const uint16_t wDangerousDir = GetUnit()->GetDangerousDir();
-				bCheck = DirsDifference( wFrontDir, wDangerousDir ) >
-					DirsDifference( wFrontDir + 32768, wDangerousDir );
+				bCheck = DirsDifference( wFrontDir, wDangerousDir ) > DirsDifference( wFrontDir + 32768, wDangerousDir );
 			}
 
 			if ( bCheck )
@@ -587,7 +630,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 				if ( GetUnit()->CheckTurn( 1.0f, -vFrontDir, false, false ) )
 				{
 					bCanGoForward = true;
-//					GetUnit()->ForceGoForward();
+					//					GetUnit()->ForceGoForward();
 					if ( !GetPath()->CanGoBackward( GetUnit() ) && GetUnit()->CanTurnRound() )
 						GetUnit()->TurnToDirection( wFrontDir, false, true );
 				}
@@ -646,7 +689,11 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 		if ( fDist <= sqr( 2.5f * unitProfile.GetHalfLength() ) )
 		{
 			SRect rect;
-			rect.InitRect( vResult, GetUnit()->GetDirectionVector(), unitProfile.GetLengthAhead() + GetAIMap()->GetTileSize() * 0.5f, 0.0f, unitProfile.GetHalfWidth() * 0.45f );
+			rect.InitRect( vResult,
+			               GetUnit()->GetDirectionVector(),
+			               unitProfile.GetLengthAhead() + GetAIMap()->GetTileSize() * 0.5f,
+			               0.0f,
+			               unitProfile.GetHalfWidth() * 0.45f );
 
 			if ( GetUnit()->IsOnLockedTiles( rect ) )
 			{

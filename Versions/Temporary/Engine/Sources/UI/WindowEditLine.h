@@ -1,8 +1,6 @@
 // WindowEditLine.h: interface for the CWindowEditLine class.
 //
 
-
-
 #pragma once
 
 #include "Window.h"
@@ -13,27 +11,27 @@ struct ISound;
 // for edit text. keep focus if being clicked upon
 class CWindowEditLine : public CWindow, public IEditLine
 {
-	OBJECT_BASIC_METHODS(CWindowEditLine)
+	OBJECT_BASIC_METHODS( CWindowEditLine )
 
 	CUIMORegConttainer impotantMsgs;
 
-	CObj<IML> pGfxText;								// text to display
-	std::list<CTRect<float> > rectsList;
+	CObj<IML> pGfxText; // text to display
+	std::list<CTRect<float>> rectsList;
 	//pGfxText->Render( &rectsList, CTPoint<float>( 0, 0 ), CTRect<float>( 0, 0, 0, 0 ) );
 
-	int timeSegment;							// for counting segment times
+	int timeSegment; // for counting segment times
 
-	int nCursorPos;									//позиция курсора в текущей редактируемой строке
-	bool bShowCursor;								//для мигания курсора
-	int nBeginSel;								//начало выделения
-	int nEndSel;									//конец выделения
-	int m_nBeginDragSel;						//начало выделения мышкой
-	int nBeginText;		//с этой позиции начинается отображение текста szFullText
+	int nCursorPos;      //позиция курсора в текущей редактируемой строке
+	bool bShowCursor;    //для мигания курсора
+	int nBeginSel;       //начало выделения
+	int nEndSel;         //конец выделения
+	int m_nBeginDragSel; //начало выделения мышкой
+	int nBeginText;      //с этой позиции начинается отображение текста szFullText
 
 	//для скроллинга текста влево и вправо
 	//в pGFXText будет храниться лишь часть отображаемой строки, а в этой переменной полностью текст
 	std::wstring wszFullText;
-	bool bRegistered;												// message sink registered
+	bool bRegistered; // message sink registered
 	bool bMouseButton1Down;
 
 	CDBPtr<NDb::SWindowEditLineShared> pShared;
@@ -66,7 +64,7 @@ class CWindowEditLine : public CWindow, public IEditLine
 	void SetTextToGfx( const std::wstring &szText );
 	//bool ProcessEvent( const struct SGameMessage &msg );
 protected:
-	NDb::SWindow* GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance() { return pInstance; }
 
 public:
 	CWindowEditLine();
@@ -96,8 +94,7 @@ public:
 	void SetCursor( const int nPos );
 	void SetSelection( const int nBegin, const int nEnd );
 	void SetText( const wchar_t *pszText );
-	const wchar_t * GetText() const { return wszFullText.c_str(); }
-
+	const wchar_t *GetText() const { return wszFullText.c_str(); }
 
 	void RegisterObservers();
 

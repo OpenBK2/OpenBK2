@@ -15,10 +15,15 @@ class CPinger : public CPacketProcessor
 	int nNetVersion;
 	int nAttemptsLeft;
 	bool bConnectNow;
+
 public:
 	CPinger();
-	CPinger( const int &nPeriod, const std::string &_szName, const std::string &_szPassword, const std::string &_szIP,
-		const int &_nPort, const int &_nNetVersion );
+	CPinger( const int &nPeriod,
+	         const std::string &_szName,
+	         const std::string &_szPassword,
+	         const std::string &_szIP,
+	         const int &_nPort,
+	         const int &_nNetVersion );
 
 	bool Segment();
 

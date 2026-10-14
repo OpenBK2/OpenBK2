@@ -1,21 +1,21 @@
 #pragma once
 #include "3Dmotor_export.h"
 
-
 #include "GSceneUtils.h"
 #include "Misc/2Darray.h"
 
 namespace NGfx
 {
-	class CTexture;
+class CTexture;
 }
 
 namespace NGScene
 {
 
-class _3DMOTOR_EXPORT CScreenshotTexture: public CPtrFuncBase<NGfx::CTexture>
+class _3DMOTOR_EXPORT CScreenshotTexture : public CPtrFuncBase<NGfx::CTexture>
 {
-	OBJECT_BASIC_METHODS(CScreenshotTexture);
+	OBJECT_BASIC_METHODS( CScreenshotTexture );
+
 public:
 	enum EMode
 	{
@@ -28,7 +28,13 @@ private:
 	EMode eMode;
 	CVec4 vCoeff;
 	CArray2D<NGfx::SPixel8888> sScreenShot;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&eMode); f.Add(3,&vCoeff); f.Add(4,&sScreenShot); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &eMode );
+		f.Add( 3, &vCoeff );
+		f.Add( 4, &sScreenShot );
+		return 0;
+	}
 
 protected:
 	void Recalc();

@@ -3,8 +3,7 @@
 #include "AITimer.h"
 #include "Main/GameTimer.h"
 
-
-IGameTimer * CAITimer::pTimer = 0;
+IGameTimer *CAITimer::pTimer = 0;
 
 CAITimer::CAITimer()
 {
@@ -18,12 +17,12 @@ void CAITimer::ToClientTime( NTimer::STime *pTime )
 
 NTimer::STime CAITimer::GetSegmentTime()
 {
-	return pTimer->GetSegmentTime() ;//+ SConsts::AI_SEGMENT_DURATION * 3500 ;
+	return pTimer->GetSegmentTime(); //+ SConsts::AI_SEGMENT_DURATION * 3500 ;
 }
 
 NTimer::STime CAITimer::GetGameTime()
 {
-	return pTimer->GetGameTime() ;//+ SConsts::AI_SEGMENT_DURATION * 3500 ;
+	return pTimer->GetGameTime(); //+ SConsts::AI_SEGMENT_DURATION * 3500 ;
 }
 
 void CAITimer::SetSpeed( int nSpeed )

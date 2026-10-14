@@ -19,5 +19,5 @@ struct SObjectSet;
 // of them at once on the way past. Worth settling separately.
 namespace NObjectProperties
 {
-	void Show( const SObjectSet &rObjectSet );
+void Show( const SObjectSet &rObjectSet );
 }

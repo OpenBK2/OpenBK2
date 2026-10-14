@@ -14,10 +14,8 @@
 //						MARKER SET
 //
 
-SMarkerSet::SMarkerSet(	const CVec3 &rvBuildingPos, const CVec2 &rvBuildingOrigin ) :
-	bIsInScene( false ),
-	vBuildingPos( rvBuildingPos ),
-	vBuildingOrigin( rvBuildingOrigin )
+SMarkerSet::SMarkerSet( const CVec3 &rvBuildingPos, const CVec2 &rvBuildingOrigin )
+		: bIsInScene( false ), vBuildingPos( rvBuildingPos ), vBuildingOrigin( rvBuildingOrigin )
 {
 	xAxisID[0] = -1;
 	xAxisID[1] = -1;
@@ -37,15 +35,15 @@ SMarkerSet::~SMarkerSet()
 
 void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &points )
 {
-	const CVec4 CLR_X( 0.5f,	0,		0,		1.0f );
-	const CVec4 CLR_Y( 0,			0.5f,	0,		1.0f );
-	const CVec4 CLR_Z( 0,			0,		0.5f,	1.0f );
-	const CVec4 CLR_A( 0.5f,	0.5f,	0.5f,	1.0f );
+	const CVec4 CLR_X( 0.5f, 0, 0, 1.0f );
+	const CVec4 CLR_Y( 0, 0.5f, 0, 1.0f );
+	const CVec4 CLR_Z( 0, 0, 0.5f, 1.0f );
+	const CVec4 CLR_A( 0.5f, 0.5f, 0.5f, 1.0f );
 
-	const CVec4 CLR_X_ACTIVE( 1.0f,		0,		0,		1.0f );
-	const CVec4 CLR_Y_ACTIVE( 0,			1.0f,	0,		1.0f );
-	const CVec4 CLR_Z_ACTIVE( 0,			0,		1.0f,	1.0f );
-	const CVec4 CLR_A_ACTIVE( 1.0f,		1.0f,	1.0f,	1.0f );
+	const CVec4 CLR_X_ACTIVE( 1.0f, 0, 0, 1.0f );
+	const CVec4 CLR_Y_ACTIVE( 0, 1.0f, 0, 1.0f );
+	const CVec4 CLR_Z_ACTIVE( 0, 0, 1.0f, 1.0f );
+	const CVec4 CLR_A_ACTIVE( 1.0f, 1.0f, 1.0f, 1.0f );
 
 	const float F_AXIS_SIZE = 20.0f;
 	const float F_ARROW_SIZE = 50.0f;
@@ -57,8 +55,8 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 	if ( !pScene )
 		return;
 
-	int nIdx = (bActive ? 1 : 0);
-	int nBaseIdx = (bActive ? 0x1000 : 0x2000);
+	int nIdx = ( bActive ? 1 : 0 );
+	int nBaseIdx = ( bActive ? 0x1000 : 0x2000 );
 
 	CVec4 clrX = ( bActive ? CLR_X_ACTIVE : CLR_X );
 	CVec4 clrY = ( bActive ? CLR_Y_ACTIVE : CLR_Y );
@@ -77,10 +75,10 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 		CVec3 v = i->pos;
 
 		polyline[k] = v;
-		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_X;
+		polyline[k + 1] = v + F_AXIS_SIZE * V3_AXIS_X;
 
 		indices[k] = k;
-		indices[k+1] = k+1;
+		indices[k + 1] = k + 1;
 
 		k += 2;
 	}
@@ -91,7 +89,7 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 	{
 		CVec3 v = i->pos;
 		polyline[k] = v;
-		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_Y;
+		polyline[k + 1] = v + F_AXIS_SIZE * V3_AXIS_Y;
 		k += 2;
 	}
 	++nBaseIdx;
@@ -102,7 +100,7 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 	{
 		CVec3 v = i->pos;
 		polyline[k] = v;
-		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_Z;
+		polyline[k + 1] = v + F_AXIS_SIZE * V3_AXIS_Z;
 		k += 2;
 	}
 	++nBaseIdx;
@@ -114,13 +112,13 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 		CVec3 v = i->pos;
 		polyline[k] = v;
 		float fR = i->fDir;
-		const float F_3PI2 = (3.0f * FP_PI2);
+		const float F_3PI2 = ( 3.0f * FP_PI2 );
 		if ( fR >= F_3PI2 )
 			fR -= F_3PI2;
 		else
 			fR += FP_PI2;
-		CVec3 dv( cos(fR), sin(fR), 0.01f );
-		polyline[k+1] = v + dv * F_ARROW_SIZE;
+		CVec3 dv( cos( fR ), sin( fR ), 0.01f );
+		polyline[k + 1] = v + dv * F_ARROW_SIZE;
 		k += 2;
 	}
 	++nBaseIdx;
@@ -166,12 +164,8 @@ void SMarkerSet::DetachFromScene()
 	bIsInScene = false;
 }
 
-void SMarkerSet::AddMarker( const CVec3 &rPos,
-													 const float fDir,
-													 EDirMeasure eDirMeasure,
-													 bool bActive,
-													 bool bUseBuildingPos,
-													 bool bUseOrigin )
+void SMarkerSet::AddMarker(
+		const CVec3 &rPos, const float fDir, EDirMeasure eDirMeasure, bool bActive, bool bUseBuildingPos, bool bUseOrigin )
 {
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene )
@@ -199,31 +193,31 @@ void SMarkerSet::AddMarker( const CVec3 &rPos,
 
 	if ( bUseOrigin )
 	{
-		const CVec2 origin = CVec2(vBuildingOrigin.y, -vBuildingOrigin.x) ^ CVec2( 0, 1 );
+		const CVec2 origin = CVec2( vBuildingOrigin.y, -vBuildingOrigin.x ) ^ CVec2( 0, 1 );
 		point.pos -= CVec3( origin.x, origin.y, 0.0f );
 	}
 
 	switch ( eDirMeasure )
 	{
-	case DIR_IN_DEGREES:
+		case DIR_IN_DEGREES:
 		{
 			const float F_GRAD_2_RAD = FP_2PI / 360.0f;
-			point.fDir = F_GRAD_2_RAD *fDir;
+			point.fDir = F_GRAD_2_RAD * fDir;
 		}
 		break;
-	case DIR_IN_RADIAN:
+		case DIR_IN_RADIAN:
 		{
 			point.fDir = fDir;
 		}
 		break;
-	case DIR_IN_AIGRAD:
+		case DIR_IN_AIGRAD:
 		{
-			point.fDir = AI2VisRad(fDir);
+			point.fDir = AI2VisRad( fDir );
 		}
 		break;
 	}
 
-    if ( bActive )
+	if ( bActive )
 		activePoints.push_back( point );
 	else
 		points.push_back( point );

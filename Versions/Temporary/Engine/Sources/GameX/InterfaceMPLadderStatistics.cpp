@@ -16,14 +16,12 @@
 
 // CInterfaceMPLadderStatistics
 
-CInterfaceMPLadderStatistics::CInterfaceMPLadderStatistics() :
-CInterfaceScreenBase( "MPLadderStatistics", "ladder_statistics" )
+CInterfaceMPLadderStatistics::CInterfaceMPLadderStatistics()
+		: CInterfaceScreenBase( "MPLadderStatistics", "ladder_statistics" )
 {
 }
 
-CInterfaceMPLadderStatistics::~CInterfaceMPLadderStatistics()
-{
-}
+CInterfaceMPLadderStatistics::~CInterfaceMPLadderStatistics() {}
 
 bool CInterfaceMPLadderStatistics::Init()
 {
@@ -36,7 +34,7 @@ bool CInterfaceMPLadderStatistics::Init()
 
 	IInterfaceBase *pPrevInterface = NMainLoop::GetPrevInterface( this );
 	if ( pPrevInterface )
-		pPrevMPScreen = dynamic_cast<CInterfaceMPScreenBase*>( pPrevInterface );
+		pPrevMPScreen = dynamic_cast<CInterfaceMPScreenBase *>( pPrevInterface );
 
 	pWaiting = GetChildChecked<ITextView>( pMain, "WaitingLine", true );
 	pAdvList = GetChildChecked<IScrollableContainer>( pMain, "RightPanel", true );
@@ -81,12 +79,12 @@ bool CInterfaceMPLadderStatistics::StepLocal( bool bAppActive )
 	{
 		while ( 1 )
 		{
-			CPtr< SMPUIMessage> pMsg = Singleton<IMPToUIManager>()->GetUIMessage();
+			CPtr<SMPUIMessage> pMsg = Singleton<IMPToUIManager>()->GetUIMessage();
 			if ( !pMsg )
 				break;
 			if ( pMsg->eMessageType == EMUI_NIVAL_NET_LADDER_STATS )
 			{
-				SMPUILadderStatsMessage *pStatsMsg = dynamic_cast_ptr<SMPUILadderStatsMessage*>( pMsg );
+				SMPUILadderStatsMessage *pStatsMsg = dynamic_cast_ptr<SMPUILadderStatsMessage *>( pMsg );
 				if ( pStatsMsg )
 					OnLadderStatsMessage( pStatsMsg );
 			}
@@ -156,7 +154,8 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	pRank->SetText( pLevel->GetDBText() + GET_TEXT_PRE( pMPConsts->sides[info.nRace].ladderRanks[pMsg->nRank]., Name ) );
 	pBattles->SetText( pBattles->GetDBText() + NStr::ToUnicode( std::to_string( nWins + nLosses ) ) );
 	pWinLose->SetText( pWinLose->GetDBText() + NStr::ToUnicode( fmt::format( "{}/{}", nWins, nLosses ) ) );
-	pGameTime->SetText( pGameTime->GetDBText() + NStr::ToUnicode( fmt::format( "{}:{:02d}:{:02d}", nPlayDays, nPlayHours, nPlayMinutes ) ) );
+	pGameTime->SetText( pGameTime->GetDBText() +
+	                    NStr::ToUnicode( fmt::format( "{}:{:02d}:{:02d}", nPlayDays, nPlayHours, nPlayMinutes ) ) );
 
 	//////////////////////////////////////////// Medals Panel
 	IScrollableContainer *pMedalsList = GetChildChecked<IScrollableContainer>( pMain, "MedalsList", true );
@@ -214,8 +213,10 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 
 	//////////////////////////////////////// Advanced Panel
 	// Win/Lose
-	Add4Line( L"", GetScreen()->GetTextEntry( "T_HDR_WON" ),
-		GetScreen()->GetTextEntry( "T_HDR_LOST" ), GetScreen()->GetTextEntry( "T_HDR_WON_PERCENT" ) );
+	Add4Line( L"",
+	          GetScreen()->GetTextEntry( "T_HDR_WON" ),
+	          GetScreen()->GetTextEntry( "T_HDR_LOST" ),
+	          GetScreen()->GetTextEntry( "T_HDR_WON_PERCENT" ) );
 	Add4Line( L"", L"", L"", L"" );
 	AddWinLoseSummary( info, GetScreen()->GetTextEntry( "T_HDR_SOLO" ), 1, 0 );
 	AddWinLoseSummary( info, GetScreen()->GetTextEntry( "T_HDR_TEAM" ), 0, 1 );
@@ -269,7 +270,10 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	pWaiting->ShowWindow( false );
 }
 
-void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &info, const std::wstring &wszName, int nUseSolo, int nUseTeam )
+void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &info,
+                                                      const std::wstring &wszName,
+                                                      int nUseSolo,
+                                                      int nUseTeam )
 {
 	int nWins = 0;
 	int nLosses = 0;
@@ -278,21 +282,28 @@ void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &i
 		nWins += nUseSolo * info.raceWinsSolo[i] + nUseTeam * info.raceWinsTeam[i];
 		nLosses += nUseSolo * info.raceLossesSolo[i] + nUseTeam * info.raceLossesTeam[i];
 	}
-	int nPercent = ( nWins + nLosses > 0 ) ?  nWins * 100 / ( nWins + nLosses ) : 0;
-	Add4Line( wszName, NStr::ToUnicode( std::to_string( nWins ) ),
-		NStr::ToUnicode( std::to_string( nLosses ) ), NStr::ToUnicode( fmt::format( "{}%", nPercent ) ) );
+	int nPercent = ( nWins + nLosses > 0 ) ? nWins * 100 / ( nWins + nLosses ) : 0;
+	Add4Line( wszName,
+	          NStr::ToUnicode( std::to_string( nWins ) ),
+	          NStr::ToUnicode( std::to_string( nLosses ) ),
+	          NStr::ToUnicode( fmt::format( "{}%", nPercent ) ) );
 	for ( int i = 0; i < countryNames.size(); ++i )
 	{
 		nWins = nUseSolo * info.raceWinsSolo[i] + nUseTeam * info.raceWinsTeam[i];
 		nLosses = nUseSolo * info.raceLossesSolo[i] + nUseTeam * info.raceLossesTeam[i];
-		nPercent = ( nWins + nLosses > 0 ) ?  nWins * 100 / ( nWins + nLosses ) : 0;
-		Add4Line( countryNames[i], NStr::ToUnicode( std::to_string( nWins ) ),
-			NStr::ToUnicode( std::to_string( nLosses ) ), NStr::ToUnicode( fmt::format( "{}%", nPercent ) ) );
+		nPercent = ( nWins + nLosses > 0 ) ? nWins * 100 / ( nWins + nLosses ) : 0;
+		Add4Line( countryNames[i],
+		          NStr::ToUnicode( std::to_string( nWins ) ),
+		          NStr::ToUnicode( std::to_string( nLosses ) ),
+		          NStr::ToUnicode( fmt::format( "{}%", nPercent ) ) );
 	}
 	Add4Line( L"", L"", L"", L"" );
 }
 
-void CInterfaceMPLadderStatistics::Add4Line( const std::wstring &wszItem1, const std::wstring &wszItem2, const std::wstring &wszItem3, const std::wstring &wszItem4 )
+void CInterfaceMPLadderStatistics::Add4Line( const std::wstring &wszItem1,
+                                             const std::wstring &wszItem2,
+                                             const std::wstring &wszItem3,
+                                             const std::wstring &wszItem4 )
 {
 	IWindow *pItem = AddWindowCopy( pAdvList, pAdv4Template );
 	if ( !pItem )
@@ -334,7 +345,7 @@ void CInterfaceMPLadderStatistics::Add2Line( const std::wstring &wszItem1, const
 
 void CInterfaceMPLadderStatistics::Add1Line( const std::wstring &wszItem )
 {
-	ITextView *pItem = dynamic_cast<ITextView*>( AddWindowCopy( pAdvList, pAdv1Template ) );
+	ITextView *pItem = dynamic_cast<ITextView *>( AddWindowCopy( pAdvList, pAdv1Template ) );
 	if ( !pItem )
 		return;
 	pItem->ShowWindow( true );
@@ -373,14 +384,12 @@ bool CInterfaceMPLadderStatistics::OnShowMedal( const std::string &szSender )
 
 // CICMPLadderStatistics
 
-void CICMPLadderStatistics::PreCreate()
-{
-}
+void CICMPLadderStatistics::PreCreate() {}
 
 void CICMPLadderStatistics::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
-	CInterfaceMPLadderStatistics *pLS = dynamic_cast<CInterfaceMPLadderStatistics*>( pInterface );
+	CInterfaceMPLadderStatistics *pLS = dynamic_cast<CInterfaceMPLadderStatistics *>( pInterface );
 	if ( pLS )
 		pLS->RequestInfo( szNick );
 }

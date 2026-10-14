@@ -5,9 +5,7 @@
 #include "ManuverInternal.h"
 #include "Stats_B2_M1/DBPlaneManuvers.h"
 
-
 //	CManuverStateDesc
-
 
 void CManuverStateDesc::Init( const enum EPlanesAttitude _att, struct IPlane *pPos, struct IPlane *pEnemy )
 {
@@ -22,14 +20,17 @@ void CManuverStateDesc::Init( const enum EPlanesAttitude _att, struct IPlane *pP
 	const CPlanePreferences &pref2 = pEnemy->GetPreferencesB2();
 	const float fTurnR1 = pref1.GetR( fabs( vSpeed1 ) );
 
+	enemyDirection =
+			DirsDifference( GetDirectionByVector( vSpeed1.x, vSpeed1.y ), GetDirectionByVector( vDist.x, vDist.y ) ) * 2.0f /
+			65536.0f;
 
-	enemyDirection = DirsDifference( GetDirectionByVector( vSpeed1.x, vSpeed1.y ),
-		GetDirectionByVector( vDist.x, vDist.y ) ) * 2.0f / 65536.0f;
+	selfDirection =
+			DirsDifference( GetDirectionByVector( vSpeed2.x, vSpeed2.y ), GetDirectionByVector( -vDist.x, -vDist.y ) ) *
+			2.0f / 65536.0f;
 
-	selfDirection = DirsDifference( GetDirectionByVector( vSpeed2.x, vSpeed2.y ),
-		GetDirectionByVector( -vDist.x, -vDist.y ) ) * 2.0f / 65536.0f;
-
-	speedAngle = DirsDifference( GetDirectionByVector( vSpeed2.x, vSpeed2.y ), GetDirectionByVector( vSpeed1.x, vSpeed1.y ) ) * 2.0f / 65536.0f;
+	speedAngle =
+			DirsDifference( GetDirectionByVector( vSpeed2.x, vSpeed2.y ), GetDirectionByVector( vSpeed1.x, vSpeed1.y ) ) *
+			2.0f / 65536.0f;
 
 	distance = fabs( vDist ) / fTurnR1;
 	selfHeight = ( vPos1.z - SPlanesConsts::GetMinHeight() ) / fTurnR1;
@@ -40,13 +41,12 @@ void CManuverStateDesc::Init( const enum EPlanesAttitude _att, struct IPlane *pP
 
 bool CManuverStateDesc::CheckSuitable( const NDb::SManuverDescriptor *pDesc ) const
 {
-	return
-		IsParamSuitable( enemyDirection, pDesc->conditions.pEnemyDirection ) &&
-		IsParamSuitable( selfDirection, pDesc->conditions.pSelfDirection ) &&
-		IsParamSuitable( speedAngle, pDesc->conditions.pSpeedAngle ) &&
-		IsParamSuitable( distance, pDesc->conditions.pDistance ) &&
-		IsParamSuitable( selfHeight, pDesc->conditions.pSelfHeight ) &&
-		IsParamSuitable( heightDifference, pDesc->conditions.pHeightDifference ) &&
-		IsParamSuitable( selfSpeed, pDesc->conditions.pSelfSpeed ) &&
-		IsParamSuitable( enemySpeed, pDesc->conditions.pEnemySpeed );
+	return IsParamSuitable( enemyDirection, pDesc->conditions.pEnemyDirection ) &&
+	       IsParamSuitable( selfDirection, pDesc->conditions.pSelfDirection ) &&
+	       IsParamSuitable( speedAngle, pDesc->conditions.pSpeedAngle ) &&
+	       IsParamSuitable( distance, pDesc->conditions.pDistance ) &&
+	       IsParamSuitable( selfHeight, pDesc->conditions.pSelfHeight ) &&
+	       IsParamSuitable( heightDifference, pDesc->conditions.pHeightDifference ) &&
+	       IsParamSuitable( selfSpeed, pDesc->conditions.pSelfSpeed ) &&
+	       IsParamSuitable( enemySpeed, pDesc->conditions.pEnemySpeed );
 }

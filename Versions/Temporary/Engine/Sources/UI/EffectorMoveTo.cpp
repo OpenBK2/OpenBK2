@@ -1,7 +1,6 @@
 // EffectorMoveTo.cpp: implementation of the CEffectorMoveTo class.
 //
 
-
 #include "stdafx.h"
 #include "EffectorMoveTo.h"
 
@@ -11,25 +10,28 @@
 
 // Construction/Destruction
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075C01, CEffectorMoveTo)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075C01, CEffectorMoveTo )
 
 int CEffectorMoveTo::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pElement );
 	saver.Add( 2, &bFinished );
 	saver.Add( 3, &vMoveOffset );
-	saver.Add( 4, &fMoveTime );												// points per second
-	saver.Add( 5, &vSpeed );														// speed
-	saver.Add( 6, &fElapsedTime );											// time elapsed so far
+	saver.Add( 4, &fMoveTime );    // points per second
+	saver.Add( 5, &vSpeed );       // speed
+	saver.Add( 6, &fElapsedTime ); // time elapsed so far
 	saver.Add( 7, &vMoveFrom );
 	saver.Add( 8, &bForward );
 
 	return 0;
 }
 
-void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
+void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd,
+                                 struct IScreen *pScreen,
+                                 SWindowContext *pContext,
+                                 const std::string &szAnimatedWindow )
 {
-	const NDb::SUISMoveTo *pCmd( checked_cast<const NDb::SUISMoveTo*>( _pCmd ) );
+	const NDb::SUISMoveTo *pCmd( checked_cast<const NDb::SUISMoveTo *>( _pCmd ) );
 	CParam<CVec2> vOffset( pCmd->vOffset );
 	CParam<float> moveTime( pCmd->fMoveTime );
 	CParam<std::string> elementToMove( pCmd->szElementToMove );
@@ -52,7 +54,7 @@ void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	fMoveTime = moveTime.Get();
 	bForward = true;
 
-	pElement = dynamic_cast<CWindow*>( pScreen->GetElement( elementToMove.Get(), true ) );
+	pElement = dynamic_cast<CWindow *>( pScreen->GetElement( elementToMove.Get(), true ) );
 	NI_ASSERT( pElement != 0, fmt::format( "no element \"{}\"", elementToMove.Get() ) );
 	if ( pElement )
 	{
@@ -80,14 +82,14 @@ void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 
 void CEffectorMoveTo::Reverse()
 {
-	std::pair<CVec2,int> res( GetCur() );
+	std::pair<CVec2, int> res( GetCur() );
 	bForward = !bForward;
 
 	const CVec2 vTmp( vMoveFrom );
 	vMoveFrom = vMoveOffset + vMoveFrom;
 	vMoveOffset = -vMoveOffset;
 
-	fElapsedTime = fabs(res.first - vMoveFrom) / fabs( vSpeed );
+	fElapsedTime = fabs( res.first - vMoveFrom ) / fabs( vSpeed );
 
 	//fMoveTime = fElapsedTime;
 	//fElapsedTime = 0;
@@ -95,9 +97,9 @@ void CEffectorMoveTo::Reverse()
 	bFinished = false;
 }
 
-const std::pair<CVec2,int> CEffectorMoveTo::GetCur() const
+const std::pair<CVec2, int> CEffectorMoveTo::GetCur() const
 {
-	std::pair<CVec2,int> res;
+	std::pair<CVec2, int> res;
 	if ( fElapsedTime >= fMoveTime )
 	{
 		res.first = vMoveOffset + vMoveFrom;
@@ -115,14 +117,14 @@ const int CEffectorMoveTo::Segment( const int timeDiff, struct IScreen *pScreen,
 {
 	const float fFormerElapsedTime = fElapsedTime;
 	fElapsedTime += timeDiff;
-	const std::pair<CVec2,int> res( GetCur() );
+	const std::pair<CVec2, int> res( GetCur() );
 
 	if ( res.first == vMoveOffset + vMoveFrom )
 	{
 		bFinished = true;
 		fElapsedTime = fMoveTime;
 	}
-	pElement->SetPlacement( res.first.x, res.first.y, 0, 0, EWPF_POS_X|EWPF_POS_Y );
+	pElement->SetPlacement( res.first.x, res.first.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 
 	// return consumed time
 	return res.second - fFormerElapsedTime;

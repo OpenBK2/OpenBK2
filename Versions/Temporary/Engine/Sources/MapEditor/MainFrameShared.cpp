@@ -52,459 +52,470 @@
 
 namespace NMainFrameShared
 {
-	bool UpdateTitle( SSWTParams *pCurrent, const SSWTParams &rSWTParams, std::string *pszTitle )
+bool UpdateTitle( SSWTParams *pCurrent, const SSWTParams &rSWTParams, std::string *pszTitle )
+{
+	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+	SSWTParams &currentSWTParams = *pCurrent;
+	//
+	const int MAX_NAME_SIZE = 133;
+	//
+	bool bModified = false;
+	if ( rSWTParams.dwFlags & SWT_MOD )
 	{
-		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		SSWTParams &currentSWTParams = *pCurrent;
-		//
-		const int MAX_NAME_SIZE = 133;
-		//
-		bool bModified = false;
-		if ( rSWTParams.dwFlags & SWT_MOD )
+		std::string szMOD = rSWTParams.szMOD;
+		if ( rSWTParams.bFillMODFromBase )
 		{
-			std::string szMOD = rSWTParams.szMOD;
-			if ( rSWTParams.bFillMODFromBase )
+			NMOD::SMOD mod;
+			NMOD::GetAttachedMOD( &mod );
+			if ( mod.wszName.empty() )
 			{
-				NMOD::SMOD mod;
-				NMOD::GetAttachedMOD( &mod );
-				if ( mod.wszName.empty() )
-				{
-					szMOD.clear();
-				}
-				else
-				{
-					Unicode2MBSC( &szMOD, mod.wszName );
-				}
-			}
-			if ( currentSWTParams.szMOD != szMOD )
-			{
-				currentSWTParams.szMOD = szMOD;
-				bModified = true;
-			}
-		}
-		if ( rSWTParams.dwFlags & SWT_TYPE )
-		{
-			if ( currentSWTParams.szType.empty() )
-			{
-				currentSWTParams.szType = pUserData->constUserData.szMainObjectType;
-			}
-			if ( currentSWTParams.szType != rSWTParams.szType )
-			{
-				currentSWTParams.szType = rSWTParams.szType;
-				bModified = true;
-			}
-			if ( currentSWTParams.szType == pUserData->constUserData.szMainObjectType )
-			{
-				currentSWTParams.szType.clear();
-			}
-		}
-		if ( rSWTParams.dwFlags & SWT_OBJECT )
-		{
-			if ( currentSWTParams.szObject != rSWTParams.szObject )
-			{
-				currentSWTParams.szObject = rSWTParams.szObject;
-				bModified = true;
-			}
-		}
-		if ( rSWTParams.dwFlags & SWT_PARAMS )
-		{
-			if ( currentSWTParams.szParams != rSWTParams.szParams )
-			{
-				currentSWTParams.szParams = rSWTParams.szParams;
-				bModified = true;
-			}
-		}
-		if ( rSWTParams.dwFlags & SWT_MODIFIED )
-		{
-			if ( currentSWTParams.bModified != rSWTParams.bModified )
-			{
-				currentSWTParams.bModified = rSWTParams.bModified;
-				bModified = true;
-			}
-		}
-		if ( !bModified )
-		{
-			return false;
-		}
-		std::string szFilePath;
-		std::string szFileName;
-		std::string szFileExtention;
-		CStringManager::SplitFileName( &szFilePath, &szFileName, &szFileExtention, currentSWTParams.szObject );
-		//
-		std::string szTitle = szFilePath + szFileName;
-		std::string szExtention = szFileExtention;
-		//
-		if ( !currentSWTParams.szType.empty() )
-		{
-			szTitle = currentSWTParams.szType + ":" + szTitle;
-		}
-		if ( currentSWTParams.bModified )
-		{
-			szExtention += "*";
-		}
-		if ( !currentSWTParams.szParams.empty() )
-		{
-			szExtention += " " + currentSWTParams.szParams;
-		}
-		if ( !currentSWTParams.szMOD.empty() )
-		{
-			szExtention += " MOD: " + currentSWTParams.szMOD;
-		}
-		//
-		if ( ( szTitle.size() + szExtention.size() ) > MAX_NAME_SIZE )
-		{
-			if ( ( MAX_NAME_SIZE - szExtention.size() - 4 ) >= 0 )
-			{
-				szTitle = szTitle.substr( 0, MAX_NAME_SIZE - szExtention.size() - 4 ) + "..." + szTitle.substr( szTitle.size() - 1 );
-			}
-		}
-		if ( szTitle.empty() && szExtention.empty() )
-		{
-			szTitle = pUserData->constUserData.szApplicationTitle;
-		}
-		else
-		{
-			szTitle = pUserData->constUserData.szApplicationTitle + " - [" + szTitle + szExtention + "]";
-		}
-		( *pszTitle ) = szTitle;
-		return true;
-	}
-
-
-	bool SaveChanges( bool bShowConfirmDialog, const std::function<void()> &rReloadData )
-	{
-		if ( IEditorContainer *pEditorContainer = Singleton<IEditorContainer>() )
-		{
-			bool bModified = ( Singleton<IEditorContainer>()->IsModified() || Singleton<IResourceManager>()->CanSyncDB() );
-			bShowConfirmDialog = bShowConfirmDialog && bModified;
-			bool bConfirmed = true;
-			if ( bShowConfirmDialog	)
-			{
-				if ( pEditorContainer->GetActiveEditor() )
-				{
-					SObjectSet objectSet;
-					pEditorContainer->GetActiveEditor()->GetView()->GetObjectSet( &objectSet );
-					//
-					std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
-					std::string szName;
-					{
-						CStringManager::GetRefValueFromTypeAndName( &szName, objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first.ToString(), TYPE_SEPARATOR_CHAR );
-					}
-					const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), szName.c_str() );
-					const NMessage::EAnswer eAnswer = NMessage::AskYesNoCancel( strMessage );
-					if ( eAnswer == NMessage::ANSWER_CANCEL )
-					{
-						return false;
-					}
-					bConfirmed = ( eAnswer == NMessage::ANSWER_YES );
-				}
-				else
-				{
-					std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_SHORT );
-					const NMessage::EAnswer eAnswer = NMessage::AskYesNoCancel( strMessagePattern );
-					if ( eAnswer == NMessage::ANSWER_CANCEL )
-					{
-						return false;
-					}
-					bConfirmed = ( eAnswer == NMessage::ANSWER_YES );
-				}
-			}
-			//
-			if ( bModified && bConfirmed )
-			{
-				NProgress::Create( true );
-				std::string strPM = NResources::GetString( IDS_PM_SAVE );
-				NProgress::SetMessage( std::string( strPM ) );
-				NProgress::SetRange( 0, pEditorContainer->GetActiveEditor() ? 2 : 1 );
-			}
-			CBusyCursor waitCursor;
-			if ( pEditorContainer->GetActiveEditor() )
-			{
-				SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-				SObjectSet objectSet;
-				pEditorContainer->GetActiveEditor()->GetView()->GetObjectSet( &objectSet );
-				const bool bMainObject = ( objectSet.szObjectTypeName == pUserData->constUserData.szMainObjectType );
-				std::string szName;
-				CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
-				CStringManager::AddToRecentList( szName, bMainObject );
-			}
-			//
-			std::string saveError;
-			if ( bModified && bConfirmed )
-			{
-				try
-				{
-					if ( IEditor *pEditor = pEditorContainer->GetActiveEditor() )
-					{
-						pEditorContainer->Save( true );
-						NProgress::SetPosition( 1 );
-						saveError = pEditor->GetSaveError();
-					}
-					if ( saveError.empty() )
-					{
-						Singleton<IResourceManager>()->SyncDB();
-						if ( Singleton<IResourceManager>()->CanSyncDB() )
-							saveError = NDb::GetLastSaveError().empty() ? "The database still has unsaved changes." : NDb::GetLastSaveError();
-					}
-				}
-				catch ( const std::exception &error )
-				{
-					saveError = error.what();
-				}
-				// Keep Save/retry available, and refuse Close, Reload and Run Game
-				// when any part of a map or database save failed.
-				if ( !saveError.empty() && pEditorContainer->GetActiveEditor() )
-					pEditorContainer->GetActiveEditor()->SetModified( true );
-			}
-			else if ( bModified && !bConfirmed )
-			{
-				if ( pEditorContainer->GetActiveEditor() )
-				{
-					pEditorContainer->Save( false );
-					NProgress::SetPosition( 2 );
-				}
-				Singleton<IResourceManager>()->ResetCache();
-				rReloadData();
-			}
-			if ( bModified && bConfirmed )
-			{
-				NProgress::Destroy();
-			}
-			//
-			{
-				bModified = ( Singleton<IEditorContainer>()->IsModified() || Singleton<IResourceManager>()->CanSyncDB() );
-				//
-				SSWTParams swtParams;
-				swtParams.dwFlags = SWT_MODIFIED;
-				swtParams.bModified = bModified;
-				Singleton<IMainFrameContainer>()->Get()->SetWindowTitle( swtParams );
-			}
-			if ( !saveError.empty() )
-			{
-				NMessage::Error( "The changes could not be saved:\n\n" + saveError +
-					"\n\nCheck that the game/mod folder is available and writable, and that the disk has free space. "
-					"Your unsaved changes remain open; correct the problem and save again.", "Save failed" );
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-	// CMainFrame's version also sent WM_TREE_GDB_BROWSER to the frame's parent
-	// window. A main frame has none, so that never happened, and it is left out.
-	void OpenResource( const std::string &rszResourceName )
-	{
-		if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
-		{
-			std::string szResourceName = rszResourceName;
-			NStr::TrimBoth( szResourceName, '"' );
-			if ( pUserData->NormalizePath( &szResourceName, true, true, false, SUserData::NPT_DATA_STORAGE, 0 ) )
-			{
-				std::string szExtention;
-				CStringManager::SplitFileName( 0, 0, &szExtention, szResourceName );
-				NStr::ToLower( &szExtention );
-				if ( szExtention == ".xdb" )
-				{
-					if ( IResourceManager *pResourceManager = Singleton<IResourceManager>() )
-					{
-						CDBID resourceDBID = CDBID( szResourceName );
-						SObjectSet objectSet;
-						objectSet.szObjectTypeName = NDb::GetClassTypeName( resourceDBID );
-						InsertHashSetElement( &( objectSet.objectNameSet ), resourceDBID );
-						if ( CPtr<IManipulator> pObjectManipulator = CManipulatorManager::CreateObectSetManipulator( objectSet ) )
-						{
-							const bool bMainObject = ( objectSet.szObjectTypeName == pUserData->constUserData.szMainObjectType );
-							std::string szName;
-							CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
-							CStringManager::AddToRecentList( szName, bMainObject );
-							//
-							IView *pView = 0;
-							Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
-							if ( pView != 0 )
-							{
-								pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
-								Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
-							}
-							if ( CPtr<IManipulator> pEditorManipulator = pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
-							{
-								Singleton<IEditorContainer>()->Create( pEditorManipulator, objectSet );
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-	bool BrowseLink( std::string *pszResult, const std::string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit )
-	{
-		NI_ASSERT( pPropertyDesc != 0, "CMainFrame::CreateToolBar() pPropertyDesc == 0" );
-		//
-		std::string szValues = pPropertyDesc->szStringParam;
-		NStr::ToLowerASCII( &szValues );
-		//
-		const int	nWidth = CStringManager::GetIntValueFromString( szValues, PCSPL_WIDTH, 0, PCSP_DIVIDERS, 0 );
-		const int	nHeight = CStringManager::GetIntValueFromString( szValues, PCSPL_HEIGHT, 0, PCSP_DIVIDERS, 0 );
-		const bool bTextEditor = CStringManager::GetBoolValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, false );
-		//
-		NDBLink::SRequest request;
-		request.eType = NDBLink::TYPE_LINK;
-		request.bMultiRef = bMultiRef;
-		request.bTextEditor = bTextEditor;
-		request.nFixedWidth = nWidth;
-		request.nFixedHeight = nHeight;
-		request.bEnableEdit = bEnableEdit;
-		request.selectedTables = pPropertyDesc->refTypes;
-		if ( !pPropertyDesc->refTypes.empty() )
-		{
-			std::string szTableName;
-			std::string szObjectName;
-			const int nPos = rszInitialValue.find( TYPE_SEPARATOR_CHAR );
-			if ( nPos >= 0 )
-			{
-				szTableName = rszInitialValue.substr( 0, nPos );
-				szObjectName = rszInitialValue.substr( nPos + 1 );
+				szMOD.clear();
 			}
 			else
 			{
-				szTableName = pPropertyDesc->refTypes.begin()->first;
-				szObjectName = rszInitialValue;
-			}
-			//
-			SUserData::CRefPathMap &rRefPathMap = Singleton<IUserDataContainer>()->Get()->refPathMap;
-			std::string szRefKey;
-			CreateRefKey( &szRefKey, pPropertyDesc );
-			//
-			if ( szObjectName.empty() )
-			{
-				std::string szRefValue = rRefPathMap[szRefKey];
-				std::string szLocalTableName;
-				CStringManager::GetTypeAndNameFromRefValue( &szLocalTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
-				if ( !szLocalTableName.empty() )
-				{
-					szTableName = szLocalTableName;
-				}
-			}
-			//
-			request.szTable = szTableName;
-			request.szObject = szObjectName;
-			//
-			NDBLink::SResult result;
-			if ( NDBLink::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), request, &result ) && bEnableEdit && ( pszResult != 0 ) )
-			{
-				szTableName = result.szTable;
-				szObjectName = result.szObject;
-				//
-				std::string szRefValue;
-				CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
-				rRefPathMap[szRefKey] = szRefValue;
-				//
-				if ( result.bEmpty )
-				{
-					pszResult->clear();
-				}
-				else
-				{
-					( *pszResult ) = szRefValue;
-				}
-				return true;
+				Unicode2MBSC( &szMOD, mod.wszName );
 			}
 		}
+		if ( currentSWTParams.szMOD != szMOD )
+		{
+			currentSWTParams.szMOD = szMOD;
+			bModified = true;
+		}
+	}
+	if ( rSWTParams.dwFlags & SWT_TYPE )
+	{
+		if ( currentSWTParams.szType.empty() )
+		{
+			currentSWTParams.szType = pUserData->constUserData.szMainObjectType;
+		}
+		if ( currentSWTParams.szType != rSWTParams.szType )
+		{
+			currentSWTParams.szType = rSWTParams.szType;
+			bModified = true;
+		}
+		if ( currentSWTParams.szType == pUserData->constUserData.szMainObjectType )
+		{
+			currentSWTParams.szType.clear();
+		}
+	}
+	if ( rSWTParams.dwFlags & SWT_OBJECT )
+	{
+		if ( currentSWTParams.szObject != rSWTParams.szObject )
+		{
+			currentSWTParams.szObject = rSWTParams.szObject;
+			bModified = true;
+		}
+	}
+	if ( rSWTParams.dwFlags & SWT_PARAMS )
+	{
+		if ( currentSWTParams.szParams != rSWTParams.szParams )
+		{
+			currentSWTParams.szParams = rSWTParams.szParams;
+			bModified = true;
+		}
+	}
+	if ( rSWTParams.dwFlags & SWT_MODIFIED )
+	{
+		if ( currentSWTParams.bModified != rSWTParams.bModified )
+		{
+			currentSWTParams.bModified = rSWTParams.bModified;
+			bModified = true;
+		}
+	}
+	if ( !bModified )
+	{
 		return false;
 	}
-
-
-	bool BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty )
+	std::string szFilePath;
+	std::string szFileName;
+	std::string szFileExtention;
+	CStringManager::SplitFileName( &szFilePath, &szFileName, &szFileExtention, currentSWTParams.szObject );
+	//
+	std::string szTitle = szFilePath + szFileName;
+	std::string szExtention = szFileExtention;
+	//
+	if ( !currentSWTParams.szType.empty() )
 	{
-		const std::string szObjectTypeName = ( pszObjectTypeName != 0 ) ? ( *pszObjectTypeName ) : std::string();
-		//
-		IResourceManager *pResourceManager = Singleton<IResourceManager>();
-		IEditorContainer *pEditorContainer = Singleton<IEditorContainer>();
-		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		//
-		SUserData::CRefPathMap &rRefPathMap = pUserData->refPathMap;
-		const std::string szRefKey = fmt::format( "_OPEN:{}", szObjectTypeName.c_str() );
-		//
-		NDBLink::SRequest request;
-		request.eType = bEnableEmpty ? NDBLink::TYPE_LINK : NDBLink::TYPE_OPEN;
-		CTableSet tableSet;
-		if ( szObjectTypeName.empty() )
+		szTitle = currentSWTParams.szType + ":" + szTitle;
+	}
+	if ( currentSWTParams.bModified )
+	{
+		szExtention += "*";
+	}
+	if ( !currentSWTParams.szParams.empty() )
+	{
+		szExtention += " " + currentSWTParams.szParams;
+	}
+	if ( !currentSWTParams.szMOD.empty() )
+	{
+		szExtention += " MOD: " + currentSWTParams.szMOD;
+	}
+	//
+	if ( ( szTitle.size() + szExtention.size() ) > MAX_NAME_SIZE )
+	{
+		if ( ( MAX_NAME_SIZE - szExtention.size() - 4 ) >= 0 )
 		{
-			if ( CPtr<IManipulator> pTableManipulator = pResourceManager->CreateTableManipulator() )
+			szTitle =
+					szTitle.substr( 0, MAX_NAME_SIZE - szExtention.size() - 4 ) + "..." + szTitle.substr( szTitle.size() - 1 );
+		}
+	}
+	if ( szTitle.empty() && szExtention.empty() )
+	{
+		szTitle = pUserData->constUserData.szApplicationTitle;
+	}
+	else
+	{
+		szTitle = pUserData->constUserData.szApplicationTitle + " - [" + szTitle + szExtention + "]";
+	}
+	( *pszTitle ) = szTitle;
+	return true;
+}
+
+bool SaveChanges( bool bShowConfirmDialog, const std::function<void()> &rReloadData )
+{
+	if ( IEditorContainer *pEditorContainer = Singleton<IEditorContainer>() )
+	{
+		bool bModified = ( Singleton<IEditorContainer>()->IsModified() || Singleton<IResourceManager>()->CanSyncDB() );
+		bShowConfirmDialog = bShowConfirmDialog && bModified;
+		bool bConfirmed = true;
+		if ( bShowConfirmDialog )
+		{
+			if ( pEditorContainer->GetActiveEditor() )
 			{
-				if ( CPtr<IManipulatorIterator> pTableManipulatorIterator = pTableManipulator->Iterate( true, ECT_NO_CACHE ) )
+				SObjectSet objectSet;
+				pEditorContainer->GetActiveEditor()->GetView()->GetObjectSet( &objectSet );
+				//
+				std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
+				std::string szName;
 				{
-					std::string szName;
-					while ( !pTableManipulatorIterator->IsEnd() )
+					CStringManager::GetRefValueFromTypeAndName( &szName,
+					                                            objectSet.szObjectTypeName,
+					                                            objectSet.objectNameSet.begin()->first.ToString(),
+					                                            TYPE_SEPARATOR_CHAR );
+				}
+				const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), szName.c_str() );
+				const NMessage::EAnswer eAnswer = NMessage::AskYesNoCancel( strMessage );
+				if ( eAnswer == NMessage::ANSWER_CANCEL )
+				{
+					return false;
+				}
+				bConfirmed = ( eAnswer == NMessage::ANSWER_YES );
+			}
+			else
+			{
+				std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_SHORT );
+				const NMessage::EAnswer eAnswer = NMessage::AskYesNoCancel( strMessagePattern );
+				if ( eAnswer == NMessage::ANSWER_CANCEL )
+				{
+					return false;
+				}
+				bConfirmed = ( eAnswer == NMessage::ANSWER_YES );
+			}
+		}
+		//
+		if ( bModified && bConfirmed )
+		{
+			NProgress::Create( true );
+			std::string strPM = NResources::GetString( IDS_PM_SAVE );
+			NProgress::SetMessage( std::string( strPM ) );
+			NProgress::SetRange( 0, pEditorContainer->GetActiveEditor() ? 2 : 1 );
+		}
+		CBusyCursor waitCursor;
+		if ( pEditorContainer->GetActiveEditor() )
+		{
+			SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+			SObjectSet objectSet;
+			pEditorContainer->GetActiveEditor()->GetView()->GetObjectSet( &objectSet );
+			const bool bMainObject = ( objectSet.szObjectTypeName == pUserData->constUserData.szMainObjectType );
+			std::string szName;
+			CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
+			CStringManager::AddToRecentList( szName, bMainObject );
+		}
+		//
+		std::string saveError;
+		if ( bModified && bConfirmed )
+		{
+			try
+			{
+				if ( IEditor *pEditor = pEditorContainer->GetActiveEditor() )
+				{
+					pEditorContainer->Save( true );
+					NProgress::SetPosition( 1 );
+					saveError = pEditor->GetSaveError();
+				}
+				if ( saveError.empty() )
+				{
+					Singleton<IResourceManager>()->SyncDB();
+					if ( Singleton<IResourceManager>()->CanSyncDB() )
+						saveError =
+								NDb::GetLastSaveError().empty() ? "The database still has unsaved changes." : NDb::GetLastSaveError();
+				}
+			}
+			catch ( const std::exception &error )
+			{
+				saveError = error.what();
+			}
+			// Keep Save/retry available, and refuse Close, Reload and Run Game
+			// when any part of a map or database save failed.
+			if ( !saveError.empty() && pEditorContainer->GetActiveEditor() )
+				pEditorContainer->GetActiveEditor()->SetModified( true );
+		}
+		else if ( bModified && !bConfirmed )
+		{
+			if ( pEditorContainer->GetActiveEditor() )
+			{
+				pEditorContainer->Save( false );
+				NProgress::SetPosition( 2 );
+			}
+			Singleton<IResourceManager>()->ResetCache();
+			rReloadData();
+		}
+		if ( bModified && bConfirmed )
+		{
+			NProgress::Destroy();
+		}
+		//
+		{
+			bModified = ( Singleton<IEditorContainer>()->IsModified() || Singleton<IResourceManager>()->CanSyncDB() );
+			//
+			SSWTParams swtParams;
+			swtParams.dwFlags = SWT_MODIFIED;
+			swtParams.bModified = bModified;
+			Singleton<IMainFrameContainer>()->Get()->SetWindowTitle( swtParams );
+		}
+		if ( !saveError.empty() )
+		{
+			NMessage::Error(
+					"The changes could not be saved:\n\n" + saveError +
+							"\n\nCheck that the game/mod folder is available and writable, and that the disk has free space. "
+							"Your unsaved changes remain open; correct the problem and save again.",
+					"Save failed" );
+			return false;
+		}
+	}
+	return true;
+}
+
+// CMainFrame's version also sent WM_TREE_GDB_BROWSER to the frame's parent
+// window. A main frame has none, so that never happened, and it is left out.
+void OpenResource( const std::string &rszResourceName )
+{
+	if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
+	{
+		std::string szResourceName = rszResourceName;
+		NStr::TrimBoth( szResourceName, '"' );
+		if ( pUserData->NormalizePath( &szResourceName, true, true, false, SUserData::NPT_DATA_STORAGE, 0 ) )
+		{
+			std::string szExtention;
+			CStringManager::SplitFileName( 0, 0, &szExtention, szResourceName );
+			NStr::ToLower( &szExtention );
+			if ( szExtention == ".xdb" )
+			{
+				if ( IResourceManager *pResourceManager = Singleton<IResourceManager>() )
+				{
+					CDBID resourceDBID = CDBID( szResourceName );
+					SObjectSet objectSet;
+					objectSet.szObjectTypeName = NDb::GetClassTypeName( resourceDBID );
+					InsertHashSetElement( &( objectSet.objectNameSet ), resourceDBID );
+					if ( CPtr<IManipulator> pObjectManipulator = CManipulatorManager::CreateObectSetManipulator( objectSet ) )
 					{
-						pTableManipulatorIterator->GetName( &szName );
-						if ( pEditorContainer->CanCreate( szName ) )
+						const bool bMainObject = ( objectSet.szObjectTypeName == pUserData->constUserData.szMainObjectType );
+						std::string szName;
+						CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
+						CStringManager::AddToRecentList( szName, bMainObject );
+						//
+						IView *pView = 0;
+						Singleton<ICommandHandlerContainer>()->HandleCommand(
+								CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
+						if ( pView != 0 )
 						{
-							InsertHashSetElement( &tableSet, szName );
+							pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
+							Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 						}
-						pTableManipulatorIterator->Next();
+						if ( CPtr<IManipulator> pEditorManipulator = pResourceManager->CreateObjectManipulator(
+										 objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
+						{
+							Singleton<IEditorContainer>()->Create( pEditorManipulator, objectSet );
+						}
 					}
 				}
 			}
 		}
+	}
+}
+
+bool BrowseLink( std::string *pszResult,
+                 const std::string &rszInitialValue,
+                 const SPropertyDesc *pPropertyDesc,
+                 bool bMultiRef,
+                 bool bEnableEdit )
+{
+	NI_ASSERT( pPropertyDesc != 0, "CMainFrame::CreateToolBar() pPropertyDesc == 0" );
+	//
+	std::string szValues = pPropertyDesc->szStringParam;
+	NStr::ToLowerASCII( &szValues );
+	//
+	const int nWidth = CStringManager::GetIntValueFromString( szValues, PCSPL_WIDTH, 0, PCSP_DIVIDERS, 0 );
+	const int nHeight = CStringManager::GetIntValueFromString( szValues, PCSPL_HEIGHT, 0, PCSP_DIVIDERS, 0 );
+	const bool bTextEditor = CStringManager::GetBoolValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, false );
+	//
+	NDBLink::SRequest request;
+	request.eType = NDBLink::TYPE_LINK;
+	request.bMultiRef = bMultiRef;
+	request.bTextEditor = bTextEditor;
+	request.nFixedWidth = nWidth;
+	request.nFixedHeight = nHeight;
+	request.bEnableEdit = bEnableEdit;
+	request.selectedTables = pPropertyDesc->refTypes;
+	if ( !pPropertyDesc->refTypes.empty() )
+	{
+		std::string szTableName;
+		std::string szObjectName;
+		const int nPos = rszInitialValue.find( TYPE_SEPARATOR_CHAR );
+		if ( nPos >= 0 )
+		{
+			szTableName = rszInitialValue.substr( 0, nPos );
+			szObjectName = rszInitialValue.substr( nPos + 1 );
+		}
 		else
 		{
-			InsertHashSetElement( &tableSet, szObjectTypeName );
+			szTableName = pPropertyDesc->refTypes.begin()->first;
+			szObjectName = rszInitialValue;
 		}
-		request.selectedTables = tableSet;
-		request.szTable = szObjectTypeName;
+		//
+		SUserData::CRefPathMap &rRefPathMap = Singleton<IUserDataContainer>()->Get()->refPathMap;
+		std::string szRefKey;
+		CreateRefKey( &szRefKey, pPropertyDesc );
+		//
+		if ( szObjectName.empty() )
 		{
 			std::string szRefValue = rRefPathMap[szRefKey];
-			std::string szTableName;
-			std::string szObjectName;
-			CStringManager::GetTypeAndNameFromRefValue( &szTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
-			if ( !szTableName.empty() )
+			std::string szLocalTableName;
+			CStringManager::GetTypeAndNameFromRefValue(
+					&szLocalTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
+			if ( !szLocalTableName.empty() )
 			{
-				request.szTable = szTableName;
-			}
-			if ( !szObjectName.empty() )
-			{
-				request.szObject = szObjectName;
+				szTableName = szLocalTableName;
 			}
 		}
-		request.bEnableEdit = bEnableEdit;
+		//
+		request.szTable = szTableName;
+		request.szObject = szObjectName;
+		//
 		NDBLink::SResult result;
-		const bool bResult = NDBLink::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), request, &result );
-		if ( bResult )
+		if ( NDBLink::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), request, &result ) && bEnableEdit &&
+		     ( pszResult != 0 ) )
 		{
-			const std::string szTableName = result.szTable;
-			const std::string szObjectName = result.szObject;
-			if ( !szObjectName.empty() )
+			szTableName = result.szTable;
+			szObjectName = result.szObject;
+			//
+			std::string szRefValue;
+			CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
+			rRefPathMap[szRefKey] = szRefValue;
+			//
+			if ( result.bEmpty )
 			{
-				std::string szRefValue;
-				CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
-				rRefPathMap[szRefKey] = szRefValue;
+				pszResult->clear();
 			}
-			if ( pObjectDBID != 0 )
+			else
 			{
-				if ( !result.bEmpty )
-				{
-					( *pObjectDBID ) = CDBID( szObjectName );
-				}
-				else
-				{
-					pObjectDBID->Clear();
-				}
+				( *pszResult ) = szRefValue;
 			}
-			if ( pszObjectTypeName != 0 )
+			return true;
+		}
+	}
+	return false;
+}
+
+bool BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty )
+{
+	const std::string szObjectTypeName = ( pszObjectTypeName != 0 ) ? ( *pszObjectTypeName ) : std::string();
+	//
+	IResourceManager *pResourceManager = Singleton<IResourceManager>();
+	IEditorContainer *pEditorContainer = Singleton<IEditorContainer>();
+	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+	//
+	SUserData::CRefPathMap &rRefPathMap = pUserData->refPathMap;
+	const std::string szRefKey = fmt::format( "_OPEN:{}", szObjectTypeName.c_str() );
+	//
+	NDBLink::SRequest request;
+	request.eType = bEnableEmpty ? NDBLink::TYPE_LINK : NDBLink::TYPE_OPEN;
+	CTableSet tableSet;
+	if ( szObjectTypeName.empty() )
+	{
+		if ( CPtr<IManipulator> pTableManipulator = pResourceManager->CreateTableManipulator() )
+		{
+			if ( CPtr<IManipulatorIterator> pTableManipulatorIterator = pTableManipulator->Iterate( true, ECT_NO_CACHE ) )
 			{
-				( *pszObjectTypeName ) = szTableName;
+				std::string szName;
+				while ( !pTableManipulatorIterator->IsEnd() )
+				{
+					pTableManipulatorIterator->GetName( &szName );
+					if ( pEditorContainer->CanCreate( szName ) )
+					{
+						InsertHashSetElement( &tableSet, szName );
+					}
+					pTableManipulatorIterator->Next();
+				}
 			}
 		}
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
-		return bResult;
 	}
-
-
-	namespace
+	else
 	{
+		InsertHashSetElement( &tableSet, szObjectTypeName );
+	}
+	request.selectedTables = tableSet;
+	request.szTable = szObjectTypeName;
+	{
+		std::string szRefValue = rRefPathMap[szRefKey];
+		std::string szTableName;
+		std::string szObjectName;
+		CStringManager::GetTypeAndNameFromRefValue(
+				&szTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
+		if ( !szTableName.empty() )
+		{
+			request.szTable = szTableName;
+		}
+		if ( !szObjectName.empty() )
+		{
+			request.szObject = szObjectName;
+		}
+	}
+	request.bEnableEdit = bEnableEdit;
+	NDBLink::SResult result;
+	const bool bResult = NDBLink::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), request, &result );
+	if ( bResult )
+	{
+		const std::string szTableName = result.szTable;
+		const std::string szObjectName = result.szObject;
+		if ( !szObjectName.empty() )
+		{
+			std::string szRefValue;
+			CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
+			rRefPathMap[szRefKey] = szRefValue;
+		}
+		if ( pObjectDBID != 0 )
+		{
+			if ( !result.bEmpty )
+			{
+				( *pObjectDBID ) = CDBID( szObjectName );
+			}
+			else
+			{
+				pObjectDBID->Clear();
+			}
+		}
+		if ( pszObjectTypeName != 0 )
+		{
+			( *pszObjectTypeName ) = szTableName;
+		}
+	}
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
+	return bResult;
+}
+
+namespace
+{
 	// The old lightweight XML readers stop at the root header and do not report
 	// malformed documents reliably. Check the entire selected file before letting
 	// the database add its header to index.bin: that it is well-formed UTF-8 XML
@@ -520,316 +531,305 @@ namespace NMainFrameShared
 			*pError = "The XDB is empty or cannot be read from the current database.";
 			return false;
 		}
-		if ( !NXdbValidation::CheckDocument( reinterpret_cast<const char*>( stream.GetBuffer() ), stream.GetSize(), pTypeName, pError ) )
+		if ( !NXdbValidation::CheckDocument(
+						 reinterpret_cast<const char *>( stream.GetBuffer() ), stream.GetSize(), pTypeName, pError ) )
 		{
 			return false;
 		}
-		std::vector<NDb::NTypeDef::STypeClass*> types;
+		std::vector<NDb::NTypeDef::STypeClass *> types;
 		NDb::GetClassesList( &types );
 		for ( const auto *pType : types )
 		{
 			if ( pType && pType->nClassTypeID != -1 && pType->szTypeName == *pTypeName &&
-					 NObjectFactory::IsRegistered(pType->nClassTypeID) )
+			     NObjectFactory::IsRegistered( pType->nClassTypeID ) )
 				return true;
 		}
 		*pError = "Unknown game resource type <" + *pTypeName + ">. The file was not registered.";
 		return false;
 	}
-	}
+}
 
-
-	void RegisterXDB( const std::function<void()> &rReloadData )
+void RegisterXDB( const std::function<void()> &rReloadData )
+{
+	const auto ReportError = []( const std::string &message ) { NMessage::Error( message, "Register XDB" ); };
+	// Attaching a mod changes the writable folder, but the base Data folder is
+	// still mounted. Accept both roots and use the same base path as MODs.cpp.
+	const std::string baseDataFolder = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA );
+	std::vector<std::filesystem::path> dataRoots;
+	for ( const std::string &folder :
+	      { Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_DATA_STORAGE ), baseDataFolder } )
 	{
-		const auto ReportError = []( const std::string &message ) {
-			NMessage::Error( message, "Register XDB" );
-		};
-		// Attaching a mod changes the writable folder, but the base Data folder is
-		// still mounted. Accept both roots and use the same base path as MODs.cpp.
-		const std::string baseDataFolder = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA );
-		std::vector<std::filesystem::path> dataRoots;
-		for ( const std::string &folder : {
-			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_DATA_STORAGE ), baseDataFolder } )
-		{
-			std::error_code error;
-			auto rootPath = std::filesystem::canonical( std::filesystem::u8path(folder), error );
-			if ( error )
-			{
-				ReportError( "Cannot open the game/mod data folder:\n" + folder );
-				return;
-			}
-			dataRoots.push_back( rootPath.make_preferred() );
-		}
-		// Give the shell a canonical Windows path, without the mixed trailing
-		// separators used internally by the VFS. Always start in the game's Data.
-		const std::string initialFolder = dataRoots.back().string();
-		std::string szChosen;
-		if ( !NFileDialog::OpenFile( Singleton<IMainFrameContainer>()->GetMainWindow(), "Register XDB in the current game or mod database",
-																 "Game database files (*.xdb)|*.xdb||", initialFolder, &szChosen ) )
-			return;
 		std::error_code error;
-		const auto filePath = std::filesystem::canonical( std::filesystem::u8path( szChosen ), error );
-		// The extension as UTF-8 rather than through path::c_str(), which is
-		// wchar_t* on Windows and char* everywhere else -- which is the only
-		// reason the wide _wcsicmp was here at all.
-		if ( error || !NStr::IEquals( filePath.extension().u8string(), ".xdb" ) )
+		auto rootPath = std::filesystem::canonical( std::filesystem::u8path( folder ), error );
+		if ( error )
 		{
-			ReportError( "Select an existing .xdb file." );
+			ReportError( "Cannot open the game/mod data folder:\n" + folder );
 			return;
 		}
-		std::string dbPath;
-		const std::string fullPath = filePath.u8string();
-		// Try the active mod first; the resulting DBID is relative to its mounted
-		// root, never prefixed with Data/ or Mods/<name>/. Compare whole directories.
-		for ( const auto &rootPath : dataRoots )
-		{
-			std::string rootPrefix = rootPath.u8string();
-			// canonical() answers in native separators, so accept either rather
-			// than assuming the backslash this used to append.
-			if ( !rootPrefix.empty() && ( rootPrefix.back() != '\\' ) && ( rootPrefix.back() != '/' ) )
-			{
-				rootPrefix += static_cast<char>( std::filesystem::path::preferred_separator );
-			}
-			// Case-insensitively, as _wcsnicmp was: the roots come from the
-			// configuration and the file from a picker, and on Windows those two
-			// need not agree about case.
-			if ( fullPath.size() > rootPrefix.size() && NStr::IStartsWith( fullPath, rootPrefix ) )
-			{
-				dbPath = std::filesystem::path(fullPath.substr(rootPrefix.size())).generic_u8string();
-				break;
-			}
-		}
-		if ( dbPath.empty() )
-		{
-			std::string message = "Select an XDB inside the game's Data folder:\n" + initialFolder;
-			if ( NMOD::DoesAnyMODAttached() )
-				message += "\n\nOr inside the active mod folder:\n" + dataRoots.front().string();
-			ReportError( message );
-			return;
-		}
-		std::string typeName, validationError;
-		if ( !ValidateXDB(dbPath, &typeName, &validationError) )
-		{
-			ReportError( validationError );
-			return;
-		}
-		const bool bAlreadyRegistered = NDb::IsFileRegistered( dbPath );
-		if ( bAlreadyRegistered && NDb::GetClassTypeName(CDBID(dbPath)) != typeName )
-		{
-			ReportError( "This database path is already registered with a different resource type. Use a new filename." );
-			return;
-		}
-		if ( !NDb::RegisterResourceFile(dbPath) )
-		{
-			ReportError( "The database could not read the selected XDB. It was not registered." );
-			return;
-		}
-		// Persist the combined database index in the active writable layer (the mod
-		// when attached). Base-data references are valid there too; do not copy XDBs
-		// or save unrelated resource edits.
-		const bool bSaved = NDb::SaveChangedIndex();
-		rReloadData();
-		if ( !bSaved )
-		{
-			ReportError( "The resource is registered for this session, but index.bin could not be saved.\nCheck data-folder permissions, then retry registration." );
-			return;
-		}
-		Singleton<IMainFrameContainer>()->Get()->Log( LT_NORMAL, fmt::format("Registered {} ({})\n", dbPath, typeName) );
-		NMessage::Information( fmt::format("{}\nType: {}\n\n{}", dbPath, typeName,
-			bAlreadyRegistered ? "This resource was already registered." : "Registered and saved to the database index."),
-			"Register XDB" );
+		dataRoots.push_back( rootPath.make_preferred() );
 	}
-
-
-	std::string GetHelpFilePath()
+	// Give the shell a canonical Windows path, without the mixed trailing
+	// separators used internally by the VFS. Always start in the game's Data.
+	const std::string initialFolder = dataRoots.back().string();
+	std::string szChosen;
+	if ( !NFileDialog::OpenFile( Singleton<IMainFrameContainer>()->GetMainWindow(),
+	                             "Register XDB in the current game or mod database",
+	                             "Game database files (*.xdb)|*.xdb||",
+	                             initialFolder,
+	                             &szChosen ) )
+		return;
+	std::error_code error;
+	const auto filePath = std::filesystem::canonical( std::filesystem::u8path( szChosen ), error );
+	// The extension as UTF-8 rather than through path::c_str(), which is
+	// wchar_t* on Windows and char* everywhere else -- which is the only
+	// reason the wide _wcsicmp was here at all.
+	if ( error || !NStr::IEquals( filePath.extension().u8string(), ".xdb" ) )
 	{
-		const std::string szHelpFileName = NResources::GetString( IDS_HELP_FILE_NAME );
-		return NFile::JoinPath( NFile::GetCurrDir(), szHelpFileName );
+		ReportError( "Select an existing .xdb file." );
+		return;
 	}
-
-
-	bool HasHelpFile( const std::string &rszHelpFilePath )
+	std::string dbPath;
+	const std::string fullPath = filePath.u8string();
+	// Try the active mod first; the resulting DBID is relative to its mounted
+	// root, never prefixed with Data/ or Mods/<name>/. Compare whole directories.
+	for ( const auto &rootPath : dataRoots )
 	{
-		return NFile::DoesFileExist( rszHelpFilePath.c_str() );
+		std::string rootPrefix = rootPath.u8string();
+		// canonical() answers in native separators, so accept either rather
+		// than assuming the backslash this used to append.
+		if ( !rootPrefix.empty() && ( rootPrefix.back() != '\\' ) && ( rootPrefix.back() != '/' ) )
+		{
+			rootPrefix += static_cast<char>( std::filesystem::path::preferred_separator );
+		}
+		// Case-insensitively, as _wcsnicmp was: the roots come from the
+		// configuration and the file from a picker, and on Windows those two
+		// need not agree about case.
+		if ( fullPath.size() > rootPrefix.size() && NStr::IStartsWith( fullPath, rootPrefix ) )
+		{
+			dbPath = std::filesystem::path( fullPath.substr( rootPrefix.size() ) ).generic_u8string();
+			break;
+		}
 	}
-
-
-	// F1. In practice this always takes the second branch, on every platform and
-	// in every build: IDS_HELP_FILE_NAME is "MapEditor.chm" and **no such file
-	// exists** -- not in this repository, not in an install, not in the shipped
-	// game. So what the user gets is the "no help file" message, and the
-	// ::HtmlHelp call below has never run for anyone.
-	//
-	// It is kept, behind BOOST_OS_WINDOWS, only so that the intent is not lost.
-	// Nothing
-	// should be ported here. If the editor ever grows a help system it will not
-	// be this one: CHM is a Microsoft container that Windows itself now opens
-	// grudgingly and that has no answer elsewhere worth depending on. Whatever
-	// replaces it -- HTML opened with wxLaunchDefaultBrowser, a PDF, an embedded
-	// browser -- is a new feature with new content behind it, not a port of one
-	// call. The 137 page Editor_Manual.pdf that ships with the game is the
-	// obvious thing to point at first.
-	void ShowHelpContents( const std::string &rszHelpFilePath )
+	if ( dbPath.empty() )
 	{
+		std::string message = "Select an XDB inside the game's Data folder:\n" + initialFolder;
+		if ( NMOD::DoesAnyMODAttached() )
+			message += "\n\nOr inside the active mod folder:\n" + dataRoots.front().string();
+		ReportError( message );
+		return;
+	}
+	std::string typeName, validationError;
+	if ( !ValidateXDB( dbPath, &typeName, &validationError ) )
+	{
+		ReportError( validationError );
+		return;
+	}
+	const bool bAlreadyRegistered = NDb::IsFileRegistered( dbPath );
+	if ( bAlreadyRegistered && NDb::GetClassTypeName( CDBID( dbPath ) ) != typeName )
+	{
+		ReportError( "This database path is already registered with a different resource type. Use a new filename." );
+		return;
+	}
+	if ( !NDb::RegisterResourceFile( dbPath ) )
+	{
+		ReportError( "The database could not read the selected XDB. It was not registered." );
+		return;
+	}
+	// Persist the combined database index in the active writable layer (the mod
+	// when attached). Base-data references are valid there too; do not copy XDBs
+	// or save unrelated resource edits.
+	const bool bSaved = NDb::SaveChangedIndex();
+	rReloadData();
+	if ( !bSaved )
+	{
+		ReportError(
+				"The resource is registered for this session, but index.bin could not be saved.\nCheck data-folder permissions, then retry registration." );
+		return;
+	}
+	Singleton<IMainFrameContainer>()->Get()->Log( LT_NORMAL, fmt::format( "Registered {} ({})\n", dbPath, typeName ) );
+	NMessage::Information( fmt::format( "{}\nType: {}\n\n{}",
+	                                    dbPath,
+	                                    typeName,
+	                                    bAlreadyRegistered ? "This resource was already registered."
+	                                                       : "Registered and saved to the database index." ),
+	                       "Register XDB" );
+}
+
+std::string GetHelpFilePath()
+{
+	const std::string szHelpFileName = NResources::GetString( IDS_HELP_FILE_NAME );
+	return NFile::JoinPath( NFile::GetCurrDir(), szHelpFileName );
+}
+
+bool HasHelpFile( const std::string &rszHelpFilePath )
+{
+	return NFile::DoesFileExist( rszHelpFilePath.c_str() );
+}
+
+// F1. In practice this always takes the second branch, on every platform and
+// in every build: IDS_HELP_FILE_NAME is "MapEditor.chm" and **no such file
+// exists** -- not in this repository, not in an install, not in the shipped
+// game. So what the user gets is the "no help file" message, and the
+// ::HtmlHelp call below has never run for anyone.
+//
+// It is kept, behind BOOST_OS_WINDOWS, only so that the intent is not lost.
+// Nothing
+// should be ported here. If the editor ever grows a help system it will not
+// be this one: CHM is a Microsoft container that Windows itself now opens
+// grudgingly and that has no answer elsewhere worth depending on. Whatever
+// replaces it -- HTML opened with wxLaunchDefaultBrowser, a PDF, an embedded
+// browser -- is a new feature with new content behind it, not a port of one
+// call. The 137 page Editor_Manual.pdf that ships with the game is the
+// obvious thing to point at first.
+void ShowHelpContents( const std::string &rszHelpFilePath )
+{
 #if BOOST_OS_WINDOWS
-		if ( HasHelpFile( rszHelpFilePath ) )
-		{
-			::HtmlHelp( ::GetDesktopWindow(), rszHelpFilePath.c_str(), HH_DISPLAY_TOPIC, 0 );
-		}
-		else
+	if ( HasHelpFile( rszHelpFilePath ) )
+	{
+		::HtmlHelp( ::GetDesktopWindow(), rszHelpFilePath.c_str(), HH_DISPLAY_TOPIC, 0 );
+	}
+	else
 #endif
-		{
-			const std::string strMessagePattern = NResources::GetString( IDS_NO_HELP_FILE_MESSAGE );
-			const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszHelpFilePath.c_str() );
-			NMessage::Error( strMessage );
-		}
-	}
-
-
-	void ShowAbout()
 	{
-		// Which dialog answers is NAbout's business, not the frame's.
-		NAbout::Run( Singleton<IMainFrameContainer>()->GetMainWindow() );
+		const std::string strMessagePattern = NResources::GetString( IDS_NO_HELP_FILE_MESSAGE );
+		const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszHelpFilePath.c_str() );
+		NMessage::Error( strMessage );
 	}
+}
 
+void ShowAbout()
+{
+	// Which dialog answers is NAbout's business, not the frame's.
+	NAbout::Run( Singleton<IMainFrameContainer>()->GetMainWindow() );
+}
 
-	const SUserData::CRecentList* GetRecentList( unsigned nCommandID, unsigned *pnFirstID )
+const SUserData::CRecentList *GetRecentList( unsigned nCommandID, unsigned *pnFirstID )
+{
+	if ( nCommandID == ID_MAIN_RECENT_0 )
 	{
-		if ( nCommandID == ID_MAIN_RECENT_0 )
-		{
-			( *pnFirstID ) = ID_MAIN_RECENT_0;
-			return &( Singleton<IUserDataContainer>()->Get()->recentList );
-		}
-		if ( nCommandID == ID_MAIN_RECENT_RESOURCE_0 )
-		{
-			( *pnFirstID ) = ID_MAIN_RECENT_RESOURCE_0;
-			return &( Singleton<IUserDataContainer>()->Get()->recentResourceList );
-		}
-		return 0;
+		( *pnFirstID ) = ID_MAIN_RECENT_0;
+		return &( Singleton<IUserDataContainer>()->Get()->recentList );
 	}
-
-
-	std::string GetRecentEmptyLabel()
+	if ( nCommandID == ID_MAIN_RECENT_RESOURCE_0 )
 	{
-		std::string strMenuLabel = NResources::GetString( IDS_RECENT_EMPTY );
-		return std::string( strMenuLabel );
+		( *pnFirstID ) = ID_MAIN_RECENT_RESOURCE_0;
+		return &( Singleton<IUserDataContainer>()->Get()->recentResourceList );
 	}
+	return 0;
+}
 
+std::string GetRecentEmptyLabel()
+{
+	std::string strMenuLabel = NResources::GetString( IDS_RECENT_EMPTY );
+	return std::string( strMenuLabel );
+}
 
-	void RunUserCommand( unsigned nCommandID )
+void RunUserCommand( unsigned nCommandID )
+{
+	bool bEnable = false;
+	bool bChecked = false;
+	if ( Singleton<ICommandHandlerContainer>()->UpdateCommand( nCommandID, &bEnable, &bChecked ) && bEnable )
 	{
-		bool bEnable = false;
-		bool bChecked = false;
-		if ( Singleton<ICommandHandlerContainer>()->UpdateCommand( nCommandID, &bEnable, &bChecked ) && bEnable  )
-		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( nCommandID, 0 );
-		}
+		Singleton<ICommandHandlerContainer>()->HandleCommand( nCommandID, 0 );
 	}
+}
 
-
-	void UpdateUserCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+void UpdateUserCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+{
+	( *pbEnable ) = false;
+	( *pbCheck ) = false;
+	if ( nCommandID == ID_MAIN_REGISTER_XDB )
+	{
+		( *pbEnable ) = ( NVFS::GetMainVFS() != 0 );
+		return;
+	}
+	unsigned nFirstID = 0;
+	if ( const SUserData::CRecentList *pRecentList = GetRecentList( nCommandID, &nFirstID ) )
+	{
+		( *pbEnable ) = !( pRecentList->empty() );
+		return;
+	}
+	if ( !Singleton<ICommandHandlerContainer>()->UpdateCommand( nCommandID, pbEnable, pbCheck ) )
 	{
 		( *pbEnable ) = false;
 		( *pbCheck ) = false;
-		if ( nCommandID == ID_MAIN_REGISTER_XDB )
-		{
-			( *pbEnable ) = ( NVFS::GetMainVFS() != 0 );
-			return;
-		}
-		unsigned nFirstID = 0;
-		if ( const SUserData::CRecentList *pRecentList = GetRecentList( nCommandID, &nFirstID ) )
-		{
-			( *pbEnable ) = !( pRecentList->empty() );
-			return;
-		}
-		if ( !Singleton<ICommandHandlerContainer>()->UpdateCommand( nCommandID, pbEnable, pbCheck ) )
-		{
-			( *pbEnable ) = false;
-			( *pbCheck ) = false;
-		}
 	}
+}
 
+CProgressHost::~CProgressHost()
+{
+	delete pView;
+	pView = 0;
+}
 
-	CProgressHost::~CProgressHost()
+void CProgressHost::Create( IWidget *pOwner )
+{
+	previousFocus.Remember();
+	if ( pView == 0 )
 	{
-		delete pView;
-		pView = 0;
+		// Which toolkit draws it is NProgressView's business.
+		pView = NProgressView::Create();
 	}
-
-
-	void CProgressHost::Create( IWidget *pOwner )
+	if ( pView->IsCreated() )
 	{
-		previousFocus.Remember();
-		if ( pView == 0 )
-		{
-			// Which toolkit draws it is NProgressView's business.
-			pView = NProgressView::Create();
-		}
-		if ( pView->IsCreated() )
-		{
-			pView->Show();
-		}
-		else
-		{
-			// The frame itself, not a temporary: the view outlives this call, and
-			// the frame outlives the view.
-			pView->Create( pOwner );
-		}
+		pView->Show();
 	}
-
-
-	void CProgressHost::Destroy()
+	else
 	{
-		if ( pView != 0 )
-		{
-			pView->Destroy();
-		}
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-		previousFocus.Restore();
+		// The frame itself, not a temporary: the view outlives this call, and
+		// the frame outlives the view.
+		pView->Create( pOwner );
 	}
+}
 
-
-	void CProgressHost::SetTitle( const std::string &rszTitle )
+void CProgressHost::Destroy()
+{
+	if ( pView != 0 )
 	{
-		if ( pView != 0 )
-		{
-			pView->SetTitle( rszTitle );
-		}
+		pView->Destroy();
 	}
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
+	previousFocus.Restore();
+}
 
-
-	void CProgressHost::SetMessage( const std::string &rszMessage )
+void CProgressHost::SetTitle( const std::string &rszTitle )
+{
+	if ( pView != 0 )
 	{
-		if ( pView != 0 )
-		{
-			pView->SetMessage( rszMessage );
-		}
+		pView->SetTitle( rszTitle );
 	}
+}
 
-
-	void CProgressHost::SetRange( int nStart, int nFinish )
+void CProgressHost::SetMessage( const std::string &rszMessage )
+{
+	if ( pView != 0 )
 	{
-		if ( pView != 0 )
-		{
-			pView->SetRange( nStart, nFinish );
-		}
+		pView->SetMessage( rszMessage );
 	}
+}
 
-
-	void CProgressHost::SetPosition( int nPosition )
+void CProgressHost::SetRange( int nStart, int nFinish )
+{
+	if ( pView != 0 )
 	{
-		if ( pView != 0 )
-		{
-			pView->SetPosition( nPosition );
-		}
+		pView->SetRange( nStart, nFinish );
 	}
+}
 
-
-	void CProgressHost::IteratePosition()
+void CProgressHost::SetPosition( int nPosition )
+{
+	if ( pView != 0 )
 	{
-		if ( pView != 0 )
-		{
-			pView->IteratePosition();
-		}
+		pView->SetPosition( nPosition );
 	}
+}
+
+void CProgressHost::IteratePosition()
+{
+	if ( pView != 0 )
+	{
+		pView->IteratePosition();
+	}
+}
 }

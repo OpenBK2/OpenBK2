@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-namespace {
+namespace
+{
 
 template <class Map>
 std::vector<typename Map::key_type> Keys( const Map &map )

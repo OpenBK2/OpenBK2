@@ -15,12 +15,14 @@ class CVisObjIconInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 
 	CPtr<ICamera> pCamera;
 	bool bUpdate;
+
 protected:
 	void Recalc();
 	bool NeedUpdate();
 	void OrientToViewer();
 	//
 	CVisObjIconInfo() {}
+
 public:
 	NMeshData::SMeshData data;
 	CVec3 vCenter;
@@ -54,10 +56,12 @@ struct SVisObjIcons
 		uint8_t cAlpha;
 		//
 		SPresentIcon() {}
-		SPresentIcon( const NDb::SIconsSet::SIconType::EIconTypeEnum _eType, const float _fValue, const uint8_t _cAlpha ) :
-			eType( _eType ), fValue( _fValue ), cAlpha( _cAlpha ) {}
+		SPresentIcon( const NDb::SIconsSet::SIconType::EIconTypeEnum _eType, const float _fValue, const uint8_t _cAlpha )
+				: eType( _eType ), fValue( _fValue ), cAlpha( _cAlpha )
+		{
+		}
 		//
-		int operator &( IBinSaver &saver )
+		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &eType );
 			saver.Add( 2, &fValue );
@@ -86,7 +90,7 @@ struct SVisObjIcons
 	}
 };
 
-inline bool operator == ( const SVisObjIcons::SPresentIcon &a, const SVisObjIcons::SPresentIcon &b )
+inline bool operator==( const SVisObjIcons::SPresentIcon &a, const SVisObjIcons::SPresentIcon &b )
 {
 	return ( a.eType == b.eType );
 }

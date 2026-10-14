@@ -8,36 +8,40 @@
 
 #include <zconf.h>
 
-PCConstructorInfo & ConstructorInfo()
+PCConstructorInfo &ConstructorInfo()
 {
 	static CConstructorInfo *pInfo = 0;
 	return pInfo;
 };
 
-template<int N> struct SUserActionsChecker;
-template<> struct SUserActionsChecker<0> { };
+template <int N>
+struct SUserActionsChecker;
+template <>
+struct SUserActionsChecker<0>
+{
+};
 
-static SUserActionsChecker<int(NDb::USER_ACTION_UNKNOWN)> check_USER_ACTION_UNKNOWN_is_null;
+static SUserActionsChecker<int( NDb::USER_ACTION_UNKNOWN )> check_USER_ACTION_UNKNOWN_is_null;
 
 void NDb::SUnitActions::ReMapCommands( CUserCommands &ai, CUserActions &user )
 {
 	user.Clear();
 	for ( int i = 0; i != 128; ++i )
 	{
-		if ( ai.GetData(i) != 0 )
+		if ( ai.GetData( i ) != 0 )
 		{
 			const NDb::EUserAction nUserAction = GetActionByCommand( (EActionCommand)i );
 			if ( nUserAction != NDb::USER_ACTION_UNKNOWN )
 			{
 				user.SetAction( nUserAction );
 			}
-//			if ( nUserAction == USER_ACTION_ENGINEER_PLACE_MINE_AP )
-//				user.SetAction( USER_ACTION_ENGINEER_PLACE_MINE_AT );
+			//			if ( nUserAction == USER_ACTION_ENGINEER_PLACE_MINE_AP )
+			//				user.SetAction( USER_ACTION_ENGINEER_PLACE_MINE_AT );
 		}
 	}
 }
 
-const NDb::SComplexSoundDesc * ChooseAcknowledgement( const NDb::SAckSetRPGStats *pStats, const NDb::EUnitAckType type )
+const NDb::SComplexSoundDesc *ChooseAcknowledgement( const NDb::SAckSetRPGStats *pStats, const NDb::EUnitAckType type )
 {
 	if ( pStats == 0 || type < 0 || type >= pStats->types.size() )
 		return 0;
@@ -95,8 +99,11 @@ const bool NDb::SUnitBaseRPGStats::HasCommand( const int nCmd ) const
 {
 	if ( -1 == nCmd )
 		return false;
-	NI_ASSERT( (nCmd >= 0 && nCmd < pActions->availCommands.GetSize()) || (nCmd >= 1000), fmt::format( "Wrong command ( {} )\n", nCmd ) );
-	return nCmd >= 1000 ? true : ( nCmd < GetActions()->availCommands.GetSize() ? GetActions()->availCommands.GetData(nCmd) : false );
+	NI_ASSERT( ( nCmd >= 0 && nCmd < pActions->availCommands.GetSize() ) || ( nCmd >= 1000 ),
+	           fmt::format( "Wrong command ( {} )\n", nCmd ) );
+	return nCmd >= 1000
+	           ? true
+	           : ( nCmd < GetActions()->availCommands.GetSize() ? GetActions()->availCommands.GetData( nCmd ) : false );
 }
 void NDb::SUnitBaseRPGStats::GetUserActions( CUserActions *pActions ) const
 {
@@ -106,7 +113,7 @@ const bool NDb::SUnitBaseRPGStats::HasUserAction( const int nAction ) const
 {
 	return pActions->availUserActions.HasAction( nAction );
 }
-const CUserActions* NDb::SUnitBaseRPGStats::GetUserActions( bool bActionsBy ) const
+const CUserActions *NDb::SUnitBaseRPGStats::GetUserActions( bool bActionsBy ) const
 {
-	return bActionsBy ? &(pActions->availUserActions) : &(pActions->availUserExposures);
+	return bActionsBy ? &( pActions->availUserActions ) : &( pActions->availUserExposures );
 }

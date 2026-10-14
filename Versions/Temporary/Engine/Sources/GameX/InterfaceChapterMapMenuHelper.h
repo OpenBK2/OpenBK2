@@ -7,15 +7,16 @@
 struct IWindow;
 namespace NDb
 {
-	struct SChapter;
-	struct SMapInfo;
-	struct STexture;
-	struct SCampaign;
+struct SChapter;
+struct SMapInfo;
+struct STexture;
+struct SCampaign;
 }
 
 struct GAMEX_EXPORT SChapterMapMenuHelper : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( SChapterMapMenuHelper );
+
 public:
 	struct SArrow
 	{
@@ -25,10 +26,21 @@ public:
 		CDBPtr<NDb::STexture> pTexture;
 		int nDependIndex;
 		ZSKIP //CPtr<IWindow> pWnd;
-		CTRect<float> rcBounds;
+				CTRect<float>
+						rcBounds;
 		int nID;
 		CVec2 vDelta;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&points); f.Add(3,&fWidth); f.Add(4,&pTexture); f.Add(5,&nDependIndex); f.Add(7,&rcBounds); f.Add(8,&nID); f.Add(9,&vDelta); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &points );
+			f.Add( 3, &fWidth );
+			f.Add( 4, &pTexture );
+			f.Add( 5, &nDependIndex );
+			f.Add( 7, &rcBounds );
+			f.Add( 8, &nID );
+			f.Add( 9, &vDelta );
+			return 0;
+		}
 
 		GAMEX_EXPORT uint32_t GetColor() const;
 		uint32_t GetDependentColor() const;
@@ -37,19 +49,32 @@ public:
 	struct SMission
 	{
 		ZDATA
-		ZSKIP //int nX;
-		ZSKIP //int nY;
-		std::vector<SArrow> arrows;
+		ZSKIP     //int nX;
+				ZSKIP //int nY;
+						std::vector<SArrow>
+								arrows;
 		float fPotentialIncomplete;
 		float fPotentialComplete;
 		CPtr<IWindow> pWnd;
 		ZSKIP //int nID;
-		CVec2 vPos;
+				CVec2 vPos;
 		bool bShowPotentialComplete;
 		int nIndex;
 		int nObjectIndex;
 		CVec2 vEndOffset;
-		ZEND int operator&( IBinSaver &f ) { f.Add(4,&arrows); f.Add(5,&fPotentialIncomplete); f.Add(6,&fPotentialComplete); f.Add(7,&pWnd); f.Add(9,&vPos); f.Add(10,&bShowPotentialComplete); f.Add(11,&nIndex); f.Add(12,&nObjectIndex); f.Add(13,&vEndOffset); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 4, &arrows );
+			f.Add( 5, &fPotentialIncomplete );
+			f.Add( 6, &fPotentialComplete );
+			f.Add( 7, &pWnd );
+			f.Add( 9, &vPos );
+			f.Add( 10, &bShowPotentialComplete );
+			f.Add( 11, &nIndex );
+			f.Add( 12, &nObjectIndex );
+			f.Add( 13, &vEndOffset );
+			return 0;
+		}
 	};
 
 	ZDATA
@@ -58,7 +83,15 @@ public:
 	CVec2 vDetailsCoeff;
 	CDBPtr<NDb::SMapInfo> pDetailsMap;
 	CDBPtr<NDb::SChapter> pChapter;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vMainStrike); f.Add(3,&missions); f.Add(4,&vDetailsCoeff); f.Add(5,&pDetailsMap); f.Add(6,&pChapter); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &vMainStrike );
+		f.Add( 3, &missions );
+		f.Add( 4, &vDetailsCoeff );
+		f.Add( 5, &pDetailsMap );
+		f.Add( 6, &pChapter );
+		return 0;
+	}
 
 	SChapterMapMenuHelper() {}
 	SChapterMapMenuHelper( const NDb::SChapter *pChapter, IWindow *pChapterMap );

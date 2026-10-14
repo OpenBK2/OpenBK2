@@ -25,12 +25,10 @@ EXPORT_RESULT CExporterBase::GetStartExportResult( const std::string &rszObjectT
 	}
 }
 
-
 void CExporterBase::SetStartExportResult( const std::string &rszObjectTypeName, EXPORT_RESULT eResult )
 {
 	startExportResultMap[rszObjectTypeName] = eResult;
 }
-
 
 EXPORT_RESULT CExporterBase::GetExportObjectResult( const std::string &rszObjectRefName )
 {
@@ -45,27 +43,25 @@ EXPORT_RESULT CExporterBase::GetExportObjectResult( const std::string &rszObject
 	}
 }
 
-
 void CExporterBase::SetExportObjectResult( const std::string &rszObjectRefName, EXPORT_RESULT eResult )
 {
 	exportObjectResultMap[rszObjectRefName] = eResult;
 }
 
-
 // Собираем новые типы требующие вызова StartExport и FinishExport
 // Дополнительно запоминаем тип и имя объекта ( может быть не указан в имени свойства )
-bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
-																					const std::string &rszObjectTypeName,
-																					const std::string &rszObjectName,
-																					CObjectTypeNameList *pObjectTypeNameList,
-																					CExportObjectTypeNameMap *pExportObjectTypeNameMap,
-																					CExportObjectNameMap *pExportObjectNameMap,
-																					CInvalidLinkList* pInvalidLinkList )
+bool CExporterBase::GetObjectTypeNameSet( IManipulator *pManipulator,
+                                          const std::string &rszObjectTypeName,
+                                          const std::string &rszObjectName,
+                                          CObjectTypeNameList *pObjectTypeNameList,
+                                          CExportObjectTypeNameMap *pExportObjectTypeNameMap,
+                                          CExportObjectNameMap *pExportObjectNameMap,
+                                          CInvalidLinkList *pInvalidLinkList )
 {
-  NI_ASSERT( pManipulator != 0, "GetObjectTypeNameSet() pManipulator == 0" );
-  NI_ASSERT( pObjectTypeNameList != 0, "GetObjectTypeNameSet() pObjectTypeNameList == 0" );
-  NI_ASSERT( pExportObjectTypeNameMap != 0, "GetObjectTypeNameSet() pExportObjectTypeNameMap == 0" );
-  NI_ASSERT( pExportObjectNameMap != 0, "GetObjectTypeNameSet() pExportObjectNameMap == 0" );
+	NI_ASSERT( pManipulator != 0, "GetObjectTypeNameSet() pManipulator == 0" );
+	NI_ASSERT( pObjectTypeNameList != 0, "GetObjectTypeNameSet() pObjectTypeNameList == 0" );
+	NI_ASSERT( pExportObjectTypeNameMap != 0, "GetObjectTypeNameSet() pExportObjectTypeNameMap == 0" );
+	NI_ASSERT( pExportObjectNameMap != 0, "GetObjectTypeNameSet() pExportObjectNameMap == 0" );
 
 	if ( CPtr<IManipulatorIterator> pManipulatorIterator = pManipulator->Iterate( true, ECT_CACHE_GLOBAL ) )
 	{
@@ -74,7 +70,7 @@ bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 		{
 			szName.clear();
 			pManipulatorIterator->GetName( &szName );
-			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pManipulator->GetDesc( szName ) ) )
+			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc *>( pManipulator->GetDesc( szName ) ) )
 			{
 				EPCIEType nType = typePCIEMnemonics.Get( pDesc, szName );
 				if ( typePCIEMnemonics.IsRef( nType ) )
@@ -85,7 +81,8 @@ bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 					{
 						std::string szObjectTypeName;
 						std::string szObjectName;
-						CStringManager::GetTypeAndNameFromRefValue( &szObjectTypeName, &szObjectName, szRef, TYPE_SEPARATOR_CHAR, pDesc->refTypes.begin()->first );
+						CStringManager::GetTypeAndNameFromRefValue(
+								&szObjectTypeName, &szObjectName, szRef, TYPE_SEPARATOR_CHAR, pDesc->refTypes.begin()->first );
 						//
 						pObjectTypeNameList->Insert( szObjectTypeName, UNIQUE_LIST_INSERT_BACK );
 						( *pExportObjectTypeNameMap )[szName] = szObjectTypeName;
@@ -97,7 +94,8 @@ bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 						{
 							if ( pInvalidLinkList != 0 )
 							{
-								CInvalidLinkList::iterator posInvalidLink = pInvalidLinkList->insert( pInvalidLinkList->end(), SInvalidLink() );
+								CInvalidLinkList::iterator posInvalidLink =
+										pInvalidLinkList->insert( pInvalidLinkList->end(), SInvalidLink() );
 								posInvalidLink->szObjectTypeName = rszObjectTypeName;
 								posInvalidLink->szObjectName = rszObjectName;
 								posInvalidLink->szPropertyName = szName;
@@ -105,9 +103,9 @@ bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 								if ( s_bReportSafeRefs )
 								{
 									const std::string szMessage = fmt::format( "Empty safe ref: Object: {}:{}, Poperty:<{}>\r\n",
-																										posInvalidLink->szObjectTypeName.c_str(),
-																										posInvalidLink->szObjectName.c_str(),
-																										posInvalidLink->szPropertyName.c_str() );
+									                                           posInvalidLink->szObjectTypeName.c_str(),
+									                                           posInvalidLink->szObjectName.c_str(),
+									                                           posInvalidLink->szPropertyName.c_str() );
 									NLog::GetLogger()->Log( LT_ERROR, szMessage );
 								}
 								// CRAP} PLAIN_TEXT
@@ -122,11 +120,12 @@ bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 	return true;
 }
 
-
 void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeNameList, bool bExport, bool bForce )
 {
 	IExporterContainer *pExporterContainer = Singleton<IExporterContainer>();
-	for ( std::list<std::string>::const_iterator itNewObjectTypeName = rNewObjectTypeNameList.GetList().begin(); itNewObjectTypeName != rNewObjectTypeNameList.GetList().end(); ++itNewObjectTypeName )
+	for ( std::list<std::string>::const_iterator itNewObjectTypeName = rNewObjectTypeNameList.GetList().begin();
+	      itNewObjectTypeName != rNewObjectTypeNameList.GetList().end();
+	      ++itNewObjectTypeName )
 	{
 		const std::string &rszObjectTypeName = ( *itNewObjectTypeName );
 		if ( GetStartExportResult( rszObjectTypeName ) == ER_UNKNOWN )
@@ -178,18 +177,21 @@ void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeN
 	}
 }
 
-
 void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 {
 	IExporterContainer *pExporterContainer = Singleton<IExporterContainer>();
 	// Необходимо заканчивать экспорт в обратном порядке - переделываем лист
 	std::list<std::string> backObjectTypeNameList;
-	for ( std::list<std::string>::const_iterator itObjectTypeName = objectTypeNameList.GetList().begin(); itObjectTypeName != objectTypeNameList.GetList().end(); ++itObjectTypeName )
+	for ( std::list<std::string>::const_iterator itObjectTypeName = objectTypeNameList.GetList().begin();
+	      itObjectTypeName != objectTypeNameList.GetList().end();
+	      ++itObjectTypeName )
 	{
 		backObjectTypeNameList.push_front( *itObjectTypeName );
 	}
 	//
-	for ( std::list<std::string>::const_iterator itObjectTypeName = backObjectTypeNameList.begin(); itObjectTypeName != backObjectTypeNameList.end(); ++itObjectTypeName )
+	for ( std::list<std::string>::const_iterator itObjectTypeName = backObjectTypeNameList.begin();
+	      itObjectTypeName != backObjectTypeNameList.end();
+	      ++itObjectTypeName )
 	{
 		const std::string &rszObjectTypeName = ( *itObjectTypeName );
 		if ( IExporter *pExporter = pExporterContainer->GetExporter( rszObjectTypeName ) )
@@ -243,12 +245,11 @@ void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 	// CRAP} PLAIN_TEXT
 }
 
-
-EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
-																								const std::string &rszObjectTypeName,
-																								const std::string &rszObjectName,
-																								bool bExport,
-																								bool bForce )
+EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator *pManipulator,
+                                                const std::string &rszObjectTypeName,
+                                                const std::string &rszObjectName,
+                                                bool bExport,
+                                                bool bForce )
 {
 	NI_ASSERT( pManipulator != 0, "CExporterBase::InnerExportObject() pManipulator == 0" );
 	//
@@ -272,7 +273,9 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 		{
 			if ( bExport )
 			{
-				DebugTrace( "CExporterBase::ExportObject(): <%s:%s>, type: ET_BEFORE_REF", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+				DebugTrace( "CExporterBase::ExportObject(): <%s:%s>, type: ET_BEFORE_REF",
+				            rszObjectTypeName.c_str(),
+				            rszObjectName.c_str() );
 				try
 				{
 					eResult = pExporter->ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, ET_BEFORE_REF );
@@ -287,11 +290,17 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
-				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );
+				DebugTrace( "result: %s",
+				            ( eResult == ER_FAIL )          ? "ER_FAIL"
+				            : ( eResult == ER_SUCCESS )     ? "ER_SUCCESS"
+				            : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED"
+				                                            : "ER_BREAK" );
 			}
 			if ( eResult == ER_SUCCESS )
 			{
-				DebugTrace( "CExporterBase::CheckObject(): <%s:%s>, type: ET_BEFORE_REF", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+				DebugTrace( "CExporterBase::CheckObject(): <%s:%s>, type: ET_BEFORE_REF",
+				            rszObjectTypeName.c_str(),
+				            rszObjectName.c_str() );
 				try
 				{
 					eResult = pExporter->CheckObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, ET_BEFORE_REF );
@@ -306,7 +315,11 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
-				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );
+				DebugTrace( "result: %s",
+				            ( eResult == ER_FAIL )          ? "ER_FAIL"
+				            : ( eResult == ER_SUCCESS )     ? "ER_SUCCESS"
+				            : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED"
+				                                            : "ER_BREAK" );
 			}
 			SetExportObjectResult( szObjectRefName, eResult );
 			if ( eResult == ER_BREAK )
@@ -328,7 +341,9 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 		{
 			if ( bExport )
 			{
-				DebugTrace( "CExporterBase::ExportObject(): <%s:%s>, type: ET_AFTER_REF", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+				DebugTrace( "CExporterBase::ExportObject(): <%s:%s>, type: ET_AFTER_REF",
+				            rszObjectTypeName.c_str(),
+				            rszObjectName.c_str() );
 				try
 				{
 					eResult = pExporter->ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, ET_AFTER_REF );
@@ -343,11 +358,17 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
-				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );
+				DebugTrace( "result: %s",
+				            ( eResult == ER_FAIL )          ? "ER_FAIL"
+				            : ( eResult == ER_SUCCESS )     ? "ER_SUCCESS"
+				            : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED"
+				                                            : "ER_BREAK" );
 			}
 			if ( eResult == ER_SUCCESS )
 			{
-				DebugTrace( "CExporterBase::CheckObject(): <%s:%s>, type: ET_AFTER_REF", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+				DebugTrace( "CExporterBase::CheckObject(): <%s:%s>, type: ET_AFTER_REF",
+				            rszObjectTypeName.c_str(),
+				            rszObjectName.c_str() );
 				try
 				{
 					eResult = pExporter->CheckObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, ET_AFTER_REF );
@@ -362,7 +383,11 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
-				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );
+				DebugTrace( "result: %s",
+				            ( eResult == ER_FAIL )          ? "ER_FAIL"
+				            : ( eResult == ER_SUCCESS )     ? "ER_SUCCESS"
+				            : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED"
+				                                            : "ER_BREAK" );
 			}
 			SetExportObjectResult( szObjectRefName, eResult );
 		}
@@ -370,14 +395,13 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 	return eResult;
 }
 
-
-EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
-																										const std::string &rszObjectTypeName,
-																										const std::string &rszObjectName,
-																										bool bExport,
-																										bool bForce )
+EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator *pManipulator,
+                                                    const std::string &rszObjectTypeName,
+                                                    const std::string &rszObjectName,
+                                                    bool bExport,
+                                                    bool bForce )
 {
-  NI_ASSERT( pManipulator != 0, "CExporterBase::HierarchyExportObject() pManipulator == 0" );
+	NI_ASSERT( pManipulator != 0, "CExporterBase::HierarchyExportObject() pManipulator == 0" );
 	//
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	// Получаем список типов ссылок
@@ -385,15 +409,17 @@ EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
 	CExportObjectTypeNameMap currentExportObjectTypeNameMap;
 	CExportObjectNameMap currentExportObjectNameMap;
 	GetObjectTypeNameSet( pManipulator,
-												rszObjectTypeName,
-												rszObjectName,
-												&currentObjectTypeNameList,
-												&currentExportObjectTypeNameMap,
-												&currentExportObjectNameMap,
-												( !bExport ) ? &invalidLinkList : 0 );
+	                      rszObjectTypeName,
+	                      rszObjectName,
+	                      &currentObjectTypeNameList,
+	                      &currentExportObjectTypeNameMap,
+	                      &currentExportObjectNameMap,
+	                      ( !bExport ) ? &invalidLinkList : 0 );
 	InnerStartExport( currentObjectTypeNameList, bExport, bForce );
 	// Экпортируем ссылочные поля
-	for ( CExportObjectNameMap::const_iterator itCurrentExportObjectName = currentExportObjectNameMap.begin(); itCurrentExportObjectName != currentExportObjectNameMap.end(); ++itCurrentExportObjectName )
+	for ( CExportObjectNameMap::const_iterator itCurrentExportObjectName = currentExportObjectNameMap.begin();
+	      itCurrentExportObjectName != currentExportObjectNameMap.end();
+	      ++itCurrentExportObjectName )
 	{
 		const std::string szObjectTypeName = currentExportObjectTypeNameMap[itCurrentExportObjectName->first];
 		const std::string szObjectName = itCurrentExportObjectName->second;
@@ -401,7 +427,8 @@ EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
 		CStringManager::GetRefValueFromTypeAndName( &szObjectRefName, szObjectTypeName, szObjectName, TYPE_SEPARATOR_CHAR );
 		if ( GetExportObjectResult( szObjectRefName ) == ER_UNKNOWN )
 		{
-			if ( CPtr<IManipulator> pObjectManpulator = pResourceManager->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
+			if ( CPtr<IManipulator> pObjectManpulator =
+			         pResourceManager->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
 			{
 				if ( InnerExportObject( pObjectManpulator, szObjectTypeName, szObjectName, bExport, bForce ) == ER_BREAK )
 				{
@@ -412,7 +439,6 @@ EXPORT_RESULT CExporterBase::HierarchyExportObject( IManipulator* pManipulator,
 	}
 	return ER_SUCCESS;
 }
-
 
 bool CExporterBase::StartExport( const std::string &rszObjectTypeName, bool bForce )
 {
@@ -427,7 +453,6 @@ bool CExporterBase::StartExport( const std::string &rszObjectTypeName, bool bFor
 	return true;
 }
 
-
 void CExporterBase::FinishExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	InnerFinishExport( true, bForce );
@@ -440,12 +465,11 @@ void CExporterBase::FinishExport( const std::string &rszObjectTypeName, bool bFo
 	//Singleton<IEditorContainer>()->ReloadActiveEditor( true );
 }
 
-
-EXPORT_RESULT CExporterBase::ExportObject( IManipulator* pManipulator,
-																					 const std::string &rszObjectTypeName,
-																					 const std::string &rszObjectName,
-																					 bool bForce,
-																					 EXPORT_TYPE exportType )
+EXPORT_RESULT CExporterBase::ExportObject( IManipulator *pManipulator,
+                                           const std::string &rszObjectTypeName,
+                                           const std::string &rszObjectName,
+                                           bool bForce,
+                                           EXPORT_TYPE exportType )
 {
 	if ( exportType == ET_NO_REF )
 	{
@@ -453,7 +477,6 @@ EXPORT_RESULT CExporterBase::ExportObject( IManipulator* pManipulator,
 	}
 	return ER_SUCCESS;
 }
-
 
 bool CExporterBase::StartCheck( const std::string &rszObjectTypeName, bool bExport )
 {
@@ -471,7 +494,6 @@ bool CExporterBase::StartCheck( const std::string &rszObjectTypeName, bool bExpo
 	return true;
 }
 
-
 void CExporterBase::FinishCheck( const std::string &rszObjectTypeName, bool bExport )
 {
 	if ( !bExport )
@@ -485,12 +507,11 @@ void CExporterBase::FinishCheck( const std::string &rszObjectTypeName, bool bExp
 	}
 }
 
-
-EXPORT_RESULT CExporterBase::CheckObject( IManipulator* pManipulator,
-																					const std::string &rszObjectTypeName,
-																					const std::string &rszObjectName,
-																					bool bExport,
-																					EXPORT_TYPE exportType )
+EXPORT_RESULT CExporterBase::CheckObject( IManipulator *pManipulator,
+                                          const std::string &rszObjectTypeName,
+                                          const std::string &rszObjectName,
+                                          bool bExport,
+                                          EXPORT_TYPE exportType )
 {
 	if ( exportType == ET_NO_REF )
 	{
@@ -501,6 +522,6 @@ EXPORT_RESULT CExporterBase::CheckObject( IManipulator* pManipulator,
 
 // basement storage
 
-START_REGISTER(DefaultExporterCommands)
+START_REGISTER( DefaultExporterCommands )
 REGISTER_VAR_EX( "report_safe_refs", NGlobal::VarBoolHandler, &s_bReportSafeRefs, true, STORAGE_NONE );
 FINISH_REGISTER

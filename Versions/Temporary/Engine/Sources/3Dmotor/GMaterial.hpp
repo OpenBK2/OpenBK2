@@ -2,12 +2,11 @@
 
 #include "3Dmotor_export.h"
 
-
 #include "System/Dg.h"
 namespace NGfx
 {
-	class CTexture;
-	class CCubeTexture;
+class CTexture;
+class CCubeTexture;
 }
 
 namespace NGScene
@@ -59,11 +58,11 @@ enum EMaterialFlags
 class IMaterial;
 struct SMaterialCreateInfo
 {
-	CPtr<CFuncBase<CVec4> > pColor;
-	CObj<CPtrFuncBase<NGfx::CTexture> > pTexture, pBump, pMirrorTexture, pSpecular, pDetail;
-	CObj<CPtrFuncBase<NGfx::CTexture> > pMask;
+	CPtr<CFuncBase<CVec4>> pColor;
+	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture, pBump, pMirrorTexture, pSpecular, pDetail;
+	CObj<CPtrFuncBase<NGfx::CTexture>> pMask;
 	CVec4 vAvrgTexColor;
-	CObj<CPtrFuncBase<NGfx::CCubeTexture> > pSky;
+	CObj<CPtrFuncBase<NGfx::CCubeTexture>> pSky;
 	float fMetalMirror, fDielMirror;
 	int alphaMode;
 	int nPriority;
@@ -81,13 +80,18 @@ struct SMaterialCreateInfo
 	bool bReceiveShadow;
 	EDynamicType eDynamicType;
 
-	SMaterialCreateInfo() : pColor(0), vAvrgTexColor(1,1,1,1), vTranslucentColor(0,0,0),
-		fMetalMirror(0), fDielMirror(0), alphaMode(MF_GENERIC|MF_OPAQUE), bDoesCastShadow(true), nPriority(0),
-		fSpecPower(32), fFloatParam(0), fDetailScale(1), bProjectOnTerrain(false), bSelfIllum(false), b2Sided(false), bApplyFog(true), bAddPlaced(false), bIgnoreZ(false), bBackFaceCastShadow(false), bReceiveShadow(true), eDynamicType(DT_DONT_CARE) {}
+	SMaterialCreateInfo()
+			: pColor( 0 ), vAvrgTexColor( 1, 1, 1, 1 ), vTranslucentColor( 0, 0, 0 ), fMetalMirror( 0 ), fDielMirror( 0 ),
+				alphaMode( MF_GENERIC | MF_OPAQUE ), bDoesCastShadow( true ), nPriority( 0 ), fSpecPower( 32 ),
+				fFloatParam( 0 ), fDetailScale( 1 ), bProjectOnTerrain( false ), bSelfIllum( false ), b2Sided( false ),
+				bApplyFog( true ), bAddPlaced( false ), bIgnoreZ( false ), bBackFaceCastShadow( false ), bReceiveShadow( true ),
+				eDynamicType( DT_DONT_CARE )
+	{
+	}
 };
-_3DMOTOR_EXPORT IMaterial* CreateMaterial( const SMaterialCreateInfo &m_ );
+_3DMOTOR_EXPORT IMaterial *CreateMaterial( const SMaterialCreateInfo &m_ );
 // make exact decal from decal material for alpha test geometry
-IMaterial* GetExactDecal( IMaterial *p );
+IMaterial *GetExactDecal( IMaterial *p );
 IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor );
 
 }

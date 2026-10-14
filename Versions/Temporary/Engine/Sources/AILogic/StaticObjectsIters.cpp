@@ -8,7 +8,7 @@
 //*******************************************************************
 
 CMinesIter::CMinesIter( const CVec2 &vCenter, float fR, const int _nParty, const bool _bAllMines )
-: CStObjCircleIter<false>( vCenter, fR ), nParty( _nParty ), bAllMines( _bAllMines )
+		: CStObjCircleIter<false>( vCenter, fR ), nParty( _nParty ), bAllMines( _bAllMines )
 {
 	Reset();
 }
@@ -27,9 +27,9 @@ void CMinesIter::IterateToNextMine()
 	for ( CExistingObject *pMine = 0; !CStObjCircleIter<false>::IsFinished(); CStObjCircleIter<false>::Iterate() )
 	{
 		pMine = CStObjCircleIter<false>::operator*();
-		if (	pMine->GetObjectType() == ESOT_MINE )
+		if ( pMine->GetObjectType() == ESOT_MINE )
 		{
-			pMineMine = checked_cast<CMineStaticObject*>( pMine );
+			pMineMine = checked_cast<CMineStaticObject *>( pMine );
 			if ( pMineMine && ( bAllMines || !pMineMine->IsVisible( nParty ) ) )
 			{
 				//found needed object (mine).
@@ -39,14 +39,14 @@ void CMinesIter::IterateToNextMine()
 	}
 }
 
-class CMineStaticObject* CMinesIter::operator->()
+class CMineStaticObject *CMinesIter::operator->()
 {
-	return checked_cast<CMineStaticObject*>(CStObjCircleIter<false>::operator*());
+	return checked_cast<CMineStaticObject *>( CStObjCircleIter<false>::operator*() );
 };
 
-class CMineStaticObject* CMinesIter::operator*()
+class CMineStaticObject *CMinesIter::operator*()
 {
-	return checked_cast<CMineStaticObject*>(CStObjCircleIter<false>::operator*());
+	return checked_cast<CMineStaticObject *>( CStObjCircleIter<false>::operator*() );
 };
 
 bool CMinesIter::IsFinished() const

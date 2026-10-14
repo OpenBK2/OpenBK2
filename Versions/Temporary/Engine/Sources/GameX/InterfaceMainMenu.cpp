@@ -18,10 +18,9 @@
 
 static bool bVisited = false;
 
-const char* PROFILE_MANAGER_VISITED = "ProfileManagerVisited";
+const char *PROFILE_MANAGER_VISITED = "ProfileManagerVisited";
 
-CInterfaceMainMenu::CInterfaceMainMenu() :
-	CInterfaceScreenBase( "MainMenu", "intermission" )
+CInterfaceMainMenu::CInterfaceMainMenu() : CInterfaceScreenBase( "MainMenu", "intermission" )
 {
 	AddObserver( "options_menu", &CInterfaceMainMenu::MsgOptionsMenu );
 	AddObserver( "credits_screen", &CInterfaceMainMenu::MsgCreditsScreen );
@@ -56,10 +55,10 @@ bool CInterfaceMainMenu::Init()
 
 	Cursor()->Show( true );
 	Cursor()->SetMode( NDb::USER_ACTION_UNKNOWN );
-//	Singleton<ISoundScene>()->SetSoundSceneMode( ESSM_INTERMISSION_INTERFACE );
+	//	Singleton<ISoundScene>()->SetSoundSceneMode( ESSM_INTERMISSION_INTERFACE );
 
 	// Substitute MPScenarioTracker to ScenarioTracker
-/*	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
+	/*	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
 	NSingleton::UnRegisterSingleton( IAIScenarioTracker::tidTypeID );
 
 	IScenarioTracker * pScenarioTracker = CreateScenarioTracker();
@@ -82,19 +81,20 @@ bool CInterfaceMainMenu::Init()
 
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
-	std::wstring wszVersion = NGlobal::GetVar("code_version_number", L"0.0.0.0");
+	std::wstring wszVersion = NGlobal::GetVar( "code_version_number", L"0.0.0.0" );
 	// Both UI strings use the same cached snapshot, including on menu re-entry.
-	const std::wstring wszChecksum = NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum()));
+	const std::wstring wszChecksum =
+			NStr::ToUnicode( NStr::ToHex( NGameX::GetGameConsts()->GetMPDataVersionChecksum() ) );
 	auto versionShort = L"OpenBK2 " + wszVersion + L" " + wszChecksum;
-	wszVersion =	L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1><right>OpenBK2 " + wszVersion + L" " +
-					wszChecksum;
+	wszVersion = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1><right>OpenBK2 " +
+	             wszVersion + L" " + wszChecksum;
 	if ( pVersionView )
 	{
-		pVersionView->SetText(wszVersion);
-		pVersionView->SetTooltip(versionShort);
+		pVersionView->SetText( wszVersion );
+		pVersionView->SetTooltip( versionShort );
 		auto placement = pVersionView->GetPlacement();
-		placement.SetRect(placement.minx - 7, placement.miny, placement.maxx - 4, placement.maxy);
-		pVersionView->SetPlacement(placement, EWindowPlacementFlags::EWPF_ALL);
+		placement.SetRect( placement.minx - 7, placement.miny, placement.maxx - 4, placement.maxy );
+		pVersionView->SetPlacement( placement, EWindowPlacementFlags::EWPF_ALL );
 	}
 #endif
 
@@ -121,12 +121,12 @@ bool CInterfaceMainMenu::Init()
 
 		if ( pMultiplayerBtn )
 			pMultiplayerBtn->Enable( false );
-//		if ( pOptionsBtn )
-//			pOptionsBtn->Enable( false );
+		//		if ( pOptionsBtn )
+		//			pOptionsBtn->Enable( false );
 		if ( pLoadMODBtn )
 			pLoadMODBtn->Enable( false );
-//		if ( pCreditsBtn )
-//			pCreditsBtn->Enable( false );
+		//		if ( pCreditsBtn )
+		//			pCreditsBtn->Enable( false );
 		if ( pEncyclopediaBtn )
 			pEncyclopediaBtn->Enable( false );
 
@@ -192,7 +192,6 @@ bool CInterfaceMainMenu::IsModal()
 	return false;
 }
 
-
 void CInterfaceMainMenu::MsgCreditsScreen( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "options_menu_end" );
@@ -238,10 +237,11 @@ void CInterfaceMainMenu::MsgMPGamesListMenu( const SGameMessage &msg )
 
 void CInterfaceMainMenu::MsgExit( const SGameMessage &msg )
 {
-//	Singleton<IMainLoop>()->Command( ML_COMMAND_MESSAGE_BOX, "type:MessageBoxWindowOkCancel;text:1234" );
+	//	Singleton<IMainLoop>()->Command( ML_COMMAND_MESSAGE_BOX, "type:MessageBoxWindowOkCancel;text:1234" );
 	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-			InterfaceState()->GetTextEntry( "T_MAIN_MENU_EXIT_QUESTION" ) ).c_str() );
+	                    CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                                     InterfaceState()->GetTextEntry( "T_MAIN_MENU_EXIT_QUESTION" ) )
+	                        .c_str() );
 }
 
 void CInterfaceMainMenu::MsgOk( const SGameMessage &msg )
@@ -249,9 +249,7 @@ void CInterfaceMainMenu::MsgOk( const SGameMessage &msg )
 	NInput::PostEvent( "exit", 0, 0 );
 }
 
-void CInterfaceMainMenu::MsgCancel( const SGameMessage &msg )
-{
-}
+void CInterfaceMainMenu::MsgCancel( const SGameMessage &msg ) {}
 
 void CInterfaceMainMenu::MsgLoadMenu( const SGameMessage &msg )
 {
@@ -272,7 +270,7 @@ void CInterfaceMainMenu::MsgEncyclopedia( const SGameMessage &msg )
 
 void CInterfaceMainMenu::MsgTutorialMenu( const SGameMessage &msg )
 {
-/*	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
+	/*	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
 
 	const NDb::SGameRoot *pGameRoot = InterfaceState()->GetGameRoot();
@@ -347,9 +345,7 @@ void CInterfaceMainMenu::MsgQuickLoad( const SGameMessage &msg )
 
 // CICMainMenu
 
-void CICMainMenu::PreCreate()
-{
-}
+void CICMainMenu::PreCreate() {}
 
 void CICMainMenu::PostCreate( IInterface *pInterface )
 {
@@ -365,19 +361,18 @@ void CICMainMenu::Configure( const char *pszConfig )
 	szConfig = pszConfig;
 }
 
-
 void StartMainMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
 	if ( !paramsSet.empty() )
 	{
 		const std::string szVal = NStr::ToMBCS( paramsSet[0] );
-		NGlobal::SetVar( "CRAP.MainMenu.BackgroundMap", szVal.c_str()  );
+		NGlobal::SetVar( "CRAP.MainMenu.BackgroundMap", szVal.c_str() );
 	}
 	if ( paramsSet.size() >= 2 )
 	{
 		const std::string szVal = NStr::ToMBCS( paramsSet[1] );
-		NGlobal::SetVar( "CRAP.MainMenu.CampaignMap", szVal.c_str()  );
+		NGlobal::SetVar( "CRAP.MainMenu.CampaignMap", szVal.c_str() );
 	}
 #endif
 
@@ -416,7 +411,7 @@ void StartMainMenuIntro( const std::string &szID, const std::vector<std::wstring
 	}
 }
 
-START_REGISTER(MainMenuCommands)
+START_REGISTER( MainMenuCommands )
 REGISTER_CMD( "menu", StartMainMenu );
 REGISTER_CMD( "main_menu", StartMainMenuIntro );
 FINISH_REGISTER

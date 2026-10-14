@@ -8,7 +8,6 @@ struct SLadderDBInfo : public CObjectBase
 	// Ladder player's info in internal representation
 	OBJECT_NOCOPY_METHODS( SLadderDBInfo )
 public:
-
 	int nXP;
 	int nLevel;
 	int nMaxXPEarned;
@@ -37,8 +36,8 @@ public:
 		int nFavouriteRaceGamesPlayed = 0;
 		for ( int nRace = 0; nRace < NUMBER_OF_RACES_IN_LADDER; ++nRace )
 		{
-			const int nGamesPlayed = raceLossesSolo[nRace] + raceLossesTeam[nRace] +
-				raceWinsSolo[nRace] + raceWinsTeam[nRace];
+			const int nGamesPlayed =
+					raceLossesSolo[nRace] + raceLossesTeam[nRace] + raceWinsSolo[nRace] + raceWinsTeam[nRace];
 			if ( nGamesPlayed > nFavouriteRaceGamesPlayed )
 			{
 				nFavouriteRace = nRace;
@@ -107,5 +106,4 @@ public:
 		pOutStatistics->techsPlayed = techsPlayed;
 		pOutStatistics->mapsPlayed = mapsPlayed;
 	}
-
 };

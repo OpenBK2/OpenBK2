@@ -35,10 +35,8 @@ int CInterfaceMissionObjectives::CReactions::Check( const std::string &szCheckNa
 
 // CInterfaceMissionObjectives
 
-CInterfaceMissionObjectives::CInterfaceMissionObjectives() :
-	CInterfaceScreenBase( "MissionObjectives", "mission_objectives" ),
-	bIsModal( true ),
-	bCameraBack( false )
+CInterfaceMissionObjectives::CInterfaceMissionObjectives()
+		: CInterfaceScreenBase( "MissionObjectives", "mission_objectives" ), bIsModal( true ), bCameraBack( false )
 {
 	AddObserver( "menu_close", &CInterfaceMissionObjectives::MsgBack );
 	AddObserver( "set_modality", &CInterfaceMissionObjectives::MsgSetModality );
@@ -112,10 +110,10 @@ bool CInterfaceMissionObjectives::Init()
 	const NDb::SMapInfo *pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission();
 	if ( pMapInfo )
 	{
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedDescription) )
-			wszMissionBriefing = GET_TEXT_PRE(pMapInfo->,LocalizedDescription);
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedName) )
-			wszMissionName = GET_TEXT_PRE(pMapInfo->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedDescription ) )
+			wszMissionBriefing = GET_TEXT_PRE( pMapInfo->, LocalizedDescription );
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+			wszMissionName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
 	}
 
 	bIsModal = true;
@@ -140,7 +138,7 @@ void CInterfaceMissionObjectives::MsgBack( const SGameMessage &msg )
 
 void CInterfaceMissionObjectives::MsgSetModality( const SGameMessage &msg )
 {
-	bIsModal = (msg.nParam1 != 0);
+	bIsModal = ( msg.nParam1 != 0 );
 }
 
 void CInterfaceMissionObjectives::MsgMissionObjectivesChanged( const SGameMessage &msg )
@@ -244,21 +242,22 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 		SObjective &objective = objectives[nIndex];
 		nIndex++;
 		objective.nID = nID;
-		objective.bAutoSelect = (pST->GetObjectiveState( nID ) == EMOS_RECEIVED);
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBObjective->,Header) )
-			objective.wszHeader = GET_TEXT_PRE(pDBObjective->,Header);
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBObjective->,Briefing) )
-			objective.wszDescBrief = GET_TEXT_PRE(pDBObjective->,Briefing);
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBObjective->,Description) )
-			objective.wszDescFull = GET_TEXT_PRE(pDBObjective->,Description);
+		objective.bAutoSelect = ( pST->GetObjectiveState( nID ) == EMOS_RECEIVED );
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Header ) )
+			objective.wszHeader = GET_TEXT_PRE( pDBObjective->, Header );
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Briefing ) )
+			objective.wszDescBrief = GET_TEXT_PRE( pDBObjective->, Briefing );
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Description ) )
+			objective.wszDescFull = GET_TEXT_PRE( pDBObjective->, Description );
 		objective.nButtonIndex = GetButtonIndex( pST->GetObjectiveState( nID ) );
 		if ( objective.pButton )
 			objective.pButton->SetTooltip( objective.pButton->GetDBTooltipStr() );
 	}
 
-	float fDeltaHeight = fItemHeight * (N_OBJECTIVES_ROW_COUNT - nIndex);
+	float fDeltaHeight = fItemHeight * ( N_OBJECTIVES_ROW_COUNT - nIndex );
 	if ( pMainWnd )
-		pMainWnd->SetPlacement( 0, fMainInitialTop + fDeltaHeight * 0.5f, 0, fMainInitialHeight - fDeltaHeight, EWPF_POS_Y | EWPF_SIZE_Y );
+		pMainWnd->SetPlacement(
+				0, fMainInitialTop + fDeltaHeight * 0.5f, 0, fMainInitialHeight - fDeltaHeight, EWPF_POS_Y | EWPF_SIZE_Y );
 	if ( pObjectivesPanel )
 		pObjectivesPanel->SetPlacement( 0, 0, 0, fListInitialHeight - fDeltaHeight, EWPF_SIZE_Y );
 }
@@ -297,7 +296,7 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 	{
 		SObjective &objective = objectives[i];
 
-		const bool bIsObjectiveVisible = (objective.nID >= 0) && (i < N_OBJECTIVES_ROW_COUNT);
+		const bool bIsObjectiveVisible = ( objective.nID >= 0 ) && ( i < N_OBJECTIVES_ROW_COUNT );
 
 		if ( objective.pWnd )
 			objective.pWnd->ShowWindow( bIsObjectiveVisible );
@@ -315,10 +314,10 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 		}
 
 		if ( objective.pButton )
-			objective.pButton->SetStateWithVisual( (nSelected == i) ? 1 : 0 );
+			objective.pButton->SetStateWithVisual( ( nSelected == i ) ? 1 : 0 );
 	}
 
-	const bool bIsSelectedObjective = (nSelected >= 0 && objectives[nSelected].nID >= 0);
+	const bool bIsSelectedObjective = ( nSelected >= 0 && objectives[nSelected].nID >= 0 );
 	if ( pDescPanel )
 		pDescPanel->ShowWindow( bIsSelectedObjective );
 
@@ -351,7 +350,7 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 		}
 	}
 
-	nPrevSelectionID = (nSelected >= 0) ? objectives[nSelected].nID : -1;
+	nPrevSelectionID = ( nSelected >= 0 ) ? objectives[nSelected].nID : -1;
 
 	NInput::PostEvent( "set_modality", 0, 0 );
 	NInput::PostEvent( "minimap_show_objectives", nPrevSelectionID, 0 );
@@ -377,7 +376,7 @@ bool CInterfaceMissionObjectives::StepLocal( bool bAppActive )
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
 		pInterface->Step( bAppActive );
 
-	return CInterfaceScreenBase::StepLocal( bAppActive);
+	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
 
 bool CInterfaceMissionObjectives::IsModal()
@@ -435,9 +434,7 @@ int CInterfaceMissionObjectives::operator&( IBinSaver &saver )
 
 // CICMissionObjectives
 
-void CICMissionObjectives::PreCreate()
-{
-}
+void CICMissionObjectives::PreCreate() {}
 
 void CICMissionObjectives::PostCreate( IInterface *pInterface )
 {

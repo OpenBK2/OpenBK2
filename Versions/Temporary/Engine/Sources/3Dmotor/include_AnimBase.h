@@ -1,5 +1,8 @@
 #pragma once
-virtual float GetSpeedFactor() const { return 1.f; }
+virtual float GetSpeedFactor() const
+{
+	return 1.f;
+}
 // Empty keeps all legacy animation resources on the Granny3D path.
 virtual const NFile::CFilePath &GetModelFileRef() const
 {
@@ -12,5 +15,11 @@ virtual const std::string &GetClipName() const
 	static const std::string emptyName;
 	return emptyName;
 }
-virtual int GetFirstFrame() const { return 0; }
-virtual int GetLastFrame() const { return 0; }
+virtual int GetFirstFrame() const
+{
+	return 0;
+}
+virtual int GetLastFrame() const
+{
+	return 0;
+}

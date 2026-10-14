@@ -5,7 +5,7 @@
 
 namespace NDb
 {
-	struct SAIGeneralParcel;
+struct SAIGeneralParcel;
 }
 
 struct SGeneralHelper
@@ -31,45 +31,51 @@ struct SGeneralHelper
 	{
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		float fCount = {};
-		SSeverityCountPredicate() : fCount( 0 ) {  }
+		SSeverityCountPredicate() : fCount( 0 ) {}
 		void operator()( const CCommonUnit *pUnit );
 	};
 	//
 	//
 	struct SFindByEnumeratorPredicate
 	{
-		IWorkerEnumerator * pEn = {};
+		IWorkerEnumerator *pEn = {};
 		enum EForceType eType = {};
-		SFindByEnumeratorPredicate( struct IWorkerEnumerator * pEnumerator, const enum EForceType eType ) : pEn( pEnumerator ), eType( eType ) {  }
+		SFindByEnumeratorPredicate( struct IWorkerEnumerator *pEnumerator, const enum EForceType eType )
+				: pEn( pEnumerator ), eType( eType )
+		{
+		}
 		bool operator()( class CCommonUnit *pU1 );
 	};
 	//
 	struct SFindBestByEnumeratorPredicate
 	{
-		IWorkerEnumerator * pEn = {};
+		IWorkerEnumerator *pEn = {};
 		enum EForceType eType = {};
 		float fRating = {};
 		CPtr<CCommonUnit> pBest;
-		SFindBestByEnumeratorPredicate( struct IWorkerEnumerator * pEn, const enum EForceType eType ) : pEn ( pEn ), eType( eType ) {  }
+		SFindBestByEnumeratorPredicate( struct IWorkerEnumerator *pEn, const enum EForceType eType )
+				: pEn( pEn ), eType( eType )
+		{
+		}
 		void operator()( class CCommonUnit *pU1 );
 	};
 	//
 	struct SCountPredicate
 	{
 		int nCount = {};
-		SCountPredicate() : nCount( 0 ) {  }
-		void operator() ( void * ) { ++nCount; }
+		SCountPredicate() : nCount( 0 ) {}
+		void operator()( void * ) { ++nCount; }
 	};
 	//
 	struct SDeadPredicate
 	{
 		// return true if unit is dead
-		bool operator() ( class CCommonUnit * pUnit );
+		bool operator()( class CCommonUnit *pUnit );
 	};
 	struct SInactiveUnitPredicate
 	{
 		int nParty = {};
-		SInactiveUnitPredicate( int _nParty ) : nParty( _nParty ) {  }
-		bool operator() ( class CCommonUnit * pUnit );
+		SInactiveUnitPredicate( int _nParty ) : nParty( _nParty ) {}
+		bool operator()( class CCommonUnit *pUnit );
 	};
 };

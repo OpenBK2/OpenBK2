@@ -4,18 +4,15 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 
-CRunModeInterfaceBase::CRunModeInterfaceBase( CTimeCounter *_pTimer ) :
-	dwTime(0), pTimer(_pTimer)
+CRunModeInterfaceBase::CRunModeInterfaceBase( CTimeCounter *_pTimer ) : dwTime( 0 ), pTimer( _pTimer )
 {
 	NInput::PurgeEvents();
 }
-
 
 CRunModeInterfaceBase::~CRunModeInterfaceBase()
 {
 	NInput::PurgeEvents();
 }
-
 
 void CRunModeInterfaceBase::Step( bool bAppActive )
 {
@@ -42,7 +39,7 @@ void CRunModeInterfaceBase::OnGetFocus( bool bFocus )
 
 bool CRunModeInterfaceBase::ProcessEvent( const struct SGameMessage &msg )
 {
-	if( msg.mMessage.cType == NInput::CT_TIME )
+	if ( msg.mMessage.cType == NInput::CT_TIME )
 	{
 		dwTime = msg.mMessage.tTime;
 	}

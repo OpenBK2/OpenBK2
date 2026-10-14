@@ -23,8 +23,9 @@ class CTestClientProcessor : public CPacketProcessor
 	std::unordered_map<int, SGameInfo> lobbyGames;
 
 	std::unordered_set<int> gameClients;
+
 public:
-	CTestClientProcessor() { }
+	CTestClientProcessor() {}
 	CTestClientProcessor( const std::string &szCfgFile );
 	void SetServerClient( CServerClient *pServerClient );
 
@@ -35,7 +36,7 @@ public:
 	bool ProcessConnectServerResult( class CConnectServerPacket *pPacket );
 	//bool ProcessLobbyChatPacket( class CReceiveLobbyChatPacket *pPacket );
 	//bool ProcessPrivateChatPacket( class CPrivateChatPacket *pPacket );
-	bool ProcessChatPacket( class CChatPacket * pPacket );
+	bool ProcessChatPacket( class CChatPacket *pPacket );
 	bool ProcessMyIDPacket( class CMyIDPacket *pPacket );
 	bool ProcessRemoveClient( class CNetRemoveClient *pPacket );
 	bool ProcessEnteredLobby( class CEnteredLobby *pPacket );
@@ -55,7 +56,7 @@ public:
 	bool ProcessGameTestBroadcastMsg( class CGameTestBroadcastMsg *pPacket );
 	bool ProcessGameTestDirectMsg( class CGameTestDirectMsg *pPacket );
 	bool ProcessConnectedGameID( class CConnectedGameID *pPacket );
-	bool ProcessClientWasKicked ( class CGameClientWasKicked *pPacket );
+	bool ProcessClientWasKicked( class CGameClientWasKicked *pPacket );
 	bool ProcessGameKickClient( class CGameKickClient *pPacket );
 	bool ProcessTestDirectPacket( class CTestDirectPacket *pPacket );
 	bool ProcessShowGameClients( class CTestShowGameClients *pPacket );

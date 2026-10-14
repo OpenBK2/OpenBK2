@@ -1,0 +1,15 @@
+# Not formatted at all.
+#
+# These are verbatim transcriptions of the original implementations the ported
+# SIMD routines are checked against, kept beside the .asm they came from. Being
+# readable as a copy of that assembly and of the 2005 C++ is their whole purpose,
+# so they are left as transcribed and diffable against their source rather than
+# restyled. Reformatting them would be behaviour-preserving but would cost the
+# one property they exist to have.
+#
+# DisableFormat makes clang-format return the input unchanged, so the hook and
+# the CI check both pass over these files without special-casing them. The
+# explicit SortIncludes is needed with it: DisableFormat alone does not stop
+# include sorting.
+DisableFormat: true
+SortIncludes: Never

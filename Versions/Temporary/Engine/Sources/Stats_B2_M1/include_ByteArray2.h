@@ -1,8 +1,20 @@
-int GetSizeX() const { return data.empty() ? 0 : data[0].data.size(); }
-int GetSizeY() const { return data.size(); }
+int GetSizeX() const
+{
+	return data.empty() ? 0 : data[0].data.size();
+}
+int GetSizeY() const
+{
+	return data.size();
+}
 
-const std::vector<int> &operator[]( const int nIndex ) const { return data[nIndex].data; }
-std::vector<int> &operator[]( const int nIndex ) { return data[nIndex].data; }
+const std::vector<int> &operator[]( const int nIndex ) const
+{
+	return data[nIndex].data;
+}
+std::vector<int> &operator[]( const int nIndex )
+{
+	return data[nIndex].data;
+}
 void SetSizes( const int nSizeX, const int nSizeY )
 {
 	data.resize( nSizeY );
@@ -10,7 +22,10 @@ void SetSizes( const int nSizeX, const int nSizeY )
 		data[i].data.resize( nSizeX );
 }
 
-bool IsEmpty() const { return data.empty(); }
+bool IsEmpty() const
+{
+	return data.empty();
+}
 
 void PostLoad( bool bInEditor )
 {

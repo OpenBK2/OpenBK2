@@ -43,31 +43,34 @@ float CalcScaleFactor( const CVec2 &vElementSize, const CVec3 &vCenter, const CV
 	vMin.Minimize( vRes );
 	vMax.Maximize( vRes );
 	//
-	const float fMaxX = (std::max)( fabs(vMin.x), fabs(vMax.x) ) * 2.0f;
-	const float fMaxY = (std::max)( fabs(vMin.y), fabs(vMax.y) ) * 2.0f;
+	const float fMaxX = (std::max)( fabs( vMin.x ), fabs( vMax.x ) ) * 2.0f;
+	const float fMaxY = (std::max)( fabs( vMin.y ), fabs( vMax.y ) ) * 2.0f;
 	return (std::min)( vElementSize.x / fMaxX, vElementSize.y / fMaxY );
 }
 
-void MakeScreenTransform( SHMatrix *pMatrix, const CVec2 &vScreenPos, const CVec2 &_vElementSize,
-												 const CVec3 &vModelCenter, const CVec3 &vModelHalfSize )
+void MakeScreenTransform( SHMatrix *pMatrix,
+                          const CVec2 &vScreenPos,
+                          const CVec2 &_vElementSize,
+                          const CVec3 &vModelCenter,
+                          const CVec3 &vModelHalfSize )
 {
 	const float fSomeMagicNumber = 1.25f; // CRAP - some magic number
 	CVec2 vElementSize = _vElementSize * fSomeMagicNumber;
 	const float fScreenScaleX = INTERFACE_3D_ELEMENT_WIDTH / SCREEN_VIRTUAL_WIDTH;
 	const float fScreenScaleY = INTERFACE_3D_ELEMENT_HEIGHT / SCREEN_VIRTUAL_HEIGHT;
-	float x = ( vScreenPos.x - SCREEN_VIRTUAL_WIDTH/2 ) * fScreenScaleX;
-	float y = ( SCREEN_VIRTUAL_HEIGHT/2 - vScreenPos.y ) * fScreenScaleY;
+	float x = ( vScreenPos.x - SCREEN_VIRTUAL_WIDTH / 2 ) * fScreenScaleX;
+	float y = ( SCREEN_VIRTUAL_HEIGHT / 2 - vScreenPos.y ) * fScreenScaleY;
 	CMatrixStack43<6> mStack;
 	Identity( pMatrix );
 	mStack.Init( *pMatrix );
-	float fAngleZ = 135;//NGlobal::GetVar("angle_z", 135).GetFloat();
-	float fAngleX = -45;//NGlobal::GetVar("angle_x", -45).GetFloat();
-	CQuat rot = CQuat( ToRadian(fAngleX), V3_AXIS_X ) * CQuat( ToRadian(fAngleZ), V3_AXIS_Z );
-	mStack.Push( CVec3(x, y, 0), rot );
-	const float fScaleFactor = CalcScaleFactor( CVec2(vElementSize.x * fScreenScaleX, vElementSize.y * fScreenScaleY),
-																							vModelCenter, vModelHalfSize, rot );
+	float fAngleZ = 135; //NGlobal::GetVar("angle_z", 135).GetFloat();
+	float fAngleX = -45; //NGlobal::GetVar("angle_x", -45).GetFloat();
+	CQuat rot = CQuat( ToRadian( fAngleX ), V3_AXIS_X ) * CQuat( ToRadian( fAngleZ ), V3_AXIS_Z );
+	mStack.Push( CVec3( x, y, 0 ), rot );
+	const float fScaleFactor = CalcScaleFactor(
+			CVec2( vElementSize.x * fScreenScaleX, vElementSize.y * fScreenScaleY ), vModelCenter, vModelHalfSize, rot );
 	mStack.PushScale( fScaleFactor );
-	mStack.Push( CVec3(-vModelCenter.x, -vModelCenter.y, 0) );
+	mStack.Push( CVec3( -vModelCenter.x, -vModelCenter.y, 0 ) );
 	*pMatrix = mStack.Get();
 }
 
@@ -108,8 +111,9 @@ void CVisObjReflectionInfo::Recalc()
 	}
 }
 
-void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pModel,
-																			const SHMatrix &matr )
+void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMeshInfo,
+                                      const NDb::SModel *pModel,
+                                      const SHMatrix &matr )
 {
 	for ( int i = 0; i < pMeshInfo->parts.size(); ++i )
 	{
@@ -129,8 +133,8 @@ void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMesh
 		data[eScene]->visObjReflections.back().pPatch->SetTransform( matr );
 
 		NGScene::IGameView::SMeshInfo meshInfo;
-		meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( data[eScene]->visObjReflections.back().pPatch,
-			data[eScene]->visObjReflections.back().pPatch->pMaterial ) );
+		meshInfo.parts.push_back( NGScene::IGameView::SPartInfo(
+				data[eScene]->visObjReflections.back().pPatch, data[eScene]->visObjReflections.back().pPatch->pMaterial ) );
 
 		SFBTransform placement;
 		Identity( &placement.forward );
@@ -143,8 +147,8 @@ void CScene::AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMesh
 bool CScene::CheckObjExist( int nObjectID ) const
 {
 	//проверка на повторное создание объектов только для FastDebug
-#if !defined(_BETARELEASE) && !defined(_FINALRELEASE)
-	if ( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end() )
+#if !defined( _BETARELEASE ) && !defined( _FINALRELEASE )
+	if ( data[eScene]->visObjects.find( nObjectID ) == data[eScene]->visObjects.end() )
 		return false;
 	// %.8x, as this was written before fmt, pads to eight digits; fmt's {:.8x}
 	// is a precision, which fmt refuses on an integer and throws format_error
@@ -154,11 +158,12 @@ bool CScene::CheckObjExist( int nObjectID ) const
 	DebugTrace( "%s", message.c_str() );
 	return true;
 #else
-	return data[eScene]->visObjects.find(nObjectID) != data[eScene]->visObjects.end();
+	return data[eScene]->visObjects.find( nObjectID ) != data[eScene]->visObjects.end();
 #endif
 }
 
-void CScene::AddInterfaceObject( IWindow *pScreen, int nID, const NDb::SModel *pModel, const CVec2 &vScreenPos, const CVec2 &vElementSize )
+void CScene::AddInterfaceObject(
+		IWindow *pScreen, int nID, const NDb::SModel *pModel, const CVec2 &vScreenPos, const CVec2 &vElementSize )
 {
 	SSceneData::CScreensData &screensData = data[eScene]->screensData;
 	SSceneData::CScreensData::iterator it = find( screensData.begin(), screensData.end(), pScreen );
@@ -166,11 +171,14 @@ void CScene::AddInterfaceObject( IWindow *pScreen, int nID, const NDb::SModel *p
 	{
 		SSceneData::SScreenData &screenData = *it;
 
-		const int nObjectID = nID;//GetID( nID );
+		const int nObjectID = nID; //GetID( nID );
 		CPtr<SAnimatedVisObjDescBase> pVOD = new SAnimatedStaticVisObjDesc();
 		// create animator
-		NI_VERIFY( pModel->pSkeleton != 0, fmt::format( "Model \"{}\" doesn't have skeleton", pModel->GetDBID().ToString() ), return );
-		pVOD->pAnimator = NAnimation::CreateSkeletonAnimator( NAnimation::SGrannySkeletonHandle(pModel->pSkeleton, 0), data[eScene]->pAbsTimer );
+		NI_VERIFY( pModel->pSkeleton != 0,
+		           fmt::format( "Model \"{}\" doesn't have skeleton", pModel->GetDBID().ToString() ),
+		           return );
+		pVOD->pAnimator = NAnimation::CreateSkeletonAnimator( NAnimation::SGrannySkeletonHandle( pModel->pSkeleton, 0 ),
+		                                                      data[eScene]->pAbsTimer );
 		// check for successful animator
 		if ( pVOD->pAnimator == 0 )
 			return;
@@ -178,13 +186,13 @@ void CScene::AddInterfaceObject( IWindow *pScreen, int nID, const NDb::SModel *p
 		pVOD->pTransform = new CCSFBTransform;
 		pVOD->pAnimator->SetGlobalTransform( pVOD->pTransform );
 		// set placement
-		CVec3 vAABBCenter = pModel->pGeometry->vCenter, vAABBHalfSize = pModel->pGeometry->vSize*0.5f;
+		CVec3 vAABBCenter = pModel->pGeometry->vCenter, vAABBHalfSize = pModel->pGeometry->vSize * 0.5f;
 		if ( pModel->pGeometry->pAIGeometry )
 		{
 			vAABBCenter = pModel->pGeometry->pAIGeometry->vAABBCenter;
 			vAABBHalfSize = pModel->pGeometry->pAIGeometry->vAABBHalfSize;
-	//		AI2Vis( &vAABBCenter, pModel->pGeometry->pAIGeometry->vAABBCenter );
-	//		AI2Vis( &vAABBHalfSize, pModel->pGeometry->pAIGeometry->vAABBHalfSize );
+			//		AI2Vis( &vAABBCenter, pModel->pGeometry->pAIGeometry->vAABBCenter );
+			//		AI2Vis( &vAABBHalfSize, pModel->pGeometry->pAIGeometry->vAABBHalfSize );
 		}
 		SHMatrix matTransform;
 		MakeScreenTransform( &matTransform, vScreenPos, vElementSize, vAABBCenter, vAABBHalfSize );
@@ -195,10 +203,10 @@ void CScene::AddInterfaceObject( IWindow *pScreen, int nID, const NDb::SModel *p
 
 		NGScene::IGameView::SMeshInfo meshInfoLocal;
 
-//		data[eScene]->pInterfaceView->CreateMeshInfo( pModel, &meshInfoLocal, true );
+		//		data[eScene]->pInterfaceView->CreateMeshInfo( pModel, &meshInfoLocal, true );
 		screenData.p3DView->CreateMeshInfo( pModel, &meshInfoLocal, true );
 		//
-//		if ( CObjectBase *pObj = pVOD->CreateAnimatedMesh(data[eScene]->pInterfaceView, pModel, &meshInfoLocal) )
+		//		if ( CObjectBase *pObj = pVOD->CreateAnimatedMesh(data[eScene]->pInterfaceView, pModel, &meshInfoLocal) )
 		if ( CObjectBase *pObj = pVOD->CreateAnimatedMesh( screenData.p3DView, pModel, &meshInfoLocal ) )
 		{
 			screenData.interfaceVisObjects[nObjectID] = pVOD;
@@ -219,32 +227,44 @@ void CScene::RemoveInterfaceObject( IWindow *pScreen, const int nID )
 		it->interfaceVisObjects.erase( nID );
 }
 
-int CScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot, const CVec3 &vScale,
-											 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel, const bool bHasReflection )
+int CScene::AddObject( const int nID,
+                       const NDb::SModel *pModel,
+                       const CVec3 &_vPos,
+                       const CQuat &qRot,
+                       const CVec3 &vScale,
+                       ESceneObjAnimMode eAnimMode,
+                       NGScene::IGameView::SMeshInfo *pMeshInfo,
+                       const NDb::SModel *pLowLevelModel,
+                       const bool bHasReflection )
 {
-	NI_VERIFY( pModel != 0, fmt::format("Adding object {} with empty model", nID), return -1 );
+	NI_VERIFY( pModel != 0, fmt::format( "Adding object {} with empty model", nID ), return -1 );
 	const bool bAnimated = ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED ) ||
-												 ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC ) ||
-												 ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS ) ||
-												 ( pModel != 0 && pModel->pSkeleton != 0 && !pModel->pSkeleton->animations.empty() ) &&
-												 ( eAnimMode != OBJ_ANIM_MODE_FORCE_NON_ANIMATED );
+	                       ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC ) ||
+	                       ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS ) ||
+	                       ( pModel != 0 && pModel->pSkeleton != 0 && !pModel->pSkeleton->animations.empty() ) &&
+	                           ( eAnimMode != OBJ_ANIM_MODE_FORCE_NON_ANIMATED );
 	if ( bAnimated )
 		return AddAnimatedObject( nID, pModel, _vPos, qRot, vScale, eAnimMode, pMeshInfo, pLowLevelModel, bHasReflection );
 	else
 		return AddStaticObject( nID, pModel, _vPos, qRot, vScale, pMeshInfo, bHasReflection );
 }
 
-int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot,
-														const CVec3 &vScale, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const bool bHasReflection )
+int CScene::AddStaticObject( const int nID,
+                             const NDb::SModel *pModel,
+                             const CVec3 &_vPos,
+                             const CQuat &qRot,
+                             const CVec3 &vScale,
+                             NGScene::IGameView::SMeshInfo *pMeshInfoPassed,
+                             const bool bHasReflection )
 {
-	NI_VERIFY( pModel != 0, fmt::format("Adding object {} with empty model", nID), return -1 );
+	NI_VERIFY( pModel != 0, fmt::format( "Adding object {} with empty model", nID ), return -1 );
 
 	data[eScene]->GetGScene()->Precache( pModel );
 	//data[eScene]->GetGScene()->WaitForLoad();
 
 	// check for object exist
 	const int nObjectID = GetID( nID );
-	if ( CheckObjExist(nObjectID) )
+	if ( CheckObjExist( nObjectID ) )
 		return nObjectID;
 	// make placement
 	CPtr<SStaticVisObjDesc> pVOD = new SStaticVisObjDesc();
@@ -259,7 +279,9 @@ int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const CVe
 	if ( bHasReflection )
 	{
 		SHMatrix matr( vPos, qRot );
-		matr._11 = vScale.x; matr._22 = vScale.y; matr._33 = vScale.z;
+		matr._11 = vScale.x;
+		matr._22 = vScale.y;
+		matr._33 = vScale.z;
 		AddReflectionFromObject( pMeshInfo, pModel, matr );
 	}
 
@@ -282,18 +304,25 @@ int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const CVe
 	return -1;
 }
 
-int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const CVec3 &_vPos, const CQuat &qRot, const CVec3 &vScale,
-															 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const NDb::SModel *pLowLevelModel, const bool bHasReflection )
+int CScene::AddAnimatedObject( const int nID,
+                               const NDb::SModel *pModel,
+                               const CVec3 &_vPos,
+                               const CQuat &qRot,
+                               const CVec3 &vScale,
+                               ESceneObjAnimMode eAnimMode,
+                               NGScene::IGameView::SMeshInfo *pMeshInfoPassed,
+                               const NDb::SModel *pLowLevelModel,
+                               const bool bHasReflection )
 {
-//	AddInterfaceObject( nID, pModel, CVec2(NGlobal::GetVar("pos_x", 400), NGlobal::GetVar("pos_y", 700)), CVec2(128, 128) );
-	NI_VERIFY( pModel != 0, fmt::format("Adding object {} with empty model", nID), return -1 );
+	//	AddInterfaceObject( nID, pModel, CVec2(NGlobal::GetVar("pos_x", 400), NGlobal::GetVar("pos_y", 700)), CVec2(128, 128) );
+	NI_VERIFY( pModel != 0, fmt::format( "Adding object {} with empty model", nID ), return -1 );
 
 	data[eScene]->GetGScene()->Precache( pModel );
 	//data[eScene]->GetGScene()->WaitForLoad();
 
 	// check for object exist
 	const int nObjectID = GetID( nID );
-	if ( CheckObjExist(nObjectID) )
+	if ( CheckObjExist( nObjectID ) )
 		return nObjectID;
 	//
 	CPtr<SAnimatedVisObjDescBase> pVOD;
@@ -303,7 +332,9 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const C
 		pVOD = new SAnimatedVisObjDesc();
 	// create animator
 	NAnimation::SGrannySkeletonHandle handle;
-	NI_VERIFY( pModel->pSkeleton != 0, fmt::format( "Model \"{}\" doesn't have skeleton", pModel->GetDBID().ToString() ), return -1 );
+	NI_VERIFY( pModel->pSkeleton != 0,
+	           fmt::format( "Model \"{}\" doesn't have skeleton", pModel->GetDBID().ToString() ),
+	           return -1 );
 	handle.pSkeleton = pModel->pSkeleton;
 	handle.nModelInFile = 0;
 	if ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS )
@@ -333,11 +364,13 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const C
 	if ( bHasReflection )
 	{
 		SHMatrix matr( vPos, qRot );
-		matr._11 = vScale.x; matr._22 = vScale.y; matr._33 = vScale.z;
+		matr._11 = vScale.x;
+		matr._22 = vScale.y;
+		matr._33 = vScale.z;
 		AddReflectionFromObject( pMeshInfo, pModel, matr );
 	}
 
-	if ( CObjectBase *pObj = pVOD->CreateAnimatedMesh(data[eScene]->GetGScene(), pModel, pMeshInfo) )
+	if ( CObjectBase *pObj = pVOD->CreateAnimatedMesh( data[eScene]->GetGScene(), pModel, pMeshInfo ) )
 	{
 		data[eScene]->visObjects[nObjectID] = pVOD;
 
@@ -359,22 +392,29 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const C
 }
 
 // AddObject versions with precomputed transform
-int CScene::AddObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace,
-											 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bHasReflection )
+int CScene::AddObject( const int nID,
+                       const NDb::SModel *pModel,
+                       const SHMatrix &mPlace,
+                       ESceneObjAnimMode eAnimMode,
+                       NGScene::IGameView::SMeshInfo *pMeshInfo,
+                       const bool bHasReflection )
 {
 	const bool bAnimated = ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED ) ||
-												 ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC ) ||
-												 ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS ) ||
-												 ( pModel != 0 && pModel->pSkeleton != 0 && !pModel->pSkeleton->animations.empty() ) &&
-												 ( eAnimMode != OBJ_ANIM_MODE_FORCE_NON_ANIMATED );
+	                       ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC ) ||
+	                       ( eAnimMode == OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS ) ||
+	                       ( pModel != 0 && pModel->pSkeleton != 0 && !pModel->pSkeleton->animations.empty() ) &&
+	                           ( eAnimMode != OBJ_ANIM_MODE_FORCE_NON_ANIMATED );
 	if ( bAnimated )
 		return AddAnimatedObject( nID, pModel, mPlace, eAnimMode, pMeshInfo, bHasReflection );
 	else
 		return AddStaticObject( nID, pModel, mPlace, pMeshInfo, bHasReflection );
 }
 
-int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace,
-														NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const bool bHasReflection )
+int CScene::AddStaticObject( const int nID,
+                             const NDb::SModel *pModel,
+                             const SHMatrix &mPlace,
+                             NGScene::IGameView::SMeshInfo *pMeshInfoPassed,
+                             const bool bHasReflection )
 {
 	if ( pModel == 0 )
 		return -1;
@@ -384,7 +424,7 @@ int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const SHM
 
 	// check for object exist
 	const int nObjectID = GetID( nID );
-	if ( CheckObjExist(nObjectID) )
+	if ( CheckObjExist( nObjectID ) )
 		return nObjectID;
 	// make placement
 	CPtr<SDynamicVisObjDesc> pVOD = new SDynamicVisObjDesc();
@@ -414,20 +454,23 @@ int CScene::AddStaticObject( const int nID, const NDb::SModel *pModel, const SHM
 	return -1;
 }
 
-int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace,
-															 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfoPassed, const bool bHasReflection )
+int CScene::AddAnimatedObject( const int nID,
+                               const NDb::SModel *pModel,
+                               const SHMatrix &mPlace,
+                               ESceneObjAnimMode eAnimMode,
+                               NGScene::IGameView::SMeshInfo *pMeshInfoPassed,
+                               const bool bHasReflection )
 {
 	// pModel = NDb::Get<NDb::SModel>( 253 );
 	if ( pModel == 0 )
 		return -1;
-
 
 	data[eScene]->GetGScene()->Precache( pModel );
 	//data[eScene]->GetGScene()->WaitForLoad();
 
 	// check for object exist
 	const int nObjectID = GetID( nID );
-	if ( CheckObjExist(nObjectID) )
+	if ( CheckObjExist( nObjectID ) )
 		return nObjectID;
 	//
 	CPtr<SAnimatedVisObjDescBase> pVOD;
@@ -463,7 +506,8 @@ int CScene::AddAnimatedObject( const int nID, const NDb::SModel *pModel, const S
 	if ( bHasReflection )
 		AddReflectionFromObject( pMeshInfo, pModel, mPlace );
 
-	if ( CObjectBase *pObj = data[eScene]->GetGScene()->CreateMesh( *pMeshInfo, pVOD->pTransform.GetPtr(), 0, NGScene::CMeshAnimStuff( pModel, pVOD->pAnimator ) ) )
+	if ( CObjectBase *pObj = data[eScene]->GetGScene()->CreateMesh(
+					 *pMeshInfo, pVOD->pTransform.GetPtr(), 0, NGScene::CMeshAnimStuff( pModel, pVOD->pAnimator ) ) )
 	{
 		data[eScene]->visObjects[nObjectID] = pVOD;
 		//
@@ -527,12 +571,16 @@ bool CScene::ChangeModel( const int nObjectID, const NDb::SModel *pModel )
 		//data[eScene]->GetGScene()->WaitForLoad();
 	}
 
-	pos->second->ChangeModel( pModel, data[eScene]->pGameTimer, data[eScene]->GetGScene(),
-														data[eScene]->pSyncSrc, data[eScene]->showModes[SCENE_SHOW_BBOXES] );
-	if ( SAnimatedVisObjDescBase *pVO = dynamic_cast_ptr<SAnimatedVisObjDescBase*>( pos->second ) )
+	pos->second->ChangeModel( pModel,
+	                          data[eScene]->pGameTimer,
+	                          data[eScene]->GetGScene(),
+	                          data[eScene]->pSyncSrc,
+	                          data[eScene]->showModes[SCENE_SHOW_BBOXES] );
+	if ( SAnimatedVisObjDescBase *pVO = dynamic_cast_ptr<SAnimatedVisObjDescBase *>( pos->second ) )
 	{
 		NTimer::STime currTime = Singleton<IGameTimer>()->GetGameTime();
-		for ( SModelVisObjDesc::CAttaches::iterator it = pVO->attachedObjects.begin(); it != pVO->attachedObjects.end(); ++it )
+		for ( SModelVisObjDesc::CAttaches::iterator it = pVO->attachedObjects.begin(); it != pVO->attachedObjects.end();
+		      ++it )
 			it->second.clear();
 	}
 	return true;
@@ -543,7 +591,7 @@ void CScene::RemoveObjectPickability( const int nID )
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
 		return;
-	if ( SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>(pos->second) )
+	if ( SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second ) )
 	{
 		pVOD->srcBind.Unlink();
 		pVOD->srcBind.Update();
@@ -559,7 +607,10 @@ void CScene::ShowObject( const int nID, const bool bShow )
 	pos->second->bHidden = !bShow;
 	if ( bShow )
 	{
-		pos->second->ReCreateObject( data[eScene]->GetGScene(), data[eScene]->pSyncSrc, data[eScene]->pGameTimer, data[eScene]->showModes[SCENE_SHOW_BBOXES] );
+		pos->second->ReCreateObject( data[eScene]->GetGScene(),
+		                             data[eScene]->pSyncSrc,
+		                             data[eScene]->pGameTimer,
+		                             data[eScene]->showModes[SCENE_SHOW_BBOXES] );
 	}
 	else
 	{

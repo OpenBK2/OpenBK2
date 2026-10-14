@@ -20,11 +20,14 @@ void RemoveAttachedSound( uint16_t *pwSound )
 	*pwSound = 0;
 }
 
-bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+bool CMOObject::CreateSceneObject( const int nUniqueID,
+                                   const SAINewUnitUpdate *pUpdate,
+                                   NDb::ESeason eSeason,
+                                   bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
 
-	bAnimateOnDeath = false;			// Default
+	bAnimateOnDeath = false; // Default
 
 	if ( GetStats()->pvisualObject == 0 )
 		return false;
@@ -41,9 +44,9 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 
 	SetModel( pModel );
 
-	if ( const NDb::SObjectBaseRPGStats *pStats = dynamic_cast<const NDb::SObjectBaseRPGStats*>( GetStats() ) )
+	if ( const NDb::SObjectBaseRPGStats *pStats = dynamic_cast<const NDb::SObjectBaseRPGStats *>( GetStats() ) )
 	{
-		if ( const NDb::SObjectRPGStats *pObjectStats = dynamic_cast<const NDb::SObjectRPGStats*>( pStats ) )
+		if ( const NDb::SObjectRPGStats *pObjectStats = dynamic_cast<const NDb::SObjectRPGStats *>( pStats ) )
 		{
 			if ( pObjectStats->bHideForPerformance && !bDrawGrass )
 				return true;
@@ -54,7 +57,8 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 			eAnimMode = OBJ_ANIM_MODE_FORCE_NON_ANIMATED;
 			bAnimateOnDeath = true;
 		}
-		if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees && Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )
+		if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees &&
+		     Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )
 		{
 			eAnimMode = OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC;
 			bAnimateOnDeath = false;
@@ -66,22 +70,27 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 		eAnimMode = GetStats()->eGameType == NDb::SGVOGT_FLORA ? OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC : eAnimMode;
 	}
 
-	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1), eAnimMode, 0 );
+	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3( 1, 1, 1 ), eAnimMode, 0 );
 
 	return true;
 }
 
-bool CMOObject::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
+bool CMOObject::Create( const int nUniqueID,
+                        const SAIBasicUpdate *_pUpdate,
+                        NDb::ESeason eSeason,
+                        const NDb::EDayNight eDayTime,
+                        bool bInEditor )
 {
-	if ( CMapObj::Create(nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor) )
+	if ( CMapObj::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor ) )
 	{
 		NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
 		RunDefaultObjectAnimation( GetModelDesc()->pSkeleton, pAnimator );
 		//
-		if ( const NDb::SObjectRPGStats *pStats = dynamic_cast<const NDb::SObjectRPGStats*>(GetStats()) )
+		if ( const NDb::SObjectRPGStats *pStats = dynamic_cast<const NDb::SObjectRPGStats *>( GetStats() ) )
 		{
-			if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees && Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )
-			{						//It's a tree! And the "animated trees" are on. Add wind mutator.
+			if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees &&
+			     Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )
+			{ //It's a tree! And the "animated trees" are on. Add wind mutator.
 				if ( pAnimator )
 				{
 					CPtr<ITreeWindMutator> pMutator = MakeObject<ITreeWindMutator>( ITreeWindMutator::typeID );
@@ -93,7 +102,7 @@ bool CMOObject::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb
 			if ( !bInEditor )
 			{
 				ISoundScene *pSoundScene = Singleton<ISoundScene>();
-				const NDb::SComplexSoundDesc* pAmbientSoundDesc = pStats->GetAmbientSoundDesc( eSeason, eDayTime );
+				const NDb::SComplexSoundDesc *pAmbientSoundDesc = pStats->GetAmbientSoundDesc( eSeason, eDayTime );
 				if ( pAmbientSoundDesc )
 					wAmbientSound = pSoundScene->AddSoundToMap( pAmbientSoundDesc, GetCenter() );
 				if ( pStats->pCycledSound )
@@ -113,7 +122,9 @@ void CMOObject::GetStatus( SObjectStatus *pStatus ) const
 	CMapObj::GetStatus( pStatus );
 }
 
-IClientUpdatableProcess* CMOObject::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+IClientUpdatableProcess *CMOObject::AIUpdateRPGStats( const SAINotifyRPGStats &stats,
+                                                      struct IClientAckManager *pAckManager,
+                                                      NDb::ESeason eSeason )
 {
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	CommonUpdateHP( fNewHP, stats, Scene(), eSeason );
@@ -132,7 +143,7 @@ void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 	RemoveAttachedSound( &wAmbientSound );
 	RemoveAttachedSound( &wCycledSound );
 	RemoveAttachedSound( &wCycledSoundTimed );
-	if ( bAnimateOnDeath )			// Recreate an animated model in the object's place
+	if ( bAnimateOnDeath ) // Recreate an animated model in the object's place
 	{
 		CVec3 vPos, vScale;
 		CQuat qRot;
@@ -140,7 +151,7 @@ void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 
 		const NDb::SModel *pModel = GetModelDesc();
 		Scene()->RemoveObject( GetID() );
-		Scene()->AddObject( GetID(), pModel, vPos, qRot, CVec3(1, 1, 1), OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC, 0 );
+		Scene()->AddObject( GetID(), pModel, vPos, qRot, CVec3( 1, 1, 1 ), OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC, 0 );
 	}
 
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
@@ -154,15 +165,26 @@ void CMOObject::AIUpdateFall( const SAITreeBrokenUpdate *pUpdate )
 		CQuat qRot;
 		GetPlacement( &vPos, &qRot, &vScale );
 		float fAngle = PI / 2.0f - atan( pUpdate->fTg );
-		if ( const NDb::SObjectRPGStats *pStats = dynamic_cast<const NDb::SObjectRPGStats *>(GetStats()) )
+		if ( const NDb::SObjectRPGStats *pStats = dynamic_cast<const NDb::SObjectRPGStats *>( GetStats() ) )
 		{
 			CPtr<ITreeFallingMutator> pMutator = MakeObject<ITreeFallingMutator>( ITreeFallingMutator::typeID );
 			int nEffectID = OBJECT_ID_GENERATE;
 			if ( pStats->pSeasonedFallEffect )
-				nEffectID = PlayComplexSeasonedEffect( nEffectID, pStats->pSeasonedFallEffect, pUpdate->nUpdateTime, vPos, eSeason );
+				nEffectID =
+						PlayComplexSeasonedEffect( nEffectID, pStats->pSeasonedFallEffect, pUpdate->nUpdateTime, vPos, eSeason );
 			else if ( pStats->pFallEffect != 0 )
 				nEffectID = PlayComplexEffect( nEffectID, pStats->pFallEffect, pUpdate->nUpdateTime, vPos );
-			pMutator->Setup( pAnimator, pUpdate->vDir, fAngle, qRot, pStats->specificJoints, nEffectID, vPos, pStats->nObjectHeight * 0.66f, pStats->fFallCycles, pStats->nFallDuration, pUpdate->nUpdateTime );
+			pMutator->Setup( pAnimator,
+			                 pUpdate->vDir,
+			                 fAngle,
+			                 qRot,
+			                 pStats->specificJoints,
+			                 nEffectID,
+			                 vPos,
+			                 pStats->nObjectHeight * 0.66f,
+			                 pStats->fFallCycles,
+			                 pStats->nFallDuration,
+			                 pUpdate->nUpdateTime );
 		}
 	}
 }
@@ -186,7 +208,7 @@ void CMOObject::GetDisabledActions( CUserActions *pActions, EActionsType eAction
 
 int CMOObject::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, (CMapObj*)this );
+	saver.Add( 1, (CMapObj *)this );
 	saver.Add( 3, &bAnimateOnDeath );
 	saver.Add( 4, &wAmbientSound );
 	saver.Add( 5, &wCycledSound );
@@ -196,7 +218,7 @@ int CMOObject::operator&( IBinSaver &saver )
 	return 0;
 }
 
-START_REGISTER(CMOObject)
+START_REGISTER( CMOObject )
 REGISTER_VAR_EX( "misc_draw_grass", NGlobal::VarBoolHandler, &bDrawGrass, true, STORAGE_USER )
 REGISTER_VAR_EX( "misc_animations_trees", NGlobal::VarBoolHandler, &bAnimateTrees, true, STORAGE_USER )
 FINISH_REGISTER

@@ -14,6 +14,7 @@ class MAPEDITORLIB_EXPORT CWxThumbnailList : public wxNativeWindow
 {
 	struct SImpl;
 	std::unique_ptr<SImpl> impl;
+
 public:
 	CWxThumbnailList( wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size, long style );
 	~CWxThumbnailList() override;

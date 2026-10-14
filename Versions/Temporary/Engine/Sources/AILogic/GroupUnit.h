@@ -3,7 +3,11 @@
 
 class CGroupUnit
 {
-	public: int operator&( IBinSaver &saver ); private:;
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
 
 	// номер группы
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -20,11 +24,11 @@ class CGroupUnit
 	int nSpecialPos = {};
 
 public:
-	CGroupUnit() : nGroup( 0 ), nPos( 0 ), nSubGroup( -1 ), vShift( VNULL2 ), nSpecialGroup( 0 ), nSpecialPos( -1 ) { }
+	CGroupUnit() : nGroup( 0 ), nPos( 0 ), nSubGroup( -1 ), vShift( VNULL2 ), nSpecialGroup( 0 ), nSpecialPos( -1 ) {}
 	void Init() {}
 
-	const CVec2& GetGroupShift() const { return vShift; }
-	const int& GetSubGroup() const { return nSubGroup; }
+	const CVec2 &GetGroupShift() const { return vShift; }
+	const int &GetSubGroup() const { return nSubGroup; }
 	const int GetNGroup() const { return nGroup; }
 	const int GetSpecialGroup() const { return nSpecialGroup; }
 

@@ -3,13 +3,13 @@
 
 namespace NNet
 {
-	struct IDriver;
+struct IDriver;
 }
 class CMultiplayerCommand;
 
 namespace NDb
 {
-	struct SNetGameConsts;
+struct SNetGameConsts;
 };
 
 struct IAICmdsAutoMagic;
@@ -23,11 +23,19 @@ class CMultiplayerInternal : public IMultiplayer
 	CMemoryStream pktOutgoing, pktIncoming;
 	int nIncomingPktClientID;
 	CPtr<IAICmdsAutoMagic> pCmdsSerialize;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pNetDriver); f.Add(3,&pConsts); f.Add(4,&pktOutgoing); f.Add(5,&pCmdsSerialize); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pNetDriver );
+		f.Add( 3, &pConsts );
+		f.Add( 4, &pktOutgoing );
+		f.Add( 5, &pCmdsSerialize );
+		return 0;
+	}
 	//
 	bool CheckConnection();
-	CMultiplayerCommand* ProcessPacket( const int nClientID, CMemoryStream *pPkt );
+	CMultiplayerCommand *ProcessPacket( const int nClientID, CMemoryStream *pPkt );
 	int GetPort() const;
+
 public:
 	CMultiplayerInternal( const NDb::SNetGameConsts *_pConsts = 0, IAICmdsAutoMagic *pCmds = 0 );
 	void CreateAsHost();
@@ -35,7 +43,7 @@ public:
 
 	virtual void SendAICommand( CObjectBase *pCommand );
 	virtual void SendDirect( int nPlayer, CObjectBase *pCommand );
-	virtual CMultiplayerCommand* GetCommand();
+	virtual CMultiplayerCommand *GetCommand();
 	virtual void FinishSegment();
 	virtual int GetSelfPlayerNum();
 	virtual EConnectionState GetState();
@@ -44,6 +52,6 @@ public:
 	virtual void SendRecv();
 
 	// CRAP{ only for alpha
-	struct NNet::IDriver* GetNetDriver() const { return pNetDriver; }
+	struct NNet::IDriver *GetNetDriver() const { return pNetDriver; }
 	// CRAP}
 };

@@ -18,26 +18,23 @@
 namespace string_conversion
 {
 
-    static std::string RGBA_to_hex(uint32_t bgra, bool includeAlpha = true, bool includeHashtag = false)
-    {
-        uint8_t b = (bgra >> 8) & 0xFF;
-        uint8_t g = (bgra >> 16) & 0xFF;
-        uint8_t r = (bgra >> 24)  & 0xFF;
-        uint8_t a =  bgra        & 0xFF;
+static std::string RGBA_to_hex( uint32_t bgra, bool includeAlpha = true, bool includeHashtag = false )
+{
+	uint8_t b = ( bgra >> 8 ) & 0xFF;
+	uint8_t g = ( bgra >> 16 ) & 0xFF;
+	uint8_t r = ( bgra >> 24 ) & 0xFF;
+	uint8_t a = bgra & 0xFF;
 
-        std::ostringstream oss;
-        if (includeHashtag)
-            oss << "#";
-        oss
-            << std::uppercase << std::hex << std::setfill('0')
-            << std::setw(2) << (int)r
-            << std::setw(2) << (int)g
-            << std::setw(2) << (int)b;
+	std::ostringstream oss;
+	if ( includeHashtag )
+		oss << "#";
+	oss << std::uppercase << std::hex << std::setfill( '0' ) << std::setw( 2 ) << (int)r << std::setw( 2 ) << (int)g
+			<< std::setw( 2 ) << (int)b;
 
-        if (includeAlpha)
-            oss << std::setw(2) << (int)a;
+	if ( includeAlpha )
+		oss << std::setw( 2 ) << (int)a;
 
-        return oss.str();
-    }
+	return oss.str();
+}
 
 }

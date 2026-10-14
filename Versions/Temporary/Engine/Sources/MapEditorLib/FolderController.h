@@ -42,12 +42,12 @@ public:
 	{
 		enum EType
 		{
-			TYPE_INSERT				= 0,
-			TYPE_REMOVE				= 1,
-			TYPE_COPY					= 2,
-			TYPE_RENAME				= 3,
-			TYPE_COLOR				= 4,
-			TYPE_EXPAND				= 6,
+			TYPE_INSERT = 0,
+			TYPE_REMOVE = 1,
+			TYPE_COPY = 2,
+			TYPE_RENAME = 3,
+			TYPE_COLOR = 4,
+			TYPE_EXPAND = 6,
 		};
 		//
 		std::string szDestination;

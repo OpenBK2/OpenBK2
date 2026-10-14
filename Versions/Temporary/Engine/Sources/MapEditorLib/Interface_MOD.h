@@ -4,7 +4,10 @@
 
 struct IMODContainer : public CObjectBase
 {
-	enum { tidTypeID = 0x1424DC42 };
+	enum
+	{
+		tidTypeID = 0x1424DC42
+	};
 
 	virtual bool CanNewMOD() = 0;
 	virtual bool CanOpenMOD() = 0;

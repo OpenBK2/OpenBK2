@@ -15,14 +15,17 @@ class CCustomLobby : public CGameLobby
 	struct SGetClientInfoFunc
 	{
 		CCustomLobby *pThis;
-		SGetClientInfoFunc( CCustomLobby *_pThis ) : pThis( _pThis ) { }
+		SGetClientInfoFunc( CCustomLobby *_pThis ) : pThis( _pThis ) {}
 		const bool operator()( const int nClientID, struct SCustomLobbyClientInfo *pInfo ) const
-			{ return pThis->GetClientInfo( nClientID, pInfo ); }
+		{
+			return pThis->GetClientInfo( nClientID, pInfo );
+		}
 	};
 
 	CObj<IStatisticsCollector> pStatisticsCollector;
 	//
 	const bool GetClientInfo( const int nClientID, struct SCustomLobbyClientInfo *pInfo ) const;
+
 protected:
 	virtual const int GetLobbyID() const { return nLobbyID; }
 
@@ -36,8 +39,9 @@ protected:
 	virtual bool PlayerCanSeeGamesList() const { return true; }
 	virtual bool PlayerCanUpdateGameInfo() const { return true; }
 	virtual bool PlayerNeedSpecificGameInfo() const { return true; }
+
 public:
-	CCustomLobby() { }
+	CCustomLobby() {}
 	CCustomLobby( class CClients *pClients, const std::string &szCfgFile );
 
 	virtual bool Segment();

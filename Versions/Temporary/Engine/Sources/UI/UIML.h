@@ -2,7 +2,6 @@
 
 #include "UI_export.h"
 
-
 #include "3Dmotor/GPixelFormat.h"
 #include "3Dmotor/GLocale.h"
 
@@ -20,13 +19,10 @@ enum ECommand
 
 namespace NGScene
 {
-	struct ILayoutFakeView;
+struct ILayoutFakeView;
 }
 
-const int
-	FONT_SIZE_MASK			= 0x00FFFFFF,
-	FONT_SIZE_PIXELS		= 0x10000000,
-	FONT_SIZE_POINTS		= 0x20000000;
+const int FONT_SIZE_MASK = 0x00FFFFFF, FONT_SIZE_PIXELS = 0x10000000, FONT_SIZE_POINTS = 0x20000000;
 
 struct SState
 {
@@ -60,7 +56,12 @@ struct SState
 	bool bForceFontSize;
 	int nMinFontSize;
 
-	SState(): eHAlign( HORALIGN_DEFAULT ), eVAlign( VERTALIGN_MIDDLE ), sFont( 16, "System" ), sColor( 0xFF, 0xFF, 0xFF, 0xFF ), nOutlineBorder( 0 ), sOutlineColor( 0xFF, 0xFF, 0xFF, 0xFF ), bForceFontSize( false ), nMinFontSize( 0 ) {}
+	SState()
+			: eHAlign( HORALIGN_DEFAULT ), eVAlign( VERTALIGN_MIDDLE ), sFont( 16, "System" ),
+				sColor( 0xFF, 0xFF, 0xFF, 0xFF ), nOutlineBorder( 0 ), sOutlineColor( 0xFF, 0xFF, 0xFF, 0xFF ),
+				bForceFontSize( false ), nMinFontSize( 0 )
+	{
+	}
 
 	int operator&( IBinSaver &saver )
 	{
@@ -82,7 +83,7 @@ struct SRange
 	float fHeight;
 
 	SRange() {}
-	SRange( float _fValue, float _fHeight ): fValue( _fValue ), fHeight( _fHeight ) {}
+	SRange( float _fValue, float _fHeight ) : fValue( _fValue ), fHeight( _fHeight ) {}
 
 	int operator&( IBinSaver &saver )
 	{
@@ -98,7 +99,7 @@ struct SReflowInfo
 	float fMaxX;
 	float fLineWidth, fLineHeight, fLastLineHeight;
 	SRange sLeft, sRight;
-	std::list<CPtr<IMLObject> > line, leftWraped, rightWraped;
+	std::list<CPtr<IMLObject>> line, leftWraped, rightWraped;
 
 	int operator&( IBinSaver &saver )
 	{
@@ -118,19 +119,23 @@ struct SReflowInfo
 
 // CMLStream
 
-class UI_EXPORT CMLStream: public CObjectBase
+class UI_EXPORT CMLStream : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CMLStream)
+	OBJECT_BASIC_METHODS( CMLStream )
 private:
 	int nPos;
 	std::wstring wsText;
 	int nSize;
 
 public:
-	CMLStream() : nPos( 0 ), nSize(0) {}
+	CMLStream() : nPos( 0 ), nSize( 0 ) {}
 
 	int GetSeek() const { return nPos; }
-	void Seek( int nSeek ) { ASSERT( nSeek <= wsText.length() ); nPos = nSeek; }
+	void Seek( int nSeek )
+	{
+		ASSERT( nSeek <= wsText.length() );
+		nPos = nSeek;
+	}
 	void IncSeek() { ++nPos; }
 
 	wchar_t GetChar() const { return wsText[nPos]; }
@@ -149,59 +154,64 @@ public:
 
 // IMLObject
 
-struct IMLObject: public CObjectBase
+struct IMLObject : public CObjectBase
 {
 	// Images/tabs have no text ink. Text objects exclude transparent padding.
 	virtual CTRect<float> GetInkBounds( bool bIncludeOutline = true ) const { return CTRect<float>( 0, 0, 0, 0 ); }
-	virtual void Generate(  ) = 0;
-	virtual void DynamicGenerate(  const SReflowInfo &sInfo ) = 0;
+	virtual void Generate() = 0;
+	virtual void DynamicGenerate( const SReflowInfo &sInfo ) = 0;
 
-	virtual const CTPoint<float>& GetSize() const = 0;
+	virtual const CTPoint<float> &GetSize() const = 0;
 
-	virtual const SState& GetState() const = 0;
+	virtual const SState &GetState() const = 0;
 	virtual void SetState( const SState &sState ) = 0;
 
-	virtual const CTPoint<float>& GetPosition() const = 0;
+	virtual const CTPoint<float> &GetPosition() const = 0;
 	virtual void SetPosition( const CTPoint<float> &sPosition ) = 0;
 
-	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow ) = 0;
-	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sGlobalPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void
+	Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 
-IMLObject* CreateIMLTextObject( CMLStream *pStream, int nStart, int nSize );
-IMLObject* CreateIMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight );
-IMLObject* CreateIMLTabObject();
+IMLObject *CreateIMLTextObject( CMLStream *pStream, int nStart, int nSize );
+IMLObject *
+CreateIMLImageObject( NDb::STexture *pTexture, SState::EHORAlign eAlign, int nBorder, int nWidth, int nHeight );
+IMLObject *CreateIMLTabObject();
 
 // IMLLayout
 
-struct IMLLayout: public CObjectBase
+struct IMLLayout : public CObjectBase
 {
 	virtual void AddObject( IMLObject *pObject ) = 0;
 	virtual void AddCommand( ECommand eCommand, IMLObject *pObject = 0 ) = 0;
 
-	virtual const CTPoint<float>& GetSize() const = 0;
+	virtual const CTPoint<float> &GetSize() const = 0;
 
-	virtual const SState& GetState() = 0;
+	virtual const SState &GetState() = 0;
 	virtual void SetState( const SState &sState ) = 0;
 	virtual void PushState() = 0;
 	virtual void PopState() = 0;
 
-	virtual void Generate(  float fWidth ) = 0;
+	virtual void Generate( float fWidth ) = 0;
 
-	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
-	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void
+	Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 
 // IMLHandler
 
-struct UI_EXPORT IMLHandler: public CObjectBase
+struct UI_EXPORT IMLHandler : public CObjectBase
 {
 	virtual void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) = 0;
 };
 
 // IML
 
-struct IML: public CObjectBase
+struct IML : public CObjectBase
 {
 	virtual void SetText( const std::wstring &wsText, int nFlags ) = 0;
 	virtual void SetFontScaleWindow( struct IWindow *pWindow ) = 0;
@@ -210,8 +220,8 @@ struct IML: public CObjectBase
 	virtual void SetIDForHandler( int nID ) = 0;
 	virtual int GetIDForHandler() const = 0;
 
-	virtual CMLStream* GetStream() = 0;
-	virtual const CTPoint<int>& GetSize() = 0;
+	virtual CMLStream *GetStream() = 0;
+	virtual const CTPoint<int> &GetSize() = 0;
 	// Used to place a caption at the user's scale before deciding on fallback.
 	virtual CTPoint<int> GetPreferredSize() = 0;
 	// Count laid-out lines, including automatic wrapping, not source newlines.
@@ -219,13 +229,17 @@ struct IML: public CObjectBase
 	// Coordinates are screen pixels. Align in sBox and fit against pClip when
 	// ordinary parents clip it further; omit scrolling viewport clips. Outline
 	// overhang alone must not shrink readable text. Returns the new draw origin.
-	virtual CTPoint<float> FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine = false, const CTRect<float> *pClip = nullptr ) = 0;
+	virtual CTPoint<float>
+	FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine = false, const CTRect<float> *pClip = nullptr ) = 0;
 	// Diagnostic includes visible outlines by default; false checks only letters.
-	virtual bool HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline = true ) = 0;
+	virtual bool
+	HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline = true ) = 0;
 
-	virtual void Generate(  int nWidth ) = 0;
-	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
-	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void Generate( int nWidth ) = 0;
+	virtual void
+	Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
+	virtual void
+	Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 
-UI_EXPORT IML* CreateML( struct IWindow *pFontScaleWindow = nullptr );
+UI_EXPORT IML *CreateML( struct IWindow *pFontScaleWindow = nullptr );

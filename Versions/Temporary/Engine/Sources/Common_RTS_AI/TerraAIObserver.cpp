@@ -28,26 +28,24 @@ void CTerraAIObserver::AddVSO( const NDb::SVSOInstance *pInstance )
 		tiles.splice( tiles.end(), temp );
 	}
 	const NDb::STerrainAIProperties prop = pInstance->pDescriptor->aIProperty;
-	pTerrain->AddTiles( tiles, (EAIClasses)prop.nAIPassabilityClass, prop.fPassability, prop.nSoilType, prop.bCanEntrench );
+	pTerrain->AddTiles(
+			tiles, (EAIClasses)prop.nAIPassabilityClass, prop.fPassability, prop.nSoilType, prop.bCanEntrench );
 }
-
 
 void CTerraAIObserver::AddCrag( const NDb::SVSOInstance *pInstance )
 {
 	NDb::SVSOInstance putVSO( *pInstance );
 	for ( int i = 0; i < putVSO.points.size(); ++i )
-		putVSO.points[i].fWidth = AI_TILE_SIZE * 2 ;
+		putVSO.points[i].fWidth = AI_TILE_SIZE * 2;
 
 	const NDb::SVSOInstance *pPutVSO( &putVSO );
 	AddVSO( pPutVSO );
 }
 
-
 void CTerraAIObserver::AddRoad( const NDb::SVSOInstance *pInstance )
 {
 	AddVSO( pInstance );
 }
-
 
 void CTerraAIObserver::AddRiver( const NDb::SVSOInstance *pInstance )
 {
@@ -67,8 +65,10 @@ void CTerraAIObserver::AddWaterLine( const NDb::SVSOInstance *pInstance, const b
 		coastTiles.splice( coastTiles.end(), temp );
 	}
 
-	pTerrain->AddMarineTiles( coastTiles, SVectorStripeObject::ESP_DUST | SVectorStripeObject::ESP_TRACE,
-														waterTiles, SVectorStripeObject::ESP_SPLASH );
+	pTerrain->AddMarineTiles( coastTiles,
+	                          SVectorStripeObject::ESP_DUST | SVectorStripeObject::ESP_TRACE,
+	                          waterTiles,
+	                          SVectorStripeObject::ESP_SPLASH );
 }
 
 void CTerraAIObserver::ClearRiverCliffTiles()
@@ -77,18 +77,21 @@ void CTerraAIObserver::ClearRiverCliffTiles()
 		pTerrain->ClearRiverCliffTiles();
 }
 
-
 void CTerraAIObserver::AddRiverCliffTiles( const std::list<SVector> &tiles )
 {
 	if ( pTerrain )
 		pTerrain->AddRiverCliffTiles( tiles );
 }
 
-
-void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, std::list<SVector> *pTiles, const SSingleSide &singleSide, bool bInverse )
+void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
+                                         const int j,
+                                         const float fCoeff,
+                                         std::list<SVector> *pTiles,
+                                         const SSingleSide &singleSide,
+                                         bool bInverse )
 {
-	const float fTileSize = (float)(pAIMap->GetTileSize());
-	NDb::SVSOInstance revVSO = (*pVSO);
+	const float fTileSize = (float)( pAIMap->GetTileSize() );
+	NDb::SVSOInstance revVSO = ( *pVSO );
 
 	const CVec2 vCenter1( revVSO.points[j].vPos.x, revVSO.points[j].vPos.y );
 	CVec2 vCenter2;
@@ -131,7 +134,7 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const in
 	const float fDist12 = fabs( v[2] - v[1] );
 	if ( fDist12 < 2.5 * fTileSize )
 	{
-		if ( fabs(fDist12) < FP_EPSILON )
+		if ( fabs( fDist12 ) < FP_EPSILON )
 			v[2] = v[1];
 		else
 			v[2] = v[1] + ( v[2] - v[1] ) * ( 2.5 * fTileSize / fDist12 );
@@ -139,7 +142,7 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const in
 	const float fDist03 = fabs( v[3] - v[0] );
 	if ( fDist03 < 2.5 * fTileSize )
 	{
-		if ( fabs(fDist03) < FP_EPSILON )
+		if ( fabs( fDist03 ) < FP_EPSILON )
 			v[3] = v[0];
 		else
 			v[3] = v[0] + ( v[3] - v[0] ) * ( 2.5 * fTileSize / fDist03 );
@@ -162,7 +165,6 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const in
 	pAIMap->GetTilesCoveredByQuadrangle( v[0], v[1], v[2], v[3], pTiles );
 }
 
-
 void CTerraAIObserver::SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params )
 {
 	if ( !pTerrain )
@@ -170,84 +172,75 @@ void CTerraAIObserver::SetTerraTypes( const std::vector<NDb::STerrainAIPropertie
 
 	pTerrain->PrepareTerraTypes( params.size() );
 	for ( int i = 0; i < params.size(); ++i )
-		pTerrain->SetTerraTypes( i, params[i].fPassability, params[i].nAIClass, params[i].nSoilType, !params[i].bCanEntrench );
+		pTerrain->SetTerraTypes(
+				i, params[i].fPassability, params[i].nAIClass, params[i].nSoilType, !params[i].bCanEntrench );
 }
 
-
-void CTerraAIObserver::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2,
-																		const CArray2D<uint8_t> &types )
+void CTerraAIObserver::UpdateTypes(
+		const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types )
 {
 	if ( !types.IsEmpty() )
 		pTerrain->UpdateTypes( nX1, nY1, nX2, nY2, types );
 	pTerrain->StartInitMode();
 }
 
-
-void CTerraAIObserver::UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2,
-																			const CArray2D<float> &heights )
+void CTerraAIObserver::UpdateHeights(
+		const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights )
 {
 	NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
 
 	pHeights->UpdateHeights( nX1, nY1, nX2, nY2, heights );
 }
 
-
 void CTerraAIObserver::UpdateZ( CVec3 *pvPos )
 {
 	pAIMap->GetHeights()->UpdateZ( pvPos );
 }
-
 
 float CTerraAIObserver::GetZ( float x, float y ) const
 {
 	return pHeights->GetZ( x, y );
 }
 
-
 float CTerraAIObserver::GetTileHeight( int nX, int nY ) const
 {
 	return pHeights->GetTileHeight( nX, nY );
 }
-
 
 uint32_t CTerraAIObserver::GetNormal( const CVec2 &vPoint ) const
 {
 	return pHeights->GetNormal( vPoint );
 }
 
-
 bool CTerraAIObserver::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	return pHeights->GetIntersectionWithTerrain( pvResult, vBegin, vEnd );
 }
 
-
-bool CTerraAIObserver::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
+bool CTerraAIObserver::GetIntersectionWithTerrainForEditor( CVec3 *pvResult,
+                                                            const CVec3 &vBegin,
+                                                            const CVec3 &vEnd ) const
 {
 	return pHeights->GetIntersectionWithTerrainForEditor( pvResult, vBegin, vEnd );
 }
-
 
 void CTerraAIObserver::InitHeights4Editor( int nSizeX, int nSizeY )
 {
 	pHeights->Init4Editor( nSizeX, nSizeY, 32 );
 }
 
-
 void CTerraAIObserver::ClearPassMarkers()
 {
 	pMarkers->Clear();
 }
 
-
 void CTerraAIObserver::DrawPassabilities() const
 {
-	if ( bShowPassability && (pMarkers != 0) )
+	if ( bShowPassability && ( pMarkers != 0 ) )
 	{
 		pMarkers->DrawPassabilities();
 	}
 }
-
 
 void CTerraAIObserver::LockSteepTiles()
 {
@@ -273,8 +266,9 @@ void CTerraAIObserver::LockSteepTiles()
 				const float fLeft = fabs( fMiddle - GetTileHeight( nX - 1, nY ) );
 				const float fRight = fabs( fMiddle - GetTileHeight( nX + 1, nY ) );
 
-				if ( fUp > s_fHeightsDiffToLock || fDown > s_fHeightsDiffToLock || fLeft > s_fHeightsDiffToLock || fRight > s_fHeightsDiffToLock )
-					steepTiles.push_back( SObjTileInfo(SVector(nX, nY), EAC_ANY) );
+				if ( fUp > s_fHeightsDiffToLock || fDown > s_fHeightsDiffToLock || fLeft > s_fHeightsDiffToLock ||
+				     fRight > s_fHeightsDiffToLock )
+					steepTiles.push_back( SObjTileInfo( SVector( nX, nY ), EAC_ANY ) );
 			}
 		}
 
@@ -295,12 +289,15 @@ void CTerraAIObserver::ToggleShowPassability()
 	DebugInfoManager()->ShowAxes( bShowPassability );
 }
 
-
-void CTerraAIObserver::SetPassMarkers( const int color, const int aiClass, const int freeClass, const int nBoundTileRadius )
+void CTerraAIObserver::SetPassMarkers( const int color,
+                                       const int aiClass,
+                                       const int freeClass,
+                                       const int nBoundTileRadius )
 {
 	if ( pMarkers != 0 )
 	{
-		pMarkers->SetPassMarkers( (NDebugInfo::EColor)color, (EAIClasses)aiClass, (EFreeTileInfo)freeClass, nBoundTileRadius );
+		pMarkers->SetPassMarkers(
+				(NDebugInfo::EColor)color, (EAIClasses)aiClass, (EFreeTileInfo)freeClass, nBoundTileRadius );
 	}
 }
 
@@ -326,22 +323,20 @@ void CTerraAIObserver::InitPassMarkers( CAIMap *_pAIMap )
 	pMarkers->Init( pAIMap );
 }
 
-
 bool CTerraAIObserver::IsBridge( const int nX, const int nY ) const
 {
 	NI_VERIFY( pTerrain, "pTerrain == NULL!", return false )
 
-	return pTerrain->IsBridge( SVector(nX, nY) );
+	return pTerrain->IsBridge( SVector( nX, nY ) );
 }
-
 
 int CTerraAIObserver::operator&( IBinSaver &f )
 {
-	f.Add( 2,&pAIMap );
+	f.Add( 2, &pAIMap );
 	//f.Add( 3,&pTerrain );
 	//f.Add( 4,&pHeights );
 	//f.Add(5,&pMarkers);
-	f.Add( 6,&bShowPassability );
+	f.Add( 6, &bShowPassability );
 
 	if ( f.IsReading() )
 	{
@@ -351,9 +346,9 @@ int CTerraAIObserver::operator&( IBinSaver &f )
 	return 0;
 }
 
-
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x11097CC0, CTerraAIObserver )
 
 START_REGISTER( TerraAIObserverConsts )
-REGISTER_VAR_EX( "TerraAIObserver.TileHeightDiffToLock", NGlobal::VarFloatHandler, &s_fHeightsDiffToLock, 20.0f, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"TerraAIObserver.TileHeightDiffToLock", NGlobal::VarFloatHandler, &s_fHeightsDiffToLock, 20.0f, STORAGE_NONE );
 FINISH_REGISTER

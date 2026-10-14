@@ -3,9 +3,11 @@ virtual void ToAIUnits( bool bInEditor )
 	eGameType = SGVOGT_SQUAD;
 	SHPObjectRPGStats::ToAIUnits( bInEditor );
 	// check changesByEvent and remove invalid entries
-	for ( std::vector<SFormation>::iterator itFormation = formations.begin(); itFormation != formations.end(); ++itFormation )
+	for ( std::vector<SFormation>::iterator itFormation = formations.begin(); itFormation != formations.end();
+	      ++itFormation )
 	{
-		for ( std::vector<int>::iterator itChange = itFormation->changesByEvent.begin(); itChange != itFormation->changesByEvent.end(); )
+		for ( std::vector<int>::iterator itChange = itFormation->changesByEvent.begin();
+		      itChange != itFormation->changesByEvent.end(); )
 		{
 			if ( *itChange >= formations.size() )
 				itChange = itFormation->changesByEvent.erase( itChange );
@@ -17,9 +19,9 @@ virtual void ToAIUnits( bool bInEditor )
 	for ( std::vector<SSquadRPGStats::SFormation>::iterator it = formations.begin(); it != formations.end(); ++it )
 	{
 		const int nOldSize = it->order.size();
-		for ( std::vector< CDBPtr<SInfantryRPGStats> >::iterator itMember = members.begin(); itMember != members.end(); )
+		for ( std::vector<CDBPtr<SInfantryRPGStats>>::iterator itMember = members.begin(); itMember != members.end(); )
 		{
-			if ( (*itMember) == 0 )
+			if ( ( *itMember ) == 0 )
 				itMember = members.erase( itMember );
 			else
 				++itMember;
@@ -56,7 +58,7 @@ virtual void ToAIUnits( bool bInEditor )
 		availUserActions.Clear();
 }
 //
-virtual const CUserActions* GetUserActions( bool bActionsBy ) const
+virtual const CUserActions *GetUserActions( bool bActionsBy ) const
 {
 	return bActionsBy ? &availUserActions : &availUserExposures;
 }

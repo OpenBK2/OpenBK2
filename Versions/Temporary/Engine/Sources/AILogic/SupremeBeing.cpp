@@ -16,7 +16,7 @@ extern CScripts *pScripts;
 //*											CSupremeBeing																*
 //*******************************************************************
 
-struct IEnemyContainer * CSupremeBeing::GetEnemyConatiner( int nParty )
+struct IEnemyContainer *CSupremeBeing::GetEnemyConatiner( int nParty )
 {
 	return generals[nParty];
 }
@@ -44,14 +44,14 @@ void CSupremeBeing::Clear()
 	generals.clear();
 }
 
-void CSupremeBeing::Init( const NDb::SMapInfo* pMapInfo )
+void CSupremeBeing::Init( const NDb::SMapInfo *pMapInfo )
 {
 	if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() )
 	{
 		for ( int i = 0; i < pMapInfo->players.size(); ++i )
 		{
 			const int nParty = theDipl.GetNParty( i );
-			if ( generals.find( nParty )  == generals.end() && nParty == 1 )
+			if ( generals.find( nParty ) == generals.end() && nParty == 1 )
 			{
 				//generals.insert( std::pair<int, CPtr<CGeneral> >( nParty, new CGeneral( nParty ) ) );
 				generals[nParty] = new CGeneral( nParty );
@@ -61,7 +61,7 @@ void CSupremeBeing::Init( const NDb::SMapInfo* pMapInfo )
 	}
 }
 
-void CSupremeBeing::GiveNewUnitsToGenerals( const std::list<CCommonUnit*> &pUnits, bool bFromReinforcement )
+void CSupremeBeing::GiveNewUnitsToGenerals( const std::list<CCommonUnit *> &pUnits, bool bFromReinforcement )
 {
 	if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() )
 	{
@@ -84,7 +84,7 @@ bool CSupremeBeing::IsMobileReinforcement( int nParty, int nGroup ) const
 	Generals::const_iterator it = generals.find( nParty );
 	if ( it != generals.end() )
 	{
-		return (it->second)->IsMobileReinforcement( nGroup );
+		return ( it->second )->IsMobileReinforcement( nGroup );
 	}
 	return false;
 }
@@ -104,7 +104,7 @@ void CSupremeBeing::Segment()
 			// запуск отложенных заждач
 			for ( DelayedTasks::iterator it = delayedTasks.begin(); it != delayedTasks.end(); )
 			{
-				IGeneralDelayedTask * pTask = *it;
+				IGeneralDelayedTask *pTask = *it;
 				if ( pTask && pTask->IsTimeToRun() )
 				{
 					pTask->Run();
@@ -127,22 +127,26 @@ void CSupremeBeing::RegisterDelayedTask( IGeneralDelayedTask *pTask )
 }
 
 void CSupremeBeing::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
-	const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
-	const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt )
+                                         const NTimer::STime lastVisibleTimeDelta,
+                                         const CVec2 &vLastVisiblePos,
+                                         const NTimer::STime lastAntiArtTimeDelta,
+                                         const CVec2 &vLastVisibleAntiArtCenter,
+                                         const float fDistToLastVisibleAntiArt )
 {
 	const int nGeneralParty = 1 - pInfo->GetOwner()->GetParty();
 
 	if ( nGeneralParty == 1 && generals.find( nGeneralParty ) != generals.end() )
 	{
-		generals[nGeneralParty]->UpdateEnemyUnitInfo(
-			pInfo,
-			lastVisibleTimeDelta, vLastVisiblePos,
-			lastAntiArtTimeDelta, vLastVisibleAntiArtCenter, fDistToLastVisibleAntiArt
-		);
+		generals[nGeneralParty]->UpdateEnemyUnitInfo( pInfo,
+		                                              lastVisibleTimeDelta,
+		                                              vLastVisiblePos,
+		                                              lastAntiArtTimeDelta,
+		                                              vLastVisibleAntiArtCenter,
+		                                              fDistToLastVisibleAntiArt );
 	}
 }
 
-void CSupremeBeing::UnitDied( class CCommonUnit * pUnit )
+void CSupremeBeing::UnitDied( class CCommonUnit *pUnit )
 {
 	for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
 	{
@@ -158,7 +162,7 @@ void CSupremeBeing::UnitDied( CAIUnitInfoForGeneral *pInfo )
 	}
 }
 
-void CSupremeBeing::UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 &vNewPos )
+void CSupremeBeing::UnitChangedPosition( class CCommonUnit *pUnit, const CVec2 &vNewPos )
 {
 	if ( AICellsTiles::GetGeneralCell( pUnit->GetCenterPlain() ) != AICellsTiles::GetGeneralCell( vNewPos ) )
 	{
@@ -168,9 +172,10 @@ void CSupremeBeing::UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 
 	}
 }
 
-void CSupremeBeing::UnitAskedForResupply( class CCommonUnit * pUnit, const EResupplyType eType, const bool bSet )
+void CSupremeBeing::UnitAskedForResupply( class CCommonUnit *pUnit, const EResupplyType eType, const bool bSet )
 {
-	if ( !pScripts || IsIronman( pScripts->GetScriptID( pUnit ) ) ) return;
+	if ( !pScripts || IsIronman( pScripts->GetScriptID( pUnit ) ) )
+		return;
 
 	if ( pUnit->GetParty() == theDipl.GetNeutralParty() )
 	{
@@ -189,9 +194,9 @@ void CSupremeBeing::UnitAskedForResupply( class CCommonUnit * pUnit, const EResu
 
 void CSupremeBeing::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 {
-//	const int nGeneralParty = 1 - pUnit->GetParty();
+	//	const int nGeneralParty = 1 - pUnit->GetParty();
 	//if ( nGeneralParty == 1 && generals.find( nGeneralParty ) != generals.end() )
-		//generals[nGeneralParty]->UnitChangedParty( pUnit, nNewParty );
+	//generals[nGeneralParty]->UnitChangedParty( pUnit, nNewParty );
 	for ( Generals::iterator it = generals.begin(); it != generals.end(); ++it )
 		it->second->UnitChangedParty( pUnit, nNewParty );
 }

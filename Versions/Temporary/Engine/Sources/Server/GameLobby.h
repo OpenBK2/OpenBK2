@@ -13,7 +13,7 @@ class CGameLobby : public CPacketProcessor
 
 	std::unordered_set<int> lobbyClients;
 	CPtr<class CClients> pClients;
-	std::unordered_map< int, std::unordered_set<int> > throughServerClients;
+	std::unordered_map<int, std::unordered_set<int>> throughServerClients;
 
 	uint32_t dwGameTimeOut;
 	uint32_t dwGameLoadingTimeOut;
@@ -32,9 +32,11 @@ class CGameLobby : public CPacketProcessor
 	struct SGetGameInfoFunc
 	{
 		CGameLobby *pThis;
-		SGetGameInfoFunc( CGameLobby *_pThis ) : pThis( _pThis ) { }
+		SGetGameInfoFunc( CGameLobby *_pThis ) : pThis( _pThis ) {}
 		const bool operator()( const int nGameID, struct SGameInfo *pInfo ) const
-		{ return pThis->GetGameInfo( nGameID, pInfo ); }
+		{
+			return pThis->GetGameInfo( nGameID, pInfo );
+		}
 	};
 
 	//
@@ -48,14 +50,15 @@ class CGameLobby : public CPacketProcessor
 	void InformThroughServerClients( const int nLeftGameClient );
 	void RemoveLobbyClient( const int nClientID );
 	bool KillGame( const int nGameID );
+
 protected:
 	bool IsLobbyClient( const int nID ) const { return lobbyClients.find( nID ) != lobbyClients.end(); }
-	class CClients* GetClients() const { return pClients; }
+	class CClients *GetClients() const { return pClients; }
 
 	void GameInfoChanged( const int nGameID );
 
-	template<typename TInPacket, typename TOutPacket, class TGetInfo>
-		inline void GetUpdate( TInPacket *pInPacket, TOutPacket *pOutPacket, TGetInfo &GetInfoFunc, bool bClientsUpdate );
+	template <typename TInPacket, typename TOutPacket, class TGetInfo>
+	inline void GetUpdate( TInPacket *pInPacket, TOutPacket *pOutPacket, TGetInfo &GetInfoFunc, bool bClientsUpdate );
 
 	//
 	virtual const int GetLobbyID() const = 0;
@@ -68,8 +71,9 @@ protected:
 	virtual bool PlayerCanSeeGamesList() const = 0;
 	virtual bool PlayerCanUpdateGameInfo() const = 0;
 	virtual bool PlayerNeedSpecificGameInfo() const = 0;
+
 public:
-	CGameLobby() : nGamesCounter( 0 ) { }
+	CGameLobby() : nGamesCounter( 0 ) {}
 	CGameLobby( class CClients *pClients, const std::string &szCfgFile );
 
 	virtual bool Segment();
@@ -103,13 +107,10 @@ public:
 	bool ProcessGetLobbyClientsListPacket( class CGetLobbyClientsListPacket *pPacket );
 	// for testing
 	bool ProcessShowLobbyGames( class CShowLobbyGamesPacket *pPacket );
-
 };
 
-
-
-template<typename TInPacket, typename TOutPacket, class TGetInfo>
-inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &GetInfoFunc, bool bClientsUpdate )
+template <typename TInPacket, typename TOutPacket, class TGetInfo>
+inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket *, TGetInfo &GetInfoFunc, bool bClientsUpdate )
 {
 	SUpdateInfo updateInfo;
 	if ( bClientsUpdate )
@@ -125,7 +126,7 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &
 	for ( std::list<int>::iterator iter = updateInfo.added.begin(); iter != updateInfo.added.end(); ++iter )
 	{
 		pOutPacket->added.emplace_back();
-		if ( !GetInfoFunc( *iter, &(pOutPacket->added.back()) ) )
+		if ( !GetInfoFunc( *iter, &( pOutPacket->added.back() ) ) )
 			pOutPacket->added.pop_back();
 	}
 
@@ -135,7 +136,7 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &
 		for ( std::list<int>::iterator iter = updateInfo.changed.begin(); iter != updateInfo.changed.end(); ++iter )
 		{
 			pOutPacket->changed.emplace_back();
-			if ( !GetInfoFunc( *iter, &(pOutPacket->changed.back()) ) )
+			if ( !GetInfoFunc( *iter, &( pOutPacket->changed.back() ) ) )
 				pOutPacket->changed.pop_back();
 		}
 	}

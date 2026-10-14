@@ -38,17 +38,17 @@ public:
 	{
 		enum EVSOType
 		{
-			VSO_ROAD			= 0,
-			VSO_RIVER			= 1,
-			VSO_CRAG			= 2,
-			VSO_LAKE			= 3,
-			VSO_COAST			= 4,
+			VSO_ROAD = 0,
+			VSO_RIVER = 1,
+			VSO_CRAG = 2,
+			VSO_LAKE = 3,
+			VSO_COAST = 4,
 		};
 		enum EType
 		{
-			TYPE_INSERT		= 0,
-			TYPE_REMOVE		= 1,
-			TYPE_CHANGE		= 2,
+			TYPE_INSERT = 0,
+			TYPE_REMOVE = 1,
+			TYPE_CHANGE = 2,
 		};
 		//
 		EVSOType eVSOType;
@@ -67,10 +67,10 @@ public:
 	CVSOUndoDataList vsoUndoDataList;
 	// IManipulator
 	virtual bool IsEmpty() const
-	{ return ( CObjectBaseController::IsEmpty() &&
-						 tileUndoDataList.empty() &&
-						 heightUndoDataList.empty() &&
-						 vsoUndoDataList.empty() ); }
+	{
+		return ( CObjectBaseController::IsEmpty() && tileUndoDataList.empty() && heightUndoDataList.empty() &&
+		         vsoUndoDataList.empty() );
+	}
 
 	// Helpers
 	inline bool AddChangeTileOperation( const CArray2D<uint8_t> &rBrush, const CVec3 &rvBrushPos )
@@ -82,7 +82,8 @@ public:
 	}
 	inline bool AddChangeHeightOperation( const CArray2D<float> &rBrush, const CTPoint<int> &rBrushPos )
 	{
-		CHeightUndoDataList::iterator posHeightUndoData = heightUndoDataList.insert( heightUndoDataList.begin(), SHeightUndoData() );
+		CHeightUndoDataList::iterator posHeightUndoData =
+				heightUndoDataList.insert( heightUndoDataList.begin(), SHeightUndoData() );
 		posHeightUndoData->brush = rBrush;
 		posHeightUndoData->brushPos = rBrushPos;
 		return true;
@@ -103,7 +104,9 @@ public:
 		posVSOUndoData->newValue = rVSOInstance;
 		return true;
 	}
-	inline bool AddChangeVSOOperation( SVSOUndoData::EVSOType _eVSOType, const NDb::SVSOInstance &rOldVSOInstance, const NDb::SVSOInstance &rNewVSOInstance )
+	inline bool AddChangeVSOOperation( SVSOUndoData::EVSOType _eVSOType,
+	                                   const NDb::SVSOInstance &rOldVSOInstance,
+	                                   const NDb::SVSOInstance &rNewVSOInstance )
 	{
 		CVSOUndoDataList::iterator posVSOUndoData = vsoUndoDataList.insert( vsoUndoDataList.begin(), SVSOUndoData() );
 		posVSOUndoData->eVSOType = _eVSOType;

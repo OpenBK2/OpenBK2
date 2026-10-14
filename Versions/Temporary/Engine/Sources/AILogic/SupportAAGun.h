@@ -17,11 +17,19 @@ class CSupportAAGun : public CAIObjectBase
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NTimer::STime timeNextTargetSearch = {};
 	uint32_t dwAllowed = 0;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&predictedFire); f.Add(3,&pShootEstimator); f.Add(4,&timeNextTargetSearch); f.Add(5,&dwAllowed); return 0; }
 
 public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &predictedFire );
+		f.Add( 3, &pShootEstimator );
+		f.Add( 4, &timeNextTargetSearch );
+		f.Add( 5, &dwAllowed );
+		return 0;
+	}
 
-	CSupportAAGun() : predictedFire( 0, 0 ) {  }
+public:
+	CSupportAAGun() : predictedFire( 0, 0 ) {}
 	CSupportAAGun( CAIUnit *_pUnit );
 
 	void Segment();

@@ -20,8 +20,9 @@ class CDebugMask
 	float fScaleCoeffY;
 	CVec2 vMin;
 	CVec2 vMax;
+
 public:
-	CDebugMask() { }
+	CDebugMask() {}
 
 	void Init( const CVec2 &_vMin, const CVec2 &_vMax )
 	{
@@ -38,15 +39,12 @@ public:
 		Clear();
 	}
 
-	void Clear()
-	{
-		mask.FillZero();
-	}
+	void Clear() { mask.FillZero(); }
 
 	void GetLocalCoord( const CVec2 &v, int *pnX, int *pnY )
 	{
-		*pnX = Clamp( (float)(v.x - vMin.x) * fScaleCoeffX, 0.0f, (float)(mask.GetSizeX() - 1) );
-		*pnY = mask.GetSizeY() - Clamp( (float)(v.y - vMin.y) * fScaleCoeffY, 0.0f, (float)(mask.GetSizeY() - 1) ) - 1;
+		*pnX = Clamp( (float)( v.x - vMin.x ) * fScaleCoeffX, 0.0f, (float)( mask.GetSizeX() - 1 ) );
+		*pnY = mask.GetSizeY() - Clamp( (float)( v.y - vMin.y ) * fScaleCoeffY, 0.0f, (float)( mask.GetSizeY() - 1 ) ) - 1;
 	}
 
 	void DrawLine( const CVec2 &v1, const CVec2 &v2, const NImage::SColor &color )
@@ -86,13 +84,11 @@ static CDebugMask mask;
 class CPointsSort
 {
 	CVec2 vStart;
-public:
-	CPointsSort( const CVec2 &v1 ) : vStart( v1 ) { }
 
-	bool operator()( const CVec2 &v1, const CVec2 &v2 ) const
-	{
-		return fabs2( v1 - vStart ) < fabs2( v2 - vStart );
-	}
+public:
+	CPointsSort( const CVec2 &v1 ) : vStart( v1 ) {}
+
+	bool operator()( const CVec2 &v1, const CVec2 &v2 ) const { return fabs2( v1 - vStart ) < fabs2( v2 - vStart ); }
 };
 
 struct SConnectedPoint
@@ -100,9 +96,8 @@ struct SConnectedPoint
 	CVec2 vPoint;
 	int nNumber;
 
-	SConnectedPoint() { }
-	SConnectedPoint( const CVec2 &_vPoint, const int _nNumber )
-		: vPoint( _vPoint ), nNumber( _nNumber ) { }
+	SConnectedPoint() {}
+	SConnectedPoint( const CVec2 &_vPoint, const int _nNumber ) : vPoint( _vPoint ), nNumber( _nNumber ) {}
 };
 
 struct SPolygon
@@ -132,8 +127,9 @@ class CPassabilityProfileCreator
 	void SimplifyPolygons();
 	const int FindNumberForPoint( const CVec2 &vPoint );
 	void AddEdge( const int n1, const int n2 );
+
 public:
-	CPassabilityProfileCreator(const NEditorGltf::SMeshData &mesh, const float fZEps, NDb::SPassProfile *pPassProfile );
+	CPassabilityProfileCreator( const NEditorGltf::SMeshData &mesh, const float fZEps, NDb::SPassProfile *pPassProfile );
 };
 
 void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMeshData &mesh, const float fZEps )
@@ -145,7 +141,7 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 	fInfinity = 1000.0f * fabs( vMax - vMin );
 
 #ifdef _DEBUG_GENERATION
-	mask.Init( CVec2(vMin.x, vMin.y), CVec2(vMax.x, vMax.y) );
+	mask.Init( CVec2( vMin.x, vMin.y ), CVec2( vMax.x, vMax.y ) );
 #endif //_DEBUG_GENERATION
 
 	const float fMaxZ = vMin.z + fZEps;
@@ -162,19 +158,19 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 		std::vector<CVec2> prjPoints;
 		for ( int i = 0; i < 3; ++i )
 		{
-			const uint8_t cFirst = (points[i].z <= fMaxZ) ? 1 : 0;
-			const uint8_t cSecond = (points[i+1].z <= fMaxZ) ? 1 : 0;
+			const uint8_t cFirst = ( points[i].z <= fMaxZ ) ? 1 : 0;
+			const uint8_t cSecond = ( points[i + 1].z <= fMaxZ ) ? 1 : 0;
 
 			const CVec2 vFirst( points[i].x, points[i].y );
-			const CVec2 vSecond( points[i+1].x, points[i+1].y );
+			const CVec2 vSecond( points[i + 1].x, points[i + 1].y );
 
 			if ( cFirst )
 				prjPoints.push_back( vFirst );
 
-			if ( cFirst ^ cSecond && points[i].z != points[i+1].z )
+			if ( cFirst ^ cSecond && points[i].z != points[i + 1].z )
 			{
-				const float fT = (fMaxZ - points[i].z) / (points[i+1].z - points[i].z);
-				prjPoints.push_back( vFirst + fT * (vSecond - vFirst) );
+				const float fT = ( fMaxZ - points[i].z ) / ( points[i + 1].z - points[i].z );
+				prjPoints.push_back( vFirst + fT * ( vSecond - vFirst ) );
 			}
 
 			if ( cSecond )
@@ -184,7 +180,7 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 		if ( !prjPoints.empty() )
 		{
 			for ( int i = 0; i < prjPoints.size(); ++i )
-				Vis2AI( &(prjPoints[i]) );
+				Vis2AI( &( prjPoints[i] ) );
 
 			prjPoints.push_back( prjPoints[0] );
 			for ( int i = 0; i < prjPoints.size() - 1; ++i )
@@ -205,7 +201,7 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 #endif //_DEBUG_GENERATION
 }
 
-template<class T>
+template <class T>
 static bool IsEqual( const T &fVar, const T &fValue )
 {
 	return fabs( fVar - fValue ) < fEps;
@@ -234,13 +230,12 @@ static const float ExactSign( const float fX )
 bool IsPointInside( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 {
 	CLine2 line( v1, v2 );
-	return
-		IsEqual( line.DistToPoint( vPoint ), 0.0f ) &&
-		Sign( vPoint.x - v1.x ) * Sign( v2.x - vPoint.x ) >= 0 &&
-		Sign( vPoint.y - v1.y ) * Sign( v2.y - vPoint.y ) >= 0;
+	return IsEqual( line.DistToPoint( vPoint ), 0.0f ) && Sign( vPoint.x - v1.x ) * Sign( v2.x - vPoint.x ) >= 0 &&
+	       Sign( vPoint.y - v1.y ) * Sign( v2.y - vPoint.y ) >= 0;
 }
 
-static void GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v21, const CVec2 &v22, std::list<CVec2> *pRes )
+static void
+GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v21, const CVec2 &v22, std::list<CVec2> *pRes )
 {
 	pRes->clear();
 
@@ -322,7 +317,9 @@ const int CPassabilityProfileCreator::FindNumberForPoint( const CVec2 &vPoint )
 {
 	int nNumber = -1;
 	int nMaxNumber = -1;
-	for ( std::list<SConnectedPoint>::iterator iter = connectedPoints.begin(); iter != connectedPoints.end() && nNumber == -1; ++iter )
+	for ( std::list<SConnectedPoint>::iterator iter = connectedPoints.begin();
+	      iter != connectedPoints.end() && nNumber == -1;
+	      ++iter )
 	{
 		if ( IsEqual( vPoint, iter->vPoint ) )
 			nNumber = iter->nNumber;
@@ -335,7 +332,8 @@ const int CPassabilityProfileCreator::FindNumberForPoint( const CVec2 &vPoint )
 
 void CPassabilityProfileCreator::AddEdge( const int n1, const int n2 )
 {
-	connections[n1][n2] = 1;;
+	connections[n1][n2] = 1;
+	;
 	connections[n2][n1] = 1;
 }
 
@@ -449,7 +447,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 		}
 	}
 
-	std::unordered_map<int, std::unordered_set<int> > connTable;
+	std::unordered_map<int, std::unordered_set<int>> connTable;
 	for ( int i = 0; i < connections.GetSizeX(); ++i )
 	{
 		if ( goodPoints.find( i ) != goodPoints.end() )
@@ -512,7 +510,7 @@ void CPassabilityProfileCreator::FormPolygon()
 			const CVec2 vPoint = iter->second;
 			if ( bFirst || vPoint.y < point.vPoint.y || vPoint.y == point.vPoint.y && vPoint.x < point.vPoint.x )
 			{
-				point.vPoint= vPoint;
+				point.vPoint = vPoint;
 				point.nNumber = iter->first;
 				bFirst = false;
 			}
@@ -546,8 +544,8 @@ void CPassabilityProfileCreator::FormPolygon()
 				//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 
 				if ( point.nNumber != nextPoint.nNumber && predPoint.nNumber != nextPoint.nNumber //&&
-					//						!IsPointInside( nextPoint.vPoint, predPoint.vPoint, point.vPoint ) //&&
-					/*( bFirst || !IsPointInside( nextPoint.vPoint, point.vPoint, bestPoint.vPoint ) )*/ )
+				     //						!IsPointInside( nextPoint.vPoint, predPoint.vPoint, point.vPoint ) //&&
+				     /*( bFirst || !IsPointInside( nextPoint.vPoint, point.vPoint, bestPoint.vPoint ) )*/ )
 				{
 					if ( bFirst )
 					{
@@ -560,7 +558,7 @@ void CPassabilityProfileCreator::FormPolygon()
 						if ( TriangleArea2( predPoint.vPoint, point.vPoint, nextPoint.vPoint ) == 0 )
 						{
 							if ( TriangleArea2( predPoint.vPoint, point.vPoint, bestPoint.vPoint ) > 0 ||
-								IsPointInside( bestPoint.vPoint, point.vPoint, nextPoint.vPoint ) )
+							     IsPointInside( bestPoint.vPoint, point.vPoint, nextPoint.vPoint ) )
 							{
 								//mask.DrawPoint( bestPoint.vPoint, NImage::SColor( 255, 0, 0, 0 ) );
 								bestPoint = nextPoint;
@@ -604,8 +602,8 @@ void CPassabilityProfileCreator::FormPolygon()
 		polygon.points.push_back( bestPoint.vPoint );
 
 		//mask.DrawPoint( predPoint.vPoint, NImage::SColor( 255, 0, 0, 255 ) );
-	}
-	while ( !IsEqual( polygon.points.front(), polygon.points.back() ) && polygon.points.size() <= connNum2Point.size() + 10 );
+	} while ( !IsEqual( polygon.points.front(), polygon.points.back() ) &&
+	          polygon.points.size() <= connNum2Point.size() + 10 );
 }
 
 void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
@@ -630,22 +628,22 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 			int nCount = 0;
 			for ( int i = 0; i < points.size() - 1 && !bInside; ++i )
 			{
-				if ( IsPointInside( vPoint, points[i], points[i+1] ) )
+				if ( IsPointInside( vPoint, points[i], points[i + 1] ) )
 					bInside = true;
-				else if ( points[i].y != points[i+1].y )
+				else if ( points[i].y != points[i + 1].y )
 				{
-					if ( points[i].y == vPoint.y || points[i+1].y == vPoint.y )
+					if ( points[i].y == vPoint.y || points[i + 1].y == vPoint.y )
 					{
-						if ( points[i].y == vPoint.y && points[i].y > points[i+1].y && points[i].x > vPoint.x ||
-							points[i+1].y == vPoint.y && points[i+1].y > points[i].y && points[i+1].x > vPoint.x )
+						if ( points[i].y == vPoint.y && points[i].y > points[i + 1].y && points[i].x > vPoint.x ||
+						     points[i + 1].y == vPoint.y && points[i + 1].y > points[i].y && points[i + 1].x > vPoint.x )
 						{
 							++nCount;
 						}
 					}
-					else if ( ExactSign( vPoint.y - points[i].y ) * ExactSign( points[i+1].y - vPoint.y ) > 0 )
+					else if ( ExactSign( vPoint.y - points[i].y ) * ExactSign( points[i + 1].y - vPoint.y ) > 0 )
 					{
-						const float fT = (vPoint.y - points[i].y)/(points[i+1].y - points[i].y);
-						const float fX = points[i].x + fT * (points[i+1].x - points[i].x);
+						const float fT = ( vPoint.y - points[i].y ) / ( points[i + 1].y - points[i].y );
+						const float fX = points[i].x + fT * ( points[i + 1].x - points[i].x );
 
 						if ( fX > vPoint.x )
 							++nCount;
@@ -653,7 +651,7 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 				}
 			}
 
-			if ( bInside || nCount%2 == 1 )
+			if ( bInside || nCount % 2 == 1 )
 				deleted.insert( iter->first );
 		}
 	}
@@ -698,9 +696,9 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 					//mask.DrawPoint( vNextPoint, NImage::SColor( 255, 0, 0, 0 ) );
 					//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 
-					if ( fabs( line.DistToPoint(vNextPoint) ) < fTolerance )
+					if ( fabs( line.DistToPoint( vNextPoint ) ) < fTolerance )
 					{
-						toDelete[i-1] = 1;
+						toDelete[i - 1] = 1;
 						bChanged = true;
 					}
 					else
@@ -720,8 +718,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 				}
 
 				polygon.points.resize( j );
-			}
-			while ( bChanged );
+			} while ( bChanged );
 		}
 
 		if ( polygon.points.size() < 3 )
@@ -731,8 +728,10 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 	}
 }
 
-CPassabilityProfileCreator::CPassabilityProfileCreator(const NEditorGltf::SMeshData &mesh, const float fZEps, NDb::SPassProfile *pPassProfile )
-: fInfinity( 0.0f )
+CPassabilityProfileCreator::CPassabilityProfileCreator( const NEditorGltf::SMeshData &mesh,
+                                                        const float fZEps,
+                                                        NDb::SPassProfile *pPassProfile )
+		: fInfinity( 0.0f )
 {
 	GenerateStartSegments( mesh, fZEps );
 	GenerateAllSegments();
@@ -776,12 +775,15 @@ CPassabilityProfileCreator::CPassabilityProfileCreator(const NEditorGltf::SMeshD
 	}
 }
 
-bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
+bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName,
+                                     const float fZEps,
+                                     NDb::SPassProfile *pPassProfile )
 {
 	NEditorGltf::SMeshData mesh;
 	std::vector<STriangle> legacyTriangles;
-	LoadGrannyModel(szGrannyFileName, &mesh.vertices, &legacyTriangles, &mesh.minimum, &mesh.maximum);
-	for ( const auto &triangle : legacyTriangles ) mesh.triangles.emplace_back(triangle.i1, triangle.i2, triangle.i3);
+	LoadGrannyModel( szGrannyFileName, &mesh.vertices, &legacyTriangles, &mesh.minimum, &mesh.maximum );
+	for ( const auto &triangle : legacyTriangles )
+		mesh.triangles.emplace_back( triangle.i1, triangle.i2, triangle.i3 );
 	CPassabilityProfileCreator profileCreator( mesh, fZEps, pPassProfile );
 
 #ifdef _DEBUG_GENERATION
@@ -792,7 +794,7 @@ bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName, const 
 		for ( int i = 0; i < polygon.points.size() - 1; ++i )
 		{
 			mask.DrawPoint( polygon.points[i], NImage::SColor( 255, 255, 0, 0 ) );
-			mask.DrawLine( polygon.points[i], polygon.points[i+1], NImage::SColor( 255, 255, 255, 0 ) );
+			mask.DrawLine( polygon.points[i], polygon.points[i + 1], NImage::SColor( 255, 255, 255, 0 ) );
 		}
 	}
 	mask.SaveImage( szImageName + "_2.tga" );
@@ -803,16 +805,20 @@ bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName, const 
 
 bool CreateObjectPassabilityProfile( const NEditorGltf::SMeshData &mesh, float zEpsilon, NDb::SPassProfile *profile )
 {
-	if ( mesh.vertices.empty() || mesh.triangles.empty() ) return false;
-	CPassabilityProfileCreator creator(mesh, zEpsilon, profile);
+	if ( mesh.vertices.empty() || mesh.triangles.empty() )
+		return false;
+	CPassabilityProfileCreator creator( mesh, zEpsilon, profile );
 	return true;
 }
 
-void SavePassProfile( const NDb::SPassProfile &passProfile, const std::string &_szPrefix, const std::string &szFieldName, IManipulator *pManipulator )
+void SavePassProfile( const NDb::SPassProfile &passProfile,
+                      const std::string &_szPrefix,
+                      const std::string &szFieldName,
+                      IManipulator *pManipulator )
 {
 	const std::string szPrefix = _szPrefix.empty() ? _szPrefix : _szPrefix + ".";
 	const std::string szStructName = szPrefix + szFieldName + ".polygons";
-	pManipulator->RemoveNode( szStructName );//szPrefix + "PassProfile.polygons" );
+	pManipulator->RemoveNode( szStructName ); //szPrefix + "PassProfile.polygons" );
 	if ( !passProfile.polygons.empty() )
 	{
 		for ( int i = 0; i < passProfile.polygons.size(); ++i )
@@ -821,7 +827,8 @@ void SavePassProfile( const NDb::SPassProfile &passProfile, const std::string &_
 
 			for ( int j = 0; j < passProfile.polygons[i].verts.size(); ++j )
 			{
-				std::string szNode = fmt::sprintf( (szStructName + ".[%d].verts").c_str(), i );//    szPrefix + "PassProfile.polygons.[%d].verts").c_str(), i );
+				std::string szNode = fmt::sprintf( ( szStructName + ".[%d].verts" ).c_str(),
+				                                   i ); //    szPrefix + "PassProfile.polygons.[%d].verts").c_str(), i );
 				pManipulator->InsertNode( szNode, j );
 
 				szNode += fmt::format( ".[{}].", j );

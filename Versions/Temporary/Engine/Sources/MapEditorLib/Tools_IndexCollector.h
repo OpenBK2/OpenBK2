@@ -5,7 +5,7 @@
 // Move is gone: it had no callers, and it compared an nIndex it does not
 // have, so it could never have been instantiated.
 
-template<class TID>
+template <class TID>
 class CIndexCollector
 {
 public:
@@ -14,10 +14,11 @@ public:
 private:
 	TID invalidID;
 	CIDToIndexMap idToIndexMap;
+
 public:
 	CIndexCollector( const TID &rInvalidID ) : invalidID( rInvalidID ) {}
 
-	const CIDToIndexMap& GetIDToIndexMap() { return idToIndexMap; }
+	const CIDToIndexMap &GetIDToIndexMap() { return idToIndexMap; }
 	// медленные операции
 	bool Insert( const TID &rID, unsigned nIndex, bool bSearchIndices )
 	{
@@ -71,10 +72,7 @@ public:
 		return true;
 	}
 	//
-	void Clear()
-	{
-		idToIndexMap.clear();
-	}
+	void Clear() { idToIndexMap.clear(); }
 	//
 	bool Swap( const TID &rID0, const TID &rID1 )
 	{
@@ -125,10 +123,7 @@ public:
 	}
 
 	//
-	unsigned Size() const
-	{
-		return idToIndexMap.size();
-	}
+	unsigned Size() const { return idToIndexMap.size(); }
 	// дебажный метод (требует очень много памяти)
 	void Trace() const
 	{

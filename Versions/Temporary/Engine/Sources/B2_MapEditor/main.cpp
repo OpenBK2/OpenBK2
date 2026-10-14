@@ -32,34 +32,33 @@
 
 namespace NGameX
 {
-	bool Initialize();
-	GAMEX_EXPORT void PostStorageInitialize();
+bool Initialize();
+GAMEX_EXPORT void PostStorageInitialize();
 };
-ED_B2_M1_EXPORT IEditorModule* GetEditorModule1();
-ED_B2_EXPORT IEditorModule* GetEditorModule2();
-ED_B2_EXPORT IEditorModule* GetEditorModule3();
-ED_B2_EXPORT IEditorModule* GetEditorModule4();
-
+ED_B2_M1_EXPORT IEditorModule *GetEditorModule1();
+ED_B2_EXPORT IEditorModule *GetEditorModule2();
+ED_B2_EXPORT IEditorModule *GetEditorModule3();
+ED_B2_EXPORT IEditorModule *GetEditorModule4();
 
 class CEditorAppSpecific : public CEditorApp
 {
-	std::vector<IEditorModule*> extModules;
+	std::vector<IEditorModule *> extModules;
+
 public:
 	bool Initialize( const std::vector<std::string> &rArgs ) override;
 
 	void LoadMapEditorModule( const std::string &szModuleName );
 	void UnloadMapEditorModule();
-	const std::vector<IEditorModule*>& GetEditorModules();
+	const std::vector<IEditorModule *> &GetEditorModules();
 	bool GameXInitialize() { return NGameX::Initialize(); }
 	void GameXPostStorageInitialize()
 	{
 		NGameX::PostStorageInitialize();
-		if ( NGlobal::GetVar("delete_removed_object", 0) != 0 )
+		if ( NGlobal::GetVar( "delete_removed_object", 0 ) != 0 )
 			NDb::AddDbObserver( NDb::CreateVFSDbObserver() );
 	}
 	void CreateMenus( IMainFrame *pMainFrame ) const;
 };
-
 
 void CEditorAppSpecific::LoadMapEditorModule( const std::string &szModuleName ) // "c:\\b2\\system\\b2.dle"
 {
@@ -86,12 +85,10 @@ void CEditorAppSpecific::LoadMapEditorModule( const std::string &szModuleName ) 
 	DebugTrace( "EditorApp() ModuleStartup(): %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-
-const std::vector<IEditorModule*>& CEditorAppSpecific::GetEditorModules()
+const std::vector<IEditorModule *> &CEditorAppSpecific::GetEditorModules()
 {
 	return extModules;
 }
-
 
 void CEditorAppSpecific::UnloadMapEditorModule()
 {
@@ -105,7 +102,6 @@ void CEditorAppSpecific::UnloadMapEditorModule()
 	//
 	DebugTrace( "EditorApp() ModuleShutdown(): %g", NHPTimer::GetTimePassed( &time ) );
 }
-
 
 bool CEditorAppSpecific::Initialize( const std::vector<std::string> &rArgs )
 {
@@ -121,7 +117,6 @@ bool CEditorAppSpecific::Initialize( const std::vector<std::string> &rArgs )
 	return CEditorApp::Initialize( rArgs );
 }
 
-
 void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 {
 	std::vector<unsigned> nIDs;
@@ -136,11 +131,10 @@ void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 // drives it: see WxHost.h.
 namespace
 {
-	CEditorAppSpecific theEditorApp;
+CEditorAppSpecific theEditorApp;
 }
 
-
-CEditorApp& NWxHost::GetEditorApp()
+CEditorApp &NWxHost::GetEditorApp()
 {
 	return theEditorApp;
 }

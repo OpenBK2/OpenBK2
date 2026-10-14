@@ -11,13 +11,13 @@ struct SLoadVertexWeight
 	int nBone;
 };
 
-inline void ConvertWeights( std::vector<SVertexWeight> *pRes, const std::vector<SLoadVertexWeight> &wghts,
-	int nVertices )
+inline void
+ConvertWeights( std::vector<SVertexWeight> *pRes, const std::vector<SLoadVertexWeight> &wghts, int nVertices )
 {
 	std::vector<SVertexWeight> &r = *pRes;
 	// convert weights
 	r.resize( nVertices );
-	memset( &r[0], 0, sizeof(SVertexWeight) * nVertices );
+	memset( &r[0], 0, sizeof( SVertexWeight ) * nVertices );
 
 	int nMax = nVertices;
 	int nCount = wghts.size();

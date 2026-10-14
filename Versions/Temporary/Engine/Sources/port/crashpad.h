@@ -131,8 +131,7 @@ inline bool InitCrashpad( const char *application = "OpenBK2", const char *build
 			database = OpenDatabase( state.databasePath );
 		}
 
-		const std::string paths = "; handler=" + handler.u8string()
-			+ "; database=" + state.databasePath.u8string();
+		const std::string paths = "; handler=" + handler.u8string() + "; database=" + state.databasePath.u8string();
 		std::error_code error;
 		if ( !database )
 			state.status = "Crashpad disabled: cannot create a writable report database" + paths;
@@ -145,8 +144,14 @@ inline bool InitCrashpad( const char *application = "OpenBK2", const char *build
 			// All paths are absolute: shortcuts and editor dialogs can use or
 			// change the working directory. No metrics directory is needed.
 			state.ready = state.client.StartHandler( base::FilePath( handler.native() ),
-				base::FilePath( state.databasePath.native() ), base::FilePath(), "", "",
-				{ { "product", application }, { "build", build } }, {}, true, false );
+			                                         base::FilePath( state.databasePath.native() ),
+			                                         base::FilePath(),
+			                                         "",
+			                                         "",
+			                                         { { "product", application }, { "build", build } },
+			                                         {},
+			                                         true,
+			                                         false );
 			state.status = ( state.ready ? "Crashpad enabled" : "Crashpad disabled: handler startup failed" ) + paths;
 #if BOOST_COMP_MSVC
 			if ( state.ready )

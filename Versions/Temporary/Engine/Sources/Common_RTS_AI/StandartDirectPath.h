@@ -8,26 +8,40 @@ class CStandartDirectPath : public IPath
 {
 	OBJECT_NOCOPY_METHODS( CStandartDirectPath )
 	ZDATA
-		int nCurrentTile = 0;
-		std::vector<SVector> tiles;
-		float fTileSize = 0.0f;
-		CVec2 vStartPoint;
-		CVec2 vFinishPoint;
+	int nCurrentTile = 0;
+	std::vector<SVector> tiles;
+	float fTileSize = 0.0f;
+	CVec2 vStartPoint;
+	CVec2 vFinishPoint;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCurrentTile); f.Add(3,&tiles); f.Add(4,&fTileSize); f.Add( 5,&vStartPoint); f.Add( 6, &vFinishPoint); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nCurrentTile );
+		f.Add( 3, &tiles );
+		f.Add( 4, &fTileSize );
+		f.Add( 5, &vStartPoint );
+		f.Add( 6, &vFinishPoint );
+		return 0;
+	}
+
 private:
 	const CVec2 GetPoint( const SVector &tile ) const { return CVec2( tile.x * fTileSize, tile.y * fTileSize ); }
+
 public:
 	CStandartDirectPath() : nCurrentTile( -1 ), fTileSize( 0.0f ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ) {}
 	void Init( const std::vector<SVector> &tiles, const int nTileSize );
 
 	bool IsFinished() const { return nCurrentTile == tiles.size(); }
 
-	const CVec2 PeekPoint( const int nShift ) const { return GetPoint( tiles[(std::min<int>)( nCurrentTile + nShift, tiles.size()-1 )] ); }
+	const CVec2 PeekPoint( const int nShift ) const
+	{
+		return GetPoint( tiles[(std::min<int>)( nCurrentTile + nShift, tiles.size() - 1 )] );
+	}
 	void Shift( const int nShift ) { nCurrentTile = (std::min<int>)( nCurrentTile + nShift, tiles.size() ); }
 
-	const CVec2& GetFinishPoint() const { return vFinishPoint; }
-	const CVec2& GetStartPoint() const { return vStartPoint; }
+	const CVec2 &GetFinishPoint() const { return vFinishPoint; }
+	const CVec2 &GetStartPoint() const { return vStartPoint; }
 
 	//! восстановить путь из новой точки ( vPoint )
 	void RecoverPath( const CVec2 &vPoint, const bool bIsPointAtWater, const SVector &vLastKnownGoodTile ) {}

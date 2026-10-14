@@ -7,5 +7,5 @@ struct IClientUpdatableProcess : public CObjectBase
 
 namespace NUpdatableProcess
 {
-	void Register( IClientUpdatableProcess *pProcess );
+void Register( IClientUpdatableProcess *pProcess );
 }

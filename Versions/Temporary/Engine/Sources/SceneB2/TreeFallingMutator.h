@@ -34,11 +34,21 @@ class CTreeFallingMutator : public ITreeFallingMutator
 	float GetCoeffForTime( int nTime );
 	void TransformRootBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot );
 	void TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot );
+
 public:
 	CTreeFallingMutator() : bFinished( false ) {}
 
-	void Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot, const std::vector<std::string> &leafNames,
-							int _nEffectID, const CVec3 &vPos, float _fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart );
+	void Setup( ISkeletonAnimator *pAnimator,
+	            const CVec2 &vDir,
+	            float _fEndAngle,
+	            const CQuat &qRot,
+	            const std::vector<std::string> &leafNames,
+	            int _nEffectID,
+	            const CVec3 &vPos,
+	            float _fEffectHeight,
+	            float fFallCycles,
+	            int nFallDuration,
+	            NTimer::STime timeStart );
 	bool NeedUpdate() { return !bFinished; }
 	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
 

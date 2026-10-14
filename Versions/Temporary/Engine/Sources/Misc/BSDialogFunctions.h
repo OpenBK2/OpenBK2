@@ -20,13 +20,15 @@ void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entr
 bool SetWindowText( HWND hwndDlg, const int nElementID, const char *pszString );
 //bool SetWindowText( HWND hwndDlg, const int nElementID, const int nValue );
 
-void* SetWindowUserData( HWND hwndDlg, const int nElementID, void *pUserData );
-void* GetWindowUserData( HWND hwndDlg, const int nElementID );
-void* SetDlgUserData( HWND hwndDlg, void *pUserData );
-void* GetDlgUserData( HWND hwndDlg );
+void *SetWindowUserData( HWND hwndDlg, const int nElementID, void *pUserData );
+void *GetWindowUserData( HWND hwndDlg, const int nElementID );
+void *SetDlgUserData( HWND hwndDlg, void *pUserData );
+void *GetDlgUserData( HWND hwndDlg );
 
 //int GetCheckButtonState( HWND hwndDlg, const int nElementID );
 
-void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription,
-	const std::vector<SCallStackEntry> &entries );
+void WriteReportToFile( const char *pszFileName,
+                        const char *pszCondition,
+                        const char *pszDescription,
+                        const std::vector<SCallStackEntry> &entries );
 }

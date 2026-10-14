@@ -10,18 +10,19 @@
 
 extern NTimer::STime curTime;
 
-CFreeFireManager::CFreeFireManager( CCommonUnit *pOwner )
-: shootInfo( 2 * pOwner->GetNGuns() ), lastCheck( 0 )
-{
-}
+CFreeFireManager::CFreeFireManager( CCommonUnit *pOwner ) : shootInfo( 2 * pOwner->GetNGuns() ), lastCheck( 0 ) {}
 
 void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 {
 	if ( curTime - lastCheck >= TIME_TO_CHECK )
 	{
-		const int nRandom = NRandom::Random( 0, 300 ); RecordRandomCall();
+		const int nRandom = NRandom::Random( 0, 300 );
+		RecordRandomCall();
 		if ( nRandom < curTime )
-			{ lastCheck = curTime - NRandom::Random( 0, 500 ); RecordRandomCall(); }
+		{
+			lastCheck = curTime - NRandom::Random( 0, 500 );
+			RecordRandomCall();
+		}
 		else
 			lastCheck = curTime;
 
@@ -35,7 +36,7 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 
 			// нельзя анализировать
 			if ( pGun->IsCommonEqual( pActiveGun ) || pGun->IsCommonGunFiring() ||
-				pGun->GetGun().nPriority == 0 && !pUnit->IsIdle() && !pUnit->CanShootInMovement() || pGun->GetNAmmo() == 0 )
+			     pGun->GetGun().nPriority == 0 && !pUnit->IsIdle() && !pUnit->CanShootInMovement() || pGun->GetNAmmo() == 0 )
 			{
 				dwForbidden |= ( 1 << i );
 				++nTriedGuns;
@@ -45,9 +46,11 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 		while ( nTriedGuns < pUnit->GetNGuns() )
 		{
 			pUnit->ResetShootEstimator( 0, false, dwForbidden );
-			for ( CUnitsIter<1,3> iter( pUnit->GetParty(), EDI_ENEMY, pUnit->GetCenterPlain(), fSightRadius ); !iter.IsFinished(); iter.Iterate() )
+			for ( CUnitsIter<1, 3> iter( pUnit->GetParty(), EDI_ENEMY, pUnit->GetCenterPlain(), fSightRadius );
+			      !iter.IsFinished();
+			      iter.Iterate() )
 			{
-				if ( (*iter)->IsAlive() && (*iter)->IsNoticableByUnit( pUnit, fSightRadius ) )
+				if ( ( *iter )->IsAlive() && ( *iter )->IsNoticableByUnit( pUnit, fSightRadius ) )
 					pUnit->AddUnitToShootEstimator( *iter );
 			}
 
@@ -78,7 +81,8 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 
 bool CFreeFireManager::SShotInfo::NeedAim( CAIUnit *pNewTarget, CBasicGun *pGun ) const
 {
-	return pNewTarget != pTarget || shootingPos != pNewTarget->GetCenterPlain() || unitDir != pNewTarget->GetFrontDirection() || gunDir != pGun->GetGlobalDir();
+	return pNewTarget != pTarget || shootingPos != pNewTarget->GetCenterPlain() ||
+	       unitDir != pNewTarget->GetFrontDirection() || gunDir != pGun->GetGlobalDir();
 }
 
 void CFreeFireManager::SShotInfo::SetInfo( CAIUnit *pNewTarget, CBasicGun *pGun )

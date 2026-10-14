@@ -15,7 +15,8 @@ static inline float CyclicClamp( const float fValue, const float fMin, const flo
 		return fMin + fmod( fValue - fMin, fMax - fMin );
 }
 
-float IncrementValue( float fCurrValue, float fAdd, const SLimit &limit, float fTimeDiff, const bool bAutoPositioning, bool bFreeCamera )
+float IncrementValue(
+		float fCurrValue, float fAdd, const SLimit &limit, float fTimeDiff, const bool bAutoPositioning, bool bFreeCamera )
 {
 	fTimeDiff *= 0.001f;
 	float fResult = 0;
@@ -45,27 +46,23 @@ float IncrementValue( float fCurrValue, float fAdd, const SLimit &limit, float f
 }
 
 CCameraBasicMouseMutator::CCameraBasicMouseMutator()
-	:	vAnchor( VNULL3 ),
-	sliderFwd( "camera_forward" ),
-	sliderStrafe( "camera_strafe" ),
-	sliderZoom( "camera_zoom" ),
-	sliderPitch( "camera_pitch" ),
-	sliderYaw( "camera_yaw" ),
-	sliderMouseForward( "camera_mouse_forward" ),
-	sliderMouseStrafe( "camera_mouse_strafe" ),
-	sliderMousePitch( "camera_mouse_pitch" ),
-	sliderMouseYaw( "camera_mouse_yaw" ),
-	sliderMouseZoom( "camera_mouse_zoom" ),
-	fScrollSpeedX( 0 ),
-	fScrollSpeedY( 0 ),
-	fYawSpeed( 0.0f )
+		: vAnchor( VNULL3 ), sliderFwd( "camera_forward" ), sliderStrafe( "camera_strafe" ), sliderZoom( "camera_zoom" ),
+			sliderPitch( "camera_pitch" ), sliderYaw( "camera_yaw" ), sliderMouseForward( "camera_mouse_forward" ),
+			sliderMouseStrafe( "camera_mouse_strafe" ), sliderMousePitch( "camera_mouse_pitch" ),
+			sliderMouseYaw( "camera_mouse_yaw" ), sliderMouseZoom( "camera_mouse_zoom" ), fScrollSpeedX( 0 ),
+			fScrollSpeedY( 0 ), fYawSpeed( 0.0f )
 {
 	//
 	rcAnchorLimit.SetEmpty();
 
 	distanceLimit.SetLimit( 10, 1000, 170, 0, 50, false );
-	pitchLimit.SetLimit( ToRadian(180.0f + 90.0f - 89.0f), ToRadian(180.0f + 90.0f - 89.0f), ToRadian(180.0f + 90.0f - 50.0f), 0, ToRadian(180.0f + 20.0f), false );
-	yawLimit.SetLimit( ToRadian(-135.0f), ToRadian(-135.0f), ToRadian(45.0f), 0, ToRadian(30.0f), false );
+	pitchLimit.SetLimit( ToRadian( 180.0f + 90.0f - 89.0f ),
+	                     ToRadian( 180.0f + 90.0f - 89.0f ),
+	                     ToRadian( 180.0f + 90.0f - 50.0f ),
+	                     0,
+	                     ToRadian( 180.0f + 20.0f ),
+	                     false );
+	yawLimit.SetLimit( ToRadian( -135.0f ), ToRadian( -135.0f ), ToRadian( 45.0f ), 0, ToRadian( 30.0f ), false );
 	//
 	ResetToDefault();
 	//
@@ -86,43 +83,39 @@ void CCameraBasicMouseMutator::SetLimits( const NCamera::ELimitsType eLimitsType
 	{
 		case NCamera::CAMERA_LIMITS_YAW:
 		{
-			yawLimit.SetLimit( ToRadian(limits.fMin),
-												ToRadian(limits.fMax),
-												ToRadian(limits.fAve),
-												ToRadian(limits.fAutoSpeed),
-												ToRadian(limits.fManualSpeed),
-												limits.bCyclic );
+			yawLimit.SetLimit( ToRadian( limits.fMin ),
+			                   ToRadian( limits.fMax ),
+			                   ToRadian( limits.fAve ),
+			                   ToRadian( limits.fAutoSpeed ),
+			                   ToRadian( limits.fManualSpeed ),
+			                   limits.bCyclic );
 			fYaw = yawLimit.fAve;
 			break;
 		}
 		//
 		case NCamera::CAMERA_LIMITS_PITCH:
 		{
-			pitchLimit.SetLimit( ToRadian(90.0f - limits.fMax),
-													ToRadian(90.0f - limits.fMin),
-													ToRadian(90.0f - limits.fAve),
-													ToRadian(limits.fAutoSpeed),
-													ToRadian(limits.fManualSpeed),
-													limits.bCyclic );
+			pitchLimit.SetLimit( ToRadian( 90.0f - limits.fMax ),
+			                     ToRadian( 90.0f - limits.fMin ),
+			                     ToRadian( 90.0f - limits.fAve ),
+			                     ToRadian( limits.fAutoSpeed ),
+			                     ToRadian( limits.fManualSpeed ),
+			                     limits.bCyclic );
 			fPitch = pitchLimit.fAve + ToRadian( 180.0f );
 			break;
 		}
 		//
 		case NCamera::CAMERA_LIMITS_DISTANCE:
 		{
-			distanceLimit.SetLimit( limits.fMin,
-															limits.fMax,
-															limits.fAve,
-															limits.fAutoSpeed,
-															limits.fManualSpeed,
-															limits.bCyclic );
+			distanceLimit.SetLimit(
+					limits.fMin, limits.fMax, limits.fAve, limits.fAutoSpeed, limits.fManualSpeed, limits.bCyclic );
 			SetDistance( distanceLimit.fAve );
 			break;
 		}
 		//
 		default:
 		{
-			NI_ASSERT( false, fmt::format("Unknown limits type {}", int( eLimitsType )) );
+			NI_ASSERT( false, fmt::format( "Unknown limits type {}", int( eLimitsType ) ) );
 		}
 	}
 }
@@ -190,8 +183,8 @@ void CCameraBasicMouseMutator::SwitchManualScrolling( const std::string &szLocke
 
 const CVec3 CCameraBasicMouseMutator::GetListener() const
 {
-	const float fScreenWidth = fDistance * tan( ToRadian(fFOV/2.0f) );
-	const float fHeight = fDistance * atan( ToRadian(fFOV/2.0f) );
+	const float fScreenWidth = fDistance * tan( ToRadian( fFOV / 2.0f ) );
+	const float fHeight = fDistance * atan( ToRadian( fFOV / 2.0f ) );
 
 	CVec3 vDir( vAnchor - vPosition );
 	vDir.z = 0;
@@ -236,7 +229,7 @@ void CCameraBasicMouseMutator::ClearSliders()
 
 int CCameraBasicMouseMutator::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CCameraPlacement *>(this) );
+	saver.Add( 1, static_cast<CCameraPlacement *>( this ) );
 	saver.Add( 2, &vAnchor );
 	saver.Add( 3, &fDistance );
 	saver.Add( 4, &bAutoPositioning );

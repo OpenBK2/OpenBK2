@@ -68,7 +68,7 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 					if ( nMission == 0 )
 					{
 						float fAngle = ToRadian( pChapter->fMainStrikeAngle );
-						CVec2 vDir( cosf( fAngle ), sinf( fAngle) );
+						CVec2 vDir( cosf( fAngle ), sinf( fAngle ) );
 						vMainStrike = vDir * pChapter->fMainStrikePower;
 					}
 					break;
@@ -81,10 +81,10 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 			{
 				const NDb::SVSOInstance &road = pDetailsMap->roads[nRoad];
 
-				if ( road.nCMArrowMission/*points[0].fReserved*/ != nMission )
+				if ( road.nCMArrowMission /*points[0].fReserved*/ != nMission )
 					continue;
 
-				int nArrowIndex = road.nCMArrowType/*road.points[0].fRadius*/;
+				int nArrowIndex = road.nCMArrowType /*road.points[0].fRadius*/;
 				if ( pChapter )
 				{
 					if ( nArrowIndex >= 0 && nArrowIndex < pChapter->arrowTextures.size() )
@@ -101,18 +101,18 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 						for ( int i = 0; i < road.points.size(); ++i )
 						{
 							arrow.points[i] = Map2Screen( road.points[i].vPos );
-							arrow.rcBounds.Union( CTRect<float>( arrow.points[i].x, arrow.points[i].y,
-								arrow.points[i].x + 1, arrow.points[i].y + 1 ) );
+							arrow.rcBounds.Union(
+									CTRect<float>( arrow.points[i].x, arrow.points[i].y, arrow.points[i].x + 1, arrow.points[i].y + 1 ) );
 						}
 						arrow.fWidth = road.points[0].fWidth / 4;
 						arrow.rcBounds.Inflate( arrow.fWidth * 0.5f, arrow.fWidth * 0.5f );
 
 						arrow.nDependIndex = -1;
-						if ( nMission == 0 )		// Analyze small missions, display only completed arrows
+						if ( nMission == 0 ) // Analyze small missions, display only completed arrows
 						{
-							if ( road.nCMArrowMission2/*points[1].fReserved*/ > 0 )
+							if ( road.nCMArrowMission2 /*points[1].fReserved*/ > 0 )
 							{
-								arrow.nDependIndex = road.nCMArrowMission2/*points[1].fReserved*/;
+								arrow.nDependIndex = road.nCMArrowMission2 /*points[1].fReserved*/;
 							}
 						}
 					}
@@ -164,7 +164,7 @@ void SChapterMapMenuHelper::UpdateArrow( NDb::SMapInfo *pDetailsMap, SArrow *pAr
 		}
 		pArrow->vDelta = VNULL2;
 
-/*		if ( pRoad->points.size() >= 2 )
+		/*		if ( pRoad->points.size() >= 2 )
 		{
 			pRoad->nCMArrowType = pRoad->points[0].fRadius;
 			pRoad->nCMArrowMission = pRoad->points[0].fReserved;
@@ -200,7 +200,7 @@ void SChapterMapMenuHelper::ReReadPotentials()
 			if ( pDetailsMap->objects[i].nPlayer == nMission )
 			{
 				float fAngle = ToRadian( pChapter->fMainStrikeAngle );
-				CVec2 vDir( cosf( fAngle ), sinf( fAngle) );
+				CVec2 vDir( cosf( fAngle ), sinf( fAngle ) );
 				vMainStrike = vDir * pChapter->fMainStrikePower;
 				break;
 			}

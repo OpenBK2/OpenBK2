@@ -57,12 +57,15 @@ int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 // unregister group
 void CCommandsSender::CommandUnregisterGroup( const uint16_t wGroup )
 {
-//	if ( !bHistoryPlaying )
-//		pTransciver->SendCommand( new CUnregisterGroupCommand( wGroup ) );
+	//	if ( !bHistoryPlaying )
+	//		pTransciver->SendCommand( new CUnregisterGroupCommand( wGroup ) );
 }
 
 // send command to group of units
-void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue, const int nCommandSaveID )
+void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand,
+                                           const uint16_t wGroup,
+                                           bool bPlaceInQueue,
+                                           const int nCommandSaveID )
 {
 	if ( !bHistoryPlaying )
 	{
@@ -70,12 +73,12 @@ void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const uin
 
 		if ( !bPlaceInQueue && !pCommand->bFromExplosion )
 		{
-			if ( !bGroupChanged && pCommand->nCmdType == lastCommand.nCmdType
-				&& pCommand->nObjectID == lastCommand.nObjectID && pCommand->nNumber == lastCommand.nNumber
-				&& pCommand->fNumber == lastCommand.fNumber )
+			if ( !bGroupChanged && pCommand->nCmdType == lastCommand.nCmdType &&
+			     pCommand->nObjectID == lastCommand.nObjectID && pCommand->nNumber == lastCommand.nNumber &&
+			     pCommand->fNumber == lastCommand.fNumber )
 			{
-				if ( fabs( pCommand->vPos - lastCommand.vPos ) < MIN_DISTANCE_BETWEEN_DIFFERENT_COMMANDS
-					&& curTime - lastCommandTime < MIN_TIME_BETWEEN_DIFFERENT_COMMANDS )
+				if ( fabs( pCommand->vPos - lastCommand.vPos ) < MIN_DISTANCE_BETWEEN_DIFFERENT_COMMANDS &&
+				     curTime - lastCommandTime < MIN_TIME_BETWEEN_DIFFERENT_COMMANDS )
 				{
 					bLastCommandSkipped = true;
 					return;
@@ -90,7 +93,8 @@ void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const uin
 		cmd.bFromAI = false;
 
 #ifndef _FINALRELEASE
-		if ( NGlobal::GetVar( "m1", 0 ) == 0 && NGlobal::GetVar( "autosave_enable", 0 ) ) {
+		if ( NGlobal::GetVar( "m1", 0 ) == 0 && NGlobal::GetVar( "autosave_enable", 0 ) )
+		{
 			const auto command = fmt::format( "autosave_{:04d}", ++AUTOSAVE_ID );
 			NMainLoop::Command( nCommandSaveID, command.c_str() );
 		}

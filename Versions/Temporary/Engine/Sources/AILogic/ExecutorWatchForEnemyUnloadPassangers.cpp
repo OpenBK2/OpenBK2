@@ -27,16 +27,17 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 		else // scan for enemies
 		{
 			const int nParty = pUnit->GetParty();
-			for ( CUnitsIter<1,3> iter( nParty, EDI_ENEMY, pUnit->GetCenterPlain(), pUnit->GetSightRadius() ); !iter.IsFinished(); iter.Iterate() )
+			for ( CUnitsIter<1, 3> iter( nParty, EDI_ENEMY, pUnit->GetCenterPlain(), pUnit->GetSightRadius() );
+			      !iter.IsFinished();
+			      iter.Iterate() )
 			{
-				CAIUnit * pEnemy = *iter;
+				CAIUnit *pEnemy = *iter;
 				if ( pEnemy->IsRefValid() && pEnemy->IsAlive() && pEnemy->IsVisible( nParty ) &&
-						 !pEnemy->GetStats()->IsAviation() && pEnemy->IsFree() &&
-							pEnemy->GetState()->GetName() != EUSN_PARTROOP )
+				     !pEnemy->GetStats()->IsAviation() && pEnemy->IsFree() && pEnemy->GetState()->GetName() != EUSN_PARTROOP )
 				{
 					// unload passengers
 
-					std::map<int, bool> formations;	// use regular std::map for beter determinism
+					std::map<int, bool> formations; // use regular std::map for beter determinism
 					for ( int i = 0; i < pUnit->GetNPassengers(); ++i )
 					{
 						CSoldier *pPass = pUnit->GetPassenger( i );

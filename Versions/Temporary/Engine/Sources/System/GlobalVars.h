@@ -11,7 +11,6 @@
 
 #include <fmt/format.h>
 
-
 // func is called on var set or cmd call
 #define REGISTER_CMD( var, func ) NGlobal::RegisterCmd( var, func, 0 );
 #define REGISTER_VAR( var, func, defval, save ) NGlobal::RegisterVar( var, func, 0, defval, save );
@@ -34,15 +33,24 @@ class CValue
 	ZDATA
 	float fVal = 0.0f;
 	std::wstring szVal;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fVal); f.Add(3,&szVal); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &fVal );
+		f.Add( 3, &szVal );
+		return 0;
+	}
+
 private:
 	//
 
-	void SetVal (std::string_view s) {
+	void SetVal( std::string_view s )
+	{
 		szVal.resize( s.length() );
 		copy( s.data(), s.data() + s.length(), szVal.begin() );
 	}
+
 public:
 	// Parse the leading number out of a string the way atof did, but without
 	// the locale dependency and without exceptions. from_chars is the only
@@ -80,23 +88,27 @@ public:
 	CValue() : fVal( 0 ) {}
 	CValue( float _fVal ) : fVal( _fVal ) { SetVal( fmt::format( "{:g}", _fVal ).c_str() ); }
 	CValue( int _n ) : fVal( _n ) { SetVal( fmt::format( "{:g}", fVal ).c_str() ); }
-	CValue( const std::wstring &_szVal )	: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ), szVal( _szVal ) {}
-	CValue( const wchar_t *pszVal )	: fVal( ParseFloat( pszVal, wcslen( pszVal ) ) ), szVal(pszVal) {}
-	CValue( const std::string &_szVal )	: fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ) { SetVal( _szVal.c_str() ); }
-	CValue( const char *pszVal )	: fVal( ParseFloat( pszVal, strlen( pszVal ) ) ) { SetVal( pszVal ); }
+	CValue( const std::wstring &_szVal ) : fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) ), szVal( _szVal ) {}
+	CValue( const wchar_t *pszVal ) : fVal( ParseFloat( pszVal, wcslen( pszVal ) ) ), szVal( pszVal ) {}
+	CValue( const std::string &_szVal ) : fVal( ParseFloat( _szVal.c_str(), _szVal.size() ) )
+	{
+		SetVal( _szVal.c_str() );
+	}
+	CValue( const char *pszVal ) : fVal( ParseFloat( pszVal, strlen( pszVal ) ) ) { SetVal( pszVal ); }
 
 	float GetFloat() const { return fVal; }
-	const std::wstring& GetString() const { return szVal; }
+	const std::wstring &GetString() const { return szVal; }
 
 	operator float() const { return fVal; }
 	operator std::wstring() const { return szVal; }
 };
 
-typedef void (*VarHandler)( const std::string &szID, const CValue &sValue, void *pContext );
-typedef void (*CmdHandler)( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
+typedef void ( *VarHandler )( const std::string &szID, const CValue &sValue, void *pContext );
+typedef void ( *CmdHandler )( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
 
 SYSTEM_EXPORT int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext );
-SYSTEM_EXPORT int RegisterVar( const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage );
+SYSTEM_EXPORT int RegisterVar(
+		const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage );
 void UnregisterCmd( const std::string &szID, int nID );
 void UnregisterVar( const std::string &szID, int nID );
 SYSTEM_EXPORT void RemoveVar( const std::string &szID );
@@ -104,7 +116,7 @@ SYSTEM_EXPORT void RemoveVar( const std::string &szID );
 SYSTEM_EXPORT const CValue &GetVar( const std::string &szName, const CValue &sDefault = CValue() );
 SYSTEM_EXPORT void SetVar( const std::string &szName, const CValue &sValue, EStorageClass storage = STORAGE_DONT_CARE );
 SYSTEM_EXPORT void GetIDList( std::vector<std::string> *pList );
-SYSTEM_EXPORT void GetVarsByClass( std::vector< std::pair<std::string, CValue> > *pList, EStorageClass eStorageClass );
+SYSTEM_EXPORT void GetVarsByClass( std::vector<std::pair<std::string, CValue>> *pList, EStorageClass eStorageClass );
 
 SYSTEM_EXPORT void ProcessCommand( const std::wstring &szCmd );
 SYSTEM_EXPORT void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage = STORAGE_DONT_CARE );

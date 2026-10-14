@@ -69,7 +69,6 @@ void CGroupLogic::AddUnitToGroup( CCommonUnit *pGroupUnit, const int nGroup )
 		pGroupUnit->nGroup = nGroup;
 		pGroupUnit->nPos = groupUnits.Push( nGroup, pGroupUnit );
 	}
-
 }
 
 void CGroupLogic::DelUnitFromGroup( CCommonUnit *pUnit )
@@ -133,10 +132,10 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 	int nAvia = 0;
 	for ( int i = 0; i < nLen; ++i )
 	{
-		CCommonUnit *pCommonUnit = dynamic_cast<CCommonUnit*>( pUnitsBuffer[i] );
+		CCommonUnit *pCommonUnit = dynamic_cast<CCommonUnit *>( pUnitsBuffer[i] );
 		if ( pCommonUnit && !pCommonUnit->IsFormation() )
 		{
-			CAIUnit * pAIUnit = checked_cast<CAIUnit*>( pCommonUnit );
+			CAIUnit *pAIUnit = checked_cast<CAIUnit *>( pCommonUnit );
 			if ( pAIUnit->GetStats()->IsAviation() )
 			{
 				vPos += pAIUnit->GetCenterPlain();
@@ -148,7 +147,7 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 		vPos /= nAvia;
 	for ( int i = 0; i < nAvia; ++i )
 	{
-		CAIUnit * pAvia = dynamic_cast<CAIUnit*>( pUnitsBuffer[aviaIndexes[i]] );
+		CAIUnit *pAvia = dynamic_cast<CAIUnit *>( pUnitsBuffer[aviaIndexes[i]] );
 		CVec2 vShift( pAvia->GetCenterPlain() - vPos );
 		if ( fabs( vShift ) > 1000 )
 		{
@@ -173,9 +172,9 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 
 	for ( int i = 0; i < nLen; ++i )
 	{
-		if ( pUnitsBuffer[i] != 0 && dynamic_cast<CCommonUnit*>(pUnitsBuffer[i]) != 0 )
+		if ( pUnitsBuffer[i] != 0 && dynamic_cast<CCommonUnit *>( pUnitsBuffer[i] ) != 0 )
 		{
-			CCommonUnit *pUnit = checked_cast<CCommonUnit*>( pUnitsBuffer[i] );
+			CCommonUnit *pUnit = checked_cast<CCommonUnit *>( pUnitsBuffer[i] );
 			CArtillery *pArtillery = dynamic_cast<CArtillery *>( pUnit );
 			const bool bNotHookedArtillery = pArtillery == 0 || !pArtillery->IsBeingHooked();
 			if ( pUnit->IsRefValid() && pUnit->IsAlive() && bNotHookedArtillery )
@@ -200,8 +199,8 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 
 void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup )
 {
-	typedef CObjectBase* LPObjectBase;
-	LPObjectBase *objects = new LPObjectBase[ vIDs.size() ];
+	typedef CObjectBase *LPObjectBase;
+	LPObjectBase *objects = new LPObjectBase[vIDs.size()];
 	// for planes calculate group shift
 
 	CVec2 vPos = VNULL2;
@@ -242,14 +241,13 @@ void CGroupLogic::UnregisterGroup( const uint16_t wGroup )
 	}
 	if ( GetPlayerByGroupNumber( wGroup ) == theDipl.GetMyNumber() )
 		groupIds.Return( GetIdByGroupNumber( wGroup ) );
-
 }
 
 void CGroupLogic::DivideBySubGroups2( const SAIUnitCmd &command, const int nGroup )
 {
 	CVec2 vGroupCenter( VNULL2 );
 	int nCount = 0;
-  for ( int i = groupUnits.begin( nGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
+	for ( int i = groupUnits.begin( nGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
 	{
 		vGroupCenter += groupUnits.GetEl( i )->GetCenterPlain();
 		++nCount;
@@ -283,7 +281,7 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 	float fMinX = 1e10, fMaxX = -1e10, fMinY = 1e10, fMaxY = -1e10;
 	for ( int i = groupUnits.begin( nGroup ), n = 0; i != groupUnits.end(); i = groupUnits.GetNext( i ), ++n )
 	{
-		const CVec2& center = groupUnits.GetEl( i )->GetCenterPlain();
+		const CVec2 &center = groupUnits.GetEl( i )->GetCenterPlain();
 
 		fMinX = (std::min)( fMinX, center.x );
 		fMaxX = (std::max)( fMaxX, center.x );
@@ -298,8 +296,8 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 	std::vector<CVec2> centers( numRows * numColumns );
 	std::vector<int> nums( numRows * numColumns );
 
-	memset( &(centers[0]), 0, centers.size() * sizeof( SVector ) );
-	memset( &(nums[0]), 0, nums.size() * sizeof( int ) );
+	memset( &( centers[0] ), 0, centers.size() * sizeof( SVector ) );
+	memset( &( nums[0] ), 0, nums.size() * sizeof( int ) );
 
 	for ( int i = groupUnits.begin( nGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
 	{
@@ -325,7 +323,7 @@ void CGroupLogic::DivideBySubGroups( const SAIUnitCmd &command, const int nGroup
 		CCommonUnit *pUnit = groupUnits.GetEl( i );
 		pUnit->vShift = pUnit->GetCenterPlain() - centers[pUnit->nSubGroup];
 		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
-			command.nCmdType == ACTION_COMMAND_SWARM_TO )
+		     command.nCmdType == ACTION_COMMAND_SWARM_TO )
 		{
 			const CVec2 vAngle( NMath::Cos( command.fNumber ), NMath::Sin( command.fNumber ) );
 			pUnit->vShift ^= vAngle;
@@ -350,11 +348,11 @@ void CGroupLogic::CreateSpecialGroup( const uint16_t wGroup )
 
 			if ( pUnit->IsFormation() )
 			{
-				CFormation *pForm = checked_cast<CFormation *>(pUnit);
+				CFormation *pForm = checked_cast<CFormation *>( pUnit );
 				int nSold = pForm->Size();
-				for ( int i=0; i< nSold; ++i )
+				for ( int i = 0; i < nSold; ++i )
 				{
-					CSoldier *pSold = (*pForm)[i];
+					CSoldier *pSold = ( *pForm )[i];
 
 					DelUnitFromSpecialGroup( pSold );
 
@@ -401,17 +399,17 @@ void CGroupLogic::CreateAmbushGroup( const uint16_t wGroup )
 
 void CGroupLogic::SetToAmbush( CAmbushGroups::iterator &iter )
 {
-	std::list< std::pair<CCommonUnit*, int> > oldUnitsGroups;
+	std::list<std::pair<CCommonUnit *, int>> oldUnitsGroups;
 
 	std::vector<int> objects;
 	int nLen = 0;
 	for ( std::list<SAmbushInfo>::iterator innerIter = iter->begin(); innerIter != iter->end(); ++innerIter )
 	{
-		CCommonUnit *pUnit = checked_cast<CCommonUnit*>( CLinkObject::GetObjectByUniqueIdSafe( innerIter->nUniqueId ) );
+		CCommonUnit *pUnit = checked_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( innerIter->nUniqueId ) );
 		innerIter->bGivenCommandToRestore = false;
 		objects.push_back( pUnit->GetUniqueId() );
 
-		oldUnitsGroups.push_back( std::pair<CCommonUnit*, int>( pUnit, pUnit->GetNGroup() ) );
+		oldUnitsGroups.push_back( std::pair<CCommonUnit *, int>( pUnit, pUnit->GetNGroup() ) );
 	}
 
 	const int nGroup = GetSpecialGroupNumberByID( groupIds.Get() );
@@ -421,7 +419,8 @@ void CGroupLogic::SetToAmbush( CAmbushGroups::iterator &iter )
 	Singleton<IAILogic>()->GroupCommand( &command, nGroup, false );
 	Singleton<IAILogic>()->UnregisterGroup( nGroup );
 
-	for ( std::list< std::pair<CCommonUnit*, int> >::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end(); ++iter )
+	for ( std::list<std::pair<CCommonUnit *, int>>::iterator iter = oldUnitsGroups.begin(); iter != oldUnitsGroups.end();
+	      ++iter )
 		theGroupLogic.AddUnitToGroup( iter->first, iter->second );
 }
 
@@ -460,7 +459,7 @@ void CGroupLogic::ProcessAmbushGroups()
 				const int nUniqueId = innerIter->nUniqueId;
 				// уже в другой ambush группе, or deleted from ambush groups, удалить из этой
 				if ( checkedUnits.find( nUniqueId ) != checkedUnits.end() ||
-						 ambushUnits.find( nUniqueId ) == ambushUnits.end() )
+				     ambushUnits.find( nUniqueId ) == ambushUnits.end() )
 					innerIter = iter->erase( innerIter );
 				else
 				{
@@ -477,32 +476,33 @@ void CGroupLogic::ProcessAmbushGroups()
 					else
 					{
 						// unit alive, check if can be set to ambush
-						CCommonUnit *pUnit = checked_cast<CCommonUnit*>( pObject );
+						CCommonUnit *pUnit = checked_cast<CCommonUnit *>( pObject );
 
 						if ( pUnit->GetState() && innerIter->vAmbushCenter.x != -1.0f )
 						{
-							const bool bRest =
-								pUnit->GetState()->IsRestState() && pUnit->IsIdle() &&
-								( !pUnit->IsFormation() || checked_cast<CFormation*>(pUnit)->IsEveryUnitResting() );
+							const bool bRest = pUnit->GetState()->IsRestState() && pUnit->IsIdle() &&
+							                   ( !pUnit->IsFormation() || checked_cast<CFormation *>( pUnit )->IsEveryUnitResting() );
 
 							if ( bRest )
 							{
 								if ( !innerIter->bGivenCommandToRestore &&
-										 ( fabs2( pUnit->GetCenterPlain() - innerIter->vAmbushCenter ) >= sqr( SConsts::TILE_SIZE * 2 ) ||
-											 DirsDifference( pUnit->GetFrontDirection(), innerIter->wAmbushDir ) >= 3000 ) )
+								     ( fabs2( pUnit->GetCenterPlain() - innerIter->vAmbushCenter ) >= sqr( SConsts::TILE_SIZE * 2 ) ||
+								       DirsDifference( pUnit->GetFrontDirection(), innerIter->wAmbushDir ) >= 3000 ) )
 								{
 									innerIter->bGivenCommandToRestore = true;
-									UnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, innerIter->vAmbushCenter , 0 ), pUnit, false );
-									UnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO_DIR, GetVectorByDirection( innerIter->wAmbushDir ) ), pUnit, true );
+									UnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, innerIter->vAmbushCenter, 0 ), pUnit, false );
+									UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_ROTATE_TO_DIR, GetVectorByDirection( innerIter->wAmbushDir ) ),
+											pUnit,
+											true );
 
 									bCanSetToAmbush = false;
 								}
 								else
 								{
 									const int nParty = pUnit->GetParty();
-									bCanSetToAmbush =
-										bCanSetToAmbush && ( pUnit->GetLastChangeStateTime() + 5000 < curTime ) &&
-										nParty < 2 && !pUnit->IsVisible( 1 - nParty );
+									bCanSetToAmbush = bCanSetToAmbush && ( pUnit->GetLastChangeStateTime() + 5000 < curTime ) &&
+									                  nParty < 2 && !pUnit->IsVisible( 1 - nParty );
 								}
 							}
 							else
@@ -544,17 +544,16 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 	Singleton<IGameTimer>()->Pause( true, 0 );*/
 
 	// т.к. часть юнитов может исчезнуть, например, когда один из игроков в multiplayer вышел
- 	if ( registeredGroups.find( wGroup ) != registeredGroups.end() )
+	if ( registeredGroups.find( wGroup ) != registeredGroups.end() )
 	{
 		// пойти с сохранением относительной позиции
 		// Called strategic bombers use the internal point-bomb command, but still need group-relative shifts.
 		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
-					command.nCmdType == ACTION_COMMAND_SWARM_TO ||
-					command.nCmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
-					command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE ||
-					command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
-					command.nCmdType == ACTION_COMMAND_RESUPPLY_HR || command.nCmdType == ACTION_COMMAND_RESUPPLY ||
-					command.nCmdType == ACTION_COMMAND_REPAIR )
+		     command.nCmdType == ACTION_COMMAND_SWARM_TO || command.nCmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
+		     command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE ||
+		     command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
+		     command.nCmdType == ACTION_COMMAND_RESUPPLY_HR || command.nCmdType == ACTION_COMMAND_RESUPPLY ||
+		     command.nCmdType == ACTION_COMMAND_REPAIR )
 			DivideBySubGroups2( command, wGroup );
 		else
 		{
@@ -572,12 +571,12 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 			CreateAmbushGroup( wGroup );
 		}*/
 
-		std::vector<CCommonUnit*> groups( groupUnits.GetSize( wGroup ) );
+		std::vector<CCommonUnit *> groups( groupUnits.GetSize( wGroup ) );
 
 		int nGroupsIter = 0;
 		for ( int i = groupUnits.begin( wGroup ); i != groupUnits.end(); i = groupUnits.GetNext( i ) )
 			groups[nGroupsIter++] = groupUnits.GetEl( i );
-/*
+		/*
 		if ( command.nCmdType == ACTION_COMMAND_SWARM_TO )
 		{
 			string str = "ACTION_COMMAND_SWARM_TO: ";
@@ -594,9 +593,10 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 */
 		// этот рандом вызывать нужно независимо от command.bFromAI - для правильной работы
 		// мультиплера
-		if ( groupUnits.GetSize(wGroup) != 0 )
+		if ( groupUnits.GetSize( wGroup ) != 0 )
 		{
-			int nRandom = NRandom::Random( groupUnits.GetSize(wGroup) ); RecordRandomCall();
+			int nRandom = NRandom::Random( groupUnits.GetSize( wGroup ) );
+			RecordRandomCall();
 			if ( !command.bFromAI )
 			{
 				// выбрать по рандому юнит, который будет говорить аск на подтверждение команды
@@ -605,11 +605,12 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 		}
 
 		if ( command.nCmdType == ACTION_COMMAND_MOVE_TO_GRID )
-			ProcessGridCommand( command.vPos, CVec2( NMath::Cos(command.fNumber), NMath::Sin(command.fNumber) ), wGroup, bPlaceInQueue );
+			ProcessGridCommand(
+					command.vPos, CVec2( NMath::Cos( command.fNumber ), NMath::Sin( command.fNumber ) ), wGroup, bPlaceInQueue );
 		else
 		{
 			CPtr<CAICommand> pCommand = new CAICommand( command );
-			for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+			for ( std::vector<CCommonUnit *>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 			{
 				CCommonUnit *pUnit = *iter;
 				if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO && !pUnit->CanCommandBeExecuted( pCommand ) )
@@ -622,33 +623,32 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 			{
 				float fDesGroupSpeed = -1.0f;
 				if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
-					command.nCmdType == ACTION_COMMAND_SWARM_TO )
+				     command.nCmdType == ACTION_COMMAND_SWARM_TO )
 				{
 					const bool bReverseMove = command.nCmdType == ACTION_COMMAND_REVERSE_TO;
 					fDesGroupSpeed = FP_MAX_VALUE;
-					for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+					for ( std::vector<CCommonUnit *>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 					{
 						CCommonUnit *pUnit = *iter;
 						if ( bReverseMove && !pUnit->CanCommandBeExecuted( pCommand ) )
 							continue;
-						const float fCommandSpeed = bReverseMove ?
-							pUnit->GetMaxPossibleBackwardSpeed() : pUnit->GetMaxPossibleForwardSpeed();
+						const float fCommandSpeed =
+								bReverseMove ? pUnit->GetMaxPossibleBackwardSpeed() : pUnit->GetMaxPossibleForwardSpeed();
 						if ( pUnit->CanMove() && fCommandSpeed > 0.0f && fCommandSpeed < fDesGroupSpeed )
 							fDesGroupSpeed = fCommandSpeed;
 					}
 				}
-				for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+				for ( std::vector<CCommonUnit *>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 				{
-					if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO &&
-						!(*iter)->CanCommandBeExecuted( pCommand ) )
+					if ( command.nCmdType == ACTION_COMMAND_REVERSE_TO && !( *iter )->CanCommandBeExecuted( pCommand ) )
 						continue;
-					(*iter)->SetDesiredSpeed( fDesGroupSpeed );
+					( *iter )->SetDesiredSpeed( fDesGroupSpeed );
 				}
 			}
 
 			det_set<int> memFormationIDs;
 			//DebugTrace( "Command from AI: %s", pCommand->IsFromAI() ? "true" : "false" );
-			for ( std::vector<CCommonUnit*>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
+			for ( std::vector<CCommonUnit *>::iterator iter = groups.begin(); iter != groups.end(); ++iter )
 			{
 				CCommonUnit *pUnit = *iter;
 
@@ -658,10 +658,10 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 				bool bSendCommand = true;
 				if ( command.nCmdType == ACTION_COMMAND_FORM_FORMATION && pUnit->IsFormation() )
 				{
-					CFormation *pFormation = checked_cast<CFormation*>( pUnit );
-					if ( pFormation->Size() == 1 && (*pFormation)[0]->GetMemFormation() != 0 )
+					CFormation *pFormation = checked_cast<CFormation *>( pUnit );
+					if ( pFormation->Size() == 1 && ( *pFormation )[0]->GetMemFormation() != 0 )
 					{
-						const int nMemFormationID = (*pFormation)[0]->GetMemFormation()->GetUniqueId();
+						const int nMemFormationID = ( *pFormation )[0]->GetMemFormation()->GetUniqueId();
 						if ( memFormationIDs.find( nMemFormationID ) == memFormationIDs.end() )
 							memFormationIDs.insert( nMemFormationID );
 						else
@@ -676,7 +676,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 	}
 }
 
-void CGroupLogic::UnitCommand( const SAIUnitCmd &command, CCommonUnit *pGroupUnit, bool bPlaceInQueue  )
+void CGroupLogic::UnitCommand( const SAIUnitCmd &command, CCommonUnit *pGroupUnit, bool bPlaceInQueue )
 {
 	if ( pGroupUnit->IsAlive() )
 	{
@@ -696,7 +696,7 @@ void CGroupLogic::InsertUnitCommand( const SAIUnitCmd &command, CCommonUnit *pUn
 	pUnit->InsertUnitCommand( pCmd );
 }
 
-void CGroupLogic::PushFrontUnitCommand( const SAIUnitCmd &command, CCommonUnit *pUnit  )
+void CGroupLogic::PushFrontUnitCommand( const SAIUnitCmd &command, CCommonUnit *pUnit )
 {
 	CAICommand *pCmd = new CAICommand( command );
 	pUnit->PushFrontUnitCommand( pCmd );
@@ -722,7 +722,7 @@ void CGroupLogic::StayTimeSegment()
 
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
-		CAIUnit *pUnit = (*iter);
+		CAIUnit *pUnit = ( *iter );
 
 		if ( pUnit->IsRefValid() )
 			pUnit->AnimationSegment();
@@ -737,9 +737,9 @@ void CGroupLogic::Segment()
 	std::fesetround( FE_TONEAREST );
 
 	// states юнитов
-	NSegmObjs::Segment( lastSegmTime, roundedCurTime, segmUnits[0], (CStateSegments*)0 );
-	NSegmObjs::Segment( lastSegmTime, roundedCurTime, segmUnits[1], (CStateSegments*)0 );
-	NSegmObjs::Segment( lastSegmTime, roundedCurTime, freezeUnits, (CFreezeSegments*)0 );
+	NSegmObjs::Segment( lastSegmTime, roundedCurTime, segmUnits[0], (CStateSegments *)0 );
+	NSegmObjs::Segment( lastSegmTime, roundedCurTime, segmUnits[1], (CStateSegments *)0 );
+	NSegmObjs::Segment( lastSegmTime, roundedCurTime, freezeUnits, (CFreezeSegments *)0 );
 
 	// взрывы
 	theShellsStore.Segment();
@@ -748,7 +748,7 @@ void CGroupLogic::Segment()
 	SegmentFollowingUnits();
 
 	// поиск коллизий
-	NSegmObjs::Segment( lastSegmTime, roundedCurTime, firstPathUnits, (CFirstPathSegments*)0 );
+	NSegmObjs::Segment( lastSegmTime, roundedCurTime, firstPathUnits, (CFirstPathSegments *)0 );
 	theScanLimiter.SegmentsFinished();
 
 	// обработка застрявших из-за коллизий юнитов (это обрабатывается в CBasePathUnit::FirstSegment)
@@ -761,7 +761,7 @@ void CGroupLogic::Segment()
 
 	// движение юнитов вдоль пути
 	// inside CSecondPathSegments there is Float2Int is used, so we have to set processor control word
-	NSegmObjs::Segment( lastSegmTime, roundedCurTime, secondPathUnits, (CSecondPathSegments*)0 );
+	NSegmObjs::Segment( lastSegmTime, roundedCurTime, secondPathUnits, (CSecondPathSegments *)0 );
 
 	lastSegmTime = curTime - curTime % SConsts::AI_SEGMENT_DURATION + SConsts::AI_SEGMENT_DURATION;
 
@@ -773,7 +773,7 @@ void CGroupLogic::UpdateAllAreas( const std::vector<int> &units, const EActionNo
 {
 	for ( int i = 0; i < units.size(); ++i )
 	{
-		CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>( CLinkObject::GetObjectByUniqueIdSafe( units[i] ) );
+		CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( units[i] ) );
 		if ( pUnit && pUnit->IsRefValid() )
 			pUnit->UpdateArea( eAction );
 	}
@@ -810,40 +810,108 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 
 	switch ( cmd.nCmdType )
 	{
-		case ACTION_COMMAND_MOVE_TO:						nType =  0; break;
-		case ACTION_COMMAND_REVERSE_TO:					nType =  0; break;
-		case ACTION_COMMAND_ATTACK_UNIT:				nType =  1; break;
-		case ACTION_COMMAND_ATTACK_OBJECT:			nType =  2; break;
-		case ACTION_COMMAND_SWARM_TO:						nType =  0; break;
-		case ACTION_COMMAND_LOAD:								nType =  1; break;
-		case ACTION_COMMAND_UNLOAD:							nType = -1; break;
-		case ACTION_COMMAND_ENTER:							nType =  2; break;
-		case ACTION_COMMAND_LEAVE:							nType =  0; break;
-		case ACTION_COMMAND_ROTATE_TO:					nType = -1; break;
-		case ACTION_COMMAND_ROTATE_TO_DIR:			nType = -1; break;
-		case ACTION_COMMAND_STOP:								nType = -1; break;
-		case ACTION_COMMAND_PARADE:							nType = -1; break;
-		case ACTION_COMMAND_PLACEMINE:					nType =  0; break;
-		case ACTION_COMMAND_CLEARMINE:					nType =  0; break;
-		case ACTION_COMMAND_GUARD:							nType =  0; break;
-		case ACTION_COMMAND_AMBUSH:							nType = -1; break;
-		case ACTION_COMMAND_RANGE_AREA:					nType = -1; break;
-		case ACTION_COMMAND_ART_BOMBARDMENT:		nType = -1; break;
-		case ACTION_COMMAND_FIRE_ROCKETS:			nType = -1; break;
-		case ACTION_COMMAND_USE_FLAMETHROWER:	nType = -1; break;
-		case ACTION_COMMAND_INSTALL:						nType = -1; break;
-		case ACTION_COMMAND_UNINSTALL:					nType = -1; break;
-		case ACTION_COMMAND_RESUPPLY:						nType = -1; break;
-		case ACTION_COMMAND_REPAIR:							nType = -1; break;
-		case ACTION_COMMAND_BUILD_FENCE_BEGIN:	nType =  0; break;
-		case ACTION_COMMAND_ENTRENCH_BEGIN:			nType =  0; break;
-		case ACTION_COMMAND_CATCH_ARTILLERY:		nType =  1; break;
-		case ACTION_COMMAND_USE_SPYGLASS:				nType = -1; break;
-		case ACTION_COMMAND_TAKE_ARTILLERY:			nType = -1; break;
-		case ACTION_COMMAND_DEPLOY_ARTILLERY:		nType = -1; break;
-		case ACTION_COMMAND_PLACE_ANTITANK:			nType =  0; break;
-		case ACTION_COMMAND_DISBAND_FORMATION:	nType = -1; break;
-		case ACTION_COMMAND_FORM_FORMATION:			nType = -1; break;
+		case ACTION_COMMAND_MOVE_TO:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_REVERSE_TO:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_ATTACK_UNIT:
+			nType = 1;
+			break;
+		case ACTION_COMMAND_ATTACK_OBJECT:
+			nType = 2;
+			break;
+		case ACTION_COMMAND_SWARM_TO:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_LOAD:
+			nType = 1;
+			break;
+		case ACTION_COMMAND_UNLOAD:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_ENTER:
+			nType = 2;
+			break;
+		case ACTION_COMMAND_LEAVE:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_ROTATE_TO:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_ROTATE_TO_DIR:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_STOP:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_PARADE:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_PLACEMINE:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_CLEARMINE:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_GUARD:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_AMBUSH:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_RANGE_AREA:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_ART_BOMBARDMENT:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_FIRE_ROCKETS:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_USE_FLAMETHROWER:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_INSTALL:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_UNINSTALL:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_RESUPPLY:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_REPAIR:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_BUILD_FENCE_BEGIN:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_ENTRENCH_BEGIN:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_CATCH_ARTILLERY:
+			nType = 1;
+			break;
+		case ACTION_COMMAND_USE_SPYGLASS:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_TAKE_ARTILLERY:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_DEPLOY_ARTILLERY:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_PLACE_ANTITANK:
+			nType = 0;
+			break;
+		case ACTION_COMMAND_DISBAND_FORMATION:
+			nType = -1;
+			break;
+		case ACTION_COMMAND_FORM_FORMATION:
+			nType = -1;
+			break;
 	}
 
 	CVec2 vResult( -1.0f, -1.0f );
@@ -855,26 +923,28 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 			vResult = cmd.vPos;
 			break;
 		case 1:
-			NI_ASSERT( dynamic_cast<CCommonUnit*>(GetObjectByCmd( cmd )) != 0, fmt::format( "Non-compliance for command {}", int( cmd.nCmdType ) ) );
-			vResult = checked_cast<CCommonUnit*>(GetObjectByCmd( cmd ))->GetCenterPlain();
+			NI_ASSERT( dynamic_cast<CCommonUnit *>( GetObjectByCmd( cmd ) ) != 0,
+			           fmt::format( "Non-compliance for command {}", int( cmd.nCmdType ) ) );
+			vResult = checked_cast<CCommonUnit *>( GetObjectByCmd( cmd ) )->GetCenterPlain();
 			break;
 		case 2:
+		{
+			NI_ASSERT( dynamic_cast<CStaticObject *>( GetObjectByCmd( cmd ) ) != 0,
+			           fmt::format( "Non-compliance for command {}", int( cmd.nCmdType ) ) );
+			CStaticObject *pObj = dynamic_cast<CStaticObject *>( GetObjectByCmd( cmd ) );
+			if ( pObj->GetObjectType() == ESOT_BUILDING )
 			{
-				NI_ASSERT( dynamic_cast<CStaticObject*>(GetObjectByCmd( cmd )) != 0, fmt::format( "Non-compliance for command {}", int( cmd.nCmdType ) ) );
-				CStaticObject* pObj = dynamic_cast<CStaticObject*>(GetObjectByCmd( cmd ));
-				if ( pObj->GetObjectType() == ESOT_BUILDING )
-				{
-					CBuilding *pBuilding = checked_cast<CBuilding*>(pObj);
-					if ( pBuilding->GetNEntrancePoints() > 0 )
-						vResult = pBuilding->GetEntrancePoint( 0 );
-					else
-						vResult = CVec2(pObj->GetCenter().x,pObj->GetCenter().y);
-				}
+				CBuilding *pBuilding = checked_cast<CBuilding *>( pObj );
+				if ( pBuilding->GetNEntrancePoints() > 0 )
+					vResult = pBuilding->GetEntrancePoint( 0 );
 				else
-					vResult = CVec2(pObj->GetCenter().x,pObj->GetCenter().y);
+					vResult = CVec2( pObj->GetCenter().x, pObj->GetCenter().y );
 			}
+			else
+				vResult = CVec2( pObj->GetCenter().x, pObj->GetCenter().y );
+		}
 
-			break;
+		break;
 	}
 
 	return vResult;
@@ -885,7 +955,10 @@ void CGroupLogic::AddFollowingUnit( CCommonUnit *pUnit )
 	followingUnits.push_back( pUnit );
 }
 
-void CGroupLogic::ProcessGridCommand( const CVec2 &vGridCenter, const CVec2 &vGridDir, const int nGroup, bool bPlaceInQueue )
+void CGroupLogic::ProcessGridCommand( const CVec2 &vGridCenter,
+                                      const CVec2 &vGridDir,
+                                      const int nGroup,
+                                      bool bPlaceInQueue )
 {
 	CGrid grid( vGridCenter, nGroup, vGridDir );
 
@@ -910,32 +983,38 @@ void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )
 	{
 		for ( int i = segmUnits[1].begin( n ); i != segmUnits[1].end(); i = segmUnits[1].GetNext( i ) )
 		{
-			CCommonUnit * pUnit = segmUnits[1].GetEl( i );
+			CCommonUnit *pUnit = segmUnits[1].GetEl( i );
 			int id = pUnit->GetUniqueId();
-			*ulChecksum = adler32( *ulChecksum, (uint8_t*)&id, 4 );
+			*ulChecksum = adler32( *ulChecksum, (uint8_t *)&id, 4 );
 		}
 	}
 }
 
-
-void CGroupLogic::UpdateDebugChecksums(FILE* f)
+void CGroupLogic::UpdateDebugChecksums( FILE *f )
 {
-	fprintf(f, "GroupSegmentUnits:\n");
+	fprintf( f, "GroupSegmentUnits:\n" );
 	uLong baseChecksum = 555111;
 	for ( int n = 0; n < NSegmObjs::SEGM_UNITS_SIZE; ++n )
 	{
 		for ( int i = segmUnits[1].begin( n ); i != segmUnits[1].end(); i = segmUnits[1].GetNext( i ) )
 		{
-			CCommonUnit * pUnit = segmUnits[1].GetEl( i );
+			CCommonUnit *pUnit = segmUnits[1].GetEl( i );
 			int id = pUnit->GetUniqueId();
 			CVec2 pos = pUnit->GetCenterPlain();
 			uint16_t dir = pUnit->GetDirection();
 
 			uint8_t player = pUnit->GetPlayer();
-			uLong checksum = CalculateChecksum(baseChecksum, id, pos.x, pos.y, dir);
+			uLong checksum = CalculateChecksum( baseChecksum, id, pos.x, pos.y, dir );
 
-			fprintf(f, "\tPlayer[%d] SegmUnit[%d]: %lu - { pos (%f, %f), dir: %hu }\n", (int)player, pUnit->GetUniqueID(), checksum, pos.x, pos.y, dir);
+			fprintf( f,
+			         "\tPlayer[%d] SegmUnit[%d]: %lu - { pos (%f, %f), dir: %hu }\n",
+			         (int)player,
+			         pUnit->GetUniqueID(),
+			         checksum,
+			         pos.x,
+			         pos.y,
+			         dir );
 		}
 	}
-	fprintf(f, "\n");
+	fprintf( f, "\n" );
 }

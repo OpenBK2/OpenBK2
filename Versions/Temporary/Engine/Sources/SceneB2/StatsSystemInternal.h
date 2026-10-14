@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-class CStatsSystem :	public IStatSystem
+class CStatsSystem : public IStatSystem
 {
 	OBJECT_NOCOPY_METHODS( CStatsSystem )
 

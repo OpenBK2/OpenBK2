@@ -8,10 +8,11 @@ class CFreezeSegments
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	class CCommonUnit *pUnit = {};
-public:
-	typedef CCommonUnit* TObjType;
 
-	CFreezeSegments() : pUnit( 0 ) { }
+public:
+	typedef CCommonUnit *TObjType;
+
+	CFreezeSegments() : pUnit( 0 ) {}
 
 	bool ShouldBeUnregistered() const { return false; }
 
@@ -26,10 +27,11 @@ class CStateSegments
 
 	bool bCheck = {};
 	bool bIsValid = {};
-public:
-	typedef CCommonUnit* TObjType;
 
-	CStateSegments() : pUnit( 0 ), bCheck( false ) { }
+public:
+	typedef CCommonUnit *TObjType;
+
+	CStateSegments() : pUnit( 0 ), bCheck( false ) {}
 
 	bool ShouldBeUnregistered() const;
 
@@ -41,10 +43,11 @@ public:
 class CFirstPathSegments
 {
 	class CAIUnit *pUnit = {};
-public:
-	typedef CAIUnit* TObjType;
 
-	CFirstPathSegments() : pUnit( 0 ) { }
+public:
+	typedef CAIUnit *TObjType;
+
+	CFirstPathSegments() : pUnit( 0 ) {}
 
 	bool ShouldBeUnregistered() const { return false; }
 
@@ -56,10 +59,11 @@ public:
 class CSecondPathSegments
 {
 	class CAIUnit *pUnit = {};
-public:
-	typedef CAIUnit* TObjType;
 
-	CSecondPathSegments() : pUnit( 0 ) { }
+public:
+	typedef CAIUnit *TObjType;
+
+	CSecondPathSegments() : pUnit( 0 ) {}
 
 	bool ShouldBeUnregistered() const { return false; }
 
@@ -71,10 +75,11 @@ public:
 class CStayTimeSegments
 {
 	class CAIUnit *pUnit = {};
-public:
-	typedef CAIUnit* TObjType;
 
-	CStayTimeSegments() : pUnit( 0 ) { }
+public:
+	typedef CAIUnit *TObjType;
+
+	CStayTimeSegments() : pUnit( 0 ) {}
 
 	void SetSegmentObject( CAIUnit *pUnit );
 	bool Check();

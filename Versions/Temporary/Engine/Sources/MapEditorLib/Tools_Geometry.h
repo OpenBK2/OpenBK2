@@ -6,10 +6,9 @@
 
 #include "MapEditorLib_export.h"
 
-EXTERNVAR MAPEDITORLIB_EXPORT const float MINIMAL_POINT_DISTANCE;	//2.0f
+EXTERNVAR MAPEDITORLIB_EXPORT const float MINIMAL_POINT_DISTANCE; //2.0f
 
-
-template<>
+template <>
 inline void UpdateBoundingBox( CVec3 *pvMin, CVec3 *pvMax, const CVec3 &rvPosition )
 {
 	if ( pvMin->x > rvPosition.x )

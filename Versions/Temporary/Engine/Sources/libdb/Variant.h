@@ -29,6 +29,7 @@ public:
 	};
 
 	typedef std::unordered_map<CDBID, CVariant> CMultiVariantMap;
+
 private:
 	EVariantType m_eType;
 
@@ -41,18 +42,18 @@ private:
 		size_t m_nSize;
 		bool m_bDelete;
 
-		SBlob(): m_ptr(0), m_nSize(0), m_bDelete(false) {}
-		SBlob(void *_ptr): m_ptr(_ptr), m_nSize(0), m_bDelete(false) {}
-		SBlob(const void *_ptr, size_t _nSize, bool _bDelete = true):
-			m_ptr(new uint8_t[_nSize]), m_nSize(_nSize), m_bDelete(_bDelete)
+		SBlob() : m_ptr( 0 ), m_nSize( 0 ), m_bDelete( false ) {}
+		SBlob( void *_ptr ) : m_ptr( _ptr ), m_nSize( 0 ), m_bDelete( false ) {}
+		SBlob( const void *_ptr, size_t _nSize, bool _bDelete = true )
+				: m_ptr( new uint8_t[_nSize] ), m_nSize( _nSize ), m_bDelete( _bDelete )
 		{
 			ASSERT( _ptr != 0 );
 			memcpy( m_ptr, _ptr, m_nSize );
 		}
-		SBlob(const SBlob &_blob):
-			m_nSize(_blob.m_nSize), m_bDelete(_blob.m_bDelete)
+		SBlob( const SBlob &_blob ) : m_nSize( _blob.m_nSize ), m_bDelete( _blob.m_bDelete )
 		{
-			if(m_bDelete){
+			if ( m_bDelete )
+			{
 				ASSERT( _blob.m_ptr != 0 );
 				m_ptr = new uint8_t[m_nSize];
 				memcpy( m_ptr, _blob.m_ptr, m_nSize );
@@ -65,26 +66,26 @@ private:
 
 		~SBlob()
 		{
-			if(m_bDelete)
+			if ( m_bDelete )
 			{
 				// every allocation of m_ptr is new uint8_t[], in the two constructors
 				// above and in operator&, so this is the matching delete. Deleting
 				// through the void* the member is declared as would be undefined.
-				delete[] static_cast< uint8_t * >( m_ptr );
+				delete[] static_cast<uint8_t *>( m_ptr );
 			}
 		}
 
-		int operator & (IBinSaver &saver)
+		int operator&( IBinSaver &saver )
 		{
-			saver.Add(1, &m_nSize);
+			saver.Add( 1, &m_nSize );
 
-			if( saver.IsReading() )
+			if ( saver.IsReading() )
 			{
 				m_bDelete = true;
 				m_ptr = new uint8_t[m_nSize];
 			}
 
-			saver.AddRawData(2, m_ptr, m_nSize);
+			saver.AddRawData( 2, m_ptr, m_nSize );
 
 			return 0;
 		}
@@ -95,14 +96,14 @@ private:
 		CMultiVariantMap *m_pMultiVariantMap;
 
 		SMultiVariant() {}
-		SMultiVariant(CMultiVariantMap *_pMultiVariantMap)
+		SMultiVariant( CMultiVariantMap *_pMultiVariantMap )
 		{
 			ASSERT( _pMultiVariantMap != 0 );
 
 			m_pMultiVariantMap = new CMultiVariantMap();
 			*( m_pMultiVariantMap ) = *( _pMultiVariantMap );
 		}
-		SMultiVariant(const SMultiVariant &_mvar)
+		SMultiVariant( const SMultiVariant &_mvar )
 		{
 			ASSERT( _mvar.m_pMultiVariantMap != 0 );
 
@@ -131,14 +132,15 @@ private:
 
 	void Clear();
 
-	void Copy(const CVariant &var);
+	void Copy( const CVariant &var );
 
 public:
 	//конструкторы
-	CVariant() : m_eType( VT_NULL ), m_pblob(NULL) {}
+	CVariant() : m_eType( VT_NULL ), m_pblob( NULL ) {}
 	CVariant( const CVariant &var );
-	CVariant& operator=( const CVariant &var );
-	void SetMultiVariant( CMultiVariantMap *pMultiVariantMap, bool bDeleteInDestructor = true /* in fact it is true anyway */);
+	CVariant &operator=( const CVariant &var );
+	void SetMultiVariant( CMultiVariantMap *pMultiVariantMap,
+	                      bool bDeleteInDestructor = true /* in fact it is true anyway */ );
 	void SetDestructorDeleted( bool bDeleteInDestructor, int nBlobSize )
 	{
 		ASSERT( m_eType == VT_POINTER );
@@ -146,34 +148,40 @@ public:
 		m_pblob->m_nSize = nBlobSize;
 	}
 	//конструкторы с приведением типов
-	CVariant( const int nVal )          : m_eType( VT_INT ), m_int( nVal ) {}
-	CVariant( const float fVal )        : m_eType( VT_FLOAT ), m_float(fVal) {}
-	CVariant( const std::string &szVal )     : m_eType( VT_STR ), m_pstr( new std::string(szVal) ) {}
-	CVariant( const char *pszVal )			: m_eType( VT_STR ), m_pstr( new std::string(pszVal) ) {}
-	CVariant( const std::wstring &wszVal )   : m_eType( VT_WSTR ), m_pwstr( new std::wstring(wszVal) ) {}
-	CVariant( const wchar_t *pwszVal )	: m_eType( VT_WSTR ), m_pwstr( new std::wstring(pwszVal) ) {}
-	CVariant( const bool bVal )         : m_eType( VT_BOOL ), m_bool( bVal ) {}
-	CVariant( const CDBID &dbid )				: m_eType( VT_DBID ), m_dbid( new CDBID(dbid) ) {}
+	CVariant( const int nVal ) : m_eType( VT_INT ), m_int( nVal ) {}
+	CVariant( const float fVal ) : m_eType( VT_FLOAT ), m_float( fVal ) {}
+	CVariant( const std::string &szVal ) : m_eType( VT_STR ), m_pstr( new std::string( szVal ) ) {}
+	CVariant( const char *pszVal ) : m_eType( VT_STR ), m_pstr( new std::string( pszVal ) ) {}
+	CVariant( const std::wstring &wszVal ) : m_eType( VT_WSTR ), m_pwstr( new std::wstring( wszVal ) ) {}
+	CVariant( const wchar_t *pwszVal ) : m_eType( VT_WSTR ), m_pwstr( new std::wstring( pwszVal ) ) {}
+	CVariant( const bool bVal ) : m_eType( VT_BOOL ), m_bool( bVal ) {}
+	CVariant( const CDBID &dbid ) : m_eType( VT_DBID ), m_dbid( new CDBID( dbid ) ) {}
 	//
-	CVariant( const uint32_t dwVal )				: m_eType( VT_INT ), m_int( dwVal ) { }
-	CVariant( const long lVal )					: m_eType( VT_INT ), m_int( lVal ) { }
-	CVariant( const uint16_t wVal )					: m_eType( VT_INT ), m_int( wVal ) { }
-	CVariant( const short nVal )				: m_eType( VT_INT ), m_int( nVal ) { }
-	CVariant( const char cVal )					: m_eType( VT_INT ), m_int( cVal ) { }
-	CVariant( const uint8_t cVal )					: m_eType( VT_INT ), m_int( cVal ) { }
+	CVariant( const uint32_t dwVal ) : m_eType( VT_INT ), m_int( dwVal ) {}
+	CVariant( const long lVal ) : m_eType( VT_INT ), m_int( lVal ) {}
+	CVariant( const uint16_t wVal ) : m_eType( VT_INT ), m_int( wVal ) {}
+	CVariant( const short nVal ) : m_eType( VT_INT ), m_int( nVal ) {}
+	CVariant( const char cVal ) : m_eType( VT_INT ), m_int( cVal ) {}
+	CVariant( const uint8_t cVal ) : m_eType( VT_INT ), m_int( cVal ) {}
 	//
-	CVariant( const boost::uuids::uuid &guid )				: m_eType( VT_POINTER ), m_pblob( new SBlob((void*)&guid, sizeof(guid)) ) {}
+	CVariant( const boost::uuids::uuid &guid )
+			: m_eType( VT_POINTER ), m_pblob( new SBlob( (void *)&guid, sizeof( guid ) ) )
+	{
+	}
+
 private:
 	//CVariant не может определить размер блока по указателю, поэтому без указания размера
 	//конструктор от void* не имеет смысла
 	// Намеренно его закрываем, чтобы не происходило неявного преобразования void * к bool
-	CVariant( void *pVar )                  : m_eType( VT_POINTER ) {}
-public:
-	CVariant( const void *pVar, int nBlobSize )   : m_eType( VT_POINTER ), m_pblob( new SBlob(pVar, nBlobSize) ) {}
+	CVariant( void *pVar ) : m_eType( VT_POINTER ) {}
 
-	CVariant( CMultiVariantMap *pMultiVariantMap/*, bool bDelete = false*/ ) :
-		m_eType( VT_MULTIVARIANT ), m_pmvar( new SMultiVariant(pMultiVariantMap) )
-	{}
+public:
+	CVariant( const void *pVar, int nBlobSize ) : m_eType( VT_POINTER ), m_pblob( new SBlob( pVar, nBlobSize ) ) {}
+
+	CVariant( CMultiVariantMap *pMultiVariantMap /*, bool bDelete = false*/ )
+			: m_eType( VT_MULTIVARIANT ), m_pmvar( new SMultiVariant( pMultiVariantMap ) )
+	{
+	}
 
 	~CVariant();
 	//
@@ -188,14 +196,14 @@ public:
 	//operator const wchar_t*() const;
 	operator bool() const;
 	//получение значений
-	bool             GetBool() const;
-	int              GetInt() const;
-	float            GetFloat() const;
-	const char      *GetStr() const;
-	const wchar_t   *GetWStr() const;
+	bool GetBool() const;
+	int GetInt() const;
+	float GetFloat() const;
+	const char *GetStr() const;
+	const wchar_t *GetWStr() const;
 	const CDBID &GetDBID() const;
-	const void      *GetPtr() const;
-	const CMultiVariantMap* GetMultiVariant() const;
+	const void *GetPtr() const;
+	const CMultiVariantMap *GetMultiVariant() const;
 	bool ToText( std::string *pszText ) const;
 	// CRAP{ special function to cross get MBCS <=> UNICODE
 	std::string GetStringRecode() const;
@@ -204,11 +212,11 @@ public:
 
 	size_t GetBlobSize() const;
 	//
-  bool operator!=( const CVariant &var ) const; //не точное сравнение ( с приведением типов )
+	bool operator!=( const CVariant &var ) const; //не точное сравнение ( с приведением типов )
 	bool operator==( const CVariant &var ) const; //точное совпадение согласно типам
 
-	int operator & ( IBinSaver &saver );
-	int operator & ( IXmlSaver &saver );
+	int operator&( IBinSaver &saver );
+	int operator&( IXmlSaver &saver );
 
 	void Trace() const;
 };

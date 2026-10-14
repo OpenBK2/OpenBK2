@@ -18,12 +18,11 @@ CCreations creations;
 
 }
 
-
 //*******************************************************************
 //*												  CComplexObstacleCreation*
 //*******************************************************************
 
-void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate )
+void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate *pUpdate )
 {
 	if ( !pFenceCreation )
 		return;
@@ -41,7 +40,7 @@ void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate 
 		bool bCanBuildCurrent = true;
 		for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 		{
-			if ( !GetAIMap()->IsTileInside(*it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
+			if ( !GetAIMap()->IsTileInside( *it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
 				pUpdate->impossibleToBuildTiles.push_back( CVec2( it->x, it->y ) );
 			else
 			{
@@ -58,7 +57,7 @@ bool CComplexObstacleCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, 
 {
 	if ( IsAIModificationAllowed() )
 	{
-  		int a = 0;
+		int a = 0;
 	}
 	bCannot = false;
 	nCurIndex = 0;
@@ -66,7 +65,7 @@ bool CComplexObstacleCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, 
 	pFenceCreation->PreCreate( vFrom, vTo, bCheckLock );
 	antitanks.clear();
 	CVec2 vDirPerp( vTo - vFrom );
-	const uint16_t wDir( GetDirectionByVector(vDirPerp ) );
+	const uint16_t wDir( GetDirectionByVector( vDirPerp ) );
 	Normalize( &vDirPerp );
 	vDirPerp = CVec2( -vDirPerp.y, vDirPerp.x );
 
@@ -74,7 +73,7 @@ bool CComplexObstacleCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, 
 	for ( int i = 0; i < pFenceCreation->GetMaxIndex(); i += SConsts::COMPLEX_OBSTACLE_ANTITANK_PERIOD )
 	{
 		const CVec2 vFenceCenter = pFenceCreation->GetCenter( i );
-		const SObjectBaseRPGStats * pStats = theUnitCreation.GetRandomAntitankObject();
+		const SObjectBaseRPGStats *pStats = theUnitCreation.GetRandomAntitankObject();
 
 		CObj<CCommonStaticObject> pAntitank;
 
@@ -82,7 +81,8 @@ bool CComplexObstacleCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, 
 
 		if ( !IsAIModificationAllowed() || CGivenPassabilityStObject::CheckStaticObject( pStats, vDesiredPoint, wDir, 0 ) )
 		{
-			pAntitank = new CSimpleStaticObject( pStats, CVec3(vDesiredPoint,0), wDir, pStats->fMaxHP, 0, ESOT_COMMON, GetPlayer(), true );
+			pAntitank = new CSimpleStaticObject(
+					pStats, CVec3( vDesiredPoint, 0 ), wDir, pStats->fMaxHP, 0, ESOT_COMMON, GetPlayer(), true );
 			if ( IsAIModificationAllowed() )
 				pAntitank->Mem2UniqueIdObjs();
 			pAntitank->Init();
@@ -109,8 +109,8 @@ const CVec2 CComplexObstacleCreation::GetNextPoint( const int nPlace, const int 
 {
 	if ( IsAntitank( nCurIndex ) )
 	{
-		NI_ASSERT( antitanks[GetAntitankIndex(nCurIndex)] != 0, "zero antitank" );
-		const CVec3 vCenter( antitanks[GetAntitankIndex(nCurIndex)]->GetCenter() );
+		NI_ASSERT( antitanks[GetAntitankIndex( nCurIndex )] != 0, "zero antitank" );
+		const CVec3 vCenter( antitanks[GetAntitankIndex( nCurIndex )]->GetCenter() );
 		return CVec2( vCenter.x, vCenter.y ) + SConsts::TILE_SIZE * GetVectorByDirection( nPlace * 65535 / nMaxPlace );
 	}
 	else
@@ -125,7 +125,7 @@ void CComplexObstacleCreation::BuildNext()
 	CLongObjectCreation::BuildNext();
 	if ( IsAntitank( nCurIndex ) )
 	{
-		CCommonStaticObject *pAntitank = antitanks[GetAntitankIndex(nCurIndex)];
+		CCommonStaticObject *pAntitank = antitanks[GetAntitankIndex( nCurIndex )];
 		theStatObjs.AddStaticObject( pAntitank, false );
 	}
 	else
@@ -139,7 +139,7 @@ void CComplexObstacleCreation::BuildNext()
 void CComplexObstacleCreation::AdvanceToNextIndex()
 {
 	++nCurIndex;
-	while ( IsAntitank( nCurIndex ) && !antitanks[GetAntitankIndex(nCurIndex)] )
+	while ( IsAntitank( nCurIndex ) && !antitanks[GetAntitankIndex( nCurIndex )] )
 	{
 		bTmpNonCheatPath = true;
 		++nCurIndex;
@@ -147,17 +147,17 @@ void CComplexObstacleCreation::AdvanceToNextIndex()
 	tilesUnder.clear();
 	if ( nCurIndex < GetMaxIndex() && IsAntitank( nCurIndex ) )
 	{
-		CCommonStaticObject *pAntitank = antitanks[GetAntitankIndex(nCurIndex)];
+		CCommonStaticObject *pAntitank = antitanks[GetAntitankIndex( nCurIndex )];
 		pAntitank->GetCoveredTiles( &tilesUnder );
 	}
 }
 
-void CComplexObstacleCreation::GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units )
+void CComplexObstacleCreation::GetUnitsPreventing( std::list<CPtr<CAIUnit>> *units )
 {
 	if ( IsAntitank( nCurIndex ) )
 	{
 		SRect r1;
-		antitanks[GetAntitankIndex(nCurIndex)]->GetBoundRect( &r1 );
+		antitanks[GetAntitankIndex( nCurIndex )]->GetBoundRect( &r1 );
 		CLongObjectCreation::GetUnitsPreventing( r1, units );
 	}
 	else
@@ -171,7 +171,7 @@ bool CComplexObstacleCreation::IsAnyUnitPrevent() const
 	if ( IsAntitank( nCurIndex ) )
 	{
 		SRect r1;
-		antitanks[GetAntitankIndex(nCurIndex)]->GetBoundRect( &r1 );
+		antitanks[GetAntitankIndex( nCurIndex )]->GetBoundRect( &r1 );
 		return CLongObjectCreation::IsAnyUnitPrevent( r1 );
 	}
 	else
@@ -182,13 +182,13 @@ bool CComplexObstacleCreation::CanBuildNext() const
 {
 	if ( IsAntitank( nCurIndex ) )
 	{
-		if ( antitanks[GetAntitankIndex(nCurIndex)] )
+		if ( antitanks[GetAntitankIndex( nCurIndex )] )
 		{
 			std::list<SVector> tiles;
-			antitanks[GetAntitankIndex(nCurIndex)]->GetCoveredTiles( &tiles );
+			antitanks[GetAntitankIndex( nCurIndex )]->GetCoveredTiles( &tiles );
 			for ( std::list<SVector>::const_iterator it = tiles.begin(); it != tiles.end(); ++it )
 			{
-				if ( !GetAIMap()->IsTileInside(*it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
+				if ( !GetAIMap()->IsTileInside( *it ) || 0 != ( EAC_TERRAIN & GetTerrain()->GetTileLockInfo( *it ) ) )
 					return false;
 			}
 			return true;
@@ -205,9 +205,7 @@ void CComplexObstacleCreation::LockCannotBuild()
 	AdvanceToNextIndex();
 }
 
-void CComplexObstacleCreation::LockNext()
-{
-}
+void CComplexObstacleCreation::LockNext() {}
 
 CLine2 CComplexObstacleCreation::GetCurLine()
 {

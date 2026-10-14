@@ -2,5 +2,5 @@
 
 namespace NDb
 {
-	struct IDbObserver *CreateVFSDbObserver();
+struct IDbObserver *CreateVFSDbObserver();
 }

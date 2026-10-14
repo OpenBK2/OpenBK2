@@ -5,27 +5,20 @@
 
 #include "AILogic_export.h"
 
-REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C80, CPahtFractionArcLineArc)
-
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11095C80, CPahtFractionArcLineArc )
 
 //	CPahtFractionArcLineArc
 
-
-void CPahtFractionArcLineArc::Init( const SPrevPathParams &prevPath,
-																		const CVec3 &x1, const CVec3 &v1,
-																		const float fR1, const float fR2 )
+void CPahtFractionArcLineArc::Init(
+		const SPrevPathParams &prevPath, const CVec3 &x1, const CVec3 &v1, const float fR1, const float fR2 )
 {
 	Init( prevPath.p2, x1, prevPath.vSpeed, v1, fR1, fR2 );
 }
 
-void CPahtFractionArcLineArc::Init( const CVec3 &x0, const CVec3 &x1,
-					const CVec3 &v0, const CVec3 &v1,
-					const float fR0, const float fR1 )
+void CPahtFractionArcLineArc::Init(
+		const CVec3 &x0, const CVec3 &x1, const CVec3 &v0, const CVec3 &v1, const float fR0, const float fR1 )
 {
-	Init( CVec2(x0.x, x0.y), CVec2(x1.x, x1.y),
-		CVec2(v0.x, v0.y), CVec2(v1.x, v1.y),
-		fR0, fR1,
-		x0.z );
+	Init( CVec2( x0.x, x0.y ), CVec2( x1.x, x1.y ), CVec2( v0.x, v0.y ), CVec2( v1.x, v1.y ), fR0, fR1, x0.z );
 }
 
 float CPahtFractionArcLineArc::GetLength() const
@@ -43,23 +36,29 @@ void CPahtFractionArcLineArc::GetSimplePath( CPathList *pPaths )
 		pPaths->push_back( pFinish.GetPtr() );
 }
 
-void CPahtFractionArcLineArc::Init( const CVec2 &x0, const CVec2 &x1, const CVec2 &v0, const CVec2 &v1, const float fR0, const float fR1, const float _fZ )
+void CPahtFractionArcLineArc::Init( const CVec2 &x0,
+                                    const CVec2 &x1,
+                                    const CVec2 &v0,
+                                    const CVec2 &v1,
+                                    const float fR0,
+                                    const float fR1,
+                                    const float _fZ )
 {
 	// create 2 circles, tangent to initial direction
-	CDirectedCircle r1, r2;												// circles, tangent to initial direction
-	CDirectedCircle o1, o2;												// circles, tangent to final direction
+	CDirectedCircle r1, r2; // circles, tangent to initial direction
+	CDirectedCircle o1, o2; // circles, tangent to final direction
 
 	CVec2 v0Normalized = v0;
 	Normalize( &v0Normalized );
-	GetDirectedCirclesByTangent( v0Normalized , x0, fR0, &r1, &r2 );
+	GetDirectedCirclesByTangent( v0Normalized, x0, fR0, &r1, &r2 );
 	//GetCirclesByTangent( v0Normalized , x0, fStartRadius, &r1, &r2 );
 
 	// to filal direction
 	if ( VNULL2 != v1 )
 	{
-		CVec2 v1Normalized =	v1;
+		CVec2 v1Normalized = v1;
 		Normalize( &v1Normalized );
-		GetDirectedCirclesByTangent( v1Normalized , x1, fR1, &o1, &o2 );
+		GetDirectedCirclesByTangent( v1Normalized, x1, fR1, &o1, &o2 );
 	}
 	else
 	{
@@ -83,10 +82,14 @@ void CPahtFractionArcLineArc::Init( const CVec2 &x0, const CVec2 &x1, const CVec
 	TryPath( x0, x1, r2, o2, pPath, this, &bInitted, _fZ );
 }
 
-void CPahtFractionArcLineArc::TryPath( const CVec2 &x0, const CVec2 &x1,
-																						const CDirectedCircle &r1, const CDirectedCircle &o1,
-																						CPahtFractionArcLineArc *pPath, CPahtFractionArcLineArc *pBest,
-																						bool *bInitted, const float _fZ ) const
+void CPahtFractionArcLineArc::TryPath( const CVec2 &x0,
+                                       const CVec2 &x1,
+                                       const CDirectedCircle &r1,
+                                       const CDirectedCircle &o1,
+                                       CPahtFractionArcLineArc *pPath,
+                                       CPahtFractionArcLineArc *pBest,
+                                       bool *bInitted,
+                                       const float _fZ ) const
 {
 	CVec2 v0, v1;
 
@@ -107,9 +110,13 @@ void CPahtFractionArcLineArc::TryPath( const CVec2 &x0, const CVec2 &x1,
 	}
 }
 
-void CPahtFractionArcLineArc::Init( const CDirectedCircle &_start, const CVec2 &_vStart1, const CVec2 &_vStart2,
-																				 const CDirectedCircle &_finish, const CVec2 &_vFinish1, const CVec2 &_vFinish2,
-																				 const float _fZ )
+void CPahtFractionArcLineArc::Init( const CDirectedCircle &_start,
+                                    const CVec2 &_vStart1,
+                                    const CVec2 &_vStart2,
+                                    const CDirectedCircle &_finish,
+                                    const CVec2 &_vFinish1,
+                                    const CVec2 &_vFinish2,
+                                    const float _fZ )
 {
 	if ( !pStart || !pFinish || !pLine )
 	{
@@ -120,5 +127,5 @@ void CPahtFractionArcLineArc::Init( const CDirectedCircle &_start, const CVec2 &
 
 	pStart->Init( _start, _vStart1, _vStart2, _fZ );
 	pFinish->Init( _finish, _vFinish1, _vFinish2, _fZ );
-	pLine->Init( CVec3(_vStart2, _fZ), CVec3(_vFinish1, _fZ ) );
+	pLine->Init( CVec3( _vStart2, _fZ ), CVec3( _vFinish1, _fZ ) );
 }

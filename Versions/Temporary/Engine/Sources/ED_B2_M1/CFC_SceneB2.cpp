@@ -37,30 +37,23 @@
 
 namespace
 {
-	const float fHorisontalStep					= 1.0f;
-	const float fVerticalStep						= 1.0f;
-	const float fPitchStep							= 1.0f;
-	const float fYawStep								= 1.0f;
-	const float fDistanceStep						= 1.0f;
+const float fHorisontalStep = 1.0f;
+const float fVerticalStep = 1.0f;
+const float fPitchStep = 1.0f;
+const float fYawStep = 1.0f;
+const float fDistanceStep = 1.0f;
 
-	const float fFastRatio							= 5.0f;
+const float fFastRatio = 5.0f;
 
-	const float fDefaultDistance				= 170.0f;
-	const float fDefaultPitch						= 45.0f;
-	const float fDefaultYaw							= 45.0f;
-	const float fDefaultFOV							= 26.0f;
+const float fDefaultDistance = 170.0f;
+const float fDefaultPitch = 45.0f;
+const float fDefaultYaw = 45.0f;
+const float fDefaultFOV = 26.0f;
 };
 
+CCFCSceneB2::CCFCSceneB2() {}
 
-CCFCSceneB2::CCFCSceneB2()
-{
-}
-
-
-CCFCSceneB2::~CCFCSceneB2()
-{
-}
-
+CCFCSceneB2::~CCFCSceneB2() {}
 
 bool CCFCSceneB2::OnCreateChildFrameWnd()
 {
@@ -72,7 +65,8 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 	if ( !NGfx::Init3D( hWindow ) )
 	{
 		// DX not found
-		NLog::GetLogger()->Log( LT_ERROR, fmt::format( "CCFCSceneB2::OnCreateChildFrameWnd(): Failed to initialize Direct3D9" ) );
+		NLog::GetLogger()->Log( LT_ERROR,
+		                        fmt::format( "CCFCSceneB2::OnCreateChildFrameWnd(): Failed to initialize Direct3D9" ) );
 		return false;
 	}
 	// init input system. InitInput works with the top-level window of the one
@@ -100,19 +94,16 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 	return true;
 }
 
-
 void CCFCSceneB2::OnDestroyChildFrameWnd()
 {
 	NInput::DoneInput();
-  NGfx::Done3D();
+	NGfx::Done3D();
 }
-
 
 void CCFCSceneB2::OnPreDrawChildFrameWnd()
 {
 	NGfx::CheckBackBufferSize();
 }
-
 
 void CCFCSceneB2::OnDrawChildFrameWnd()
 {
@@ -134,18 +125,16 @@ void CCFCSceneB2::OnDrawChildFrameWnd()
 	}
 }
 
-
 void CCFCSceneB2::OnResizeChildFrameWnd( int cx, int cy )
 {
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAP_INFO_EDITOR, ID_UPDATE_SCENE_SIZE, PackCoords(CVec2(cx, cy)) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_MAP_INFO_EDITOR, ID_UPDATE_SCENE_SIZE, PackCoords( CVec2( cx, cy ) ) );
 }
-
 
 bool CCFCSceneB2::KeyPressed( unsigned nChar, uintptr_t dwData )
 {
 	return ( ( dwData == nChar ) || NWxKey::IsDown( nChar ) );
 }
-
 
 void CCFCSceneB2::ResetCamera( bool bAll )
 {
@@ -157,14 +146,16 @@ void CCFCSceneB2::ResetCamera( bool bAll )
 		}
 		if ( bAll && EditorScene() && EditorScene()->GetTerraManager() )
 		{
-			pCamera->SetAnchor( CVec3(EditorScene()->GetTerraManager()->GetTilesCountX(), EditorScene()->GetTerraManager()->GetTilesCountY(), 0 ) * DEF_TILE_SIZE / 2.0f );
+			pCamera->SetAnchor( CVec3( EditorScene()->GetTerraManager()->GetTilesCountX(),
+			                           EditorScene()->GetTerraManager()->GetTilesCountY(),
+			                           0 ) *
+			                    DEF_TILE_SIZE / 2.0f );
 		}
 		pCamera->SetPlacement( fDefaultDistance, fDefaultPitch, fDefaultYaw );
 		pCamera->SetFOV( fDefaultFOV );
 	}
 	Redraw();
 }
-
 
 void CCFCSceneB2::UpdateCameraPosition( uintptr_t dwData )
 {
@@ -177,10 +168,10 @@ void CCFCSceneB2::UpdateCameraPosition( uintptr_t dwData )
 	}
 	else
 	{
-		NLog::GetLogger()->Log( LT_ERROR, fmt::format( "CCFCSceneB2::UpdateCameraPosition(): dwData is not packed 2D coords" ) );
+		NLog::GetLogger()->Log( LT_ERROR,
+		                        fmt::format( "CCFCSceneB2::UpdateCameraPosition(): dwData is not packed 2D coords" ) );
 	}
 }
-
 
 void CCFCSceneB2::UpdateCamera( uintptr_t dwData )
 {
@@ -291,7 +282,6 @@ void CCFCSceneB2::UpdateCamera( uintptr_t dwData )
 	Redraw();
 }
 
-
 void CCFCSceneB2::ClearScene()
 {
 	EditorScene()->ClearScene( SCENE_MISSION );
@@ -299,10 +289,9 @@ void CCFCSceneB2::ClearScene()
 	NGScene::CResourceFileOpener::Clear();
 }
 
-
 bool CCFCSceneB2::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_SCENE_CLEAR:
 			ClearScene();
@@ -320,13 +309,12 @@ bool CCFCSceneB2::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return CChildFrameWndBase::HandleCommand( nCommandID, dwData );
 }
 
-
 bool CCFCSceneB2::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CCFCSceneB2::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CCFCSceneB2::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_SCENE_CLEAR:
 			( *pbEnable ) = true;
@@ -348,7 +336,6 @@ bool CCFCSceneB2::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 	return CChildFrameWndBase::UpdateCommand( nCommandID, pbEnable, pbCheck );
 }
 
-
 void CCFCSceneB2::DrawFocus( IPaintContext *pPaintContext )
 {
 	// The client rectangle less its last row and column, framed in red.
@@ -357,7 +344,6 @@ void CCFCSceneB2::DrawFocus( IPaintContext *pPaintContext )
 	// 0x00BBGGRR: RGB( 255, 30, 30 ).
 	pPaintContext->FrameRect( clientRect, 0x001E1EFF );
 }
-
 
 void CCFCSceneB2::DrawStatistic( IPaintContext *pPaintContext )
 {
@@ -384,23 +370,24 @@ void CCFCSceneB2::DrawStatistic( IPaintContext *pPaintContext )
 		// viewport's paint made serves for the whole block.
 		NDrawToolsDC::DrawTextDC( pPaintContext, "Camera params:", vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Position: ({:.0f}, {:.0f}, {:.0f})", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ), vScreenPos );
+		NDrawToolsDC::DrawTextDC(
+				pPaintContext,
+				fmt::format( "Position: ({:.0f}, {:.0f}, {:.0f})", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ),
+				vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Distance: {:.0f}", fCamDist), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format( "Distance: {:.0f}", fCamDist ), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Yaw: {:.0f}", fCamYaw), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format( "Yaw: {:.0f}", fCamYaw ), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Pitch: {:.0f}", fCamPitch), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format( "Pitch: {:.0f}", fCamPitch ), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("FOV: {:.0f}", fFOV), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format( "FOV: {:.0f}", fFOV ), vScreenPos );
 	}
 }
-
 
 void CCFCSceneB2::DrawFrameBorders( IPaintContext *pPaintContext )
 {
 	NDrawToolsDC::DrawFrameBorders( pPaintContext, rectBorder1, rectBorder2, rectWindow );
 }
-
 
 // basement storage

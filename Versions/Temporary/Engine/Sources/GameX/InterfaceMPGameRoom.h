@@ -5,10 +5,7 @@
 #include "GameRoomData.h"
 #include "ChatControl.h"
 
-
-
-class CInterfaceMPGameRoom : public CInterfaceMPScreenBase,
-	public IProgrammedReactionsAndChecks
+class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPGameRoom );
 
@@ -28,12 +25,12 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase,
 
 	typedef std::vector<SUISlot> CUISlots;
 
-	ZDATA_(CInterfaceMPScreenBase)
-		// { Info for the game
+	ZDATA_( CInterfaceMPScreenBase )
+	// { Info for the game
 	CPtr<ITextView> pSessionName;
 	CPtr<ITextView> pTechLevel;
 	CPtr<ITextView> pNumPlayers;
-	CPtr<ITextView>	pMapName;
+	CPtr<ITextView> pMapName;
 	CPtr<IWindow> pMinimap;
 	CPtr<ITextView> pTimeLimit;
 	CPtr<ITextView> pCaptureTime;
@@ -67,8 +64,35 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase,
 	CPtr<ITextView> pCantStartAccept;
 	CPtr<ITextView> pCantStartSide;
 	CPtr<ITextView> pCantStartColour;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceMPScreenBase*)this); f.Add(2,&pSessionName); f.Add(3,&pTechLevel); f.Add(4,&pNumPlayers); f.Add(5,&pMapName); f.Add(6,&pMinimap); f.Add(7,&pTimeLimit); f.Add(8,&pCaptureTime); f.Add(9,&pGameSpeed); f.Add(10,&pUnitExperience); f.Add(11,&pMain); f.Add(12,&slots); f.Add(13,&nOwnSlot); f.Add(14,&pList); f.Add(15,&pSlotTemplate); f.Add(16,&pButtonBeginGame); f.Add(17,&pChatInput); f.Add(18,&pChatOutput); f.Add(19,&pWaitMessage); f.Add(20,&bConnected); f.Add(21,&gameDesc); f.Add(22,&bHost); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceMPScreenBase *)this );
+		f.Add( 2, &pSessionName );
+		f.Add( 3, &pTechLevel );
+		f.Add( 4, &pNumPlayers );
+		f.Add( 5, &pMapName );
+		f.Add( 6, &pMinimap );
+		f.Add( 7, &pTimeLimit );
+		f.Add( 8, &pCaptureTime );
+		f.Add( 9, &pGameSpeed );
+		f.Add( 10, &pUnitExperience );
+		f.Add( 11, &pMain );
+		f.Add( 12, &slots );
+		f.Add( 13, &nOwnSlot );
+		f.Add( 14, &pList );
+		f.Add( 15, &pSlotTemplate );
+		f.Add( 16, &pButtonBeginGame );
+		f.Add( 17, &pChatInput );
+		f.Add( 18, &pChatOutput );
+		f.Add( 19, &pWaitMessage );
+		f.Add( 20, &bConnected );
+		f.Add( 21, &gameDesc );
+		f.Add( 22, &bHost );
+		return 0;
+	}
+
 private:
 	void RegisterObservers();
 
@@ -107,13 +131,14 @@ private:
 	bool OnChangeStatus();
 	void SetTimeLimit( int nTimeLimit );
 
-	IListControlItem* FindChangedSideTeam( int &nNewSide, int &nNewTeam );
+	IListControlItem *FindChangedSideTeam( int &nNewSide, int &nNewTeam );
 	bool CheckNewColor( int nClientID, int nColor );
 	int GetAvailableColor();
 	void TryInitThisPlayerSideAndColor();
 
 protected:
 	~CInterfaceMPGameRoom();
+
 public:
 	CInterfaceMPGameRoom();
 
@@ -125,11 +150,10 @@ public:
 
 	void SetOwner( bool _bCreator );
 
-
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
-	int SelectionIndexToNationIndex(int nSelectionIndex);
-	int NationIndexToSelectionIndex(int nCountryIndex);
+	int SelectionIndexToNationIndex( int nSelectionIndex );
+	int NationIndexToSelectionIndex( int nCountryIndex );
 	int Check( const std::string &szCheckName ) const;
 	//}
 };
@@ -141,9 +165,14 @@ class CICMPGameRoom : public CInterfaceCommandBase<CInterfaceMPGameRoom>
 	//
 	ZDATA
 	std::string str;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&str); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &str );
+		return 0;
+	}
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

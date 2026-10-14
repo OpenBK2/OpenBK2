@@ -12,13 +12,19 @@ class CRegisterGroupCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CRegisterGroupCommand );
 	//
 	ZDATA
-		std::vector<int> unitsIDs;					// IDs of all obejcts in group
+	std::vector<int> unitsIDs; // IDs of all obejcts in group
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	uint16_t nID = {};														// ID of the group
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&unitsIDs); f.Add(3,&nID); return 0; }
+	uint16_t nID = {}; // ID of the group
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &unitsIDs );
+		f.Add( 3, &nID );
+		return 0;
+	}
+
 public:
-	CRegisterGroupCommand() { }
-	CRegisterGroupCommand( const std::vector<int> &vIDs, const int nID  );
+	CRegisterGroupCommand() {}
+	CRegisterGroupCommand( const std::vector<int> &vIDs, const int nID );
 	//	CRegisterGroupCommand( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wID, IAILogic *pAILogic );
 	//
 	void Execute();
@@ -34,7 +40,6 @@ public:
 		return szDebug;
 	}
 #endif
-
 };
 
 class CUnregisterGroupCommand : public IAILogicCommandB2
@@ -42,22 +47,23 @@ class CUnregisterGroupCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CUnregisterGroupCommand );
 	//
 	ZDATA
-		int nGroup = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGroup); return 0; }
+	int nGroup = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGroup );
+		return 0;
+	}
+
 public:
-	CUnregisterGroupCommand() { }
+	CUnregisterGroupCommand() {}
 	CUnregisterGroupCommand( const int nGroup );
 	//
 	void Execute();
 	//
 	bool NeedToBeStored() const { return true; }
 #ifndef _FINALRELEASE
-	virtual std::string GetDebugInfo() const
-	{
-		return fmt::format( "UnregisterGroup {}", nGroup );
-	}
+	virtual std::string GetDebugInfo() const { return fmt::format( "UnregisterGroup {}", nGroup ); }
 #endif
-
 };
 
 class CB2GroupCommand : public IAILogicCommandB2
@@ -65,12 +71,19 @@ class CB2GroupCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CB2GroupCommand );
 	//
 	ZDATA
-		SAIUnitCmd command;									// command itself
-	uint16_t wGroup = {};												// group ID, this command for
-	bool bPlaceInQueue = {};									// do we need place this command in the group's queue
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&command); f.Add(3,&wGroup); f.Add(4,&bPlaceInQueue); return 0; }
+	SAIUnitCmd command;      // command itself
+	uint16_t wGroup = {};    // group ID, this command for
+	bool bPlaceInQueue = {}; // do we need place this command in the group's queue
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &command );
+		f.Add( 3, &wGroup );
+		f.Add( 4, &bPlaceInQueue );
+		return 0;
+	}
+
 public:
-	CB2GroupCommand() { }
+	CB2GroupCommand() {}
 	CB2GroupCommand( const SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue );
 	//
 	void Execute();
@@ -80,10 +93,13 @@ public:
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
-		return fmt::format( "GroupCommand CmdID {}, GroupID {}, ({:f},{:f})", int(command.nCmdType), wGroup, command.vPos.x, command.vPos.y  );
+		return fmt::format( "GroupCommand CmdID {}, GroupID {}, ({:f},{:f})",
+		                    int( command.nCmdType ),
+		                    wGroup,
+		                    command.vPos.x,
+		                    command.vPos.y );
 	}
 #endif
-
 };
 
 class CUnitCommand : public IAILogicCommandB2
@@ -91,12 +107,19 @@ class CUnitCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CUnitCommand );
 	//
 	ZDATA
-		SAIUnitCmd command;									// command itself
-	uint16_t wID = {};														// group ID - result of this command :)
-	int nPlayer = {};												// player number
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&command); f.Add(3,&wID); f.Add(4,&nPlayer); return 0; }
+	SAIUnitCmd command; // command itself
+	uint16_t wID = {};  // group ID - result of this command :)
+	int nPlayer = {};   // player number
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &command );
+		f.Add( 3, &wID );
+		f.Add( 4, &nPlayer );
+		return 0;
+	}
+
 public:
-	CUnitCommand() { }
+	CUnitCommand() {}
 	CUnitCommand( const struct SAIUnitCmd *pCommand, const uint16_t wID, const int nPlayer );
 	//
 	void Execute();
@@ -106,7 +129,11 @@ public:
 #ifndef _FINALRELEASE
 	virtual std::string GetDebugInfo() const
 	{
-		return fmt::format( "UnitCommand CmdID {}, Player {}, ({:f},{:f})", int(command.nCmdType), nPlayer, command.vPos.x, command.vPos.y  );
+		return fmt::format( "UnitCommand CmdID {}, Player {}, ({:f},{:f})",
+		                    int( command.nCmdType ),
+		                    nPlayer,
+		                    command.vPos.x,
+		                    command.vPos.y );
 	}
 #endif
 };

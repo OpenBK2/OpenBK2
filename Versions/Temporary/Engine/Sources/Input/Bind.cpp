@@ -22,12 +22,12 @@ typedef std::unordered_map<std::string, SCommand> TCommandsMap;
 static std::vector<std::string> sections;
 static std::list<SGameMessage> events;
 
-TActionsMap& GetActions()
+TActionsMap &GetActions()
 {
 	static TActionsMap actionsMap;
 	return actionsMap;
 }
-TCommandsMap& GetCommands()
+TCommandsMap &GetCommands()
 {
 	static TCommandsMap commandsMap;
 	return commandsMap;
@@ -42,7 +42,7 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet );
 
 // Public
 
-const std::vector<std::string>& GetSections()
+const std::vector<std::string> &GetSections()
 {
 	return sections;
 }
@@ -72,7 +72,10 @@ static bool IsSectionInSet( const std::string &szSection )
 	return find( sections.begin(), sections.end(), szSection ) != sections.end();
 }
 
-void Bind( EMappingType eType, const std::string &sCmd, const std::string &szSection, const std::vector<std::string> &szControlsSet )
+void Bind( EMappingType eType,
+           const std::string &sCmd,
+           const std::string &szSection,
+           const std::vector<std::string> &szControlsSet )
 {
 	SMapping sMapping;
 	TActionsMap &sActions = GetActions();
@@ -108,7 +111,8 @@ void Bind( EMappingType eType, const std::string &sCmd, const std::string &szSec
 		if ( sInfo.eState != STATE_INITIALIZED )
 		{
 			if ( sInfo.eState != STATE_CONFIGPRESET )
-				sInfo.fCoeff = 1.0f;;
+				sInfo.fCoeff = 1.0f;
+			;
 
 			sInfo.eState = STATE_INITIALIZED;
 			sInfo.szName = szControlsSet[nTemp];
@@ -131,7 +135,8 @@ void Unbind( const std::string &szCmd )
 		return;
 
 	SCommand &sCommand = iTemp->second;
-	for ( std::list<SMapping>::iterator iMapping = sCommand.mappingsList.begin(); iMapping != sCommand.mappingsList.end(); )
+	for ( std::list<SMapping>::iterator iMapping = sCommand.mappingsList.begin();
+	      iMapping != sCommand.mappingsList.end(); )
 	{
 		if ( !IsSectionInSet( iMapping->szSection ) )
 		{
@@ -165,13 +170,15 @@ void GetBind( const std::string &szCmd, std::list<SBind> *pRes )
 		return;
 
 	SCommand &sCommand = sCommandsMap[szCmd];
-	for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+	for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
+	      iTempMapping != sCommand.mappingsList.end();
+	      ++iTempMapping )
 	{
 		SBind &sBind = pRes->emplace_back();
 		sBind.eType = iTempMapping->mType;
 		sBind.szSection = iTempMapping->szSection;
 
-		for( int nTemp = 0; nTemp < iTempMapping->actionsSet.size(); nTemp++ )
+		for ( int nTemp = 0; nTemp < iTempMapping->actionsSet.size(); nTemp++ )
 		{
 			const SActionInfo &sTempInfo = sActions[iTempMapping->actionsSet[nTemp]];
 			sBind.controlsSet.push_back( sTempInfo.szName );
@@ -183,18 +190,26 @@ void UpdateBinds()
 {
 	TCommandsMap &sCommandsMap = GetCommands();
 
-	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommandsMap.begin(); iTempCommand != sCommandsMap.end(); ++iTempCommand )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommandsMap.begin();
+	      iTempCommand != sCommandsMap.end();
+	      ++iTempCommand )
 	{
 		SCommand &sCommand = iTempCommand->second;
-		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
+		      iTempMapping != sCommand.mappingsList.end();
+		      ++iTempMapping )
 			iTempMapping->blockingGroupsSet.clear();
 	}
 
-	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommandsMap.begin(); iTempCommand != sCommandsMap.end(); ++iTempCommand )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommandsMap.begin();
+	      iTempCommand != sCommandsMap.end();
+	      ++iTempCommand )
 	{
 		SCommand &sCommand = iTempCommand->second;
 
-		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
+		      iTempMapping != sCommand.mappingsList.end();
+		      ++iTempMapping )
 		{
 			iTempMapping->bDisabled = false;
 
@@ -207,26 +222,34 @@ void UpdateBinds()
 		}
 	}
 
-	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand1 = sCommandsMap.begin(); iTempCommand1 != sCommandsMap.end(); ++iTempCommand1 )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand1 = sCommandsMap.begin();
+	      iTempCommand1 != sCommandsMap.end();
+	      ++iTempCommand1 )
 	{
 		SCommand &sCommand1 = iTempCommand1->second;
 		std::unordered_map<std::string, SCommand>::iterator iNext = iTempCommand1;
 		iNext++;
-		for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand2 = iNext; iTempCommand2 != sCommandsMap.end(); ++iTempCommand2 )
+		for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand2 = iNext;
+		      iTempCommand2 != sCommandsMap.end();
+		      ++iTempCommand2 )
 		{
 			SCommand &sCommand2 = iTempCommand2->second;
 
-			for ( std::list<SMapping>::iterator iTempMapping1 = sCommand1.mappingsList.begin(); iTempMapping1 != sCommand1.mappingsList.end(); ++iTempMapping1 )
+			for ( std::list<SMapping>::iterator iTempMapping1 = sCommand1.mappingsList.begin();
+			      iTempMapping1 != sCommand1.mappingsList.end();
+			      ++iTempMapping1 )
 			{
-				for ( std::list<SMapping>::iterator iTempMapping2 = sCommand2.mappingsList.begin(); iTempMapping2 != sCommand2.mappingsList.end(); ++iTempMapping2 )
+				for ( std::list<SMapping>::iterator iTempMapping2 = sCommand2.mappingsList.begin();
+				      iTempMapping2 != sCommand2.mappingsList.end();
+				      ++iTempMapping2 )
 				{
 					if ( iTempMapping1->bDisabled || iTempMapping2->bDisabled )
 						continue;
 
 					if ( IsMappingBSubsetA( *iTempMapping1, *iTempMapping2 ) )
-						CrossMappings( *iTempMapping1, &(*iTempMapping2) );
+						CrossMappings( *iTempMapping1, &( *iTempMapping2 ) );
 					if ( IsMappingBSubsetA( *iTempMapping2, *iTempMapping1 ) )
-						CrossMappings( *iTempMapping2, &(*iTempMapping1) );
+						CrossMappings( *iTempMapping2, &( *iTempMapping1 ) );
 				}
 			}
 		}
@@ -283,12 +306,12 @@ bool GetEvent( SGameMessage *pSGameMessage )
 	return true;
 }
 
-void MakeEvent( SGameMessage *pMsg,  const std::string &szGameMessage, int _nParam1, int _nParam2, EControlType ct )
+void MakeEvent( SGameMessage *pMsg, const std::string &szGameMessage, int _nParam1, int _nParam2, EControlType ct )
 {
 	*pMsg = SGameMessage();
 	TCommandsMap::iterator iTemp = GetCommands().find( szGameMessage );
 	if ( iTemp != GetCommands().end() )
-		pMsg->commands.push_back( &(iTemp->second) );
+		pMsg->commands.push_back( &( iTemp->second ) );
 
 	pMsg->mMessage.cType = ct;
 	pMsg->mMessage.tTime = GetCurrentTimeMilliseconds();
@@ -321,7 +344,9 @@ void PurgeEvents()
 {
 	PumpMessages( true );
 	SGameMessage gameMessage;
-	while ( GetEvent( &gameMessage ) ) {}
+	while ( GetEvent( &gameMessage ) )
+	{
+	}
 }
 
 void PurgeUIEvents()
@@ -366,7 +391,7 @@ void SetCommandCoeff( const std::string &szControl, float fCoeff )
 
 // CBind
 
-CBind::CBind( const std::string &sCmd ): fDelta( 0 )
+CBind::CBind( const std::string &sCmd ) : fDelta( 0 )
 {
 
 #ifndef _FINALRELEASE
@@ -405,7 +430,8 @@ bool CBind::ProcessEvent( const SGameMessage &eEvent )
 	if ( find( eEvent.commands.begin(), eEvent.commands.end(), pBindCommand ) == eEvent.commands.end() )
 		return false;
 
-	if ( ( eEvent.mMessage.cType == CT_UNKNOWN || eEvent.mMessage.cType == CT_WINDOWS ) && ( eEvent.mMessage.nAction == -1 ) )
+	if ( ( eEvent.mMessage.cType == CT_UNKNOWN || eEvent.mMessage.cType == CT_WINDOWS ) &&
+	     ( eEvent.mMessage.nAction == -1 ) )
 		return true;
 
 	return ProcessCommandMessage( eEvent.mMessage, *pBindCommand );
@@ -426,7 +452,9 @@ static void Update( uint32_t dwTime )
 
 		bool bActive = false;
 		int64_t nValue = 0;
-		for( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
+		      iTempMapping != sCommand.mappingsList.end();
+		      ++iTempMapping )
 		{
 			if ( iTempMapping->bDisabled )
 				continue;
@@ -448,7 +476,7 @@ static bool IsBindActive( const SMapping &sMapping )
 
 	int nCount = 0;
 	bool bSetActive = true;
-	for( int nTemp = 0; nTemp < sMapping.actionsSet.size(); nTemp++ )
+	for ( int nTemp = 0; nTemp < sMapping.actionsSet.size(); nTemp++ )
 	{
 		const SActionInfo &sTempInfo = sActions[sMapping.actionsSet[nTemp]];
 		if ( sTempInfo.bActive )
@@ -460,12 +488,14 @@ static bool IsBindActive( const SMapping &sMapping )
 
 	if ( bSetActive )
 	{
-		for( std::list<std::vector<int> >::const_iterator iTempSet = sMapping.blockingGroupsSet.begin(); iTempSet != sMapping.blockingGroupsSet.end(); iTempSet++ )
+		for ( std::list<std::vector<int>>::const_iterator iTempSet = sMapping.blockingGroupsSet.begin();
+		      iTempSet != sMapping.blockingGroupsSet.end();
+		      iTempSet++ )
 		{
 			int nBlockingCount = 0;
 			const std::vector<int> &sBlockingSet = *iTempSet;
 
-			for( int nTemp = 0; nTemp < sBlockingSet.size(); nTemp++ )
+			for ( int nTemp = 0; nTemp < sBlockingSet.size(); nTemp++ )
 			{
 				const SActionInfo &sTempInfo = sActions[sBlockingSet[nTemp]];
 
@@ -502,15 +532,20 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 	SActionInfo &sActionInfo = sActions[mMsg.nAction];
 	sActionInfo.bActive = mMsg.bState;
 
-	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommands.begin(); iTempCommand != sCommands.end(); ++iTempCommand )
+	for ( std::unordered_map<std::string, SCommand>::iterator iTempCommand = sCommands.begin();
+	      iTempCommand != sCommands.end();
+	      ++iTempCommand )
 	{
 		SCommand &sCommand = iTempCommand->second;
 
-		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+		for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
+		      iTempMapping != sCommand.mappingsList.end();
+		      ++iTempMapping )
 		{
 			if ( iTempMapping->bDisabled || iTempMapping->actionsSet.empty() )
 				continue;
-			if ( find( iTempMapping->fullActionsSet.begin(), iTempMapping->fullActionsSet.end(), mMsg.nAction ) == iTempMapping->fullActionsSet.end() )
+			if ( find( iTempMapping->fullActionsSet.begin(), iTempMapping->fullActionsSet.end(), mMsg.nAction ) ==
+			     iTempMapping->fullActionsSet.end() )
 				continue;
 
 			SActionInfo &sActionInfo = sActions[mMsg.nAction];
@@ -549,11 +584,14 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 	SActionInfo &sActionInfo = sActions[mMsg.nAction];
 	sActionInfo.bActive = mMsg.bState;
 
-	for( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+	for ( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin();
+	      iTempMapping != sCommand.mappingsList.end();
+	      ++iTempMapping )
 	{
 		if ( iTempMapping->bDisabled || iTempMapping->actionsSet.empty() )
 			continue;
-		if ( find( iTempMapping->fullActionsSet.begin(), iTempMapping->fullActionsSet.end(), mMsg.nAction ) == iTempMapping->fullActionsSet.end() )
+		if ( find( iTempMapping->fullActionsSet.begin(), iTempMapping->fullActionsSet.end(), mMsg.nAction ) ==
+		     iTempMapping->fullActionsSet.end() )
 			continue;
 
 		SActionInfo &sActionInfo = sActions[mMsg.nAction];
@@ -570,13 +608,16 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 		if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_KEY ) )
 			iTempMapping->sAccumulator.sKeyAccumulator.Activate( iTempMapping->nPower * sActionInfo.fCoeff, mMsg.tTime );
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_AXIS ) )
-			iTempMapping->sAccumulator.sAxisAccumulator.Add( iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+			iTempMapping->sAccumulator.sAxisAccumulator.Add(
+					iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_LIMAXIS ) )
-			iTempMapping->sAccumulator.sLimAxisAccumulator.Add( iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+			iTempMapping->sAccumulator.sLimAxisAccumulator.Add(
+					iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_POV ) )
 		{
 			if ( mMsg.nParam != -1 )
-				iTempMapping->sAccumulator.sPOVAccumulator.Activate( iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+				iTempMapping->sAccumulator.sPOVAccumulator.Activate(
+						iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
 			else
 				iTempMapping->sAccumulator.sPOVAccumulator.Deactivate( mMsg.tTime );
 		}
@@ -603,7 +644,8 @@ static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 	{
 		bool bInSet = false;
 
-		for ( std::vector<int>::const_iterator iTempA = mSetA.actionsSet.begin(); iTempA != mSetA.actionsSet.end(); ++iTempA )
+		for ( std::vector<int>::const_iterator iTempA = mSetA.actionsSet.begin(); iTempA != mSetA.actionsSet.end();
+		      ++iTempA )
 		{
 			if ( *iTempB == *iTempA )
 				bInSet = true;
@@ -618,15 +660,20 @@ static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 
 static bool IsSameMappingExist( const SCommand &sCommand, const SMapping &sMapping )
 {
-	for ( std::list<SMapping>::const_iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
+	for ( std::list<SMapping>::const_iterator iTempMapping = sCommand.mappingsList.begin();
+	      iTempMapping != sCommand.mappingsList.end();
+	      ++iTempMapping )
 	{
-		if ( ( sMapping.mType != iTempMapping->mType ) || ( sMapping.nPower != iTempMapping->nPower ) || ( sMapping.bActive != iTempMapping->bActive ) || ( sMapping.szSection != iTempMapping->szSection ) )
+		if ( ( sMapping.mType != iTempMapping->mType ) || ( sMapping.nPower != iTempMapping->nPower ) ||
+		     ( sMapping.bActive != iTempMapping->bActive ) || ( sMapping.szSection != iTempMapping->szSection ) )
 			continue;
 		if ( iTempMapping->actionsSet.size() != sMapping.actionsSet.size() )
 			continue;
 
 		int nSameActionsCount = 0;
-		for ( std::vector<int>::const_iterator iTempAction = iTempMapping->actionsSet.begin(); iTempAction != iTempMapping->actionsSet.end(); iTempAction++ )
+		for ( std::vector<int>::const_iterator iTempAction = iTempMapping->actionsSet.begin();
+		      iTempAction != iTempMapping->actionsSet.end();
+		      iTempAction++ )
 		{
 			if ( find( sMapping.actionsSet.begin(), sMapping.actionsSet.end(), *iTempAction ) != sMapping.actionsSet.end() )
 				nSameActionsCount++;
@@ -689,21 +736,21 @@ static void CommandBindInner( const std::string &szID, const std::vector<std::ws
 	NInput::EMappingType eType = NInput::MTYPE_UNKNOWN;
 	switch ( szCommand[0] )
 	{
-	case '+':
-		eType = NInput::MTYPE_SLIDER;
-		NStr::TrimLeft( szCommand, '+' );
-		break;
-	case '-':
-		eType = NInput::MTYPE_SLIDER_MINUS;
-		NStr::TrimLeft( szCommand, '-' );
-		break;
-	case '!':
-		eType = NInput::MTYPE_EVENT_UP;
-		NStr::TrimLeft( szCommand, '!' );
-		break;
-	default:
-		eType = NInput::MTYPE_EVENT;
-		break;
+		case '+':
+			eType = NInput::MTYPE_SLIDER;
+			NStr::TrimLeft( szCommand, '+' );
+			break;
+		case '-':
+			eType = NInput::MTYPE_SLIDER_MINUS;
+			NStr::TrimLeft( szCommand, '-' );
+			break;
+		case '!':
+			eType = NInput::MTYPE_EVENT_UP;
+			NStr::TrimLeft( szCommand, '!' );
+			break;
+		default:
+			eType = NInput::MTYPE_EVENT;
+			break;
 	}
 
 	std::vector<std::string> controlsSet;
@@ -734,7 +781,7 @@ static void CommandBind( const std::string &szID, const std::vector<std::wstring
 	std::vector<std::wstring> paramsSet( _paramsSet );
 	for ( int k = 1; k < paramsSet.size(); ++k )
 	{
-		if ( paramsSet[k] == std::wstring(L"'CTRL'") )
+		if ( paramsSet[k] == std::wstring( L"'CTRL'" ) )
 		{
 			paramsSet[k] = L"'LCTRL'";
 			CommandBind( szID, paramsSet, pContext );
@@ -824,12 +871,12 @@ static void CommandShowBind( const std::string &szID, const std::vector<std::wst
 	}
 }
 
-START_REGISTER(InputBind)
-	REGISTER_CMD( "bind", CommandBind )
-	REGISTER_CMD( "unbind", CommandUnbind )
-	REGISTER_CMD( "unbindall", CommandUnbindAll )
-	REGISTER_CMD( "bindsection", CommandBindSection )
-	REGISTER_CMD( "bindconfigure", CommandBindConfigure )
-	REGISTER_CMD( "bind_update", CommandBindUpdate )
-	REGISTER_CMD( "showbind", CommandShowBind )
+START_REGISTER( InputBind )
+REGISTER_CMD( "bind", CommandBind )
+REGISTER_CMD( "unbind", CommandUnbind )
+REGISTER_CMD( "unbindall", CommandUnbindAll )
+REGISTER_CMD( "bindsection", CommandBindSection )
+REGISTER_CMD( "bindconfigure", CommandBindConfigure )
+REGISTER_CMD( "bind_update", CommandBindUpdate )
+REGISTER_CMD( "showbind", CommandShowBind )
 FINISH_REGISTER

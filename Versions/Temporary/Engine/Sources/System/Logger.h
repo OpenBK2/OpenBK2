@@ -14,7 +14,7 @@ ILogDumper *CreateAssertDumper();
 class CLogger
 {
 	const std::string szLoggerName;
-	typedef std::vector<CObj<ILogDumper> > CDumpersList;
+	typedef std::vector<CObj<ILogDumper>> CDumpersList;
 	CDumpersList dumpers;
 	std::wstring wszLogBuffer;
 	CLogger *pParent;
@@ -22,8 +22,9 @@ class CLogger
 	CLogger *GetParent() const { return pParent; }
 	const std::string &GetLoggerLocalName() const { return szLoggerName; }
 	std::string GetLoggerFullName() const;
+
 public:
-	CLogger( const std::string &_szLoggerName, CLogger *_pParent ): szLoggerName( _szLoggerName ), pParent( _pParent ) {}
+	CLogger( const std::string &_szLoggerName, CLogger *_pParent ) : szLoggerName( _szLoggerName ), pParent( _pParent ) {}
 	~CLogger() { Dump(); }
 	//
 	CLogger &operator<<( const int nVal );
@@ -37,7 +38,7 @@ public:
 	CLogger &operator<<( const wchar_t *pwszText );
 	CLogger &operator<<( const std::wstring &wszText );
 	//
-	CLogger &operator<< ( CLogger &(*Func)( CLogger &logStream ) ) { return Func( *this ); }
+	CLogger &operator<<( CLogger &( *Func )( CLogger &logStream ) ) { return Func( *this ); }
 	CLogger &Dump();
 	bool Dump( const std::string &szChildLoggerFullName, const std::wstring &wszString );
 	//
@@ -46,8 +47,14 @@ public:
 
 }
 
-NLog::CLogger &endl( NLog::CLogger &logStream ) { return logStream << L"\n"; }
-NLog::CLogger &dump( NLog::CLogger &logStream ) { return logStream.Dump(); }
+NLog::CLogger &endl( NLog::CLogger &logStream )
+{
+	return logStream << L"\n";
+}
+NLog::CLogger &dump( NLog::CLogger &logStream )
+{
+	return logStream.Dump();
+}
 
 // Отладочные сообщения. Используются для глубокой отладки приложений (программерское).
 EXTERNVAR NLog::CLogger logDebug;

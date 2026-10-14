@@ -20,36 +20,40 @@ class CMapInfoBuilder : public CBuildDataBuilder
 	OBJECT_NOCOPY_METHODS( CMapInfoBuilder );
 
 	CMapInfoBuilder() {}
+
 protected:
 	// IBuildDataCallback
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 
 	// CBuildDataBuilder
-	const std::string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
+	const std::string &GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
 	bool InternalInsertObject( std::string *pszObjectTypeName,
-														 std::string *pszUniqueObjectName,
-														 bool bFromMainMenu,
-														 bool *pbCanChangeObjectName,
-														 bool *pbNeedExport,
-														 bool *pbNeedEdit,
-														 IManipulator *pBuildDataManipulator );
+	                           std::string *pszUniqueObjectName,
+	                           bool bFromMainMenu,
+	                           bool *pbCanChangeObjectName,
+	                           bool *pbNeedExport,
+	                           bool *pbNeedEdit,
+	                           IManipulator *pBuildDataManipulator );
 
 	// IBuilder
 	void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder );
 	bool InsertObject( std::string *pszObjectTypeName,
-										 std::string *pszUniqueObjectName,
-										 bool bFromMainMenu,
-										 bool *pbCanChangeObjectName,
-										 bool *pbNeedExport,
-										 bool *pbNeedEdit );
-	bool CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
+	                   std::string *pszUniqueObjectName,
+	                   bool bFromMainMenu,
+	                   bool *pbCanChangeObjectName,
+	                   bool *pbNeedExport,
+	                   bool *pbNeedEdit );
+	bool
+	CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
 	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 
 	// members
 	bool IsValidDataBuilder( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 	bool IsValidDataCopier( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
-	bool InternalCopy( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource, IManipulator *pBuildDataManipulator );
-
+	bool InternalCopy( const std::string &rszObjectTypeName,
+	                   const std::string &rszDestination,
+	                   const std::string &rszSource,
+	                   IManipulator *pBuildDataManipulator );
 
 public:
 	static bool EnsureMinimapMaterialAndTexture( IManipulator *pObjectManipulator, const CDBID &dbid );

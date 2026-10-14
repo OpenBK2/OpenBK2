@@ -32,7 +32,7 @@ bool IsNoCode( const NDb::NTypeDef::STypeStructBase::SField &field )
 	return false;
 }
 
-NDb::NTypeDef::STypeDef* GetRealType( NDb::NTypeDef::STypeDef *pType )
+NDb::NTypeDef::STypeDef *GetRealType( NDb::NTypeDef::STypeDef *pType )
 {
 	if ( CDynamicCast<NDb::NTypeDef::STypedefType> pTypeDefNode = pType )
 		return pTypeDefNode->pRealType;

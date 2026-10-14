@@ -18,12 +18,12 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D488, CAnimUnitSoldier );
 
 void CAnimUnitSoldier::Init( CAIUnit *_pOwner )
 {
-	pOwner = checked_cast<CSoldier*>(_pOwner);
+	pOwner = checked_cast<CSoldier *>( _pOwner );
 	nCurAnimation = NDb::ANIMATION_IDLE;
 	timeOfFinishAnimation = 0;
 	bMustFinishCurAnimation = true;
 
-	pOwnerStats = checked_cast<const SInfantryRPGStats*>(pOwner->GetStats());
+	pOwnerStats = checked_cast<const SInfantryRPGStats *>( pOwner->GetStats() );
 	bComplexAttack = !pOwnerStats->bCanAttackDown || !pOwnerStats->bCanAttackUp;
 }
 
@@ -58,7 +58,7 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 		case NDb::ANIMATION_DEATH_DOWN:
 		case NDb::ANIMATION_USE:
 		case NDb::ANIMATION_USE_DOWN:
-//		case NDb::ANIMATION_POINTING:
+			//		case NDb::ANIMATION_POINTING:
 		case NDb::ANIMATION_BINOCULARS:
 		case NDb::ANIMATION_BINOCULARS_DOWN:
 		case NDb::ANIMATION_DEATH_FATALITY:
@@ -79,9 +79,10 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 			{
 				NI_ASSERT( std::fegetround() == FE_TONEAREST, "something changed processor control word" );
 				const SInfantryRPGStats::SInfantryGun &gun = pOwnerStats->GetGun( pOwner->GetUniqueID(), 0, 0 );
-				timeOfFinishAnimation = curTime +
-					(std::max)( pOwnerStats->GetAnimTime( nAnimation ),
-					Float2Int( gun.pWeapon->nAmmoPerBurst * 60000 / gun.pWeapon->shells[0].fFireRate - 0.5f ) );
+				timeOfFinishAnimation =
+						curTime +
+						(std::max)( pOwnerStats->GetAnimTime( nAnimation ),
+				                Float2Int( gun.pWeapon->nAmmoPerBurst * 60000 / gun.pWeapon->shells[0].fFireRate - 0.5f ) );
 			}
 
 			if ( bComplexAttack )
@@ -91,11 +92,11 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 		case NDb::ANIMATION_SHOOT_TRENCH:
 		case NDb::ANIMATION_THROW:
 		case NDb::ANIMATION_THROW_TRENCH:
-//		case NDb::ANIMATION_RADIO:
+			//		case NDb::ANIMATION_RADIO:
 		case NDb::ANIMATION_LIE:
 		case NDb::ANIMATION_STAND:
 		case NDb::ANIMATION_THROW_DOWN:
-//		case NDb::ANIMATION_PRISONING:
+			//		case NDb::ANIMATION_PRISONING:
 			bMustFinishCurAnimation = true;
 			timeOfFinishAnimation = curTime + pOwnerStats->GetAnimTime( nAnimation );
 			break;
@@ -116,17 +117,17 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 void CAnimUnitSoldier::Segment()
 {
 	if ( movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ||
-			 movingState.state == SMovingState::EMS_MOVING_TO_STOPPED )
+	     movingState.state == SMovingState::EMS_MOVING_TO_STOPPED )
 	{
 		if ( movingState.timeOfIntentionStart + 100 < curTime )
 		{
-			movingState.state =
-				movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ?
-														 SMovingState::EMS_MOVING : SMovingState::EMS_STOPPED;
+			movingState.state = movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ? SMovingState::EMS_MOVING
+			                                                                             : SMovingState::EMS_STOPPED;
 
 			if ( nCurAnimation == NDb::ANIMATION_MOVE || nCurAnimation == NDb::ANIMATION_CRAWL ||
-				/*!bMustFinishCurAnimation || */
-						movingState.state == SMovingState::EMS_MOVING && nCurAnimation != NDb::ANIMATION_STAND && nCurAnimation != NDb::ANIMATION_LIE )
+			     /*!bMustFinishCurAnimation || */
+			     movingState.state == SMovingState::EMS_MOVING && nCurAnimation != NDb::ANIMATION_STAND &&
+			         nCurAnimation != NDb::ANIMATION_LIE )
 			{
 				bMustFinishCurAnimation = false;
 				StopCurAnimation();
@@ -155,7 +156,7 @@ void CAnimUnitSoldier::Segment()
 void CAnimUnitSoldier::StopCurAnimation()
 {
 	//if ( pOwner->GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE )
-		//return;
+	//return;
 	if ( movingState.state == SMovingState::EMS_STOPPED )
 	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_STOP, pOwner, -1 );

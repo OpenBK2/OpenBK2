@@ -15,13 +15,13 @@
 namespace NModelExporter
 {
 
-EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
-																						const std::string &rszObjectTypeName,
-																						const std::string &rszObjectName,
-																						bool bForce,
-																						EXPORT_TYPE exportType )
+EXPORT_RESULT CModelExporter::ExportObject( IManipulator *pManipulator,
+                                            const std::string &rszObjectTypeName,
+                                            const std::string &rszObjectName,
+                                            bool bForce,
+                                            EXPORT_TYPE exportType )
 {
-	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport(pManipulator, rszObjectTypeName) )
+	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport( pManipulator, rszObjectTypeName ) )
 		return ER_BREAK;
 	if ( exportType == ET_BEFORE_REF )
 		return ER_SUCCESS;
@@ -31,21 +31,23 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 	{
 		// first, check number of meshes and number of materials
 		std::string szGeometryName;
-		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pManipulator, 0, &szGeometryName, 0 );
+		CPtr<IManipulator> pGeomMan =
+				CManipulatorManager::CreateManipulatorFromReference( "Geometry", pManipulator, 0, &szGeometryName, 0 );
 		if ( pGeomMan == 0 || szGeometryName.empty() )
 		{
 			Log( LT_ERROR, "Can't extract geometry from model\n" );
-			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
+			Log( LT_ERROR, fmt::format( "\tModel name: {}\n", rszObjectName.c_str() ) );
 			return ER_FAIL;
 		}
-		if ( NEditorGltf::IsGltf(pGeomMan) && exportType == ET_NO_REF &&
-			!NEditorGltf::Export(pGeomMan, "Geometry", true) ) return ER_BREAK;
+		if ( NEditorGltf::IsGltf( pGeomMan ) && exportType == ET_NO_REF &&
+		     !NEditorGltf::Export( pGeomMan, "Geometry", true ) )
+			return ER_BREAK;
 		int nNumGeometryMeshes = 0;
 		CManipulatorManager::GetValue( &nNumGeometryMeshes, pGeomMan, "NumMeshes" );
 		if ( nNumGeometryMeshes == 0 )
 		{
 			Log( LT_ERROR, "Empty 'NumMeshes' in geometry\n" );
-			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
+			Log( LT_ERROR, fmt::format( "\tModel name: {}\n", rszObjectName.c_str() ) );
 			return ER_FAIL;
 		}
 		int nNumGeomMaterials = 0;
@@ -57,16 +59,19 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		if ( nNumGeomMaterials == 0 && PatMat( szModelName.c_str(), "*section??" ) == 0 )
 		{
 			Log( LT_ERROR, "Empty material list in model\n" );
-			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
+			Log( LT_ERROR, fmt::format( "\tModel name: {}\n", rszObjectName.c_str() ) );
 			return ER_FAIL;
 		}
 		// GLTF rendering uses the authored XDB material list in mesh-node order.
 		// Never try to regenerate that list by reading a nonexistent Granny binary.
-		if ( NEditorGltf::IsGltf(pGeomMan) )
-			return NEditorGltf::Export(pGeomMan, "Geometry", false) ? ER_SUCCESS : ER_BREAK;
+		if ( NEditorGltf::IsGltf( pGeomMan ) )
+			return NEditorGltf::Export( pGeomMan, "Geometry", false ) ? ER_SUCCESS : ER_BREAK;
 		// load geometry
 		CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
-		CGrannyFileInfoGuard pInfo( NBinResources::GetExistentBinaryFileName( Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\geometries", pGeometry->GetRecordID(), pGeometry->uid ) ); // uid
+		CGrannyFileInfoGuard pInfo( NBinResources::GetExistentBinaryFileName(
+				Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\geometries",
+				pGeometry->GetRecordID(),
+				pGeometry->uid ) ); // uid
 		//CGrannyFileInfoGuard pInfo( pUserData->szExportDestinationFolder + fmt::format( "bin\\geometries\\{}", nGeomID ) );
 		int nNumGrannyMeshes = pInfo->MeshCount;
 		//
@@ -80,7 +85,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 	catch ( ... )
 	{
 		Log( LT_ERROR, "General fail during model check\n" );
-		Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
+		Log( LT_ERROR, fmt::format( "\tModel name: {}\n", rszObjectName.c_str() ) );
 		return ER_FAIL;
 	}
 	//
@@ -98,16 +103,15 @@ struct SMaterialInfo
 	std::string szType;
 	//
 	SMaterialInfo() {}
-	SMaterialInfo( const std::string &_szName, const std::string &_szType )
-		: szName( _szName ), szType( _szType ) {}
+	SMaterialInfo( const std::string &_szName, const std::string &_szType ) : szName( _szName ), szType( _szType ) {}
 };
 
-bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* pGeomMan, CGrannyFileInfoGuard &pInfo )
+bool CModelExporter::MakeMaterialsList( IManipulator *pModelMan, IManipulator *pGeomMan, CGrannyFileInfoGuard &pInfo )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
 	CGrannyBoneAttributesList attribs;
-	ReadAttributes( &attribs, NMEGeomAttribs::GetAttribsByModel(pModelMan), "", true );
+	ReadAttributes( &attribs, NMEGeomAttribs::GetAttribsByModel( pModelMan ), "", true );
 	// find opacity attribute for each mesh
 	bool bHasTransparency = false;
 	std::unordered_map<std::string, bool> meshTranspInfoMap;
@@ -137,7 +141,8 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 			return false;
 		}
 		//
-		CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( szMaterialRefName, pModelMan, 0, 0, 0 );
+		CPtr<IManipulator> pMaterialMan =
+				CManipulatorManager::CreateManipulatorFromReference( szMaterialRefName, pModelMan, 0, 0, 0 );
 		std::string szMaterialType;
 		CManipulatorManager::GetValue( &szMaterialType, pMaterialMan, "AlphaMode" );
 		//
@@ -145,42 +150,47 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 			szTransparentMaterialName = szMaterialName;
 		else
 			szOpaqueMaterialName = szMaterialName;
-		materials.push_back( SMaterialInfo(szMaterialName, szMaterialType) );
+		materials.push_back( SMaterialInfo( szMaterialName, szMaterialType ) );
 	}
 	// make transparent material and change texture params
 	if ( szTransparentMaterialName.empty() && !materials.empty() )
 	{
-		szTransparentMaterialName = NFile::GetFilePath( materials.front().szName ) + NFile::GetFileTitle( materials.front().szName ) + "_transp.xdb";
-		CPtr<IManipulator> pTranspMaterialMan = Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szTransparentMaterialName );
+		szTransparentMaterialName = NFile::GetFilePath( materials.front().szName ) +
+		                            NFile::GetFileTitle( materials.front().szName ) + "_transp.xdb";
+		CPtr<IManipulator> pTranspMaterialMan =
+				Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szTransparentMaterialName );
 		if ( pTranspMaterialMan == 0 )
 		{
 			if ( MakeMaterialCopy( materials.front().szName, szTransparentMaterialName ) == false )
 			{
 				Log( LT_ERROR, "Can't make material copy to create transparent material\n" );
-				Log( LT_ERROR, fmt::format("\tMaterial name: {}\n", szTransparentMaterialName.c_str()) );
+				Log( LT_ERROR, fmt::format( "\tMaterial name: {}\n", szTransparentMaterialName.c_str() ) );
 				return ER_FAIL;
 			}
-			pTranspMaterialMan = Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szTransparentMaterialName );
+			pTranspMaterialMan =
+					Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szTransparentMaterialName );
 		}
 		//
 		if ( pTranspMaterialMan != 0 )
-			CManipulatorManager::SetValue( std::string("AM_TRANSPARENT"), pTranspMaterialMan, "AlphaMode" );
+			CManipulatorManager::SetValue( std::string( "AM_TRANSPARENT" ), pTranspMaterialMan, "AlphaMode" );
 		// change texture export params to achive transparency
-		CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelMan, 0, 0, 0 );
-		CPtr<IManipulator> pTextureMan = CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialMan, 0, 0, 0 );
+		CPtr<IManipulator> pMaterialMan =
+				CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelMan, 0, 0, 0 );
+		CPtr<IManipulator> pTextureMan =
+				CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialMan, 0, 0, 0 );
 		bool bNeedConvertTexture = false;
 		std::string szConversionType;
 		CManipulatorManager::GetValue( &szConversionType, pTextureMan, "ConversionType" );
 		if ( szConversionType != "CONVERT_TRANSPARENT" )
 		{
-			CManipulatorManager::SetValue( std::string("CONVERT_TRANSPARENT"), pTextureMan, "ConversionType" );
+			CManipulatorManager::SetValue( std::string( "CONVERT_TRANSPARENT" ), pTextureMan, "ConversionType" );
 			bNeedConvertTexture = true;
 		}
 		std::string szTextureFormat;
 		CManipulatorManager::GetValue( &szTextureFormat, pTextureMan, "Format" );
 		if ( szTextureFormat != "TF_DXT3" )
 		{
-			CManipulatorManager::SetValue( std::string("TF_DXT3"), pTextureMan, "Format" );
+			CManipulatorManager::SetValue( std::string( "TF_DXT3" ), pTextureMan, "Format" );
 			bNeedConvertTexture = true;
 		}
 		//
@@ -188,7 +198,8 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		{
 			std::string szTextureName;
 			CManipulatorManager::GetValue( &szTextureName, pMaterialMan, "Texture" );
-			Singleton<IExporterContainer>()->ExportObject( pTextureMan, "Texture", szTextureName, true, NOT_EXPORT_REFERENCES );
+			Singleton<IExporterContainer>()->ExportObject(
+					pTextureMan, "Texture", szTextureName, true, NOT_EXPORT_REFERENCES );
 		}
 	}
 	//
@@ -208,7 +219,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		const std::string szMaterialRefName = fmt::format( "Materials.[{}]", i );
 		if ( i >= nNumModelMaterials )
 		{
-			if ( pModelMan->InsertNode("Materials") == false )
+			if ( pModelMan->InsertNode( "Materials" ) == false )
 			{
 				Log( LT_ERROR, "Can't insert material in model\n" );
 				return ER_FAIL;
@@ -241,18 +252,17 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 using namespace NModelExporter;
 REGISTER_EXPORTER_IN_DLL( Model, CModelExporter )
 
-
-
 // VisObj has no binary of its own. Validate all seasonal models before the
 // default exporter walks their geometry, materials, skeletons and animations.
 class CVisObjExporter : public CBasicExporter
 {
-	OBJECT_NOCOPY_METHODS(CVisObjExporter);
+	OBJECT_NOCOPY_METHODS( CVisObjExporter );
+
 public:
-	EXPORT_RESULT ExportObject( IManipulator *resource, const std::string &type,
-		const std::string &, bool, EXPORT_TYPE phase ) override
+	EXPORT_RESULT
+	ExportObject( IManipulator *resource, const std::string &type, const std::string &, bool, EXPORT_TYPE phase ) override
 	{
-		return phase == ET_AFTER_REF || NEditorGltf::ValidateForExport(resource, type) ? ER_SUCCESS : ER_BREAK;
+		return phase == ET_AFTER_REF || NEditorGltf::ValidateForExport( resource, type ) ? ER_SUCCESS : ER_BREAK;
 	}
 };
 REGISTER_EXPORTER_IN_DLL( VisObj, CVisObjExporter )

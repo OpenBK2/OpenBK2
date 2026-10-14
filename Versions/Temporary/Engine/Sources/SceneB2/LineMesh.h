@@ -12,9 +12,11 @@ class CLineMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 
 	static void FillVertexData( NGScene::SVertex &vertex );
 	void BuildLine( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris );
+
 protected:
 	void Recalc();
 	CLineMesh() {}
+
 public:
 	CLineMesh( const CVec2 &vStart, const CVec2 &vEnd, CTerrainManager *_pTerraManager );
 

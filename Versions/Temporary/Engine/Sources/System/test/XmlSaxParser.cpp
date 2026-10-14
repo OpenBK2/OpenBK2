@@ -24,16 +24,19 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 // Every callback, written as one line, so a mismatch shows as a diff of lines.
 class CRecordingVisitor : public NLXML::IXmlSaxVisitor
 {
 	OBJECT_NOCOPY_METHODS( CRecordingVisitor );
+
 public:
 	std::vector<std::string> events;
 
-	bool VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone ) override
+	bool
+	VisitHeader( const std::string &szVersion, const std::string &szEncoding, const std::string &szStandalone ) override
 	{
 		events.push_back( "header " + szVersion + " " + szEncoding + " [" + szStandalone + "]" );
 		return true;
@@ -80,25 +83,25 @@ std::vector<std::string> Parse( const std::string &szXml, bool *pbResult )
 // reference in text, text that is only spaces, a self-closed element, and a
 // comment holding markup that must not be parsed.
 const char szDocument[] =
-	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	"<!-- a comment before the root -->\n"
-	"<Data attr=\"wer\" zxc='as \" we' test=\"just a test\">\n"
-	"\t<as attr1=\"val1\" attr2=\"val2\"/>\n"
-	"\t<a as=\"we\" as1=\"we1\">\n"
-	"\t\t<NewText>  this is a text with syschars &amp; &lt; &gt; &quot; &apos; &#xA9;!</NewText>\n"
-	"\t\t<NewText2>   </NewText2>\n"
-	"\t</a>\n"
-	"\t<a>\n"
-	"\t\t<NewText>  this is a text with syschars &amp; &lt; &gt; &quot; &apos; &#xA9;!</NewText>\n"
-	"\t\t<NewText2>   </NewText2>\n"
-	"\t</a>\n"
-	"\t<a />\n"
-	"    <!--\n"
-	"\t<b as=\"we\" as1=\"we1\">\n"
-	"& < > ' \"\n"
-	"\t</b>\n"
-	"    -->\n"
-	"</Data>\n";
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		"<!-- a comment before the root -->\n"
+		"<Data attr=\"wer\" zxc='as \" we' test=\"just a test\">\n"
+		"\t<as attr1=\"val1\" attr2=\"val2\"/>\n"
+		"\t<a as=\"we\" as1=\"we1\">\n"
+		"\t\t<NewText>  this is a text with syschars &amp; &lt; &gt; &quot; &apos; &#xA9;!</NewText>\n"
+		"\t\t<NewText2>   </NewText2>\n"
+		"\t</a>\n"
+		"\t<a>\n"
+		"\t\t<NewText>  this is a text with syschars &amp; &lt; &gt; &quot; &apos; &#xA9;!</NewText>\n"
+		"\t\t<NewText2>   </NewText2>\n"
+		"\t</a>\n"
+		"\t<a />\n"
+		"    <!--\n"
+		"\t<b as=\"we\" as1=\"we1\">\n"
+		"& < > ' \"\n"
+		"\t</b>\n"
+		"    -->\n"
+		"</Data>\n";
 
 TEST( XmlSaxParser, ReportsEveryPartOfTheDocumentInOrder )
 {

@@ -12,13 +12,12 @@
 #include <cstdint>
 
 //Mapinfo object state edit parameters
-#define MIMOSEP_PLAYER_COUNT			0x00000001
-#define MIMOSEP_PLAYER_INDEX			0x00000002
-#define MIMOSEP_DIRECTION_TYPE		0x00000004
-#define MIMOSEP_DIRECTION					0x00000008
-#define MIMOSEP_THUMBNAILS				0x00000010
-#define MIMOSEP_ALL								0xFFFFFFFF
-
+#define MIMOSEP_PLAYER_COUNT 0x00000001
+#define MIMOSEP_PLAYER_INDEX 0x00000002
+#define MIMOSEP_DIRECTION_TYPE 0x00000004
+#define MIMOSEP_DIRECTION 0x00000008
+#define MIMOSEP_THUMBNAILS 0x00000010
+#define MIMOSEP_ALL 0xFFFFFFFF
 
 class CMapObjectMultiState : public CMultiInputState, public ICommandHandler
 {
@@ -27,12 +26,12 @@ class CMapObjectMultiState : public CMultiInputState, public ICommandHandler
 
 	enum EInputStates
 	{
-		IS_SIMPLE_OBJECT	= 0,
-		IS_BRIDGE					= 1,
-		IS_SPOT						= 2,
-		IS_FENCE					= 3,
-		IS_ENTRENCHMENT		= 4,
-		IS_COUNT					= 5,
+		IS_SIMPLE_OBJECT = 0,
+		IS_BRIDGE = 1,
+		IS_SPOT = 2,
+		IS_FENCE = 3,
+		IS_ENTRENCHMENT = 4,
+		IS_COUNT = 5,
 	};
 
 public:
@@ -41,8 +40,8 @@ public:
 	{
 		enum EDirectionType
 		{
-			DT_RANDOM	= 0,
-			DT_CUSTOM	= 1,
+			DT_RANDOM = 0,
+			DT_CUSTOM = 1,
 		};
 
 		typedef std::vector<std::string> CPlayerList;
@@ -55,21 +54,18 @@ public:
 		float fDirection;
 		bool bThumbnails;
 		SEditParameters()
-			:	nFlags( MIMOSEP_ALL ),
-				nPlayerIndex( 0 ),
-				eDirectionType( DT_RANDOM ),
-				fDirection( 0.0f  ),
-				bThumbnails( true ) {}
-		SEditParameters( const SEditParameters &rEditParameters )
-			:	nFlags( rEditParameters.nFlags ),
-				playerList( rEditParameters.playerList ),
-				nPlayerIndex( rEditParameters.nPlayerIndex ),
-				eDirectionType( rEditParameters.eDirectionType ),
-				fDirection( rEditParameters.fDirection ),
-				bThumbnails( rEditParameters.bThumbnails ) {}
-		SEditParameters& operator=( const SEditParameters &rEditParameters )
+				: nFlags( MIMOSEP_ALL ), nPlayerIndex( 0 ), eDirectionType( DT_RANDOM ), fDirection( 0.0f ), bThumbnails( true )
 		{
-			if( &rEditParameters != this )
+		}
+		SEditParameters( const SEditParameters &rEditParameters )
+				: nFlags( rEditParameters.nFlags ), playerList( rEditParameters.playerList ),
+					nPlayerIndex( rEditParameters.nPlayerIndex ), eDirectionType( rEditParameters.eDirectionType ),
+					fDirection( rEditParameters.fDirection ), bThumbnails( rEditParameters.bThumbnails )
+		{
+		}
+		SEditParameters &operator=( const SEditParameters &rEditParameters )
+		{
+			if ( &rEditParameters != this )
 			{
 				nFlags = rEditParameters.nFlags;
 				playerList = rEditParameters.playerList;
@@ -84,45 +80,56 @@ public:
 		int operator&( IXmlSaver &xs );
 	};
 
-	SEditParameters* GetEditParameters();
-	class CMapInfoEditor* pMapInfoEditor;
+	SEditParameters *GetEditParameters();
+	class CMapInfoEditor *pMapInfoEditor;
 
 	void UpdateEditParameters( unsigned nFlags );
 
 	//конструкторы и операторы присваивания
-	CMapObjectMultiState( CMapInfoEditor* _pMapInfoEditor = 0 )
+	CMapObjectMultiState( CMapInfoEditor *_pMapInfoEditor = 0 )
 	{
 		pMapInfoEditor = _pMapInfoEditor;
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
 
 		CSimpleObjectState *pSimpleObjectState = new CSimpleObjectState( this );
 		nStateIndex = AddInputState( pSimpleObjectState );
-		NI_ASSERT( nStateIndex == IS_SIMPLE_OBJECT, fmt::format( "CMapObjectMultiState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SIMPLE_OBJECT ) ) );
+		NI_ASSERT( nStateIndex == IS_SIMPLE_OBJECT,
+		           fmt::format( "CMapObjectMultiState(): Wrong state number: {} ({})",
+		                        nStateIndex,
+		                        static_cast<int>( IS_SIMPLE_OBJECT ) ) );
 
 		CBridgeState *pBridgeState = new CBridgeState( this );
 		nStateIndex = AddInputState( pBridgeState );
-		NI_ASSERT( nStateIndex == IS_BRIDGE, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_BRIDGE ) ) );
+		NI_ASSERT( nStateIndex == IS_BRIDGE,
+		           fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})",
+		                        nStateIndex,
+		                        static_cast<int>( IS_BRIDGE ) ) );
 
 		CSpotState *pSpotState = new CSpotState( this );
 		nStateIndex = AddInputState( pSpotState );
-		NI_ASSERT( nStateIndex == IS_SPOT, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_SPOT ) ) );
+		NI_ASSERT( nStateIndex == IS_SPOT,
+		           fmt::format(
+									 "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_SPOT ) ) );
 
 		CFenceState *pFenceState = new CFenceState( this );
 		nStateIndex = AddInputState( pFenceState );
-		NI_ASSERT( nStateIndex == IS_FENCE, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_FENCE ) ) );
+		NI_ASSERT( nStateIndex == IS_FENCE,
+		           fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})",
+		                        nStateIndex,
+		                        static_cast<int>( IS_FENCE ) ) );
 
 		CEntrenchmentState *pEntrenchmentState = new CEntrenchmentState( this );
 		nStateIndex = AddInputState( pEntrenchmentState );
-		NI_ASSERT( nStateIndex == IS_ENTRENCHMENT, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ENTRENCHMENT ) ) );
+		NI_ASSERT( nStateIndex == IS_ENTRENCHMENT,
+		           fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})",
+		                        nStateIndex,
+		                        static_cast<int>( IS_ENTRENCHMENT ) ) );
 
 		SetActiveInputState( IS_SIMPLE_OBJECT, false, false );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, this );
 	}
 	//
-	~CMapObjectMultiState()
-	{
-		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_MULTI_STATE );
-	}
+	~CMapObjectMultiState() { Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_MULTI_STATE ); }
 
 	void SwitchState( const std::string &rszObjectTypeName );
 	//IInputState interface
@@ -134,7 +141,6 @@ public:
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
-
 
 // The palette's half of the exchange above, whichever toolkit draws it. Beside
 // the state rather than beside a window because it is the state's data type

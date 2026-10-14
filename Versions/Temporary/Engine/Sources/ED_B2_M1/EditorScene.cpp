@@ -2,7 +2,7 @@
 
 #include "EditorScene.h"
 
-IEditorScene* EditorScene()
+IEditorScene *EditorScene()
 {
 	return Singleton<IEditorScene>();
 }

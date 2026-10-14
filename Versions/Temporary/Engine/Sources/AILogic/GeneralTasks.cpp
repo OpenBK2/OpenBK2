@@ -27,8 +27,7 @@ extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
 extern CUnitCreation theUnitCreation;
-const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats );
-
+const float GetWeightOfUnit( const SUnitBaseRPGStats *pStats );
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D489, CGeneralSwarmWaitForReady );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D48A, CGeneralTaskToSwarmToPoint );
@@ -36,27 +35,28 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D499, CGeneralTaskRecaptureStorage );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B1, CGeneralTaskToHoldReinforcement );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B2, CGeneralTaskToDefendPatch );
 
-
 //*******************************************************************
 //*											CGeneralTaskToDefendPatch										*
 //*******************************************************************
 
 CGeneralTaskToDefendPatch::CGeneralTaskToDefendPatch()
-: nCurReinforcePoint( 0 ), pOwner( 0 ), bFinished( false ), bResistanceRemoved( false )
+		: nCurReinforcePoint( 0 ), pOwner( 0 ), bFinished( false ), bResistanceRemoved( false )
 {
 }
 
 void CGeneralTaskToDefendPatch::InitTanks( CCommonUnit *pUnit )
 {
-	const CVec2 vRP ( patchInfo.reinforcePoints.empty() ? VNULL2: patchInfo.reinforcePoints[nCurReinforcePoint].vCenter );
-	const uint16_t wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
-	const CVec2 vTransReinforcePoint ( vRP.y, -vRP.x );
-	const CVec2 vReinforcePoint( patchInfo.vCenter + ( vTransReinforcePoint ^ GetVectorByDirection(patchInfo.GetDir()) ) );
+	const CVec2 vRP( patchInfo.reinforcePoints.empty() ? VNULL2 : patchInfo.reinforcePoints[nCurReinforcePoint].vCenter );
+	const uint16_t wRD =
+			( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
+	const CVec2 vTransReinforcePoint( vRP.y, -vRP.x );
+	const CVec2 vReinforcePoint( patchInfo.vCenter +
+	                             ( vTransReinforcePoint ^ GetVectorByDirection( patchInfo.GetDir() ) ) );
 	const CVec2 vLookPoint( vReinforcePoint + GetVectorByDirection( wRD + patchInfo.GetDir() ) * 100 );
 
-	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_SWARM_TO, vReinforcePoint ), pUnit, false );
-	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_ROTATE_TO, vLookPoint ), pUnit, true );
-	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF), pUnit, true );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, vReinforcePoint ), pUnit, false );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, vLookPoint ), pUnit, true );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF ), pUnit, true );
 	++nCurReinforcePoint;
 	if ( !patchInfo.reinforcePoints.empty() )
 		nCurReinforcePoint %= patchInfo.reinforcePoints.size();
@@ -65,7 +65,7 @@ void CGeneralTaskToDefendPatch::InitTanks( CCommonUnit *pUnit )
 void CGeneralTaskToDefendPatch::InitInfantryInTrenches( class CCommonUnit *pUnit )
 {
 	const CVec2 vSpyGlassPoint( patchInfo.vCenter + GetVectorByDirection( patchInfo.GetDir() ) * 1000 );
-	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_USE_SPYGLASS, vSpyGlassPoint), pUnit, true );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_USE_SPYGLASS, vSpyGlassPoint ), pUnit, true );
 }
 
 void CGeneralTaskToDefendPatch::Init( const NDb::SAIGeneralParcel &_patchInfo, CGeneral *_pOwner )
@@ -89,13 +89,12 @@ void CGeneralTaskToDefendPatch::Init( const NDb::SAIGeneralParcel &_patchInfo, C
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::WHITE );
 
-
 		for ( int i = 0; i < patchInfo.reinforcePoints.size(); ++i )
 		{
-			const CVec2 vRP ( patchInfo.reinforcePoints.empty() ? VNULL2: patchInfo.reinforcePoints[i].vCenter );
+			const CVec2 vRP( patchInfo.reinforcePoints.empty() ? VNULL2 : patchInfo.reinforcePoints[i].vCenter );
 			const uint16_t wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[i].GetDir() );
-			const CVec2 vTransReinforcePoint ( vRP.y, -vRP.x );
-			const CVec2 vP( patchInfo.vCenter + ( vTransReinforcePoint ^ GetVectorByDirection(patchInfo.GetDir()) ) );
+			const CVec2 vTransReinforcePoint( vRP.y, -vRP.x );
+			const CVec2 vP( patchInfo.vCenter + ( vTransReinforcePoint ^ GetVectorByDirection( patchInfo.GetDir() ) ) );
 			const CVec2 vLookPoint( vP + GetVectorByDirection( wRD + patchInfo.GetDir() ) * 100 );
 
 			segm.p1 = vP + CVec2( -10, -10 );
@@ -110,7 +109,6 @@ void CGeneralTaskToDefendPatch::Init( const NDb::SAIGeneralParcel &_patchInfo, C
 			segm.p2 = vLookPoint;
 			segm.dir = segm.p2 - segm.p1;
 			DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::WHITE );
-
 		}
 	}
 #endif
@@ -147,7 +145,8 @@ void CGeneralTaskToDefendPatch::ReleaseWorker( ICommander *pManager, const float
 	{
 		// отдать часть подкрепления
 		// возможно стоит выбрать самых ненужных юнитов - the resting tanks
-		for ( CommonUnits::iterator it = tanksMobile.begin(); it != tanksMobile.end() &&fSeverity > _fMinSeverity && fEnemyForce == 0; )
+		for ( CommonUnits::iterator it = tanksMobile.begin();
+		      it != tanksMobile.end() && fSeverity > _fMinSeverity && fEnemyForce == 0; )
 		{
 			CCommonUnit *pTank = *it;
 			if ( !pTank->IsRefValid() || !pTank->IsAlive() )
@@ -212,7 +211,8 @@ void CGeneralTaskToDefendPatch::CalcSeverity( const bool bEnemyUpdated, const bo
 		fFriendlyMobileForce = pr2.fCount;
 	}
 	// Add importance
-	fSeverity = fFriendlyForce + fFriendlyMobileForce  - fabs( patchInfo.fImportance ) - SGeneralConsts::PLAYER_FORCE_COEFFICIENT * fEnemyForce;
+	fSeverity = fFriendlyForce + fFriendlyMobileForce - fabs( patchInfo.fImportance ) -
+	            SGeneralConsts::PLAYER_FORCE_COEFFICIENT * fEnemyForce;
 }
 
 void CGeneralTaskToDefendPatch::CancelTask( ICommander *pManager )
@@ -279,7 +279,7 @@ void CGeneralTaskToDefendPatch::Segment()
 		bResistanceRemoved = true;
 		theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->RemoveResistance( patchInfo.vCenter );
 	}
-	if ( fFriendlyForce != 0.0f && bResistanceRemoved  )
+	if ( fFriendlyForce != 0.0f && bResistanceRemoved )
 	{
 		bResistanceRemoved = false;
 		theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->AddResistance( patchInfo.vCenter, patchInfo.fRadius );
@@ -293,102 +293,103 @@ int CGeneralTaskToDefendPatch::GetWorkerCount()
 
 bool CGeneralTaskToDefendPatch::EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType )
 {
-		// give orders to the worker
-	switch( eType )
+	// give orders to the worker
+	switch ( eType )
 	{
-	case FT_FREE_INFANTRY:
-		if ( SGeneralHelper::IsUnitNearParcel( pUnit, patchInfo ) )
-		{
-			NI_ASSERT( dynamic_cast<CFormation*>(pUnit) != 0, "not infantry passed" );
-			infantryInTrenches.push_back( checked_cast<CFormation*>(pUnit) );
-			InitInfantryInTrenches( pUnit );
-			SGeneralHelper::SSeverityCountPredicate pr1;
-			pr1( pUnit );
-			fFriendlyForce += pr1.fCount;
-			CalcSeverity( false, false );
-		}
-
-		return true;
-	case FT_INFANTRY_IN_TRENCHES:
-		if ( SGeneralHelper::IsUnitNearParcel( pUnit, patchInfo ) )
-		{
-			NI_ASSERT( dynamic_cast<CFormation*>(pUnit) != 0, "not infantry passed" );
-			infantryInTrenches.push_back( checked_cast<CFormation*>(pUnit) );
-			InitInfantryInTrenches( pUnit );
-			SGeneralHelper::SSeverityCountPredicate pr1;
-			pr1( pUnit );
-			fFriendlyForce += pr1.fCount;
-		}
-		return true;
-	case FT_STATIONARY_MECH_UNITS:
-		if ( SGeneralHelper::IsUnitNearParcel( pUnit, patchInfo ) )
-		{
-			NI_ASSERT( dynamic_cast<CAIUnit*>(pUnit) != 0, "not mechUnit passed" );
-			stationaryUnits.push_back( checked_cast<CAIUnit*>(pUnit) );
-			SGeneralHelper::SSeverityCountPredicate pr1;
-			pr1( pUnit );
-			fFriendlyForce += pr1.fCount;
-		}
-
-		return true;
-	case FT_MOBILE_TANKS:
-		if ( patchInfo.nMinUnitsToReinforce > 0 )
-		{
-			NI_ASSERT( dynamic_cast<CAIUnit*>(pUnit) != 0, "not tank passed" );
-			newTanks.push_back( checked_cast<CAIUnit*>(pUnit) );
-			SGeneralHelper::SSeverityCountPredicate pr1;
-			pr1 = for_each( newTanks.begin(), newTanks.end(), pr1 );
-			bool bNeedMore = pr1.fCount < patchInfo.nMinUnitsToReinforce;
-
-			if ( !bNeedMore )
-				Segment();
-			return bNeedMore;
-		}
-		else
-		{
-			NI_ASSERT( dynamic_cast<CAIUnit*>(pUnit) != 0, "not tank passed" );
+		case FT_FREE_INFANTRY:
+			if ( SGeneralHelper::IsUnitNearParcel( pUnit, patchInfo ) )
 			{
-				tanksMobile.push_back( checked_cast<CAIUnit*>(pUnit) );
-				InitTanks( pUnit );
+				NI_ASSERT( dynamic_cast<CFormation *>( pUnit ) != 0, "not infantry passed" );
+				infantryInTrenches.push_back( checked_cast<CFormation *>( pUnit ) );
+				InitInfantryInTrenches( pUnit );
 				SGeneralHelper::SSeverityCountPredicate pr1;
 				pr1( pUnit );
-				fFriendlyMobileForce += pr1.fCount;
+				fFriendlyForce += pr1.fCount;
 				CalcSeverity( false, false );
 			}
-			return fSeverity < fMaxSeverity && fSeverity < 0;
+
+			return true;
+		case FT_INFANTRY_IN_TRENCHES:
+			if ( SGeneralHelper::IsUnitNearParcel( pUnit, patchInfo ) )
+			{
+				NI_ASSERT( dynamic_cast<CFormation *>( pUnit ) != 0, "not infantry passed" );
+				infantryInTrenches.push_back( checked_cast<CFormation *>( pUnit ) );
+				InitInfantryInTrenches( pUnit );
+				SGeneralHelper::SSeverityCountPredicate pr1;
+				pr1( pUnit );
+				fFriendlyForce += pr1.fCount;
+			}
+			return true;
+		case FT_STATIONARY_MECH_UNITS:
+			if ( SGeneralHelper::IsUnitNearParcel( pUnit, patchInfo ) )
+			{
+				NI_ASSERT( dynamic_cast<CAIUnit *>( pUnit ) != 0, "not mechUnit passed" );
+				stationaryUnits.push_back( checked_cast<CAIUnit *>( pUnit ) );
+				SGeneralHelper::SSeverityCountPredicate pr1;
+				pr1( pUnit );
+				fFriendlyForce += pr1.fCount;
+			}
+
+			return true;
+		case FT_MOBILE_TANKS:
+			if ( patchInfo.nMinUnitsToReinforce > 0 )
+			{
+				NI_ASSERT( dynamic_cast<CAIUnit *>( pUnit ) != 0, "not tank passed" );
+				newTanks.push_back( checked_cast<CAIUnit *>( pUnit ) );
+				SGeneralHelper::SSeverityCountPredicate pr1;
+				pr1 = for_each( newTanks.begin(), newTanks.end(), pr1 );
+				bool bNeedMore = pr1.fCount < patchInfo.nMinUnitsToReinforce;
+
+				if ( !bNeedMore )
+					Segment();
+				return bNeedMore;
+			}
+			else
+			{
+				NI_ASSERT( dynamic_cast<CAIUnit *>( pUnit ) != 0, "not tank passed" );
+				{
+					tanksMobile.push_back( checked_cast<CAIUnit *>( pUnit ) );
+					InitTanks( pUnit );
+					SGeneralHelper::SSeverityCountPredicate pr1;
+					pr1( pUnit );
+					fFriendlyMobileForce += pr1.fCount;
+					CalcSeverity( false, false );
+				}
+				return fSeverity < fMaxSeverity && fSeverity < 0;
+				break;
+			}
 			break;
-		}
-		break;
 	}
 	return false;
 }
 
 bool CGeneralTaskToDefendPatch::EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const
 {
-	switch( eType )
+	switch ( eType )
 	{
-	case FT_INFANTRY_IN_TRENCHES:
-	case FT_FREE_INFANTRY:
-	case FT_STATIONARY_MECH_UNITS:
-		return SGeneralHelper::IsUnitInParcel( pUnit, patchInfo );
+		case FT_INFANTRY_IN_TRENCHES:
+		case FT_FREE_INFANTRY:
+		case FT_STATIONARY_MECH_UNITS:
+			return SGeneralHelper::IsUnitInParcel( pUnit, patchInfo );
 
-	case FT_MOBILE_TANKS:
-		// гаубичные орудия не посылаем
-		if ( pUnit->GetFirstArtilleryGun() != 0 )
-			return false;
-		else if ( enemyForces.empty() )	// no enemies, any unit will be fine
-		{
-			return true;
-		}
-		// проверить, пробивает ли предложенный юнит кого-то из врагов
-		else for ( CommonUnits::const_iterator it = enemyForces.begin(); it != enemyForces.end(); ++it )
-		{
-			NI_ASSERT( dynamic_cast_ptr<CAIUnit*>(*it) != 0, "wrong tank" );
-			CAIUnit * pEnemy = static_cast_ptr<CAIUnit*>( *it );
-			if ( 0 != pUnit->GetKillSpeed( pEnemy ) ) // можем пробить
+		case FT_MOBILE_TANKS:
+			// гаубичные орудия не посылаем
+			if ( pUnit->GetFirstArtilleryGun() != 0 )
+				return false;
+			else if ( enemyForces.empty() ) // no enemies, any unit will be fine
+			{
 				return true;
-		}
-		return false;
+			}
+			// проверить, пробивает ли предложенный юнит кого-то из врагов
+			else
+				for ( CommonUnits::const_iterator it = enemyForces.begin(); it != enemyForces.end(); ++it )
+				{
+					NI_ASSERT( dynamic_cast_ptr<CAIUnit *>( *it ) != 0, "wrong tank" );
+					CAIUnit *pEnemy = static_cast_ptr<CAIUnit *>( *it );
+					if ( 0 != pUnit->GetKillSpeed( pEnemy ) ) // можем пробить
+						return true;
+				}
+			return false;
 	}
 	return false;
 }
@@ -399,12 +400,14 @@ bool CGeneralTaskToDefendPatch::EnumEnemy( class CAIUnit *pEnemy )
 	if ( SGeneralHelper::IsUnitNearParcel( pEnemy, patchInfo ) )
 	{
 		// scan for other enemies inside resistance point (yes, look under war fog)
-		for ( CUnitsIter<0,2> iter( pEnemy->GetParty(), EDI_FRIEND, patchInfo.vCenter, patchInfo.fRadius ); !iter.IsFinished(); iter.Iterate() )
+		for ( CUnitsIter<0, 2> iter( pEnemy->GetParty(), EDI_FRIEND, patchInfo.vCenter, patchInfo.fRadius );
+		      !iter.IsFinished();
+		      iter.Iterate() )
 		{
 			if ( SGeneralHelper::IsUnitNearParcel( pEnemy, patchInfo ) )
 			{
 				SGeneralHelper::SSeverityCountPredicate pr;
-				CAIUnit * pNearby = *iter;
+				CAIUnit *pNearby = *iter;
 				pr( pNearby );
 				fEnemyForce += pr.fCount;
 				enemyForces.push_back( pNearby );
@@ -419,15 +422,12 @@ bool CGeneralTaskToDefendPatch::EnumEnemy( class CAIUnit *pEnemy )
 //*											CGeneralTaskToHoldReinforcement							*
 //*******************************************************************
 
-CGeneralTaskToHoldReinforcement::CGeneralTaskToHoldReinforcement()
-: fSeverity( 0 ), nCurReinforcePoint( 0 )
-{
-}
+CGeneralTaskToHoldReinforcement::CGeneralTaskToHoldReinforcement() : fSeverity( 0 ), nCurReinforcePoint( 0 ) {}
 
 void CGeneralTaskToHoldReinforcement::Init( const NDb::SAIGeneralParcel &_patchInfo )
 {
 	patchInfo = _patchInfo;
-//	NI_ASSERT( !patchInfo.reinforcePoints.empty(), "no places to hold reinforcements, adding VNULL2" );
+	//	NI_ASSERT( !patchInfo.reinforcePoints.empty(), "no places to hold reinforcements, adding VNULL2" );
 	if ( patchInfo.reinforcePoints.empty() )
 	{
 		NDb::SReinforcePoint pt;
@@ -478,7 +478,7 @@ void CGeneralTaskToHoldReinforcement::Segment()
 {
 	if ( SGeneralHelper::RemoveDead( &tanksFree ) )
 	{
-		std::list< CPtr<CCommonUnit> > removed;
+		std::list<CPtr<CCommonUnit>> removed;
 		for ( UnitsPositions::iterator it = unitsPositions.begin(); it != unitsPositions.end(); ++it )
 		{
 			CCommonUnit *pUnit = GetObjectByUniqueIdSafe<CCommonUnit>( it->first );
@@ -496,24 +496,28 @@ bool CGeneralTaskToHoldReinforcement::EnumWorker( class CCommonUnit *pUnit, cons
 	// послать танк на место сбора подкрепления
 	NI_ASSERT( FT_MOBILE_TANKS == eType, "not tank reinforcement" );
 
-	tanksFree.push_back( checked_cast<CAIUnit*>(pUnit) );
+	tanksFree.push_back( checked_cast<CAIUnit *>( pUnit ) );
 	if ( EPATCH_UNKNOWN == patchInfo.eType )
 	{
 		if ( unitsPositions.find( pUnit->GetUniqueId() ) == unitsPositions.end() )
 			unitsPositions[pUnit->GetUniqueId()] = pUnit->GetCenterPlain();
 		else
-			theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_SWARM_TO, unitsPositions[pUnit->GetUniqueId()] ), pUnit, false );
+			theGroupLogic.UnitCommand(
+					SAIUnitCmd( ACTION_COMMAND_SWARM_TO, unitsPositions[pUnit->GetUniqueId()] ), pUnit, false );
 	}
 	else
 	{
-		const CVec2 vRP ( patchInfo.reinforcePoints.empty() ? VNULL2: patchInfo.reinforcePoints[nCurReinforcePoint].vCenter );
-		const uint16_t wRD = ( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
-		const CVec2 vTransReinforcePoint ( vRP.y, -vRP.x );
-		const CVec2 vReinforcePoint( patchInfo.vCenter + ( vTransReinforcePoint ^ GetVectorByDirection(patchInfo.GetDir()) ) );
+		const CVec2 vRP( patchInfo.reinforcePoints.empty() ? VNULL2
+		                                                   : patchInfo.reinforcePoints[nCurReinforcePoint].vCenter );
+		const uint16_t wRD =
+				( patchInfo.reinforcePoints.empty() ? 0 : patchInfo.reinforcePoints[nCurReinforcePoint].GetDir() );
+		const CVec2 vTransReinforcePoint( vRP.y, -vRP.x );
+		const CVec2 vReinforcePoint( patchInfo.vCenter +
+		                             ( vTransReinforcePoint ^ GetVectorByDirection( patchInfo.GetDir() ) ) );
 		const CVec2 vLookPoint( vReinforcePoint + GetVectorByDirection( wRD + patchInfo.GetDir() ) * 100 );
 
-		theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_SWARM_TO, vReinforcePoint ), pUnit, false );
-		theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_ROTATE_TO, vLookPoint), pUnit, true );
+		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, vReinforcePoint ), pUnit, false );
+		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, vLookPoint ), pUnit, true );
 
 		++nCurReinforcePoint;
 		nCurReinforcePoint %= patchInfo.reinforcePoints.size();
@@ -524,7 +528,7 @@ bool CGeneralTaskToHoldReinforcement::EnumWorker( class CCommonUnit *pUnit, cons
 float CGeneralTaskToHoldReinforcement::GetSeverity() const
 {
 	//CRAP{ for test
-	return /*fSeverity*/0.0f;
+	return /*fSeverity*/ 0.0f;
 	//CRAP}
 }
 
@@ -541,10 +545,9 @@ bool CGeneralTaskToHoldReinforcement::EvaluateWorker( CCommonUnit *pUnit, const 
 //*											CGeneralTaskRecaptureStorage								*
 //*******************************************************************
 
-CGeneralTaskRecaptureStorage::CGeneralTaskRecaptureStorage( const CVec2 & vReinforcePoint )
-: vReinforcePoint( vReinforcePoint ),
-	fSeverity( -SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER ),
-	bFinished( false )
+CGeneralTaskRecaptureStorage::CGeneralTaskRecaptureStorage( const CVec2 &vReinforcePoint )
+		: vReinforcePoint( vReinforcePoint ), fSeverity( -SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER ),
+			bFinished( false )
 {
 }
 
@@ -558,7 +561,7 @@ void CGeneralTaskRecaptureStorage::ReleaseWorker( ICommander *pManager, const fl
 {
 	if ( bFinished )
 	{
-		while( !tanksFree.empty() )
+		while ( !tanksFree.empty() )
 		{
 			pManager->Give( *tanksFree.begin() );
 			tanksFree.pop_front();
@@ -590,16 +593,16 @@ bool CGeneralTaskRecaptureStorage::EnumWorker( class CCommonUnit *pUnit, const e
 	if ( FT_MOBILE_TANKS == eType )
 	{
 		tanksFree.push_back( pUnit );
-		theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_SWARM_TO, vReinforcePoint), pUnit );
+		theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_TO, vReinforcePoint ), pUnit );
 		return ++fSeverity == 0;
 	}
 	NI_ASSERT( false, "wrong type of worker given" );
 	return false;
 }
 
-bool CGeneralTaskRecaptureStorage::EvaluateWorker( CCommonUnit * pUnit, const enum EForceType eType ) const
+bool CGeneralTaskRecaptureStorage::EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const
 {
-	return fabs2( pUnit->GetCenterPlain() - vReinforcePoint ) < sqr(SGeneralConsts::RECAPTURE_STORAGE_MAX_DISTANCE);
+	return fabs2( pUnit->GetCenterPlain() - vReinforcePoint ) < sqr( SGeneralConsts::RECAPTURE_STORAGE_MAX_DISTANCE );
 }
 
 //*******************************************************************
@@ -607,16 +610,13 @@ bool CGeneralTaskRecaptureStorage::EvaluateWorker( CCommonUnit * pUnit, const en
 //*******************************************************************
 
 CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint( CGeneral *_pOwner )
-: nAdditionalIterations( 0 ), fSeverity( 0 ), bFinished( false ),
-	bReleaseWorkers( false ), timeNextCheck( 0 ),
-	eState( ESS_REST ), pOwner( _pOwner ), bResistanesBusyByUs( false )
+		: nAdditionalIterations( 0 ), fSeverity( 0 ), bFinished( false ), bReleaseWorkers( false ), timeNextCheck( 0 ),
+			eState( ESS_REST ), pOwner( _pOwner ), bResistanesBusyByUs( false )
 {
 	ClearResistanceToAcceptNewTask();
 }
 
-CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint() : pOwner( 0 ), bResistanesBusyByUs( false )
-{
-}
+CGeneralTaskToSwarmToPoint::CGeneralTaskToSwarmToPoint() : pOwner( 0 ), bResistanesBusyByUs( false ) {}
 
 bool CGeneralTaskToSwarmToPoint::IsTimeToRun() const
 {
@@ -643,21 +643,21 @@ void CGeneralTaskToSwarmToPoint::Run()
 	if ( !swarmingTanks.empty() )
 	{
 		const int nGroup = theGroupLogic.GenerateGroupNumber();
-		CObjectBase **arUnits = GetLocalTempBuffer<CObjectBase*>( swarmingTanks.size() );
+		CObjectBase **arUnits = GetLocalTempBuffer<CObjectBase *>( swarmingTanks.size() );
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
 			arUnits[i] = swarmingTanks[i];
 		theGroupLogic.RegisterGroup( arUnits, swarmingTanks.size(), nGroup );
-		SAIUnitCmd cmd(ACTION_COMMAND_SWARM_TO, curResistanceToAttack.GetResistanceCellCenter());
+		SAIUnitCmd cmd( ACTION_COMMAND_SWARM_TO, curResistanceToAttack.GetResistanceCellCenter() );
 		cmd.bFromAI = false;
 		theGroupLogic.GroupCommand( cmd, nGroup, false );
 
 		//for ( int i = 0; i < swarmingTanks.size(); ++i )
-			//theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_SWARM_TO, curResistanceToAttack.GetResistanceCellCenter()), swarmingTanks[i], false );
+		//theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_COMMAND_SWARM_TO, curResistanceToAttack.GetResistanceCellCenter()), swarmingTanks[i], false );
 
 		//CRAP{for testing
 		{
-//			const int x = curResistanceToAttack.GetResistanceCellCenter().x;
-//			const int y = curResistanceToAttack.GetResistanceCellCenter().y;
+			//			const int x = curResistanceToAttack.GetResistanceCellCenter().x;
+			//			const int y = curResistanceToAttack.GetResistanceCellCenter().y;
 			//Singleton<IStatistics>()->UpdateEntry( "General: (ATTACK):", StrFmt( "Attacking, (%d,%d)", x, y ) );
 		}
 		//CRAP}
@@ -666,10 +666,10 @@ void CGeneralTaskToSwarmToPoint::Run()
 		theGroupLogic.UnregisterGroup( nGroup );
 		Singleton<IAILogic>()->SetNeedNewGroupNumber();
 	}
-	timeNextCheck = curTime + 1000* (SGeneralConsts::TIME_SWARM_DURATION + NRandom::Random( SGeneralConsts::TIME_SWARM_DURATION_RANDOM )); RecordRandomCall();
+	timeNextCheck = curTime + 1000 * ( SGeneralConsts::TIME_SWARM_DURATION +
+	                                   NRandom::Random( SGeneralConsts::TIME_SWARM_DURATION_RANDOM ) );
+	RecordRandomCall();
 	eState = ESS_ATTACKING;
-
-
 }
 
 void CGeneralTaskToSwarmToPoint::AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit )
@@ -698,27 +698,29 @@ void CGeneralTaskToSwarmToPoint::SendToGroupPoint()
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
 		{
 			if ( swarmingTanks[i]->IsRefValid() && swarmingTanks[i]->IsAlive() )
-				theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_TO_NOT_PRESIZE,vPrepearCenter, 32*SConsts::TILE_SIZE), swarmingTanks[i], true );
+				theGroupLogic.UnitCommand(
+						SAIUnitCmd( ACTION_MOVE_TO_NOT_PRESIZE, vPrepearCenter, 32 * SConsts::TILE_SIZE ), swarmingTanks[i], true );
 		}
 
 		eState = ESS_PREPEARING;
-		theSupremeBeing.RegisterDelayedTask( new CGeneralSwarmWaitForReady(this) );
-		timeNextCheck = curTime + 1000*(SGeneralConsts::TIME_TO_WAIT_SWARM_READY + NRandom::Random( SGeneralConsts::TIME_TO_WAIT_SWARM_READY_RANDOM )); RecordRandomCall();
+		theSupremeBeing.RegisterDelayedTask( new CGeneralSwarmWaitForReady( this ) );
+		timeNextCheck = curTime + 1000 * ( SGeneralConsts::TIME_TO_WAIT_SWARM_READY +
+		                                   NRandom::Random( SGeneralConsts::TIME_TO_WAIT_SWARM_READY_RANDOM ) );
+		RecordRandomCall();
 
 		//CRAP{for testing
 		{
-//			const int x = vPrepearCenter.x;
-//			const int y = vPrepearCenter.y;
+			//			const int x = vPrepearCenter.x;
+			//			const int y = vPrepearCenter.y;
 			//Singleton<IStatistics>()->UpdateEntry( "General: (ATTACK):", StrFmt( "Prepearing, (%d,%d)", x, y ) );
 		}
 		//CRAP}
-
 	}
 }
 
 void CGeneralTaskToSwarmToPoint::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
 {
-	if ( (!curResistanceToAttack.IsInitted() || bReleaseWorkers ) && !swarmingTanks.empty() )
+	if ( ( !curResistanceToAttack.IsInitted() || bReleaseWorkers ) && !swarmingTanks.empty() )
 	{
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
 			pManager->Give( swarmingTanks[i] );
@@ -747,100 +749,101 @@ void CGeneralTaskToSwarmToPoint::Segment()
 	SGeneralHelper::SDeadPredicate pr;
 	swarmingTanks.erase( remove_if( swarmingTanks.begin(), swarmingTanks.end(), pr ), swarmingTanks.end() );
 
-	switch( eState )
+	switch ( eState )
 	{
-	case ESS_REST:
-		if ( timeNextCheck < curTime )
-		{
-			timeNextCheck = curTime + 3000;		//
-			//fSeverity = - 1;
-			fSeverity = 0;
-			ClearResistanceToAcceptNewTask();
-			theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveResistances( this );
-
-			// wait for some time
-			bReleaseWorkers = !curResistanceToAttack.IsInitted();
-			if ( fSeverity != 0.0f )
+		case ESS_REST:
+			if ( timeNextCheck < curTime )
 			{
-				eState = ESS_WAIT_FOR_WORKERS;
-				timeNextCheck = curTime;
-			}
-		}
+				timeNextCheck = curTime + 3000; //
+				//fSeverity = - 1;
+				fSeverity = 0;
+				ClearResistanceToAcceptNewTask();
+				theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveResistances( this );
 
-		break;
-	case ESS_WAIT_FOR_WORKERS:
-		if ( !swarmingTanks.empty() )
-		{
-			SendToGroupPoint();
-			nAdditionalIterations = NRandom::Random( 0, SGeneralConsts::SWARM_ADDITIONAL_ITERATIONS ); RecordRandomCall();
-			bReleaseWorkers = false;
-		}
-		else if ( timeNextCheck < curTime )
-		{
-			eState = ESS_REST;
-		}
-		break;
-	case ESS_PREPEARING:
-		// check if all are dead
-		for ( int i = 0; i < swarmingTanks.size(); ++i )
-		{
-			if ( IsValidObj( swarmingTanks[i] ) )
+				// wait for some time
+				bReleaseWorkers = !curResistanceToAttack.IsInitted();
+				if ( fSeverity != 0.0f )
+				{
+					eState = ESS_WAIT_FOR_WORKERS;
+					timeNextCheck = curTime;
+				}
+			}
+
+			break;
+		case ESS_WAIT_FOR_WORKERS:
+			if ( !swarmingTanks.empty() )
 			{
-				break;
+				SendToGroupPoint();
+				nAdditionalIterations = NRandom::Random( 0, SGeneralConsts::SWARM_ADDITIONAL_ITERATIONS );
+				RecordRandomCall();
+				bReleaseWorkers = false;
 			}
-		}
-		eState = ESS_REST;
-
-		break;
-	case ESS_ATTACKING:
-		if ( timeNextCheck < curTime )
-		{
-			int nAlive = 0;
-			int nIdle = 0;
+			else if ( timeNextCheck < curTime )
+			{
+				eState = ESS_REST;
+			}
+			break;
+		case ESS_PREPEARING:
+			// check if all are dead
 			for ( int i = 0; i < swarmingTanks.size(); ++i )
 			{
 				if ( IsValidObj( swarmingTanks[i] ) )
 				{
-					++nAlive;
-					if ( swarmingTanks[i]->GetState()->IsRestState() || !swarmingTanks[i]->CanMove() )
-						++nIdle;
+					break;
 				}
 			}
-			if ( timeNextCheck < curTime || nIdle == nAlive || 0 == nAlive )
+			eState = ESS_REST;
+
+			break;
+		case ESS_ATTACKING:
+			if ( timeNextCheck < curTime )
 			{
-				if ( ( 0 == nAlive || nIdle == nAlive ) && nAdditionalIterations <= 0 ) // don't want to swarm anymore
+				int nAlive = 0;
+				int nIdle = 0;
+				for ( int i = 0; i < swarmingTanks.size(); ++i )
 				{
-					eState = ESS_REST;
-
-					if ( bResistanesBusyByUs )
+					if ( IsValidObj( swarmingTanks[i] ) )
 					{
-						pOwner->SetCellInUse( curResistanceToAttack.GetCellNumber(), false );
-						bResistanesBusyByUs = false;
+						++nAlive;
+						if ( swarmingTanks[i]->GetState()->IsRestState() || !swarmingTanks[i]->CanMove() )
+							++nIdle;
 					}
-
-					curResistanceToAttack.Clear();
-
-					bReleaseWorkers = true;
 				}
-				else  // will swarm another time
+				if ( timeNextCheck < curTime || nIdle == nAlive || 0 == nAlive )
 				{
-					--nAdditionalIterations;
-
-					if ( bResistanesBusyByUs )
+					if ( ( 0 == nAlive || nIdle == nAlive ) && nAdditionalIterations <= 0 ) // don't want to swarm anymore
 					{
-						pOwner->SetCellInUse( curResistanceToAttack.GetCellNumber(), false );
-						bResistanesBusyByUs = false;
-					}
+						eState = ESS_REST;
 
-					ClearResistanceToAcceptNewTask();
-					theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveResistances( this );
-					if ( curResistanceToAttack.IsInitted() )
-						SendToGroupPoint();
+						if ( bResistanesBusyByUs )
+						{
+							pOwner->SetCellInUse( curResistanceToAttack.GetCellNumber(), false );
+							bResistanesBusyByUs = false;
+						}
+
+						curResistanceToAttack.Clear();
+
+						bReleaseWorkers = true;
+					}
+					else // will swarm another time
+					{
+						--nAdditionalIterations;
+
+						if ( bResistanesBusyByUs )
+						{
+							pOwner->SetCellInUse( curResistanceToAttack.GetCellNumber(), false );
+							bResistanesBusyByUs = false;
+						}
+
+						ClearResistanceToAcceptNewTask();
+						theSupremeBeing.GetEnemyConatiner( pOwner->GetParty() )->GiveResistances( this );
+						if ( curResistanceToAttack.IsInitted() )
+							SendToGroupPoint();
+					}
 				}
 			}
-		}
 
-		break;
+			break;
 	}
 }
 
@@ -854,7 +857,7 @@ void CGeneralTaskToSwarmToPoint::ClearResistanceToAcceptNewTask()
 
 	curResistanceToAttack.Clear();
 
-	vTanksPosition = CVec2( -1,-1 );
+	vTanksPosition = CVec2( -1, -1 );
 	fCurDistance = -1;
 	int nAlive = 0;
 	for ( int i = 0; i < swarmingTanks.size(); ++i )
@@ -877,7 +880,7 @@ bool CGeneralTaskToSwarmToPoint::EnumWorker( class CCommonUnit *pUnit, const enu
 	return fSeverity < fMaxSeverity;
 }
 
-float CGeneralTaskToSwarmToPoint::EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const
+float CGeneralTaskToSwarmToPoint::EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const
 {
 	const CVec2 vFinishPoint( curResistanceToAttack.GetResistanceCellCenter() );
 	return 1.0f / ( fabs2( vFinishPoint - pUnit->GetCenterPlain() ) + 1 );
@@ -889,7 +892,7 @@ bool CGeneralTaskToSwarmToPoint::EnumResistances( const SResistance &resistance 
 	{
 		if ( vTanksPosition.x == -1 || vTanksPosition.y == -1 )
 		{
-			fSeverity = - resistance.GetWeight() * SGeneralConsts::SWARM_WEIGHT_COEFFICIENT;
+			fSeverity = -resistance.GetWeight() * SGeneralConsts::SWARM_WEIGHT_COEFFICIENT;
 			curResistanceToAttack = resistance;
 
 			return false;
@@ -898,7 +901,7 @@ bool CGeneralTaskToSwarmToPoint::EnumResistances( const SResistance &resistance 
 		const float fDistance = fabs2( vTanksPosition - resistance.GetResistanceCellCenter() );
 		if ( fCurDistance == -1 || fDistance < fCurDistance )
 		{
-			fSeverity = - resistance.GetWeight() * SGeneralConsts::SWARM_WEIGHT_COEFFICIENT;
+			fSeverity = -resistance.GetWeight() * SGeneralConsts::SWARM_WEIGHT_COEFFICIENT;
 			curResistanceToAttack = resistance;
 			fCurDistance = fDistance;
 		}

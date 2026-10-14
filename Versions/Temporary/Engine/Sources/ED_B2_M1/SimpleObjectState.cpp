@@ -14,7 +14,6 @@
 #include "SimpleObjectState.h"
 #include "ResourceDefines.h"
 
-
 #include "MapEditorLib/Interface_Logger.h"
 
 #include "MapObjectMultiState.h"
@@ -35,7 +34,9 @@ void CSimpleObjectState::ClearData()
 	{
 		if ( !sceneObjectlist.empty() )
 		{
-			for ( CSceneObjectList::const_iterator itSceneObject = sceneObjectlist.begin(); itSceneObject != sceneObjectlist.end(); ++itSceneObject )
+			for ( CSceneObjectList::const_iterator itSceneObject = sceneObjectlist.begin();
+			      itSceneObject != sceneObjectlist.end();
+			      ++itSceneObject )
 			{
 				if ( itSceneObject->nID != INVALID_NODE_ID )
 				{
@@ -57,25 +58,28 @@ void CSimpleObjectState::ClearData()
 	rpgStatsDBID.Clear();
 }
 
-
 bool CSimpleObjectState::CanAddSimpleObject()
 {
 	bool bResult = false;
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+					 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+	     ( !objectSet.objectNameSet.empty() ) )
 	{
-		bResult = ( ( objectSet.szObjectTypeName == "MineRPGStats" ) ||
-								( objectSet.szObjectTypeName == "BuildingRPGStats" ) ||
-								( objectSet.szObjectTypeName == "MechUnitRPGStats" ) ||
-								( objectSet.szObjectTypeName == "ObjectRPGStats" ) ||
-								( objectSet.szObjectTypeName == "SquadRPGStats" ) ) &&
-							( !objectSet.objectNameSet.empty() );
+		bResult =
+				( ( objectSet.szObjectTypeName == "MineRPGStats" ) || ( objectSet.szObjectTypeName == "BuildingRPGStats" ) ||
+		      ( objectSet.szObjectTypeName == "MechUnitRPGStats" ) || ( objectSet.szObjectTypeName == "ObjectRPGStats" ) ||
+		      ( objectSet.szObjectTypeName == "SquadRPGStats" ) ) &&
+				( !objectSet.objectNameSet.empty() );
 		if ( bResult )
 		{
 			bResult = false;
-			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( GetMapInfoEditor()->GetViewManipulator()->GetDesc( "HiddenObjectType" ) ) )
+			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc *>(
+							 GetMapInfoEditor()->GetViewManipulator()->GetDesc( "HiddenObjectType" ) ) )
 			{
-				for ( SPropertyDesc::CTypesMap::const_iterator itObjectTypeName = pDesc->refTypes.begin(); itObjectTypeName != pDesc->refTypes.end(); ++itObjectTypeName )
+				for ( SPropertyDesc::CTypesMap::const_iterator itObjectTypeName = pDesc->refTypes.begin();
+				      itObjectTypeName != pDesc->refTypes.end();
+				      ++itObjectTypeName )
 				{
 					if ( itObjectTypeName->first == objectSet.szObjectTypeName )
 					{
@@ -85,7 +89,11 @@ bool CSimpleObjectState::CanAddSimpleObject()
 			}
 			if ( !bResult )
 			{
-				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+				NLog::GetLogger()->Log( LT_ERROR,
+				                        fmt::format( "Object have no visual part: {}{:c}{}\n",
+				                                     objectSet.szObjectTypeName.c_str(),
+				                                     TYPE_SEPARATOR_CHAR,
+				                                     objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 			}
 		}
 		if ( bResult )
@@ -93,20 +101,27 @@ bool CSimpleObjectState::CanAddSimpleObject()
 			bResult = false;
 			if ( objectSet.szObjectTypeName != "SquadRPGStats" )
 			{
-				if ( CPtr<IManipulator> pRPGStatsManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
+				if ( CPtr<IManipulator> pRPGStatsManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+								 objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
 				{
 					bResult = true;
-					CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pRPGStatsManipulator, 0, 0, 0 );
+					CPtr<IManipulator> pVisObjectManipulator =
+							CManipulatorManager::CreateManipulatorFromReference( "visualObject", pRPGStatsManipulator, 0, 0, 0 );
 					if ( pVisObjectManipulator == 0 )
 					{
 						bResult = false;
-						NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+						NLog::GetLogger()->Log( LT_ERROR,
+						                        fmt::format( "Object have no visual part: {}{:c}{}\n",
+						                                     objectSet.szObjectTypeName.c_str(),
+						                                     TYPE_SEPARATOR_CHAR,
+						                                     objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 					}
 				}
 			}
 			else
 			{
-				if ( CPtr<IManipulator> pRPGStatsManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
+				if ( CPtr<IManipulator> pRPGStatsManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+								 objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
 				{
 					bResult = true;
 					int nMemberCount = 0;
@@ -115,11 +130,17 @@ bool CSimpleObjectState::CanAddSimpleObject()
 					{
 						for ( int nMemberIndex = 0; nMemberIndex < nMemberCount; ++nMemberIndex )
 						{
-							CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( fmt::format( "members.[{}]", nMemberIndex ), pRPGStatsManipulator, 0, 0, 0 );
+							CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference(
+									fmt::format( "members.[{}]", nMemberIndex ), pRPGStatsManipulator, 0, 0, 0 );
 							if ( pVisObjectManipulator == 0 )
 							{
 								bResult = false;
-								NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}.member[{}]\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str(), nMemberIndex ) );
+								NLog::GetLogger()->Log( LT_ERROR,
+								                        fmt::format( "Object have no visual part: {}{:c}{}.member[{}]\n",
+								                                     objectSet.szObjectTypeName.c_str(),
+								                                     TYPE_SEPARATOR_CHAR,
+								                                     objectSet.objectNameSet.begin()->first.ToString().c_str(),
+								                                     nMemberIndex ) );
 								break;
 							}
 						}
@@ -127,7 +148,11 @@ bool CSimpleObjectState::CanAddSimpleObject()
 					else
 					{
 						bResult = false;
-						NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Object have no visual part: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+						NLog::GetLogger()->Log( LT_ERROR,
+						                        fmt::format( "Object have no visual part: {}{:c}{}\n",
+						                                     objectSet.szObjectTypeName.c_str(),
+						                                     TYPE_SEPARATOR_CHAR,
+						                                     objectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 					}
 				}
 			}
@@ -136,7 +161,6 @@ bool CSimpleObjectState::CanAddSimpleObject()
 	return bResult;
 }
 
-
 bool CSimpleObjectState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
@@ -144,7 +168,9 @@ bool CSimpleObjectState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rT
 		CMapObjectMultiState::SEditParameters *pEditParameters = GetParentState()->GetEditParameters();
 		const float fDirection = ( ( pEditParameters->fDirection * FP_PI ) / 180.0f );
 		const CVec3 vPosition = pStoreInputState->lastEventInfo.vTerrainPos;
-		for ( CSceneObjectList::const_iterator itSceneObject = sceneObjectlist.begin(); itSceneObject != sceneObjectlist.end(); ++itSceneObject )
+		for ( CSceneObjectList::const_iterator itSceneObject = sceneObjectlist.begin();
+		      itSceneObject != sceneObjectlist.end();
+		      ++itSceneObject )
 		{
 			CVec3 vAdditionalPosition = itSceneObject->vPosition;
 			RotatePoint( &vAdditionalPosition, fDirection, VNULL3 );
@@ -183,7 +209,6 @@ bool CSimpleObjectState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rT
 	return false;
 }
 
-
 bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( CanEdit() )
@@ -204,7 +229,9 @@ bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rT
 		//
 		CBusyCursor waitCursor;
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+						 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+		     ( !objectSet.objectNameSet.empty() ) )
 		{
 			szRPGStatsTypeName = objectSet.szObjectTypeName;
 			rpgStatsDBID = objectSet.objectNameSet.begin()->first;
@@ -231,7 +258,8 @@ bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rT
 			unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
 			if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 			{
-				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
+				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = GetMapInfoEditor()->objectInfoCollector.Insert(
+								 static_cast<NMapInfoEditor::SSimpleObjectInfo *>( 0 ), &nSimpleObjectInfoID ) )
 				{
 					if ( pSimpleObjectInfo->Create( &objectCreateInfo, pScene, pObjectController, pManipulator ) )
 					{
@@ -258,12 +286,10 @@ bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rT
 	return false;
 }
 
-
 bool CSimpleObjectState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	return true;
 }
-
 
 bool CSimpleObjectState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -279,7 +305,6 @@ bool CSimpleObjectState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, c
 	/**/
 	return false;
 }
-
 
 void CSimpleObjectState::InsertObjectEnter()
 {
@@ -314,7 +339,9 @@ void CSimpleObjectState::InsertObjectEnter()
 		ClearData();
 		SObjectSet objectSet;
 		//
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+						 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+		     ( !objectSet.objectNameSet.empty() ) )
 		{
 			szRPGStatsTypeName = objectSet.szObjectTypeName;
 			rpgStatsDBID = objectSet.objectNameSet.begin()->first;
@@ -327,14 +354,16 @@ void CSimpleObjectState::InsertObjectEnter()
 			const NDb::ESeason eSeason = static_cast<NDb::ESeason>( typeSeasonMnemonics.GetValue( szSeason ) );
 			// заполняем сцену и проставляем ссылки в mapInfo
 			CBusyCursor waitCursor;
-			const NDb::SHPObjectRPGStats *pHPObjectRPGStats = dynamic_cast<const NDb::SHPObjectRPGStats*>( NDb::GetObject( rpgStatsDBID ) );
+			const NDb::SHPObjectRPGStats *pHPObjectRPGStats =
+					dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetObject( rpgStatsDBID ) );
 			if ( !pHPObjectRPGStats )
 			{
 				return;
 			}
 			if ( szRPGStatsTypeName == "SquadRPGStats" )
 			{
-				if ( const NDb::SSquadRPGStats *pSquadRPGStats = dynamic_cast<const NDb::SSquadRPGStats*>( pHPObjectRPGStats ) )
+				if ( const NDb::SSquadRPGStats *pSquadRPGStats =
+				         dynamic_cast<const NDb::SSquadRPGStats *>( pHPObjectRPGStats ) )
 				{
 					const NDb::SSquadRPGStats::SFormation *pFormation = 0;
 					for ( int nFormationIndex = 0; nFormationIndex < pSquadRPGStats->formations.size(); ++nFormationIndex )
@@ -346,12 +375,15 @@ void CSimpleObjectState::InsertObjectEnter()
 						}
 					}
 					if ( pFormation != 0 )
- 					{
-						for ( int nMemberIndex = 0; ( nMemberIndex < pFormation->order.size() ) && ( nMemberIndex < pSquadRPGStats->members.size() ); ++nMemberIndex )
+					{
+						for ( int nMemberIndex = 0;
+						      ( nMemberIndex < pFormation->order.size() ) && ( nMemberIndex < pSquadRPGStats->members.size() );
+						      ++nMemberIndex )
 						{
 							if ( pSquadRPGStats->members[nMemberIndex] != 0 )
 							{
-								CVec3 vAdditionalPosition = CVec3( pFormation->order[nMemberIndex].vPos.x, pFormation->order[nMemberIndex].vPos.y, 0.0f );
+								CVec3 vAdditionalPosition =
+										CVec3( pFormation->order[nMemberIndex].vPos.x, pFormation->order[nMemberIndex].vPos.y, 0.0f );
 								float fAdditionalDirection = AI2VisRad( pFormation->order[nMemberIndex].fDir );
 								//
 								CVec3 vObjectScenePosition = vPosition + vAdditionalPosition;
@@ -394,11 +426,15 @@ void CSimpleObjectState::InsertObjectEnter()
 									GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
 								}
 
-								if ( CPtr<SAIActionUpdate> pUpdate = new SAIActionUpdate( nSceneID, ACTION_NOTIFY_ANIMATION_CHANGED, NDb::ANIMATION_IDLE, Singleton<IGameTimer>()->GetGameTime() ) )
- 								{
+								if ( CPtr<SAIActionUpdate> pUpdate = new SAIActionUpdate( nSceneID,
+								                                                          ACTION_NOTIFY_ANIMATION_CHANGED,
+								                                                          NDb::ANIMATION_IDLE,
+								                                                          Singleton<IGameTimer>()->GetGameTime() ) )
+								{
 									GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
 								}
-								CSceneObjectList::iterator itSceneObject = sceneObjectlist.insert( sceneObjectlist.end(), SSceneObject() );
+								CSceneObjectList::iterator itSceneObject =
+										sceneObjectlist.insert( sceneObjectlist.end(), SSceneObject() );
 								itSceneObject->nID = nSceneID;
 								itSceneObject->vPosition = vAdditionalPosition;
 								itSceneObject->fDirection = fAdditionalDirection;
@@ -452,7 +488,9 @@ void CSimpleObjectState::InsertObjectEnter()
 			}
 			//
 			std::list<int> sceneIDlist;
-			for ( CSceneObjectList::const_iterator itSceneObject = sceneObjectlist.begin(); itSceneObject != sceneObjectlist.end(); ++itSceneObject )
+			for ( CSceneObjectList::const_iterator itSceneObject = sceneObjectlist.begin();
+			      itSceneObject != sceneObjectlist.end();
+			      ++itSceneObject )
 			{
 				sceneIDlist.push_back( itSceneObject->nID );
 			}
@@ -462,12 +500,10 @@ void CSimpleObjectState::InsertObjectEnter()
 	}
 }
 
-
 void CSimpleObjectState::InsertObjectLeave()
 {
 	ClearData();
 }
-
 
 void CSimpleObjectState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
@@ -479,8 +515,16 @@ void CSimpleObjectState::InsertObjectDraw( IPaintContext *pPaintDC )
 			CVec3 vPlacementPosition = pStoreInputState->lastEventInfo.vTerrainPos;
 			vPlacementPosition.z = GetTerrainHeight( vPlacementPosition.x, vPlacementPosition.y );
 			CVec3 vPlacementSelectorPosition = vPlacementPosition;
-			sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS0, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
-			sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS1, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
+			sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+			                          NMapInfoEditor::PLACEMENT_RADIUS0,
+			                          NMapInfoEditor::PLACEMENT_PARTS,
+			                          NMapInfoEditor::PLACEMENT_COLOR,
+			                          false );
+			sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+			                          NMapInfoEditor::PLACEMENT_RADIUS1,
+			                          NMapInfoEditor::PLACEMENT_PARTS,
+			                          NMapInfoEditor::PLACEMENT_COLOR,
+			                          false );
 			float fPlacementDirection = ( ( pEditParameters->fDirection * FP_PI ) / 180.0f );
 			const float fDirection = fPlacementDirection;
 			fPlacementDirection += FP_PI2;
@@ -489,14 +533,16 @@ void CSimpleObjectState::InsertObjectDraw( IPaintContext *pPaintDC )
 				fPlacementDirection -= FP_2PI;
 			}
 			CVec2 vDirection = CreateFromPolarCoord( NMapInfoEditor::PLACEMENT_DIRECTION_RADIUS, fPlacementDirection );
-			const CVec3 vPlacementSelectorDirection( vDirection.x + vPlacementSelectorPosition.x, vDirection.y + vPlacementSelectorPosition.y, vPlacementSelectorPosition.z );
-			sceneDrawTool.DrawLine( vPlacementSelectorPosition, vPlacementSelectorDirection, NMapInfoEditor::PLACEMENT_COLOR, false );
+			const CVec3 vPlacementSelectorDirection( vDirection.x + vPlacementSelectorPosition.x,
+			                                         vDirection.y + vPlacementSelectorPosition.y,
+			                                         vPlacementSelectorPosition.z );
+			sceneDrawTool.DrawLine(
+					vPlacementSelectorPosition, vPlacementSelectorDirection, NMapInfoEditor::PLACEMENT_COLOR, false );
 		}
 	}
 }
 
 // basement storage
-
 
 /**
 

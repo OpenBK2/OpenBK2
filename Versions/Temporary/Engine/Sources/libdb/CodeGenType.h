@@ -6,8 +6,8 @@
 
 namespace NLang
 {
-	class CComplexTypeNode;
-	class CEnumNode;
+class CComplexTypeNode;
+class CEnumNode;
 }
 
 namespace NCodeGen
@@ -21,12 +21,18 @@ class CTypeDefinition : public ICode
 	CPtr<NDb::NTypeDef::STypeDef> pType;
 	CObj<CNamespace> pNamespace;
 	bool bTerminal;
+
 public:
-	CTypeDefinition() : bTerminal( true ) { }
-	CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+	CTypeDefinition() : bTerminal( true ) {}
+	CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode,
+	                 const CNodes2TypeDefs &nodes2TypeDefs,
+	                 NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 	CTypeDefinition( NLang::CEnumNode *pEnumNode, const CNodes2TypeDefs &nodes2TypeDefs );
 
-	virtual void GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName );
+	virtual void GenerateCode( SCodeStreams *pCode,
+	                           const std::string &szTabs,
+	                           NDb::NTypeDef::STypeDef *pParentType,
+	                           const std::string &szQualifiedName );
 
 	int operator&( IXmlSaver &saver )
 	{

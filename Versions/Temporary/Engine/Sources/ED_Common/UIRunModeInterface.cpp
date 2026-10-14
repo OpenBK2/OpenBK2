@@ -8,11 +8,13 @@
 #include "UIRunModeInterface.h"
 #include "UIScene.h"
 
-CUIRunModeInterface::CUIRunModeInterface( const std::string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
+CUIRunModeInterface::CUIRunModeInterface( const std::string &rszTypeName,
+                                          const CDBID &rDBID,
+                                          const CDBID &rTemplateWindowDBID,
+                                          const CDBID &rTemplateScreenDBID )
 {
 	LoadWindow( rszTypeName, rDBID, rTemplateWindowDBID, rTemplateScreenDBID );
 }
-
 
 CUIRunModeInterface::~CUIRunModeInterface()
 {
@@ -22,7 +24,6 @@ CUIRunModeInterface::~CUIRunModeInterface()
 		pScreen = 0;
 	}
 }
-
 
 void CUIRunModeInterface::Step( bool bAppActive )
 {
@@ -44,10 +45,12 @@ bool CUIRunModeInterface::ProcessEvent( const struct SGameMessage &msg )
 	return false;
 }
 
-
-void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
+void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName,
+                                      const CDBID &rDBID,
+                                      const CDBID &rTemplateWindowDBID,
+                                      const CDBID &rTemplateScreenDBID )
 {
-	const NDb::SUIGameConsts *pUI = 0;//pGameRoot->pConsts->pUI;
+	const NDb::SUIGameConsts *pUI = 0; //pGameRoot->pConsts->pUI;
 	//const NDb::SGameRoot *pGameRoot = NDb::Get<NDb::SGameRoot>( GetGlobalVar("game_root", 2) );
 	//Singleton<IUIInitialization>()->SetUIConsts( pUI );
 
@@ -60,7 +63,8 @@ void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBI
 	{
 		CDBPtr<NDb::SWindowScreen> pScreenTemplate = NDb::Get<NDb::SWindowScreen>( rTemplateScreenDBID );
 
-		pScreen = Singleton<IUIInitialization>()->CreateScreenFromDesc( pScreenTemplate, pUI, 0, Singleton<IUIScene>()->GetG2DView(), 0, 0 );
+		pScreen = Singleton<IUIInitialization>()->CreateScreenFromDesc(
+				pScreenTemplate, pUI, 0, Singleton<IUIScene>()->GetG2DView(), 0, 0 );
 
 		// avoid fitting UI to viewport size
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
@@ -83,8 +87,7 @@ void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBI
 		pInstance->pShared = pShared;
 
 		pScreen = Singleton<IUIInitialization>()->CreateScreenFromDesc(
-			pInstance, pUI, 0,
-			Singleton<IUIScene>()->GetG2DView(), 0, 0 );
+				pInstance, pUI, 0, Singleton<IUIScene>()->GetG2DView(), 0, 0 );
 	}
 	else
 	{

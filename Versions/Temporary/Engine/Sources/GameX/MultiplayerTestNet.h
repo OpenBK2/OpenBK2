@@ -10,14 +10,15 @@ class CNetPacket;
 class CEmptyServerClient : public IServerClient
 {
 	OBJECT_NOCOPY_METHODS( CEmptyServerClient );
+
 public:
 	CEmptyServerClient() {}
 
 	//{
-	CNetPacket* GetPacket();
+	CNetPacket *GetPacket();
 	void SendPacket( CNetPacket *pPacket );
 
-	CNetPacket* GetGamePacket();
+	CNetPacket *GetGamePacket();
 	void SendGamePacket( CNetPacket *pPacket, bool bBroadcast );
 
 	void Segment();

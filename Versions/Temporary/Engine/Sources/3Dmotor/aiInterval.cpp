@@ -14,12 +14,8 @@ static bool CmpFloat( const float &a, const float &b )
 {
 	return a < b;
 }
-template<class T, class TFunc, class TCompare>
-void CalcResult(
-	std::vector<T> *pEnter,
-	std::vector<T> *pExit,
-	bool bTerrain,
-	TFunc make, TCompare compare )
+template <class T, class TFunc, class TCompare>
+void CalcResult( std::vector<T> *pEnter, std::vector<T> *pExit, bool bTerrain, TFunc make, TCompare compare )
 {
 	std::vector<T> &enter = *pEnter;
 	std::vector<T> &exit = *pExit;
@@ -33,11 +29,11 @@ void CalcResult(
 	}
 	else
 	{
-		if ( enter.size() < exit.size() || (enter.size() && enter.size() == exit.size() && compare(exit[0], enter[0])) )
+		if ( enter.size() < exit.size() || ( enter.size() && enter.size() == exit.size() && compare( exit[0], enter[0] ) ) )
 		{
 			enter.resize( enter.size() + 1 );
 			for ( int i = enter.size() - 1; i > 0; --i )
-				enter[i] = enter[i-1];
+				enter[i] = enter[i - 1];
 			enter[0] = make( -1e10f );
 		}
 		if ( enter.size() > exit.size() )
@@ -49,13 +45,21 @@ void CalcResult(
 		}
 	}
 }
-static SInterval::SCrossPoint MakeCross( float f ) { return SInterval::SCrossPoint( f, CVec3(0,0,1) ); }
-static float MakeFloat( float f ) { return f; }
+static SInterval::SCrossPoint MakeCross( float f )
+{
+	return SInterval::SCrossPoint( f, CVec3( 0, 0, 1 ) );
+}
+static float MakeFloat( float f )
+{
+	return f;
+}
 
 void FillIntersectionResults( std::vector<SInterval> *pRes,
-	std::vector<SInterval::SCrossPoint> *pEnter,
-	std::vector<SInterval::SCrossPoint> *pExit,
-	const SSourceInfo &_src, int _nUserID, bool bTerrain )
+                              std::vector<SInterval::SCrossPoint> *pEnter,
+                              std::vector<SInterval::SCrossPoint> *pExit,
+                              const SSourceInfo &_src,
+                              int _nUserID,
+                              bool bTerrain )
 {
 	std::vector<SInterval::SCrossPoint> &enter = *pEnter;
 	std::vector<SInterval::SCrossPoint> &exit = *pExit;
@@ -68,15 +72,18 @@ void FillIntersectionResults( std::vector<SInterval> *pRes,
 		//ASSERT( enter[i].fT <= exit[i].fT );
 		if ( enter[i].fT > exit[i].fT )
 			DebugTrace( "AI tracing, something went wrong" );
-		exit[i].fT = (std::max)( enter[i].fT, exit[i].fT ); // this is it Beavis, correct wrong results so it seams less buggy
+		exit[i].fT =
+				(std::max)( enter[i].fT, exit[i].fT ); // this is it Beavis, correct wrong results so it seams less buggy
 		pRes->push_back( SInterval( _src, _nUserID, enter[i], exit[i] ) );
 	}
 }
 
 void FillIntersectionResults( std::vector<SSimpleInterval> *pRes,
-	std::vector<float> *pEnter,
-	std::vector<float> *pExit,
-	const SSourceInfo &_src, int _nUserID, bool bTerrain )
+                              std::vector<float> *pEnter,
+                              std::vector<float> *pExit,
+                              const SSourceInfo &_src,
+                              int _nUserID,
+                              bool bTerrain )
 {
 	std::vector<float> &enter = *pEnter;
 	std::vector<float> &exit = *pExit;

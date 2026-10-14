@@ -17,14 +17,14 @@ class CMOEntrenchmentPart : public CMOSelectable
 	struct SCachedInfo
 	{
 		//Indentifying parameters
-		CVec3			vPos;
+		CVec3 vPos;
 		uint16_t wDir = 0;
 		//Derived parameters
-		CQuat			qRot;
-		SHMatrix	mPlace;
+		CQuat qRot;
+		SHMatrix mPlace;
 		//Terrain hole params
-		CVec2			vHoleStart;
-		CVec2			vHoleEnd;
+		CVec2 vHoleStart;
+		CVec2 vHoleEnd;
 		float fHoleWidth = 0.0f;
 	};
 
@@ -32,8 +32,9 @@ class CMOEntrenchmentPart : public CMOSelectable
 	int nFrameIndex = 0;
 
 	void DeriveTransform( const CVec3 &_vPos, const uint16_t _wDir );
+
 public:
-	CMOEntrenchmentPart() : pParent( 0 )  , nFrameIndex( 0 )
+	CMOEntrenchmentPart() : pParent( 0 ), nFrameIndex( 0 )
 	{
 		cached.vPos.Set( 0, 0, 0 );
 		cached.wDir = 0;
@@ -44,15 +45,26 @@ public:
 		cached.fHoleWidth = 0;
 	};
 
-	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
+	virtual bool Create( const int nUniqueID,
+	                     const SAIBasicUpdate *pUpdate,
+	                     NDb::ESeason eSeason,
+	                     const NDb::EDayNight eDayTime,
+	                     bool bInEditor );
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
 	void GetStatus( SObjectStatus *pStatus ) const;
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
+	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
+	                                struct IScene *pScene,
+	                                struct ISoundScene *pSoundScene,
+	                                NDb::ESeason eSeason );
 
-	IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
+	IClientUpdatableProcess *
+	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+	{
+		return 0;
+	}
 	//
 	void SetParent( CMOEntrenchment *pTrench ) { pParent = pTrench; }
-	CMOEntrenchment* GetParent() { return pParent; }
+	CMOEntrenchment *GetParent() { return pParent; }
 	//
 	void GetHoleParams( CVec2 *pStart, CVec2 *pEnd, float *pWidth );
 	//
@@ -63,7 +75,7 @@ public:
 	virtual void Select( bool bSelect ) { NI_ASSERT( !bSelect, "Selecting entrenchment!" ); }
 	virtual bool CanSelect() const { return false; }
 	virtual void SetCanSelect( bool _bCanSelect ) { NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" ); }
-	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
+	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
 	virtual int GetPassangersCount() const { return 0; }
 	//
 	int operator&( IBinSaver &saver );
@@ -73,21 +85,41 @@ class CMOEntrenchment : public CMOSelectable
 {
 	OBJECT_NOCOPY_METHODS( CMOEntrenchment );
 
-	typedef std::list< CPtr<CMOEntrenchmentPart> > CPartsList;
+	typedef std::list<CPtr<CMOEntrenchmentPart>> CPartsList;
 	CPartsList parts;
+
 public:
 	CMOEntrenchment() {};
 	~CMOEntrenchment();
 
-	void SetEntrenchmentStats( const NDb::SEntrenchmentRPGStats *pStats ) { SetStats(pStats); }
+	void SetEntrenchmentStats( const NDb::SEntrenchmentRPGStats *pStats ) { SetStats( pStats ); }
 
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, NDb::ESeason eSeason ) { }
-	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason ) { }
+	virtual void
+	AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, NDb::ESeason eSeason )
+	{
+	}
+	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
+	                                struct IScene *pScene,
+	                                struct ISoundScene *pSoundScene,
+	                                NDb::ESeason eSeason )
+	{
+	}
 
-	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
+	virtual IClientUpdatableProcess *
+	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+	{
+		return 0;
+	}
 
-	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
-	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor ) { return true; }
+	virtual bool Create( const int nUniqueID,
+	                     const SAIBasicUpdate *_pUpdate,
+	                     NDb::ESeason eSeason,
+	                     const NDb::EDayNight eDayTime,
+	                     bool bInEditor );
+	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+	{
+		return true;
+	}
 	//
 	void AddPart( CMOEntrenchmentPart *pPart, const bool bLast = false, const bool bDigBySegment = false );
 	//
@@ -103,7 +135,7 @@ public:
 	virtual void SetCanSelect( bool _bCanSelect ) { NI_ASSERT( !_bCanSelect, "Selecting entrenchment!" ); }
 
 	bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const;
-	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
+	virtual void GetPassangers( std::vector<IB2MapObj *> *pPassangers ) const {}
 	virtual int GetPassangersCount() const { return 0; }
 	//
 	int operator&( IBinSaver &saver );

@@ -17,7 +17,8 @@ bool CheckStringValue( std::string *pszDescription, const std::string &szValueNa
 	return true;
 }
 
-bool CheckIntValue( std::string *pszDescription, const std::string &szValueName, int nMin, int nMax, IManipulator *pBuilderMan )
+bool CheckIntValue(
+		std::string *pszDescription, const std::string &szValueName, int nMin, int nMax, IManipulator *pBuilderMan )
 {
 	int nValue = 0;
 	if ( !CManipulatorManager::GetValue( &nValue, pBuilderMan, szValueName ) || ( nValue < nMin ) || ( nValue > nMax ) )

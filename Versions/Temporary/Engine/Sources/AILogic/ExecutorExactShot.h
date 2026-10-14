@@ -15,27 +15,36 @@ class CExecutorExactShot : public CExecutor
 {
 	OBJECT_BASIC_METHODS( CExecutorExactShot );
 
-	ZDATA_(CExecutor)
+	ZDATA_( CExecutor )
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	NTimer::STime									timeLastUpdate = {};
-	SAbilitySwitchState						state;
-	SSpecialAbilityInfo						lastSent;
+	NTimer::STime timeLastUpdate = {};
+	SAbilitySwitchState state;
+	SSpecialAbilityInfo lastSent;
 	CPtr<SAISpecialAbilityUpdate> pUpdate;
 	CPtr<CAIUnit> pUnit;
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&timeLastUpdate); f.Add(3,&state); f.Add(4,&lastSent); f.Add(5,&pUpdate); f.Add(6,&pUnit); return 0; }
-private:
 
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutor *)this );
+		f.Add( 2, &timeLastUpdate );
+		f.Add( 3, &state );
+		f.Add( 4, &lastSent );
+		f.Add( 5, &pUpdate );
+		f.Add( 6, &pUnit );
+		return 0;
+	}
+
+private:
 	void UpdateProgress( const SAbilitySwitchState _state, const float fParam );
 
 protected:
-
 	void SetAutocast( const bool _bAutocast );
 	bool GetAutocast() const { return state.bAutocast; }
 
 public:
 	CExecutorExactShot( CAIUnit *_pUnit );
-	CExecutorExactShot() { }
+	CExecutorExactShot() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	bool NotifyEvent( const CExecutorEvent &event );

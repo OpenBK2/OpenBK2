@@ -2,12 +2,12 @@
 #include "CClientGameConsts.h"
 #include "GetConsts.h"
 
-IClientGameConsts* CreateClientGameConsts()
+IClientGameConsts *CreateClientGameConsts()
 {
 	return new CClientGameConsts();
 }
 
-const NDb::SClientGameConsts * CClientGameConsts::GetClientGameConsts()
+const NDb::SClientGameConsts *CClientGameConsts::GetClientGameConsts()
 {
 	return NGameX::GetClientConsts();
 }

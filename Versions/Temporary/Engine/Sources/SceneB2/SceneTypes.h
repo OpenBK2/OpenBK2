@@ -28,17 +28,12 @@ struct SSceneObjIconInfo
 	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconLevelup = {};
 	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconDamagedBuilding = {};
 
-	bool IsEmpty() const
-	{
-		return (nHPBarBaseLength == 0) || !bIsMainHitbar;
-	}
+	bool IsEmpty() const { return ( nHPBarBaseLength == 0 ) || !bIsMainHitbar; }
 
-	SSceneObjIconInfo( int _nID ) :
-		nID( _nID ),
-		nHPBarBaseLength( 0 ),
-		eIconGroup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE ),
-		eIconLevelup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE ),
-		eIconDamagedBuilding( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
+	SSceneObjIconInfo( int _nID )
+			: nID( _nID ), nHPBarBaseLength( 0 ), eIconGroup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE ),
+				eIconLevelup( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE ),
+				eIconDamagedBuilding( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
 	{
 	}
 };

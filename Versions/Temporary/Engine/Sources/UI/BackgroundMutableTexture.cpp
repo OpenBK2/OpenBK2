@@ -13,7 +13,7 @@ void CBackgroundMutableTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	CBackground::InitByDesc( _pDesc );
 }
 
-void CBackgroundMutableTexture::Visit( struct IUIVisitor* pVisitor )
+void CBackgroundMutableTexture::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( !pData )
 		return;
@@ -40,7 +40,7 @@ void CBackgroundMutableTexture::Set( const CArray2D<NGfx::SPixel8888> &src )
 
 int CBackgroundMutableTexture::operator&( struct IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CBackground*>( this ) );
+	saver.Add( 1, static_cast<CBackground *>( this ) );
 	saver.Add( 2, &pData );
 	return 0;
 }
@@ -62,8 +62,12 @@ void CBackgroundMutableTexture::CTextureData::Recalc()
 		picture[0][0] = 0;
 	}
 
-	pValue = NGfx::MakeTexture( GetNextPow2( picture.GetSizeX() ), GetNextPow2( picture.GetSizeY() ),
-		1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
+	pValue = NGfx::MakeTexture( GetNextPow2( picture.GetSizeX() ),
+	                            GetNextPow2( picture.GetSizeY() ),
+	                            1,
+	                            NGfx::SPixel8888::ID,
+	                            NGfx::DYNAMIC_TEXTURE,
+	                            NGfx::CLAMP );
 
 	if ( !IsValid( pValue ) )
 		return;

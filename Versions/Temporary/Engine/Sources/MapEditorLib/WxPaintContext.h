@@ -19,7 +19,6 @@
 //     FrameRect paint with PATCOPY whatever the ROP2 is, and a rubber band drawn
 //     in DRAW_NOT does not turn a label's background into an inversion.
 
-
 #include "Interface_Widget.h"
 
 #include <wx/brush.h>
@@ -90,12 +89,20 @@ class CWxPaintContext : public IPaintContext
 		if ( ::GetObjectA( ::GetStockObject( ANSI_VAR_FONT ), sizeof( logFont ), &logFont ) != 0 )
 		{
 			const wxString szDescription = wxString::Format( "0;%ld;%ld;%ld;%ld;%ld;%d;%d;%d;%d;%d;%d;%d;%d;%s",
-				static_cast<long>( logFont.lfHeight ), static_cast<long>( logFont.lfWidth ),
-				static_cast<long>( logFont.lfEscapement ), static_cast<long>( logFont.lfOrientation ),
-				static_cast<long>( logFont.lfWeight ),
-				logFont.lfItalic, logFont.lfUnderline, logFont.lfStrikeOut, logFont.lfCharSet,
-				logFont.lfOutPrecision, logFont.lfClipPrecision, logFont.lfQuality, logFont.lfPitchAndFamily,
-				wxString( logFont.lfFaceName ) );
+			                                                 static_cast<long>( logFont.lfHeight ),
+			                                                 static_cast<long>( logFont.lfWidth ),
+			                                                 static_cast<long>( logFont.lfEscapement ),
+			                                                 static_cast<long>( logFont.lfOrientation ),
+			                                                 static_cast<long>( logFont.lfWeight ),
+			                                                 logFont.lfItalic,
+			                                                 logFont.lfUnderline,
+			                                                 logFont.lfStrikeOut,
+			                                                 logFont.lfCharSet,
+			                                                 logFont.lfOutPrecision,
+			                                                 logFont.lfClipPrecision,
+			                                                 logFont.lfQuality,
+			                                                 logFont.lfPitchAndFamily,
+			                                                 wxString( logFont.lfFaceName ) );
 			wxFont font;
 			if ( font.SetNativeFontInfo( szDescription ) )
 			{
@@ -131,11 +138,11 @@ public:
 
 	static TWidgetColor FromColour( const wxColour &rColour )
 	{
-		return static_cast<TWidgetColor>( rColour.Red() ) | ( static_cast<TWidgetColor>( rColour.Green() ) << 8 ) | ( static_cast<TWidgetColor>( rColour.Blue() ) << 16 );
+		return static_cast<TWidgetColor>( rColour.Red() ) | ( static_cast<TWidgetColor>( rColour.Green() ) << 8 ) |
+		       ( static_cast<TWidgetColor>( rColour.Blue() ) << 16 );
 	}
 
-	CWxPaintContext( wxDC &_rDC, const wxWindow *_pWindow )
-		: rDC( _rDC ), pWindow( _pWindow ), currentPosition( 0, 0 )
+	CWxPaintContext( wxDC &_rDC, const wxWindow *_pWindow ) : rDC( _rDC ), pWindow( _pWindow ), currentPosition( 0, 0 )
 	{
 		rDC.SetTextForeground( *wxBLACK );
 		rDC.SetTextBackground( *wxWHITE );
@@ -185,40 +192,22 @@ public:
 		rDC.SetPen( wxPen( ToColour( color ), nWidth, ToPenStyle( ePenStyle ) ) );
 	}
 
-	virtual void SetBrush( TWidgetColor color )
-	{
-		rDC.SetBrush( wxBrush( ToColour( color ) ) );
-	}
+	virtual void SetBrush( TWidgetColor color ) { rDC.SetBrush( wxBrush( ToColour( color ) ) ); }
 
-	virtual void SetFont( EFontKind eFontKind )
-	{
-		rDC.SetFont( StockFont( eFontKind ) );
-	}
+	virtual void SetFont( EFontKind eFontKind ) { rDC.SetFont( StockFont( eFontKind ) ); }
 
-	virtual void SetDrawMode( EDrawMode eDrawMode )
-	{
-		rDC.SetLogicalFunction( ToLogicalFunction( eDrawMode ) );
-	}
+	virtual void SetDrawMode( EDrawMode eDrawMode ) { rDC.SetLogicalFunction( ToLogicalFunction( eDrawMode ) ); }
 
-	virtual void SetTextColor( TWidgetColor color )
-	{
-		rDC.SetTextForeground( ToColour( color ) );
-	}
+	virtual void SetTextColor( TWidgetColor color ) { rDC.SetTextForeground( ToColour( color ) ); }
 
-	virtual TWidgetColor GetTextColor() const
-	{
-		return FromColour( rDC.GetTextForeground() );
-	}
+	virtual TWidgetColor GetTextColor() const { return FromColour( rDC.GetTextForeground() ); }
 
 	virtual void SetTextBackgroundOpaque( bool bOpaque )
 	{
 		rDC.SetBackgroundMode( bOpaque ? wxBRUSHSTYLE_SOLID : wxBRUSHSTYLE_TRANSPARENT );
 	}
 	//
-	virtual void MoveTo( int nX, int nY )
-	{
-		currentPosition = wxPoint( nX, nY );
-	}
+	virtual void MoveTo( int nX, int nY ) { currentPosition = wxPoint( nX, nY ); }
 
 	virtual void LineTo( int nX, int nY )
 	{

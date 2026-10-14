@@ -16,9 +16,9 @@
 
 namespace NGameX
 {
-	void PostStorageInitialize();
-	void InitDataDependentSingletons();
-	void UnInitDataDependentSingletons();
+void PostStorageInitialize();
+void InitDataDependentSingletons();
+void UnInitDataDependentSingletons();
 }
 
 namespace NMOD
@@ -31,7 +31,9 @@ void ReadMODInfo( SMOD *pMOD, const std::string &_szFullFolderName )
 		szFullFolderName += '/';
 	//
 	pMOD->szFullFolderPath = szFullFolderName;
-	NFile::MakeRelativePath( &pMOD->szRelativePath, szFullFolderName, NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) + NFile::PATH_SEPARATOR );
+	NFile::MakeRelativePath( &pMOD->szRelativePath,
+	                         szFullFolderName,
+	                         NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) + NFile::PATH_SEPARATOR );
 	// name
 	{
 		CFileStream stream( szFullFolderName + "name.txt", CFileStream::WIN_READ_ONLY );
@@ -48,7 +50,7 @@ void GetAllMODs( std::vector<SMOD> *pMODs )
 {
 	const std::string szMODsBaseDir = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) + NFile::PATH_SEPARATOR;
 	// iterate through all files by mask
-	for ( NFile::CFileIterator it( (szMODsBaseDir + "*.*").c_str() ); !it.IsEnd(); ++it )
+	for ( NFile::CFileIterator it( ( szMODsBaseDir + "*.*" ).c_str() ); !it.IsEnd(); ++it )
 	{
 		if ( it.IsDirectory() && !it.IsDots() )
 		{
@@ -61,7 +63,9 @@ void GetAllMODs( std::vector<SMOD> *pMODs )
 	}
 }
 
-void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath, const NFile::CFilePath &szMODPath, NDb::EDatabaseMode eMode )
+void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath,
+                        const NFile::CFilePath &szMODPath,
+                        NDb::EDatabaseMode eMode )
 {
 	NVFS::IVFS *pVFS = NVFS::GetMainVFS();
 	NVFS::ICombinerVFS *pMainVFS = pVFS == 0 ? 0 : dynamic_cast<NVFS::ICombinerVFS *>( pVFS );
@@ -71,9 +75,9 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath, const NFile:
 	if ( pMainFileCreator == 0 )
 		pMainFileCreator = NVFS::CreateWinFileCreator( szBaseResourcePath );
 	//
-	std::vector< CObj<NVFS::IVFS> > vfses = pMainVFS->GetVFSList();
+	std::vector<CObj<NVFS::IVFS>> vfses = pMainVFS->GetVFSList();
 	if ( vfses.empty() )
-		vfses.push_back( NVFS::CreateWinVFS(szBaseResourcePath) );
+		vfses.push_back( NVFS::CreateWinVFS( szBaseResourcePath ) );
 	// remove all VFSes but one (base storage VFS)
 	while ( vfses.size() > 1 )
 		vfses.pop_back();
@@ -81,7 +85,7 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath, const NFile:
 	if ( !szMODPath.empty() && szMODPath != szBaseResourcePath )
 	{
 		pMainFileCreator = NVFS::CreateWinFileCreator( szMODPath );
-		vfses.push_back( NVFS::CreateWinVFS(szMODPath) );
+		vfses.push_back( NVFS::CreateWinVFS( szMODPath ) );
 	}
 	else if ( szMODPath.empty() )
 		pMainFileCreator = NVFS::CreateWinFileCreator( szBaseResourcePath );
@@ -109,16 +113,16 @@ class CICAttachMOD : public IInterfaceCommand
 	NFile::CFilePath szFullFolderPath;
 	NDb::EDatabaseMode eMode;
 	//
-	CICAttachMOD(): eMode( NDb::DATABASE_MODE_GAME ) {}
+	CICAttachMOD() : eMode( NDb::DATABASE_MODE_GAME ) {}
+
 public:
-	CICAttachMOD( NDb::EDatabaseMode _eMode ): eMode(_eMode) {}
+	CICAttachMOD( NDb::EDatabaseMode _eMode ) : eMode( _eMode ) {}
 
 	void Configure( const char *pszConfig )
 	{
 		szFullFolderPath = pszConfig == 0 ? "" : pszConfig;
-		if ( szFullFolderPath.size() > 1 &&
-			   szFullFolderPath[szFullFolderPath.size() - 1] != '/' &&
-				 szFullFolderPath[szFullFolderPath.size() - 1] != '/' )
+		if ( szFullFolderPath.size() > 1 && szFullFolderPath[szFullFolderPath.size() - 1] != '/' &&
+		     szFullFolderPath[szFullFolderPath.size() - 1] != '/' )
 		{
 			szFullFolderPath += "/";
 		}
@@ -129,8 +133,8 @@ public:
 		// A trailing separator, because CWinVFS and CWinFileCreator build a full
 		// path by concatenating this with the name they are asked for. JoinPath
 		// does not add one, which is right for a file path and wrong for a base.
-		AttachMODInternal( NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA ) + NFile::PATH_SEPARATOR,
-		                   szFullFolderPath, eMode );
+		AttachMODInternal(
+				NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA ) + NFile::PATH_SEPARATOR, szFullFolderPath, eMode );
 		auto modConfigPath = std::filesystem::path( szFullFolderPath.c_str() ) / "mod_config.cfg";
 		if ( std::filesystem::exists( modConfigPath ) )
 		{
@@ -177,7 +181,7 @@ NFile::CFilePath GetAbsolutePath( const NFile::CFilePath &path )
 void AttachMOD( const NFile::CFilePath &_path )
 {
 	NMainLoop::Command( MOD_PRE_SHUTDOWN, MOD_MODE_GAME );
-	NMainLoop::Command( MOD_ATTACH_COMMAND, GetAbsolutePath(_path).c_str() );
+	NMainLoop::Command( MOD_ATTACH_COMMAND, GetAbsolutePath( _path ).c_str() );
 	NMainLoop::Command( MOD_POST_SETUP, MOD_MODE_GAME );
 }
 

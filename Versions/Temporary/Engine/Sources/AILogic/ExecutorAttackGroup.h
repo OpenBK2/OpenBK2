@@ -3,7 +3,7 @@
 
 class CCommonUnit;
 
-class CExecutorAttackGroup :	public CExecutor
+class CExecutorAttackGroup : public CExecutor
 {
 	enum EAttackGroupState
 	{
@@ -12,9 +12,9 @@ class CExecutorAttackGroup :	public CExecutor
 		EAGS_SWARM,
 		EAGS_END,
 	};
-	typedef std::list<CPtr<CCommonUnit> > CAttackGroupUnits;
+	typedef std::list<CPtr<CCommonUnit>> CAttackGroupUnits;
 	OBJECT_BASIC_METHODS( CExecutorAttackGroup );
-	ZDATA_(CExecutor)
+	ZDATA_( CExecutor )
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nGroupID = {};
 	CAttackGroupUnits units;
@@ -22,12 +22,24 @@ class CExecutorAttackGroup :	public CExecutor
 	CVec2 vPoint;
 	float fRadius = {};
 	EAttackGroupState eState = {};
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&nGroupID); f.Add(3,&units); f.Add(4,&vPoint); f.Add(5,&fRadius); f.Add(6,&eState); return 0; }
 
 public:
-	CExecutorAttackGroup( int _nGroupID ) : CExecutor( TID_ATTACKGROUP, 20 ), nGroupID( _nGroupID ), eState( EAGS_BEGIN ) {  }
-	CExecutorAttackGroup() {  }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutor *)this );
+		f.Add( 2, &nGroupID );
+		f.Add( 3, &units );
+		f.Add( 4, &vPoint );
+		f.Add( 5, &fRadius );
+		f.Add( 6, &eState );
+		return 0;
+	}
+
+public:
+	CExecutorAttackGroup( int _nGroupID ) : CExecutor( TID_ATTACKGROUP, 20 ), nGroupID( _nGroupID ), eState( EAGS_BEGIN )
+	{
+	}
+	CExecutorAttackGroup() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	virtual int Segment();

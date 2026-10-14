@@ -22,11 +22,11 @@ const float UNFADE_TIME = 1.0f;
 
 // CInterfaceMPStatistics
 
-CInterfaceMPStatistics::CInterfaceMPStatistics() :
-	CInterfaceMPScreenBase( "MPStatistics", "mp_statistics" )
+CInterfaceMPStatistics::CInterfaceMPStatistics() : CInterfaceMPScreenBase( "MPStatistics", "mp_statistics" )
 {
 	AddObserver( "menu_next", &CInterfaceMPStatistics::MsgNext );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_GAME_AFTERMATH, SMPUIGameAftemathMessage, &CInterfaceMPStatistics::OnGameAftermathMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_GAME_AFTERMATH, SMPUIGameAftemathMessage, &CInterfaceMPStatistics::OnGameAftermathMessage );
 }
 
 bool CInterfaceMPStatistics::Init()
@@ -83,7 +83,8 @@ void CInterfaceMPStatistics::MakeInterior()
 
 	if ( pMissionTimeView )
 	{
-		int nTime = Singleton<IScenarioTracker>()->GetStatistics( Singleton<IScenarioTracker>()->GetLocalPlayer(), IScenarioTracker::ESK_TIME );
+		int nTime = Singleton<IScenarioTracker>()->GetStatistics( Singleton<IScenarioTracker>()->GetLocalPlayer(),
+		                                                          IScenarioTracker::ESK_TIME );
 		std::string szText = fmt::format( "{:02d}", nTime % 60 );
 		nTime = nTime / 60;
 		szText = fmt::format( "{:02d}:", nTime % 60 ) + szText;
@@ -145,7 +146,8 @@ void CInterfaceMPStatistics::FillTeams()
 	}
 }
 
-void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player, std::list<SPlayerItemData> &team )
+void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player,
+                                              std::list<SPlayerItemData> &team )
 {
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 	SPlayerItemData item;
@@ -164,7 +166,7 @@ void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplay
 	// Insert it appropriately
 	std::list<SPlayerItemData>::iterator it = team.begin();
 
-	while ( it != team.end() && (*it).nScore > item.nScore )
+	while ( it != team.end() && ( *it ).nScore > item.nScore )
 		++it;
 
 	team.insert( it, item );
@@ -224,11 +226,11 @@ void CInterfaceMPStatistics::AddPlayerItemsToList( std::list<SPlayerItemData> &t
 		if ( pItemTeamColour )
 			pItemTeamColour->SetState( item.nTeam );
 
-		pItemLost->SetText( pItemLost->GetDBText() + NStr::ToUnicode( std::to_string(  item.nUnitsLost ) ) );
-		pItemKilled->SetText( pItemKilled->GetDBText() + NStr::ToUnicode( std::to_string(  item.nUnitsKilled ) ) );
+		pItemLost->SetText( pItemLost->GetDBText() + NStr::ToUnicode( std::to_string( item.nUnitsLost ) ) );
+		pItemKilled->SetText( pItemKilled->GetDBText() + NStr::ToUnicode( std::to_string( item.nUnitsKilled ) ) );
 		pItemScore1->SetText( pItemScore1->GetDBText() + NStr::ToUnicode( fmt::format( "{}%", item.nScoreTactics ) ) );
 		pItemScore2->SetText( pItemScore2->GetDBText() + NStr::ToUnicode( fmt::format( "{}%", item.nScoreStrategy ) ) );
-		pItemScoreTotal->SetText( pItemScoreTotal->GetDBText() + NStr::ToUnicode( std::to_string(  item.nScore ) ) );
+		pItemScoreTotal->SetText( pItemScoreTotal->GetDBText() + NStr::ToUnicode( std::to_string( item.nScore ) ) );
 
 		pPlayerList->PushBack( pItemWnd, false );
 	}
@@ -252,7 +254,9 @@ int CInterfaceMPStatistics::Check( const std::string &szCheckName ) const
 
 void CInterfaceMPStatistics::MsgNext( const SGameMessage &msg )
 {
-	NI_VERIFY( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE, "Wrong game type (multiplayer only allowed)", return );
+	NI_VERIFY( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE,
+	           "Wrong game type (multiplayer only allowed)",
+	           return );
 
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_NONE );
 
@@ -289,10 +293,11 @@ bool CInterfaceMPStatistics::OnGameAftermathMessage( struct SMPUIGameAftemathMes
 		return true;
 
 	pPlayerRankView->SetText( pPlayerRankView->GetDBText() +
-		GET_TEXT_PRE( pMPConsts->sides[pMsg->nCountry].ladderRanks[pMsg->nRank]., Name ) );
-	pPlayerLevelView->SetText( pPlayerLevelView->GetDBText() + NStr::ToUnicode( std::to_string(  pMsg->nLevel ) ) );
-	pExpEarnedView->SetText( pExpEarnedView->GetDBText() + NStr::ToUnicode( std::to_string(  pMsg->nExpEarned ) ) );
-	pExpTotalView->SetText( pExpTotalView->GetDBText() + NStr::ToUnicode( fmt::format( "{} / {}", pMsg->nExpTotal1, pMsg->nExpTotal2 ) ) );
+	                          GET_TEXT_PRE( pMPConsts->sides[pMsg->nCountry].ladderRanks[pMsg->nRank]., Name ) );
+	pPlayerLevelView->SetText( pPlayerLevelView->GetDBText() + NStr::ToUnicode( std::to_string( pMsg->nLevel ) ) );
+	pExpEarnedView->SetText( pExpEarnedView->GetDBText() + NStr::ToUnicode( std::to_string( pMsg->nExpEarned ) ) );
+	pExpTotalView->SetText( pExpTotalView->GetDBText() +
+	                        NStr::ToUnicode( fmt::format( "{} / {}", pMsg->nExpTotal1, pMsg->nExpTotal2 ) ) );
 	if ( pMsg->nExpTotal2 != 0 )
 		pExpTotalProgress->SetPosition( float( pMsg->nExpTotal1 ) / pMsg->nExpTotal2 );
 	else
@@ -372,18 +377,14 @@ void CInterfaceMPStatistics::ShowMedalPopup( const NDb::SMedal *pMedal )
 
 // CICMPStatistics
 
-void CICMPStatistics::PreCreate()
-{
-}
+void CICMPStatistics::PreCreate() {}
 
 void CICMPStatistics::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMPStatistics::Configure( const char *pszConfig )
-{
-}
+void CICMPStatistics::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1719C300, CInterfaceMPStatistics )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_STATISTICS, CICMPStatistics )

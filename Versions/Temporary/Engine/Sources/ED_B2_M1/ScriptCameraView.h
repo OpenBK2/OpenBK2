@@ -14,13 +14,12 @@
 // falls through to here for the dialog-data pair.
 typedef CPaletteCommands<SScriptCameraWindowData> CScriptCameraCommands;
 
-
 // The script camera palette -- the list of saved camera placements a mission
 // script can cut to -- behind a boundary that names no toolkit.
 namespace NScriptCameraView
 {
-	// Creates the palette in pPage, its page of the shortcut bar, registers it
-	// in pPalettes, which owns it from then on, and returns it. Null if it could
-	// not be created.
-	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage );
+// Creates the palette in pPage, its page of the shortcut bar, registers it
+// in pPalettes, which owns it from then on, and returns it. Null if it could
+// not be created.
+IWidget *Create( CPaletteList *pPalettes, IWidget *pPage );
 }

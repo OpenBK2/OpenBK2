@@ -13,8 +13,8 @@ extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
 CExecutorTrackTargetting::CExecutorTrackTargetting( CAIUnit *_pUnit )
-: state( EASS_READY_TO_ON ), CExecutor( TID_TRACK_TARGETTING, 1000/SConsts::AI_SEGMENT_DURATION ),
-timeLastUpdate( curTime ), pUnit( _pUnit )
+		: state( EASS_READY_TO_ON ), CExecutor( TID_TRACK_TARGETTING, 1000 / SConsts::AI_SEGMENT_DURATION ),
+			timeLastUpdate( curTime ), pUnit( _pUnit )
 {
 	NI_ASSERT( _pUnit, "Attempt to create TrackTargetting executor for null unit" );
 }
@@ -32,17 +32,21 @@ int CExecutorTrackTargetting::Segment()
 		bool bFoundUnit = false;
 		CAIUnit *pTarget = 0;
 
-		for ( CUnitsIter<1,3> iter( pUnit->GetParty(), EDI_ENEMY, CVec2(pUnit->GetCenter().x,pUnit->GetCenter().y), pUnit->GetSightRadius() );
-			!iter.IsFinished(); iter.Iterate() )
+		for ( CUnitsIter<1, 3> iter( pUnit->GetParty(),
+		                             EDI_ENEMY,
+		                             CVec2( pUnit->GetCenter().x, pUnit->GetCenter().y ),
+		                             pUnit->GetSightRadius() );
+		      !iter.IsFinished();
+		      iter.Iterate() )
 		{
 			CAIUnit *pCurUnit = *iter;
-			if ( pCurUnit->IsRefValid() && pCurUnit->IsAlive() &&
-				pCurUnit->IsVisible( pUnit->GetParty() ) && !pCurUnit->GetStats()->IsAviation() )
+			if ( pCurUnit->IsRefValid() && pCurUnit->IsAlive() && pCurUnit->IsVisible( pUnit->GetParty() ) &&
+			     !pCurUnit->GetStats()->IsAviation() )
 			{
 				CTank *pTankTarget;
 
-				pTankTarget = dynamic_cast< CTank * >( pCurUnit );
-				if ( pTankTarget && !pTankTarget->IsTrackDamaged() )			// It's a tank, and it's mobile
+				pTankTarget = dynamic_cast<CTank *>( pCurUnit );
+				if ( pTankTarget && !pTankTarget->IsTrackDamaged() ) // It's a tank, and it's mobile
 				{
 					bFoundUnit = true;
 					pTarget = pCurUnit;
@@ -73,19 +77,18 @@ void CExecutorTrackTargetting::UpdateProgress( const SAbilitySwitchState _state,
 	pUpdate->info.fCurValue = fParam;
 	pUpdate->info.nObjUniqueID = pUnit->GetUniqueId();
 
-	if ( 0 != memcmp( &lastSent, &pUpdate->info, sizeof(lastSent) ) )
+	if ( 0 != memcmp( &lastSent, &pUpdate->info, sizeof( lastSent ) ) )
 	{
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, pUnit, -1 );
 		lastSent = pUpdate->info;
 		pUpdate = 0;
 	}
-
 }
 
 void CExecutorTrackTargetting::SetAutocast( const bool _bAutocast )
 {
 	state.bAutocast = _bAutocast;
-	UpdateProgress( state , 0 );
+	UpdateProgress( state, 0 );
 }
 
 void CExecutorTrackTargetting::RegisterOnEvents( IExecutorContainer *pContainer )
@@ -114,18 +117,18 @@ bool CExecutorTrackTargetting::NotifyEvent( const CExecutorEvent &event )
 		return false;
 	//end - Filter out wrong calls
 
-	switch( event.GetParam().eEventID )
+	switch ( event.GetParam().eEventID )
 	{
-	case EID_ABILITY_ACTIVATE_AUTOCAST:
-		SetAutocast( true );
-		pUnit->SetTrackTargeting( false );
+		case EID_ABILITY_ACTIVATE_AUTOCAST:
+			SetAutocast( true );
+			pUnit->SetTrackTargeting( false );
 
-		return true;
-	case EID_ABILITY_DEACTIVATE_AUTOCAST:
-		SetAutocast( false );
-		pUnit->SetTrackTargeting( false );
+			return true;
+		case EID_ABILITY_DEACTIVATE_AUTOCAST:
+			SetAutocast( false );
+			pUnit->SetTrackTargeting( false );
 
-		return true;
+			return true;
 	}
 	return false;
 }

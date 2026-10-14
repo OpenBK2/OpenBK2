@@ -10,12 +10,10 @@ const CVec3 CModelEditorSettings::vShift = CVec3( VIS_TILE_SIZE / 8.0f, VIS_TILE
 const float CModelEditorSettings::fDefaultDiff = VIS_TILE_SIZE / 64;
 //
 CModelEditorSettings::SCameraPlacement::SCameraPlacement()
-	:	vAnchor( VNULL3 ),
-		fDistance( VIS_TILE_SIZE * 16.0f ),
-		fPitch( 45.0f ),
-		fYaw( 45.0f ),
-		fFOV( 26.0f ),
-		bValid( false ) {}
+		: vAnchor( VNULL3 ), fDistance( VIS_TILE_SIZE * 16.0f ), fPitch( 45.0f ), fYaw( 45.0f ), fFOV( 26.0f ),
+			bValid( false )
+{
+}
 
 int CModelEditorSettings::SCameraPlacement::operator&( IXmlSaver &xs )
 {
@@ -29,22 +27,13 @@ int CModelEditorSettings::SCameraPlacement::operator&( IXmlSaver &xs )
 }
 
 CModelEditorSettings::CModelEditorSettings()
-	:	bShowToolbar( false ),
-		bShowTool( true ),
-		bDrawTerrain( true ),
-		bDrawAnimations( true ),
-		bDrawAIGeometry( false ),
-		bDoubleSided( true ),
-		bAnimationsCircle( true ),
-		bShowGrid( true ),
-		bShowSolidAIGeometry( false ),
-		nGridSize( 32 ),
-		vSceneColor( 0.0f, 0.0f, 0.0f ),
-		vTerrainColor( 128.0f, 128.0f, 128.0f, 128.0f ),
-		nMaxAnimationsCount( 16 ),
-		fAnimationsCircleDistance( 12.0f ),
-		fAnimationsBetweenDistance( 4.0f ),
-		nGameTimerSpeed( 0 ) {}
+		: bShowToolbar( false ), bShowTool( true ), bDrawTerrain( true ), bDrawAnimations( true ), bDrawAIGeometry( false ),
+			bDoubleSided( true ), bAnimationsCircle( true ), bShowGrid( true ), bShowSolidAIGeometry( false ),
+			nGridSize( 32 ), vSceneColor( 0.0f, 0.0f, 0.0f ), vTerrainColor( 128.0f, 128.0f, 128.0f, 128.0f ),
+			nMaxAnimationsCount( 16 ), fAnimationsCircleDistance( 12.0f ), fAnimationsBetweenDistance( 4.0f ),
+			nGameTimerSpeed( 0 )
+{
+}
 
 int CModelEditorSettings::operator&( IXmlSaver &xs )
 {

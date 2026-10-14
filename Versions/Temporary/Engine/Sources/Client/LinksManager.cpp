@@ -12,7 +12,7 @@ bool CGameLinksManager::IsGoodAddress( const sockaddr &addr ) const
 	while ( iter != bannedAddresses.end() && bGood )
 	{
 		const sockaddr &bannedAddr = *iter;
-		bGood = memcmp( &addr, &bannedAddr, sizeof(addr) ) != 0;
+		bGood = memcmp( &addr, &bannedAddr, sizeof( addr ) ) != 0;
 
 		++iter;
 	}

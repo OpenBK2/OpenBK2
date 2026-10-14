@@ -2,8 +2,8 @@
 
 namespace NDb
 {
-	struct SMapInfo;
-	struct SUnitStatsModifier;
+struct SMapInfo;
+struct SUnitStatsModifier;
 }
 
 class CBalanceTest
@@ -17,20 +17,15 @@ class CBalanceTest
 	void PrintBalanceTestData();
 	void CollectBalanceTestData( int nIteration );
 	void AllignSizes( std::string *szTitle, std::string *szSide0, std::string *szSide1, int nAdd = 0 );
+
 public:
-	CBalanceTest() : bTest( false ), shoot( 3, false ) { }
+	CBalanceTest() : bTest( false ), shoot( 3, false ) {}
 	void Clear() { bTest = false; }
 	bool IsActive() const { return bTest; }
-	bool HasShoot( int nPlayer ) const
-	{
-		return shoot[nPlayer];
-	}
-	void SetShoot( int nPlayer )
-	{
-		shoot[nPlayer] = true;
-	}
+	bool HasShoot( int nPlayer ) const { return shoot[nPlayer]; }
+	void SetShoot( int nPlayer ) { shoot[nPlayer] = true; }
 	void SegmentBalanceTest();
 	void InitBalanceTest( const NDb::SMapInfo *pMapInfo );
-	const NDb::SUnitStatsModifier * GetModifier( int nPlayer ) const;
+	const NDb::SUnitStatsModifier *GetModifier( int nPlayer ) const;
 	void UnitDead( class CAIUnit *pUnit );
 };

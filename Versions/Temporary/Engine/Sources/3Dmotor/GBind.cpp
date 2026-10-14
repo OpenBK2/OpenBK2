@@ -10,14 +10,14 @@ namespace NGScene
 // CBind
 
 CBind::CBind( CFuncBase<NAnimation::SSkeletonPose> *_pAnimation, const NDb::SSkeleton *pSkeleton, int _nModelInFile )
-	: pAnimation(_pAnimation)
+		: pAnimation( _pAnimation )
 {
 	skeletonH.pSkeleton = pSkeleton;
 	skeletonH.nModelInFile = _nModelInFile;
 }
 
 CBind::CBind( CFuncBase<NAnimation::SSkeletonPose> *_pAnimation, const NAnimation::SSkeletonHandle &_skeletonH )
-	: pAnimation(_pAnimation), skeletonH(_skeletonH)
+		: pAnimation( _pAnimation ), skeletonH( _skeletonH )
 {
 }
 
@@ -27,14 +27,12 @@ void CBind::Recalc()
 	value = pAnimation->GetValue().compositePose;
 }
 
-CBind::~CBind()
-{
-}
+CBind::~CBind() {}
 
 // CAnimatedBound
 
 CAnimatedBound::CAnimatedBound( const SBound &_bv, CFuncBase<NAnimation::SSkeletonPose> *_pAnimation )
-	: bv(_bv), pAnimation(_pAnimation)
+		: bv( _bv ), pAnimation( _pAnimation )
 {
 	Zero( value );
 	Zero( prevValue );
@@ -42,7 +40,7 @@ CAnimatedBound::CAnimatedBound( const SBound &_bv, CFuncBase<NAnimation::SSkelet
 
 static bool operator==( const SSphere &a, const SSphere &b )
 {
-	return memcmp( &a, &b, sizeof(a) ) == 0;
+	return memcmp( &a, &b, sizeof( a ) ) == 0;
 }
 bool CAnimatedBound::NeedUpdate()
 {
@@ -51,7 +49,7 @@ bool CAnimatedBound::NeedUpdate()
 	if ( !pAnimation.Refresh() )
 		return false;
 	const NAnimation::SSkeletonPose &pose = pAnimation->GetValue();
-	const SHMatrix *pGlobal = (const SHMatrix*)pose.poseGlobal;
+	const SHMatrix *pGlobal = (const SHMatrix *)pose.poseGlobal;
 	SHMatrix pos;
 	Transpose( &pos, *pGlobal );
 	CVec3 ptCenter;
@@ -67,18 +65,15 @@ bool CAnimatedBound::NeedUpdate()
 	return true;
 }
 
-void CAnimatedBound::Recalc()
-{
-}
-
+void CAnimatedBound::Recalc() {}
 
 void DiscretisizeBoundSphere( SSphere *pResult, const CVec3 &ptCenter, const float fRadius, const float fDiscrStep )
 {
 	// position discretisation
 	CVec3 vDiscrCenter;
-	vDiscrCenter.x = Float2Int( ptCenter.x * (1 / fDiscrStep) ) * fDiscrStep;
-	vDiscrCenter.y = Float2Int( ptCenter.y * (1 / fDiscrStep) ) * fDiscrStep;
-	vDiscrCenter.z = Float2Int( ptCenter.z * (1 / fDiscrStep) ) * fDiscrStep;
+	vDiscrCenter.x = Float2Int( ptCenter.x * ( 1 / fDiscrStep ) ) * fDiscrStep;
+	vDiscrCenter.y = Float2Int( ptCenter.y * ( 1 / fDiscrStep ) ) * fDiscrStep;
+	vDiscrCenter.z = Float2Int( ptCenter.z * ( 1 / fDiscrStep ) ) * fDiscrStep;
 	// radius should be larger because of position shift
 	float fDiscrRadius = fRadius + fabs( ptCenter - vDiscrCenter );
 	// radius discretisation with bias to max
@@ -86,7 +81,6 @@ void DiscretisizeBoundSphere( SSphere *pResult, const CVec3 &ptCenter, const flo
 	pResult->ptCenter = vDiscrCenter;
 	pResult->fRadius = fDiscrRadius;
 }
-
 
 } // namespace
 using namespace NGScene;

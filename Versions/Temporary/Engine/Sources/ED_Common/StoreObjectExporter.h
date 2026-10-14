@@ -3,13 +3,12 @@
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Tools_HashSet.h"
 
-
 class CStoreObjectExporter : public IExporter
 {
 	SObjectSet objectSet;
 
 public:
-	inline const SObjectSet& GetObjectSet() const { return objectSet; }
+	inline const SObjectSet &GetObjectSet() const { return objectSet; }
 
 	// IExporter
 	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce )
@@ -18,11 +17,11 @@ public:
 		objectSet.objectNameSet.clear();
 		return true;
 	}
-	virtual EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-																			const std::string &rszObjectTypeName,
-																			const std::string &rszObjectName,
-																			bool bForce,
-																			EXPORT_TYPE exportType )
+	virtual EXPORT_RESULT ExportObject( IManipulator *pManipulator,
+	                                    const std::string &rszObjectTypeName,
+	                                    const std::string &rszObjectName,
+	                                    bool bForce,
+	                                    EXPORT_TYPE exportType )
 	{
 		if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
 		{
@@ -35,9 +34,12 @@ public:
 	//
 	virtual bool StartCheck( const std::string &rszObjectTypeName, bool bExport ) { return true; }
 	virtual void FinishCheck( const std::string &rszObjectTypeName, bool bExport ) {}
-	virtual EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-																		 const std::string &rszObjectTypeName,
-																		 const std::string &rszObjectName,
-																		 bool bExport,
-																		 EXPORT_TYPE exportType ) { return ER_SUCCESS; }
+	virtual EXPORT_RESULT CheckObject( IManipulator *pManipulator,
+	                                   const std::string &rszObjectTypeName,
+	                                   const std::string &rszObjectName,
+	                                   bool bExport,
+	                                   EXPORT_TYPE exportType )
+	{
+		return ER_SUCCESS;
+	}
 };

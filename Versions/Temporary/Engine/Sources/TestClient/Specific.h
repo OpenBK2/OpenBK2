@@ -2,7 +2,7 @@
 
 #include <cstdarg>
 
-inline void WriteMSG( const char* pszFormat, ... )
+inline void WriteMSG( const char *pszFormat, ... )
 {
 	static char buff[1024];
 

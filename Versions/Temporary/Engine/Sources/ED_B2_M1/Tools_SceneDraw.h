@@ -14,7 +14,7 @@
 
 namespace NDb
 {
-	struct SModel;
+struct SModel;
 }
 
 class CSceneDrawTool
@@ -35,13 +35,12 @@ class CSceneDrawTool
 		//
 		SModelInfo() : pModel( 0 ), vPos( VNULL3 ), qRot( QNULL ), vScale( VNULL3 ) {}
 		SModelInfo( const SModelInfo &rModelInfo )
-			: pModel( rModelInfo.pModel ),
-				vPos( rModelInfo.vPos ),
-				qRot( rModelInfo.qRot ),
-				vScale( rModelInfo.vScale ) {}
-		SModelInfo& operator=( const SModelInfo &rModelInfo )
+				: pModel( rModelInfo.pModel ), vPos( rModelInfo.vPos ), qRot( rModelInfo.qRot ), vScale( rModelInfo.vScale )
 		{
-			if( &rModelInfo != this )
+		}
+		SModelInfo &operator=( const SModelInfo &rModelInfo )
+		{
+			if ( &rModelInfo != this )
 			{
 				pModel = rModelInfo.pModel;
 				vPos = rModelInfo.vPos;
@@ -62,12 +61,12 @@ class CSceneDrawTool
 		//
 		SPolylineInfo() : vColor( VNULL3 ), bDepthCheck( true ) {}
 		SPolylineInfo( const SPolylineInfo &rPolylineInfo )
-			: points( rPolylineInfo.points ),
-				vColor( rPolylineInfo.vColor ),
-				bDepthCheck( rPolylineInfo.bDepthCheck ) {}
-		SPolylineInfo& operator=( const SPolylineInfo &rPolylineInfo )
+				: points( rPolylineInfo.points ), vColor( rPolylineInfo.vColor ), bDepthCheck( rPolylineInfo.bDepthCheck )
 		{
-			if( &rPolylineInfo != this )
+		}
+		SPolylineInfo &operator=( const SPolylineInfo &rPolylineInfo )
+		{
+			if ( &rPolylineInfo != this )
 			{
 				points = rPolylineInfo.points;
 				vColor = rPolylineInfo.vColor;
@@ -92,11 +91,11 @@ public:
 	void Clear();
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	template<class TPoint>
-	void DrawLine( const TPoint &rBegin, const TPoint &rEnd,  uint32_t dwColor, bool bDepthCheck )
+	template <class TPoint>
+	void DrawLine( const TPoint &rBegin, const TPoint &rEnd, uint32_t dwColor, bool bDepthCheck )
 	{
-		const CVec3 vBegin = GetPointType( rBegin, static_cast<CVec3*>( 0 ) );
-		const CVec3 vEnd = GetPointType( rEnd, static_cast<CVec3*>( 0 ) );
+		const CVec3 vBegin = GetPointType( rBegin, static_cast<CVec3 *>( 0 ) );
+		const CVec3 vEnd = GetPointType( rEnd, static_cast<CVec3 *>( 0 ) );
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 		{
 			posNewPolyline->points.push_back( vBegin );
@@ -108,13 +107,13 @@ public:
 	}
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	template<class TPoint>
-	void Draw3DLine( const TPoint &rBegin, const TPoint &rEnd,  uint32_t dwColor, bool bDepthCheck, int nSegmentCount )
+	template <class TPoint>
+	void Draw3DLine( const TPoint &rBegin, const TPoint &rEnd, uint32_t dwColor, bool bDepthCheck, int nSegmentCount )
 	{
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 		//
-		CVec3 vBegin = GetPointType( rBegin, static_cast<CVec3*>( 0 ) );
-		CVec3 vEnd = GetPointType( rEnd, static_cast<CVec3*>( 0 ) );
+		CVec3 vBegin = GetPointType( rBegin, static_cast<CVec3 *>( 0 ) );
+		CVec3 vEnd = GetPointType( rEnd, static_cast<CVec3 *>( 0 ) );
 		if ( nSegmentCount > 1 )
 		{
 			const CVec3 vPart = ( vEnd - vBegin ) / nSegmentCount;
@@ -137,7 +136,12 @@ public:
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void Draw3DLine( const CTPoint<int> &rBegin, const CTPoint<int> &rEnd,  uint32_t dwColor, bool bGridHeights, bool bConnectors, bool bDepthCheck )
+	void Draw3DLine( const CTPoint<int> &rBegin,
+	                 const CTPoint<int> &rEnd,
+	                 uint32_t dwColor,
+	                 bool bGridHeights,
+	                 bool bConnectors,
+	                 bool bDepthCheck )
 	{
 		ITerraManager *pTerraManager = EditorScene()->GetTerraManager();
 		if ( ( pTerraManager != 0 ) && ( ( rBegin.x == rEnd.x ) || ( rBegin.y == rEnd.y ) ) )
@@ -145,9 +149,8 @@ public:
 			CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 			if ( bConnectors && bGridHeights )
 			{
-				CVec3 vPoint = CVec3( rBegin.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-															rBegin.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-															0.0f );
+				CVec3 vPoint = CVec3(
+						rBegin.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, rBegin.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, 0.0f );
 				vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 				posNewPolyline->points.push_back( vPoint );
 			}
@@ -155,16 +158,19 @@ public:
 			{
 				for ( int nPointIndex = rBegin.y; nPointIndex <= rEnd.y; ++nPointIndex )
 				{
-					CVec3 vPoint = CVec3( rBegin.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-																nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-																0.0f );
+					CVec3 vPoint = CVec3(
+							rBegin.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, 0.0f );
 					if ( bGridHeights )
 					{
-						vPoint.z = pTerraManager->GetTerraHeightFast( rBegin.x, nPointIndex ) * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE / VIS_TILE_SIZE + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
+						vPoint.z = pTerraManager->GetTerraHeightFast( rBegin.x, nPointIndex ) * AI_TILE_SIZE *
+						               AI_TILES_IN_VIS_TILE / VIS_TILE_SIZE +
+						           ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 					}
 					else
 					{
-						vPoint.z = GetTerrainHeight( rBegin.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
+						vPoint.z = GetTerrainHeight( rBegin.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
+						                             nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE ) +
+						           ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 					}
 					posNewPolyline->points.push_back( vPoint );
 				}
@@ -173,25 +179,27 @@ public:
 			{
 				for ( int nPointIndex = rBegin.x; nPointIndex <= rEnd.x; ++nPointIndex )
 				{
-					CVec3 vPoint = CVec3( nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-																rBegin.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-																0.0f );
+					CVec3 vPoint = CVec3(
+							nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, rBegin.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, 0.0f );
 					if ( bGridHeights )
 					{
-						vPoint.z = pTerraManager->GetTerraHeightFast( nPointIndex, rBegin.y ) * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE / VIS_TILE_SIZE + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
+						vPoint.z = pTerraManager->GetTerraHeightFast( nPointIndex, rBegin.y ) * AI_TILE_SIZE *
+						               AI_TILES_IN_VIS_TILE / VIS_TILE_SIZE +
+						           ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 					}
 					else
 					{
-						vPoint.z = GetTerrainHeight( nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, rBegin.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
+						vPoint.z = GetTerrainHeight( nPointIndex * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
+						                             rBegin.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE ) +
+						           ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 					}
 					posNewPolyline->points.push_back( vPoint );
 				}
 			}
 			if ( bConnectors && bGridHeights )
 			{
-				CVec3 vPoint = CVec3( rEnd.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-															rEnd.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE,
-															0.0f );
+				CVec3 vPoint =
+						CVec3( rEnd.x * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, rEnd.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE, 0.0f );
 				vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 				posNewPolyline->points.push_back( vPoint );
 			}
@@ -201,7 +209,7 @@ public:
 	}
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	template<class TPointList>
+	template <class TPointList>
 	void DrawPolyline( const TPointList &rPolintList, uint32_t dwColor, bool bClosed, bool bDepthCheck )
 	{
 		typename TPointList::const_iterator itTestPoint = rPolintList.begin();
@@ -220,12 +228,12 @@ public:
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 		for ( typename TPointList::const_iterator itPoint = rPolintList.begin(); itPoint != rPolintList.end(); ++itPoint )
 		{
-			const CVec3 vPoint = GetPointType( *itPoint, static_cast<CVec3*>( 0 ) );
+			const CVec3 vPoint = GetPointType( *itPoint, static_cast<CVec3 *>( 0 ) );
 			posNewPolyline->points.push_back( vPoint );
 		}
 		if ( bClosed )
 		{
-			const CVec3 vPoint = GetPointType( *( rPolintList.begin() ), static_cast<CVec3*>( 0 ) );
+			const CVec3 vPoint = GetPointType( *( rPolintList.begin() ), static_cast<CVec3 *>( 0 ) );
 			posNewPolyline->points.push_back( vPoint );
 		}
 		GetVec3FromARGBColor( &( posNewPolyline->vColor ), dwColor );
@@ -233,7 +241,7 @@ public:
 	}
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	template<class TPointList>
+	template <class TPointList>
 	void Draw3DPolyline( const TPointList &rPolintList, uint32_t dwColor, bool bClosed, bool bDepthCheck )
 	{
 		typename TPointList::const_iterator itTestPoint = rPolintList.begin();
@@ -252,13 +260,13 @@ public:
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 		for ( typename TPointList::const_iterator itPoint = rPolintList.begin(); itPoint != rPolintList.end(); ++itPoint )
 		{
-			CVec3 vPoint = GetPointType( *itPoint, static_cast<CVec3*>( 0 ) );
+			CVec3 vPoint = GetPointType( *itPoint, static_cast<CVec3 *>( 0 ) );
 			vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 			posNewPolyline->points.push_back( vPoint );
 		}
 		if ( bClosed )
 		{
-			CVec3 vPoint = GetPointType( *( rPolintList.begin() ), static_cast<CVec3*>( 0 ) );
+			CVec3 vPoint = GetPointType( *( rPolintList.begin() ), static_cast<CVec3 *>( 0 ) );
 			vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 			posNewPolyline->points.push_back( vPoint );
 		}
@@ -267,42 +275,38 @@ public:
 	}
 	//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	template<class TPoint>
+	template <class TPoint>
 	void DrawCircle( const TPoint &rCenter, float fRadius, int nParts, uint32_t dwColor, bool bDepthCheck )
 	{
 		if ( nParts < 2 )
 		{
 			return;
 		}
-		CVec3 vCenter = GetPointType( rCenter, static_cast<CVec3*>( 0 ) );
+		CVec3 vCenter = GetPointType( rCenter, static_cast<CVec3 *>( 0 ) );
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 		for ( int nIndex = 0; nIndex <= nParts; ++nIndex )
 		{
 			float alpha = FP_2PI * nIndex / nParts;
-			const CVec3 vPoint = CVec3( fRadius * cos( alpha ) + vCenter.x,
-																	fRadius * sin( alpha ) + vCenter.y,
-																	vCenter.z );
+			const CVec3 vPoint = CVec3( fRadius * cos( alpha ) + vCenter.x, fRadius * sin( alpha ) + vCenter.y, vCenter.z );
 			posNewPolyline->points.push_back( vPoint );
 		}
 		GetVec3FromARGBColor( &( posNewPolyline->vColor ), dwColor );
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	template<class TPoint>
+	template <class TPoint>
 	void Draw3DCircle( const TPoint &rCenter, float fRadius, int nParts, uint32_t dwColor, bool bDepthCheck )
 	{
 		if ( nParts < 2 )
 		{
 			return;
 		}
-		CVec3 vCenter = GetPointType( rCenter, static_cast<CVec3*>( 0 ) );
+		CVec3 vCenter = GetPointType( rCenter, static_cast<CVec3 *>( 0 ) );
 		CPolylineInfoList::iterator posNewPolyline = polylineInfoList.insert( polylineInfoList.end(), SPolylineInfo() );
 		for ( int nIndex = 0; nIndex <= nParts; ++nIndex )
 		{
 			float alpha = FP_2PI * nIndex / nParts;
-			CVec3 vPoint = CVec3( fRadius * cos( alpha ) + vCenter.x,
-														fRadius * sin( alpha ) + vCenter.y,
-														vCenter.z );
+			CVec3 vPoint = CVec3( fRadius * cos( alpha ) + vCenter.x, fRadius * sin( alpha ) + vCenter.y, vCenter.z );
 			vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y ) + ( bDepthCheck ? SCENE_Z_SHIFT : 0.0f );
 			posNewPolyline->points.push_back( vPoint );
 		}

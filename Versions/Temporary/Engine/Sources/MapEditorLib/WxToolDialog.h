@@ -27,7 +27,6 @@
 // in the editor's dialogs: everything modality used to need by hand is now
 // wx's, because the frame a dialog is parented on is a wxFrame.
 
-
 #include <wx/dialog.h>
 
 class CWxToolDialog : public wxDialog
@@ -43,10 +42,12 @@ public:
 	// The same reasoning says a class derived from this one cannot override
 	// MSWGetStyle again and be heard: by then the window already exists. No
 	// dialog needs to, and one that did would create itself the same way.
-	CWxToolDialog( wxWindow *pParent, wxWindowID id, const wxString &rTitle,
-								 const wxPoint &rPos = wxDefaultPosition,
-								 const wxSize &rSize = wxDefaultSize,
-								 long nStyle = wxDEFAULT_DIALOG_STYLE )
+	CWxToolDialog( wxWindow *pParent,
+	               wxWindowID id,
+	               const wxString &rTitle,
+	               const wxPoint &rPos = wxDefaultPosition,
+	               const wxSize &rSize = wxDefaultSize,
+	               long nStyle = wxDEFAULT_DIALOG_STYLE )
 	{
 		Create( pParent, id, rTitle, rPos, rSize, nStyle );
 	}

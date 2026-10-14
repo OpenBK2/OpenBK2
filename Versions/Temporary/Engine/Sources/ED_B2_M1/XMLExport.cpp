@@ -23,8 +23,7 @@ struct SLevelDesc
 	std::string szType;
 	//
 	SLevelDesc() {}
-	SLevelDesc( const std::string &_szName, const std::string &_szType )
-		: szName( _szName ), szType( _szType ) {}
+	SLevelDesc( const std::string &_szName, const std::string &_szType ) : szName( _szName ), szType( _szType ) {}
 };
 typedef std::vector<SLevelDesc> CLevelsList;
 inline bool IsInRect( const CLevelsList &levels )
@@ -40,49 +39,50 @@ void ConvertXMLSysChars( std::string *pString )
 	szRes.reserve( pString->size() );
 	for ( int i = 0; i < pString->size(); )
 	{
-		const int chr = (*pString)[i];
+		const int chr = ( *pString )[i];
 
 		switch ( chr )
 		{
-		case '&':
-			if ( (i < ( (int)(*pString).length() - 2 )) && ((*pString)[i + 1] == '#') && ((*pString)[i + 2] == 'x') )
-			{
-				// Hexadecimal character reference.
-				// Pass through unchanged.
-				// &#xA9;	-- copyright symbol, for example.
-				while ( i < (int)(*pString).length() )
+			case '&':
+				if ( ( i < ( (int)( *pString ).length() - 2 ) ) && ( ( *pString )[i + 1] == '#' ) &&
+				     ( ( *pString )[i + 2] == 'x' ) )
 				{
-					szRes += (*pString)[i];
-					++i;
-					if ( (*pString)[i] == ';' )
-						break;
+					// Hexadecimal character reference.
+					// Pass through unchanged.
+					// &#xA9;	-- copyright symbol, for example.
+					while ( i < (int)( *pString ).length() )
+					{
+						szRes += ( *pString )[i];
+						++i;
+						if ( ( *pString )[i] == ';' )
+							break;
+					}
 				}
-			}
-			else
-			{
-				szRes += "&amp;";
+				else
+				{
+					szRes += "&amp;";
+					++i;
+				}
+				break;
+			case '<':
+				szRes += "&lt;";
 				++i;
-			}
-			break;
-		case '<':
-			szRes += "&lt;";
-			++i;
-			break;
-		case '>':
-			szRes += "&gt;";
-			++i;
-			break;
-		case '\"':
-			szRes += "&quot;";
-			++i;
-			break;
-		case '\'':
-			szRes += "&apos;";
-			++i;
-			break;
-		default:
-			szRes += char( chr );
-			++i;
+				break;
+			case '>':
+				szRes += "&gt;";
+				++i;
+				break;
+			case '\"':
+				szRes += "&quot;";
+				++i;
+				break;
+			case '\'':
+				szRes += "&apos;";
+				++i;
+				break;
+			default:
+				szRes += char( chr );
+				++i;
 		}
 	}
 	*pString = szRes;
@@ -92,52 +92,52 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 {
 	switch ( variant.GetType() )
 	{
-	case CVariant::VT_NULL:
-		pString->clear();
-		break;
+		case CVariant::VT_NULL:
+			pString->clear();
+			break;
 
-	case CVariant::VT_INT:
-		*pString = std::to_string(  (int)variant );
-		break;
+		case CVariant::VT_INT:
+			*pString = std::to_string( (int)variant );
+			break;
 
-	case CVariant::VT_FLOAT:
-		*pString = fmt::format( "{:g}", (float)variant );
-		break;
+		case CVariant::VT_FLOAT:
+			*pString = fmt::format( "{:g}", (float)variant );
+			break;
 
-	case CVariant::VT_BOOL:
-		*pString = ((bool)variant) == false ? "false" : "true";
-		break;
+		case CVariant::VT_BOOL:
+			*pString = ( (bool)variant ) == false ? "false" : "true";
+			break;
 
-	case CVariant::VT_STR:
-		*pString = variant.GetStr();
-		if ( bConvertSysChars )
-			ConvertXMLSysChars( pString );
-		break;
+		case CVariant::VT_STR:
+			*pString = variant.GetStr();
+			if ( bConvertSysChars )
+				ConvertXMLSysChars( pString );
+			break;
 
-	case CVariant::VT_WSTR:
-		*pString = WideToUTF8( variant.GetWStr() );
-		if ( bConvertSysChars )
-			ConvertXMLSysChars( pString );
-		break;
+		case CVariant::VT_WSTR:
+			*pString = WideToUTF8( variant.GetWStr() );
+			if ( bConvertSysChars )
+				ConvertXMLSysChars( pString );
+			break;
 
-	case CVariant::VT_POINTER:
-		if ( ePCIType == PCIE_GUID )
-		{
-			NI_ASSERT( variant.GetBlobSize() == sizeof(boost::uuids::uuid), "Size mismatch during GUID convertion" );
-			if ( variant.GetBlobSize() == sizeof(boost::uuids::uuid) )
-				*pString = boost::uuids::to_string( *static_cast<const boost::uuids::uuid*>( variant.GetPtr() ) );
+		case CVariant::VT_POINTER:
+			if ( ePCIType == PCIE_GUID )
+			{
+				NI_ASSERT( variant.GetBlobSize() == sizeof( boost::uuids::uuid ), "Size mismatch during GUID convertion" );
+				if ( variant.GetBlobSize() == sizeof( boost::uuids::uuid ) )
+					*pString = boost::uuids::to_string( *static_cast<const boost::uuids::uuid *>( variant.GetPtr() ) );
+				else
+					pString->clear();
+			}
 			else
-				pString->clear();
-		}
-		else
-		{
-			pString->resize( variant.GetBlobSize() * 2 );
-			NStr::BinToString( variant.GetPtr(), variant.GetBlobSize(), const_cast<char*>(pString->c_str()) );
-		}
-		break;
+			{
+				pString->resize( variant.GetBlobSize() * 2 );
+				NStr::BinToString( variant.GetPtr(), variant.GetBlobSize(), const_cast<char *>( pString->c_str() ) );
+			}
+			break;
 
-	default:
-		NI_ASSERT( false, fmt::format("Can't convert type {} to string", static_cast<int>( variant.GetType() )) );
+		default:
+			NI_ASSERT( false, fmt::format( "Can't convert type {} to string", static_cast<int>( variant.GetType() ) ) );
 	}
 }
 
@@ -159,12 +159,19 @@ void PrintTabs( const int nAmount, FILE *file )
 	fmt::print( file, "{}", std::string( nAmount, '\t' ) );
 }
 
-void StartLevel( const std::string &szName, const std::string &szType, CLevelsList &levels, FILE *file, int nArraySize, std::list< std::pair<std::string, std::string> > *pAtributes )
+void StartLevel( const std::string &szName,
+                 const std::string &szType,
+                 CLevelsList &levels,
+                 FILE *file,
+                 int nArraySize,
+                 std::list<std::pair<std::string, std::string>> *pAtributes )
 {
 	std::string szAttributes;
 	if ( pAtributes && !pAtributes->empty() )
 	{
-		for ( std::list< std::pair<std::string, std::string> >::const_iterator it = pAtributes->begin(); it != pAtributes->end(); ++it )
+		for ( std::list<std::pair<std::string, std::string>>::const_iterator it = pAtributes->begin();
+		      it != pAtributes->end();
+		      ++it )
 			szAttributes += " " + it->first + "=\"" + it->second + "\"";
 	}
 	//
@@ -178,8 +185,8 @@ void StartLevel( const std::string &szName, const std::string &szType, CLevelsLi
 	}
 	else
 	{
-		levels.push_back( SLevelDesc(szName, szType) );
-		if ( !IsInRect(levels) )
+		levels.push_back( SLevelDesc( szName, szType ) );
+		if ( !IsInRect( levels ) )
 		{
 			PrintTabs( levels.size() - 1, file );
 			if ( szName[0] == '[' )
@@ -203,7 +210,7 @@ void StartLevel( const std::string &szName, const std::string &szType, CLevelsLi
 void FinishLevel( CLevelsList &levels, FILE *file )
 {
 	NI_VERIFY( !levels.empty(), "Can't finish empty levels stack!", return );
-	if ( !IsInRect(levels) )
+	if ( !IsInRect( levels ) )
 	{
 		PrintTabs( levels.size() - 1, file );
 		if ( levels.back().szName[0] == '[' )
@@ -230,11 +237,12 @@ std::string MakeSimpleChunkName( const std::string &szFullName, CLevelsList &lev
 		}
 		nLastPos = nPos + 1;
 	}
-	const std::string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
+	const std::string szChunkName = szFullName.c_str() + szFullName.rfind( '.' ) + 1;
 	return szChunkName[0] == '[' ? "Item" : szChunkName;
 }
 
-void MoveToNextLevel( const std::string &szFullName, const std::string &szType, CLevelsList &levels, FILE *file, int nArraySize )
+void MoveToNextLevel(
+		const std::string &szFullName, const std::string &szType, CLevelsList &levels, FILE *file, int nArraySize )
 {
 	int nLastPos = 0;
 	for ( int i = NUM_SYSTEM_CHUNKS; i < levels.size(); ++i )
@@ -250,7 +258,7 @@ void MoveToNextLevel( const std::string &szFullName, const std::string &szType, 
 		}
 		nLastPos = nPos + 1;
 	}
-	std::string szChunkName = szFullName.c_str() + szFullName.rfind('.') + 1;
+	std::string szChunkName = szFullName.c_str() + szFullName.rfind( '.' ) + 1;
 	StartLevel( szChunkName, szType, levels, file, nArraySize, 0 );
 }
 
@@ -262,8 +270,12 @@ const std::string GetTypeName( const SPropertyDesc *pDesc, const std::string &sz
 		return pDesc->szTypeName;
 }
 
-void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName, const int nClassTypeID,
-																			const std::string &szObjectName, const int nObjectID, const std::string &szFieldName )
+void CXmlExporter::ExportObjectToXML( FILE *file,
+                                      const std::string &szTypeName,
+                                      const int nClassTypeID,
+                                      const std::string &szObjectName,
+                                      const int nObjectID,
+                                      const std::string &szFieldName )
 {
 	StartExport( szObjectName, szTypeName, szFieldName );
 	//
@@ -273,18 +285,18 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 	fprintf( file, "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" );
 	// base element with attribute -> ObjectRecordID
 	{
-		std::list< std::pair<std::string, std::string> > attributes;
-		attributes.push_back( std::pair<std::string, std::string>("ObjectRecordID", fmt::format("{}", nObjectID)) );
+		std::list<std::pair<std::string, std::string>> attributes;
+		attributes.push_back( std::pair<std::string, std::string>( "ObjectRecordID", fmt::format( "{}", nObjectID ) ) );
 		StartLevel( szTypeName, szTypeName, levels, file, -1, &attributes );
 	}
 	//
 	IResourceManager *pRM = Singleton<IResourceManager>();
 	if ( CObj<IManipulator> pObjMan = pRM->CreateObjectManipulator( szTypeName, szObjectName ) )
 	{
-		for ( CObj<IManipulatorIterator> pIt = pObjMan->Iterate(true, ECT_CACHE_GLOBAL);
-			pIt != 0 && !pIt->IsEnd(); pIt->Next() )
+		for ( CObj<IManipulatorIterator> pIt = pObjMan->Iterate( true, ECT_CACHE_GLOBAL ); pIt != 0 && !pIt->IsEnd();
+		      pIt->Next() )
 		{
-			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>(pIt->GetDesc()) )
+			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc *>( pIt->GetDesc() ) )
 			{
 				std::string szFullFieldName;
 				if ( pIt->GetName( &szFullFieldName ) != false && !szFullFieldName.empty() && szFullFieldName != " " )
@@ -294,27 +306,32 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 					if ( ePCIType == PCIE_UNKNOWN && pDesc->szTypeName == "hexBinary" )
 						ePCIType = PCIE_BINARY_BIT_FIELD;
 					//
-					if ( typePCIEMnemonics.IsLeaf(ePCIType) )
+					if ( typePCIEMnemonics.IsLeaf( ePCIType ) )
 					{
 						const std::string szChunkName = MakeSimpleChunkName( szFullFieldName, levels, file );
 						PrintTabs( levels.size(), file );
 						//
-						if ( typePCIEMnemonics.IsRef(ePCIType) )
+						if ( typePCIEMnemonics.IsRef( ePCIType ) )
 						{
 							std::string szRefTypeName, szRefObjName;
-							if ( CManipulatorManager::GetParamsFromReference( szFullFieldName, pObjMan, &szRefTypeName, &szRefObjName, 0 ) != false )
+							if ( CManipulatorManager::GetParamsFromReference(
+											 szFullFieldName, pObjMan, &szRefTypeName, &szRefObjName, 0 ) != false )
 							{
 								if ( !szRefTypeName.empty() && szRefTypeName != " " && !szRefObjName.empty() && szRefObjName != " " )
 								{
-//									// hierarchical export
-//									if ( ExportObject( szRefObjName, szRefTypeName, szFullFieldName ) != false )
+									//									// hierarchical export
+									//									if ( ExportObject( szRefObjName, szRefTypeName, szFullFieldName ) != false )
 									{
 										std::string szFullPathName = MakePathName( szRefObjName, szRefTypeName, szFullFieldName );
 										NStr::ToLowerASCII( &szFullPathName );
-										fprintf( file, "<%s href=\"/%s#xpointer(/%s)\"/>\n", szChunkName.c_str(), szFullPathName.c_str(), szRefTypeName.c_str() );
+										fprintf( file,
+										         "<%s href=\"/%s#xpointer(/%s)\"/>\n",
+										         szChunkName.c_str(),
+										         szFullPathName.c_str(),
+										         szRefTypeName.c_str() );
 									}
-//									else
-//										fprintf( file, "<%s href=\"\"/>\n", szChunkName.c_str() );
+									//									else
+									//										fprintf( file, "<%s href=\"\"/>\n", szChunkName.c_str() );
 								}
 								else
 									fprintf( file, "<%s href=\"\"/>\n", szChunkName.c_str() );
@@ -342,15 +359,15 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 										// export text to text file
 										const std::string szFullName = MakePathName( szObjectName, szTypeName, szFieldName );
 										std::string szFullFileName = "c:\\b2\\xml\\" + szFullName;
-										szFullFileName = szFullFileName.substr( 0, szFullFileName.rfind('.') ) + ".txt";
+										szFullFileName = szFullFileName.substr( 0, szFullFileName.rfind( '.' ) ) + ".txt";
 										NStr::ReplaceAllChars( &szFullFileName, '/', '\\' );
 										//
 										if ( FILE *txtfile = fopen( szFullFileName.c_str(), "wb" ) )
 										{
 											uint16_t wUnicodeMagic = 0xfeff;
-											fwrite( &wUnicodeMagic, sizeof(uint16_t), 1, txtfile );
+											fwrite( &wUnicodeMagic, sizeof( uint16_t ), 1, txtfile );
 											if ( !wszUnicodeValue.empty() )
-												fwrite( wszUnicodeValue.c_str(), sizeof(uint16_t), wszUnicodeValue.size(), txtfile );
+												fwrite( wszUnicodeValue.c_str(), sizeof( uint16_t ), wszUnicodeValue.size(), txtfile );
 											fclose( txtfile );
 										}
 									}
@@ -360,13 +377,13 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 										VariantToString( &szRawValue, value, ePCIType, false );
 										const std::string szFullName = MakePathName( szObjectName, szTypeName, szFieldName );
 										std::string szFullFileName = "c:\\b2\\xml\\" + szFullName;
-										szFullFileName = szFullFileName.substr( 0, szFullFileName.rfind('.') ) + ".lua";
+										szFullFileName = szFullFileName.substr( 0, szFullFileName.rfind( '.' ) ) + ".lua";
 										NStr::ReplaceAllChars( &szFullFileName, '/', '\\' );
 										//
 										if ( FILE *txtfile = fopen( szFullFileName.c_str(), "wb" ) )
 										{
 											if ( !szRawValue.empty() )
-												fwrite( szRawValue.c_str(), sizeof(char), szRawValue.size(), txtfile );
+												fwrite( szRawValue.c_str(), sizeof( char ), szRawValue.size(), txtfile );
 											fclose( txtfile );
 										}
 									}
@@ -375,15 +392,18 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 									// convert type-rename int and uint32_t to int value before saving
 									if ( pDesc->szTypeRename == "int" || pDesc->szTypeRename == "uint32_t" )
 									{
-										NI_ASSERT( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4, fmt::format("Can't convert type {} to {}", static_cast<int>( value.GetType() ), pDesc->szTypeRename.c_str()) );
+										NI_ASSERT( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4,
+										           fmt::format( "Can't convert type {} to {}",
+										                        static_cast<int>( value.GetType() ),
+										                        pDesc->szTypeRename.c_str() ) );
 										if ( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4 )
 										{
-											int nIntValue = *( (int*)value.GetPtr() );
-											VariantToString( &szValue, CVariant(nIntValue), ePCIType, true );
+											int nIntValue = *( (int *)value.GetPtr() );
+											VariantToString( &szValue, CVariant( nIntValue ), ePCIType, true );
 										}
 									}
 									// special case - convert int value of VecColor to CVec3 {x, y, z}
-									if ( GetTypeName(pDesc, szFullFieldName) == "VecColor" )
+									if ( GetTypeName( pDesc, szFullFieldName ) == "VecColor" )
 									{
 										const int nData = value.GetType() == CVariant::VT_NULL ? 0 : int( value );
 										CVec3 vColor;
@@ -402,19 +422,20 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 
 										FinishLevel( levels, file );
 									}
-									else if ( IsInRect(levels) )
+									else if ( IsInRect( levels ) )
 									{
-										if ( szFullFieldName.compare(szFullFieldName.size() - 9, 9, "LeftTop.x") == 0 )
+										if ( szFullFieldName.compare( szFullFieldName.size() - 9, 9, "LeftTop.x" ) == 0 )
 											fprintf( file, "<x1>%s</x1>\n", szValue.c_str() );
-										else if ( szFullFieldName.compare(szFullFieldName.size() - 9, 9, "LeftTop.y") == 0 )
+										else if ( szFullFieldName.compare( szFullFieldName.size() - 9, 9, "LeftTop.y" ) == 0 )
 											fprintf( file, "<y1>%s</y1>\n", szValue.c_str() );
-										else if ( szFullFieldName.compare(szFullFieldName.size() - 13, 13, "RightBottom.x") == 0 )
+										else if ( szFullFieldName.compare( szFullFieldName.size() - 13, 13, "RightBottom.x" ) == 0 )
 											fprintf( file, "<x2>%s</x2>\n", szValue.c_str() );
-										else if ( szFullFieldName.compare(szFullFieldName.size() - 13, 13, "RightBottom.y") == 0 )
+										else if ( szFullFieldName.compare( szFullFieldName.size() - 13, 13, "RightBottom.y" ) == 0 )
 											fprintf( file, "<y2>%s</y2>\n", szValue.c_str() );
 										else
 										{
-											NI_ASSERT( false, fmt::format("Unknown field \"{}\" for rect export!", szFullFieldName.c_str()) );
+											NI_ASSERT( false,
+											           fmt::format( "Unknown field \"{}\" for rect export!", szFullFieldName.c_str() ) );
 										}
 									}
 									else
@@ -431,12 +452,12 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 						{
 							CVariant value;
 							if ( pObjMan->GetValue( szFullFieldName, &value ) != false )
-								MoveToNextLevel( szFullFieldName, GetTypeName(pDesc, szFullFieldName), levels, file, (int)value );
+								MoveToNextLevel( szFullFieldName, GetTypeName( pDesc, szFullFieldName ), levels, file, (int)value );
 							else
-								MoveToNextLevel( szFullFieldName, GetTypeName(pDesc, szFullFieldName), levels, file, -1 );
+								MoveToNextLevel( szFullFieldName, GetTypeName( pDesc, szFullFieldName ), levels, file, -1 );
 						}
 						else
-							MoveToNextLevel( szFullFieldName, GetTypeName(pDesc, szFullFieldName), levels, file, -1 );
+							MoveToNextLevel( szFullFieldName, GetTypeName( pDesc, szFullFieldName ), levels, file, -1 );
 					}
 				}
 			}
@@ -449,7 +470,9 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 	FinishExport();
 }
 
-bool CXmlExporter::ExportObject( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
+bool CXmlExporter::ExportObject( const std::string &szObjectName,
+                                 const std::string &szClassTypeName,
+                                 const std::string &szFieldName )
 {
 	const std::string szFullName = MakePathName( szObjectName, szClassTypeName, szFieldName );
 	if ( szFullName.empty() )
@@ -465,8 +488,8 @@ bool CXmlExporter::ExportObject( const std::string &szObjectName, const std::str
 			//
 			std::string szFullFileName = "c:\\b2\\xml\\" + szFullName;
 			NStr::ReplaceAllChars( &szFullFileName, '/', '\\' );
-			NFile::CreatePath( szFullFileName.substr(0, szFullFileName.rfind('\\')) );
-			if ( FILE *file = fopen(szFullFileName.c_str(), "wt") )
+			NFile::CreatePath( szFullFileName.substr( 0, szFullFileName.rfind( '\\' ) ) );
+			if ( FILE *file = fopen( szFullFileName.c_str(), "wt" ) )
 			{
 				if ( CPtr<IManipulator> pFolderMan = pRM->CreateFolderManipulator( szClassTypeName ) )
 				{
@@ -488,7 +511,9 @@ bool CXmlExporter::ExportObject( const std::string &szObjectName, const std::str
 	}
 }
 
-void CXmlExporter::StartExport( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
+void CXmlExporter::StartExport( const std::string &szObjectName,
+                                const std::string &szClassTypeName,
+                                const std::string &szFieldName )
 {
 	CObjectsStack::iterator pos = objectsStack.insert( objectsStack.end(), SObjStackEntry() );
 	pos->szClassTypeName = szClassTypeName;
@@ -507,22 +532,23 @@ static void DumpTypeNames()
 	if ( CObj<IManipulator> pTableMan = pRM->CreateTableManipulator() )
 	{
 		std::vector<std::string> typeNames;
-		for ( CObj<IManipulatorIterator> pItTable = pTableMan->Iterate(true, ECT_CACHE_GLOBAL);
-			pItTable != 0 && !pItTable->IsEnd(); pItTable->Next() )
+		for ( CObj<IManipulatorIterator> pItTable = pTableMan->Iterate( true, ECT_CACHE_GLOBAL );
+		      pItTable != 0 && !pItTable->IsEnd();
+		      pItTable->Next() )
 		{
 			std::string szTypeName;
 			if ( pItTable->GetName( &szTypeName ) != false && !szTypeName.empty() && szTypeName != " " )
 			{
-				if ( szTypeName.size() > 7 && szTypeName.compare(szTypeName.size() - 7, 7, "Builder") == 0 )
+				if ( szTypeName.size() > 7 && szTypeName.compare( szTypeName.size() - 7, 7, "Builder" ) == 0 )
 					continue;
-				if ( szTypeName.size() > 6 && szTypeName.compare(szTypeName.size() - 6, 6, "Copier") == 0 )
+				if ( szTypeName.size() > 6 && szTypeName.compare( szTypeName.size() - 6, 6, "Copier" ) == 0 )
 					continue;
 				typeNames.push_back( szTypeName );
 			}
 		}
 		//
 		sort( typeNames.begin(), typeNames.end() );
-		if ( FILE *fout = fopen("c:\\b2\\TypeNames.txt", "wt") )
+		if ( FILE *fout = fopen( "c:\\b2\\TypeNames.txt", "wt" ) )
 		{
 			for ( int i = 0; i < typeNames.size(); ++i )
 				fprintf( fout, "{ \"%s\" },\n", typeNames[i].c_str() );
@@ -531,220 +557,217 @@ static void DumpTypeNames()
 	}
 }
 
-static const char *s_pszTypeNames[] =
-{
-	{ "AIExpLevel" },
-	{ "AIGameConsts" },
-	{ "AIGeometry" },
-	{ "ARRemoveGlobalVar" },
-	{ "ARSendGameMessage" },
-	{ "ARSendUIMessage" },
-	{ "ARSetForcedAction" },
-	{ "ARSetGlobalVar" },
-	{ "ARSetSpecialAbility" },
-	{ "ARSwitchTab" },
-	{ "AckSetRPGStats" },
-	{ "ActionButtonInfo" },
-	{ "AddReinforcementCalls" },
-	{ "AmbientLight" },
-	{ "AnimB2" },
-	{ "AnimLight" },
-	{ "ArmorPattern" },
-	{ "ArmorPatternPlacement" },
-	{ "AttachedModelVisObj" },
-	{ "BackgroundFrameSequence" },
-	{ "BackgroundSimpleScallingTexture" },
-	{ "BackgroundSimpleTexture" },
-	{ "BackgroundTiledTexture" },
-	{ "BridgeRPGStats" },
-	{ "BuildingRPGStats" },
-	{ "BurningFuel" },
-	{ "CameraLimits" },
-	{ "Campaign" },
-	{ "Chapter" },
-	{ "ChapterBonus" },
-	{ "CheckIsTabActive" },
-	{ "CheckIsWindowEnabled" },
-	{ "CheckIsWindowVisible" },
-	{ "CheckPreprogrammed" },
-	{ "CheckRunScript" },
-	{ "ClientGameConsts" },
-	{ "CoastDesc" },
-	{ "ComplexEffect" },
-	{ "ComplexSeasonedEffect" },
-	{ "ComplexSoundDesc" },
-	{ "ComplexStaticObject" },
-	{ "Composition" },
-	{ "CragDesc" },
-	{ "CraterSet" },
-	{ "CubeTexture" },
-	{ "DBConstructorProfile" },
-	{ "Decal" },
-	{ "DeployTemplate" },
-	{ "DepthOfField" },
-	{ "DifficultyLevel" },
-	{ "DirectionRange" },
-	{ "DistanceFog" },
-	{ "DistanceRange" },
-	{ "DynamicDebrisSet" },
-	{ "EditorOptions" },
-	{ "EditorTest" },
-	{ "Effect" },
-	{ "EntrenchmentRPGStats" },
-	{ "Fade" },
-	{ "FenceRPGStats" },
-	{ "Field" },
-	{ "FlashEffect" },
-	{ "Font" },
-	{ "ForegroundTextString" },
-	{ "ForegroundTextStringShared" },
-	{ "GameConsts" },
-	{ "Geometry" },
-	{ "HeightFog" },
-	{ "HeightRange" },
-	{ "IconsSet" },
-	{ "InfantryRPGStats" },
-	{ "LakeDesc" },
-	{ "LightInstance" },
-	{ "M1UnitActionBuild" },
-	{ "M1UnitActionTransform" },
-	{ "M1UnitActions" },
-	{ "M1UnitHelicopter" },
-	{ "M1UnitStatsModifier" },
-	{ "M1UnitType" },
-	{ "ManuverDescriptor" },
-//	{ "MapClip" },
-	{ "MapInfo" },
-	{ "MapMusic" },
-	{ "Material" },
-	{ "MechUnitRPGStats" },
-	{ "Medal" },
-	{ "MessageReactionComplex" },
-	{ "MineRPGStats" },
-	{ "Minimap" },
-	{ "Mission" },
-	{ "MissionObjective" },
-	{ "Model" },
-	{ "ModelInstance" },
-	{ "MultiplayerConsts" },
-	{ "MusicTrack" },
-	{ "NetGameConsts" },
-	{ "Notification" },
-	{ "NotificationEvent" },
-	{ "ObjectRPGStats" },
-	{ "OptionSystem" },
-	{ "Particle" },
-	{ "ParticleInstance" },
-	{ "PartyDependentInfo" },
-	{ "PlayList" },
-	{ "PlayTime" },
-	{ "PlayerRank" },
-	{ "PreLight" },
-	{ "Projectile" },
-	{ "Reinforcement" },
-	{ "ReinforcementChange" },
-	{ "ReinforcementDisable" },
-	{ "ReinforcementEnable" },
-	{ "ReinforcementTypes" },
-	{ "RiverDesc" },
-	{ "RoadDesc" },
-	{ "SceneConsts" },
-	{ "Script" },
-	{ "Skeleton" },
-	{ "SoundDesc" },
-	{ "SpeedRange" },
-	{ "Spot" },
-	{ "SquadRPGStats" },
-	{ "StaticDebrisSet" },
-	{ "SunFlares" },
-	{ "TGNoise" },
-	{ "TGTerraSet" },
-	{ "TGTerraType" },
-	{ "TerraObjSetRPGStats" },
-	{ "TerrainSpotDesc" },
-	{ "Text" },
-	{ "TextEntry" },
-	{ "TextFormat" },
-	{ "Texture" },
-	{ "TooltipContext" },
-	{ "TwoSidedLight" },
-	{ "UIConsoleCommand" },
-	{ "UIConstsB2" },
-	{ "UISB2Move" },
-	{ "UISB2MoveShared" },
-	{ "UISButtonSubstate" },
-	{ "UISDirectRunReaction" },
-	{ "UISMoveTo" },
-	{ "UISPlaySound" },
-	{ "UISRunReaction" },
-	{ "UISSendUIMessage" },
-	{ "UnitActions" },
-	{ "UnitSpecialAblityDesc" },
-	{ "UnitStatsModifier" },
-	{ "VisObj" },
-	{ "VisObjIconsSet" },
-	{ "Voice" },
-	{ "Water" },
-	{ "WaterSet" },
-	{ "WeaponRPGStats" },
-	{ "WeatherDesc" },
-	{ "Window1LvlTreeControl" },
-	{ "Window1LvlTreeControlShared" },
-	{ "Window3DControl" },
-	{ "Window3DControlShared" },
-	{ "WindowComboBox" },
-	{ "WindowComboBoxShared" },
-	{ "WindowConsole" },
-	{ "WindowConsoleOutput" },
-	{ "WindowConsoleOutputShared" },
-	{ "WindowConsoleShared" },
-	{ "WindowEditLine" },
-	{ "WindowEditLineShared" },
-	{ "WindowFrameSequence" },
-	{ "WindowFrameSequenceShared" },
-	{ "WindowListCtrl" },
-	{ "WindowListHeader" },
-	{ "WindowListHeaderShared" },
-	{ "WindowListItem" },
-	{ "WindowListItemShared" },
-	{ "WindowListSharedData" },
-	{ "WindowMSButton" },
-	{ "WindowMSButtonShared" },
-	{ "WindowMiniMap" },
-	{ "WindowMiniMapShared" },
-	{ "WindowMultiTextureProgressBar" },
-	{ "WindowMultiTextureProgressBarShared" },
-	{ "WindowPlayer" },
-	{ "WindowPlayerShared" },
-	{ "WindowPotentialLines" },
-	{ "WindowPotentialLinesShared" },
-	{ "WindowProgressBar" },
-	{ "WindowProgressBarShared" },
-	{ "WindowRoundProgressBar" },
-	{ "WindowRoundProgressBarShared" },
-	{ "WindowScreen" },
-	{ "WindowScreenShared" },
-	{ "WindowScrollBar" },
-	{ "WindowScrollBarShared" },
-	{ "WindowScrollableContainer" },
-	{ "WindowScrollableContainerShared" },
-	{ "WindowSelection" },
-	{ "WindowSelectionShared" },
-	{ "WindowSimple" },
-	{ "WindowSimpleShared" },
-	{ "WindowSlider" },
-	{ "WindowSliderShared" },
-	{ "WindowStatsSystem" },
-	{ "WindowStatsSystemShared" },
-	{ "WindowTabControl" },
-	{ "WindowTabControlShared" },
-	{ "WindowTextView" },
-	{ "WindowTextViewShared" },
-	{ "WindowTooltip" },
-	{ "WindowTooltipShared" },
-	{ "GameRoot" },
-	{ 0 }
-};
+static const char *s_pszTypeNames[] = { { "AIExpLevel" },
+                                        { "AIGameConsts" },
+                                        { "AIGeometry" },
+                                        { "ARRemoveGlobalVar" },
+                                        { "ARSendGameMessage" },
+                                        { "ARSendUIMessage" },
+                                        { "ARSetForcedAction" },
+                                        { "ARSetGlobalVar" },
+                                        { "ARSetSpecialAbility" },
+                                        { "ARSwitchTab" },
+                                        { "AckSetRPGStats" },
+                                        { "ActionButtonInfo" },
+                                        { "AddReinforcementCalls" },
+                                        { "AmbientLight" },
+                                        { "AnimB2" },
+                                        { "AnimLight" },
+                                        { "ArmorPattern" },
+                                        { "ArmorPatternPlacement" },
+                                        { "AttachedModelVisObj" },
+                                        { "BackgroundFrameSequence" },
+                                        { "BackgroundSimpleScallingTexture" },
+                                        { "BackgroundSimpleTexture" },
+                                        { "BackgroundTiledTexture" },
+                                        { "BridgeRPGStats" },
+                                        { "BuildingRPGStats" },
+                                        { "BurningFuel" },
+                                        { "CameraLimits" },
+                                        { "Campaign" },
+                                        { "Chapter" },
+                                        { "ChapterBonus" },
+                                        { "CheckIsTabActive" },
+                                        { "CheckIsWindowEnabled" },
+                                        { "CheckIsWindowVisible" },
+                                        { "CheckPreprogrammed" },
+                                        { "CheckRunScript" },
+                                        { "ClientGameConsts" },
+                                        { "CoastDesc" },
+                                        { "ComplexEffect" },
+                                        { "ComplexSeasonedEffect" },
+                                        { "ComplexSoundDesc" },
+                                        { "ComplexStaticObject" },
+                                        { "Composition" },
+                                        { "CragDesc" },
+                                        { "CraterSet" },
+                                        { "CubeTexture" },
+                                        { "DBConstructorProfile" },
+                                        { "Decal" },
+                                        { "DeployTemplate" },
+                                        { "DepthOfField" },
+                                        { "DifficultyLevel" },
+                                        { "DirectionRange" },
+                                        { "DistanceFog" },
+                                        { "DistanceRange" },
+                                        { "DynamicDebrisSet" },
+                                        { "EditorOptions" },
+                                        { "EditorTest" },
+                                        { "Effect" },
+                                        { "EntrenchmentRPGStats" },
+                                        { "Fade" },
+                                        { "FenceRPGStats" },
+                                        { "Field" },
+                                        { "FlashEffect" },
+                                        { "Font" },
+                                        { "ForegroundTextString" },
+                                        { "ForegroundTextStringShared" },
+                                        { "GameConsts" },
+                                        { "Geometry" },
+                                        { "HeightFog" },
+                                        { "HeightRange" },
+                                        { "IconsSet" },
+                                        { "InfantryRPGStats" },
+                                        { "LakeDesc" },
+                                        { "LightInstance" },
+                                        { "M1UnitActionBuild" },
+                                        { "M1UnitActionTransform" },
+                                        { "M1UnitActions" },
+                                        { "M1UnitHelicopter" },
+                                        { "M1UnitStatsModifier" },
+                                        { "M1UnitType" },
+                                        { "ManuverDescriptor" },
+                                        //	{ "MapClip" },
+                                        { "MapInfo" },
+                                        { "MapMusic" },
+                                        { "Material" },
+                                        { "MechUnitRPGStats" },
+                                        { "Medal" },
+                                        { "MessageReactionComplex" },
+                                        { "MineRPGStats" },
+                                        { "Minimap" },
+                                        { "Mission" },
+                                        { "MissionObjective" },
+                                        { "Model" },
+                                        { "ModelInstance" },
+                                        { "MultiplayerConsts" },
+                                        { "MusicTrack" },
+                                        { "NetGameConsts" },
+                                        { "Notification" },
+                                        { "NotificationEvent" },
+                                        { "ObjectRPGStats" },
+                                        { "OptionSystem" },
+                                        { "Particle" },
+                                        { "ParticleInstance" },
+                                        { "PartyDependentInfo" },
+                                        { "PlayList" },
+                                        { "PlayTime" },
+                                        { "PlayerRank" },
+                                        { "PreLight" },
+                                        { "Projectile" },
+                                        { "Reinforcement" },
+                                        { "ReinforcementChange" },
+                                        { "ReinforcementDisable" },
+                                        { "ReinforcementEnable" },
+                                        { "ReinforcementTypes" },
+                                        { "RiverDesc" },
+                                        { "RoadDesc" },
+                                        { "SceneConsts" },
+                                        { "Script" },
+                                        { "Skeleton" },
+                                        { "SoundDesc" },
+                                        { "SpeedRange" },
+                                        { "Spot" },
+                                        { "SquadRPGStats" },
+                                        { "StaticDebrisSet" },
+                                        { "SunFlares" },
+                                        { "TGNoise" },
+                                        { "TGTerraSet" },
+                                        { "TGTerraType" },
+                                        { "TerraObjSetRPGStats" },
+                                        { "TerrainSpotDesc" },
+                                        { "Text" },
+                                        { "TextEntry" },
+                                        { "TextFormat" },
+                                        { "Texture" },
+                                        { "TooltipContext" },
+                                        { "TwoSidedLight" },
+                                        { "UIConsoleCommand" },
+                                        { "UIConstsB2" },
+                                        { "UISB2Move" },
+                                        { "UISB2MoveShared" },
+                                        { "UISButtonSubstate" },
+                                        { "UISDirectRunReaction" },
+                                        { "UISMoveTo" },
+                                        { "UISPlaySound" },
+                                        { "UISRunReaction" },
+                                        { "UISSendUIMessage" },
+                                        { "UnitActions" },
+                                        { "UnitSpecialAblityDesc" },
+                                        { "UnitStatsModifier" },
+                                        { "VisObj" },
+                                        { "VisObjIconsSet" },
+                                        { "Voice" },
+                                        { "Water" },
+                                        { "WaterSet" },
+                                        { "WeaponRPGStats" },
+                                        { "WeatherDesc" },
+                                        { "Window1LvlTreeControl" },
+                                        { "Window1LvlTreeControlShared" },
+                                        { "Window3DControl" },
+                                        { "Window3DControlShared" },
+                                        { "WindowComboBox" },
+                                        { "WindowComboBoxShared" },
+                                        { "WindowConsole" },
+                                        { "WindowConsoleOutput" },
+                                        { "WindowConsoleOutputShared" },
+                                        { "WindowConsoleShared" },
+                                        { "WindowEditLine" },
+                                        { "WindowEditLineShared" },
+                                        { "WindowFrameSequence" },
+                                        { "WindowFrameSequenceShared" },
+                                        { "WindowListCtrl" },
+                                        { "WindowListHeader" },
+                                        { "WindowListHeaderShared" },
+                                        { "WindowListItem" },
+                                        { "WindowListItemShared" },
+                                        { "WindowListSharedData" },
+                                        { "WindowMSButton" },
+                                        { "WindowMSButtonShared" },
+                                        { "WindowMiniMap" },
+                                        { "WindowMiniMapShared" },
+                                        { "WindowMultiTextureProgressBar" },
+                                        { "WindowMultiTextureProgressBarShared" },
+                                        { "WindowPlayer" },
+                                        { "WindowPlayerShared" },
+                                        { "WindowPotentialLines" },
+                                        { "WindowPotentialLinesShared" },
+                                        { "WindowProgressBar" },
+                                        { "WindowProgressBarShared" },
+                                        { "WindowRoundProgressBar" },
+                                        { "WindowRoundProgressBarShared" },
+                                        { "WindowScreen" },
+                                        { "WindowScreenShared" },
+                                        { "WindowScrollBar" },
+                                        { "WindowScrollBarShared" },
+                                        { "WindowScrollableContainer" },
+                                        { "WindowScrollableContainerShared" },
+                                        { "WindowSelection" },
+                                        { "WindowSelectionShared" },
+                                        { "WindowSimple" },
+                                        { "WindowSimpleShared" },
+                                        { "WindowSlider" },
+                                        { "WindowSliderShared" },
+                                        { "WindowStatsSystem" },
+                                        { "WindowStatsSystemShared" },
+                                        { "WindowTabControl" },
+                                        { "WindowTabControlShared" },
+                                        { "WindowTextView" },
+                                        { "WindowTextViewShared" },
+                                        { "WindowTooltip" },
+                                        { "WindowTooltipShared" },
+                                        { "GameRoot" },
+                                        { 0 } };
 
 void DumpAllObjects()
 {
@@ -763,11 +786,13 @@ void DumpAllObjects()
 			if ( szTypeName == pszLastExportedTypeName )
 			{
 				nStartPosition = i + 1;
-				DebugTrace( "***** =====> Starting export from \"%s\" (position %d) <===== *****", s_pszTypeNames[nStartPosition], nStartPosition );
+				DebugTrace( "***** =====> Starting export from \"%s\" (position %d) <===== *****",
+				            s_pszTypeNames[nStartPosition],
+				            nStartPosition );
 				break;
 			}
 		}
-		NI_VERIFY( nStartPosition < std::size(s_pszTypeNames), "Failed to find start position for data export!", return );
+		NI_VERIFY( nStartPosition < std::size( s_pszTypeNames ), "Failed to find start position for data export!", return );
 	}
 	// export
 	for ( int i = nStartPosition; s_pszTypeNames[i] != 0; ++i )
@@ -775,14 +800,15 @@ void DumpAllObjects()
 		const std::string szTypeName = s_pszTypeNames[i];
 		const int nClassTypeID = pTableMan->GetID( szTypeName );
 		//
-		if ( CObj<IManipulator> pFolderMan = pRM->CreateFolderManipulator(szTypeName) )
+		if ( CObj<IManipulator> pFolderMan = pRM->CreateFolderManipulator( szTypeName ) )
 		{
-			for ( CObj<IManipulatorIterator> pItFolder = pFolderMan->Iterate(true, ECT_CACHE_GLOBAL);
-				pItFolder != 0 && !pItFolder->IsEnd(); pItFolder->Next() )
+			for ( CObj<IManipulatorIterator> pItFolder = pFolderMan->Iterate( true, ECT_CACHE_GLOBAL );
+			      pItFolder != 0 && !pItFolder->IsEnd();
+			      pItFolder->Next() )
 			{
 				std::string szObjectName;
-				if ( !pItFolder->IsFolder() && pItFolder->GetName( &szObjectName ) != false &&
-					!szObjectName.empty() && szObjectName != " " )
+				if ( !pItFolder->IsFolder() && pItFolder->GetName( &szObjectName ) != false && !szObjectName.empty() &&
+				     szObjectName != " " )
 				{
 					GetExporter()->ExportObject( szObjectName, szTypeName, "" );
 				}

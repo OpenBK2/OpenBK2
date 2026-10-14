@@ -43,14 +43,15 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 {
 	if ( IsValidObj( pTarget ) && pTarget->GetStats()->IsAviation() )
 	{
-		if ( pGun != 0 && ( !pGun->CanShootByHeight( pTarget ) || !pGun->CanBreakArmor( pTarget ) ) ) return;
+		if ( pGun != 0 && ( !pGun->CanShootByHeight( pTarget ) || !pGun->CanBreakArmor( pTarget ) ) )
+			return;
 
 		CBasicGun *pChosenGun = pGun;
 		// gun не задан, нужно его выбрать и найти время для убиения врага
 		if ( pChosenGun == 0 )
 		{
 			int i = 0;
-			while ( i < pUnit->GetNGuns() && !pUnit->GetGun(i)->CanBreach( pTarget ) )
+			while ( i < pUnit->GetNGuns() && !pUnit->GetGun( i )->CanBreach( pTarget ) )
 				++i;
 			if ( i >= pUnit->GetNGuns() )
 				return;
@@ -59,14 +60,14 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 			//CRAP}
 		}
 
-
 		const float fDistance = fabs2( pUnit->GetCenter() - pTarget->GetCenter() );
 		const float fDamage = pTarget->GetMaxDamage( pUnit );
 
 		//его можно прострелить
 		if ( pChosenGun != 0 )
 		{
-			NTimer::STime timeToShoot = DirsDifference( GetDirectionByVector( pTarget->GetCenterPlain() - pUnit->GetCenterPlain() ), pChosenGun->GetGlobalDir() );
+			NTimer::STime timeToShoot = DirsDifference(
+					GetDirectionByVector( pTarget->GetCenterPlain() - pUnit->GetCenterPlain() ), pChosenGun->GetGlobalDir() );
 			const bool bCanShoot = pChosenGun->CanShootToUnit( pTarget );
 			if ( pResult == 0 )
 			{
@@ -82,10 +83,9 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 				// или может стрелять (исходя из дистанции)
 				// или он нанесёт такой же damage, но его быстрее пристрелить
 				// или damage и время совпадают, но он ближе
-				if (	fDamage > fWorstDamage ||
-							fDamage == fWorstDamage && bCanShoot && !bCanShootNow ||
-							fDamage == fWorstDamage && bCanShoot == bCanShootNow && bestTime > timeToShoot ||
-							fDamage == fWorstDamage && bestTime == timeToShoot && fDistance < fMinDistance )
+				if ( fDamage > fWorstDamage || fDamage == fWorstDamage && bCanShoot && !bCanShootNow ||
+				     fDamage == fWorstDamage && bCanShoot == bCanShootNow && bestTime > timeToShoot ||
+				     fDamage == fWorstDamage && bestTime == timeToShoot && fDistance < fMinDistance )
 				{
 					bCanShootNow = bCanShoot;
 					pResult = pTarget;
@@ -98,7 +98,7 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 	}
 }
 
-CAIUnit* CShootEstimatorLighAA::GetBestUnit()
+CAIUnit *CShootEstimatorLighAA::GetBestUnit()
 {
 	return pResult;
 }
@@ -107,7 +107,7 @@ CAIUnit* CShootEstimatorLighAA::GetBestUnit()
 //*												CStandartBehaviour												*
 //*******************************************************************
 
-CAIUnit* CStandartBehaviour::LookForTargetInFireRange( CCommonUnit *pUnit )
+CAIUnit *CStandartBehaviour::LookForTargetInFireRange( CCommonUnit *pUnit )
 {
 	return 0;
 }
@@ -115,12 +115,12 @@ CAIUnit* CStandartBehaviour::LookForTargetInFireRange( CCommonUnit *pUnit )
 void CStandartBehaviour::ResetTime( CCommonUnit *pUnit )
 {
 	underFireAnalyzeTime = 0;
-	lastTimeOfRotate = NTimer::STime(-1);
+	lastTimeOfRotate = NTimer::STime( -1 );
 }
 
 void CStandartBehaviour::UponFire( class CCommonUnit *pUnit, class CAIUnit *pWho, class CAICommand *pCommand )
 {
-/*
+	/*
 	if ( IsValidObj( pWho ) )
 	{
 		SBehaviour &beh = pUnit->GetBehaviour();
@@ -169,10 +169,13 @@ bool CStandartBehaviour::TryToTraceEnemy( CAIUnit *pUnit )
 		CAIUnit *pBestUnit = 0;
 		const CVec2 vCenter = pUnit->GetCenterPlain();
 
-		for ( CUnitsIter<1,3> iter( pUnit->GetParty(), EDI_ENEMY, pUnit->GetCenterPlain(), r ); !iter.IsFinished() && nBestSides < 3; iter.Iterate() )
+		for ( CUnitsIter<1, 3> iter( pUnit->GetParty(), EDI_ENEMY, pUnit->GetCenterPlain(), r );
+		      !iter.IsFinished() && nBestSides < 3;
+		      iter.Iterate() )
 		{
 			CAIUnit *pEnemy = *iter;
-			if ( !pEnemy->GetStats()->IsAviation() && pEnemy->IsVisible( nParty ) && fabs2( pEnemy->GetCenterPlain() - vCenter ) < r2 )
+			if ( !pEnemy->GetStats()->IsAviation() && pEnemy->IsVisible( nParty ) &&
+			     fabs2( pEnemy->GetCenterPlain() - vCenter ) < r2 )
 			{
 				int nSides = 0;
 				for ( int i = 0; i < 4; ++i )
@@ -223,13 +226,13 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 				lastTimeOfRotate = curTime;
 			else if ( pUnit->GetTurret( 0 )->IsFinished() )
 			{
-			 if ( ( theHitsStore.WasHit( pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) ||
-							lastTimeOfRotate != NTimer::STime( -1 ) && (curTime - lastTimeOfRotate < 10000 + NRandom::Random( 0, 1000 ) & RecordRandomCall()) ) )
+				if ( ( theHitsStore.WasHit( pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) ||
+				       lastTimeOfRotate != NTimer::STime( -1 ) &&
+				           ( curTime - lastTimeOfRotate < 10000 + NRandom::Random( 0, 1000 ) & RecordRandomCall() ) ) )
 				{
 					// если танк с перебитой гусеницей или зенитка
 					if ( pUnit->GetTurret( 0 )->GetHorTurnConstraint() != 0 &&
-							( !pUnit->CanMove() && pUnit->GetStats()->IsArmor() || pUnit->GetStats()->etype == RPG_TYPE_ART_AAGUN )
-						 )
+					     ( !pUnit->CanMove() && pUnit->GetStats()->IsArmor() || pUnit->GetStats()->etype == RPG_TYPE_ART_AAGUN ) )
 					{
 						RecordRandomCall();
 						if ( NRandom::Random( 0.0f, 1.0f ) > 0.7f )
@@ -244,11 +247,13 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 								wRotateAngle = (std::min)( (uint16_t)32768, (uint16_t)pTurret->GetHorTurnConstraint() );
 
 							const uint16_t wMinRotateAngle = wRotateAngle / 4;
-							const uint16_t wMaxRotateAngle = (std::max)( DirsDifference( wTurretAngle, wRotateAngle ), DirsDifference( wTurretAngle, -wRotateAngle ) );
+							const uint16_t wMaxRotateAngle = (std::max)( DirsDifference( wTurretAngle, wRotateAngle ),
+							                                             DirsDifference( wTurretAngle, -wRotateAngle ) );
 
 							if ( wMaxRotateAngle > 0 && (int)wMaxRotateAngle - (int)wMinRotateAngle + 1 != 0 )
 							{
-								uint16_t wRotate = NRandom::Random( wMinRotateAngle, wMaxRotateAngle ); RecordRandomCall();
+								uint16_t wRotate = NRandom::Random( wMinRotateAngle, wMaxRotateAngle );
+								RecordRandomCall();
 
 								bool bClockWise = false;
 								bool bCounterClockWise = false;
@@ -266,9 +271,15 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 								if ( bClockWise && bCounterClockWise )
 								{
 									if ( nLastSign == 1 )
-										{ nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.6f ) ? 1 : -1; RecordRandomCall(); }
+									{
+										nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.6f ) ? 1 : -1;
+										RecordRandomCall();
+									}
 									else
-										{ nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.4f ) ? 1 : -1; RecordRandomCall(); }
+									{
+										nSign = ( NRandom::Random( 0.0f, 1.0f ) >= 0.4f ) ? 1 : -1;
+										RecordRandomCall();
+									}
 								}
 								if ( !bClockWise && !bCounterClockWise )
 								{
@@ -282,7 +293,8 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 							}
 						}
 
-						if ( theHitsStore.WasHit( pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) )
+						if ( theHitsStore.WasHit(
+										 pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) )
 							lastTimeOfRotate = curTime;
 					}
 				}
@@ -291,6 +303,7 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 			}
 		}
 
-		underFireAnalyzeTime = curTime + SConsts::TIME_OF_HIT_NOTIFY + NRandom::Random( 0, 1000 ); RecordRandomCall();
+		underFireAnalyzeTime = curTime + SConsts::TIME_OF_HIT_NOTIFY + NRandom::Random( 0, 1000 );
+		RecordRandomCall();
 	}
 }

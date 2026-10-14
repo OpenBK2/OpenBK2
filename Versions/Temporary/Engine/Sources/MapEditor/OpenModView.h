@@ -17,8 +17,8 @@
 // which are the same question. Run answers it once: true means pMod was filled.
 namespace NOpenMod
 {
-	// Runs the dialog modally over pParent. Returns true if the user chose a MOD
-	// and accepted, with *pMod set to it; false on cancel, or on OK with nothing
-	// valid selected, which the dialog does not allow anyway.
-	bool Run( IWidget *pParent, NMOD::SMOD *pMod );
+// Runs the dialog modally over pParent. Returns true if the user chose a MOD
+// and accepted, with *pMod set to it; false on cancel, or on OK with nothing
+// valid selected, which the dialog does not allow anyway.
+bool Run( IWidget *pParent, NMOD::SMOD *pMod );
 }

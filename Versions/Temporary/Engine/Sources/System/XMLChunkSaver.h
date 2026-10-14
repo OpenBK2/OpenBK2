@@ -9,8 +9,8 @@
 
 namespace NXml
 {
-	class CXmlReader;
-	class CXmlNode;
+class CXmlReader;
+class CXmlNode;
 }
 using namespace NLXML;
 
@@ -21,19 +21,19 @@ class CXMLChunkSaver : public IXmlSaver
 	CObj<NXml::CXmlReader> pXmlReader;
 	const NXml::CXmlNode *pReadNode;
 
-	std::vector<const NXml::CXmlNode*> readChunkLevels;
+	std::vector<const NXml::CXmlNode *> readChunkLevels;
 	int nCurChunkLevel;
 
 	CXMLDocument document;
 	CDataStream *pDstStream;
 	CXMLMultiNode *pCurrNode;
-	typedef std::list<CXMLMultiNode*> CChunksList;
+	typedef std::list<CXMLMultiNode *> CChunksList;
 	CChunksList chunkLevels;
 	bool bReading;
 	std::string szCurrObjectPath;
 	std::list<std::string> objectNamesStack;
 	//
-	typedef std::unordered_map<void*,CPtr<CXmlResource>> CObjectsHash;
+	typedef std::unordered_map<void *, CPtr<CXmlResource>> CObjectsHash;
 	CObjectsHash objects;
 	// The ID each stored object is written under, in its references and as its
 	// __ServerPtr in SharedClasses. It used to be the object's address, cut to
@@ -41,10 +41,10 @@ class CXMLChunkSaver : public IXmlSaver
 	// collide. IDs are handed out 1, 2, 3... in the order objects are first
 	// reached, as CStructureSaver does. A reader only matches references to
 	// objects by them, so files written either way load either way.
-	typedef std::unordered_map<void*,uintptr_t> CPObjectsHash;
+	typedef std::unordered_map<void *, uintptr_t> CPObjectsHash;
 	CPObjectsHash storedObjects;
-	uintptr_t nNextObjectID = 1;			// 0 is the null pointer
-	std::list< CPtr<CXmlResource> > toStore;
+	uintptr_t nNextObjectID = 1; // 0 is the null pointer
+	std::list<CPtr<CXmlResource>> toStore;
 	//
 	void PushReadChunkLevel( const NXml::CXmlNode *pNode );
 	void PopReadChunkLevel();
@@ -75,12 +75,13 @@ class CXMLChunkSaver : public IXmlSaver
 	bool AddAttribute( const chunk_id attrName, std::wstring *pData );
 	//
 	void StoreObject( CObjectBase *pObject );
-	CObjectBase* LoadObject();
+	CObjectBase *LoadObject();
 	//
 	void Start( CDataStream *pStream, bool bRead );
 	void Finish();
 
-	CXMLChunkSaver() {  }
+	CXMLChunkSaver() {}
+
 public:
 	CXMLChunkSaver( CDataStream *pStream, bool bRead )
 	{

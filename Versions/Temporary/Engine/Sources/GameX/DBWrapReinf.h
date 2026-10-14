@@ -2,14 +2,14 @@
 
 namespace NDb
 {
-	struct SCampaign;
+struct SCampaign;
 }
 
 namespace NDBWrap
 {
 
 // Название уровня опытности самого подкрепления (не командира)
-const std::wstring& GetReinfXPLevelName( int nLevel );
+const std::wstring &GetReinfXPLevelName( int nLevel );
 
 float GetLeaderRankExp( const NDb::SCampaign *pCampaign, int nRank );
 

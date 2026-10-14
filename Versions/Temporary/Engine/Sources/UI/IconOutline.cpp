@@ -22,7 +22,10 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 {
 	NGScene::ISW2DScene *pScene;
 
-	void CreateDynamicRects( const NDb::STexture *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+	void CreateDynamicRects( const NDb::STexture *pTexture,
+	                         const CRectLayout &sLayout,
+	                         const CTPoint<float> &sPosition,
+	                         const CTRect<float> &sWindow )
 	{
 		CRectLayout rl;
 		for ( int nTemp = 0; nTemp < sLayout.rects.size(); nTemp++ )
@@ -35,9 +38,11 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 				continue;
 
 			CRectLayout::SRect r;
-			int d = ( nTemp == sLayout.rects.size()-1 )?1:0;
-			r.fX = sClippedRect.x1 * CIconOutliner::GetTextStretchX() + d; r.fSizeX = sClippedRect.Width();
-			r.fY = sClippedRect.y1; r.fSizeY = sClippedRect.Height();
+			int d = ( nTemp == sLayout.rects.size() - 1 ) ? 1 : 0;
+			r.fX = sClippedRect.x1 * CIconOutliner::GetTextStretchX() + d;
+			r.fSizeX = sClippedRect.Width();
+			r.fY = sClippedRect.y1;
+			r.fSizeY = sClippedRect.Height();
 			r.sTex = sTex;
 			r.sColor = sRect.sColor;
 			rl.AddRect( r );
@@ -45,11 +50,16 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 		pScene->CreateRects( NGScene::GetSWTex( pTexture ), rl );
 	}
 	void CreateDynamicRects( const NDb::STexture *pTexture,
-		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
+	                         const CVec2 *pPos4,
+	                         const NGfx::SPixel8888 *pColors4,
+	                         const CTRect<float> &rectTexture )
 	{
 		NI_ASSERT( 0, "not implemented" );
 	}
-	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *_pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *_pTexture,
+	                         const CRectLayout &sLayout,
+	                         const CTPoint<float> &sPosition,
+	                         const CTRect<float> &sWindow )
 	{
 		const NGScene::CTexShare::CDataHash &allTex = NGScene::shareTextures.GetAll();
 		for ( NGScene::CTexShare::CDataHash::const_iterator i = allTex.begin(); i != allTex.end(); ++i )
@@ -60,15 +70,15 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 				return;
 			}
 		}
-		ASSERT(0);
+		ASSERT( 0 );
 	}
-	SRLBuilder( NGScene::ISW2DScene *_pScene ) : pScene(_pScene) {}
+	SRLBuilder( NGScene::ISW2DScene *_pScene ) : pScene( _pScene ) {}
 };
 
 //vector<int> CIconOutliner::OutlineIDs;
 
 CIconOutliner::CIconOutliner( CDBID _nOutlineType, NGfx::ETextureUsage _eUsage, const CTPoint<int> &_size )
-: bNeedUpdate(true), fixedSize(_size), eUsage( _eUsage ), nOutlineType(_nOutlineType), size(1,1)
+		: bNeedUpdate( true ), fixedSize( _size ), eUsage( _eUsage ), nOutlineType( _nOutlineType ), size( 1, 1 )
 {
 	//ASSERT( OutlineIDs.size() ); //call before SetOutlineIDs
 }
@@ -94,14 +104,14 @@ bool CIconOutliner::NeedUpdate()
 CVec2 CIconOutliner::GetOutlineAdd( const CDBID &nOutlineType )
 {
 	const NDb::STexture *pMask = NDb::Get<NDb::STexture>( nOutlineType );
-	return pMask? CVec2( pMask->nWidth, pMask->nWidth ):CVec2();
+	return pMask ? CVec2( pMask->nWidth, pMask->nWidth ) : CVec2();
 }
 
 void CIconOutliner::Recalc()
 {
 	NGfx::EPixelFormat pf = NGfx::Is16BitTextures() ? NGfx::CF_A4R4G4B4 : NGfx::CF_A8R8G8B8;
 	pValue = NGfx::MakeTexture( size.x, size.y, 1, pf, eUsage, NGfx::CLAMP );
-	if ( !IsValid(pValue) )
+	if ( !IsValid( pValue ) )
 	{
 		csSystem << "error texture in CIconOutliner::Recalc, size:" << size.x << ", " << size.y << "\n";
 		return;
@@ -113,31 +123,39 @@ void CIconOutliner::Recalc()
 		const SFormattingInfo::SCmd &cmd = fmtProcessed.cmds[k];
 		switch ( cmd.type )
 		{
-		case SFormattingInfo::ELEM_OUTLINE:
+			case SFormattingInfo::ELEM_OUTLINE:
 			{
 				const NDb::STexture *pMask = NDb::Get<NDb::STexture>( cmd.nOutlineType );
 				if ( pMask )
-					p2DScene->AddPostFilter( NGScene::GetSWTex( pMask ), pMask->nWidth/ 2, pMask->nHeight/ 2 );
+					p2DScene->AddPostFilter( NGScene::GetSWTex( pMask ), pMask->nWidth / 2, pMask->nHeight / 2 );
 			}
 			break;
-		case SFormattingInfo::ELEM_PICTURE:
+			case SFormattingInfo::ELEM_PICTURE:
 			{
-				CRectLayout rl = MakeLayout( cmd.vPos.x, cmd.vPos.y, cmd.vSize.x, cmd.vSize.y, 0, 0, cmd.pTexture->nWidth, cmd.pTexture->nHeight, cmd.dwColor );
+				CRectLayout rl = MakeLayout( cmd.vPos.x,
+				                             cmd.vPos.y,
+				                             cmd.vSize.x,
+				                             cmd.vSize.y,
+				                             0,
+				                             0,
+				                             cmd.pTexture->nWidth,
+				                             cmd.pTexture->nHeight,
+				                             cmd.dwColor );
 				p2DScene->CreateRects( NGScene::GetSWTex( cmd.pTexture.GetPtr() ), rl );
 			}
 			break;
-		case SFormattingInfo::ELEM_TEXT:
+			case SFormattingInfo::ELEM_TEXT:
 			{
 				SRLBuilder rb( p2DScene );
-				gfxTexts[k]->Render( &rb, CTPoint<float>( cmd.vPos.x, cmd.vPos.y ),  CTRect<float>( 0, 0, size.x, size.y ) );
+				gfxTexts[k]->Render( &rb, CTPoint<float>( cmd.vPos.x, cmd.vPos.y ), CTRect<float>( 0, 0, size.x, size.y ) );
 			}
 			break;
-		case SFormattingInfo::ELEM_GRAY_FILTER:
-			p2DScene->AddGrayingFilter( NGfx::GetCVec4Color( cmd.dwColor ) );
-			break;
-		default:
-			ASSERT(0);
-			break;
+			case SFormattingInfo::ELEM_GRAY_FILTER:
+				p2DScene->AddGrayingFilter( NGfx::GetCVec4Color( cmd.dwColor ) );
+				break;
+			default:
+				ASSERT( 0 );
+				break;
 		}
 	}
 	p2DScene->Draw( pValue, size, true );
@@ -156,24 +174,24 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 		fmtProcessed.AddOutline( nOutlineType );
 
 	bool bIsFixedSize = fixedSize.x != 0 && fixedSize.y != 0;
-	int nSizeXAdd = (eUsage==NGfx::TEXTURE_2D)?GetSizeAdd().x:0;
-	int nSizeYAdd = (eUsage==NGfx::TEXTURE_2D)?GetSizeAdd().y:0;
+	int nSizeXAdd = ( eUsage == NGfx::TEXTURE_2D ) ? GetSizeAdd().x : 0;
+	int nSizeYAdd = ( eUsage == NGfx::TEXTURE_2D ) ? GetSizeAdd().y : 0;
 	CTPoint<int> resSize = fixedSize;
 	for ( int k = 0; k < fmtProcessed.cmds.size(); ++k )
 	{
 		SFormattingInfo::SCmd &cmd = fmtProcessed.cmds[k];
 		if ( cmd.nChainX >= 0 )
 		{
-			SFormattingInfo::SCmd &ch = fmtProcessed.cmds[ cmd.nChainX ];
+			SFormattingInfo::SCmd &ch = fmtProcessed.cmds[cmd.nChainX];
 			cmd.vPos.x = ch.vPos.x + ch.vSize.x;
 		}
 		switch ( cmd.type )
 		{
-		case SFormattingInfo::ELEM_OUTLINE:
+			case SFormattingInfo::ELEM_OUTLINE:
 			{
 				const NDb::STexture *pMask = NDb::Get<NDb::STexture>( cmd.nOutlineType );
 				// enlarge size estimate
-				if ( pMask && eUsage==NGfx::TEXTURE_2D )
+				if ( pMask && eUsage == NGfx::TEXTURE_2D )
 				{
 					nSizeXAdd = (std::max)( nSizeXAdd, pMask->nWidth );
 					nSizeYAdd = (std::max)( nSizeYAdd, pMask->nHeight );
@@ -182,7 +200,7 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 				//	ASSERT( 0 );
 			}
 			break;
-		case SFormattingInfo::ELEM_PICTURE:
+			case SFormattingInfo::ELEM_PICTURE:
 			{
 				if ( cmd.vSize.x == 0 && cmd.vSize.y == 0 )
 				{
@@ -208,7 +226,7 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 				}
 			}
 			break;
-		case SFormattingInfo::ELEM_TEXT:
+			case SFormattingInfo::ELEM_TEXT:
 			{
 				IML *pML = CreateML();
 				gfxTexts[k] = pML;
@@ -235,11 +253,11 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 				cmd.vSize.x *= CIconOutliner::GetTextStretchX();
 			}
 			break;
-		case SFormattingInfo::ELEM_GRAY_FILTER:
-			break;
-		default:
-			ASSERT(0);
-			break;
+			case SFormattingInfo::ELEM_GRAY_FILTER:
+				break;
+			default:
+				ASSERT( 0 );
+				break;
 		}
 	}
 	// process centered flags

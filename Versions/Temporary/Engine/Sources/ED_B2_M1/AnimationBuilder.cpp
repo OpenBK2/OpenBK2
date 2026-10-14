@@ -27,13 +27,12 @@
 
 REGISTER_BUILDER_IN_DLL( AnimB2, CAnimationBuilder )
 
-
 CAnimationBuilder::CAnimationBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_ANIMATION_BUILDER, this );
-	Singleton<ICommandHandlerContainer>()->Register( CHID_ANIMATION_BUILDER, ID_TOOLS_CREATE_INF_ANIMS, ID_TOOLS_CREATE_INF_ANIMS );
+	Singleton<ICommandHandlerContainer>()->Register(
+			CHID_ANIMATION_BUILDER, ID_TOOLS_CREATE_INF_ANIMS, ID_TOOLS_CREATE_INF_ANIMS );
 }
-
 
 CAnimationBuilder::~CAnimationBuilder()
 {
@@ -41,9 +40,10 @@ CAnimationBuilder::~CAnimationBuilder()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_ANIMATION_BUILDER );
 }
 
-
 //CRAP{ PLAIN_TEXT
-bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
+                                          std::string *pszDescription,
+                                          IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
@@ -55,7 +55,8 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, s
 		( *pszDescription ) = "<SrcName> must be filled.";
 		return false;
 	}
-	if ( !NFile::DoesFileExist( ( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szSrcName ) ) )
+	if ( !NFile::DoesFileExist(
+					 ( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szSrcName ) ) )
 	{
 		( *pszDescription ) = "<SrcName> is invalid file name. Can't find file.";
 		return false;
@@ -70,12 +71,10 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, s
 }
 //CRAP} PLAIN_TEXT
 
-
 bool CAnimationBuilder::IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName )
 {
 	return Singleton<IFolderCallback>()->IsUniqueName( szObjectType, szObjectName );
 }
-
 
 bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder )
 {
@@ -85,7 +84,8 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 	std::string szAnimationTypeName = "AnimB2";
 	std::string szSrcName;
 	std::string szRootJoint;
-	CPtr<IManipulator> pAnimationFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szAnimationTypeName );
+	CPtr<IManipulator> pAnimationFolderManipulator =
+			Singleton<IResourceManager>()->CreateFolderManipulator( szAnimationTypeName );
 	if ( !pAnimationFolderManipulator )
 	{
 		return false;
@@ -101,7 +101,8 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 	std::string szBuildDataName;
 	if ( Singleton<IBuilderContainer>()->FillBuildData( &szBuildDataTypeName, &szBuildDataName, &buildDataParams, this ) )
 	{
-		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
+		if ( CPtr<IManipulator> pBuildDataManipulator =
+		         Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
 			std::string szDescription;
 			if ( IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
@@ -123,7 +124,8 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 	{
 		std::string szScriptText;
 		const std::string szSource = pUserData->constUserData.szExportSourceFolder + szSrcName;
-		const std::string szAnimParamsFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Animations\\Params\\";
+		const std::string szAnimParamsFolder =
+				Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Animations\\Params\\";
 		const std::string szAnimParamsDestination = szAnimParamsFolder + "FFFFFFFF";
 		NFile::CreatePath( szAnimParamsFolder.c_str() );
 		//
@@ -131,9 +133,11 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 		szScriptText += fmt::format( "sysFile -del \"{}\";\r\n", szAnimParamsDestination.c_str() );
 		szScriptText += fmt::format( "file -o -f \"{}\";\r\n", szSource.c_str() );
 		szScriptText += fmt::format( "triangulateAll;\r\n" );
-		szScriptText += fmt::format( "string $AnimParamsMeshFFFFFFFF[] = `ls -dag -tr \"{}\"`;\r\n", ANIMATIONS_ROOT_JOINT );
+		szScriptText +=
+				fmt::format( "string $AnimParamsMeshFFFFFFFF[] = `ls -dag -tr \"{}\"`;\r\n", ANIMATIONS_ROOT_JOINT );
 		szScriptText += fmt::format( "select -r $AnimParamsMeshFFFFFFFF;\r\n" );
-		szScriptText += fmt::format( "GrannyLoadSettings \"{}\";\r\n", GetGrannyExportSettingsFileName("Attribs").c_str() );
+		szScriptText +=
+				fmt::format( "GrannyLoadSettings \"{}\";\r\n", GetGrannyExportSettingsFileName( "Attribs" ).c_str() );
 		szScriptText += fmt::format( "GrannyExport -s on \"{}\";\r\n", szAnimParamsDestination.c_str() );
 		MEFinishScript( &szScriptText, false );
 		bResult = MERunScript( szScriptText, "Skeleton", true, false );
@@ -148,7 +152,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 				CPtr<IManipulatorIterator> pIterator = pAnimationFolderManipulator->Iterate( true, ECT_CACHE_LOCAL );
 				const int nSize = rszAnimationFolder.size();
 				bool bFound = false;
-				while( !pIterator->IsEnd() )
+				while ( !pIterator->IsEnd() )
 				{
 					std::string szName;
 					if ( pIterator->GetName( &szName ) )
@@ -156,8 +160,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 						if ( szName.compare( 0, rszAnimationFolder.size(), rszAnimationFolder ) == 0 )
 						{
 							bFound = true;
-							if ( ( szName != rszAnimationFolder ) &&
-									 ( szName.find( '\\', nSize ) == std::string::npos ) )
+							if ( ( szName != rszAnimationFolder ) && ( szName.find( '\\', nSize ) == std::string::npos ) )
 							{
 								InsertHashSetElement( &animationMap, szName );
 								DebugTrace( "CAnimationBuilder::UpdateAminations() found animation: <%s>", szName.c_str() );
@@ -175,7 +178,8 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 			// Читаем набор анимаций из файла с атрибутами
 			if ( bResult )
 			{
-				if ( !Singleton<IExporterContainer>()->StartExport( szAnimationTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, NOT_EXPORT_REFERENCES ) )
+				if ( !Singleton<IExporterContainer>()->StartExport(
+								 szAnimationTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, NOT_EXPORT_REFERENCES ) )
 				{
 					return false;
 				}
@@ -184,13 +188,17 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 					CGrannyBoneAttributesList attributesList;
 					if ( ReadAttributes( &attributesList, szAnimParamsDestination, ANIMATIONS_ROOT_JOINT, false ) == false )
 					{
-						const std::string szError = fmt::format( "Can't open animation params file \"{}\" to build/update animation\n", szAnimParamsDestination.c_str() );
+						const std::string szError =
+								fmt::format( "Can't open animation params file \"{}\" to build/update animation\n",
+						                 szAnimParamsDestination.c_str() );
 						NLog::GetLogger()->Log( LT_ERROR, szError );
 						return false;
 					}
 					//
 					int nAnimationRefCount = 0;
-					for ( CGrannyBoneAttributesList::const_iterator itAttribute = attributesList.begin(); itAttribute != attributesList.end(); ++itAttribute )
+					for ( CGrannyBoneAttributesList::const_iterator itAttribute = attributesList.begin();
+					      itAttribute != attributesList.end();
+					      ++itAttribute )
 					{
 						std::string szAnimationName;
 						//
@@ -247,24 +255,26 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 							}
 						}
 						szAnimationName = rszAnimationFolder + szAnimationName;
-						DebugTrace( "CAnimationBuilder::UpdateAminations() add animation: %s, Name:<%s>, RootJoint:<%s>, type:<%s>, frame:[%d,%d], aabb_a:<%s>, aabb_d:<%s>, bits: 0x%X, looped: %s",
-												bResult ? "true" : "false",
-												szAnimationName.c_str(),
-												szRootJoint.c_str(),
-												szAnimationType.c_str(),
-												nFirstFrame,
-												nLastFrame,
-												szAABBAName.c_str(),
-												szAABBDName.c_str(),
-												dwWeaponBits,
-												bLooped ? "true" : "false" );
+						DebugTrace(
+								"CAnimationBuilder::UpdateAminations() add animation: %s, Name:<%s>, RootJoint:<%s>, type:<%s>, frame:[%d,%d], aabb_a:<%s>, aabb_d:<%s>, bits: 0x%X, looped: %s",
+								bResult ? "true" : "false",
+								szAnimationName.c_str(),
+								szRootJoint.c_str(),
+								szAnimationType.c_str(),
+								nFirstFrame,
+								nLastFrame,
+								szAABBAName.c_str(),
+								szAABBDName.c_str(),
+								dwWeaponBits,
+								bLooped ? "true" : "false" );
 						if ( bResult )
 						{
-							if ( pFolderCallback->IsUniqueName( szAnimationTypeName,  szAnimationName ) )
+							if ( pFolderCallback->IsUniqueName( szAnimationTypeName, szAnimationName ) )
 							{
 								pFolderCallback->InsertObject( szAnimationTypeName, szAnimationName );
 							}
-							if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) )
+							if ( CPtr<IManipulator> pAnimationManipulator =
+							         Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) )
 							{
 
 								// Удалим анимацию из списка несуществующих анимаций
@@ -281,7 +291,8 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 								bResult = bResult && pAnimationManipulator->SetValue( "LastFrame", nLastFrame );
 								bResult = bResult && pAnimationManipulator->SetValue( "AABBAName", szAABBAName );
 								bResult = bResult && pAnimationManipulator->SetValue( "AABBDName", szAABBDName );
-								bResult = bResult && pAnimationManipulator->SetValue( "WeaponsToUseWith", CVariant( &dwWeaponBits, sizeof(dwWeaponBits) ) );
+								bResult = bResult && pAnimationManipulator->SetValue(
+																				 "WeaponsToUseWith", CVariant( &dwWeaponBits, sizeof( dwWeaponBits ) ) );
 								bResult = bResult && pAnimationManipulator->SetValue( "Looped", bLooped );
 								bResult = bResult && pAnimationManipulator->SetValue( "MoveSpeed", fSpeed );
 								bResult = bResult && pAnimationManipulator->SetValue( "ActionFrame", nActionFrame );
@@ -289,10 +300,10 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 								if ( bResult )
 								{
 									Singleton<IExporterContainer>()->ExportObject( pAnimationManipulator,
-																																 szAnimationTypeName,
-																																 szAnimationName,
-																																 FORCE_EXPORT,
-																																 NOT_EXPORT_REFERENCES );
+									                                               szAnimationTypeName,
+									                                               szAnimationName,
+									                                               FORCE_EXPORT,
+									                                               NOT_EXPORT_REFERENCES );
 								}
 							}
 						}
@@ -302,32 +313,38 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 						}
 					}
 					DebugTrace( "CAnimationBuilder::UpdateAminations(): SrcName:<%s>, animations added: %d",
-											szSrcName.c_str(),
-											nAnimationRefCount );
+					            szSrcName.c_str(),
+					            nAnimationRefCount );
 				}
 				catch ( ... )
 				{
-					const std::string szError = fmt::format( "General error during build/update animation(s) from params file \"{}\"\n", szAnimParamsDestination.c_str() );
+					const std::string szError =
+							fmt::format( "General error during build/update animation(s) from params file \"{}\"\n",
+					                 szAnimParamsDestination.c_str() );
 					NLog::GetLogger()->Log( LT_ERROR, szError );
 					bResult = false;
 				}
 				NFile::RemoveFile( szAnimParamsDestination.c_str() );
-				Singleton<IExporterContainer>()->FinishExport( szAnimationTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, NOT_EXPORT_REFERENCES );
+				Singleton<IExporterContainer>()->FinishExport(
+						szAnimationTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, NOT_EXPORT_REFERENCES );
 			}
 			// Удаляем лишние анимации:
 			if ( bResult )
 			{
-				for ( CAnimationMap::iterator itAnimation = animationMap.begin(); itAnimation != animationMap.end(); ++itAnimation )
+				for ( CAnimationMap::iterator itAnimation = animationMap.begin(); itAnimation != animationMap.end();
+				      ++itAnimation )
 				{
 					bResult = pFolderCallback->RemoveObject( szAnimationTypeName, itAnimation->first, false );
 					DebugTrace( "CAnimationBuilder::UpdateAminations() delete animation: %s <%s>",
-											bResult ? "true" : "false",
-											itAnimation->first.c_str() );
+					            bResult ? "true" : "false",
+					            itAnimation->first.c_str() );
 					if ( !bResult )
 					{
-						if ( CPtr<IManipulator> pAminationanipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, itAnimation->first ) )
+						if ( CPtr<IManipulator> pAminationanipulator =
+						         Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, itAnimation->first ) )
 						{
-							CManipulatorManager::SetValue( typeAnimationMnemonics.GetMnemonic( NDb::ANIMATION_UNKNOWN ), pAminationanipulator, "Type" );
+							CManipulatorManager::SetValue(
+									typeAnimationMnemonics.GetMnemonic( NDb::ANIMATION_UNKNOWN ), pAminationanipulator, "Type" );
 						}
 						bResult = true;
 					}
@@ -338,15 +355,15 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 	return bResult;
 }
 
-
 bool CAnimationBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_TOOLS_CREATE_INF_ANIMS:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -364,18 +381,18 @@ bool CAnimationBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CAnimationBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAnimationBuilder::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_TOOLS_CREATE_INF_ANIMS:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -394,11 +411,12 @@ bool CAnimationBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool
 	return false;
 }
 
-
-uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) const
+uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes &gba ) const
 {
 	uint32_t dwWeaponBits = 0;
-	for ( unsigned nWeaponTypeIndex = NDb::SWeaponRPGStats::WEAPON_PISTOL; nWeaponTypeIndex <= NDb::SWeaponRPGStats::_WEAPON_COUNTER; ++nWeaponTypeIndex )
+	for ( unsigned nWeaponTypeIndex = NDb::SWeaponRPGStats::WEAPON_PISTOL;
+	      nWeaponTypeIndex <= NDb::SWeaponRPGStats::_WEAPON_COUNTER;
+	      ++nWeaponTypeIndex )
 	{
 		std::string szMnemonic = typeMayaWeaponMnemonics.GetMnemonic( nWeaponTypeIndex );
 		NStr::ToLowerASCII( &szMnemonic );
@@ -410,6 +428,5 @@ uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) c
 	}
 	return dwWeaponBits;
 }
-
 
 // basement storage

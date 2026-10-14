@@ -133,7 +133,7 @@ void CTurret::Segment()
 
 	if ( !ver.bFinished && curTime >= ver.endTime )
 		ver.bFinished = true, ver.wCurAngle = ver.wFinalAngle;
-/*
+	/*
 	if ( !hor.bFinished && GetHorCurAngle() > GetHorTurnConstraint() ||
 			 !ver.bFinished && GetVerCurAngle() > GetVerTurnConstraint() )
 		StopTurning();
@@ -141,18 +141,21 @@ void CTurret::Segment()
 	if ( pTracedUnit != 0 )
 	{
 		if ( !IsValidObj( pTracedUnit ) || !pTracedUnit->IsVisible( GetOwnerParty() ) ||
-				  fabs2( GetOwnerCenter() - pTracedUnit->GetCenterPlain() ) > sqr( SAIConsts::TILE_SIZE * 60 ) )
+		     fabs2( GetOwnerCenter() - pTracedUnit->GetCenterPlain() ) > sqr( SAIConsts::TILE_SIZE * 60 ) )
 			pTracedUnit = 0;
 		else
 		{
 			const CVec2 toTracedUnit( pTracedUnit->GetCenterPlain() - GetOwnerCenter() );
-			const uint16_t wDesHorAngle = ConstraintAngle( GetDirectionByVector( toTracedUnit ) - GetOwnerFrontDir() + ( IsBackGunsDirection() ? 32768 : 0 ), GetHorTurnConstraint() );
+			const uint16_t wDesHorAngle = ConstraintAngle( GetDirectionByVector( toTracedUnit ) - GetOwnerFrontDir() +
+			                                                   ( IsBackGunsDirection() ? 32768 : 0 ),
+			                                               GetHorTurnConstraint() );
 			if ( hor.bFinished || GetSignOfTurn( GetHorCurAngle(), wDesHorAngle ) != hor.sign )
 				TurnHor( wDesHorAngle );
 
 			if ( bVerAiming )
 			{
-				const uint16_t wDesVerAngle = ConstraintAngle( GetZAngle( toTracedUnit, pTracedUnit->GetCenter().z - GetOwnerZ() ), GetVerTurnConstraint() );
+				const uint16_t wDesVerAngle = ConstraintAngle(
+						GetZAngle( toTracedUnit, pTracedUnit->GetCenter().z - GetOwnerZ() ), GetVerTurnConstraint() );
 				if ( ver.bFinished || GetSignOfTurn( GetVerCurAngle(), wDesVerAngle ) != ver.sign )
 					TurnVer( wDesVerAngle + 16384 * 3 );
 			}
@@ -177,7 +180,8 @@ uint16_t CTurret::GetCurAngle( const SRotating &rotateInfo ) const
 			return rotateInfo.wFinalAngle;
 		else
 		{
-			const float fAngle = rotateInfo.wCurAngle + rotateInfo.sign * rotateInfo.wRotationSpeed * ( curTime - rotateInfo.startTime );
+			const float fAngle =
+					rotateInfo.wCurAngle + rotateInfo.sign * rotateInfo.wRotationSpeed * ( curTime - rotateInfo.startTime );
 			// A turn can cross zero; truncate in signed range before the defined uint16_t wrap.
 			return static_cast<uint16_t>( static_cast<int32_t>( fAngle ) );
 		}
@@ -217,14 +221,15 @@ void CTurret::StopTurning()
 
 void CTurret::Lock( const CBasicGun *pGun )
 {
-	pLockingGun = const_cast<CBasicGun*>(pGun);
+	pLockingGun = const_cast<CBasicGun *>( pGun );
 }
 
 void CTurret::Unlock( const CBasicGun *pGun )
 {
 	if ( pLockingGun != 0 && ( !pLockingGun->IsRefValid() || !pLockingGun->IsAlive() ) )
 		pLockingGun = 0;
-	if ( pGun == pLockingGun ) pLockingGun = 0;
+	if ( pGun == pLockingGun )
+		pLockingGun = 0;
 }
 
 bool CTurret::IsLocked( const CBasicGun *pGun )
@@ -242,11 +247,16 @@ void CTurret::SetCanReturn()
 //*											  CUnitTurret																*
 //*******************************************************************
 
-CUnitTurret::CUnitTurret( CAIUnit *_pOwner, const int _nPlatform, const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed,
-	const uint16_t _wHorConstraint, const uint16_t _wVerConstraint, const bool _bBuckGunsDirection )
-: CTurret( wHorRotationSpeed, wVerRotationSpeed, _pOwner->GetStats()->etype != RPG_TYPE_ART_AAGUN ),
-	pOwner( _pOwner ), nPlatform( _nPlatform ), wHorConstraint( _wHorConstraint ), wVerConstraint( _wVerConstraint ),
-	bCanRotateTurret( true ), wOldHorConstraint( _wHorConstraint ), bBuckGunsDirection( _bBuckGunsDirection )
+CUnitTurret::CUnitTurret( CAIUnit *_pOwner,
+                          const int _nPlatform,
+                          const uint16_t wHorRotationSpeed,
+                          const uint16_t wVerRotationSpeed,
+                          const uint16_t _wHorConstraint,
+                          const uint16_t _wVerConstraint,
+                          const bool _bBuckGunsDirection )
+		: CTurret( wHorRotationSpeed, wVerRotationSpeed, _pOwner->GetStats()->etype != RPG_TYPE_ART_AAGUN ),
+			pOwner( _pOwner ), nPlatform( _nPlatform ), wHorConstraint( _wHorConstraint ), wVerConstraint( _wVerConstraint ),
+			bCanRotateTurret( true ), wOldHorConstraint( _wHorConstraint ), bBuckGunsDirection( _bBuckGunsDirection )
 {
 }
 
@@ -328,14 +338,16 @@ const int CUnitTurret::GetOwnerParty() const
 //BASIC_REGISTER_CLASS( CMountedTurret );
 
 CMountedTurret::CMountedTurret( CBuilding *_pBuilding, const int _nSlot )
-:	CTurret( checked_cast<const SBuildingRPGStats*>(_pBuilding->GetStats())->aiSlots[_nSlot].wRotationSpeed, 0, true ),
-	pBuilding( _pBuilding ),
-	dir( checked_cast<const SBuildingRPGStats*>(_pBuilding->GetStats())->aiSlots[_nSlot].wDirection + _pBuilding->GetDir() ),
-	wHorTurnConstraint( checked_cast<const SBuildingRPGStats*>(_pBuilding->GetStats())->aiSlots[_nSlot].wAngle ),
-	wVerTurnConstraint( 16384 ),	wOldHorConstraint( wHorTurnConstraint )
+		: CTurret(
+					checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wRotationSpeed, 0, true ),
+			pBuilding( _pBuilding ),
+			dir( checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wDirection +
+           _pBuilding->GetDir() ),
+			wHorTurnConstraint( checked_cast<const SBuildingRPGStats *>( _pBuilding->GetStats() )->aiSlots[_nSlot].wAngle ),
+			wVerTurnConstraint( 16384 ), wOldHorConstraint( wHorTurnConstraint )
 {
-	center.x = checked_cast<const SBuildingRPGStats*>(pBuilding->GetStats())->aiSlots[_nSlot].vPos.x;
-	center.y = checked_cast<const SBuildingRPGStats*>(pBuilding->GetStats())->aiSlots[_nSlot].vPos.y;
+	center.x = checked_cast<const SBuildingRPGStats *>( pBuilding->GetStats() )->aiSlots[_nSlot].vPos.x;
+	center.y = checked_cast<const SBuildingRPGStats *>( pBuilding->GetStats() )->aiSlots[_nSlot].vPos.y;
 	center = MoveVectorByDirection( center, pBuilding->GetDir() );
 	center.x += pBuilding->GetCenter().x;
 	center.y += pBuilding->GetCenter().y;

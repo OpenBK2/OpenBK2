@@ -61,11 +61,7 @@
 
 REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )
 
-
-
-
-ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] =
-{
+ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] = {
 	ID_TOOLS_RESET_CAMERA,
 	ID_TOOLS_UPDATE_VSO,
 	NMainFrameBar::SEPARATOR,
@@ -79,63 +75,53 @@ ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO
 	ID_VIEW_FILTER,
 };
 
-
-ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT] =
-{
+ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT] = {
 	ID_MI_VIEW_MINIMAP,
 	ID_MI_VIEW_TOOL,
 };
 
-
 CMapInfoEditor::CMapInfoEditor()
-	: nMapInfoToolsToolbarID( 0xFFFFFFFF ),
-		nMapInfoViewToolbarID( 0xFFFFFFFF ),
-		pMapInfo( 0 ),
-		pwndShortcutBar( 0 ),
-		pwndMiniMap( 0 ),
-		pwndMoviesEditor( 0 ),
-		pMiniMapView( 0 ),
-		pMoviesEditorView( 0 ),
-		pMapInfoState( 0 ),
-		heightContainer( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE * 1.0f )
+		: nMapInfoToolsToolbarID( 0xFFFFFFFF ), nMapInfoViewToolbarID( 0xFFFFFFFF ), pMapInfo( 0 ), pwndShortcutBar( 0 ),
+			pwndMiniMap( 0 ), pwndMoviesEditor( 0 ), pMiniMapView( 0 ), pMoviesEditorView( 0 ), pMapInfoState( 0 ),
+			heightContainer( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE * 1.0f )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_EDITOR, this );
 	//
-	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_TOOLS_RESET_CAMERA, ID_TOOLS_REGEN_VSO_NORMALS );
-	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_TOOLS_CREATE_SCRIPT_PATH_POINTS, ID_TOOLS_CREATE_SCRIPT_PATH_POINTS );
+	Singleton<ICommandHandlerContainer>()->Register(
+			CHID_MAPINFO_EDITOR, ID_TOOLS_RESET_CAMERA, ID_TOOLS_REGEN_VSO_NORMALS );
+	Singleton<ICommandHandlerContainer>()->Register(
+			CHID_MAPINFO_EDITOR, ID_TOOLS_CREATE_SCRIPT_PATH_POINTS, ID_TOOLS_CREATE_SCRIPT_PATH_POINTS );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_UPDATE_SCENE_SIZE, ID_UPDATE_SCENE_VIEW );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_MI_VIEW_MINIMAP, ID_MI_VIEW_TOOLS_TOOLBAR );
 }
-
 
 //CRAP{ PLAIN_TEXT
 
 void CMapInfoEditor::ResetGUI( bool bActive )
 {
-    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-    if ( !bActive )
-        pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
-    // Copy only GUI fields from the defaults, preserving all editing settings.
-    const CMapInfoEditorSettings defaults;
-    editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
-    editorSettings.bShowMinimapBar = defaults.bShowMinimapBar;
-    editorSettings.bShowMoviesEditor = defaults.bShowMoviesEditor;
-    editorSettings.bShowMapInfoToolsToolbar = defaults.bShowMapInfoToolsToolbar;
-    editorSettings.bShowMapInfoViewToolbar = defaults.bShowMapInfoViewToolbar;
-    pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+	if ( !bActive )
+		pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+	// Copy only GUI fields from the defaults, preserving all editing settings.
+	const CMapInfoEditorSettings defaults;
+	editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
+	editorSettings.bShowMinimapBar = defaults.bShowMinimapBar;
+	editorSettings.bShowMoviesEditor = defaults.bShowMoviesEditor;
+	editorSettings.bShowMapInfoToolsToolbar = defaults.bShowMapInfoToolsToolbar;
+	editorSettings.bShowMapInfoViewToolbar = defaults.bShowMapInfoViewToolbar;
+	pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
-    if ( pwndShortcutBar )
-        pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
-    if ( pwndMiniMap )
-        pwndMiniMap->Show( bActive && editorSettings.bShowMinimapBar );
-    if ( pwndMoviesEditor )
-        pwndMoviesEditor->Show( bActive && editorSettings.bShowMoviesEditor );
-    if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
-        pToolbar->Show( bActive && editorSettings.bShowMapInfoToolsToolbar );
-    if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
-        pToolbar->Show( bActive && editorSettings.bShowMapInfoViewToolbar );
+	if ( pwndShortcutBar )
+		pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
+	if ( pwndMiniMap )
+		pwndMiniMap->Show( bActive && editorSettings.bShowMinimapBar );
+	if ( pwndMoviesEditor )
+		pwndMoviesEditor->Show( bActive && editorSettings.bShowMoviesEditor );
+	if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+		pToolbar->Show( bActive && editorSettings.bShowMapInfoToolsToolbar );
+	if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+		pToolbar->Show( bActive && editorSettings.bShowMapInfoViewToolbar );
 }
-
 
 void CMapInfoEditor::CreateControls()
 {
@@ -152,7 +138,8 @@ void CMapInfoEditor::CreateControls()
 	//const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	//const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 	unsigned nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
-	if ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MiniMap", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.2f, 265 ) )
+	if ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+					 &nID, "MiniMap", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.2f, 265 ) )
 	{
 		// Whichever toolkit draws the contents; the pane is the frame's either way.
 		pMiniMapView = NMiniMapView::Create();
@@ -167,7 +154,8 @@ void CMapInfoEditor::CreateControls()
 
 	nID = ID_MAPINFO_EDITOR_SHORTCUT_DW;
 	// создаем shortcut docking window
-	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "ShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.8f, 265 ) )
+	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+					 &nID, "ShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.8f, 265 ) )
 	{
 		nID = ID_MAPINFO_EDITOR_SHORTCUT_PANE_0;
 		pShortcutBarView.reset( NShortcutBar::Create() );
@@ -176,7 +164,8 @@ void CMapInfoEditor::CreateControls()
 			// A bar per input state and a tab per substate, each palette made by its
 			// own view -- which toolkit draws it is that view's business -- and the
 			// substate the user left open shown.
-			const auto AddStateBar = [this]( auto eState, const std::vector<std::pair<unsigned, NShortcutBar::TPaletteFactory>> &rTabs )
+			const auto AddStateBar =
+					[this]( auto eState, const std::vector<std::pair<unsigned, NShortcutBar::TPaletteFactory>> &rTabs )
 			{
 				const int nBar = pShortcutBarView->BeginBar( INVALID_COMMAND_HANDLER_ID, INVALID_COMMAND_ID );
 				std::string strPaneLabel;
@@ -186,10 +175,10 @@ void CMapInfoEditor::CreateControls()
 					pShortcutBarView->AddTab( nBar, strPaneLabel, rTab.second );
 				}
 				//
-				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( eState );
-				if ( ( posActiveStateMap != editorSettings.activeStateMap.end() ) &&
-						 ( posActiveStateMap->second >= 0 ) &&
-						 ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[eState] ) )
+				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap =
+						editorSettings.activeStateMap.find( eState );
+				if ( ( posActiveStateMap != editorSettings.activeStateMap.end() ) && ( posActiveStateMap->second >= 0 ) &&
+				     ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[eState] ) )
 				{
 					pShortcutBarView->ActivateTab( nBar, posActiveStateMap->second );
 				}
@@ -201,23 +190,32 @@ void CMapInfoEditor::CreateControls()
 				strPaneLabel = NResources::GetString( CMapInfoState::INPUT_STATE_LABEL_ID[eState] );
 				pShortcutBarView->EndBar( nBar, strPaneLabel );
 			};
-			AddStateBar( CMapInfoState::IS_TERRAIN, {
-				{ CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_HEIGHT_V3], &NHeightViewV3::Create },
-				{ CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_FIELD], &NFieldView::Create } } );
-			AddStateBar( CMapInfoState::IS_OBJECT, {
-				{ CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_MAP_OBJECT], &NMapObjectView::Create },
-				{ CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_VSO], &NVSOView::Create } } );
-			AddStateBar( CMapInfoState::IS_GAMEPLAY, {
-				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_REINF_POINTS], &NReinfPointsView::Create },
-				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_START_CAMERA], &NCameraPositionView::Create },
-				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_AIGENERAL], &NAIGeneralView::Create },
-				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_UNIT_START_CMD], &NUnitStartCmdView::Create } } );
-			AddStateBar( CMapInfoState::IS_SCRIPT, {
-				{ CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_AREAS], &NScriptAreaView::Create },
-				{ CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_MOVIES], &NScriptCameraView::Create } } );
+			AddStateBar( CMapInfoState::IS_TERRAIN,
+			             { { CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_HEIGHT_V3],
+			                 &NHeightViewV3::Create },
+			               { CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_FIELD],
+			                 &NFieldView::Create } } );
+			AddStateBar(
+					CMapInfoState::IS_OBJECT,
+					{ { CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_MAP_OBJECT],
+			        &NMapObjectView::Create },
+			      { CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_VSO], &NVSOView::Create } } );
+			AddStateBar( CMapInfoState::IS_GAMEPLAY,
+			             { { CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_REINF_POINTS],
+			                 &NReinfPointsView::Create },
+			               { CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_START_CAMERA],
+			                 &NCameraPositionView::Create },
+			               { CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_AIGENERAL],
+			                 &NAIGeneralView::Create },
+			               { CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_UNIT_START_CMD],
+			                 &NUnitStartCmdView::Create } } );
+			AddStateBar( CMapInfoState::IS_SCRIPT,
+			             { { CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_AREAS],
+			                 &NScriptAreaView::Create },
+			               { CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_MOVIES],
+			                 &NScriptCameraView::Create } } );
 			//
-			if ( ( editorSettings.nActiveStateIndex >= 0 ) &&
-					 ( editorSettings.nActiveStateIndex < CMapInfoState::IS_COUNT ) )
+			if ( ( editorSettings.nActiveStateIndex >= 0 ) && ( editorSettings.nActiveStateIndex < CMapInfoState::IS_COUNT ) )
 			{
 				pShortcutBarView->SelectBar( editorSettings.nActiveStateIndex );
 			}
@@ -225,7 +223,8 @@ void CMapInfoEditor::CreateControls()
 			{
 				pShortcutBarView->SelectBar( CMapInfoState::DEFAULT_INPUT_STATE );
 			}
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar,
+			                                                                      pShortcutBarView->GetWidget() );
 			pwndShortcutBar->ShowWithoutLayout( true );
 			pShortcutBarView->Show( true );
 			pShortcutBarView->SetCommandHandlerID( CHID_MAPINFO_STATE, ID_MIS_CHANGE_STATE );
@@ -237,45 +236,45 @@ void CMapInfoEditor::CreateControls()
 	//const bool bShowMoviesEditor = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMoviesEditor", 0, ";: ,|\t", true );
 	//if ( bShowMoviesEditor )
 	nID = ID_MOVIES_EDITOR_DW;
-	if ( pwndMoviesEditor = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MoviesEditor", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_BOTTOM, 0.5f, 200 ) )
+	if ( pwndMoviesEditor = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+					 &nID, "MoviesEditor", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_BOTTOM, 0.5f, 200 ) )
 	{
 		// Whichever toolkit draws the contents; the pane is the frame's either way.
 		pMoviesEditorView = NMoviesEditorView::Create();
 		if ( pMoviesEditorView != 0 && pMoviesEditorView->Create( pwndMoviesEditor ) )
 		{
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMoviesEditor, pMoviesEditorView->GetWidget() );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMoviesEditor,
+			                                                                      pMoviesEditorView->GetWidget() );
 			pwndMoviesEditor->ShowWithoutLayout( true );
 			pMoviesEditorView->Show( true );
 		}
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create movies editor window: %g", NHPTimer::GetTimePassed( &time ) );
 
-
 	std::string strToolbarName = NResources::GetString( IDS_TOOLBAR_MAPINFO_VIEW );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MAPINFO_VIEW, IDT_MAPINFO_VIEW );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nMapInfoViewToolbarID,
-																													strToolbarName.c_str(),
-																													TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT,
-																													TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID,
- 																													NMainFrameBar::ALIGN_ANY,
-																													NMainFrameBar::DOCK_TOP,
-																													true,
-																													false,
-																													true );
+	                                                        strToolbarName.c_str(),
+	                                                        TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT,
+	                                                        TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID,
+	                                                        NMainFrameBar::ALIGN_ANY,
+	                                                        NMainFrameBar::DOCK_TOP,
+	                                                        true,
+	                                                        false,
+	                                                        true );
 	strToolbarName = NResources::GetString( IDS_TOOLBAR_MAPINFO_TOOLS );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MAPINFO_TOOLS, IDT_MAPINFO_TOOLS );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nMapInfoToolsToolbarID,
-																													strToolbarName.c_str(),
-																													TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT,
-																													TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID,
- 																													NMainFrameBar::ALIGN_ANY,
-																													NMainFrameBar::DOCK_TOP,
-																													true,
-																													false,
-																													true );
+	                                                        strToolbarName.c_str(),
+	                                                        TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT,
+	                                                        TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID,
+	                                                        NMainFrameBar::ALIGN_ANY,
+	                                                        NMainFrameBar::DOCK_TOP,
+	                                                        true,
+	                                                        false,
+	                                                        true );
 }
 //CRAP} PLAIN_TEXT
-
 
 void CMapInfoEditor::PostCreateControls()
 {
@@ -302,7 +301,6 @@ void CMapInfoEditor::PostCreateControls()
 	}
 }
 
-
 void CMapInfoEditor::PreDestroyControls()
 {
 	if ( pwndShortcutBar != 0 )
@@ -327,7 +325,6 @@ void CMapInfoEditor::PreDestroyControls()
 		pToolbar->Show( false );
 	}
 }
-
 
 void CMapInfoEditor::DestroyControls()
 {
@@ -369,7 +366,8 @@ void CMapInfoEditor::DestroyControls()
 	}
 
 	// разрушаем Movies Editor docking window
-	const bool bShowMoviesEditor = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMoviesEditor", 0, ";: ,|\t", true );
+	const bool bShowMoviesEditor =
+			CStringManager::GetBoolValueFromString( szDebugParam, "ShowMoviesEditor", 0, ";: ,|\t", true );
 	if ( bShowMoviesEditor )
 	{
 		if ( pwndMoviesEditor != 0 )
@@ -390,7 +388,6 @@ void CMapInfoEditor::DestroyControls()
 	//Destroy();
 }
 
-
 void CMapInfoEditor::Create()
 {
 	// Сначала грузим файл с установками редактора
@@ -408,12 +405,11 @@ void CMapInfoEditor::Create()
 	if ( pwndMoviesEditor )
 		pwndMoviesEditor->Show( editorSettings.bShowMoviesEditor );
 
-	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar(nMapInfoToolsToolbarID) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
 		pToolbar->Show( editorSettings.bShowMapInfoToolsToolbar );
 
-	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar(nMapInfoViewToolbarID) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
 		pToolbar->Show( editorSettings.bShowMapInfoViewToolbar );
-
 
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
@@ -427,12 +423,10 @@ void CMapInfoEditor::Create()
 	Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAPINFO );
 }
 
-
 void CMapInfoEditor::Destroy()
 {
-	if ( Singleton<IMainFrameContainer>() &&
-			 Singleton<IMainFrameContainer>()->Get() &&
-			 Singleton<IMainFrameContainer>()->GetMainWindow() )
+	if ( Singleton<IMainFrameContainer>() && Singleton<IMainFrameContainer>()->Get() &&
+	     Singleton<IMainFrameContainer>()->GetMainWindow() )
 	{
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );
 		//
@@ -477,7 +471,6 @@ void CMapInfoEditor::Destroy()
 	}
 }
 
-
 void CMapInfoEditor::Save( bool bSaveChanges )
 {
 	bSaveFailed = false;
@@ -494,9 +487,10 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 		{
 			if ( !NEditor::SaveTerrain( EditorScene()->GetTerraManager(), &szSaveError ) )
 			{
-				if ( szSaveError.empty() ) szSaveError = "Could not serialize the map terrain.";
+				if ( szSaveError.empty() )
+					szSaveError = "Could not serialize the map terrain.";
 				NLog::GetLogger()->Log( LT_ERROR, "Failed to save map\n" );
-				NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tObjectID: {}\n", NDb::GetResName(pMapInfo)) );
+				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "\tObjectID: {}\n", NDb::GetResName( pMapInfo ) ) );
 				bSaveFailed = true;
 				return;
 			}
@@ -529,10 +523,9 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 	CEditorBase::Save( bSaveChanges );
 }
 
-
 bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
 		{
@@ -555,8 +548,9 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		//
 		case ID_TOOLS_FIT_TO_GRID:
 		{
-      editorSettings.bFitToGrid = !editorSettings.bFitToGrid;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_FENCE_STATE, ID_TOOLS_FIT_TO_GRID, uint32_t(editorSettings.bFitToGrid) );
+			editorSettings.bFitToGrid = !editorSettings.bFitToGrid;
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_FENCE_STATE, ID_TOOLS_FIT_TO_GRID, uint32_t( editorSettings.bFitToGrid ) );
 			return true;
 		}
 		//
@@ -592,11 +586,13 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < road.points.size(); ++nPointIndex )
 				{
-					CVec3 vNorm = ( nPointIndex == 0 ) ? ( road.points[1].vPos - road.points[0].vPos ) : ( road.points[nPointIndex].vPos - road.points[nPointIndex - 1].vPos );
+					CVec3 vNorm = ( nPointIndex == 0 ) ? ( road.points[1].vPos - road.points[0].vPos )
+					                                   : ( road.points[nPointIndex].vPos - road.points[nPointIndex - 1].vPos );
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Roads.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>(
+																	 fmt::format( "Roads.[{}].points.[{}].Norm", i, nPointIndex ), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -614,11 +610,13 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < river.points.size(); ++nPointIndex )
 				{
-					CVec3 vNorm = ( nPointIndex == 0 ) ? ( river.points[1].vPos - river.points[0].vPos ) : ( river.points[nPointIndex].vPos - river.points[nPointIndex - 1].vPos );
+					CVec3 vNorm = ( nPointIndex == 0 ) ? ( river.points[1].vPos - river.points[0].vPos )
+					                                   : ( river.points[nPointIndex].vPos - river.points[nPointIndex - 1].vPos );
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Rivers.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>(
+																	 fmt::format( "Rivers.[{}].points.[{}].Norm", i, nPointIndex ), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -636,11 +634,13 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < crag.points.size(); ++nPointIndex )
 				{
-					CVec3 vNorm = ( nPointIndex == 0 ) ? ( crag.points[1].vPos - crag.points[0].vPos ) : ( crag.points[nPointIndex].vPos - crag.points[nPointIndex - 1].vPos );
+					CVec3 vNorm = ( nPointIndex == 0 ) ? ( crag.points[1].vPos - crag.points[0].vPos )
+					                                   : ( crag.points[nPointIndex].vPos - crag.points[nPointIndex - 1].vPos );
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Crags.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>(
+																	 fmt::format( "Crags.[{}].points.[{}].Norm", i, nPointIndex ), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -658,11 +658,13 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 				bool bResult = true;
 				for ( int nPointIndex = 0; nPointIndex < lake.points.size(); ++nPointIndex )
 				{
-					CVec3 vNorm = ( nPointIndex == 0 ) ? ( lake.points[1].vPos - lake.points[0].vPos ) : ( lake.points[nPointIndex].vPos - lake.points[nPointIndex - 1].vPos );
+					CVec3 vNorm = ( nPointIndex == 0 ) ? ( lake.points[1].vPos - lake.points[0].vPos )
+					                                   : ( lake.points[nPointIndex].vPos - lake.points[nPointIndex - 1].vPos );
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Lakes.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>(
+																	 fmt::format( "Lakes.[{}].points.[{}].Norm", i, nPointIndex ), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -704,7 +706,8 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			editorSettings.bDrawAIMap = !editorSettings.bDrawAIMap;
 			if ( IEditorScene *pEditorScene = EditorScene() )
 			{
-				while ( pEditorScene->ToggleAIGeometryMode() != editorSettings.bDrawAIMap );
+				while ( pEditorScene->ToggleAIGeometryMode() != editorSettings.bDrawAIMap )
+					;
 			}
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			return true;
@@ -715,7 +718,8 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			editorSettings.bDrawPassability = !editorSettings.bDrawPassability;
 			if ( IEditorScene *pEditorScene = EditorScene() )
 			{
-				while( pEditorScene->ToggleShow( SCENE_SHOW_PASS_MARKERS ) != editorSettings.bDrawPassability );
+				while ( pEditorScene->ToggleShow( SCENE_SHOW_PASS_MARKERS ) != editorSettings.bDrawPassability )
+					;
 			}
 
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -827,158 +831,158 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	NI_ASSERT( pbEnable != 0, "CMapInfoEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapInfoEditor::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
-	case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
-	{
-		*pbEnable = pMapInfo != 0 && pMapInfoState != 0;
-		*pbCheck = *pbEnable && pMapInfoState->IsCreatingScriptPathPoints();
-		return true;
-	}
-	case ID_UPDATE_SCENE_SIZE:
-	case ID_UPDATE_SCENE_VIEW:
-	case ID_MIMCO_GENERATE_MINIMAP_IMAGE:
-	{
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	}
-	//
-	case ID_TOOLS_FIT_TO_GRID:
-	{
-		( *pbEnable ) = true;
-		( *pbCheck ) = editorSettings.bFitToGrid;
-		return true;
-	}
-	//
-	case ID_TOOLS_ROTATE_90:
-	{
-		( *pbEnable ) = true;
-		( *pbCheck ) = editorSettings.bRotateTo90Degree;
-		return true;
-	}
-	//
-	case ID_TOOLS_SHOW_GRID:
-	{
-		( *pbEnable ) = ( pMapInfo != 0 );
-		( *pbCheck ) = editorSettings.viewFilterData.bShowGrid;
-		return true;
-	}
-	//
-	case ID_TOOLS_UPDATE_VSO:
-	case ID_VIEW_FILTER:
-	case ID_TOOLS_RUN_GAME:
-	case ID_TOOLS_RESET_CAMERA:
-	{
-		( *pbEnable ) = ( pMapInfo != 0 );
-		( *pbCheck ) = false;
-		return true;
-	}
-	//
-	case ID_TOOLS_DRAW_SHOOT_AREAS:
-	{
-		( *pbEnable ) = ( pMapInfo != 0 );
-		( *pbCheck ) = editorSettings.bDrawShootAreas;
-		return true;
-	}
-	//
-	case ID_TOOLS_DRAW_AI_MAP:
-	{
-		( *pbEnable ) = ( pMapInfo != 0 );
-		( *pbCheck ) = editorSettings.bDrawAIMap;
-		return true;
-	}
-	//
-	case ID_TOOLS_DRAW_PASSABILITY:
-	{
-		( *pbEnable ) = ( pMapInfo != 0 );
-		( *pbCheck ) = editorSettings.bDrawPassability;
-		return true;
-	}
-	//
-	case ID_MI_VIEW_MINIMAP:
-	{
-		if ( pwndMiniMap != 0 )
+		case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
+		{
+			*pbEnable = pMapInfo != 0 && pMapInfoState != 0;
+			*pbCheck = *pbEnable && pMapInfoState->IsCreatingScriptPathPoints();
+			return true;
+		}
+		case ID_UPDATE_SCENE_SIZE:
+		case ID_UPDATE_SCENE_VIEW:
+		case ID_MIMCO_GENERATE_MINIMAP_IMAGE:
 		{
 			( *pbEnable ) = true;
-			( *pbCheck ) = pwndMiniMap->IsVisible();
-		}
-		else
-		{
-			( *pbEnable ) = false;
 			( *pbCheck ) = false;
+			return true;
 		}
-		return true;
-	}
-	//
-	case ID_MI_VIEW_MOVIE_EDITOR:
-	{
-		if ( pwndMoviesEditor != 0 )
+		//
+		case ID_TOOLS_FIT_TO_GRID:
 		{
 			( *pbEnable ) = true;
-			( *pbCheck ) = pwndMoviesEditor->IsVisible();
+			( *pbCheck ) = editorSettings.bFitToGrid;
+			return true;
 		}
-		else
-		{
-			( *pbEnable ) = false;
-			( *pbCheck ) = false;
-		}
-		return true;
-	}
-	//
-	case ID_MI_VIEW_TOOL:
-	{
-		if ( pwndShortcutBar != 0 )
+		//
+		case ID_TOOLS_ROTATE_90:
 		{
 			( *pbEnable ) = true;
-			( *pbCheck ) = pwndShortcutBar->IsVisible();
+			( *pbCheck ) = editorSettings.bRotateTo90Degree;
+			return true;
 		}
-		else
+		//
+		case ID_TOOLS_SHOW_GRID:
 		{
-			( *pbEnable ) = false;
+			( *pbEnable ) = ( pMapInfo != 0 );
+			( *pbCheck ) = editorSettings.viewFilterData.bShowGrid;
+			return true;
+		}
+		//
+		case ID_TOOLS_UPDATE_VSO:
+		case ID_VIEW_FILTER:
+		case ID_TOOLS_RUN_GAME:
+		case ID_TOOLS_RESET_CAMERA:
+		{
+			( *pbEnable ) = ( pMapInfo != 0 );
 			( *pbCheck ) = false;
+			return true;
 		}
-		return true;
-	}
-	//
-	case ID_MI_VIEW_VIEW_TOOLBAR:
-	{
-		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+		//
+		case ID_TOOLS_DRAW_SHOOT_AREAS:
 		{
-			( *pbEnable ) = true;
-			( *pbCheck ) = pToolbar->IsVisible();
+			( *pbEnable ) = ( pMapInfo != 0 );
+			( *pbCheck ) = editorSettings.bDrawShootAreas;
+			return true;
 		}
-		else
+		//
+		case ID_TOOLS_DRAW_AI_MAP:
 		{
-			( *pbEnable ) = false;
+			( *pbEnable ) = ( pMapInfo != 0 );
+			( *pbCheck ) = editorSettings.bDrawAIMap;
+			return true;
+		}
+		//
+		case ID_TOOLS_DRAW_PASSABILITY:
+		{
+			( *pbEnable ) = ( pMapInfo != 0 );
+			( *pbCheck ) = editorSettings.bDrawPassability;
+			return true;
+		}
+		//
+		case ID_MI_VIEW_MINIMAP:
+		{
+			if ( pwndMiniMap != 0 )
+			{
+				( *pbEnable ) = true;
+				( *pbCheck ) = pwndMiniMap->IsVisible();
+			}
+			else
+			{
+				( *pbEnable ) = false;
+				( *pbCheck ) = false;
+			}
+			return true;
+		}
+		//
+		case ID_MI_VIEW_MOVIE_EDITOR:
+		{
+			if ( pwndMoviesEditor != 0 )
+			{
+				( *pbEnable ) = true;
+				( *pbCheck ) = pwndMoviesEditor->IsVisible();
+			}
+			else
+			{
+				( *pbEnable ) = false;
+				( *pbCheck ) = false;
+			}
+			return true;
+		}
+		//
+		case ID_MI_VIEW_TOOL:
+		{
+			if ( pwndShortcutBar != 0 )
+			{
+				( *pbEnable ) = true;
+				( *pbCheck ) = pwndShortcutBar->IsVisible();
+			}
+			else
+			{
+				( *pbEnable ) = false;
+				( *pbCheck ) = false;
+			}
+			return true;
+		}
+		//
+		case ID_MI_VIEW_VIEW_TOOLBAR:
+		{
+			if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+			{
+				( *pbEnable ) = true;
+				( *pbCheck ) = pToolbar->IsVisible();
+			}
+			else
+			{
+				( *pbEnable ) = false;
+				( *pbCheck ) = false;
+			}
+			return true;
+		}
+		//
+		case ID_MI_VIEW_TOOLS_TOOLBAR:
+		{
+			if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+			{
+				( *pbEnable ) = true;
+				( *pbCheck ) = pToolbar->IsVisible();
+			}
+			else
+			{
+				( *pbEnable ) = false;
+				( *pbCheck ) = false;
+			}
+			return true;
+		}
+		//
+		case ID_TOOLS_REGEN_VSO_NORMALS:
+		{
+			( *pbEnable ) = ( pMapInfo != 0 );
 			( *pbCheck ) = false;
+			return true;
 		}
-		return true;
-	}
-	//
-	case ID_MI_VIEW_TOOLS_TOOLBAR:
-	{
-		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
-		{
-			( *pbEnable ) = true;
-			( *pbCheck ) = pToolbar->IsVisible();
-		}
-		else
-		{
-			( *pbEnable ) = false;
-			( *pbCheck ) = false;
-		}
-		return true;
-	}
-	//
-	case ID_TOOLS_REGEN_VSO_NORMALS:
-	{
-		( *pbEnable ) = ( pMapInfo != 0 );
-		( *pbCheck ) = false;
-		return true;
-	}
-	default:
-		return false;
+		default:
+			return false;
 	}
 	return false;
 }
@@ -990,7 +994,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 	pObjectController->GetTemporaryLabel( &szControllerTemporaryLabel );
 	if ( szControllerTemporaryLabel == CMapInfoController::TEMPORARY_LABEL )
 	{
-		CMapInfoController *pMapInfoController = dynamic_cast<CMapInfoController*>( pObjectController );
+		CMapInfoController *pMapInfoController = dynamic_cast<CMapInfoController *>( pObjectController );
 		if ( pMapInfoController != 0 )
 		{
 			if ( IEditorScene *pEditorScene = EditorScene() )
@@ -1008,8 +1012,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 						{
 							posTileUndoData = pMapInfoController->tileUndoDataList.end();
 						}
-						while ( posTileUndoData != ( bRedo ? pMapInfoController->tileUndoDataList.end() :
-																								 pMapInfoController->tileUndoDataList.begin() ) )
+						while ( posTileUndoData != ( bRedo ? pMapInfoController->tileUndoDataList.end()
+						                                   : pMapInfoController->tileUndoDataList.begin() ) )
 						{
 							if ( !bRedo )
 							{
@@ -1018,11 +1022,17 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							//
 							if ( bRedo )
 							{
-								pTerraManager->UpdateTileAreaType( posTileUndoData->vBrushPos.x, posTileUndoData->vBrushPos.y, posTileUndoData->brush, NTerraBrush::TERRA_BRUSH_ADD );
+								pTerraManager->UpdateTileAreaType( posTileUndoData->vBrushPos.x,
+								                                   posTileUndoData->vBrushPos.y,
+								                                   posTileUndoData->brush,
+								                                   NTerraBrush::TERRA_BRUSH_ADD );
 							}
 							else
 							{
-								pTerraManager->UpdateTileAreaType( posTileUndoData->vBrushPos.x, posTileUndoData->vBrushPos.y, posTileUndoData->brush, NTerraBrush::TERRA_BRUSH_SUB );
+								pTerraManager->UpdateTileAreaType( posTileUndoData->vBrushPos.x,
+								                                   posTileUndoData->vBrushPos.y,
+								                                   posTileUndoData->brush,
+								                                   NTerraBrush::TERRA_BRUSH_SUB );
 							}
 							//
 							if ( bRedo )
@@ -1044,8 +1054,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 						{
 							posHeightUndoData = pMapInfoController->heightUndoDataList.end();
 						}
-						while ( posHeightUndoData != ( bRedo ? pMapInfoController->heightUndoDataList.end() :
-																									 pMapInfoController->heightUndoDataList.begin() ) )
+						while ( posHeightUndoData != ( bRedo ? pMapInfoController->heightUndoDataList.end()
+						                                     : pMapInfoController->heightUndoDataList.begin() ) )
 						{
 							if ( !bRedo )
 							{
@@ -1055,18 +1065,18 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							if ( bRedo )
 							{
 								pTerraManager->ModifyTerraGeometryByBrush( posHeightUndoData->brushPos.x,
-																													 posHeightUndoData->brushPos.y,
-																													 true,
-																													 posHeightUndoData->brush,
-																													 NTerraBrush::TERRA_BRUSH_ADD );
+								                                           posHeightUndoData->brushPos.y,
+								                                           true,
+								                                           posHeightUndoData->brush,
+								                                           NTerraBrush::TERRA_BRUSH_ADD );
 							}
 							else
 							{
 								pTerraManager->ModifyTerraGeometryByBrush( posHeightUndoData->brushPos.x,
-																													 posHeightUndoData->brushPos.y,
-																													 true,
-																													 posHeightUndoData->brush,
-																													 NTerraBrush::TERRA_BRUSH_SUB );
+								                                           posHeightUndoData->brushPos.y,
+								                                           true,
+								                                           posHeightUndoData->brush,
+								                                           NTerraBrush::TERRA_BRUSH_SUB );
 							}
 							//
 							if ( bRedo )
@@ -1089,8 +1099,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 						{
 							posVSOUndoData = pMapInfoController->vsoUndoDataList.end();
 						}
-						while ( posVSOUndoData != ( bRedo ? pMapInfoController->vsoUndoDataList.end() :
-																								pMapInfoController->vsoUndoDataList.begin() ) )
+						while ( posVSOUndoData != ( bRedo ? pMapInfoController->vsoUndoDataList.end()
+						                                  : pMapInfoController->vsoUndoDataList.begin() ) )
 						{
 							if ( !bRedo )
 							{
@@ -1099,11 +1109,11 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							//
 							if ( bRedo )
 							{
-								switch( posVSOUndoData->eVSOType )
+								switch ( posVSOUndoData->eVSOType )
 								{
 									case CMapInfoController::SVSOUndoData::VSO_ROAD:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1136,7 +1146,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									}
 									case CMapInfoController::SVSOUndoData::VSO_RIVER:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1169,7 +1179,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									}
 									case CMapInfoController::SVSOUndoData::VSO_CRAG:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1203,7 +1213,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									case CMapInfoController::SVSOUndoData::VSO_LAKE:
 									case CMapInfoController::SVSOUndoData::VSO_COAST:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1243,11 +1253,11 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							}
 							else
 							{
-								switch( posVSOUndoData->eVSOType )
+								switch ( posVSOUndoData->eVSOType )
 								{
 									case CMapInfoController::SVSOUndoData::VSO_ROAD:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1280,7 +1290,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									}
 									case CMapInfoController::SVSOUndoData::VSO_RIVER:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1313,7 +1323,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									}
 									case CMapInfoController::SVSOUndoData::VSO_CRAG:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1347,7 +1357,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									case CMapInfoController::SVSOUndoData::VSO_LAKE:
 									case CMapInfoController::SVSOUndoData::VSO_COAST:
 									{
-										switch( posVSOUndoData->eType )
+										switch ( posVSOUndoData->eType )
 										{
 											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
@@ -1409,17 +1419,17 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		char pPostfix[0xFFF];
 		std::string szPostfix;
 		//
-		const std::string szPlayersLabel				= "Players";
-		const std::string szObjectsLabel				= "Objects";
-		const std::string szBridgesLabel				= "Bridges";
-		const std::string szEntrenchmentsLabel	= "Entrenchments";
-		const std::string szDirectionLabel			= "Dir";
-		const std::string szPositionLabel			= "Pos";
-		const std::string szLinkLabel					= "Link";
-		const std::string szPlayerLabel				= "Player";
-		const std::string szFrameIndexLabel		= "FrameIndex";
-		const std::string szSpotsLabel					= "Spots";
-		const std::string szStartCommandLabel	= "startCommandsList";
+		const std::string szPlayersLabel = "Players";
+		const std::string szObjectsLabel = "Objects";
+		const std::string szBridgesLabel = "Bridges";
+		const std::string szEntrenchmentsLabel = "Entrenchments";
+		const std::string szDirectionLabel = "Dir";
+		const std::string szPositionLabel = "Pos";
+		const std::string szLinkLabel = "Link";
+		const std::string szPlayerLabel = "Player";
+		const std::string szFrameIndexLabel = "FrameIndex";
+		const std::string szSpotsLabel = "Spots";
+		const std::string szStartCommandLabel = "startCommandsList";
 		//
 		bool bUpdatePlayerList = false;
 		bool bUpdateStartCommandList = false;
@@ -1443,8 +1453,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		{
 			posUndoData = pObjectController->undoDataList.end();
 		}
-		while ( posUndoData != ( bRedo ? pObjectController->undoDataList.end() :
-																		 pObjectController->undoDataList.begin() ) )
+		while ( posUndoData != ( bRedo ? pObjectController->undoDataList.end() : pObjectController->undoDataList.begin() ) )
 		{
 			if ( !bRedo )
 			{
@@ -1462,7 +1471,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				if ( szName == szPlayersLabel )
 				{
 					if ( ( posUndoData->eType == CObjectBaseController::SUndoData::TYPE_INSERT ) ||
-							 ( posUndoData->eType == CObjectBaseController::SUndoData::TYPE_REMOVE ) )
+					     ( posUndoData->eType == CObjectBaseController::SUndoData::TYPE_REMOVE ) )
 					{
 						bUpdatePlayerList = true;
 					}
@@ -1536,12 +1545,14 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							if ( bRedo )
 							{
 								InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &objectList, nObjectIndex );
-								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
+								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
 							}
 							else
 							{
 								removedObjectBackList.push_front( nObjectIndex );
-								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
+								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
 							}
 						}
 					}
@@ -1554,12 +1565,14 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							if ( bRedo )
 							{
 								removedObjectBackList.push_front( nObjectIndex );
-								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
+								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
 							}
 							else
 							{
 								InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &objectList, nObjectIndex );
-								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
+								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedObjectList, nObjectIndex );
 							}
 						}
 					}
@@ -1576,13 +1589,17 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 						// reported the type mismatch. The width is there because
 						// %s into a fixed buffer with no bound is how a long
 						// enough property name overruns it.
-						if ( ( sscanf( szName.c_str(), "Objects.[%d].%4094s", &nObjectIndex, pPostfix ) == 2 ) && ( nObjectIndex != INVALID_NODE_ID ) )
+						if ( ( sscanf( szName.c_str(), "Objects.[%d].%4094s", &nObjectIndex, pPostfix ) == 2 ) &&
+						     ( nObjectIndex != INVALID_NODE_ID ) )
 						{
 							szPostfix = pPostfix;
-							NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo = FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>( changedObjectList, nObjectIndex );
+							NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo =
+									FindIndex<NMapInfoEditor::CControllerChangeInfoList,
+							              NMapInfoEditor::CControllerChangeInfoList::iterator>( changedObjectList, nObjectIndex );
 							if ( posControllerChangeInfo == changedObjectList.end() )
 							{
-								posControllerChangeInfo = changedObjectList.insert( changedObjectList.end(), NMapInfoEditor::SControllerChangeInfo( nObjectIndex ) );
+								posControllerChangeInfo = changedObjectList.insert(
+										changedObjectList.end(), NMapInfoEditor::SControllerChangeInfo( nObjectIndex ) );
 							}
 							if ( posControllerChangeInfo != changedObjectList.end() )
 							{
@@ -1621,12 +1638,14 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							if ( bRedo )
 							{
 								InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &spotList, nSpotIndex );
-								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
+								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
 							}
 							else
 							{
 								removedSpotBackList.push_front( nSpotIndex );
-								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
+								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
 							}
 						}
 					}
@@ -1639,12 +1658,14 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							if ( bRedo )
 							{
 								removedSpotBackList.push_front( nSpotIndex );
-								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
+								RemoveIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
 							}
 							else
 							{
 								InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &spotList, nSpotIndex );
-								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
+								InsertIndexToIndicesList<NMapInfoEditor::CControllerChangeInfoList,
+								                         NMapInfoEditor::SControllerChangeInfo>( &changedSpotList, nSpotIndex );
 							}
 						}
 					}
@@ -1656,13 +1677,17 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 						pPostfix[0] = 0;
 						int nSpotIndex = INVALID_NODE_ID;
 						// Same two corrections as the Objects case above.
-						if ( ( sscanf( szName.c_str(), "Spots.[%d].%4094s", &nSpotIndex, pPostfix ) == 2 ) && ( nSpotIndex != INVALID_NODE_ID ) )
+						if ( ( sscanf( szName.c_str(), "Spots.[%d].%4094s", &nSpotIndex, pPostfix ) == 2 ) &&
+						     ( nSpotIndex != INVALID_NODE_ID ) )
 						{
 							szPostfix = pPostfix;
-							NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo = FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>( changedSpotList, nSpotIndex );
+							NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo =
+									FindIndex<NMapInfoEditor::CControllerChangeInfoList,
+							              NMapInfoEditor::CControllerChangeInfoList::iterator>( changedSpotList, nSpotIndex );
 							if ( posControllerChangeInfo == changedSpotList.end() )
 							{
-								posControllerChangeInfo = changedSpotList.insert( changedSpotList.end(), NMapInfoEditor::SControllerChangeInfo( nSpotIndex ) );
+								posControllerChangeInfo = changedSpotList.insert( changedSpotList.end(),
+								                                                  NMapInfoEditor::SControllerChangeInfo( nSpotIndex ) );
 							}
 							if ( posControllerChangeInfo != changedSpotList.end() )
 							{
@@ -1680,7 +1705,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		}
 		if ( bUpdatePlayerList )
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_PLAYER_COUNT );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_PLAYER_COUNT );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_REINF_POINTS_STATE, ID_UPDATE_EDIT_PARAMETERS, 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_STATE, ID_UPDATE_EDIT_PARAMETERS, 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_AIGEN_POINTS_STATE, ID_UPDATE_EDIT_PARAMETERS, 0 );
@@ -1698,9 +1724,12 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			// Добавляем объекты
 			std::unordered_map<int, int> objectIndexToLinkIDMap;
 			objectList.sort();
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = objectList.begin(); itIndex != objectList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = objectList.begin(); itIndex != objectList.end();
+			      ++itIndex )
 			{
-				NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo = FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>( changedObjectList, *itIndex );
+				NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo =
+						FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>(
+								changedObjectList, *itIndex );
 				if ( posControllerChangeInfo != changedObjectList.end() )
 				{
 					changedObjectList.erase( posControllerChangeInfo );
@@ -1712,31 +1741,33 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				objectIndexToLinkIDMap[*itIndex] = nLinkID;
 			}
 			//
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = objectList.begin(); itIndex != objectList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = objectList.begin(); itIndex != objectList.end();
+			      ++itIndex )
 			{
 				std::unordered_map<int, int>::const_iterator posObjectIndexToLinkID = objectIndexToLinkIDMap.find( *itIndex );
 				if ( posObjectIndexToLinkID == objectIndexToLinkIDMap.end() )
 				{
-					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map object {} on the map \"{}\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
+					NLog::GetLogger()->Log( LT_ERROR,
+					                        fmt::format( "Map object {} on the map \"{}\" has no objectID. Skiping...\n",
+					                                     *itIndex,
+					                                     NDb::GetResName( pMapInfo ) ) );
 					continue;
 				}
 				const std::string szObjectPrefix = fmt::format( "Objects.[{}]", *itIndex );
 				std::string szRPGStatsTypeName;
 				std::string szRPGStatsName;
-				CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
+				CManipulatorManager::GetParamsFromReference(
+						szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 				{
 					NI_ASSERT( 0, fmt::format( "Empty object {}", *itIndex ) );
 					continue;
 				}
 				// создаем записи в mapInfo в зависимости от типа объекта
-				if ( ( szRPGStatsTypeName == "MineRPGStats" )					||
-						 ( szRPGStatsTypeName == "BuildingRPGStats" )			||
-						 ( szRPGStatsTypeName == "MechUnitRPGStats" )			||
-						 ( szRPGStatsTypeName == "ObjectRPGStats" )				||
-						 ( szRPGStatsTypeName == "TerraObjSetRPGStats" )	||
-						 ( szRPGStatsTypeName == "FenceRPGStats" )				||
-						 ( szRPGStatsTypeName == "SquadRPGStats" ) )
+				if ( ( szRPGStatsTypeName == "MineRPGStats" ) || ( szRPGStatsTypeName == "BuildingRPGStats" ) ||
+				     ( szRPGStatsTypeName == "MechUnitRPGStats" ) || ( szRPGStatsTypeName == "ObjectRPGStats" ) ||
+				     ( szRPGStatsTypeName == "TerraObjSetRPGStats" ) || ( szRPGStatsTypeName == "FenceRPGStats" ) ||
+				     ( szRPGStatsTypeName == "SquadRPGStats" ) )
 				{
 					//DebugTrace( "CMapInfoEditor::GetChangesFromController(): insert object: %d", *itIndex );
 					//
@@ -1748,15 +1779,19 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					objectLoadInfo.szRPGStatsTypeName = szRPGStatsTypeName;
 					objectLoadInfo.rpgStatsDBID = CDBID( szRPGStatsName );
 					CManipulatorManager::GetValue( &( objectLoadInfo.nPlayer ), pManipulator, szObjectPrefix + ".Player" );
-					CManipulatorManager::GetValue( &( objectLoadInfo.nFrameIndex ), pManipulator, szObjectPrefix + ".FrameIndex" );
+					CManipulatorManager::GetValue(
+							&( objectLoadInfo.nFrameIndex ), pManipulator, szObjectPrefix + ".FrameIndex" );
 					CManipulatorManager::GetValue( &( objectLoadInfo.fHP ), pManipulator, szObjectPrefix + ".HP" );
-					CManipulatorManager::GetVec3<CVec3, float>( &( objectLoadInfo.vPosition ), pManipulator, szObjectPrefix + ".Pos" );
+					CManipulatorManager::GetVec3<CVec3, float>(
+							&( objectLoadInfo.vPosition ), pManipulator, szObjectPrefix + ".Pos" );
 					uint16_t wDirection = 0;
 					CManipulatorManager::GetValue( &wDirection, pManipulator, szObjectPrefix + ".Dir" );
 					objectLoadInfo.fDirection = AI2VisRad( wDirection );
-					CManipulatorManager::GetValue( &( objectLoadInfo.nLinkWith ), pManipulator, szObjectPrefix + ".Link.LinkWith" );
+					CManipulatorManager::GetValue(
+							&( objectLoadInfo.nLinkWith ), pManipulator, szObjectPrefix + ".Link.LinkWith" );
 					unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
-					if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
+					if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = objectInfoCollector.Insert(
+									 static_cast<NMapInfoEditor::SSimpleObjectInfo *>( 0 ), &nSimpleObjectInfoID ) )
 					{
 						pSimpleObjectInfo->Load( &objectLoadInfo, pEditorScene, pManipulator );
 					}
@@ -1764,7 +1799,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			}
 			// мосты
 			bridgeList.sort();
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = bridgeList.begin(); itIndex != bridgeList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = bridgeList.begin(); itIndex != bridgeList.end();
+			      ++itIndex )
 			{
 				const int nBridgeIndex = *itIndex;
 				//DebugTrace( "CMapInfoEditor::GetChangesFromController(): insert bridge: %d", nBridgeIndex );
@@ -1773,14 +1809,17 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				objectLoadInfo.nObjectIndex = nBridgeIndex;
 				objectLoadInfo.bSearchIndices = true;
 				unsigned nBridgeInfoID = INVALID_NODE_ID;
-				if ( NMapInfoEditor::SBridgeInfo *pBridgeInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SBridgeInfo*>( 0 ), &nBridgeInfoID ) )
+				if ( NMapInfoEditor::SBridgeInfo *pBridgeInfo =
+				         objectInfoCollector.Insert( static_cast<NMapInfoEditor::SBridgeInfo *>( 0 ), &nBridgeInfoID ) )
 				{
 					pBridgeInfo->Load( &objectLoadInfo, pEditorScene, pManipulator );
 				}
 			}
 			// окопы
 			entrenchmentList.sort();
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = entrenchmentList.begin(); itIndex != entrenchmentList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = entrenchmentList.begin();
+			      itIndex != entrenchmentList.end();
+			      ++itIndex )
 			{
 				const int nEntrenchmentIndex = *itIndex;
 				//DebugTrace( "CMapInfoEditor::GetChangesFromController(): insert entrenchment: %d", nEntrenchmentIndex );
@@ -1789,7 +1828,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				objectLoadInfo.nObjectIndex = nEntrenchmentIndex;
 				objectLoadInfo.bSearchIndices = true;
 				unsigned nEntrenchmentInfoID = INVALID_NODE_ID;
-				if ( NMapInfoEditor::SEntrenchmentInfo *pEntrenchmentInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SEntrenchmentInfo*>( 0 ), &nEntrenchmentInfoID ) )
+				if ( NMapInfoEditor::SEntrenchmentInfo *pEntrenchmentInfo = objectInfoCollector.Insert(
+								 static_cast<NMapInfoEditor::SEntrenchmentInfo *>( 0 ), &nEntrenchmentInfoID ) )
 				{
 					pEntrenchmentInfo->Load( &objectLoadInfo, pEditorScene, pManipulator );
 				}
@@ -1798,13 +1838,16 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		}
 		else if ( !removedObjectBackList.empty() )
 		{
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = removedObjectBackList.begin(); itIndex != removedObjectBackList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = removedObjectBackList.begin();
+			      itIndex != removedObjectBackList.end();
+			      ++itIndex )
 			{
 				InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &objectList, *itIndex );
 			}
 			removedObjectBackList.clear();
 			std::list<int> nObjectIDToRemoveList;
-			for ( NMapInfoEditor::CIndicesList::iterator itIndex = objectList.begin(); itIndex != objectList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::iterator itIndex = objectList.begin(); itIndex != objectList.end();
+			      ++itIndex )
 			{
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, 0, true );
 				if ( nLinkID != INVALID_NODE_ID )
@@ -1813,23 +1856,28 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				}
 			}
 			// Удаляем объекты
-			for ( std::list<int>::iterator itObjectNameToRemove = nObjectIDToRemoveList.begin(); itObjectNameToRemove != nObjectIDToRemoveList.end(); ++itObjectNameToRemove )
+			for ( std::list<int>::iterator itObjectNameToRemove = nObjectIDToRemoveList.begin();
+			      itObjectNameToRemove != nObjectIDToRemoveList.end();
+			      ++itObjectNameToRemove )
 			{
-				if ( const NMapInfoEditor::SObjectInfo* pObjectInfo = objectInfoCollector.GetObjectInfoByLinkID( *itObjectNameToRemove ) )
+				if ( const NMapInfoEditor::SObjectInfo *pObjectInfo =
+				         objectInfoCollector.GetObjectInfoByLinkID( *itObjectNameToRemove ) )
 				{
-					objectInfoCollector.Remove(	pObjectInfo->nObjectInfoID, true, pEditorScene, false, 0, 0 );
+					objectInfoCollector.Remove( pObjectInfo->nObjectInfoID, true, pEditorScene, false, 0, 0 );
 				}
 			}
 		}
 		// обновляем объекты
 		if ( !changedObjectList.empty() )
 		{
-			for( NMapInfoEditor::CControllerChangeInfoList::const_iterator itControllerChangeInfo = changedObjectList.begin();
-					 itControllerChangeInfo != changedObjectList.end();
-					 ++itControllerChangeInfo )
+			for ( NMapInfoEditor::CControllerChangeInfoList::const_iterator itControllerChangeInfo =
+			          changedObjectList.begin();
+			      itControllerChangeInfo != changedObjectList.end();
+			      ++itControllerChangeInfo )
 			{
 				//DebugTrace( "CMapInfoEditor::GetChangesFromController(): update Object: %d", itControllerChangeInfo->nIndex );
-				objectInfoCollector.UpdateObjectByController( itControllerChangeInfo->nIndex, itControllerChangeInfo->nFlags, pEditorScene, pManipulator );
+				objectInfoCollector.UpdateObjectByController(
+						itControllerChangeInfo->nIndex, itControllerChangeInfo->nFlags, pEditorScene, pManipulator );
 			}
 		}
 		// Spots
@@ -1840,9 +1888,12 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			// Добавляем объекты
 			std::unordered_map<int, int> spotIndexToLinkIDMap;
 			spotList.sort();
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end();
+			      ++itIndex )
 			{
-				NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo = FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>( changedSpotList, *itIndex );
+				NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo =
+						FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>(
+								changedSpotList, *itIndex );
 				if ( posControllerChangeInfo != changedSpotList.end() )
 				{
 					changedSpotList.erase( posControllerChangeInfo );
@@ -1854,18 +1905,23 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				spotIndexToLinkIDMap[*itIndex] = nLinkID;
 			}
 			//
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end();
+			      ++itIndex )
 			{
 				std::unordered_map<int, int>::const_iterator posSpotIndexToLinkID = spotIndexToLinkIDMap.find( *itIndex );
 				if ( posSpotIndexToLinkID == spotIndexToLinkIDMap.end() )
 				{
-					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map spot {} on the map \"{}\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
+					NLog::GetLogger()->Log( LT_ERROR,
+					                        fmt::format( "Map spot {} on the map \"{}\" has no objectID. Skiping...\n",
+					                                     *itIndex,
+					                                     NDb::GetResName( pMapInfo ) ) );
 					continue;
 				}
 				const std::string szSpotPrefix = fmt::format( "Spots.[{}]", *itIndex );
 				std::string szRPGStatsTypeName;
 				std::string szRPGStatsName;
-				CManipulatorManager::GetParamsFromReference( szSpotPrefix + ".Descriptor", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
+				CManipulatorManager::GetParamsFromReference(
+						szSpotPrefix + ".Descriptor", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 				{
 					NI_ASSERT( 0, fmt::format( "Empty Spot {}", *itIndex ) );
@@ -1873,10 +1929,12 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				}
 				pManipulator->SetValue( szSpotPrefix + ".points", 4 );
 				NMapInfoEditor::CSpotSquare spotSquare;
-				CManipulatorManager::GetArray<NMapInfoEditor::CSpotSquare, CVec2>( &spotSquare, pManipulator, szSpotPrefix + ".points" );
+				CManipulatorManager::GetArray<NMapInfoEditor::CSpotSquare, CVec2>(
+						&spotSquare, pManipulator, szSpotPrefix + ".points" );
 				//
 				NDb::STerrainSpotInstance terrainSpotInstance;
-				terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc*>( NDb::GetObject( CDBID( szRPGStatsName ) ) );
+				terrainSpotInstance.pDescriptor =
+						dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( CDBID( szRPGStatsName ) ) );
 				terrainSpotInstance.nSpotID = posSpotIndexToLinkID->second;
 				terrainSpotInstance.points = spotSquare;
 				//std::vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.insert( pMutablMapInfo->spots.begin() + *itIndex, terrainSpotInfoInstance );
@@ -1890,7 +1948,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				spotLoadInfo.rpgStatsDBID = CDBID( szRPGStatsName );
 				spotLoadInfo.spotSquare = spotSquare;
 				unsigned nSpotInfoID = INVALID_NODE_ID;
-				if ( NMapInfoEditor::SSpotInfo *pSpotInfo = objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSpotInfo*>( 0 ), &nSpotInfoID ) )
+				if ( NMapInfoEditor::SSpotInfo *pSpotInfo =
+				         objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSpotInfo *>( 0 ), &nSpotInfoID ) )
 				{
 					pSpotInfo->Load( &spotLoadInfo, pEditorScene, pManipulator );
 				}
@@ -1898,55 +1957,58 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		}
 		else if ( !removedSpotBackList.empty() )
 		{
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = removedSpotBackList.begin(); itIndex != removedSpotBackList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = removedSpotBackList.begin();
+			      itIndex != removedSpotBackList.end();
+			      ++itIndex )
 			{
 				InsertIndexToIndicesList<NMapInfoEditor::CIndicesList>( &spotList, *itIndex );
 			}
 			removedSpotBackList.clear();
 			// Удаляем spots
-			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end(); ++itIndex )
+			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end();
+			      ++itIndex )
 			{
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, 0, false );
-				if ( const NMapInfoEditor::SObjectInfo* pObjectInfo = objectInfoCollector.GetObjectInfoByLinkID( nLinkID ) )
+				if ( const NMapInfoEditor::SObjectInfo *pObjectInfo = objectInfoCollector.GetObjectInfoByLinkID( nLinkID ) )
 				{
-					objectInfoCollector.Remove(	pObjectInfo->nObjectInfoID, true, pEditorScene, false, 0, 0 );
+					objectInfoCollector.Remove( pObjectInfo->nObjectInfoID, true, pEditorScene, false, 0, 0 );
 				}
 			}
 		}
 		// обновляем spots
 		if ( !changedSpotList.empty() )
 		{
-			for( NMapInfoEditor::CControllerChangeInfoList::const_iterator itControllerChangeInfo = changedSpotList.begin();
-					 itControllerChangeInfo != changedSpotList.end();
-					 ++itControllerChangeInfo )
+			for ( NMapInfoEditor::CControllerChangeInfoList::const_iterator itControllerChangeInfo = changedSpotList.begin();
+			      itControllerChangeInfo != changedSpotList.end();
+			      ++itControllerChangeInfo )
 			{
 				//DebugTrace( "CMapInfoEditor::GetChangesFromController(): update Spot: %d", itControllerChangeInfo->nIndex );
-				objectInfoCollector.UpdateSpotByController( itControllerChangeInfo->nIndex, itControllerChangeInfo->nFlags, pEditorScene, pManipulator );
+				objectInfoCollector.UpdateSpotByController(
+						itControllerChangeInfo->nIndex, itControllerChangeInfo->nFlags, pEditorScene, pManipulator );
 			}
 		}
 		//
 		objectInfoCollector.UpdateSelectionByController();
 		if ( bUpdateStartCommandList )
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_STATE, ID_UNIT_START_CMD_REFRESH_WINDOW, 0 );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_UNIT_START_CMD_STATE, ID_UNIT_START_CMD_REFRESH_WINDOW, 0 );
 		}
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
-void CMapInfoEditor::Undo( IController* pController )
+void CMapInfoEditor::Undo( IController *pController )
 {
-	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController*>( pController ) )
+	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController *>( pController ) )
 	{
 		GetChangesFromController( pObjectController, false );
 	}
 }
 
-
-void CMapInfoEditor::Redo( IController* pController )
+void CMapInfoEditor::Redo( IController *pController )
 {
-	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController*>( pController ) )
+	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController *>( pController ) )
 	{
 		GetChangesFromController( pObjectController, true );
 	}
@@ -1972,7 +2034,7 @@ void CMapInfoEditor::ApplyViewFilter()
 	// grid
 	if ( editorSettings.viewFilterData.bShowGrid )
 	{
-		if ( editorSettings.viewFilterData.szGridSize == RCSTR("Visual tile") )
+		if ( editorSettings.viewFilterData.szGridSize == RCSTR( "Visual tile" ) )
 		{
 			if ( pEditorScene->IsShowOn( SCENE_SHOW_AI_GRID ) )
 			{
@@ -1983,7 +2045,7 @@ void CMapInfoEditor::ApplyViewFilter()
 				pEditorScene->ToggleShow( SCENE_SHOW_GRID );
 			}
 		}
-		else if ( editorSettings.viewFilterData.szGridSize == RCSTR("AI tile") )
+		else if ( editorSettings.viewFilterData.szGridSize == RCSTR( "AI tile" ) )
 		{
 			if ( pEditorScene->IsShowOn( SCENE_SHOW_GRID ) )
 			{
@@ -2171,28 +2233,31 @@ void CMapInfoEditor::ApplyViewFilter()
 		return;
 
 	// получить idшники типов объектов, которые должны быть скрыты фильтром
-	std::unordered_map<std::string,bool> filterSettings;
+	std::unordered_map<std::string, bool> filterSettings;
 	for ( int t = 0; t < editorSettings.viewFilterData.objTypeFilter.size(); ++t )
 	{
 		std::string szTypeName = editorSettings.viewFilterData.objTypeFilter[t].szObjTypeName;
-		if ( szTypeName.empty()  )
+		if ( szTypeName.empty() )
 		{
 			continue;
 		}
 		filterSettings[szTypeName] = editorSettings.viewFilterData.objTypeFilter[t].bShow;
 	}
 
-	for ( NMapInfoEditor::SObjectInfoCollector::CObjectInfoMap::iterator itObjectInfo = objectInfoCollector.objectInfoMap.begin();
-		itObjectInfo != objectInfoCollector.objectInfoMap.end(); ++itObjectInfo )
+	for ( NMapInfoEditor::SObjectInfoCollector::CObjectInfoMap::iterator itObjectInfo =
+	          objectInfoCollector.objectInfoMap.begin();
+	      itObjectInfo != objectInfoCollector.objectInfoMap.end();
+	      ++itObjectInfo )
 	{
 		// по объектам
-		NMapInfoEditor::SObjectInfo *pOI = itObjectInfo ->second;
+		NMapInfoEditor::SObjectInfo *pOI = itObjectInfo->second;
 		if ( !pOI )
 			continue;
 
-		for ( NMapInfoEditor::SObjectInfo::CSceneIDToLinkIDMap::iterator
-					itSceneIDToElemID = pOI->sceneIDToLinkIDMap.begin();
-					itSceneIDToElemID != pOI->sceneIDToLinkIDMap.end(); ++itSceneIDToElemID )
+		for ( NMapInfoEditor::SObjectInfo::CSceneIDToLinkIDMap::iterator itSceneIDToElemID =
+		          pOI->sceneIDToLinkIDMap.begin();
+		      itSceneIDToElemID != pOI->sceneIDToLinkIDMap.end();
+		      ++itSceneIDToElemID )
 		{
 			// по элементам объекта
 			int nSceneID = itSceneIDToElemID->first;
@@ -2200,10 +2265,10 @@ void CMapInfoEditor::ApplyViewFilter()
 			NMapInfoEditor::SObjectInfo::CMapInfoElementMap::iterator itElement = pOI->mapInfoElementMap.find( nElemID );
 			if ( itElement == pOI->mapInfoElementMap.end() )
 				continue;
-			NMapInfoEditor::SObjectInfo::SMapInfoElement *pElement = &(itElement->second);
+			NMapInfoEditor::SObjectInfo::SMapInfoElement *pElement = &( itElement->second );
 			//
 			const std::string szElementTypeName = pElement->szRPGStatsTypeName;
-			std::unordered_map<std::string,bool>::iterator itFilter = filterSettings.find( szElementTypeName );
+			std::unordered_map<std::string, bool>::iterator itFilter = filterSettings.find( szElementTypeName );
 			if ( itFilter == filterSettings.end() || itFilter->second == true )
 				pEditorScene->ShowObject( nSceneID, true );
 			else
@@ -2213,7 +2278,6 @@ void CMapInfoEditor::ApplyViewFilter()
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-
 
 void CMapInfoEditor::RunGame()
 {
@@ -2227,9 +2291,7 @@ void CMapInfoEditor::RunGame()
 	// translation unit that loses windows.h's A/W macros stops linking against
 	// NDb::GetObjectA. MessageBoxes.h names no toolkit now, so the objection is
 	// gone with it.
-	const auto ReportError = []( const std::string &message ) {
-		NMessage::Error( message, "Start Mission in Game" );
-	};
+	const auto ReportError = []( const std::string &message ) { NMessage::Error( message, "Start Mission in Game" ); };
 
 	// Resolve the platform's game executable beside the editor, independent of
 	// file-dialog working directories.
@@ -2245,19 +2307,21 @@ void CMapInfoEditor::RunGame()
 		return;
 	}
 	const std::filesystem::path binFolder = std::filesystem::u8path( szSelf ).parent_path();
-	const std::string gamePath = (binFolder / gameName).u8string();
+	const std::string gamePath = ( binFolder / gameName ).u8string();
 	if ( !NFile::DoesFileExist( gamePath ) )
 	{
-		ReportError( gameName + " was not found beside the map editor. Install the game executable in:\n" + binFolder.u8string() );
+		ReportError( gameName + " was not found beside the map editor. Install the game executable in:\n" +
+		             binFolder.u8string() );
 		return;
 	}
 
 	const std::string mapPath = NDb::GetFileName( pMapInfo->GetDBID() );
 	NMOD::SMOD mod;
-	const std::string modPath = NMOD::GetAttachedMOD(&mod)
-		? std::filesystem::u8path(mod.szFullFolderPath.c_str()).generic_u8string() : std::string();
-	if ( mapPath.empty() || mapPath.find_first_of("\"\r\n;") != std::string::npos ||
-		 modPath.find_first_of("\"\r\n;") != std::string::npos )
+	const std::string modPath = NMOD::GetAttachedMOD( &mod )
+	                                ? std::filesystem::u8path( mod.szFullFolderPath.c_str() ).generic_u8string()
+	                                : std::string();
+	if ( mapPath.empty() || mapPath.find_first_of( "\"\r\n;" ) != std::string::npos ||
+	     modPath.find_first_of( "\"\r\n;" ) != std::string::npos )
 	{
 		ReportError( "The map/mod path cannot contain quotes, semicolons or line breaks." );
 		return;
@@ -2265,7 +2329,7 @@ void CMapInfoEditor::RunGame()
 
 	// Save the current map and DB before the independent game process reads them.
 	bSaveFailed = false;
-	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand(ID_VIEW_SAVE_CHANGES, false) )
+	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, false ) )
 		return; // Save already reported the specific failure and kept the edits open.
 	if ( bSaveFailed || Singleton<IResourceManager>()->CanSyncDB() || !NDb::SaveChangedIndex() )
 	{
@@ -2273,13 +2337,11 @@ void CMapInfoEditor::RunGame()
 		return;
 	}
 #if BOOST_OS_WINDOWS
-	const std::string arguments = "--editor-map=\"" + mapPath +
-		"\" --editor-mod=\"" + modPath + "\"";
+	const std::string arguments = "--editor-map=\"" + mapPath + "\" --editor-mod=\"" + modPath + "\"";
 #else
 	// LaunchDetachedIn uses a POSIX shell: preserve paths as literal arguments,
 	// including spaces, dollar signs and other shell metacharacters.
-	const std::string arguments = ShellQuote( "--editor-map=" + mapPath ) + " " +
-		ShellQuote( "--editor-mod=" + modPath );
+	const std::string arguments = ShellQuote( "--editor-map=" + mapPath ) + " " + ShellQuote( "--editor-mod=" + modPath );
 #endif
 	// The working directory is not decoration: the game resolves Data, Profiles
 	// and Editor against it, so starting it anywhere else gives it an empty
@@ -2290,10 +2352,9 @@ void CMapInfoEditor::RunGame()
 	}
 }
 
-
 // basement storage
 
-		/**
+/**
 		// удаляемые объекты убираем из добавляемых
 		for ( std::unordered_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{

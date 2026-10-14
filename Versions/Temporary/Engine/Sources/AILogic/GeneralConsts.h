@@ -36,7 +36,7 @@ struct SGeneralConsts
 	// среднее количество выстрелов, которое генерал делает артиллерией
 	static float SHOOTS_OF_ARTILLERY_FIRE;
 	// вероятность того, что генерал пошлёт бомберов, вместно того, чтобы произвести артиллерийский обстрел
-//	static float PROBABILITY_TO_SEND_BOMBERS;
+	//	static float PROBABILITY_TO_SEND_BOMBERS;
 	// минимальный вес ячейки, чтобы начать обстрел артиллерией
 	static float MIN_WEIGHT_TO_ARTILLERY_FIRE;
 	// минимальный вес ячейки, чтобы послать бомберы

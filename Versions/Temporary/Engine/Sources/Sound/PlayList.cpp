@@ -10,10 +10,7 @@
 namespace NMusicSystem
 {
 
-
-
 //CPlayList
-
 
 void CPlayList::NextComposition()
 {
@@ -38,13 +35,16 @@ void CPlayList::NextComposition()
 		}
 
 		nStillSong = 0;
-		if (pList->stillOrder.size() > nStillSong) {
-			LaunchComposition(pList->stillOrder[nStillSong]);
+		if ( pList->stillOrder.size() > nStillSong )
+		{
+			LaunchComposition( pList->stillOrder[nStillSong] );
 		}
 	}
-	else {
-		if (pList->stillOrder.size() > nStillSong) {
-			LaunchComposition(pList->stillOrder[nStillSong]);
+	else
+	{
+		if ( pList->stillOrder.size() > nStillSong )
+		{
+			LaunchComposition( pList->stillOrder[nStillSong] );
 		}
 	}
 }
@@ -56,7 +56,7 @@ void CPlayList::LaunchComposition( const NDb::SComposition *_pComposition )
 	if ( _pComposition == 0 || _pComposition->pTrack == 0 )
 		return;
 
-	CTrack *pTrack = new CTrack( _pComposition->pTrack, _pComposition->pPlayTime,  EST_MUSIC );
+	CTrack *pTrack = new CTrack( _pComposition->pTrack, _pComposition->pPlayTime, EST_MUSIC );
 	elements.push_back( pTrack );
 	elements.push_back( new CPause( _pComposition->playPauseAfter ) );
 
@@ -88,20 +88,20 @@ void CPlayList::Segment()
 		pPlaylistFade->Segment();
 		if ( pPlaylistFade->IsFinished() )
 		{
-			switch( eState )
+			switch ( eState )
 			{
-			case EPSS_FADING_OUT:
+				case EPSS_FADING_OUT:
 				{
 					eState = EPSS_OUT;
 					CElements::iterator pos = elements.begin();
 					if ( pos != elements.end() )
-						(*pos)->Stop();
+						( *pos )->Stop();
 				}
 				break;
-			case EPSS_FADING_IN:
-				eState = EPSS_IN;
+				case EPSS_FADING_IN:
+					eState = EPSS_IN;
 
-				break;
+					break;
 			}
 			pPlaylistFade = 0;
 		}
@@ -115,11 +115,11 @@ void CPlayList::Segment()
 	// tracks and pauses
 	for ( CElements::iterator it = elements.begin(); it != elements.end(); )
 	{
-		if ( (*it)->IsFinished() )
+		if ( ( *it )->IsFinished() )
 			it = elements.erase( it );
 		else
 		{
-			(*it)->Segment();
+			( *it )->Segment();
 			break;
 		}
 	}
@@ -143,7 +143,7 @@ void CPlayList::FadeOut()
 			eState = EPSS_OUT;
 			CElements::iterator pos = elements.begin();
 			if ( pos != elements.end() )
-				(*pos)->Stop();
+				( *pos )->Stop();
 		}
 	}
 }
@@ -168,7 +168,7 @@ void CPlayList::FadeIn()
 			NextComposition();
 		CElements::iterator pos = elements.begin();
 		if ( pos != elements.end() )
-			(*pos)->Play();
+			( *pos )->Play();
 	}
 }
 
@@ -176,15 +176,15 @@ void CPlayList::OnResetTimer()
 {
 	for ( CElements::iterator it = elements.begin(); it != elements.end(); )
 	{
-		if ( (*it)->IsFinished() )
+		if ( ( *it )->IsFinished() )
 			it = elements.erase( it );
 		else
 		{
-			(*it)->OnResetTimer();
+			( *it )->OnResetTimer();
 			break;
 		}
 	}
 }
 
 }
-REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x111813C0, CPlayList, NMusicSystem  )
+REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x111813C0, CPlayList, NMusicSystem )

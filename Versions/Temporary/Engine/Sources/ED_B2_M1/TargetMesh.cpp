@@ -16,14 +16,15 @@ namespace NTargetMesh
 static void FillVertexData( NGScene::SVertex &vertex )
 {
 	vertex.tex.Set( 0, 0 );
-	CalcCompactVector( &(vertex.normal), CVec3(0, 0, 1) );
-	CalcCompactVector( &(vertex.texU), CVec3(0, 0, 0) );
-	CalcCompactVector( &(vertex.texV), CVec3(0, 0, 0) );
+	CalcCompactVector( &( vertex.normal ), CVec3( 0, 0, 1 ) );
+	CalcCompactVector( &( vertex.texU ), CVec3( 0, 0, 0 ) );
+	CalcCompactVector( &( vertex.texV ), CVec3( 0, 0, 0 ) );
 }
 
 class CTargetMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	CVec4 vOriginalVerticesPos[4];
+
 public:
 	CTargetMesh( float fSizeX, float fSizeY );
 	bool NeedUpdate() { return true; }
@@ -33,7 +34,11 @@ public:
 class CTargetMeshTransform : public CFuncBase<SFBTransform>
 {
 public:
-	CTargetMeshTransform() { Identity( &value.forward ); Identity( &value.backward ); }
+	CTargetMeshTransform()
+	{
+		Identity( &value.forward );
+		Identity( &value.backward );
+	}
 	bool NeedUpdate() { return true; }
 	void Recalc() {};
 };
@@ -46,14 +51,12 @@ public:
 	void Recalc() {};
 };
 
-
 CTargetMesh::CTargetMesh( float fSizeX, float fSizeY )
 {
 	vOriginalVerticesPos[0] = CVec4( fSizeX, fSizeY, 0.1f, 1.0f );
 	vOriginalVerticesPos[1] = CVec4( -fSizeX, fSizeY, 0.1f, 1.0f );
 	vOriginalVerticesPos[2] = CVec4( -fSizeX, -fSizeY, 0.1f, 1.0f );
 	vOriginalVerticesPos[3] = CVec4( fSizeX, -fSizeY, 0.1f, 1.0f );
-
 }
 
 void CTargetMesh::Recalc()
@@ -64,7 +67,7 @@ void CTargetMesh::Recalc()
 	const CTransformStack &cameraTransform = Camera()->GetTransform();
 
 	CVec2 vScreenSize = NGfx::GetScreenRect();
-	float fAspect = vScreenSize.x/vScreenSize.y;
+	float fAspect = vScreenSize.x / vScreenSize.y;
 
 	NGScene::CObjectInfo::SData objData;
 	objData.verts.resize( 4 );
@@ -75,16 +78,16 @@ void CTargetMesh::Recalc()
 
 		CVec4 vResult;
 		cameraTransform.Get().backward.RotateHVector( &vResult, vProj );
-		objData.verts[iVertex].pos.x = vResult.x/vResult.w;
-		objData.verts[iVertex].pos.y = vResult.y/vResult.w;
-		objData.verts[iVertex].pos.z = vResult.z/vResult.w;
+		objData.verts[iVertex].pos.x = vResult.x / vResult.w;
+		objData.verts[iVertex].pos.y = vResult.y / vResult.w;
+		objData.verts[iVertex].pos.z = vResult.z / vResult.w;
 
 		FillVertexData( objData.verts[iVertex] );
 	}
 
 	objData.geometry.reserve( 2 );
-	objData.geometry.push_back( STriangle( 0, 1, 2) );
-	objData.geometry.push_back( STriangle( 2, 3, 0) );
+	objData.geometry.push_back( STriangle( 0, 1, 2 ) );
+	objData.geometry.push_back( STriangle( 2, 3, 0 ) );
 
 	pValue->AssignFast( &objData );
 }
@@ -97,7 +100,7 @@ void CreateTargetMesh( float fSizeX, float fSizeY )
 	if ( !pGameView )
 		return;
 
-	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CTargetMesh( fSizeX, fSizeY );
+	CPtr<CPtrFuncBase<NGScene::CObjectInfo>> pGeom = new CTargetMesh( fSizeX, fSizeY );
 
 	NGScene::IGameView::SMeshInfo meshInfo;
 	meshInfo.parts.resize( 1 );

@@ -23,9 +23,7 @@
 
 //REGISTER_EDITOR_IN_DLL( EditorTest, CEditorTestEditor )
 
-CEditorTestEditor::CEditorTestEditor() : pEditorTestState( 0 )
-{
-}
+CEditorTestEditor::CEditorTestEditor() : pEditorTestState( 0 ) {}
 
 void CEditorTestEditor::Create()
 {
@@ -68,7 +66,6 @@ void CEditorTestEditor::Create()
 		pEditorTestState = new CEditorTestState( this );
 	}
 }
-
 
 void CEditorTestEditor::Destroy()
 {

@@ -9,7 +9,7 @@ extern int N_SAVELOAD_VERSION;
 // also requires no countchunks() use
 class CChunklessSerializer : public IBinSaver
 {
-	OBJECT_NOCOPY_METHODS(CChunklessSerializer);
+	OBJECT_NOCOPY_METHODS( CChunklessSerializer );
 	CPtr<IPointerSerialization> pTracker;
 	// Defensive defaults also cover the factory/default construction path.
 	CMemoryStream *pRes = nullptr;
@@ -40,13 +40,10 @@ class CChunklessSerializer : public IBinSaver
 		CheckChunk( idChunk, nChunkNumber );
 		return true;
 	}
-	virtual void FinishChunk()
-	{
-		CheckChunk( 0, -1 );
-	}
+	virtual void FinishChunk() { CheckChunk( 0, -1 ); }
 	virtual int CountChunks( const chunk_id idChunk )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		return 0;
 	}
 
@@ -63,11 +60,11 @@ class CChunklessSerializer : public IBinSaver
 			// check unitialized
 			int nCount = 0;
 			for ( int k = 0; k < nSize; ++k )
-				nCount += ((const unsigned char*)pData)[ k ] == 0xcd;
+				nCount += ( (const unsigned char *)pData )[k] == 0xcd;
 			ASSERT( nCount != nSize );
 			nCount = 0;
 			for ( int k = 0; k < nSize; ++k )
-				nCount += ((const unsigned char*)pData)[ k ] == 0xcc;
+				nCount += ( (const unsigned char *)pData )[k] == 0xcc;
 			ASSERT( nCount != nSize );
 #endif
 			pRes->Write( pData, nSize );
@@ -121,32 +118,35 @@ class CChunklessSerializer : public IBinSaver
 #ifndef TRACK_OBJECTS_STATISTICS
 		ASSERT( pObject == 0 || IsValid( pObject ) );
 #endif
-		ASSERT( IsValid(pTracker) );
-		if ( !IsValid(pTracker) )
+		ASSERT( IsValid( pTracker ) );
+		if ( !IsValid( pTracker ) )
 			return;
 		int nID = pTracker->GetObjectID( pObject );
 		if ( pRes )
 			pRes->Write( &nID, 4 );
 	}
-	virtual CObjectBase* LoadObject()
+	virtual CObjectBase *LoadObject()
 	{
-		ASSERT( IsValid(pTracker) );
-		if ( !IsValid(pTracker) )
+		ASSERT( IsValid( pTracker ) );
+		if ( !IsValid( pTracker ) )
 			return 0;
 		int nID;
 		pRes->Read( &nID, 4 );
 		CObjectBase *pRes = pTracker->GetObject( nID );
 		return pRes;
 	}
+
 public:
 	virtual bool IsReading() { return mode == SAVER_MODE_READ; }
 	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
-	CChunklessSerializer() : pRes(0) {}
+	CChunklessSerializer() : pRes( 0 ) {}
 	CChunklessSerializer( IPointerSerialization *_pTracker, CMemoryStream *_pRes, ESaverMode _mode )
-		: pTracker(_pTracker), pRes(_pRes), mode(_mode) {}
+			: pTracker( _pTracker ), pRes( _pRes ), mode( _mode )
+	{
+	}
 };
 
 IBinSaver *CreateChunklessSaver( IPointerSerialization *pPtr, CMemoryStream *pStream, ESaverMode mode )
 {
-	return new CChunklessSerializer( pPtr, pStream , mode );
+	return new CChunklessSerializer( pPtr, pStream, mode );
 }

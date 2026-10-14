@@ -16,13 +16,13 @@
 namespace NGScene
 {
 
-std::vector<CPtr<IPrecache> > precacheUpdateList;
+std::vector<CPtr<IPrecache>> precacheUpdateList;
 void LoadPrecached()
 {
 	for ( int k = 0; k < precacheUpdateList.size(); ++k )
 	{
 		IPrecache *p = precacheUpdateList[k];
-		if ( IsValid(p) )
+		if ( IsValid( p ) )
 			p->ForceUpdate();
 	}
 	precacheUpdateList.clear();
@@ -44,9 +44,9 @@ inline std::string GetFileResourceName( const char *pszResName, int nFileID )
 
 inline std::string GetFileResourceUidName( const char *pszResName, const boost::uuids::uuid &fileUID )
 {
-	if (fileUID.is_nil())
+	if ( fileUID.is_nil() )
 		return pszResName;
-	return fmt::format("bin\\{}\\{}", pszResName, boost::uuids::to_string(fileUID));
+	return fmt::format( "bin\\{}\\{}", pszResName, boost::uuids::to_string( fileUID ) );
 }
 
 static inline bool DoesFileExist( const char *pszResName, int nID )
@@ -56,7 +56,7 @@ static inline bool DoesFileExist( const char *pszResName, int nID )
 
 static inline bool DoesFileExist( const char *pszResName, const boost::uuids::uuid &fileUID )
 {
-	if (fileUID.is_nil())
+	if ( fileUID.is_nil() )
 		return false;
 
 	return NVFS::GetMainVFS()->DoesFileExist( GetFileResourceUidName( pszResName, fileUID ) );
@@ -65,16 +65,14 @@ static inline bool DoesFileExist( const char *pszResName, const boost::uuids::uu
 // CFileResource
 
 CFileResource::CFileResource( const char *pszResName, int nFileID )
-: f( NVFS::GetMainVFS(), GetFileResourceName( pszResName, nFileID ) )
+		: f( NVFS::GetMainVFS(), GetFileResourceName( pszResName, nFileID ) )
 {
 }
 
 CFileResource::CFileResource( const char *pszResName, const SResKey<int> &key )
-: f(	NVFS::GetMainVFS(),
-			DoesFileExist( pszResName, key.uidKey ) ?
-				GetFileResourceUidName( pszResName, key.uidKey ) :
-				GetFileResourceName( pszResName, key.tKey )
-	 )
+		: f( NVFS::GetMainVFS(),
+         DoesFileExist( pszResName, key.uidKey ) ? GetFileResourceUidName( pszResName, key.uidKey )
+                                                 : GetFileResourceName( pszResName, key.tKey ) )
 {
 }
 
@@ -84,12 +82,18 @@ struct SDoesExistKey
 	SResKey<int> key;
 
 	SDoesExistKey() {}
-	SDoesExistKey( const char *_pszRes, const SResKey<int> &_k ) : szRes(_pszRes), key(_k) {}
+	SDoesExistKey( const char *_pszRes, const SResKey<int> &_k ) : szRes( _pszRes ), key( _k ) {}
 };
-inline bool operator ==( const SDoesExistKey &a, const SDoesExistKey &b ) { return a.szRes == b.szRes && a.key == b.key; }
+inline bool operator==( const SDoesExistKey &a, const SDoesExistKey &b )
+{
+	return a.szRes == b.szRes && a.key == b.key;
+}
 struct SDoesExistKeyHash
 {
-	int operator()( const SDoesExistKey &a ) const { return std::hash<std::string>()( a.szRes ) ^ std::hash<SResKey<int> >()( a.key ); }
+	int operator()( const SDoesExistKey &a ) const
+	{
+		return std::hash<std::string>()( a.szRes ) ^ std::hash<SResKey<int>>()( a.key );
+	}
 };
 typedef std::unordered_map<SDoesExistKey, bool, SDoesExistKeyHash> TDoesExistHash;
 static TDoesExistHash deh;
@@ -102,7 +106,7 @@ bool CResourceFileOpener::DoesExist( const char *pszResName, const SResKey<int> 
 	bool bRes = DoesFileExist( pszResName, key.uidKey );
 	if ( !bRes )
 		bRes = DoesFileExist( pszResName, key.tKey );
-	deh[ k ] = bRes;
+	deh[k] = bRes;
 	return bRes;
 }
 
@@ -111,15 +115,14 @@ void CResourceFileOpener::Clear()
 	deh.clear();
 }
 
-
 CFileRequest::CFileRequest( const char *_pszResName, int _nID, bool _bDelayedLoad )
-	: pszResName(_pszResName), nID(_nID), bIsReady(false), bDelayedLoad(_bDelayedLoad)
+		: pszResName( _pszResName ), nID( _nID ), bIsReady( false ), bDelayedLoad( _bDelayedLoad )
 {
 	Zero( uid );
 }
 
 CFileRequest::CFileRequest( const char *_pszResName, const SResKey<int> &key, bool _bDelayedLoad )
-: pszResName(_pszResName), nID(key.tKey), uid(key.uidKey), bIsReady(false), bDelayedLoad(_bDelayedLoad)
+		: pszResName( _pszResName ), nID( key.tKey ), uid( key.uidKey ), bIsReady( false ), bDelayedLoad( _bDelayedLoad )
 {
 }
 
@@ -138,13 +141,14 @@ void CFileRequest::Read()
 		return;
 	std::lock_guard l( readResource );
 	bIsFileReading = true;
-	const std::string szResourceName = DoesFileExist( pszResName, uid ) ? GetFileResourceUidName( pszResName, uid ) : GetFileResourceName( pszResName, nID );
+	const std::string szResourceName = DoesFileExist( pszResName, uid ) ? GetFileResourceUidName( pszResName, uid )
+	                                                                    : GetFileResourceName( pszResName, nID );
 
 	CFileStream f( NVFS::GetMainVFS(), szResourceName );
 	if ( f.IsOk() )
 	{
 		f.ReadTo( &data, f.GetSize() );
-		data.Seek(0);
+		data.Seek( 0 );
 	}
 
 	bIsFileReading = false;
@@ -158,12 +162,12 @@ void CFileRequest::Read()
 static std::mutex reqQueue;
 static std::condition_variable newRequest;
 static std::thread loaderThread;
-static std::list<CPtr<CFileRequest> > holdRequests;
-static std::list<CFileRequest*> requests;
+static std::list<CPtr<CFileRequest>> holdRequests;
+static std::list<CFileRequest *> requests;
 
 static void LoaderThread()
 {
-	for (;;)
+	for ( ;; )
 	{
 		CFileRequest *pRes = 0;
 		{

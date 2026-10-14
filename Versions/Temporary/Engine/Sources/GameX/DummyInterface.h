@@ -6,6 +6,7 @@
 class CDummyInterface : public CInterfaceScreenBase
 {
 	OBJECT_NOCOPY_METHODS( CDummyInterface );
+
 public:
 	CDummyInterface();
 	virtual ~CDummyInterface();

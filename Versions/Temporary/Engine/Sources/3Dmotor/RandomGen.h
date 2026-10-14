@@ -20,11 +20,12 @@ struct SRand
 class CRoulette
 {
 	std::vector<float> m_aSectors;
+
 public:
 	CRoulette() : m_aSectors( 1, 0.0f ) {}
 	void AddSector( float fValue );
 	int GetRandomSector( SRand *pRand ) const;
-	float GetSectorValue( int nIndex ) const { return m_aSectors[ nIndex + 1 ] - m_aSectors[ nIndex ]; }
+	float GetSectorValue( int nIndex ) const { return m_aSectors[nIndex + 1] - m_aSectors[nIndex]; }
 	int operator&( CStructureSaver &f );
 };
 
@@ -48,14 +49,20 @@ private:
 	unsigned int randa;
 	unsigned int randb;
 	unsigned int randc;
+
 public:
 	CRandomGenerator() { Init(); }
 	unsigned int Get();
-	unsigned int Get( unsigned int nMax ) { ASSERT( nMax != 0 ); return Get() % nMax; }
-	unsigned int Get( unsigned int nMin, unsigned int nMax )	{ return Get( nMax-nMin ) + nMin; }
+	unsigned int Get( unsigned int nMax )
+	{
+		ASSERT( nMax != 0 );
+		return Get() % nMax;
+	}
+	unsigned int Get( unsigned int nMin, unsigned int nMax ) { return Get( nMax - nMin ) + nMin; }
 	float GetFloat( float fpMin, float fpMax );
-	bool Check( int nCheck, int nRange = 100 ) { return Get(nRange) < nCheck; }
-	bool NegCheck( int nCheck, int nRange = 100 ) { return Get(nRange) >= nCheck; }
+	bool Check( int nCheck, int nRange = 100 ) { return Get( nRange ) < nCheck; }
+	bool NegCheck( int nCheck, int nRange = 100 ) { return Get( nRange ) >= nCheck; }
+
 private:
 	void Init();
 	void Isaac();
@@ -67,21 +74,21 @@ inline unsigned int CRandomGenerator::Get()
 	if ( randcnt-- == 0 )
 	{
 		Isaac();
-		randcnt=RANDSIZ-1;
+		randcnt = RANDSIZ - 1;
 	}
-	return randrsl[ randcnt ];
+	return randrsl[randcnt];
 }
 
 inline float CRandomGenerator::GetFloat( float fpMin, float fpMax )
 {
 	ASSERT( fpMin <= fpMax );
-	return fpMin + float( Get() * ( ( fpMax - fpMin ) * (1/double(0xFFFFFFFF)) ) );
+	return fpMin + float( Get() * ( ( fpMax - fpMin ) * ( 1 / double( 0xFFFFFFFF ) ) ) );
 }
 
 inline float SRand::GetFloat( float fpMin, float fpMax )
 {
 	ASSERT( fpMin <= fpMax );
-	return fpMin + float( Get( 0xFFFF ) * ( ( fpMax - fpMin ) * (1/double(0xFFFF)) ) );
+	return fpMin + float( Get( 0xFFFF ) * ( ( fpMax - fpMin ) * ( 1 / double( 0xFFFF ) ) ) );
 }
 
 // Not `random`: POSIX declares `long random( void )` in <stdlib.h>, which arrives

@@ -28,12 +28,15 @@ struct TextVisitor : IUIVisitor
 	CPtr<IML> text;
 	bool clipped = false;
 	int calls = 0;
-	void ClipSet( const CTRect<float>& ) override {}
+	void ClipSet( const CTRect<float> & ) override {}
 	void ClipRestore() override {}
-	void VisitZClearRect( const CRectLayout&, const CTPoint<float>&, const CTRect<float>&, float ) override {}
-	void VisitUIRect( const NDb::STexture*, int, const CRectLayout& ) override {}
-	void VisitUIRect( const NDb::STexture*, int, const CVec2*, const NGfx::SPixel8888*, const CTRect<float>& ) override {}
-	void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture>*, int, const CRectLayout& ) override {}
+	void VisitZClearRect( const CRectLayout &, const CTPoint<float> &, const CTRect<float> &, float ) override {}
+	void VisitUIRect( const NDb::STexture *, int, const CRectLayout & ) override {}
+	void
+	VisitUIRect( const NDb::STexture *, int, const CVec2 *, const NGfx::SPixel8888 *, const CTRect<float> & ) override
+	{
+	}
+	void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *, int, const CRectLayout & ) override {}
 	void VisitUIText( IML *value, const CTPoint<float> &origin, const CTRect<float> &window ) override
 	{
 		text = value;
@@ -54,6 +57,7 @@ class TextVerticalAlignment : public testing::Test
 	CObj<NDb::STexture> texture;
 	CObj<NDb::SFont> header;
 	CObj<NDb::STexture> headerTexture;
+
 protected:
 	double capRatio = 0;
 	void AddHeaderFont()
@@ -136,13 +140,15 @@ protected:
 		desc->placement.verAllign = NDb::EPA_LOW_END;
 		desc->placement.lowerMargin = VNULL2;
 		desc->placement.upperMargin = VNULL2;
-		IScreen *screen = dynamic_cast<IScreen*>( CUIFactory::MakeWindow( desc ) );
+		IScreen *screen = dynamic_cast<IScreen *>( CUIFactory::MakeWindow( desc ) );
 		screen->SetHudFontScale( hud );
 		return screen;
 	}
-	CWindowTextView *MakeLabel( float width, float height, bool resize = false, const NDb::SWindowPlacement *captionPlacement = nullptr )
+	CWindowTextView *
+	MakeLabel( float width, float height, bool resize = false, const NDb::SWindowPlacement *captionPlacement = nullptr )
 	{
-		CPtr<NDb::SWindowTextViewShared> shared = MakeObject<NDb::SWindowTextViewShared>( NDb::SWindowTextViewShared::typeID );
+		CPtr<NDb::SWindowTextViewShared> shared =
+				MakeObject<NDb::SWindowTextViewShared>( NDb::SWindowTextViewShared::typeID );
 		CPtr<NDb::SWindowTextView> desc = MakeObject<NDb::SWindowTextView>( NDb::SWindowTextView::typeID );
 		desc->nClassTypeID = 0x11075B8C;
 		desc->pShared = shared;
@@ -150,9 +156,11 @@ protected:
 		desc->bResizeOnTextSet = resize;
 		if ( captionPlacement )
 		{
-			CPtr<NDb::SForegroundTextStringShared> captionShared = MakeObject<NDb::SForegroundTextStringShared>( NDb::SForegroundTextStringShared::typeID );
+			CPtr<NDb::SForegroundTextStringShared> captionShared =
+					MakeObject<NDb::SForegroundTextStringShared>( NDb::SForegroundTextStringShared::typeID );
 			captionShared->position = *captionPlacement;
-			CPtr<NDb::SForegroundTextString> caption = MakeObject<NDb::SForegroundTextString>( NDb::SForegroundTextString::typeID );
+			CPtr<NDb::SForegroundTextString> caption =
+					MakeObject<NDb::SForegroundTextString>( NDb::SForegroundTextString::typeID );
 			caption->pShared = captionShared;
 			desc->pTextString = caption;
 		}
@@ -162,7 +170,7 @@ protected:
 		desc->placement.verAllign = NDb::EPA_LOW_END;
 		desc->placement.lowerMargin = VNULL2;
 		desc->placement.upperMargin = VNULL2;
-		CWindowTextView *label = dynamic_cast<CWindowTextView*>( CUIFactory::MakeWindow( desc ) );
+		CWindowTextView *label = dynamic_cast<CWindowTextView *>( CUIFactory::MakeWindow( desc ) );
 		label->Reposition( CTRect<float>( 0, 0, 1024, 768 ) );
 		return label;
 	}
@@ -190,10 +198,12 @@ protected:
 		CPtr<NDb::SWindowSimple> border = PanelDescription( width, height );
 		border->placement.horAllign = NDb::EPA_MARGIN;
 		border->placement.verAllign = NDb::EPA_MARGIN;
-		CPtr<NDb::SWindowScrollableContainerShared> shared = MakeObject<NDb::SWindowScrollableContainerShared>( NDb::SWindowScrollableContainerShared::typeID );
+		CPtr<NDb::SWindowScrollableContainerShared> shared =
+				MakeObject<NDb::SWindowScrollableContainerShared>( NDb::SWindowScrollableContainerShared::typeID );
 		shared->placement = border->placement;
 		shared->pBorder = border;
-		CPtr<NDb::SWindowScrollableContainer> desc = MakeObject<NDb::SWindowScrollableContainer>( NDb::SWindowScrollableContainer::typeID );
+		CPtr<NDb::SWindowScrollableContainer> desc =
+				MakeObject<NDb::SWindowScrollableContainer>( NDb::SWindowScrollableContainer::typeID );
 		desc->nClassTypeID = 0x170AF301;
 		desc->pShared = shared;
 		desc->bVisible = true;
@@ -208,18 +218,26 @@ TEST_F( TextVerticalAlignment, FixedHeightUnitStatsKeepTheirDigitsInsideTheClip 
 	// The tutorial tank's WeaponBrief fields are 12 virtual pixels tall and
 	// use the numeric font at 14 points.
 	std::string error;
-	auto face = NFontRaster::CFace::OpenFile( std::string( GAME_DATA_DIR ) + "/Fonts/Files/LiberationSans-Regular.ttf", 0, &error );
+	auto face = NFontRaster::CFace::OpenFile(
+			std::string( GAME_DATA_DIR ) + "/Fonts/Files/LiberationSans-Regular.ttf", 0, &error );
 	ASSERT_TRUE( face ) << error;
 	std::vector<uint32_t> sizing;
-	for ( int charset : { NCodePages::CHARSET_ANSI, NCodePages::CHARSET_EASTEUROPE, NCodePages::CHARSET_RUSSIAN,
-		NCodePages::CHARSET_GREEK, NCodePages::CHARSET_TURKISH, NCodePages::CHARSET_BALTIC } )
+	for ( int charset : { NCodePages::CHARSET_ANSI,
+	                      NCodePages::CHARSET_EASTEUROPE,
+	                      NCodePages::CHARSET_RUSSIAN,
+	                      NCodePages::CHARSET_GREEK,
+	                      NCodePages::CHARSET_TURKISH,
+	                      NCodePages::CHARSET_BALTIC } )
 	{
 		const auto chars = NCodePages::GetPrintableCodePoints( charset );
 		sizing.insert( sizing.end(), chars.begin(), chars.end() );
 	}
 	std::sort( sizing.begin(), sizing.end() );
 	sizing.erase( std::unique( sizing.begin(), sizing.end() ), sizing.end() );
-	for ( auto resolution : { CTPoint<int>( 1024, 768 ), CTPoint<int>( 1920, 1080 ), CTPoint<int>( 2560, 1440 ), CTPoint<int>( 3840, 2160 ) } )
+	for ( auto resolution : { CTPoint<int>( 1024, 768 ),
+	                          CTPoint<int>( 1920, 1080 ),
+	                          CTPoint<int>( 2560, 1440 ),
+	                          CTPoint<int>( 3840, 2160 ) } )
 	{
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
 		CObj<CWindowTextView> label = MakeLabel( 100, 12 );
@@ -438,9 +456,8 @@ TEST_F( TextVerticalAlignment, PlacedCaptionFallbackKeepsItsAlignment )
 TEST_F( TextVerticalAlignment, VerticalClippingReflowsTheWholeParagraphAtOne )
 {
 	CObj<IScreen> hud = MakeScreen( true );
-	for ( const std::wstring content : {
-		L"<font face=numeric size=14>65\n80\n84/84",
-		L"<font face=numeric size=14>65 80 84/84 3750/3750 65 80 84/84 3750/3750" } )
+	for ( const std::wstring content : { L"<font face=numeric size=14>65\n80\n84/84",
+	                                     L"<font face=numeric size=14>65 80 84/84 3750/3750 65 80 84/84 3750/3750" } )
 	{
 		CObj<IML> original = MakeText( content, 100, hud );
 		const auto originalSize = original->GetSize();
@@ -691,8 +708,8 @@ TEST_F( TextVerticalAlignment, RealScrollViewportExcludesAncestorsButKeepsConten
 	CObj<CWindow> outer = MakePanel( 200, 20 );
 	CObj<CWindow> scroll = MakeScrollPanel( 200, 30 );
 	outer->AddChild( scroll, true );
-	IScrollableContainer *container = dynamic_cast<IScrollableContainer*>( scroll.GetPtr() );
-	ISliderNotify *slider = dynamic_cast<ISliderNotify*>( scroll.GetPtr() );
+	IScrollableContainer *container = dynamic_cast<IScrollableContainer *>( scroll.GetPtr() );
+	ISliderNotify *slider = dynamic_cast<ISliderNotify *>( scroll.GetPtr() );
 	ASSERT_NE( container, nullptr );
 	ASSERT_NE( slider, nullptr );
 	CObj<CWindowTextView> label = MakeLabel( 200, 12, true );

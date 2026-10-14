@@ -15,55 +15,57 @@
 //
 // http://www.acm.org/jgt/papers/MollerTrumbore97/code.html
 //
-int IntersectTriangle(	float *t,
-												float *pU,
-												float *pV,
-												const CVec3 &rvOrig,
-												const CVec3 &rvDir,
-												const CVec3 &rvVert0,
-												const CVec3 &rvVert1,
-												const CVec3 &rvVert2 )
+int IntersectTriangle( float *t,
+                       float *pU,
+                       float *pV,
+                       const CVec3 &rvOrig,
+                       const CVec3 &rvDir,
+                       const CVec3 &rvVert0,
+                       const CVec3 &rvVert1,
+                       const CVec3 &rvVert2 )
 {
-   /* find vectors for two edges sharing vert0 */
-   CVec3 vEdge1 = (rvVert1 - rvVert0);
-	 CVec3 vEdge2 = (rvVert2 - rvVert0);
+	/* find vectors for two edges sharing vert0 */
+	CVec3 vEdge1 = ( rvVert1 - rvVert0 );
+	CVec3 vEdge2 = ( rvVert2 - rvVert0 );
 
-   /* begin calculating determinant - also used to calculate U parameter */
-	 CVec3 vPvec = rvDir ^ vEdge2;
+	/* begin calculating determinant - also used to calculate U parameter */
+	CVec3 vPvec = rvDir ^ vEdge2;
 
-   /* if determinant is near zero, ray lies in plane of triangle */
-   float fDet = vEdge1 * vPvec;
+	/* if determinant is near zero, ray lies in plane of triangle */
+	float fDet = vEdge1 * vPvec;
 
-   if ( fDet > -FLT_EPSILON && fDet < FLT_EPSILON )
-     return 0;
+	if ( fDet > -FLT_EPSILON && fDet < FLT_EPSILON )
+		return 0;
 
-   float fInvDet = 1.0 / fDet;
+	float fInvDet = 1.0 / fDet;
 
-   /* calculate distance from vert0 to ray origin */
-   CVec3 vTvec = rvOrig - rvVert0;
+	/* calculate distance from vert0 to ray origin */
+	CVec3 vTvec = rvOrig - rvVert0;
 
-   /* calculate U parameter and test bounds */
-   *pU = (vTvec * vPvec) * fInvDet;
-   if (*pU < 0.0 || *pU > 1.0)
-     return 0;
+	/* calculate U parameter and test bounds */
+	*pU = ( vTvec * vPvec ) * fInvDet;
+	if ( *pU < 0.0 || *pU > 1.0 )
+		return 0;
 
-   /* prepare to test V parameter */
-	 CVec3 vQvec = vTvec ^ vEdge1;
+	/* prepare to test V parameter */
+	CVec3 vQvec = vTvec ^ vEdge1;
 
-   /* calculate V parameter and test bounds */
-   *pV = ( rvDir * vQvec ) * fInvDet;
-   if (*pV < 0.0 || *pU + *pV > 1.0)
-     return 0;
+	/* calculate V parameter and test bounds */
+	*pV = ( rvDir * vQvec ) * fInvDet;
+	if ( *pV < 0.0 || *pU + *pV > 1.0 )
+		return 0;
 
-   /* calculate t, ray intersects triangle */
-   *t = ( vEdge2 * vQvec ) * fInvDet;
+	/* calculate t, ray intersects triangle */
+	*t = ( vEdge2 * vQvec ) * fInvDet;
 
-   return 1;
+	return 1;
 }
 
-static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pSurfacePoint1,
-											const std::vector<STriangleForTrace> &rTrianglesForTrace,
-											const CVec3 &vRayOrig, const CVec3 vDir )
+static int TraceCell( SModelSurfacePoint *pSurfacePoint0,
+                      SModelSurfacePoint *pSurfacePoint1,
+                      const std::vector<STriangleForTrace> &rTrianglesForTrace,
+                      const CVec3 &vRayOrig,
+                      const CVec3 vDir )
 {
 	//
 	float fMinDist = 0;
@@ -79,8 +81,7 @@ static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pS
 		float v = 0;
 		//
 		const STriangleForTrace &rTr = rTrianglesForTrace[k];
-		if ( IntersectTriangle( &t, &u, &v, vRayOrig, vDir,
-				 rTr.vertices[0], rTr.vertices[1], rTr.vertices[2] ) )
+		if ( IntersectTriangle( &t, &u, &v, vRayOrig, vDir, rTr.vertices[0], rTr.vertices[1], rTr.vertices[2] ) )
 		{
 			CVec3 vIntersPoint = vRayOrig + vDir * t;
 			float fCurDist = fabs( vIntersPoint - vRayOrig );
@@ -152,23 +153,30 @@ static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pS
 	return nResult;
 }
 
-void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
-											const std::vector<STriangleForTrace> &rTrianglesForTrace,
-											const CVec3 &rvMin, const CVec3 &rvMax,
-											int nNumPointsPerCell )
+void TraceTriangles( std::vector<SModelSurfacePoint> *pSurfacePoints,
+                     const std::vector<STriangleForTrace> &rTrianglesForTrace,
+                     const CVec3 &rvMin,
+                     const CVec3 &rvMax,
+                     int nNumPointsPerCell )
 {
 	//
 	const int N_MAX_CYCLES_NUM = 100;
 	//
 	float fAITileSize = VIS_TILE_SIZE / float( AI_TILES_IN_VIS_TILE );
 	//
-	int nDivX = (std::max)(1, static_cast<int>((rvMax.x - rvMin.x) / Clamp( ( rvMax.x - rvMin.x ) / 10.0f, fAITileSize, fAITileSize * 8.0f )));
-	int nDivY = (std::max)(1, static_cast<int>((rvMax.y - rvMin.y) / Clamp( ( rvMax.y - rvMin.y ) / 10.0f, fAITileSize, fAITileSize * 8.0f )));
-	int nDivZ = (std::max)(1, static_cast<int>((rvMax.z - rvMin.z) / Clamp( ( rvMax.z - rvMin.z ) / 10.0f, fAITileSize, fAITileSize * 8.0f )));
+	int nDivX = (std::max)( 1,
+	                        static_cast<int>( ( rvMax.x - rvMin.x ) /
+	                                          Clamp( ( rvMax.x - rvMin.x ) / 10.0f, fAITileSize, fAITileSize * 8.0f ) ) );
+	int nDivY = (std::max)( 1,
+	                        static_cast<int>( ( rvMax.y - rvMin.y ) /
+	                                          Clamp( ( rvMax.y - rvMin.y ) / 10.0f, fAITileSize, fAITileSize * 8.0f ) ) );
+	int nDivZ = (std::max)( 1,
+	                        static_cast<int>( ( rvMax.z - rvMin.z ) /
+	                                          Clamp( ( rvMax.z - rvMin.z ) / 10.0f, fAITileSize, fAITileSize * 8.0f ) ) );
 	//
-	float fDx = (rvMax.x - rvMin.x) / nDivX;
-	float fDy = (rvMax.y - rvMin.y) / nDivY;
-	float fDz = (rvMax.z - rvMin.z) / nDivZ;
+	float fDx = ( rvMax.x - rvMin.x ) / nDivX;
+	float fDy = ( rvMax.y - rvMin.y ) / nDivY;
+	float fDz = ( rvMax.z - rvMin.z ) / nDivZ;
 	//
 	// side (Xmin..Xmax, Ymin, Zmin..Zmax)
 	//
@@ -176,18 +184,20 @@ void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
 	{
 		for ( int j = 0; j < nDivZ; ++j )
 		{
-			CVec3 vCellPos = CVec3( rvMin.x + (fDx * i), rvMin.y, rvMin.z + (fDz * j) );
+			CVec3 vCellPos = CVec3( rvMin.x + ( fDx * i ), rvMin.y, rvMin.z + ( fDz * j ) );
 			CVec3 vRayOrig = vCellPos;
 
 			int nNumPointsFound = 0;
 			for ( int nCycle = 0; nCycle < N_MAX_CYCLES_NUM; ++nCycle )
 			{
-				vRayOrig.x += NRandom::Random( 0.0f, fDx ); RecordRandomCall();
-				vRayOrig.z += NRandom::Random( 0.0f, fDz ); RecordRandomCall();
+				vRayOrig.x += NRandom::Random( 0.0f, fDx );
+				RecordRandomCall();
+				vRayOrig.z += NRandom::Random( 0.0f, fDz );
+				RecordRandomCall();
 
 				SModelSurfacePoint sp0;
 				SModelSurfacePoint sp1;
-				int nRes = TraceCell(	&sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_Y );
+				int nRes = TraceCell( &sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_Y );
 
 				if ( nRes )
 				{
@@ -211,18 +221,20 @@ void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
 	{
 		for ( int j = 0; j < nDivZ; ++j )
 		{
-			CVec3 vCellPos = CVec3( rvMin.x, rvMin.y + (fDy * i), rvMin.z + (fDz * j) );
+			CVec3 vCellPos = CVec3( rvMin.x, rvMin.y + ( fDy * i ), rvMin.z + ( fDz * j ) );
 			CVec3 vRayOrig = vCellPos;
 
 			int nNumPointsFound = 0;
 			for ( int nCycle = 0; nCycle < N_MAX_CYCLES_NUM; ++nCycle )
 			{
-				vRayOrig.y += NRandom::Random( 0.0f, fDy ); RecordRandomCall();
-				vRayOrig.z += NRandom::Random( 0.0f, fDz ); RecordRandomCall();
+				vRayOrig.y += NRandom::Random( 0.0f, fDy );
+				RecordRandomCall();
+				vRayOrig.z += NRandom::Random( 0.0f, fDz );
+				RecordRandomCall();
 
 				SModelSurfacePoint sp0;
 				SModelSurfacePoint sp1;
-				int nRes = TraceCell(	&sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_X );
+				int nRes = TraceCell( &sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_X );
 
 				if ( nRes )
 				{
@@ -264,39 +276,39 @@ int TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, granny_file_inf
 	int nTotalTriangles = 0;
 	for ( int nMeshIdx = 0; nMeshIdx < pModel->MeshBindingCount; ++nMeshIdx )
 	{
-		granny_mesh *pMesh = pModel->MeshBindings[ nMeshIdx ].Mesh;
+		granny_mesh *pMesh = pModel->MeshBindings[nMeshIdx].Mesh;
 		//
-		granny_int32 nIndexCount = GrannyGetMeshIndexCount(pMesh);
-		granny_int32 nBytesPerIndex = GrannyGetMeshBytesPerIndex(pMesh);
-		granny_uint8 *pIndices = (granny_uint8*)GrannyGetMeshIndices(pMesh);
+		granny_int32 nIndexCount = GrannyGetMeshIndexCount( pMesh );
+		granny_int32 nBytesPerIndex = GrannyGetMeshBytesPerIndex( pMesh );
+		granny_uint8 *pIndices = (granny_uint8 *)GrannyGetMeshIndices( pMesh );
 		//
-		granny_int32x nVertexCount = GrannyGetMeshVertexCount(pMesh);
-		granny_data_type_definition *pVertexType = GrannyGetMeshVertexType(pMesh);
+		granny_int32x nVertexCount = GrannyGetMeshVertexCount( pMesh );
+		granny_data_type_definition *pVertexType = GrannyGetMeshVertexType( pMesh );
 		const int nPositionOffset = CalculateGrannyTypedefOffset( pVertexType, GrannyVertexPositionName );
 		const int nVertexSize = GrannyGetTotalObjectSize( pVertexType );
-		granny_uint8 *pVertices = (granny_uint8*)GrannyGetMeshVertices(pMesh);
+		granny_uint8 *pVertices = (granny_uint8 *)GrannyGetMeshVertices( pMesh );
 		//
 		int nNumTriangles = nIndexCount / 3;
-		for(int nTriIndex = 0; nTriIndex < nNumTriangles; ++nTriIndex )
+		for ( int nTriIndex = 0; nTriIndex < nNumTriangles; ++nTriIndex )
 		{
 			STriangleForTrace tr;
 			tr.szBodyPart = pMesh->Name;
 			for ( int v = 0; v < 3; ++v )
 			{
 				int nVertexIndex = 0;
-				if ( nBytesPerIndex == sizeof(short) )
+				if ( nBytesPerIndex == sizeof( short ) )
 				{
-					nVertexIndex = *(short*)( &pIndices[ ( nTriIndex * 3 + v ) * nBytesPerIndex ] );
+					nVertexIndex = *(short *)( &pIndices[( nTriIndex * 3 + v ) * nBytesPerIndex] );
 				}
 				else
 				{
-					nVertexIndex = *(int*)( &pIndices[ ( nTriIndex * 3 + v ) * nBytesPerIndex ] );
+					nVertexIndex = *(int *)( &pIndices[( nTriIndex * 3 + v ) * nBytesPerIndex] );
 				}
 
-				granny_uint8 *pVtxData = &pVertices[ nVertexIndex * nVertexSize ];
-				granny_uint8 *pPosData = &pVtxData[ nPositionOffset ];
+				granny_uint8 *pVtxData = &pVertices[nVertexIndex * nVertexSize];
+				granny_uint8 *pPosData = &pVtxData[nPositionOffset];
 				//
-				tr.vertices[v] = *(CVec3*)pPosData;
+				tr.vertices[v] = *(CVec3 *)pPosData;
 			}
 			//
 			trianglesForTrace.push_back( tr );
@@ -317,9 +329,11 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	if ( !pUserData )
-		return false;;
+		return false;
+	;
 
-	const std::string szGeometriesFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
+	const std::string szGeometriesFolder =
+			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
 
 	//char pszBuf[32] = {0};
 	//sprintf( pszBuf, "%d", nGeometryResourceID );
@@ -327,11 +341,11 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 	CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( rszGeometryResourceName ) );
 	if ( pGeometry && !pGeometry->szModelFileRef.empty() )
 	{
-		const auto file = NGltf::LoadFile(pGeometry, pGeometry->szModelFileRef);
+		const auto file = NGltf::LoadFile( pGeometry, pGeometry->szModelFileRef );
 		std::vector<size_t> nodes;
 		CVec3 minimum, maximum;
-		if ( !NGltf::GetMeshNodes(file, pGeometry->szRootMesh, &nodes) ||
-			!NGltf::GetMeshBoundingBox(file, pGeometry->szRootMesh, false, &minimum, &maximum) )
+		if ( !NGltf::GetMeshNodes( file, pGeometry->szRootMesh, &nodes ) ||
+		     !NGltf::GetMeshBoundingBox( file, pGeometry->szRootMesh, false, &minimum, &maximum ) )
 			return false;
 		std::vector<STriangleForTrace> triangles;
 		for ( size_t index : nodes )
@@ -339,55 +353,68 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 			const auto &node = file->asset.nodes[index];
 			for ( const auto &primitive : file->asset.meshes[*node.meshIndex].primitives )
 			{
-				const auto position = primitive.findAttribute("POSITION");
-				if ( position == primitive.attributes.end() ) continue;
-				const auto &positions = file->Vec3Accessor(position->accessorIndex);
+				const auto position = primitive.findAttribute( "POSITION" );
+				if ( position == primitive.attributes.end() )
+					continue;
+				const auto &positions = file->Vec3Accessor( position->accessorIndex );
 				std::vector<uint32_t> indices;
 				if ( primitive.indicesAccessor )
-					fastgltf::iterateAccessor<uint32_t>(file->asset, file->asset.accessors[*primitive.indicesAccessor],
-						[&](uint32_t vertex) { indices.push_back(vertex); });
+					fastgltf::iterateAccessor<uint32_t>( file->asset,
+					                                     file->asset.accessors[*primitive.indicesAccessor],
+					                                     [&]( uint32_t vertex ) { indices.push_back( vertex ); } );
 				else
-					for ( size_t i = 0; i < positions.size(); ++i ) indices.push_back(static_cast<uint32_t>(i));
-				auto triangle = [&](uint32_t a, uint32_t b, uint32_t c)
+					for ( size_t i = 0; i < positions.size(); ++i )
+						indices.push_back( static_cast<uint32_t>( i ) );
+				auto triangle = [&]( uint32_t a, uint32_t b, uint32_t c )
 				{
-					if ( a >= positions.size() || b >= positions.size() || c >= positions.size() ) return false;
-					if ( a == b || b == c || a == c ) return true;
+					if ( a >= positions.size() || b >= positions.size() || c >= positions.size() )
+						return false;
+					if ( a == b || b == c || a == c )
+						return true;
 					STriangleForTrace result;
-					result.szBodyPart = std::string(node.name);
+					result.szBodyPart = std::string( node.name );
 					// X mirroring plus the Y/Z swap preserves winding, as in rendering.
-					const uint32_t vertices[] = {a, b, c};
+					const uint32_t vertices[] = { a, b, c };
 					for ( int v = 0; v < 3; ++v )
 					{
-						const CVec3 point = NGltf::ConvertPosition(positions[vertices[v]]);
-						if ( node.skinIndex ) result.vertices[v] = point;
-						else file->nodeWorldTransforms[index].RotateHVector(&result.vertices[v], point);
+						const CVec3 point = NGltf::ConvertPosition( positions[vertices[v]] );
+						if ( node.skinIndex )
+							result.vertices[v] = point;
+						else
+							file->nodeWorldTransforms[index].RotateHVector( &result.vertices[v], point );
 					}
-					triangles.push_back(result);
+					triangles.push_back( result );
 					return true;
 				};
 				if ( primitive.type == fastgltf::PrimitiveType::Triangles )
 				{
-					if ( indices.size() % 3 ) return false;
+					if ( indices.size() % 3 )
+						return false;
 					for ( size_t i = 0; i + 2 < indices.size(); i += 3 )
-						if ( !triangle(indices[i], indices[i+1], indices[i+2]) ) return false;
+						if ( !triangle( indices[i], indices[i + 1], indices[i + 2] ) )
+							return false;
 				}
 				else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
 				{
 					for ( size_t i = 2; i < indices.size(); ++i )
-						if ( !triangle(indices[i-2+(i%2)], indices[i-1-(i%2)], indices[i]) ) return false;
+						if ( !triangle( indices[i - 2 + ( i % 2 )], indices[i - 1 - ( i % 2 )], indices[i] ) )
+							return false;
 				}
 				else if ( primitive.type == fastgltf::PrimitiveType::TriangleFan )
 				{
 					for ( size_t i = 2; i < indices.size(); ++i )
-						if ( !triangle(indices[0], indices[i-1], indices[i]) ) return false;
+						if ( !triangle( indices[0], indices[i - 1], indices[i] ) )
+							return false;
 				}
 			}
 		}
-		if ( triangles.empty() ) return false;
-		TraceTriangles(pSurfacePoints, triangles, minimum, maximum, 1);
+		if ( triangles.empty() )
+			return false;
+		TraceTriangles( pSurfacePoints, triangles, minimum, maximum, 1 );
 		return true;
 	}
-	std::string szFilePath = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid  ); // uid
+	std::string szFilePath =
+			NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
 
 	WaitForFile( szFilePath, 10000 );
 	granny_file *pFile = GrannyReadEntireFile( szFilePath.c_str() );

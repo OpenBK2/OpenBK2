@@ -7,6 +7,6 @@ struct SStaticObjectSlotInfo
 	int nType = {};
 	int nIndex = {};
 
-	SStaticObjectSlotInfo() : nSlot( -1 ), nType( -1 ), nIndex( -1 ) { }
+	SStaticObjectSlotInfo() : nSlot( -1 ), nType( -1 ), nIndex( -1 ) {}
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

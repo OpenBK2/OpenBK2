@@ -12,7 +12,9 @@
 namespace NCodeGen
 {
 
-CNamespace::CNamespace( NLang::CNamespace *pNM, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
+CNamespace::CNamespace( NLang::CNamespace *pNM,
+                        const CNodes2TypeDefs &nodes2TypeDefs,
+                        NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	for ( NLang::CNamespace::TDefsListIter iter = pNM->DefsListBegin(); iter != pNM->DefsListEnd(); ++iter )
 	{
@@ -35,10 +37,13 @@ CNamespace::CNamespace( NLang::CNamespace *pNM, const CNodes2TypeDefs &nodes2Typ
 	badIncludes = pNM->GetBadIncludes();
 }
 
-void CNamespace::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
+void CNamespace::GenerateCode( SCodeStreams *pCode,
+                               const std::string &szTabs,
+                               NDb::NTypeDef::STypeDef *pParentType,
+                               const std::string &szQualifiedName )
 {
-	for ( std::list< CObj<ICode> >::iterator iter = definitions.begin(); iter != definitions.end(); ++iter )
-		(*iter)->GenerateCode( pCode, szTabs + "\t", pParentType, szQualifiedName );
+	for ( std::list<CObj<ICode>>::iterator iter = definitions.begin(); iter != definitions.end(); ++iter )
+		( *iter )->GenerateCode( pCode, szTabs + "\t", pParentType, szQualifiedName );
 
 	if ( !badIncludes.empty() )
 	{

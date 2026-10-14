@@ -16,15 +16,16 @@ std::string GetBinaryFileName( const std::string &rszDirPrefix, const int nRecor
 {
 	std::string szDirPrefix = rszDirPrefix;
 	NStr::TrimRight( szDirPrefix, '\\' );
-	if (uid.is_nil())
+	if ( uid.is_nil() )
 	{
 		DebugTrace( "Empty resource GUID: %s\\%d", szDirPrefix.c_str(), nRecordID );
 		return fmt::format( "{}\\{}", szDirPrefix, nRecordID );
 	}
-	return fmt::format( "{}\\{}", szDirPrefix, boost::uuids::to_string(uid) );
+	return fmt::format( "{}\\{}", szDirPrefix, boost::uuids::to_string( uid ) );
 }
 
-std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const boost::uuids::uuid &uid )
+std::string
+GetExistentBinaryFileName( const std::string &rszDirPrefix, const int nRecordID, const boost::uuids::uuid &uid )
 {
 	std::string szName = GetBinaryFileName( rszDirPrefix, nRecordID, uid );
 

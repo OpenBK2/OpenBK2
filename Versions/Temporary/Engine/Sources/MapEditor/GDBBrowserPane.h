@@ -31,7 +31,7 @@ public:
 		// No table is chosen: the pane shows its empty face, not the browser.
 		virtual void ShowEmpty( bool bEmpty ) = 0;
 		// What the Select Tables dialog opens over.
-		virtual IWidget* GetOwner() = 0;
+		virtual IWidget *GetOwner() = 0;
 	};
 
 private:
@@ -73,11 +73,17 @@ public:
 	// CHID_MAIN, and keeps the chosen tables in the user data.
 	void Stop();
 
-	IObjectBrowser* GetBrowser() const { return pContents; }
+	IObjectBrowser *GetBrowser() const { return pContents; }
 	// What answers CHID_OBJECT_STORAGE while this pane has the focus.
-	ICommandHandler* GetObjectStorage() { return ( pContents != 0 ) ? pContents->GetObjectStorage() : 0; }
+	ICommandHandler *GetObjectStorage() { return ( pContents != 0 ) ? pContents->GetObjectStorage() : 0; }
 	int GetID() const { return nGDBBrowserID; }
-	void EnableEdit( bool bEnable ) { if ( pContents != 0 ) { pContents->EnableEdit( bEnable ); } }
+	void EnableEdit( bool bEnable )
+	{
+		if ( pContents != 0 )
+		{
+			pContents->EnableEdit( bEnable );
+		}
+	}
 
 	// IObjectBrowser::IListener
 	virtual void OnTableSelected();

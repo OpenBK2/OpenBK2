@@ -32,11 +32,11 @@ void CStringManager::CreateRecentListName( std::string *pszName, const SObjectSe
 		}
 		else
 		{
-			CStringManager::GetRefValueFromTypeAndName( pszName, rObjectSet.szObjectTypeName, szObjectName, TYPE_SEPARATOR_CHAR );
+			CStringManager::GetRefValueFromTypeAndName(
+					pszName, rObjectSet.szObjectTypeName, szObjectName, TYPE_SEPARATOR_CHAR );
 		}
 	}
 }
-
 
 void CStringManager::CreateObjectSet( SObjectSet *pObjectSet, const std::string &rszName, bool bMainObject )
 {
@@ -58,12 +58,12 @@ void CStringManager::CreateObjectSet( SObjectSet *pObjectSet, const std::string 
 	}
 	else
 	{
-		CStringManager::GetTypeAndNameFromRefValue( &szObjectTypeName, &szObjectName, rszName, TYPE_SEPARATOR_CHAR, pUserData->constUserData.szMainObjectType );
+		CStringManager::GetTypeAndNameFromRefValue(
+				&szObjectTypeName, &szObjectName, rszName, TYPE_SEPARATOR_CHAR, pUserData->constUserData.szMainObjectType );
 	}
 	pObjectSet->szObjectTypeName = szObjectTypeName;
 	InsertHashSetElement( &( pObjectSet->objectNameSet ), CDBID( szObjectName ) );
 }
-
 
 void CStringManager::AddToRecentList( const std::string &rszName, bool bMainObject )
 {
@@ -88,7 +88,6 @@ void CStringManager::AddToRecentList( const std::string &rszName, bool bMainObje
 	}
 }
 
-
 void CStringManager::RemoveFromRecentList( const std::string &rszName, bool bMainObject )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -96,7 +95,8 @@ void CStringManager::RemoveFromRecentList( const std::string &rszName, bool bMai
 	NStr::ToLower( &szName );
 	if ( bMainObject )
 	{
-		for ( SUserData::CRecentList::iterator itRecentName = pUserData->recentList.begin(); itRecentName != pUserData->recentList.end(); )
+		for ( SUserData::CRecentList::iterator itRecentName = pUserData->recentList.begin();
+		      itRecentName != pUserData->recentList.end(); )
 		{
 			std::string szRecentName = ( *itRecentName );
 			NStr::ToLower( &szRecentName );
@@ -112,7 +112,8 @@ void CStringManager::RemoveFromRecentList( const std::string &rszName, bool bMai
 	}
 	else
 	{
-		for ( SUserData::CRecentList::iterator itRecentName = pUserData->recentResourceList.begin(); itRecentName != pUserData->recentResourceList.end(); )
+		for ( SUserData::CRecentList::iterator itRecentName = pUserData->recentResourceList.begin();
+		      itRecentName != pUserData->recentResourceList.end(); )
 		{
 			std::string szRecentName = ( *itRecentName );
 			NStr::ToLower( &szRecentName );
@@ -128,8 +129,12 @@ void CStringManager::RemoveFromRecentList( const std::string &rszName, bool bMai
 	}
 }
 
-
-bool CStringManager::GetStringValueFromString( const std::string &rszString, const std::string &rszLabel, const int nPos, const std::string &rszDividers, const std::string &rszDefaultValue, std::string *pszString )
+bool CStringManager::GetStringValueFromString( const std::string &rszString,
+                                               const std::string &rszLabel,
+                                               const int nPos,
+                                               const std::string &rszDividers,
+                                               const std::string &rszDefaultValue,
+                                               std::string *pszString )
 {
 	NI_ASSERT( pszString != 0, "CStringManager::GetStringValueFromString(): pszString == 0" );
 	//
@@ -161,8 +166,11 @@ bool CStringManager::GetStringValueFromString( const std::string &rszString, con
 	return false;
 }
 
-
-int CStringManager::GetIntValueFromString( const std::string &rszString, const std::string &rszLabel, const int nPos, const std::string &rszDividers, int nDefaultValue )
+int CStringManager::GetIntValueFromString( const std::string &rszString,
+                                           const std::string &rszLabel,
+                                           const int nPos,
+                                           const std::string &rszDividers,
+                                           int nDefaultValue )
 {
 	const int nStringPos = rszString.find( rszLabel, nPos );
 	if ( nStringPos == std::string::npos )
@@ -197,8 +205,11 @@ int CStringManager::GetIntValueFromString( const std::string &rszString, const s
 	}
 }
 
-
-float CStringManager::GetFloatValueFromString( const std::string &rszString, const std::string &rszLabel, const int nPos, const std::string &rszDividers, float fDefaultValue )
+float CStringManager::GetFloatValueFromString( const std::string &rszString,
+                                               const std::string &rszLabel,
+                                               const int nPos,
+                                               const std::string &rszDividers,
+                                               float fDefaultValue )
 {
 	const int nStringPos = rszString.find( rszLabel, nPos );
 	if ( nStringPos == std::string::npos )
@@ -233,8 +244,11 @@ float CStringManager::GetFloatValueFromString( const std::string &rszString, con
 	}
 }
 
-
-bool CStringManager::GetBoolValueFromString( const std::string &rszString, const std::string &rszLabel, const int nPos, const std::string &rszDividers, bool bDefaultValue )
+bool CStringManager::GetBoolValueFromString( const std::string &rszString,
+                                             const std::string &rszLabel,
+                                             const int nPos,
+                                             const std::string &rszDividers,
+                                             bool bDefaultValue )
 {
 	const int nStringPos = rszString.find( rszLabel, nPos );
 	if ( nStringPos == std::string::npos )
@@ -261,7 +275,6 @@ bool CStringManager::GetBoolValueFromString( const std::string &rszString, const
 	return ( szString == "true" );
 }
 
-
 int CStringManager::NormalizeValue( int nValue, int nStep )
 {
 	if ( ( nValue % nStep ) != 0 )
@@ -280,7 +293,6 @@ int CStringManager::NormalizeValue( int nValue, int nStep )
 	return nValue;
 }
 
-
 int CStringManager::GetPowerPrecision( int nPrercision )
 {
 	int nPowerPrecision = 1;
@@ -291,8 +303,11 @@ int CStringManager::GetPowerPrecision( int nPrercision )
 	return nPowerPrecision;
 }
 
-
-void CStringManager::GetTypeAndNameFromRefValue( std::string *pszTypeName, std::string *pszName, const std::string &rszRefValue, char cSeparator, const std::string &rszDefaultTypeName )
+void CStringManager::GetTypeAndNameFromRefValue( std::string *pszTypeName,
+                                                 std::string *pszName,
+                                                 const std::string &rszRefValue,
+                                                 char cSeparator,
+                                                 const std::string &rszDefaultTypeName )
 {
 	//NI_ASSERT( pszTypeName != 0, "CStringManager::GetTypeAndNameFromRefValue(): pszTypeName == 0" );
 	//NI_ASSERT( pszName != 0, "CStringManager::GetTypeAndNameFromRefValue(): pszName == 0" );
@@ -322,14 +337,15 @@ void CStringManager::GetTypeAndNameFromRefValue( std::string *pszTypeName, std::
 	}
 }
 
-
-void CStringManager::GetRefValueFromTypeAndName( std::string *pszRefValue, const std::string &rszTypeName, const std::string &rszName, char cSeparator )
+void CStringManager::GetRefValueFromTypeAndName( std::string *pszRefValue,
+                                                 const std::string &rszTypeName,
+                                                 const std::string &rszName,
+                                                 char cSeparator )
 {
 	NI_ASSERT( pszRefValue != 0, "CStringManager::GetRefValueFromTypeAndName(): pszRefValue == 0" );
 	//
 	( *pszRefValue ) = rszTypeName + cSeparator + rszName;
 }
-
 
 void CStringManager::CutFileName( std::string *pszFileName )
 {
@@ -347,7 +363,6 @@ void CStringManager::CutFileName( std::string *pszFileName )
 		pszFileName->clear();
 	}
 }
-
 
 bool CStringManager::CutFileExtention( std::string *pszFileName )
 {
@@ -368,7 +383,6 @@ bool CStringManager::CutFileExtention( std::string *pszFileName )
 	return false;
 }
 
-
 bool CStringManager::CutFileExtention( std::string *pszFileName, const std::string &rszFileExtention )
 {
 	if ( pszFileName )
@@ -378,7 +392,8 @@ bool CStringManager::CutFileExtention( std::string *pszFileName, const std::stri
 		NStr::ToLower( &szFileNameNoCase );
 		NStr::ToLower( &szFileExtentionNoCase );
 		const int nDotPosition = szFileNameNoCase.rfind( '.' );
-		const std::string szCurrentFileExtentionNoCase = szFileNameNoCase.substr( ( nDotPosition != std::string::npos ) ? nDotPosition : 0, std::string::npos );
+		const std::string szCurrentFileExtentionNoCase =
+				szFileNameNoCase.substr( ( nDotPosition != std::string::npos ) ? nDotPosition : 0, std::string::npos );
 		if ( szCurrentFileExtentionNoCase == szFileExtentionNoCase )
 		{
 			if ( nDotPosition > 0 )
@@ -396,7 +411,6 @@ bool CStringManager::CutFileExtention( std::string *pszFileName, const std::stri
 	return false;
 }
 
-
 void CStringManager::ExtendFileExtention( std::string *pszFileName, const std::string &rszFileExtention )
 {
 	if ( pszFileName )
@@ -406,7 +420,8 @@ void CStringManager::ExtendFileExtention( std::string *pszFileName, const std::s
 		NStr::ToLower( &szFileNameNoCase );
 		NStr::ToLower( &szFileExtentionNoCase );
 		const int nDotPosition = szFileNameNoCase.rfind( '.' );
-		const std::string szCurrentFileExtentionNoCase = szFileNameNoCase.substr( ( nDotPosition != std::string::npos ) ? nDotPosition : 0, std::string::npos );
+		const std::string szCurrentFileExtentionNoCase =
+				szFileNameNoCase.substr( ( nDotPosition != std::string::npos ) ? nDotPosition : 0, std::string::npos );
 		if ( szCurrentFileExtentionNoCase != szFileExtentionNoCase )
 		{
 			( *pszFileName ) += rszFileExtention;
@@ -414,8 +429,10 @@ void CStringManager::ExtendFileExtention( std::string *pszFileName, const std::s
 	}
 }
 
-
-void CStringManager::SplitFileName( std::string *pszFilePath, std::string *pszFileName, std::string *pszFileExtention, const std::string &rszFullFileName )
+void CStringManager::SplitFileName( std::string *pszFilePath,
+                                    std::string *pszFileName,
+                                    std::string *pszFileExtention,
+                                    const std::string &rszFullFileName )
 {
 	std::string szFullFileName = rszFullFileName;
 	NStr::ReplaceAllChars( &szFullFileName, '/', '\\' );
@@ -441,22 +458,21 @@ void CStringManager::SplitFileName( std::string *pszFilePath, std::string *pszFi
 	//
 	if ( pszFilePath )
 	{
-		 ( *pszFilePath	 ) = szFilePath;
+		( *pszFilePath ) = szFilePath;
 	}
 	if ( pszFileName )
 	{
-		 ( *pszFileName	 ) = szFileName;
+		( *pszFileName ) = szFileName;
 	}
 	if ( pszFileExtention )
 	{
-		 ( *pszFileExtention	 ) = szFileExtention;
+		( *pszFileExtention ) = szFileExtention;
 	}
 }
 
-
 void CStringManager::RemoveDoubleSlashes( std::string *pszFilePath )
 {
-  if ( pszFilePath && !pszFilePath->empty() )
+	if ( pszFilePath && !pszFilePath->empty() )
 	{
 		NStr::ReplaceAllChars( pszFilePath, '/', '\\' );
 		std::string::iterator itChar = pszFilePath->begin();
@@ -479,7 +495,6 @@ void CStringManager::RemoveDoubleSlashes( std::string *pszFilePath )
 	}
 }
 
-
 std::string CStringManager::GetFloatStringWithPrecision( const float fValue, const int nPrecision )
 {
 	if ( nPrecision > 0 )
@@ -493,8 +508,8 @@ std::string CStringManager::GetFloatStringWithPrecision( const float fValue, con
 	}
 }
 
-
-int CStringManager::Compare( const std::string &rszLeft, const std::string &rszRight, bool bIgnoreCase, bool bIgnoreSlash, bool bSubString )
+int CStringManager::Compare(
+		const std::string &rszLeft, const std::string &rszRight, bool bIgnoreCase, bool bIgnoreSlash, bool bSubString )
 {
 	std::string szLeft = rszLeft;
 	std::string szRight = rszRight;

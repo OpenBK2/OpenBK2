@@ -7,8 +7,8 @@ class CNet;
 
 namespace NNet
 {
-	class CGameLinksManager;
-	class CNodeAddress;
+class CGameLinksManager;
+class CNodeAddress;
 }
 
 class CSimpleClientEffort : public CConnectionEffort
@@ -21,7 +21,11 @@ class CSimpleClientEffort : public CConnectionEffort
 	CPtr<CNet> pNet;
 	CPtr<CNet> pConnet2PlayersNet;
 
-	enum ESubState { ECONNECT_SERVER, ECONNECT_CLIENT };
+	enum ESubState
+	{
+		ECONNECT_SERVER,
+		ECONNECT_CLIENT
+	};
 	ESubState eSubState;
 
 	EState eState;
@@ -34,15 +38,21 @@ class CSimpleClientEffort : public CConnectionEffort
 	std::string szClientIP;
 	int nClientPort;
 	int nTimeOut;
+
 public:
-	CSimpleClientEffort() { }
-	CSimpleClientEffort( const int nMyServerID, const int nClientServerID, CNet *pNet,
-											 const std::string &szServerIP, const int nServerPort, const int nGameNetVersion, const int nTimeOut );
+	CSimpleClientEffort() {}
+	CSimpleClientEffort( const int nMyServerID,
+	                     const int nClientServerID,
+	                     CNet *pNet,
+	                     const std::string &szServerIP,
+	                     const int nServerPort,
+	                     const int nGameNetVersion,
+	                     const int nTimeOut );
 
 	virtual const EState GetState() const { return eState; }
 	virtual const int GetClientServerID() const { return nClientServerID; }
 
-	virtual struct IConnection* CreateConnection() const;
+	virtual struct IConnection *CreateConnection() const;
 
 	virtual bool Segment();
 	void ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
@@ -51,7 +61,7 @@ public:
 	bool ProcessClientAccepted( class CGameConnectingClientAccepted *pPacket );
 	bool ProcessClientConnectInfo( class CClientGameConnectInfo *pPacket );
 
-	CConnectionEffort* CreateNextEffort( const int nOurGameID );
+	CConnectionEffort *CreateNextEffort( const int nOurGameID );
 
 	//
 	bool ProcessClientIdentity( class CIndentityPacket *pPacket );
@@ -74,21 +84,26 @@ class CSimpleServerEffort : public CConnectionEffort
 
 	float fStartConnectClientTime;
 	float fPredBreakThroughSend;
+
 public:
-	CSimpleServerEffort() { }
-	CSimpleServerEffort( const int nMyServerID, const int nClientServerID,
-											 const std::string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet );
+	CSimpleServerEffort() {}
+	CSimpleServerEffort( const int nMyServerID,
+	                     const int nClientServerID,
+	                     const std::string &szClientIP,
+	                     const int nClientPort,
+	                     CNet *pNet,
+	                     CNet *pAcceptGamersNet );
 
 	virtual const EState GetState() const { return eState; }
 	virtual const int GetClientServerID() const { return nClientServerID; }
 
-	virtual struct IConnection* CreateConnection() const;
+	virtual struct IConnection *CreateConnection() const;
 	virtual bool Segment();
 
 	//
 	bool ProcessClientIdentity( class CIndentityPacket *pPacket );
 
-	CConnectionEffort* CreateNextEffort( const int nOurGameID );
+	CConnectionEffort *CreateNextEffort( const int nOurGameID );
 };
 
 class CThroughServerEffort : public CConnectionEffort
@@ -100,8 +115,9 @@ class CThroughServerEffort : public CConnectionEffort
 	int nOurGameID;
 	CPtr<CNet> pNet;
 	EState eState;
+
 public:
-	CThroughServerEffort() { }
+	CThroughServerEffort() {}
 	CThroughServerEffort( const int nClientServerID, const int nMyServerID, const int nOurGameID, CNet *pNet );
 
 	virtual const EState GetState() const { return ES_SUCCESS; }
@@ -109,6 +125,6 @@ public:
 
 	virtual bool Segment() { return true; }
 
-	virtual struct IConnection* CreateConnection() const;
-	class CConnectionEffort* CreateNextEffort( const int nOurGameID ) { return 0; }
+	virtual struct IConnection *CreateConnection() const;
+	class CConnectionEffort *CreateNextEffort( const int nOurGameID ) { return 0; }
 };

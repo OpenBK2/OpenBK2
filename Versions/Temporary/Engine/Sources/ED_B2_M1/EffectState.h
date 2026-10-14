@@ -9,6 +9,7 @@ class CEffectState : public CDefaultInputState
 	std::list<int> effectIDList;
 	// Данные общего назначения
 	CEffectEditor *pEffectEditor;
+
 public:
 	CEffectState( CEffectEditor *_pCEffectEditor );
 	//IInputState

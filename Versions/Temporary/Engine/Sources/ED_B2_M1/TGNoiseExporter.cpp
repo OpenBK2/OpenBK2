@@ -11,11 +11,11 @@
 
 REGISTER_EXPORTER_IN_DLL( TGNoise, CTGNoiseExporter )
 
-EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator* pManipulator,
-																							const std::string &rszObjectTypeName,
-																							const std::string &rszObjectName,
-																							bool bForce,
-																							EXPORT_TYPE exportType )
+EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator *pManipulator,
+                                              const std::string &rszObjectTypeName,
+                                              const std::string &rszObjectName,
+                                              bool bForce,
+                                              EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
 		return ER_SUCCESS;
@@ -24,13 +24,15 @@ EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator* pManipulator,
 	ILogger *pLogger = NLog::GetLogger();
 	//
 	std::string szNoiseFileName;
-	if ( CManipulatorManager::GetValue(&szNoiseFileName, pManipulator, "FileName") != false && !szNoiseFileName.empty() )
+	if ( CManipulatorManager::GetValue( &szNoiseFileName, pManipulator, "FileName" ) != false &&
+	     !szNoiseFileName.empty() )
 	{
 		if ( NFile::CopyFile( pUserData->constUserData.szExportSourceFolder + szNoiseFileName,
-			                    Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szNoiseFileName ) == false )
+		                      Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) +
+		                          szNoiseFileName ) == false )
 		{
 			pLogger->Log( LT_ERROR, "Can't export noise\n" );
-			pLogger->Log( LT_ERROR, fmt::format("\tNoise: {}\n", szNoiseFileName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format( "\tNoise: {}\n", szNoiseFileName.c_str() ) );
 			return ER_FAIL;
 		}
 	}

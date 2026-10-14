@@ -4,7 +4,7 @@
 
 namespace NDb
 {
-	struct SCampaign;
+struct SCampaign;
 }
 
 class CInterfaceCustomCampaign : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
@@ -20,10 +20,19 @@ class CInterfaceCustomCampaign : public CInterfaceScreenBase, public IProgrammed
 		CPtr<ITextView> pNameView;
 		std::wstring wszName;
 		std::wstring wszDesc;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCampaignDB); f.Add(3,&pWnd); f.Add(4,&pFlagWnd); f.Add(5,&pNameView); f.Add(6,&wszName); f.Add(7,&wszDesc); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pCampaignDB );
+			f.Add( 3, &pWnd );
+			f.Add( 4, &pFlagWnd );
+			f.Add( 5, &pNameView );
+			f.Add( 6, &wszName );
+			f.Add( 7, &wszDesc );
+			return 0;
+		}
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pTopPanel;
 	CPtr<IWindow> pBottomPanel;
@@ -37,11 +46,28 @@ class CInterfaceCustomCampaign : public CInterfaceScreenBase, public IProgrammed
 	CPtr<IComboBox> pDifficultyComboBox;
 	CPtr<IButton> pPlayBtn;
 	std::vector<SCampaign> campaigns;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pTopPanel); f.Add(4,&pBottomPanel); f.Add(5,&pCampaignsListPanel); f.Add(6,&pCampaignDescPanel); f.Add(7,&pCampaignsListCont); f.Add(8,&pCampaignsListItemTemplate); f.Add(9,&pCampaignDescCont); f.Add(10,&pCampaignDescView); f.Add(11,&pDifficultyComboBox); f.Add(12,&pPlayBtn); f.Add(13,&campaigns); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMainWnd );
+		f.Add( 3, &pTopPanel );
+		f.Add( 4, &pBottomPanel );
+		f.Add( 5, &pCampaignsListPanel );
+		f.Add( 6, &pCampaignDescPanel );
+		f.Add( 7, &pCampaignsListCont );
+		f.Add( 8, &pCampaignsListItemTemplate );
+		f.Add( 9, &pCampaignDescCont );
+		f.Add( 10, &pCampaignDescView );
+		f.Add( 11, &pDifficultyComboBox );
+		f.Add( 12, &pPlayBtn );
+		f.Add( 13, &campaigns );
+		return 0;
+	}
+
 private:
 	void MakeInterior();
 	void AddCampaign( const NDb::SCampaign *pCampaign );
-	const SCampaign* FindSelected() const;
+	const SCampaign *FindSelected() const;
 
 	bool OnBack();
 	bool OnPlay();
@@ -51,6 +77,7 @@ private:
 	void CampaignStart( const NDb::SCampaign *pCampaignDB );
 	void UpdateSelection( bool bFirstTime );
 	void UpdateDifficulty( const SCampaign *pCampaign, bool bFirstTime );
+
 public:
 	CInterfaceCustomCampaign();
 
@@ -71,6 +98,7 @@ class CICCustomCampaign : public CInterfaceCommandBase<CInterfaceCustomCampaign>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

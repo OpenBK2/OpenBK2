@@ -6,13 +6,17 @@
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x31114C82, CStandartDirPath );
 
-CStandartDirPath::CStandartDirPath( const CVec2 &_startPoint, const CVec2 &_dir, const CVec2 &_finishPoint, const int _nTileSize )
-: dir( _dir ), startPoint( _startPoint ), finishPoint( _finishPoint ), curPoint( _startPoint ), nTileSize( _nTileSize )
+CStandartDirPath::CStandartDirPath( const CVec2 &_startPoint,
+                                    const CVec2 &_dir,
+                                    const CVec2 &_finishPoint,
+                                    const int _nTileSize )
+		: dir( _dir ), startPoint( _startPoint ), finishPoint( _finishPoint ), curPoint( _startPoint ),
+			nTileSize( _nTileSize )
 {
 }
 
 CStandartDirPath::CStandartDirPath( const CVec2 &_startPoint, const CVec2 &_finishPoint, const int _nTileSize )
-: startPoint( _startPoint ), finishPoint( _finishPoint ), curPoint( _startPoint ), nTileSize( _nTileSize )
+		: startPoint( _startPoint ), finishPoint( _finishPoint ), curPoint( _startPoint ), nTileSize( _nTileSize )
 {
 	dir = Norm( finishPoint - startPoint );
 }
@@ -42,7 +46,7 @@ const CVec2 CStandartDirPath::PeekPoint( const int nShift ) const
 		CVec2 res( curPoint );
 		int inc = 0;
 
-		while ( ( finishPoint - res ) * dir > 0  && inc < nShift )
+		while ( ( finishPoint - res ) * dir > 0 && inc < nShift )
 		{
 			res += dir * nTileSize;
 			++inc;

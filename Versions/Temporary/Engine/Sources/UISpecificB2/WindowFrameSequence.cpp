@@ -16,14 +16,9 @@
 
 // CWindowFrameSequence
 
-CWindowFrameSequence::CWindowFrameSequence() :
-	timeStart( 0 )
-{
-}
+CWindowFrameSequence::CWindowFrameSequence() : timeStart( 0 ) {}
 
-CWindowFrameSequence::~CWindowFrameSequence()
-{
-}
+CWindowFrameSequence::~CWindowFrameSequence() {}
 
 void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 {
@@ -45,7 +40,7 @@ void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 			int nDeltaTime = time - timeStart;
 			if ( nDeltaTime >= nTime )
 			{
-				nFrame = (nFrame + nDeltaTime / nTime) % pShared->nFrameCount;
+				nFrame = ( nFrame + nDeltaTime / nTime ) % pShared->nFrameCount;
 				timeStart = time - nDeltaTime % nTime;
 			}
 		}
@@ -60,9 +55,15 @@ void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 
 		CTRect<float> rect = GetWindowRect();
 
-		CRectLayout rects( rect.x1, rect.y1, rect.Width(), rect.Height(),
-			nX * pShared->vFrameSize.x, nY * pShared->vFrameSize.y, pShared->vFrameSize.x, pShared->vFrameSize.y,
-			FadeColor( 0xFFFFFFFF, GetTotalFadeValue() ) );
+		CRectLayout rects( rect.x1,
+		                   rect.y1,
+		                   rect.Width(),
+		                   rect.Height(),
+		                   nX * pShared->vFrameSize.x,
+		                   nY * pShared->vFrameSize.y,
+		                   pShared->vFrameSize.x,
+		                   pShared->vFrameSize.y,
+		                   FadeColor( 0xFFFFFFFF, GetTotalFadeValue() ) );
 		VirtualToScreen( &rects );
 
 		pVisitor->VisitUIRect( pShared->pTexture, 3, rects );
@@ -71,8 +72,8 @@ void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 
 void CWindowFrameSequence::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
-	pInstance = checked_cast<const NDb::SWindowFrameSequence*>( pDesc )->Duplicate();
-	pShared = checked_cast_ptr<const NDb::SWindowFrameSequenceShared*>( pInstance->pShared );
+	pInstance = checked_cast<const NDb::SWindowFrameSequence *>( pDesc )->Duplicate();
+	pShared = checked_cast_ptr<const NDb::SWindowFrameSequenceShared *>( pInstance->pShared );
 
 	if ( pShared )
 	{
@@ -105,4 +106,4 @@ void CWindowFrameSequence::Reset()
 	timeStart = Singleton<IGameTimer>()->GetAbsTime();
 }
 
-REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1717A442, CWindowFrameSequence)
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x1717A442, CWindowFrameSequence )

@@ -18,16 +18,16 @@
 //! volume is high and the formatting is not free.
 namespace NAsyncTrace
 {
-	SYSTEM_EXPORT bool IsEnabled();
+SYSTEM_EXPORT bool IsEnabled();
 
-	//! Stamped on every line written after it, so an event lands somewhere in the
-	//! simulation rather than only somewhere in a sequence. Called once per
-	//! segment; anything traced outside a segment carries the previous one.
-	SYSTEM_EXPORT void SetGameTime( const int nGameTime );
+//! Stamped on every line written after it, so an event lands somewhere in the
+//! simulation rather than only somewhere in a sequence. Called once per
+//! segment; anything traced outside a segment carries the previous one.
+SYSTEM_EXPORT void SetGameTime( const int nGameTime );
 
-	SYSTEM_EXPORT void Write( const char *szCategory, const std::string &szWhat );
+SYSTEM_EXPORT void Write( const char *szCategory, const std::string &szWhat );
 
-	//! Separate from Write so that the resource hooks, which live in a template in
-	//! a header, do not drag a formatting library in behind them.
-	SYSTEM_EXPORT void WriteResource( const char *szWhat, const char *szResName, const int nID );
+//! Separate from Write so that the resource hooks, which live in a template in
+//! a header, do not drag a formatting library in behind them.
+SYSTEM_EXPORT void WriteResource( const char *szWhat, const char *szResName, const int nID );
 }

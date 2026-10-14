@@ -3,21 +3,26 @@
 #include "GPartParticles.h"
 namespace NGScene
 {
-extern bool	bFreeze;
+extern bool bFreeze;
 extern bool bNewShadows;
 
-static void AttachPart( ISomePart *pRes, CVolumeNode *pNode,
-	SFullStaticTrackers *pTrackers, bool bIsDynamic )
+static void AttachPart( ISomePart *pRes, CVolumeNode *pNode, SFullStaticTrackers *pTrackers, bool bIsDynamic )
 {
 	///bool bIsLightmapped = !bIsDynamic && pRes->GetGroupInfo().nLightGroup == 0 && pRes->GetMaterial()->GetType() == IMaterial::MT_NORMAL;//!= IMaterial::MT_OCCLUDER;
 	CCombinedPart *pCPart;
 	int nFloorMask = pRes->GetGroupInfo().nObjectGroup & N_MASK_FLOORS;
 	NGScene::EDynamicType eDT = pRes->GetMaterial()->GetDynamicType();
 
-	if( bNewShadows )
+	if ( bNewShadows )
 	{
-		if( eDT == DT_FORCE_DYNAMIC ) {  bIsDynamic = true; }
-		if( eDT == DT_FORCE_STATIC ) { bIsDynamic = false; }
+		if ( eDT == DT_FORCE_DYNAMIC )
+		{
+			bIsDynamic = true;
+		}
+		if ( eDT == DT_FORCE_STATIC )
+		{
+			bIsDynamic = false;
+		}
 	}
 
 	if ( bIsDynamic )
@@ -32,8 +37,8 @@ static void AttachPart( ISomePart *pRes, CVolumeNode *pNode,
 	//	pRes->SetCombiner( pCPart->GetCombiner(), true, false );
 }
 
-void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR,
-	SFullStaticTrackers *pTrackers, bool bIsDynamic )
+void PlaceToOctree(
+		ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR, SFullStaticTrackers *pTrackers, bool bIsDynamic )
 {
 	CVolumeNode *pNode = pRoot->GetNode( vPos, fR );
 	ASSERT( pNode );
@@ -48,7 +53,7 @@ CVolumeNode *GetUpdatable( CVolumeNode *pRoot, const SBound &hintBV )
 }
 
 ISomePart::ISomePart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-: IPart( pData, 0 ), group( _pMaterial, _gInfo )
+		: IPart( pData, 0 ), group( _pMaterial, _gInfo )
 {
 	SetCacheLightFlags();
 }
@@ -73,7 +78,7 @@ void ISomePart::SetCacheLightFlags()
 	if ( group.pMaterial )
 		cacheLighting.vTranslucentColor = group.pMaterial->GetTranslucentColor();
 	else
-		cacheLighting.vTranslucentColor = CVec3(0,0,0);
+		cacheLighting.vTranslucentColor = CVec3( 0, 0, 0 );
 	cacheLighting.bTranslucent = fabs2( cacheLighting.vTranslucentColor ) > 0;
 }
 
@@ -114,27 +119,34 @@ void ISomePart::SetLM( CPtrFuncBase<NGfx::CTexture> *pLM )
 
 // CStaticAnimatedPart
 
-CStaticAnimatedPart::CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *pAnim,
-	CFuncBase<std::vector<NGfx::SCompactTransformer> > *pMMXAnim,
-	const SBound &_bv, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-	: ISomePart( pData, _pMaterial, _gInfo ), pAnimation(pAnim), pMMXAnimation(pMMXAnim), bv(_bv)
+CStaticAnimatedPart::CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
+                                          CFuncBase<std::vector<SHMatrix>> *pAnim,
+                                          CFuncBase<std::vector<NGfx::SCompactTransformer>> *pMMXAnim,
+                                          const SBound &_bv,
+                                          IMaterial *_pMaterial,
+                                          const SFullGroupInfo &_gInfo )
+		: ISomePart( pData, _pMaterial, _gInfo ), pAnimation( pAnim ), pMMXAnimation( pMMXAnim ), bv( _bv )
 {
 }
 
 // CGenericDynamicPart
 
-CGenericDynamicPart::CGenericDynamicPart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-: ISomePart( pData, _pMaterial, _gInfo ), nStillCounter(0), bt(BT_NONE)
+CGenericDynamicPart::CGenericDynamicPart( CPtrFuncBase<CObjectInfo> *pData,
+                                          IMaterial *_pMaterial,
+                                          const SFullGroupInfo &_gInfo )
+		: ISomePart( pData, _pMaterial, _gInfo ), nStillCounter( 0 ), bt( BT_NONE )
 {
 }
 
 // CDynamicPart
 
-CDynamicPart::CDynamicPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase<SFBTransform> *pPos,
-													 IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-													 : CGenericDynamicPart( pData, _pMaterial, _gInfo ), pTransform(pPos), pTrackObjInfo(pData)
+CDynamicPart::CDynamicPart( CPtrFuncBase<CObjectInfo> *pData,
+                            CFuncBase<SFBTransform> *pPos,
+                            IMaterial *_pMaterial,
+                            const SFullGroupInfo &_gInfo )
+		: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pTransform( pPos ), pTrackObjInfo( pData )
 {
-	bound.SphereInit( CVec3(0,0,0), 1e20f );
+	bound.SphereInit( CVec3( 0, 0, 0 ), 1e20f );
 	//	RefreshObjectInfo();
 	//	GetObjectInfo()->CalcBound( &bound );
 }
@@ -158,9 +170,9 @@ bool CDynamicPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers 
 	}
 	else
 	{
-		if( !bFreeze )
-		++nStillCounter;
-		if ( nStillCounter == 3 && (GetGroupInfo().nLightFlags & LF_NEVER_STATIC) == 0 )
+		if ( !bFreeze )
+			++nStillCounter;
+		if ( nStillCounter == 3 && ( GetGroupInfo().nLightFlags & LF_NEVER_STATIC ) == 0 )
 		{
 			CVolumeNode *pNode = pVolume->SelectNode( pTransform, bound );
 			ASSERT( pNode );
@@ -172,19 +184,24 @@ bool CDynamicPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers 
 
 // CDynamicPartWithAnimatedBound
 
-CDynamicPartWithAnimatedBound::CDynamicPartWithAnimatedBound( CPtrFuncBase<CObjectInfo> *pData, CFuncBase<SFBTransform> *pPos, CFuncBase<SBound> *_pBound,
-													 IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-													 : CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, pPos ), pTransform(pPos)
+CDynamicPartWithAnimatedBound::CDynamicPartWithAnimatedBound( CPtrFuncBase<CObjectInfo> *pData,
+                                                              CFuncBase<SFBTransform> *pPos,
+                                                              CFuncBase<SBound> *_pBound,
+                                                              IMaterial *_pMaterial,
+                                                              const SFullGroupInfo &_gInfo )
+		: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, pPos ), pTransform( pPos )
 {
 }
 
 // CAnimatedPart
 
-CAnimatedPart::CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *_pAnim,
-	CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
-	CFuncBase<SBound> *_pBound, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-	: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, _pAnim),
-	pAnimation(_pAnim), pMMXAnimation(_pMMXAnim)
+CAnimatedPart::CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData,
+                              CFuncBase<std::vector<SHMatrix>> *_pAnim,
+                              CFuncBase<std::vector<NGfx::SCompactTransformer>> *_pMMXAnim,
+                              CFuncBase<SBound> *_pBound,
+                              IMaterial *_pMaterial,
+                              const SFullGroupInfo &_gInfo )
+		: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, _pAnim ), pAnimation( _pAnim ), pMMXAnimation( _pMMXAnim )
 {
 }
 
@@ -202,23 +219,23 @@ bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTra
 	EBindType needBT = BT_DYNAMIC;
 	switch ( dg )
 	{
-	case DG_CHANGE_UNKNOWN:
-		if ( bt == BT_STATIC )
-			needBT = bt;
-		break;
-	case DG_CHANGE_NONE:
-		if( !bFreeze )
-		++nStillCounter;
-		if ( nStillCounter > 3 && (GetGroupInfo().nLightFlags & LF_NEVER_STATIC) == 0 )
-			needBT = BT_STATIC;
-		break;
-	case DG_CHANGE_CHANGED:
-		nStillCounter = 0;
-		needBT = BT_DYNAMIC;
-		break;
-	default:
-		ASSERT(0);
-		break;
+		case DG_CHANGE_UNKNOWN:
+			if ( bt == BT_STATIC )
+				needBT = bt;
+			break;
+		case DG_CHANGE_NONE:
+			if ( !bFreeze )
+				++nStillCounter;
+			if ( nStillCounter > 3 && ( GetGroupInfo().nLightFlags & LF_NEVER_STATIC ) == 0 )
+				needBT = BT_STATIC;
+			break;
+		case DG_CHANGE_CHANGED:
+			nStillCounter = 0;
+			needBT = BT_DYNAMIC;
+			break;
+		default:
+			ASSERT( 0 );
+			break;
 	}
 
 	if ( pBound.Refresh() )
@@ -244,9 +261,12 @@ bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTra
 
 // CDynamicGeometryPart
 
-CDynamicGeometryPart::CDynamicGeometryPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase<SFBTransform> *_pTransform,
-	CFuncBase<SBound> *_pBound, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-	: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pBound(_pBound), pTransform(_pTransform), pChanges(pData)
+CDynamicGeometryPart::CDynamicGeometryPart( CPtrFuncBase<CObjectInfo> *pData,
+                                            CFuncBase<SFBTransform> *_pTransform,
+                                            CFuncBase<SBound> *_pBound,
+                                            IMaterial *_pMaterial,
+                                            const SFullGroupInfo &_gInfo )
+		: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pBound( _pBound ), pTransform( _pTransform ), pChanges( pData )
 {
 }
 
@@ -266,23 +286,23 @@ bool CDynamicGeometryPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pT
 	EBindType needBT = BT_DYNAMIC;
 	switch ( dg )
 	{
-	case DG_CHANGE_UNKNOWN:
-		if ( bt == BT_STATIC )
-			needBT = bt;
-		break;
-	case DG_CHANGE_NONE:
-		if( !bFreeze )
-		++nStillCounter;
-		if ( nStillCounter > 3 && (GetGroupInfo().nLightFlags & LF_NEVER_STATIC) == 0 )
-			needBT = BT_STATIC;
-		break;
-	case DG_CHANGE_CHANGED:
-		nStillCounter = 0;
-		needBT = BT_DYNAMIC;
-		break;
-	default:
-		ASSERT(0);
-		break;
+		case DG_CHANGE_UNKNOWN:
+			if ( bt == BT_STATIC )
+				needBT = bt;
+			break;
+		case DG_CHANGE_NONE:
+			if ( !bFreeze )
+				++nStillCounter;
+			if ( nStillCounter > 3 && ( GetGroupInfo().nLightFlags & LF_NEVER_STATIC ) == 0 )
+				needBT = BT_STATIC;
+			break;
+		case DG_CHANGE_CHANGED:
+			nStillCounter = 0;
+			needBT = BT_DYNAMIC;
+			break;
+		default:
+			ASSERT( 0 );
+			break;
 	}
 
 	if ( pBound.Refresh() )
@@ -310,8 +330,8 @@ bool CDynamicGeometryPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pT
 // CCombinedPart
 
 CCombinedPart::CCombinedPart( SFullStaticTrackers *pTrackers, int _nFloorMask, bool _bIsDynamic )
-	: nIgnoreMark(0), pCombiner( new CPerMaterialCombiner( 0 ) ), nFloorMask(_nFloorMask),
-	pPervertexLightState( pTrackers->pLightState ), bRecalcPartInfo(false), bIsDynamic(_bIsDynamic)
+		: nIgnoreMark( 0 ), pCombiner( new CPerMaterialCombiner( 0 ) ), nFloorMask( _nFloorMask ),
+			pPervertexLightState( pTrackers->pLightState ), bRecalcPartInfo( false ), bIsDynamic( _bIsDynamic )
 {
 }
 
@@ -319,14 +339,12 @@ void CCombinedPart::InitGeometry()
 {
 	SRenderGeometryInfo &gi = geometryInfo;
 	gi.pVertices = new CVBCombiner(
-		pCombiner,
-		bIsDynamic ? CT_DYNAMIC : CT_STATIC,
-		pCombiner->GetAnimationTracker(), pPervertexLightState );
+			pCombiner, bIsDynamic ? CT_DYNAMIC : CT_STATIC, pCombiner->GetAnimationTracker(), pPervertexLightState );
 	gi.pTriLists[TLT_POSITION] = new CIBCombiner( pCombiner, pCombiner->GetFullChangeTracker(), IBTT_POSITIONS );
 	gi.pTriLists[TLT_GEOM] = new CIBCombiner( pCombiner, pCombiner->GetFullChangeTracker(), IBTT_VERTICES );
 }
 
-SRenderGeometryInfo* CCombinedPart::GetGeometryInfo()
+SRenderGeometryInfo *CCombinedPart::GetGeometryInfo()
 {
 	if ( !geometryInfo.pVertices )
 		InitGeometry();
@@ -338,9 +356,9 @@ void CCombinedPart::UpdatePartInfo()
 	if ( !pCombiner.Refresh() && !bRecalcPartInfo )
 		return;
 	bRecalcPartInfo = false;
-	CDGPtr<CFuncBase<std::vector< CPtr<IPart> > > > pC( GetCombiner() );
+	CDGPtr<CFuncBase<std::vector<CPtr<IPart>>>> pC( GetCombiner() );
 	pC.Refresh();
-	const std::vector< CPtr<IPart> > &src = pC->GetValue();
+	const std::vector<CPtr<IPart>> &src = pC->GetValue();
 	parts.resize( src.size() );
 	materials.resize( 0 );
 	for ( int k = 0; k < src.size(); ++k )
@@ -393,12 +411,12 @@ inline void UpdateVector( std::vector<TElem> *a, TParam *p1, TParam2 *p2 )
 	int nSize = a->size();
 	for ( int k = 0; k < nSize; )
 	{
-		const TElem &ptr = (*a)[k];
+		const TElem &ptr = ( *a )[k];
 		if ( IsValid( ptr ) && ptr->Update( p1, p2 ) )
 			++k;
 		else
 		{
-			(*a)[k] = (*a)[ nSize - 1 ];
+			( *a )[k] = ( *a )[nSize - 1];
 			--nSize;
 		}
 	}
@@ -410,12 +428,12 @@ inline void UpdateVector( std::vector<TElem> *a, TParam *p )
 	int nSize = a->size();
 	for ( int k = 0; k < nSize; )
 	{
-		const TElem &ptr = (*a)[k];
+		const TElem &ptr = ( *a )[k];
 		if ( IsValid( ptr ) && ptr->Update( p ) )
 			++k;
 		else
 		{
-			(*a)[k] = (*a)[ nSize - 1 ];
+			( *a )[k] = ( *a )[nSize - 1];
 			--nSize;
 		}
 	}
@@ -439,7 +457,6 @@ bool CVolumeNode::IsEmpty()
 	return staticParts.IsEmpty() & dynamicParts.IsEmpty() & particles.empty() & updatable.IsEmpty();
 }
 
-
 void SetPartFade( CObjectBase *_p, float fFade )
 {
 	if ( CDynamicCast<ISomePart> p = _p )
@@ -454,7 +471,7 @@ void SetPartPriority( CObjectBase *_p, int _nPriority )
 		p->SetPriority( _nPriority );
 }
 
-void SetPartLM( CObjectBase *_p, CPtrFuncBase<NGfx::CTexture> *pLM )//CFuncBase<CArray2D<NGfx::SPixel8888> > *pLM )
+void SetPartLM( CObjectBase *_p, CPtrFuncBase<NGfx::CTexture> *pLM ) //CFuncBase<CArray2D<NGfx::SPixel8888> > *pLM )
 {
 	if ( CDynamicCast<ISomePart> p = _p )
 		p->SetLM( pLM );
@@ -464,7 +481,7 @@ CObjectBase *GetPartGeometry( CObjectBase *_pA )
 {
 	if ( !_pA )
 		return nullptr;
-	CDynamicCast<IPart> pA(_pA);
+	CDynamicCast<IPart> pA( _pA );
 	if ( !pA )
 		return nullptr;
 	return pA->GetObjectInfoNode();

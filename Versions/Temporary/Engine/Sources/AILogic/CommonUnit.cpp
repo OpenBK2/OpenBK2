@@ -53,7 +53,7 @@ const float CCommonUnit::GetMaxDamage( CCommonUnit *pTarget ) const
 	return fMaxDamage;
 }
 
-CBasicGun* CCommonUnit::ChooseGunForStatObjWOTime( CStaticObject *pObj )
+CBasicGun *CCommonUnit::ChooseGunForStatObjWOTime( CStaticObject *pObj )
 {
 	NTimer::STime time;
 	return ChooseGunForStatObj( pObj, &time );
@@ -61,13 +61,15 @@ CBasicGun* CCommonUnit::ChooseGunForStatObjWOTime( CStaticObject *pObj )
 
 void CCommonUnit::Init( const CVec3 &_vCenter, const uint16_t _wDirection, ICollisionsCollector *pCollisionsCollector )
 {
-	NI_VERIFY( GetUniqueID() != -1, "Unique id is not set", SetUniqueIdForUnits( ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID) );
+	NI_VERIFY( GetUniqueID() != -1,
+	           "Unique id is not set",
+	           SetUniqueIdForUnits( ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID ) );
 
 	bSelectable = true;
 	lastBehTime = 0;
 	vBattlePos = CVec2( -1.0f, -1.0f );
 	fDesirableSpeed = -1.0f;
-	fMinFollowingSpeed = float(1e10);
+	fMinFollowingSpeed = float( 1e10 );
 
 	bCanBeFrozenByState = false;
 	bCanBeFrozenByScan = false;
@@ -91,20 +93,19 @@ const bool CCommonUnit::CanGoToPoint( const CVec2 &point ) const
 	if ( IsInFormation() )
 	{
 		CFormation *pFormation = GetFormation();
-		return
-			!pFormation->IsInWaitingState() ||
-			pFormation->GetState()->IsAttackingState() ||
-			fabs2( pFormation->GetCenterPlain() - point ) < sqr( (float)SConsts::RADIUS_OF_FORMATION );
+		return !pFormation->IsInWaitingState() || pFormation->GetState()->IsAttackingState() ||
+		       fabs2( pFormation->GetCenterPlain() - point ) < sqr( (float)SConsts::RADIUS_OF_FORMATION );
 	}
 	else if ( GetState()->GetName() == EUSN_REST )
-		return fabs2( checked_cast<CCommonRestState*>( GetState() )->GetGuardPoint() - point ) < sqr( SConsts::GUARD_STATE_RADIUS );
+		return fabs2( checked_cast<CCommonRestState *>( GetState() )->GetGuardPoint() - point ) <
+		       sqr( SConsts::GUARD_STATE_RADIUS );
 
 	return true;
 }
 
 void CCommonUnit::SetSelectable( bool _bSelectable, bool bSendToWorld )
 {
-	bSelectable  = _bSelectable;
+	bSelectable = _bSelectable;
 	if ( !bSendToWorld )
 		return;
 	updater.AddUpdate( 0, ACTION_NOTIFY_SELECTABLE_CHANGED, this, IsSelectable() );
@@ -117,7 +118,7 @@ const uint8_t CCommonUnit::GetParty() const
 
 void CCommonUnit::Lock( const CBasicGun *pGun )
 {
-	pLockingGun = const_cast<CBasicGun*>(pGun);
+	pLockingGun = const_cast<CBasicGun *>( pGun );
 }
 
 void CCommonUnit::Unlock( const CBasicGun *pGun )
@@ -138,7 +139,7 @@ bool CCommonUnit::CanShootToUnitWoMove( class CAIUnit *_pTarget )
 	// можно ли пробить армор и вообще попасть
 	bool bCan = false;
 	int nGun = GetNGuns();
-	for ( int i=0; i<nGun; ++i )
+	for ( int i = 0; i < nGun; ++i )
 	{
 		CBasicGun *pGun = GetGun( i );
 		if ( pGun->CanShootToUnitWOMove( _pTarget ) )
@@ -194,7 +195,7 @@ bool CCommonUnit::IsInFollowState()
 	return pFollowedUnit != 0;
 }
 
-class CCommonUnit* CCommonUnit::GetFollowedUnit() const
+class CCommonUnit *CCommonUnit::GetFollowedUnit() const
 {
 	return pFollowedUnit;
 }
@@ -214,7 +215,9 @@ void CCommonUnit::FollowingByYou( CCommonUnit *pFollowingUnit )
 
 void CCommonUnit::Segment()
 {
-	if ( !GetState()->IsAttackingState() )//|| !theWarFog.IsTileVisible( AICellsTiles::GetTile( GetState()->GetPurposePoint() ), GetParty() ) )
+	if (
+			!GetState()
+					 ->IsAttackingState() ) //|| !theWarFog.IsTileVisible( AICellsTiles::GetTile( GetState()->GetPurposePoint() ), GetParty() ) )
 	{
 		if ( fDesirableSpeed == -1.0f )
 			SetDesirableSpeed( fMinFollowingSpeed );
@@ -230,13 +233,14 @@ void CCommonUnit::FreezeSegment()
 {
 	if ( bCanBeFrozenByState && nextFreezeScan < curTime )
 	{
-		nextFreezeScan = curTime + NRandom::Random( 1500, 3000 ); RecordRandomCall();
+		nextFreezeScan = curTime + NRandom::Random( 1500, 3000 );
+		RecordRandomCall();
 
 		if ( !IsIdle() )
 			bCanBeFrozenByScan = false;
 		else
 		{
-			CUnitsIter<0,3> iter( GetParty(), EDI_ENEMY, GetCenterPlain(), GetTargetScanRadius() );
+			CUnitsIter<0, 3> iter( GetParty(), EDI_ENEMY, GetCenterPlain(), GetTargetScanRadius() );
 			bCanBeFrozenByScan = iter.IsFinished();
 		}
 
@@ -265,12 +269,12 @@ void CCommonUnit::AddUnitToShootEstimator( CAIUnit *pUnit )
 	pShootEstimator->AddUnit( pUnit );
 }
 
-CAIUnit* CCommonUnit::GetBestShootEstimatedUnit() const
+CAIUnit *CCommonUnit::GetBestShootEstimatedUnit() const
 {
 	return pShootEstimator->GetBestUnit();
 }
 
-CBasicGun* CCommonUnit::GetBestShootEstimatedGun() const
+CBasicGun *CCommonUnit::GetBestShootEstimatedGun() const
 {
 	return pShootEstimator->GetBestGun();
 }
@@ -285,7 +289,7 @@ void CCommonUnit::SetTruck( CAIUnit *pUnit )
 	pTruck = pUnit;
 }
 
-CAIUnit* CCommonUnit::GetTruck() const
+CAIUnit *CCommonUnit::GetTruck() const
 {
 	return pTruck;
 }
@@ -317,11 +321,14 @@ void CCommonUnit::CheckForDestroyedObjects( const CVec2 &center ) const
 	const EAIClasses aiClass = GetAIPassabilityClass();
 	const CVec2 vCenter = unitProfile.GetCenter();
 
-	for ( CStObjCircleIter<false> stObjsIter( unitProfile.GetCenter(), unitProfile.GetRadius() + 200 ); !stObjsIter.IsFinished(); stObjsIter.Iterate() )
+	for ( CStObjCircleIter<false> stObjsIter( unitProfile.GetCenter(), unitProfile.GetRadius() + 200 );
+	      !stObjsIter.IsFinished();
+	      stObjsIter.Iterate() )
 	{
 		CExistingObject *pObj = *stObjsIter;
 		const EStaticObjType eType = pObj->GetObjectType();
-		if ( pObj->IsAlive() && eType != ESOT_BRIDGE_SPAN && eType != ESOT_MINE && eType != ESOT_ENTR_PART && eType != ESOT_FLAG && eType != ESOT_CANT_CRUSH )
+		if ( pObj->IsAlive() && eType != ESOT_BRIDGE_SPAN && eType != ESOT_MINE && eType != ESOT_ENTR_PART &&
+		     eType != ESOT_FLAG && eType != ESOT_CANT_CRUSH )
 		{
 			if ( pObj->CanUnitGoThrough( aiClass ) )
 			{
@@ -340,7 +347,7 @@ void CCommonUnit::CheckForDestroyedObjects( const CVec2 &center ) const
 				{
 					if ( pObj->CanFall() )
 					{
-						CVec2 vFallDir = CVec2(pObj->GetCenter().x,pObj->GetCenter().y) - vCenter;
+						CVec2 vFallDir = CVec2( pObj->GetCenter().x, pObj->GetCenter().y ) - vCenter;
 						vFallDir /= fabs( vFallDir );
 						pObj->AnimateFalling( vFallDir );
 						pObj->SetTrampled();
@@ -362,7 +369,7 @@ void CCommonUnit::CheckForDestroyedObjects( const CVec2 &center ) const
 					{
 						updater.AddUpdate( 0, ACTION_NOTIFY_SILENT_DEATH, pObj, -1 );
 
-						const SStaticObjectRPGStats *pStats = dynamic_cast<const SStaticObjectRPGStats*>(pObj->GetStats());
+						const SStaticObjectRPGStats *pStats = dynamic_cast<const SStaticObjectRPGStats *>( pObj->GetStats() );
 						if ( !pStats || !pStats->bLeaveCorpse )
 							pObj->Delete();
 						else
@@ -375,11 +382,14 @@ void CCommonUnit::CheckForDestroyedObjects( const CVec2 &center ) const
 	}
 }
 
-const bool CCommonUnit::IterateUnits( const CVec2 &vCenter, const float fRadius, const bool bOnlyMech, const SIterateUnitsCallback &callback ) const
+const bool CCommonUnit::IterateUnits( const CVec2 &vCenter,
+                                      const float fRadius,
+                                      const bool bOnlyMech,
+                                      const SIterateUnitsCallback &callback ) const
 {
-	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, vCenter, fRadius, bOnlyMech ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0, 0> iter( 0, ANY_PARTY, vCenter, fRadius, bOnlyMech ); !iter.IsFinished(); iter.Iterate() )
 	{
-		CAIUnit * pAIUnit = *iter;
+		CAIUnit *pAIUnit = *iter;
 		if ( !pAIUnit || !pAIUnit->IsAlive() )
 			continue;
 
@@ -393,7 +403,7 @@ const bool CCommonUnit::IterateUnits( const CVec2 &vCenter, const float fRadius,
 	return true;
 }
 
-IStaticPath* CCommonUnit::GetPathToBuilding( CBuilding *pBuilding, int *pnEntrance )
+IStaticPath *CCommonUnit::GetPathToBuilding( CBuilding *pBuilding, int *pnEntrance )
 {
 	float fMinLen = 1e10;
 	IStaticPath *pBestPath = 0;
@@ -431,7 +441,7 @@ IStaticPath* CCommonUnit::GetPathToBuilding( CBuilding *pBuilding, int *pnEntran
 	return pBestPath;
 }
 
-IStaticPath* CCommonUnit::GetPathToEntrenchment( CEntrenchment *pEntrenchment )
+IStaticPath *CCommonUnit::GetPathToEntrenchment( CEntrenchment *pEntrenchment )
 {
 	SRect rect;
 	pEntrenchment->GetBoundRect( &rect );
@@ -477,7 +487,7 @@ const uint32_t CCommonUnit::GetNormale( const CVec2 &vCenter ) const
 void CCommonUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 {
 	NI_ASSERT( timeDiff <= SConsts::AI_SEGMENT_DURATION, fmt::format( "wrong segment time {}", timeDiff ) );
-	const float t = Clamp( (float)timeDiff/(float)(SConsts::AI_SEGMENT_DURATION), 0.0f, 1.0f );
+	const float t = Clamp( (float)timeDiff / (float)( SConsts::AI_SEGMENT_DURATION ), 0.0f, 1.0f );
 	//DebugTrace( "CCommonUnit::GetPlacement t = %2.3f", t );
 
 	const CVec3 vPosition( vOldPlacement * t + GetCenter() * ( 1.0f - t ) );
@@ -518,36 +528,38 @@ void CCommonUnit::SetBehaviourMoving( const SBehaviour::EMoving _moving )
 	beh.moving = _moving;
 }
 
-void CCommonUnit::ProduceEventByAction( const NDb::EUnitSpecialAbility eAbility, const NDb::ESpecialAbilityParam action, class CAICommand * pCommand )
+void CCommonUnit::ProduceEventByAction( const NDb::EUnitSpecialAbility eAbility,
+                                        const NDb::ESpecialAbilityParam action,
+                                        class CAICommand *pCommand )
 {
 	const NDb::SUnitSpecialAblityDesc *pDesc = GetUnitAbilityDesc( eAbility );
 	if ( !pDesc )
 		return;
 
-	switch( action )
+	switch ( action )
 	{
-	case PARAM_ABILITY_ON: // switch ability on ( single use )
+		case PARAM_ABILITY_ON: // switch ability on ( single use )
 		{
 			SExecutorEventParam param( EID_ABILITY_ACTIVATE, 0, GetUniqueId() );
 			CExecutorEventSpecialAbilityActivate event( param, eAbility, pCommand, pDesc );
 			theExecutorContainer.RaiseEvent( event );
 		}
 		break;
-	case PARAM_ABILITY_OFF: // switch ability off ( single use )
+		case PARAM_ABILITY_OFF: // switch ability off ( single use )
 		{
 			SExecutorEventParam param( EID_ABILITY_DEACTIVATE, 0, GetUniqueId() );
 			CExecutorEventSpecialAbilityActivate event( param, eAbility, 0, pDesc );
 			theExecutorContainer.RaiseEvent( event );
 		}
 		break;
-	case PARAM_ABILITY_AUTOCAST_ON: // switch on autocast mode
+		case PARAM_ABILITY_AUTOCAST_ON: // switch on autocast mode
 		{
 			SExecutorEventParam param( EID_ABILITY_ACTIVATE_AUTOCAST, 0, GetUniqueId() );
 			CExecutorEventSpecialAbilityActivate event( param, eAbility, 0, pDesc );
 			theExecutorContainer.RaiseEvent( event );
 		}
 		break;
-	case PARAM_ABILITY_AUTOCAST_OFF: // switch autocast mode off
+		case PARAM_ABILITY_AUTOCAST_OFF: // switch autocast mode off
 		{
 			SExecutorEventParam param( EID_ABILITY_DEACTIVATE_AUTOCAST, 0, GetUniqueId() );
 			CExecutorEventSpecialAbilityActivate event( param, eAbility, 0, pDesc );
@@ -573,7 +585,8 @@ const bool CCommonUnit::TryExecuteCommand( CAICommand *pCommand, const bool bPla
 			if ( !availEnemies.empty() )
 			{
 				nCommandLeft = g_nDefaultCommandsLimit;
-				ChangePlayer( availEnemies[NRandom::Random( 0, availEnemies.size()-1 )] ); RecordRandomCall();
+				ChangePlayer( availEnemies[NRandom::Random( 0, availEnemies.size() - 1 )] );
+				RecordRandomCall();
 			}
 			return false;
 		}

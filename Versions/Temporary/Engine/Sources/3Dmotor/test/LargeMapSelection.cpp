@@ -13,6 +13,7 @@ namespace
 class CTestArmor : public NDb::CResource
 {
 	OBJECT_BASIC_METHODS( CTestArmor );
+
 public:
 	int GetTypeID() const override { return 0; }
 };
@@ -20,6 +21,7 @@ public:
 class CTestUnit : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CTestUnit );
+
 public:
 	std::vector<CObj<CObjectBase>> hulls;
 };
@@ -27,6 +29,7 @@ public:
 class CChangeCounter : public NAI::IAIMapTracker
 {
 	OBJECT_NOCOPY_METHODS( CChangeCounter );
+
 public:
 	int count = 0;
 	void OnChange() override { ++count; }
@@ -41,10 +44,7 @@ protected:
 	CObj<CMemObject> geometry = new CMemObject;
 	std::vector<CObj<CTestUnit>> units;
 
-	void SetUp() override
-	{
-		geometry->CreateCube( CVec3( -1, -1, -1 ), CVec3( 2, 2, 2 ) );
-	}
+	void SetUp() override { geometry->CreateCube( CVec3( -1, -1, -1 ), CVec3( 2, 2, 2 ) ); }
 
 	void PlaceUnit( CTestUnit *unit, const CVec3 &center, int mask = 1 )
 	{
@@ -92,8 +92,7 @@ TEST_F( LargeMapSelection, ClickRaysReachGeometryBeyondTwentyPatches )
 	{
 		SCOPED_TRACE( patches );
 		const float edge = patches * 44.0f - 2;
-		for ( const CVec3 &center : { CVec3( edge, 200, 0 ),
-			CVec3( 200, edge, 0 ), CVec3( edge, edge, 0 ) } )
+		for ( const CVec3 &center : { CVec3( edge, 200, 0 ), CVec3( 200, edge, 0 ), CVec3( edge, edge, 0 ) } )
 		{
 			CTestUnit *unit = AddUnit( center );
 			auto hits = Pick( center );
@@ -123,7 +122,7 @@ TEST_F( LargeMapSelection, BoxSelectionGridIncludesOnlyObjectsInRectangle )
 	grid.gridFrames.FillEvery( -1 );
 	map->TraceGrid( &grid, -1, NAI::IAIMap::STH_SORT_INTERVALS );
 
-	std::set<CObjectBase*> inView, inBox;
+	std::set<CObjectBase *> inView, inBox;
 	for ( int y = 0; y < grid.resGrid.GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < grid.resGrid.GetSizeX(); ++x )
@@ -136,8 +135,8 @@ TEST_F( LargeMapSelection, BoxSelectionGridIncludesOnlyObjectsInRectangle )
 			}
 		}
 	}
-	EXPECT_EQ( inBox, (std::set<CObjectBase*>{ first, second }) );
-	EXPECT_EQ( inView, (std::set<CObjectBase*>{ first, second, outsideBox }) );
+	EXPECT_EQ( inBox, ( std::set<CObjectBase *>{ first, second } ) );
+	EXPECT_EQ( inView, ( std::set<CObjectBase *>{ first, second, outsideBox } ) );
 	EXPECT_EQ( inView.count( outsideView ), 0u );
 }
 

@@ -7,7 +7,6 @@
 #include "libdb/Manipulator.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
 
-
 class CObjectFilterCollector : public IObjectFilterCollector
 {
 	OBJECT_NOCOPY_METHODS( CObjectFilterCollector );
@@ -33,20 +32,16 @@ class CObjectFilterCollector : public IObjectFilterCollector
 		mutable CObjectCollection objectCollection;
 		mutable int nObjectCollectionCount;
 		//
-		SObjectFilter()
-			: bSeparator( false ),
-				bCached( false ),
-				nObjectCollectionCount( 0 ) {}
+		SObjectFilter() : bSeparator( false ), bCached( false ), nObjectCollectionCount( 0 ) {}
 		SObjectFilter( const SObjectFilter &rObjectFilter )
-			: szName( rObjectFilter.szName ),
-				partList( rObjectFilter.partList ),
-				bSeparator( rObjectFilter.bSeparator ),
-				bCached( rObjectFilter.bCached ),
-				objectCollection( rObjectFilter.objectCollection ),
-				nObjectCollectionCount( rObjectFilter.nObjectCollectionCount ) {}
-		SObjectFilter& operator=( const SObjectFilter &rObjectFilter )
+				: szName( rObjectFilter.szName ), partList( rObjectFilter.partList ), bSeparator( rObjectFilter.bSeparator ),
+					bCached( rObjectFilter.bCached ), objectCollection( rObjectFilter.objectCollection ),
+					nObjectCollectionCount( rObjectFilter.nObjectCollectionCount )
 		{
-			if( &rObjectFilter != this )
+		}
+		SObjectFilter &operator=( const SObjectFilter &rObjectFilter )
+		{
+			if ( &rObjectFilter != this )
 			{
 				szName = rObjectFilter.szName;
 				partList = rObjectFilter.partList;
@@ -60,10 +55,14 @@ class CObjectFilterCollector : public IObjectFilterCollector
 		//
 		int operator&( IXmlSaver &saver );
 
-		bool InsertObjectToCollection( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName, const std::string &rszObjectName ) const;
+		bool InsertObjectToCollection( CObjectCollection *pObjectCollection,
+		                               const std::string &rszObjectTypeName,
+		                               const std::string &rszObjectName ) const;
 		int GetObjectCollection( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName ) const;
 		void ExtractObjectsForFilterPart( CObjectNameCollection *pObjectNameCollection, const SPart &rPart ) const;
-		void MergeSets( CObjectNameCollection *pDestination, const CObjectNameCollection &rSource, const std::string &szOperationType ) const;
+		void MergeSets( CObjectNameCollection *pDestination,
+		                const CObjectNameCollection &rSource,
+		                const std::string &szOperationType ) const;
 
 		//IObjectFilter
 		int GetObjectCollection( CObjectCollection *pObjectCollection ) const;
@@ -74,22 +73,21 @@ class CObjectFilterCollector : public IObjectFilterCollector
 	//
 	CObjectFilterListMap objectFilterListMap;
 
-	const SObjectFilter* LocateObjectFilter( const std::string &rszFilterType, const int nFilterIndex ) const;
+	const SObjectFilter *LocateObjectFilter( const std::string &rszFilterType, const int nFilterIndex ) const;
 
 protected:
 	// IObjectFilterCollector
 	bool Load( CDataStream *pStream );
 	bool Save( CDataStream *pStream );
 	//
-	int GetFilterList( CFilterList* pFilterList, const std::string &rszFilterType ) const;
+	int GetFilterList( CFilterList *pFilterList, const std::string &rszFilterType ) const;
 	//
 	bool IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const;
-	const IObjectFilter* Get( const std::string &rszFilterType, const int nFilterIndex ) const;
+	const IObjectFilter *Get( const std::string &rszFilterType, const int nFilterIndex ) const;
 
-	int ShowFilterSelectionDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
-	int ShowFilterCreationDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
+	int ShowFilterSelectionDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
+	int ShowFilterCreationDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
 };
-
 
 class CObjectCollector : public IObjectCollector
 {
@@ -100,7 +98,7 @@ class CObjectCollector : public IObjectCollector
 	typedef std::vector<std::string> CObjectTypeNameList;
 	typedef std::unordered_map<std::string, CObjectTypeNameList> CDataExtractorTypeMap;
 	//
-	typedef std::unordered_map<std::string, CObj<IObjectDataExtractor> > CDataExtractorMap;
+	typedef std::unordered_map<std::string, CObj<IObjectDataExtractor>> CDataExtractorMap;
 	//
 	CObjectCollection objectCollection;
 	//
@@ -114,16 +112,29 @@ class CObjectCollector : public IObjectCollector
 	CDataExtractorMap dataExtractorMap;
 
 	void CreateImageLists();
-	const std::string& LocateExtractorType( const std::string &rszObjectTypeName ) const;
-	const SObjectParams* LocateObjectParams( const std::string &rszObjectTypeName, const std::string &rszObjectName ) const;
-	const SObjectParams* GetObjectParams( const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType );
-	void FillObjectParams( SObjectParams *pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType );
-	bool InsertObjectToCollection( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName, const std::string &rszObjectName, const SObjectParams* pObjectParams ) const;
+	const std::string &LocateExtractorType( const std::string &rszObjectTypeName ) const;
+	const SObjectParams *LocateObjectParams( const std::string &rszObjectTypeName,
+	                                         const std::string &rszObjectName ) const;
+	const SObjectParams *GetObjectParams( const std::string &rszObjectTypeName,
+	                                      const std::string &rszObjectName,
+	                                      const std::string &rszDataExtractorType );
+	void FillObjectParams( SObjectParams *pObjectParams,
+	                       const std::string &rszObjectTypeName,
+	                       const std::string &rszObjectName,
+	                       const std::string &rszDataExtractorType );
+	bool InsertObjectToCollection( CObjectCollection *pObjectCollection,
+	                               const std::string &rszObjectTypeName,
+	                               const std::string &rszObjectName,
+	                               const SObjectParams *pObjectParams ) const;
 	//
-	bool InsertObjectToCollection( const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType );
+	bool InsertObjectToCollection( const std::string &rszObjectTypeName,
+	                               const std::string &rszObjectName,
+	                               const std::string &rszDataExtractorType );
 	bool RemoveObjectFromCollection( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 	//
-	void InsertObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType );
+	void InsertObject( const std::string &rszObjectTypeName,
+	                   const std::string &rszObjectName,
+	                   const std::string &rszDataExtractorType );
 	void RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 
 protected:
@@ -137,14 +148,12 @@ protected:
 	// возвращает общее количество объектов
 	int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName );
 	int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter );
-	bool GetObjectParams( SObjectParams* pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool GetObjectParams( SObjectParams *pObjectParams,
+	                      const std::string &rszObjectTypeName,
+	                      const std::string &rszObjectName );
 	//
-	IImageList* GetImageList( int nImageListType );
+	IImageList *GetImageList( int nImageListType );
 
 public:
-	CObjectCollector()
-		: nDefaultImageIndex( INVALID_NODE_ID )
-	{
-		CreateImageLists();
-	}
+	CObjectCollector() : nDefaultImageIndex( INVALID_NODE_ID ) { CreateImageLists(); }
 };

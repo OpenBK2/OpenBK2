@@ -13,24 +13,24 @@
 // not have to spell them differently.
 enum EHeightIconV3
 {
-	TMITH_TILE					= 0,
-	TMITH_UP						= 1,
-	TMITH_DOWN					= 2,
-	TMITH_ROUND					= 3,
-	TMITH_PLATO					= 4,
-	TMITH_CIRCLE				= 5,
-	TMITH_SQUARE				= 6,
-	TMITH_BRUSH_SIZE_C0	= 7,
-	TMITH_BRUSH_SIZE_C1	= 8,
-	TMITH_BRUSH_SIZE_C2	= 9,
-	TMITH_BRUSH_SIZE_C3	= 10,
-	TMITH_BRUSH_SIZE_C4	= 11,
-	TMITH_BRUSH_SIZE_R0	= 12,
-	TMITH_BRUSH_SIZE_R1	= 13,
-	TMITH_BRUSH_SIZE_R2	= 14,
-	TMITH_BRUSH_SIZE_R3	= 15,
-	TMITH_BRUSH_SIZE_R4	= 16,
-	TMITH_COUNT					= 17,
+	TMITH_TILE = 0,
+	TMITH_UP = 1,
+	TMITH_DOWN = 2,
+	TMITH_ROUND = 3,
+	TMITH_PLATO = 4,
+	TMITH_CIRCLE = 5,
+	TMITH_SQUARE = 6,
+	TMITH_BRUSH_SIZE_C0 = 7,
+	TMITH_BRUSH_SIZE_C1 = 8,
+	TMITH_BRUSH_SIZE_C2 = 9,
+	TMITH_BRUSH_SIZE_C3 = 10,
+	TMITH_BRUSH_SIZE_C4 = 11,
+	TMITH_BRUSH_SIZE_R0 = 12,
+	TMITH_BRUSH_SIZE_R1 = 13,
+	TMITH_BRUSH_SIZE_R2 = 14,
+	TMITH_BRUSH_SIZE_R3 = 15,
+	TMITH_BRUSH_SIZE_R4 = 16,
+	TMITH_COUNT = 17,
 };
 
 // The terrain height palette, behind a boundary that names no toolkit.
@@ -41,29 +41,29 @@ enum EHeightIconV3
 // two implementations.
 namespace NHeightViewV3
 {
-	// The object collector's type name for the terrain tiles the list shows.
-	// Shared rather than duplicated: both palettes pass it to the collector on
-	// every refill, and a typo in one of them would show an empty list with no
-	// other symptom.
-	inline constexpr char TILE_TYPE_NAME[] = "TGTerraType";
+// The object collector's type name for the terrain tiles the list shows.
+// Shared rather than duplicated: both palettes pass it to the collector on
+// every refill, and a typo in one of them would show an empty list with no
+// other symptom.
+inline constexpr char TILE_TYPE_NAME[] = "TGTerraType";
 
-	// One frame of the icon strip, square.
-	inline constexpr int ICON_PIXELS = 32;
+// One frame of the icon strip, square.
+inline constexpr int ICON_PIXELS = 32;
 
-	// Puts a tile into the property browser -- what the tile list's Properties
-	// context menu item does.
-	//
-	// Nothing in it is a toolkit's business: it builds a manipulator over the
-	// named object and hands it to the property control dialog. Both palettes
-	// call it with the name of the selected tile, which is the one thing they
-	// have to work out for themselves.
-	//
-	// Defined in HeightViewV3.cpp.
-	void ShowTileProperties( const std::string &rszTileName );
+// Puts a tile into the property browser -- what the tile list's Properties
+// context menu item does.
+//
+// Nothing in it is a toolkit's business: it builds a manipulator over the
+// named object and hands it to the property control dialog. Both palettes
+// call it with the name of the selected tile, which is the one thing they
+// have to work out for themselves.
+//
+// Defined in HeightViewV3.cpp.
+void ShowTileProperties( const std::string &rszTileName );
 
-	// Creates the palette in pPage, its page of the shortcut bar, registers it
-	// in pPalettes, which owns it from then on, and returns it. Null if it could
-	// not be created.
-	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage );
+// Creates the palette in pPage, its page of the shortcut bar, registers it
+// in pPalettes, which owns it from then on, and returns it. Null if it could
+// not be created.
+IWidget *Create( CPaletteList *pPalettes, IWidget *pPage );
 
 }

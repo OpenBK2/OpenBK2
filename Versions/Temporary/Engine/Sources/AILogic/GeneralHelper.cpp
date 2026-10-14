@@ -38,12 +38,12 @@ void SGeneralHelper::SFindBestByEnumeratorPredicate::operator()( class CCommonUn
 //*											SDeadPredicate															*
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool SGeneralHelper::SDeadPredicate::operator() ( CCommonUnit * pUnit )
+bool SGeneralHelper::SDeadPredicate::operator()( CCommonUnit *pUnit )
 {
 	return !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive();
 }
 
-bool SGeneralHelper::SInactiveUnitPredicate::operator() ( class CCommonUnit * pUnit )
+bool SGeneralHelper::SInactiveUnitPredicate::operator()( class CCommonUnit *pUnit )
 {
 	return !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() || pUnit->GetParty() != nParty;
 }
@@ -64,21 +64,24 @@ bool SGeneralHelper::SFindByEnumeratorPredicate::operator()( class CCommonUnit *
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SGeneralHelper::IsUnitNearParcel( const CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel )
 {
-	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() ) return false;
+	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() )
+		return false;
 	const CVec2 vDiff1( ( pUnit->GetCenterPlain() - parcel.vCenter ) );
-	return  fabs( vDiff1 ) <=  parcel.fRadius + SConsts::SPY_GLASS_RADIUS / 2;
+	return fabs( vDiff1 ) <= parcel.fRadius + SConsts::SPY_GLASS_RADIUS / 2;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SGeneralHelper::IsUnitInParcel( const CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel )
 {
-	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() ) return false;
+	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() )
+		return false;
 	const CVec2 vDiff( pUnit->GetCenterPlain() - parcel.vCenter );
 	return fabs( vDiff ) <= parcel.fRadius;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float SGeneralHelper::CalcUnitSeverity( const CCommonUnit *pUnit )
 {
-	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() ) return 0;
+	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() )
+		return 0;
 	return pUnit->GetPriceMax();
 }
 

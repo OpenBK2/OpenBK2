@@ -11,21 +11,21 @@ class CCursor : public ICursor
 	OBJECT_NOCOPY_METHODS( CCursor )
 	//
 	typedef std::unordered_map<int, NWinCursor::TCursor> CModesMap;
-	CModesMap modes;											// registered modes
+	CModesMap modes; // registered modes
 
 	std::unordered_map<int, std::string> modesFiles;
 	//
-	int nCurrMode;												// current cursor mode
-	NWinCursor::TCursor hCurrCursor;			// current cursor
+	int nCurrMode;                   // current cursor mode
+	NWinCursor::TCursor hCurrCursor; // current cursor
 	// Where the animation of hCurrCursor has got to, how many steps it has, and
 	// when the step it is showing runs out. A still cursor has one step, and so
 	// does every cursor on Windows, where the animation is USER32's to run.
 	int nCurrStep;
 	int nStepCount;
 	std::chrono::steady_clock::time_point timeNextStep;
-	CTRect<long> rcClip;									// current cursor clip area
-	bool bAcquired;												// is control over cursor acquired?
-	bool bShow;														// do we need show cursor?
+	CTRect<long> rcClip; // current cursor clip area
+	bool bAcquired;      // is control over cursor acquired?
+	bool bShow;          // do we need show cursor?
 	bool bCanShow;
 	//
 	void AcquireLocal();
@@ -35,6 +35,7 @@ class CCursor : public ICursor
 	void ClearModes();
 	//
 	~CCursor();
+
 public:
 	CCursor();
 	bool Init() { return true; }

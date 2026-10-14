@@ -3,7 +3,6 @@
 //      are changed infrequently
 //
 
-
 #pragma once
 // No MFC: nothing links it, so the __AFX__ branch that
 // included afxwin.h and friends is gone.
@@ -19,17 +18,16 @@
 #include <cstdlib>
 #include <cassert>
 
-
 #pragma component( mintypeinfo, on )
 #include <cmath>
 #include <cstring>
 //
 #include "Misc/Asserts.h"
 //
-#pragma warning( disable: 4018 4355 4800 4244 4267 )
-#pragma warning( disable: 4127 4100 4201 4512 4389 )
+#pragma warning( disable : 4018 4355 4800 4244 4267 )
+#pragma warning( disable : 4127 4100 4201 4512 4389 )
 #ifdef NIVAL_DLL
-#pragma warning( disable: 4273)
+#pragma warning( disable : 4273 )
 #endif
 
 #include <list>
@@ -42,7 +40,7 @@
 
 namespace NTimer
 {
-	typedef uint32_t STime;
+typedef uint32_t STime;
 }
 //
 #include "Misc/Tools.h"

@@ -32,7 +32,7 @@ struct IObjectTree
 	// Whether the tree has been given its table's folder yet.
 	virtual bool IsTreeCreated() = 0;
 	// The tree as a view: what a folder manipulator is set on.
-	virtual IView* GetView() = 0;
+	virtual IView *GetView() = 0;
 	// Fills the tree from the folder.
 	virtual void CreateTree() = 0;
 	// Hands the selected objects to the properties view that
@@ -50,7 +50,6 @@ struct IObjectTree
 	// brings the browser to it.
 	virtual void SetStrongSelection() = 0;
 };
-
 
 struct IObjectBrowser
 {
@@ -87,37 +86,38 @@ struct IObjectBrowser
 
 	virtual void RemoveAllTables() = 0;
 	// A table and its tree, not filled yet. Null on failure.
-	virtual IObjectTree* AddTable( const std::string &rszTableName ) = 0;
+	virtual IObjectTree *AddTable( const std::string &rszTableName ) = 0;
 	virtual int GetTableCount() = 0;
-	virtual IObjectTree* GetTable( int nIndex ) = 0;
-	virtual IObjectTree* GetTable( const std::string &rszTableName ) = 0;
+	virtual IObjectTree *GetTable( int nIndex ) = 0;
+	virtual IObjectTree *GetTable( const std::string &rszTableName ) = 0;
 	// Chooses pTree's table, which tells the listener.
 	virtual bool ActivateTable( IObjectTree *pTree ) = 0;
 	// The chosen table's tree, or null.
-	virtual IObjectTree* GetActiveTable() = 0;
+	virtual IObjectTree *GetActiveTable() = 0;
 	virtual bool GetActiveTableName( std::string *pszTableName ) = 0;
 	// Shows the chosen table's tree and hides the others.
 	virtual void ShowActiveTable() = 0;
 
 	// What answers CHID_OBJECT_STORAGE for this browser: the objects selected in
 	// the chosen table, which the editor's placing tools read.
-	virtual ICommandHandler* GetObjectStorage() = 0;
+	virtual ICommandHandler *GetObjectStorage() = 0;
 };
-
-
-
 
 class wxWindow;
 
 namespace NObjectBrowser
 {
-	// The wx contents made straight inside a wx window, for a wx dialog -- the
-	// link picker -- or a wx frame's pane, rather than inside an MFC pane.
-	// *ppWindow is what to put in the layout, which then does what SetBounds
-	// does for an MFC pane; Show shows and hides it. pOwner is what the trees'
-	// dialogs open over, and must outlive the contents. nGDBBrowserID is a
-	// browser pane's, which its trees give the frame when they take the focus;
-	// -1 for a dialog. Owned by the caller; null on failure.
-	IObjectBrowser* CreateWxIn( wxWindow *pParent, IWidget *pOwner, IObjectBrowser::IListener *pListener,
-															IObjectBrowser::EKind eKind, wxWindow **ppWindow, int nGDBBrowserID = -1 );
+// The wx contents made straight inside a wx window, for a wx dialog -- the
+// link picker -- or a wx frame's pane, rather than inside an MFC pane.
+// *ppWindow is what to put in the layout, which then does what SetBounds
+// does for an MFC pane; Show shows and hides it. pOwner is what the trees'
+// dialogs open over, and must outlive the contents. nGDBBrowserID is a
+// browser pane's, which its trees give the frame when they take the focus;
+// -1 for a dialog. Owned by the caller; null on failure.
+IObjectBrowser *CreateWxIn( wxWindow *pParent,
+                            IWidget *pOwner,
+                            IObjectBrowser::IListener *pListener,
+                            IObjectBrowser::EKind eKind,
+                            wxWindow **ppWindow,
+                            int nGDBBrowserID = -1 );
 }

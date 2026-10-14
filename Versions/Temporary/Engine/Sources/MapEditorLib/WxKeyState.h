@@ -29,20 +29,27 @@
 
 namespace NWxKey
 {
-	inline bool IsDown( unsigned nVirtualKey )
+inline bool IsDown( unsigned nVirtualKey )
+{
+	switch ( nVirtualKey )
 	{
-		switch ( nVirtualKey )
-		{
-			case VK_SHIFT:		return wxGetKeyState( WXK_SHIFT );
-			case VK_CONTROL:	return wxGetKeyState( WXK_CONTROL );
-			// VK_MENU is the Alt key, whatever its name suggests.
-			case VK_MENU:			return wxGetKeyState( WXK_ALT );
-			case VK_LEFT:			return wxGetKeyState( WXK_LEFT );
-			case VK_RIGHT:		return wxGetKeyState( WXK_RIGHT );
-			case VK_UP:				return wxGetKeyState( WXK_UP );
-			case VK_DOWN:			return wxGetKeyState( WXK_DOWN );
-		}
-		NI_ASSERT( false, "NWxKey::IsDown(): no wx key code for this virtual key" );
-		return false;
+		case VK_SHIFT:
+			return wxGetKeyState( WXK_SHIFT );
+		case VK_CONTROL:
+			return wxGetKeyState( WXK_CONTROL );
+		// VK_MENU is the Alt key, whatever its name suggests.
+		case VK_MENU:
+			return wxGetKeyState( WXK_ALT );
+		case VK_LEFT:
+			return wxGetKeyState( WXK_LEFT );
+		case VK_RIGHT:
+			return wxGetKeyState( WXK_RIGHT );
+		case VK_UP:
+			return wxGetKeyState( WXK_UP );
+		case VK_DOWN:
+			return wxGetKeyState( WXK_DOWN );
 	}
+	NI_ASSERT( false, "NWxKey::IsDown(): no wx key code for this virtual key" );
+	return false;
+}
 }

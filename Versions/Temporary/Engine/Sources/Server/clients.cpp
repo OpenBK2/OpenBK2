@@ -42,12 +42,11 @@ bool CClients::Query( const std::string &szQuery, CDbResult *pResult )
 		bOk = pDatabase->Query( szQuery, pResult );
 		if ( !bOk )
 		{
-			NI_ASSERT( false, fmt::format( "Query error, query = \"{}\", error = {}",
-				szQuery, pDatabase->GetLastError() ) );
+			NI_ASSERT( false, fmt::format( "Query error, query = \"{}\", error = {}", szQuery, pDatabase->GetLastError() ) );
 		}
 	}
 
-	(*pStatisticsCollector)["QueriesPerSecond"]->Add( 1.0f );
+	( *pStatisticsCollector )["QueriesPerSecond"]->Add( 1.0f );
 	return bOk;
 }
 
@@ -68,7 +67,8 @@ void CClients::RecalcDBOverload()
 		fQueriesPerSecond = 0.0f;
 	}
 	else
-		fQueriesPerSecond = float( nQueries + fPrevQueriesPerSecond * QUERIES_CALC_INTERVAL ) / ( fTimeInterval + QUERIES_CALC_INTERVAL );
+		fQueriesPerSecond =
+				float( nQueries + fPrevQueriesPerSecond * QUERIES_CALC_INTERVAL ) / ( fTimeInterval + QUERIES_CALC_INTERVAL );
 }
 
 bool CClients::IsCriticalBusy() const
@@ -102,7 +102,6 @@ CClients::CClients( IDatabase *_pDatabase )
 			nMaxXP = NStr::ToInt( result.Get( 0, 0 ) );
 		}
 	}
-
 }
 
 int CClients::GetDBUserIDbyNick( const std::string &_szNick )
@@ -111,8 +110,8 @@ int CClients::GetDBUserIDbyNick( const std::string &_szNick )
 	if ( it != DBUserIDByNick.end() )
 		return it->second;
 	std::string szNick = EscapeString( _szNick );
-	std::string szQuery = "SELECT t.userID FROM users AS t, names AS n WHERE ( n.Name = '" +
-		szNick + "' AND t.name = n.nameID )";
+	std::string szQuery =
+			"SELECT t.userID FROM users AS t, names AS n WHERE ( n.Name = '" + szNick + "' AND t.name = n.nameID )";
 	CDbResult result;
 	Query( szQuery, &result );
 	if ( result.GetRowCount() > 0 )
@@ -133,11 +132,11 @@ void CClients::LoadIgnoreFriendList()
 		std::string szQuery = "SELECT recipient, sender FROM ignorelist ";
 		CDbResult result;
 		Query( szQuery, &result );
-			int nRows = result.GetRowCount();
+		int nRows = result.GetRowCount();
 		for ( int i = 0; i < nRows; ++i )
 		{
 			const CDbRow row = result.Row( 0 );
-			ignoreList[ NStr::ToInt( row[0] ) ].insert( NStr::ToInt( row[1] ) );
+			ignoreList[NStr::ToInt( row[0] )].insert( NStr::ToInt( row[1] ) );
 		}
 		WriteMSG( "Server-side ignore list loaded.\n" );
 	}
@@ -146,11 +145,11 @@ void CClients::LoadIgnoreFriendList()
 		std::string szQuery = "SELECT player, notifier FROM friendlist ";
 		CDbResult result;
 		Query( szQuery, &result );
-			int nRows = result.GetRowCount();
+		int nRows = result.GetRowCount();
 		for ( int i = 0; i < nRows; ++i )
 		{
 			const CDbRow row = result.Row( 0 );
-			friendList[ NStr::ToInt( row[0] ) ].insert( NStr::ToInt( row[1] ) );
+			friendList[NStr::ToInt( row[0] )].insert( NStr::ToInt( row[1] ) );
 		}
 		WriteMSG( "Server-side friends list loaded.\n" );
 	}
@@ -166,13 +165,13 @@ void CClients::AddIgnoreFriendPair( const int nRecipient, const std::string &szS
 		const int nSenderDBUserID = GetDBUserIDbyNick( szSender );
 		if ( nRecipientDBUserID == -1 || nSenderDBUserID == -1 )
 			return;
-		switch( eList )
+		switch ( eList )
 		{
-		case IGNORE_LIST:
-			ignoreList[ nRecipientDBUserID ].insert( nSenderDBUserID );
-			break;
-		case FRIEND_LIST:
-			friendList[ nRecipientDBUserID ].insert( nSenderDBUserID );
+			case IGNORE_LIST:
+				ignoreList[nRecipientDBUserID].insert( nSenderDBUserID );
+				break;
+			case FRIEND_LIST:
+				friendList[nRecipientDBUserID].insert( nSenderDBUserID );
 		}
 
 		AddIgnoreFriendPairToDB( nRecipientDBUserID, nSenderDBUserID, eList );
@@ -189,46 +188,50 @@ void CClients::DeleteIgnoreFriendPair( const int nRecipient, const std::string &
 		const int nSenderDBUserID = GetDBUserIDbyNick( szSender );
 		if ( nRecipientDBUserID == -1 || nSenderDBUserID == -1 )
 			return;
-		switch( eList )
+		switch ( eList )
 		{
-		case IGNORE_LIST:
-			ignoreList[ nRecipientDBUserID ].erase( nSenderDBUserID );
-		break;
-		case FRIEND_LIST:
-			friendList[ nRecipientDBUserID ].erase( nSenderDBUserID );
+			case IGNORE_LIST:
+				ignoreList[nRecipientDBUserID].erase( nSenderDBUserID );
+				break;
+			case FRIEND_LIST:
+				friendList[nRecipientDBUserID].erase( nSenderDBUserID );
 		}
 		DeleteIgnoreFriendPairFromDB( nRecipientDBUserID, nSenderDBUserID, eList );
 	}
 }
 
-void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList )
+void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID,
+                                        const int nSenderDBUserID,
+                                        EIgnoreFriendList eList )
 {
 	std::string szQuery;
-	switch( eList )
+	switch ( eList )
 	{
-	case IGNORE_LIST:
-		szQuery = fmt::format( "INSERT INTO ignorelist (recipient,sender) VALUES ( '{}', '{}' )", nRecipientDBUserID,
-			nSenderDBUserID );
-		break;
-	case FRIEND_LIST:
-		szQuery = fmt::format( "INSERT INTO friendlist (player,notifier) VALUES ( '{}', '{}' )", nRecipientDBUserID,
-			nSenderDBUserID );
+		case IGNORE_LIST:
+			szQuery = fmt::format(
+					"INSERT INTO ignorelist (recipient,sender) VALUES ( '{}', '{}' )", nRecipientDBUserID, nSenderDBUserID );
+			break;
+		case FRIEND_LIST:
+			szQuery = fmt::format(
+					"INSERT INTO friendlist (player,notifier) VALUES ( '{}', '{}' )", nRecipientDBUserID, nSenderDBUserID );
 	}
 	Execute( szQuery );
 }
 
-void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList )
+void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID,
+                                             const int nSenderDBUserID,
+                                             EIgnoreFriendList eList )
 {
 	std::string szQuery;
-	switch( eList )
+	switch ( eList )
 	{
-	case IGNORE_LIST:
-		szQuery = fmt::format( "DELETE FROM ignorelist WHERE recipient = '{}' AND sender = '{}'", nRecipientDBUserID,
-			nSenderDBUserID );
-		break;
-	case FRIEND_LIST:
-		szQuery = fmt::format( "DELETE FROM friendlist WHERE player = '{}' AND notifier = '{}'", nRecipientDBUserID,
-			nSenderDBUserID );
+		case IGNORE_LIST:
+			szQuery = fmt::format(
+					"DELETE FROM ignorelist WHERE recipient = '{}' AND sender = '{}'", nRecipientDBUserID, nSenderDBUserID );
+			break;
+		case FRIEND_LIST:
+			szQuery = fmt::format(
+					"DELETE FROM friendlist WHERE player = '{}' AND notifier = '{}'", nRecipientDBUserID, nSenderDBUserID );
 	}
 	Execute( szQuery );
 }
@@ -237,14 +240,14 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSe
 {
 	if ( IsOnLine( nRecipient ) )
 	{
-		std::unordered_map<int,std::string>::const_iterator it = nickByID.find( nRecipient );
+		std::unordered_map<int, std::string>::const_iterator it = nickByID.find( nRecipient );
 		const int nRecipientDBID = GetDBUserIDbyNick( it->second );
 		const int nSenderDBID = GetDBUserIDbyNick( szSender );
 		{
-      std::unordered_map<int, std::unordered_set<int> >::const_iterator it;
-			switch( eList )
+			std::unordered_map<int, std::unordered_set<int>>::const_iterator it;
+			switch ( eList )
 			{
-			case IGNORE_LIST:
+				case IGNORE_LIST:
 				{
 					it = ignoreList.find( nRecipientDBID );
 					if ( it == ignoreList.end() )
@@ -253,7 +256,7 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSe
 					return recipientsIgnoreList.find( nSenderDBID ) != recipientsIgnoreList.end();
 					break;
 				}
-			case FRIEND_LIST:
+				case FRIEND_LIST:
 				{
 					it = friendList.find( nRecipientDBID );
 					if ( it == friendList.end() )
@@ -266,7 +269,7 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSe
 		}
 	}
 	else
-    return false;
+		return false;
 }
 
 std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList eList )
@@ -274,15 +277,17 @@ std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnore
 	if ( IsOnLine( nClient ) )
 	{
 		std::string szQuery;
-		switch( eList )
+		switch ( eList )
 		{
-		case IGNORE_LIST:
-			szQuery = fmt::format( "SELECT names.Name FROM ignorelist, users, names WHERE users.userID = ignorelist.sender AND names.nameID = users.name AND ignorelist.recipient = '{}'",
-				GetDBUserIDbyNick( nickByID[nClient] ) );
-			break;
-		case FRIEND_LIST:
-			szQuery = fmt::format( "SELECT names.Name FROM friendlist, users, names WHERE users.userID = friendlist.notifier AND names.nameID = users.name AND friendlist.player = '{}'",
-				GetDBUserIDbyNick( nickByID[nClient] ) );
+			case IGNORE_LIST:
+				szQuery = fmt::format(
+						"SELECT names.Name FROM ignorelist, users, names WHERE users.userID = ignorelist.sender AND names.nameID = users.name AND ignorelist.recipient = '{}'",
+						GetDBUserIDbyNick( nickByID[nClient] ) );
+				break;
+			case FRIEND_LIST:
+				szQuery = fmt::format(
+						"SELECT names.Name FROM friendlist, users, names WHERE users.userID = friendlist.notifier AND names.nameID = users.name AND friendlist.player = '{}'",
+						GetDBUserIDbyNick( nickByID[nClient] ) );
 		}
 
 		CDbResult result;
@@ -316,7 +321,7 @@ bool CClients::IsBadNick( const std::string &szNick )
 	// TODO:
 	// Нужна проверка ника на соответствие требованиям
 
-	return	false;
+	return false;
 }
 
 bool CClients::IsBannedNick( const std::string &szNick )
@@ -355,8 +360,9 @@ const std::string CClients::GetCDKey( const std::string &szNick )
 {
 	if ( szNick.empty() )
 		return "";
-	std::string szQuery = "SELECT cdkeys.CDKey FROM cdkeys, users, names WHERE ( cdkeys.cdkeyID = users.cdkey AND names.nameID = users.name AND names.Name = '" +
-		EscapeString( szNick ) + "')";
+	std::string szQuery =
+			"SELECT cdkeys.CDKey FROM cdkeys, users, names WHERE ( cdkeys.cdkeyID = users.cdkey AND names.nameID = users.name AND names.Name = '" +
+			EscapeString( szNick ) + "')";
 	CDbResult result;
 	Query( szQuery, &result );
 	std::string ans = "";
@@ -374,7 +380,7 @@ const std::string CClients::GetPassword( const std::string &szNick )
 		return "";
 
 	std::string szQuery = "SELECT users.password FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
-		EscapeString( szNick ) + "')";
+	                      EscapeString( szNick ) + "')";
 	CDbResult result;
 	Query( szQuery, &result );
 	std::string ans = "";
@@ -392,7 +398,7 @@ const std::string CClients::GetEmail( const std::string &szNick )
 		return "";
 
 	std::string szQuery = "SELECT users.email FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
-		EscapeString( szNick ) + "')";
+	                      EscapeString( szNick ) + "')";
 	CDbResult result;
 	Query( szQuery, &result );
 	std::string ans = "";
@@ -424,7 +430,10 @@ void CClients::Register( const std::string &_szNick, const std::string &_szPassw
 	Register( _szNick, _szPassword, _szCDKey, "nobody@nowhere.org" );
 }
 
-void CClients::Register( const std::string &_szNick, const std::string &_szPassword, const std::string &_szCDKey, const std::string &_szEmail )
+void CClients::Register( const std::string &_szNick,
+                         const std::string &_szPassword,
+                         const std::string &_szCDKey,
+                         const std::string &_szEmail )
 {
 	if ( _szNick.empty() )
 		return;
@@ -451,18 +460,17 @@ void CClients::Register( const std::string &_szNick, const std::string &_szPassw
 	Query( "SELECT MAX(statsID) FROM gamestats", &result );
 	const std::string szStatsID = result.Get( 0, 0 );
 
-	const std::string szQuery = "INSERT INTO users (name, cdkey, email, password, gamestats) VALUES ('"+ szNameID + "','" +
-		szCDKeyID + "','" + szEmail + "','"	+ szPassword + "','" + szStatsID + "')";
+	const std::string szQuery = "INSERT INTO users (name, cdkey, email, password, gamestats) VALUES ('" + szNameID +
+	                            "','" + szCDKeyID + "','" + szEmail + "','" + szPassword + "','" + szStatsID + "')";
 	Execute( szQuery );
-
 }
 
-SLadderDBInfo* CClients::GetLadderInfoFromDB( const std::string &szNick )
+SLadderDBInfo *CClients::GetLadderInfoFromDB( const std::string &szNick )
 {
-	std::unordered_map<std::string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
+	std::unordered_map<std::string, CPtr<SLadderDBInfo>>::const_iterator it = ladderInfoCache.find( szNick );
 	if ( it == ladderInfoCache.end() )
 	{
-		static std::unordered_map<std::string,int> rawData;
+		static std::unordered_map<std::string, int> rawData;
 		GetRawLadderInfoFromDB( &rawData, szNick );
 		static CPtr<SLadderDBInfo> pInfo;
 		pInfo = new SLadderDBInfo();
@@ -481,11 +489,11 @@ SLadderDBInfo* CClients::GetLadderInfoFromDB( const std::string &szNick )
 
 void CClients::PutLadderInfoToDB( const std::string &szNick )
 {
-	std::unordered_map< std::string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
+	std::unordered_map<std::string, CPtr<SLadderDBInfo>>::const_iterator it = ladderInfoCache.find( szNick );
 	if ( it != ladderInfoCache.end() )
 	{
-		SLadderDBInfo* pInfo = it->second;
-		static std::unordered_map<std::string,int> rawData;
+		SLadderDBInfo *pInfo = it->second;
+		static std::unordered_map<std::string, int> rawData;
 		ConvertLadderInfo( pInfo, &rawData, false );
 		PutRawLadderInfoToDB( szNick, rawData );
 		nMaxXP = std::max( nMaxXP, pInfo->nXP );
@@ -501,7 +509,7 @@ void CClients::LockLadderInfo( const std::string &szNick )
 
 void CClients::UnlockLadderInfo( const std::string &szNick )
 {
-	std::unordered_map<std::string,int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
+	std::unordered_map<std::string, int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
 	if ( it != ladderInfoCacheLockCounter.end() )
 	{
 		int &nCounter = it->second;
@@ -516,11 +524,16 @@ void CClients::UnlockLadderInfo( const std::string &szNick )
 	}
 }
 
-void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, std::unordered_map<std::string,int> *pHashMap, const bool bReadFromHashMap ) const
+void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo,
+                                  std::unordered_map<std::string, int> *pHashMap,
+                                  const bool bReadFromHashMap ) const
 {
-#define CONVERT_NUMBER( name, var ) NHashMapConvertor::ConvertNumber( pHashMap, name, &(pInfo->var), bReadFromHashMap )
-#define CONVERT_VECTOR( name, var, nSize ) NHashMapConvertor::ConvertVector( pHashMap, name, &(pInfo->var), bReadFromHashMap );\
-	if ( pInfo->var.size() < nSize ) pInfo->var.resize( nSize, 0 )
+#define CONVERT_NUMBER( name, var ) \
+	NHashMapConvertor::ConvertNumber( pHashMap, name, &( pInfo->var ), bReadFromHashMap )
+#define CONVERT_VECTOR( name, var, nSize )                                               \
+	NHashMapConvertor::ConvertVector( pHashMap, name, &( pInfo->var ), bReadFromHashMap ); \
+	if ( pInfo->var.size() < nSize )                                                       \
+	pInfo->var.resize( nSize, 0 )
 
 	CONVERT_NUMBER( "xp", nXP );
 	CONVERT_NUMBER( "level", nLevel );
@@ -548,28 +561,29 @@ void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, std::unordered_map<std::
 #undef CONVERT_VECTOR
 }
 
-void CClients::GetRawLadderInfoFromDB( std::unordered_map<std::string,int> *pInfo, const std::string &szNick )
+void CClients::GetRawLadderInfoFromDB( std::unordered_map<std::string, int> *pInfo, const std::string &szNick )
 {
 	pInfo->clear();
-	const std::string szClientDBID = std::to_string(  GetDBUserIDbyNick( szNick ) );
-	const std::string szQuery = "SELECT g.* FROM gamestats AS g, users AS u WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
-  CDbResult result;
+	const std::string szClientDBID = std::to_string( GetDBUserIDbyNick( szNick ) );
+	const std::string szQuery =
+			"SELECT g.* FROM gamestats AS g, users AS u WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
+	CDbResult result;
 	Query( szQuery, &result );
 	if ( result.GetRowCount() > 0 )
 	{
 		for ( int i = 0; i < result.GetColumnCount(); ++i )
 		{
-			(*pInfo)[result.GetColumnName( i )] = NStr::ToInt( result.Get( 0, i ) );
+			( *pInfo )[result.GetColumnName( i )] = NStr::ToInt( result.Get( 0, i ) );
 		}
 	}
 }
 
-void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unordered_map<std::string,int> &ladderInfo )
+void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unordered_map<std::string, int> &ladderInfo )
 {
 	const int nClientDBID = GetDBUserIDbyNick( szNick );
-	const std::string szClientDBID = std::to_string(  nClientDBID );
+	const std::string szClientDBID = std::to_string( nClientDBID );
 	{
-		std::unordered_map<std::string,int>::const_iterator statsIDiter = ladderInfo.find( "statsID" );
+		std::unordered_map<std::string, int>::const_iterator statsIDiter = ladderInfo.find( "statsID" );
 		if ( statsIDiter != ladderInfo.end() && statsIDiter->second != nClientDBID )
 		{
 			DebugTrace( "PutLadderInfoToDB: invalid ClientDBID detected!" );
@@ -580,7 +594,7 @@ void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unord
 	{
 		std::unordered_set<std::string> availableColumns = GetTableColumns( "gamestats" );
 		std::list<std::string> columnsToCreate;
-		for ( std::unordered_map<std::string,int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
+		for ( std::unordered_map<std::string, int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
 		{
 			const std::string &szStatsName = it->first;
 			if ( availableColumns.find( szStatsName ) == availableColumns.end() )
@@ -601,7 +615,7 @@ void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unord
 	// what every backend takes, and it states which row is written rather
 	// than leaving it to the join.
 	std::string szQuery = "UPDATE gamestats SET ";
-	for ( std::unordered_map<std::string,int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
+	for ( std::unordered_map<std::string, int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
 	{
 		const std::string &szStatsName = it->first;
 		const int &nStatsValue = it->second;
@@ -668,7 +682,7 @@ void CClients::SetOffLine( const int nClientID )
 	idByNick.erase( szNick );
 	DBUserIDByNick.erase( szNick );
 	gameConnections.erase( nClientID );
-	std::unordered_map<std::string,int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
+	std::unordered_map<std::string, int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
 	if ( it == ladderInfoCacheLockCounter.end() )
 		ladderInfoCache.erase( szNick );
 
@@ -721,27 +735,32 @@ void CClients::SetCommonClientInfo( const int nClientID, const SCommonClientInfo
 		iter->second = commonClientInfo;
 }
 
-void CClients::SetGameConnectInfo( const int nClientID, const int nConnection,
-																	 const std::string &szIP, const int nGameConnectPort )
+void CClients::SetGameConnectInfo( const int nClientID,
+                                   const int nConnection,
+                                   const std::string &szIP,
+                                   const int nGameConnectPort )
 {
 	std::unordered_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
 	if ( iter != onLine.end() )
 	{
-		SGameConnection &conn= gameConnections[nClientID];
+		SGameConnection &conn = gameConnections[nClientID];
 
 		conn.connections[nConnection].szIP = szIP;
 		conn.connections[nConnection].nPort = nGameConnectPort;
 	}
 }
 
-bool CClients::GetGameConnectInfo( const int nClientID, const int nConnection, SGameConnection::SAddressInfo *pAddressInfo ) const
+bool CClients::GetGameConnectInfo( const int nClientID,
+                                   const int nConnection,
+                                   SGameConnection::SAddressInfo *pAddressInfo ) const
 {
 	std::unordered_map<int, SGameConnection>::const_iterator iter = gameConnections.find( nClientID );
 	if ( iter == gameConnections.end() )
 		return false;
 
 	const SGameConnection &conn = iter->second;
-	std::unordered_map<int, SGameConnection::SAddressInfo>::const_iterator addr_iter = conn.connections.find( nConnection );
+	std::unordered_map<int, SGameConnection::SAddressInfo>::const_iterator addr_iter =
+			conn.connections.find( nConnection );
 	if ( addr_iter == conn.connections.end() )
 		return false;
 
@@ -763,8 +782,8 @@ bool CClients::IsCDKeyOnline( const std::string &szCDKey )
 {
 	if ( szCDKey == "" )
 		return true;
-	std::string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" + EscapeString( szCDKey ) +
-		"' AND c.cdkeyID = u.cdkey AND u.name = n.nameID";
+	std::string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" +
+	                      EscapeString( szCDKey ) + "' AND c.cdkeyID = u.cdkey AND u.name = n.nameID";
 	CDbResult result;
 	Query( szQuery, &result );
 	bool bResult = false;

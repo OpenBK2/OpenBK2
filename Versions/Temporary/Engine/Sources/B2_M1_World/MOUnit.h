@@ -6,9 +6,9 @@
 
 namespace NDb
 {
-	struct SAnimB2;
-	struct SAttachedModelVisObj;
-	struct SModel;
+struct SAnimB2;
+struct SAttachedModelVisObj;
+struct SModel;
 };
 
 class CMOUnit : public IMOUnit
@@ -19,17 +19,20 @@ class CMOUnit : public IMOUnit
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;
 		int nWeaponCount = 0;
 		int nAmmo = 0;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeapon); f.Add(3,&nWeaponCount); f.Add(4,&nAmmo); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWeapon );
+			f.Add( 3, &nWeaponCount );
+			f.Add( 4, &nAmmo );
+			return 0;
+		}
 	};
 	struct SAmmoCompare
 	{
 		const NDb::SWeaponRPGStats *pWeapon = nullptr;
 
 		SAmmoCompare( const NDb::SWeaponRPGStats *_pWeapon ) { pWeapon = _pWeapon; }
-		bool operator()( const SAmmo &ammo )
-		{
-			return pWeapon == ammo.pWeapon;
-		}
+		bool operator()( const SAmmo &ammo ) { return pWeapon == ammo.pWeapon; }
 	};
 
 	CAbilityInfo abilityMap;
@@ -49,26 +52,34 @@ class CMOUnit : public IMOUnit
 
 private:
 	//
-	const NDb::SUnitBaseRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() ); }
+	const NDb::SUnitBaseRPGStats *GetStatsLocal() const
+	{
+		return checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() );
+	}
 	void CopyAreas( const std::vector<SShootAreas> &newAreas );
 	bool AreasChanged( const std::vector<SShootAreas> &newAreas ) const;
 
 public:
 	struct IChooseAttached : public CObjectBase
 	{
-		virtual const NDb::SVisObj* Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj ) = 0;
+		virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj ) = 0;
 	};
+
 protected:
 	struct SChooseAttachedByDefault : public IChooseAttached
 	{
 		OBJECT_NOCOPY_METHODS( SChooseAttachedByDefault )
 	public:
-		virtual const NDb::SVisObj* Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj );
+		virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj );
 	};
 
 	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc ) = 0;
-	void TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc,
-										const NDb::ESeason eSeason, const std::string &szLocator, const ESceneSubObjType eType, const int nNumber );
+	void TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj,
+	                  IChooseAttached *pChooseFunc,
+	                  const NDb::ESeason eSeason,
+	                  const std::string &szLocator,
+	                  const ESceneSubObjType eType,
+	                  const int nNumber );
 
 	virtual void ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
 	virtual void ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
@@ -80,35 +91,45 @@ protected:
 	int GetWeaponAmmo( const NDb::SWeaponRPGStats *pWeapon ) const;
 	int GetWeaponAmmoTotal() const;
 	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
-public:
-	typedef std::list< SAbilityInfo > CAbilityInfoList;
 
-	bool Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
-	virtual bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
+public:
+	typedef std::list<SAbilityInfo> CAbilityInfoList;
+
+	bool Create( const int nUniqueID,
+	             const SAIBasicUpdate *_pUpdate,
+	             NDb::ESeason eSeason,
+	             const NDb::EDayNight eDayTime,
+	             bool bInEditor );
+	virtual bool
+	CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
 
 	void GetStatus( SObjectStatus *pStatus ) const;
 
-	IClientUpdatableProcess* AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
+	IClientUpdatableProcess *
+	AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason );
 	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update );
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
-	const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( NDb::EUserAction eAction ) const;
+	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const;
 	void GetAbilityInfo( CAbilityInfo &abilityList ) const;
-	void SetSquad( struct IMOSquad *_pSquad ) { }
-	virtual struct IMOSquad* GetSquad() const {	return 0; }
+	void SetSquad( struct IMOSquad *_pSquad ) {}
+	virtual struct IMOSquad *GetSquad() const { return 0; }
 	//
 	virtual bool NeedShowInterrior() const;
 
 	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
 	void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet );
 	void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, struct IClientAckManager *pAckManager );
-	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, ISoundScene *pSoundScene, IClientAckManager *pAckManager );
-	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
+	void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
+	                       const NDb::ESeason eSeason,
+	                       const bool bIsNight,
+	                       ISoundScene *pSoundScene,
+	                       IClientAckManager *pAckManager );
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
+	                        struct ISoundScene *pSoundScene,
+	                        IClientAckManager *pAckManager );
 	void AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate );
 
-	bool IsSelected() const
-	{
-		return (GetSquad()) ? (GetSquad()->IsSelected()) : (CMOSelectable::IsSelected());
-	}
+	bool IsSelected() const { return ( GetSquad() ) ? ( GetSquad()->IsSelected() ) : ( CMOSelectable::IsSelected() ); }
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetPossibleActions( CUserActions *pActions ) const;
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;

@@ -9,15 +9,13 @@
 
 #include <fmt/format.h>
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075CC4,CCheckRunScript)
-REGISTER_SAVELOAD_CLASS(UI, 0x11075CC5, CCheckPreprogrammed)
-REGISTER_SAVELOAD_CLASS(UI, 0x15083383, CCheckIsWindowEnabled)
-REGISTER_SAVELOAD_CLASS(UI, 0x110B5300, CCheckIsWindowVisible)
-REGISTER_SAVELOAD_CLASS(UI, 0x170B6340, CCheckIsTabActive)
-
+REGISTER_SAVELOAD_CLASS( UI, 0x11075CC4, CCheckRunScript )
+REGISTER_SAVELOAD_CLASS( UI, 0x11075CC5, CCheckPreprogrammed )
+REGISTER_SAVELOAD_CLASS( UI, 0x15083383, CCheckIsWindowEnabled )
+REGISTER_SAVELOAD_CLASS( UI, 0x110B5300, CCheckIsWindowVisible )
+REGISTER_SAVELOAD_CLASS( UI, 0x170B6340, CCheckIsTabActive )
 
 // CCheckRunScript::
-
 
 int CCheckRunScript::operator&( IBinSaver &saver )
 {
@@ -25,9 +23,13 @@ int CCheckRunScript::operator&( IBinSaver &saver )
 	return 0;
 }
 
-int CCheckRunScript::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const
+int CCheckRunScript::Check( struct IScreen *pScreen,
+                            struct IScriptWrapper *pScript,
+                            struct IProgrammedReactionsAndChecks *pProg,
+                            uint16_t wKeyboardFlags ) const
 {
-	NI_ASSERT( pScript != 0, fmt::format( "CCheckRunScript function = \"{}\" but don't have script loaded", pDesc->szScriptFunction ) );
+	NI_ASSERT( pScript != 0,
+	           fmt::format( "CCheckRunScript function = \"{}\" but don't have script loaded", pDesc->szScriptFunction ) );
 	if ( pScript )
 	{
 		return pScript->CallScriptFunction( pDesc->szScriptFunction.c_str() );
@@ -37,63 +39,65 @@ int CCheckRunScript::Check( struct IScreen *pScreen, struct IScriptWrapper *pScr
 
 void CCheckRunScript::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	pDesc = checked_cast<const NDb::SCheckRunScript*>( _pDesc );
+	pDesc = checked_cast<const NDb::SCheckRunScript *>( _pDesc );
 }
-
 
 // CCheckPreprogrammed::
 
-
 void CCheckPreprogrammed::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	pDesc = checked_cast<const NDb::SCheckPreprogrammed*>( _pDesc );
+	pDesc = checked_cast<const NDb::SCheckPreprogrammed *>( _pDesc );
 }
 int CCheckPreprogrammed::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
 	return 0;
 }
-int CCheckPreprogrammed::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const
+int CCheckPreprogrammed::Check( struct IScreen *pScreen,
+                                struct IScriptWrapper *pScript,
+                                struct IProgrammedReactionsAndChecks *pProg,
+                                uint16_t wKeyboardFlags ) const
 {
-	NI_ASSERT( pProg != 0, fmt::format("try to call check \"{}\" without preprogrammed checks provided", pDesc->szCheckName) );
-	return ( pProg->NeedFlags() ? pProg->Check( pDesc->szCheckName, wKeyboardFlags ) : pProg->Check( pDesc->szCheckName ) );
+	NI_ASSERT( pProg != 0,
+	           fmt::format( "try to call check \"{}\" without preprogrammed checks provided", pDesc->szCheckName ) );
+	return ( pProg->NeedFlags() ? pProg->Check( pDesc->szCheckName, wKeyboardFlags )
+	                            : pProg->Check( pDesc->szCheckName ) );
 }
-
 
 // CCheckIsWindowEnabled::
 
-
 void CCheckIsWindowEnabled::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	pDesc = checked_cast<const NDb::SCheckIsWindowEnabled*>( _pDesc );
+	pDesc = checked_cast<const NDb::SCheckIsWindowEnabled *>( _pDesc );
 }
 int CCheckIsWindowEnabled::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDesc );
 	return 0;
 }
-int CCheckIsWindowEnabled::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const
+int CCheckIsWindowEnabled::Check( struct IScreen *pScreen,
+                                  struct IScriptWrapper *pScript,
+                                  struct IProgrammedReactionsAndChecks *pProg,
+                                  uint16_t wKeyboardFlags ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
 	//DebugTrace( "Check window enabled/visible %s", pDesc->szWindowName.c_str() );
 	IWindow *pWnd = 0;
 	if ( !pDesc->szParentWindowName.empty() )
 	{
-		IWindow *pParentWnd = checked_cast<IWindow*>(pScreen->GetVisibleElement( pDesc->szParentWindowName, true ));
+		IWindow *pParentWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szParentWindowName, true ) );
 		if ( pParentWnd )
-			pWnd = checked_cast<IWindow*>(pParentWnd->GetVisibleChild( pDesc->szWindowName, true ));
+			pWnd = checked_cast<IWindow *>( pParentWnd->GetVisibleChild( pDesc->szWindowName, true ) );
 	}
 	if ( !pWnd )
-		pWnd = checked_cast<IWindow*>(pScreen->GetVisibleElement( pDesc->szWindowName, true ));
-	if ( !pWnd || !(pWnd->IsEnabled()) || !(pWnd->IsVisible()) )
+		pWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szWindowName, true ) );
+	if ( !pWnd || !( pWnd->IsEnabled() ) || !( pWnd->IsVisible() ) )
 		return 0;
 	else
 		return 1;
 }
 
-
 // CCheckIsWindowVisible ::
-
 
 int CCheckIsWindowVisible::operator&( IBinSaver &saver )
 {
@@ -101,20 +105,23 @@ int CCheckIsWindowVisible::operator&( IBinSaver &saver )
 	return 0;
 }
 
-int CCheckIsWindowVisible::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const
+int CCheckIsWindowVisible::Check( struct IScreen *pScreen,
+                                  struct IScriptWrapper *pScript,
+                                  struct IProgrammedReactionsAndChecks *pProg,
+                                  uint16_t wKeyboardFlags ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
 	//DebugTrace( "Check window visible %s", pDesc->szWindowName.c_str() );
 	IWindow *pWnd = 0;
 	if ( !pDesc->szParentWindowName.empty() )
 	{
-		IWindow *pParentWnd = checked_cast<IWindow*>(pScreen->GetVisibleElement( pDesc->szParentWindowName, true ));
+		IWindow *pParentWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szParentWindowName, true ) );
 		if ( pParentWnd )
-			pWnd = checked_cast<IWindow*>(pParentWnd->GetVisibleChild( pDesc->szWindowName, true ));
+			pWnd = checked_cast<IWindow *>( pParentWnd->GetVisibleChild( pDesc->szWindowName, true ) );
 	}
 	if ( !pWnd )
-		pWnd = checked_cast<IWindow*>(pScreen->GetVisibleElement( pDesc->szWindowName, true ));
-	if ( !pWnd || !(pWnd->IsVisible()) )
+		pWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szWindowName, true ) );
+	if ( !pWnd || !( pWnd->IsVisible() ) )
 		return 0;
 	else
 		return 1;
@@ -122,13 +129,10 @@ int CCheckIsWindowVisible::Check( struct IScreen *pScreen, struct IScriptWrapper
 
 void CCheckIsWindowVisible::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	pDesc = checked_cast<const NDb::SCheckIsWindowVisible*>( _pDesc );
+	pDesc = checked_cast<const NDb::SCheckIsWindowVisible *>( _pDesc );
 }
 
-
-
 // CCheckIsTabActive ::
-
 
 int CCheckIsTabActive::operator&( IBinSaver &saver )
 {
@@ -136,14 +140,17 @@ int CCheckIsTabActive::operator&( IBinSaver &saver )
 	return 0;
 }
 
-int CCheckIsTabActive::Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const
+int CCheckIsTabActive::Check( struct IScreen *pScreen,
+                              struct IScriptWrapper *pScript,
+                              struct IProgrammedReactionsAndChecks *pProg,
+                              uint16_t wKeyboardFlags ) const
 {
 	NI_ASSERT( pScreen != 0, "try to call window check without screen provided" );
 	DebugTrace( "Check tab active %s (%d)", pDesc->szTabControlName.c_str(), pDesc->nTab );
-	IWindow *pWnd = checked_cast<IWindow*>(pScreen->GetVisibleElement( pDesc->szTabControlName, true ));
-	if ( !pWnd || !(pWnd->IsVisible()) )
+	IWindow *pWnd = checked_cast<IWindow *>( pScreen->GetVisibleElement( pDesc->szTabControlName, true ) );
+	if ( !pWnd || !( pWnd->IsVisible() ) )
 		return 0;
-	ITabControl *pTab = dynamic_cast<ITabControl*>(pScreen->GetElement( pDesc->szTabControlName, true ));
+	ITabControl *pTab = dynamic_cast<ITabControl *>( pScreen->GetElement( pDesc->szTabControlName, true ) );
 	NI_ASSERT( pTab != 0, fmt::format( "tab control with name \"{}\" not found", pDesc->szTabControlName ) );
 	if ( pTab->GetActive() != pDesc->nTab )
 		return 0;
@@ -152,5 +159,5 @@ int CCheckIsTabActive::Check( struct IScreen *pScreen, struct IScriptWrapper *pS
 
 void CCheckIsTabActive::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	pDesc = checked_cast<const NDb::SCheckIsTabActive*>( _pDesc );
+	pDesc = checked_cast<const NDb::SCheckIsTabActive *>( _pDesc );
 }

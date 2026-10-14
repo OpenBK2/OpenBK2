@@ -9,8 +9,8 @@ extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
 CExecutorExactShot::CExecutorExactShot( CAIUnit *_pUnit )
-: state( EASS_READY_TO_ON ), CExecutor( TID_EXACT_SHOT, 1000/SConsts::AI_SEGMENT_DURATION ),
-timeLastUpdate( curTime ), pUnit( _pUnit )
+		: state( EASS_READY_TO_ON ), CExecutor( TID_EXACT_SHOT, 1000 / SConsts::AI_SEGMENT_DURATION ),
+			timeLastUpdate( curTime ), pUnit( _pUnit )
 {
 }
 
@@ -36,13 +36,12 @@ void CExecutorExactShot::UpdateProgress( const SAbilitySwitchState _state, const
 	pUpdate->info.fCurValue = fParam;
 	pUpdate->info.nObjUniqueID = pUnit->GetUniqueId();
 
-	if ( 0 != memcmp( &lastSent, &pUpdate->info, sizeof(lastSent) ) )
+	if ( 0 != memcmp( &lastSent, &pUpdate->info, sizeof( lastSent ) ) )
 	{
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, pUnit, -1 );
 		lastSent = pUpdate->info;
 		pUpdate = 0;
 	}
-
 }
 
 void CExecutorExactShot::SetAutocast( const bool _bAutocast )
@@ -53,7 +52,7 @@ void CExecutorExactShot::SetAutocast( const bool _bAutocast )
 
 		pUnit->SetIgnoreAABBCoeff( _bAutocast );
 
-		UpdateProgress( state , 0 );
+		UpdateProgress( state, 0 );
 	}
 }
 
@@ -83,16 +82,16 @@ bool CExecutorExactShot::NotifyEvent( const CExecutorEvent &event )
 		return false;
 	//end - Filter out wrong calls
 
-	switch( event.GetParam().eEventID )
+	switch ( event.GetParam().eEventID )
 	{
-	case EID_ABILITY_ACTIVATE_AUTOCAST:
-		SetAutocast( true );
+		case EID_ABILITY_ACTIVATE_AUTOCAST:
+			SetAutocast( true );
 
-		return true;
-	case EID_ABILITY_DEACTIVATE_AUTOCAST:
-		SetAutocast( false );
+			return true;
+		case EID_ABILITY_DEACTIVATE_AUTOCAST:
+			SetAutocast( false );
 
-		return true;
+			return true;
 	}
 	return false;
 }

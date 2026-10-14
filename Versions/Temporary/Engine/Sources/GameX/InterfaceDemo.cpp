@@ -10,8 +10,8 @@
 
 #include <cstdint>
 
-const char* DEMO_START_SEQUENCE_FILE_NAME = "Demo\\start_frames.xml";
-const char* DEMO_FINAL_SEQUENCE_FILE_NAME = "Demo\\final_frames.xml";
+const char *DEMO_START_SEQUENCE_FILE_NAME = "Demo\\start_frames.xml";
+const char *DEMO_FINAL_SEQUENCE_FILE_NAME = "Demo\\final_frames.xml";
 
 static bool s_bExit = false;
 
@@ -26,13 +26,9 @@ int CInterfaceDemo::SFrame::operator&( IXmlSaver &saver )
 
 // CInterfaceDemo
 
-CInterfaceDemo::CInterfaceDemo() :
-	CInterfaceScreenBase( "DemoScreen", "demo_screen" ),
-	fDelay( 0.0f ),
-	timeAbs( 0 ),
-	bFinished( false ),
-	nNextPicture( 0 ),
-	bFinal( false )
+CInterfaceDemo::CInterfaceDemo()
+		: CInterfaceScreenBase( "DemoScreen", "demo_screen" ), fDelay( 0.0f ), timeAbs( 0 ), bFinished( false ),
+			nNextPicture( 0 ), bFinal( false )
 {
 }
 
@@ -78,7 +74,7 @@ bool CInterfaceDemo::StepLocal( bool bAppActive )
 		NTimer::STime timeAbsCur = Singleton<IGameTimer>()->GetAbsTime();
 		if ( timeAbs != 0 )
 		{
-			fDelay -= (float)(timeAbsCur - timeAbs) * 0.001f;
+			fDelay -= (float)( timeAbsCur - timeAbs ) * 0.001f;
 
 			if ( fDelay <= 0.0f )
 				NextPicture();
@@ -107,7 +103,7 @@ bool CInterfaceDemo::LoadImage( const std::string &szFileName )
 	{
 		CArray2D<uint32_t> array;
 		NImage::LoadTGAImage( array, &stream );
-		pPictureTexture->Set( *reinterpret_cast< CArray2D<NGfx::SPixel8888>* >( &array ) );
+		pPictureTexture->Set( *reinterpret_cast<CArray2D<NGfx::SPixel8888> *>( &array ) );
 	}
 	return bResult;
 }
@@ -141,9 +137,7 @@ void CInterfaceDemo::SetFinal( bool _bFinal )
 
 // CICInterfaceDemo
 
-void CICInterfaceDemo::PreCreate()
-{
-}
+void CICInterfaceDemo::PreCreate() {}
 
 void CICInterfaceDemo::PostCreate( IInterface *pInterface )
 {
@@ -175,7 +169,7 @@ void DemoScreenFinal( const std::string &szID, const std::vector<std::wstring> &
 	s_bExit = true;
 }
 
-START_REGISTER(DemoCommands)
+START_REGISTER( DemoCommands )
 REGISTER_CMD( "demo_screen", DemoScreen );
 REGISTER_CMD( "demo_screen_final", DemoScreenFinal );
 FINISH_REGISTER

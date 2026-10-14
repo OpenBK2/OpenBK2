@@ -10,7 +10,13 @@ class CInterfaceTestScreen : public CInterfaceScreenBase, public IProgrammedReac
 
 	ZDATA_( CInterfaceScreenBase )
 	CDBID dbid;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CInterfaceScreenBase *)this); f.Add(2,&dbid); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &dbid );
+		return 0;
+	}
+
 protected:
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction ) { return false; }
@@ -31,12 +37,18 @@ class CICTestScreen : public CInterfaceCommandBase<CInterfaceTestScreen>
 {
 	OBJECT_BASIC_METHODS( CICTestScreen );
 
-	ZDATA_(CInterfaceCommandBase<CInterfaceTestScreen>)
+	ZDATA_( CInterfaceCommandBase<CInterfaceTestScreen> )
 	CDBID dbid;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceTestScreen>*)this); f.Add(2,&dbid); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceCommandBase<CInterfaceTestScreen> *)this );
+		f.Add( 2, &dbid );
+		return 0;
+	}
 
-	void PreCreate( );
+	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

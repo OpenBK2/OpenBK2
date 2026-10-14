@@ -7,7 +7,10 @@
 //interface for manipulating db data and related services
 struct LIBDB_EXPORT IResourceManager : CObjectBase
 {
-	enum { tidTypeID = 0x10074AC0 };
+	enum
+	{
+		tidTypeID = 0x10074AC0
+	};
 	//
 	struct SDBConfig
 	{
@@ -19,36 +22,38 @@ struct LIBDB_EXPORT IResourceManager : CObjectBase
 	//virtual bool Startup() = 0;
 
 	//get manipulator for key-referenced types
-	virtual IManipulator* CreateTableManipulator() = 0;
+	virtual IManipulator *CreateTableManipulator() = 0;
 	//get manipulator for objects tree structure (arg - type name)
-	virtual IManipulator* CreateFolderManipulator( const std::string &szTypeName ) = 0;
-	virtual IManipulator* CreateFolderManipulator( int nID ) = 0;
+	virtual IManipulator *CreateFolderManipulator( const std::string &szTypeName ) = 0;
+	virtual IManipulator *CreateFolderManipulator( int nID ) = 0;
 	//get db object manipulator
-	virtual IManipulator* CreateObjectManipulator( const std::string &szTypeName, const std::string &szObjectName ) = 0;
-	virtual IManipulator* CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID ) = 0;
-	virtual IManipulator* CreateObjectManipulator( const std::string &szObjectName ) = 0;
-	virtual IManipulator* CreateObjectManipulator( const CDBID &rCDBID ) = 0;
-
+	virtual IManipulator *CreateObjectManipulator( const std::string &szTypeName, const std::string &szObjectName ) = 0;
+	virtual IManipulator *CreateObjectManipulator( const std::string &szTypeName, const CDBID &rCDBID ) = 0;
+	virtual IManipulator *CreateObjectManipulator( const std::string &szObjectName ) = 0;
+	virtual IManipulator *CreateObjectManipulator( const CDBID &rCDBID ) = 0;
 
 	//Set DBConfig file full path. Should be done right after initializing singleton.
 	virtual void SetConfig( const SDBConfig &config ) = 0;
 
-//	enum EDb
-//	{
-//		DB_LOCAL,
-//		DB_ANY_EXISTENT,
-//		DB_MAIN
-//	};
+	//	enum EDb
+	//	{
+	//		DB_LOCAL,
+	//		DB_ANY_EXISTENT,
+	//		DB_MAIN
+	//	};
 
-	virtual void FillReferencingObjects( bool *bServiceIsReady, const std::string &szTypeName, const std::string &szObjectName, std::list<std::string> &results ) = 0;
+	virtual void FillReferencingObjects( bool *bServiceIsReady,
+	                                     const std::string &szTypeName,
+	                                     const std::string &szObjectName,
+	                                     std::list<std::string> &results ) = 0;
 	virtual void ResetCache() = 0;
 
 	virtual void SetDataDir( const std::string &dataDir ) {}
 
-	virtual void SyncDB()    = 0;
+	virtual void SyncDB() = 0;
 	virtual bool CanSyncDB() = 0;
-	virtual bool CheckIn()   = 0;
-	virtual bool CheckOut()  = 0;
+	virtual bool CheckIn() = 0;
+	virtual bool CheckOut() = 0;
 	virtual bool GetLatest() = 0;
 
 	virtual bool InitializeVersionControl() = 0;
@@ -66,7 +71,6 @@ struct LIBDB_EXPORT IResourceManager : CObjectBase
 	//// FIXME: unused legacy, must be removed
 	//// Take string with data for GraphViz
 	//virtual string TakeVizString( const list<NCodeGen::SXSDDesc> &vNS ) = 0;
-
 
 	//Static functions for singleton init/uninit. Should be called manually.
 	static void InitSingleton();

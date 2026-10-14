@@ -48,7 +48,11 @@ private:
 		EClassifyRotation classifyRotation;
 		CVec2 vCreationPoint;
 
-		bool CreateFromDirection( const CVec2 &vBegin, const CVec2 &vEnd, float _fRadius, EClassifyRotation _classifyRotation, bool bBegin = true );
+		bool CreateFromDirection( const CVec2 &vBegin,
+		                          const CVec2 &vEnd,
+		                          float _fRadius,
+		                          EClassifyRotation _classifyRotation,
+		                          bool bBegin = true );
 		bool GetTangentPoint( const CVec2 &v, CVec2 *pTangentPoint ) const;
 		bool GetPointsSequence( const CVec2 &v, int nSegmentsCount, std::list<CVec2> *pPointsSequence ) const;
 	};
@@ -64,10 +68,13 @@ public:
 			float fOpacity;
 			//
 			SKeyPoint() : fWidth( DEFAULT_WIDTH ), fHeight( DEFAULT_HEIGHT ), fOpacity( DEFAULT_OPACITY ) {}
-			SKeyPoint( const SKeyPoint &rKeyPoint ) : fWidth( rKeyPoint.fWidth ), fHeight( rKeyPoint.fHeight ), fOpacity( rKeyPoint.fOpacity ) {}
-			SKeyPoint& operator=( const SKeyPoint &rKeyPoint )
+			SKeyPoint( const SKeyPoint &rKeyPoint )
+					: fWidth( rKeyPoint.fWidth ), fHeight( rKeyPoint.fHeight ), fOpacity( rKeyPoint.fOpacity )
 			{
-				if( &rKeyPoint != this )
+			}
+			SKeyPoint &operator=( const SKeyPoint &rKeyPoint )
+			{
+				if ( &rKeyPoint != this )
 				{
 					fWidth = rKeyPoint.fWidth;
 					fHeight = rKeyPoint.fHeight;
@@ -83,7 +90,10 @@ public:
 	public:
 		void SaveKeyPoints( const CVSOPointList &rVSOPointList );
 		void LoadKeyPoints( CVSOPointList *pVSOPointList );
-		void AddKeyPoint( int nKeyPointIndex, float fWidth = DEFAULT_WIDTH, float fHeight = DEFAULT_HEIGHT, float fOpacity = DEFAULT_OPACITY );
+		void AddKeyPoint( int nKeyPointIndex,
+		                  float fWidth = DEFAULT_WIDTH,
+		                  float fHeight = DEFAULT_HEIGHT,
+		                  float fOpacity = DEFAULT_OPACITY );
 		void RemoveKeyPoint( int nKeyPointIndex );
 
 		//very special methods for RMG
@@ -98,31 +108,27 @@ public:
 	{
 		enum ESelectionType
 		{
-			ST_UNKNOWN		= 0,
-			ST_CONTROL		= 1,
-			ST_CENTER			= 2,
-			ST_NORMALE		= 3,
-			ST_OPNORMALE	= 4,
-			ST_COUNT			= 5,
+			ST_UNKNOWN = 0,
+			ST_CONTROL = 1,
+			ST_CENTER = 2,
+			ST_NORMALE = 3,
+			ST_OPNORMALE = 4,
+			ST_COUNT = 5,
 		};
 		ESelectionType eSelectionType;
 		int nIndex;
 		CVec3 vDifference;
 		float fOpacity;
 		//
-		SVSOSelection()
-			:	eSelectionType( ST_UNKNOWN ),
-			nIndex( 0 ),
-			vDifference( VNULL3 ),
-			fOpacity( 0.0f ) {}
+		SVSOSelection() : eSelectionType( ST_UNKNOWN ), nIndex( 0 ), vDifference( VNULL3 ), fOpacity( 0.0f ) {}
 		SVSOSelection( const SVSOSelection &rVSOSelection )
-			:	eSelectionType( rVSOSelection.eSelectionType ),
-			nIndex( rVSOSelection.nIndex ),
-			vDifference( rVSOSelection.vDifference ),
-			fOpacity( rVSOSelection.fOpacity ) {}
-		SVSOSelection& operator=( const SVSOSelection &rVSOSelection )
+				: eSelectionType( rVSOSelection.eSelectionType ), nIndex( rVSOSelection.nIndex ),
+					vDifference( rVSOSelection.vDifference ), fOpacity( rVSOSelection.fOpacity )
 		{
-			if( &rVSOSelection != this )
+		}
+		SVSOSelection &operator=( const SVSOSelection &rVSOSelection )
+		{
+			if ( &rVSOSelection != this )
 			{
 				eSelectionType = rVSOSelection.eSelectionType;
 				nIndex = rVSOSelection.nIndex;
@@ -135,7 +141,10 @@ public:
 		inline bool IsValid() { return ( eSelectionType != ST_UNKNOWN ); }
 		inline bool IsControlPointType() { return ( eSelectionType == ST_CONTROL ); }
 		inline bool IsCenterPointType() { return ( eSelectionType == ST_CENTER ); }
-		inline bool IsNormalePointType() { return ( ( eSelectionType == ST_NORMALE ) || ( eSelectionType == ST_OPNORMALE ) ); }
+		inline bool IsNormalePointType()
+		{
+			return ( ( eSelectionType == ST_NORMALE ) || ( eSelectionType == ST_OPNORMALE ) );
+		}
 	};
 
 	struct SVSOSelectionParam
@@ -143,18 +152,18 @@ public:
 		SVSOSelection::ESelectionType eSelectionType;
 		float fRadius;
 
-		SVSOSelectionParam()
-			:	eSelectionType( SVSOSelection::ST_UNKNOWN ),
-			fRadius( 0.0f ) {}
+		SVSOSelectionParam() : eSelectionType( SVSOSelection::ST_UNKNOWN ), fRadius( 0.0f ) {}
 		SVSOSelectionParam( SVSOSelection::ESelectionType _eSelectionType, float _fRadus )
-			:	eSelectionType( _eSelectionType ),
-			fRadius( _fRadus ) {}
-		SVSOSelectionParam( const SVSOSelectionParam &rVSOSelectionParam )
-			:	eSelectionType( rVSOSelectionParam.eSelectionType ),
-			fRadius( rVSOSelectionParam.fRadius ){}
-		SVSOSelectionParam& operator=( const SVSOSelectionParam &rVSOSelectionParam )
+				: eSelectionType( _eSelectionType ), fRadius( _fRadus )
 		{
-			if( &rVSOSelectionParam != this )
+		}
+		SVSOSelectionParam( const SVSOSelectionParam &rVSOSelectionParam )
+				: eSelectionType( rVSOSelectionParam.eSelectionType ), fRadius( rVSOSelectionParam.fRadius )
+		{
+		}
+		SVSOSelectionParam &operator=( const SVSOSelectionParam &rVSOSelectionParam )
+		{
+			if ( &rVSOSelectionParam != this )
 			{
 				eSelectionType = rVSOSelectionParam.eSelectionType;
 				fRadius = rVSOSelectionParam.fRadius;
@@ -165,68 +174,107 @@ public:
 	typedef std::list<SVSOSelectionParam> CVSOSelectionParamList;
 
 private:
-	static void SmoothCurve( const std::vector<int> &rKeyPointList, std::vector<float> *pPointList, bool bCircle, bool bComplete );
+	static void
+	SmoothCurve( const std::vector<int> &rKeyPointList, std::vector<float> *pPointList, bool bCircle, bool bComplete );
 	static void SmoothCurveWidth( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete );
 	static void SmoothCurveHeight( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete );
 	static void SmoothCurveOpacity( CVSOPointList *pVSOPointList, bool bCircle, bool bComplete );
 
 	static int SliceSpline( const class CAnalyticBSpline2 &rSpline,
-													std::list<NDb::SVSOPoint> *pPoints,
-													float *pfRest,
-													const float fStep );
+	                        std::list<NDb::SVSOPoint> *pPoints,
+	                        float *pfRest,
+	                        const float fStep );
 	static void SampleCurve( const std::vector<CVec3> &rControlPointList,
-													 CVSOPointList *pVSOPointList,
-													 float fStep,
-													 float fWidth,
-													 float fHeight,
-													 float fOpacity,
-													 bool bCircle,
-													 bool bComplete );
+	                         CVSOPointList *pVSOPointList,
+	                         float fStep,
+	                         float fWidth,
+	                         float fHeight,
+	                         float fOpacity,
+	                         bool bCircle,
+	                         bool bComplete );
 
-	static bool GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOCircle &rCircleEnd, int nSegmentsCountBegin, int nSegmentsCountEnd, std::list<CVec2> *pPointsSequence );
-	static bool GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, float fRadius0, int nSegmentsCount0, bool bBegin0,
-																 const CVec2 &vBegin1, const CVec2 &vEnd1, float fRadius1, int nSegmentsCount1, bool bBegin1,
-																 std::list<CVec2> *pPointsSequence );
+	static bool GetPointsSequence( const SVSOCircle &rCircleBegin,
+	                               const SVSOCircle &rCircleEnd,
+	                               int nSegmentsCountBegin,
+	                               int nSegmentsCountEnd,
+	                               std::list<CVec2> *pPointsSequence );
+	static bool GetPointsSequence( const CVec2 &vBegin0,
+	                               const CVec2 &vEnd0,
+	                               float fRadius0,
+	                               int nSegmentsCount0,
+	                               bool bBegin0,
+	                               const CVec2 &vBegin1,
+	                               const CVec2 &vEnd1,
+	                               float fRadius1,
+	                               int nSegmentsCount1,
+	                               bool bBegin1,
+	                               std::list<CVec2> *pPointsSequence );
 
 	//
 public:
 	enum EVSOPolygonType
 	{
-		PT_NORMALE		= 0,
-		PT_OPNORMALE	= 1,
-		PT_BOTH				= 2,
+		PT_NORMALE = 0,
+		PT_OPNORMALE = 1,
+		PT_BOTH = 2,
 	};
 	// Получить выделеннную точку
-	static bool GetVSOSelection( SVSOSelection *pVSOSelection,												// Сюда записывается результат
-															 const CVec3 &rvPos,																	// Позиция пересечения луча от мыши с землей
-															 const CVec3 &rvOrigin,																// Параметры луча проходящие через курсор мыши ( стартовая точка )
-															 const CVec3 &rvDirection,														// Параметры луча проходящие через курсор мыши ( единичный вектор направления )
-															 const NDb::SVSOInstance &rVSO,												// VSO, в котором ищем
-															 const CVSOSelectionParamList &rVSOSelectionParamList );
+	static bool GetVSOSelection(
+			SVSOSelection *pVSOSelection,  // Сюда записывается результат
+			const CVec3 &rvPos,            // Позиция пересечения луча от мыши с землей
+			const CVec3 &rvOrigin,         // Параметры луча проходящие через курсор мыши ( стартовая точка )
+			const CVec3 &rvDirection,      // Параметры луча проходящие через курсор мыши ( единичный вектор направления )
+			const NDb::SVSOInstance &rVSO, // VSO, в котором ищем
+			const CVSOSelectionParamList &rVSOSelectionParamList );
 	static bool Update( NDb::SVSOInstance *pVSO,
-											bool bResampleCurve,
-											bool bKeepKeyPoints,
-											float fStep,
-											float fWidth,
-											float fHeight,
-											float fOpacity,
-											bool bWidth,
-											bool bHeight,
-											bool bOpacity,
-											bool bCircle,
-											bool bComplete );
-	static bool MoveEdgeControlPointsOut( NDb::SVSOInstance *pVSO, const CTRect<float> &rRect, float fStepOut, bool bBothEdges, bool bFixedStepOut );
+	                    bool bResampleCurve,
+	                    bool bKeepKeyPoints,
+	                    float fStep,
+	                    float fWidth,
+	                    float fHeight,
+	                    float fOpacity,
+	                    bool bWidth,
+	                    bool bHeight,
+	                    bool bOpacity,
+	                    bool bCircle,
+	                    bool bComplete );
+	static bool MoveEdgeControlPointsOut(
+			NDb::SVSOInstance *pVSO, const CTRect<float> &rRect, float fStepOut, bool bBothEdges, bool bFixedStepOut );
 	//
-	static bool GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, int nPointIndex, EVSOPolygonType vsoPolygonType, float fRelWidth );
-	static bool GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth );
-	static void GetBoundingPolygon( std::vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth );
-	static void GetCragBoundingPolygon( std::vector<CVec2> *pBoundingPolygon, const CVSOPointList &rVSOPointList, EVSOPolygonType vsoPolygonType, float fRelWidth, int nVSOID );
+	static bool GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon,
+	                                const CVSOPointList &rVSOPointList,
+	                                int nPointIndex,
+	                                EVSOPolygonType vsoPolygonType,
+	                                float fRelWidth );
+	static bool GetBoundingPolygon( std::list<CVec3> *pBoundingPolygon,
+	                                const CVSOPointList &rVSOPointList,
+	                                EVSOPolygonType vsoPolygonType,
+	                                float fRelWidth );
+	static void GetBoundingPolygon( std::vector<CVec2> *pBoundingPolygon,
+	                                const CVSOPointList &rVSOPointList,
+	                                EVSOPolygonType vsoPolygonType,
+	                                float fRelWidth );
+	static void GetCragBoundingPolygon( std::vector<CVec2> *pBoundingPolygon,
+	                                    const CVSOPointList &rVSOPointList,
+	                                    EVSOPolygonType vsoPolygonType,
+	                                    float fRelWidth,
+	                                    int nVSOID );
 	//
-	static bool FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegin0,
-												const CVec2 &vBegin1, const CVec2 &vEnd1, bool bBegin1,
-												float fRadius, int nSegmentsCount, float fMinEdgeLength, float fDistance, float fDisturbance,
-												std::list<CVec2> *pPointsSequence, const std::vector<std::vector<CVec2> > &rLockedPolygons, std::list<CVec2> *pUsedPoints,
-												int nDepth = 0 );
+	static bool FindPath( const CVec2 &vBegin0,
+	                      const CVec2 &vEnd0,
+	                      bool bBegin0,
+	                      const CVec2 &vBegin1,
+	                      const CVec2 &vEnd1,
+	                      bool bBegin1,
+	                      float fRadius,
+	                      int nSegmentsCount,
+	                      float fMinEdgeLength,
+	                      float fDistance,
+	                      float fDisturbance,
+	                      std::list<CVec2> *pPointsSequence,
+	                      const std::vector<std::vector<CVec2>> &rLockedPolygons,
+	                      std::list<CVec2> *pUsedPoints,
+	                      int nDepth = 0 );
 	//не симметричный метод, первый VSO продолжается на две точки по отношению ко второму с соблюдением ширины
 	//на обоих концах проставляется нулевая opacity
 	static bool Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin, NDb::SVSOInstance *pVSO1, bool bVSO1Begin );

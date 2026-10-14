@@ -28,7 +28,7 @@ extern CGroupLogic theGroupLogic;
 
 CPtr<CInEntrenchmentStatesFactory> CInEntrenchmentStatesFactory::pFactory = 0;
 
-IStatesFactory* CInEntrenchmentStatesFactory::Instance()
+IStatesFactory *CInEntrenchmentStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CInEntrenchmentStatesFactory();
@@ -39,22 +39,19 @@ IStatesFactory* CInEntrenchmentStatesFactory::Instance()
 bool CInEntrenchmentStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		( cmdType == ACTION_COMMAND_DIE						||
-			cmdType == ACTION_COMMAND_ATTACK_UNIT		||
-			cmdType == ACTION_COMMAND_IDLE_TRENCH		||
-//			cmdType == ACTION_COMMAND_AMBUSH				||
-			cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||
-			cmdType == ACTION_COMMAND_DISAPPEAR );
+	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_ATTACK_UNIT ||
+	         cmdType == ACTION_COMMAND_IDLE_TRENCH ||
+	         //			cmdType == ACTION_COMMAND_AMBUSH				||
+	         cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT || cmdType == ACTION_COMMAND_DISAPPEAR );
 }
 
-IUnitState* CInEntrenchmentStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
+IUnitState *CInEntrenchmentStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
-	CSoldier *pSoldier = checked_cast<CSoldier*>( pUnit );
+	NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit type" );
+	CSoldier *pSoldier = checked_cast<CSoldier *>( pUnit );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 	bool bSwarmAttack = false;
 
 	switch ( cmd.nCmdType )
@@ -66,23 +63,23 @@ IUnitState* CInEntrenchmentStatesFactory::ProduceState( class CQueueUnit *pUnit,
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 			bSwarmAttack = true;
 		case ACTION_COMMAND_ATTACK_UNIT:
-			{
-				CONVERT_OBJECT( CAIUnit, pUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
-				pResult = CSoldierAttackInEtrenchState::Instance( pSoldier, pUnit, bSwarmAttack );
-			}
+		{
+			CONVERT_OBJECT( CAIUnit, pUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
+			pResult = CSoldierAttackInEtrenchState::Instance( pSoldier, pUnit, bSwarmAttack );
+		}
 
-			break;
+		break;
 		case ACTION_COMMAND_IDLE_TRENCH:
-			{
-				CObjectBase *pEnt = GetObjectByCmd( cmd );
-				if ( checked_cast<CEntrenchment*>(pEnt) )
-					pResult = CSoldierRestInEntrenchmentState::Instance( pSoldier, checked_cast<CEntrenchment*>(pEnt) );
-				else
-					pResult = CSoldierRestInEntrenchmentState::Instance( pSoldier, 0 );
-			}
+		{
+			CObjectBase *pEnt = GetObjectByCmd( cmd );
+			if ( checked_cast<CEntrenchment *>( pEnt ) )
+				pResult = CSoldierRestInEntrenchmentState::Instance( pSoldier, checked_cast<CEntrenchment *>( pEnt ) );
+			else
+				pResult = CSoldierRestInEntrenchmentState::Instance( pSoldier, 0 );
+		}
 
-			break;
-/*		case ACTION_COMMAND_AMBUSH:
+		break;
+			/*		case ACTION_COMMAND_AMBUSH:
 			pResult = CCommonAmbushState::Instance( pSoldier );
 
 			break;*/
@@ -93,17 +90,17 @@ IUnitState* CInEntrenchmentStatesFactory::ProduceState( class CQueueUnit *pUnit,
 	return pResult;
 }
 
-IUnitState* CInEntrenchmentStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CInEntrenchmentStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
-	return CSoldierRestInEntrenchmentState::Instance( checked_cast<CSoldier*>( pUnit ), 0 );
+	NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit type" );
+	return CSoldierRestInEntrenchmentState::Instance( checked_cast<CSoldier *>( pUnit ), 0 );
 }
 
 //*******************************************************************
 //*										CSoldierRestInEntrenchmentState								*
 //*******************************************************************
 
-IUnitState* CSoldierRestInEntrenchmentState::Instance( CSoldier *pSoldier, CEntrenchment *pEntrenchment )
+IUnitState *CSoldierRestInEntrenchmentState::Instance( CSoldier *pSoldier, CEntrenchment *pEntrenchment )
 {
 	CSoldierRestInEntrenchmentState *pRest = new CSoldierRestInEntrenchmentState( pSoldier );
 	pRest->SetUnitTo( pEntrenchment );
@@ -111,8 +108,7 @@ IUnitState* CSoldierRestInEntrenchmentState::Instance( CSoldier *pSoldier, CEntr
 	return pRest;
 }
 
-CSoldierRestInEntrenchmentState::CSoldierRestInEntrenchmentState( CSoldier *_pSoldier )
-: pSoldier( _pSoldier )
+CSoldierRestInEntrenchmentState::CSoldierRestInEntrenchmentState( CSoldier *_pSoldier ) : pSoldier( _pSoldier )
 {
 	startTime = curTime;
 	pSoldier->StartCamouflating();
@@ -121,7 +117,7 @@ CSoldierRestInEntrenchmentState::CSoldierRestInEntrenchmentState( CSoldier *_pSo
 void CSoldierRestInEntrenchmentState::SetUnitTo( CEntrenchment *pEntrenchment )
 {
 	// только зашёл в окоп
-	if ( pEntrenchment != 0 && !pSoldier->IsInEntrenchment())
+	if ( pEntrenchment != 0 && !pSoldier->IsInEntrenchment() )
 		pSoldier->SetInEntrenchment( pEntrenchment );
 	// уже там сидит
 	else
@@ -137,8 +133,10 @@ void CSoldierRestInEntrenchmentState::Segment()
 	if ( pSoldier->IsInFirePlace() )
 		pSoldier->AnalyzeTargetScan( 0, false, false );
 
-	if ( pSoldier->IsInFollowState() && fabs( pSoldier->GetCenter() - pSoldier->GetFollowedUnit()->GetCenter() ) >= SConsts::FOLLOW_GO_RADIUS )
-		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_FOLLOW_NOW, pSoldier->GetFollowedUnit()->GetUniqueId() ), pSoldier, false );
+	if ( pSoldier->IsInFollowState() &&
+	     fabs( pSoldier->GetCenter() - pSoldier->GetFollowedUnit()->GetCenter() ) >= SConsts::FOLLOW_GO_RADIUS )
+		theGroupLogic.UnitCommand(
+				SAIUnitCmd( ACTION_COMMAND_FOLLOW_NOW, pSoldier->GetFollowedUnit()->GetUniqueId() ), pSoldier, false );
 	else
 		pSoldier->FreezeByState( true );
 }
@@ -161,14 +159,16 @@ const CVec2 CSoldierRestInEntrenchmentState::GetPurposePoint() const
 //*										  CSoldierAttackInEtrenchState								*
 //*******************************************************************
 
-IUnitState* CSoldierAttackInEtrenchState::Instance( CSoldier *pSoldier, CAIUnit *pEnemy, const bool bSwarmAttack )
+IUnitState *CSoldierAttackInEtrenchState::Instance( CSoldier *pSoldier, CAIUnit *pEnemy, const bool bSwarmAttack )
 {
 	return new CSoldierAttackInEtrenchState( pSoldier, pEnemy, bSwarmAttack );
 }
 
-CSoldierAttackInEtrenchState::CSoldierAttackInEtrenchState( CSoldier *_pSoldier, CAIUnit *_pEnemy, const bool _bSwarmAttack )
-: pSoldier( _pSoldier ), pEnemy( _pEnemy ), bFinish( false ), bAim( true ), bSwarmAttack( _bSwarmAttack ),
-	nEnemyParty( _pEnemy->GetParty() )
+CSoldierAttackInEtrenchState::CSoldierAttackInEtrenchState( CSoldier *_pSoldier,
+                                                            CAIUnit *_pEnemy,
+                                                            const bool _bSwarmAttack )
+		: pSoldier( _pSoldier ), pEnemy( _pEnemy ), bFinish( false ), bAim( true ), bSwarmAttack( _bSwarmAttack ),
+			nEnemyParty( _pEnemy->GetParty() )
 {
 	if ( !pEnemy->IsAlive() )
 		pSoldier->SendAcknowledgement( ACK_INVALID_TARGET, true );
@@ -237,12 +237,11 @@ void CSoldierAttackInEtrenchState::Segment()
 		else if ( !pGun->IsFiring() )
 		{
 			damageToEnemyUpdater.SetDamageToEnemy( pSoldier, pEnemy, pGun );
-//			if ( bSwarmAttack )
-//				pSoldier->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
+			//			if ( bSwarmAttack )
+			//				pSoldier->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
 			// если враг мёртв или его не видно или стреляем сами по себе или пора заканчивать стрельбу
-			if ( !IsValidObj( pEnemy ) ||
-					 !pEnemy->IsVisible( pSoldier->GetParty() ) || pEnemy.GetPtr() == pSoldier || bFinish ||
-					 pEnemy->GetParty() != nEnemyParty )
+			if ( !IsValidObj( pEnemy ) || !pEnemy->IsVisible( pSoldier->GetParty() ) || pEnemy.GetPtr() == pSoldier ||
+			     bFinish || pEnemy->GetParty() != nEnemyParty )
 			{
 				if ( IsValidObj( pEnemy ) && !pEnemy->IsVisible( pSoldier->GetParty() ) )
 					pSoldier->SendAcknowledgement( ACK_DONT_SEE_THE_ENEMY );
@@ -289,7 +288,7 @@ const CVec2 CSoldierAttackInEtrenchState::GetPurposePoint() const
 		return CVec2( -1.0f, -1.0f );
 }
 
-CAIUnit* CSoldierAttackInEtrenchState::GetTargetUnit() const
+CAIUnit *CSoldierAttackInEtrenchState::GetTargetUnit() const
 {
 	return pEnemy;
 }

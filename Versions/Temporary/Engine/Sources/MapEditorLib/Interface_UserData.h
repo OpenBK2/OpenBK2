@@ -14,13 +14,13 @@ struct SUserData
 {
 	enum ESerializeType
 	{
-		ST_LOAD	= 0,
+		ST_LOAD = 0,
 		ST_SAVE = 1,
 	};
 
 	enum ESettingsType
 	{
-		EDITOR_SETTINGS	= 0,
+		EDITOR_SETTINGS = 0,
 		EXPORTER_SETINGS = 1,
 		BUILDER_SETTINGS = 2,
 		PRIVATE_SETTINGS = 3,
@@ -28,12 +28,12 @@ struct SUserData
 
 	enum ENormalizePathType
 	{
-		NPT_UNKNOWN							= 0,
-		NPT_EXPORT_SOURCE				= 1,
-		NPT_EXPORT_DESTINATION	= 2,
-		NPT_DATA_STORAGE				= 3,
-		NPT_START								= 4,
-		NPT_COUNT								= 5,
+		NPT_UNKNOWN = 0,
+		NPT_EXPORT_SOURCE = 1,
+		NPT_EXPORT_DESTINATION = 2,
+		NPT_DATA_STORAGE = 3,
+		NPT_START = 4,
+		NPT_COUNT = 5,
 	};
 	//
 	struct SMayaExportData
@@ -64,9 +64,7 @@ struct SUserData
 		std::string szScriptFileName;
 		std::string szOldPluginParticleFixYZOption;
 
-		SMayaExportData()
-			: nMayaResponseTimeout(0), nMayaExecutionQuota(0)
-		{}
+		SMayaExportData() : nMayaResponseTimeout( 0 ), nMayaExecutionQuota( 0 ) {}
 
 		// serializing...
 		int operator&( IXmlSaver &xs )
@@ -103,11 +101,11 @@ struct SUserData
 		typedef std::unordered_map<std::string, uint32_t> CExpandedPropertySet;
 		typedef std::unordered_map<std::string, uint32_t> CExpandedObjectSet;
 		// CRAP} HASH_SET
-		std::string szCurrentObject;										// объект выделенный в таблице
-		std::string szCurrentProperty;									// свойство выделенное у объекта
+		std::string szCurrentObject;   // объект выделенный в таблице
+		std::string szCurrentProperty; // свойство выделенное у объекта
 		//CBrowsePathMap browsePathMap;						// пути для диалогов OpenFile и т.д.
-		CExpandedPropertySet expandedPropertySet;	// открытые ветки в Property Control
-		CExpandedObjectSet expandedObjectSet;			// открытые ветки в дереве обьектов
+		CExpandedPropertySet expandedPropertySet; // открытые ветки в Property Control
+		CExpandedObjectSet expandedObjectSet;     // открытые ветки в дереве обьектов
 		//std::string szEditorSettingsFileName;					// имя файла с настройками редактора, если не задан генерируется по умолчанию
 		//std::string szExporterSettingsFileName;				// имя файла с настройками экспортера, если не задан генерируется по умолчанию
 		//std::string szBuilderSettingsFileName;					// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
@@ -150,9 +148,12 @@ struct SUserData
 
 		struct SObjectTypeData
 		{
-			std::string szEditorSettingsFileName;				// имя файла с настройками редактора, если не задан генерируется по умолчанию
-			std::string szExporterSettingsFileName;			// имя файла с настройками экспортера, если не задан генерируется по умолчанию
-			std::string szBuilderSettingsFileName;				// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
+			std::string
+					szEditorSettingsFileName; // имя файла с настройками редактора, если не задан генерируется по умолчанию
+			std::string
+					szExporterSettingsFileName; // имя файла с настройками экспортера, если не задан генерируется по умолчанию
+			std::string
+					szBuilderSettingsFileName; // имя файла с настройками компоновщика, если не задан генерируется по умолчанию
 
 			// serializing...
 			int operator&( IXmlSaver &xs )
@@ -178,11 +179,11 @@ struct SUserData
 		// Object GUID property
 		std::string szGUIDName;
 		// Common Folders
-		std::string szExportSourceFolder;					// Исходники для binary resources
-		std::string szExportDestinationFolder;			// Текущее место складывания binary resource при экспорте
-		std::string szDataStorageFolder;						// Основной каталог resources "..\\Data", (для конфигурационных файлов)
-		std::string szStartFolder;									// Стартовый каталог программы
-		std::string szObjectRecordIDsFolder;				// folder with object record IDs .ini file
+		std::string szExportSourceFolder;      // Исходники для binary resources
+		std::string szExportDestinationFolder; // Текущее место складывания binary resource при экспорте
+		std::string szDataStorageFolder;       // Основной каталог resources "..\\Data", (для конфигурационных файлов)
+		std::string szStartFolder;             // Стартовый каталог программы
+		std::string szObjectRecordIDsFolder;   // folder with object record IDs .ini file
 
 		// serializing...
 		int operator&( IXmlSaver &xs )
@@ -197,23 +198,23 @@ struct SUserData
 			xs.Add( "ExportSourceFolder", &szExportSourceFolder );
 			xs.Add( "ExportDestinationFolder", &szExportDestinationFolder );
 			xs.Add( "ObjectRecordIDsFolder", &szObjectRecordIDsFolder );
-//			xs.Add( "DataStorageFolder", &szDataStorageFolder );
+			//			xs.Add( "DataStorageFolder", &szDataStorageFolder );
 
 			return 0;
 		}
 	};
 	SConstUserData constUserData;
 	//
-	CRecentList recentList;										// resent list for next and previous objects
-	CRecentList recentResourceList;						// resent list for next and previous objects
-	CColorList colorList;											// custom colors in color dialog
-	CTableSetMap tableSetMap;									// visible tables
-	std::unordered_map<int, std::string> szCurrentTableMap;	// current table
-	std::vector<int> tableHeaderWidthList;					// table header width values
-	std::vector<int> tableLinkHeaderWidthList;			// тоже самое но для диалога ObjectLink
+	CRecentList recentList;                                 // resent list for next and previous objects
+	CRecentList recentResourceList;                         // resent list for next and previous objects
+	CColorList colorList;                                   // custom colors in color dialog
+	CTableSetMap tableSetMap;                               // visible tables
+	std::unordered_map<int, std::string> szCurrentTableMap; // current table
+	std::vector<int> tableHeaderWidthList;                  // table header width values
+	std::vector<int> tableLinkHeaderWidthList;              // тоже самое но для диалога ObjectLink
 	// User Module (project-specific module)
 	//std::vector<std::string> userModuleFileNamesList;	// list of project specific modules to load at editor start
-	std::string szUserModuleFileName;							// project specific module to load at editor start
+	std::string szUserModuleFileName; // project specific module to load at editor start
 	//
 	CObjectTypeDataMap objectTypeDataMap;
 	CBuildDataTypeNameMap buildDataTypeNameMap;
@@ -223,17 +224,17 @@ struct SUserData
 	// Maya export
 	SMayaExportData mayaExportData;
 	//
-	CObjectDBTypeMap buildingDBTypeMap;		// default ojects for building builder (copy fields to new object from here)
-	CObjectDBTypeMap infantryDBTypeMap;		// default ojects for infantry builder (copy fields to new object from here)
-	CObjectDBTypeMap mechUnitDBTypeMap;		// default ojects for mechUnit builder (copy fields to new object from here)
+	CObjectDBTypeMap buildingDBTypeMap; // default ojects for building builder (copy fields to new object from here)
+	CObjectDBTypeMap infantryDBTypeMap; // default ojects for infantry builder (copy fields to new object from here)
+	CObjectDBTypeMap mechUnitDBTypeMap; // default ojects for mechUnit builder (copy fields to new object from here)
 	//
-	CFilePathMap filePathMap;							// пути для диалогов OpenFile и т.д.
-	CRefPathMap refPathMap;								// пути для диалогов RefLink и т.д.
+	CFilePathMap filePathMap; // пути для диалогов OpenFile и т.д.
+	CRefPathMap refPathMap;   // пути для диалогов RefLink и т.д.
 	//
 	std::string szDebugParam;
 	//
-	std::list<int> gdbBrowserIDList;						// список окон с каталогами
-	int nFocusedGDBBrowserID;							// текущее активное окно с каталогамми
+	std::list<int> gdbBrowserIDList; // список окон с каталогами
+	int nFocusedGDBBrowserID;        // текущее активное окно с каталогамми
 	//
 	std::string szOpenedMODFolder;
 	//
@@ -248,16 +249,12 @@ struct SUserData
 	bool bShowLogWarnings;
 	bool bShowLogErrors;
 	//
-	SUserData()
-		: bShowLogMessages( true ),
-			bShowLogWarnings( true ),
-			bShowLogErrors( true )
-	{}
+	SUserData() : bShowLogMessages( true ), bShowLogWarnings( true ), bShowLogErrors( true ) {}
 	//
 	int operator&( IXmlSaver &xs )
 	{
 		xs.Add( "RecentList", &recentList );
-		xs.Add( "RecentResourceList", &recentResourceList);
+		xs.Add( "RecentResourceList", &recentResourceList );
 		xs.Add( "ColorList", &colorList );
 		xs.Add( "TableSetMap", &tableSetMap );
 		xs.Add( "CurrentTableMap", &szCurrentTableMap );
@@ -312,14 +309,22 @@ struct SUserData
 	// для однозначности: если указан начальный путь то наличие проверяется только по указанному пути
 	// true		- имя существует в указанном каталоге ( поверка производится только при bExists = true )
 	// false	- имя не существует в указанном каталоге ( поверка производится только при bExists = true )
-	bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, ENormalizePathType type, bool *pbAbsolutePath )
+	bool NormalizePath( std::string *pszPath,
+	                    bool bFile,
+	                    bool bExists,
+	                    bool bReturnAbsolutePath,
+	                    ENormalizePathType type,
+	                    bool *pbAbsolutePath )
 	{
 		std::string szPathPrefix = GetPath( type );
 		return ::NormalizePath( pszPath, bFile, bExists, bReturnAbsolutePath, szPathPrefix, pbAbsolutePath );
 	}
 	//
-	template<class TSettings>
-	bool SerializeSettings( TSettings &rSettings, const std::string &rszTypeName, ESettingsType settingsType, ESerializeType serializeType )
+	template <class TSettings>
+	bool SerializeSettings( TSettings &rSettings,
+	                        const std::string &rszTypeName,
+	                        ESettingsType settingsType,
+	                        ESerializeType serializeType )
 	{
 		std::string szSettingsFileName;
 		switch ( settingsType )
@@ -375,12 +380,14 @@ struct SUserData
 	}
 };
 
-
 struct IUserDataContainer : public CObjectBase
 {
-	enum { tidTypeID = 0x1408AB40 };
+	enum
+	{
+		tidTypeID = 0x1408AB40
+	};
 	// Получить User Data
-	virtual SUserData* Get() = 0;
+	virtual SUserData *Get() = 0;
 	//
 	virtual void Load() = 0;
 	virtual void Save() = 0;

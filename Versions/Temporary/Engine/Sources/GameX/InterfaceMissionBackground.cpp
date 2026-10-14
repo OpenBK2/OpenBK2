@@ -18,8 +18,7 @@ static int nInterfaceMissionBackgroundCount = 0; // sanity check
 
 // CInterfaceMissionBackground
 
-CInterfaceMissionBackground::CInterfaceMissionBackground() :
-	CInterfaceMissionBase( "MissionBackground", "no_section" )
+CInterfaceMissionBackground::CInterfaceMissionBackground() : CInterfaceMissionBase( "MissionBackground", "no_section" )
 {
 #ifndef _FINALRELEASE
 	NI_ASSERT( nInterfaceMissionBackgroundCount == 0, "Duplicate background mission" );
@@ -79,8 +78,8 @@ void CInterfaceMissionBackground::StartMissionMap( const NDb::SMapInfo *pMapInfo
 		if ( !pMapInfo->players[nPlayer].camera.bUseAnchorOnly )
 		{
 			Camera()->SetPlacement( pMapInfo->players[nPlayer].camera.fDist,
-				pMapInfo->players[nPlayer].camera.fPitch,
-				pMapInfo->players[nPlayer].camera.fYaw );
+			                        pMapInfo->players[nPlayer].camera.fPitch,
+			                        pMapInfo->players[nPlayer].camera.fYaw );
 		}
 	}
 	else
@@ -116,7 +115,8 @@ void CInterfaceMissionBackground::OnSerialize( IBinSaver &saver )
 bool CInterfaceMissionBackground::StepLocal( bool bAppActive )
 {
 	bool bNeedToDraw = true;
-	for ( IInterfaceBase *pInterface = NMainLoop::GetTopInterface(); pInterface != this, pInterface; pInterface = NMainLoop::GetPrevInterface( pInterface ) )
+	for ( IInterfaceBase *pInterface = NMainLoop::GetTopInterface(); pInterface != this, pInterface;
+	      pInterface = NMainLoop::GetPrevInterface( pInterface ) )
 	{
 		CDynamicCast<CInterfaceScreenBase> pScreenBaseInterface = pInterface;
 		if ( pScreenBaseInterface && !pScreenBaseInterface->IsTransparent() )
@@ -151,22 +151,19 @@ bool CInterfaceMissionBackground::StepLocal( bool bAppActive )
 
 // CICMissionBackground
 
-void CICMissionBackground::PreCreate()
-{
-}
+void CICMissionBackground::PreCreate() {}
 
 void CICMissionBackground::PostCreate( IInterface *pInterface )
 {
 #ifndef _FINALRELEASE
 	// sanity check
-	NI_ASSERT( NMainLoop::GetTopInterface() == 0, "Programmers: no interfaces are allowed under the CInterfaceMissionBackground" );
+	NI_ASSERT( NMainLoop::GetTopInterface() == 0,
+	           "Programmers: no interfaces are allowed under the CInterfaceMissionBackground" );
 #endif
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMissionBackground::Configure( const char *pszConfig )
-{
-}
+void CICMissionBackground::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17117B81, CInterfaceMissionBackground )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BACKGROUND, CICMissionBackground )

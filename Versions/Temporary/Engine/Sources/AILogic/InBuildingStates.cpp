@@ -28,7 +28,7 @@ extern CGroupLogic theGroupLogic;
 
 CPtr<CInBuildingStatesFactory> CInBuildingStatesFactory::pFactory = 0;
 
-IStatesFactory* CInBuildingStatesFactory::Instance()
+IStatesFactory *CInBuildingStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CInBuildingStatesFactory();
@@ -39,23 +39,19 @@ IStatesFactory* CInBuildingStatesFactory::Instance()
 bool CInBuildingStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		( cmdType == ACTION_COMMAND_DIE						||
-			cmdType == ACTION_COMMAND_ATTACK_UNIT		||
-			cmdType == ACTION_COMMAND_IDLE_BUILDING ||
-//			cmdType == ACTION_COMMAND_AMBUSH				||
-			cmdType == ACTION_COMMAND_DISAPPEAR			||
-			cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT
-		);
+	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_ATTACK_UNIT ||
+	         cmdType == ACTION_COMMAND_IDLE_BUILDING ||
+	         //			cmdType == ACTION_COMMAND_AMBUSH				||
+	         cmdType == ACTION_COMMAND_DISAPPEAR || cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT );
 }
 
-IUnitState* CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
+IUnitState *CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
-	CSoldier *pSoldier = checked_cast<CSoldier*>( pUnit );
+	NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit type" );
+	CSoldier *pSoldier = checked_cast<CSoldier *>( pUnit );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 
 	switch ( cmd.nCmdType )
 	{
@@ -65,12 +61,12 @@ IUnitState* CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAI
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 		case ACTION_COMMAND_ATTACK_UNIT:
-			{
-				CONVERT_OBJECT( CAIUnit, pUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
-				pResult = CSoldierAttackInBuildingState::Instance( pSoldier, pUnit );
-			}
+		{
+			CONVERT_OBJECT( CAIUnit, pUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
+			pResult = CSoldierAttackInBuildingState::Instance( pSoldier, pUnit );
+		}
 
-			break;
+		break;
 		case ACTION_COMMAND_IDLE_BUILDING:
 			pResult = CSoldierRestInBuildingState::Instance( pSoldier, 0 );
 
@@ -86,17 +82,17 @@ IUnitState* CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAI
 	return pResult;
 }
 
-IUnitState* CInBuildingStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CInBuildingStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
-	return CSoldierRestInBuildingState::Instance( checked_cast<CSoldier*>( pUnit ), 0 );
+	NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit type" );
+	return CSoldierRestInBuildingState::Instance( checked_cast<CSoldier *>( pUnit ), 0 );
 }
 
 //*******************************************************************
 //*										CSoldierRestInBuildingState										*
 //*******************************************************************
 
-IUnitState* CSoldierRestInBuildingState::Instance( CSoldier *pSoldier, CBuilding *pBuilding )
+IUnitState *CSoldierRestInBuildingState::Instance( CSoldier *pSoldier, CBuilding *pBuilding )
 {
 	CSoldierRestInBuildingState *pRest = new CSoldierRestInBuildingState( pSoldier );
 	pRest->SendUnitTo( pBuilding );
@@ -104,8 +100,7 @@ IUnitState* CSoldierRestInBuildingState::Instance( CSoldier *pSoldier, CBuilding
 	return pRest;
 }
 
-CSoldierRestInBuildingState::CSoldierRestInBuildingState( CSoldier *_pSoldier )
-: pSoldier( _pSoldier )
+CSoldierRestInBuildingState::CSoldierRestInBuildingState( CSoldier *_pSoldier ) : pSoldier( _pSoldier )
 {
 	startTime = curTime;
 
@@ -128,8 +123,10 @@ void CSoldierRestInBuildingState::SendUnitTo( CBuilding *pBuilding )
 
 void CSoldierRestInBuildingState::Segment()
 {
-	if ( pSoldier->IsInFollowState() && fabs( pSoldier->GetCenter() - pSoldier->GetFollowedUnit()->GetCenter() ) >= SConsts::FOLLOW_GO_RADIUS )
-		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_FOLLOW_NOW, pSoldier->GetFollowedUnit()->GetUniqueId() ), pSoldier, false );
+	if ( pSoldier->IsInFollowState() &&
+	     fabs( pSoldier->GetCenter() - pSoldier->GetFollowedUnit()->GetCenter() ) >= SConsts::FOLLOW_GO_RADIUS )
+		theGroupLogic.UnitCommand(
+				SAIUnitCmd( ACTION_COMMAND_FOLLOW_NOW, pSoldier->GetFollowedUnit()->GetUniqueId() ), pSoldier, false );
 	else if ( pSoldier->GetSlot() != -1 )
 		pSoldier->AnalyzeTargetScan( 0, false, false );
 }
@@ -152,13 +149,13 @@ const CVec2 CSoldierRestInBuildingState::GetPurposePoint() const
 //*										 CSoldierAttackInBuildingState								*
 //*******************************************************************
 
-IUnitState* CSoldierAttackInBuildingState::Instance(  CSoldier *pSoldier, CAIUnit *pEnemy )
+IUnitState *CSoldierAttackInBuildingState::Instance( CSoldier *pSoldier, CAIUnit *pEnemy )
 {
 	return new CSoldierAttackInBuildingState( pSoldier, pEnemy );
 }
 
 CSoldierAttackInBuildingState::CSoldierAttackInBuildingState( class CSoldier *_pSoldier, CAIUnit *_pEnemy )
-: pSoldier( _pSoldier ), pEnemy( _pEnemy ), bFinish( false ), bAim( true ), nEnemyParty( _pEnemy->GetParty() )
+		: pSoldier( _pSoldier ), pEnemy( _pEnemy ), bFinish( false ), bAim( true ), nEnemyParty( _pEnemy->GetParty() )
 {
 	pSoldier->GetBuilding()->Alarm();
 
@@ -221,8 +218,8 @@ void CSoldierAttackInBuildingState::Segment()
 
 			// если враг мёртв или его не видно или стреляем сами по себе или пора заканчивать стрельбу
 			if ( !IsValidObj( pEnemy ) || pEnemy.GetPtr() == pSoldier ||
-					 !pEnemy->IsNoticableByUnit( pSoldier, pGun->GetFireRange( 0 ) ) || bFinish ||
-					 nEnemyParty != pEnemy->GetParty() )
+			     !pEnemy->IsNoticableByUnit( pSoldier, pGun->GetFireRange( 0 ) ) || bFinish ||
+			     nEnemyParty != pEnemy->GetParty() )
 			{
 				if ( IsValidObj( pEnemy ) && !pEnemy->IsNoticableByUnit( pSoldier, pGun->GetFireRange( 0 ) ) )
 					pSoldier->SendAcknowledgement( ACK_DONT_SEE_THE_ENEMY );
@@ -271,7 +268,7 @@ const CVec2 CSoldierAttackInBuildingState::GetPurposePoint() const
 		return CVec2( -1.0f, -1.0f );
 }
 
-CAIUnit* CSoldierAttackInBuildingState::GetTargetUnit() const
+CAIUnit *CSoldierAttackInBuildingState::GetTargetUnit() const
 {
 	return pEnemy;
 }

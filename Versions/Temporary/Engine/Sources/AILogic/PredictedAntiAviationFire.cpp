@@ -8,19 +8,21 @@
 #include "AAFeedBacks.h"
 #include "Manuver.h"
 
-
 extern CDiplomacy theDipl;
 extern NTimer::STime curTime;
 extern CAAFeedBacks theAAFeedBacks;
 
-CPredictedAntiAviationFire::SPredict::SPredict( const CVec3 &pt, const float _fRange, const NTimer::STime _timeToFire, CAIUnit *pOwner )
-: vPt( pt ), fRange( _fRange ), timeToFire ( _timeToFire )
+CPredictedAntiAviationFire::SPredict::SPredict( const CVec3 &pt,
+                                                const float _fRange,
+                                                const NTimer::STime _timeToFire,
+                                                CAIUnit *pOwner )
+		: vPt( pt ), fRange( _fRange ), timeToFire( _timeToFire )
 {
 	const CVec2 vCenter( pOwner->GetCenterPlain() );
 	const CVec2 vDir( pt.x - vCenter.x, pt.y - vCenter.y );
 
 	wHor = GetDirectionByVector( vDir );
-	wVer = GetDirectionByVector( fabs(vDir), pt.z );
+	wVer = GetDirectionByVector( fabs( vDir ), pt.z );
 }
 
 void CPredictedAntiAviationFire::OnSerialize( IBinSaver &saver )
@@ -65,9 +67,8 @@ void CPredictedAntiAviationFire::SetTarget( CAviation *_pPlane )
 
 void CPredictedAntiAviationFire::Segment()
 {
-	if (	eState != SAAS_WAIT_FOR_END_OF_BURST &&
-				eState != SAAS_FINISH &&
-				( !IsValidObj( pPlane ) || EDI_ENEMY != theDipl.GetDiplStatus( pPlane->GetPlayer(), pUnit->GetPlayer() ) ) )
+	if ( eState != SAAS_WAIT_FOR_END_OF_BURST && eState != SAAS_FINISH &&
+	     ( !IsValidObj( pPlane ) || EDI_ENEMY != theDipl.GetDiplStatus( pPlane->GetPlayer(), pUnit->GetPlayer() ) ) )
 	{
 		eState = SAAS_FINISH;
 		StopFire();
@@ -78,7 +79,7 @@ void CPredictedAntiAviationFire::Segment()
 
 	switch ( eState )
 	{
-	case SAAS_ESITMATING:
+		case SAAS_ESITMATING:
 		{
 			if ( CalcAimPoint() )
 			{
@@ -90,32 +91,32 @@ void CPredictedAntiAviationFire::Segment()
 		}
 
 		break;
-	case SAAS_FINISHED_TASK:
-		break;
-	case SAAS_FINISH:
-		if ( IsFinishedFire() )
-			eState = SAAS_FINISHED_TASK;
-		else
-		{
-			StopFire();
-			eState = SAAS_WAIT_FOR_END_OF_BURST;
-		}
+		case SAAS_FINISHED_TASK:
+			break;
+		case SAAS_FINISH:
+			if ( IsFinishedFire() )
+				eState = SAAS_FINISHED_TASK;
+			else
+			{
+				StopFire();
+				eState = SAAS_WAIT_FOR_END_OF_BURST;
+			}
 
-		break;
-	case SAAS_WAIT_FOR_END_OF_BURST:
-		if ( IsFinishedFire() )
-		{
-			StopFire();
-			eState = SAAS_FINISHED_TASK;
-		}
+			break;
+		case SAAS_WAIT_FOR_END_OF_BURST:
+			if ( IsFinishedFire() )
+			{
+				StopFire();
+				eState = SAAS_FINISHED_TASK;
+			}
 
-		break;
-	case SAAS_START_AIMING_TO_PREDICTED_POINT:
+			break;
+		case SAAS_START_AIMING_TO_PREDICTED_POINT:
 		{
 			if ( curTime - timeLastAimUpdate > SConsts::AA_BEH_UPDATE_DURATION )
 				CalcAimPoint();
 
-			if ( fabs( CVec2( aimPoint.GetPt().x, aimPoint.GetPt().y) - pUnit->GetCenterPlain() ) <= aimPoint.GetRange() )
+			if ( fabs( CVec2( aimPoint.GetPt().x, aimPoint.GetPt().y ) - pUnit->GetCenterPlain() ) <= aimPoint.GetRange() )
 			{
 				// pUnit->SendAcknowledgement( ACK_ATTACKING_AVIATION, true );
 				bAttacking = true;
@@ -128,26 +129,26 @@ void CPredictedAntiAviationFire::Segment()
 		}
 
 		break;
-	case SAAS_AIM_TO_PREDICTED_POINT:
+		case SAAS_AIM_TO_PREDICTED_POINT:
 
-		if ( aimPoint.GetPt().z <= 0 )			// don't want to shoot to the ground.
-			eState = SAAS_ESITMATING;
-		else
-		{
-			Aim();
-			if ( curTime >= aimPoint.GetFireTime() )
+			if ( aimPoint.GetPt().z <= 0 ) // don't want to shoot to the ground.
+				eState = SAAS_ESITMATING;
+			else
 			{
-				FireNow();
-				theAAFeedBacks.Fired( pUnit, pPlane );
-				eState = SAAS_FIRING_TO_PREDICTED_POINT;
+				Aim();
+				if ( curTime >= aimPoint.GetFireTime() )
+				{
+					FireNow();
+					theAAFeedBacks.Fired( pUnit, pPlane );
+					eState = SAAS_FIRING_TO_PREDICTED_POINT;
+				}
 			}
-		}
-		break;
-	case SAAS_FIRING_TO_PREDICTED_POINT:
-		if ( IsFinishedFire() )
-			eState = SAAS_ESITMATING;
+			break;
+		case SAAS_FIRING_TO_PREDICTED_POINT:
+			if ( IsFinishedFire() )
+				eState = SAAS_ESITMATING;
 
-		break;
+			break;
 	}
 }
 
@@ -189,8 +190,8 @@ bool CPredictedAntiAviationFire::CalcAimPoint()
 	timeLastAimUpdate = curTime;
 
 	float fRange = 0;
-	CTurret * pTurret = 0;
-	CBasicGun * pGunAbleToShoot = 0;
+	CTurret *pTurret = 0;
+	CBasicGun *pGunAbleToShoot = 0;
 	// choose the first gun that able to shoot to plane
 	CBasicGun *pGun = pUnit->GetGun( *nGuns.begin() );
 
@@ -225,7 +226,7 @@ bool CPredictedAntiAviationFire::CalcAimPoint()
 
 	const int nTimeToShoot = nTime / SConsts::AI_SEGMENT_DURATION * SConsts::AI_SEGMENT_DURATION;
 
-	DRAW_WHITE_CROSS(vPredict);
+	DRAW_WHITE_CROSS( vPredict );
 
 	aimPoint = SPredict( vPredict, fRange, curTime + nTimeToShoot, pUnit );
 	return true;

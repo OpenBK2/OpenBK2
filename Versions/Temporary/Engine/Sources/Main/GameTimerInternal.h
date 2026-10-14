@@ -13,12 +13,12 @@ class CGameTimer : public IGameTimer
 	//
 	typedef std::list<int> CPauseTypes;
 	//
-	CScaleTimer timerGame;								// game timer
-	CScaleTimer timerAbs;									// absolute timer
-	NTimer::STime timeSegment;						// last segment independent time
-	int nSegmentsCounter;									// segments counter
-	CPauseTypes pauseTypes;								// pause types
-	int nGameTimerSpeed;									// game timer game-friendly speed [-10..+10]
+	CScaleTimer timerGame;     // game timer
+	CScaleTimer timerAbs;      // absolute timer
+	NTimer::STime timeSegment; // last segment independent time
+	int nSegmentsCounter;      // segments counter
+	CPauseTypes pauseTypes;    // pause types
+	int nGameTimerSpeed;       // game timer game-friendly speed [-10..+10]
 	int nSegmentDuration;
 	CObj<CCSTime2> pAbsTimer;
 	CObj<CCSTime2> pGameTimer;
@@ -41,11 +41,11 @@ public:
 	CFuncBase<STime> *GetGameTimerA5() const { return pGameTimerA5; }
 	CFuncBase<STime> *GetAbsTimerA5() const { return pAbsTimerA5; }
 	// get current independent game time
-	const NTimer::STime& GetGameTime() const;
+	const NTimer::STime &GetGameTime() const;
 	// get current independent absolute time
-	const NTimer::STime& GetAbsTime() const;
+	const NTimer::STime &GetAbsTime() const;
 	// get current independent segment time
-	const NTimer::STime& GetSegmentTime() const;
+	const NTimer::STime &GetSegmentTime() const;
 	virtual const float GetSegmentDuration() const { return nSegmentDuration; }
 	// get segment number
 	int GetSegment() const;

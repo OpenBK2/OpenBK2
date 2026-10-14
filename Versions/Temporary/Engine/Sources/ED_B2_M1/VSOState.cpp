@@ -20,48 +20,47 @@
 
 namespace NExtraDraw
 {
-	void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const std::vector<CVec3> &vPoints )
-	{
-		if ( vPoints.size() < 2 )
-			return;
+void DrawVector( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const std::vector<CVec3> &vPoints )
+{
+	if ( vPoints.size() < 2 )
+		return;
 
-		std::vector<CVec3>::const_iterator itPoint = vPoints.begin();
-		std::vector<CVec3>::const_iterator itPointPrev = itPoint;
+	std::vector<CVec3>::const_iterator itPoint = vPoints.begin();
+	std::vector<CVec3>::const_iterator itPointPrev = itPoint;
+	++itPoint;
+
+	while ( 1 )
+	{
+		if ( itPoint == vPoints.end() )
+			break;
+
+		pSceneDrawTool->DrawLine( *itPoint, *itPointPrev, uColor, false );
+
+		itPointPrev = itPoint;
 		++itPoint;
-
-		while ( 1 )
-		{
-			if ( itPoint == vPoints.end() )
-				break;
-
-			pSceneDrawTool->DrawLine( *itPoint, *itPointPrev, uColor, false );
-
-			itPointPrev = itPoint;
-			++itPoint;
-		}
-		pSceneDrawTool->DrawLine( (*vPoints.begin()), (*itPointPrev), uColor, false );
 	}
-	//
-	void DrawArray( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const CArray2D<float> &array, const float fTileSize )
+	pSceneDrawTool->DrawLine( ( *vPoints.begin() ), ( *itPointPrev ), uColor, false );
+}
+//
+void DrawArray( CSceneDrawTool *pSceneDrawTool, unsigned uColor, const CArray2D<float> &array, const float fTileSize )
+{
+	const int nSizeX = array.GetSizeX();
+	const int nSizeY = array.GetSizeY();
+	if ( ( nSizeX < 1 ) | ( nSizeY < 1 ) )
+		return;
+
+	for ( int g = 0; g < nSizeY; ++g )
 	{
-		const int nSizeX = array.GetSizeX();
-		const int nSizeY = array.GetSizeY();
-		if ( (nSizeX < 1) | (nSizeY < 1) )
-			return;
-
-		for ( int g = 0; g < nSizeY; ++g )
+		for ( int i = 0; i < nSizeX; ++i )
 		{
-			for ( int i = 0; i < nSizeX; ++i )
-			{
-				const CVec3 vDown( i*fTileSize, g*fTileSize, 0 );
-				const CVec3 vUp = vDown + V3_AXIS_Z * Vis2AI( array[g][i] );
+			const CVec3 vDown( i * fTileSize, g * fTileSize, 0 );
+			const CVec3 vUp = vDown + V3_AXIS_Z * Vis2AI( array[g][i] );
 
-				pSceneDrawTool->DrawLine( vDown, vUp, uColor, false );
-			}
+			pSceneDrawTool->DrawLine( vDown, vUp, uColor, false );
 		}
 	}
+}
 };
-
 
 void CVSOSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -71,28 +70,30 @@ void CVSOSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMouse
 		//
 		pParentState->ClearPickVSOIDList();
 		//
-		pParentState->PickVSO( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, &( pParentState->pickVSOIDList ) );
+		pParentState->PickVSO( pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+		                       &( pParentState->pickVSOIDList ) );
 		// Выделяем верхний VSO
 		if ( !pParentState->pickVSOIDList.empty() )
 		{
 			pParentState->nSelectedIndex = 0;
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
-		else if ( !pParentState->PickOtherVSO( nFlags, rMousePoint, pParentState->pStoreInputState->lastEventInfo.vTerrainPos ) )
+		else if ( !pParentState->PickOtherVSO(
+									nFlags, rMousePoint, pParentState->pStoreInputState->lastEventInfo.vTerrainPos ) )
 		{
 			if ( pParentState->CanInsertVSO() )
 			{
 				// Начинаем строить новый VSO ( добавляем первую точку )
 				pParentState->PrepareInsertVSO();
 				pParentState->ClearStartVSOPointList();
-				pParentState->startVSOInstance.controlPoints.push_back( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->startVSOInstance.controlPoints.push_back(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 				pParentState->SetActiveInputState( CVSOState::IS_ADD, true, false );
 			}
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 	}
 }
-
 
 void CVSOSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -105,7 +106,8 @@ void CVSOSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePo
 		{
 			pParentState->ValidateSelectedIndex();
 			//
-			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_START, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
+			pParentState->UpdateVSO(
+					pParentState->GetSelectedVSOID(), CVSOState::UT_START, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
 			{
 				NDb::SVSOInstance *pSelectedVSO = pParentState->GetVSO( pParentState->GetSelectedVSOID(), 0 );
 				pParentState->startVSOInstance.points = pSelectedVSO->points;
@@ -117,7 +119,6 @@ void CVSOSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePo
 		}
 	}
 }
-
 
 void CVSOSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -140,16 +141,14 @@ void CVSOSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-
 void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
 		pParentState->pStoreInputState->OnMouseMove( nFlags, rMousePoint );
 		CVSOMultiState::SEditParameters *pEditParameters = pParentState->pParentState->GetEditParameters();
-		if ( ( nFlags & MK_LBUTTON ) &&
-				pParentState->currentSelection.IsValid() &&
-				pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
+		if ( ( nFlags & MK_LBUTTON ) && pParentState->currentSelection.IsValid() &&
+		     pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 		{
 			NDb::SVSOInstance *pSelectedVSO = pParentState->GetVSO( pParentState->GetSelectedVSOID(), 0 );
 			if ( pSelectedVSO == 0 )
@@ -167,31 +166,36 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 			if ( pParentState->currentSelection.IsControlPointType() )
 			{
 				pParentState->backupKeyPoints.LoadKeyPoints( &( pSelectedVSO->points ) );
-				switch( pEditParameters->ePointNumber )
+				switch ( pEditParameters->ePointNumber )
 				{
 					case CVSOMultiState::SEditParameters::PN_SINGLE:
 					default:
 					{
-						pSelectedVSO->controlPoints[pParentState->currentSelection.nIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																																									pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+						pSelectedVSO->controlPoints[pParentState->currentSelection.nIndex] +=
+								pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+								pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 						break;
 					}
 					case CVSOMultiState::SEditParameters::PN_MULTI:
 					{
 						if ( ( nFlags & MK_CONTROL ) == 0 )
 						{
-							for ( int nPointIndex = pParentState->currentSelection.nIndex; nPointIndex < pSelectedVSO->controlPoints.size(); ++nPointIndex )
+							for ( int nPointIndex = pParentState->currentSelection.nIndex;
+							      nPointIndex < pSelectedVSO->controlPoints.size();
+							      ++nPointIndex )
 							{
-								pSelectedVSO->controlPoints[nPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																														pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+								pSelectedVSO->controlPoints[nPointIndex] +=
+										pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+										pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 							}
 						}
 						else
 						{
 							for ( int nPointIndex = 0; nPointIndex <= pParentState->currentSelection.nIndex; ++nPointIndex )
 							{
-								pSelectedVSO->controlPoints[nPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																														pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+								pSelectedVSO->controlPoints[nPointIndex] +=
+										pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+										pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 							}
 						}
 						break;
@@ -200,8 +204,9 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 					{
 						for ( int nPointIndex = 0; nPointIndex < pSelectedVSO->controlPoints.size(); ++nPointIndex )
 						{
-							pSelectedVSO->controlPoints[nPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																													pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+							pSelectedVSO->controlPoints[nPointIndex] +=
+									pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+									pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 						}
 						break;
 					}
@@ -215,11 +220,13 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 				if ( ICamera *pCamera = Camera() )
 				{
 					CTPoint<int> dimensions( 0, 0 );
-					if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_GET_DIMENSIONS, reinterpret_cast<uintptr_t>( &dimensions ) ) )
+					if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+									 CHID_SCENE, ID_SCENE_GET_DIMENSIONS, reinterpret_cast<uintptr_t>( &dimensions ) ) )
 					{
 						float vNewZ = 0.0f;
 						{
-							const int nDY = pParentState->pStoreInputState->lastEventInfo.point.y - pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].point.y;
+							const int nDY = pParentState->pStoreInputState->lastEventInfo.point.y -
+							                pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].point.y;
 							float fNear = 0.0f;
 							float fFar = 0.0f;
 							float fFOV = 0.0f;
@@ -231,12 +238,14 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 							const CVec3 vCenterPoint = pSelectedVSO->points[pParentState->currentSelection.nIndex].vPos;
 							// fNear - сократили
 							const float fDY = ( nDY * tan( fFOV / 2.0f ) /* *fNear */ ) / ( dimensions.x * 1.0f );
-							const float fDZ = 2.0f * vUPVector.z * fDY * fabs( vOrigin.x - vCenterPoint.x, vOrigin.y - vCenterPoint.y ) / ( fabs( vDirection.x, vDirection.y ) /* *fNear */ );
+							const float fDZ = 2.0f * vUPVector.z * fDY *
+							                  fabs( vOrigin.x - vCenterPoint.x, vOrigin.y - vCenterPoint.y ) /
+							                  ( fabs( vDirection.x, vDirection.y ) /* *fNear */ );
 							vNewZ = pParentState->currentSelection.vDifference.z + fDZ;
 							//DebugTrace( "Dimensions: %dx%d, nDY: %d, fDZ: %g", dimensions.x, dimensions.y, nDY, fDZ );
 						}
 						//
-						switch( pEditParameters->ePointNumber )
+						switch ( pEditParameters->ePointNumber )
 						{
 							case CVSOMultiState::SEditParameters::PN_SINGLE:
 							default:
@@ -266,9 +275,12 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 			}
 			else if ( pParentState->currentSelection.IsNormalePointType() )
 			{
-				CVec3 vShift = pParentState->pStoreInputState->lastEventInfo.vTerrainPos - pSelectedVSO->points[pParentState->currentSelection.nIndex].vPos - pParentState->currentSelection.vDifference;
-				float fNewWidth = fabs( pSelectedVSO->points[pParentState->currentSelection.nIndex].vNorm * ( vShift * pSelectedVSO->points[pParentState->currentSelection.nIndex].vNorm ) );
-				switch( pEditParameters->ePointNumber )
+				CVec3 vShift = pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+				               pSelectedVSO->points[pParentState->currentSelection.nIndex].vPos -
+				               pParentState->currentSelection.vDifference;
+				float fNewWidth = fabs( pSelectedVSO->points[pParentState->currentSelection.nIndex].vNorm *
+				                        ( vShift * pSelectedVSO->points[pParentState->currentSelection.nIndex].vNorm ) );
+				switch ( pEditParameters->ePointNumber )
 				{
 					case CVSOMultiState::SEditParameters::PN_SINGLE:
 					default:
@@ -298,28 +310,32 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 			}
 			if ( ( pSelectedVSO->controlPoints.size() > 2 ) && ( pParentState->IsEdgesMustBeOut() ) )
 			{
-				CVSOManager::MoveEdgeControlPointsOut( pSelectedVSO, pParentState->mapRect, pParentState->GetDefaultStepOut(), true, true );
+				CVSOManager::MoveEdgeControlPointsOut(
+						pSelectedVSO, pParentState->mapRect, pParentState->GetDefaultStepOut(), true, true );
 			}
-			CVSOManager::Update( pSelectedVSO,
-													 pParentState->currentSelection.IsControlPointType(),
-													 true,
-													 pParentState->GetDefaultStep(),
-													 pEditParameters->fWidth,
-													 pEditParameters->fHeight,
-													 pEditParameters->fOpacity,
-													 pParentState->currentSelection.IsControlPointType() || pParentState->currentSelection.IsNormalePointType(),
-													 pParentState->currentSelection.IsControlPointType() || pParentState->currentSelection.IsCenterPointType(),
-													 true,
-													 pParentState->IsClose(),
-													 pParentState->IsComplete() );
-			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_CONTINUE_MOVE, pParentState->currentSelection.eSelectionType, nFlags );
+			CVSOManager::Update(
+					pSelectedVSO,
+					pParentState->currentSelection.IsControlPointType(),
+					true,
+					pParentState->GetDefaultStep(),
+					pEditParameters->fWidth,
+					pEditParameters->fHeight,
+					pEditParameters->fOpacity,
+					pParentState->currentSelection.IsControlPointType() || pParentState->currentSelection.IsNormalePointType(),
+					pParentState->currentSelection.IsControlPointType() || pParentState->currentSelection.IsCenterPointType(),
+					true,
+					pParentState->IsClose(),
+					pParentState->IsComplete() );
+			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+			                         CVSOState::UT_CONTINUE_MOVE,
+			                         pParentState->currentSelection.eSelectionType,
+			                         nFlags );
 			//
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			return;
 		}
-		else if ( ( nFlags & MK_RBUTTON ) &&
-							pParentState->currentSelection.IsValid() &&
-							pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].IsValid() )
+		else if ( ( nFlags & MK_RBUTTON ) && pParentState->currentSelection.IsValid() &&
+		          pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].IsValid() )
 		{
 			if ( pParentState->currentSelection.IsNormalePointType() )
 			{
@@ -336,12 +352,14 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 				pEditParameters->nFlags = MIVSOSEP_POINT_NUMBER | MIVSOSEP_WIDTH | MIVSOSEP_OPACITY | MIVSOSEP_HEIGHT;
 				::GetEditParameters( pEditParameters, CHID_MAPINFO_VSO_WINDOW );
 				//
-				int nShift = pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].point.y - pParentState->pStoreInputState->lastEventInfo.point.y;
+				int nShift = pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].point.y -
+				             pParentState->pStoreInputState->lastEventInfo.point.y;
 				if ( pEditParameters->ePointNumber == CVSOMultiState::SEditParameters::PN_ALL )
 				{
 					for ( int nPointIndex = 0; nPointIndex < pSelectedVSO->points.size(); ++nPointIndex )
 					{
-						pSelectedVSO->points[nPointIndex].fOpacity = pParentState->currentSelection.fOpacity + ( nShift / CVSOManager::OPACITY_DELIMITER );
+						pSelectedVSO->points[nPointIndex].fOpacity =
+								pParentState->currentSelection.fOpacity + ( nShift / CVSOManager::OPACITY_DELIMITER );
 						if ( pSelectedVSO->points[nPointIndex].fOpacity < 0.0f )
 						{
 							pSelectedVSO->points[nPointIndex].fOpacity = 0.0f;
@@ -354,7 +372,8 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 				}
 				else
 				{
-					pSelectedVSO->points[pParentState->currentSelection.nIndex].fOpacity = pParentState->currentSelection.fOpacity + ( nShift / CVSOManager::OPACITY_DELIMITER );
+					pSelectedVSO->points[pParentState->currentSelection.nIndex].fOpacity =
+							pParentState->currentSelection.fOpacity + ( nShift / CVSOManager::OPACITY_DELIMITER );
 					if ( pSelectedVSO->points[pParentState->currentSelection.nIndex].fOpacity < 0.0f )
 					{
 						pSelectedVSO->points[pParentState->currentSelection.nIndex].fOpacity = 0.0f;
@@ -368,18 +387,21 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 				pEditParameters->fOpacity = pSelectedVSO->points[pParentState->currentSelection.nIndex].fOpacity;
 				SetEditParameters( *pEditParameters, CHID_MAPINFO_VSO_WINDOW );
 				CVSOManager::Update( pSelectedVSO,
-														 pParentState->currentSelection.IsControlPointType(),
-														 true,
-														 pParentState->GetDefaultStep(),
-														 pEditParameters->fWidth,
-														 pEditParameters->fHeight,
-														 pEditParameters->fOpacity,
-														 false,
-														 false,
-														 true,
-														 pParentState->IsClose(),
-														 pParentState->IsComplete() );
-				pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_CONTINUE_MOVE, pParentState->currentSelection.eSelectionType, nFlags );
+				                     pParentState->currentSelection.IsControlPointType(),
+				                     true,
+				                     pParentState->GetDefaultStep(),
+				                     pEditParameters->fWidth,
+				                     pEditParameters->fHeight,
+				                     pEditParameters->fOpacity,
+				                     false,
+				                     false,
+				                     true,
+				                     pParentState->IsClose(),
+				                     pParentState->IsComplete() );
+				pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+				                         CVSOState::UT_CONTINUE_MOVE,
+				                         pParentState->currentSelection.eSelectionType,
+				                         nFlags );
 				//
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 				return;
@@ -387,7 +409,6 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 		}
 	}
 }
-
 
 void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -412,11 +433,11 @@ void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 		Camera()->GetProjectiveRay( &vOrigin, &vDirection, CVec2( rMousePoint.x, rMousePoint.y ) );
 		Vis2AI( &vOrigin );
 		if ( CVSOManager::GetVSOSelection( &( pParentState->currentSelection ),
-																			 pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
-																			 vOrigin,
-																			 vDirection,
-																			 *pSelectedVSO,
-																			 pParentState->leftButtonVSOSelectionParamList ) )
+		                                   pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+		                                   vOrigin,
+		                                   vDirection,
+		                                   *pSelectedVSO,
+		                                   pParentState->leftButtonVSOSelectionParamList ) )
 		{
 			if ( pParentState->currentSelection.IsNormalePointType() )
 			{
@@ -427,7 +448,10 @@ void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 				SetEditParameters( *pEditParameters, CHID_MAPINFO_VSO_WINDOW );
 			}
 			pParentState->backupKeyPoints.SaveKeyPoints( pSelectedVSO->points );
-			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_START_MOVE, pParentState->currentSelection.eSelectionType, MK_LBUTTON );
+			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+			                         CVSOState::UT_START_MOVE,
+			                         pParentState->currentSelection.eSelectionType,
+			                         MK_LBUTTON );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			return;
 		}
@@ -438,7 +462,8 @@ void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 		//
 		pParentState->ClearPickVSOIDList();
 		//
-		pParentState->PickVSO( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, &( pParentState->pickVSOIDList ) );
+		pParentState->PickVSO( pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+		                       &( pParentState->pickVSOIDList ) );
 		bool bReturnOldVSO = true;
 		if ( !pParentState->pickVSOIDList.empty() )
 		{
@@ -460,7 +485,8 @@ void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 				bReturnOldVSO = false;
 			}
 		}
-		else if ( pParentState->PickOtherVSO( nFlags, rMousePoint, pParentState->pStoreInputState->lastEventInfo.vTerrainPos ) )
+		else if ( pParentState->PickOtherVSO(
+									nFlags, rMousePoint, pParentState->pStoreInputState->lastEventInfo.vTerrainPos ) )
 		{
 			return;
 		}
@@ -474,7 +500,6 @@ void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-
 
 void CVSOEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -494,7 +519,10 @@ void CVSOEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoin
 		//
 		if ( pParentState->currentSelection.IsValid() )
 		{
-			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_FINISH_MOVE, pParentState->currentSelection.eSelectionType, MK_LBUTTON );
+			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+			                         CVSOState::UT_FINISH_MOVE,
+			                         pParentState->currentSelection.eSelectionType,
+			                         MK_LBUTTON );
 		}
 		pParentState->currentSelection.Invalidate();
 		pParentState->backupKeyPoints.Clear();
@@ -502,7 +530,6 @@ void CVSOEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoin
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-
 
 void CVSOEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -531,11 +558,11 @@ void CVSOEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 			//Camera()->GetProjectiveRay( &vOrigin, &vDirection, CVec2( rMousePoint.x, rMousePoint.y ) );
 			//Vis2AI( &vOrigin );
 			if ( CVSOManager::GetVSOSelection( &( pParentState->currentSelection ),
-																				pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
-																				vOrigin,
-																				vDirection,
-																				*pSelectedVSO,
-																				pParentState->rightButtonVSOSelectionParamList ) )
+			                                   pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+			                                   vOrigin,
+			                                   vDirection,
+			                                   *pSelectedVSO,
+			                                   pParentState->rightButtonVSOSelectionParamList ) )
 			{
 				pEditParameters->nFlags = MIVSOSEP_WIDTH | MIVSOSEP_OPACITY | MIVSOSEP_HEIGHT;
 				pEditParameters->fWidth = pSelectedVSO->points[pParentState->currentSelection.nIndex].fWidth;
@@ -543,7 +570,10 @@ void CVSOEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 				pEditParameters->fOpacity = pSelectedVSO->points[pParentState->currentSelection.nIndex].fOpacity;
 				SetEditParameters( *pEditParameters, CHID_MAPINFO_VSO_WINDOW );
 				//
-				pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_START_MOVE, pParentState->currentSelection.eSelectionType, MK_RBUTTON );
+				pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+				                         CVSOState::UT_START_MOVE,
+				                         pParentState->currentSelection.eSelectionType,
+				                         MK_RBUTTON );
 				//
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 				return;
@@ -551,7 +581,6 @@ void CVSOEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 		}
 	}
 }
-
 
 void CVSOEditState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -571,7 +600,10 @@ void CVSOEditState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoin
 		//
 		if ( pParentState->currentSelection.IsValid() )
 		{
-			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_FINISH_MOVE, pParentState->currentSelection.eSelectionType, MK_RBUTTON );
+			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+			                         CVSOState::UT_FINISH_MOVE,
+			                         pParentState->currentSelection.eSelectionType,
+			                         MK_RBUTTON );
 		}
 		pParentState->currentSelection.Invalidate();
 		pParentState->backupKeyPoints.Clear();
@@ -579,7 +611,6 @@ void CVSOEditState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoin
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-
 
 void CVSOEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -612,7 +643,8 @@ void CVSOEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMouse
 				pSelectedVSO->points[pSelectedVSO->points.size() - 1].vPos.z = 0;
 			}
 		}
-		pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_FINISH, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
+		pParentState->UpdateVSO(
+				pParentState->GetSelectedVSOID(), CVSOState::UT_FINISH, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
 		//
 		DebugTrace( "CVSOEditState::OnLButtonDblClk(): pParentState->GetVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 		//
@@ -624,7 +656,6 @@ void CVSOEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-
 void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -634,7 +665,7 @@ void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 		if ( nChar == VK_INSERT )
 		{
 			if ( pParentState->currentSelection.IsValid() &&
-					pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
+			     pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 			{
 				NDb::SVSOInstance *pSelectedVSO = pParentState->GetVSO( pParentState->GetSelectedVSOID(), 0 );
 				if ( pSelectedVSO == 0 )
@@ -656,49 +687,57 @@ void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 					{
 						CVec3 vEnd = pSelectedVSO->controlPoints[pParentState->currentSelection.nIndex + 1];
 						CVec3 vNewControlPoint = ( vBegin + vEnd ) / 2.0f;
-						pSelectedVSO->controlPoints.insert( pSelectedVSO->controlPoints.begin() + ( pParentState->currentSelection.nIndex + 1 ), vNewControlPoint );
-						pParentState->backupKeyPoints.AddKeyPoint( ( pParentState->currentSelection.nIndex + 1 ), pEditParameters->fWidth, pEditParameters->fOpacity );
+						pSelectedVSO->controlPoints.insert(
+								pSelectedVSO->controlPoints.begin() + ( pParentState->currentSelection.nIndex + 1 ), vNewControlPoint );
+						pParentState->backupKeyPoints.AddKeyPoint(
+								( pParentState->currentSelection.nIndex + 1 ), pEditParameters->fWidth, pEditParameters->fOpacity );
 					}
 					else
 					{
 						CVec3 vEnd = pSelectedVSO->controlPoints[pParentState->currentSelection.nIndex - 1];
 						CVec3 vNewControlPoint = ( vBegin + vEnd ) / 2.0f;
-						pSelectedVSO->controlPoints.insert( pSelectedVSO->controlPoints.begin() + ( pParentState->currentSelection.nIndex + 0 ), vNewControlPoint );
-						pParentState->backupKeyPoints.AddKeyPoint( ( pParentState->currentSelection.nIndex + 0 ), pEditParameters->fWidth, pEditParameters->fOpacity );
+						pSelectedVSO->controlPoints.insert(
+								pSelectedVSO->controlPoints.begin() + ( pParentState->currentSelection.nIndex + 0 ), vNewControlPoint );
+						pParentState->backupKeyPoints.AddKeyPoint(
+								( pParentState->currentSelection.nIndex + 0 ), pEditParameters->fWidth, pEditParameters->fOpacity );
 
 						++( pParentState->currentSelection.nIndex );
 					}
 					//
 					CVSOManager::Update( pSelectedVSO,
-															 true,
-															 true,
-															 pParentState->GetDefaultStep(),
-															 pEditParameters->fWidth,
-															 pEditParameters->fHeight,
-															 pEditParameters->fOpacity,
-															 true,
-															 true,
-															 true,
-															 pParentState->IsClose(),
-															 pParentState->IsComplete() );
+					                     true,
+					                     true,
+					                     pParentState->GetDefaultStep(),
+					                     pEditParameters->fWidth,
+					                     pEditParameters->fHeight,
+					                     pEditParameters->fOpacity,
+					                     true,
+					                     true,
+					                     true,
+					                     pParentState->IsClose(),
+					                     pParentState->IsComplete() );
 					pParentState->backupKeyPoints.LoadKeyPoints( &( pSelectedVSO->points ) );
 					if ( ( pSelectedVSO->controlPoints.size() > 2 ) && ( pParentState->IsEdgesMustBeOut() ) )
 					{
-						CVSOManager::MoveEdgeControlPointsOut( pSelectedVSO, pParentState->mapRect, pParentState->GetDefaultStepOut(), true, true );
+						CVSOManager::MoveEdgeControlPointsOut(
+								pSelectedVSO, pParentState->mapRect, pParentState->GetDefaultStepOut(), true, true );
 					}
 					CVSOManager::Update( pSelectedVSO,
-															 true,
-															 true,
-															 pParentState->GetDefaultStep(),
-															 pEditParameters->fWidth,
-															 pEditParameters->fHeight,
-															 pEditParameters->fOpacity,
-															 true,
-															 true,
-															 true,
-															 pParentState->IsClose(),
-															 pParentState->IsComplete() );
-					pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_CHANGE_POINT_NUMBER, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
+					                     true,
+					                     true,
+					                     pParentState->GetDefaultStep(),
+					                     pEditParameters->fWidth,
+					                     pEditParameters->fHeight,
+					                     pEditParameters->fOpacity,
+					                     true,
+					                     true,
+					                     true,
+					                     pParentState->IsClose(),
+					                     pParentState->IsComplete() );
+					pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+					                         CVSOState::UT_CHANGE_POINT_NUMBER,
+					                         CVSOManager::SVSOSelection::ST_UNKNOWN,
+					                         0 );
 					//
 					Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 					return;
@@ -749,7 +788,10 @@ void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 			NHPTimer::STime time = 0;
 			NHPTimer::GetTime( &time );
 			//
-			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), ( nChar != VK_ESCAPE ) ? CVSOState::UT_FINISH : CVSOState::UT_CANCEL, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
+			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(),
+			                         ( nChar != VK_ESCAPE ) ? CVSOState::UT_FINISH : CVSOState::UT_CANCEL,
+			                         CVSOManager::SVSOSelection::ST_UNKNOWN,
+			                         0 );
 			//
 			DebugTrace( "CVSOEditState::OnKeyDown(): pParentState->UpdateVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 			//
@@ -763,7 +805,6 @@ void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 	}
 }
 
-
 bool CVSOAddState::InsertVSO()
 {
 	NHPTimer::STime totalTime = 0;
@@ -773,7 +814,8 @@ bool CVSOAddState::InsertVSO()
 	NHPTimer::GetTime( &time );
 	//
 	bool bResult = true;
-	UniquePolygon<std::vector<CVec3>, CVec3>( &( pParentState->startVSOInstance.controlPoints ), CVSOManager::DEFAULT_POINT_RADIUS );
+	UniquePolygon<std::vector<CVec3>, CVec3>( &( pParentState->startVSOInstance.controlPoints ),
+	                                          CVSOManager::DEFAULT_POINT_RADIUS );
 	//
 	DebugTrace( "CVSOAddState::InsertVSO(): UniquePolygon: %g", NHPTimer::GetTimePassed( &time ) );
 	//
@@ -794,7 +836,8 @@ bool CVSOAddState::InsertVSO()
 		pParentState->pickVSOIDList.push_back( nNewVSOID );
 		pParentState->nSelectedIndex = 0;
 		//
-		pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), CVSOState::UT_START, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
+		pParentState->UpdateVSO(
+				pParentState->GetSelectedVSOID(), CVSOState::UT_START, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
 		//
 		DebugTrace( "CVSOAddState::InsertVSO(): pParentState->UpdateVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 		//
@@ -821,8 +864,7 @@ bool CVSOAddState::InsertVSO()
 	return bResult;
 }
 
-
-void CVSOAddState::OnSetFocus( IWidget* pNewWnd )
+void CVSOAddState::OnSetFocus( IWidget *pNewWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -830,15 +872,13 @@ void CVSOAddState::OnSetFocus( IWidget* pNewWnd )
 	}
 }
 
-
-void CVSOAddState::OnKillFocus( IWidget* pOldWnd )
+void CVSOAddState::OnKillFocus( IWidget *pOldWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-
 
 void CVSOAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -854,7 +894,6 @@ void CVSOAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-
 void CVSOAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -868,7 +907,6 @@ void CVSOAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-
 void CVSOAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -879,7 +917,8 @@ void CVSOAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint
 		{
 			pParentState->startVSOInstance.controlPoints.pop_back();
 			pParentState->startVSOInstance.controlPoints.pop_back();
-			pParentState->startVSOInstance.controlPoints.push_back( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+			pParentState->startVSOInstance.controlPoints.push_back(
+					pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 			pParentState->UpdateVisualVSO( &( pParentState->startVSOInstance ), false );
 		}
 		else
@@ -894,7 +933,6 @@ void CVSOAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint
 	}
 }
 
-
 void CVSOAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -907,7 +945,6 @@ void CVSOAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMouseP
 		}
 	}
 }
-
 
 void CVSOAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -935,7 +972,6 @@ void CVSOAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags 
 	}
 }
 
-
 void CVSOState::Enter()
 {
 	currentSelection.Invalidate();
@@ -947,24 +983,33 @@ void CVSOState::Enter()
 	// Создаем заново параметры селектора
 	if ( CanEditPoints( CVSOManager::SVSOSelection::ST_NORMALE ) )
 	{
-		leftButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_NORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
-		rightButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_NORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
+		leftButtonVSOSelectionParamList.push_back(
+				CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_NORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
+		rightButtonVSOSelectionParamList.push_back(
+				CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_NORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
 	}
 	if ( CanEditPoints( CVSOManager::SVSOSelection::ST_OPNORMALE ) )
 	{
-		leftButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_OPNORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
-		rightButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_NORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
+		leftButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam(
+				CVSOManager::SVSOSelection::ST_OPNORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
+		rightButtonVSOSelectionParamList.push_back(
+				CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_NORMALE, CVSOManager::NORMALE_POINT_RADIUS ) );
 	}
 	if ( CanEditPoints( CVSOManager::SVSOSelection::ST_CENTER ) )
 	{
-		leftButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_CENTER, CVSOManager::CENTER_POINT_RADIUS ) );
+		leftButtonVSOSelectionParamList.push_back(
+				CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_CENTER, CVSOManager::CENTER_POINT_RADIUS ) );
 	}
 	if ( CanEditPoints( CVSOManager::SVSOSelection::ST_CONTROL ) )
 	{
-		leftButtonVSOSelectionParamList.push_back( CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_CONTROL, CVSOManager::CONTROL_POINT_RADIUS ) );
+		leftButtonVSOSelectionParamList.push_back(
+				CVSOManager::SVSOSelectionParam( CVSOManager::SVSOSelection::ST_CONTROL, CVSOManager::CONTROL_POINT_RADIUS ) );
 	}
 	//
-	mapRect = CTRect<float>( 0.0f, 0.0f, GetMapInfoEditor()->pMapInfo->nNumPatchesX * AI_TILE_SIZE * AI_TILES_IN_PATCH, GetMapInfoEditor()->pMapInfo->nNumPatchesY * AI_TILE_SIZE * AI_TILES_IN_PATCH );
+	mapRect = CTRect<float>( 0.0f,
+	                         0.0f,
+	                         GetMapInfoEditor()->pMapInfo->nNumPatchesX * AI_TILE_SIZE * AI_TILES_IN_PATCH,
+	                         GetMapInfoEditor()->pMapInfo->nNumPatchesY * AI_TILE_SIZE * AI_TILES_IN_PATCH );
 	SetActiveInputState( IS_SELECT, true, false );
 	//
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_VSO_STATE, this );
@@ -974,7 +1019,6 @@ void CVSOState::Enter()
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-
 
 void CVSOState::Leave()
 {
@@ -1005,20 +1049,17 @@ void CVSOState::Leave()
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, "" );
 }
 
-
 void CVSOState::ClearSelection()
 {
 	Enter();
 }
-
 
 void CVSOState::RemoveSelectedVSO()
 {
 	if ( CanEdit() )
 	{
 		CVSOMultiState::SEditParameters *pEditParameters = pParentState->GetEditParameters();
-		if ( currentSelection.IsValid() &&
-				pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
+		if ( currentSelection.IsValid() && pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 		{
 			NDb::SVSOInstance *pSelectedVSO = GetVSO( GetSelectedVSOID(), 0 );
 			if ( pSelectedVSO == 0 )
@@ -1035,34 +1076,34 @@ void CVSOState::RemoveSelectedVSO()
 				backupKeyPoints.RemoveKeyPoint( currentSelection.nIndex );
 
 				CVSOManager::Update( pSelectedVSO,
-														 true,
-														 true,
-														 GetDefaultStep(),
-														 pEditParameters->fWidth,
-														 pEditParameters->fHeight,
-														 pEditParameters->fOpacity,
-														 true,
-														 true,
-														 true,
-														 IsClose(),
-														 IsComplete() );
+				                     true,
+				                     true,
+				                     GetDefaultStep(),
+				                     pEditParameters->fWidth,
+				                     pEditParameters->fHeight,
+				                     pEditParameters->fOpacity,
+				                     true,
+				                     true,
+				                     true,
+				                     IsClose(),
+				                     IsComplete() );
 				backupKeyPoints.LoadKeyPoints( &( pSelectedVSO->points ) );
 				if ( ( pSelectedVSO->controlPoints.size() > 2 ) && ( IsEdgesMustBeOut() ) )
 				{
 					CVSOManager::MoveEdgeControlPointsOut( pSelectedVSO, mapRect, GetDefaultStepOut(), true, true );
 				}
 				CVSOManager::Update( pSelectedVSO,
-														 true,
-														 true,
-														 GetDefaultStep(),
-														 pEditParameters->fWidth,
-														 pEditParameters->fHeight,
-														 pEditParameters->fOpacity,
-														 true,
-														 true,
-														 true,
-														 IsClose(),
-														 IsComplete() );
+				                     true,
+				                     true,
+				                     GetDefaultStep(),
+				                     pEditParameters->fWidth,
+				                     pEditParameters->fHeight,
+				                     pEditParameters->fOpacity,
+				                     true,
+				                     true,
+				                     true,
+				                     IsClose(),
+				                     IsComplete() );
 				UpdateVSO( GetSelectedVSOID(), CVSOState::UT_CHANGE_POINT_NUMBER, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
 				currentSelection.Invalidate();
 				//
@@ -1086,7 +1127,7 @@ void CVSOState::RemoveSelectedVSO()
 				backupKeyPoints.Clear();
 				ClearPickVSOIDList();
 				//
-				SetActiveInputState( CVSOState::IS_SELECT, true, false);
+				SetActiveInputState( CVSOState::IS_SELECT, true, false );
 			}
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -1094,18 +1135,15 @@ void CVSOState::RemoveSelectedVSO()
 	}
 }
 
-
-CMapInfoEditor* CVSOState::GetMapInfoEditor()
+CMapInfoEditor *CVSOState::GetMapInfoEditor()
 {
 	return pParentState->pMapInfoEditor;
 }
-
 
 bool CVSOState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 {
 	return pParentState->PickOtherVSO( nFlags, rMousePoint, rvPos );
 }
-
 
 void CVSOState::EmulateSelectLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 {
@@ -1125,7 +1163,6 @@ void CVSOState::EmulateSelectLButtonDown( unsigned nFlags, const CTPoint<int> &r
 	}
 }
 
-
 void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 {
 	if ( CanEdit() )
@@ -1140,24 +1177,24 @@ void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 			GetControlPointBounds( &nMinCount, &nMaxCount );
 			//UniquePolygon<std::vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
 			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) &&
-					( pVSO->controlPoints.size() > 1 ) )
+			     ( pVSO->controlPoints.size() > 1 ) )
 			{
 				if ( ( pVSO->controlPoints.size() > 3 ) && ( IsEdgesMustBeOut() ) )
 				{
 					CVSOManager::MoveEdgeControlPointsOut( pVSO, mapRect, GetDefaultStepOut(), bBothEdges, true );
 				}
 				CVSOManager::Update( pVSO,
-														 true,
-														 false,
-														 GetDefaultStep(),
-														 pEditParameters->fWidth,
-														 pEditParameters->fHeight,
-														 pEditParameters->fOpacity,
-														 true,
-														 false,
-														 true,
-														 IsClose(),
-														 IsComplete() );
+				                     true,
+				                     false,
+				                     GetDefaultStep(),
+				                     pEditParameters->fWidth,
+				                     pEditParameters->fHeight,
+				                     pEditParameters->fOpacity,
+				                     true,
+				                     false,
+				                     true,
+				                     IsClose(),
+				                     IsComplete() );
 			}
 			else
 			{
@@ -1166,7 +1203,6 @@ void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 		}
 	}
 }
-
 
 void CVSOState::Draw( IPaintContext *pPaintDC )
 {
@@ -1191,32 +1227,36 @@ void CVSOState::Draw( IPaintContext *pPaintDC )
 		//
 		if ( GetActiveInputStateIndex() == IS_ADD )
 		{
-			drawParams.pVSO  = &startVSOInstance;
+			drawParams.pVSO = &startVSOInstance;
 		}
 		else
 		{
-			drawParams.pVSO  = 0;
+			drawParams.pVSO = 0;
 		}
 		//
 		switch ( GetActiveInputStateIndex() )
 		{
-		case IS_SELECT:
-			drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_SELECT;
-			break;
-		case IS_EDIT:
-			drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_EDIT;
-			break;
-		case IS_ADD:
-			drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_ADD;
-			break;
-		default:
-			drawParams.eDrawer = CVSOManager::SVSODrawParams::BAD_DRAWER;
+			case IS_SELECT:
+				drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_SELECT;
+				break;
+			case IS_EDIT:
+				drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_EDIT;
+				break;
+			case IS_ADD:
+				drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_ADD;
+				break;
+			default:
+				drawParams.eDrawer = CVSOManager::SVSODrawParams::BAD_DRAWER;
 		}
 
-		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_CONTROL, CanEditPoints( CVSOManager::SVSOSelection::ST_CONTROL ) );
-		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_CENTER, CanEditPoints( CVSOManager::SVSOSelection::ST_CENTER ) );
-		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_NORMALE, CanEditPoints( CVSOManager::SVSOSelection::ST_NORMALE ) );
-		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_OPNORMALE, CanEditPoints( CVSOManager::SVSOSelection::ST_OPNORMALE ) );
+		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_CONTROL,
+		                       CanEditPoints( CVSOManager::SVSOSelection::ST_CONTROL ) );
+		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_CENTER,
+		                       CanEditPoints( CVSOManager::SVSOSelection::ST_CENTER ) );
+		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_NORMALE,
+		                       CanEditPoints( CVSOManager::SVSOSelection::ST_NORMALE ) );
+		drawParams.SetCanEdit( CVSOManager::SVSOSelection::ST_OPNORMALE,
+		                       CanEditPoints( CVSOManager::SVSOSelection::ST_OPNORMALE ) );
 		//
 		CVSOManager::DrawVSO( &drawParams );
 	}
@@ -1232,13 +1272,11 @@ void CVSOState::Draw( IPaintContext *pPaintDC )
 	//}
 }
 
-
-void CVSOState::OnSetFocus( IWidget* pNewWnd )
+void CVSOState::OnSetFocus( IWidget *pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
-
 
 void CVSOState::SwitchToAddState()
 {
@@ -1255,10 +1293,9 @@ void CVSOState::SwitchToAddState()
 	}
 }
 
-
 bool CVSOState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MIMO_SWITCH_ADD_STATE:
 			SwitchToAddState();
@@ -1274,13 +1311,12 @@ bool CVSOState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CVSOState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CVSOState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CVSOState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MIMO_SWITCH_ADD_STATE:
 			( *pbEnable ) = true;
@@ -1288,8 +1324,7 @@ bool CVSOState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbChec
 			return true;
 		case ID_SELECTION_CLEAR:
 		{
-			if ( currentSelection.IsValid() &&
-					pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
+			if ( currentSelection.IsValid() && pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 			{
 				( *pbEnable ) = true;
 				( *pbCheck ) = false;
@@ -1306,6 +1341,5 @@ bool CVSOState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbChec
 	}
 	return false;
 }
-
 
 // basement storage

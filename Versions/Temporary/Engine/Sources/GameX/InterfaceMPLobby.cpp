@@ -18,20 +18,23 @@
 
 #include <fmt/format.h>
 
-CInterfaceMPLobby::CInterfaceMPLobby() :
-CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
+CInterfaceMPLobby::CInterfaceMPLobby() : CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPLobby::OnChatMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_CHANNELS, SMPUIChatChannelListMessage, &CInterfaceMPLobby::OnChatChannelsListMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_NICKS, SMPUIChatChannelNicksMessage, &CInterfaceMPLobby::OnChatChannelNicksMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_NICKS_CHANGE, SMPUIChatChannelNicksChangeMessage, &CInterfaceMPLobby::OnChatChannelNicksChangeMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_CHAT_CHANNELS, SMPUIChatChannelListMessage, &CInterfaceMPLobby::OnChatChannelsListMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_CHAT_NICKS, SMPUIChatChannelNicksMessage, &CInterfaceMPLobby::OnChatChannelNicksMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_CHAT_NICKS_CHANGE, SMPUIChatChannelNicksChangeMessage, &CInterfaceMPLobby::OnChatChannelNicksChangeMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_SHORT_INFO, SMPUIShortInfoMessage, &CInterfaceMPLobby::OnShortInfoMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_LADDER, SMPUILadderStatusChangeMessage, &CInterfaceMPLobby::OnLadderMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_NIVAL_NET_LADDER, SMPUILadderStatusChangeMessage, &CInterfaceMPLobby::OnLadderMessage );
 }
 
 bool CInterfaceMPLobby::Init()
 {
-	if ( CInterfaceScreenBase::	Init() == false )
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 	AddScreen( this );
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
@@ -67,7 +70,8 @@ void CInterfaceMPLobby::InitControls()
 	pCustomButton = GetChildChecked<IButton>( pMain, "CustomGame", true );
 	pCancelButton = GetChildChecked<IButton>( pMain, "CancelButton", true );
 	pCancelButton->ShowWindow( false );
-	pWaitingForLadder = GetChildChecked<ITextView>( pMain, "WaitForLadder", true );;
+	pWaitingForLadder = GetChildChecked<ITextView>( pMain, "WaitForLadder", true );
+	;
 	pWaitingForLadder->ShowWindow( false );
 	pStatsButton = GetChildChecked<IButton>( pMain, "MyLadderStats", true );
 	pBackButton = GetChildChecked<IButton>( pMain, "ButtonBack", true );
@@ -192,20 +196,20 @@ bool CInterfaceMPLobby::OnClientMenu( const std::string &szSender )
 	std::string szStatusCode;
 	switch ( nStatusCode )
 	{
-	case 1:
-		szStatusCode = "T_STATUS_IGNORE";
-		break;
-	case 2:
-		szStatusCode = "T_STATUS_FRIEND_ONLINE";
-		break;
-	case 3:
-		szStatusCode = "T_STATUS_FRIEND_OFFLINE";
-		break;
-	case 4:
-		szStatusCode = "T_STATUS_FRIEND_BUSY";
-		break;
-	default:
-		szStatusCode = "T_STATUS_ONLINE";
+		case 1:
+			szStatusCode = "T_STATUS_IGNORE";
+			break;
+		case 2:
+			szStatusCode = "T_STATUS_FRIEND_ONLINE";
+			break;
+		case 3:
+			szStatusCode = "T_STATUS_FRIEND_OFFLINE";
+			break;
+		case 4:
+			szStatusCode = "T_STATUS_FRIEND_BUSY";
+			break;
+		default:
+			szStatusCode = "T_STATUS_ONLINE";
 	}
 	if ( pStatusText )
 		pStatusText->SetText( pStatusText->GetDBText() + GetScreen()->GetTextEntry( szStatusCode ) );
@@ -272,30 +276,30 @@ bool CInterfaceMPLobby::OnClientInfoClose( const bool bApply )
 	{
 		if ( bFriendOld )
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage(
-				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_FRIEND ) );
+			Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChangeFriendIgnoreStatusMessage(
+					szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_FRIEND ) );
 			chatFriends.erase( szSelectedClient );
 			bNeedUpdate = true;
 		}
 		else
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage(
-				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_FRIEND ) );
+			Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChangeFriendIgnoreStatusMessage(
+					szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_FRIEND ) );
 		}
 	}
 	if ( bIgnoreOld != bIgnoreNew )
 	{
 		if ( bIgnoreOld )
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage(
-				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_IGNORE ) );
+			Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChangeFriendIgnoreStatusMessage(
+					szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_IGNORE ) );
 			chatIgnores.erase( szSelectedClient );
 			bNeedUpdate = true;
 		}
 		else
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage(
-				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_IGNORE ) );
+			Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChangeFriendIgnoreStatusMessage(
+					szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_IGNORE ) );
 			chatIgnores[szSelectedClient] = new CClientListData( szSelectedClient, EMPS_OFFLINE );
 			bNeedUpdate = true;
 		}
@@ -314,11 +318,11 @@ bool CInterfaceMPLobby::OnShortInfoMessage( struct SMPUIShortInfoMessage *pMsg )
 		pInfoArea->ShowWindow( true );
 	ITextView *pWaitText = GetChildChecked<ITextView>( pClientInfoWindow, "GettingInfo", true );
 	if ( pWaitText )
-		pWaitText->ShowWindow( false);
+		pWaitText->ShowWindow( false );
 
 	ITextView *pInfoLevel = GetChildChecked<ITextView>( pInfoArea, "Client_Level", true );
 	if ( pInfoLevel )
-		pInfoLevel->SetText( pInfoLevel->GetDBText() + NStr::ToUnicode( std::to_string(  pMsg->nLevel ) ) );
+		pInfoLevel->SetText( pInfoLevel->GetDBText() + NStr::ToUnicode( std::to_string( pMsg->nLevel ) ) );
 	ITextView *pInfoRank = GetChildChecked<ITextView>( pInfoArea, "Client_Rank", true );
 	if ( pInfoRank )
 		pInfoRank->SetText( pInfoRank->GetDBText() + pMsg->wszRank );
@@ -352,7 +356,7 @@ bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *
 {
 	switch ( pMsg->eState )
 	{
-	case SMPUILadderStatusChangeMessage::ELS_SEARCH_STARTED:
+		case SMPUILadderStatusChangeMessage::ELS_SEARCH_STARTED:
 		{
 			pLadderButton->ShowWindow( false );
 			pCustomButton->ShowWindow( false );
@@ -364,7 +368,7 @@ bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *
 			bLadderGameFound = false;
 		}
 		break;
-	case SMPUILadderStatusChangeMessage::ELS_GAME_FOUND:
+		case SMPUILadderStatusChangeMessage::ELS_GAME_FOUND:
 		{
 			pLadderButton->ShowWindow( false );
 			pCustomButton->ShowWindow( false );
@@ -375,7 +379,7 @@ bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *
 			bLadderGameFound = true;
 		}
 		break;
-	case SMPUILadderStatusChangeMessage::ELS_CANCELLED:
+		case SMPUILadderStatusChangeMessage::ELS_CANCELLED:
 		{
 			pLadderButton->ShowWindow( true );
 			pCustomButton->ShowWindow( true );
@@ -387,7 +391,8 @@ bool CInterfaceMPLobby::OnLadderMessage( struct SMPUILadderStatusChangeMessage *
 			bLadderGameFound = false;
 			std::wstring wszReason = GetScreen()->GetTextEntry( "LADDER_GAME_CANCELLED" );
 			if ( wszReason.length() > 0 )
-				NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszReason ).c_str() );
+				NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+				                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszReason ).c_str() );
 		}
 		break;
 	}
@@ -404,7 +409,8 @@ bool CInterfaceMPLobby::StepLocal( bool bAppActive )
 			int nElapsedMin = nElapsedSec / 60;
 			nElapsedSec %= 60;
 
-			std::wstring wszText = pWaitingForLadder->GetDBText() + NStr::ToUnicode( fmt::format( " {}:{:02d}", nElapsedMin, nElapsedSec ) );
+			std::wstring wszText =
+					pWaitingForLadder->GetDBText() + NStr::ToUnicode( fmt::format( " {}:{:02d}", nElapsedMin, nElapsedSec ) );
 			if ( bLadderGameFound )
 				wszText = wszText + GetScreen()->GetTextEntry( "T_LADDER_GAME_FOUND" );
 			pWaitingForLadder->SetText( wszText );
@@ -429,7 +435,8 @@ bool CInterfaceMPLobby::OnLadderCancelReaction()
 
 bool CInterfaceMPLobby::OnLadderStatsReaction()
 {
-	NMainLoop::Command( ML_COMMAND_MP_LADDER_STATISTICS, NStr::ToMBCS( NGlobal::GetVar( "Multiplayer.PlayerName", L"Player" ).GetString() ).c_str() );
+	NMainLoop::Command( ML_COMMAND_MP_LADDER_STATISTICS,
+	                    NStr::ToMBCS( NGlobal::GetVar( "Multiplayer.PlayerName", L"Player" ).GetString() ).c_str() );
 	return true;
 }
 
@@ -482,18 +489,14 @@ bool CInterfaceMPLobby::OnFriendsSwitch( bool bShowFriends )
 #ifndef _SINGLE_DEMO
 // CICMPLobby
 
-void CICMPLobby::PreCreate()
-{
-}
+void CICMPLobby::PreCreate() {}
 
 void CICMPLobby::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMPLobby::Configure( const char *pszConfig )
-{
-}
+void CICMPLobby::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x321AB300, CInterfaceMPLobby );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_GAME_LOBBY, CICMPLobby );

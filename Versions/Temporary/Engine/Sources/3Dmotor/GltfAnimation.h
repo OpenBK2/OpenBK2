@@ -48,11 +48,11 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		int operator&( IBinSaver &f );
 	};
 
-	OBJECT_NOCOPY_METHODS(CGltfSkeletonAnimator);
+	OBJECT_NOCOPY_METHODS( CGltfSkeletonAnimator );
 
 	SSkeletonHandle skeletonH;
-	CDGPtr<CFuncBase<STime> > pTime;
-	CDGPtr<CFuncBase<SFBTransform> > pGlobalTransform;
+	CDGPtr<CFuncBase<STime>> pTime;
+	CDGPtr<CFuncBase<SFBTransform>> pGlobalTransform;
 	CObj<IAnimMutator> pSpecMutator;
 	NGltf::TGltfFilePtr pSkeletonFile;
 	NGltf::SSkeletonDefinition skeleton;
@@ -70,8 +70,12 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	void Create( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
 	bool BindAnimation( SAnimationHolder *pHolder );
 	bool SelectAnimationRange( SAnimationHolder *pHolder );
-	bool SelectAnimationRange( SAnimationHolder *pHolder, const NGltf::TGltfFilePtr &file,
-		const std::string &clipName, int firstFrame, int lastFrame, bool allowRangeFallback = true );
+	bool SelectAnimationRange( SAnimationHolder *pHolder,
+	                           const NGltf::TGltfFilePtr &file,
+	                           const std::string &clipName,
+	                           int firstFrame,
+	                           int lastFrame,
+	                           bool allowRangeFallback = true );
 	void ResolveBoundChannels( SAnimationHolder *pHolder );
 	float GetEffectiveWeight( const SAnimationHolder &holder, STime time ) const;
 	float GetLocalTime( const SAnimationHolder &holder, STime time, bool *pActive ) const;
@@ -80,7 +84,11 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	void BuildMatrices();
 	void ApplyBoneMutators( STime time );
 	void CheckJustLoaded();
-	void Touch() { CheckJustLoaded(); bSmthChanged = true; }
+	void Touch()
+	{
+		CheckJustLoaded();
+		bSmthChanged = true;
+	}
 
 protected:
 	bool NeedUpdate() override;
@@ -88,8 +96,8 @@ protected:
 
 public:
 	// Export uses the playback timeline, but rejects invalid ranges instead of silently using the full clip.
-	_3DMOTOR_EXPORT static bool GetSourceDuration( const NGltf::TGltfFilePtr &file,
-		const std::string &clipName, int firstFrame, int lastFrame, float *seconds );
+	_3DMOTOR_EXPORT static bool GetSourceDuration(
+			const NGltf::TGltfFilePtr &file, const std::string &clipName, int firstFrame, int lastFrame, float *seconds );
 	CGltfSkeletonAnimator();
 	CGltfSkeletonAnimator( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
 	~CGltfSkeletonAnimator() override {}
@@ -104,16 +112,19 @@ public:
 	int GetChannelIndex( const std::string & ) override { return INVALID_CHANNEL_ID; }
 	float GetChannelValue( int ) override { return 0.0f; }
 
-	SAnimID AddAnimation( STime tStartTime, const SAnimHandle &h,
-		bool bLoop, float fSpeed = 1.0f, float fWeight = 1.0f, STime tEndTime = -1 ) override;
+	SAnimID AddAnimation( STime tStartTime,
+	                      const SAnimHandle &h,
+	                      bool bLoop,
+	                      float fSpeed = 1.0f,
+	                      float fWeight = 1.0f,
+	                      STime tEndTime = -1 ) override;
 	void ClearAllAnimations() override;
 	void FadeIn( const STime &tDuration, SAnimID whatFadeIn ) override;
 	void FadeOut( const STime &tDuration, SAnimID whatFadeOut ) override;
 	void FadeOutAllAnimations( const STime &tDuration ) override;
 	void SetSpeedFactorForAllAnimations( const STime &tCurrent, float fSpeed ) override;
 	float GetDuration( const SAnimID animID ) override;
-	unsigned int GetMarkTimes( std::vector<float> *pResult, const SAnimID,
-		const std::string & ) override;
+	unsigned int GetMarkTimes( std::vector<float> *pResult, const SAnimID, const std::string & ) override;
 	unsigned int EnumMarks( std::vector<std::string> *pResult, const SAnimID ) override;
 	void SetSpeedFactor( const SAnimID animID, float fSpeed ) override;
 	void SetLocalTime( const SAnimID animID, const STime tTime ) override;
@@ -131,10 +142,12 @@ public:
 	bool GetBonePosition( int nBoneIndex, SHMatrix *pResult ) override;
 	bool GetLocalBonePosition( const char *pszBoneName, SHMatrix *pResult ) override;
 
-	void SetBoneMutator( const char *pszBoneName, const STime &tStart,
-		const std::vector<SDesiredBoneMove> &boneMutation ) override;
-	void SetBoneMutator( const int nBoneIndex, const STime &tStart,
-		const std::vector<SDesiredBoneMove> &boneMutation ) override;
+	void SetBoneMutator( const char *pszBoneName,
+	                     const STime &tStart,
+	                     const std::vector<SDesiredBoneMove> &boneMutation ) override;
+	void SetBoneMutator( const int nBoneIndex,
+	                     const STime &tStart,
+	                     const std::vector<SDesiredBoneMove> &boneMutation ) override;
 	void SetSpecialMutator( IAnimMutator *pMutator ) override;
 
 	CFuncBase<SFBTransform> *CreateTransform( const std::string &szBoneName ) override;

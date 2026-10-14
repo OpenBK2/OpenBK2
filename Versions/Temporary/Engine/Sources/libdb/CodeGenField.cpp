@@ -16,14 +16,18 @@ namespace NCodeGen
 CFieldDefinition::CFieldDefinition( NLang::CVariable *pVarNode, const CNodes2TypeDefs &nodes2TypeDefs )
 {
 	CNodes2TypeDefs::const_iterator iterNodes = nodes2TypeDefs.find( pVarNode );
-	NI_VERIFY( iterNodes != nodes2TypeDefs.end(), fmt::format( "can't find typedef for node {}", pVarNode->GetName() ), return );
+	NI_VERIFY(
+			iterNodes != nodes2TypeDefs.end(), fmt::format( "can't find typedef for node {}", pVarNode->GetName() ), return );
 	pType = GetRealType( iterNodes->second );
 	NI_ASSERT( pType != 0, "null type" );
 
 	NHungarian::ConvertToShortName( &szFieldName, pVarNode->GetName(), pType->eType, pType->GetAttributes() );
 }
 
-void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
+void CFieldDefinition::GenerateCode( SCodeStreams *pCode,
+                                     const std::string &szTabs,
+                                     NDb::NTypeDef::STypeDef *pParentType,
+                                     const std::string &szQualifiedName )
 {
 	NI_VERIFY( pParentType != 0, "Wrong field definition", return );
 
@@ -39,7 +43,9 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szT
 
 		++nField;
 	}
-	NI_VERIFY( nField < pStruct->fields.size(), fmt::format( "can't find field {} of struct {}", szFieldName, pStruct->GetTypeName() ), return );
+	NI_VERIFY( nField < pStruct->fields.size(),
+	           fmt::format( "can't find field {} of struct {}", szFieldName, pStruct->GetTypeName() ),
+	           return );
 
 	const NDb::NTypeDef::STypeStructBase::SField &field = pStruct->fields[nField];
 	NDb::NTypeDef::STypeDef *pVarType = field.pType;
@@ -53,11 +59,11 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szT
 	{
 		pCode->h << "std::vector< ";
 		++nBrackets;
-		pVarType = dynamic_cast<NDb::NTypeDef::STypeArray*>( pVarType )->field.pType;
+		pVarType = dynamic_cast<NDb::NTypeDef::STypeArray *>( pVarType )->field.pType;
 	}
 
 	NI_ASSERT( pVarType->eType != NDb::NTypeDef::TYPE_TYPE_CLASS,
-						 fmt::format( "variable {} is not-reference ty type {}", field.szName, pVarType->GetTypeName() ) );
+	           fmt::format( "variable {} is not-reference ty type {}", field.szName, pVarType->GetTypeName() ) );
 
 	if ( pVarType->eType == NDb::NTypeDef::TYPE_TYPE_REF )
 	{

@@ -10,7 +10,6 @@
 #include "3Dmotor/DBScene.h"
 #include "Main/GameTimer.h"
 
-
 #include "EffectInterface.h"
 #include "EffectState.h"
 #include "EffectEditor.h"
@@ -24,19 +23,20 @@
 
 #include <zconf.h>
 
-CEffectState::CEffectState( CEffectEditor *_pEffectEditor ) : pEffectEditor( _pEffectEditor )
-{
-}
-
+CEffectState::CEffectState( CEffectEditor *_pEffectEditor ) : pEffectEditor( _pEffectEditor ) {}
 
 void CEffectState::Enter()
 {
 	NI_ASSERT( pEffectEditor != 0, "CEffectState::Enter(), pEffectEditor == 0" );
-	NI_ASSERT( !( pEffectEditor->GetObjectSet().objectNameSet.empty() ), "CEffectState::Enter() GetObjectSet().objectNameSet is empty" );
+	NI_ASSERT( !( pEffectEditor->GetObjectSet().objectNameSet.empty() ),
+	           "CEffectState::Enter() GetObjectSet().objectNameSet is empty" );
 	IEditorScene *pScene = EditorScene();
 	NI_ASSERT( pScene != 0, "CEffectState::Enter(): pScene == 0" );
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CEffectInterfaceCommand( new CEffectInterface() ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_SCENE,
+			ID_SCENE_ENABLE_GAME_INPUT,
+			reinterpret_cast<uintptr_t>( new CEffectInterfaceCommand( new CEffectInterface() ) ) );
 
 	const CVec3 vShift = CVec3( 8.0f * AI_TILE_SIZE, 8.0f * AI_TILE_SIZE, 0.0f );
 	CVec3 vCameraPos = Camera()->GetAnchor();
@@ -46,11 +46,13 @@ void CEffectState::Enter()
 	int nEffectID = INVALID_NODE_ID;
 	effectIDList.clear();
 	ClearHoldQueue();
-	if ( const NDb::SEffect *pEffect = NDb::Get<NDb::SEffect>( pEffectEditor->GetObjectSet().objectNameSet.begin()->first ) )
+	if ( const NDb::SEffect *pEffect =
+	         NDb::Get<NDb::SEffect>( pEffectEditor->GetObjectSet().objectNameSet.begin()->first ) )
 	{
 		vEffectPos = vCameraPos - vShift;
 		vEffectPos.z = GetTerrainHeight( vEffectPos.x, vEffectPos.y );
-		nEffectID = pScene->AddEffect( 1, pEffect, Singleton<IGameTimer>()->GetGameTime(), vEffectPos, CQuat( -FP_PI2, V3_AXIS_Z ) );
+		nEffectID = pScene->AddEffect(
+				1, pEffect, Singleton<IGameTimer>()->GetGameTime(), vEffectPos, CQuat( -FP_PI2, V3_AXIS_Z ) );
 		if ( nEffectID != INVALID_NODE_ID )
 		{
 			effectIDList.push_back( nEffectID );
@@ -58,7 +60,8 @@ void CEffectState::Enter()
 		//
 		vEffectPos = vCameraPos;
 		vEffectPos.z = GetTerrainHeight( vEffectPos.x, vEffectPos.y );
-		nEffectID = pScene->AddEffect( 2, pEffect, Singleton<IGameTimer>()->GetGameTime(), vEffectPos, CQuat( 0.0f, V3_AXIS_Z ) );
+		nEffectID =
+				pScene->AddEffect( 2, pEffect, Singleton<IGameTimer>()->GetGameTime(), vEffectPos, CQuat( 0.0f, V3_AXIS_Z ) );
 		if ( nEffectID != INVALID_NODE_ID )
 		{
 			effectIDList.push_back( nEffectID );
@@ -66,7 +69,8 @@ void CEffectState::Enter()
 		//
 		vEffectPos = vCameraPos + vShift;
 		vEffectPos.z = GetTerrainHeight( vEffectPos.x, vEffectPos.y );
-		nEffectID = pScene->AddEffect( 3, pEffect, Singleton<IGameTimer>()->GetGameTime(), vEffectPos, CQuat( FP_PI2, V3_AXIS_Z ) );
+		nEffectID =
+				pScene->AddEffect( 3, pEffect, Singleton<IGameTimer>()->GetGameTime(), vEffectPos, CQuat( FP_PI2, V3_AXIS_Z ) );
 		if ( nEffectID != INVALID_NODE_ID )
 		{
 			effectIDList.push_back( nEffectID );
@@ -78,7 +82,6 @@ void CEffectState::Enter()
 	CDefaultInputState::Enter();
 }
 
-
 void CEffectState::Leave()
 {
 	NI_ASSERT( pEffectEditor != 0, "CEffectState::Leave(), pEffectEditor == 0" );
@@ -87,7 +90,8 @@ void CEffectState::Leave()
 	//
 	CDefaultInputState::Leave();
 	// Выгружаем Эффект
-	for ( std::list<int>::const_iterator itEffectID = effectIDList.begin(); itEffectID != effectIDList.end(); ++itEffectID )
+	for ( std::list<int>::const_iterator itEffectID = effectIDList.begin(); itEffectID != effectIDList.end();
+	      ++itEffectID )
 	{
 		pScene->RemoveObject( *itEffectID );
 	}

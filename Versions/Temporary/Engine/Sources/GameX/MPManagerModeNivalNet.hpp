@@ -39,7 +39,10 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	NTimer::STime timeOutLadderGame;
 
 	virtual const int GetOwnClientID() { return nMyClientID; }
-	virtual const bool IsInGameRoom() const { return ( eState == EGS_GAME_ROOM || eState == EGS_JOINING || eState == EGS_LADDER_WAIT_CLIENTS ); }
+	virtual const bool IsInGameRoom() const
+	{
+		return ( eState == EGS_GAME_ROOM || eState == EGS_JOINING || eState == EGS_LADDER_WAIT_CLIENTS );
+	}
 	virtual const bool IsGameRunning() const { return ( eState == EGS_GAME_STARTED ); }
 	virtual const bool IsGameHost() const { return ( eState == EGS_GAME_ROOM && bHost ); }
 

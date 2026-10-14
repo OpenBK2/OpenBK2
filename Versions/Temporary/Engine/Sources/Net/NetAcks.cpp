@@ -15,7 +15,7 @@
 namespace NNet
 {
 const int CS_PACKET_ID_RANGE = 0x10000;
-const float FP_RTT_KEEP = 0.93f;    // RTT recalc rate
+const float FP_RTT_KEEP = 0.93f; // RTT recalc rate
 const float TIME_TO_UPDATE_PING = 4;
 const float F_INITIAL_RTT = 3;
 const float MIN_WINDOWS_SIZE = 2.0f;
@@ -41,7 +41,7 @@ CAckTracker::CAckTracker()
 	fTimeSinceLastRecv = 0;
 	fCurrentTime = 0;
 	//nUpdateSize = 220;//512;
-	nPktSent = (PACKET_ID) dwTick;
+	nPktSent = (PACKET_ID)dwTick;
 	nPktLastReceived = 0;
 	nPktHighCounter = CS_PACKET_ID_RANGE;
 	dwAckedBits = 0;
@@ -69,7 +69,7 @@ bool CAckTracker::CanSend()
 		return true;
 	}
 	return false;
-/*	if ( fUpdateTimeElapsed > fUpdateTimeDelay )
+	/*	if ( fUpdateTimeElapsed > fUpdateTimeDelay )
 	{
 		fUpdateTimeElapsed -= fUpdateTimeDelay;
 		fTimeSinceLastSend = 0;
@@ -105,7 +105,10 @@ void CAckTracker::RegisterRTT( float _fRTT )
 	}
 }
 
-void CAckTracker::Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT )
+void CAckTracker::Step( std::vector<PACKET_ID> *pRolled,
+                        std::vector<PACKET_ID> *pErased,
+                        double fDeltaTime,
+                        float fMaxRTT )
 {
 	pRolled->resize( 0 );
 	pErased->resize( 0 );
@@ -171,7 +174,7 @@ void CAckTracker::ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt )
 				fWindow += 0.05f;
 				fWindow = (std::min)( fWindow, MAX_WINDOWS_SIZE );
 			}
-				// / fWindow;
+			// / fWindow;
 			//fUpdateTimeDelay *= 0.99f;
 			//fUpdateTimeDelay = Max( fUpdateTimeDelay, 0.00001f );
 #ifdef LOG
@@ -205,7 +208,7 @@ void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bi
 {
 	uint32_t dwBits, dwNewAckBits;
 	PACKET_ID nLast;
-	bits.Read( &nLast, sizeof(nLast) );
+	bits.Read( &nLast, sizeof( nLast ) );
 	bits.Read( &dwBits, sizeof( dwBits ) );
 	//
 	int nShift = ( nLast - nAckedLast ) & ( CS_PACKET_ID_RANGE - 1 );
@@ -238,7 +241,7 @@ void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bi
 	for ( int i = 1; i <= 32; i++ )
 	{
 		nLast--;
-		if ( dwNewAckBits & ( 1 << (i-1) ) )
+		if ( dwNewAckBits & ( 1 << ( i - 1 ) ) )
 			ReceiveAck( pAcked, nLast );
 	}
 }
@@ -277,7 +280,7 @@ bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 	pAcked->resize( 0 );
 	fTimeSinceLastRecv = 0;
 	//
-	bits.Read( &nReceived, sizeof(PACKET_ID) );
+	bits.Read( &nReceived, sizeof( PACKET_ID ) );
 	// calcing sequential number of arrived update (accounting for wrapping of pkt numbers)
 	nCurUpdate = nPktHighCounter + nReceived;
 	if ( nPktLastReceived == 0 )
@@ -313,10 +316,10 @@ void CAckTracker::SendPktAcks( CBitStream *pBits )
 		std::vector<UPDATE_ID>::iterator k;
 		k = find( receivedPkts.begin(), receivedPkts.end(), nTest );
 		if ( k != receivedPkts.end() )
-			dwBits |= 1 << (i-1);
+			dwBits |= 1 << ( i - 1 );
 	}
-	(*pBits).Write( &nLast, sizeof(nLast) );
-	(*pBits).Write( &dwBits, 4 );
+	( *pBits ).Write( &nLast, sizeof( nLast ) );
+	( *pBits ).Write( &dwBits, 4 );
 	// removing too old ack Pkts
 	for ( i = receivedPkts.size() - 1; i >= 0; i-- )
 	{
@@ -335,7 +338,7 @@ PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 	// current packet number
 	// const unsigned char *pStart = bits.GetCurrentPtr();
 	PACKET_ID nPktCurrent = nPktSent++;
-	(*pBits).Write( &nPktCurrent, sizeof(PACKET_ID) );
+	( *pBits ).Write( &nPktCurrent, sizeof( PACKET_ID ) );
 
 	// acks on received packets
 	SendPktAcks( pBits );
@@ -345,7 +348,7 @@ PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 	update.nPktNumber = nPktCurrent;
 	update.bOnTheWindowEdge = nFlyPackets + 1 > fWindow;
 
-//	bHasNewPacketToAck = false;
+	//	bHasNewPacketToAck = false;
 	// CRAP - fix rate tracking info
 	return nPktCurrent;
 }

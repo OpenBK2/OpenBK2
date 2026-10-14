@@ -35,7 +35,7 @@
 
 namespace NVFS
 {
-	LIBDB_EXPORT void VFSSegmentProfiler();
+LIBDB_EXPORT void VFSSegmentProfiler();
 }
 
 // messages
@@ -68,17 +68,16 @@ static bool ProcessMainLoopCmds( const SGameMessage &msg )
 	return registers.ProcessEvent( msg, 0 );
 }
 
-
 namespace NMainLoop
 {
-typedef std::list< CObj<IInterfaceCommand> > CInterfaceCommandsList;
-typedef std::list< CObj<IInterfaceBase> > CInterfacesList;
-static CInterfaceCommandsList icmds;					// interface commands
-static CInterfacesList interfaces;						// interfaces stack
-static std::string szBaseDir;								// base dir of the main loop
+typedef std::list<CObj<IInterfaceCommand>> CInterfaceCommandsList;
+typedef std::list<CObj<IInterfaceBase>> CInterfacesList;
+static CInterfaceCommandsList icmds; // interface commands
+static CInterfacesList interfaces;   // interfaces stack
+static std::string szBaseDir;        // base dir of the main loop
 static bool bInputEnabled = true;
 
-const std::string& GetBaseDir()
+const std::string &GetBaseDir()
 {
 	return szBaseDir;
 }
@@ -167,15 +166,15 @@ IInterfaceBase *GetTopInterface()
 
 IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface )
 {
-	if( !pCurrentInterface )
+	if ( !pCurrentInterface )
 		return interfaces.back();
 
-	for( CInterfacesList::iterator it = interfaces.begin(); it!=interfaces.end(); ++it )
+	for ( CInterfacesList::iterator it = interfaces.begin(); it != interfaces.end(); ++it )
 	{
-		if( *it == pCurrentInterface )
+		if ( *it == pCurrentInterface )
 		{
-			if( it != interfaces.begin() )
-				return *(--it);
+			if ( it != interfaces.begin() )
+				return *( --it );
 			else
 				return 0;
 		}
@@ -203,10 +202,10 @@ void AfterLoad()
 {
 	// interfaces after load
 	for ( CInterfacesList::iterator it = interfaces.begin(); it != interfaces.end(); ++it )
-		(*it)->AfterLoad();
+		( *it )->AfterLoad();
 	// UNTIL MODAL INTERFACES (ONLY LAST INTERFACE HAS FOCUS
 	if ( !interfaces.empty() )
-		(interfaces.back())->OnGetFocus( true );
+		( interfaces.back() )->OnGetFocus( true );
 }
 
 //! Whether to write a line for every interface command executed.
@@ -231,7 +230,7 @@ static bool ProcessInterfaceCmds()
 	{
 		CObj<IInterfaceCommand> pCmd = icmds.front();
 		icmds.pop_front();
-		if ( !IsValid(pCmd) )
+		if ( !IsValid( pCmd ) )
 		{
 			// This is how the game is asked to stop: an invalid command throws
 			// away the interface stack and ends the main loop. A Windows trace
@@ -247,8 +246,9 @@ static bool ProcessInterfaceCmds()
 		{
 			// the type id is an int, and fmt writes one with its top bit set as
 			// -0x...; format its bits
-			csSystem << "icmd: " << fmt::format( "{:#010x}", static_cast<uint32_t>( NObjectFactory::GetObjectTypeID( pCmd ) ) ).c_str()
-			         << " " << typeid( *pCmd ).name() << endl;
+			csSystem << "icmd: "
+							 << fmt::format( "{:#010x}", static_cast<uint32_t>( NObjectFactory::GetObjectTypeID( pCmd ) ) ).c_str()
+							 << " " << typeid( *pCmd ).name() << endl;
 		}
 		pCmd->Exec();
 	}
@@ -263,7 +263,7 @@ static bool ProcessEvent( const SGameMessage &msg )
 		while ( it != interfaces.begin() )
 		{
 			--it;
-			if ( (*it)->ProcessEvent( msg ) || ( msg.mMessage.cType != NInput::CT_UNKNOWN && (*it)->IsModal() ) )
+			if ( ( *it )->ProcessEvent( msg ) || ( msg.mMessage.cType != NInput::CT_UNKNOWN && ( *it )->IsModal() ) )
 				return true;
 		}
 	}
@@ -328,7 +328,8 @@ bool StepApp( bool bActive )
 		//NI_ASSERT( !interfaces.empty(), "Can't perform execution more: empty interfaces stack... leaving..." );
 		return false;
 	}
-	NI_ASSERT( IsValid(interfaces.back()), fmt::format("Invalid Interface of class \"{}\"", typeid(*interfaces.back()).name()) );
+	NI_ASSERT( IsValid( interfaces.back() ),
+	           fmt::format( "Invalid Interface of class \"{}\"", typeid( *interfaces.back() ).name() ) );
 	// update game timer
 	Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
 	// process messages
@@ -345,7 +346,7 @@ bool StepApp( bool bActive )
 			return false;
 		ASSERT( IsValid( interfaces.back() ) );
 
-		if ( true )//bInput )
+		if ( true ) //bInput )
 		{
 			// commands processing
 			SGameMessage event;
@@ -399,6 +400,6 @@ static void CmdSave( const std::string &szID, const std::vector<std::wstring> &p
 		NMainLoop::Command( CreateICSave( NStr::ToMBCS( paramsSet[0] ) ) );
 }
 START_REGISTER( MainLoopInternal )
-	REGISTER_CMD( "load", CmdLoad );
-	REGISTER_CMD( "save", CmdSave );
+REGISTER_CMD( "load", CmdLoad );
+REGISTER_CMD( "save", CmdSave );
 FINISH_REGISTER

@@ -17,7 +17,7 @@ class CAIGeneralPointsState : public CDefaultInputState, public ICommandHandler
 private:
 	//
 	CMapInfoEditor *pMapInfoEditor;
-	SAIGeneralPointsWindowData dialogData;	// editor window data
+	SAIGeneralPointsWindowData dialogData; // editor window data
 	CSceneDrawTool sceneDrawTool;
 
 	bool bMoveParcel;
@@ -25,7 +25,7 @@ private:
 	bool bRotateParcel;
 	bool bRotatePoint;
 
-	CMapInfoEditor* GetMapInfoEditor() { return pMapInfoEditor; }
+	CMapInfoEditor *GetMapInfoEditor() { return pMapInfoEditor; }
 
 public:
 	CAIGeneralPointsState( CMapInfoEditor *pMapInfoEditor = 0 );
@@ -34,7 +34,7 @@ public:
 	// IInputStateInterface
 	virtual void Enter();
 	virtual void Leave();
-	virtual void OnSetFocus( IWidget* pNewWnd );
+	virtual void OnSetFocus( IWidget *pNewWnd );
 	virtual void Draw( IPaintContext *pPaintDC );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );

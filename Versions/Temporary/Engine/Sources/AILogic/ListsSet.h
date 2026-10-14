@@ -8,24 +8,31 @@
 //*								  Set of lists, stored in arrays									*
 //*******************************************************************
 
-template< class T >
+template <class T>
 struct SElInfo
 {
-	public:
-		public: int operator&( IBinSaver &saver ); private:
+public:
+public:
+	int operator&( IBinSaver &saver );
 
+private:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int id = {};
 	T value = {};
 
-	SElInfo() { }
-	SElInfo( const int _id, const T &_value ) : id( _id ), value( _value ) { }
+	SElInfo() {}
+	SElInfo( const int _id, const T &_value ) : id( _id ), value( _value ) {}
 };
 
-template< class T >
+template <class T>
 class CListsSet
 {
-	public: public: int operator&( IBinSaver &saver ); private:;
+public:
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
 
 	std::vector<int> nexts;
 	std::vector<int> preds;
@@ -44,6 +51,7 @@ class CListsSet
 		nexts[pos] = freePtr;
 		freePtr = pos;
 	}
+
 public:
 	CListsSet() { Init( SConsts::AI_START_VECTOR_SIZE ); }
 	explicit CListsSet( const int nLists ) { Init( nLists ); }
@@ -51,9 +59,22 @@ public:
 	void Init( const int nFronts );
 	void Clear();
 
-	const int GetSize( const int nList ) const { if ( nList >= sizes.size() ) return 0; else return sizes[nList]; }
+	const int GetSize( const int nList ) const
+	{
+		if ( nList >= sizes.size() )
+			return 0;
+		else
+			return sizes[nList];
+	}
 
-	void IncreaseListsNum( const int nSize ) { if ( fronts.size() <= nSize * 1.5 ) { fronts.resize( nSize * 1.5, 0 ); sizes.resize( nSize * 1.5, 0 ); } }
+	void IncreaseListsNum( const int nSize )
+	{
+		if ( fronts.size() <= nSize * 1.5 )
+		{
+			fronts.resize( nSize * 1.5, 0 );
+			sizes.resize( nSize * 1.5, 0 );
+		}
+	}
 	const int GetListsNum() const { return fronts.size(); }
 
 	typedef int tEnumerator;
@@ -64,18 +85,24 @@ public:
 	// возвращает предыдущий у удаляемого
 	const int Erase( const int listNum, const int pos );
 
-	const int begin( const int listNum )	const	{ if ( listNum >= fronts.size() ) return 0; else return fronts[listNum]; }
-	const int end( )		const		{ return 0; }
+	const int begin( const int listNum ) const
+	{
+		if ( listNum >= fronts.size() )
+			return 0;
+		else
+			return fronts[listNum];
+	}
+	const int end() const { return 0; }
 	const int GetNext( const tEnumerator pos ) const { return nexts[pos]; }
 	const int GetPred( const tEnumerator pos ) const { return preds[pos]; }
 
-	T& GetEl ( int pos )
+	T &GetEl( int pos )
 	{
 		NI_ASSERT( pos > 0 && pos < values.size(), "Invalid enumerator" );
 		return values[pos];
 	}
 
-	const T& GetEl ( int pos ) const
+	const T &GetEl( int pos ) const
 	{
 		NI_ASSERT( pos > 0 && pos < values.size(), "Invalid enumerator" );
 		return values[pos];
@@ -113,7 +140,7 @@ public:
 	void CheckSizes() const;
 };
 
-template< class T >
+template <class T>
 void CListsSet<T>::Init( const int nFronts )
 {
 	nexts.resize( SConsts::AI_START_VECTOR_SIZE, 0 );
@@ -126,7 +153,7 @@ void CListsSet<T>::Init( const int nFronts )
 	freePtr = 1;
 }
 
-template< class T >
+template <class T>
 void CListsSet<T>::Clear()
 {
 	nexts.clear();
@@ -138,7 +165,7 @@ void CListsSet<T>::Clear()
 	Init( SConsts::AI_START_VECTOR_SIZE );
 }
 
-template< class T >
+template <class T>
 const int CListsSet<T>::Add( int listNum, const T &value )
 {
 #ifdef _DEBUG
@@ -163,7 +190,7 @@ const int CListsSet<T>::Add( int listNum, const T &value )
 	return newPos;
 }
 
-template< class T >
+template <class T>
 int CListsSet<T>::InsertAfter( const int listNum, const int nPos, const T &value )
 {
 #ifdef _DEBUG
@@ -196,12 +223,13 @@ int CListsSet<T>::InsertAfter( const int listNum, const int nPos, const T &value
 	return newPos;
 }
 
-template< class T >
+template <class T>
 const int CListsSet<T>::Erase( int listNum, tEnumerator pos )
 {
 #ifdef _DEBUG
 	int i;
-	for ( i = begin( listNum ); i != end() && i!= pos; i = GetNext( i ) );
+	for ( i = begin( listNum ); i != end() && i != pos; i = GetNext( i ) )
+		;
 	NI_ASSERT( i != end(), "There isn't such position in the list" );
 
 	int cnt = 0;
@@ -227,7 +255,7 @@ const int CListsSet<T>::Erase( int listNum, tEnumerator pos )
 	return pred;
 }
 
-template< class T >
+template <class T>
 int CListsSet<T>::GetFreePos()
 {
 	int result = freePtr;
@@ -251,12 +279,13 @@ int CListsSet<T>::GetFreePos()
 	return result;
 }
 
-template< class T >
+template <class T>
 void CListsSet<T>::CheckSizes() const
 {
 	for ( int nListNum = 0; nListNum < sizes.size(); ++nListNum )
 	{
-		std::string strResult = fmt::format( "+++ {} : Checking size for list {}, size = {}: " , typeid(*this).name(), nListNum, GetSize( nListNum ) );
+		std::string strResult = fmt::format(
+				"+++ {} : Checking size for list {}, size = {}: ", typeid( *this ).name(), nListNum, GetSize( nListNum ) );
 		//DebugTrace( "%s : Checking size for list %d with size %d ...", typeid(*this).name(), nListNum, GetSize( nListNum ) );
 		det_set<int> visited;
 		int nCount = 0;
@@ -290,13 +319,20 @@ void CListsSet<T>::CheckSizes() const
 //*												Set of Queues															*
 //*******************************************************************
 
-template< class T >
+template <class T>
 class CQueuesSet
 {
-	public: public: int operator&( IBinSaver &saver ); private:;
+public:
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
+
 protected:
 	CListsSet<T> cListsSet;
 	std::vector<int> currentPos;
+
 public:
 	CQueuesSet() { Init( SConsts::AI_START_VECTOR_SIZE ); }
 	explicit CQueuesSet( const int queuesNum ) { Init( queuesNum ); }
@@ -320,12 +356,12 @@ public:
 	inline int PushAndEvict( const int queueNum, const T &el );
 
 	inline void Pop( const int queueNum );
-	inline T& Peek( const int queueNum );
+	inline T &Peek( const int queueNum );
 	inline void Erase( const int queueNum, const int nPos );
 
-	inline const T& Peek( const int queueNum ) const;
-	const T& GetEl( const int nPos ) const { return cListsSet.GetEl( nPos ); }
-	T& GetEl(  const int nPos ) { return cListsSet.GetEl( nPos ); }
+	inline const T &Peek( const int queueNum ) const;
+	const T &GetEl( const int nPos ) const { return cListsSet.GetEl( nPos ); }
+	T &GetEl( const int nPos ) { return cListsSet.GetEl( nPos ); }
 
 	inline const bool IsLast( const int queueNum ) const;
 	inline const bool IsEmpty( const int queueNum ) const;
@@ -333,21 +369,21 @@ public:
 	inline void DelQueue( const int queueNum );
 
 	// begin - голова очереди, end - хвост
-	const int begin( const int queueNum )	const	{ return IsEmpty(queueNum) ? end() : currentPos[queueNum]; }
-	const int end( ) const { return 0; }
+	const int begin( const int queueNum ) const { return IsEmpty( queueNum ) ? end() : currentPos[queueNum]; }
+	const int end() const { return 0; }
 	const int last( const int queueNum ) const { return cListsSet.begin( queueNum ); }
-	const int GetNext( const int id ) const	{ return cListsSet.GetPred( id ); }
-	const int GetPred( const int id ) const	{ return cListsSet.GetNext( id ); }
+	const int GetNext( const int id ) const { return cListsSet.GetPred( id ); }
+	const int GetPred( const int id ) const { return cListsSet.GetNext( id ); }
 };
 
-template< class T >
+template <class T>
 void CQueuesSet<T>::Init( const int nQueues )
 {
 	cListsSet.Init( nQueues );
 	currentPos.resize( nQueues, 0 );
 }
 
-template< class T >
+template <class T>
 void CQueuesSet<T>::Clear()
 {
 	cListsSet.Clear();
@@ -356,7 +392,7 @@ void CQueuesSet<T>::Clear()
 	Init( SConsts::AI_START_VECTOR_SIZE );
 }
 
-template< class T >
+template <class T>
 inline int CQueuesSet<T>::Push( const int queueNum, const T &el )
 {
 	typename CListsSet<T>::tEnumerator pos = cListsSet.Add( queueNum, el );
@@ -368,7 +404,7 @@ inline int CQueuesSet<T>::Push( const int queueNum, const T &el )
 	return pos;
 }
 
-template< class T >
+template <class T>
 inline int CQueuesSet<T>::PushAndEvict( const int queueNum, const T &el )
 {
 	// clear all unnecessary elements
@@ -376,7 +412,7 @@ inline int CQueuesSet<T>::PushAndEvict( const int queueNum, const T &el )
 	return Push( queueNum, el );
 }
 
-template< class T >
+template <class T>
 inline void CQueuesSet<T>::Pop( const int queueNum )
 {
 	NI_ASSERT( !IsEmpty( queueNum ), "The queue is empty" );
@@ -385,7 +421,7 @@ inline void CQueuesSet<T>::Pop( const int queueNum )
 	currentPos[queueNum] = cListsSet.Erase( queueNum, currentPos[queueNum] );
 }
 
-template< class T >
+template <class T>
 inline void CQueuesSet<T>::Erase( const int queueNum, const int nPos )
 {
 	NI_ASSERT( !IsEmpty( queueNum ), "The queue is empty" );
@@ -396,33 +432,33 @@ inline void CQueuesSet<T>::Erase( const int queueNum, const int nPos )
 		cListsSet.Erase( queueNum, nPos );
 }
 
-template< class T >
-inline T& CQueuesSet<T>::Peek( const int queueNum )
+template <class T>
+inline T &CQueuesSet<T>::Peek( const int queueNum )
 {
 	NI_ASSERT( !IsEmpty( queueNum ), "The queue is empty" );
 	return cListsSet.GetEl( currentPos[queueNum] );
 }
 
-template< class T >
-inline const T& CQueuesSet<T>::Peek( const int queueNum ) const
+template <class T>
+inline const T &CQueuesSet<T>::Peek( const int queueNum ) const
 {
 	NI_ASSERT( !IsEmpty( queueNum ), "The queue is empty" );
 	return cListsSet.GetEl( currentPos[queueNum] );
 }
 
-template< class T >
+template <class T>
 inline const bool CQueuesSet<T>::IsEmpty( const int queueNum ) const
 {
 	return cListsSet.begin( queueNum ) == cListsSet.end();
 }
 
-template< class T >
+template <class T>
 inline const bool CQueuesSet<T>::IsLast( const int queueNum ) const
 {
 	return cListsSet.begin( queueNum ) == currentPos[queueNum];
 }
 
-template< class T >
+template <class T>
 inline void CQueuesSet<T>::DelQueue( const int queueNum )
 {
 	if ( queueNum < currentPos.size() && currentPos[queueNum] != 0 )
@@ -436,10 +472,16 @@ inline void CQueuesSet<T>::DelQueue( const int queueNum )
 //*													Set of Decks														*
 //*******************************************************************
 
-template< class T >
+template <class T>
 class CDecksSet : public CQueuesSet<T>
 {
-	public: public: int operator&( IBinSaver &saver ); private:;
+public:
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
+
 public:
 	CDecksSet() { Init( SConsts::AI_START_VECTOR_SIZE ); }
 	explicit CDecksSet( const int decksNum ) { Init( decksNum ); }
@@ -454,37 +496,37 @@ public:
 	void PushFront( const int deckNum, const T &el );
 
 	//возвращает хвост
-	T& GetLastEl( const int nDeckNum );
-	const T& GetLastEl( const int nDeckNum ) const;
+	T &GetLastEl( const int nDeckNum );
+	const T &GetLastEl( const int nDeckNum ) const;
 };
 
-template< class T >
+template <class T>
 void CDecksSet<T>::Init( const int nDecks )
 {
 	CQueuesSet<T>::Init( nDecks );
 }
 
-template< class T >
+template <class T>
 void CDecksSet<T>::Clear()
 {
 	CQueuesSet<T>::Clear();
 	Init( SConsts::AI_START_VECTOR_SIZE );
 }
 
-template< class T >
+template <class T>
 void CDecksSet<T>::PushFront( const int deckNum, const T &el )
 {
 	this->currentPos[deckNum] = this->cListsSet.InsertAfter( deckNum, this->currentPos[deckNum], el );
 }
 
-template< class T >
-T& CDecksSet<T>::GetLastEl( const int nDeckNum )
+template <class T>
+T &CDecksSet<T>::GetLastEl( const int nDeckNum )
 {
 	return this->cListsSet.GetEl( this->cListsSet.begin( nDeckNum ) );
 }
 
-template< class T >
-const T& CDecksSet<T>::GetLastEl( const int nDeckNum ) const
+template <class T>
+const T &CDecksSet<T>::GetLastEl( const int nDeckNum ) const
 {
 	return this->cListsSet.GetEl( this->cListsSet.begin( nDeckNum ) );
 }
@@ -498,7 +540,6 @@ template <class T>
 inline int SElInfo<T>::operator&( IBinSaver &saver )
 {
 
-
 	saver.Add( 1, &id );
 	saver.Add( 2, &value );
 
@@ -510,14 +551,13 @@ template <>
 inline int SElInfo<uint16_t>::operator&( IBinSaver &saver )
 {
 
-
 	saver.Add( 1, &id );
 	saver.Add( 2, &value );
 
 	return 0;
 }
 
-template < class T >
+template <class T>
 inline int CListsSet<T>::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &nexts );
@@ -535,10 +575,9 @@ inline int CListsSet<T>::operator&( IBinSaver &saver )
 	return 0;
 }
 
-template < class T >
+template <class T>
 int CQueuesSet<T>::operator&( IBinSaver &saver )
 {
-
 
 	saver.Add( 1, &cListsSet );
 	saver.Add( 2, &currentPos );
@@ -546,12 +585,11 @@ int CQueuesSet<T>::operator&( IBinSaver &saver )
 	return 0;
 }
 
-template < class T >
+template <class T>
 int CDecksSet<T>::operator&( IBinSaver &saver )
 {
 
-
-	saver.Add( 1, static_cast<CQueuesSet<T>*>(this) );
+	saver.Add( 1, static_cast<CQueuesSet<T> *>( this ) );
 
 	return 0;
 }

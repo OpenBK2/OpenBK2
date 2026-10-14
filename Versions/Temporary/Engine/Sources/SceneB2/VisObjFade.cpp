@@ -16,7 +16,9 @@ void CScene::SetFadedObjects( const std::list<int> &objects )
 		data[eScene]->fadeModes[*it] = true;
 	}
 	// включим
-	for ( std::unordered_map<int, bool>::iterator it = data[eScene]->fadeModes.begin(); it != data[eScene]->fadeModes.end(); ++it )
+	for ( std::unordered_map<int, bool>::iterator it = data[eScene]->fadeModes.begin();
+	      it != data[eScene]->fadeModes.end();
+	      ++it )
 	{
 		if ( old_fade.find( it->first ) == old_fade.end() )
 		{
@@ -33,15 +35,13 @@ void CScene::SetFadedObjects( const std::list<int> &objects )
 	}
 }
 
-
 void CScene::SetFadedObjects( const std::list<int> &objects, float fFade )
 {
 	for ( std::list<int>::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
-		 FadeObject( *it, fFade );
+		FadeObject( *it, fFade );
 	}
 }
-
 
 void CScene::FadeObject( int nID, bool bFade )
 {
@@ -53,10 +53,12 @@ void CScene::FadeObject( int nID, bool bFade )
 	{
 		float fFade = bFade ? FADE_VALUE_UNDER_CURSOR : 1.0f;
 		pos->second->SetFade( fFade );
-		pos->second->ReCreateObject( data[eScene]->GetGScene(), data[eScene]->pSyncSrc, data[eScene]->pGameTimer, data[eScene]->showModes[SCENE_SHOW_BBOXES] );
+		pos->second->ReCreateObject( data[eScene]->GetGScene(),
+		                             data[eScene]->pSyncSrc,
+		                             data[eScene]->pGameTimer,
+		                             data[eScene]->showModes[SCENE_SHOW_BBOXES] );
 	}
 }
-
 
 void CScene::FadeObject( int nID, float fFade )
 {
@@ -67,10 +69,12 @@ void CScene::FadeObject( int nID, float fFade )
 	if ( pos->second->pObj )
 	{
 		pos->second->SetFade( fFade );
-		pos->second->ReCreateObject( data[eScene]->GetGScene(), data[eScene]->pSyncSrc, data[eScene]->pGameTimer, data[eScene]->showModes[SCENE_SHOW_BBOXES] );
+		pos->second->ReCreateObject( data[eScene]->GetGScene(),
+		                             data[eScene]->pSyncSrc,
+		                             data[eScene]->pGameTimer,
+		                             data[eScene]->showModes[SCENE_SHOW_BBOXES] );
 	}
 }
-
 
 void CScene::ClearPostEffectObjects()
 {
@@ -79,7 +83,7 @@ void CScene::ClearPostEffectObjects()
 
 void CScene::AddPostEffectObjects( const std::list<int> &objects, const CVec4 &vColor )
 {
-	std::vector< CObjectBase* > filterObjects;
+	std::vector<CObjectBase *> filterObjects;
 	filterObjects.reserve( 100 );
 	for ( std::list<int>::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
@@ -92,6 +96,6 @@ void CScene::AddPostEffectObjects( const std::list<int> &objects, const CVec4 &v
 			}
 		}
 	}
-	data[eScene]->postEffects.push_back( data[eScene]->GetGScene()->AddPostFilter( filterObjects,
-		new NGScene::COccludedColorer( new NGScene::CCVec4( vColor ) ) ) );
+	data[eScene]->postEffects.push_back( data[eScene]->GetGScene()->AddPostFilter(
+			filterObjects, new NGScene::COccludedColorer( new NGScene::CCVec4( vColor ) ) ) );
 }

@@ -6,7 +6,6 @@
 #include "GTexture.h"
 #include "GSceneUtils.h"
 
-
 namespace NGScene
 {
 
@@ -63,39 +62,84 @@ void CMaterialShare::FillCreateMaterialInfo( const NDb::SMaterial *_pMaterial, S
 
 	switch ( _pMaterial->eDynamicMode )
 	{
-	case NDb::SMaterial::DM_DONT_CARE : mc.eDynamicType = DT_DONT_CARE; break;
-	case NDb::SMaterial::DM_FORCE_STATIC : mc.eDynamicType = DT_FORCE_STATIC; break;
-	case NDb::SMaterial::DM_FORCE_DYNAMIC : mc.eDynamicType = DT_FORCE_DYNAMIC; break;
+		case NDb::SMaterial::DM_DONT_CARE:
+			mc.eDynamicType = DT_DONT_CARE;
+			break;
+		case NDb::SMaterial::DM_FORCE_STATIC:
+			mc.eDynamicType = DT_FORCE_STATIC;
+			break;
+		case NDb::SMaterial::DM_FORCE_DYNAMIC:
+			mc.eDynamicType = DT_FORCE_DYNAMIC;
+			break;
 	}
 	int nFlags = 0;
 	switch ( _pMaterial->eAlphaMode )
 	{
-	case NDb::SMaterial::AM_OPAQUE: nFlags |= MF_OPAQUE; break;
-	case NDb::SMaterial::AM_OVERLAY: nFlags |= MF_OVERLAY; break;
-	case NDb::SMaterial::AM_OVERLAY_ZWRITE: nFlags |= MF_OVERLAY_ZWRITE; break;
-	case NDb::SMaterial::AM_TRANSPARENT: nFlags |= MF_TRANSPARENT; break;
-	case NDb::SMaterial::AM_ALPHA_TEST: nFlags |= MF_ALPHA_TEST; break;
-	case NDb::SMaterial::AM_DECAL: nFlags |= MF_DECAL; break;
-	default: ASSERT(0); break;
+		case NDb::SMaterial::AM_OPAQUE:
+			nFlags |= MF_OPAQUE;
+			break;
+		case NDb::SMaterial::AM_OVERLAY:
+			nFlags |= MF_OVERLAY;
+			break;
+		case NDb::SMaterial::AM_OVERLAY_ZWRITE:
+			nFlags |= MF_OVERLAY_ZWRITE;
+			break;
+		case NDb::SMaterial::AM_TRANSPARENT:
+			nFlags |= MF_TRANSPARENT;
+			break;
+		case NDb::SMaterial::AM_ALPHA_TEST:
+			nFlags |= MF_ALPHA_TEST;
+			break;
+		case NDb::SMaterial::AM_DECAL:
+			nFlags |= MF_DECAL;
+			break;
+		default:
+			ASSERT( 0 );
+			break;
 	}
 	switch ( _pMaterial->eEffect )
 	{
-	case NDb::SMaterial::M_GENERIC: nFlags |= MF_GENERIC; break;
-	case NDb::SMaterial::M_WATER: nFlags |= MF_WATER; break;
-	case NDb::SMaterial::M_TRACKS: nFlags |= MF_TRACKS; break;
-	case NDb::SMaterial::M_TERRAIN: nFlags |= MF_TERRAIN; break;
-	case NDb::SMaterial::M_CLOUDS_H5: nFlags |= MF_CLOUDS_H5; break;
-	case NDb::SMaterial::M_ANIM_WATER: nFlags |= MF_ANIM_WATER; break;
-	case NDb::SMaterial::M_SURF: nFlags |= MF_SURF; break;
-	case NDb::SMaterial::M_SIMPLE_SKY: nFlags |= MF_SIMPLE_SKY; break;
-	case NDb::SMaterial::M_REFLECT_WATER: nFlags |= MF_REFLECT_WATER; break;
-	default: ASSERT(0); break;
+		case NDb::SMaterial::M_GENERIC:
+			nFlags |= MF_GENERIC;
+			break;
+		case NDb::SMaterial::M_WATER:
+			nFlags |= MF_WATER;
+			break;
+		case NDb::SMaterial::M_TRACKS:
+			nFlags |= MF_TRACKS;
+			break;
+		case NDb::SMaterial::M_TERRAIN:
+			nFlags |= MF_TERRAIN;
+			break;
+		case NDb::SMaterial::M_CLOUDS_H5:
+			nFlags |= MF_CLOUDS_H5;
+			break;
+		case NDb::SMaterial::M_ANIM_WATER:
+			nFlags |= MF_ANIM_WATER;
+			break;
+		case NDb::SMaterial::M_SURF:
+			nFlags |= MF_SURF;
+			break;
+		case NDb::SMaterial::M_SIMPLE_SKY:
+			nFlags |= MF_SIMPLE_SKY;
+			break;
+		case NDb::SMaterial::M_REFLECT_WATER:
+			nFlags |= MF_REFLECT_WATER;
+			break;
+		default:
+			ASSERT( 0 );
+			break;
 	}
 	switch ( _pMaterial->eLightingMode )
 	{
-	case NDb::SMaterial::L_NORMAL: break;
-	case NDb::SMaterial::L_SELFILLUM: mc.bSelfIllum = true; break;
-	default: ASSERT(0); break;
+		case NDb::SMaterial::L_NORMAL:
+			break;
+		case NDb::SMaterial::L_SELFILLUM:
+			mc.bSelfIllum = true;
+			break;
+		default:
+			ASSERT( 0 );
+			break;
 	}
 	mc.alphaMode = nFlags;
 	mc.b2Sided = _pMaterial->bIs2Sided;
@@ -112,7 +156,7 @@ void CMaterialShare::FillCreateMaterialInfo( const NDb::SMaterial *_pMaterial, S
 	mc.bBackFaceCastShadow = _pMaterial->bBackFaceCastShadow;
 }
 
-IMaterial* CMaterialShare::CreateMaterial( const NDb::SMaterial *pMaterial )
+IMaterial *CMaterialShare::CreateMaterial( const NDb::SMaterial *pMaterial )
 {
 	SMaterialCreateInfo mc;
 	if ( pMaterial )
@@ -122,7 +166,7 @@ IMaterial* CMaterialShare::CreateMaterial( const NDb::SMaterial *pMaterial )
 			return i->second;
 		FillCreateMaterialInfo( pMaterial, &mc );
 		IMaterial *pRes = NGScene::CreateMaterial( mc );
-		materials[ pMaterial ] = pRes;
+		materials[pMaterial] = pRes;
 		return pRes;
 	}
 	else
@@ -134,13 +178,13 @@ IMaterial* CMaterialShare::CreateMaterial( const NDb::SMaterial *pMaterial )
 
 // CColorMaterialShare
 
-IMaterial* CColorMaterialShare::CreateMaterial( const CVec3 &color )
+IMaterial *CColorMaterialShare::CreateMaterial( const CVec3 &color )
 {
 	CMatHashmap::iterator i = materials.find( color );
 	if ( i != materials.end() && IsValid( i->second ) )
 		return i->second;
 	SMaterialCreateInfo mc;
-	mc.pColor = new CCVec4( CVec4(color,1) );
+	mc.pColor = new CCVec4( CVec4( color, 1 ) );
 	IMaterial *pRes = NGScene::CreateMaterial( mc );
 
 	materials[color] = pRes;
@@ -149,7 +193,7 @@ IMaterial* CColorMaterialShare::CreateMaterial( const CVec3 &color )
 
 // CTransparentMaterialShare
 
-IMaterial* CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoesCastShadow )
+IMaterial *CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoesCastShadow )
 {
 	CVec4 color( cr.x * cr.w, cr.y * cr.w, cr.z * cr.w, cr.w );
 	if ( bDoesCastShadow )
@@ -164,11 +208,11 @@ IMaterial* CTransparentMaterialShare::CreateMaterial( const CVec4 &cr, bool bDoe
 		if ( i != noShadowMaterials.end() && IsValid( i->second ) )
 			return i->second;
 	}
-	CObj<CPtrFuncBase<NGfx::CTexture> > pTexture = new CColorTexture( color );//shareTextures.Get( 1724 );
+	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture = new CColorTexture( color ); //shareTextures.Get( 1724 );
 	SMaterialCreateInfo mc;
 	mc.pTexture = pTexture;
 	mc.vAvrgTexColor = color;
-	mc.alphaMode = MF_GENERIC|MF_TRANSPARENT;
+	mc.alphaMode = MF_GENERIC | MF_TRANSPARENT;
 	mc.bDoesCastShadow = bDoesCastShadow;
 	IMaterial *pRes = NGScene::CreateMaterial( mc );
 	materials[color] = pRes;

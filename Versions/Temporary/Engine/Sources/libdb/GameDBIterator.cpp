@@ -12,6 +12,7 @@ class CDBIterator : public IDBIterator
 	std::vector<CDBID>::const_iterator posCurrent;
 	//
 	CDBIterator() {}
+
 public:
 	CDBIterator( int nTypeID )
 	{
@@ -27,20 +28,11 @@ public:
 		return !IsEnd();
 	}
 
-	bool IsEnd() const
-	{
-		return posCurrent == dbids.end();
-	}
+	bool IsEnd() const { return posCurrent == dbids.end(); }
 
-	CResource *Get() const
-	{
-		return IsEnd() ? 0 : NDb::GetObject( *posCurrent );
-	}
+	CResource *Get() const { return IsEnd() ? 0 : NDb::GetObject( *posCurrent ); }
 
-	void MoveFirst()
-	{
-		posCurrent = dbids.empty() ? dbids.end() : dbids.begin();
-	}
+	void MoveFirst() { posCurrent = dbids.empty() ? dbids.end() : dbids.begin(); }
 };
 
 IDBIterator *CreateDBIterator( int nTypeID )

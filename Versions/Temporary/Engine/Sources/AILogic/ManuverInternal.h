@@ -34,7 +34,7 @@ class CManuver : public IManuver
 	CPathList simplePaths;
 
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	float fProgress = {};															// path progress
+	float fProgress = {}; // path progress
 	float fSpeed = {};
 
 	CVec3 vCenter;
@@ -45,14 +45,34 @@ class CManuver : public IManuver
 
 	// nomrale acceleration
 	float fCurTiltSpeed = {};
-	float fDistToGo = {};							// distance that other path must go to ensure smoothness.
+	float fDistToGo = {}; // distance that other path must go to ensure smoothness.
 	bool bToHorisontal = {};
 
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPlane); f.Add(3,&pPath); f.Add(4,&simplePaths); f.Add(5,&fProgress); f.Add(6,&fSpeed); f.Add(7,&vCenter); f.Add(8,&vSpeed); f.Add(9,&vNormal); f.Add(10,&bUsed); f.Add(11,&fCurTiltSpeed); f.Add(12,&fDistToGo); f.Add(13,&bToHorisontal); return 0; }
-	void InitInternal( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const float fSpeed, const CVec3 &vNormale, const bool _bToHorisontal );
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pPlane );
+		f.Add( 3, &pPath );
+		f.Add( 4, &simplePaths );
+		f.Add( 5, &fProgress );
+		f.Add( 6, &fSpeed );
+		f.Add( 7, &vCenter );
+		f.Add( 8, &vSpeed );
+		f.Add( 9, &vNormal );
+		f.Add( 10, &bUsed );
+		f.Add( 11, &fCurTiltSpeed );
+		f.Add( 12, &fDistToGo );
+		f.Add( 13, &bToHorisontal );
+		return 0;
+	}
+	void InitInternal( struct IPathFraction *_pPath,
+	                   CPlanesFormation *_pPlane,
+	                   const float fSpeed,
+	                   const CVec3 &vNormale,
+	                   const bool _bToHorisontal );
 	void CheckToHorisontal();
-protected:
 
+protected:
 	void InitCommon( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const bool _bToHorisontal );
 	bool AdvanceCommon( const NTimer::STime timeDiff );
 
@@ -61,27 +81,30 @@ private:
 	void CalcPoint();
 	void CalcNormale( const NTimer::STime timeDiff );
 
-	void AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesiredNormale, CVec3 *vNormal, int *pnRotation, float *pfTiltToGo ) const;
+	void AdjustNormale( const NTimer::STime timeDiff,
+	                    const CVec3 &vDesiredNormale,
+	                    CVec3 *vNormal,
+	                    int *pnRotation,
+	                    float *pfTiltToGo ) const;
 
 	// height difference needed to start horisontal move
 	const float CalcHeightToEnterHorisontal( const CVec3 &_vSpeed, const class CPlanePreferences &pref ) const;
-	bool IsChangeHeightPossible( const CVec3 &_vSpeed, const CVec3 &vPos, const class CPlanePreferences &pref, CVec3 *pvNewTarget ) const;
+	bool IsChangeHeightPossible( const CVec3 &_vSpeed,
+	                             const CVec3 &vPos,
+	                             const class CPlanePreferences &pref,
+	                             CVec3 *pvNewTarget ) const;
 
 public:
-
 	bool IsToHorisontal() const { return bToHorisontal; }
 	void SetPlane( CPlanesFormation *_pPlane ) { pPlane = _pPlane; }
 
 	// to init next manuver with this params - will be smooth transition between manuvers
 	void GetManuverParams( struct SPrevPathParams *pParams ) const;
 
-	CManuver() : bUsed( false ), fCurTiltSpeed( 0 ), bToHorisontal( 0 ) {  }
+	CManuver() : bUsed( false ), fCurTiltSpeed( 0 ), bToHorisontal( 0 ) {}
 	//CRAP{ FOR TEST
 	// preferred top direction
-	CVec3 GetTopDirection() const
-	{
-		return CVec3(0,0,1.0f);
-	}
+	CVec3 GetTopDirection() const { return CVec3( 0, 0, 1.0f ); }
 	virtual const CVec3 GetEndPoint() const { return pPath->GetEndPoint(); }
 	//CRAP}
 
@@ -102,10 +125,15 @@ public:
 class CManuverGeneric : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverGeneric );
-	ZDATA_(CManuver)
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CManuver*)this); return 0; }
+	ZDATA_( CManuver )
 public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CManuver *)this );
+		return 0;
+	}
 
+public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos );
 	virtual bool Advance( const NTimer::STime timeDiff );
 };
@@ -113,11 +141,15 @@ public:
 class CManuverToHorisontal : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverToHorisontal )
-	ZDATA_(CManuver)
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CManuver*)this); return 0; }
+	ZDATA_( CManuver )
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CManuver *)this );
+		return 0;
+	}
 
 public:
-
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos );
 	virtual bool Advance( const NTimer::STime timeDiff );
 };
@@ -125,9 +157,14 @@ public:
 class CManuverPrepareGroundAttack : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverPrepareGroundAttack )
-	ZDATA_(CManuver)
+	ZDATA_( CManuver )
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CManuver*)this); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CManuver *)this );
+		return 0;
+	}
+
 public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos, const CVec3 &vDirection );
 	virtual bool Advance( const NTimer::STime timeDiff );
@@ -140,11 +177,16 @@ public:
 class CManuverSteepClimb : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverSteepClimb );
-	ZDATA_(CManuver)
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CManuver*)this); return 0; }
+	ZDATA_( CManuver )
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CManuver *)this );
+		return 0;
+	}
 
 public:
-	CManuverSteepClimb() {  }
+	CManuverSteepClimb() {}
 
 	void Init( CPlanesFormation *pPos );
 	virtual bool Advance( const NTimer::STime timeDiff );

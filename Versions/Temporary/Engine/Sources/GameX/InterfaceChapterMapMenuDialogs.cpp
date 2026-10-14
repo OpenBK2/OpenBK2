@@ -148,7 +148,7 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 		pHPBar->SetPosition( 1.0f );
 	}
 
-	bool bShowArmor = (data.armors.size() >= NUnitFullInfo::ES_ARMOR_COUNT);
+	bool bShowArmor = ( data.armors.size() >= NUnitFullInfo::ES_ARMOR_COUNT );
 	if ( bShowArmor )
 	{
 		std::wstring wszArmorFront = NStr::ToUnicode( std::to_string( data.armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
@@ -191,8 +191,8 @@ void SChapterReinfBase::SUnit::MakeUnitInfo()
 	if ( !pStats )
 		pStats = data.pSquad;
 
-	if ( pStats && CHECK_TEXT_NOT_EMPTY_PRE(pStats->,LocalizedName) )
-		data.wszName = GET_TEXT_PRE(pStats->,LocalizedName);
+	if ( pStats && CHECK_TEXT_NOT_EMPTY_PRE( pStats->, LocalizedName ) )
+		data.wszName = GET_TEXT_PRE( pStats->, LocalizedName );
 
 	NUnitFullInfo::MakeWeapons( data.weapons, pStats );
 	NUnitFullInfo::MakeArmors( data.armors, pStats );
@@ -220,7 +220,7 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 
 	data.objects3D.clear();
 
-	if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats*>( pStats ) )
+	if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats *>( pStats ) )
 	{
 		for ( int i = 0; i < (std::min<int>)( 3, pSquadStats->members.size() ); ++i )
 		{
@@ -237,7 +237,7 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 			NI_ASSERT( object.pModel, fmt::format( "Designers: no model for object: {}", pStats->GetDBID().ToString() ) );
 			object.vPos = param.vPos;
 			object.vSize = param.vSize;
-			object.pAnim = NUnitFullInfo::FindAnimation( pMember ) ;
+			object.pAnim = NUnitFullInfo::FindAnimation( pMember );
 			data.objects3D.push_back( object );
 		}
 	}
@@ -254,7 +254,8 @@ void SChapterReinfBase::SUnit::Make3DInfo( const NDb::SHPObjectRPGStats *pStats 
 				pVisObj = pStats->pvisualObject;
 		}
 		object.pModel = pStats ? NUnitFullInfo::GetModel( pVisObj, NDb::SEASON_SUMMER ) : 0;
-		NI_ASSERT( !pStats || object.pModel, fmt::format( "Designers: no model for object: {}", pStats->GetDBID().ToString() ) );
+		NI_ASSERT( !pStats || object.pModel,
+		           fmt::format( "Designers: no model for object: {}", pStats->GetDBID().ToString() ) );
 		object.vPos = param.vPos;
 		object.vSize = param.vSize;
 		data.objects3D.push_back( object );
@@ -271,7 +272,7 @@ void SChapterReinfBase::InitUnitInfoControls( IWindow *pBaseWnd )
 	pUnitSupplyView = GetChildChecked<ITextView>( pBaseWnd, "UnitSupplyView", true );
 	if ( pBaseWnd )
 	{
-		for ( int i = 1; ; ++i )
+		for ( int i = 1;; ++i )
 		{
 			IWindow *pWnd = pBaseWnd->GetChild( fmt::format( "UnitWeapon{}", i ), true );
 			if ( !pWnd )
@@ -316,8 +317,8 @@ void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 		if ( weapon.pIconWnd )
 		{
 			std::wstring wszTooltip;
-			if ( weaponInfo.pWeapon && CHECK_TEXT_NOT_EMPTY_PRE(weaponInfo.pWeapon->,LocalizedName) )
-				wszTooltip = GET_TEXT_PRE(weaponInfo.pWeapon->,LocalizedName);
+			if ( weaponInfo.pWeapon && CHECK_TEXT_NOT_EMPTY_PRE( weaponInfo.pWeapon->, LocalizedName ) )
+				wszTooltip = GET_TEXT_PRE( weaponInfo.pWeapon->, LocalizedName );
 			weapon.pIconWnd->SetTexture( weaponInfo.pWeapon ? weaponInfo.pWeapon->pWeaponTypeTexture : 0 );
 			weapon.pIconWnd->SetTooltip( wszTooltip );
 		}
@@ -338,7 +339,8 @@ void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 	bool bIsSupply = pUnit ? pUnit->data.weapons.empty() : false;
 	if ( bIsSupply && pUnit->data.pMechUnit && pUnit->data.pMechUnit->IsTransport() )
 	{
-		if ( pUnit->data.pMechUnit->pActions && NUnitFullInfo::IsResourcesCarrier( pUnit->data.pMechUnit->pActions->availUserActions ) )
+		if ( pUnit->data.pMechUnit->pActions &&
+		     NUnitFullInfo::IsResourcesCarrier( pUnit->data.pMechUnit->pActions->availUserActions ) )
 			bIsSupply = true;
 	}
 	if ( pUnitSupplyLabel )
@@ -346,7 +348,7 @@ void SChapterReinfBase::ShowUnitInfo( SUnit *pUnit )
 	if ( pUnitSupplyView )
 	{
 		pUnitSupplyView->ShowWindow( bIsSupply );
-		pUnitSupplyView->SetText( pUnitSupplyView->GetDBText() + NStr::ToUnicode( std::to_string(  SUPPLIES_COUNT ) ) );
+		pUnitSupplyView->SetText( pUnitSupplyView->GetDBText() + NStr::ToUnicode( std::to_string( SUPPLIES_COUNT ) ) );
 	}
 }
 
@@ -369,7 +371,7 @@ void SChapterReinfBase::MakeReinfData( std::vector<SUnitData> &units, const NDb:
 		if ( it == units.end() )
 			units.push_back( unitData );
 		else
-			++(it->nCount);
+			++( it->nCount );
 	}
 }
 
@@ -392,8 +394,7 @@ void SChapterReinfUpgrade::InitControls( IWindow *_pBaseWnd )
 	InitUnitInfoControls( pUpgradePanel );
 }
 
-void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
-	const NDb::SReinforcement *pNewReinf )
+void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf, const NDb::SReinforcement *pNewReinf )
 {
 	if ( !pNewReinf && !pOldReinf )
 		return;
@@ -406,8 +407,8 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 	if ( pReinfIconWnd )
 		pReinfIconWnd->SetTexture( pNewReinf ? pNewReinf->pIconTexture : 0 );
 	std::wstring wszName;
-	if ( pNewReinf && CHECK_TEXT_NOT_EMPTY_PRE(pNewReinf->,LocalizedName) )
-		wszName = GET_TEXT_PRE(pNewReinf->,LocalizedName);
+	if ( pNewReinf && CHECK_TEXT_NOT_EMPTY_PRE( pNewReinf->, LocalizedName ) )
+		wszName = GET_TEXT_PRE( pNewReinf->, LocalizedName );
 	if ( pReinfHeaderView )
 		pReinfHeaderView->SetText( pReinfHeaderView->GetDBText() + wszName );
 
@@ -430,12 +431,16 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 		}
 		line.pUnit1 = new SUnit();
 		line.pUnit2 = new SUnit();
-		line.pUnit1->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel1", true ), fmt::format( "UnitBtnOld{}", i ), BASE_ID_3D + DELTA_ID_3D * (2 * i) );
-		line.pUnit2->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel2", true ), fmt::format( "UnitBtnNew{}", i ), BASE_ID_3D + DELTA_ID_3D * (2 * i + 1) );
+		line.pUnit1->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel1", true ),
+		                           fmt::format( "UnitBtnOld{}", i ),
+		                           BASE_ID_3D + DELTA_ID_3D * ( 2 * i ) );
+		line.pUnit2->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel2", true ),
+		                           fmt::format( "UnitBtnNew{}", i ),
+		                           BASE_ID_3D + DELTA_ID_3D * ( 2 * i + 1 ) );
 		line.pUnit1->data.nCount = 0;
 		line.pUnit2->data.nCount = 0;
 
-		if ( i < unitsDataOld.size()  )
+		if ( i < unitsDataOld.size() )
 		{
 			line.pUnit1->SetUnit( unitsDataOld[i] );
 		}
@@ -444,7 +449,7 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 			line.pUnit1->SetUnknown();
 		}
 
-		if ( i < unitsDataNew.size()  )
+		if ( i < unitsDataNew.size() )
 		{
 			line.pUnit2->SetUnit( unitsDataNew[i] );
 		}
@@ -527,7 +532,7 @@ void SChapterReinfUpgrade::SelectUnit( SUnit *pUnit )
 	if ( pSelectedUnit )
 	{
 		pSelectedUnit->ShowSelection( true );
-/*		for ( int i = 0; i < lines.size(); ++i )
+		/*		for ( int i = 0; i < lines.size(); ++i )
 		{
 			SUpgradeLine &line = lines[i];
 			if ( line.pUnit1 == pUnit || line.pUnit2 == pUnit )
@@ -553,7 +558,7 @@ void SChapterReinfComposition::InitControls( IWindow *_pBaseWnd )
 
 	if ( pCompositionPanel )
 	{
-		for ( int i = 1; ; ++i )
+		for ( int i = 1;; ++i )
 		{
 			IWindow *pWnd = pCompositionPanel->GetChild( fmt::format( "Unit{}", i ), true );
 			if ( !pWnd )
@@ -577,8 +582,8 @@ void SChapterReinfComposition::ShowReinf( const NDb::SReinforcement *pReinf )
 	if ( pReinfIconWnd )
 		pReinfIconWnd->SetTexture( pReinf ? pReinf->pIconTexture : 0 );
 	std::wstring wszName;
-	if ( pReinf && CHECK_TEXT_NOT_EMPTY_PRE(pReinf->,LocalizedName) )
-		wszName = GET_TEXT_PRE(pReinf->,LocalizedName);
+	if ( pReinf && CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+		wszName = GET_TEXT_PRE( pReinf->, LocalizedName );
 	if ( pReinfHeaderView )
 		pReinfHeaderView->SetText( pReinfHeaderView->GetDBText() + wszName );
 
@@ -684,8 +689,8 @@ void CInterfaceChapterMapMenu::SChapterDesc::Show( const NDb::SChapter *pChapter
 	{
 		CDBPtr<NDb::STexture> pPicture = pChapter->general.pPortrait;
 		std::wstring wszDesc;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pChapter->general.,Desc) )
-			wszDesc = GET_TEXT_PRE(pChapter->general.,Desc);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pChapter->general., Desc ) )
+			wszDesc = GET_TEXT_PRE( pChapter->general., Desc );
 
 		ITextView *pGeneralDesc = GetChildChecked<ITextView>( pItemGeneral, "ItemGeneralDesc", true );
 		IWindow *pGeneralPicture = GetChildChecked<IWindow>( pItemGeneral, "ItemGeneralPicture", true );
@@ -705,8 +710,8 @@ void CInterfaceChapterMapMenu::SChapterDesc::Show( const NDb::SChapter *pChapter
 	if ( pContainer && pDescView )
 	{
 		std::wstring wszDesc;
-		if ( pChapter && CHECK_TEXT_NOT_EMPTY_PRE(pChapter->,LocalizedDescription) )
-			wszDesc = GET_TEXT_PRE(pChapter->,LocalizedDescription);
+		if ( pChapter && CHECK_TEXT_NOT_EMPTY_PRE( pChapter->, LocalizedDescription ) )
+			wszDesc = GET_TEXT_PRE( pChapter->, LocalizedDescription );
 		pDescView->SetText( pDescView->GetDBText() + wszDesc );
 
 		pContainer->Update();
@@ -750,15 +755,15 @@ void CInterfaceChapterMapMenu::SMissionDesc::Show( const NDb::SMissionEnableInfo
 	if ( pContainer && pDescView )
 	{
 		std::wstring wszMissionDesc;
-		if ( mission.pMap && CHECK_TEXT_NOT_EMPTY_PRE(mission.pMap->,LoadingDescription) )
-			wszMissionDesc = GET_TEXT_PRE(mission.pMap->,LoadingDescription);
+		if ( mission.pMap && CHECK_TEXT_NOT_EMPTY_PRE( mission.pMap->, LoadingDescription ) )
+			wszMissionDesc = GET_TEXT_PRE( mission.pMap->, LoadingDescription );
 		pDescView->SetText( pDescView->GetDBText() + wszMissionDesc );
 		pContainer->Update();
 	}
 
 	std::wstring wszName;
-	if ( mission.pMap && CHECK_TEXT_NOT_EMPTY_PRE(mission.pMap->,LocalizedName) )
-		wszName = GET_TEXT_PRE(mission.pMap->,LocalizedName);
+	if ( mission.pMap && CHECK_TEXT_NOT_EMPTY_PRE( mission.pMap->, LocalizedName ) )
+		wszName = GET_TEXT_PRE( mission.pMap->, LocalizedName );
 	if ( pNameView )
 		pNameView->SetText( pNameView->GetDBText() + wszName );
 
@@ -766,8 +771,8 @@ void CInterfaceChapterMapMenu::SMissionDesc::Show( const NDb::SMissionEnableInfo
 	if ( IScenarioTracker *pST = Singleton<IScenarioTracker>() )
 	{
 		if ( const NDb::SDifficultyLevel *pDifficulty = pST->GetDifficultyLevelDB() )
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pDifficulty->,LocalizedName) )
-				wszDifficulty = GET_TEXT_PRE(pDifficulty->,LocalizedName);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pDifficulty->, LocalizedName ) )
+				wszDifficulty = GET_TEXT_PRE( pDifficulty->, LocalizedName );
 	}
 	if ( pDifficultyView )
 		pDifficultyView->SetText( pDifficultyView->GetDBText() + wszDifficulty );

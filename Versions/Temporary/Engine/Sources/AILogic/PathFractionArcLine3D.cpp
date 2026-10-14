@@ -6,8 +6,7 @@
 
 #include "AILogic_export.h"
 
-REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C41, CPathFractionArcLine3D)
-
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11095C41, CPathFractionArcLine3D )
 
 #ifndef _FINALRELEASE
 void DrawWhiteCross( const CVec3 &vPoint )
@@ -19,16 +18,14 @@ void DrawWhiteCross( const CVec3 &vPoint )
 		segm.p2 = CVec2( vPoint.x - 10, vPoint.y - 10 );
 		segm.dir = segm.p2 - segm.p1;
 
-		NDebugInfo::SArrowHead a1 ( vPoint, 100, 100 );
-		NDebugInfo::SArrowHead a2 ( vPoint - V3_AXIS_Z * 10 );
+		NDebugInfo::SArrowHead a1( vPoint, 100, 100 );
+		NDebugInfo::SArrowHead a2( vPoint - V3_AXIS_Z * 10 );
 		DebugInfoManager()->DrawLine( NDebugInfo::OBJECT_ID_GENERATE, a1, a2, NDebugInfo::WHITE );
 	}
 }
 #endif
 
-
 //	CPathFractionArcLine3D
-
 
 void CPathFractionArcLine3D::GetSimplePath( CPathList *pPaths )
 {
@@ -38,27 +35,30 @@ void CPathFractionArcLine3D::GetSimplePath( CPathList *pPaths )
 		pPaths->push_back( pLine.GetPtr() );
 }
 
-CPathFractionArc3D * CPathFractionArcLine3D::GetArc()
+CPathFractionArc3D *CPathFractionArcLine3D::GetArc()
 {
 	return pArc;
 }
 
-IPathFraction * CPathFractionArcLine3D::GetLine()
+IPathFraction *CPathFractionArcLine3D::GetLine()
 {
 	return pLine;
 }
 
 float CPathFractionArcLine3D::GetLength() const
 {
-	return (pArc ? pArc->GetLength(): 0.0f) + (pLine? pLine->GetLength(): 0.0f);
+	return ( pArc ? pArc->GetLength() : 0.0f ) + ( pLine ? pLine->GetLength() : 0.0f );
 }
 
-void CPathFractionArcLine3D::Init( const SPrevPathParams &prevPath, const CVec3 &x1, const float fR/*circle radius*/)
+void CPathFractionArcLine3D::Init( const SPrevPathParams &prevPath, const CVec3 &x1, const float fR /*circle radius*/ )
 {
 	Init( prevPath.p2, prevPath.vSpeed, x1, fR );
 }
 
-void CPathFractionArcLine3D::Init( const CVec3 &x0, const CVec3 &_v0, const CVec3 &x1, const float fR/*circle radius*/ )
+void CPathFractionArcLine3D::Init( const CVec3 &x0,
+                                   const CVec3 &_v0,
+                                   const CVec3 &x1,
+                                   const float fR /*circle radius*/ )
 {
 	CVec3 v0 = _v0;
 	Normalize( &v0 );
@@ -71,7 +71,7 @@ void CPathFractionArcLine3D::Init( const CVec3 &x0, const CVec3 &_v0, const CVec
 
 	CVec3 vDir( x1 - x0 );
 	Normalize( &vDir );
-	if ( fabs( v0 - vDir ) > 0.05f  ) // the circle is needed
+	if ( fabs( v0 - vDir ) > 0.05f ) // the circle is needed
 	{
 		if ( TryCircle( x0, v0, x1, fR, 1, &vT1 ) )
 			pArc1 = pArc;
@@ -93,7 +93,7 @@ void CPathFractionArcLine3D::Init( const CVec3 &x0, const CVec3 &_v0, const CVec
 		pArc = pArc1;
 		pLine->Init( vT1, x1 );
 	}
-	else if ( pArc1->GetLength() + fabs( vT1 - x1 ) > pArc2->GetLength() + fabs( vT2 -x1 ) )
+	else if ( pArc1->GetLength() + fabs( vT1 - x1 ) > pArc2->GetLength() + fabs( vT2 - x1 ) )
 	{
 		pArc = pArc2;
 		pLine->Init( vT2, x1 );
@@ -108,7 +108,8 @@ void CPathFractionArcLine3D::Init( const CVec3 &x0, const CVec3 &_v0, const CVec
 		pLine = 0;
 }
 
-bool CPathFractionArcLine3D::TryCircle( const CVec3 &x0, const CVec3 &v0, const CVec3 &x1, const float fR, const int nDir, CVec3 *vT )
+bool CPathFractionArcLine3D::TryCircle(
+		const CVec3 &x0, const CVec3 &v0, const CVec3 &x1, const float fR, const int nDir, CVec3 *vT )
 {
 	CVec3 x0x1 = x1 - x0;
 	CVec3 _x0x1 = x1 - x0;
@@ -153,18 +154,18 @@ bool CPathFractionArcLine3D::TryCircle( const CVec3 &x0, const CVec3 &v0, const 
 		// transform x1 to new coordiante system ( a, b - its new coordinates )
 		//const CVec3 x1t( x0x1 * i, x0x1 * j, x0x1 * k );
 		const CVec2 x1t( x0x1 * i, x0x1 * j );
-		CVec2 t1t, t2t;													// tangent points to find (in new coordinate system)
+		CVec2 t1t, t2t; // tangent points to find (in new coordinate system)
 		const bool bFound = FindTangentPoints( x1t, circle, &t1t, &t2t );
 		if ( !bFound )
 			return false;
 		// choose needed tangent point
 
-		const CVec2 vR1t( t1t - circle.center );						// transformed radius to tangent point 1
-		const CVec2 vR2t( t2t - circle.center );						// transformed radius to tangent point 2
-		const CVec2 vTangent1( x1t - t1t );			// tangent line 1
-		const CVec2 vTangent2( x1t - t2t );			// tangent line 2
+		const CVec2 vR1t( t1t - circle.center ); // transformed radius to tangent point 1
+		const CVec2 vR2t( t2t - circle.center ); // transformed radius to tangent point 2
+		const CVec2 vTangent1( x1t - t1t );      // tangent line 1
+		const CVec2 vTangent2( x1t - t2t );      // tangent line 2
 
-		const CVec2 vR0t( - circle.center );		// transformed radius vector of x0
+		const CVec2 vR0t( -circle.center ); // transformed radius vector of x0
 		const CVec2 v0t( 1, 0 );
 
 		// ---- correct up to there ---
@@ -182,14 +183,14 @@ bool CPathFractionArcLine3D::TryCircle( const CVec3 &x0, const CVec3 &v0, const 
 		if ( boost::math::sign( vR1t.y * vTangent1.x - vR1t.x * vTangent1.y ) == -1 ) //nCircleSign )
 		{
 			// if it is so, then 1st tangent - is needed tangent
-			const int nDiff = DirectedDirsDifference( vR0t, vR1t, -1 );//nCircleSign );
+			const int nDiff = DirectedDirsDifference( vR0t, vR1t, -1 ); //nCircleSign );
 			*vT = i * t1t.x + j * t1t.y + x0;
 			pArc->Init( i, j, k, circle, x0, *vT, fR * 2.0f * PI * nDiff / 65535.0f, nDiff );
 		}
 		else
 		{
 			// else, 2nd line is needed tangent
-			const int nDiff = DirectedDirsDifference( vR0t, vR2t, -1 );//nCircleSign );
+			const int nDiff = DirectedDirsDifference( vR0t, vR2t, -1 ); //nCircleSign );
 			*vT = i * t2t.x + j * t2t.y + x0;
 			pArc->Init( i, j, k, circle, x0, *vT, fR * 2.0f * PI * nDiff / 65535.0f, nDiff );
 		}

@@ -7,8 +7,8 @@
 
 namespace NDb
 {
-	struct SMedal;
-	struct SMultiplayerConsts;
+struct SMedal;
+struct SMultiplayerConsts;
 }
 
 class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
@@ -28,7 +28,7 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 		int nScore;
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CDBPtr<NDb::SMultiplayerConsts> pMPConsts;
 	CPtr<IWindow> pMain;
 	CPtr<IButton> pNextBtn;
@@ -45,7 +45,7 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 
 	CPtr<IWindow> pMedalPopup;
 	CPtr<IWindow> pRankPopup;
-	std::vector< CDBPtr<NDb::SMedal> > medals;
+	std::vector<CDBPtr<NDb::SMedal>> medals;
 	int nNextMedal;
 
 	std::list<SPlayerItemData> wonTeam;
@@ -64,7 +64,40 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 	CPtr<IProgressBar> pExpTotalProgress;
 
 	bool bWasLadderGame;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMPConsts); f.Add(3,&pMain); f.Add(4,&pNextBtn); f.Add(5,&pSaveReplayBtn); f.Add(6,&pPlayerNameView); f.Add(7,&pMissionTimeView); f.Add(8,&pHeaderWinView); f.Add(9,&pHeaderLostView); f.Add(10,&pPlayerList); f.Add(11,&pPlayerListDelimiter); f.Add(12,&pPlayerListItemTemplate); f.Add(13,&pMedalPopup); f.Add(14,&pRankPopup); f.Add(15,&medals); f.Add(16,&nNextMedal); f.Add(17,&wonTeam); f.Add(18,&lostTeam); f.Add(19,&pWaiting); f.Add(20,&pPlayerRankLabel); f.Add(21,&pPlayerRankView); f.Add(22,&pPlayerLevelLabel); f.Add(23,&pPlayerLevelView); f.Add(24,&pExpEarnedLabel); f.Add(25,&pExpEarnedView); f.Add(26,&pExpTotalLabel); f.Add(27,&pExpTotalView); f.Add(28,&pExpTotalProgress); f.Add(29,&bWasLadderGame); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMPConsts );
+		f.Add( 3, &pMain );
+		f.Add( 4, &pNextBtn );
+		f.Add( 5, &pSaveReplayBtn );
+		f.Add( 6, &pPlayerNameView );
+		f.Add( 7, &pMissionTimeView );
+		f.Add( 8, &pHeaderWinView );
+		f.Add( 9, &pHeaderLostView );
+		f.Add( 10, &pPlayerList );
+		f.Add( 11, &pPlayerListDelimiter );
+		f.Add( 12, &pPlayerListItemTemplate );
+		f.Add( 13, &pMedalPopup );
+		f.Add( 14, &pRankPopup );
+		f.Add( 15, &medals );
+		f.Add( 16, &nNextMedal );
+		f.Add( 17, &wonTeam );
+		f.Add( 18, &lostTeam );
+		f.Add( 19, &pWaiting );
+		f.Add( 20, &pPlayerRankLabel );
+		f.Add( 21, &pPlayerRankView );
+		f.Add( 22, &pPlayerLevelLabel );
+		f.Add( 23, &pPlayerLevelView );
+		f.Add( 24, &pExpEarnedLabel );
+		f.Add( 25, &pExpEarnedView );
+		f.Add( 26, &pExpTotalLabel );
+		f.Add( 27, &pExpTotalView );
+		f.Add( 28, &pExpTotalProgress );
+		f.Add( 29, &bWasLadderGame );
+		return 0;
+	}
+
 private:
 	void MakeInterior();
 	void FillTeams();
@@ -80,6 +113,7 @@ private:
 	bool OnSaveReplay();
 	void ShowLevelPopup( int nLevel, int nLevelOld, int nCountry, int nRank, int nRankOld );
 	void ShowMedalPopup( const NDb::SMedal *pMedal );
+
 public:
 	CInterfaceMPStatistics();
 
@@ -97,6 +131,7 @@ class CICMPStatistics : public CInterfaceCommandBase<CInterfaceMPStatistics>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

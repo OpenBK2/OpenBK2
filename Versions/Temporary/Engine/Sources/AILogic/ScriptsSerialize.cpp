@@ -14,7 +14,6 @@ int CScripts::operator&( IBinSaver &saver )
 		pScripts = this;
 	}
 
-
 	saver.Add( 3, &groups );
 	saver.Add( 4, &pConsole );
 	saver.Add( 10, &areas );

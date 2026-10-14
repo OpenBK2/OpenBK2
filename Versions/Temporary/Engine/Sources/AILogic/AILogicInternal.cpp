@@ -49,7 +49,6 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "System/RandomGen.h"
 #include "System/Text.h"
 
-
 //#include "../SCeneB2/AIDebugInfo.h"
 #include "UISpecificB2/UISpecificB2.h"
 
@@ -116,7 +115,7 @@ CBalanceTest theBalanceTest;
 IAIScenarioTracker *GetScenarioTracker()
 {
 	//CRAP{ FOR SAVES COMPATIBILITY
-	IAIScenarioTracker * p = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GetScenarioTracker();
+	IAIScenarioTracker *p = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetScenarioTracker();
 	if ( p )
 		return p;
 	return Singleton<IAIScenarioTracker>();
@@ -139,7 +138,8 @@ void CAILogic::PickedObj( const int nObjID )
 			{
 				IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 				if ( pStatsSystemWindow )
-					pStatsSystemWindow->UpdateEntry( L"Pick", NStr::ToUnicode(std::to_string( pObj->GetUniqueId() )), 0xff00ff00 );
+					pStatsSystemWindow->UpdateEntry(
+							L"Pick", NStr::ToUnicode( std::to_string( pObj->GetUniqueId() ) ), 0xff00ff00 );
 			}
 		}
 	}
@@ -157,7 +157,8 @@ void CAILogic::PickEmpty()
 }
 
 CAILogic::CAILogic()
-: timeLocalPlayerUnitCheck( 0 ), bLocalPlayerUnitsPresent( false ), timeLastMiniMapUpdateUnits( 0 ), bNeedNewGroupNumber( true )
+		: timeLocalPlayerUnitCheck( 0 ), bLocalPlayerUnitsPresent( false ), timeLastMiniMapUpdateUnits( 0 ),
+			bNeedNewGroupNumber( true )
 {
 	CScripts::RegisterScriptForSaveLoad();
 	bMissionLoaded = false;
@@ -168,7 +169,7 @@ CAILogic::~CAILogic()
 	ClearAI();
 }
 
-ITerraAIObserver* CAILogic::CreateTerraAIObserver( const int nSizeX, const int nSizeY )
+ITerraAIObserver *CAILogic::CreateTerraAIObserver( const int nSizeX, const int nSizeY )
 {
 	pAIMap = new CAIMap( nSizeX, nSizeY, SAIConsts::TILE_SIZE, SConsts::MAX_UNIT_TILE_RADIUS, SAIConsts::MAX_MAP_SIZE );
 	SetAIMap( pAIMap );
@@ -196,11 +197,13 @@ void CAILogic::ClearAI()
 	ConstructorInfo() = 0;
 }
 
-bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *linksInfo, const SMechUnitRPGStats **pNewStats ) const
+bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object,
+                                      LinkInfo *linksInfo,
+                                      const SMechUnitRPGStats **pNewStats ) const
 {
 	if ( !theDipl.IsNetGame() )
 	{
-		CDBPtr<SUnitBaseRPGStats> pStats = checked_cast<const SUnitBaseRPGStats*>( object.pObject.GetPtr() );
+		CDBPtr<SUnitBaseRPGStats> pStats = checked_cast<const SUnitBaseRPGStats *>( object.pObject.GetPtr() );
 
 		// транспорт и с кем-то линкуется
 		if ( pStats->IsTransport() && object.link.nLinkWith > 0 )
@@ -209,7 +212,7 @@ bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *li
 			// найден объект, с которым линкуется
 			if ( pObj )
 			{
-				CArtillery *pArtillery = dynamic_cast<CArtillery*>( pObj );
+				CArtillery *pArtillery = dynamic_cast<CArtillery *>( pObj );
 
 				// линкуется с артиллерией
 				if ( pArtillery )
@@ -218,7 +221,7 @@ bool CAILogic::CheckForScenarioTruck( const SMapObjectInfo &object, LinkInfo *li
 						return false;
 
 					// артиллерия сценарийная, нужно заменить на подходяцщий грузовик
-/*
+					/*
 					if ( pArtillery->GetScenarioUnit() )
 					{
 						*pNewStats = 0;
@@ -251,12 +254,17 @@ void CAILogic::SendAcknowlegdementForced( CObjectBase *pObj, const EUnitAckType 
 {
 	if ( pObj && pObj->IsRefValid() )
 	{
-		CCommonUnit *pUnit = checked_cast<CCommonUnit*>( pObj );
+		CCommonUnit *pUnit = checked_cast<CCommonUnit *>( pObj );
 		pUnit->SendAcknowledgement( eAck, true );
 	}
 }
 
-CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &object, LinkInfo *linksInfo, bool bInitialization, const SHPObjectRPGStats *pPassedStats, EReinforcementType eType )
+CObjectBase *CAILogic::AddObject( const int nUniqueID,
+                                  const SMapObjectInfo &object,
+                                  LinkInfo *linksInfo,
+                                  bool bInitialization,
+                                  const SHPObjectRPGStats *pPassedStats,
+                                  EReinforcementType eType )
 {
 	CUpdatableObj *pResult = 0;
 
@@ -264,22 +272,28 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 	if ( object.pObject == 0 )
 		return 0;
 
-	NI_ASSERT( object.pObject->GetTypeID() != NDb::SInfantryRPGStats::typeID, "Trying to add bare infantry w/o squad - ignoring" );
+	NI_ASSERT( object.pObject->GetTypeID() != NDb::SInfantryRPGStats::typeID,
+	           "Trying to add bare infantry w/o squad - ignoring" );
 	if ( object.pObject->GetTypeID() == NDb::SInfantryRPGStats::typeID )
 		return 0;
 
 	{
 		const bool bGoodVisObj = object.pObject->pvisualObject != 0 ||
-			object.pObject->GetTypeID() == NDb::SSquadRPGStats::typeID ||
-			object.pObject->GetTypeID() == NDb::SBridgeRPGStats::typeID ||
-			object.pObject->GetTypeID() == NDb::SFenceRPGStats::typeID ||
-			object.pObject->GetTypeID() == NDb::SEntrenchmentRPGStats::typeID;
-		NI_ASSERT( bGoodVisObj , fmt::format( "object (ID = \"{}\") of type \"{}\" with empty visual part, ignoring", NDb::GetResName(object.pObject), typeid(*object.pObject.GetPtr()).name() ) );
+		                         object.pObject->GetTypeID() == NDb::SSquadRPGStats::typeID ||
+		                         object.pObject->GetTypeID() == NDb::SBridgeRPGStats::typeID ||
+		                         object.pObject->GetTypeID() == NDb::SFenceRPGStats::typeID ||
+		                         object.pObject->GetTypeID() == NDb::SEntrenchmentRPGStats::typeID;
+		NI_ASSERT( bGoodVisObj,
+		           fmt::format( "object (ID = \"{}\") of type \"{}\" with empty visual part, ignoring",
+		                        NDb::GetResName( object.pObject ),
+		                        typeid( *object.pObject.GetPtr() ).name() ) );
 		if ( !bGoodVisObj )
 			return 0;
 	}
-	bool bNotAllowedObject = !GetAIMap()->IsPointInside( CVec2( object.vPos.x,object.vPos.y ) ) && object.pObject->GetTypeID() != NDb::SMechUnitRPGStats::typeID &&
-														object.pObject->GetTypeID() != NDb::SSquadRPGStats::typeID && object.pObject->GetTypeID() != NDb::SInfantryRPGStats::typeID ;
+	bool bNotAllowedObject = !GetAIMap()->IsPointInside( CVec2( object.vPos.x, object.vPos.y ) ) &&
+	                         object.pObject->GetTypeID() != NDb::SMechUnitRPGStats::typeID &&
+	                         object.pObject->GetTypeID() != NDb::SSquadRPGStats::typeID &&
+	                         object.pObject->GetTypeID() != NDb::SInfantryRPGStats::typeID;
 	// check if object is inside map
 	NI_ASSERT( !bNotAllowedObject, "object is outside map, deleting. see next assert about object number in MapInfo" );
 	if ( bNotAllowedObject )
@@ -300,40 +314,73 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 					int id = 0;
 					if ( pNewStats != 0 )
 					{
-						if ( GetAIMap()->IsPointInside( CVec2( object.vPos.x,object.vPos.y ) ) )
+						if ( GetAIMap()->IsPointInside( CVec2( object.vPos.x, object.vPos.y ) ) )
 						{
-							const float z = ( pNewStats->IsAviation() ) ? object.vPos.z  : object.vPos.z + GetHeights()->GetVisZ( object.vPos.x, object.vPos.y );
-							const EReinforcementType eTempType = eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( pNewStats->etype ) : eType;
-							id = theUnitCreation.AddNewUnit( nUniqueID, pNewStats, object.fHP, object.vPos.x, object.vPos.y, z, wDir, nPlayer, true, true, eTempType );
+							const float z = ( pNewStats->IsAviation() )
+							                    ? object.vPos.z
+							                    : object.vPos.z + GetHeights()->GetVisZ( object.vPos.x, object.vPos.y );
+							const EReinforcementType eTempType =
+									eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( pNewStats->etype ) : eType;
+							id = theUnitCreation.AddNewUnit( nUniqueID,
+							                                 pNewStats,
+							                                 object.fHP,
+							                                 object.vPos.x,
+							                                 object.vPos.y,
+							                                 z,
+							                                 wDir,
+							                                 nPlayer,
+							                                 true,
+							                                 true,
+							                                 eTempType );
 						}
 					}
 					else if ( pPassedStats != 0 )
 					{
-						NI_ASSERT( dynamic_cast<const SUnitBaseRPGStats*>(pPassedStats) != 0, fmt::format( "Unit expected, passed object ({})", pPassedStats->szKeyName.c_str() ) );
-						const SUnitBaseRPGStats *pStats = checked_cast<const SUnitBaseRPGStats*>(pPassedStats);
-						NI_ASSERT( pStats->IsAviation() || GetAIMap()->IsPointInside( CVec2( object.vPos.x,object.vPos.y ) ), "ground unit is outside map" );
-						if ( pStats->IsAviation() || GetAIMap()->IsPointInside( CVec2( object.vPos.x,object.vPos.y ) ) )
+						NI_ASSERT( dynamic_cast<const SUnitBaseRPGStats *>( pPassedStats ) != 0,
+						           fmt::format( "Unit expected, passed object ({})", pPassedStats->szKeyName.c_str() ) );
+						const SUnitBaseRPGStats *pStats = checked_cast<const SUnitBaseRPGStats *>( pPassedStats );
+						NI_ASSERT( pStats->IsAviation() || GetAIMap()->IsPointInside( CVec2( object.vPos.x, object.vPos.y ) ),
+						           "ground unit is outside map" );
+						if ( pStats->IsAviation() || GetAIMap()->IsPointInside( CVec2( object.vPos.x, object.vPos.y ) ) )
 						{
-							const float z = ( pStats->IsAviation() ) ? object.vPos.z  : object.vPos.z + GetHeights()->GetVisZ( object.vPos.x, object.vPos.y );
-							const EReinforcementType eTempType = eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( pStats->etype ) : eType;
-							id = theUnitCreation.AddNewUnit( nUniqueID, pStats,	object.fHP,	object.vPos.x, object.vPos.y,	z, wDir, nPlayer,	true, true, eTempType );
+							const float z = ( pStats->IsAviation() )
+							                    ? object.vPos.z
+							                    : object.vPos.z + GetHeights()->GetVisZ( object.vPos.x, object.vPos.y );
+							const EReinforcementType eTempType =
+									eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( pStats->etype ) : eType;
+							id = theUnitCreation.AddNewUnit( nUniqueID,
+							                                 pStats,
+							                                 object.fHP,
+							                                 object.vPos.x,
+							                                 object.vPos.y,
+							                                 z,
+							                                 wDir,
+							                                 nPlayer,
+							                                 true,
+							                                 true,
+							                                 eTempType );
 						}
 					}
 					else
 					{
-						const SUnitBaseRPGStats *pStats = checked_cast<const SUnitBaseRPGStats*>( object.pObject.GetPtr() );
-						const float z = ( pStats->IsAviation() ) ? object.vPos.z  : object.vPos.z + GetHeights()->GetVisZ( object.vPos.x, object.vPos.y );
-						const EReinforcementType eTempType = eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( checked_cast<const SUnitBaseRPGStats*>( object.pObject.GetPtr() )->etype ) : eType;
-						id = theUnitCreation.AddNewUnit( nUniqueID, pStats, object.fHP, object.vPos.x, object.vPos.y, z, wDir, nPlayer, true, true, eTempType );
+						const SUnitBaseRPGStats *pStats = checked_cast<const SUnitBaseRPGStats *>( object.pObject.GetPtr() );
+						const float z = ( pStats->IsAviation() )
+						                    ? object.vPos.z
+						                    : object.vPos.z + GetHeights()->GetVisZ( object.vPos.x, object.vPos.y );
+						const EReinforcementType eTempType =
+								eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType(
+																				checked_cast<const SUnitBaseRPGStats *>( object.pObject.GetPtr() )->etype )
+																	: eType;
+						id = theUnitCreation.AddNewUnit(
+								nUniqueID, pStats, object.fHP, object.vPos.x, object.vPos.y, z, wDir, nPlayer, true, true, eTempType );
 					}
 					if ( id != 0 )
 					{
 						pResult = CAIUnit::GetUnitByUniqueID( id );
 						scripts.AddObjToScriptGroup( CAIUnit::GetUnitByUniqueID( id ), object.nScriptID );
 
-						if ( !NGlobal::GetVar( "nogeneral", 0 ) &&
-								!theDipl.IsNetGame() &&
-								!bInitialization && theSupremeBeing.IsMobileReinforcement( theDipl.GetNParty(nPlayer), object.nScriptID ) )
+						if ( !NGlobal::GetVar( "nogeneral", 0 ) && !theDipl.IsNetGame() && !bInitialization &&
+						     theSupremeBeing.IsMobileReinforcement( theDipl.GetNParty( nPlayer ), object.nScriptID ) )
 							theSupremeBeing.AddReinforcement( CAIUnit::GetUnitByUniqueID( id ) );
 					}
 				}
@@ -346,9 +393,9 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 		{
 			if ( theDipl.IsPlayerExist( object.nPlayer ) )
 			{
-				CDBPtr<SSquadRPGStats> pStats = checked_cast<const SSquadRPGStats*>(pPassedStats);
+				CDBPtr<SSquadRPGStats> pStats = checked_cast<const SSquadRPGStats *>( pPassedStats );
 				if ( pStats == 0 )
-					pStats = checked_cast<const SSquadRPGStats*>( object.pObject.GetPtr() );
+					pStats = checked_cast<const SSquadRPGStats *>( object.pObject.GetPtr() );
 
 				const uint16_t wDir = object.nDir;
 				const int nFormation = object.nFrameIndex == -1 ? 0 : object.nFrameIndex;
@@ -356,13 +403,27 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 				if ( !pStats->members.empty() && pStats->members[0] != 0 )
 				{
 					//cheat for paratroopers (elite) squads
-					const NDb::EReinforcementType eReinfType = eType == NDb::RT_PARATROOPS ? eType : NReinforcement::GetReinforcementTypeByUnitRPGType( pStats->members[0]->etype );
-					pResult = theUnitCreation.AddNewFormation( pStats, nFormation, object.fHP, object.vPos.x,
-																										 object.vPos.y, GetHeights()->GetVisZ( object.vPos.x, object.vPos.y ), wDir, nPlayer, true, true, -1, eReinfType );
+					const NDb::EReinforcementType eReinfType =
+							eType == NDb::RT_PARATROOPS
+									? eType
+									: NReinforcement::GetReinforcementTypeByUnitRPGType( pStats->members[0]->etype );
+					pResult = theUnitCreation.AddNewFormation( pStats,
+					                                           nFormation,
+					                                           object.fHP,
+					                                           object.vPos.x,
+					                                           object.vPos.y,
+					                                           GetHeights()->GetVisZ( object.vPos.x, object.vPos.y ),
+					                                           wDir,
+					                                           nPlayer,
+					                                           true,
+					                                           true,
+					                                           -1,
+					                                           eReinfType );
 				}
 				else
 				{
-					NI_ASSERT( !pStats->members.empty() && pStats->members[0] != 0, fmt::format("Invalid squad \"{}\" - empty or invalid members list", NDb::GetResName(pStats)) );
+					NI_ASSERT( !pStats->members.empty() && pStats->members[0] != 0,
+					           fmt::format( "Invalid squad \"{}\" - empty or invalid members list", NDb::GetResName( pStats ) ) );
 					pResult = 0;
 				}
 				// pResult can be null in the case of incorrect squad <= defensive programming
@@ -377,9 +438,10 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 		{
 			if ( theCheats.GetLoadObjects() )
 			{
-				CDBPtr<SBuildingRPGStats> pStats = checked_cast<const SBuildingRPGStats*>(object.pObject.GetPtr());
+				CDBPtr<SBuildingRPGStats> pStats = checked_cast<const SBuildingRPGStats *>( object.pObject.GetPtr() );
 
-				pResult = theStatObjs.AddNewBuilding( pStats, object.fHP, object.vPos, object.nDir, object.nFrameIndex, nPlayer, object.link.nLinkID );
+				pResult = theStatObjs.AddNewBuilding(
+						pStats, object.fHP, object.vPos, object.nDir, object.nFrameIndex, nPlayer, object.link.nLinkID );
 				scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 				break;
 			}
@@ -388,9 +450,10 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 
 		case SGVOGT_ENTRENCHMENT:
 		{
-			CDBPtr<SEntrenchmentRPGStats> pStats = checked_cast<const SEntrenchmentRPGStats*>( object.pObject.GetPtr() );
+			CDBPtr<SEntrenchmentRPGStats> pStats = checked_cast<const SEntrenchmentRPGStats *>( object.pObject.GetPtr() );
 
-			pResult = theStatObjs.AddNewEntrencmentPart( pStats, object.fHP, object.vPos, object.nDir, object.nFrameIndex, object.nPlayer, false );
+			pResult = theStatObjs.AddNewEntrencmentPart(
+					pStats, object.fHP, object.vPos, object.nDir, object.nFrameIndex, object.nPlayer, false );
 			scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 
 			break;
@@ -400,8 +463,9 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 		{
 			if ( theCheats.GetLoadObjects() )
 			{
-				CDBPtr<SMineRPGStats> pStats = checked_cast<const SMineRPGStats*>( object.pObject.GetPtr() );
-	  		pResult = checked_cast<CUpdatableObj*>( theStatObjs.AddNewMine( pStats, object.fHP, object.vPos, object.nFrameIndex, object.nPlayer ) );
+				CDBPtr<SMineRPGStats> pStats = checked_cast<const SMineRPGStats *>( object.pObject.GetPtr() );
+				pResult = checked_cast<CUpdatableObj *>(
+						theStatObjs.AddNewMine( pStats, object.fHP, object.vPos, object.nFrameIndex, object.nPlayer ) );
 				scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 			}
 
@@ -412,10 +476,11 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 		{
 			if ( theCheats.GetLoadObjects() )
 			{
-				CDBPtr<SObjectBaseRPGStats> pObjDesc = checked_cast<const SObjectBaseRPGStats*>( object.pObject.GetPtr() );
+				CDBPtr<SObjectBaseRPGStats> pObjDesc = checked_cast<const SObjectBaseRPGStats *>( object.pObject.GetPtr() );
 
 				if ( object.pObject->eVisType == SGVOT_MESH )
-					pResult = theStatObjs.AddNewTerraMeshObj( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
+					pResult =
+							theStatObjs.AddNewTerraMeshObj( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
 				else
 					pResult = theStatObjs.AddNewTerraObj( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
 
@@ -427,9 +492,9 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 
 		case SGVOGT_BRIDGE:
 		{
-			CDBPtr<SBridgeRPGStats> pObjDesc = static_cast<const SBridgeRPGStats*>( pPassedStats );
+			CDBPtr<SBridgeRPGStats> pObjDesc = static_cast<const SBridgeRPGStats *>( pPassedStats );
 			if ( pObjDesc == 0 )
-				pObjDesc = checked_cast<const SBridgeRPGStats*>( object.pObject.GetPtr() );
+				pObjDesc = checked_cast<const SBridgeRPGStats *>( object.pObject.GetPtr() );
 			pResult = theStatObjs.AddNewBridgeSpan( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
 			scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 
@@ -440,19 +505,21 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 		{
 			if ( theCheats.GetLoadObjects() )
 			{
-				CDBPtr<SFenceRPGStats> pObjDesc = static_cast<const SFenceRPGStats*>( pPassedStats );
+				CDBPtr<SFenceRPGStats> pObjDesc = static_cast<const SFenceRPGStats *>( pPassedStats );
 				if ( pObjDesc == 0 )
-					pObjDesc = checked_cast<const SFenceRPGStats*>( object.pObject.GetPtr() );
-//				NI_ASSERT( object.nFrameIndex != -1, StrFmt("Can't add fence (linkID = %d) with frame index -1", object.link.nLinkID) );
+					pObjDesc = checked_cast<const SFenceRPGStats *>( object.pObject.GetPtr() );
+				//				NI_ASSERT( object.nFrameIndex != -1, StrFmt("Can't add fence (linkID = %d) with frame index -1", object.link.nLinkID) );
 				if ( object.nFrameIndex != -1 )
 				{
 					//pResult = theStatObjs.AddNewFenceObject( pObjDesc, object.fHP, object.vPos, object.nDir, object.nPlayer, false );
-					pResult = theStatObjs.AddNewFenceObject( pObjDesc, object.fHP, object.vPos, object.nDir, object.nPlayer, object.nFrameIndex );
+					pResult = theStatObjs.AddNewFenceObject(
+							pObjDesc, object.fHP, object.vPos, object.nDir, object.nPlayer, object.nFrameIndex );
 					scripts.AddObjToScriptGroup( pResult, object.nScriptID );
 				}
 				else
 				{
-					NI_ASSERT( object.nFrameIndex != -1, fmt::format("Can't add fence \"{}\" with frame index -1", NDb::GetResName(object.pObject)) );
+					NI_ASSERT( object.nFrameIndex != -1,
+					           fmt::format( "Can't add fence \"{}\" with frame index -1", NDb::GetResName( object.pObject ) ) );
 				}
 			}
 
@@ -472,20 +539,23 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 		{
 			if ( theCheats.GetLoadObjects() )
 			{
-				NI_ASSERT( dynamic_cast<const SInfantryRPGStats*>( pPassedStats ) == 0,	"Soldier witout squad on map." );
-				NI_ASSERT( dynamic_cast_ptr<const SInfantryRPGStats*>( object.pObject ) == 0, "Soldier witout squad on map." );
+				NI_ASSERT( dynamic_cast<const SInfantryRPGStats *>( pPassedStats ) == 0, "Soldier witout squad on map." );
+				NI_ASSERT( dynamic_cast_ptr<const SInfantryRPGStats *>( object.pObject ) == 0, "Soldier witout squad on map." );
 
 				if ( pPassedStats == 0 )
 					pPassedStats = object.pObject;
-				if ( pPassedStats != 0 && dynamic_cast<const SObjectBaseRPGStats*>(pPassedStats) == 0 )
+				if ( pPassedStats != 0 && dynamic_cast<const SObjectBaseRPGStats *>( pPassedStats ) == 0 )
 				{
-					NI_ASSERT( dynamic_cast<const SObjectBaseRPGStats*>(pPassedStats) != 0, fmt::format("Incorrect object \"{}\" of type \"{}\" - trying to treat as simple object", NDb::GetResName(pPassedStats), typeid(*pPassedStats).name()) );
+					NI_ASSERT( dynamic_cast<const SObjectBaseRPGStats *>( pPassedStats ) != 0,
+					           fmt::format( "Incorrect object \"{}\" of type \"{}\" - trying to treat as simple object",
+					                        NDb::GetResName( pPassedStats ),
+					                        typeid( *pPassedStats ).name() ) );
 					return 0;
 				}
 
-				CDBPtr<SObjectBaseRPGStats> pObjDesc = checked_cast<const SObjectBaseRPGStats*>( pPassedStats );
+				CDBPtr<SObjectBaseRPGStats> pObjDesc = checked_cast<const SObjectBaseRPGStats *>( pPassedStats );
 				if ( pObjDesc == 0 )
-					pObjDesc = checked_cast<const SObjectBaseRPGStats*>( object.pObject.GetPtr() );
+					pObjDesc = checked_cast<const SObjectBaseRPGStats *>( object.pObject.GetPtr() );
 				if ( !pObjDesc )
 					return 0;
 				pResult = theStatObjs.AddNewStaticObject( pObjDesc, object.fHP, object.vPos, object.nDir, object.nFrameIndex );
@@ -498,12 +568,13 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 
 	if ( pResult != 0 )
 	{
-		NI_ASSERT( dynamic_cast<CLinkObject*>( pResult ) != 0, fmt::format("Wrong object of type \"{}\" created - CLinkObject expected", typeid(*pResult).name()) );
-		CLinkObject *pLinkResult = checked_cast<CLinkObject*>( pResult );
+		NI_ASSERT( dynamic_cast<CLinkObject *>( pResult ) != 0,
+		           fmt::format( "Wrong object of type \"{}\" created - CLinkObject expected", typeid( *pResult ).name() ) );
+		CLinkObject *pLinkResult = checked_cast<CLinkObject *>( pResult );
 		pLinkResult->SetLink( object.link.nLinkID );
 
 		if ( linksInfo != 0 && pLinkResult->GetUniqueId() != 0 )
-			(*linksInfo)[pLinkResult->GetUniqueId()] = object.link;
+			( *linksInfo )[pLinkResult->GetUniqueId()] = object.link;
 	}
 
 	return pResult;
@@ -512,7 +583,7 @@ CObjectBase* CAILogic::AddObject( const int nUniqueID, const SMapObjectInfo &obj
 void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 {
 	std::list<int> transports;
-//	ConstructorInfo() = Singleton<CConstructorInfo>();
+	//	ConstructorInfo() = Singleton<CConstructorInfo>();
 	for ( int i = 0; i < pMapInfo->objects.size(); ++i )
 	{
 		if ( pProgress )
@@ -524,8 +595,12 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		if ( pMapInfo->objects[i].pObject->GetTypeID() == NDb::SMechUnitRPGStats::typeID )
 		{
 			const NDb::EDBUnitRPGType eUnitRPGType =
-				checked_cast_ptr<const NDb::SUnitBaseRPGStats*>(pMapInfo->objects[i].pObject)->eDBtype;
-			NI_ASSERT( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER, fmt::format("Object {} (MechUnit \"{}\") in the map \"{}\" are treated as Infantry", i, NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo)) );
+					checked_cast_ptr<const NDb::SUnitBaseRPGStats *>( pMapInfo->objects[i].pObject )->eDBtype;
+			NI_ASSERT( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER,
+			           fmt::format( "Object {} (MechUnit \"{}\") in the map \"{}\" are treated as Infantry",
+			                        i,
+			                        NDb::GetResName( pMapInfo->objects[i].pObject ),
+			                        NDb::GetResName( pMapInfo ) ) );
 			if ( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER )
 				continue;
 			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
@@ -534,8 +609,12 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		else if ( pMapInfo->objects[i].pObject->GetTypeID() == NDb::SInfantryRPGStats::typeID )
 		{
 			const NDb::EDBUnitRPGType eUnitRPGType =
-				checked_cast_ptr<const NDb::SUnitBaseRPGStats*>(pMapInfo->objects[i].pObject)->eDBtype;
-			NI_ASSERT( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER, fmt::format("Object {} (Infantry \"{}\") in the map \"{}\" are treated as MechUnit", i, NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo)) );
+					checked_cast_ptr<const NDb::SUnitBaseRPGStats *>( pMapInfo->objects[i].pObject )->eDBtype;
+			NI_ASSERT( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER,
+			           fmt::format( "Object {} (Infantry \"{}\") in the map \"{}\" are treated as MechUnit",
+			                        i,
+			                        NDb::GetResName( pMapInfo->objects[i].pObject ),
+			                        NDb::GetResName( pMapInfo ) ) );
 			if ( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER )
 				continue;
 			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
@@ -546,17 +625,24 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		// в reinforcement
 		const int nGroup = pMapInfo->reinforcements.GetGroupById( pMapInfo->objects[i].nScriptID );
 		if ( nGroup != -1 )
-			scripts.AddUnitToReinforcGroup( pMapInfo->objects[i], nGroup, 0/*, 0 */);
+			scripts.AddUnitToReinforcGroup( pMapInfo->objects[i], nGroup, 0 /*, 0 */ );
 		else
 		{
-			const SUnitBaseRPGStats *pStats = dynamic_cast_ptr<const SUnitBaseRPGStats*>( pMapInfo->objects[i].pObject );
+			const SUnitBaseRPGStats *pStats = dynamic_cast_ptr<const SUnitBaseRPGStats *>( pMapInfo->objects[i].pObject );
 
 			if ( !pStats || !pStats->IsTransport() )
 			{
 				const int nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 
 				CObjectBase *pObj = AddObject( nUniqueID, pMapInfo->objects[i], linksInfo, true, 0 );
-				NI_ASSERT( pObj != 0, fmt::format( "Failed to add {} object (\"{}\" : \"{}\") to map \"{}\" at ({:g}, {:g})", i, typeid(*pMapInfo->objects[i].pObject).name(), NDb::GetResName(pMapInfo->objects[i].pObject), NDb::GetResName(pMapInfo), pMapInfo->objects[i].vPos.x, pMapInfo->objects[i].vPos.y) );
+				NI_ASSERT( pObj != 0,
+				           fmt::format( "Failed to add {} object (\"{}\" : \"{}\") to map \"{}\" at ({:g}, {:g})",
+				                        i,
+				                        typeid( *pMapInfo->objects[i].pObject ).name(),
+				                        NDb::GetResName( pMapInfo->objects[i].pObject ),
+				                        NDb::GetResName( pMapInfo ),
+				                        pMapInfo->objects[i].vPos.x,
+				                        pMapInfo->objects[i].vPos.y ) );
 			}
 			else
 				transports.push_back( i );
@@ -566,23 +652,29 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 	for ( std::list<int>::iterator iter = transports.begin(); iter != transports.end(); ++iter )
 	{
 		const SMapObjectInfo &mapObj = pMapInfo->objects[*iter];
-		const SUnitBaseRPGStats *pStats = dynamic_cast_ptr<const SUnitBaseRPGStats*>( mapObj.pObject );
+		const SUnitBaseRPGStats *pStats = dynamic_cast_ptr<const SUnitBaseRPGStats *>( mapObj.pObject );
 
 		const int nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 		CObjectBase *pObj = AddObject( nUniqueID, mapObj, linksInfo, true, 0 );
-		NI_ASSERT( pObj != 0, fmt::format( "Failed to add {} object (\"{}\" : \"{}\") to map \"{}\" at ({:g}, {:g})", *iter, typeid(*mapObj.pObject).name(), NDb::GetResName(mapObj.pObject), NDb::GetResName(pMapInfo), mapObj.vPos.x, mapObj.vPos.y) );
+		NI_ASSERT( pObj != 0,
+		           fmt::format( "Failed to add {} object (\"{}\" : \"{}\") to map \"{}\" at ({:g}, {:g})",
+		                        *iter,
+		                        typeid( *mapObj.pObject ).name(),
+		                        NDb::GetResName( mapObj.pObject ),
+		                        NDb::GetResName( pMapInfo ),
+		                        mapObj.vPos.x,
+		                        mapObj.vPos.y ) );
 	}
-
 }
 
-void CAILogic::LinkArtilleryWithTransport( CArtillery * pArtillery, CAITransportUnit *pTransport )
+void CAILogic::LinkArtilleryWithTransport( CArtillery *pArtillery, CAITransportUnit *pTransport )
 {
 	// переместить артиллерию к пушке
 	pTransport->SetTowedArtillery( pArtillery );
 	pArtillery->SetBeingHooked( pTransport );
-	CFormation* pCrew = pArtillery->GetCrew();
+	CFormation *pCrew = pArtillery->GetCrew();
 	pTransport->SetTowedArtilleryCrew( pCrew );
-	pArtillery->SetDirection( 65535/2 + pTransport->GetFrontDirection() );
+	pArtillery->SetDirection( 65535 / 2 + pTransport->GetFrontDirection() );
 	pArtillery->CallUpdatePlacement();
 
 	const CVec2 vTransportHookPoint = pTransport->GetHookPoint();
@@ -597,7 +689,7 @@ void CAILogic::LinkArtilleryWithTransport( CArtillery * pArtillery, CAITransport
 
 	pArtillery->InstallAction( ACTION_NOTIFY_UNINSTALL_TRANSPORT, true );
 	updater.AddUpdate( 0, ACTION_NOTIFY_FINISH_UNINSTALL_TRANSPORT, pArtillery, 0 );
-	pArtillery->SetDirection( 65535/2 + pTransport->GetFrontDirection() );
+	pArtillery->SetDirection( 65535 / 2 + pTransport->GetFrontDirection() );
 	pArtillery->CallUpdatePlacement();
 	pArtillery->UpdateAmmoBoxVisibility( true, false );
 
@@ -609,13 +701,13 @@ void AdvanceSegments( CCommonUnit *pUnit )
 
 	if ( pUnit->IsFormation() )
 	{
-		CFormation *pFormation = static_cast<CFormation*>( pUnit );
+		CFormation *pFormation = static_cast<CFormation *>( pUnit );
 		pFormation->Segment();
 		pFormation->Segment();
 		for ( int i = 0; i < pFormation->Size(); ++i )
 		{
-			(*pFormation)[i]->Segment();
-			(*pFormation)[i]->Segment();
+			( *pFormation )[i]->Segment();
+			( *pFormation )[i]->Segment();
 		}
 	}
 	else
@@ -631,12 +723,12 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 	{
 		bool bTrain = false;
 
-		if ( CAIUnit *pTrainUnit = dynamic_cast<CAIUnit*>(CLinkObject::GetObjectByUniqueId( iter->first )) )
+		if ( CAIUnit *pTrainUnit = dynamic_cast<CAIUnit *>( CLinkObject::GetObjectByUniqueId( iter->first ) ) )
 		{
 			if ( pTrainUnit->GetStats()->IsTrain() )
 			{
 				bTrain = true;
-				CTrainCar *pTrainCar = dynamic_cast<CTrainCar*>( pTrainUnit );		// Train cars manage the linking
+				CTrainCar *pTrainCar = dynamic_cast<CTrainCar *>( pTrainUnit ); // Train cars manage the linking
 				if ( pTrainCar )
 				{
 					const SMapObjectInfo::SLinkInfo &link = linksInfo[pTrainUnit->GetUniqueId()];
@@ -645,7 +737,7 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 						CObjectBase *pObj = CLinkObject::GetObjectByLink( link.nLinkWith );
 						if ( pObj )
 						{
-							if ( CMilitaryCar *pMilitaryCar = dynamic_cast<CMilitaryCar*>( pObj ) )
+							if ( CMilitaryCar *pMilitaryCar = dynamic_cast<CMilitaryCar *>( pObj ) )
 							{
 								pTrainCar->LinkToCar( pMilitaryCar );
 							}
@@ -653,8 +745,9 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 								NI_ASSERT( false, "Wrong link" );
 						}
 						else
-							NI_ASSERT( false, fmt::format( "Wrong link, linked object does not exist for unit: {}",
-								pTrainUnit->GetStats() ? pTrainUnit->GetStats()->GetDBID().ToString() : "???" ) );
+							NI_ASSERT( false,
+							           fmt::format( "Wrong link, linked object does not exist for unit: {}",
+							                        pTrainUnit->GetStats() ? pTrainUnit->GetStats()->GetDBID().ToString() : "???" ) );
 					}
 				}
 			}
@@ -662,10 +755,13 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 
 		if ( !bTrain )
 		{
-			CExistingObject *pObj1 = dynamic_cast<CExistingObject*>( CLinkObject::GetObjectByUniqueId( iter->first ) );
-			CExistingObject *pObj2 = dynamic_cast<CExistingObject*>( CLinkObject::GetObjectByLink( iter->second.nLinkWith ) );
+			CExistingObject *pObj1 = dynamic_cast<CExistingObject *>( CLinkObject::GetObjectByUniqueId( iter->first ) );
+			CExistingObject *pObj2 =
+					dynamic_cast<CExistingObject *>( CLinkObject::GetObjectByLink( iter->second.nLinkWith ) );
 			// static objecta are linked (key-building and flag)
-			if ( pObj1 && pObj2 && ( theBonusSystem.IsKeyBuilding( iter->second.nLinkID ) || theBonusSystem.IsKeyBuilding( iter->second.nLinkWith ) ) )
+			if ( pObj1 && pObj2 &&
+			     ( theBonusSystem.IsKeyBuilding( iter->second.nLinkID ) ||
+			       theBonusSystem.IsKeyBuilding( iter->second.nLinkWith ) ) )
 			{
 				CBuildingSimple *pBld1 = dynamic_cast<CBuildingSimple *>( pObj1 );
 				CBuildingSimple *pBld2 = dynamic_cast<CBuildingSimple *>( pObj2 );
@@ -675,7 +771,7 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 					pBld2->SetPartyFlag( pObj1 );
 			}
 
-			if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>(CLinkObject::GetObjectByUniqueId( iter->first )) )
+			if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueId( iter->first ) ) )
 			{
 				const SMapObjectInfo::SLinkInfo &link = linksInfo[pUnit->GetUniqueId()];
 				// с кем-то линкуется и этот кто-то существует
@@ -685,9 +781,9 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 					if ( pObj )
 					{
 						//линковка грузовичка с пушкой
-						if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit*>( pObj ) )
+						if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit *>( pObj ) )
 						{
-							if ( CArtillery *pArtillery = dynamic_cast<CArtillery*>(pUnit) )
+							if ( CArtillery *pArtillery = dynamic_cast<CArtillery *>( pUnit ) )
 								LinkArtilleryWithTransport( pArtillery, pTransport );
 							// линкуются солдатики
 							else if ( pUnit->IsFormation() )
@@ -696,82 +792,98 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 
 								if ( !link.bIntention )
 								{
-									CFormation *pFormation = static_cast<CFormation*>( pUnit );
+									CFormation *pFormation = static_cast<CFormation *>( pUnit );
 									for ( int i = 0; i < pFormation->Size(); ++i )
 									{
-										theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_IDLE_TRANSPORT, pTransport->GetUniqueId() ), (*pFormation)[i], false );
-										(*pFormation)[i]->SetInTransport( pTransport );
-										pTransport->AddPassenger( (*pFormation)[i] );
+										theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_IDLE_TRANSPORT, pTransport->GetUniqueId() ),
+										                           ( *pFormation )[i],
+										                           false );
+										( *pFormation )[i]->SetInTransport( pTransport );
+										pTransport->AddPassenger( ( *pFormation )[i] );
 									}
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_IDLE_TRANSPORT, pTransport->GetUniqueId() ), pFormation, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_IDLE_TRANSPORT, pTransport->GetUniqueId() ), pFormation, false );
 								}
 								else
 								{
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_LOAD, pTransport->GetUniqueId() ), pUnit, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_LOAD, pTransport->GetUniqueId() ), pUnit, false );
 								}
 							}
-							else if ( CMilitaryCar * pCar = dynamic_cast<CMilitaryCar*>( pUnit ) )
+							else if ( CMilitaryCar *pCar = dynamic_cast<CMilitaryCar *>( pUnit ) )
 							{
-								if ( CMilitaryCar *pTransport = dynamic_cast<CMilitaryCar*>( pObj ) )
+								if ( CMilitaryCar *pTransport = dynamic_cast<CMilitaryCar *>( pObj ) )
 								{
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_MECH_ENTER_NOW, pTransport->GetUniqueId() ), pCar, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_MOVE_MECH_ENTER_NOW, pTransport->GetUniqueId() ), pCar, false );
 									AdvanceSegments( pCar );
 									AdvanceSegments( pTransport );
 								}
 							}
 						}
-						else if ( CArtillery *pArtillery = dynamic_cast<CArtillery*>( pObj ) )
+						else if ( CArtillery *pArtillery = dynamic_cast<CArtillery *>( pObj ) )
 						{
-							if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit*>(pUnit) )
+							if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit *>( pUnit ) )
 								LinkArtilleryWithTransport( pArtillery, pTransport );
 						}
 						// линковка с юнитом
-						else if ( CCommonUnit *pWithUnit = dynamic_cast<CCommonUnit*>(pObj) )
+						else if ( CCommonUnit *pWithUnit = dynamic_cast<CCommonUnit *>( pObj ) )
 						{
 							// линкуются солдатики
 							if ( pUnit->IsFormation() )
 							{
 								if ( link.bIntention )
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_LOAD, pWithUnit->GetUniqueId() ), pUnit, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_LOAD, pWithUnit->GetUniqueId() ), pUnit, false );
 								else
 								{
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_LOAD_NOW, pWithUnit->GetUniqueId() ), pUnit, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_LOAD_NOW, pWithUnit->GetUniqueId() ), pUnit, false );
 									AdvanceSegments( pUnit );
 								}
 							}
-							else if ( CMilitaryCar * pCar = dynamic_cast<CMilitaryCar*>( pUnit ) )
+							else if ( CMilitaryCar *pCar = dynamic_cast<CMilitaryCar *>( pUnit ) )
 							{
-								if ( CMilitaryCar *pTransport = dynamic_cast<CMilitaryCar*>( pObj ) )
+								if ( CMilitaryCar *pTransport = dynamic_cast<CMilitaryCar *>( pObj ) )
 								{
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_MECH_ENTER_NOW, pTransport->GetUniqueId() ), pCar, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_MOVE_MECH_ENTER_NOW, pTransport->GetUniqueId() ), pCar, false );
 									AdvanceSegments( pCar );
 									AdvanceSegments( pTransport );
 								}
 							}
 						}
 						// link with static object
-						else if ( CStaticObject *pStaticObj = dynamic_cast<CStaticObject*>( pObj ) )
+						else if ( CStaticObject *pStaticObj = dynamic_cast<CStaticObject *>( pObj ) )
 						{
 							// линковка с домиком
 							if ( pStaticObj->GetObjectType() == ESOT_BUILDING )
 							{
 								if ( link.bIntention )
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER, pStaticObj->GetUniqueId(), float(0) ), pUnit, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_ENTER, pStaticObj->GetUniqueId(), float( 0 ) ), pUnit, false );
 								else
 								{
-									CCommonUnit *pLoadingUnit = checked_cast<CCommonUnit*>(CLinkObject::GetObjectByUniqueId( iter->first ));
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER_BUILDING_NOW, pStaticObj->GetUniqueId() ), pLoadingUnit, false );
+									CCommonUnit *pLoadingUnit =
+											checked_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueId( iter->first ) );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_ENTER_BUILDING_NOW, pStaticObj->GetUniqueId() ), pLoadingUnit, false );
 								}
 							}
 							// линковка с окопом
 							else if ( pStaticObj->GetObjectType() == ESOT_ENTR_PART )
 							{
 								if ( link.bIntention )
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER, pStaticObj->GetUniqueId(), float(2) ), pUnit, false );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_ENTER, pStaticObj->GetUniqueId(), float( 2 ) ), pUnit, false );
 								else
 								{
-									CCommonUnit *pLoadingUnit = checked_cast<CCommonUnit*>(CLinkObject::GetObjectByUniqueId( iter->first ));
-									theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTER_ENTREHCMNENT_NOW, pStaticObj->GetUniqueId(), float(2) ), pLoadingUnit, false );
+									CCommonUnit *pLoadingUnit =
+											checked_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueId( iter->first ) );
+									theGroupLogic.UnitCommand(
+											SAIUnitCmd( ACTION_COMMAND_ENTER_ENTREHCMNENT_NOW, pStaticObj->GetUniqueId(), float( 2 ) ),
+											pLoadingUnit,
+											false );
 								}
 							}
 						}
@@ -795,37 +907,38 @@ void CAILogic::LoadEntrenchments( const std::vector<SEntrenchmentInfo> &entrench
 		CPtr<CFullEntrenchment> pFullEntrenchment = new CFullEntrenchment();
 		for ( int j = 0; j < entrenchments[i].sections.size(); ++j )
 		{
-			std::vector<CObjectBase*> segments;
+			std::vector<CObjectBase *> segments;
 			for ( int k = 0; k < entrenchments[i].sections[j].data.size(); ++k )
 			{
 				const int nLink = entrenchments[i].sections[j].data[k];
 				CLinkObject *pObj = CLinkObject::GetObjectByLink( nLink );
-				NI_ASSERT( pObj != 0, fmt::format("Section of entrenchment (link = {}) doesn't exist", nLink) );
+				NI_ASSERT( pObj != 0, fmt::format( "Section of entrenchment (link = {}) doesn't exist", nLink ) );
 				if ( pObj )
 					segments.push_back( pObj );
 			}
 
 			if ( segments.empty() )
 				continue;
-			theStatObjs.AddNewEntrencment( &(segments[0]), segments.size(), pFullEntrenchment );
+			theStatObjs.AddNewEntrencment( &( segments[0] ), segments.size(), pFullEntrenchment );
 		}
 	}
 }
 
-void CAILogic::LoadBridges( const std::vector< NDb::SIntArray > &bridgesInfo )
+void CAILogic::LoadBridges( const std::vector<NDb::SIntArray> &bridgesInfo )
 {
 	// по мостам
 	for ( int i = 0; i < bridgesInfo.size(); ++i )
 	{
-		std::list<CPtr<CBridgeSpan> > bridge;
+		std::list<CPtr<CBridgeSpan>> bridge;
 		// по пролётам
 		CPtr<CFullBridge> pFullBridge = new CFullBridge;
 		for ( int j = 0; j < bridgesInfo[i].data.size(); ++j )
 		{
 			NI_ASSERT( CLinkObject::GetObjectByLink( bridgesInfo[i].data[j] ) != 0, "Span of a bridge doesn't exist" );
-			NI_ASSERT( dynamic_cast<CBridgeSpan*>( CLinkObject::GetObjectByLink( bridgesInfo[i].data[j] ) ) != 0, "Wrong type of bridge span" );
+			NI_ASSERT( dynamic_cast<CBridgeSpan *>( CLinkObject::GetObjectByLink( bridgesInfo[i].data[j] ) ) != 0,
+			           "Wrong type of bridge span" );
 			// add span only in the case it exist (!)
-			if ( CBridgeSpan* pSpan = checked_cast<CBridgeSpan*>( CLinkObject::GetObjectByLink( bridgesInfo[i].data[j] ) ) )
+			if ( CBridgeSpan *pSpan = checked_cast<CBridgeSpan *>( CLinkObject::GetObjectByLink( bridgesInfo[i].data[j] ) ) )
 			{
 				pSpan->SetFullBrige( pFullBridge );
 				pFullBridge->AddSpan( pSpan );
@@ -841,14 +954,14 @@ void CAILogic::LoadBridges( const std::vector< NDb::SIntArray > &bridgesInfo )
 void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectBase **pUnitsBuffer, const int nSize )
 {
 	SAIUnitCmd cmd;
-	cmd.nCmdType = static_cast<EActionCommand>(startCommand.nCmdType);
+	cmd.nCmdType = static_cast<EActionCommand>( startCommand.nCmdType );
 	cmd.fNumber = startCommand.fNumber;
 	cmd.bFromExplosion = startCommand.bFromExplosion;
 	if ( CLinkObject *pObj = CLinkObject::GetObjectByLink( startCommand.nLinkID ) )
 		cmd.nObjectID = pObj->GetUniqueId();
 	cmd.vPos = startCommand.vPos;
 
-	const	uint16_t wGroup = theGroupLogic.GenerateGroupNumber();
+	const uint16_t wGroup = theGroupLogic.GenerateGroupNumber();
 	theGroupLogic.RegisterGroup( pUnitsBuffer, nSize, wGroup );
 	theGroupLogic.GroupCommand( cmd, wGroup, true );
 	theGroupLogic.UnregisterGroup( wGroup );
@@ -856,29 +969,29 @@ void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectB
 
 void CAILogic::InitStartCommands()
 {
-	for ( std::vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
+	for ( std::vector<SAIStartCommand>::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
 	{
 		if ( !iter->unitLinkIDs.empty() )
 		{
 			const int nSize = iter->unitLinkIDs.size();
-			std::vector<CObjectBase*> unitsBuffer( nSize );
+			std::vector<CObjectBase *> unitsBuffer( nSize );
 			for ( int i = 0; i < nSize; ++i )
 				unitsBuffer[i] = CLinkObject::GetObjectByLink( iter->unitLinkIDs[i] );
 
-			LaunchStartCommand( *iter, &(unitsBuffer[0]), nSize );
+			LaunchStartCommand( *iter, &( unitsBuffer[0] ), nSize );
 		}
 	}
 }
 
 void CAILogic::InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &old2NewLinks )
 {
-	for ( std::vector< SAIStartCommand >::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
+	for ( std::vector<SAIStartCommand>::const_iterator iter = startCmds.begin(); iter != startCmds.end(); ++iter )
 	{
 		if ( !iter->unitLinkIDs.empty() )
 		{
 			int nActuallyUnits = 0;
 			const int nSize = iter->unitLinkIDs.size();
-			std::vector<CObjectBase*> unitsBuffer( nSize );
+			std::vector<CObjectBase *> unitsBuffer( nSize );
 			for ( int i = 0; i < nSize; ++i )
 			{
 				const int nLink = iter->unitLinkIDs[i];
@@ -891,26 +1004,27 @@ void CAILogic::InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &
 			}
 
 			if ( nActuallyUnits != 0 )
-				LaunchStartCommand( *iter, &(unitsBuffer[0]), nSize );
+				LaunchStartCommand( *iter, &( unitsBuffer[0] ), nSize );
 		}
 	}
 }
 
 void CAILogic::InitReservePositions()
 {
-	for ( std::vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
+	for ( std::vector<SBattlePosition>::const_iterator iter = reservePositions.begin(); iter != reservePositions.end();
+	      ++iter )
 	{
 		CLinkObject *pLinkObject = CLinkObject::GetObjectByLink( iter->nArtilleryLinkID );
 		if ( pLinkObject && pLinkObject->IsRefValid() && pLinkObject->IsAlive() )
 		{
-			CAIUnit *pUnit = checked_cast<CAIUnit*>( pLinkObject );
+			CAIUnit *pUnit = checked_cast<CAIUnit *>( pLinkObject );
 			pUnit->SetBattlePos( iter->vPos );
 
 			// есть грузовичок, который таскает
 			CLinkObject *pLinkTruck = CLinkObject::GetObjectByLink( iter->nTruckLinkID );
 			if ( pLinkTruck && pLinkTruck->IsRefValid() && pLinkTruck->IsAlive() )
 			{
-				CAITransportUnit *pTruck = checked_cast<CAITransportUnit*>( pLinkTruck );
+				CAITransportUnit *pTruck = checked_cast<CAITransportUnit *>( pLinkTruck );
 				pTruck->SetMustTow( pUnit );
 				pUnit->SetTruck( pTruck );
 			}
@@ -920,7 +1034,8 @@ void CAILogic::InitReservePositions()
 
 void CAILogic::InitReservePositions( det_map<int, int> &old2NewLinks )
 {
-	for ( std::vector< SBattlePosition >::const_iterator iter = reservePositions.begin(); iter != reservePositions.end(); ++iter )
+	for ( std::vector<SBattlePosition>::const_iterator iter = reservePositions.begin(); iter != reservePositions.end();
+	      ++iter )
 	{
 		const int nArtilleryLink = iter->nArtilleryLinkID;
 		if ( old2NewLinks.find( nArtilleryLink ) != old2NewLinks.end() )
@@ -928,7 +1043,7 @@ void CAILogic::InitReservePositions( det_map<int, int> &old2NewLinks )
 			CLinkObject *pLinkObject = CLinkObject::GetObjectByLink( old2NewLinks[nArtilleryLink] );
 			if ( pLinkObject && pLinkObject->IsRefValid() && pLinkObject->IsAlive() )
 			{
-				CCommonUnit *pUnit = checked_cast<CCommonUnit*>( pLinkObject );
+				CCommonUnit *pUnit = checked_cast<CCommonUnit *>( pLinkObject );
 				pUnit->SetBattlePos( iter->vPos );
 
 				// есть грузовичок, который таскает
@@ -938,7 +1053,7 @@ void CAILogic::InitReservePositions( det_map<int, int> &old2NewLinks )
 					CLinkObject *pLinkTruck = CLinkObject::GetObjectByLink( old2NewLinks[nTruckLink] );
 					if ( pLinkTruck && pLinkTruck->IsRefValid() && pLinkTruck->IsAlive() )
 					{
-						CAIUnit *pTruck = checked_cast<CAIUnit*>( pLinkTruck );
+						CAIUnit *pTruck = checked_cast<CAIUnit *>( pLinkTruck );
 						pUnit->SetTruck( pTruck );
 					}
 				}
@@ -996,7 +1111,10 @@ void CAILogic::LogCheckSum( ICheckSumLog *_pCheckSumLog )
 	this->operator&( *pCheckSumSaver );
 }
 
-void CAILogic::Init( ICheckSumLog *_pCheckSumLog, const SMapInfo* pMapInfo, const NDb::SAIGameConsts *_pConsts, IAIScenarioTracker *_pScenarioTracker )
+void CAILogic::Init( ICheckSumLog *_pCheckSumLog,
+                     const SMapInfo *pMapInfo,
+                     const NDb::SAIGameConsts *_pConsts,
+                     IAIScenarioTracker *_pScenarioTracker )
 {
 	NWin32Helper::MaskAllFloatingPointExceptions();
 	pConsts = _pConsts;
@@ -1018,7 +1136,10 @@ void CAILogic::Init( ICheckSumLog *_pCheckSumLog, const SMapInfo* pMapInfo, cons
 
 	theStatistics.Init();
 
-	theWarFog.Init( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH, pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH, pConsts->warFog.nMaxRadius, pConsts->warFog.fUnitHeight );
+	theWarFog.Init( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH,
+	                pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH,
+	                pConsts->warFog.nMaxRadius,
+	                pConsts->warFog.fUnitHeight );
 
 	theCheats.SetWarFog( ( NGlobal::GetVar( "warfog", "" ) ).GetString().empty() );
 	theCheats.SetLoadObjects( ( NGlobal::GetVar( "noobjects", "" ) ).GetString().empty() );
@@ -1038,7 +1159,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 {
 	NWin32Helper::CRoundingControl roundControl( NWin32Helper::CRoundingControl::RCM_NEAR );
 
-//	ConstructorInfo() = Singleton<CConstructorInfo>();
+	//	ConstructorInfo() = Singleton<CConstructorInfo>();
 
 	if ( !GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 	{
@@ -1061,7 +1182,7 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 
 	scripts.Init( pMapInfo );
 	if ( pMapInfo->scriptAreas.size() > 0 )
-		scripts.InitAreas( &(pMapInfo->scriptAreas[0]), pMapInfo->scriptAreas.size() );
+		scripts.InitAreas( &( pMapInfo->scriptAreas[0] ), pMapInfo->scriptAreas.size() );
 
 	LinkInfo linksInfo;
 
@@ -1086,11 +1207,10 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 	InitReservePositions();
 	UpdateUnitsOnBridges();
 
-
 	// init general
 	if ( !theDipl.IsNetGame() )
 	{
-		std::list<CCommonUnit*> pUnits;
+		std::list<CCommonUnit *> pUnits;
 		for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 			pUnits.push_back( *iter );
 
@@ -1135,14 +1255,12 @@ bool CAILogic::NeedWriteCheckSum() const
 	// Not while a replay is playing: then the recorded values are what we
 	// compare against, and recomputing over them would compare a run with
 	// itself.
-	return NGlobal::GetVar( "count_checksum", 0 ) != 0
-		&& NGlobal::GetVar( "History.Playing", 0 ) == 0;
+	return NGlobal::GetVar( "count_checksum", 0 ) != 0 && NGlobal::GetVar( "History.Playing", 0 ) == 0;
 }
 
 bool CAILogic::NeedVerifyCheckSum() const
 {
-	return NGlobal::GetVar( "checksum_verify", 0 ) != 0
-		&& NGlobal::GetVar( "History.Playing", 0 ) != 0;
+	return NGlobal::GetVar( "checksum_verify", 0 ) != 0 && NGlobal::GetVar( "History.Playing", 0 ) != 0;
 }
 
 void CAILogic::UpdateCheckSum( bool bSend )
@@ -1156,7 +1274,7 @@ void CAILogic::UpdateCheckSum( bool bSend )
 	if ( NGlobal::GetVar( "light_checksum_count", 0 ) )
 	{
 		using namespace NCheckSums;
-		static SCheckSumBufferStorage	checkSumBuf( 10000 );
+		static SCheckSumBufferStorage checkSumBuf( 10000 );
 		checkSumBuf.nCnt = 0;
 
 		for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
@@ -1171,7 +1289,7 @@ void CAILogic::UpdateCheckSum( bool bSend )
 			CopyToBuf( &checkSumBuf, fHP );
 		}
 
-		checkSum = adler32( checkSum, &(checkSumBuf.buf[0]), checkSumBuf.nCnt );
+		checkSum = adler32( checkSum, &( checkSumBuf.buf[0] ), checkSumBuf.nCnt );
 		//theGroupLogic.GetCheckSum( &checkSum );
 
 		//CONSOLE_BUFFER_LOG2( 10, StrFmt( "%ul", checkSum ), 0, true );
@@ -1200,9 +1318,9 @@ void CAILogic::UpdateCheckSum( bool bSend )
 
 void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 {
-	FILE* f = fopen(szFileName, "w");
+	FILE *f = fopen( szFileName, "w" );
 
-	if (!f)
+	if ( !f )
 		return;
 
 	uLong baseChecksum = 11123;
@@ -1215,17 +1333,22 @@ void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 	// rubbish on Linux -- in the file whose entire purpose is being compared
 	// against another machine's copy. fmt takes each argument's type from the
 	// argument, so the format and the value cannot disagree again.
-	fmt::print(f, "Random state:\n");
-	fmt::print(f, "\tCalls: {}\n", randomDebugState.randomCalls);
-	fmt::print(f, "\tISAAC: randcnt={} randa={} randb={} randc={} randrsl={} randmem={}\n",
-		randomDebugState.randcnt, randomDebugState.randa, randomDebugState.randb, randomDebugState.randc,
-		randomDebugState.randrslChecksum, randomDebugState.randmemChecksum);
-	fmt::print(f, "\n");
-	fmt::print(f, "Rng Calls:\n");
-	NRandom::DumpRecords(f);
-	fmt::print(f, "\n");
+	fmt::print( f, "Random state:\n" );
+	fmt::print( f, "\tCalls: {}\n", randomDebugState.randomCalls );
+	fmt::print( f,
+	            "\tISAAC: randcnt={} randa={} randb={} randc={} randrsl={} randmem={}\n",
+	            randomDebugState.randcnt,
+	            randomDebugState.randa,
+	            randomDebugState.randb,
+	            randomDebugState.randc,
+	            randomDebugState.randrslChecksum,
+	            randomDebugState.randmemChecksum );
+	fmt::print( f, "\n" );
+	fmt::print( f, "Rng Calls:\n" );
+	NRandom::DumpRecords( f );
+	fmt::print( f, "\n" );
 
-	fmt::print(f, "Unit checksums [UID, checksum]:\n");
+	fmt::print( f, "Unit checksums [UID, checksum]:\n" );
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
@@ -1235,8 +1358,8 @@ void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 
 		std::string unitName = "<NO_NAME>";
 		auto stats = pUnit->GetStats();
-		if (stats)
-			unitName = WideToUTF8(NText::GetText(stats->szLocalizedNameFileRef));
+		if ( stats )
+			unitName = WideToUTF8( NText::GetText( stats->szLocalizedNameFileRef ) );
 
 		int isA = pUnit->IsAviation();
 		int isF = pUnit->IsFormation();
@@ -1244,29 +1367,42 @@ void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 		int isM = pUnit->IsMech();
 		int isT = pUnit->IsTrain();
 		int isV = pUnit->IsVirtualTankPit();
-		auto checksum = CalculateChecksum(baseChecksum, vCenter.x, vCenter.y, wDir, fHP);
+		auto checksum = CalculateChecksum( baseChecksum, vCenter.x, vCenter.y, wDir, fHP );
 		// The positions and hit points were %f, which rounds to six decimals and
 		// can therefore hide exactly the low-bit difference this file exists to
 		// find. {} writes the shortest text that reads back as the same float,
 		// so a divergence cannot round away before anyone sees it.
-		fmt::print(f, "\tPlayer[{}] Unit[{}]: {} - {{ pos: ({}, {}), dir: {}, hp: {}, AFIMTV: {}{}{}{}{}{} }} - {}\n",
-			(int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum, vCenter.x, vCenter.y, wDir, fHP, isA, isF, isI, isM, isT, isV, unitName
-		);
+		fmt::print( f,
+		            "\tPlayer[{}] Unit[{}]: {} - {{ pos: ({}, {}), dir: {}, hp: {}, AFIMTV: {}{}{}{}{}{} }} - {}\n",
+		            (int)pUnit->GetPlayer(),
+		            pUnit->GetUniqueID(),
+		            checksum,
+		            vCenter.x,
+		            vCenter.y,
+		            wDir,
+		            fHP,
+		            isA,
+		            isF,
+		            isI,
+		            isM,
+		            isT,
+		            isV,
+		            unitName );
 	}
-	fmt::print(f, "\n");
+	fmt::print( f, "\n" );
 
-	units.WriteSpatialCellDebugInfo(f);
+	units.WriteSpatialCellDebugInfo( f );
 
 	// checksums for shells, theGroupLogic and current time (curTime) too!
-	theShellsStore.UpdateDebugChecksums(f);
+	theShellsStore.UpdateDebugChecksums( f );
 
-	NAsyncExplosionDebug::DumpAreaDamageTrace(f);
+	NAsyncExplosionDebug::DumpAreaDamageTrace( f );
 
-	theGroupLogic.UpdateDebugChecksums(f);
+	theGroupLogic.UpdateDebugChecksums( f );
 
-	fmt::print(f, "Time checksum: {}\n", CalculateChecksum(baseChecksum, curTime));
+	fmt::print( f, "Time checksum: {}\n", CalculateChecksum( baseChecksum, curTime ) );
 
-	fclose(f);
+	fclose( f );
 }
 
 void CAILogic::Segment()
@@ -1363,32 +1499,34 @@ void CAILogic::Segment()
 			if ( bPresent != bLocalPlayerUnitsPresent )
 				updater.AddUpdate( EFB_LOCAL_PLAYER_UNITS_PRESENT, bPresent, 0 );
 			bLocalPlayerUnitsPresent = bPresent;
-			timeLocalPlayerUnitCheck = curTime + 500 + NRandom::Random( 1000 ); RecordRandomCall();
+			timeLocalPlayerUnitCheck = curTime + 500 + NRandom::Random( 1000 );
+			RecordRandomCall();
 		}
 	}
 
-//	CheckAIObjectBase();
+	//	CheckAIObjectBase();
 }
 
 void CAILogic::UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer )
 {
 	curTime = CAITimer::GetSegmentTime();
-	switch( pCommand->nCmdType )
+	switch ( pCommand->nCmdType )
 	{
-	case ACTION_COMMAND_ORDER:
-		theReinfArray[nPlayer].AddCallReinforcementCommand( NDb::EReinforcementType( pCommand->nNumber ), pCommand->vPos );
-		break;
-	case ACTION_COMMAND_USE_SUPER_WEAPON:
-		//NSuperWeapon::SuperWeaponUse( nPlayer, pCommand->vPos );
-		break;
-	case ACTION_COMMAND_PLACE_MARKER:
-		if ( theDipl.GetMyParty() == theDipl.GetNParty( nPlayer ) )
-		{
-			DebugTrace( "+++ Marker at %f,%f", pCommand->vPos.x, pCommand->vPos.y );
-			//Send update
-			updater.AddUpdate( EFB_PLACE_MARKER, MAKELONG( pCommand->vPos.x, pCommand->vPos.y ) );
-		}
-		break;
+		case ACTION_COMMAND_ORDER:
+			theReinfArray[nPlayer].AddCallReinforcementCommand( NDb::EReinforcementType( pCommand->nNumber ),
+			                                                    pCommand->vPos );
+			break;
+		case ACTION_COMMAND_USE_SUPER_WEAPON:
+			//NSuperWeapon::SuperWeaponUse( nPlayer, pCommand->vPos );
+			break;
+		case ACTION_COMMAND_PLACE_MARKER:
+			if ( theDipl.GetMyParty() == theDipl.GetNParty( nPlayer ) )
+			{
+				DebugTrace( "+++ Marker at %f,%f", pCommand->vPos.x, pCommand->vPos.y );
+				//Send update
+				updater.AddUpdate( EFB_PLACE_MARKER, MAKELONG( pCommand->vPos.x, pCommand->vPos.y ) );
+			}
+			break;
 	}
 }
 
@@ -1427,7 +1565,7 @@ bool CAILogic::CanShowVisibilities() const
 	return curTime >= SConsts::AI_SEGMENT_DURATION * SConsts::SHOW_ALL_TIME_COEFF;
 }
 
-const bool CAILogic::GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits )
+const bool CAILogic::GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits )
 {
 	if ( curTime >= timeLastMiniMapUpdateUnits && ( !theDipl.IsNetGame() || bNetGameStarted ) )
 	{
@@ -1441,15 +1579,18 @@ const bool CAILogic::GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnit
 				const CVec2 vCenter( pUnit->GetCenterPlain() );
 				const SUnitBaseRPGStats *pStats = pUnit->GetStats();
 
-				if ( pStats && pStats->IsAviation() || GetAIMap()->IsPointInside( vCenter ) && ( false && !pUnit->IsInSolidPlace() ||
-					pUnit->GetParty() != theCheats.GetNPartyForWarFog() && pUnit->IsVisible( theCheats.GetNPartyForWarFog() ) ||
-					pUnit->IsVisibleByPlayer() ) )
+				if ( pStats && pStats->IsAviation() ||
+				     GetAIMap()->IsPointInside( vCenter ) && ( false && !pUnit->IsInSolidPlace() ||
+				                                               pUnit->GetParty() != theCheats.GetNPartyForWarFog() &&
+				                                                   pUnit->IsVisible( theCheats.GetNPartyForWarFog() ) ||
+				                                               pUnit->IsVisibleByPlayer() ) )
 				{
 					const EUnitStateNames eName = pUnit->GetState()->GetName();
 					if ( eName != EUSN_REST_ON_BOARD && eName != EUSN_MECHUNIT_REST_ON_BOARD )
 					{
 						float z = pUnit->GetCenter().z;
-						vUnits.push_back( SMiniMapUnitInfo( vCenter.x, vCenter.y, z, pUnit->GetPlayer(), pUnit->GetBoundTileRadius() ) );
+						vUnits.push_back(
+								SMiniMapUnitInfo( vCenter.x, vCenter.y, z, pUnit->GetPlayer(), pUnit->GetBoundTileRadius() ) );
 					}
 				}
 			}
@@ -1483,8 +1624,8 @@ void CAILogic::ShowAreas( const std::vector<int> &units, EActionNotify &eType, b
 	if ( bShow && units.size() > 0 )
 	{
 		//Generate group number
-//		int nGroup = theGroupLogic.GenerateGroupNumber();
-//		theGroupLogic.RegisterGroup( units, nGroup );
+		//		int nGroup = theGroupLogic.GenerateGroupNumber();
+		//		theGroupLogic.RegisterGroup( units, nGroup );
 		updater.UpdateAreasGroup( true, eType );
 		theGroupLogic.UpdateAllAreas( units, eType );
 	}
@@ -1515,14 +1656,17 @@ void CAILogic::GetShootAreas( int nUnitID, SShootAreas *pAreas )
 
 		for ( int i = 0; i < pFormation->Size(); ++i )
 		{
-			(*pFormation)[i]->GetShootAreas( &unitAreas, &nAreas );
+			( *pFormation )[i]->GetShootAreas( &unitAreas, &nAreas );
 			for ( std::list<SShootArea>::iterator it = unitAreas.areas.begin(); it != unitAreas.areas.end(); ++it )
 				pAreas->areas.push_back( *it );
 		}
 	}
 }
 
-void CAILogic::RequestBuildPreview( const EActionCommand eBuildCommand, const CVec2 &vStart, const CVec2 &vEnd, bool bFinished )
+void CAILogic::RequestBuildPreview( const EActionCommand eBuildCommand,
+                                    const CVec2 &vStart,
+                                    const CVec2 &vEnd,
+                                    bool bFinished )
 {
 	theUnderConstructionObject.ShowUnderConstruction( eBuildCommand, vStart, vEnd, bFinished, this );
 }
@@ -1539,12 +1683,13 @@ void CAILogic::ToGarbage( CCommonUnit *pUnit )
 
 int CAILogic::GetUniqueIDOfObject( CObjectBase *pObj )
 {
-	NI_ASSERT( dynamic_cast<CLinkObject*>(pObj) != 0, fmt::format("Wrong object of type \"{}\" - CLinkObject expected", typeid(*pObj).name()) );
+	NI_ASSERT( dynamic_cast<CLinkObject *>( pObj ) != 0,
+	           fmt::format( "Wrong object of type \"{}\" - CLinkObject expected", typeid( *pObj ).name() ) );
 
-	return checked_cast<CLinkObject*>(pObj)->GetUniqueId();
+	return checked_cast<CLinkObject *>( pObj )->GetUniqueId();
 }
 
-CObjectBase* CAILogic::GetObjByUniqueID( const int id )
+CObjectBase *CAILogic::GetObjByUniqueID( const int id )
 {
 	return GetObjectByUniqueIdSafe<CObjectBase>( id );
 }
@@ -1625,7 +1770,7 @@ bool CAILogic::IsNetGameStarted() const
 	return bNetGameStarted;
 }
 
-const CDifficultyLevel* CAILogic::GetDifficultyLevel() const
+const CDifficultyLevel *CAILogic::GetDifficultyLevel() const
 {
 	return &theDifficultyLevel;
 }
@@ -1649,7 +1794,7 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 			}
 		}
 
-		std::list<CCommonUnit*> playerUnits;
+		std::list<CCommonUnit *> playerUnits;
 		for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
 		{
 			CCommonUnit *pUnit = *iter;
@@ -1657,7 +1802,7 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 				playerUnits.push_back( pUnit );
 		}
 
-		for ( std::list<CCommonUnit*>::iterator iter = playerUnits.begin(); iter != playerUnits.end(); ++iter )
+		for ( std::list<CCommonUnit *>::iterator iter = playerUnits.begin(); iter != playerUnits.end(); ++iter )
 		{
 			CCommonUnit *pUnit = *iter;
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), pUnit, false );
@@ -1668,13 +1813,13 @@ void CAILogic::NeutralizePlayer( const int nPlayer )
 		theDipl.SetPlayerNotExist( nPlayer );
 
 		if ( nBestPlayer != theDipl.GetNeutralPlayer() )
-	 		updater.AddUpdate( EFB_TROOPS_PASSED, MAKELONG( nPlayer, nBestPlayer ) );
+			updater.AddUpdate( EFB_TROOPS_PASSED, MAKELONG( nPlayer, nBestPlayer ) );
 	}
 }
 
-CObjectBase* CAILogic::GetUnitState( CObjectBase *pObj )
+CObjectBase *CAILogic::GetUnitState( CObjectBase *pObj )
 {
-	if ( CQueueUnit *pUnit = dynamic_cast<CQueueUnit*>(pObj) )
+	if ( CQueueUnit *pUnit = dynamic_cast<CQueueUnit *>( pObj ) )
 		return pUnit->GetState();
 	else
 		return 0;
@@ -1682,7 +1827,7 @@ CObjectBase* CAILogic::GetUnitState( CObjectBase *pObj )
 
 bool CAILogic::IsFrozen( CObjectBase *pObj ) const
 {
-	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>(pObj) )
+	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( pObj ) )
 		return pUnit->CanBeFrozen();
 	else
 		return false;
@@ -1690,7 +1835,7 @@ bool CAILogic::IsFrozen( CObjectBase *pObj ) const
 
 bool CAILogic::IsFrozenByState( CObjectBase *pObj ) const
 {
-	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>(pObj) )
+	if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( pObj ) )
 		return pUnit->IsFrozenByState();
 	else
 		return false;
@@ -1703,7 +1848,7 @@ void CAILogic::GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCent
 	*pnLen = grid.GetNUnitsInGrid();
 	*pCoord = GetLocalTempBuffer<CVec2>( *pnLen );
 	for ( int i = 0; i < *pnLen; ++i )
-		(*pCoord)[i] = grid.GetUnitCenter( i ) - vGridCenter;
+		( *pCoord )[i] = grid.GetUnitCenter( i ) - vGridCenter;
 }
 
 void CAILogic::Suspend()
@@ -1718,7 +1863,7 @@ void CAILogic::Resume()
 
 static CPtr<SAIBasicUpdate> pUpdate = 0;
 
-CObjectBase* CAILogic::GetUpdate()
+CObjectBase *CAILogic::GetUpdate()
 {
 	pUpdate = updater.GetUpdate();
 	return pUpdate;
@@ -1746,13 +1891,13 @@ const int CAILogic::VIS_POWER() const
 
 int CAILogic::GetUniqueID( CObjectBase *pObj )
 {
-	if ( CLinkObject *pLinkObj = dynamic_cast<CLinkObject*>(pObj) )
+	if ( CLinkObject *pLinkObj = dynamic_cast<CLinkObject *>( pObj ) )
 		return pLinkObj->GetUniqueId();
 	else
 		return 0;
 }
 
-CStaticMapHeights* CAILogic::GetHeights() const
+CStaticMapHeights *CAILogic::GetHeights() const
 {
 	return ::GetHeights();
 }
@@ -1778,7 +1923,9 @@ const int CAILogic::GetUnitCount( const int nPlayer ) const
 
 const bool CAILogic::HasPlayerNoUnits( const int nPlayer ) const
 {
-	NI_VERIFY( nPlayer >= 0 && nPlayer < theReinfArray.size(), "Index out of range", return false ); // CRAP - dont't use AILogic directly at Client
+	NI_VERIFY( nPlayer >= 0 && nPlayer < theReinfArray.size(),
+	           "Index out of range",
+	           return false ); // CRAP - dont't use AILogic directly at Client
 
 	if ( theReinfArray[nPlayer].CanCallNow() )
 		return false;
@@ -1808,7 +1955,7 @@ static bool ConverWStingToInt( int *pValue, const std::wstring &wszString, const
 	*pValue = NStr::ToInt( szParam );
 	if ( nMin != nMax && ( *pValue < nMin || *pValue >= nMax ) )
 	{
-		csSystem << "error: invalid radius, must be integer value between " << nMin << " and " << nMax <<endl;
+		csSystem << "error: invalid radius, must be integer value between " << nMin << " and " << nMax << endl;
 		return false;
 	}
 	return true;
@@ -1818,25 +1965,38 @@ static void PathfinderTest( const std::string &szID, const std::vector<std::wstr
 {
 	const int nMaxX = GetAIMap()->GetSizeX();
 	const int nMaxY = GetAIMap()->GetSizeY();
-	SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
-	SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
+	SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+	RecordRandomCall();
+	RecordRandomCall();
+	SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+	RecordRandomCall();
+	RecordRandomCall();
 
 	for ( int i = 0; i < 500; ++i )
 	{
 		const int dwTickStart = GetCurrentTimeMilliseconds();
 
 		CCommonPathFinder *pPathFinder = Singleton<CCommonPathFinder>();
-		pPathFinder->SetPathParameters( 0, EAC_HUMAN, GetAIMap()->GetPointByTile( vStartTile ), GetAIMap()->GetPointByTile( vFinishTile ), vStartTile, GetAIMap() );
+		pPathFinder->SetPathParameters( 0,
+		                                EAC_HUMAN,
+		                                GetAIMap()->GetPointByTile( vStartTile ),
+		                                GetAIMap()->GetPointByTile( vFinishTile ),
+		                                vStartTile,
+		                                GetAIMap() );
 		pPathFinder->DoesPathExist();
-    const int dwTickCount = GetCurrentTimeMilliseconds() - dwTickStart;
+		const int dwTickCount = GetCurrentTimeMilliseconds() - dwTickStart;
 		if ( dwTickCount > 5 )
 		{
 			//csSystem << "prolonged (" << dwTickCount << ") path searching from " << vStartTile.x << " x " << vStartTile.y << " to " << vFinishTile.x << " x " << vFinishTile.y << endl;
 		}
 		else
 		{
-			SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
-			SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) ); RecordRandomCall(); RecordRandomCall();
+			SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+			RecordRandomCall();
+			RecordRandomCall();
+			SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+			RecordRandomCall();
+			RecordRandomCall();
 		}
 	}
 }
@@ -1846,7 +2006,9 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 	if ( paramsSet.size() != 7 )
 	{
 		csSystem << "usage: " << szID << "file_name start_tile finish_tile ai_class radius" << endl;
-		csSystem << "\tfile_name:\tname for .tga file with maxes (file will be saved in debug_images folder with .tga extension)" << endl;
+		csSystem
+				<< "\tfile_name:\tname for .tga file with maxes (file will be saved in debug_images folder with .tga extension)"
+				<< endl;
 		csSystem << "\tstart_tile:\tfind path from this tile (x y)" << endl;
 		csSystem << "\tfinish_tile:\tfind path to this tile (x y)" << endl;
 		csSystem << "\tai_class:\t\tHUMAN, WHEEL, TRACK, SEA, RIVER, TERRAIN, WATER, ANY" << endl;
@@ -1855,15 +2017,15 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 	}
 
 	SVector vStartTile( 0, 0 );
-	if ( !ConverWStingToInt( &(vStartTile.x), paramsSet[1], 0, GetAIMap()->GetSizeX() ) )
+	if ( !ConverWStingToInt( &( vStartTile.x ), paramsSet[1], 0, GetAIMap()->GetSizeX() ) )
 		return;
-	if ( !ConverWStingToInt( &(vStartTile.y), paramsSet[2], 0, GetAIMap()->GetSizeY() ) )
+	if ( !ConverWStingToInt( &( vStartTile.y ), paramsSet[2], 0, GetAIMap()->GetSizeY() ) )
 		return;
 
 	SVector vFinishTile( 0, 0 );
-	if ( !ConverWStingToInt( &(vFinishTile.x), paramsSet[3], 0, GetAIMap()->GetSizeX() ) )
+	if ( !ConverWStingToInt( &( vFinishTile.x ), paramsSet[3], 0, GetAIMap()->GetSizeX() ) )
 		return;
-	if ( !ConverWStingToInt( &(vFinishTile.y), paramsSet[4], 0, GetAIMap()->GetSizeY() ) )
+	if ( !ConverWStingToInt( &( vFinishTile.y ), paramsSet[4], 0, GetAIMap()->GetSizeY() ) )
 		return;
 
 	std::string szParam;
@@ -1871,7 +2033,7 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 	NStr::ToMBCS( &szParam, paramsSet[5] );
 	NStr::ToLowerASCII( &szParam );
 	EAIClasses aiClass = EAC_NONE;
-	if (szParam == "human" )
+	if ( szParam == "human" )
 		aiClass = EAC_HUMAN;
 	else if ( szParam == "wheel" )
 		aiClass = EAC_WHELL;
@@ -1894,7 +2056,12 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 
 	STerrainModeSetter modeSetter( ELM_STATIC, GetAIMap()->GetTerrain() );
 	CCommonPathFinder *pPathFinder = Singleton<CCommonPathFinder>();
-	pPathFinder->SetPathParameters( nBoundTileRadius, aiClass, GetAIMap()->GetPointByTile( vStartTile ), GetAIMap()->GetPointByTile( vFinishTile ), vStartTile, GetAIMap() );
+	pPathFinder->SetPathParameters( nBoundTileRadius,
+	                                aiClass,
+	                                GetAIMap()->GetPointByTile( vStartTile ),
+	                                GetAIMap()->GetPointByTile( vFinishTile ),
+	                                vStartTile,
+	                                GetAIMap() );
 	CPtr<IStaticPath> pPath = pPathFinder->CreatePath( true );
 	std::vector<SVector> realPath;
 	std::vector<SVector> smoothPath;
@@ -1912,23 +2079,28 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 			smoothPath.push_back( pPath->GetTile( i ) );
 	}
 
-	pPathFinder->SetPathParameters( nBoundTileRadius, aiClass, GetAIMap()->GetPointByTile( vStartTile ), GetAIMap()->GetPointByTile( vFinishTile ), vStartTile, GetAIMap() );
+	pPathFinder->SetPathParameters( nBoundTileRadius,
+	                                aiClass,
+	                                GetAIMap()->GetPointByTile( vStartTile ),
+	                                GetAIMap()->GetPointByTile( vFinishTile ),
+	                                vStartTile,
+	                                GetAIMap() );
 	pPathFinder->DoesPathExist();
 	if ( pPathFinder->GetPathLength() > 1 )
 	{
 		realPath.resize( pPathFinder->GetPathLength() );
-		pPathFinder->GetStopPoints( &(realPath[0]), pPathFinder->GetPathLength() );
+		pPathFinder->GetStopPoints( &( realPath[0] ), pPathFinder->GetPathLength() );
 		for ( int i = 1; i < pPathFinder->GetPathLength(); ++i )
 		{
 			if ( !GetAIMap()->IsTileInside( realPath[i] ) )
-				realPath[i] = realPath[i-1];
+				realPath[i] = realPath[i - 1];
 		}
 	}
 
-
 	NStr::ToMBCS( &szParam, paramsSet[0] );
 	NStr::ToLowerASCII( &szParam );
-	GetAIMap()->GetTerrain()->DumpMaxes( ELM_STATIC, aiClass, "debug_images\\" + szParam + ".tga", realPath, smoothPath, true );
+	GetAIMap()->GetTerrain()->DumpMaxes(
+			ELM_STATIC, aiClass, "debug_images\\" + szParam + ".tga", realPath, smoothPath, true );
 }
 
 static void DumpWarFogHeights( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
@@ -1936,22 +2108,24 @@ static void DumpWarFogHeights( const std::string &szID, const std::vector<std::w
 	if ( paramsSet.size() != 5 )
 	{
 		csSystem << "usage: " << szID << "file_name start_point finish_point" << endl;
-		csSystem << "\tfile_name:\tname for .tga file with trace result (file will be saved in debug_images\\warfog folder with .tga extension)" << endl;
+		csSystem
+				<< "\tfile_name:\tname for .tga file with trace result (file will be saved in debug_images\\warfog folder with .tga extension)"
+				<< endl;
 		csSystem << "\tstart_point:\tstart trace from this point" << endl;
 		csSystem << "\tfinish_point:\tfinish trace at this point" << endl;
 		return;
 	}
 
 	SVector vStartTile( 0, 0 );
-	if ( !ConverWStingToInt( &(vStartTile.x), paramsSet[1], 0, GetAIMap()->GetSizeX()*GetAIMap()->GetTileSize() ) )
+	if ( !ConverWStingToInt( &( vStartTile.x ), paramsSet[1], 0, GetAIMap()->GetSizeX() * GetAIMap()->GetTileSize() ) )
 		return;
-	if ( !ConverWStingToInt( &(vStartTile.y), paramsSet[2], 0, GetAIMap()->GetSizeY()*GetAIMap()->GetTileSize() ) )
+	if ( !ConverWStingToInt( &( vStartTile.y ), paramsSet[2], 0, GetAIMap()->GetSizeY() * GetAIMap()->GetTileSize() ) )
 		return;
 
 	SVector vFinishTile( 0, 0 );
-	if ( !ConverWStingToInt( &(vFinishTile.x), paramsSet[3], 0, GetAIMap()->GetSizeX()*GetAIMap()->GetTileSize() ) )
+	if ( !ConverWStingToInt( &( vFinishTile.x ), paramsSet[3], 0, GetAIMap()->GetSizeX() * GetAIMap()->GetTileSize() ) )
 		return;
-	if ( !ConverWStingToInt( &(vFinishTile.y), paramsSet[4], 0, GetAIMap()->GetSizeY()*GetAIMap()->GetTileSize() ) )
+	if ( !ConverWStingToInt( &( vFinishTile.y ), paramsSet[4], 0, GetAIMap()->GetSizeY() * GetAIMap()->GetTileSize() ) )
 		return;
 
 	const CVec2 vStartPoint( vStartTile.x, vStartTile.y );

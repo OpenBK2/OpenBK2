@@ -11,12 +11,12 @@ bool IsIgnore( const SIgnoresList &ignores, const char *pszFileName, int nLineNu
 	{
 		if ( pos->dwFlags & IGNORE_THIS )
 		{
-			if ( (pos->szFileName == pszFileName) && (pos->nLineNumber == nLineNumber) )
+			if ( ( pos->szFileName == pszFileName ) && ( pos->nLineNumber == nLineNumber ) )
 				return true;
 		}
 		else if ( pos->dwFlags & IGNORE_NON_THIS )
 		{
-			if ( (pos->szFileName != pszFileName) || (pos->nLineNumber != nLineNumber) )
+			if ( ( pos->szFileName != pszFileName ) || ( pos->nLineNumber != nLineNumber ) )
 				return true;
 		}
 		else if ( pos->dwFlags & IGNORE_FILE )

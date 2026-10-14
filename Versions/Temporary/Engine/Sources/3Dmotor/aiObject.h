@@ -12,12 +12,13 @@ struct SEdge
 	uint16_t wStart, wFinish;
 	//
 	SEdge() {}
-	SEdge( uint16_t _wS, uint16_t _wF ): wStart(_wS), wFinish(_wF) {}
+	SEdge( uint16_t _wS, uint16_t _wF ) : wStart( _wS ), wFinish( _wF ) {}
 };
 
 class _3DMOTOR_EXPORT CEdgesInfo
 {
 	uint16_t InsertEdge( uint16_t i1, uint16_t i2, const std::vector<CVec3> &pts );
+
 public:
 	std::vector<SEdge> edges;
 	std::vector<STriangle> mesh;
@@ -25,7 +26,7 @@ public:
 	//
 	CEdgesInfo() { bClosed = true; }
 	void BuildTriangleList( std::vector<STriangle> *pRes ) const;
-	void BuildClosedMeshes( std::vector<std::vector<STriangle> > *pMeshes ) const;
+	void BuildClosedMeshes( std::vector<std::vector<STriangle>> *pMeshes ) const;
 	void GenerateEdgeList( const std::vector<STriangle> &tris, const std::vector<CVec3> &pts );
 	bool IsClosed() const; // checks geometry
 	bool IsEmpty() const { return mesh.empty(); }
@@ -34,10 +35,10 @@ public:
 struct SJunction
 {
 	CVec3 pt;
-	bool  bGround;
+	bool bGround;
 
 	SJunction() {}
-	SJunction( const CVec3 &_pt, bool _bGr = false ): pt(_pt), bGround(_bGr) {}
+	SJunction( const CVec3 &_pt, bool _bGr = false ) : pt( _pt ), bGround( _bGr ) {}
 };
 
 //class CPrecalcSpheres;
@@ -52,9 +53,10 @@ struct SPiece
 	//vector<CPtr<CPrecalcSpheres> > precalc;
 };
 
-class CGeometryInfo: public CObjectBase
+class CGeometryInfo : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CGeometryInfo);
+	OBJECT_BASIC_METHODS( CGeometryInfo );
+
 public:
 	typedef std::unordered_map<int, SPiece> CPieceMap;
 
@@ -63,10 +65,14 @@ public:
 	CVec3 massCenter;
 	CPieceMap pieces;
 	//
-	SPiece* GetPiece( int nPieceID );
-	void AddPiece( int nPieceID, const std::vector<CVec3> &_points, const std::vector<STriangle> &_tris,
-		float fVolume, std::vector<SJunction> juncs = std::vector<SJunction>(), bool _bClosed = true );
-		//const vector<CPtr<CPrecalcSpheres> > &spheres = vector<CPtr<CPrecalcSpheres> >() );
+	SPiece *GetPiece( int nPieceID );
+	void AddPiece( int nPieceID,
+	               const std::vector<CVec3> &_points,
+	               const std::vector<STriangle> &_tris,
+	               float fVolume,
+	               std::vector<SJunction> juncs = std::vector<SJunction>(),
+	               bool _bClosed = true );
+	//const vector<CPtr<CPrecalcSpheres> > &spheres = vector<CPtr<CPrecalcSpheres> >() );
 	void CalcBound();
 	//void PrecalcCollideInfo( bool bTerrain = false );
 	//void SetCollideInfo( const CPrecalcPieces &precalc );
@@ -85,15 +91,24 @@ struct SConvexHull
 	//const vector<CPtr<CBSPTree> > trees;
 	//const vector<CPtr<CPrecalcSpheres> > &precalc;
 	//
-	SConvexHull( const std::vector<CVec3> &_points, const CEdgesInfo &_tris, const SHMatrix &_trans,
-		SSourceInfo &_src, int _nUserID )//, const vector<CPtr<CPrecalcSpheres> > &_precalc )
-	: points(_points), tris(_tris), trans(_trans), src(_src), nUserID(_nUserID) {}//, precalc(_precalc) {}
+	SConvexHull( const std::vector<CVec3> &_points,
+	             const CEdgesInfo &_tris,
+	             const SHMatrix &_trans,
+	             SSourceInfo &_src,
+	             int _nUserID ) //, const vector<CPtr<CPrecalcSpheres> > &_precalc )
+			: points( _points ), tris( _tris ), trans( _trans ), src( _src ), nUserID( _nUserID )
+	{
+	} //, precalc(_precalc) {}
 	// Present so the struct satisfies the serializable shape, never meant to run:
 	// it holds references and cannot be rebuilt from a stream. The ASSERT says
 	// so and compiles to nothing, because _DO_ASSERT_SLOW is not set in this
 	// tree and ASSERT then does not evaluate its argument, so what was left was
 	// a function returning int that fell off its end.
-	int operator&( CStructureSaver &f ) { ASSERT(0&&"This struct could not be serialized!"); return 0; }
+	int operator&( CStructureSaver &f )
+	{
+		ASSERT( 0 && "This struct could not be serialized!" );
+		return 0;
+	}
 };
 
 //! group of entities; entity terrain is represented with several SConvexHull

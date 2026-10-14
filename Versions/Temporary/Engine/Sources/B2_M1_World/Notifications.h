@@ -6,12 +6,12 @@
 
 namespace NTimer
 {
-	typedef uint32_t STime;
+typedef uint32_t STime;
 }
 
 namespace NDb
 {
-	enum ENotificationEventType : int;
+enum ENotificationEventType : int;
 }
 class CMapObj;
 
@@ -60,7 +60,12 @@ struct IVisualNotifications : public CObjectBase
 		ZDATA
 		std::wstring wszHeader;
 		std::wstring wszDesc;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszHeader); f.Add(3,&wszDesc); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &wszHeader );
+			f.Add( 3, &wszDesc );
+			return 0;
+		}
 	};
 
 	struct SEventParams
@@ -70,8 +75,16 @@ struct IVisualNotifications : public CObjectBase
 		NDb::ENotificationEventType eEventType{};
 		std::vector<CVec2> positions;
 		std::vector<int> ids; // misc info
-		std::vector< CPtr<CMapObj> > objects;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&eEventType); f.Add(4,&positions); f.Add(5,&ids); f.Add(6,&objects); return 0; }
+		std::vector<CPtr<CMapObj>> objects;
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nID );
+			f.Add( 3, &eEventType );
+			f.Add( 4, &positions );
+			f.Add( 5, &ids );
+			f.Add( 6, &objects );
+			return 0;
+		}
 	};
 
 	virtual bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos ) = 0;

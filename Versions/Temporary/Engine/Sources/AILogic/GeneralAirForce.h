@@ -5,7 +5,7 @@
 
 namespace NDb
 {
-	enum EReinforcementType : int;
+enum EReinforcementType : int;
 }
 
 class CAIUnit;
@@ -15,48 +15,69 @@ class CEnemyRememberer;
 class CGeneralAirForce : public CCommander
 {
 	friend class CGeneralAirForceLaunchFighters;
-	OBJECT_BASIC_METHODS(CGeneralAirForce);
+	OBJECT_BASIC_METHODS( CGeneralAirForce );
 
 	struct SSameEnemyPointPredicate
 	{
-		bool operator()( const CVec2 &v1, const CVec2 &v2 ) {	return fabs2(v1-v2) < sqr(SConsts::PLANE_GUARD_STATE_RADIUS/2); }
+		bool operator()( const CVec2 &v1, const CVec2 &v2 )
+		{
+			return fabs2( v1 - v2 ) < sqr( SConsts::PLANE_GUARD_STATE_RADIUS / 2 );
+		}
 	};
 
-	typedef det_map< int, CPtr<CEnemyRememberer> > AntiAviation;
+	typedef det_map<int, CPtr<CEnemyRememberer>> AntiAviation;
 
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	struct IEnemyContainer *pEnemyContainer = {};
 
 	struct SSupportInfo
 	{
-		CVec2 vPoint;												// куда вызвали
-		int nResistanceCellNumber = {};					// если вызвали пробомбить точку сопротивления, то > 0
+		CVec2 vPoint;                   // куда вызвали
+		int nResistanceCellNumber = {}; // если вызвали пробомбить точку сопротивления, то > 0
 
-		SSupportInfo() : vPoint( VNULL2 ), nResistanceCellNumber( -1 ) { }
+		SSupportInfo() : vPoint( VNULL2 ), nResistanceCellNumber( -1 ) {}
 	};
 
-	ZDATA_(CCommander)
+	ZDATA_( CCommander )
 	int nParty = {};
-	std::vector<int> players;							// номера игроков, которые находятся под управлением
+	std::vector<int> players; // номера игроков, которые находятся под управлением
 	CFreeIds requestsID;
 
 	AntiAviation antiAviation;
 
-	std::vector<CPtr<CAIUnit> > createdAviation;
+	std::vector<CPtr<CAIUnit>> createdAviation;
 	NTimer::STime timeWaitForReinforceSystem = {};
-	EForceType nCurrentRequest = {};									// current aviation, that general is wating for
+	EForceType nCurrentRequest = {}; // current aviation, that general is wating for
 	bool bOurTurn = {};
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); f.Add(2,&nParty); f.Add(3,&players); f.Add(4,&requestsID); f.Add(5,&antiAviation); f.Add(6,&createdAviation); f.Add(7,&timeWaitForReinforceSystem); f.Add(8,&nCurrentRequest); f.Add(9,&bOurTurn); return 0; }
-public:
-	typedef det_map< int /*request ID*/, SSupportInfo > Requests;
-	typedef det_map<int, Requests> RequestsByForceType;
-private:
 
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CCommander *)this );
+		f.Add( 2, &nParty );
+		f.Add( 3, &players );
+		f.Add( 4, &requestsID );
+		f.Add( 5, &antiAviation );
+		f.Add( 6, &createdAviation );
+		f.Add( 7, &timeWaitForReinforceSystem );
+		f.Add( 8, &nCurrentRequest );
+		f.Add( 9, &bOurTurn );
+		return 0;
+	}
+
+public:
+	typedef det_map<int /*request ID*/, SSupportInfo> Requests;
+	typedef det_map<int, Requests> RequestsByForceType;
+
+private:
 	RequestsByForceType requests;
 
 	void LaunchScoutFree( const int nPlayer, const NDb::EReinforcementType eType );
 	bool PrepeareFighters( int nPlayer );
-	void CallReinforcement( const int nPlayer, NDb::EReinforcementType eType, RequestsByForceType *pRequests, EForceType eForceType );
+	void CallReinforcement( const int nPlayer,
+	                        NDb::EReinforcementType eType,
+	                        RequestsByForceType *pRequests,
+	                        EForceType eForceType );
 	void GiveOrders( const int nPlayer );
 
 	void LaunchPlane( EForceType eType, const std::list<CVec2> &vPoints, const int nPlayer );
@@ -67,25 +88,23 @@ private:
 
 	void InitCheckPeriod();
 	void InitFighterCheckPeriod();
+
 public:
-	CGeneralAirForce() {  }
-	CGeneralAirForce( const int nPlayer, IEnemyContainer *pEnemyContainer ) ;
+	CGeneralAirForce() {}
+	CGeneralAirForce( const int nPlayer, IEnemyContainer *pEnemyContainer );
 
 	void Segment();
 	void Give( CCommonUnit *pWorker );
-	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) {  }
+	void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator ) {}
 
-
-	int /*request ID*/RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType, int nResistanceCellNumber = -1 );
+	int /*request ID*/
+	RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType, int nResistanceCellNumber = -1 );
 	void CancelRequest( int nRequestID, enum EForceType eType );
 
-	void SetEnemyContainer( IEnemyContainer * _pEnemyConatainer )
-	{
-		pEnemyContainer = _pEnemyConatainer;
-	}
+	void SetEnemyContainer( IEnemyContainer *_pEnemyConatainer ) { pEnemyContainer = _pEnemyConatainer; }
 
 	void SetAAVisible( class CAIUnit *pUnit, const bool bVisible );
-	void DeleteAA( class CAIUnit * pUnit );
+	void DeleteAA( class CAIUnit *pUnit );
 
 	void PassTurn();
 	bool TurnReturned() const;

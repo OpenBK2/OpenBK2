@@ -24,229 +24,234 @@ bool IsPropertyModified( const CDBID &dbid, const std::string &szName )
 {
 	if ( dbid.IsEmpty() )
 		return false;
-	NBind::CBindStruct *pBind = dynamic_cast<NBind::CBindStruct*>( GetManipulator( dbid ) );
+	NBind::CBindStruct *pBind = dynamic_cast<NBind::CBindStruct *>( GetManipulator( dbid ) );
 	return pBind && pBind->IsPropertyModified( szName );
 }
 
-  //
-  void SetDatabaseDataChanged( const CDBID &dbid );
+//
+void SetDatabaseDataChanged( const CDBID &dbid );
 
 //
 namespace NBind
 {
 
-// ************************************************************************************************************************ //
-// **
-// ** bind struct
-// **
-// **
-// **
-// ************************************************************************************************************************ //
+	// ************************************************************************************************************************ //
+	// **
+	// ** bind struct
+	// **
+	// **
+	// **
+	// ************************************************************************************************************************ //
 
-CBindStruct::CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo )
-: pStruct( _pStruct ), pMetaInfo( _pMetaInfo ), ownValues( _pMetaInfo->nNumOwnValues ),
-  bindProcessor( (uint8_t*)_pStruct, _pMetaInfo->nNumOwnValues == 0 ? 0 : &(ownValues[0]), _pMetaInfo ),
-	bLoaded( false ), bChanged( false ), bNewObject( false )
-{
-	if ( pMetaInfo->nNumOwnValues > 0 )
-		pMetaInfo->ConstructStruct( (uint8_t*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
-	bool bSuccess = pMetaInfo->fields.find( "flags" ) != pMetaInfo->fields.end();
-}
-
-CBindStruct::~CBindStruct()
-{
-	if ( pMetaInfo && pMetaInfo->nNumOwnValues > 0 )
-		pMetaInfo->DestructStruct( (uint8_t*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
-}
-
-void CBindStruct::SetDBID( const CDBID &_dbid )
-{
-	dbidMain = _dbid;
-	CResourceHelper::SetDBID( pStruct.GetPtr(), _dbid );
-}
-
-void CBindStruct::SetChanged()
-{
-	if ( IsLoaded() )
+	CBindStruct::CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo )
+			: pStruct( _pStruct ), pMetaInfo( _pMetaInfo ), ownValues( _pMetaInfo->nNumOwnValues ),
+				bindProcessor( (uint8_t *)_pStruct, _pMetaInfo->nNumOwnValues == 0 ? 0 : &( ownValues[0] ), _pMetaInfo ),
+				bLoaded( false ), bChanged( false ), bNewObject( false )
 	{
-		if ( bTrackPropertyChanges && !bHaveSavedValues )
+		if ( pMetaInfo->nNumOwnValues > 0 )
+			pMetaInfo->ConstructStruct( (uint8_t *)( pStruct.GetPtr() ), ownValues.empty() ? 0 : &( ownValues[0] ), true );
+		bool bSuccess = pMetaInfo->fields.find( "flags" ) != pMetaInfo->fields.end();
+	}
+
+	CBindStruct::~CBindStruct()
+	{
+		if ( pMetaInfo && pMetaInfo->nNumOwnValues > 0 )
+			pMetaInfo->DestructStruct( (uint8_t *)( pStruct.GetPtr() ), ownValues.empty() ? 0 : &( ownValues[0] ), true );
+	}
+
+	void CBindStruct::SetDBID( const CDBID &_dbid )
+	{
+		dbidMain = _dbid;
+		CResourceHelper::SetDBID( pStruct.GetPtr(), _dbid );
+	}
+
+	void CBindStruct::SetChanged()
+	{
+		if ( IsLoaded() )
 		{
-			// SetChanged precedes SetValue/Insert/Remove. Snapshot the original
-			// fields, including array counts, before indices or values can change.
-			CObj<IObjManIterator> pIterator = CreateIterator( true );
-			while ( pIterator && !pIterator->IsEnd() )
+			if ( bTrackPropertyChanges && !bHaveSavedValues )
 			{
-				CVariant value;
-				const std::string szName = pIterator->GetName();
-				const NTypeDef::STypeStructBase::SField *pField = pIterator->GetDesc();
-				// Struct rows have no scalar getter (array elements assert if
-				// queried as one); their children are visited by the iterator.
-				if ( pField && pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
-					savedPropertyValues.emplace( szName, value );
-				pIterator->Next();
+				// SetChanged precedes SetValue/Insert/Remove. Snapshot the original
+				// fields, including array counts, before indices or values can change.
+				CObj<IObjManIterator> pIterator = CreateIterator( true );
+				while ( pIterator && !pIterator->IsEnd() )
+				{
+					CVariant value;
+					const std::string szName = pIterator->GetName();
+					const NTypeDef::STypeStructBase::SField *pField = pIterator->GetDesc();
+					// Struct rows have no scalar getter (array elements assert if
+					// queried as one); their children are visited by the iterator.
+					if ( pField && pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
+						savedPropertyValues.emplace( szName, value );
+					pIterator->Next();
+				}
+				bHaveSavedValues = true;
 			}
-			bHaveSavedValues = true;
+			++nPropertyChangeVersion;
+			bChanged = true;
+			SetDatabaseDataChanged( dbidMain );
 		}
+	}
+
+	// Saving/discarding establishes a new baseline; the next edit captures it.
+	void CBindStruct::ResetChanged()
+	{
+		bChanged = false;
+		bHaveSavedValues = false;
+		savedPropertyValues.clear();
 		++nPropertyChangeVersion;
-		bChanged = true;
-		SetDatabaseDataChanged( dbidMain );
 	}
-}
 
-// Saving/discarding establishes a new baseline; the next edit captures it.
-void CBindStruct::ResetChanged()
-{
-	bChanged = false;
-	bHaveSavedValues = false;
-	savedPropertyValues.clear();
-	++nPropertyChangeVersion;
-}
-
-bool CBindStruct::IsPropertyModified( const std::string &szName )
-{
-	bTrackPropertyChanges = true;
-	if ( !bHaveSavedValues )
-		return false;
-
-	const NTypeDef::STypeStructBase::SField *pField = GetDesc( szName );
-	if ( !pField )
-		return false;
-	CVariant value;
-	const auto saved = savedPropertyValues.find( szName );
-	if ( pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
+	bool CBindStruct::IsPropertyModified( const std::string &szName )
 	{
-		if ( saved == savedPropertyValues.end() || saved->second != value )
-			return true;
-	}
-	else if ( saved != savedPropertyValues.end() )
-		return true;
-
-	// Containers (including colour vectors) also represent their descendants.
-	// Compare full names with a separator so Foo cannot match FooBar.
-	const std::string szPrefix = szName + ".";
-	for ( auto it = savedPropertyValues.lower_bound( szPrefix );
-			it != savedPropertyValues.end() && it->first.compare( 0, szPrefix.size(), szPrefix ) == 0; ++it )
-	{
-		if ( !GetValue( it->first, &value ) || value != it->second )
-			return true;
-	}
-	return false;
-}
-
-std::wstring CBindStruct::GetAttribute( const std::string &szName ) const
-{
-	for ( CAttributesList::const_iterator it = attributes.begin(); it != attributes.end(); ++it )
-	{
-		if ( it->first == szName )
-			return it->second;
-	}
-	return L"";
-}
-
-void CBindStruct::SetAttribute( const std::string &szName, const std::wstring &szValue )
-{
-	// first, try to find existing attribute
-	for ( CAttributesList::iterator it = attributes.begin(); it != attributes.end(); ++it )
-	{
-		if ( it->first == szName )
-		{
-			it->second = szValue;
-			return;
-		}
-	}
-	// add new one
-	attributes.push_back( std::pair<std::string, std::wstring>(szName, szValue) );
-}
-
-// ************************************************************************************************************************ //
-// **
-// ** struct iterator
-// **
-// **
-// **
-// ************************************************************************************************************************ //
-
-bool CStructIterator::GotoNextFieldInLevels()
-{
-	while ( ++levels.back().nCurrField >= levels.back().pTypeStruct->fields.size() )
-	{
-		levels.pop_back();
-		if ( levels.empty() )
+		bTrackPropertyChanges = true;
+		if ( !bHaveSavedValues )
 			return false;
-	}
-	//
-	if ( !bShowHidden && levels.back().pTypeStruct->fields[levels.back().nCurrField].HasAttribute( "hidden" ) != false )
-		return GotoNextFieldInLevels();
-	return true;
-}
 
-bool CStructIterator::AddLevel( const std::string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct )
-{
-	std::list<SLevel>::iterator pos = levels.insert( levels.end(), SLevel() );
-	pos->szAddName = _szAddName;
-	pos->pTypeStruct = _pTypeStruct;
-	if ( _pTypeStruct->pBaseType != 0 )
-	{
-		pos->nCurrField = -1;
-		return AddLevel( _szAddName, _pTypeStruct->pBaseType );
-	}
-	else
-	{
-		pos->nCurrField = -1;
-		return GotoNextFieldInLevels();
-	}
-}
-
-bool CStructIterator::Next()
-{
-	if ( levels.empty() )
-		return false;
-	SLevel &level = levels.back();
-	if ( level.pAggregatedIterator )
-	{
-		if ( level.pAggregatedIterator->Next() == false )
+		const NTypeDef::STypeStructBase::SField *pField = GetDesc( szName );
+		if ( !pField )
+			return false;
+		CVariant value;
+		const auto saved = savedPropertyValues.find( szName );
+		if ( pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
 		{
-			level.pAggregatedIterator = 0;
+			if ( saved == savedPropertyValues.end() || saved->second != value )
+				return true;
+		}
+		else if ( saved != savedPropertyValues.end() )
+			return true;
+
+		// Containers (including colour vectors) also represent their descendants.
+		// Compare full names with a separator so Foo cannot match FooBar.
+		const std::string szPrefix = szName + ".";
+		for ( auto it = savedPropertyValues.lower_bound( szPrefix );
+		      it != savedPropertyValues.end() && it->first.compare( 0, szPrefix.size(), szPrefix ) == 0;
+		      ++it )
+		{
+			if ( !GetValue( it->first, &value ) || value != it->second )
+				return true;
+		}
+		return false;
+	}
+
+	std::wstring CBindStruct::GetAttribute( const std::string &szName ) const
+	{
+		for ( CAttributesList::const_iterator it = attributes.begin(); it != attributes.end(); ++it )
+		{
+			if ( it->first == szName )
+				return it->second;
+		}
+		return L"";
+	}
+
+	void CBindStruct::SetAttribute( const std::string &szName, const std::wstring &szValue )
+	{
+		// first, try to find existing attribute
+		for ( CAttributesList::iterator it = attributes.begin(); it != attributes.end(); ++it )
+		{
+			if ( it->first == szName )
+			{
+				it->second = szValue;
+				return;
+			}
+		}
+		// add new one
+		attributes.push_back( std::pair<std::string, std::wstring>( szName, szValue ) );
+	}
+
+	// ************************************************************************************************************************ //
+	// **
+	// ** struct iterator
+	// **
+	// **
+	// **
+	// ************************************************************************************************************************ //
+
+	bool CStructIterator::GotoNextFieldInLevels()
+	{
+		while ( ++levels.back().nCurrField >= levels.back().pTypeStruct->fields.size() )
+		{
+			levels.pop_back();
+			if ( levels.empty() )
+				return false;
+		}
+		//
+		if ( !bShowHidden && levels.back().pTypeStruct->fields[levels.back().nCurrField].HasAttribute( "hidden" ) != false )
 			return GotoNextFieldInLevels();
+		return true;
+	}
+
+	bool CStructIterator::AddLevel( const std::string &_szAddName, NTypeDef::STypeStructBase *_pTypeStruct )
+	{
+		std::list<SLevel>::iterator pos = levels.insert( levels.end(), SLevel() );
+		pos->szAddName = _szAddName;
+		pos->pTypeStruct = _pTypeStruct;
+		if ( _pTypeStruct->pBaseType != 0 )
+		{
+			pos->nCurrField = -1;
+			return AddLevel( _szAddName, _pTypeStruct->pBaseType );
 		}
 		else
-			return true;
-	}
-	else if ( level.nCurrField < level.pTypeStruct->fields.size() )
-	{
-		if ( !bShowHidden && level.pTypeStruct->fields[level.nCurrField].HasAttribute( "hidden" ) != false )
-			return GotoNextFieldInLevels();
-		//
-		switch ( level.pTypeStruct->fields[level.nCurrField].pType->eType )
 		{
-		case NTypeDef::TYPE_TYPE_STRUCT:
-			if ( AddLevel( level.szAddName + level.pTypeStruct->fields[level.nCurrField].szName + ".",
-				             checked_cast_ptr<NTypeDef::STypeStruct *>( level.pTypeStruct->fields[level.nCurrField].pType ) ) == false )
-			{
-				return GotoNextFieldInLevels();
-			}
-			else
-				return true;
+			pos->nCurrField = -1;
+			return GotoNextFieldInLevels();
+		}
+	}
 
-		case NTypeDef::TYPE_TYPE_ARRAY:
-			level.pAggregatedIterator = new CArrayIterator( -1, level.szAddName + level.pTypeStruct->fields[level.nCurrField].szName,
-					                                            checked_cast_ptr<NTypeDef::STypeArray *>(level.pTypeStruct->fields[level.nCurrField].pType),
-												                              pObjMan, bShowHidden );
-			if ( level.pAggregatedIterator->IsEnd() )
+	bool CStructIterator::Next()
+	{
+		if ( levels.empty() )
+			return false;
+		SLevel &level = levels.back();
+		if ( level.pAggregatedIterator )
+		{
+			if ( level.pAggregatedIterator->Next() == false )
 			{
 				level.pAggregatedIterator = 0;
 				return GotoNextFieldInLevels();
 			}
 			else
 				return true;
-
-		default:
-			return GotoNextFieldInLevels();
 		}
+		else if ( level.nCurrField < level.pTypeStruct->fields.size() )
+		{
+			if ( !bShowHidden && level.pTypeStruct->fields[level.nCurrField].HasAttribute( "hidden" ) != false )
+				return GotoNextFieldInLevels();
+			//
+			switch ( level.pTypeStruct->fields[level.nCurrField].pType->eType )
+			{
+				case NTypeDef::TYPE_TYPE_STRUCT:
+					if ( AddLevel( level.szAddName + level.pTypeStruct->fields[level.nCurrField].szName + ".",
+					               checked_cast_ptr<NTypeDef::STypeStruct *>(
+														 level.pTypeStruct->fields[level.nCurrField].pType ) ) == false )
+					{
+						return GotoNextFieldInLevels();
+					}
+					else
+						return true;
+
+				case NTypeDef::TYPE_TYPE_ARRAY:
+					level.pAggregatedIterator = new CArrayIterator(
+							-1,
+							level.szAddName + level.pTypeStruct->fields[level.nCurrField].szName,
+							checked_cast_ptr<NTypeDef::STypeArray *>( level.pTypeStruct->fields[level.nCurrField].pType ),
+							pObjMan,
+							bShowHidden );
+					if ( level.pAggregatedIterator->IsEnd() )
+					{
+						level.pAggregatedIterator = 0;
+						return GotoNextFieldInLevels();
+					}
+					else
+						return true;
+
+				default:
+					return GotoNextFieldInLevels();
+			}
+		}
+		else
+			return GotoNextFieldInLevels();
 	}
-	else
-		return GotoNextFieldInLevels();
-}
 
 }
 }

@@ -11,13 +11,13 @@
 template <class TYPE>
 inline void ZeroSA( TYPE &val )
 {
-	memset( &val, 0, sizeof(val) );
+	memset( &val, 0, sizeof( val ) );
 }
 
 CSymEngine::CSymEngine()
 {
 	hProcess = GetCurrentProcess();
-	SymSetOptions ( SymGetOptions() | SYMOPT_LOAD_LINES | SYMOPT_DEFERRED_LOADS );
+	SymSetOptions( SymGetOptions() | SYMOPT_LOAD_LINES | SYMOPT_DEFERRED_LOADS );
 	if ( !SymInitialize( hProcess, 0, TRUE ) )
 		hProcess = 0;
 }
@@ -28,8 +28,13 @@ CSymEngine::~CSymEngine()
 		SymCleanup( hProcess );
 }
 
-inline void Clear( CSymString *p ) { if ( p ) *p = "?"; }
-bool CSymEngine::GetSymbol( uint32_t dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc )
+inline void Clear( CSymString *p )
+{
+	if ( p )
+		*p = "?";
+}
+bool CSymEngine::GetSymbol(
+		uint32_t dwAddress, CSymString *pszModule, CSymString *pszFile, int *pnLine, CSymString *pszFunc )
 {
 	Clear( pszModule );
 	Clear( pszFile );
@@ -39,23 +44,23 @@ bool CSymEngine::GetSymbol( uint32_t dwAddress, CSymString *pszModule, CSymStrin
 	if ( !hProcess )
 		return false;
 	const int N_MAX_NAME_LENG = 1000;
-	const int N_BUF_SIZE = sizeof(SYMBOL_INFO) + N_MAX_NAME_LENG;
-	char szBuf[ N_BUF_SIZE ];
+	const int N_BUF_SIZE = sizeof( SYMBOL_INFO ) + N_MAX_NAME_LENG;
+	char szBuf[N_BUF_SIZE];
 	memset( szBuf, 0, N_BUF_SIZE );
 
 	if ( pszModule )
 	{
 		IMAGEHLP_MODULE64 moduleInfo;
 		ZeroSA( moduleInfo );
-		moduleInfo.SizeOfStruct = sizeof(moduleInfo);
+		moduleInfo.SizeOfStruct = sizeof( moduleInfo );
 		if ( SymGetModuleInfo64( hProcess, dwAddress, &moduleInfo ) )
 			*pszModule = moduleInfo.ImageName;
 	}
 
 	if ( pszFunc )
 	{
-		SYMBOL_INFO *pInfo = (SYMBOL_INFO*)szBuf;
-		pInfo->SizeOfStruct = std::size(szBuf);
+		SYMBOL_INFO *pInfo = (SYMBOL_INFO *)szBuf;
+		pInfo->SizeOfStruct = std::size( szBuf );
 		pInfo->MaxNameLen = N_MAX_NAME_LENG;
 		if ( SymFromAddr( hProcess, dwAddress, 0, pInfo ) )
 			*pszFunc = pInfo->Name;
@@ -65,7 +70,7 @@ bool CSymEngine::GetSymbol( uint32_t dwAddress, CSymString *pszModule, CSymStrin
 	{
 		IMAGEHLP_LINE64 lineInfo;
 		ZeroSA( lineInfo );
-		lineInfo.SizeOfStruct = sizeof(lineInfo);
+		lineInfo.SizeOfStruct = sizeof( lineInfo );
 		unsigned long dwDisp;
 		if ( SymGetLineFromAddr64( hProcess, dwAddress, &dwDisp, &lineInfo ) )
 		{
@@ -82,7 +87,7 @@ static void Assign( ADDRESS64 *pRes, uint32_t dwSeg, DWORD64 dwOffset )
 {
 	pRes->Mode = AddrModeFlat;
 	pRes->Offset = dwOffset;
-	pRes->Segment = 0;//dwSeg;
+	pRes->Segment = 0; //dwSeg;
 }
 int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nMaxEntries )
 {
@@ -106,8 +111,15 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 	int nEntry = 0;
 	for ( nEntry = 0; nEntry < nMaxEntries; ++nEntry )
 	{
-		BOOL bRes = StackWalk64( IMAGE_FILE_MACHINE_I386, se.GetProcess(), GetCurrentThread(), &stkFrame, &ctx, 0,
-			SymFunctionTableAccess64, SymGetModuleBase64, 0 );
+		BOOL bRes = StackWalk64( IMAGE_FILE_MACHINE_I386,
+		                         se.GetProcess(),
+		                         GetCurrentThread(),
+		                         &stkFrame,
+		                         &ctx,
+		                         0,
+		                         SymFunctionTableAccess64,
+		                         SymGetModuleBase64,
+		                         0 );
 		if ( !bRes || stkFrame.AddrPC.Offset == 0 )
 			break;
 		SCallStackEntry &res = pRes[nEntry];
@@ -122,7 +134,7 @@ int CollectCallStack( SCallStackEntry *pRes, int nMaxEntries )
 	CONTEXT ctx;
 	EXCEPTION_POINTERS ep;
 	ep.ContextRecord = &ctx;
-	RtlCaptureContext(&ctx);
+	RtlCaptureContext( &ctx );
 	return CollectCallStack( &ep, pRes, nMaxEntries );
 }
 

@@ -10,13 +10,13 @@
 
 namespace NMenuDropDown
 {
-	void Choose( unsigned nCommandID, int nIndex )
+void Choose( unsigned nCommandID, int nIndex )
+{
+	if ( nIndex < 0 )
 	{
-		if ( nIndex < 0 )
-		{
-			return;
-		}
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CONTROLLER_CONTAINER, nCommandID,
-																												 static_cast<uintptr_t>( nIndex ) );
+		return;
 	}
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_CONTROLLER_CONTAINER, nCommandID, static_cast<uintptr_t>( nIndex ) );
+}
 }

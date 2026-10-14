@@ -10,13 +10,13 @@ class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 {
 	enum EResourceType
 	{
-		RT_MODEL			= 0,
-		RT_MATERIAL		= 1,
-		RT_TEXTURE		= 2,
-		RT_GEOMETRY		= 3,
-		RT_AIGEOMETRY	= 4,
-		RT_SKELETON		= 5,
-		RT_COUNT			= 6,
+		RT_MODEL = 0,
+		RT_MATERIAL = 1,
+		RT_TEXTURE = 2,
+		RT_GEOMETRY = 3,
+		RT_AIGEOMETRY = 4,
+		RT_SKELETON = 5,
+		RT_COUNT = 6,
 	};
 	//
 	static const char VISOBJ_TYPE_NAME[];
@@ -34,13 +34,15 @@ class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 	//
 	static void GetSeasonedFolderName( std::string *pszFileName, NDb::ESeason eSeason );
 	static void GetSeasonedFileName( std::string *pszFileName, NDb::ESeason eSeason );
-	static void GetResourceFileName( std::string *pszResourceFileName, EResourceType eResourceType, const std::string &rszVisObjFileName );
+	static void GetResourceFileName( std::string *pszResourceFileName,
+	                                 EResourceType eResourceType,
+	                                 const std::string &rszVisObjFileName );
 	//
 	bool AddVisObjEntry( const std::string &rszUniqueObjectName,
-											 IManipulator *pBuildDataManipulator,
-											 const std::string &rszMBFullFileName,
-											 const std::string &rszTGAFullFileName,
-											 NDb::ESeason eSeason );
+	                     IManipulator *pBuildDataManipulator,
+	                     const std::string &rszMBFullFileName,
+	                     const std::string &rszTGAFullFileName,
+	                     NDb::ESeason eSeason );
 	bool CreateVisObj( const std::string &rszVisObjFolder );
 	//
 	bool RemoveMaterial( const std::string &rszObjectTypeName, const std::string &rszObjectName );
@@ -59,14 +61,14 @@ protected:
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 
 	//CBuildDataBuilder
-	const std::string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
+	const std::string &GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
 	bool InternalInsertObject( std::string *pszObjectTypeName,
-														 std::string *pszUniqueObjectName,
-														 bool bFromMainMenu,
-														 bool *pbCanChangeObjectName,
-														 bool *pbNeedExport,
-														 bool *pbNeedEdit,
-														 IManipulator *pBuildDataManipulator );
+	                           std::string *pszUniqueObjectName,
+	                           bool bFromMainMenu,
+	                           bool *pbCanChangeObjectName,
+	                           bool *pbNeedExport,
+	                           bool *pbNeedEdit,
+	                           IManipulator *pBuildDataManipulator );
 	//CBuilderBase
 	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 

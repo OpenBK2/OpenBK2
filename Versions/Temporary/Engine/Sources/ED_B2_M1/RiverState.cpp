@@ -22,7 +22,6 @@
 const std::string CRiverState::VSO_NAME = "Rivers";
 const std::string CRiverState::VSO_TYPE_NAME = "RiverDesc";
 
-
 /**
 bool CRiverState::CanInsertVSO()
 {
@@ -59,12 +58,11 @@ bool CRiverState::CanInsertVSO()
 }
 /**/
 
-NMapInfoEditor::CVSOInstanceList* CRiverState::GetVSOList()
+NMapInfoEditor::CVSOInstanceList *CRiverState::GetVSOList()
 {
 	//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 	return &( GetMapInfoEditor()->VSOCollector.riverList );
 }
-
 
 void CRiverState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 {
@@ -75,11 +73,14 @@ void CRiverState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 		{
 			float fDefaultWidth = 0.0f;
 			SObjectSet objectSet;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+							 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+			     ( !objectSet.objectNameSet.empty() ) )
 			{
 				if ( objectSet.szObjectTypeName == VSO_TYPE_NAME )
 				{
-					CPtr<IManipulator> pVSODescManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first );
+					CPtr<IManipulator> pVSODescManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+							objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first );
 					if ( pVSODescManipulator )
 					{
 						CManipulatorManager::GetValue( &fDefaultWidth, pVSODescManipulator, "DefaultWidth" );
@@ -100,20 +101,20 @@ void CRiverState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 			GetControlPointBounds( &nMinCount, &nMaxCount );
 			//UniquePolygon<std::vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
 			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) &&
-					( pVSO->controlPoints.size() > 1 ) )
+			     ( pVSO->controlPoints.size() > 1 ) )
 			{
 				CVSOManager::Update( pVSO,
-														 true,
-														 false,
-														 GetDefaultStep(),
-														 pEditParameters->fWidth,
-														 pEditParameters->fHeight,
-														 pEditParameters->fOpacity,
-														 true,
-														 false,
-														 true,
-														 IsClose(),
-														 IsComplete() );
+				                     true,
+				                     false,
+				                     GetDefaultStep(),
+				                     pEditParameters->fWidth,
+				                     pEditParameters->fHeight,
+				                     pEditParameters->fOpacity,
+				                     true,
+				                     false,
+				                     true,
+				                     IsClose(),
+				                     IsComplete() );
 			}
 			else
 			{
@@ -123,10 +124,9 @@ void CRiverState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 	}
 }
 
-
 bool CRiverState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType )
 {
-	switch( eSelectionType )
+	switch ( eSelectionType )
 	{
 		case CVSOManager::SVSOSelection::ST_CONTROL:
 			return true;
@@ -141,7 +141,6 @@ bool CRiverState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSel
 	}
 }
 
-
 void CRiverState::InsertVSOInTerrain( const NDb::SVSOInstance &rVSO )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -153,7 +152,6 @@ void CRiverState::InsertVSOInTerrain( const NDb::SVSOInstance &rVSO )
 		}
 	}
 }
-
 
 void CRiverState::RemoveVSOFromTerrain( int nVSOID )
 {
@@ -167,7 +165,6 @@ void CRiverState::RemoveVSOFromTerrain( int nVSOID )
 	}
 }
 
-
 void CRiverState::UpdateVSOInTerrain( int nVSOID )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -179,6 +176,5 @@ void CRiverState::UpdateVSOInTerrain( int nVSOID )
 		}
 	}
 }
-
 
 // basement storage

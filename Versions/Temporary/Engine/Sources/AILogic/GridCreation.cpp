@@ -16,17 +16,16 @@ const float STANDART_HEIGHT = 250.0f;
 //*													CSortedGridUnits												*
 //*******************************************************************
 
-CSortedGridUnits* CSortedGridUnits::SUnitsCompare::pSortedUnits = 0;
+CSortedGridUnits *CSortedGridUnits::SUnitsCompare::pSortedUnits = 0;
 
-CSortedGridUnits::CSortedGridUnits( )
-: units( 10 )
+CSortedGridUnits::CSortedGridUnits() : units( 10 )
 {
 	nUnits = 0;
 
 	SUnitsCompare::pSortedUnits = this;
 }
 
-void CSortedGridUnits::AddUnit( CCommonUnit* pUnit )
+void CSortedGridUnits::AddUnit( CCommonUnit *pUnit )
 {
 	if ( units.size() >= nUnits - 1 )
 		units.resize( nUnits * 2 );
@@ -111,7 +110,7 @@ const int CSortedGridUnits::GetUnitByOrderNumber( const int n ) const
 	return sortedUnitsNums[n];
 }
 
-CCommonUnit* CSortedGridUnits::GetUnit( const int n ) const
+CCommonUnit *CSortedGridUnits::GetUnit( const int n ) const
 {
 	return units[sortedUnitsNums[n]];
 }
@@ -120,10 +119,10 @@ CCommonUnit* CSortedGridUnits::GetUnit( const int n ) const
 //*															CGrid																*
 //*******************************************************************
 
-CGrid* CGrid::SColumnCompare::pGrid;
+CGrid *CGrid::SColumnCompare::pGrid;
 
 CGrid::CGrid( const CVec2 &vGridCenter, const int nGroup, const CVec2 &vGridDir )
-: vCenter( vGridCenter ), fMaxWidth( 0.0f )
+		: vCenter( vGridCenter ), fMaxWidth( 0.0f )
 {
 	SColumnCompare::pGrid = this;
 	for ( int i = theGroupLogic.BeginGroup( nGroup ); i != theGroupLogic.EndGroup(); i = theGroupLogic.Next( i ) )
@@ -207,7 +206,7 @@ void CGrid::CreateGrid()
 		const CVec2 vAABBHalfSize( sortedUnits.GetAABB( i ) );
 
 		const int nColumn = *sortedColumns.begin();
-		SetUnitCenterByColumn( sortedUnits.GetUnitByOrderNumber(i), nColumn );
+		SetUnitCenterByColumn( sortedUnits.GetUnitByOrderNumber( i ), nColumn );
 
 		sortedColumns.erase( sortedColumns.begin() );
 		columns[nColumn] -= GetRowHeight( vAABBHalfSize.y );
@@ -215,8 +214,8 @@ void CGrid::CreateGrid()
 		sortedColumns.push_back( nColumn );
 		std::sort( sortedColumns.begin(), sortedColumns.end(), compare );
 
-		fHeight = (std::max)( fHeight, static_cast<float>(fabs( newCenters[sortedUnits.GetUnitByOrderNumber(i)].y )) );
-		fWidth = (std::max)( fWidth, newCenters[sortedUnits.GetUnitByOrderNumber(i)].x + vAABBHalfSize.x );
+		fHeight = (std::max)( fHeight, static_cast<float>( fabs( newCenters[sortedUnits.GetUnitByOrderNumber( i )].y ) ) );
+		fWidth = (std::max)( fWidth, newCenters[sortedUnits.GetUnitByOrderNumber( i )].x + vAABBHalfSize.x );
 	}
 
 	//
@@ -243,7 +242,7 @@ const CVec2 CGrid::GetUnitCenter( const int n ) const
 	return newCenters[n];
 }
 
-class CCommonUnit* CGrid::GetUnit( const int n ) const
+class CCommonUnit *CGrid::GetUnit( const int n ) const
 {
 	CheckRange( newCenters, n );
 	return sortedUnits.GetUnit( n );
@@ -251,8 +250,5 @@ class CCommonUnit* CGrid::GetUnit( const int n ) const
 
 bool CGrid::SColumnCompare::operator()( const int a, const int b ) const
 {
-	return
-		pGrid->columns[a] > pGrid->columns[b] ||
-		pGrid->columns[a] == pGrid->columns[b] && a < b;
-
+	return pGrid->columns[a] > pGrid->columns[b] || pGrid->columns[a] == pGrid->columns[b] && a < b;
 }

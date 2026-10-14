@@ -23,11 +23,11 @@ namespace NFontRaster
 struct SGlyphBitmap
 {
 	uint32_t nCodePoint = 0;
-	bool bMissing = false;						// the face has no glyph for it; this is .notdef
-	int nA = 0, nB = 0, nC = 0;				// pen to ink, ink width, ink to next pen
-	int nTop = 0;										// rows from the ink's top down to the baseline
+	bool bMissing = false;      // the face has no glyph for it; this is .notdef
+	int nA = 0, nB = 0, nC = 0; // pen to ink, ink width, ink to next pen
+	int nTop = 0;               // rows from the ink's top down to the baseline
 	int nRows = 0;
-	std::vector<uint8_t> coverage;		// nB * nRows, row after row from the top
+	std::vector<uint8_t> coverage; // nB * nRows, row after row from the top
 };
 
 // What a face was fitted to, and the metrics the engine lays text out by
@@ -47,16 +47,18 @@ class CFace
 	struct SImpl;
 	std::unique_ptr<SImpl> pImpl;
 	CFace();
+
 public:
 	~CFace();
-	CFace( const CFace& ) = delete;
-	CFace& operator=( const CFace& ) = delete;
+	CFace( const CFace & ) = delete;
+	CFace &operator=( const CFace & ) = delete;
 
 	// From a file. nFaceIndex as SOptions::nFaceIndex takes it.
 	static std::unique_ptr<CFace> OpenFile( const std::string &szFile, int nFaceIndex, std::string *pszError );
 	// From bytes already in memory, which the face keeps alive for as long as it
 	// lives; this is how a font in the game's paks is opened.
-	static std::unique_ptr<CFace> OpenMemory( std::shared_ptr<const std::vector<uint8_t>> data, int nFaceIndex, std::string *pszError );
+	static std::unique_ptr<CFace>
+	OpenMemory( std::shared_ptr<const std::vector<uint8_t>> data, int nFaceIndex, std::string *pszError );
 
 	// Sizes the face so that its cell is exactly options.nCellHeight pixels,
 	// measured the way options.eCellMetrics says. For CELL_INK, sizingCodePoints

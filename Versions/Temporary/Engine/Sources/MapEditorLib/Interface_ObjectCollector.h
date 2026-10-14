@@ -15,11 +15,10 @@
 #define NORMAL_IMAGE_SPACE_Y 35
 //
 
-#define OCDE_NORMAL_BITMAP	0x01
-#define OCDE_SMALL_BITMAP		0x02
-#define OCDE_LABEL					0x04
-#define OCDE_ALL						0xFFFFFFFF
-
+#define OCDE_NORMAL_BITMAP 0x01
+#define OCDE_SMALL_BITMAP 0x02
+#define OCDE_LABEL 0x04
+#define OCDE_ALL 0xFFFFFFFF
 
 struct IObjectDataExtractor : public CObjectBase
 {
@@ -29,13 +28,12 @@ struct IObjectDataExtractor : public CObjectBase
 	// this call already works in CArray2D<uint32_t> and the conversion to a
 	// front-end bitmap is the collector's job.
 	virtual unsigned GetObjectData( CArray2D<uint32_t> *pNormalImage,
-															CArray2D<uint32_t> *pSmallImage,
-															std::string *pszLabel,
-															const std::string &rszObjectTypeName,
-															const std::string &rszObjectName,
-															const std::string &rszDataExtractorType ) = 0;
+	                                CArray2D<uint32_t> *pSmallImage,
+	                                std::string *pszLabel,
+	                                const std::string &rszObjectTypeName,
+	                                const std::string &rszObjectName,
+	                                const std::string &rszDataExtractorType ) = 0;
 };
-
 
 struct IObjectFilter
 {
@@ -46,10 +44,12 @@ struct IObjectFilter
 	virtual bool Match( const std::string &szObjectTypeName, const std::string &szObjectName ) const = 0;
 };
 
-
 struct IObjectFilterCollector : public CObjectBase
 {
-	enum { tidTypeID = 0x14216B00 };
+	enum
+	{
+		tidTypeID = 0x14216B00
+	};
 	//
 	typedef std::vector<std::string> CFilterList;
 	typedef std::unordered_map<std::string, CFilterList> CFilterListMap;
@@ -57,22 +57,24 @@ struct IObjectFilterCollector : public CObjectBase
 	virtual bool Load( CDataStream *pStream ) = 0;
 	virtual bool Save( CDataStream *pStream ) = 0;
 	//
-	virtual int GetFilterList( CFilterList* pFilterList, const std::string &rszFilterType ) const = 0;
+	virtual int GetFilterList( CFilterList *pFilterList, const std::string &rszFilterType ) const = 0;
 	//
 	virtual bool IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const = 0;
-	virtual const IObjectFilter* Get( const std::string &rszFilterType, const int nFilterIndex ) const = 0;
+	virtual const IObjectFilter *Get( const std::string &rszFilterType, const int nFilterIndex ) const = 0;
 	// wxID_OK or wxID_CANCEL
-	virtual int ShowFilterSelectionDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) = 0;
-	virtual int ShowFilterCreationDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) = 0;
+	virtual int ShowFilterSelectionDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) = 0;
+	virtual int ShowFilterCreationDialog( IWidget *pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) = 0;
 };
-
 
 // Коллекционирование объектов по меткам
 // Создание ImageList на коллекцию
 // Применение фильтров
 struct IObjectCollector : public CObjectBase
 {
-	enum { tidTypeID = 0x14126380 };
+	enum
+	{
+		tidTypeID = 0x14126380
+	};
 	//
 	struct SObjectParams
 	{
@@ -86,13 +88,16 @@ struct IObjectCollector : public CObjectBase
 	virtual bool Save( CDataStream *pStream ) = 0;
 	//
 	virtual void RegisterDataExtractor( IObjectDataExtractor *pDataExtractor ) = 0;
-	virtual void RegisterDataExtractor( const std::string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor ) = 0;
+	virtual void RegisterDataExtractor( const std::string &rszDataExtractorType,
+	                                    IObjectDataExtractor *pDataExtractor ) = 0;
 	//
 	//
 	// возвращает количество объектов
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName ) = 0;
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter ) = 0;
-	virtual bool GetObjectParams( SObjectParams* pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName ) = 0;
+	virtual bool GetObjectParams( SObjectParams *pObjectParams,
+	                              const std::string &rszObjectTypeName,
+	                              const std::string &rszObjectName ) = 0;
 	// Which of an object's two icon sizes is wanted. The numbers are
 	// wxIMAGE_LIST_NORMAL and wxIMAGE_LIST_SMALL, which are also the
 	// LVSIL_NORMAL and LVSIL_SMALL the list controls were asked with before the
@@ -103,5 +108,5 @@ struct IObjectCollector : public CObjectBase
 		IMAGE_LIST_NORMAL = 0,
 		IMAGE_LIST_SMALL = 1,
 	};
-	virtual IImageList* GetImageList( int nImageListType ) = 0;
+	virtual IImageList *GetImageList( int nImageListType ) = 0;
 };

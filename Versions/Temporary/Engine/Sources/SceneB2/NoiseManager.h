@@ -13,24 +13,27 @@ class CNoiseAccessor
 	const unsigned int nYOffset;
 
 	CNoiseAccessor( const CArray2D<uint8_t> &_noise )
-		: noise(_noise),
-			nXOffset( (float)rand() / RAND_MAX * _noise.GetSizeX() ),
-			nYOffset( (float)rand() / RAND_MAX * _noise.GetSizeY() ) {}
-public:
-	CNoiseAccessor( const CNoiseAccessor &acc )
-		: noise( acc.noise ), nXOffset( acc.nXOffset ), nYOffset( acc.nYOffset ) {}
+			: noise( _noise ), nXOffset( (float)rand() / RAND_MAX * _noise.GetSizeX() ),
+				nYOffset( (float)rand() / RAND_MAX * _noise.GetSizeY() )
+	{
+	}
 
-	CNoiseAccessor& operator=( const CNoiseAccessor &acc )
+public:
+	CNoiseAccessor( const CNoiseAccessor &acc ) : noise( acc.noise ), nXOffset( acc.nXOffset ), nYOffset( acc.nYOffset )
+	{
+	}
+
+	CNoiseAccessor &operator=( const CNoiseAccessor &acc )
 	{
 		CNoiseAccessor::~CNoiseAccessor();
-		::new( this ) CNoiseAccessor( acc );
+		::new ( this ) CNoiseAccessor( acc );
 		return *this;
 	}
 
 	uint8_t GetValue( unsigned int x, unsigned int y )
 	{
 		NI_ASSERT( ( noise.GetSizeX() > 0 ) && ( noise.GetSizeY() > 0 ), "Empty noise" );
-		return noise[(y + nYOffset) & ( noise.GetSizeY() - 1 )][(x + nXOffset) & ( noise.GetSizeX() - 1 )];
+		return noise[( y + nYOffset ) & ( noise.GetSizeY() - 1 )][( x + nXOffset ) & ( noise.GetSizeX() - 1 )];
 	}
 };
 

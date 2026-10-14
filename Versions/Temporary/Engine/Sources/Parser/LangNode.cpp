@@ -30,7 +30,7 @@ static struct SInitTypeNames
 	};
 } initTypeNames;
 
-const char* GetTypeName( ESimpleType eType )
+const char *GetTypeName( ESimpleType eType )
 {
 	return ( typeToName.find( eType ) != typeToName.end() ) ? typeToName[eType].c_str() : "unknown";
 }
@@ -54,12 +54,9 @@ static bool IsNum( ESimpleType eType )
 
 bool IsTypesEqual( ESimpleType eType1, ESimpleType eType2 )
 {
-	return	eType1 == eType2 || IsNum( eType1 ) && IsNum( eType2 ) ||
-					eType1 == EST_STRING && eType2 == EST_WSTRING ||
-					eType1 == EST_WSTRING && eType2 == EST_STRING;
+	return eType1 == eType2 || IsNum( eType1 ) && IsNum( eType2 ) || eType1 == EST_STRING && eType2 == EST_WSTRING ||
+	       eType1 == EST_WSTRING && eType2 == EST_STRING;
 }
-
-
 
 void CSimpleValue::SetValue( const std::string &szDefValue, bool bString )
 {

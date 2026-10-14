@@ -4,8 +4,8 @@
 #include "MapObj.h"
 #include "Main/GameTimer.h"
 
-CAllAnimationsPlayer::CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj> > &_objects )
-: objects( _objects ), bSwitchToNextAnimation( true )
+CAllAnimationsPlayer::CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj>> &_objects )
+		: objects( _objects ), bSwitchToNextAnimation( true )
 {
 }
 
@@ -13,7 +13,7 @@ void CAllAnimationsPlayer::Update()
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
 	std::list<int> toDelete;
-	for ( std::unordered_map<int, CObj<CMapObj> >::iterator iter = objects.begin(); iter != objects.end(); ++iter )
+	for ( std::unordered_map<int, CObj<CMapObj>>::iterator iter = objects.begin(); iter != objects.end(); ++iter )
 	{
 		SAnimationInfo &animInfo = playingAnimations[iter->first];
 		if ( bSwitchToNextAnimation || ( animInfo.nStartNextAnimTime < curTime && !animInfo.bLooped ) )
@@ -33,8 +33,7 @@ void CAllAnimationsPlayer::Update()
 
 				if ( animDuration.first == -1 )
 					animInfo.nAnimation = -1;
-			}
-			while ( animDuration.first <= 0 && animInfo.nAnimation != nStartAnim );
+			} while ( animDuration.first <= 0 && animInfo.nAnimation != nStartAnim );
 
 			if ( animDuration.first > 0 )
 			{

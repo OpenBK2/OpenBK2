@@ -2,17 +2,25 @@
 
 #include "UpdatableObject.h"
 
-class CObjectBase * GetObjectByCmd( const struct SAIUnitCmd &cmd );
+class CObjectBase *GetObjectByCmd( const struct SAIUnitCmd &cmd );
 
 class CLinkObject : public CUpdatableObj
 {
 public:
 	ZDATA_( CUpdatableObj )
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		int nLink = {};
-		int nUniqueID = {};
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nLink = {};
+	int nUniqueID = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CUpdatableObj *)this); f.Add(2,&nLink); f.Add(3,&nUniqueID); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CUpdatableObj *)this );
+		f.Add( 2, &nLink );
+		f.Add( 3, &nUniqueID );
+		return 0;
+	}
+
 public:
 	CLinkObject();
 	CLinkObject( const int _nLink ) { SetLink( _nLink ); }
@@ -28,13 +36,13 @@ public:
 
 	static void Clear();
 	static void ClearLinks();
-	static CLinkObject* GetObjectByLink( const int nLink );
+	static CLinkObject *GetObjectByLink( const int nLink );
 	static void Segment();
 	// падает, если передан некорректный nUniqueID
-	static CLinkObject* GetObjectByUniqueId( const int nUniqueID );
+	static CLinkObject *GetObjectByUniqueId( const int nUniqueID );
 
 	// возвращает 0, если передан некорректный nUniqueID
-	static CLinkObject* GetObjectByUniqueIdSafe( const int nUniqueID );
+	static CLinkObject *GetObjectByUniqueIdSafe( const int nUniqueID );
 
 	//
 	static bool IsLinkObjectExists( const int nUniqueID );
@@ -47,32 +55,28 @@ public:
 };
 
 // возвращает 0, если передан некорректный nUniqueID
-template<class T>
-inline T* GetObjectByUniqueIdSafe( const int nUniqueID )
+template <class T>
+inline T *GetObjectByUniqueIdSafe( const int nUniqueID )
 {
 	CLinkObject *pLinkObject = CLinkObject::GetObjectByUniqueIdSafe( nUniqueID );
-	return
-		pLinkObject ? checked_cast<T*>( pLinkObject ) : 0;
+	return pLinkObject ? checked_cast<T *>( pLinkObject ) : 0;
 }
 
 struct SLinkObjData
 {
-	std::vector< CObj<CLinkObject> > link2object;
+	std::vector<CObj<CLinkObject>> link2object;
 	std::list<int> deletedObjects;
 	std::list<int> deletedUniqueObjects;
 
-	det_map< int, CObj<CLinkObject> > unitsID2object;
+	det_map<int, CObj<CLinkObject>> unitsID2object;
 	int nCurUniqueID = {};
-	SLinkObjData() : nCurUniqueID( 0 ) {  }
+	SLinkObjData() : nCurUniqueID( 0 ) {}
 };
 
 struct SLinkObjDataAutoMagic
 {
-	static SLinkObjData * pLinkObjData;
-	SLinkObjDataAutoMagic()
-	{
-		pLinkObjData = new SLinkObjData;
-	}
+	static SLinkObjData *pLinkObjData;
+	SLinkObjDataAutoMagic() { pLinkObjData = new SLinkObjData; }
 	~SLinkObjDataAutoMagic()
 	{
 		delete pLinkObjData;

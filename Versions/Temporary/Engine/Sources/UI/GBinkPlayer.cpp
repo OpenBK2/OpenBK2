@@ -14,9 +14,9 @@ namespace NGScene
 {
 
 // CBinkVideoPlayer
-class CBinkVideoPlayer: public IVideoPlayer
+class CBinkVideoPlayer : public IVideoPlayer
 {
-	OBJECT_NOCOPY_METHODS(CBinkVideoPlayer);
+	OBJECT_NOCOPY_METHODS( CBinkVideoPlayer );
 	std::unique_ptr<FFmpeg> ffmpeg_player;
 	std::unique_ptr<CDataStream> pStream;
 	ZDATA
@@ -29,15 +29,16 @@ class CBinkVideoPlayer: public IVideoPlayer
 	bool bNeedUpdate = false; // BinkWait returned 0
 	int nEndFrame = -1;
 	int nFrameSkip = 0;
-	ZEND int operator&( IBinSaver &f ) override {
-		f.Add(2,&bForceUpdate);
-		f.Add(3,&bStopped);
-		f.Add(4,&dwCopyFlags);
-		f.Add(5,&dwPlayFlags);
-		f.Add(6,&szFileName);
-		f.Add(7,&bNeedUpdate);
-		f.Add(8,&nEndFrame);
-		f.Add(9,&nFrameSkip);
+	ZEND int operator&( IBinSaver &f ) override
+	{
+		f.Add( 2, &bForceUpdate );
+		f.Add( 3, &bStopped );
+		f.Add( 4, &dwCopyFlags );
+		f.Add( 5, &dwPlayFlags );
+		f.Add( 6, &szFileName );
+		f.Add( 7, &bNeedUpdate );
+		f.Add( 8, &nEndFrame );
+		f.Add( 9, &nFrameSkip );
 		return 0;
 	}
 
@@ -53,7 +54,7 @@ public:
 
 	void Play() override;
 	bool Stop() override;
-	bool Pause( bool bPause )override;
+	bool Pause( bool bPause ) override;
 	bool OpenVideo() override;
 	bool IsPlaying() const override;
 
@@ -67,19 +68,20 @@ public:
 	void PlayFragment( int nStartFrame, int _nEndFrame, int _nFrameSkip = 0 ) override;
 };
 
-IVideoPlayer* CreateVideoPlayer( const std::string &filename, uint32_t dwFlags )
+IVideoPlayer *CreateVideoPlayer( const std::string &filename, uint32_t dwFlags )
 {
 	return new CBinkVideoPlayer( filename, dwFlags );
 }
 
-CBinkVideoPlayer::CBinkVideoPlayer( const std::string &filename, uint32_t _dwFlags ):
-	dwPlayFlags( _dwFlags ), szFileName( filename )
+CBinkVideoPlayer::CBinkVideoPlayer( const std::string &filename, uint32_t _dwFlags )
+		: dwPlayFlags( _dwFlags ), szFileName( filename )
 {
 }
 
 int CBinkVideoPlayer::GetCurrentFrame() const
 {
-	if ( !IsPlaying() ) {
+	if ( !IsPlaying() )
+	{
 		return -1;
 	}
 	return ffmpeg_player->FrameNum;
@@ -87,11 +89,12 @@ int CBinkVideoPlayer::GetCurrentFrame() const
 
 void CBinkVideoPlayer::SetCurrentFrame( int nFrame )
 {
-	if ( !IsPlaying() ) {
+	if ( !IsPlaying() )
+	{
 		return;
 	}
 
-	ffmpeg_player->Goto(nFrame);
+	ffmpeg_player->Goto( nFrame );
 	Updated();
 	bForceUpdate = true;
 
@@ -107,7 +110,8 @@ void CBinkVideoPlayer::SetCurrentFrame( int nFrame )
 
 void CBinkVideoPlayer::Play()
 {
-	if ( OpenVideo() ) {
+	if ( OpenVideo() )
+	{
 		ffmpeg_player->Play();
 	}
 }
@@ -125,11 +129,12 @@ bool CBinkVideoPlayer::Stop()
 
 bool CBinkVideoPlayer::Pause( bool bPause )
 {
-	if ( !ffmpeg_player ) {
+	if ( !ffmpeg_player )
+	{
 		return false;
 	}
 
-	return ffmpeg_player->Pause(bPause);
+	return ffmpeg_player->Pause( bPause );
 }
 
 bool CBinkVideoPlayer::IsPlaying() const
@@ -140,7 +145,8 @@ bool CBinkVideoPlayer::IsPlaying() const
 int CBinkVideoPlayer::GetLength() const
 {
 	ASSERT( ffmpeg_player );
-	return ffmpeg_player && ( ffmpeg_player->FrameRate > 0 ) ? 1000 * ffmpeg_player->Frames / ffmpeg_player->FrameRate : 0;
+	return ffmpeg_player && ( ffmpeg_player->FrameRate > 0 ) ? 1000 * ffmpeg_player->Frames / ffmpeg_player->FrameRate
+	                                                         : 0;
 }
 
 int CBinkVideoPlayer::GetNumFrames() const
@@ -167,7 +173,8 @@ void CBinkVideoPlayer::GetSize( CTPoint<int> *pSize ) const
 
 void CBinkVideoPlayer::Recalc()
 {
-	if ( !ffmpeg_player ) {
+	if ( !ffmpeg_player )
+	{
 		return;
 	}
 
@@ -176,7 +183,8 @@ void CBinkVideoPlayer::Recalc()
 		CTPoint sSize( GetNextPow2( ffmpeg_player->Width ), GetNextPow2( ffmpeg_player->Height ) );
 		pValue = NGfx::MakeTexture( sSize.x, sSize.y, 1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
 	}
-	if ( !IsValid( pValue ) ) {
+	if ( !IsValid( pValue ) )
+	{
 		return;
 	}
 
@@ -211,7 +219,8 @@ void CBinkVideoPlayer::Recalc()
 		}
 	}
 
-	if ( bForceUpdate && !bFrameUpdated ) {
+	if ( bForceUpdate && !bFrameUpdated )
+	{
 		ffmpeg_player->DoFrame();
 	}
 
@@ -224,7 +233,8 @@ void CBinkVideoPlayer::Recalc()
 
 bool CBinkVideoPlayer::NeedUpdate()
 {
-	if (!ffmpeg_player) {
+	if ( !ffmpeg_player )
+	{
 		return false;
 	}
 	if ( !ffmpeg_player->Wait() || bForceUpdate )
@@ -244,29 +254,31 @@ bool CBinkVideoPlayer::OpenVideo()
 		if ( !pStream || !pStream->IsOk() || !pStream->CanRead() )
 			return false;
 
-		ffmpeg_player = FFmpeg::Open( (pStream->GetBuffer()), pStream->GetSize() );
+		ffmpeg_player = FFmpeg::Open( ( pStream->GetBuffer() ), pStream->GetSize() );
 	}
 
 	if ( ffmpeg_player )
 	{
 		const float fSFXMasterVolume = NGlobal::GetVar( "Sound.SFXVolume", 1.0f );
 		const long nVolume = 32768 * fSFXMasterVolume;
-		ffmpeg_player->SetVolume(nVolume);
+		ffmpeg_player->SetVolume( nVolume );
 	}
 	return ffmpeg_player != nullptr;
 }
 
 void CBinkVideoPlayer::PlayFragment( int nStartFrame, int _nEndFrame, int _nFrameSkip )
 {
-	if ( !IsPlaying() ) {
+	if ( !IsPlaying() )
+	{
 		Play();
 	}
 
-	if ( !IsPlaying() ) {
-		return;			// Something went wrong
+	if ( !IsPlaying() )
+	{
+		return; // Something went wrong
 	}
 
-	const int nStart = Clamp( nStartFrame, 0, ffmpeg_player->Frames - 1);
+	const int nStart = Clamp( nStartFrame, 0, ffmpeg_player->Frames - 1 );
 	nEndFrame = Clamp( _nEndFrame, nStart, ffmpeg_player->Frames - 1 );
 	SetCurrentFrame( nStart );
 	nFrameSkip = _nFrameSkip;

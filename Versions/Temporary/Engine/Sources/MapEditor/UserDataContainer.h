@@ -15,7 +15,7 @@ public:
 	void GetConstXMLFilePath( std::string *pszConstXMLFilePath );
 
 	// IUserDataContainer
-	SUserData* Get() { return &userData; }
+	SUserData *Get() { return &userData; }
 	//
 	void Load();
 	void Save();

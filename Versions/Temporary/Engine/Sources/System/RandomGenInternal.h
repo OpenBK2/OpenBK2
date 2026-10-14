@@ -25,11 +25,12 @@ class CRandomGenSeed : public IRandomSeed
 	SRandData rnd;
 	//
 	void SFLB0_InitVariables();
+
 public:
 	void Init();
 	void InitByZeroSeed();
 	//
-	const SRandData& GetRandData() const { return rnd; }
+	const SRandData &GetRandData() const { return rnd; }
 	void SetRandData( const SRandData &_rnd ) { rnd = _rnd; }
 	//
 	void Store( CDataStream *pStream );

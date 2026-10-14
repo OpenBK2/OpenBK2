@@ -40,7 +40,7 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 	// Arrange slots
 	slots.clear();
 	slots.resize( gameDesc.nPlayers );
-	slots[0].szName = szMPName;			// Add self
+	slots[0].szName = szMPName; // Add self
 	slots[0].bPresent = true;
 	slots[0].nClientID = GetOwnClientID();
 	nHostClientID = slots[0].nClientID;
@@ -66,7 +66,8 @@ bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 		SNetGameInfo &game = *it;
 		if ( game.nGameID == pMsg->nGameID )
 		{
-			if ( game.nMaxPlayers < 2 || game.nMaxPlayers - game.nPlayers < 1 )		// Do not join games with less than 2 players, or full games
+			if ( game.nMaxPlayers < 2 ||
+			     game.nMaxPlayers - game.nPlayers < 1 ) // Do not join games with less than 2 players, or full games
 				break;
 
 			bFound = true;
@@ -130,7 +131,7 @@ bool CMPManagerMode::OnUpdateGameListMessage( SMPUIGameListMessage *pMsg )
 			for ( CNetGameList::iterator it = games.begin(); it != games.end(); ++it )
 			{
 				SNetGameInfo &ownGame = *it;
-				AddGameInfoForUI( &(pGamesMsg->gamesAddChange), ownGame );
+				AddGameInfoForUI( &( pGamesMsg->gamesAddChange ), ownGame );
 			}
 			PushMessage( pGamesMsg );
 		}
@@ -151,7 +152,7 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 		// Process slot open/close
 		if ( IsGameHost() && newSlot.bPresent == false )
 		{
-			if ( oldSlot.bPresent )				// Kick player
+			if ( oldSlot.bPresent ) // Kick player
 			{
 				KickPlayerFromSlot( pMsg->nSlot );
 				RemoveClient( oldSlot.nClientID, true );
@@ -180,12 +181,11 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 	const uint32_t dwLaggersBefore = dwLaggers;
 	// Lockstep reports are queued independently of UI pause requests. A report
 	// from before Ctrl+P must not clear the local pause or hide its Resume button.
-	const uint32_t dwOwnPause = nOwnSlot >= 0 && nOwnSlot < slots.size()
-		? dwUserPausedPlayers & ( 1UL << nOwnSlot ) : 0;
+	const uint32_t dwOwnPause = nOwnSlot >= 0 && nOwnSlot < slots.size() ? dwUserPausedPlayers & ( 1UL << nOwnSlot ) : 0;
 	// Drops can be processed before an older UI lag report. Only retain players
 	// that are still present and actually required by the lockstep transceiver.
-	const uint32_t dwReportedLaggers = ( pMsg->dwLaggingPlayers | dwOwnPause ) &
-		GetPresentMask() & pTransceiver->GetPlayerMask();
+	const uint32_t dwReportedLaggers =
+			( pMsg->dwLaggingPlayers | dwOwnPause ) & GetPresentMask() & pTransceiver->GetPlayerMask();
 	if ( bInitialLoadInProgress && !pMsg->bInitialWait )
 	{
 		dwLaggersOld = 0;
@@ -199,12 +199,14 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 	}
 
 	dwLaggers = dwReportedLaggers;
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"STATE",
-		"OnLagMessage",
-		GetOwnClientID(),
-		fmt::format( "initial={} pre_laggers={:08X} post_laggers={:08X}", pMsg->bInitialWait ? 1 : 0, dwLaggersBefore, dwLaggers ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "STATE",
+	                              "OnLagMessage",
+	                              GetOwnClientID(),
+	                              fmt::format( "initial={} pre_laggers={:08X} post_laggers={:08X}",
+	                                           pMsg->bInitialWait ? 1 : 0,
+	                                           dwLaggersBefore,
+	                                           dwLaggers ) );
 	// Several reports may arrive before AnalyzeLaggers updates dwLaggersOld.
 	ShowWaitWindow( dwLaggers != 0 );
 
@@ -215,12 +217,11 @@ bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 
 bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 {
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"DECISION",
-		"OnLeaveGameMessage",
-		GetOwnClientID(),
-		fmt::format( "running={}", IsGameRunning() ? 1 : 0 ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "DECISION",
+	                              "OnLeaveGameMessage",
+	                              GetOwnClientID(),
+	                              fmt::format( "running={}", IsGameRunning() ? 1 : 0 ) );
 	if ( IsGameRunning() )
 	{
 		if ( IsGameControlHost() && IsValid( pTransceiver ) )
@@ -233,12 +234,11 @@ bool CMPManagerMode::OnLeaveGameMessage( SMPUIMessage *pMsg )
 
 bool CMPManagerMode::OnInterruptMessage( SMPUIMessage *pMsg )
 {
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"DECISION",
-		"OnInterruptMessage",
-		GetOwnClientID(),
-		"interrupt=1" );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "DECISION",
+	                              "OnInterruptMessage",
+	                              GetOwnClientID(),
+	                              "interrupt=1" );
 	OnLeaveGame();
 	return true;
 }
@@ -268,14 +268,14 @@ void CMPManagerMode::SetUserPause( bool bPauseOn )
 	// Automatic pause expiry must publish the same state change as Resume.
 	pClient->SendGamePacket( new CB2UserPausePacket( 0, bPauseOn ), true );
 	NGameX::MatchPacketTrace_Log(
-		pTransceiver->GetCurrentCommonSegment(),
-		"TX",
-		"CB2UserPausePacket",
-		GetOwnClientID(),
-		fmt::format( "slot={} paused={} user_pause_mask={:08X}", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
+			pTransceiver->GetCurrentCommonSegment(),
+			"TX",
+			"CB2UserPausePacket",
+			GetOwnClientID(),
+			fmt::format( "slot={} paused={} user_pause_mask={:08X}", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
 
 	pTransceiver->CommandTimeOut( bPauseOn );
-	if ( !bPauseOn )							// Pause off
+	if ( !bPauseOn ) // Pause off
 	{
 		dwLaggers &= ~( 1UL << nOwnSlot );
 		int nTimeLeft = lags[nOwnSlot].nLagLeft - ( curTime - lags[nOwnSlot].timeStartLag );
@@ -283,7 +283,7 @@ void CMPManagerMode::SetUserPause( bool bPauseOn )
 		lags[nOwnSlot].dwHatedBy = 0;
 		lags[nOwnSlot].timeStartLag = 0;
 	}
-	else													// Pause on
+	else // Pause on
 	{
 		dwLaggers |= ( 1UL << nOwnSlot );
 		lags[nOwnSlot].timeStartLag = curTime;
@@ -303,16 +303,17 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 		if ( pMsg->bTeamOnly && slot.nTeam != slots[nOwnSlot].nTeam )
 			continue;
 
-		pClient->SendGamePacket( new CChatPacket( slot.nClientID, wszFilteredText, szMPName, slot.nClientID, !pMsg->bTeamOnly ), false );
+		pClient->SendGamePacket(
+				new CChatPacket( slot.nClientID, wszFilteredText, szMPName, slot.nClientID, !pMsg->bTeamOnly ), false );
 	}
 
 	auto scenario = Singleton<IScenarioTracker>();
 
 	int playerID = -1;
-	const auto& players = scenario->GetMultiplayerInfo()->players;
-	for(int i = 0; i < players.size(); i++)
+	const auto &players = scenario->GetMultiplayerInfo()->players;
+	for ( int i = 0; i < players.size(); i++ )
 	{
-		if (players[i].wszName == NStr::ToUnicode(szMPName))
+		if ( players[i].wszName == NStr::ToUnicode( szMPName ) )
 		{
 			playerID = players[i].nIndex;
 			break;
@@ -320,18 +321,19 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	}
 
 	std::wstring colorStr = L"", colorEndStr = L"";
-	if (playerID >= 0)
+	if ( playerID >= 0 )
 	{
-		uint32_t color = scenario->GetPlayerColor(playerID).dwColor;
-		colorStr = L"<color = " + UTF8ToWide(string_conversion::RGBA_to_hex(color)) + L">";
+		uint32_t color = scenario->GetPlayerColor( playerID ).dwColor;
+		colorStr = L"<color = " + UTF8ToWide( string_conversion::RGBA_to_hex( color ) ) + L">";
 		colorEndStr = L"<color = FFFFFFFF>";
 	}
 
 	std::wstring teamOnly = L"";
-	if (pMsg->bTeamOnly)
+	if ( pMsg->bTeamOnly )
 		teamOnly = L" (Team)";
 
-	std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + NStr::ToUnicode( szMPName ) + colorEndStr + teamOnly + L": " + wszFilteredText;
+	std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr +
+	                   NStr::ToUnicode( szMPName ) + colorEndStr + teamOnly + L": " + wszFilteredText;
 
 	InterfaceState()->AddMPChatMessage( txt );
 	return true;

@@ -23,8 +23,8 @@ public:
 	CBusyCursor();
 	~CBusyCursor();
 
-	CBusyCursor( const CBusyCursor& ) = delete;
-	CBusyCursor& operator=( const CBusyCursor& ) = delete;
+	CBusyCursor( const CBusyCursor & ) = delete;
+	CBusyCursor &operator=( const CBusyCursor & ) = delete;
 
 	// The front end's two halves: show the busy cursor, and put back what was
 	// there before it. Null for either turns this off.

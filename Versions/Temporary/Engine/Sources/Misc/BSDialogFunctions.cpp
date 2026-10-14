@@ -19,11 +19,11 @@ namespace NBSU
 
 void ListView_AddColumn( HWND hwnd, const std::string &strCaption, int nWidth )
 {
-	LV_COLUMN  Column;
-	memset( &Column, 0, sizeof( LV_COLUMN) );
+	LV_COLUMN Column;
+	memset( &Column, 0, sizeof( LV_COLUMN ) );
 
 	Column.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-	Column.pszText = const_cast<char*>(strCaption.c_str());
+	Column.pszText = const_cast<char *>( strCaption.c_str() );
 	Column.cx = nWidth;
 	//Column.iSubItem = nNumber;
 
@@ -33,11 +33,11 @@ void ListView_AddColumn( HWND hwnd, const std::string &strCaption, int nWidth )
 int ListView_AddItem( HWND hwnd, const std::string &strText, LPARAM lParam, int nItem )
 {
 	LVITEM Item;
-	memset( &Item, 0, sizeof(Item) );
+	memset( &Item, 0, sizeof( Item ) );
 	Item.mask = LVIF_PARAM | LVIF_TEXT;
 	Item.iItem = nItem;
 	Item.lParam = lParam;
-	Item.pszText = const_cast<char*>(strText.c_str());
+	Item.pszText = const_cast<char *>( strText.c_str() );
 	Item.cchTextMax = strText.size();
 	return ListView_InsertItem( hwnd, &Item );
 }
@@ -57,12 +57,12 @@ void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entr
 	SendMessage( hwndCallStack, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM)LVS_EX_FULLROWSELECT );
 	RECT rc;
 	GetClientRect( hwndCallStack, &rc );
-	int nPart10 = (rc.right - rc.left) / 10;
-	ListView_AddColumn( hwndCallStack, "File", nPart10 * 3 );	// 0
-	ListView_AddColumn( hwndCallStack, "Method", nPart10 * 5 );	// 1
-	ListView_AddColumn( hwndCallStack, "Line", nPart10 * 2 );	// 2
-	ListView_AddColumn( hwndCallStack, "Module", nPart10 * 3 );	// 3
-	ListView_AddColumn( hwndCallStack, "Param1", nPart10 * 2);	// 4
+	int nPart10 = ( rc.right - rc.left ) / 10;
+	ListView_AddColumn( hwndCallStack, "File", nPart10 * 3 );   // 0
+	ListView_AddColumn( hwndCallStack, "Method", nPart10 * 5 ); // 1
+	ListView_AddColumn( hwndCallStack, "Line", nPart10 * 2 );   // 2
+	ListView_AddColumn( hwndCallStack, "Module", nPart10 * 3 ); // 3
+	ListView_AddColumn( hwndCallStack, "Param1", nPart10 * 2 ); // 4
 	ListView_AddColumn( hwndCallStack, "Param2", nPart10 * 2 );
 	ListView_AddColumn( hwndCallStack, "Param3", nPart10 * 2 );
 	ListView_AddColumn( hwndCallStack, "Param4", nPart10 * 2 );
@@ -70,8 +70,8 @@ void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entr
 	{
 		const SCallStackEntry &e = entries[i];
 		char buf[nIntStrSize];
-		int nNewLine = ListView_AddItem( hwndCallStack, GetFileName( e.szFile.szStr ), LPARAM(&e), 2000000 );
-		ListView_SetItemText( hwndCallStack, nNewLine, 1, const_cast<char*>( e.szFunc.szStr ) );
+		int nNewLine = ListView_AddItem( hwndCallStack, GetFileName( e.szFile.szStr ), LPARAM( &e ), 2000000 );
+		ListView_SetItemText( hwndCallStack, nNewLine, 1, const_cast<char *>( e.szFunc.szStr ) );
 		// to_chars returns the end of the range on failure, so leave the last
 		// byte for the terminator and *res.ptr is always in bounds
 		const std::to_chars_result resLine = std::to_chars( buf, buf + sizeof( buf ) - 1, e.nLine );
@@ -80,16 +80,16 @@ void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entr
 		CSymString szModule;
 		GetSymEngine().GetSymbol( e.dwAddress, &szModule, 0, 0, 0 );
 		ListView_SetItemText( hwndCallStack, nNewLine, 3, szModule.szStr );
-//		buf[0] = '0';
-//		buf[1] = 'x';
-//		itoa( pos->params[0], &buf[2], 16 );
-//		ListView_SetItemText( hwndCallStack, nNewLine, 4, buf );
-//		itoa( pos->params[1], &buf[2], 16 );
-//		ListView_SetItemText( hwndCallStack, nNewLine, 5, buf );
-//		itoa( pos->params[2], &buf[2], 16 );
-//		ListView_SetItemText( hwndCallStack, nNewLine, 6, buf );
-//		itoa( pos->params[3], &buf[2], 16 );
-//		ListView_SetItemText( hwndCallStack, nNewLine, 7, buf );
+		//		buf[0] = '0';
+		//		buf[1] = 'x';
+		//		itoa( pos->params[0], &buf[2], 16 );
+		//		ListView_SetItemText( hwndCallStack, nNewLine, 4, buf );
+		//		itoa( pos->params[1], &buf[2], 16 );
+		//		ListView_SetItemText( hwndCallStack, nNewLine, 5, buf );
+		//		itoa( pos->params[2], &buf[2], 16 );
+		//		ListView_SetItemText( hwndCallStack, nNewLine, 6, buf );
+		//		itoa( pos->params[3], &buf[2], 16 );
+		//		ListView_SetItemText( hwndCallStack, nNewLine, 7, buf );
 	}
 }
 
@@ -130,7 +130,7 @@ void FillStackList( HWND hwndCallStack, const std::vector<SCallStackEntry> &entr
 
 bool SetWindowText( HWND hwndDlg, const int nElementID, const char *pszString )
 {
-	return SetWindowText( GetDlgItem(hwndDlg, nElementID), pszString ) != FALSE;
+	return SetWindowText( GetDlgItem( hwndDlg, nElementID ), pszString ) != FALSE;
 }
 //bool SetWindowText( HWND hwndDlg, const int nElementID, const int nValue )
 //{
@@ -139,22 +139,22 @@ bool SetWindowText( HWND hwndDlg, const int nElementID, const char *pszString )
 //	return SetWindowText( hwndDlg, nElementID, buff );
 //}
 
-void* SetWindowUserData( HWND hwndDlg, const int nElementID, void *pUserData )
+void *SetWindowUserData( HWND hwndDlg, const int nElementID, void *pUserData )
 {
-	return reinterpret_cast<void*>( SetWindowLongPtr( GetDlgItem(hwndDlg, nElementID),
-		                                             GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pUserData) ) );
+	return reinterpret_cast<void *>(
+			SetWindowLongPtr( GetDlgItem( hwndDlg, nElementID ), GWLP_USERDATA, reinterpret_cast<LONG_PTR>( pUserData ) ) );
 }
-void* GetWindowUserData( HWND hwndDlg, const int nElementID )
+void *GetWindowUserData( HWND hwndDlg, const int nElementID )
 {
-	return reinterpret_cast<void*>( GetWindowLongPtr( GetDlgItem(hwndDlg, nElementID), GWLP_USERDATA ) );
+	return reinterpret_cast<void *>( GetWindowLongPtr( GetDlgItem( hwndDlg, nElementID ), GWLP_USERDATA ) );
 }
-void* SetDlgUserData( HWND hwndDlg, void *pUserData )
+void *SetDlgUserData( HWND hwndDlg, void *pUserData )
 {
-	return reinterpret_cast<void*>( SetWindowLongPtr( hwndDlg, DWLP_USER, reinterpret_cast<LONG_PTR>(pUserData) ) );
+	return reinterpret_cast<void *>( SetWindowLongPtr( hwndDlg, DWLP_USER, reinterpret_cast<LONG_PTR>( pUserData ) ) );
 }
-void* GetDlgUserData( HWND hwndDlg )
+void *GetDlgUserData( HWND hwndDlg )
 {
-	return reinterpret_cast<void*>( GetWindowLongPtr( hwndDlg, DWLP_USER ) );
+	return reinterpret_cast<void *>( GetWindowLongPtr( hwndDlg, DWLP_USER ) );
 }
 
 //int GetCheckButtonState( HWND hwndDlg, const int nElementID )
@@ -162,8 +162,10 @@ void* GetDlgUserData( HWND hwndDlg )
 //	return SendMessage( GetDlgItem(hwndDlg, nElementID), BM_GETCHECK, 0, 0 );
 //}
 
-void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription,
-												const std::vector<SCallStackEntry> &entries )
+void WriteReportToFile( const char *pszFileName,
+                        const char *pszCondition,
+                        const char *pszDescription,
+                        const std::vector<SCallStackEntry> &entries )
 {
 	char buffer[1024];
 	// create file name
@@ -175,7 +177,7 @@ void WriteReportToFile( const char *pszFileName, const char *pszCondition, const
 			if ( *it == '\\' )
 			{
 				ptr = it + 1;
-				*(it + 1) = 0;
+				*( it + 1 ) = 0;
 				break;
 			}
 		}
@@ -183,7 +185,7 @@ void WriteReportToFile( const char *pszFileName, const char *pszCondition, const
 		strcpy( ptr, pszFileName );
 	}
 	//
-	if ( FILE *file = fopen(buffer, "at") )
+	if ( FILE *file = fopen( buffer, "at" ) )
 	{
 		fprintf( file, "%s\n", pszCondition );
 		fprintf( file, "%s\n\n", pszDescription );

@@ -1,7 +1,6 @@
 // WindowEditLine.cpp: implementation of the CWindowEditLine class.
 //
 
-
 #include "stdafx.h"
 
 #include "port/virtualkey.h"
@@ -19,16 +18,13 @@
 #include "UIML.h"
 #include "UIScreen.h"
 
-
-REGISTER_SAVELOAD_CLASS(UI, 0x11075B83, CWindowEditLine)
-
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B83, CWindowEditLine )
 
 // CWindowEditLine
 
-
-CWindowEditLine::CWindowEditLine() : timeSegment( 0 ), nCursorPos( 0 ), bShowCursor( 1 ),
-nBeginSel( -1 ), nEndSel( -1 ), m_nBeginDragSel( -1 ),
-nBeginText( 0 ), bRegistered( false ), bMouseButton1Down( false )
+CWindowEditLine::CWindowEditLine()
+		: timeSegment( 0 ), nCursorPos( 0 ), bShowCursor( 1 ), nBeginSel( -1 ), nEndSel( -1 ), m_nBeginDragSel( -1 ),
+			nBeginText( 0 ), bRegistered( false ), bMouseButton1Down( false )
 {
 	impotantMsgs.AddObserver( "editline_wordleft", &CWindowEditLine::OnCtrlLeft );
 	impotantMsgs.AddObserver( "editline_wordright", &CWindowEditLine::OnCtrlRight );
@@ -158,15 +154,14 @@ int CWindowEditLine::GetSelection( const int _nX )
 
 	int nCur = 0, nPrev = 0;
 
-
-	int i = 0;	// char number
+	int i = 0; // char number
 	//nCur += editRect.left;
-	for ( std::list<CTRect<float> >::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
+	for ( std::list<CTRect<float>>::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
 	{
 		nCur += it->Width();
 		if ( nCur > nX )
 		{
-			if ( nX - nPrev < nCur - nX && i > 0 )			//ближе к левой букве чем к правой
+			if ( nX - nPrev < nCur - nX && i > 0 ) //ближе к левой букве чем к правой
 				i--;
 			break;
 		}
@@ -174,9 +169,8 @@ int CWindowEditLine::GetSelection( const int _nX )
 		++i;
 	}
 
-
 	//if ( nCur <= nX && i > 0 )		//нажато правее края текста
-		//i--;
+	//i--;
 	NI_ASSERT( i >= 0 && i <= wszFullText.size(), "Error in CWindowEditLine::GetSelection()" );
 	return i;
 }
@@ -211,7 +205,7 @@ bool CWindowEditLine::DeleteSelection()
 	return false;
 }
 
-bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
+bool CWindowEditLine::IsValidSymbol( const wchar_t chr ) const
 {
 	static const std::wstring szInValidSymbols = L"<>";
 	static const int nLen = szInValidSymbols.size();
@@ -221,12 +215,13 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 			return false;
 	}
 
-	switch( pInstance->eTextEntryType )
+	switch ( pInstance->eTextEntryType )
 	{
-	case NDb::ETET_GAME_SPY:
+		case NDb::ETET_GAME_SPY:
 		{
 			//проверим, что символ удовлетворяет требованиям GameSpy NickName
-			static const std::wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]\\`_^{|}-";
+			static const std::wstring szValidSymbols =
+					L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]\\`_^{|}-";
 			static const int nLen = szValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
 			{
@@ -236,10 +231,11 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 			return false;
 		}
 		break;
-	case NDb::ETET_FILENAME:
+		case NDb::ETET_FILENAME:
 		{
 			//проверим, что символ удовлетворяет требованиям FileName symbols
-			static const std::wstring szValidSymbols = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]`_^{}-!@#$%^&()+=~";
+			static const std::wstring szValidSymbols =
+					L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]`_^{}-!@#$%^&()+=~";
 			static const int nLen = szValidSymbols.size();
 			for ( int i = 0; i < nLen; i++ )
 			{
@@ -249,7 +245,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 			return false;
 		}
 		break;
-	case NDb::ETET_NUMERIC:
+		case NDb::ETET_NUMERIC:
 		{
 			static const std::wstring szValidSymbols = L"0123456789";
 			static const int nLen = szValidSymbols.size();
@@ -261,7 +257,7 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 			return false;
 		}
 		break;
-	case NDb::ETET_LOCAL_PLAYERNAME:
+		case NDb::ETET_LOCAL_PLAYERNAME:
 		{
 			static const std::wstring szInValidSymbols = L"&'\"<>";
 			static const int nLen = szInValidSymbols.size();
@@ -272,11 +268,11 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr )const
 			}
 		}
 		break;
-	case NDb::ETET_ALL:
-		break;
-	default:
-		NI_ASSERT( false, fmt::format( "wrong edit line type {}", int( pInstance->eTextEntryType ) ) );
-		return false;
+		case NDb::ETET_ALL:
+			break;
+		default:
+			NI_ASSERT( false, fmt::format( "wrong edit line type {}", int( pInstance->eTextEntryType ) ) );
+			return false;
 	}
 	return true;
 }
@@ -346,7 +342,7 @@ void SetClipboardText( const std::wstring &wszText )
 	EmptyClipboard();
 
 	// Allocate a global memory object for the text.
-	HGLOBAL hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ( wszText.size() + 1 ) * sizeof(char) );
+	HGLOBAL hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ( wszText.size() + 1 ) * sizeof( char ) );
 	if ( hglbCopy == NULL )
 	{
 		CloseClipboard();
@@ -357,8 +353,8 @@ void SetClipboardText( const std::wstring &wszText )
 	// Lock the handle and copy the text to the buffer.
 	LPTSTR lptstrCopy = (LPTSTR)GlobalLock( hglbCopy );
 
-	memcpy( lptstrCopy, szToCopy.c_str(), ( szToCopy.size() ) * sizeof(char) );
-	lptstrCopy[szToCopy.size()] = (char) 0;    // null character
+	memcpy( lptstrCopy, szToCopy.c_str(), ( szToCopy.size() ) * sizeof( char ) );
+	lptstrCopy[szToCopy.size()] = (char)0; // null character
 	GlobalUnlock( hglbCopy );
 
 	SetClipboardData( CF_TEXT, hglbCopy );
@@ -395,15 +391,15 @@ void CWindowEditLine::OnPaste( const struct SGameMessage &msg )
 	}
 
 	DeleteSelection();
-	wszFullText.insert( (std::max)(0,nBeginText+nCursorPos), szInserted.c_str() );
+	wszFullText.insert( (std::max)( 0, nBeginText + nCursorPos ), szInserted.c_str() );
 
-	nCursorPos+= szInserted.size();
+	nCursorPos += szInserted.size();
 	if ( !CheckTextInsideEditLine() )
 	{
 		wszFullText = wszOldText;
 		nCursorPos = nOldCursorPos;
 		EnsureCursorVisible();
-		return ;
+		return;
 	}
 	EnsureCursorVisible();
 }
@@ -459,7 +455,8 @@ void CWindowEditLine::OnTab( const struct SGameMessage &msg )
 	const std::wstring wszOldText = wszFullText;
 	const int nOldCursorPos = nCursorPos;
 
-	if ( pInstance->eTextEntryType != NDb::ETET_NUMERIC && pInstance->eTextEntryType != NDb::ETET_GAME_SPY && pInstance->eTextEntryType != NDb::ETET_FILENAME )
+	if ( pInstance->eTextEntryType != NDb::ETET_NUMERIC && pInstance->eTextEntryType != NDb::ETET_GAME_SPY &&
+	     pInstance->eTextEntryType != NDb::ETET_FILENAME )
 	{
 		DeleteSelection();
 		wszFullText.insert( wszFullText.begin() + nBeginText + nCursorPos, VK_SPACE );
@@ -497,7 +494,7 @@ void CWindowEditLine::OnDelete( const struct SGameMessage &msg )
 
 	if ( !DeleteSelection() && nBeginText + nCursorPos < wszFullText.size() )
 	{
-		wszFullText.erase( nBeginText+nCursorPos, 1 );
+		wszFullText.erase( nBeginText + nCursorPos, 1 );
 	}
 	CheckTextInsideEditLine();
 	EnsureCursorVisible();
@@ -509,7 +506,7 @@ void CWindowEditLine::OnLeft( const struct SGameMessage &msg )
 		return;
 
 	nBeginSel = nEndSel = -1;
-	if ( nBeginText+nCursorPos == 0 )
+	if ( nBeginText + nCursorPos == 0 )
 		return;
 	//на одну позицию влево
 	nCursorPos--;
@@ -522,20 +519,20 @@ void CWindowEditLine::OnCtrlLeft( const struct SGameMessage &msg )
 		return;
 
 	nBeginSel = nEndSel = -1;
-	if ( nBeginText+nCursorPos == 0 )
+	if ( nBeginText + nCursorPos == 0 )
 		return;
 
 	//Если нажата crtl и стрелка влево, то сдвигаемся влево на одно слово
-	while( nBeginText+nCursorPos > 0 && isspace(wszFullText[nBeginText+nCursorPos-1]) )
+	while ( nBeginText + nCursorPos > 0 && isspace( wszFullText[nBeginText + nCursorPos - 1] ) )
 		nCursorPos--;
-	if ( nBeginText+nCursorPos > 0 )
+	if ( nBeginText + nCursorPos > 0 )
 	{
-		if ( isalpha(wszFullText[nBeginText+nCursorPos-1]) )
-			while( nBeginText+nCursorPos > 0 && isalpha(wszFullText[nBeginText+nCursorPos-1]) )
+		if ( isalpha( wszFullText[nBeginText + nCursorPos - 1] ) )
+			while ( nBeginText + nCursorPos > 0 && isalpha( wszFullText[nBeginText + nCursorPos - 1] ) )
 				nCursorPos--;
-			else
-				while( nBeginText+nCursorPos > 0 && !isalpha(wszFullText[nBeginText+nCursorPos-1]) )
-					nCursorPos--;
+		else
+			while ( nBeginText + nCursorPos > 0 && !isalpha( wszFullText[nBeginText + nCursorPos - 1] ) )
+				nCursorPos--;
 	}
 	EnsureCursorVisible();
 }
@@ -546,7 +543,7 @@ void CWindowEditLine::OnRight( const struct SGameMessage &msg )
 		return;
 
 	nBeginSel = nEndSel = -1;
-	if ( nBeginText+nCursorPos == wszFullText.size() )
+	if ( nBeginText + nCursorPos == wszFullText.size() )
 		return;
 	//на одну позицию вправо
 	nCursorPos++;
@@ -559,17 +556,17 @@ void CWindowEditLine::OnCtrlRight( const struct SGameMessage &msg )
 		return;
 
 	//Если нажата crtl и стрелка вправо, то сдвигаемся вправо на одно слово
-	if ( nBeginText+nCursorPos < wszFullText.size() )
+	if ( nBeginText + nCursorPos < wszFullText.size() )
 	{
-		if ( isalpha(wszFullText[nBeginText+nCursorPos]) )
-			while( nBeginText+nCursorPos < wszFullText.size() && isalpha(wszFullText[nBeginText+nCursorPos]) )
+		if ( isalpha( wszFullText[nBeginText + nCursorPos] ) )
+			while ( nBeginText + nCursorPos < wszFullText.size() && isalpha( wszFullText[nBeginText + nCursorPos] ) )
 				nCursorPos++;
-			else
-				while( nBeginText+nCursorPos < wszFullText.size() && !isalpha(wszFullText[nBeginText+nCursorPos]) )
-					nCursorPos++;
+		else
+			while ( nBeginText + nCursorPos < wszFullText.size() && !isalpha( wszFullText[nBeginText + nCursorPos] ) )
+				nCursorPos++;
 	}
 
-	while( nBeginText+nCursorPos < wszFullText.size() && isspace(wszFullText[nBeginText+nCursorPos]) )
+	while ( nBeginText + nCursorPos < wszFullText.size() && isspace( wszFullText[nBeginText + nCursorPos] ) )
 		nCursorPos++;
 	EnsureCursorVisible();
 }
@@ -610,13 +607,13 @@ bool CWindowEditLine::OnChar( const SGameMessage &msg )
 	if ( !IsFocused() || bMouseButton1Down )
 		return false;
 
-	const wchar_t chr = msg.nParam1;//.wCharCode;
+	const wchar_t chr = msg.nParam1; //.wCharCode;
 
 	// Text input is Unicode; CRT iswprint depends on the process locale and
 	// rejects non-ASCII text in the C locale on some platforms. Only exclude
 	// control characters and line separators here; field rules live in AddChar.
-	if ( msg.nParam1 < 32 || ( msg.nParam1 >= 0x7f && msg.nParam1 <= 0x9f ) ||
-		msg.nParam1 == 0x2028 || msg.nParam1 == 0x2029 )
+	if ( msg.nParam1 < 32 || ( msg.nParam1 >= 0x7f && msg.nParam1 <= 0x9f ) || msg.nParam1 == 0x2028 ||
+	     msg.nParam1 == 0x2029 )
 		return false;
 
 	//Если печатный символ, то просто выводим его
@@ -630,17 +627,29 @@ bool CWindowEditLine::OnKey( const SGameMessage &msg )
 	if ( !IsFocused() )
 		return false;
 
-	switch( msg.nParam1 )
+	switch ( msg.nParam1 )
 	{
-	case VK_END: OnEnd( msg ); return true;
-	case VK_HOME: OnHome( msg ); return true;
-	case VK_LEFT: OnLeft( msg ); return true;
-	case VK_RIGHT: OnRight( msg ); return true;
-	case VK_BACK: OnBack( msg ); return true;
-	case VK_DELETE: OnDelete( msg ); return true;
-//	case VK_RETURN: OnReturn( msg ); return true;
-//	case VK_ESCAPE: OnEscape( msg ); return false;
-	//case VK_TAB: OnTab( msg ); return true;
+		case VK_END:
+			OnEnd( msg );
+			return true;
+		case VK_HOME:
+			OnHome( msg );
+			return true;
+		case VK_LEFT:
+			OnLeft( msg );
+			return true;
+		case VK_RIGHT:
+			OnRight( msg );
+			return true;
+		case VK_BACK:
+			OnBack( msg );
+			return true;
+		case VK_DELETE:
+			OnDelete( msg );
+			return true;
+			//	case VK_RETURN: OnReturn( msg ); return true;
+			//	case VK_ESCAPE: OnEscape( msg ); return false;
+			//case VK_TAB: OnTab( msg ); return true;
 	}
 	return false;
 }
@@ -652,7 +661,7 @@ bool CWindowEditLine::AddChar( const wchar_t chr )
 	if ( IsValidSymbol( chr ) )
 	{
 		DeleteSelection();
-		wszFullText.insert( wszFullText.begin() + (std::min)( int(wszFullText.size()), nBeginText + nCursorPos), chr );
+		wszFullText.insert( wszFullText.begin() + (std::min)( int( wszFullText.size() ), nBeginText + nCursorPos ), chr );
 		nCursorPos++;
 		if ( !CheckTextInsideEditLine() )
 		{
@@ -675,11 +684,11 @@ void CWindowEditLine::Init()
 	static int nTabOrder = 0;
 	if ( pInstance->nTabOrder == -1 )
 	{
-		checked_cast<CWindowScreen*>(GetScreen())->RegisterTabOrder( this, nTabOrder );
+		checked_cast<CWindowScreen *>( GetScreen() )->RegisterTabOrder( this, nTabOrder );
 		++nTabOrder;
 	}
 	else
-		checked_cast<CWindowScreen*>(GetScreen())->RegisterTabOrder( this, pInstance->nTabOrder );
+		checked_cast<CWindowScreen *>( GetScreen() )->RegisterTabOrder( this, pInstance->nTabOrder );
 }
 
 void CWindowEditLine::InitLocal()
@@ -702,17 +711,17 @@ void CWindowEditLine::CreateText()
 
 int CWindowEditLine::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 2, &pGfxText );
-	saver.Add( 3, &timeSegment );							// for counting segment times
-	saver.Add( 4, &nCursorPos );									//позиция курсора в текущей редактируемой строке
-	saver.Add( 5, &bShowCursor );								//для мигания курсора
-	saver.Add( 7, &nBeginSel );								//начало выделения
-	saver.Add( 8, &nEndSel );									//конец выделения
-	saver.Add( 10, &m_nBeginDragSel );						//начало выделения мышкой
-	saver.Add( 16, &nBeginText );		//с этой позиции начинается отображение текста szFullText
+	saver.Add( 3, &timeSegment );      // for counting segment times
+	saver.Add( 4, &nCursorPos );       //позиция курсора в текущей редактируемой строке
+	saver.Add( 5, &bShowCursor );      //для мигания курсора
+	saver.Add( 7, &nBeginSel );        //начало выделения
+	saver.Add( 8, &nEndSel );          //конец выделения
+	saver.Add( 10, &m_nBeginDragSel ); //начало выделения мышкой
+	saver.Add( 16, &nBeginText );      //с этой позиции начинается отображение текста szFullText
 	saver.Add( 18, &wszFullText );
-	saver.Add( 27, &bRegistered );												// message sink registered
+	saver.Add( 27, &bRegistered ); // message sink registered
 	saver.Add( 28, &pShared );
 	saver.Add( 29, &pInstance );
 	saver.Add( 30, &bRegistered );
@@ -731,7 +740,7 @@ void CWindowEditLine::AfterLoad()
 
 void CWindowEditLine::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowEditLine *pDesc( checked_cast<const NDb::SWindowEditLine*>( _pDesc ) );
+	const NDb::SWindowEditLine *pDesc( checked_cast<const NDb::SWindowEditLine *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 
 	CWindow::InitByDesc( _pDesc );
@@ -754,11 +763,11 @@ int CWindowEditLine::GetTextWidth( const int nFirstChars )
 	{
 		if ( rectsList.empty() )
 			return 0;
-		std::list<CTRect<float> >::const_iterator pos = rectsList.end();
+		std::list<CTRect<float>>::const_iterator pos = rectsList.end();
 		--pos;
 		return pos->x2;
 	}
-	std::list<CTRect<float> >::const_iterator it = rectsList.begin();
+	std::list<CTRect<float>>::const_iterator it = rectsList.begin();
 
 	advance( it, nFirstChars );
 	if ( it == rectsList.end() )
@@ -792,7 +801,6 @@ void CWindowEditLine::Visit( struct IUIVisitor *pVisitor )
 	textRect.top = wndRect.top + ( wndRect.Height() - nH ) / 2;
 	textRect.bottom = textRect.top + nH;
 
-
 	// рисуем выделение
 	if ( nBeginSel != -1 && nBeginSel != nEndSel )
 	{
@@ -810,7 +818,12 @@ void CWindowEditLine::Visit( struct IUIVisitor *pVisitor )
 		rect.top = textRect.top;
 		rect.bottom = textRect.bottom;
 
-		rectLayout.AddRect( rect.x1, rect.y1, rect.Width(), rect.Height(), CTRect<float>(0,0,0,0), NGfx::SPixel8888( pShared->nSelColor ) );
+		rectLayout.AddRect( rect.x1,
+		                    rect.y1,
+		                    rect.Width(),
+		                    rect.Height(),
+		                    CTRect<float>( 0, 0, 0, 0 ),
+		                    NGfx::SPixel8888( pShared->nSelColor ) );
 		pVisitor->VisitUIRect( 0, 0, rectLayout );
 	}
 
@@ -822,7 +835,12 @@ void CWindowEditLine::Visit( struct IUIVisitor *pVisitor )
 	{
 		CRectLayout rectLayout;
 		int nPos = GetTextWidth( nCursorPos );
-		rectLayout.AddRect( textRect.x1 + nPos, textRect.y1 , 2, textRect.Height(), CTRect<float>(0,0,0,0), NGfx::SPixel8888( pShared->nCursorColor ) );
+		rectLayout.AddRect( textRect.x1 + nPos,
+		                    textRect.y1,
+		                    2,
+		                    textRect.Height(),
+		                    CTRect<float>( 0, 0, 0, 0 ),
+		                    NGfx::SPixel8888( pShared->nCursorColor ) );
 		pVisitor->VisitUIRect( 0, 0, rectLayout );
 	}
 }
@@ -901,7 +919,7 @@ void CWindowEditLine::EnsureCursorVisible()
 	else if ( GetTextWidth( nCursorPos ) > wndRect.Width() - 2 )
 	{
 		//курсор правее правого края edit box, подвинем текст влево, чтобы курсор стал видимым
-		while ( GetTextWidth( nCursorPos ) > wndRect.Width() - 2 )		//2 is the width of cursor
+		while ( GetTextWidth( nCursorPos ) > wndRect.Width() - 2 ) //2 is the width of cursor
 		{
 			if ( pInstance->bTextScroll )
 			{
@@ -933,7 +951,7 @@ void CWindowEditLine::SetTextToGfx( const std::wstring &szText )
 	std::wstring wszText;
 	if ( pInstance->bPassword )
 	{
-		for ( int i = szText.size(); i != 0 ; i-- )
+		for ( int i = szText.size(); i != 0; i-- )
 			wszText += L"*";
 	}
 	else
@@ -946,7 +964,7 @@ void CWindowEditLine::SetTextToGfx( const std::wstring &szText )
 	rectsList.clear();
 	pGfxText->Render( &rectsList, CTPoint<float>( 0, 0 ), CTRect<float>( 0, 0, 0, 0 ) );
 	//DEBUG{
-	std::list<CTRect<float> >::const_iterator it = rectsList.begin();
+	std::list<CTRect<float>>::const_iterator it = rectsList.begin();
 	while ( it != rectsList.end() )
 	{
 		CTRect<float> dbg = *it;
@@ -972,7 +990,7 @@ bool CWindowEditLine::CheckTextInsideEditLine()
 		return true;
 
 	int nTextWidth = 0;
-	for ( std::list<CTRect<float> >::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
+	for ( std::list<CTRect<float>>::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
 		nTextWidth += it->Width();
 	return GetTextWidth( -1 ) < wndRect.Width() - 2;
 }
@@ -993,13 +1011,13 @@ void CWindowEditLine::FillWindowRectEditLine( CTRect<float> *pRect )
 
 bool CWindowEditLine::ProcessEvent( const struct SGameMessage &msg )
 {
-	NInput::CBind bindEnter("enter_pressed");
+	NInput::CBind bindEnter( "enter_pressed" );
 	if ( bindEnter.ProcessEvent( msg ) )
 	{
 		if ( OnReturn() )
 			return true;
 	}
-	NInput::CBind bindEsc("esc_pressed");
+	NInput::CBind bindEsc( "esc_pressed" );
 	if ( bindEsc.ProcessEvent( msg ) )
 	{
 		if ( OnEscape() )
@@ -1008,7 +1026,7 @@ bool CWindowEditLine::ProcessEvent( const struct SGameMessage &msg )
 
 	impotantMsgs.ProcessEvent( msg, this );
 
-	if (NInput::IsDInputDiscardableKey( msg.mMessage ) )
+	if ( NInput::IsDInputDiscardableKey( msg.mMessage ) )
 		return IsFocused();
 	else
 		return CWindow::ProcessEvent( msg );

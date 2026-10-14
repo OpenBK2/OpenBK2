@@ -5,7 +5,8 @@
 namespace NGScene
 {
 
-void RenderRectLayout( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const CRectLayout &l, float fZ, ELayoutRenderMode lrm )
+void RenderRectLayout(
+		NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const CRectLayout &l, float fZ, ELayoutRenderMode lrm )
 {
 	for ( int i = 0; i < l.rects.size(); ++i )
 	{
@@ -20,8 +21,11 @@ void RenderRectLayout( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const
 	}
 }
 
-bool ClipRect( CTRect<float> *pClippedRect, CRectLayout::STextureCoord *pTex,
-	const CRectLayout::SRect &sRect, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+bool ClipRect( CTRect<float> *pClippedRect,
+               CRectLayout::STextureCoord *pTex,
+               const CRectLayout::SRect &sRect,
+               const CTPoint<float> &sPosition,
+               const CTRect<float> &sWindow )
 {
 	CTRect<float> &sClippedRect = *pClippedRect;
 	CRectLayout::STextureCoord &sTex = *pTex;
@@ -43,14 +47,20 @@ bool ClipRect( CTRect<float> *pClippedRect, CRectLayout::STextureCoord *pTex,
 	sTex = sRect.sTex;
 	float fCSWidth = float( sTex.rcTexRect.Width() ) / sSourceRect.Width();
 	float fCSHeight = float( sTex.rcTexRect.Height() ) / sSourceRect.Height();
-	sTex.rcTexRect.x1 += fCSWidth * ( sClippedRect.x1 - sSourceRect.x1  );
-	sTex.rcTexRect.x2 += fCSWidth * ( sClippedRect.x2 - sSourceRect.x2  );
-	sTex.rcTexRect.y1 += fCSHeight * ( sClippedRect.y1 - sSourceRect.y1  );
-	sTex.rcTexRect.y2 += fCSHeight * ( sClippedRect.y2 - sSourceRect.y2  );
+	sTex.rcTexRect.x1 += fCSWidth * ( sClippedRect.x1 - sSourceRect.x1 );
+	sTex.rcTexRect.x2 += fCSWidth * ( sClippedRect.x2 - sSourceRect.x2 );
+	sTex.rcTexRect.y1 += fCSHeight * ( sClippedRect.y1 - sSourceRect.y1 );
+	sTex.rcTexRect.y2 += fCSHeight * ( sClippedRect.y2 - sSourceRect.y2 );
 	return true;
 }
 
-void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow, float fZ, ELayoutRenderMode lrm )
+void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes,
+                              NGfx::CTexture *pTex,
+                              const CRectLayout &sLayout,
+                              const CTPoint<float> &sPosition,
+                              const CTRect<float> &sWindow,
+                              float fZ,
+                              ELayoutRenderMode lrm )
 {
 	for ( int nTemp = 0; nTemp < sLayout.rects.size(); nTemp++ )
 	{
@@ -69,8 +79,12 @@ void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex
 	}
 }
 
-void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex,
-	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc, float fZ )
+void RenderRect( NGfx::C2DQuadsRenderer *pRes,
+                 NGfx::CTexture *pTex,
+                 const CVec2 *pPos4,
+                 const NGfx::SPixel8888 *pColors4,
+                 const CTRect<float> &rSrc,
+                 float fZ )
 {
 	pRes->AddRect( pPos4, pColors4, pTex, rSrc, fZ );
 }

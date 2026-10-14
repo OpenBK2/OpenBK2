@@ -16,7 +16,6 @@ int SVectorStripeObjectPoint::operator&( IXmlSaver &saver )
 	return 0;
 }
 
-
 int SVectorStripeObjectDesc::SLayer::operator&( IXmlSaver &saver )
 {
 
@@ -31,7 +30,6 @@ int SVectorStripeObjectDesc::SLayer::operator&( IXmlSaver &saver )
 	saver.Add( "RelWidth", &fRelWidth );
 	return 0;
 }
-
 
 int SVectorStripeObjectDesc::SLayer::operator&( IBinSaver &saver )
 {
@@ -48,10 +46,8 @@ int SVectorStripeObjectDesc::SLayer::operator&( IBinSaver &saver )
 	return 0;
 }
 
-
 int SVectorStripeObjectDesc::operator&( IXmlSaver &saver )
 {
-
 
 	saver.Add( "Type", &eType );
 	saver.Add( "Priority", &nPriority );
@@ -68,10 +64,8 @@ int SVectorStripeObjectDesc::operator&( IXmlSaver &saver )
 	return 0;
 }
 
-
 int SVectorStripeObjectDesc::operator&( IBinSaver &saver )
 {
-
 
 	saver.Add( 1, &bottom );
 	saver.Add( 2, &bottomBorders );
@@ -88,11 +82,10 @@ int SVectorStripeObjectDesc::operator&( IBinSaver &saver )
 	return 0;
 }
 
-
 int SVectorStripeObject::operator&( IXmlSaver &saver )
 {
 
-	saver.AddTypedSuper( static_cast<SVectorStripeObjectDesc*>(this) );
+	saver.AddTypedSuper( static_cast<SVectorStripeObjectDesc *>( this ) );
 	saver.Add( "DescName", &szDescName );
 	saver.Add( "Points", &points );
 	saver.Add( "ControlPoints", &controlpoints );
@@ -106,16 +99,15 @@ int SVectorStripeObject::operator&( IXmlSaver &saver )
 			CPtr<IXmlSaver> saver1 = CreateXmlSaver( &stream, SAVER_MODE_READ );
 			SVectorStripeObjectDesc desc;
 			saver1->Add( "VSODescription", &desc );
-			*( static_cast<SVectorStripeObjectDesc*>(this) ) = desc;
+			*( static_cast<SVectorStripeObjectDesc *>( this ) ) = desc;
 		}
 	}
 	return 0;
 }
 
-
 int SVectorStripeObject::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<SVectorStripeObjectDesc*>(this) );
+	saver.Add( 1, static_cast<SVectorStripeObjectDesc *>( this ) );
 	saver.Add( 2, &points );
 	saver.Add( 3, &controlpoints );
 	saver.Add( 4, &nID );
@@ -129,7 +121,7 @@ int SVectorStripeObject::operator&( IBinSaver &saver )
 			CPtr<IXmlSaver> saver1 = CreateXmlSaver( &stream, SAVER_MODE_READ );
 			SVectorStripeObjectDesc desc;
 			saver1->Add( "VSODescription", &desc );
-			*( static_cast<SVectorStripeObjectDesc*>(this) ) = desc;
+			*( static_cast<SVectorStripeObjectDesc *>( this ) ) = desc;
 		}
 	}
 	return 0;

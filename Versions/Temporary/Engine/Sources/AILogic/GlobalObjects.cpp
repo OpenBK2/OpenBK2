@@ -113,6 +113,7 @@ class CGlobalSerializer
 {
 public:
 	int operator&( IBinSaver &saver );
+
 private:
 };
 

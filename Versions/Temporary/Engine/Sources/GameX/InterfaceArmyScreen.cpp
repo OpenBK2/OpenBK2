@@ -16,16 +16,17 @@
 
 #include <fmt/format.h>
 
-const int WAIT_TIME = 300; // msec
+const int WAIT_TIME = 300;     // msec
 const int STEP_WAIT_TIME = 50; // msec
 const float EXP_PROGRESS_STEP_FRACTION = 0.05f;
-const wchar_t* TEXT_TAG_ABILITY_TOOLTIP = L"ability_tooltip";
-const wchar_t* DYNAMIC_TAG_RANK_NUMBER = L"rank_number";
-const char* DYNAMIC_TAG_RANK_NAME_FORMAT = "rank{}_name";
+const wchar_t *TEXT_TAG_ABILITY_TOOLTIP = L"ability_tooltip";
+const wchar_t *DYNAMIC_TAG_RANK_NUMBER = L"rank_number";
+const char *DYNAMIC_TAG_RANK_NAME_FORMAT = "rank{}_name";
 
 class CInterfaceArmyScreen::CReinfData : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CReinfData );
+
 public:
 	struct SAbility
 	{
@@ -36,16 +37,26 @@ public:
 		std::wstring wszTooltip;
 		CDBPtr<NDb::STexture> pDisabledIcon;
 		int nLevel;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&wszDesc); f.Add(4,&pEnabledIcon); f.Add(5,&wszTooltip); f.Add(6,&pDisabledIcon); f.Add(7,&nLevel); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &wszName );
+			f.Add( 3, &wszDesc );
+			f.Add( 4, &pEnabledIcon );
+			f.Add( 5, &wszTooltip );
+			f.Add( 6, &pDisabledIcon );
+			f.Add( 7, &nLevel );
+			return 0;
+		}
 	};
 
 	ZDATA
 	NDb::EReinforcementType eType;
 	CDBPtr<NDb::SReinforcement> pDBReinf;
 	CDBPtr<NDb::STexture> pTexture;
-	ZSKIP //wstring wszLine01;
-	ZSKIP //wstring wszLine02;
-	CObj<CLeaderInfo> pLeader;
+	ZSKIP     //wstring wszLine01;
+			ZSKIP //wstring wszLine02;
+					CObj<CLeaderInfo>
+							pLeader;
 	bool bEnabled;
 	std::wstring wszName;
 	std::wstring wszProfileUnit;
@@ -53,7 +64,21 @@ public:
 	bool bFromPrevChapter;
 	std::wstring wszProfileUnitRank;
 	std::vector<SAbility> abilities;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); f.Add(3,&pDBReinf); f.Add(4,&pTexture); f.Add(7,&pLeader); f.Add(8,&bEnabled); f.Add(9,&wszName); f.Add(10,&wszProfileUnit); f.Add(11,&pItem); f.Add(12,&bFromPrevChapter); f.Add(13,&wszProfileUnitRank); f.Add(14,&abilities); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &eType );
+		f.Add( 3, &pDBReinf );
+		f.Add( 4, &pTexture );
+		f.Add( 7, &pLeader );
+		f.Add( 8, &bEnabled );
+		f.Add( 9, &wszName );
+		f.Add( 10, &wszProfileUnit );
+		f.Add( 11, &pItem );
+		f.Add( 12, &bFromPrevChapter );
+		f.Add( 13, &wszProfileUnitRank );
+		f.Add( 14, &abilities );
+		return 0;
+	}
 
 	void FillAbilities();
 };
@@ -61,6 +86,7 @@ public:
 class CInterfaceArmyScreen::CLeaderInfo : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CLeaderInfo );
+
 public:
 	struct SLastSeen
 	{
@@ -86,7 +112,21 @@ public:
 		int nCurKilled;
 		int nWaitTime;
 		int fExpStep;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bExpChanged); f.Add(4,&bRankChanged); f.Add(5,&bLostChanged); f.Add(6,&bKilledChanged); f.Add(7,&fCurExp); f.Add(8,&nCurRank); f.Add(9,&nCurLost); f.Add(10,&nCurKilled); f.Add(11,&nWaitTime); f.Add(12,&fExpStep); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &eState );
+			f.Add( 3, &bExpChanged );
+			f.Add( 4, &bRankChanged );
+			f.Add( 5, &bLostChanged );
+			f.Add( 6, &bKilledChanged );
+			f.Add( 7, &fCurExp );
+			f.Add( 8, &nCurRank );
+			f.Add( 9, &nCurLost );
+			f.Add( 10, &nCurKilled );
+			f.Add( 11, &nWaitTime );
+			f.Add( 12, &fExpStep );
+			return 0;
+		}
 
 		SLastSeen() : eState( ST_NONE ) {}
 	};
@@ -95,22 +135,37 @@ public:
 	std::wstring wszName;
 	CDBPtr<NDb::STexture> pIcon;
 	float fExp; // [0..1]
-	ZSKIP //wstring wszRank;
-	std::wstring wszSpecialization;
+	ZSKIP       //wstring wszRank;
+			std::wstring wszSpecialization;
 	int nKilled;
 	int nLost;
 	ZSKIP //vector<SAbility> abilities;
-	bool bPermanent;
+			bool bPermanent;
 	IScenarioTracker::SUndoLeaderInfo undo;
 	int nRank;
 	SLastSeen lastSeen;
 	NDb::EReinforcementType eType;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&pIcon); f.Add(4,&fExp); f.Add(6,&wszSpecialization); f.Add(7,&nKilled); f.Add(8,&nLost); f.Add(10,&bPermanent); f.Add(11,&undo); f.Add(12,&nRank); f.Add(13,&lastSeen); f.Add(14,&eType); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &wszName );
+		f.Add( 3, &pIcon );
+		f.Add( 4, &fExp );
+		f.Add( 6, &wszSpecialization );
+		f.Add( 7, &nKilled );
+		f.Add( 8, &nLost );
+		f.Add( 10, &bPermanent );
+		f.Add( 11, &undo );
+		f.Add( 12, &nRank );
+		f.Add( 13, &lastSeen );
+		f.Add( 14, &eType );
+		return 0;
+	}
 };
 
 class CInterfaceArmyScreen::CReinfViewer : public IDataViewer
 {
 	OBJECT_BASIC_METHODS( CReinfViewer );
+
 public:
 	//{ IDataViewer
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
@@ -141,10 +196,10 @@ void CInterfaceArmyScreen::CReinfData::FillAbilities()
 				NDb::EUserAction eAction = GetActionByAbility( pAbility->eName );
 				SAbility ability;
 				ability.nLevel = i;
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(pAbility->,LocalizedName) )
-					ability.wszName = GET_TEXT_PRE(pAbility->,LocalizedName);
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(pAbility->,LocalizedDesc) )
-					ability.wszDesc = GET_TEXT_PRE(pAbility->,LocalizedDesc);
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( pAbility->, LocalizedName ) )
+					ability.wszName = GET_TEXT_PRE( pAbility->, LocalizedName );
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( pAbility->, LocalizedDesc ) )
+					ability.wszDesc = GET_TEXT_PRE( pAbility->, LocalizedDesc );
 
 				const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts();
 				for ( int j = 0; j < pUIConsts->actionButtonInfos.size(); ++j )
@@ -156,8 +211,8 @@ void CInterfaceArmyScreen::CReinfData::FillAbilities()
 						{
 							ability.pEnabledIcon = pActionButtonInfo->pIcon;
 							ability.pDisabledIcon = pActionButtonInfo->pIconDisabled;
-							if ( CHECK_TEXT_NOT_EMPTY_PRE(pActionButtonInfo->,Tooltip) )
-								ability.wszTooltip = GET_TEXT_PRE(pActionButtonInfo->,Tooltip);
+							if ( CHECK_TEXT_NOT_EMPTY_PRE( pActionButtonInfo->, Tooltip ) )
+								ability.wszTooltip = GET_TEXT_PRE( pActionButtonInfo->, Tooltip );
 							break;
 						}
 					}
@@ -198,11 +253,7 @@ void CInterfaceArmyScreen::CReinfViewer::MakeInterior( CObjectBase *pWindow, con
 
 // CInterfaceArmyScreen
 
-CInterfaceArmyScreen::CInterfaceArmyScreen() :
-	CInterfaceScreenBase( "ArmyScreen", "army_screen_menu" ),
-	timeAbs( 0 )
-{
-}
+CInterfaceArmyScreen::CInterfaceArmyScreen() : CInterfaceScreenBase( "ArmyScreen", "army_screen_menu" ), timeAbs( 0 ) {}
 
 CInterfaceArmyScreen::~CInterfaceArmyScreen()
 {
@@ -272,7 +323,7 @@ void CInterfaceArmyScreen::GetElements()
 	pLeaderKilledView = GetChildChecked<ITextView>( pCommanderInfoBlock, "KilledView", true );
 	pLeaderLostView = GetChildChecked<ITextView>( pCommanderInfoBlock, "LostView", true );
 
-	for ( int i = 1; ; ++i )
+	for ( int i = 1;; ++i )
 	{
 		IWindow *pWnd = pLeftPanel ? pLeftPanel->GetChild( fmt::format( "Ability{}", i ), true ) : 0;
 		if ( !pWnd )
@@ -317,24 +368,24 @@ void CInterfaceArmyScreen::MakeInterior()
 
 		CPtr<CReinfData> pReinf = new CReinfData();
 		pReinf->eType = (NDb::EReinforcementType)( i );
-		pReinf->bEnabled = (reinf.eState == IScenarioTracker::ERS_ENABLED);
+		pReinf->bEnabled = ( reinf.eState == IScenarioTracker::ERS_ENABLED );
 		const NDb::SReinforcement *pDBReinf = reinf.pDBReinf;
 		pReinf->pDBReinf = pDBReinf;
 		pReinf->bFromPrevChapter = reinf.bFromPrevChapter;
 		pReinf->FillAbilities();
 		if ( pDBReinf )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBReinf->,LocalizedName) )
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBReinf->, LocalizedName ) )
 			{
-				pReinf->wszName = GET_TEXT_PRE(pDBReinf->,LocalizedName);
+				pReinf->wszName = GET_TEXT_PRE( pDBReinf->, LocalizedName );
 				if ( !pDBReinf->entries.empty() )
 				{
 					const NDb::SReinforcementEntry &entry = pDBReinf->entries.front();
-					const NDb::SHPObjectRPGStats *pDBStats = (entry.pMechUnit != 0) ?
-						checked_cast_ptr<const NDb::SHPObjectRPGStats*>( entry.pMechUnit ) :
-						checked_cast_ptr<const NDb::SHPObjectRPGStats*>( entry.pSquad );
-					if ( pDBStats && CHECK_TEXT_NOT_EMPTY_PRE(pDBStats->,LocalizedName) )
-						pReinf->wszProfileUnit = GET_TEXT_PRE(pDBStats->,LocalizedName);
+					const NDb::SHPObjectRPGStats *pDBStats =
+							( entry.pMechUnit != 0 ) ? checked_cast_ptr<const NDb::SHPObjectRPGStats *>( entry.pMechUnit )
+																			 : checked_cast_ptr<const NDb::SHPObjectRPGStats *>( entry.pSquad );
+					if ( pDBStats && CHECK_TEXT_NOT_EMPTY_PRE( pDBStats->, LocalizedName ) )
+						pReinf->wszProfileUnit = GET_TEXT_PRE( pDBStats->, LocalizedName );
 				}
 			}
 		}
@@ -343,8 +394,9 @@ void CInterfaceArmyScreen::MakeInterior()
 			// icon
 			if ( pUIConsts )
 			{
-				for ( std::vector< NDb::SReinfButton >::const_iterator it = pUIConsts->reinfButtons.begin();
-					it != pUIConsts->reinfButtons.end(); ++it )
+				for ( std::vector<NDb::SReinfButton>::const_iterator it = pUIConsts->reinfButtons.begin();
+				      it != pUIConsts->reinfButtons.end();
+				      ++it )
 				{
 					const NDb::SReinfButton &button = *it;
 					if ( button.eType == pReinf->eType )
@@ -366,7 +418,8 @@ void CInterfaceArmyScreen::MakeInterior()
 			if ( pDBReinf )
 			{
 				pReinf->pTexture = pDBReinf->pIconTexture;
-				pReinf->wszProfileUnitRank = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, pReinf->eType ) );
+				pReinf->wszProfileUnitRank =
+						NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, pReinf->eType ) );
 			}
 
 			IScenarioTracker::SUndoLeaderInfo undo;
@@ -376,14 +429,15 @@ void CInterfaceArmyScreen::MakeInterior()
 		}
 
 		if ( pReinf->bEnabled && !pReinf->bFromPrevChapter && // show enabled only
-			pReinf->eType != NDb::RT_SUPER_WEAPON ) // CRAP - don't show super weapon
+		     pReinf->eType != NDb::RT_SUPER_WEAPON )          // CRAP - don't show super weapon
 		{
 			reinforcements.push_back( pReinf.GetPtr() );
 		}
 	}
 
 	if ( pPromotionsView )
-		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string(  pST->GetAvailablePromotions() ) ) );
+		pPromotionsView->SetText( pPromotionsView->GetDBText() +
+		                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 
 	for ( int i = 0; i < reinforcements.size(); ++i )
 	{
@@ -410,11 +464,11 @@ void CInterfaceArmyScreen::MakeInterior()
 		if ( i < pCampaign->leaderRanks.size() )
 		{
 			const NDb::SLeaderExpLevel &rank = pCampaign->leaderRanks[i];
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(rank.,RankName) )
-				wszRankName = GET_TEXT_PRE(rank.,RankName);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( rank., RankName ) )
+				wszRankName = GET_TEXT_PRE( rank., RankName );
 		}
 
-		std::vector< std::pair<std::wstring, std::wstring> > params;
+		std::vector<std::pair<std::wstring, std::wstring>> params;
 		params.push_back( std::pair<std::wstring, std::wstring>( wszTag, wszRankName ) );
 		SetDynamicTextView( visAbility.pRankLabel, params );
 	}
@@ -458,7 +512,7 @@ void CInterfaceArmyScreen::FillLeaderInfo( CReinfData *pReinf, const IScenarioTr
 		if ( pLeader->lastSeen.fCurExp != pLeader->fExp )
 		{
 			pLeader->lastSeen.bExpChanged = true;
-			pLeader->lastSeen.fExpStep = (pLeader->fExp - pLeader->lastSeen.fCurExp) * EXP_PROGRESS_STEP_FRACTION;
+			pLeader->lastSeen.fExpStep = ( pLeader->fExp - pLeader->lastSeen.fCurExp ) * EXP_PROGRESS_STEP_FRACTION;
 			if ( pLeader->lastSeen.fExpStep < 1 )
 				pLeader->lastSeen.fExpStep = 1;
 		}
@@ -494,8 +548,7 @@ void CInterfaceArmyScreen::ShowLeaderInfo( bool bEnabled, const CLeaderInfo *pLe
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	int nPromotionCount = pST->GetAvailablePromotions();
-	bool bAssigned = (pLeader != 0);
-
+	bool bAssigned = ( pLeader != 0 );
 
 	if ( pPromoteCommanderView )
 		pPromoteCommanderView->ShowWindow( !bAssigned && nPromotionCount > 0 );
@@ -565,12 +618,12 @@ void CInterfaceArmyScreen::ShowReinfAbilities( bool bEnabled, const CReinfData *
 			{
 				visAbility.pWnd->ShowWindow( true );
 
-				std::vector< std::pair<std::wstring, std::wstring> > params;
+				std::vector<std::pair<std::wstring, std::wstring>> params;
 				params.push_back( std::pair<std::wstring, std::wstring>( TEXT_TAG_ABILITY_TOOLTIP, ability.wszTooltip ) );
 				SetDynamicTooltip( visAbility.pWnd, visAbility.pWnd->GetDBTooltipStr(), params );
 			}
 
-			if ( ability.nLevel == 0 || (pSTLeader && ability.nLevel <= pSTLeader->info.nRank ) )
+			if ( ability.nLevel == 0 || ( pSTLeader && ability.nLevel <= pSTLeader->info.nRank ) )
 				pIcon = ability.pEnabledIcon;
 			else
 				pIcon = ability.pDisabledIcon;
@@ -595,10 +648,7 @@ struct SDBUnit
 	int nCount;
 	const NDb::SHPObjectRPGStats *pDBStats;
 
-	bool operator==( const NDb::SHPObjectRPGStats *_pDBStats ) const
-	{
-		return pDBStats == _pDBStats;
-	}
+	bool operator==( const NDb::SHPObjectRPGStats *_pDBStats ) const { return pDBStats == _pDBStats; }
 };
 
 void CInterfaceArmyScreen::ShowReinfInfo( bool bEnabled, const CReinfData *pReinf )
@@ -684,7 +734,7 @@ int CInterfaceArmyScreen::Check( const std::string &szCheckName ) const
 
 bool CInterfaceArmyScreen::CheckAutoAssign()
 {
-	bool bAutoAssign = (Singleton<IScenarioTracker>()->GetAvailablePromotions() > 0);
+	bool bAutoAssign = ( Singleton<IScenarioTracker>()->GetAvailablePromotions() > 0 );
 	if ( bAutoAssign )
 	{
 		bAutoAssign = false;
@@ -719,7 +769,7 @@ bool CInterfaceArmyScreen::OnSelect()
 	if ( pReinfList )
 	{
 		IListControlItem *pItem = pReinfList->GetSelectedListItem();
-		pSelection = dynamic_cast<CReinfData*>( pItem->GetUserData() );
+		pSelection = dynamic_cast<CReinfData *>( pItem->GetUserData() );
 	}
 	UpdateSelectionInfo();
 
@@ -759,7 +809,8 @@ bool CInterfaceArmyScreen::OnAssignLeaderOk()
 		FillLeaderInfo( pSelection, undo );
 
 		if ( pPromotionsView )
-			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+			pPromotionsView->SetText( pPromotionsView->GetDBText() +
+			                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 
 		UpdateSelectionInfo();
 
@@ -823,7 +874,8 @@ void CInterfaceArmyScreen::AutoAssignCommanders()
 	UpdateSelectionInfo();
 
 	if ( pPromotionsView )
-		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+		pPromotionsView->SetText( pPromotionsView->GetDBText() +
+		                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 }
 
 void CInterfaceArmyScreen::Back()
@@ -840,7 +892,7 @@ void CInterfaceArmyScreen::Back()
 		if ( !pSTLeader )
 			continue;
 		if ( pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_NONE &&
-			pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_DONE )
+		     pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_DONE )
 		{
 			IScenarioTracker::SLeaderInfo::SLeaderStatSet info;
 			info.nRank = pLeader->lastSeen.nCurRank;
@@ -907,7 +959,7 @@ void CInterfaceArmyScreen::UndoAllAssignCommander()
 
 			if ( pReinf->pLeader && !pReinf->pLeader->bPermanent )
 			{
-				pST->UndoAssignLeader( pReinf->pLeader->undo ) ;
+				pST->UndoAssignLeader( pReinf->pLeader->undo );
 				pReinf->pLeader = 0;
 
 				pReinfViewer->MakeInterior( pReinf->pItem, pReinf );
@@ -915,7 +967,8 @@ void CInterfaceArmyScreen::UndoAllAssignCommander()
 		}
 
 		if ( pPromotionsView )
-			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
+			pPromotionsView->SetText( pPromotionsView->GetDBText() +
+			                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 
 		UpdateSelectionInfo();
 
@@ -938,12 +991,13 @@ void CInterfaceArmyScreen::UndoAssignCommander()
 	{
 		IScenarioTracker *pST = Singleton<IScenarioTracker>();
 
-		pST->UndoAssignLeader( pSelection->pLeader->undo ) ;
+		pST->UndoAssignLeader( pSelection->pLeader->undo );
 		nAssignmentCount--;
 		pSelection->pLeader = 0;
 
 		if ( pPromotionsView )
-			pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string(  pST->GetAvailablePromotions() ) ) );
+			pPromotionsView->SetText( pPromotionsView->GetDBText() +
+			                          NStr::ToUnicode( std::to_string( pST->GetAvailablePromotions() ) ) );
 
 		UpdateSelectionInfo();
 
@@ -1122,8 +1176,8 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 	if ( pLeaderRankView )
 		pLeaderRankView->SetText( pLeaderRankView->GetDBText() + wszRank );
 
-	std::wstring wszRankNumber = NStr::ToUnicode( std::to_string(  pLeader->nRank + 1 ) );
-	std::vector< std::pair<std::wstring, std::wstring> > params;
+	std::wstring wszRankNumber = NStr::ToUnicode( std::to_string( pLeader->nRank + 1 ) );
+	std::vector<std::pair<std::wstring, std::wstring>> params;
 	params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_RANK_NUMBER, wszRankNumber ) );
 	SetDynamicTextView( pLeaderRankLabel, params );
 
@@ -1153,18 +1207,14 @@ bool CInterfaceArmyScreen::IsMainScreenActive() const
 
 // CICArmyScreen
 
-void CICArmyScreen::PreCreate()
-{
-}
+void CICArmyScreen::PreCreate() {}
 
 void CICArmyScreen::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICArmyScreen::Configure( const char *pszConfig )
-{
-}
+void CICArmyScreen::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x171BB441, CInterfaceArmyScreen )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ARMY_SCREEN, CICArmyScreen )

@@ -7,8 +7,7 @@
 #include "Server_Client_Common/LobbiesIDs.h"
 #include "Statistics.h"
 
-CCustomLobby::CCustomLobby( class CClients *pClients, const std::string &szCfgFile )
-: CGameLobby( pClients, szCfgFile )
+CCustomLobby::CCustomLobby( class CClients *pClients, const std::string &szCfgFile ) : CGameLobby( pClients, szCfgFile )
 {
 	nLobbyID = ERID_CUSTOM;
 	pStatisticsCollector = NStatistics::CreateCollector( "CUSTOM" );
@@ -25,7 +24,8 @@ const bool CCustomLobby::GetClientInfo( const int nClientID, SCustomLobbyClientI
 {
 	SCommonClientInfo commonClientInfo;
 	std::string szNick;
-	if ( GetClients()->GetCommonClientInfo( nClientID, &commonClientInfo ) && GetClients()->GetNick( nClientID, &szNick ) )
+	if ( GetClients()->GetCommonClientInfo( nClientID, &commonClientInfo ) &&
+	     GetClients()->GetNick( nClientID, &szNick ) )
 	{
 		pInfo->eState = commonClientInfo.eState;
 		pInfo->bWant2ReceiveChat = commonClientInfo.bWant2ReceiveChat;
@@ -42,20 +42,20 @@ const bool CCustomLobby::GetClientInfo( const int nClientID, SCustomLobbyClientI
 void CCustomLobby::GetLobbyClients( CGetLobbyClientsPacket *pPacket )
 {
 	SGetClientInfoFunc getClientInfo( this );
-	GetUpdate( pPacket, (CCustomLobbyClientsPacket*)0, getClientInfo, true );
+	GetUpdate( pPacket, (CCustomLobbyClientsPacket *)0, getClientInfo, true );
 }
 
 bool CCustomLobby::Segment()
 {
 	CGameLobby::Segment();
-	(*pStatisticsCollector)[ "PlayersAverage" ]->Add( float( nPlayersTotal ) );
-	(*pStatisticsCollector)[ "GamesAverage" ]->Add( float( nGamesTotal ) );
+	( *pStatisticsCollector )["PlayersAverage"]->Add( float( nPlayersTotal ) );
+	( *pStatisticsCollector )["GamesAverage"]->Add( float( nGamesTotal ) );
 	return true;
 }
 
 void CCustomLobby::ClientEnterToLobby( const int nClientID )
 {
-	(*pStatisticsCollector)[ "TotalPlayersEntered" ]->Add( 1.0f );
+	( *pStatisticsCollector )["TotalPlayersEntered"]->Add( 1.0f );
 	++nPlayersTotal;
 }
 
@@ -66,8 +66,8 @@ void CCustomLobby::ClientLeaveLobby( const int nClientID )
 
 int CCustomLobby::CreateGame( const int nMaxPlayers )
 {
-	(*pStatisticsCollector)[ "GamesTotal" ]->Add( 1.0f );
-	(*pStatisticsCollector)[ "GamesPerSecond" ]->Add( 1.0f );
+	( *pStatisticsCollector )["GamesTotal"]->Add( 1.0f );
+	( *pStatisticsCollector )["GamesPerSecond"]->Add( 1.0f );
 	++nGamesTotal;
 	return CGameLobby::CreateGame( nMaxPlayers );
 }

@@ -15,49 +15,52 @@
 #define DEF_PENDENT_PART1_ANGLE_COEFF ( DEF_PEAK_PENDENT_MAX_ANGLE / ( DEF_PENDENT_PART1_NUM - 1 ) )
 #define DEF_PEAK_PATCH_SIZE 8
 
-inline void CheckTileInsidingAndPush( std::vector<CVec3> *pInters, const CVec3 &v, const float x1, const float y1, const float x2, const float y2 )
+inline void CheckTileInsidingAndPush(
+		std::vector<CVec3> *pInters, const CVec3 &v, const float x1, const float y1, const float x2, const float y2 )
 {
-	if ( (v.x > (x1 - DEF_EPS)) && (v.x < (x2 + DEF_EPS)) && (v.y > (y1 - DEF_EPS)) && (v.y < (y2 + DEF_EPS)) )
+	if ( ( v.x > ( x1 - DEF_EPS ) ) && ( v.x < ( x2 + DEF_EPS ) ) && ( v.y > ( y1 - DEF_EPS ) ) &&
+	     ( v.y < ( y2 + DEF_EPS ) ) )
 		pInters->push_back( v );
 }
 
-inline void CheckTrgInsidingAndPush( std::vector<CVec3> *pInters, const CVec3 &v, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
+inline void CheckTrgInsidingAndPush(
+		std::vector<CVec3> *pInters, const CVec3 &v, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
 {
 	CVec2 vBary;
 	GetBaryCoords( v, v1, v2, v3, &vBary );
-	if ( (vBary.x > -DEF_EPS) && (vBary.y > -DEF_EPS) && ((vBary.x + vBary.y) < (1.0f + DEF_EPS)) )
+	if ( ( vBary.x > -DEF_EPS ) && ( vBary.y > -DEF_EPS ) && ( ( vBary.x + vBary.y ) < ( 1.0f + DEF_EPS ) ) )
 		AddUnique( pInters, v );
 }
 
-inline void CheckVerticalIntersectAndPush( std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
-																					 const float fY, const float fX1, const float fX2 )
+inline void CheckVerticalIntersectAndPush(
+		std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2, const float fY, const float fX1, const float fX2 )
 {
-	if ( fabs(v2.y - v1.y) > EPS_VALUE )
+	if ( fabs( v2.y - v1.y ) > EPS_VALUE )
 	{
 		const float t = ( fY - v1.y ) / ( v2.y - v1.y );
-		if ( (t > -DEF_EPS) && (t < (1.0f + DEF_EPS)) )
+		if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )
 		{
 			const float x = v1.x + ( v2.x - v1.x ) * t;
-			if ( (x > (fX1 - DEF_EPS)) && (x < (fX2 + DEF_EPS)) )
+			if ( ( x > ( fX1 - DEF_EPS ) ) && ( x < ( fX2 + DEF_EPS ) ) )
 			{
-				PushBackUnique( pInters, CVec3(x, fY, v1.z + (v2.z - v1.z) * t) );
+				PushBackUnique( pInters, CVec3( x, fY, v1.z + ( v2.z - v1.z ) * t ) );
 			}
 		}
 	}
 }
 
-inline void CheckHorizontalIntersectAndPush( std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2,
-																						 const float fX, const float fY1, const float fY2 )
+inline void CheckHorizontalIntersectAndPush(
+		std::vector<CVec3> *pInters, const CVec3 &v1, const CVec3 &v2, const float fX, const float fY1, const float fY2 )
 {
-	if ( fabs(v2.x - v1.x) > EPS_VALUE )
+	if ( fabs( v2.x - v1.x ) > EPS_VALUE )
 	{
 		const float t = ( fX - v1.x ) / ( v2.x - v1.x );
-		if ( (t > -DEF_EPS) && (t < (1.0f + DEF_EPS)) )
+		if ( ( t > -DEF_EPS ) && ( t < ( 1.0f + DEF_EPS ) ) )
 		{
 			const float y = v1.y + ( v2.y - v1.y ) * t;
-			if ( (y > (fY1 - DEF_EPS)) && (y < (fY2 + DEF_EPS)) )
+			if ( ( y > ( fY1 - DEF_EPS ) ) && ( y < ( fY2 + DEF_EPS ) ) )
 			{
-				PushBackUnique( pInters, CVec3(fX, y, v1.z + (v2.z - v1.z) * t) );
+				PushBackUnique( pInters, CVec3( fX, y, v1.z + ( v2.z - v1.z ) * t ) );
 			}
 		}
 	}
@@ -68,24 +71,26 @@ inline void InterpolateHeight( CVec3 *pV, const CVec3 &v1, const CVec3 &v2, cons
 	pV->z = ( v2.z - v1.z ) * vTex.x + ( v3.z - v1.z ) * vTex.y + v1.z;
 }
 
-inline void InterpolateSecTexCoords( CVec2 *pSecTex, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const CVec2 &vBary )
+inline void InterpolateSecTexCoords(
+		CVec2 *pSecTex, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const CVec2 &vBary )
 {
 	pSecTex->x = ( vSecTex2.x - vSecTex1.x ) * vBary.x + ( vSecTex3.x - vSecTex1.x ) * vBary.y + vSecTex1.x;
 	pSecTex->y = ( vSecTex2.y - vSecTex1.y ) * vBary.x + ( vSecTex3.y - vSecTex1.y ) * vBary.y + vSecTex1.y;
 }
 
-inline void InterpolateRealPos( CVec3 *pPos, const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3, const CVec2 &vBary )
+inline void InterpolateRealPos(
+		CVec3 *pPos, const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3, const CVec2 &vBary )
 {
-	(*pPos) = ( vRealPos2 - vRealPos1 ) * vBary.x + ( vRealPos3 - vRealPos1 ) * vBary.y + vRealPos1;
+	( *pPos ) = ( vRealPos2 - vRealPos1 ) * vBary.x + ( vRealPos3 - vRealPos1 ) * vBary.y + vRealPos1;
 }
 
 inline void InterpolateNorm( CVec3 *pNorm, const CVec3 &vNorm1, const CVec3 &vNorm2, const float t )
 {
-	(*pNorm) = vNorm1 + ( vNorm2 - vNorm1 ) * t;
-	if ( fabs2(*pNorm) > DEF_EPS )
+	( *pNorm ) = vNorm1 + ( vNorm2 - vNorm1 ) * t;
+	if ( fabs2( *pNorm ) > DEF_EPS )
 		Normalize( pNorm );
 	else
-		(*pNorm) = vNorm1;
+		( *pNorm ) = vNorm1;
 }
 
 inline CVec3 GetInterpolateNorm( const CVec3 &n1, const CVec3 &n2, const float t )
@@ -98,18 +103,47 @@ inline CVec3 GetInterpolateNorm( const CVec3 &n1, const CVec3 &n2, const float t
 	return n;
 }
 
-void CTerraGen::PeaksProjectTrgOnTiles( std::vector<NMeshData::SMeshDataTex2> *pDataArr, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3,
-																	 const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3,
-																	 const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3,
-																	 const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3,
-																	 const CVec3 &vBase1, const CVec3 &vBase2, const CVec3 &vBase3 )
+void CTerraGen::PeaksProjectTrgOnTiles( std::vector<NMeshData::SMeshDataTex2> *pDataArr,
+                                        const CVec3 &v1,
+                                        const CVec3 &v2,
+                                        const CVec3 &v3,
+                                        const CVec2 &vSecTex1,
+                                        const CVec2 &vSecTex2,
+                                        const CVec2 &vSecTex3,
+                                        const CVec3 &vRealPos1,
+                                        const CVec3 &vRealPos2,
+                                        const CVec3 &vRealPos3,
+                                        const CVec3 &vNorm1,
+                                        const CVec3 &vNorm2,
+                                        const CVec3 &vNorm3,
+                                        const CVec3 &vBase1,
+                                        const CVec3 &vBase2,
+                                        const CVec3 &vBase3 )
 {
-	const int nTileX1 = Clamp( int((std::min)((std::min)(v1.x, v2.x), v3.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int((std::min)((std::min)(v1.y, v2.y), v3.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp(
+			int( (std::min)( (std::min)( v1.x, v2.x ), v3.x ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp(
+			int( (std::min)( (std::min)( v1.y, v2.y ), v3.y ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
-	AddTileTriangle( 0, pDataArr, v1, v2, v3, vSecTex1, vSecTex2, vSecTex3, nTileX1, nTileY1,
-									 nTileX1 >> DEF_PATCH_SIZE_BITS, nTileY1 >> DEF_PATCH_SIZE_BITS, &vRealPos1, &vRealPos2, &vRealPos3,
-									 &vNorm1, &vNorm2, &vNorm3, false );
+	AddTileTriangle( 0,
+	                 pDataArr,
+	                 v1,
+	                 v2,
+	                 v3,
+	                 vSecTex1,
+	                 vSecTex2,
+	                 vSecTex3,
+	                 nTileX1,
+	                 nTileY1,
+	                 nTileX1 >> DEF_PATCH_SIZE_BITS,
+	                 nTileY1 >> DEF_PATCH_SIZE_BITS,
+	                 &vRealPos1,
+	                 &vRealPos2,
+	                 &vRealPos3,
+	                 &vNorm1,
+	                 &vNorm2,
+	                 &vNorm3,
+	                 false );
 
 	/*return;
 
@@ -218,8 +252,14 @@ inline float GetDist2( const CVec3 &v1, const CVec3fEx &v2 )
 	return fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) + fabs2( v1.z - v2.z );
 }
 
-static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3 &v, const CArray2D<STerrainInfo::STile> &tiles,
-																		const int x1, const int y1, const int x2, const int y2 )
+static bool FindNearestVertexInTile( CVec3 *pRes,
+                                     float *fAddHeight,
+                                     const CVec3 &v,
+                                     const CArray2D<STerrainInfo::STile> &tiles,
+                                     const int x1,
+                                     const int y1,
+                                     const int x2,
+                                     const int y2 )
 {
 	bool bFlag = true;
 	CVec3fEx vRes;
@@ -236,7 +276,7 @@ static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3
 			{
 				//vRes = tile.vertices[0]; vRes.z += tile.addHeights[0];
 				const CVec3fEx &tileVert = tile.vertices[0];
-				vRes.Set( tileVert.x, tileVert.y, (std::max)(tileVert.z + tile.addHeights[0], 0.0f), tileVert.flag );
+				vRes.Set( tileVert.x, tileVert.y, (std::max)( tileVert.z + tile.addHeights[0], 0.0f ), tileVert.flag );
 				*fAddHeight = tile.addHeights[0];
 				fDist = GetDist2( v, vRes );
 				bFlag = false;
@@ -244,13 +284,14 @@ static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3
 			for ( int k = 0; k < tile.vertices.size(); ++k )
 			{
 				const CVec3fEx &vCur = tile.vertices[k];
-				const float t = GetDist2( v, CVec3fEx(vCur.x, vCur.y, (std::max)(vCur.z + tile.addHeights[k], 0.0f), vCur.flag) );
+				const float t =
+						GetDist2( v, CVec3fEx( vCur.x, vCur.y, (std::max)( vCur.z + tile.addHeights[k], 0.0f ), vCur.flag ) );
 				if ( t < fDist )
 				{
 					fDist = t;
 					//vRes = vCur; vRes.z += tile.addHeights[k];
 					*fAddHeight = tile.addHeights[k];
-					vRes.Set( vCur.x, vCur.y, (std::max)(vCur.z + tile.addHeights[k], 0.0f), vCur.flag );
+					vRes.Set( vCur.x, vCur.y, (std::max)( vCur.z + tile.addHeights[k], 0.0f ), vCur.flag );
 				}
 			}
 		}
@@ -268,7 +309,8 @@ static bool FindNearestVertexInTile( CVec3 *pRes, float *fAddHeight, const CVec3
 	return false;
 }
 
-inline bool FindNearestVertexInTile( CVec3 *pRes, float *pAddHeight, const CVec3 &v, const CArray2D<STerrainInfo::STile> &tiles )
+inline bool
+FindNearestVertexInTile( CVec3 *pRes, float *pAddHeight, const CVec3 &v, const CArray2D<STerrainInfo::STile> &tiles )
 {
 	const int nx = Clamp( int( v.x * DEF_INV_TILE_SIZE ), 0, tiles.GetSizeX() - 1 );
 	const int ny = Clamp( int( v.y * DEF_INV_TILE_SIZE ), 0, tiles.GetSizeY() - 1 );
@@ -280,10 +322,10 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 	if ( fabs( fabs2( v1.x - v2.x ) + fabs2( v1.y - v2.y ) ) < EPS_VALUE )
 		return;
 
-	const int nTileX1 = Clamp( int((std::min)(v1.x, v2.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int((std::min)(v1.y, v2.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
-	const int nTileX2 = Clamp( int((std::max)(v1.x, v2.x) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY2 = Clamp( int((std::max)(v1.y, v2.y) * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp( int( (std::min)( v1.x, v2.x ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp( int( (std::min)( v1.y, v2.y ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX2 = Clamp( int( (std::max)( v1.x, v2.x ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY2 = Clamp( int( (std::max)( v1.y, v2.y ) * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	int nX1, nY1, nX2, nY2;
 	if ( nTileX1 <= nTileX2 )
@@ -309,8 +351,8 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 
 	const float fDx = fabs( v2.x - v1.x );
 	const float fDy = fabs( v2.y - v1.y );
-	const float fInvDx = ( fDx > EPS_VALUE ) ? ( 1.0f / (v2.x - v1.x) ) : 0.0f;
-	const float fInvDy = ( fDy > EPS_VALUE ) ? ( 1.0f / (v2.y - v1.y) ) : 0.0f;
+	const float fInvDx = ( fDx > EPS_VALUE ) ? ( 1.0f / ( v2.x - v1.x ) ) : 0.0f;
+	const float fInvDy = ( fDy > EPS_VALUE ) ? ( 1.0f / ( v2.y - v1.y ) ) : 0.0f;
 	float t;
 
 	for ( int g = nY1; g <= nY2; ++g )
@@ -325,21 +367,25 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 				if ( fDx > EPS_VALUE )
 				{
 					t = ( curVert.x - v1.x ) * fInvDx;
-					if ( (t > 0) && (t < 1.0f) && (fabs(v1.y + (v2.y - v1.y) * t - curVert.y) < DEF_EPS) )
+					if ( ( t > 0 ) && ( t < 1.0f ) && ( fabs( v1.y + ( v2.y - v1.y ) * t - curVert.y ) < DEF_EPS ) )
 					{
 						curVert.z = v1.z + ( v2.z - v1.z ) * t - addHeights[k];
 						//addHeights[k] = v1.z + ( v2.z - v1.z ) * t;
-						PushBackUnique( pInters, SIntersectPoint(CVec3(curVert.x, curVert.y, (std::max)(curVert.z + addHeights[k], 0.0f)), t) );
+						PushBackUnique(
+								pInters,
+								SIntersectPoint( CVec3( curVert.x, curVert.y, (std::max)( curVert.z + addHeights[k], 0.0f ) ), t ) );
 					}
 				}
 				else
 				{
 					t = ( curVert.y - v1.y ) * fInvDy;
-					if ( (t > 0) && (t < 1.0f) && (fabs(v1.x + (v2.x - v1.x) * t - curVert.x) < DEF_EPS) )
+					if ( ( t > 0 ) && ( t < 1.0f ) && ( fabs( v1.x + ( v2.x - v1.x ) * t - curVert.x ) < DEF_EPS ) )
 					{
 						curVert.z = v1.z + ( v2.z - v1.z ) * t - addHeights[k];
 						//addHeights[k] = v1.z + ( v2.z - v1.z ) * t;
-						PushBackUnique( pInters, SIntersectPoint(CVec3(curVert.x, curVert.y, (std::max)(curVert.z + addHeights[k], 0.0f)), t) );
+						PushBackUnique(
+								pInters,
+								SIntersectPoint( CVec3( curVert.x, curVert.y, (std::max)( curVert.z + addHeights[k], 0.0f ) ), t ) );
 					}
 				}
 			}
@@ -370,7 +416,7 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 
 	std::sort( pInters->begin(), pInters->end() );
 
-/*	firstArrPos.push_back( v1 );
+	/*	firstArrPos.push_back( v1 );
 
 	for ( vector<SIntersectPoint>::const_iterator it = pInters.begin(); it != pInters.end(); ++it )
 		firstArrPos.push_back( it->vPoint );
@@ -378,7 +424,12 @@ void CTerraGen::PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *pInter
 	firstArrPos.push_back( v2 );*/
 }
 
-inline void RotateRealPos( CVec3 &pRealPos, const CVec3 &vSrcPos, const CVec3 &vSrcNorm, const float fCosAng, const float fSinAng, const float fWidth )
+inline void RotateRealPos( CVec3 &pRealPos,
+                           const CVec3 &vSrcPos,
+                           const CVec3 &vSrcNorm,
+                           const float fCosAng,
+                           const float fSinAng,
+                           const float fWidth )
 {
 	pRealPos.x = vSrcPos.x + vSrcNorm.x * fCosAng * fWidth;
 	pRealPos.y = vSrcPos.y + vSrcNorm.y * fCosAng * fWidth;
@@ -407,7 +458,7 @@ inline void ReleaseUnusedAttribues( std::vector<NMeshData::SMeshDataTex2> &pData
 
 void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 {
-	if ( !(pDesc->pTerraSet) || (pDesc->pTerraSet->terraTypes.empty()) )
+	if ( !( pDesc->pTerraSet ) || ( pDesc->pTerraSet->terraTypes.empty() ) )
 		return;
 
 	SPeakGFXInfo gfxInfo;
@@ -431,7 +482,7 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 	float fSecTexX = 0.0f, fSecTexY;
 
 	const float fSecTexAspectRatio = (float)pDesc->pTerraSet->terraTypes[0]->pPeakMaterial->pBump->nHeight /
-																	 pDesc->pTerraSet->terraTypes[0]->pPeakMaterial->pBump->nWidth;
+	                                 pDesc->pTerraSet->terraTypes[0]->pPeakMaterial->pBump->nWidth;
 
 	int nPatchesCount;
 	std::vector<SIntersectPoint> firstArrPos;
@@ -439,7 +490,9 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 	CVec3 vPos1, vPos2;
 	float fAddHeight1, fAddHeight2;
 
-	for ( std::vector< std::vector<STerrainInfo::SVSOPoint> >::const_iterator itPointsArr = peak.points.begin(); itPointsArr != peak.points.end(); ++itPointsArr )
+	for ( std::vector<std::vector<STerrainInfo::SVSOPoint>>::const_iterator itPointsArr = peak.points.begin();
+	      itPointsArr != peak.points.end();
+	      ++itPointsArr )
 	{
 		ClearDataArr( dataArr );
 		nPatchesCount = 0;
@@ -447,13 +500,13 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 		const int nPreLastNum = itPointsArr->size() - 1;
 		for ( int i = 0; i < nPreLastNum; ++i )
 		{
-			const STerrainInfo::SVSOPoint &point1 = (*itPointsArr)[i];
-			const STerrainInfo::SVSOPoint &point2 = (*itPointsArr)[i + 1];
+			const STerrainInfo::SVSOPoint &point1 = ( *itPointsArr )[i];
+			const STerrainInfo::SVSOPoint &point2 = ( *itPointsArr )[i + 1];
 
-			if ( !FindNearestVertexInTile(&vPos1, &fAddHeight1, point1.vPos, terrainInfo.tiles) )
+			if ( !FindNearestVertexInTile( &vPos1, &fAddHeight1, point1.vPos, terrainInfo.tiles ) )
 				//vPos1 = point1.vPos;
 				continue;
-			if ( !FindNearestVertexInTile(&vPos2, &fAddHeight2, point2.vPos, terrainInfo.tiles) )
+			if ( !FindNearestVertexInTile( &vPos2, &fAddHeight2, point2.vPos, terrainInfo.tiles ) )
 				//vPos2 = point2.vPos;
 				continue;
 
@@ -497,36 +550,93 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 
 				const CVec2 vPrevSecTex1( fSecTexX, fSecTexY );
 				const CVec2 vPrevSecTex2( fNextSecTexX, fSecTexY );
-				const CVec2 vNextSecTex1( fSecTexX , fNextSecTexY );
+				const CVec2 vNextSecTex1( fSecTexX, fNextSecTexY );
 				const CVec2 vNextSecTex2( fNextSecTexX, fNextSecTexY );
 
 				if ( k == 0 )
 				{
 					firstArrPos.resize( 0 );
-					firstArrPos.push_back( SIntersectPoint(vPrev1, 0.0f) );
-					firstArrPos.push_back( SIntersectPoint(vPrev2, 1.0f) );
-					PeaksGetArrayOfFirstPoints( &firstArrPos, vPrev1/*CVec3( vPrev1.x, vPrev1.y, fAddHeight1 )*/, vPrev2/*CVec3( vPrev2.x, vPrev2.y, fAddHeight2 )*/ );
+					firstArrPos.push_back( SIntersectPoint( vPrev1, 0.0f ) );
+					firstArrPos.push_back( SIntersectPoint( vPrev2, 1.0f ) );
+					PeaksGetArrayOfFirstPoints( &firstArrPos,
+					                            vPrev1 /*CVec3( vPrev1.x, vPrev1.y, fAddHeight1 )*/,
+					                            vPrev2 /*CVec3( vPrev2.x, vPrev2.y, fAddHeight2 )*/ );
 					const int nLast = firstArrPos.size() - 1;
 					for ( int p = nLast; p > 0; --p )
 					{
 						const SIntersectPoint &p1 = firstArrPos[p - 1];
 						const SIntersectPoint &p2 = firstArrPos[p];
-						PeaksProjectTrgOnTiles( &dataArr, p2.vPoint, p1.vPoint, vNext2, vPrevSecTex2, vPrevSecTex1, vNextSecTex2,
-															 p2.vPoint, p1.vPoint, vRealPos2, GetInterpolateNorm(vNorm1, vNorm2, p2.fDist),
-															 GetInterpolateNorm(vNorm1, vNorm2, p1.fDist), vNorm2, vPrev2, vPrev1, vNext2 );
-															 //vNorm2, vNorm1, vPrev2, vPrev1, vNext2 );
+						PeaksProjectTrgOnTiles( &dataArr,
+						                        p2.vPoint,
+						                        p1.vPoint,
+						                        vNext2,
+						                        vPrevSecTex2,
+						                        vPrevSecTex1,
+						                        vNextSecTex2,
+						                        p2.vPoint,
+						                        p1.vPoint,
+						                        vRealPos2,
+						                        GetInterpolateNorm( vNorm1, vNorm2, p2.fDist ),
+						                        GetInterpolateNorm( vNorm1, vNorm2, p1.fDist ),
+						                        vNorm2,
+						                        vPrev2,
+						                        vPrev1,
+						                        vNext2 );
+						//vNorm2, vNorm1, vPrev2, vPrev1, vNext2 );
 					}
-					PeaksProjectTrgOnTiles( &dataArr, vNext1, vNext2, firstArrPos[0].vPoint, vNextSecTex1, vNextSecTex2, vPrevSecTex1,
-														 vRealPos1, vRealPos2, firstArrPos[0].vPoint, vNorm1, vNorm2, vNorm1, vNext1, vNext2, vPrev1 );
-														 //ProjectTrgOnTiles( dataArr, vNext1, vNext2, firstArrPos[0], vNextSecTex1, vNextSecTex2, vPrevSecTex1,
-														 //	 vRealPos1, vRealPos2, firstArrPos[0], vNorm1, vNorm2, vNext1, vNext2, vPrev1 );
+					PeaksProjectTrgOnTiles( &dataArr,
+					                        vNext1,
+					                        vNext2,
+					                        firstArrPos[0].vPoint,
+					                        vNextSecTex1,
+					                        vNextSecTex2,
+					                        vPrevSecTex1,
+					                        vRealPos1,
+					                        vRealPos2,
+					                        firstArrPos[0].vPoint,
+					                        vNorm1,
+					                        vNorm2,
+					                        vNorm1,
+					                        vNext1,
+					                        vNext2,
+					                        vPrev1 );
+					//ProjectTrgOnTiles( dataArr, vNext1, vNext2, firstArrPos[0], vNextSecTex1, vNextSecTex2, vPrevSecTex1,
+					//	 vRealPos1, vRealPos2, firstArrPos[0], vNorm1, vNorm2, vNext1, vNext2, vPrev1 );
 				}
 				else
 				{
-					PeaksProjectTrgOnTiles( &dataArr, vPrev2, vPrev1, vNext2, vPrevSecTex2, vPrevSecTex1, vNextSecTex2,
-														 vPrevRealPos2, vPrevRealPos1, vRealPos2, vNorm2, vNorm1, vNorm2, vPrev2, vPrev1, vNext2 );
-					PeaksProjectTrgOnTiles( &dataArr, vNext1, vNext2, vPrev1, vNextSecTex1, vNextSecTex2, vPrevSecTex1,
-														 vRealPos1, vRealPos2, vPrevRealPos1, vNorm1, vNorm2, vNorm1, vNext1, vNext2, vPrev1 );
+					PeaksProjectTrgOnTiles( &dataArr,
+					                        vPrev2,
+					                        vPrev1,
+					                        vNext2,
+					                        vPrevSecTex2,
+					                        vPrevSecTex1,
+					                        vNextSecTex2,
+					                        vPrevRealPos2,
+					                        vPrevRealPos1,
+					                        vRealPos2,
+					                        vNorm2,
+					                        vNorm1,
+					                        vNorm2,
+					                        vPrev2,
+					                        vPrev1,
+					                        vNext2 );
+					PeaksProjectTrgOnTiles( &dataArr,
+					                        vNext1,
+					                        vNext2,
+					                        vPrev1,
+					                        vNextSecTex1,
+					                        vNextSecTex2,
+					                        vPrevSecTex1,
+					                        vRealPos1,
+					                        vRealPos2,
+					                        vPrevRealPos1,
+					                        vNorm1,
+					                        vNorm2,
+					                        vNorm1,
+					                        vNext1,
+					                        vNext2,
+					                        vPrev1 );
 
 					//PeaksProjectTrgOnTiles( dataArr, vPrev2, vPrev1, vNext2, vPrevSecTex2, vPrevSecTex1, vNextSecTex2,
 					//	vPrevRealPos2, vPrevRealPos1, vRealPos2, vNorm2, vNorm1, vPrev2, vPrev1, vNext2 );
@@ -562,12 +672,13 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 	terrainGfxInfo.peaks.push_back( gfxInfo );
 
 	if ( pGfxObserver )
-		pGfxObserver->AddPeak( &(terrainGfxInfo.peaks.back()) );
+		pGfxObserver->AddPeak( &( terrainGfxInfo.peaks.back() ) );
 }
 
 void CTerraGen::AddAllPeaks()
 {
-	for ( std::list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
+	for ( std::list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end();
+	      ++it )
 		AddPeak( *it );
 }
 
@@ -607,11 +718,13 @@ void CTerraGen::UpdateNeededPeaks()
 		return;
 
 	const CVec2 vMin( (float)vTexModMin.x * DEF_TILE_SIZE, (float)vTexModMin.y * DEF_TILE_SIZE );
-	const CVec2 vMax( (float)(vTexModMax.x + 1) * DEF_TILE_SIZE, (float)(vTexModMax.y + 1) * DEF_TILE_SIZE );
+	const CVec2 vMax( (float)( vTexModMax.x + 1 ) * DEF_TILE_SIZE, (float)( vTexModMax.y + 1 ) * DEF_TILE_SIZE );
 
-	for ( std::list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
+	for ( std::list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end();
+	      ++it )
 	{
-		if ( (it->vBBMax.x >= vMin.x) && (it->vBBMax.y >= vMin.y) && (it->vBBMin.x <= vMax.x) && (it->vBBMin.y <= vMax.y) )
+		if ( ( it->vBBMax.x >= vMin.x ) && ( it->vBBMax.y >= vMin.y ) && ( it->vBBMin.x <= vMax.x ) &&
+		     ( it->vBBMin.y <= vMax.y ) )
 		{
 			RemovePeakGfxInfo( it->nID );
 			if ( pGfxObserver )

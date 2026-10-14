@@ -18,7 +18,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-
 namespace NGScene
 {
 
@@ -27,171 +26,212 @@ extern CBasicShare<SIntResKey, CFileFont> shareFonts;
 namespace
 {
 
-// blank pixels between cells, and from the atlas edge, so that bilinear
-// filtering never reaches a neighbour's ink
-const int N_PADDING = 2;
-// GDI's tmDefaultChar, and so the key a missing character's .notdef box has
-// always been filed under; FontGen stores it under the same key
-const uint16_t W_DEFAULT_CHAR = 0x1F;
-const int N_MIN_ATLAS = 256;
-const int N_MAX_ATLAS = 2048;
-// room for about this many glyphs of average width at a given size: all of a
-// code page with plenty to spare for names and chat in other scripts
-const int N_GLYPHS_PLANNED = 512;
+	// blank pixels between cells, and from the atlas edge, so that bilinear
+	// filtering never reaches a neighbour's ink
+	const int N_PADDING = 2;
+	// GDI's tmDefaultChar, and so the key a missing character's .notdef box has
+	// always been filed under; FontGen stores it under the same key
+	const uint16_t W_DEFAULT_CHAR = 0x1F;
+	const int N_MIN_ATLAS = 256;
+	const int N_MAX_ATLAS = 2048;
+	// room for about this many glyphs of average width at a given size: all of a
+	// code page with plenty to spare for names and chat in other scripts
+	const int N_GLYPHS_PLANNED = 512;
 
-// The database's charset enum, which is its own numbering, as the Windows
-// charset NCodePages takes
-int ToWindowsCharset( const NDb::SFont::ECharset eCharset )
-{
-	switch ( eCharset )
+	// The database's charset enum, which is its own numbering, as the Windows
+	// charset NCodePages takes
+	int ToWindowsCharset( const NDb::SFont::ECharset eCharset )
 	{
-	case NDb::SFont::ANSI: return NCodePages::CHARSET_ANSI;
-	case NDb::SFont::BALTIC: return NCodePages::CHARSET_BALTIC;
-	case NDb::SFont::CHINESEBIG5: return NCodePages::CHARSET_CHINESEBIG5;
-	case NDb::SFont::DEF_CHARSET: return NCodePages::CHARSET_DEFAULT;
-	case NDb::SFont::EASTEUROPE: return NCodePages::CHARSET_EASTEUROPE;
-	case NDb::SFont::GB2312: return NCodePages::CHARSET_GB2312;
-	case NDb::SFont::GREEK: return NCodePages::CHARSET_GREEK;
-	case NDb::SFont::HANGUL: return NCodePages::CHARSET_HANGUL;
-	case NDb::SFont::RUSSIAN: return NCodePages::CHARSET_RUSSIAN;
-	case NDb::SFont::SHIFTJIS: return NCodePages::CHARSET_SHIFTJIS;
-	case NDb::SFont::SYMBOL: return NCodePages::CHARSET_SYMBOL;
-	case NDb::SFont::TURKISH: return NCodePages::CHARSET_TURKISH;
-	case NDb::SFont::HEBREW: return NCodePages::CHARSET_HEBREW;
-	case NDb::SFont::ARABIC: return NCodePages::CHARSET_ARABIC;
-	case NDb::SFont::THAI: return NCodePages::CHARSET_THAI;
-	default: return NCodePages::CHARSET_ANSI;
-	}
-}
-
-// The characters every runtime font reserves room for, whatever charset its
-// record names: the printable half of each European code page, together.
-//
-// The charset is a baking instruction; text reaches the engine as UTF-16 and
-// glyphs are looked up by code point, so a runtime font draws any character
-// its file has whatever the record says. Fitting by the record's own charset
-// would size the same font differently in each language edition, since each
-// edition's texts.pak carries its own records (the Russian edition's say
-// RUSSIAN, the repository's ANSI), and one set of records shipped over any
-// edition should look the same in all of them. The tallest of these, the accented
-// capitals of Latin-1 and Latin Extended and Cyrillic's Й and Ё, are what the
-// cell has to hold anyway for names and chat to fit.
-const std::vector<uint32_t> &GetSizingCodePoints()
-{
-	static std::vector<uint32_t> codePoints;
-	if ( codePoints.empty() )
-	{
-		const int CHARSETS[] = { NCodePages::CHARSET_ANSI, NCodePages::CHARSET_EASTEUROPE, NCodePages::CHARSET_RUSSIAN,
-			NCodePages::CHARSET_GREEK, NCodePages::CHARSET_TURKISH, NCodePages::CHARSET_BALTIC };
-		for ( const int nCharset : CHARSETS )
+		switch ( eCharset )
 		{
-			for ( const uint32_t nCodePoint : NCodePages::GetPrintableCodePoints( nCharset ) )
-				codePoints.push_back( nCodePoint );
+			case NDb::SFont::ANSI:
+				return NCodePages::CHARSET_ANSI;
+			case NDb::SFont::BALTIC:
+				return NCodePages::CHARSET_BALTIC;
+			case NDb::SFont::CHINESEBIG5:
+				return NCodePages::CHARSET_CHINESEBIG5;
+			case NDb::SFont::DEF_CHARSET:
+				return NCodePages::CHARSET_DEFAULT;
+			case NDb::SFont::EASTEUROPE:
+				return NCodePages::CHARSET_EASTEUROPE;
+			case NDb::SFont::GB2312:
+				return NCodePages::CHARSET_GB2312;
+			case NDb::SFont::GREEK:
+				return NCodePages::CHARSET_GREEK;
+			case NDb::SFont::HANGUL:
+				return NCodePages::CHARSET_HANGUL;
+			case NDb::SFont::RUSSIAN:
+				return NCodePages::CHARSET_RUSSIAN;
+			case NDb::SFont::SHIFTJIS:
+				return NCodePages::CHARSET_SHIFTJIS;
+			case NDb::SFont::SYMBOL:
+				return NCodePages::CHARSET_SYMBOL;
+			case NDb::SFont::TURKISH:
+				return NCodePages::CHARSET_TURKISH;
+			case NDb::SFont::HEBREW:
+				return NCodePages::CHARSET_HEBREW;
+			case NDb::SFont::ARABIC:
+				return NCodePages::CHARSET_ARABIC;
+			case NDb::SFont::THAI:
+				return NCodePages::CHARSET_THAI;
+			default:
+				return NCodePages::CHARSET_ANSI;
 		}
-		std::sort( codePoints.begin(), codePoints.end() );
-		codePoints.erase( std::unique( codePoints.begin(), codePoints.end() ), codePoints.end() );
 	}
-	return codePoints;
-}
 
-// Measure the old atlas rather than guessing a scale factor for a replacement
-// family. H supplies the visible height; a fixed Latin/digit sample supplies
-// the width. Neither measurement depends on the current text or language.
-const char REFERENCE_CHARACTERS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-struct SReferenceSize
-{
-	double fCapHeight = 0;
-	double fAdvance = 0;
-};
-
-SReferenceSize ReadReferenceSize( const NDb::SFont *pRecord )
-{
-	SReferenceSize result;
-	CDGPtr<CPtrFuncBase<CFontFormatInfo>> baked( shareFonts.Get( SResKey<int>( pRecord->uid, pRecord->GetRecordID() ) ) );
-	baked.Refresh();
-	const CFontFormatInfo *pFormat = baked->GetValue();
-	if ( pFormat == nullptr || pFormat->GetLineSpace() <= 0 || !pFormat->HasChar( 'H' ) || pRecord->pTexture == nullptr )
-		return result;
-	CFileStream stream( NVFS::GetMainVFS(), pRecord->pTexture->szDestName );
-	CArray2D<uint32_t> pixels;
-	if ( !stream.IsOk() || !NImage::LoadImageDDS( &pixels, &stream ) )
-		return result;
-	const STFCharacter &capital = pFormat->GetChar( 'H' );
-	if ( capital.x1 < 0 || capital.y1 < 0 || capital.x2 > pixels.GetSizeX() || capital.y2 > pixels.GetSizeY() )
-		return result;
-	int nTop = capital.y2, nBottom = capital.y1;
-	for ( int y = capital.y1; y < capital.y2; ++y )
+	// The characters every runtime font reserves room for, whatever charset its
+	// record names: the printable half of each European code page, together.
+	//
+	// The charset is a baking instruction; text reaches the engine as UTF-16 and
+	// glyphs are looked up by code point, so a runtime font draws any character
+	// its file has whatever the record says. Fitting by the record's own charset
+	// would size the same font differently in each language edition, since each
+	// edition's texts.pak carries its own records (the Russian edition's say
+	// RUSSIAN, the repository's ANSI), and one set of records shipped over any
+	// edition should look the same in all of them. The tallest of these, the accented
+	// capitals of Latin-1 and Latin Extended and Cyrillic's Й and Ё, are what the
+	// cell has to hold anyway for names and chat to fit.
+	const std::vector<uint32_t> &GetSizingCodePoints()
 	{
-		for ( int x = capital.x1; x < capital.x2; ++x )
+		static std::vector<uint32_t> codePoints;
+		if ( codePoints.empty() )
 		{
-			if ( ( pixels[y][x] >> 24 ) != 0 )
+			const int CHARSETS[] = { NCodePages::CHARSET_ANSI,
+			                         NCodePages::CHARSET_EASTEUROPE,
+			                         NCodePages::CHARSET_RUSSIAN,
+			                         NCodePages::CHARSET_GREEK,
+			                         NCodePages::CHARSET_TURKISH,
+			                         NCodePages::CHARSET_BALTIC };
+			for ( const int nCharset : CHARSETS )
 			{
-				nTop = (std::min)( nTop, y );
-				nBottom = (std::max)( nBottom, y + 1 );
+				for ( const uint32_t nCodePoint : NCodePages::GetPrintableCodePoints( nCharset ) )
+					codePoints.push_back( nCodePoint );
+			}
+			std::sort( codePoints.begin(), codePoints.end() );
+			codePoints.erase( std::unique( codePoints.begin(), codePoints.end() ), codePoints.end() );
+		}
+		return codePoints;
+	}
+
+	// Measure the old atlas rather than guessing a scale factor for a replacement
+	// family. H supplies the visible height; a fixed Latin/digit sample supplies
+	// the width. Neither measurement depends on the current text or language.
+	const char REFERENCE_CHARACTERS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	struct SReferenceSize
+	{
+		double fCapHeight = 0;
+		double fAdvance = 0;
+	};
+
+	SReferenceSize ReadReferenceSize( const NDb::SFont *pRecord )
+	{
+		SReferenceSize result;
+		CDGPtr<CPtrFuncBase<CFontFormatInfo>> baked(
+				shareFonts.Get( SResKey<int>( pRecord->uid, pRecord->GetRecordID() ) ) );
+		baked.Refresh();
+		const CFontFormatInfo *pFormat = baked->GetValue();
+		if ( pFormat == nullptr || pFormat->GetLineSpace() <= 0 || !pFormat->HasChar( 'H' ) ||
+		     pRecord->pTexture == nullptr )
+			return result;
+		CFileStream stream( NVFS::GetMainVFS(), pRecord->pTexture->szDestName );
+		CArray2D<uint32_t> pixels;
+		if ( !stream.IsOk() || !NImage::LoadImageDDS( &pixels, &stream ) )
+			return result;
+		const STFCharacter &capital = pFormat->GetChar( 'H' );
+		if ( capital.x1 < 0 || capital.y1 < 0 || capital.x2 > pixels.GetSizeX() || capital.y2 > pixels.GetSizeY() )
+			return result;
+		int nTop = capital.y2, nBottom = capital.y1;
+		for ( int y = capital.y1; y < capital.y2; ++y )
+		{
+			for ( int x = capital.x1; x < capital.x2; ++x )
+			{
+				if ( ( pixels[y][x] >> 24 ) != 0 )
+				{
+					nTop = (std::min)( nTop, y );
+					nBottom = (std::max)( nBottom, y + 1 );
+				}
 			}
 		}
-	}
-	if ( nBottom <= nTop )
-		return result;
-	int nAdvance = 0;
-	for ( const char c : REFERENCE_CHARACTERS )
-	{
-		if ( c == 0 )
-			break;
-		if ( !pFormat->HasChar( c ) )
+		if ( nBottom <= nTop )
 			return result;
-		const STFCharacter &glyph = pFormat->GetChar( c );
-		nAdvance += glyph.nA + glyph.nBC;
+		int nAdvance = 0;
+		for ( const char c : REFERENCE_CHARACTERS )
+		{
+			if ( c == 0 )
+				break;
+			if ( !pFormat->HasChar( c ) )
+				return result;
+			const STFCharacter &glyph = pFormat->GetChar( c );
+			nAdvance += glyph.nA + glyph.nBC;
+		}
+		result.fCapHeight = static_cast<double>( nBottom - nTop ) / pFormat->GetLineSpace();
+		result.fAdvance = static_cast<double>( nAdvance ) / pFormat->GetLineSpace();
+		return result;
 	}
-	result.fCapHeight = static_cast<double>( nBottom - nTop ) / pFormat->GetLineSpace();
-	result.fAdvance = static_cast<double>( nAdvance ) / pFormat->GetLineSpace();
-	return result;
-}
 
-// A font file from the game data, read once and shared by every size of every
-// font that uses it; FreeType reads from these bytes for as long as a face is
-// open on them
-std::shared_ptr<const std::vector<uint8_t>> LoadFontData( const std::string &szPath )
-{
-	static std::unordered_map<std::string, std::shared_ptr<const std::vector<uint8_t>>> loaded;
-	std::string szKey = szPath;
-	NStr::ToLower( &szKey );
-	std::unordered_map<std::string, std::shared_ptr<const std::vector<uint8_t>>>::const_iterator pos = loaded.find( szKey );
-	if ( pos != loaded.end() )
-		return pos->second;
-	std::shared_ptr<std::vector<uint8_t>> pData;
-	CFileStream stream( NVFS::GetMainVFS(), szPath );
-	if ( stream.IsOk() && stream.GetSize() > 0 )
+	// A font file from the game data, read once and shared by every size of every
+	// font that uses it; FreeType reads from these bytes for as long as a face is
+	// open on them
+	std::shared_ptr<const std::vector<uint8_t>> LoadFontData( const std::string &szPath )
 	{
-		pData = std::make_shared<std::vector<uint8_t>>( stream.GetSize() );
-		stream.Read( pData->data(), stream.GetSize() );
+		static std::unordered_map<std::string, std::shared_ptr<const std::vector<uint8_t>>> loaded;
+		std::string szKey = szPath;
+		NStr::ToLower( &szKey );
+		std::unordered_map<std::string, std::shared_ptr<const std::vector<uint8_t>>>::const_iterator pos =
+				loaded.find( szKey );
+		if ( pos != loaded.end() )
+			return pos->second;
+		std::shared_ptr<std::vector<uint8_t>> pData;
+		CFileStream stream( NVFS::GetMainVFS(), szPath );
+		if ( stream.IsOk() && stream.GetSize() > 0 )
+		{
+			pData = std::make_shared<std::vector<uint8_t>>( stream.GetSize() );
+			stream.Read( pData->data(), stream.GetSize() );
+		}
+		loaded[szKey] = pData;
+		return pData;
 	}
-	loaded[szKey] = pData;
-	return pData;
-}
 
-// The families tried, in order, for a character no font of the record has.
-// Wide coverage first; each is used only if installed. Windows' own set covers
-// most of Unicode between them, and a Linux desktop usually has Noto.
-const char *const SYSTEM_FALLBACK_FAMILIES[] =
-{
-	"Segoe UI", "Segoe UI Symbol", "Segoe UI Historic", "Microsoft YaHei", "Yu Gothic", "Malgun Gothic",
-	"Nirmala UI", "Leelawadee UI", "Ebrima", "Gadugi", "Myanmar Text", "Mongolian Baiti", "Microsoft Himalaya",
-	"Noto Sans", "Noto Sans CJK SC", "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans Devanagari",
-	"Noto Sans Thai", "Noto Sans Armenian", "Noto Sans Georgian", "Noto Sans Ethiopic", "DejaVu Sans",
-	"Arial Unicode MS",
-};
+	// The families tried, in order, for a character no font of the record has.
+	// Wide coverage first; each is used only if installed. Windows' own set covers
+	// most of Unicode between them, and a Linux desktop usually has Noto.
+	const char *const SYSTEM_FALLBACK_FAMILIES[] = {
+		"Segoe UI",
+		"Segoe UI Symbol",
+		"Segoe UI Historic",
+		"Microsoft YaHei",
+		"Yu Gothic",
+		"Malgun Gothic",
+		"Nirmala UI",
+		"Leelawadee UI",
+		"Ebrima",
+		"Gadugi",
+		"Myanmar Text",
+		"Mongolian Baiti",
+		"Microsoft Himalaya",
+		"Noto Sans",
+		"Noto Sans CJK SC",
+		"Noto Sans Arabic",
+		"Noto Sans Hebrew",
+		"Noto Sans Devanagari",
+		"Noto Sans Thai",
+		"Noto Sans Armenian",
+		"Noto Sans Georgian",
+		"Noto Sans Ethiopic",
+		"DejaVu Sans",
+		"Arial Unicode MS",
+	};
 
-// The installed fonts, read the first time a character needs one: a second or
-// so over Windows' fonts, once per run
-const NFontRaster::CFontCatalog &GetSystemCatalog()
-{
-	static std::unique_ptr<NFontRaster::CFontCatalog> pCatalog;
-	if ( pCatalog == nullptr )
-		pCatalog.reset( new NFontRaster::CFontCatalog( NFontRaster::GetSystemFontDirectories() ) );
-	return *pCatalog;
-}
+	// The installed fonts, read the first time a character needs one: a second or
+	// so over Windows' fonts, once per run
+	const NFontRaster::CFontCatalog &GetSystemCatalog()
+	{
+		static std::unique_ptr<NFontRaster::CFontCatalog> pCatalog;
+		if ( pCatalog == nullptr )
+			pCatalog.reset( new NFontRaster::CFontCatalog( NFontRaster::GetSystemFontDirectories() ) );
+		return *pCatalog;
+	}
 
 }
 
@@ -201,9 +241,9 @@ struct CGlyphAtlas::SState
 	std::vector<std::unique_ptr<NFontRaster::CFace>> faces;
 	bool bSystemFacesAdded = false;
 	NFontRaster::SOptions options;
-	std::vector<uint32_t> sizing;						// what every face's cell is fitted to
-	int nRasterHeight = 0;						// full cell, including the replacement's accents
-	int nAscent = 0;												// the baseline every glyph sits on, the first face's
+	std::vector<uint32_t> sizing; // what every face's cell is fitted to
+	int nRasterHeight = 0;        // full cell, including the replacement's accents
+	int nAscent = 0;              // the baseline every glyph sits on, the first face's
 	CObj<CFontFormatInfo> pFormat;
 	// which face each placed character came from, for kerning, which only
 	// pairs within one face mean anything
@@ -225,7 +265,8 @@ CGlyphAtlas::~CGlyphAtlas() {}
 
 // Fits a fallback face to the same cell as the first, by the same characters
 // where it has them and by its own win metrics where it has none of them
-static bool FitFallback( NFontRaster::CFace *pFace, const NFontRaster::SOptions &options, const std::vector<uint32_t> &sizing )
+static bool
+FitFallback( NFontRaster::CFace *pFace, const NFontRaster::SOptions &options, const std::vector<uint32_t> &sizing )
 {
 	std::string szError;
 	if ( pFace->Fit( options, sizing, &szError ) )
@@ -236,7 +277,10 @@ static bool FitFallback( NFontRaster::CFace *pFace, const NFontRaster::SOptions 
 	return pFace->Fit( winOptions, sizing, &szError );
 }
 
-bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight, const int _nCellWidth, const bool _bMatchBakedSize )
+bool CGlyphAtlas::Init( const NDb::SFont *_pRecord,
+                        const int _nCellHeight,
+                        const int _nCellWidth,
+                        const bool _bMatchBakedSize )
 {
 	pRecord = _pRecord;
 	nCellHeight = _nCellHeight;
@@ -251,12 +295,13 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight, cons
 	std::shared_ptr<const std::vector<uint8_t>> pData = LoadFontData( pRecord->szFontFile );
 	if ( pData == nullptr )
 	{
-		DebugTrace( "runtime font: cannot read \"%s\" for font \"%s\"", pRecord->szFontFile.c_str(), pRecord->szName.c_str() );
+		DebugTrace(
+				"runtime font: cannot read \"%s\" for font \"%s\"", pRecord->szFontFile.c_str(), pRecord->szName.c_str() );
 		return false;
 	}
 	std::string szError;
-	std::unique_ptr<NFontRaster::CFace> pFace = NFontRaster::CFace::OpenMemory( pData,
-		NFontRaster::SelectFace( *pData, pRecord->nThickness, pRecord->bItalic ), &szError );
+	std::unique_ptr<NFontRaster::CFace> pFace = NFontRaster::CFace::OpenMemory(
+			pData, NFontRaster::SelectFace( *pData, pRecord->nThickness, pRecord->bItalic ), &szError );
 	state.options.nCellHeight = nCellHeight;
 	state.options.eCellMetrics = NFontRaster::CELL_INK;
 	state.options.eHinting = NFontRaster::HINTING_LIGHT;
@@ -271,7 +316,10 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight, cons
 		state.options.nCapHeight = (std::max)( 1, static_cast<int>( std::lround( reference.fCapHeight * nCellHeight ) ) );
 	if ( pFace == nullptr || !pFace->Fit( state.options, state.sizing, &szError ) )
 	{
-		DebugTrace( "runtime font: \"%s\" for font \"%s\": %s", pRecord->szFontFile.c_str(), pRecord->szName.c_str(), szError.c_str() );
+		DebugTrace( "runtime font: \"%s\" for font \"%s\": %s",
+		            pRecord->szFontFile.c_str(),
+		            pRecord->szName.c_str(),
+		            szError.c_str() );
 		return false;
 	}
 	// Match the old text's average advance as well as its visible height.
@@ -304,15 +352,20 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight, cons
 	state.pFormat = new CFontFormatInfo;
 	// The replacement may need more vertical room for accents. Its visible
 	// letters already match the old size, so the UI must keep drawing at 1:1.
-	state.pFormat->SetMetrics( state.nRasterHeight, 0, metrics.nAveCharWidth, metrics.nMaxCharWidth, static_cast<uint8_t>( nCharset ), W_DEFAULT_CHAR );
+	state.pFormat->SetMetrics( state.nRasterHeight,
+	                           0,
+	                           metrics.nAveCharWidth,
+	                           metrics.nMaxCharWidth,
+	                           static_cast<uint8_t>( nCharset ),
+	                           W_DEFAULT_CHAR );
 	state.faces.push_back( std::move( pFace ) );
 	for ( const NFile::CFilePath &szFallback : pRecord->fallbackFontFiles )
 	{
 		std::shared_ptr<const std::vector<uint8_t>> pFallbackData = LoadFontData( szFallback );
 		if ( pFallbackData == nullptr )
 			continue;
-		std::unique_ptr<NFontRaster::CFace> pFallback = NFontRaster::CFace::OpenMemory( pFallbackData,
-			NFontRaster::SelectFace( *pFallbackData, pRecord->nThickness, pRecord->bItalic ), &szError );
+		std::unique_ptr<NFontRaster::CFace> pFallback = NFontRaster::CFace::OpenMemory(
+				pFallbackData, NFontRaster::SelectFace( *pFallbackData, pRecord->nThickness, pRecord->bItalic ), &szError );
 		if ( pFallback != nullptr && FitFallback( pFallback.get(), state.options, state.sizing ) )
 		{
 			state.faces.push_back( std::move( pFallback ) );
@@ -357,7 +410,8 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 			if ( !GetSystemCatalog().Find( pszFamily, pRecord->nThickness, pRecord->bItalic, &match ) )
 				continue;
 			std::string szError;
-			std::unique_ptr<NFontRaster::CFace> pFace = NFontRaster::CFace::OpenFile( match.szFile, match.nFaceIndex, &szError );
+			std::unique_ptr<NFontRaster::CFace> pFace =
+					NFontRaster::CFace::OpenFile( match.szFile, match.nFaceIndex, &szError );
 			if ( pFace != nullptr && FitFallback( pFace.get(), state.options, state.sizing ) )
 			{
 				state.faces.push_back( std::move( pFace ) );
@@ -397,7 +451,10 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	if ( state.nPenY + state.nRasterHeight + N_PADDING > state.nSize )
 	{
 		state.bFull = true;
-		DebugTrace( "runtime font \"%s\" %d px: atlas full at %d characters", pRecord->szName.c_str(), nCellHeight, static_cast<int>( order.size() ) );
+		DebugTrace( "runtime font \"%s\" %d px: atlas full at %d characters",
+		            pRecord->szName.c_str(),
+		            nCellHeight,
+		            static_cast<int>( order.size() ) );
 		state.missing.insert( wChar );
 		return false;
 	}
@@ -583,7 +640,7 @@ int CRuntimeFontFormat::operator&( IBinSaver &saver )
 }
 
 CRuntimeFontInfo::CRuntimeFontInfo( const SFont &sFont, CGlyphAtlas *_pAtlas )
-	: CFontInfo( sFont, _pAtlas, new CRuntimeFontFormat( _pAtlas ) ), pAtlas( _pAtlas )
+		: CFontInfo( sFont, _pAtlas, new CRuntimeFontFormat( _pAtlas ) ), pAtlas( _pAtlas )
 {
 }
 

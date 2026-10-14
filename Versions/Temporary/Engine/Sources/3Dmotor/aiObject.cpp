@@ -10,7 +10,7 @@ namespace NAI
 
 // CEdgesInfo
 
-int SelectNonZero( const std::vector<int> & count )
+int SelectNonZero( const std::vector<int> &count )
 {
 	for ( int i = 0; i < count.size(); ++i )
 		if ( count[i] != 0 )
@@ -21,39 +21,42 @@ int SelectNonZero( const std::vector<int> & count )
 inline void CountEdge( std::vector<int> *pRes, int n )
 {
 	if ( n & 0x8000 )
-		(*pRes)[n&0x7fff]--;
+		( *pRes )[n & 0x7fff]--;
 	else
-		(*pRes)[n&0x7fff]++;
+		( *pRes )[n & 0x7fff]++;
 }
 
-int PushTri( const STriangle &t, const std::vector<SEdge> &edges, std::vector<int> *pCount, std::vector<STriangle> *pTris)
+int PushTri( const STriangle &t,
+             const std::vector<SEdge> &edges,
+             std::vector<int> *pCount,
+             std::vector<STriangle> *pTris )
 {
 	uint16_t i1, i2, i3;
 	if ( t.i1 & 0x8000 )
 	{
-		i1 = edges[ t.i1 & 0x7fff ].wFinish;
-		i2 = edges[ t.i1 & 0x7fff ].wStart;
+		i1 = edges[t.i1 & 0x7fff].wFinish;
+		i2 = edges[t.i1 & 0x7fff].wStart;
 	}
 	else
 	{
-		i1 = edges[ t.i1 & 0x7fff ].wStart;
-		i2 = edges[ t.i1 & 0x7fff ].wFinish;
+		i1 = edges[t.i1 & 0x7fff].wStart;
+		i2 = edges[t.i1 & 0x7fff].wFinish;
 	}
 	if ( t.i2 & 0x8000 )
-		i3 = edges[ t.i2 & 0x7fff ].wStart;
+		i3 = edges[t.i2 & 0x7fff].wStart;
 	else
-		i3 = edges[ t.i2 & 0x7fff ].wFinish;
+		i3 = edges[t.i2 & 0x7fff].wFinish;
 	pTris->push_back( STriangle( i1, i2, i3 ) );
 	std::vector<int> &count = *pCount;
 	CountEdge( &count, t.i1 );
 	CountEdge( &count, t.i2 );
 	CountEdge( &count, t.i3 );
 	// вернуть индекс незакрытого ребра
-	if ( count[ t.i1 & 0x7fff ] )
+	if ( count[t.i1 & 0x7fff] )
 		return t.i1 & 0x7fff;
-	if ( count[ t.i2 & 0x7fff ] )
+	if ( count[t.i2 & 0x7fff] )
 		return t.i2 & 0x7fff;
-	if ( count[ t.i3 & 0x7fff ] )
+	if ( count[t.i3 & 0x7fff] )
 		return t.i3 & 0x7fff;
 	return -1;
 }
@@ -75,14 +78,14 @@ bool CEdgesInfo::IsClosed() const
 	return bRes;
 }
 
-void CEdgesInfo::BuildClosedMeshes( std::vector<std::vector<STriangle> > *pMeshes ) const
+void CEdgesInfo::BuildClosedMeshes( std::vector<std::vector<STriangle>> *pMeshes ) const
 {
-	std::vector<std::vector<STriangle> > &meshes = *pMeshes;
+	std::vector<std::vector<STriangle>> &meshes = *pMeshes;
 	meshes.clear();
 	std::vector<STriangle> *pCurrMesh = 0;
 	if ( !IsClosed() )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		pMeshes->push_back( std::vector<STriangle>() );
 		pCurrMesh = &pMeshes->back();
 		BuildTriangleList( pCurrMesh );
@@ -104,18 +107,18 @@ void CEdgesInfo::BuildClosedMeshes( std::vector<std::vector<STriangle> > *pMeshe
 			pCurrMesh = &pMeshes->back();
 			// push next free triangle
 			nTri = 0;
-			while ( triUsed[ nTri ] )
+			while ( triUsed[nTri] )
 				++nTri;
 		}
 		else
 		{
-			if ( count[ nEdge ] > 0 )
+			if ( count[nEdge] > 0 )
 				nEdge += 0x8000;
-			for ( nTri = 0; ; ++nTri )
+			for ( nTri = 0;; ++nTri )
 			{
-				if ( triUsed[ nTri ] )
+				if ( triUsed[nTri] )
 					continue;
-				const STriangle &t = mesh[ nTri ];
+				const STriangle &t = mesh[nTri];
 				if ( t.i1 == nEdge )
 					break;
 				if ( t.i2 == nEdge )
@@ -125,8 +128,8 @@ void CEdgesInfo::BuildClosedMeshes( std::vector<std::vector<STriangle> > *pMeshe
 			}
 		}
 		--nFreeTris;
-		triUsed[ nTri ] = 1;
-		nEdge = PushTri( mesh[ nTri ], edges, &count, pCurrMesh );
+		triUsed[nTri] = 1;
+		nEdge = PushTri( mesh[nTri], edges, &count, pCurrMesh );
 		if ( nEdge == -1 )
 			nEdge = SelectNonZero( count );
 	}
@@ -143,20 +146,20 @@ void CEdgesInfo::BuildTriangleList( std::vector<STriangle> *pRes ) const
 		const STriangle &t = mesh[i];
 		if ( t.i1 & 0x8000 )
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wFinish;
-			i2 = edges[ t.i1 & 0x7fff ].wStart;
+			i1 = edges[t.i1 & 0x7fff].wFinish;
+			i2 = edges[t.i1 & 0x7fff].wStart;
 		}
 		else
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wStart;
-			i2 = edges[ t.i1 & 0x7fff ].wFinish;
+			i1 = edges[t.i1 & 0x7fff].wStart;
+			i2 = edges[t.i1 & 0x7fff].wFinish;
 		}
 		if ( t.i2 & 0x8000 )
-			i3 = edges[ t.i2 & 0x7fff ].wStart;
+			i3 = edges[t.i2 & 0x7fff].wStart;
 		else
-			i3 = edges[ t.i2 & 0x7fff ].wFinish;
+			i3 = edges[t.i2 & 0x7fff].wFinish;
 		//
-		(*pRes)[i] = STriangle( i1, i2, i3 );
+		( *pRes )[i] = STriangle( i1, i2, i3 );
 	}
 }
 
@@ -195,12 +198,12 @@ uint16_t CEdgesInfo::InsertEdge( uint16_t i1, uint16_t i2, const std::vector<CVe
 				edge.wFinish = i1;
 				f = 0x8000;
 			}
-//			else if ( p1.z == p2.z )
-//			ASSERT(0);
+			//			else if ( p1.z == p2.z )
+			//			ASSERT(0);
 		}
 	}
 	edges.push_back( edge );
-	return (edges.size() - 1) | f;
+	return ( edges.size() - 1 ) | f;
 }
 
 void CEdgesInfo::GenerateEdgeList( const std::vector<STriangle> &tris, const std::vector<CVec3> &pts )
@@ -210,25 +213,27 @@ void CEdgesInfo::GenerateEdgeList( const std::vector<STriangle> &tris, const std
 		const STriangle &t = tris[i];
 		if ( t.i1 == t.i2 || t.i1 == t.i3 || t.i2 == t.i3 )
 			continue;
-		mesh.push_back( STriangle(
-			InsertEdge( t.i1, t.i2, pts ),
-			InsertEdge( t.i2, t.i3, pts ),
-			InsertEdge( t.i3, t.i1, pts ) ) );
+		mesh.push_back(
+				STriangle( InsertEdge( t.i1, t.i2, pts ), InsertEdge( t.i2, t.i3, pts ), InsertEdge( t.i3, t.i1, pts ) ) );
 	}
 }
 
 // CGeometryInfo
 
-SPiece* CGeometryInfo::GetPiece( int nPieceID )
+SPiece *CGeometryInfo::GetPiece( int nPieceID )
 {
 	CPieceMap::iterator i = pieces.find( nPieceID );
 	if ( i == pieces.end() )
 		return 0;
 	return &i->second;
 }
-void CGeometryInfo::AddPiece( int nPieceID, const std::vector<CVec3> &_points,
-	const std::vector<STriangle> &_tris, float fVolume, std::vector<SJunction> juncs, bool _bClosed )
-	//, const vector<CPtr<CPrecalcSpheres> > &spheres )
+void CGeometryInfo::AddPiece( int nPieceID,
+                              const std::vector<CVec3> &_points,
+                              const std::vector<STriangle> &_tris,
+                              float fVolume,
+                              std::vector<SJunction> juncs,
+                              bool _bClosed )
+//, const vector<CPtr<CPrecalcSpheres> > &spheres )
 {
 	ASSERT( pieces.find( nPieceID ) == pieces.end() );
 	if ( _tris.empty() )

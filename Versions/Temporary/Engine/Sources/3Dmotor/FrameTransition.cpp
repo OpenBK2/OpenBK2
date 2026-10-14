@@ -37,9 +37,15 @@ static bool B_RANDOM_DIR = NDefFTVals::B_DEF_FT_RANDOM_DIR;
 static CVec2 V_TRANSITION_DIR( NDefFTVals::V_DEF_FT_TRANSITION_DIR );
 static float F_TRANSITION_LENGTH = NDefFTVals::F_DEF_FT_TRANSITION_LENGTH;
 
-static void GenerateZoomQuads1( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTexture *pTex, float fTime, const CVec2 &vScreenRectHalf )
+static void GenerateZoomQuads1( NGfx::C2DQuadsRenderer &quadsRenderer,
+                                NGfx::CTexture *pTex,
+                                float fTime,
+                                const CVec2 &vScreenRectHalf )
 {
-	const int nAlpha = Clamp( Float2Int( ( F_QUADS_GROUP1_MIN_ALPHA + ( F_QUADS_GROUP1_MAX_ALPHA - F_QUADS_GROUP1_MIN_ALPHA ) * fTime ) * 255 ), 0, 255 );
+	const int nAlpha = Clamp(
+			Float2Int( ( F_QUADS_GROUP1_MIN_ALPHA + ( F_QUADS_GROUP1_MAX_ALPHA - F_QUADS_GROUP1_MIN_ALPHA ) * fTime ) * 255 ),
+			0,
+			255 );
 	const CTRect<float> imgRect( 0, 0, nTargetResolution, nTargetResolution );
 	CTRect<float> scrRect;
 	NGfx::SPixel8888 color( 0xff, 0xff, 0xff, nAlpha );
@@ -53,12 +59,14 @@ static void GenerateZoomQuads1( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTe
 		const float fDelta = 1.0f / fCurZ;
 
 		const CVec2 vOffset( V_TRANSITION_DIR.x * vScreenRectHalf.x * F_TRANSITION_LENGTH * fQuadPrjCoeff * fDelta,
-												 V_TRANSITION_DIR.y * vScreenRectHalf.y * F_TRANSITION_LENGTH * fQuadPrjCoeff * fDelta );
+		                     V_TRANSITION_DIR.y * vScreenRectHalf.y * F_TRANSITION_LENGTH * fQuadPrjCoeff * fDelta );
 
 		const float fDeltaX = fDelta * vScreenRectHalf.x;
 		const float fDeltaY = fDelta * vScreenRectHalf.y;
-		scrRect.Set( vScreenRectHalf.x - fDeltaX + vOffset.x, vScreenRectHalf.y - fDeltaY + vOffset.y,
-								 vScreenRectHalf.x + fDeltaX + vOffset.x, vScreenRectHalf.y + fDeltaY + vOffset.y );
+		scrRect.Set( vScreenRectHalf.x - fDeltaX + vOffset.x,
+		             vScreenRectHalf.y - fDeltaY + vOffset.y,
+		             vScreenRectHalf.x + fDeltaX + vOffset.x,
+		             vScreenRectHalf.y + fDeltaY + vOffset.y );
 		if ( i == ( N_QUADS_GROUP1_NUM - 1 ) )
 		{
 			color.a = 0xff;
@@ -70,9 +78,13 @@ static void GenerateZoomQuads1( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTe
 	}
 }
 
-static void GenerateZoomQuads2( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTexture *pTex, float fTime, const CVec2 &vScreenRect )
+static void
+GenerateZoomQuads2( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTexture *pTex, float fTime, const CVec2 &vScreenRect )
 {
-	const int nAlpha = Clamp( Float2Int( ( F_QUADS_GROUP2_MIN_ALPHA + ( F_QUADS_GROUP2_MAX_ALPHA - F_QUADS_GROUP2_MIN_ALPHA ) * fTime ) * 255 ), 0, 255 );
+	const int nAlpha = Clamp(
+			Float2Int( ( F_QUADS_GROUP2_MIN_ALPHA + ( F_QUADS_GROUP2_MAX_ALPHA - F_QUADS_GROUP2_MIN_ALPHA ) * fTime ) * 255 ),
+			0,
+			255 );
 	CTRect<float> imgRect;
 	const CTRect<float> scrRect( 0, 0, vScreenRect.x, vScreenRect.y );
 	NGfx::SPixel8888 color( 0xff, 0xff, 0xff, nAlpha );
@@ -86,19 +98,21 @@ static void GenerateZoomQuads2( NGfx::C2DQuadsRenderer &quadsRenderer, NGfx::CTe
 		const float fDelta = F_QUADS_GROUP2_MIN_Z + ( F_QUADS_GROUP2_MAX_Z - F_QUADS_GROUP2_MIN_Z ) * fQuadPrjCoeff;
 
 		const CVec2 vOffset( V_TRANSITION_DIR.x * fTargetSizeHalf * F_TRANSITION_LENGTH * fQuadPrjCoeff * fDelta,
-												 V_TRANSITION_DIR.y * fTargetSizeHalf * F_TRANSITION_LENGTH * fQuadPrjCoeff * fDelta );
+		                     V_TRANSITION_DIR.y * fTargetSizeHalf * F_TRANSITION_LENGTH * fQuadPrjCoeff * fDelta );
 
 		const float fDeltaX = fDelta * fTargetSizeHalf;
 		const float fDeltaY = fDelta * fTargetSizeHalf;
-		imgRect.Set( fTargetSizeHalf - fDeltaX + vOffset.x, fTargetSizeHalf - fDeltaY + vOffset.y,
-								 fTargetSizeHalf + fDeltaX + vOffset.x, fTargetSizeHalf + fDeltaY + vOffset.y );
+		imgRect.Set( fTargetSizeHalf - fDeltaX + vOffset.x,
+		             fTargetSizeHalf - fDeltaY + vOffset.y,
+		             fTargetSizeHalf + fDeltaX + vOffset.x,
+		             fTargetSizeHalf + fDeltaY + vOffset.y );
 		quadsRenderer.AddRect( scrRect, pTex, imgRect, color );
 	}
 }
 
 bool IsFrameTransitionComplete()
 {
-	return (bComplete || (NGlobal::GetVar( "gfx_frame_transition", 1 ) == 0));
+	return ( bComplete || ( NGlobal::GetVar( "gfx_frame_transition", 1 ) == 0 ) );
 }
 
 void RenderFrameTransition()
@@ -127,13 +141,13 @@ void RenderFrameTransition()
 
 	if ( B_ZOOM )
 	{
-		const float fTime = 1.0f - Clamp( (float)(nTimeDelta) / N_EFFECT_DURATION, 0.0f, 1.0f );
+		const float fTime = 1.0f - Clamp( (float)( nTimeDelta ) / N_EFFECT_DURATION, 0.0f, 1.0f );
 		GenerateZoomQuads1( quadsRender, pScreen2.GetTexture(), fTime, vScreenRectHalf );
 		GenerateZoomQuads2( quadsRender, pScreen1.GetTexture(), fTime, vScreenRect );
 	}
 	else
 	{
-		const float fTime = Clamp( (float)(nTimeDelta) / N_EFFECT_DURATION, 0.0f, 1.0f );
+		const float fTime = Clamp( (float)( nTimeDelta ) / N_EFFECT_DURATION, 0.0f, 1.0f );
 		GenerateZoomQuads1( quadsRender, pScreen1.GetTexture(), fTime, vScreenRectHalf );
 		GenerateZoomQuads2( quadsRender, pScreen2.GetTexture(), fTime, vScreenRect );
 	}
@@ -198,29 +212,76 @@ void StartFrameTransition( const SFrameTransitionInfo &info )
 	StartFrameTransition();
 }
 
-NGfx::CTexture *GetTexture( CRTPtr * pTex)
+NGfx::CTexture *GetTexture( CRTPtr *pTex )
 {
 	return pTex->GetTexture();
 }
 
-
-START_REGISTER(FrameTransition)
+START_REGISTER( FrameTransition )
 //
-REGISTER_VAR_EX( "ft_effect_duration", NGlobal::VarIntHandler, &N_EFFECT_DURATION, NDefFTVals::N_DEF_FT_EFFECT_DURATION, STORAGE_NONE );
+REGISTER_VAR_EX( "ft_effect_duration",
+                 NGlobal::VarIntHandler,
+                 &N_EFFECT_DURATION,
+                 NDefFTVals::N_DEF_FT_EFFECT_DURATION,
+                 STORAGE_NONE );
 REGISTER_VAR_EX( "ft_zoom", NGlobal::VarIntHandler, &B_ZOOM, NDefFTVals::B_DEF_FT_ZOOM, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_transition_length", NGlobal::VarIntHandler, &F_TRANSITION_LENGTH, NDefFTVals::F_DEF_FT_TRANSITION_LENGTH, STORAGE_NONE );
+REGISTER_VAR_EX( "ft_transition_length",
+                 NGlobal::VarIntHandler,
+                 &F_TRANSITION_LENGTH,
+                 NDefFTVals::F_DEF_FT_TRANSITION_LENGTH,
+                 STORAGE_NONE );
 //
-REGISTER_VAR_EX( "ft_quads_group1_num", NGlobal::VarIntHandler, &N_QUADS_GROUP1_NUM, NDefFTVals::N_DEF_FT_QUADS_GROUP1_NUM, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group1_min_alpha", NGlobal::VarFloatHandler, &F_QUADS_GROUP1_MIN_ALPHA, NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_ALPHA, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group1_max_alpha", NGlobal::VarFloatHandler, &F_QUADS_GROUP1_MAX_ALPHA, NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_ALPHA, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group1_min_z", NGlobal::VarFloatHandler, &F_QUADS_GROUP1_MIN_Z, NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_Z, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group1_max_z", NGlobal::VarFloatHandler, &F_QUADS_GROUP1_MAX_Z, NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_Z, STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group1_num",
+                 NGlobal::VarIntHandler,
+                 &N_QUADS_GROUP1_NUM,
+                 NDefFTVals::N_DEF_FT_QUADS_GROUP1_NUM,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group1_min_alpha",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP1_MIN_ALPHA,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_ALPHA,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group1_max_alpha",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP1_MAX_ALPHA,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_ALPHA,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group1_min_z",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP1_MIN_Z,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP1_MIN_Z,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group1_max_z",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP1_MAX_Z,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP1_MAX_Z,
+                 STORAGE_NONE );
 //
-REGISTER_VAR_EX( "ft_quads_group2_num", NGlobal::VarIntHandler, &N_QUADS_GROUP2_NUM, NDefFTVals::N_DEF_FT_QUADS_GROUP2_NUM, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group2_min_alpha", NGlobal::VarFloatHandler, &F_QUADS_GROUP2_MIN_ALPHA, NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_ALPHA, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group2_max_alpha", NGlobal::VarFloatHandler, &F_QUADS_GROUP2_MAX_ALPHA, NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_ALPHA, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group2_min_z", NGlobal::VarFloatHandler, &F_QUADS_GROUP2_MIN_Z, NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_Z, STORAGE_NONE );
-REGISTER_VAR_EX( "ft_quads_group2_max_z", NGlobal::VarFloatHandler, &F_QUADS_GROUP2_MAX_Z, NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_Z, STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group2_num",
+                 NGlobal::VarIntHandler,
+                 &N_QUADS_GROUP2_NUM,
+                 NDefFTVals::N_DEF_FT_QUADS_GROUP2_NUM,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group2_min_alpha",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP2_MIN_ALPHA,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_ALPHA,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group2_max_alpha",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP2_MAX_ALPHA,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_ALPHA,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group2_min_z",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP2_MIN_Z,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP2_MIN_Z,
+                 STORAGE_NONE );
+REGISTER_VAR_EX( "ft_quads_group2_max_z",
+                 NGlobal::VarFloatHandler,
+                 &F_QUADS_GROUP2_MAX_Z,
+                 NDefFTVals::F_DEF_FT_QUADS_GROUP2_MAX_Z,
+                 STORAGE_NONE );
 //
 FINISH_REGISTER
 

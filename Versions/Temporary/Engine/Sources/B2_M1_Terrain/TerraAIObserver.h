@@ -23,11 +23,7 @@
 //	{ }
 //};
 
-
-
 ////	Common TerraAIObserver class for game and editor
-
-
 
 //class CTerraAIObserver :	public ITerraAIObserver
 //{

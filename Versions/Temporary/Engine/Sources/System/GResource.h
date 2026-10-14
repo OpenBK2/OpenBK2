@@ -17,33 +17,47 @@
 namespace NGScene
 {
 
-template<class TKey>
+template <class TKey>
 struct SResKey
 {
 	boost::uuids::uuid uidKey;
 	TKey tKey{};
 
 	SResKey() {}
-	SResKey( const boost::uuids::uuid &uid, const TKey &key ): uidKey(uid), tKey(key) {}
-	SResKey( const TKey &key ): tKey(key) { Zero(uidKey); }   // TODO: create a uid field in NDb resources and remove this constructor
+	SResKey( const boost::uuids::uuid &uid, const TKey &key ) : uidKey( uid ), tKey( key ) {}
+	SResKey( const TKey &key ) : tKey( key )
+	{
+		Zero( uidKey );
+	} // TODO: create a uid field in NDb resources and remove this constructor
 
-	int operator&( IBinSaver &f ) { f.Add( 1, &tKey ); AddUuidChunk( f, 2, &uidKey ); return 0; }
+	int operator&( IBinSaver &f )
+	{
+		f.Add( 1, &tKey );
+		AddUuidChunk( f, 2, &uidKey );
+		return 0;
+	}
 
 	bool operator==( const SResKey<TKey> &a ) const { return uidKey == a.uidKey && tKey == a.tKey; }
 	int operator()( const SResKey<TKey> &k ) const { return k.tKey.nID; }
 };
 
 template <class TKey, class TValue>
-class CResourceLoader: public CHoldedPtrFuncBase<TValue>
+class CResourceLoader : public CHoldedPtrFuncBase<TValue>
 {
 	SResKey<TKey> key;
+
 protected:
-	const SResKey<TKey>& GetKey() const { return key; }
+	const SResKey<TKey> &GetKey() const { return key; }
+
 public:
 	CResourceLoader() {}
 	void SetKey( const TKey &_key, const boost::uuids::uuid &uid ) { key = SResKey<TKey>( uid, _key ); }
 	void SetKey( const SResKey<TKey> &_key ) { key = _key; }
-	int operator&( IBinSaver &f ) { f.Add( 1, &key ); return 0; }
+	int operator&( IBinSaver &f )
+	{
+		f.Add( 1, &key );
+		return 0;
+	}
 };
 
 class IPrecache : public CObjectBase
@@ -54,26 +68,27 @@ public:
 };
 //extern vector<CPtr<IPrecache> > precacheUpdateList;
 
-template<class T>
+template <class T>
 class CResourcePrecache : public IPrecache
 {
-	OBJECT_NOCOPY_METHODS(CResourcePrecache);
+	OBJECT_NOCOPY_METHODS( CResourcePrecache );
 	CDGPtr<T> pStuff;
 	int operator&( IBinSaver &f )
 	{
-		f.Add(2,&pStuff);
+		f.Add( 2, &pStuff );
 		if ( f.IsReading() )
 			AddToPrecachedUpdate( this );
-			//precacheUpdateList.push_back( this );
+		//precacheUpdateList.push_back( this );
 		return 0;
 	}
+
 public:
-	CResourcePrecache( T *_pStuff = 0 ) : pStuff(_pStuff) { TryUpdate(); }
+	CResourcePrecache( T *_pStuff = 0 ) : pStuff( _pStuff ) { TryUpdate(); }
 	~CResourcePrecache() { TryUpdate(); }
 	bool TryUpdate()
 	{
 		bool bRes = true;
-		if ( IsValid(pStuff) )
+		if ( IsValid( pStuff ) )
 		{
 			pStuff.Refresh();
 			bRes = pStuff->GetValue() != 0;
@@ -82,7 +97,7 @@ public:
 	}
 	void ForceUpdate()
 	{
-		if ( IsValid(pStuff) )
+		if ( IsValid( pStuff ) )
 		{
 			pStuff.Refresh();
 			while ( !pStuff->GetValue() )
@@ -94,10 +109,11 @@ public:
 class CFileResource
 {
 	CFileStream f;
+
 public:
 	CFileResource( const char *pszResName, int nFileID );
 	CFileResource( const char *pszResName, const SResKey<int> &key );
-	CFileStream& GetFileStream() { return f; }
+	CFileStream &GetFileStream() { return f; }
 
 	bool IsOk() const { return f.IsOk(); }
 };
@@ -109,9 +125,10 @@ public:
 	static bool DoesExist( const char *pszResName, const SResKey<int> &key );
 	static void Clear();
 	CFileResource f;
+
 public:
-	CResourceFileOpener( const char *pszResName, const SResKey<int> &key ) : f( pszResName, key ) { }
-	CFileStream& GetFileStream() { return f.GetFileStream(); }
+	CResourceFileOpener( const char *pszResName, const SResKey<int> &key ) : f( pszResName, key ) {}
+	CFileStream &GetFileStream() { return f.GetFileStream(); }
 
 	bool IsOk() const { return f.IsOk(); }
 };
@@ -120,13 +137,14 @@ class CResourceOpener
 {
 	CResourceFileOpener file;
 	CObj<IBinSaver> pSaver;
+
 public:
 	CResourceOpener( const char *pszResName, const SResKey<int> &key ) : file( pszResName, key )
 	{
 		if ( file.IsOk() )
 			pSaver = CreateBinSaver( &file.GetFileStream(), SAVER_MODE_READ );
 	}
-	IBinSaver* operator->() { return pSaver; }
+	IBinSaver *operator->() { return pSaver; }
 
 	bool IsOk() const { return file.IsOk(); }
 };
@@ -135,9 +153,9 @@ public:
 // through CFileRequest system
 class SYSTEM_EXPORT CFileRequest : public CObjectBase
 {
-	OBJECT_NOCOPY_METHODS(CFileRequest);
+	OBJECT_NOCOPY_METHODS( CFileRequest );
 	const char *pszResName = nullptr;
-	int  nID = 0;
+	int nID = 0;
 	boost::uuids::uuid uid;
 	// The loader thread fills `data` and then announces it by setting this flag,
 	// while the main thread polls IsReady() without taking the loader's mutex.
@@ -148,13 +166,14 @@ class SYSTEM_EXPORT CFileRequest : public CObjectBase
 	std::atomic<bool> bIsReady{ false };
 	bool bDelayedLoad = false;
 	CMemoryStream data;
+
 public:
-	CFileRequest() : pszResName(0), nID(0), bIsReady(true), bDelayedLoad(true) {}
+	CFileRequest() : pszResName( 0 ), nID( 0 ), bIsReady( true ), bDelayedLoad( true ) {}
 	CFileRequest( const char *pszResName, int nID, bool bDelayedLoad );
 	CFileRequest( const char *pszResName, const SResKey<int> &key, bool bDelayedLoad );
 	//CFileRequest( const char *pszResName, const SPartKey &key, bDelayedLoad(true) );
-	CMemoryStream* operator->() { return &data; }
-	CMemoryStream* GetStream() { return &data; }
+	CMemoryStream *operator->() { return &data; }
+	CMemoryStream *GetStream() { return &data; }
 	void Read();
 	// Acquire, to pair with the release store in Read(): a caller that sees true
 	// here is guaranteed to see the bytes the loader thread wrote into `data`.
@@ -164,8 +183,14 @@ public:
 	const char *GetResName() const { return pszResName; }
 	int GetResID() const { return nID; }
 };
-inline CFileRequest* CreateFileRequiest( const char *pszResName, int nID, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, nID, bDelayedLoad ); }
-inline CFileRequest* CreateFileRequiest( const char *pszResName, const SResKey<int> &key, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, key, bDelayedLoad ); }
+inline CFileRequest *CreateFileRequiest( const char *pszResName, int nID, bool bDelayedLoad = true )
+{
+	return new CFileRequest( pszResName, nID, bDelayedLoad );
+}
+inline CFileRequest *CreateFileRequiest( const char *pszResName, const SResKey<int> &key, bool bDelayedLoad = true )
+{
+	return new CFileRequest( pszResName, key, bDelayedLoad );
+}
 //inline CFileRequest* CreateFileRequiest( const char *pszResName, const SPartKey &key, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, key, bDelayLoad ); }
 
 SYSTEM_EXPORT void AddToPrecachedUpdate( IPrecache *pAdd );
@@ -187,16 +212,17 @@ SYSTEM_EXPORT void LoadPrecached();
 // forward declaration of CFileRequest for company, which is not enough to call a
 // member on one.
 template <class TKey, class TValue>
-class CLazyResourceLoader : public CResourceLoader<TKey,TValue>
+class CLazyResourceLoader : public CResourceLoader<TKey, TValue>
 {
-	typedef CResourceLoader<TKey,TValue> TParent;
+	typedef CResourceLoader<TKey, TValue> TParent;
 	CObj<CFileRequest> pRequest;
+
 protected:
-	virtual CFileRequest* CreateRequest() = 0;
+	virtual CFileRequest *CreateRequest() = 0;
 	virtual void RecalcValue( CFileRequest *p ) = 0;
 	virtual void Recalc()
 	{
-		if ( IsValid(pRequest) )
+		if ( IsValid( pRequest ) )
 		{
 			if ( !pRequest->IsReady() )
 			{
@@ -224,17 +250,28 @@ protected:
 			}
 		}
 	}
-	bool NeedUpdate() { TParent::NeedUpdate(); if ( !IsValid(this->pValue) && IsValid(pRequest) && pRequest->IsReady() ) return true; return false; }
+	bool NeedUpdate()
+	{
+		TParent::NeedUpdate();
+		if ( !IsValid( this->pValue ) && IsValid( pRequest ) && pRequest->IsReady() )
+			return true;
+		return false;
+	}
+
 public:
 };
 }
 
 typedef NGScene::SResKey<int> SIntResKey;
 
-template<> struct std::hash<SIntResKey>
+template <>
+struct std::hash<SIntResKey>
 {
-	size_t operator()(const SIntResKey &key ) const { return key.tKey; }
+	size_t operator()( const SIntResKey &key ) const { return key.tKey; }
 };
 
-template<class T>
-SIntResKey GetIntResKey( T *pResource ) { return SIntResKey( pResource->uid, pResource->GetRecordID() ); }
+template <class T>
+SIntResKey GetIntResKey( T *pResource )
+{
+	return SIntResKey( pResource->uid, pResource->GetRecordID() );
+}

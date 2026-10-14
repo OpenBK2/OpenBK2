@@ -16,12 +16,18 @@ class CProgressHookHelper : public IProgressHookB2
 
 	ZDATA
 	std::vector<SRange> ranges;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&ranges); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &ranges );
+		return 0;
+	}
+
 protected:
 	// returns a position in the whole progress
 	float GetProgress() const;
 	// returns progress in the given range
 	int GetProgress( int nMin, int nMax ) const;
+
 public:
 	CProgressHookHelper();
 
@@ -40,8 +46,8 @@ class CInterfaceLoadingBase : public CProgressHookHelper
 public:
 	class CReactions;
 	class CLoadingScene;
-private:
 
+private:
 	bool bInitialized;
 	CObj<IScreen> pScreen;
 	CObj<IProgrammedReactionsAndChecks> pReactions;
@@ -62,12 +68,13 @@ protected:
 	void Draw();
 
 	bool IsInitialized() const { return bInitialized; }
-	IScreen* GetScreen() const { return pScreen; }
+	IScreen *GetScreen() const { return pScreen; }
 
 	void PlayOnEnterTransitEffect();
 
 	bool IsEffectFinished() const;
 	void ShowFirstElement();
+
 public:
 	CInterfaceLoadingBase();
 
@@ -89,18 +96,27 @@ public:
 class CInterfaceLoadingSingle2D : public CInterfaceLoadingBase
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceLoadingSingle2D );
+
 private:
 	CPtr<ITextView> pPressKeyView;
 	CPtr<IWindow> pInfoPanel;
 	CPtr<IWindow> pCitation;
+
 protected:
 	~CInterfaceLoadingSingle2D();
 
-	void MakeInterior( const NDb::STexture *pTexture, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter );
+	void MakeInterior( const NDb::STexture *pTexture,
+	                   const std::wstring &wszDesc,
+	                   const std::wstring &wszCitation,
+	                   bool bChapter );
 	void ShowOnEnterMoveEffect();
+
 public:
 	CInterfaceLoadingSingle2D();
-	CInterfaceLoadingSingle2D( const NDb::STexture *pTexture, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter );
+	CInterfaceLoadingSingle2D( const NDb::STexture *pTexture,
+	                           const std::wstring &wszDesc,
+	                           const std::wstring &wszCitation,
+	                           bool bChapter );
 
 	//{ IProgressHookB2
 	void RunFinishScreen();
@@ -119,13 +135,22 @@ class CInterfaceLoadingSingleFinished : public CInterfaceScreenBase, public IPro
 		EUIS_START_TRANSIT_TO_MISSION_DONE,
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	EUIState eUIState;
 	CPtr<ITextView> pPressKeyView;
 	std::wstring wszPressKeyFormat1;
 	std::wstring wszPressKeyFormat2;
 	bool bFormat1;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&eUIState); f.Add(3,&pPressKeyView); f.Add(4,&wszPressKeyFormat1); f.Add(5,&wszPressKeyFormat2); f.Add(6,&bFormat1); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &eUIState );
+		f.Add( 3, &pPressKeyView );
+		f.Add( 4, &wszPressKeyFormat1 );
+		f.Add( 5, &wszPressKeyFormat2 );
+		f.Add( 6, &bFormat1 );
+		return 0;
+	}
 
 	NTimer::STime timeAbs; // don't save
 private:
@@ -135,6 +160,7 @@ private:
 	void StartTransitToMission();
 	void StartTransitToMissionDone();
 	void ShowPressKey( bool bFormat1 );
+
 public:
 	CInterfaceLoadingSingleFinished();
 
@@ -158,6 +184,7 @@ class CICLoadingSingleFinished : public CInterfaceCommandBase<CInterfaceLoadingS
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

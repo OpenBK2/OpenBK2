@@ -11,6 +11,7 @@ class CVFSDbObserver : public IDbObserver
 	//
 	typedef std::list<CDBID> CObjectsList;
 	CObjectsList objects2remove;
+
 public:
 	void ObjectChanged( const CDBID &dbid ) {}
 	void ObjectAdded( const CDBID &dbid )
@@ -38,7 +39,7 @@ public:
 		if ( NVFS::IFileCreator *pCreator = NVFS::GetMainFileCreator() )
 		{
 			for ( CObjectsList::const_iterator it = objects2remove.begin(); it != objects2remove.end(); ++it )
-				pCreator->RemoveFile( NDb::GetFileName(*it) );
+				pCreator->RemoveFile( NDb::GetFileName( *it ) );
 		}
 		objects2remove.clear();
 	}

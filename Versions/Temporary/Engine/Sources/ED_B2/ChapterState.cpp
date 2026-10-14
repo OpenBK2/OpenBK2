@@ -25,17 +25,14 @@
 
 // CChapterState
 
-CChapterState::CChapterState( CChapterEditor *_pChapterEditor ) :
-	pChapterEditor( _pChapterEditor ),
-	bDragging( false ),
-	pPickedMission( 0 ),
-	pPickedArrow( 0 )
+CChapterState::CChapterState( CChapterEditor *_pChapterEditor )
+		: pChapterEditor( _pChapterEditor ), bDragging( false ), pPickedMission( 0 ), pPickedArrow( 0 )
 {
 }
 
 void CChapterState::Enter()
 {
-//	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CChapterInterfaceCommand( new CChapterInterface() ) ) );
+	//	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CChapterInterfaceCommand( new CChapterInterface() ) ) );
 
 	// clear the scene
 	Singleton<IUIScene>()->Create();
@@ -65,7 +62,7 @@ void CChapterState::Leave()
 	pScreen = 0;
 
 	// Обновляем сцену
-//	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
+	//	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 
 	// clear the scene
 	Singleton<IUIScene>()->Clear();
@@ -99,15 +96,15 @@ void CChapterState::PostDraw( IPaintContext *pPaintDC )
 
 		const int x1 = wrc.left;
 		const int y1 = wrc.top;
-		const int x2 = wrc.right-1;
-		const int y2 = wrc.bottom-1;
+		const int x2 = wrc.right - 1;
+		const int y2 = wrc.bottom - 1;
 		const int HS = 4; // helper's size
 
 		// R2_NOT: the marquee is undrawn by drawing it again.
 		pPaintDC->SetDrawMode( DRAW_NOT );
 
 		// draw picked rect
-		pPaintDC->SetPen( PEN_DOT, 1, RGB(255,255,255) );
+		pPaintDC->SetPen( PEN_DOT, 1, RGB( 255, 255, 255 ) );
 		pPaintDC->MoveTo( x1, y1 );
 		pPaintDC->LineTo( x2, y1 );
 		pPaintDC->LineTo( x2, y2 );
@@ -115,20 +112,23 @@ void CChapterState::PostDraw( IPaintContext *pPaintDC )
 		pPaintDC->LineTo( x1, y1 );
 
 		// The eight resize handles, at the corners and the edge midpoints.
-		const int xm = (x1+x2)/2;
-		const int ym = (y1+y2)/2;
-		const CTPoint<int> handleCentres[] =
-		{
-			CTPoint<int>( x1, y1 ), CTPoint<int>( x2, y1 ),
-			CTPoint<int>( x2, y2 ), CTPoint<int>( x1, y2 ),
-			CTPoint<int>( x1, ym ), CTPoint<int>( x2, ym ),
-			CTPoint<int>( xm, y1 ), CTPoint<int>( xm, y2 ),
+		const int xm = ( x1 + x2 ) / 2;
+		const int ym = ( y1 + y2 ) / 2;
+		const CTPoint<int> handleCentres[] = {
+			CTPoint<int>( x1, y1 ),
+			CTPoint<int>( x2, y1 ),
+			CTPoint<int>( x2, y2 ),
+			CTPoint<int>( x1, y2 ),
+			CTPoint<int>( x1, ym ),
+			CTPoint<int>( x2, ym ),
+			CTPoint<int>( xm, y1 ),
+			CTPoint<int>( xm, y2 ),
 		};
 		for ( int nHandle = 0; nHandle < sizeof( handleCentres ) / sizeof( handleCentres[0] ); ++nHandle )
 		{
 			const CTPoint<int> &rCentre = handleCentres[nHandle];
-			pPaintDC->FillRect( CTRect<int>( rCentre.x-HS, rCentre.y-HS, rCentre.x+HS, rCentre.y+HS ),
-													RGB(0,255,0) );
+			pPaintDC->FillRect( CTRect<int>( rCentre.x - HS, rCentre.y - HS, rCentre.x + HS, rCentre.y + HS ),
+			                    RGB( 0, 255, 0 ) );
 		}
 
 		pPaintDC->RestoreState();
@@ -140,7 +140,8 @@ void CChapterState::PostDraw( IPaintContext *pPaintDC )
 void CChapterState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	CVec2 vScreenPos;
-	Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual( CVec2(rMousePoint.x, rMousePoint.y), &vScreenPos );
+	Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual( CVec2( rMousePoint.x, rMousePoint.y ),
+	                                                                               &vScreenPos );
 	vStartPos = vScreenPos;
 	vPrevPos = vScreenPos;
 
@@ -173,8 +174,8 @@ void CChapterState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 
 			if ( arrow.rcBounds.IsInside( vScreenPos ) )
 			{
-				int nDist2 = fabs2( vScreenPos.x - (arrow.rcBounds.x1 + arrow.rcBounds.x2) / 2.0f,
-					vScreenPos.y - (arrow.rcBounds.y1 + arrow.rcBounds.y2) / 2.0f );
+				int nDist2 = fabs2( vScreenPos.x - ( arrow.rcBounds.x1 + arrow.rcBounds.x2 ) / 2.0f,
+				                    vScreenPos.y - ( arrow.rcBounds.y1 + arrow.rcBounds.y2 ) / 2.0f );
 				if ( nMinDist2 == -1 || nDist2 < nMinDist2 )
 				{
 					pPickedMission = 0;
@@ -185,7 +186,7 @@ void CChapterState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 		}
 	}
 
-	bDragging = (pPickedMission != 0) || (pPickedArrow != 0);
+	bDragging = ( pPickedMission != 0 ) || ( pPickedArrow != 0 );
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 
@@ -199,7 +200,8 @@ void CChapterState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoin
 	if ( bDragging )
 	{
 		CVec2 vScreenPos;
-		Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual( CVec2(rMousePoint.x, rMousePoint.y), &vScreenPos );
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual(
+				CVec2( rMousePoint.x, rMousePoint.y ), &vScreenPos );
 
 		if ( pPickedMission )
 			MoveMission( pPickedMission, vScreenPos, true );
@@ -232,7 +234,8 @@ void CChapterState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 	if ( bDragging )
 	{
 		CVec2 vScreenPos;
-		Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual( CVec2(rMousePoint.x, rMousePoint.y), &vScreenPos );
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->ScreenToVirtual(
+				CVec2( rMousePoint.x, rMousePoint.y ), &vScreenPos );
 
 		bool bMoved = false;
 		if ( pPickedMission )
@@ -254,7 +257,7 @@ void CChapterState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 void CChapterState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	CBusyCursor wc;
-	switch( nChar )
+	switch ( nChar )
 	{
 		case VK_UP:
 			OnKeyArrows( 0, -1 );
@@ -288,7 +291,7 @@ void CChapterState::LoadChapterMap()
 	const NDb::CResource *pSelected = NDb::GetObject( pChapterEditor->GetObjectSet().objectNameSet.begin()->first );
 	NI_ASSERT( pSelected != 0, "CChapterState::LoadChapterMap: pSelected == 0" );
 
-	pChapter = dynamic_cast<const NDb::SChapter*>( pSelected );
+	pChapter = dynamic_cast<const NDb::SChapter *>( pSelected );
 	NI_VERIFY( pChapter != 0, "CChapterState::LoadChapterMap: pChapter == 0", return );
 
 	CreateScreen();
@@ -316,7 +319,11 @@ void CChapterState::LoadChapterMap()
 
 		if ( pFrontLines )
 		{
-			pFrontLines->SetParams( pChapter->szSeaNoiseMask, pChapter->szDifferentColourMap, pHelper->vMainStrike, pChapter->nPositiveColour, pChapter->nNegativeColour );
+			pFrontLines->SetParams( pChapter->szSeaNoiseMask,
+			                        pChapter->szDifferentColourMap,
+			                        pHelper->vMainStrike,
+			                        pChapter->nPositiveColour,
+			                        pChapter->nNegativeColour );
 			pFrontLines->ShowWindow( true );
 		}
 
@@ -324,7 +331,7 @@ void CChapterState::LoadChapterMap()
 		{
 			SChapterMapMenuHelper::SMission &mission = pHelper->missions[i];
 
-			IWindow *pWnd = AddWindowCopy( pChapterMap, (i == 0) ? pBigMissionBtn : pMissionBtn );
+			IWindow *pWnd = AddWindowCopy( pChapterMap, ( i == 0 ) ? pBigMissionBtn : pMissionBtn );
 			mission.pWnd = pWnd;
 			if ( !pWnd )
 				continue;
@@ -337,9 +344,10 @@ void CChapterState::LoadChapterMap()
 			pWnd->SetPlacement( nX, nY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 			pWnd->ShowWindow( true );
 
-			ITextView *pNumber = dynamic_cast<ITextView*>( AddWindowCopy( pWnd, (i == 0) ? pBigNumberView : pNumberView ) );
+			ITextView *pNumber =
+					dynamic_cast<ITextView *>( AddWindowCopy( pWnd, ( i == 0 ) ? pBigNumberView : pNumberView ) );
 			if ( pNumber )
-				pNumber->SetText( pNumber->GetDBText() + NStr::ToUnicode( std::to_string(i) ) );
+				pNumber->SetText( pNumber->GetDBText() + NStr::ToUnicode( std::to_string( i ) ) );
 
 			for ( int j = 0; j < mission.arrows.size(); ++j )
 			{
@@ -367,8 +375,9 @@ void CChapterState::CreateScreen()
 	NI_VERIFY( pScreenDesc != 0, "CChapterState::CreateScreen: pScreenDesc == 0", return );
 
 	// create template screen
-	IWindow *pScreenWnd = Singleton<IUIInitialization>()->CreateScreenFromDesc( pScreenDesc, 0, 0, Singleton<IUIScene>()->GetG2DView(), 0, 0 );
-	pScreen = dynamic_cast<IScreen*>( pScreenWnd );
+	IWindow *pScreenWnd = Singleton<IUIInitialization>()->CreateScreenFromDesc(
+			pScreenDesc, 0, 0, Singleton<IUIScene>()->GetG2DView(), 0, 0 );
+	pScreen = dynamic_cast<IScreen *>( pScreenWnd );
 	NI_VERIFY( pScreen != 0, "CChapterState::CreateScreen: pScreen == 0", return );
 
 	// add screen to scene
@@ -401,12 +410,12 @@ bool CChapterState::MoveMission( SChapterMapMenuHelper::SMission *pMission, cons
 	}
 
 	CVec2 vStartDelta = vPos - vStartPos;
-	if ( bSave && pHelper->pDetailsMap && (vStartDelta.x != 0.0f || vStartDelta.y != 0.0f) )
+	if ( bSave && pHelper->pDetailsMap && ( vStartDelta.x != 0.0f || vStartDelta.y != 0.0f ) )
 	{
 		NDb::IObjMan *pObjMan = NDb::GetManipulator( pHelper->pDetailsMap->GetDBID() );
 		if ( pObjMan )
 		{
-			NDb::SMapInfo *pDetailsMap = dynamic_cast<NDb::SMapInfo*>( pObjMan->GetObject() );
+			NDb::SMapInfo *pDetailsMap = dynamic_cast<NDb::SMapInfo *>( pObjMan->GetObject() );
 			if ( pDetailsMap )
 			{
 				pHelper->UpdateMission( pDetailsMap, pMission );
@@ -425,8 +434,8 @@ bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec
 
 	bool bMoved = false;
 	CVec2 vDelta = vPos - vPrevPos;
-	CVec2 vCenter( floorf( (pArrow->rcBounds.x1 + pArrow->rcBounds.x2) / 2.0f ),
-		floorf( (pArrow->rcBounds.y1 + pArrow->rcBounds.y2) / 2.0f ) );
+	CVec2 vCenter( floorf( ( pArrow->rcBounds.x1 + pArrow->rcBounds.x2 ) / 2.0f ),
+	               floorf( ( pArrow->rcBounds.y1 + pArrow->rcBounds.y2 ) / 2.0f ) );
 	int nDeltaX = Clamp( vCenter.x + vDelta.x, 0.0f, vChapterMapSize.x ) - vCenter.x;
 	int nDeltaY = Clamp( vCenter.y + vDelta.y, 0.0f, vChapterMapSize.y ) - vCenter.y;
 	if ( nDeltaX != 0 || nDeltaY != 0 )
@@ -453,14 +462,14 @@ bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec
 	}
 
 	CVec2 vStartDelta = vPos - vStartPos;
-	if ( pHelper->pDetailsMap && (vStartDelta.x != 0.0f || vStartDelta.y != 0.0f) )
+	if ( pHelper->pDetailsMap && ( vStartDelta.x != 0.0f || vStartDelta.y != 0.0f ) )
 	{
 		if ( bSave )
 		{
 			NDb::IObjMan *pObjMan = NDb::GetManipulator( pHelper->pDetailsMap->GetDBID() );
 			if ( pObjMan )
 			{
-				NDb::SMapInfo *pDetailsMap = dynamic_cast<NDb::SMapInfo*>( pObjMan->GetObject() );
+				NDb::SMapInfo *pDetailsMap = dynamic_cast<NDb::SMapInfo *>( pObjMan->GetObject() );
 				if ( pDetailsMap )
 				{
 					pHelper->UpdateArrow( pDetailsMap, pArrow );
@@ -476,7 +485,11 @@ bool CChapterState::MoveArrow( SChapterMapMenuHelper::SArrow *pArrow, const CVec
 void CChapterState::UpdateFrontLines()
 {
 	if ( pFrontLines )
-		pFrontLines->SetParams( pChapter->szSeaNoiseMask, pChapter->szDifferentColourMap, pHelper->vMainStrike, pChapter->nPositiveColour, pChapter->nNegativeColour );
+		pFrontLines->SetParams( pChapter->szSeaNoiseMask,
+		                        pChapter->szDifferentColourMap,
+		                        pHelper->vMainStrike,
+		                        pChapter->nPositiveColour,
+		                        pChapter->nNegativeColour );
 
 	if ( pFrontLines )
 		pFrontLines->ClearNodes();
@@ -486,8 +499,12 @@ void CChapterState::UpdateFrontLines()
 		SChapterMapMenuHelper::SMission &mission = pHelper->missions[i];
 
 		if ( pFrontLines )
-			pFrontLines->SetNode( mission.vPos.x, mission.vPos.y, mission.vEndOffset.x, mission.vEndOffset.y,
-				mission.bShowPotentialComplete ? mission.fPotentialComplete : mission.fPotentialIncomplete );
+			pFrontLines->SetNode( mission.vPos.x,
+			                      mission.vPos.y,
+			                      mission.vEndOffset.x,
+			                      mission.vEndOffset.y,
+			                      mission.bShowPotentialComplete ? mission.fPotentialComplete
+			                                                     : mission.fPotentialIncomplete );
 	}
 }
 
@@ -513,8 +530,8 @@ void CChapterState::SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArr
 	CPtr<IManipulator> pMapManipulator;
 	if ( pHelper->pDetailsMap )
 	{
-		pMapManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
-			"MapInfo", pHelper->pDetailsMap->GetDBID().ToString() );
+		pMapManipulator =
+				Singleton<IResourceManager>()->CreateObjectManipulator( "MapInfo", pHelper->pDetailsMap->GetDBID().ToString() );
 	}
 	const std::string szMask = fmt::format( "Roads.[{}].", pArrow->nID );
 	pMaskManipulator = new CMaskManipulator( szMask, pMapManipulator, CMaskManipulator::SMART_MODE );
@@ -526,15 +543,14 @@ void CChapterState::SetMaskManipulatorArrow( SChapterMapMenuHelper::SArrow *pArr
 	SetView( pView );
 }
 
-IView* CChapterState::ClearView()
+IView *CChapterState::ClearView()
 {
 	if ( pMaskManipulator != 0 )
 		ClearMaskManipulator();
 
 	IView *pView = 0;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
-																												ID_PC_DIALOG_GET_VIEW,
-																												reinterpret_cast<uintptr_t>(&pView) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 	if ( pView != 0 )
 	{
 		pView->RemoveViewManipulator();
@@ -546,23 +562,20 @@ IView* CChapterState::ClearView()
 
 void CChapterState::SetView( IView *pView )
 {
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
-																												ID_PC_DIALOG_GET_VIEW,
-																												reinterpret_cast<uintptr_t>(&pView) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 	bool bNeedCreateTree = true;
 	if ( pView != 0 )
 	{
 		bNeedCreateTree = ( pView->GetViewManipulator() != pMaskManipulator );
 		pView->SetViewManipulator( pMaskManipulator, pChapterEditor->GetObjectSet(), std::string() );
 	}
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
-																												bNeedCreateTree ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES,
-																												0 );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_PC_DIALOG, bNeedCreateTree ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES, 0 );
 
 	ICommandHandler *pCommandHandler = 0;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
-																												ID_PC_DIALOG_GET_COMMAND_HANDLER,
-																												reinterpret_cast<uintptr_t>(&pCommandHandler) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_PC_DIALOG, ID_PC_DIALOG_GET_COMMAND_HANDLER, reinterpret_cast<uintptr_t>( &pCommandHandler ) );
 	if ( pCommandHandler != 0 )
 	{
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
@@ -574,9 +587,8 @@ void CChapterState::ClearMaskManipulator()
 	if ( pMaskManipulator != 0 )
 	{
 		IView *pView = 0;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
-																													ID_PC_DIALOG_GET_VIEW,
-																													reinterpret_cast<uintptr_t>(&pView) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();

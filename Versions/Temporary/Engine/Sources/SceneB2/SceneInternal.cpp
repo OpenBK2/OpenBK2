@@ -62,12 +62,12 @@ const CVec4 vDefaultColor( 0.0f, 0.0f, 0.0f, 1.0f );
 
 namespace NGamma
 {
-	static float s_fBrightness = 0.5f;
-	static float s_fContrast = 0.5f;
-	static float s_fGamma = 0.5f;
+static float s_fBrightness = 0.5f;
+static float s_fContrast = 0.5f;
+static float s_fGamma = 0.5f;
 }
 
-IScene* CreateScene()
+IScene *CreateScene()
 {
 	return new CScene();
 }
@@ -75,7 +75,7 @@ IScene* CreateScene()
 // CScene
 
 CScene::CScene()
-: eScene( ES_UNKNOWN ), vBackgroundColor( vDefaultColor ), timeBadWeatherLeft( 0 ), bGetSizesFromTarget( false )
+		: eScene( ES_UNKNOWN ), vBackgroundColor( vDefaultColor ), timeBadWeatherLeft( 0 ), bGetSizesFromTarget( false )
 {
 	observers.AddObserver( "scene_show_bboxes", &CScene::ToggleShowMsg, SCENE_SHOW_BBOXES );
 	observers.AddObserver( "scene_show_grid", &CScene::ToggleShowMsg, SCENE_SHOW_GRID );
@@ -108,7 +108,7 @@ void CScene::CreateGScene()
 		const CVec2 vSize = NGfx::GetScreenRect();
 		Cursor()->SetBounds( 0, 0, vSize.x, vSize.y );
 
-		theUIVisitor.SetGView(  data[eScene]->p2DView );
+		theUIVisitor.SetGView( data[eScene]->p2DView );
 		Singleton<IUIInitialization>()->Set2DGameView( data[eScene]->p2DView );
 
 		return;
@@ -162,7 +162,7 @@ void CScene::Init()
 
 void CScene::SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts )
 {
-	if ( (data.size() <= eScene) && (eScene != ES_UNKNOWN) )
+	if ( ( data.size() <= eScene ) && ( eScene != ES_UNKNOWN ) )
 		return;
 
 	if ( _pSceneConsts )
@@ -179,7 +179,9 @@ void CScene::SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts )
 		if ( data[eScene]->pInterfaceView && _pSceneConsts->pInterfaceLight )
 			data[eScene]->pInterfaceView->SetAmbient( _pSceneConsts->pInterfaceLight, data[eScene]->pGameTimer );
 
-		for ( SSceneData::CScreensData::iterator it = data[eScene]->screensData.begin(); it != data[eScene]->screensData.end(); ++it )
+		for ( SSceneData::CScreensData::iterator it = data[eScene]->screensData.begin();
+		      it != data[eScene]->screensData.end();
+		      ++it )
 		{
 			SSceneData::SScreenData &data = *it;
 			data.SetSceneConsts( _pSceneConsts );
@@ -207,7 +209,7 @@ bool CScene::SetupMode( ESceneMode eMode, bool _bEditorMode )
 	NGScene::SUserRTInfo rtInfo;
 	if ( NGlobal::GetVar( "m1", 0 ) == 1 )
 		rtInfo.AddTex( 1024, "EFFECT_RT" );
-	if ( !NGScene::SetModeFromConfig(true, rtInfo) )
+	if ( !NGScene::SetModeFromConfig( true, rtInfo ) )
 	{
 		NI_ASSERT( false, "Can't set mode from config" ); // no mode found
 		return false;
@@ -277,7 +279,7 @@ bool CScene::ToggleShow( ESceneShow eShow )
 	{
 		case SCENE_SHOW_SHADOWS:
 		{
-			NGlobal::SetVar( "gfx_noshadows", (data[eScene]->showModes[eShow] ? 0 : 1) );
+			NGlobal::SetVar( "gfx_noshadows", ( data[eScene]->showModes[eShow] ? 0 : 1 ) );
 			break;
 		}
 		//
@@ -288,13 +290,15 @@ bool CScene::ToggleShow( ESceneShow eShow )
 		}
 		//
 		case SCENE_SHOW_UI:
-		break;
+			break;
 		//
 		case SCENE_SHOW_BBOXES:
 		{
-			for ( SSceneData::CVisObjectsMap::iterator it = data[eScene]->visObjects.begin(); it != data[eScene]->visObjects.end(); ++it )
+			for ( SSceneData::CVisObjectsMap::iterator it = data[eScene]->visObjects.begin();
+			      it != data[eScene]->visObjects.end();
+			      ++it )
 			{
-				if ( SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>(it->second) )
+				if ( SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( it->second ) )
 				{
 					if ( data[eScene]->showModes[eShow] )
 						pVOD->UpdateBBPolyLine( data[eScene]->GetGScene() );
@@ -314,13 +318,14 @@ bool CScene::ToggleShow( ESceneShow eShow )
 		//
 		case SCENE_SHOW_OVERDRAW:
 		{
-			data[eScene]->GetGScene()->SetRenderMode( data[eScene]->showModes[eShow] ? NGScene::SRM_SHOWOVERDRAW : NGScene::SRM_BEST );
+			data[eScene]->GetGScene()->SetRenderMode( data[eScene]->showModes[eShow] ? NGScene::SRM_SHOWOVERDRAW
+			                                                                         : NGScene::SRM_BEST );
 			break;
 		}
 		//
 		case SCENE_SHOW_MIPMAPS:
 		{
-			bool bShow = NGlobal::GetVar("gfx_draw_mip").GetFloat() != 0;
+			bool bShow = NGlobal::GetVar( "gfx_draw_mip" ).GetFloat() != 0;
 			bShow = !bShow;
 			NGlobal::SetVar( "gfx_draw_mip", bShow );
 		}
@@ -372,12 +377,12 @@ bool CScene::IsShowOn( ESceneShow eShow )
 			return data[eScene]->showModes[eShow];
 		case SCENE_SHOW_MIPMAPS:
 		{
-			bool bShow = NGlobal::GetVar("gfx_draw_mip").GetFloat() != 0;
+			bool bShow = NGlobal::GetVar( "gfx_draw_mip" ).GetFloat() != 0;
 			return bShow;
 		}
 		case SCENE_SHOW_SHADOWS:
 		{
-			bool bShow = NGlobal::GetVar("gfx_noshadows").GetFloat() != 0;
+			bool bShow = NGlobal::GetVar( "gfx_noshadows" ).GetFloat() != 0;
 			return bShow;
 		}
 		case SCENE_SHOW_STATISTICS:
@@ -391,7 +396,7 @@ bool CScene::IsShowOn( ESceneShow eShow )
 
 static void OutputStat( const char *pszName, const int nValue, uint32_t dwColor, IStatSystem *pSS )
 {
-	const std::string szValue = std::to_string(  nValue );
+	const std::string szValue = std::to_string( nValue );
 	pSS->UpdateEntry( pszName, szValue, dwColor );
 }
 
@@ -424,8 +429,8 @@ static void CalcOrthographicScreenSize( float *pfSizeX, float *pfSizeY, float fS
 	float fDist, fYaw, fPitch;
 	Camera()->GetPlacement( &fDist, &fPitch, &fYaw );
 	const float fFOV = Camera()->GetFOV();
-	*pfSizeX = 2.0f * fDist * tan( ToRadian(fFOV) * 0.5f );
-	*pfSizeY = fScreenSizeY / fScreenSizeX * (*pfSizeX);
+	*pfSizeX = 2.0f * fDist * tan( ToRadian( fFOV ) * 0.5f );
+	*pfSizeY = fScreenSizeY / fScreenSizeX * ( *pfSizeX );
 }
 
 // brightness, contrast and gamma are in range [-1..1]
@@ -434,23 +439,23 @@ static void CalcGammaRamp2Bounded( NGfx::SPixel8888 *pRamp, float fBrightness, f
 	// calculate equation params for Y = A*X + B
 	// contrast: a*x + b
 	// если contrast < 0, то a = 1/a (наклон <45 градусов)
-	float fA = 1.0f + 4.0f*fabs( fContrast );
+	float fA = 1.0f + 4.0f * fabs( fContrast );
 	if ( fContrast < 0 )
 		fA = 1.0f / fA;
-	float fB = 0.5f*( 1.0f - fA );
+	float fB = 0.5f * ( 1.0f - fA );
 	// gamma: x^power
 	float fPower = 1;
 	if ( fGamma > 0 )
-		fPower = 1.0f / ( 5.0f*fGamma + 1 );
+		fPower = 1.0f / ( 5.0f * fGamma + 1 );
 	else if ( fGamma < 0 )
-		fPower = 1.0f / ( 0.5f*fGamma + 1 );
+		fPower = 1.0f / ( 0.5f * fGamma + 1 );
 	// brightness: x + b
 	//
 	for ( int i = 0; i < 256; ++i )
 	{
 		float fVal = float( i ) / 255.0f;
 		float fGammaValue = pow( fVal, fPower );
-		float fContrastValue = Clamp( fA*fGammaValue + fB, 0.0f, 1.0f );
+		float fContrastValue = Clamp( fA * fGammaValue + fB, 0.0f, 1.0f );
 		float fResult = Clamp( fContrastValue + fBrightness, 0.0f, 1.0f );
 		pRamp[i].r = fResult * 255.0f;
 		pRamp[i].g = fResult * 255.0f;
@@ -460,9 +465,9 @@ static void CalcGammaRamp2Bounded( NGfx::SPixel8888 *pRamp, float fBrightness, f
 
 inline void CalcGammaRamp2( NGfx::SPixel8888 *pRamp, float fBrightness, float fContrast, float fGamma )
 {
-//	fBrightness = Clamp( fBrightness, -1.0f, 1.0f ) * 0.5f; // to avoid complete dark and complete white values
-//	fContrast = Clamp( fContrast, -1.0f, 1.0f ) * 0.5f;
-//	fGamma = Clamp( fGamma, -1.0f, 1.0f ) * 0.5f;
+	//	fBrightness = Clamp( fBrightness, -1.0f, 1.0f ) * 0.5f; // to avoid complete dark and complete white values
+	//	fContrast = Clamp( fContrast, -1.0f, 1.0f ) * 0.5f;
+	//	fGamma = Clamp( fGamma, -1.0f, 1.0f ) * 0.5f;
 	//
 	CalcGammaRamp2Bounded( pRamp, fBrightness, fContrast, fGamma );
 }
@@ -470,9 +475,10 @@ inline void CalcGammaRamp2( NGfx::SPixel8888 *pRamp, float fBrightness, float fC
 inline void CalcGammaRamp( NGfx::SPixel8888 *pRamp, float fBrightness, float fContrast, float fGamma )
 {
 	static const float s_fBoundFactor = 0.5f;
-	CalcGammaRamp2( pRamp, (fBrightness - 0.5f)*2.0f * s_fBoundFactor,
-												 (fContrast - 0.5f)*2.0f * s_fBoundFactor,
-												 (fGamma - 0.5f)*2.0f );
+	CalcGammaRamp2( pRamp,
+	                ( fBrightness - 0.5f ) * 2.0f * s_fBoundFactor,
+	                ( fContrast - 0.5f ) * 2.0f * s_fBoundFactor,
+	                ( fGamma - 0.5f ) * 2.0f );
 }
 
 void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
@@ -481,13 +487,14 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 	static float s_fLastContrast = NGamma::s_fContrast;
 	static float s_fLastBrightness = NGamma::s_fBrightness;
 	//
-	if ( NGamma::s_fGamma != s_fLastGamma || NGamma::s_fContrast != s_fLastContrast || NGamma::s_fBrightness != s_fLastBrightness )
+	if ( NGamma::s_fGamma != s_fLastGamma || NGamma::s_fContrast != s_fLastContrast ||
+	     NGamma::s_fBrightness != s_fLastBrightness )
 	{
 		s_fLastGamma = NGamma::s_fGamma;
 		s_fLastContrast = NGamma::s_fContrast;
 		s_fLastBrightness = NGamma::s_fBrightness;
 		std::vector<NGfx::SPixel8888> gammaRamp( 256 );
-		CalcGammaRamp( &(gammaRamp[0]), NGamma::s_fBrightness, NGamma::s_fContrast, NGamma::s_fGamma );
+		CalcGammaRamp( &( gammaRamp[0] ), NGamma::s_fBrightness, NGamma::s_fContrast, NGamma::s_fGamma );
 		NGfx::SetGammaRamp( gammaRamp );
 	}
 	//
@@ -540,7 +547,8 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 
 		// Editor previews also own render nodes directly (particles, the ground
 		// plane and the icon target). They are absent from the map object lists.
-		if ( bEditorMode || data[eScene]->pTerraManager || !data[eScene]->visObjects.empty() || !data[eScene]->polylines.empty() )
+		if ( bEditorMode || data[eScene]->pTerraManager || !data[eScene]->visObjects.empty() ||
+		     !data[eScene]->polylines.empty() )
 		{
 			if ( data[eScene]->GetGScene() )
 			{
@@ -548,12 +556,12 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 				NGScene::IGameView::SDrawInfo drawInfo;
 				drawInfo.pTS = &( pCamera->GetTransform() );
 
-//				if ( NGlobal::GetVar( "m1", 0 ) != 0 )
-//				{
-//					// Process fog parameters and update scene by it
-//					if ( data[eScene]->pSceneAmbientLight && data[eScene]->pSceneAmbientLight->pDistanceFog )
-//						vBackgroundColor = data[eScene]->pSceneAmbientLight->pDistanceFog->vColor;
-//				}
+				//				if ( NGlobal::GetVar( "m1", 0 ) != 0 )
+				//				{
+				//					// Process fog parameters and update scene by it
+				//					if ( data[eScene]->pSceneAmbientLight && data[eScene]->pSceneAmbientLight->pDistanceFog )
+				//						vBackgroundColor = data[eScene]->pSceneAmbientLight->pDistanceFog->vColor;
+				//				}
 
 				if ( vBackgroundColor != vDefaultColor )
 				{
@@ -575,7 +583,7 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 		}
 		else
 		{
-			NGScene::ClearScreen( CVec3(0.25f, 0.25f, 0.25f) );
+			NGScene::ClearScreen( CVec3( 0.25f, 0.25f, 0.25f ) );
 		}
 		// delete all tracks, for which this was planned
 		if ( data[eScene]->pTracksManager )
@@ -604,7 +612,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 				if ( data[eScene]->showModes[SCENE_SHOW_UI] != false )
 				{
 					theUIVisitor.SetGView( data[eScene]->p2DView );
-					for ( SSceneData::CScreensData::iterator it = data[eScene]->screensData.begin(); it != data[eScene]->screensData.end(); ++it )
+					for ( SSceneData::CScreensData::iterator it = data[eScene]->screensData.begin();
+					      it != data[eScene]->screensData.end();
+					      ++it )
 					{
 						SSceneData::SScreenData &screenData = *it;
 						screenData.pScreen->Visit( &theUIVisitor );
@@ -615,10 +625,11 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 
 							NGScene::IGameView::SDrawInfo drawInfo;
 							CTransformStack ts;
-			//				ts.MakeParallel( vScreenSize.x, vScreenSize.y, 100, -50 );
-							ts.MakeParallel( INTERFACE_3D_ELEMENT_WIDTH,// / fInterfaceElementScaleFactor,
-															INTERFACE_3D_ELEMENT_HEIGHT,// / fInterfaceElementScaleFactor,
-															100, -50 );
+							//				ts.MakeParallel( vScreenSize.x, vScreenSize.y, 100, -50 );
+							ts.MakeParallel( INTERFACE_3D_ELEMENT_WIDTH,  // / fInterfaceElementScaleFactor,
+							                 INTERFACE_3D_ELEMENT_HEIGHT, // / fInterfaceElementScaleFactor,
+							                 100,
+							                 -50 );
 							drawInfo.pTS = &ts;
 							drawInfo.pTarget = pTarget;
 							if ( vBackgroundColor != vDefaultColor )
@@ -675,7 +686,8 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 					if ( data[eScene]->nFPSDropCounter > s_fMinDynamicFPSMeasurePeriods )
 					{
 						csSystem << CC_RED << "FPS Too Low!!!" << endl;
-						csSystem << CC_RED << fmt::format("FPS = {:g}, but minimal allowed = {:g}", fFPS, s_fMinDynamicFPS ) << endl;
+						csSystem << CC_RED << fmt::format( "FPS = {:g}, but minimal allowed = {:g}", fFPS, s_fMinDynamicFPS )
+										 << endl;
 						data[eScene]->nFPSDropCounter = 0;
 					}
 				}
@@ -683,9 +695,12 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 					data[eScene]->nFPSDropCounter = 0;
 				//
 				OutputStat( "FPS", fFPS, 0xff00ffff, pSS );
-				OutputStat( "Verts", int( float(data[eScene]->nStatNumVerts)/data[eScene]->nStatNumFrames ), 0xffffffff, pSS );
-				OutputStat( "Tris", int( float(data[eScene]->nStatNumTris)/data[eScene]->nStatNumFrames ), 0xffffffff, pSS );
-				OutputStat( "DIPs", int( float(data[eScene]->nStatNumDIPs)/data[eScene]->nStatNumFrames ), 0xffffffff, pSS );
+				OutputStat(
+						"Verts", int( float( data[eScene]->nStatNumVerts ) / data[eScene]->nStatNumFrames ), 0xffffffff, pSS );
+				OutputStat(
+						"Tris", int( float( data[eScene]->nStatNumTris ) / data[eScene]->nStatNumFrames ), 0xffffffff, pSS );
+				OutputStat(
+						"DIPs", int( float( data[eScene]->nStatNumDIPs ) / data[eScene]->nStatNumFrames ), 0xffffffff, pSS );
 				//
 				float fCamDist, fCamPitch, fCamYaw;
 				Camera()->GetPlacement( &fCamDist, &fCamPitch, &fCamYaw );
@@ -709,7 +724,7 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 			OutputStat( "PointLights", renderStats.nScenePointLights, 0xffffffff, pSS );
 			OutputStat( "Particles", renderStats.nParticles, 0xffffffff, pSS );
 			//
-			OutputStat( "TextureMem", float(NGScene::CalcTouchedTextureSize() / (1024.0f*1024.0f)), 0xffffffff, pSS );
+			OutputStat( "TextureMem", float( NGScene::CalcTouchedTextureSize() / ( 1024.0f * 1024.0f ) ), 0xffffffff, pSS );
 			//
 			OutputStat( "StaticGeometryThrashing", renderStats.bStaticGeometryThrashing, pSS );
 			OutputStat( "2DTexturesThrashing", renderStats.b2DTexturesThrashing, pSS );
@@ -761,7 +776,7 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 		}
 
 		// Updating weather parameters
-		if ( IsValid(data[eScene]->pWeather) )
+		if ( IsValid( data[eScene]->pWeather ) )
 			data[eScene]->pWeather->Update();
 	}
 	else
@@ -777,9 +792,9 @@ const EScene CScene::GetCurrentScene() const
 	return eScene;
 }
 
-NGScene::I2DGameView* CScene::GetG2DView()
+NGScene::I2DGameView *CScene::GetG2DView()
 {
-	return  data[eScene]->p2DView;
+	return data[eScene]->p2DView;
 }
 
 NGScene::IGameView *CScene::GetGView()
@@ -857,9 +872,9 @@ static void CalcBigRect( CTRect<float> *pRect, float fCameraYaw, float fMapSizeX
 	CVec2 v2( fMapSizeX, 0 );
 	CVec2 v3( fMapSizeX, fMapSizeY );
 	//
-	v1.Set( v1.x*fCos - v1.y*fSin, v1.x*fSin + v1.y*fCos );
-	v2.Set( v2.x*fCos - v2.y*fSin, v2.x*fSin + v2.y*fCos );
-	v3.Set( v3.x*fCos - v3.y*fSin, v3.x*fSin + v3.y*fCos );
+	v1.Set( v1.x * fCos - v1.y * fSin, v1.x * fSin + v1.y * fCos );
+	v2.Set( v2.x * fCos - v2.y * fSin, v2.x * fSin + v2.y * fCos );
+	v3.Set( v3.x * fCos - v3.y * fSin, v3.x * fSin + v3.y * fCos );
 	CVec2 vMin( 0, 0 );
 	vMin.Minimize( v1 );
 	vMin.Minimize( v2 );
@@ -875,18 +890,22 @@ static void CalcBigRect( CTRect<float> *pRect, float fCameraYaw, float fMapSizeX
 	pRect->maxy = vMax.y;
 }
 
-static void CalcIterationParams( CVec3 *pvStart, CVec3 *pvStepX, CVec3 *pvStepY,
-													float fCameraYaw, float fMapSizeX, float fMapSizeY, const CTRect<float> &rcRect )
+static void CalcIterationParams( CVec3 *pvStart,
+                                 CVec3 *pvStepX,
+                                 CVec3 *pvStepY,
+                                 float fCameraYaw,
+                                 float fMapSizeX,
+                                 float fMapSizeY,
+                                 const CTRect<float> &rcRect )
 {
 	const float fAngle = -ToRadian( fCameraYaw );
 	const float fSin = sin( fAngle );
 	const float fCos = cos( fAngle );
-	const CVec3 vAxisX(	fCos, fSin, 0 );
+	const CVec3 vAxisX( fCos, fSin, 0 );
 	const CVec3 vAxisY( -fSin, fCos, 0 );
-	pvStart->Set( rcRect.minx*vAxisX.x + rcRect.maxy*vAxisX.y,
-								rcRect.minx*vAxisY.x + rcRect.maxy*vAxisY.y, 0 );
+	pvStart->Set( rcRect.minx * vAxisX.x + rcRect.maxy * vAxisX.y, rcRect.minx * vAxisY.x + rcRect.maxy * vAxisY.y, 0 );
 	//
-	pvStepX->Set(	vAxisX.x,	vAxisY.x, 0 );
+	pvStepX->Set( vAxisX.x, vAxisY.x, 0 );
 	pvStepY->Set( -vAxisX.y, -vAxisY.y, 0 );
 }
 
@@ -895,19 +914,19 @@ class CCameraPlacementGuard
 	CVec3 vAnchor;
 	float fYaw, fPitch, fDist;
 	float fLimitsX, fLimitsY;
+
 public:
-	CCameraPlacementGuard( float _fLimitsX, float _fLimitsY )
-		: fLimitsX( _fLimitsX ), fLimitsY( _fLimitsY )
+	CCameraPlacementGuard( float _fLimitsX, float _fLimitsY ) : fLimitsX( _fLimitsX ), fLimitsY( _fLimitsY )
 	{
 		Camera()->GetPlacement( &fDist, &fPitch, &fYaw );
 		vAnchor = Camera()->GetAnchor();
-		Camera()->SetAnchorLimits( CTRect<float>(0, 0, 0, 0) );
+		Camera()->SetAnchorLimits( CTRect<float>( 0, 0, 0, 0 ) );
 	}
 	~CCameraPlacementGuard()
 	{
 		Camera()->SetPlacement( fDist, fPitch, fYaw );
 		Camera()->SetAnchor( vAnchor );
-		Camera()->SetAnchorLimits( CTRect<float>(0, 0, fLimitsX, fLimitsY) );
+		Camera()->SetAnchorLimits( CTRect<float>( 0, 0, fLimitsX, fLimitsY ) );
 	}
 };
 
@@ -922,10 +941,11 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	const float fMaxSizeY = pDesc->nNumPatchesX * VIS_TILES_IN_PATCH * VIS_TILE_SIZE;
 	CCameraPlacementGuard cameraGuard( fMaxSizeX, fMaxSizeY );
 	//
-//	pCamera->ResetToDefault();
+	//	pCamera->ResetToDefault();
 	s_bPerspectiveCamera = false;
 	//
-	while ( ToggleShow(SCENE_SHOW_UI) != false );
+	while ( ToggleShow( SCENE_SHOW_UI ) != false )
+		;
 	//
 	{
 		CArray2D<uint8_t> whiteWarFog;
@@ -939,14 +959,18 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 	float fDist, fYaw, fPitch;
 	pCamera->GetPlacement( &fDist, &fPitch, &fYaw );
 	const float fFOV = pCamera->GetFOV();
-	CCameraMapIterator itCamera( ToRadian(fFOV), ToRadian(fYaw), ToRadian(fPitch), fDist,
-															 NGfx::GetScreenRect(), fMaxSizeX, fMaxSizeY );
+	CCameraMapIterator itCamera(
+			ToRadian( fFOV ), ToRadian( fYaw ), ToRadian( fPitch ), fDist, NGfx::GetScreenRect(), fMaxSizeX, fMaxSizeY );
 	//
 	std::tm systime = {};
 	GetLocalTime( &systime, std::time( 0 ) );
 	const std::string szFileName = fmt::format( "screenshots\\mapshot-{:04d}.{:02d}.{:02d}-{:02d}.{:02d}.{:02d}.tga",
-		systime.tm_year + 1900, systime.tm_mon + 1, systime.tm_mday,
-		systime.tm_hour, systime.tm_min, systime.tm_sec );
+	                                            systime.tm_year + 1900,
+	                                            systime.tm_mon + 1,
+	                                            systime.tm_mday,
+	                                            systime.tm_hour,
+	                                            systime.tm_min,
+	                                            systime.tm_sec );
 	//
 	try
 	{
@@ -969,12 +993,13 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 		footer.cReservedCharacter = '.';
 		// file mapping
 		CFileStream stream( NVFS::GetMainFileCreator(), szFileName );
-		const int nWriteSizeInBytes = int(hdr.imagespec.wImageWidth) * int(hdr.imagespec.wImageHeight) * sizeof(SColor24);
-		stream.SetSize( sizeof(hdr) + nWriteSizeInBytes + sizeof(footer) );
+		const int nWriteSizeInBytes =
+				int( hdr.imagespec.wImageWidth ) * int( hdr.imagespec.wImageHeight ) * sizeof( SColor24 );
+		stream.SetSize( sizeof( hdr ) + nWriteSizeInBytes + sizeof( footer ) );
 		uint8_t *pBuffer = stream.GetBufferForWrite();
-		memcpy( pBuffer, &hdr, sizeof(hdr) );
-		memcpy( pBuffer + sizeof(hdr) + nWriteSizeInBytes, &footer, sizeof(footer) );
-		SColor24 *pImage = (SColor24 *)( pBuffer + sizeof(hdr) );
+		memcpy( pBuffer, &hdr, sizeof( hdr ) );
+		memcpy( pBuffer + sizeof( hdr ) + nWriteSizeInBytes, &footer, sizeof( footer ) );
+		SColor24 *pImage = (SColor24 *)( pBuffer + sizeof( hdr ) );
 		const int nLineWidth = hdr.imagespec.wImageWidth;
 
 		for ( ; !itCamera.IsEnd(); itCamera.Next() )
@@ -995,27 +1020,29 @@ bool CScene::MakeMapShot( const SGameMessage &msg )
 			CArray2D<NGfx::SPixel8888> data;
 			NGfx::MakeScreenShot( &data, false );
 			NImage::CRawColorConvertor<SColor24> convertor( 0, 0, 0 );
-			for ( int y = 0; y < data.GetSizeY(); ++y	)
+			for ( int y = 0; y < data.GetSizeY(); ++y )
 			{
 				for ( int x = 0; x < data.GetSizeX(); ++x )
-					pImage[(itCamera.GetImagePosY() + y)*nLineWidth + itCamera.GetImagePosX() + x] = convertor( *((uint32_t*)(&data[y][x])) );
+					pImage[( itCamera.GetImagePosY() + y ) * nLineWidth + itCamera.GetImagePosX() + x] =
+							convertor( *( (uint32_t *)( &data[y][x] ) ) );
 			}
 		}
-//		// save result image
-//		SYSTEMTIME systime;
-//		GetLocalTime( &systime );
-//		const string szFileName = StrFmt( "screenshots\\mapshot-%.4d.%.2d.%.2d-%.2d.%.2d.%.2d.tga",
-//																			int(systime.wYear), int(systime.wMonth), int(systime.wDay),
-//																			int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );
-//		//
-//		CFileStream stream( NVFS::GetMainFileCreator(), szFileName );
-//		NImage::SaveAsTGA( image, &stream );
+		//		// save result image
+		//		SYSTEMTIME systime;
+		//		GetLocalTime( &systime );
+		//		const string szFileName = StrFmt( "screenshots\\mapshot-%.4d.%.2d.%.2d-%.2d.%.2d.%.2d.tga",
+		//																			int(systime.wYear), int(systime.wMonth), int(systime.wDay),
+		//																			int(systime.wHour), int(systime.wMinute), int(systime.wSecond) );
+		//		//
+		//		CFileStream stream( NVFS::GetMainFileCreator(), szFileName );
+		//		NImage::SaveAsTGA( image, &stream );
 	}
 	catch ( ... )
 	{
 	}
 	// restore camera params
-	while ( ToggleShow(SCENE_SHOW_UI) == false );
+	while ( ToggleShow( SCENE_SHOW_UI ) == false )
+		;
 	Cursor()->Show( true );
 	s_bPerspectiveCamera = true;
 	//
@@ -1029,8 +1056,8 @@ bool CScene::ToggleAIGeometryMode()
 		nMode = SSceneData::EAI_GEOM_OVER;
 	else
 		nMode = SSceneData::EAI_GEOM_NONE;
-	data[eScene]->eAIGeomMode = (SSceneData::EAIGeomMode)(nMode);
-	data[eScene]->showModes[SCENE_SHOW_AI_GEOM] = (nMode != SSceneData::EAI_GEOM_NONE);
+	data[eScene]->eAIGeomMode = (SSceneData::EAIGeomMode)( nMode );
+	data[eScene]->showModes[SCENE_SHOW_AI_GEOM] = ( nMode != SSceneData::EAI_GEOM_NONE );
 	UpdateAIGeometry();
 	return ( nMode == SSceneData::EAI_GEOM_OVER );
 }
@@ -1038,10 +1065,10 @@ bool CScene::ToggleAIGeometryMode()
 void CScene::CycleAIGeometryModes()
 {
 	int nMode = data[eScene]->eAIGeomMode + 1;
-	if ( nMode >= SSceneData::EAI_GEOM_LAST	)
+	if ( nMode >= SSceneData::EAI_GEOM_LAST )
 		nMode = SSceneData::EAI_GEOM_NONE;
-	data[eScene]->eAIGeomMode = (SSceneData::EAIGeomMode)(nMode);
-	data[eScene]->showModes[SCENE_SHOW_AI_GEOM] = (nMode != SSceneData::EAI_GEOM_NONE);
+	data[eScene]->eAIGeomMode = (SSceneData::EAIGeomMode)( nMode );
+	data[eScene]->showModes[SCENE_SHOW_AI_GEOM] = ( nMode != SSceneData::EAI_GEOM_NONE );
 	UpdateAIGeometry();
 }
 
@@ -1066,7 +1093,7 @@ void CScene::UpdateAIGeometry()
 	SFBTransform idPos;
 	Identity( &idPos.forward );
 	Identity( &idPos.backward );
-	for( std::vector<NAI::SObjectInfo>::iterator it = ent.begin(); it != ent.end(); ++it )
+	for ( std::vector<NAI::SObjectInfo>::iterator it = ent.begin(); it != ent.end(); ++it )
 	{
 		const NAI::SObjectInfo &obj = *it;
 		CObj<CMemObject> pMemObject = new CMemObject;
@@ -1077,9 +1104,13 @@ void CScene::UpdateAIGeometry()
 	}
 }
 
-void CScene::AddShotTrace( const CVec3 &_vStart, const CVec3 &_vEnd, NTimer::STime _timeStart, const NDb::SWeaponRPGStats::SShell *pShell )
+void CScene::AddShotTrace( const CVec3 &_vStart,
+                           const CVec3 &_vEnd,
+                           NTimer::STime _timeStart,
+                           const NDb::SWeaponRPGStats::SShell *pShell )
 {
-	const NDb::SMaterial *pShotTraceMaterial = pShell->pTraceMaterial ? pShell->pTraceMaterial : data[eScene]->pSceneConsts->pShotTraceMaterial;
+	const NDb::SMaterial *pShotTraceMaterial =
+			pShell->pTraceMaterial ? pShell->pTraceMaterial : data[eScene]->pSceneConsts->pShotTraceMaterial;
 	if ( pShotTraceMaterial )
 	{
 		CShotTraceObj *pTrace = new CShotTraceObj( _vStart, _vEnd, _timeStart, pShell, data[eScene]->pGameTimer );
@@ -1090,7 +1121,12 @@ void CScene::AddShotTrace( const CVec3 &_vStart, const CVec3 &_vEnd, NTimer::STi
 		bound.BoxInit( _vStart, _vEnd );
 		pBound->Set( bound );
 
-		CObjectBase *pObj = data[eScene]->GetGScene()->CreateDynamicMesh( data[eScene]->GetGScene()->MakeMeshInfo(pTrace, pShotTraceMaterial), 0, pBound, NGScene::MakeLargeHintBound(), room );
+		CObjectBase *pObj = data[eScene]->GetGScene()->CreateDynamicMesh(
+				data[eScene]->GetGScene()->MakeMeshInfo( pTrace, pShotTraceMaterial ),
+				0,
+				pBound,
+				NGScene::MakeLargeHintBound(),
+				room );
 		SetToSceneHoldQueue( pObj, false );
 	}
 }
@@ -1102,17 +1138,21 @@ void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 	//
 	timeBadWeatherLeft = bActive ? timeLength : 0;
 
-	if ( bActive )	// Switch on
+	if ( bActive ) // Switch on
 	{
 		const NDb::SWeatherDesc *pWeatherDesc = data[eScene]->pTerraManager->GetDesc()->weather.pVisuals;
 		if ( pWeatherDesc )
 		{
 			//GetAbsTimer()->Updated();
-			if ( !IsValid(data[eScene]->pWeather) )
-				data[eScene]->pWeather = new CWeatherVisual( pWeatherDesc, GetGameTimer(), data[eScene]->pScreenFader, data[eScene]->pTerraManager->GetDesc()->pLight, pWeatherDesc->pWeatherLight );
+			if ( !IsValid( data[eScene]->pWeather ) )
+				data[eScene]->pWeather = new CWeatherVisual( pWeatherDesc,
+				                                             GetGameTimer(),
+				                                             data[eScene]->pScreenFader,
+				                                             data[eScene]->pTerraManager->GetDesc()->pLight,
+				                                             pWeatherDesc->pWeatherLight );
 			//data[eScene]->pWeather = new CWeatherVisual( pWeatherDesc, GetAbsTimer() );
 
-			NGScene::SFullRoomInfo room( NGScene::SRoomInfo(NGScene::LF_SKIP_LIGHTING, -100), 0, 0 );
+			NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
 			CPtr<CCSBound> pBound = new CCSBound();
 			SBound bound;
 			CVec3 vFarEnd( AI_TILES_IN_PATCH * AI_TILE_SIZE, AI_TILES_IN_PATCH * AI_TILE_SIZE, 100 );
@@ -1121,15 +1161,15 @@ void CScene::SwitchWeather( bool bActive, NTimer::STime timeLength )
 			bound.BoxInit( VNULL3, vFarEnd );
 			pBound->Set( bound );
 
-			data[eScene]->pWeatherSceneObject = data[eScene]->GetGScene()->CreateDynamicMesh( data[eScene]->pWeather->MakeMeshInfo(),
-				0, pBound, NGScene::MakeLargeHintBound(), room );
+			data[eScene]->pWeatherSceneObject = data[eScene]->GetGScene()->CreateDynamicMesh(
+					data[eScene]->pWeather->MakeMeshInfo(), 0, pBound, NGScene::MakeLargeHintBound(), room );
 
 			data[eScene]->pWeather->SwitchOn( timeLength );
 			if ( pWeatherDesc && pWeatherDesc->pWater )
 				data[eScene]->pTerraManager->SetRainyWaters( pWeatherDesc->pWater );
 		}
 	}
-	else	// Switch off
+	else // Switch off
 	{
 		if ( data[eScene]->pWeather )
 		{
@@ -1178,7 +1218,7 @@ float CScene::GetTileHeight( int nX, int nY ) const
 	return data[eScene]->pTerraManager->GetTileHeight( nX, nY );
 }
 
-CSyncSrc<IVisObj>* CScene::GetSyncSrc() const
+CSyncSrc<IVisObj> *CScene::GetSyncSrc() const
 {
 	return data[eScene]->pSyncSrc;
 }
@@ -1187,7 +1227,6 @@ bool CScene::SetGSceneInternal( bool bIsInternal )
 {
 	return data[eScene]->SetGSceneInternal( bIsInternal );
 }
-
 
 void CScene::SetBackgroundColor( const CVec3 &rvBackgroundColor )
 {
@@ -1209,9 +1248,10 @@ bool CScene::ToggleGetSizeFromTarget( bool _bGetSizesFromTarget )
 }
 
 // special script function to position camera for pwl-mapshot
-static void CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void
+CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
-	if ( !(Scene()->DoesTerraManagerExist()) )
+	if ( !( Scene()->DoesTerraManagerExist() ) )
 		return;
 	int nSizeX = 0, nSizeY = 0;
 	if ( ITerraManager *pTerraManager = Scene()->GetTerraManager() )
@@ -1227,7 +1267,7 @@ static void CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<s
 		return;
 	//
 	const float fYaw = paramsSet.empty() ? 0 : NStr::ToFloat( NStr::ToMBCS( paramsSet[0] ) );
-	const float fPitch = ToDegree( asin( 3.0f/4.0f ) );
+	const float fPitch = ToDegree( asin( 3.0f / 4.0f ) );
 	float fOldDist, fOldPitch, fOldYaw;
 	Camera()->GetPlacement( &fOldDist, &fOldPitch, &fOldYaw );
 	Camera()->SetPlacement( fOldDist, fPitch, fYaw );
@@ -1246,7 +1286,8 @@ REGISTER_VAR_EX( "camera_far_plane", NGlobal::VarFloatHandler, &s_fCameraFarPlan
 REGISTER_VAR_EX( "camera_perspective", NGlobal::VarBoolHandler, &s_bPerspectiveCamera, true, STORAGE_SAVE );
 REGISTER_VAR_EX( "min_static_fps", NGlobal::VarFloatHandler, &s_fMinStaticFPS, 25, STORAGE_NONE );
 REGISTER_VAR_EX( "min_dynamic_fps", NGlobal::VarFloatHandler, &s_fMinDynamicFPS, 15, STORAGE_NONE );
-REGISTER_VAR_EX( "min_dynamic_fps_measure_periods", NGlobal::VarFloatHandler, &s_fMinDynamicFPSMeasurePeriods, 3, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"min_dynamic_fps_measure_periods", NGlobal::VarFloatHandler, &s_fMinDynamicFPSMeasurePeriods, 3, STORAGE_NONE );
 
 REGISTER_VAR_EX( "scene_brightness", NGlobal::VarFloatHandler, &NGamma::s_fBrightness, 0.5f, STORAGE_USER );
 REGISTER_VAR_EX( "scene_contrast", NGlobal::VarFloatHandler, &NGamma::s_fContrast, 0.5f, STORAGE_USER );

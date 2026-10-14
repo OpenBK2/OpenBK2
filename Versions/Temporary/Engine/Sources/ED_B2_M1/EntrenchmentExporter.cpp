@@ -9,12 +9,11 @@
 
 REGISTER_EXPORTER_IN_DLL( EntrenchmentRPGStats, CEntrenchmentExporter )
 
-
-EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
-																									 const std::string &rszObjectTypeName,
-																									 const std::string &rszObjectName,
- 																									 bool bForce,
-																									 EXPORT_TYPE exportType )
+EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator *pManipulator,
+                                                   const std::string &rszObjectTypeName,
+                                                   const std::string &rszObjectName,
+                                                   bool bForce,
+                                                   EXPORT_TYPE exportType )
 {
 	EXPORT_RESULT eResult = ER_SUCCESS;
 	if ( ( exportType == ET_AFTER_REF ) || ( exportType == ET_NO_REF ) )
@@ -24,7 +23,8 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 		{
 			return ER_FAIL;
 		}
-		if ( CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, CDBID( rszObjectName ) ) )
+		if ( CPtr<IManipulator> pManipulator =
+		         Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, CDBID( rszObjectName ) ) )
 		{
 			int nSegments = 0;
 			CManipulatorManager::GetValue( &nSegments, pManipulator, "segments" );
@@ -32,12 +32,15 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 			{
 				const std::string szSegmentName = fmt::format( "segments.[{}].", nSegmentIndex );
 				std::string szObjName;
-				if ( CManipulatorManager::GetValue( &szObjName, pManipulator, szSegmentName + "VisObj" ) && ( !szObjName.empty() ) )
+				if ( CManipulatorManager::GetValue( &szObjName, pManipulator, szSegmentName + "VisObj" ) &&
+				     ( !szObjName.empty() ) )
 				{
 					CPtr<IManipulator> pVisObjMan = pResourceManager->CreateObjectManipulator( "VisObj", szObjName );
 					CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 );
-					CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, 0, 0 );
-					CPtr<IManipulator> pAIGeomMan = CManipulatorManager::CreateManipulatorFromReference( "AIGeometry", pGeomMan, 0, 0, 0 );
+					CPtr<IManipulator> pGeomMan =
+							CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, 0, 0 );
+					CPtr<IManipulator> pAIGeomMan =
+							CManipulatorManager::CreateManipulatorFromReference( "AIGeometry", pGeomMan, 0, 0, 0 );
 					if ( pAIGeomMan != 0 )
 					{
 						CVec3 vAABBCenter;
@@ -49,7 +52,8 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 						Vis2AI( &vAABBHalfSize );
 						//
 						CManipulatorManager::SetVec3( vAABBHalfSize, pManipulator, szSegmentName + "AABBHalfSize" );
-						CManipulatorManager::SetVec2( CVec2( vAABBCenter.x, vAABBCenter.y ), pManipulator, szSegmentName + "AABBCenter" );
+						CManipulatorManager::SetVec2(
+								CVec2( vAABBCenter.x, vAABBCenter.y ), pManipulator, szSegmentName + "AABBCenter" );
 					}
 
 					// Export fireplaces

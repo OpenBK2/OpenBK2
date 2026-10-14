@@ -17,7 +17,6 @@
 const std::string CLakeState::VSO_NAME = "Lakes";
 const std::string CLakeState::VSO_TYPE_NAME = "LakeDesc";
 
-
 /**
 bool CLakeState::CanInsertVSO()
 {
@@ -42,18 +41,16 @@ bool CLakeState::CanInsertVSO()
 }
 /**/
 
-
-NMapInfoEditor::CVSOInstanceList* CLakeState::GetVSOList()
+NMapInfoEditor::CVSOInstanceList *CLakeState::GetVSOList()
 {
 	//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 	return &( GetMapInfoEditor()->VSOCollector.lakeList );
 }
 
-
 bool CLakeState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType )
 
 {
-	switch( eSelectionType )
+	switch ( eSelectionType )
 	{
 		case CVSOManager::SVSOSelection::ST_CONTROL:
 			return true;
@@ -67,7 +64,6 @@ bool CLakeState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSele
 			return false;
 	}
 }
-
 
 void CLakeState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 {
@@ -99,7 +95,6 @@ void CLakeState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 	DebugTrace( "CLakeState::PickVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-
 void CLakeState::InsertVSOInTerrain( const NDb::SVSOInstance &rVSO )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -112,7 +107,6 @@ void CLakeState::InsertVSOInTerrain( const NDb::SVSOInstance &rVSO )
 	}
 }
 
-
 void CLakeState::RemoveVSOFromTerrain( int nVSOID )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -124,7 +118,6 @@ void CLakeState::RemoveVSOFromTerrain( int nVSOID )
 		}
 	}
 }
-
 
 void CLakeState::UpdateVSOInTerrain( int nVSOID )
 {

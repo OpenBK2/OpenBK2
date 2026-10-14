@@ -8,8 +8,7 @@
 
 extern NTimer::STime curTime;
 
-CSupportAAGun::CSupportAAGun( CAIUnit *_pUnit )
-: timeNextTargetSearch( curTime ), predictedFire( _pUnit, 0 )
+CSupportAAGun::CSupportAAGun( CAIUnit *_pUnit ) : timeNextTargetSearch( curTime ), predictedFire( _pUnit, 0 )
 {
 	pShootEstimator = new CShootEstimatorSupportAAGun( _pUnit );
 }
@@ -17,7 +16,7 @@ CSupportAAGun::CSupportAAGun( CAIUnit *_pUnit )
 void CSupportAAGun::AddGunNumber( const int nGun )
 {
 	predictedFire.AddGunNumber( nGun );
-	dwAllowed |= (1<<nGun);
+	dwAllowed |= ( 1 << nGun );
 }
 
 void CSupportAAGun::Segment()
@@ -35,12 +34,11 @@ void CSupportAAGun::Segment()
 
 		for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
 		{
-			if ( theDipl.GetDiplStatus( nPlayer, (*iter)->GetPlayer() ) == EDI_ENEMY )
+			if ( theDipl.GetDiplStatus( nPlayer, ( *iter )->GetPlayer() ) == EDI_ENEMY )
 				pShootEstimator->AddUnit( *iter );
 		}
-		predictedFire.SetTarget( static_cast<CAviation*>( pShootEstimator->GetBestUnit() ) );
+		predictedFire.SetTarget( static_cast<CAviation *>( pShootEstimator->GetBestUnit() ) );
 	}
 }
-
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11143C40, CSupportAAGun )

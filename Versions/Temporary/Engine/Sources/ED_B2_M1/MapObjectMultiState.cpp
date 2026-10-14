@@ -25,14 +25,14 @@ void CMapObjectMultiState::UpdateEditParameters( unsigned nFlags )
 			pEditParameters->playerList.clear();
 			for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 			{
-				pEditParameters->playerList.push_back( std::to_string(  nPlayerIndex ) );
+				pEditParameters->playerList.push_back( std::to_string( nPlayerIndex ) );
 			}
 		}
 		if ( pEditParameters->nFlags & MIMOSEP_DIRECTION )
 		{
 			if ( !pMapInfoEditor->objectInfoCollector.IsSelectionEmpty() )
 			{
-				pEditParameters->fDirection = pMapInfoEditor->objectInfoCollector.GetSelectionDirection()	* 180.0f / FP_PI;
+				pEditParameters->fDirection = pMapInfoEditor->objectInfoCollector.GetSelectionDirection() * 180.0f / FP_PI;
 				while ( pEditParameters->fDirection > 360.0f )
 				{
 					pEditParameters->fDirection -= 360.0f;
@@ -45,7 +45,6 @@ void CMapObjectMultiState::UpdateEditParameters( unsigned nFlags )
 		}
 	}
 }
-
 
 void CMapObjectMultiState::SwitchState( const std::string &rszObjectTypeName )
 {
@@ -98,7 +97,6 @@ void CMapObjectMultiState::SwitchState( const std::string &rszObjectTypeName )
 	}
 }
 
-
 void CMapObjectMultiState::Enter()
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -109,7 +107,6 @@ void CMapObjectMultiState::Enter()
 	//
 	CMultiInputState::Enter();
 }
-
 
 void CMapObjectMultiState::Leave()
 {
@@ -122,10 +119,9 @@ void CMapObjectMultiState::Leave()
 	}
 }
 
-
 bool CMapObjectMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_GET_EDIT_PARAMETERS:
 		{
@@ -156,7 +152,7 @@ bool CMapObjectMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 		}
 		case ID_MIMO_SWITCH_MULTI_STATE:
 		{
-			std::string *pszObjectTypeName = reinterpret_cast<std::string*>( dwData );
+			std::string *pszObjectTypeName = reinterpret_cast<std::string *>( dwData );
 			if ( pszObjectTypeName != 0 )
 			{
 				SwitchState( *pszObjectTypeName );
@@ -169,13 +165,12 @@ bool CMapObjectMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 	return false;
 }
 
-
 bool CMapObjectMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapObjectMultiState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapObjectMultiState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_GET_EDIT_PARAMETERS:
 		case ID_SET_EDIT_PARAMETERS:
@@ -193,12 +188,10 @@ bool CMapObjectMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, b
 	return false;
 }
 
-
-CMapObjectMultiState::SEditParameters* CMapObjectMultiState::GetEditParameters()
+CMapObjectMultiState::SEditParameters *CMapObjectMultiState::GetEditParameters()
 {
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epMapObjectMultiState ) : 0 );
 }
-
 
 int CMapObjectMultiState::SEditParameters::operator&( IXmlSaver &xs )
 {

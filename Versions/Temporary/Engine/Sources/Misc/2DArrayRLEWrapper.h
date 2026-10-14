@@ -4,13 +4,16 @@
 
 #include <fmt/format.h>
 
-template<class T>
+template <class T>
 class CArray2DRLEWrapper
 {
 public:
 	int operator&( IBinSaver &saver );
 
-	enum { NZEROS = 4 };
+	enum
+	{
+		NZEROS = 4
+	};
 
 	CArray2D<T> &a;
 	T packingData;
@@ -19,19 +22,21 @@ public:
 	CArray2DRLEWrapper();
 	void SaveCode( T *pRes, int *pNResCnt, const int nCode );
 	const int ReadCode( T *pRes, int *pNResCnt );
+
 public:
-	CArray2DRLEWrapper( CArray2D<T> &_a, const T _packingData ) : a( _a ), packingData( _packingData ) { }
+	CArray2DRLEWrapper( CArray2D<T> &_a, const T _packingData ) : a( _a ), packingData( _packingData ) {}
 };
 
-template<class T>
+template <class T>
 class CBitArray2DRLEWrapper
 {
 	T &a;
 	uint8_t packingData;
 
 	CBitArray2DRLEWrapper();
+
 public:
-	CBitArray2DRLEWrapper( T &_a, const uint8_t _packingData ) : a( _a ), packingData( _packingData ) { }
+	CBitArray2DRLEWrapper( T &_a, const uint8_t _packingData ) : a( _a ), packingData( _packingData ) {}
 
 	int operator&( struct IBinSaver &saver )
 	{
@@ -45,53 +50,53 @@ public:
 	}
 };
 
-template<class T>
+template <class T>
 inline void CArray2DRLEWrapper<T>::SaveCode( T *pRes, int *pNResCnt, const int nCode )
 {
-	switch ( sizeof(T) )
+	switch ( sizeof( T ) )
 	{
 		case 1:
-			pRes[(*pNResCnt)++] = nCode >> 24;
-			pRes[(*pNResCnt)++] = ( nCode & 0x00ff0000 ) >> 16;
-			pRes[(*pNResCnt)++] = ( nCode & 0x0000ff00 ) >> 8;
-			pRes[(*pNResCnt)++] = nCode & 0x000000ff;
+			pRes[( *pNResCnt )++] = nCode >> 24;
+			pRes[( *pNResCnt )++] = ( nCode & 0x00ff0000 ) >> 16;
+			pRes[( *pNResCnt )++] = ( nCode & 0x0000ff00 ) >> 8;
+			pRes[( *pNResCnt )++] = nCode & 0x000000ff;
 
 			break;
 		case 2:
-			pRes[(*pNResCnt)++] = nCode >> 16;
-			pRes[(*pNResCnt)++] = nCode & 0x0000ffff;
+			pRes[( *pNResCnt )++] = nCode >> 16;
+			pRes[( *pNResCnt )++] = nCode & 0x0000ffff;
 
 			break;
 		default:
-			pRes[(*pNResCnt)++] = nCode;
+			pRes[( *pNResCnt )++] = nCode;
 	}
 }
 
-template<class T>
+template <class T>
 const int CArray2DRLEWrapper<T>::ReadCode( T *pRes, int *pNResCnt )
 {
 	int nCode = 0;
-	switch ( sizeof(T) )
+	switch ( sizeof( T ) )
 	{
 		case 1:
-			nCode = ( (int)pRes[ *pNResCnt   ] << 24 ) | ( (int)pRes[(*pNResCnt)+1] << 16 )	|
-							( (int)pRes[(*pNResCnt)+2] <<  8 ) | ( (int)pRes[(*pNResCnt)+3] );
+			nCode = ( (int)pRes[*pNResCnt] << 24 ) | ( (int)pRes[( *pNResCnt ) + 1] << 16 ) |
+			        ( (int)pRes[( *pNResCnt ) + 2] << 8 ) | ( (int)pRes[( *pNResCnt ) + 3] );
 			*pNResCnt += 4;
 
 			break;
 		case 2:
-			nCode = ( (int)pRes[*pNResCnt] << 16 )	| ( (int)pRes[(*pNResCnt)+1] );
+			nCode = ( (int)pRes[*pNResCnt] << 16 ) | ( (int)pRes[( *pNResCnt ) + 1] );
 			*pNResCnt += 2;
 
 			break;
 		default:
-			nCode = (int)pRes[(*pNResCnt)++];
+			nCode = (int)pRes[( *pNResCnt )++];
 	}
 
 	return nCode;
 }
 
-template<class T>
+template <class T>
 inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 {
 	if ( !saver.IsReading() )
@@ -103,7 +108,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 
 		if ( a.GetSizeX() * a.GetSizeY() != 0 )
 		{
-			T *pData = &(a[0][0]);
+			T *pData = &( a[0][0] );
 			const int nRLESize = a.GetSizeX() * a.GetSizeY() * 4;
 			T *pRLE = new T[nRLESize];
 			int cnt = 0;
@@ -151,7 +156,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 
 				const int nLength = i - cnt;
 				NI_ASSERT( nLength < 0x7fffffff, "Arra is too big, can't save" );
-				if ( !(nLength < 0x7fffffff) )
+				if ( !( nLength < 0x7fffffff ) )
 					return 0;
 
 				if ( nType == 0 )
@@ -159,7 +164,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 				else
 				{
 					SaveCode( pRLE, &nRLECnt, 0x80000000 | nLength );
-					memcpy( pRLE + nRLECnt, pData + cnt, nLength * sizeof(T) );
+					memcpy( pRLE + nRLECnt, pData + cnt, nLength * sizeof( T ) );
 					nRLECnt += nLength;
 				}
 
@@ -167,9 +172,9 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 			}
 
 			saver.Add( 3, &nRLECnt );
-			saver.AddRawData( 4, pRLE, sizeof(T) * nRLECnt );
+			saver.AddRawData( 4, pRLE, sizeof( T ) * nRLECnt );
 
-			delete []pRLE;
+			delete[] pRLE;
 		}
 	}
 	else
@@ -191,9 +196,9 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 			int nRLELength;
 			saver.Add( 3, &nRLELength );
 			T *pRLE = new T[nRLELength];
-			saver.AddRawData( 4, pRLE, sizeof(T) * nRLELength );
+			saver.AddRawData( 4, pRLE, sizeof( T ) * nRLELength );
 
-			T *pData = &(a[0][0]);
+			T *pData = &( a[0][0] );
 
 			int cnt = 0;
 			int i = 0;
@@ -204,7 +209,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 				if ( nCode & 0x80000000 )
 				{
 					const int nLength = nCode & ~0x80000000;
-					memcpy( pData + cnt, pRLE + i, nLength * sizeof(T) );
+					memcpy( pData + cnt, pRLE + i, nLength * sizeof( T ) );
 
 					cnt += nLength;
 					i += nLength;
@@ -214,7 +219,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 					cnt += nCode;
 			}
 
-			delete []pRLE;
+			delete[] pRLE;
 
 			NI_ASSERT( cnt == nSizeX * nSizeY, fmt::format( "Cnt({}) != nSizeY * nSizeY({})", cnt, nSizeX * nSizeY ) );
 		}

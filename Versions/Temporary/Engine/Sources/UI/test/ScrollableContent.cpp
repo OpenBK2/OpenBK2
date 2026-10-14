@@ -33,11 +33,11 @@ CWindow *MakeScrollWindow( float width, float height )
 	border->placement.horAllign = NDb::EPA_MARGIN;
 	border->placement.verAllign = NDb::EPA_MARGIN;
 	CPtr<NDb::SWindowScrollableContainerShared> shared =
-		MakeObject<NDb::SWindowScrollableContainerShared>( NDb::SWindowScrollableContainerShared::typeID );
+			MakeObject<NDb::SWindowScrollableContainerShared>( NDb::SWindowScrollableContainerShared::typeID );
 	SetPlacement( &shared->placement, width, height );
 	shared->pBorder = border;
 	CPtr<NDb::SWindowScrollableContainer> desc =
-		MakeObject<NDb::SWindowScrollableContainer>( NDb::SWindowScrollableContainer::typeID );
+			MakeObject<NDb::SWindowScrollableContainer>( NDb::SWindowScrollableContainer::typeID );
 	desc->nClassTypeID = 0x170AF301; // CWindowScrollableContainer.
 	desc->pShared = shared;
 	desc->bVisible = true;
@@ -54,8 +54,8 @@ TEST( ScrollableContent, ParentRepositionKeepsTheEntireDescriptionScrollable )
 		CObj<CWindow> panel = CUIFactory::MakeWindow( SimpleDescription( 300, 300 ) );
 		CObj<CWindow> scroll = MakeScrollWindow( 255, 100 );
 		panel->AddChild( scroll, true );
-		IScrollableContainer *container = dynamic_cast<IScrollableContainer*>( scroll.GetPtr() );
-		ISliderNotify *slider = dynamic_cast<ISliderNotify*>( scroll.GetPtr() );
+		IScrollableContainer *container = dynamic_cast<IScrollableContainer *>( scroll.GetPtr() );
+		ISliderNotify *slider = dynamic_cast<ISliderNotify *>( scroll.GetPtr() );
 		ASSERT_NE( container, nullptr );
 		ASSERT_NE( slider, nullptr );
 
@@ -83,7 +83,7 @@ TEST( ScrollableContent, RepositionRemeasuresChangedChildHeights )
 {
 	CObj<CWindow> scroll = MakeScrollWindow( 255, 100 );
 	scroll->Reposition( CTRect<float>( 0, 0, 255, 100 ) );
-	IScrollableContainer *container = dynamic_cast<IScrollableContainer*>( scroll.GetPtr() );
+	IScrollableContainer *container = dynamic_cast<IScrollableContainer *>( scroll.GetPtr() );
 	ASSERT_NE( container, nullptr );
 	CObj<CWindow> description = CUIFactory::MakeWindow( SimpleDescription( 255, 200 ) );
 	container->PushBack( description, false );

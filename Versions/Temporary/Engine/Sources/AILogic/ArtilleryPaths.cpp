@@ -15,8 +15,11 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4BB, CArtilleryBeingTowedPath );
 //*												CArtilleryCrewPath												*
 //*******************************************************************
 
-CArtilleryCrewPath::CArtilleryCrewPath( CBasePathUnit *_pUnit, const CVec2 &vStartPoint, const CVec2 &_vEndPoint, const float fMaxSpeed )
-: pUnit( _pUnit ), vCurPoint( vStartPoint )
+CArtilleryCrewPath::CArtilleryCrewPath( CBasePathUnit *_pUnit,
+                                        const CVec2 &vStartPoint,
+                                        const CVec2 &_vEndPoint,
+                                        const float fMaxSpeed )
+		: pUnit( _pUnit ), vCurPoint( vStartPoint )
 {
 	SetParams( _vEndPoint, fMaxSpeed );
 }
@@ -81,10 +84,10 @@ void CArtilleryCrewPath::Segment( const NTimer::STime timeDiff )
 		float fPassedLenght = fSpeedLen * timeDiff;
 		CVec2 vDir = vEndPoint - vCurPoint;
 		float fDistToGo = fabs( vDir );
-		if ( fDistToGo >= fPassedLenght )// еще нужно идти
+		if ( fDistToGo >= fPassedLenght ) // еще нужно идти
 		{
 			Normalize( &vDir );
-			vDir *= fPassedLenght ;
+			vDir *= fPassedLenght;
 			vCurPoint += vDir;
 			pUnit->SetDirectionVec( vDir );
 		}

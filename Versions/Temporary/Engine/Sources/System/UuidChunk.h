@@ -30,7 +30,7 @@ inline void SwapUuidStorageOrder( boost::uuids::uuid *pUid )
 // Serialize a uid under the given chunk id, in the on-disk byte order above.
 // The chunk is sixteen raw bytes, exactly as it was when the field was a GUID,
 // so the chunk id keeps its meaning and old streams stay readable.
-template < class TSaver >
+template <class TSaver>
 inline void AddUuidChunk( TSaver &saver, const int idChunk, boost::uuids::uuid *pUid )
 {
 	if ( saver.IsReading() )

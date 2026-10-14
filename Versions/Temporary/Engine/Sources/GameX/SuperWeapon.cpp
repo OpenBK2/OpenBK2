@@ -11,9 +11,7 @@
 
 // CMissionSuperWeapon
 
-CMissionSuperWeapon::CMissionSuperWeapon()
-{
-}
+CMissionSuperWeapon::CMissionSuperWeapon() {}
 
 void CMissionSuperWeapon::Init( IWindow *pScr, CWorldClient *_pWorld, NDb::ESeason eSeason )
 {
@@ -31,7 +29,7 @@ void CMissionSuperWeapon::Init( IWindow *pScr, CWorldClient *_pWorld, NDb::ESeas
 
 	pUnitFullInfo = new CMissionUnitFullInfo();
 	IWindow *pSuperWeaponInfoPanel = GetChildChecked<IWindow>( pScr, "SuperWeaponInfoPanel", true );
-//	IWindow *pFullInfoWnd = GetChildChecked<IWindow>( pSuperWeaponInfoPanel, "UnitFullInfo3", true );
+	//	IWindow *pFullInfoWnd = GetChildChecked<IWindow>( pSuperWeaponInfoPanel, "UnitFullInfo3", true );
 	IWindow *pAppearanceWnd = GetChildChecked<IWindow>( pScr, "AppearancePanel", true );
 	IWindow *pAppearanceForSuperWeaponWnd = GetChildChecked<IWindow>( pAppearanceWnd, "AppearanceForSuperWeapon", true );
 	pUnitFullInfo->InitBySuperWeapon( pSuperWeaponInfoPanel, pAppearanceForSuperWeaponWnd, eSeason );
@@ -43,7 +41,7 @@ void CMissionSuperWeapon::Init( IWindow *pScr, CWorldClient *_pWorld, NDb::ESeas
 	bDisabledByInterface = false;
 
 	//{ CRAP - test
-/*	bExist = true;
+	/*	bExist = true;
 	bEnabled = true;
 	fProgress = 0.3f;
 	bActive = false;*/
@@ -52,7 +50,9 @@ void CMissionSuperWeapon::Init( IWindow *pScr, CWorldClient *_pWorld, NDb::ESeas
 	UpdateVisual();
 }
 
-void CMissionSuperWeapon::OnUpdateSuperWeaponControl( CMapObj *_pMO, const NDb::SHPObjectRPGStats *_pDBUnit, bool _bExist )
+void CMissionSuperWeapon::OnUpdateSuperWeaponControl( CMapObj *_pMO,
+                                                      const NDb::SHPObjectRPGStats *_pDBUnit,
+                                                      bool _bExist )
 {
 	pMO = _pMO;
 	bExist = _bExist;
@@ -71,7 +71,7 @@ void CMissionSuperWeapon::OnUpdateSuperWeaponControl( CMapObj *_pMO, const NDb::
 void CMissionSuperWeapon::OnUpdateSuperWeaponRecycle( float _fProgress )
 {
 	fProgress = _fProgress;
-	bEnabled = (fProgress == 1.0f);
+	bEnabled = ( fProgress == 1.0f );
 
 	bDisabledByInterface = false;
 
@@ -111,8 +111,8 @@ void CMissionSuperWeapon::Deactivate()
 
 void CMissionSuperWeapon::UpdateVisual()
 {
-//	if ( pSuperWeaponBtn )
-//		pSuperWeaponBtn->ShowWindow( bExist );
+	//	if ( pSuperWeaponBtn )
+	//		pSuperWeaponBtn->ShowWindow( bExist );
 
 	if ( !bExist )
 		return;

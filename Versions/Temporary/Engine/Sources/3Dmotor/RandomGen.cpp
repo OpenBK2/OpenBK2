@@ -7,13 +7,9 @@
 
 #include <cstdint>
 
-SRandomSeed::SRandomSeed() : nSeed( GetCurrentTimeMilliseconds() )
-{
-}
+SRandomSeed::SRandomSeed() : nSeed( GetCurrentTimeMilliseconds() ) {}
 
-SRandomSeed::SRandomSeed( int seed ) : nSeed( seed )
-{
-}
+SRandomSeed::SRandomSeed( int seed ) : nSeed( seed ) {}
 
 SRand::SRand() : seed( GetCurrentTimeMilliseconds() )
 {
@@ -22,7 +18,7 @@ SRand::SRand() : seed( GetCurrentTimeMilliseconds() )
 
 int SRand::Get( int nMax )
 {
-	return (((seed.nSeed = seed.nSeed * 214013L + 2531011L) >> 16) & 0x7fff) * nMax / 0x8000;
+	return ( ( ( seed.nSeed = seed.nSeed * 214013L + 2531011L ) >> 16 ) & 0x7fff ) * nMax / 0x8000;
 }
 
 // CRoulette
@@ -59,27 +55,43 @@ int CRoulette::operator&( CStructureSaver &f )
 
 CRandomGenerator randomGen;
 
-#define ind(mm,x)  (*(unsigned int *)(( uint8_t *)(mm) + ((x) & ((RANDSIZ-1)<<2))))
+#define ind( mm, x ) ( *(unsigned int *)( (uint8_t *)( mm ) + ( ( x ) & ( ( RANDSIZ - 1 ) << 2 ) ) ) )
 
-#define rngstep(mix,a,b,mm,m,m2,r,x) \
-{ \
-  x = *m;  \
-  a = (a^(mix)) + *(m2++); \
-  *(m++) = y = ind(mm,x) + a + b; \
-  *(r++) = b = ind(mm,y>>RANDSIZL) + x; \
-}
+#define rngstep( mix, a, b, mm, m, m2, r, x )    \
+	{                                              \
+		x = *m;                                      \
+		a = ( a ^ ( mix ) ) + *( m2++ );             \
+		*( m++ ) = y = ind( mm, x ) + a + b;         \
+		*( r++ ) = b = ind( mm, y >> RANDSIZL ) + x; \
+	}
 
-#define mix(a,b,c,d,e,f,g,h) \
-{ \
-   a^=b<<11; d+=a; b+=c; \
-   b^=c>>2;  e+=b; c+=d; \
-   c^=d<<8;  f+=c; d+=e; \
-   d^=e>>16; g+=d; e+=f; \
-   e^=f<<10; h+=e; f+=g; \
-   f^=g>>4;  a+=f; g+=h; \
-   g^=h<<8;  b+=g; h+=a; \
-   h^=a>>9;  c+=h; a+=b; \
-}
+#define mix( a, b, c, d, e, f, g, h ) \
+	{                                   \
+		a ^= b << 11;                     \
+		d += a;                           \
+		b += c;                           \
+		b ^= c >> 2;                      \
+		e += b;                           \
+		c += d;                           \
+		c ^= d << 8;                      \
+		f += c;                           \
+		d += e;                           \
+		d ^= e >> 16;                     \
+		g += d;                           \
+		e += f;                           \
+		e ^= f << 10;                     \
+		h += e;                           \
+		f += g;                           \
+		f ^= g >> 4;                      \
+		a += f;                           \
+		g += h;                           \
+		g ^= h << 8;                      \
+		b += g;                           \
+		h += a;                           \
+		h ^= a >> 9;                      \
+		c += h;                           \
+		a += b;                           \
+	}
 
 void CRandomGenerator::Isaac()
 {
@@ -88,19 +100,19 @@ void CRandomGenerator::Isaac()
 	r = randrsl;
 	a = randa;
 	b = randb + ( ++randc );
-	for ( m = mm, mend = m2 = m+(RANDSIZ/2); m<mend; )
+	for ( m = mm, mend = m2 = m + ( RANDSIZ / 2 ); m < mend; )
 	{
-		rngstep( a<<13, a, b, mm, m, m2, r, x );
-		rngstep( a>>6 , a, b, mm, m, m2, r, x );
-		rngstep( a<<2 , a, b, mm, m, m2, r, x );
-		rngstep( a>>16, a, b, mm, m, m2, r, x );
+		rngstep( a << 13, a, b, mm, m, m2, r, x );
+		rngstep( a >> 6, a, b, mm, m, m2, r, x );
+		rngstep( a << 2, a, b, mm, m, m2, r, x );
+		rngstep( a >> 16, a, b, mm, m, m2, r, x );
 	}
-	for ( m2 = mm; m2<mend; )
+	for ( m2 = mm; m2 < mend; )
 	{
-		rngstep( a<<13, a, b, mm, m, m2, r, x );
-		rngstep( a>>6 , a, b, mm, m, m2, r, x );
-		rngstep( a<<2 , a, b, mm, m, m2, r, x );
-		rngstep( a>>16, a, b, mm, m, m2, r, x );
+		rngstep( a << 13, a, b, mm, m, m2, r, x );
+		rngstep( a >> 6, a, b, mm, m, m2, r, x );
+		rngstep( a << 2, a, b, mm, m, m2, r, x );
+		rngstep( a >> 16, a, b, mm, m, m2, r, x );
 	}
 	randb = b;
 	randa = a;
@@ -116,31 +128,55 @@ void CRandomGenerator::Init()
 	randa = randb = randc = 0;
 	m = randmem;
 	r = randrsl;
-	a = b = c = d = e = f = g = h = 0x9e3779b9;  /* the golden ratio */
+	a = b = c = d = e = f = g = h = 0x9e3779b9; /* the golden ratio */
 
-	for ( i=0; i<4; ++i )          /* scramble it */
+	for ( i = 0; i < 4; ++i ) /* scramble it */
 		mix( a, b, c, d, e, f, g, h );
 
 	/* initialize using the contents of r[] as the seed */
-	for ( i=0; i<RANDSIZ; i+=8 )
+	for ( i = 0; i < RANDSIZ; i += 8 )
 	{
-		a+=r[i  ]; b+=r[i+1]; c+=r[i+2]; d+=r[i+3];
-		e+=r[i+4]; f+=r[i+5]; g+=r[i+6]; h+=r[i+7];
+		a += r[i];
+		b += r[i + 1];
+		c += r[i + 2];
+		d += r[i + 3];
+		e += r[i + 4];
+		f += r[i + 5];
+		g += r[i + 6];
+		h += r[i + 7];
 		mix( a, b, c, d, e, f, g, h );
-		m[i  ]=a; m[i+1]=b; m[i+2]=c; m[i+3]=d;
-		m[i+4]=e; m[i+5]=f; m[i+6]=g; m[i+7]=h;
+		m[i] = a;
+		m[i + 1] = b;
+		m[i + 2] = c;
+		m[i + 3] = d;
+		m[i + 4] = e;
+		m[i + 5] = f;
+		m[i + 6] = g;
+		m[i + 7] = h;
 	}
 	/* do a second pass to make all of the seed affect all of m */
-	for (i=0; i<RANDSIZ; i+=8)
+	for ( i = 0; i < RANDSIZ; i += 8 )
 	{
-		a+=m[i  ]; b+=m[i+1]; c+=m[i+2]; d+=m[i+3];
-		e+=m[i+4]; f+=m[i+5]; g+=m[i+6]; h+=m[i+7];
-		mix(a,b,c,d,e,f,g,h);
-		m[i  ]=a; m[i+1]=b; m[i+2]=c; m[i+3]=d;
-		m[i+4]=e; m[i+5]=f; m[i+6]=g; m[i+7]=h;
+		a += m[i];
+		b += m[i + 1];
+		c += m[i + 2];
+		d += m[i + 3];
+		e += m[i + 4];
+		f += m[i + 5];
+		g += m[i + 6];
+		h += m[i + 7];
+		mix( a, b, c, d, e, f, g, h );
+		m[i] = a;
+		m[i + 1] = b;
+		m[i + 2] = c;
+		m[i + 3] = d;
+		m[i + 4] = e;
+		m[i + 5] = f;
+		m[i + 6] = g;
+		m[i + 7] = h;
 	}
-	Isaac();				/* fill in the first set of results */
-	randcnt=RANDSIZ;		/* prepare to use the first set of results */
+	Isaac();           /* fill in the first set of results */
+	randcnt = RANDSIZ; /* prepare to use the first set of results */
 }
 
 // --------------------------- FillRandRsl() ---------------------------------------------------------------

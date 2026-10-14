@@ -6,8 +6,14 @@ class CPerlinNoise
 {
 	CArray2D<float> noise;
 
-	inline float GetFullNoise( const int x, const int y, const int nOctsNum, const float fScale, const float fPers,
-		const float fTexOffsX, const float fTexOffsY );
+	inline float GetFullNoise( const int x,
+	                           const int y,
+	                           const int nOctsNum,
+	                           const float fScale,
+	                           const float fPers,
+	                           const float fTexOffsX,
+	                           const float fTexOffsY );
+
 public:
 	// function creates 2D perlin noise
 	int Create( const int nSizeX, const int nSizeY, const long nOctsNum, const float fPers, const float fScale );

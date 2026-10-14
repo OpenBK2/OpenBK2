@@ -1,6 +1,6 @@
 #pragma once
 
-#define EDITOR_BUILDING_ID (-4)
+#define EDITOR_BUILDING_ID ( -4 )
 
 #include "B2_M1_World/MOBuilding.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
@@ -17,9 +17,7 @@ class CBuildingRPGStatsEditorSettings
 public:
 	bool bShowShortcutBar;
 
-	CBuildingRPGStatsEditorSettings()
-		: bShowShortcutBar( true )
-	{}
+	CBuildingRPGStatsEditorSettings() : bShowShortcutBar( true ) {}
 
 	// serializing...
 	int operator&( IXmlSaver &xs );
@@ -68,9 +66,12 @@ public:
 	const std::string &GetCurrSeason() const;
 
 	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView* GetView() { return this; }
-	IInputState* GetInputState() { return reinterpret_cast<IInputState*>(pBuildingState); }
-	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	IView *GetView() { return this; }
+	IInputState *GetInputState() { return reinterpret_cast<IInputState *>( pBuildingState ); }
+	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	{
+		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
+	}
 	void CreateControls();
 	void ResetGUI( bool bActive ) override;
 	void PostCreateControls() {}
@@ -80,8 +81,8 @@ public:
 	void Destroy();
 
 	//CDefaultView
-	void Undo( IController* pController );
-	void Redo( IController* pController );
+	void Undo( IController *pController );
+	void Redo( IController *pController );
 
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
@@ -99,7 +100,7 @@ public:
 	void SetBuildingOrigin( const CVec2 &rvOrigin );
 	CVec2 GetBuildingOrigin();
 	CVec3 GetBuildingPos();
-	IManipulator* CreateBuildingManipulator();
+	IManipulator *CreateBuildingManipulator();
 	CVec3 GetLastCameraAnchor() { return vLastCameraAnchor; }
 	//
 	void ChangeSeason( const NDb::ESeason eSeason );

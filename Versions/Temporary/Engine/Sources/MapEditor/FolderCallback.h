@@ -2,7 +2,6 @@
 
 #include "MapEditorLib/Interface_FolderCallback.h"
 
-
 class CFolderCallback : public IFolderCallback
 {
 	OBJECT_NOCOPY_METHODS( CFolderCallback );
@@ -28,8 +27,10 @@ protected:
 	bool IsUniqueName( const std::string &rszTypeName, const std::string &rszName );
 	bool UniqueName( const std::string &szTypeName, std::string *pszName );
 	bool InsertObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
-	bool CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
-	bool RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
+	bool
+	CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
+	bool
+	RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource );
 	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, bool bRecursive );
 	bool SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor );
 };

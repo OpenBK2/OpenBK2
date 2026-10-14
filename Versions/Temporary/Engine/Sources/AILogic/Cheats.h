@@ -4,7 +4,12 @@
 
 struct SCheats
 {
-	public: int operator&( IBinSaver &saver ); private:;
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
+
 private:
 	// просчитывать ли туман bWarFog
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -24,6 +29,7 @@ private:
 	std::vector<uint8_t> firstShoot;
 
 	bool bPasswordOK = {};
+
 public:
 	SCheats();
 

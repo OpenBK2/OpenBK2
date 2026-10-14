@@ -14,14 +14,19 @@ struct SLightInfo
 	CVec4 vLightPos, vRadius;
 	float fWarFogBlend;
 
-	SLightInfo(): bNeedSet(false), vLightColor(VNULL3), vGlossColor(VNULL3),
-		vLightPos(VNULL4), vRadius(1,1,1,1), vAmbientColor(0,0,0), fWarFogBlend(0),
-		vShadeColor(VNULL3), vIncidentShadeColor(VNULL3)
-	{}
+	SLightInfo()
+			: bNeedSet( false ), vLightColor( VNULL3 ), vGlossColor( VNULL3 ), vLightPos( VNULL4 ), vRadius( 1, 1, 1, 1 ),
+				vAmbientColor( 0, 0, 0 ), fWarFogBlend( 0 ), vShadeColor( VNULL3 ), vIncidentShadeColor( VNULL3 )
+	{
+	}
 };
 
-void Execute( IRender *pRender, NGfx::CRenderContext *pRC, const CTransformStack &ts, const CRenderCmdList &cl,
-	const CSceneFragments &scene, const SLightInfo &lightInfo );
+void Execute( IRender *pRender,
+              NGfx::CRenderContext *pRC,
+              const CTransformStack &ts,
+              const CRenderCmdList &cl,
+              const CSceneFragments &scene,
+              const SLightInfo &lightInfo );
 
 void StartRenderExecute( NGfx::CRenderContext *pRC, const SLightInfo &light );
 

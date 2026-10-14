@@ -16,8 +16,7 @@
 
 // CInterfaceMPWaitPlayers
 
-CInterfaceMPWaitPlayers::CInterfaceMPWaitPlayers() :
-	CInterfaceMPScreenBase( "MPWaitPlayers", "mp_wait_players" )
+CInterfaceMPWaitPlayers::CInterfaceMPWaitPlayers() : CInterfaceMPScreenBase( "MPWaitPlayers", "mp_wait_players" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_WAITING_INFO, SMPUILagInfoMessage, &CInterfaceMPWaitPlayers::OnLagInfoMessage );
 }
@@ -86,7 +85,8 @@ bool CInterfaceMPWaitPlayers::OnLagInfoMessage( SMPUILagInfoMessage *pMsg )
 
 	if ( bOwnLag )
 	{
-		std::wstring wszTime = NStr::ToUnicode( fmt::format( "{}:{:02d}", pMsg->nOwnTimeLeft / 60, pMsg->nOwnTimeLeft % 60 ) );
+		std::wstring wszTime =
+				NStr::ToUnicode( fmt::format( "{}:{:02d}", pMsg->nOwnTimeLeft / 60, pMsg->nOwnTimeLeft % 60 ) );
 		if ( pOwnTime )
 			pOwnTime->SetText( pOwnTime->GetDBText() + wszTime );
 	}
@@ -95,7 +95,7 @@ bool CInterfaceMPWaitPlayers::OnLagInfoMessage( SMPUILagInfoMessage *pMsg )
 		pPlayerList->RemoveItems();
 		for ( SMPUILagInfoMessage::CLaggerList::iterator it = pMsg->lags.begin(); it != pMsg->lags.end(); ++it )
 		{
-			SMPUILagInfoMessage::SLagItem &lagItem = (*it);
+			SMPUILagInfoMessage::SLagItem &lagItem = ( *it );
 			AddPlayerLine( lagItem.szName, lagItem.nSecondsLeft );
 		}
 
@@ -130,18 +130,14 @@ void CInterfaceMPWaitPlayers::AddPlayerLine( const std::string &szName, const in
 
 // CICMPWaitPlayers
 
-void CICMPWaitPlayers::PreCreate()
-{
-}
+void CICMPWaitPlayers::PreCreate() {}
 
 void CICMPWaitPlayers::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMPWaitPlayers::Configure( const char *pszConfig )
-{
-}
+void CICMPWaitPlayers::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1713CBC1, CInterfaceMPWaitPlayers );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_WAIT_PLAYERS, CICMPWaitPlayers );

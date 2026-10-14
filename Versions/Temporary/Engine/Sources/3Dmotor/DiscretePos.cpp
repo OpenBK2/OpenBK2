@@ -18,7 +18,7 @@ static struct SInitDiscretePos
 
 void SDiscretePos::MakeMatrix( SFBTransform *pRes ) const
 {
-	switch( nRotation )
+	switch ( nRotation )
 	{
 		case TURN_0:
 			*pRes = MakeTransform( ptMove );
@@ -36,13 +36,13 @@ void SDiscretePos::MakeMatrix( SFBTransform *pRes ) const
 			*pRes = MakeTransform( ptMove, 0 );
 			break;
 	}
-	if ( pTransform )//->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
+	if ( pTransform ) //->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
 		*pRes = pTransform->pos * *pRes;
 }
 
-CFBTransform* SDiscretePos::GetTransform() const
+CFBTransform *SDiscretePos::GetTransform() const
 {
-	if ( pTransform )//->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
+	if ( pTransform ) //->IsValid() ) // CRAP - not enough ref counts for building DiscretePos
 		return pTransform;
 	return pIdentity;
 }

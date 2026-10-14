@@ -10,18 +10,29 @@
 
 BASIC_REGISTER_CLASS( AILOGIC, IStaticPathFinder );
 
-IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const float fRangeMin, const float fRangeMax, const float fRandomCant, bool bIgnoreObstacles )
+IStaticPath *CreateStaticPathForAttack( CBasePathUnit *pUnit,
+                                        CAIUnit *pTarget,
+                                        const float fRangeMin,
+                                        const float fRangeMax,
+                                        const float fRandomCant,
+                                        bool bIgnoreObstacles )
 {
 	// видно в любой стороны
-	if ( !( pTarget->GetStats()->IsInfantry() &&
-				  checked_cast<CSoldier*>(pTarget)->IsInBuilding() && ( checked_cast<CSoldier*>(pTarget)->GetMinAngle() !=0 || checked_cast<CSoldier*>(pTarget)->GetMaxAngle() != 65535 ) ) )
+	if ( !( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pTarget )->IsInBuilding() &&
+	        ( checked_cast<CSoldier *>( pTarget )->GetMinAngle() != 0 ||
+	          checked_cast<CSoldier *>( pTarget )->GetMaxAngle() != 65535 ) ) )
 	{
-		CPtr<IPointChecking> pPointChecking = new CAttackPointChecking( fRangeMin, (std::max)( 0.0f, fRangeMax - 4.0f * SConsts::TILE_SIZE ), pTarget->GetCenterTile(), bIgnoreObstacles );
+		CPtr<IPointChecking> pPointChecking =
+				new CAttackPointChecking( fRangeMin,
+		                              (std::max)( 0.0f, fRangeMax - 4.0f * SConsts::TILE_SIZE ),
+		                              pTarget->GetCenterTile(),
+		                              bIgnoreObstacles );
 
 		CVec2 vRandomCant( VNULL2 );
 		if ( fRandomCant != 0.0f )
 		{
-			const float fRandomDist = NRandom::Random( 0.0f, fRandomCant ); RecordRandomCall();
+			const float fRandomDist = NRandom::Random( 0.0f, fRandomCant );
+			RecordRandomCall();
 			CVec2 vDirFromEnemy = pUnit->GetCenterPlain() - pTarget->GetCenterPlain();
 			Normalize( &vDirFromEnemy );
 			const CVec2 vPerpDir( -vDirFromEnemy.y, vDirFromEnemy.x );
@@ -65,34 +76,48 @@ IStaticPath* CreateStaticPathForAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, 
 	}
 	else
 	{
-		CSoldier *pSoldier = checked_cast<CSoldier*>( pTarget );
+		CSoldier *pSoldier = checked_cast<CSoldier *>( pTarget );
 		CVec2 vAttackDir( GetVectorByDirection( ( pSoldier->GetMaxAngle() + pSoldier->GetMinAngle() ) / 2 ) );
 		const CVec2 vDirFromEnemy( pSoldier->GetCenterPlain() - pUnit->GetCenterPlain() );
 		const float fProj = vAttackDir * vDirFromEnemy;
 		const float fMinDist = (std::min)( fProj, fRangeMax * 3.0f / 4.0f );
 
-		return
-			CreateStaticPathForSideAttack(
-				pUnit, pTarget, vAttackDir,
-				fRangeMin, fRangeMax, fMinDist, ( pSoldier->GetMaxAngle() - pSoldier->GetMinAngle() ) / 2, bIgnoreObstacles );
+		return CreateStaticPathForSideAttack( pUnit,
+		                                      pTarget,
+		                                      vAttackDir,
+		                                      fRangeMin,
+		                                      fRangeMax,
+		                                      fMinDist,
+		                                      ( pSoldier->GetMaxAngle() - pSoldier->GetMinAngle() ) / 2,
+		                                      bIgnoreObstacles );
 	}
 }
 
-IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarget, const CVec2 &attackDir, const float fRangeMin, const float fRangeMax, const float fDistToPoint, const uint16_t wHalfAngle, const bool bIgnoreObstacles )
+IStaticPath *CreateStaticPathForSideAttack( CBasePathUnit *pUnit,
+                                            CAIUnit *pTarget,
+                                            const CVec2 &attackDir,
+                                            const float fRangeMin,
+                                            const float fRangeMax,
+                                            const float fDistToPoint,
+                                            const uint16_t wHalfAngle,
+                                            const bool bIgnoreObstacles )
 {
 	const uint16_t wAttackDir = GetDirectionByVector( attackDir );
 	CVec2 vNormAttackDir( attackDir );
 	Normalize( &vNormAttackDir );
 
-	CPtr<IPointChecking> pPointChecking = new CAttackSideChecking( fRangeMin, fRangeMax, pTarget->GetCenterTile(), wAttackDir, wHalfAngle, bIgnoreObstacles );
-	IStaticPath *pPath = pUnit->CreateBigStaticPath( pUnit->GetCenterPlain(), pTarget->GetCenterPlain() + vNormAttackDir * fDistToPoint, pPointChecking );
+	CPtr<IPointChecking> pPointChecking = new CAttackSideChecking(
+			fRangeMin, fRangeMax, pTarget->GetCenterTile(), wAttackDir, wHalfAngle, bIgnoreObstacles );
+	IStaticPath *pPath = pUnit->CreateBigStaticPath(
+			pUnit->GetCenterPlain(), pTarget->GetCenterPlain() + vNormAttackDir * fDistToPoint, pPointChecking );
 
 	if ( pPath != 0 )
 	{
 		CVec2 finishDir = pPath->GetFinishPoint() - pTarget->GetCenterPlain();
 		const uint16_t wFinishDir = GetDirectionByVector( finishDir );
 		// нельзя дойти до точки, откуда можно будет атаковать
-		if ( DirsDifference( wFinishDir, wAttackDir ) > wHalfAngle || fabs2( pPath->GetFinishPoint() - pTarget->GetCenterPlain() ) > sqr( fRangeMax ) )
+		if ( DirsDifference( wFinishDir, wAttackDir ) > wHalfAngle ||
+		     fabs2( pPath->GetFinishPoint() - pTarget->GetCenterPlain() ) > sqr( fRangeMax ) )
 		{
 			CPtr<IStaticPath> pGarbage = pPath;
 			return 0;
@@ -108,13 +133,15 @@ IStaticPath* CreateStaticPathForSideAttack( CBasePathUnit *pUnit, CAIUnit *pTarg
 		return pPath;
 }
 
-IStaticPath* CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTargetTile, IPointChecking *pPointChecking )
+IStaticPath *CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTargetTile, IPointChecking *pPointChecking )
 {
 	// чтобы удалилось
 	CPtr<IPointChecking> pGarbage = pPointChecking;
 
-	IStaticPath *pPath = pUnit->CreateBigStaticPath( pUnit->GetCenterPlain(), AICellsTiles::GetPointByTile( vTargetTile ), pPointChecking );
-	if ( pPath != 0 && ( !pUnit->CanGoToPoint( pPath->GetFinishPoint() ) || !pPointChecking->IsGoodTile( pPath->GetFinishTile() ) ) )
+	IStaticPath *pPath = pUnit->CreateBigStaticPath(
+			pUnit->GetCenterPlain(), AICellsTiles::GetPointByTile( vTargetTile ), pPointChecking );
+	if ( pPath != 0 &&
+	     ( !pUnit->CanGoToPoint( pPath->GetFinishPoint() ) || !pPointChecking->IsGoodTile( pPath->GetFinishTile() ) ) )
 	{
 		CPtr<IStaticPath> pGarbage = pPath;
 		return 0;
@@ -123,7 +150,11 @@ IStaticPath* CreatePathWithChecking( CBasePathUnit *pUnit, const SVector &vTarge
 	return pPath;
 }
 
-IStaticPath* CreateStaticPathForStObjAttack( CBasePathUnit *pUnit, CStaticObject *pObj, const float fRangeMin, const float fRangeMax, const bool bIgnoreObstacles )
+IStaticPath *CreateStaticPathForStObjAttack( CBasePathUnit *pUnit,
+                                             CStaticObject *pObj,
+                                             const float fRangeMin,
+                                             const float fRangeMax,
+                                             const bool bIgnoreObstacles )
 {
 	const CVec2 vUnitCenter( pUnit->GetCenterPlain() );
 
@@ -141,49 +172,47 @@ IStaticPath* CreateStaticPathForStObjAttack( CBasePathUnit *pUnit, CStaticObject
 
 bool CanUnitApproachToUnitByPath( const CAIUnit *Moving, const IStaticPath *Path, const CAIUnit *Standing )
 {
-	if( !Path )
+	if ( !Path )
 		return false;
 
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
 	SRect rMovingFinal;
-	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift);
+	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift );
 
 	SRect rStanding = Standing->GetUnitRect();
 	rMovingFinal.Compress( 1.2f );
 	rStanding.Compress( 1.2f );
 
-	return
-		rMovingFinal.IsIntersected( rStanding );
+	return rMovingFinal.IsIntersected( rStanding );
 }
 
 bool CanUnitApproachToPointByPath( const CAIUnit *Moving, const IStaticPath *Path, const CVec2 &point )
 {
-	if( !Path )
+	if ( !Path )
 		return false;
 
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
 	SRect rMovingFinal;
-	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift);
+	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift );
 
 	rMovingFinal.center = Path->GetFinishPoint();
 
 	rMovingFinal.Compress( 1.2f );
 
-	return
-		rMovingFinal.IsPointInside( point );
+	return rMovingFinal.IsPointInside( point );
 }
 
 bool CanUnitApproachToObjectByPath( const CAIUnit *Moving, const IStaticPath *Path, const CStaticObject *standing )
 {
-	if( !Path )
+	if ( !Path )
 		return false;
 
 	SRect rMoving = Moving->GetUnitRect();
 	CVec2 vShift = Path->GetFinishPoint() - Moving->GetCenterPlain();
 	SRect rMovingFinal;
-	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift);
+	rMovingFinal.InitRect( rMoving.v1() + vShift, rMoving.v2() + vShift, rMoving.v3() + vShift, rMoving.v4() + vShift );
 
 	SRect rStanding;
 	standing->GetBoundRect( &rStanding );
@@ -191,8 +220,7 @@ bool CanUnitApproachToObjectByPath( const CAIUnit *Moving, const IStaticPath *Pa
 	rMovingFinal.Compress( 1.2f );
 	rStanding.Compress( 1.2f );
 
-	return
-		rMovingFinal.IsIntersected( rStanding );
+	return rMovingFinal.IsIntersected( rStanding );
 }
 
 bool IsUnitNearObject( const CAIUnit *pUnit, const CStaticObject *pObj )
@@ -221,12 +249,12 @@ bool IsUnitNearUnit( const CAIUnit *pUnit1, const CAIUnit *pUnit2 )
 bool IsUnitNearPoint( const CAIUnit *pUnit, const CVec2 &point, const int add )
 {
 	SRect r1 = pUnit->GetUnitRect();
-	r1.InitRect( r1.center, r1.dir, r1.width + add, r1.lengthAhead + add);
+	r1.InitRect( r1.center, r1.dir, r1.width + add, r1.lengthAhead + add );
 
 	return r1.IsPointInside( point );
 }
 
 bool IsPointNearPoint( const CVec2 &point1, const CVec2 &point2 )
 {
-	return fabs2(point1-point2) < sqr(static_cast<int>(SConsts::TILE_SIZE) );
+	return fabs2( point1 - point2 ) < sqr( static_cast<int>( SConsts::TILE_SIZE ) );
 }

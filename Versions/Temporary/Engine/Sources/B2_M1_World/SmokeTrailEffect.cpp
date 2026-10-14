@@ -3,8 +3,13 @@
 #include "3Dmotor/GAnimation.hpp"
 #include "MapObj.h"
 
-CSmokeTrailEffect::CSmokeTrailEffect( const SHMatrix &_mLocalPos, float _fInterval, const NDb::SComplexEffect *_pEffect,
-									                    const CVec3 &_vPos, const CQuat &_qRot, NTimer::STime currTime, bool bVisible )
+CSmokeTrailEffect::CSmokeTrailEffect( const SHMatrix &_mLocalPos,
+                                      float _fInterval,
+                                      const NDb::SComplexEffect *_pEffect,
+                                      const CVec3 &_vPos,
+                                      const CQuat &_qRot,
+                                      NTimer::STime currTime,
+                                      bool bVisible )
 {
 	vLastVisPos = _vPos;
 	fTimeLastUpdate = currTime;
@@ -20,7 +25,7 @@ void CSmokeTrailEffect::CreateEffect( const CVec3 &vPos, const CQuat &qRot, NTim
 	if ( !bVisible )
 		return;
 	SHMatrix mResultPos;
-	Multiply( &mResultPos, SHMatrix(vPos, qRot), mLocalPos );
+	Multiply( &mResultPos, SHMatrix( vPos, qRot ), mLocalPos );
 	PlayComplexEffect( OBJECT_ID_FORGET, pEffect, time, mResultPos );
 }
 
@@ -53,18 +58,21 @@ void CSmokeTrailEffect::UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, N
 	{
 		vLastVisPos += vDirInterval;
 		fTime += fTimeInterval;
-		CreateEffect( vLastVisPos + vDir, qRot, NTimer::STime(fTime), bVisible );
+		CreateEffect( vLastVisPos + vDir, qRot, NTimer::STime( fTime ), bVisible );
 		fDist -= fInterval;
-	}
-	while ( fDist >= fInterval );
+	} while ( fDist >= fInterval );
 	//
 	fTimeLastUpdate = fTime;
 }
 
-void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const std::string &szBoneName, NAnimation::ISkeletonAnimator *pAnimator )
+void CalcRelativePos( SHMatrix *pmRelativePos,
+                      const SHMatrix &mPos,
+                      const std::string &szBoneName,
+                      NAnimation::ISkeletonAnimator *pAnimator )
 {
 	SHMatrix mBoneLocalPos;
-	if ( szBoneName.empty() || pAnimator == 0 || pAnimator->GetLocalBonePosition( szBoneName.c_str(), &mBoneLocalPos ) == false )
+	if ( szBoneName.empty() || pAnimator == 0 ||
+	     pAnimator->GetLocalBonePosition( szBoneName.c_str(), &mBoneLocalPos ) == false )
 	{
 		Identity( pmRelativePos );
 		return;

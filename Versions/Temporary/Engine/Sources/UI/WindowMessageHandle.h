@@ -1,18 +1,16 @@
 // WindowMessageHandle.h: interface for the WindowMessageHandle class.
 //
 
-
-
 #pragma once
 
-typedef bool (*MESSAGE_HANDLER)( const struct SBUIMessage &msg, void *pObj );
+typedef bool ( *MESSAGE_HANDLER )( const struct SBUIMessage &msg, void *pObj );
 
 class CUIMessageHandler
 {
-	MESSAGE_HANDLER pH;										// message handler to call
+	MESSAGE_HANDLER pH; // message handler to call
 public:
-	CUIMessageHandler() : pH( 0 ) {  }
-	CUIMessageHandler( MESSAGE_HANDLER _pH ) : pH( _pH ) {  }
+	CUIMessageHandler() : pH( 0 ) {}
+	CUIMessageHandler( MESSAGE_HANDLER _pH ) : pH( _pH ) {}
 	bool Execute( const struct SBUIMessage &msg, void *pObj )
 	{
 		NI_ASSERT( pH != 0, "null message handler" );
@@ -21,28 +19,27 @@ public:
 };
 
 // handle map is used by all macros
-#define HM_TYPE std::unordered_map<std::string,CUIMessageHandler>
+#define HM_TYPE std::unordered_map<std::string, CUIMessageHandler>
 #define DECLARE_HANDLE_MAP static HM_TYPE handleMap;
-#define IMPLEMENT_HANDLE_MAP(ClassName) HM_TYPE ClassName::handleMap;
+#define IMPLEMENT_HANDLE_MAP( ClassName ) HM_TYPE ClassName::handleMap;
 
 // message handler declaration
-#define DECLARE_MESSAGE_HANDLER(HandleName) \
-		static bool HandleName( const struct SBUIMessage &msg, void *pObj );\
-		bool _##HandleName( const struct SBUIMessage &msg );
+#define DECLARE_MESSAGE_HANDLER( HandleName )                          \
+	static bool HandleName( const struct SBUIMessage &msg, void *pObj ); \
+	bool _##HandleName( const struct SBUIMessage &msg );
 
 // to use write
 // IMPLEMENT_MESSAGE_HANDLER(CWindow,MouseMove)
 // {
 //    function body
 // }
-#define IMPLEMENT_MESSAGE_HANDLER(ClassName,HandleName) \
-	bool ClassName::HandleName( const struct SBUIMessage &msg, void *pObj )\
-	{\
-		return ((ClassName*)(pObj))->_##HandleName( msg );\
-	}\
+#define IMPLEMENT_MESSAGE_HANDLER( ClassName, HandleName )                \
+	bool ClassName::HandleName( const struct SBUIMessage &msg, void *pObj ) \
+	{                                                                       \
+		return ( (ClassName *)( pObj ) )->_##HandleName( msg );               \
+	}                                                                       \
 	bool ClassName::_##HandleName( const struct SBUIMessage &msg )
-
 
 // messag handler registratoin
 //#define REGISTER_MESSAGE_HANDLER(ClassName,HandleName,MessageName)\
-	//handleMap["MessageName"] = CUIMessageHandler( ClassName::HandleName );
+//handleMap["MessageName"] = CUIMessageHandler( ClassName::HandleName );

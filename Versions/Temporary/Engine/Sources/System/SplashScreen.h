@@ -2,7 +2,6 @@
 
 #include "System_export.h"
 
-
 namespace NSplash
 {
 

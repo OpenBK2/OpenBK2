@@ -12,8 +12,8 @@ struct IServerClient;
 class CLANTester;
 namespace NDb
 {
-	struct SMultiplayerMap;
-	struct SMultiplayerConsts;
+struct SMultiplayerMap;
+struct SMultiplayerConsts;
 }
 class CMPTransceiver;
 class CCommandsHistory;
@@ -34,39 +34,43 @@ public:
 protected:
 	struct SAutoUpdate
 	{
-		bool					bUpdating;
+		bool bUpdating;
 		NTimer::STime timeNextUpdate;
 		NTimer::STime timeUpdatePeriod;
-		uint32_t					dwVersion;
-		SAutoUpdate() : bUpdating(false), timeNextUpdate( 0 ), timeUpdatePeriod( 1000 ), dwVersion( 0 ) {}
+		uint32_t dwVersion;
+		SAutoUpdate() : bUpdating( false ), timeNextUpdate( 0 ), timeUpdatePeriod( 1000 ), dwVersion( 0 ) {}
 		bool CheckNeedUpdate();
-		int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "should not be serialized" ); return 0; }
+		int operator&( IBinSaver &saver )
+		{
+			NI_ASSERT( 0, "should not be serialized" );
+			return 0;
+		}
 	};
 
 	struct SNetGameInfo
 	{
-		int									nGameID;
-		NNet::CNodeAddress	lanNode;
-		NTimer::STime				lastSeen;
-		std::string							szSessionName;
-		std::string							szMapName;
-		int									nPlayers;
-		int									nMaxPlayers;
-		float								fPing;
-		int									nSizeX;
-		int									nSizeY;
-		int									nGameType;
-		int									nTechLevel;
-		bool								bPasswordRequired;
+		int nGameID;
+		NNet::CNodeAddress lanNode;
+		NTimer::STime lastSeen;
+		std::string szSessionName;
+		std::string szMapName;
+		int nPlayers;
+		int nMaxPlayers;
+		float fPing;
+		int nSizeX;
+		int nSizeY;
+		int nGameType;
+		int nTechLevel;
+		bool bPasswordRequired;
 	};
 	typedef std::list<SNetGameInfo> CNetGameList;
 
 	struct SLagInfo
 	{
-		NTimer::STime timeStartLag;		// Start of last lag
-		int nLagLeft;									// Remaining lag time
-		uint32_t dwHatedBy;							// They want him kicked already
-		SLagInfo() : timeStartLag(0), nLagLeft(0), dwHatedBy(0) {}
+		NTimer::STime timeStartLag; // Start of last lag
+		int nLagLeft;               // Remaining lag time
+		uint32_t dwHatedBy;         // They want him kicked already
+		SLagInfo() : timeStartLag( 0 ), nLagLeft( 0 ), dwHatedBy( 0 ) {}
 	};
 	typedef std::vector<SLagInfo> CLaggerList;
 
@@ -90,9 +94,9 @@ protected:
 	int nHostClientID;
 	int nOwnSlot;
 	int nSlotsUsed;
-	uint32_t dwLaggers;								// Waiting for these players
-	uint32_t dwLaggersOld;							// same, previous state, used to find changes in AnalyzeLag();
-	uint32_t dwUserPausedPlayers;					// Players that explicitly toggled MP pause
+	uint32_t dwLaggers;           // Waiting for these players
+	uint32_t dwLaggersOld;        // same, previous state, used to find changes in AnalyzeLag();
+	uint32_t dwUserPausedPlayers; // Players that explicitly toggled MP pause
 	uint32_t dwInitialPlayers;
 	bool bInitialLoadInProgress;
 	bool bWaitWindowShown;
@@ -100,11 +104,11 @@ protected:
 	SAutoUpdate lagsUpdate;
 	std::vector<int> scheduledDropSegmentBySlot;
 
-	std::list<int> pendingClients;				// NEW_CLIENT-s that are received when we do not have our slot number yet
+	std::list<int> pendingClients; // NEW_CLIENT-s that are received when we do not have our slot number yet
 
 	// (Custom) Games List
-	SAutoUpdate						gamesUpdate;
-	CNetGameList					games;
+	SAutoUpdate gamesUpdate;
+	CNetGameList games;
 
 	// In-game state
 	NTimer::STime timeEndMatch;
@@ -195,7 +199,7 @@ protected:
 	virtual const bool IsGameHost() const = 0;
 
 	void SendGameRoomInitMessages();
-	bool HostAssignNewClient( int nClientID );	// return true if successfully added to slots
+	bool HostAssignNewClient( int nClientID ); // return true if successfully added to slots
 	void ClientAssignNewClient( int nClientID );
 	void JoiningClientAssignNewClient( int nClientID );
 	void RemoveClient( int nClientID, bool bKicked );
@@ -215,6 +219,7 @@ protected:
 	void OnCriticalNetworkError( const std::wstring &wszMessage );
 
 	unsigned long GetCheckSum( const NDb::SMultiplayerMap *pMPMap );
+
 public:
 	CMPManagerMode();
 	~CMPManagerMode();
@@ -232,27 +237,43 @@ public:
 class CSlotNumberPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CSlotNumberPacket );
+
 public:
 	ZDATA
 	int nSlot;
 	uint32_t ulCheckSum;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlot); f.Add(3,&ulCheckSum); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSlot );
+		f.Add( 3, &ulCheckSum );
+		return 0;
+	}
 
-	CSlotNumberPacket() { }
+	CSlotNumberPacket() {}
 	CSlotNumberPacket( const int nClientID, const int _nSlot, const unsigned long _ulCheckSum )
-		: CNetPacket( nClientID ), nSlot( _nSlot ), ulCheckSum( _ulCheckSum ) { }
+			: CNetPacket( nClientID ), nSlot( _nSlot ), ulCheckSum( _ulCheckSum )
+	{
+	}
 };
 
 class CB2GameLostPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CB2GameLostPacket );
+
 public:
 	ZDATA
 	int nGameID;
 	int nSegment;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); f.Add(3,&nSegment); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		f.Add( 3, &nSegment );
+		return 0;
+	}
 
-	CB2GameLostPacket() { }
+	CB2GameLostPacket() {}
 	CB2GameLostPacket( const int nClientID, const int _nGameID, const int _nSegment )
-		: CNetPacket( nClientID ), nGameID( _nGameID ), nSegment( _nSegment ) { }
+			: CNetPacket( nClientID ), nGameID( _nGameID ), nSegment( _nSegment )
+	{
+	}
 };

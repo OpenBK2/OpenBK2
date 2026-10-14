@@ -4,21 +4,20 @@
 #include "Artillery.h"
 #include "SerializeOwner.h"
 
-
 int CAIUnit::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CCommonUnit*>(this) );
+	saver.Add( 1, static_cast<CCommonUnit *>( this ) );
 	saver.Add( 5, &timeToDeath );
 	if ( !saver.IsChecksum() )
 		saver.Add( 6, &player );
 	saver.Add( 11, &fCamoflage );
 	saver.Add( 12, &wVisionAngle );
 	saver.Add( 15, &fHitPoints );
-//	saver.Add( 16, &pPathUnit );
+	//	saver.Add( 16, &pPathUnit );
 	saver.Add( 17, &pAntiArtillery );
 	saver.Add( 22, &pTankPit );
 	saver.Add( 23, &camouflateTime );
-//	if ( !saver.IsChecksum() )
+	//	if ( !saver.IsChecksum() )
 	//	saver.Add( 24, &bVisibleByPlayer );
 	saver.Add( 25, &fTakenDamagePower );
 	saver.Add( 26, &nGrenades );
@@ -92,19 +91,32 @@ void CSoldier::OnSerialize( IBinSaver &saver )
 
 int CArtillery::operator&( IBinSaver &f )
 {
-	f.Add( 1, static_cast<CAIUnit*>(this) );
-	f.Add(2,&pStats); f.Add(3,&nInitialPlayer); f.Add(4,&pGuns); f.Add(5,&turrets);
-	f.Add(6,&eCurInstallAction); f.Add(7,&eNextInstallAction);
-	f.Add(8,&eCurrentStateOfInstall); f.Add(9,&bInstalled);
-	f.Add(10,&installActionTime); f.Add(11,&bInstallActionInstant); f.Add(12,&pStaticPathToSend);
-	f.Add(13,&vShift); f.Add(14,&pIPathToSend); f.Add(15,&pCapturingUnit);
-	f.Add(16,&pCrew); f.Add(17,&fOperable); f.Add(18,&pSlaveTransport);
-	f.Add(19,&pHookingTransport); f.Add(20,&pBulletStorage);
+	f.Add( 1, static_cast<CAIUnit *>( this ) );
+	f.Add( 2, &pStats );
+	f.Add( 3, &nInitialPlayer );
+	f.Add( 4, &pGuns );
+	f.Add( 5, &turrets );
+	f.Add( 6, &eCurInstallAction );
+	f.Add( 7, &eNextInstallAction );
+	f.Add( 8, &eCurrentStateOfInstall );
+	f.Add( 9, &bInstalled );
+	f.Add( 10, &installActionTime );
+	f.Add( 11, &bInstallActionInstant );
+	f.Add( 12, &pStaticPathToSend );
+	f.Add( 13, &vShift );
+	f.Add( 14, &pIPathToSend );
+	f.Add( 15, &pCapturingUnit );
+	f.Add( 16, &pCrew );
+	f.Add( 17, &fOperable );
+	f.Add( 18, &pSlaveTransport );
+	f.Add( 19, &pHookingTransport );
+	f.Add( 20, &pBulletStorage );
 
 	if ( !f.IsChecksum() )
-		f.Add(21,&bBulletStorageVisible);
+		f.Add( 21, &bBulletStorageVisible );
 
-	f.Add(22,&lastCheckToInstall); f.Add(23,&behUpdateDuration);
+	f.Add( 22, &lastCheckToInstall );
+	f.Add( 23, &behUpdateDuration );
 	return 0;
 }
 #ifndef _FINALRELEASE
@@ -113,9 +125,9 @@ extern NTimer::STime curTime;
 
 int CCommonUnit::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CLinkObject*>(this) );
-	saver.Add( 2, static_cast<CGroupUnit*>(this) );
-	saver.Add( 3, static_cast<CQueueUnit*>(this) );
+	saver.Add( 1, static_cast<CLinkObject *>( this ) );
+	saver.Add( 2, static_cast<CGroupUnit *>( this ) );
+	saver.Add( 3, static_cast<CQueueUnit *>( this ) );
 
 	saver.Add( 4, &beh );
 	saver.Add( 5, &lastBehTime );
@@ -132,14 +144,13 @@ int CCommonUnit::operator&( IBinSaver &saver )
 	saver.Add( 17, &pTruck );
 	saver.Add( 18, &vBattlePos );
 
-	saver.Add( 20, static_cast<CBasePathUnit*>(this) );
+	saver.Add( 20, static_cast<CBasePathUnit *>( this ) );
 
-//	saver.Add( 22, &pScenarioUnit );
+	//	saver.Add( 22, &pScenarioUnit );
 	saver.Add( 23, &bCanBeFrozenByState );
 	saver.Add( 24, &bCanBeFrozenByScan );
 	saver.Add( 25, &nextFreezeScan );
 	saver.Add( 26, &fPrice );
-
 
 	saver.Add( 27, &vOldPlacement );
 	saver.Add( 28, &qStart );

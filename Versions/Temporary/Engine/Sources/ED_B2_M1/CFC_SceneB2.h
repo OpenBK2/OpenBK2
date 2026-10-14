@@ -13,7 +13,6 @@ class CCFCSceneB2 : public CChildFrameWndBase
 	bool KeyPressed( unsigned nChar, uintptr_t dwData );
 
 protected:
-
 public:
 	CCFCSceneB2();
 	virtual ~CCFCSceneB2();

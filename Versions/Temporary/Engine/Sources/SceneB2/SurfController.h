@@ -8,12 +8,12 @@ class CCSBound;
 
 namespace NDb
 {
-	struct SWater;
+struct SWater;
 }
 
 namespace NGScene
 {
-	class IGameView;
+class IGameView;
 }
 
 class CVisSurfPatch : public CPtrFuncBase<NGScene::CObjectInfo>
@@ -21,17 +21,21 @@ class CVisSurfPatch : public CPtrFuncBase<NGScene::CObjectInfo>
 	CVec2 vMaxMapCoords;
 	//
 	bool bUpdate;
-	CDGPtr<CFuncBase<STime> > pTimer;
+	CDGPtr<CFuncBase<STime>> pTimer;
+
 protected:
 	void UpdateGeomData();
 	void Recalc();
 	bool NeedUpdate() { return pTimer == 0 ? bUpdate : pTimer.Refresh(); }
+
 public:
 	NMeshData::SMeshData data;
 	std::vector<float> texYOffsets;
 	//
 	CVisSurfPatch( CFuncBase<STime> *_pTimer, const CVec2 &vBounds )
-		: bUpdate( true ), pTimer( _pTimer ), vMaxMapCoords( vBounds ) {}
+			: bUpdate( true ), pTimer( _pTimer ), vMaxMapCoords( vBounds )
+	{
+	}
 };
 typedef NMeshData::SPatchHolder<CVisSurfPatch> CVisSurfPatchHolder;
 
@@ -39,11 +43,15 @@ class CSurfController
 {
 	CObj<NGScene::IGameView> pGScene;
 	std::vector<CVisSurfPatchHolder> surfPatches;
-	std::vector<CObj<CCSBound> > surfPatchesBounds;
+	std::vector<CObj<CCSBound>> surfPatchesBounds;
 	//
-	CPtr<CFuncBase<STime> > pTimer;
+	CPtr<CFuncBase<STime>> pTimer;
+
 public:
 	CSurfController() {}
-	void Init( const float fAngle, const CVec2i &vMapSize, const std::vector<NWaterStuff::SSurfBorder> &borders, NGScene::IGameView *_pGScene );
+	void Init( const float fAngle,
+	           const CVec2i &vMapSize,
+	           const std::vector<NWaterStuff::SSurfBorder> &borders,
+	           NGScene::IGameView *_pGScene );
 	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }
 };

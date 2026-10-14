@@ -14,7 +14,7 @@
 
 namespace NDb
 {
-	class CResource;
+class CResource;
 }
 
 namespace NGltf
@@ -70,25 +70,28 @@ struct SSkeletonDefinition
 // ModelFileRef first searches beside its owning DB resource. If that candidate
 // is absent, the supplied path is used directly (including absolute paths).
 _3DMOTOR_EXPORT NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
-	const NFile::CFilePath &modelFileRef );
-_3DMOTOR_EXPORT bool DoesModelFileExist( const NDb::CResource *pOwner,
-	const NFile::CFilePath &modelFileRef );
-_3DMOTOR_EXPORT TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
-	const NFile::CFilePath &modelFileRef );
+                                                       const NFile::CFilePath &modelFileRef );
+_3DMOTOR_EXPORT bool DoesModelFileExist( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef );
+_3DMOTOR_EXPORT TGltfFilePtr LoadFile( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef );
 // A non-empty selector is matched case-sensitively and includes mesh-bearing descendants.
-_3DMOTOR_EXPORT bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
-	std::vector<std::size_t> *pResult );
+_3DMOTOR_EXPORT bool
+GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName, std::vector<std::size_t> *pResult );
 // Calculates bounds in the same engine vertex space used by the GLB loaders.
 // Static AI geometry applies every node transform, while render geometry keeps
 // skinned vertices in their bind-pose mesh space for the animator.
-_3DMOTOR_EXPORT bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeName,
-	bool bApplyNodeTransformsToSkinnedMeshes, CVec3 *pMin, CVec3 *pMax );
-_3DMOTOR_EXPORT int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef,
-	const std::string &rootNodeName );
+_3DMOTOR_EXPORT bool GetMeshBoundingBox( const TGltfFilePtr &file,
+                                         const std::string &rootNodeName,
+                                         bool bApplyNodeTransformsToSkinnedMeshes,
+                                         CVec3 *pMin,
+                                         CVec3 *pMax );
+_3DMOTOR_EXPORT int
+GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef, const std::string &rootNodeName );
 _3DMOTOR_EXPORT bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult );
 // With no glTF skins, RootJoint selects a rigid node hierarchy instead.
-_3DMOTOR_EXPORT bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
-	int nFallbackSkin, SSkeletonDefinition *pResult );
+_3DMOTOR_EXPORT bool BuildSkeleton( const TGltfFilePtr &file,
+                                    const std::string &rootNodeName,
+                                    int nFallbackSkin,
+                                    SSkeletonDefinition *pResult );
 
 _3DMOTOR_EXPORT CVec3 ConvertPosition( const fastgltf::math::fvec3 &value );
 CVec3 ConvertDirection( const fastgltf::math::fvec3 &value );

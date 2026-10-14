@@ -12,9 +12,8 @@
 
 // CInterfaceProfileManager
 
-CInterfaceProfileManager::CInterfaceProfileManager() :
-	CInterfaceScreenBase( "ProfileManager", "profile_manager_menu" ),
-	bNoUpdateSelection( false )
+CInterfaceProfileManager::CInterfaceProfileManager()
+		: CInterfaceScreenBase( "ProfileManager", "profile_manager_menu" ), bNoUpdateSelection( false )
 {
 	AddObserver( "message_box_ok", &CInterfaceProfileManager::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceProfileManager::MsgCancel );
@@ -102,7 +101,7 @@ void CInterfaceProfileManager::FillScreenList()
 			pCenterPanel->RemoveChild( pProfileList );
 		pProfileList = 0;
 	}
-	pProfileList = dynamic_cast<IScrollableContainer*>( AddWindowCopy( pCenterPanel, pProfileListTemplate ) );
+	pProfileList = dynamic_cast<IScrollableContainer *>( AddWindowCopy( pCenterPanel, pProfileListTemplate ) );
 	if ( pProfileList )
 		pProfileList->ShowWindow( true );
 	profiles.clear();
@@ -119,13 +118,13 @@ void CInterfaceProfileManager::FillScreenList()
 		NI_ASSERT( pElement, "Could not create Profile list entry" );
 		if ( pElement )
 			pElement->ShowWindow( true );
-		pElement->SetName( fmt::format("Profile{}", i ) );
+		pElement->SetName( fmt::format( "Profile{}", i ) );
 		ITextView *pName = GetChildChecked<ITextView>( pElement, "NameText", true );
 		if ( pName )
 			pName->SetText( pName->GetDBText() + item.wszName );
 
-		IWindow *pIndic = GetChildChecked<IWindow>( pElement, "Indicator", true );		//Get "currently selected" indicator
-		if ( item.wszName == wszSelectedItem ) //Select one
+		IWindow *pIndic = GetChildChecked<IWindow>( pElement, "Indicator", true ); //Get "currently selected" indicator
+		if ( item.wszName == wszSelectedItem )                                     //Select one
 		{
 			nSelectedItem = i;
 			if ( pIndic )
@@ -146,7 +145,7 @@ void CInterfaceProfileManager::FillScreenList()
 	if ( nSelectedItem != -1 )
 	{
 		if ( pProfileList )
-			pProfileList->Select( profiles[ nSelectedItem ].pWindow.GetPtr() );
+			pProfileList->Select( profiles[nSelectedItem].pWindow.GetPtr() );
 	}
 }
 
@@ -157,7 +156,7 @@ void CInterfaceProfileManager::MsgBack( const std::string &szSender )
 
 void CInterfaceProfileManager::MsgSelect( const std::string &szSender )
 {
-	if ( nSelectedItem == -1 )		// Not selected, do nothing
+	if ( nSelectedItem == -1 ) // Not selected, do nothing
 		return;
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
@@ -185,7 +184,7 @@ void CInterfaceProfileManager::MsgCreate( const std::string &szSender )
 	NProfile::ChangeProfile( wszName );
 
 	nSelectedItem = FindProfileIndex();
-	IWindow *pWnd = (nSelectedItem >= 0) ? profiles[nSelectedItem].pWindow : 0;
+	IWindow *pWnd = ( nSelectedItem >= 0 ) ? profiles[nSelectedItem].pWindow : 0;
 	if ( pProfileList )
 		pProfileList->Select( pWnd );
 
@@ -199,23 +198,26 @@ void CInterfaceProfileManager::MsgDelete( const std::string &szSender )
 	std::wstring wszName;
 
 	if ( nSelectedItem < 0 || nSelectedItem >= profiles.size() )
-		return;			//Wrong selection
+		return; //Wrong selection
 
-	wszName = profiles[ nSelectedItem ].wszName;
+	wszName = profiles[nSelectedItem].wszName;
 
-	if ( NProfile::GetCurrentProfileName() == wszName )						// Cannot delete currently selected profile
+	if ( NProfile::GetCurrentProfileName() == wszName ) // Cannot delete currently selected profile
 	{
 		// Display warning
 		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-			CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
-			InterfaceState()->GetTextEntry( "T_PROFILE_MANAGER_DELETE_CURRENT" ) ).c_str() );
+		                    CICMessageBox::MakeConfigString(
+														"MessageBoxWindowOk", InterfaceState()->GetTextEntry( "T_PROFILE_MANAGER_DELETE_CURRENT" ) )
+		                        .c_str() );
 		return;
 	}
 
 	eState = EST_DELETE_QUESTION;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-		InterfaceState()->GetTextEntry( "T_PROFILE_MANAGER_DELETE_QUESTION" ) ).c_str() );
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                     InterfaceState()->GetTextEntry( "T_PROFILE_MANAGER_DELETE_QUESTION" ) )
+					.c_str() );
 }
 
 void CInterfaceProfileManager::MsgSelectionChange( const std::string &szSender )
@@ -229,7 +231,7 @@ void CInterfaceProfileManager::MsgSelectionChange( const std::string &szSender )
 	if ( !pSelection )
 	{
 		if ( pNameEditLine )
-			pNameEditLine->SetText( L"" );			//No selection, empty editline
+			pNameEditLine->SetText( L"" ); //No selection, empty editline
 	}
 	else
 	{
@@ -252,7 +254,7 @@ bool CInterfaceProfileManager::OnEditChanged()
 	bNoUpdateSelection = true;
 
 	nSelectedItem = FindProfileIndex();
-	IWindow *pWnd = (nSelectedItem >= 0) ? profiles[nSelectedItem].pWindow : 0;
+	IWindow *pWnd = ( nSelectedItem >= 0 ) ? profiles[nSelectedItem].pWindow : 0;
 	if ( pProfileList )
 		pProfileList->Select( pWnd );
 
@@ -339,7 +341,7 @@ void CInterfaceProfileManager::MsgOk( const SGameMessage &msg )
 	{
 		case EST_DELETE_QUESTION:
 		{
-			std::wstring wszName = profiles[ nSelectedItem ].wszName;
+			std::wstring wszName = profiles[nSelectedItem].wszName;
 			if ( NProfile::RemoveProfile( wszName ) )
 			{
 				FillScreenList();
@@ -360,18 +362,14 @@ void CInterfaceProfileManager::MsgCancel( const SGameMessage &msg )
 
 // CICProfileManager
 
-void CICProfileManager::PreCreate()
-{
-}
+void CICProfileManager::PreCreate() {}
 
 void CICProfileManager::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICProfileManager::Configure( const char *pszConfig )
-{
-}
+void CICProfileManager::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19113481, CInterfaceProfileManager )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_PROFILE_MENU, CICProfileManager )

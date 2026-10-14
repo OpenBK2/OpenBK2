@@ -47,21 +47,21 @@ static wxString FromUtf8( const std::string &rszString )
 	return wxString::FromUTF8( rszString.c_str() );
 }
 
-
 class CWxSkeletonFrame : public wxFrame
 {
 public:
 	explicit CWxSkeletonFrame( const wxString &rstrDetails )
-		: wxFrame( nullptr, wxID_ANY,
-							 // The title carries the version so that windump.py can read it
-							 // from outside the process, which is how everything else in this
-							 // port gets checked.
-							 wxString::Format( "wx skeleton - %s", wxVERSION_STRING ),
-							 wxDefaultPosition, wxSize( 560, 320 ) )
+			: wxFrame( nullptr,
+	               wxID_ANY,
+	               // The title carries the version so that windump.py can read it
+	               // from outside the process, which is how everything else in this
+	               // port gets checked.
+	               wxString::Format( "wx skeleton - %s", wxVERSION_STRING ),
+	               wxDefaultPosition,
+	               wxSize( 560, 320 ) )
 	{
-		wxTextCtrl *pDetails = new wxTextCtrl( this, wxID_ANY, rstrDetails,
-																					 wxDefaultPosition, wxDefaultSize,
-																					 wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP );
+		wxTextCtrl *pDetails = new wxTextCtrl(
+				this, wxID_ANY, rstrDetails, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP );
 		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 		pSizer->Add( pDetails, wxSizerFlags( 1 ).Expand().Border( wxALL, 8 ) );
 		SetSizer( pSizer );
@@ -69,7 +69,6 @@ public:
 		SetStatusText( "wxWidgets is up." );
 	}
 };
-
 
 // Everything the skeleton is trying to find out, in one string, so that the
 // console path and the window path report exactly the same thing.
@@ -80,7 +79,7 @@ static wxString CollectDetails()
 	strDetails << "library version  : " << wxGetLibraryVersionInfo().ToString() << "\n";
 	strDetails << "port             : " << wxPlatformInfo::Get().GetPortIdName() << "\n";
 	strDetails << "OS               : " << wxGetOsDescription() << "\n";
-	strDetails << "architecture     : " << ( sizeof( void* ) * 8 ) << "-bit\n";
+	strDetails << "architecture     : " << ( sizeof( void * ) * 8 ) << "-bit\n";
 	strDetails << "wxUSE_UNICODE    : " << wxUSE_UNICODE << "\n";
 	strDetails << "sizeof(wxChar)   : " << (int)sizeof( wxChar ) << "\n";
 	// The round trip that matters: a non-ASCII string through the narrow/wide
@@ -89,12 +88,10 @@ static wxString CollectDetails()
 	const std::string szUtf8 = "\xd0\x9b\xd0\xb5\xd0\xb3\xd0\xba\xd0\xb8\xd0\xb9 \xd1\x82\xd0\xb0\xd0\xbd\xd0\xba";
 	const wxString strWide = FromUtf8( szUtf8 );
 	const bool bRoundTrip = ( ToUtf8( strWide ) == szUtf8 );
-	strDetails << "utf-8 round trip : " << ( bRoundTrip ? "ok" : "FAILED" )
-						 << " (" << (int)strWide.length() << " wide chars from "
-						 << (int)szUtf8.size() << " utf-8 bytes)\n";
+	strDetails << "utf-8 round trip : " << ( bRoundTrip ? "ok" : "FAILED" ) << " (" << (int)strWide.length()
+						 << " wide chars from " << (int)szUtf8.size() << " utf-8 bytes)\n";
 	return strDetails;
 }
-
 
 class CWxSkeletonApp : public wxApp
 {
@@ -111,7 +108,6 @@ public:
 };
 
 wxIMPLEMENT_APP_NO_MAIN( CWxSkeletonApp );
-
 
 // wmain is MSVC's wide entry point; everywhere else the arguments arrive
 // narrow through the standard main. wxEntry has an overload for each.

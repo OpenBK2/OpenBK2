@@ -34,24 +34,17 @@ REGISTER_EDITOR_IN_DLL( SquadRPGStats, CSquadEditor )
 //
 //
 
-CSquadEditor::CSquadEditor() :
-	pSquadState(0),
-	pMarkers(0),
-	pwndShortcutBar(0),
-	vSquadCenterPos(VNULL3)
-{
-}
+CSquadEditor::CSquadEditor() : pSquadState( 0 ), pMarkers( 0 ), pwndShortcutBar( 0 ), vSquadCenterPos( VNULL3 ) {}
 
-CSquadEditor::~CSquadEditor()
-{
-}
+CSquadEditor::~CSquadEditor() {}
 
 void CSquadEditor::Create()
 {
 	// Сначало грузим файл с установками редактора
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+		pUserData->SerializeSettings(
+				editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 	}
 	//
 	pwndShortcutBar->Show( editorSettings.bShowShortcutBar );
@@ -73,7 +66,8 @@ void CSquadEditor::Destroy()
 	// Записываем файл с установками (его могли поменять во время работы редактора)
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+		pUserData->SerializeSettings(
+				editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 	}
 	//
 	if ( pSquadState )
@@ -120,7 +114,8 @@ int CSquadEditor::AddModel( const NDb::SModel *pModel, const CVec3 &rvPosition, 
 
 	vHumanPos.z = GetTerrainHeight( vHumanPos.x, vHumanPos.y );
 
-	int nRes = pScene->AddObject( OBJECT_ID_GENERATE, pModel, vHumanPos, CQuat( 0.0f, V3_AXIS_Z ), CVec3(1,1,1), OBJ_ANIM_MODE_DEFAULT, 0 );
+	int nRes = pScene->AddObject(
+			OBJECT_ID_GENERATE, pModel, vHumanPos, CQuat( 0.0f, V3_AXIS_Z ), CVec3( 1, 1, 1 ), OBJ_ANIM_MODE_DEFAULT, 0 );
 
 	SSquadMemberInfo inf;
 	inf.nSceneObjectID = nRes;
@@ -143,7 +138,7 @@ bool CSquadEditor::RemoveModel( int nID )
 	std::list<SSquadMemberInfo>::iterator fndIt = std::find( membersInfo.begin(), membersInfo.end(), inf );
 	if ( fndIt != membersInfo.end() )
 	{
-		membersInfo.erase(fndIt);
+		membersInfo.erase( fndIt );
 		return true;
 	}
 	return false;
@@ -151,24 +146,24 @@ bool CSquadEditor::RemoveModel( int nID )
 
 void CSquadEditor::ResetGUI( bool bActive )
 {
-    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-    if ( !bActive )
-        pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
-    // Copy only GUI fields from the defaults, preserving all editing settings.
-    const CSquadEditorSettings defaults;
-    editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
-    pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+	if ( !bActive )
+		pUserData->SerializeSettings(
+				editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+	// Copy only GUI fields from the defaults, preserving all editing settings.
+	const CSquadEditorSettings defaults;
+	editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
+	pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
-    if ( pwndShortcutBar )
-        pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
+	if ( pwndShortcutBar )
+		pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
 }
-
 
 void CSquadEditor::CreateControls()
 {
 	unsigned nID = ID_SQUAD_EDITOR_DW;
-	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->
-		CreateControlBar( &nID, "SquadEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) )
+	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+					 &nID, "SquadEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) )
 	{
 		nID = ID_SQUAD_EDITOR_SHORTCUT_PANE_0;
 		pShortcutBarView.reset( NShortcutBar::Create() );
@@ -183,7 +178,8 @@ void CSquadEditor::CreateControls()
 			pShortcutBarView->EndBar( nBar, RCSTR( "Squad" ) );
 			pShortcutBarView->SelectBar( 0 );
 			//
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar,
+			                                                                      pShortcutBarView->GetWidget() );
 			pwndShortcutBar->Show( false );
 			pwndShortcutBar->ShowWithoutLayout( true );
 			pShortcutBarView->Show( true );
@@ -211,21 +207,16 @@ void CSquadEditor::DestroyControls()
 	Destroy();
 }
 
-
 void CSquadEditor::RemoveAllModels()
 {
 	while ( !membersInfo.empty() )
-		RemoveModel(membersInfo.front().nSceneObjectID);
+		RemoveModel( membersInfo.front().nSceneObjectID );
 }
 
-IManipulator* CSquadEditor::CreateSquadManipulator()
+IManipulator *CSquadEditor::CreateSquadManipulator()
 {
-	IManipulator* pSquadManip = Singleton<IResourceManager>()->
-		CreateObjectManipulator
-		(
-			GetObjectSet().szObjectTypeName,
-			GetObjectSet().objectNameSet.begin()->first
-		);
+	IManipulator *pSquadManip = Singleton<IResourceManager>()->CreateObjectManipulator(
+			GetObjectSet().szObjectTypeName, GetObjectSet().objectNameSet.begin()->first );
 	return pSquadManip;
 }
 
@@ -290,7 +281,7 @@ int CSquadEditor::GetMemberIndexBySceneID( int nSceneID )
 {
 	for ( std::list<SSquadMemberInfo>::const_iterator it = membersInfo.begin(); it != membersInfo.end(); ++it )
 	{
-		const SSquadMemberInfo *pMembInf = &(*it);
+		const SSquadMemberInfo *pMembInf = &( *it );
 		if ( pMembInf->nSceneObjectID == nSceneID )
 			return pMembInf->nMemberIndex;
 	}

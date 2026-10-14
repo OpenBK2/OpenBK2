@@ -87,9 +87,11 @@ static SDL_Cursor *CreateFrame( const uint8_t *pData, size_t nSize, size_t nBase
 	}
 
 	// SImage is tightly packed, so one row is one row and the pitch is the width
-	SDL_Surface *pSurface = SDL_CreateSurfaceFrom( image.nWidth, image.nHeight,
-		SDL_PIXELFORMAT_ARGB8888, &image.pixels[0],
-		image.nWidth * static_cast<int>( sizeof( uint32_t ) ) );
+	SDL_Surface *pSurface = SDL_CreateSurfaceFrom( image.nWidth,
+	                                               image.nHeight,
+	                                               SDL_PIXELFORMAT_ARGB8888,
+	                                               &image.pixels[0],
+	                                               image.nWidth * static_cast<int>( sizeof( uint32_t ) ) );
 	if ( pSurface == 0 )
 	{
 		return 0;

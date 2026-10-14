@@ -9,9 +9,8 @@
 
 namespace NPassMarkers
 {
-	static bool s_bShowWater = false;
+static bool s_bShowWater = false;
 }
-
 
 CPassMarkersDraw::CPassMarkersDraw()
 {
@@ -21,7 +20,6 @@ CPassMarkersDraw::CPassMarkersDraw()
 	nWaterMarker = NDebugInfo::OBJECT_ID_GENERATE;
 	Reset();
 }
-
 
 void CPassMarkersDraw::Reset()
 {
@@ -36,13 +34,11 @@ void CPassMarkersDraw::Reset()
 	bDrawMarkers = false;
 }
 
-
 void CPassMarkersDraw::Init( CAIMap *_pAIMap )
 {
 	pAIMap = _pAIMap;
 	pTerrain = pAIMap->GetTerrain();
 }
-
 
 void CPassMarkersDraw::Clear()
 {
@@ -53,7 +49,6 @@ void CPassMarkersDraw::Clear()
 	}
 	DebugInfoManager()->DeleteObject( nWaterMarker );
 }
-
 
 void CPassMarkersDraw::ToggleDrawPassMarkers()
 {
@@ -71,8 +66,10 @@ void CPassMarkersDraw::ToggleDrawPassMarkers()
 	DebugInfoManager()->ShowAxes( bDrawMarkers );
 }
 
-
-void CPassMarkersDraw::SetPassMarkers( const NDebugInfo::EColor color, const EAIClasses aiClass, const EFreeTileInfo freeClass, const int nBoundTileRadius )
+void CPassMarkersDraw::SetPassMarkers( const NDebugInfo::EColor color,
+                                       const EAIClasses aiClass,
+                                       const EFreeTileInfo freeClass,
+                                       const int nBoundTileRadius )
 {
 	for ( int i = 0; i < MARKERS_COLORS_COUNT; ++i )
 	{
@@ -86,7 +83,6 @@ void CPassMarkersDraw::SetPassMarkers( const NDebugInfo::EColor color, const EAI
 		}
 	}
 }
-
 
 void CPassMarkersDraw::DrawPassabilities()
 {

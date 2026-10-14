@@ -30,7 +30,7 @@ bool CMPManagerMode::HostAssignNewClient( int nClientID )
 
 	for ( int i = 0; i < slots.size(); ++i )
 	{
-		if ( !slots[i].bPresent && !slots[i].bAccept )			// Look for an empty slot that is not locked
+		if ( !slots[i].bPresent && !slots[i].bAccept ) // Look for an empty slot that is not locked
 		{
 			slots[i].bPresent = true;
 			slots[i].nClientID = nClientID;
@@ -43,7 +43,7 @@ bool CMPManagerMode::HostAssignNewClient( int nClientID )
 
 			// Send own slot info, the rest it should get from others
 			//pClient->SendGamePacket( new CB2SlotInfoPacket( nClientID, nOwnSlot, slots[nOwnSlot] ), false );
-			UpdateMyConnectivityMask();		// Sends own slot info inside
+			UpdateMyConnectivityMask(); // Sends own slot info inside
 
 			//Send game info
 			CPtr<CB2GameSpecificInfoPacket> pGameInfoPkt = new CB2GameSpecificInfoPacket;
@@ -109,9 +109,9 @@ void CMPManagerMode::SendLagInfo()
 
 bool CMPManagerMode::IsPlayerPresent( int nPlayer )
 {
-	 if ( nPlayer < 0 || nPlayer >= slots.size() )
-		 return false;
-	 return slots[nPlayer].bPresent;
+	if ( nPlayer < 0 || nPlayer >= slots.size() )
+		return false;
+	return slots[nPlayer].bPresent;
 }
 
 uint32_t CMPManagerMode::GetPresentMask() const
@@ -200,11 +200,11 @@ void CMPManagerMode::PromoteGameControlHostAfterRemoval( int nRemovedClientID )
 	const int nOldHostClientID = nHostClientID;
 	nHostClientID = GetReplacementHostClientID( nRemovedClientID );
 	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"STATE",
-		"PromoteGameControlHostAfterRemoval",
-		GetOwnClientID(),
-		fmt::format( "old_host={} new_host={} removed={}", nOldHostClientID, nHostClientID, nRemovedClientID ) );
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"STATE",
+			"PromoteGameControlHostAfterRemoval",
+			GetOwnClientID(),
+			fmt::format( "old_host={} new_host={} removed={}", nOldHostClientID, nHostClientID, nRemovedClientID ) );
 	OnGameControlHostChanged( nOldHostClientID, nHostClientID, nRemovedClientID );
 }
 
@@ -223,17 +223,19 @@ bool CMPManagerMode::IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegme
 	{
 		const int nReplacementHostClientID = GetReplacementHostClientID( nHostClientID );
 		if ( pPacket->nClientID == nHostClientID ||
-			nReplacementHostClientID >= 0 && pPacket->nClientID == nReplacementHostClientID )
+		     nReplacementHostClientID >= 0 && pPacket->nClientID == nReplacementHostClientID )
 		{
 			const int nOldHostClientID = nHostClientID;
 			nHostClientID = nReplacementHostClientID;
-			NGameX::MatchPacketTrace_Log(
-				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-				"STATE",
-				"PromoteGameControlHostFromDropPacket",
-				GetOwnClientID(),
-				fmt::format( "old_host={} new_host={} slot={} target_seg={}",
-					nOldHostClientID, nHostClientID, nSlotToDrop, pPacket->nSegment ) );
+			NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			                              "STATE",
+			                              "PromoteGameControlHostFromDropPacket",
+			                              GetOwnClientID(),
+			                              fmt::format( "old_host={} new_host={} slot={} target_seg={}",
+			                                           nOldHostClientID,
+			                                           nHostClientID,
+			                                           nSlotToDrop,
+			                                           pPacket->nSegment ) );
 			OnGameControlHostChanged( nOldHostClientID, nHostClientID, nOldHostClientID );
 			return true;
 		}
@@ -251,11 +253,11 @@ void CMPManagerMode::BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, c
 		return;
 
 	NGameX::MatchPacketTrace_Log(
-		nSegment,
-		"TX",
-		"CB2DropPlayerAtSegmentPacket",
-		GetOwnClientID(),
-		fmt::format( "slot={} target_seg={} reason={}", nSlot, nSegment, szReason ? szReason : "" ) );
+			nSegment,
+			"TX",
+			"CB2DropPlayerAtSegmentPacket",
+			GetOwnClientID(),
+			fmt::format( "slot={} target_seg={} reason={}", nSlot, nSegment, szReason ? szReason : "" ) );
 	BroadcastGameControlPacket( new CB2DropPlayerAtSegmentPacket( 0, nSlot, nSegment ) );
 }
 
@@ -284,12 +286,19 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 		ShowWaitWindow( false );
 	NGameX::MatchPacketTrace_RecordDropScheduled( nSlot, nSegment );
 	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"DECISION",
-		"ScheduleSynchronizedPlayerDrop",
-		GetOwnClientID(),
-		fmt::format( "slot={} target_seg={} prev_target_seg={} pre_laggers={:08X} post_laggers={:08X} pre_laggers_old={:08X} post_laggers_old={:08X}",
-			nSlot, nSegment, nCurrent, dwLaggersBefore, dwLaggers, dwLaggersOldBefore, dwLaggersOld ) );
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"DECISION",
+			"ScheduleSynchronizedPlayerDrop",
+			GetOwnClientID(),
+			fmt::format(
+					"slot={} target_seg={} prev_target_seg={} pre_laggers={:08X} post_laggers={:08X} pre_laggers_old={:08X} post_laggers_old={:08X}",
+					nSlot,
+					nSegment,
+					nCurrent,
+					dwLaggersBefore,
+					dwLaggers,
+					dwLaggersOldBefore,
+					dwLaggersOld ) );
 
 	// Defer both lockstep and manager-side removal to the same segment boundary.
 	if ( IsValid( pTransceiver ) )
@@ -323,12 +332,16 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 			slots[i].bPresent = false;
 			const uint32_t dwPostPresentMask = GetPresentMask();
 			NGameX::MatchPacketTrace_Log(
-				nCommonSegment,
-				"STATE",
-				"ApplyScheduledSlotDrops",
-				GetOwnClientID(),
-				fmt::format( "slot={} target_seg={} applied_seg={} pre_present={:08X} post_present={:08X}",
-					i, nDropSegment, nCommonSegment, dwPrePresentMask, dwPostPresentMask ) );
+					nCommonSegment,
+					"STATE",
+					"ApplyScheduledSlotDrops",
+					GetOwnClientID(),
+					fmt::format( "slot={} target_seg={} applied_seg={} pre_present={:08X} post_present={:08X}",
+			                 i,
+			                 nDropSegment,
+			                 nCommonSegment,
+			                 dwPrePresentMask,
+			                 dwPostPresentMask ) );
 			NGameX::MatchPacketTrace_RecordDropApplied( i, nCommonSegment );
 		}
 	}
@@ -336,14 +349,17 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 
 void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 {
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"DECISION",
-		"RemoveClient",
-		nClientID,
-		fmt::format( "kicked={} running={} in_room={} room_host={} control_host={} host_id={}",
-			bKicked ? 1 : 0, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0,
-			IsGameHost() ? 1 : 0, IsGameControlHost() ? 1 : 0, nHostClientID ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "DECISION",
+	                              "RemoveClient",
+	                              nClientID,
+	                              fmt::format( "kicked={} running={} in_room={} room_host={} control_host={} host_id={}",
+	                                           bKicked ? 1 : 0,
+	                                           IsGameRunning() ? 1 : 0,
+	                                           IsInGameRoom() ? 1 : 0,
+	                                           IsGameHost() ? 1 : 0,
+	                                           IsGameControlHost() ? 1 : 0,
+	                                           nHostClientID ) );
 
 	if ( IsInGameRoom() && !IsGameHost() && nClientID == nHostClientID )
 	{
@@ -366,7 +382,7 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 			const bool bRemovingGameControlHost = ( nClientID == nHostClientID );
 			const int nReplacementHostClientID = bRemovingGameControlHost ? GetReplacementHostClientID( nClientID ) : -1;
 			const bool bOwnsDropAuthority =
-				IsGameControlHost() || ( bRemovingGameControlHost && GetOwnClientID() == nReplacementHostClientID );
+					IsGameControlHost() || ( bRemovingGameControlHost && GetOwnClientID() == nReplacementHostClientID );
 			if ( IsValid( pTransceiver ) )
 			{
 				if ( scheduledDropSegmentBySlot.size() != slots.size() )
@@ -385,25 +401,26 @@ void CMPManagerMode::RemoveClient( int nClientID, bool bKicked )
 						ScheduleSynchronizedPlayerDrop( i, nDropSegment );
 
 						if ( IsGameControlHost() )
-							BroadcastSynchronizedPlayerDrop( i, nDropSegment, bRemovingGameControlHost ? "host_removed" : "remove_client" );
+							BroadcastSynchronizedPlayerDrop(
+									i, nDropSegment, bRemovingGameControlHost ? "host_removed" : "remove_client" );
 						else
 						{
-							NGameX::MatchPacketTrace_Log(
-								nDropSegment,
-								"DECISION",
-								"RemoveClientLocalDropFallback",
-								GetOwnClientID(),
-								fmt::format( "slot={} target_seg={}", i, nDropSegment ) );
+							NGameX::MatchPacketTrace_Log( nDropSegment,
+							                              "DECISION",
+							                              "RemoveClientLocalDropFallback",
+							                              GetOwnClientID(),
+							                              fmt::format( "slot={} target_seg={}", i, nDropSegment ) );
 						}
 					}
 					else
 					{
 						NGameX::MatchPacketTrace_Log(
-							nDropSegment,
-							"DECISION",
-							"RemoveClientAwaitingDropAuthority",
-							GetOwnClientID(),
-							fmt::format( "slot={} authority={}", i, bRemovingGameControlHost ? nReplacementHostClientID : nHostClientID ) );
+								nDropSegment,
+								"DECISION",
+								"RemoveClientAwaitingDropAuthority",
+								GetOwnClientID(),
+								fmt::format(
+										"slot={} authority={}", i, bRemovingGameControlHost ? nReplacementHostClientID : nHostClientID ) );
 					}
 				}
 				else if ( bRemovingGameControlHost && GetOwnClientID() == nReplacementHostClientID )

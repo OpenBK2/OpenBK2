@@ -70,7 +70,7 @@ class SERVER_CLIENT_COMMON_EXPORT CCommands : public CCommandsBase
 {
 	OBJECT_NOCOPY_METHODS( CCommands );
 
-	typedef void (CCommands::*PARSE_CMD_FUNC)( std::vector<std::string> &szWords, SCommand *pCmd );
+	typedef void ( CCommands::*PARSE_CMD_FUNC )( std::vector<std::string> &szWords, SCommand *pCmd );
 	std::unordered_map<int, PARSE_CMD_FUNC> parseCmdFuncs;
 	bool bServer;
 
@@ -131,10 +131,10 @@ class SERVER_CLIENT_COMMON_EXPORT CCommands : public CCommandsBase
 
 	std::string szErrorMsg;
 	void SetErrorMsg( const std::string &_szMsg ) { szErrorMsg = _szMsg; }
-	const std::string& GetErrorMsg() const { return szErrorMsg; }
+	const std::string &GetErrorMsg() const { return szErrorMsg; }
 
 public:
-	CCommands() : bServer( false ) { }
+	CCommands() : bServer( false ) {}
 	CCommands( const bool bServer );
 
 	virtual void GetStringCommands( std::vector<std::string> *pCommands );

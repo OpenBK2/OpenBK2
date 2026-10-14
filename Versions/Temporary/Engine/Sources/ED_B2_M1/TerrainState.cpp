@@ -15,19 +15,20 @@
 
 #include <zconf.h>
 
-CTerrainState::CTerrainState( CTerrainEditor *_pTerrainEditor ) : pTerrainEditor( _pTerrainEditor )
-{
-}
-
+CTerrainState::CTerrainState( CTerrainEditor *_pTerrainEditor ) : pTerrainEditor( _pTerrainEditor ) {}
 
 void CTerrainState::Enter()
 {
 	NI_ASSERT( pTerrainEditor != 0, "CTerrainState::Enter(), pTerrainEditor == 0" );
-	NI_ASSERT( !( pTerrainEditor->GetObjectSet().objectNameSet.empty() ), "CTerrainState::Enter() GetObjectSet().objectNameSet is empty" );
+	NI_ASSERT( !( pTerrainEditor->GetObjectSet().objectNameSet.empty() ),
+	           "CTerrainState::Enter() GetObjectSet().objectNameSet is empty" );
 	IEditorScene *pScene = EditorScene();
 	NI_ASSERT( pScene != 0, "CTerrainState::Enter(): pScene == 0" );
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CTerrainInterfaceCommand( new CTerrainInterface() ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_SCENE,
+			ID_SCENE_ENABLE_GAME_INPUT,
+			reinterpret_cast<uintptr_t>( new CTerrainInterfaceCommand( new CTerrainInterface() ) ) );
 
 	// Загружаем Terrain
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, false );
@@ -37,7 +38,6 @@ void CTerrainState::Enter()
 	//
 	CDefaultInputState::Enter();
 }
-
 
 void CTerrainState::Leave()
 {

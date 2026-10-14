@@ -13,7 +13,6 @@
 // through LoadImage, GetObject and GetDIBits that used to be here is gone with
 // the last of the Win32 in this header.
 
-
 #include <wx/bitmap.h>
 #include <wx/cursor.h>
 #include <wx/iconbndl.h>
@@ -26,119 +25,114 @@
 
 namespace NWxResourceImages
 {
-	// The bitmap nResourceID names, with no mask set; an invalid image when
-	// there is no such bitmap or it will not decode. Every read of one goes
-	// through here.
-	inline wxImage ReadBitmapResource( unsigned nResourceID )
+// The bitmap nResourceID names, with no mask set; an invalid image when
+// there is no such bitmap or it will not decode. Every read of one goes
+// through here.
+inline wxImage ReadBitmapResource( unsigned nResourceID )
+{
+	const unsigned char *pData = nullptr;
+	size_t nSize = 0;
+	if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
 	{
-		const unsigned char *pData = nullptr;
-		size_t nSize = 0;
-		if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
-		{
-			return wxImage();
-		}
-		wxMemoryInputStream stream( pData, nSize );
-		// Quietly: wx puts a dialog up for an image it cannot read, and every
-		// caller here already answers with an empty image.
-		wxLogNull noLog;
-		wxImage image;
-		if ( !image.LoadFile( stream, wxBITMAP_TYPE_BMP ) )
-		{
-			return wxImage();
-		}
-		return image;
+		return wxImage();
 	}
-
-
-	// wx registers the BMP handler itself but not the ICO and CUR ones, and
-	// nothing in this tree calls wxInitAllImageHandlers. Added on first use
-	// rather than at start-up so no module has to remember to do it.
-	inline void EnsureIconHandlers()
+	wxMemoryInputStream stream( pData, nSize );
+	// Quietly: wx puts a dialog up for an image it cannot read, and every
+	// caller here already answers with an empty image.
+	wxLogNull noLog;
+	wxImage image;
+	if ( !image.LoadFile( stream, wxBITMAP_TYPE_BMP ) )
 	{
-		static const bool bAdded = []()
-		{
-			if ( wxImage::FindHandler( wxBITMAP_TYPE_ICO ) == nullptr )
-			{
-				wxImage::AddHandler( new wxICOHandler );
-			}
-			if ( wxImage::FindHandler( wxBITMAP_TYPE_CUR ) == nullptr )
-			{
-				wxImage::AddHandler( new wxCURHandler );
-			}
-			return true;
-		}();
-		( void ) bAdded;
+		return wxImage();
 	}
+	return image;
+}
 
-
-	// Every size in the icon nResourceID names. wx picks the nearest of them
-	// for whatever it is asked for, which is what LoadImage did when it was
-	// given a size; an empty bundle when there is no such icon.
-	inline wxIconBundle LoadIconBundle( unsigned nResourceID )
+// wx registers the BMP handler itself but not the ICO and CUR ones, and
+// nothing in this tree calls wxInitAllImageHandlers. Added on first use
+// rather than at start-up so no module has to remember to do it.
+inline void EnsureIconHandlers()
+{
+	static const bool bAdded = []()
 	{
-		const unsigned char *pData = nullptr;
-		size_t nSize = 0;
-		if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
+		if ( wxImage::FindHandler( wxBITMAP_TYPE_ICO ) == nullptr )
 		{
-			return wxIconBundle();
+			wxImage::AddHandler( new wxICOHandler );
 		}
-		EnsureIconHandlers();
-		wxMemoryInputStream stream( pData, nSize );
-		wxLogNull noLog;
-		return wxIconBundle( stream, wxBITMAP_TYPE_ICO );
+		if ( wxImage::FindHandler( wxBITMAP_TYPE_CUR ) == nullptr )
+		{
+			wxImage::AddHandler( new wxCURHandler );
+		}
+		return true;
+	}();
+	(void)bAdded;
+}
+
+// Every size in the icon nResourceID names. wx picks the nearest of them
+// for whatever it is asked for, which is what LoadImage did when it was
+// given a size; an empty bundle when there is no such icon.
+inline wxIconBundle LoadIconBundle( unsigned nResourceID )
+{
+	const unsigned char *pData = nullptr;
+	size_t nSize = 0;
+	if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
+	{
+		return wxIconBundle();
 	}
+	EnsureIconHandlers();
+	wxMemoryInputStream stream( pData, nSize );
+	wxLogNull noLog;
+	return wxIconBundle( stream, wxBITMAP_TYPE_ICO );
+}
 
-
-	// The cursor nResourceID names, hotspot and all: wx reads the hotspot out
-	// of the .cur and sets it on the image. An invalid cursor when there is no
-	// such resource. Not LoadCursor: that is a windows.h macro.
-	inline wxCursor LoadCursorResource( unsigned nResourceID )
+// The cursor nResourceID names, hotspot and all: wx reads the hotspot out
+// of the .cur and sets it on the image. An invalid cursor when there is no
+// such resource. Not LoadCursor: that is a windows.h macro.
+inline wxCursor LoadCursorResource( unsigned nResourceID )
+{
+	const unsigned char *pData = nullptr;
+	size_t nSize = 0;
+	if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
 	{
-		const unsigned char *pData = nullptr;
-		size_t nSize = 0;
-		if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
-		{
-			return wxCursor();
-		}
-		EnsureIconHandlers();
-		wxMemoryInputStream stream( pData, nSize );
-		wxLogNull noLog;
-		wxImage image;
-		if ( !image.LoadFile( stream, wxBITMAP_TYPE_CUR ) )
-		{
-			return wxCursor();
-		}
-		return wxCursor( image );
+		return wxCursor();
 	}
-
-
-	// A row of 16 pixel icons, magenta made transparent: the editor's own icon
-	// strips are drawn that way.
-	inline wxImage LoadStrip( unsigned nResourceID )
+	EnsureIconHandlers();
+	wxMemoryInputStream stream( pData, nSize );
+	wxLogNull noLog;
+	wxImage image;
+	if ( !image.LoadFile( stream, wxBITMAP_TYPE_CUR ) )
 	{
-		wxImage strip = ReadBitmapResource( nResourceID );
-		if ( strip.IsOk() )
-		{
-			strip.SetMaskColour( 255, 0, 255 );
-		}
-		return strip;
+		return wxCursor();
 	}
+	return wxCursor( image );
+}
 
-
-	// The strip cut into its nSize pixel icons, left to right; empty when it
-	// cannot be read.
-	inline std::vector<wxBitmap> LoadIcons( unsigned nResourceID, int nSize = 16 )
+// A row of 16 pixel icons, magenta made transparent: the editor's own icon
+// strips are drawn that way.
+inline wxImage LoadStrip( unsigned nResourceID )
+{
+	wxImage strip = ReadBitmapResource( nResourceID );
+	if ( strip.IsOk() )
 	{
-		std::vector<wxBitmap> icons;
-		const wxImage strip = LoadStrip( nResourceID );
-		if ( !strip.IsOk() )
-		{
-			return icons;
-		}
-		for ( int nX = 0; nX + nSize <= strip.GetWidth(); nX += nSize )
-		{
-			icons.push_back( wxBitmap( strip.GetSubImage( wxRect( nX, 0, nSize, ( std::min )( nSize, strip.GetHeight() ) ) ) ) );
-		}
+		strip.SetMaskColour( 255, 0, 255 );
+	}
+	return strip;
+}
+
+// The strip cut into its nSize pixel icons, left to right; empty when it
+// cannot be read.
+inline std::vector<wxBitmap> LoadIcons( unsigned nResourceID, int nSize = 16 )
+{
+	std::vector<wxBitmap> icons;
+	const wxImage strip = LoadStrip( nResourceID );
+	if ( !strip.IsOk() )
+	{
 		return icons;
 	}
+	for ( int nX = 0; nX + nSize <= strip.GetWidth(); nX += nSize )
+	{
+		icons.push_back( wxBitmap( strip.GetSubImage( wxRect( nX, 0, nSize, (std::min)( nSize, strip.GetHeight() ) ) ) ) );
+	}
+	return icons;
+}
 }

@@ -26,7 +26,7 @@ void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
 
-	if ( nVal == 1)
+	if ( nVal == 1 )
 		Singleton<IDebugSingleton>()->ShowStatsWindow( true );
 	else
 		Singleton<IDebugSingleton>()->ShowStatsWindow( false );
@@ -46,15 +46,14 @@ void ShowDebugInfo( const std::string &szID, const std::vector<std::wstring> &pa
 
 // Construction/Destruction
 
-
-static const int CONSOLE_HEIGHT = 240;			//Высота консоли в пикселах
-static const int TEXT_LEFT_SPACE = 20;			//Отступ от левого края экрана до текста в консоли
-static const int TEXT_VERTICAL_SIZE = 20;		//Размер шрифта по вертикали
-static const int MINUS_PAGE_SIZE = 5;				//Специальная константа отступа для PgUp PgDown,
-static const int CURSOR_ANIMATION_TIME = 400;		//период переключения курсора
+static const int CONSOLE_HEIGHT = 240;        //Высота консоли в пикселах
+static const int TEXT_LEFT_SPACE = 20;        //Отступ от левого края экрана до текста в консоли
+static const int TEXT_VERTICAL_SIZE = 20;     //Размер шрифта по вертикали
+static const int MINUS_PAGE_SIZE = 5;         //Специальная константа отступа для PgUp PgDown,
+static const int CURSOR_ANIMATION_TIME = 400; //период переключения курсора
 static const wchar_t szPrefix[] = L">>";
 
-CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ), nConsoleSequenceID(0)
+CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ), nConsoleSequenceID( 0 )
 {
 	impotantMsgs.AddObserver( "show_console", &CWindowConsole::OnShowConsole );
 	impotantMsgs.AddObserver( "win_char", &CWindowConsole::OnChar );
@@ -64,7 +63,7 @@ CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginStri
 }
 
 CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
-: szString( pszStr ), dwColor( col )
+		: szString( pszStr ), dwColor( col )
 {
 	const std::wstring szText = pszStr;
 	pGfxText = CreateML();
@@ -75,17 +74,18 @@ CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, uint32_t col,
 
 void CWindowConsole::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowConsole *pDesc( checked_cast<const NDb::SWindowConsole*>( _pDesc ) );
+	const NDb::SWindowConsole *pDesc( checked_cast<const NDb::SWindowConsole *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 	CWindow::InitByDesc( _pDesc );
 
 	pShared = checked_cast_ptr<const NDb::SWindowConsoleShared *>( pDesc->pShared );
-	pEditLine = dynamic_cast<CWindowEditLine*>( CUIFactory::MakeWindow( pShared->pEditLine ) );
+	pEditLine = dynamic_cast<CWindowEditLine *>( CUIFactory::MakeWindow( pShared->pEditLine ) );
 	AddChild( pEditLine, false );
 
 	pUpperSign = CreateML();
 	CUIFactory::RegisterMLHandlers( pUpperSign );
-	pUpperSign->SetText( L"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", 0 );
+	pUpperSign->SetText(
+			L"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", 0 );
 }
 
 void CWindowConsole::Init()
@@ -96,9 +96,7 @@ void CWindowConsole::Init()
 	GetScreen()->RegisterToSegment( this, true );
 }
 
-void CWindowConsole::NotifyStateSequenceFinished()
-{
-}
+void CWindowConsole::NotifyStateSequenceFinished() {}
 
 void CWindowConsole::Reposition( const CTRect<float> &rcParent )
 {
@@ -122,21 +120,23 @@ void CWindowConsole::ReadConsoleStrings()
 	{
 		if ( l.nStream == CONSOLE_STREAM_CONSOLE )
 		{
-			if( nBeginString!=0 )
+			if ( nBeginString != 0 )
 				nBeginString++;
-			vectorOfStrings.push_back( SColorString( l.szText.c_str(), l.dwColor, 1024) );
+			vectorOfStrings.push_back( SColorString( l.szText.c_str(), l.dwColor, 1024 ) );
 		}
 		else if ( l.nStream >= CONSOLE_STREAM_DEBUG_WINDOW && l.nStream < CONSOLE_STREAM_DEBUG_WINDOW + 2 )
 		{
 			// debug Windows
-			IConsoleOutput *pTextView = dynamic_cast<IConsoleOutput*>( pDebug->GetDebugInfoWindow( l.nStream - CONSOLE_STREAM_DEBUG_WINDOW ) );
+			IConsoleOutput *pTextView =
+					dynamic_cast<IConsoleOutput *>( pDebug->GetDebugInfoWindow( l.nStream - CONSOLE_STREAM_DEBUG_WINDOW ) );
 			if ( pTextView )
 				pTextView->AddString( l.szText, l.dwColor );
 		}
 		else if ( l.nStream >= CONSOLE_STREAM_DEBUG_WINDOW + 2 && l.nStream < CONSOLE_STREAM_DEBUG_WINDOW + 6 )
 		{
 			// debug strings
-			ITextView *pTextView = dynamic_cast<ITextView*>( pDebug->GetDebugInfoWindow( l.nStream - CONSOLE_STREAM_DEBUG_WINDOW ) );
+			ITextView *pTextView =
+					dynamic_cast<ITextView *>( pDebug->GetDebugInfoWindow( l.nStream - CONSOLE_STREAM_DEBUG_WINDOW ) );
 			if ( pTextView )
 				pTextView->SetText( l.szText );
 		}
@@ -154,9 +154,9 @@ void CWindowConsole::Segment( const int timeDiff )
 	while ( ReadFromPipe( PIPE_CONSOLE_CMDS, &szCmd, &color ) )
 	{
 		vectorOfCommands.push_back( szCmd );
-		if( nBeginString!=0 )
+		if ( nBeginString != 0 )
 			nBeginString++;
-		vectorOfStrings.push_back( SColorString(szCmd.c_str(), color, 1024) );
+		vectorOfStrings.push_back( SColorString( szCmd.c_str(), color, 1024 ) );
 		ParseCommand( szCmd );
 
 		ReadConsoleStrings();
@@ -211,20 +211,20 @@ void CWindowConsole::Visit( struct IUIVisitor *pVisitor )
 
 bool CWindowConsole::ProcessEvent( const struct SGameMessage &msg )
 {
-	if( !IsVisible() )
+	if ( !IsVisible() )
 		return false;
 
-	if( impotantMsgs.ProcessEvent( msg, this ) )
+	if ( impotantMsgs.ProcessEvent( msg, this ) )
 		return true;
 	return CWindow::ProcessEvent( msg );
 }
 
 bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 {
-	if( !IsVisible() )
+	if ( !IsVisible() )
 		return false;
 	//Autocomplete instead of tabulate
-	if( msg.nParam1==VK_TAB )
+	if ( msg.nParam1 == VK_TAB )
 	{
 		std::wstring wsInput( pEditLine->GetText() );
 		if ( !wsInput.empty() )
@@ -253,7 +253,7 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 					std::wstring wsNewSame( wsSamePart );
 					for ( int nTemp = 0; nTemp < (std::min)( iTemp->length(), wsSamePart.length() ); nTemp++ )
 					{
-						if ( (*iTemp)[nTemp] == wsSamePart[nTemp] )
+						if ( ( *iTemp )[nTemp] == wsSamePart[nTemp] )
 							continue;
 
 						wsNewSame = wsSamePart.substr( 0, nTemp );
@@ -262,7 +262,8 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 					wsSamePart = wsNewSame;
 
 					const NGlobal::CValue &sValue = NGlobal::GetVar( NStr::ToMBCS( *iTemp ), 0.0f );
-					csSystem << L"\t" << (*iTemp) << " string = '" << sValue.GetString() << "' float = '" << sValue.GetFloat() << "'" << endl;
+					csSystem << L"\t" << ( *iTemp ) << " string = '" << sValue.GetString() << "' float = '" << sValue.GetFloat()
+									 << "'" << endl;
 				}
 
 				pEditLine->SetText( wsSamePart.c_str() );
@@ -278,16 +279,16 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 		return true;
 	}
 
-	if( msg.nParam1==VK_PRIOR )
+	if ( msg.nParam1 == VK_PRIOR )
 		return OnPgUp( msg );
 
-	if( msg.nParam1==VK_NEXT )
+	if ( msg.nParam1 == VK_NEXT )
 		return OnPgDn( msg );
 
-	if( msg.nParam1==VK_UP )
+	if ( msg.nParam1 == VK_UP )
 		return OnUp( msg );
 
-	if( msg.nParam1==VK_DOWN )
+	if ( msg.nParam1 == VK_DOWN )
 		return OnDown( msg );
 
 	return false;
@@ -295,11 +296,11 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 
 bool CWindowConsole::OnChar( const SGameMessage &msg )
 {
-	if( !IsVisible() )
+	if ( !IsVisible() )
 		return false;
 
 	//Чтобы тильда, с помощью которой открыли консоль, не попадала в строку ввода
-	if( msg.nParam1=='`' )
+	if ( msg.nParam1 == '`' )
 		return true;
 
 	return false;
@@ -310,17 +311,16 @@ bool CWindowConsole::OnUp( const struct SGameMessage &msg )
 	if ( !IsVisible() )
 		return false;
 
-	if( vectorOfCommands.empty() )
+	if ( vectorOfCommands.empty() )
 		return true;
 
-	if( nBeginCommand<0 || nBeginCommand>=vectorOfCommands.size() )
+	if ( nBeginCommand < 0 || nBeginCommand >= vectorOfCommands.size() )
 		nBeginCommand = vectorOfCommands.size();
 
-	if( nBeginCommand>0 )
+	if ( nBeginCommand > 0 )
 		nBeginCommand--;
 
 	pEditLine->SetText( vectorOfCommands[nBeginCommand].c_str() );
-
 
 	/*
 	if ( nBeginCommand == vectorOfCommands.size() || nBeginCommand == -1 )
@@ -346,13 +346,13 @@ bool CWindowConsole::OnDown( const struct SGameMessage &msg )
 	if ( !IsVisible() )
 		return false;
 
-	if( vectorOfCommands.empty() )
+	if ( vectorOfCommands.empty() )
 		return true;
 
-	if( nBeginCommand<0)
+	if ( nBeginCommand < 0 )
 		return true;
 
-	if( nBeginCommand<vectorOfCommands.size()-1 )
+	if ( nBeginCommand < vectorOfCommands.size() - 1 )
 	{
 		nBeginCommand++;
 		pEditLine->SetText( vectorOfCommands[nBeginCommand].c_str() );
@@ -429,10 +429,10 @@ void CWindowConsole::SetParent( CWindow *_pParent )
 	{
 		if ( IsVisible() )
 		{
-			IScreen * pIScreen = GetScreen();
+			IScreen *pIScreen = GetScreen();
 			if ( !pIScreen )
 			{
-				ASSERT(0);
+				ASSERT( 0 );
 			}
 			else
 				pIScreen->UndoStateCommandSequence( "ShowConsole" );
@@ -443,13 +443,13 @@ void CWindowConsole::SetParent( CWindow *_pParent )
 
 bool CWindowConsole::OnShowConsole( const struct SGameMessage &msg )
 {
-	if( !IsVisible() )
+	if ( !IsVisible() )
 		return false;
 
-	IScreen * pIScreen = GetScreen();
+	IScreen *pIScreen = GetScreen();
 	if ( !pIScreen )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		return false;
 	}
 
@@ -525,19 +525,17 @@ void CWindowConsole::ParseCommand( const std::wstring &szExtCommand )
 	}
 
 	// unknown command - report it
-//	const string szError = string( "Unknown command: " ) + szCommandString;
-//	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szError.c_str(), 0xffff0000 );
+	//	const string szError = string( "Unknown command: " ) + szCommandString;
+	//	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szError.c_str(), 0xffff0000 );
 }
 
-
 // CDebugSingleton
-
 
 void CDebugSingleton::CreateDebugInfo()
 {
 	if ( 0 != CUIFactory::GetConsts() )
 	{
-		pDebugInfo = checked_cast<IWindow*>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pDebugInfo ) );
+		pDebugInfo = checked_cast<IWindow *>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pDebugInfo ) );
 		pDebugInfo->ShowWindow( bDebugShown );
 	}
 }
@@ -545,24 +543,24 @@ void CDebugSingleton::CreateDebugInfo()
 void CDebugSingleton::CreateConsole()
 {
 	if ( 0 != CUIFactory::GetConsts() )
-		pConsole = checked_cast<IWindow*>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pConsole ) );
+		pConsole = checked_cast<IWindow *>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pConsole ) );
 }
 
-IWindow * CDebugSingleton::GetConsole()
+IWindow *CDebugSingleton::GetConsole()
 {
 	if ( !pConsole )
 		CreateConsole();
 	return pConsole;
 }
 
-IWindow * CDebugSingleton::GetDebug()
+IWindow *CDebugSingleton::GetDebug()
 {
 	if ( !pDebugInfo )
 		CreateDebugInfo();
 	return pDebugInfo;
 }
 
-IWindow * CDebugSingleton::GetDebugInfoWindow( const int nWindow )
+IWindow *CDebugSingleton::GetDebugInfoWindow( const int nWindow )
 {
 	if ( !pDebugInfo )
 		CreateDebugInfo();
@@ -583,7 +581,7 @@ void CDebugSingleton::ShowDebugInfo( const bool bShow )
 void CDebugSingleton::CreateStatsWindow()
 {
 	if ( 0 != CUIFactory::GetConsts() && CUIFactory::GetConsts()->pStatsWindow != 0 )
-		pStatsWindow = checked_cast<IWindow*>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pStatsWindow ) );
+		pStatsWindow = checked_cast<IWindow *>( CUIFactory::MakeWindow( CUIFactory::GetConsts()->pStatsWindow ) );
 }
 
 void CDebugSingleton::ShowStatsWindow( const bool bShow )
@@ -594,11 +592,11 @@ void CDebugSingleton::ShowStatsWindow( const bool bShow )
 		pStatsWindow->ShowWindow( bShow );
 }
 
-struct IStatsSystemWindow * CDebugSingleton::GetStatsWindow()
+struct IStatsSystemWindow *CDebugSingleton::GetStatsWindow()
 {
 	if ( !pStatsWindow )
 		CreateStatsWindow();
-	return dynamic_cast_ptr<IStatsSystemWindow*>( pStatsWindow );
+	return dynamic_cast_ptr<IStatsSystemWindow *>( pStatsWindow );
 }
 
 IDebugSingleton *CreateDebugSingleton()
@@ -606,7 +604,7 @@ IDebugSingleton *CreateDebugSingleton()
 	return new CDebugSingleton;
 }
 
-START_REGISTER(UIDebugInfoCommand)
+START_REGISTER( UIDebugInfoCommand )
 REGISTER_CMD( "Debug", ShowDebugInfo );
 REGISTER_CMD( "Stats", ShowStatsWindow );
 REGISTER_VAR_EX( "console_size", NGlobal::VarIntHandler, &nConsoleSize, 100, STORAGE_SAVE );

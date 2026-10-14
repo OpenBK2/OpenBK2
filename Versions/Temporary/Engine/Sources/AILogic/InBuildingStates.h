@@ -9,15 +9,13 @@ class CInBuildingStatesFactory : public IStatesFactory
 	OBJECT_BASIC_METHODS( CInBuildingStatesFactory );
 
 	static CPtr<CInBuildingStatesFactory> pFactory;
-public:
-	static IStatesFactory* Instance();
-	int operator&( IBinSaver &saver )
-	{
-		return 0;
-	}
 
-	virtual struct IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual struct IUnitState* ProduceRestState( class CQueueUnit *pUnit );
+public:
+	static IStatesFactory *Instance();
+	int operator&( IBinSaver &saver ) { return 0; }
+
+	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
+	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
 
 	// for Saving/Loading of static members
@@ -28,16 +26,24 @@ class CSoldierRestInBuildingState : public IUnitState, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CSoldierRestInBuildingState );
 
-	ZDATA_(CStandartBehaviour)
+	ZDATA_( CStandartBehaviour )
 	CPtr<CSoldier> pSoldier;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NTimer::STime startTime = {};
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pSoldier); f.Add(3,&startTime); return 0; }
 
 public:
-	static IUnitState* Instance( class CSoldier *pSoldier, class CBuilding *pBuilding );
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CStandartBehaviour *)this );
+		f.Add( 2, &pSoldier );
+		f.Add( 3, &startTime );
+		return 0;
+	}
 
-	CSoldierRestInBuildingState() : pSoldier( 0 ) { }
+public:
+	static IUnitState *Instance( class CSoldier *pSoldier, class CBuilding *pBuilding );
+
+	CSoldierRestInBuildingState() : pSoldier( 0 ) {}
 	CSoldierRestInBuildingState( class CSoldier *pSoldier );
 
 	void SendUnitTo( class CBuilding *pBuilding );
@@ -58,7 +64,6 @@ class CSoldierAttackInBuildingState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackInBuildingState );
 
-
 	ZDATA
 	CPtr<CSoldier> pSoldier;
 	CPtr<CAIUnit> pEnemy;
@@ -71,14 +76,26 @@ class CSoldierAttackInBuildingState : public IUnitAttackingState
 	int nEnemyParty = {};
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); f.Add(3,&pEnemy); f.Add(4,&pGun); f.Add(5,&bFinish); f.Add(6,&bAim); f.Add(7,&nEnemyParty); f.Add(8,&damageToEnemyUpdater); return 0; }
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pSoldier );
+		f.Add( 3, &pEnemy );
+		f.Add( 4, &pGun );
+		f.Add( 5, &bFinish );
+		f.Add( 6, &bAim );
+		f.Add( 7, &nEnemyParty );
+		f.Add( 8, &damageToEnemyUpdater );
+		return 0;
+	}
 
 	//
 	void AnalyzeCurrentState();
-public:
-	static IUnitState* Instance( class CSoldier *pSoldier, class CAIUnit *pEnemy );
 
-	CSoldierAttackInBuildingState() : pSoldier( 0 ) { }
+public:
+	static IUnitState *Instance( class CSoldier *pSoldier, class CAIUnit *pEnemy );
+
+	CSoldierAttackInBuildingState() : pSoldier( 0 ) {}
 	CSoldierAttackInBuildingState( class CSoldier *pSoldier, class CAIUnit *pEnemy );
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
@@ -87,6 +104,6 @@ public:
 	virtual const CVec2 GetPurposePoint() const;
 
 	virtual bool IsAttacksUnit() const { return true; }
-	virtual class CAIUnit* GetTargetUnit() const;
+	virtual class CAIUnit *GetTargetUnit() const;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

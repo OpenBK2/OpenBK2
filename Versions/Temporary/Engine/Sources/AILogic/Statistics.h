@@ -2,30 +2,40 @@
 #pragma once
 namespace NDb
 {
-	enum EReinforcementType : int;
+enum EReinforcementType : int;
 }
 
 class CStatistics
 {
-	public: int operator&( IBinSaver &saver ); private:;
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
 
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	bool bEnablePlayerExp = {};										// can we add player exp? (false in tutorial mode - initialized in the Init())
+	bool bEnablePlayerExp = {}; // can we add player exp? (false in tutorial mode - initialized in the Init())
 
 public:
-	CStatistics() : bEnablePlayerExp( false ) {  }
+	CStatistics() : bEnablePlayerExp( false ) {}
 
 	void Init();
 
 	const int GetXPLevel( const int nPlayer, const NDb::EReinforcementType eType );
-	const int GetAbilityLevel( const int nPlayer, const NDb::EReinforcementType eType );		// Different from XP level, because of leaders
+	const int GetAbilityLevel( const int nPlayer,
+	                           const NDb::EReinforcementType eType ); // Different from XP level, because of leaders
 
 	float GetValue( const int nValue, const int nPlayer ) const;
 	int GetUnitLevel( const NDb::EReinforcementType eType, const int nPlayer ) const;
 	// player captured oter player's unit
 	void UnitCaptured( const int nPlayer );
 	// игрок nPlayer уничтожил юниты игрока nKilledUnitsPlayer, fTotalAIPrice - их price
-	void UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, const float fTotalAIPrice, const EReinforcementType eKillerType, const EReinforcementType eDeadType, const bool bInfantry );
+	void UnitKilled( const int nPlayer,
+	                 const int nKilledUnitsPlayer,
+	                 const float fTotalAIPrice,
+	                 const EReinforcementType eKillerType,
+	                 const EReinforcementType eDeadType,
+	                 const bool bInfantry );
 	// unit умер
 	void UnitDead( class CCommonUnit *pUnit );
 	// игрок nPlayer уничтожил house
@@ -37,9 +47,8 @@ public:
 	// игрок nPlayer использовал ресурсы
 	void ResourceUsed( const int nPlayer, const float fResources );
 	//player's experience
-	void IncreasePlayerExperience( const int nPlayer, const NDb::EReinforcementType eType, const float fPrice ) ;
+	void IncreasePlayerExperience( const int nPlayer, const NDb::EReinforcementType eType, const float fPrice );
 
 	void SetFlagPoints( const int nParty, const float fPoints );
 	void SetCapturedFlags( const int nParty, const int nFlags );
-
 };

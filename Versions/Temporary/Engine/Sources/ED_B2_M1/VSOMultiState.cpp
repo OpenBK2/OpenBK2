@@ -21,7 +21,6 @@ void CVSOMultiState::UpdateEditParameters( unsigned nFlags )
 	}
 }
 
-
 bool CVSOMultiState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
 {
 	const int nActiveStateIndex = GetActiveInputStateIndex();
@@ -32,7 +31,7 @@ bool CVSOMultiState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePo
 		if ( nStateIndex != nActiveStateIndex )
 		{
 			CVSOState::CVSOIDList pickVSOIDList;
-			CVSOState *pVSOState = dynamic_cast<CVSOState*>( GetInputState( nStateIndex ) );
+			CVSOState *pVSOState = dynamic_cast<CVSOState *>( GetInputState( nStateIndex ) );
 			pVSOState->PickVSO( rvPos, &pickVSOIDList );
 			if ( !pickVSOIDList.empty() )
 			{
@@ -44,7 +43,6 @@ bool CVSOMultiState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePo
 	}
 	return false;
 }
-
 
 void CVSOMultiState::SwitchState( const std::string &rszObjectTypeName )
 {
@@ -77,7 +75,6 @@ void CVSOMultiState::SwitchState( const std::string &rszObjectTypeName )
 	}
 }
 
-
 void CVSOMultiState::Enter()
 {
 	CMultiInputState::Enter();
@@ -88,7 +85,6 @@ void CVSOMultiState::Enter()
 		SetEditParameters( *pEditParameters, CHID_MAPINFO_VSO_WINDOW );
 	}
 }
-
 
 void CVSOMultiState::Leave()
 {
@@ -101,10 +97,9 @@ void CVSOMultiState::Leave()
 	CMultiInputState::Leave();
 }
 
-
 bool CVSOMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_GET_EDIT_PARAMETERS:
 		{
@@ -135,7 +130,7 @@ bool CVSOMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		}
 		case ID_MIVSO_SWITCH_MULTI_STATE:
 		{
-			std::string *pszObjectTypeName = reinterpret_cast<std::string*>( dwData );
+			std::string *pszObjectTypeName = reinterpret_cast<std::string *>( dwData );
 			if ( pszObjectTypeName != 0 )
 			{
 				SwitchState( *pszObjectTypeName );
@@ -148,13 +143,12 @@ bool CVSOMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CVSOMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CVSOMultiState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CVSOMultiState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_GET_EDIT_PARAMETERS:
 		case ID_SET_EDIT_PARAMETERS:
@@ -172,12 +166,10 @@ bool CVSOMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	return false;
 }
 
-
-CVSOMultiState::SEditParameters* CVSOMultiState::GetEditParameters()
+CVSOMultiState::SEditParameters *CVSOMultiState::GetEditParameters()
 {
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epVSOMultiState ) : 0 );
 }
-
 
 int CVSOMultiState::SEditParameters::operator&( IXmlSaver &xs )
 {

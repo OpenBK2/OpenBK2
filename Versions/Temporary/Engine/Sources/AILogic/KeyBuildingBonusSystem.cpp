@@ -14,7 +14,7 @@ extern CEventUpdater updater;
 CKeyBuildingBonusSystem theBonusSystem;
 extern CPlayerReinforcementArray theReinfArray;
 
-void CKeyBuildingBonusSystem::InitBonusSystem( const NDb::SMapInfo * pMapInfo )
+void CKeyBuildingBonusSystem::InitBonusSystem( const NDb::SMapInfo *pMapInfo )
 {
 	for ( int i = 0; i < pMapInfo->playerBonusObjects.size(); ++i )
 		buildingBonuses[pMapInfo->playerBonusObjects[i].nLinkID] = pMapInfo->playerBonusObjects[i];
@@ -37,9 +37,9 @@ void CKeyBuildingBonusSystem::SendUpdates() const
 	if ( !GetScenarioTracker() )
 		return;
 
-	for ( CBuildingBonuses::const_iterator it = buildingBonuses.begin(); it != buildingBonuses.end(); ++it  )
+	for ( CBuildingBonuses::const_iterator it = buildingBonuses.begin(); it != buildingBonuses.end(); ++it )
 	{
-		CLinkObject * pBuilding = CLinkObject::GetObjectByLink( it->first );
+		CLinkObject *pBuilding = CLinkObject::GetObjectByLink( it->first );
 		if ( pBuilding )
 		{
 			SAIKeyBuildingUpdate *pUpdate = new SAIKeyBuildingUpdate;
@@ -109,7 +109,7 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 				{
 					const int nPositionID = pos->second.playerBonuses[i].nPointID;
 					theReinfArray[i].EnablePosition( nPositionID, true );
-					const auto message =  fmt::format( "New reinforcement point {} given to player {}", nPositionID, i );
+					const auto message = fmt::format( "New reinforcement point {} given to player {}", nPositionID, i );
 					CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
 				}
 			}

@@ -8,18 +8,19 @@
 
 REGISTER_BUILDER_IN_DLL( ObjectRPGStats, CObjectRPGStatsBuilder )
 
-
 const std::string CObjectRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "ObjectRPGStatsBuilder";
 
-
-bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
+                                               std::string *pszDescription,
+                                               IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();
 	// Считываем данные
 	std::string szVisualObject;
-	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
+	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) ||
+	     szVisualObject.empty() )
 	{
 		( *pszDescription ) = "<VisualObject> must be filled.";
 		return false;
@@ -33,14 +34,13 @@ bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulat
 	return true;
 }
 
-
 bool CObjectRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeName,
-																									 std::string *pszUniqueObjectName,
-																									 bool bFromMainMenu,
-																									 bool *pbCanChangeObjectName,
-																									 bool *pbNeedExport,
-																									 bool *pbNeedEdit,
-																									 IManipulator *pBuildDataManipulator )
+                                                   std::string *pszUniqueObjectName,
+                                                   bool bFromMainMenu,
+                                                   bool *pbCanChangeObjectName,
+                                                   bool *pbNeedExport,
+                                                   bool *pbNeedEdit,
+                                                   IManipulator *pBuildDataManipulator )
 {
 	NI_ASSERT( pszObjectTypeName != 0, "CObjectRPGStatsBuilder::InternalInsertObject() pszObjectTypeName == 0" );
 	NI_ASSERT( pszUniqueObjectName != 0, "CObjectRPGStatsBuilder::InternalInsertObject() pszUniqueObjectName == 0" );
@@ -62,11 +62,14 @@ bool CObjectRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeNam
 	bool bResult = pFolderCallback->InsertObject( *pszObjectTypeName, *pszUniqueObjectName );
 	if ( bResult )
 	{
-		CPtr<IManipulator> pObjectRPGStatsManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
-		NI_ASSERT( pObjectRPGStatsManipulator != 0, "CObjectRPGStatsBuilder::InternalInsertObject() pObjectRPGStatsManipulator == 0" );
+		CPtr<IManipulator> pObjectRPGStatsManipulator =
+				pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
+		NI_ASSERT( pObjectRPGStatsManipulator != 0,
+		           "CObjectRPGStatsBuilder::InternalInsertObject() pObjectRPGStatsManipulator == 0" );
 		if ( !szSource.empty() )
 		{
-			CPtr<IManipulator> pSourceObjectRPGStatsManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szSource );
+			CPtr<IManipulator> pSourceObjectRPGStatsManipulator =
+					pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szSource );
 			if ( pSourceObjectRPGStatsManipulator )
 			{
 				CManipulatorManager::CloneDBManipulator( pObjectRPGStatsManipulator, pSourceObjectRPGStatsManipulator, true );

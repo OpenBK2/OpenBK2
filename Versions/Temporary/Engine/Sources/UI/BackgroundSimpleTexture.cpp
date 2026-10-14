@@ -8,7 +8,7 @@
 
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B41, CBackgroundSimpleTexture )
 
-void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
+void CBackgroundSimpleTexture::Visit( IUIVisitor *pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats )
 		return;
@@ -21,7 +21,7 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 		mem = pos;
 		int w = pIcon->GetSize().x - pTexture->nWidth;
 		int h = pIcon->GetSize().y - pTexture->nHeight;
-		pos.Inflate( w/2, h/2 );
+		pos.Inflate( w / 2, h / 2 );
 	}
 	else if ( pTexture )
 	{
@@ -36,13 +36,13 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 
 	if ( pTexture )
 	{
-		rc.fSizeX = (std::min)( float(pos.Width()), float(size.x) );
-		rc.fSizeY = (std::min)( float(pos.Height()), float(size.y) );
+		rc.fSizeX = (std::min)( float( pos.Width() ), float( size.x ) );
+		rc.fSizeY = (std::min)( float( pos.Height() ), float( size.y ) );
 
-		NUITools::ApplyTextureAllign( pStats->eTextureX, pos.Width(), size.x,
-			&rc.sTex.rcTexRect.x1, &rc.sTex.rcTexRect.x2, &rc.sTex.rcTexRect.x1 );
-		NUITools::ApplyTextureAllign( pStats->eTextureY, pos.Height(), size.y,
-			&rc.sTex.rcTexRect.y1, &rc.sTex.rcTexRect.y2, &rc.sTex.rcTexRect.y1 );
+		NUITools::ApplyTextureAllign(
+				pStats->eTextureX, pos.Width(), size.x, &rc.sTex.rcTexRect.x1, &rc.sTex.rcTexRect.x2, &rc.sTex.rcTexRect.x1 );
+		NUITools::ApplyTextureAllign(
+				pStats->eTextureY, pos.Height(), size.y, &rc.sTex.rcTexRect.y1, &rc.sTex.rcTexRect.y2, &rc.sTex.rcTexRect.y1 );
 	}
 	else
 	{
@@ -54,7 +54,7 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 	rects.AddRect( rc.fX, rc.fY, rc.fSizeX, rc.fSizeY, rc.sTex.rcTexRect, rc.sColor );
 	VirtualToScreen( &rects );
 
-	if( pIcon )
+	if ( pIcon )
 	{
 		pVisitor->VisitUITextureRect( pIcon, 3, rects );
 		pos = mem;
@@ -66,7 +66,7 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 void CBackgroundSimpleTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	CBackground::InitByDesc( _pDesc );
-	pStats = checked_cast<const NDb::SBackgroundSimpleTexture*>( _pDesc );
+	pStats = checked_cast<const NDb::SBackgroundSimpleTexture *>( _pDesc );
 	pTexture = pStats->pTexture;
 #ifndef _FINALRELEASE
 	if ( CHECK_UI_TEXTURES_INSTANT_LOAD != 0 )
@@ -87,7 +87,7 @@ void CBackgroundSimpleTexture::SetTexture( const struct NDb::STexture *_pDesc )
 	if ( pTexture != 0 )
 		pTexture = 0;
 	if ( _pDesc != 0 )
-		pTexture = checked_cast<const NDb::STexture*>( _pDesc );
+		pTexture = checked_cast<const NDb::STexture *>( _pDesc );
 #ifndef _FINALRELEASE
 	if ( CHECK_UI_TEXTURES_INSTANT_LOAD != 0 )
 	{
@@ -98,10 +98,10 @@ void CBackgroundSimpleTexture::SetTexture( const struct NDb::STexture *_pDesc )
 
 void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
 {
-	if( !pTexture )
+	if ( !pTexture )
 		return;
 
-	if( !pIcon )
+	if ( !pIcon )
 	{
 		pIcon = new CIconOutliner( nOutlineType );
 		pIcon->SetTexture( pTexture );
@@ -110,7 +110,7 @@ void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
 
 int CBackgroundSimpleTexture::operator&( struct IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CBackground*>( this ) );
+	saver.Add( 1, static_cast<CBackground *>( this ) );
 	saver.Add( 4, &pStats );
 	saver.Add( 5, &pTexture );
 	saver.Add( 6, &pIcon );

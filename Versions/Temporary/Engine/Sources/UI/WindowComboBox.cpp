@@ -5,7 +5,7 @@
 
 #include <algorithm>
 
-REGISTER_SAVELOAD_CLASS(UI, 0x17122340, CWindowComboBox);
+REGISTER_SAVELOAD_CLASS( UI, 0x17122340, CWindowComboBox );
 
 // CWindowComboBox
 
@@ -16,26 +16,23 @@ REGISTER_SAVELOAD_CLASS(UI, 0x17122340, CWindowComboBox);
 // корневого с заданным приоритетом (надо задавать выше чем у всех "обычных" окон, но не тултипов),
 // получает фокус и убирается при его потере.
 
-CWindowComboBox::CWindowComboBox() :
-	nSelected( -1 ),
-	bSuppressPopupList( false ),
-	nMaxVisibleRows( 0 )
+CWindowComboBox::CWindowComboBox() : nSelected( -1 ), bSuppressPopupList( false ), nMaxVisibleRows( 0 )
 {
 	AddObserver( "window_combo_box_close", &CWindowComboBox::OnEscape );
 }
 
 void CWindowComboBox::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowComboBox *pDesc( checked_cast<const NDb::SWindowComboBox*>( _pDesc ) );
+	const NDb::SWindowComboBox *pDesc( checked_cast<const NDb::SWindowComboBox *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 	nMaxVisibleRows = pInstance->nMaxVisibleRows;
 
 	CWindow::InitByDesc( _pDesc );
-	pShared = checked_cast_ptr<const NDb::SWindowComboBoxShared*>( pDesc->pShared ) ;
+	pShared = checked_cast_ptr<const NDb::SWindowComboBoxShared *>( pDesc->pShared );
 
 	// required field
 	CWindow *pLineWnd = CUIFactory::MakeWindow( pShared->pLine );
-	pLine = dynamic_cast<CWindowListItem*>( pLineWnd );
+	pLine = dynamic_cast<CWindowListItem *>( pLineWnd );
 	NI_ASSERT( pLine, "Window not found" );
 	if ( pLine )
 	{
@@ -45,14 +42,14 @@ void CWindowComboBox::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	AddChild( pLineWnd, false );
 
 	// required field
-	pIcon = dynamic_cast<CWindowMSButton*>( CUIFactory::MakeWindow( pShared->pIcon ) );
+	pIcon = dynamic_cast<CWindowMSButton *>( CUIFactory::MakeWindow( pShared->pIcon ) );
 	NI_ASSERT( pIcon, "Window not found" );
 	AddChild( pIcon, false );
 	if ( pIcon )
 		pIcon->SetNotifySink( this );
 
 	// required field
-	pList = dynamic_cast<CWindowListCtrl*>( CUIFactory::MakeWindow( pShared->pList ) );
+	pList = dynamic_cast<CWindowListCtrl *>( CUIFactory::MakeWindow( pShared->pList ) );
 	NI_ASSERT( pList, "Window not found" );
 	ShowList( false );
 	if ( pList )
@@ -91,7 +88,8 @@ void CWindowComboBox::ResizeList()
 	if ( pList && nMaxVisibleRows > 0 )
 	{
 		NI_ASSERT( GetItemCount() <= nMaxVisibleRows, "Too many items at combo box" );
-		pList->SetPlacement( 0, 0, 0, nListBaseHeight + nRowHeight * (std::min)( nMaxVisibleRows, GetItemCount() ), EWPF_SIZE_Y );
+		pList->SetPlacement(
+				0, 0, 0, nListBaseHeight + nRowHeight * (std::min)( nMaxVisibleRows, GetItemCount() ), EWPF_SIZE_Y );
 	}
 }
 
@@ -138,7 +136,7 @@ void CWindowComboBox::RemoveAllItems()
 	ResizeList();
 }
 
-IListControlItem* CWindowComboBox::GetItem( int nIndex ) const
+IListControlItem *CWindowComboBox::GetItem( int nIndex ) const
 {
 	NI_VERIFY( 0 <= nIndex && nIndex < items.size(), "Index out of range", return 0 );
 	return items[nIndex];
@@ -263,5 +261,5 @@ bool CWindowComboBox::OnEscape( const SGameMessage &msg )
 
 bool CWindowComboBox::IsRelatedFocus( IWindow *pWindow ) const
 {
-	return this == pWindow || dynamic_cast_ptr<IWindow*>( pList ) == pWindow;
+	return this == pWindow || dynamic_cast_ptr<IWindow *>( pList ) == pWindow;
 }

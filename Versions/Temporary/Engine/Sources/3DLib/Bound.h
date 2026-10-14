@@ -1,19 +1,19 @@
 #pragma once
-template<class T>
+template <class T>
 struct SGetSelf
 {
-	const T& operator()( const T &a ) const { return a; }
+	const T &operator()( const T &a ) const { return a; }
 };
 struct SBoundCalcer
 {
 	CVec3 ptMin, ptMax;
-	SBoundCalcer(): ptMin( 1e38f,1e38f,1e38f ), ptMax(-1e38f,-1e38f,-1e38f) {}
-	template<class TSet,class TGetPoint>
-		void LookSet( const TSet &a, TGetPoint GetPoint )
+	SBoundCalcer() : ptMin( 1e38f, 1e38f, 1e38f ), ptMax( -1e38f, -1e38f, -1e38f ) {}
+	template <class TSet, class TGetPoint>
+	void LookSet( const TSet &a, TGetPoint GetPoint )
 	{
 		for ( typename TSet::const_iterator i = a.begin(); i != a.end(); ++i )
 		{
-			const CVec3 &p = GetPoint(*i);
+			const CVec3 &p = GetPoint( *i );
 			ptMin.x = (std::min)( ptMin.x, p.x );
 			ptMin.y = (std::min)( ptMin.y, p.y );
 			ptMin.z = (std::min)( ptMin.z, p.z );
@@ -22,7 +22,11 @@ struct SBoundCalcer
 			ptMax.z = (std::max)( ptMax.z, p.z );
 		}
 	}
-	void Clear() { ptMin = CVec3( 1e38f,1e38f,1e38f ); ptMax = CVec3(-1e38f,-1e38f,-1e38f); }
+	void Clear()
+	{
+		ptMin = CVec3( 1e38f, 1e38f, 1e38f );
+		ptMax = CVec3( -1e38f, -1e38f, -1e38f );
+	}
 	void Add( const CVec3 &p, float fRadius )
 	{
 		ptMin.x = (std::min)( ptMin.x, p.x - fRadius );
@@ -55,7 +59,7 @@ struct SBoundCalcer
 	void Make( SBound *pRes ) const
 	{
 		if ( IsEmpty() )
-			pRes->BoxInit( CVec3(0,0,0), CVec3(0,0,0) );
+			pRes->BoxInit( CVec3( 0, 0, 0 ), CVec3( 0, 0, 0 ) );
 		else
 			pRes->BoxInit( ptMin, ptMax );
 	}
@@ -63,7 +67,7 @@ struct SBoundCalcer
 	{
 		if ( IsEmpty() )
 		{
-			pRes->ptCenter = CVec3(0,0,0);
+			pRes->ptCenter = CVec3( 0, 0, 0 );
 			pRes->fRadius = 0;
 		}
 		else
@@ -74,7 +78,7 @@ struct SBoundCalcer
 	}
 };
 
-template<class TRes, class TSet,class TGetPoint>
+template <class TRes, class TSet, class TGetPoint>
 inline void CalcBound( TRes *pRes, const TSet &a, TGetPoint GetPoint )
 {
 	SBoundCalcer b;
@@ -82,21 +86,20 @@ inline void CalcBound( TRes *pRes, const TSet &a, TGetPoint GetPoint )
 	b.Make( pRes );
 }
 
-inline void UpdateBounds(CVec3 & vMin, CVec3 & vMax, const CVec3 & v) {
-	vMin.x = (std::min)(vMin.x, v.x);
-	vMin.y = (std::min)(vMin.y, v.y);
-	vMin.z = (std::min)(vMin.z, v.z);
+inline void UpdateBounds( CVec3 &vMin, CVec3 &vMax, const CVec3 &v )
+{
+	vMin.x = (std::min)( vMin.x, v.x );
+	vMin.y = (std::min)( vMin.y, v.y );
+	vMin.z = (std::min)( vMin.z, v.z );
 
-	vMax.x = (std::max)(vMax.x, v.x);
-	vMax.y = (std::max)(vMax.y, v.y);
-	vMax.z = (std::max)(vMax.z, v.z);
+	vMax.x = (std::max)( vMax.x, v.x );
+	vMax.y = (std::max)( vMax.y, v.y );
+	vMax.z = (std::max)( vMax.z, v.z );
 }
 
 inline bool DoesIntersect( const SSphere &s, const SBound &bv )
 {
 	CVec3 v( bv.s.ptCenter - s.ptCenter );
-	return
-		fabs(v.x) - s.fRadius < bv.ptHalfBox.x &&
-		fabs(v.y) - s.fRadius < bv.ptHalfBox.y &&
-		fabs(v.z) - s.fRadius < bv.ptHalfBox.z;
+	return fabs( v.x ) - s.fRadius < bv.ptHalfBox.x && fabs( v.y ) - s.fRadius < bv.ptHalfBox.y &&
+	       fabs( v.z ) - s.fRadius < bv.ptHalfBox.z;
 }

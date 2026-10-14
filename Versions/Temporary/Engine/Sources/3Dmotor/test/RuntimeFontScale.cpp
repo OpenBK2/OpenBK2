@@ -16,6 +16,7 @@ class RuntimeFontScale : public testing::Test
 	NGlobal::CValue savedHudScale = NGlobal::GetVar( "hud_font_scale", 1.0f );
 	NGlobal::CValue savedScale = NGlobal::GetVar( "ui_font_scale", 1.2f );
 	CObj<NVFS::IVFS> savedVFS = NVFS::GetMainVFS();
+
 protected:
 	void TearDown() override
 	{
@@ -44,8 +45,8 @@ TEST_F( RuntimeFontScale, ConsoleAndSetVarChangeTheUserSetting )
 
 	std::vector<std::pair<std::string, NGlobal::CValue>> userVariables;
 	NGlobal::GetVarsByClass( &userVariables, STORAGE_USER );
-	const auto setting = std::find_if( userVariables.begin(), userVariables.end(),
-		[]( const auto &entry ) { return entry.first == "ui_font_scale"; } );
+	const auto setting = std::find_if(
+			userVariables.begin(), userVariables.end(), []( const auto &entry ) { return entry.first == "ui_font_scale"; } );
 	ASSERT_NE( setting, userVariables.end() );
 	EXPECT_FLOAT_EQ( setting->second.GetFloat(), 1.0f );
 
@@ -57,8 +58,8 @@ TEST_F( RuntimeFontScale, ConsoleAndSetVarChangeTheUserSetting )
 	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale( true ), 0.9f );
 	userVariables.clear();
 	NGlobal::GetVarsByClass( &userVariables, STORAGE_USER );
-	const auto hudSetting = std::find_if( userVariables.begin(), userVariables.end(),
-		[]( const auto &entry ) { return entry.first == "hud_font_scale"; } );
+	const auto hudSetting = std::find_if(
+			userVariables.begin(), userVariables.end(), []( const auto &entry ) { return entry.first == "hud_font_scale"; } );
 	ASSERT_NE( hudSetting, userVariables.end() );
 	EXPECT_FLOAT_EQ( hudSetting->second.GetFloat(), 0.9f );
 }

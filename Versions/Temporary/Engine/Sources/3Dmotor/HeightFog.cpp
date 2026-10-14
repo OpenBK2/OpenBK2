@@ -16,23 +16,41 @@ class CHeightFogHolder : public CPtrFuncBase<CObjectInfo>
 	OBJECT_BASIC_METHODS( CHeightFogHolder )
 	//
 	ZDATA
-	CDGPtr<CPtrFuncBase<CObjectInfo> > pGeom;
+	CDGPtr<CPtrFuncBase<CObjectInfo>> pGeom;
 	CDBPtr<NDb::SHeightFog> pHeightFog;
 	SFBTransform place;
-	CDGPtr<CFuncBase<SFBTransform> > pPlace;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGeom); f.Add(3,&pHeightFog); f.Add(4,&place);f.Add(5,&pPlace); return 0; }
+	CDGPtr<CFuncBase<SFBTransform>> pPlace;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pGeom );
+		f.Add( 3, &pHeightFog );
+		f.Add( 4, &place );
+		f.Add( 5, &pPlace );
+		return 0;
+	}
+
 protected:
 	CHeightFogHolder() {}
 	bool NeedUpdate() { return pGeom.Refresh() | ( !pPlace || pPlace.Refresh() ); }
 	void Recalc();
+
 public:
-	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom, const NDb::SHeightFog *_pHeightFog, const SFBTransform &_place ) :
-			pGeom(_pGeom), pHeightFog(_pHeightFog), place(_place) {}
-	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom, const NDb::SHeightFog *_pHeightFog, CFuncBase<SFBTransform> *_pPlace ) :
-			pGeom(_pGeom), pHeightFog(_pHeightFog), pPlace(_pPlace) { Identity( &(place.forward) ); Identity( &(place.backward) ); }
+	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom, const NDb::SHeightFog *_pHeightFog, const SFBTransform &_place )
+			: pGeom( _pGeom ), pHeightFog( _pHeightFog ), place( _place )
+	{
+	}
+	CHeightFogHolder( CPtrFuncBase<CObjectInfo> *_pGeom,
+	                  const NDb::SHeightFog *_pHeightFog,
+	                  CFuncBase<SFBTransform> *_pPlace )
+			: pGeom( _pGeom ), pHeightFog( _pHeightFog ), pPlace( _pPlace )
+	{
+		Identity( &( place.forward ) );
+		Identity( &( place.backward ) );
+	}
 };
 
-inline void GetHeightFogCol( CVec3 *pCol, const CVec3 &vPos, const CVec3 &vFogCol, float fMinHeight, float fHeightCoeff )
+inline void
+GetHeightFogCol( CVec3 *pCol, const CVec3 &vPos, const CVec3 &vFogCol, float fMinHeight, float fHeightCoeff )
 {
 	const float t = Clamp( ( vPos.z - fMinHeight ) * fHeightCoeff, 0.0f, 1.0f );
 	const float it = 1.0f - t;
@@ -83,16 +101,17 @@ void CHeightFogHolder::Recalc()
 	}
 }
 
-CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog,
-																								  const SFBTransform &place )
+CPtrFuncBase<CObjectInfo> *
+CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog, const SFBTransform &place )
 {
 	if ( pGeom )
 		return new CHeightFogHolder( pGeom, pHeightFog, place );
 	return 0;
 }
 
-CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SHeightFog *pHeightFog,
-																								  CFuncBase<SFBTransform> *pPlace )
+CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGeom,
+                                                  const NDb::SHeightFog *pHeightFog,
+                                                  CFuncBase<SFBTransform> *pPlace )
 {
 	if ( pGeom )
 		return new CHeightFogHolder( pGeom, pHeightFog, pPlace );

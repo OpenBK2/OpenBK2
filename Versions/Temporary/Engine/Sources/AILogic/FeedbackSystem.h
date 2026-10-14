@@ -5,15 +5,15 @@
 
 namespace NDb
 {
-	struct SAIGameConsts;
+struct SAIGameConsts;
 }
 
 struct SEFBHash
 {
-	int operator()( const EFeedBack & eFB ) const { return int ( eFB ); }
+	int operator()( const EFeedBack &eFB ) const { return int( eFB ); }
 };
 
-typedef std::pair<int,int> CIDAndParam;
+typedef std::pair<int, int> CIDAndParam;
 
 class CFeedBackSystem
 {
@@ -24,14 +24,24 @@ class CFeedBackSystem
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		NTimer::STime timeNextTalk = {};
 		CVec2 vCenter;
-		int nClientID = {};				// id to remove feedback from client
+		int nClientID = {}; // id to remove feedback from client
 		NTimer::STime timeToForget = {};
 		std::vector<CIDAndParam> objectIDs;
-		ZEND int operator&( IBinSaver &f ) { f.Add(3,&timeNextTalk); f.Add(4,&vCenter); f.Add(5,&nClientID); f.Add(6,&timeToForget); f.Add(7,&objectIDs); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 3, &timeNextTalk );
+			f.Add( 4, &vCenter );
+			f.Add( 5, &nClientID );
+			f.Add( 6, &timeToForget );
+			f.Add( 7, &objectIDs );
+			return 0;
+		}
+
 	public:
-		SFeedBackCell( ) : vCenter( -1, -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {  }
-		SFeedBackCell( const CVec2 &_vCenter )
-			: vCenter( _vCenter ), nClientID( -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {  }
+		SFeedBackCell() : vCenter( -1, -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {}
+		SFeedBackCell( const CVec2 &_vCenter ) : vCenter( _vCenter ), nClientID( -1 ), timeToForget( 0 ), timeNextTalk( 0 )
+		{
+		}
 	};
 	typedef std::list<SFeedBackCell> CCells;
 	typedef det_map<EFeedBack, CCells, SEFBHash> CFeedbacks;
@@ -41,7 +51,16 @@ class CFeedBackSystem
 	CDBPtr<NDb::SAIGameConsts> pConsts;
 
 public:
-	int operator&( IBinSaver &f ) { if ( !f.IsChecksum() ) { f.Add(2,&feedbacks); f.Add(3,&clientIDs); f.Add(4,&pConsts); } return 0; }
+	int operator&( IBinSaver &f )
+	{
+		if ( !f.IsChecksum() )
+		{
+			f.Add( 2, &feedbacks );
+			f.Add( 3, &clientIDs );
+			f.Add( 4, &pConsts );
+		}
+		return 0;
+	}
 
 private:
 	void AddFeedBackInternal( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, bool bForget, int nParam );

@@ -8,7 +8,6 @@ CChildFrameContainer::~CChildFrameContainer()
 	Destroy();
 }
 
-
 bool CChildFrameContainer::CanCreate( const std::string &rszChildFrameTypeName )
 {
 	if ( !rszChildFrameTypeName.empty() )
@@ -18,7 +17,6 @@ bool CChildFrameContainer::CanCreate( const std::string &rszChildFrameTypeName )
 	return false;
 }
 
-
 bool CChildFrameContainer::IsActive( const std::string &rszChildFrameTypeName )
 {
 	if ( !rszChildFrameTypeName.empty() )
@@ -27,7 +25,6 @@ bool CChildFrameContainer::IsActive( const std::string &rszChildFrameTypeName )
 	}
 	return false;
 }
-
 
 bool CChildFrameContainer::Create( const std::string &rszChildFrameTypeName )
 {
@@ -58,7 +55,6 @@ bool CChildFrameContainer::Create( const std::string &rszChildFrameTypeName )
 	return false;
 }
 
-
 void CChildFrameContainer::Destroy()
 {
 	if ( pActiveChildFrame != 0 )
@@ -72,7 +68,6 @@ void CChildFrameContainer::Destroy()
 	szActiveChildFrameTypeName.clear();
 }
 
-
 void CChildFrameContainer::Enter()
 {
 	if ( pActiveChildFrame != 0 )
@@ -81,7 +76,6 @@ void CChildFrameContainer::Enter()
 		pActiveChildFrame->Enter();
 	}
 }
-
 
 void CChildFrameContainer::Leave()
 {

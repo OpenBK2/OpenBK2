@@ -22,18 +22,18 @@
 
 #include <fmt/format.h>
 
-
 // The ## was a no-op that only MSVC accepted: FuncName is already a complete
 // token here, and a conforming preprocessor rejects a ## with nothing on its
 // left to paste onto.
-#define REGISTER_CMD_FUNC( cmd, FuncName ) \
-processCmdsFuncs[cmd] = &CGameServer::FuncName;
+#define REGISTER_CMD_FUNC( cmd, FuncName ) processCmdsFuncs[cmd] = &CGameServer::FuncName;
 
 void ForcePacketRegistration(); // For too smart linker
 
-CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile,
-	const std::string &szBackendOverride, const std::string &szDatabaseFileOverride )
-: pCommands( _pCommands )
+CGameServer::CGameServer( CCommands *_pCommands,
+                          const std::string &szCfgFile,
+                          const std::string &szBackendOverride,
+                          const std::string &szDatabaseFileOverride )
+		: pCommands( _pCommands )
 {
 	REGISTER_CMD_FUNC( ESC_CLIENTS, CommandClientsList );
 	REGISTER_CMD_FUNC( ESC_CLIENT_STATE, CommandClientState );
@@ -166,15 +166,15 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile,
 			std::string szPwd = passwords[i];
 			std::string szEmail = emails[i];
 			if ( !pClients->IsNickRegistered( szName ) )
-				pClients->Register( szName, szPwd, szName + szPwd + std::to_string(  names.size() ), szEmail );
+				pClients->Register( szName, szPwd, szName + szPwd + std::to_string( names.size() ), szEmail );
 		}
 	}
 
-//		for ( int i = 0; i < 10000; ++i )
-//		{
-//			string szText = std::to_string(  i );
-//			pClients->Register( szText, szText, szText );
-//		}
+	//		for ( int i = 0; i < 10000; ++i )
+	//		{
+	//			string szText = std::to_string(  i );
+	//			pClients->Register( szText, szText, szText );
+	//		}
 
 	pNet = new CNet( nNetVersion, nPort, 30 );
 	CNet::SetTimeOut( 20.0f );
@@ -207,13 +207,13 @@ void CGameServer::ProcessCommands()
 	while ( pCommands->GetCommand( &cmd ) )
 	{
 		std::unordered_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
-//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
+		//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
 			continue;
 
 		PROCESS_CMD_FUNC pfnFunc = iter->second;
-		(this->*pfnFunc)( cmd );
+		( this->*pfnFunc )( cmd );
 	}
 
 	while ( !consoleCommandPackets.empty() )
@@ -318,7 +318,8 @@ void CGameServer::CommandClientsList( const SCommand &cmd )
 			if ( onLine.size() < 20 )
 			{
 				szList = "clients list: \n";
-				for ( std::unordered_map<int, SCommonClientInfo>::const_iterator iter = onLine.begin(); iter != onLine.end(); ++iter )
+				for ( std::unordered_map<int, SCommonClientInfo>::const_iterator iter = onLine.begin(); iter != onLine.end();
+				      ++iter )
 				{
 					std::string szNick;
 					if ( !pClients->GetNick( iter->first, &szNick ) )
@@ -383,9 +384,15 @@ void CGameServer::CommandClientState( const SCommand &cmd )
 
 			switch ( clientInfo.eState )
 			{
-				case ES_ONLINE: szStr += "online"; break;
-				case ES_AWAY: szStr += "away"; break;
-				case ES_INGAME: szStr += "ingame"; break;
+				case ES_ONLINE:
+					szStr += "online";
+					break;
+				case ES_AWAY:
+					szStr += "away";
+					break;
+				case ES_INGAME:
+					szStr += "ingame";
+					break;
 			}
 
 			switch ( clientInfo.cLobbyID )
@@ -405,16 +412,16 @@ void CGameServer::CommandClientState( const SCommand &cmd )
 			else
 				szStr += fmt::format( ", in game {}", clientInfo.nGameID );
 
-			WriteMSG( "%s", (szStr + "\n").c_str() );
+			WriteMSG( "%s", ( szStr + "\n" ).c_str() );
 		}
 	}
 }
 
 void CGameServer::CommandReloadConfig( const SCommand &cmd )
 {
-	for ( std::vector< CPtr<CPacketProcessor> >::iterator it = lobbies.begin(); it != lobbies.end(); ++it )
+	for ( std::vector<CPtr<CPacketProcessor>>::iterator it = lobbies.begin(); it != lobbies.end(); ++it )
 	{
-		CPacketProcessor * pLobby = *it;
+		CPacketProcessor *pLobby = *it;
 		pLobby->ReloadConfig();
 	}
 	WriteMSG( "%s", "Configuration reloaded.\n" );
@@ -438,8 +445,10 @@ void CGameServer::CommandBroadcast( const SCommand &cmd )
 	}
 	std::wstring wszText = NStr::ToUnicode( szText );
 	CChatLobby::SetWelcomeText( wszText );
-	const std::unordered_map<int, SCommonClientInfo>& onlineClients = pClients->GetOnLine();
-	for ( std::unordered_map<int, SCommonClientInfo>::const_iterator it = onlineClients.begin(); it != onlineClients.end(); ++it )
+	const std::unordered_map<int, SCommonClientInfo> &onlineClients = pClients->GetOnLine();
+	for ( std::unordered_map<int, SCommonClientInfo>::const_iterator it = onlineClients.begin();
+	      it != onlineClients.end();
+	      ++it )
 	{
 		const int nID = it->first;
 		pNet->SendPacket( new CSystemBroadcastPacket( nID, wszText ) );

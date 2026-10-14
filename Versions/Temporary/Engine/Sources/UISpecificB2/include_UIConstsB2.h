@@ -8,6 +8,7 @@ void PostLoad( bool bInEditor )
 		it->PostLoad( bInEditor );
 	for ( std::vector<SMLTag>::iterator it = tags.begin(); it != tags.end(); ++it )
 		it->PostLoad( bInEditor );
-	for ( std::vector<SMPLocalizedGameType>::iterator it = mPLocalizedGameTypes.begin(); it != mPLocalizedGameTypes.end(); ++it )
+	for ( std::vector<SMPLocalizedGameType>::iterator it = mPLocalizedGameTypes.begin(); it != mPLocalizedGameTypes.end();
+	      ++it )
 		it->PostLoad( bInEditor );
 }

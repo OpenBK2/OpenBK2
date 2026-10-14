@@ -16,10 +16,7 @@ bool CSoundSample::b3DSoundShare = false;
 // **
 // ************************************************************************************************************************ //
 
-CSoundSample::CSoundSample()
-: sample( 0 )
-{
-}
+CSoundSample::CSoundSample() : sample( 0 ) {}
 
 CSoundSample::~CSoundSample()
 {
@@ -41,7 +38,7 @@ void CSoundSample::SetSample( FSOUND_SAMPLE *_sample )
 		FSOUND_Sample_SetMinMaxDistance( sample, 45, 1000000000.0f );
 }
 
-FSOUND_SAMPLE* CSoundSample::GetInternalContainer()
+FSOUND_SAMPLE *CSoundSample::GetInternalContainer()
 {
 	return sample;
 }
@@ -64,9 +61,10 @@ void CSoundSample::SetKey( const CDBID &dbid )
 		if ( stream.IsOk() )
 		{
 			const int nSize = stream.GetSize();
-			std::vector<char> data(nSize);
+			std::vector<char> data( nSize );
 			stream.Read( &data[0], nSize );
-			FSOUND_SAMPLE *pSample = FSOUND_Sample_Load( FSOUND_UNMANAGED, &data[0], /*( b3DSoundShare ? FSOUND_HW3D : FSOUND_2D ) |*/ FSOUND_LOADMEMORY, 0, nSize );
+			FSOUND_SAMPLE *pSample = FSOUND_Sample_Load(
+					FSOUND_UNMANAGED, &data[0], /*( b3DSoundShare ? FSOUND_HW3D : FSOUND_2D ) |*/ FSOUND_LOADMEMORY, 0, nSize );
 			SetSample( pSample );
 		}
 	}

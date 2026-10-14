@@ -2,12 +2,12 @@
 
 #include "Server_Client_Common_export.h"
 
-
 class SERVER_CLIENT_COMMON_EXPORT CPrimeNumbers : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CPrimeNumbers );
 	std::vector<int> numbers;
 	std::unordered_set<int> isPrime;
+
 public:
 	CPrimeNumbers();
 

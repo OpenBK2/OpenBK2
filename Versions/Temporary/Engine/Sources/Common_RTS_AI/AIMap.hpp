@@ -17,10 +17,11 @@
 // to include.
 #include "Terrain.h"
 
-inline bool operator < ( const SVector &cell1, const SVector &cell2 );
+inline bool operator<( const SVector &cell1, const SVector &cell2 );
 
 template <class TContainter>
-inline void CAIMap::PushTile( const SVector &vCenter, const SVector &tile, TContainter *tiles, CArray2D1Bit &mask, const int nMaxRadius )
+inline void CAIMap::PushTile(
+		const SVector &vCenter, const SVector &tile, TContainter *tiles, CArray2D1Bit &mask, const int nMaxRadius )
 {
 	if ( !mask.GetData( tile.x + nMaxRadius, tile.y + nMaxRadius ) )
 	{
@@ -31,39 +32,48 @@ inline void CAIMap::PushTile( const SVector &vCenter, const SVector &tile, TCont
 }
 
 template <class TContainter>
-inline bool CAIMap::Process8Tiles( const SVector &vCenter, const SVector &vOffset, TContainter *pTiles, const EAIClasses aiClass, const bool bAddOnly, CArray2D1Bit &mask )
+inline bool CAIMap::Process8Tiles( const SVector &vCenter,
+                                   const SVector &vOffset,
+                                   TContainter *pTiles,
+                                   const EAIClasses aiClass,
+                                   const bool bAddOnly,
+                                   CArray2D1Bit &mask )
 {
 	if ( bAddOnly )
 	{
-		const int nMaxRadius = ( mask.GetSizeX()-1 ) / 2;
-		PushTile( vCenter, SVector( vOffset.x,  vOffset.y  ), pTiles, mask, nMaxRadius );
-		PushTile( vCenter, SVector( -vOffset.x, vOffset.y  ), pTiles, mask, nMaxRadius );
-		PushTile( vCenter, SVector( vOffset.x,  -vOffset.y ), pTiles, mask, nMaxRadius );
+		const int nMaxRadius = ( mask.GetSizeX() - 1 ) / 2;
+		PushTile( vCenter, SVector( vOffset.x, vOffset.y ), pTiles, mask, nMaxRadius );
+		PushTile( vCenter, SVector( -vOffset.x, vOffset.y ), pTiles, mask, nMaxRadius );
+		PushTile( vCenter, SVector( vOffset.x, -vOffset.y ), pTiles, mask, nMaxRadius );
 		PushTile( vCenter, SVector( -vOffset.x, -vOffset.y ), pTiles, mask, nMaxRadius );
 
-		PushTile( vCenter, SVector( vOffset.y,  vOffset.x  ), pTiles, mask, nMaxRadius );
-		PushTile( vCenter, SVector( -vOffset.y, vOffset.x  ), pTiles, mask, nMaxRadius );
-		PushTile( vCenter, SVector( vOffset.y,  -vOffset.x ), pTiles, mask, nMaxRadius );
+		PushTile( vCenter, SVector( vOffset.y, vOffset.x ), pTiles, mask, nMaxRadius );
+		PushTile( vCenter, SVector( -vOffset.y, vOffset.x ), pTiles, mask, nMaxRadius );
+		PushTile( vCenter, SVector( vOffset.y, -vOffset.x ), pTiles, mask, nMaxRadius );
 		PushTile( vCenter, SVector( -vOffset.y, -vOffset.x ), pTiles, mask, nMaxRadius );
 		return false;
 	}
 	else
 	{
-		return
-			IsLocked( vCenter + SVector( vOffset.x,  vOffset.y  ), aiClass ) ||
-			IsLocked( vCenter + SVector( -vOffset.x, vOffset.y  ), aiClass ) ||
-			IsLocked( vCenter + SVector( vOffset.x,  -vOffset.y ), aiClass ) ||
-			IsLocked( vCenter + SVector( -vOffset.x, -vOffset.y ), aiClass ) ||
+		return IsLocked( vCenter + SVector( vOffset.x, vOffset.y ), aiClass ) ||
+		       IsLocked( vCenter + SVector( -vOffset.x, vOffset.y ), aiClass ) ||
+		       IsLocked( vCenter + SVector( vOffset.x, -vOffset.y ), aiClass ) ||
+		       IsLocked( vCenter + SVector( -vOffset.x, -vOffset.y ), aiClass ) ||
 
-			IsLocked( vCenter + SVector( vOffset.y,  vOffset.x  ), aiClass ) ||
-			IsLocked( vCenter + SVector( -vOffset.y, vOffset.x  ), aiClass ) ||
-			IsLocked( vCenter + SVector( vOffset.y,  -vOffset.x ), aiClass ) ||
-			IsLocked( vCenter + SVector( -vOffset.y, -vOffset.x ), aiClass );
+		       IsLocked( vCenter + SVector( vOffset.y, vOffset.x ), aiClass ) ||
+		       IsLocked( vCenter + SVector( -vOffset.y, vOffset.x ), aiClass ) ||
+		       IsLocked( vCenter + SVector( vOffset.y, -vOffset.x ), aiClass ) ||
+		       IsLocked( vCenter + SVector( -vOffset.y, -vOffset.x ), aiClass );
 	}
 }
 
 template <class TContainter>
-inline bool CAIMap::ProcessLineTiles( const SVector &vCenter, const SVector &vOffset, TContainter *pTiles, const EAIClasses aiClass, const bool bAddOnly, CArray2D1Bit &mask )
+inline bool CAIMap::ProcessLineTiles( const SVector &vCenter,
+                                      const SVector &vOffset,
+                                      TContainter *pTiles,
+                                      const EAIClasses aiClass,
+                                      const bool bAddOnly,
+                                      CArray2D1Bit &mask )
 {
 	CBres bres;
 	bres.InitPoint( SVector( 0, 0 ), vOffset );
@@ -75,16 +85,19 @@ inline bool CAIMap::ProcessLineTiles( const SVector &vCenter, const SVector &vOf
 		if ( Process8Tiles( vCenter, curOffset, pTiles, aiClass, bAddOnly, mask ) )
 			return true;
 		bres.MakePointStep();
-	}
-	while ( curOffset != vOffset );
+	} while ( curOffset != vOffset );
 	return false;
 }
 
 template <class TContainter, int N>
-inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter, const float fRadius, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& )
+inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter,
+                                             const float fRadius,
+                                             TContainter *pTiles,
+                                             const EAIClasses aiClass,
+                                             const SGenericNumber<N> & )
 {
 	const SVector vTileCenter = GetTile( vCenter );
-	const int nTileRadius = fRadius/GetTileSize();
+	const int nTileRadius = fRadius / GetTileSize();
 
 	if ( N )
 		pTiles->clear();
@@ -93,8 +106,8 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter, const float f
 	{
 		const int nSizeX = GetSizeX() * GetTileSize();
 		const int nSizeY = GetSizeY() * GetTileSize();
-		if ( vTileCenter.x - nTileRadius < 0 || vTileCenter.x + nTileRadius > nSizeX ||
-				 vTileCenter.y - nTileRadius < 0 || vTileCenter.y + nTileRadius > nSizeY )
+		if ( vTileCenter.x - nTileRadius < 0 || vTileCenter.x + nTileRadius > nSizeX || vTileCenter.y - nTileRadius < 0 ||
+		     vTileCenter.y + nTileRadius > nSizeY )
 			return true;
 	}
 
@@ -106,12 +119,12 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter, const float f
 	}
 
 	CArray2D1Bit mask;
-	mask.SetSizes( 2*nTileRadius+1, 2*nTileRadius+1 );
+	mask.SetSizes( 2 * nTileRadius + 1, 2 * nTileRadius + 1 );
 	mask.FillZero();
 
 	int x = 0;
 	int y = nTileRadius;
-	int d = 3 - 2*nTileRadius;
+	int d = 3 - 2 * nTileRadius;
 	while ( x <= y )
 	{
 		if ( N )
@@ -126,11 +139,11 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter, const float f
 		}
 		if ( d < 0 )
 		{
-			d += 4*x + 6;
+			d += 4 * x + 6;
 		}
 		else
 		{
-			d += 4*( x-y ) + 10;
+			d += 4 * ( x - y ) + 10;
 			y--;
 			if ( N )
 			{
@@ -149,10 +162,14 @@ inline bool CAIMap::ProcessLargeCircleTiles( const CVec2 &vCenter, const float f
 }
 
 template <class TContainter, int N>
-inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter, const float fRadius, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& )
+inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter,
+                                        const float fRadius,
+                                        TContainter *pTiles,
+                                        const EAIClasses aiClass,
+                                        const SGenericNumber<N> & )
 {
 	const SVector vTileCenter = GetTile( vCenter );
-	const int nTileRadius = fRadius/GetTileSize();
+	const int nTileRadius = fRadius / GetTileSize();
 
 	if ( pTiles )
 		pTiles->clear();
@@ -161,11 +178,11 @@ inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter, const float fRadiu
 	{
 		const int nSizeX = GetSizeX() * GetTileSize();
 		const int nSizeY = GetSizeY() * GetTileSize();
-		if ( vTileCenter.x - nTileRadius < 0 || vTileCenter.x + nTileRadius > nSizeX ||
-				 vTileCenter.y - nTileRadius < 0 || vTileCenter.y + nTileRadius > nSizeY )
+		if ( vTileCenter.x - nTileRadius < 0 || vTileCenter.x + nTileRadius > nSizeX || vTileCenter.y - nTileRadius < 0 ||
+		     vTileCenter.y + nTileRadius > nSizeY )
 			return true;
 	}
-/*
+	/*
 	if ( nTileRadius < 2 )
 	{
 		if ( N )
@@ -188,7 +205,13 @@ inline bool CAIMap::ProcessCircleTiles( const CVec2 &vCenter, const float fRadiu
 }
 
 template <class TContainter, int N>
-inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& )
+inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1,
+                                            const CVec2 &v2,
+                                            const CVec2 &v3,
+                                            const CVec2 &v4,
+                                            TContainter *pTiles,
+                                            const EAIClasses aiClass,
+                                            const SGenericNumber<N> & )
 {
 	if ( N )
 		pTiles->clear();
@@ -199,8 +222,8 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 		const int nSizeX = GetSizeX() * GetTileSize();
 		const int nSizeY = GetSizeY() * GetTileSize();
 		if ( v1.x < 0 || v1.y < 0 || v2.x < 0 || v2.y < 0 || v3.x < 0 || v3.y < 0 || v4.x < 0 || v4.y < 0 ||
-			v1.x >= nSizeX || v1.y >= nSizeY || v2.x >= nSizeX || v2.y >= nSizeY ||
-			v3.x >= nSizeX || v3.y >= nSizeY || v4.x >= nSizeX || v4.y >= nSizeY )
+		     v1.x >= nSizeX || v1.y >= nSizeY || v2.x >= nSizeX || v2.y >= nSizeY || v3.x >= nSizeX || v3.y >= nSizeY ||
+		     v4.x >= nSizeX || v4.y >= nSizeY )
 			return true;
 	}
 
@@ -220,12 +243,18 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 	const SVector tile4 = GetTile( v4 );
 
 	SVector p1( tile1 ), p2( tile1 );
-	if ( tile2.y < p1.y ) p1 = tile2;
-	if ( tile2.y > p2.y ) p2 = tile2;
-	if ( tile3.y < p1.y ) p1 = tile3;
-	if ( tile3.y > p2.y ) p2 = tile3;
-	if ( tile4.y < p1.y ) p1 = tile4;
-	if ( tile4.y > p2.y ) p2 = tile4;
+	if ( tile2.y < p1.y )
+		p1 = tile2;
+	if ( tile2.y > p2.y )
+		p2 = tile2;
+	if ( tile3.y < p1.y )
+		p1 = tile3;
+	if ( tile3.y > p2.y )
+		p2 = tile3;
+	if ( tile4.y < p1.y )
+		p1 = tile4;
+	if ( tile4.y > p2.y )
+		p2 = tile4;
 
 	if ( p1 == p2 )
 	{
@@ -252,8 +281,7 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 				return true;
 
 			bres.MakePointStep();
-		}
-		while ( curTile != p2 );
+		} while ( curTile != p2 );
 	}
 	else
 	{
@@ -267,7 +295,7 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 			CVec2 curPoint = GetPointByTile( curTile );
 
 			if ( line1.GetSign( curPoint ) == sign1 && line2.GetSign( curPoint ) == sign2 &&
-					 line3.GetSign( curPoint ) == sign3 && line4.GetSign( curPoint ) == sign4 )
+			     line3.GetSign( curPoint ) == sign3 && line4.GetSign( curPoint ) == sign4 )
 			{
 				if ( IsTileInside( curTile ) )
 				{
@@ -281,7 +309,7 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 			--curTile.x;
 			curPoint.x -= GetTileSize();
 			while ( line1.GetSign( curPoint ) == sign1 && line2.GetSign( curPoint ) == sign2 &&
-							line3.GetSign( curPoint ) == sign3 && line4.GetSign( curPoint ) == sign4 )
+			        line3.GetSign( curPoint ) == sign3 && line4.GetSign( curPoint ) == sign4 )
 			{
 				if ( IsTileInside( curTile ) )
 				{
@@ -301,7 +329,7 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 			++curTile.x;
 			curPoint.x += GetTileSize();
 			while ( line1.GetSign( curPoint ) == sign1 && line2.GetSign( curPoint ) == sign2 &&
-							line3.GetSign( curPoint ) == sign3 && line4.GetSign( curPoint ) == sign4 )
+			        line3.GetSign( curPoint ) == sign3 && line4.GetSign( curPoint ) == sign4 )
 			{
 				if ( IsTileInside( curTile ) )
 				{
@@ -319,7 +347,7 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 				bFlag = false;
 			else
 			{
-				const int y  = bres.GetDirection().y;
+				const int y = bres.GetDirection().y;
 				do
 				{
 					bres.MakePointStep();
@@ -343,38 +371,39 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 	return false;
 }
 
-template<class TContainter>
-inline void CAIMap::GetTilesCoveredByQuadrangle( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles )
+template <class TContainter>
+inline void CAIMap::GetTilesCoveredByQuadrangle(
+		const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles )
 {
 	ProcessQuadrangleTiles( v1, v2, v3, v4, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 
-template<class TContainter>
+template <class TContainter>
 inline void CAIMap::GetTilesCoveredByCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles )
 {
 	ProcessCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 
-template<class TContainter>
+template <class TContainter>
 inline void CAIMap::GetTilesCoveredByLargeCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles )
 {
 	ProcessLargeCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 
-template<class TContainter>
+template <class TContainter>
 inline void CAIMap::GetTilesCoveredByRect( const SRect &rect, TContainter *pTiles )
 {
 	ProcessQuadrangleTiles( rect.v1(), rect.v2(), rect.v3(), rect.v4(), pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 
 // для GetTilesCoveredByRectSides
-template<typename TContainter>
+template <typename TContainter>
 class CTilesCollector
 {
 public:
 	TContainter *pTiles = nullptr;
 	CAIMap *pAIMap = nullptr;
-	CTilesCollector( TContainter* _pTiles, CAIMap *_pAIMap ) : pTiles( _pTiles ), pAIMap( _pAIMap ) { }
+	CTilesCollector( TContainter *_pTiles, CAIMap *_pAIMap ) : pTiles( _pTiles ), pAIMap( _pAIMap ) {}
 
 	bool operator()( float x, float y )
 	{
@@ -385,13 +414,29 @@ public:
 	}
 };
 
-template<class TContainter>
+template <class TContainter>
 inline void CAIMap::GetTilesCoveredByRectSides( const SRect &rect, TContainter *pTiles )
 {
 	CTilesCollector<TContainter> a( pTiles, this );
 
-	MakeLine2( rect.v1().x / GetTileSize(), rect.v1().y / GetTileSize(), rect.v2().x / GetTileSize(), rect.v2().y / GetTileSize(), a );
-	MakeLine2( rect.v2().x / GetTileSize(), rect.v2().y / GetTileSize(), rect.v3().x / GetTileSize(), rect.v3().y / GetTileSize(), a );
-	MakeLine2( rect.v3().x / GetTileSize(), rect.v3().y / GetTileSize(), rect.v4().x / GetTileSize(), rect.v4().y / GetTileSize(), a );
-	MakeLine2( rect.v4().x / GetTileSize(), rect.v4().y / GetTileSize(), rect.v1().x / GetTileSize(), rect.v1().y / GetTileSize(), a );
+	MakeLine2( rect.v1().x / GetTileSize(),
+	           rect.v1().y / GetTileSize(),
+	           rect.v2().x / GetTileSize(),
+	           rect.v2().y / GetTileSize(),
+	           a );
+	MakeLine2( rect.v2().x / GetTileSize(),
+	           rect.v2().y / GetTileSize(),
+	           rect.v3().x / GetTileSize(),
+	           rect.v3().y / GetTileSize(),
+	           a );
+	MakeLine2( rect.v3().x / GetTileSize(),
+	           rect.v3().y / GetTileSize(),
+	           rect.v4().x / GetTileSize(),
+	           rect.v4().y / GetTileSize(),
+	           a );
+	MakeLine2( rect.v4().x / GetTileSize(),
+	           rect.v4().y / GetTileSize(),
+	           rect.v1().x / GetTileSize(),
+	           rect.v1().y / GetTileSize(),
+	           a );
 }

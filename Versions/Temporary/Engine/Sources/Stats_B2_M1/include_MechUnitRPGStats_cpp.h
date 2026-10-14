@@ -7,9 +7,9 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 	if ( !bInEditor )
 	{
 		// градусы/сек <=> угол 65536/тик
-		fRotateSpeed *= float( (65536.0 / 360.0) / 1000.0 );
-		fTiltSpeed *= float( (65536.0 / 360.0) / 1000.0 );
-		fTiltAcceleration *= float( (65536.0 / 360.0) / 1000.0 / 1000.0 );
+		fRotateSpeed *= float( ( 65536.0 / 360.0 ) / 1000.0 );
+		fTiltSpeed *= float( ( 65536.0 / 360.0 ) / 1000.0 );
+		fTiltAcceleration *= float( ( 65536.0 / 360.0 ) / 1000.0 / 1000.0 );
 		// метры <=> AI точки
 		fTurnRadius *= float( 32.0f );
 		fMaxHeight *= float( 32.0f );
@@ -53,7 +53,7 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 		CountShellTypes( -1, i );
 
 	for ( int i = 0; i < allowedPlaneManuvers.size(); ++i )
-		manuverMap[int(allowedPlaneManuvers[i])] = true;
+		manuverMap[int( allowedPlaneManuvers[i] )] = true;
 }
 
 }

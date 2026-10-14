@@ -15,10 +15,17 @@ struct SStats
 	MRU_TYPE nCurrentRU;
 	bool bThrashing;
 
-	SStats() { nEldestEntry = MRU_LAST; nUsed = 0; nFree = 0; nBlocks = 0; bThrashing = false; }
+	SStats()
+	{
+		nEldestEntry = MRU_LAST;
+		nUsed = 0;
+		nFree = 0;
+		nBlocks = 0;
+		bThrashing = false;
+	}
 };
 
-template<class T>
+template <class T>
 class CShortPtrAllocator
 {
 public:
@@ -27,15 +34,23 @@ public:
 	{
 		NIL = 0xffffffff
 	};
+
 private:
 	ZDATA
 	std::vector<T> buffer;
 	pointer nFree, nLast;
-public:
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&buffer); f.Add(3,&nFree); f.Add(4,&nLast); return 0; }
 
-	CShortPtrAllocator(): nFree(NIL), nLast(0) {}
-	T& operator()( pointer p ) { return buffer[p]; }
+public:
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &buffer );
+		f.Add( 3, &nFree );
+		f.Add( 4, &nLast );
+		return 0;
+	}
+
+	CShortPtrAllocator() : nFree( NIL ), nLast( 0 ) {}
+	T &operator()( pointer p ) { return buffer[p]; }
 	pointer alloc()
 	{
 		if ( nFree != NIL )
@@ -55,28 +70,35 @@ public:
 		buffer[p].pNext = nFree;
 		nFree = p;
 		//delete p;
-/*		Node( p ).pUser = 0;
+		/*		Node( p ).pUser = 0;
 		Node( p ).pNext = freePtr;
 		freePtr = p;*/
 	}
 };
 
-
-template<template<class T> class TAlloc, class TElement, class TUser>
+template <template <class T> class TAlloc, class TElement, class TUser>
 class CGatheringCache;
 
-template<template<class T> class TAlloc, class TElement, class TUser>
+template <template <class T> class TAlloc, class TElement, class TUser>
 class CGatherElementBase : virtual public CObjectBase
 {
 protected:
 	// no copies are allowed!
-	typedef CGatheringCache<TAlloc,TElement,TUser> CTracker;
+	typedef CGatheringCache<TAlloc, TElement, TUser> CTracker;
+
 private:
 	ZDATA
 	typename CTracker::pointer p;
 	CPtr<CTracker> pTracker;
+
 public:
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&p); f.Add(3,&pTracker); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &p );
+		f.Add( 3, &pTracker );
+		return 0;
+	}
+
 protected:
 	~CGatherElementBase()
 	{
@@ -86,7 +108,8 @@ protected:
 			pTracker = 0;
 		}
 	}
-	CTracker* GetTracker() const { return pTracker; }
+	CTracker *GetTracker() const { return pTracker; }
+
 public:
 	virtual bool Touch()
 	{
@@ -103,13 +126,13 @@ public:
 			return pTracker->GetMRU( p );
 		return 0;
 	}
-	friend class CGatheringCache<TAlloc,TElement,TUser>;
+	friend class CGatheringCache<TAlloc, TElement, TUser>;
 };
 
-template<template<class T> class TAlloc, class TElement, class TUser>
-class CGatheringCache: public CObjectBase
+template <template <class T> class TAlloc, class TElement, class TUser>
+class CGatheringCache : public CObjectBase
 {
-	OBJECT_NOCOPY_METHODS(CGatheringCache);
+	OBJECT_NOCOPY_METHODS( CGatheringCache );
 	struct SElement;
 	typedef TAlloc<SElement> Alloc;
 	typedef typename Alloc::pointer pointer;
@@ -122,17 +145,37 @@ class CGatheringCache: public CObjectBase
 		pointer pUp, pDown;
 		MRU_TYPE nRU;
 		CMObj<TUser> pUser;
-		ZEND int operator&( CStructureSaver &f ) { f.Add(2,&elem); f.Add(3,&pNextPeer); f.Add(4,&pNext); f.Add(5,&pPrev); f.Add(6,&pUp); f.Add(7,&pDown); f.Add(8,&nRU); f.Add(9,&pUser); return 0; }
+		ZEND int operator&( CStructureSaver &f )
+		{
+			f.Add( 2, &elem );
+			f.Add( 3, &pNextPeer );
+			f.Add( 4, &pNext );
+			f.Add( 5, &pPrev );
+			f.Add( 6, &pUp );
+			f.Add( 7, &pDown );
+			f.Add( 8, &nRU );
+			f.Add( 9, &pUser );
+			return 0;
+		}
 	};
 	ZDATA
 	Alloc alloc;
 	MRU_TYPE nCurrentRU, nLatestAllocRU;
 	bool bThrashing;
 	std::vector<pointer> nodes;
-public:
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&alloc); f.Add(3,&nCurrentRU); f.Add(4,&nLatestAllocRU); f.Add(5,&bThrashing); f.Add(6,&nodes); return 0; }
-private:
 
+public:
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &alloc );
+		f.Add( 3, &nCurrentRU );
+		f.Add( 4, &nLatestAllocRU );
+		f.Add( 5, &bThrashing );
+		f.Add( 6, &nodes );
+		return 0;
+	}
+
+private:
 	void EraseNode( pointer pNode )
 	{
 		if ( pNode == Alloc::NIL )
@@ -151,15 +194,15 @@ private:
 		{
 			ASSERT( !IsValid( node.pUser ) );
 			// wipe out children
-			for(;;)
+			for ( ;; )
 			{
 				pointer pHold = p1;
-				p1 = alloc(p1).pNextPeer;
+				p1 = alloc( p1 ).pNextPeer;
 				EraseNode( pHold );
 				if ( p1 == Alloc::NIL )
 					break;
 			}
-			alloc(pNode).pDown = Alloc::NIL;
+			alloc( pNode ).pDown = Alloc::NIL;
 		}
 		else
 		{
@@ -190,11 +233,11 @@ private:
 	{
 		CGatheringCache *pThis;
 		pointer pLast, pUp;
-		SSplitter( CGatheringCache *_pThis, pointer _pUp ) : pLast( Alloc::NIL ), pThis(_pThis), pUp(_pUp) {}
+		SSplitter( CGatheringCache *_pThis, pointer _pUp ) : pLast( Alloc::NIL ), pThis( _pThis ), pUp( _pUp ) {}
 		void operator()( const TElement &_e, typename TElement::ESplitType t )
 		{
 			pointer p = pThis->alloc.alloc();
-			SElement &e = pThis->alloc(p);
+			SElement &e = pThis->alloc( p );
 			e.elem = _e;
 			e.pNextPeer = pLast;
 			e.pUp = pUp;
@@ -205,35 +248,35 @@ private:
 			if ( t != TElement::NONE )
 			{
 				SSplitter rec( pThis, p );
-				TElement src = pThis->alloc(p).elem;
+				TElement src = pThis->alloc( p ).elem;
 				src.Split( t, rec );
-				pThis->alloc(p).pDown = rec.pLast;
+				pThis->alloc( p ).pDown = rec.pLast;
 			}
 		}
 	};
 	void Split( pointer p, typename TElement::ESplitType t )
 	{
 		SSplitter split( this, p );
-		TElement e = alloc(p).elem;
+		TElement e = alloc( p ).elem;
 		e.Split( t, split );
-		alloc(p).pDown = split.pLast;
+		alloc( p ).pDown = split.pLast;
 	}
 	// subdivides p until reach elem size, returns pointer to node of _elem size
 	pointer GetAllocNode( pointer p, const TElement &_elem )
 	{
-		if ( alloc(p).elem.SameSize( _elem ) )
+		if ( alloc( p ).elem.SameSize( _elem ) )
 			return p;
-		TElement elem(_elem);
+		TElement elem( _elem );
 		typename TElement::ESplitType t = elem.Up();
 		ASSERT( _elem.GetHash() < nodes.size() );
 		pointer pHigher = GetAllocNode( p, elem );
 		Split( pHigher, t );
-		for ( pointer pRes = alloc(pHigher).pDown; pRes != Alloc::NIL; pRes = alloc(pRes).pNextPeer )
+		for ( pointer pRes = alloc( pHigher ).pDown; pRes != Alloc::NIL; pRes = alloc( pRes ).pNextPeer )
 		{
-			if ( alloc(pRes).elem.SameSize( _elem ) )
+			if ( alloc( pRes ).elem.SameSize( _elem ) )
 				return pRes;
 		}
-		ASSERT(0); // trouble happened - Split()/Up() for TElement are not reversible
+		ASSERT( 0 ); // trouble happened - Split()/Up() for TElement are not reversible
 		return p;
 	}
 	pointer AddRootNode( const TElement &elem )
@@ -245,7 +288,7 @@ private:
 		n.pUp = Alloc::NIL;
 		n.pDown = Alloc::NIL;
 		n.nRU = 0;
-		Link( nodes[ elem.GetHash() ], pNode );
+		Link( nodes[elem.GetHash()], pNode );
 		return pNode;
 	}
 
@@ -253,7 +296,7 @@ private:
 	bool Touch( pointer _p )
 	{
 		pointer p = _p;
-		for ( ; p != Alloc::NIL; p = alloc(p).pUp )
+		for ( ; p != Alloc::NIL; p = alloc( p ).pUp )
 		{
 			SElement &node = alloc( p );
 			if ( node.nRU == nCurrentRU )
@@ -261,7 +304,7 @@ private:
 			Unlink( p );
 			int nHash = node.elem.GetHash();
 			ASSERT( nHash >= 0 && nHash < nodes.size() );
-			Link( alloc( nodes[ nHash ] ).pPrev, p );
+			Link( alloc( nodes[nHash] ).pPrev, p );
 			node.nRU = nCurrentRU;
 		}
 		return true;
@@ -270,7 +313,7 @@ private:
 	void PlaceNodeSorted( pointer pNode )
 	{
 		SElement &node = alloc( pNode );
-		pointer pRoot = nodes[ node.elem.GetHash() ], pTest = node.pPrev;
+		pointer pRoot = nodes[node.elem.GetHash()], pTest = node.pPrev;
 		while ( pTest != pRoot && alloc( pTest ).nRU > node.nRU )
 			pTest = alloc( pTest ).pPrev;
 		Unlink( pNode );
@@ -326,11 +369,11 @@ private:
 		// check other peers, if all are empty - free parent
 		if ( node.pUp != Alloc::NIL )
 		{
-			ASSERT( !IsValid( alloc(node.pUp).pUser ) );
+			ASSERT( !IsValid( alloc( node.pUp ).pUser ) );
 			bool bHasChildren = false;
-			for ( pointer p = alloc(node.pUp).pDown; p != Alloc::NIL; p = alloc(p).pNextPeer )
+			for ( pointer p = alloc( node.pUp ).pDown; p != Alloc::NIL; p = alloc( p ).pNextPeer )
 			{
-				SElement &e = alloc(p);
+				SElement &e = alloc( p );
 				if ( e.nRU != 0 || e.pDown != Alloc::NIL )
 				{
 					bHasChildren = true;
@@ -347,11 +390,12 @@ private:
 		}
 		// place in front
 		Unlink( pNode );
-		Link( nodes[ alloc( pNode ).elem.GetHash() ], pNode );
+		Link( nodes[alloc( pNode ).elem.GetHash()], pNode );
 		RecalcRU( node.pUp );
 		//
 		SplitOnUsable( pNode );
 	}
+
 public:
 	struct SCachePlace
 	{
@@ -360,13 +404,16 @@ public:
 		MRU_TYPE nMRU;
 	};
 
-	CGatheringCache( MRU_TYPE _nCurrentRU = N_START_RU ): nCurrentRU( _nCurrentRU ), nLatestAllocRU(0), bThrashing(false) {}
+	CGatheringCache( MRU_TYPE _nCurrentRU = N_START_RU )
+			: nCurrentRU( _nCurrentRU ), nLatestAllocRU( 0 ), bThrashing( false )
+	{
+	}
 	~CGatheringCache() { Clear(); }
 	void Clear()
 	{
 		for ( int k = nodes.size() - 1; k >= 0; --k )
 		{
-			for ( pointer p = alloc(nodes[k]).pNext; p != nodes[k]; p = alloc(p).pNext )
+			for ( pointer p = alloc( nodes[k] ).pNext; p != nodes[k]; p = alloc( p ).pNext )
 				MakeFreeLeaf( p );
 		}
 	}
@@ -424,10 +471,10 @@ public:
 		if ( nodes.empty() )
 			return false;
 		// search for node with minimal RU
-		TElement elem(_elem);
+		TElement elem( _elem );
 		pointer pBest = Alloc::NIL;
 		MRU_TYPE nBestMRU = MRU_LAST;
-		for(;;)
+		for ( ;; )
 		{
 			int n = elem.GetHash();
 			if ( n >= nodes.size() )
@@ -465,7 +512,7 @@ public:
 		pPlace->resPlace = nRes.elem;
 		Touch( pNode );
 	}
-	MRU_TYPE GetMRU( pointer p ) { return alloc(p).nRU; }
+	MRU_TYPE GetMRU( pointer p ) { return alloc( p ).nRU; }
 	struct SStatePlace
 	{
 		TElement place;
@@ -473,7 +520,7 @@ public:
 		MRU_TYPE nMRU;
 
 		SStatePlace() {}
-		SStatePlace( const TElement &_e, TUser *_p, MRU_TYPE _nMRU ) : place(_e), pUser(_p), nMRU(_nMRU) {}
+		SStatePlace( const TElement &_e, TUser *_p, MRU_TYPE _nMRU ) : place( _e ), pUser( _p ), nMRU( _nMRU ) {}
 	};
 	void GetState( std::vector<SStatePlace> *pState )
 	{
@@ -481,9 +528,9 @@ public:
 		{
 			for ( pointer p = alloc( nodes[k] ).pNext; p != nodes[k]; p = alloc( p ).pNext )
 			{
-				SElement &e = alloc(p);
+				SElement &e = alloc( p );
 				if ( e.pDown == Alloc::NIL )
-				pState->push_back( SStatePlace( e.elem, e.pUser, e.nRU ) );
+					pState->push_back( SStatePlace( e.elem, e.pUser, e.nRU ) );
 			}
 		}
 	}
@@ -509,9 +556,9 @@ public:
 	int GetHash() const
 	{
 		if ( nXSize > nYSize )
-			return nXSize * (nXSize + 1) + nYSize * 2;
+			return nXSize * ( nXSize + 1 ) + nYSize * 2;
 		else
-			return nYSize * (nYSize + 1) + nXSize * 2 + 1;
+			return nYSize * ( nYSize + 1 ) + nXSize * 2 + 1;
 	}
 	ESplitType Up()
 	{
@@ -537,59 +584,64 @@ public:
 			return YSPLIT;
 		return NONE;
 	}
-	bool SameSize( const CQuadTreeElement &a ) const
-	{
-		return nXSize == a.nXSize && nYSize == a.nYSize;
-	}
-	int GetSize() const { return 1<<(nXSize+nYSize); }
-	template<class TOutput>
-		void Split( ESplitType t, TOutput &out )
+	bool SameSize( const CQuadTreeElement &a ) const { return nXSize == a.nXSize && nYSize == a.nYSize; }
+	int GetSize() const { return 1 << ( nXSize + nYSize ); }
+	template <class TOutput>
+	void Split( ESplitType t, TOutput &out )
 	{
 		switch ( t )
 		{
 			case XSPLIT:
-				{
-					ESplitType tt = ( ( nXSize - 1 ) == nYSize ) ? NONE : XSPLIT;
-					out( CQuadTreeElement( nXSize - 1, nYSize, nShiftX, nShiftY ), tt );
-					out( CQuadTreeElement( nXSize - 1, nYSize, nShiftX + (1<<(nXSize-1)), nShiftY ), tt );
-				}
-				break;
+			{
+				ESplitType tt = ( ( nXSize - 1 ) == nYSize ) ? NONE : XSPLIT;
+				out( CQuadTreeElement( nXSize - 1, nYSize, nShiftX, nShiftY ), tt );
+				out( CQuadTreeElement( nXSize - 1, nYSize, nShiftX + ( 1 << ( nXSize - 1 ) ), nShiftY ), tt );
+			}
+			break;
 			case YSPLIT:
-				{
-					ESplitType tt = ( ( nYSize - 1 ) == nXSize ) ? NONE : YSPLIT;
-					out( CQuadTreeElement( nXSize, nYSize - 1, nShiftX, nShiftY ), tt );
-					out( CQuadTreeElement( nXSize, nYSize - 1, nShiftX, nShiftY + (1<<(nYSize-1)) ), tt );
-				}
-				break;
+			{
+				ESplitType tt = ( ( nYSize - 1 ) == nXSize ) ? NONE : YSPLIT;
+				out( CQuadTreeElement( nXSize, nYSize - 1, nShiftX, nShiftY ), tt );
+				out( CQuadTreeElement( nXSize, nYSize - 1, nShiftX, nShiftY + ( 1 << ( nYSize - 1 ) ) ), tt );
+			}
+			break;
 			case YBINARY:
-				out( CQuadTreeElement( nXSize, nYSize - 1, nShiftX, nShiftY + (1<<(nYSize-1)) ), XSPLIT );
+				out( CQuadTreeElement( nXSize, nYSize - 1, nShiftX, nShiftY + ( 1 << ( nYSize - 1 ) ) ), XSPLIT );
 				out( CQuadTreeElement( nXSize, nYSize - 1, nShiftX, nShiftY ), NONE );
 				break;
 			case XBINARY:
-				out( CQuadTreeElement( nXSize - 1, nYSize, nShiftX + (1<<(nXSize-1)), nShiftY ), YSPLIT );
+				out( CQuadTreeElement( nXSize - 1, nYSize, nShiftX + ( 1 << ( nXSize - 1 ) ), nShiftY ), YSPLIT );
 				out( CQuadTreeElement( nXSize - 1, nYSize, nShiftX, nShiftY ), NONE );
 				break;
 			case QUAD:
 				ASSERT( nXSize == nYSize );
 				out( CQuadTreeElement( nXSize - 1, nYSize - 1, nShiftX, nShiftY ), NONE );
-				out( CQuadTreeElement( nXSize - 1, nYSize - 1, nShiftX, nShiftY + (1<<(nYSize-1)) ), NONE );
-				out( CQuadTreeElement( nXSize - 1, nYSize - 1, nShiftX + (1<<(nYSize-1)), nShiftY ), NONE );
-				out( CQuadTreeElement( nXSize - 1, nYSize - 1, nShiftX + (1<<(nYSize-1)), nShiftY + (1<<(nYSize-1)) ), NONE );
+				out( CQuadTreeElement( nXSize - 1, nYSize - 1, nShiftX, nShiftY + ( 1 << ( nYSize - 1 ) ) ), NONE );
+				out( CQuadTreeElement( nXSize - 1, nYSize - 1, nShiftX + ( 1 << ( nYSize - 1 ) ), nShiftY ), NONE );
+				out( CQuadTreeElement(
+								 nXSize - 1, nYSize - 1, nShiftX + ( 1 << ( nYSize - 1 ) ), nShiftY + ( 1 << ( nYSize - 1 ) ) ),
+				     NONE );
 				break;
 		}
 	}
 	CQuadTreeElement() {}
 	CQuadTreeElement( int _nXSize, int _nYSize, int _nShiftX, int _nShiftY )
-		: nXSize(_nXSize), nYSize(_nYSize), nShiftX(_nShiftX), nShiftY(_nShiftY) {}
+			: nXSize( _nXSize ), nYSize( _nYSize ), nShiftX( _nShiftX ), nShiftY( _nShiftY )
+	{
+	}
 };
 
 const int N_MAX_FIB = 64;
 extern int nFibbonachiSeries[N_MAX_FIB];
-inline int fib( int nDepth ) { ASSERT( nDepth < N_MAX_FIB ); return nFibbonachiSeries[nDepth]; }
+inline int fib( int nDepth )
+{
+	ASSERT( nDepth < N_MAX_FIB );
+	return nFibbonachiSeries[nDepth];
+}
 inline int GetMajorFib( int _n )
 {
 	int k = 0;
-	while ( fib( k ) <_n )
+	while ( fib( k ) < _n )
 		++k;
 	return k;
 }
@@ -611,21 +663,17 @@ public:
 		return NONE;
 	}
 	ESplitType GetUsableSplit() const { return NONE; }
-	bool SameSize( const CFibElement &a ) const
-	{
-		return nSize == a.nSize;
-	}
+	bool SameSize( const CFibElement &a ) const { return nSize == a.nSize; }
 	int GetSize() const { return fib( nSize ); }
-	template<class TOutput>
-		void Split( ESplitType t, TOutput &out )
+	template <class TOutput>
+	void Split( ESplitType t, TOutput &out )
 	{
 		ASSERT( nSize > 0 );
 		out( CFibElement( nSize - 1, nShift ), NONE );
 		out( CFibElement( (std::max)( 0, nSize - 2 ), nShift + fib( nSize - 1 ) ), NONE );
 	}
 	CFibElement() {}
-	CFibElement( int _nSize, int _nShift )
-		: nSize(_nSize), nShift(_nShift) {}
+	CFibElement( int _nSize, int _nShift ) : nSize( _nSize ), nShift( _nShift ) {}
 };
 
 }

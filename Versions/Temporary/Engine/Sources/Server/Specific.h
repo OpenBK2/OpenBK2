@@ -1,6 +1,6 @@
 #pragma once
 
-void WriteMSG( const char* pszFormat, ... );
+void WriteMSG( const char *pszFormat, ... );
 
 #define CONSOLE_LOG_SILENCE
 #define USE_REMOTE_CONSOLE

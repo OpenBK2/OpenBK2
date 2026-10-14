@@ -20,10 +20,14 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 		NI_ASSERT( formerTilesType.size() == 0, "wrong call" );
 		// найти количество юнитов, которые могут быть на нашем пути.
 		int nUnits = 0;
-		for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, bigRect.center, (std::max)( bigRect.width, (std::max)(bigRect.lengthAhead,bigRect.lengthBack) ) );
-					!iter.IsFinished(); iter.Iterate() )
+		for ( CUnitsIter<0, 3> iter( 0,
+		                             ANY_PARTY,
+		                             bigRect.center,
+		                             (std::max)( bigRect.width, (std::max)( bigRect.lengthAhead, bigRect.lengthBack ) ) );
+		      !iter.IsFinished();
+		      iter.Iterate() )
 		{
-			if ( bigRect.IsIntersected( (*iter)->GetUnitRect() ) )
+			if ( bigRect.IsIntersected( ( *iter )->GetUnitRect() ) )
 			{
 				if ( ++nUnits > 1 )
 					return false;
@@ -34,18 +38,18 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 		// запомнить состояние залоченности на всем пути и выяснить возможность танку выехать
 		GetAIMap()->GetTilesCoveredByRect( bigRect, &pathTiles );
 
-		formerTilesType.resize( pathTiles.size(),0 );
+		formerTilesType.resize( pathTiles.size(), 0 );
 		int i = 0;
 		bool bPossible = true;
 		bAIClass = _bAIClass;
 		for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 		{
-			uint8_t b = GetTerrain()->GetTileLockInfo( (*it) );
+			uint8_t b = GetTerrain()->GetTileLockInfo( ( *it ) );
 			formerTilesType[i] = b;
-			bPossible &= !(formerTilesType[i] & bAIClass); // может ли танк проехать по нужному пути
+			bPossible &= !( formerTilesType[i] & bAIClass ); // может ли танк проехать по нужному пути
 			++i;
 		}
-		if (!bPossible)
+		if ( !bPossible )
 		{
 			pathTiles.clear();
 			formerTilesType.clear();
@@ -87,18 +91,18 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 
 void CLockWithUnlockPossibilities::Lock()
 {
-	int i=0;
-	uint8_t aiClass=0;
+	int i = 0;
+	uint8_t aiClass = 0;
 	bool aiAnyExists = false;
 
 	std::list<SObjTileInfo> tilesInfo;
 	for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 	{
-//		GetTerrain()->LockTile( (*it), formerTilesType[i] );
-		tilesInfo.push_back( SObjTileInfo(*it, formerTilesType[i]) );
+		//		GetTerrain()->LockTile( (*it), formerTilesType[i] );
+		tilesInfo.push_back( SObjTileInfo( *it, formerTilesType[i] ) );
 
 		aiClass |= formerTilesType[i];
-		aiAnyExists |= (formerTilesType[i]==EAC_ANY);
+		aiAnyExists |= ( formerTilesType[i] == EAC_ANY );
 		++i;
 	}
 
@@ -107,18 +111,18 @@ void CLockWithUnlockPossibilities::Lock()
 
 void CLockWithUnlockPossibilities::Unlock()
 {
-	int i=0;
-	uint8_t aiClass=0;
+	int i = 0;
+	uint8_t aiClass = 0;
 	bool aiAnyExists = false;
 
 	std::list<SObjTileInfo> tilesInfo;
 	for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 	{
-//		GetTerrain()->UnlockTile( (*it), formerTilesType[i] );
-		tilesInfo.push_back( SObjTileInfo(*it, formerTilesType[i]) );
+		//		GetTerrain()->UnlockTile( (*it), formerTilesType[i] );
+		tilesInfo.push_back( SObjTileInfo( *it, formerTilesType[i] ) );
 
 		aiClass |= formerTilesType[i];
-		aiAnyExists |= (formerTilesType[i]==EAC_ANY);
+		aiAnyExists |= ( formerTilesType[i] == EAC_ANY );
 		++i;
 	}
 

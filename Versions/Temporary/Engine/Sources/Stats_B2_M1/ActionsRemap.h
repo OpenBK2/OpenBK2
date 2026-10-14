@@ -2,7 +2,6 @@
 
 #include "Stats_B2_M1_export.h"
 
-
 #include "RPGStats.h"
 
 STATS_B2_M1_EXPORT NDb::EUnitSpecialAbility GetAbilityByCommand( EActionCommand actionCommand );

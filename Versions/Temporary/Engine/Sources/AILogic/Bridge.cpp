@@ -78,13 +78,13 @@ void CBridgeHeightRemover::Segment()
 //*														CBridgeSpan														*
 //*******************************************************************
 
-CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, const float _fHP, const uint16_t _nDir, const int nFrameIndex )
-: CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex ), pStats( _pStats ),
-	bNewBuilt( false ), bLocked( false ), bDeletingAround( false ),
-	nScriptID( -1 )
+CBridgeSpan::CBridgeSpan(
+		const SBridgeRPGStats *_pStats, const CVec3 &center, const float _fHP, const uint16_t _nDir, const int nFrameIndex )
+		: CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex ), pStats( _pStats ), bNewBuilt( false ),
+			bLocked( false ), bDeletingAround( false ), nScriptID( -1 )
 {
 	Init();
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
 
 	// под всем мостом запретить строить окопы.
@@ -101,7 +101,7 @@ void CBridgeSpan::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 {
 	pPlacement->nObjUniqueID = GetUniqueId();
 	pPlacement->dir = GetDir();
-	pPlacement->center = CVec2(GetCenter().x,GetCenter().y);
+	pPlacement->center = CVec2( GetCenter().x, GetCenter().y );
 	pPlacement->z = GetCenter().z;
 	pPlacement->fSpeed = 0;
 	pPlacement->dwNormal = GetHeights()->GetNormal( -1, -1 );
@@ -131,11 +131,8 @@ void CBridgeSpan::GetCoveredTiles( std::list<SVector> *pTiles ) const
 
 bool CBridgeSpan::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
-	return
-		( eAction == ACTION_NOTIFY_RPG_CHANGED ||
-			eAction == ACTION_NOTIFY_UPDATE_DIPLOMACY ||
-			eAction == ACTION_NOTIFY_CHANGE_FRAME_INDEX ||
-			eAction == ACTION_NOTIFY_NEW_ST_OBJ && bNewBuilt );
+	return ( eAction == ACTION_NOTIFY_RPG_CHANGED || eAction == ACTION_NOTIFY_UPDATE_DIPLOMACY ||
+	         eAction == ACTION_NOTIFY_CHANGE_FRAME_INDEX || eAction == ACTION_NOTIFY_NEW_ST_OBJ && bNewBuilt );
 }
 
 void CBridgeSpan::Build()
@@ -147,28 +144,37 @@ void CBridgeSpan::Build()
 	pFullBridge->SpanBuilt( this );
 }
 
-void CBridgeSpan::GetVisibility( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *visibility ) const
+void CBridgeSpan::GetVisibility(
+		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *visibility ) const
 {
 	const CVec3 vCenter( GetCenter() );
-	visibility->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetVisOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
+	visibility->Init( pStats->GetPassability( GetFrameIndex() ),
+	                  GetDir(),
+	                  pStats->GetVisOrigin( GetFrameIndex() ),
+	                  CVec2( vCenter.x, vCenter.y ) );
 }
 
-void CBridgeSpan::GetPassability( CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > *passability ) const
+void CBridgeSpan::GetPassability(
+		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> *passability ) const
 {
 	const CVec3 vCenter( GetCenter() );
-	passability->Init( pStats->GetPassability( GetFrameIndex() ), GetDir(), pStats->GetOrigin( GetFrameIndex() ), CVec2( vCenter.x, vCenter.y ) );
+	passability->Init( pStats->GetPassability( GetFrameIndex() ),
+	                   GetDir(),
+	                   pStats->GetOrigin( GetFrameIndex() ),
+	                   CVec2( vCenter.x, vCenter.y ) );
 }
 
 void CBridgeSpan::SetHeights()
 {
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
 
 	CArray2D<bool> newHeightsInfo;
 	const float fBridgeZ = GetCenter().z;
 	//DebugTrace( "Set bridge's heights at %2.3f + %2.3f = %2.3f", fBridgeZ, pStats->fHeight, fBridgeZ + pStats->fHeight );
 
-	newHeightsInfo.SetSizes( (pass.GetMaxX() - pass.GetMinX() ) / SConsts::TILE_SIZE + 1, (pass.GetMaxY() - pass.GetMinY())/SConsts::TILE_SIZE +1);
+	newHeightsInfo.SetSizes( ( pass.GetMaxX() - pass.GetMinX() ) / SConsts::TILE_SIZE + 1,
+	                         ( pass.GetMaxY() - pass.GetMinY() ) / SConsts::TILE_SIZE + 1 );
 	newHeightsInfo.FillEvery( false );
 
 	const SVector vStartTile( AICellsTiles::GetTile( pass.GetMinX(), pass.GetMinY() ) );
@@ -177,7 +183,7 @@ void CBridgeSpan::SetHeights()
 		for ( int y = pass.GetMinY(); y < pass.GetMaxY(); y += SConsts::TILE_SIZE )
 		{
 			const CVec2 vTileCenter( AICellsTiles::GetCenterOfTile( x, y ) );
-			const SVector tile( GetAIMap()->GetTile( x - pass.GetMinX(), y - pass.GetMinY()) );
+			const SVector tile( GetAIMap()->GetTile( x - pass.GetMinX(), y - pass.GetMinY() ) );
 
 			if ( pass.GetVal( vTileCenter ) )
 			{
@@ -187,16 +193,21 @@ void CBridgeSpan::SetHeights()
 		}
 	}
 	const SVector tileLeftDown( GetAIMap()->GetTile( CVec2( pass.GetMinX(), pass.GetMinY() ) ) );
-	nOldHeightsID = GetHeights()->UpdateLocalHeights( tileLeftDown.x, tileLeftDown.y, newHeightsInfo, pStats->fHeight + fBridgeZ );
+	nOldHeightsID =
+			GetHeights()->UpdateLocalHeights( tileLeftDown.x, tileLeftDown.y, newHeightsInfo, pStats->fHeight + fBridgeZ );
 	SVector tileUp, tileDown;
 	if ( GetHeights()->GetLocalHeightsInfo( &tileUp, &tileDown, nOldHeightsID ) )
 		theWarFog.SynchronizeHeights( tileUp, tileDown );
 
 	const CVec3 vCenter( GetCenter() );
-	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, CVec2( vCenter.x, vCenter.y ), SConsts::TILE_SIZE * (newHeightsInfo.GetSizeX() + newHeightsInfo.GetSizeY() ) );
-				!iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0, 0> iter( 0,
+	                             ANY_PARTY,
+	                             CVec2( vCenter.x, vCenter.y ),
+	                             SConsts::TILE_SIZE * ( newHeightsInfo.GetSizeX() + newHeightsInfo.GetSizeY() ) );
+	      !iter.IsFinished();
+	      iter.Iterate() )
 	{
-		CAIUnit * pUnit = *iter;
+		CAIUnit *pUnit = *iter;
 		if ( IsValidObj( pUnit ) && !pUnit->GetStats()->IsAviation() )
 			updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, pUnit, -1 );
 	}
@@ -213,7 +224,7 @@ void CBridgeSpan::DisplayBridgeTiles()
 	std::vector<SVector> tiles;
 
 	//Get tiles
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
 
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
@@ -238,7 +249,7 @@ void CBridgeSpan::CreateLockedTilesInfo( std::list<SObjTileInfo> *pTiles )
 {
 	pTiles->clear();
 
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
 	{
@@ -267,7 +278,7 @@ void CBridgeSpan::LockTiles()
 	if ( !oldTilesInfo.empty() )
 		return;
 
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
 	oldTilesInfo.clear();
 	for ( int x = pass.GetMinX(); x < pass.GetMaxX(); x += SConsts::TILE_SIZE )
@@ -291,7 +302,7 @@ void CBridgeSpan::RealLockTiles()
 	if ( fHP <= 0 || bLocked )
 		return;
 
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
 
 	bLocked = true;
@@ -378,7 +389,7 @@ void CBridgeSpan::Die( const float fDamage )
 	if ( bDeletingAround )
 		return;
 
-	SRect	boundRect;
+	SRect boundRect;
 	GetBoundRect( &boundRect );
 	theGraveyard.DelKilledUnitsFromBridge( boundRect );
 
@@ -387,20 +398,22 @@ void CBridgeSpan::Die( const float fDamage )
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	fHP = 0.0f;
 
-	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 	GetPassability( &pass );
 
 	// убить юнитов, стоявших на этом пролёте
 	const CVec2 rectCenter( ( pass.GetMaxX() + pass.GetMinX() ) * 0.5f, ( pass.GetMinY() + pass.GetMaxY() ) * 0.5f );
 	const CVec2 vAABBHalfSize( ( pass.GetMaxX() - pass.GetMinX() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS,
-		( pass.GetMaxY() - pass.GetMinY() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS );
+	                           ( pass.GetMaxY() - pass.GetMinY() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS );
 
-	std::list<CAIUnit*> deadUnits;
+	std::list<CAIUnit *> deadUnits;
 
-	std::list<CExistingObject*> deadObjects;
+	std::list<CExistingObject *> deadObjects;
 	{
 		STerrainModeSetter terrainMode( ELM_STATIC, GetTerrain() );
-		for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, rectCenter, (std::max)( vAABBHalfSize.x, vAABBHalfSize.y ) ); !iter.IsFinished(); iter.Iterate() )
+		for ( CUnitsIter<0, 0> iter( 0, ANY_PARTY, rectCenter, (std::max)( vAABBHalfSize.x, vAABBHalfSize.y ) );
+		      !iter.IsFinished();
+		      iter.Iterate() )
 		{
 			CAIUnit *pUnit = *iter;
 			if ( pUnit && pUnit->IsAlive() && !pUnit->GetStats()->IsAviation() )
@@ -411,20 +424,23 @@ void CBridgeSpan::Die( const float fDamage )
 			}
 		}
 
-		for ( CStObjCircleIter<false> iter( rectCenter, vAABBHalfSize.x + vAABBHalfSize.y ); !iter.IsFinished(); iter.Iterate() )
+		for ( CStObjCircleIter<false> iter( rectCenter, vAABBHalfSize.x + vAABBHalfSize.y ); !iter.IsFinished();
+		      iter.Iterate() )
 		{
 			CExistingObject *pObj = *iter;
 			if ( pObj && pObj->IsAlive() && pObj->GetObjectType() != ESOT_BRIDGE_SPAN )
 			{
 				SRect objectRect;
 				pObj->GetBoundRect( &objectRect );
-				if ( boundRect.IsIntersected( objectRect ) || GetTerrain()->IsLocked( GetAIMap()->GetTile( CVec2( pObj->GetCenter().x, pObj->GetCenter().y ) ), EAC_TERRAIN ) )
+				if ( boundRect.IsIntersected( objectRect ) ||
+				     GetTerrain()->IsLocked( GetAIMap()->GetTile( CVec2( pObj->GetCenter().x, pObj->GetCenter().y ) ),
+				                             EAC_TERRAIN ) )
 					deadObjects.push_back( pObj );
 			}
 		}
 	}
 
-	for ( std::list<CAIUnit*>::iterator iter = deadUnits.begin(); iter != deadUnits.end(); ++iter )
+	for ( std::list<CAIUnit *>::iterator iter = deadUnits.begin(); iter != deadUnits.end(); ++iter )
 	{
 		CAIUnit *pUnit = *iter;
 		theStatistics.UnitDead( pUnit );
@@ -432,7 +448,7 @@ void CBridgeSpan::Die( const float fDamage )
 	}
 
 	bDeletingAround = true;
-	for ( std::list<CExistingObject*>::iterator it = deadObjects.begin(); it != deadObjects.end(); ++it )
+	for ( std::list<CExistingObject *>::iterator it = deadObjects.begin(); it != deadObjects.end(); ++it )
 	{
 		CExistingObject *pObj = *it;
 		if ( pObj->IsAlive() )
@@ -441,17 +457,20 @@ void CBridgeSpan::Die( const float fDamage )
 	bDeletingAround = false;
 }
 
-void CBridgeSpan::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CBridgeSpan::TakeDamage( const float fDamage,
+                              const bool bFromExplosion,
+                              const int nPlayerOfShoot,
+                              CAIUnit *pShotUnit )
 {
 	NI_ASSERT( pFullBridge != 0, "Check your map!!! Bridge span without full bridge." );
-	if ( bFromExplosion && fHP > 0 && pFullBridge && pFullBridge->CanTakeDamage() && !theCheats.GetImmortals(0) )
+	if ( bFromExplosion && fHP > 0 && pFullBridge && pFullBridge->CanTakeDamage() && !theCheats.GetImmortals( 0 ) )
 	{
 		fHP = (std::max)( 0.0f, fHP - fDamage );
 
-		if ( theCheats.GetFirstShoot( theDipl.GetNParty( nPlayerOfShoot) ) == 1 )
+		if ( theCheats.GetFirstShoot( theDipl.GetNParty( nPlayerOfShoot ) ) == 1 )
 			fHP = 0;
 
-		if ( fHP == 0  )
+		if ( fHP == 0 )
 			Die( fDamage );
 		else
 		{
@@ -492,8 +511,7 @@ void CBridgeSpan::RemoveTransparencies()
 
 struct SOnlyDirNeed
 {
-	bool operator()( const int nTest, const int nDesire) const
-	{ return nTest == nDesire; }
+	bool operator()( const int nTest, const int nDesire ) const { return nTest == nDesire; }
 };
 
 class CTilesColl
@@ -501,7 +519,7 @@ class CTilesColl
 public:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	std::list<SVector> *pTiles = {};
-	CTilesColl( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) { }
+	CTilesColl( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) {}
 
 	void operator()( const int x, const int y )
 	{
@@ -510,62 +528,62 @@ public:
 	}
 };
 
-static void GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles, const uint16_t wDir, SOnlyDirNeed need )
+static void
+GetTilesUnderRectSide( const SRect &rect, std::list<SVector> *pTiles, const uint16_t wDir, SOnlyDirNeed need )
 {
 	CTilesColl a( pTiles );
 
 	//перейдм к uint32_t чтобы не переполнялось
 	uint32_t arDir[4];
 	uint32_t dwDir = wDir;
-	arDir[0] = GetDirectionByVector( (rect.v1() +rect.v2())/2 - rect.center );
-	arDir[1] = GetDirectionByVector( (rect.v2() +rect.v3())/2 - rect.center );
-	arDir[2] = GetDirectionByVector( (rect.v3() +rect.v4())/2 - rect.center );
-	arDir[3] = GetDirectionByVector( (rect.v4() +rect.v1())/2 - rect.center );
+	arDir[0] = GetDirectionByVector( ( rect.v1() + rect.v2() ) / 2 - rect.center );
+	arDir[1] = GetDirectionByVector( ( rect.v2() + rect.v3() ) / 2 - rect.center );
+	arDir[2] = GetDirectionByVector( ( rect.v3() + rect.v4() ) / 2 - rect.center );
+	arDir[3] = GetDirectionByVector( ( rect.v4() + rect.v1() ) / 2 - rect.center );
 
 	int iMin = 0;
 	uint32_t dwMin = 65535;
-	for( int i=0; i< 4; ++i )
+	for ( int i = 0; i < 4; ++i )
 	{
 		const uint16_t wDirsDiff = DirsDifference( arDir[i], dwDir );
-		if( dwMin >  wDirsDiff )
+		if ( dwMin > wDirsDiff )
 		{
 			iMin = i;
-			dwMin  = wDirsDiff;
+			dwMin = wDirsDiff;
 		}
 	}
 
 	const int nTileSize = GetAIMap()->GetTileSize();
 
-	if ( need(iMin,0) )
-	{//wDir не лежит между arDir[0] и arDir[1]
+	if ( need( iMin, 0 ) )
+	{ //wDir не лежит между arDir[0] и arDir[1]
 		MakeLine2( rect.v1().x / nTileSize, rect.v1().y / nTileSize, rect.v2().x / nTileSize, rect.v2().y / nTileSize, a );
 	}
 
-	if ( need(iMin,1) )
-	{//wDir не лежит между arDir[1] и arDir[2]
+	if ( need( iMin, 1 ) )
+	{ //wDir не лежит между arDir[1] и arDir[2]
 		MakeLine2( rect.v2().x / nTileSize, rect.v2().y / nTileSize, rect.v3().x / nTileSize, rect.v3().y / nTileSize, a );
 	}
 
-	if ( need(iMin,2) )
-	{//wDir no лежит между arDir[1] и arDir[2]
+	if ( need( iMin, 2 ) )
+	{ //wDir no лежит между arDir[1] и arDir[2]
 		MakeLine2( rect.v3().x / nTileSize, rect.v3().y / nTileSize, rect.v4().x / nTileSize, rect.v4().y / nTileSize, a );
 	}
 
-	if ( need(iMin,3) )
-	{//wDir no лежит между arDir[1] и arDir[2]
+	if ( need( iMin, 3 ) )
+	{ //wDir no лежит между arDir[1] и arDir[2]
 		MakeLine2( rect.v4().x / nTileSize, rect.v4().y / nTileSize, rect.v1().x / nTileSize, rect.v1().y / nTileSize, a );
 	}
 }
 
-CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const uint16_t wDir )
-: pSpan( pSpan )
+CFullBridge::SSpanLock::SSpanLock( CBridgeSpan *pSpan, const uint16_t wDir ) : pSpan( pSpan )
 {
 	// найти тайлы. запомнить состояние залоченности.
 	SRect rect;
 	pSpan->GetBoundRect( &rect );
 
 	SOnlyDirNeed a;
-	GetTilesUnderRectSide( rect, &tiles, wDir + 65535/2, a );
+	GetTilesUnderRectSide( rect, &tiles, wDir + 65535 / 2, a );
 
 	std::list<SObjTileInfo> tilesInfo;
 	// разлокать
@@ -575,7 +593,6 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const uint16_t wDir )
 		formerTiles.push_back( lockInfo );
 
 		tilesInfo.push_back( SObjTileInfo( *it, lockInfo ) );
-
 	}
 	GetTerrain()->RemoveStaticObjectTiles( tilesInfo );
 
@@ -626,9 +643,9 @@ void CFullBridge::AddSpan( CBridgeSpan *pSpan )
 	++nSpans;
 }
 
-void CFullBridge::SpanBuilt( CBridgeSpan * pSpan )
+void CFullBridge::SpanBuilt( CBridgeSpan *pSpan )
 {
-	for ( std::list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
+	for ( std::list<CBridgeSpan *>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
 	{
 		if ( *it == pSpan )
 		{
@@ -642,7 +659,7 @@ void CFullBridge::SpanBuilt( CBridgeSpan * pSpan )
 const float CFullBridge::GetHPPercent() const
 {
 	NI_ASSERT( !spans.empty(), "no spans" );
-	return (*spans.begin())->GetHitPoints() / (*spans.begin())->GetStats()->fMaxHP;
+	return ( *spans.begin() )->GetHitPoints() / ( *spans.begin() )->GetStats()->fMaxHP;
 }
 
 bool CFullBridge::CanTakeDamage() const
@@ -650,14 +667,18 @@ bool CFullBridge::CanTakeDamage() const
 	return true;
 }
 
-void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan, const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan,
+                               const float fDamage,
+                               const bool bFromExplosion,
+                               const int nPlayerOfShoot,
+                               CAIUnit *pShotUnit )
 {
 	if ( !bGivingDamage )
 	{
 		bGivingDamage = true;
 		const float fNewHPPercent = pDamagedSpan->GetHitPoints() / pDamagedSpan->GetStats()->fMaxHP;
 
-		for ( std::list<CBridgeSpan*>::iterator iter = spans.begin(); iter != spans.end(); ++iter )
+		for ( std::list<CBridgeSpan *>::iterator iter = spans.begin(); iter != spans.end(); ++iter )
 		{
 			CBridgeSpan *pSpan = *iter;
 			if ( pSpan != pDamagedSpan )
@@ -667,7 +688,7 @@ void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan, const float fDamage, c
 				const float fCurHPPercent = pSpan->GetHitPoints() / fCurMaxHP;
 				if ( fCurHPPercent > fNewHPPercent )
 				{
-					const float fDamage = (fCurHPPercent - fNewHPPercent) * fCurMaxHP;
+					const float fDamage = ( fCurHPPercent - fNewHPPercent ) * fCurMaxHP;
 					pSpan->TakeDamage( fDamage, bFromExplosion, nPlayerOfShoot, pShotUnit );
 				}
 			}
@@ -682,23 +703,23 @@ void CFullBridge::UnlockAllSpans()
 {
 	for ( LockedSpans::iterator it = lockedSpans.begin(); it != lockedSpans.end(); )
 	{
-		(*it)->Unlock();
+		( *it )->Unlock();
 		it = lockedSpans.erase( it );
 	}
 }
 
-void CFullBridge::LockSpan( CBridgeSpan * pSpan, const uint16_t wDir )
+void CFullBridge::LockSpan( CBridgeSpan *pSpan, const uint16_t wDir )
 {
 	lockedSpans.push_back( new SSpanLock( pSpan, wDir ) );
 }
 
-void CFullBridge::UnlockSpan( CBridgeSpan * pSpan )
+void CFullBridge::UnlockSpan( CBridgeSpan *pSpan )
 {
 	for ( LockedSpans::iterator it = lockedSpans.begin(); it != lockedSpans.end(); )
 	{
-		if ( (*it)->GetSpan() == pSpan )
+		if ( ( *it )->GetSpan() == pSpan )
 		{
-			(*it)->Unlock();
+			( *it )->Unlock();
 			it = lockedSpans.erase( it );
 		}
 		else
@@ -711,11 +732,11 @@ const int CFullBridge::GetNSpans() const
 	return nSpans;
 }
 
-void CFullBridge::EnumSpans( std::vector< CObj<CBridgeSpan> > *pSpans )
+void CFullBridge::EnumSpans( std::vector<CObj<CBridgeSpan>> *pSpans )
 {
-	for ( std::list<CBridgeSpan*>::iterator it = spans.begin(); it != spans.end(); ++it )
+	for ( std::list<CBridgeSpan *>::iterator it = spans.begin(); it != spans.end(); ++it )
 		pSpans->push_back( *it );
-	for ( std::list<CBridgeSpan*>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
+	for ( std::list<CBridgeSpan *>::iterator it = projectedSpans.begin(); it != projectedSpans.end(); ++it )
 		pSpans->push_back( *it );
 }
 
@@ -735,20 +756,20 @@ const bool CFullBridge::IsVisible( const uint8_t cParty ) const
 
 void CFullBridge::GetTilesForVisibility( CTilesSet *pTiles ) const
 {
-	for ( std::list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
-		(*it)->GetTilesForVisibilityInternal( pTiles );
+	for ( std::list<CBridgeSpan *>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+		( *it )->GetTilesForVisibilityInternal( pTiles );
 }
 
 void CFullBridge::InitEntireBridge()
 {
 	det_set<int> ids;
-	for ( std::list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
-		ids.insert( (*it)->GetUniqueId() );
+	for ( std::list<CBridgeSpan *>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+		ids.insert( ( *it )->GetUniqueId() );
 	theWarFog.ReplaceStaticObjects( GetUniqueId(), ids );
 
 	if ( bLockingBridge )
 	{
-		for ( std::list<CBridgeSpan*>::const_iterator it = spans.begin(); it != spans.end(); ++it )
-			(*it)->RealLockTiles();
+		for ( std::list<CBridgeSpan *>::const_iterator it = spans.begin(); it != spans.end(); ++it )
+			( *it )->RealLockTiles();
 	}
 }

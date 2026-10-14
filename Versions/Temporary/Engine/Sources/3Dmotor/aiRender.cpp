@@ -5,13 +5,14 @@
 namespace NAI
 {
 
-inline CVec3 Unhomogen( const CVec4 &v ) { return CVec3( v.x / v.w, v.y / v.w, v.z / v.w ); }
+inline CVec3 Unhomogen( const CVec4 &v )
+{
+	return CVec3( v.x / v.w, v.y / v.w, v.z / v.w );
+}
 
 // CFastRenderer
 
-CFastRenderer::CFastRenderer() : bUseInvertOrder(false), bPerspective(false)
-{
-}
+CFastRenderer::CFastRenderer() : bUseInvertOrder( false ), bPerspective( false ) {}
 
 void CFastRenderer::SetRegion( const CTRect<int> &_region )
 {
@@ -28,7 +29,7 @@ void CFastRenderer::SetRegion( const CTRect<int> &_region )
 void CFastRenderer::GetDir( CVec3 *pRes, float x, float y ) const
 {
 	ASSERT( bPerspective );
-	CVec3 base( fPerPixelShiftX * (x+0.5f+region.x1), fPerPixelShiftY * (y+0.5f+region.y1), 1 );
+	CVec3 base( fPerPixelShiftX * ( x + 0.5f + region.x1 ), fPerPixelShiftY * ( y + 0.5f + region.y1 ), 1 );
 	Normalize( &base );
 	CVec4 res;
 	backForPoints.RotateHVector( &res, base );
@@ -54,20 +55,20 @@ void CFastRenderer::GetCoordsClamped( const CVec3 &v, float *pX, float *pY )
 
 void CFastRenderer::GetPoints( std::vector<CVec3> *pEnters, std::vector<CVec3> *pExits, int x, int y ) const
 {
-	for( SResult *p = resGrid[y][x]; p; p = p->pNext )
+	for ( SResult *p = resGrid[y][x]; p; p = p->pNext )
 	{
 		SResult &interval = *p;
 		float fEnter = interval.fEnter;
 		float fExit = interval.fExit;
 		if ( bPerspective )
 		{
-			CVec3 base( fPerPixelShiftX * (x+0.5f+region.x1), fPerPixelShiftY * (y+0.5f+region.y1), 1 );
+			CVec3 base( fPerPixelShiftX * ( x + 0.5f + region.x1 ), fPerPixelShiftY * ( y + 0.5f + region.y1 ), 1 );
 			Normalize( &base );
 			CVec4 res;
 			backForPoints.RotateHVector( &res, base * fEnter );
-			pEnters->push_back( Unhomogen(res) );
+			pEnters->push_back( Unhomogen( res ) );
 			backForPoints.RotateHVector( &res, base * fExit );
-			pExits->push_back( Unhomogen(res) );
+			pExits->push_back( Unhomogen( res ) );
 			//ASSERT( fabs( fEnter - fabs( pEnters->back() - ptFrom ) ) < 1e-3f );
 			//CVec3 vDir;
 			//GetDir( &vDir, x, y );
@@ -109,9 +110,8 @@ void CFastRenderer::CalcDistMul()
 		{
 			for ( int x = 0; x < distMult.GetSizeX(); ++x )
 			{
-				float fDistMul = sqrt( 1 +
-					sqr( ( x + region.x1 + 0.5f ) * fPerPixelShiftX ) +
-					sqr( ( y + region.y1 + 0.5f ) * fPerPixelShiftY ) );
+				float fDistMul = sqrt( 1 + sqr( ( x + region.x1 + 0.5f ) * fPerPixelShiftX ) +
+				                       sqr( ( y + region.y1 + 0.5f ) * fPerPixelShiftY ) );
 				distMult[y][x] = fDistMul;
 				//float fDepth = ( f1A + f1M * f ) / ( f2A + f2M * f );
 			}
@@ -127,8 +127,8 @@ void CFastRenderer::Init( const CTransformStack &transformStack, int nHalfSize )
 	ts = transformStack;
 	transform = ts.Get().forward;
 
-	transform.SetX(transform.x() * nHalfSize);
-	transform.SetY(transform.y() * nHalfSize);
+	transform.SetX( transform.x() * nHalfSize );
+	transform.SetY( transform.y() * nHalfSize );
 
 	CTRect<int> region( -nHalfSize, -nHalfSize, nHalfSize, nHalfSize );
 	SetRegion( region );
@@ -142,21 +142,23 @@ void CFastRenderer::Init( const CTransformStack &transformStack, int nHalfSize )
 
 void CFastRenderer::InitParallel( const CVec2 &_ptOrigin, float fAngle, float fStep, const CTRect<int> &region )
 {
-	ptFrom = CVec3(_ptOrigin, 0 );
+	ptFrom = CVec3( _ptOrigin, 0 );
 	// fill projection info
 	SFBTransform t;
-	MakeMatrix( &t, CVec3(fStep, fStep, 1), CVec3(_ptOrigin.x,_ptOrigin.y,0), fAngle );
+	MakeMatrix( &t, CVec3( fStep, fStep, 1 ), CVec3( _ptOrigin.x, _ptOrigin.y, 0 ), fAngle );
 	transform = t.backward;
 	// shift by 0.5 pixel
-	transform.SetX(transform.x() + transform.w() * 0.499f); // should be 0.5f, but until terrain patches are not shifted this is required
-	transform.SetY(transform.y() + transform.w() * 0.499f);
+	transform.SetX( transform.x() +
+	                transform.w() *
+	                    0.499f ); // should be 0.5f, but until terrain patches are not shifted this is required
+	transform.SetY( transform.y() + transform.w() * 0.499f );
 	// init ts
 	ts.MakeParallel( region.Width() + 0.01f, region.Height() + 0.01f );
 	SHMatrix cam;
 	CVec2 ptCenter( _ptOrigin.x, _ptOrigin.y );
-	CVec2 ptXDir( cos(fAngle) * fStep, sin(fAngle) * fStep );
-	ptCenter += ptXDir * ( (region.x1 + region.x2) * 0.5f );
-	ptCenter += CVec2(-ptXDir.y, ptXDir.x) * ( (region.y1 + region.y2) * 0.5f );
+	CVec2 ptXDir( cos( fAngle ) * fStep, sin( fAngle ) * fStep );
+	ptCenter += ptXDir * ( ( region.x1 + region.x2 ) * 0.5f );
+	ptCenter += CVec2( -ptXDir.y, ptXDir.x ) * ( ( region.y1 + region.y2 ) * 0.5f );
 	MakeMatrix( &cam, FP_PI2, fAngle, 0, CVec3( ptCenter.x, ptCenter.y, 0 ) );
 	ts.SetCamera( cam );
 	// setup grids
@@ -178,9 +180,9 @@ void CFastRenderer::InitParallel( const SHMatrix &cameraPos, float fHalfSize, in
 	ts.MakeParallel( fHalfSize * 2, fHalfSize * 2, -5000, 5000 );
 	ts.SetCamera( cameraPos );
 	transform = ts.Get().forward;
-	transform.SetX(transform.x() * nHalfSize);
-	transform.SetY(transform.y() * nHalfSize);
-	transform.SetZ(transform.z() * 10000 - transform.w() * 5000);
+	transform.SetX( transform.x() * nHalfSize );
+	transform.SetY( transform.y() * nHalfSize );
+	transform.SetZ( transform.z() * 10000 - transform.w() * 5000 );
 	// setup grids
 	SetRegion( CTRect<int>( -nHalfSize, -nHalfSize, nHalfSize, nHalfSize ) );
 	bPerspective = false;
@@ -189,21 +191,22 @@ void CFastRenderer::InitParallel( const SHMatrix &cameraPos, float fHalfSize, in
 	bUseInvertOrder = false;
 }
 
-void CFastRenderer::InitProjective( const SHMatrix &cameraPos, float fDistance, float fAngle, int nHalfSize, float fAspect )
+void CFastRenderer::InitProjective(
+		const SHMatrix &cameraPos, float fDistance, float fAngle, int nHalfSize, float fAspect )
 {
 	ptFrom = cameraPos.GetTranslation();
 	ts.MakeProjective( fAspect, fAngle, 0.1f, fDistance );
 	ts.SetCamera( cameraPos );
 	transform = ts.Get().forward;
 	CTRect<int> region( -nHalfSize, -nHalfSize, nHalfSize, nHalfSize );
-	transform.SetX(transform.x() * nHalfSize);
-	transform.SetY(transform.y() * nHalfSize);
+	transform.SetX( transform.x() * nHalfSize );
+	transform.SetY( transform.y() * nHalfSize );
 	//
 	SetRegion( region );
 	//grid.SetSizes( region.Width(), region.Height() );
 	//origin = CTPoint<int>( -nHalfSize, -nHalfSize );
 
-	fPerPixelShiftX = tan( ToRadian(fAngle) * 0.5f ) / nHalfSize;
+	fPerPixelShiftX = tan( ToRadian( fAngle ) * 0.5f ) / nHalfSize;
 	fPerPixelShiftY = fPerPixelShiftX * fAspect;
 	bPerspective = true;
 	CalcDistMul();
@@ -232,18 +235,18 @@ void CFastRenderer::InitProjective( const CVec3 &src, const CVec3 &dst, const CV
 
 void CFastRenderer::InitSingleRay( const CVec3 &src, const CVec3 &dst )
 {
-	ptFrom = src;//CVec3(_ptOrigin, 0 );
+	ptFrom = src; //CVec3(_ptOrigin, 0 );
 	SHMatrix cam;
 	CVec3 ptDir = dst - src;
 	MakeMatrix( &cam, src, dst - src );
 	float fDist = fabs( ptDir );
-	ts.MakeParallel( 1, 1, 0, fDist );//0.01f, 0.01f );
+	ts.MakeParallel( 1, 1, 0, fDist ); //0.01f, 0.01f );
 	ts.SetCamera( cam );
 
 	transform = ts.Get().forward;
-	transform.SetX(transform.x() + transform.w() * 0.5f);
-	transform.SetY(transform.y() + transform.w() * 0.5f);
-	transform.SetZ(transform.z() * fDist);
+	transform.SetX( transform.x() + transform.w() * 0.5f );
+	transform.SetY( transform.y() + transform.w() * 0.5f );
+	transform.SetZ( transform.z() * fDist );
 
 	// setup grids
 	SetRegion( CTRect<int>( 0, 0, 1, 1 ) );
@@ -282,7 +285,7 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 		if ( vMaxs.x < vMins.x + 1.0f || vMaxs.y < vMins.y + 1.0f )
 		{
 			// To force to raster the object
-			CVec2 vMiddle = ( vMins+vMaxs ) / 2.0f;
+			CVec2 vMiddle = ( vMins + vMaxs ) / 2.0f;
 			for ( int i = 0; i < e.points.size(); ++i )
 			{
 				SProjectedPoint &dst = projected[i];
@@ -321,22 +324,23 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 		const STriangle &t = mesh[i];
 		if ( t.i1 & 0x8000 )
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wFinish;
-			i2 = edges[ t.i1 & 0x7fff ].wStart;
+			i1 = edges[t.i1 & 0x7fff].wFinish;
+			i2 = edges[t.i1 & 0x7fff].wStart;
 		}
 		else
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wStart;
-			i2 = edges[ t.i1 & 0x7fff ].wFinish;
+			i1 = edges[t.i1 & 0x7fff].wStart;
+			i2 = edges[t.i1 & 0x7fff].wFinish;
 		}
 		if ( t.i2 & 0x8000 )
-			i3 = edges[ t.i2 & 0x7fff ].wStart;
+			i3 = edges[t.i2 & 0x7fff].wStart;
 		else
-			i3 = edges[ t.i2 & 0x7fff ].wFinish;
+			i3 = edges[t.i2 & 0x7fff].wFinish;
 		//
 		if ( bPerspective )
 		{
-			if ( (projected[i3].res.y-projected[i1].res.y)*(projected[i2].res.x-projected[i1].res.x) > (projected[i2].res.y-projected[i1].res.y)*(projected[i3].res.x-projected[i1].res.x) )
+			if ( ( projected[i3].res.y - projected[i1].res.y ) * ( projected[i2].res.x - projected[i1].res.x ) >
+			     ( projected[i2].res.y - projected[i1].res.y ) * ( projected[i3].res.x - projected[i1].res.x ) )
 				Raster( projected[i1], projected[i3], projected[i2] );
 		}
 		else
@@ -455,7 +459,7 @@ static bool WalkChain( CFastRenderer::SResult **p )
 	if ( !*p )
 		return false;
 	bool bRet = false;
-	for(;;)
+	for ( ;; )
 	{
 		CFastRenderer::SResult *pCur = *p;
 		CFastRenderer::SResult *pTest = pCur->pNext;
@@ -468,7 +472,7 @@ static bool WalkChain( CFastRenderer::SResult **p )
 			*p = pTest;
 			bRet = true;
 		}
-		p = &(*p)->pNext;
+		p = &( *p )->pNext;
 	}
 	return bRet;
 }
@@ -480,7 +484,8 @@ void CFastRenderer::SortIntervals()
 	{
 		for ( int x = 0; x < resGrid.GetSizeX(); ++x )
 		{
-			while ( WalkChain( &resGrid[y][x] ) ) ;
+			while ( WalkChain( &resGrid[y][x] ) )
+				;
 		}
 	}
 }
@@ -491,7 +496,7 @@ void CFastRenderer::ReduceTerrain()
 	{
 		for ( int x = 0; x < resGrid.GetSizeX(); ++x )
 		{
-			for( CFastRenderer::SResult *p = resGrid[y][x]; p; p = p->pNext )
+			for ( CFastRenderer::SResult *p = resGrid[y][x]; p; p = p->pNext )
 			{
 				if ( p->pObject == 0 ) // terrain
 					p->fEnter = p->fExit - 0.01f;
@@ -500,9 +505,7 @@ void CFastRenderer::ReduceTerrain()
 	}
 }
 
-void CFastRenderer::TraceEntity( const std::vector<SConvexHull> &hulls, bool bTerrain )
-{
-}
+void CFastRenderer::TraceEntity( const std::vector<SConvexHull> &hulls, bool bTerrain ) {}
 
 void CFastRenderer::TraceEntity( const SConvexHull &e, bool bTerrain )
 {

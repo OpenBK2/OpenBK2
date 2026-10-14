@@ -12,21 +12,21 @@
 enum ELockMode
 {
 	ELM_STATIC = 0x00,
-	ELM_ALL    = 0x01
+	ELM_ALL = 0x01
 };
 enum ETerrainTypes
 {
-	ETT_EARTH_TERRAIN  = 0,
-	ETT_WATER_TERRAIN  = 1,
+	ETT_EARTH_TERRAIN = 0,
+	ETT_WATER_TERRAIN = 1,
 	ETT_MARINE_TERRAIN = 2,
 };
 
 enum EFreeTileInfo : int
 {
-	FREE_NONE    = 0x00,
+	FREE_NONE = 0x00,
 	FREE_TERRAIN = 0x01,
-	FREE_WATER   = 0x02,
-	FREE_ANY     = FREE_TERRAIN | FREE_WATER,
+	FREE_WATER = 0x02,
+	FREE_ANY = FREE_TERRAIN | FREE_WATER,
 };
 
 struct SObjTileInfo
@@ -34,10 +34,10 @@ struct SObjTileInfo
 	SVector tile;
 	EAIClasses lockInfo{};
 
-	SObjTileInfo() : tile( 0, 0 ), lockInfo( EAC_ANY ) { }
-	SObjTileInfo( const SVector &_tile ) : tile( _tile ), lockInfo( EAC_ANY ) { }
-	SObjTileInfo( const SVector &_tile, const uint8_t _lockInfo ) : tile( _tile ), lockInfo( (EAIClasses)_lockInfo ) { }
-	SObjTileInfo( const SVector &_tile, const EAIClasses _lockInfo ) : tile( _tile ), lockInfo( _lockInfo ) { }
+	SObjTileInfo() : tile( 0, 0 ), lockInfo( EAC_ANY ) {}
+	SObjTileInfo( const SVector &_tile ) : tile( _tile ), lockInfo( EAC_ANY ) {}
+	SObjTileInfo( const SVector &_tile, const uint8_t _lockInfo ) : tile( _tile ), lockInfo( (EAIClasses)_lockInfo ) {}
+	SObjTileInfo( const SVector &_tile, const EAIClasses _lockInfo ) : tile( _tile ), lockInfo( _lockInfo ) {}
 };
 
 class CAIMap;
@@ -49,21 +49,39 @@ struct SUnitProfile
 	CCircle circle;
 	//
 	SUnitProfile() : bRect( false ), circle( VNULL2, 0 ) { rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 ); }
-	SUnitProfile( const SRect &_rect ) : bRect( true ), rect( _rect ), circle( VNULL2, 0 ) { }
-	SUnitProfile( const CCircle &_circle ) : bRect( false ), circle( _circle ), rect() { rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 ); }
-	SUnitProfile( const CVec2 &vCenter, const float fRadius ) : bRect( false ), circle( vCenter, fRadius ), rect() { rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 ); }
+	SUnitProfile( const SRect &_rect ) : bRect( true ), rect( _rect ), circle( VNULL2, 0 ) {}
+	SUnitProfile( const CCircle &_circle ) : bRect( false ), circle( _circle ), rect()
+	{
+		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
+	}
+	SUnitProfile( const CVec2 &vCenter, const float fRadius ) : bRect( false ), circle( vCenter, fRadius ), rect()
+	{
+		rect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 );
+	}
 
-	const bool IsIntersected( const SUnitProfile &profile ) const { return profile.bRect ? IsIntersected( profile.rect ) : IsIntersected( profile.circle ); }
-	const bool IsIntersected( const SRect &_rect ) const {	return bRect ? _rect.IsIntersected( rect ) : _rect.IsIntersectCircle( circle );	}
-	const bool IsIntersected( const CCircle &_circle ) const {	return bRect ? rect.IsIntersectCircle( _circle ) : circle.IsIntersected( _circle ); }
+	const bool IsIntersected( const SUnitProfile &profile ) const
+	{
+		return profile.bRect ? IsIntersected( profile.rect ) : IsIntersected( profile.circle );
+	}
+	const bool IsIntersected( const SRect &_rect ) const
+	{
+		return bRect ? _rect.IsIntersected( rect ) : _rect.IsIntersectCircle( circle );
+	}
+	const bool IsIntersected( const CCircle &_circle ) const
+	{
+		return bRect ? rect.IsIntersectCircle( _circle ) : circle.IsIntersected( _circle );
+	}
 
-	const bool IsPointInside( const CVec2 &point ) const { return ( bRect ) ? rect.IsPointInside( point ) : ( fabs( circle.center - point ) <= circle.r ); }
+	const bool IsPointInside( const CVec2 &point ) const
+	{
+		return ( bRect ) ? rect.IsPointInside( point ) : ( fabs( circle.center - point ) <= circle.r );
+	}
 
-	const CVec2 GetCenter() const {	return ( bRect ) ? rect.center : circle.center; }
+	const CVec2 GetCenter() const { return ( bRect ) ? rect.center : circle.center; }
 
-	const float GetRadius() const {	return ( bRect ) ? fabs( GetHalfLength(), GetHalfWidth() ) : circle.r; }
+	const float GetRadius() const { return ( bRect ) ? fabs( GetHalfLength(), GetHalfWidth() ) : circle.r; }
 
-	const float GetHalfLength() const { return ( bRect ) ? (rect.lengthAhead + rect.lengthBack )/2.0f: circle.r; }
+	const float GetHalfLength() const { return ( bRect ) ? ( rect.lengthAhead + rect.lengthBack ) / 2.0f : circle.r; }
 	const float GetHalfWidth() const { return ( bRect ) ? rect.width : circle.r; }
 	const float GetLengthAhead() const { return ( bRect ) ? rect.lengthAhead : circle.r; }
 	const float GetLengthBack() const { return ( bRect ) ? rect.lengthBack : circle.r; }
@@ -105,8 +123,8 @@ struct SUnitTileInfo
 	bool bWater = false;
 
 	SUnitTileInfo() : bWater(), profile() {}
-	SUnitTileInfo( const SRect _rect, const bool _bWater ) :  profile( _rect ), bWater( _bWater ) {}
-	SUnitTileInfo( const SUnitProfile _profile, const bool _bWater ) :  profile( _profile ), bWater( _bWater ) {}
+	SUnitTileInfo( const SRect _rect, const bool _bWater ) : profile( _rect ), bWater( _bWater ) {}
+	SUnitTileInfo( const SUnitProfile _profile, const bool _bWater ) : profile( _profile ), bWater( _bWater ) {}
 };
 
 typedef std::unordered_map<int, SUnitTileInfo> CUnitsRects;
@@ -123,7 +141,9 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 
 		STmpLockInfo() : tile( -1, -1 ), nUnitsBuf( -1 ), aiClass( EAC_FORCE_DWORD ) {}
 		STmpLockInfo( const SVector &_tile, const int _nUnitsBuf, const EAIClasses _aiClass )
-			: tile( _tile ), nUnitsBuf( _nUnitsBuf ), aiClass( _aiClass ) {}
+				: tile( _tile ), nUnitsBuf( _nUnitsBuf ), aiClass( _aiClass )
+		{
+		}
 	};
 
 	struct STmpLockInfo2
@@ -132,13 +152,12 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 		EAIClasses aiClass{};
 
 		STmpLockInfo2() : tile( 0, 0 ), aiClass( EAC_NONE ) {}
-		STmpLockInfo2( const SVector &_tile, const EAIClasses _aiClass )
-			: tile( _tile ), aiClass( _aiClass ) {}
+		STmpLockInfo2( const SVector &_tile, const EAIClasses _aiClass ) : tile( _tile ), aiClass( _aiClass ) {}
 	};
 	typedef std::list<STmpLockInfo2> CTmpLockInfoBuf2;
 	typedef std::list<STmpLockInfo> CTmpLockInfoBuf;
 
-	std::vector< CArray2D<uint8_t> > unitsBuf;  // юниты, для воды и для суши
+	std::vector<CArray2D<uint8_t>> unitsBuf; // юниты, для воды и для суши
 	CUnitsRects unitsRects;
 	CArray2D<uint8_t> passTypes;
 	std::vector<float> passabilities;
@@ -146,12 +165,12 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	ELockMode eMode{};
 	CArray2D<EAIClasses> buf;
 	CArray2D4Bit terrainTypes;
-	std::unordered_map< int, std::pair< bool, CTmpLockInfoBuf > > tmpUnlockUnitsMap;
+	std::unordered_map<int, std::pair<bool, CTmpLockInfoBuf>> tmpUnlockUnitsMap;
 	// по типу terrain - его ai проходимость
 	std::vector<uint32_t> passClasses;
 	// по номеру тайла terrain - его тип
 	std::vector<uint8_t> terrSubTypes;
-	CArray2D1Bit digImpossible;		// невозможность строительства окопов на тайле
+	CArray2D1Bit digImpossible; // невозможность строительства окопов на тайле
 	CArray2D1Bit bridgeTiles;
 	CArray2D1Bit riverCliffTiles;
 	CArray2D<uint8_t> soil;
@@ -159,7 +178,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	std::vector<uint8_t> soilParams;
 	CArray2D<CArray2D4Bit> maxes;
 	bool bInitMode = false;
-	std::unordered_map< int, CTmpLockInfoBuf2 > tmpLockUnitsMap;
+	std::unordered_map<int, CTmpLockInfoBuf2> tmpLockUnitsMap;
 	int nTmpLockUnitID = 0;
 
 	CPtr<CAIMap> pAIMap;
@@ -174,7 +193,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	int nDebugLockInfoPos = 0;
 #endif
 	//
-	void LoadPassabilities( const struct STerrainDesc* pTerrainDesc );
+	void LoadPassabilities( const struct STerrainDesc *pTerrainDesc );
 	//void LoadRivers( const struct STerrainInfo &terrainInfo );
 	//void Load3DRoads( const struct STerrainInfo &terrainInfo );
 	void InitExplosionTerrainTypes();
@@ -194,7 +213,8 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	void UnlockTile( const int x, const int y, const EAIClasses aiClass );
 	void UnlockTile( const SObjTileInfo &tileInfo );
 
-	void LockUnitProfile( const SUnitProfile &profile, const int id, SVector *pDownTile, SVector *pUpTile, const bool bWater );
+	void
+	LockUnitProfile( const SUnitProfile &profile, const int id, SVector *pDownTile, SVector *pUpTile, const bool bWater );
 	bool UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUpTile, bool *bWater );
 
 	void LockTiles( const std::list<SObjTileInfo> &tiles, SVector *pDownTile, SVector *pUpTile );
@@ -221,17 +241,33 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	void AddLockInfo( const int nUnitID, const bool bLock, const SUnitProfile &profile );
 #endif
 
-	int operator&( IBinSaver &f ) { NI_ASSERT( false, "Can't serialize CTerrain, should be restored after load" ); return 0; }
+	int operator&( IBinSaver &f )
+	{
+		NI_ASSERT( false, "Can't serialize CTerrain, should be restored after load" );
+		return 0;
+	}
+
 public:
 	CTerrain();
 	CTerrain( CAIMap *pAIMap, const bool bInitMode );
 
 	void PrepareTerraTypes( const int nCount );
-	void SetTerraTypes( const int nIndex, const float fPass, const uint32_t passClass, const uint8_t soilType, const uint8_t digImpossible );
+	void SetTerraTypes( const int nIndex,
+	                    const float fPass,
+	                    const uint32_t passClass,
+	                    const uint8_t soilType,
+	                    const uint8_t digImpossible );
 	void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
 
-	void AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench );
-	void AddMarineTiles( const std::list<SVector> coastTiles, const uint8_t coastSoilType, const std::list<SVector> waterTiles, const uint8_t waterSoilType );
+	void AddTiles( const std::list<SVector> vTiles,
+	               const EAIClasses aiPassClass,
+	               const float fPassability,
+	               const int nSoilType,
+	               const bool bCanEntrench );
+	void AddMarineTiles( const std::list<SVector> coastTiles,
+	                     const uint8_t coastSoilType,
+	                     const std::list<SVector> waterTiles,
+	                     const uint8_t waterSoilType );
 	void ClearRiverCliffTiles();
 	void AddRiverCliffTiles( const std::list<SVector> &tiles );
 
@@ -254,13 +290,20 @@ public:
 
 	// units related functions
 	EFreeTileInfo CanUnitGo( const int nBoundTileRadius, const SVector &tile, const EAIClasses aiClass ) const;
-	EFreeTileInfo CanUnitGoToPoint( const int nBoundTileRadius, const CVec2 &point, const EAIClasses aiClass, CAIMap *pAIMap ) const;
-	const CVec2 GetValidPoint( const int nBoundTileRadius, const CVec2 &vStart, const CVec2 &vEnd, const EAIClasses aiClass, const bool bFindWayBack, CAIMap *pAIMap ) const;
+	EFreeTileInfo
+	CanUnitGoToPoint( const int nBoundTileRadius, const CVec2 &point, const EAIClasses aiClass, CAIMap *pAIMap ) const;
+	const CVec2 GetValidPoint( const int nBoundTileRadius,
+	                           const CVec2 &vStart,
+	                           const CVec2 &vEnd,
+	                           const EAIClasses aiClass,
+	                           const bool bFindWayBack,
+	                           CAIMap *pAIMap ) const;
 
 	const ETerrainTypes GetTerrainType( const int nX, const int nY ) const;
 
 	// true - если был произведён unlock при вызове, false - если уже до этого был сделан unlock
-	bool TemporaryUnlockUnitProfile( const int id, const SUnitProfile &unitProfile, const int nDecrease, const bool bWater );
+	bool
+	TemporaryUnlockUnitProfile( const int id, const SUnitProfile &unitProfile, const int nDecrease, const bool bWater );
 	void RemoveTemporaryUnlocking( const int id );
 
 	int TemporaryLockUnitProfile( const SUnitProfile &profile, const EAIClasses aiClass );
@@ -295,22 +338,13 @@ public:
 	//void UpdateRiverPassability( const SVectorStripeObject &river, bool bAdd, bool bUpdate );
 
 	// help functions
-	bool IsLocked ( const SVector &coord, const EAIClasses aiClass ) const
+	bool IsLocked( const SVector &coord, const EAIClasses aiClass ) const
 	{
 		return IsLocked( coord.x, coord.y, aiClass );
 	}
-	EAIClasses GetTileLockInfo( const SVector &tile ) const
-	{
-		return GetTileLockInfo( tile.x, tile.y );
-	}
-	const ETerrainTypes GetTerrainType( const SVector &tile ) const
-	{
-		return GetTerrainType( tile.x, tile.y );
-	}
-	const float GetPass( const CVec2 &point ) const
-	{
-		return GetPass( point.x, point.y );
-	}
+	EAIClasses GetTileLockInfo( const SVector &tile ) const { return GetTileLockInfo( tile.x, tile.y ); }
+	const ETerrainTypes GetTerrainType( const SVector &tile ) const { return GetTerrainType( tile.x, tile.y ); }
+	const float GetPass( const CVec2 &point ) const { return GetPass( point.x, point.y ); }
 
 	// debug helpers
 	void GetLockedTiles( std::vector<SVector> *pTiles, const EAIClasses aiClass, const EFreeTileInfo tileInfo );
@@ -320,8 +354,16 @@ public:
 
 	//for debug purpose only
 	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName );
-	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName, const std::vector<SVector> &markTiles );
-	void DumpMaxes( const ELockMode lockMode, const EAIClasses aiClass, const std::string &szFileName, const std::vector<SVector> &linkTiles1, const std::vector<SVector> &linkTiles2, const bool bLink );
+	void DumpMaxes( const ELockMode lockMode,
+	                const EAIClasses aiClass,
+	                const std::string &szFileName,
+	                const std::vector<SVector> &markTiles );
+	void DumpMaxes( const ELockMode lockMode,
+	                const EAIClasses aiClass,
+	                const std::string &szFileName,
+	                const std::vector<SVector> &linkTiles1,
+	                const std::vector<SVector> &linkTiles2,
+	                const bool bLink );
 	void DumpStaticLock( const EAIClasses aiClass, const std::string &szFileName );
 	void DumpPassability( const std::string &szFileName );
 	void DumpBridges( const std::string &szFileName );
@@ -337,8 +379,10 @@ class CTemporaryUnitProfileUnlocker
 	bool bLocking = false;
 	int nID = 0;
 	CTerrain *pTerrain = nullptr;
+
 public:
-	CTemporaryUnitProfileUnlocker( const int nUnitID, const SUnitProfile &profile, const int nDecrease, const bool bWater, CTerrain *pTerrain );
+	CTemporaryUnitProfileUnlocker(
+			const int nUnitID, const SUnitProfile &profile, const int nDecrease, const bool bWater, CTerrain *pTerrain );
 	~CTemporaryUnitProfileUnlocker();
 };
 
@@ -346,6 +390,7 @@ class CTemporaryUnitProfileLocker
 {
 	int nLockID = 0;
 	CTerrain *pTerrain = nullptr;
+
 public:
 	CTemporaryUnitProfileLocker( const SUnitProfile &profile, const EAIClasses aiClass, CTerrain *pTerrain );
 	~CTemporaryUnitProfileLocker();

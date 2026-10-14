@@ -24,19 +24,18 @@
 
 namespace NDb
 {
-	// CRAP{ legacy - remove it ASAP
-	const CDBID *GetDBID( const int nClassTypeID, const int nRecordID );
-	// CRAP}
+// CRAP{ legacy - remove it ASAP
+const CDBID *GetDBID( const int nClassTypeID, const int nRecordID );
+// CRAP}
 }
 
 //REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CObjectBaseRPGStatsExporter )
 
-
 static EXPORT_RESULT ObjectExportError( const std::string &objectName, const std::string &detail )
 {
 	const std::string message = "Cannot export " + objectName + ":\n" + detail;
-	NLog::Log(LT_ERROR, "%s\n", message.c_str());
-	NMessage::Error(message, "Object export");
+	NLog::Log( LT_ERROR, "%s\n", message.c_str() );
+	NMessage::Error( message, "Object export" );
 	return ER_BREAK;
 }
 
@@ -45,7 +44,7 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	// Keep generated debris private to this object, even when several stats share a folder.
-	const std::string szObjectPath = NFile::CutFileExt(szObjectName, ".xdb") + "_";
+	const std::string szObjectPath = NFile::CutFileExt( szObjectName, ".xdb" ) + "_";
 
 	std::string szGeometryName;
 	{
@@ -80,26 +79,29 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 	CManipulatorManager::GetValue( &bNeedDynamicDebris, pManipulator, "DynamicDebris.NeedDebris" );
 	if ( bNeedDynamicDebris )
 	{
-		CPtr<IManipulator> geometry = pResourceManager->CreateObjectManipulator("Geometry", szGeometryName);
+		CPtr<IManipulator> geometry = pResourceManager->CreateObjectManipulator( "Geometry", szGeometryName );
 		NEditorGltf::SMeshData mesh;
-		if ( !geometry || !NEditorGltf::LoadGeometry(geometry, &mesh) ) return false;
-		CPtr<IManipulator> pDebrisSet = CManipulatorManager::CreateManipulatorFromReference( "DynamicDebris.Debris", pManipulator, 0, 0, 0 );
-		if ( !pDebrisSet ) return false;
+		if ( !geometry || !NEditorGltf::LoadGeometry( geometry, &mesh ) )
+			return false;
+		CPtr<IManipulator> pDebrisSet =
+				CManipulatorManager::CreateManipulatorFromReference( "DynamicDebris.Debris", pManipulator, 0, 0, 0 );
+		if ( !pDebrisSet )
+			return false;
 		auto *folders = Singleton<IFolderCallback>();
 		{
 			// Reuse generated XDB resources. Deleting and recreating a loaded resource
 			// leaves its cached references invalid on subsequent exports after restart.
-			pManipulator->RemoveNode("DynamicDebris.Masks", NODE_REMOVEALL_INDEX);
+			pManipulator->RemoveNode( "DynamicDebris.Masks", NODE_REMOVEALL_INDEX );
 			int nNewCount = 0;
 			CManipulatorManager::GetValue( &nNewCount, pDebrisSet, "Debris" );
 			// Stable ordering keeps generated seasonal mask names consistent on every platform.
-			typedef std::map< std::string, std::pair<std::string, float> > CSeasonDebrisMap;
+			typedef std::map<std::string, std::pair<std::string, float>> CSeasonDebrisMap;
 			CSeasonDebrisMap debrisTextures;
 			for ( int i = 0; i < nNewCount; ++i )
 			{
 				CVariant var;
 				pDebrisSet->GetValue( fmt::format( "Debris.[{}].Texture", i ), &var );
-				if ( !IsDBIDEmpty(var) )
+				if ( !IsDBIDEmpty( var ) )
 				{
 					std::string szSeason;
 					CManipulatorManager::GetValue( &szSeason, pDebrisSet, fmt::format( "Debris.[{}].Season", i ) );
@@ -110,24 +112,37 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 				}
 			}
 			int nEntryCounter = 0;
-			for ( CSeasonDebrisMap::const_iterator it = debrisTextures.begin(); it != debrisTextures.end(); ++it, ++nEntryCounter )
+			for ( CSeasonDebrisMap::const_iterator it = debrisTextures.begin(); it != debrisTextures.end();
+			      ++it, ++nEntryCounter )
 			{
 				CVec2 vDynamicDebrisOrigin( 0, 0 );
-				std::string szDynamicDebrisTextureFileName = fmt::format( "{}DynDebris_{}.tga", szObjectPath.c_str(), nEntryCounter );
-				if ( !CreateObjectDynamicDebris(mesh, NFile::JoinPath(pUserData->constUserData.szExportSourceFolder,
-					szDynamicDebrisTextureFileName), &vDynamicDebrisOrigin, it->second.second) ) return false;
-				const std::string szMaterialName = fmt::format( "{}DynDebris{}_Material.xdb", szObjectPath.c_str(), nEntryCounter );
-				const std::string szTextureName = fmt::format( "{}DynDebris{}_Texture.xdb", szObjectPath.c_str(), nEntryCounter );
-				if ( folders->IsUniqueName("Texture", szTextureName) && !folders->InsertObject("Texture", szTextureName) ) return false;
+				std::string szDynamicDebrisTextureFileName =
+						fmt::format( "{}DynDebris_{}.tga", szObjectPath.c_str(), nEntryCounter );
+				if ( !CreateObjectDynamicDebris(
+								 mesh,
+								 NFile::JoinPath( pUserData->constUserData.szExportSourceFolder, szDynamicDebrisTextureFileName ),
+								 &vDynamicDebrisOrigin,
+								 it->second.second ) )
+					return false;
+				const std::string szMaterialName =
+						fmt::format( "{}DynDebris{}_Material.xdb", szObjectPath.c_str(), nEntryCounter );
+				const std::string szTextureName =
+						fmt::format( "{}DynDebris{}_Texture.xdb", szObjectPath.c_str(), nEntryCounter );
+				if ( folders->IsUniqueName( "Texture", szTextureName ) && !folders->InsertObject( "Texture", szTextureName ) )
+					return false;
 				CPtr<IManipulator> pTextureMan = pResourceManager->CreateObjectManipulator( "Texture", szTextureName );
-				if ( !pTextureMan ) return false;
+				if ( !pTextureMan )
+					return false;
 				CManipulatorManager::SetValue( szDynamicDebrisTextureFileName, pTextureMan, "SrcName", false );
 				CManipulatorManager::SetValue( "TF_DXT3", pTextureMan, "Format", false );
 				CManipulatorManager::SetValue( "WRAP", pTextureMan, "AddrType", false );
 				CManipulatorManager::SetValue( 4, pTextureMan, "NMips" );
-				if ( folders->IsUniqueName("Material", szMaterialName) && !folders->InsertObject("Material", szMaterialName) ) return false;
+				if ( folders->IsUniqueName( "Material", szMaterialName ) &&
+				     !folders->InsertObject( "Material", szMaterialName ) )
+					return false;
 				CPtr<IManipulator> pMaterialMan = pResourceManager->CreateObjectManipulator( "Material", szMaterialName );
-				if ( !pMaterialMan ) return false;
+				if ( !pMaterialMan )
+					return false;
 				CManipulatorManager::SetValue( it->second.first, pMaterialMan, "Texture", true );
 				CManipulatorManager::SetValue( szTextureName, pMaterialMan, "Bump", true );
 				CManipulatorManager::SetValue( "AM_OVERLAY", pMaterialMan, "AlphaMode", false );
@@ -138,13 +153,18 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 				CManipulatorManager::SetValue( szMaterialName, pManipulator, "DynamicDebris.Masks.[0].Material", true );
 				CManipulatorManager::SetVec2( vDynamicDebrisOrigin, pManipulator, "DynamicDebris.Masks.[0].Origin" );
 				CManipulatorManager::SetValue( it->second.second, pManipulator, "DynamicDebris.Masks.[0].Width" );
-				if ( CPtr<IManipulator> pTextureManipulator = pResourceManager->CreateObjectManipulator( "Texture", it->second.first ) )
+				if ( CPtr<IManipulator> pTextureManipulator =
+				         pResourceManager->CreateObjectManipulator( "Texture", it->second.first ) )
 				{
-					if ( Singleton<IExporterContainer>()->ExportObject( pTextureManipulator, "Texture", it->second.first, true, false ) != ER_SUCCESS ) return false;
+					if ( Singleton<IExporterContainer>()->ExportObject(
+									 pTextureManipulator, "Texture", it->second.first, true, false ) != ER_SUCCESS )
+						return false;
 				}
 				if ( pTextureMan )
 				{
-					if ( Singleton<IExporterContainer>()->ExportObject( pTextureMan, "Texture", szTextureName, true, false ) != ER_SUCCESS ) return false;
+					if ( Singleton<IExporterContainer>()->ExportObject( pTextureMan, "Texture", szTextureName, true, false ) !=
+					     ER_SUCCESS )
+						return false;
 				}
 			}
 		}
@@ -152,25 +172,31 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 	return true;
 }
 
-EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																												const std::string &rszObjectTypeName,
-																												const std::string &rszObjectName,
-																												bool bForce,
-																												EXPORT_TYPE exportType )
+EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator *pManipulator,
+                                                         const std::string &rszObjectTypeName,
+                                                         const std::string &rszObjectName,
+                                                         bool bForce,
+                                                         EXPORT_TYPE exportType )
 {
 	// Reject legacy sources before any reference exporter can mutate this object.
-	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport(pManipulator, rszObjectTypeName) ) return ER_BREAK;
+	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport( pManipulator, rszObjectTypeName ) )
+		return ER_BREAK;
 	if ( exportType == ET_NO_REF )
 	{
 		// Direct exports also publish ModelFileRef before surface-point generation reads the model.
-		CPtr<IManipulator> visual = CManipulatorManager::CreateManipulatorFromReference("visualObject", pManipulator, 0, 0, 0);
-		CPtr<IManipulator> model = visual ? CreateModelManipulatorFromVisObj(visual, 0) : nullptr;
-		CPtr<IManipulator> geometry = model ? CManipulatorManager::CreateManipulatorFromReference("Geometry", model, 0, 0, 0) : nullptr;
-		if ( geometry && !NEditorGltf::Export(geometry, "Geometry", true) )
-			return ObjectExportError(rszObjectName, "Cannot export the GLTF model. Check the source and writable data/mod folder.");
+		CPtr<IManipulator> visual =
+				CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 );
+		CPtr<IManipulator> model = visual ? CreateModelManipulatorFromVisObj( visual, 0 ) : nullptr;
+		CPtr<IManipulator> geometry =
+				model ? CManipulatorManager::CreateManipulatorFromReference( "Geometry", model, 0, 0, 0 ) : nullptr;
+		if ( geometry && !NEditorGltf::Export( geometry, "Geometry", true ) )
+			return ObjectExportError( rszObjectName,
+			                          "Cannot export the GLTF model. Check the source and writable data/mod folder." );
 	}
-	const auto result = CStaticObjectRPGStatsExporter::ExportObject(pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType);
-	if ( result != ER_SUCCESS ) return result;
+	const auto result =
+			CStaticObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
+	if ( result != ER_SUCCESS )
+		return result;
 	//
 	if ( exportType == ET_BEFORE_REF )
 		return ER_SUCCESS;
@@ -180,7 +206,8 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	//
 	bool bResult = true;
 	// Получаем манипулятор на VisObject
-	CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 );
+	CPtr<IManipulator> pVisObjectManipulator =
+			CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 );
 	if ( !pVisObjectManipulator )
 	{
 		return ER_SUCCESS;
@@ -191,13 +218,14 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	{
 		return ER_SUCCESS;
 	}
-	CPtr<IManipulator> geometry = CManipulatorManager::CreateManipulatorFromReference("Geometry", pModelManipulator, 0, 0, 0);
+	CPtr<IManipulator> geometry =
+			CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelManipulator, 0, 0, 0 );
 	NEditorGltf::SMeshData mesh;
-	if ( !geometry || !NEditorGltf::LoadGeometry(geometry, &mesh) )
-		return ObjectExportError(rszObjectName, "Cannot read GLTF geometry. Check ModelFileRef and RootMesh.");
+	if ( !geometry || !NEditorGltf::LoadGeometry( geometry, &mesh ) )
+		return ObjectExportError( rszObjectName, "Cannot read GLTF geometry. Check ModelFileRef and RootMesh." );
 	// GLTF vertices have already been converted to the engine's Z-up coordinates.
-	if ( !pManipulator->SetValue("ObjectHeight", int(Vis2AI(mesh.maximum.z - mesh.minimum.z))) )
-		return ObjectExportError(rszObjectName, "Cannot update ObjectHeight.");
+	if ( !pManipulator->SetValue( "ObjectHeight", int( Vis2AI( mesh.maximum.z - mesh.minimum.z ) ) ) )
+		return ObjectExportError( rszObjectName, "Cannot update ObjectHeight." );
 	// Получаем каталоги материалов, текстур и файлов текстур
 	std::string szMaterialFolder;
 	std::string szTextureFolder;
@@ -207,10 +235,12 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	if ( nMaterialCount > 0 )
 	{
 		std::string szMaterialName;
-		if ( CPtr<IManipulator> pMaterialManipulator = CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelManipulator, 0, &szMaterialName, 0 ) )
+		if ( CPtr<IManipulator> pMaterialManipulator = CManipulatorManager::CreateManipulatorFromReference(
+						 "Materials.[0]", pModelManipulator, 0, &szMaterialName, 0 ) )
 		{
 			std::string szTextureName;
-			if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialManipulator, 0, &szTextureName, 0 ) )
+			if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference(
+							 "Texture", pMaterialManipulator, 0, &szTextureName, 0 ) )
 			{
 				CManipulatorManager::GetValue( &szTextureFileFolder, pTextureManipulator, "SrcName" );
 				if ( !szTextureFileFolder.empty() )
@@ -234,8 +264,10 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		if ( bNeedStaticDebris )
 		{
 			// Получаем манипулятор на описатель
-			CPtr<IManipulator> pDebrisManipulator = CManipulatorManager::CreateManipulatorFromReference( "StaticDebris.Debris", pManipulator, 0, 0, 0 );
-			if ( !pDebrisManipulator ) return ObjectExportError(rszObjectName, "Static debris is enabled but its Debris resource is missing.");
+			CPtr<IManipulator> pDebrisManipulator =
+					CManipulatorManager::CreateManipulatorFromReference( "StaticDebris.Debris", pManipulator, 0, 0, 0 );
+			if ( !pDebrisManipulator )
+				return ObjectExportError( rszObjectName, "Static debris is enabled but its Debris resource is missing." );
 			{
 				int nDebrisCount = 0;
 				bResult = bResult && CManipulatorManager::GetValue( &nDebrisCount, pDebrisManipulator, "Debris" );
@@ -249,17 +281,31 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 
 					std::string szSeasonName;
 					float fWidth = 20;
-					bResult = bResult && CManipulatorManager::GetValue( &szSeasonName, pDebrisManipulator, szDebrisPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
-					bResult = bResult && CManipulatorManager::GetValue( &fWidth, pDebrisManipulator, szDebrisPrefix + LEVEL_SEPARATOR_CHAR + "Width" );
+					bResult = bResult && CManipulatorManager::GetValue( &szSeasonName,
+					                                                    pDebrisManipulator,
+					                                                    szDebrisPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
+					bResult = bResult && CManipulatorManager::GetValue(
+																	 &fWidth, pDebrisManipulator, szDebrisPrefix + LEVEL_SEPARATOR_CHAR + "Width" );
 					//
 					CVec2 vMaskOrigin = VNULL2;
-					const std::string szSeasonFilePostfix = typeSeasonFilePostfixMnemonics.GetMnemonic( typeSeasonMnemonics.GetValue( szSeasonName ) );
-					const std::string szMaskFileName = szSeasonFilePostfix.empty() ? fmt::format( "{}StaticDebris.tga", szTextureFileFolder.c_str() ) : fmt::format( "{}StaticDebris_{}.tga", szTextureFileFolder.c_str(), szSeasonFilePostfix.c_str() );
-					bResult = bResult && CreateObjectStaticDebris( mesh, NFile::JoinPath(pUserData->constUserData.szExportSourceFolder, szMaskFileName), &vMaskOrigin, (int)fWidth );
+					const std::string szSeasonFilePostfix =
+							typeSeasonFilePostfixMnemonics.GetMnemonic( typeSeasonMnemonics.GetValue( szSeasonName ) );
+					const std::string szMaskFileName =
+							szSeasonFilePostfix.empty()
+									? fmt::format( "{}StaticDebris.tga", szTextureFileFolder.c_str() )
+									: fmt::format( "{}StaticDebris_{}.tga", szTextureFileFolder.c_str(), szSeasonFilePostfix.c_str() );
+					bResult = bResult && CreateObjectStaticDebris(
+																	 mesh,
+																	 NFile::JoinPath( pUserData->constUserData.szExportSourceFolder, szMaskFileName ),
+																	 &vMaskOrigin,
+																	 (int)fWidth );
 					//
-					bResult = bResult && CManipulatorManager::SetValue( szSeasonName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
-					bResult = bResult && CManipulatorManager::SetValue( szMaskFileName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "SrcName" );
-					bResult = bResult && CManipulatorManager::SetVec2( vMaskOrigin, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "Origin" );
+					bResult = bResult && CManipulatorManager::SetValue(
+																	 szSeasonName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
+					bResult = bResult && CManipulatorManager::SetValue(
+																	 szMaskFileName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "SrcName" );
+					bResult = bResult && CManipulatorManager::SetVec2(
+																	 vMaskOrigin, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "Origin" );
 					if ( !bResult )
 					{
 						break;
@@ -277,7 +323,8 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 				const std::string szMaskPrefix = fmt::format( "StaticDebris.Masks.[{}]", nMasksIndex );
 				//
 				std::string szMaskFileName;
-				if ( CManipulatorManager::GetValue( &szMaskFileName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "SrcName" ) )
+				if ( CManipulatorManager::GetValue(
+								 &szMaskFileName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "SrcName" ) )
 				{
 					if ( !szMaskFileName.empty() && ( szMaskFileName[0] != ' ' ) )
 					{
@@ -309,14 +356,16 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 
 			bResult = bResult && CreateObjectPassabilityProfile( mesh, 1.0f, &passProfile );
 		}
-		if ( bResult ) SavePassProfile(passProfile, "", "PassProfile", pManipulator);
+		if ( bResult )
+			SavePassProfile( passProfile, "", "PassProfile", pManipulator );
 		bResult = bResult && pManipulator->SetValue( "Origin.x", vPassabilityOrigin.x );
 		bResult = bResult && pManipulator->SetValue( "Origin.y", vPassabilityOrigin.y );
 	}
 	if ( !bResult )
-		return ObjectExportError(rszObjectName, "Could not generate debris or passability. Check the log and ensure the export source folder is writable.");
+		return ObjectExportError(
+				rszObjectName,
+				"Could not generate debris or passability. Check the log and ensure the export source folder is writable." );
 	return ER_SUCCESS;
 }
-
 
 // basement storage

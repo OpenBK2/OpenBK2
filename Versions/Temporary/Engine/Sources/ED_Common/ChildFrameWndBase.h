@@ -19,16 +19,15 @@ struct ISceneSurface;
 // the same two switches.
 enum EScrollAction
 {
-	SCROLL_TO_START,			// SB_LEFT, SB_TOP
-	SCROLL_TO_END,				// SB_RIGHT, SB_BOTTOM
-	SCROLL_LINE_BACK,			// SB_LINELEFT, SB_LINEUP
-	SCROLL_LINE_FORWARD,	// SB_LINERIGHT, SB_LINEDOWN
-	SCROLL_PAGE_BACK,			// SB_PAGELEFT, SB_PAGEUP
-	SCROLL_PAGE_FORWARD,	// SB_PAGERIGHT, SB_PAGEDOWN
-	SCROLL_THUMB,					// SB_THUMBPOSITION, SB_THUMBTRACK
-	SCROLL_OTHER,					// anything else, which the frame ignores
+	SCROLL_TO_START,     // SB_LEFT, SB_TOP
+	SCROLL_TO_END,       // SB_RIGHT, SB_BOTTOM
+	SCROLL_LINE_BACK,    // SB_LINELEFT, SB_LINEUP
+	SCROLL_LINE_FORWARD, // SB_LINERIGHT, SB_LINEDOWN
+	SCROLL_PAGE_BACK,    // SB_PAGELEFT, SB_PAGEUP
+	SCROLL_PAGE_FORWARD, // SB_PAGERIGHT, SB_PAGEDOWN
+	SCROLL_THUMB,        // SB_THUMBPOSITION, SB_THUMBTRACK
+	SCROLL_OTHER,        // anything else, which the frame ignores
 };
-
 
 // The 3D viewport: what goes to the active input state and what to the game,
 // when the scene steps and redraws, and the CHID_SCENE commands.
@@ -82,7 +81,7 @@ protected:
 	CTRect<int> rectBorder1, rectBorder2, rectWindow, rectMain;
 
 	// The window, between OnCreate and OnDestroy; null outside them.
-	ISceneSurface* Surface() const { return pSurface; }
+	ISceneSurface *Surface() const { return pSurface; }
 	// Invalidate, erase and paint the window now, if there is one.
 	void Redraw();
 
@@ -103,32 +102,32 @@ public:
 	// The scene update timer's tick.
 	void OnTimer();
 	//
-	void OnSetFocus			( IWidget *pOldWidget );
-	void OnKillFocus		( IWidget *pNewWidget );
+	void OnSetFocus( IWidget *pOldWidget );
+	void OnKillFocus( IWidget *pNewWidget );
 
-	void OnMouseMove		( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rPoint );
 	// rPoint in viewport coordinates, as the input state's terrain picker expects, and
 	// bDefaultResult what the window's default handling of the wheel answered:
 	// the input state only hears of a wheel the window did something with.
-	bool OnMouseWheel		( unsigned nFlags, short zDelta, const CTPoint<int> &rPoint, bool bDefaultResult );
+	bool OnMouseWheel( unsigned nFlags, short zDelta, const CTPoint<int> &rPoint, bool bDefaultResult );
 	//
-	void OnLButtonDown	( unsigned nFlags, const CTPoint<int> &rPoint );
-	void OnLButtonUp		( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rPoint );
 	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint );
 	//
-	void OnRButtonDown	( unsigned nFlags, const CTPoint<int> &rPoint );
-	void OnRButtonUp		( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rPoint );
 	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint );
 	//
-	void OnMButtonDown	( unsigned nFlags, const CTPoint<int> &rPoint );
-	void OnMButtonUp		( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rPoint );
 	void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint );
 	//
-	void OnKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
 	// rScreenPoint in screen coordinates, or ( -1, -1 ) from the keyboard.
-	void OnContextMenu	( const CTPoint<int> &rScreenPoint );
+	void OnContextMenu( const CTPoint<int> &rScreenPoint );
 	//
 	// A paint in two halves around the surface's paint context. BeginPaint
 	// lays the window out and prepares the renderer, or answers false for a

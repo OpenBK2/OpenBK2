@@ -31,9 +31,9 @@ public:
 	void PacketLost( PACKET_ID pktID );
 
 private:
-	PACKET_ID nPktSent;        // is used to order update packets
-	UPDATE_ID nPktLastReceived;// number of last received pkt
-	UPDATE_ID nPktHighCounter; // high part of packet counter
+	PACKET_ID nPktSent;         // is used to order update packets
+	UPDATE_ID nPktLastReceived; // number of last received pkt
+	UPDATE_ID nPktHighCounter;  // high part of packet counter
 	//
 	// info on received pkts (acks on them should be sent)
 	std::vector<UPDATE_ID> receivedPkts;
@@ -41,7 +41,7 @@ private:
 	uint32_t dwAckedBits;
 	PACKET_ID nAckedLast;
 	//
-	float fAvrgRTT, fAvrgRTT2;    // RTT statistics
+	float fAvrgRTT, fAvrgRTT2; // RTT statistics
 
 	// ping information
 	float fPing;
@@ -55,7 +55,7 @@ private:
 	//float fUpdateTimeDelay;       // recommended delay between updates (in seconds)
 	//float fUpdateTimeElapsed;     // time elapsed since last update
 	float fTimeSinceLastSend;
-	float fTimeSinceLastRecv;     // time elapsed since last receive
+	float fTimeSinceLastRecv; // time elapsed since last receive
 	double fCurrentTime;
 	//int nUpdateSize;               // recommended update size
 	// bool bHasNewPacketToAck;
@@ -69,7 +69,7 @@ private:
 		bool bOnTheWindowEdge;
 	};
 	// info on sent update packets
-	std::list< CUpdate > sentUpdates, rolledUpdates;    // unacknowledged updates
+	std::list<CUpdate> sentUpdates, rolledUpdates; // unacknowledged updates
 
 	void RegisterRTT( float fRTT );
 	void SendPktAcks( CBitStream *pBits );

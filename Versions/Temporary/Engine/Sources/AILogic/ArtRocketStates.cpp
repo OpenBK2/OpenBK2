@@ -31,7 +31,7 @@ extern CGroupLogic theGroupLogic;
 
 CPtr<CArtRocketStatesFactory> CArtRocketStatesFactory::pFactory = 0;
 
-IStatesFactory* CArtRocketStatesFactory::Instance()
+IStatesFactory *CArtRocketStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CArtRocketStatesFactory();
@@ -42,67 +42,51 @@ IStatesFactory* CArtRocketStatesFactory::Instance()
 bool CArtRocketStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		( cmdType == ACTION_COMMAND_DIE							||
-			cmdType == ACTION_COMMAND_MOVE_TO					||
-			cmdType == ACTION_COMMAND_REVERSE_TO				||
-			cmdType == ACTION_COMMAND_ART_BOMBARDMENT	||
-			cmdType == ACTION_COMMAND_FIRE_ROCKETS		||
-			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
-			cmdType == ACTION_COMMAND_ROTATE_TO				||
-			cmdType == ACTION_COMMAND_INSTALL					||
-			cmdType == ACTION_COMMAND_UNINSTALL				||
-			cmdType == ACTION_COMMAND_DISAPPEAR				||
-			cmdType == ACTION_MOVE_IDLE								||
-			cmdType == ACTION_COMMAND_GUARD						||
-			cmdType == ACTION_MOVE_BEING_TOWED				||
-			cmdType == ACTION_COMMAND_ATTACK_OBJECT		||
-			cmdType == ACTION_COMMAND_ENTRENCH_SELF		||
-			cmdType == ACTION_COMMAND_CHANGE_SHELLTYPE ||
-			cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH	||
-			cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
-			cmdType == ACTION_COMMAND_STAND_GROUND ||
-			cmdType == ACTION_COMMAND_MOVE_TO_GRID ||
-			cmdType == ACTION_COMMAND_SWARM_TO ||
-			cmdType == ACTION_COMMAND_WAIT ||
-			cmdType == ACTION_COMMAND_UNLOAD ||
-			cmdType == ACTION_COMMAND_MECH_ENTER ||
-			cmdType == ACTION_MOVE_MECH_ENTER_NOW ||
-			cmdType == ACTION_COMMAND_HOLD_SECTOR ||
-			cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT
-		);
+	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_MOVE_TO || cmdType == ACTION_COMMAND_REVERSE_TO ||
+	         cmdType == ACTION_COMMAND_ART_BOMBARDMENT || cmdType == ACTION_COMMAND_FIRE_ROCKETS ||
+	         cmdType == ACTION_COMMAND_USE_FLAMETHROWER || cmdType == ACTION_COMMAND_ROTATE_TO ||
+	         cmdType == ACTION_COMMAND_INSTALL || cmdType == ACTION_COMMAND_UNINSTALL ||
+	         cmdType == ACTION_COMMAND_DISAPPEAR || cmdType == ACTION_MOVE_IDLE || cmdType == ACTION_COMMAND_GUARD ||
+	         cmdType == ACTION_MOVE_BEING_TOWED || cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
+	         cmdType == ACTION_COMMAND_ENTRENCH_SELF || cmdType == ACTION_COMMAND_CHANGE_SHELLTYPE ||
+	         cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH || cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
+	         cmdType == ACTION_COMMAND_STAND_GROUND || cmdType == ACTION_COMMAND_MOVE_TO_GRID ||
+	         cmdType == ACTION_COMMAND_SWARM_TO || cmdType == ACTION_COMMAND_WAIT || cmdType == ACTION_COMMAND_UNLOAD ||
+	         cmdType == ACTION_COMMAND_MECH_ENTER || cmdType == ACTION_MOVE_MECH_ENTER_NOW ||
+	         cmdType == ACTION_COMMAND_HOLD_SECTOR || cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT );
 }
 
-IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
+IUnitState *CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CArtillery*>( pObj ) != 0, "Wrong unit type" );
-	CArtillery *pArtillery = checked_cast<CArtillery*>( pObj );
+	NI_ASSERT( dynamic_cast<CArtillery *>( pObj ) != 0, "Wrong unit type" );
+	CArtillery *pArtillery = checked_cast<CArtillery *>( pObj );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 
 	switch ( cmd.nCmdType )
 	{
-	case ACTION_COMMAND_MECH_ENTER:
-	case ACTION_MOVE_MECH_ENTER_NOW:
+		case ACTION_COMMAND_MECH_ENTER:
+		case ACTION_MOVE_MECH_ENTER_NOW:
 		{
-			CObjectBase * pObj = GetObjectByCmd( cmd );
+			CObjectBase *pObj = GetObjectByCmd( cmd );
 			if ( pObj )
 			{
-				CMilitaryCar * pTransport = checked_cast<CMilitaryCar*>( pObj );
-				pResult = new CMechUnitInsideMechUnitState( pArtillery, pTransport, cmd.nCmdType == ACTION_MOVE_MECH_ENTER_NOW );
+				CMilitaryCar *pTransport = checked_cast<CMilitaryCar *>( pObj );
+				pResult =
+						new CMechUnitInsideMechUnitState( pArtillery, pTransport, cmd.nCmdType == ACTION_MOVE_MECH_ENTER_NOW );
 			}
 		}
 
 		break;
-	case ACTION_COMMAND_WAIT:
-		pResult = CArtilleryRestState::Instance( pArtillery, cmd.vPos, pArtillery->GetDirection(), cmd.fNumber );
+		case ACTION_COMMAND_WAIT:
+			pResult = CArtilleryRestState::Instance( pArtillery, cmd.vPos, pArtillery->GetDirection(), cmd.fNumber );
 
-		break;
-	case ACTION_COMMAND_UNLOAD:
+			break;
+		case ACTION_COMMAND_UNLOAD:
 		{
-			CObjectBase * pObj = GetObjectByCmd( cmd );
-			CMechUnitInsideMechUnitState *pState ( checked_cast<CMechUnitInsideMechUnitState*>( pArtillery->GetState() ) );
+			CObjectBase *pObj = GetObjectByCmd( cmd );
+			CMechUnitInsideMechUnitState *pState( checked_cast<CMechUnitInsideMechUnitState *>( pArtillery->GetState() ) );
 			if ( pObj )
 			{
 				pState->Unload( pArtillery->GetCenterPlain() );
@@ -110,13 +94,13 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 		}
 
 		break;
-	case ACTION_MOVE_ONBOARD_ATTACK_UNIT:
+		case ACTION_MOVE_ONBOARD_ATTACK_UNIT:
 		{
-			CObjectBase * pObj = GetObjectByCmd( cmd );
-			CMechUnitInsideMechUnitState *pState ( checked_cast<CMechUnitInsideMechUnitState*>( pArtillery->GetState() ) );
+			CObjectBase *pObj = GetObjectByCmd( cmd );
+			CMechUnitInsideMechUnitState *pState( checked_cast<CMechUnitInsideMechUnitState *>( pArtillery->GetState() ) );
 			if ( pObj )
 			{
-				CAIUnit * pEnemy = checked_cast<CMilitaryCar*>( pObj );
+				CAIUnit *pEnemy = checked_cast<CMilitaryCar *>( pObj );
 				pState->AttackTarget( pEnemy );
 			}
 			pResult = pState;
@@ -137,7 +121,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 		case ACTION_COMMAND_HOLD_SECTOR:
 			switch ( cmd.nNumber )
 			{
-			case 0:
+				case 0:
 				{
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, cmd.vPos ), pArtillery );
 					SAIUnitCmd newCmd( ACTION_COMMAND_HOLD_SECTOR );
@@ -145,24 +129,24 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 					theGroupLogic.InsertUnitCommand( newCmd, pArtillery );
 				}
 				break;
-			case 1:
-				pArtillery->ResetHoldSector();
-				break;
-			case 2:
-				pResult = CSoldierEnterHoldSectorState::Instance( pArtillery );
-				break;
-			default:
-				NI_ASSERT( false, "Wrong param to ACTION_COMMAND_HOLD_SECTOR" );
-				break;
+				case 1:
+					pArtillery->ResetHoldSector();
+					break;
+				case 2:
+					pResult = CSoldierEnterHoldSectorState::Instance( pArtillery );
+					break;
+				default:
+					NI_ASSERT( false, "Wrong param to ACTION_COMMAND_HOLD_SECTOR" );
+					break;
 			}
 			break;
 		case ACTION_MOVE_BEING_TOWED:
-			{
-				CONVERT_OBJECT( CAITransportUnit, pTransportUnit, GetObjectByCmd( cmd ), "Wrong unit to attach artillery" );
-				pResult = CArtilleryBeingTowedState::Instance( pArtillery, pTransportUnit );
-			}
+		{
+			CONVERT_OBJECT( CAITransportUnit, pTransportUnit, GetObjectByCmd( cmd ), "Wrong unit to attach artillery" );
+			pResult = CArtilleryBeingTowedState::Instance( pArtillery, pTransportUnit );
+		}
 
-			break;
+		break;
 		case ACTION_COMMAND_DIE:
 			NI_ASSERT( false, "Command to die in the queue" );
 
@@ -173,19 +157,19 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_MOVE_TO:
 		case ACTION_COMMAND_REVERSE_TO:
+		{
+			pArtillery->UnsetFollowState();
+			pArtillery->ResetHoldSector();
+			if ( pArtillery->IsInTankPit() ) // сначала выйти из TankPit, потом поехать куда послали
 			{
-				pArtillery->UnsetFollowState();
-				pArtillery->ResetHoldSector();
-				if ( pArtillery->IsInTankPit() )// сначала выйти из TankPit, потом поехать куда послали
-				{
-					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
-					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
-				}
-				else
-					pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
+				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
+				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
 			}
+			else
+				pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
+		}
 
-			break;
+		break;
 		case ACTION_COMMAND_ART_BOMBARDMENT:
 		case ACTION_COMMAND_FIRE_ROCKETS:
 			pResult = CArtRocketAttackGroundState::Instance( pArtillery, cmd.vPos );
@@ -198,7 +182,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_ROTATE_TO:
 			pArtillery->ResetHoldSector();
-			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )// сначала выйти из TankPit, потом поехать куда послали
+			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() ) // сначала выйти из TankPit, потом поехать куда послали
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
@@ -210,7 +194,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_ROTATE_TO_DIR:
 			pArtillery->ResetHoldSector();
-			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )// сначала выйти из TankPit, потом поехать куда послали
+			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() ) // сначала выйти из TankPit, потом поехать куда послали
 			{
 				theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
@@ -236,21 +220,22 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 			break;
 		case ACTION_COMMAND_ATTACK_OBJECT:
+		{
+			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong static object to attack" );
+			// attack the artillery
+			if ( pStaticObj->GetObjectType() == ESOT_ARTILLERY_BULLET_STORAGE )
 			{
-				CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong static object to attack" );
-				// attack the artillery
-				if ( pStaticObj->GetObjectType() == ESOT_ARTILLERY_BULLET_STORAGE )
-				{
-					pResult = CArtRocketAttackGroundState::Instance( pArtillery, checked_cast<CArtilleryBulletStorage*>(pStaticObj)->GetOwner()->GetCenterPlain() );
-				}
-				else
-					pResult = CArtilleryAttackCommonStatObjState::Instance( pArtillery, pStaticObj );
-
+				pResult = CArtRocketAttackGroundState::Instance(
+						pArtillery, checked_cast<CArtilleryBulletStorage *>( pStaticObj )->GetOwner()->GetCenterPlain() );
 			}
+			else
+				pResult = CArtilleryAttackCommonStatObjState::Instance( pArtillery, pStaticObj );
+		}
 
-			break;
+		break;
 		case ACTION_COMMAND_CHANGE_SHELLTYPE:
-			pArtillery->SetActiveShellType( static_cast<NDb::SWeaponRPGStats::SShell::EShellDamageType>( int(cmd.fNumber)) );
+			pArtillery->SetActiveShellType(
+					static_cast<NDb::SWeaponRPGStats::SShell::EShellDamageType>( int( cmd.fNumber ) ) );
 
 			break;
 		case ACTION_COMMAND_STAND_GROUND:
@@ -284,10 +269,10 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 	return pResult;
 }
 
-IUnitState* CArtRocketStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CArtRocketStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CArtillery*>( pUnit ) != 0, "Wrong unit type" );
-	CArtillery * pArt = checked_cast<CArtillery*>( pUnit );
+	NI_ASSERT( dynamic_cast<CArtillery *>( pUnit ) != 0, "Wrong unit type" );
+	CArtillery *pArt = checked_cast<CArtillery *>( pUnit );
 	return CArtilleryRestState::Instance( pArt, CVec2( -1, -1 ), 0, -1 );
 }
 
@@ -295,14 +280,14 @@ IUnitState* CArtRocketStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 //*										 CArtRocketAttackGroundState									*
 //*******************************************************************
 
-IUnitState* CArtRocketAttackGroundState::Instance( CArtillery *pArtillery, const CVec2 &point )
+IUnitState *CArtRocketAttackGroundState::Instance( CArtillery *pArtillery, const CVec2 &point )
 {
 	return new CArtRocketAttackGroundState( pArtillery, point );
 }
 
 CArtRocketAttackGroundState::CArtRocketAttackGroundState( CArtillery *_pArtillery, const CVec2 &_point )
-: pArtillery( _pArtillery ), point( _point ), bFired( false ), eState( EAGS_FIRING ), wDirToRotate( 0 ), bFinished( false ),
-bSaidNoAmmo( false )
+		: pArtillery( _pArtillery ), point( _point ), bFired( false ), eState( EAGS_FIRING ), wDirToRotate( 0 ),
+			bFinished( false ), bSaidNoAmmo( false )
 {
 	pArtillery->Stop();
 	NI_ASSERT( pArtillery->GetFirstArtilleryGun() != 0, "ArtRocket unit doesn't have an aritillery gun" );
@@ -329,7 +314,8 @@ bSaidNoAmmo( false )
 			const EUnitAckType eReject = pArtillery->GetFirstArtilleryGun()->GetRejectReason();
 			pArtillery->SendAcknowledgement( eReject, true );
 			if ( eReject == ACK_NO_AMMO && pArtillery->GetPlayer() == theDipl.GetMyNumber() )
-				theFeedBackSystem.AddFeedbackAndForget( pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
+				theFeedBackSystem.AddFeedbackAndForget(
+						pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
 
 			bFinished = true;
 		}
@@ -379,7 +365,8 @@ void CArtRocketAttackGroundState::Segment()
 							{
 								pArtillery->SendAcknowledgement( ACK_NO_AMMO );
 								if ( pArtillery->GetPlayer() == theDipl.GetMyNumber() )
-									theFeedBackSystem.AddFeedbackAndForget( pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
+									theFeedBackSystem.AddFeedbackAndForget(
+											pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
 							}
 						}
 						else
@@ -397,7 +384,8 @@ void CArtRocketAttackGroundState::Segment()
 						{
 							pArtillery->SendAcknowledgement( ACK_NO_AMMO );
 							if ( pArtillery->GetPlayer() == theDipl.GetMyNumber() )
-								theFeedBackSystem.AddFeedbackAndForget( pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
+								theFeedBackSystem.AddFeedbackAndForget(
+										pArtillery->GetUniqueID(), pArtillery->GetCenterPlain(), EFB_NO_AMMO, -1 );
 							bSaidNoAmmo = true;
 							if ( NGlobal::GetVar( "stop_on_no_ammo", 0 ) )
 								pArtillery->SetCommandFinished();
@@ -406,12 +394,13 @@ void CArtRocketAttackGroundState::Segment()
 				}
 
 				break;
-			default: NI_ASSERT( false, fmt::format( "Wrong CArtRocketAttackGroundState ({})", (int)eState ) );
+			default:
+				NI_ASSERT( false, fmt::format( "Wrong CArtRocketAttackGroundState ({})", (int)eState ) );
 		}
 	}
 }
 
-ETryStateInterruptResult CArtRocketAttackGroundState::TryInterruptState(class CAICommand *pCommand)
+ETryStateInterruptResult CArtRocketAttackGroundState::TryInterruptState( class CAICommand *pCommand )
 {
 	if ( pCommand == 0 || !pArtillery->GetFirstArtilleryGun()->IsBursting() )
 	{

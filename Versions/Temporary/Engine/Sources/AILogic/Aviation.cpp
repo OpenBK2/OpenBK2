@@ -43,13 +43,12 @@ extern NAI::CTimeCounter timeCounter;
 //*														CAviation															*
 //*******************************************************************
 
-CAviation::~CAviation()
-{
-}
+CAviation::~CAviation() {}
 
 void CAviation::DecFuel( const bool bEconomyMode )
 {
-	const float fDec = (bEconomyMode ?  SConsts::PLANE_FUEL_DEC_ECONOMY : SConsts::PLANE_FUEL_DEC ) * SConsts::AI_SEGMENT_DURATION / 1000;
+	const float fDec = ( bEconomyMode ? SConsts::PLANE_FUEL_DEC_ECONOMY : SConsts::PLANE_FUEL_DEC ) *
+	                   SConsts::AI_SEGMENT_DURATION / 1000;
 	fFuel = (std::max)( fFuel - fDec, 0.0f );
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 }
@@ -59,13 +58,12 @@ float CAviation::GetFuel() const
 	return fFuel;
 }
 
-const SRect & CAviation::GetUnitRect() const
+const SRect &CAviation::GetUnitRect() const
 {
 	static SRect unitRect;
 
 	const float length = GetStats()->vAABBHalfSize.y * SConsts::BOUND_RECT_FACTOR;
 	const float width = GetStats()->vAABBHalfSize.x * SConsts::BOUND_RECT_FACTOR;
-
 
 	const CVec2 realDirVec( GetDirVector() );
 	const CVec2 dirPerp( realDirVec.y, -realDirVec.x );
@@ -75,9 +73,15 @@ const SRect & CAviation::GetUnitRect() const
 	return unitRect;
 }
 
-void CAviation::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
+void CAviation::Init( const CVec2 &center,
+                      const int z,
+                      const SUnitBaseRPGStats *_pStats,
+                      const float fHP,
+                      const uint16_t dir,
+                      const uint8_t player,
+                      ICollisionsCollector *pCollisionsCollector )
 {
-	pStats = checked_cast<const SMechUnitRPGStats*>( _pStats );
+	pStats = checked_cast<const SMechUnitRPGStats *>( _pStats );
 	// calculate appear height
 	timeNextGroundScan = curTime;
 
@@ -92,19 +96,23 @@ void CAviation::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 	CVec2 vUitDir( vGoToPoint - vAppearPoint );
 	Normalize( &vUitDir );
 
-
 	// create formation if needed
 	CPtr<CPlanesFormation> pTempFormation = new CPlanesFormation( 0 );
-	pTempFormation->Init( pStats, CVec3(vAppearPoint, fAppearHeight), pStats->fTurnRadius, pStats->fTurnRadius * 2,
-		CVec3(vDirection * pStats->fSpeed,0), CVec3(0,0,1.0f), 0, false );
+	pTempFormation->Init( pStats,
+	                      CVec3( vAppearPoint, fAppearHeight ),
+	                      pStats->fTurnRadius,
+	                      pStats->fTurnRadius * 2,
+	                      CVec3( vDirection * pStats->fSpeed, 0 ),
+	                      CVec3( 0, 0, 1.0f ),
+	                      0,
+	                      false );
 	SetPlanesFormation( pTempFormation, VNULL3 );
 	fFuel = pStats->fFuel;
-
 
 	CPtr<CPlaneInFormationSmoothPath> pPath = new CPlaneInFormationSmoothPath;
 	pPath->Init( this );
 	SetSmoothPath( pPath );
-	pFormation->CreatePointManuver( CVec3(vGoToPoint, fAppearHeight), true );
+	pFormation->CreatePointManuver( CVec3( vGoToPoint, fAppearHeight ), true );
 
 	CMilitaryCar::Init( center, fAppearHeight, pStats, fHP, dir, player, pCollisionsCollector );
 
@@ -113,24 +121,23 @@ void CAviation::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 	//SetSmoothPath( pPath );
 	//pFormation->CreatePointManuver( CVec3(vGoToPoint, fAppearHeight), true );
 
-
 	vSpeed = pFormation->GetSpeedB2();
 	vPos = pFormation->GetPosB2();
 	vNormale = pFormation->GetNormalB2();
 	// SendAcknowledgement( ACK_PLANE_TAKING_OFF, true );
 }
 
-const class CPlanePreferences & CAviation::GetPreferencesB2() const
+const class CPlanePreferences &CAviation::GetPreferencesB2() const
 {
 	return pFormation->GetPreferencesB2();
 }
 
-const IManuver * CAviation::GetManuver() const
+const IManuver *CAviation::GetManuver() const
 {
 	return pFormation->GetManuver();
 }
 
-IStatesFactory* CAviation::GetStatesFactory() const
+IStatesFactory *CAviation::GetStatesFactory() const
 {
 	return CPlaneStatesFactory::Instance();
 }
@@ -139,7 +146,7 @@ const uint16_t CAviation::GetDir() const
 {
 	if ( pFormation )
 	{
-		const CVec3 vSpeed ( pFormation->GetSpeed( vPlanesShift ) );
+		const CVec3 vSpeed( pFormation->GetSpeed( vPlanesShift ) );
 		return GetDirectionByVector( vSpeed.x, vSpeed.y );
 	}
 	return CMilitaryCar::GetDirection();
@@ -181,7 +188,7 @@ void CAviation::SetPlanesFormation( class CPlanesFormation *_pFormation, const C
 	vPlanesShift = _vShift;
 }
 
-CPlanesFormation * CAviation::GetPlanesFormation()
+CPlanesFormation *CAviation::GetPlanesFormation()
 {
 	return pFormation;
 }
@@ -247,7 +254,7 @@ void CAviation::Segment()
 	{
 		bool bFound = false;
 		// scan ground for enemy ground units
-		for ( CUnitsIter<1,3> iter( GetParty(), EDI_ENEMY, GetCenterPlain(), 1000 ); !iter.IsFinished(); iter.Iterate() )
+		for ( CUnitsIter<1, 3> iter( GetParty(), EDI_ENEMY, GetCenterPlain(), 1000 ); !iter.IsFinished(); iter.Iterate() )
 		{
 			CAIUnit *pUnit = *iter;
 			if ( pUnit->IsRefValid() && pUnit->IsAlive() )
@@ -258,7 +265,8 @@ void CAviation::Segment()
 			}
 		}
 
-		timeNextGroundScan = curTime + 1000 + NRandom::Random( 0, 2000 ); RecordRandomCall();
+		timeNextGroundScan = curTime + 1000 + NRandom::Random( 0, 2000 );
+		RecordRandomCall();
 	}
 }
 
@@ -290,17 +298,16 @@ void CAviation::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STim
 			CVec3 vSp( vInterpolatedSpeed );
 			Normalize( &vSp );
 			NDebugInfo::SArrowHead a1( vInterpolatedPos );
-			NDebugInfo::SArrowHead a2( vInterpolatedPos + vSp * 500, 50, 5  );
+			NDebugInfo::SArrowHead a2( vInterpolatedPos + vSp * 500, 50, 5 );
 			DebugInfoManager()->DrawLine( GetUniqueId() * 50000, a1, a2, NDebugInfo::RED );
 		}
 		{
 			NDebugInfo::SArrowHead a1( vInterpolatedPos );
-			NDebugInfo::SArrowHead a2( vInterpolatedPos + vInterpolatedNormale * 500, 50, 5  );
+			NDebugInfo::SArrowHead a2( vInterpolatedPos + vInterpolatedNormale * 500, 50, 5 );
 			DebugInfoManager()->DrawLine( GetUniqueId() * 50001, a1, a2, NDebugInfo::RED );
 		}
 	}
 #endif
-
 
 	MakeQuatBySpeedAndNormale( &pPlacement->rotation, vInterpolatedSpeed, vInterpolatedNormale );
 	pPlacement->vPlacement = vInterpolatedPos;
@@ -328,12 +335,12 @@ void CAviation::Die( const bool fromExplosion, const float fDamage )
 	else if ( EDI_ENEMY == theDipl.GetDiplStatus( GetParty(), theDipl.GetMyParty() ) )
 		nParam = 3;
 
-/*	if ( nParam != 0 )
+	/*	if ( nParam != 0 )
 		updater.AddUpdate( EFB_AVIA_KILLED, (nParam << 16) | GetAviationType() );
 	*/
 	ChangePlayer( theDipl.GetNeutralPlayer() );
 
-	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_FLY_DEAD), this, false );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_FLY_DEAD ), this, false );
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	updater.AddUpdate( 0, ACTION_NOTIFY_DEADPLANE, this, -1 );

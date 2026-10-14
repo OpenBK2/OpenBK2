@@ -12,7 +12,7 @@
 CDBPtr<NDb::SUIGameConsts> NUIFactory::pConsts;
 extern CVec2 vScreenRect;
 extern CVec2 vScreenOrg;
-IScreen * CUIFactory::pScreenDuringLoad = 0;
+IScreen *CUIFactory::pScreenDuringLoad = 0;
 NInput::CGMORegContainer CUIFactory::registeredMessages;
 bool OnKnownMessage( const struct SGameMessage &msg )
 {
@@ -68,7 +68,7 @@ void MessageReactionsRegisterScriptFunctions();
 CUIFactory::CUIFactory()
 {
 	pVirtualScreenController = new CVirtualScreenController();
-//	MessageReactionsRegisterScriptFunctions();
+	//	MessageReactionsRegisterScriptFunctions();
 }
 
 void CUIFactory::SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler )
@@ -89,16 +89,17 @@ void CUIFactory::RegisterMLHandlers( struct IML *pML )
 	Singleton<CUIFactory>()->RegisterMLHandlersInternal( pML );
 }
 
-IWindow * CUIFactory::CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc )
+IWindow *CUIFactory::CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc )
 {
 	return CUIFactory::MakeWindow( pDesc );
 }
 
-IWindow * CUIFactory::CreateScreenFromDesc( const struct NDb::SUIDesc *_pDesc,
-																						const NDb::SUIGameConsts *_pConsts,
-																						IProgrammedReactionsAndChecks *pReactionsAndChecks,
-																						NGScene::I2DGameView * p2DView,
-																						NGScene::IGameView *pGView, NGScene::IGameView *pInterface3DView )
+IWindow *CUIFactory::CreateScreenFromDesc( const struct NDb::SUIDesc *_pDesc,
+                                           const NDb::SUIGameConsts *_pConsts,
+                                           IProgrammedReactionsAndChecks *pReactionsAndChecks,
+                                           NGScene::I2DGameView *p2DView,
+                                           NGScene::IGameView *pGView,
+                                           NGScene::IGameView *pInterface3DView )
 {
 	NUIFactory::pConsts = _pConsts;
 	IScreen *pScreen = MakeObjectVirtual<CWindowScreen>( UI_SCREEN );
@@ -108,7 +109,7 @@ IWindow * CUIFactory::CreateScreenFromDesc( const struct NDb::SUIDesc *_pDesc,
 	return pScreen;
 }
 
-void CUIFactory::Set2DGameView( NGScene::I2DGameView* pView )
+void CUIFactory::Set2DGameView( NGScene::I2DGameView *pView )
 {
 	CWindowScreen::Set2DGView( pView );
 }
@@ -120,34 +121,38 @@ NGScene::I2DGameView * CUIFactory::Get2DGameView()
 }
 */
 
-CWindow * CUIFactory::MakeWindow( const struct NDb::SUIDesc *pDesc )
+CWindow *CUIFactory::MakeWindow( const struct NDb::SUIDesc *pDesc )
 {
 	if ( !pDesc )
 		return 0;
 
-	NI_ASSERT( checked_cast<const NDb::SWindow*>(pDesc)->pShared != 0, fmt::format( "shared part is empty, WindowName \"{}\"", checked_cast<const NDb::SWindow*>(pDesc)->szName ) );
-	CWindow * p = MakeObjectVirtual<CWindow>( pDesc->nClassTypeID );
+	NI_ASSERT(
+			checked_cast<const NDb::SWindow *>( pDesc )->pShared != 0,
+			fmt::format( "shared part is empty, WindowName \"{}\"", checked_cast<const NDb::SWindow *>( pDesc )->szName ) );
+	CWindow *p = MakeObjectVirtual<CWindow>( pDesc->nClassTypeID );
 
 	p->InitByDesc( pDesc );
 	return p;
 }
 
-IWindowPart * CUIFactory::MakeWindowPart( const struct NDb::SUIDesc *pDesc )
+IWindowPart *CUIFactory::MakeWindowPart( const struct NDb::SUIDesc *pDesc )
 {
-	if ( !pDesc ) return 0;
-	IWindowPart * p = MakeObject<IWindowPart>( pDesc->nClassTypeID );
+	if ( !pDesc )
+		return 0;
+	IWindowPart *p = MakeObject<IWindowPart>( pDesc->nClassTypeID );
 	p->InitByDesc( pDesc );
 	p->Init();
 	return p;
 }
 
-IMessageReactionB2 * CUIFactory::MakeReaction( const struct NDb::SUIDesc *pDesc )
+IMessageReactionB2 *CUIFactory::MakeReaction( const struct NDb::SUIDesc *pDesc )
 {
 	if ( !pDesc )
 		return 0;
 	static int nCurrentID = 0;
 
-	NI_ASSERT( nCurrentID != pDesc->nClassTypeID, fmt::format( "attempt to create cyclic Reactions DBID = \"{}\"", pDesc->GetDBID().ToString() ) );
+	NI_ASSERT( nCurrentID != pDesc->nClassTypeID,
+	           fmt::format( "attempt to create cyclic Reactions DBID = \"{}\"", pDesc->GetDBID().ToString() ) );
 	nCurrentID = pDesc->nClassTypeID;
 
 	IMessageReactionB2 *p = MakeObject<IMessageReactionB2>( pDesc->nClassTypeID );
@@ -158,17 +163,22 @@ IMessageReactionB2 * CUIFactory::MakeReaction( const struct NDb::SUIDesc *pDesc 
 	return p;
 }
 
-IMessageCheck * CUIFactory::MakeCheck( const struct NDb::SUIDesc *pDesc )
+IMessageCheck *CUIFactory::MakeCheck( const struct NDb::SUIDesc *pDesc )
 {
-	if ( !pDesc ) return 0;
-	IMessageCheck * p = MakeObject<IMessageCheck>( pDesc->nClassTypeID );
+	if ( !pDesc )
+		return 0;
+	IMessageCheck *p = MakeObject<IMessageCheck>( pDesc->nClassTypeID );
 	p->InitByDesc( pDesc );
 	return p;
 }
 
-IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimateWindow )
+IUIEffector *CUIFactory::MakeEffect( const NDb::SUIStateBase *pCmd,
+                                     struct IScreen *pScreen,
+                                     SWindowContext *pContext,
+                                     const std::string &szAnimateWindow )
 {
-	if ( !pCmd ) return 0;
+	if ( !pCmd )
+		return 0;
 	IUIEffector *p = MakeObject<IUIEffector>( pCmd->nClassTypeID );
 	p->Configure( pCmd, pScreen, pContext, szAnimateWindow );
 	return p;
@@ -179,12 +189,12 @@ void CUIFactory::RegisterMessage( const std::string &szMessage )
 	registeredMessages.AddObserver( szMessage, OnKnownMessage );
 }
 
-bool CUIFactory::IsMessageRegistered( const SGameMessage &msg  )
+bool CUIFactory::IsMessageRegistered( const SGameMessage &msg )
 {
 	return registeredMessages.ProcessEvent( msg, 0 );
 }
 
-IUIInitialization* CreateUIInitialization()
+IUIInitialization *CreateUIInitialization()
 {
 	return new CUIFactory;
 }

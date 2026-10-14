@@ -14,23 +14,33 @@ class CDifficultyLevel
 		EM_MAX_NUM = 5,
 	};
 	ZDATA
-		ZONSERIALIZE
+	ZONSERIALIZE
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nLevel = {};
 	int nCheatLevel = {};
 
-
-
-	std::vector< CArray2D<float> > coeff;
+	std::vector<CArray2D<float>> coeff;
 
 	std::vector<std::string> levelsNames;
 	std::vector<std::string> coeffNames;
 	std::vector<std::string> partiesNames;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(2,&nLevel); f.Add(3,&nCheatLevel); f.Add(4,&coeff); f.Add(5,&levelsNames); f.Add(6,&coeffNames); f.Add(7,&partiesNames); return 0; }
-		void OnSerialize( IBinSaver &f );
+	ZEND int operator&( IBinSaver &f )
+	{
+		OnSerialize( f );
+		f.Add( 2, &nLevel );
+		f.Add( 3, &nCheatLevel );
+		f.Add( 4, &coeff );
+		f.Add( 5, &levelsNames );
+		f.Add( 6, &coeffNames );
+		f.Add( 7, &partiesNames );
+		return 0;
+	}
+	void OnSerialize( IBinSaver &f );
+
 public:
-	CDifficultyLevel() : nLevel( 1 ), nCheatLevel( 255 ) { }
+	CDifficultyLevel() : nLevel( 1 ), nCheatLevel( 255 ) {}
 	void Clear() { nCheatLevel = 255; }
 
 	virtual void Init();

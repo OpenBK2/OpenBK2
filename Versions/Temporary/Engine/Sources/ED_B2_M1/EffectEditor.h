@@ -4,7 +4,6 @@
 #include "MapEditorLib/DefaultView.h"
 #include "EffectState.h"
 
-
 class CEffectEditor : public CEditorBase, public CDefaultView
 {
 	friend class CEffectState;
@@ -21,9 +20,12 @@ class CEffectEditor : public CEditorBase, public CDefaultView
 public:
 	//IEditor
 	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView* GetView() { return this; }
-	IInputState* GetInputState() { return pEffectState; }
-	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	IView *GetView() { return this; }
+	IInputState *GetInputState() { return pEffectState; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	{
+		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
+	}
 	void CreateControls() {}
 	void PostCreateControls() {}
 	void PreDestroyControls() {}
@@ -32,6 +34,6 @@ public:
 	void Destroy();
 
 	//CDefaultView
-	void Undo( IController* pController ) {}
-	void Redo( IController* pController ) {}
+	void Undo( IController *pController ) {}
+	void Redo( IController *pController ) {}
 };

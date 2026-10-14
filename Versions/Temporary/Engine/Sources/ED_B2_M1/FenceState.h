@@ -18,19 +18,20 @@
 
 class CFenceDesignTool
 {
-	bool bEnabled;			// готов к работе
-	bool bComplete;			// больше ничего менять нельзя - можно генерить забор
-	CVec3 vRayOrigin;		// точка начала куска забора
-	float fRayDir;			// направление куска
-	bool bFitToAIGrid;	// привязывать к сетке
-	int nNumSections;		// текущее число число секций
-	float fSectionLen;	// длина одной секции
+	bool bEnabled;     // готов к работе
+	bool bComplete;    // больше ничего менять нельзя - можно генерить забор
+	CVec3 vRayOrigin;  // точка начала куска забора
+	float fRayDir;     // направление куска
+	bool bFitToAIGrid; // привязывать к сетке
+	int nNumSections;  // текущее число число секций
+	float fSectionLen; // длина одной секции
 
-	CVec3 GetFencePlace( const CVec3 &p );	// ищет центр ближайшего к p тайла (есди bFitToAIGrd == false тогда просто возвращает p)
-	void Complete();												// завершить текущий кусок
+	CVec3 GetFencePlace(
+			const CVec3 &p ); // ищет центр ближайшего к p тайла (есди bFitToAIGrd == false тогда просто возвращает p)
+	void Complete();      // завершить текущий кусок
 
 public:
-	bool bRay;					// зафиксирована точка начала куска забора или нет
+	bool bRay; // зафиксирована точка начала куска забора или нет
 	CVec3 vLastPos;
 
 	CFenceDesignTool() : bEnabled( false ) {}
@@ -51,10 +52,10 @@ public:
 		CVec3 vPosition;
 		float fDirection;
 	};
-	void GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo, NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode );
+	void GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo,
+	                      NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode );
 	///
 };
-
 
 //
 //
@@ -84,13 +85,16 @@ class CFenceState : public CMapObjectState
 	SSelectedFenceInfo selectedFenceInfo;
 	void RefreshSelectedFenceInfo();
 	//
-	int InsertFenceSection( NMapInfoEditor::SObjectCreateInfo *pSectionCreateInfo, IEditorScene *pEditorScene, IManipulator *pManipulator, CObjectBaseController *pObjectController );
+	int InsertFenceSection( NMapInfoEditor::SObjectCreateInfo *pSectionCreateInfo,
+	                        IEditorScene *pEditorScene,
+	                        IManipulator *pManipulator,
+	                        CObjectBaseController *pObjectController );
 	//
 	void ClearScene();
 	void FillScene( unsigned nFlags, const CVec3 &rTerrainPos );
 	//
 public:
-	CFenceState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
+	CFenceState( CMapObjectMultiState *_pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, fmt::format( "CFenceState(): pParentState == 0" ) );
 		ClearData();

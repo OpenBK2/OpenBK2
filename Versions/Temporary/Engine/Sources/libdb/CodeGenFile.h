@@ -4,16 +4,16 @@
 
 namespace NDb
 {
-	namespace NTypeDef
-	{
-		struct STypeDef;
-		class CTerminalTypesDescriptor;
-	}
+namespace NTypeDef
+{
+	struct STypeDef;
+	class CTerminalTypesDescriptor;
+}
 }
 
 namespace NLang
 {
-	class CFileNode;
+class CFileNode;
 }
 
 namespace NCodeGen
@@ -29,9 +29,13 @@ class CFile : public CXmlResource
 	std::list<std::string> hExternalIncludes;
 	std::list<std::string> cppExternalIncludes;
 	CObj<CNamespace> pNamespace;
+
 public:
-	CFile() { }
-	CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+	CFile() {}
+	CFile( NLang::CFileNode *pFileNode,
+	       const CNodes2TypeDefs &nodes2TypeDefs,
+	       const std::string &szRootDir,
+	       NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
 	const std::string &GetName() const { return szName; }
 

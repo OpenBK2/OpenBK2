@@ -17,7 +17,7 @@ void CTerrainSounds::CTerrainSound::AddCycledSound( const NDb::SComplexSoundDesc
 		CPtr<ISound> pNewSound = CSoundManager::CreateSound2D( pRandomSound->pPathName, true );
 		if ( pNewSound )
 		{
-			cycledSounds.push_back( SSoundInfo(pNewSound, pRandomSound->esoundType == NDb::PEACEFULL ) );
+			cycledSounds.push_back( SSoundInfo( pNewSound, pRandomSound->esoundType == NDb::PEACEFULL ) );
 			bNeedUpdate = true;
 		}
 	}
@@ -27,21 +27,19 @@ void CTerrainSounds::CTerrainSound::StartCycledSounds( ISFX *pSFX, bool bNonPeac
 {
 	for ( CCycledSounds::iterator it = cycledSounds.begin(); it != cycledSounds.end(); ++it )
 	{
-		if ( bMustPlay &&
-			( !bNonPeacefulOnly	|| !it->bPeaceful ) &&
-			!pSFX->IsPlaying( it->pSound ) )
+		if ( bMustPlay && ( !bNonPeacefulOnly || !it->bPeaceful ) && !pSFX->IsPlaying( it->pSound ) )
 			pSFX->PlaySample( it->pSound, true );
 	}
 }
 
-void CTerrainSounds::CTerrainSound::Update(	const struct SSoundTerrainInfo& info,
-																												const CVec3 &vListener,
-																												const float fViewSize,
-																												const float fRelativeVolume )
+void CTerrainSounds::CTerrainSound::Update( const struct SSoundTerrainInfo &info,
+                                            const CVec3 &vListener,
+                                            const float fViewSize,
+                                            const float fRelativeVolume )
 {
 	//calc volume and pan and set new volume to ISounds
 	//if something changed set bNeedupdateFlag
-	vSoundPos	= info.vPos;
+	vSoundPos = info.vPos;
 
 	const CVec2 vNewOffset( info.vPos.x - vListener.x, info.vPos.y - vListener.y );
 	if ( vNewOffset != vOffset )
@@ -51,15 +49,14 @@ void CTerrainSounds::CTerrainSound::Update(	const struct SSoundTerrainInfo& info
 		fPan = vOffset.x / fViewSize;
 
 		//calc volume
-		const float fOffset = fabs(vOffset);
+		const float fOffset = fabs( vOffset );
 		//dependence from distance
 		const float fMinRadius = SSoundSceneConsts::TERRAIN_SOUND_RADIUS_MIN * fViewSize;
 		float fVolumeDist;
 		if ( fOffset < fMinRadius )
 			fVolumeDist = 1.0f;
 		else
-			fVolumeDist = ( fOffset - fMinRadius ) /
-			( SSoundSceneConsts::TERRAIN_SOUND_RADIUS_MAX * fViewSize - fMinRadius );
+			fVolumeDist = ( fOffset - fMinRadius ) / ( SSoundSceneConsts::TERRAIN_SOUND_RADIUS_MAX * fViewSize - fMinRadius );
 		fVolumeDist = fVolumeDist < 0.0f ? 0.0f : fVolumeDist;
 
 		//dependence from weight
@@ -69,7 +66,7 @@ void CTerrainSounds::CTerrainSound::Update(	const struct SSoundTerrainInfo& info
 		else
 			fVolumeWeight = info.fWeight / SSoundSceneConsts::TERRAIN_CRITICAL_WEIGHT;
 
-		fVolume = fVolumeDist * fVolumeWeight * fRelativeVolume ;
+		fVolume = fVolumeDist * fVolumeWeight * fRelativeVolume;
 		bNeedUpdate = true;
 	}
 }
@@ -80,7 +77,7 @@ void CTerrainSounds::CTerrainSound::SetMustPlay( bool _bMustPlay )
 	bMustPlay = _bMustPlay;
 }
 
-void CTerrainSounds::CTerrainSound::DoUpdate( ISFX * pSFX )
+void CTerrainSounds::CTerrainSound::DoUpdate( ISFX *pSFX )
 {
 	if ( bMustPlay )
 	{
@@ -98,7 +95,9 @@ void CTerrainSounds::CTerrainSound::DoUpdate( ISFX * pSFX )
 	bNeedUpdate = false;
 }
 
-void CTerrainSounds::CTerrainSound::SetSound( const NDb::SComplexSoundDesc *pStats, NTimer::STime timeWhenRestart, ISoundScene *pScene )
+void CTerrainSounds::CTerrainSound::SetSound( const NDb::SComplexSoundDesc *pStats,
+                                              NTimer::STime timeWhenRestart,
+                                              ISoundScene *pScene )
 {
 	if ( wSound )
 	{
@@ -114,7 +113,7 @@ void CTerrainSounds::CTerrainSound::SetSound( const NDb::SComplexSoundDesc *pSta
 	timeRestart = timeWhenRestart;
 }
 
-void CTerrainSounds::CTerrainSound::StopSounds( ISFX * pSFX, bool bOnlyPeaceful )
+void CTerrainSounds::CTerrainSound::StopSounds( ISFX *pSFX, bool bOnlyPeaceful )
 {
 	for ( CCycledSounds::iterator it = cycledSounds.begin(); it != cycledSounds.end(); ++it )
 	{
@@ -122,7 +121,6 @@ void CTerrainSounds::CTerrainSound::StopSounds( ISFX * pSFX, bool bOnlyPeaceful 
 			pSFX->StopSample( it->pSound );
 	}
 }
-
 
 //*******************************************************************
 //*															CTerrainSounds*
@@ -137,11 +135,11 @@ void CTerrainSounds::Init( struct ITerrainSounds *_pTerrain )
 
 void CTerrainSounds::Clear()
 {
-	for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end();  ++it )
-		(*it).second.StopSounds( pSFX, false );
+	for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end(); ++it )
+		( *it ).second.StopSounds( pSFX, false );
 
 	terrainSounds.clear();
-	vListener = CVec3(-1,-1,-1);
+	vListener = CVec3( -1, -1, -1 );
 	lastUpdateTime = 0;
 	bMuteAll = false;
 }
@@ -151,17 +149,21 @@ void CTerrainSounds::Mute( const bool bMute )
 	bMuteAll = bMute;
 	if ( bMuteAll )
 	{
-		for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end();  ++it )
+		for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end(); ++it )
 		{
-			CTerrainSound &sound = (*it).second;
+			CTerrainSound &sound = ( *it ).second;
 			sound.StopSounds( pSFX, false );
 		}
 	}
 }
 
-void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, const bool bCombat, struct ISoundScene *pScene )
+void CTerrainSounds::Update( const CVec3 &vNewListener,
+                             const float fViewSize,
+                             const bool bCombat,
+                             struct ISoundScene *pScene )
 {
-	if ( !pTerrain || bMuteAll ) return ;
+	if ( !pTerrain || bMuteAll )
+		return;
 
 	// если камера сместилась - получить информацию о звуках заново,
 	// все их запустить
@@ -176,7 +178,7 @@ void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, c
 		if ( 0 != nSize )
 		{
 			// mark sounds that must play (for one pass, so code may be ugly)
-			const int nMaxTerrain = pInfo[nSize-1].nTerrainType;
+			const int nMaxTerrain = pInfo[nSize - 1].nTerrainType;
 			int nCurSizeIndex = 0;
 			for ( int i = 0; i <= nMaxTerrain; ++i )
 			{
@@ -194,25 +196,26 @@ void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, c
 	}
 
 	// обработать all sounds
-	for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end();  ++it )
+	for ( CSounds::iterator it = terrainSounds.begin(); it != terrainSounds.end(); ++it )
 	{
-		CTerrainSound &sound = (*it).second;
+		CTerrainSound &sound = ( *it ).second;
 		//if sound is to be changed and it is finished
 		// not cycle sound
 		if ( sound.GetRestartTime() <= CSoundScene2D::GetCurTime() && sound.IsMustPlay() )
 		{
 			//Update sound, run it again
-			const NDb::SComplexSoundDesc *pStats = pTerrain->GetTerrainSound( (*it).first );
+			const NDb::SComplexSoundDesc *pStats = pTerrain->GetTerrainSound( ( *it ).first );
 
-			sound.SetSound( pStats, CSoundScene2D::GetCurTime() + SSoundSceneConsts::SS_AMBIENT_SOUND_CHANGE +
-				SSoundSceneConsts::SS_AMBIENT_SOUND_CHANGE_RANDOM * rand() / RAND_MAX, pScene );
-
+			sound.SetSound( pStats,
+			                CSoundScene2D::GetCurTime() + SSoundSceneConsts::SS_AMBIENT_SOUND_CHANGE +
+			                    SSoundSceneConsts::SS_AMBIENT_SOUND_CHANGE_RANDOM * rand() / RAND_MAX,
+			                pScene );
 		}
 
 		// create cycle sound
 		if ( !sound.HasCycleSound() ) //sound isn't started yet
 		{
-			const NDb::SComplexSoundDesc *pStats = pTerrain->GetTerrainCycleSound( (*it).first );
+			const NDb::SComplexSoundDesc *pStats = pTerrain->GetTerrainCycleSound( ( *it ).first );
 			if ( pStats )
 				sound.AddCycledSound( pStats );
 			sound.StartCycledSounds( pSFX, bCombat );

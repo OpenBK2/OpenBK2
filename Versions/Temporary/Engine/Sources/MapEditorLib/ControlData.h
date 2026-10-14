@@ -1,7 +1,6 @@
 #pragma once
 
-
-template <class TItem, class TID, class TData, class TItemHash = std::hash<TItem>, class TIDHash = std::hash<TID> >
+template <class TItem, class TID, class TData, class TItemHash = std::hash<TItem>, class TIDHash = std::hash<TID>>
 class CControlData
 {
 public:
@@ -34,7 +33,7 @@ public:
 		return false;
 	}
 	//
-	TData* GetDataByItem( const TItem &rItem )
+	TData *GetDataByItem( const TItem &rItem )
 	{
 		typename CControlItemDataMap::const_iterator posControlItemData = controlItemDataMap.find( rItem );
 		if ( posControlItemData != controlItemDataMap.end() )
@@ -79,7 +78,7 @@ public:
 		}
 	}
 	//
-	TData* GetDataByID( const TID &rID )
+	TData *GetDataByID( const TID &rID )
 	{
 		Item item;
 		if ( GetItem( rID, &item ) )

@@ -18,28 +18,59 @@ class CExistingObject;
 class CHitInfo : public CLinkObject
 {
 	OBJECT_BASIC_METHODS( CHitInfo );
+
 public:
-	ZDATA_(CLinkObject)
+	ZDATA_( CLinkObject )
 
 	CDBPtr<SWeaponRPGStats> pWeapon;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	uint16_t wShell = {};
 	SAIAngle wDir;
 
-	CPtr<CObjectBase> pVictim;  // для попадания по юниту
-	CVec3 explCoord;					// для попадания по земле
+	CPtr<CObjectBase> pVictim; // для попадания по юниту
+	CVec3 explCoord;           // для попадания по земле
 
 	SAINotifyHitInfo::EHitType eHitType = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pWeapon); f.Add(3,&wShell); f.Add(4,&wDir); f.Add(5,&pVictim); f.Add(6,&explCoord); f.Add(7,&eHitType); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CLinkObject *)this );
+		f.Add( 2, &pWeapon );
+		f.Add( 3, &wShell );
+		f.Add( 4, &wDir );
+		f.Add( 5, &pVictim );
+		f.Add( 6, &explCoord );
+		f.Add( 7, &eHitType );
+		return 0;
+	}
 
-	CHitInfo() { }
-	CHitInfo( const SWeaponRPGStats *_pWeapon, const uint16_t _wShell, const uint16_t &_wDir, CObjectBase *_pVictim, const SAINotifyHitInfo::EHitType _eHitType, const CVec3 &_explCoord )
-		: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), pVictim( _pVictim ), eHitType( _eHitType ), explCoord( _explCoord ) { SetUniqueIdForObjects(); }
+	CHitInfo() {}
+	CHitInfo( const SWeaponRPGStats *_pWeapon,
+	          const uint16_t _wShell,
+	          const uint16_t &_wDir,
+	          CObjectBase *_pVictim,
+	          const SAINotifyHitInfo::EHitType _eHitType,
+	          const CVec3 &_explCoord )
+			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), pVictim( _pVictim ), eHitType( _eHitType ),
+				explCoord( _explCoord )
+	{
+		SetUniqueIdForObjects();
+	}
 
-	CHitInfo( const SWeaponRPGStats *_pWeapon, const uint16_t _wShell, const uint16_t &_wDir, const CVec3 &_explCoord, const SAINotifyHitInfo::EHitType _eHitType )
-		: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), pVictim( 0 ), explCoord( _explCoord ), eHitType( _eHitType ) { SetUniqueIdForObjects(); }
+	CHitInfo( const SWeaponRPGStats *_pWeapon,
+	          const uint16_t _wShell,
+	          const uint16_t &_wDir,
+	          const CVec3 &_explCoord,
+	          const SAINotifyHitInfo::EHitType _eHitType )
+			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), pVictim( 0 ), explCoord( _explCoord ),
+				eHitType( _eHitType )
+	{
+		SetUniqueIdForObjects();
+	}
 
-	CHitInfo( const class CExplosion *pExpl, CObjectBase *pVictim, const enum SAINotifyHitInfo::EHitType &eHitType, const CVec3 &explCoord );
+	CHitInfo( const class CExplosion *pExpl,
+	          CObjectBase *pVictim,
+	          const enum SAINotifyHitInfo::EHitType &eHitType,
+	          const CVec3 &explCoord );
 
 	virtual void GetHitInfo( struct SAINotifyHitInfo *pHitInfo ) const;
 
@@ -55,26 +86,26 @@ public:
 struct IBallisticTraj : public CAIObjectBase
 {
 public:
-	virtual const NTimer::STime& GetExplTime() const = 0;
-	virtual const NTimer::STime& GetStartTime() const = 0;
+	virtual const NTimer::STime &GetExplTime() const = 0;
+	virtual const NTimer::STime &GetStartTime() const = 0;
 
-	virtual const CVec3& GetStartPoint() const = 0;
+	virtual const CVec3 &GetStartPoint() const = 0;
 	virtual const uint16_t GetStart2DDir() const = 0;
 
 	virtual const CVec3 GetCoordinates() const = 0;
 	virtual const CVec3 GetVelocity() const { return VNULL3; }
 
 	// Dynamic trajectories advance explicitly; analytic trajectories need no work here.
-	virtual void Segment() { }
+	virtual void Segment() {}
 	virtual bool IsFinished( const NTimer::STime &time ) const { return GetExplTime() <= time; }
 	virtual bool IsAirBurst() const { return false; }
 
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const = 0;
 };
 
-class AILOGIC_EXPORT CBallisticTraj: public IBallisticTraj
+class AILOGIC_EXPORT CBallisticTraj : public IBallisticTraj
 {
-	OBJECT_BASIC_METHODS( CBallisticTraj	);
+	OBJECT_BASIC_METHODS( CBallisticTraj );
 	ZDATA
 	CVec3 vStart3D;
 	// скорости
@@ -91,22 +122,47 @@ class AILOGIC_EXPORT CBallisticTraj: public IBallisticTraj
 	NTimer::STime startTime = {}, explTime = {};
 
 	NDb::SWeaponRPGStats::SShell::ETrajectoryType eType = {};
-	public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&fVx); f.Add(4,&fVy); f.Add(5,&wAngle); f.Add(6,&wDir); f.Add(7,&vDir); f.Add(8,&fG); f.Add(9,&startTime); f.Add(10,&explTime); f.Add(11,&eType); return 0; }
-public:
-	CBallisticTraj() { }
-	CBallisticTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, uint16_t wMaxAngle, float fMaxRange, float fVerticalOffsetAngleRad = 0.0f );
 
-	virtual const NTimer::STime& GetExplTime() const { return explTime; }
-	virtual const NTimer::STime& GetStartTime() const { return startTime; }
-	virtual const CVec3& GetStartPoint() const { return vStart3D; }
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &vStart3D );
+		f.Add( 3, &fVx );
+		f.Add( 4, &fVy );
+		f.Add( 5, &wAngle );
+		f.Add( 6, &wDir );
+		f.Add( 7, &vDir );
+		f.Add( 8, &fG );
+		f.Add( 9, &startTime );
+		f.Add( 10, &explTime );
+		f.Add( 11, &eType );
+		return 0;
+	}
+
+public:
+	CBallisticTraj() {}
+	CBallisticTraj( const CVec3 &vStart,
+	                const CVec3 &vFinish,
+	                float fV,
+	                const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType,
+	                uint16_t wMaxAngle,
+	                float fMaxRange,
+	                float fVerticalOffsetAngleRad = 0.0f );
+
+	virtual const NTimer::STime &GetExplTime() const { return explTime; }
+	virtual const NTimer::STime &GetStartTime() const { return startTime; }
+	virtual const CVec3 &GetStartPoint() const { return vStart3D; }
 	virtual const uint16_t GetStart2DDir() const { return wDir; }
 
 	virtual const CVec3 GetCoordinates() const;
 	const CVec3 GetCoordinatesAtTime( NTimer::STime time ) const;
 	const CVec3 GetInitialVelocity() const { return CVec3( vDir * fVx, fVy ); }
 
-	static uint16_t GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, uint16_t wMaxAngle, float fMaxRange );
+	static uint16_t GetTrajectoryZAngle( const CVec3 &vToAim,
+	                                     float fV,
+	                                     const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType,
+	                                     uint16_t wMaxAngle,
+	                                     float fMaxRange );
 
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return eType; }
 };
@@ -122,19 +178,35 @@ class CFakeBallisticTraj : public IBallisticTraj
 	CVec3 v;
 	float A1 = {}, A2 = {};
 	SAIAngle wDir;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&startTime); f.Add(3,&explTime); f.Add(4,&point); f.Add(5,&v); f.Add(6,&A1); f.Add(7,&A2); f.Add(8,&wDir); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &startTime );
+		f.Add( 3, &explTime );
+		f.Add( 4, &point );
+		f.Add( 5, &v );
+		f.Add( 6, &A1 );
+		f.Add( 7, &A2 );
+		f.Add( 8, &wDir );
+		return 0;
+	}
+
 public:
-	CFakeBallisticTraj() { }
-	CFakeBallisticTraj( const CVec3 &point, const CVec3 &v, const NTimer::STime &explTime, const float A1, const float A2 );
+	CFakeBallisticTraj() {}
+	CFakeBallisticTraj(
+			const CVec3 &point, const CVec3 &v, const NTimer::STime &explTime, const float A1, const float A2 );
 
-	virtual const NTimer::STime& GetExplTime() const { return explTime; }
-	virtual const NTimer::STime& GetStartTime() const { return startTime; }
+	virtual const NTimer::STime &GetExplTime() const { return explTime; }
+	virtual const NTimer::STime &GetStartTime() const { return startTime; }
 
-	virtual const CVec3& GetStartPoint() const { return point; }
+	virtual const CVec3 &GetStartPoint() const { return point; }
 	virtual const uint16_t GetStart2DDir() const { return wDir; }
 
 	virtual const CVec3 GetCoordinates() const;
-	static uint16_t GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType ) { return 0; }
+	static uint16_t
+	GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType )
+	{
+		return 0;
+	}
 
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const;
 };
@@ -149,51 +221,83 @@ class CBombBallisticTraj : public IBallisticTraj
 	CVec2 vRandAcc;
 	SAIAngle wDir;
 	NTimer::STime startTime = {}, explTime = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&point); f.Add(3,&v); f.Add(4,&vRandAcc); f.Add(5,&wDir); f.Add(6,&startTime); f.Add(7,&explTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &point );
+		f.Add( 3, &v );
+		f.Add( 4, &vRandAcc );
+		f.Add( 5, &wDir );
+		f.Add( 6, &startTime );
+		f.Add( 7, &explTime );
+		return 0;
+	}
 
 public:
-	CBombBallisticTraj() { };
+	CBombBallisticTraj() {};
 	CBombBallisticTraj( const CVec3 &point, const CVec3 &v, const NTimer::STime &explTime, const CVec2 &vRandAcc );
 
-	virtual const NTimer::STime& GetExplTime() const { return explTime; }
-	virtual const NTimer::STime& GetStartTime() const { return startTime; }
+	virtual const NTimer::STime &GetExplTime() const { return explTime; }
+	virtual const NTimer::STime &GetStartTime() const { return startTime; }
 
-	virtual const CVec3& GetStartPoint() const { return point; }
+	virtual const CVec3 &GetStartPoint() const { return point; }
 	virtual const uint16_t GetStart2DDir() const { return wDir; }
 
 	virtual const CVec3 GetCoordinates() const;
 
-	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB; }
+	const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const
+	{
+		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB;
+	}
 
 	static float GetCoeff( const float &timeDiff );
-	static uint16_t GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType ) { return 16384 * 3; }
-	static CVec3 CalcTrajectoryFinish( const CVec3 &vSourcePoint, const CVec3 &vInitialSpeed, const CVec2 &vRandAcc, const float fTimeOfFly );
+	static uint16_t
+	GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType )
+	{
+		return 16384 * 3;
+	}
+	static CVec3 CalcTrajectoryFinish( const CVec3 &vSourcePoint,
+	                                   const CVec3 &vInitialSpeed,
+	                                   const CVec2 &vRandAcc,
+	                                   const float fTimeOfFly );
 	static float GetTimeOfFly( const float fZ, const float fZSpeed );
 };
 
-class CAARocketTraj: public IBallisticTraj
+class CAARocketTraj : public IBallisticTraj
 {
-	OBJECT_BASIC_METHODS( CAARocketTraj	);
+	OBJECT_BASIC_METHODS( CAARocketTraj );
 	ZDATA
 	CVec3 vStart3D;
 	SAIAngle wDir;
 	CVec3 vSpeed;
 
 	NTimer::STime startTime = {}, explTime = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&wDir); f.Add(4,&vSpeed); f.Add(5,&startTime); f.Add(6,&explTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &vStart3D );
+		f.Add( 3, &wDir );
+		f.Add( 4, &vSpeed );
+		f.Add( 5, &startTime );
+		f.Add( 6, &explTime );
+		return 0;
+	}
+
 public:
-	CAARocketTraj() { }
+	CAARocketTraj() {}
 	CAARocketTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV );
 
-	virtual const NTimer::STime& GetExplTime() const { return explTime; }
-	virtual const NTimer::STime& GetStartTime() const { return startTime; }
-	virtual const CVec3& GetStartPoint() const { return vStart3D; }
+	virtual const NTimer::STime &GetExplTime() const { return explTime; }
+	virtual const NTimer::STime &GetStartTime() const { return startTime; }
+	virtual const CVec3 &GetStartPoint() const { return vStart3D; }
 	virtual const uint16_t GetStart2DDir() const { return wDir; }
 
 	virtual const CVec3 GetCoordinates() const;
 
-	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const { return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET; }
+	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const
+	{
+		return NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET;
+	}
 };
 
 // A deterministic, target-aware trajectory for guided ATGMs and SAMs.
@@ -222,21 +326,62 @@ class CATGMTraj : public IBallisticTraj
 	bool bStrayMode = {};
 	bool bFinished = {};
 	bool bAirBurst = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&vCenter); f.Add(4,&vVelocity); f.Add(5,&vFixedTarget); f.Add(6,&pTarget); f.Add(7,&nShooterParty); f.Add(8,&fSpeed); f.Add(9,&fTurnRateRad); f.Add(10,&fStrayModeTime); f.Add(11,&startTime); f.Add(12,&lastUpdateTime); f.Add(13,&explTime); f.Add(14,&wStartDir); f.Add(15,&bStrayMode); f.Add(16,&bFinished); f.Add(17,&pShooter); f.Add(18,&bAirBurst); f.Add(19,&eTrajectoryType); f.Add(20,&bAimsForTop); f.Add(21,&fTopTargetingHeight); f.Add(22,&fProximityRadius); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &vStart3D );
+		f.Add( 3, &vCenter );
+		f.Add( 4, &vVelocity );
+		f.Add( 5, &vFixedTarget );
+		f.Add( 6, &pTarget );
+		f.Add( 7, &nShooterParty );
+		f.Add( 8, &fSpeed );
+		f.Add( 9, &fTurnRateRad );
+		f.Add( 10, &fStrayModeTime );
+		f.Add( 11, &startTime );
+		f.Add( 12, &lastUpdateTime );
+		f.Add( 13, &explTime );
+		f.Add( 14, &wStartDir );
+		f.Add( 15, &bStrayMode );
+		f.Add( 16, &bFinished );
+		f.Add( 17, &pShooter );
+		f.Add( 18, &bAirBurst );
+		f.Add( 19, &eTrajectoryType );
+		f.Add( 20, &bAimsForTop );
+		f.Add( 21, &fTopTargetingHeight );
+		f.Add( 22, &fProximityRadius );
+		return 0;
+	}
 
 	bool IsAimingForTargetTop() const;
 	float GetTargetAimZ( const CAIUnit *pUnit ) const;
 	CVec3 GetGuidancePoint() const;
 	void EnterStrayMode();
-	float FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget, CExistingObject **ppHitObject ) const;
-	float FindSAMProximityRatio( const CVec3 &vFrom, const CVec3 &vTo, float fTimeDiff, const NTimer::STime &stepEndTime ) const;
-public:
-	CATGMTraj() : nShooterParty( -1 ), eTrajectoryType( NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE ), fSpeed( 0.0f ), fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), fTopTargetingHeight( 0.0f ), fProximityRadius( 0.0f ), bAimsForTop( false ), bStrayMode( false ), bFinished( false ), bAirBurst( false ) { }
-	CATGMTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, CAIUnit *pShooter, CAIUnit *pTarget, int nShooterParty, NDb::SWeaponRPGStats::SShell::ETrajectoryType eTrajectoryType, const NDb::SMissleParams *pParams );
+	float
+	FindImpactRatio( const CVec3 &vFrom, const CVec3 &vTo, CAIUnit **ppHitTarget, CExistingObject **ppHitObject ) const;
+	float FindSAMProximityRatio( const CVec3 &vFrom,
+	                             const CVec3 &vTo,
+	                             float fTimeDiff,
+	                             const NTimer::STime &stepEndTime ) const;
 
-	virtual const NTimer::STime& GetExplTime() const { return explTime; }
-	virtual const NTimer::STime& GetStartTime() const { return startTime; }
-	virtual const CVec3& GetStartPoint() const { return vStart3D; }
+public:
+	CATGMTraj()
+			: nShooterParty( -1 ), eTrajectoryType( NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_LINE ), fSpeed( 0.0f ),
+				fTurnRateRad( 0.0f ), fStrayModeTime( 0.0f ), fTopTargetingHeight( 0.0f ), fProximityRadius( 0.0f ),
+				bAimsForTop( false ), bStrayMode( false ), bFinished( false ), bAirBurst( false )
+	{
+	}
+	CATGMTraj( const CVec3 &vStart,
+	           const CVec3 &vFinish,
+	           float fV,
+	           CAIUnit *pShooter,
+	           CAIUnit *pTarget,
+	           int nShooterParty,
+	           NDb::SWeaponRPGStats::SShell::ETrajectoryType eTrajectoryType,
+	           const NDb::SMissleParams *pParams );
+
+	virtual const NTimer::STime &GetExplTime() const { return explTime; }
+	virtual const NTimer::STime &GetStartTime() const { return startTime; }
+	virtual const CVec3 &GetStartPoint() const { return vStart3D; }
 	virtual const uint16_t GetStart2DDir() const { return wStartDir; }
 	virtual const CVec3 GetCoordinates() const { return vCenter; }
 	virtual const CVec3 GetVelocity() const { return vVelocity; }
@@ -267,28 +412,68 @@ protected:
 	NDb::SUnitStatsModifier::SParameterModifier weaponAreaModifier;
 	NDb::SUnitStatsModifier::SParameterModifier weaponArea2Modifier;
 	bool bForceAirEffect = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nShellType); f.Add(3,&pWeapon); f.Add(4,&pUnit); f.Add(5,&explCoord); f.Add(6,&attackDir); f.Add(7,&nPlayerOfShoot); f.Add(8,&pHitToSend); f.Add(9,&weaponDamageModifier); f.Add(10,&weaponPiercingModifier); f.Add(11,&weaponAreaModifier); f.Add(12,&weaponArea2Modifier); f.Add(13,&bForceAirEffect); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nShellType );
+		f.Add( 3, &pWeapon );
+		f.Add( 4, &pUnit );
+		f.Add( 5, &explCoord );
+		f.Add( 6, &attackDir );
+		f.Add( 7, &nPlayerOfShoot );
+		f.Add( 8, &pHitToSend );
+		f.Add( 9, &weaponDamageModifier );
+		f.Add( 10, &weaponPiercingModifier );
+		f.Add( 11, &weaponAreaModifier );
+		f.Add( 12, &weaponArea2Modifier );
+		f.Add( 13, &bForceAirEffect );
+		return 0;
+	}
+
 protected:
 	//
-	const SAINotifyHitInfo::EHitType ProcessExactHit( class CAIUnit *pTarget, const SRect &combatRect, const CVec3 &explCoord, const int nRandPiercing, const int nRandArmor ) const;
-	void Init( class CAIUnit *pUnit, const struct SWeaponRPGStats *pWeapon, const float fDispersion, const float fDispRatio, const CVec3 &_explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize, const int nPlayerOfShoot );
+	const SAINotifyHitInfo::EHitType ProcessExactHit( class CAIUnit *pTarget,
+	                                                  const SRect &combatRect,
+	                                                  const CVec3 &explCoord,
+	                                                  const int nRandPiercing,
+	                                                  const int nRandArmor ) const;
+	void Init( class CAIUnit *pUnit,
+	           const struct SWeaponRPGStats *pWeapon,
+	           const float fDispersion,
+	           const float fDispRatio,
+	           const CVec3 &_explCoord,
+	           const CVec3 &attackerPos,
+	           const uint8_t nShellType,
+	           const bool bRandomize,
+	           const int nPlayerOfShoot );
 	//
 	bool InOnGround( const float fExplTerrainZ ) const
 	{
-		return fabs(GetExplCoordinates().z - fExplTerrainZ) <= SConsts::TILE_SIZE;
+		return fabs( GetExplCoordinates().z - fExplTerrainZ ) <= SConsts::TILE_SIZE;
 	}
-public:
-	CExplosion() : nPlayerOfShoot( -1 ), bForceAirEffect( false ) { }
-	CExplosion( CAIUnit *pUnit, const class CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize = true );
-	CExplosion( CAIUnit *pUnit, const struct SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize = true );
 
-	const CVec3& GetExplCoordinates() const { return explCoord; }
-	CAIUnit* GetWhoFire() const { return pUnit; }
+public:
+	CExplosion() : nPlayerOfShoot( -1 ), bForceAirEffect( false ) {}
+	CExplosion( CAIUnit *pUnit,
+	            const class CBasicGun *pGun,
+	            const CVec3 &explCoord,
+	            const CVec3 &attackerPos,
+	            const uint8_t nShellType,
+	            const bool bRandomize = true );
+	CExplosion( CAIUnit *pUnit,
+	            const struct SWeaponRPGStats *pWeapon,
+	            const CVec3 &explCoord,
+	            const CVec3 &attackerPos,
+	            const uint8_t nShellType,
+	            const bool bRandomize = true );
+
+	const CVec3 &GetExplCoordinates() const { return explCoord; }
+	CAIUnit *GetWhoFire() const { return pUnit; }
 
 	const SWeaponRPGStats *GetWeapon() const { return pWeapon; }
 	const uint8_t GetShellType() const { return nShellType; }
-	const SWeaponRPGStats::SShell& GetShellStats() const { return pWeapon->shells[nShellType]; }
+	const SWeaponRPGStats::SShell &GetShellStats() const { return pWeapon->shells[nShellType]; }
 	const uint16_t GetAttackDir() const { return attackDir; }
 	// Guided shells update the eventual impact as their path changes.
 	void SetExplCoordinates( const CVec3 &vCoordinates ) { explCoord = vCoordinates; }
@@ -304,8 +489,11 @@ public:
 	const int GetPlayerOfShoot() const;
 
 	virtual void Explode() = 0;
-	float GetMaxDamage() const ;
-	NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajectoryType() const { return pWeapon->shells[nShellType].etrajectory; }
+	float GetMaxDamage() const;
+	NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajectoryType() const
+	{
+		return pWeapon->shells[nShellType].etrajectory;
+	}
 
 	// если explosion дымовой, то вернется true.
 	bool ProcessSmokeScreenExplosion() const;
@@ -315,31 +503,71 @@ public:
 
 namespace NAsyncExplosionDebug
 {
-	uint64_t GetRandomCallCounter();
-	void SetAreaDamageCandidate( const CExplosion *pExpl, CAIUnit *pTarget, int nRawIndex, int nSortedIndex, int nDuplicateCount, int nRawCount, int nUniqueCount );
-	void ClearAreaDamageCandidate();
-	void RecordAreaDamageTrace( const char *szStage, const CExplosion *pExpl, CAIUnit *pTarget, int nArmorDir, float fRadius, float fSmallRadius,
-		bool bPreconditionsPassed, bool bCoverCalled, bool bSavedByCover, bool bCircleHit, bool bArmorPassed, bool bDamageApplied,
-		float fDist2, float fZDiff, uint64_t nRngBefore, uint64_t nRngAfter );
-	void ResetAreaDamageTrace();
-	void DumpAreaDamageTrace( FILE* f );
+uint64_t GetRandomCallCounter();
+void SetAreaDamageCandidate( const CExplosion *pExpl,
+                             CAIUnit *pTarget,
+                             int nRawIndex,
+                             int nSortedIndex,
+                             int nDuplicateCount,
+                             int nRawCount,
+                             int nUniqueCount );
+void ClearAreaDamageCandidate();
+void RecordAreaDamageTrace( const char *szStage,
+                            const CExplosion *pExpl,
+                            CAIUnit *pTarget,
+                            int nArmorDir,
+                            float fRadius,
+                            float fSmallRadius,
+                            bool bPreconditionsPassed,
+                            bool bCoverCalled,
+                            bool bSavedByCover,
+                            bool bCircleHit,
+                            bool bArmorPassed,
+                            bool bDamageApplied,
+                            float fDist2,
+                            float fZDiff,
+                            uint64_t nRngBefore,
+                            uint64_t nRngAfter );
+void ResetAreaDamageTrace();
+void DumpAreaDamageTrace( FILE *f );
 }
 
 class CBurstExpl : public CExplosion
 {
 	OBJECT_BASIC_METHODS( CBurstExpl );
-	ZDATA_(CExplosion)
+	ZDATA_( CExplosion )
 	int nArmorDir = {};
 	bool bShowEffect = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExplosion*)this); f.Add(2,&nArmorDir); f.Add(3,&bShowEffect); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExplosion *)this );
+		f.Add( 2, &nArmorDir );
+		f.Add( 3, &bShowEffect );
+		return 0;
+	}
+
 public:
-	CBurstExpl() { }
+	CBurstExpl() {}
 	// nArmorDir == 0  -  просто по плоскому направлению ( это для снарядов )
 	// nArmorDir == 1  -  взрыв под днищем ( для мин )
 	// nArmorDir == 2  -  взрыв над крышей
 
-	CBurstExpl( CAIUnit *pUnit, const class CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize, const int ArmorDir, const bool bShowEffect );
-	CBurstExpl( CAIUnit *pUnit, const SWeaponRPGStats *pWeapon, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize, const int ArmorDir, const bool bShowEffect );
+	CBurstExpl( CAIUnit *pUnit,
+	            const class CBasicGun *pGun,
+	            const CVec3 &explCoord,
+	            const CVec3 &attackerPos,
+	            const uint8_t nShellType,
+	            const bool bRandomize,
+	            const int ArmorDir,
+	            const bool bShowEffect );
+	CBurstExpl( CAIUnit *pUnit,
+	            const SWeaponRPGStats *pWeapon,
+	            const CVec3 &explCoord,
+	            const CVec3 &attackerPos,
+	            const uint8_t nShellType,
+	            const bool bRandomize,
+	            const int ArmorDir,
+	            const bool bShowEffect );
 
 	virtual void Explode();
 };
@@ -347,12 +575,23 @@ public:
 class CCumulativeExpl : public CExplosion
 {
 	OBJECT_BASIC_METHODS( CCumulativeExpl );
-	ZDATA_(CExplosion)
+	ZDATA_( CExplosion )
 	int nArmorDir = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExplosion*)this); f.Add(2,&nArmorDir); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExplosion *)this );
+		f.Add( 2, &nArmorDir );
+		return 0;
+	}
+
 public:
-	CCumulativeExpl() { }
-	CCumulativeExpl( CAIUnit *pUnit, const class CBasicGun *pGun, const CVec3 &explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize = true );
+	CCumulativeExpl() {}
+	CCumulativeExpl( CAIUnit *pUnit,
+	                 const class CBasicGun *pGun,
+	                 const CVec3 &explCoord,
+	                 const CVec3 &attackerPos,
+	                 const uint8_t nShellType,
+	                 const bool bRandomize = true );
 
 	virtual void Explode();
 };
@@ -360,17 +599,22 @@ public:
 class CFlameThrowerExpl : public CExplosion
 {
 	OBJECT_BASIC_METHODS( CFlameThrowerExpl )
-	ZDATA_(CExplosion)
+	ZDATA_( CExplosion )
 	CVec3 vShooterPos;
 	CVec3 vTargetPos;
-	ZEND
-public:
-	// Loading older saves must not leave the flame path dependent on heap contents.
-	CFlameThrowerExpl() : vShooterPos( VNULL3 ), vTargetPos( VNULL3 ) { }
+ZEND public :
+		// Loading older saves must not leave the flame path dependent on heap contents.
+		CFlameThrowerExpl()
+		: vShooterPos( VNULL3 ), vTargetPos( VNULL3 )
+	{
+	}
 	int operator&( IBinSaver &saver );
-	CFlameThrowerExpl( CAIUnit *pUnit, const class CBasicGun *pGun,
-										 const CVec3 &explCoord, const CVec3 &attackerPos,
-										 const uint8_t nShellType, const bool bRandomize = true );
+	CFlameThrowerExpl( CAIUnit *pUnit,
+	                   const class CBasicGun *pGun,
+	                   const CVec3 &explCoord,
+	                   const CVec3 &attackerPos,
+	                   const uint8_t nShellType,
+	                   const bool bRandomize = true );
 	void Explode();
 };
 
@@ -384,11 +628,16 @@ class CMomentShell
 	ZDATA
 
 	CPtr<CExplosion> expl;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&expl); return 0; }
-public:
-	CMomentShell( CExplosion *_expl ) : expl( _expl ) { }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &expl );
+		return 0;
+	}
 
-	const CVec3& GetExplCoordinates() const { return expl->GetExplCoordinates(); }
+public:
+	CMomentShell( CExplosion *_expl ) : expl( _expl ) {}
+
+	const CVec3 &GetExplCoordinates() const { return expl->GetExplCoordinates(); }
 	void Explode() { expl->Explode(); }
 
 	float GetMaxDamage() const { return expl->GetMaxDamage(); }
@@ -404,24 +653,39 @@ class CShell
 	int nGun = {};
 
 	float vStartVisZ = {}, vFinishVisZ = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&explTime); f.Add(3,&expl); f.Add(4,&nGun); f.Add(5,&vStartVisZ); f.Add(6,&vFinishVisZ); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &explTime );
+		f.Add( 3, &expl );
+		f.Add( 4, &nGun );
+		f.Add( 5, &vStartVisZ );
+		f.Add( 6, &vFinishVisZ );
+		return 0;
+	}
 
 protected:
 	const float GetStartVisZ() const { return vStartVisZ; }
 	const float GetFinishVisZ() const { return vFinishVisZ; }
-	void SetDynamicImpact( const CVec3 &vCoordinates, const CVec3 &vVelocity, bool bAirBurst ) { expl->SetExplCoordinates( vCoordinates ); expl->SetAttackDir( vVelocity ); expl->SetForceAirEffect( bAirBurst ); }
+	void SetDynamicImpact( const CVec3 &vCoordinates, const CVec3 &vVelocity, bool bAirBurst )
+	{
+		expl->SetExplCoordinates( vCoordinates );
+		expl->SetAttackDir( vVelocity );
+		expl->SetForceAirEffect( bAirBurst );
+	}
+
 public:
-	CShell() { }
+	CShell() {}
 	CShell( const NTimer::STime &explTime, CExplosion *expl, const int nGun );
 
 	const NTimer::STime GetExplTime() const { return explTime; }
 
-	const CVec3& GetExplCoordinates() const { return expl->GetExplCoordinates(); }
+	const CVec3 &GetExplCoordinates() const { return expl->GetExplCoordinates(); }
 	const SWeaponRPGStats *GetWeapon() const { return expl->GetWeapon(); }
 	const uint8_t GetShellType() const { return expl->GetShellType(); }
 
-	CObjectBase* GetWhoFired() const;
+	CObjectBase *GetWhoFired() const;
 	const int GetNGun() const { return nGun; }
 
 	void Explode() { expl->Explode(); }
@@ -433,13 +697,21 @@ public:
 class CInvisShell : public CAIObjectBase, public CShell
 {
 	OBJECT_BASIC_METHODS( CInvisShell );
-	ZDATA_(CShell)
+	ZDATA_( CShell )
 	int nOrder = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CShell*)this); f.Add(2,&nOrder); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CShell *)this );
+		f.Add( 2, &nOrder );
+		return 0;
+	}
+
 public:
-	CInvisShell() : nOrder( 0 ) { }
+	CInvisShell() : nOrder( 0 ) {}
 	CInvisShell( const NTimer::STime &explTime, CExplosion *expl, const int nGun )
-		: CShell( explTime, expl, nGun ), nOrder( 0 ) { }
+			: CShell( explTime, expl, nGun ), nOrder( 0 )
+	{
+	}
 
 	void SetOrder( const int _nOrder ) { nOrder = _nOrder; }
 	const int GetOrder() const { return nOrder; }
@@ -449,7 +721,11 @@ public:
 class CVisShell : public CLinkObject, public CShell
 {
 	OBJECT_BASIC_METHODS( CVisShell );
-public: int operator&( IBinSaver &saver ); private:
+
+public:
+	int operator&( IBinSaver &saver );
+
+private:
 	CPtr<IBallisticTraj> pTraj;
 	CVec3 center;
 	CVec3 speed;
@@ -458,8 +734,9 @@ public: int operator&( IBinSaver &saver ); private:
 	int nOrder = {};
 
 	void CalcVisibility();
+
 public:
-	CVisShell() : nOrder( 0 ) { }
+	CVisShell() : nOrder( 0 ) {}
 	CVisShell( CExplosion *_expl, IBallisticTraj *_pTraj, const int nGun, const int nPlatform );
 
 	const NTimer::STime GetStartTime() const { return pTraj->GetStartTime(); }
@@ -494,14 +771,19 @@ struct SInvisShell
 {
 	ZDATA
 	CPtr<CInvisShell> ptr;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&ptr); return 0; }
-public:
-	SInvisShell() {  }
-	SInvisShell ( CInvisShell * p ) : ptr( p ) {  }
-	SInvisShell ( CPtr<CInvisShell> &s ) : ptr( s ) {  }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &ptr );
+		return 0;
+	}
 
-	CInvisShell* operator->() const { return ptr; }
-	operator CInvisShell*() const { return ptr; }
+public:
+	SInvisShell() {}
+	SInvisShell( CInvisShell *p ) : ptr( p ) {}
+	SInvisShell( CPtr<CInvisShell> &s ) : ptr( s ) {}
+
+	CInvisShell *operator->() const { return ptr; }
+	operator CInvisShell *() const { return ptr; }
 };
 
 struct SInvisShellCompare
@@ -515,7 +797,7 @@ struct SInvisShellCompare
 		return s1.ptr->GetOrder() > s2.ptr->GetOrder();
 	}
 };
-typedef std::list< CObj<CVisShell> > CVisShellList;
+typedef std::list<CObj<CVisShell>> CVisShellList;
 struct SVisShellCompare
 {
 	bool operator()( const CObj<CVisShell> &s1, const CObj<CVisShell> &s2 ) const
@@ -534,21 +816,29 @@ class CShellsStore
 {
 
 	// все невидимые снаряды
-	typedef std::priority_queue< SInvisShell, std::vector<SInvisShell>, SInvisShellCompare > CInvisShells;
+	typedef std::priority_queue<SInvisShell, std::vector<SInvisShell>, SInvisShellCompare> CInvisShells;
 	ZDATA
 	CInvisShells invisShells;
 	// все видимые снаряды
 	CVisShellList visShells;
 	int nNextInvisShellOrder = {};
 	int nNextVisShellOrder = {};
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&invisShells); f.Add(3,&visShells); f.Add(4,&nNextInvisShellOrder); f.Add(5,&nNextVisShellOrder); return 0; }
 
 public:
-	CShellsStore() : nNextInvisShellOrder( 0 ), nNextVisShellOrder( 0 ) { }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &invisShells );
+		f.Add( 3, &visShells );
+		f.Add( 4, &nNextInvisShellOrder );
+		f.Add( 5, &nNextVisShellOrder );
+		return 0;
+	}
+
+public:
+	CShellsStore() : nNextInvisShellOrder( 0 ), nNextVisShellOrder( 0 ) {}
 	void Clear();
 
-	void AddShell( CMomentShell	&shell );
+	void AddShell( CMomentShell &shell );
 	void AddShell( CInvisShell *pShell );
 	void AddShell( CVisShell *pShell );
 
@@ -556,5 +846,5 @@ public:
 
 	// для тестирования multiplayer
 	void UpdateCheckSum( uLong *pCheckSum );
-	void UpdateDebugChecksums(FILE* f);
+	void UpdateDebugChecksums( FILE *f );
 };

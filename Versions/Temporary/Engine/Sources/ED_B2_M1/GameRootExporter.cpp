@@ -9,25 +9,25 @@
 
 REGISTER_EXPORTER_IN_DLL( GameRoot, CGameRootExporter )
 
-EXPORT_RESULT CGameRootExporter::ExportObject( IManipulator* pManipulator,
-																								const std::string &rszObjectTypeName,
-																								const std::string &rszObjectName,
-																								bool bForce,
-																								EXPORT_TYPE exportType )
+EXPORT_RESULT CGameRootExporter::ExportObject( IManipulator *pManipulator,
+                                               const std::string &rszObjectTypeName,
+                                               const std::string &rszObjectName,
+                                               bool bForce,
+                                               EXPORT_TYPE exportType )
 {
-//	// CRAP{ to export old database to new xml
-//	if ( exportType == ET_NO_REF && bForce )
-//	{
-//		NXMLExport::DumpAllObjects();
-//		return ER_SUCCESS;
-//	}
-//	// CRAP}
+	//	// CRAP{ to export old database to new xml
+	//	if ( exportType == ET_NO_REF && bForce )
+	//	{
+	//		NXMLExport::DumpAllObjects();
+	//		return ER_SUCCESS;
+	//	}
+	//	// CRAP}
 	//
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
 		return ER_SUCCESS;
 	//
 	std::string szIntroMovie;
-	if ( CManipulatorManager::GetValue(&szIntroMovie, pManipulator, "IntroMovie") != false && !szIntroMovie.empty() )
+	if ( CManipulatorManager::GetValue( &szIntroMovie, pManipulator, "IntroMovie" ) != false && !szIntroMovie.empty() )
 	{
 		if ( ExportFilesList( szIntroMovie, bForce, "Movies" ) == false )
 			return ER_FAIL;

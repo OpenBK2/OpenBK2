@@ -15,7 +15,7 @@
 #include <fmt/format.h>
 
 CGameLobby::CGameLobby( CClients *_pClients, const std::string &_szCfgFile )
-: pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )
+		: pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessCommonClientStatePacket );
 	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessGameHeartBeatPacket );
@@ -100,7 +100,8 @@ void CGameLobby::ClientLeaved( const int nID )
 		lobbyClients.erase( nID );
 		clientsVersions.Remove( nID );
 
-		for ( std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
+		for ( std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end();
+		      ++iter )
 		{
 			SLobbyGameInfo &gameInfo = iter->second;
 			std::unordered_set<int>::iterator clients_iter = gameInfo.clients.find( nID );
@@ -109,7 +110,6 @@ void CGameLobby::ClientLeaved( const int nID )
 
 			SetClientGameID( nID, -1 );
 			GameInfoChanged( iter->first );
-
 		}
 
 		InformThroughServerClients( nID );
@@ -230,7 +230,9 @@ bool CGameLobby::ProcessConnectGamePacket( CConnectGamePacket *pPacket )
 			}
 
 			CPtr<CAnswerConnectGame> pAnswerPacket = new CAnswerConnectGame( pPacket->nClientID );
-			for ( std::unordered_set<int>::iterator clients_iter = gameInfo.clients.begin(); clients_iter != gameInfo.clients.end(); ++clients_iter )
+			for ( std::unordered_set<int>::iterator clients_iter = gameInfo.clients.begin();
+			      clients_iter != gameInfo.clients.end();
+			      ++clients_iter )
 				pAnswerPacket->clients.push_back( *clients_iter );
 			PushPacket( pAnswerPacket );
 
@@ -248,7 +250,9 @@ void CGameLobby::InformThroughServerClients( const int nLeftGameClient )
 {
 	if ( throughServerClients.find( nLeftGameClient ) != throughServerClients.end() )
 	{
-		for ( std::unordered_set<int>::iterator iter = throughServerClients[nLeftGameClient].begin(); iter != throughServerClients[nLeftGameClient].end(); ++iter )
+		for ( std::unordered_set<int>::iterator iter = throughServerClients[nLeftGameClient].begin();
+		      iter != throughServerClients[nLeftGameClient].end();
+		      ++iter )
 			PushPacket( new CGameClientDead( *iter, nLeftGameClient ) );
 
 		throughServerClients.erase( nLeftGameClient );
@@ -285,12 +289,12 @@ bool CGameLobby::ProcessWant2Connect2Client( CWant2Connect2Client *pPacket )
 
 	SGameConnection::SAddressInfo addrClient, addrClientTo;
 	if ( pClients->GetGameConnectInfo( pPacket->nClientID, pPacket->nMyConnect, &addrClient ) &&
-		pClients->GetGameConnectInfo( pPacket->nClient2Connect, 0, &addrClientTo ) )
+	     pClients->GetGameConnectInfo( pPacket->nClient2Connect, 0, &addrClientTo ) )
 	{
-		CPtr<CNetPacket> pInfoToClient =
-			new CClientGameConnectInfo( pPacket->nClientID, addrClientTo.szIP, addrClientTo.nPort, pPacket->nClient2Connect );
+		CPtr<CNetPacket> pInfoToClient = new CClientGameConnectInfo(
+				pPacket->nClientID, addrClientTo.szIP, addrClientTo.nPort, pPacket->nClient2Connect );
 		CPtr<CNetPacket> pInfoToClientToConnect =
-			new CClientWantToConnect( pPacket->nClient2Connect, pPacket->nClientID, addrClient.szIP, addrClient.nPort );
+				new CClientWantToConnect( pPacket->nClient2Connect, pPacket->nClientID, addrClient.szIP, addrClient.nPort );
 
 		PushPacket( pInfoToClient );
 		PushPacket( pInfoToClientToConnect );
@@ -311,7 +315,8 @@ bool CGameLobby::ProcessKickClient( CGameKickClient *pPacket )
 	if ( iter != lobbyGames.end() )
 	{
 		SLobbyGameInfo &info = iter->second;
-		for ( std::unordered_set<int>::iterator clients_iter = info.clients.begin(); clients_iter != info.clients.end(); ++clients_iter )
+		for ( std::unordered_set<int>::iterator clients_iter = info.clients.begin(); clients_iter != info.clients.end();
+		      ++clients_iter )
 		{
 			const int nClientID = *clients_iter;
 			PushPacket( new CGameClientWasKicked( nClientID, pPacket->nKicked ) );
@@ -415,7 +420,9 @@ int CGameLobby::CreateGame( const int nMaxPlayers )
 
 void CGameLobby::EraseGameClients( const int nGameID )
 {
-	for ( std::unordered_set<int>::iterator iter = lobbyGames[nGameID].clients.begin(); iter != lobbyGames[nGameID].clients.end(); ++iter )
+	for ( std::unordered_set<int>::iterator iter = lobbyGames[nGameID].clients.begin();
+	      iter != lobbyGames[nGameID].clients.end();
+	      ++iter )
 	{
 		CPtr<CNetPacket> pPacket = new CGameKilled( *iter, nGameID );
 		PushPacket( pPacket );
@@ -455,7 +462,7 @@ bool CGameLobby::ProcessGetLobbyGames( CGetLobbyGamesPacket *pPacket )
 		return true;
 
 	SGetGameInfoFunc getGameInfo( this );
-	GetUpdate( pPacket, (CLobbyGamesPacket*)0, getGameInfo, false );
+	GetUpdate( pPacket, (CLobbyGamesPacket *)0, getGameInfo, false );
 
 	return true;
 }
@@ -513,7 +520,9 @@ bool CGameLobby::ProcessSpecificGameInfo( CSpecificGameInfo *pPacket )
 		iter->second.pSpecificGameInfo = pPacket;
 
 		SLobbyGameInfo &gameInfo = iter->second;
-		for ( std::unordered_set<int>::iterator clients_iter = gameInfo.clients.begin(); clients_iter != gameInfo.clients.end(); ++clients_iter )
+		for ( std::unordered_set<int>::iterator clients_iter = gameInfo.clients.begin();
+		      clients_iter != gameInfo.clients.end();
+		      ++clients_iter )
 		{
 			if ( *clients_iter != pPacket->nClientID )
 			{
@@ -543,8 +552,7 @@ bool CGameLobby::Segment()
 		if ( nTime > iter->second.nLastGameHeartBeat + dwGameTimeOut )
 		{
 #ifndef CONSOLE_LOG_SILENCE
-			WriteMSG( "game \"%s\", number %d is dead, deleted\n",
-				lobbyGames[nGameID].gameInfo.szName.c_str(), nGameID );
+			WriteMSG( "game \"%s\", number %d is dead, deleted\n", lobbyGames[nGameID].gameInfo.szName.c_str(), nGameID );
 #endif
 			deadGames.push_back( nGameID );
 		}
@@ -597,10 +605,10 @@ bool CGameLobby::ProcessThroughServerConnection( CThroughServerConnectionPacket 
 #ifndef CONSOLE_LOG_SILENCE
 			std::string szClientNick, szClientWithNick;
 			if ( pClients->GetNick( pPacket->nClientID, &szClientNick ) &&
-				pClients->GetNick( pPacket->nClientWith, &szClientWithNick ) )
+			     pClients->GetNick( pPacket->nClientWith, &szClientWithNick ) )
 			{
-				WriteMSG( "clients %s and %s are connected through the server\n",
-					szClientNick.c_str(), szClientWithNick.c_str() );
+				WriteMSG(
+						"clients %s and %s are connected through the server\n", szClientNick.c_str(), szClientWithNick.c_str() );
 			}
 #endif
 		}
@@ -620,13 +628,17 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 	else
 	{
 		szStr = "games:\n";
-		for ( std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
+		for ( std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end();
+		      ++iter )
 		{
 			SGameInfo &info = iter->second.gameInfo;
 			NI_ASSERT( iter->first == info.nID, fmt::format( "wrong ids for game, {}->{}", iter->first, info.nID ) );
 			szStr += fmt::format( "    \"{}\", id {}, max players {}, has_password-{}, password \"{}\"",
-				info.szName, info.nID,
-				info.nMaxPlayers, (int)info.bHasPassword, info.szPassword );
+			                      info.szName,
+			                      info.nID,
+			                      info.nMaxPlayers,
+			                      (int)info.bHasPassword,
+			                      info.szPassword );
 			if ( info.bCanConnect )
 				szStr += ", can connect";
 			else
@@ -661,7 +673,5 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 
 	return true;
 }
-
-
 
 BASIC_REGISTER_CLASS( SERVER, CGameLobby );

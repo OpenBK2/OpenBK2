@@ -2,19 +2,10 @@
 #include "MapInfoEditorSettings.h"
 
 CMapInfoEditorSettings::CMapInfoEditorSettings()
-	: bShowShortcutBar( true ),
-		bShowMinimapBar( true ),
-		bShowMoviesEditor( false ),
-		bShowMapInfoToolsToolbar( true ),
-		bShowMapInfoViewToolbar( false ),
-		bFitToGrid( false ),
-		bRotateTo90Degree( false ),
-		bDrawShootAreas( false ),
-		bDrawAIMap( false ),
-		bDrawPassability( false ),
-		nLastLoadedMap( 0 ),
-		vLastMapCameraAnchor( VNULL3 ),
-		nActiveStateIndex( 0 )
+		: bShowShortcutBar( true ), bShowMinimapBar( true ), bShowMoviesEditor( false ), bShowMapInfoToolsToolbar( true ),
+			bShowMapInfoViewToolbar( false ), bFitToGrid( false ), bRotateTo90Degree( false ), bDrawShootAreas( false ),
+			bDrawAIMap( false ), bDrawPassability( false ), nLastLoadedMap( 0 ), vLastMapCameraAnchor( VNULL3 ),
+			nActiveStateIndex( 0 )
 {
 }
 

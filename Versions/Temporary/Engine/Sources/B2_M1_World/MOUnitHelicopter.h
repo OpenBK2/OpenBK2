@@ -6,7 +6,7 @@
 
 namespace NDb
 {
-	struct SHelicopterStats;
+struct SHelicopterStats;
 }
 
 class CHelicopterDeviationProcess;
@@ -18,15 +18,26 @@ class CMOUnitHelicopter : public CMOUnitMechanical
 	friend class CHelicopterDeviationProcess;
 
 	ZDATA_( CMOUnitMechanical )
-		// Hover deviation is client-only and never changes the authoritative AI placement.
-		CVec3 vStandingDeviationBasePlacement;
-		CVec3 vStandingDeviationOffset;
-		CVec3 vStandingDeviationTarget;
-		NTimer::STime timeStandingDeviationLastUpdate = 0;
-		uint32_t dwStandingDeviationRandomState = 0;
-		bool bStandingDeviationActive = false;
-	public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnitMechanical *)this); f.Add(2,&vStandingDeviationBasePlacement); f.Add(3,&vStandingDeviationOffset); f.Add(4,&vStandingDeviationTarget); f.Add(5,&timeStandingDeviationLastUpdate); f.Add(6,&dwStandingDeviationRandomState); f.Add(7,&bStandingDeviationActive); return 0; }
+	// Hover deviation is client-only and never changes the authoritative AI placement.
+	CVec3 vStandingDeviationBasePlacement;
+	CVec3 vStandingDeviationOffset;
+	CVec3 vStandingDeviationTarget;
+	NTimer::STime timeStandingDeviationLastUpdate = 0;
+	uint32_t dwStandingDeviationRandomState = 0;
+	bool bStandingDeviationActive = false;
+
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CMOUnitMechanical *)this );
+		f.Add( 2, &vStandingDeviationBasePlacement );
+		f.Add( 3, &vStandingDeviationOffset );
+		f.Add( 4, &vStandingDeviationTarget );
+		f.Add( 5, &timeStandingDeviationLastUpdate );
+		f.Add( 6, &dwStandingDeviationRandomState );
+		f.Add( 7, &bStandingDeviationActive );
+		return 0;
+	}
 
 private:
 	const NDb::SHelicopterStats *GetHelicopterStats() const;
@@ -40,6 +51,9 @@ protected:
 	virtual void AdjustVisualPlacement( struct SAINotifyPlacement *pPlacement );
 
 public:
-	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason,
-		const NDb::EDayNight eDayTime, bool bInEditor );
+	virtual bool Create( const int nUniqueID,
+	                     const SAIBasicUpdate *pUpdate,
+	                     NDb::ESeason eSeason,
+	                     const NDb::EDayNight eDayTime,
+	                     bool bInEditor );
 };

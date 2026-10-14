@@ -7,12 +7,12 @@
 
 bool CPCBaseDialog::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_PC_DIALOG_GET_VIEW:
 			if ( dwData != 0 )
 			{
-				IView **ppView = reinterpret_cast<IView**>( dwData );
+				IView **ppView = reinterpret_cast<IView **>( dwData );
 				( *ppView ) = GetView();
 				return true;
 			}
@@ -20,7 +20,7 @@ bool CPCBaseDialog::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_PC_DIALOG_GET_COMMAND_HANDLER:
 			if ( dwData != 0 )
 			{
-				ICommandHandler **ppCommandHandler = reinterpret_cast<ICommandHandler**>( dwData );
+				ICommandHandler **ppCommandHandler = reinterpret_cast<ICommandHandler **>( dwData );
 				( *ppCommandHandler ) = GetCommandHandler();
 				return true;
 			}
@@ -35,13 +35,12 @@ bool CPCBaseDialog::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	}
 }
 
-
 bool CPCBaseDialog::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPCBaseDialog::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPCBaseDialog::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_PC_DIALOG_GET_VIEW:
 			( *pbEnable ) = true;

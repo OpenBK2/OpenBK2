@@ -12,14 +12,14 @@
 
 namespace NMenuDropDown
 {
-	class IView;
+class IView;
 }
 
 class CControllerContainer : public IControllerContainer, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CControllerContainer );
 	//
-	typedef std::list<CPtr<IController> > CControllerList;
+	typedef std::list<CPtr<IController>> CControllerList;
 	CControllerList controllerList;
 	CControllerList redoOperationList;
 	// Each modal picker has its own undo/redo history. Keep a separate record
@@ -56,8 +56,8 @@ public:
 	public:
 		explicit CEditSession( CControllerContainer *_pContainer );
 		~CEditSession();
-		CEditSession( const CEditSession& ) = delete;
-		CEditSession& operator=( const CEditSession& ) = delete;
+		CEditSession( const CEditSession & ) = delete;
+		CEditSession &operator=( const CEditSession & ) = delete;
 		bool Finish( bool bAccept );
 	};
 

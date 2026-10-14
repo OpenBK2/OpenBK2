@@ -27,18 +27,17 @@ const int CBridgeState::START_TERMINATOR_INDEX = 0;
 const int CBridgeState::FINISH_TERMINATOR_INDEX = 1;
 const int CBridgeState::TERMINATOR_COUNT = 2;
 
-
 bool CBridgeState::CanAddBridge()
 {
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+					 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+	     ( !objectSet.objectNameSet.empty() ) )
 	{
-		return ( objectSet.szObjectTypeName == "BridgeRPGStats" ) &&
-					 ( !objectSet.objectNameSet.empty() );
+		return ( objectSet.szObjectTypeName == "BridgeRPGStats" ) && ( !objectSet.objectNameSet.empty() );
 	}
 	return false;
 }
-
 
 void CBridgeState::InsertObjectEnter()
 {
@@ -46,16 +45,15 @@ void CBridgeState::InsertObjectEnter()
 	ClearData();
 	//
 	CBusyCursor waitCursor;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
 }
-
 
 void CBridgeState::InsertObjectLeave()
 {
 	ClearScene();
 	ClearData();
 }
-
 
 void CBridgeState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
@@ -64,7 +62,10 @@ void CBridgeState::InsertObjectDraw( IPaintContext *pPaintDC )
 		const int nBridgeElementCount = bridgeElementCenterPointList.size();
 		int nBridgeElementIndex = 0;
 		float fDirection = GetPolarAngle( vDirection );
-		for ( NMapInfoEditor::CBridgeCenterPointList::const_iterator itBridgeElementCenterPoint = bridgeElementCenterPointList.begin(); itBridgeElementCenterPoint != bridgeElementCenterPointList.end(); ++itBridgeElementCenterPoint )
+		for ( NMapInfoEditor::CBridgeCenterPointList::const_iterator itBridgeElementCenterPoint =
+		          bridgeElementCenterPointList.begin();
+		      itBridgeElementCenterPoint != bridgeElementCenterPointList.end();
+		      ++itBridgeElementCenterPoint )
 		{
 			CVec2 vHalfSize = VNULL2;
 			NMapInfoEditor::CBridgeCenterPointList bridgeElementPointList;
@@ -77,17 +78,25 @@ void CBridgeState::InsertObjectDraw( IPaintContext *pPaintDC )
 				vHalfSize = vCenterSize / 2.0f;
 			}
 			bridgeElementPointList.push_back( CVec3( -vHalfSize.x, -vHalfSize.y, 0.0f ) );
-			bridgeElementPointList.push_back( CVec3(  vHalfSize.x, -vHalfSize.y, 0.0f ) );
-			bridgeElementPointList.push_back( CVec3(  vHalfSize.x,  vHalfSize.y, 0.0f ) );
-			bridgeElementPointList.push_back( CVec3( -vHalfSize.x,  vHalfSize.y, 0.0f ) );
+			bridgeElementPointList.push_back( CVec3( vHalfSize.x, -vHalfSize.y, 0.0f ) );
+			bridgeElementPointList.push_back( CVec3( vHalfSize.x, vHalfSize.y, 0.0f ) );
+			bridgeElementPointList.push_back( CVec3( -vHalfSize.x, vHalfSize.y, 0.0f ) );
 			//
 			RotatePoints<NMapInfoEditor::CBridgeCenterPointList, CVec3>( &bridgeElementPointList, fDirection );
 			CVec3 vCenterPoint = *itBridgeElementCenterPoint;
 			vCenterPoint.z += GetTerrainHeight( itBridgeElementCenterPoint->x, itBridgeElementCenterPoint->y );
 			MovePoints( &bridgeElementPointList, vCenterPoint );
 			sceneDrawTool.DrawPolyline( bridgeElementPointList, PLACEMENT_COLOR, true, false );
-			sceneDrawTool.DrawCircle( vCenterPoint, NMapInfoEditor::PLACEMENT_RADIUS0, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
-			sceneDrawTool.DrawCircle( vCenterPoint, NMapInfoEditor::PLACEMENT_RADIUS1, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
+			sceneDrawTool.DrawCircle( vCenterPoint,
+			                          NMapInfoEditor::PLACEMENT_RADIUS0,
+			                          NMapInfoEditor::PLACEMENT_PARTS,
+			                          NMapInfoEditor::PLACEMENT_COLOR,
+			                          false );
+			sceneDrawTool.DrawCircle( vCenterPoint,
+			                          NMapInfoEditor::PLACEMENT_RADIUS1,
+			                          NMapInfoEditor::PLACEMENT_PARTS,
+			                          NMapInfoEditor::PLACEMENT_COLOR,
+			                          false );
 			//
 			++nBridgeElementIndex;
 		}
@@ -97,11 +106,18 @@ void CBridgeState::InsertObjectDraw( IPaintContext *pPaintDC )
 		CVec3 vPlacementPosition = pStoreInputState->lastEventInfo.vTerrainPos;
 		vPlacementPosition.z = GetTerrainHeight( vPlacementPosition.x, vPlacementPosition.y );
 		CVec3 vPlacementSelectorPosition = vPlacementPosition;
-		sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS0, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
-		sceneDrawTool.DrawCircle( vPlacementSelectorPosition, NMapInfoEditor::PLACEMENT_RADIUS1, NMapInfoEditor::PLACEMENT_PARTS, NMapInfoEditor::PLACEMENT_COLOR, false );
+		sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+		                          NMapInfoEditor::PLACEMENT_RADIUS0,
+		                          NMapInfoEditor::PLACEMENT_PARTS,
+		                          NMapInfoEditor::PLACEMENT_COLOR,
+		                          false );
+		sceneDrawTool.DrawCircle( vPlacementSelectorPosition,
+		                          NMapInfoEditor::PLACEMENT_RADIUS1,
+		                          NMapInfoEditor::PLACEMENT_PARTS,
+		                          NMapInfoEditor::PLACEMENT_COLOR,
+		                          false );
 	}
 }
-
 
 bool CBridgeState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -117,7 +133,6 @@ bool CBridgeState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrain
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	return false;
 }
-
 
 bool CBridgeState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -145,8 +160,6 @@ bool CBridgeState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerra
 	return false;
 }
 
-
-
 bool CBridgeState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	if ( bPlaceBridge )
@@ -162,7 +175,6 @@ bool CBridgeState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrain
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	return false;
 }
-
 
 bool CBridgeState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -198,14 +210,15 @@ bool CBridgeState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const C
 	return false;
 }
 
-
 void CBridgeState::ClearScene()
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
 		if ( !sceneIDlist.empty() )
 		{
-			for ( NMapInfoEditor::CSceneIDList::const_iterator itSceneID = sceneIDlist.begin(); itSceneID != sceneIDlist.end(); ++itSceneID )
+			for ( NMapInfoEditor::CSceneIDList::const_iterator itSceneID = sceneIDlist.begin();
+			      itSceneID != sceneIDlist.end();
+			      ++itSceneID )
 			{
 				if ( CPtr<SAIDissapearObjUpdate> pUpdate = new SAIDissapearObjUpdate() )
 				{
@@ -221,7 +234,6 @@ void CBridgeState::ClearScene()
 	}
 }
 
-
 void CBridgeState::ClearData()
 {
 	objectSet.Clear();
@@ -234,7 +246,6 @@ void CBridgeState::ClearData()
 	vCenterSize = VNULL2;
 	bPlaceBridge = false;
 }
-
 
 void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixStartPoint, bool bPlace )
 {
@@ -256,9 +267,12 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		// получаем размер
 		if ( objectSet.szObjectTypeName.empty() )
 		{
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+							 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+			     ( !objectSet.objectNameSet.empty() ) )
 			{
-				CPtr<IManipulator> pBridgeRPGStatsManipulator = pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first );
+				CPtr<IManipulator> pBridgeRPGStatsManipulator = pResourceManager->CreateObjectManipulator(
+						objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first );
 				if ( pBridgeRPGStatsManipulator )
 				{
 					vEndSize = VNULL2;
@@ -273,26 +287,42 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		vDirection = VNULL3;
 		if ( ( vEndSize.x > FP_EPSILON ) && ( vCenterSize.x > FP_EPSILON ) )
 		{
-			SBridgeInfo::CreateCenterPoints( &bridgeElementCenterPointList, &vDirection, vStart, vEnd, direction, vEndSize.x, vCenterSize.x, bFixStartPoint );
+			SBridgeInfo::CreateCenterPoints( &bridgeElementCenterPointList,
+			                                 &vDirection,
+			                                 vStart,
+			                                 vEnd,
+			                                 direction,
+			                                 vEndSize.x,
+			                                 vCenterSize.x,
+			                                 bFixStartPoint );
 			const int nBridgeElementCount = bridgeElementCenterPointList.size();
 			if ( nBridgeElementCount > 0 )
 			{
 				float fAverageZ = 0.0f;
-				for ( NMapInfoEditor::CBridgeCenterPointList::const_iterator itBridgeElementCenterPoint = bridgeElementCenterPointList.begin(); itBridgeElementCenterPoint != bridgeElementCenterPointList.end(); ++itBridgeElementCenterPoint )
+				for ( NMapInfoEditor::CBridgeCenterPointList::const_iterator itBridgeElementCenterPoint =
+				          bridgeElementCenterPointList.begin();
+				      itBridgeElementCenterPoint != bridgeElementCenterPointList.end();
+				      ++itBridgeElementCenterPoint )
 				{
 					fAverageZ += GetTerrainHeight( itBridgeElementCenterPoint->x, itBridgeElementCenterPoint->y );
 				}
 				fAverageZ = fAverageZ / ( 1.0f * nBridgeElementCount );
-				for ( NMapInfoEditor::CBridgeCenterPointList::iterator itBridgeElementCenterPoint = bridgeElementCenterPointList.begin(); itBridgeElementCenterPoint != bridgeElementCenterPointList.end(); ++itBridgeElementCenterPoint )
+				for ( NMapInfoEditor::CBridgeCenterPointList::iterator itBridgeElementCenterPoint =
+				          bridgeElementCenterPointList.begin();
+				      itBridgeElementCenterPoint != bridgeElementCenterPointList.end();
+				      ++itBridgeElementCenterPoint )
 				{
-					itBridgeElementCenterPoint->z = fAverageZ - GetTerrainHeight( itBridgeElementCenterPoint->x, itBridgeElementCenterPoint->y );
+					itBridgeElementCenterPoint->z =
+							fAverageZ - GetTerrainHeight( itBridgeElementCenterPoint->x, itBridgeElementCenterPoint->y );
 				}
 			}
 		}
 		//
 		const NDb::SBridgeRPGStats *pBridgeRPGStats = 0;
-		pBridgeRPGStats = dynamic_cast<const NDb::SBridgeRPGStats*>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
-		NI_ASSERT( pBridgeRPGStats != 0, fmt::format( "{} not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) );
+		pBridgeRPGStats =
+				dynamic_cast<const NDb::SBridgeRPGStats *>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
+		NI_ASSERT( pBridgeRPGStats != 0,
+		           fmt::format( "{} not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) );
 		//
 		if ( bPlace )
 		{
@@ -312,7 +342,8 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 				unsigned nBridgeInfoID = INVALID_NODE_ID;
 				if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 				{
-					if ( NMapInfoEditor::SBridgeInfo *pBridgeInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SBridgeInfo*>( 0 ), &nBridgeInfoID ) )
+					if ( NMapInfoEditor::SBridgeInfo *pBridgeInfo = GetMapInfoEditor()->objectInfoCollector.Insert(
+									 static_cast<NMapInfoEditor::SBridgeInfo *>( 0 ), &nBridgeInfoID ) )
 					{
 						if ( pBridgeInfo->Create( &bridgeCreateInfo, pScene, pObjectController, pManipulator ) )
 						{
@@ -446,13 +477,16 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 				NMapInfoEditor::CSceneIDList::const_iterator itSpanTerminator = itFinishTerminator;
 				++itSpanTerminator;
 				//
-				for ( NMapInfoEditor::CBridgeCenterPointList::iterator itBridgeElementCenterPoint = bridgeElementCenterPointList.begin(); itBridgeElementCenterPoint != bridgeElementCenterPointList.end(); ++itBridgeElementCenterPoint )
+				for ( NMapInfoEditor::CBridgeCenterPointList::iterator itBridgeElementCenterPoint =
+				          bridgeElementCenterPointList.begin();
+				      itBridgeElementCenterPoint != bridgeElementCenterPointList.end();
+				      ++itBridgeElementCenterPoint )
 				{
 					CVec3 vObjectScenePosition = *itBridgeElementCenterPoint;
 					vObjectScenePosition.z += GetTerrainHeight( itBridgeElementCenterPoint->x, itBridgeElementCenterPoint->y );
 					//
 					float fDirection = fInDirectionAngle;
-					if ( itBridgeElementCenterPoint ==  bridgeElementCenterPointList.begin() )
+					if ( itBridgeElementCenterPoint == bridgeElementCenterPointList.begin() )
 					{
 						nBridgeElementSceneID = *itStartTerminator;
 					}
@@ -493,7 +527,6 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		}
 	}
 }
-
 
 // basement storage
 

@@ -10,7 +10,6 @@
 int CHeightContainer::STACK_SIZE = sizeof( uint32_t ) * 8;
 int CHeightContainer::TRACE_IMAGE_TILE_SIZE = 64;
 
-
 struct STraceImageFunctor
 {
 	uint32_t dwColor;
@@ -25,13 +24,12 @@ struct STraceImageFunctor
 	}
 };
 
-
 void CHeightContainer::MarkTraceImageTile( CArray2D<uint32_t> *pImage, int x, int y, uint32_t dwColor )
 {
 	const CTRect<int> indices( x * TRACE_IMAGE_TILE_SIZE - 2,
-														 y * TRACE_IMAGE_TILE_SIZE - 2,
-														 x * TRACE_IMAGE_TILE_SIZE + 2,
-														 y * TRACE_IMAGE_TILE_SIZE + 2 );
+	                           y * TRACE_IMAGE_TILE_SIZE - 2,
+	                           x * TRACE_IMAGE_TILE_SIZE + 2,
+	                           y * TRACE_IMAGE_TILE_SIZE + 2 );
 	for ( int y = indices.miny; y <= indices.maxy; ++y )
 	{
 		for ( int x = indices.minx; x <= indices.maxx; ++x )
@@ -43,7 +41,6 @@ void CHeightContainer::MarkTraceImageTile( CArray2D<uint32_t> *pImage, int x, in
 		}
 	}
 }
-
 
 void CHeightContainer::MarkTraceImageGrid( CArray2D<uint32_t> *pImage, uint32_t dwColor )
 {
@@ -63,21 +60,23 @@ void CHeightContainer::MarkTraceImageGrid( CArray2D<uint32_t> *pImage, uint32_t 
 	}
 }
 
-
 CHeightContainer::CHeightContainer( const float _fTileSize )
-	: fTileSize ( _fTileSize ), planeSize( 0, 0 ), nStackCount( 0 ), bTraceToImage( false ) {}
-
+		: fTileSize( _fTileSize ), planeSize( 0, 0 ), nStackCount( 0 ), bTraceToImage( false )
+{
+}
 
 void CHeightContainer::AddStack()
 {
 	++nStackCount;
 	{
-		std::vector<CArray2D<uint32_t> >::iterator posPlaneStack = blackPlaneStackList.insert( blackPlaneStackList.end(), CArray2D<uint32_t>() );
+		std::vector<CArray2D<uint32_t>>::iterator posPlaneStack =
+				blackPlaneStackList.insert( blackPlaneStackList.end(), CArray2D<uint32_t>() );
 		posPlaneStack->SetSizes( planeSize.x, planeSize.y );
 		posPlaneStack->FillZero();
 	}
 	{
-		std::vector<CArray2D<uint32_t> >::iterator posPlaneStack = redPlaneStackList.insert( redPlaneStackList.end(), CArray2D<uint32_t>() );
+		std::vector<CArray2D<uint32_t>>::iterator posPlaneStack =
+				redPlaneStackList.insert( redPlaneStackList.end(), CArray2D<uint32_t>() );
 		posPlaneStack->SetSizes( planeSize.x, planeSize.y );
 		posPlaneStack->FillZero();
 	}
@@ -85,11 +84,7 @@ void CHeightContainer::AddStack()
 	filledBitsList.push_back( 0 );
 }
 
-
-void CHeightContainer::EraseStack()
-{
-}
-
+void CHeightContainer::EraseStack() {}
 
 int CHeightContainer::AddPlane( int nPolygonID )
 {
@@ -114,7 +109,6 @@ int CHeightContainer::AddPlane( int nPolygonID )
 	}
 }
 
-
 void CHeightContainer::ErasePlane( int nPolygonID )
 {
 	std::unordered_map<int, int>::iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.find( nPolygonID );
@@ -133,11 +127,10 @@ void CHeightContainer::ErasePlane( int nPolygonID )
 	}
 }
 
-
 void CHeightContainer::ClearPlane( int nPlaneIndex )
 {
 	const int nStackIndex = nPlaneIndex / STACK_SIZE;
-	const uint32_t dwMask =  ~( 1 << ( nPlaneIndex - ( nStackIndex * STACK_SIZE ) ) );
+	const uint32_t dwMask = ~( 1 << ( nPlaneIndex - ( nStackIndex * STACK_SIZE ) ) );
 	for ( int y = 0; y < planeSize.y; ++y )
 	{
 		for ( int x = 0; x < planeSize.x; ++x )
@@ -148,15 +141,13 @@ void CHeightContainer::ClearPlane( int nPlaneIndex )
 	}
 }
 
-
 //функционал изменяющий pLockArray на заданное значение
 struct SModifyBitFunctional
 {
 	int nBit;
 	CArray2D<uint32_t> *pPlaneArray;
 
-	SModifyBitFunctional( const int _nBit, CArray2D<uint32_t> *_pPlaneArray )
-		: nBit( _nBit ), pPlaneArray( _pPlaneArray )
+	SModifyBitFunctional( const int _nBit, CArray2D<uint32_t> *_pPlaneArray ) : nBit( _nBit ), pPlaneArray( _pPlaneArray )
 	{
 	}
 	bool operator()( int nXIndex, int nYIndex )
@@ -166,19 +157,21 @@ struct SModifyBitFunctional
 	}
 };
 
-
-void CHeightContainer::FillPlane( int nPlaneIndex, const std::vector<CVec2> &rBlackPolygon, const std::vector<CVec2> &rRedPolygon )
+void CHeightContainer::FillPlane( int nPlaneIndex,
+                                  const std::vector<CVec2> &rBlackPolygon,
+                                  const std::vector<CVec2> &rRedPolygon )
 {
 	const int nStackIndex = nPlaneIndex / STACK_SIZE;
 	const CTRect<int> rect( 0, 0, planeSize.x, planeSize.y );
 	// Named: ApplyPointsInPolygon takes the functional by non-const reference,
 	// which a temporary cannot bind to outside MSVC's extension.
-	SModifyBitFunctional blackFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( blackPlaneStackList[nStackIndex] ) );
+	SModifyBitFunctional blackFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ),
+	                                      &( blackPlaneStackList[nStackIndex] ) );
 	SModifyBitFunctional redFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( redPlaneStackList[nStackIndex] ) );
-	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rBlackPolygon, fTileSize, blackFunctional );
+	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>(
+			rect, rBlackPolygon, fTileSize, blackFunctional );
 	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rRedPolygon, fTileSize, redFunctional );
 }
-
 
 void CHeightContainer::GetBits( std::vector<uint32_t> *pBitsList, const int x, const int y )
 {
@@ -189,7 +182,6 @@ void CHeightContainer::GetBits( std::vector<uint32_t> *pBitsList, const int x, c
 	}
 }
 
-
 void CHeightContainer::AddBitsToString( std::string *pszMessage, const uint32_t dwBits ) const
 {
 	for ( int nBit = 0; nBit < STACK_SIZE; ++nBit )
@@ -197,7 +189,6 @@ void CHeightContainer::AddBitsToString( std::string *pszMessage, const uint32_t 
 		( *pszMessage ) += ( ( dwBits & ( 1 << nBit ) ) != 0 ) ? "1" : "0";
 	}
 }
-
 
 void CHeightContainer::Clear()
 {
@@ -214,7 +205,6 @@ void CHeightContainer::Clear()
 	bTraceToImage = false;
 }
 
-
 void CHeightContainer::SetSize( const int x, const int y, bool _bTraceToImage )
 {
 	Clear();
@@ -224,7 +214,6 @@ void CHeightContainer::SetSize( const int x, const int y, bool _bTraceToImage )
 	//
 	bTraceToImage = _bTraceToImage;
 }
-
 
 void CHeightContainer::Mark( const int x, const int y )
 {
@@ -244,7 +233,6 @@ void CHeightContainer::Mark( const int x, const int y )
 	/**/
 }
 
-
 bool CHeightContainer::Compare( const int x, const int y )
 {
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) );
@@ -260,8 +248,9 @@ bool CHeightContainer::Compare( const int x, const int y )
 	return true;
 }
 
-
-void CHeightContainer::InsertPolygon( const std::vector<CVec2> &rBlackPolygon, const std::vector<CVec2> &rRedPolygon, int nPolygonID )
+void CHeightContainer::InsertPolygon( const std::vector<CVec2> &rBlackPolygon,
+                                      const std::vector<CVec2> &rRedPolygon,
+                                      int nPolygonID )
 {
 	if ( ( planeSize.x == 0 ) || ( planeSize.y == 0 ) )
 	{
@@ -330,7 +319,6 @@ void CHeightContainer::InsertPolygon( const std::vector<CVec2> &rBlackPolygon, c
 	/**/
 }
 
-
 void CHeightContainer::ErasePolygon( int nPolygonID )
 {
 	if ( nStackCount == 0 )
@@ -343,7 +331,6 @@ void CHeightContainer::ErasePolygon( int nPolygonID )
 	}
 	ErasePlane( nPolygonID );
 }
-
 
 bool CHeightContainer::GetBlackRedBallance( const CTRect<int> &rRect )
 {
@@ -380,19 +367,25 @@ bool CHeightContainer::GetBlackRedBallance( const CTRect<int> &rRect )
 	return false;
 }
 
-
 void CHeightContainer::InsertVSO( const NDb::SVSOInstance &rVSO )
 {
-	if ( const NDb::SCragDesc *pCragDesc = checked_cast<const NDb::SCragDesc*>( &( *( rVSO.pDescriptor ) ) ) )
+	if ( const NDb::SCragDesc *pCragDesc = checked_cast<const NDb::SCragDesc *>( &( *( rVSO.pDescriptor ) ) ) )
 	{
 		std::vector<CVec2> blackPolygon;
 		std::vector<CVec2> redPolygon;
-		CVSOManager::GetCragBoundingPolygon( &blackPolygon, rVSO.points, pCragDesc->bLeftSided ? CVSOManager::PT_OPNORMALE : CVSOManager::PT_NORMALE, 1.0f, rVSO.nVSOID );
-		CVSOManager::GetCragBoundingPolygon( &redPolygon, rVSO.points, pCragDesc->bLeftSided ? CVSOManager::PT_NORMALE : CVSOManager::PT_OPNORMALE, 1.0f, rVSO.nVSOID );
+		CVSOManager::GetCragBoundingPolygon( &blackPolygon,
+		                                     rVSO.points,
+		                                     pCragDesc->bLeftSided ? CVSOManager::PT_OPNORMALE : CVSOManager::PT_NORMALE,
+		                                     1.0f,
+		                                     rVSO.nVSOID );
+		CVSOManager::GetCragBoundingPolygon( &redPolygon,
+		                                     rVSO.points,
+		                                     pCragDesc->bLeftSided ? CVSOManager::PT_NORMALE : CVSOManager::PT_OPNORMALE,
+		                                     1.0f,
+		                                     rVSO.nVSOID );
 		InsertPolygon( blackPolygon, redPolygon, rVSO.nVSOID );
 	}
 }
-
 
 void CHeightContainer::Trace()
 {
@@ -423,7 +416,9 @@ void CHeightContainer::Trace()
 	DebugTrace( "%s", szMessage.c_str() );
 	freePlaneIndexCollector.Trace();
 	DebugTrace( "polygonID2PlaneIndexMap [PolygonID] = planeIndex, begin" );
-	for ( std::unordered_map<int, int>::const_iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.begin(); posPolygonID2PlaneIndex != polygonID2PlaneIndexMap.end(); ++posPolygonID2PlaneIndex )
+	for ( std::unordered_map<int, int>::const_iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.begin();
+	      posPolygonID2PlaneIndex != polygonID2PlaneIndexMap.end();
+	      ++posPolygonID2PlaneIndex )
 	{
 		DebugTrace( "[%d] = %d", posPolygonID2PlaneIndex->first, posPolygonID2PlaneIndex->second );
 	}

@@ -22,12 +22,12 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 
 	// aeieiiaoey niaiaaaao n aeieiiaoeae caueoieeia iauaeoa
 	if ( GetNDefenders() > 0 && theDipl.GetDiplStatus( GetPlayer(), nPlayer ) != EDI_ENEMY ||
-			 GetNDefenders() == 0 && !bAttackers )
+	     GetNDefenders() == 0 && !bAttackers )
 		AddSoldier( pUnit );
 	else
 	{
 		if ( pUnit->GetUnitAbilityDesc( NDb::ABILITY_MASTER_OF_STREETS ) )
-		{			// Find a defender who has no such ability, and murder him in cold blood
+		{ // Find a defender who has no such ability, and murder him in cold blood
 			for ( int i = 0; i < GetNDefenders(); ++i )
 			{
 				if ( !GetUnit( i )->GetUnitAbilityDesc( NDb::ABILITY_MASTER_OF_STREETS ) )
@@ -200,7 +200,8 @@ bool CStormableObject::Segment()
 
 			if ( nActiveAttackers != 0 )
 			{
-				const int nAttacker = NRandom::Random( nActiveAttackers ); RecordRandomCall();
+				const int nAttacker = NRandom::Random( nActiveAttackers );
+				RecordRandomCall();
 
 				int i = 0, predI = 0;
 				int nParty = 0;
@@ -231,7 +232,8 @@ bool CStormableObject::Segment()
 
 					NI_ASSERT( i != attackers.end(), "Wrong attacker chosen" );
 					CSoldier *pAttacker = attackers.GetEl( i );
-					CSoldier *pDefender = GetUnit( NRandom::Random( GetNDefenders() ) ); RecordRandomCall();
+					CSoldier *pDefender = GetUnit( NRandom::Random( GetNDefenders() ) );
+					RecordRandomCall();
 
 					NI_ASSERT( IsValidObj( pAttacker ), "Wrong attacking unit is inside of building" );
 					NI_ASSERT( IsValidObj( pDefender ), "Wrong defending unit is inside of building" );
@@ -248,14 +250,7 @@ bool CStormableObject::Segment()
 
 const int CStormableObject::GetNFriendlyAttackers( const int nPlayer ) const
 {
-	return nAttackers[ theDipl.GetNParty( nPlayer ) ];
-
-
-
-
-
-
-
+	return nAttackers[theDipl.GetNParty( nPlayer )];
 }
 
 const bool CStormableObject::IsAnyInsiderVisible() const

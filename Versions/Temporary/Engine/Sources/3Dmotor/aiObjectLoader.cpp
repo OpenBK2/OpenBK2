@@ -14,216 +14,218 @@
 
 namespace NAI
 {
-	static CBasicShare<CDBPtr<NDb::SAIGeometry>, NAnimation::CGrannyAIGeomLoader, SDBPtrHash> shareGrannyAIGeometries(116);
+static CBasicShare<CDBPtr<NDb::SAIGeometry>, NAnimation::CGrannyAIGeomLoader, SDBPtrHash>
+		shareGrannyAIGeometries( 116 );
 
 std::size_t SAISkinKeyHash::operator()( const SAISkinKey &key ) const
 {
 	const std::size_t geometryHash = key.pGeometry ? key.pGeometry->GetDBID().GetHashKey() : 0;
 	const std::size_t skeletonHash = key.skeletonH.pSkeleton ? key.skeletonH.pSkeleton->GetDBID().GetHashKey() : 0;
-	return geometryHash ^ (skeletonHash << 1) ^ static_cast<std::size_t>(key.skeletonH.nModelInFile);
+	return geometryHash ^ ( skeletonHash << 1 ) ^ static_cast<std::size_t>( key.skeletonH.nModelInFile );
 }
 
 namespace
 {
-template <class TValue>
-std::vector<TValue> ReadGltfAccessor( const fastgltf::Asset &asset, std::size_t accessorIndex )
-{
-	std::vector<TValue> result;
-	if ( accessorIndex >= asset.accessors.size() )
+	template <class TValue>
+	std::vector<TValue> ReadGltfAccessor( const fastgltf::Asset &asset, std::size_t accessorIndex )
+	{
+		std::vector<TValue> result;
+		if ( accessorIndex >= asset.accessors.size() )
+			return result;
+		const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
+		result.reserve( accessor.count );
+		for ( const TValue &value : fastgltf::iterateAccessor<TValue>( asset, accessor ) )
+			result.push_back( value );
 		return result;
-	const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
-	result.reserve( accessor.count );
-	for ( const TValue &value : fastgltf::iterateAccessor<TValue>(asset, accessor) )
-		result.push_back( value );
-	return result;
-}
-
-std::size_t FindAttribute( const fastgltf::Primitive &primitive, const char *pszName )
-{
-	const auto it = primitive.findAttribute( pszName );
-	return it == primitive.attributes.end() ? static_cast<std::size_t>(-1) : it->accessorIndex;
-}
-
-void AppendTriangles( const fastgltf::Asset &asset, const fastgltf::Primitive &primitive,
-	std::size_t vertexOffset, std::vector<STriangle> *pResult )
-{
-	if ( !primitive.indicesAccessor.has_value() )
-		return;
-	const std::vector<std::uint32_t> indices =
-		ReadGltfAccessor<std::uint32_t>( asset, *primitive.indicesAccessor );
-	// As in rendering, (-X, Z, Y) preserves source winding for collision faces.
-	if ( primitive.type == fastgltf::PrimitiveType::Triangles )
-	{
-		for ( std::size_t i = 0; i + 2 < indices.size(); i += 3 )
-			pResult->push_back( STriangle(static_cast<int>(vertexOffset + indices[i]),
-				static_cast<int>(vertexOffset + indices[i + 1]),
-				static_cast<int>(vertexOffset + indices[i + 2])) );
 	}
-	else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
+
+	std::size_t FindAttribute( const fastgltf::Primitive &primitive, const char *pszName )
 	{
-		for ( std::size_t i = 2; i < indices.size(); ++i )
+		const auto it = primitive.findAttribute( pszName );
+		return it == primitive.attributes.end() ? static_cast<std::size_t>( -1 ) : it->accessorIndex;
+	}
+
+	void AppendTriangles( const fastgltf::Asset &asset,
+	                      const fastgltf::Primitive &primitive,
+	                      std::size_t vertexOffset,
+	                      std::vector<STriangle> *pResult )
+	{
+		if ( !primitive.indicesAccessor.has_value() )
+			return;
+		const std::vector<std::uint32_t> indices = ReadGltfAccessor<std::uint32_t>( asset, *primitive.indicesAccessor );
+		// As in rendering, (-X, Z, Y) preserves source winding for collision faces.
+		if ( primitive.type == fastgltf::PrimitiveType::Triangles )
 		{
-			const std::uint32_t a = indices[i - 2];
-			const std::uint32_t b = indices[i - 1];
-			const std::uint32_t c = indices[i];
-			if ( a == b || b == c || a == c )
-				continue;
-			// Strip triangles alternate their source winding.
-			pResult->push_back( STriangle(static_cast<int>(vertexOffset + (i & 1 ? b : a)),
-				static_cast<int>(vertexOffset + (i & 1 ? a : b)),
-				static_cast<int>(vertexOffset + c)) );
+			for ( std::size_t i = 0; i + 2 < indices.size(); i += 3 )
+				pResult->push_back( STriangle( static_cast<int>( vertexOffset + indices[i] ),
+				                               static_cast<int>( vertexOffset + indices[i + 1] ),
+				                               static_cast<int>( vertexOffset + indices[i + 2] ) ) );
+		}
+		else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
+		{
+			for ( std::size_t i = 2; i < indices.size(); ++i )
+			{
+				const std::uint32_t a = indices[i - 2];
+				const std::uint32_t b = indices[i - 1];
+				const std::uint32_t c = indices[i];
+				if ( a == b || b == c || a == c )
+					continue;
+				// Strip triangles alternate their source winding.
+				pResult->push_back( STriangle( static_cast<int>( vertexOffset + ( i & 1 ? b : a ) ),
+				                               static_cast<int>( vertexOffset + ( i & 1 ? a : b ) ),
+				                               static_cast<int>( vertexOffset + c ) ) );
+			}
+		}
+		else if ( primitive.type == fastgltf::PrimitiveType::TriangleFan )
+		{
+			for ( std::size_t i = 2; i < indices.size(); ++i )
+				pResult->push_back( STriangle( static_cast<int>( vertexOffset + indices[0] ),
+				                               static_cast<int>( vertexOffset + indices[i - 1] ),
+				                               static_cast<int>( vertexOffset + indices[i] ) ) );
 		}
 	}
-	else if ( primitive.type == fastgltf::PrimitiveType::TriangleFan )
-	{
-		for ( std::size_t i = 2; i < indices.size(); ++i )
-			pResult->push_back( STriangle(static_cast<int>(vertexOffset + indices[0]),
-				static_cast<int>(vertexOffset + indices[i - 1]),
-				static_cast<int>(vertexOffset + indices[i])) );
-	}
-}
 
-bool BuildTargetBoneMap( const SAISkinKey &key,
-	NAnimation::CGrannyFileInfo *pGrannySkeletonFile,
-	std::unordered_map<std::string, int> *pResult )
-{
-	pResult->clear();
-	if ( !key.skeletonH.pSkeleton )
-		return false;
-	if ( !key.skeletonH.pSkeleton->szModelFileRef.empty() )
+	bool BuildTargetBoneMap( const SAISkinKey &key,
+	                         NAnimation::CGrannyFileInfo *pGrannySkeletonFile,
+	                         std::unordered_map<std::string, int> *pResult )
 	{
-		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.skeletonH.pSkeleton,
-			key.skeletonH.pSkeleton->szModelFileRef );
-		NGltf::SSkeletonDefinition skeleton;
-		if ( !NGltf::BuildSkeleton(file, key.skeletonH.pSkeleton->szRootJoint,
-			key.skeletonH.nModelInFile, &skeleton) )
+		pResult->clear();
+		if ( !key.skeletonH.pSkeleton )
 			return false;
-		*pResult = skeleton.boneByName;
+		if ( !key.skeletonH.pSkeleton->szModelFileRef.empty() )
+		{
+			const NGltf::TGltfFilePtr file =
+					NGltf::LoadFile( key.skeletonH.pSkeleton, key.skeletonH.pSkeleton->szModelFileRef );
+			NGltf::SSkeletonDefinition skeleton;
+			if ( !NGltf::BuildSkeleton( file, key.skeletonH.pSkeleton->szRootJoint, key.skeletonH.nModelInFile, &skeleton ) )
+				return false;
+			*pResult = skeleton.boneByName;
+			return true;
+		}
+		if ( !pGrannySkeletonFile )
+			return false;
+		const granny_skeleton *pSkeleton = NAnimation::GetSkeleton( pGrannySkeletonFile, key.skeletonH.nModelInFile );
+		if ( !pSkeleton || pSkeleton->BoneCount > 256 )
+			return false;
+		for ( int i = 0; i < pSkeleton->BoneCount; ++i )
+			( *pResult )[pSkeleton->Bones[i].Name] = i;
 		return true;
 	}
-	if ( !pGrannySkeletonFile )
-		return false;
-	const granny_skeleton *pSkeleton =
-		NAnimation::GetSkeleton( pGrannySkeletonFile, key.skeletonH.nModelInFile );
-	if ( !pSkeleton || pSkeleton->BoneCount > 256 )
-		return false;
-	for ( int i = 0; i < pSkeleton->BoneCount; ++i )
-		(*pResult)[pSkeleton->Bones[i].Name] = i;
-	return true;
-}
 
-std::string GetGltfNodeName( const fastgltf::Node &node, std::size_t nodeIndex )
-{
-	return node.name.empty() ? "Node_" + std::to_string(nodeIndex) : std::string(node.name);
-}
-
-void AppendGltfAIPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex,
-	const fastgltf::Primitive &primitive, bool bAnimated,
-	const std::unordered_map<std::string, int> *pTargetBones,
-	std::vector<CVec3> *pPoints, std::vector<STriangle> *pTriangles,
-	std::vector<NGScene::SVertexWeight> *pWeights )
-{
-	if ( primitive.type != fastgltf::PrimitiveType::Triangles &&
-		primitive.type != fastgltf::PrimitiveType::TriangleStrip &&
-		primitive.type != fastgltf::PrimitiveType::TriangleFan )
-		return;
-	const std::size_t positionAccessor = FindAttribute( primitive, "POSITION" );
-	if ( positionAccessor == static_cast<std::size_t>(-1) )
-		return;
-
-	const fastgltf::Asset &asset = file->asset;
-	const fastgltf::Node &node = asset.nodes[nodeIndex];
-	int nRigidBone = -1;
-	if ( bAnimated && !node.skinIndex.has_value() && pTargetBones )
+	std::string GetGltfNodeName( const fastgltf::Node &node, std::size_t nodeIndex )
 	{
-		const auto found = pTargetBones->find( GetGltfNodeName(node, nodeIndex) );
-		if ( found != pTargetBones->end() && found->second >= 0 && found->second <= 255 )
-			nRigidBone = found->second;
+		return node.name.empty() ? "Node_" + std::to_string( nodeIndex ) : std::string( node.name );
 	}
-	const std::vector<fastgltf::math::fvec3> positions =
-		ReadGltfAccessor<fastgltf::math::fvec3>( asset, positionAccessor );
-	const std::size_t vertexOffset = pPoints->size();
-	pPoints->reserve( vertexOffset + positions.size() );
-	for ( const fastgltf::math::fvec3 &source : positions )
+
+	void AppendGltfAIPrimitive( const NGltf::TGltfFilePtr &file,
+	                            std::size_t nodeIndex,
+	                            const fastgltf::Primitive &primitive,
+	                            bool bAnimated,
+	                            const std::unordered_map<std::string, int> *pTargetBones,
+	                            std::vector<CVec3> *pPoints,
+	                            std::vector<STriangle> *pTriangles,
+	                            std::vector<NGScene::SVertexWeight> *pWeights )
 	{
-		CVec3 point = NGltf::ConvertPosition( source );
-		if ( !bAnimated || !node.skinIndex.has_value() )
+		if ( primitive.type != fastgltf::PrimitiveType::Triangles &&
+		     primitive.type != fastgltf::PrimitiveType::TriangleStrip &&
+		     primitive.type != fastgltf::PrimitiveType::TriangleFan )
+			return;
+		const std::size_t positionAccessor = FindAttribute( primitive, "POSITION" );
+		if ( positionAccessor == static_cast<std::size_t>( -1 ) )
+			return;
+
+		const fastgltf::Asset &asset = file->asset;
+		const fastgltf::Node &node = asset.nodes[nodeIndex];
+		int nRigidBone = -1;
+		if ( bAnimated && !node.skinIndex.has_value() && pTargetBones )
 		{
-			CVec3 transformed;
-			file->nodeWorldTransforms[nodeIndex].RotateHVector( &transformed, point );
-			point = transformed;
+			const auto found = pTargetBones->find( GetGltfNodeName( node, nodeIndex ) );
+			if ( found != pTargetBones->end() && found->second >= 0 && found->second <= 255 )
+				nRigidBone = found->second;
 		}
-		pPoints->push_back( point );
-	}
-	AppendTriangles( asset, primitive, vertexOffset, pTriangles );
+		const std::vector<fastgltf::math::fvec3> positions =
+				ReadGltfAccessor<fastgltf::math::fvec3>( asset, positionAccessor );
+		const std::size_t vertexOffset = pPoints->size();
+		pPoints->reserve( vertexOffset + positions.size() );
+		for ( const fastgltf::math::fvec3 &source : positions )
+		{
+			CVec3 point = NGltf::ConvertPosition( source );
+			if ( !bAnimated || !node.skinIndex.has_value() )
+			{
+				CVec3 transformed;
+				file->nodeWorldTransforms[nodeIndex].RotateHVector( &transformed, point );
+				point = transformed;
+			}
+			pPoints->push_back( point );
+		}
+		AppendTriangles( asset, primitive, vertexOffset, pTriangles );
 
-	if ( !pWeights )
-		return;
-	pWeights->resize( pPoints->size() );
-	for ( std::size_t i = 0; i < positions.size(); ++i )
-	{
-		NGScene::SVertexWeight &target = (*pWeights)[vertexOffset + i];
-		memset( &target, 0, sizeof(target) );
-		// An incompletely exported vertex follows the root bone.
-		target.fWeights[0] = 1.0f;
-	}
-	if ( nRigidBone >= 0 )
-	{
-		// AI geometry uses the same model-space rest vertices as rendering and
-		// receives the matching synthetic node's transform delta at runtime.
+		if ( !pWeights )
+			return;
+		pWeights->resize( pPoints->size() );
 		for ( std::size_t i = 0; i < positions.size(); ++i )
 		{
-			NGScene::SVertexWeight &target = (*pWeights)[vertexOffset + i];
-			memset( &target, 0, sizeof(target) );
-			target.cBoneIndices[0] = static_cast<uint8_t>(nRigidBone);
+			NGScene::SVertexWeight &target = ( *pWeights )[vertexOffset + i];
+			memset( &target, 0, sizeof( target ) );
+			// An incompletely exported vertex follows the root bone.
 			target.fWeights[0] = 1.0f;
 		}
-		return;
-	}
-	if ( !node.skinIndex.has_value() || *node.skinIndex >= asset.skins.size() || !pTargetBones )
-		return;
-	const std::size_t jointsAccessor = FindAttribute( primitive, "JOINTS_0" );
-	const std::size_t weightsAccessor = FindAttribute( primitive, "WEIGHTS_0" );
-	if ( jointsAccessor == static_cast<std::size_t>(-1) || weightsAccessor == static_cast<std::size_t>(-1) )
-		return;
-
-	const fastgltf::Skin &sourceSkin = asset.skins[*node.skinIndex];
-	const std::vector<fastgltf::math::uvec4> joints =
-		ReadGltfAccessor<fastgltf::math::uvec4>( asset, jointsAccessor );
-	const std::vector<fastgltf::math::fvec4> weights =
-		ReadGltfAccessor<fastgltf::math::fvec4>( asset, weightsAccessor );
-	for ( std::size_t i = 0; i < positions.size() && i < joints.size() && i < weights.size(); ++i )
-	{
-		NGScene::SVertexWeight &target = (*pWeights)[vertexOffset + i];
-		memset( &target, 0, sizeof(target) );
-		int nTargetInfluence = 0;
-		float fTotalWeight = 0.0f;
-		for ( int influence = 0; influence < 4 && nTargetInfluence < 4; ++influence )
+		if ( nRigidBone >= 0 )
 		{
-			if ( weights[i][influence] <= 0.0f )
-				continue;
-			const std::size_t joint = joints[i][influence];
-			if ( joint >= sourceSkin.joints.size() )
-				continue;
-			const std::size_t sourceNodeIndex = sourceSkin.joints[joint];
-			if ( sourceNodeIndex >= asset.nodes.size() )
-				continue;
-			const fastgltf::Node &sourceNode = asset.nodes[sourceNodeIndex];
-			const std::string name = GetGltfNodeName( sourceNode, sourceNodeIndex );
-			const auto found = pTargetBones->find( name );
-			if ( found == pTargetBones->end() || found->second < 0 || found->second > 255 )
-				continue;
-			target.cBoneIndices[nTargetInfluence] = static_cast<uint8_t>(found->second);
-			target.fWeights[nTargetInfluence] = weights[i][influence];
-			fTotalWeight += target.fWeights[nTargetInfluence++];
+			// AI geometry uses the same model-space rest vertices as rendering and
+			// receives the matching synthetic node's transform delta at runtime.
+			for ( std::size_t i = 0; i < positions.size(); ++i )
+			{
+				NGScene::SVertexWeight &target = ( *pWeights )[vertexOffset + i];
+				memset( &target, 0, sizeof( target ) );
+				target.cBoneIndices[0] = static_cast<uint8_t>( nRigidBone );
+				target.fWeights[0] = 1.0f;
+			}
+			return;
 		}
-		if ( fTotalWeight > FP_EPSILON )
-			for ( int influence = 0; influence < nTargetInfluence; ++influence )
-				target.fWeights[influence] /= fTotalWeight;
-		else
-			target.fWeights[0] = 1.0f;
+		if ( !node.skinIndex.has_value() || *node.skinIndex >= asset.skins.size() || !pTargetBones )
+			return;
+		const std::size_t jointsAccessor = FindAttribute( primitive, "JOINTS_0" );
+		const std::size_t weightsAccessor = FindAttribute( primitive, "WEIGHTS_0" );
+		if ( jointsAccessor == static_cast<std::size_t>( -1 ) || weightsAccessor == static_cast<std::size_t>( -1 ) )
+			return;
+
+		const fastgltf::Skin &sourceSkin = asset.skins[*node.skinIndex];
+		const std::vector<fastgltf::math::uvec4> joints = ReadGltfAccessor<fastgltf::math::uvec4>( asset, jointsAccessor );
+		const std::vector<fastgltf::math::fvec4> weights =
+				ReadGltfAccessor<fastgltf::math::fvec4>( asset, weightsAccessor );
+		for ( std::size_t i = 0; i < positions.size() && i < joints.size() && i < weights.size(); ++i )
+		{
+			NGScene::SVertexWeight &target = ( *pWeights )[vertexOffset + i];
+			memset( &target, 0, sizeof( target ) );
+			int nTargetInfluence = 0;
+			float fTotalWeight = 0.0f;
+			for ( int influence = 0; influence < 4 && nTargetInfluence < 4; ++influence )
+			{
+				if ( weights[i][influence] <= 0.0f )
+					continue;
+				const std::size_t joint = joints[i][influence];
+				if ( joint >= sourceSkin.joints.size() )
+					continue;
+				const std::size_t sourceNodeIndex = sourceSkin.joints[joint];
+				if ( sourceNodeIndex >= asset.nodes.size() )
+					continue;
+				const fastgltf::Node &sourceNode = asset.nodes[sourceNodeIndex];
+				const std::string name = GetGltfNodeName( sourceNode, sourceNodeIndex );
+				const auto found = pTargetBones->find( name );
+				if ( found == pTargetBones->end() || found->second < 0 || found->second > 255 )
+					continue;
+				target.cBoneIndices[nTargetInfluence] = static_cast<uint8_t>( found->second );
+				target.fWeights[nTargetInfluence] = weights[i][influence];
+				fTotalWeight += target.fWeights[nTargetInfluence++];
+			}
+			if ( fTotalWeight > FP_EPSILON )
+				for ( int influence = 0; influence < nTargetInfluence; ++influence )
+					target.fWeights[influence] /= fTotalWeight;
+			else
+				target.fWeights[0] = 1.0f;
+		}
 	}
-}
 }
 
 static CVec3 CalcMassCenter( std::vector<SMassSphere> &spheres )
@@ -265,14 +267,19 @@ void CLoadAIGeometryFromA5Exporter::Recalc()
 	if ( pieces.empty() )
 	{
 		//ASSERT( pPrecalc );
-		pValue->AddPiece( 0, points, tris, 0, std::vector<SJunction>(), true );//, precalc );
+		pValue->AddPiece( 0, points, tris, 0, std::vector<SJunction>(), true ); //, precalc );
 	}
 	else
 	{
 		for ( CStoredPieceMap::const_iterator i = pieces.begin(); i != pieces.end(); ++i )
 		{
 			//ASSERT( i->second.tris.empty() || ( !i->second.precalc.empty() ) );
-			pValue->AddPiece( i->first, i->second.verts, i->second.tris, i->second.fVolume, i->second.juncs, true );//, i->second.precalc );
+			pValue->AddPiece( i->first,
+			                  i->second.verts,
+			                  i->second.tris,
+			                  i->second.fVolume,
+			                  i->second.juncs,
+			                  true ); //, i->second.precalc );
 		}
 	}
 	pValue->CalcBound();
@@ -288,7 +295,7 @@ void CLoadAIGeometryFromGranny::Recalc()
 	{
 		const NGltf::TGltfFilePtr file = NGltf::LoadFile( pGeometry, pGeometry->szModelFileRef );
 		std::vector<std::size_t> meshNodes;
-		if ( !NGltf::GetMeshNodes(file, pGeometry->szRootMesh, &meshNodes) )
+		if ( !NGltf::GetMeshNodes( file, pGeometry->szRootMesh, &meshNodes ) )
 			return;
 		for ( std::size_t i = 0; i < meshNodes.size(); ++i )
 		{
@@ -299,10 +306,9 @@ void CLoadAIGeometryFromGranny::Recalc()
 			std::vector<CVec3> points;
 			std::vector<STriangle> triangles;
 			for ( const fastgltf::Primitive &primitive : file->asset.meshes[*node.meshIndex].primitives )
-				AppendGltfAIPrimitive( file, nodeIndex, primitive, false, 0,
-					&points, &triangles, 0 );
+				AppendGltfAIPrimitive( file, nodeIndex, primitive, false, 0, &points, &triangles, 0 );
 			if ( !points.empty() && !triangles.empty() )
-				pValue->AddPiece( static_cast<int>(i), points, triangles, 0, std::vector<SJunction>(), true );
+				pValue->AddPiece( static_cast<int>( i ), points, triangles, 0, std::vector<SJunction>(), true );
 		}
 		pValue->CalcBound();
 		return;
@@ -326,8 +332,7 @@ void CLoadAIGeometryFromGranny::Recalc()
 void CLoadAIGeometryFromGranny::SetKey( const NDb::SAIGeometry *pGeometry )
 {
 	this->pGeometry = pGeometry;
-	pData = pGeometry && pGeometry->szModelFileRef.empty()
-		? shareGrannyAIGeometries.Get( pGeometry ) : 0;
+	pData = pGeometry && pGeometry->szModelFileRef.empty() ? shareGrannyAIGeometries.Get( pGeometry ) : 0;
 }
 
 bool CLoadAIGeometryFromGranny::NeedUpdate()
@@ -357,7 +362,7 @@ struct SMergePoints
 	}
 	void AddTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c )
 	{
-		tris.push_back( STriangle( GetPointIndex(a), GetPointIndex(b), GetPointIndex(c) ) );
+		tris.push_back( STriangle( GetPointIndex( a ), GetPointIndex( b ), GetPointIndex( c ) ) );
 	}
 };
 
@@ -419,14 +424,12 @@ void CFileSkinPointsLoadFromGranny::Recalc()
 	pValue = new CFileSkinPoints;
 	if ( key.pGeometry && !key.pGeometry->szModelFileRef.empty() )
 	{
-		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry,
-			key.pGeometry->szModelFileRef );
+		const NGltf::TGltfFilePtr file = NGltf::LoadFile( key.pGeometry, key.pGeometry->szModelFileRef );
 		std::vector<std::size_t> meshNodes;
-		if ( !NGltf::GetMeshNodes(file, key.pGeometry->szRootMesh, &meshNodes) )
+		if ( !NGltf::GetMeshNodes( file, key.pGeometry->szRootMesh, &meshNodes ) )
 			return;
 		std::unordered_map<std::string, int> targetBones;
-		NAnimation::CGrannyFileInfo *pGrannySkeleton =
-			pSkeletonData ? pSkeletonData->GetValue() : 0;
+		NAnimation::CGrannyFileInfo *pGrannySkeleton = pSkeletonData ? pSkeletonData->GetValue() : 0;
 		const bool bHaveTargetBones = BuildTargetBoneMap( key, pGrannySkeleton, &targetBones );
 		for ( std::size_t i = 0; i < meshNodes.size(); ++i )
 		{
@@ -434,13 +437,19 @@ void CFileSkinPointsLoadFromGranny::Recalc()
 			const fastgltf::Node &node = file->asset.nodes[nodeIndex];
 			if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
 				continue;
-			CFileSkinPoints::SBodypart &part = pValue->parts[static_cast<int>(i)];
+			CFileSkinPoints::SBodypart &part = pValue->parts[static_cast<int>( i )];
 			std::vector<STriangle> triangles;
 			for ( const fastgltf::Primitive &primitive : file->asset.meshes[*node.meshIndex].primitives )
-				AppendGltfAIPrimitive( file, nodeIndex, primitive, true,
-					bHaveTargetBones ? &targetBones : 0, &part.points, &triangles, &part.weights );
+				AppendGltfAIPrimitive( file,
+				                       nodeIndex,
+				                       primitive,
+				                       true,
+				                       bHaveTargetBones ? &targetBones : 0,
+				                       &part.points,
+				                       &triangles,
+				                       &part.weights );
 			if ( part.points.empty() || triangles.empty() )
-				pValue->parts.erase( static_cast<int>(i) );
+				pValue->parts.erase( static_cast<int>( i ) );
 			else
 				part.edges.GenerateEdgeList( triangles, part.points );
 		}
@@ -467,17 +476,17 @@ void CFileSkinPointsLoadFromGranny::Recalc()
 void CFileSkinPointsLoadFromGranny::SetKey( const SAISkinKey &_key )
 {
 	key = _key;
-	pData = key.pGeometry && key.pGeometry->szModelFileRef.empty()
-		? shareGrannyAIGeometries.Get( key.pGeometry ) : 0;
+	pData = key.pGeometry && key.pGeometry->szModelFileRef.empty() ? shareGrannyAIGeometries.Get( key.pGeometry ) : 0;
 	pSkeletonData = key.skeletonH.pSkeleton && key.skeletonH.pSkeleton->szModelFileRef.empty()
-		? NAnimation::GetSkeletonFileInfo( key.skeletonH.pSkeleton ) : 0;
+	                    ? NAnimation::GetSkeletonFileInfo( key.skeletonH.pSkeleton )
+	                    : 0;
 }
 
 void CFileSkinPointsLoadFromGranny::SetKey( const NDb::SAIGeometry *pGeometry )
 {
 	// GR2 stores the source skeleton together with the AI mesh, matching the
 	// original cache behavior and serialized key layout.
-	SetKey( SAISkinKey(pGeometry, NAnimation::SSkeletonHandle()) );
+	SetKey( SAISkinKey( pGeometry, NAnimation::SSkeletonHandle() ) );
 }
 
 bool CFileSkinPointsLoadFromGranny::NeedUpdate()
@@ -521,7 +530,7 @@ void CSkinner::Recalc()
 		const SVertex *pMesh = &src.points[0];
 		const SVertexWeight *pWeight = &src.weights[0];
 		const NGScene::SSkeletonMatrices &blends = pAnimation->GetValue();
-		memset( pRes, 0, sizeof(SVertex) * nVertices );
+		memset( pRes, 0, sizeof( SVertex ) * nVertices );
 		CVec3 p;
 		for ( int i = 0; i < nVertices; ++i )
 		{

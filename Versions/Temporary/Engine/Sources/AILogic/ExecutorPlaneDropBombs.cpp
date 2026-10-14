@@ -12,10 +12,7 @@
 extern CGroupLogic theGroupLogic;
 extern CDiplomacy theDipl;
 
-
-
 //CExecutorPlaneDropBombsObject
-
 
 bool CExecutorPlaneDropBombsObject::IsExecutorValidInternal() const
 {
@@ -23,12 +20,14 @@ bool CExecutorPlaneDropBombsObject::IsExecutorValidInternal() const
 }
 
 CExecutorPlaneDropBombsObject::CExecutorPlaneDropBombsObject( CAIUnit *_pUnit )
-: CExecutorUnitBase( TID_PLANE_DROP_BOMBS_OBJECT, SConsts::BEH_UPDATE_DURATION/SConsts::AI_SEGMENT_DURATION, ABILITY_DROP_BOMBS ),
-pUnit( _pUnit )
+		: CExecutorUnitBase( TID_PLANE_DROP_BOMBS_OBJECT,
+                         SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION,
+                         ABILITY_DROP_BOMBS ),
+			pUnit( _pUnit )
 {
 	if ( theDipl.IsAIPlayer( pUnit->GetPlayer() ) )
 	{
-		checked_cast_ptr<CAviation*>( pUnit )->SetBombAutocast( true );
+		checked_cast_ptr<CAviation *>( pUnit )->SetBombAutocast( true );
 		SetAutocast( true );
 	}
 }
@@ -39,9 +38,8 @@ int CExecutorPlaneDropBombsObject::Segment()
 	const int nGun = pUnit->GetNGuns();
 	for ( int i = 0; i < nGun; ++i )
 	{
-		CBasicGun *pGun = pUnit ->GetGun( i );
-		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
-			   pGun->GetNAmmo() != 0 )
+		CBasicGun *pGun = pUnit->GetGun( i );
+		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB && pGun->GetNAmmo() != 0 )
 		{
 			bBombsOnBoard = true;
 			break;
@@ -67,17 +65,17 @@ bool CExecutorPlaneDropBombsObject::NotifyEvent( const CExecutorEvent &event )
 
 	const EExecutorEventID eCurID = event.GetParam().eEventID;
 
-	switch( eCurID )
+	switch ( eCurID )
 	{
-	case EID_ABILITY_DEACTIVATE_AUTOCAST:
-		checked_cast_ptr<CAviation*>( pUnit )->SetBombAutocast( false );
-		SetAutocast( false );
-		return true;
+		case EID_ABILITY_DEACTIVATE_AUTOCAST:
+			checked_cast_ptr<CAviation *>( pUnit )->SetBombAutocast( false );
+			SetAutocast( false );
+			return true;
 
-	case EID_ABILITY_ACTIVATE_AUTOCAST:
-		checked_cast_ptr<CAviation*>( pUnit )->SetBombAutocast( true );
-		SetAutocast( true );
-		return true;
+		case EID_ABILITY_ACTIVATE_AUTOCAST:
+			checked_cast_ptr<CAviation *>( pUnit )->SetBombAutocast( true );
+			SetAutocast( true );
+			return true;
 	}
 
 	if ( pEv->GetAbility() == GetAbility() )
@@ -112,17 +110,11 @@ CCommonUnit *CExecutorPlaneDropBombsObject::GetUnit()
 	return pUnit;
 }
 
-void CExecutorPlaneDropBombsObject::SwitchingOffEnd()
-{
-}
+void CExecutorPlaneDropBombsObject::SwitchingOffEnd() {}
 
-void CExecutorPlaneDropBombsObject::SwitchingOffStart()
-{
-}
+void CExecutorPlaneDropBombsObject::SwitchingOffStart() {}
 
-void CExecutorPlaneDropBombsObject::SwitchOnEnd()
-{
-}
+void CExecutorPlaneDropBombsObject::SwitchOnEnd() {}
 
 void CExecutorPlaneDropBombsObject::SwitchOnStart( const class CAICommand *pCommand )
 {
@@ -131,9 +123,9 @@ void CExecutorPlaneDropBombsObject::SwitchOnStart( const class CAICommand *pComm
 	{
 		const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 		if ( cmd.nObjectID != 0 )
-			theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_DROP_BOMBS_TO_TARGET, cmd.nObjectID, 0.0f ), pUnit, false );
+			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_DROP_BOMBS_TO_TARGET, cmd.nObjectID, 0.0f ), pUnit, false );
 		else
-			theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_DROP_BOMBS_TO_POINT, cmd.vPos ), pUnit, false );
+			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_DROP_BOMBS_TO_POINT, cmd.vPos ), pUnit, false );
 	}
 	ForceRecharge();
 }

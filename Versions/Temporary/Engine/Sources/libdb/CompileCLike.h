@@ -5,21 +5,23 @@
 
 namespace NDb
 {
-	namespace NTypeDef
-	{
-		struct STypeDef;
-		class CTerminalTypesDescriptor;
-	}
+namespace NTypeDef
+{
+	struct STypeDef;
+	class CTerminalTypesDescriptor;
+}
 }
 
 namespace NLang
 {
-	class CNamespace;
+class CNamespace;
 }
 
 namespace NCompileCLike
 {
-	// exported for dbcodegen, which compiles the parsed .cll files with it
-	LIBDB_EXPORT bool Compile( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc,
-								CNodes2TypeDefs *pNodes2TypeDefs, NLang::CNamespace *pRootNN );
+// exported for dbcodegen, which compiles the parsed .cll files with it
+LIBDB_EXPORT bool Compile( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
+                           NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc,
+                           CNodes2TypeDefs *pNodes2TypeDefs,
+                           NLang::CNamespace *pRootNN );
 }

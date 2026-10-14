@@ -4,27 +4,31 @@
 
 namespace NMapInfoEditor
 {
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	struct SSimpleObjectInfo : public SObjectInfo
-	{
-		OBJECT_BASIC_METHODS( SSimpleObjectInfo );
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct SSimpleObjectInfo : public SObjectInfo
+{
+	OBJECT_BASIC_METHODS( SSimpleObjectInfo );
 
-	public:
-		static const NDb::SModel* GetModel( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const NDb::ESeason eSeason );
-		static const NDb::SModel* ChooseModelWithHP( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const float fHP, const NDb::ESeason eSeason );
-		static bool NeedMakeOrientation( const std::string &rszRPGStatsTypeName, const CDBID &rRPGStatsDBID );
-		//
-		// SObjectInfo
-		SObjectInfo* CallDuplicate() const { return Duplicate(); }
-		EObjectInfoType GetObjectInfoType() { return OIT_SIMPLE_OBJECT; }
-		virtual bool NeedMakeOrientation();
-		virtual bool KeepZeroHeight();
-		virtual bool KeepCommonHeight() { return false; }
-		virtual bool NeedProcessEditParameters() { return true; }
-		//
-		virtual bool Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pScene, IManipulator *pManipulator );
-		virtual bool Create( const SObjectCreateInfo* pObjectCreateInfo, IEditorScene *pScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		virtual void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
-		virtual void GetMask( std::string *pszMask ) {}
-	};
+public:
+	static const NDb::SModel *GetModel( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const NDb::ESeason eSeason );
+	static const NDb::SModel *
+	ChooseModelWithHP( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const float fHP, const NDb::ESeason eSeason );
+	static bool NeedMakeOrientation( const std::string &rszRPGStatsTypeName, const CDBID &rRPGStatsDBID );
+	//
+	// SObjectInfo
+	SObjectInfo *CallDuplicate() const { return Duplicate(); }
+	EObjectInfoType GetObjectInfoType() { return OIT_SIMPLE_OBJECT; }
+	virtual bool NeedMakeOrientation();
+	virtual bool KeepZeroHeight();
+	virtual bool KeepCommonHeight() { return false; }
+	virtual bool NeedProcessEditParameters() { return true; }
+	//
+	virtual bool Load( const SObjectLoadInfo *pObjectLoadInfo, IEditorScene *pScene, IManipulator *pManipulator );
+	virtual bool Create( const SObjectCreateInfo *pObjectCreateInfo,
+	                     IEditorScene *pScene,
+	                     CObjectBaseController *pObjectController,
+	                     IManipulator *pManipulator );
+	virtual void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
+	virtual void GetMask( std::string *pszMask ) {}
+};
 };

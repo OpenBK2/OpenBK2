@@ -6,13 +6,13 @@
 
 namespace NDb
 {
-	struct SMapMusic;
-	struct SComposition;
-	struct SMusicTrack;
+struct SMapMusic;
+struct SComposition;
+struct SMusicTrack;
 }
 namespace NMusicSystem
 {
-FSOUND_STREAM* OpenTrack( CDataStream *pTrack );
+FSOUND_STREAM *OpenTrack( CDataStream *pTrack );
 NTimer::STime GetAbsTime();
 class CTrack;
 class CPlayList;
@@ -32,9 +32,8 @@ class CMusicSystem : public IMusicSystem
 		EPST_FADING_NEW_IN,
 	};
 
-
 	int nPlayList;
-	std::vector<CPtr<CPlayList> > playlists;
+	std::vector<CPtr<CPlayList>> playlists;
 	CPtr<CTrack> pVoiceTrack;
 	std::vector<float> volumes;
 	std::vector<int> pauses;
@@ -48,11 +47,9 @@ class CMusicSystem : public IMusicSystem
 	void InitDefault();
 
 	void UpdatePlayListChange();
+
 public:
-	CMusicSystem()
-	{
-		InitDefault();
-	}
+	CMusicSystem() { InitDefault(); }
 
 	bool IsPaused( EStreamType eType ) const;
 	void OnResetTimer();
@@ -61,19 +58,16 @@ public:
 	void SetVolume( EMusicSystemVolume eType, float fVolume );
 	float GetVolume( EMusicSystemVolume eType ) const;
 	void PauseMusic( EMusicSystemVolume eType, bool bPause );
-	void PlayVoice( const NDb::SVoice *pVoice ) ;
+	void PlayVoice( const NDb::SVoice *pVoice );
 	void Init( const NDb::SMapMusic *pMapMusic, int nActivePlayList );
 	void ChangePlayList( int _nPlayList );
 	bool CanChangePlayList() const;
 	int GetPlayList() const;
-	int GetNPlayLists() const
-	{
-		return playlists.size();
-	}
+	int GetNPlayLists() const { return playlists.size(); }
 
 	void SetChannel( int nChannel, EStreamType eType ) { channels[eType] = nChannel; }
-	int GetChannel( EStreamType eType ) const  { return channels[eType]; }
+	int GetChannel( EStreamType eType ) const { return channels[eType]; }
 };
 
-CMusicSystem * GetMusicSystem();
+CMusicSystem *GetMusicSystem();
 }

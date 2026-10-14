@@ -9,19 +9,20 @@ class CButtonGroup : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CButtonGroup )
 
-	typedef std::unordered_set< CPtr<CWindowMSButton> > CButtons;
+	typedef std::unordered_set<CPtr<CWindowMSButton>> CButtons;
 	CButtons buttons;
 	CPtr<IWindow> pPressed;
 
-	IWindow * ChooseDefault();
+	IWindow *ChooseDefault();
+
 public:
 	// button must notify its group before state changing.
 	// must not change state if false is returned.
 	bool TrySwitchState( IWindow *pButton );
-	void Add( IWindow * pButton );
+	void Add( IWindow *pButton );
 	void Init();
 	void SetActive( IWindow *pButton );
 	void Remove_All();
-	IWindow* GetPressed() const;
-	IWindow* GetButton( int i );
+	IWindow *GetPressed() const;
+	IWindow *GetButton( int i );
 };

@@ -3,7 +3,7 @@
 
 namespace NGfx
 {
-	class CGeometry;
+class CGeometry;
 };
 
 namespace NGScene
@@ -11,14 +11,20 @@ namespace NGScene
 class CObjectInfo;
 
 // special class for polylines
-class CMemGeometry: public CPtrFuncBase<NGfx::CGeometry>
+class CMemGeometry : public CPtrFuncBase<NGfx::CGeometry>
 {
-	OBJECT_BASIC_METHODS(CMemGeometry);
+	OBJECT_BASIC_METHODS( CMemGeometry );
 	ZDATA
 	std::vector<CVec3> points;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&points); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &points );
+		return 0;
+	}
+
 protected:
 	virtual void Recalc();
+
 public:
 	CMemGeometry() {}
 	CMemGeometry( const std::vector<CVec3> &points );

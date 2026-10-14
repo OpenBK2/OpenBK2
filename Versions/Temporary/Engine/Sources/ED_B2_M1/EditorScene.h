@@ -6,19 +6,19 @@
 
 namespace NDb
 {
-	struct SModel;
-	struct SAmbientLight;
+struct SModel;
+struct SAmbientLight;
 }
 namespace NGScene
 {
-	class I2DGameView;
-	class IGameView;
-	class CRTPtr;
+class I2DGameView;
+class IGameView;
+class CRTPtr;
 }
 
 namespace NAnimation
 {
-	struct ISkeletonAnimator;
+struct ISkeletonAnimator;
 }
 
 enum EScene : int;
@@ -30,7 +30,10 @@ struct ITerraManager;
 
 struct IEditorScene : public CObjectBase
 {
-	enum { tidTypeID = 0x301CBB41 };
+	enum
+	{
+		tidTypeID = 0x301CBB41
+	};
 
 	virtual void RemoveAllScreens() = 0;
 	virtual void AddScreen( struct IWindow *pScreen ) = 0;
@@ -42,20 +45,37 @@ struct IEditorScene : public CObjectBase
 	virtual class CCSTime *GetGameTimer() = 0;
 	virtual uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
 	virtual void ClearMarkers( ESceneMarkerType eType, int nID ) = 0;
-	virtual void AddShootArea( int nID, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, const CVec3 &vColor, const CVec2 &vCenter ) = 0;
+	virtual void AddShootArea( int nID,
+	                           float fStartAngle,
+	                           float fEndAngle,
+	                           float fMinRadius,
+	                           float fMaxRadius,
+	                           const CVec3 &vColor,
+	                           const CVec2 &vCenter ) = 0;
 	virtual void SwitchScene( const EScene eScene ) = 0;
 
-	virtual int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot,
-												 const CVec3 &vScale, ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo,
-												 const bool bHasReflection = false ) = 0;
-	virtual bool MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3(1, 1, 1) ) = 0;
+	virtual int AddObject( const int nID,
+	                       const NDb::SModel *pModel,
+	                       const CVec3 &vPos,
+	                       const CQuat &qRot,
+	                       const CVec3 &vScale,
+	                       ESceneObjAnimMode eAnimMode,
+	                       NGScene::IGameView::SMeshInfo *pMeshInfo,
+	                       const bool bHasReflection = false ) = 0;
+	virtual bool
+	MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3( 1, 1, 1 ) ) = 0;
 	virtual void RemoveObject( const int nID ) = 0;
 	virtual void SetFadedObjects( const std::list<int> &objects ) = 0;
 	virtual void SetFadedObjects( const std::list<int> &objects, float fFade ) = 0;
-	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot ) = 0;
+	virtual int AddEffect(
+			const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot ) = 0;
 
 	virtual int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) = 0;
-	virtual int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
+	virtual int AddIndexedPolyline( const int nID,
+	                                const std::vector<CVec3> &points,
+	                                const std::vector<uint16_t> &indices,
+	                                const CVec4 &vColor,
+	                                bool bDepthCheck ) = 0;
 	virtual void RemovePolyline( const int nID ) = 0;
 	virtual bool ToggleShow( ESceneShow eShow ) = 0;
 	virtual bool ToggleAIGeometryMode() = 0;
@@ -91,4 +111,4 @@ struct IEditorScene : public CObjectBase
 	virtual void SetWarFogBlend( const float fBlend ) = 0;
 };
 
-IEditorScene* EditorScene();
+IEditorScene *EditorScene();

@@ -114,28 +114,13 @@ struct SSquare
 {
 	float a[2][2];
 };
-static float CalcIntegral( const SSquare &a, const SSquare & b )
+static float CalcIntegral( const SSquare &a, const SSquare &b )
 {
-	float fRes = ( 1 / 36.0f ) * (
-		4 * (
-		a.a[0][0] * b.a[0][0] +
-		a.a[0][1] * b.a[0][1] +
-		a.a[1][0] * b.a[1][0] +
-		a.a[1][1] * b.a[1][1]
-		) +
-		2 * (
-		a.a[0][0] * b.a[0][1] + a.a[0][0] * b.a[1][0] +
-		a.a[0][1] * b.a[0][0] + a.a[0][1] * b.a[1][1] +
-		a.a[1][0] * b.a[1][1] + a.a[1][0] * b.a[0][0] +
-		a.a[1][1] * b.a[1][0] + a.a[1][1] * b.a[0][1]
-		) +
-		(
-		a.a[0][0] * b.a[1][1] +
-		a.a[0][1] * b.a[1][0] +
-		a.a[1][0] * b.a[0][1] +
-		a.a[1][1] * b.a[0][0]
-		)
-		);
+	float fRes = ( 1 / 36.0f ) *
+	             ( 4 * ( a.a[0][0] * b.a[0][0] + a.a[0][1] * b.a[0][1] + a.a[1][0] * b.a[1][0] + a.a[1][1] * b.a[1][1] ) +
+	               2 * ( a.a[0][0] * b.a[0][1] + a.a[0][0] * b.a[1][0] + a.a[0][1] * b.a[0][0] + a.a[0][1] * b.a[1][1] +
+	                     a.a[1][0] * b.a[1][1] + a.a[1][0] * b.a[0][0] + a.a[1][1] * b.a[1][0] + a.a[1][1] * b.a[0][1] ) +
+	               ( a.a[0][0] * b.a[1][1] + a.a[0][1] * b.a[1][0] + a.a[1][0] * b.a[0][1] + a.a[1][1] * b.a[0][0] ) );
 	return fRes;
 }
 
@@ -152,8 +137,8 @@ static float Multiply( const CArray2D<float> &a, const CArray2D<float> &b )
 			{
 				for ( int dy = 0; dy < 2; ++dy )
 				{
-					sa.a[dy][dx] = a[y+dy][x+dx];
-					sb.a[dy][dx] = b[y+dy][x+dx];
+					sa.a[dy][dx] = a[y + dy][x + dx];
+					sb.a[dy][dx] = b[y + dy][x + dx];
 				}
 			}
 			fSum += CalcIntegral( sa, sb );
@@ -204,7 +189,7 @@ static void Add( CArray2D<float> &dst, const CArray2D<float> &a, float f )
 }
 */
 
-template<class T>
+template <class T>
 void EnlargeImage( CArray2D<T> &r, const CArray2D<T> &src, int nMargin, bool bWrapX, bool bWrapY )
 {
 	// enlarge tempConv
@@ -233,8 +218,8 @@ void EnlargeImage( CArray2D<T> &r, const CArray2D<T> &src, int nMargin, bool bWr
 	}
 }
 
-static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *pRes, const CVec4 &conv,
-	int nMargin, bool bWrapX, bool bWrapY )
+static void Create2XSampledSource(
+		const CArray2D<CVec4> &src, CArray2D<float> *pRes, const CVec4 &conv, int nMargin, bool bWrapX, bool bWrapY )
 {
 	CArray2D<float> &p = *pRes;
 	int nXSize = src.GetSizeX() * 2 + nMargin * 4;
@@ -245,7 +230,7 @@ static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *
 	{
 		for ( int x = 0; x < src.GetSizeX(); ++x )
 		{
-			p[y*2+nMargin*2][x*2+nMargin*2] = src[y][x] * conv;
+			p[y * 2 + nMargin * 2][x * 2 + nMargin * 2] = src[y][x] * conv;
 		}
 	}
 	// copy edges
@@ -270,7 +255,7 @@ static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *
 			nY = Clamp( nY, 0, src.GetSizeY() - 1 );
 			nX += nMargin;
 			nY += nMargin;
-			p[y*2][x*2] = p[nY*2][nX*2];
+			p[y * 2][x * 2] = p[nY * 2][nX * 2];
 		}
 	}
 	// interpolate
@@ -279,9 +264,9 @@ static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *
 		for ( int x = 0; x < p.GetSizeX() / 2 - 1; ++x )
 		{
 			int nX = x * 2, nY = y * 2;
-			p[nY+1][nX] = 0.5f * ( p[nY][nX] + p[nY+2][nX]);
-			p[nY][nX+1] = 0.5f * ( p[nY][nX] + p[nY][nX+2]);
-			p[nY+1][nX+1] = 0.25f * ( p[nY][nX] + p[nY+2][nX] + p[nY][nX+2] + p[nY+2][nX+2] );
+			p[nY + 1][nX] = 0.5f * ( p[nY][nX] + p[nY + 2][nX] );
+			p[nY][nX + 1] = 0.5f * ( p[nY][nX] + p[nY][nX + 2] );
+			p[nY + 1][nX + 1] = 0.25f * ( p[nY][nX] + p[nY + 2][nX] + p[nY][nX + 2] + p[nY + 2][nX + 2] );
 		}
 	}
 }
@@ -294,10 +279,10 @@ static void CreateReferenceBasisFunc( CArray2D<float> *pRes, int nHalfSize )
 	p.SetSizes( nSize, nSize );
 	for ( int y = 0; y < nSize; ++y )
 	{
-		float fY = 1 - abs(y-nHalfSize) * ( 1.0f / nHalfSize );
+		float fY = 1 - abs( y - nHalfSize ) * ( 1.0f / nHalfSize );
 		for ( int x = 0; x < nSize; ++x )
 		{
-			float fX = 1 - abs(x-nHalfSize) * ( 1.0f / nHalfSize );
+			float fX = 1 - abs( x - nHalfSize ) * ( 1.0f / nHalfSize );
 			p[y][x] = fY * fX;
 		}
 	}
@@ -338,7 +323,21 @@ static void CreateFinalResolveMatrix( CArray2D<double> *pRes, int nSize )
 	}
 }*/
 
-static double fResolveCoef[15] = { -0.000114508, 0.00042735, -0.00159489, 0.00595222, -0.022214, 0.0829038, -0.309401, 1.1547, -0.309401, 0.0829038, -0.022214, 0.00595222, -0.00159489, 0.00042735, -0.000114508 };
+static double fResolveCoef[15] = { -0.000114508,
+                                   0.00042735,
+                                   -0.00159489,
+                                   0.00595222,
+                                   -0.022214,
+                                   0.0829038,
+                                   -0.309401,
+                                   1.1547,
+                                   -0.309401,
+                                   0.0829038,
+                                   -0.022214,
+                                   0.00595222,
+                                   -0.00159489,
+                                   0.00042735,
+                                   -0.000114508 };
 static void MulResolve( std::vector<float> *pRes, const std::vector<float> &s )
 {
 	std::vector<float> &r = *pRes;
@@ -348,7 +347,7 @@ static void MulResolve( std::vector<float> *pRes, const std::vector<float> &s )
 		float fRes = 0;
 		int nStart = (std::max)( -7, -y ), nFinish = (std::min<int>)( 7, r.size() - y - 1 );
 		for ( int delta = nStart; delta <= nFinish; ++delta )
-			fRes += fResolveCoef[delta + 7] * s[ y + delta ];
+			fRes += fResolveCoef[delta + 7] * s[y + delta];
 		r[y] = fRes;
 	}
 }
@@ -367,7 +366,7 @@ static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 		s.resize( src.GetSizeX() );
 		for ( int x = 0; x < src.GetSizeX(); ++x )
 			s[x] = src[y][x];
-		MulResolve( &st, s );//Mul( &st, m, s );
+		MulResolve( &st, s ); //Mul( &st, m, s );
 		for ( int x = 0; x < src.GetSizeX(); ++x )
 			t[y][x] = st[x] * 1.5f;
 	}
@@ -379,7 +378,7 @@ static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 		s.resize( src.GetSizeY() );
 		for ( int y = 0; y < src.GetSizeY(); ++y )
 			s[y] = t[y][x];
-		MulResolve( &st, s );//Mul( &st, m, s );
+		MulResolve( &st, s ); //Mul( &st, m, s );
 		for ( int y = 0; y < src.GetSizeY(); ++y )
 			r[y][x] = st[y] * 1.5f;
 	}
@@ -390,10 +389,11 @@ static void FinalResolve( CArray2D<float> *pRes, const CArray2D<float> &src )
 	}
 }
 
-const int N_HALF_REFERENCE = 4;//8;
-const int N_MARGIN = 6; // in source texels
+const int N_HALF_REFERENCE = 4; //8;
+const int N_MARGIN = 6;         // in source texels
 const int N_FINAL_MARGIN = 8;
-static void CalcChannel( CArray2D<float> *pRes, const CArray2D<CVec4> &src, const CVec4 &_conv, bool bWrapX, bool bWrapY )
+static void
+CalcChannel( CArray2D<float> *pRes, const CArray2D<CVec4> &src, const CVec4 &_conv, bool bWrapX, bool bWrapY )
 {
 	CArray2D<float> tempConv, conv, &res = *pRes, finalSrc;
 	CArray2D<float> buf2, baseFunc, convFrag;
@@ -421,7 +421,7 @@ static void CalcChannel( CArray2D<float> *pRes, const CArray2D<CVec4> &src, cons
 	{
 		for ( int x = 0; x < res.GetSizeX(); ++x )
 		{
-			res[y][x] = conv[y+N_FINAL_MARGIN][x+N_FINAL_MARGIN];
+			res[y][x] = conv[y + N_FINAL_MARGIN][x + N_FINAL_MARGIN];
 		}
 	}
 }
@@ -436,21 +436,25 @@ bool GenerateMipLevel( CArray2D<CVec4> *pDst, const CArray2D<CVec4> &src, bool b
 	// generate temporary array to integrate over
 	CArray2D<float> channel;
 	channel.SetSizes( nXSize, nYSize );
-	CalcChannel( &channel, src, CVec4(1,0,0,0), bWrapX, bWrapY );
-	for ( int y = 0; y < nYSize; ++y ) for ( int x = 0; x < nXSize; ++x )
-		(*pDst)[y][x].r = channel[y][x];
+	CalcChannel( &channel, src, CVec4( 1, 0, 0, 0 ), bWrapX, bWrapY );
+	for ( int y = 0; y < nYSize; ++y )
+		for ( int x = 0; x < nXSize; ++x )
+			( *pDst )[y][x].r = channel[y][x];
 
-	CalcChannel( &channel, src, CVec4(0,1,0,0), bWrapX, bWrapY );
-	for ( int y = 0; y < nYSize; ++y ) for ( int x = 0; x < nXSize; ++x )
-		(*pDst)[y][x].g = channel[y][x];
+	CalcChannel( &channel, src, CVec4( 0, 1, 0, 0 ), bWrapX, bWrapY );
+	for ( int y = 0; y < nYSize; ++y )
+		for ( int x = 0; x < nXSize; ++x )
+			( *pDst )[y][x].g = channel[y][x];
 
-	CalcChannel( &channel, src, CVec4(0,0,1,0), bWrapX, bWrapY );
-	for ( int y = 0; y < nYSize; ++y ) for ( int x = 0; x < nXSize; ++x )
-		(*pDst)[y][x].b = channel[y][x];
+	CalcChannel( &channel, src, CVec4( 0, 0, 1, 0 ), bWrapX, bWrapY );
+	for ( int y = 0; y < nYSize; ++y )
+		for ( int x = 0; x < nXSize; ++x )
+			( *pDst )[y][x].b = channel[y][x];
 
-	CalcChannel( &channel, src, CVec4(0,0,0,1), bWrapX, bWrapY );
-	for ( int y = 0; y < nYSize; ++y ) for ( int x = 0; x < nXSize; ++x )
-		(*pDst)[y][x].a = channel[y][x];
+	CalcChannel( &channel, src, CVec4( 0, 0, 0, 1 ), bWrapX, bWrapY );
+	for ( int y = 0; y < nYSize; ++y )
+		for ( int x = 0; x < nXSize; ++x )
+			( *pDst )[y][x].a = channel[y][x];
 
 	return true;
 }
@@ -466,7 +470,8 @@ bool GenerateMipLevelPoint( CArray2D<CVec4> *pDst, const CArray2D<CVec4> &src )
 	{
 		for ( int x = 0; x < nXSize; ++x )
 		{
-			(*pDst)[y][x] = 0.25f * ( src[y*2][x*2] + src[y*2+1][x*2] + src[y*2][x*2+1] + src[y*2+1][x*2+1] );
+			( *pDst )[y][x] =
+					0.25f * ( src[y * 2][x * 2] + src[y * 2 + 1][x * 2] + src[y * 2][x * 2 + 1] + src[y * 2 + 1][x * 2 + 1] );
 		}
 	}
 	return true;
@@ -478,26 +483,27 @@ void GenerateNormals( CArray2D<CVec4> *pData, const CVec4 &conv, float fMappingS
 	fSrc.SetSizes( pData->GetSizeX(), pData->GetSizeY() );
 	for ( int y = 0; y < pData->GetSizeY(); ++y )
 		for ( int x = 0; x < pData->GetSizeX(); ++x )
-			fSrc[y][x] = (*pData)[y][x] * conv;
+			fSrc[y][x] = ( *pData )[y][x] * conv;
 	EnlargeImage( f, fSrc, 1, bWrapX, bWrapY );
 	float fMX = pData->GetSizeX() / ( 2 * fMappingSize );
 	float fMY = pData->GetSizeY() / ( 2 * fMappingSize );
 	for ( int y = 0; y < pData->GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < pData->GetSizeX(); ++x )
-			(*pData)[y][x] = CVec4( -( f[y+1][x+2] - f[y+1][x] ) * fMX, -( f[y+2][x+1] - f[y][x+1] ) * fMY, 1, (*pData)[y][x].w );
+			( *pData )[y][x] = CVec4(
+					-( f[y + 1][x + 2] - f[y + 1][x] ) * fMX, -( f[y + 2][x + 1] - f[y][x + 1] ) * fMY, 1, ( *pData )[y][x].w );
 	}
 	float fScale = 127 / 255.0f, fAdd = 128 / 255.0f;
 	for ( int y = 0; y < pData->GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < pData->GetSizeX(); ++x )
 		{
-			CVec4 normal( (*pData)[y][x].x, (*pData)[y][x].g, (*pData)[y][x].b, 0 );
+			CVec4 normal( ( *pData )[y][x].x, ( *pData )[y][x].g, ( *pData )[y][x].b, 0 );
 			Normalize( &normal );
 			normal *= fScale;
 			normal += CVec4( fAdd, fAdd, fAdd, 0 );
-			normal.w = (*pData)[y][x].w;
-			(*pData)[y][x] = normal;
+			normal.w = ( *pData )[y][x].w;
+			( *pData )[y][x] = normal;
 		}
 	}
 }

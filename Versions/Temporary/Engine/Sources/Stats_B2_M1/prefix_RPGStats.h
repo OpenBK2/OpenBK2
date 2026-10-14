@@ -2,7 +2,6 @@
 
 #include "Stats_B2_M1_export.h"
 
-
 #include "Misc/2Darray.h"
 #include "Vis2AI.h"
 #include "System/RandomGen.h"
@@ -11,13 +10,13 @@
 
 namespace NDb
 {
-	struct SComplexSoundDesc;
-	enum EUnitAckType : int;
-	enum EReinforcementType : int;
+struct SComplexSoundDesc;
+enum EUnitAckType : int;
+enum EReinforcementType : int;
 };
 // optimisation (singleton cache)
-typedef class CConstructorInfo * PCConstructorInfo;
-STATS_B2_M1_EXPORT PCConstructorInfo & ConstructorInfo();
+typedef class CConstructorInfo *PCConstructorInfo;
+STATS_B2_M1_EXPORT PCConstructorInfo &ConstructorInfo();
 
 /*
 enum EArmorDirection
@@ -32,22 +31,26 @@ enum EArmorDirection
 */
 
 // mega for_each for vectors
-#define FOR_EACH(vec,fun) for( int i = 0; i < vec.size(); ++i ) \
-{\
-	vec[i].fun();\
-}
-#define FOR_EACH_ARR(arr,fun,count) for ( int i = 0; i < count; ++i )\
-{\
-	arr[i].fun();\
-}
-#define FOR_EACH_VAL(vec,fun, val) for( int i = 0; i < vec.size(); ++i ) \
-{\
-	vec[i].fun(val);\
-}
-#define FOR_EACH_ARR_VAL(arr,fun,count, val) for ( int i = 0; i < count; ++i )\
-{\
-	arr[i].fun(val);\
-}
+#define FOR_EACH( vec, fun )             \
+	for ( int i = 0; i < vec.size(); ++i ) \
+	{                                      \
+		vec[i].fun();                        \
+	}
+#define FOR_EACH_ARR( arr, fun, count ) \
+	for ( int i = 0; i < count; ++i )     \
+	{                                     \
+		arr[i].fun();                       \
+	}
+#define FOR_EACH_VAL( vec, fun, val )    \
+	for ( int i = 0; i < vec.size(); ++i ) \
+	{                                      \
+		vec[i].fun( val );                   \
+	}
+#define FOR_EACH_ARR_VAL( arr, fun, count, val ) \
+	for ( int i = 0; i < count; ++i )              \
+	{                                              \
+		arr[i].fun( val );                           \
+	}
 /*
 enum EAIClass
 {
@@ -63,34 +66,38 @@ enum EAIClass
 
 inline int GetRandom( int nAverage, int nRandom )
 {
-	if (nRandom <= 0)
+	if ( nRandom <= 0 )
 		return nAverage;
 
-	RecordRandomCall(); return NRandom::RandomCheck( nAverage - nRandom, nAverage + nRandom );
+	RecordRandomCall();
+	return NRandom::RandomCheck( nAverage - nRandom, nAverage + nRandom );
 }
 inline float GetRandom( float fAverage, int nRandom )
 {
-	if (nRandom <= 0)
+	if ( nRandom <= 0 )
 		return fAverage;
 
-	RecordRandomCall(); return NRandom::RandomCheck( fAverage - float(nRandom), fAverage + float(nRandom) );
+	RecordRandomCall();
+	return NRandom::RandomCheck( fAverage - float( nRandom ), fAverage + float( nRandom ) );
 }
 inline int GetPositiveRandom( int nAverage, int nRandom )
 {
-	RecordRandomCall(); return (std::max)( 0, NRandom::Random( nAverage - nRandom,  nAverage + nRandom) );
+	RecordRandomCall();
+	return (std::max)( 0, NRandom::Random( nAverage - nRandom, nAverage + nRandom ) );
 }
 inline float GetPositiveRandom( float fAverage, int nRandom )
 {
-	RecordRandomCall(); return (std::max)( 0.0f, NRandom::Random( fAverage - float(nRandom), fAverage + float(nRandom) ) );
+	RecordRandomCall();
+	return (std::max)( 0.0f, NRandom::Random( fAverage - float( nRandom ), fAverage + float( nRandom ) ) );
 }
 
 // Special Ability
 namespace NDb
 {
-	struct SUnitSpecialAblityDesc;
-	enum EUnitSpecialAbility : int;
-	struct SAIGameConsts;
-	struct SAckSetRPGStats;
+struct SUnitSpecialAblityDesc;
+enum EUnitSpecialAbility : int;
+struct SAIGameConsts;
+struct SAckSetRPGStats;
 };
 
 const NDb::SComplexSoundDesc *ChooseAcknowledgement( const NDb::SAckSetRPGStats *pSet, const NDb::EUnitAckType type );

@@ -15,20 +15,23 @@ extern CGlobalWarFog theWarFog;
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B5, CSmokeScreen );
 
 CSmokeScreen::CSmokeScreen( const CVec3 &_vCenter, const float _fRadius, const int _nTransparency, const int nTime )
-: vCenter( _vCenter ), fRadius( _fRadius ), nTransparency( _nTransparency ), timeOfDissapear( curTime + nTime ),
-	CExistingObject( 0, 1.0f ), tileCenter( AICellsTiles::GetTile( CVec2(_vCenter.x,_vCenter.y) ) ), bTransparencySet( false )
+		: vCenter( _vCenter ), fRadius( _fRadius ), nTransparency( _nTransparency ), timeOfDissapear( curTime + nTime ),
+			CExistingObject( 0, 1.0f ), tileCenter( AICellsTiles::GetTile( CVec2( _vCenter.x, _vCenter.y ) ) ),
+			bTransparencySet( false )
 {
 }
 
 void CSmokeScreen::Init()
 {
-	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION ); RecordRandomCall();
+	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION );
+	RecordRandomCall();
 	theStatObjs.RegisterSegment( this );
 }
 
 void CSmokeScreen::Segment()
 {
-	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION ); RecordRandomCall();
+	nextSegmTime = curTime + 4 * SConsts::AI_SEGMENT_DURATION + NRandom::Random( 0, 3 * SConsts::AI_SEGMENT_DURATION );
+	RecordRandomCall();
 	if ( curTime >= timeOfDissapear )
 	{
 		RemoveTransparencies();
@@ -55,14 +58,14 @@ void CSmokeScreen::TraceToPoint( const int x, const int y, const bool bAdd )
 
 void CSmokeScreen::OctupleTrace( const int x, const int y, const bool bAdd )
 {
-	TraceToPoint(  x,  y, bAdd );
-	TraceToPoint( -x,  y, bAdd );
-	TraceToPoint(  x, -y, bAdd );
+	TraceToPoint( x, y, bAdd );
+	TraceToPoint( -x, y, bAdd );
+	TraceToPoint( x, -y, bAdd );
 	TraceToPoint( -x, -y, bAdd );
 
-	TraceToPoint(  y,  x, bAdd );
-	TraceToPoint(  y, -x, bAdd );
-	TraceToPoint( -y,  x, bAdd );
+	TraceToPoint( y, x, bAdd );
+	TraceToPoint( y, -x, bAdd );
+	TraceToPoint( -y, x, bAdd );
 	TraceToPoint( -y, -x, bAdd );
 }
 
@@ -77,27 +80,27 @@ void CSmokeScreen::Trace( const bool bAdd )
 
 	const int r = fRadius / SConsts::TILE_SIZE + 1;
 	int x = 0, y = r;
-	int d = 3 - 2*y;
+	int d = 3 - 2 * y;
 
-	TraceToPoint(  0,  r, bAdd );
-	TraceToPoint(  0, -r, bAdd );
-	TraceToPoint(  r,  0, bAdd );
-	TraceToPoint( -r,  0, bAdd );
+	TraceToPoint( 0, r, bAdd );
+	TraceToPoint( 0, -r, bAdd );
+	TraceToPoint( r, 0, bAdd );
+	TraceToPoint( -r, 0, bAdd );
 
 	do
 	{
 		if ( d < 0 )
-			d += 4*x + 6;
+			d += 4 * x + 6;
 		else
 		{
-			d += 4*(x - y) + 10;
+			d += 4 * ( x - y ) + 10;
 			--y;
 			OctupleTrace( x, y, bAdd );
 		}
 		++x;
 
 		OctupleTrace( x, y, bAdd );
-	}	while ( x <= y );
+	} while ( x <= y );
 }
 
 void CSmokeScreen::SetTransparencies()

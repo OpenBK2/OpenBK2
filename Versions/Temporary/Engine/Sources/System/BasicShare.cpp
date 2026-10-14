@@ -20,9 +20,8 @@ void CreateSharedHolder( CSharedHolder *pHolder )
 		pTest->CreateHolder( &pHolder->objs );
 }
 
-
 void SerializeShared( IBinSaver *pFile )
 {
 	for ( CBasicShareBase *pTest = pList; pTest; pTest = pTest->pNext )
-		(*pTest) & ( *pFile );
+		( *pTest ) & ( *pFile );
 }

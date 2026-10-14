@@ -5,23 +5,22 @@
 #include "ChatControl.h"
 #include "MPLobbyData.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CInterfaceMPLobby : public CInterfaceMPScreenBase, public
-IProgrammedReactionsAndChecks
+class CInterfaceMPLobby : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {
 	friend class CClientListViewer;
 	OBJECT_NOCOPY_METHODS( CInterfaceMPLobby );
 
-	typedef std::unordered_map< std::string, CPtr<CClientListData> > CChatClientsList;
+	typedef std::unordered_map<std::string, CPtr<CClientListData>> CChatClientsList;
 
-	ZDATA_(CInterfaceMPScreenBase)
+	ZDATA_( CInterfaceMPScreenBase )
 	CPtr<IWindow> pMain;
 	// Chat {
-	CPtr<IEditLine>						pChatInput;
+	CPtr<IEditLine> pChatInput;
 	CPtr<CChatControlWrapper> pChatOutput;
-	CPtr<IEditLine>						pChannelNameEdit;
-	CPtr<IListControl>				pChannelsList;
-	CPtr<IWindow>							pChannelsButtonDisabler;
-	CPtr<IButton>							pChannelsButton;
+	CPtr<IEditLine> pChannelNameEdit;
+	CPtr<IListControl> pChannelsList;
+	CPtr<IWindow> pChannelsButtonDisabler;
+	CPtr<IButton> pChannelsButton;
 
 	bool bJoiningChannel;
 	std::string szCurrentChannel;
@@ -47,8 +46,35 @@ IProgrammedReactionsAndChecks
 	NTimer::STime timeStartWaiting;
 	bool bLadderGameFound;
 	CPtr<IButton> pPostMessage;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceMPScreenBase*)this); f.Add(2,&pMain); f.Add(3,&pChatInput); f.Add(4,&pChatOutput); f.Add(5,&pChannelNameEdit); f.Add(6,&pChannelsList); f.Add(7,&pChannelsButtonDisabler); f.Add(8,&pChannelsButton); f.Add(9,&bJoiningChannel); f.Add(10,&szCurrentChannel); f.Add(11,&pNicksList); f.Add(12,&chatClients); f.Add(13,&chatFriends); f.Add(14,&chatIgnores); f.Add(15,&pClientInfoWindow); f.Add(16,&szSelectedClient); f.Add(17,&pLadderButton); f.Add(18,&pCustomButton); f.Add(19,&pCancelButton); f.Add(20,&pStatsButton); f.Add(21,&pWaitingForLadder); f.Add(22,&timeStartWaiting); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceMPScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 3, &pChatInput );
+		f.Add( 4, &pChatOutput );
+		f.Add( 5, &pChannelNameEdit );
+		f.Add( 6, &pChannelsList );
+		f.Add( 7, &pChannelsButtonDisabler );
+		f.Add( 8, &pChannelsButton );
+		f.Add( 9, &bJoiningChannel );
+		f.Add( 10, &szCurrentChannel );
+		f.Add( 11, &pNicksList );
+		f.Add( 12, &chatClients );
+		f.Add( 13, &chatFriends );
+		f.Add( 14, &chatIgnores );
+		f.Add( 15, &pClientInfoWindow );
+		f.Add( 16, &szSelectedClient );
+		f.Add( 17, &pLadderButton );
+		f.Add( 18, &pCustomButton );
+		f.Add( 19, &pCancelButton );
+		f.Add( 20, &pStatsButton );
+		f.Add( 21, &pWaitingForLadder );
+		f.Add( 22, &timeStartWaiting );
+		return 0;
+	}
+
 private:
 	bool OnChatMessage( struct SMPUIChatMessage *pMsg );
 	bool OnChatChannelsListMessage( struct SMPUIChatChannelListMessage *pMsg );
@@ -109,6 +135,7 @@ class CICMPLobby : public CInterfaceCommandBase<CInterfaceMPLobby>
 
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

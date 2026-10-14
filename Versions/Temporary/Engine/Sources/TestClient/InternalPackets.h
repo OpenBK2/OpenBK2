@@ -5,16 +5,18 @@
 class CEnteredLobby : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CEnteredLobby );
+
 public:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
-	CEnteredLobby() { }
+	CEnteredLobby() {}
 };
 
 class CTestShowGameClients : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CTestShowGameClients );
+
 public:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
@@ -23,11 +25,16 @@ public:
 class CTestSpecGameInfo : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CTestSpecGameInfo );
+
 public:
 	ZDATA
-		std::string szMapName;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szMapName); return 0; }
+	std::string szMapName;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szMapName );
+		return 0;
+	}
 
-	CTestSpecGameInfo() { }
-	CTestSpecGameInfo( const std::string &_szMapName ) : szMapName( _szMapName ) { }
+	CTestSpecGameInfo() {}
+	CTestSpecGameInfo( const std::string &_szMapName ) : szMapName( _szMapName ) {}
 };

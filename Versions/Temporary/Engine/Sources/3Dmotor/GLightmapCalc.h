@@ -2,7 +2,6 @@
 
 #include "GLightmapLoader.h"
 
-
 namespace NGScene
 {
 class IRender;
@@ -14,7 +13,13 @@ class CLightmapsTempHolder;
 enum ELightmapQuality : int;
 CLightmapsTempHolder *CreateLightmapsTempHolder();
 CLightmapsHolder *FinalMergeLightmaps( CLightmapsTempHolder *pTmpHolder );
-CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, int nUserID,
-	const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder );
-void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader * pLD  );
+CLightmapsHolder *CalcLightmaps( IGScene *pScene,
+                                 IRender *pRender,
+                                 CObjectBase *pUser,
+                                 int nUserID,
+                                 const SSphere &highResLM,
+                                 ELightmapQuality quality,
+                                 CLightmapsTempHolder *pTmpHolder );
+void ApplyLightmaps(
+		IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader *pLD );
 }

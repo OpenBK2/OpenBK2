@@ -47,7 +47,7 @@ const float CalculateProbability( float x0, float y0, float x1, float y1 )
 			fRes = sqr( x1 - y0 ) / ( 2 * ( y1 - y0 ) * ( x1 - x0 ) );
 		else if ( x0 <= y0 )
 			fRes = ( x1 - y0 + x1 - y1 ) / ( 2 * ( x1 - x0 ) );
-//			( x1 - y0 + x1 - y1 ) * ( y1 - y0 ) / ( 2 * ( y1 - y0 ) * ( x1 - x0 ) );
+		//			( x1 - y0 + x1 - y1 ) * ( y1 - y0 ) / ( 2 * ( y1 - y0 ) * ( x1 - x0 ) );
 		else if ( x0 <= y1 )
 			fRes = 1 - sqr( y1 - x0 ) / ( 2 * ( y1 - y0 ) * ( x1 - x0 ) );
 		else

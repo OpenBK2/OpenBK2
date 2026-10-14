@@ -2,7 +2,6 @@
 
 #include "3Dmotor_export.h"
 
-
 namespace NGScene
 {
 

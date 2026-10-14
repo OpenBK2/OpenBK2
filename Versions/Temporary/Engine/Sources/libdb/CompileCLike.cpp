@@ -11,8 +11,10 @@
 namespace NCompileCLike
 {
 
-bool Compile( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc,
-						 CNodes2TypeDefs *pNodes2TypeDefs, NLang::CNamespace *pRootNN )
+bool Compile( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
+              NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc,
+              CNodes2TypeDefs *pNodes2TypeDefs,
+              NLang::CNamespace *pRootNN )
 {
 	CPtr<CVisitor> pVisitor = new CVisitor( pTypes, pTermTypesDesc );
 	pVisitor->Visit( pRootNN );
@@ -22,10 +24,10 @@ bool Compile( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDe
 	int nCnt = 0;
 	for ( int i = 0; i < pTypes->size(); ++i )
 	{
-		CPtr<NDb::NTypeDef::STypeDef> pTypeDef = (*pTypes)[i].GetPtr();
+		CPtr<NDb::NTypeDef::STypeDef> pTypeDef = ( *pTypes )[i].GetPtr();
 		if ( pTermTypesDesc->IsTerminalType( pTypeDef ) )
 		{
-			(*pTypes)[nCnt++] = pTypeDef;
+			( *pTypes )[nCnt++] = pTypeDef;
 
 			CDynamicCast<NDb::NTypeDef::STypeClass> pClass = pTypeDef;
 			if ( pClass && pClass->nClassTypeID == -1 )

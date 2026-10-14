@@ -28,13 +28,12 @@ extern SCheats theCheats;
 
 //BASIC_REGISTER_CLASS( CMineStaticObject );
 
-CMineStaticObject::CMineStaticObject()
-{
-}
+CMineStaticObject::CMineStaticObject() {}
 
-CMineStaticObject::CMineStaticObject( const SMineRPGStats *_pStats, const CVec3 &center,  const float fHP, const int nFrameIndex, int _player )
-: pStats( _pStats ), bIfWillBeDeleted( false ), bAlive( true ), CGivenPassabilityStObject( center, fHP, 0, nFrameIndex ), player( _player )
-, bIfRegisteredInCWorld( false )
+CMineStaticObject::CMineStaticObject(
+		const SMineRPGStats *_pStats, const CVec3 &center, const float fHP, const int nFrameIndex, int _player )
+		: pStats( _pStats ), bIfWillBeDeleted( false ), bAlive( true ),
+			CGivenPassabilityStObject( center, fHP, 0, nFrameIndex ), player( _player ), bIfRegisteredInCWorld( false )
 {
 	SetAlive( bAlive );
 }
@@ -50,9 +49,17 @@ void CMineStaticObject::Init()
 void CMineStaticObject::Detonate()
 {
 	const CVec3 vCenter( GetCenter() );
-	theShellsStore.AddShell
-	( new CInvisShell( curTime, new CBurstExpl( 0, pStats->pWeapon,
-	CVec3( vCenter.x, vCenter.y, GetHeights()->GetVisZ( vCenter.x, vCenter.y ) ), VNULL3, 0, false, 1, true ), 0 ) );
+	theShellsStore.AddShell(
+			new CInvisShell( curTime,
+	                     new CBurstExpl( 0,
+	                                     pStats->pWeapon,
+	                                     CVec3( vCenter.x, vCenter.y, GetHeights()->GetVisZ( vCenter.x, vCenter.y ) ),
+	                                     VNULL3,
+	                                     0,
+	                                     false,
+	                                     1,
+	                                     true ),
+	                     0 ) );
 
 	Delete();
 	bAlive = false;
@@ -88,11 +95,12 @@ bool CMineStaticObject::CheckToDetonate( CAIUnit *pUnit )
 {
 	if ( IsValidObj( pUnit ) && !pUnit->GetStats()->IsAviation() )
 	{
-		bool bMatchTiles = pUnit->GetCenterTile() == AICellsTiles::GetTile( CVec2(GetCenter().x,GetCenter().y) );
+		bool bMatchTiles = pUnit->GetCenterTile() == AICellsTiles::GetTile( CVec2( GetCenter().x, GetCenter().y ) );
 		SRect rect( pUnit->GetUnitRect() );
 		const bool bGoodUnitToExplode = WillExplodeUnder( pUnit );
-		CDBPtr<SMineRPGStats> pMineStats = checked_cast<const SMineRPGStats*>( GetStats() );
-		if ( bGoodUnitToExplode && ( bMatchTiles || rect.IsPointInside( CVec2(GetCenter().x,GetCenter().y) ) || pMineStats->bRangeDetonator ) )
+		CDBPtr<SMineRPGStats> pMineStats = checked_cast<const SMineRPGStats *>( GetStats() );
+		if ( bGoodUnitToExplode &&
+		     ( bMatchTiles || rect.IsPointInside( CVec2( GetCenter().x, GetCenter().y ) ) || pMineStats->bRangeDetonator ) )
 		{
 			// наступили
 			Detonate();
@@ -105,12 +113,16 @@ bool CMineStaticObject::CheckToDetonate( CAIUnit *pUnit )
 
 void CMineStaticObject::Segment()
 {
-	nextSegmTime = curTime + NRandom::Random( 500, 1000 ); RecordRandomCall();
+	nextSegmTime = curTime + NRandom::Random( 500, 1000 );
+	RecordRandomCall();
 
-  CDBPtr<SMineRPGStats> pMineStats = checked_cast<const SMineRPGStats*>( GetStats() );
+	CDBPtr<SMineRPGStats> pMineStats = checked_cast<const SMineRPGStats *>( GetStats() );
 	if ( pMineStats->etype != MT_CHARGE )
 	{
-		CUnitsIter<0,0> it( theDipl.GetNParty( player ), EDI_ENEMY, CVec2(GetCenter().x,GetCenter().y), pMineStats->nTriggerRange * SConsts::TILE_SIZE );
+		CUnitsIter<0, 0> it( theDipl.GetNParty( player ),
+		                     EDI_ENEMY,
+		                     CVec2( GetCenter().x, GetCenter().y ),
+		                     pMineStats->nTriggerRange * SConsts::TILE_SIZE );
 		while ( !it.IsFinished() )
 		{
 			if ( CheckToDetonate( *it ) )
@@ -126,7 +138,10 @@ void CMineStaticObject::Die( const float fDamage )
 	Detonate();
 }
 
-void CMineStaticObject::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CMineStaticObject::TakeDamage( const float fDamage,
+                                    const bool bFromExplosion,
+                                    const int nPlayerOfShoot,
+                                    CAIUnit *pShotUnit )
 {
 	if ( bFromExplosion && fHP > 0 )
 	{
@@ -151,13 +166,14 @@ void CMineStaticObject::SetVisible( int nParty, bool bVis )
 {
 	if ( nParty != theDipl.GetNeutralParty() )
 	{
-		mVisibleStatus = ( mVisibleStatus & ~( 1UL << nParty ) ) | ( uint32_t(bVis) << nParty );
+		mVisibleStatus = ( mVisibleStatus & ~( 1UL << nParty ) ) | ( uint32_t( bVis ) << nParty );
 
 		if ( theDipl.GetDiplStatusForParties( nParty, theDipl.GetMyParty() ) == EDI_FRIEND )
 		{
 			RegisterInWorld();
 			if ( theDipl.GetNParty( player ) != nParty )
-				theFeedBackSystem.AddFeedbackAndForget( nUniqueID, CVec2( GetCenter().x, GetCenter().y ), EFB_MINE_SIGHTED, -1 );
+				theFeedBackSystem.AddFeedbackAndForget(
+						nUniqueID, CVec2( GetCenter().x, GetCenter().y ), EFB_MINE_SIGHTED, -1 );
 		}
 	}
 }
@@ -169,11 +185,8 @@ const bool CMineStaticObject::IsVisible( const uint8_t nParty ) const
 
 bool CMineStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
-	return
-		(	eAction == ACTION_NOTIFY_UPDATE_DIPLOMACY ||
-		eAction == ACTION_NOTIFY_TREE_BROKEN ||
-		eAction == ACTION_NOTIFY_CHANGE_FRAME_INDEX ||
-		eAction == ACTION_NOTIFY_DISSAPEAR_OBJ ||
-		//eAction == ACTION_NOTIFY_DELETED_ST_OBJ ||
-		eAction == ACTION_NOTIFY_SILENT_DEATH );
+	return ( eAction == ACTION_NOTIFY_UPDATE_DIPLOMACY || eAction == ACTION_NOTIFY_TREE_BROKEN ||
+	         eAction == ACTION_NOTIFY_CHANGE_FRAME_INDEX || eAction == ACTION_NOTIFY_DISSAPEAR_OBJ ||
+	         //eAction == ACTION_NOTIFY_DELETED_ST_OBJ ||
+	         eAction == ACTION_NOTIFY_SILENT_DEATH );
 }

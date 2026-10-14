@@ -29,15 +29,12 @@ CInterfaceCredits::~CInterfaceCredits()
 		Scene()->RemoveScreen( pScreen );
 }
 
-
-
-
 bool CInterfaceCredits::Init()
 {
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	pReactions = new CReactions( pScreen, this );
-	if ( AddUIScreen(pScreen, "CreditsScreen", pReactions) == false )
+	if ( AddUIScreen( pScreen, "CreditsScreen", pReactions ) == false )
 		return false;
 	pText = GetChildChecked<IWindow>( pScreen, "CreditsText", true );
 	IScrollableContainer *pScroll = GetChildChecked<IScrollableContainer>( pScreen, "CreditsScroll", true );
@@ -113,18 +110,14 @@ bool CInterfaceCredits::ProcessEvent( const SGameMessage &msg )
 
 // CICWinLooseDialog
 
-void CICInterfaceCredist::PreCreate()
-{
-}
+void CICInterfaceCredist::PreCreate() {}
 
 void CICInterfaceCredist::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICInterfaceCredist::Configure( const char *pszConfig )
-{
-}
+void CICInterfaceCredist::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1119C382, CInterfaceCredits )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CREDITS, CICInterfaceCredist )

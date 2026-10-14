@@ -49,10 +49,10 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 		rcDelta.y2 = pIconsSet->hpBarColors[1].y2 - pIconsSet->hpBarColors[0].y2;
 		for ( int i = DEF_HPBAR_PARTS_NUM; i < hpBarTexCoords.size(); ++i )
 		{
-			hpBarTexCoords[i].x1 = pIconsSet->hpBarColors[0].x1 + rcDelta.x1 * (i - DEF_HPBAR_PARTS_NUM );
-			hpBarTexCoords[i].y1 = pIconsSet->hpBarColors[0].y1 + rcDelta.y1 * (i - DEF_HPBAR_PARTS_NUM );
-			hpBarTexCoords[i].x2 = pIconsSet->hpBarColors[0].x2 + rcDelta.x2 * (i - DEF_HPBAR_PARTS_NUM );
-			hpBarTexCoords[i].y2 = pIconsSet->hpBarColors[0].y2 + rcDelta.y2 * (i - DEF_HPBAR_PARTS_NUM );
+			hpBarTexCoords[i].x1 = pIconsSet->hpBarColors[0].x1 + rcDelta.x1 * ( i - DEF_HPBAR_PARTS_NUM );
+			hpBarTexCoords[i].y1 = pIconsSet->hpBarColors[0].y1 + rcDelta.y1 * ( i - DEF_HPBAR_PARTS_NUM );
+			hpBarTexCoords[i].x2 = pIconsSet->hpBarColors[0].x2 + rcDelta.x2 * ( i - DEF_HPBAR_PARTS_NUM );
+			hpBarTexCoords[i].y2 = pIconsSet->hpBarColors[0].y2 + rcDelta.y2 * ( i - DEF_HPBAR_PARTS_NUM );
 		}
 	}
 
@@ -75,13 +75,16 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 	rectLayout.rects.reserve( 256 );
 
 	fHPColOffset = (std::max)( ( ( hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1 ) -
-		( hpBarTexCoords[DEF_HPBAR_PARTS_NUM].x2 - hpBarTexCoords[DEF_HPBAR_PARTS_NUM].x1 ) ), 1.0f );
+	                             ( hpBarTexCoords[DEF_HPBAR_PARTS_NUM].x2 - hpBarTexCoords[DEF_HPBAR_PARTS_NUM].x1 ) ),
+	                           1.0f );
 	fHPColExpand = (std::max)( ( hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1 - fHPColOffset ) * 2, 0.0f );
 
 	bNeedUpdate = true;
 }
 
-inline void CVisObjIconsManager::ProjectIcon( CVisObjIconsManager::SObjIcon &icon, const SHMatrix &matr, const CVec2 &vViewportSize )
+inline void CVisObjIconsManager::ProjectIcon( CVisObjIconsManager::SObjIcon &icon,
+                                              const SHMatrix &matr,
+                                              const CVec2 &vViewportSize )
 {
 	CVec4 vSrcPos;
 	matr.RotateHVector( &vSrcPos, icon.vPos );
@@ -95,7 +98,8 @@ inline void CVisObjIconsManager::ProjectIcon( CVisObjIconsManager::SObjIcon &ico
 	const float fOffsetX = ( vSrcPos.x * fW + 1.0f ) * 0.5f;
 	const float fOffsetY = ( vSrcPos.y * fW + 1.0f ) * 0.5f;
 
-	if ( ( fOffsetX < 0.0f ) || ( fOffsetX > 1.0f ) || ( fOffsetY < 0.0f ) || ( fOffsetY > 1.0f ) || ( icon.fDepth < 0.0f ) || fW < 0.0f )
+	if ( ( fOffsetX < 0.0f ) || ( fOffsetX > 1.0f ) || ( fOffsetY < 0.0f ) || ( fOffsetY > 1.0f ) ||
+	     ( icon.fDepth < 0.0f ) || fW < 0.0f )
 		icon.fDepth = -1.0f; // for not processing after sorting
 	else
 	{
@@ -113,10 +117,10 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 
 		const float fScrOffsetX = icon.nScrOffsetX;
 		const float fScrOffsetY = icon.nScrOffsetY;
-		const float fHPBarLength = (hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1) +
-			icon.nHPBarBaseLength + (hpBarTexCoords[2].x2 - hpBarTexCoords[2].x1);
+		const float fHPBarLength = ( hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1 ) + icon.nHPBarBaseLength +
+		                           ( hpBarTexCoords[2].x2 - hpBarTexCoords[2].x1 );
 		const float fIconsAboveOffsetY = fScrOffsetY - DEF_ICONS_ABOVE_Y;
-		const float fIconsBelowOffsetY = fScrOffsetY + (hpBarTexCoords[0].y2 - hpBarTexCoords[0].y1) + DEF_ICONS_BELOW_Y;
+		const float fIconsBelowOffsetY = fScrOffsetY + ( hpBarTexCoords[0].y2 - hpBarTexCoords[0].y1 ) + DEF_ICONS_BELOW_Y;
 
 		// add common icons
 		if ( !icon.icons.empty() )
@@ -129,9 +133,9 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 				const SSingleIcon &baseIcon = singleIcons[*it];
 				fIconsSizeX += baseIcon.texCoords.x2 - baseIcon.texCoords.x1;
 			}
-			fIconsSizeX += DEF_ICONS_GAP_X * (icon.icons.size() - 1);
+			fIconsSizeX += DEF_ICONS_GAP_X * ( icon.icons.size() - 1 );
 			if ( fIconsSizeX > fHPBarLength )
-				fIconsOffsetX += (fIconsSizeX - fHPBarLength) * 0.5f;
+				fIconsOffsetX += ( fIconsSizeX - fHPBarLength ) * 0.5f;
 
 			for ( std::vector<int>::const_iterator it = icon.icons.begin(); it != icon.icons.end(); ++it )
 			{
@@ -176,7 +180,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 			const SSingleIcon &baseIcon = singleIcons[icon.nIconDamagedBuilding];
 			rect.fSizeX = baseIcon.texCoords.x2 - baseIcon.texCoords.x1;
 			rect.fSizeY = baseIcon.texCoords.y2 - baseIcon.texCoords.y1;
-			rect.fX = fScrOffsetX + (fHPBarLength - rect.fSizeX) * 0.5f;
+			rect.fX = fScrOffsetX + ( fHPBarLength - rect.fSizeX ) * 0.5f;
 			rect.fY = fIconsAboveOffsetY - rect.fSizeY;
 			rect.sTex.rcTexRect = baseIcon.texCoords;
 			rectLayout.rects.push_back( rect );
@@ -288,7 +292,7 @@ inline void CVisObjIconsManager::UpdateIcon( SObjIcon &icon )
 
 	if ( ( icon.fDepth >= 0.0f ) || ( bWasInside ) )
 		bNeedUpdate = true;
-		//RegenerateAllIconsRects();
+	//RegenerateAllIconsRects();
 }
 
 void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec3 &vPos )
@@ -296,7 +300,7 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 	CObjIconsHash::iterator itFind = objIcons.find( iconInfo.nID );
 	if ( itFind == objIcons.end() ) // create new
 	{
-		itFind = objIcons.insert( std::pair<int,SObjIcon>( iconInfo.nID, SObjIcon( iconInfo.nID, -1 ) ) ).first;
+		itFind = objIcons.insert( std::pair<int, SObjIcon>( iconInfo.nID, SObjIcon( iconInfo.nID, -1 ) ) ).first;
 	}
 
 	SObjIcon &icon = itFind->second;

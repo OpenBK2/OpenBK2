@@ -32,12 +32,10 @@ class CSimpleChecksumLog : public ICheckSumLog
 	det_map<int, unsigned long> entries1;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bEntries2 = {};
+
 public:
-	CSimpleChecksumLog() : bEntries2( false ) {  }
-	void SetEntries2()
-	{
-		bEntries2 = true;
-	}
+	CSimpleChecksumLog() : bEntries2( false ) {}
+	void SetEntries2() { bEntries2 = true; }
 	virtual bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
 	{
 		if ( bEntries2 )
@@ -45,7 +43,6 @@ public:
 			const unsigned long entry = entries1[nEntry];
 			if ( ulChecksum == entry )
 			{
-
 			}
 			else
 			{
@@ -61,8 +58,8 @@ public:
 bool bShowUnderConstruction = false;
 #endif
 
-
-void CUnderConstructionObject::ShowUnderConstruction( EActionCommand eCommand, const CVec2 &vStart, const CVec2 &vFinish, bool bFinished, CAILogic *pAI )
+void CUnderConstructionObject::ShowUnderConstruction(
+		EActionCommand eCommand, const CVec2 &vStart, const CVec2 &vFinish, bool bFinished, CAILogic *pAI )
 {
 	if ( bFinished )
 	{
@@ -73,36 +70,35 @@ void CUnderConstructionObject::ShowUnderConstruction( EActionCommand eCommand, c
 	CExistingObjectModifyAI prohibited;
 	switch ( eCommand )
 	{
-	case ACTION_COMMAND_BUILD_FENCE_BEGIN:
-		// create CFenceCreation, PreCreate, create update and add it to updater
-		{
-			CPtr<CComplexObstacleCreation> pFence = new CComplexObstacleCreation( theDipl.GetMyNumber(), false );
+		case ACTION_COMMAND_BUILD_FENCE_BEGIN:
+			// create CFenceCreation, PreCreate, create update and add it to updater
+			{
+				CPtr<CComplexObstacleCreation> pFence = new CComplexObstacleCreation( theDipl.GetMyNumber(), false );
 
-			pFence->PreCreate( vStart, vFinish, false );
-			CPtr<SAIObjectsUnderConstructionUpdate> pUpdate = new SAIObjectsUnderConstructionUpdate( true );
-			pFence->CreateObjects( pUpdate );
-			updater.AddUpdate( pUpdate, ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION, 0, 0 );
-		}
+				pFence->PreCreate( vStart, vFinish, false );
+				CPtr<SAIObjectsUnderConstructionUpdate> pUpdate = new SAIObjectsUnderConstructionUpdate( true );
+				pFence->CreateObjects( pUpdate );
+				updater.AddUpdate( pUpdate, ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION, 0, 0 );
+			}
 
-		break;
-	case ACTION_COMMAND_ENTRENCH_BEGIN:
-		// create CFenceCreation, PreCreate, create update and add it to updater
-		{
-			CPtr<CEntrenchmentCreation> pFence = new CEntrenchmentCreation( theDipl.GetMyNumber(), false );
+			break;
+		case ACTION_COMMAND_ENTRENCH_BEGIN:
+			// create CFenceCreation, PreCreate, create update and add it to updater
+			{
+				CPtr<CEntrenchmentCreation> pFence = new CEntrenchmentCreation( theDipl.GetMyNumber(), false );
 
-			pFence->PreCreate( vStart, vFinish, false );
-			CPtr<SAIObjectsUnderConstructionUpdate> pUpdate = new SAIObjectsUnderConstructionUpdate( true );
-			pFence->CreateObjects( pUpdate );
-			updater.AddUpdate( pUpdate, ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION, 0, 0 );
+				pFence->PreCreate( vStart, vFinish, false );
+				CPtr<SAIObjectsUnderConstructionUpdate> pUpdate = new SAIObjectsUnderConstructionUpdate( true );
+				pFence->CreateObjects( pUpdate );
+				updater.AddUpdate( pUpdate, ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION, 0, 0 );
+			}
 
-		}
+			break;
+		case ACTION_COMMAND_LAND_MINE:
 
-		break;
-	case ACTION_COMMAND_LAND_MINE:
-
-		break;
-	default:
-		NI_ASSERT( false, fmt::format( "wrong build command {}", int( eCommand ) ) );
+			break;
+		default:
+			NI_ASSERT( false, fmt::format( "wrong build command {}", int( eCommand ) ) );
 	}
 }
 

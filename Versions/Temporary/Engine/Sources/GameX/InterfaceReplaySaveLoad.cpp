@@ -159,9 +159,12 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 		ITextView *pItemPlayers = GetChildChecked<ITextView>( pWnd, "ItemPlayers", true );
 		if ( pItemName )
 			pItemName->SetText( pItemName->GetDBText() + NStr::ToUnicode( entry.szName ) );
-		std::wstring wszDate = NStr::ToUnicode( fmt::format("{:02d}.{:02d}.{:04d}<br>{:02d}:{:02d}",
-			entry.time.wDay, entry.time.wMonth, entry.time.wYear,
-			entry.time.wHour, entry.time.wMinute ) );
+		std::wstring wszDate = NStr::ToUnicode( fmt::format( "{:02d}.{:02d}.{:04d}<br>{:02d}:{:02d}",
+		                                                     entry.time.wDay,
+		                                                     entry.time.wMonth,
+		                                                     entry.time.wYear,
+		                                                     entry.time.wHour,
+		                                                     entry.time.wMinute ) );
 		if ( pItemDate )
 			pItemDate->SetText( pItemDate->GetDBText() + wszDate );
 
@@ -172,7 +175,7 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 				++nNumPlayers;
 		}
 		if ( pItemPlayers )
-			pItemPlayers->SetText( pItemPlayers->GetDBText() + NStr::ToUnicode( std::to_string(  nNumPlayers ) ) );
+			pItemPlayers->SetText( pItemPlayers->GetDBText() + NStr::ToUnicode( std::to_string( nNumPlayers ) ) );
 
 		entry.pItem = pWnd;
 		pReplayList->PushBack( pWnd, true );
@@ -269,7 +272,8 @@ void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
 	{
 		if ( pMap )
 		{
-			pMinimapWnd->SetLoadingMapParams( pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE, pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
+			pMinimapWnd->SetLoadingMapParams( pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
+			                                  pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
 			pMinimapWnd->SetTexture( pMap->pMiniMap->pTexture );
 		}
 		else
@@ -310,7 +314,8 @@ void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
 
 		int nSizeX, nSizeY;
 		pWnd->GetPlacement( 0, 0, &nSizeX, &nSizeY );
-		pWnd->SetPlacement( nMinimapX + vPos.x - nSizeX * 0.5f, nMinimapY + vPos.y - nSizeY * 0.5f, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+		pWnd->SetPlacement(
+				nMinimapX + vPos.x - nSizeX * 0.5f, nMinimapY + vPos.y - nSizeY * 0.5f, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 
 		CPtr<CColorBackground> pColourBgr = new CColorBackground();
 		pColourBgr->nColor = pMPConsts->playerColorInfos[slot.nColour].nColor | 0xFF000000;
@@ -346,9 +351,9 @@ void CInterfaceReplaySaveLoad::DoSaveReplay()
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	std::string szErrorCode = bResult ? "T_SAVE_SUCCESSFUL" : "T_SAVE_FAILED";
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", GetScreen()->GetTextEntry( szErrorCode ) ).c_str() );
-
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOk", GetScreen()->GetTextEntry( szErrorCode ) ).c_str() );
 }
 
 bool CInterfaceReplaySaveLoad::OnSave()
@@ -366,8 +371,9 @@ bool CInterfaceReplaySaveLoad::OnSave()
 		{
 			eQuestion = EQM_OVERWRITE;
 			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-				GetScreen()->GetTextEntry( "T_OVERWRITE_QUESTION" ) ).c_str() );
+			                    CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+			                                                     GetScreen()->GetTextEntry( "T_OVERWRITE_QUESTION" ) )
+			                        .c_str() );
 			return true;
 		}
 	}
@@ -406,9 +412,10 @@ bool CInterfaceReplaySaveLoad::OnDelete()
 		return true;
 
 	eQuestion = EQM_DELETE;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-		GetScreen()->GetTextEntry( "T_DELETE_QUESTION" ) ).c_str() );
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", GetScreen()->GetTextEntry( "T_DELETE_QUESTION" ) )
+					.c_str() );
 	return true;
 }
 
@@ -464,9 +471,7 @@ void CInterfaceReplaySaveLoad::MsgCancel( const SGameMessage &msg )
 
 // CICInterfaceReplaySaveLoad
 
-void CICInterfaceReplaySaveLoad::PreCreate()
-{
-}
+void CICInterfaceReplaySaveLoad::PreCreate() {}
 
 void CICInterfaceReplaySaveLoad::PostCreate( IInterface *pInterface )
 {

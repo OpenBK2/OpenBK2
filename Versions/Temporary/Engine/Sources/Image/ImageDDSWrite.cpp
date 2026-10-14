@@ -3,9 +3,9 @@
 #include "ImageDDS.h"
 
 #include "DDS.h"
-#include "ImageInternal.h"		// SPixelConvertInfo
-#include "ImageConvertor.h"	// Convert, between packed ARGB and CVec4
-#include "ImageMip.h"				// GenerateMipLevel, GenerateNormals
+#include "ImageInternal.h"  // SPixelConvertInfo
+#include "ImageConvertor.h" // Convert, between packed ARGB and CVec4
+#include "ImageMip.h"       // GenerateMipLevel, GenerateNormals
 #include "ImageScale.h"
 
 #include "System/FilePath.h"
@@ -19,7 +19,6 @@
 #include <vector>
 
 #include <fmt/format.h>
-
 
 using namespace NGfx;
 
@@ -58,15 +57,33 @@ static bool GetDDSPixelFormat( NGfx::EPixelFormat format, SDDSPixelFormat *pForm
 {
 	switch ( format )
 	{
-		case CF_DXT1:     *pFormat = DDSPF_DXT1;     break;
-		case CF_DXT2:     *pFormat = DDSPF_DXT2;     break;
-		case CF_DXT3:     *pFormat = DDSPF_DXT3;     break;
-		case CF_DXT4:     *pFormat = DDSPF_DXT4;     break;
-		case CF_DXT5:     *pFormat = DDSPF_DXT5;     break;
-		case CF_A8R8G8B8: *pFormat = DDSPF_A8R8G8B8; break;
-		case CF_A4R4G4B4: *pFormat = DDSPF_A4R4G4B4; break;
-		case CF_A1R5G5B5: *pFormat = DDSPF_A1R5G5B5; break;
-		case CF_R5G6B5:   *pFormat = DDSPF_R5G6B5;   break;
+		case CF_DXT1:
+			*pFormat = DDSPF_DXT1;
+			break;
+		case CF_DXT2:
+			*pFormat = DDSPF_DXT2;
+			break;
+		case CF_DXT3:
+			*pFormat = DDSPF_DXT3;
+			break;
+		case CF_DXT4:
+			*pFormat = DDSPF_DXT4;
+			break;
+		case CF_DXT5:
+			*pFormat = DDSPF_DXT5;
+			break;
+		case CF_A8R8G8B8:
+			*pFormat = DDSPF_A8R8G8B8;
+			break;
+		case CF_A4R4G4B4:
+			*pFormat = DDSPF_A4R4G4B4;
+			break;
+		case CF_A1R5G5B5:
+			*pFormat = DDSPF_A1R5G5B5;
+			break;
+		case CF_R5G6B5:
+			*pFormat = DDSPF_R5G6B5;
+			break;
 		default:
 			return false;
 	}
@@ -110,16 +127,16 @@ static void SwizzleToRGBA( std::vector<squish::u8> *pRes, const CArray2D<uint32_
 	const int nSizeX = image.GetSizeX();
 	const int nSizeY = image.GetSizeY();
 	pRes->resize( nSizeX * nSizeY * 4 );
-	squish::u8 *pDst = &(*pRes)[0];
+	squish::u8 *pDst = &( *pRes )[0];
 	for ( int y = 0; y < nSizeY; ++y )
 	{
 		const uint32_t *pSrc = &image[y][0];
 		for ( int x = 0; x < nSizeX; ++x, ++pSrc, pDst += 4 )
 		{
-			pDst[0] = static_cast<squish::u8>( ( *pSrc >> 16 ) & 0xff );	// R
-			pDst[1] = static_cast<squish::u8>( ( *pSrc >>  8 ) & 0xff );	// G
-			pDst[2] = static_cast<squish::u8>( ( *pSrc       ) & 0xff );	// B
-			pDst[3] = static_cast<squish::u8>( ( *pSrc >> 24 ) & 0xff );	// A
+			pDst[0] = static_cast<squish::u8>( ( *pSrc >> 16 ) & 0xff ); // R
+			pDst[1] = static_cast<squish::u8>( ( *pSrc >> 8 ) & 0xff );  // G
+			pDst[2] = static_cast<squish::u8>( ( *pSrc ) & 0xff );       // B
+			pDst[3] = static_cast<squish::u8>( ( *pSrc >> 24 ) & 0xff ); // A
 		}
 	}
 }
@@ -143,7 +160,7 @@ static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> 
 		std::vector<squish::u8> rgba;
 		SwizzleToRGBA( &rgba, image );
 		pRes->resize( squish::GetStorageRequirements( nSizeX, nSizeY, nFlags ) );
-		squish::CompressImage( &rgba[0], nSizeX, nSizeY, &(*pRes)[0], nFlags, s_colourMetric );
+		squish::CompressImage( &rgba[0], nSizeX, nSizeY, &( *pRes )[0], nFlags, s_colourMetric );
 		return true;
 	}
 
@@ -152,7 +169,7 @@ static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> 
 		// The in-memory layout is already A8R8G8B8 little-endian, which is what
 		// the pixel format in the header describes.
 		pRes->resize( nSizeX * nSizeY * 4 );
-		memcpy( &(*pRes)[0], &image[0][0], pRes->size() );
+		memcpy( &( *pRes )[0], &image[0][0], pRes->size() );
 		return true;
 	}
 
@@ -162,7 +179,7 @@ static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> 
 	// The 16 bit formats quantise by truncation, as the removed S3TC path did.
 	SPixelConvertInfo pci( ddsformat.dwABitMask, ddsformat.dwRBitMask, ddsformat.dwGBitMask, ddsformat.dwBBitMask );
 	pRes->resize( nSizeX * nSizeY * 2 );
-	uint16_t *pDst = reinterpret_cast<uint16_t *>( &(*pRes)[0] );
+	uint16_t *pDst = reinterpret_cast<uint16_t *>( &( *pRes )[0] );
 	for ( int y = 0; y < nSizeY; ++y )
 	{
 		const uint32_t *pSrc = &image[y][0];
@@ -180,7 +197,8 @@ static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> 
 //! ones are 0x00001007 with 0x00001000. dwPitchOrLinearSize is 0 throughout,
 //! and both reserved blocks are zero in every one of them, so there is no tool
 //! watermark to reproduce.
-static void MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
+static void
+MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
 	GetDDSPixelFormat( ePixelFormat, &pHdr->ddspf );
 	pHdr->dwWidth = nWidth;
@@ -221,8 +239,8 @@ static void MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPix
 //! is a property of the level being compressed: normals have to come from that
 //! level's own height field, and premultiplication has to happen after the
 //! averaging that produced the level, not before it.
-static void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType,
-	bool bWrapX, bool bWrapY, float fMappingSize )
+static void
+PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType, bool bWrapX, bool bWrapY, float fMappingSize )
 {
 	switch ( eImageType )
 	{
@@ -247,7 +265,7 @@ static void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImage
 			{
 				for ( int x = 0; x < pSrc->GetSizeX(); ++x )
 				{
-					CVec4 &v = (*pSrc)[y][x];
+					CVec4 &v = ( *pSrc )[y][x];
 					v = CVec4( v.x * v.a, v.y * v.a, v.z * v.a, v.a );
 				}
 			}
@@ -259,7 +277,7 @@ static void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImage
 			{
 				for ( int x = 0; x < pSrc->GetSizeX(); ++x )
 				{
-					CVec4 &v = (*pSrc)[y][x];
+					CVec4 &v = ( *pSrc )[y][x];
 					v = CVec4( v.x * v.a, v.y * v.a, v.z * v.a, 0 );
 				}
 			}
@@ -279,9 +297,14 @@ static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelF
 //! `src` is the copy PrepareImageForCompression works on. Downsampling the
 //! prepared image instead would premultiply twice and would average normals
 //! rather than heights.
-static void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<uint32_t> > *pMips,
-	const CArray2D<CVec4> &srcImage, EImageType eImageType, NGfx::EPixelFormat ePixelFormat,
-	int _nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
+static void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<uint32_t>> *pMips,
+                                                       const CArray2D<CVec4> &srcImage,
+                                                       EImageType eImageType,
+                                                       NGfx::EPixelFormat ePixelFormat,
+                                                       int _nNumMipLevels,
+                                                       bool bWrapX,
+                                                       bool bWrapY,
+                                                       float fMappingSize )
 {
 	const int nNumMipLevels = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), ePixelFormat, _nNumMipLevels );
 	pMips->resize( nNumMipLevels );
@@ -291,7 +314,7 @@ static void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<uint
 	{
 		PrepareImageForCompression( &src, eImageType, bWrapX, bWrapY, fMappingSize );
 
-		CArray2D<uint32_t> &dst = (*pMips)[i];
+		CArray2D<uint32_t> &dst = ( *pMips )[i];
 		dst.SetSizes( src.GetSizeX(), src.GetSizeY() );
 		Convert( &dst, src );
 
@@ -304,12 +327,12 @@ static void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<uint
 static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
 	// Include the base level and allow the tail down to 1x1, including DXT blocks.
-	const int nMaxPossible = GetMSB( (std::max)(nWidth, nHeight) ) + 1;
+	const int nMaxPossible = GetMSB( (std::max)( nWidth, nHeight ) ) + 1;
 	return nNumMipLevels <= 0 ? nMaxPossible : (std::min)( nNumMipLevels, nMaxPossible );
 }
 
-static bool WriteDDS( const std::string &szFileName, NGfx::EPixelFormat ePixelFormat,
-	const std::vector<CArray2D<uint32_t> > &mips )
+static bool
+WriteDDS( const std::string &szFileName, NGfx::EPixelFormat ePixelFormat, const std::vector<CArray2D<uint32_t>> &mips )
 {
 	ASSERT( !mips.empty() );
 	if ( mips.empty() )
@@ -318,14 +341,16 @@ static bool WriteDDS( const std::string &szFileName, NGfx::EPixelFormat ePixelFo
 	SDDSPixelFormat ddsformat;
 	if ( !GetDDSPixelFormat( ePixelFormat, &ddsformat ) )
 	{
-		NI_ASSERT( 0, fmt::format( "Unsupported destination format {}, DDS conversion failed (\"{}\")",
-			static_cast<int>( ePixelFormat ), szFileName ) );
+		NI_ASSERT( 0,
+		           fmt::format( "Unsupported destination format {}, DDS conversion failed (\"{}\")",
+		                        static_cast<int>( ePixelFormat ),
+		                        szFileName ) );
 		return false;
 	}
 
 	// Compress everything before the file is created, so a failure leaves no
 	// truncated .dds behind for the exporter to pick up as a finished one.
-	std::vector<std::vector<uint8_t> > levels( mips.size() );
+	std::vector<std::vector<uint8_t>> levels( mips.size() );
 	for ( size_t i = 0; i < mips.size(); ++i )
 	{
 		if ( !CompressLevel( &levels[i], mips[i], ePixelFormat ) )
@@ -345,19 +370,25 @@ static bool WriteDDS( const std::string &szFileName, NGfx::EPixelFormat ePixelFo
 		NI_ASSERT( 0, fmt::format( "Can't create DDS file \"{}\"", szFileName ) );
 		return false;
 	}
-	stream.Write( &hdr, sizeof(hdr) );
+	stream.Write( &hdr, sizeof( hdr ) );
 	for ( size_t i = 0; i < levels.size(); ++i )
 		stream.Write( &levels[i][0], levels[i].size() );
 	return stream.IsOk();
 }
 
-bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
-	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
+bool ConvertAndSaveAsDDS( const std::string &szFileName,
+                          const CArray2D<uint32_t> &srcImage,
+                          EImageType eImageType,
+                          NGfx::EPixelFormat nSubFormat,
+                          int nNumMipLevels,
+                          bool bWrapX,
+                          bool bWrapY,
+                          float fMappingSize )
 {
 	if ( srcImage.GetSizeX() <= 0 || srcImage.GetSizeY() <= 0 )
 		return false;
 
-	std::vector<CArray2D<uint32_t> > mips;
+	std::vector<CArray2D<uint32_t>> mips;
 
 	if ( eImageType == IMAGE_TYPE_PICTURE_FASTMIP )
 	{
@@ -372,7 +403,7 @@ bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArray2D<uint32_t
 		{
 			const int nSizeX = (std::max)( 1, srcImage.GetSizeX() >> nLevel );
 			const int nSizeY = (std::max)( 1, srcImage.GetSizeY() >> nLevel );
-			CArray2D<uint32_t> &image = mips[ nLevel ];
+			CArray2D<uint32_t> &image = mips[nLevel];
 			image.SetSizes( nSizeX, nSizeY );
 			Scale( &image, srcImage, IMAGE_SCALE_METHOD_LANCZOS3 );
 		}
@@ -384,8 +415,8 @@ bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArray2D<uint32_t
 		CArray2D<CVec4> trueImage;
 		trueImage.SetSizes( srcImage.GetSizeX(), srcImage.GetSizeY() );
 		Convert( &trueImage, srcImage );
-		GenerateMipLevelsAndPrepareForCompression( &mips, trueImage, eImageType, nSubFormat,
-			nNumMipLevels, bWrapX, bWrapY, fMappingSize );
+		GenerateMipLevelsAndPrepareForCompression(
+				&mips, trueImage, eImageType, nSubFormat, nNumMipLevels, bWrapX, bWrapY, fMappingSize );
 	}
 
 	return WriteDDS( szFileName, nSubFormat, mips );

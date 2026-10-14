@@ -9,13 +9,14 @@
 
 #include <cstdint>
 
-class CMiniMapLayer :  public CPtrFuncBase< NGfx::CTexture >
+class CMiniMapLayer : public CPtrFuncBase<NGfx::CTexture>
 {
-	OBJECT_BASIC_METHODS(CMiniMapLayer);
+	OBJECT_BASIC_METHODS( CMiniMapLayer );
 	CArray2D<NGfx::SPixel8888> points;
 	int nWidth, nHeight;
 	bool bNeedUpdate;
 	int nLastUpdateTime;
+
 protected:
 	bool NeedUpdate();
 	void Recalc();
@@ -29,7 +30,11 @@ public:
 	void PutPixel( const int x, const int y, const NGfx::SPixel8888 &color );
 	const NGfx::SPixel8888 GetPixel( const int x, const int y );
 	void SetNeedUpdate() { bNeedUpdate = true; }
-	void SetNeedUpdateNow() { bNeedUpdate = true; nLastUpdateTime = 0; }
+	void SetNeedUpdateNow()
+	{
+		bNeedUpdate = true;
+		nLastUpdateTime = 0;
+	}
 	void Clear();
 
 	int operator&( IBinSaver &saver );
@@ -41,9 +46,10 @@ class CDrawMiniMapPixelFunctional
 	CArray2D1Bit *pMaskMiniMap;
 	NGfx::SPixel8888 color;
 	int nWidth, nHeight;
+
 public:
 	CDrawMiniMapPixelFunctional( CMiniMapLayer *_pMiniMapLayer, NGfx::SPixel8888 _color, CArray2D1Bit *_pMaskMiniMap )
-		: pMiniMapLayer( _pMiniMapLayer ), color( _color ), pMaskMiniMap( _pMaskMiniMap )
+			: pMiniMapLayer( _pMiniMapLayer ), color( _color ), pMaskMiniMap( _pMaskMiniMap )
 	{
 		nWidth = pMiniMapLayer->GetWidth();
 		nHeight = pMiniMapLayer->GetHeight();
@@ -62,7 +68,7 @@ public:
 
 class CWindowMiniMap : public CWindow, public IMiniMap
 {
-	OBJECT_BASIC_METHODS(CWindowMiniMap);
+	OBJECT_BASIC_METHODS( CWindowMiniMap );
 
 	struct STransform
 	{
@@ -71,11 +77,16 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 		float fCos;
 		CVec2 vSize;
 		CVec2 vCenter;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&fSin); f.Add(3,&fCos); f.Add(4,&vSize); f.Add(5,&vCenter); return 0; }
-
-		STransform()
+		ZEND int operator&( IBinSaver &f )
 		{
+			f.Add( 2, &fSin );
+			f.Add( 3, &fCos );
+			f.Add( 4, &vSize );
+			f.Add( 5, &vCenter );
+			return 0;
 		}
+
+		STransform() {}
 
 		void Init( float fAngle, const CVec2 &_vSize, const CVec2 &_vCenter )
 		{
@@ -89,18 +100,14 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 		CVec2 Transform( const CVec2 &_vPos ) const
 		{
 			CVec2 vPos( _vPos.x - 0.5f, _vPos.y - 0.5f );
-			return CVec2( (fCos * vPos.x + fSin * vPos.y) * vSize.x,
-				-(-fSin * vPos.x + fCos * vPos.y) * vSize.y ) + vCenter;
+			return CVec2( ( fCos * vPos.x + fSin * vPos.y ) * vSize.x, -( -fSin * vPos.x + fCos * vPos.y ) * vSize.y ) +
+			       vCenter;
 		}
 		CVec2 RotateBackgroundPos( const CVec2 &vPos ) const
 		{
-			return CVec2( (fCos * vPos.x - fSin * vPos.y),
-				(fSin * vPos.x + fCos * vPos.y) );
+			return CVec2( ( fCos * vPos.x - fSin * vPos.y ), ( fSin * vPos.x + fCos * vPos.y ) );
 		}
-		float TransformRadius( float fRadius ) const
-		{
-			return fRadius * (vSize.x + vSize.y) * 0.5f;
-		}
+		float TransformRadius( float fRadius ) const { return fRadius * ( vSize.x + vSize.y ) * 0.5f; }
 		CVec2 TransformBack( const CVec2 &_vPos ) const
 		{
 			CVec2 vPos( _vPos - vCenter );
@@ -120,11 +127,11 @@ protected:
 	float mScreenToMap1[2][3], mScreenToMap2[2][3];
 	float mMapToScreen1[2][3], mMapToScreen2[2][3];
 
-	CObj< CMiniMapLayer > pUnitsLayer;
-	CObj< CMiniMapLayer > pWarFogLayer;
-	CObj< CMiniMapLayer > pViewPortLayer;
-	CObj< CMiniMapLayer > pFiguresLayer;
-	CObj< CMiniMapLayer > pRangesLayer;
+	CObj<CMiniMapLayer> pUnitsLayer;
+	CObj<CMiniMapLayer> pWarFogLayer;
+	CObj<CMiniMapLayer> pViewPortLayer;
+	CObj<CMiniMapLayer> pFiguresLayer;
+	CObj<CMiniMapLayer> pRangesLayer;
 
 	bool bRangesPresent;
 
@@ -137,7 +144,7 @@ protected:
 	std::vector<NGfx::SPixel8888> warFogColors;
 	NGfx::SPixel8888 frameColor;
 	CArray2D1Bit maskMiniMap;
-	CDBPtr< NDb::SMaterial > pMaterial;
+	CDBPtr<NDb::SMaterial> pMaterial;
 	std::vector<SMarker> markers;
 
 	bool bRotable;
@@ -151,20 +158,21 @@ protected:
 	float fAdditionalScale;
 	float fPrevRotableAngle;
 
-	CArray2D< std::pair<CVec2, bool> > screenToMap;
+	CArray2D<std::pair<CVec2, bool>> screenToMap;
 	bool bNeedScreenToMapRefresh;
 	CVec2 vOldDir;
 
 	CDBPtr<NDb::STexture> pTexture;
 
 	CVec2 vLastMousePos;
-	CVec2 vSize;	// for caching (optimisation)
+	CVec2 vSize; // for caching (optimisation)
 
 	CDBPtr<NDb::STexture> pRotableBackgroundTexture;
 	CVec2 vRotableBackgroundSize;
 	CDBPtr<NDb::STexture> pRotableNorthPointTexture;
 	CVec2 vRotableNorhtPointSize;
 	CDBPtr<NDb::STexture> pRotableForegroundTexture;
+
 private:
 	CVec2 GetCWindowSize() const;
 	bool CalculateScreenToMapSlow( const CVec2 &vPos, CVec2 *pvRes );
@@ -175,14 +183,15 @@ private:
 	bool MapToScreen( const CVec2 &vMapPos, CVec2 *pvRes ) const;
 	void RadiusMapToScreen( const CVec2 &vMapPos, CVec2 *pvRes );
 	float RadiusMapToScreen( float fRadius );
-	void MakeTransformParams( const CVec2 &vPoint00, const CVec2 &vPoint01,
-		const CVec2 &vPoint10, const CVec2 &vPoint11 );
+	void
+	MakeTransformParams( const CVec2 &vPoint00, const CVec2 &vPoint01, const CVec2 &vPoint10, const CVec2 &vPoint11 );
 	void MakeRotableTransformParams( const CVec2 &vDirView );
 	void MakeMaskMimimap();
 	void UpdateWarFog();
 	void SetBaseRotableParams();
+
 protected:
-	virtual NDb::SWindow* GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance() { return pInstance; }
 
 	bool MsgMouseMoveEmit( const SGameMessage &msg );
 
@@ -203,8 +212,8 @@ public:
 	bool OnButtonUp( const CVec2 &vPos, const int nButton );
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
 
-	void SetUnits( const std::vector< SMiniMapUnitInfo > &vUnits );
-	void SetViewport( const std::vector< CVec2 > &vPoints );
+	void SetUnits( const std::vector<SMiniMapUnitInfo> &vUnits );
+	void SetViewport( const std::vector<CVec2> &vPoints );
 	void SetWarFog( const CArray2D<uint8_t> *pWarFogInfo );
 	void SetMarkers( const std::vector<SMarker> &markers );
 	void SetFigures( const std::vector<SFigure> &figures );
@@ -214,7 +223,7 @@ public:
 	virtual void SetRangeInfo( const int nUnitID, const SShootAreas &rangeInfo );
 	virtual void RemoveAllRangeInfo();
 
-	virtual void SetMaterial( CDBPtr< NDb::SMaterial > pMaterial );
+	virtual void SetMaterial( CDBPtr<NDb::SMaterial> pMaterial );
 	void SetTexture( const NDb::STexture *pTexture );
 
 	void SetAdditionalScale( float fAdditionalScale );

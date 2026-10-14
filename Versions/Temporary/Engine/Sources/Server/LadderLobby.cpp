@@ -17,26 +17,38 @@ extern int MAX_NUMBER_OF_REINFORCEMENTS;
 const int MAX_TECHLEVELS = 100;
 const int MAX_MAPS = 500;
 
-namespace NLadder{
-	void DropFromListByLevel( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-		const int nLevel, const int nDeltaPlus, const int nDeltaMinus );
-	void DropFromListByTeamSize( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-		const int nTeamSize );
-	void DropFromListByHistoricityAndChecksum( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-		const bool bHistoricity, const unsigned int uCheckSum );
-	void DropFromListBySide( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-		const int nSide );
-	void RandomizeList( std::list<int> *pList );
-	float TeamLevel( const std::unordered_map< int, CPtr<CLadderClient> > &players, const std::list<int> &team );
-	void DropWeakestExcept( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pList, const int nException );
-	void DropStrongestExcept( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pList, const int nException );
+namespace NLadder
+{
+void DropFromListByLevel( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                          std::list<int> *pWaitingOrder,
+                          const int nLevel,
+                          const int nDeltaPlus,
+                          const int nDeltaMinus );
+void DropFromListByTeamSize( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                             std::list<int> *pWaitingOrder,
+                             const int nTeamSize );
+void DropFromListByHistoricityAndChecksum( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                                           std::list<int> *pWaitingOrder,
+                                           const bool bHistoricity,
+                                           const unsigned int uCheckSum );
+void DropFromListBySide( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                         std::list<int> *pWaitingOrder,
+                         const int nSide );
+void RandomizeList( std::list<int> *pList );
+float TeamLevel( const std::unordered_map<int, CPtr<CLadderClient>> &players, const std::list<int> &team );
+void DropWeakestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                        std::list<int> *pList,
+                        const int nException );
+void DropStrongestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                          std::list<int> *pList,
+                          const int nException );
 }
 
 class CLadderExperience
 {
 public:
 	int nNewbieLevel;
-	std::unordered_map<int,float> lossFactor;
+	std::unordered_map<int, float> lossFactor;
 	std::unordered_map<int, int> winXP;
 	std::unordered_map<int, int> loseXP;
 	std::vector<int> levelXP;
@@ -87,7 +99,8 @@ public:
 	}
 };
 
-CLadderCacheLocker::CLadderCacheLocker( CClients* _pClients, const std::string &_szNick ) : pClients( _pClients ), szNick( _szNick )
+CLadderCacheLocker::CLadderCacheLocker( CClients *_pClients, const std::string &_szNick )
+		: pClients( _pClients ), szNick( _szNick )
 {
 	pClients->LockLadderInfo( szNick );
 }
@@ -152,12 +165,12 @@ bool CLadderLobby::Segment()
 	{
 		nLastStepTime = nTime;
 		bool bGameCreated = false;
-		for ( int i = 0; i < pConsts->nPlayersPerStep && ! bGameCreated; ++i )
+		for ( int i = 0; i < pConsts->nPlayersPerStep && !bGameCreated; ++i )
 		{
 			bGameCreated = MatchMakingStep();
 		}
-		(*pStatisticsCollector)[ "GamesAverage" ]->Add( float( games.size() ) );
-		(*pStatisticsCollector)[ "PlayersAverage" ]->Add( float( ladderClients.size() ) );
+		( *pStatisticsCollector )["GamesAverage"]->Add( float( games.size() ) );
+		( *pStatisticsCollector )["PlayersAverage"]->Add( float( ladderClients.size() ) );
 
 		// Do something
 		UpdateGames();
@@ -171,7 +184,7 @@ void CLadderLobby::UpdateGames()
 {
 	const uint64_t nTime = GetLongTickCount();
 	std::list<int> gamesToDel;
-	for ( std::unordered_map< int, SLadderGameInfo >::iterator it = games.begin(); it != games.end(); ++it )
+	for ( std::unordered_map<int, SLadderGameInfo>::iterator it = games.begin(); it != games.end(); ++it )
 	{
 		const SLadderGameInfo &gameInfo = it->second;
 		if ( gameInfo.bIsDead && nTime > ( gameInfo.nDeathTime + GAME_DEATH_TIMEOUT ) )
@@ -191,7 +204,7 @@ bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 	if ( games.find( nGameID ) == games.end() )
 		return true;
 
-	SLadderGameInfo &gameInfo = games[ nGameID ];
+	SLadderGameInfo &gameInfo = games[nGameID];
 	const int nTeamSize = gameInfo.team1Players.size();
 
 	if ( gameInfo.bInvalid )
@@ -215,7 +228,9 @@ bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 		return true;
 	}
 
-	for ( std::unordered_map<int,int>::const_iterator it = gameInfo.playerRaces.begin(); it != gameInfo.playerRaces.end(); ++it )
+	for ( std::unordered_map<int, int>::const_iterator it = gameInfo.playerRaces.begin();
+	      it != gameInfo.playerRaces.end();
+	      ++it )
 	{
 		if ( it->second >= NUMBER_OF_RACES_IN_LADDER || it->second < 0 )
 		{
@@ -224,7 +239,9 @@ bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 		}
 	}
 
-	for ( std::unordered_map<int,int>::const_iterator it = gameInfo.unitsKilled.begin(); it != gameInfo.unitsKilled.end(); ++it )
+	for ( std::unordered_map<int, int>::const_iterator it = gameInfo.unitsKilled.begin();
+	      it != gameInfo.unitsKilled.end();
+	      ++it )
 	{
 		if ( it->second < 0 )
 		{
@@ -233,7 +250,8 @@ bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 		}
 	}
 
-	for ( std::unordered_map<int,int>::const_iterator it = gameInfo.unitsLost.begin(); it != gameInfo.unitsLost.end(); ++it )
+	for ( std::unordered_map<int, int>::const_iterator it = gameInfo.unitsLost.begin(); it != gameInfo.unitsLost.end();
+	      ++it )
 	{
 		if ( it->second < 0 )
 		{
@@ -242,7 +260,9 @@ bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 		}
 	}
 
-	for ( std::unordered_map<int,std::vector<int> >::iterator it = gameInfo.reinfUsed.begin(); it != gameInfo.reinfUsed.end(); ++it )
+	for ( std::unordered_map<int, std::vector<int>>::iterator it = gameInfo.reinfUsed.begin();
+	      it != gameInfo.reinfUsed.end();
+	      ++it )
 	{
 		if ( it->second.size() > MAX_NUMBER_OF_REINFORCEMENTS )
 		{
@@ -254,7 +274,10 @@ bool CLadderLobby::CheckGameResultIsFake( const int nGameID )
 	return false;
 }
 
-void CLadderLobby::UpdatePlayerXP( SLadderGameInfo *pGameInfo, const int nPlayerID, SLadderDBInfo *pClientInfo, const bool bWin )
+void CLadderLobby::UpdatePlayerXP( SLadderGameInfo *pGameInfo,
+                                   const int nPlayerID,
+                                   SLadderDBInfo *pClientInfo,
+                                   const bool bWin )
 {
 	if ( pGameInfo->updatedPlayers.find( nPlayerID ) != pGameInfo->updatedPlayers.end() )
 		return;
@@ -267,10 +290,10 @@ void CLadderLobby::UpdatePlayerXP( SLadderGameInfo *pGameInfo, const int nPlayer
 			nPlayerTeam = 1;
 	}
 
-	int nXP = bWin ? pGameInfo->winXP[nPlayerTeam] : ( - pGameInfo->loseXP[nPlayerTeam] );
+	int nXP = bWin ? pGameInfo->winXP[nPlayerTeam] : ( -pGameInfo->loseXP[nPlayerTeam] );
 
 	if ( pClientInfo->nLevel <= pConsts->experience.nNewbieLevel && nXP < 0 )
-		nXP *= pConsts->experience.lossFactor[ pClientInfo->nLevel ];
+		nXP *= pConsts->experience.lossFactor[pClientInfo->nLevel];
 	pClientInfo->nXP += nXP;
 
 	if ( nXP > 0 )
@@ -294,7 +317,6 @@ void CLadderLobby::UpdatePlayerXP( SLadderGameInfo *pGameInfo, const int nPlayer
 			break;
 		}
 	}
-
 }
 
 void CLadderLobby::CalcResults( const int nGameID )
@@ -303,7 +325,7 @@ void CLadderLobby::CalcResults( const int nGameID )
 	DebugTrace( "LADDER_TEST: Game %d finished. Calculating results.", nGameID );
 #endif
 
-	SLadderGameInfo &gameInfo = games[ nGameID ];
+	SLadderGameInfo &gameInfo = games[nGameID];
 	const int nTeamSize = gameInfo.team1Players.size();
 
 	std::list<int> players = gameInfo.team1Players;
@@ -315,7 +337,8 @@ void CLadderLobby::CalcResults( const int nGameID )
 		for ( std::list<int>::const_iterator it = players.begin(); it != players.end(); ++it )
 		{
 			const int nPlayerID = *it;
-			CPtr<CNetPacket> pPacketToSend = new CLadderInvalidStatisticsPacket( nPlayerID, nGameID, gameInfo.eInvalidReason );
+			CPtr<CNetPacket> pPacketToSend =
+					new CLadderInvalidStatisticsPacket( nPlayerID, nGameID, gameInfo.eInvalidReason );
 			PushPacket( pPacketToSend );
 		}
 		return;
@@ -342,64 +365,71 @@ void CLadderLobby::CalcResults( const int nGameID )
 
 		if ( bWin )
 		{
-      if ( nTeamSize == 1 )
-					++pClientInfo->raceWinsSolo[ gameInfo.playerRaces[nPlayerID] ];
+			if ( nTeamSize == 1 )
+				++pClientInfo->raceWinsSolo[gameInfo.playerRaces[nPlayerID]];
 			else
-				++pClientInfo->raceWinsTeam[ gameInfo.playerRaces[nPlayerID] ];
+				++pClientInfo->raceWinsTeam[gameInfo.playerRaces[nPlayerID]];
 			++pClientInfo->nWinsInSeries;
 		}
 		else
 		{
 			if ( nTeamSize == 1 )
-				++pClientInfo->raceLossesSolo[ gameInfo.playerRaces[nPlayerID] ];
+				++pClientInfo->raceLossesSolo[gameInfo.playerRaces[nPlayerID]];
 			else
-				++pClientInfo->raceLossesTeam[ gameInfo.playerRaces[nPlayerID] ];
+				++pClientInfo->raceLossesTeam[gameInfo.playerRaces[nPlayerID]];
 			pClientInfo->nWinsInSeries = 0;
 		}
 
-		pClientInfo->nUnitsKilled += gameInfo.unitsKilled[ nPlayerID ];
-		pClientInfo->nUnitsLost += gameInfo.unitsLost[ nPlayerID ];
+		pClientInfo->nUnitsKilled += gameInfo.unitsKilled[nPlayerID];
+		pClientInfo->nUnitsLost += gameInfo.unitsLost[nPlayerID];
 
 		pClientInfo->nTotalPlayTime += int( gameInfo.nDeathTime - gameInfo.nStartTime ) / 1000;
 		++pClientInfo->nTotalGamesPlayed;
 
-		pClientInfo->nUnitsEffectiveness =
-			( pClientInfo->nUnitsEffectiveness * ( pClientInfo->nTotalGamesPlayed - 1 ) + gameInfo.playerUnitsEff[ nPlayerID ] ) / pClientInfo->nTotalGamesPlayed;
+		pClientInfo->nUnitsEffectiveness = ( pClientInfo->nUnitsEffectiveness * ( pClientInfo->nTotalGamesPlayed - 1 ) +
+		                                     gameInfo.playerUnitsEff[nPlayerID] ) /
+		                                   pClientInfo->nTotalGamesPlayed;
 		pClientInfo->nKeyPointsEffectiveness =
-			( pClientInfo->nKeyPointsEffectiveness * ( pClientInfo->nTotalGamesPlayed - 1 ) + gameInfo.playerKeyPointEff[ nPlayerID ] ) / pClientInfo->nTotalGamesPlayed;
+				( pClientInfo->nKeyPointsEffectiveness * ( pClientInfo->nTotalGamesPlayed - 1 ) +
+		      gameInfo.playerKeyPointEff[nPlayerID] ) /
+				pClientInfo->nTotalGamesPlayed;
 
 		if ( pClientInfo->mapsPlayed.size() < ( gameInfo.nMapID + 1 ) )
 			pClientInfo->mapsPlayed.resize( gameInfo.nMapID + 1, 0 );
-		++pClientInfo->mapsPlayed[ gameInfo.nMapID ];
+		++pClientInfo->mapsPlayed[gameInfo.nMapID];
 
 		if ( pClientInfo->techsPlayed.size() < ( gameInfo.nTechLevel + 1 ) )
 			pClientInfo->techsPlayed.resize( gameInfo.nTechLevel + 1, 0 );
-		++pClientInfo->techsPlayed[ gameInfo.nTechLevel ];
+		++pClientInfo->techsPlayed[gameInfo.nTechLevel];
 
 		if ( bWin )
 		{
 			std::list<int> &enemyPlayers = ( nPlayerTeam == 1 ) ? gameInfo.team2Players : gameInfo.team1Players;
 			for ( std::list<int>::const_iterator it = enemyPlayers.begin(); it != enemyPlayers.end(); ++it )
-				++pClientInfo->winsAgainst[ gameInfo.playerRaces[*it] ];
+				++pClientInfo->winsAgainst[gameInfo.playerRaces[*it]];
 		}
 		else
 		{
 			std::list<int> &enemyPlayers = ( nPlayerTeam == 1 ) ? gameInfo.team2Players : gameInfo.team1Players;
 			for ( std::list<int>::const_iterator it = enemyPlayers.begin(); it != enemyPlayers.end(); ++it )
 				if ( gameInfo.winners.find( *it ) != gameInfo.winners.end() )
-					++pClientInfo->lossesAgainst[ gameInfo.playerRaces[*it] ];
+					++pClientInfo->lossesAgainst[gameInfo.playerRaces[*it]];
 		}
 
 		const std::vector<int> &reinfUsed = gameInfo.reinfUsed[nPlayerID];
 		if ( pClientInfo->reinforcementUsed.size() < reinfUsed.size() )
 			pClientInfo->reinforcementUsed.resize( reinfUsed.size(), 0 );
 		for ( int i = 0; i < reinfUsed.size(); ++i )
-			pClientInfo->reinforcementUsed[ i ] += reinfUsed[ i ];
+			pClientInfo->reinforcementUsed[i] += reinfUsed[i];
 
-		pClients->PutLadderInfoToDB( gameInfo.nickByID[ nPlayerID ] );
+		pClients->PutLadderInfoToDB( gameInfo.nickByID[nPlayerID] );
 
 #ifdef LADDER_TEST
-		DebugTrace( "LADDER_TEST: %s gaines %d xp(%d total). His level now is %d.", gameInfo.nickByID[nPlayerID].c_str(), nXP, pClientInfo->nXP, pClientInfo->nLevel );
+		DebugTrace( "LADDER_TEST: %s gaines %d xp(%d total). His level now is %d.",
+		            gameInfo.nickByID[nPlayerID].c_str(),
+		            nXP,
+		            pClientInfo->nXP,
+		            pClientInfo->nLevel );
 #endif
 	}
 
@@ -408,13 +438,12 @@ void CLadderLobby::CalcResults( const int nGameID )
 		const int nPlayerID = *it;
 		CPtr<SLadderDBInfo> pClientInfo = gameInfo.playerInfo[nPlayerID];
 
-		if ( CheckMedals( pClientInfo, gameInfo.unitsKilled[ nPlayerID ], gameInfo.unitsLost[ nPlayerID ] ) )
-			pClients->PutLadderInfoToDB( gameInfo.nickByID[ nPlayerID ] );
-		SendLadderInfoToPlayer( nPlayerID, gameInfo.nickByID[ nPlayerID ], true );
+		if ( CheckMedals( pClientInfo, gameInfo.unitsKilled[nPlayerID], gameInfo.unitsLost[nPlayerID] ) )
+			pClients->PutLadderInfoToDB( gameInfo.nickByID[nPlayerID] );
+		SendLadderInfoToPlayer( nPlayerID, gameInfo.nickByID[nPlayerID], true );
 	}
 
 	pClients->DBLogGameResult( &gameInfo );
-
 }
 
 bool CLadderLobby::CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLastGame, const int nUnitsLostInLastGame )
@@ -423,22 +452,12 @@ bool CLadderLobby::CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLa
 	const int nRace = pInfo->GetFavouriteRace();
 	// KILLED - medals
 	int nArrayIndex = 0;
-	for ( int nMedalType = SLadderStatistics::EMedalTypes::KILLED_3; nMedalType <= SLadderStatistics::EMedalTypes::KILLED_1; ++nMedalType )
-	{
-		if ( !SLadderStatistics::HasMedal( pInfo->medals, nRace, nMedalType ) && pInfo->nUnitsKilled > pConsts->killedMedals[nArrayIndex] )
-		{
-			SLadderStatistics::AddMedal( &pInfo->medals, nRace, nMedalType );
-			bNewMedals = true;
-			break;
-		}
-		++nArrayIndex;
-	}
-
-	nArrayIndex = 0;
-	for ( int nMedalType = SLadderStatistics::EMedalTypes::KILLED_LOST_3; nMedalType <= SLadderStatistics::EMedalTypes::KILLED_LOST_1; ++nMedalType )
+	for ( int nMedalType = SLadderStatistics::EMedalTypes::KILLED_3;
+	      nMedalType <= SLadderStatistics::EMedalTypes::KILLED_1;
+	      ++nMedalType )
 	{
 		if ( !SLadderStatistics::HasMedal( pInfo->medals, nRace, nMedalType ) &&
-			nUnitsKilledInLastGame > pConsts->killedLostMedals[nArrayIndex] * nUnitsLostInLastGame )
+		     pInfo->nUnitsKilled > pConsts->killedMedals[nArrayIndex] )
 		{
 			SLadderStatistics::AddMedal( &pInfo->medals, nRace, nMedalType );
 			bNewMedals = true;
@@ -448,9 +467,27 @@ bool CLadderLobby::CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLa
 	}
 
 	nArrayIndex = 0;
-	for ( int nMedalType = SLadderStatistics::EMedalTypes::WIN_SERIES_3; nMedalType <= SLadderStatistics::EMedalTypes::WIN_SERIES_1; ++nMedalType )
+	for ( int nMedalType = SLadderStatistics::EMedalTypes::KILLED_LOST_3;
+	      nMedalType <= SLadderStatistics::EMedalTypes::KILLED_LOST_1;
+	      ++nMedalType )
 	{
-		if ( !SLadderStatistics::HasMedal( pInfo->medals, nRace, nMedalType ) && pInfo->nWinsInSeries >= pConsts->winsInSeriesMedals[nArrayIndex] )
+		if ( !SLadderStatistics::HasMedal( pInfo->medals, nRace, nMedalType ) &&
+		     nUnitsKilledInLastGame > pConsts->killedLostMedals[nArrayIndex] * nUnitsLostInLastGame )
+		{
+			SLadderStatistics::AddMedal( &pInfo->medals, nRace, nMedalType );
+			bNewMedals = true;
+			break;
+		}
+		++nArrayIndex;
+	}
+
+	nArrayIndex = 0;
+	for ( int nMedalType = SLadderStatistics::EMedalTypes::WIN_SERIES_3;
+	      nMedalType <= SLadderStatistics::EMedalTypes::WIN_SERIES_1;
+	      ++nMedalType )
+	{
+		if ( !SLadderStatistics::HasMedal( pInfo->medals, nRace, nMedalType ) &&
+		     pInfo->nWinsInSeries >= pConsts->winsInSeriesMedals[nArrayIndex] )
 		{
 			SLadderStatistics::AddMedal( &pInfo->medals, nRace, nMedalType );
 			bNewMedals = true;
@@ -460,7 +497,7 @@ bool CLadderLobby::CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLa
 	}
 
 	if ( !SLadderStatistics::HasMedal( pInfo->medals, nRace, SLadderStatistics::EMedalTypes::FIRST_PLACE ) &&
-		pInfo->nXP >= pClients->GetMaxXP() && pInfo->nLevel >= pConsts->nFirstPlaceMedalLevel )
+	     pInfo->nXP >= pClients->GetMaxXP() && pInfo->nLevel >= pConsts->nFirstPlaceMedalLevel )
 	{
 		SLadderStatistics::AddMedal( &pInfo->medals, nRace, SLadderStatistics::EMedalTypes::FIRST_PLACE );
 		bNewMedals = true;
@@ -475,7 +512,7 @@ bool CLadderLobby::ProcessSurrenderPacket( CLadderSurrenderPacket *pPacket )
 	const int nPlayerID = pPacket->nClientID;
 	const int nGameID = pPacket->nGameID;
 
-	std::unordered_map< int, SLadderGameInfo >::iterator it = games.find( nGameID );
+	std::unordered_map<int, SLadderGameInfo>::iterator it = games.find( nGameID );
 	if ( it != games.end() )
 	{
 		SLadderGameInfo &gameInfo = it->second;
@@ -504,7 +541,8 @@ bool CLadderLobby::MatchMakingStep()
 
 	SLadderGameInfo gameInfo;
 
-	const int nTeamSize = ( pPlayer->nTeamSize != 0 ) ? ( pPlayer->nTeamSize ) : NRandom::Random( 1, pConsts->nMaxTeamSize );
+	const int nTeamSize =
+			( pPlayer->nTeamSize != 0 ) ? ( pPlayer->nTeamSize ) : NRandom::Random( 1, pConsts->nMaxTeamSize );
 	const int nTeam1Side = ( pPlayer->nSide != 0 ) ? ( pPlayer->nSide ) : NRandom::Random( 1, 2 );
 	const bool bHistoricity = pPlayer->bHistoricity;
 	const int nLevel = pPlayer->nLevel;
@@ -548,7 +586,7 @@ bool CLadderLobby::MatchMakingStep()
 				gameInfo.team1Players.clear();
 				gameInfo.team2Players.clear();
 
-				std::unordered_map<int, std::list<int> > candidates;
+				std::unordered_map<int, std::list<int>> candidates;
 				// Распихиваем игроков по командам, тех, кто не выбрал команду - распихиваем случайно
 				// Если историчность отключена - всех случайно
 				for ( std::list<int>::iterator it = players.begin(); it != players.end(); ++it )
@@ -561,11 +599,11 @@ bool CLadderLobby::MatchMakingStep()
 
 					if ( bHistoricity && nSide )
 					{
-						candidates[ nSide == nTeam1Side ? 1 : 2 ].push_back( *it );
+						candidates[nSide == nTeam1Side ? 1 : 2].push_back( *it );
 					}
 					else
 					{
-						candidates[ NRandom::Random( 1, 2 ) ].push_back( *it );
+						candidates[NRandom::Random( 1, 2 )].push_back( *it );
 					}
 				}
 
@@ -576,19 +614,19 @@ bool CLadderLobby::MatchMakingStep()
 				NLadder::RandomizeList( &candidates[2] );
 				// Если получилось слишком мало кандидатов в одну из команд - попробуем еще раз
 
-        while ( candidates[1].size() >= ( nTeamSize - 1 ) && candidates[2].size() >= nTeamSize )
+				while ( candidates[1].size() >= ( nTeamSize - 1 ) && candidates[2].size() >= nTeamSize )
 				{
 
 					// Заполняем команды кандидатами
 					gameInfo.team1Players.push_back( nFirstPlayerID );
-					while( ( gameInfo.team1Players.size() < nTeamSize && !candidates[1].empty() )
-						|| ( gameInfo.team2Players.size() < nTeamSize && !candidates[2].empty() ) )
+					while ( ( gameInfo.team1Players.size() < nTeamSize && !candidates[1].empty() ) ||
+					        ( gameInfo.team2Players.size() < nTeamSize && !candidates[2].empty() ) )
 					{
 						if ( gameInfo.team1Players.size() < nTeamSize )
 						{
 							gameInfo.team1Players.push_back( candidates[1].front() );
 							candidates[1].pop_front();
-   					}
+						}
 						if ( gameInfo.team2Players.size() < nTeamSize )
 						{
 							gameInfo.team2Players.push_back( candidates[2].front() );
@@ -597,7 +635,7 @@ bool CLadderLobby::MatchMakingStep()
 					}
 
 					if ( gameInfo.team1Players.size() < nTeamSize || gameInfo.team2Players.size() < nTeamSize )
-						continue; 				// Кандидатов не хватило :(
+						continue; // Кандидатов не хватило :(
 
 					const float nTeam1Level = NLadder::TeamLevel( ladderClients, gameInfo.team1Players );
 					const float nTeam2Level = NLadder::TeamLevel( ladderClients, gameInfo.team2Players );
@@ -628,7 +666,6 @@ bool CLadderLobby::MatchMakingStep()
 					}
 				}
 			}
-
 		}
 	}
 	waitingList.push_back( nFirstPlayerID );
@@ -637,12 +674,12 @@ bool CLadderLobby::MatchMakingStep()
 
 void CLadderLobby::CreateLadderGame( const SLadderGameInfo &_gameInfo )
 {
-	(*pStatisticsCollector)[ "GamesTotal" ]->Add( 1.0f );
-	(*pStatisticsCollector)[ "GamesPerSecond" ]->Add( 1.0f );
+	( *pStatisticsCollector )["GamesTotal"]->Add( 1.0f );
+	( *pStatisticsCollector )["GamesPerSecond"]->Add( 1.0f );
 	const int nTeamSize = _gameInfo.team1Players.size() + _gameInfo.team2Players.size();
 	const int nGameID = CreateGame( 2 * nTeamSize );
-	games[ nGameID ] = _gameInfo;
-	SLadderGameInfo &gameInfo = games[ nGameID ];
+	games[nGameID] = _gameInfo;
+	SLadderGameInfo &gameInfo = games[nGameID];
 	gameInfo.bIsDead = false;
 	gameInfo.nDeathTime = 0;
 	gameInfo.winners.clear();
@@ -657,26 +694,31 @@ void CLadderLobby::CreateLadderGame( const SLadderGameInfo &_gameInfo )
 	for ( std::list<int>::iterator it = players.begin(); it != players.end(); ++it )
 	{
 		const int nID = *it;
-		PushPacket( new CLadderInvitePacket( nID, nGameID, gameInfo.nMapID, gameInfo.nTechLevel, gameInfo.team1Players, gameInfo.team2Players ) );
+		PushPacket( new CLadderInvitePacket(
+				nID, nGameID, gameInfo.nMapID, gameInfo.nTechLevel, gameInfo.team1Players, gameInfo.team2Players ) );
 
-		for ( std::unordered_set<int>::iterator it = ladderClients[nID]->maps.begin(); it != ladderClients[nID]->maps.begin(); ++it )
+		for ( std::unordered_set<int>::iterator it = ladderClients[nID]->maps.begin();
+		      it != ladderClients[nID]->maps.begin();
+		      ++it )
 		{
 			gameInfo.mapsRequested[nID].push_back( *it );
 		}
-		for ( std::unordered_set<int>::iterator it = ladderClients[nID]->techLevels.begin(); it != ladderClients[nID]->techLevels.begin(); ++it )
+		for ( std::unordered_set<int>::iterator it = ladderClients[nID]->techLevels.begin();
+		      it != ladderClients[nID]->techLevels.begin();
+		      ++it )
 		{
 			gameInfo.techsRequested[nID].push_back( *it );
 		}
 
 		waitingList.remove( nID );
-		const std::string &szNick = nickByID[ nID ];
-		gameInfo.nickByID[ nID ] = szNick;
+		const std::string &szNick = nickByID[nID];
+		gameInfo.nickByID[nID] = szNick;
 		gameInfo.playerInfo[nID] = pClients->GetLadderInfoFromDB( szNick );
 
 		gameInfo.lockers.push_back( new CLadderCacheLocker( pClients, szNick ) );
 		//		gameInfo.playerInfo[ nID ] = ladderClients[ nID ]->dbInfo;
 
-		(*pStatisticsCollector)[ "AverageWaitTime" ]->Add( float( nTime - ladderClients[nID]->nStartTime ) / 1000 );
+		( *pStatisticsCollector )["AverageWaitTime"]->Add( float( nTime - ladderClients[nID]->nStartTime ) / 1000 );
 	}
 
 	// Calculating average team level
@@ -698,10 +740,13 @@ void CLadderLobby::CreateLadderGame( const SLadderGameInfo &_gameInfo )
 	gameInfo.loseXP[1] = pConsts->experience.loseXP[nLevelDiff];
 	gameInfo.loseXP[2] = pConsts->experience.loseXP[-nLevelDiff];
 
-	games[ nGameID ] = gameInfo;
+	games[nGameID] = gameInfo;
 #ifdef LADDER_TEST
-	DebugTrace( "LADDER_TEST: Game %d created. TeamSize = %d, TechLevel = %d, MapID = %d", nGameID, gameInfo.team1Players.size(),
-		gameInfo.nTechLevel, gameInfo.nMapID );
+	DebugTrace( "LADDER_TEST: Game %d created. TeamSize = %d, TechLevel = %d, MapID = %d",
+	            nGameID,
+	            gameInfo.team1Players.size(),
+	            gameInfo.nTechLevel,
+	            gameInfo.nMapID );
 #endif
 }
 
@@ -709,8 +754,8 @@ void CLadderLobby::ClientEnterToLobby( const int nClientID )
 {
 	std::string szNick;
 	pClients->GetNick( nClientID, &szNick );
-	nickByID[ nClientID ] = szNick;
-	(*pStatisticsCollector)[ "TotalPlayersEntered" ]->Add( 1.0f );
+	nickByID[nClientID] = szNick;
+	( *pStatisticsCollector )["TotalPlayersEntered"]->Add( 1.0f );
 }
 
 void CLadderLobby::ClientLeaveLobby( const int nClientID )
@@ -725,7 +770,7 @@ bool CLadderLobby::ProcessLadderInfoPacket( CLadderInfoPacket *pPacket )
 	if ( !IsLobbyClient( pPacket->nClientID ) )
 		return false;
 
-	(*pStatisticsCollector)[ "RequestsPerSecond" ]->Add( 1.0f );
+	( *pStatisticsCollector )["RequestsPerSecond"]->Add( 1.0f );
 
 	CPtr<CLadderClient> pClient = new CLadderClient();
 	pClient->nSide = pPacket->nSide;
@@ -747,15 +792,15 @@ bool CLadderLobby::ProcessLadderInfoPacket( CLadderInfoPacket *pPacket )
 	pClient->nStartTime = GetLongTickCount();
 
 	{
-		pClient->nLevel = pClients->GetLadderInfoFromDB( nickByID[ pPacket->nClientID ] )->nLevel;
+		pClient->nLevel = pClients->GetLadderInfoFromDB( nickByID[pPacket->nClientID] )->nLevel;
 	}
 
-	ladderClients[ pPacket->nClientID ] = pClient;
+	ladderClients[pPacket->nClientID] = pClient;
 	waitingList.remove( pPacket->nClientID );
 	waitingList.push_back( pPacket->nClientID );
 
 #ifdef LADDER_TEST
-	std::string szText = fmt::format( "LADDER_TEST: Player {} ladder info received: ", nickByID[ pPacket->nClientID ] );
+	std::string szText = fmt::format( "LADDER_TEST: Player {} ladder info received: ", nickByID[pPacket->nClientID] );
 	szText += "TechLevels";
 	for ( std::list<int>::iterator it = pPacket->techLevels.begin(); it != pPacket->techLevels.end(); ++it )
 	{
@@ -775,14 +820,14 @@ bool CLadderLobby::ProcessLadderInfoPacket( CLadderInfoPacket *pPacket )
 
 bool CLadderLobby::ProcessLadderGameResultPacket( CLadderGameResultPacket *pPacket )
 {
-  if ( !IsLobbyClient( pPacket->nClientID ) )
+	if ( !IsLobbyClient( pPacket->nClientID ) )
 		return false;
 
 	if ( games.find( pPacket->nGameID ) == games.end() )
 		return true;
-	SLadderGameInfo &gameInfo = games[ pPacket->nGameID ];
-	if ( gameInfo.team1Players.size() + gameInfo.team2Players.size() != pPacket->races.size()
-		|| pPacket->winners.size() > gameInfo.team1Players.size() )
+	SLadderGameInfo &gameInfo = games[pPacket->nGameID];
+	if ( gameInfo.team1Players.size() + gameInfo.team2Players.size() != pPacket->races.size() ||
+	     pPacket->winners.size() > gameInfo.team1Players.size() )
 	{
 #ifdef LADDER_TEST
 		DebugTrace( "LADDER_TEST: Corrupted statistics of game %d ignored", pPacket->nGameID );
@@ -792,19 +837,22 @@ bool CLadderLobby::ProcessLadderGameResultPacket( CLadderGameResultPacket *pPack
 
 	if ( !gameInfo.winners.empty() || !gameInfo.playerRaces.empty() )
 	{
-		if ( ( ! ( gameInfo.winners == pPacket->winners ) ) || ( ! ( gameInfo.playerRaces == pPacket->races ) ) )
+		if ( ( !( gameInfo.winners == pPacket->winners ) ) || ( !( gameInfo.playerRaces == pPacket->races ) ) )
 		{
 #ifdef LADDER_TEST
 			DebugTrace( "LADDER_TEST: Statistics difference detected. Game id = %d results ignored.", pPacket->nGameID );
 #endif
-			games[ pPacket->nGameID ].bInvalid = true;
-			games[ pPacket->nGameID ].eInvalidReason = SLadderGameInfo::EInvalidReason::DIFFERENCE_DETECTED;
+			games[pPacket->nGameID].bInvalid = true;
+			games[pPacket->nGameID].eInvalidReason = SLadderGameInfo::EInvalidReason::DIFFERENCE_DETECTED;
 		}
 	}
 	else
 	{
 #ifdef LADDER_TEST
-		DebugTrace( "LADDER_TEST: %d game info stored. %d winners, %d players total.", pPacket->nGameID, pPacket->winners.size(), pPacket->races.size() );
+		DebugTrace( "LADDER_TEST: %d game info stored. %d winners, %d players total.",
+		            pPacket->nGameID,
+		            pPacket->winners.size(),
+		            pPacket->races.size() );
 #endif
 		gameInfo.winners = pPacket->winners;
 		gameInfo.playerRaces = pPacket->races;
@@ -813,7 +861,9 @@ bool CLadderLobby::ProcessLadderGameResultPacket( CLadderGameResultPacket *pPack
 		gameInfo.playerKeyPointEff = pPacket->playerKeyPointEff;
 		gameInfo.unitsKilled = pPacket->unitsKilled;
 		gameInfo.unitsLost = pPacket->unitsLost;
-		for ( std::unordered_map<int,std::vector<int> >::iterator it = gameInfo.reinfUsed.begin(); it != gameInfo.reinfUsed.end(); ++it )
+		for ( std::unordered_map<int, std::vector<int>>::iterator it = gameInfo.reinfUsed.begin();
+		      it != gameInfo.reinfUsed.end();
+		      ++it )
 		{
 			if ( it->second.size() > pConsts->nMaxUnitTypes )
 			{
@@ -832,7 +882,9 @@ bool CLadderLobby::ProcessLadderStatisticsRequestPacket( CLadderStatisticsReques
 	return true;
 }
 
-void CLadderLobby::SendLadderInfoToPlayer( const int nClientID, const std::string& szClientNick, const bool bFullStatistics )
+void CLadderLobby::SendLadderInfoToPlayer( const int nClientID,
+                                           const std::string &szClientNick,
+                                           const bool bFullStatistics )
 {
 	if ( bFullStatistics )
 	{
@@ -859,7 +911,8 @@ void CLadderLobby::SendLadderInfoToPlayer( const int nClientID, const std::strin
 	{
 		CPtr<SLadderDBInfo> pInfo = pClients->GetLadderInfoFromDB( szClientNick );
 
-		CPtr<CNetPacket> pPacketToSend = new CLadderShortStatisticsPacket( nClientID, szClientNick, pInfo->nLevel, pInfo->GetFavouriteRace() );
+		CPtr<CNetPacket> pPacketToSend =
+				new CLadderShortStatisticsPacket( nClientID, szClientNick, pInfo->nLevel, pInfo->GetFavouriteRace() );
 		PushPacket( pPacketToSend );
 	}
 }
@@ -878,7 +931,7 @@ void CLadderLobby::GameDead( const int nGameID )
 bool CLadderClient::CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pConsts )
 {
 	int nErrorLevel = 0;
-  if ( maps.find( nMapID ) == maps.end() )
+	if ( maps.find( nMapID ) == maps.end() )
 		++nErrorLevel;
 	if ( techLevels.find( nTechLevel ) == techLevels.end() )
 		++nErrorLevel;
@@ -894,133 +947,145 @@ bool CLadderClient::CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pC
 
 //   Helpful functions
 
-namespace NLadder{
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DropFromListByLevel( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-			const int nLevel, const int nDeltaPlus, const int nDeltaMinus )
+namespace NLadder
+{
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DropFromListByLevel( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                          std::list<int> *pWaitingOrder,
+                          const int nLevel,
+                          const int nDeltaPlus,
+                          const int nDeltaMinus )
+{
+	std::list<int>::iterator itNext = pWaitingOrder->begin();
+	std::list<int>::iterator it = itNext++;
+	for ( ; it != pWaitingOrder->end(); it = itNext++ )
 	{
-		std::list<int>::iterator itNext = pWaitingOrder->begin();
-		std::list<int>::iterator it = itNext++;
-		for ( ; it != pWaitingOrder->end(); it = itNext++ )
+		int nID = *it;
+		CLadderClient *pClient = players.find( nID )->second;
+		int nPlayerLevel = pClient->nLevel;
+		if ( ( nPlayerLevel < nLevel - nDeltaMinus ) || ( nPlayerLevel > nLevel + nDeltaPlus ) )
+			pWaitingOrder->erase( it );
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DropFromListByTeamSize( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                             std::list<int> *pWaitingOrder,
+                             const int nTeamSize )
+{
+	std::list<int>::iterator itNext = pWaitingOrder->begin();
+	std::list<int>::iterator it = itNext++;
+	for ( ; it != pWaitingOrder->end(); it = itNext++ )
+	{
+		int nID = *it;
+		CLadderClient *pClient = players.find( nID )->second;
+		if ( pClient->nTeamSize != nTeamSize && pClient->nTeamSize != 0 )
+			pWaitingOrder->erase( it );
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DropFromListByHistoricityAndChecksum( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                                           std::list<int> *pWaitingOrder,
+                                           const bool bHistoricity,
+                                           const unsigned int uCheckSum )
+{
+	std::list<int>::iterator itNext = pWaitingOrder->begin();
+	std::list<int>::iterator it = itNext++;
+	for ( ; it != pWaitingOrder->end(); it = itNext++ )
+	{
+		int nID = *it;
+		CLadderClient *pClient = players.find( nID )->second;
+		if ( pClient->bHistoricity != bHistoricity || pClient->uCheckSum != uCheckSum )
+			pWaitingOrder->erase( it );
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DropFromListBySide( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                         std::list<int> *pWaitingOrder,
+                         const int nSide )
+{
+	std::list<int>::iterator itNext = pWaitingOrder->begin();
+	std::list<int>::iterator it = itNext++;
+	for ( ; it != pWaitingOrder->end(); it = itNext++ )
+	{
+		int nID = *it;
+		CLadderClient *pClient = players.find( nID )->second;
+		if ( pClient->nSide != nSide )
+			pWaitingOrder->erase( it );
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+float TeamLevel( const std::unordered_map<int, CPtr<CLadderClient>> &players, const std::list<int> &team )
+{
+	float fLevel = 0;
+	for ( std::list<int>::const_iterator it = team.begin(); it != team.end(); ++it )
+	{
+		int nID = *it;
+		fLevel += players.find( nID )->second->nLevel;
+	}
+	return fLevel / team.size();
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void RandomizeList( std::list<int> *pList )
+{
+	int nSize = pList->size();
+	std::vector<int> tempVector( nSize );
+	int nMaxRand = nSize - 1;
+	for ( int i = 0; i < nSize; ++i )
+	{
+		tempVector[i] = pList->front();
+		pList->pop_front();
+	}
+	for ( int i = 0; i < nSize; ++i )
+	{
+		int nRandom = NRandom::Random( 0, nMaxRand );
+		int t = tempVector[nRandom];
+		tempVector[nRandom] = tempVector[i];
+		tempVector[i] = t;
+	}
+	for ( int i = 0; i < nSize; ++i )
+	{
+		pList->push_back( tempVector[i] );
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DropWeakestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                        std::list<int> *pList,
+                        const int nException )
+{
+	int nMinLevel = 1e8;
+	int nMinID = -1;
+	for ( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
+	{
+		int nID = *it;
+		int nLevel = players.find( nID )->second->nLevel;
+		if ( nLevel < nMinLevel && nID != nException )
 		{
-			int nID = *it;
-			CLadderClient *pClient = players.find( nID )->second;
-			int nPlayerLevel = pClient->nLevel;
-			if ( ( nPlayerLevel < nLevel - nDeltaMinus ) || ( nPlayerLevel > nLevel + nDeltaPlus ) )
-				pWaitingOrder->erase( it );
+			nMinLevel = nLevel;
+			nMinID = nID;
 		}
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DropFromListByTeamSize( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-		const int nTeamSize )
+	pList->remove( nMinID );
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DropStrongestExcept( const std::unordered_map<int, CPtr<CLadderClient>> &players,
+                          std::list<int> *pList,
+                          const int nException )
+{
+	int nMaxLevel = -1;
+	int nMaxID = -1;
+	for ( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
 	{
-		std::list<int>::iterator itNext = pWaitingOrder->begin();
-		std::list<int>::iterator it = itNext++;
-		for ( ; it != pWaitingOrder->end(); it = itNext++ )
+		int nID = *it;
+		int nLevel = players.find( nID )->second->nLevel;
+		if ( nLevel > nMaxLevel && nID != nException )
 		{
-			int nID = *it;
-			CLadderClient *pClient = players.find( nID )->second;
-			if ( pClient->nTeamSize != nTeamSize && pClient->nTeamSize != 0 )
-				pWaitingOrder->erase( it );
+			nMaxLevel = nLevel;
+			nMaxID = nID;
 		}
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DropFromListByHistoricityAndChecksum( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-		const bool bHistoricity, const unsigned int uCheckSum )
-	{
-		std::list<int>::iterator itNext = pWaitingOrder->begin();
-		std::list<int>::iterator it = itNext++;
-		for ( ; it != pWaitingOrder->end(); it = itNext++ )
-		{
-			int nID = *it;
-			CLadderClient *pClient = players.find( nID )->second;
-			if ( pClient->bHistoricity != bHistoricity || pClient->uCheckSum != uCheckSum )
-				pWaitingOrder->erase( it );
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DropFromListBySide( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pWaitingOrder,
-		const int nSide )
-	{
-		std::list<int>::iterator itNext = pWaitingOrder->begin();
-		std::list<int>::iterator it = itNext++;
-		for ( ; it != pWaitingOrder->end(); it = itNext++ )
-		{
-			int nID = *it;
-			CLadderClient *pClient = players.find( nID )->second;
-			if ( pClient->nSide != nSide )
-				pWaitingOrder->erase( it );
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	float TeamLevel( const std::unordered_map< int, CPtr<CLadderClient> > &players, const std::list<int> &team )
-	{
-		float fLevel = 0;
-		for ( std::list<int>::const_iterator it = team.begin(); it != team.end(); ++it )
-		{
-			int nID = *it;
-			fLevel += players.find( nID )->second->nLevel;
-		}
-		return fLevel / team.size();
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void RandomizeList( std::list<int> *pList )
-	{
-		int nSize = pList->size();
-		std::vector<int> tempVector( nSize );
-		int nMaxRand = nSize - 1;
-		for( int i = 0; i < nSize; ++i )
-		{
-			tempVector[ i ] = pList->front();
-			pList->pop_front();
-		}
-		for( int i = 0; i < nSize; ++i )
-		{
-			int nRandom = NRandom::Random( 0, nMaxRand );
-			int t = tempVector[nRandom];
-			tempVector[nRandom] = tempVector[i];
-			tempVector[i] = t;
-		}
-		for( int i = 0; i < nSize; ++i )
-		{
-			pList->push_back( tempVector[i] );
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DropWeakestExcept( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pList, const int nException )
-	{
-		int nMinLevel = 1e8;
-		int nMinID = -1;
-		for( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
-		{
-			int nID = *it;
-			int nLevel = players.find( nID )->second->nLevel;
-			if ( nLevel < nMinLevel && nID != nException )
-			{
-				nMinLevel = nLevel;
-				nMinID = nID;
-			}
-		}
-		pList->remove( nMinID );
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void DropStrongestExcept( const std::unordered_map< int, CPtr<CLadderClient> > &players, std::list<int> *pList, const int nException )
-	{
-		int nMaxLevel = -1;
-		int nMaxID = -1;
-		for( std::list<int>::iterator it = pList->begin(); it != pList->end(); ++it )
-		{
-			int nID = *it;
-			int nLevel = players.find( nID )->second->nLevel;
-			if ( nLevel > nMaxLevel && nID != nException )
-			{
-				nMaxLevel = nLevel;
-				nMaxID = nID;
-			}
-		}
-		pList->remove( nMaxID );
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	pList->remove( nMaxID );
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 #undef STEP_LENGTH_TIME

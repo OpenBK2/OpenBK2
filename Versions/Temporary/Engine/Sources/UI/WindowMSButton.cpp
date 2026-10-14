@@ -1,7 +1,6 @@
 // WindowMSButton.cpp: implementation of the CWindowMSButton class.
 //
 
-
 #include "stdafx.h"
 #include "WindowMSButton.h"
 #include "ButtonGroup.h"
@@ -10,11 +9,9 @@
 
 #include <fmt/format.h>
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075B87, CWindowMSButton)
-
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B87, CWindowMSButton )
 
 // CWindowMSButton
-
 
 void CButtonSubStateVisual::Init( const NDb::SButtonVisualSubState &substate )
 {
@@ -23,7 +20,7 @@ void CButtonSubStateVisual::Init( const NDb::SButtonVisualSubState &substate )
 	if ( substate.pForeground )
 		pForeground = CUIFactory::MakeWindowPart( substate.pForeground );
 	if ( substate.pTextString )
-		pTextString = (CForegroundTextString*)( CUIFactory::MakeWindowPart( substate.pTextString ) );
+		pTextString = (CForegroundTextString *)( CUIFactory::MakeWindowPart( substate.pTextString ) );
 	pTextFormat = substate.pTextFormat;
 }
 
@@ -31,35 +28,41 @@ void CButtonSubStateVisual::SetupTextString( const NDb::SForegroundTextString *_
 {
 	if ( !pTextString && _pTextString )
 	{
-		pTextString = (CForegroundTextString*)( CUIFactory::MakeWindowPart( _pTextString ) );
+		pTextString = (CForegroundTextString *)( CUIFactory::MakeWindowPart( _pTextString ) );
 	}
 }
 
 void CWindowMSButton::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowMSButton *pDesc( checked_cast<const NDb::SWindowMSButton*>( _pDesc ) );
+	const NDb::SWindowMSButton *pDesc( checked_cast<const NDb::SWindowMSButton *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 
 	CWindow::InitByDesc( _pDesc );
 
 	pShared = checked_cast_ptr<const NDb::SWindowMSButtonShared *>( pDesc->pShared );
 
-	NI_VERIFY( !pInstance->buttonStates.empty(), fmt::format( "ButtonStates not defined for button \"{}\"", pInstance->szName ), return );
-	NI_VERIFY( !pShared->visualStates.empty(), fmt::format( "VisualStates not defined for button \"{}\"", pInstance->szName ), return );
-	NI_VERIFY( pInstance->buttonStates.size() == pShared->visualStates.size(), fmt::format( "VisualStates is not equal ButtonStates for button \"{}\"", pInstance->szName ), return );
+	NI_VERIFY( !pInstance->buttonStates.empty(),
+	           fmt::format( "ButtonStates not defined for button \"{}\"", pInstance->szName ),
+	           return );
+	NI_VERIFY( !pShared->visualStates.empty(),
+	           fmt::format( "VisualStates not defined for button \"{}\"", pInstance->szName ),
+	           return );
+	NI_VERIFY( pInstance->buttonStates.size() == pShared->visualStates.size(),
+	           fmt::format( "VisualStates is not equal ButtonStates for button \"{}\"", pInstance->szName ),
+	           return );
 
 	states.resize( pShared->visualStates.size() );
 	for ( int i = 0; i < pShared->visualStates.size(); ++i )
 	{
 		states[i].Init( pShared->visualStates[i] );
-//		states[i].SetupTextString( pInstance->pTextString );
+		//		states[i].SetupTextString( pInstance->pTextString );
 	}
 	nAnimationID = 0;
 	bMouseEntered = false;
 	bPressed.clear();
 	bPressed.resize( 4, false );
 	bEffect = false;
-	eEffectSubState =  NDb::BST_NORMAL;
+	eEffectSubState = NDb::BST_NORMAL;
 
 	if ( IsEnabled() )
 		SwitchSubState( NDb::BST_NORMAL );
@@ -82,7 +85,7 @@ void CWindowMSButton::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 int CWindowMSButton::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 2, &pInstance );
 	saver.Add( 3, &pShared );
 	saver.Add( 4, &bPressed );
@@ -115,26 +118,26 @@ void CWindowMSButton::AfterLoad()
 	CWindow::AfterLoad();
 }
 
-const std::wstring& CWindowMSButton::GetDBFormatText() const
+const std::wstring &CWindowMSButton::GetDBFormatText() const
 {
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
 	{
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pTextFormat->, FormatString) )
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pTextFormat->, FormatString ) )
 			return GET_TEXT_PRE( pTextFormat->, FormatString );
 	}
 
 	return CWindow::GetDBFormatText();
 }
 
-const std::wstring& CWindowMSButton::GetDBInstanceText() const
+const std::wstring &CWindowMSButton::GetDBInstanceText() const
 {
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pInstance->, Text) )
-		return GET_TEXT_PRE(pInstance->, Text);
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pInstance->, Text ) )
+		return GET_TEXT_PRE( pInstance->, Text );
 
 	return CWindow::GetDBInstanceText();
 }
 
-const NDb::SWindowPlacement* CWindowMSButton::GetDBTextPlacement() const
+const NDb::SWindowPlacement *CWindowMSButton::GetDBTextPlacement() const
 {
 	if ( const NDb::STextFormat *pTextFormat = pInstance->pTextFormat )
 	{
@@ -151,7 +154,8 @@ void CWindowMSButton::OnEnter( const int nButton )
 		{
 			BackAnimation();
 			SwitchSubState( NDb::BST_PUSHED_DEEP );
-			nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].pushed.onEnterSubState, this );
+			nAnimationID =
+					GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].pushed.onEnterSubState, this );
 		}
 	}
 	else if ( 0 == nButton )
@@ -162,7 +166,8 @@ void CWindowMSButton::OnEnter( const int nButton )
 			// switch to MOUSE_OVER static appearance
 			SwitchSubState( NDb::BST_MOUSE_OVER );
 			// run effect
-			nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].mouseOver.onEnterSubState, this );
+			nAnimationID = GetScreen()->RunAnimationSequienceForward(
+					pShared->visualStates[GetState()].mouseOver.onEnterSubState, this );
 			if ( pButtonNotify )
 				pButtonNotify->Entered( this );
 		}
@@ -178,7 +183,8 @@ void CWindowMSButton::OnLeave( const int nButton )
 		BackAnimation();
 		SwitchSubState( NDb::BST_NORMAL );
 		// run NORMAL in forward direction
-		nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].normal.onEnterSubState, this );
+		nAnimationID =
+				GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].normal.onEnterSubState, this );
 
 		bMouseEntered = false;
 		if ( pButtonNotify )
@@ -210,12 +216,13 @@ void CWindowMSButton::OnPush( const int nButton )
 				// acitvate pressed substate state in next state (static)
 				SwitchSubState( NDb::BST_PUSHED_DEEP );
 				// run pressed effect in forward direction
-				nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].pushed.onEnterSubState, this );
+				nAnimationID =
+						GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].pushed.onEnterSubState, this );
 				// run state change sequience and visual effects
 				RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
-					pInstance->buttonStates[GetState()].szMessageOnEnterState,
-					pInstance->buttonStates[GetState()].bWaitVisual,
-					pInstance->buttonStates[GetState()].bReverseCommands );
+				                         pInstance->buttonStates[GetState()].szMessageOnEnterState,
+				                         pInstance->buttonStates[GetState()].bWaitVisual,
+				                         pInstance->buttonStates[GetState()].bReverseCommands );
 			}
 			else if ( nButton == MSTATE_BUTTON2 )
 			{
@@ -228,12 +235,13 @@ void CWindowMSButton::OnPush( const int nButton )
 				// acitvate pressed substate state in next state (static)
 				SwitchSubState( NDb::BST_RIGHT_DOWN );
 				// run RIGHT_DOWN effect in forward direction
-				nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].rightButtonDown.onEnterSubState, this );
+				nAnimationID = GetScreen()->RunAnimationSequienceForward(
+						pShared->visualStates[GetState()].rightButtonDown.onEnterSubState, this );
 				// run state change sequience and visual effects
 				RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
-					pInstance->buttonStates[GetState()].szMessageOnEnterState,
-					pInstance->buttonStates[GetState()].bWaitVisual,
-					pInstance->buttonStates[GetState()].bReverseCommands );
+				                         pInstance->buttonStates[GetState()].szMessageOnEnterState,
+				                         pInstance->buttonStates[GetState()].bWaitVisual,
+				                         pInstance->buttonStates[GetState()].bReverseCommands );
 			}
 		}
 		else
@@ -246,7 +254,8 @@ void CWindowMSButton::OnPush( const int nButton )
 				// acitvate pressed substate state in next state (static)
 				SwitchSubState( NDb::BST_PUSHED_DEEP );
 				// run PUSHED effect in forward direction
-				nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].pushed.onEnterSubState, this );
+				nAnimationID =
+						GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].pushed.onEnterSubState, this );
 			}
 			else if ( nButton == MSTATE_BUTTON2 )
 			{
@@ -256,7 +265,8 @@ void CWindowMSButton::OnPush( const int nButton )
 				// acitvate pressed substate state in next state (static)
 				SwitchSubState( NDb::BST_RIGHT_DOWN );
 				// run RIGHT_DOWN effect in forward direction
-				nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].rightButtonDown.onEnterSubState, this );
+				nAnimationID = GetScreen()->RunAnimationSequienceForward(
+						pShared->visualStates[GetState()].rightButtonDown.onEnterSubState, this );
 			}
 		}
 
@@ -284,13 +294,14 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					if ( pInstance->bAutoChangeState )
 						SetNextState();
 					// run logical state Sequience
-					NI_ASSERT( pInstance->buttonStates.size() > GetState(), "button states(in instance) have less states then button states in shared." );
+					NI_ASSERT( pInstance->buttonStates.size() > GetState(),
+					           "button states(in instance) have less states then button states in shared." );
 					GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnEnterState, this );
 					// run state change sequience and visual effects
 					RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
-						pInstance->buttonStates[GetState()].szMessageOnEnterState,
-						pInstance->buttonStates[GetState()].bWaitVisual,
-						!pInstance->buttonStates[GetState()].bReverseCommands );
+					                         pInstance->buttonStates[GetState()].szMessageOnEnterState,
+					                         pInstance->buttonStates[GetState()].bWaitVisual,
+					                         !pInstance->buttonStates[GetState()].bReverseCommands );
 				}
 				else if ( nButton == MSTATE_BUTTON2 )
 				{
@@ -298,13 +309,14 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					BackAnimation();
 
 					// run logical state Sequience
-					NI_ASSERT( pInstance->buttonStates.size() > GetState(), "button states(in instance) have less states then button states in shared." );
+					NI_ASSERT( pInstance->buttonStates.size() > GetState(),
+					           "button states(in instance) have less states then button states in shared." );
 					GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnRightClick, this );
 					// run state change sequience and visual effects
 					RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
-						pInstance->buttonStates[GetState()].szMessageOnEnterState,
-						pInstance->buttonStates[GetState()].bWaitVisual,
-						!pInstance->buttonStates[GetState()].bReverseCommands );
+					                         pInstance->buttonStates[GetState()].szMessageOnEnterState,
+					                         pInstance->buttonStates[GetState()].bWaitVisual,
+					                         !pInstance->buttonStates[GetState()].bReverseCommands );
 				}
 			}
 			// change substate ( static appearance )
@@ -312,7 +324,8 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 				SwitchSubState( NDb::BST_MOUSE_OVER );
 
 			// run state MOUSE_OVER in forward direction
-			nAnimationID = GetScreen()->RunAnimationSequienceForward( pShared->visualStates[GetState()].mouseOver.onEnterSubState, this );
+			nAnimationID = GetScreen()->RunAnimationSequienceForward(
+					pShared->visualStates[GetState()].mouseOver.onEnterSubState, this );
 		}
 		else
 		{
@@ -320,17 +333,15 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 
 			// set state to normal ( just static appearance )
 			SwitchSubState( NDb::BST_NORMAL );
-			nAnimationID = RunAnimationAndCommands( pShared->visualStates[GetState()].normal.onEnterSubState, "", false, true );
+			nAnimationID =
+					RunAnimationAndCommands( pShared->visualStates[GetState()].normal.onEnterSubState, "", false, true );
 		}
 		if ( pButtonNotify && nButton == MSTATE_BUTTON1 )
 			pButtonNotify->Released( this );
 	}
 }
 
-void CWindowMSButton::OnRightClick()
-{
-
-}
+void CWindowMSButton::OnRightClick() {}
 
 void CWindowMSButton::BackAnimation()
 {
@@ -351,9 +362,7 @@ void CWindowMSButton::SetNextState()
 	}
 }
 
-void CWindowMSButton::NotifyStateSequenceFinished()
-{
-}
+void CWindowMSButton::NotifyStateSequenceFinished() {}
 
 void CWindowMSButton::OnActivatePushedState( const SGameMessage &msg )
 {
@@ -378,7 +387,7 @@ void CWindowMSButton::Init()
 	}
 }
 
-CButtonGroup* CWindowMSButton::GetButtonGroup()
+CButtonGroup *CWindowMSButton::GetButtonGroup()
 {
 	return pButtonGroup;
 }
@@ -431,8 +440,10 @@ bool CWindowMSButton::OnButtonDblClk( const CVec2 &_vPos, const int nButton )
 {
 	if ( !CWindow::OnButtonDblClk( _vPos, nButton ) )
 	{
-		NI_ASSERT( pInstance->buttonStates.size() > GetState(), "button states(in instance) have less states then button states in shared." );
-		if ( !pShared->bIgnoreDblClick && (nButton & MSTATE_BUTTON1) && !pInstance->buttonStates[GetState()].commandsOnLDblKlick.commands.empty() )
+		NI_ASSERT( pInstance->buttonStates.size() > GetState(),
+		           "button states(in instance) have less states then button states in shared." );
+		if ( !pShared->bIgnoreDblClick && ( nButton & MSTATE_BUTTON1 ) &&
+		     !pInstance->buttonStates[GetState()].commandsOnLDblKlick.commands.empty() )
 		{
 			GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnLDblKlick, this );
 			return true;
@@ -445,9 +456,9 @@ bool CWindowMSButton::OnMouseMove( const CVec2 &vPos, const int nButton )
 {
 	if ( IsEnabled() )
 	{
-		if ( bPressed[0] && !(nButton & MSTATE_BUTTON1) )
+		if ( bPressed[0] && !( nButton & MSTATE_BUTTON1 ) )
 			OnRelease( false, MSTATE_BUTTON1 );
-		if ( bPressed[1] && !(nButton & MSTATE_BUTTON2) )
+		if ( bPressed[1] && !( nButton & MSTATE_BUTTON2 ) )
 			OnRelease( false, MSTATE_BUTTON2 );
 
 		const bool bInside = IsInside( vPos );
@@ -480,9 +491,9 @@ void CWindowMSButton::SetStateWithVisual( const int nState )
 	SetState( nState );
 	// run state change sequience and visual effects
 	RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
-		pInstance->buttonStates[GetState()].szMessageOnEnterState,
-		pInstance->buttonStates[GetState()].bWaitVisual,
-		!pInstance->buttonStates[GetState()].bReverseCommands );
+	                         pInstance->buttonStates[GetState()].szMessageOnEnterState,
+	                         pInstance->buttonStates[GetState()].bWaitVisual,
+	                         !pInstance->buttonStates[GetState()].bReverseCommands );
 
 	if ( !IsEnabled() )
 		Enable( false );
@@ -499,7 +510,7 @@ void CWindowMSButton::SetState( const int nState )
 void CWindowMSButton::SetTextString( const std::wstring &wszText )
 {
 	wszCustomText = wszText;
-/*	for ( int i = 0; i < states.size(); ++i )
+	/*	for ( int i = 0; i < states.size(); ++i )
 	{
 		if ( states[i].normal.pTextString )
 			states[i].normal.pTextString->SetText( szText );
@@ -593,9 +604,9 @@ void CWindowMSButton::ApplySubstateText( const CButtonSubStateVisual &substate )
 	else
 	{
 		wszText = GetDBInstanceText();
-		if ( substate.pTextFormat && CHECK_TEXT_NOT_EMPTY_PRE(substate.pTextFormat->,FormatString) )
+		if ( substate.pTextFormat && CHECK_TEXT_NOT_EMPTY_PRE( substate.pTextFormat->, FormatString ) )
 		{
-			wszText = GET_TEXT_PRE(substate.pTextFormat->,FormatString) + wszText;
+			wszText = GET_TEXT_PRE( substate.pTextFormat->, FormatString ) + wszText;
 		}
 		else if ( substate.pTextString )
 		{

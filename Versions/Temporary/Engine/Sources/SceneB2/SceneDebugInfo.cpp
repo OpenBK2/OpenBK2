@@ -11,7 +11,8 @@ static std::unordered_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash>
 
 const NDb::SMaterial *Color2Color( const NDebugInfo::EColor color )
 {
-	std::unordered_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash >::const_iterator pos = colorsMap.find( color );
+	std::unordered_map<NDebugInfo::EColor, CDBPtr<NDb::SMaterial>, SEnumHash>::const_iterator pos =
+			colorsMap.find( color );
 	if ( pos == colorsMap.end() )
 		return 0;
 	else
@@ -70,19 +71,23 @@ void CScene::CreateLine( const NDebugInfo::SDebugInfoLine *pLine )
 	points.push_back( pLine->arrowEnd.vPosition );
 	if ( pLine->arrowStart.fHeight != 0.0f || pLine->arrowEnd.fHeight != 0.0f )
 	{
-		CVec3 vDir = pLine->arrowEnd.vPosition-pLine->arrowStart.vPosition;
+		CVec3 vDir = pLine->arrowEnd.vPosition - pLine->arrowStart.vPosition;
 		Normalize( &vDir );
 
-		CVec3 v1 = ( vDir.y == 0.0f && vDir.z == 0.0f ) ? CVec3( 0.0f, 1.0f, 0.0f ) : vDir ^ CVec3( 1.0f, 0.0f, 0.0f ) ;
+		CVec3 v1 = ( vDir.y == 0.0f && vDir.z == 0.0f ) ? CVec3( 0.0f, 1.0f, 0.0f ) : vDir ^ CVec3( 1.0f, 0.0f, 0.0f );
 		Normalize( &v1 );
 		CVec3 v2 = vDir ^ v1;
 		Normalize( &v2 );
 		if ( pLine->arrowStart.fHeight != 0.0f )
 		{
-			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth + v1 * pLine->arrowStart.fHeight );
-			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth - v1 * pLine->arrowStart.fHeight );
-			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth + v2 * pLine->arrowStart.fHeight );
-			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth - v2 * pLine->arrowStart.fHeight );
+			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth +
+			                  v1 * pLine->arrowStart.fHeight );
+			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth -
+			                  v1 * pLine->arrowStart.fHeight );
+			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth +
+			                  v2 * pLine->arrowStart.fHeight );
+			points.push_back( pLine->arrowStart.vPosition + vDir * pLine->arrowStart.fWidth -
+			                  v2 * pLine->arrowStart.fHeight );
 			indices.push_back( 2 );
 			indices.push_back( 0 );
 			indices.push_back( 4 );
@@ -139,37 +144,39 @@ void CScene::ProcessDebugInfoUpdates()
 {
 	CDebugInfoManager *pDebugInfoManager = static_cast<CDebugInfoManager *>( DebugInfoManager() );
 
-	do {
+	do
+	{
 		const NDebugInfo::SDebugInfoUpdate *pDebugInfoUpdate = pDebugInfoManager->GetUpdate();
 		if ( pDebugInfoUpdate )
 		{
-			switch( pDebugInfoUpdate->GetDebugInfoUpdateID() ) {
-			case NDebugInfo::DEBUG_INFO_MARKER:
-				CreateMarker( static_cast<const NDebugInfo::SDebugInfoMarker *>(pDebugInfoUpdate) );
-				break;
-			case NDebugInfo::DEBUG_INFO_CIRCLE:
-				CreateCircle( static_cast<const NDebugInfo::SDebugInfoCircle *>(pDebugInfoUpdate) );
-				break;
-			case NDebugInfo::DEBUG_INFO_SEGMENT:
-				CreateSegment( static_cast<const NDebugInfo::SDebugInfoSegment *>(pDebugInfoUpdate) );
-				break;
-			case NDebugInfo::DEBUG_INFO_LINE:
-				CreateLine( static_cast<const NDebugInfo::SDebugInfoLine *>(pDebugInfoUpdate) );
-				break;
-			case NDebugInfo::DEBUG_INFO_RECT:
-				CreateRect( static_cast<const NDebugInfo::SDebugInfoRect *>(pDebugInfoUpdate) );
-				break;
-			case NDebugInfo::DEBUG_INFO_DELETE:
+			switch ( pDebugInfoUpdate->GetDebugInfoUpdateID() )
+			{
+				case NDebugInfo::DEBUG_INFO_MARKER:
+					CreateMarker( static_cast<const NDebugInfo::SDebugInfoMarker *>( pDebugInfoUpdate ) );
+					break;
+				case NDebugInfo::DEBUG_INFO_CIRCLE:
+					CreateCircle( static_cast<const NDebugInfo::SDebugInfoCircle *>( pDebugInfoUpdate ) );
+					break;
+				case NDebugInfo::DEBUG_INFO_SEGMENT:
+					CreateSegment( static_cast<const NDebugInfo::SDebugInfoSegment *>( pDebugInfoUpdate ) );
+					break;
+				case NDebugInfo::DEBUG_INFO_LINE:
+					CreateLine( static_cast<const NDebugInfo::SDebugInfoLine *>( pDebugInfoUpdate ) );
+					break;
+				case NDebugInfo::DEBUG_INFO_RECT:
+					CreateRect( static_cast<const NDebugInfo::SDebugInfoRect *>( pDebugInfoUpdate ) );
+					break;
+				case NDebugInfo::DEBUG_INFO_DELETE:
 				{
 					CDebugInfoObjects::iterator pos = debugInfoObjects.find( pDebugInfoUpdate->nID );
 					if ( pos != debugInfoObjects.end() )
 						debugInfoObjects.erase( pos );
 				}
 				break;
-			case NDebugInfo::DEBUG_INFO_DELETE_LINE:
-				RemovePolyline( pDebugInfoUpdate->nID );
-				break;
+				case NDebugInfo::DEBUG_INFO_DELETE_LINE:
+					RemovePolyline( pDebugInfoUpdate->nID );
+					break;
 			}
 		}
-	} while( pDebugInfoManager->PopUpdate() );
+	} while ( pDebugInfoManager->PopUpdate() );
 }

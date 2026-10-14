@@ -8,21 +8,24 @@
 
 #define DEF_TILE_MIN_ALPHA 0
 
-
 inline CVec3 GetPreLightColor( const NDb::STerrain *pDesc, const CVec3 &vNorm, const CVec3 &vPreLightDir )
 {
 	const float fLightScaling = 4.0f; // scale always - 'bWhitening' flag already taken in account during DB loading
 	const float fAng = vNorm * ( -vPreLightDir );
-	return fAng >= 0.0f ? ( (-fAng * pDesc->pPreLight->vLightColor + pDesc->pPreLight->vAmbientColor) * fLightScaling ) :
-	( ((1.0f - fAng) * pDesc->pPreLight->vShadeColor + pDesc->pPreLight->vShadeAmbientColor) * fLightScaling );
+	return fAng >= 0.0f ? ( ( -fAng * pDesc->pPreLight->vLightColor + pDesc->pPreLight->vAmbientColor ) * fLightScaling )
+	                    : ( ( ( 1.0f - fAng ) * pDesc->pPreLight->vShadeColor + pDesc->pPreLight->vShadeAmbientColor ) *
+	                        fLightScaling );
 }
 
-
-void CTerraGen::CalcTerraVertexData( NGScene::SVertex *pVertex, const CVec3 &vPos,
-																		 const int nTileX, const int nTileY,
-																		 const int nPatchX, const int nPatchY,
-																		 const CVec3 *pRealPos, const CVec3 *pRealNorm,
-																		 const bool bNeedFaster ) const
+void CTerraGen::CalcTerraVertexData( NGScene::SVertex *pVertex,
+                                     const CVec3 &vPos,
+                                     const int nTileX,
+                                     const int nTileY,
+                                     const int nPatchX,
+                                     const int nPatchY,
+                                     const CVec3 *pRealPos,
+                                     const CVec3 *pRealNorm,
+                                     const bool bNeedFaster ) const
 {
 	//vert.tex.x = Clamp( ( vPos.x - (float)nPatchX * DEF_PATCH_WORLD_SIZE ) * DEF_INV_PATCH_WORLD_SIZE, 0.0f, 1.0f );
 	//vert.tex.y = Clamp( ( vPos.y - (float)nPatchY * DEF_PATCH_WORLD_SIZE ) * DEF_INV_PATCH_WORLD_SIZE, 0.0f, 1.0f );
@@ -32,29 +35,28 @@ void CTerraGen::CalcTerraVertexData( NGScene::SVertex *pVertex, const CVec3 &vPo
 	if ( pRealNorm )
 		vNorm = *pRealNorm;
 	else
-		vNorm = bNeedFaster ? GetTerraNormFast( vPos.x, vPos.y, nTileX, nTileY ) : FindNormalInVertex( vPos, nTileX, nTileY );
-	CalcCompactVector( &(pVertex->normal), vNorm );
+		vNorm =
+				bNeedFaster ? GetTerraNormFast( vPos.x, vPos.y, nTileX, nTileY ) : FindNormalInVertex( vPos, nTileX, nTileY );
+	CalcCompactVector( &( pVertex->normal ), vNorm );
 	pVertex->pos = ( pRealPos != 0 ) ? ( *pRealPos ) : vPos;
-	CalcCompactVector( &(pVertex->texU), GetPreLightColor(pDesc, vNorm, vPreLightDir) );
+	CalcCompactVector( &( pVertex->texU ), GetPreLightColor( pDesc, vNorm, vPreLightDir ) );
 	//CalcCompactVector( &(vert.texU), V3_AXIS_X );
-	CalcCompactVector( &(pVertex->texV), V3_AXIS_Y );
+	CalcCompactVector( &( pVertex->texV ), V3_AXIS_Y );
 }
-
 
 void CTerraGen::UpdateAlphaByPosition( NGScene::SVertex *pVertex )
 {
-	const float fAlphaCoeff = IsPointOnMap( GetVec2(pVertex->pos) ) ? 1.0f : 0.0f;
+	const float fAlphaCoeff = IsPointOnMap( GetVec2( pVertex->pos ) ) ? 1.0f : 0.0f;
 	pVertex->normal.w *= fAlphaCoeff;
 }
 
 void CTerraGen::RemoveInvisibleTriangles( NMeshData::SMeshData *pPatch )
 {
-	for ( int iTriangle = 0; iTriangle < pPatch->triangles.size();  )
+	for ( int iTriangle = 0; iTriangle < pPatch->triangles.size(); )
 	{
 		const STriangle &triangle = pPatch->triangles[iTriangle];
-		if ( pPatch->vertices[triangle.i1].normal.w == 0 &&
-			pPatch->vertices[triangle.i2].normal.w == 0 &&
-			pPatch->vertices[triangle.i3].normal.w == 0 )
+		if ( pPatch->vertices[triangle.i1].normal.w == 0 && pPatch->vertices[triangle.i2].normal.w == 0 &&
+		     pPatch->vertices[triangle.i3].normal.w == 0 )
 		{
 			pPatch->triangles[iTriangle] = pPatch->triangles[pPatch->triangles.size() - 1];
 			pPatch->triangles.resize( pPatch->triangles.size() - 1 );
@@ -64,13 +66,12 @@ void CTerraGen::RemoveInvisibleTriangles( NMeshData::SMeshData *pPatch )
 	}
 }
 
-
-int CTerraGen::AddUniqueVertex(	NMeshData::SMeshData *pMeshData,
-															  NMeshData::SMeshDataTex2 *pTexData,
-															  const CVec2 &vSecTex,
-															  const uint8_t cAlpha,
-															  NGScene::SVertex *pVertex,
-															  const bool bNeedFaster ) const
+int CTerraGen::AddUniqueVertex( NMeshData::SMeshData *pMeshData,
+                                NMeshData::SMeshDataTex2 *pTexData,
+                                const CVec2 &vSecTex,
+                                const uint8_t cAlpha,
+                                NGScene::SVertex *pVertex,
+                                const bool bNeedFaster ) const
 {
 	pVertex->normal.w = cAlpha;
 
@@ -106,26 +107,24 @@ int CTerraGen::AddUniqueVertex(	NMeshData::SMeshData *pMeshData,
 	return ( pTexData->vertices.size() - 1 );
 }
 
-
 inline uint8_t GetInterpolateValue( const CVec3 &v, const CArray2D<uint8_t> &mask )
 {
-	const int x = Clamp( int(v.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
-	const int y = Clamp( int(v.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
+	const int x = Clamp( int( v.x * DEF_INV_TILE_SIZE ), 0, mask.GetSizeX() - 2 );
+	const int y = Clamp( int( v.y * DEF_INV_TILE_SIZE ), 0, mask.GetSizeY() - 2 );
 	const float dx = Clamp( v.x - (float)x * DEF_TILE_SIZE, 0.0f, 1.0f );
 	const float dy = Clamp( v.y - (float)y * DEF_TILE_SIZE, 0.0f, 1.0f );
-	const float fAlpha = (float)( (float)mask[y][x] + (float)(mask[y][x + 1] - mask[y][x]) * dx ) * ( 1.0f - dy ) +
-		(float)( (float)mask[y + 1][x] + (float)(mask[y + 1][x + 1] - mask[y + 1][x]) * dx ) * dy;
-	return Clamp( Float2Int(fAlpha), 0, 255 );
+	const float fAlpha = (float)( (float)mask[y][x] + (float)( mask[y][x + 1] - mask[y][x] ) * dx ) * ( 1.0f - dy ) +
+	                     (float)( (float)mask[y + 1][x] + (float)( mask[y + 1][x + 1] - mask[y + 1][x] ) * dx ) * dy;
+	return Clamp( Float2Int( fAlpha ), 0, 255 );
 }
 
-
-inline uint8_t GetInterpolateValue( const CArray2D<uint8_t> &mask, const int x, const int y, const float dx, const float dy )
+inline uint8_t
+GetInterpolateValue( const CArray2D<uint8_t> &mask, const int x, const int y, const float dx, const float dy )
 {
 	const float fAlpha = (float)( (float)mask[y][x] + (float)( mask[y][x + 1] - mask[y][x] ) * dx ) * ( 1.0f - dy ) +
-		(float)( (float)mask[y + 1][x] + (float)(mask[y + 1][x + 1] - mask[y + 1][x]) * dx ) * dy;
-	return Clamp( Float2Int(fAlpha), 0, 255 );
+	                     (float)( (float)mask[y + 1][x] + (float)( mask[y + 1][x + 1] - mask[y + 1][x] ) * dx ) * dy;
+	return Clamp( Float2Int( fAlpha ), 0, 255 );
 }
-
 
 struct SPushAlphaTriangle
 {
@@ -134,21 +133,24 @@ struct SPushAlphaTriangle
 	//
 	SPushAlphaTriangle() {}
 	SPushAlphaTriangle( const int _nID, const uint8_t a1, const uint8_t a2, const uint8_t a3 )
-		:	nID(_nID), cAlpha1(a1), cAlpha2(a2), cAlpha3(a3) {}
+			: nID( _nID ), cAlpha1( a1 ), cAlpha2( a2 ), cAlpha3( a3 )
+	{
+	}
 };
-
 
 static std::vector<SPushAlphaTriangle> prePushTrgs( 256 );
 
-
-static void WrapChapterTexture( std::vector<NGScene::SVertex> *pVerts, const int nPatchesX, const int nPatchesY, const float fScale = 1 )
+static void WrapChapterTexture( std::vector<NGScene::SVertex> *pVerts,
+                                const int nPatchesX,
+                                const int nPatchesY,
+                                const float fScale = 1 )
 {
 	const float fDefTexSize = 1024.0f;
 	const CVec2 vCropSize( 696.0f, 591.0f );
 
 	for ( std::vector<NGScene::SVertex>::iterator itVert = pVerts->begin(); itVert != pVerts->end(); ++itVert )
 	{
-		NGScene::SVertex &vert = (*itVert);
+		NGScene::SVertex &vert = ( *itVert );
 		const CVec3 &vPos = vert.pos;
 
 		vert.tex.x = vPos.y / ( nPatchesY * DEF_PATCH_WORLD_SIZE ) / fDefTexSize * vCropSize.x;
@@ -156,16 +158,25 @@ static void WrapChapterTexture( std::vector<NGScene::SVertex> *pVerts, const int
 	}
 }
 
-
 void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
-																 std::vector<NMeshData::SMeshDataTex2> *pTexData,
-																 const CVec3 &v1, const CVec3 &v2, const CVec3 &v3,
-																 const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3,
-																 const int nTileX, const int nTileY,
-																 const int nPatchX, const int nPatchY,
-																 const CVec3 *pRealPos1, const CVec3 *pRealPos2, const CVec3 *pRealPos3,
-																 const CVec3 *pRealNorm1, const CVec3 *pRealNorm2, const CVec3 *pRealNorm3,
-																 const bool bNeedFaster ) const
+                                 std::vector<NMeshData::SMeshDataTex2> *pTexData,
+                                 const CVec3 &v1,
+                                 const CVec3 &v2,
+                                 const CVec3 &v3,
+                                 const CVec2 &vSecTex1,
+                                 const CVec2 &vSecTex2,
+                                 const CVec2 &vSecTex3,
+                                 const int nTileX,
+                                 const int nTileY,
+                                 const int nPatchX,
+                                 const int nPatchY,
+                                 const CVec3 *pRealPos1,
+                                 const CVec3 *pRealPos2,
+                                 const CVec3 *pRealPos3,
+                                 const CVec3 *pRealNorm1,
+                                 const CVec3 *pRealNorm2,
+                                 const CVec3 *pRealNorm3,
+                                 const bool bNeedFaster ) const
 {
 	NI_VERIFY( pMeshData || pTexData, "CTerraGen::AddTileTriangle - Invalid destination data array", return )
 
@@ -179,16 +190,16 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 		return;
 
 	const CArray2D<uint8_t> &mask = tileTerraMasks[0];
-	const int nV1x = Clamp( int(v1.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
-	const int nV1y = Clamp( int(v1.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
+	const int nV1x = Clamp( int( v1.x * DEF_INV_TILE_SIZE ), 0, mask.GetSizeX() - 2 );
+	const int nV1y = Clamp( int( v1.y * DEF_INV_TILE_SIZE ), 0, mask.GetSizeY() - 2 );
 	const float fV1dx = Clamp( v1.x - (float)nV1x * DEF_TILE_SIZE, 0.0f, 1.0f );
 	const float fV1dy = Clamp( v1.y - (float)nV1y * DEF_TILE_SIZE, 0.0f, 1.0f );
-	const int nV2x = Clamp( int(v2.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
-	const int nV2y = Clamp( int(v2.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
+	const int nV2x = Clamp( int( v2.x * DEF_INV_TILE_SIZE ), 0, mask.GetSizeX() - 2 );
+	const int nV2y = Clamp( int( v2.y * DEF_INV_TILE_SIZE ), 0, mask.GetSizeY() - 2 );
 	const float fV2dx = Clamp( v2.x - (float)nV2x * DEF_TILE_SIZE, 0.0f, 1.0f );
 	const float fV2dy = Clamp( v2.y - (float)nV2y * DEF_TILE_SIZE, 0.0f, 1.0f );
-	const int nV3x = Clamp( int(v3.x * DEF_INV_TILE_SIZE), 0, mask.GetSizeX() - 2 );
-	const int nV3y = Clamp( int(v3.y * DEF_INV_TILE_SIZE), 0, mask.GetSizeY() - 2 );
+	const int nV3x = Clamp( int( v3.x * DEF_INV_TILE_SIZE ), 0, mask.GetSizeX() - 2 );
+	const int nV3y = Clamp( int( v3.y * DEF_INV_TILE_SIZE ), 0, mask.GetSizeY() - 2 );
 	const float fV3dx = Clamp( v3.x - (float)nV3x * DEF_TILE_SIZE, 0.0f, 1.0f );
 	const float fV3dy = Clamp( v3.y - (float)nV3y * DEF_TILE_SIZE, 0.0f, 1.0f );
 
@@ -198,12 +209,14 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 		const uint8_t cAlpha1 = GetInterpolateValue( curMask, nV1x, nV1y, fV1dx, fV1dy );
 		const uint8_t cAlpha2 = GetInterpolateValue( curMask, nV2x, nV2y, fV2dx, fV2dy );
 		const uint8_t cAlpha3 = GetInterpolateValue( curMask, nV3x, nV3y, fV3dx, fV3dy );
-		if ( (cAlpha1 > DEF_TILE_MIN_ALPHA) || (cAlpha2 > DEF_TILE_MIN_ALPHA) || (cAlpha3 > DEF_TILE_MIN_ALPHA) )
-			prePushTrgs.push_back( SPushAlphaTriangle(tilesOrder[k].nPrevNum, cAlpha1, cAlpha2, cAlpha3) );
+		if ( ( cAlpha1 > DEF_TILE_MIN_ALPHA ) || ( cAlpha2 > DEF_TILE_MIN_ALPHA ) || ( cAlpha3 > DEF_TILE_MIN_ALPHA ) )
+			prePushTrgs.push_back( SPushAlphaTriangle( tilesOrder[k].nPrevNum, cAlpha1, cAlpha2, cAlpha3 ) );
 	}
 
 	const int nSizeMinusOne = prePushTrgs.size() - 1;
-	nA1 = 0; nA2 = 0; nA3 = 0;
+	nA1 = 0;
+	nA2 = 0;
+	nA3 = 0;
 
 	NGScene::SVertex vert1, vert2, vert3;
 	CalcTerraVertexData( &vert1, v1, nTileX, nTileY, nPatchX, nPatchY, pRealPos1, pRealNorm1, bNeedFaster );
@@ -218,7 +231,9 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 		const SPushAlphaTriangle &pushTrg = prePushTrgs[k];
 		if ( k == 0 )
 		{
-			nA1 = 255; nA2 = 255; nA3 = 255;
+			nA1 = 255;
+			nA2 = 255;
+			nA3 = 255;
 		}
 		else
 		{
@@ -227,8 +242,8 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 			nA3 += pushTrg.cAlpha3;
 		}
 
-		NMeshData::SMeshData *pSingleMeshData = ( pMeshData != 0 ) ? ( &(*pMeshData)[pushTrg.nID] ) : 0;
-		NMeshData::SMeshDataTex2 *pSingleTexData = ( pTexData != 0 ) ? ( &(*pTexData)[pushTrg.nID] ) : 0;
+		NMeshData::SMeshData *pSingleMeshData = ( pMeshData != 0 ) ? ( &( *pMeshData )[pushTrg.nID] ) : 0;
+		NMeshData::SMeshDataTex2 *pSingleTexData = ( pTexData != 0 ) ? ( &( *pTexData )[pushTrg.nID] ) : 0;
 
 		vert1.tex = vTexBase1 * pDesc->pTerraSet->terraTypes[pushTrg.nID]->fScaleCoeff;
 		vert2.tex = vTexBase2 * pDesc->pTerraSet->terraTypes[pushTrg.nID]->fScaleCoeff;
@@ -238,21 +253,21 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 		const int nInd2 = AddUniqueVertex( pSingleMeshData, pSingleTexData, vSecTex2, nA2, &vert2, bNeedFaster );
 		const int nInd3 = AddUniqueVertex( pSingleMeshData, pSingleTexData, vSecTex3, nA3, &vert3, bNeedFaster );
 
-		std::vector<STriangle> &triangles = ( pSingleMeshData != 0 ) ? pSingleMeshData->triangles : pSingleTexData->triangles;
+		std::vector<STriangle> &triangles =
+				( pSingleMeshData != 0 ) ? pSingleMeshData->triangles : pSingleTexData->triangles;
 
-		if ( (nInd1 != nInd2) && (nInd2 != nInd3) && (nInd3 != nInd1) )
+		if ( ( nInd1 != nInd2 ) && ( nInd2 != nInd3 ) && ( nInd3 != nInd1 ) )
 		{
 			if ( IsCCW( v1, v2, v3 ) )
-				triangles.push_back( STriangle(nInd1, nInd2, nInd3) );
+				triangles.push_back( STriangle( nInd1, nInd2, nInd3 ) );
 			else
-				triangles.push_back( STriangle(nInd1, nInd3, nInd2) );
+				triangles.push_back( STriangle( nInd1, nInd3, nInd2 ) );
 		}
 
-		if ( (nA1 >= 0xff) && (nA2 >= 0xff) && (nA3 >= 0xff) )
+		if ( ( nA1 >= 0xff ) && ( nA2 >= 0xff ) && ( nA3 >= 0xff ) )
 			break;
 	}
 }
-
 
 typedef std::unordered_map<int, CVec3> CPatchNormsHash;
 typedef std::unordered_map<int, int> CPatchNormsCntHash;
@@ -264,8 +279,8 @@ inline int GetVertexHashKey( const CVec3 &v )
 	return ( Float2Int( v.y * 100.0f ) << 16 ) | Float2Int( v.x * 100.0f );
 }
 
-
-inline void AddNormFromVertex( const CVec3 &v, const CVec3 &vNorm, CPatchNormsHash &patchNorms, CPatchNormsCntHash &patchNormsCnt )
+inline void
+AddNormFromVertex( const CVec3 &v, const CVec3 &vNorm, CPatchNormsHash &patchNorms, CPatchNormsCntHash &patchNormsCnt )
 {
 	const int nVertKey = GetVertexHashKey( v );
 	CPatchNormsHash::iterator itFind = patchNorms.find( nVertKey );
@@ -281,33 +296,41 @@ inline void AddNormFromVertex( const CVec3 &v, const CVec3 &vNorm, CPatchNormsHa
 	}
 }
 
-
-inline int AddGfxVertex( CPatchVertsHash *pVertsHash, const CVec3 &rVertex, const float fPatchX, const float fPatchY, const CPatchNormsHash &normsHash )
+inline int AddGfxVertex( CPatchVertsHash *pVertsHash,
+                         const CVec3 &rVertex,
+                         const float fPatchX,
+                         const float fPatchY,
+                         const CPatchNormsHash &normsHash )
 {
 	const int nVertKey = GetVertexHashKey( rVertex );
 	CPatchVertsHash::const_iterator itFind = pVertsHash->find( nVertKey );
 	if ( itFind == pVertsHash->end() )
 	{
 		NGScene::SVertex vert;
-		CalcCompactVector( &(vert.texU), V3_AXIS_X );
-		CalcCompactVector( &(vert.texV), V3_AXIS_Y );
-		CalcCompactVector( &(vert.normal), normsHash.find(nVertKey)->second );
+		CalcCompactVector( &( vert.texU ), V3_AXIS_X );
+		CalcCompactVector( &( vert.texV ), V3_AXIS_Y );
+		CalcCompactVector( &( vert.normal ), normsHash.find( nVertKey )->second );
 		vert.pos = rVertex;
-		vert.tex.Set( (rVertex.x - fPatchX) * DEF_INV_PATCH_WORLD_SIZE, (rVertex.y - fPatchY) * DEF_INV_PATCH_WORLD_SIZE );
-		(*pVertsHash)[nVertKey] = vert;
+		vert.tex.Set( ( rVertex.x - fPatchX ) * DEF_INV_PATCH_WORLD_SIZE,
+		              ( rVertex.y - fPatchY ) * DEF_INV_PATCH_WORLD_SIZE );
+		( *pVertsHash )[nVertKey] = vert;
 	}
 	return nVertKey;
 }
 
-
-inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash, std::vector<NGScene::SVertex> *pDataVerts, std::vector<uint32_t> *pAttr,
-													 const int nInd, const NGScene::SVertex &vert, const float fTexScaleCoeff, CPatchPreLightHash &preLightHash /* - really const!*/ )
+inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash,
+                           std::vector<NGScene::SVertex> *pDataVerts,
+                           std::vector<uint32_t> *pAttr,
+                           const int nInd,
+                           const NGScene::SVertex &vert,
+                           const float fTexScaleCoeff,
+                           CPatchPreLightHash &preLightHash /* - really const!*/ )
 {
 	std::unordered_map<int, int>::const_iterator itFind = pVertsHash->find( nInd );
 	if ( itFind == pVertsHash->end() )
 	{
 		const int nLayerKey = pDataVerts->size();
-		(*pVertsHash)[nInd] = nLayerKey;
+		( *pVertsHash )[nInd] = nLayerKey;
 		//pDataVerts->push_back( vert );
 		std::vector<NGScene::SVertex>::iterator itAdded = pDataVerts->insert( pDataVerts->end(), vert );
 		itAdded->tex *= fTexScaleCoeff;
@@ -320,21 +343,18 @@ inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash, std::vector
 	return itFind->second;
 }
 
-
 inline void CalcTerraNorm( CVec3 *pNorm, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3 )
 {
 	const CVec3 dv1( v2.x - v1.x, v2.y - v1.y, v2.z - v1.z );
 	const CVec3 dv2( v3.x - v1.x, v3.y - v1.y, v3.z - v1.z );
-	(*pNorm) = dv1 ^ dv2;
+	( *pNorm ) = dv1 ^ dv2;
 	Normalize( pNorm );
 }
-
 
 inline float GetDistInsideTile( const float x, const int nTile )
 {
 	return ( x - (float)nTile * DEF_TILE_SIZE ) * DEF_INV_TILE_SIZE;
 }
-
 
 void CTerraGen::PutAllGfxToObserver()
 {
@@ -352,25 +372,28 @@ void CTerraGen::PutAllGfxToObserver()
 	}
 }
 
-
 void CTerraGen::PutAllFeaturesToGfx()
 {
 	//for ( list<SCragGFXInfo>::const_iterator it = terrainGfxInfo.crags.begin(); it != terrainGfxInfo.crags.end(); ++it )
 	//	pGfxObserver->AddCrag( &(*it) );
-	for ( std::list<SRiverGFXInfo>::const_iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end(); ++it )
-		pGfxObserver->AddRiver( &(*it) );
+	for ( std::list<SRiverGFXInfo>::const_iterator it = terrainGfxInfo.rivers.begin(); it != terrainGfxInfo.rivers.end();
+	      ++it )
+		pGfxObserver->AddRiver( &( *it ) );
 	for ( std::list<SRoadGFXInfo>::iterator it = terrainGfxInfo.roads.begin(); it != terrainGfxInfo.roads.end(); ++it )
-		pGfxObserver->AddRoad( &(*it) );
-	for ( std::list<STerraSpotGFXInfo>::iterator it = terrainGfxInfo.terraspots.begin(); it != terrainGfxInfo.terraspots.end(); ++it )
-		pGfxObserver->AddTerraSpot( &(*it) );
+		pGfxObserver->AddRoad( &( *it ) );
+	for ( std::list<STerraSpotGFXInfo>::iterator it = terrainGfxInfo.terraspots.begin();
+	      it != terrainGfxInfo.terraspots.end();
+	      ++it )
+		pGfxObserver->AddTerraSpot( &( *it ) );
 	for ( std::list<SPeakGFXInfo>::iterator it = terrainGfxInfo.peaks.begin(); it != terrainGfxInfo.peaks.end(); ++it )
-		pGfxObserver->AddPeak( &(*it) );
+		pGfxObserver->AddPeak( &( *it ) );
 	for ( std::list<SFootGFXInfo>::iterator it = terrainGfxInfo.foots.begin(); it != terrainGfxInfo.foots.end(); ++it )
-		pGfxObserver->AddFoot( &(*it) );
-	for ( std::list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin(); it != terrainGfxInfo.precipices.end(); ++it )
-		pGfxObserver->AddPrecipice( &(*it) );
+		pGfxObserver->AddFoot( &( *it ) );
+	for ( std::list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin();
+	      it != terrainGfxInfo.precipices.end();
+	      ++it )
+		pGfxObserver->AddPrecipice( &( *it ) );
 }
-
 
 void CTerraGen::UpdateAllGfxInfo()
 {
@@ -379,7 +402,6 @@ void CTerraGen::UpdateAllGfxInfo()
 	if ( pGfxObserver )
 		PutAllFeaturesToGfx();
 }
-
 
 void CTerraGen::ReCreateAllFeaturesGfx()
 {
@@ -392,7 +414,7 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	{
 		TIME_STAT_START( Roads_recreation )
 
-			std::vector<NDb::SVSOPoint> points;
+		std::vector<NDb::SVSOPoint> points;
 		for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->roads.begin(); it != pDesc->roads.end(); ++it )
 		{
 			ConvertVSOPointsFromAIToVisAndPutOnTerrain( &points, it->points );
@@ -406,14 +428,17 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	{
 		// recreate foots
 		//AddAllFoots();
-		for ( std::list<STerrainInfo::SFoot>::const_iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end(); ++it )
+		for ( std::list<STerrainInfo::SFoot>::const_iterator it = terrainInfo.foots.begin(); it != terrainInfo.foots.end();
+		      ++it )
 			AddFoot( *it );
 
 		terrainInfo.peaks.clear();
 
 		// recreate precipices
-		for ( std::list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin(); it != terrainInfo.precipices.end(); ++it )
-			CreatePrecipiceMesh( &(*it), false );
+		for ( std::list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin();
+		      it != terrainInfo.precipices.end();
+		      ++it )
+			CreatePrecipiceMesh( &( *it ), false );
 
 		// recreate peaks
 		//for ( list<STerrainInfo::SPeak>::const_iterator it = terrainInfo.peaks.begin(); it != terrainInfo.peaks.end(); ++it )
@@ -423,11 +448,12 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	// recreate rivers
 	if ( pDesc->rivers.size() > 0 )
 	{
-		for ( std::list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
+		for ( std::list<STerrainInfo::SRiver>::iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end();
+		      ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRiver( it->nID );
 			if ( pInstance )
-				CreateRiverGfx( &(*it), pInstance, true );
+				CreateRiverGfx( &( *it ), pInstance, true );
 		}
 		if ( !terrainGfxInfo.rivers.empty() )
 			UpdateRiversDepthes();
@@ -436,11 +462,13 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 	// recreate spots
 	if ( pDesc->spots.size() > 0 )
 	{
-		for ( std::list<STerrainInfo::STerraSpot>::iterator it = terrainInfo.terraspots.begin(); it != terrainInfo.terraspots.end(); ++it )
+		for ( std::list<STerrainInfo::STerraSpot>::iterator it = terrainInfo.terraspots.begin();
+		      it != terrainInfo.terraspots.end();
+		      ++it )
 		{
 			const NDb::STerrainSpotInstance *pInstance = FindTerraSpot( it->nID );
 			if ( pInstance && pInstance->pDescriptor )
-				CreateTerraSpotGfx( &(*it), pInstance );
+				CreateTerraSpotGfx( &( *it ), pInstance );
 			else
 				DebugTrace( "Can't find terra spot instance %d or instance descriptor empty", it->nID );
 		}
@@ -448,7 +476,6 @@ void CTerraGen::ReCreateAllFeaturesGfx()
 
 	TIME_STAT_FINISH( CTerraGen__ReCreateAllFeaturesGfx )
 }
-
 
 void CTerraGen::UpdateTerraBorders()
 {
@@ -468,14 +495,14 @@ void CTerraGen::UpdateTerraBorders()
 		NMeshData::SMeshData &data = terrainGfxInfo.terraBorders[0][i];
 		//
 		data.vertices.resize( 4 );
-		data.vertices[0].pos.Set( i * DEF_TILE_SIZE, 0.0f, GetTerraHeight(Tile2Vis(i), 0.0f) );
-		data.vertices[1].pos.Set( (i + 1) * DEF_TILE_SIZE, 0.0f, GetTerraHeight(Tile2Vis(i + 1), 0.0f) );
+		data.vertices[0].pos.Set( i * DEF_TILE_SIZE, 0.0f, GetTerraHeight( Tile2Vis( i ), 0.0f ) );
+		data.vertices[1].pos.Set( ( i + 1 ) * DEF_TILE_SIZE, 0.0f, GetTerraHeight( Tile2Vis( i + 1 ), 0.0f ) );
 		data.vertices[2].pos.Set( i * DEF_TILE_SIZE, 0.0f, fLowerBorder );
-		data.vertices[3].pos.Set( (i + 1) * DEF_TILE_SIZE, 0.0f, fLowerBorder );
-		CalcCompactVector( &(data.vertices[0].normal), CVec3(0, -1, 0) );
-		CalcCompactVector( &(data.vertices[1].normal), CVec3(0, -1, 0) );
-		CalcCompactVector( &(data.vertices[2].normal), CVec3(0, -1, 0) );
-		CalcCompactVector( &(data.vertices[3].normal), CVec3(0, -1, 0) );
+		data.vertices[3].pos.Set( ( i + 1 ) * DEF_TILE_SIZE, 0.0f, fLowerBorder );
+		CalcCompactVector( &( data.vertices[0].normal ), CVec3( 0, -1, 0 ) );
+		CalcCompactVector( &( data.vertices[1].normal ), CVec3( 0, -1, 0 ) );
+		CalcCompactVector( &( data.vertices[2].normal ), CVec3( 0, -1, 0 ) );
+		CalcCompactVector( &( data.vertices[3].normal ), CVec3( 0, -1, 0 ) );
 		data.vertices[0].tex = VNULL2;
 		data.vertices[1].tex = VNULL2;
 		data.vertices[2].tex = VNULL2;
@@ -489,14 +516,14 @@ void CTerraGen::UpdateTerraBorders()
 		NMeshData::SMeshData &data = terrainGfxInfo.terraBorders[1][i];
 		//
 		data.vertices.resize( 4 );
-		data.vertices[0].pos.Set( i * DEF_TILE_SIZE, fFarY, GetTerraHeight(Tile2Vis(i), fFarY) );
-		data.vertices[1].pos.Set( (i + 1) * DEF_TILE_SIZE, fFarY, GetTerraHeight(Tile2Vis(i + 1), fFarY) );
+		data.vertices[0].pos.Set( i * DEF_TILE_SIZE, fFarY, GetTerraHeight( Tile2Vis( i ), fFarY ) );
+		data.vertices[1].pos.Set( ( i + 1 ) * DEF_TILE_SIZE, fFarY, GetTerraHeight( Tile2Vis( i + 1 ), fFarY ) );
 		data.vertices[2].pos.Set( i * DEF_TILE_SIZE, fFarY, fLowerBorder );
-		data.vertices[3].pos.Set( (i + 1) * DEF_TILE_SIZE, fFarY, fLowerBorder );
-		CalcCompactVector( &(data.vertices[0].normal), CVec3(0, 1, 0) );
-		CalcCompactVector( &(data.vertices[1].normal), CVec3(0, 1, 0) );
-		CalcCompactVector( &(data.vertices[2].normal), CVec3(0, 1, 0) );
-		CalcCompactVector( &(data.vertices[3].normal), CVec3(0, 1, 0) );
+		data.vertices[3].pos.Set( ( i + 1 ) * DEF_TILE_SIZE, fFarY, fLowerBorder );
+		CalcCompactVector( &( data.vertices[0].normal ), CVec3( 0, 1, 0 ) );
+		CalcCompactVector( &( data.vertices[1].normal ), CVec3( 0, 1, 0 ) );
+		CalcCompactVector( &( data.vertices[2].normal ), CVec3( 0, 1, 0 ) );
+		CalcCompactVector( &( data.vertices[3].normal ), CVec3( 0, 1, 0 ) );
 		data.vertices[0].tex = VNULL2;
 		data.vertices[1].tex = VNULL2;
 		data.vertices[2].tex = VNULL2;
@@ -510,14 +537,14 @@ void CTerraGen::UpdateTerraBorders()
 		NMeshData::SMeshData &data = terrainGfxInfo.terraBorders[2][i];
 		//
 		data.vertices.resize( 4 );
-		data.vertices[0].pos.Set( 0.0f, i * DEF_TILE_SIZE, GetTerraHeight(0.0f, Tile2Vis(i)) );
-		data.vertices[1].pos.Set( 0.0f, (i + 1) * DEF_TILE_SIZE, GetTerraHeight(0.0f, Tile2Vis(i + 1)) );
+		data.vertices[0].pos.Set( 0.0f, i * DEF_TILE_SIZE, GetTerraHeight( 0.0f, Tile2Vis( i ) ) );
+		data.vertices[1].pos.Set( 0.0f, ( i + 1 ) * DEF_TILE_SIZE, GetTerraHeight( 0.0f, Tile2Vis( i + 1 ) ) );
 		data.vertices[2].pos.Set( 0.0f, i * DEF_TILE_SIZE, fLowerBorder );
-		data.vertices[3].pos.Set( 0.0f, (i + 1) * DEF_TILE_SIZE, fLowerBorder );
-		CalcCompactVector( &(data.vertices[0].normal), CVec3(-1, 0, 0) );
-		CalcCompactVector( &(data.vertices[1].normal), CVec3(-1, 0, 0) );
-		CalcCompactVector( &(data.vertices[2].normal), CVec3(-1, 0, 0) );
-		CalcCompactVector( &(data.vertices[3].normal), CVec3(-1, 0, 0) );
+		data.vertices[3].pos.Set( 0.0f, ( i + 1 ) * DEF_TILE_SIZE, fLowerBorder );
+		CalcCompactVector( &( data.vertices[0].normal ), CVec3( -1, 0, 0 ) );
+		CalcCompactVector( &( data.vertices[1].normal ), CVec3( -1, 0, 0 ) );
+		CalcCompactVector( &( data.vertices[2].normal ), CVec3( -1, 0, 0 ) );
+		CalcCompactVector( &( data.vertices[3].normal ), CVec3( -1, 0, 0 ) );
 		data.vertices[0].tex = VNULL2;
 		data.vertices[1].tex = VNULL2;
 		data.vertices[2].tex = VNULL2;
@@ -531,14 +558,14 @@ void CTerraGen::UpdateTerraBorders()
 		NMeshData::SMeshData &data = terrainGfxInfo.terraBorders[3][i];
 		//
 		data.vertices.resize( 4 );
-		data.vertices[0].pos.Set( fFarX, i * DEF_TILE_SIZE, GetTerraHeight(fFarX, Tile2Vis(i)) );
-		data.vertices[1].pos.Set( fFarX, (i + 1) * DEF_TILE_SIZE, GetTerraHeight(fFarX, Tile2Vis(i + 1)) );
+		data.vertices[0].pos.Set( fFarX, i * DEF_TILE_SIZE, GetTerraHeight( fFarX, Tile2Vis( i ) ) );
+		data.vertices[1].pos.Set( fFarX, ( i + 1 ) * DEF_TILE_SIZE, GetTerraHeight( fFarX, Tile2Vis( i + 1 ) ) );
 		data.vertices[2].pos.Set( fFarX, i * DEF_TILE_SIZE, fLowerBorder );
-		data.vertices[3].pos.Set( fFarX, (i + 1) * DEF_TILE_SIZE, fLowerBorder );
-		CalcCompactVector( &(data.vertices[0].normal), CVec3(1, 0, 0) );
-		CalcCompactVector( &(data.vertices[1].normal), CVec3(1, 0, 0) );
-		CalcCompactVector( &(data.vertices[2].normal), CVec3(1, 0, 0) );
-		CalcCompactVector( &(data.vertices[3].normal), CVec3(1, 0, 0) );
+		data.vertices[3].pos.Set( fFarX, ( i + 1 ) * DEF_TILE_SIZE, fLowerBorder );
+		CalcCompactVector( &( data.vertices[0].normal ), CVec3( 1, 0, 0 ) );
+		CalcCompactVector( &( data.vertices[1].normal ), CVec3( 1, 0, 0 ) );
+		CalcCompactVector( &( data.vertices[2].normal ), CVec3( 1, 0, 0 ) );
+		CalcCompactVector( &( data.vertices[3].normal ), CVec3( 1, 0, 0 ) );
 		data.vertices[0].tex = VNULL2;
 		data.vertices[1].tex = VNULL2;
 		data.vertices[2].tex = VNULL2;
@@ -557,7 +584,6 @@ void CTerraGen::UpdateTerraBorders()
 	}
 }
 
-
 void CTerraGen::UpdateGfxInfo( const int nPatchX1, const int nPatchY1, const int nPatchX2, const int nPatchY2 )
 {
 	for ( int g = nPatchY1; g < nPatchY2; ++g )
@@ -570,7 +596,6 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX1, const int nPatchY1, const int
 	// TODO: needs to be optimized
 	UpdateTerraBorders();
 }
-
 
 void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 {
@@ -607,7 +632,8 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 	//if ( terrainGfxInfo.terraPatches[nPatchY][nPatchX].size() != tileTerraMasks.size() )
 	//	terrainGfxInfo.terraPatches[nPatchY][nPatchX].resize( tileTerraMasks.size() );
 
-	const int nPatchInd = nPatchY * terrainInfo.nNumPatchesX * DEF_BREAK_TERRA_PATCHES + nPatchX * DEF_BREAK_TERRA_PATCHES;
+	const int nPatchInd =
+			nPatchY * terrainInfo.nNumPatchesX * DEF_BREAK_TERRA_PATCHES + nPatchX * DEF_BREAK_TERRA_PATCHES;
 
 	for ( int i = 0; i < DEF_BREAK_TERRA_PATCHES; ++i )
 	{
@@ -664,9 +690,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 					const CVec3fEx &_v1 = tile.vertices[it->i1];
 					const CVec3fEx &_v2 = tile.vertices[it->i2];
 					const CVec3fEx &_v3 = tile.vertices[it->i3];
-					const CVec3 v1( _v1.x, _v1.y, (std::max)(_v1.z + tile.addHeights[it->i1], 0.0f) );
-					const CVec3 v2( _v2.x, _v2.y, (std::max)(_v2.z + tile.addHeights[it->i2], 0.0f) );
-					const CVec3 v3( _v3.x, _v3.y, (std::max)(_v3.z + tile.addHeights[it->i3], 0.0f) );
+					const CVec3 v1( _v1.x, _v1.y, (std::max)( _v1.z + tile.addHeights[it->i1], 0.0f ) );
+					const CVec3 v2( _v2.x, _v2.y, (std::max)( _v2.z + tile.addHeights[it->i2], 0.0f ) );
+					const CVec3 v3( _v3.x, _v3.y, (std::max)( _v3.z + tile.addHeights[it->i3], 0.0f ) );
 					CalcTerraNorm( &vNorm, v1, v2, v3 );
 					AddNormFromVertex( v1, vNorm, patchNorms, patchNormsCnt );
 					AddNormFromVertex( v2, vNorm, patchNorms, patchNormsCnt );
@@ -689,7 +715,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 		for ( CPatchNormsHash::const_iterator it = patchNorms.begin(); it != patchNorms.end(); ++it )
 			preLightHash[it->first] = GetPreLightColor( pDesc, it->second, vPreLightDir );
 
-		std::vector<std::unordered_map<int, int> > patchesVertsHash( tileTerraMasks.size() );
+		std::vector<std::unordered_map<int, int>> patchesVertsHash( tileTerraMasks.size() );
 		static std::unordered_map<int, NGScene::SVertex> vertsHash( 1024 );
 
 		//vector<NMeshData::SMeshData> *pData = &(terrainGfxInfo.terraPatches[nPatchY][nPatchX]);
@@ -706,7 +732,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 				for ( int k = tileTerraMasks.size() - 1; k >= 0; --k )
 				{
 					const CArray2D<uint8_t> &mask = tileTerraMasks[k];
-					if ( (mask[g][i] > 0) || (mask[g][i + 1] > 0) || (mask[g + 1][i + 1] > 0) || (mask[g + 1][i] > 0) )
+					if ( ( mask[g][i] > 0 ) || ( mask[g][i + 1] > 0 ) || ( mask[g + 1][i + 1] > 0 ) || ( mask[g + 1][i] > 0 ) )
 						maskLayers.push_back( k );
 				}
 				if ( maskLayers.empty() )
@@ -718,9 +744,9 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 					const CVec3fEx &_v1 = tile.vertices[it->i1];
 					const CVec3fEx &_v2 = tile.vertices[it->i2];
 					const CVec3fEx &_v3 = tile.vertices[it->i3];
-					const CVec3 v1( _v1.x, _v1.y, (std::max)(_v1.z + tile.addHeights[it->i1], 0.0f) );
-					const CVec3 v2( _v2.x, _v2.y, (std::max)(_v2.z + tile.addHeights[it->i2], 0.0f) );
-					const CVec3 v3( _v3.x, _v3.y, (std::max)(_v3.z + tile.addHeights[it->i3], 0.0f) );
+					const CVec3 v1( _v1.x, _v1.y, (std::max)( _v1.z + tile.addHeights[it->i1], 0.0f ) );
+					const CVec3 v2( _v2.x, _v2.y, (std::max)( _v2.z + tile.addHeights[it->i2], 0.0f ) );
+					const CVec3 v3( _v3.x, _v3.y, (std::max)( _v3.z + tile.addHeights[it->i3], 0.0f ) );
 					const int nInd1 = AddGfxVertex( &vertsHash, v1, fPatchX, fPatchY, patchNorms );
 					const int nInd2 = AddGfxVertex( &vertsHash, v2, fPatchX, fPatchY, patchNorms );
 					const int nInd3 = AddGfxVertex( &vertsHash, v3, fPatchX, fPatchY, patchNorms );
@@ -741,7 +767,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 					for ( int k = 0; k < maskLayers.size(); ++k )
 					{
 						const int nLayer = maskLayers[k];
-						if ( k < (maskLayers.size() - 1) )
+						if ( k < ( maskLayers.size() - 1 ) )
 						{
 							const CArray2D<uint8_t> &mask = tileTerraMasks[nLayer];
 							nAlpha1 = (std::min)( nAlpha1 + mask[g][i], 255 );
@@ -753,9 +779,15 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 							nAlpha1 = nAlpha2 = nAlpha3 = nAlpha4 = 255;
 						const int nSub1 = nAlpha2 - nAlpha1;
 						const int nSub2 = nAlpha4 - nAlpha3;
-						const uint8_t cA1 = (std::min)( Float2Int(((float)nAlpha1 + (float)nSub1 * dx1) * (1.0f - dy1) + ((float)nAlpha3 + (float)nSub2 * dx1) * dy1), 255 );
-						const uint8_t cA2 = (std::min)( Float2Int(((float)nAlpha1 + (float)nSub1 * dx2) * (1.0f - dy2) + ((float)nAlpha3 + (float)nSub2 * dx2) * dy2), 255 );
-						const uint8_t cA3 = (std::min)( Float2Int(((float)nAlpha1 + (float)nSub1 * dx3) * (1.0f - dy3) + ((float)nAlpha3 + (float)nSub2 * dx3) * dy3), 255 );
+						const uint8_t cA1 = (std::min)( Float2Int( ( (float)nAlpha1 + (float)nSub1 * dx1 ) * ( 1.0f - dy1 ) +
+						                                           ( (float)nAlpha3 + (float)nSub2 * dx1 ) * dy1 ),
+						                                255 );
+						const uint8_t cA2 = (std::min)( Float2Int( ( (float)nAlpha1 + (float)nSub1 * dx2 ) * ( 1.0f - dy2 ) +
+						                                           ( (float)nAlpha3 + (float)nSub2 * dx2 ) * dy2 ),
+						                                255 );
+						const uint8_t cA3 = (std::min)( Float2Int( ( (float)nAlpha1 + (float)nSub1 * dx3 ) * ( 1.0f - dy3 ) +
+						                                           ( (float)nAlpha3 + (float)nSub2 * dx3 ) * dy3 ),
+						                                255 );
 						std::unordered_map<int, int> &curPatchVertsHash = patchesVertsHash[nLayer];
 						const int &nRealNum = tilesOrder[nLayer].nPrevNum;
 						//NMeshData::SMeshData &curData = data[nRealNum];
@@ -763,9 +795,27 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 
 						const float &fTexScaleCoeff = pDesc->pTerraSet->terraTypes[nRealNum]->fScaleCoeff;
 
-						const int nLayerInd1 = AddLayerVertex( &curPatchVertsHash, &curData.vertices, &(curData.attributes[0].data), nInd1, vert1, fTexScaleCoeff, preLightHash );
-						const int nLayerInd2 = AddLayerVertex( &curPatchVertsHash, &curData.vertices, &(curData.attributes[0].data), nInd2, vert2, fTexScaleCoeff, preLightHash );
-						const int nLayerInd3 = AddLayerVertex( &curPatchVertsHash, &curData.vertices, &(curData.attributes[0].data), nInd3, vert3, fTexScaleCoeff, preLightHash );
+						const int nLayerInd1 = AddLayerVertex( &curPatchVertsHash,
+						                                       &curData.vertices,
+						                                       &( curData.attributes[0].data ),
+						                                       nInd1,
+						                                       vert1,
+						                                       fTexScaleCoeff,
+						                                       preLightHash );
+						const int nLayerInd2 = AddLayerVertex( &curPatchVertsHash,
+						                                       &curData.vertices,
+						                                       &( curData.attributes[0].data ),
+						                                       nInd2,
+						                                       vert2,
+						                                       fTexScaleCoeff,
+						                                       preLightHash );
+						const int nLayerInd3 = AddLayerVertex( &curPatchVertsHash,
+						                                       &curData.vertices,
+						                                       &( curData.attributes[0].data ),
+						                                       nInd3,
+						                                       vert3,
+						                                       fTexScaleCoeff,
+						                                       preLightHash );
 
 						if ( pDesc->pTerraSet->bWrapTexture )
 							WrapChapterTexture( &curData.vertices, pDesc->nNumPatchesX, pDesc->nNumPatchesY, fTexScaleCoeff );
@@ -776,7 +826,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 
 						if ( nLayerInd1 == nLayerInd2 || nLayerInd1 == nLayerInd3 || nLayerInd2 == nLayerInd3 )
 						{
-							if ( (nAlpha1 == 255) && (nAlpha2 == 255) && (nAlpha3 == 255) && (nAlpha4 == 255) )
+							if ( ( nAlpha1 == 255 ) && ( nAlpha2 == 255 ) && ( nAlpha3 == 255 ) && ( nAlpha4 == 255 ) )
 								break;
 
 							continue;
@@ -785,9 +835,12 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						bool bFound = false;
 						for ( int iTriangle = 0; iTriangle < curData.triangles.size(); ++iTriangle )
 						{
-							if ( (curData.triangles[iTriangle].i1 == nLayerInd1 || curData.triangles[iTriangle].i1 == nLayerInd2 || curData.triangles[iTriangle].i1 == nLayerInd3) &&
-								(curData.triangles[iTriangle].i2 == nLayerInd1 || curData.triangles[iTriangle].i2 == nLayerInd2 || curData.triangles[iTriangle].i2 == nLayerInd3) &&
-								(curData.triangles[iTriangle].i3 == nLayerInd1 || curData.triangles[iTriangle].i3 == nLayerInd2 || curData.triangles[iTriangle].i3 == nLayerInd3) )
+							if ( ( curData.triangles[iTriangle].i1 == nLayerInd1 || curData.triangles[iTriangle].i1 == nLayerInd2 ||
+							       curData.triangles[iTriangle].i1 == nLayerInd3 ) &&
+							     ( curData.triangles[iTriangle].i2 == nLayerInd1 || curData.triangles[iTriangle].i2 == nLayerInd2 ||
+							       curData.triangles[iTriangle].i2 == nLayerInd3 ) &&
+							     ( curData.triangles[iTriangle].i3 == nLayerInd1 || curData.triangles[iTriangle].i3 == nLayerInd2 ||
+							       curData.triangles[iTriangle].i3 == nLayerInd3 ) )
 							{
 								bFound = true;
 								continue;
@@ -796,15 +849,15 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 
 						if ( bFound )
 						{
-							if ( (nAlpha1 == 255) && (nAlpha2 == 255) && (nAlpha3 == 255) && (nAlpha4 == 255) )
+							if ( ( nAlpha1 == 255 ) && ( nAlpha2 == 255 ) && ( nAlpha3 == 255 ) && ( nAlpha4 == 255 ) )
 								break;
 
 							continue;
 						}
 
-						curData.triangles.push_back( STriangle(nLayerInd1, nLayerInd2, nLayerInd3) );
+						curData.triangles.push_back( STriangle( nLayerInd1, nLayerInd2, nLayerInd3 ) );
 
-						if ( (nAlpha1 == 255) && (nAlpha2 == 255) && (nAlpha3 == 255) && (nAlpha4 == 255) )
+						if ( ( nAlpha1 == 255 ) && ( nAlpha2 == 255 ) && ( nAlpha3 == 255 ) && ( nAlpha4 == 255 ) )
 							break;
 					}
 				}

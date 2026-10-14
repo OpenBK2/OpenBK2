@@ -30,7 +30,7 @@ void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNode
 			while ( !pSubObjManIterator->IsEnd() )
 			{
 				std::string szName = szStartNodeName + LEVEL_SEPARATOR_CHAR + pSubObjManIterator->GetName();
-				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pObjectManipulator->GetDesc( szName ) ) )
+				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc *>( pObjectManipulator->GetDesc( szName ) ) )
 				{
 					EPCIEType nType = typePCIEMnemonics.Get( pDesc, szName );
 					if ( nType == PCIE_LIST )
@@ -66,7 +66,8 @@ void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNode
 				if ( szName.compare( 0, szStartNodeName.size(), szStartNodeName ) == 0 )
 				{
 					bFound = true;
-					if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pObjectManipulatorIterator->GetDesc() ) )
+					if ( const SPropertyDesc *pDesc =
+					         dynamic_cast<const SPropertyDesc *>( pObjectManipulatorIterator->GetDesc() ) )
 					{
 						EPCIEType nType = typePCIEMnemonics.Get( pDesc, szName );
 						if ( nType == PCIE_LIST )
@@ -98,8 +99,8 @@ void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNode
 	//DebugTrace( "FillLists() %s: %g", szStartNodeName.c_str(), NHPTimer::GetTimePassed( &time ) );
 }
 
-
-bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const
+bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator,
+                                             const IManipulator::CNameMap *pNameMap ) const
 {
 	bool bResult = true;
 	switch ( eType )
@@ -109,7 +110,8 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 			//DebugTrace( "Undo: TYPE_INSERT %s %d", szName.c_str(), (int)( oldValue ) );
 			if ( pNameMap && !pNameMap->empty() )
 			{
-				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end();
+				      ++itNamePrefix )
 				{
 					if ( !pObjectManipulator->RemoveNode( itNamePrefix->first + szName, (int)( oldValue ) ) )
 					{
@@ -129,7 +131,9 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 			{
 				if ( pNameMap && !pNameMap->empty() )
 				{
-					for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+					for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin();
+					      itNamePrefix != pNameMap->end();
+					      ++itNamePrefix )
 					{
 						if ( !pObjectManipulator->InsertNode( itNamePrefix->first + szName, (int)( oldValue ) ) )
 						{
@@ -143,13 +147,16 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 				}
 			}
 			//создаем заново массивы
-			for ( CArrayDataList::const_iterator itArrayData = arrayList.begin(); itArrayData != arrayList.end(); ++itArrayData )
+			for ( CArrayDataList::const_iterator itArrayData = arrayList.begin(); itArrayData != arrayList.end();
+			      ++itArrayData )
 			{
 				for ( int nNodeIndex = 0; nNodeIndex < itArrayData->nCount; ++nNodeIndex )
 				{
 					if ( pNameMap && !pNameMap->empty() )
 					{
-						for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+						for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin();
+						      itNamePrefix != pNameMap->end();
+						      ++itNamePrefix )
 						{
 							if ( !pObjectManipulator->InsertNode( itNamePrefix->first + itArrayData->szName, 0 ) )
 							{
@@ -168,11 +175,14 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 				}
 			}
 			//проставляем удаленные элементы
-			for ( CValueDataList::const_iterator itValueData = valueList.begin(); itValueData != valueList.end(); ++itValueData )
+			for ( CValueDataList::const_iterator itValueData = valueList.begin(); itValueData != valueList.end();
+			      ++itValueData )
 			{
 				if ( pNameMap && !pNameMap->empty() )
 				{
-					for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+					for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin();
+					      itNamePrefix != pNameMap->end();
+					      ++itNamePrefix )
 					{
 						if ( !pObjectManipulator->SetValue( itNamePrefix->first + itValueData->szName, itValueData->value ) )
 						{
@@ -195,7 +205,8 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 			//DebugTrace( "Undo: TYPE_CHANGE %s", szName.c_str() );
 			if ( pNameMap && !pNameMap->empty() )
 			{
-				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end();
+				      ++itNamePrefix )
 				{
 					if ( !pObjectManipulator->SetValue( itNamePrefix->first + szName.c_str(), oldValue ) )
 					{
@@ -214,14 +225,14 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 			break;
 		///////////////////////////////////////////
 		default:
-		bResult = false;
-		break;
+			bResult = false;
+			break;
 	}
 	return bResult;
 }
 
-
-bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const
+bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator,
+                                             const IManipulator::CNameMap *pNameMap ) const
 {
 	bool bResult = true;
 	switch ( eType )
@@ -231,7 +242,8 @@ bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, c
 			//DebugTrace( "Redo: TYPE_INSERT %s %d", szName.c_str(), (int)( newValue ) );
 			if ( pNameMap && !pNameMap->empty() )
 			{
-				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end();
+				      ++itNamePrefix )
 				{
 					if ( !pObjectManipulator->InsertNode( itNamePrefix->first + szName, (int)( newValue ) ) )
 					{
@@ -249,7 +261,8 @@ bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, c
 			//DebugTrace( "Redo: TYPE_REMOVE %s  %d", szName.c_str(), (int)( newValue ) );
 			if ( pNameMap && !pNameMap->empty() )
 			{
-				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end();
+				      ++itNamePrefix )
 				{
 					if ( !pObjectManipulator->RemoveNode( itNamePrefix->first + szName, (int)( newValue ) ) )
 					{
@@ -266,7 +279,8 @@ bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, c
 		case TYPE_CHANGE:
 			if ( pNameMap && !pNameMap->empty() )
 			{
-				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end(); ++itNamePrefix )
+				for ( IManipulator::CNameMap::const_iterator itNamePrefix = pNameMap->begin(); itNamePrefix != pNameMap->end();
+				      ++itNamePrefix )
 				{
 					if ( !pObjectManipulator->SetValue( itNamePrefix->first + szName.c_str(), newValue ) )
 					{
@@ -291,20 +305,26 @@ bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, c
 	return bResult;
 }
 
-
 void CObjectBaseController::Trace() const
 {
-	for ( CUndoDataList::const_iterator posUndoData = undoDataList.begin(); posUndoData != undoDataList.end(); ++posUndoData )
+	for ( CUndoDataList::const_iterator posUndoData = undoDataList.begin(); posUndoData != undoDataList.end();
+	      ++posUndoData )
 	{
 		switch ( posUndoData->eType )
 		{
 			///////////////////////////////////////////
 			case SUndoData::TYPE_INSERT:
-				DebugTrace( "Undo: TYPE_INSERT name: %s, new: %d, old: %d", posUndoData->szName.c_str(), (int)( posUndoData->newValue ), (int)( posUndoData->oldValue ) );
+				DebugTrace( "Undo: TYPE_INSERT name: %s, new: %d, old: %d",
+				            posUndoData->szName.c_str(),
+				            (int)( posUndoData->newValue ),
+				            (int)( posUndoData->oldValue ) );
 				break;
 			///////////////////////////////////////////
 			case SUndoData::TYPE_REMOVE:
-				DebugTrace( "Undo: TYPE_REMOVE name: %s, new: %d, old: %d", posUndoData->szName.c_str(), (int)( posUndoData->newValue ), (int)( posUndoData->oldValue ) );
+				DebugTrace( "Undo: TYPE_REMOVE name: %s, new: %d, old: %d",
+				            posUndoData->szName.c_str(),
+				            (int)( posUndoData->newValue ),
+				            (int)( posUndoData->oldValue ) );
 				break;
 			///////////////////////////////////////////
 			case SUndoData::TYPE_CHANGE:
@@ -317,7 +337,6 @@ void CObjectBaseController::Trace() const
 	}
 }
 
-
 bool CObjectBaseController::IsAbsolute() const
 {
 	if ( !undoDataList.empty() )
@@ -325,7 +344,9 @@ bool CObjectBaseController::IsAbsolute() const
 		// A modal picker must be able to restore removed array values on Cancel.
 		if ( NGlobal::GetVar( "disable_remove_undo", 0 ) > 0 && !Singleton<IControllerContainer>()->IsEditSessionActive() )
 		{
-			for ( CObjectBaseController::CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
+			for ( CObjectBaseController::CUndoDataList::const_iterator itUndoData = undoDataList.begin();
+			      itUndoData != undoDataList.end();
+			      ++itUndoData )
 			{
 				if ( itUndoData->eType == SUndoData::TYPE_REMOVE )
 				{
@@ -352,7 +373,7 @@ void CObjectBaseController::GetDescription( std::string *pszDescription ) const
 			if ( nSize == 1 )
 			{
 				const SUndoData &rUndoData = undoDataList.front();
-				switch( rUndoData.eType )
+				switch ( rUndoData.eType )
 				{
 					case SUndoData::TYPE_INSERT:
 						if ( (int)rUndoData.newValue >= 0 )
@@ -377,7 +398,8 @@ void CObjectBaseController::GetDescription( std::string *pszDescription ) const
 						}
 						return;
 					case SUndoData::TYPE_CHANGE:
-					{	std::string szText;
+					{
+						std::string szText;
 						rUndoData.newValue.ToText( &szText );
 						( *pszDescription ) = fmt::format( "Set to {}", szText );
 						return;
@@ -396,7 +418,6 @@ void CObjectBaseController::GetDescription( std::string *pszDescription ) const
 }
 //CRAP} PLAIN_TEXT
 
-
 bool CObjectBaseController::UndoWithoutUpdateViews()
 {
 	bool bResult = true;
@@ -406,11 +427,18 @@ bool CObjectBaseController::UndoWithoutUpdateViews()
 		{
 			IResourceManager *pResourceManager = Singleton<IResourceManager>();
 			CPtr<CMultiManipulator> pMultiManipulator = new CMultiManipulator();
-			for ( CObjectNameSet::const_iterator itObjectName = GetObjectSet().objectNameSet.begin(); itObjectName != GetObjectSet().objectNameSet.end(); ++itObjectName )
+			for ( CObjectNameSet::const_iterator itObjectName = GetObjectSet().objectNameSet.begin();
+			      itObjectName != GetObjectSet().objectNameSet.end();
+			      ++itObjectName )
 			{
-				pMultiManipulator->InsertManipulator( itObjectName->first, pResourceManager->CreateObjectManipulator( GetObjectSet().szObjectTypeName, itObjectName->first ), false, false );
+				pMultiManipulator->InsertManipulator(
+						itObjectName->first,
+						pResourceManager->CreateObjectManipulator( GetObjectSet().szObjectTypeName, itObjectName->first ),
+						false,
+						false );
 			}
-			for ( CObjectBaseController::CUndoDataList::const_iterator itUndoData = undoDataList.end(); itUndoData != undoDataList.begin(); )
+			for ( CObjectBaseController::CUndoDataList::const_iterator itUndoData = undoDataList.end();
+			      itUndoData != undoDataList.begin(); )
 			{
 				--itUndoData;
 				bResult = itUndoData->Undo( pMultiManipulator, &GetNameList() );
@@ -424,7 +452,6 @@ bool CObjectBaseController::UndoWithoutUpdateViews()
 	return bResult;
 }
 
-
 bool CObjectBaseController::RedoWithoutUpdateViews()
 {
 	bool bResult = true;
@@ -434,11 +461,19 @@ bool CObjectBaseController::RedoWithoutUpdateViews()
 		{
 			IResourceManager *pResourceManager = Singleton<IResourceManager>();
 			CPtr<CMultiManipulator> pMultiManipulator = new CMultiManipulator();
-			for ( CObjectNameSet::const_iterator itObjectName = GetObjectSet().objectNameSet.begin(); itObjectName != GetObjectSet().objectNameSet.end(); ++itObjectName )
+			for ( CObjectNameSet::const_iterator itObjectName = GetObjectSet().objectNameSet.begin();
+			      itObjectName != GetObjectSet().objectNameSet.end();
+			      ++itObjectName )
 			{
-				pMultiManipulator->InsertManipulator( itObjectName->first, pResourceManager->CreateObjectManipulator( GetObjectSet().szObjectTypeName, itObjectName->first ), false, false );
+				pMultiManipulator->InsertManipulator(
+						itObjectName->first,
+						pResourceManager->CreateObjectManipulator( GetObjectSet().szObjectTypeName, itObjectName->first ),
+						false,
+						false );
 			}
-			for ( CObjectBaseController::CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
+			for ( CObjectBaseController::CUndoDataList::const_iterator itUndoData = undoDataList.begin();
+			      itUndoData != undoDataList.end();
+			      ++itUndoData )
 			{
 				bResult = itUndoData->Redo( pMultiManipulator, &GetNameList() );
 				if ( !bResult )
@@ -451,8 +486,9 @@ bool CObjectBaseController::RedoWithoutUpdateViews()
 	return bResult;
 }
 
-
-bool CObjectBaseController::AddInsertOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddInsertOperation( const std::string &rszArrayName,
+                                                const int nIndex,
+                                                IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
 	//
@@ -487,8 +523,9 @@ bool CObjectBaseController::AddInsertOperation( const std::string &rszArrayName,
 	return bResult;
 }
 
-
-bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName,
+                                                const int nIndex,
+                                                IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
 	//
@@ -512,7 +549,8 @@ bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName,
 	posNewUndoData->newValue = nIndexToDelete;
 	// Retain deleted values for the picker's rollback even when ordinary
 	// array-removal undo is disabled in the editor configuration.
-	const bool bKeepUndoData = NGlobal::GetVar( "disable_remove_undo", 0 ) == 0 || Singleton<IControllerContainer>()->IsEditSessionActive();
+	const bool bKeepUndoData =
+			NGlobal::GetVar( "disable_remove_undo", 0 ) == 0 || Singleton<IControllerContainer>()->IsEditSessionActive();
 	if ( nIndexToDelete == NODE_REMOVEALL_INDEX )
 	{
 		if ( bKeepUndoData )
@@ -533,11 +571,11 @@ bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName,
 		if ( bKeepUndoData )
 		{
 			const std::string szStartNodeName = fmt::format( "{}{:c}{:c}{}{:c}",
-																						posNewUndoData->szName.c_str(),
-																						LEVEL_SEPARATOR_CHAR,
-																						ARRAY_NODE_START_CHAR,
-																						nIndexToDelete,
-																						ARRAY_NODE_END_CHAR );
+			                                                 posNewUndoData->szName.c_str(),
+			                                                 LEVEL_SEPARATOR_CHAR,
+			                                                 ARRAY_NODE_START_CHAR,
+			                                                 nIndexToDelete,
+			                                                 ARRAY_NODE_END_CHAR );
 			posNewUndoData->FillLists( szStartNodeName, pObjectManipulator );
 		}
 	}
@@ -550,8 +588,9 @@ bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName,
 	return bResult;
 }
 
-
-bool CObjectBaseController::AddChangeOperation( const std::string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddChangeOperation( const std::string &rszPropertyName,
+                                                const CVariant &rValue,
+                                                IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
 	//
@@ -580,8 +619,9 @@ bool CObjectBaseController::AddChangeOperation( const std::string &rszPropertyNa
 	return bResult;
 }
 
-
-bool CObjectBaseController::AddExpandOperation( const std::string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator )
+bool CObjectBaseController::AddExpandOperation( const std::string &rszPropertyName,
+                                                bool bExpand,
+                                                IManipulator *pObjectManipulator )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	posNewUndoData->eType = SUndoData::TYPE_EXPAND;

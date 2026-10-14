@@ -18,12 +18,11 @@
 
 REGISTER_EXPORTER_IN_DLL( FenceRPGStats, CFenceRPGStatsExporter )
 
-
-EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																										const std::string &rszObjectTypeName,
-																										const std::string &rszObjectName,
-																										bool bForce,
-																										EXPORT_TYPE exportType )
+EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator *pManipulator,
+                                                    const std::string &rszObjectTypeName,
+                                                    const std::string &rszObjectName,
+                                                    bool bForce,
+                                                    EXPORT_TYPE exportType )
 {
 	CStaticObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 	//
@@ -52,7 +51,9 @@ EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const std::string &rszSegmentsSetName, std::string *pszGeomFileName )
+bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator,
+                                               const std::string &rszSegmentsSetName,
+                                               std::string *pszGeomFileName )
 {
 	// Получаем манипулятор на VisObject-ы
 	int nNumVisobjs = 0;
@@ -70,7 +71,8 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const
 	if ( !pResourceManager )
 		return false;
 
-	CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( szObjName, pManipulator, 0, 0, 0 );
+	CPtr<IManipulator> pVisObjectManipulator =
+			CManipulatorManager::CreateManipulatorFromReference( szObjName, pManipulator, 0, 0, 0 );
 	if ( !pVisObjectManipulator )
 		return false;
 
@@ -83,10 +85,12 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const
 	CManipulatorManager::GetParamsFromReference( "Geometry", pModelManipulator, 0, &szGeometryName, 0 );
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const std::string szGeometriesFolder =	Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
+	const std::string szGeometriesFolder =
+			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
 
 	CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
-	*pszGeomFileName = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
+	*pszGeomFileName =
+			NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
 	return true;
 }
 
@@ -102,9 +106,9 @@ void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, con
 }
 
 bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator,
-																					  const std::string &rszSegmentsSetName,
-																						const CArray2D<uint8_t> &rPassabilityArray,
-																						const CVec3 &rvPassabilityOrigin )
+                                            const std::string &rszSegmentsSetName,
+                                            const CArray2D<uint8_t> &rPassabilityArray,
+                                            const CVec3 &rvPassabilityOrigin )
 {
 	// Записываем третий параметр - AI проходимость объекта
 
@@ -113,7 +117,8 @@ bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator,
 
 	if ( bResult )
 	{
-		bResult = bResult && CManipulatorManager::Set2DArray( rPassabilityArray, pManipulator, rszSegmentsSetName + ".passability" );
+		bResult = bResult &&
+		          CManipulatorManager::Set2DArray( rPassabilityArray, pManipulator, rszSegmentsSetName + ".passability" );
 		bResult = bResult && pManipulator->SetValue( rszSegmentsSetName + ".Origin.x", rvPassabilityOrigin.x );
 		bResult = bResult && pManipulator->SetValue( rszSegmentsSetName + ".Origin.y", rvPassabilityOrigin.y );
 	}

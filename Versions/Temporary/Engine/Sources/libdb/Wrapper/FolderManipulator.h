@@ -9,13 +9,17 @@ class CFolderManipulatorWrapper : public IManipulator
 	std::string szClassTypeName;
 	std::string szSrcPath;
 	std::string szDstPath;
+
 protected:
 	CFolderManipulatorWrapper() {}
+
 public:
-	CFolderManipulatorWrapper( const std::string &_szClassTypeName, const std::string &_szSrcPath, const std::string &_szDstPath );
+	CFolderManipulatorWrapper( const std::string &_szClassTypeName,
+	                           const std::string &_szSrcPath,
+	                           const std::string &_szDstPath );
 	// IManipulator
-	IManipulatorIterator* Iterate( bool bShowHidden, ECacheType eCache );
-	const SIteratorDesc* GetDesc( const std::string &szName ) const { return 0; }
+	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache );
+	const SIteratorDesc *GetDesc( const std::string &szName ) const { return 0; }
 	bool GetType( const std::string &szName, std::string *pszType ) const { return false; }
 	unsigned GetID( const std::string &szName ) const;
 	bool GetName( unsigned nID, std::string *pszName ) const;
@@ -26,7 +30,7 @@ public:
 	bool GetValue( const std::string &szName, CVariant *pValue ) const;
 	bool SetValue( const std::string &szName, const CVariant &value );
 	bool CheckValue( const std::string &szName, const CVariant &value, bool *pResult ) const { return false; }
-	NDb::IObjMan* GetObjMan() { return 0; }
+	NDb::IObjMan *GetObjMan() { return 0; }
 	bool IsNameExists( const std::string &rszName ) const;
 	void GetNameList( CNameMap *pNameMap ) const;
 };
@@ -54,12 +58,15 @@ class CFolderManipulatorIteratorWrapper : public IManipulatorIterator
 	//
 protected:
 	CFolderManipulatorIteratorWrapper() {}
+
 public:
-	CFolderManipulatorIteratorWrapper( const std::string &szSrcPath, const std::string &szDstPath, const std::string &szTypeName );
+	CFolderManipulatorIteratorWrapper( const std::string &szSrcPath,
+	                                   const std::string &szDstPath,
+	                                   const std::string &szTypeName );
 
 	bool Next();
 	bool IsEnd() const;
-	const SIteratorDesc* GetDesc() const;
+	const SIteratorDesc *GetDesc() const;
 	bool GetName( std::string *pszName ) const;
 	bool GetType( std::string *pszType ) const;
 	unsigned GetID() const;

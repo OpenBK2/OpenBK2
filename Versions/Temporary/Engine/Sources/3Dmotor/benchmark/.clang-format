@@ -1,9 +1,0 @@
-# The Google Benchmark harnesses, indented with spaces like the unit tests
-# beside them rather than like the engine sources. Same reasoning as
-# 3Dmotor/test/.clang-format.
-#
-# Everything else is inherited from the .clang-format at the repository root.
-BasedOnStyle: InheritParentConfig
-UseTab: Never
-IndentWidth: 2
-TabWidth: 2

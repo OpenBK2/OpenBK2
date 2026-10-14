@@ -18,10 +18,10 @@ void CheatsPassword( const std::string &szID, const std::vector<std::wstring> &p
 	if ( paramsSet.empty() )
 		return;
 	//
-	theCheats.CheckPassword( NStr::ToMBCS(paramsSet[0]) );
+	theCheats.CheckPassword( NStr::ToMBCS( paramsSet[0] ) );
 }
 
-START_REGISTER(Cheats)
+START_REGISTER( Cheats )
 
 REGISTER_VAR_EX( "dont_show_warfog", NGlobal::VarBoolHandler, &g_bDontShowWarFog, false, STORAGE_NONE );
 REGISTER_CMD( "password", CheatsPassword );

@@ -7,9 +7,14 @@
 
 #include <cstdint>
 
-bool CMapObjectDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
+bool CMapObjectDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage,
+                                         CArray2D<uint32_t> *pNormalImage,
+                                         const std::string &rszObjectTypeName,
+                                         const std::string &rszObjectName,
+                                         IManipulator *pObjectManipulator )
 {
-	if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference( "IconTexture", pObjectManipulator, 0, 0, 0 ) )
+	if ( CPtr<IManipulator> pTextureManipulator =
+	         CManipulatorManager::CreateManipulatorFromReference( "IconTexture", pObjectManipulator, 0, 0, 0 ) )
 	{
 		std::string szTextureName;
 		CManipulatorManager::GetValue( &szTextureName, pTextureManipulator, "DestName" );
@@ -18,8 +23,10 @@ bool CMapObjectDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray
 	return false;
 }
 
-
-bool CMapObjectDataExtractor::GetLabel( std::string *pszLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
+bool CMapObjectDataExtractor::GetLabel( std::string *pszLabel,
+                                        const std::string &rszObjectTypeName,
+                                        const std::string &rszObjectName,
+                                        IManipulator *pObjectManipulator )
 {
 	std::string szNameFileName;
 	if ( CManipulatorManager::GetValue( &szNameFileName, pObjectManipulator, "LocalizedNameFileRef" ) != false )

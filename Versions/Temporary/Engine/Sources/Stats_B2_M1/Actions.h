@@ -6,9 +6,9 @@
 
 namespace NDb
 {
-	struct SWeaponRPGStats;
-	struct SHPObjectRPGStats;
-	enum EReinforcementType : int;
+struct SWeaponRPGStats;
+struct SHPObjectRPGStats;
+enum EReinforcementType : int;
 }
 
 // ************************************************************************************************************************ //
@@ -21,51 +21,78 @@ namespace NDb
 
 enum EMovingType
 {
-	MOVE_TYPE_MOVE = 0,										// на самом деле либо Move либо Turn
-	MOVE_TYPE_DIVE = 1,										//for dive bombers
+	MOVE_TYPE_MOVE = 0, // на самом деле либо Move либо Turn
+	MOVE_TYPE_DIVE = 1, //for dive bombers
 };
 
 struct SSuspendedUpdate
 {
 	ZDATA
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		int nObjUniqueID = {};	// subject to change
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nObjUniqueID); return 0; }
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nObjUniqueID = {}; // subject to change
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nObjUniqueID );
+		return 0;
+	}
+
 public:
-	SSuspendedUpdate() : nObjUniqueID( 0 ) { }
-	SSuspendedUpdate( const int _nObjUniqueID ) : nObjUniqueID( _nObjUniqueID ) { }
+	SSuspendedUpdate() : nObjUniqueID( 0 ) {}
+	SSuspendedUpdate( const int _nObjUniqueID ) : nObjUniqueID( _nObjUniqueID ) {}
 };
 
 // for chage unit's visual representation
 struct SChangeDBIDUpdate : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
-		ZSKIP
-		ZSKIP
-		CDBPtr<NDb::SHPObjectRPGStats> pStats;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(4,&pStats); return 0; }
+	ZSKIP
+	ZSKIP
+	CDBPtr<NDb::SHPObjectRPGStats> pStats;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SSuspendedUpdate *)this );
+		f.Add( 4, &pStats );
+		return 0;
+	}
+
 public:
 };
 
 struct SAINotifyAction : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
-		uint16_t typeID = {};															// action type
-		int nParam = {};
-		NTimer::STime time = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&typeID); f.Add(3,&nParam); f.Add(4,&time); return 0; }
+	uint16_t typeID = {}; // action type
+	int nParam = {};
+	NTimer::STime time = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SSuspendedUpdate *)this );
+		f.Add( 2, &typeID );
+		f.Add( 3, &nParam );
+		f.Add( 4, &time );
+		return 0;
+	}
+
 public:
 	//
-	SAINotifyAction() { }
+	SAINotifyAction() {}
 	SAINotifyAction( const uint8_t _typeID, const int nObjUniqueID )
-		: SSuspendedUpdate( nObjUniqueID ), typeID( _typeID ), nParam( -1 ) { }
+			: SSuspendedUpdate( nObjUniqueID ), typeID( _typeID ), nParam( -1 )
+	{
+	}
 };
 
 struct SAINotifyDeadAtAll : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
-		bool bRot = {};															// true - если потом придёт update на исчезновение
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&bRot); return 0; }
+	bool bRot = {}; // true - если потом придёт update на исчезновение
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SSuspendedUpdate *)this );
+		f.Add( 2, &bRot );
+		return 0;
+	}
+
 public:
 };
 
@@ -77,34 +104,60 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 		ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pStats;
 		int nAmmo = {};
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pStats); f.Add(3,&nAmmo); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pStats );
+			f.Add( 3, &nAmmo );
+			return 0;
+		}
 	};
 	ZDATA_( SSuspendedUpdate )
-		float fHitPoints = {};											// hit points
-		float fFuel = {};
-		ZSKIP//int nMainAmmo
-		ZSKIP//int nSecondaryAmmo;				// патроны главной пушки и всего остального
-		NTimer::STime time = {};
-		std::vector<SWeaponAmmo> ammo;
-		int nSupply = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&fHitPoints); f.Add(3,&fFuel); f.Add(6,&time); f.Add(7,&ammo); f.Add(8,&nSupply); return 0; }
+	float fHitPoints = {}; // hit points
+	float fFuel = {};
+	ZSKIP     //int nMainAmmo
+			ZSKIP //int nSecondaryAmmo;				// патроны главной пушки и всего остального
+					NTimer::STime time = {};
+	std::vector<SWeaponAmmo> ammo;
+	int nSupply = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SSuspendedUpdate *)this );
+		f.Add( 2, &fHitPoints );
+		f.Add( 3, &fFuel );
+		f.Add( 6, &time );
+		f.Add( 7, &ammo );
+		f.Add( 8, &nSupply );
+		return 0;
+	}
+
 public:
 	//
-	SAINotifyRPGStats() { }
+	SAINotifyRPGStats() {}
 	SAINotifyRPGStats( const int nObjUniqueID, const float _fHitPoints )
-		: SSuspendedUpdate( nObjUniqueID ), fHitPoints( _fHitPoints ) { }
+			: SSuspendedUpdate( nObjUniqueID ), fHitPoints( _fHitPoints )
+	{
+	}
 };
 
 struct SAINotifyDiplomacy : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
-		EDiplomacyInfo eDiplomacy = {};
-		int nPlayer = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&eDiplomacy); f.Add(3,&nPlayer); return 0; }
+	EDiplomacyInfo eDiplomacy = {};
+	int nPlayer = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SSuspendedUpdate *)this );
+		f.Add( 2, &eDiplomacy );
+		f.Add( 3, &nPlayer );
+		return 0;
+	}
+
 public:
-	SAINotifyDiplomacy() { }
+	SAINotifyDiplomacy() {}
 	SAINotifyDiplomacy( EDiplomacyInfo _eDiplomacy, const int nObjUniqueID, const int _nPlayer )
-		: SSuspendedUpdate( nObjUniqueID ), eDiplomacy( _eDiplomacy ), nPlayer( _nPlayer ) { }
+			: SSuspendedUpdate( nObjUniqueID ), eDiplomacy( _eDiplomacy ), nPlayer( _nPlayer )
+	{
+	}
 };
 
 struct SAINotifyKeyBuilding : public SSuspendedUpdate
@@ -114,55 +167,79 @@ struct SAINotifyKeyBuilding : public SSuspendedUpdate
 	int nPrevPlayer = {};
 	bool bStorage = {};
 	bool bFriendLost = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&nPlayer); f.Add(3,&nPrevPlayer); f.Add(4,&bStorage); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SSuspendedUpdate *)this );
+		f.Add( 2, &nPlayer );
+		f.Add( 3, &nPrevPlayer );
+		f.Add( 4, &bStorage );
+		return 0;
+	}
+
 public:
-	SAINotifyKeyBuilding() { }
+	SAINotifyKeyBuilding() {}
 	SAINotifyKeyBuilding( const int nObjUniqueID, bool _bStorage, const int _nPlayer, const int _nPrevPlayer )
-		: SSuspendedUpdate( nObjUniqueID ), nPlayer( _nPlayer ), nPrevPlayer( _nPrevPlayer ), bStorage( _bStorage ), bFriendLost( false ) { }
+			: SSuspendedUpdate( nObjUniqueID ), nPlayer( _nPlayer ), nPrevPlayer( _nPrevPlayer ), bStorage( _bStorage ),
+				bFriendLost( false )
+	{
+	}
 };
 
 // update на вход/выход, юниты сначала входят не в стрелковую ячейку
 struct SAINotifyEntranceState
 {
 	ZDATA
-		int nInfantryUniqueID = {};											// кто входит
-		int nTargetUniqueID = {};												// куда входит
-		bool bEnter = {};																// true - входит, false - выходит
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nInfantryUniqueID); f.Add(3,&nTargetUniqueID); f.Add(4,&bEnter); return 0; }
+	int nInfantryUniqueID = {}; // кто входит
+	int nTargetUniqueID = {};   // куда входит
+	bool bEnter = {};           // true - входит, false - выходит
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nInfantryUniqueID );
+		f.Add( 3, &nTargetUniqueID );
+		f.Add( 4, &bEnter );
+		return 0;
+	}
+
 public:
-	SAINotifyEntranceState() : nInfantryUniqueID( 0 ), nTargetUniqueID( 0 ) { }
+	SAINotifyEntranceState() : nInfantryUniqueID( 0 ), nTargetUniqueID( 0 ) {}
 	SAINotifyEntranceState( const int _nInfantryUniqueID, const int _nTargetUniqueID, const bool _bEnter )
-		: nInfantryUniqueID( _nInfantryUniqueID ), nTargetUniqueID( _nTargetUniqueID ), bEnter( _bEnter ) { }
+			: nInfantryUniqueID( _nInfantryUniqueID ), nTargetUniqueID( _nTargetUniqueID ), bEnter( _bEnter )
+	{
+	}
 };
 // placement update
 struct SAINotifyPlacement : public SSuspendedUpdate
 {
-	bool bNewFormat = {};											// when true OLD is ignored
+	bool bNewFormat = {}; // when true OLD is ignored
 
 	//OLD{
-	CVec2 center;													// (x, y)
-	float z = {};															// height (mostly for planes)
-	uint16_t dir = {};															// direction [0..65535) => [0..2pi), only for units
-	uint32_t dwNormal = {};												// нормаль
+	CVec2 center;           // (x, y)
+	float z = {};           // height (mostly for planes)
+	uint16_t dir = {};      // direction [0..65535) => [0..2pi), only for units
+	uint32_t dwNormal = {}; // нормаль
 	//OLD}
 
 	//NEW{
-	CVec3 vPlacement;											// unit center
-	CQuat rotation;												// unit orientation (not sexual, in world)
+	CVec3 vPlacement; // unit center
+	CQuat rotation;   // unit orientation (not sexual, in world)
 	//NEW}
 
 	float fSpeed = {};
-	float fWaterCoeff = {};											// 0 - dry/shore, 1 - full amphibian water offset
-	uint8_t cSoil = {};														// параметры почвы: дым из-под колёс, следы и т.д.
+	float fWaterCoeff = {}; // 0 - dry/shore, 1 - full amphibian water offset
+	uint8_t cSoil = {};     // параметры почвы: дым из-под колёс, следы и т.д.
 
-	SAINotifyPlacement() : bNewFormat( false ), fWaterCoeff( 0.0f ), cSoil( 0 ) { }
-	SAINotifyPlacement(	const int nObjUniqueID, const CVec2 &_center, const short _z, const uint16_t _dir, const float _fSpeed )
-		: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ), fSpeed( _fSpeed ), fWaterCoeff( 0.0f ), cSoil( 0 ) { }
+	SAINotifyPlacement() : bNewFormat( false ), fWaterCoeff( 0.0f ), cSoil( 0 ) {}
+	SAINotifyPlacement(
+			const int nObjUniqueID, const CVec2 &_center, const short _z, const uint16_t _dir, const float _fSpeed )
+			: SSuspendedUpdate( nObjUniqueID ), bNewFormat( false ), center( _center ), z( _z ), dir( _dir ),
+				fSpeed( _fSpeed ), fWaterCoeff( 0.0f ), cSoil( 0 )
+	{
+	}
 
 	// для использования в AILogic
 	virtual int operator&( IBinSaver &saver )
 	{
-		saver.Add( 1, (SSuspendedUpdate*)(this) );
+		saver.Add( 1, (SSuspendedUpdate *)( this ) );
 
 		saver.Add( 2, &bNewFormat );
 		if ( bNewFormat )
@@ -188,147 +265,287 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 struct SNewUnitInfo : public SAINotifyPlacement
 {
 	ZDATA_( SAINotifyPlacement )
-		// placement of a unit
-		float fResize = {};												//for resizing the object
-		float fHitPoints = {};
-		float fFuel = {};
-		ZSKIP
-		ZSKIP
-		EDiplomacyInfo eDipl = {};									// diplomacy settings
-		int nPlayer = {};
-		int nFrameIndex = {};											// frame index for static objects
-		int nExpLevel = {};												// XP level of current unit
-		NDb::EReinforcementType eReinfType = {};
-		CDBPtr<NDb::SHPObjectRPGStats> pStats;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAINotifyPlacement *)this); f.Add(2,&fResize); f.Add(3,&fHitPoints); f.Add(4,&fFuel); f.Add(7,&eDipl); f.Add(8,&nPlayer); f.Add(9,&nFrameIndex); f.Add(10,&nExpLevel); f.Add(11,&eReinfType); f.Add(12,&pStats); return 0; }
+	// placement of a unit
+	float fResize = {}; //for resizing the object
+	float fHitPoints = {};
+	float fFuel = {};
+	ZSKIP
+	ZSKIP
+	EDiplomacyInfo eDipl = {}; // diplomacy settings
+	int nPlayer = {};
+	int nFrameIndex = {}; // frame index for static objects
+	int nExpLevel = {};   // XP level of current unit
+	NDb::EReinforcementType eReinfType = {};
+	CDBPtr<NDb::SHPObjectRPGStats> pStats;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SAINotifyPlacement *)this );
+		f.Add( 2, &fResize );
+		f.Add( 3, &fHitPoints );
+		f.Add( 4, &fFuel );
+		f.Add( 7, &eDipl );
+		f.Add( 8, &nPlayer );
+		f.Add( 9, &nFrameIndex );
+		f.Add( 10, &nExpLevel );
+		f.Add( 11, &eReinfType );
+		f.Add( 12, &pStats );
+		return 0;
+	}
+
 public:
-	SNewUnitInfo() {  }
+	SNewUnitInfo() {}
 };
 
 // hit update
 struct SAINotifyHitInfo
 {
-	enum EHitType { EHT_NONE, EHT_HIT, EHT_MISS, EHT_REFLECT, EHT_GROUND, EHT_WATER, EHT_AIR, EHT_AIR_WITH_CRATER };
+	enum EHitType
+	{
+		EHT_NONE,
+		EHT_HIT,
+		EHT_MISS,
+		EHT_REFLECT,
+		EHT_GROUND,
+		EHT_WATER,
+		EHT_AIR,
+		EHT_AIR_WITH_CRATER
+	};
 
 	ZDATA
-		CDBPtr<NDb::SWeaponRPGStats> pWeapon;					// weapon shell was fired
-		uint16_t wShell = {};														// shell index in the weapon
-		uint16_t wDir = {};															// direction hit was from
-		EHitType eHitType = {};											// тип попадани
-		int nVictimUniqueID = {};
-		CVec3 explCoord;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeapon); f.Add(3,&wShell); f.Add(4,&wDir); f.Add(5,&eHitType); f.Add(6,&nVictimUniqueID); f.Add(7,&explCoord); return 0; }
-public:
-	SAINotifyHitInfo() : pWeapon( 0 ) { }
-	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon, const uint16_t _wShell, const uint16_t &_wDir, const int _nVictimUniqueID, const CVec3 &_explCoord )
-		: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( _nVictimUniqueID ), explCoord( _explCoord ) { }
+	CDBPtr<NDb::SWeaponRPGStats> pWeapon; // weapon shell was fired
+	uint16_t wShell = {};                 // shell index in the weapon
+	uint16_t wDir = {};                   // direction hit was from
+	EHitType eHitType = {};               // тип попадани
+	int nVictimUniqueID = {};
+	CVec3 explCoord;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pWeapon );
+		f.Add( 3, &wShell );
+		f.Add( 4, &wDir );
+		f.Add( 5, &eHitType );
+		f.Add( 6, &nVictimUniqueID );
+		f.Add( 7, &explCoord );
+		return 0;
+	}
 
-	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon, const uint16_t _wShell, const uint16_t &_wDir, const CVec3 &_explCoord )
-		: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( 0 ), explCoord( _explCoord ) { }
+public:
+	SAINotifyHitInfo() : pWeapon( 0 ) {}
+	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon,
+	                  const uint16_t _wShell,
+	                  const uint16_t &_wDir,
+	                  const int _nVictimUniqueID,
+	                  const CVec3 &_explCoord )
+			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( _nVictimUniqueID ),
+				explCoord( _explCoord )
+	{
+	}
+
+	SAINotifyHitInfo( const NDb::SWeaponRPGStats *_pWeapon,
+	                  const uint16_t _wShell,
+	                  const uint16_t &_wDir,
+	                  const CVec3 &_explCoord )
+			: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), nVictimUniqueID( 0 ), explCoord( _explCoord )
+	{
+	}
 };
 // aiming: turret turning update
 struct SAINotifyTurretTurn
 {
 	ZDATA
-		int nObjUniqueID = {};											// object turret belong to
-		int nPlantform = {};												// turned platform
-		uint16_t wAngle = {};													// final angle
-		NTimer::STime endTime = {};								// final time
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nObjUniqueID); f.Add(3,&nPlantform); f.Add(4,&wAngle); f.Add(5,&endTime); return 0; }
+	int nObjUniqueID = {};      // object turret belong to
+	int nPlantform = {};        // turned platform
+	uint16_t wAngle = {};       // final angle
+	NTimer::STime endTime = {}; // final time
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nObjUniqueID );
+		f.Add( 3, &nPlantform );
+		f.Add( 4, &wAngle );
+		f.Add( 5, &endTime );
+		return 0;
+	}
+
 public:
-	SAINotifyTurretTurn() : nObjUniqueID( 0 ) { }
-	SAINotifyTurretTurn( const int _nObjUniqueID, const int &_nPlantform, const uint16_t &_wAngle, const NTimer::STime &_endTime )
-		: nObjUniqueID( _nObjUniqueID ), nPlantform( _nPlantform ), wAngle( _wAngle ), endTime( _endTime ) { }
+	SAINotifyTurretTurn() : nObjUniqueID( 0 ) {}
+	SAINotifyTurretTurn( const int _nObjUniqueID,
+	                     const int &_nPlantform,
+	                     const uint16_t &_wAngle,
+	                     const NTimer::STime &_endTime )
+			: nObjUniqueID( _nObjUniqueID ), nPlantform( _nPlantform ), wAngle( _wAngle ), endTime( _endTime )
+	{
+	}
 };
 
 struct SAINotifyBaseShot
 {
 	ZDATA
-		int typeID = {};														// shot type
-		int nObjUniqueID = {};											// юнит, который стрелял либо объект, из которого он стрелял
-		uint8_t cShell = {};													// shell number
-		NTimer::STime time = {};										// time, this shot was...
-		CVec3 vDestPos;												// destination point of this shot
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&typeID); f.Add(3,&nObjUniqueID); f.Add(4,&cShell); f.Add(5,&time); f.Add(6,&vDestPos); return 0; }
+	int typeID = {};         // shot type
+	int nObjUniqueID = {};   // юнит, который стрелял либо объект, из которого он стрелял
+	uint8_t cShell = {};     // shell number
+	NTimer::STime time = {}; // time, this shot was...
+	CVec3 vDestPos;          // destination point of this shot
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &typeID );
+		f.Add( 3, &nObjUniqueID );
+		f.Add( 4, &cShell );
+		f.Add( 5, &time );
+		f.Add( 6, &vDestPos );
+		return 0;
+	}
+
 public:
-	SAINotifyBaseShot() : nObjUniqueID( 0 ) {  }
-	SAINotifyBaseShot( const uint8_t _typeID, const int _nObjUniqueID, const uint8_t _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
-		: typeID( _typeID ), nObjUniqueID( _nObjUniqueID ), cShell( _cShell ), time( _time ), vDestPos( _vDestPos ) {  }
+	SAINotifyBaseShot() : nObjUniqueID( 0 ) {}
+	SAINotifyBaseShot( const uint8_t _typeID,
+	                   const int _nObjUniqueID,
+	                   const uint8_t _cShell,
+	                   const NTimer::STime &_time,
+	                   const CVec3 &_vDestPos )
+			: typeID( _typeID ), nObjUniqueID( _nObjUniqueID ), cShell( _cShell ), time( _time ), vDestPos( _vDestPos )
+	{
+	}
 };
 
 struct SAINotifyMechShot : public SAINotifyBaseShot
 {
 	ZDATA_( SAINotifyBaseShot )
-		uint8_t cGun = {};														// gun number
-		uint8_t cPlatform = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAINotifyBaseShot *)this); f.Add(2,&cGun); f.Add(3,&cPlatform); return 0; }
-public:
-	SAINotifyMechShot() { }
-	SAINotifyMechShot( const uint8_t _typeID, const int _nObjUniqueID, const uint8_t _cGun, const uint8_t _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
-		: SAINotifyBaseShot( _typeID, _nObjUniqueID, _cShell, _time, _vDestPos ), cGun( _cGun ) {  }
+	uint8_t cGun = {}; // gun number
+	uint8_t cPlatform = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SAINotifyBaseShot *)this );
+		f.Add( 2, &cGun );
+		f.Add( 3, &cPlatform );
+		return 0;
+	}
 
+public:
+	SAINotifyMechShot() {}
+	SAINotifyMechShot( const uint8_t _typeID,
+	                   const int _nObjUniqueID,
+	                   const uint8_t _cGun,
+	                   const uint8_t _cShell,
+	                   const NTimer::STime &_time,
+	                   const CVec3 &_vDestPos )
+			: SAINotifyBaseShot( _typeID, _nObjUniqueID, _cShell, _time, _vDestPos ), cGun( _cGun )
+	{
+	}
 };
 
 struct SAINotifyInfantryShot : public SAINotifyBaseShot
 {
-	ZDATA_(SAINotifyBaseShot)
-		CDBPtr<NDb::SWeaponRPGStats> pWeapon;				// оружие
-		// если nSlot >= 0, то стрельбы из объекта, nSlot == -1, то стрельба в открытую
-		int nSlot = {};											// номер слота
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAINotifyBaseShot*)this); f.Add(2,&pWeapon); f.Add(3,&nSlot); return 0; }
+	ZDATA_( SAINotifyBaseShot )
+	CDBPtr<NDb::SWeaponRPGStats> pWeapon; // оружие
+	// если nSlot >= 0, то стрельбы из объекта, nSlot == -1, то стрельба в открытую
+	int nSlot = {}; // номер слота
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (SAINotifyBaseShot *)this );
+		f.Add( 2, &pWeapon );
+		f.Add( 3, &nSlot );
+		return 0;
+	}
+
 public:
-// CRAP{
-// Эти два параметра нужны только нам в M1
-// Потому что мы не умеем другими способами передавать pWeapon
+	// CRAP{
+	// Эти два параметра нужны только нам в M1
+	// Потому что мы не умеем другими способами передавать pWeapon
 	int nPlatform = {};
 	int nGun = {};
-// CRAP}
-	SAINotifyInfantryShot() : pWeapon( 0 ), nSlot( -1 ), nPlatform( 0 ), nGun( 0 ) {  }
-	SAINotifyInfantryShot( const uint8_t _typeID, const int nObjUniqueID, const int _nSlot, const uint8_t _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
-		: SAINotifyBaseShot( _typeID, nObjUniqueID, _cShell, _time, _vDestPos ), nSlot( _nSlot ), nPlatform( 0 ), nGun( 0 ) {  }
+	// CRAP}
+	SAINotifyInfantryShot() : pWeapon( 0 ), nSlot( -1 ), nPlatform( 0 ), nGun( 0 ) {}
+	SAINotifyInfantryShot( const uint8_t _typeID,
+	                       const int nObjUniqueID,
+	                       const int _nSlot,
+	                       const uint8_t _cShell,
+	                       const NTimer::STime &_time,
+	                       const CVec3 &_vDestPos )
+			: SAINotifyBaseShot( _typeID, nObjUniqueID, _cShell, _time, _vDestPos ), nSlot( _nSlot ), nPlatform( 0 ),
+				nGun( 0 )
+	{
+	}
 };
 
 struct SAINotifySelections
 {
 	ZDATA
-		int nObjUniqueID = {};
-		bool bSelectable = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nObjUniqueID); f.Add(3,&bSelectable); return 0; }
+	int nObjUniqueID = {};
+	bool bSelectable = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nObjUniqueID );
+		f.Add( 3, &bSelectable );
+		return 0;
+	}
+
 public:
 };
 
 struct SAINotifyNewProjectile
 {
 	ZDATA
-		int nObjUniqueID = {};
-		int nSourceUniqueID = {};
+	int nObjUniqueID = {};
+	int nSourceUniqueID = {};
 
-		int nGun = {};
-		int nPlatform = {};
-		int nShell = {};
+	int nGun = {};
+	int nPlatform = {};
+	int nShell = {};
 
-		CVec3 vAIStartPos;
-		NTimer::STime timeToEqualizePos = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nObjUniqueID); f.Add(3,&nSourceUniqueID); f.Add(4,&nGun); f.Add(5,&nPlatform); f.Add(6,&nShell); f.Add(7,&vAIStartPos); f.Add(8,&timeToEqualizePos); return 0; }
+	CVec3 vAIStartPos;
+	NTimer::STime timeToEqualizePos = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nObjUniqueID );
+		f.Add( 3, &nSourceUniqueID );
+		f.Add( 4, &nGun );
+		f.Add( 5, &nPlatform );
+		f.Add( 6, &nShell );
+		f.Add( 7, &vAIStartPos );
+		f.Add( 8, &timeToEqualizePos );
+		return 0;
+	}
+
 public:
-	SAINotifyNewProjectile() : nObjUniqueID( 0 ) { }
-	SAINotifyNewProjectile( const int _nObjUniqueID, const int _nSourceUniqueID, const int _nPlatform, const int _nGun, const int _nShell, const CVec3 &_vAIStartPos, const NTimer::STime _timeToEqualizePos )
-		: nObjUniqueID( _nObjUniqueID ), nSourceUniqueID( _nSourceUniqueID ), nPlatform( _nPlatform ), nGun( _nGun ), nShell( _nShell ), vAIStartPos( _vAIStartPos ), timeToEqualizePos( _timeToEqualizePos ) { }
+	SAINotifyNewProjectile() : nObjUniqueID( 0 ) {}
+	SAINotifyNewProjectile( const int _nObjUniqueID,
+	                        const int _nSourceUniqueID,
+	                        const int _nPlatform,
+	                        const int _nGun,
+	                        const int _nShell,
+	                        const CVec3 &_vAIStartPos,
+	                        const NTimer::STime _timeToEqualizePos )
+			: nObjUniqueID( _nObjUniqueID ), nSourceUniqueID( _nSourceUniqueID ), nPlatform( _nPlatform ), nGun( _nGun ),
+				nShell( _nShell ), vAIStartPos( _vAIStartPos ), timeToEqualizePos( _timeToEqualizePos )
+	{
+	}
 };
 
 struct SAINotifyUpdateLaseMark
 {
 	ZDATA
-		int nLaserMarkID = {};
-		int nUnitID = {};
+	int nLaserMarkID = {};
+	int nUnitID = {};
 
-		int nPlatform = {};
-		int nGun = {};
+	int nPlatform = {};
+	int nGun = {};
 
-		CVec3 vTarget;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLaserMarkID); f.Add(3,&nUnitID); f.Add(4,&nPlatform); f.Add(5,&nGun); f.Add(6,&vTarget); return 0; }
+	CVec3 vTarget;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nLaserMarkID );
+		f.Add( 3, &nUnitID );
+		f.Add( 4, &nPlatform );
+		f.Add( 5, &nGun );
+		f.Add( 6, &vTarget );
+		return 0;
+	}
+
 public:
 	SAINotifyUpdateLaseMark() : nLaserMarkID( -1 ), nUnitID( -1 ), nPlatform( -1 ), nGun( -1 ), vTarget( VNULL3 ) {}
-	SAINotifyUpdateLaseMark( const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
-		: nLaserMarkID( _nLaserMarkID ), nUnitID( _nUnitID ), nPlatform( _nPlatform ), nGun( _nGun ), vTarget( _vTarget ) {}
+	SAINotifyUpdateLaseMark(
+			const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
+			: nLaserMarkID( _nLaserMarkID ), nUnitID( _nUnitID ), nPlatform( _nPlatform ), nGun( _nGun ), vTarget( _vTarget )
+	{
+	}
 };

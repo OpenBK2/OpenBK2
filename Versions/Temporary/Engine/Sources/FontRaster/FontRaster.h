@@ -60,12 +60,12 @@ enum ECellMetrics
 
 struct SOptions
 {
-	std::string szFontFile;			// a TrueType or OpenType file
+	std::string szFontFile; // a TrueType or OpenType file
 	// which face: the index in a collection (.ttc) in the low 16 bits, and for a
 	// variable font a named instance, counted from 1, in the high 16 bits
 	int nFaceIndex = 0;
 	ECellMetrics eCellMetrics = CELL_WIN;
-	int nCellHeight = 16;				// ascent + descent in pixels, exactly
+	int nCellHeight = 16; // ascent + descent in pixels, exactly
 	// Match a baked font's visible capital height. The cell may grow to hold
 	// the replacement's accents and descenders without shrinking its letters.
 	int nCapHeight = 0;
@@ -73,7 +73,7 @@ struct SOptions
 	// legacy UI proportions never stretches an already rasterised bitmap.
 	double fWidthScale = 1.0;
 	EHinting eHinting = HINTING_LIGHT;
-	bool bAntialias = true;			// false renders one bit per pixel
+	bool bAntialias = true; // false renders one bit per pixel
 	// Applied to coverage as alpha = coverage ^ (1 / fGamma). 1 leaves FreeType's
 	// linear coverage alone; above 1 thickens the antialiased edges, which is
 	// roughly what GDI's ClearType contrast does.
@@ -87,16 +87,16 @@ struct SOptions
 struct SGlyph
 {
 	uint32_t nCodePoint = 0;
-	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;	// the rect in the atlas: x2 - x1 is B + max(C, 0), y2 - y1 the cell height
-	int nA = 0;													// pen to ink
-	int nBC = 0;												// ink to the next pen position, B + C
-	int nWidth = 0;											// B + max(C, 0)
+	int x1 = 0, y1 = 0, x2 = 0, y2 = 0; // the rect in the atlas: x2 - x1 is B + max(C, 0), y2 - y1 the cell height
+	int nA = 0;                         // pen to ink
+	int nBC = 0;                        // ink to the next pen position, B + C
+	int nWidth = 0;                     // B + max(C, 0)
 };
 
 struct SKerningPair
 {
-	uint32_t nLeft = 0, nRight = 0;			// code points
-	int nAmount = 0;										// pixels added to the pen between them
+	uint32_t nLeft = 0, nRight = 0; // code points
+	int nAmount = 0;                // pixels added to the pen between them
 };
 
 struct SFont
@@ -115,13 +115,16 @@ struct SFont
 	int nAtlasWidth = 0, nAtlasHeight = 0;
 	std::vector<uint8_t> atlas;
 	// diagnostics, for the caller to report
-	std::vector<uint32_t> missing;			// code points that fell back to .notdef
-	std::vector<uint32_t> clipped;			// code points whose ink reached outside their cell
-	double fPixelsPerEm = 0;						// the em size that gives nCellHeight
+	std::vector<uint32_t> missing; // code points that fell back to .notdef
+	std::vector<uint32_t> clipped; // code points whose ink reached outside their cell
+	double fPixelsPerEm = 0;       // the em size that gives nCellHeight
 };
 
 // Rasterises codePoints from options.szFontFile into pResult. Returns false and
 // fills *pszError when the font cannot be opened or the atlas cannot hold it.
-bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints, SFont *pResult, std::string *pszError );
+bool Rasterise( const SOptions &options,
+                const std::vector<uint32_t> &codePoints,
+                SFont *pResult,
+                std::string *pszError );
 
 }

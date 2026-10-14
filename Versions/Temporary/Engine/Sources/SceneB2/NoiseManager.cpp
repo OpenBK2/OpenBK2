@@ -45,7 +45,8 @@ CNoiseManager::CNoiseManager()
 
 CNoiseAccessor CNoiseManager::GetNoise( unsigned int nNoiseNum )
 {
-	NI_ASSERT( nNoiseNum < noises.size(), fmt::format("Invalid noise number {} - available [0..{}]", nNoiseNum, noises.size() - 1) );
+	NI_ASSERT( nNoiseNum < noises.size(),
+	           fmt::format( "Invalid noise number {} - available [0..{}]", nNoiseNum, noises.size() - 1 ) );
 	if ( !noises[nNoiseNum].bLoaded )
 		LoadNoise( nNoiseNum );
 
@@ -61,20 +62,20 @@ CNoiseAccessor CNoiseManager::GetNoise( const std::string &_szName )
 		if ( noises[i].szFileName == szName )
 			return GetNoise( i );
 	}
-	NI_ASSERT( false, fmt::format("Unknown noise \"{}\"", szName) );
+	NI_ASSERT( false, fmt::format( "Unknown noise \"{}\"", szName ) );
 	return GetNoise( 0 );
 }
 
 void CNoiseManager::LoadNoise( unsigned int nNoiseNum )
 {
 	CFileStream stream( NVFS::GetMainVFS(), noises[nNoiseNum].szFileName );
-	NI_ASSERT( stream.IsOk(), fmt::format("Can't load noise: {}", noises[nNoiseNum].szFileName ) );
+	NI_ASSERT( stream.IsOk(), fmt::format( "Can't load noise: {}", noises[nNoiseNum].szFileName ) );
 
 	LoadGrayTGAImage( &stream, noises[nNoiseNum].noise );
 
 	NI_ASSERT( ( noises[nNoiseNum].noise.GetSizeX() == GetNextPow2( noises[nNoiseNum].noise.GetSizeX() ) ) &&
-						 ( noises[nNoiseNum].noise.GetSizeY() == GetNextPow2( noises[nNoiseNum].noise.GetSizeY() ) ),
-						 fmt::format("Noise {} has not powered two sizes", noises[nNoiseNum].szFileName ) );
+	               ( noises[nNoiseNum].noise.GetSizeY() == GetNextPow2( noises[nNoiseNum].noise.GetSizeY() ) ),
+	           fmt::format( "Noise {} has not powered two sizes", noises[nNoiseNum].szFileName ) );
 
 	noises[nNoiseNum].bLoaded = true;
 }

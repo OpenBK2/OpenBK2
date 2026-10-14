@@ -11,7 +11,7 @@ namespace NGScene
 
 float CParticleAnimator::GetRealTime( const STime &time )
 {
-	return (time - stBeginTime) * pInstance->fSpeed / 1000.f - pInstance->fOffset * pInstance->fSpeed;
+	return ( time - stBeginTime ) * pInstance->fSpeed / 1000.f - pInstance->fOffset * pInstance->fSpeed;
 }
 
 void CParticleAnimator::CheckFirstTime()
@@ -35,17 +35,17 @@ void CParticleAnimator::CheckFirstTime()
 void CParticleAnimator::Recalc()
 {
 	CheckFirstTime();
-	CDynamicCast<CStandardParticleEffect> pRealValue(pValue);
+	CDynamicCast<CStandardParticleEffect> pRealValue( pValue );
 	CStandardParticleEffect &value = *pRealValue;
 
 	value.bEnd = true;
 	value.bLeaveParticlesWhereStarted = bLeaveParticlesWhereStarted;
 	value.bSampleCenterWarfog = !bPerParticleFog;
 
-//	value.bAlphaAdd = (pInstance->alpha == NDb::SParticleInstance::A_ADDITIVE);
+	//	value.bAlphaAdd = (pInstance->alpha == NDb::SParticleInstance::A_ADDITIVE);
 	value.transform = pPlacement->GetValue().forward;
 	value.frames.clear();
-	value.vWrap = CVec2(0,0);
+	value.vWrap = CVec2( 0, 0 );
 	if ( pInstance && pInstance->pParticle )
 		value.vWrap = pInstance->pParticle->vWrapSize;
 
@@ -80,7 +80,7 @@ void CParticleAnimator::Recalc()
 		}
 		else
 		{
-			fTimes.push_back(0);
+			fTimes.push_back( 0 );
 			value.bEnd = false;
 		}
 	}
@@ -92,13 +92,13 @@ void CParticleAnimator::Recalc()
 			nCycleCount = value.nStopCycle;
 		if ( nCycleCount && nCurCycle > nCycleCount )
 			nCurCycle = nCycleCount;
-		float fT = fTObject - (nCurCycle - 1) * pInstance->fEndCycle;
+		float fT = fTObject - ( nCurCycle - 1 ) * pInstance->fEndCycle;
 		for ( int i = 0; i < nCurCycle && fT < pEffect->fTEnd; ++i )
 		{
 			fTimes.push_back( fT );
 			fT += pInstance->fEndCycle;
 		}
-		if ( nCycleCount == 0	|| fTObject < pEffect->fTEnd + (nCycleCount - 1) * pInstance->fEndCycle )
+		if ( nCycleCount == 0 || fTObject < pEffect->fTEnd + ( nCycleCount - 1 ) * pInstance->fEndCycle )
 			value.bEnd = false;
 	}
 
@@ -106,8 +106,9 @@ void CParticleAnimator::Recalc()
 	{
 		SParticleFrame frame;
 		frame.fT = fTimes[i] * pEffect->fFrameRate;
-		frame.bLastCycle = (i == 0);
-		frame.nNumFrame = (fTObject - fTimes[i]) / pInstance->fEndCycle + 1;;
+		frame.bLastCycle = ( i == 0 );
+		frame.nNumFrame = ( fTObject - fTimes[i] ) / pInstance->fEndCycle + 1;
+		;
 		value.frames.push_back( frame );
 	}
 }
@@ -122,7 +123,7 @@ void CParticleAnimator::StopParticlesGeneration( const STime &tStop )
 	CParticlesInfo *pEffect = pInfo->GetValue();
 	if ( !pEffect )
 		return;
-	CDynamicCast<CStandardParticleEffect> pRealValue(pValue);
+	CDynamicCast<CStandardParticleEffect> pRealValue( pValue );
 	CStandardParticleEffect &value = *pRealValue;
 	float fT = GetRealTime( tStop );
 	if ( pInstance->fEndCycle == 0 )
@@ -131,8 +132,8 @@ void CParticleAnimator::StopParticlesGeneration( const STime &tStop )
 	{
 		int nCycle = int( fT / pInstance->fEndCycle ) + 1;
 		if ( pInstance->nCycleCount && nCycle > pInstance->nCycleCount )
-				nCycle = pInstance->nCycleCount;
-		float fTTruncated = fT - (nCycle - 1) * pInstance->fEndCycle;
+			nCycle = pInstance->nCycleCount;
+		float fTTruncated = fT - ( nCycle - 1 ) * pInstance->fEndCycle;
 		value.fTStopGeneration = fTTruncated * pEffect->fFrameRate;
 		value.nStopCycle = nCycle;
 	}

@@ -2,11 +2,7 @@
 
 #include "InterfaceMPBase.h"
 
-
-
-
-class CInterfaceMPLadderGame : public CInterfaceScreenBase,
-	public IProgrammedReactionsAndChecks
+class CInterfaceMPLadderGame : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPLadderGame );
 
@@ -19,35 +15,55 @@ class CInterfaceMPLadderGame : public CInterfaceScreenBase,
 		CPtr<IButton> pSwitch;
 		bool bAllowed;
 		bool bSelected;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMapDesc); f.Add(3,&pSwitch); f.Add(4,&bAllowed); f.Add(5,&bSelected); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pMapDesc );
+			f.Add( 3, &pSwitch );
+			f.Add( 4, &bAllowed );
+			f.Add( 5, &bSelected );
+			return 0;
+		}
 
 		CLadderMapData() {}
-		CLadderMapData( const NDb::SMultiplayerMap *_pDesc ) : pMapDesc( _pDesc ), bAllowed( true ), bSelected( true ) { };
+		CLadderMapData( const NDb::SMultiplayerMap *_pDesc ) : pMapDesc( _pDesc ), bAllowed( true ), bSelected( true ) {};
 	};
 	//--------------
 	class CItemLadderMapListViewer : public IDataViewer
 	{
-		OBJECT_NOCOPY_METHODS(CItemLadderMapListViewer)
+		OBJECT_NOCOPY_METHODS( CItemLadderMapListViewer )
 	public:
 		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	};
 	//--------------
 
+	typedef std::vector<CPtr<CLadderMapData>> CMPMaps;
 
-	typedef std::vector< CPtr<CLadderMapData> > CMPMaps;
-
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
 	CMPMaps maps;
 	CPtr<IListControl> pList;
 	CPtr<IComboBox> pGameTypeBox;
 	CPtr<IComboBox> pSide;
 	CPtr<IComboBox> pTechLevel;
-	CPtr<ITextView>	pMapName;
+	CPtr<ITextView> pMapName;
 	CPtr<IWindow> pPicture;
 	CPtr<IButton> pStartButton;
 	CPtr<IWindow> pChecksumPWL;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&maps); f.Add(4,&pList); f.Add(5,&pGameTypeBox); f.Add(6,&pSide); f.Add(7,&pTechLevel); f.Add(8,&pMapName); f.Add(9,&pPicture); f.Add(10,&pStartButton); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 3, &maps );
+		f.Add( 4, &pList );
+		f.Add( 5, &pGameTypeBox );
+		f.Add( 6, &pSide );
+		f.Add( 7, &pTechLevel );
+		f.Add( 8, &pMapName );
+		f.Add( 9, &pPicture );
+		f.Add( 10, &pStartButton );
+		return 0;
+	}
+
 private:
 	void RegisterObservers();
 
@@ -62,8 +78,10 @@ private:
 	bool OnSelectMapReaction( const std::string &szSender );
 	bool OnTeamSizeChanged();
 	bool OnChangeMapStatusReaction();
+
 protected:
 	~CInterfaceMPLadderGame();
+
 public:
 	CInterfaceMPLadderGame();
 	bool Init();
@@ -83,6 +101,7 @@ class CICMPLadderGame : public CInterfaceCommandBase<CInterfaceMPLadderGame>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

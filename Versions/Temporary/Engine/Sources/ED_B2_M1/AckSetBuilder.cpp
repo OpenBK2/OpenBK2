@@ -47,8 +47,7 @@ struct SAckDesc
 	const char *pszCodeName;
 	NDb::EUnitAckType eType;
 };
-static SAckDesc s_AckDescs[] =
-{
+static SAckDesc s_AckDescs[] = {
 	{ "ACK_POSITIVE", "ACK_POSITIVE", NDb::ACK_POSITIVE },
 	{ "ACK_NEGATIVE", "ACK_NEGATIVE", NDb::ACK_NEGATIVE },
 	{ "ACK_SELECTED", "ACK_SELECTED", NDb::ACK_SELECTED },
@@ -78,12 +77,13 @@ static SAckDesc s_AckDescs[] =
 	{ "ACK_START_SERVICE_REPAIR", "ACK_START_SERVICE_REPAIR", NDb::ACK_START_SERVICE_REPAIR },
 	{ "ACK_CANNOT_FINISH_BUILD", "ACK_CANNOT_FINISH_BUILD", NDb::ACK_CANNOT_FINISH_BUILD },
 	{ "ACK_MINE_FOUND", "ACK_MINE_FOUND", NDb::ACK_MINE_FOUND },
-	{ "ACK_PLANE_REACH_POINT_START_ATTACK", "ACK_PLANE_REACH_POINT_START_ATTACK", NDb::ACK_PLANE_REACH_POINT_START_ATTACK },
+	{ "ACK_PLANE_REACH_POINT_START_ATTACK",
+    "ACK_PLANE_REACH_POINT_START_ATTACK",
+    NDb::ACK_PLANE_REACH_POINT_START_ATTACK },
 	{ "ACK_PLANE_LEAVING", "ACK_PLANE_LEAVING", NDb::ACK_PLANE_LEAVING },
 	{ "ACK_BEING_ATTACKED_BY_AVIATION", "ACK_BEING_ATTACKED_BY_AVIATION", NDb::ACK_BEING_ATTACKED_BY_AVIATION },
 	{ "ACK_START_SERVICE_BUILDING", "ACK_START_SERVICE_BUILDING", NDb::ACK_START_SERVICE_BUILDING },
-	{ 0, 0, NDb::ACK_NONE }
-};
+	{ 0, 0, NDb::ACK_NONE } };
 static std::unordered_map<std::string, std::string> s_AckTypesMap;
 typedef std::unordered_map<CDBID, std::string> CDBIDMap;
 static struct SEditorAckTypesAutoMagic
@@ -98,9 +98,9 @@ static struct SEditorAckTypesAutoMagic
 void CollectEntries( CDBIDMap *pRes, const std::string &szFolderInEditor, const std::string &szTypeName )
 {
 	CDBID dbid1( szFolderInEditor );
-	if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator(szTypeName) )
+	if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator( szTypeName ) )
 	{
-		for ( CPtr<IManipulatorIterator> pIt = pFolderMan->Iterate(true, ECT_CACHE_LOCAL); !pIt->IsEnd(); pIt->Next() )
+		for ( CPtr<IManipulatorIterator> pIt = pFolderMan->Iterate( true, ECT_CACHE_LOCAL ); !pIt->IsEnd(); pIt->Next() )
 		{
 			if ( !pIt->IsFolder() )
 			{
@@ -109,9 +109,9 @@ void CollectEntries( CDBIDMap *pRes, const std::string &szFolderInEditor, const 
 				{
 					if ( szName.size() >= szFolderInEditor.size() )
 					{
-						CDBID dbid2( szName.substr(0, szFolderInEditor.size()) );
+						CDBID dbid2( szName.substr( 0, szFolderInEditor.size() ) );
 						if ( dbid2 == dbid1 )
-							(*pRes)[szName] = szName;
+							( *pRes )[szName] = szName;
 					}
 				}
 			}
@@ -130,9 +130,11 @@ struct SAckSetKey
 	int nSubtype;
 	int nVoiceID;
 	//
-	SAckSetKey(): nSubtype(-1), nVoiceID(-1) {}
+	SAckSetKey() : nSubtype( -1 ), nVoiceID( -1 ) {}
 	SAckSetKey( const std::string &_szTypeName, int _nSubtype, int _nVoiceID )
-		: szTypeName( _szTypeName ), nSubtype( _nSubtype ), nVoiceID( _nVoiceID ) {}
+			: szTypeName( _szTypeName ), nSubtype( _nSubtype ), nVoiceID( _nVoiceID )
+	{
+	}
 	//
 	bool operator==( const SAckSetKey &key ) const
 	{
@@ -144,9 +146,13 @@ struct SAckSetKey
 // Specialised at namespace scope rather than inside the old nstl namespace:
 // std::hash can only be specialised for std, and C++17 allows the qualified
 // form here.
-template<> struct std::hash<NAcks::SAckSetKey>
+template <>
+struct std::hash<NAcks::SAckSetKey>
 {
-	size_t operator()( const NAcks::SAckSetKey &key ) const { return std::hash<std::string>()( key.szTypeName ) + key.nSubtype + key.nVoiceID; }
+	size_t operator()( const NAcks::SAckSetKey &key ) const
+	{
+		return std::hash<std::string>()( key.szTypeName ) + key.nSubtype + key.nVoiceID;
+	}
 };
 
 namespace NAcks
@@ -159,10 +165,12 @@ struct SAckSet
 		std::string szFileName;
 		float fProbability;
 	};
-	std::unordered_map<std::string, std::list<SAck> > acks;
+	std::unordered_map<std::string, std::list<SAck>> acks;
 };
 
-bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFolderInEditor, const std::string &szSoundSource )
+bool UpdateAckSets( const std::string &szExcelFileName,
+                    const std::string &szFolderInEditor,
+                    const std::string &szSoundSource )
 {
 	std::vector<SAckEntry> entries;
 	if ( LoadAcksTable( &entries, szExcelFileName ) == false || entries.empty() )
@@ -184,18 +192,18 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 		for ( int i = 0; i < nNumTypes; ++i )
 		{
 			CDBID dbidComplexSoundDesc;
-			pAckSetMan->GetValue( fmt::format("types.[{}].Ack", i), &dbidComplexSoundDesc );
+			pAckSetMan->GetValue( fmt::format( "types.[{}].Ack", i ), &dbidComplexSoundDesc );
 			if ( !dbidComplexSoundDesc.IsEmpty() )
 			{
 				oldComplexSoundDescs[dbidComplexSoundDesc] = dbidComplexSoundDesc.ToString();
-				if ( CObj<NDb::IObjMan> pComplexSoundDescMan = NDb::GetManipulator(dbidComplexSoundDesc) )
+				if ( CObj<NDb::IObjMan> pComplexSoundDescMan = NDb::GetManipulator( dbidComplexSoundDesc ) )
 				{
 					int nNumSounds = 0;
 					pComplexSoundDescMan->GetValue( "sounds", &nNumSounds );
 					for ( int j = 0; j < nNumSounds; ++j )
 					{
 						CDBID dbidSoundDesc;
-						pComplexSoundDescMan->GetValue( fmt::format("sounds.[{}].PathName", j), &dbidSoundDesc );
+						pComplexSoundDescMan->GetValue( fmt::format( "sounds.[{}].PathName", j ), &dbidSoundDesc );
 						if ( !dbidSoundDesc.IsEmpty() )
 							oldSoundDescs[dbidSoundDesc] = dbidSoundDesc.ToString();
 					}
@@ -204,8 +212,8 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 		}
 	}
 
-//	CollectEntries( &complexSoundDescs, COMMON_ADD_PATH + szFolderInEditor, COMPLEX_SOUND_DESC_TYPE_NAME );
-//	CollectEntries( &soundDescs, COMMON_ADD_PATH + szFolderInEditor, SOUND_DESC_TYPE_NAME );
+	//	CollectEntries( &complexSoundDescs, COMMON_ADD_PATH + szFolderInEditor, COMPLEX_SOUND_DESC_TYPE_NAME );
+	//	CollectEntries( &soundDescs, COMMON_ADD_PATH + szFolderInEditor, SOUND_DESC_TYPE_NAME );
 	//
 	// create new ack sets from excel file
 	//
@@ -221,7 +229,7 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 		const int nSubtypePos = it->szRecordCode.find_first_not_of( "1234567890", nTypeNamePos );
 		if ( nSubtypePos == std::string::npos )
 			continue;
-		key.nSubtype = atoi( it->szRecordCode.substr(nTypeNamePos, nSubtypePos - nTypeNamePos).c_str() );
+		key.nSubtype = atoi( it->szRecordCode.substr( nTypeNamePos, nSubtypePos - nTypeNamePos ).c_str() );
 		key.nVoiceID = it->nSubsetCode;
 		//
 		SAckSet &ackSet = newAckSets[key];
@@ -235,34 +243,41 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 	// update old ack sets and create new ones
 	for ( CAckSetsMap::const_iterator itAckSet = newAckSets.begin(); itAckSet != newAckSets.end(); ++itAckSet )
 	{
-		const std::string szAckSetFolder = szFolderInEditor + fmt::format( "{}\\{}{}_voice{}\\", itAckSet->first.szTypeName.c_str(), itAckSet->first.szTypeName.c_str(), itAckSet->first.nSubtype, itAckSet->first.nVoiceID );
+		const std::string szAckSetFolder = szFolderInEditor + fmt::format( "{}\\{}{}_voice{}\\",
+		                                                                   itAckSet->first.szTypeName.c_str(),
+		                                                                   itAckSet->first.szTypeName.c_str(),
+		                                                                   itAckSet->first.nSubtype,
+		                                                                   itAckSet->first.nVoiceID );
 		const std::string szAckSetName = szAckSetFolder + "AckSetRPGStats.xdb";
 		const CDBID dbidAckSet( szAckSetName );
-//		DebugTrace( szAckSetName.c_str() );
+		//		DebugTrace( szAckSetName.c_str() );
 		//
-		if ( oldAcksSets.find(dbidAckSet) == oldAcksSets.end() )
+		if ( oldAcksSets.find( dbidAckSet ) == oldAcksSets.end() )
 			pFolderCallback->InsertObject( ACK_SET_TYPE_NAME, szAckSetName );
 		else
 			oldAcksSets.erase( dbidAckSet );
 		//
-		if ( CObj<NDb::IObjMan> pAckSetMan = NDb::GetManipulator(dbidAckSet) )
+		if ( CObj<NDb::IObjMan> pAckSetMan = NDb::GetManipulator( dbidAckSet ) )
 		{
 			pAckSetMan->Remove( "types", MAN_REMOVE_ALL );
 			pAckSetMan->SetValue( "VoiceNumber", itAckSet->first.nVoiceID );
 			//
 			int nTypeNumber = 0;
-			for ( std::unordered_map<std::string, std::list<SAckSet::SAck> >::const_iterator itAckList = itAckSet->second.acks.begin(); itAckList != itAckSet->second.acks.end(); ++itAckList )
+			for ( std::unordered_map<std::string, std::list<SAckSet::SAck>>::const_iterator itAckList =
+			          itAckSet->second.acks.begin();
+			      itAckList != itAckSet->second.acks.end();
+			      ++itAckList )
 			{
 				const std::string szAckSituationName = s_AckTypesMap[itAckList->first];
 				const std::string szComplexSoundDescName = szAckSetFolder + szAckSituationName + ".xdb";
 				const CDBID dbidComplexSoundDesc( szComplexSoundDescName );
-				if ( oldComplexSoundDescs.find(dbidComplexSoundDesc) == oldComplexSoundDescs.end() )
+				if ( oldComplexSoundDescs.find( dbidComplexSoundDesc ) == oldComplexSoundDescs.end() )
 					pFolderCallback->InsertObject( COMPLEX_SOUND_DESC_TYPE_NAME, szComplexSoundDescName );
 				else
 					oldComplexSoundDescs.erase( dbidComplexSoundDesc );
-//				DebugTrace( "\t%s", szComplexSoundDescName.c_str() );
+				//				DebugTrace( "\t%s", szComplexSoundDescName.c_str() );
 				//
-				if ( CObj<NDb::IObjMan> pComplexSoundDescMan = NDb::GetManipulator(dbidComplexSoundDesc) )
+				if ( CObj<NDb::IObjMan> pComplexSoundDescMan = NDb::GetManipulator( dbidComplexSoundDesc ) )
 				{
 					if ( pAckSetMan->Insert( "types", MAN_APPEND ) == false )
 						continue;
@@ -272,37 +287,42 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 					pComplexSoundDescMan->Remove( "sounds", MAN_REMOVE_ALL );
 					//
 					int nSoundNumber = 0;
-					for ( std::list<SAckSet::SAck>::const_iterator itAck = itAckList->second.begin(); itAck != itAckList->second.end(); ++itAck )
+					for ( std::list<SAckSet::SAck>::const_iterator itAck = itAckList->second.begin();
+					      itAck != itAckList->second.end();
+					      ++itAck )
 					{
 						const std::string szSoundDescBase = szAckSetFolder + itAck->szRecordCode;
 						const std::string szSoundDescName = szSoundDescBase + ".xdb";
 						const CDBID dbidSoundDesc( szSoundDescName );
-						if ( oldSoundDescs.find(dbidSoundDesc) == oldSoundDescs.end() )
+						if ( oldSoundDescs.find( dbidSoundDesc ) == oldSoundDescs.end() )
 							pFolderCallback->InsertObject( SOUND_DESC_TYPE_NAME, szSoundDescName );
 						else
 							oldSoundDescs.erase( dbidSoundDesc );
-//						DebugTrace( "\t\t%s", szSoundDescName.c_str() );
-						if ( CObj<NDb::IObjMan> pSoundDescMan = NDb::GetManipulator(dbidSoundDesc) )
+						//						DebugTrace( "\t\t%s", szSoundDescName.c_str() );
+						if ( CObj<NDb::IObjMan> pSoundDescMan = NDb::GetManipulator( dbidSoundDesc ) )
 						{
 							if ( pComplexSoundDescMan->Insert( "sounds", MAN_APPEND ) == false )
 								continue;
 							const std::string szSoundEntryName = fmt::format( "sounds.[{}]", nSoundNumber );
 							pComplexSoundDescMan->SetValue( szSoundEntryName + ".Probability", itAck->fProbability );
-							pComplexSoundDescMan->SetValue( szSoundEntryName + ".soundType", std::string("NORMAL") );
+							pComplexSoundDescMan->SetValue( szSoundEntryName + ".soundType", std::string( "NORMAL" ) );
 							pComplexSoundDescMan->SetValue( szSoundEntryName + ".PathName", szSoundDescName );
 							//
 							const std::string szSoundFileName = szSoundDescBase + ".wav";
 							pSoundDescMan->SetValue( "SoundPath", szSoundFileName );
 							//
-							const std::string szSrcFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szSoundSource + itAck->szFileName;
-							const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szSoundFileName;
+							const std::string szSrcFileName =
+									Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szSoundSource +
+									itAck->szFileName;
+							const std::string szDstFileName =
+									Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szSoundFileName;
 							NFile::CopyFile( szSrcFileName, szDstFileName );
 							// export sound desc
-//							{
-//								IResourceManager *pRM = Singleton<IResourceManager>();
-//								if ( CPtr<IManipulator> pSoundDescMan2 = pRM->CreateObjectManipulator( SOUND_DESC_TYPE_NAME, szSoundDescName ) )
-//									Singleton<IExporterContainer>()->ExportObject( pSoundDescMan2, SOUND_DESC_TYPE_NAME, szSoundDescName, true, false  );
-//							}
+							//							{
+							//								IResourceManager *pRM = Singleton<IResourceManager>();
+							//								if ( CPtr<IManipulator> pSoundDescMan2 = pRM->CreateObjectManipulator( SOUND_DESC_TYPE_NAME, szSoundDescName ) )
+							//									Singleton<IExporterContainer>()->ExportObject( pSoundDescMan2, SOUND_DESC_TYPE_NAME, szSoundDescName, true, false  );
+							//							}
 							//
 							++nSoundNumber;
 						}
@@ -333,14 +353,12 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 // **
 // ************************************************************************************************************************ //
 
-
-
 CAcksBuilder::CAcksBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_ACKS_BUILDER, this );
-	Singleton<ICommandHandlerContainer>()->Register( CHID_ACKS_BUILDER, ID_TOOLS_CREATE_ACK_SETS, ID_TOOLS_CREATE_ACK_SETS );
+	Singleton<ICommandHandlerContainer>()->Register(
+			CHID_ACKS_BUILDER, ID_TOOLS_CREATE_ACK_SETS, ID_TOOLS_CREATE_ACK_SETS );
 }
-
 
 CAcksBuilder::~CAcksBuilder()
 {
@@ -348,21 +366,24 @@ CAcksBuilder::~CAcksBuilder()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_ACKS_BUILDER );
 }
 
-
 //CRAP{ PLAIN_TEXT
-bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
+                                     std::string *pszDescription,
+                                     IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();
 	// Считываем данные
 	std::string szExcelFileName;
-	if ( !CManipulatorManager::GetValue( &szExcelFileName, pBuildDataManipulator, "ExcelFile" ) || szExcelFileName.empty() )
+	if ( !CManipulatorManager::GetValue( &szExcelFileName, pBuildDataManipulator, "ExcelFile" ) ||
+	     szExcelFileName.empty() )
 	{
 		( *pszDescription ) = "<ExcelFile> must be filled.";
 		return false;
 	}
-	if ( !NFile::DoesFileExist( ( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szExcelFileName ) ) )
+	if ( !NFile::DoesFileExist(
+					 ( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szExcelFileName ) ) )
 	{
 		( *pszDescription ) = "<ExcelFile> is invalid file name. Can't find file.";
 		return false;
@@ -377,12 +398,10 @@ bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::s
 }
 //CRAP} PLAIN_TEXT
 
-
 bool CAcksBuilder::IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName )
 {
 	return Singleton<IFolderCallback>()->IsUniqueName( szObjectType, szObjectName );
 }
-
 
 bool CAcksBuilder::UpdateAckSets( const std::string &rszAnimationFolder )
 {
@@ -406,7 +425,8 @@ bool CAcksBuilder::UpdateAckSets( const std::string &rszAnimationFolder )
 	std::string szBuildDataName;
 	if ( Singleton<IBuilderContainer>()->FillBuildData( &szBuildDataTypeName, &szBuildDataName, &buildDataParams, this ) )
 	{
-		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
+		if ( CPtr<IManipulator> pBuildDataManipulator =
+		         Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
 			std::string szDescription;
 			if ( IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
@@ -419,7 +439,8 @@ bool CAcksBuilder::UpdateAckSets( const std::string &rszAnimationFolder )
 				{
 					return false;
 				}
-				NAcks::UpdateAckSets( pUserData->constUserData.szExportSourceFolder + szExcelFileName, rszAnimationFolder, szSourceDir );
+				NAcks::UpdateAckSets(
+						pUserData->constUserData.szExportSourceFolder + szExcelFileName, rszAnimationFolder, szSourceDir );
 				NDb::SaveChanges();
 			}
 		}
@@ -427,15 +448,15 @@ bool CAcksBuilder::UpdateAckSets( const std::string &rszAnimationFolder )
 	return false;
 }
 
-
 bool CAcksBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
-	case ID_TOOLS_CREATE_ACK_SETS:
+		case ID_TOOLS_CREATE_ACK_SETS:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == ACK_SET_TYPE_NAME );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -447,24 +468,24 @@ bool CAcksBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			}
 			return bResult;
 		}
-	default:
-		return false;
+		default:
+			return false;
 	}
 	return false;
 }
-
 
 bool CAcksBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAcksBuilder::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAcksBuilder::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
-	case ID_TOOLS_CREATE_ACK_SETS:
+		case ID_TOOLS_CREATE_ACK_SETS:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == ACK_SET_TYPE_NAME );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -477,8 +498,8 @@ bool CAcksBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 			}
 			return true;
 		}
-	default:
-		return false;
+		default:
+			return false;
 	}
 	return false;
 }

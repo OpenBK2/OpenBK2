@@ -16,19 +16,54 @@ template <class T>
 class com_ptr
 {
 	T *pData = nullptr;
-	void Assign( T *_pData ) { if ( _pData ) { _pData->AddRef(); } pData = _pData; }
-	void Free() { if ( pData ) pData->Release(); }
+	void Assign( T *_pData )
+	{
+		if ( _pData )
+		{
+			_pData->AddRef();
+		}
+		pData = _pData;
+	}
+	void Free()
+	{
+		if ( pData )
+			pData->Release();
+	}
+
 public:
 	com_ptr( T *_pData = 0 ) { Assign( _pData ); }
 	~com_ptr() { Free(); }
 	com_ptr( const com_ptr &a ) { Assign( a.pData ); }
-	com_ptr& operator=( const com_ptr &a ) { if ( pData == a.pData ) return *this; Free(); Assign( a.pData ); return *this; }
-	com_ptr& operator=( T *pObj ) { if ( pData == pObj ) return *this; Free(); Assign( pObj ); return *this; }
-	operator T*() const { return pData; }
-	T* operator->() const { return pData; }
+	com_ptr &operator=( const com_ptr &a )
+	{
+		if ( pData == a.pData )
+			return *this;
+		Free();
+		Assign( a.pData );
+		return *this;
+	}
+	com_ptr &operator=( T *pObj )
+	{
+		if ( pData == pObj )
+			return *this;
+		Free();
+		Assign( pObj );
+		return *this;
+	}
+	operator T *() const { return pData; }
+	T *operator->() const { return pData; }
 	// not fair play
-	void Create( T *_pData ) { Free(); pData = _pData; }
-	T** GetAddr() { Free(); pData = 0; return &pData; }
+	void Create( T *_pData )
+	{
+		Free();
+		pData = _pData;
+	}
+	T **GetAddr()
+	{
+		Free();
+		pData = 0;
+		return &pData;
+	}
 };
 
 // Saves the floating-point environment and puts it back on scope exit.
@@ -39,6 +74,7 @@ public:
 class CControl87Guard
 {
 	std::fenv_t prevState;
+
 public:
 	CControl87Guard() { std::fegetenv( &prevState ); }
 	~CControl87Guard() { std::fesetenv( &prevState ); }
@@ -51,18 +87,29 @@ public:
 class CPrecisionControl
 {
 	CControl87Guard guard;
+
 public:
-	enum EPrecisionControlMode{ PCM_HIGH, PCM_MEDIUM, PCM_LOW };
-	CPrecisionControl( EPrecisionControlMode mode = PCM_HIGH ) {
-		Set( mode );
-	}
-	void Set( EPrecisionControlMode mode ) {
+	enum EPrecisionControlMode
+	{
+		PCM_HIGH,
+		PCM_MEDIUM,
+		PCM_LOW
+	};
+	CPrecisionControl( EPrecisionControlMode mode = PCM_HIGH ) { Set( mode ); }
+	void Set( EPrecisionControlMode mode )
+	{
 #if BOOST_OS_WINDOWS && BOOST_ARCH_X86_32
 		switch ( mode )
 		{
-			case PCM_HIGH: _control87( _PC_64, _MCW_PC ); break;
-			case PCM_MEDIUM: _control87( _PC_53, _MCW_PC ); break;
-			case PCM_LOW: _control87( _PC_24, _MCW_PC ); break;
+			case PCM_HIGH:
+				_control87( _PC_64, _MCW_PC );
+				break;
+			case PCM_MEDIUM:
+				_control87( _PC_53, _MCW_PC );
+				break;
+			case PCM_LOW:
+				_control87( _PC_24, _MCW_PC );
+				break;
 		}
 #else
 		(void)mode;
@@ -77,14 +124,17 @@ public:
 class CRoundingControl
 {
 	CControl87Guard guard;
+
 public:
-	enum ERoundingControlMode{ RCM_NEAR = FE_TONEAREST, RCM_DOWN = FE_DOWNWARD, RCM_UP = FE_UPWARD, RCM_CHOP = FE_TOWARDZERO };
-	CRoundingControl( ERoundingControlMode mode = RCM_NEAR ) {
-		Set( mode );
-	}
-	void Set( ERoundingControlMode mode ) {
-		std::fesetround( mode );
-	}
+	enum ERoundingControlMode
+	{
+		RCM_NEAR = FE_TONEAREST,
+		RCM_DOWN = FE_DOWNWARD,
+		RCM_UP = FE_UPWARD,
+		RCM_CHOP = FE_TOWARDZERO
+	};
+	CRoundingControl( ERoundingControlMode mode = RCM_NEAR ) { Set( mode ); }
+	void Set( ERoundingControlMode mode ) { std::fesetround( mode ); }
 };
 
 // Mask every floating point exception, so arithmetic yields Inf or NaN rather
@@ -120,7 +170,8 @@ public:
 inline void MaskAllFloatingPointExceptions()
 {
 #if BOOST_OS_WINDOWS && BOOST_ARCH_X86_32
-	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24, 0xfffff );
+	_control87( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL | _PC_24,
+	            0xfffff );
 #elif BOOST_OS_WINDOWS
 	_controlfp( _EM_INVALID | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW | _EM_INEXACT | _EM_DENORMAL, _MCW_EM );
 #else

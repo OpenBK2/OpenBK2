@@ -30,11 +30,7 @@ struct SScriptCameraWindowData
 	};
 	EScriptCameraLastAction eLastAction;
 
-	SScriptCameraWindowData()
-		: nCurrentCamera( -1 ),
-		eLastAction( SCA_NO_ACTIONS )
-	{
-	}
+	SScriptCameraWindowData() : nCurrentCamera( -1 ), eLastAction( SCA_NO_ACTIONS ) {}
 	void Clear()
 	{
 		scriptCameras.clear();

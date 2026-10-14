@@ -30,7 +30,7 @@ struct SVertexWeight
 {
 	float fWeights[4]{};
 	uint8_t cBoneIndices[4]{};
-	bool operator==( const SVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
+	bool operator==( const SVertexWeight &v ) const { return memcmp( this, &v, sizeof( *this ) ) == 0; }
 };
 
 struct SRealVertexWeight
@@ -38,28 +38,38 @@ struct SRealVertexWeight
 	float fWeights[4]{};
 	uint8_t nWeights[4]{};
 	uint8_t cBoneIndices[4]{};
-	bool operator==( const SRealVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
+	bool operator==( const SRealVertexWeight &v ) const { return memcmp( this, &v, sizeof( *this ) ) == 0; }
 };
 
-#pragma warning( disable: 4701 )
+#pragma warning( disable : 4701 )
 inline SVertexWeight GetWeight( const SRealVertexWeight &a )
 {
 	SVertexWeight res;
-	for ( int k = 0; k < 4; ++k ) { res.fWeights[k] = a.fWeights[k]; res.cBoneIndices[k] = a.cBoneIndices[k]; }
+	for ( int k = 0; k < 4; ++k )
+	{
+		res.fWeights[k] = a.fWeights[k];
+		res.cBoneIndices[k] = a.cBoneIndices[k];
+	}
 	return res;
 }
-#pragma warning( default: 4701 )
+#pragma warning( default : 4701 )
 
 class _3DLIB_EXPORT CObjectInfo : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CObjectInfo);
+	OBJECT_BASIC_METHODS( CObjectInfo );
+
 public:
 	struct SStream
 	{
 		ZDATA
 		int nID = 0;
 		std::vector<uint32_t> data;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&data); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nID );
+			f.Add( 3, &data );
+			return 0;
+		}
 	};
 	struct SData
 	{
@@ -69,7 +79,15 @@ public:
 		std::vector<SVertexWeight> weights;
 		std::vector<CVec2> secondTex;
 		std::vector<SStream> attributes;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&verts); f.Add(3,&geometry); f.Add(4,&weights); f.Add(5,&secondTex); f.Add(6,&attributes); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &verts );
+			f.Add( 3, &geometry );
+			f.Add( 4, &weights );
+			f.Add( 5, &secondTex );
+			f.Add( 6, &attributes );
+			return 0;
+		}
 	};
 	struct SBinData
 	{
@@ -77,31 +95,33 @@ public:
 		std::vector<CVec3> positions;
 		std::vector<SUVInfo> verts;
 		std::vector<SRealVertexWeight> weights;
-		std::vector<uint16_t> posIndices; // references to positions for each vert
+		std::vector<uint16_t> posIndices;       // references to positions for each vert
 		std::vector<uint16_t> vertRefPositions; // number of first position encounter for each vertex
 		std::vector<STriangle> geometry;
 		std::vector<SStream> attributes;
 		int nTris = 0;
 		float fAverageTriArea = 0.0f;
 		bool bIsLightmappable = false;
-		ZEND int operator&( IBinSaver &f ) {
-			f.Add(2,&positions);
-			f.Add(3,&verts);
-			f.Add(4,&weights);
-			f.Add(5,&posIndices);
-			f.Add(6,&vertRefPositions);
-			f.Add(7,&geometry);
-			f.Add(8,&attributes);
-			f.Add(9,&nTris);
-			f.Add(10,&fAverageTriArea);
-			f.Add(11,&bIsLightmappable);
-			return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &positions );
+			f.Add( 3, &verts );
+			f.Add( 4, &weights );
+			f.Add( 5, &posIndices );
+			f.Add( 6, &vertRefPositions );
+			f.Add( 7, &geometry );
+			f.Add( 8, &attributes );
+			f.Add( 9, &nTris );
+			f.Add( 10, &fAverageTriArea );
+			f.Add( 11, &bIsLightmappable );
+			return 0;
+		}
 	};
 
 	std::vector<CVec3> positions;
 	std::vector<SUVInfo> verts;
 	std::vector<SRealVertexWeight> weights;
-	std::vector<uint16_t> posIndices; // references to positions for each vert
+	std::vector<uint16_t> posIndices;       // references to positions for each vert
 	std::vector<uint16_t> vertRefPositions; // number of first position encounter for each vertex
 	std::vector<STriangle> geometry;
 	std::vector<SStream> attributes;
@@ -117,8 +137,7 @@ private:
 	void Assign( const SData &data, std::vector<STriangle> *pGeom, bool bOptimizeVCache );
 
 public:
-
-	void AssignDestructive(SBinData *pData)
+	void AssignDestructive( SBinData *pData )
 	{
 		std::swap( positions, pData->positions );
 		std::swap( verts, pData->verts );
@@ -131,7 +150,7 @@ public:
 		fAverageTriArea = pData->fAverageTriArea;
 		bIsLightmappable = pData->bIsLightmappable;
 	}
-	void AssignTo(SBinData *pData)
+	void AssignTo( SBinData *pData )
 	{
 		pData->positions = positions;
 		pData->verts = verts;
@@ -140,20 +159,20 @@ public:
 		pData->vertRefPositions = vertRefPositions;
 		pData->geometry = geometry;
 		pData->attributes = attributes;
-        pData->nTris = nTris;
-	    pData->fAverageTriArea = fAverageTriArea;
-        pData->bIsLightmappable = bIsLightmappable;
+		pData->nTris = nTris;
+		pData->fAverageTriArea = fAverageTriArea;
+		pData->bIsLightmappable = bIsLightmappable;
 	}
-	CObjectInfo() : nTris(0), bIsLightmappable(true) {}
+	CObjectInfo() : nTris( 0 ), bIsLightmappable( true ) {}
 	void Assign( const SData &data, bool bOptimizeVCache );
 	// will modify pData
 	void Assign( SData *pData, bool bOptimizeVCache );
 	void AssignFast( SData *pData );
-	const std::vector<CVec3>& GetPositions() const { return positions; }
-	const std::vector<SUVInfo>& GetVertices() const { return verts; }
-	const std::vector<SRealVertexWeight>& GetWeights() const { return weights; }
-	const std::vector<uint16_t>& GetPositionIndices() const { return posIndices; }
-	const std::vector<STriangle>& GetGeometry() const { return geometry; }
+	const std::vector<CVec3> &GetPositions() const { return positions; }
+	const std::vector<SUVInfo> &GetVertices() const { return verts; }
+	const std::vector<SRealVertexWeight> &GetWeights() const { return weights; }
+	const std::vector<uint16_t> &GetPositionIndices() const { return posIndices; }
+	const std::vector<STriangle> &GetGeometry() const { return geometry; }
 	const std::vector<uint32_t> &GetAttribute( int nID );
 
 	void SetAttribute( int nID, const std::vector<uint32_t> &attr );

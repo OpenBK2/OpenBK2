@@ -16,15 +16,12 @@
 
 // CBackgroundFrameSequence
 
-CBackgroundFrameSequence::CBackgroundFrameSequence() :
-	timeStart( 0 )
-{
-}
+CBackgroundFrameSequence::CBackgroundFrameSequence() : timeStart( 0 ) {}
 
 void CBackgroundFrameSequence::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	CBackground::InitByDesc( _pDesc );
-	pStats = checked_cast<const NDb::SBackgroundFrameSequence*>( _pDesc );
+	pStats = checked_cast<const NDb::SBackgroundFrameSequence *>( _pDesc );
 	pTexture = pStats->pTexture;
 	if ( pStats )
 	{
@@ -36,7 +33,8 @@ void CBackgroundFrameSequence::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 		if ( pStats->nRandomAddTime > 0 )
 			nTime += NWin32Random::Random( 0, pStats->nRandomAddTime - 1 );
 	}
-	NI_ASSERT( !pStats || (pStats->nFrameCount <= pStats->nFrameCountX * pStats->nFrameCountY), "Too low frames at texture" );
+	NI_ASSERT( !pStats || ( pStats->nFrameCount <= pStats->nFrameCountX * pStats->nFrameCountY ),
+	           "Too low frames at texture" );
 #ifndef _FINALRELEASE
 	if ( CHECK_UI_TEXTURES_INSTANT_LOAD != 0 )
 	{
@@ -45,7 +43,7 @@ void CBackgroundFrameSequence::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 #endif
 }
 
-void CBackgroundFrameSequence::Visit( IUIVisitor * pVisitor )
+void CBackgroundFrameSequence::Visit( IUIVisitor *pVisitor )
 {
 	if ( pos.IsEmpty() || !pStats || !pTexture )
 		return;
@@ -60,7 +58,7 @@ void CBackgroundFrameSequence::Visit( IUIVisitor * pVisitor )
 		int nDeltaTime = time - timeStart;
 		if ( nDeltaTime >= nTime )
 		{
-			nFrame = (nFrame + nDeltaTime / nTime) % pStats->nFrameCount;
+			nFrame = ( nFrame + nDeltaTime / nTime ) % pStats->nFrameCount;
 			timeStart = time - nDeltaTime % nTime;
 		}
 	}
@@ -78,9 +76,15 @@ void CBackgroundFrameSequence::Visit( IUIVisitor * pVisitor )
 	vVirtSize.y = (std::min)( (float)( pos.Height() ), (float)( pStats->vFrameSize.y ) );
 	NGfx::SPixel8888 sColor = FadeColor( pStats->nColor, GetFadeValue() );
 
-	CRectLayout rects( pos.x1, pos.y1, vVirtSize.x, vVirtSize.y,
-		nX * pStats->vFrameSize.x, nY * pStats->vFrameSize.y,
-		pStats->vFrameSize.x, pStats->vFrameSize.y, FadeColor( sColor.dwColor, GetFadeValue() ) );
+	CRectLayout rects( pos.x1,
+	                   pos.y1,
+	                   vVirtSize.x,
+	                   vVirtSize.y,
+	                   nX * pStats->vFrameSize.x,
+	                   nY * pStats->vFrameSize.y,
+	                   pStats->vFrameSize.x,
+	                   pStats->vFrameSize.y,
+	                   FadeColor( sColor.dwColor, GetFadeValue() ) );
 	VirtualToScreen( &rects );
 
 	pVisitor->VisitUIRect( pTexture, 3, rects );

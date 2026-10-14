@@ -14,7 +14,7 @@ void CMeshBound::Recalc()
 	const SSkeletonMatrices &anim = pAnimation->GetValue();
 	std::vector<CVec3> pts;
 	pts.resize( anim.size() );
-	for ( int i=0; i<anim.size(); ++i )
+	for ( int i = 0; i < anim.size(); ++i )
 		pts[i] = anim[i].GetTranslation();
 	CalcBound( &value, pts, SGetSelf<CVec3>() );
 	value.Extend( 0.5f );

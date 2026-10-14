@@ -2,11 +2,10 @@
 
 #include "libdb_export.h"
 
-
 namespace NVFS
 {
-	struct IVFS;
-	struct IFileCreator;
+struct IVFS;
+struct IFileCreator;
 }
 
 namespace NDb

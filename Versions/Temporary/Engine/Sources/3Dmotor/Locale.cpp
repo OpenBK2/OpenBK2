@@ -8,7 +8,7 @@ namespace NGScene
 CTextLocaleInfo *GetTextLocaleInfo()
 {
 	const int N_SINGLETON_ID = 0x2016EB40;
-	CTextLocaleInfo *pRes = checked_cast<CTextLocaleInfo*>( NSingleton::Singleton( N_SINGLETON_ID ) );
+	CTextLocaleInfo *pRes = checked_cast<CTextLocaleInfo *>( NSingleton::Singleton( N_SINGLETON_ID ) );
 	if ( pRes == 0 )
 	{
 		pRes = new CTextLocaleInfo;
@@ -16,6 +16,5 @@ CTextLocaleInfo *GetTextLocaleInfo()
 	}
 	return pRes;
 }
-
 
 }

@@ -11,11 +11,11 @@
 
 REGISTER_EXPORTER_IN_DLL( Minimap, CMinimapExporter )
 
-EXPORT_RESULT CMinimapExporter::ExportObject( IManipulator* pManipulator,
-																							const std::string &rszObjectTypeName,
-																							const std::string &rszObjectName,
-																							bool bForce,
-																							EXPORT_TYPE exportType )
+EXPORT_RESULT CMinimapExporter::ExportObject( IManipulator *pManipulator,
+                                              const std::string &rszObjectTypeName,
+                                              const std::string &rszObjectName,
+                                              bool bForce,
+                                              EXPORT_TYPE exportType )
 {
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
 		return ER_SUCCESS;
@@ -27,12 +27,13 @@ EXPORT_RESULT CMinimapExporter::ExportObject( IManipulator* pManipulator,
 	for ( int i = 0; i < nNumLayers; ++i )
 	{
 		std::string szNoiseImageFileName;
-		CManipulatorManager::GetValue( &szNoiseImageFileName, pManipulator, fmt::format("Layers.[{}].NoiseImage", i) );
+		CManipulatorManager::GetValue( &szNoiseImageFileName, pManipulator, fmt::format( "Layers.[{}].NoiseImage", i ) );
 		if ( !szNoiseImageFileName.empty() && szNoiseImageFileName != " " )
 		{
 			const std::string szSrcFileName = pUserData->constUserData.szExportSourceFolder + szNoiseImageFileName;
-			const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szNoiseImageFileName;
-			if ( CheckFilesUpdated(szSrcFileName, szDstFileName, bForce) == false )
+			const std::string szDstFileName =
+					Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szNoiseImageFileName;
+			if ( CheckFilesUpdated( szSrcFileName, szDstFileName, bForce ) == false )
 				NFile::CopyFile( szSrcFileName, szDstFileName );
 		}
 	}

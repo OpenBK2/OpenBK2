@@ -13,59 +13,67 @@
 
 namespace
 {
-	wxString FromUTF8( const std::string &rszText )
-	{
-		return wxString::FromUTF8( rszText.c_str(), rszText.size() );
-	}
-
-
-	std::string ToUTF8( const wxString &rText )
-	{
-		return std::string( rText.utf8_str() );
-	}
+wxString FromUTF8( const std::string &rszText )
+{
+	return wxString::FromUTF8( rszText.c_str(), rszText.size() );
 }
 
+std::string ToUTF8( const wxString &rText )
+{
+	return std::string( rText.utf8_str() );
+}
+}
 
 namespace NFileDialog
 {
-	bool OpenFile( IWidget *pOwner, const std::string &rszTitle, const std::string &rszFilter,
-								 const std::string &rszInitialDir, std::string *pszPath )
+bool OpenFile( IWidget *pOwner,
+               const std::string &rszTitle,
+               const std::string &rszFilter,
+               const std::string &rszInitialDir,
+               std::string *pszPath )
+{
+	if ( pszPath == nullptr )
 	{
-		if ( pszPath == nullptr )
-		{
-			return false;
-		}
-		// MFC's filter ends in "||"; wx's has no terminator.
-		std::string szFilter = rszFilter;
-		while ( !szFilter.empty() && ( szFilter.back() == '|' ) )
-		{
-			szFilter.pop_back();
-		}
-		wxFileDialog dialog( ToWxOwnerWindow( pOwner ), FromUTF8( rszTitle ), FromUTF8( rszInitialDir ), wxString(),
-												 FromUTF8( szFilter ), wxFD_OPEN | wxFD_FILE_MUST_EXIST );
-		if ( dialog.ShowModal() != wxID_OK )
-		{
-			return false;
-		}
-		( *pszPath ) = ToUTF8( dialog.GetPath() );
-		return true;
+		return false;
 	}
-
-
-	bool ChooseFolder( IWidget *pOwner, const std::string &rszTitle, const std::string &rszInitialDir,
-										 std::string *pszPath )
+	// MFC's filter ends in "||"; wx's has no terminator.
+	std::string szFilter = rszFilter;
+	while ( !szFilter.empty() && ( szFilter.back() == '|' ) )
 	{
-		if ( pszPath == nullptr )
-		{
-			return false;
-		}
-		wxDirDialog dialog( ToWxOwnerWindow( pOwner ), FromUTF8( rszTitle ), FromUTF8( rszInitialDir ),
-												wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
-		if ( dialog.ShowModal() != wxID_OK )
-		{
-			return false;
-		}
-		( *pszPath ) = ToUTF8( dialog.GetPath() );
-		return true;
+		szFilter.pop_back();
 	}
+	wxFileDialog dialog( ToWxOwnerWindow( pOwner ),
+	                     FromUTF8( rszTitle ),
+	                     FromUTF8( rszInitialDir ),
+	                     wxString(),
+	                     FromUTF8( szFilter ),
+	                     wxFD_OPEN | wxFD_FILE_MUST_EXIST );
+	if ( dialog.ShowModal() != wxID_OK )
+	{
+		return false;
+	}
+	( *pszPath ) = ToUTF8( dialog.GetPath() );
+	return true;
+}
+
+bool ChooseFolder( IWidget *pOwner,
+                   const std::string &rszTitle,
+                   const std::string &rszInitialDir,
+                   std::string *pszPath )
+{
+	if ( pszPath == nullptr )
+	{
+		return false;
+	}
+	wxDirDialog dialog( ToWxOwnerWindow( pOwner ),
+	                    FromUTF8( rszTitle ),
+	                    FromUTF8( rszInitialDir ),
+	                    wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
+	if ( dialog.ShowModal() != wxID_OK )
+	{
+		return false;
+	}
+	( *pszPath ) = ToUTF8( dialog.GetPath() );
+	return true;
+}
 }

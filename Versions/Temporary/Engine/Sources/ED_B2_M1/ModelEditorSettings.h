@@ -1,12 +1,11 @@
 #pragma once
 
-
 class CModelEditorSettings
 {
 public:
 	//
-	static const CVec3 vShift;				// vis tiles
-	static const float fDefaultDiff;	// vis tiles
+	static const CVec3 vShift;       // vis tiles
+	static const float fDefaultDiff; // vis tiles
 	//
 	struct SCameraPlacement
 	{
@@ -38,18 +37,18 @@ public:
 	SCameraPlacement defaultCamera;
 	SCameraPlacement currentCamera;
 	//
-  CDBID lightDBID;
-  CDBID mapInfoDBID;
+	CDBID lightDBID;
+	CDBID mapInfoDBID;
 	CDBID defaultGeometryDBID;
 	CDBID defaultMaterialDBID;
 	//
-	float nGridSize;									// in vis tiles ( 8 ... 64 )
-	CVec3 vSceneColor;								// CVec3( 0 ... 255 )
-	CVec4 vTerrainColor;							// CVec4( 0 ... 255 )
-	int nMaxAnimationsCount;					// 0 ... 64
-	float fAnimationsCircleDistance;	// in vis tiles ( 2 ... 32 )
+	float nGridSize;                  // in vis tiles ( 8 ... 64 )
+	CVec3 vSceneColor;                // CVec3( 0 ... 255 )
+	CVec4 vTerrainColor;              // CVec4( 0 ... 255 )
+	int nMaxAnimationsCount;          // 0 ... 64
+	float fAnimationsCircleDistance;  // in vis tiles ( 2 ... 32 )
 	float fAnimationsBetweenDistance; // in vis tiles ( 2 ... 16 )
-	int nGameTimerSpeed;							// -10 ... +10
+	int nGameTimerSpeed;              // -10 ... +10
 	//
 	CModelEditorSettings();
 	// serializing...

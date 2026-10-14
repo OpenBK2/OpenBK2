@@ -49,9 +49,10 @@ extern CUnitCreation theUnitCreation;
 
 bool g_bNewLock;
 float g_fKeyPointDamageThreshold = 0.95f;
-START_REGISTER(BuildingConsts)
-	REGISTER_VAR_EX( "new_lock", NGlobal::VarBoolHandler, &g_bNewLock, false, STORAGE_NONE );
-	REGISTER_VAR_EX( "key_point_damage_threshold", NGlobal::VarFloatHandler, &g_fKeyPointDamageThreshold, 0.95f, STORAGE_NONE );
+START_REGISTER( BuildingConsts )
+REGISTER_VAR_EX( "new_lock", NGlobal::VarBoolHandler, &g_bNewLock, false, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"key_point_damage_threshold", NGlobal::VarFloatHandler, &g_fKeyPointDamageThreshold, 0.95f, STORAGE_NONE );
 FINISH_REGISTER
 
 //DEBUG{
@@ -67,7 +68,7 @@ void CBuildingSimple::AddSoldier( CSoldier *pUnit )
 	CBuilding::AddSoldier( pUnit );
 
 	if ( GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
-	 	ChangePlayer( pUnit->GetPlayer() );
+		ChangePlayer( pUnit->GetPlayer() );
 }
 
 void CBuildingSimple::ChangePlayer( const int _nPlayer )
@@ -85,11 +86,11 @@ void CBuildingSimple::ChangePlayer( const int _nPlayer )
 			pUpdate->info.nPlayer = _nPlayer;
 			pUpdate->info.bStorage = theBonusSystem.IsStorage( nLinkID );
 			pUpdate->info.bFriendLost = ( nOldParty == theDipl.GetMyParty() && nNewParty != theDipl.GetMyParty() );
-			if ( nNewParty == theDipl.GetMyParty() )				// We captured it!
+			if ( nNewParty == theDipl.GetMyParty() ) // We captured it!
 			{
 				updater.AddUpdate( pUpdate, ACTION_NOTIFY_KEY_BUILDING_CAPTURED, this, 0 );
 			}
-			else if ( nNewParty != theDipl.GetMyParty() )		// We lost it...
+			else if ( nNewParty != theDipl.GetMyParty() ) // We lost it...
 			{
 				updater.AddUpdate( pUpdate, ACTION_NOTIFY_KEY_BUILDING_LOST, this, 0 );
 			}
@@ -125,7 +126,7 @@ void CBuildingSimple::RaisePlayerFlag( int nNewPlayer )
 		updater.AddUpdate( 0, ACTION_NOTIFY_DELETED_ST_OBJ, pKeyBuildingFlag, -1 );
 		pKeyBuildingFlag = 0;
 	}
-	pKeyBuildingFlag = theUnitCreation.CreatePlayerFlag( nNewPlayer , pNeutralKeyBuildingFlag );
+	pKeyBuildingFlag = theUnitCreation.CreatePlayerFlag( nNewPlayer, pNeutralKeyBuildingFlag );
 	if ( !pKeyBuildingFlag && pNeutralKeyBuildingFlag ) // substitute with neutral
 	{
 		pKeyBuildingFlag = pNeutralKeyBuildingFlag;
@@ -133,7 +134,7 @@ void CBuildingSimple::RaisePlayerFlag( int nNewPlayer )
 	}
 }
 
-void CBuildingSimple::SetPartyFlag( CExistingObject * _pKeyBuildingFlag )
+void CBuildingSimple::SetPartyFlag( CExistingObject *_pKeyBuildingFlag )
 {
 	pNeutralKeyBuildingFlag = _pKeyBuildingFlag;
 	pKeyBuildingFlag = pNeutralKeyBuildingFlag;
@@ -141,9 +142,15 @@ void CBuildingSimple::SetPartyFlag( CExistingObject * _pKeyBuildingFlag )
 		RaisePlayerFlag( GetPlayer() );
 }
 
-CBuildingSimple::CBuildingSimple( const SBuildingRPGStats *pStats, const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex, int nPlayerIndex, int _nLinkID )
-: CBuilding( pStats, center, wDir, fHP, nFrameIndex, _nLinkID ), nPlayer( nPlayerIndex ), nSideToCapture(-1), timeToChangeOwner(0),
-timeToChangeOwnerTotal(0)
+CBuildingSimple::CBuildingSimple( const SBuildingRPGStats *pStats,
+                                  const CVec3 &center,
+                                  const uint16_t wDir,
+                                  const float fHP,
+                                  const int nFrameIndex,
+                                  int nPlayerIndex,
+                                  int _nLinkID )
+		: CBuilding( pStats, center, wDir, fHP, nFrameIndex, _nLinkID ), nPlayer( nPlayerIndex ), nSideToCapture( -1 ),
+			timeToChangeOwner( 0 ), timeToChangeOwnerTotal( 0 )
 {
 	SetAlive( fHP > 0.0f );
 
@@ -152,7 +159,7 @@ timeToChangeOwnerTotal(0)
 	if ( NGlobal::GetVar( "show_building_entrances", 0 ) )
 	{
 		CSegment segm;
-		for ( int i = 0; i < pStats->entrances.size() -1; ++i )
+		for ( int i = 0; i < pStats->entrances.size() - 1; ++i )
 		{
 			const CVec2 vPoint( GetEntrancePoint( i ) );
 			segm.p1 = CVec2( vPoint.x + 10, vPoint.y + 10 );
@@ -166,9 +173,10 @@ timeToChangeOwnerTotal(0)
 		}
 	}
 #endif
-//DEBUG}
+	//DEBUG}
 
-	if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL && theBonusSystem.IsKeyBuilding( _nLinkID ) )
+	if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL &&
+	     theBonusSystem.IsKeyBuilding( _nLinkID ) )
 	{
 		if ( !theDipl.IsPlayerExist( nPlayer ) )
 		{
@@ -228,7 +236,7 @@ void CBuildingSimple::Segment()
 			if ( GetHitPoints() < 0.1f * GetStats()->fMaxHP && GetPlayer() != theDipl.GetNeutralPlayer() )
 			{
 				nNewPlayer = theDipl.GetNeutralPlayer();
-				ChangePlayer( nNewPlayer );		// Change instantly
+				ChangePlayer( nNewPlayer ); // Change instantly
 				bShouldCount = false;
 			}
 		}
@@ -240,7 +248,7 @@ void CBuildingSimple::Segment()
 			if ( theDipl.GetNParty( GetPlayer() ) == theDipl.GetNeutralParty() )
 			{
 				if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL &&
-					GetHitPoints() < GetStats()->fMaxHP * 0.9f )
+				     GetHitPoints() < GetStats()->fMaxHP * 0.9f )
 				{
 					// Do nothing if in this game mode a neutral key building has less than 90% HP
 				}
@@ -248,15 +256,20 @@ void CBuildingSimple::Segment()
 				{
 					int nNeutralPlayer = GetPlayer();
 					uint8_t nContenders = 0;
-					for ( CUnitsIter<0,3> iter( theDipl.GetNParty(nPlayer), ANY_PARTY, CVec2(GetCenter().x,GetCenter().y), SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
-						!iter.IsFinished(); iter.Iterate() )
+					for ( CUnitsIter<0, 3> iter( theDipl.GetNParty( nPlayer ),
+					                             ANY_PARTY,
+					                             CVec2( GetCenter().x, GetCenter().y ),
+					                             SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
+					      !iter.IsFinished();
+					      iter.Iterate() )
 					{
 						CPtr<CAIUnit> curUnit = *iter;
 						const int nUnitPlayer = curUnit->GetPlayer();
 						const uint8_t nUnitSide = theDipl.GetNParty( nUnitPlayer );
-						if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() && nUnitPlayer != nPlayer && nUnitSide != theDipl.GetNeutralParty() )
+						if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() && nUnitPlayer != nPlayer &&
+						     nUnitSide != theDipl.GetNeutralParty() )
 						{
-							if (nNewPlayer == nNeutralPlayer)
+							if ( nNewPlayer == nNeutralPlayer )
 								nNewPlayer = nUnitPlayer;
 							//ChangePlayer( nNewPlayer );		// Change instantly
 							nContenders |= 1 << nUnitSide;
@@ -270,12 +283,12 @@ void CBuildingSimple::Segment()
 						// Do nothing
 					}
 					// team 1 (red) is capping
-					else if (nContenders == 2)
+					else if ( nContenders == 2 )
 					{
 						// Do nothing
 					}
 					// base is contested!
-					else if (nContenders != 0)
+					else if ( nContenders != 0 )
 					{
 						bIsContested = true;
 					}
@@ -296,19 +309,26 @@ void CBuildingSimple::Segment()
 				}
 				else
 				{
-					for ( CUnitsIter<0,3> iter( theDipl.GetNParty(nPlayer), EDI_ENEMY, CVec2(GetCenter().x, GetCenter().y), SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
-						!iter.IsFinished(); iter.Iterate() )
+					for ( CUnitsIter<0, 3> iter( theDipl.GetNParty( nPlayer ),
+					                             EDI_ENEMY,
+					                             CVec2( GetCenter().x, GetCenter().y ),
+					                             SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
+					      !iter.IsFinished();
+					      iter.Iterate() )
 					{
 						CPtr<CAIUnit> curUnit = *iter;
-						if ( curUnit->IsAlive() && curUnit->GetPlayer() != theDipl.GetNeutralPlayer() && !curUnit->GetStats()->IsAviation() )
+						if ( curUnit->IsAlive() && curUnit->GetPlayer() != theDipl.GetNeutralPlayer() &&
+						     !curUnit->GetStats()->IsAviation() )
 						{
 							nNewPlayer = curUnit->GetPlayer();
 							break;
 						}
 					}
 				}
-				if ( nNewPlayer != nPlayer && theDipl.GetNParty( nNewPlayer ) != theDipl.GetNParty( nPlayer ) && GetPlayer() == theDipl.GetMyNumber() )
-					theFeedBackSystem.AddFeedbackAndForget( nUniqueID, CVec2( GetCenter().x, GetCenter().y ), EFB_KEYBUILDING_ATTACKED, -1 );
+				if ( nNewPlayer != nPlayer && theDipl.GetNParty( nNewPlayer ) != theDipl.GetNParty( nPlayer ) &&
+				     GetPlayer() == theDipl.GetMyNumber() )
+					theFeedBackSystem.AddFeedbackAndForget(
+							nUniqueID, CVec2( GetCenter().x, GetCenter().y ), EFB_KEYBUILDING_ATTACKED, -1 );
 
 				// scan for friendly units
 				if ( theDipl.GetDiplStatus( CBuilding::GetPlayer(), nPlayer ) == EDI_FRIEND )
@@ -317,8 +337,12 @@ void CBuildingSimple::Segment()
 				}
 				else
 				{
-					for ( CUnitsIter<0,3> iter( theDipl.GetNParty(nPlayer), EDI_FRIEND, CVec2(GetCenter().x, GetCenter().y), SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
-						!iter.IsFinished(); iter.Iterate() )
+					for ( CUnitsIter<0, 3> iter( theDipl.GetNParty( nPlayer ),
+					                             EDI_FRIEND,
+					                             CVec2( GetCenter().x, GetCenter().y ),
+					                             SConsts::RADIUS_TO_TAKE_STORAGE_OWNERSHIP );
+					      !iter.IsFinished();
+					      iter.Iterate() )
 					{
 						CPtr<CAIUnit> curUnit = *iter;
 						if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() )
@@ -348,7 +372,7 @@ void CBuildingSimple::Segment()
 			}
 			else
 			{
-				if ( curTime < timeToChangeOwner || bIsContested )		// still not done, do not change
+				if ( curTime < timeToChangeOwner || bIsContested ) // still not done, do not change
 				{
 					float fProgress = 0.5f;
 
@@ -385,12 +409,15 @@ void CBuildingSimple::Segment()
 
 void CBuildingSimple::CheckHitPoints()
 {
-	if ( theBonusSystem.IsKeyBuilding( nLinkID ) && GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( theBonusSystem.IsKeyBuilding( nLinkID ) &&
+	     GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
 	{
 		if ( GetHitPoints() < GetStats()->fMaxHP * g_fKeyPointDamageThreshold )
-			updater.AddUpdate( CreateStatusUpdate( EUS_KEY_POINT_DAMAGED, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+			updater.AddUpdate(
+					CreateStatusUpdate( EUS_KEY_POINT_DAMAGED, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 		else
-			updater.AddUpdate( CreateStatusUpdate( EUS_KEY_POINT_DAMAGED, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+			updater.AddUpdate(
+					CreateStatusUpdate( EUS_KEY_POINT_DAMAGED, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 	}
 }
 
@@ -400,7 +427,10 @@ void CBuildingSimple::SetHitPoints( const float fNewHP )
 	CheckHitPoints();
 }
 
-void CBuildingSimple::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CBuildingSimple::TakeDamage( const float fDamage,
+                                  const bool bFromExplosion,
+                                  const int nPlayerOfShoot,
+                                  CAIUnit *pShotUnit )
 {
 	float fActualDamage = fDamage;
 
@@ -408,7 +438,8 @@ void CBuildingSimple::TakeDamage( const float fDamage, const bool bFromExplosion
 	if ( theBonusSystem.IsKeyBuilding( nLinkID ) )
 	{
 		float fMinHP = GetMinHP();
-		if ( GetHitPoints() - fDamage < fMinHP && GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+		if ( GetHitPoints() - fDamage < fMinHP &&
+		     GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
 			ChangePlayer( theDipl.GetNeutralPlayer() );
 
 		if ( fDamage > GetHitPoints() )
@@ -450,20 +481,23 @@ bool CBuilding::SIllSort::operator()( const CPtr<CSoldier> &a, const CPtr<CSoldi
 
 BASIC_REGISTER_CLASS( AILOGIC, CBuilding );
 
-CBuilding::CBuilding( const SBuildingRPGStats *_pStats, const CVec3 &center, const uint16_t _wDir, const float fHP, const int nFrameIndex, int _nLinkID )
-: pStats( _pStats ), CGivenPassabilityStObject( center, fHP, _wDir, nFrameIndex ), pLockingUnit( 0 ),
-	nOveralPlaces( _pStats->nRestSlots + _pStats->nMedicalSlots + _pStats->aiSlots.size() ),
-	medical( _pStats->nMedicalSlots ), fire( _pStats->aiSlots.size() ), rest( _pStats->nRestSlots ),
-	bAlarm( false ), nLinkID( _nLinkID ),
-	turrets( _pStats->aiSlots.size() ), guns( _pStats->aiSlots.size() ),
-	nextSegmTime( curTime ), lastDistibution( 0 ), nLastFreeFireSoldierChoice( 0 ),
-	firePlace2Soldier( _pStats->aiSlots.size() ),
-	nLastPlayer( theDipl.GetNeutralPlayer() ), nScriptID( -1 ), bShouldEscape( false ), bEscaped( false ), timeOfDeath( 0 ),
-	lastLeave( theDipl.GetNPlayers() ), bKeyBuilding( false ), wDir( _wDir ),
-	nIterator( -1 ), startOfRest( 0 ), bNewtralInfantryInside( false )
+CBuilding::CBuilding( const SBuildingRPGStats *_pStats,
+                      const CVec3 &center,
+                      const uint16_t _wDir,
+                      const float fHP,
+                      const int nFrameIndex,
+                      int _nLinkID )
+		: pStats( _pStats ), CGivenPassabilityStObject( center, fHP, _wDir, nFrameIndex ), pLockingUnit( 0 ),
+			nOveralPlaces( _pStats->nRestSlots + _pStats->nMedicalSlots + _pStats->aiSlots.size() ),
+			medical( _pStats->nMedicalSlots ), fire( _pStats->aiSlots.size() ), rest( _pStats->nRestSlots ), bAlarm( false ),
+			nLinkID( _nLinkID ), turrets( _pStats->aiSlots.size() ), guns( _pStats->aiSlots.size() ), nextSegmTime( curTime ),
+			lastDistibution( 0 ), nLastFreeFireSoldierChoice( 0 ), firePlace2Soldier( _pStats->aiSlots.size() ),
+			nLastPlayer( theDipl.GetNeutralPlayer() ), nScriptID( -1 ), bShouldEscape( false ), bEscaped( false ),
+			timeOfDeath( 0 ), lastLeave( theDipl.GetNPlayers() ), bKeyBuilding( false ), wDir( _wDir ), nIterator( -1 ),
+			startOfRest( 0 ), bNewtralInfantryInside( false )
 {
 	SetAlive( fHP > 0.0f );
-	memset( &lastLeave[0], 0, sizeof(lastLeave[0]) * lastLeave.size() );
+	memset( &lastLeave[0], 0, sizeof( lastLeave[0] ) * lastLeave.size() );
 
 	Init();
 
@@ -475,13 +509,18 @@ CBuilding::CBuilding( const SBuildingRPGStats *_pStats, const CVec3 &center, con
 			turrets[i] = new CMountedTurret( this, i );
 
 			int nGuns = 0;
-			guns[i]->AddGun( CMountedGunsFactory( this, static_cast_ptr<CMountedTurret*>(turrets[i]), i ), 0, i, pStats->aiSlots[i].gun.pWeapon, &nGuns, pStats->aiSlots[i].gun.nAmmo );
+			guns[i]->AddGun( CMountedGunsFactory( this, static_cast_ptr<CMountedTurret *>( turrets[i] ), i ),
+			                 0,
+			                 i,
+			                 pStats->aiSlots[i].gun.pWeapon,
+			                 &nGuns,
+			                 pStats->aiSlots[i].gun.nAmmo );
 		}
 	}
 
 	InitObservationPlaces();
 	bKeyBuilding = theBonusSystem.IsKeyBuilding( nLinkID );
-	if ( bKeyBuilding  )
+	if ( bKeyBuilding )
 		theStatObjs.RegisterSegment( this );
 }
 
@@ -508,7 +547,7 @@ void CBuilding::InitObservationPlaces()
 		uint16_t wRightDiff = 65535;
 
 		const CVec2 vRightPoint = boundRect.v[i] - vCenter;
-		const CVec2 vLeftPoint = boundRect.v[(i+1) % 4] - vCenter;
+		const CVec2 vLeftPoint = boundRect.v[( i + 1 ) % 4] - vCenter;
 		const CVec2 vMiddlePoint = vRightPoint + vLeftPoint;
 		uint16_t wRightDir = GetDirectionByVector( vRightPoint );
 		uint16_t wLeftDir = GetDirectionByVector( vLeftPoint );
@@ -516,7 +555,8 @@ void CBuilding::InitObservationPlaces()
 
 		for ( int j = 0; j < pStats->aiSlots.size(); ++j )
 		{
-			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) + CVec2(GetCenter().x,GetCenter().y) - vCenter;
+			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) +
+			                       CVec2( GetCenter().x, GetCenter().y ) - vCenter;
 			const uint16_t wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
 
 			if ( takenSlots[j] == 0 && DirsDifference( pStats->aiSlots[j].wDirection, wMiddleDir ) < 4000 )
@@ -543,7 +583,8 @@ void CBuilding::InitObservationPlaces()
 
 		for ( int j = 0; j < pStats->aiSlots.size(); ++j )
 		{
-			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) + CVec2(GetCenter().x,GetCenter().y) - vCenter;
+			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) +
+			                       CVec2( GetCenter().x, GetCenter().y ) - vCenter;
 			const uint16_t wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
 
 			if ( nLeftSlot != j && DirsDifference( pStats->aiSlots[j].wDirection, wMiddleDir ) < 4000 )
@@ -559,7 +600,8 @@ void CBuilding::InitObservationPlaces()
 
 		for ( int j = 0; j < pStats->aiSlots.size(); ++j )
 		{
-			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) + CVec2(GetCenter().x,GetCenter().y) - vCenter;
+			const CVec2 vSlotDir = CVec2( pStats->aiSlots[j].vPos.x, pStats->aiSlots[j].vPos.y ) +
+			                       CVec2( GetCenter().x, GetCenter().y ) - vCenter;
 			const uint16_t wSlotDir = GetDirectionByVector( vSlotDir ) + wDir;
 
 			if ( nLeftSlot != j && nRightSlot != j && DirsDifference( pStats->aiSlots[j].wDirection, wMiddleDir ) < 4000 )
@@ -576,14 +618,14 @@ void CBuilding::InitObservationPlaces()
 		if ( nRightSlot != -1 )
 		{
 			observationPlaces[i][sides[i].nObservationPoints] = nRightSlot;
-			firePlace2Observation[nRightSlot] = (sides[i].nObservationPoints << 2) | i;
+			firePlace2Observation[nRightSlot] = ( sides[i].nObservationPoints << 2 ) | i;
 			++sides[i].nObservationPoints;
 		}
 
 		if ( nMiddleSlot != -1 )
 		{
 			observationPlaces[i][sides[i].nObservationPoints] = nMiddleSlot;
-			firePlace2Observation[nMiddleSlot] = (sides[i].nObservationPoints << 2) | i;
+			firePlace2Observation[nMiddleSlot] = ( sides[i].nObservationPoints << 2 ) | i;
 			++sides[i].nObservationPoints;
 		}
 
@@ -596,7 +638,7 @@ void CBuilding::InitObservationPlaces()
 	}
 }
 
-CAIUnit* CBuilding::GetIteratedUnit()
+CAIUnit *CBuilding::GetIteratedUnit()
 {
 	NI_VERIFY( !IsIterateFinished(), "Wrong fire unit to get", return 0 );
 	return fire[nIterator];
@@ -614,7 +656,8 @@ void CBuilding::SetFiringUnitProperties( CSoldier *pUnit, const int nSlot, const
 	pUnit->SetSlotInfo( nSlot, 0, nIndex );
 
 	pUnit->SetVisionAngle( 32768 );
-	pUnit->SetAngles( pStats->aiSlots[nSlot].wDirection + wDir - pStats->aiSlots[nSlot].wAngle, pStats->aiSlots[nSlot].wDirection + wDir + pStats->aiSlots[nSlot].wAngle );
+	pUnit->SetAngles( pStats->aiSlots[nSlot].wDirection + wDir - pStats->aiSlots[nSlot].wAngle,
+	                  pStats->aiSlots[nSlot].wDirection + wDir + pStats->aiSlots[nSlot].wAngle );
 
 	CVec2 vSlotPos( pStats->aiSlots[nSlot].vPos.x, pStats->aiSlots[nSlot].vPos.y );
 	vSlotPos = MoveVectorByDirection( vSlotPos, wDir );
@@ -633,7 +676,7 @@ const uint8_t CBuilding::GetFreeFireSlot()
 	{
 		if ( firePlace2Soldier[j] == 0 && turrets[j] != 0 )
 		{
-			nLastFreeFireSoldierChoice = (nLastFreeFireSoldierChoice + 1) % pStats->aiSlots.size();
+			nLastFreeFireSoldierChoice = ( nLastFreeFireSoldierChoice + 1 ) % pStats->aiSlots.size();
 			return j;
 		}
 	}
@@ -644,14 +687,14 @@ const uint8_t CBuilding::GetFreeFireSlot()
 
 	if ( i >= firePlace2Soldier.size() || firePlace2Soldier[i] != 0 )
 	{
-		 i = 0;
-		 while ( i < nLastFreeFireSoldierChoice && firePlace2Soldier[i] != 0 )
-			 ++i;
+		i = 0;
+		while ( i < nLastFreeFireSoldierChoice && firePlace2Soldier[i] != 0 )
+			++i;
 
 		NI_ASSERT( i < nLastFreeFireSoldierChoice, "Can't find empty fireplace" );
 	}
 
-	nLastFreeFireSoldierChoice = (nLastFreeFireSoldierChoice + 1) % pStats->aiSlots.size();
+	nLastFreeFireSoldierChoice = ( nLastFreeFireSoldierChoice + 1 ) % pStats->aiSlots.size();
 
 	return i;
 }
@@ -691,7 +734,7 @@ const CVec2 CBuilding::GetEntrancePoint( const int nEntrance ) const
 {
 	NI_ASSERT( nEntrance < GetNEntrancePoints(), "Wrong number of entrance point" );
 	CVec2 vLocalPos( pStats->entrances[nEntrance].vPos.x, pStats->entrances[nEntrance].vPos.y );
-	return CVec2(GetCenter().x,GetCenter().y) + MoveVectorByDirection( vLocalPos, wDir );
+	return CVec2( GetCenter().x, GetCenter().y ) + MoveVectorByDirection( vLocalPos, wDir );
 }
 
 void CBuilding::GetEntranceData( CVec2 *pvPoint, uint16_t *pwDir, int nIndex ) const
@@ -955,7 +998,8 @@ bool CBuilding::IsIllInFire()
 void CBuilding::DistributeAll()
 {
 	// обменять тех, кто вылечился в medical с больными в fire или rest
-	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP &&	( IsIllInFire() || IsIllInRest() ) )
+	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP &&
+	        ( IsIllInFire() || IsIllInRest() ) )
 	{
 		const bool bIllInFire = IsIllInFire();
 		const bool bIllInRest = IsIllInRest();
@@ -974,7 +1018,8 @@ void CBuilding::DistributeAll()
 	}
 
 	// выгнать халявщиков из medical places в fireplaces
-	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP &&	fire.Size() != fire.GetReserved() )
+	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP &&
+	        fire.Size() != fire.GetReserved() )
 	{
 		CSoldier *pSoldier = medical.GetMaxEl();
 		medical.Pop();
@@ -982,7 +1027,8 @@ void CBuilding::DistributeAll()
 	}
 
 	// выгнать халявщиков из medical places в restplaces
-	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP &&	rest.Size() != rest.GetReserved() )
+	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP &&
+	        rest.Size() != rest.GetReserved() )
 	{
 		CSoldier *pSoldier = medical.GetMaxEl();
 		medical.Pop();
@@ -1122,7 +1168,7 @@ void CBuilding::PushSoldierToFirePlace( CSoldier *pUnit, const int nFirePlace )
 
 void CBuilding::PushSoldierToObservationPoint( CSoldier *pSoldier, const int nSide )
 {
-	if ( sides[nSide].nObservationPoints != 0  )
+	if ( sides[nSide].nObservationPoints != 0 )
 	{
 		// ещё никто не сидит
 		if ( sides[nSide].nSoldiersInObservationPoints == 0 )
@@ -1162,7 +1208,7 @@ bool CBuilding::IsSoldierInObservationPoint( CSoldier *pSoldier ) const
 
 void CBuilding::SetSoldiersToObservationPoints()
 {
-	for ( int i = 0; i < rest.Size();	++i )
+	for ( int i = 0; i < rest.Size(); ++i )
 	{
 		CSoldier *pRestingSoldier = rest[i];
 		const int nSide = ChooseSideToSetSoldier( pRestingSoldier );
@@ -1236,7 +1282,8 @@ void CBuilding::SetSoldiersToObservationPoints()
 void CBuilding::DistributeNonFires()
 {
 	// обменять тех, кто вылечился в medical с больными в rest
-	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP && IsIllInRest() )
+	while ( !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP &&
+	        IsIllInRest() )
 	{
 		CPtr<CSoldier> pMedicalSoldier = medical.GetMaxEl();
 		medical.Pop();
@@ -1248,7 +1295,8 @@ void CBuilding::DistributeNonFires()
 	}
 
 	// выгнать тех, кто вылечился
-	while ( rest.Size() < rest.GetReserved() && !medical.IsEmpty() && medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP )
+	while ( rest.Size() < rest.GetReserved() && !medical.IsEmpty() &&
+	        medical.GetMaxEl()->GetHitPoints() == medical.GetMaxEl()->GetStats()->fMaxHP )
 	{
 		CSoldier *pSoldier = medical.GetMaxEl();
 		medical.Pop();
@@ -1290,7 +1338,8 @@ void CBuilding::DistributeFiringSoldiers()
 				}
 				else
 				{
-					nLastFreeFireSoldierChoice += NRandom::Random( 0, pStats->aiSlots.size() ); RecordRandomCall();
+					nLastFreeFireSoldierChoice += NRandom::Random( 0, pStats->aiSlots.size() );
+					RecordRandomCall();
 					const int nNewFireSlot = GetFreeFireSlot();
 
 					DelSoldierFromFirePlace( pSoldier );
@@ -1326,11 +1375,13 @@ void CBuilding::ExchangeSoldiersToTurrets()
 
 void CBuilding::Segment()
 {
-	nextSegmTime = curTime + NRandom::Random( 2 * SConsts::AI_SEGMENT_DURATION, 10 * SConsts::AI_SEGMENT_DURATION ); RecordRandomCall();
+	nextSegmTime = curTime + NRandom::Random( 2 * SConsts::AI_SEGMENT_DURATION, 10 * SConsts::AI_SEGMENT_DURATION );
+	RecordRandomCall();
 
 	if ( !IsUnitsInside() )
 	{
-		if ( TYPE_MAIN_RU_STORAGE != pStats->etype && TYPE_TEMP_RU_STORAGE != pStats->etype && !theBonusSystem.IsKeyBuilding( nLinkID ) )
+		if ( TYPE_MAIN_RU_STORAGE != pStats->etype && TYPE_TEMP_RU_STORAGE != pStats->etype &&
+		     !theBonusSystem.IsKeyBuilding( nLinkID ) )
 			theStatObjs.UnregisterSegment( this );
 
 		bShouldEscape = false;
@@ -1374,7 +1425,8 @@ void CBuilding::Segment()
 			}
 		}
 
-		if ( curTime - lastDistibution >= 4000 || curTime - startOfRest < SConsts::TIME_OF_BUILDING_ALARM && curTime - lastDistibution >= 3500 )
+		if ( curTime - lastDistibution >= 4000 ||
+		     curTime - startOfRest < SConsts::TIME_OF_BUILDING_ALARM && curTime - lastDistibution >= 3500 )
 		{
 			lastDistibution = curTime;
 
@@ -1430,7 +1482,7 @@ void CBuilding::Segment()
 
 void CBuilding::KillAllInsiders()
 {
-	std::list< CPtr<CSoldier> > dead;
+	std::list<CPtr<CSoldier>> dead;
 
 	for ( int i = 0; i < medical.Size(); ++i )
 		dead.push_back( medical[i] );
@@ -1441,8 +1493,8 @@ void CBuilding::KillAllInsiders()
 	for ( int i = 0; i < fire.Size(); ++i )
 		dead.push_back( fire[i] );
 
-	for ( std::list< CPtr<CSoldier> >::iterator iter = dead.begin(); iter != dead.end(); ++iter )
-		(*iter)->Die( false, 0 );
+	for ( std::list<CPtr<CSoldier>>::iterator iter = dead.begin(); iter != dead.end(); ++iter )
+		( *iter )->Die( false, 0 );
 }
 
 void CBuilding::Die( const float fDamage )
@@ -1481,9 +1533,10 @@ void CBuilding::DriveOut( CSoldier *pSoldier, det_set<int> *pFormations )
 	if ( GetNEntrancePoints() && pFormations->find( nFormationID ) == pFormations->end() )
 	{
 		pFormations->insert( nFormationID );
-		const int nEntrancePoint = NRandom::Random( 0, GetNEntrancePoints() - 1 ); RecordRandomCall();
+		const int nEntrancePoint = NRandom::Random( 0, GetNEntrancePoints() - 1 );
+		RecordRandomCall();
 		const CVec2 vEntrancePoint( GetEntrancePoint( nEntrancePoint ) );
-		CVec2 vDirFromCenter( vEntrancePoint - CVec2(GetCenter().x,GetCenter().y) );
+		CVec2 vDirFromCenter( vEntrancePoint - CVec2( GetCenter().x, GetCenter().y ) );
 		Normalize( &vDirFromCenter );
 		const CVec2 vPointsToGo( vEntrancePoint + vDirFromCenter * SAIConsts::TILE_SIZE * 3.0f );
 
@@ -1491,7 +1544,10 @@ void CBuilding::DriveOut( CSoldier *pSoldier, det_set<int> *pFormations )
 	}
 }
 
-void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CBuilding::TakeDamage( const float fDamage,
+                            const bool bFromExplosion,
+                            const int nPlayerOfShoot,
+                            CAIUnit *pShotUnit )
 {
 	if ( fHP > 0 )
 	{
@@ -1522,8 +1578,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 			if ( GetHitPoints() == 0.0f )
 			{
 				// хранилища не умирают
-				if ( TYPE_MAIN_RU_STORAGE != pStats->etype &&
-						 TYPE_TEMP_RU_STORAGE != pStats->etype )
+				if ( TYPE_MAIN_RU_STORAGE != pStats->etype && TYPE_TEMP_RU_STORAGE != pStats->etype )
 				{
 					theStatistics.ObjectDestroyed( nPlayerOfShoot );
 
@@ -1534,24 +1589,36 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 							if ( pShotUnit )
 								pShotUnit->EnemyKilled( fire[i] );
 
-							theStatistics.UnitKilled( nPlayerOfShoot, fire[i]->GetPlayer(), fire[i]->GetStats()->fExpPrice,
-								pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE, fire[i]->GetReinforcementType(), true );
+							theStatistics.UnitKilled( nPlayerOfShoot,
+							                          fire[i]->GetPlayer(),
+							                          fire[i]->GetStats()->fExpPrice,
+							                          pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE,
+							                          fire[i]->GetReinforcementType(),
+							                          true );
 						}
 						for ( int i = 0; i < medical.Size(); ++i )
 						{
 							if ( pShotUnit )
 								pShotUnit->EnemyKilled( medical[i] );
 
-							theStatistics.UnitKilled( nPlayerOfShoot, medical[i]->GetPlayer(), medical[i]->GetStats()->fExpPrice,
-								pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE, medical[i]->GetReinforcementType(), true );
+							theStatistics.UnitKilled( nPlayerOfShoot,
+							                          medical[i]->GetPlayer(),
+							                          medical[i]->GetStats()->fExpPrice,
+							                          pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE,
+							                          medical[i]->GetReinforcementType(),
+							                          true );
 						}
 						for ( int i = 0; i < rest.Size(); ++i )
 						{
 							if ( pShotUnit )
 								pShotUnit->EnemyKilled( rest[i] );
 
-							theStatistics.UnitKilled( nPlayerOfShoot, rest[i]->GetPlayer(), rest[i]->GetStats()->fExpPrice,
-								pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE, rest[i]->GetReinforcementType(), true );
+							theStatistics.UnitKilled( nPlayerOfShoot,
+							                          rest[i]->GetPlayer(),
+							                          rest[i]->GetStats()->fExpPrice,
+							                          pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE,
+							                          rest[i]->GetReinforcementType(),
+							                          true );
 						}
 					}
 				}
@@ -1564,7 +1631,7 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 				{
 					const float fProbability = fDamage / pStats->fMaxHP;
 
-					std::list< CPtr<CSoldier> > dead;
+					std::list<CPtr<CSoldier>> dead;
 					for ( int i = 0; i < medical.Size(); ++i )
 					{
 						// не жилец
@@ -1589,15 +1656,19 @@ void CBuilding::TakeDamage( const float fDamage, const bool bFromExplosion, cons
 							dead.push_back( fire[i] );
 					}
 
-					for ( std::list< CPtr<CSoldier> >::iterator iter = dead.begin(); iter != dead.end(); ++iter )
+					for ( std::list<CPtr<CSoldier>>::iterator iter = dead.begin(); iter != dead.end(); ++iter )
 					{
 						CSoldier *pSoldier = *iter;
 
 						if ( pShotUnit )
 							pShotUnit->EnemyKilled( pSoldier );
 
-						theStatistics.UnitKilled( nPlayerOfShoot, dead.front()->GetPlayer(),
-							pSoldier->GetStats()->fPrice, pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE, pSoldier->GetReinforcementType(), true );
+						theStatistics.UnitKilled( nPlayerOfShoot,
+						                          dead.front()->GetPlayer(),
+						                          pSoldier->GetStats()->fPrice,
+						                          pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE,
+						                          pSoldier->GetReinforcementType(),
+						                          true );
 
 						pSoldier->Die( false, 0 );
 					}
@@ -1626,7 +1697,8 @@ const int CBuilding::GetNFreePlaces() const
 
 bool CBuilding::IsGoodPointForRunIn( const SVector &point, const int nEntrance, const float fMinDist ) const
 {
-	return fabs2( point.ToCVec2() - GetEntrancePoint( nEntrance ) ) <= sqr( float( SConsts::TILE_SIZE ) * 6.0f + fMinDist );
+	return fabs2( point.ToCVec2() - GetEntrancePoint( nEntrance ) ) <=
+	       sqr( float( SConsts::TILE_SIZE ) * 6.0f + fMinDist );
 }
 
 const int CBuilding::GetNDefenders() const
@@ -1634,7 +1706,7 @@ const int CBuilding::GetNDefenders() const
 	return medical.Size() + rest.Size() + fire.Size();
 }
 
-class CSoldier* CBuilding::GetUnit( const int n ) const
+class CSoldier *CBuilding::GetUnit( const int n ) const
 {
 	NI_ASSERT( n < GetNDefenders(), "Wrong number of unit to get from defenders of a building" );
 
@@ -1679,17 +1751,17 @@ const int CBuilding::GetNGunsInFireSlot( const int nSlot )
 	return guns[nSlot]->GetNTotalGuns();
 }
 
-CBasicGun* CBuilding::GetGunInFireSlot( const int nSlot, const int nGun )
+CBasicGun *CBuilding::GetGunInFireSlot( const int nSlot, const int nGun )
 {
 	NI_ASSERT( nSlot < guns.size(), fmt::format( "Wrong number of slot ({})", nSlot ) );
 
-	if ( nGun >= guns[nSlot]->GetNTotalGuns() || guns[nSlot]->GetGun(nGun)->GetWeapon() == 0 )
+	if ( nGun >= guns[nSlot]->GetNTotalGuns() || guns[nSlot]->GetGun( nGun )->GetWeapon() == 0 )
 		return 0;
 
-	return guns[nSlot]->GetGun(nGun);
+	return guns[nSlot]->GetGun( nGun );
 }
 
-CTurret* CBuilding::GetTurretInFireSlot( const int nSlot )
+CTurret *CBuilding::GetTurretInFireSlot( const int nSlot )
 {
 	NI_ASSERT( nSlot < guns.size(), fmt::format( "Wrong number of slot ({})", nSlot ) );
 	return turrets[nSlot];
@@ -1701,7 +1773,10 @@ float CBuilding::GetMaxFireRangeInSlot( const int nSlot ) const
 	return guns[nSlot]->GetMaxFireRange( 0 );
 }
 
-bool CBuilding::IsSoldierVisible( const int nParty, const CVec2 &center, bool bCamouflated, const float fCamouflage ) const
+bool CBuilding::IsSoldierVisible( const int nParty,
+                                  const CVec2 &center,
+                                  bool bCamouflated,
+                                  const float fCamouflage ) const
 {
 	if ( nParty == theDipl.GetNParty( GetPlayer() ) )
 		return true;
@@ -1709,13 +1784,13 @@ bool CBuilding::IsSoldierVisible( const int nParty, const CVec2 &center, bool bC
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 	{
 		if ( theDipl.GetDiplStatusForParties( nParty, theDipl.GetNParty( i ) ) == EDI_FRIEND &&
-				 GetNFriendlyAttackers( i ) > 0 )
+		     GetNFriendlyAttackers( i ) > 0 )
 			return true;
 	}
 
 	if ( g_bNewLock == 0 )
 	{
-		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
+		CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2> pass;
 		GetPassability( &pass );
 
 		const int nSizeX = pass.GetMaxX() - pass.GetMinX();
@@ -1726,8 +1801,8 @@ bool CBuilding::IsSoldierVisible( const int nParty, const CVec2 &center, bool bC
 
 		const int nYDown = ( nYShift <= nSizeY / 2 ) ? 0 : nSizeY / 2;
 		const int nXDown = ( nXShift <= nSizeX / 2 ) ? 0 : nSizeX / 2;
-		const int nYUp	 = ( nYShift <= nSizeY / 2 ) ? nSizeY / 2 + 1 : nSizeY;
-		const int nXUp   = ( nXShift <= nSizeX / 2 ) ? nSizeX / 2 + 1 : nSizeX;
+		const int nYUp = ( nYShift <= nSizeY / 2 ) ? nSizeY / 2 + 1 : nSizeY;
+		const int nXUp = ( nXShift <= nSizeX / 2 ) ? nSizeX / 2 + 1 : nSizeX;
 
 		for ( int y = pass.GetMinY() + nYDown; y < pass.GetMinY() + nYUp; y += SConsts::TILE_SIZE )
 		{
@@ -1752,8 +1827,8 @@ bool CBuilding::IsSoldierVisible( const int nParty, const CVec2 &center, bool bC
 			CVec2 vTileCenter = AICellsTiles::GetPointByTile( tiles[i] );
 
 			if ( boost::math::sign( vTileCenter.x - vAABBCenter.x ) * boost::math::sign( center.x - vAABBCenter.x ) >= 0 &&
-					boost::math::sign( vTileCenter.y - vAABBCenter.y ) * boost::math::sign( center.y - vAABBCenter.y ) >= 0 &&
-					theWarFog.IsUnitVisible( tiles[i], nParty, bCamouflated /*, fCamouflage*/ ) )
+			     boost::math::sign( vTileCenter.y - vAABBCenter.y ) * boost::math::sign( center.y - vAABBCenter.y ) >= 0 &&
+			     theWarFog.IsUnitVisible( tiles[i], nParty, bCamouflated /*, fCamouflage*/ ) )
 			{
 				return true;
 			}
@@ -1771,7 +1846,11 @@ bool CBuilding::ChooseEntrance( class CCommonUnit *pUnit, const CVec2 &vPoint, i
 	for ( int i = 0; i < GetNEntrancePoints(); ++i )
 	{
 		CPtr<IStaticPath> pPath = CreateStaticPathToPoint( GetEntrancePoint( i ), vPoint, VNULL2, pUnit, true, GetAIMap() );
-		if ( pPath != 0 && ( *pnEntrance == -1 || pPath->GetLength() < nMinDistance )/* && fabs2( ( pPath->GetFinishPoint() - vPoint ) ) <= sqr( 2 * SConsts::GOOD_LAND_DIST )*/ )
+		if (
+				pPath != 0 &&
+				( *pnEntrance == -1 ||
+		      pPath->GetLength() <
+		          nMinDistance ) /* && fabs2( ( pPath->GetFinishPoint() - vPoint ) ) <= sqr( 2 * SConsts::GOOD_LAND_DIST )*/ )
 		{
 			nMinDistance = pPath->GetLength();
 			*pnEntrance = i;
@@ -1786,8 +1865,7 @@ bool CBuilding::ChooseEntrance( class CCommonUnit *pUnit, const CVec2 &vPoint, i
 
 bool CBuilding::IsSelectable() const
 {
-	return GetPlayer() == theDipl.GetMyNumber() &&
-				 ( fire.Size() != 0 || medical.Size() != 0 || rest.Size() != 0 );
+	return GetPlayer() == theDipl.GetMyNumber() && ( fire.Size() != 0 || medical.Size() != 0 || rest.Size() != 0 );
 }
 
 bool CBuilding::CanUnitGoThrough( const EAIClasses &eClass ) const
@@ -1797,7 +1875,7 @@ bool CBuilding::CanUnitGoThrough( const EAIClasses &eClass ) const
 
 bool CBuilding::CanRotateSoldier( CSoldier *pSoldier ) const
 {
-/*
+	/*
 	// отдыхает
 	if ( pSoldier->GetState() && pSoldier->GetState()->IsRestState() ) )
 	{
@@ -1831,12 +1909,15 @@ const int CBuilding::GetNFirePlaces() const
 	return pStats->aiSlots.size();
 }
 
-CSoldier* CBuilding::GetSoldierInFireplace( const int nFireplace) const
+CSoldier *CBuilding::GetSoldierInFireplace( const int nFireplace ) const
 {
 	return firePlace2Soldier[nFireplace];
 }
 
-void CBuilding::SSwapAction::operator()( CPtr<CSoldier> pSoldier1, CPtr<CSoldier> pSoldier2, const int nSoldier1Index, const int nSoldier2Index )
+void CBuilding::SSwapAction::operator()( CPtr<CSoldier> pSoldier1,
+                                         CPtr<CSoldier> pSoldier2,
+                                         const int nSoldier1Index,
+                                         const int nSoldier2Index )
 {
 	if ( pSoldier1 )
 		pSoldier1->SetSlotIndex( nSoldier2Index );
@@ -1849,7 +1930,7 @@ bool CBuilding::IsBetterChangeObservationSoldier( CSoldier *pSoldier, CSoldier *
 	return pSoldier->GetSightRadius() > pSoldierInPoint->GetSightRadius();
 }
 
-CSoldier* CBuilding::GetSoldierOnSide( const int nSide )
+CSoldier *CBuilding::GetSoldierOnSide( const int nSide )
 {
 	NI_ASSERT( nSide < 4, fmt::format( "Wrong side passed ({})", nSide ) );
 	for ( int i = 0; i < sides[nSide].nObservationPoints; ++i )
@@ -1913,7 +1994,8 @@ const int CBuilding::ChooseSideToSetSoldier( CSoldier *pSoldier ) const
 		if ( i == nSoldierSide )
 			--nSoldiersInObservationPoints;
 
-		if ( sides[i].nObservationPoints > 0 && nSoldiersInObservationPoints < 2 && nSoldiersInObservationPoints < sides[i].nObservationPoints )
+		if ( sides[i].nObservationPoints > 0 && nSoldiersInObservationPoints < 2 &&
+		     nSoldiersInObservationPoints < sides[i].nObservationPoints )
 		{
 			if ( nBestSide == -1 )
 			{
@@ -1925,7 +2007,8 @@ const int CBuilding::ChooseSideToSetSoldier( CSoldier *pSoldier ) const
 				nBestSide = i;
 				nBestSideSoldiers = nSoldiersInObservationPoints;
 			}
-			else if ( nSoldiersInObservationPoints == nBestSideSoldiers && ((NRandom::Random( 0.0f, 1.0f ) < 0.5f) & RecordRandomCall()) )
+			else if ( nSoldiersInObservationPoints == nBestSideSoldiers &&
+			          ( ( NRandom::Random( 0.0f, 1.0f ) < 0.5f ) & RecordRandomCall() ) )
 			{
 				nBestSide = i;
 				nBestSideSoldiers = nSoldiersInObservationPoints;
@@ -1943,7 +2026,7 @@ const bool CBuilding::IsVisibleForDiplomacyUpdate()
 		return true;
 	// мы забежали/выбежали
 	if ( theDipl.GetNParty( nLastPlayer ) == theDipl.GetMyParty() ||
-				theDipl.GetNParty( GetPlayer() ) == theDipl.GetMyParty())
+	     theDipl.GetNParty( GetPlayer() ) == theDipl.GetMyParty() )
 		return true;
 	// враг забежал
 	else if ( GetPlayer() != theDipl.GetNeutralPlayer() )

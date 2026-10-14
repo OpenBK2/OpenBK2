@@ -21,55 +21,55 @@
 
 namespace
 {
-	CObj<CInteractiveMayaExportTool> pInteractiveMayaExportTool;
+CObj<CInteractiveMayaExportTool> pInteractiveMayaExportTool;
 
-	//
-	void LoadFilters()
+//
+void LoadFilters()
+{
+	try
 	{
-		try
+		// JoinPath rather than a concatenation with the separator written out,
+		// which is how "Editor\Filters.xml" got onto the end of an otherwise
+		// good start folder and named one file that does not exist off
+		// Windows. Without the filters every palette keyed on them is built
+		// with an empty filter list, so the object palette offers nothing to
+		// place: no units, no buildings, no terrain objects.
+		const std::string szObjectFilterFileName =
+				NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Filters.xml" );
 		{
-			// JoinPath rather than a concatenation with the separator written out,
-			// which is how "Editor\Filters.xml" got onto the end of an otherwise
-			// good start folder and named one file that does not exist off
-			// Windows. Without the filters every palette keyed on them is built
-			// with an empty filter list, so the object palette offers nothing to
-			// place: no units, no buildings, no terrain objects.
-			const std::string szObjectFilterFileName =
-					NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Filters.xml" );
+			CFileStream stream( szObjectFilterFileName, CFileStream::WIN_READ_ONLY );
+			if ( stream.IsOk() )
 			{
-				CFileStream stream( szObjectFilterFileName, CFileStream::WIN_READ_ONLY );
-				if( stream.IsOk() )
-				{
-					Singleton<IObjectFilterCollector>()->Load( &stream );
-				}
-				else
-				{
-					// Said out loud, because a palette with nothing in it is all
-					// the report this used to make.
-					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Can't read the object filters {}\n", szObjectFilterFileName ) );
-				}
+				Singleton<IObjectFilterCollector>()->Load( &stream );
 			}
-			const std::string szDataExtractorFileName =
-					NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Extractors.xml" );
+			else
 			{
-				CFileStream stream( szDataExtractorFileName, CFileStream::WIN_READ_ONLY );
-				if( stream.IsOk() )
-				{
-					Singleton<IObjectCollector>()->Load( &stream );
-				}
-				else
-				{
-					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Can't read the data extractors {}\n", szDataExtractorFileName ) );
-				}
+				// Said out loud, because a palette with nothing in it is all
+				// the report this used to make.
+				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Can't read the object filters {}\n", szObjectFilterFileName ) );
 			}
 		}
-		catch ( ... )
+		const std::string szDataExtractorFileName = NFile::JoinPath(
+				Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Extractors.xml" );
 		{
-			NLog::GetLogger()->Log( LT_ERROR, "Can't load object filters\n" );
+			CFileStream stream( szDataExtractorFileName, CFileStream::WIN_READ_ONLY );
+			if ( stream.IsOk() )
+			{
+				Singleton<IObjectCollector>()->Load( &stream );
+			}
+			else
+			{
+				NLog::GetLogger()->Log( LT_ERROR,
+				                        fmt::format( "Can't read the data extractors {}\n", szDataExtractorFileName ) );
+			}
 		}
 	}
+	catch ( ... )
+	{
+		NLog::GetLogger()->Log( LT_ERROR, "Can't load object filters\n" );
+	}
 }
-
+}
 
 class CEditorModuleB2M1 : public IEditorModule
 {
@@ -95,7 +95,6 @@ void CEditorModuleB2M1::ModuleShutdown()
 {
 	// существует только Singleton<IUserDataContainer>()
 }
-
 
 void CEditorModuleB2M1::ModuleCreate()
 {
@@ -193,7 +192,7 @@ void CEditorModuleB2M1::ModulePostCreateMainFrame()
 
 static CEditorModuleB2M1 theEDB2Module;
 
-ED_B2_M1_EXPORT IEditorModule* GetEditorModule1()
+ED_B2_M1_EXPORT IEditorModule *GetEditorModule1()
 {
 	return &theEDB2Module;
 }

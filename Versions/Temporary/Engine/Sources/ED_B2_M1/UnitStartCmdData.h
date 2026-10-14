@@ -15,16 +15,12 @@ struct SUnitStartCmdWindowData
 	//
 	struct SCmd // данные для создания row в списке команд
 	{
-		int nIndex;					// индекс команды в MapInfo.startCommandList[]
-		std::string szType;			// тип команды
-		std::string szTarget;	// местоназначение команды - имя юнита или координаты
+		int nIndex;           // индекс команды в MapInfo.startCommandList[]
+		std::string szType;   // тип команды
+		std::string szTarget; // местоназначение команды - имя юнита или координаты
 		//
-		SCmd()
-			:	nIndex(-1),
-			szType( RCSTR("<UNKNOWN>") )
-		{
-		}
-		bool operator== ( const SCmd &cmd ) const { return ( this->nIndex == cmd.nIndex ); }
+		SCmd() : nIndex( -1 ), szType( RCSTR( "<UNKNOWN>" ) ) {}
+		bool operator==( const SCmd &cmd ) const { return ( this->nIndex == cmd.nIndex ); }
 	};
 	std::vector<SCmd> commands;
 	//
@@ -38,13 +34,10 @@ struct SUnitStartCmdWindowData
 		ORDER_UP_CMD,
 		SEL_CHANGE
 	};
-	EAction eLastAction;							// последнее событие интерфейса пользователя
-	std::vector<int> selectedCommands;		// SCmd::nIndex выбранных в списке команд
+	EAction eLastAction;               // последнее событие интерфейса пользователя
+	std::vector<int> selectedCommands; // SCmd::nIndex выбранных в списке команд
 	//
-	SUnitStartCmdWindowData()
-	{
-		Clear();
-	}
+	SUnitStartCmdWindowData() { Clear(); }
 	//
 	void Clear()
 	{
@@ -53,12 +46,8 @@ struct SUnitStartCmdWindowData
 		commands.clear();
 	}
 	//
-	void SetLastAction( EAction eAction )
-	{
-		eLastAction = eAction;
-	}
+	void SetLastAction( EAction eAction ) { eLastAction = eAction; }
 };
-
 
 // CMapInfoState drives this palette with the two window commands every palette
 // takes, so the dispatch is CPaletteCommands' and only the reading and writing

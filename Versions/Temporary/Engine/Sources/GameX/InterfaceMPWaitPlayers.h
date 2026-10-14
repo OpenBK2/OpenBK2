@@ -20,6 +20,7 @@ private:
 
 	bool OnLagInfoMessage( SMPUILagInfoMessage *pMsg );
 	void AddPlayerLine( const std::string &szName, const int nTime );
+
 public:
 	CInterfaceMPWaitPlayers();
 
@@ -38,6 +39,7 @@ class CICMPWaitPlayers : public CInterfaceCommandBase<CInterfaceMPWaitPlayers>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

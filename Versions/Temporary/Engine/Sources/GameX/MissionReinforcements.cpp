@@ -16,19 +16,19 @@
 
 #include <fmt/format.h>
 
-const char* REINF_STATE_NORMAL = "Normal";
-const char* REINF_STATE_SELECTED = "Selected";
-const char* REINF_STATE_DISABLED = "Disabled";
+const char *REINF_STATE_NORMAL = "Normal";
+const char *REINF_STATE_SELECTED = "Selected";
+const char *REINF_STATE_DISABLED = "Disabled";
 
 const float ROLLER_TIME = 1.0f;
 
-const int N_TX_REINF_RIGHT		= 1;
-const int N_TX_REINF_INACTIVE	= 2;
-const int N_TX_REINF_LIGHT		= 4;
+const int N_TX_REINF_RIGHT = 1;
+const int N_TX_REINF_INACTIVE = 2;
+const int N_TX_REINF_LIGHT = 4;
 
-static float s_fBlinkStep = 0.5f; // время показа одного положения мигающей кнопки
+static float s_fBlinkStep = 0.5f;      // время показа одного положения мигающей кнопки
 static float s_fBlinkDuration = 10.0f; // время мигания кнопки
-static float s_fBlinkPeriod = 60.0f; // время между миганиями кнопки
+static float s_fBlinkPeriod = 60.0f;   // время между миганиями кнопки
 static int s_nAutoShowReinf = 1;
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17163380, CMissionReinf )
@@ -42,7 +42,7 @@ struct STmpReinfEntry
 
 	bool operator==( const STmpReinfEntry &reinf ) const
 	{
-		bool bResult = (pStats == reinf.pStats);
+		bool bResult = ( pStats == reinf.pStats );
 		return bResult;
 	}
 };
@@ -61,15 +61,9 @@ void CMissionReinf::SReinfInfo::ShowChevron( int nIndex )
 
 // CMissionReinf
 
-CMissionReinf::CMissionReinf() :
-	bTrackMousePos( false ),
-	ePreSelected( NDb::_RT_NONE ),
-	bDisabledByInterface( false ),
-	nPrevReinfCount( 0 ),
-	bIsOpen( false ),
-	bIsLight( false ),
-	timeBlinkAbs( 0 ),
-	bWasEnabled( false )
+CMissionReinf::CMissionReinf()
+		: bTrackMousePos( false ), ePreSelected( NDb::_RT_NONE ), bDisabledByInterface( false ), nPrevReinfCount( 0 ),
+			bIsOpen( false ), bIsLight( false ), timeBlinkAbs( 0 ), bWasEnabled( false )
 {
 }
 
@@ -80,7 +74,10 @@ CMissionReinf::~CMissionReinf()
 	pUnitFullInfo = 0;
 }
 
-void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotifications *_pNotifications, NDb::ESeason _eSeason )
+void CMissionReinf::Init( IScreen *pScr,
+                          CWorldClient *_pWorld,
+                          IVisualNotifications *_pNotifications,
+                          NDb::ESeason _eSeason )
 {
 	pWorld = _pWorld;
 	pNotifications = _pNotifications;
@@ -96,7 +93,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	pReinfPanel = GetChildChecked<IWindow>( pScr, "ReinfPanel", true );
 	if ( !pReinfPanel )
 		return;
-/*	int nX;
+	/*	int nX;
 	int nSizeX;
 	pReinfPanel->GetPlacement( &nX, 0, &nSizeX, 0 );
 	pReinfPanel->SetPlacement( nX + nSizeX, 0, 0, 0, EWPF_POS_X );*/
@@ -104,7 +101,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	pReinfPanel->Enable( false );
 
 	IWindow *pRightPanel = GetChildChecked<IWindow>( pScr, "MissionActionsPanel", true );
-/*	pReinfMode = GetChildChecked<IWindow>( pRightPanel, "ReinforcementBtn", true );
+	/*	pReinfMode = GetChildChecked<IWindow>( pRightPanel, "ReinforcementBtn", true );
 	if ( pReinfMode )
 		pReinfMode->Enable( false );*/
 	pToggleReinfBtn = GetChildChecked<IButton>( pRightPanel, "ToggleReinfBtn", true );
@@ -116,7 +113,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	if ( pRoundProgressMask )
 		pRoundProgressMask->ShowWindow( false );
 
-//	pCount = GetChildChecked<ITextView>( pReinfMode, "ReinfCount", true );
+	//	pCount = GetChildChecked<ITextView>( pReinfMode, "ReinfCount", true );
 
 	pReinfCountPanel = GetChildChecked<IWindow>( pRightPanel, "ReinfCountPanel", true );
 	pRoller1 = GetChildChecked<IPlayer>( pReinfCountPanel, "Roller1", true );
@@ -124,7 +121,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	NUIElementsHelper::InitRoller( pRoller1 );
 	NUIElementsHelper::InitRoller( pRoller2 );
 
-/*	pCloseReinfBtn = GetChildChecked<IButton>( pRightPanel, "CloseReinforcementBtn", true );
+	/*	pCloseReinfBtn = GetChildChecked<IButton>( pRightPanel, "CloseReinforcementBtn", true );
 	if ( pCloseReinfBtn )
 	{
 		pCloseReinfBtn->ShowWindow( false );
@@ -146,7 +143,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 
 	if ( pCommonInfo )
 	{
-		for ( int i = 1; ; ++i )
+		for ( int i = 1;; ++i )
 		{
 			IWindow *pWnd = pCommonInfo->GetChild( fmt::format( "ReinfInfoUnit{}", i ), true );
 			if ( !pWnd )
@@ -176,10 +173,10 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 		pUnitFullInfo->SetReinfUnit( 0 );
 
 	// hide all buttons
-	for ( int i = 1; ; ++i )
+	for ( int i = 1;; ++i )
 	{
 		IWindow *pWnd = pReinfPanel->GetChild( fmt::format( "ButtonReinf{:02d}", i ), true );
-		if ( !dynamic_cast<IButton*>( pWnd ) )
+		if ( !dynamic_cast<IButton *>( pWnd ) )
 			break;
 
 		pWnd->ShowWindow( false );
@@ -187,8 +184,9 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 
 	if ( const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts() )
 	{
-		for ( std::vector< NDb::SReinfButton >::const_iterator it = pUIConsts->reinfButtons.begin();
-			it != pUIConsts->reinfButtons.end(); ++it )
+		for ( std::vector<NDb::SReinfButton>::const_iterator it = pUIConsts->reinfButtons.begin();
+		      it != pUIConsts->reinfButtons.end();
+		      ++it )
 		{
 			const NDb::SReinfButton &button = *it;
 			if ( !button.pButton )
@@ -202,12 +200,12 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 				info.pIconEnabledWnd = GetChildChecked<IWindow>( pButton, "IconEnabledPanel", true );
 				info.pIconWnd = GetChildChecked<IWindow>( pButton, "Icon", true );
 				info.pIconDisabledWnd = GetChildChecked<IWindow>( pButton, "IconDisabled", true );
-//				info.pXPLevelBtn = GetChildChecked<IButton>( pButton, "XPLevel", true );
+				//				info.pXPLevelBtn = GetChildChecked<IButton>( pButton, "XPLevel", true );
 				info.pXPBar = GetChildChecked<IProgressBar>( pButton, "XPBar", true );
 				info.pXPBarBg = GetChildChecked<IWindow>( pButton, "XPBarBg", true );
 				info.pBadWeatherWnd = GetChildChecked<IWindow>( pButton, "BadWeather", true );
 
-				pButton->ShowWindow( false/*true*/ );
+				pButton->ShowWindow( false /*true*/ );
 
 				if ( info.pIconWnd )
 					info.pIconWnd->SetTexture( button.pTexture );
@@ -221,8 +219,8 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 					// Keep the UI-constants disabled texture as the fallback for legacy reinforcement data.
 					if ( info.pIconDisabledWnd && pContext->pDisabledIconTexture )
 						info.pIconDisabledWnd->SetTexture( pContext->pDisabledIconTexture );
-//					if ( pContext->pTooltip )
-//						info.pIconWnd->SetHelpContext( pContext->pTooltip );
+					//					if ( pContext->pTooltip )
+					//						info.pIconWnd->SetHelpContext( pContext->pTooltip );
 				}
 
 				for ( int j = 0; j <= 3; ++j )
@@ -241,12 +239,15 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	textures[0] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_LEFT_NORMAL" );
 	textures[N_TX_REINF_LIGHT] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_LEFT_LIGHT" );
 	textures[N_TX_REINF_INACTIVE] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_LEFT_INACTIVE" );
-	textures[N_TX_REINF_INACTIVE | N_TX_REINF_LIGHT] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_LEFT_INACTIVE_LIGHT" );
+	textures[N_TX_REINF_INACTIVE | N_TX_REINF_LIGHT] =
+			InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_LEFT_INACTIVE_LIGHT" );
 	textures[N_TX_REINF_RIGHT] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_NORMAL" );
 	textures[N_TX_REINF_RIGHT | N_TX_REINF_LIGHT] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_LIGHT" );
-	textures[N_TX_REINF_RIGHT | N_TX_REINF_INACTIVE] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_INACTIVE" );
-	textures[N_TX_REINF_RIGHT | N_TX_REINF_INACTIVE | N_TX_REINF_LIGHT] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_INACTIVE_LIGHT" );
-//	SetToggleButtonState( bIsOpen, false, false, -1.0f );
+	textures[N_TX_REINF_RIGHT | N_TX_REINF_INACTIVE] =
+			InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_INACTIVE" );
+	textures[N_TX_REINF_RIGHT | N_TX_REINF_INACTIVE | N_TX_REINF_LIGHT] =
+			InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_INACTIVE_LIGHT" );
+	//	SetToggleButtonState( bIsOpen, false, false, -1.0f );
 
 	pUnitFullInfo = new CMissionUnitFullInfo();
 	IWindow *pAppearanceWnd = GetChildChecked<IWindow>( pScr, "AppearancePanel", true );
@@ -380,13 +381,14 @@ void CMissionReinf::Select( NDb::EReinforcementType eType )
 void CMissionReinf::UpdateForcedAction()
 {
 	if ( !IsOpen() )
- 		return;
+		return;
 
 	NDb::EUserAction eUserAction = NDb::USER_ACTION_REINF_COMMON;
 	if ( const NDb::SReinforcementTypes *pReinfTypes = GetReinfTypes() )
 	{
-		for ( std::vector< NDb::SReinforcementTypeInfo >::const_iterator it = pReinfTypes->typeInfo.begin();
-			it != pReinfTypes->typeInfo.end(); ++it )
+		for ( std::vector<NDb::SReinforcementTypeInfo>::const_iterator it = pReinfTypes->typeInfo.begin();
+		      it != pReinfTypes->typeInfo.end();
+		      ++it )
 		{
 			const NDb::SReinforcementTypeInfo &info = *it;
 			if ( info.eType == eSelected )
@@ -436,7 +438,7 @@ void CMissionReinf::Close( bool bForced )
 
 void CMissionReinf::ShowUnitInfo( const std::string &szSender )
 {
-	for ( std::vector< SUnitInfo >::const_iterator it = units.begin(); it != units.end(); ++it )
+	for ( std::vector<SUnitInfo>::const_iterator it = units.begin(); it != units.end(); ++it )
 	{
 		const SUnitInfo &info = *it;
 		if ( info.pButton && info.pButton->GetName() == szSender )
@@ -585,7 +587,7 @@ void CMissionReinf::BadWeather( bool bStart )
 	}
 
 	if ( !IsOpen() )
- 		return;
+		return;
 
 	Update();
 }
@@ -621,8 +623,8 @@ void CMissionReinf::Show()
 		InterfaceState()->WriteToMissionConsole( wszText );
 	}
 
-//	if ( eSelected == NDb::_RT_NONE ) // don't select default now
-//		eSelected = GetDefaultReinfType();
+	//	if ( eSelected == NDb::_RT_NONE ) // don't select default now
+	//		eSelected = GetDefaultReinfType();
 	eSelected = NDb::_RT_NONE;
 	Select( eSelected );
 
@@ -635,7 +637,7 @@ bool CMissionReinf::IsEnabled() const
 		return false;
 	int nCount = GetReinfCallsLeft();
 	return Singleton<IScenarioTracker>()->IsMissionActive() && pWorld->IsReinfEnabled() &&
-		(nCount == IAIScenarioTracker::INFINITE_CALLS || nCount > 0) && !bDisabledByInterface;
+	       ( nCount == IAIScenarioTracker::INFINITE_CALLS || nCount > 0 ) && !bDisabledByInterface;
 }
 
 void CMissionReinf::UpdateEnable()
@@ -651,7 +653,7 @@ void CMissionReinf::UpdateEnable()
 	if ( nCount == IAIScenarioTracker::INFINITE_CALLS )
 		nCount = 99;
 
-	std::vector<IPlayer*> rollers;
+	std::vector<IPlayer *> rollers;
 	rollers.push_back( pRoller2 );
 	rollers.push_back( pRoller1 );
 	if ( nPrevReinfCount != nCount )
@@ -665,7 +667,8 @@ void CMissionReinf::UpdateEnable()
 		{
 			int nMinutes = nSeconds / 60;
 			nSeconds = nSeconds % 60;
-			std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + NStr::ToUnicode( fmt::format( "{}:{:02d}", nMinutes, nSeconds ) );
+			std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) +
+			                          NStr::ToUnicode( fmt::format( "{}:{:02d}", nMinutes, nSeconds ) );
 			pRoller1->SetTooltip( wszTooltip );
 			pRoller2->SetTooltip( wszTooltip );
 		}
@@ -689,7 +692,7 @@ void CMissionReinf::UpdateEnable()
 
 void CMissionReinf::UpdateReinfs()
 {
-	 const CEnabledReinforcements &enabledReinf = pWorld->GetEnabledReinfs();
+	const CEnabledReinforcements &enabledReinf = pWorld->GetEnabledReinfs();
 
 	// clear previous state
 	for ( CReinfInfos::iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
@@ -699,14 +702,13 @@ void CMissionReinf::UpdateReinfs()
 	}
 
 	// fill new data
-	for ( CEnabledReinforcements::const_iterator it = enabledReinf.begin();
-		it != enabledReinf.end(); ++it )
+	for ( CEnabledReinforcements::const_iterator it = enabledReinf.begin(); it != enabledReinf.end(); ++it )
 	{
 		const NDb::SReinforcement *pReinf = *it;
 		CReinfInfos::iterator iInfo = reinfInfos.find( pReinf->eType );
 		if ( iInfo == reinfInfos.end() )
 			continue;
-//		NI_VERIFY( iInfo != reinfInfos.end(), "Forbidden reinf type", continue );
+		//		NI_VERIFY( iInfo != reinfInfos.end(), "Forbidden reinf type", continue );
 		SReinfInfo &info = iInfo->second;
 		info.pReinf = pReinf;
 	}
@@ -723,7 +725,7 @@ void CMissionReinf::UpdateReinfsVisual()
 	{
 		NDb::EReinforcementType eType = it->first;
 		SReinfInfo &info = it->second;
-		bool bIsReinf = (info.pReinf != 0);
+		bool bIsReinf = ( info.pReinf != 0 );
 		bool bCanCall = bEnabled && CanCall( eType );
 
 		if ( info.pButton )
@@ -764,7 +766,7 @@ void CMissionReinf::UpdateMPReinfsXPAndLevel()
 		if ( fDeltaExp > 0.0f )
 		{
 			if ( fCurRankExp < fNextRankExp )
-				fPosition = (fExp - fCurRankExp) / fDeltaExp;
+				fPosition = ( fExp - fCurRankExp ) / fDeltaExp;
 			else
 				fPosition = 1.0f; // reached the cap
 		}
@@ -788,8 +790,8 @@ void CMissionReinf::UpdateMPReinfsXPAndLevel()
 		std::wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
 		if ( const NDb::SReinforcement *pContext = GetReinfContext( eType ) )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pContext->,Tooltip) )
-				wszTooltip = GET_TEXT_PRE(pContext->,Tooltip) + L"<br>" + wszTooltip;
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pContext->, Tooltip ) )
+				wszTooltip = GET_TEXT_PRE( pContext->, Tooltip ) + L"<br>" + wszTooltip;
 		}
 		if ( info.pButton )
 			info.pButton->SetTooltip( wszTooltip );
@@ -832,7 +834,7 @@ void CMissionReinf::UpdateReinfsXPAndLevel()
 		if ( fDeltaExp > 0.0f )
 		{
 			if ( fCurRankExp < fNextRankExp )
-				fPosition = (fExp - fCurRankExp) / fDeltaExp;
+				fPosition = ( fExp - fCurRankExp ) / fDeltaExp;
 			else
 				fPosition = 1.0f; // reached the cap
 		}
@@ -845,8 +847,8 @@ void CMissionReinf::UpdateReinfsXPAndLevel()
 		if ( info.pXPBar )
 			info.pXPBar->SetPosition( fPosition );
 
-//		if ( info.pXPLevelBtn )
-//			info.pXPLevelBtn->ShowWindow( info.pReinf != 0 );
+		//		if ( info.pXPLevelBtn )
+		//			info.pXPLevelBtn->ShowWindow( info.pReinf != 0 );
 		if ( info.pXPBar )
 			info.pXPBar->ShowWindow( info.pReinf != 0 && bIsLeader );
 		if ( info.pXPBarBg )
@@ -856,8 +858,8 @@ void CMissionReinf::UpdateReinfsXPAndLevel()
 		std::wstring wszTooltip = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, eType ) );
 		if ( const NDb::SReinforcement *pContext = GetReinfContext( eType ) )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pContext->,Tooltip) )
-				wszTooltip = GET_TEXT_PRE(pContext->,Tooltip) + L"<br>" + wszTooltip;
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pContext->, Tooltip ) )
+				wszTooltip = GET_TEXT_PRE( pContext->, Tooltip ) + L"<br>" + wszTooltip;
 		}
 		if ( info.pButton )
 			info.pButton->SetTooltip( wszTooltip );
@@ -934,7 +936,9 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 			tmpReinfEntry.pStats = entry.pMechUnit;
 			if ( !tmpReinfEntry.pStats )
 				tmpReinfEntry.pStats = entry.pSquad;
-			NI_VERIFY( tmpReinfEntry.pStats, fmt::format("Incorrect data in reinforcement \"{}\" entry {}", pReinf->GetDBID().ToString(), i), continue );
+			NI_VERIFY( tmpReinfEntry.pStats,
+			           fmt::format( "Incorrect data in reinforcement \"{}\" entry {}", pReinf->GetDBID().ToString(), i ),
+			           continue );
 			tmpReinfEntry.nCount = 1;
 
 			tmpReinfEntries.push_back( tmpReinfEntry );
@@ -984,13 +988,13 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 				info.pFlagBg->SetTexture( pFlagBgTexture );
 
 			if ( info.pCountView )
-				info.pCountView->SetText( info.pCountView->GetDBText() + NStr::ToUnicode( std::to_string(  info.nCount ) ) );
+				info.pCountView->SetText( info.pCountView->GetDBText() + NStr::ToUnicode( std::to_string( info.nCount ) ) );
 		}
 
 		if ( pName )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pReinf->,LocalizedName) )
-				pName->SetText( pName->GetDBText() + GET_TEXT_PRE(pReinf->,LocalizedName) );
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+				pName->SetText( pName->GetDBText() + GET_TEXT_PRE( pReinf->, LocalizedName ) );
 			else
 				pName->SetText( L"" );
 			pName->ShowWindow( true );
@@ -1027,7 +1031,7 @@ void CMissionReinf::Call( const CVec2 &vPos )
 		nCalls++;
 		bDisabledByInterface = true;
 
-/*		if ( GetReinfCallsLeft() == 0 )
+		/*		if ( GetReinfCallsLeft() == 0 )
 		{
 			IVisualNotifications::SEventParams params;
 			params.nID = -1;
@@ -1070,15 +1074,16 @@ void CMissionReinf::Step()
 		bWasEnabled = false;
 }
 
-const NDb::SReinforcement* CMissionReinf::GetReinfContext( const NDb::EReinforcementType eType ) const
+const NDb::SReinforcement *CMissionReinf::GetReinfContext( const NDb::EReinforcementType eType ) const
 {
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 	// Multiplayer clients can occupy any player slot, while single-player data belongs to player 0.
-	const int nPlayer = pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ? 0 : pScenarioTracker->GetLocalPlayer();
+	const int nPlayer =
+			pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ? 0 : pScenarioTracker->GetLocalPlayer();
 	return pScenarioTracker->GetReinforcement( nPlayer, eType );
 }
 
-const NDb::SReinforcementTypes* CMissionReinf::GetReinfTypes() const
+const NDb::SReinforcementTypes *CMissionReinf::GetReinfTypes() const
 {
 	if ( const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign() )
 		return pCampaign->pReinforcementTypes;
@@ -1224,7 +1229,7 @@ void CMissionReinf::AfterLoad()
 {
 	pRoller1->Stop();
 	pRoller2->Stop();
-	std::vector<IPlayer*> rollers;
+	std::vector<IPlayer *> rollers;
 	rollers.push_back( pRoller2 );
 	rollers.push_back( pRoller1 );
 	NUIElementsHelper::PlayRollerAnim( rollers, nPrevReinfCount, nPrevReinfCount, 0 );
@@ -1236,12 +1241,11 @@ void CMissionReinf::UpdateToggleButtonState()
 	float fProgress = pWorld->GetReinfRecycleProgress();
 	int nCount = GetReinfCallsLeft();
 	bool bHaveReinf = ( nCount == IAIScenarioTracker::INFINITE_CALLS || nCount > 0 );
-	bool bClockVisible = Singleton<IScenarioTracker>()->IsMissionActive() &&
-		!pWorld->IsReinfEnabled() && timeToEnable != 0 && bHaveReinf;
+	bool bClockVisible =
+			Singleton<IScenarioTracker>()->IsMissionActive() && !pWorld->IsReinfEnabled() && timeToEnable != 0 && bHaveReinf;
 
-	int nIndex = (bIsOpen ? N_TX_REINF_RIGHT : 0) |
-		(pWorld->IsReinfEnabled() ? 0 : N_TX_REINF_INACTIVE) |
-		(!bClockVisible && bIsLight ? N_TX_REINF_LIGHT : 0);
+	int nIndex = ( bIsOpen ? N_TX_REINF_RIGHT : 0 ) | ( pWorld->IsReinfEnabled() ? 0 : N_TX_REINF_INACTIVE ) |
+	             ( !bClockVisible && bIsLight ? N_TX_REINF_LIGHT : 0 );
 	if ( pToggleReinfBtn )
 		pToggleReinfBtn->SetTexture( textures[nIndex] );
 
@@ -1287,7 +1291,7 @@ void CMissionReinf::UpdateBlink()
 		return;
 
 	NTimer::STime timeAbs = Singleton<IGameTimer>()->GetAbsTime();
-	float fDeltaTime = (timeAbs - timeBlinkAbs) / 1000.0f;
+	float fDeltaTime = ( timeAbs - timeBlinkAbs ) / 1000.0f;
 
 	fBlinkStep += fDeltaTime;
 	if ( fBlinkStep >= s_fBlinkStep )
@@ -1339,7 +1343,7 @@ bool CMissionReinf::ResetReinfMode()
 	return false;
 }
 
-START_REGISTER(MissionReinforcements)
+START_REGISTER( MissionReinforcements )
 
 REGISTER_VAR_EX( "reinf_button_blink_step", NGlobal::VarFloatHandler, &s_fBlinkStep, 0.5f, STORAGE_NONE );
 REGISTER_VAR_EX( "reinf_button_blink_duration", NGlobal::VarFloatHandler, &s_fBlinkDuration, 10.0f, STORAGE_NONE );

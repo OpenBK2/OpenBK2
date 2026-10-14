@@ -36,15 +36,9 @@ void ReplaceTokens( std::string *pszString )
 	ReplaceTokens( pszString );
 }
 
-CUserDataContainer::CUserDataContainer()
-{
-}
+CUserDataContainer::CUserDataContainer() {}
 
-
-CUserDataContainer::~CUserDataContainer()
-{
-}
-
+CUserDataContainer::~CUserDataContainer() {}
 
 void CUserDataContainer::GetXMLFilePath( std::string *pszXMLFilePath )
 {
@@ -52,13 +46,11 @@ void CUserDataContainer::GetXMLFilePath( std::string *pszXMLFilePath )
 	( *pszXMLFilePath ) = NFile::JoinPath( "Editor", "UserData" );
 }
 
-
 void CUserDataContainer::GetConstXMLFilePath( std::string *pszConstXMLFilePath )
 {
 	NI_ASSERT( pszConstXMLFilePath != 0, "CUserDataContainer::GetXMLFilePath() pszXMLFilePath is NULL" );
 	( *pszConstXMLFilePath ) = NFile::JoinPath( "Editor", "ConstUserData" );
 }
-
 
 void CUserDataContainer::Load()
 {
@@ -78,7 +70,7 @@ void CUserDataContainer::Load()
 	// загружаем константную часть
 	std::string szConstXMLFilePath;
 	GetConstXMLFilePath( &szConstXMLFilePath );
-	LoadXMLResource(  szStartFolder + szConstXMLFilePath, ".xml", "ConstUserData", userData.constUserData );
+	LoadXMLResource( szStartFolder + szConstXMLFilePath, ".xml", "ConstUserData", userData.constUserData );
 	{
 		// Стартовый каталог
 		userData.constUserData.szStartFolder = szStartFolder;
@@ -109,26 +101,28 @@ void CUserDataContainer::Load()
 		ReplaceTokens( &userData.constUserData.mayaExportData.szStartupScript );
 		ReplaceTokens( &userData.constUserData.mayaExportData.szOldPluginFileName );
 		ReplaceTokens( &userData.constUserData.mayaExportData.szOldPluginName );
-		for ( SUserData::SMayaExportData::CGrannyExportSettingsMap::iterator it = userData.constUserData.mayaExportData.grannyExportSettings.begin();
-			it != userData.constUserData.mayaExportData.grannyExportSettings.end(); ++it )
+		for ( SUserData::SMayaExportData::CGrannyExportSettingsMap::iterator it =
+		          userData.constUserData.mayaExportData.grannyExportSettings.begin();
+		      it != userData.constUserData.mayaExportData.grannyExportSettings.end();
+		      ++it )
 		{
 			ReplaceTokens( &it->second );
 		}
 	}
 }
 
-
 void CUserDataContainer::Save()
 {
 	// replace start path with token
-	ReplaceToken( &userData.constUserData.szExportSourceFolder, userData.constUserData.szStartFolder, START_FOLDER_TOKEN );
-	ReplaceToken( &userData.constUserData.szExportDestinationFolder, userData.constUserData.szStartFolder, START_FOLDER_TOKEN );
+	ReplaceToken(
+			&userData.constUserData.szExportSourceFolder, userData.constUserData.szStartFolder, START_FOLDER_TOKEN );
+	ReplaceToken(
+			&userData.constUserData.szExportDestinationFolder, userData.constUserData.szStartFolder, START_FOLDER_TOKEN );
 	ReplaceToken( &userData.constUserData.szDataStorageFolder, userData.constUserData.szStartFolder, START_FOLDER_TOKEN );
 	//
 	std::string szXMLFilePath;
 	GetXMLFilePath( &szXMLFilePath );
 	SaveXMLResource( userData.constUserData.szStartFolder + szXMLFilePath, ".xml", "UserData", userData );
 }
-
 
 // basement storage

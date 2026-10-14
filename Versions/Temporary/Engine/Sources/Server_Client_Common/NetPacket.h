@@ -6,8 +6,8 @@ public:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nClientID = {};
 
-	CNetPacket() { }
-	CNetPacket( const int _nClientID ) : nClientID( _nClientID ) { }
+	CNetPacket() {}
+	CNetPacket( const int _nClientID ) : nClientID( _nClientID ) {}
 
 	// every net packet should have operator&
 	virtual int operator&( IBinSaver &f ) = 0;

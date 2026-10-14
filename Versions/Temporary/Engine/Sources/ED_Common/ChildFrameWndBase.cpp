@@ -22,35 +22,20 @@
 
 const int CChildFrameWndBase::DEFAULT_REFRESH_RATE = 50;
 
-
 CChildFrameWndBase::CChildFrameWndBase()
-	: pSurface( 0 ),
-		bUpdateSceneTimer( false ),
-		nUpdateSceneTimerInterval( 0 ),
-		bRunModeEnabled( false ),
-		bGameInputEnabled( false ),
-		bInputEnabled( true ),
-		bRenderEnabled( true ),
-		bShowStatistic( false ),
-		bShowMovieBorders( false ),
-		bEnableSceneUpdate( true ),
-		bEnableScroll( false ),
-		bIsSettingUp( false ),
-		bWasResized( true ),
-		rectBorder1( 0, 0, 0, 0 ),
-		rectBorder2( 0, 0, 0, 0 ),
-		rectWindow( 0, 0, 0, 0 ),
-		rectMain( 0, 0, 0, 0 )
+		: pSurface( 0 ), bUpdateSceneTimer( false ), nUpdateSceneTimerInterval( 0 ), bRunModeEnabled( false ),
+			bGameInputEnabled( false ), bInputEnabled( true ), bRenderEnabled( true ), bShowStatistic( false ),
+			bShowMovieBorders( false ), bEnableSceneUpdate( true ), bEnableScroll( false ), bIsSettingUp( false ),
+			bWasResized( true ), rectBorder1( 0, 0, 0, 0 ), rectBorder2( 0, 0, 0, 0 ), rectWindow( 0, 0, 0, 0 ),
+			rectMain( 0, 0, 0, 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SCENE, this );
 }
-
 
 CChildFrameWndBase::~CChildFrameWndBase()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SCENE );
 }
-
 
 void CChildFrameWndBase::Redraw()
 {
@@ -59,7 +44,6 @@ void CChildFrameWndBase::Redraw()
 		pSurface->Redraw();
 	}
 }
-
 
 bool CChildFrameWndBase::OnCreate( ISceneSurface *_pSurface )
 {
@@ -75,7 +59,6 @@ bool CChildFrameWndBase::OnCreate( ISceneSurface *_pSurface )
 	return true;
 }
 
-
 void CChildFrameWndBase::OnDestroy()
 {
 	KillUpdateSceneTimer();
@@ -85,7 +68,6 @@ void CChildFrameWndBase::OnDestroy()
 	// The window is going; nothing below may reach for it any more.
 	pSurface = 0;
 }
-
 
 void CChildFrameWndBase::OnTimer()
 {
@@ -138,7 +120,6 @@ void CChildFrameWndBase::OnSetFocus( IWidget *pOldWidget )
 	//Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-
 void CChildFrameWndBase::OnKillFocus( IWidget *pNewWidget )
 {
 	DebugTrace( "CChildFrameWndBase::OnKillFocus()\n" );
@@ -150,7 +131,6 @@ void CChildFrameWndBase::OnKillFocus( IWidget *pNewWidget )
 	bInputEnabled = true;
 	NMainLoop::SetInputEnabled( false );
 }
-
 
 void CChildFrameWndBase::OnMouseMove( unsigned nFlags, const CTPoint<int> &rPoint )
 {
@@ -170,7 +150,6 @@ void CChildFrameWndBase::OnMouseMove( unsigned nFlags, const CTPoint<int> &rPoin
 		NInput::PostEvent( "win_mouse_move", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
-
 
 bool CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, const CTPoint<int> &rPoint, bool bDefaultResult )
 {
@@ -193,7 +172,6 @@ bool CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, const CTPo
 	return bDefaultResult;
 }
 
-
 void CChildFrameWndBase::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rPoint )
 {
 	if ( bInputEnabled )
@@ -213,7 +191,6 @@ void CChildFrameWndBase::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rPo
 	}
 }
 
-
 void CChildFrameWndBase::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rPoint )
 {
 	if ( bInputEnabled )
@@ -229,7 +206,6 @@ void CChildFrameWndBase::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rPoin
 	}
 }
 
-
 void CChildFrameWndBase::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint )
 {
 	if ( bInputEnabled )
@@ -244,7 +220,6 @@ void CChildFrameWndBase::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 		NInput::PostEvent( "win_left_button_dblclk", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
-
 
 void CChildFrameWndBase::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rPoint )
 {
@@ -265,7 +240,6 @@ void CChildFrameWndBase::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rPo
 	}
 }
 
-
 void CChildFrameWndBase::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rPoint )
 {
 	if ( bInputEnabled )
@@ -280,7 +254,6 @@ void CChildFrameWndBase::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rPoin
 		NInput::PostEvent( "win_right_button_up", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
-
 
 void CChildFrameWndBase::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint )
 {
@@ -297,7 +270,6 @@ void CChildFrameWndBase::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 	}
 }
 
-
 void CChildFrameWndBase::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rPoint )
 {
 	if ( bInputEnabled )
@@ -313,7 +285,6 @@ void CChildFrameWndBase::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rPo
 	}
 }
 
-
 void CChildFrameWndBase::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rPoint )
 {
 	if ( bInputEnabled )
@@ -324,7 +295,6 @@ void CChildFrameWndBase::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rPoin
 		}
 	}
 }
-
 
 void CChildFrameWndBase::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint )
 {
@@ -337,13 +307,11 @@ void CChildFrameWndBase::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 	}
 }
 
-
 void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( nChar == 'Q' )
 	{
-		if ( NWxKey::IsDown( VK_SHIFT ) &&
-				 NWxKey::IsDown( VK_CONTROL )	)
+		if ( NWxKey::IsDown( VK_SHIFT ) && NWxKey::IsDown( VK_CONTROL ) )
 		{
 			bShowStatistic = !bShowStatistic;
 			Redraw();
@@ -351,8 +319,7 @@ void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 	}
 	else if ( nChar == 'W' )
 	{
-		if ( NWxKey::IsDown( VK_SHIFT ) &&
-				 NWxKey::IsDown( VK_CONTROL )	)
+		if ( NWxKey::IsDown( VK_SHIFT ) && NWxKey::IsDown( VK_CONTROL ) )
 		{
 			bShowMovieBorders = !bShowMovieBorders;
 			bWasResized = true;
@@ -379,7 +346,6 @@ void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 	}
 }
 
-
 void CChildFrameWndBase::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( bInputEnabled )
@@ -391,7 +357,6 @@ void CChildFrameWndBase::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFl
 	}
 }
 
-
 void CChildFrameWndBase::OnContextMenu( const CTPoint<int> &rScreenPoint )
 {
 	if ( bInputEnabled )
@@ -402,7 +367,6 @@ void CChildFrameWndBase::OnContextMenu( const CTPoint<int> &rScreenPoint )
 		}
 	}
 }
-
 
 bool CChildFrameWndBase::BeginPaint()
 {
@@ -422,7 +386,6 @@ bool CChildFrameWndBase::BeginPaint()
 	OnPreDrawChildFrameWnd();
 	return true;
 }
-
 
 void CChildFrameWndBase::Paint( IPaintContext *pPaintContext )
 {
@@ -461,7 +424,6 @@ void CChildFrameWndBase::Paint( IPaintContext *pPaintContext )
 	OnResizeChildFrameWnd( size.x, size.y );
 }
 
-
 void CChildFrameWndBase::OnSize( int cx, int cy )
 {
 	if ( bIsSettingUp || ( pSurface == 0 ) )
@@ -473,7 +435,7 @@ void CChildFrameWndBase::OnSize( int cx, int cy )
 	rectMain = CTRect<int>( 0, 0, cx + 4, cy + 4 );
 	//
 	OnResizeChildFrameWnd( size.x, size.y );
-	if( bEnableScroll )
+	if ( bEnableScroll )
 	{
 		const int nGap = 16;
 		pSurface->SetScrollBarRange( false, -nGap, 1024 - cx + 1 + nGap );
@@ -486,7 +448,6 @@ void CChildFrameWndBase::OnSize( int cx, int cy )
 	bWasResized = true;
 }
 
-
 void CChildFrameWndBase::AlignWndAspect()
 {
 	bIsSettingUp = true;
@@ -497,7 +458,7 @@ void CChildFrameWndBase::AlignWndAspect()
 	if ( rectMain.Width() > 0 )
 	{
 		const float fRectAspect = (float)rectMain.Height() / rectMain.Width();
-		if ( fRectAspect < fDefaultAspect )	//	horizontal layout
+		if ( fRectAspect < fDefaultAspect ) //	horizontal layout
 		{
 			const int nMainWidth = rectMain.Height() / fDefaultAspect;
 			const int nBorderWidth = ( rectMain.Width() - nMainWidth ) / 2;
@@ -505,7 +466,7 @@ void CChildFrameWndBase::AlignWndAspect()
 			rectBorder2 = CTRect<int>( rectMain.right - nBorderWidth, rectMain.top, rectMain.right, rectMain.bottom );
 			rectWindow = CTRect<int>( rectBorder1.right, rectBorder1.top, rectBorder2.left, rectBorder2.bottom );
 		}
-		else	// vertical layout
+		else // vertical layout
 		{
 			const int nMainHeight = rectMain.Width() * fDefaultAspect;
 			const int nBorderHeight = ( rectMain.Height() - nMainHeight ) / 2;
@@ -531,7 +492,6 @@ void CChildFrameWndBase::AlignWndAspect()
 	bIsSettingUp = false;
 }
 
-
 void CChildFrameWndBase::SetUpdateSceneTimer()
 {
 	KillUpdateSceneTimer();
@@ -545,7 +505,6 @@ void CChildFrameWndBase::SetUpdateSceneTimer()
 	}
 }
 
-
 void CChildFrameWndBase::KillUpdateSceneTimer()
 {
 	if ( bUpdateSceneTimer && ( pSurface != 0 ) )
@@ -554,7 +513,6 @@ void CChildFrameWndBase::KillUpdateSceneTimer()
 	}
 	bUpdateSceneTimer = false;
 }
-
 
 void CChildFrameWndBase::RemoveInput()
 {
@@ -565,13 +523,11 @@ void CChildFrameWndBase::RemoveInput()
 	pSurface->DiscardPendingInput();
 }
 
-
 void CChildFrameWndBase::EnableInput( uintptr_t dwData )
 {
 	DebugTrace( "CChildFrameWndBase::EnableInput( %d )", dwData );
 	bInputEnabled = ( dwData != 0 );
 }
-
 
 void CChildFrameWndBase::EnableAutoUpdate( uintptr_t dwData )
 {
@@ -585,7 +541,6 @@ void CChildFrameWndBase::EnableAutoUpdate( uintptr_t dwData )
 		KillUpdateSceneTimer();
 	}
 }
-
 
 void CChildFrameWndBase::EnableRunMode( uintptr_t dwData )
 {
@@ -603,7 +558,6 @@ void CChildFrameWndBase::EnableRunMode( uintptr_t dwData )
 	EnableAutoUpdate( dwData );
 }
 
-
 void CChildFrameWndBase::EnableGameInput( IInterfaceCommand *pInterfaceCommand )
 {
 	NInput::InitInput( ( pSurface != 0 ) ? pSurface->GetHandle() : 0, true );
@@ -616,7 +570,6 @@ void CChildFrameWndBase::EnableGameInput( IInterfaceCommand *pInterfaceCommand )
 	EnableAutoUpdate( DEFAULT_REFRESH_RATE );
 }
 
-
 void CChildFrameWndBase::DisableGameInput()
 {
 	NInput::DoneInput();
@@ -628,12 +581,10 @@ void CChildFrameWndBase::DisableGameInput()
 	EnableAutoUpdate( 0 );
 }
 
-
 void CChildFrameWndBase::EnableRender( uintptr_t dwData )
 {
 	bRenderEnabled = ( dwData != 0 );
 }
-
 
 void CChildFrameWndBase::EnableScrollbars( uintptr_t dwData )
 {
@@ -647,7 +598,6 @@ void CChildFrameWndBase::EnableScrollbars( uintptr_t dwData )
 	}
 }
 
-
 void CChildFrameWndBase::EnableMouseCapture( uintptr_t dwData )
 {
 	if ( pSurface != 0 )
@@ -656,175 +606,171 @@ void CChildFrameWndBase::EnableMouseCapture( uintptr_t dwData )
 	}
 }
 
-
 void CChildFrameWndBase::GetDimensions( uintptr_t dwData )
 {
 	if ( ( dwData != 0 ) && ( pSurface != 0 ) )
 	{
-		CTPoint<int> *pDimensions = reinterpret_cast<CTPoint<int>*>( dwData );
+		CTPoint<int> *pDimensions = reinterpret_cast<CTPoint<int> *>( dwData );
 		const CTPoint<int> size = pSurface->GetClientSize();
 		pDimensions->x = size.x;
 		pDimensions->y = size.y;
 	}
 }
 
-
 bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
-	case ID_SCENE_UPDATE:
-		Redraw();
-		return true;
-	case ID_SCENE_REMOVE_INPUT:
-		RemoveInput();
-		return true;
-	case ID_SCENE_ENABLE_INPUT:
-		EnableInput( dwData );
-		return true;
-	case ID_SCENE_GET_DIMENSIONS:
-		GetDimensions( dwData );
-		return true;
-	case ID_SCENE_ENABLE_RUN_MODE:
-		EnableRunMode( dwData );
-		return true;
-	case ID_SCENE_ENABLE_GAME_INPUT:
-		EnableGameInput( reinterpret_cast<IInterfaceCommand*>( dwData ) );
-		return true;
-	case ID_SCENE_DISABLE_GAME_INPUT:
-		DisableGameInput();
-		return true;
-	case ID_SCENE_ENABLE_RENDER:
-		EnableRender( dwData );
-		return true;
-	case ID_SCENE_ENABLE_UPDATE:
-		bEnableSceneUpdate = ( dwData > 0 );
-		return true;
-	case ID_SCENE_ENABLE_SCROLLBARS:
-		EnableScrollbars( dwData );
-		return true;
-	case ID_SCENE_ENABLE_MOUSE_CAPTURE:
-		EnableMouseCapture( dwData );
-		return true;
-	case ID_SCENE_SET_FOCUS:
-		if ( ( pSurface != 0 ) && !pSurface->HasFocus() )
+		case ID_SCENE_UPDATE:
+			Redraw();
+			return true;
+		case ID_SCENE_REMOVE_INPUT:
+			RemoveInput();
+			return true;
+		case ID_SCENE_ENABLE_INPUT:
+			EnableInput( dwData );
+			return true;
+		case ID_SCENE_GET_DIMENSIONS:
+			GetDimensions( dwData );
+			return true;
+		case ID_SCENE_ENABLE_RUN_MODE:
+			EnableRunMode( dwData );
+			return true;
+		case ID_SCENE_ENABLE_GAME_INPUT:
+			EnableGameInput( reinterpret_cast<IInterfaceCommand *>( dwData ) );
+			return true;
+		case ID_SCENE_DISABLE_GAME_INPUT:
+			DisableGameInput();
+			return true;
+		case ID_SCENE_ENABLE_RENDER:
+			EnableRender( dwData );
+			return true;
+		case ID_SCENE_ENABLE_UPDATE:
+			bEnableSceneUpdate = ( dwData > 0 );
+			return true;
+		case ID_SCENE_ENABLE_SCROLLBARS:
+			EnableScrollbars( dwData );
+			return true;
+		case ID_SCENE_ENABLE_MOUSE_CAPTURE:
+			EnableMouseCapture( dwData );
+			return true;
+		case ID_SCENE_SET_FOCUS:
+			if ( ( pSurface != 0 ) && !pSurface->HasFocus() )
+			{
+				pSurface->Focus();
+			}
+			return true;
+		case ID_SCENE_GET_FOCUS:
+			return ( pSurface != 0 ) && pSurface->HasFocus();
+		case ID_SCENE_SHOW_STATISTIC:
+			bShowStatistic = !bShowStatistic;
+			Redraw();
+			if ( dwData != 0 )
+			{
+				( *( reinterpret_cast<bool *>( dwData ) ) ) = bShowStatistic;
+			}
+			return true;
+		case ID_SCENE_SHOW_MOVIE_BORDERS:
+			bShowMovieBorders = !bShowMovieBorders;
+			Redraw();
+			if ( dwData != 0 )
+			{
+				( *( reinterpret_cast<bool *>( dwData ) ) ) = bShowMovieBorders;
+			}
+			return true;
+		case ID_SCENE_RESIZE_TO_GAME:
 		{
-			pSurface->Focus();
-		}
-		return true;
-	case ID_SCENE_GET_FOCUS:
-		return ( pSurface != 0 ) && pSurface->HasFocus();
-	case ID_SCENE_SHOW_STATISTIC:
-		bShowStatistic = !bShowStatistic;
-		Redraw();
-		if ( dwData != 0 )
-		{
-			( *( reinterpret_cast<bool*>( dwData ) ) ) = bShowStatistic;
-		}
-		return true;
-	case ID_SCENE_SHOW_MOVIE_BORDERS:
-		bShowMovieBorders = !bShowMovieBorders;
-		Redraw();
-		if ( dwData != 0 )
-		{
-			( *( reinterpret_cast<bool*>( dwData ) ) ) = bShowMovieBorders;
-		}
-		return true;
-	case ID_SCENE_RESIZE_TO_GAME:
-		{
-			bShowMovieBorders = (bool)(dwData);
+			bShowMovieBorders = (bool)( dwData );
 			bWasResized = true;
 			Redraw();
 			return true;
 		}
-	case ID_SELECTION_NEW:
-		OnKeyDown( VK_INSERT, 0, 0 );
-		return true;
-	case ID_SELECTION_CLEAR:
-		OnKeyDown( VK_DELETE, 0, 0 );
-		return true;
-	default:
-		return false;
+		case ID_SELECTION_NEW:
+			OnKeyDown( VK_INSERT, 0, 0 );
+			return true;
+		case ID_SELECTION_CLEAR:
+			OnKeyDown( VK_DELETE, 0, 0 );
+			return true;
+		default:
+			return false;
 	}
 	return false;
 }
-
 
 bool CChildFrameWndBase::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CChildFrameWndBase::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CChildFrameWndBase::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
-	case ID_SCENE_UPDATE:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_REMOVE_INPUT:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_ENABLE_INPUT:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_GET_DIMENSIONS:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_ENABLE_RUN_MODE:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_ENABLE_GAME_INPUT:
-	case ID_SCENE_DISABLE_GAME_INPUT:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_ENABLE_RENDER:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_ENABLE_UPDATE:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_ENABLE_SCROLLBARS:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_ENABLE_MOUSE_CAPTURE:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_SET_FOCUS:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_GET_FOCUS:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	case ID_SCENE_SHOW_STATISTIC:
-		( *pbEnable ) = true;
-		( *pbCheck ) = bShowStatistic;
-		return true;
-	case ID_SCENE_SHOW_MOVIE_BORDERS:
-		( *pbEnable ) = true;
-		( *pbCheck ) = bShowMovieBorders;
-		return true;
-	case ID_SELECTION_NEW:
-	case ID_SELECTION_CLEAR:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
+		case ID_SCENE_UPDATE:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_REMOVE_INPUT:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_ENABLE_INPUT:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_GET_DIMENSIONS:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_ENABLE_RUN_MODE:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_ENABLE_GAME_INPUT:
+		case ID_SCENE_DISABLE_GAME_INPUT:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_ENABLE_RENDER:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_ENABLE_UPDATE:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_ENABLE_SCROLLBARS:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_ENABLE_MOUSE_CAPTURE:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_SET_FOCUS:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_GET_FOCUS:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		case ID_SCENE_SHOW_STATISTIC:
+			( *pbEnable ) = true;
+			( *pbCheck ) = bShowStatistic;
+			return true;
+		case ID_SCENE_SHOW_MOVIE_BORDERS:
+			( *pbEnable ) = true;
+			( *pbCheck ) = bShowMovieBorders;
+			return true;
+		case ID_SELECTION_NEW:
+		case ID_SELECTION_CLEAR:
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
+			return true;
+		default:
+			return false;
 	}
 	return false;
 }
-
 
 void CChildFrameWndBase::OnHScroll( EScrollAction eAction, unsigned nPos )
 {
@@ -835,36 +781,35 @@ void CChildFrameWndBase::OnHScroll( EScrollAction eAction, unsigned nPos )
 		int nCurrentPos = 0;
 		pSurface->GetScrollBarState( false, &nMin, &nMax, &nCurrentPos );
 
-		int nStep = (nMax-nMin)/20;
+		int nStep = ( nMax - nMin ) / 20;
 		if ( nStep == 0 )
 			nStep = 1;
 
-		switch( eAction )
+		switch ( eAction )
 		{
-		case SCROLL_TO_END:
-			nPos = nMax;
-			break;
-		case SCROLL_TO_START:
-			nPos = nMin;
-			break;
-		case SCROLL_PAGE_FORWARD:
-		case SCROLL_LINE_FORWARD:
-			nPos = nCurrentPos + nStep;
-			break;
-		case SCROLL_PAGE_BACK:
-		case SCROLL_LINE_BACK:
-			nPos = nCurrentPos - nStep;
-			break;
-		case SCROLL_THUMB:
-			break;
-		default:
-			return;
+			case SCROLL_TO_END:
+				nPos = nMax;
+				break;
+			case SCROLL_TO_START:
+				nPos = nMin;
+				break;
+			case SCROLL_PAGE_FORWARD:
+			case SCROLL_LINE_FORWARD:
+				nPos = nCurrentPos + nStep;
+				break;
+			case SCROLL_PAGE_BACK:
+			case SCROLL_LINE_BACK:
+				nPos = nCurrentPos - nStep;
+				break;
+			case SCROLL_THUMB:
+				break;
+			default:
+				return;
 		}
 		if ( (int)nPos < nMin )
 			nPos = nMin;
-		else
-			if ( (int)nPos > nMax )
-				nPos = nMax;
+		else if ( (int)nPos > nMax )
+			nPos = nMax;
 
 		if ( nPos != nCurrentPos )
 		{
@@ -881,7 +826,6 @@ void CChildFrameWndBase::OnHScroll( EScrollAction eAction, unsigned nPos )
 	}
 }
 
-
 void CChildFrameWndBase::OnVScroll( EScrollAction eAction, unsigned nPos )
 {
 	if ( bEnableScroll && ( pSurface != 0 ) )
@@ -891,36 +835,35 @@ void CChildFrameWndBase::OnVScroll( EScrollAction eAction, unsigned nPos )
 		int nCurrentPos = 0;
 		pSurface->GetScrollBarState( true, &nMin, &nMax, &nCurrentPos );
 
-		int nStep = (nMax-nMin)/20;
+		int nStep = ( nMax - nMin ) / 20;
 		if ( nStep == 0 )
 			nStep = 1;
 
-		switch( eAction )
+		switch ( eAction )
 		{
-		case SCROLL_TO_END:
-			nPos = nMax;
-			break;
-		case SCROLL_TO_START:
-			nPos = nMin;
-			break;
-		case SCROLL_PAGE_FORWARD:
-		case SCROLL_LINE_FORWARD:
-			nPos = nCurrentPos + nStep;
-			break;
-		case SCROLL_PAGE_BACK:
-		case SCROLL_LINE_BACK:
-			nPos = nCurrentPos - nStep;
-			break;
-		case SCROLL_THUMB:
-			break;
-		default:
-			return;
+			case SCROLL_TO_END:
+				nPos = nMax;
+				break;
+			case SCROLL_TO_START:
+				nPos = nMin;
+				break;
+			case SCROLL_PAGE_FORWARD:
+			case SCROLL_LINE_FORWARD:
+				nPos = nCurrentPos + nStep;
+				break;
+			case SCROLL_PAGE_BACK:
+			case SCROLL_LINE_BACK:
+				nPos = nCurrentPos - nStep;
+				break;
+			case SCROLL_THUMB:
+				break;
+			default:
+				return;
 		}
 		if ( (int)nPos < nMin )
 			nPos = nMin;
-		else
-			if ( (int)nPos > nMax )
-				nPos = nMax;
+		else if ( (int)nPos > nMax )
+			nPos = nMax;
 
 		if ( nPos != nCurrentPos )
 		{

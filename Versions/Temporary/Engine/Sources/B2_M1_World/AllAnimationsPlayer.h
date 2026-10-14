@@ -11,21 +11,37 @@ class CAllAnimationsPlayer : public CObjectBase
 	struct SAnimationInfo
 	{
 		ZDATA
-			int nAnimation = 0;
-			NTimer::STime nStartNextAnimTime = 0;
-			bool bLooped = false;
-		ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nAnimation); f.Add(3,&nStartNextAnimTime); f.Add(4,&bLooped); return 0; } private:
+		int nAnimation = 0;
+		NTimer::STime nStartNextAnimTime = 0;
+		bool bLooped = false;
+	ZEND public : int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nAnimation );
+			f.Add( 3, &nStartNextAnimTime );
+			f.Add( 4, &bLooped );
+			return 0;
+		}
+
+	private:
 	public:
-		SAnimationInfo() : nAnimation( -1 ), nStartNextAnimTime( 0 ), bLooped( false ) { }
+		SAnimationInfo() : nAnimation( -1 ), nStartNextAnimTime( 0 ), bLooped( false ) {}
 	};
 	ZDATA
-		std::unordered_map<int, CObj<CMapObj> > objects;
-		std::unordered_map<int, SAnimationInfo> playingAnimations;
-		bool bSwitchToNextAnimation = false;
-	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&objects); f.Add(3,&playingAnimations); f.Add(4,&bSwitchToNextAnimation); return 0; } private:
+	std::unordered_map<int, CObj<CMapObj>> objects;
+	std::unordered_map<int, SAnimationInfo> playingAnimations;
+	bool bSwitchToNextAnimation = false;
+ZEND public : int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &objects );
+		f.Add( 3, &playingAnimations );
+		f.Add( 4, &bSwitchToNextAnimation );
+		return 0;
+	}
+
+private:
 public:
-	CAllAnimationsPlayer() { }
-	explicit CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj> > &objects );
+	CAllAnimationsPlayer() {}
+	explicit CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj>> &objects );
 
 	void Update();
 	void SwitchToNextAnimation() { bSwitchToNextAnimation = true; }

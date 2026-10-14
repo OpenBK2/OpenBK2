@@ -13,6 +13,7 @@ class CAcksBuilder : public CDefaultBuilderBase, public IBuildDataCallback, publ
 	~CAcksBuilder();
 
 	bool UpdateAckSets( const std::string &rszAnimationFolder );
+
 protected:
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );

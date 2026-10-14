@@ -11,7 +11,7 @@
 
 // CEmptyServerClient
 
-CNetPacket* CEmptyServerClient::GetPacket()
+CNetPacket *CEmptyServerClient::GetPacket()
 {
 	return 0;
 }
@@ -21,7 +21,7 @@ void CEmptyServerClient::SendPacket( CNetPacket *pPacket )
 	NI_ASSERT( 0, "Wrong call" );
 }
 
-CNetPacket* CEmptyServerClient::GetGamePacket()
+CNetPacket *CEmptyServerClient::GetGamePacket()
 {
 	return 0;
 }
@@ -31,9 +31,7 @@ void CEmptyServerClient::SendGamePacket( CNetPacket *pPacket, bool bBroadcast )
 	NI_ASSERT( 0, "Wrong call" );
 }
 
-void CEmptyServerClient::Segment()
-{
-}
+void CEmptyServerClient::Segment() {}
 
 // CMPUITestServerClient
 

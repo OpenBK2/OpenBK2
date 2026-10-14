@@ -12,6 +12,7 @@ namespace
 class CFinishedApproach : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CFinishedApproach );
+
 public:
 	bool Init( CBasePathUnit *, IPath *, bool, bool, CAIMap * ) override { return true; }
 	bool Init( IMemento *, CBasePathUnit *, CAIMap * ) override { return true; }
@@ -28,12 +29,14 @@ class CTestTruck : public CBasePathUnit
 {
 	SUnitProfile profile;
 	CVec2 halfSize = CVec2( 16, 16 );
+
 protected:
 	void UpdatePlacement( const CVec3 &, uint16_t, bool ) override {}
 	void UpdateTile() override {}
 	void CheckForDestroyedObjects( const CVec2 & ) const override {}
 	void NullSegmTime() override {}
 	ISmoothPath *CreateSmoothPath() override { return new CFinishedApproach; }
+
 public:
 	const int GetUniqueID() const override { return 1; }
 	const float GetMaxPossibleSpeed() const override { return 1.0f; }

@@ -25,9 +25,13 @@
 bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 {
 	DebugTrace( "+++ Slot Info packet from client %d for slot %d, name %s, conn %d",
-		pPacket->nClientID, pPacket->nSlot, pPacket->info.szName.c_str(), pPacket->info.wConnectedTo );
+	            pPacket->nClientID,
+	            pPacket->nSlot,
+	            pPacket->info.szName.c_str(),
+	            pPacket->info.wConnectedTo );
 	// Store for myself
-	NI_VERIFY( pPacket->nSlot >= 0 && pPacket->nSlot < slots.size(), "PRG: Got slot info that is outside bounds", return true );
+	NI_VERIFY(
+			pPacket->nSlot >= 0 && pPacket->nSlot < slots.size(), "PRG: Got slot info that is outside bounds", return true );
 	//NI_VERIFY( IsInGameRoom(), "PRG: Received slot info while not in game room", return true );
 	if ( pPacket->info.bPresent && !IsPlayerPresent( pPacket->nSlot ) )
 	{
@@ -72,11 +76,11 @@ bool CMPManagerMode::OnGameClientRemoved( class CGameClientRemoved *pPacket )
 {
 	DebugTrace( "+++ Client Removed packet from client %d", pPacket->nClientID );
 	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CGameClientRemoved",
-		pPacket->nClientID,
-		fmt::format( "running={} in_room={}", IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"RX",
+			"CGameClientRemoved",
+			pPacket->nClientID,
+			fmt::format( "running={} in_room={}", IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
 	RemoveClient( pPacket->nClientID, false );
 	return true;
 }
@@ -85,25 +89,25 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 {
 	DebugTrace( "+++ GameKilled packet from client %d, game %d", pPacket->nClientID, pPacket->nGame );
 	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CGameKilled",
-		pPacket->nClientID,
-		fmt::format( "game={} running={} in_room={}", pPacket->nGame, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
-	if ( pPacket->nGame != nGameID )
-	{
-		NGameX::MatchPacketTrace_Log(
 			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 			"RX",
-			"CGameKilledIgnoredWrongGame",
+			"CGameKilled",
 			pPacket->nClientID,
-			fmt::format( "packet_game={} local_game={}", pPacket->nGame, nGameID ) );
+			fmt::format( "game={} running={} in_room={}", pPacket->nGame, IsGameRunning() ? 1 : 0, IsInGameRoom() ? 1 : 0 ) );
+	if ( pPacket->nGame != nGameID )
+	{
+		NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		                              "RX",
+		                              "CGameKilledIgnoredWrongGame",
+		                              pPacket->nClientID,
+		                              fmt::format( "packet_game={} local_game={}", pPacket->nGame, nGameID ) );
 		return true;
 	}
 
 	if ( IsInGameRoom() )
 	{
-		NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+		NGameX::MatchPacketTrace_SetFinalState(
+				GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
 		NGameX::MatchPacketTrace_Flush( "game_killed" );
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_GAME_KILLED ) );
 		OnLeaveGame();
@@ -111,11 +115,11 @@ bool CMPManagerMode::OnGameKilled( class CGameKilled *pPacket )
 	else if ( IsGameRunning() )
 	{
 		NGameX::MatchPacketTrace_Log(
-			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			"RX",
-			"CGameKilledIgnoredRunningGame",
-			pPacket->nClientID,
-			fmt::format( "game={} present={:08X} host_id={}", pPacket->nGame, GetPresentMask(), nHostClientID ) );
+				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+				"RX",
+				"CGameKilledIgnoredRunningGame",
+				pPacket->nClientID,
+				fmt::format( "game={} present={:08X} host_id={}", pPacket->nGame, GetPresentMask(), nHostClientID ) );
 		return true;
 	}
 
@@ -145,7 +149,7 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 	//DebugTrace( "+++ SpecificInfo packet from client %d, players %d", pPacket->nClientID, pPacket->info.nPlayers );
 
 	// Absolute shit (or in nival devs terms: CRAP) of solution, but it should work really well when detecting if the client has the MP map or not
-	if (pPacket->info.pMPMap.GetBarePtrNoLoad() == nullptr)
+	if ( pPacket->info.pMPMap.GetBarePtrNoLoad() == nullptr )
 		pPacket->info.nPlayers = -1;
 
 	if ( !IsInGameRoom() || IsGameHost() )
@@ -164,11 +168,11 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 		auto scenario = Singleton<IScenarioTracker>();
 
 		int playerID = -1;
-		const auto& players = scenario->GetMultiplayerInfo()->players;
-		auto nick = NStr::ToUnicode(pPacket->szNick);
-		for(int i = 0; i < players.size(); i++)
+		const auto &players = scenario->GetMultiplayerInfo()->players;
+		auto nick = NStr::ToUnicode( pPacket->szNick );
+		for ( int i = 0; i < players.size(); i++ )
 		{
-			if (players[i].wszName == nick)
+			if ( players[i].wszName == nick )
 			{
 				playerID = players[i].nIndex;
 				break;
@@ -176,18 +180,19 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 		}
 
 		std::wstring colorStr = L"", colorEndStr = L"";
-		if (playerID >= 0)
+		if ( playerID >= 0 )
 		{
-			uint32_t color = scenario->GetPlayerColor(playerID).dwColor;
-			colorStr = L"<color = " + UTF8ToWide(string_conversion::RGBA_to_hex(color)) + L">";
+			uint32_t color = scenario->GetPlayerColor( playerID ).dwColor;
+			colorStr = L"<color = " + UTF8ToWide( string_conversion::RGBA_to_hex( color ) ) + L">";
 			colorEndStr = L"<color = FFFFFFFF>";
 		}
 
 		std::wstring teamOnly = L"";
-		if (!pPacket->bIsBroadcast)
+		if ( !pPacket->bIsBroadcast )
 			teamOnly = L" (Team)";
 
-		std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + nick + colorEndStr + teamOnly + L": " + pPacket->wszMessage;
+		std::wstring txt = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + colorStr + nick +
+		                   colorEndStr + teamOnly + L": " + pPacket->wszMessage;
 
 		InterfaceState()->AddMPChatMessage( txt );
 
@@ -212,7 +217,7 @@ bool CMPManagerMode::OnSlotNumberPacket( class CSlotNumberPacket *pPacket )
 	slots[nOwnSlot].szName = szMPName;
 	slots[nOwnSlot].nClientID = GetOwnClientID();
 	slots[nOwnSlot].nTeam = nOwnSlot % 2;
-	slots[nOwnSlot].nColour = nOwnSlot % ( (pMPConsts) ? pMPConsts->playerColorInfos.size() : 4 );
+	slots[nOwnSlot].nColour = nOwnSlot % ( ( pMPConsts ) ? pMPConsts->playerColorInfos.size() : 4 );
 	slots[nOwnSlot].bPresent = true;
 	ulHostCheckSum = pPacket->ulCheckSum;
 
@@ -244,12 +249,15 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 
 	const uint32_t dwPreVotes = lags[nSlotToKick].dwHatedBy;
 	lags[nSlotToKick].dwHatedBy |= ( 1UL << nVoterSlot );
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CB2SuggestKickPacket",
-		pPacket->nClientID,
-		fmt::format( "slot_to_kick={} voter_slot={} pre_votes={:08X} post_votes={:08X}", nSlotToKick, nVoterSlot, dwPreVotes, lags[nSlotToKick].dwHatedBy ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "RX",
+	                              "CB2SuggestKickPacket",
+	                              pPacket->nClientID,
+	                              fmt::format( "slot_to_kick={} voter_slot={} pre_votes={:08X} post_votes={:08X}",
+	                                           nSlotToKick,
+	                                           nVoterSlot,
+	                                           dwPreVotes,
+	                                           lags[nSlotToKick].dwHatedBy ) );
 
 	return true;
 }
@@ -260,14 +268,14 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 		return true;
 	const int nSenderSlot = GetSlotByClientID( pPacket->nClientID );
 	const int nPlayer = pPacket->nPlayer;
-	if ( nSenderSlot < 0 || nSenderSlot >= slots.size() ||
-		nPlayer < 0 || nPlayer >= slots.size() || nPlayer >= lags.size() )
+	if ( nSenderSlot < 0 || nSenderSlot >= slots.size() || nPlayer < 0 || nPlayer >= slots.size() ||
+	     nPlayer >= lags.size() )
 		return true;
 	// Queued reports from departing clients must not consume survivors' budgets.
 	// A scheduled drop already ends participation before the visible slot clears.
 	if ( !IsPlayerPresent( nSenderSlot ) || !IsPlayerPresent( nPlayer ) ||
-		( nSenderSlot < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nSenderSlot] >= 0 ) ||
-		( nPlayer < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nPlayer] >= 0 ) )
+	     ( nSenderSlot < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nSenderSlot] >= 0 ) ||
+	     ( nPlayer < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nPlayer] >= 0 ) )
 		return true;
 
 	SLagInfo &lag = lags[pPacket->nPlayer];
@@ -277,9 +285,8 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 	// its budget at timeStartLag. Charge elapsed time once before comparing them;
 	// otherwise every peer's resume report charges the same pause again.
 	const uint32_t dwPlayerBit = 1UL << pPacket->nPlayer;
-	const bool bTimerRunning = pPacket->nPlayer == nOwnSlot
-		? ( dwUserPausedPlayers & dwPlayerBit ) != 0
-		: ( dwLaggersOld & dwPlayerBit ) != 0;
+	const bool bTimerRunning =
+			pPacket->nPlayer == nOwnSlot ? ( dwUserPausedPlayers & dwPlayerBit ) != 0 : ( dwLaggersOld & dwPlayerBit ) != 0;
 	if ( bTimerRunning )
 	{
 		const NTimer::STime curTime = GameTimer()->GetAbsTime();
@@ -289,11 +296,11 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 	}
 	lag.nLagLeft = (std::min)( (std::max)( pPacket->nTimeLeft, 0 ), lag.nLagLeft );
 	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CB2LagTimeUpdatePacket",
-		pPacket->nClientID,
-		fmt::format( "player={} pre_time_left={} post_time_left={}", pPacket->nPlayer, nPreLagLeft, lag.nLagLeft ) );
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"RX",
+			"CB2LagTimeUpdatePacket",
+			pPacket->nClientID,
+			fmt::format( "player={} pre_time_left={} post_time_left={}", pPacket->nPlayer, nPreLagLeft, lag.nLagLeft ) );
 
 	return true;
 }
@@ -312,13 +319,15 @@ bool CMPManagerMode::OnB2UserPausePacket( class CB2UserPausePacket *pPacket )
 		dwUserPausedPlayers |= ( 1UL << nSlot );
 	else
 		dwUserPausedPlayers &= ~( 1UL << nSlot );
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CB2UserPausePacket",
-		pPacket->nClientID,
-		fmt::format( "slot={} paused={} pre_user_pause_mask={:08X} post_user_pause_mask={:08X}",
-			nSlot, pPacket->bPaused ? 1 : 0, dwPreUserPausedPlayers, dwUserPausedPlayers ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "RX",
+	                              "CB2UserPausePacket",
+	                              pPacket->nClientID,
+	                              fmt::format( "slot={} paused={} pre_user_pause_mask={:08X} post_user_pause_mask={:08X}",
+	                                           nSlot,
+	                                           pPacket->bPaused ? 1 : 0,
+	                                           dwPreUserPausedPlayers,
+	                                           dwUserPausedPlayers ) );
 
 	return true;
 }
@@ -330,20 +339,22 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 	const int nPreviousHostClientID = nHostClientID;
 
 	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CB2DropPlayerAtSegmentPacket",
-		pPacket->nClientID,
-		fmt::format( "slot={} target_seg={} host_id={}", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"RX",
+			"CB2DropPlayerAtSegmentPacket",
+			pPacket->nClientID,
+			fmt::format(
+					"slot={} target_seg={} host_id={}", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
 
 	if ( !IsAuthoritativeDropPacket( pPacket ) )
 	{
 		NGameX::MatchPacketTrace_Log(
-			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			"RX",
-			"CB2DropPlayerAtSegmentPacketRejected",
-			pPacket->nClientID,
-			fmt::format( "slot={} target_seg={} host_id={}", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
+				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+				"RX",
+				"CB2DropPlayerAtSegmentPacketRejected",
+				pPacket->nClientID,
+				fmt::format(
+						"slot={} target_seg={} host_id={}", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
 		return true;
 	}
 
@@ -355,8 +366,8 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 		// The departing host may have reached only some peers before disconnecting.
 		// Its successor relays the same accepted boundary before it can finish too.
 		// Only a newly assumed authority relays, so duplicates cannot loop.
-		BroadcastSynchronizedPlayerDrop( pPacket->nSlotToDrop,
-			scheduledDropSegmentBySlot[pPacket->nSlotToDrop], "host_handoff" );
+		BroadcastSynchronizedPlayerDrop(
+				pPacket->nSlotToDrop, scheduledDropSegmentBySlot[pPacket->nSlotToDrop], "host_handoff" );
 	}
 	return true;
 }
@@ -366,12 +377,11 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 	if ( !IsGameRunning() || !IsValid( pTransceiver ) || pPacket->nGameID != nGameID || pPacket->nSegment < 0 )
 		return true;
 
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CB2GameLostPacket",
-		pPacket->nClientID,
-		fmt::format( "game_id={} segment={}", pPacket->nGameID, pPacket->nSegment ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "RX",
+	                              "CB2GameLostPacket",
+	                              pPacket->nClientID,
+	                              fmt::format( "game_id={} segment={}", pPacket->nGameID, pPacket->nSegment ) );
 
 	//DebugTrace( "+++ GameLost packet" );
 	for ( int i = 0; i < slots.size(); ++i )
@@ -400,7 +410,7 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 
 bool CMPManagerMode::OnPingPacket( class CPingPacket *pPacket )
 {
-	if ( pPacket->nFromID != nOwnSlot )		// Pong
+	if ( pPacket->nFromID != nOwnSlot ) // Pong
 	{
 		pClient->SendGamePacket( new CPingPacket( pPacket->nClientID, pPacket->nFromID, pPacket->nSendTime ), false );
 		return true;

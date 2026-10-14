@@ -11,8 +11,8 @@ class CSinglePlayerTransceiver : public ITransceiver
 	OBJECT_NOCOPY_METHODS( CSinglePlayerTransceiver );
 
 	ZDATA
-		// история команд
-		CPtr<ICommandsHistory> pCmdsHistory;
+	// история команд
+	CPtr<ICommandsHistory> pCmdsHistory;
 	// общий номер сегмента - для истории команд
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	long nCommonSegment = {};
@@ -22,8 +22,20 @@ class CSinglePlayerTransceiver : public ITransceiver
 	int nGameSpeed = {};
 	NTimer::STime nStartCountingTime = {};
 	int nFrames = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCmdsHistory); f.Add(3,&nCommonSegment); f.Add(4,&bCommandsFromHistory); f.Add(5,&pAI); f.Add(6,&nAdjustedGameSpeed); f.Add(7,&nGameSpeed); f.Add(8,&nStartCountingTime); f.Add(9,&nFrames); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pCmdsHistory );
+		f.Add( 3, &nCommonSegment );
+		f.Add( 4, &bCommandsFromHistory );
+		f.Add( 5, &pAI );
+		f.Add( 6, &nAdjustedGameSpeed );
+		f.Add( 7, &nGameSpeed );
+		f.Add( 8, &nStartCountingTime );
+		f.Add( 9, &nFrames );
+		return 0;
+	}
 	void AdjustGameSpeed( const int nDelta );
+
 public:
 	CSinglePlayerTransceiver();
 	CSinglePlayerTransceiver( ICommandsHistory *_pCommandHistory, IAILogic *_pAI );

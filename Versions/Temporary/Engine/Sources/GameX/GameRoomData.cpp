@@ -30,10 +30,10 @@ static uint32_t ConvertColor( const CVec3 &vColor )
 	const int g = vColor.g * 255.0f;
 	const int b = vColor.b * 255.0f;
 
-	return 0xFF000000 + (( r & 0xFF ) << 16) + (( g & 0xFF ) << 8) + ( b & 0xFF );
+	return 0xFF000000 + ( ( r & 0xFF ) << 16 ) + ( ( g & 0xFF ) << 8 ) + ( b & 0xFF );
 }
 
-void CColorBackground::Visit( struct IUIVisitor * pVisitor )
+void CColorBackground::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pos.IsEmpty() )
 		return;
@@ -64,7 +64,7 @@ void CColorViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData 
 	NI_VERIFY( pInfo, "Wrong data", return );
 
 	CWindow *pWnd = GetChildChecked<CWindow>( pList, "ComboColorWnd", true );
-	CPtr<CColorBackground>  pBackground = new CColorBackground();
+	CPtr<CColorBackground> pBackground = new CColorBackground();
 	pBackground->nColor = pInfo->nColor;
 
 	if ( pWnd )
@@ -90,7 +90,7 @@ void CTextureViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDat
 
 CTextData::CTextData( int i )
 {
-	wszText = NStr::ToUnicode( std::to_string(i) );
+	wszText = NStr::ToUnicode( std::to_string( i ) );
 }
 
 void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
@@ -105,7 +105,6 @@ void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDa
 
 	ITextView *pTxt = GetChildChecked<ITextView>( pItem, "ItemComboText", true );
 	pTxt->SetText( pTxt->GetDBText() + wszText );
-
 }
 
 // Some strange utilities
@@ -119,7 +118,7 @@ void NMPSetData::SetText( ITextView *pText, const std::wstring &szText )
 
 void NMPSetData::SetNum( ITextView *pWindow, int nText )
 {
-	std::wstring newstring = NStr::ToUnicode( std::to_string(  nText ) );
+	std::wstring newstring = NStr::ToUnicode( std::to_string( nText ) );
 	SetText( pWindow, newstring );
 }
 

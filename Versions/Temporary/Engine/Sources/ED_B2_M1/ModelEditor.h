@@ -17,7 +17,6 @@
 
 EXTERNVAR ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT];
 
-
 class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
 	friend class CModelState;
@@ -41,9 +40,12 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 public:
 	//IEditor
 	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView* GetView() { return this; }
-	IInputState* GetInputState() { return pModelState; }
-	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	IView *GetView() { return this; }
+	IInputState *GetInputState() { return pModelState; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	{
+		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
+	}
 	void CreateControls();
 	void ResetGUI( bool bActive ) override;
 	void PostCreateControls();
@@ -53,8 +55,8 @@ public:
 	void Destroy();
 
 	//CDefaultView
-	void Undo( IController* pController ) {}
-	void Redo( IController* pController ) {}
+	void Undo( IController *pController ) {}
+	void Redo( IController *pController ) {}
 
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );

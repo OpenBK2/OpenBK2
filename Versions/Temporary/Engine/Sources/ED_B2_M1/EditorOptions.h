@@ -6,13 +6,22 @@ namespace NEditorOptions
 {
 
 // get editor options system manipulator
-IManipulator* CreateOptionsManipulator();
+IManipulator *CreateOptionsManipulator();
 //
-std::string GetStringFromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
-int GetIntFromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
-float GetFloatFromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
-CVec2 GetVec2FromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
-CVec3 GetVec3FromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
+std::string
+GetStringFromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
+int GetIntFromOptions( const std::string &szPreName,
+                       const std::string &szPostName,
+                       const std::string &szDesiredSeason );
+float GetFloatFromOptions( const std::string &szPreName,
+                           const std::string &szPostName,
+                           const std::string &szDesiredSeason );
+CVec2 GetVec2FromOptions( const std::string &szPreName,
+                          const std::string &szPostName,
+                          const std::string &szDesiredSeason );
+CVec3 GetVec3FromOptions( const std::string &szPreName,
+                          const std::string &szPostName,
+                          const std::string &szDesiredSeason );
 
 // get peak mask texture for desired season (or for any season if no suitable)
 std::string GetPeakMaskTexture( const std::string &szDesiredSeason );

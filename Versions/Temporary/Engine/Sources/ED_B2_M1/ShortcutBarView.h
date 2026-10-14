@@ -24,44 +24,43 @@ class CPaletteList;
 // always gets wx palettes.
 namespace NShortcutBar
 {
-	// Makes one palette in a tab window, registers it in the window's list, and
-	// returns it: the shape of every palette's Create.
-	typedef std::function<IWidget*( CPaletteList*, IWidget* )> TPaletteFactory;
+// Makes one palette in a tab window, registers it in the window's list, and
+// returns it: the shape of every palette's Create.
+typedef std::function<IWidget *( CPaletteList *, IWidget * )> TPaletteFactory;
 
-	class IView
-	{
-	public:
-		virtual ~IView() {}
+class IView
+{
+public:
+	virtual ~IView() {}
 
-		// Makes the bar in pPane, the editor's docking pane. nControlID is the
-		// Stingray bar's child id.
-		virtual bool Create( IWidget *pPane, unsigned nControlID ) = 0;
-		// Takes the bar down, palettes and all.
-		virtual void Destroy() = 0;
-		// What the pane is given as its contents.
-		virtual IWidget* GetWidget() = 0;
-		virtual void Show( bool bShow ) = 0;
+	// Makes the bar in pPane, the editor's docking pane. nControlID is the
+	// Stingray bar's child id.
+	virtual bool Create( IWidget *pPane, unsigned nControlID ) = 0;
+	// Takes the bar down, palettes and all.
+	virtual void Destroy() = 0;
+	// What the pane is given as its contents.
+	virtual IWidget *GetWidget() = 0;
+	virtual void Show( bool bShow ) = 0;
 
-		// A new bar, not yet in the column; its index. A tab handler, when one
-		// is named, hears this bar's tab changes on its own, as
-		// CDefault3DTabWindow::SetCommandHandlerID -- the building editor's
-		// point lists use it.
-		virtual int BeginBar( unsigned nTabCommandHandlerID, unsigned nTabCommandID ) = 0;
-		// A tab on the bar, with the palette rFactory makes. False when the
-		// factory made none, and no tab is added.
-		virtual bool AddTab( int nBar, const std::string &rszLabel, const TPaletteFactory &rFactory ) = 0;
-		virtual void ActivateTab( int nBar, int nTab ) = 0;
-		// Puts the bar in the column under rszLabel.
-		virtual void EndBar( int nBar, const std::string &rszLabel ) = 0;
+	// A new bar, not yet in the column; its index. A tab handler, when one
+	// is named, hears this bar's tab changes on its own, as
+	// CDefault3DTabWindow::SetCommandHandlerID -- the building editor's
+	// point lists use it.
+	virtual int BeginBar( unsigned nTabCommandHandlerID, unsigned nTabCommandID ) = 0;
+	// A tab on the bar, with the palette rFactory makes. False when the
+	// factory made none, and no tab is added.
+	virtual bool AddTab( int nBar, const std::string &rszLabel, const TPaletteFactory &rFactory ) = 0;
+	virtual void ActivateTab( int nBar, int nTab ) = 0;
+	// Puts the bar in the column under rszLabel.
+	virtual void EndBar( int nBar, const std::string &rszLabel ) = 0;
 
-		// Opens a bar.
-		virtual void SelectBar( int nBar ) = 0;
-		// Where a bar being opened, and a tab changed in the open bar, are
-		// reported: MAKELONG( tab, bar ), when the command is enabled.
-		virtual void SetCommandHandlerID( unsigned nCommandHandlerID, unsigned nCommandID ) = 0;
-	};
+	// Opens a bar.
+	virtual void SelectBar( int nBar ) = 0;
+	// Where a bar being opened, and a tab changed in the open bar, are
+	// reported: MAKELONG( tab, bar ), when the command is enabled.
+	virtual void SetCommandHandlerID( unsigned nCommandHandlerID, unsigned nCommandID ) = 0;
+};
 
-
-	// Owned by the caller.
-	IView* Create();
+// Owned by the caller.
+IView *Create();
 }

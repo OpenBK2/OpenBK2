@@ -27,13 +27,14 @@
 #define GET_ARRAY_ELEMENT( pre_name, name, index ) ( NText::GetText( pre_name name##FileRefs[index] ) )
 #define CHECK_ARRAY_EMPTY( pre_name, name ) ( pre_name name##FileRefs.empty() )
 
-const wchar_t* FORBIDDEN_REPLACEMENT = L"!@#$%^&*()_+"; // общепринятое допустимое в обществе ругательство
+const wchar_t *FORBIDDEN_REPLACEMENT = L"!@#$%^&*()_+"; // общепринятое допустимое в обществе ругательство
 
-const char* TUTORIAL_RECOMMENDED_MISSION = "TutorialRecommendedMission";
+const char *TUTORIAL_RECOMMENDED_MISSION = "TutorialRecommendedMission";
 
-class CCustomMLHandler: public IMLHandler
+class CCustomMLHandler : public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CCustomMLHandler );
+
 public:
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet );
 };
@@ -42,7 +43,7 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 0x300C8D43, CCampaignState )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300C8D44, CInterfaceState )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1716F400, CCustomMLHandler )
 
-IInterfaceState* CreateInterfaceState()
+IInterfaceState *CreateInterfaceState()
 {
 	CInterfaceState *pState = new CInterfaceState();
 	pState->Init();
@@ -54,10 +55,7 @@ struct SScreenEntryEqual
 	std::string szName;
 
 	SScreenEntryEqual( const std::string &_szName ) { szName = _szName; }
-	bool operator()( const NDb::SUIScreenEntry &value ) const
-	{
-		return szName == value.szType;
-	}
+	bool operator()( const NDb::SUIScreenEntry &value ) const { return szName == value.szType; }
 };
 
 struct STextEntryEqual
@@ -65,7 +63,7 @@ struct STextEntryEqual
 	std::string szTextID;
 
 	STextEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
-	bool operator()( const CDBPtr< NDb::STextEntry > &value ) const
+	bool operator()( const CDBPtr<NDb::STextEntry> &value ) const
 	{
 		NI_VERIFY( value, "NULL text entry find", return false );
 		return szTextID == value->szName;
@@ -77,10 +75,7 @@ struct STagEntryEqual
 	std::string szName;
 
 	STagEntryEqual( const std::string &_szName ) { szName = _szName; }
-	bool operator()( const NDb::SMLTag &value ) const
-	{
-		return szName == value.szName;
-	}
+	bool operator()( const NDb::SMLTag &value ) const { return szName == value.szName; }
 };
 
 struct SSoundEntryEqual
@@ -88,10 +83,7 @@ struct SSoundEntryEqual
 	std::string szTextID;
 
 	SSoundEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
-	bool operator()( const NDb::SUISoundEntry &value ) const
-	{
-		return szTextID == value.szType;
-	}
+	bool operator()( const NDb::SUISoundEntry &value ) const { return szTextID == value.szType; }
 };
 
 struct STextureEntryEqual
@@ -99,10 +91,7 @@ struct STextureEntryEqual
 	std::string szID;
 
 	STextureEntryEqual( const std::string &_szID ) { szID = _szID; }
-	bool operator()( const NDb::SUITextureEntry &value ) const
-	{
-		return szID == value.szTextID;
-	}
+	bool operator()( const NDb::SUITextureEntry &value ) const { return szID == value.szTextID; }
 };
 
 // CCampaignState
@@ -189,8 +178,8 @@ void CInterfaceState::InitForbiddenWords()
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( pUIConsts )
 	{
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pUIConsts->,ForbiddenWords) )
-			wszForbiddenWords = GET_TEXT_PRE(pUIConsts->,ForbiddenWords);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pUIConsts->, ForbiddenWords ) )
+			wszForbiddenWords = GET_TEXT_PRE( pUIConsts->, ForbiddenWords );
 	}
 	int nPos = 0;
 	while ( nPos < wszForbiddenWords.size() )
@@ -215,14 +204,14 @@ void CInterfaceState::InitForbiddenWords()
 	}
 }
 
-const NDb::SGameRoot* CInterfaceState::GetGameRoot() const
+const NDb::SGameRoot *CInterfaceState::GetGameRoot() const
 {
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	NI_ASSERT( pGameRoot, "Game root not defined" );
 	return pGameRoot;
 }
 
-const NDb::SUIConstsB2* CInterfaceState::GetUIConsts() const
+const NDb::SUIConstsB2 *CInterfaceState::GetUIConsts() const
 {
 	const NDb::SUIConstsB2 *pUIConsts = NGameX::GetUIConsts();
 	NI_ASSERT( pUIConsts, "UI consts not defined" );
@@ -231,48 +220,48 @@ const NDb::SUIConstsB2* CInterfaceState::GetUIConsts() const
 
 CDBID CInterfaceState::GetScreenEntryDBID( const std::string &szName ) const
 {
-//	const int nID = NGlobal::GetVar( ("screenID_" + szName).c_str(), -1 );
-//	if ( nID != -1 )
-//		return nID;
+	//	const int nID = NGlobal::GetVar( ("screenID_" + szName).c_str(), -1 );
+	//	if ( nID != -1 )
+	//		return nID;
 	const NDb::SUIScreenEntry *pEntry = GetScreenEntry( szName );
 	if ( pEntry && pEntry->pScreen )
 		return pEntry->pScreen->GetDBID();
 	return CDBID();
 }
 
-const NDb::SUIScreenEntry* CInterfaceState::GetScreenEntry( const std::string &szName ) const
+const NDb::SUIScreenEntry *CInterfaceState::GetScreenEntry( const std::string &szName ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	std::vector<NDb::SUIScreenEntry>::const_iterator it = find_if( pGameRoot->screens.begin(), pGameRoot->screens.end(),
-		SScreenEntryEqual( szName ) );
+	std::vector<NDb::SUIScreenEntry>::const_iterator it =
+			find_if( pGameRoot->screens.begin(), pGameRoot->screens.end(), SScreenEntryEqual( szName ) );
 	if ( it != pGameRoot->screens.end() )
 	{
-		const NDb::SUIScreenEntry *pEntry = &(*it);
+		const NDb::SUIScreenEntry *pEntry = &( *it );
 		return pEntry;
 	}
 	NI_ASSERT( 0, fmt::format( "interface screen entry '{}' not found", szName ) );
 	return 0;
 }
 
-const std::wstring& CInterfaceState::GetTextEntry( const std::string &szTextID ) const
+const std::wstring &CInterfaceState::GetTextEntry( const std::string &szTextID ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	std::vector< CDBPtr< NDb::STextEntry > >::const_iterator it = find_if( pGameRoot->textEntries.begin(), pGameRoot->textEntries.end(),
-		STextEntryEqual( szTextID ) );
+	std::vector<CDBPtr<NDb::STextEntry>>::const_iterator it =
+			find_if( pGameRoot->textEntries.begin(), pGameRoot->textEntries.end(), STextEntryEqual( szTextID ) );
 	if ( it != pGameRoot->textEntries.end() )
 	{
-		return GET_TEXT_PRE( (*it)->,Text);
+		return GET_TEXT_PRE( ( *it )->, Text );
 	}
 	NI_ASSERT( 0, fmt::format( "text entry '{}' not found", szTextID ) );
 	static std::wstring empty;
 	return empty;
 }
 
-const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const std::string &szName ) const
+const NDb::SComplexSoundDesc *CInterfaceState::GetSoundEntry( const std::string &szName ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	std::vector<NDb::SUISoundEntry>::const_iterator it = find_if( pGameRoot->sounds.begin(), pGameRoot->sounds.end(),
-		SSoundEntryEqual( szName ) );
+	std::vector<NDb::SUISoundEntry>::const_iterator it =
+			find_if( pGameRoot->sounds.begin(), pGameRoot->sounds.end(), SSoundEntryEqual( szName ) );
 	if ( it != pGameRoot->sounds.end() )
 	{
 		return it->pSound;
@@ -281,11 +270,11 @@ const NDb::SComplexSoundDesc* CInterfaceState::GetSoundEntry( const std::string 
 	return 0;
 }
 
-const NDb::STexture* CInterfaceState::GetTextureEntry( const std::string &szID ) const
+const NDb::STexture *CInterfaceState::GetTextureEntry( const std::string &szID ) const
 {
 	const NDb::SGameRoot *pGameRoot = GetGameRoot();
-	std::vector<NDb::SUITextureEntry>::const_iterator it = find_if( pGameRoot->textures.begin(), pGameRoot->textures.end(),
-		STextureEntryEqual( szID ) );
+	std::vector<NDb::SUITextureEntry>::const_iterator it =
+			find_if( pGameRoot->textures.begin(), pGameRoot->textures.end(), STextureEntryEqual( szID ) );
 	if ( it != pGameRoot->textures.end() )
 	{
 		return it->pTexture;
@@ -294,7 +283,7 @@ const NDb::STexture* CInterfaceState::GetTextureEntry( const std::string &szID )
 	return 0;
 }
 
-const std::wstring& CInterfaceState::GetMLTag( const std::wstring &wszName ) const
+const std::wstring &CInterfaceState::GetMLTag( const std::wstring &wszName ) const
 {
 	static std::wstring empty;
 
@@ -302,32 +291,33 @@ const std::wstring& CInterfaceState::GetMLTag( const std::wstring &wszName ) con
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
 		return empty;
-	std::vector<NDb::SMLTag>::const_iterator it = find_if( pUIConsts->tags.begin(), pUIConsts->tags.end(),
-		STagEntryEqual( szName ) );
+	std::vector<NDb::SMLTag>::const_iterator it =
+			find_if( pUIConsts->tags.begin(), pUIConsts->tags.end(), STagEntryEqual( szName ) );
 	if ( it != pUIConsts->tags.end() )
 	{
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(it->,Text) )
-			return GET_TEXT_PRE(it->,Text);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( it->, Text ) )
+			return GET_TEXT_PRE( it->, Text );
 	}
 	NI_ASSERT( 0, fmt::format( "Designers: custom ML tag '{}' not found", szName ) );
 	return empty;
 }
 
-const std::wstring& CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) const
+const std::wstring &CInterfaceState::GetMPGameType( enum NDb::EMPGameType eType ) const
 {
 	static std::wstring wszEmpty;
 
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	if ( !pUIConsts )
 		return wszEmpty;
-	for ( std::vector< NDb::SMPLocalizedGameType >::const_iterator it = pUIConsts->mPLocalizedGameTypes.begin();
-		it != pUIConsts->mPLocalizedGameTypes.end(); ++it )
+	for ( std::vector<NDb::SMPLocalizedGameType>::const_iterator it = pUIConsts->mPLocalizedGameTypes.begin();
+	      it != pUIConsts->mPLocalizedGameTypes.end();
+	      ++it )
 	{
 		const NDb::SMPLocalizedGameType &gameType = *it;
 		if ( gameType.eGameType == eType )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(gameType.,LocalizedText) )
-				return GET_TEXT_PRE(gameType.,LocalizedText);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( gameType., LocalizedText ) )
+				return GET_TEXT_PRE( gameType., LocalizedText );
 			return wszEmpty;
 		}
 	}
@@ -348,8 +338,8 @@ std::wstring CInterfaceState::GetSeasonName( enum NDb::ESeason eSeason ) const
 		if ( season.eSeason == eSeason )
 		{
 			std::wstring wszName;
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(season.,Name) )
-				wszName = GET_TEXT_PRE(season.,Name);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( season., Name ) )
+				wszName = GET_TEXT_PRE( season., Name );
 			return wszName;
 		}
 	}
@@ -378,7 +368,7 @@ void CInterfaceState::SetDifficulty( int _nDifficulty )
 	nDifficulty = _nDifficulty;
 }
 
-ICampaignState* CInterfaceState::GetCampaign( const CDBID &dbidCampaign )
+ICampaignState *CInterfaceState::GetCampaign( const CDBID &dbidCampaign )
 {
 	CCampaignState *pCampaignState = new CCampaignState();
 	pCampaignState->Init( dbidCampaign );
@@ -386,14 +376,22 @@ ICampaignState* CInterfaceState::GetCampaign( const CDBID &dbidCampaign )
 	return pCampaignState;
 }
 
-void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty )
+void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign,
+                                          int nChapterNumber,
+                                          int nMissionNumber,
+                                          int nDifficulty )
 {
 	const NDb::SCampaign *pCampaign = NDb::Get<const NDb::SCampaign>( dbidCampaign );
-	NI_VERIFY( pCampaign, fmt::format( "Start single mission: campaign \"{}\" not found", dbidCampaign.ToString() ), return );
-	NI_VERIFY( nChapterNumber >= 0 && nChapterNumber < pCampaign->chapters.size(), "Start single mission: chapter number out of range", return );
+	NI_VERIFY(
+			pCampaign, fmt::format( "Start single mission: campaign \"{}\" not found", dbidCampaign.ToString() ), return );
+	NI_VERIFY( nChapterNumber >= 0 && nChapterNumber < pCampaign->chapters.size(),
+	           "Start single mission: chapter number out of range",
+	           return );
 	const NDb::SChapter *pChapter = pCampaign->chapters[nChapterNumber];
 	NI_VERIFY( pChapter, "Start single mission: chapter not found", return );
-	NI_VERIFY( nMissionNumber >= 0 && nMissionNumber < pChapter->missionPath.size(), "Start single mission: mission number out of range", return );
+	NI_VERIFY( nMissionNumber >= 0 && nMissionNumber < pChapter->missionPath.size(),
+	           "Start single mission: mission number out of range",
+	           return );
 	const NDb::SMapInfo *pMission = pChapter->missionPath[nMissionNumber].pMap;
 	NI_VERIFY( pMission, "Start single mission: mission not found", return );
 
@@ -411,7 +409,7 @@ void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign, int nChapte
 	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 
-NGScene::CScreenshotTexture* CInterfaceState::GetScreenShotTexture()
+NGScene::CScreenshotTexture *CInterfaceState::GetScreenShotTexture()
 {
 	if ( !pScreenShot )
 		pScreenShot = new NGScene::CScreenshotTexture;
@@ -444,13 +442,13 @@ void CInterfaceState::SendCommandsToCloseAllIncluding( const std::string &szInte
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetPrevInterface( pI ) )
 	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-		CInterfaceScreenBase * pInterface = dynamic_cast<CInterfaceScreenBase*>( pI );
+		CInterfaceScreenBase *pInterface = dynamic_cast<CInterfaceScreenBase *>( pI );
 		if ( pInterface && pInterface->GetInterfaceType() == szInterfaceID )
 			break;
 	}
 }
 
-void CInterfaceState::SendCommandsToCloseAllIncluding( IInterfaceBase * pLastInterfaceToClose )
+void CInterfaceState::SendCommandsToCloseAllIncluding( IInterfaceBase *pLastInterfaceToClose )
 {
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetPrevInterface( pI ) )
 	{
@@ -460,9 +458,10 @@ void CInterfaceState::SendCommandsToCloseAllIncluding( IInterfaceBase * pLastInt
 	}
 }
 
-void CInterfaceState::SendCommandsToBringOnTop( IInterfaceBase * pNewTop )
+void CInterfaceState::SendCommandsToBringOnTop( IInterfaceBase *pNewTop )
 {
-	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0 && pI != pNewTop; pI = NMainLoop::GetPrevInterface( pI ) )
+	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0 && pI != pNewTop;
+	      pI = NMainLoop::GetPrevInterface( pI ) )
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 }
 
@@ -471,22 +470,27 @@ struct SVar
 	ZDATA
 	std::string szName;
 	NGlobal::CValue value;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&value); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szName );
+		f.Add( 3, &value );
+		return 0;
+	}
 
 	SVar() {}
-	SVar( const std::string &_szName, const NGlobal::CValue &_value ) :
-		szName( _szName ), value( _value ) {}
+	SVar( const std::string &_szName, const NGlobal::CValue &_value ) : szName( _szName ), value( _value ) {}
 };
 
 void CInterfaceState::OnSerialize( IBinSaver &saver )
 {
-	std::vector< std::pair<std::string, NGlobal::CValue> > vars;
-	std::vector< SVar > vars2; // используем вспомогательный массив, поскольку vector< pair<> > сериализовать нельзя
+	std::vector<std::pair<std::string, NGlobal::CValue>> vars;
+	std::vector<SVar> vars2; // используем вспомогательный массив, поскольку vector< pair<> > сериализовать нельзя
 	if ( !saver.IsReading() )
 	{
 		NGlobal::GetVarsByClass( &vars, STORAGE_SAVE );
 		vars2.reserve( vars.size() );
-		for ( std::vector< std::pair<std::string, NGlobal::CValue> >::const_iterator it = vars.begin(); it != vars.end(); ++it )
+		for ( std::vector<std::pair<std::string, NGlobal::CValue>>::const_iterator it = vars.begin(); it != vars.end();
+		      ++it )
 		{
 			const std::pair<std::string, NGlobal::CValue> var = *it;
 			vars2.push_back( SVar( var.first, var.second ) );
@@ -498,7 +502,7 @@ void CInterfaceState::OnSerialize( IBinSaver &saver )
 	if ( saver.IsReading() )
 	{
 		NGlobal::ResetVarsToDefault( STORAGE_SAVE );
-		for ( std::vector< SVar >::const_iterator it = vars2.begin(); it != vars2.end(); ++it  )
+		for ( std::vector<SVar>::const_iterator it = vars2.begin(); it != vars2.end(); ++it )
 		{
 			const SVar &var = *it;
 			NGlobal::SetVar( var.szName, var.value, STORAGE_SAVE );
@@ -565,7 +569,7 @@ void CInterfaceState::SetTransitEffectFlag( bool bTransit )
 	bTransitEffectFlag = bTransit;
 }
 
-const NDb::STexture* CInterfaceState::GetMenuBackgroundTexture() const
+const NDb::STexture *CInterfaceState::GetMenuBackgroundTexture() const
 {
 	const NDb::STexture *pBackground = 0;
 
@@ -594,14 +598,14 @@ std::wstring CInterfaceState::GetRandomCitation()
 	if ( const NDb::SGameRoot *pGameRoot = GetGameRoot() )
 	{
 		NWin32Random::Seed( GetCurrentTimeMilliseconds() );
-		int nSize = GET_ARRAY_SIZE(pGameRoot->,citation);
+		int nSize = GET_ARRAY_SIZE( pGameRoot->, citation );
 		if ( nSize > 0 )
-			wszText = GET_ARRAY_ELEMENT(pGameRoot->,citation,NWin32Random::Random( 0, nSize - 1 ));
+			wszText = GET_ARRAY_ELEMENT( pGameRoot->, citation, NWin32Random::Random( 0, nSize - 1 ) );
 	}
 	return wszText;
 }
 
-int CInterfaceState::GetAndRegisterIDForMLHandler( const std::vector< std::pair<std::wstring, std::wstring> > &params )
+int CInterfaceState::GetAndRegisterIDForMLHandler( const std::vector<std::pair<std::wstring, std::wstring>> &params )
 {
 	int nID;
 	if ( !freeIDsForMLHandler.empty() )
@@ -624,7 +628,7 @@ void CInterfaceState::UnregisterIDForMLHandler( int nID )
 		freeIDsForMLHandler.push_back( nID );
 }
 
-const std::wstring& CInterfaceState::ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const
+const std::wstring &CInterfaceState::ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const
 {
 	if ( !wszTag.empty() && wszTag[0] == L'%' )
 	{
@@ -634,7 +638,7 @@ const std::wstring& CInterfaceState::ExpandMLTag( const std::wstring &wszTag, in
 
 			if ( !wszDynamicTag.empty() )
 			{
-				const std::vector< std::pair<std::wstring, std::wstring> > &params = GetParamsForMLHandler( nIDForHandler );
+				const std::vector<std::pair<std::wstring, std::wstring>> &params = GetParamsForMLHandler( nIDForHandler );
 
 				// find tag by name
 				for ( int i = 0; i < params.size(); ++i )
@@ -665,14 +669,14 @@ const std::wstring& CInterfaceState::ExpandMLTag( const std::wstring &wszTag, in
 	return wszText;
 }
 
-const std::vector< std::pair<std::wstring, std::wstring> >& CInterfaceState::GetParamsForMLHandler( int nID ) const
+const std::vector<std::pair<std::wstring, std::wstring>> &CInterfaceState::GetParamsForMLHandler( int nID ) const
 {
-	static std::vector< std::pair<std::wstring, std::wstring> > emptyParams;
+	static std::vector<std::pair<std::wstring, std::wstring>> emptyParams;
 
 	CParamsForMLHandler::const_iterator it = paramsForMLHandler.find( nID );
 	if ( it != paramsForMLHandler.end() )
 	{
-		const std::vector< std::pair<std::wstring, std::wstring> > &params = it->second;
+		const std::vector<std::pair<std::wstring, std::wstring>> &params = it->second;
 		return params;
 	}
 	return emptyParams;
@@ -772,10 +776,9 @@ void CCustomMLHandler::Exec( IML *pIML, IMLLayout *pLayout, const std::vector<st
 		pIML->GetStream()->InsertString( wszText );
 }
 
-
 static int GetDifficultyFromName( const std::string &szName )
 {
-	if ( NStr::IsDecNumber(szName) )
+	if ( NStr::IsDecNumber( szName ) )
 		return NStr::ToInt( szName );
 	else if ( szName == "easy" )
 		return 0;
@@ -786,7 +789,7 @@ static int GetDifficultyFromName( const std::string &szName )
 	else if ( szName == "veryeasy" )
 		return 4;
 	else
-		return 0;	// default = easy
+		return 0; // default = easy
 }
 
 int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex, const std::string &_szMissionName )
@@ -794,12 +797,14 @@ int GetMissionIndexFromName( const CDBID &dbidCampaign, const int nChapterIndex,
 	std::string szMissionName = _szMissionName;
 	NStr::TrimBoth( szMissionName, '\"' );
 	//
-	if ( NStr::IsDecNumber(szMissionName) )
+	if ( NStr::IsDecNumber( szMissionName ) )
 		return NStr::ToInt( szMissionName );
 	//
 	const NDb::SCampaign *pCampaign = NDb::Get<const NDb::SCampaign>( dbidCampaign );
 	NI_VERIFY( pCampaign, fmt::format( "Campaign \"{}\" not found", dbidCampaign.ToString() ), return 0 );
-	NI_VERIFY( nChapterIndex >= 0 && nChapterIndex < pCampaign->chapters.size(), fmt::format( "Chapter ({}) out of range ({})", nChapterIndex, pCampaign->chapters.size() ), return 0 );
+	NI_VERIFY( nChapterIndex >= 0 && nChapterIndex < pCampaign->chapters.size(),
+	           fmt::format( "Chapter ({}) out of range ({})", nChapterIndex, pCampaign->chapters.size() ),
+	           return 0 );
 	const NDb::SChapter *pChapter = pCampaign->chapters[nChapterIndex];
 	NI_VERIFY( pChapter, fmt::format( "Chapter {} empty", nChapterIndex ), return 0 );
 	//
@@ -817,25 +822,28 @@ CDBID GetCampaignDBIDFromName( const std::string &_szName )
 {
 	std::string szName = _szName;
 	NStr::TrimBoth( szName, '\"' );
-	NI_VERIFY( !NStr::IsDecNumber(szName), "Deprecated way to identify resource! Use DBID instead!", return CDBID() );
+	NI_VERIFY( !NStr::IsDecNumber( szName ), "Deprecated way to identify resource! Use DBID instead!", return CDBID() );
 	return CDBID( szName );
 }
 
 void StartSingleMission( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
-	NI_VERIFY( paramsSet.size() >= 3, "Not enough params for 'mission' commmand (mission <campaign_id> <chapter number 0..> <mission number 0..> [<difficulty level 0..>])", return );
+	NI_VERIFY(
+			paramsSet.size() >= 3,
+			"Not enough params for 'mission' commmand (mission <campaign_id> <chapter number 0..> <mission number 0..> [<difficulty level 0..>])",
+			return );
 
-	const CDBID dbidCampaign = GetCampaignDBIDFromName( NStr::ToMBCS(paramsSet[0]) );
+	const CDBID dbidCampaign = GetCampaignDBIDFromName( NStr::ToMBCS( paramsSet[0] ) );
 	if ( dbidCampaign.IsEmpty() )
 		return;
 
-	const int nChapterIndex = NStr::ToInt( NStr::ToMBCS(paramsSet[1]) );
-	const int nMissionIndex = GetMissionIndexFromName( dbidCampaign, nChapterIndex, NStr::ToMBCS(paramsSet[2]) );
-	const int nDifficulty = (paramsSet.size() >= 4) ? GetDifficultyFromName( NStr::ToMBCS(paramsSet[3]) ) : 0;
+	const int nChapterIndex = NStr::ToInt( NStr::ToMBCS( paramsSet[1] ) );
+	const int nMissionIndex = GetMissionIndexFromName( dbidCampaign, nChapterIndex, NStr::ToMBCS( paramsSet[2] ) );
+	const int nDifficulty = ( paramsSet.size() >= 4 ) ? GetDifficultyFromName( NStr::ToMBCS( paramsSet[3] ) ) : 0;
 
 	InterfaceState()->StartSingleMission( dbidCampaign, nChapterIndex, nMissionIndex, nDifficulty );
 }
 
-START_REGISTER(InterfaceState)
+START_REGISTER( InterfaceState )
 REGISTER_CMD( "mission", StartSingleMission );
 FINISH_REGISTER

@@ -3,9 +3,9 @@
 class CFormation;
 class CAIUnit;
 class CCommonUnit;
-typedef std::list< CPtr<CFormation> > Infantry;
-typedef std::list< CPtr<CAIUnit> > MechUnits;
-typedef std::list<CPtr<CCommonUnit> > CommonUnits;
+typedef std::list<CPtr<CFormation>> Infantry;
+typedef std::list<CPtr<CAIUnit>> MechUnits;
+typedef std::list<CPtr<CCommonUnit>> CommonUnits;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum ETaskName
@@ -27,16 +27,15 @@ enum EForceType
 	FT_AIR_BOMBER,
 	FT_AIR_FIGHTER,
 
-
 	FT_INFANTRY_IN_TRENCHES,
 	FT_FREE_INFANTRY,
 
-	FT_MOBILE_TANKS,											// мобильное подкрепление
-	FT_SWARMING_TANKS,										// tanks that is ascribed to attack group
-	FT_STATIONARY_MECH_UNITS,							// ЮНИты из обороны
+	FT_MOBILE_TANKS,          // мобильное подкрепление
+	FT_SWARMING_TANKS,        // tanks that is ascribed to attack group
+	FT_STATIONARY_MECH_UNITS, // ЮНИты из обороны
 	FT_RECAPTURE_STORAGE,
 
-	FT_TRUCK_REPAIR_BUILDING,							//truck that is able to repair buildings
+	FT_TRUCK_REPAIR_BUILDING, //truck that is able to repair buildings
 	FT_TRUCK_RESUPPLY,
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +51,7 @@ struct IEnemyEnumerator
 struct IEnemyContainer
 {
 	virtual void GiveEnemies( IEnemyEnumerator *pEnumerator ) = 0;
-	virtual void GiveResistances( IEnemyEnumerator *pEnmumerator ) { }
+	virtual void GiveResistances( IEnemyEnumerator *pEnmumerator ) {}
 	virtual void AddResistance( const CVec2 &vCenter, const float fRadius ) = 0;
 	virtual void RemoveResistance( const CVec2 &vCenter ) = 0;
 };
@@ -66,13 +65,13 @@ struct IWorkerEnumerator
 	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) = 0;
 
 	// return the avalability of worker for the specific work ( should be fast )
-	virtual bool EvaluateWorker( CCommonUnit * pUnit, const enum EForceType eType ) const = 0;
+	virtual bool EvaluateWorker( CCommonUnit *pUnit, const enum EForceType eType ) const = 0;
 
 	// if enumerator needs only best units of this kind
 	virtual int NeedNBest( const enum EForceType eType ) const { return 0; }
 
 	// return presize avalability of worker for enumerator
-	virtual float EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const { return 1.0f; }
+	virtual float EvaluateWorkerRating( CCommonUnit *pUnit, const enum EForceType eType ) const { return 1.0f; }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ****
@@ -89,8 +88,8 @@ struct ICommander : public CAIObjectBase
 	virtual void Segment() = 0;
 
 	// дать наводку артиллерии или авиации or ask for resupply(repair,heal)(отменить существуюшую)
-	virtual int /*request ID*/RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) { return 0; }
-	virtual void CancelRequest( int nRequestID, enum EForceType eType ) {  }
+	virtual int /*request ID*/ RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) { return 0; }
+	virtual void CancelRequest( int nRequestID, enum EForceType eType ) {}
 };
 
 // ****

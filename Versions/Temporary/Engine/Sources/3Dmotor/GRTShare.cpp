@@ -14,19 +14,23 @@ namespace NGScene
 
 // CTexShare
 
-template<class T> void CreateTex( CObj<T> *pRes, int nSize, int nPixelFormatID ) { ASSERT(0); }
-template<>
+template <class T>
+void CreateTex( CObj<T> *pRes, int nSize, int nPixelFormatID )
+{
+	ASSERT( 0 );
+}
+template <>
 void CreateTex<NGfx::CTexture>( CObj<NGfx::CTexture> *pRes, int nSize, int nPixelFormatID )
 {
 	*pRes = NGfx::MakeTexture( nSize, nSize, 1, nPixelFormatID, NGfx::TARGET, NGfx::CLAMP );
 }
-template<>
+template <>
 void CreateTex<NGfx::CCubeTexture>( CObj<NGfx::CCubeTexture> *pRes, int nSize, int nPixelFormatID )
 {
 	*pRes = NGfx::MakeCubeTexture( nSize, 1, nPixelFormatID, NGfx::TARGET );
 }
 
-template<class T>
+template <class T>
 class CTexShare
 {
 	struct STexInfo
@@ -48,13 +52,14 @@ class CTexShare
 			CreateTex( &i->second.pTex, nRes, nPixelFormatID );
 		}
 	}
+
 public:
 	T *GetTexture( const std::string &sz )
 	{
 		typename CTexHash::iterator i = textureHash.find( sz );
 		if ( i == textureHash.end() )
 		{
-			ASSERT(0);
+			ASSERT( 0 );
 			return 0;
 		}
 		if ( !IsValid( i->second.pTex ) )
@@ -70,7 +75,7 @@ public:
 		for ( int k = 0; k < rtInfo.size(); ++k )
 		{
 			const SUserRTInfo::STex &tex = rtInfo[k];
-			STexInfo &texInfo = textureHash[ tex.szName ];
+			STexInfo &texInfo = textureHash[tex.szName];
 			texInfo.nResolution = tex.nResolution;
 			texInfo.nPixelFormatID = tex.nPixelFormatID;
 			texInfo.pTex = 0;
@@ -83,7 +88,7 @@ static CTexShare<NGfx::CCubeTexture> texCubeShare;
 
 NGfx::CTexture *CRTPtr::GetTexture()
 {
-	if ( IsValid(pRes) )
+	if ( IsValid( pRes ) )
 		return pRes;
 	pRes = texShare.GetTexture( szName );
 	return pRes;
@@ -91,7 +96,7 @@ NGfx::CTexture *CRTPtr::GetTexture()
 
 NGfx::CCubeTexture *CCubeRTPtr::GetTexture()
 {
-	if ( IsValid(pRes) )
+	if ( IsValid( pRes ) )
 		return pRes;
 	pRes = texCubeShare.GetTexture( szName );
 	return pRes;

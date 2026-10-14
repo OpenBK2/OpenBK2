@@ -13,13 +13,17 @@ class CControlSumCheckCommand : public IAILogicCommandB2
 	unsigned long ulCheckSum = {};
 
 	// не сэйвится!
-	static std::vector< std::list<unsigned long> > checkSums;
+	static std::vector<std::list<unsigned long>> checkSums;
+
 public:
 	static uint16_t wMask;
+
 public:
-	CControlSumCheckCommand() { }
+	CControlSumCheckCommand() {}
 	CControlSumCheckCommand( const int _nPlayer, const unsigned long _ulCheckSum )
-		: nPlayer( _nPlayer ), ulCheckSum( _ulCheckSum ) { }
+			: nPlayer( _nPlayer ), ulCheckSum( _ulCheckSum )
+	{
+	}
 
 	void Execute();
 	//
@@ -44,24 +48,27 @@ public:
 	// не сэйвится!
 	static CArray2D<unsigned long> checkSums;
 	static uint16_t wMask;
+
 public:
-	CControlSumHistoryCommand() { }
+	CControlSumHistoryCommand() {}
 	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const unsigned long _ulCheckSum )
-		: nPlayer( _nPlayer ), nSegment( _nSegment ), ulCheckSum( _ulCheckSum ) { }
+			: nPlayer( _nPlayer ), nSegment( _nSegment ), ulCheckSum( _ulCheckSum )
+	{
+	}
 
-		void Execute();
-		//
-		bool NeedToBeStored() const { return false; }
+	void Execute();
+	//
+	bool NeedToBeStored() const { return false; }
 
-		// only if CheckSum on nStartSegment is different, check other segments
-		static void Check( const int nOurNumber, const int nStartSegment, struct IAILogic *pAI );
+	// only if CheckSum on nStartSegment is different, check other segments
+	static void Check( const int nOurNumber, const int nStartSegment, struct IAILogic *pAI );
 
-		static void Init( const uint16_t wMask );
-		static void SetMask( const uint16_t wMask );
+	static void Init( const uint16_t wMask );
+	static void SetMask( const uint16_t wMask );
 
-		static unsigned long GetValue( const int _nPlayer, const int _nSegment );
+	static unsigned long GetValue( const int _nPlayer, const int _nSegment );
 
-		int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver );
 };
 
 class CDropPlayerCommand : public IAILogicCommandB2
@@ -69,11 +76,16 @@ class CDropPlayerCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CDropPlayerCommand );
 
 	ZDATA
-		int nPlayerToDrop = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nPlayerToDrop); return 0; }
+	int nPlayerToDrop = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nPlayerToDrop );
+		return 0;
+	}
+
 public:
-	CDropPlayerCommand() : nPlayerToDrop( -1 ) { }
-	explicit CDropPlayerCommand( int _nPlayerToDrop ) : nPlayerToDrop( _nPlayerToDrop ) { }
+	CDropPlayerCommand() : nPlayerToDrop( -1 ) {}
+	explicit CDropPlayerCommand( int _nPlayerToDrop ) : nPlayerToDrop( _nPlayerToDrop ) {}
 
 	//
 	void Execute();

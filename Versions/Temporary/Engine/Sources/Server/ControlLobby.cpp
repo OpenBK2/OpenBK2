@@ -81,7 +81,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	}
 
 	if ( !pPrime->IsPrime( pPacket->nPrime1 ) || !pPrime->IsPrime( pPacket->nPrime2 ) ||
-				(int64_t)pPacket->nPrime1 * (int64_t)pPacket->nPrime2 != askedNumbers[pPacket->nClientID] )
+	     (int64_t)pPacket->nPrime1 * (int64_t)pPacket->nPrime2 != askedNumbers[pPacket->nClientID] )
 	{
 		pNet->Kick( pPacket->nClientID );
 		connecting.erase( pPacket->nClientID );
@@ -93,7 +93,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	{
 		pClients->RecalcDBOverload();
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_CRITICAL_BUSY );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_CRITICAL_BUSY );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 		PushPacket( pAnswerPacket );
 		connecting.erase( pPacket->nClientID );
@@ -105,7 +105,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	if ( pClients->IsBadNick( pPacket->szNick ) )
 	{
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_BAD_NICK );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_BAD_NICK );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 
 		PushPacket( pAnswerPacket );
@@ -118,7 +118,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_LOGIN && !pClients->IsNickRegistered( pPacket->szNick ) )
 	{
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_NOT_REGISTERED );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_NOT_REGISTERED );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 
 		PushPacket( pAnswerPacket );
@@ -127,14 +127,15 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 		return true;
 	}
 
-	const std::string szCDKey =
-		pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER ? pPacket->szCDKey : pClients->GetCDKey( pPacket->szNick );
+	const std::string szCDKey = pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER
+	                                ? pPacket->szCDKey
+	                                : pClients->GetCDKey( pPacket->szNick );
 
 	// already online?
 	if ( pClients->IsOnLine( pPacket->szNick ) || pClients->IsCDKeyOnline( szCDKey ) )
 	{
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_ALREADY_ONLINE );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_ALREADY_ONLINE );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 
 		PushPacket( pAnswerPacket );
@@ -144,10 +145,11 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	}
 
 	// not correct cdkey?
-	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER && !pClients->IsCorrectCDKey( pPacket->szCDKey ) && bCheckCDKeyIsValid )
+	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER &&
+	     !pClients->IsCorrectCDKey( pPacket->szCDKey ) && bCheckCDKeyIsValid )
 	{
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_WRONG_CD_KEY );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_WRONG_CD_KEY );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 
 		PushPacket( pAnswerPacket );
@@ -160,7 +162,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	if ( pClients->IsBannedNick( pPacket->szNick ) )
 	{
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_BANNED_NICK );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_BANNED_NICK );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 
 		PushPacket( pAnswerPacket );
@@ -170,10 +172,11 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	}
 
 	// nick is already registered, trying to register?
-	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER && pClients->IsNickRegistered( pPacket->szNick ) )
+	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER &&
+	     pClients->IsNickRegistered( pPacket->szNick ) )
 	{
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_ALREADY_REGISTERED );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_ALREADY_REGISTERED );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 
 		PushPacket( pAnswerPacket );
@@ -186,7 +189,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	if ( szCDKey != "" && pClients->IsBannedCDKey( szCDKey ) )
 	{
 		CConnectServerPacket *pAnswerPacket =
-			new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_BANNED_CDKEY );
+				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_BANNED_CDKEY );
 		pAnswerPacket->nClientID = pPacket->nClientID;
 
 		PushPacket( pAnswerPacket );
@@ -202,7 +205,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 		if ( szStr != pPacket->szPassword )
 		{
 			CConnectServerPacket *pAnswerPacket =
-				new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_WRONG_PASSWORD );
+					new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_WRONG_PASSWORD );
 			pAnswerPacket->nClientID = pPacket->nClientID;
 
 			PushPacket( pAnswerPacket );
@@ -217,8 +220,8 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 
 	pClients->SetOnLine( pPacket->szNick, pPacket->nClientID );
 
-  CConnectServerPacket *pAnswerPacket =
-		new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, CConnectServerPacket::ERR_UNKNOWN );
+	CConnectServerPacket *pAnswerPacket =
+			new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, CConnectServerPacket::ERR_UNKNOWN );
 	pAnswerPacket->nClientID = pPacket->nClientID;
 	PushPacket( pAnswerPacket );
 
@@ -268,9 +271,11 @@ bool CControlLobby::ProcessCommonClientStatePacket( CCommonClientStatePacket *pP
 bool CControlLobby::ProcessNewConnectingClient( CNewGameConnectingClient *pPacket )
 {
 	const int nClientID = pPacket->nClientID;
-	pClients->SetGameConnectInfo( pPacket->nServerID, pPacket->nConnection, pNet->GetIP( nClientID ), pNet->GetPort( nClientID ) );
+	pClients->SetGameConnectInfo(
+			pPacket->nServerID, pPacket->nConnection, pNet->GetIP( nClientID ), pNet->GetPort( nClientID ) );
 
-  CPtr<CGameConnectingClientAccepted> pAnswerPacket = new CGameConnectingClientAccepted( pPacket->nServerID, pPacket->nConnection );
+	CPtr<CGameConnectingClientAccepted> pAnswerPacket =
+			new CGameConnectingClientAccepted( pPacket->nServerID, pPacket->nConnection );
 	PushPacket( pAnswerPacket );
 
 	connecting.erase( pPacket->nClientID );
@@ -303,10 +308,10 @@ bool CControlLobby::ProcessPingPacket( CPingPacket *pPacket )
 
 bool CControlLobby::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pPacket )
 {
-	if ( ! pClients->IsNickRegistered( pPacket->szNick ) )
+	if ( !pClients->IsNickRegistered( pPacket->szNick ) )
 	{
-		CPtr<CForgottenPasswordAnswerPacket> pAnswerPacket = new CForgottenPasswordAnswerPacket( pPacket->nClientID,
-			CForgottenPasswordAnswerPacket::NICK_NOT_REGISTERED );
+		CPtr<CForgottenPasswordAnswerPacket> pAnswerPacket =
+				new CForgottenPasswordAnswerPacket( pPacket->nClientID, CForgottenPasswordAnswerPacket::NICK_NOT_REGISTERED );
 		PushPacket( pAnswerPacket );
 		return true;
 	}
@@ -314,17 +319,16 @@ bool CControlLobby::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pP
 
 	if ( pPacket->szEMail != szEmail )
 	{
-		CPtr<CForgottenPasswordAnswerPacket> pAnswerPacket = new CForgottenPasswordAnswerPacket( pPacket->nClientID,
-			CForgottenPasswordAnswerPacket::INVALID_EMAIL );
+		CPtr<CForgottenPasswordAnswerPacket> pAnswerPacket =
+				new CForgottenPasswordAnswerPacket( pPacket->nClientID, CForgottenPasswordAnswerPacket::INVALID_EMAIL );
 		PushPacket( pAnswerPacket );
 		return true;
 	}
 
-
 	// TODO: implement the procedure
 
-	CPtr<CForgottenPasswordAnswerPacket> pAnswerPacket = new CForgottenPasswordAnswerPacket( pPacket->nClientID,
-		CForgottenPasswordAnswerPacket::SORRY_SERVICE_IS_NOT_IMPLEMENTED_YET );
-  PushPacket( pAnswerPacket );
+	CPtr<CForgottenPasswordAnswerPacket> pAnswerPacket = new CForgottenPasswordAnswerPacket(
+			pPacket->nClientID, CForgottenPasswordAnswerPacket::SORRY_SERVICE_IS_NOT_IMPLEMENTED_YET );
+	PushPacket( pAnswerPacket );
 	return true;
 }

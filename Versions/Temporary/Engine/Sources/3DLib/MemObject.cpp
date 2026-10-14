@@ -12,10 +12,7 @@ struct SMemBuilderVertex
 {
 	CVec3 point;
 	CVec3 normal;
-	bool operator==( const SMemBuilderVertex &a ) const
-	{
-		return point == a.point && fabs2( normal - a.normal ) < 1e-6;
-	}
+	bool operator==( const SMemBuilderVertex &a ) const { return point == a.point && fabs2( normal - a.normal ) < 1e-6; }
 };
 
 struct SMemBuilderVertexHash
@@ -23,7 +20,7 @@ struct SMemBuilderVertexHash
 	int operator()( const SMemBuilderVertex &v ) const
 	{
 		float f = v.point.x + v.point.y * 123 + v.point.z * 15352331;
-		return *(int*)&f;
+		return *(int *)&f;
 	}
 };
 
@@ -32,8 +29,9 @@ class CMemObjectBuilder
 	typedef std::unordered_map<SMemBuilderVertex, int, SMemBuilderVertexHash> CPointsHash;
 	CPointsHash points;
 	CMemObject *p;
+
 public:
-	CMemObjectBuilder( CMemObject *_p ): p(_p) {}
+	CMemObjectBuilder( CMemObject *_p ) : p( _p ) {}
 	uint16_t GetPointIndex( const CVec3 &point, const CVec3 &normal );
 	void AddSphereTriangle( const CVec3 &a, const CVec3 &b, const CVec3 &c, int nSubs );
 };
@@ -77,7 +75,7 @@ void CMemObjectBuilder::AddSphereTriangle( const CVec3 &a, const CVec3 &b, const
 		AddSphereTriangle( a, ab, ca, nSubs - 1 );
 		AddSphereTriangle( ca, bc, c, nSubs - 1 );
 		AddSphereTriangle( ab, bc, ca, nSubs - 1 );
-		Normalize( &ca );// COMPILER - compiler generate wrong code without this line
+		Normalize( &ca ); // COMPILER - compiler generate wrong code without this line
 	}
 }
 
@@ -89,14 +87,14 @@ void CMemObject::CreateCube( const CVec3 &base, const CVec3 &size, bool bTwoSide
 	std::vector<STriangle> tris;
 	//
 	points.resize( 8 );
-	points[0] = CVec3( base.x,          base.y,          base.z );
-	points[1] = CVec3( base.x,          base.y + size.y, base.z );
+	points[0] = CVec3( base.x, base.y, base.z );
+	points[1] = CVec3( base.x, base.y + size.y, base.z );
 	points[2] = CVec3( base.x + size.x, base.y + size.y, base.z );
-	points[3] = CVec3( base.x + size.x, base.y         , base.z );
-	points[4] = CVec3( base.x,          base.y,          base.z + size.z);
-	points[5] = CVec3( base.x,          base.y + size.y, base.z + size.z );
+	points[3] = CVec3( base.x + size.x, base.y, base.z );
+	points[4] = CVec3( base.x, base.y, base.z + size.z );
+	points[5] = CVec3( base.x, base.y + size.y, base.z + size.z );
 	points[6] = CVec3( base.x + size.x, base.y + size.y, base.z + size.z );
-	points[7] = CVec3( base.x + size.x, base.y         , base.z + size.z );
+	points[7] = CVec3( base.x + size.x, base.y, base.z + size.z );
 	//
 	tris.resize( 12 );
 	tris[0] = STriangle( 0, 1, 2 );
@@ -133,9 +131,9 @@ void CMemObject::CreateSphere( const CVec3 &ptCenter, float fRadius, int nSubs )
 	Clear();
 	CMemObjectBuilder mb( this );
 	CVec3 a( 1.000f, 0.000f, -0.707f );
-  CVec3 b( 0.000f, -1.000f, 0.707f );
-  CVec3 c( 0.000f, 1.000f, 0.707f );
-  CVec3 d( -1.000f, 0.000f, -0.707f );
+	CVec3 b( 0.000f, -1.000f, 0.707f );
+	CVec3 c( 0.000f, 1.000f, 0.707f );
+	CVec3 d( -1.000f, 0.000f, -0.707f );
 	Normalize( &a );
 	Normalize( &b );
 	Normalize( &c );
@@ -160,7 +158,10 @@ struct SMOTessPoint
 	float fNormal;
 	CVec2 vPoint;
 
-	SMOTessPoint( float _fNormal, const CVec2 &_vPoint, int _nIndex ): fNormal(_fNormal), vPoint(_vPoint), nIndex(_nIndex) {}
+	SMOTessPoint( float _fNormal, const CVec2 &_vPoint, int _nIndex )
+			: fNormal( _fNormal ), vPoint( _vPoint ), nIndex( _nIndex )
+	{
+	}
 };
 typedef CVec2 TTriangle[3];
 
@@ -175,13 +176,13 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 	std::list<SMOTessPoint> poly;
 	for ( int i = 0; i < points.size(); i++ )
 	{
-		const CVec2 &vPrev2 = points[ (i-1 + points.size()) % points.size() ];
-		const CVec2 &vNext2 = points[ (i+1) % points.size() ];
+		const CVec2 &vPrev2 = points[( i - 1 + points.size() ) % points.size()];
+		const CVec2 &vNext2 = points[( i + 1 ) % points.size()];
 		const CVec2 &vTemp2 = points[i];
 		CVec3 vPrev( vPrev2.x, vPrev2.y, 0 );
 		CVec3 vNext( vNext2.x, vNext2.y, 0 );
 		CVec3 vTemp( vTemp2.x, vTemp2.y, 0 );
-		CVec3 vNormal( (vPrev - vTemp) ^ (vNext - vTemp) );
+		CVec3 vNormal( ( vPrev - vTemp ) ^ ( vNext - vTemp ) );
 		poly.push_back( SMOTessPoint( vNormal.z, vTemp2, i ) );
 
 		vert[i] = CVec3( vTemp2.x, vTemp2.y, fZ );
@@ -190,7 +191,7 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 	bool bTryAgain = true;
 	float fRange = -FP_EPSILON;
 	std::vector<STriangle> tris;
-	while( poly.size() > 2 )
+	while ( poly.size() > 2 )
 	{
 		bool bRemoved = false;
 		std::list<SMOTessPoint>::iterator iPrev, iPrev2;
@@ -253,7 +254,7 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 				CVec3 vPrev( prev.vPoint.x, prev.vPoint.y, 0 );
 				CVec3 vNext( next.vPoint.x, next.vPoint.y, 0 );
 				CVec3 vTemp( temp.vPoint.x, temp.vPoint.y, 0 );
-				CVec3 vNormal( (vPrev - vTemp) ^ (vNext - vTemp) );
+				CVec3 vNormal( ( vPrev - vTemp ) ^ ( vNext - vTemp ) );
 				temp.fNormal = vNormal.z;
 			}
 		}
@@ -289,22 +290,22 @@ void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float
 	SHMatrix m;
 	MakeMatrix( &m, ptStart, ptDir );
 	m.RotateHVector( &base[0], base[0] );
-	CVec3 n(0, 1, 0);
+	CVec3 n( 0, 1, 0 );
 	m.RotateHVector( &n, n );
 	uint16_t capd = b.GetPointIndex( base[0], -n );
 	uint16_t capu = b.GetPointIndex( base[0] + ptDir, n );
 	for ( int i = 1; i < base.size(); ++i )
 	{
 		m.RotateHVector( &base[i], base[i] );
-		uint16_t w1 = b.GetPointIndex( base[i-1], VNULL3 );
+		uint16_t w1 = b.GetPointIndex( base[i - 1], VNULL3 );
 		uint16_t w2 = b.GetPointIndex( base[i], VNULL3 );
-		uint16_t w3 = b.GetPointIndex( base[i-1] + ptDir, VNULL3 );
+		uint16_t w3 = b.GetPointIndex( base[i - 1] + ptDir, VNULL3 );
 		uint16_t w4 = b.GetPointIndex( base[i] + ptDir, VNULL3 );
-		CVec3 n1 = (resPoints[w1] - resPoints[w4]) ^ (resPoints[w2] - resPoints[w4]);
-		CVec3 n2 = (resPoints[w4] - resPoints[w1]) ^ (resPoints[w3] - resPoints[w1]);
+		CVec3 n1 = ( resPoints[w1] - resPoints[w4] ) ^ ( resPoints[w2] - resPoints[w4] );
+		CVec3 n2 = ( resPoints[w4] - resPoints[w1] ) ^ ( resPoints[w3] - resPoints[w1] );
 		Normalize( &n1 );
 		Normalize( &n2 );
-		const CVec3 n3 = 0.5f * (n1 + n2);
+		const CVec3 n3 = 0.5f * ( n1 + n2 );
 		resNormals[w1] = n3;
 		resNormals[w2] = n1;
 		resNormals[w3] = n2;
@@ -313,9 +314,9 @@ void CMemObject::CreateCylinder( const CVec3 &ptStart, const CVec3 &ptEnd, float
 		resTris.push_back( STriangle( w1, w3, w4 ) );
 		if ( bClose )
 		{
-			uint16_t c1 = b.GetPointIndex( base[i-1], -n );
+			uint16_t c1 = b.GetPointIndex( base[i - 1], -n );
 			uint16_t c2 = b.GetPointIndex( base[i], -n );
-			uint16_t c3 = b.GetPointIndex( base[i-1] + ptDir, n );
+			uint16_t c3 = b.GetPointIndex( base[i - 1] + ptDir, n );
 			uint16_t c4 = b.GetPointIndex( base[i] + ptDir, n );
 			resTris.push_back( STriangle( capd, c1, c2 ) );
 			resTris.push_back( STriangle( capu, c4, c3 ) );
@@ -335,8 +336,8 @@ void CMemObject::CreateIsoscelesColumn( const CVec3 &ptBase, float fHeight, floa
 
 	CVec3 ptN( -1, 0, 0 );
 	uint16_t w1 = b.GetPointIndex( ptLeft, ptN );
-	uint16_t w2 = b.GetPointIndex( ptLeft + CVec3(0,0,fHeight), ptN );
-	uint16_t w3 = b.GetPointIndex( ptRight + CVec3(0,0,fHeight), ptN );
+	uint16_t w2 = b.GetPointIndex( ptLeft + CVec3( 0, 0, fHeight ), ptN );
+	uint16_t w3 = b.GetPointIndex( ptRight + CVec3( 0, 0, fHeight ), ptN );
 	uint16_t w4 = b.GetPointIndex( ptRight, ptN );
 	resTris.push_back( STriangle( w1, w3, w2 ) );
 	resTris.push_back( STriangle( w1, w4, w3 ) );
@@ -344,8 +345,8 @@ void CMemObject::CreateIsoscelesColumn( const CVec3 &ptBase, float fHeight, floa
 	ptN = CVec3( 1, 1, 0 );
 	Normalize( &ptN );
 	w1 = b.GetPointIndex( ptMiddle, ptN );
-	w2 = b.GetPointIndex( ptMiddle + CVec3(0,0,fHeight), ptN );
-	w3 = b.GetPointIndex( ptLeft + CVec3(0,0,fHeight), ptN );
+	w2 = b.GetPointIndex( ptMiddle + CVec3( 0, 0, fHeight ), ptN );
+	w3 = b.GetPointIndex( ptLeft + CVec3( 0, 0, fHeight ), ptN );
 	w4 = b.GetPointIndex( ptLeft, ptN );
 	resTris.push_back( STriangle( w1, w3, w2 ) );
 	resTris.push_back( STriangle( w1, w4, w3 ) );
@@ -353,8 +354,8 @@ void CMemObject::CreateIsoscelesColumn( const CVec3 &ptBase, float fHeight, floa
 	ptN = CVec3( 1, -1, 0 );
 	Normalize( &ptN );
 	w1 = b.GetPointIndex( ptRight, ptN );
-	w2 = b.GetPointIndex( ptRight + CVec3(0,0,fHeight), ptN );
-	w3 = b.GetPointIndex( ptMiddle + CVec3(0,0,fHeight), ptN );
+	w2 = b.GetPointIndex( ptRight + CVec3( 0, 0, fHeight ), ptN );
+	w3 = b.GetPointIndex( ptMiddle + CVec3( 0, 0, fHeight ), ptN );
 	w4 = b.GetPointIndex( ptMiddle, ptN );
 	resTris.push_back( STriangle( w1, w3, w2 ) );
 	resTris.push_back( STriangle( w1, w4, w3 ) );
@@ -366,7 +367,7 @@ void CMemObject::CreateIsoscelesColumn( const CVec3 &ptBase, float fHeight, floa
 	resTris.push_back( STriangle( w1, w3, w2 ) );
 	//
 	ptN = CVec3( 0, 0, 1 );
-	CVec3 ptH(0,0,fHeight);
+	CVec3 ptH( 0, 0, fHeight );
 	w1 = b.GetPointIndex( ptRight + ptH, ptN );
 	w2 = b.GetPointIndex( ptLeft + ptH, ptN );
 	w3 = b.GetPointIndex( ptMiddle + ptH, ptN );
@@ -391,11 +392,9 @@ void CMemObject::Create( const std::vector<CVec3> &points, const std::vector<STr
 		//CVec3 normal(0,0,1);
 		CVec3 normal = ( points[t.i2] - points[t.i1] ) ^ ( points[t.i3] - points[t.i1] );
 		Normalize( &normal );
-		resTris.push_back( STriangle(
-			b.GetPointIndex(points[t.i1], normal ),
-			b.GetPointIndex(points[t.i2], normal ),
-			b.GetPointIndex(points[t.i3], normal )
-			) );
+		resTris.push_back( STriangle( b.GetPointIndex( points[t.i1], normal ),
+		                              b.GetPointIndex( points[t.i2], normal ),
+		                              b.GetPointIndex( points[t.i3], normal ) ) );
 	}
 }
 

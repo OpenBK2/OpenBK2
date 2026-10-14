@@ -5,12 +5,12 @@
 // большой статический потайловый  путь, вдоль которого идут юниты
 struct IStaticPath : public CAIObjectBase
 {
-	virtual const SVector GetStartTile() const	= 0;
+	virtual const SVector GetStartTile() const = 0;
 	virtual const SVector GetFinishTile() const = 0;
-	virtual const CVec2& GetFinishPoint() const = 0;
+	virtual const CVec2 &GetFinishPoint() const = 0;
 
-	virtual const int GetLength() const	= 0;
-	virtual const SVector GetTile( const int n ) const	= 0;
+	virtual const int GetLength() const = 0;
+	virtual const SVector GetTile( const int n ) const = 0;
 	virtual void MoveFinishPointBy( const CVec2 &vMove ) = 0;
 
 	virtual void MoveStartTileTo( const int nStart ) = 0;

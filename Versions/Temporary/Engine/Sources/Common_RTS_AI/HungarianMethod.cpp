@@ -191,7 +191,6 @@ void CHungarianMethod::UpdateMatrix()
 					if ( fDelta > matrix[j][i] )
 						fDelta = matrix[j][i];
 				}
-
 			}
 		}
 	}
@@ -218,7 +217,7 @@ void CHungarianMethod::BuildResult()
 {
 	for ( int i = 0; i < nSize; ++i )
 	{
-		for( int j = 0; j < nSize; ++j )
+		for ( int j = 0; j < nSize; ++j )
 		{
 			if ( marks[j][i] == 1 )
 			{
@@ -235,7 +234,8 @@ void CHungarianMethod::Solve()
 	while ( true )
 	{
 		MarkZeros();
-		while ( SwapMarks() );
+		while ( SwapMarks() )
+			;
 		if ( IsSolved() )
 			break;
 		UpdateMatrix();

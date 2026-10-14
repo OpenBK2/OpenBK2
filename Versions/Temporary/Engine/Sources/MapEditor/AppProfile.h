@@ -23,15 +23,15 @@
 // наглядности".
 namespace NAppProfile
 {
-	// The entry's text, or rszDefault when it is not there. An empty section
-	// means the profile's own level, where the format version lives.
-	std::string GetString( const std::string &rszSection, const std::string &rszEntry, const std::string &rszDefault );
+// The entry's text, or rszDefault when it is not there. An empty section
+// means the profile's own level, where the format version lives.
+std::string GetString( const std::string &rszSection, const std::string &rszEntry, const std::string &rszDefault );
 
-	// Creates the section if need be. False if the store refused.
-	bool WriteString( const std::string &rszSection, const std::string &rszEntry, const std::string &rszValue );
+// Creates the section if need be. False if the store refused.
+bool WriteString( const std::string &rszSection, const std::string &rszEntry, const std::string &rszValue );
 
-	// Forget everything the editor has stored: the -reg switch, and a format
-	// version this build does not understand. This is what SHDeleteKey over
-	// the profile key did.
-	void DeleteAll();
+// Forget everything the editor has stored: the -reg switch, and a format
+// version this build does not understand. This is what SHDeleteKey over
+// the profile key did.
+void DeleteAll();
 }

@@ -20,7 +20,6 @@ float GetDistanceTo3DLine( const CVec3 &rvPoint, CVec2 &rvScreenPos )
 	return GetDistanceTo3DLine( rvPoint, vOrigin, vDirection );
 }
 
-
 void Get2DPosOnMapHeights( CVec3 *pvPos, const CVec2 &rvScreenPos )
 {
 	//NI_ASSERT( ( EditorScene() != 0 ) && ( EditorScene()->GetTerrain() != 0 ), "Get2DPosOnMapHeights(), Terrain not loaded" );
@@ -41,19 +40,16 @@ void Get2DPosOnMapHeights( CVec3 *pvPos, const CVec2 &rvScreenPos )
 	}
 }
 
-
 void Get3DPosOnMapHeights( CVec3 *pvPos, const CVec2 &rvScreenPos )
 {
 	Get2DPosOnMapHeights( pvPos, rvScreenPos );
 	UpdateTerrainHeight( pvPos );
 }
 
-
 float GetTerrainHeight( float x, float y )
 {
 	return EditorScene()->GetZ( x, y );
 }
-
 
 void UpdateTerrainHeight( CVec3 *pvPos )
 {

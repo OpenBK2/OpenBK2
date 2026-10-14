@@ -23,16 +23,16 @@
 // NDb::GetObjectA.
 namespace NBuildDetails
 {
-	// One "name : value" per line, every line newline-terminated. UTF-8.
-	//
-	// Nothing is cached: the MOD, the display scale and the git revision of a
-	// dirty tree can all differ between two calls.
-	MAPEDITORLIB_EXPORT std::string Collect();
+// One "name : value" per line, every line newline-terminated. UTF-8.
+//
+// Nothing is cached: the MOD, the display scale and the git revision of a
+// dirty tree can all differ between two calls.
+MAPEDITORLIB_EXPORT std::string Collect();
 
-	// The same lines, into the editor's log window, under a heading.
-	//
-	// Here rather than at the call site so that the one thing in the block that
-	// is not just information -- a Granny version mismatch -- is logged as the
-	// error it is, and is so in every front end that calls this.
-	MAPEDITORLIB_EXPORT void Log();
+// The same lines, into the editor's log window, under a heading.
+//
+// Here rather than at the call site so that the one thing in the block that
+// is not just information -- a Granny version mismatch -- is logged as the
+// error it is, and is so in every front end that calls this.
+MAPEDITORLIB_EXPORT void Log();
 }

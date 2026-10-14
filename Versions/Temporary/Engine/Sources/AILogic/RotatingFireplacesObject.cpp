@@ -26,18 +26,25 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 	if ( pSoldier->IsInFirePlace() )
 	{
 		iter->nLastFireplace = nFireplace;
-		NI_ASSERT( iter->nLastFireplace < GetNFirePlaces(), fmt::format( "Wrong number of fireplace ({}), number of fireplaces ({})", iter->nLastFireplace, GetNFirePlaces() ) );
+		NI_ASSERT( iter->nLastFireplace < GetNFirePlaces(),
+		           fmt::format( "Wrong number of fireplace ({}), number of fireplaces ({})",
+		                        iter->nLastFireplace,
+		                        GetNFirePlaces() ) );
 	}
 	else
 	{
 		const int nFireplaces = GetNFirePlaces();
 		if ( nFireplaces > 1 )
-			{ iter->nLastFireplace = NRandom::Random( 0, nFireplaces - 1 ); RecordRandomCall(); }
+		{
+			iter->nLastFireplace = NRandom::Random( 0, nFireplaces - 1 );
+			RecordRandomCall();
+		}
 		else
 			iter->nLastFireplace = 0;
 	}
 
-	iter->lastFireplaceChange = curTime + NRandom::Random( 0, 1000 ); RecordRandomCall();
+	iter->lastFireplaceChange = curTime + NRandom::Random( 0, 1000 );
+	RecordRandomCall();
 }
 
 void CRotatingFireplacesObject::DeleteUnit( CSoldier *pSoldier )
@@ -46,7 +53,7 @@ void CRotatingFireplacesObject::DeleteUnit( CSoldier *pSoldier )
 	while ( iter != units.end() && iter->pSoldier != pSoldier )
 		++iter;
 
-//	NI_ASSERT( iter != units.end(), "Unit not found" );
+	//	NI_ASSERT( iter != units.end(), "Unit not found" );
 
 	if ( iter != units.end() )
 		units.erase( iter );
@@ -63,9 +70,11 @@ bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, con
 	// не вытеснять солдата из fireplace, если мы уже сидим в fireplace или он убит
 	else if ( !pFireplaceSoldier->IsAlive() || pSoldier->IsInFirePlace() )
 		return false;
-	else if ( pSoldier->GetStats()->etype != RPG_TYPE_OFFICER && pFireplaceSoldier->GetStats()->etype == RPG_TYPE_OFFICER )
+	else if ( pSoldier->GetStats()->etype != RPG_TYPE_OFFICER &&
+	          pFireplaceSoldier->GetStats()->etype == RPG_TYPE_OFFICER )
 		return false;
-	else if ( pSoldier->GetStats()->etype == RPG_TYPE_OFFICER && pFireplaceSoldier->GetStats()->etype != RPG_TYPE_OFFICER )
+	else if ( pSoldier->GetStats()->etype == RPG_TYPE_OFFICER &&
+	          pFireplaceSoldier->GetStats()->etype != RPG_TYPE_OFFICER )
 		return true;
 	else
 	{
@@ -87,7 +96,8 @@ bool CRotatingFireplacesObject::IsBetterToGoToFireplace( CSoldier *pSoldier, con
 				return false;
 
 			const float fSoldierDamageSpeed = pSoldier->GetGun( 0 )->GetFireRate() * pSoldier->GetGun( 0 )->GetDamage();
-			const float fFireplaceSoldierDamageSpeed = pFireplaceSoldier->GetGun( 0 )->GetFireRate() * pFireplaceSoldier->GetGun( 0 )->GetDamage();
+			const float fFireplaceSoldierDamageSpeed =
+					pFireplaceSoldier->GetGun( 0 )->GetFireRate() * pFireplaceSoldier->GetGun( 0 )->GetDamage();
 
 			return ( fSoldierDamageSpeed > fFireplaceSoldierDamageSpeed );
 		}
@@ -125,7 +135,8 @@ void CRotatingFireplacesObject::Segment()
 				{
 					if ( curTime >= iter->lastFireplaceChange )
 					{
-						iter->lastFireplaceChange = curTime + NRandom::Random( 500, 2000 ) ; RecordRandomCall();
+						iter->lastFireplaceChange = curTime + NRandom::Random( 500, 2000 );
+						RecordRandomCall();
 						if ( CanRotateSoldier( pSoldier ) )
 						{
 							iter->nLastFireplace = ( iter->nLastFireplace + 1 ) % GetNFirePlaces();

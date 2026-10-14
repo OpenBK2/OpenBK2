@@ -62,11 +62,9 @@
 #include "port/debugging.h"
 #include "port/process.h"
 
-
 EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 
 CEditorApp *CEditorApp::pInstance = nullptr;
-
 
 // ************************************************************************************************************************ //
 // **
@@ -92,7 +90,6 @@ CEditorApp::CEditorApp()
 	pInstance = this;
 }
 
-
 CEditorApp::~CEditorApp()
 {
 	if ( pInstance == this )
@@ -100,7 +97,6 @@ CEditorApp::~CEditorApp()
 		pInstance = nullptr;
 	}
 }
-
 
 void CEditorApp::CreateUserDataSingleton()
 {
@@ -124,7 +120,6 @@ void CEditorApp::CreateUserDataSingleton()
 		}
 	}
 }
-
 
 bool CEditorApp::CreateSingletons()
 {
@@ -151,12 +146,12 @@ bool CEditorApp::CreateSingletons()
 	if ( IUserDataContainer *pUserDataContainer = Singleton<IUserDataContainer>() )
 	{
 		const SUserData::SConstUserData &cfg = pUserDataContainer->Get()->constUserData;
-		theLogger.WriteLog( fmt::format("{} {}", cfg.szApplicationTitle.c_str(), cfg.szVersion.c_str()) );
+		theLogger.WriteLog( fmt::format( "{} {}", cfg.szApplicationTitle.c_str(), cfg.szVersion.c_str() ) );
 		theLogger.WriteLog( "" );
-		theLogger.WriteLog( fmt::format("StartFolder:             {}", cfg.szStartFolder.c_str()) );
-		theLogger.WriteLog( fmt::format("DataStorageFolder:       {}", cfg.szDataStorageFolder.c_str()) );
-		theLogger.WriteLog( fmt::format("ExportSourceFolder:      {}", cfg.szExportSourceFolder.c_str()) );
-		theLogger.WriteLog( fmt::format("ExportDestinationFolder: {}", cfg.szExportDestinationFolder.c_str()) );
+		theLogger.WriteLog( fmt::format( "StartFolder:             {}", cfg.szStartFolder.c_str() ) );
+		theLogger.WriteLog( fmt::format( "DataStorageFolder:       {}", cfg.szDataStorageFolder.c_str() ) );
+		theLogger.WriteLog( fmt::format( "ExportSourceFolder:      {}", cfg.szExportSourceFolder.c_str() ) );
+		theLogger.WriteLog( fmt::format( "ExportDestinationFolder: {}", cfg.szExportDestinationFolder.c_str() ) );
 		theLogger.WriteLog( "" );
 
 		NHPTimer::GetTimePassed( &time );
@@ -235,7 +230,6 @@ bool CEditorApp::CreateSingletons()
 	LoadMapEditorModule( "" );
 	DebugTrace( "EditorApp() LoadMapEditorModule(): %g", NHPTimer::GetTimePassed( &time ) );
 
-
 	NSingleton::RegisterSingleton( new CMainFrameContainer(), IMainFrameContainer::tidTypeID );
 	NSingleton::RegisterSingleton( new CCommandHandlerContainer(), ICommandHandlerContainer::tidTypeID );
 	NSingleton::RegisterSingleton( new CObjectFilterCollector(), IObjectFilterCollector::tidTypeID );
@@ -262,7 +256,7 @@ bool CEditorApp::CreateSingletons()
 		pCommandHandlerContainer->Register( CHID_VIEW, ID_VIEW_FIRST_COMMAND_ID, ID_VIEW_LAST_COMMAND_ID );
 	}
 	//
-	const std::vector<IEditorModule*> &extModules = GetEditorModules();
+	const std::vector<IEditorModule *> &extModules = GetEditorModules();
 	for ( int i = 0; i < extModules.size(); ++i )
 	{
 		extModules[i]->ModuleCreate();
@@ -273,14 +267,13 @@ bool CEditorApp::CreateSingletons()
 	return true;
 }
 
-
 void CEditorApp::DestroySingletons()
 {
 	//
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
-	const std::vector<IEditorModule*> &extModules = GetEditorModules();
+	const std::vector<IEditorModule *> &extModules = GetEditorModules();
 	for ( int i = 0; i < extModules.size(); ++i )
 	{
 		extModules[i]->ModuleDestroy();
@@ -349,7 +342,6 @@ void CEditorApp::DestroySingletons()
 	DebugTrace( "EditorApp() Finalize: %g", NHPTimer::GetTimePassed( &time ) );
 }
 
-
 bool CEditorApp::ParseCommandLine( const std::string &rszFileToOpen, bool bResetProfile )
 {
 	const std::string szValidRegistryVersion = "1";
@@ -383,7 +375,6 @@ bool CEditorApp::ParseCommandLine( const std::string &rszFileToOpen, bool bReset
 	NAppProfile::WriteString( "", NResources::GetString( IDS_REGISTRY_KEY_VERSION ), szValidRegistryVersion );
 	return true;
 }
-
 
 bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 {
@@ -483,7 +474,7 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	DebugTrace( "EditorApp() GameXPostStorageInitialize(): %g", NHPTimer::GetTimePassed( &time ) );
 	//
 	// after main frame initialization
-	const std::vector<IEditorModule*> &extModules = GetEditorModules();
+	const std::vector<IEditorModule *> &extModules = GetEditorModules();
 	for ( int i = 0; i < extModules.size(); ++i )
 	{
 		extModules[i]->ModulePostCreateMainFrame();
@@ -509,8 +500,8 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	if ( !szUnavailableMODFolder.empty() )
 	{
 		NMessage::Warning( "The previously opened mod folder is unavailable:\n\n" + szUnavailableMODFolder +
-			"\n\nThe editor has opened the base game Data folder instead. To continue editing your mod, "
-			"use File > Open Mod to select its folder on this computer." );
+		                   "\n\nThe editor has opened the base game Data folder instead. To continue editing your mod, "
+		                   "use File > Open Mod to select its folder on this computer." );
 	}
 	// The "-reg" this used to exclude by hand is a switch now and never reaches
 	// szFileToOpen, which is the argument that is not one.
@@ -520,7 +511,6 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	}
 	return true;
 }
-
 
 void CEditorApp::Shutdown()
 {
@@ -535,7 +525,7 @@ void CEditorApp::SetMapFileName( const std::string &szMapFileName )
 
 void CEditorApp::RegisterEditors()
 {
-//	g_RegisterEditorsSemiAutoMagic.Load(); // сейчас регистрируются только в коде
+	//	g_RegisterEditorsSemiAutoMagic.Load(); // сейчас регистрируются только в коде
 }
 
 // basement storage

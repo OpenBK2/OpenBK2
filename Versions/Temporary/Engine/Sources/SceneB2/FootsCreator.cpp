@@ -33,7 +33,9 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 
 	int nPatchesCount;
 
-	for ( std::vector< std::vector<STerrainInfo::SVSOPoint> >::const_iterator itPointsArr = foot.points.begin(); itPointsArr != foot.points.end(); ++itPointsArr )
+	for ( std::vector<std::vector<STerrainInfo::SVSOPoint>>::const_iterator itPointsArr = foot.points.begin();
+	      itPointsArr != foot.points.end();
+	      ++itPointsArr )
 	{
 		fFootTexX = 0.0f;
 
@@ -45,8 +47,8 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 		const int nPreLastNum = itPointsArr->size() - 1;
 		for ( int i = 0; i < nPreLastNum; ++i )
 		{
-			const STerrainInfo::SVSOPoint &point1 = (*itPointsArr)[i];
-			const STerrainInfo::SVSOPoint &point2 = (*itPointsArr)[i + 1];
+			const STerrainInfo::SVSOPoint &point1 = ( *itPointsArr )[i];
+			const STerrainInfo::SVSOPoint &point2 = ( *itPointsArr )[i + 1];
 
 			const float fFootWidth1 = DEF_FOOT_WIDTH_BASE + ( DEF_FOOT_WIDTH * point1.fRadius );
 			const float fFootWidth2 = DEF_FOOT_WIDTH_BASE + ( DEF_FOOT_WIDTH * point2.fRadius );
@@ -54,7 +56,9 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 			const CVec3 vNextPoint1 = point1.vPos + point1.vNorm * fFootWidth1;
 			const CVec3 vNextPoint2 = point2.vPos + point2.vNorm * fFootWidth2;
 
-			const float fNextFootTexX = fFootTexX + sqrt( fabs2( point1.vPos.x - point2.vPos.x ) + fabs2( point1.vPos.y - point2.vPos.y ) ) * fTexScaleX;
+			const float fNextFootTexX =
+					fFootTexX +
+					sqrt( fabs2( point1.vPos.x - point2.vPos.x ) + fabs2( point1.vPos.y - point2.vPos.y ) ) * fTexScaleX;
 
 			const float fTexY1 = point1.vPos.z * fTexScaleY;
 			const float fTexY2 = point2.vPos.z * fTexScaleY;
@@ -63,23 +67,30 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 
 			if ( i < DEF_FOOT_PARAGRAPH )
 				fAlpha1 = (float)i * DEF_FOOT_PARAGRAPH_INV;
+			else if ( i > ( itPointsArr->size() - DEF_FOOT_PARAGRAPH - 1 ) )
+				fAlpha1 = (float)( itPointsArr->size() - i - 1 ) * DEF_FOOT_PARAGRAPH_INV;
 			else
-				if ( i > (itPointsArr->size() - DEF_FOOT_PARAGRAPH - 1) )
-					fAlpha1 = (float)( itPointsArr->size() - i - 1 ) * DEF_FOOT_PARAGRAPH_INV;
-				else
-					fAlpha1 = 1.0f;
+				fAlpha1 = 1.0f;
 			if ( ( i + 1 ) < DEF_FOOT_PARAGRAPH )
 				fAlpha2 = (float)( i + 1 ) * DEF_FOOT_PARAGRAPH_INV;
+			else if ( ( i + 1 ) > ( itPointsArr->size() - DEF_FOOT_PARAGRAPH - 1 ) )
+				fAlpha2 = (float)( itPointsArr->size() - ( i + 1 ) - 1 ) * DEF_FOOT_PARAGRAPH_INV;
 			else
-				if ( ( i + 1 ) > (itPointsArr->size() - DEF_FOOT_PARAGRAPH - 1) )
-					fAlpha2 = (float)( itPointsArr->size() - (i + 1) - 1 ) * DEF_FOOT_PARAGRAPH_INV;
-				else
-					fAlpha2 = 1.0f;
+				fAlpha2 = 1.0f;
 
-			ProjectQuadOnTerrain( point1.vPos, vNextPoint1, vNextPoint2, point2.vPos,
-														CVec2(fFootTexX, fTexY1), CVec2(fFootTexX, fNextTexY1),
-														CVec2(fNextFootTexX, fNextTexY2), CVec2(fNextFootTexX, fTexY2),
-														fAlpha1, 0.0f, 0.0f, fAlpha2, &data );
+			ProjectQuadOnTerrain( point1.vPos,
+			                      vNextPoint1,
+			                      vNextPoint2,
+			                      point2.vPos,
+			                      CVec2( fFootTexX, fTexY1 ),
+			                      CVec2( fFootTexX, fNextTexY1 ),
+			                      CVec2( fNextFootTexX, fNextTexY2 ),
+			                      CVec2( fNextFootTexX, fTexY2 ),
+			                      fAlpha1,
+			                      0.0f,
+			                      0.0f,
+			                      fAlpha2,
+			                      &data );
 
 			fFootTexX = fNextFootTexX;
 
@@ -99,7 +110,7 @@ void CTerraGen::AddFoot( const STerrainInfo::SFoot &foot )
 	terrainGfxInfo.foots.push_back( gfxNewFoot );
 
 	if ( pGfxObserver )
-		pGfxObserver->AddFoot( &(terrainGfxInfo.foots.back()) );
+		pGfxObserver->AddFoot( &( terrainGfxInfo.foots.back() ) );
 }
 
 //void CTerraGen::AddAllFoots()
@@ -112,7 +123,9 @@ void CTerraGen::AddAllNeededFoots()
 {
 	for ( std::vector<int>::const_iterator it = needAddFoots.begin(); it != needAddFoots.end(); ++it )
 	{
-		for ( std::list<STerrainInfo::SFoot>::const_iterator itFoot = terrainInfo.foots.begin(); itFoot !=	terrainInfo.foots.end(); ++itFoot )
+		for ( std::list<STerrainInfo::SFoot>::const_iterator itFoot = terrainInfo.foots.begin();
+		      itFoot != terrainInfo.foots.end();
+		      ++itFoot )
 		{
 			if ( *it == itFoot->nID )
 				AddFoot( *itFoot );

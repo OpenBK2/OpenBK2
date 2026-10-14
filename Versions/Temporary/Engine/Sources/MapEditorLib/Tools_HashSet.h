@@ -1,7 +1,6 @@
 #pragma once
 
-
-template<class TContainer, class TElement>
+template <class TContainer, class TElement>
 void InsertHashSetElement( TContainer *pSet, const TElement &rElement )
 {
 	if ( pSet )
@@ -10,9 +9,7 @@ void InsertHashSetElement( TContainer *pSet, const TElement &rElement )
 	}
 }
 
-
-
-template<class TContainer>
+template <class TContainer>
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
 	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
@@ -25,8 +22,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 	pList->push_back( nIndex );
 }
 
-
-template<class TContainer, class TElement>
+template <class TContainer, class TElement>
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
 	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
@@ -39,8 +35,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 	pList->push_back( TElement( nIndex ) );
 }
 
-
-template<class TContainer, class TElement>
+template <class TContainer, class TElement>
 void RemoveIndexToIndicesList( TContainer *pList, int nIndex )
 {
 	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
@@ -61,8 +56,7 @@ void RemoveIndexToIndicesList( TContainer *pList, int nIndex )
 	}
 }
 
-
-template<class TContainer, class TContainerIterator>
+template <class TContainer, class TContainerIterator>
 TContainerIterator FindIndex( TContainer &rList, int nIndex )
 {
 	for ( TContainerIterator itElement = rList.begin(); itElement != rList.end(); ++itElement )

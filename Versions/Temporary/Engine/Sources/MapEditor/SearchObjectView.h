@@ -18,8 +18,8 @@
 // the remembered search text it means to update.
 namespace NSearchObject
 {
-	// Runs the dialog modally over pParent. Returns true if accepted, with
-	// *pszText set to the entered text -- which may be empty, because the
-	// dialog does not require anything and neither did the one it replaces.
-	bool Run( IWidget *pParent, std::string *pszText );
+// Runs the dialog modally over pParent. Returns true if accepted, with
+// *pszText set to the entered text -- which may be empty, because the
+// dialog does not require anything and neither did the one it replaces.
+bool Run( IWidget *pParent, std::string *pszText );
 }

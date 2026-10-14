@@ -10,10 +10,7 @@
 extern NAI::CTimeCounter timeCounter;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CCommander::STaskCalcSeverityPredicate::STaskCalcSeverityPredicate()
-: nNumberNegative( 0 ),
-	fSeverityNegative( 0 ),
-	nNumberPositive( 0 ),
-	fSeverityPositive( 0 )
+		: nNumberNegative( 0 ), fSeverityNegative( 0 ), nNumberPositive( 0 ), fSeverityPositive( 0 )
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +18,7 @@ const float CCommander::STaskCalcSeverityPredicate::GetSeverity() const
 {
 	if ( nNumberPositive + nNumberNegative )
 	{
-		return ( fSeverityNegative + fSeverityPositive ) / ( nNumberNegative + nNumberPositive ) ;
+		return ( fSeverityNegative + fSeverityPositive ) / ( nNumberNegative + nNumberPositive );
 	}
 	return 0;
 }
@@ -30,10 +27,7 @@ const float CCommander::STaskCalcSeverityPredicate::GetSeverity() const
 //*											CCommander*
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CCommander::CCommander()
-: fMeanSeverity( 0 )
-{
-}
+CCommander::CCommander() : fMeanSeverity( 0 ) {}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float CCommander::GetMeanSeverity() const
 {
@@ -67,18 +61,16 @@ void CCommander::Segment()
 	calcSeverity = for_each( tasks.begin(), tasks.end(), calcSeverity );
 	fMeanSeverity = calcSeverity.GetSeverity();
 
-
 	// у тасков, которых все хорошо попытаться забрать лишние юниты
 	for ( Tasks::iterator i = tasks.begin(); i != tasks.end(); ++i )
-		(*i)->ReleaseWorker( this, calcSeverity.nNumberNegative ? -1.0f : fMeanSeverity );
-
+		( *i )->ReleaseWorker( this, calcSeverity.nNumberNegative ? -1.0f : fMeanSeverity );
 
 	if ( !tasks.empty() )
 	{
-		for ( Tasks::iterator it = tasks.end(); ; )
+		for ( Tasks::iterator it = tasks.end();; )
 		{
 			--it;
-			(*it)->AskForWorker( this, fMeanSeverity );
+			( *it )->AskForWorker( this, fMeanSeverity );
 			if ( it == tasks.begin() )
 				break;
 		}
@@ -87,16 +79,12 @@ void CCommander::Segment()
 	for ( Tasks::reverse_iterator i = tasks.rbegin(); i != tasks.rend(); ++i )
 		(*i)->AskForWorker( this, fMeanSeverity );
 	*/
-
 }
 struct SCommonUnitCompare
 {
 	CPtr<CCommonUnit> pUnit;
-	SCommonUnitCompare( CCommonUnit *_pUnit ) : pUnit( _pUnit ) {  }
-	bool operator()( const CPtr<CCommonUnit> _pUnit ) const
-	{
-		return pUnit == _pUnit;
-	}
+	SCommonUnitCompare( CCommonUnit *_pUnit ) : pUnit( _pUnit ) {}
+	bool operator()( const CPtr<CCommonUnit> _pUnit ) const { return pUnit == _pUnit; }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumerator *pEn, CommonUnits *pUnits )
@@ -104,9 +92,9 @@ void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumer
 	// the simple optimisation
 	if ( pEn->NeedNBest( eType ) > 1 )
 	{
-		std::vector< std::pair<float, CPtr<CCommonUnit> > > units;
+		std::vector<std::pair<float, CPtr<CCommonUnit>>> units;
 		for ( CommonUnits::iterator it = pUnits->begin(); it != pUnits->end(); ++it )
-			units.push_back( std::pair<float, CPtr<CCommonUnit> >( 0, *it ) );
+			units.push_back( std::pair<float, CPtr<CCommonUnit>>( 0, *it ) );
 		pUnits->clear();
 		SCalcRatingPredicate calcRating( pEn, eType );
 		for_each( units.begin(), units.end(), calcRating );
@@ -138,7 +126,7 @@ void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumer
 	}
 	else
 	{
-  	SGeneralHelper::SFindByEnumeratorPredicate pr( pEn, eType );
+		SGeneralHelper::SFindByEnumeratorPredicate pr( pEn, eType );
 		CommonUnits::iterator suitable = remove_if( pUnits->begin(), pUnits->end(), pr );
 
 		bool bNeedMore = true;

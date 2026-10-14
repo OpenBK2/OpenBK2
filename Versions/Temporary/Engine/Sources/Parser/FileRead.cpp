@@ -23,7 +23,7 @@ static struct SFileStreamDestroyer
 	}
 } fileStreamDestroyer;
 
-const char* GetParsingFileName()
+const char *GetParsingFileName()
 {
 	return szFileName.c_str();
 }

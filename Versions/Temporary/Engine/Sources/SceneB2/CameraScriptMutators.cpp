@@ -6,10 +6,16 @@
 
 #include <fmt/format.h>
 
-void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll,
-									const float fYaw1, const float fPitch1, const float fRoll1,
-									const float fYaw2, const float fPitch2, const float fRoll2,
-									const float fdt )
+void SLERPAngles( float *pfYaw,
+                  float *pfPitch,
+                  float *pfRoll,
+                  const float fYaw1,
+                  const float fPitch1,
+                  const float fRoll1,
+                  const float fYaw2,
+                  const float fPitch2,
+                  const float fRoll2,
+                  const float fdt )
 {
 	CQuat q1, q2, qRes;
 	q1.FromEulerAngles( fYaw1, fPitch1, fRoll1 );
@@ -17,7 +23,6 @@ void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll,
 	qRes.Slerp( fdt, q1, q2 );
 	qRes.DecompEulerAngles( pfYaw, pfPitch, pfRoll );
 }
-
 
 void CSCamDMoveFlightMutator::Recalc()
 {
@@ -48,24 +53,30 @@ void CSCamDMoveFlightMutator::Recalc()
 	else
 	{
 		const float fCoeff = float( currTime - timeStart ) / float( timeFinish - timeStart );
-		const CVec3 vAnchor = vAnchorStart + vAnchorDir*fCoeff;
+		const CVec3 vAnchor = vAnchorStart + vAnchorDir * fCoeff;
 		//
 		{
 			float fYaw, fPitch, fRoll;
-			SLERPAngles( &fYaw, &fPitch, &fRoll,
-									 ToRadian(placementStart.fYaw), ToRadian(placementStart.fPitch), 0,
-									 ToRadian(placementFinish.fYaw), ToRadian(placementFinish.fPitch), 0,
-									 fCoeff );
+			SLERPAngles( &fYaw,
+			             &fPitch,
+			             &fRoll,
+			             ToRadian( placementStart.fYaw ),
+			             ToRadian( placementStart.fPitch ),
+			             0,
+			             ToRadian( placementFinish.fYaw ),
+			             ToRadian( placementFinish.fPitch ),
+			             0,
+			             fCoeff );
 			this->fYaw = ToDegree( fYaw );
 			this->fPitch = ToDegree( fPitch );
 		}
 		TLinearInterpolate interp;
 		//
 		const float fLeng = interp( fLengStart, fLengFinish, fCoeff );
-		const CVec3 vDir( sin(ToRadian(-this->fYaw))*cos(ToRadian(-this->fPitch)),
-											cos(ToRadian(-this->fYaw))*cos(ToRadian(-this->fPitch)),
-											sin(ToRadian(-this->fPitch)) );
-		this->vPosition = vAnchor - vDir*fLeng;
+		const CVec3 vDir( sin( ToRadian( -this->fYaw ) ) * cos( ToRadian( -this->fPitch ) ),
+		                  cos( ToRadian( -this->fYaw ) ) * cos( ToRadian( -this->fPitch ) ),
+		                  sin( ToRadian( -this->fPitch ) ) );
+		this->vPosition = vAnchor - vDir * fLeng;
 		this->fFOV = interp( placementStart.fFOV, placementFinish.fFOV, fCoeff );
 	}
 
@@ -74,7 +85,6 @@ void CSCamDMoveFlightMutator::Recalc()
 	this->fYaw = ToRadian( this->fYaw );
 	AI2Vis( &this->vPosition );
 };
-
 
 void CSCamDFollowFlightMutator::Recalc()
 {
@@ -107,8 +117,8 @@ void CSCamDFollowFlightMutator::Recalc()
 		CVec3 vDir = vAnchor - this->vPosition;
 		Normalize( &vDir );
 		//
-		this->fPitch = ToDegree( -asinf(vDir.z) );
-		this->fYaw = ToDegree( atan2(vDir.y, vDir.x) - FP_PI2 );
+		this->fPitch = ToDegree( -asinf( vDir.z ) );
+		this->fYaw = ToDegree( atan2( vDir.y, vDir.x ) - FP_PI2 );
 	}
 	else
 	{
@@ -122,7 +132,6 @@ void CSCamDFollowFlightMutator::Recalc()
 	this->fYaw = ToRadian( this->fYaw );
 	AI2Vis( &this->vPosition );
 };
-
 
 void CSCamDRotateFlightMutator::Recalc()
 {
@@ -149,37 +158,35 @@ void CSCamDRotateFlightMutator::Recalc()
 	this->fFOV = basePlacement.fFOV;
 	this->fYaw = basePlacement.fYaw;
 	// convert to editor's units
-	this->fPitch = 90.0f - ToDegree( this->fPitch - ToRadian(180.0f) );
+	this->fPitch = 90.0f - ToDegree( this->fPitch - ToRadian( 180.0f ) );
 	this->fYaw = ToDegree( this->fYaw );
 	Vis2AI( &this->vPosition );
 
+	const float fPitch = ToRadian( this->fPitch );
+	const float fYaw = ToRadian( this->fYaw );
 
-	const float fPitch = ToRadian(this->fPitch);
-	const float fYaw = ToRadian(this->fYaw);
-
-	CVec3 vOldDir = CVec3(	sin(-fYaw)*cos(-fPitch),
-													cos(-fYaw)*cos(-fPitch),
-													sin(-fPitch) );
+	CVec3 vOldDir = CVec3( sin( -fYaw ) * cos( -fPitch ), cos( -fYaw ) * cos( -fPitch ), sin( -fPitch ) );
 
 	if ( vOldDir.z != 0 ) //	We cannot rotate horizontal camera
-		vOldDir *= fabs( Vis2AI(basePlacement.vPosition.z) / vOldDir.z );
+		vOldDir *= fabs( Vis2AI( basePlacement.vPosition.z ) / vOldDir.z );
 
 	const float fCoeff = float( currTime - timeStart ) / float( timeFinish - timeStart );
-	const float fNewYaw = fStartYaw + fAngle*fCoeff;
+	const float fNewYaw = fStartYaw + fAngle * fCoeff;
 	this->fYaw = ToDegree( fNewYaw );
-	CVec3 vNewDir = CVec3(	sin(-fNewYaw)*cos(-fPitch),
-													cos(-fNewYaw)*cos(-fPitch),
-													sin(-fPitch) );
+	CVec3 vNewDir = CVec3( sin( -fNewYaw ) * cos( -fPitch ), cos( -fNewYaw ) * cos( -fPitch ), sin( -fPitch ) );
 	vNewDir *= fabs( vOldDir );
 
-	this->vPosition = ( CVec3(Vis2AI(basePlacement.vPosition.x), Vis2AI(basePlacement.vPosition.y), Vis2AI(basePlacement.vPosition.z)) + vOldDir ) - vNewDir;
+	this->vPosition = ( CVec3( Vis2AI( basePlacement.vPosition.x ),
+	                           Vis2AI( basePlacement.vPosition.y ),
+	                           Vis2AI( basePlacement.vPosition.z ) ) +
+	                    vOldDir ) -
+	                  vNewDir;
 
 	// convert to game's units
 	this->fPitch = ToRadian( 180.0f ) + ToRadian( 90.0f - this->fPitch );
 	this->fYaw = ToRadian( this->fYaw );
 	AI2Vis( &this->vPosition );
 };
-
 
 void CSCamSplineMutator::Recalc()
 {
@@ -212,10 +219,16 @@ void CSCamSplineMutator::Recalc()
 		//
 		{
 			float fYaw, fPitch, fRoll;
-			SLERPAngles( &fYaw, &fPitch, &fRoll,
-									 ToRadian(placementStart.fYaw), ToRadian(placementStart.fPitch), 0,
-									 ToRadian(placementFinish.fYaw), ToRadian(placementFinish.fPitch), 0,
-									 fCoeff );
+			SLERPAngles( &fYaw,
+			             &fPitch,
+			             &fRoll,
+			             ToRadian( placementStart.fYaw ),
+			             ToRadian( placementStart.fPitch ),
+			             0,
+			             ToRadian( placementFinish.fYaw ),
+			             ToRadian( placementFinish.fPitch ),
+			             0,
+			             fCoeff );
 			this->fYaw = ToDegree( fYaw );
 			this->fPitch = ToDegree( fPitch );
 		}
@@ -232,42 +245,42 @@ void CSCamSplineMutator::Recalc()
 	AI2Vis( &this->vPosition );
 };
 
-
-CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies &rMoviesData, int _nMovieIndex, CFuncBase<STime> *_pTimer )
-	: moviesData( rMoviesData ),
-	nMovieIndex( _nMovieIndex ),
-	pTimer( _pTimer ),
-	fCurrTime( 0.0f ),
-	fSpeedCoeff( 1.0f ),
-	bLoopPlayback( true ),
-	eMode( PM_STOPPED ),
-	nLastKeyID( -1 )
+CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies &rMoviesData,
+                                                        int _nMovieIndex,
+                                                        CFuncBase<STime> *_pTimer )
+		: moviesData( rMoviesData ), nMovieIndex( _nMovieIndex ), pTimer( _pTimer ), fCurrTime( 0.0f ), fSpeedCoeff( 1.0f ),
+			bLoopPlayback( true ), eMode( PM_STOPPED ), nLastKeyID( -1 )
 {
 	pTimer.Refresh();
 	movieStartTime = pTimer->GetValue();
 
-	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
-						 (nMovieIndex >= 0) &&
-						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
+	NI_VERIFY( ( moviesData.scriptMovieSequences.size() > 0 ) && ( nMovieIndex >= 0 ) &&
+	               ( nMovieIndex < moviesData.scriptMovieSequences.size() ),
+	           "Invalid Movie",
+	           return )
 
 	cameraQuats.resize( 0 );
-	for ( std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
-																												itPosKey != moviesData.scriptMovieSequences[nMovieIndex].posKeys.end(); ++itPosKey )
+	for ( std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey =
+	          moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	      itPosKey != moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
+	      ++itPosKey )
 	{
-		NI_VERIFY( (itPosKey->nPositionIndex >= 0) &&
-							 (itPosKey->nPositionIndex < moviesData.scriptCameraPlacements.size()), "Invalid movie key", return )
+		NI_VERIFY( ( itPosKey->nPositionIndex >= 0 ) &&
+		               ( itPosKey->nPositionIndex < moviesData.scriptCameraPlacements.size() ),
+		           "Invalid movie key",
+		           return )
 
-		const NDb::SScriptCameraPlacement& camPlacement = moviesData.scriptCameraPlacements[itPosKey->nPositionIndex];
+		const NDb::SScriptCameraPlacement &camPlacement = moviesData.scriptCameraPlacements[itPosKey->nPositionIndex];
 
 		// calculate Quaternion
 		CQuat quat;
-		quat.FromEulerAngles( ToRadian(camPlacement.fYaw), ToRadian(camPlacement.fPitch), 0.0f );
+		quat.FromEulerAngles( ToRadian( camPlacement.fYaw ), ToRadian( camPlacement.fPitch ), 0.0f );
 		cameraQuats.push_back( quat );
 
 		// calculate Anchor
-		const CVec3 vDir( sin(ToRadian(-camPlacement.fYaw))*cos(ToRadian(-camPlacement.fPitch)),
-											cos(ToRadian(-camPlacement.fYaw))*cos(ToRadian(-camPlacement.fPitch)),
-											sin(ToRadian(-camPlacement.fPitch)) );
+		const CVec3 vDir( sin( ToRadian( -camPlacement.fYaw ) ) * cos( ToRadian( -camPlacement.fPitch ) ),
+		                  cos( ToRadian( -camPlacement.fYaw ) ) * cos( ToRadian( -camPlacement.fPitch ) ),
+		                  sin( ToRadian( -camPlacement.fPitch ) ) );
 		const float fDist = fabs( camPlacement.vPosition.z / vDir.z );
 		const CVec3 vAnchor = camPlacement.vPosition + vDir * fDist;
 		cameraAnchors.push_back( vAnchor );
@@ -275,7 +288,6 @@ CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies
 	}
 	szCallbackFuncName = "";
 }
-
 
 void CScriptMoviesMutatorHolder::Recalc()
 {
@@ -289,9 +301,10 @@ void CScriptMoviesMutatorHolder::Recalc()
 
 	if ( IsPlaying() )
 	{
-		fCurrTime = fSpeedCoeff * ((float)(timeCurrent) - movieStartTime)/1000.0f;
+		fCurrTime = fSpeedCoeff * ( (float)(timeCurrent)-movieStartTime ) / 1000.0f;
 
-		std::vector<NDb::SScriptMovieKeyPos>::const_iterator itEnd = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
+		std::vector<NDb::SScriptMovieKeyPos>::const_iterator itEnd =
+				moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
 		--itEnd;
 		const float f1 = itEnd->fStartTime;
 
@@ -328,16 +341,17 @@ void CScriptMoviesMutatorHolder::Recalc()
 		while ( itKeyPos != movieKeys.posKeys.end() )
 		{
 			// find previous and next nodes
-			if ( (itKeyPosPrev->fStartTime <= fCurrTime) && (itKeyPos->fStartTime >= fCurrTime) )
+			if ( ( itKeyPosPrev->fStartTime <= fCurrTime ) && ( itKeyPos->fStartTime >= fCurrTime ) )
 			{
 				nStartPos = itKeyPosPrev->nPositionIndex;
 				nFinishPos = itKeyPos->nPositionIndex;
 				//
-				const NDb::SScriptCameraPlacement& startCamera = moviesData.scriptCameraPlacements[nStartPos];
-				const NDb::SScriptCameraPlacement& finishCamera = moviesData.scriptCameraPlacements[nFinishPos];
+				const NDb::SScriptCameraPlacement &startCamera = moviesData.scriptCameraPlacements[nStartPos];
+				const NDb::SScriptCameraPlacement &finishCamera = moviesData.scriptCameraPlacements[nFinishPos];
 
 				// fCoeff lies in [0..1]
-				const float fCoeff = ( fCurrTime - itKeyPosPrev->fStartTime ) / ( itKeyPos->fStartTime - itKeyPosPrev->fStartTime );
+				const float fCoeff =
+						( fCurrTime - itKeyPosPrev->fStartTime ) / ( itKeyPos->fStartTime - itKeyPosPrev->fStartTime );
 				TLinearInterpolate interp;
 
 				CQuat quat;
@@ -348,12 +362,12 @@ void CScriptMoviesMutatorHolder::Recalc()
 
 				// interpolate position
 				{
-					const CVec3 vAnchor = cameraAnchors[i] + (cameraAnchors[i + 1] - cameraAnchors[i]) * fCoeff;
+					const CVec3 vAnchor = cameraAnchors[i] + ( cameraAnchors[i + 1] - cameraAnchors[i] ) * fCoeff;
 					const float fDist = interp( cameraDists[i], cameraDists[i + 1], fCoeff );
-					const CVec3 vDir( sin(-(placement.fYaw))*cos(-(FP_PI2 * 3.0f - placement.fPitch)),
-														cos(-(placement.fYaw))*cos(-(FP_PI2 * 3.0f - placement.fPitch)),
-														sin(-(FP_PI2 * 3.0f - placement.fPitch)) );
-					placement.vPosition = vAnchor - vDir*fDist;
+					const CVec3 vDir( sin( -( placement.fYaw ) ) * cos( -( FP_PI2 * 3.0f - placement.fPitch ) ),
+					                  cos( -( placement.fYaw ) ) * cos( -( FP_PI2 * 3.0f - placement.fPitch ) ),
+					                  sin( -( FP_PI2 * 3.0f - placement.fPitch ) ) );
+					placement.vPosition = vAnchor - vDir * fDist;
 				}
 				AI2Vis( &placement.vPosition );
 
@@ -375,12 +389,10 @@ void CScriptMoviesMutatorHolder::Recalc()
 	}
 }
 
-
 const NCamera::CCameraPlacement CScriptMoviesMutatorHolder::GetValue() const
 {
 	return placement;
 }
-
 
 const CVec3 CScriptMoviesMutatorHolder::GetAnchor() const
 {
@@ -395,66 +407,60 @@ const CVec3 CScriptMoviesMutatorHolder::GetAnchor() const
 	return vAnchor;
 }
 
-
 const CVec3 CScriptMoviesMutatorHolder::GetPos() const
 {
-  return placement.vPosition;
+	return placement.vPosition;
 }
-
 
 const float CScriptMoviesMutatorHolder::GetDistance() const
 {
 	return placement.GetDistance();
 }
 
-
 const float CScriptMoviesMutatorHolder::GetYaw() const
 {
 	return placement.fYaw;
 }
-
 
 const float CScriptMoviesMutatorHolder::GetPitch() const
 {
 	return placement.fPitch;
 }
 
-
 const float CScriptMoviesMutatorHolder::GetFOV() const
 {
 	return placement.fFOV;
 }
 
-
 void CScriptMoviesMutatorHolder::GetPlacement( float *pfDist, float *pfPitch, float *pfYaw ) const
 {
-	(*pfDist) = AI2Vis( placement.GetDistance() );
-	(*pfPitch) = placement.fPitch;
-	(*pfYaw) = placement.fYaw;
+	( *pfDist ) = AI2Vis( placement.GetDistance() );
+	( *pfPitch ) = placement.fPitch;
+	( *pfYaw ) = placement.fYaw;
 }
-
 
 float CScriptMoviesMutatorHolder::GetLength() const
 {
-	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
-						 (nMovieIndex >= 0) &&
-						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return 0.0f )
+	NI_VERIFY( ( moviesData.scriptMovieSequences.size() > 0 ) && ( nMovieIndex >= 0 ) &&
+	               ( nMovieIndex < moviesData.scriptMovieSequences.size() ),
+	           "Invalid Movie",
+	           return 0.0f )
 
-	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
-	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst =
+			moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast =
+			moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
 	--itPosKeyLast;
 
 	return ( itPosKeyLast->fStartTime - itPosKeyFirst->fStartTime );
 }
 
-
 void CScriptMoviesMutatorHolder::SetTime( float _fTime )
 {
 	fCurrTime = _fTime;
 	pTimer.Refresh();
-	movieStartTime = pTimer->GetValue() - fCurrTime*1000.0;
+	movieStartTime = pTimer->GetValue() - fCurrTime * 1000.0;
 }
-
 
 void CScriptMoviesMutatorHolder::Stop()
 {
@@ -463,45 +469,48 @@ void CScriptMoviesMutatorHolder::Stop()
 	eMode = PM_STOPPED;
 }
 
-
 void CScriptMoviesMutatorHolder::JumpFirstKey()
 {
-	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
-						 (nMovieIndex >= 0) &&
-						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
+	NI_VERIFY( ( moviesData.scriptMovieSequences.size() > 0 ) && ( nMovieIndex >= 0 ) &&
+	               ( nMovieIndex < moviesData.scriptMovieSequences.size() ),
+	           "Invalid Movie",
+	           return )
 
-	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyFirst =
+			moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
 
 	SetTime( itPosKeyFirst->fStartTime );
 }
 
-
 void CScriptMoviesMutatorHolder::JumpLastKey()
 {
-	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
-						 (nMovieIndex >= 0) &&
-						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
+	NI_VERIFY( ( moviesData.scriptMovieSequences.size() > 0 ) && ( nMovieIndex >= 0 ) &&
+	               ( nMovieIndex < moviesData.scriptMovieSequences.size() ),
+	           "Invalid Movie",
+	           return )
 
-	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast = moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyLast =
+			moviesData.scriptMovieSequences[nMovieIndex].posKeys.end();
 	--itPosKeyLast;
 
 	SetTime( itPosKeyLast->fStartTime );
 }
 
-
 void CScriptMoviesMutatorHolder::StepNextKey()
 {
-	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
-						 (nMovieIndex >= 0) &&
-						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
+	NI_VERIFY( ( moviesData.scriptMovieSequences.size() > 0 ) && ( nMovieIndex >= 0 ) &&
+	               ( nMovieIndex < moviesData.scriptMovieSequences.size() ),
+	           "Invalid Movie",
+	           return )
 
-	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev =
+			moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
 	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = itPosKeyPrev;
 	++itPosKey;
 
 	while ( itPosKey != moviesData.scriptMovieSequences[nMovieIndex].posKeys.end() )
 	{
-		if ( (fCurrTime >= itPosKeyPrev->fStartTime) && (fCurrTime < itPosKey->fStartTime) )
+		if ( ( fCurrTime >= itPosKeyPrev->fStartTime ) && ( fCurrTime < itPosKey->fStartTime ) )
 		{
 			SetTime( itPosKey->fStartTime );
 			return;
@@ -512,20 +521,21 @@ void CScriptMoviesMutatorHolder::StepNextKey()
 	}
 }
 
-
 void CScriptMoviesMutatorHolder::StepPrevKey()
 {
-	NI_VERIFY( (moviesData.scriptMovieSequences.size() > 0) &&
-						 (nMovieIndex >= 0) &&
-						 (nMovieIndex < moviesData.scriptMovieSequences.size()), "Invalid Movie", return )
+	NI_VERIFY( ( moviesData.scriptMovieSequences.size() > 0 ) && ( nMovieIndex >= 0 ) &&
+	               ( nMovieIndex < moviesData.scriptMovieSequences.size() ),
+	           "Invalid Movie",
+	           return )
 
-	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev = moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
+	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKeyPrev =
+			moviesData.scriptMovieSequences[nMovieIndex].posKeys.begin();
 	std::vector<NDb::SScriptMovieKeyPos>::const_iterator itPosKey = itPosKeyPrev;
 	++itPosKey;
 
 	while ( itPosKey != moviesData.scriptMovieSequences[nMovieIndex].posKeys.end() )
 	{
-		if ( (fCurrTime > itPosKeyPrev->fStartTime) && (fCurrTime <= itPosKey->fStartTime) )
+		if ( ( fCurrTime > itPosKeyPrev->fStartTime ) && ( fCurrTime <= itPosKey->fStartTime ) )
 		{
 			SetTime( itPosKeyPrev->fStartTime );
 			return;
@@ -536,18 +546,16 @@ void CScriptMoviesMutatorHolder::StepPrevKey()
 	}
 }
 
-
 void CScriptMoviesMutatorHolder::SetCallbackFuncName( const std::string &_szCallbackFuncName )
 {
 	szCallbackFuncName = _szCallbackFuncName;
 }
 
-
 void CScriptMoviesMutatorHolder::ScriptCallback( int nKeyID )
 {
 	if ( !szCallbackFuncName.empty() )
 	{
-		WriteToPipe( PIPE_SCRIPT_CMDS, fmt::format("{}({})", szCallbackFuncName, nKeyID) );
+		WriteToPipe( PIPE_SCRIPT_CMDS, fmt::format( "{}({})", szCallbackFuncName, nKeyID ) );
 	}
 }
 
@@ -570,7 +578,6 @@ int CScriptMoviesMutatorHolder::operator&( IBinSaver &Saver )
 
 	return 0;
 }
-
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1B1C84C0, CSCamDMoveFlightMutator )
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1B1C84C2, CSCamDFollowFlightMutator )

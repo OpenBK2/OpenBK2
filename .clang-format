@@ -1,17 +1,16 @@
 ---
-# The style this tree is already written in, not a new one.
+# One style for the whole tree, applied to whole files.
 #
-# Enforcement is on changed lines only, through the clang-format-changed hook in
-# .pre-commit-config.yaml: a commit's own lines are formatted and every line
-# around them is left exactly as it was. A whole-tree pass would rewrite about a
-# third of every file, which is a diff nobody can review, so it is not done. See
-# "file hygiene" in Contributing.md.
+# The goal is code that is easy to read, easy to maintain and hard to make a
+# mistake in. Matching what was already there is not a goal: where the two
+# disagreed, this file follows the first. That is why a line here can differ
+# from the line a 2005 author wrote, and why the diff that introduced this
+# config is large.
 #
-# Most of the values below were chosen by measurement rather than taste: each
-# was set to whichever setting a full pass would disturb least, over a sample of
-# the sources. That is the best available proxy for "looks like the code around
-# it". Where two settings came out within a few lines of each other the comment
-# says which way the tie was broken.
+# Enforced on every source by .pre-commit-config.yaml before a commit, and again
+# by .github/workflows/hygiene.yml. Not applied to generated sources, the
+# parser's fixture corpus or third-party code; see "file hygiene" in
+# Contributing.md for the list and the reasons.
 Language: Cpp
 BasedOnStyle: LLVM
 Standard: c++17
@@ -21,15 +20,30 @@ Standard: c++17
 UseTab: AlignWithSpaces
 TabWidth: 2
 IndentWidth: 2
-ContinuationIndentWidth: 2
-ConstructorInitializerIndentWidth: 2
 AccessModifierOffset: -2
 
-# No line length limit, which is what keeps this config usable on changed lines
-# only: existing line breaks are kept, so a touched line is re-indented and
-# re-spaced but never rewrapped. The sources run to 137 columns at the 99th
-# percentile and a limit would rewrap 13724 lines that are otherwise fine.
-ColumnLimit: 0
+# A continuation is indented deeper than a nesting level, so a wrapped line
+# cannot be mistaken for the start of a block.
+ContinuationIndentWidth: 4
+ConstructorInitializerIndentWidth: 4
+
+# A braced list's elements sit one level in from the declaration, not two: they
+# are the contents of the braces rather than the continuation of a statement.
+BracedInitializerIndentWidth: 2
+
+# Wide enough for this code, which carries long type and member names, and
+# narrow enough to read without scrolling and to put two files side by side.
+# Comments are exempt: ReflowComments below leaves them alone.
+ColumnLimit: 120
+
+# A wrapped line lines up under what it continues, which is what makes a long
+# argument list or condition readable once it no longer fits on one line.
+AlignAfterOpenBracket: Align
+AlignOperands: Align
+AlignEscapedNewlines: Left
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
 
 # void Foo( int n ) and if ( x ), as the tree writes them. A C-style cast keeps
 # its tight parentheses: (std::min)( a, b ), (int)x.
@@ -41,52 +55,89 @@ SpacesInParensOptions:
   InEmptyParentheses: false
   Other: true
 SpacesInSquareBrackets: false
-Cpp11BracedListStyle: false
+
+# Braced lists are laid out like a call, which is what lets a long one go one
+# element per line (see BinPackLongBracedList below); Block keeps packing them
+# into columns however many fit. The spacing is unaffected: SpacesInParens
+# above applies to a braced list in this mode too, so it stays { 1, 2 }.
+Cpp11BracedListStyle: FunctionCall
 
 BreakBeforeBraces: Allman
 PointerAlignment: Right
 ReferenceAlignment: Right
 DerivePointerAlignment: false
 
-# Both halves of the tree's switch layout are in use, 427 switches indenting
-# their case labels against 446 not. Indenting them is what two independent
-# samples of the sources agree costs fewer lines.
+# One statement per line. A body on the same line as its condition hides the
+# second statement somebody adds later, and hides which branch a line belongs
+# to when reading quickly.
+AllowShortBlocksOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+
+# One enumerator per line, so adding or removing one is a one-line diff and
+# shows up in blame against the line it belongs to.
+AllowShortEnumsOnASingleLine: false
+
+# A one-line accessor declared inside a class stays on one line. There are
+# thousands of them, there is nothing to hide in a body with no control flow,
+# and expanding each to four lines would make the headers harder to read rather
+# than easier. Inline rather than All: a free function keeps its braces on their
+# own lines, where the body is the thing being read rather than an afterthought
+# to a signature.
+AllowShortFunctionsOnASingleLine: Inline
+
+# The template header goes on its own line, so the signature below it reads the
+# same whether or not the function happens to be a template.
+BreakTemplateDeclarations: Yes
+
+# Case labels are indented inside their switch, so a label reads as part of the
+# block it is in rather than as a sibling of the switch.
 IndentCaseLabels: true
 
-# The one-line forms the tree uses: empty constructors, one-line getters and
-# OBJECT_BASIC_METHODS-style bodies stay on their line. Short if statements are
-# left at WithoutElse, which came out one line behind AllIfsAndElse over 28103
-# and is the conservative reading; new code braces its conditionals anyway, and
-# a braced body is governed by AllowShortBlocksOnASingleLine.
-AllowShortFunctionsOnASingleLine: All
-AllowShortBlocksOnASingleLine: Always
-AllowShortIfStatementsOnASingleLine: WithoutElse
-AllowShortLoopsOnASingleLine: true
-AllowShortCaseLabelsOnASingleLine: true
-
-# Namespaces at file scope are not indented; a namespace inside a namespace is.
+# A namespace at file scope does not indent its contents, since nearly every
+# line in the file would pay for it; a namespace nested in one does.
 NamespaceIndentation: Inner
 
-# Include order is load-bearing here. stdafx.h must come first, and several
-# headers name types an earlier include has to have declared, so sorting them
-# breaks the build rather than the layout.
+# Include order is load-bearing. stdafx.h must come first, and several headers
+# name types an earlier include has to have declared, so sorting them breaks the
+# build rather than the layout. Using declarations are left in their order for
+# the same reason: a formatter reordering declarations is not a layout change.
 SortIncludes: Never
+SortUsingDeclarations: Never
 
-# Comments carry Russian text, box drawing and quoted Intel pseudocode, none of
-# which survives being rewrapped or realigned into a column.
+# A message that does not fit the column limit stays one string. Splitting it
+# into adjacent literals means the same thing to the compiler, but it is the one
+# thing here that would make the code harder to work with rather than easier:
+# half of these are log lines, SQL and UI text, and a split one can no longer be
+# found by searching for what the program printed.
+BreakStringLiterals: false
+
+# Comments carry Russian text, box drawing, aligned tables and quoted Intel
+# pseudocode, none of which survives being rewrapped.
 ReflowComments: Never
-AlignTrailingComments:
-  Kind: Never
 FixNamespaceComments: false
 
-AlignAfterOpenBracket: DontAlign
-AlignOperands: DontAlign
-AlignEscapedNewlines: DontAlign
+# One per line, once it does not fit on one line: arguments, parameters and the
+# elements of a braced list. A packed block of values is dense to read, and an
+# added or removed element rewrites every line after it, where one per line
+# makes it a one-line diff against the line that changed.
+#
+# BinPackLongBracedList is what extends this to the long arrays and enums,
+# which clang-format otherwise packs into columns however many fit. That is the
+# shape most of this tree's tables want. The four that genuinely want a grid
+# are wrapped in clang-format off: the sine and arcsine tables in
+# System/FastMath.cpp, the bit mask table in System/BitStreams.cpp and the
+# embedded cursor in MapEditorLib/CursorsWx.cpp.
+BinPackArguments: false
+BinPackParameters: OnePerLine
+BinPackLongBracedList: false
+
+# Left alone: aligning a run of assignments reads well in a table and badly
+# everywhere else, and it makes renaming one identifier rewrite the whitespace
+# of every line around it.
 AlignConsecutiveAssignments: None
 AlignConsecutiveDeclarations: None
-
-BinPackArguments: true
-BinPackParameters: true
 IndentPPDirectives: None
 KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 1

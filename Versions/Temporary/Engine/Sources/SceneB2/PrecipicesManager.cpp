@@ -5,14 +5,20 @@
 #include <algorithm>
 #include <cstdint>
 
-int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
-															const float fMin, const float fMax,
-															const int nID,
-															const float fDepth, const float fDepthRand,
-															const float fRandX, const float fRandY )
+int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos,
+                                  const CVec3 &vNorm,
+                                  const float fMin,
+                                  const float fMax,
+                                  const int nID,
+                                  const float fDepth,
+                                  const float fDepthRand,
+                                  const float fRandX,
+                                  const float fRandY )
 {
 	int nCount = 0;
-	for ( std::vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nCount )
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin();
+	      it != terrainInfo.precNodes.end();
+	      ++it, ++nCount )
 	{
 		if ( fabs2( vPos - it->vPos ) < DEF_EPS )
 		{
@@ -24,7 +30,7 @@ int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 			it->fMinHeight = (std::min)( it->fMinHeight, fMin );
 			it->fMaxHeight = (std::max)( it->fMaxHeight, fMax );
 			++it->nCount;
-			AddUnique( &(it->precs), nID );
+			AddUnique( &( it->precs ), nID );
 			it->verts.resize( 0 );
 			AddUnique( &updatedPrecNodes, nCount );
 			return nCount;
@@ -44,17 +50,30 @@ int CTerraGen::PrecAddUniqueNode( const CVec2 &vPos, const CVec3 &vNorm,
 	node.precs.push_back( nID );
 	node.verts.resize( 0 );
 	terrainInfo.precNodes.push_back( node );
-	AddUnique( &updatedPrecNodes, static_cast<int>(terrainInfo.precNodes.size() - 1) );
+	AddUnique( &updatedPrecNodes, static_cast<int>( terrainInfo.precNodes.size() - 1 ) );
 	return ( terrainInfo.precNodes.size() - 1 );
 }
 
-int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const CVec3 &vNorm2, const float fMin, const float fMax,
-																	 const int nID1, const int nID2, const float fDepth1, const float fDepth2,
-																	 const float fDepthRand1, const float fDepthRand2, const float fRandX1, const float fRandX2,
-																	 const float fRandY1, const float fRandY2 )
+int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos,
+                                   const CVec3 &vNorm1,
+                                   const CVec3 &vNorm2,
+                                   const float fMin,
+                                   const float fMax,
+                                   const int nID1,
+                                   const int nID2,
+                                   const float fDepth1,
+                                   const float fDepth2,
+                                   const float fDepthRand1,
+                                   const float fDepthRand2,
+                                   const float fRandX1,
+                                   const float fRandX2,
+                                   const float fRandY1,
+                                   const float fRandY2 )
 {
 	int nCount = 0;
-	for ( std::vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nCount )
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::iterator it = terrainInfo.precNodes.begin();
+	      it != terrainInfo.precNodes.end();
+	      ++it, ++nCount )
 	{
 		if ( fabs2( vPos - it->vPos ) < DEF_EPS )
 		{
@@ -66,8 +85,8 @@ int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const
 			it->fMinHeight = (std::min)( it->fMinHeight, fMin );
 			it->fMaxHeight = (std::max)( it->fMaxHeight, fMax );
 			it->nCount += 2;
-			AddUnique( &(it->precs), nID1 );
-			AddUnique( &(it->precs), nID2 );
+			AddUnique( &( it->precs ), nID1 );
+			AddUnique( &( it->precs ), nID2 );
 			it->verts.resize( 0 );
 			AddUnique( &updatedPrecNodes, nCount );
 			return nCount;
@@ -88,7 +107,7 @@ int CTerraGen::PrecAddUniqueNode2( const CVec2 &vPos, const CVec3 &vNorm1, const
 	node.precs.push_back( nID2 );
 	node.verts.resize( 0 );
 	terrainInfo.precNodes.push_back( node );
-	AddUnique( &updatedPrecNodes, static_cast<int>(terrainInfo.precNodes.size() - 1) );
+	AddUnique( &updatedPrecNodes, static_cast<int>( terrainInfo.precNodes.size() - 1 ) );
 	return ( terrainInfo.precNodes.size() - 1 );
 }
 
@@ -100,7 +119,7 @@ struct SPrecipiceIntersect
 	float fMinHeight;
 	float fMaxHeight;
 	//
-	bool operator < ( const SPrecipiceIntersect &v ) const { return fDist < v.fDist; }
+	bool operator<( const SPrecipiceIntersect &v ) const { return fDist < v.fDist; }
 };
 
 inline void SwapPrecipices( STerrainInfo::SPrecipice &prec1, STerrainInfo::SPrecipice &prec2 )
@@ -112,8 +131,11 @@ inline void SwapPrecipices( STerrainInfo::SPrecipice &prec1, STerrainInfo::SPrec
 	prec1.visibles.swap( prec2.visibles );
 }
 
-inline void AddToPrecipice( STerrainInfo::SPrecipice &prec, const int nNodeInd, const CVec3 &vNorm,
-														const float fMinHeight, const float fMaxHeight )
+inline void AddToPrecipice( STerrainInfo::SPrecipice &prec,
+                            const int nNodeInd,
+                            const CVec3 &vNorm,
+                            const float fMinHeight,
+                            const float fMaxHeight )
 {
 	prec.nodes.push_back( nNodeInd );
 	prec.norms.push_back( vNorm );
@@ -147,24 +169,35 @@ inline void InitPrecipiceFromPrecipice( STerrainInfo::SPrecipice &dstPrec, const
 	dstPrec.visibles.resize( 0 );
 }
 
-STerrainInfo::SPrecipice* CTerraGen::FindPrecipice( const int nID )
+STerrainInfo::SPrecipice *CTerraGen::FindPrecipice( const int nID )
 {
-	for ( std::list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin(); it != terrainInfo.precipices.end(); ++it )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator it = terrainInfo.precipices.begin();
+	      it != terrainInfo.precipices.end();
+	      ++it )
 	{
 		if ( it->nID == nID )
-			return &(*it);
+			return &( *it );
 	}
 	//NI_ASSERT( false, StrFmt( "Can't find precipice with ID=%d", nID ) );
 	return 0;
 }
 
-void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3> &posArr, const std::vector<float> &heightsArr,
-																				 const std::vector<CVec3> &normsArr, const NDb::SMaterial *pMaterial, const float fTexGeomScale,
-																				 const uint8_t bStayedOnTerrain, const int nExcludeID, const NDb::SMaterial *pFootMaterial,
-																				 const float fDepth, const float fDepthRand, const float fRandX, const float fRandY,
-																				 const bool bHasPeak )
+void CTerraGen::AddPrecipiceToCollector( const int nID,
+                                         const std::vector<CVec3> &posArr,
+                                         const std::vector<float> &heightsArr,
+                                         const std::vector<CVec3> &normsArr,
+                                         const NDb::SMaterial *pMaterial,
+                                         const float fTexGeomScale,
+                                         const uint8_t bStayedOnTerrain,
+                                         const int nExcludeID,
+                                         const NDb::SMaterial *pFootMaterial,
+                                         const float fDepth,
+                                         const float fDepthRand,
+                                         const float fRandX,
+                                         const float fRandY,
+                                         const bool bHasPeak )
 {
-	NI_ASSERT( (posArr.size() == heightsArr.size()) && (posArr.size() == normsArr.size()), "Wrong parameters" );
+	NI_ASSERT( ( posArr.size() == heightsArr.size() ) && ( posArr.size() == normsArr.size() ), "Wrong parameters" );
 
 	if ( posArr.size() < 2 )
 		return;
@@ -200,12 +233,12 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 
 	for ( int i = 0; i < posArr.size(); ++i )
 	{
-		addPrec.vMin.Minimize( CVec2(posArr[i].x, posArr[i].y) );
-		addPrec.vMax.Maximize( CVec2(posArr[i].x, posArr[i].y) );
+		addPrec.vMin.Minimize( CVec2( posArr[i].x, posArr[i].y ) );
+		addPrec.vMax.Maximize( CVec2( posArr[i].x, posArr[i].y ) );
 		const float fMinH = (std::min)( posArr[i].z, heightsArr[i] );
 		const float fMaxH = (std::max)( posArr[i].z, heightsArr[i] );
-		const int nNodeInd = PrecAddUniqueNode( CVec2(posArr[i].x, posArr[i].y), normsArr[i], fMinH, fMaxH, addPrec.nID,
-			fDepth, fDepthRand, fRandX, fRandY );
+		const int nNodeInd = PrecAddUniqueNode(
+				CVec2( posArr[i].x, posArr[i].y ), normsArr[i], fMinH, fMaxH, addPrec.nID, fDepth, fDepthRand, fRandX, fRandY );
 		AddToPrecipice( addPrec, nNodeInd, normsArr[i], fMinH, fMaxH );
 	}
 
@@ -213,9 +246,11 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 	float fDist;
 	std::vector<SPrecipiceIntersect> precInters( 8 );
 
-	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrecipice = terrainInfo.precipices.begin(); itPrecipice != terrainInfo.precipices.end(); ++itPrecipice )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrecipice = terrainInfo.precipices.begin();
+	      itPrecipice != terrainInfo.precipices.end();
+	      ++itPrecipice )
 	{
-		if ( IsBBIntersect(itPrecipice->vMin, itPrecipice->vMax, addPrec.vMin, addPrec.vMax) )
+		if ( IsBBIntersect( itPrecipice->vMin, itPrecipice->vMax, addPrec.vMin, addPrec.vMax ) )
 		{
 			InitPrecipiceFromPrecipice( oldPrecipice, *itPrecipice );
 
@@ -238,18 +273,20 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 						const STerrainInfo::SPrecipiceNode &addNode2 = terrainInfo.precNodes[addPrec.nodes[g]];
 
 						fDist = ( node2.vPos.x - node1.vPos.x ) * ( addNode2.vPos.y - addNode1.vPos.y ) -
-										( node2.vPos.y - node1.vPos.y ) * ( addNode2.vPos.x - addNode1.vPos.x );
+						        ( node2.vPos.y - node1.vPos.y ) * ( addNode2.vPos.x - addNode1.vPos.x );
 						if ( fabs( fDist ) > DEF_EPS )
 						{
 							fDist = 1.0f / fDist;
-							const float t = ( (addNode1.vPos.x - node1.vPos.x ) * (addNode2.vPos.y - addNode1.vPos.y) -
-																(addNode1.vPos.y - node1.vPos.y ) * (addNode2.vPos.x - addNode1.vPos.x) ) * fDist;
-							const float k = ( (node1.vPos.y - addNode1.vPos.y ) * (node2.vPos.x - node1.vPos.x) -
-																(node1.vPos.x - addNode1.vPos.x ) * (node2.vPos.y - node1.vPos.y) ) * fDist;
-							if ( (t >= 0.0f) && (t <= 1.0f) && (k >= 0.0f) && (k <= 1.0f) )
+							const float t = ( ( addNode1.vPos.x - node1.vPos.x ) * ( addNode2.vPos.y - addNode1.vPos.y ) -
+							                  ( addNode1.vPos.y - node1.vPos.y ) * ( addNode2.vPos.x - addNode1.vPos.x ) ) *
+							                fDist;
+							const float k = ( ( node1.vPos.y - addNode1.vPos.y ) * ( node2.vPos.x - node1.vPos.x ) -
+							                  ( node1.vPos.x - addNode1.vPos.x ) * ( node2.vPos.y - node1.vPos.y ) ) *
+							                fDist;
+							if ( ( t >= 0.0f ) && ( t <= 1.0f ) && ( k >= 0.0f ) && ( k <= 1.0f ) )
 							{
-								const CVec2 vPos( node1.vPos.x + (node2.vPos.x - node1.vPos.x) * t,
-																	node1.vPos.y + (node2.vPos.y - node1.vPos.y) * t );
+								const CVec2 vPos( node1.vPos.x + ( node2.vPos.x - node1.vPos.x ) * t,
+								                  node1.vPos.y + ( node2.vPos.y - node1.vPos.y ) * t );
 								const CVec3 vNormFromNode1 = node1.vNorm / node1.nCount;
 								const CVec3 vNormFromNode2 = node2.vNorm / node2.nCount;
 								const CVec3 vNorm1 = vNormFromNode1 + ( vNormFromNode2 - vNormFromNode1 ) * t;
@@ -262,11 +299,14 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 								//	( itPrecipice->minHeights[i - 1] + ( itPrecipice->minHeights[i] - itPrecipice->minHeights[i - 1] ) * t );
 								float fNH1;
 								if ( itPrecipice->nExcludeRiverID < 0 )
-									fNH1 = fTerraHeight + ( addPrec.nExcludeRiverID < 0 ? GetMaxCragHeight2(vPos, nID, itPrecipice->nID) : GetMaxCragHeight(vPos, itPrecipice->nID) );
+									fNH1 = fTerraHeight + ( addPrec.nExcludeRiverID < 0 ? GetMaxCragHeight2( vPos, nID, itPrecipice->nID )
+									                                                    : GetMaxCragHeight( vPos, itPrecipice->nID ) );
 								else
-									fNH1 = itPrecipice->minHeights[i - 1] + ( itPrecipice->minHeights[i] - itPrecipice->minHeights[i - 1] ) * t;
+									fNH1 = itPrecipice->minHeights[i - 1] +
+									       ( itPrecipice->minHeights[i] - itPrecipice->minHeights[i - 1] ) * t;
 
-								const float fXH1 = itPrecipice->maxHeights[i - 1] + ( itPrecipice->maxHeights[i] - itPrecipice->maxHeights[i - 1] ) * t;
+								const float fXH1 = itPrecipice->maxHeights[i - 1] +
+								                   ( itPrecipice->maxHeights[i] - itPrecipice->maxHeights[i - 1] ) * t;
 								if ( fXH1 < fNH1 )
 									continue;
 								const float fMinH1 = (std::min)( fNH1, fXH1 );
@@ -277,27 +317,42 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 								//	( addPrec.minHeights[g - 1] + ( addPrec.minHeights[g] - addPrec.minHeights[g - 1] ) * k );4
 								float fNH2;
 								if ( addPrec.nExcludeRiverID < 0 )
-									fNH2 = fTerraHeight + ( itPrecipice->nExcludeRiverID < 0 ? GetMaxCragHeight2(vPos, nID, itPrecipice->nID) : GetMaxCragHeight(vPos, nID) );
+									fNH2 = fTerraHeight + ( itPrecipice->nExcludeRiverID < 0
+									                            ? GetMaxCragHeight2( vPos, nID, itPrecipice->nID )
+									                            : GetMaxCragHeight( vPos, nID ) );
 								else
 									fNH2 = addPrec.minHeights[g - 1] + ( addPrec.minHeights[g] - addPrec.minHeights[g - 1] ) * k;
 
-								const float fXH2 = addPrec.maxHeights[g - 1] + ( addPrec.maxHeights[g] - addPrec.maxHeights[g - 1] ) * k;
+								const float fXH2 =
+										addPrec.maxHeights[g - 1] + ( addPrec.maxHeights[g] - addPrec.maxHeights[g - 1] ) * k;
 								if ( fXH2 < fNH2 )
 									continue;
 								const float fMinH2 = (std::min)( fNH2, fXH2 );
 								const float fMaxH2 = (std::max)( fNH2, fXH2 );
-/*!!!!!!!!*/		const int nNodeInd = PrecAddUniqueNode2( vPos, vNorm2, vNorm1/*vNorm1, vNorm2*/, (std::min)(fMinH1, fMinH2), (std::max)(fMaxH1, fMaxH2),
-																												 addPrec.nID, itPrecipice->nID, addPrec.fDepth, itPrecipice->fDepth, addPrec.fDepthRand, itPrecipice->fDepthRand,
-																												 addPrec.fRandX, itPrecipice->fRandX, addPrec.fRandY, itPrecipice->fRandY );
+								/*!!!!!!!!*/ const int nNodeInd = PrecAddUniqueNode2( vPos,
+								                                                      vNorm2,
+								                                                      vNorm1 /*vNorm1, vNorm2*/,
+								                                                      (std::min)( fMinH1, fMinH2 ),
+								                                                      (std::max)( fMaxH1, fMaxH2 ),
+								                                                      addPrec.nID,
+								                                                      itPrecipice->nID,
+								                                                      addPrec.fDepth,
+								                                                      itPrecipice->fDepth,
+								                                                      addPrec.fDepthRand,
+								                                                      itPrecipice->fDepthRand,
+								                                                      addPrec.fRandX,
+								                                                      itPrecipice->fRandX,
+								                                                      addPrec.fRandY,
+								                                                      itPrecipice->fRandY );
 
 								SPrecipiceIntersect curInters;
 								curInters.nNode = nNodeInd;
 								curInters.vNorm = vNorm1;
 
-								AddUnique( &(itPrecipice->intersectors), addPrec.nID );
-								AddUnique( &(addPrec.intersectors), itPrecipice->nID );
+								AddUnique( &( itPrecipice->intersectors ), addPrec.nID );
+								AddUnique( &( addPrec.intersectors ), itPrecipice->nID );
 
-								if ( (itPrecipice->nodes[i - 1] != nNodeInd) && (itPrecipice->nodes[i] != nNodeInd) )
+								if ( ( itPrecipice->nodes[i - 1] != nNodeInd ) && ( itPrecipice->nodes[i] != nNodeInd ) )
 								{
 									if ( itPrecipice->nExcludeRiverID < 0 ) // crag
 									{
@@ -344,7 +399,7 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 											{
 												curInters.fDist = t - DEF_EPS;
 												curInters.fMinHeight = fMinH1;
-												curInters.fMaxHeight = /*fMaxH1*/fMinH2;
+												curInters.fMaxHeight = /*fMaxH1*/ fMinH2;
 												precInters.push_back( curInters );
 											}
 											//
@@ -364,14 +419,14 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 											{
 												curInters.fDist = t;
 												curInters.fMinHeight = fMinH1;
-												curInters.fMaxHeight = /*fMaxH1*/fMinH2;
+												curInters.fMaxHeight = /*fMaxH1*/ fMinH2;
 												precInters.push_back( curInters );
 											}
 										}
 									}
 								}
 
-								if ( (addPrec.nodes[g - 1] != nNodeInd) && (addPrec.nodes[g] != nNodeInd) )
+								if ( ( addPrec.nodes[g - 1] != nNodeInd ) && ( addPrec.nodes[g] != nNodeInd ) )
 								{
 									if ( addPrec.nExcludeRiverID < 0 ) // crag
 									{
@@ -380,11 +435,19 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 											if ( addPrec.minHeights[g - 1] <= addPrec.minHeights[g] )
 											{
 												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, fMaxH2 );
-												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMaxH1, fMaxH2), (std::max)(fMaxH1, fMaxH2) );
+												AddToPrecipice( resPrecipice,
+												                nNodeInd,
+												                vNorm2,
+												                (std::min)( fMaxH1, fMaxH2 ),
+												                (std::max)( fMaxH1, fMaxH2 ) );
 											}
 											else
 											{
-												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMaxH1, fMaxH2), (std::max)(fMaxH1, fMaxH2) );
+												AddToPrecipice( resPrecipice,
+												                nNodeInd,
+												                vNorm2,
+												                (std::min)( fMaxH1, fMaxH2 ),
+												                (std::max)( fMaxH1, fMaxH2 ) );
 												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, fMaxH2 );
 											}
 										}
@@ -398,14 +461,16 @@ void CTerraGen::AddPrecipiceToCollector( const int nID, const std::vector<CVec3>
 										if ( addPrec.maxHeights[g - 1] <= addPrec.maxHeights[g] )
 										{
 											if ( itPrecipice->nExcludeRiverID < 0 )
-												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, /*fMaxH2*/fMinH1 );
-											AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMinH1, fMinH2), (std::max)(fMaxH1, fMaxH2) );
+												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, /*fMaxH2*/ fMinH1 );
+											AddToPrecipice(
+													resPrecipice, nNodeInd, vNorm2, (std::min)( fMinH1, fMinH2 ), (std::max)( fMaxH1, fMaxH2 ) );
 										}
 										else
 										{
-											AddToPrecipice( resPrecipice, nNodeInd, vNorm2, (std::min)(fMinH1, fMinH2), (std::max)(fMaxH1, fMaxH2) );
+											AddToPrecipice(
+													resPrecipice, nNodeInd, vNorm2, (std::min)( fMinH1, fMinH2 ), (std::max)( fMaxH1, fMaxH2 ) );
 											if ( itPrecipice->nExcludeRiverID < 0 )
-												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, /*fMaxH2*/fMinH1 );
+												AddToPrecipice( resPrecipice, nNodeInd, vNorm2, fMinH2, /*fMaxH2*/ fMinH1 );
 										}
 									}
 								}
@@ -440,12 +505,14 @@ void CTerraGen::UpdateAllNeededPrecipices()
 		const STerrainInfo::SPrecipice *pPrec = FindPrecipice( *it );
 		if ( pPrec )
 		{
-			for ( std::vector<int>::const_iterator itInters = pPrec->intersectors.begin(); itInters != pPrec->intersectors.end(); ++itInters )
+			for ( std::vector<int>::const_iterator itInters = pPrec->intersectors.begin();
+			      itInters != pPrec->intersectors.end();
+			      ++itInters )
 			{
 				if ( *itInters < 0x20000 )
 					AddUnique( &resUpdated, *itInters );
 				else
-					AddUnique( &resUpdated, (*itInters & 0xffff) | 0x10000 ); // add only one bank of river
+					AddUnique( &resUpdated, ( *itInters & 0xffff ) | 0x10000 ); // add only one bank of river
 			}
 		}
 	}
@@ -456,7 +523,7 @@ void CTerraGen::UpdateAllNeededPrecipices()
 	{
 		RemovePrecipiceFromCollector( *it, true );
 		if ( *it > 0xffff )
-			RemovePrecipiceFromCollector( 0x20000 | ((*it) & 0xffff), true );
+			RemovePrecipiceFromCollector( 0x20000 | ( ( *it ) & 0xffff ), true );
 	}
 
 	// add all updated precipices
@@ -467,32 +534,57 @@ void CTerraGen::UpdateAllNeededPrecipices()
 		{
 			const STerrainInfo::SCrag *pCrag = FindCragInfo( *it );
 			if ( pCrag )
-				AddPrecipiceToCollector(	pCrag->nID, pCrag->precVerts, pCrag->precHeights, pCrag->precNorms,
-																	pCrag->pDesc->pRidgeMaterial, pCrag->pDesc->fRidgeTexGeomScale,
-																	true, -1, pCrag->pDesc->pFootMaterial,
-																	pCrag->pDesc->fDepth, pCrag->pDesc->fDepthRand, pCrag->pDesc->fRandX, pCrag->pDesc->fRandY,
-																	pCrag->pDesc->bHasPeak );
+				AddPrecipiceToCollector( pCrag->nID,
+				                         pCrag->precVerts,
+				                         pCrag->precHeights,
+				                         pCrag->precNorms,
+				                         pCrag->pDesc->pRidgeMaterial,
+				                         pCrag->pDesc->fRidgeTexGeomScale,
+				                         true,
+				                         -1,
+				                         pCrag->pDesc->pFootMaterial,
+				                         pCrag->pDesc->fDepth,
+				                         pCrag->pDesc->fDepthRand,
+				                         pCrag->pDesc->fRandX,
+				                         pCrag->pDesc->fRandY,
+				                         pCrag->pDesc->bHasPeak );
 		}
 		else // river
 		{
 			if ( *it < 0x20000 ) // only for one coast for double-excluding
 			{
-				const STerrainInfo::SRiver *pRiver = FindRiverInfo( (*it) & 0xffff );
+				const STerrainInfo::SRiver *pRiver = FindRiverInfo( ( *it ) & 0xffff );
 				if ( pRiver )
 				{
-					AddPrecipiceToCollector(	pRiver->nID | 0x10000,
-																		pRiver->precVertsL, pRiver->precHeightsL, pRiver->precNormsL,
-																		pRiver->pDesc->pPrecipiceMaterial, pRiver->pDesc->fRidgeTexGeomScale,
-																		false, pRiver->nID, 0,
-																		pRiver->pDesc->fDepth, pRiver->pDesc->fDepthRand, pRiver->pDesc->fRandX, pRiver->pDesc->fRandY,
-																		pRiver->pDesc->bHasPeak );
+					AddPrecipiceToCollector( pRiver->nID | 0x10000,
+					                         pRiver->precVertsL,
+					                         pRiver->precHeightsL,
+					                         pRiver->precNormsL,
+					                         pRiver->pDesc->pPrecipiceMaterial,
+					                         pRiver->pDesc->fRidgeTexGeomScale,
+					                         false,
+					                         pRiver->nID,
+					                         0,
+					                         pRiver->pDesc->fDepth,
+					                         pRiver->pDesc->fDepthRand,
+					                         pRiver->pDesc->fRandX,
+					                         pRiver->pDesc->fRandY,
+					                         pRiver->pDesc->bHasPeak );
 
-					AddPrecipiceToCollector(	pRiver->nID | 0x20000,
-																		pRiver->precVertsR, pRiver->precHeightsR, pRiver->precNormsR,
-																		pRiver->pDesc->pPrecipiceMaterial, pRiver->pDesc->fRidgeTexGeomScale,
-																		false, pRiver->nID, 0,
-																		pRiver->pDesc->fDepth, pRiver->pDesc->fDepthRand, pRiver->pDesc->fRandX, pRiver->pDesc->fRandY,
-																		pRiver->pDesc->bHasPeak );
+					AddPrecipiceToCollector( pRiver->nID | 0x20000,
+					                         pRiver->precVertsR,
+					                         pRiver->precHeightsR,
+					                         pRiver->precNormsR,
+					                         pRiver->pDesc->pPrecipiceMaterial,
+					                         pRiver->pDesc->fRidgeTexGeomScale,
+					                         false,
+					                         pRiver->nID,
+					                         0,
+					                         pRiver->pDesc->fDepth,
+					                         pRiver->pDesc->fDepthRand,
+					                         pRiver->pDesc->fRandX,
+					                         pRiver->pDesc->fRandY,
+					                         pRiver->pDesc->bHasPeak );
 				}
 			}
 		}
@@ -500,18 +592,18 @@ void CTerraGen::UpdateAllNeededPrecipices()
 
 	// create all vertices in nodes
 	for ( std::vector<int>::const_iterator it = updatedPrecNodes.begin(); it != updatedPrecNodes.end(); ++it )
-		CreateVerticesInPrecipiceNode( &(terrainInfo.precNodes[*it]), *it );
+		CreateVerticesInPrecipiceNode( &( terrainInfo.precNodes[*it] ), *it );
 	updatedPrecNodes.resize( 0 );
 
 	// create all meshes
 	STerrainInfo::SPrecipice *pPrec;
 	for ( std::vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
 	{
-		if ( pPrec = FindPrecipice(*it) )
+		if ( pPrec = FindPrecipice( *it ) )
 			CreatePrecipiceMesh( pPrec, true );
 		if ( *it > 0xffff )
 		{
-			if ( pPrec = FindPrecipice( 0x20000 | ((*it) & 0xffff)) )
+			if ( pPrec = FindPrecipice( 0x20000 | ( ( *it ) & 0xffff ) ) )
 				CreatePrecipiceMesh( pPrec, true );
 		}
 	}
@@ -526,7 +618,9 @@ void CTerraGen::RemapPrecipices()
 	newNodes.reserve( terrainInfo.precNodes.size() );
 	newNodes.resize( 0 );
 	int nInd = 0;
-	for ( std::vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it, ++nInd )
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin();
+	      it != terrainInfo.precNodes.end();
+	      ++it, ++nInd )
 	{
 		if ( it->nCount > 0 )
 		{
@@ -535,7 +629,9 @@ void CTerraGen::RemapPrecipices()
 		}
 	}
 	terrainInfo.precNodes = newNodes;
-	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin();
+	      itPrec != terrainInfo.precipices.end();
+	      ++itPrec )
 	{
 		for ( std::vector<int>::iterator it = itPrec->nodes.begin(); it != itPrec->nodes.end(); ++it )
 		{

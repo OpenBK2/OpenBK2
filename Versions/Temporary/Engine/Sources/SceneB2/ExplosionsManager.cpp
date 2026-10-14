@@ -27,7 +27,8 @@ int CExplosionsManager::AddExplosion( const NMeshData::SMeshData &_data, const N
 	SFBTransform placement;
 	Identity( &placement.forward );
 	Identity( &placement.backward );
-	explObj.explosionHolder.pHolder = pGScene->CreateMesh( pGScene->MakeMeshInfo( explObj.explosionHolder.pPatch, pMaterial ), placement, 0, 0 );
+	explObj.explosionHolder.pHolder =
+			pGScene->CreateMesh( pGScene->MakeMeshInfo( explObj.explosionHolder.pPatch, pMaterial ), placement, 0, 0 );
 
 	explosions.push_back( explObj );
 

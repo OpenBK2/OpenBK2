@@ -2,23 +2,22 @@
 
 #include "Window.h"
 
-
-
 class CWindowProgressBar : public CWindow, public IProgressBar
 {
-	OBJECT_BASIC_METHODS(CWindowProgressBar)
+	OBJECT_BASIC_METHODS( CWindowProgressBar )
 
-	CObj<IWindowPart> pForward;						// show increasing progress
-	CObj<IWindowPart> pBackward;						// show decreasing part
-	CObj<IWindowPart> pGlow;// texture drawn over border between increasing and decreasing parts
+	CObj<IWindowPart> pForward;  // show increasing progress
+	CObj<IWindowPart> pBackward; // show decreasing part
+	CObj<IWindowPart> pGlow;     // texture drawn over border between increasing and decreasing parts
 
 	CPtr<NDb::SWindowProgressBar> pInstance;
 	CDBPtr<NDb::SWindowProgressBarShared> pShared;
 
 	float fStepSize;
 	bool bShowFirstElement;
+
 protected:
-	virtual NDb::SWindow* GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance() { return pInstance; }
 
 public:
 	int operator&( IBinSaver &saver );
@@ -37,16 +36,18 @@ public:
 
 class CWindowMultiTextureProgressBar : public CWindow, public IMultiTextureProgressBar
 {
-	OBJECT_BASIC_METHODS(CWindowMultiTextureProgressBar)
+	OBJECT_BASIC_METHODS( CWindowMultiTextureProgressBar )
 
-	std::vector< CObj<IWindowPart> > parts;
+	std::vector<CObj<IWindowPart>> parts;
 
 	CPtr<NDb::SWindowMultiTextureProgressBar> pInstance;
 	CDBPtr<NDb::SWindowMultiTextureProgressBarShared> pShared;
+
 protected:
-	virtual NDb::SWindow* GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance() { return pInstance; }
 
 	int FindStateIndex( float fProgress );
+
 public:
 	int operator&( IBinSaver &saver );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );

@@ -14,7 +14,14 @@ struct SLogEntry
 	bool bLooped;
 	int nStartPos;
 	unsigned long nStartTime;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&bLooped); f.Add(4,&nStartPos); f.Add(5,&nStartTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szName );
+		f.Add( 3, &bLooped );
+		f.Add( 4, &nStartPos );
+		f.Add( 5, &nStartTime );
+		return 0;
+	}
 
 	//void ToString( string *pString );
 	//void FromString( const string &szCode );
@@ -31,7 +38,17 @@ class CPlayLog
 
 	ESFXOutputType eOutput;
 	int nFrequ;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&log); f.Add(3,&nCurPos); f.Add(4,&bLogIsFull); f.Add(5,&nChannels); f.Add(6,&eOutput); f.Add(7,&nFrequ); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &log );
+		f.Add( 3, &nCurPos );
+		f.Add( 4, &bLogIsFull );
+		f.Add( 5, &nChannels );
+		f.Add( 6, &eOutput );
+		f.Add( 7, &nFrequ );
+		return 0;
+	}
+
 public:
 	CPlayLog();
 	void ClearLog();
@@ -41,8 +58,8 @@ public:
 };
 #endif
 
-typedef std::unordered_map<ISound*, int> CSoundChannelMap;
-typedef std::unordered_map<int, CPtr<ISound> > CChannelSoundMap;
+typedef std::unordered_map<ISound *, int> CSoundChannelMap;
+typedef std::unordered_map<int, CPtr<ISound>> CChannelSoundMap;
 
 class CSoundEngine : public ISFX
 {
@@ -51,27 +68,27 @@ class CSoundEngine : public ISFX
 	struct SDriverInfo
 	{
 		std::string szDriverName;
-		bool isHardware3DAccelerated;				// this driver supports hardware accelerated 3d sound.
-		bool supportEAXReverb;							// this driver supports EAX reverb
-		bool supportReverb;									// this driver supports EAX2/A3D3 reverb
-		bool supportEAX3;										// this driver supports EAX3
+		bool isHardware3DAccelerated; // this driver supports hardware accelerated 3d sound.
+		bool supportEAXReverb;        // this driver supports EAX reverb
+		bool supportReverb;           // this driver supports EAX2/A3D3 reverb
+		bool supportEAX3;             // this driver supports EAX3
 	};
 	// initialization info - drivers
 	typedef std::vector<SDriverInfo> CDriversInfo;
-	CDriversInfo drivers;									// [0] is default driver
+	CDriversInfo drivers; // [0] is default driver
 	//
 	NTimer::STime timeLastUpdate;
 	//
 	// channels management
-	CSoundChannelMap channelsMap;					// sound => channel map
-	CChannelSoundMap soundsMap;						// channel => sound map
+	CSoundChannelMap channelsMap; // sound => channel map
+	CChannelSoundMap soundsMap;   // channel => sound map
 	//
 	bool bInited;
-	bool bEnableSFX;											// enable SFXes playing
-	bool bEnableStreaming;								// enable streaming playing
+	bool bEnableSFX;       // enable SFXes playing
+	bool bEnableStreaming; // enable streaming playing
 	bool bSoundCardPresent;
-	bool bPaused;													// is all SFX sounds paused?
-	bool bStreamingPaused;								// is streaming sound paused
+	bool bPaused;          // is all SFX sounds paused?
+	bool bStreamingPaused; // is streaming sound paused
 	//
 	bool b3DMode;
 	CVec3 vFormerListener;
@@ -92,14 +109,18 @@ public:
 	// internal-use service functions
 	void MapSound( ISound *pSound, int nChannel );
 	//
-	virtual CObjectBase* QI( int nInterfaceTypeID );
+	virtual CObjectBase *QI( int nInterfaceTypeID );
 	// init and close sound system
 	virtual bool IsInitialized();
 	virtual bool Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMixRate, int nMaxChannels );
 	//
 	// enable SFXes and streaming
-	virtual void EnableSFX( bool bEnable ) { bEnableSFX = bEnable; ReEnableSounds(); }
-	virtual bool IsSFXEnabled()const { return bEnableSFX && bSoundCardPresent; }
+	virtual void EnableSFX( bool bEnable )
+	{
+		bEnableSFX = bEnable;
+		ReEnableSounds();
+	}
+	virtual bool IsSFXEnabled() const { return bEnableSFX && bSoundCardPresent; }
 	//
 	// setup
 	virtual void SetDistanceFactor( float fFactor );
@@ -118,7 +139,7 @@ public:
 	virtual bool IsPaused();
 	virtual bool IsPlaying( ISound *pSound );
 
-	unsigned int GetCurrentPosition( ISound * pSound );
-	virtual void SetCurrentPosition( ISound * pSound, unsigned int pos );
+	unsigned int GetCurrentPosition( ISound *pSound );
+	virtual void SetCurrentPosition( ISound *pSound, unsigned int pos );
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

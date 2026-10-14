@@ -8,12 +8,11 @@
 
 // CWindowTabControl
 
-
-REGISTER_SAVELOAD_CLASS(UI, 0x11075B8B, CWindowTabControl);
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B8B, CWindowTabControl );
 
 int CWindowTabControl::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 4, &pHeadersContainer );
 	saver.Add( 7, &nActiveTab );
 	saver.Add( 8, &pInstance );
@@ -32,13 +31,14 @@ void CWindowTabControl::AfterLoad()
 
 void CWindowTabControl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowTabControl *pDesc( checked_cast<const NDb::SWindowTabControl*>( _pDesc ) );
+	const NDb::SWindowTabControl *pDesc( checked_cast<const NDb::SWindowTabControl *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 
 	CWindow::InitByDesc( _pDesc );
 	pShared = checked_cast_ptr<const NDb::SWindowTabControlShared *>( pDesc->pShared );
 
-	pHeadersContainer = dynamic_cast<CWindowScrollableContainer*>( CUIFactory::MakeWindow( pShared->pHeadersContainer ) );
+	pHeadersContainer =
+			dynamic_cast<CWindowScrollableContainer *>( CUIFactory::MakeWindow( pShared->pHeadersContainer ) );
 	if ( pHeadersContainer )
 		AddChild( pHeadersContainer, false );
 
@@ -85,16 +85,16 @@ void CWindowTabControl::SetActive( const int nTab, const bool bUpdateButtons )
 
 void CWindowTabControl::ShowTab( const int nTab, const bool bShow, const bool bUpdateButtons )
 {
-	CWindow * pWindow = dynamic_cast<CWindow*>( GetChild( CreateTabName( nTab, 0 ), false ) );
+	CWindow *pWindow = dynamic_cast<CWindow *>( GetChild( CreateTabName( nTab, 0 ), false ) );
 	if ( pWindow )
 		pWindow->ShowWindow( bShow );
 
 	if ( /*bUpdateButtons && bShow && pButtonSample &&*/ pHeadersContainer )
 	{
-		CWindowMSButton *pButton = dynamic_cast<CWindowMSButton*>( pHeadersContainer->GetItem( nTab ) );
+		CWindowMSButton *pButton = dynamic_cast<CWindowMSButton *>( pHeadersContainer->GetItem( nTab ) );
 		if ( pButton )
 		{
-			CButtonGroup * pGroup = pButton->GetButtonGroup();
+			CButtonGroup *pGroup = pButton->GetButtonGroup();
 			NI_ASSERT( pGroup != 0, "the button must have button group in tab control header" );
 			//pButton->SetState( bShow ? 1 : 0 );
 			pGroup->SetActive( pButton );
@@ -106,21 +106,21 @@ void CWindowTabControl::ShowTab( const int nTab, const bool bShow, const bool bU
 void CWindowTabControl::Reposition( const CTRect<float> &rcParent )
 {
 	CWindow::Reposition( rcParent );
-/*
+	/*
 	if ( !pContainerSample )
 		pContainerSample = checked_cast<CWindow*>( GetChild( "ContainerSample" ) );
 	if ( !pButtonSample )
 		pButtonSample = dynamic_cast<CWindowMSButton*>( GetChild( "ButtonSample" ) );
 */
 	if ( !pHeadersContainer )
-		pHeadersContainer = dynamic_cast<CWindowScrollableContainer*>( GetChild( "HeadersContainer", false ) );
+		pHeadersContainer = dynamic_cast<CWindowScrollableContainer *>( GetChild( "HeadersContainer", false ) );
 }
 
 void CWindowTabControl::Init()
 {
 	// find existing tabs
 	nTabNumber = 0;
-	while( true )
+	while ( true )
 	{
 		IWindow *pContainer = GetChild( CreateTabName( nTabNumber, 0 ), false );
 		if ( pContainer )
@@ -129,7 +129,7 @@ void CWindowTabControl::Init()
 			{
 				IWindow *pButton = pHeadersContainer->GetItem( nTabNumber );
 				if ( pButton )
-					dynamic_cast<IButton*>( pButton )->SetNotifySink( this );
+					dynamic_cast<IButton *>( pButton )->SetNotifySink( this );
 			}
 			++nTabNumber;
 		}
@@ -150,7 +150,7 @@ const std::string &CWindowTabControl::CreateTabName( const int nTab, CWindow *pT
 		}
 		else
 		{
-			tabNames[nTab] = std::to_string(nTab);
+			tabNames[nTab] = std::to_string( nTab );
 		}
 	}
 	return tabNames[nTab];
@@ -160,10 +160,9 @@ void CWindowTabControl::AddTab( const std::wstring &szButtonName, CWindow *pTab 
 {
 	// if we have buttons, add button
 
-
 	if ( pHeadersContainer )
 	{
-		CWindowMSButton *pButton = dynamic_cast<CWindowMSButton*>( CUIFactory::MakeWindow( pShared->pButtonSample ));
+		CWindowMSButton *pButton = dynamic_cast<CWindowMSButton *>( CUIFactory::MakeWindow( pShared->pButtonSample ) );
 		if ( pButton )
 		{
 			pHeadersContainer->PushBack( pButton, false );
@@ -187,7 +186,7 @@ void CWindowTabControl::AddTab( const std::wstring &szButtonName, CWindow *pTab 
 void CWindowTabControl::AddTab( const std::wstring &szButtonName )
 {
 	// add container
-	CWindow * pNewTab = checked_cast<CWindow*>( CUIFactory::MakeWindow( pShared->pContainerSample ) );
+	CWindow *pNewTab = checked_cast<CWindow *>( CUIFactory::MakeWindow( pShared->pContainerSample ) );
 	NI_ASSERT( pNewTab != 0, "cannot create new tab" );
 	AddTab( szButtonName, pNewTab );
 	pNewTab->Init();
@@ -195,7 +194,7 @@ void CWindowTabControl::AddTab( const std::wstring &szButtonName )
 
 void CWindowTabControl::AddElement( const int nTab, IWindow *pWnd )
 {
-	CWindow * pWindow = dynamic_cast<CWindow*>( GetChild( CreateTabName( nTab, 0 ), false ) );
+	CWindow *pWindow = dynamic_cast<CWindow *>( GetChild( CreateTabName( nTab, 0 ), false ) );
 	if ( pWindow )
 		pWindow->AddChild( pWnd, true );
 }

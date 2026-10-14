@@ -11,17 +11,18 @@
 #include <future>
 #include <thread>
 
-#if !defined(_FINALRELEASE) || defined(_DEVVERSION)
+#if !defined( _FINALRELEASE ) || defined( _DEVVERSION )
 //#define __TEST_LAGS__
 #endif // !defined(_FINALRELEASE) || defined(_DEVVERSION)
 
 namespace NNet
 {
-	////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 class CNetDriver : public IDriver
 {
 	OBJECT_NOCOPY_METHODS( CNetDriver );
 	friend struct CNetDriverTestAccess;
+
 public:
 	struct SServer
 	{
@@ -37,10 +38,11 @@ public:
 		std::vector<int> received;
 		CMemoryStream pkt;
 	};
+
 private:
 	SNetDriverConsts consts;
 	bool bIsBroadcast; // used to prevent undesireble broadcast
-	bool bIsClient; //to determine client or server
+	bool bIsClient;    //to determine client or server
 	//
 	struct SClientAddressInfo
 	{
@@ -49,7 +51,9 @@ private:
 
 		SClientAddressInfo() {}
 		SClientAddressInfo( const CNodeAddress &_inetAddress, const CNodeAddressSet &_localAddress )
-			: inetAddress(_inetAddress), localAddress(_localAddress) {}
+				: inetAddress( _inetAddress ), localAddress( _localAddress )
+		{
+		}
 	};
 	//
 	struct SPeer
@@ -65,7 +69,7 @@ private:
 	};
 
 	//
-	typedef std::unordered_map<CP2PTracker::UCID,SPeer> CPeerList;
+	typedef std::unordered_map<CP2PTracker::UCID, SPeer> CPeerList;
 	CPeerList clients;
 	EState state;
 	EReject lastReject;
@@ -80,8 +84,8 @@ private:
 	CNodeAddress addr;
 	CNodeAddress gameHostAddress;
 
-	SPeer* GetClientByAddr( const CNodeAddress &addr );
-	SPeer* GetClient( CP2PTracker::UCID nID );
+	SPeer *GetClientByAddr( const CNodeAddress &addr );
+	SPeer *GetClient( CP2PTracker::UCID nID );
 	void AddClient( const SClientAddressInfo &addr, CP2PTracker::UCID clientID );
 	void AddNewP2PClient( const SClientAddressInfo &addr, CP2PTracker::UCID clientID );
 	void RemoveClient( CP2PTracker::UCID nID );
@@ -93,8 +97,10 @@ private:
 	void ProcessIncomingMessages();
 	void ProcessLogin( const CNodeAddress &addr, CBitStream &bits );
 	void ProcessNormal( const CNodeAddress &addr, CBitStream &bits );
-	void AddOutputMessage( EMessage msg, CP2PTracker::UCID _from,
-		CMemoryStream &data, const std::vector<CP2PTracker::UCID> &received );
+	void AddOutputMessage( EMessage msg,
+	                       CP2PTracker::UCID _from,
+	                       CMemoryStream &data,
+	                       const std::vector<CP2PTracker::UCID> &received );
 
 	void PollMessages( SPeer *pPeer );
 	void ProcessP2PMessages();
@@ -125,7 +131,7 @@ private:
 	bool bReceiveNow;
 
 	std::list<CMemoryStream> msgToSendBroadcast;
-	std::list< std::pair< int, CMemoryStream > > msgToSendDirect;
+	std::list<std::pair<int, CMemoryStream>> msgToSendDirect;
 
 	bool AnalyzeLags();
 #endif // __TEST_LAGS__
@@ -134,12 +140,14 @@ private:
 	void KillThread();
 
 	void StartGameInfoSend( const CMemoryStream &data );
+
 public:
 	CNetDriver();
 	CNetDriver( const SNetDriverConsts &_consts, bool _bIsBroadcast );
 	~CNetDriver();
 	//
-	virtual void Init( const APPLICATION_ID nApplicationID, const int nGamePort, bool bClientOnly, ILinksManager *pLinksManager );
+	virtual void
+	Init( const APPLICATION_ID nApplicationID, const int nGamePort, bool bClientOnly, ILinksManager *pLinksManager );
 	// get current state (active/inactive/connecting)
 	virtual EState GetState() const;
 	// get reject reason (then )
@@ -159,7 +167,7 @@ public:
 	// get game info (for client)
 	virtual bool GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo );
 	// refresh servers list ( for client )
-	virtual void RefreshServersList() { }
+	virtual void RefreshServersList() {}
 	// send broadcast message for all
 	virtual bool SendBroadcast( const CMemoryStream &pkt );
 	// send direct message for client 'nClient'
@@ -178,7 +186,6 @@ public:
 
 	virtual const std::string GetIP( const int nClientID );
 	virtual const int GetPort( const int nClientID );
-
 
 	virtual void PauseNet();
 	virtual void UnpauseNet();

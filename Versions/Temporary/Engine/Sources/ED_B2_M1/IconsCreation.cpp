@@ -52,7 +52,7 @@ static bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture, IEditorScene
 	// Restore scene
 	pScene->SetBackgroundColor( vPrevColor );
 	pScene->ToggleGetSizeFromTarget( bPrevGetSizes );
-	NTargetMesh::CreateTargetMesh( N_ICONS_SIZE_X/(float)N_TARGET_SIZE_X, N_ICONS_SIZE_Y/(float)N_TARGET_SIZE_Y );
+	NTargetMesh::CreateTargetMesh( N_ICONS_SIZE_X / (float)N_TARGET_SIZE_X, N_ICONS_SIZE_Y / (float)N_TARGET_SIZE_Y );
 
 	// Getting data
 	NGfx::GetRenderTargetData( pTexture, pTarget->GetTexture() );
@@ -78,7 +78,7 @@ static bool WriteTGA( const std::string &szFileName, const CArray2D<NGfx::SPixel
 	for ( int iX = 0; iX < nIconSizeX; ++iX )
 		for ( int iY = 0; iY < nIconSizeY; ++iY )
 		{
-			image[iX][iY] = texture[iX + nStartX][iY+nStartY].dwColor;
+			image[iX][iY] = texture[iX + nStartX][iY + nStartY].dwColor;
 		}
 
 	// Write file
@@ -86,7 +86,7 @@ static bool WriteTGA( const std::string &szFileName, const CArray2D<NGfx::SPixel
 	if ( !fileTGA.IsOk() )
 		return false;
 
-	NImage::SaveImageAsTGA( &fileTGA, image);
+	NImage::SaveImageAsTGA( &fileTGA, image );
 
 	return true;
 }
@@ -97,11 +97,11 @@ static bool CreateTextureItem( const std::string &szTextureName, const std::stri
 	IResourceManager *pRM = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 
-	CPtr<IManipulator> pTexMan = pRM->CreateObjectManipulator("Texture", szTextureName);
+	CPtr<IManipulator> pTexMan = pRM->CreateObjectManipulator( "Texture", szTextureName );
 	if ( !pTexMan )
 	{
-		pFolderCallback->InsertObject( "Texture", szTextureName);
-		pTexMan = pRM->CreateObjectManipulator("Texture", szTextureName);
+		pFolderCallback->InsertObject( "Texture", szTextureName );
+		pTexMan = pRM->CreateObjectManipulator( "Texture", szTextureName );
 	}
 
 	if ( !pTexMan )
@@ -149,7 +149,8 @@ static bool SaveCameraPosition( NDb::IObjMan *pManipulator )
 
 void CModelEditor::CreateIcon()
 {
-	const NDb::SMechUnitRPGStats *pUnitStats = NDb::Get<NDb::SMechUnitRPGStats>( GetObjectSet().objectNameSet.begin()->first );
+	const NDb::SMechUnitRPGStats *pUnitStats =
+			NDb::Get<NDb::SMechUnitRPGStats>( GetObjectSet().objectNameSet.begin()->first );
 	if ( !pUnitStats )
 		return;
 
@@ -194,7 +195,8 @@ void CModelEditor::CreateIcon()
 void CModelEditor::RestoreCameraParametersFromStats()
 {
 	// Getting unit manipulator
-	const NDb::SMechUnitRPGStats *pUnitStats = NDb::Get<NDb::SMechUnitRPGStats>( GetObjectSet().objectNameSet.begin()->first );
+	const NDb::SMechUnitRPGStats *pUnitStats =
+			NDb::Get<NDb::SMechUnitRPGStats>( GetObjectSet().objectNameSet.begin()->first );
 	if ( !pUnitStats )
 		return;
 
@@ -233,7 +235,7 @@ void CModelEditor::RestoreCameraParametersFromStats()
 
 void CModelEditor::CreateTarget()
 {
-	NTargetMesh::CreateTargetMesh( N_ICONS_SIZE_X/(float)N_TARGET_SIZE_X, N_ICONS_SIZE_Y/(float)N_TARGET_SIZE_Y );
+	NTargetMesh::CreateTargetMesh( N_ICONS_SIZE_X / (float)N_TARGET_SIZE_X, N_ICONS_SIZE_Y / (float)N_TARGET_SIZE_Y );
 }
 
 void CModelEditor::DeleteTarget()

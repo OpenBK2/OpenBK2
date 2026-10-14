@@ -7,15 +7,21 @@
 namespace NGScene
 {
 
-void RenderTnL( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC,
-	IRender *pRender, CSceneFragments &scene, CTransparentRenderer *pTransp, ETransparentMode trMode, NGfx::CCubeTexture *_pSky )
+void RenderTnL( CTransformStack *pTS,
+                CTransformStack *pClipTS,
+                NGfx::CRenderContext *pRC,
+                IRender *pRender,
+                CSceneFragments &scene,
+                CTransparentRenderer *pTransp,
+                ETransparentMode trMode,
+                NGfx::CCubeTexture *_pSky )
 {
 	SRenderPathContext rpc( true, 0, 0 );
 	SLightInfo lightInfo;
 	if ( trMode != TRM_ONLY )
 	{
 		CRenderCmdList lightOps;
-		const std::vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
+		const std::vector<SRenderFragmentInfo *> &fragments = scene.GetFragments();
 		for ( int i = 1; i < fragments.size(); ++i )
 		{
 			if ( scene.IsFilteredFragment( i ) )

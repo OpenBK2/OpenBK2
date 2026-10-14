@@ -21,20 +21,37 @@ public:
 	virtual class CCSTime *GetGameTimer();
 	virtual uint32_t GetNormal( const CVec2 &vPoint ) const;
 	virtual void ClearMarkers( ESceneMarkerType eType, int nID );
-	virtual void AddShootArea( int nID, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, const CVec3 &vColor, const CVec2 &vCenter );
+	virtual void AddShootArea( int nID,
+	                           float fStartAngle,
+	                           float fEndAngle,
+	                           float fMinRadius,
+	                           float fMaxRadius,
+	                           const CVec3 &vColor,
+	                           const CVec2 &vCenter );
 	virtual void SwitchScene( const EScene eScene );
 
-	virtual int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot,
-												 const CVec3 &vScale, ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo,
-												 const bool bHasReflection = false );
-	virtual bool MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3(1, 1, 1) );
+	virtual int AddObject( const int nID,
+	                       const NDb::SModel *pModel,
+	                       const CVec3 &vPos,
+	                       const CQuat &qRot,
+	                       const CVec3 &vScale,
+	                       ESceneObjAnimMode eAnimMode,
+	                       NGScene::IGameView::SMeshInfo *pMeshInfo,
+	                       const bool bHasReflection = false );
+	virtual bool
+	MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3( 1, 1, 1 ) );
 	virtual void RemoveObject( const int nID );
 	virtual void SetFadedObjects( const std::list<int> &objects );
 	virtual void SetFadedObjects( const std::list<int> &objects, float fFade );
-	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot );
+	virtual int AddEffect(
+			const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot );
 
 	virtual int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck );
-	virtual int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck );
+	virtual int AddIndexedPolyline( const int nID,
+	                                const std::vector<CVec3> &points,
+	                                const std::vector<uint16_t> &indices,
+	                                const CVec4 &vColor,
+	                                bool bDepthCheck );
 	virtual void RemovePolyline( const int nID );
 	virtual bool ToggleShow( ESceneShow eShow );
 	virtual bool ToggleAIGeometryMode();

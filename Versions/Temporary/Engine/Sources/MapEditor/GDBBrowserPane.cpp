@@ -27,17 +27,15 @@
 // commented out and which nothing called, did not come along.
 
 CGDBBrowserContents::CGDBBrowserContents( IPane *_pPane, int _nGDBBrowserID )
-	: pPane( _pPane ), nGDBBrowserID( _nGDBBrowserID ), bCreateControls( true ), pContents( 0 )
+		: pPane( _pPane ), nGDBBrowserID( _nGDBBrowserID ), bCreateControls( true ), pContents( 0 )
 {
 }
-
 
 CGDBBrowserContents::~CGDBBrowserContents()
 {
 	delete pContents;
 	pContents = 0;
 }
-
 
 void CGDBBrowserContents::Start( IObjectBrowser *pBrowser )
 {
@@ -55,7 +53,6 @@ void CGDBBrowserContents::Start( IObjectBrowser *pBrowser )
 	SetTableManipulator( Singleton<IResourceManager>()->CreateTableManipulator() );
 }
 
-
 void CGDBBrowserContents::Stop()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_OBJECT_STORAGE, GetObjectStorage() );
@@ -66,7 +63,6 @@ void CGDBBrowserContents::Stop()
 	pUserData->tableSetMap[nGDBBrowserID] = selectedTables;
 	pUserData->szCurrentTableMap[nGDBBrowserID] = szCurrentTable;
 }
-
 
 void CGDBBrowserContents::OnTableSelected()
 {
@@ -87,7 +83,10 @@ void CGDBBrowserContents::OnTableSelected()
 			collectionObjectSet.szObjectTypeName = szCurrentTable;
 			InsertHashSetElement( &( collectionObjectSet.objectNameSet ), CDBID( VIEW_COLLECTION_ID ) );
 			//
-			pwndTreeGBDBrowserBase->GetView()->SetViewManipulator( Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, std::string() );
+			pwndTreeGBDBrowserBase->GetView()->SetViewManipulator(
+					Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ),
+					collectionObjectSet,
+					std::string() );
 			pwndTreeGBDBrowserBase->CreateTree();
 		}
 		else
@@ -96,7 +95,6 @@ void CGDBBrowserContents::OnTableSelected()
 		}
 	}
 }
-
 
 void CGDBBrowserContents::SetTableManipulator( IManipulator *_pTableManipulator )
 {
@@ -122,7 +120,6 @@ void CGDBBrowserContents::SetTableManipulator( IManipulator *_pTableManipulator 
 	}
 }
 
-
 void CGDBBrowserContents::CreateTabs()
 {
 	if ( pContents == 0 )
@@ -134,12 +131,12 @@ void CGDBBrowserContents::CreateTabs()
 		bCreateControls = true;
 		pContents->RemoveAllTables();
 		// Необходимо сначало добавить все панели, а потом устанавливать активную
-		IObjectTree* pwndActiveTreeGBDBrowser = 0;
+		IObjectTree *pwndActiveTreeGBDBrowser = 0;
 		for ( std::list<std::string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 		{
 			if ( selectedTables.find( *itTable ) != selectedTables.end() )
 			{
-				if ( IObjectTree* pwndTreeGBDBrowser = pContents->AddTable( *itTable ) )
+				if ( IObjectTree *pwndTreeGBDBrowser = pContents->AddTable( *itTable ) )
 				{
 					if ( ( *itTable ) == szCurrentTable )
 					{
@@ -172,7 +169,6 @@ void CGDBBrowserContents::CreateTabs()
 	}
 }
 
-
 void CGDBBrowserContents::SelectTables()
 {
 	// Which dialog answers -- the MFC one or the wx one -- is NSelectTables'
@@ -183,17 +179,17 @@ void CGDBBrowserContents::SelectTables()
 	}
 }
 
-
 void CGDBBrowserContents::SelectObjectSet( const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.objectNameSet.empty() && ( pContents != 0 ) )
 	{
 		if ( !rObjectSet.objectNameSet.begin()->first.IsEmpty() )
 		{
-			Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[rObjectSet.szObjectTypeName].szCurrentObject = rObjectSet.objectNameSet.begin()->first.ToString();
+			Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[rObjectSet.szObjectTypeName].szCurrentObject =
+					rObjectSet.objectNameSet.begin()->first.ToString();
 		}
 		//
-		if ( 	selectedTables.find( rObjectSet.szObjectTypeName ) != selectedTables.end() )
+		if ( selectedTables.find( rObjectSet.szObjectTypeName ) != selectedTables.end() )
 		{
 			IObjectTree *pwndTab = pContents->GetTable( rObjectSet.szObjectTypeName );
 			if ( pwndTab != 0 )
@@ -206,7 +202,7 @@ void CGDBBrowserContents::SelectObjectSet( const SObjectSet &rObjectSet )
 		{
 			bCreateControls = true;
 			InsertHashSetElement( &selectedTables, rObjectSet.szObjectTypeName );
-			IObjectTree* pwndTreeGBDBrowser = pContents->AddTable( rObjectSet.szObjectTypeName );
+			IObjectTree *pwndTreeGBDBrowser = pContents->AddTable( rObjectSet.szObjectTypeName );
 			bCreateControls = false;
 			// The table is added before anything is asked of its tree; a tree that
 			// could not be made used to be dereferenced here all the same.
@@ -222,7 +218,6 @@ void CGDBBrowserContents::SelectObjectSet( const SObjectSet &rObjectSet )
 		}
 	}
 }
-
 
 void CGDBBrowserContents::New( const std::string &rszObjectTypeName )
 {
@@ -253,15 +248,18 @@ void CGDBBrowserContents::New( const std::string &rszObjectTypeName )
 	bool bNeedExport = false;
 	bool bNeedEdit = true;
 	//
-	if ( pBuilderContainer->InsertObject( &szObjectTypeName, &szObjectName, true, &bCanChangeObjectName, &bNeedExport, &bNeedEdit ) )
+	if ( pBuilderContainer->InsertObject(
+					 &szObjectTypeName, &szObjectName, true, &bCanChangeObjectName, &bNeedExport, &bNeedEdit ) )
 	{
-		if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
+		if ( CPtr<IManipulator> pObjectManipulator =
+		         pResourceManager->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
 		{
 			// Экспортируем вновь созданный объект
 			if ( bNeedExport )
 			{
 				pExporterContainer->StartExport( szObjectTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, EXPORT_REFERENCES );
-				pExporterContainer->ExportObject( pObjectManipulator, szObjectTypeName, szObjectName, FORCE_EXPORT, EXPORT_REFERENCES );
+				pExporterContainer->ExportObject(
+						pObjectManipulator, szObjectTypeName, szObjectName, FORCE_EXPORT, EXPORT_REFERENCES );
 				pExporterContainer->FinishExport( szObjectTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, EXPORT_REFERENCES );
 			}
 			if ( pEditorContainer->CanCreate( szObjectTypeName ) )
@@ -287,7 +285,6 @@ void CGDBBrowserContents::New( const std::string &rszObjectTypeName )
 	}
 }
 
-
 void CGDBBrowserContents::Open( const std::string &rszObjectTypeName )
 {
 	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
@@ -307,7 +304,8 @@ void CGDBBrowserContents::Open( const std::string &rszObjectTypeName )
 		{
 			if ( pEditorContainer->CanCreate( szObjectTypeName ) )
 			{
-				if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( szObjectTypeName, objectDBID ) )
+				if ( CPtr<IManipulator> pObjectManipulator =
+				         pResourceManager->CreateObjectManipulator( szObjectTypeName, objectDBID ) )
 				{
 					SObjectSet objectSet;
 					objectSet.szObjectTypeName = szObjectTypeName;
@@ -325,7 +323,6 @@ void CGDBBrowserContents::Open( const std::string &rszObjectTypeName )
 	}
 }
 
-
 void CGDBBrowserContents::OnRecentList( int nIndex, bool bMainObject )
 {
 	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
@@ -340,10 +337,12 @@ void CGDBBrowserContents::OnRecentList( int nIndex, bool bMainObject )
 	std::string szName;
 	if ( bMainObject )
 	{
-		if ( ( nIndex >= 0 ) && ( nIndex < pUserData->recentList.size () ) )
+		if ( ( nIndex >= 0 ) && ( nIndex < pUserData->recentList.size() ) )
 		{
 			int nNameIndex = 0;
-			for ( SUserData::CRecentList::const_iterator itRecentName = pUserData->recentList.begin(); itRecentName != pUserData->recentList.end(); ++itRecentName )
+			for ( SUserData::CRecentList::const_iterator itRecentName = pUserData->recentList.begin();
+			      itRecentName != pUserData->recentList.end();
+			      ++itRecentName )
 			{
 				if ( nIndex == nNameIndex )
 				{
@@ -356,10 +355,12 @@ void CGDBBrowserContents::OnRecentList( int nIndex, bool bMainObject )
 	}
 	else
 	{
-		if ( ( nIndex >= 0 ) && ( nIndex < pUserData->recentResourceList.size () ) )
+		if ( ( nIndex >= 0 ) && ( nIndex < pUserData->recentResourceList.size() ) )
 		{
 			int nNameIndex = 0;
-			for ( SUserData::CRecentList::const_iterator itRecentName = pUserData->recentResourceList.begin(); itRecentName != pUserData->recentResourceList.end(); ++itRecentName )
+			for ( SUserData::CRecentList::const_iterator itRecentName = pUserData->recentResourceList.begin();
+			      itRecentName != pUserData->recentResourceList.end();
+			      ++itRecentName )
 			{
 				if ( nIndex == nNameIndex )
 				{
@@ -376,7 +377,8 @@ void CGDBBrowserContents::OnRecentList( int nIndex, bool bMainObject )
 		CStringManager::CreateObjectSet( &objectSet, szName, bMainObject );
 		if ( pEditorContainer->CanCreate( objectSet.szObjectTypeName ) )
 		{
-			if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
+			if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator(
+							 objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
 			{
 				CStringManager::AddToRecentList( szName, bMainObject );
 				SelectObjectSet( objectSet );
@@ -386,11 +388,7 @@ void CGDBBrowserContents::OnRecentList( int nIndex, bool bMainObject )
 	}
 }
 
-
-void CGDBBrowserContents::OnCheckOut()
-{
-}
-
+void CGDBBrowserContents::OnCheckOut() {}
 
 void CGDBBrowserContents::OnCheckIn()
 {
@@ -404,16 +402,19 @@ void CGDBBrowserContents::OnCheckIn()
 	{
 		bResult = Singleton<IResourceManager>()->CheckIn();
 	}
-	catch (...)	{}
+	catch ( ... )
+	{
+	}
 	//
 	if ( bResult )
 	{
 		NMessage::Information( "Check in completed successfully.\r\n\r\n"
-				"MapEditor will exit now." );
+		                       "MapEditor will exit now." );
 	}
 	else
 	{
-		NMessage::Error( "Check in failed.\r\n\r\n"
+		NMessage::Error(
+				"Check in failed.\r\n\r\n"
 				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
 				"This situation is CRITICAL.\r\n"
 				"If you do not want to lose changes you've done in your local database,\r\n"
@@ -422,7 +423,6 @@ void CGDBBrowserContents::OnCheckIn()
 	}
 	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );
 }
-
 
 void CGDBBrowserContents::OnGetLatest()
 {
@@ -436,15 +436,18 @@ void CGDBBrowserContents::OnGetLatest()
 	{
 		bResult = Singleton<IResourceManager>()->GetLatest();
 	}
-	catch (...)	{}
+	catch ( ... )
+	{
+	}
 	if ( bResult )
 	{
 		NMessage::Information( "\"Get latest\" completed successfully\r\n\r\n"
-				"MapEditor will exit now." );
+		                       "MapEditor will exit now." );
 	}
 	else
 	{
-		NMessage::Error( "Game database Get Latest operation has failed.\r\n\r\n"
+		NMessage::Error(
+				"Game database Get Latest operation has failed.\r\n\r\n"
 				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
 				"This situation is CRITICAL.\r\n"
 				"If you do not want to lose changes you've done in your local database, call to MapEditor's gurus immediately and do not try to start MapEditor again until they're come.\r\n\r\n"
@@ -453,12 +456,11 @@ void CGDBBrowserContents::OnGetLatest()
 	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );
 }
 
-
 bool CGDBBrowserContents::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MAIN_NEW:
 		{
@@ -599,7 +601,6 @@ bool CGDBBrowserContents::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CGDBBrowserContents::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CGDBBrowserContents::UpdateCommand(), pbEnable == 0" );
@@ -607,7 +608,7 @@ bool CGDBBrowserContents::UpdateCommand( unsigned nCommandID, bool *pbEnable, bo
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MAIN_NEW:
 		case ID_MAIN_OPEN:
@@ -736,7 +737,6 @@ bool CGDBBrowserContents::UpdateCommand( unsigned nCommandID, bool *pbEnable, bo
 	}
 	return false;
 }
-
 
 void CGDBBrowserContents::LocateObject()
 {

@@ -13,14 +13,9 @@
 // **
 // ************************************************************************************************************************ //
 
-CDummyInterface::CDummyInterface()
-: CInterfaceScreenBase( "dummy_interface", "default" )
-{
-}
+CDummyInterface::CDummyInterface() : CInterfaceScreenBase( "dummy_interface", "default" ) {}
 
-CDummyInterface::~CDummyInterface()
-{
-}
+CDummyInterface::~CDummyInterface() {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x160AC441, CDummyInterface );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_DUMMY, CICDummy );

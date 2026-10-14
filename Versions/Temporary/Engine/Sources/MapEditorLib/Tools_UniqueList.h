@@ -3,7 +3,7 @@
 #define UNIQUE_LIST_INSERT_FRONT true
 #define UNIQUE_LIST_INSERT_BACK false
 
-template<class TList, class TElement>
+template <class TList, class TElement>
 class CUniqueList
 {
 	typedef std::unordered_map<TElement, unsigned> CElementMap;
@@ -54,11 +54,8 @@ public:
 		elementList.clear();
 	}
 	//
-	bool IsExists( const TElement &rElement ) const
-	{
-		return ( elementMap.find( rElement ) != elementMap.end() );
-	}
+	bool IsExists( const TElement &rElement ) const { return ( elementMap.find( rElement ) != elementMap.end() ); }
 	//
-	const CElementMap& GetMap() const { return elementMap; }
-	const TList& GetList() const { return elementList; }
+	const CElementMap &GetMap() const { return elementMap; }
+	const TList &GetList() const { return elementList; }
 };

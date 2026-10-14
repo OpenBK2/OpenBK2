@@ -15,9 +15,9 @@
 
 namespace NGameX
 {
-	void PostStorageInitialize();
-	void InitDataDependentSingletons();
-	void UnInitDataDependentSingletons();
+void PostStorageInitialize();
+void InitDataDependentSingletons();
+void UnInitDataDependentSingletons();
 }
 
 namespace NMOD
@@ -51,7 +51,7 @@ class CICMODPostSetup : public IInterfaceCommand
 	NDb::EDatabaseMode eMode;
 	//
 public:
-	CICMODPostSetup(): eMode( NDb::DATABASE_MODE_GAME ) {}
+	CICMODPostSetup() : eMode( NDb::DATABASE_MODE_GAME ) {}
 	void Exec()
 	{
 		NDb::OpenDatabase( NVFS::GetMainVFS(), NVFS::GetMainFileCreator(), eMode );
@@ -72,9 +72,9 @@ public:
 	{
 		if ( pszConfig != 0 )
 		{
-			if ( strcmp(pszConfig, MOD_MODE_GAME) == 0 )
+			if ( strcmp( pszConfig, MOD_MODE_GAME ) == 0 )
 				eMode = NDb::DATABASE_MODE_GAME;
-			else if ( strcmp(pszConfig, MOD_MODE_EDITOR) == 0 )
+			else if ( strcmp( pszConfig, MOD_MODE_EDITOR ) == 0 )
 				eMode = NDb::DATABASE_MODE_EDITOR;
 		}
 	}

@@ -7,18 +7,17 @@
 #include "Net/NetAddress.h"
 #include "MPManagerMode.h"
 
-
 struct IServerClient;
 namespace NDb
 {
-	struct SMultiplayerMap;
+struct SMultiplayerMap;
 }
 
 IMPToUIManager *CreateMPManager();
 
 class CMPManager : public IMPToUIManager, public CMPUIMessageProcessor
 {
-	OBJECT_NOCOPY_METHODS(CMPManager);
+	OBJECT_NOCOPY_METHODS( CMPManager );
 
 	CObj<CMPManagerMode> pCurrentNetMode;
 
@@ -33,14 +32,13 @@ public:
 	CMPManager();
 	~CMPManager();
 
-
 	void SetLanTester( CLANTester *_pLANTester ) { pCurrentNetMode->SetLanTester( _pLANTester ); }
 
 	//{ IMPToUIManager
 	virtual void AddUIMessage( SMPUIMessage *pMsg );
 	virtual void AddUIMessage( EMPUIMessageType eMessageType );
-	virtual SMPUIMessage* GetUIMessage();
-	virtual SMPUIMessage* PeekUIMessage();
+	virtual SMPUIMessage *GetUIMessage();
+	virtual SMPUIMessage *PeekUIMessage();
 	virtual void MPUISegment();
 	//}
 

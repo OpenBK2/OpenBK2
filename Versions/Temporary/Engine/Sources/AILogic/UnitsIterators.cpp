@@ -24,7 +24,7 @@ void CGlobalIter::Init( const uint8_t cStartDipl, const uint8_t cFilter )
 	else
 	{
 		iter = units.units.begin( parties[nCurParty] );
-		while ( nCurParty < nParties && ( iter == 0 || units.units.GetEl(iter) == 0 ) )
+		while ( nCurParty < nParties && ( iter == 0 || units.units.GetEl( iter ) == 0 ) )
 		{
 			if ( iter != 0 )
 				iter = units.units.GetNext( iter );
@@ -51,7 +51,7 @@ void CGlobalIter::Iterate()
 
 	visitedUnits.insert( iter );
 
-	while ( ( iter == 0 || units.units.GetEl(iter) == 0 ) && nCurParty < nParties )
+	while ( ( iter == 0 || units.units.GetEl( iter ) == 0 ) && nCurParty < nParties )
 	{
 		if ( iter != 0 )
 			iter = units.units.GetNext( iter );
@@ -65,9 +65,9 @@ void CGlobalIter::Iterate()
 	}
 }
 
-CAIUnit* CGlobalIter::operator*() const
+CAIUnit *CGlobalIter::operator*() const
 {
-	return units.units.GetEl(iter);
+	return units.units.GetEl( iter );
 }
 
 //*******************************************************************
@@ -77,18 +77,18 @@ CAIUnit* CGlobalIter::operator*() const
 CPlanesIter::CPlanesIter()
 {
 	iter = units.planes.begin();
-	while ( iter != units.planes.end() && *iter == 0)
+	while ( iter != units.planes.end() && *iter == 0 )
 		++iter;
 }
 
 void CPlanesIter::Iterate()
 {
- 	++iter;
+	++iter;
 	while ( iter != units.planes.end() && *iter == 0 )
 		++iter;
 }
 
-CAviation* CPlanesIter::operator*() const
+CAviation *CPlanesIter::operator*() const
 {
 	return *iter;
 }

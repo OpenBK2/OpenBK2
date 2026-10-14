@@ -21,6 +21,7 @@ class CTerminal : public CObjectBase
 	// thread parked in a blocking accept or recv, so it ends with the process.
 	// The HANDLE this replaces was never closed either.
 	std::thread readingThread;
+
 public:
 	CTerminal() {}
 	CTerminal( CCommands *_pCommands, const int _nPort );

@@ -20,7 +20,8 @@ TEST( ExtendedStatsRegistration, DatabaseAndSimulationTypesHaveDistinctFactories
 {
 	// The exported cast forces AILogic to load, even with Windows import pruning
 	// or ELF --as-needed. No simulation/world initialization is required.
-	EXPECT_EQ( CastToUserObject( static_cast<CObjectBase *>( nullptr ), static_cast<CHelicopter *>( nullptr ) ), nullptr );
+	EXPECT_EQ( CastToUserObject( static_cast<CObjectBase *>( nullptr ), static_cast<CHelicopter *>( nullptr ) ),
+	           nullptr );
 	EXPECT_NE( int( NDb::SExtendedStats::typeID ), int( AI_HELICOPTER ) );
 	ASSERT_TRUE( NObjectFactory::IsRegistered( AI_HELICOPTER ) );
 	CObj<CObjectBase> object = NObjectFactory::MakeObject( NDb::SExtendedStats::typeID );
@@ -43,11 +44,11 @@ protected:
 		std::filesystem::copy_file( EXTENDED_STATS_TYPES_FILE, directory / "types.xml" );
 		std::ofstream( directory / "legacy.xdb" ) << "<MechUnitRPGStats/>";
 		std::ofstream( directory / "defaults.xdb" ) << "<ExtendedStats/>";
-		std::ofstream( directory / "extended.xdb" ) <<
-			"<ExtendedStats><ForwardTowed>true</ForwardTowed>"
-			"<VerticalOffsetAngleRad>-0.5</VerticalOffsetAngleRad></ExtendedStats>";
-		std::ofstream( directory / "unit.xdb" ) <<
-			"<MechUnitRPGStats><ExtendedStats href=\"extended.xdb\"/></MechUnitRPGStats>";
+		std::ofstream( directory / "extended.xdb" )
+				<< "<ExtendedStats><ForwardTowed>true</ForwardTowed>"
+					 "<VerticalOffsetAngleRad>-0.5</VerticalOffsetAngleRad></ExtendedStats>";
+		std::ofstream( directory / "unit.xdb" )
+				<< "<MechUnitRPGStats><ExtendedStats href=\"extended.xdb\"/></MechUnitRPGStats>";
 		const std::string path = directory.generic_string() + "/";
 		NVFS::SetMainVFS( NVFS::CreateWinVFS( path ) );
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator( path ) );

@@ -8,12 +8,12 @@
 
 namespace NGScene
 {
-	class IGameView;
+class IGameView;
 };
 
 namespace NDb
 {
-	struct SWater;
+struct SWater;
 };
 
 class CCSBound;
@@ -31,13 +31,15 @@ class CWaterPatchLayer : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	OBJECT_BASIC_METHODS( CWaterPatchLayer );
 	//
-	CDGPtr<CWaterPatch, CPtr<CWaterPatch> > pPatch;
+	CDGPtr<CWaterPatch, CPtr<CWaterPatch>> pPatch;
+
 protected:
 	bool NeedUpdate() { return pPatch.Refresh(); }
-	void Recalc() {	}
+	void Recalc() {}
+
 public:
 	CWaterPatchLayer() {}
-	CWaterPatchLayer( CWaterPatch *_pPatch ): pPatch( _pPatch ) { pValue = new NGScene::CObjectInfo(); }
+	CWaterPatchLayer( CWaterPatch *_pPatch ) : pPatch( _pPatch ) { pValue = new NGScene::CObjectInfo(); }
 	//
 	void UpdateMesh( NGScene::CObjectInfo::SData *pData )
 	{
@@ -112,7 +114,7 @@ class CWaterPatch : public CVersioningBase
 		float fOffsY;
 	};
 	//
-	CDGPtr<CFuncBase<STime> > pTimer;
+	CDGPtr<CFuncBase<STime>> pTimer;
 	CDBPtr<NDb::SWater> pDesc;
 	CDGPtr<CCSBound> pBound;
 	//
@@ -133,7 +135,7 @@ class CWaterPatch : public CVersioningBase
 	CVec2 windVec;
 
 	// foam parameters
-	std::vector<std::vector<SFoamParams> > foamParams;
+	std::vector<std::vector<SFoamParams>> foamParams;
 	std::vector<float> foamXOffsets;
 
 	CArray2D<SWaterHorDeform> waterHorDeform;
@@ -152,11 +154,13 @@ protected:
 	float GetTanHyperbolic( const float z );
 	float GetFracPart( const float z );
 	float GetWaveProfile( const float z );
+
 public:
 	CWaterPatch() {}
 	CWaterPatch( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer, CCSBound *_pBound );
 	//
-	int Init( const int nSX, const int nSY, const int nCoast, const CVec2 &dsize, const CVec2 &org, const float _fRotAngle );
+	int Init(
+			const int nSX, const int nSY, const int nCoast, const CVec2 &dsize, const CVec2 &org, const float _fRotAngle );
 	int Process( const long nTime );
 	//
 	void Create( NGScene::IGameView *pGView );
@@ -170,12 +174,13 @@ class CWater : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CWater )
 	//
-	std::vector< CObj<CWaterPatch> > patches;
-	CDGPtr< CFuncBase<STime> > pTimer;
+	std::vector<CObj<CWaterPatch>> patches;
+	CDGPtr<CFuncBase<STime>> pTimer;
 	CDBPtr<NDb::SWater> pDesc;
+
 public:
 	CWater() {}
-	CWater( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer ): pDesc( _pDesc ), pTimer( _pTimer ) {}
+	CWater( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer ) : pDesc( _pDesc ), pTimer( _pTimer ) {}
 	void Create( NGScene::IGameView *pGView, const int nPatchesX, const int nPatchesY );
 	//
 	int operator&( IBinSaver &saver );

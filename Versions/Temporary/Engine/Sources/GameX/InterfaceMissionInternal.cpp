@@ -75,7 +75,7 @@ static int WARFOG_UPDATE_PERIOD = 1000;
 
 static int CHAT_MESSAGE_VISIBLE_TIME = 5000;
 static int CHAT_MESSAGE_MAX_VISIBLE_TIME = 15000;
-static int CHAT_MESSAGE_SPEED = 20; // pixels per second
+static int CHAT_MESSAGE_SPEED = 20;     // pixels per second
 static int CHAT_MESSAGE_MAX_SPEED = 60; // pixels per second
 static int CHAT_MESSAGE_INTERVAL = 5;
 
@@ -86,23 +86,23 @@ static bool s_bEnableScrollTransition = false;
 
 static bool s_bDeepMapLoad = false;
 
-const int TAB_MULTI_SELECT				= 0;
-const int TAB_SINGLE_SELECT				= 3;
-const int TAB_REINF_SELECT				= 1;
-const int TAB_SUPER_WEAPON_SELECT	= 4;
+const int TAB_MULTI_SELECT = 0;
+const int TAB_SINGLE_SELECT = 3;
+const int TAB_REINF_SELECT = 1;
+const int TAB_SUPER_WEAPON_SELECT = 4;
 
-const int ACTION_TAB_SELECT						= 0;
-const int ACTION_TAB_CANCEL						= 1;
-const int ACTION_TAB_FORMATIONS				= 2;
-const int ACTION_TAB_REINF						= 3;
-const int ACTION_TAB_SUPER_WEAPON			= 3;
-const int ACTION_TAB_RADIO_CONTROLLED	= 5;
+const int ACTION_TAB_SELECT = 0;
+const int ACTION_TAB_CANCEL = 1;
+const int ACTION_TAB_FORMATIONS = 2;
+const int ACTION_TAB_REINF = 3;
+const int ACTION_TAB_SUPER_WEAPON = 3;
+const int ACTION_TAB_RADIO_CONTROLLED = 5;
 
-const int TAB_APPEARANCE_SINGLE_SELECT	= 0;
-const int TAB_APPEARANCE_REINF					= 1;
-const int TAB_APPEARANCE_SUPER_WEAPON		= 2;
+const int TAB_APPEARANCE_SINGLE_SELECT = 0;
+const int TAB_APPEARANCE_REINF = 1;
+const int TAB_APPEARANCE_SUPER_WEAPON = 2;
 
-static std::vector< SMiniMapUnitInfo > s_unitsForMiniMap;
+static std::vector<SMiniMapUnitInfo> s_unitsForMiniMap;
 
 void DoQuickSave();
 void DoQuickLoad();
@@ -122,11 +122,11 @@ static void MsgDumpMemoryStats( const SGameMessage &msg )
 
 static const NDb::SMapInfo *GetMapInfo( const std::string &_szParam )
 {
-	NI_VERIFY( !NStr::IsDecNumber(_szParam), "Deprecated way to identify resources! Use DBID instead!", return 0 );
+	NI_VERIFY( !NStr::IsDecNumber( _szParam ), "Deprecated way to identify resources! Use DBID instead!", return 0 );
 	{
 		std::string szParam = _szParam;
 		NStr::TrimBoth( szParam, '\"' );
-		return NDb::Get<NDb::SMapInfo>( CDBID(szParam) );
+		return NDb::Get<NDb::SMapInfo>( CDBID( szParam ) );
 	}
 }
 
@@ -136,7 +136,7 @@ static uint32_t ConvertColor( const CVec3 &vColor )
 	const int g = vColor.g * 255.0f;
 	const int b = vColor.b * 255.0f;
 
-  return 0xFF000000 + (( r & 0xFF ) << 16) + (( g & 0xFF ) << 8) + ( b & 0xFF );
+	return 0xFF000000 + ( ( r & 0xFF ) << 16 ) + ( ( g & 0xFF ) << 8 ) + ( b & 0xFF );
 }
 
 class CDrawProgress : public CObjectBase
@@ -149,6 +149,7 @@ public:
 		EC_TERRAINS,
 		EC_TEXTURES,
 	};
+
 private:
 	class CLoadingCounter;
 
@@ -156,11 +157,12 @@ private:
 	CObj<CLoadingCounter> pMaterials;
 	CObj<CLoadingCounter> pTerrains;
 	CObj<CLoadingCounter> pTextures;
+
 public:
 	CDrawProgress() {}
 	CDrawProgress( IProgressHookB2 *pProgress );
 
-	CLoadingCounter* GetTextures() const { return pTextures; }
+	CLoadingCounter *GetTextures() const { return pTextures; }
 
 	void OnTotalCount( ECounter eCounter, int nTotalCount );
 	void OnCount( ECounter eCounter, int nCount );
@@ -173,6 +175,7 @@ class CDrawProgress::CLoadingCounter : public ILoadingCounter
 	CDrawProgress::ECounter eCounter;
 	int nLeftCount;
 	int nTotalCount;
+
 public:
 	CLoadingCounter() {}
 	CLoadingCounter( CDrawProgress *pOwner, CDrawProgress::ECounter eCounter );
@@ -189,6 +192,7 @@ class CICLoadB2 : public CICLoadBase
 	OBJECT_NOCOPY_METHODS( CICLoadB2 );
 
 	CObj<IProgressHookB2> pProgress;
+
 public:
 	CICLoadB2() {}
 	CICLoadB2( const std::string &szFileName );
@@ -200,8 +204,13 @@ class CICSaveB2 : public CICSaveBase
 {
 	OBJECT_NOCOPY_METHODS( CICSaveB2 );
 
-	ZDATA_(CICSaveBase)
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CICSaveBase*)this); return 0; }
+	ZDATA_( CICSaveBase )
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CICSaveBase *)this );
+		return 0;
+	}
+
 public:
 	CICSaveB2() {}
 	CICSaveB2( const std::string &szFileName );
@@ -221,7 +230,9 @@ void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd );
 
 // CInterfaceMission::CReactions
 
-bool CInterfaceMission::CReactions::Execute( const std::string &szSender, const std::string &szReaction, uint16_t wKeyboardFlags )
+bool CInterfaceMission::CReactions::Execute( const std::string &szSender,
+                                             const std::string &szReaction,
+                                             uint16_t wKeyboardFlags )
 {
 	if ( szReaction == "FullInfoMember" )
 		return pInterface->OnClickFullInfoMember( szSender );
@@ -294,22 +305,12 @@ bool CInterfaceMission::CReactions::Execute( const std::string &szSender, const 
 // CInterfaceMission
 
 CInterfaceMission::CInterfaceMission()
-: CInterfaceScreenBase( "Mission", "mission" ), nCurrentSlot( 0 ), nCurrentIconSlot( 0 ),
-	bScreenLoaded( false ), nCurrentReinfPoint( -1 ), bFrozen( false ), bEscMenuPressed( false ),
-	nGameSpeed( 0 ), bMultifunctionPanelMinimized( false ),
-	eActivePanel( NDb::ACTION_BTN_PANEL_DEFAULT ),
-	eActiveAction( NDb::USER_ACTION_UNKNOWN ),
-	vPrevCameraLine( VNULL3 ),
-	timeMissionLastCheck( 0 ),
-	nFrameTransition(0),
-	eUIState( EUIS_NORMAL ),
-	timeAbsLast( 0 ),
-	eSkipState( ESMS_NONE ),
-	bScriptMoivie( false ),
-	fFormerVolume( 0 ),
-	bCheckShowHelpScreen( true ),
-	bMovieMode( false ),
-	bTryExitWindows( false )
+		: CInterfaceScreenBase( "Mission", "mission" ), nCurrentSlot( 0 ), nCurrentIconSlot( 0 ), bScreenLoaded( false ),
+			nCurrentReinfPoint( -1 ), bFrozen( false ), bEscMenuPressed( false ), nGameSpeed( 0 ),
+			bMultifunctionPanelMinimized( false ), eActivePanel( NDb::ACTION_BTN_PANEL_DEFAULT ),
+			eActiveAction( NDb::USER_ACTION_UNKNOWN ), vPrevCameraLine( VNULL3 ), timeMissionLastCheck( 0 ),
+			nFrameTransition( 0 ), eUIState( EUIS_NORMAL ), timeAbsLast( 0 ), eSkipState( ESMS_NONE ), bScriptMoivie( false ),
+			fFormerVolume( 0 ), bCheckShowHelpScreen( true ), bMovieMode( false ), bTryExitWindows( false )
 {
 	pMission = 0;
 	AddObserver( "inc_game_speed", &MsgChangeGameSpeed, +1 );
@@ -385,8 +386,8 @@ CInterfaceMission::~CInterfaceMission()
 {
 	pReinf = 0;
 	pUnitFullInfo = 0;
-//	if ( pScreen )
-//		Scene()->RemoveScreen( pScreen );
+	//	if ( pScreen )
+	//		Scene()->RemoveScreen( pScreen );
 	pReactions = 0;
 	pNotifications = 0;
 	if ( pWorld )
@@ -474,10 +475,8 @@ void CInterfaceMission::RegisterObservers()
 
 void CInterfaceMission::MsgToggleGamePause( const SGameMessage &msg )
 {
-	if ( !pScenarioTracker ||
-		pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
-		NGlobal::GetVar( "mp_allow_pause", 0 ) == 1 ||
-		NGlobal::GetVar( "History.Playing", 0 ) == 1 )
+	if ( !pScenarioTracker || pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
+	     NGlobal::GetVar( "mp_allow_pause", 0 ) == 1 || NGlobal::GetVar( "History.Playing", 0 ) == 1 )
 	{
 		bool bGamePaused = Singleton<IGameTimer>()->HasPause( PAUSE_TYPE_USER_PAUSE );
 		bGamePaused = !bGamePaused;
@@ -503,8 +502,10 @@ void CInterfaceMission::InitMinimapColors( const NDb::SUIConstsB2 *pUIConsts )
 		const IScenarioTracker::SPlayerColor &color = pScenarioTracker->GetPlayerColor( nID );
 		uint32_t dwColor = color.dwColor;
 
-		minimapColors[nID] = CVec4( ((dwColor >> 16) & 0xFF) / 255.0f,
-			((dwColor >> 8) & 0xFF) / 255.0f, (dwColor & 0xFF) / 255.0f, 1.0f );
+		minimapColors[nID] = CVec4( ( ( dwColor >> 16 ) & 0xFF ) / 255.0f,
+		                            ( ( dwColor >> 8 ) & 0xFF ) / 255.0f,
+		                            ( dwColor & 0xFF ) / 255.0f,
+		                            1.0f );
 		if ( pMiniMap )
 			pMiniMap->SetPlayerColor( nID, NGfx::SPixel8888( dwColor ) );
 	}
@@ -558,7 +559,7 @@ bool CInterfaceMission::ProcessEvent( const struct SGameMessage &msg )
 {
 	// don't allow input messages furhter
 	if ( msg.mMessage.cType != NInput::CT_UNKNOWN &&
-			 ( NGlobal::GetVar( "temp.script_movie", false ) != 0 || ( pMovieBorder && pMovieBorder->IsVisible() ) ) )
+	     ( NGlobal::GetVar( "temp.script_movie", false ) != 0 || ( pMovieBorder && pMovieBorder->IsVisible() ) ) )
 	{
 		if ( scriptMovieMessageProcessor.ProcessEvent( msg, this ) )
 			return true;
@@ -570,7 +571,6 @@ bool CInterfaceMission::ProcessEvent( const struct SGameMessage &msg )
 
 	if ( !pWorld )
 		return false;
-
 
 	return pWorld->ProcessEvent( msg );
 }
@@ -604,9 +604,8 @@ void CInterfaceMission::SetAbilityState( const NDb::EUserAction eUserAction, con
 
 			action.Enable( action.curState.eState == EASS_ACTIVE || action.curState.eState == EASS_READY_TO_ON );
 
-			bool bClock = action.curState.eState == EASS_SWITCHING_ON ||
-				action.curState.eState == EASS_SWITCHING_OFF ||
-				action.curState.eState == EASS_OFF;
+			bool bClock = action.curState.eState == EASS_SWITCHING_ON || action.curState.eState == EASS_SWITCHING_OFF ||
+			              action.curState.eState == EASS_OFF;
 			if ( action.pClockWnd )
 				action.pClockWnd->ShowWindow( bClock );
 			if ( action.pIconFgWnd )
@@ -623,7 +622,10 @@ void CInterfaceMission::SetAbilityState( const NDb::EUserAction eUserAction, con
 	}
 }
 
-void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *_pScenarioTracker, int nPlayer )
+void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
+                                    ITransceiver *_pTransceiver,
+                                    IScenarioTracker *_pScenarioTracker,
+                                    int nPlayer )
 {
 	// clear previous chat input
 	while ( true )
@@ -672,8 +674,8 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 			if ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 			{
 				std::wstring wszDesc;
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LoadingDescription) )
-					wszDesc = GET_TEXT_PRE(pMapInfo->,LoadingDescription);
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LoadingDescription ) )
+					wszDesc = GET_TEXT_PRE( pMapInfo->, LoadingDescription );
 				std::wstring wszCitation = InterfaceState()->GetRandomCitation();
 				pProgress = new CInterfaceLoadingSingle2D( pMapInfo->pLoadingPicture, wszDesc, wszCitation, false );
 			}
@@ -687,8 +689,8 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 				params.pMapPicture = pMapInfo->pLoadingPicture;
 				if ( pMapInfo->pMiniMap )
 					params.pMinimap = pMapInfo->pMiniMap->pTexture;
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedName) )
-					params.wszMapName = GET_TEXT_PRE(pMapInfo->,LocalizedName);
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+					params.wszMapName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
 
 				if ( const IScenarioTracker::SMultiplayerInfo *pInfo = pScenarioTracker->GetMultiplayerInfo() )
 				{
@@ -748,8 +750,9 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	uint32_t dwChatColor = 0xFFFFFFFF;
 	if ( const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts() )
 	{
-		for ( std::vector< NDb::SSeasonColor >::const_iterator it = pUIConsts->chatSeasonColors.begin();
-			it != pUIConsts->chatSeasonColors.end(); ++it )
+		for ( std::vector<NDb::SSeasonColor>::const_iterator it = pUIConsts->chatSeasonColors.begin();
+		      it != pUIConsts->chatSeasonColors.end();
+		      ++it )
 		{
 			const NDb::SSeasonColor &seasonColor = *it;
 			if ( seasonColor.eSeason == pMapInfo->eSeason )
@@ -774,11 +777,12 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 
 	// Loading world
 	//////////////////////////////////////////////////////////////////////////
-	pNotifications = new CVisualNotifications( GetScreen(), pMiniMap,
-		CVec2( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-		pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE ), Singleton<IAILogic>() );
-	pWorld = new CWorldClient( pTransceiver, pNotifications, Singleton<IAILogic>(), pScenarioTracker,
-		pSuperWeapon );
+	pNotifications = new CVisualNotifications( GetScreen(),
+	                                           pMiniMap,
+	                                           CVec2( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
+	                                                  pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE ),
+	                                           Singleton<IAILogic>() );
+	pWorld = new CWorldClient( pTransceiver, pNotifications, Singleton<IAILogic>(), pScenarioTracker, pSuperWeapon );
 	pWorld->SetMaxUnits( iconSlots.size(), iconSlots.size() );
 
 	Scene()->GetWindController()->SetWindParams( pMapInfo->weather.nWindDirection, pMapInfo->weather.nWindForce );
@@ -826,13 +830,12 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 		if ( !pMapInfo->players[nPlayer].camera.bUseAnchorOnly )
 		{
 			Camera()->SetPlacement( pMapInfo->players[nPlayer].camera.fDist,
-				pMapInfo->players[nPlayer].camera.fPitch,
-				pMapInfo->players[nPlayer].camera.fYaw );
+			                        pMapInfo->players[nPlayer].camera.fPitch,
+			                        pMapInfo->players[nPlayer].camera.fYaw );
 		}
 	}
 	else
-		Camera()->SetAnchor( CVec3(10, 10, 0) );
-
+		Camera()->SetAnchor( CVec3( 10, 10, 0 ) );
 
 	InitMinimapColors( pUIConsts );
 
@@ -867,13 +870,14 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	if ( pProgress )
 		pProgress->UnlockRange(); // step 6
 
-	Singleton<IStatSystem>()->UpdateEntry( "MapDesigner", NStr::ToMBCS( GET_TEXT_PRE(pMapInfo->,MapDesigner) ) );
+	Singleton<IStatSystem>()->UpdateEntry( "MapDesigner", NStr::ToMBCS( GET_TEXT_PRE( pMapInfo->, MapDesigner ) ) );
 
 	nMissionTimeMSec = 0;
 
 	PauseIntermission( true );
 
-	if ( Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE && !Singleton<IScenarioTracker>()->IsCustomMission() )
+	if ( Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE &&
+	     !Singleton<IScenarioTracker>()->IsCustomMission() )
 	{
 		for ( int i = 0; i < NDb::_RT_NONE; ++i )
 		{
@@ -914,7 +918,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		// get ability slots
 		SSlotPosition slot;
 		IWindow *pWnd;
-		for ( int i = 1; ( pWnd = pScreen->GetElement( fmt::format( "ability_slot_{}", i ), true )) != 0 ; ++i)
+		for ( int i = 1; ( pWnd = pScreen->GetElement( fmt::format( "ability_slot_{}", i ), true ) ) != 0; ++i )
 		{
 			pWnd->GetPlacement( &slot.x, &slot.y, &slot.sizeX, &slot.sizeY );
 			vAbilitySlots.push_back( slot );
@@ -934,9 +938,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		pBackground->PostLoad( false );
 		pBackground->nColor = color.dwColor;
 		// get icons slots
-		for ( int i = 1; ( pWnd = pMultiselectWnd->GetChild( fmt::format( "unit_slot_{}", i ), true )) != 0 ; ++i)
+		for ( int i = 1; ( pWnd = pMultiselectWnd->GetChild( fmt::format( "unit_slot_{}", i ), true ) ) != 0; ++i )
 		{
-			IButton *pBtn = dynamic_cast<IButton*>( pWnd );
+			IButton *pBtn = dynamic_cast<IButton *>( pWnd );
 			if ( !pBtn )
 				break;
 			pBtn->ShowWindow( false );
@@ -973,9 +977,10 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		//{ get action buttons
 		ITabControl *pTabCtrl = GetChildChecked<ITabControl>( pScreen, "action_tab_control", true );
 
-		for ( int i = 0; i <  pUIConsts->actionButtons.size(); ++i )
+		for ( int i = 0; i < pUIConsts->actionButtons.size(); ++i )
 		{
-			NI_ASSERT( pUIConsts->actionButtons[i].pButton != 0, fmt::format("Empty button {} in pUIConsts->actionButtons", i) );
+			NI_ASSERT( pUIConsts->actionButtons[i].pButton != 0,
+			           fmt::format( "Empty button {} in pUIConsts->actionButtons", i ) );
 			if ( pUIConsts->actionButtons[i].pButton == 0 )
 				continue;
 			const NDb::EUserAction eAction = pUIConsts->actionButtons[i].eAction;
@@ -991,7 +996,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 		{
 			if ( IWindow *pSlotsWnd = GetChildChecked<IWindow>( pScreen, "ActionButtonSlots", true ) )
 			{
-				for ( int i = 1; ; ++i )
+				for ( int i = 1;; ++i )
 				{
 					IWindow *pWnd = pSlotsWnd->GetChild( fmt::format( "Slot{:02d}", i ), true );
 					if ( !pWnd )
@@ -1007,8 +1012,9 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			{
 				if ( IButton *pTemplateActionBtn = GetChildChecked<IButton>( pTemplatesWnd, "ActionButtonTemplate", true ) )
 				{
-					for ( std::vector< CDBPtr<NDb::SActionButtonInfo> >::const_iterator it = pUIConsts->actionButtonInfos.begin();
-						it != pUIConsts->actionButtonInfos.end(); ++it )
+					for ( std::vector<CDBPtr<NDb::SActionButtonInfo>>::const_iterator it = pUIConsts->actionButtonInfos.begin();
+					      it != pUIConsts->actionButtonInfos.end();
+					      ++it )
 					{
 						const NDb::SActionButtonInfo *pDBAction = *it;
 						if ( !pDBAction )
@@ -1016,7 +1022,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 						if ( pDBAction->bNoButton )
 							continue;
 
-						if ( IButton *pBtn = dynamic_cast<IButton*>( AddWindowCopy( pTabCtrl, pTemplateActionBtn ) ) )
+						if ( IButton *pBtn = dynamic_cast<IButton *>( AddWindowCopy( pTabCtrl, pTemplateActionBtn ) ) )
 						{
 							SNewActionButton action;
 
@@ -1034,10 +1040,10 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 							action.nSlot = pDBAction->nSlot - 1;
 							action.bCurPresent = false;
 							action.szHotkeyCmd = pDBAction->szHotkeyCmd;
-							if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBAction->,Tooltip) )
-								action.wszTooltip = GET_TEXT_PRE(pDBAction->,Tooltip);
+							if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBAction->, Tooltip ) )
+								action.wszTooltip = GET_TEXT_PRE( pDBAction->, Tooltip );
 
-//							action.pIconBgWnd = GetChildChecked<IWindow>( pBtn, "IconBg", true );
+							//							action.pIconBgWnd = GetChildChecked<IWindow>( pBtn, "IconBg", true );
 							action.pIconFgWnd = GetChildChecked<IWindow>( pBtn, "IconFg", true );
 							action.pClockWnd = GetChildChecked<IWindowRoundProgressBar>( pBtn, "Clock", true );
 							action.pAutocastWnd = GetChildChecked<IWindowFrameSequence>( pBtn, "Autocast", true );
@@ -1064,21 +1070,23 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 									pTabCtrl->AddElement( ACTION_TAB_RADIO_CONTROLLED, pBtn );
 							}
 
-							if ( CHECK_TEXT_NOT_EMPTY_PRE(pDBAction->,Tooltip) )
-								pBtn->SetTooltip( GET_TEXT_PRE(pDBAction->,Tooltip) );
+							if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBAction->, Tooltip ) )
+								pBtn->SetTooltip( GET_TEXT_PRE( pDBAction->, Tooltip ) );
 
 #ifndef _FINALRELEASE
-							if ( !CHECK_TEXT_NOT_EMPTY_PRE(pDBAction->,Tooltip) )
-								pBtn->SetTooltip( NStr::ToUnicode( fmt::format( "UserAction id: {}", (int)( pDBAction->eAction ) ) ) ); // CRAP - test only
-#endif //_FINALRELEASE
+							if ( !CHECK_TEXT_NOT_EMPTY_PRE( pDBAction->, Tooltip ) )
+								pBtn->SetTooltip( NStr::ToUnicode(
+										fmt::format( "UserAction id: {}", (int)( pDBAction->eAction ) ) ) ); // CRAP - test only
+#endif                                                                                   //_FINALRELEASE
 
 							pBtn->ShowWindow( false );
 							pBtn->SetName( fmt::format( "NewActionButton{}", (int)( pDBAction->eAction ) ) );
-							action.pIconBgDisabledWnd->SetName( fmt::format( "NewActionDisabledButton{}", (int)( pDBAction->eAction ) ) );
+							action.pIconBgDisabledWnd->SetName(
+									fmt::format( "NewActionDisabledButton{}", (int)( pDBAction->eAction ) ) );
 							pBtn->RegisterObservers();
 
-//							if ( action.pIconBgWnd )
-//								action.pIconBgWnd->ShowWindow( false );
+							//							if ( action.pIconBgWnd )
+							//								action.pIconBgWnd->ShowWindow( false );
 							if ( action.pIconFgWnd )
 								action.pIconFgWnd->ShowWindow( false );
 							if ( action.pClockWnd )
@@ -1154,7 +1162,8 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			if ( pMiniMap )
 			{
 				pMiniMap->LoadMap( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-					pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE, Singleton<IAILogic>()->VIS_POWER() + 1 );
+				                   pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE,
+				                   Singleton<IAILogic>()->VIS_POWER() + 1 );
 				pMiniMap->SetMaterial( pMapInfo->pMiniMap );
 				pMiniMap->ShowWindow( true );
 			}
@@ -1195,10 +1204,10 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			pRightPanel->ShowWindow( true );
 		}
 
-//		IWindow *pTopCenterPanel = GetChildChecked<IWindow>( pScr, "MissionTopCenterPanel", true );
+		//		IWindow *pTopCenterPanel = GetChildChecked<IWindow>( pScr, "MissionTopCenterPanel", true );
 		if ( pScreen /*&& pTopCenterPanel*/ )
 		{
-//			pTopCenterPanel->ShowWindow( true );
+			//			pTopCenterPanel->ShowWindow( true );
 			// Buttons 01-06 map directly to special-group indices 0-5.
 			for ( int i = 1; i <= 6; ++i )
 			{
@@ -1251,7 +1260,7 @@ void CInterfaceMission::MsgToggleWarFog( const SGameMessage &msg )
 
 void CInterfaceMission::MsgUpdateMinimapPos( const SGameMessage &msg )
 {
-	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
+	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	bool bOnMinimap = msg.nParam2;
 
@@ -1290,7 +1299,7 @@ void CInterfaceMission::MsgAviaReturns( const SGameMessage &msg )
 	IVisualNotifications::SEventParams params;
 	params.nID = -1;
 	params.eEventType = NDb::NEVT_AVIA_BAD_WEATHER_RETREAT;
-	std::vector<CMapObj*> objects;
+	std::vector<CMapObj *> objects;
 	pWorld->GetOwnAvia( &objects );
 	params.objects.resize( objects.size() );
 	for ( int i = 0; i < objects.size(); ++i )
@@ -1454,7 +1463,7 @@ void CInterfaceMission::UpdateWinLooseState()
 	// objectives
 	if ( pShowObjectives && !pScenarioTracker->IsMissionActive() )
 		pShowObjectives->Enable( false );
-//	NInput::PostEvent( "mission_objectives_close", 0, 0 );
+	//	NInput::PostEvent( "mission_objectives_close", 0, 0 );
 }
 
 void CInterfaceMission::MsgTestCommand( const SGameMessage &msg )
@@ -1463,8 +1472,10 @@ void CInterfaceMission::MsgTestCommand( const SGameMessage &msg )
 	if ( szTestCommand == "chat" )
 	{
 		WriteToPipe( PIPE_CHAT, "MsgTestCommand 1", 0xffff0000 );
-		WriteToPipe( PIPE_CHAT,
-			"MsgTestCommand 222222222222222222222 33333333333333333333 4444444444444444444444 55555555555555555555555", 0xff0000ff );
+		WriteToPipe(
+				PIPE_CHAT,
+				"MsgTestCommand 222222222222222222222 33333333333333333333 4444444444444444444444 55555555555555555555555",
+				0xff0000ff );
 	}
 	if ( szTestCommand == "esc_menu" )
 	{
@@ -1488,7 +1499,7 @@ void CInterfaceMission::SetWarForVisibility( const bool _bShowWarFog )
 		Singleton<IAILogic>()->ToggleWarFog( bShowWarFog );
 		if ( _bShowWarFog )
 			bNeedWarFogRecalc = true;
-		else if ( NGlobal::GetVar("no_warfog", 0) == 0 )
+		else if ( NGlobal::GetVar( "no_warfog", 0 ) == 0 )
 			SetRawWarfog( 255 );
 	}
 }
@@ -1496,7 +1507,7 @@ void CInterfaceMission::SetWarForVisibility( const bool _bShowWarFog )
 void CInterfaceMission::UpdateChat( NTimer::STime nDeltaTime )
 {
 	NTimer::STime nCurrTime = Singleton<IGameTimer>()->GetAbsTime();
-	NTimer::STime nDeltaAbsTime = (nChatTime == 0) ? 0 : (std::max<NTimer::STime>)( 0, nCurrTime - nChatTime );
+	NTimer::STime nDeltaAbsTime = ( nChatTime == 0 ) ? 0 : (std::max<NTimer::STime>)( 0, nCurrTime - nChatTime );
 	UpdateChatAbs( nDeltaAbsTime );
 	nChatTime = nCurrTime;
 }
@@ -1534,13 +1545,13 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 		pElement->SetPlacement( 0, 0, 100, nBaseWidth, EWPF_ALL );
 
 		IWindow *pViewWindow = pElement->GetChild( "chat_messages_text", true );
-		ITextView *pView = dynamic_cast<ITextView*>( pViewWindow );
+		ITextView *pView = dynamic_cast<ITextView *>( pViewWindow );
 		NI_ASSERT( pView, "View window for chat messages not found" );
 		pView->SetWidth( nBaseWidth );
-		uint32_t a = (dwColor >> 24) & 0xFF;
-		uint32_t r = (dwColor >> 16) & 0xFF;
-		uint32_t g = (dwColor >> 8) & 0xFF;
-		uint32_t b = (dwColor >> 0) & 0xFF;
+		uint32_t a = ( dwColor >> 24 ) & 0xFF;
+		uint32_t r = ( dwColor >> 16 ) & 0xFF;
+		uint32_t g = ( dwColor >> 8 ) & 0xFF;
+		uint32_t b = ( dwColor >> 0 ) & 0xFF;
 		std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:02X}{:02X}{:02X}{:02X}>", a, r, g, b ) );
 		szText += szReadText;
 		pView->SetText( szText.c_str() );
@@ -1571,9 +1582,9 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 	}
 	if ( !chatMessages.empty() && chatMessages.front().nVisibleTime >= CHAT_MESSAGE_VISIBLE_TIME )
 	{
-		int nSpeed = (chatMessages.front().nVisibleTime < CHAT_MESSAGE_MAX_VISIBLE_TIME) ?
-			CHAT_MESSAGE_SPEED : CHAT_MESSAGE_MAX_SPEED;
-		int nDelta = (std::max)( (int)1, (int)(nDeltaTime * nSpeed / 1000) );
+		int nSpeed = ( chatMessages.front().nVisibleTime < CHAT_MESSAGE_MAX_VISIBLE_TIME ) ? CHAT_MESSAGE_SPEED
+		                                                                                   : CHAT_MESSAGE_MAX_SPEED;
+		int nDelta = (std::max)( (int)1, (int)( nDeltaTime * nSpeed / 1000 ) );
 		for ( std::list<SChatMessage>::iterator it = chatMessages.begin(); it != chatMessages.end(); )
 		{
 			SChatMessage &el = *it;
@@ -1652,7 +1663,8 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 				const int nVisPower = Singleton<IAILogic>()->VIS_POWER();
 				for ( int x = 0; x < pWarFogInfo->GetSizeX(); ++x )
 					for ( int y = 0; y < pWarFogInfo->GetSizeY(); ++y )
-						sceneWarFogInfo[y + nWarFogY][x + nWarFogX] = WARFOG_MIN_VALUE + (255 - WARFOG_MIN_VALUE) * (*pWarFogInfo)[y][x] / nVisPower;
+						sceneWarFogInfo[y + nWarFogY][x + nWarFogX] =
+								WARFOG_MIN_VALUE + ( 255 - WARFOG_MIN_VALUE ) * ( *pWarFogInfo )[y][x] / nVisPower;
 			}
 			else
 				sceneWarFogInfo.FillEvery( 255 );
@@ -1662,12 +1674,12 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 			for ( int i = 0; i < WARFOG_HARD_RECT_WIDTH; ++i )
 			{
 				nDensity = WARFOG_MIN_VALUE * i / ( WARFOG_HARD_RECT_WIDTH - 1 );
-				for ( int x = i; x <= nMapSizeX-i; ++x )
+				for ( int x = i; x <= nMapSizeX - i; ++x )
 				{
 					sceneWarFogInfo[i][x] = nDensity;
 					sceneWarFogInfo[nMapSizeY - i][x] = nDensity;
 				}
-				for ( int y = i; y <= nMapSizeY-i; ++y )
+				for ( int y = i; y <= nMapSizeY - i; ++y )
 				{
 					sceneWarFogInfo[y][i] = nDensity;
 					sceneWarFogInfo[y][nMapSizeX - i] = nDensity;
@@ -1699,12 +1711,12 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 	pWorld->Update();
 
 	const NTimer::STime nCurrentTime = GameTimer()->GetGameTime();
-	const bool bScriptMovieNow = 	NGlobal::GetVar( "temp.script_movie", false );
+	const bool bScriptMovieNow = NGlobal::GetVar( "temp.script_movie", false );
 	if ( bScriptMoivie && !bScriptMovieNow ) // just finished
 		EndScriptMovieSequence();
 	bScriptMoivie = bScriptMovieNow;
 
-/*	if ( bCheckShowHelpScreen )
+	/*	if ( bCheckShowHelpScreen )
 	{
 		if ( nCurrentTime != 0 && !bMovieMode && eUIState == EUIS_NORMAL )
 		{
@@ -1715,17 +1727,17 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 
 	const float fFadeTime = 2.0f;
 
-	switch( eSkipState )
+	switch ( eSkipState )
 	{
-	case ESMS_NONE:
-		break;
-	case ESMS_FADING_OUT:
+		case ESMS_NONE:
+			break;
+		case ESMS_FADING_OUT:
 		{
 			Scene()->GetScreenFader()->Start( fFadeTime, SCREEN_FADER_CLEAR, SCREEN_FADER_BLACK );
 			eSkipState = ESMS_PREPARE_FOR_FAST_FORWARD;
 		}
 		break;
-	case ESMS_PREPARE_FOR_FAST_FORWARD:
+		case ESMS_PREPARE_FOR_FAST_FORWARD:
 		{
 			if ( !Scene()->GetScreenFader()->IsInProgress() )
 			{
@@ -1737,15 +1749,15 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 			}
 			break;
 		}
-	case ESMS_FAST_FORWARD:
-		if ( NGlobal::GetVar( "temp.script_movie", false ) == 0 )
-		{
-			eSkipState = ESMS_FADING_IN;
-			timeSkipProgress = nCurrentTime;
-		}
+		case ESMS_FAST_FORWARD:
+			if ( NGlobal::GetVar( "temp.script_movie", false ) == 0 )
+			{
+				eSkipState = ESMS_FADING_IN;
+				timeSkipProgress = nCurrentTime;
+			}
 
-		break;
-	case ESMS_FADING_IN:
+			break;
+		case ESMS_FADING_IN:
 		{
 			Scene()->GetScreenFader()->Start( fFadeTime, SCREEN_FADER_BLACK, SCREEN_FADER_CLEAR );
 
@@ -1754,11 +1766,11 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 			NGlobal::SetVar( "Sound.SFXVolume", fFormerVolume );
 		}
 		break;
-	case ESMS_DONE:
-		eSkipState = ESMS_NONE;
-		GameTimer()->SetSpeed( 0 );
-		NGlobal::SetVar( "Sound.SFXVolume", fFormerVolume );
-		break;
+		case ESMS_DONE:
+			eSkipState = ESMS_NONE;
+			GameTimer()->SetSpeed( 0 );
+			NGlobal::SetVar( "Sound.SFXVolume", fFormerVolume );
+			break;
 	}
 
 	float fStepAbsTime = 0.0f;
@@ -1775,7 +1787,7 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 
 		if ( pMiniMap )
 		{
-			std::vector< CVec2 > viewport;
+			std::vector<CVec2> viewport;
 			CVec3 vPos;
 			const CVec2 vScreenSize = Scene()->GetScreenRect();
 			Scene()->PickZeroHeight( &vPos, CVec2( 0, 0 ) );
@@ -1812,9 +1824,10 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 				pMiniMap->SetUnits( s_unitsForMiniMap );
 			else
 			{
-				std::vector< SMiniMapUnitInfo > units2;
+				std::vector<SMiniMapUnitInfo> units2;
 				units2.reserve( s_unitsForMiniMap.size() );
-				for ( std::vector< SMiniMapUnitInfo >::iterator it = s_unitsForMiniMap.begin(); it != s_unitsForMiniMap.end(); ++it )
+				for ( std::vector<SMiniMapUnitInfo>::iterator it = s_unitsForMiniMap.begin(); it != s_unitsForMiniMap.end();
+				      ++it )
 				{
 					SMiniMapUnitInfo &info = *it;
 
@@ -1842,7 +1855,6 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 			}
 		}
 
-
 		const NTimer::STime nCurrentTime = GameTimer()->GetGameTime();
 		const NTimer::STime nDeltaTime = nCurrentTime - nLastStepTime;
 
@@ -1860,8 +1872,8 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 
 		if ( pShowObjectives )
 		{
-			bool bEnable = pScenarioTracker && pScenarioTracker->IsMissionActive() &&
-				pScenarioTracker->GetKnownObjectiveCount() != 0;
+			bool bEnable =
+					pScenarioTracker && pScenarioTracker->IsMissionActive() && pScenarioTracker->GetKnownObjectiveCount() != 0;
 			if ( pShowObjectives->IsEnabled() != bEnable )
 				pShowObjectives->Enable( bEnable );
 		}
@@ -1952,11 +1964,13 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 	pEnemyScore->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 0 ? nScore1 : nScore0 ) ) );
 	pFriendlyScore->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 1 ? nScore1 : nScore0 ) ) );
 
-	std::pair<int,int> buildings = pScenarioTracker->GetKeyBuildingSummary();
+	std::pair<int, int> buildings = pScenarioTracker->GetKeyBuildingSummary();
 	ITextView *pEnemyKeyBuildings = GetChildChecked<ITextView>( pScreen, "EnemyKeyBuildings", true );
 	ITextView *pFriendlyKeyBuildings = GetChildChecked<ITextView>( pScreen, "FriendlyKeyBuildings", true );
-	pEnemyKeyBuildings->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 0 ? buildings.second : buildings.first ) ) );
-	pFriendlyKeyBuildings->SetText( NStr::ToUnicode( std::to_string( nLocalParty == 1 ? buildings.second : buildings.first ) ) );
+	pEnemyKeyBuildings->SetText(
+			NStr::ToUnicode( std::to_string( nLocalParty == 0 ? buildings.second : buildings.first ) ) );
+	pFriendlyKeyBuildings->SetText(
+			NStr::ToUnicode( std::to_string( nLocalParty == 1 ? buildings.second : buildings.first ) ) );
 
 	const int nTimelimit = NGlobal::GetVar( "multiplayer_time_limit", -1 );
 	ITextView *pTimeRemaining = GetChildChecked<ITextView>( pScreen, "TimeRemaining", true );
@@ -1966,28 +1980,31 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 	pTimeRemainingTitle->ShowWindow( nTimelimit != -1 );
 	if ( nTimelimit != -1 )
 	{
-		const int nTimeRemaining =  (std::max)( 0, int(nTimelimit - Singleton<IGameTimer>()->GetGameTime()/1000) );
+		const int nTimeRemaining = (std::max)( 0, int( nTimelimit - Singleton<IGameTimer>()->GetGameTime() / 1000 ) );
 		int hours = nTimeRemaining / 3600;
-		int minutes = (nTimeRemaining % 3600) / 60;
+		int minutes = ( nTimeRemaining % 3600 ) / 60;
 		int seconds = nTimeRemaining % 60;
 		pTimeRemaining->SetText( NStr::ToUnicode( fmt::format( "{}:{:02}:{:02}", hours, minutes, seconds ) ) );
 	}
 
 	ITextView *timeForNextReinf = GetChildChecked<ITextView>( pScreen, "RecycleHintTime", true );
-	if (timeForNextReinf != nullptr)
+	if ( timeForNextReinf != nullptr )
 	{
 		int totalSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
 
 		int minutes = totalSeconds / 60;
 		int seconds = totalSeconds % 60;
 
-		timeForNextReinf->SetText(NStr::ToUnicode(fmt::format( "<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>{}:{:02}", minutes, seconds )));
+		timeForNextReinf->SetText( NStr::ToUnicode(
+				fmt::format( "<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>{}:{:02}",
+		                 minutes,
+		                 seconds ) ) );
 
-		timeForNextReinf->ShowWindow(true);
+		timeForNextReinf->ShowWindow( true );
 
-		IWindow* parent = timeForNextReinf->GetParentWindow();
-		parent->ShowWindow(true);
-		parent->SetPlacement(0, 0, 1024, 768, 1);
+		IWindow *parent = timeForNextReinf->GetParentWindow();
+		parent->ShowWindow( true );
+		parent->SetPlacement( 0, 0, 1024, 768, 1 );
 	}
 
 	ITextView *pTimeToLooseOrWin = GetChildChecked<ITextView>( pScreen, "TimeToLooseOrWin", true );
@@ -2021,8 +2038,9 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 void CInterfaceMission::UpdateInterfacePause()
 {
 	PauseIntermission( pScenarioTracker &&
-		( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE || NGlobal::GetVar( "History.Playing", 0 ) ) &&
-		(!IsInFocus() /*&& !IsMoveSequence() */) );
+	                   ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
+	                     NGlobal::GetVar( "History.Playing", 0 ) ) &&
+	                   ( !IsInFocus() /*&& !IsMoveSequence() */ ) );
 }
 
 bool CInterfaceMission::IsScreenControl( const CVec2 &vPos ) const
@@ -2057,10 +2075,14 @@ void CInterfaceMission::OnMouseMove( const CVec2 &vPos )
 				IStatsSystemWindow *pStatsSystemWindow = pDebug->GetStatsWindow();
 				if ( pStatsSystemWindow )
 				{
-					pStatsSystemWindow->UpdateEntry( L"TerrainPos", NStr::ToUnicode(fmt::format( "{:.2f},{:.2f}", vZeroPos.x, vZeroPos.y )), 0xff00ff00 );
+					pStatsSystemWindow->UpdateEntry(
+							L"TerrainPos", NStr::ToUnicode( fmt::format( "{:.2f},{:.2f}", vZeroPos.x, vZeroPos.y ) ), 0xff00ff00 );
 					CVec3 vTerrainPos;
 					Scene()->PickTerrain( &vTerrainPos, vPos );
-					pStatsSystemWindow->UpdateEntry( L"MousePos", NStr::ToUnicode(fmt::format( "{:.2f} x {:.2f} x {:.2f}", vTerrainPos.x, vTerrainPos.y, vTerrainPos.z )), 0xffffff00 );
+					pStatsSystemWindow->UpdateEntry(
+							L"MousePos",
+							NStr::ToUnicode( fmt::format( "{:.2f} x {:.2f} x {:.2f}", vTerrainPos.x, vTerrainPos.y, vTerrainPos.z ) ),
+							0xffffff00 );
 				}
 			}
 		}
@@ -2104,7 +2126,7 @@ void CInterfaceMission::CheckMouseBorder( const CVec2 &vPos, const bool bAllowSc
 	}
 	const CVec2 vSize = Scene()->GetScreenRect();
 	const int nX = 0, nY = 0, nSizeX = vSize.x, nSizeY = vSize.y;
-//	pScreen->GetPlacement( &nX, &nY, &nSizeX, &nSizeY );
+	//	pScreen->GetPlacement( &nX, &nY, &nSizeX, &nSizeY );
 	int nDX = 0;
 	int nDY = 0;
 	if ( vPos.x - nX == 0 )
@@ -2143,10 +2165,11 @@ void CInterfaceMission::OnButtonDown( const CVec2 &vPos, int nButton )
 
 void CInterfaceMission::OnButtonUp( const CVec2 &vPos, int nButton )
 {
-	if ( eActiveControl != AC_SCREEN ) {
+	if ( eActiveControl != AC_SCREEN )
+	{
 		if ( nButton == MSTATE_BUTTON1 )
 			pWorld->DoLButtonUp( vPos );
-		else if  ( nButton == MSTATE_BUTTON2 )
+		else if ( nButton == MSTATE_BUTTON2 )
 			pWorld->DoRButtonUp( vPos );
 	}
 	//if ( eActiveControl != AC_WORLD )
@@ -2157,12 +2180,12 @@ void CInterfaceMission::OnButtonUp( const CVec2 &vPos, int nButton )
 void CInterfaceMission::OnButtonDblClk( const CVec2 &vPos, int nButton )
 {
 	//if ( IsScreenControl( vPos ) )
-		//pScreen->OnButtonDblClk( vPos, nButton );
+	//pScreen->OnButtonDblClk( vPos, nButton );
 	//else
 	{
 		if ( nButton == MSTATE_BUTTON1 )
 			pWorld->DoLButtonDblClk( vPos );
-		else if  ( nButton == MSTATE_BUTTON2 )
+		else if ( nButton == MSTATE_BUTTON2 )
 			pWorld->DoRButtonDblClk( vPos );
 	}
 }
@@ -2173,12 +2196,15 @@ void CInterfaceMission::ResetAbilityButtons()
 	{
 		it->second->ShowWindow( false );
 	}
-//	pAbilityProgressBar->ShowWindow( false );
+	//	pAbilityProgressBar->ShowWindow( false );
 	lActiveAbilities.clear();
 	nCurrentSlot = 0;
 }
 
-void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWnd, bool bFixedPlace, const NDb::SUnitSpecialAblityDesc *pAbilityDesc )
+void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction,
+                                          IWindow *pWnd,
+                                          bool bFixedPlace,
+                                          const NDb::SUnitSpecialAblityDesc *pAbilityDesc )
 {
 	if ( !pWnd )
 		return;
@@ -2225,10 +2251,14 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction, IWindow *pWn
 	}
 	else if ( nCurrentSlot < vAbilitySlots.size() )
 	{
-		pWnd->SetPlacement( vAbilitySlots[nCurrentSlot].x, vAbilitySlots[nCurrentSlot].y, vAbilitySlots[nCurrentSlot].sizeX, vAbilitySlots[nCurrentSlot].sizeY, EWPF_ALL );
+		pWnd->SetPlacement( vAbilitySlots[nCurrentSlot].x,
+		                    vAbilitySlots[nCurrentSlot].y,
+		                    vAbilitySlots[nCurrentSlot].sizeX,
+		                    vAbilitySlots[nCurrentSlot].sizeY,
+		                    EWPF_ALL );
 		pWnd->ShowWindow( true );
 
-/*		IProgressBar *pProgress = dynamic_cast<IProgressBar *>( pWnd->GetChild( "ability_progress", true ) );
+		/*		IProgressBar *pProgress = dynamic_cast<IProgressBar *>( pWnd->GetChild( "ability_progress", true ) );
 		if ( pProgress )
 			pProgress->SetPosition( 0 );*/
 
@@ -2269,8 +2299,8 @@ void CInterfaceMission::MsgMessageBoxOk( const SGameMessage &msg )
 
 void CInterfaceMission::MsgNotificationOpenReinf( const SGameMessage &msg )
 {
-//	if ( !pReinf->IsOpen() && pReinf->IsEnabled() && pReinf->IsAviaPresents() )
-//		OnReinfShow( "notifications" );
+	//	if ( !pReinf->IsOpen() && pReinf->IsEnabled() && pReinf->IsAviaPresents() )
+	//		OnReinfShow( "notifications" );
 }
 
 void CInterfaceMission::MsgOnMultiplayerPause( const SGameMessage &msg )
@@ -2280,7 +2310,7 @@ void CInterfaceMission::MsgOnMultiplayerPause( const SGameMessage &msg )
 
 void CInterfaceMission::MsgOnScriptBlinkActionButton( const SGameMessage &msg )
 {
-	BlinkActionButton( msg.nParam1, (msg.nParam2 != 0) );
+	BlinkActionButton( msg.nParam1, ( msg.nParam2 != 0 ) );
 }
 
 void CInterfaceMission::MsgBlinkObjectiveBtn( const SGameMessage &msg )
@@ -2329,8 +2359,8 @@ static std::string MakeAutoSaveReplayName( const NDb::SMapInfo *pMap, const bool
 	std::string szMap = pMap != 0 ? pMap->GetDBID().ToString() : "unknown";
 	for ( char &c : szMap )
 	{
-		const bool bSafe = ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) ||
-		                   ( c >= '0' && c <= '9' ) || c == '.' || c == '-';
+		const bool bSafe =
+				( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) || c == '.' || c == '-';
 		if ( !bSafe )
 			c = '_';
 	}
@@ -2340,8 +2370,14 @@ static std::string MakeAutoSaveReplayName( const NDb::SMapInfo *pMap, const bool
 		now = SSystemTime();
 
 	return fmt::format( "auto_{}_{}_{:04d}{:02d}{:02d}-{:02d}{:02d}{:02d}",
-		szMap, bWin ? "win" : "lose",
-		now.wYear, now.wMonth, now.wDay, now.wHour, now.wMinute, now.wSecond );
+	                    szMap,
+	                    bWin ? "win" : "lose",
+	                    now.wYear,
+	                    now.wMonth,
+	                    now.wDay,
+	                    now.wHour,
+	                    now.wMinute,
+	                    now.wSecond );
 }
 
 void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
@@ -2349,7 +2385,7 @@ void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
 	if ( !Singleton<IScenarioTracker>()->IsMissionActive() )
 		return;
 
-	bool bWin = (msg.nParam1 == 1);
+	bool bWin = ( msg.nParam1 == 1 );
 
 	// A replay is only comparable against the build that recorded it, so a
 	// corpus has to be regenerated whenever the simulation changes and the cost
@@ -2366,9 +2402,8 @@ void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
 	if ( NGlobal::GetVar( "replay_autosave", 0 ) != 0 )
 	{
 		const std::string szName = MakeAutoSaveReplayName( pMission, bWin );
-		const auto message = SaveReplay( szName )
-			? fmt::format( "replay autosaved as \"{}\"", szName )
-			: fmt::format( "replay autosave failed for \"{}\"", szName );
+		const auto message = SaveReplay( szName ) ? fmt::format( "replay autosaved as \"{}\"", szName )
+		                                          : fmt::format( "replay autosave failed for \"{}\"", szName );
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
 		fmt::print( "{}\n", message );
 		fflush( stdout );
@@ -2394,7 +2429,7 @@ void CInterfaceMission::MsgEscMenu( const SGameMessage &msg )
 	bEscMenuPressed = true;
 	NMainLoop::Command( ML_COMMAND_ESC_MENU, "" );
 	//if ( IsMoveSequence() )
-		//Cursor()->Show( true );
+	//Cursor()->Show( true );
 }
 
 void CInterfaceMission::MsgOk( const SGameMessage &msg )
@@ -2411,9 +2446,11 @@ void CInterfaceMission::MsgCancel( const SGameMessage &msg )
 void CInterfaceMission::MsgTryExitWindows( const SGameMessage &msg )
 {
 	bTryExitWindows = true;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-		InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) ).c_str() );
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                     InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) )
+					.c_str() );
 }
 
 void CInterfaceMission::MsgShowObjectives( const SGameMessage &msg )
@@ -2545,7 +2582,7 @@ void CInterfaceMission::MsgHighlightUnits( const SGameMessage &msg )
 
 void CInterfaceMission::MsgSetAbilityState( const SGameMessage &msg )
 {
-	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>(msg.nParam1) );
+	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>( msg.nParam1 ) );
 	SAbilitySwitchState state;
 	state.dwStateValue = msg.nParam2;
 	SetAbilityState( eUserAction, state );
@@ -2558,14 +2595,12 @@ struct SReinfInfo
 
 	bool operator==( const SReinfInfo &reinf ) const
 	{
-		bool bResult = (pStats == reinf.pStats);
+		bool bResult = ( pStats == reinf.pStats );
 		return bResult;
 	}
 };
 
-void CInterfaceMission::SetArmyPoints( int nPoints )
-{
-}
+void CInterfaceMission::SetArmyPoints( int nPoints ) {}
 
 void CInterfaceMission::GetObjectHPs( const CMapObj *pMO, std::vector<float> *pHPs, bool *pIsSquad )
 {
@@ -2576,9 +2611,9 @@ void CInterfaceMission::GetObjectHPs( const CMapObj *pMO, std::vector<float> *pH
 	bool bSquad = false;
 	if ( pMO->GetTypeID() == NDb::SSquadRPGStats::typeID )
 	{
-		if ( const IMOSquad *pSquad = checked_cast<const IMOSquad*>( pMO ) )
+		if ( const IMOSquad *pSquad = checked_cast<const IMOSquad *>( pMO ) )
 		{
-			if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats*>( pSquad->GetStats() ) )
+			if ( const NDb::SSquadRPGStats *pSquadStats = dynamic_cast<const NDb::SSquadRPGStats *>( pSquad->GetStats() ) )
 			{
 				bSquad = true;
 
@@ -2594,7 +2629,7 @@ void CInterfaceMission::GetObjectHPs( const CMapObj *pMO, std::vector<float> *pH
 		pHPs->push_back( pMO->GetHP() );
 	}
 
-//	*pIsSquad = bSquad;
+	//	*pIsSquad = bSquad;
 	*pIsSquad = false;
 }
 
@@ -2635,7 +2670,7 @@ void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 		{
 			slot.pCountView->ShowWindow( nCount != 1 );
 			if ( nCount != 1 )
-				slot.pCountView->SetText( slot.pCountView->GetDBText() + NStr::ToUnicode( std::to_string(  nCount ) ) );
+				slot.pCountView->SetText( slot.pCountView->GetDBText() + NStr::ToUnicode( std::to_string( nCount ) ) );
 		}
 
 		bool bSquad;
@@ -2648,21 +2683,21 @@ void CInterfaceMission::UpdateMultiUnitsInfo( CMapObj *pMO, int nCount )
 				slot.pProgressBar->SetPosition( progresses.front() );
 		}
 
-/*		IWindow *pWndUnit = vIconSlots[nCurrentIconSlot]->GetChild( "multi_bar_unit", true );
+		/*		IWindow *pWndUnit = vIconSlots[nCurrentIconSlot]->GetChild( "multi_bar_unit", true );
 		IMultiTextureProgressBar *pWndUnit2 = dynamic_cast<IMultiTextureProgressBar*>( pWndUnit );
 
 		IWindow *pWndSquad = vIconSlots[nCurrentIconSlot]->GetChild( "multi_bar_squad", true );
 		IMultiTextureProgressBar *pWndSquad2 = dynamic_cast<IMultiTextureProgressBar*>( pWndSquad );*/
 
-//		bool bSolid = bSquad; // unit/squad
-//		bool bSolid = (progresses.size() == 1); // single/multi
-//		bool bSolid = true;
+		//		bool bSolid = bSquad; // unit/squad
+		//		bool bSolid = (progresses.size() == 1); // single/multi
+		//		bool bSolid = true;
 
-//		if ( pWndUnit )
-//			pWndUnit->ShowWindow( bSolid );
-//		if ( pWndSquad )
-//			pWndSquad->ShowWindow( !bSolid );
-/*		if ( bSolid )
+		//		if ( pWndUnit )
+		//			pWndUnit->ShowWindow( bSolid );
+		//		if ( pWndSquad )
+		//			pWndSquad->ShowWindow( !bSolid );
+		/*		if ( bSolid )
 		{
 			if ( pWndUnit2 )
 				pWndUnit2->SetPositions( progresses, bSolid );
@@ -2776,7 +2811,10 @@ string CInterfaceMission::GetActionOwnReaction( IWindow *pWnd ) const
 	return string();
 }*/
 
-void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const std::string &szCommand, bool bHotkey, const std::wstring *pTooltipOverride )
+void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction,
+                                           const std::string &szCommand,
+                                           bool bHotkey,
+                                           const std::wstring *pTooltipOverride )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
 	if ( it != newActionButtons.end() )
@@ -2797,7 +2835,8 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const s
 					NInput::SBind &bind = *it;
 					if ( bind.szSection == szButtonsBindSection && !bind.controlsSet.empty() )
 					{
-						std::string szControlLocalName = NInput::GetControlLocalName( NInput::GetControlID(bind.controlsSet.front()) );
+						std::string szControlLocalName =
+								NInput::GetControlLocalName( NInput::GetControlID( bind.controlsSet.front() ) );
 						if ( szControlLocalName.empty() )
 							szControlLocalName = bind.controlsSet.front();
 						wszTooltip += L"<br><val hotkey>" + NStr::ToUnicode( "'" + szControlLocalName + "'" );
@@ -2820,7 +2859,10 @@ void CInterfaceMission::MakeActionTooltip( NDb::EUserAction eUserAction, const s
 	}
 }
 
-void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nSlot, const NDb::SUnitSpecialAblityDesc *pAbilityDesc, bool bFixedPlace )
+void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction,
+                                            int nSlot,
+                                            const NDb::SUnitSpecialAblityDesc *pAbilityDesc,
+                                            bool bFixedPlace )
 {
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
 	if ( it != newActionButtons.end() )
@@ -2828,9 +2870,9 @@ void CInterfaceMission::MakeAbilityTooltip( NDb::EUserAction eUserAction, int nS
 		SNewActionButton &action = it->second;
 		std::wstring wszAbilityTooltip;
 		const std::wstring *pTooltipOverride = 0;
-		if ( pAbilityDesc && CHECK_TEXT_NOT_EMPTY_PRE(pAbilityDesc->,LocalizedDesc) )
+		if ( pAbilityDesc && CHECK_TEXT_NOT_EMPTY_PRE( pAbilityDesc->, LocalizedDesc ) )
 		{
-			wszAbilityTooltip = GET_TEXT_PRE(pAbilityDesc->,LocalizedDesc);
+			wszAbilityTooltip = GET_TEXT_PRE( pAbilityDesc->, LocalizedDesc );
 			if ( !wszAbilityTooltip.empty() )
 				pTooltipOverride = &wszAbilityTooltip;
 		}
@@ -2856,13 +2898,12 @@ bool CInterfaceMission::IsAbility( NDb::EUserAction eAction ) const
 	// Reverse was added after the ability range, but it is a fixed movement command like Move.
 	if ( eAction == NDb::USER_ACTION_REVERSE )
 		return false;
-//	if ( eAction == NDb::USER_ACTION_RADIO_CONTROLLED_MODE )
-//		return false;
-	return eAction > NDb::USER_ACTION_ABILITY ||
-		eAction == NDb::USER_ACTION_AMBUSH ||
-		eAction == NDb::USER_ACTION_ENGINEER_BUILD_ENTRENCHMENT ||
-		eAction == NDb::USER_ACTION_ENGINEER_CLEAR_MINES;// CRAP
-//		eAction == NDb::USER_ACTION_CAPTURE_ARTILLERY; // CRAP
+	//	if ( eAction == NDb::USER_ACTION_RADIO_CONTROLLED_MODE )
+	//		return false;
+	return eAction > NDb::USER_ACTION_ABILITY || eAction == NDb::USER_ACTION_AMBUSH ||
+	       eAction == NDb::USER_ACTION_ENGINEER_BUILD_ENTRENCHMENT ||
+	       eAction == NDb::USER_ACTION_ENGINEER_CLEAR_MINES; // CRAP
+																													 //		eAction == NDb::USER_ACTION_CAPTURE_ARTILLERY; // CRAP
 }
 
 NDb::EUserAction CInterfaceMission::GetActionByButtonName( const std::string &szName ) const
@@ -2885,19 +2926,19 @@ void CInterfaceMission::UpdateActionPanel()
 	{
 		case NDb::ACTION_BTN_PANEL_DEFAULT:
 			nActionTab = ACTION_TAB_SELECT;
-		break;
+			break;
 
 		case NDb::ACTION_BTN_PANEL_ESC:
 			nActionTab = ACTION_TAB_CANCEL;
-		break;
+			break;
 
 		case NDb::ACTION_BTN_PANEL_FORMATIONS:
 			nActionTab = ACTION_TAB_FORMATIONS;
-		break;
+			break;
 
 		case NDb::ACTION_BTN_PANEL_RADIO_CONTROLLED:
 			nActionTab = ACTION_TAB_RADIO_CONTROLLED;
-		break;
+			break;
 	}
 
 	if ( pActionTab )
@@ -2950,7 +2991,7 @@ void CInterfaceMission::UpdateActionButtons()
 		if ( !IsAbility( eAction ) )
 		{
 			pWnd->ShowWindow( bHasAction );
-//			pWnd->Enable( !bIsDisabled );
+			//			pWnd->Enable( !bIsDisabled );
 
 			CNewActionButtons::iterator it2 = newActionButtons.find( eAction );
 			if ( it2 != newActionButtons.end() )
@@ -2984,7 +3025,8 @@ void CInterfaceMission::UpdateActionButtons()
 					ability.bEnabled = action.bEnabled;
 				}
 
-				NI_ASSERT( ability.bFixedPlace || ability.nTier >= 0, fmt::format( "Wrong ability ({}) tier", int( eAction ) ) );
+				NI_ASSERT( ability.bFixedPlace || ability.nTier >= 0,
+				           fmt::format( "Wrong ability ({}) tier", int( eAction ) ) );
 
 				abilities.push_back( ability );
 			}
@@ -3013,7 +3055,7 @@ void CInterfaceMission::RegisterActionObservers()
 		NDb::EUserAction eAction = it->first;
 
 		if ( !action.szHotkeyCmd.empty() )
-			AddObserver( action.szHotkeyCmd, &CInterfaceMission::MsgActionCmd, (int)(eAction) );
+			AddObserver( action.szHotkeyCmd, &CInterfaceMission::MsgActionCmd, (int)( eAction ) );
 	}
 }
 
@@ -3084,7 +3126,7 @@ void CInterfaceMission::MsgNewUpdateReinfPoint( const SGameMessage &msg )
 
 void CInterfaceMission::MsgForcedActionCallReinf( const SGameMessage &msg )
 {
-	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
+	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	pReinf->Call( vPos );
 
@@ -3098,7 +3140,7 @@ void CInterfaceMission::MsgForcedActionCallNoReinf( const SGameMessage &msg )
 
 void CInterfaceMission::MsgForcedActionCallSuperWeapon( const SGameMessage &msg )
 {
-	NI_ASSERT( IsPacked2DCoords(msg.nParam1), "param is not a packed 2D coords!" );
+	NI_ASSERT( IsPacked2DCoords( msg.nParam1 ), "param is not a packed 2D coords!" );
 	CVec2 vPos = UnPackCoords( msg.nParam1 );
 	pSuperWeapon->Call( vPos );
 
@@ -3118,7 +3160,7 @@ void CInterfaceMission::MsgResetTarget( const SGameMessage &msg )
 
 void CInterfaceMission::MsgSetAbilityParam( const SGameMessage &msg )
 {
-	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>(msg.nParam1) );
+	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>( msg.nParam1 ) );
 	float fProgress = msg.nParam2 / 1024.0f;
 
 	CNewActionButtons::iterator it = newActionButtons.find( eUserAction );
@@ -3129,7 +3171,7 @@ void CInterfaceMission::MsgSetAbilityParam( const SGameMessage &msg )
 		action.SetProgress( fProgress );
 	}
 
-/*	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>(msg.nParam1) );
+	/*	const NDb::EUserAction eUserAction = GetActionByAbility( static_cast<NDb::EUnitSpecialAbility>(msg.nParam1) );
 	for ( CActionButtons::iterator it = lActiveAbilities.begin(); it != lActiveAbilities.end(); ++it )
 		if ( it->first == eUserAction )
 		{
@@ -3218,7 +3260,7 @@ void CInterfaceMission::EndScriptMovieSequence()
 	pScreen->ShowWindow( true );
 	Cursor()->Show( true );
 
-//	CheckedShowHelpScreen( false );
+	//	CheckedShowHelpScreen( false );
 
 	if ( pMovieBorder )
 		pMovieBorder->ShowWindow( false );
@@ -3237,9 +3279,9 @@ bool CInterfaceMission::OnReinfSelect( const std::string &szSender )
 
 bool CInterfaceMission::OnReinfSelectDblClick( const std::string &szSender )
 {
- // CRAP - temporary disable, uncomment it at designer's request
+	// CRAP - temporary disable, uncomment it at designer's request
 
-/*	pReinf->SelectDblClick( szSender );
+	/*	pReinf->SelectDblClick( szSender );
 	SetActionMode( EAM_SELECT );*/
 
 	return true;
@@ -3361,7 +3403,7 @@ void CInterfaceMission::NewActionButtonClick( NDb::EUserAction eAction )
 		if ( !action.bAbility )
 		{
 			if ( action.eTargetPanel != NDb::ACTION_BTN_PANEL_FORMATIONS &&
-				action.eTargetPanel != NDb::ACTION_BTN_PANEL_RADIO_CONTROLLED )
+			     action.eTargetPanel != NDb::ACTION_BTN_PANEL_RADIO_CONTROLLED )
 				NInput::PostEvent( "set_forced_action", eAction, 0 );
 		}
 		else
@@ -3392,8 +3434,9 @@ bool CInterfaceMission::OnNewActionButtonRightClick( const std::string &szSender
 		if ( action.bAutocast )
 		{
 			action.curState.bAutocast = !action.curState.bAutocast;
-			NInput::PostEvent( "set_special_ability", eAction,
-				action.curState.bAutocast ? NDb::PARAM_ABILITY_AUTOCAST_ON : NDb::PARAM_ABILITY_AUTOCAST_OFF );
+			NInput::PostEvent( "set_special_ability",
+			                   eAction,
+			                   action.curState.bAutocast ? NDb::PARAM_ABILITY_AUTOCAST_ON : NDb::PARAM_ABILITY_AUTOCAST_OFF );
 		}
 	}
 	return true;
@@ -3413,9 +3456,9 @@ bool CInterfaceMission::OnEnterPressed( uint16_t wKeyboardFlags )
 		return true;
 
 	bool bTeam = chatInput.bTeamByDefault;
-	if ( (wKeyboardFlags & EKF_CTRL) != 0 )
+	if ( ( wKeyboardFlags & EKF_CTRL ) != 0 )
 		bTeam = true;
-	else if ( (wKeyboardFlags & EKF_SHIFT) != 0 )
+	else if ( ( wKeyboardFlags & EKF_SHIFT ) != 0 )
 		bTeam = false;
 	StartChatInput( bTeam );
 
@@ -3472,7 +3515,8 @@ void CInterfaceMission::StartChatInput( bool _bTeam )
 		if ( chatInput.pEdit )
 		{
 			chatInput.pEdit->SetText( L"" );
-			chatInput.pEdit->SetPlacement( chatInput.fEditBaseX + nViewWidth, 0, chatInput.fEditBaseWidth - nViewWidth, 0, EWPF_POS_X | EWPF_SIZE_X );
+			chatInput.pEdit->SetPlacement(
+					chatInput.fEditBaseX + nViewWidth, 0, chatInput.fEditBaseWidth - nViewWidth, 0, EWPF_POS_X | EWPF_SIZE_X );
 			chatInput.pEdit->SetFocus( true );
 		}
 	}
@@ -3487,7 +3531,7 @@ void CInterfaceMission::SendChat( const std::wstring &wszText, bool bTeam )
 	Singleton<IMPToUIManager>()->AddUIMessage( pChatMsg );
 
 	// CRAP - test echo
-//	InterfaceState()->AddMPChatMessage( wszText );
+	//	InterfaceState()->AddMPChatMessage( wszText );
 }
 
 void CInterfaceMission::FastMinimizePanels()
@@ -3533,7 +3577,7 @@ void CInterfaceMission::AfterLoad()
 		NGlobal::ProcessCommand( L"main_menu" );
 		return;
 	}
-/*	Scene()->SetSceneConsts( NGameX::GetSceneConsts() );
+	/*	Scene()->SetSceneConsts( NGameX::GetSceneConsts() );
 	Scene()->AfterLoad();*/
 
 	NGlobal::SetVar( "MissionIconsMovieMode", 0.0f );
@@ -3702,13 +3746,13 @@ void CInterfaceMission::SetActionMode( EActionMode eActionMode )
 
 int CInterfaceMission::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, (CInterfaceScreenBase*)this );
+	saver.Add( 1, (CInterfaceScreenBase *)this );
 
 	saver.Add( 2, &pWorld );
 	saver.Add( 3, &vAbilitySlots );
 	saver.Add( 4, &nCurrentSlot );
 	saver.Add( 5, &lActiveAbilities );
-//	saver.Add( 6, &vIconSlots );
+	//	saver.Add( 6, &vIconSlots );
 	saver.Add( 7, &actionButtons );
 	saver.Add( 8, &nCurrentIconSlot );
 	saver.Add( 9, &bScreenLoaded );
@@ -3734,14 +3778,14 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 
 	saver.Add( 29, &bFrozen );
 
-//	saver.Add( 30, &unitFullInfo );
-//	saver.Add( 31, &pMultiFunctionTabWnd );
-//	saver.Add( 32, &reinf );
+	//	saver.Add( 30, &unitFullInfo );
+	//	saver.Add( 31, &pMultiFunctionTabWnd );
+	//	saver.Add( 32, &reinf );
 	saver.Add( 33, &timeLastWarFogUpdate );
 	saver.Add( 34, &bMultiSelectSubMode );
 	saver.Add( 35, &pNotifications );
 	saver.Add( 36, &chatMessages );
-//	saver.Add( 37, &newObjectiveNotify );
+	//	saver.Add( 37, &newObjectiveNotify );
 	saver.Add( 38, &pShowObjectives );
 	saver.Add( 39, &pPause );
 	saver.Add( 41, &pTransceiver );
@@ -3750,7 +3794,7 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 	saver.Add( 45, &pReinf );
 	saver.Add( 46, &pActionTab );
 	saver.Add( 47, &szButtonsBindSection );
-//	saver.Add( 48, &pReinfLight );
+	//	saver.Add( 48, &pReinfLight );
 	saver.Add( 49, &pFlareBtn );
 	saver.Add( 50, &pMinimizeBtn );
 	saver.Add( 51, &pMultifunctionWnd );
@@ -3762,14 +3806,14 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 	saver.Add( 57, &newActionButtonSlots );
 	saver.Add( 58, &eActiveAction );
 	saver.Add( 59, &fViewportBottom );
-//	saver.Add( 60, &nMissionTime );
+	//	saver.Add( 60, &nMissionTime );
 	saver.Add( 61, &nMissionTimeMSec );
 	saver.Add( 62, &pScenarioTracker );
 
 	saver.Add( 63, &nFrameTransition );
 	saver.Add( 64, &vFrameTransitionTo );
 
-//	saver.Add( 65, &ownAviaBackUnits );
+	//	saver.Add( 65, &ownAviaBackUnits );
 
 	//{ CRAP - for compability with old saves
 	if ( saver.IsReading() )
@@ -3786,7 +3830,7 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 	saver.Add( 68, &fInitialBrightness );
 	saver.Add( 69, &pMovieBorder );
 	saver.Add( 70, &bScriptMoivie );
-	saver.Add( 71, &fFormerVolume	);
+	saver.Add( 71, &fFormerVolume );
 	saver.Add( 72, &pMission );
 	saver.Add( 73, &bCheckShowHelpScreen );
 	saver.Add( 74, &bMovieMode );
@@ -3805,8 +3849,7 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 
 // CDrawProgress
 
-CDrawProgress::CDrawProgress( IProgressHookB2 *_pProgress ) :
-	pProgress( _pProgress )
+CDrawProgress::CDrawProgress( IProgressHookB2 *_pProgress ) : pProgress( _pProgress )
 {
 	pMaterials = new CLoadingCounter( this, EC_MATERIALS );
 	pTerrains = new CLoadingCounter( this, EC_TERRAINS );
@@ -3841,9 +3884,8 @@ void CDrawProgress::OnCount( ECounter eCounter, int nCount )
 
 // CDrawProgress::CLoadingCounter
 
-CDrawProgress::CLoadingCounter::CLoadingCounter( CDrawProgress *_pOwner, ECounter _eCounter ) :
-	pOwner( _pOwner ),
-	eCounter( _eCounter )
+CDrawProgress::CLoadingCounter::CLoadingCounter( CDrawProgress *_pOwner, ECounter _eCounter )
+		: pOwner( _pOwner ), eCounter( _eCounter )
 {
 }
 
@@ -3873,10 +3915,7 @@ void CDrawProgress::CLoadingCounter::Step()
 
 // CICLoadB2
 
-CICLoadB2::CICLoadB2( const std::string &szFileName ) :
-	CICLoadBase( szFileName )
-{
-}
+CICLoadB2::CICLoadB2( const std::string &szFileName ) : CICLoadBase( szFileName ) {}
 
 void CICLoadB2::OnProgress( EStage eStage )
 {
@@ -3940,8 +3979,8 @@ void CICLoadB2::OnProgress( EStage eStage )
 			}
 
 			//{ CRAP - for compability with old saves (is really needed?)
-//			if ( !Singleton<IScenarioTracker>() )
-//				InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
+			//			if ( !Singleton<IScenarioTracker>() )
+			//				InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
 			//}
 		}
 		break;
@@ -3950,9 +3989,7 @@ void CICLoadB2::OnProgress( EStage eStage )
 
 // CICSaveB2
 
-CICSaveB2::CICSaveB2( const std::string &szFileName ) : CICSaveBase( szFileName )
-{
-}
+CICSaveB2::CICSaveB2( const std::string &szFileName ) : CICSaveBase( szFileName ) {}
 
 void CICSaveB2::OnProgress( EStage eStage )
 {
@@ -3979,7 +4016,8 @@ void CICSaveB2::OnProgress( EStage eStage )
 
 void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd )
 {
-	if ( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE && NGlobal::GetVar( "History.Playing", 0 ) == 0 )
+	if ( Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE &&
+	     NGlobal::GetVar( "History.Playing", 0 ) == 0 )
 		return;
 
 	int nPrevSpeed = GameTimer()->GetSpeed();
@@ -3989,7 +4027,7 @@ void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd )
 
 	// report about game speed changed to chat
 	std::wstring wszText = InterfaceState()->GetTextEntry( "T_GAME_SPEED_CHANGED" ) +
-			NStr::ToUnicode( std::to_string(  GameTimer()->GetSpeed() ) );
+	                       NStr::ToUnicode( std::to_string( GameTimer()->GetSpeed() ) );
 	if ( GameTimer()->GetSpeed() == GameTimer()->GetMinSpeed() )
 	{
 		wszText += InterfaceState()->GetTextEntry( "T_GAME_SPEED_CHANGED_MIN" );
@@ -4099,17 +4137,18 @@ void DoAutosaveInMission( const bool bOnWin )
 	if ( const NDb::SMapInfo *pMission = Singleton<IScenarioTracker>()->GetCurrentMission() )
 	{
 		std::wstring wszMissionName;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pMission->,LocalizedName) )
-			wszMissionName = GET_TEXT_PRE(pMission->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMission->, LocalizedName ) )
+			wszMissionName = GET_TEXT_PRE( pMission->, LocalizedName );
 
 		std::wstring wszCampaignName;
 		const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();
 		if ( pCampaign )
-			wszCampaignName = GET_TEXT_PRE(pCampaign->,LocalizedName) + L" - ";
+			wszCampaignName = GET_TEXT_PRE( pCampaign->, LocalizedName ) + L" - ";
 
 		std::wstring wszName = InterfaceState()->GetTextEntry( "T_AUTO_SAVE_NAME" );
 		if ( !wszName.empty() )
-			NSaveLoad::MakeUniqueSave( wszName + wszCampaignName + wszMissionName + ( bOnWin ? L" 1" : L" 2" ), true, false, false );
+			NSaveLoad::MakeUniqueSave(
+					wszName + wszCampaignName + wszMissionName + ( bOnWin ? L" 1" : L" 2" ), true, false, false );
 	}
 }
 
@@ -4117,8 +4156,7 @@ void DoAutosaveInMission( const bool bOnWin )
 //*                     CICMission                                  *
 //*******************************************************************
 
-CICMission::CICMission( ITransceiver *pTransceiver )
-: nPlayerForWarFog( -1 )
+CICMission::CICMission( ITransceiver *pTransceiver ) : nPlayerForWarFog( -1 )
 {
 	pTrans = pTransceiver;
 	pMap = pTrans->GetMap();
@@ -4126,7 +4164,7 @@ CICMission::CICMission( ITransceiver *pTransceiver )
 
 void CICMission::PreCreate()
 {
-//	NI_ASSERT( !NMainLoop::GetTopInterface(), "Non-empty interface stack at mission start" ); // sanity check
+	//	NI_ASSERT( !NMainLoop::GetTopInterface(), "Non-empty interface stack at mission start" ); // sanity check
 	CInterfaceCommandBase<CInterfaceMission>::PreCreate();
 }
 
@@ -4172,7 +4210,7 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 	else
 		Singleton<IAIScenarioTracker>()->SetLocalPlayer( nPlayerForWarFog );
 	pTrans->StartMission( pMap, Singleton<IAILogic>() );
-	pInterface->NewMission( pMap, pTrans, Singleton<IScenarioTracker>(), nPlayerForWarFog  );
+	pInterface->NewMission( pMap, pTrans, Singleton<IScenarioTracker>(), nPlayerForWarFog );
 
 	NMainLoop::PushInterface( pInterface );
 }
@@ -4183,7 +4221,7 @@ void CICMission::Configure( const char *pszConfig )
 		return;
 
 	std::vector<std::string> szStrings;
-	for ( NStr::CStringIterator<char, std::string> it(pszConfig, ';'); !it.IsEnd(); it.Next() )
+	for ( NStr::CStringIterator<char, std::string> it( pszConfig, ';' ); !it.IsEnd(); it.Next() )
 	{
 		std::string szString;
 		it.Get( &szString );
@@ -4198,8 +4236,8 @@ void CICMission::Configure( const char *pszConfig )
 	// a size check.
 	if ( szStrings.empty() )
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
-			"empty \"map\" command, expected <map_id> or replay;<file_name>;<player>" );
+		Singleton<IConsoleBuffer>()->WriteASCII(
+				CONSOLE_STREAM_CONSOLE, "empty \"map\" command, expected <map_id> or replay;<file_name>;<player>" );
 		return;
 	}
 
@@ -4209,7 +4247,7 @@ void CICMission::Configure( const char *pszConfig )
 		if ( szStrings.size() < 2 )
 		{
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
-				"\"replay\" needs a file name (replay;<file_name>;<player>)" );
+			                                         "\"replay\" needs a file name (replay;<file_name>;<player>)" );
 			return;
 		}
 		pMap = 0;
@@ -4236,7 +4274,7 @@ void CInterfaceMission::SNewActionButton::Enable( bool _bEnable )
 	bEnabled = _bEnable;
 
 	if ( pBtn )
-//		pBtn->Enable( !bPassive && bEnable );
+		//		pBtn->Enable( !bPassive && bEnable );
 		pBtn->Enable( !bPassive );
 
 	if ( pIconBgDisabledWnd )
@@ -4251,7 +4289,6 @@ void CInterfaceMission::SNewActionButton::SetProgress( float fProgress )
 		pClockWnd->SetAngles( FP_PI2, FP_2PI + FP_PI2 - fProgress * FP_2PI );
 }
 
-
 void StartNewMap( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
@@ -4262,14 +4299,15 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 	NGlobal::RemoveVar( "Multiplayer.Client" );
 
 	std::vector<std::string> szStrings;
-	for ( NStr::CStringIterator<char, std::string> it(szVal, ';'); !it.IsEnd(); it.Next() )
+	for ( NStr::CStringIterator<char, std::string> it( szVal, ';' ); !it.IsEnd(); it.Next() )
 	{
 		std::string szString;
 		it.Get( &szString );
 		szStrings.push_back( szString );
 	}
 	if ( szStrings.size() == 0 || szStrings.size() > 3 )
-		NI_ASSERT( szStrings.size() >= 1, "Illegal usage of \"map\" command (i.e. map <map_id> <player>|\"replay\";<file_name>;" );
+		NI_ASSERT( szStrings.size() >= 1,
+		           "Illegal usage of \"map\" command (i.e. map <map_id> <player>|\"replay\";<file_name>;" );
 	if ( szStrings[0] == "replay" )
 	{
 	}
@@ -4314,7 +4352,7 @@ bool CInterfaceMission::SaveReplay( const std::string &szFileName )
 
 	// Both transceivers hand their commands history out as the checksum logger,
 	// and SaveReplay is on the concrete class rather than on ICommandsHistory.
-	CCommandsHistory *pHistory = dynamic_cast<CCommandsHistory*>( pTransceiver->GetCheckSumLogger() );
+	CCommandsHistory *pHistory = dynamic_cast<CCommandsHistory *>( pTransceiver->GetCheckSumLogger() );
 	if ( pHistory == 0 )
 		return false;
 
@@ -4342,11 +4380,10 @@ void CmdSaveReplay( const std::string &szID, const std::vector<std::wstring> &pa
 
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetPrevInterface( pI ) )
 	{
-		if ( CInterfaceMission *pMission = dynamic_cast<CInterfaceMission*>( pI ) )
+		if ( CInterfaceMission *pMission = dynamic_cast<CInterfaceMission *>( pI ) )
 		{
-			const auto message = pMission->SaveReplay( szName )
-				? fmt::format( "replay saved as \"{}\"", szName )
-				: fmt::format( "could not save replay \"{}\"", szName );
+			const auto message = pMission->SaveReplay( szName ) ? fmt::format( "replay saved as \"{}\"", szName )
+			                                                    : fmt::format( "could not save replay \"{}\"", szName );
 			pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
 			return;
 		}
@@ -4381,12 +4418,10 @@ class CSimpleChecksumLog : public ICheckSumLog
 	OBJECT_BASIC_METHODS( CSimpleChecksumLog );
 	std::unordered_map<int, unsigned long> entries1;
 	bool bEntries2;
+
 public:
-	CSimpleChecksumLog() : bEntries2( false ) {  }
-	void SetEntries2()
-	{
-		bEntries2 = true;
-	}
+	CSimpleChecksumLog() : bEntries2( false ) {}
+	void SetEntries2() { bEntries2 = true; }
 	virtual bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
 	{
 		if ( bEntries2 )
@@ -4394,7 +4429,6 @@ public:
 			const unsigned long entry = entries1[nEntry];
 			if ( ulChecksum == entry )
 			{
-
 			}
 			else
 			{
@@ -4414,7 +4448,7 @@ void CompareSaves( const std::string &szID, const std::vector<std::wstring> &par
 		csSystem << "usage: " << szID << "save_1" << "save_2" << endl;
 	else
 	{
-OMG_I_USE_GOTO_AGAIN:
+	OMG_I_USE_GOTO_AGAIN:
 
 		try
 		{
@@ -4457,7 +4491,7 @@ OMG_I_USE_GOTO_AGAIN:
 			pSumLog->SetEntries2();
 			Singleton<IAILogic>()->LogCheckSum( pSumLog );
 		}
-		catch( ... )
+		catch ( ... )
 		{
 			goto OMG_I_USE_GOTO_AGAIN;
 		}
@@ -4474,10 +4508,11 @@ void DemoExit( const std::string &szID, const std::vector<std::wstring> &paramsS
 	NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szParam.c_str() );
 }
 
-START_REGISTER(MissionCommands)
+START_REGISTER( MissionCommands )
 
 REGISTER_VAR_EX( "chat_message_visible_time", NGlobal::VarIntHandler, &CHAT_MESSAGE_VISIBLE_TIME, 5000, STORAGE_NONE );
-REGISTER_VAR_EX( "chat_message_max_visible_time", NGlobal::VarIntHandler, &CHAT_MESSAGE_MAX_VISIBLE_TIME, 15000, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"chat_message_max_visible_time", NGlobal::VarIntHandler, &CHAT_MESSAGE_MAX_VISIBLE_TIME, 15000, STORAGE_NONE );
 REGISTER_VAR_EX( "chat_message_speed", NGlobal::VarIntHandler, &CHAT_MESSAGE_SPEED, 20, STORAGE_NONE );
 REGISTER_VAR_EX( "chat_message_max_speed", NGlobal::VarIntHandler, &CHAT_MESSAGE_MAX_SPEED, 60, STORAGE_NONE );
 REGISTER_VAR_EX( "chat_message_interval", NGlobal::VarIntHandler, &CHAT_MESSAGE_INTERVAL, 5, STORAGE_NONE );
@@ -4486,9 +4521,14 @@ REGISTER_VAR_EX( "warfog_update_period", NGlobal::VarIntHandler, &WARFOG_UPDATE_
 REGISTER_VAR_EX( "warfog_border_width", NGlobal::VarIntHandler, &WARFOG_HARD_RECT_WIDTH, 2, STORAGE_NONE );
 REGISTER_VAR_EX( "warfog_min_value", NGlobal::VarIntHandler, &WARFOG_MIN_VALUE, 128, STORAGE_NONE );
 
-REGISTER_VAR_EX( "mission_buttons_bind_section", NGlobal::VarWStrHandler, &MISSION_BUTTONS_BIND_SECTION, L"mission_buttons_original", STORAGE_USER );
+REGISTER_VAR_EX( "mission_buttons_bind_section",
+                 NGlobal::VarWStrHandler,
+                 &MISSION_BUTTONS_BIND_SECTION,
+                 L"mission_buttons_original",
+                 STORAGE_USER );
 
-REGISTER_VAR_EX( "transition_effect_duration", NGlobal::VarIntHandler, &s_nTransitionEffectDuration, 800, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"transition_effect_duration", NGlobal::VarIntHandler, &s_nTransitionEffectDuration, 800, STORAGE_NONE );
 REGISTER_VAR_EX( "enable_scroll_transition", NGlobal::VarBoolHandler, &s_bEnableScrollTransition, false, STORAGE_NONE );
 
 REGISTER_VAR_EX( "deep_map_load", NGlobal::VarBoolHandler, &s_bDeepMapLoad, false, STORAGE_USER );

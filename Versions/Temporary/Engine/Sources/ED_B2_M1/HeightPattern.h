@@ -6,7 +6,6 @@
 #include <fmt/format.h>
 #include "MapEditorLib/Tools_Gradient.h"
 
-
 struct SHeightPattern
 {
 	CTPoint<int> pos;
@@ -16,14 +15,20 @@ struct SHeightPattern
 	//
 	SHeightPattern() : pos( 0, 0 ), fRatio( 1.0f ), bOdd( false ) {}
 	SHeightPattern( const CTPoint<int> &rPos, float _fRatio, const CArray2D<float> &rHeights, bool _bOdd )
-		: pos( rPos ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd ) {}
-	SHeightPattern( int nPosX, int nPosY, float _fRatio, const CArray2D<float> &rHeights, bool _bOdd )
-		: pos( nPosX, nPosY ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd ) {}
-	SHeightPattern( const SHeightPattern &rPattern )
-		: pos( rPattern.pos ), fRatio( rPattern.fRatio ), heights( rPattern.heights ), bOdd ( rPattern.bOdd ) {}
-	SHeightPattern& operator=( const SHeightPattern &rPattern )
+			: pos( rPos ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd )
 	{
-		if( &rPattern != this )
+	}
+	SHeightPattern( int nPosX, int nPosY, float _fRatio, const CArray2D<float> &rHeights, bool _bOdd )
+			: pos( nPosX, nPosY ), fRatio( _fRatio ), heights( rHeights ), bOdd( _bOdd )
+	{
+	}
+	SHeightPattern( const SHeightPattern &rPattern )
+			: pos( rPattern.pos ), fRatio( rPattern.fRatio ), heights( rPattern.heights ), bOdd( rPattern.bOdd )
+	{
+	}
+	SHeightPattern &operator=( const SHeightPattern &rPattern )
+	{
+		if ( &rPattern != this )
 		{
 			pos = rPattern.pos;
 			fRatio = rPattern.fRatio;
@@ -37,7 +42,6 @@ struct SHeightPattern
 	bool CreateByValue( float fValue, int nGridLines, bool bEllipse );
 };
 
-
 //функционал создающий паттерн по градиенту
 struct SCreateHeightPatternByGradientFunctional
 {
@@ -46,8 +50,12 @@ struct SCreateHeightPatternByGradientFunctional
 	float fRatio;
 	float bSquareInterpolated;
 	//
-	SCreateHeightPatternByGradientFunctional( SHeightPattern *_pHeightPattern, const SGradient *_pGradient, float _fRatio, bool _bSquareInterpolated )
-		: pHeightPattern( _pHeightPattern ), pGradient( _pGradient ), fRatio( _fRatio ), bSquareInterpolated( _bSquareInterpolated )
+	SCreateHeightPatternByGradientFunctional( SHeightPattern *_pHeightPattern,
+	                                          const SGradient *_pGradient,
+	                                          float _fRatio,
+	                                          bool _bSquareInterpolated )
+			: pHeightPattern( _pHeightPattern ), pGradient( _pGradient ), fRatio( _fRatio ),
+				bSquareInterpolated( _bSquareInterpolated )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		NI_ASSERT( pGradient != 0, "Wrong parameter: pGradient == 0" );
@@ -55,11 +63,11 @@ struct SCreateHeightPatternByGradientFunctional
 	//
 	bool operator()( int nXIndex, int nYIndex, float fDistance )
 	{
-		pHeightPattern->heights[nYIndex][nXIndex] = ( *pGradient )( fDistance * ( pGradient->range.max - pGradient->range.min ), bSquareInterpolated ) * fRatio;
+		pHeightPattern->heights[nYIndex][nXIndex] =
+				( *pGradient )( fDistance * ( pGradient->range.max - pGradient->range.min ), bSquareInterpolated ) * fRatio;
 		return true;
 	}
 };
-
 
 struct SCreateHeightPatternByValueFunctional
 {
@@ -67,7 +75,7 @@ struct SCreateHeightPatternByValueFunctional
 	float fValue;
 	//
 	SCreateHeightPatternByValueFunctional( SHeightPattern *_pHeightPattern, float _fValue )
-		: pHeightPattern( _pHeightPattern ), fValue( _fValue )
+			: pHeightPattern( _pHeightPattern ), fValue( _fValue )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -79,7 +87,6 @@ struct SCreateHeightPatternByValueFunctional
 	}
 };
 
-
 //функционал создающий паттерн заравнивания
 struct SCreateHeightPatternToLevelFunctional
 {
@@ -88,7 +95,7 @@ struct SCreateHeightPatternToLevelFunctional
 	float fLevelRatio;
 
 	SCreateHeightPatternToLevelFunctional( SHeightPattern *_pHeightPattern, float _fAverageHeight, float _fLevelRatio )
-		: fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio ), pHeightPattern( _pHeightPattern )
+			: fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio ), pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -106,7 +113,6 @@ struct SCreateHeightPatternToLevelFunctional
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
 
-
 //функционал создающий паттерн заравнивания, все высоты приводятся к положительным величинам
 struct SCreateHeightPatternToLevelOverZeroFunctional
 {
@@ -114,8 +120,10 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 	float fAverageHeight;
 	float fLevelRatio;
 
-	SCreateHeightPatternToLevelOverZeroFunctional( SHeightPattern *_pHeightPattern, float _fAverageHeight, float _fLevelRatio )
-		: fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio ), pHeightPattern( _pHeightPattern )
+	SCreateHeightPatternToLevelOverZeroFunctional( SHeightPattern *_pHeightPattern,
+	                                               float _fAverageHeight,
+	                                               float _fLevelRatio )
+			: fAverageHeight( _fAverageHeight ), fLevelRatio( _fLevelRatio ), pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 		if ( fAverageHeight < 0 )
@@ -145,14 +153,12 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
 
-
 //функционал создающий паттерн в высотами
 struct SCreateHeightPatternFunctional
 {
 	SHeightPattern *pHeightPattern;
 
-	SCreateHeightPatternFunctional( SHeightPattern *_pHeightPattern )
-		: pHeightPattern( _pHeightPattern )
+	SCreateHeightPatternFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -161,14 +167,14 @@ struct SCreateHeightPatternFunctional
 	{
 		if ( fValue == 1.0f )
 		{
-			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = GetHeight( nXIndex, nYIndex );
+			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] =
+					GetHeight( nXIndex, nYIndex );
 		}
 		return true;
 	}
 	//
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
-
 
 //функционал определяющий среднее значение высоты
 struct SCalculateAverageHeightFunctional
@@ -193,18 +199,17 @@ struct SCalculateAverageHeightFunctional
 	virtual float GetHeight( int nXIndex, int nYIndex ) = 0;
 };
 
-
 //применение функционалов для всех элементов SHeightPattern.heights
-template<class TYPE>
+template <class TYPE>
 bool ApplyHeightPattern( const CTRect<int> &rRect,
-												 const SHeightPattern &rPattern,
-												 TYPE &rApplyFunctional,
-												 bool isIgnoreInvalidIndices = false )
+                         const SHeightPattern &rPattern,
+                         TYPE &rApplyFunctional,
+                         bool isIgnoreInvalidIndices = false )
 {
 	CTRect<int> indices( rPattern.pos.x,
-											 rPattern.pos.y,
-											 rPattern.pos.x + rPattern.heights.GetSizeX(),
-											 rPattern.pos.y + rPattern.heights.GetSizeY() );
+	                     rPattern.pos.y,
+	                     rPattern.pos.x + rPattern.heights.GetSizeX(),
+	                     rPattern.pos.y + rPattern.heights.GetSizeY() );
 	const int nResult = ValidateRect( rRect, &indices );
 	//нет ни одного вертекса
 	if ( nResult < 0 )
@@ -231,7 +236,9 @@ bool ApplyHeightPattern( const CTRect<int> &rRect,
 	{
 		for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
 		{
-			if ( !rApplyFunctional( nXIndex, nYIndex, rPattern.heights[nYIndex - rPattern.pos.y][nXIndex - rPattern.pos.x] * rPattern.fRatio ) )
+			if ( !rApplyFunctional( nXIndex,
+			                        nYIndex,
+			                        rPattern.heights[nYIndex - rPattern.pos.y][nXIndex - rPattern.pos.x] * rPattern.fRatio ) )
 			{
 				return false;
 			}
@@ -241,13 +248,12 @@ bool ApplyHeightPattern( const CTRect<int> &rRect,
 	return true;
 }
 
-
 //применение функционалов внутри эллипса для полея heights
-template<class TYPE>
+template <class TYPE>
 static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
 {
 	NI_ASSERT( ( rRect.Width() > 0 ) && ( rRect.Height() > 0 ),
-						 fmt::format( "Invalid sizes: ({}, {})\n", rRect.Width(), rRect.Height() ) );
+	           fmt::format( "Invalid sizes: ({}, {})\n", rRect.Width(), rRect.Height() ) );
 	if ( ( rRect.Width() <= 0 ) || ( rRect.Height() <= 0 ) )
 	{
 		return false;

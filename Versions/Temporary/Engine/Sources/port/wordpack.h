@@ -31,7 +31,8 @@
 #define HIWORD( l ) ( (WORD)( ( ( (ULONG_PTR)( l ) ) >> 16 ) & 0xffff ) )
 #define MAKEWORD( a, b ) \
 	( (WORD)( ( (BYTE)( ( (ULONG_PTR)( a ) ) & 0xff ) ) | ( (WORD)( (BYTE)( ( (ULONG_PTR)( b ) ) & 0xff ) ) ) << 8 ) )
-#define MAKELONG( a, b ) \
-	( (LONG)( ( (WORD)( ( (ULONG_PTR)( a ) ) & 0xffff ) ) | ( (DWORD)( (WORD)( ( (ULONG_PTR)( b ) ) & 0xffff ) ) ) << 16 ) )
+#define MAKELONG( a, b )                                                                                         \
+	( (LONG)( ( (WORD)( ( (ULONG_PTR)( a ) ) & 0xffff ) ) | ( (DWORD)( (WORD)( ( (ULONG_PTR)( b ) ) & 0xffff ) ) ) \
+	                                                            << 16 ) )
 
 #endif

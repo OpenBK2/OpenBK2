@@ -9,12 +9,10 @@
 // Moved from DW_Log.cpp unchanged, but that a missing view no longer crashes a
 // log call: the buffer is kept either way.
 
-CLogPaneContents::CLogPaneContents()
-	: pLogView( 0 )
+CLogPaneContents::CLogPaneContents() : pLogView( 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_LOG, this );
 }
-
 
 CLogPaneContents::~CLogPaneContents()
 {
@@ -22,7 +20,6 @@ CLogPaneContents::~CLogPaneContents()
 	delete pLogView;
 	pLogView = 0;
 }
-
 
 void CLogPaneContents::SetView( ILogView *pView )
 {
@@ -32,7 +29,6 @@ void CLogPaneContents::SetView( ILogView *pView )
 		pLogView = pView;
 	}
 }
-
 
 void CLogPaneContents::Log( ELogOutputType eLogOutputType, const std::string &szText )
 {
@@ -57,7 +53,6 @@ void CLogPaneContents::Log( ELogOutputType eLogOutputType, const std::string &sz
 	}
 }
 
-
 void CLogPaneContents::ClearLog()
 {
 	logBufferList.clear();
@@ -68,22 +63,20 @@ void CLogPaneContents::ClearLog()
 	}
 }
 
-
 void CLogPaneContents::UpdateLog()
 {
-	if ( ( pLogView != 0 ) &&
-			 ( Singleton<IUserDataContainer>() != 0 ) &&
-			 ( Singleton<IUserDataContainer>()->Get() != 0 ) )
+	if ( ( pLogView != 0 ) && ( Singleton<IUserDataContainer>() != 0 ) &&
+	     ( Singleton<IUserDataContainer>()->Get() != 0 ) )
 	{
 		pLogView->Clear();
-		for ( NLog::CLogBufferList::iterator itLogBuffer = logBufferList.begin(); itLogBuffer != logBufferList.end(); ++itLogBuffer )
+		for ( NLog::CLogBufferList::iterator itLogBuffer = logBufferList.begin(); itLogBuffer != logBufferList.end();
+		      ++itLogBuffer )
 		{
 			Append( *itLogBuffer );
 		}
 		pLogView->Redraw();
 	}
 }
-
 
 void CLogPaneContents::Append( const NLog::SLogBuffer &rLogBuffer )
 {
@@ -93,24 +86,22 @@ void CLogPaneContents::Append( const NLog::SLogBuffer &rLogBuffer )
 	}
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	if ( ( ( rLogBuffer.eLogOutputType == LT_NORMAL ) && ( pUserData->bShowLogMessages ) ) ||
-			 ( ( rLogBuffer.eLogOutputType == LT_IMPORTANT ) && ( pUserData->bShowLogWarnings ) ) ||
-			 ( ( rLogBuffer.eLogOutputType == LT_ERROR ) && ( pUserData->bShowLogErrors ) ) )
+	     ( ( rLogBuffer.eLogOutputType == LT_IMPORTANT ) && ( pUserData->bShowLogWarnings ) ) ||
+	     ( ( rLogBuffer.eLogOutputType == LT_ERROR ) && ( pUserData->bShowLogErrors ) ) )
 	{
 		pLogView->Append( rLogBuffer.eLogOutputType, rLogBuffer.szText );
 	}
 }
 
-
 bool CLogPaneContents::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	if ( ( Singleton<IUserDataContainer>() == 0 ) ||
-			 ( Singleton<IUserDataContainer>()->Get() == 0 ) ||
-			 ( pLogView == 0 ) )
+	if ( ( Singleton<IUserDataContainer>() == 0 ) || ( Singleton<IUserDataContainer>()->Get() == 0 ) ||
+	     ( pLogView == 0 ) )
 	{
 		return false;
 	}
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_LOG_SHOW_MESSAGES:
 			pUserData->bShowLogMessages = !pUserData->bShowLogMessages;
@@ -144,20 +135,18 @@ bool CLogPaneContents::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	}
 }
 
-
 bool CLogPaneContents::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CLogPaneContents::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CLogPaneContents::UpdateCommand(), pbCheck == 0" );
 	//
-	if ( ( Singleton<IUserDataContainer>() == 0 ) ||
-			 ( Singleton<IUserDataContainer>()->Get() == 0 ) ||
-			 ( pLogView == 0 ) )
+	if ( ( Singleton<IUserDataContainer>() == 0 ) || ( Singleton<IUserDataContainer>()->Get() == 0 ) ||
+	     ( pLogView == 0 ) )
 	{
 		return false;
 	}
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_LOG_SHOW_MESSAGES:
 			( *pbEnable ) = true;

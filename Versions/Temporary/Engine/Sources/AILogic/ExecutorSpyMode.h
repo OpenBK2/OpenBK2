@@ -15,13 +15,14 @@ class CExecutorSpyMode : public CExecutorUnitCombatBonus
 	void SwitchModel( const NDb::SHPObjectRPGStats *pStats );
 
 protected:
-
-	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags );
+	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags,
+	                                                               const uint16_t newModeFlags );
 	void SwitchingOffEnd();
 	void SwitchOnEnd();
+
 public:
 	CExecutorSpyMode( CAIUnit *_pUnit );
-	CExecutorSpyMode() { }
+	CExecutorSpyMode() {}
 
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	bool NotifyEvent( const CExecutorEvent &event );

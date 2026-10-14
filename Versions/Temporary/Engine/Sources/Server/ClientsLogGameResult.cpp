@@ -12,7 +12,7 @@
 
 #define CHECK_TABLE_STRUCTURE
 #ifndef _FINALRELEASE
-	#define LOG_FULL_GAME_RESULT
+#define LOG_FULL_GAME_RESULT
 #endif
 
 // The two query macros are CClients::Query and CClients::Execute now.
@@ -31,10 +31,10 @@ struct SPlayerInfoToLog
 	std::vector<int> reinfXP;
 	std::vector<int> reinfUsed;
 
-	void ConvertToHashMap( std::unordered_map<std::string,int> *pHashMap )
+	void ConvertToHashMap( std::unordered_map<std::string, int> *pHashMap )
 	{
-#define CONVERT_NUMBER( name, var ) NHashMapConvertor::ConvertNumber( pHashMap, name, &(var), false )
-#define CONVERT_VECTOR( name, var ) NHashMapConvertor::ConvertVector( pHashMap, name, &(var), false )
+#define CONVERT_NUMBER( name, var ) NHashMapConvertor::ConvertNumber( pHashMap, name, &( var ), false )
+#define CONVERT_VECTOR( name, var ) NHashMapConvertor::ConvertVector( pHashMap, name, &( var ), false )
 
 		CONVERT_NUMBER( "playerid", nDBID );
 		CONVERT_VECTOR( "mapsrequested", mapsRequested );
@@ -55,7 +55,9 @@ struct SPlayerInfoToLog
 
 void CClients::DBLogGameResult( SLadderGameInfo *pGameInfo )
 {
-	for ( std::unordered_map<int,std::string>::const_iterator it = pGameInfo->nickByID.begin(); it != pGameInfo->nickByID.end(); ++it )
+	for ( std::unordered_map<int, std::string>::const_iterator it = pGameInfo->nickByID.begin();
+	      it != pGameInfo->nickByID.end();
+	      ++it )
 	{
 		SPlayerInfoToLog info;
 		info.nDBID = GetDBUserIDbyNick( it->second );
@@ -66,20 +68,20 @@ void CClients::DBLogGameResult( SLadderGameInfo *pGameInfo )
 		info.mapsRequested = pGameInfo->mapsRequested[nPlayerID];
 		info.techsRequested = pGameInfo->techsRequested[nPlayerID];
 		info.nGameLength = ( pGameInfo->nDeathTime - pGameInfo->nStartTime ) / 1000;
-		std::unordered_map<std::string,int> buffer;
+		std::unordered_map<std::string, int> buffer;
 		info.ConvertToHashMap( &buffer );
 		DBLogRawGameResult( buffer );
 	}
 }
 
-void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &info )
+void CClients::DBLogRawGameResult( const std::unordered_map<std::string, int> &info )
 {
 #ifdef LOG_FULL_GAME_RESULT
 #ifdef CHECK_TABLE_STRUCTURE
 	{
 		std::unordered_set<std::string> availableColumns = GetTableColumns( "resultslog" );
 		std::list<std::string> columnsToCreate;
-		for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
+		for ( std::unordered_map<std::string, int>::const_iterator it = info.begin(); it != info.end(); ++it )
 		{
 			const std::string &szStatsName = it->first;
 			if ( availableColumns.find( szStatsName ) == availableColumns.end() )
@@ -97,7 +99,7 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 #endif
 
 	std::string szQuery = "INSERT INTO `resultslog` (  ";
-	for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
+	for ( std::unordered_map<std::string, int>::const_iterator it = info.begin(); it != info.end(); ++it )
 	{
 		const std::string &szColumnName = it->first;
 		szQuery += szColumnName + ",";
@@ -105,9 +107,9 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 	szQuery.erase( szQuery.size() - 1, 1 );
 	szQuery += ") VALUES (  ";
 
-	for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
+	for ( std::unordered_map<std::string, int>::const_iterator it = info.begin(); it != info.end(); ++it )
 	{
-		const std::string &szColumnValue = std::to_string(  it->second );
+		const std::string &szColumnValue = std::to_string( it->second );
 		szQuery += "'" + szColumnValue + "',";
 	}
 	szQuery.erase( szQuery.size() - 1, 1 );

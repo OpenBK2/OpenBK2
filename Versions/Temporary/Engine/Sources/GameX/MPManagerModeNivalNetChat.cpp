@@ -36,7 +36,7 @@ bool CMPManagerModeNivalNet::OnChatMessage( SMPUIChatMessage *pMsg )
 	{
 		CChatPacket *pPacket = new CChatPacket( 0, wszFilteredText, szMPName, 0, true );
 		pClient->SendGamePacket( pPacket, true );
-		PushMessage( new SMPUIChatMessage( szMPName, wszFilteredText ) );		// Doesn't matter if it's private
+		PushMessage( new SMPUIChatMessage( szMPName, wszFilteredText ) ); // Doesn't matter if it's private
 	}
 
 	// No need to report it back, the server does it
@@ -60,21 +60,22 @@ bool CMPManagerModeNivalNet::OnRequestChatChannelsMessage( SMPUIMessage *pMsg )
 
 bool CMPManagerModeNivalNet::OnChangeFriendIgnoreStatusMessage( SMPUIChangeFriendIgnoreStatusMessage *pMsg )
 {
-	CChatModifyIgnoreFriendListPacket *pPkt = new CChatModifyIgnoreFriendListPacket( 0, pMsg->szNick, CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE );
+	CChatModifyIgnoreFriendListPacket *pPkt =
+			new CChatModifyIgnoreFriendListPacket( 0, pMsg->szNick, CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE );
 	switch ( pMsg->eAction )
 	{
-	case SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_FRIEND:
-		pPkt->eChange = CChatModifyIgnoreFriendListPacket::ADD_FRIEND;
-		break;
-	case SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_IGNORE:
-		pPkt->eChange = CChatModifyIgnoreFriendListPacket::ADD_IGNORE;
-		break;
-	case SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_FRIEND:
-		pPkt->eChange = CChatModifyIgnoreFriendListPacket::REMOVE_FRIEND;
-		break;
-	case SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_IGNORE:
-		pPkt->eChange = CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE;
-		break;
+		case SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_FRIEND:
+			pPkt->eChange = CChatModifyIgnoreFriendListPacket::ADD_FRIEND;
+			break;
+		case SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_IGNORE:
+			pPkt->eChange = CChatModifyIgnoreFriendListPacket::ADD_IGNORE;
+			break;
+		case SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_FRIEND:
+			pPkt->eChange = CChatModifyIgnoreFriendListPacket::REMOVE_FRIEND;
+			break;
+		case SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_IGNORE:
+			pPkt->eChange = CChatModifyIgnoreFriendListPacket::REMOVE_IGNORE;
+			break;
 	}
 	pClient->SendPacket( pPkt );
 	return true;
@@ -123,8 +124,8 @@ bool CMPManagerModeNivalNet::OnChatChannelClientsPacket( class CChatChannelClien
 bool CMPManagerModeNivalNet::OnChatChannelClientNotifyPacket( class CChatClientListChangeNotifyPacket *pPacket )
 {
 	//DebugTrace( "+++ ChatClientsListChange" );
-	SMPUIChatChannelNicksChangeMessage *pMsg = new SMPUIChatChannelNicksChangeMessage( pPacket->szNick,
-		( pPacket->bJoined ? EMPS_ONLINE : EMPS_OFFLINE ), false );
+	SMPUIChatChannelNicksChangeMessage *pMsg = new SMPUIChatChannelNicksChangeMessage(
+			pPacket->szNick, ( pPacket->bJoined ? EMPS_ONLINE : EMPS_OFFLINE ), false );
 	PushMessage( pMsg );
 	return true;
 }
@@ -154,18 +155,19 @@ bool CMPManagerModeNivalNet::OnChatIgnoreFriendListPacket( class CChatIgnoreFrie
 
 bool CMPManagerModeNivalNet::OnChatFriendNotifyPacket( class CChatFriendNotifyPacket *pPacket )
 {
-	SMPUIChatChannelNicksChangeMessage *pMsg = new SMPUIChatChannelNicksChangeMessage( pPacket->szNick, EMPS_OFFLINE, true );
+	SMPUIChatChannelNicksChangeMessage *pMsg =
+			new SMPUIChatChannelNicksChangeMessage( pPacket->szNick, EMPS_OFFLINE, true );
 	switch ( pPacket->cChatStatus )
 	{
-	case 0:
-		pMsg->eStatus = EMPS_OFFLINE;
-		break;
-	case 1:
-		pMsg->eStatus = EMPS_ONLINE;
-		break;
-	case 2:
-		pMsg->eStatus = EMPS_BUSY;
-		break;
+		case 0:
+			pMsg->eStatus = EMPS_OFFLINE;
+			break;
+		case 1:
+			pMsg->eStatus = EMPS_ONLINE;
+			break;
+		case 2:
+			pMsg->eStatus = EMPS_BUSY;
+			break;
 	}
 	PushMessage( pMsg );
 	return true;
@@ -173,6 +175,7 @@ bool CMPManagerModeNivalNet::OnChatFriendNotifyPacket( class CChatFriendNotifyPa
 
 bool CMPManagerModeNivalNet::OnChatAFKResponsePacket( class CChatAFKResponsePacket *pPacket )
 {
-	PushMessage( new SMPUIChatMessage( NStr::ToUnicode( pPacket->szAFKNick ) + L" - " + InterfaceState()->GetTextEntry( "T_CHAT_AFK_RESPONSE" ) ) );
+	PushMessage( new SMPUIChatMessage( NStr::ToUnicode( pPacket->szAFKNick ) + L" - " +
+	                                   InterfaceState()->GetTextEntry( "T_CHAT_AFK_RESPONSE" ) ) );
 	return true;
 }

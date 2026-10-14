@@ -14,22 +14,22 @@ class CRotatedArray2D
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nRotation = {};
 
-	int operator&( IBinSaver & saver ) { return 0; } // dissalow serialize
+	int operator&( IBinSaver &saver ) { return 0; } // dissalow serialize
 public:
-
-	CRotatedArray2D( TArray2D &_array, const int _nRotation )
-		: array( _array ), nRotation( _nRotation )
-	{
-	}
+	CRotatedArray2D( TArray2D &_array, const int _nRotation ) : array( _array ), nRotation( _nRotation ) {}
 
 	int GetMinX() const
 	{
-		switch( nRotation )
+		switch ( nRotation )
 		{
-		case 0: return 0;
-		case 1: return -(array.GetSizeY() - 1);
-		case 2: return -(array.GetSizeX() - 1 );
-		case 3: return 0;
+			case 0:
+				return 0;
+			case 1:
+				return -( array.GetSizeY() - 1 );
+			case 2:
+				return -( array.GetSizeX() - 1 );
+			case 3:
+				return 0;
 		}
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
@@ -37,12 +37,16 @@ public:
 
 	int GetMinY() const
 	{
-		switch( nRotation )
+		switch ( nRotation )
 		{
-		case 0: return 0;
-		case 1: return 0;
-		case 2: return -(array.GetSizeY() - 1);
-		case 3: return -(array.GetSizeX() - 1);
+			case 0:
+				return 0;
+			case 1:
+				return 0;
+			case 2:
+				return -( array.GetSizeY() - 1 );
+			case 3:
+				return -( array.GetSizeX() - 1 );
 		}
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
@@ -50,12 +54,16 @@ public:
 
 	int GetMaxX() const
 	{
-		switch( nRotation )
+		switch ( nRotation )
 		{
-		case 0: return (array.GetSizeX()-1);
-		case 1: return 0;
-		case 2: return 0;
-		case 3: return (array.GetSizeY()-1);
+			case 0:
+				return ( array.GetSizeX() - 1 );
+			case 1:
+				return 0;
+			case 2:
+				return 0;
+			case 3:
+				return ( array.GetSizeY() - 1 );
 		}
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
@@ -63,38 +71,50 @@ public:
 
 	int GetMaxY() const
 	{
-		switch( nRotation )
+		switch ( nRotation )
 		{
-		case 0: return (array.GetSizeY()-1);
-		case 1: return (array.GetSizeX()-1);
-		case 2: return 0;
-		case 3: return 0;
+			case 0:
+				return ( array.GetSizeY() - 1 );
+			case 1:
+				return ( array.GetSizeX() - 1 );
+			case 2:
+				return 0;
+			case 3:
+				return 0;
 		}
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return 0;
 	}
 
-	const TCont & Get( const int nX, const int nY ) const
+	const TCont &Get( const int nX, const int nY ) const
 	{
-		switch( nRotation )
+		switch ( nRotation )
 		{
-		case 0: return array[nY][nX];
-		case 1: return array[-nX][nY];
-		case 2: return array[-nY][-nX];
-		case 3: return array[nX][-nY];
+			case 0:
+				return array[nY][nX];
+			case 1:
+				return array[-nX][nY];
+			case 2:
+				return array[-nY][-nX];
+			case 3:
+				return array[nX][-nY];
 		}
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return array[0][0];
 	}
 
-	TCont & Get( const int nX, const int nY )
+	TCont &Get( const int nX, const int nY )
 	{
-		switch( nRotation )
+		switch ( nRotation )
 		{
-		case 0: return array[nY][nX];
-		case 1: return array[-nX][nY];
-		case 2: return array[-nY][-nX];
-		case 3: return array[nX][-nY];
+			case 0:
+				return array[nY][nX];
+			case 1:
+				return array[-nX][nY];
+			case 2:
+				return array[-nY][-nX];
+			case 3:
+				return array[nX][-nY];
 		}
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return array[0][0];
@@ -117,28 +137,28 @@ class CRotatedVec2 : public CVec2
 {
 public:
 	CRotatedVec2( const CVec2 &_vOrigin, const uint16_t _wAngle )
-		: CVec2( CVec2(_vOrigin.y, -_vOrigin.x) ^ GetVectorByDirection( _wAngle ) )
+			: CVec2( CVec2( _vOrigin.y, -_vOrigin.x ) ^ GetVectorByDirection( _wAngle ) )
 	{
 	}
 };
 
-typedef CRotatedArray2D<uint8_t, const CArray2D<uint8_t> > CRotatedArray2DBYTEConst;
-typedef CRotatedArray2D<uint8_t, CArray2D<uint8_t> > CRotatedArray2DBYTE;
-
+typedef CRotatedArray2D<uint8_t, const CArray2D<uint8_t>> CRotatedArray2DBYTEConst;
+typedef CRotatedArray2D<uint8_t, CArray2D<uint8_t>> CRotatedArray2DBYTE;
 
 template <class TCont, class TArray2D>
 class CSmoothRotatedArray2D
 {
-	TArray2D *array = {};						// passability array
-	SAIAngle wAngle;								// object rotation ange
-	CVec2 vCenter;							// object center (int AI world coordinates)
-	CVec2 vOrigin;							// passability origin
+	TArray2D *array = {}; // passability array
+	SAIAngle wAngle;      // object rotation ange
+	CVec2 vCenter;        // object center (int AI world coordinates)
+	CVec2 vOrigin;        // passability origin
 	CVec2 vRotationVector, vRotationVectorBack;
 	int nMinX = {}, nMinY = {}, nMaxX = {}, nMaxY = {};
 	float fSin = {}, fCos = {};
+
 public:
 	// array - passability/visibility
-	CSmoothRotatedArray2D() { }
+	CSmoothRotatedArray2D() {}
 	CSmoothRotatedArray2D( TArray2D &_array, const uint16_t _wAngle, const CVec2 &_vOrigin, const CVec2 &_vCenter )
 	{
 		Init( _array, _wAngle, _vOrigin, _vCenter );
@@ -150,20 +170,23 @@ public:
 		vCenter = _vCenter;
 		vOrigin = _vOrigin;
 
-		vRotationVector = CVec2( NMath::Cos( 2 * PI * (_wAngle) / 65536.0f ), NMath::Sin( 2 * PI * (_wAngle) / 65536.0f ) );
-		vRotationVectorBack = CVec2( NMath::Cos( 2 * PI * (65536 - _wAngle) / 65536.0f ), NMath::Sin( 2 * PI * ( 65536 - _wAngle) / 65536.0f ) );
+		vRotationVector =
+				CVec2( NMath::Cos( 2 * PI * ( _wAngle ) / 65536.0f ), NMath::Sin( 2 * PI * ( _wAngle ) / 65536.0f ) );
+		vRotationVectorBack = CVec2( NMath::Cos( 2 * PI * ( 65536 - _wAngle ) / 65536.0f ),
+		                             NMath::Sin( 2 * PI * ( 65536 - _wAngle ) / 65536.0f ) );
 		std::vector<CVec2> vVertices;
 
 		CVec2 vPt = -vOrigin;
-		vVertices.push_back( ( vPt ^ vRotationVector) + vCenter );
-
-		vPt = CVec2(-vOrigin.x + ( array->GetSizeX() ) * SConsts::TILE_SIZE, -vOrigin.y );
 		vVertices.push_back( ( vPt ^ vRotationVector ) + vCenter );
 
-		vPt = CVec2(-vOrigin.x, -vOrigin.y + ( array->GetSizeY() ) * SConsts::TILE_SIZE);
+		vPt = CVec2( -vOrigin.x + ( array->GetSizeX() ) * SConsts::TILE_SIZE, -vOrigin.y );
 		vVertices.push_back( ( vPt ^ vRotationVector ) + vCenter );
 
-		vPt = CVec2(-vOrigin.x + ( array->GetSizeX() ) * SConsts::TILE_SIZE, -vOrigin.y + ( array->GetSizeY() ) * SConsts::TILE_SIZE );
+		vPt = CVec2( -vOrigin.x, -vOrigin.y + ( array->GetSizeY() ) * SConsts::TILE_SIZE );
+		vVertices.push_back( ( vPt ^ vRotationVector ) + vCenter );
+
+		vPt = CVec2( -vOrigin.x + ( array->GetSizeX() ) * SConsts::TILE_SIZE,
+		             -vOrigin.y + ( array->GetSizeY() ) * SConsts::TILE_SIZE );
 		vVertices.push_back( ( vPt ^ vRotationVector ) + vCenter );
 
 		nMinX = nMaxX = vVertices[0].x;
@@ -191,8 +214,8 @@ public:
 		const CVec2 vRotatedPoint( vRelativePoint ^ vRotationVectorBack );
 		const CVec2 vPassabilityPoint( vRotatedPoint + vOrigin );
 		const SVector vP( vPassabilityPoint.x / SConsts::TILE_SIZE, vPassabilityPoint.y / SConsts::TILE_SIZE );
-		if ( vP.x >= 0 && vP.y >= 0 && vP.x < array->GetSizeX()&& vP.y < array->GetSizeY() )
-			return (*array)[vP.y][vP.x];
-		return TCont(0);
+		if ( vP.x >= 0 && vP.y >= 0 && vP.x < array->GetSizeX() && vP.y < array->GetSizeY() )
+			return ( *array )[vP.y][vP.x];
+		return TCont( 0 );
 	}
 };

@@ -1,6 +1,5 @@
 #pragma once
 
-
 // в cpp файле написать макрос: REGISTER_CHILD_FRAME_IN_...( typeName, className )
 struct IChildFrame : public CObjectBase
 {
@@ -14,10 +13,12 @@ struct IChildFrame : public CObjectBase
 	virtual void Leave() = 0;
 };
 
-
 struct IChildFrameContainer : public CObjectBase
 {
-	enum { tidTypeID = 0x1408B400 };
+	enum
+	{
+		tidTypeID = 0x1408B400
+	};
 	//
 	// Проверить на возможность создания
 	virtual bool CanCreate( const std::string &rszChildFrameTypeName ) = 0;

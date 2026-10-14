@@ -11,60 +11,60 @@
 
 namespace NScene
 {
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	const std::string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const std::string SZ_TERRA_BIN_FILE_NAME = "map.b2m";
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
+{
+	const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
+	//
+	//CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
+	pTerraManager->Load( pDesc, 0 );
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
+{
+	const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
+	//
+	CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
+	if ( stream.IsOk() )
 	{
-		const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
-		//
-		//CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
-		pTerraManager->Load( pDesc, 0 );
+		pTerraManager->Load( pDesc, &stream );
+		return true;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath )
+	//
+	return false;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath )
+{
+	return SaveTerrain( pTerraManager, szMapFilePath, nullptr );
+}
+bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError )
+{
+	try
 	{
-		const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
-		//
-		CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
-		if ( stream.IsOk() )
+		if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() )
 		{
-			pTerraManager->Load( pDesc, &stream );
-			return true;
+			const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
+			//
+			// A failed open used to return true. Finish serialization first,
+			// then report the actual result of replacing the terrain file.
+			CMemoryStream stream;
+			pTerraManager->Save( &stream );
+			return NVFS::WriteFile( NVFS::GetMainFileCreator(), szTerrainBinFileName, stream, pError );
 		}
-		//
-		return false;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath )
+	catch ( const std::exception &error )
 	{
-		return SaveTerrain( pTerraManager, szMapFilePath, nullptr );
+		if ( pError )
+			*pError = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME + "\n" + error.what();
 	}
-	bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError )
-	{
-		try
-		{
-			if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() )
-			{
-				const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
-				//
-				// A failed open used to return true. Finish serialization first,
-				// then report the actual result of replacing the terrain file.
-				CMemoryStream stream;
-				pTerraManager->Save( &stream );
-				return NVFS::WriteFile( NVFS::GetMainFileCreator(), szTerrainBinFileName, stream, pError );
-			}
-		}
-		catch ( const std::exception &error )
-		{
-			if ( pError ) *pError = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME + "\n" + error.what();
-		}
-		//
-		return false;
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	return false;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
-
 
 void CTerrainManager::Setup( NGScene::IGameView *pGView, CFuncBase<STime> *_pTimer )
 {
@@ -76,7 +76,6 @@ void CTerrainManager::Setup( NGScene::IGameView *pGView, CFuncBase<STime> *_pTim
 	pTerraGen->AttachTimer( pTimer );
 }
 
-
 void CTerrainManager::SetAIObserver( struct ITerraAIObserver *pObserver )
 {
 	if ( pTerraGen == 0 )
@@ -84,12 +83,10 @@ void CTerrainManager::SetAIObserver( struct ITerraAIObserver *pObserver )
 	pTerraGen->SetAIObserver( pObserver );
 }
 
-
-ITerraAIObserver* CTerrainManager::GetAIObserver()
+ITerraAIObserver *CTerrainManager::GetAIObserver()
 {
 	return pTerraGen->GetAIObserver();
 }
-
 
 void CTerrainManager::Load( const NDb::STerrain *_pDesc, CDataStream *pStream )
 {
@@ -107,13 +104,11 @@ void CTerrainManager::Load( const NDb::STerrain *_pDesc, CDataStream *pStream )
 	pTerraGen->Load( pDesc, pStream );
 }
 
-
 void CTerrainManager::Save( CDataStream *pStream )
 {
 	//CheckPathes();
 	pTerraGen->Save( pStream );
 }
-
 
 void CTerrainManager::AddRoad( const NDb::SVSOInstance *pInstance )
 {
@@ -121,13 +116,11 @@ void CTerrainManager::AddRoad( const NDb::SVSOInstance *pInstance )
 	pTerraGen->AddRoad( pInstance );
 }
 
-
 void CTerrainManager::UpdateRoad( const int nVSOID )
 {
 	DebugTrace( "CTerrainManager::UpdateRoad() ID: 0x%X", nVSOID );
 	pTerraGen->UpdateRoad( nVSOID );
 }
-
 
 void CTerrainManager::RemoveRoad( const int nVSOID )
 {
@@ -135,13 +128,11 @@ void CTerrainManager::RemoveRoad( const int nVSOID )
 	pTerraGen->RemoveRoad( nVSOID );
 }
 
-
 void CTerrainManager::AddCrag( const NDb::SVSOInstance *pInstance )
 {
 	DebugTrace( "CTerrainManager::AddCrag() ID: 0x%X", pInstance->nVSOID );
 	pTerraGen->AddCrag( pInstance );
 }
-
 
 void CTerrainManager::UpdateCrag( const int nVSOID )
 {
@@ -149,13 +140,11 @@ void CTerrainManager::UpdateCrag( const int nVSOID )
 	pTerraGen->UpdateCrag( nVSOID );
 }
 
-
 void CTerrainManager::RemoveCrag( const int nVSOID )
 {
 	DebugTrace( "CTerrainManager::RemoveCrag() ID: 0x%X", nVSOID );
 	pTerraGen->RemoveCrag( nVSOID );
 }
-
 
 void CTerrainManager::AddRiver( const NDb::SVSOInstance *pInstance )
 {
@@ -163,13 +152,11 @@ void CTerrainManager::AddRiver( const NDb::SVSOInstance *pInstance )
 	pTerraGen->AddRiver( pInstance );
 }
 
-
 void CTerrainManager::UpdateRiver( const int nVSOID )
 {
 	DebugTrace( "CTerrainManager::UpdateRiver() ID: 0x%X", nVSOID );
 	pTerraGen->UpdateRiver( nVSOID );
 }
-
 
 void CTerrainManager::RemoveRiver( const int nVSOID )
 {
@@ -177,30 +164,25 @@ void CTerrainManager::RemoveRiver( const int nVSOID )
 	pTerraGen->RemoveRiver( nVSOID );
 }
 
-
 void CTerrainManager::AddTerraSpot( const NDb::STerrainSpotInstance *pInstance )
 {
 	pTerraGen->AddTerraSpot( pInstance );
 }
-
 
 void CTerrainManager::UpdateTerraSpot( const int nSpotID )
 {
 	pTerraGen->UpdateTerraSpot( nSpotID );
 }
 
-
 void CTerrainManager::RemoveTerraSpot( const int nSpotID )
 {
 	pTerraGen->RemoveTerraSpot( nSpotID );
 }
 
-
 void CTerrainManager::AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth )
 {
 	pTerraGen->AddEntrenchment( _ctrlPoints, _fWidth );
 }
-
 
 void CTerrainManager::RestoreFromHistory()
 {
@@ -210,7 +192,6 @@ void CTerrainManager::RestoreFromHistory()
 	//Load( pDesc );
 	pTerraGen->RestoreFromHistory();
 }
-
 
 int CTerrainManager::operator&( IBinSaver &saver )
 {
@@ -240,7 +221,6 @@ int CTerrainManager::operator&( IBinSaver &saver )
 	return 0;
 }
 
-
 float CTerrainManager::GetZ( float x, float y ) const
 {
 	//if ( pTerraGen )
@@ -255,7 +235,6 @@ float CTerrainManager::GetZ( float x, float y ) const
 	//NI_ASSERT( 0, "Error getting height from AI Observer" )
 	return 0.0f;
 }
-
 
 float CTerrainManager::GetTileHeight( int nX, int nY ) const
 {
@@ -272,7 +251,6 @@ float CTerrainManager::GetTileHeight( int nX, int nY ) const
 	return 0.0f;
 }
 
-
 void CTerrainManager::UpdateZ( CVec3 *pvPos )
 {
 	//if ( pTerraGen )
@@ -286,7 +264,6 @@ void CTerrainManager::UpdateZ( CVec3 *pvPos )
 
 	//NI_ASSERT( 0, "Error updating AI Observer height" )
 }
-
 
 uint32_t CTerrainManager::GetNormal( const CVec2 &vPoint ) const
 {
@@ -303,7 +280,6 @@ uint32_t CTerrainManager::GetNormal( const CVec2 &vPoint ) const
 	return 0;
 }
 
-
 bool CTerrainManager::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
 {
 	//if ( pTerraGen )
@@ -319,8 +295,9 @@ bool CTerrainManager::GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &
 	return false;
 }
 
-
-bool CTerrainManager::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const
+bool CTerrainManager::GetIntersectionWithTerrainForEditor( CVec3 *pvResult,
+                                                           const CVec3 &vBegin,
+                                                           const CVec3 &vEnd ) const
 {
 	//if ( pTerraGen )
 	{
@@ -334,7 +311,6 @@ bool CTerrainManager::GetIntersectionWithTerrainForEditor( CVec3 *pvResult, cons
 	//NI_ASSERT( 0, "Error getting terra intersection from AI Observer" )
 	return false;
 }
-
 
 void CTerrainManager::InitHeights4Editor( int nSizeX, int nSizeY )
 {
@@ -350,110 +326,107 @@ void CTerrainManager::InitHeights4Editor( int nSizeX, int nSizeY )
 	//NI_ASSERT( 0, "Error init heights for AI Observer" )
 }
 
-
-void CTerrainManager::CreateDebris(	const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin,
-																		const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
-																		const NDebrisBuilder::EMaskSmoothType smoothType )
+void CTerrainManager::CreateDebris( const std::string &szFileName,
+                                    CArray2D<uint8_t> *pImage,
+                                    CVec2 *pOrigin,
+                                    const NDebrisBuilder::EMaskType maskType,
+                                    const int nSmoothRadius,
+                                    const NDebrisBuilder::EMaskSmoothType smoothType )
 {
 	pTerraGen->CreateDebris( szFileName, pImage, pOrigin, maskType, nSmoothRadius, smoothType );
 }
-
 
 void CTerrainManager::CreateSelection( NMeshData::SMeshData *pData, const CVec3 &vMin, const CVec3 &vMax )
 {
 	pTerraGen->CreateSelection( pData, vMin, vMax, this );
 }
 
-
-void CTerrainManager::AddTrack(	const int nID, const float fFadingSpeed,
-																const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4,
-																const CVec2 &vNorm, const float _fWidth, const float fAplha, CTracksManager *pTracksManager )
+void CTerrainManager::AddTrack( const int nID,
+                                const float fFadingSpeed,
+                                const CVec2 &_v1,
+                                const CVec2 &_v2,
+                                const CVec2 &_v3,
+                                const CVec2 &_v4,
+                                const CVec2 &vNorm,
+                                const float _fWidth,
+                                const float fAplha,
+                                CTracksManager *pTracksManager )
 {
 	pTerraGen->AddTrack( nID, fFadingSpeed, _v1, _v2, _v3, _v4, vNorm, _fWidth, fAplha, pTracksManager );
 }
-
 
 void CTerrainManager::AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial )
 {
 	pTerraGen->AddExplosion( _vMin, _vMax, pMaterial );
 }
 
-
-void CTerrainManager::ModifyTerraGeometryByBrush(	const int nVisTileX, const int nVisTileY, bool bCenter,
-																									const CArray2D<float> &brush,
-																									const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
+void CTerrainManager::ModifyTerraGeometryByBrush( const int nVisTileX,
+                                                  const int nVisTileY,
+                                                  bool bCenter,
+                                                  const CArray2D<float> &brush,
+                                                  const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
 {
 	pTerraGen->ModifyTerraGeometryByBrush( nVisTileX, nVisTileY, bCenter, brush, terraBrushUpdate );
 }
-
 
 void CTerrainManager::GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs )
 {
 	pTerraGen->GetTerraGeometryUpdateDifferences( pOffsX, pOffsY, pDiffs );
 }
 
-
 void CTerrainManager::UpdateAllObjectsInGeomModifyingArea()
 {
 	pTerraGen->UpdateAllObjectsInGeomModifyingArea();
 }
-
 
 void CTerrainManager::UpdateWater()
 {
 	pTerraGen->UpdateWater();
 }
 
-
 float CTerrainManager::GetTerraHeight( const float x, const float y ) const
 {
 	return pTerraGen->GetTerraHeight( x, y );
 }
-
 
 float CTerrainManager::GetRealTerraHeight( const float x, const float y ) const
 {
 	return pTerraGen->GetRealTerraHeight( x, y );
 }
 
-
 float CTerrainManager::GetTerraHeightFast( const int nTileX, const int nTileY ) const
 {
 	return pTerraGen->GetTerraHeightFast( nTileX, nTileY );
 }
-
 
 float CTerrainManager::GetRealTerraHeightFast( const int nTileX, const int nTileY ) const
 {
 	return pTerraGen->GetRealTerraHeightFast( nTileX, nTileY );
 }
 
-
 void CTerrainManager::UpdateRiversDepthes()
 {
 	pTerraGen->UpdateRiversDepthes();
 }
 
-
-void CTerrainManager::AddDynamicDebris( const CVec2 &vPos, const CVec2 &vSize,
-																				const float fAngle, const int nSmoothRad,
-																				const NDb::SMaterial *pMaterial )
+void CTerrainManager::AddDynamicDebris(
+		const CVec2 &vPos, const CVec2 &vSize, const float fAngle, const int nSmoothRad, const NDb::SMaterial *pMaterial )
 {
 	pTerraGen->AddDynamicDebris( vPos, vSize, fAngle, nSmoothRad, pMaterial );
 }
 
-
-void CTerrainManager::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight )
+void CTerrainManager::ApplyBridgeTerraForm( const CVec2 &_p1,
+                                            const CVec2 &_p2,
+                                            const float fWidth,
+                                            const float fHeight )
 {
 	pTerraGen->ApplyBridgeTerraForm( _p1, _p2, fWidth, fHeight );
 }
-
 
 void CTerrainManager::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 )
 {
 	pTerraGen->ApplyObjectTerraForm( _p1, _p2, _p3, _p4 );
 }
-
 
 void CTerrainManager::HideTerrain( bool bHide )
 {
@@ -463,55 +436,50 @@ void CTerrainManager::HideTerrain( bool bHide )
 	}
 }
 
-
-void CTerrainManager::UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<uint8_t> &mask,
-																					const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
+void CTerrainManager::UpdateTileAreaType( const float fXo,
+                                          const float fYo,
+                                          const CArray2D<uint8_t> &mask,
+                                          const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
 {
 	pTerraGen->UpdateTileAreaType( fXo, fYo, mask, terraBrushUpdate );
 }
-
 
 void CTerrainManager::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs )
 {
 	pTerraGen->GetTileTypeUpdateDifferences( pOffsX, pOffsY, pDiffs );
 }
 
-
 void CTerrainManager::FinalizeTexModifying()
 {
 	pTerraGen->FinalizeTexModifying();
 }
-
 
 void CTerrainManager::ClampUnderRivers( NMeshData::SMeshData *pData )
 {
 	pTerraGen->ClampUnderRivers( pData );
 }
 
-
-void CTerrainManager::GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
+void CTerrainManager::GetAreaTileTypes(
+		CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
 	pTerraGen->GetAreaTileTypes( pAreaTypes, nX1, nY1, nX2, nY2 );
 }
 
-
-void CTerrainManager::GetAreaHeights(	CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 )
+void CTerrainManager::GetAreaHeights(
+		CArray2D<float> *pAreaHeights, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
 	pTerraGen->GetAreaHeights( pAreaHeights, nX1, nY1, nX2, nY2 );
 }
-
 
 void CTerrainManager::UpdateAfterTilesModifying()
 {
 	pTerraGen->UpdateAfterTilesModifying();
 }
 
-
 void CTerrainManager::SetRainyWaters( CDBPtr<NDb::SWater> pRainyWater )
 {
 	pTerraGen->InitRainyWater( pRainyWater );
 }
-
 
 BASIC_REGISTER_CLASS( SCENEB2, ITerraManager );
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x10096401, CTerrainManager )

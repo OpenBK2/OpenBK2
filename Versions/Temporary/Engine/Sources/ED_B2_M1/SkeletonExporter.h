@@ -13,21 +13,22 @@ class CSkeletonExporter : public CBasicSceneExporter
 	//
 	const char *GetAddPath() const;
 	bool FormScript( std::string *pScriptText,
-									 const std::string &szTypeName,
-									 const std::string &szObjName,
-		               const std::string &szDstPath,
-									 const std::string &szSrcPath,
-		               IManipulator *pManipulator );
+	                 const std::string &szTypeName,
+	                 const std::string &szObjName,
+	                 const std::string &szDstPath,
+	                 const std::string &szSrcPath,
+	                 IManipulator *pManipulator );
 	bool ImportInfoToDBBeforeRefs( const std::string &szGeomObjName,
-		                             const std::string &szSrcScenePath,
-																 const std::string &szDstFileName,
-																 IManipulator *pManipulator );
+	                               const std::string &szSrcScenePath,
+	                               const std::string &szDstFileName,
+	                               IManipulator *pManipulator );
 	EXPORT_RESULT CustomCheck( const std::string &szTypeName,
-														 const std::string &szObjName,
-														 const std::string &szSrcScenePath,
-														 const std::string &szDestinationPath,
-														 IManipulator *pManipulator );
+	                           const std::string &szObjName,
+	                           const std::string &szSrcScenePath,
+	                           const std::string &szDestinationPath,
+	                           IManipulator *pManipulator );
 	CSkeletonExporter() {}
+
 public:
 	// Import metadata independently of the export UI (also used by headless checks).
 	ED_B2_M1_EXPORT bool ImportGltfInfo( IManipulator *pManipulator ) override;

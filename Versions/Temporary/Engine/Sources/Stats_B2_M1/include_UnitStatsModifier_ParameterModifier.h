@@ -17,5 +17,5 @@ void Apply( const SParameterModifier &param, const bool bForward )
 }
 float Get( const float fInitialValue ) const
 {
-	return (nZeroCount ? 0.0f : ( fInitialValue + fAddBonus ) * fMultBonus);
+	return ( nZeroCount ? 0.0f : ( fInitialValue + fAddBonus ) * fMultBonus );
 }

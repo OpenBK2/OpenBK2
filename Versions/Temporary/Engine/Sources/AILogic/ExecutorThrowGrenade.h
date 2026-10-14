@@ -6,27 +6,34 @@ class CAIUnit;
 
 class CExecutorThrowGrenade : public CExecutor
 {
-	OBJECT_BASIC_METHODS(CExecutorThrowGrenade)
-		ZDATA_(CExecutor)
+	OBJECT_BASIC_METHODS( CExecutorThrowGrenade )
+	ZDATA_( CExecutor )
 	CPtr<CAIUnit> pUnit;
 	SAbilitySwitchState state;
 	SAbilitySwitchState secondaryState;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NDb::EUnitSpecialAbility eAbility = {};
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&pUnit); f.Add(3,&state); f.Add(4,&secondaryState); f.Add(5,&eAbility); return 0; }
+
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutor *)this );
+		f.Add( 2, &pUnit );
+		f.Add( 3, &state );
+		f.Add( 4, &secondaryState );
+		f.Add( 5, &eAbility );
+		return 0;
+	}
 
 	void UpdateState( const SAbilitySwitchState &_state );
 	const bool HasGrenades();
+
 public:
 	CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecialAbility _eAbility );
-	CExecutorThrowGrenade() {  }
+	CExecutorThrowGrenade() {}
 
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event );
-	virtual bool IsExecutorValid() const
-	{
-		return IsValid( pUnit );
-	}
+	virtual bool IsExecutorValid() const { return IsValid( pUnit ); }
 	virtual void RegisterOnEvents( IExecutorContainer *pContainer );
-
 };

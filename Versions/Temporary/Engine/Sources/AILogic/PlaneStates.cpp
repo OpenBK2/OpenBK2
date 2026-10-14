@@ -52,12 +52,12 @@ static const float LEAVE_DISSAPEAR_DISTANCE = 512.0f;
 static bool GetStrategicBomberBombingPoint( const SAIUnitCmd &cmd, CAviation *pPlane, CVec2 *pPoint )
 {
 	CLinkObject *pObject = CLinkObject::GetObjectByUniqueIdSafe( cmd.nObjectID );
-	if ( CAIUnit *pTarget = dynamic_cast<CAIUnit*>( pObject ) )
+	if ( CAIUnit *pTarget = dynamic_cast<CAIUnit *>( pObject ) )
 	{
 		*pPoint = pTarget->GetCenterPlain();
 		return true;
 	}
-	if ( CBuilding *pBuilding = dynamic_cast<CBuilding*>( pObject ) )
+	if ( CBuilding *pBuilding = dynamic_cast<CBuilding *>( pObject ) )
 	{
 		*pPoint = pBuilding->GetAttackCenter( pPlane->GetCenterPlain() );
 		return true;
@@ -65,7 +65,7 @@ static bool GetStrategicBomberBombingPoint( const SAIUnitCmd &cmd, CAviation *pP
 	return false;
 }
 
-START_REGISTER(SuicideVars)
+START_REGISTER( SuicideVars )
 REGISTER_VAR_EX( "AI.Aviation.FAU2_DiveDistance", NGlobal::VarFloatHandler, &g_fBombDiveDistance, 0.0f, STORAGE_NONE );
 FINISH_REGISTER
 
@@ -75,7 +75,7 @@ FINISH_REGISTER
 
 CPtr<CPlaneStatesFactory> CPlaneStatesFactory::pFactory = 0;
 
-IStatesFactory* CPlaneStatesFactory::Instance()
+IStatesFactory *CPlaneStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CPlaneStatesFactory();
@@ -86,76 +86,68 @@ IStatesFactory* CPlaneStatesFactory::Instance()
 bool CPlaneStatesFactory::CanCommandBeExecuted( class CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		(
-			cmdType == ACTION_COMMAND_DIE			||
-			cmdType == ACTION_COMMAND_DISAPPEAR ||
-			cmdType == ACTION_MOVE_PLANE_LEAVE ||
-			cmdType == ACTION_MOVE_FLY_DEAD ||
-			cmdType == ACTION_COMMAND_MOVE_TO  ||
-			cmdType == ACTION_COMMAND_ATTACK_UNIT ||
-			cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
-			cmdType == ACTION_MOVE_ATTACKPLANE_SETPOINT ||
-			cmdType == ACTION_MOVE_FIGHTER_SETPOINT ||
-			cmdType == ACTION_COMMAND_UNLOAD ||
-			cmdType == ACTION_COMMAND_SWARM_TO ||
-			cmdType == ACTION_MOVE_DROP_BOMBS_TO_TARGET ||
-			cmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
-			cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
-			cmdType == ACTION_COMMAND_FIRE_ROCKETS ||
-			cmdType == ACTION_COMMAND_PATROL
-		);
+	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_DISAPPEAR || cmdType == ACTION_MOVE_PLANE_LEAVE ||
+	         cmdType == ACTION_MOVE_FLY_DEAD || cmdType == ACTION_COMMAND_MOVE_TO ||
+	         cmdType == ACTION_COMMAND_ATTACK_UNIT || cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
+	         cmdType == ACTION_MOVE_ATTACKPLANE_SETPOINT || cmdType == ACTION_MOVE_FIGHTER_SETPOINT ||
+	         cmdType == ACTION_COMMAND_UNLOAD || cmdType == ACTION_COMMAND_SWARM_TO ||
+	         cmdType == ACTION_MOVE_DROP_BOMBS_TO_TARGET || cmdType == ACTION_MOVE_DROP_BOMBS_TO_POINT ||
+	         cmdType == ACTION_COMMAND_ART_BOMBARDMENT || cmdType == ACTION_COMMAND_FIRE_ROCKETS ||
+	         cmdType == ACTION_COMMAND_PATROL );
 }
 
-IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
+IUnitState *CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CAviation*>( pObj ) != 0, "Wrong unit type" );
-	CAviation *pUnit = checked_cast<CAviation*>( pObj );
+	NI_ASSERT( dynamic_cast<CAviation *>( pObj ) != 0, "Wrong unit type" );
+	CAviation *pUnit = checked_cast<CAviation *>( pObj );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 
 	switch ( cmd.nCmdType )
 	{
-	case ACTION_COMMAND_PATROL:
-		if ( pUnit->GetState()->GetName() == EUSN_PLANE_PATROL )
-		{
-			CPlanePatrolState * pState = checked_cast<CPlanePatrolState*>( pUnit->GetState() );
-			pState->AddPoint( cmd.vPos );
-			pResult = pState;
-		}
-		else
-		{
-			if ( pUnit->GetStats()->etype == RPG_TYPE_AVIA_FIGHTER )
-				pResult = new CPlaneFighterPatrolState( pUnit, cmd.vPos, 0 );
-			else if ( pUnit->GetStats()->etype == RPG_TYPE_AVIA_ATTACK )
-				pResult = new CPlaneShturmovikPatrolState( pUnit, cmd.vPos, 0, 0, false );
-			else
+		case ACTION_COMMAND_PATROL:
+			if ( pUnit->GetState()->GetName() == EUSN_PLANE_PATROL )
 			{
-				CPlanePatrolState * pState = new CPlaneScoutState( pUnit );
+				CPlanePatrolState *pState = checked_cast<CPlanePatrolState *>( pUnit->GetState() );
 				pState->AddPoint( cmd.vPos );
 				pResult = pState;
 			}
-		}
+			else
+			{
+				if ( pUnit->GetStats()->etype == RPG_TYPE_AVIA_FIGHTER )
+					pResult = new CPlaneFighterPatrolState( pUnit, cmd.vPos, 0 );
+				else if ( pUnit->GetStats()->etype == RPG_TYPE_AVIA_ATTACK )
+					pResult = new CPlaneShturmovikPatrolState( pUnit, cmd.vPos, 0, 0, false );
+				else
+				{
+					CPlanePatrolState *pState = new CPlaneScoutState( pUnit );
+					pState->AddPoint( cmd.vPos );
+					pResult = pState;
+				}
+			}
 
-		break;
-	case ACTION_MOVE_PLANE_LEAVE:
-		pResult = new CPlaneLeaveState( pUnit );
+			break;
+		case ACTION_MOVE_PLANE_LEAVE:
+			pResult = new CPlaneLeaveState( pUnit );
 
-		break;
-	case ACTION_COMMAND_UNLOAD:
-		pResult = new CPlaneParaDropState( pUnit, (const EActionLeaveParam)int(cmd.fNumber), cmd.vPos, checked_cast<CFormation*>( GetObjectByCmd( cmd ) ) );
+			break;
+		case ACTION_COMMAND_UNLOAD:
+			pResult = new CPlaneParaDropState( pUnit,
+			                                   ( const EActionLeaveParam ) int( cmd.fNumber ),
+			                                   cmd.vPos,
+			                                   checked_cast<CFormation *>( GetObjectByCmd( cmd ) ) );
 
-		break;
-	case ACTION_MOVE_ATTACKPLANE_SETPOINT:
-		// Strategic bombers must never enter the dive-bomber attack state.
-		if ( pUnit->IsStrategicBomber() )
-			pResult = new CPlaneBombState( pUnit, cmd.vPos );
-		else
-			pResult = new CPlaneShturmovikPatrolState( pUnit, cmd.vPos, 0, 0, false );
+			break;
+		case ACTION_MOVE_ATTACKPLANE_SETPOINT:
+			// Strategic bombers must never enter the dive-bomber attack state.
+			if ( pUnit->IsStrategicBomber() )
+				pResult = new CPlaneBombState( pUnit, cmd.vPos );
+			else
+				pResult = new CPlaneShturmovikPatrolState( pUnit, cmd.vPos, 0, 0, false );
 
-		break;
-	case ACTION_MOVE_DROP_BOMBS_TO_TARGET:
+			break;
+		case ACTION_MOVE_DROP_BOMBS_TO_TARGET:
 		{
 			if ( pUnit->IsStrategicBomber() )
 			{
@@ -168,15 +160,15 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 			else
 			{
 				// cmd.nNumber cannot be properly assigned in PerformGroupAction, so fuck it, decide what to attack by type
-				CAIUnit *pTarget = dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) );
-				if (pTarget)
+				CAIUnit *pTarget = dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) );
+				if ( pTarget )
 				{
 					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, pTarget, 0, true );
 					break;
 				}
 
-				CBuilding *pBuildingTarget = dynamic_cast<CBuilding*>( GetObjectByCmd( cmd ) );
-				if (pBuildingTarget)
+				CBuilding *pBuildingTarget = dynamic_cast<CBuilding *>( GetObjectByCmd( cmd ) );
+				if ( pBuildingTarget )
 				{
 					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pBuildingTarget, true );
 					break;
@@ -185,65 +177,66 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 		}
 
 		break;
-	case ACTION_MOVE_DROP_BOMBS_TO_POINT:
-	case ACTION_COMMAND_ART_BOMBARDMENT:
-		pResult = new CPlaneBombState( pUnit, cmd.vPos );
+		case ACTION_MOVE_DROP_BOMBS_TO_POINT:
+		case ACTION_COMMAND_ART_BOMBARDMENT:
+			pResult = new CPlaneBombState( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_FIRE_ROCKETS:
-		// Aircraft make one bombing pass for the finite single-salvo ability.
-		pResult = new CPlaneBombState( pUnit, cmd.vPos, true );
+			break;
+		case ACTION_COMMAND_FIRE_ROCKETS:
+			// Aircraft make one bombing pass for the finite single-salvo ability.
+			pResult = new CPlaneBombState( pUnit, cmd.vPos, true );
 
-		break;
-	case ACTION_MOVE_FIGHTER_SETPOINT:
-		pResult = new CPlaneFighterPatrolState( pUnit, cmd.vPos, 0 );
+			break;
+		case ACTION_MOVE_FIGHTER_SETPOINT:
+			pResult = new CPlaneFighterPatrolState( pUnit, cmd.vPos, 0 );
 
-		break;
-	case ACTION_COMMAND_SWARM_TO:
-		if ( pUnit->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER || pUnit->GetStats()->etype == NDb::RPG_TYPE_AVIA_SUPER )
-		{
-			if ( cmd.fNumber == 0.0f )
-				pResult = new CPlaneBombState( pUnit, cmd.vPos );
+			break;
+		case ACTION_COMMAND_SWARM_TO:
+			if ( pUnit->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER ||
+			     pUnit->GetStats()->etype == NDb::RPG_TYPE_AVIA_SUPER )
+			{
+				if ( cmd.fNumber == 0.0f )
+					pResult = new CPlaneBombState( pUnit, cmd.vPos );
+				else
+					pResult = new CPlaneSuicideState( pUnit, cmd.vPos );
+			}
 			else
-				pResult = new CPlaneSuicideState( pUnit, cmd.vPos );
-		}
-		else
-			pResult = new CPlaneSwarmToState( pUnit, cmd.vPos, true );
+				pResult = new CPlaneSwarmToState( pUnit, cmd.vPos, true );
 
-		break;
-	case ACTION_COMMAND_MOVE_TO:
-		if ( pUnit->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER )
-		{
-			if ( cmd.fNumber == 0.0f )
-				pResult = new CPlaneBombState( pUnit, cmd.vPos );
+			break;
+		case ACTION_COMMAND_MOVE_TO:
+			if ( pUnit->GetStats()->etype == NDb::RPG_TYPE_AVIA_BOMBER )
+			{
+				if ( cmd.fNumber == 0.0f )
+					pResult = new CPlaneBombState( pUnit, cmd.vPos );
+				else
+					pResult = new CPlaneSuicideState( pUnit, cmd.vPos );
+			}
 			else
-				pResult = new CPlaneSuicideState( pUnit, cmd.vPos );
-		}
-		else
-			pResult = new CPlaneSwarmToState( pUnit, cmd.vPos, false );
+				pResult = new CPlaneSwarmToState( pUnit, cmd.vPos, false );
 
-		break;
-	case ACTION_COMMAND_ATTACK_OBJECT:
-		if ( pUnit->IsStrategicBomber() )
-		{
-			CVec2 vBombingPoint;
-			if ( GetStrategicBomberBombingPoint( cmd, pUnit, &vBombingPoint ) )
-				pResult = new CPlaneBombState( pUnit, vBombingPoint );
+			break;
+		case ACTION_COMMAND_ATTACK_OBJECT:
+			if ( pUnit->IsStrategicBomber() )
+			{
+				CVec2 vBombingPoint;
+				if ( GetStrategicBomberBombingPoint( cmd, pUnit, &vBombingPoint ) )
+					pResult = new CPlaneBombState( pUnit, vBombingPoint );
+				else
+					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
+			}
+			else if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_FIGHTER )
+			{
+				CLinkObject *pLinkObject = CLinkObject::GetObjectByUniqueIdSafe( cmd.nObjectID );
+				CBuilding *pBuilding = dynamic_cast<CBuilding *>( pLinkObject );
+				if ( pBuilding )
+					pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pBuilding, false );
+			}
 			else
 				pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
-		}
-		else if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_FIGHTER )
-		{
-			CLinkObject *pLinkObject = CLinkObject::GetObjectByUniqueIdSafe( cmd.nObjectID );
-			CBuilding *pBuilding = dynamic_cast<CBuilding*>( pLinkObject );
-			if ( pBuilding )
-				pResult = new CPlaneShturmovikPatrolState( pUnit, VNULL2, 0, pBuilding, false );
-		}
-		else
-			pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 
-		break;
-	case ACTION_COMMAND_ATTACK_UNIT:
+			break;
+		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			if ( pUnit->IsStrategicBomber() )
 			{
@@ -253,15 +246,15 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 				else
 					pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 			}
-			else if ( CAIUnit *pTarget = dynamic_cast<CAIUnit*>( GetObjectByCmd( cmd ) ) )
+			else if ( CAIUnit *pTarget = dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) ) )
 			{
-				if (!pTarget)
+				if ( !pTarget )
 					return nullptr;
 
 				if ( pTarget->GetStats()->IsAviation() )
 				{
 					if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_ATTACK || pTarget->GetStats()->etype != RPG_TYPE_AVIA_BOMBER )
-						pResult = new CPlaneFighterPatrolState( pUnit, VNULL2, checked_cast<CAviation*>( pTarget ) );
+						pResult = new CPlaneFighterPatrolState( pUnit, VNULL2, checked_cast<CAviation *>( pTarget ) );
 					else
 						pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 				}
@@ -273,7 +266,7 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 						pUnit->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, false );
 				}
 			}
-			else if ( CBuilding *pTarget = checked_cast<CBuilding*>( GetObjectByCmd( cmd ) ) )
+			else if ( CBuilding *pTarget = checked_cast<CBuilding *>( GetObjectByCmd( cmd ) ) )
 			{
 				if ( pUnit->GetStats()->etype != RPG_TYPE_AVIA_FIGHTER )
 				{
@@ -285,23 +278,23 @@ IUnitState* CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 		}
 
 		break;
-	case ACTION_MOVE_FLY_DEAD:
-		pResult = new CPlaneFlyDeadState( pUnit );
+		case ACTION_MOVE_FLY_DEAD:
+			pResult = new CPlaneFlyDeadState( pUnit );
 
-		break;
-	case ACTION_COMMAND_DIE:
-		NI_ASSERT( false, "Command to die in the queue" );
+			break;
+		case ACTION_COMMAND_DIE:
+			NI_ASSERT( false, "Command to die in the queue" );
 
-		break;
+			break;
 	}
 
 	return pResult;
 }
 
-IUnitState* CPlaneStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CPlaneStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CAviation*>( pUnit ) != 0, "Wrong unit type" );
-	return new CPlaneRestState( checked_cast<CAviation*>( pUnit ) );
+	NI_ASSERT( dynamic_cast<CAviation *>( pUnit ) != 0, "Wrong unit type" );
+	return new CPlaneRestState( checked_cast<CAviation *>( pUnit ) );
 }
 
 //*******************************************************************
@@ -309,24 +302,24 @@ IUnitState* CPlaneStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 //*******************************************************************
 
 CPlaneSwarmToState::CPlaneSwarmToState( CAviation *pUnit, const CVec2 &_vPoint, const bool _bScanForTarget )
-: CPlanePatrolState( pUnit ), eState( PSTS_ESTIMATING ),
-	CPlaneDeffensiveFire( pUnit ), bScanForTarget( _bScanForTarget )
+		: CPlanePatrolState( pUnit ), eState( PSTS_ESTIMATING ), CPlaneDeffensiveFire( pUnit ),
+			bScanForTarget( _bScanForTarget )
 {
 	AddPoint( _vPoint );
 }
 
 void CPlaneSwarmToState::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case PSTS_ESTIMATING:
-		//CRAP{ TEST
-		InitPathToPoint( CVec3( GetPoint(), pPlane->GetCenter().z ), true, false );
-		//CRAP}
-		eState = PSTS_MOVING;
-		break;
-	case PSTS_MOVING:
-		break;
+		case PSTS_ESTIMATING:
+			//CRAP{ TEST
+			InitPathToPoint( CVec3( GetPoint(), pPlane->GetCenter().z ), true, false );
+			//CRAP}
+			eState = PSTS_MOVING;
+			break;
+		case PSTS_MOVING:
+			break;
 	}
 
 	if ( bScanForTarget )
@@ -352,9 +345,8 @@ ETryStateInterruptResult CPlaneSwarmToState::TryInterruptState( class CAICommand
 //*										  CPlaneScoutState*
 //*******************************************************************
 
-CPlaneScoutState::CPlaneScoutState ( CAviation *_pPlane  )
-: CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
-	eState( EPSS_GOTO_GUARDPOINT )
+CPlaneScoutState::CPlaneScoutState( CAviation *_pPlane )
+		: CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ), eState( EPSS_GOTO_GUARDPOINT )
 {
 }
 
@@ -363,30 +355,30 @@ void CPlaneScoutState::Segment()
 	if ( pPlane->GetNextCommand() != 0 && pPlane->GetNextCommand()->ToUnitCmd().nCmdType == ACTION_COMMAND_PATROL )
 		pPlane->SetCommandFinished();
 
-	switch( eState )
+	switch ( eState )
 	{
-	case EPSS_GOTO_GUARDPOINT:
-		InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight()), true, false );
-		eState = EPSS_GOING_TO_GUARDPOINT;
+		case EPSS_GOTO_GUARDPOINT:
+			InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, false );
+			eState = EPSS_GOING_TO_GUARDPOINT;
 
-		break;
-	case EPSS_GOING_TO_GUARDPOINT:
-		if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
-			eState = EPSS_AIM_TO_NEXT_POINT;
+			break;
+		case EPSS_GOING_TO_GUARDPOINT:
+			if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
+				eState = EPSS_AIM_TO_NEXT_POINT;
 
-		break;
-	case EPSS_AIM_TO_NEXT_POINT:
-		if ( vPatrolPoints.size() == 1 )
-			TryInterruptState( 0 );
-		else
-		{
-			ToNextPoint();
-			eState = EPSS_GOTO_GUARDPOINT;
-		}
+			break;
+		case EPSS_AIM_TO_NEXT_POINT:
+			if ( vPatrolPoints.size() == 1 )
+				TryInterruptState( 0 );
+			else
+			{
+				ToNextPoint();
+				eState = EPSS_GOTO_GUARDPOINT;
+			}
 
-		break;
-	case EPSS_ESCAPE:
-		break;
+			break;
+		case EPSS_ESCAPE:
+			break;
 	}
 	// path segment
 	if ( PathSegment() && EPSS_ESCAPE != eState )
@@ -404,8 +396,7 @@ ETryStateInterruptResult CPlaneScoutState::TryInterruptState( class CAICommand *
 //*										  CPlaneDeffensiveFire*
 //*******************************************************************
 
-CPlaneDeffensiveFire::CPlaneDeffensiveFire( class CAviation *pPlane )
-: timeLastBSUUpdate( 0 ), pOwner( pPlane )
+CPlaneDeffensiveFire::CPlaneDeffensiveFire( class CAviation *pPlane ) : timeLastBSUUpdate( 0 ), pOwner( pPlane )
 {
 	pDefShootEstimator = new CPlaneDeffensiveFireShootEstimator( pPlane );
 }
@@ -427,11 +418,10 @@ void CPlaneDeffensiveFire::AnalyzeBSU()
 					pDefShootEstimator->Reset( 0, true, 0 );
 					pDefShootEstimator->SetGun( pGun );
 					//выбирать лучшего врага
-					for( CPlanesIter planes; !planes.IsFinished(); planes.Iterate() )
+					for ( CPlanesIter planes; !planes.IsFinished(); planes.Iterate() )
 					{
 						CAviation *pEnemy = *planes;
-						if ( pOwner!= pEnemy &&
-								 EDI_ENEMY == theDipl.GetDiplStatus( pOwner->GetPlayer(), pEnemy->GetPlayer() ) )
+						if ( pOwner != pEnemy && EDI_ENEMY == theDipl.GetDiplStatus( pOwner->GetPlayer(), pEnemy->GetPlayer() ) )
 						{
 							pDefShootEstimator->AddUnit( pEnemy );
 						}
@@ -453,8 +443,7 @@ void CPlaneDeffensiveFire::AnalyzeBSU()
 //*******************************************************************
 
 CPlanePatrolState::CPlanePatrolState( CAviation *_pPlane )
-	: pPlane( _pPlane ), nCurPointIndex( 0 ),
-	enemie( _pPlane ), timeNextScan( curTime ), bEconomyMode ( false )
+		: pPlane( _pPlane ), nCurPointIndex( 0 ), enemie( _pPlane ), timeNextScan( curTime ), bEconomyMode( false )
 {
 	pShootEstimator = new CPlaneShturmovikShootEstimator( pPlane );
 	AdvancePlane();
@@ -467,8 +456,7 @@ bool CPlanePatrolState::IsBombsPresent() const
 	for ( int i = 0; i < nGun; ++i )
 	{
 		CBasicGun *pGun = pPlane->GetGun( i );
-		if ( NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB == pGun->GetShell().etrajectory &&
-			   0 != pGun->GetNAmmo() )
+		if ( NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB == pGun->GetShell().etrajectory && 0 != pGun->GetNAmmo() )
 		{
 			bPresent = true;
 			break;
@@ -480,54 +468,55 @@ bool CPlanePatrolState::IsBombsPresent() const
 void CPlanePatrolState::Escape()
 {
 	pPlane->SetCommandFinished();
-	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PLANE_LEAVE), pPlane, false );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PLANE_LEAVE ), pPlane, false );
 }
 
-CAviation * CPlanePatrolState::FindBetterEnemiyPlane( CAviation * pEnemie, const CVec2 &vPoint, const float fRadius ) const
+CAviation *
+CPlanePatrolState::FindBetterEnemiyPlane( CAviation *pEnemie, const CVec2 &vPoint, const float fRadius ) const
 {
 	CPtr<CAviation> pBetter;
 	CPlanesIter planes;
 	float Dist = 0;
-	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>(pPlane->GetStats());
+	const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
 	while ( !planes.IsFinished() )
 	{
 		if ( CanAttackEnemy( *planes ) )
 		{
 			//found enemie that is near and can be hit by plane's weapon
-			float curDist = fabs2( vPoint - (*planes)->GetCenterPlain() );
+			float curDist = fabs2( vPoint - ( *planes )->GetCenterPlain() );
 
-			CVec2 ce((*planes)->GetCenterPlain());
+			CVec2 ce( ( *planes )->GetCenterPlain() );
 
 			float distFromPatrolpoint = fabs2( ce - GetPoint() );
-			CVec2 planeToEnemie( (*planes)->GetCenterPlain() - vPoint );
+			CVec2 planeToEnemie( ( *planes )->GetCenterPlain() - vPoint );
 			float scalarProduct = pPlane->GetDirVector() * planeToEnemie;
 
-			if ( distFromPatrolpoint < sqr( fRadius ) && //near guard point
-					 theDipl.GetDiplStatus( pPlane->GetPlayer(), (*planes)->GetPlayer() ) == EDI_ENEMY &&//enemie
-					 (*planes)->GetCenter().z <  pStats->fMaxHeight &&					// in our height range
-					 ( !pBetter || Dist < curDist ) && //nearer then former or new enemie
-						pStats->fMaxHeight >= (*planes)->GetCenter().z &&
-						// the current velocity is near to distance from enemie
-						DirsDifference( pPlane->GetDirection(), (*planes)->GetDirection()) < /*30deg*/ 65535.0f/360.0f*30.0f &&
-						scalarProduct > 0
-				 )
+			if ( distFromPatrolpoint < sqr( fRadius ) &&                                                //near guard point
+			     theDipl.GetDiplStatus( pPlane->GetPlayer(), ( *planes )->GetPlayer() ) == EDI_ENEMY && //enemie
+			     ( *planes )->GetCenter().z < pStats->fMaxHeight &&                                     // in our height range
+			     ( !pBetter || Dist < curDist ) && //nearer then former or new enemie
+			     pStats->fMaxHeight >= ( *planes )->GetCenter().z &&
+			     // the current velocity is near to distance from enemie
+			     DirsDifference( pPlane->GetDirection(), ( *planes )->GetDirection() ) <
+			         /*30deg*/ 65535.0f / 360.0f * 30.0f &&
+			     scalarProduct > 0 )
 			{
 				int nGuns = pPlane->GetNGuns();
 				bool bCanBreak = false;
-				for ( int i=0; i< nGuns && !bCanBreak; ++i )
+				for ( int i = 0; i < nGuns && !bCanBreak; ++i )
 				{
 					bCanBreak = pPlane->GetGun( i )->CanBreakArmor( *planes ); //can damage
 				}
 				if ( bCanBreak )
 				{
 					Dist = curDist;
-					pBetter = (*planes);
+					pBetter = ( *planes );
 				}
 			}
 		}
 		planes.Iterate();
 	}
-	if( pBetter != 0 && pBetter!= pEnemie )
+	if ( pBetter != 0 && pBetter != pEnemie )
 	{
 		return pBetter;
 	}
@@ -537,10 +526,10 @@ CAviation * CPlanePatrolState::FindBetterEnemiyPlane( CAviation * pEnemie, const
 bool CPlanePatrolState::FindNewGroundEnemie( const CVec2 &vPoint, const float fRadius )
 {
 	pShootEstimator->Reset( 0, true, 0 );
-	for ( CUnitsIter<1,3> iter( pPlane->GetParty(), EDI_ENEMY, vPoint, fRadius ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<1, 3> iter( pPlane->GetParty(), EDI_ENEMY, vPoint, fRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
-		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->IsVisible( pPlane->GetParty()) && CanAttackEnemy( pUnit ) )
+		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->IsVisible( pPlane->GetParty() ) && CanAttackEnemy( pUnit ) )
 			pShootEstimator->AddUnit( pUnit );
 	}
 
@@ -570,42 +559,43 @@ void CPlanePatrolState::DisableBombAbility()
 
 bool CPlanePatrolState::CanAttackEnemy( CAIUnit *pEnemy ) const
 {
-	return pPlane != pEnemy && ( pPlane->GetStats()->etype != RPG_TYPE_AVIA_ATTACK || pEnemy->GetStats()->etype != RPG_TYPE_AVIA_BOMBER );
+	return pPlane != pEnemy &&
+	       ( pPlane->GetStats()->etype != RPG_TYPE_AVIA_ATTACK || pEnemy->GetStats()->etype != RPG_TYPE_AVIA_BOMBER );
 }
 
-CAviation * CPlanePatrolState::FindNewEnemyPlane( const CVec2 &vPoint, const float fRadius ) const
+CAviation *CPlanePatrolState::FindNewEnemyPlane( const CVec2 &vPoint, const float fRadius ) const
 {
 	CPtr<CAviation> pEnemie;
 	CPlanesIter planes;
 	pEnemie = 0;
 
 	float Dist = 0;
-	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>(pPlane->GetStats());
+	const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
 	while ( !planes.IsFinished() )
 	{
 		if ( CanAttackEnemy( *planes ) )
 		{
 			//found enemie that is near and can be hit by plane's weapon
-			float curDist = fabs2( vPoint - (*planes)->GetCenterPlain() );
+			float curDist = fabs2( vPoint - ( *planes )->GetCenterPlain() );
 
-			CVec2 ce((*planes)->GetCenterPlain());
-			float distFromPatrolpoint = fabs2(  ce - GetPoint() );
+			CVec2 ce( ( *planes )->GetCenterPlain() );
+			float distFromPatrolpoint = fabs2( ce - GetPoint() );
 
 			if ( //distFromPatrolpoint < sqr( fRadius ) && //near guard point
-					 theDipl.GetDiplStatus( pPlane->GetPlayer(), (*planes)->GetPlayer() ) == EDI_ENEMY &&//enemie
-					 ( !pEnemie || Dist < curDist ) //nearer then former or new enemie
-				 )
+					theDipl.GetDiplStatus( pPlane->GetPlayer(), ( *planes )->GetPlayer() ) == EDI_ENEMY && //enemie
+					( !pEnemie || Dist < curDist ) //nearer then former or new enemie
+			)
 			{
 				int nGuns = pPlane->GetNGuns();
 				bool bCanBreak = false;
-				for ( int i = 0; i< nGuns && !bCanBreak; ++i )
+				for ( int i = 0; i < nGuns && !bCanBreak; ++i )
 				{
 					bCanBreak = pPlane->GetGun( i )->CanBreakArmor( *planes ); //can damage
 				}
 				if ( bCanBreak )
 				{
 					Dist = curDist;
-					pEnemie = (*planes);
+					pEnemie = ( *planes );
 				}
 			}
 		}
@@ -624,11 +614,12 @@ bool CPlanePatrolState::TargetScan()
 		const NDb::EUnitRPGType eType = pPlane->GetStats()->etype;
 		// guard state
 		// if fighter - find target (aviation)
-		CAviation * pEnemyPlane = 0;
+		CAviation *pEnemyPlane = 0;
 		if ( eType == RPG_TYPE_AVIA_FIGHTER || eType == RPG_TYPE_AVIA_ATTACK )
 		{
 			const CPlanePreferences &pref = pPlane->GetPreferencesB2();
-			pEnemyPlane = FindNewEnemyPlane( pPlane->GetCenterPlain(), SConsts::PLANE_GUARD_STATE_RADIUS + pref.GetR( pref.GetMaxSpeed() ));
+			pEnemyPlane = FindNewEnemyPlane( pPlane->GetCenterPlain(),
+			                                 SConsts::PLANE_GUARD_STATE_RADIUS + pref.GetR( pref.GetMaxSpeed() ) );
 			if ( pEnemyPlane )
 				bFoundEnemy = true;
 		}
@@ -636,7 +627,8 @@ bool CPlanePatrolState::TargetScan()
 		if ( !bFoundEnemy && eType == RPG_TYPE_AVIA_ATTACK )
 		{
 			const CPlanePreferences &pref = pPlane->GetPreferencesB2();
-			if ( FindNewGroundEnemie( pPlane->GetCenterPlain(), SConsts::PLANE_GUARD_STATE_RADIUS + pref.GetR( pref.GetMaxSpeed() )) )
+			if ( FindNewGroundEnemie( pPlane->GetCenterPlain(),
+			                          SConsts::PLANE_GUARD_STATE_RADIUS + pref.GetR( pref.GetMaxSpeed() ) ) )
 				bFoundEnemy = true;
 		}
 
@@ -678,7 +670,7 @@ void CPlanePatrolState::AdvancePlane()
 	{
 		CVec3 vSpeed( pPlane->GetSpeedB2() );
 		Normalize( &vSpeed );
-		pFormation->CreatePointManuver( pPlane->GetPosB2() + 1000 * CVec3(vSpeed.x, vSpeed.y, 0.0f), true );
+		pFormation->CreatePointManuver( pPlane->GetPosB2() + 1000 * CVec3( vSpeed.x, vSpeed.y, 0.0f ), true );
 		bEconomyMode = true;
 	}
 }
@@ -697,7 +689,7 @@ bool CPlanePatrolState::PathSegment()
 
 void CPlanePatrolState::InitPathToEnemyPlane( class CPlanesFormation *_pEnemy )
 {
-	CPlanesFormation * pFormation = pPlane->GetPlanesFormation();
+	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	if ( pFormation && _pEnemy )
 	{
 		pFormation->CreateManuver( _pEnemy );
@@ -707,7 +699,7 @@ void CPlanePatrolState::InitPathToEnemyPlane( class CPlanesFormation *_pEnemy )
 
 void CPlanePatrolState::InitPathToPoint( const CVec3 &vPoint, const bool _bEconomyMode, const bool _bToHorisontal )
 {
-	CPlanesFormation * pFormation = pPlane->GetPlanesFormation();
+	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	if ( pFormation )
 	{
 		const float fSpeed = fabs( pFormation->GetSpeedB2() );
@@ -725,12 +717,9 @@ void CPlanePatrolState::InitPathToPoint( const CVec3 &vPoint, const bool _bEcono
 	}
 }
 
-
 //*										  CPlaneRestState *
 
-
-CPlaneRestState::CPlaneRestState( CAviation *pUnit )
-: CPlanePatrolState( pUnit ), CPlaneDeffensiveFire( pUnit )
+CPlaneRestState::CPlaneRestState( CAviation *pUnit ) : CPlanePatrolState( pUnit ), CPlaneDeffensiveFire( pUnit )
 {
 	if ( pUnit->GetPlanesFormation() )
 	{
@@ -739,7 +728,10 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 		CVec3 vSpeed3D( pUnit->GetSpeedB2() );
 		CVec2 vSpeed( vSpeed3D.x, vSpeed3D.y );
 		if ( VNULL2 == vSpeed )
-			{ vSpeed = GetVectorByDirection( NRandom::Random(65535) ); RecordRandomCall(); }
+		{
+			vSpeed = GetVectorByDirection( NRandom::Random( 65535 ) );
+			RecordRandomCall();
+		}
 		else
 			Normalize( &vSpeed );
 
@@ -750,9 +742,12 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 
 		const float fTriangleLength = pref.GetR( pref.GetMaxSpeed() );
 		const CVec2 vPoint1( vPos + vSpeed * fTriangleLength );
-		const int nRot = NRandom::Random(0,1) == 0 ? 1 : -1; RecordRandomCall();
-		const CVec2 vPoint2( vPos + fTriangleLength * ( ( sqrt(3.0f) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
-		const CVec2 vPoint3( vPos + fTriangleLength * ( - ( sqrt(3.0f) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
+		const int nRot = NRandom::Random( 0, 1 ) == 0 ? 1 : -1;
+		RecordRandomCall();
+		const CVec2 vPoint2( vPos + fTriangleLength *
+		                                ( ( sqrt( 3.0f ) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
+		const CVec2 vPoint3(
+				vPos + fTriangleLength * ( -( sqrt( 3.0f ) * 0.5f ) * nRot * CVec2( vSpeed.y, -vSpeed.x ) - 0.5f * vSpeed ) );
 
 		AddPoint( vPoint2 );
 		AddPoint( vPoint3 );
@@ -760,7 +755,7 @@ CPlaneRestState::CPlaneRestState( CAviation *pUnit )
 #ifndef _FINALRELEASE
 		if ( NGlobal::GetVar( "plane_rest_state_markers", 0 ) )
 		{
-				CSegment segm;
+			CSegment segm;
 
 			segm.p1 = vPoint1;
 			segm.p2 = vPoint2;
@@ -796,7 +791,7 @@ void CPlaneRestState::Segment()
 		}
 		PathSegment();
 	}
- 	AnalyzeBSU();
+	AnalyzeBSU();
 }
 
 ETryStateInterruptResult CPlaneRestState::TryInterruptState( class CAICommand *pCommand )
@@ -806,15 +801,14 @@ ETryStateInterruptResult CPlaneRestState::TryInterruptState( class CAICommand *p
 	return TSIR_YES_IMMIDIATELY;
 }
 
-
 //*******************************************************************
 //*										  CPlaneBombState															*
 //*******************************************************************
 
 CPlaneBombState::CPlaneBombState( CAviation *_pPlane, const CVec2 &vPoint, bool _bSingleSalvo )
-: CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
-	eState( ECBS_ESTIMATE ), fInitialHeight ( _pPlane->GetCenter().z ),
-	fStartAttackDist( 0.0f ), bHaveBombs( true ), bSingleSalvo( _bSingleSalvo )
+		: CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ), eState( ECBS_ESTIMATE ),
+			fInitialHeight( _pPlane->GetCenter().z ), fStartAttackDist( 0.0f ), bHaveBombs( true ),
+			bSingleSalvo( _bSingleSalvo )
 {
 	bHaveBombs = IsBombsPresent();
 	SetPoint( vPoint + _pPlane->GetGroupShift() );
@@ -829,7 +823,7 @@ float CPlaneBombState::RecalcStartAttack() const
 	CVec3 vSpeed3( pPlane->GetSpeedB2() );
 	const CVec3 vCenter( pPlane->GetPosB2() );
 	const float fTimeToFly = CBombBallisticTraj::GetTimeOfFly( vCenter.z - GetHeights()->GetZ( vCenter ), vSpeed3.z );
-	const CVec3 vOffset =  CBombBallisticTraj::CalcTrajectoryFinish( pPlane->GetPosB2(), vSpeed3, VNULL2, fTimeToFly );
+	const CVec3 vOffset = CBombBallisticTraj::CalcTrajectoryFinish( pPlane->GetPosB2(), vSpeed3, VNULL2, fTimeToFly );
 	fStartAttackDist += fabs( vOffset.x - vCenter.x, vOffset.y - vCenter.y );
 
 	// вычислить поправку на длину очереди (чтобы в цель попала середина очереди)
@@ -840,12 +834,10 @@ float CPlaneBombState::RecalcStartAttack() const
 		CBasicGun *pGun = pPlane->GetGun( i );
 		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 		{
-			const SWeaponRPGStats * pStats = pGun->GetWeapon();
-			fStartAttackDist += pPlane->GetSpeed() *
-				(
-				pStats->fAimingTime +
-				(std::min)( pStats->nAmmoPerBurst, pGun->GetNAmmo() ) * pGun->GetFireRate()
-				) / 2.0f;
+			const SWeaponRPGStats *pStats = pGun->GetWeapon();
+			fStartAttackDist +=
+					pPlane->GetSpeed() *
+					( pStats->fAimingTime + (std::min)( pStats->nAmmoPerBurst, pGun->GetNAmmo() ) * pGun->GetFireRate() ) / 2.0f;
 
 			break;
 		}
@@ -857,28 +849,28 @@ void CPlaneBombState::Segment()
 {
 	switch ( eState )
 	{
-	case ECBS_ESTIMATE:
-		fStartAttackDist = RecalcStartAttack();
-		eState = ECBS_GAIN_DISTANCE;
-
-		break;
-	case ECBS_GAIN_DISTANCE:
-		// если расстояние до точки бомбометания больше 2 радиусов поворота самолета
-		// + расстояние начала бомбометания - то начать заход на цель, иначе удалиться от цели.
-		{
-			const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
-			const CPlanePreferences &pref = pPlane->GetPreferencesB2();
+		case ECBS_ESTIMATE:
 			fStartAttackDist = RecalcStartAttack();
-			if ( fabs2( pPlane->GetCenterPlain() - GetPoint() ) > sqr( fStartAttackDist ) )
-			{
-				fStartAttackDist = RecalcStartAttack();
-				InitPathToPoint( CVec3( GetPoint(), fInitialHeight ), false, true );
-				eState = ECBS_APPROACH;
-			}
-		}
+			eState = ECBS_GAIN_DISTANCE;
 
-		break;
-	case ECBS_APPROACH:
+			break;
+		case ECBS_GAIN_DISTANCE:
+			// если расстояние до точки бомбометания больше 2 радиусов поворота самолета
+			// + расстояние начала бомбометания - то начать заход на цель, иначе удалиться от цели.
+			{
+				const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
+				const CPlanePreferences &pref = pPlane->GetPreferencesB2();
+				fStartAttackDist = RecalcStartAttack();
+				if ( fabs2( pPlane->GetCenterPlain() - GetPoint() ) > sqr( fStartAttackDist ) )
+				{
+					fStartAttackDist = RecalcStartAttack();
+					InitPathToPoint( CVec3( GetPoint(), fInitialHeight ), false, true );
+					eState = ECBS_APPROACH;
+				}
+			}
+
+			break;
+		case ECBS_APPROACH:
 		{
 			CVec2 vPlaneCenter = pPlane->GetCenterPlain();
 			fStartAttackDist = RecalcStartAttack();
@@ -900,15 +892,14 @@ void CPlaneBombState::Segment()
 		}
 
 		break;
-	case ECBS_ATTACK_HORISONTAL:
+		case ECBS_ATTACK_HORISONTAL:
 		{
 			int nGun = pPlane->GetNGuns();
 			for ( int i = 0; i < nGun; ++i )
 			{
 				CBasicGun *pGun = pPlane->GetGun( i );
-				if ( pGun->GetNAmmo() != 0 &&
-						 pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
-						 !pGun->IsFiring() && 0 == pGun->GetRestTimeOfRelax() )
+				if ( pGun->GetNAmmo() != 0 && pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
+				     !pGun->IsFiring() && 0 == pGun->GetRestTimeOfRelax() )
 				{
 					pGun->StartPointBurst( pPlane->GetCenter(), false );
 				}
@@ -917,7 +908,7 @@ void CPlaneBombState::Segment()
 		}
 
 		break;
-	case ECBS_AIM_TO_NEXT_POINT:
+		case ECBS_AIM_TO_NEXT_POINT:
 		{
 			bool bFiring = false;
 			const int nGun = pPlane->GetNGuns();
@@ -939,7 +930,7 @@ void CPlaneBombState::Segment()
 		}
 
 		break;
-	case ECBS_AIM_TO_NEXT_POINT_2:
+		case ECBS_AIM_TO_NEXT_POINT_2:
 		{
 			if ( bSingleSalvo && bHaveBombs )
 				TryInterruptState( 0 );
@@ -977,17 +968,16 @@ ETryStateInterruptResult CPlaneBombState::TryInterruptState( class CAICommand *p
 	return TSIR_YES_IMMIDIATELY;
 }
 
-
 //*******************************************************************
 //*										  CPlaneParaDropState													*
 //*******************************************************************
 
-CPlaneParaDropState::CPlaneParaDropState ( CAviation *pPlane, const enum EActionLeaveParam param, const CVec2 &vLandPoint, CFormation *_pSquad )
-: CPlanePatrolState( pPlane ),
-	CPlaneDeffensiveFire( pPlane ), nDroppingSoldier( 0 ),
-	vLastDrop( VNULL2 ),
-	pSquad( _pSquad ),
-	bDrop1Squad( IsValidObj( _pSquad ) )
+CPlaneParaDropState::CPlaneParaDropState( CAviation *pPlane,
+                                          const enum EActionLeaveParam param,
+                                          const CVec2 &vLandPoint,
+                                          CFormation *_pSquad )
+		: CPlanePatrolState( pPlane ), CPlaneDeffensiveFire( pPlane ), nDroppingSoldier( 0 ), vLastDrop( VNULL2 ),
+			pSquad( _pSquad ), bDrop1Squad( IsValidObj( _pSquad ) )
 {
 	if ( param == ALP_POSITION_VALID )
 	{
@@ -998,7 +988,7 @@ CPlaneParaDropState::CPlaneParaDropState ( CAviation *pPlane, const enum EAction
 		eState = PPDS_PREPARE_TO_DROP;
 }
 
-bool CPlaneParaDropState::CanDrop( const CVec2 & point )
+bool CPlaneParaDropState::CanDrop( const CVec2 &point )
 {
 	if ( !GetAIMap()->IsTileInside( AICellsTiles::GetTile( point ) ) )
 		return true;
@@ -1009,8 +999,8 @@ bool CPlaneParaDropState::CanDrop( const CVec2 & point )
 		return true;
 	else
 	{
-		for ( int i = centerTile.x-SConsts::PARADROP_SPRED; i< centerTile.x+SConsts::PARADROP_SPRED; ++i )
-			for ( int j = centerTile.y-SConsts::PARADROP_SPRED; j< centerTile.y+SConsts::PARADROP_SPRED; ++j )
+		for ( int i = centerTile.x - SConsts::PARADROP_SPRED; i < centerTile.x + SConsts::PARADROP_SPRED; ++i )
+			for ( int j = centerTile.y - SConsts::PARADROP_SPRED; j < centerTile.y + SConsts::PARADROP_SPRED; ++j )
 				if ( GetAIMap()->IsTileInside( i, j ) && !GetTerrain()->IsLocked( i, j, EAC_HUMAN ) )
 					return true;
 	}
@@ -1028,19 +1018,19 @@ void CPlaneParaDropState::Segment()
 
 		if ( pPlane->GetNPassengers() == 0 )
 			Escape();
-		switch( eState )
+		switch ( eState )
 		{
-		case PPDS_ESTIMATE:
-			InitPathToPoint( CVec3( GetPoint(), pPlane->GetCenter().z ), true, true );
-			eState = PPDS_APPROACHNIG;
+			case PPDS_ESTIMATE:
+				InitPathToPoint( CVec3( GetPoint(), pPlane->GetCenter().z ), true, true );
+				eState = PPDS_APPROACHNIG;
 
-			break;
-		case PPDS_APPROACHNIG:
-			if ( fabs( GetPoint() - pPlane->GetCenterPlain() ) < SConsts::TILE_SIZE * 5  )
-				eState = PPDS_PREPARE_TO_DROP;
+				break;
+			case PPDS_APPROACHNIG:
+				if ( fabs( GetPoint() - pPlane->GetCenterPlain() ) < SConsts::TILE_SIZE * 5 )
+					eState = PPDS_PREPARE_TO_DROP;
 
-			break;
-		case PPDS_PREPARE_TO_DROP:
+				break;
+			case PPDS_PREPARE_TO_DROP:
 			{
 				CVec3 where( pPlane->GetCenter() );
 
@@ -1054,79 +1044,80 @@ void CPlaneParaDropState::Segment()
 					eState = PPDS_DROPPING;
 					pPlane->SendAcknowledgement( ACK_PLANE_REACH_POINT_START_ATTACK, true );
 					NI_ASSERT( IsValid( pSquad ), "no squad to drop" );
-					theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_PARACHUTE), pSquad, false );
+					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PARACHUTE ), pSquad, false );
 					bRepeat = true;
 				}
 			}
 
-
 			break;
-		case PPDS_TO_NEXT_SQUAD:
-			if ( bDrop1Squad )
-				TryInterruptState( 0 );
-			else if ( pPlane->GetNPassengers() == 0 )
-			{
-				Escape();
-			}
-			else
-			{
-				pSquad = 0;
-				eState = PPDS_PREPARE_TO_DROP;
-				bRepeat = true;
-			}
-
-			break;
-		case PPDS_DROPPING:
-			if ( fabs2 ( vLastDrop - pPlane->GetCenterPlain() ) > sqr(SConsts::PLANE_PARADROP_INTERVAL) )
-			{
-				// найти солдата, который сидит в самолете
-				CPtr<CSoldier> pDropper = 0;
-				for ( int i = 0; i < pSquad->Size(); ++i )
+			case PPDS_TO_NEXT_SQUAD:
+				if ( bDrop1Squad )
+					TryInterruptState( 0 );
+				else if ( pPlane->GetNPassengers() == 0 )
 				{
-					if ( (*pSquad)[i]->IsRefValid() && (*pSquad)[i]->IsAlive() &&  (*pSquad)[i]->IsInSolidPlace() )
-					{
-						pDropper = (*pSquad)[i];
-						break;
-					}
-				}
-				if ( !pDropper )
-				{
-					eState = PPDS_TO_NEXT_SQUAD;
-					bRepeat = true;
+					Escape();
 				}
 				else
 				{
-					bRepeat = (nDroppingSoldier % 2) == 0;
-					if ( !bRepeat )
-						vLastDrop = pPlane->GetCenterPlain() ;
-					// случайный разброс парашютистов.
+					pSquad = 0;
+					eState = PPDS_PREPARE_TO_DROP;
+					bRepeat = true;
+				}
 
-					const CVec2 vDropPoint = vLastDrop + 2.0f * ( nDroppingSoldier % 2 - 0.5f ) *
-						NRandom::Random( SConsts::PLANE_PARADROP_INTERVAL_PERP_MIN, SConsts::PLANE_PARADROP_INTERVAL_PERP_MAX ) *
-						GetVectorByDirection( pPlane->GetDirection() + 65535 / 4 ); RecordRandomCall();
-					// вычислить возможно ли приземление где-нить.
-					bool bSafeLanding = CanDrop( vDropPoint );
-					//
-					if ( bSafeLanding )
+				break;
+			case PPDS_DROPPING:
+				if ( fabs2( vLastDrop - pPlane->GetCenterPlain() ) > sqr( SConsts::PLANE_PARADROP_INTERVAL ) )
+				{
+					// найти солдата, который сидит в самолете
+					CPtr<CSoldier> pDropper = 0;
+					for ( int i = 0; i < pSquad->Size(); ++i )
 					{
-						// выбросить этого солдата
-						pDropper->SetFree();
-						DRAW_WHITE_CROSS( CVec3( vDropPoint, pPlane->GetCenter().z ) );
-						pDropper->SetCenter( CVec3( vDropPoint, pPlane->GetCenter().z ), false );
-						pDropper->SetSelectable( false, true );
-						pPlane->DelPassenger( pDropper );
-						pDropper->GetState()->TryInterruptState( 0 );
-
-						theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_PARACHUTE, pPlane->GetUniqueID() ), pDropper, false );
-						pDropper->SetCenter( CVec3( vDropPoint, pPlane->GetCenter().z ) );
-						++nDroppingSoldier;
+						if ( ( *pSquad )[i]->IsRefValid() && ( *pSquad )[i]->IsAlive() && ( *pSquad )[i]->IsInSolidPlace() )
+						{
+							pDropper = ( *pSquad )[i];
+							break;
+						}
+					}
+					if ( !pDropper )
+					{
+						eState = PPDS_TO_NEXT_SQUAD;
+						bRepeat = true;
 					}
 					else
-						bRepeat = false;
-				}
-			}
+					{
+						bRepeat = ( nDroppingSoldier % 2 ) == 0;
+						if ( !bRepeat )
+							vLastDrop = pPlane->GetCenterPlain();
+						// случайный разброс парашютистов.
 
-			break;
+						const CVec2 vDropPoint = vLastDrop + 2.0f * ( nDroppingSoldier % 2 - 0.5f ) *
+						                                         NRandom::Random( SConsts::PLANE_PARADROP_INTERVAL_PERP_MIN,
+						                                                          SConsts::PLANE_PARADROP_INTERVAL_PERP_MAX ) *
+						                                         GetVectorByDirection( pPlane->GetDirection() + 65535 / 4 );
+						RecordRandomCall();
+						// вычислить возможно ли приземление где-нить.
+						bool bSafeLanding = CanDrop( vDropPoint );
+						//
+						if ( bSafeLanding )
+						{
+							// выбросить этого солдата
+							pDropper->SetFree();
+							DRAW_WHITE_CROSS( CVec3( vDropPoint, pPlane->GetCenter().z ) );
+							pDropper->SetCenter( CVec3( vDropPoint, pPlane->GetCenter().z ), false );
+							pDropper->SetSelectable( false, true );
+							pPlane->DelPassenger( pDropper );
+							pDropper->GetState()->TryInterruptState( 0 );
+
+							theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PARACHUTE, pPlane->GetUniqueID() ), pDropper, false );
+							pDropper->SetCenter( CVec3( vDropPoint, pPlane->GetCenter().z ) );
+							++nDroppingSoldier;
+						}
+						else
+							bRepeat = false;
+					}
+				}
+
+				break;
 		}
 	}
 	PathSegment();
@@ -1140,15 +1131,15 @@ ETryStateInterruptResult CPlaneParaDropState::TryInterruptState( CAICommand *pCo
 		if ( IsValidObj( pSquad ) )
 		{
 			// kill undropped soldiers
-			std::list<CSoldier*> onboardSoldiers;
+			std::list<CSoldier *> onboardSoldiers;
 			for ( int i = 0; i < pSquad->Size(); ++i )
 			{
-				CSoldier *pSold = (*pSquad)[i];
+				CSoldier *pSold = ( *pSquad )[i];
 				if ( pSold->IsRefValid() && pSold->IsAlive() && pSold->IsInSolidPlace() )
 					onboardSoldiers.push_back( pSold );
 			}
-			for ( std::list<CSoldier*>::iterator it = onboardSoldiers.begin(); it != onboardSoldiers.end(); ++it )
-				(*it)->Disappear();
+			for ( std::list<CSoldier *>::iterator it = onboardSoldiers.begin(); it != onboardSoldiers.end(); ++it )
+				( *it )->Disappear();
 		}
 	}
 	else if ( IsValid( pSquad ) )
@@ -1170,39 +1161,42 @@ const CVec2 CPlaneParaDropState::GetPurposePoint() const
 //*******************************************************************
 
 CPlaneLeaveState::CPlaneLeaveState( CAviation *_pPlane )
-: eState( EPLS_STARTING ),
-	CPlanePatrolState( _pPlane ),
-	CPlaneDeffensiveFire( _pPlane )
+		: eState( EPLS_STARTING ), CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane )
 {
 	pPlane->SendAcknowledgement( ACK_PLANE_LEAVING, true );
 
 	const CVec2 vCenter( pPlane->GetCenterPlain() );
 	const CVec2 vMapSize( GetAIMap()->GetSizeX() * SConsts::TILE_SIZE, GetAIMap()->GetSizeY() * SConsts::TILE_SIZE );
-	const CVec2 vAwayPoint1( vCenter.x, vCenter.y < vMapSize.y - vCenter.y ? -LEAVE_DISSAPEAR_DISTANCE : vMapSize.y + LEAVE_DISSAPEAR_DISTANCE );
-	const CVec2 vAwayPoint2( vCenter.x < vMapSize.x - vCenter.x ? -LEAVE_DISSAPEAR_DISTANCE : vMapSize.x + LEAVE_DISSAPEAR_DISTANCE, vCenter.y );
-	const CVec2 vAwayPoint = fabs( vAwayPoint1.y - vCenter.y ) < fabs( vAwayPoint2.x - vCenter.x ) ? vAwayPoint1 : vAwayPoint2;
+	const CVec2 vAwayPoint1( vCenter.x,
+	                         vCenter.y < vMapSize.y - vCenter.y ? -LEAVE_DISSAPEAR_DISTANCE
+	                                                            : vMapSize.y + LEAVE_DISSAPEAR_DISTANCE );
+	const CVec2 vAwayPoint2( vCenter.x < vMapSize.x - vCenter.x ? -LEAVE_DISSAPEAR_DISTANCE
+	                                                            : vMapSize.x + LEAVE_DISSAPEAR_DISTANCE,
+	                         vCenter.y );
+	const CVec2 vAwayPoint =
+			fabs( vAwayPoint1.y - vCenter.y ) < fabs( vAwayPoint2.x - vCenter.x ) ? vAwayPoint1 : vAwayPoint2;
 
 	InitPathToPoint( CVec3( vAwayPoint, pPlane->GetCenter().z ), true, true );
 }
 
 void CPlaneLeaveState::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EPLS_STARTING:
+		case EPLS_STARTING:
 		{
 			eState = EPLS_IN_ROUTE;
 		}
 
 		break;
-	case EPLS_IN_ROUTE:
-		if( pPlane->GetPlanesFormation()->IsManuverFinished() )
-		{
-			pPlane->SetCommandFinished();
-			pPlane->Disappear();
-		}
+		case EPLS_IN_ROUTE:
+			if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
+			{
+				pPlane->SetCommandFinished();
+				pPlane->Disappear();
+			}
 
-		break;
+			break;
 	}
 
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
@@ -1239,7 +1233,7 @@ const CVec2 CPlaneLeaveState::GetPurposePoint() const
 //*										  CPlaneFighterPatrolState										*
 //*******************************************************************
 
-class CAIUnit* CPlaneFighterPatrolState::GetTargetUnit() const
+class CAIUnit *CPlaneFighterPatrolState::GetTargetUnit() const
 {
 	return pEnemie;
 }
@@ -1256,11 +1250,9 @@ bool CPlaneFighterPatrolState::SetNewEnemy( CAviation *pNewEnemy, CAviation *pCo
 	return pNewEnemy != pCompareEnemy;
 }
 
-CPlaneFighterPatrolState::CPlaneFighterPatrolState ( CAviation *_pPlane, const CVec2 &_vPoint, CAviation *pTarget )
-: CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ),
-	eState( ECFS_GOTO_GUARDPOINT ),
-	timeLastCheck( curTime ), timeOfLastPathUpdate( 0 ),
-	bAmmoRemains( true ), nextPathUpdate( curTime )
+CPlaneFighterPatrolState::CPlaneFighterPatrolState( CAviation *_pPlane, const CVec2 &_vPoint, CAviation *pTarget )
+		: CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ), eState( ECFS_GOTO_GUARDPOINT ),
+			timeLastCheck( curTime ), timeOfLastPathUpdate( 0 ), bAmmoRemains( true ), nextPathUpdate( curTime )
 {
 	if ( SetNewEnemy( pTarget, 0 ) )
 		SetPoint( pEnemie->GetCenterPlain() );
@@ -1268,7 +1260,7 @@ CPlaneFighterPatrolState::CPlaneFighterPatrolState ( CAviation *_pPlane, const C
 		SetPoint( _vPoint );
 
 	const CPlanePreferences &pref = _pPlane->GetPreferencesB2();
-	fPartolRadius = SConsts::PLANE_GUARD_STATE_RADIUS +  pref.GetR( pref.GetMaxSpeed() );
+	fPartolRadius = SConsts::PLANE_GUARD_STATE_RADIUS + pref.GetR( pref.GetMaxSpeed() );
 	if ( !bAmmoRemains )
 	{
 		//TODO{ send ack that no ammo
@@ -1279,7 +1271,7 @@ CPlaneFighterPatrolState::CPlaneFighterPatrolState ( CAviation *_pPlane, const C
 bool CPlaneFighterPatrolState::IsEnemyAlive( CAviation *pEnemie ) const
 {
 	return IsValid( pEnemie ) && pEnemie->IsAlive() &&
-		EDI_ENEMY == theDipl.GetDiplStatus( pPlane->GetPlayer(), pEnemie->GetPlayer() ) ;
+	       EDI_ENEMY == theDipl.GetDiplStatus( pPlane->GetPlayer(), pEnemie->GetPlayer() );
 }
 
 void CPlaneFighterPatrolState::Segment()
@@ -1288,7 +1280,7 @@ void CPlaneFighterPatrolState::Segment()
 	{
 		FinishState();
 	}
-//		pPlane->SetCommandFinished();
+	//		pPlane->SetCommandFinished();
 
 	// if plane are too far off the map it should move to map center
 	// untill it reaches map again
@@ -1298,111 +1290,114 @@ void CPlaneFighterPatrolState::Segment()
 		SVector vCenter( vCenter3.x / SConsts::TILE_SIZE, vCenter3.y / SConsts::TILE_SIZE );
 		SVector vSize( GetAIMap()->GetSizeX(), GetAIMap()->GetSizeY() );
 		int nRadius = pPlane->GetPreferencesB2().GetR( fabs( pPlane->GetSpeedB2() ) ) / SConsts::TILE_SIZE;
-		if ( vCenter.x < -nRadius || vCenter.x > vSize.x + nRadius ||
-				vCenter.y < -nRadius || vCenter.y > vSize.y + nRadius )
+		if ( vCenter.x < -nRadius || vCenter.x > vSize.x + nRadius || vCenter.y < -nRadius ||
+		     vCenter.y > vSize.y + nRadius )
 		{
 			// should return
 			eState = ECFS_RETURN_TO_MAP;
-			InitPathToPoint( CVec3( vSize.x / 2.0f * SConsts::TILE_SIZE, vSize.y / 2.0f * SConsts::TILE_SIZE, pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
+			InitPathToPoint( CVec3( vSize.x / 2.0f * SConsts::TILE_SIZE,
+			                        vSize.y / 2.0f * SConsts::TILE_SIZE,
+			                        pPlane->GetPreferencesB2().GetPatrolHeight() ),
+			                 true,
+			                 true );
 		}
 	}
 
 	switch ( eState )
 	{
-	case ECFS_RETURN_TO_MAP:
-		if ( GetAIMap()->IsPointInside( pPlane->GetCenterPlain() ) )
-			eState = ECFS_FIND_ENEMY_OR_NEXT_POINT;
+		case ECFS_RETURN_TO_MAP:
+			if ( GetAIMap()->IsPointInside( pPlane->GetCenterPlain() ) )
+				eState = ECFS_FIND_ENEMY_OR_NEXT_POINT;
 
-		break;
-	case ECFS_GOTO_GUARDPOINT:
-		if ( pEnemie )
-			eState = ECFS_ENGAGE_TARGET;
-		else
-		{
-			InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
-			eState = ECFS_GOING_TO_GUARDPOINT;
-		}
-
-		break;
-	case ECFS_FIND_ENEMY_OR_NEXT_POINT:
-		if ( SetNewEnemy( FindNewEnemyPlane( GetPoint(), fPartolRadius ), 0 ) )
-			eState = ECFS_ENGAGE_TARGET;
-		else
-			eState = ECFS_AIM_TO_NEXT_POINT;
-
-		break;
-	case ECFS_GOING_TO_GUARDPOINT:
-  	if ( SetNewEnemy( FindNewEnemyPlane( GetPoint(), fPartolRadius ), 0 ) )
-			eState = ECFS_ENGAGE_TARGET;
-		else if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
-			eState = ECFS_AIM_TO_NEXT_POINT;
-
-		break;
-	case ECFS_AIM_TO_NEXT_POINT:
-		if ( vPatrolPoints.size() == 1 )
-			TryInterruptState( 0 );
-		else
-		{
-			ToNextPoint();
-			eState = ECFS_GOTO_GUARDPOINT;
-		}
-
-		break;
-	case ECFS_ESCAPE:
-		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PLANE_LEAVE ), pPlane, false );
-
-		break;
-	case ECFS_AVOID_COLLISION:
-		if ( curTime > nextPathUpdate )
-			eState = ECFS_FIND_ENEMY_OR_NEXT_POINT;
-
-		break;
-	case ECFS_ENGAGE_TARGET:
-		if ( !IsEnemyAlive( pEnemie ) )
-		{
-			eState = ECFS_FIND_ENEMY_OR_NEXT_POINT;
-		}
-		else if ( fabs( pEnemie->GetCenterPlain() - pPlane->GetCenterPlain() ) <
-			( pEnemie->GetBoundTileRadius() + pPlane->GetBoundTileRadius() ) * 32 )
-		{
-			CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
-			const CVec3 vAdd( 0, 0, NRandom::Random( 0, 2 ) * 250 ); RecordRandomCall();
-			CVec3 vSpeed( pPlane->GetSpeedB2() );
-			Normalize( &vSpeed );
-			pFormation->CreatePointManuver( vAdd + pPlane->GetPosB2() - vSpeed * 1000, false );
-			nextPathUpdate = curTime + 1000;
-			eState = ECFS_AVOID_COLLISION;
-		}
-		else if ( SetNewEnemy( FindBetterEnemiyPlane( pEnemie, GetPoint(), fPartolRadius), pEnemie ) )
-		{
-			TryInitPathToEnemie( true );
-			eState = ECFS_ENGAGE_TARGET;
-		}
-		else	//enemie not killed yet
-		{
-			TryInitPathToEnemie( false );
-
-
-			int nGun = pPlane->GetNGuns();
-			for ( int i = 0; i < nGun; ++i )
+			break;
+		case ECFS_GOTO_GUARDPOINT:
+			if ( pEnemie )
+				eState = ECFS_ENGAGE_TARGET;
+			else
 			{
-				CBasicGun *pGun = pPlane->GetGun( i );
-				// атака только пушками
-				if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
-					!pGun->IsFiring() && pGun->GetRestTimeOfRelax() == 0 &&
-					pGun->CanShootWOGunTurn( pEnemie, 1 ) )
-						pGun->StartPlaneBurst( pEnemie, false );
+				InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
+				eState = ECFS_GOING_TO_GUARDPOINT;
 			}
-		}
 
-		break;
+			break;
+		case ECFS_FIND_ENEMY_OR_NEXT_POINT:
+			if ( SetNewEnemy( FindNewEnemyPlane( GetPoint(), fPartolRadius ), 0 ) )
+				eState = ECFS_ENGAGE_TARGET;
+			else
+				eState = ECFS_AIM_TO_NEXT_POINT;
+
+			break;
+		case ECFS_GOING_TO_GUARDPOINT:
+			if ( SetNewEnemy( FindNewEnemyPlane( GetPoint(), fPartolRadius ), 0 ) )
+				eState = ECFS_ENGAGE_TARGET;
+			else if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
+				eState = ECFS_AIM_TO_NEXT_POINT;
+
+			break;
+		case ECFS_AIM_TO_NEXT_POINT:
+			if ( vPatrolPoints.size() == 1 )
+				TryInterruptState( 0 );
+			else
+			{
+				ToNextPoint();
+				eState = ECFS_GOTO_GUARDPOINT;
+			}
+
+			break;
+		case ECFS_ESCAPE:
+			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PLANE_LEAVE ), pPlane, false );
+
+			break;
+		case ECFS_AVOID_COLLISION:
+			if ( curTime > nextPathUpdate )
+				eState = ECFS_FIND_ENEMY_OR_NEXT_POINT;
+
+			break;
+		case ECFS_ENGAGE_TARGET:
+			if ( !IsEnemyAlive( pEnemie ) )
+			{
+				eState = ECFS_FIND_ENEMY_OR_NEXT_POINT;
+			}
+			else if ( fabs( pEnemie->GetCenterPlain() - pPlane->GetCenterPlain() ) <
+			          ( pEnemie->GetBoundTileRadius() + pPlane->GetBoundTileRadius() ) * 32 )
+			{
+				CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
+				const CVec3 vAdd( 0, 0, NRandom::Random( 0, 2 ) * 250 );
+				RecordRandomCall();
+				CVec3 vSpeed( pPlane->GetSpeedB2() );
+				Normalize( &vSpeed );
+				pFormation->CreatePointManuver( vAdd + pPlane->GetPosB2() - vSpeed * 1000, false );
+				nextPathUpdate = curTime + 1000;
+				eState = ECFS_AVOID_COLLISION;
+			}
+			else if ( SetNewEnemy( FindBetterEnemiyPlane( pEnemie, GetPoint(), fPartolRadius ), pEnemie ) )
+			{
+				TryInitPathToEnemie( true );
+				eState = ECFS_ENGAGE_TARGET;
+			}
+			else //enemie not killed yet
+			{
+				TryInitPathToEnemie( false );
+
+				int nGun = pPlane->GetNGuns();
+				for ( int i = 0; i < nGun; ++i )
+				{
+					CBasicGun *pGun = pPlane->GetGun( i );
+					// атака только пушками
+					if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB && !pGun->IsFiring() &&
+					     pGun->GetRestTimeOfRelax() == 0 && pGun->CanShootWOGunTurn( pEnemie, 1 ) )
+						pGun->StartPlaneBurst( pEnemie, false );
+				}
+			}
+
+			break;
 	}
 
 	if ( bAmmoRemains && timeLastCheck - curTime > SConsts::TIME_QUANT )
 	{
 		int nGuns = pPlane->GetNGuns();
 		bool bAmmoRemains = false;
-		for ( int i=0; i< nGuns; ++i )
+		for ( int i = 0; i < nGuns; ++i )
 		{
 			CBasicGun *pGun = pPlane->GetGun( i );
 			if ( pGun->GetNAmmo() != 0 )
@@ -1420,7 +1415,8 @@ void CPlaneFighterPatrolState::Segment()
 void CPlaneFighterPatrolState::TryInitPathToEnemie( const bool _bNewEnemy )
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
-	if ( pFormation && IsValidObj( pEnemie ) && ( nextPathUpdate < curTime || (_bNewEnemy || pFormation->IsManuverFinished()) ) )
+	if ( pFormation && IsValidObj( pEnemie ) &&
+	     ( nextPathUpdate < curTime || ( _bNewEnemy || pFormation->IsManuverFinished() ) ) )
 	{
 		if ( pEnemie->IsHelicopter() )
 		{
@@ -1451,7 +1447,7 @@ void CPlaneFighterPatrolState::FinishState()
 //*										  CEnemyContainer															*
 //*******************************************************************
 
-void CPlanePatrolState::CEnemyContainer::SetBuildingEnemy( CBuilding * _pBuilding )
+void CPlanePatrolState::CEnemyContainer::SetBuildingEnemy( CBuilding *_pBuilding )
 {
 	if ( pEnemy )
 		pEnemy->UpdateTakenDamagePower( -fTakenDamage );
@@ -1477,7 +1473,8 @@ bool CPlanePatrolState::CEnemyContainer::CanBreakTarget( const bool bBombsAllowe
 
 void CPlanePatrolState::CEnemyContainer::SetUnitEnemy( CAIUnit *pNewEnemy )
 {
-	if ( pEnemy == pNewEnemy ) return;
+	if ( pEnemy == pNewEnemy )
+		return;
 	const bool bNeedModif = IsValidObj( pNewEnemy ) && pNewEnemy->IsAviation();
 	if ( bNeedModif != bModifApplied )
 	{
@@ -1493,7 +1490,7 @@ void CPlanePatrolState::CEnemyContainer::SetUnitEnemy( CAIUnit *pNewEnemy )
 		pEnemy->UpdateTakenDamagePower( -fTakenDamage );
 	if ( pNewEnemy )
 	{
-		fTakenDamage = pOwner->GetKillSpeed( pNewEnemy, uint32_t(-1) );
+		fTakenDamage = pOwner->GetKillSpeed( pNewEnemy, uint32_t( -1 ) );
 		pNewEnemy->UpdateTakenDamagePower( fTakenDamage );
 	}
 	pEnemy = pNewEnemy;
@@ -1537,38 +1534,37 @@ CVec2 CPlanePatrolState::CEnemyContainer::GetCenter() const
 	return VNULL2;
 }
 
-CAIUnit * CPlanePatrolState::CEnemyContainer::GetGroundEnemy()
+CAIUnit *CPlanePatrolState::CEnemyContainer::GetGroundEnemy()
 {
 	return IsValidUnit() && !pEnemy->GetStats()->IsAviation() ? pEnemy : 0;
 }
 
-CAviation * CPlanePatrolState::CEnemyContainer::GetAviationEnemy()
+CAviation *CPlanePatrolState::CEnemyContainer::GetAviationEnemy()
 {
 	if ( IsValidUnit() && pEnemy->GetStats()->IsAviation() )
 	{
-		CAviation *pAviation = static_cast_ptr<CAviation*>( pEnemy );
+		CAviation *pAviation = static_cast_ptr<CAviation *>( pEnemy );
 		return pAviation;
 	}
 	return 0;
 }
 
-CBuilding * CPlanePatrolState::CEnemyContainer::GetBuilding()
+CBuilding *CPlanePatrolState::CEnemyContainer::GetBuilding()
 {
 	return IsValidBuilding() ? pBuilding : 0;
 }
 
 bool CPlanePatrolState::CEnemyContainer::IsValidBuilding() const
 {
-	return IsValidObj( pBuilding ) &&
-		EDI_ENEMY == theDipl.GetDiplStatus( pBuilding->GetPlayer(), pOwner->GetPlayer() ) ;
+	return IsValidObj( pBuilding ) && EDI_ENEMY == theDipl.GetDiplStatus( pBuilding->GetPlayer(), pOwner->GetPlayer() );
 }
 
 bool CPlanePatrolState::CEnemyContainer::IsValidUnit() const
 {
 	//CRAP{ TO FAST START
-	return IsValidObj( pEnemy ) ;//&&
-		//EDI_ENEMY == theDipl.GetDiplStatus( pEnemy->GetPlayer(), pOwner->GetPlayer() ) ;
-	//CRAP}
+	return IsValidObj( pEnemy ); //&&
+															 //EDI_ENEMY == theDipl.GetDiplStatus( pEnemy->GetPlayer(), pOwner->GetPlayer() ) ;
+															 //CRAP}
 }
 
 bool CPlanePatrolState::CEnemyContainer::IsValid() const
@@ -1580,19 +1576,13 @@ bool CPlanePatrolState::CEnemyContainer::IsValid() const
 //*										  CPlaneShturmovikPatrolState *
 //*******************************************************************
 
-CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState ( CAviation *_pPlane, const CVec2 &_vPoint, CAIUnit *pTarget, CBuilding *pBuilding, const bool _bMustDropBombs )
-: CPlanePatrolState( _pPlane ),
-	CPlaneDeffensiveFire( _pPlane ),
-	eState( PSPS_GOTO_GUARDPOINT ),
-	timeOfLastPathUpdate( curTime ),
-	pPlane( _pPlane ),
-	timeLastCheck ( curTime ),
-	vCurTargetPoint( -1.0f, -1.0f ),
-	fStartAttackDist( 0.0f ), fFinishAttckDist( 0.0f ), fTurnRadius( 0.0f ),
-	bAmmoRemains( true ),
-	bMustDrop1Bomb( _bMustDropBombs ),
-	bBombsDropped( false ),
-	bShootedToEnemie ( false ), bFirstApproach( true ), bDiveInProgress( false )
+CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState(
+		CAviation *_pPlane, const CVec2 &_vPoint, CAIUnit *pTarget, CBuilding *pBuilding, const bool _bMustDropBombs )
+		: CPlanePatrolState( _pPlane ), CPlaneDeffensiveFire( _pPlane ), eState( PSPS_GOTO_GUARDPOINT ),
+			timeOfLastPathUpdate( curTime ), pPlane( _pPlane ), timeLastCheck( curTime ), vCurTargetPoint( -1.0f, -1.0f ),
+			fStartAttackDist( 0.0f ), fFinishAttckDist( 0.0f ), fTurnRadius( 0.0f ), bAmmoRemains( true ),
+			bMustDrop1Bomb( _bMustDropBombs ), bBombsDropped( false ), bShootedToEnemie( false ), bFirstApproach( true ),
+			bDiveInProgress( false )
 {
 	if ( IsValidObj( pTarget ) )
 	{
@@ -1612,16 +1602,18 @@ CPlaneShturmovikPatrolState::CPlaneShturmovikPatrolState ( CAviation *_pPlane, c
 		pPlane->SendAcknowledgement( ACK_CANNOT_PIERCE );
 		TryInterruptState( 0 );
 	}
-	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
+	const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
 	fTurnRadius = pStats->fTurnRadius;
 
 	const float fVertTurnRadius = fTurnRadius;
 	const float fDiveAngle = pStats->wDivingAngle * 2.0f * PI / 65535;
-	NI_ASSERT( pStats->wDivingAngle != 0, fmt::format("DESIGNER'S BUG: GROUND ATTACK PLANE \"{}\" DIVING ANGLE == 0", NDb::GetResName(pStats)) );
+	NI_ASSERT( pStats->wDivingAngle != 0,
+	           fmt::format( "DESIGNER'S BUG: GROUND ATTACK PLANE \"{}\" DIVING ANGLE == 0", NDb::GetResName( pStats ) ) );
 	if ( pStats->wDivingAngle != 0 )
 	{
 		const float fBetta = ( PI - fDiveAngle ) / 2.0f;
-		fStartAttackDist = (fVertTurnRadius / tan( fBetta )) + (pPlane->GetCenter().z / tan( fDiveAngle )) + pStats->fSpeed * 3 * SConsts::AI_SEGMENT_DURATION;
+		fStartAttackDist = ( fVertTurnRadius / tan( fBetta ) ) + ( pPlane->GetCenter().z / tan( fDiveAngle ) ) +
+		                   pStats->fSpeed * 3 * SConsts::AI_SEGMENT_DURATION;
 
 		fFinishAttckDist = SPlanesConsts::GetMinHeight() / tan( fDiveAngle );
 		//TODO{ check for gun ammo and bombs and send ack if no ammo
@@ -1664,7 +1656,7 @@ void CPlaneShturmovikPatrolState::Segment()
 	{
 		FinishState();
 	}
-//		pPlane->SetCommandFinished();
+	//		pPlane->SetCommandFinished();
 
 	//DEBUG{
 	static det_map<int, std::string> nameconv;
@@ -1682,48 +1674,47 @@ void CPlaneShturmovikPatrolState::Segment()
 		nameconv[PSPS_TURNING_TO_TARGET] = "PSPS_TURNING_TO_TARGET";
 		nameconv[PSPS_GAIN_HEIGHT] = "PSPS_GAIN_HEIGHT";
 		nameconv[PSPS_GAINING_HEIGHT] = "PSPS_GAINING_HEIGHT";
-
 	}
 	EPlaneShturmovikPatrolState eRem = eState;
 	//DEBUG}
 
 	switch ( eState )
 	{
-	case PSPS_ESCAPE:
-		Escape();
+		case PSPS_ESCAPE:
+			Escape();
 
-		break;
-	case PSPS_GOTO_GUARDPOINT:
-		if ( enemie.IsValid() )
-			eState = PSPS_TURN_TO_TARGET;
-		else
-		{
-			pShootEstimator->SetCurCenter( GetPoint() );
-			InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
-			eState = PSPS_GOING_TO_GUARDPOINT;
-		}
+			break;
+		case PSPS_GOTO_GUARDPOINT:
+			if ( enemie.IsValid() )
+				eState = PSPS_TURN_TO_TARGET;
+			else
+			{
+				pShootEstimator->SetCurCenter( GetPoint() );
+				InitPathToPoint( CVec3( GetPoint(), pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
+				eState = PSPS_GOING_TO_GUARDPOINT;
+			}
 
-		break;
-	case PSPS_FIND_ENEMY_OR_NEXT_POINT:
-		OnFindEnemy();
+			break;
+		case PSPS_FIND_ENEMY_OR_NEXT_POINT:
+			OnFindEnemy();
 
-		break;
-	case PSPS_GOING_TO_GUARDPOINT:
-		if ( FindNewGroundEnemie( GetPoint(), SConsts::PLANE_GUARD_STATE_RADIUS ) )
-			eState = PSPS_TURN_TO_TARGET;
-		else if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
-			eState = PSPS_AIM_TO_NEXT_POINT;
+			break;
+		case PSPS_GOING_TO_GUARDPOINT:
+			if ( FindNewGroundEnemie( GetPoint(), SConsts::PLANE_GUARD_STATE_RADIUS ) )
+				eState = PSPS_TURN_TO_TARGET;
+			else if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
+				eState = PSPS_AIM_TO_NEXT_POINT;
 
-		break;
-	case PSPS_AIM_TO_NEXT_POINT:
-		TryInterruptState( 0 );
+			break;
+		case PSPS_AIM_TO_NEXT_POINT:
+			TryInterruptState( 0 );
 
-		break;
-	case PSPS_TURN_TO_TARGET:
-		OnTurnToTarget();
+			break;
+		case PSPS_TURN_TO_TARGET:
+			OnTurnToTarget();
 
-		break;
-	case PSPS_TURNING_TO_TARGET:
+			break;
+		case PSPS_TURNING_TO_TARGET:
 		{
 			if ( !enemie.IsValid() )
 			{
@@ -1736,7 +1727,7 @@ void CPlaneShturmovikPatrolState::Segment()
 			CVec2 vPos( vPos3.x, vPos3.y );
 
 			CVec2 vDirToTarget = enemie.GetCenter() - vPos;
-			if (  DirsDifference( GetDirectionByVector( vDirToTarget ), GetDirectionByVector( vSpeed ) ) < 65535 / 8 )
+			if ( DirsDifference( GetDirectionByVector( vDirToTarget ), GetDirectionByVector( vSpeed ) ) < 65535 / 8 )
 			{
 				TryInitPathToEnemie( true );
 				eState = PSPS_ENGAGING_TARGET;
@@ -1746,7 +1737,7 @@ void CPlaneShturmovikPatrolState::Segment()
 		}
 
 		break;
-	case PSPS_APPROACH_TARGET:
+		case PSPS_APPROACH_TARGET:
 		{
 			eState = PSPS_APPROACHING_TARGET;
 			CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
@@ -1762,66 +1753,66 @@ void CPlaneShturmovikPatrolState::Segment()
 			{
 				TryInitPathToEnemie( true );
 			}
-			else if ( CAIUnit * pUnit = enemie.GetGroundEnemy() )
+			else if ( CAIUnit *pUnit = enemie.GetGroundEnemy() )
 				pFormation->CreateManuver( pUnit->GetCenter(), pUnit->GetUniqueID() );
-			else if ( CBuilding * pBuilding = enemie.GetBuilding() )
+			else if ( CBuilding *pBuilding = enemie.GetBuilding() )
 				pFormation->CreateManuver( pBuilding->GetCenter(), pBuilding->GetUniqueId() );
 			else
 				eState = PSPS_FIND_ENEMY_OR_NEXT_POINT;
 		}
 
 		break;
-	case PSPS_APPROACHING_TARGET:
-		if ( !enemie.IsValid() )
-			eState = PSPS_FIND_ENEMY_OR_NEXT_POINT;
-		else
-		{
-			CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
-			if ( pFormation->IsManuverFinished() )
+		case PSPS_APPROACHING_TARGET:
+			if ( !enemie.IsValid() )
+				eState = PSPS_FIND_ENEMY_OR_NEXT_POINT;
+			else
 			{
-				TryInitPathToEnemie( true );
-				eState = PSPS_ENGAGING_TARGET;
-				bShootedToEnemie = false;
+				CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
+				if ( pFormation->IsManuverFinished() )
+				{
+					TryInitPathToEnemie( true );
+					eState = PSPS_ENGAGING_TARGET;
+					bShootedToEnemie = false;
+				}
 			}
-		}
-		break;
-	case PSPS_ENGAGING_TARGET:
-		if ( !enemie.IsValid() )
-		{
-			const CVec2 vPoint( pPlane->GetCenterPlain() + pPlane->GetDirVector() * fStartAttackDist * 2 );
-			TryInitPathToPoint( CVec3( vPoint.x, vPoint.y, pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
+			break;
+		case PSPS_ENGAGING_TARGET:
+			if ( !enemie.IsValid() )
+			{
+				const CVec2 vPoint( pPlane->GetCenterPlain() + pPlane->GetDirVector() * fStartAttackDist * 2 );
+				TryInitPathToPoint( CVec3( vPoint.x, vPoint.y, pPlane->GetPreferencesB2().GetPatrolHeight() ), true, true );
 
-			eState = PSPS_FIRE_TO_WORLD;
-		}
-		else
-		{
-			CVec3 vSpeed3 = pPlane->GetSpeedB2();
-			if ( !bDiveInProgress && vSpeed3.z < 0.0f )
-			{
-				updater.AddUpdate( 0, ACTION_NOTIFY_DIVEBOMBER_DIVE, pPlane, 1 );
-				bDiveInProgress = true;
-			}
-			TryBurstAllGuns();
-			if ( fabs( pPlane->GetPlanesFormation()->GetManuver()->GetEndPoint().z - enemie.GetZ() ) > SPlanesConsts::GetMinHeight() )
-			{
-				// too low height, maneuver was canceled by itself
-				if ( !bShootedToEnemie )
-					pPlane->SendAcknowledgement( NDb::ACK_NEGATIVE_NOTIFICATION );
 				eState = PSPS_FIRE_TO_WORLD;
-				TryBurstAllGunsToPoints();
 			}
 			else
 			{
-				// если враг живой - атаковать
+				CVec3 vSpeed3 = pPlane->GetSpeedB2();
+				if ( !bDiveInProgress && vSpeed3.z < 0.0f )
+				{
+					updater.AddUpdate( 0, ACTION_NOTIFY_DIVEBOMBER_DIVE, pPlane, 1 );
+					bDiveInProgress = true;
+				}
 				TryBurstAllGuns();
-				TryInitPathToEnemie( false );
-				TryBurstAllGunsToPoints();
+				if ( fabs( pPlane->GetPlanesFormation()->GetManuver()->GetEndPoint().z - enemie.GetZ() ) >
+				     SPlanesConsts::GetMinHeight() )
+				{
+					// too low height, maneuver was canceled by itself
+					if ( !bShootedToEnemie )
+						pPlane->SendAcknowledgement( NDb::ACK_NEGATIVE_NOTIFICATION );
+					eState = PSPS_FIRE_TO_WORLD;
+					TryBurstAllGunsToPoints();
+				}
+				else
+				{
+					// если враг живой - атаковать
+					TryBurstAllGuns();
+					TryInitPathToEnemie( false );
+					TryBurstAllGunsToPoints();
+				}
 			}
-		}
 
-
-		break;
-	case PSPS_FIRE_TO_WORLD:
+			break;
+		case PSPS_FIRE_TO_WORLD:
 		{
 			bFirstApproach = false;
 			if ( !bMustDrop1Bomb )
@@ -1839,46 +1830,47 @@ void CPlaneShturmovikPatrolState::Segment()
 			if ( !pPlane->GetPlanesFormation()->GetManuver()->IsToHorisontal() )
 			{
 				InitPathToPoint(
-					CVec3 (
-									( SConsts::PLANE_GUARD_STATE_RADIUS + fTurnRadius * 2 ) * vDir + CVec2( vPos3.x, vPos3.y ),
-									  pPlane->GetPreferencesB2().GetPatrolHeight()
-								),
-					true, true );
+						CVec3( ( SConsts::PLANE_GUARD_STATE_RADIUS + fTurnRadius * 2 ) * vDir + CVec2( vPos3.x, vPos3.y ),
+				           pPlane->GetPreferencesB2().GetPatrolHeight() ),
+						true,
+						true );
 			}
 			eState = PSPS_GAINING_HEIGHT;
 		}
 
 		break;
-	case PSPS_GAINING_HEIGHT:
-		if ( bDiveInProgress )
-		{
-			bDiveInProgress = false;
-			updater.AddUpdate( 0, ACTION_NOTIFY_DIVEBOMBER_DIVE, pPlane, 0 );
-		}
-		if ( pPlane->GetSpeedB2().z < 0 )
-			TryBurstAllGunsToPoints();
+		case PSPS_GAINING_HEIGHT:
+			if ( bDiveInProgress )
+			{
+				bDiveInProgress = false;
+				updater.AddUpdate( 0, ACTION_NOTIFY_DIVEBOMBER_DIVE, pPlane, 0 );
+			}
+			if ( pPlane->GetSpeedB2().z < 0 )
+				TryBurstAllGunsToPoints();
 
-		if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
-		{
-			eState = PSPS_FIND_ENEMY_OR_NEXT_POINT;
-			OnFindEnemy();
-		}
+			if ( pPlane->GetPlanesFormation()->IsManuverFinished() )
+			{
+				eState = PSPS_FIND_ENEMY_OR_NEXT_POINT;
+				OnFindEnemy();
+			}
 
-		break;
+			break;
 	}
 
 	//DEBUG{
 	if ( eState != eRem )
 	{
 		const auto message = fmt::format( "GunplaneSubstate =  \"{}\"", nameconv[eState] );
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, message.c_str());
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 2, message.c_str() );
 		Singleton<IStatSystem>()->UpdateEntry( "test: ", nameconv[eState], 0xffff0000 );
 	}
 	//DEBUG}
 	AnalyzeBSU();
 
-	if ( pPlane->GetCenter().z < SPlanesConsts::GetMinHeight() + (pPlane->GetPreferencesB2().GetPatrolHeight() - SPlanesConsts::GetMinHeight()) * SConsts::BOMB_START_HEIGHT &&
-		pPlane->GetSpeedB2().z < 0.0f )
+	if ( pPlane->GetCenter().z < SPlanesConsts::GetMinHeight() +
+	                                 ( pPlane->GetPreferencesB2().GetPatrolHeight() - SPlanesConsts::GetMinHeight() ) *
+	                                     SConsts::BOMB_START_HEIGHT &&
+	     pPlane->GetSpeedB2().z < 0.0f )
 		TryDropBombs();
 
 	// 1 bomb drop per command
@@ -1898,7 +1890,7 @@ void CPlaneShturmovikPatrolState::Segment()
 			TryInterruptState( 0 );
 		}
 	}
-	if ( bAmmoRemains &&	PSPS_ESCAPE != eState && timeLastCheck - curTime > SConsts::TIME_QUANT )
+	if ( bAmmoRemains && PSPS_ESCAPE != eState && timeLastCheck - curTime > SConsts::TIME_QUANT )
 	{
 		const int nGuns = pPlane->GetNGuns();
 		bool bAmmoRemains = false;
@@ -1920,7 +1912,8 @@ void CPlaneShturmovikPatrolState::Segment()
 bool CPlaneShturmovikPatrolState::IsTargetBehind( const CVec2 &vTarget ) const
 {
 	const CVec2 vDist = vTarget - pPlane->GetCenterPlain();
-	return DirsDifference( GetDirectionByVector( vDist ), pPlane->GetFrontDirection() /* GetDirectionByVector( pPlane->GetSpeed() ) */ ) > 65535/4;
+	return DirsDifference( GetDirectionByVector( vDist ),
+	                       pPlane->GetFrontDirection() /* GetDirectionByVector( pPlane->GetSpeed() ) */ ) > 65535 / 4;
 }
 
 void CPlaneShturmovikPatrolState::TryBurstAllGunsToPoints()
@@ -1940,11 +1933,11 @@ void CPlaneShturmovikPatrolState::TryBurstAllGunsToPoints()
 		for ( int i = 0; i < nGun; ++i )
 		{
 			CBasicGun *pGun = pPlane->GetGun( i );
-			if (	pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB && !pGun->IsFiring() &&
-						0 == pGun->GetRestTimeOfRelax() && !pGun->GetTurret() && fRange <= pGun->GetFireRangeMax() )
+			if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB && !pGun->IsFiring() &&
+			     0 == pGun->GetRestTimeOfRelax() && !pGun->GetTurret() && fRange <= pGun->GetFireRangeMax() )
 			{
 				//CRAP{ UNTILL 2D SHOOTING
-				pGun->StartPointBurst( CVec2(vShoot.x, vShoot.y ), true );
+				pGun->StartPointBurst( CVec2( vShoot.x, vShoot.y ), true );
 				//CRAP}
 			}
 		}
@@ -1953,13 +1946,9 @@ void CPlaneShturmovikPatrolState::TryBurstAllGunsToPoints()
 
 void CPlaneShturmovikPatrolState::TryDropBombs()
 {
-	const CVec3 vSpeed3 ( pPlane->GetSpeedB2() );
-	if (  enemie.IsValid() &&
-				(
-					bMustDrop1Bomb && !bBombsDropped ||
-					( pPlane->IsBombsAutocast() || theDipl.IsAIPlayer( pPlane->GetPlayer() ) )
-				)
-	   )
+	const CVec3 vSpeed3( pPlane->GetSpeedB2() );
+	if ( enemie.IsValid() && ( bMustDrop1Bomb && !bBombsDropped ||
+	                           ( pPlane->IsBombsAutocast() || theDipl.IsAIPlayer( pPlane->GetPlayer() ) ) ) )
 	{
 		const int nGun = pPlane->GetNGuns();
 		for ( int i = 0; i < nGun; ++i )
@@ -1970,11 +1959,13 @@ void CPlaneShturmovikPatrolState::TryDropBombs()
 				// атака бомбами.
 				if ( !pGun->IsFiring() && pGun->GetRestTimeOfRelax() == 0 && pGun->GetNAmmo() != 0 )
 				{
-					const CVec3 vSpeed3 ( pPlane->GetSpeedB2() );
+					const CVec3 vSpeed3( pPlane->GetSpeedB2() );
 					const CVec3 vCurPoint3( pPlane->GetPosB2() );
 					const CVec2 vCurPoint2( vCurPoint3.x, vCurPoint3.y );
-					const float fTimeToFly = CBombBallisticTraj::GetTimeOfFly( pPlane->GetZ() - GetHeights()->GetZ( pPlane->GetCenterPlain() ), vSpeed3.z );
-					const CVec3 vTrajFinish( CBombBallisticTraj::CalcTrajectoryFinish( vCurPoint3, vSpeed3, VNULL2, fTimeToFly ) );
+					const float fTimeToFly = CBombBallisticTraj::GetTimeOfFly(
+							pPlane->GetZ() - GetHeights()->GetZ( pPlane->GetCenterPlain() ), vSpeed3.z );
+					const CVec3 vTrajFinish(
+							CBombBallisticTraj::CalcTrajectoryFinish( vCurPoint3, vSpeed3, VNULL2, fTimeToFly ) );
 					const float fDisp = pGun->GetDispersion() * pPlane->GetCenter().z / pGun->GetFireRangeMax();
 
 					if ( fabs( CVec2( vTrajFinish.x, vTrajFinish.y ) - enemie.GetCenter() ) < fDisp * 2.0f )
@@ -1999,9 +1990,8 @@ void CPlaneShturmovikPatrolState::TryBurstAllGuns()
 	for ( int i = 0; i < nGun; ++i )
 	{
 		CBasicGun *pGun = pPlane->GetGun( i );
-		if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB  &&
-			   !pGun->IsFiring() && pGun->GetRestTimeOfRelax() == 0 &&
-				 enemie.CanShootToTarget( pGun ) )
+		if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB && !pGun->IsFiring() &&
+		     pGun->GetRestTimeOfRelax() == 0 && enemie.CanShootToTarget( pGun ) )
 		{
 			enemie.StartBurst( pGun );
 			bShootedToEnemie = true;
@@ -2018,25 +2008,27 @@ CAIUnit *CPlaneShturmovikPatrolState::FindEnemyInFiringSector()
 	float fBentRange = 0;
 	for ( int i = 0; i < nGuns; ++i )
 	{
-		CBasicGun * pGun = pPlane->GetGun( i );
+		CBasicGun *pGun = pPlane->GetGun( i );
 		if ( pGun->GetNAmmo() != 0 && pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
-			fBentRange = (std::max)( fBentRange, float(pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535) );
+			fBentRange = (std::max)( fBentRange, float( pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535 ) );
 	}
 
 	const CVec2 vBentRange( GetVectorByDirection( fBentRange + 65535 * 3 / 4 ) );
 	pShootEstimator->Reset( enemie.GetGroundEnemy(), true, 0 );
 	if ( enemie.GetAviationEnemy() )
 		pShootEstimator->AddUnit( enemie.GetAviationEnemy() );
-	for ( CUnitsIter<1,3> iter( pPlane->GetParty(), EDI_ENEMY, GetPoint(), SConsts::PLANE_GUARD_STATE_RADIUS ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<1, 3> iter( pPlane->GetParty(), EDI_ENEMY, GetPoint(), SConsts::PLANE_GUARD_STATE_RADIUS );
+	      !iter.IsFinished();
+	      iter.Iterate() )
 	{
-		CAIUnit * pUnit = *iter;
-		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->IsVisible( pPlane->GetParty()) && CanAttackEnemy( pUnit ) )
+		CAIUnit *pUnit = *iter;
+		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->IsVisible( pPlane->GetParty() ) && CanAttackEnemy( pUnit ) )
 			pShootEstimator->AddUnit( pUnit );
 	}
 	return pShootEstimator->GetBestUnit();
 }
 
-CAIUnit* CPlaneShturmovikPatrolState::FindEnemyInPossibleDiveSector()
+CAIUnit *CPlaneShturmovikPatrolState::FindEnemyInPossibleDiveSector()
 {
 	CVec3 vSpeed = pPlane->GetSpeedB2();
 	Normalize( &vSpeed );
@@ -2055,24 +2047,27 @@ CAIUnit* CPlaneShturmovikPatrolState::FindEnemyInPossibleDiveSector()
 		{
 			if ( pGun->GetShell().etrajectory != NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 			{
-				fGnutost = (std::max)( fGnutost, float(pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535) );
+				fGnutost = (std::max)( fGnutost, float( pGun->GetWeapon()->wDeltaAngle * 2.0f * PI / 65535 ) );
 				fMaxRange = (std::max)( fMaxRange, pGun->GetFireRangeMax() );
 			}
 		}
 	}
 
-	const float fMaxPossibleDivePoint( fMaxRange + (pPlane->GetCenter().z -SPlanesConsts::GetMinHeight())/ pPlane->GetPreferencesB2().GetPatrolHeight() * fStartAttackDist );
-	const float fAvePossibleDivePoint( (fMaxPossibleDivePoint + fMinPossibleDivePoint)*0.5f );
+	const float fMaxPossibleDivePoint( fMaxRange + ( pPlane->GetCenter().z - SPlanesConsts::GetMinHeight() ) /
+	                                                   pPlane->GetPreferencesB2().GetPatrolHeight() * fStartAttackDist );
+	const float fAvePossibleDivePoint( ( fMaxPossibleDivePoint + fMinPossibleDivePoint ) * 0.5f );
 
 	const CVec3 vAimCenter( vCenter + vSpeed * fAvePossibleDivePoint );
 
 	pShootEstimator->Reset( enemie.GetGroundEnemy(), true, 0 );
 	if ( enemie.GetAviationEnemy() )
 		pShootEstimator->AddUnit( enemie.GetAviationEnemy() );
-	for ( CUnitsIter<1,3> iter( pPlane->GetParty(), EDI_ENEMY, GetPoint(), SConsts::PLANE_GUARD_STATE_RADIUS ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<1, 3> iter( pPlane->GetParty(), EDI_ENEMY, GetPoint(), SConsts::PLANE_GUARD_STATE_RADIUS );
+	      !iter.IsFinished();
+	      iter.Iterate() )
 	{
-		CAIUnit * pUnit = *iter;
-		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->IsVisible( pPlane->GetParty()) && CanAttackEnemy( pUnit ) )
+		CAIUnit *pUnit = *iter;
+		if ( pUnit->IsRefValid() && pUnit->IsAlive() && pUnit->IsVisible( pPlane->GetParty() ) && CanAttackEnemy( pUnit ) )
 			pShootEstimator->AddUnit( pUnit );
 	}
 	return pShootEstimator->GetBestUnit();
@@ -2096,13 +2091,14 @@ void CPlaneShturmovikPatrolState::TryInitPathToEnemie( const bool bForceNewPath 
 	}
 }
 
-void CPlaneShturmovikPatrolState::TryInitPathToPoint( const CVec3 &_vPos, const bool _bNewPoint, const bool _bToHorisontal )
+void CPlaneShturmovikPatrolState::TryInitPathToPoint( const CVec3 &_vPos,
+                                                      const bool _bNewPoint,
+                                                      const bool _bToHorisontal )
 {
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	if ( _bNewPoint || pFormation->IsManuverFinished() )
 		InitPathToPoint( _vPos, false, _bToHorisontal );
 }
-
 
 ETryStateInterruptResult CPlaneShturmovikPatrolState::TryInterruptState( class CAICommand *pCommand )
 {
@@ -2123,25 +2119,34 @@ void CPlaneShturmovikPatrolState::FinishState()
 //*										  CPlaneFlyDeadState													*
 //*******************************************************************
 
-CPlaneFlyDeadState::CPlaneFlyDeadState ( CAviation *_pPlane )
-: eState( EPDS_START_DIVE ), timeStart( curTime ), bExplodeInstantly( true ),
-	fHeight( 0.0f ), bFatality( false ), CPlanePatrolState( _pPlane ), bGroundCrash( false )
+CPlaneFlyDeadState::CPlaneFlyDeadState( CAviation *_pPlane )
+		: eState( EPDS_START_DIVE ), timeStart( curTime ), bExplodeInstantly( true ), fHeight( 0.0f ), bFatality( false ),
+			CPlanePatrolState( _pPlane ), bGroundCrash( false )
 {
-	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pPlane->GetStats() );
+	const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats *>( pPlane->GetStats() );
 	bFatality = pStats->pEffectFatality != 0;
 	if ( bFatality )
-		{ bExplodeInstantly = NRandom::Random( 1 ); RecordRandomCall(); }
+	{
+		bExplodeInstantly = NRandom::Random( 1 );
+		RecordRandomCall();
+	}
 	if ( !bExplodeInstantly )
-		{ timeStart = curTime + NRandom::Random( 0, SConsts::DIVE_BEFORE_EXPLODE_TIME ); RecordRandomCall(); }
+	{
+		timeStart = curTime + NRandom::Random( 0, SConsts::DIVE_BEFORE_EXPLODE_TIME );
+		RecordRandomCall();
+	}
 
-	const NDb::SAIGameConsts * pConsts = Singleton<IAILogic>()->GetAIConsts();
+	const NDb::SAIGameConsts *pConsts = Singleton<IAILogic>()->GetAIConsts();
 	bGroundCrash = pPlane->GetStats()->vAABBHalfSize.y < pConsts->nGroundCrashPlaneSize;
 	const CPlanePreferences &pref = pPlane->GetPreferencesB2();
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	if ( bGroundCrash )
 		pFormation->SetCanViolateHeghtLimits();
 	fHeight = bGroundCrash ? -500.0f : (std::max)( SPlanesConsts::GetMinHeight(), pPlane->GetCenter().z * 0.8f );
-	pFormation->CreatePointManuver( CVec3( pPlane->GetCenterPlain() + pPlane->GetDirectionVector() * pref.GetR( fabs( pPlane->GetSpeedB2() ) ) * 2, fHeight), bGroundCrash || bFatality ? false : true  );
+	pFormation->CreatePointManuver(
+			CVec3( pPlane->GetCenterPlain() + pPlane->GetDirectionVector() * pref.GetR( fabs( pPlane->GetSpeedB2() ) ) * 2,
+	           fHeight ),
+			bGroundCrash || bFatality ? false : true );
 
 	deadZone.Init();
 }
@@ -2154,13 +2159,13 @@ void CPlaneFlyDeadState::CDeadZone::Init()
 	fMinY = -3000;
 }
 
-void CPlaneFlyDeadState::CDeadZone::AdjustEscapePoint( CVec2 * pPoint )
+void CPlaneFlyDeadState::CDeadZone::AdjustEscapePoint( CVec2 *pPoint )
 {
-	const float fXMaxDiff = fabs(pPoint->x - fMaxX);
-	const float fXMinDiff = fabs(pPoint->x - fMinX);
+	const float fXMaxDiff = fabs( pPoint->x - fMaxX );
+	const float fXMinDiff = fabs( pPoint->x - fMinX );
 
-	const float fYMaxDiff = fabs(pPoint->y - fMaxY);
-	const float fYMinDiff = fabs(pPoint->y - fMinY);
+	const float fYMaxDiff = fabs( pPoint->y - fMaxY );
+	const float fYMinDiff = fabs( pPoint->y - fMinY );
 
 	const float fXDiff = (std::min)( fXMaxDiff, fXMinDiff );
 	const float fYDiff = (std::min)( fYMaxDiff, fYMinDiff );
@@ -2194,14 +2199,15 @@ void CPlaneFlyDeadState::InitPathToNearestPoint()
 
 	CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 	if ( pFormation )
-		pFormation->CreatePointManuver( CVec3(vPoint,(std::max)(SPlanesConsts::GetMinHeight(),pPlane->GetCenter().z * 0.8f)), true );
+		pFormation->CreatePointManuver(
+				CVec3( vPoint, (std::max)( SPlanesConsts::GetMinHeight(), pPlane->GetCenter().z * 0.8f ) ), true );
 }
 
 void CPlaneFlyDeadState::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EPDS_START_DIVE:
+		case EPDS_START_DIVE:
 		{
 			if ( bGroundCrash )
 				eState = EPDS_DIVE;
@@ -2218,58 +2224,58 @@ void CPlaneFlyDeadState::Segment()
 				eState = EPDS_DIVE;
 		}
 		break;
-	case EPDS_DIVE:
-		if ( bGroundCrash )
-		{
-			const CVec3 vPos ( pPlane->GetPosB2() );
-			CVec3 vGroundPos ( GetHeights()->GetGroundPoint( vPos ) );
-			CVec3 vSpeed ( pPlane->GetSpeedB2() );
-			Normalize( &vSpeed );
-
-			GetHeights()->GetIntersectionWithTerrain( &vGroundPos, vPos, vPos + 2000 * vSpeed );
-
-			if ( vPos.z <= vGroundPos.z + pPlane->GetStats()->vAABBHalfSize.y )
+		case EPDS_DIVE:
+			if ( bGroundCrash )
 			{
-				pPlane->Disappear();
-				const NDb::SAIGameConsts * pConsts = Singleton<IAILogic>()->GetAIConsts();
-				if ( pConsts->pAviationGroundCrashExplosion )
+				const CVec3 vPos( pPlane->GetPosB2() );
+				CVec3 vGroundPos( GetHeights()->GetGroundPoint( vPos ) );
+				CVec3 vSpeed( pPlane->GetSpeedB2() );
+				Normalize( &vSpeed );
+
+				GetHeights()->GetIntersectionWithTerrain( &vGroundPos, vPos, vPos + 2000 * vSpeed );
+
+				if ( vPos.z <= vGroundPos.z + pPlane->GetStats()->vAABBHalfSize.y )
 				{
-					theShellsStore.AddShell
-						( new CInvisShell( curTime, new CBurstExpl( 0, pConsts->pAviationGroundCrashExplosion,
-						vGroundPos, VNULL3, 0, false, 1, true ), 0 ) );
+					pPlane->Disappear();
+					const NDb::SAIGameConsts *pConsts = Singleton<IAILogic>()->GetAIConsts();
+					if ( pConsts->pAviationGroundCrashExplosion )
+					{
+						theShellsStore.AddShell( new CInvisShell(
+								curTime,
+								new CBurstExpl( 0, pConsts->pAviationGroundCrashExplosion, vGroundPos, VNULL3, 0, false, 1, true ),
+								0 ) );
+					}
 				}
 			}
-		}
-		else if ( bFatality )
-		{
-			if ( timeStart < curTime )
+			else if ( bFatality )
 			{
-				pPlane->Disappear();
-				break;
+				if ( timeStart < curTime )
+				{
+					pPlane->Disappear();
+					break;
+				}
 			}
-		}
-		else
-		{
-			CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
-			if ( pFormation )
-				InitPathToNearestPoint();
+			else
+			{
+				CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
+				if ( pFormation )
+					InitPathToNearestPoint();
+				eState = EPDS_WAIT_FINISH_PATH;
+			}
+
+			break;
+		case EPDS_ESTIMATE:
 			eState = EPDS_WAIT_FINISH_PATH;
-		}
 
-		break;
-	case EPDS_ESTIMATE:
-		eState = EPDS_WAIT_FINISH_PATH;
+			//break; убран сознательно
+		case EPDS_WAIT_FINISH_PATH:
+			if ( deadZone.IsInZone( pPlane->GetCenterPlain() ) )
+				pPlane->Disappear();
 
-		//break; убран сознательно
-	case EPDS_WAIT_FINISH_PATH:
-		if ( deadZone.IsInZone( pPlane->GetCenterPlain()) )
-			pPlane->Disappear();
-
-		break;
+			break;
 	}
 
 	PathSegment();
-
 }
 
 ETryStateInterruptResult CPlaneFlyDeadState::TryInterruptState( class CAICommand *pCommand )
@@ -2296,7 +2302,7 @@ const CVec2 CPlaneFlyDeadState::GetPurposePoint() const
 // CPlaneSuicideState
 
 CPlaneSuicideState::CPlaneSuicideState( CAviation *_pPlane, const CVec2 &_vTarget )
-: pPlane( _pPlane ), eState( EPSS_START ), vTarget( _vTarget ), pWeapon( 0 ), fDistToDive2( 0.0f )
+		: pPlane( _pPlane ), eState( EPSS_START ), vTarget( _vTarget ), pWeapon( 0 ), fDistToDive2( 0.0f )
 {
 	const int nCommonGunsCount = pPlane->GetNCommonGuns();
 	for ( int i = 0; i < nCommonGunsCount; ++i )
@@ -2307,11 +2313,11 @@ CPlaneSuicideState::CPlaneSuicideState( CAviation *_pPlane, const CVec2 &_vTarge
 		}
 	if ( !pWeapon )
 	{
-		const NDb::SAIGameConsts * pConsts = Singleton<IAILogic>()->GetAIConsts();
+		const NDb::SAIGameConsts *pConsts = Singleton<IAILogic>()->GetAIConsts();
 		pWeapon = pConsts->pAviationGroundCrashExplosion;
 	}
 
-/*
+	/*
 	const CVec3 vPos3( pPlane->GetPosB2() );
 	fDistToDive2 = sqr( 2.0f * ( vPos3.z - GetHeights()->GetZ( vTarget ) ) );
 */
@@ -2321,9 +2327,9 @@ CPlaneSuicideState::CPlaneSuicideState( CAviation *_pPlane, const CVec2 &_vTarge
 
 void CPlaneSuicideState::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EPSS_START:
+		case EPSS_START:
 		{
 			CPlanesFormation *pFormation = pPlane->GetPlanesFormation();
 			const CVec3 vPos3( pPlane->GetPosB2() );
@@ -2331,8 +2337,8 @@ void CPlaneSuicideState::Segment()
 			eState = EPSS_FLY;
 		}
 
-		// нет тут break, не нужен
-	case EPSS_FLY:
+			// нет тут break, не нужен
+		case EPSS_FLY:
 		{
 			const CVec3 vPos3( pPlane->GetPosB2() );
 			const CVec2 vPos2( vPos3.x, vPos3.y );
@@ -2345,7 +2351,7 @@ void CPlaneSuicideState::Segment()
 			}
 		}
 		break;
-	case EPSS_DIVE:
+		case EPSS_DIVE:
 		{
 			const CVec3 vPos( pPlane->GetPosB2() );
 			CVec3 vGroundPos( GetHeights()->GetGroundPoint( vPos ) );
@@ -2357,7 +2363,8 @@ void CPlaneSuicideState::Segment()
 			if ( vPos.z <= vGroundPos.z + pPlane->GetStats()->vAABBHalfSize.y || pFormation->IsManuverFinished() )
 			{
 				pPlane->Disappear();
-				theShellsStore.AddShell( new CInvisShell( curTime, new CBurstExpl( 0, pWeapon, vGroundPos, VNULL3, 0, false, 1, true ), 0 ) );
+				theShellsStore.AddShell(
+						new CInvisShell( curTime, new CBurstExpl( 0, pWeapon, vGroundPos, VNULL3, 0, false, 1, true ), 0 ) );
 			}
 		}
 		break;

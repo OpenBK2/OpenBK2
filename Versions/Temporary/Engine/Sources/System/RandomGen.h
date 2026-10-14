@@ -22,56 +22,74 @@ struct IRandomSeed : public CObjectBase
 
 namespace NRandom
 {
-	struct SDebugState
-	{
-		unsigned int randcnt = 0;
-		unsigned int randa = 0;
-		unsigned int randb = 0;
-		unsigned int randc = 0;
-		// Fixed width, not unsigned long: these are compared between a Windows and
-		// a Linux client, and unsigned long is 32 bits on one and 64 on the other,
-		// which made the same state hash to two different values.
-		uint32_t randrslChecksum = 0;
-		uint32_t randmemChecksum = 0;
-		uint64_t randomCalls = 0;
-	};
-
-	struct RngCall
-	{
-		int callNumber = 0;
-		const char* file = nullptr;
-		int line = 0;
-		const char* function = nullptr;
-	};
-
-	// Keep raw macro pointers here: wrapping __FILE__/__func__ in temporary strings leaves dangling c_str() pointers in the ring buffer.
-	SYSTEM_EXPORT bool RecordCall(const char* file, int line, const char* func);
-	SYSTEM_EXPORT void DumpRecords(FILE* f);
-
-	// initialize random generator with random seed
-	SYSTEM_EXPORT void SetRandomSeed( IRandomSeed *pSeed );
-	// create copy of the current random gen seed and return it
-	SYSTEM_EXPORT IRandomSeed *CreateRandomSeedCopy();
-	// copy compact debug info for ASYNC diagnostics without consuming RNG values
-	SYSTEM_EXPORT void GetDebugState( SDebugState *pState );
-	// cheap counter-only accessor for hot-path ASYNC diagnostics
-	SYSTEM_EXPORT uint64_t GetRandomCallsCounter();
-	// get random value
-	SYSTEM_EXPORT unsigned Random();
-	// random w/o checks
-	BOOST_FORCEINLINE unsigned int Random( const unsigned int uMax ) { return Random() % uMax; }
-	BOOST_FORCEINLINE int Random( const int nMin, const int nMax ) { return nMin + (int)Random( (unsigned int)(nMax - nMin + 1) ); }
-	BOOST_FORCEINLINE float Random( const float fMin, const float fMax ) { return fMin + float( double(Random()) / double(0xffffffffUL) * double(fMax - fMin) ); }
-	// random with checks
-	BOOST_FORCEINLINE unsigned int RandomCheck( const unsigned int uMax ) { return uMax == 0 ? 0 : Random( uMax ); }
-	BOOST_FORCEINLINE int RandomCheck( const int nMin, const int nMax ) { return nMax < nMin ? nMin : Random( nMin, nMax ); }
-	BOOST_FORCEINLINE int RandomCheck( const float fMin, const float fMax ) { return fMax < fMin ? fMin : Random( fMin, fMax ); }
-
-	struct SRandomFunc
-	{
-		float operator()( float fMin, float fMax ) const { return Random( fMin, fMax ); }
-	};
-	const SRandomFunc& RndFunc();
+struct SDebugState
+{
+	unsigned int randcnt = 0;
+	unsigned int randa = 0;
+	unsigned int randb = 0;
+	unsigned int randc = 0;
+	// Fixed width, not unsigned long: these are compared between a Windows and
+	// a Linux client, and unsigned long is 32 bits on one and 64 on the other,
+	// which made the same state hash to two different values.
+	uint32_t randrslChecksum = 0;
+	uint32_t randmemChecksum = 0;
+	uint64_t randomCalls = 0;
 };
 
-#define RecordRandomCall() NRandom::RecordCall(__FILE__, __LINE__, __func__)
+struct RngCall
+{
+	int callNumber = 0;
+	const char *file = nullptr;
+	int line = 0;
+	const char *function = nullptr;
+};
+
+// Keep raw macro pointers here: wrapping __FILE__/__func__ in temporary strings leaves dangling c_str() pointers in the ring buffer.
+SYSTEM_EXPORT bool RecordCall( const char *file, int line, const char *func );
+SYSTEM_EXPORT void DumpRecords( FILE *f );
+
+// initialize random generator with random seed
+SYSTEM_EXPORT void SetRandomSeed( IRandomSeed *pSeed );
+// create copy of the current random gen seed and return it
+SYSTEM_EXPORT IRandomSeed *CreateRandomSeedCopy();
+// copy compact debug info for ASYNC diagnostics without consuming RNG values
+SYSTEM_EXPORT void GetDebugState( SDebugState *pState );
+// cheap counter-only accessor for hot-path ASYNC diagnostics
+SYSTEM_EXPORT uint64_t GetRandomCallsCounter();
+// get random value
+SYSTEM_EXPORT unsigned Random();
+// random w/o checks
+BOOST_FORCEINLINE unsigned int Random( const unsigned int uMax )
+{
+	return Random() % uMax;
+}
+BOOST_FORCEINLINE int Random( const int nMin, const int nMax )
+{
+	return nMin + (int)Random( (unsigned int)( nMax - nMin + 1 ) );
+}
+BOOST_FORCEINLINE float Random( const float fMin, const float fMax )
+{
+	return fMin + float( double( Random() ) / double( 0xffffffffUL ) * double( fMax - fMin ) );
+}
+// random with checks
+BOOST_FORCEINLINE unsigned int RandomCheck( const unsigned int uMax )
+{
+	return uMax == 0 ? 0 : Random( uMax );
+}
+BOOST_FORCEINLINE int RandomCheck( const int nMin, const int nMax )
+{
+	return nMax < nMin ? nMin : Random( nMin, nMax );
+}
+BOOST_FORCEINLINE int RandomCheck( const float fMin, const float fMax )
+{
+	return fMax < fMin ? fMin : Random( fMin, fMax );
+}
+
+struct SRandomFunc
+{
+	float operator()( float fMin, float fMax ) const { return Random( fMin, fMax ); }
+};
+const SRandomFunc &RndFunc();
+};
+
+#define RecordRandomCall() NRandom::RecordCall( __FILE__, __LINE__, __func__ )

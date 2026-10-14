@@ -10,15 +10,13 @@ class CInTransportStatesFactory : public IStatesFactory
 	OBJECT_BASIC_METHODS( CInTransportStatesFactory );
 
 	static CPtr<CInTransportStatesFactory> pFactory;
-public:
-	static IStatesFactory* Instance();
-	int operator&( IBinSaver &saver )
-	{
-		return 0;
-	}
 
-	virtual struct IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
-	virtual struct IUnitState* ProduceRestState( class CQueueUnit *pUnit );
+public:
+	static IStatesFactory *Instance();
+	int operator&( IBinSaver &saver ) { return 0; }
+
+	virtual struct IUnitState *ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
+	virtual struct IUnitState *ProduceRestState( class CQueueUnit *pUnit );
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
 
 	// for Saving/Loading of static members
@@ -30,13 +28,19 @@ class CSoldierRestOnBoardState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierRestOnBoardState );
 	ZDATA
 	CPtr<CSoldier> pSoldier;
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); return 0; }
-public:
-	static IUnitState* Instance( class CSoldier *pSoldier, class CMilitaryCar* pTransport );
 
-	CSoldierRestOnBoardState() : pSoldier( 0 ) { }
-	CSoldierRestOnBoardState( class CSoldier *pSoldier, class CMilitaryCar* pTransport );
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pSoldier );
+		return 0;
+	}
+
+public:
+	static IUnitState *Instance( class CSoldier *pSoldier, class CMilitaryCar *pTransport );
+
+	CSoldierRestOnBoardState() : pSoldier( 0 ) {}
+	CSoldierRestOnBoardState( class CSoldier *pSoldier, class CMilitaryCar *pTransport );
 
 	virtual void Segment();
 

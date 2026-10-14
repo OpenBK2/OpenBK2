@@ -7,7 +7,7 @@
 
 #include "MapEditorLib_export.h"
 
-template<class CArray2DType>
+template <class CArray2DType>
 void Trace2DByteArray( const CArray2DType &rArray, const std::string &rszAdditionalMessage )
 {
 	CTPoint<int> size( rArray.GetSizeX(), rArray.GetSizeY() );
@@ -35,8 +35,7 @@ void Trace2DByteArray( const CArray2DType &rArray, const std::string &rszAdditio
 	DebugTrace( "%s", szTrace.c_str() );
 }
 
-
-template<class CArray2DType>
+template <class CArray2DType>
 void Trace2DFloatArray( const CArray2DType &rArray, const std::string &rszAdditionalMessage )
 {
 	CTPoint<int> size( rArray.GetSizeX(), rArray.GetSizeY() );
@@ -64,20 +63,17 @@ void Trace2DFloatArray( const CArray2DType &rArray, const std::string &rszAdditi
 	DebugTrace( "%s", szTrace.c_str() );
 }
 
-
 // Берёт опцию из mayaExportData секции UserData.
 // Производится lookup сначала в пользовательском наборе установок, затем в общем
 // таким образом локальные установки пользователя имеют приоритет.
 //
-template<class T> const T & GetOption( const T SUserData::SMayaExportData::* pField )
+template <class T>
+const T &GetOption( const T SUserData::SMayaExportData::*pField )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	return (pUserData->mayaExportData.*pField != T()
-		? pUserData->mayaExportData.*pField
-		: pUserData->constUserData.mayaExportData.*pField
-		);
+	return ( pUserData->mayaExportData.*pField != T() ? pUserData->mayaExportData.*pField
+	                                                  : pUserData->constUserData.mayaExportData.*pField );
 }
-
 
 // get granny export settings file name for Maya export
 MAPEDITORLIB_EXPORT std::string GetGrannyExportSettingsFileName( const std::string &szTypeName );
@@ -90,9 +86,10 @@ void NormalizeFilePath( std::string *pszPath );
 // construct full source file path from reference value
 MAPEDITORLIB_EXPORT bool BuildSrcFilePath( std::string *pszFilePath, const std::string &szRefValue );
 // construct full source file path from reference field
-MAPEDITORLIB_EXPORT bool BuildSrcFilePath( std::string *pszFilePath, struct IManipulator *pManipulator, const std::string &szRefFieldDBPath );
+MAPEDITORLIB_EXPORT bool
+BuildSrcFilePath( std::string *pszFilePath, struct IManipulator *pManipulator, const std::string &szRefFieldDBPath );
 // construct full destination file path from nObjectID or "uid" field (if present)
-MAPEDITORLIB_EXPORT std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &szDestFolder );
+MAPEDITORLIB_EXPORT std::string BuildDestFilePath( IManipulator *pManipulator, const std::string &szDestFolder );
 
 // return true if bForced == true or if szSrc file is newer then szDst file
 MAPEDITORLIB_EXPORT bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced );
@@ -101,7 +98,8 @@ MAPEDITORLIB_EXPORT bool CheckFilesUpdated( const std::string &szSrc, const std:
 // launches interactive maya instance and executes startup script
 MAPEDITORLIB_EXPORT bool StartupMayaProcess( class CInteractiveMaya *pMayaProcess );
 // Wait for file to be accessible
-MAPEDITORLIB_EXPORT bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime /* = 10000 */, bool bReportAsError = true );
+MAPEDITORLIB_EXPORT bool
+WaitForFile( const std::string &szFileName, const double fMaxWaitTime /* = 10000 */, bool bReportAsError = true );
 // execute single script with interactive Maya
 MAPEDITORLIB_EXPORT bool ExecuteMayaScript( const std::string &szScript );
 
@@ -112,34 +110,41 @@ MAPEDITORLIB_EXPORT void MEStartScript( std::string *pszScriptText, bool bGUIMod
 MAPEDITORLIB_EXPORT void MEFinishScript( std::string *pszScriptText, bool bGUIMode );
 // Выполнить скрипт Maya
 // bNeedExport - есть необходимость выполнять скрит ( если false - только сохранить скрипт на диск )
-MAPEDITORLIB_EXPORT bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode );
+MAPEDITORLIB_EXPORT bool
+MERunScript( const std::string &rszScriptText, const std::string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode );
 
 // Получить размер картинки
-MAPEDITORLIB_EXPORT bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize  );
+MAPEDITORLIB_EXPORT bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize );
 // Получить размер картинки
-MAPEDITORLIB_EXPORT bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize  );
+MAPEDITORLIB_EXPORT bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize );
 
 MAPEDITORLIB_EXPORT bool GetSelectedObjects( SObjectSet *pObjectSet, const std::string &szObjectTypeName );
 
-template<class TObjectHookFunctional>
+template <class TObjectHookFunctional>
 bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHookFunctional )
 {
 	// CRAP{ PLAIN_TEXT
 	ILogger *pLogger = NLog::GetLogger();
-	for ( CObjectNameSet::const_iterator itObject = rObjectSet.objectNameSet.begin(); itObject != rObjectSet.objectNameSet.end(); ++itObject )
+	for ( CObjectNameSet::const_iterator itObject = rObjectSet.objectNameSet.begin();
+	      itObject != rObjectSet.objectNameSet.end();
+	      ++itObject )
 	{
 		try
 		{
 			if ( objectHookFunctional( rObjectSet.szObjectTypeName, itObject->first ) == false )
 			{
 				pLogger->Log( LT_ERROR, "ForEachObject() processing failed\n" );
-				pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
+				pLogger->Log(
+						LT_ERROR,
+						fmt::format( "\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
 			}
 		}
 		catch ( ... )
 		{
 			pLogger->Log( LT_ERROR, "ForEachObject processing general fail\n" );
-			pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
+			pLogger->Log(
+					LT_ERROR,
+					fmt::format( "\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
 		}
 	}
 	return true;
@@ -147,4 +152,5 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 }
 
 //! move temp file, made during export, to real destination and register it in RCS
-MAPEDITORLIB_EXPORT void MoveTempFileToDestination( const std::string &szTempFileFullName, const std::string &szDstFileFullName );
+MAPEDITORLIB_EXPORT void MoveTempFileToDestination( const std::string &szTempFileFullName,
+                                                    const std::string &szDstFileFullName );

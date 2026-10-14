@@ -16,21 +16,21 @@
 // CModelCommands, both in ModelState.h.
 namespace NModelView
 {
-	class IView
-	{
-	public:
-		virtual ~IView() {}
+class IView
+{
+public:
+	virtual ~IView() {}
 
-		// Makes the palette in pPane, the model editor's docking pane. False if
-		// it could not be made.
-		virtual bool Create( IWidget *pPane ) = 0;
-		// Takes the palette's window down. Safe when it was never made.
-		virtual void Destroy() = 0;
-		virtual void Show( bool bShow ) = 0;
-		// What the pane is given as its contents. Null before Create.
-		virtual IWidget* GetWidget() = 0;
-	};
+	// Makes the palette in pPane, the model editor's docking pane. False if
+	// it could not be made.
+	virtual bool Create( IWidget *pPane ) = 0;
+	// Takes the palette's window down. Safe when it was never made.
+	virtual void Destroy() = 0;
+	virtual void Show( bool bShow ) = 0;
+	// What the pane is given as its contents. Null before Create.
+	virtual IWidget *GetWidget() = 0;
+};
 
-	// The view for this session. Owned by the caller.
-	IView* Create();
+// The view for this session. Owned by the caller.
+IView *Create();
 }

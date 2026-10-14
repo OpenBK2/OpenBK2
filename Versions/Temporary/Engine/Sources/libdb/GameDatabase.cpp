@@ -31,10 +31,7 @@ struct SGameDbForceLoadGuard
 		++s_nCurrLoadDepth;
 		bOpened = true;
 	}
-	~SGameDbForceLoadGuard()
-	{
-		Close();
-	}
+	~SGameDbForceLoadGuard() { Close(); }
 	void Close()
 	{
 		if ( bOpened )
@@ -63,7 +60,7 @@ class CGameDatabase : public CBasicDatabase
 	{
 		CDBID dbid;
 		NormalizeDBID( &dbid, _dbid );
-		if ( DoesObjectExist(dbid) == false )
+		if ( DoesObjectExist( dbid ) == false )
 			return 0;
 		else
 			return &( elementsMap[dbid] );
@@ -76,8 +73,9 @@ class CGameDatabase : public CBasicDatabase
 	void ResetIndexChanged() { bIndexChanged = false; }
 	void RegisterObject( const SFullTypeHeader &hdr );
 	bool LoadTypesMap();
+
 public:
-	CGameDatabase(): bIndexChanged(false) {}
+	CGameDatabase() : bIndexChanged( false ) {}
 	//
 	bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator );
 	bool SaveChangedIndex();
@@ -87,28 +85,70 @@ public:
 	//
 	CResource *GetObject( const CDBID &dbid );
 	// editor-specific functionality
-	IObjMan *GetManipulator( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return 0; }
-	IObjMan *CreateNewObject( const std::string &szClassTypeName ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return 0; }
-	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	bool RemoveObject( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	void MarkChanged( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); }
+	IObjMan *GetManipulator( const CDBID &dbid )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return 0;
+	}
+	IObjMan *CreateNewObject( const std::string &szClassTypeName )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return 0;
+	}
+	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
+	bool RemoveObject( const CDBID &dbid )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
+	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
+	bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
+	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
+	void MarkChanged( const CDBID &dbid )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+	}
 	void SaveChanges();
 	void DropCachedResources() { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); }
-	bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
-	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
+	bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
+	bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName )
+	{
+		NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" );
+		return false;
+	}
 	bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID );
 	std::string GetClassTypeName( const CDBID &_dbid )
 	{
-		if ( const SElement *pElement = GetElement(_dbid) )
+		if ( const SElement *pElement = GetElement( _dbid ) )
 			return pElement->typeHeader.szClassTypeName;
 		else
 			return "";
 	}
 };
-CBasicDatabase *CreateGameDatabase() { return new CGameDatabase(); }
+CBasicDatabase *CreateGameDatabase()
+{
+	return new CGameDatabase();
+}
 
 bool CGameDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFileCreator )
 {
@@ -122,27 +162,29 @@ bool CGameDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFileC
 void CGameDatabase::RegisterObject( const SFullTypeHeader &hdr )
 {
 	CDBID dbid;
-	NormalizeDBID( &dbid, CDBID(hdr.szFileName) );
-	elementsMap[dbid].typeHeader = *( static_cast<const STypeObjectHeader*>(&hdr) );
+	NormalizeDBID( &dbid, CDBID( hdr.szFileName ) );
+	elementsMap[dbid].typeHeader = *( static_cast<const STypeObjectHeader *>( &hdr ) );
 }
 
 bool CGameDatabase::LoadTypesMap()
 {
-	std::vector< CObj<NDb::NTypeDef::STypeDef> > topLevelTypes;
+	std::vector<CObj<NDb::NTypeDef::STypeDef>> topLevelTypes;
 	CFileStream stream( GetVFS(), TYPES_FILE_NAME );
 	if ( stream.IsOk() )
 	{
-		if ( CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ) )
+		if ( CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ ) )
 		{
 			pSaver->Add( "Types", &topLevelTypes );
 		}
 	}
 	// build typeName => typeID map
-	for ( std::vector< CObj<NDb::NTypeDef::STypeDef> >::const_iterator it = topLevelTypes.begin(); it != topLevelTypes.end(); ++it )
+	for ( std::vector<CObj<NDb::NTypeDef::STypeDef>>::const_iterator it = topLevelTypes.begin();
+	      it != topLevelTypes.end();
+	      ++it )
 	{
-		if ( (*it)->eType == NDb::NTypeDef::TYPE_TYPE_CLASS )
+		if ( ( *it )->eType == NDb::NTypeDef::TYPE_TYPE_CLASS )
 		{
-			NDb::NTypeDef::STypeClass *pTypeClass = checked_cast_ptr<NDb::NTypeDef::STypeClass*>( *it );
+			NDb::NTypeDef::STypeClass *pTypeClass = checked_cast_ptr<NDb::NTypeDef::STypeClass *>( *it );
 			if ( !pTypeClass->szTypeName.empty() && pTypeClass->nClassTypeID != -1 )
 				name2typeIDmap[pTypeClass->szTypeName] = pTypeClass->nClassTypeID;
 		}
@@ -157,7 +199,7 @@ bool CGameDatabase::SaveChangedIndex()
 		CFileStream stream( GetFileCreator(), INDEX_FILE_NAME );
 		if ( stream.IsOk() )
 		{
-			if ( CPtr<IBinSaver> pSaver = CreateBinSaver(&stream, SAVER_MODE_WRITE) )
+			if ( CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE ) )
 			{
 				// save changed index
 				std::vector<SFullTypeHeader> objectsIndex( elementsMap.size() );
@@ -165,10 +207,10 @@ bool CGameDatabase::SaveChangedIndex()
 				for ( CElementsMap::const_iterator it = elementsMap.begin(); it != elementsMap.end(); ++it, ++i )
 				{
 					objectsIndex[i].szFileName = GetFileName( it->first );
-					*( static_cast<STypeObjectHeader*>(&objectsIndex[i]) ) = it->second.typeHeader;
+					*( static_cast<STypeObjectHeader *>( &objectsIndex[i] ) ) = it->second.typeHeader;
 				}
 				//
-//				sort( objectsIndex.begin(), objectsIndex.end() );
+				//				sort( objectsIndex.begin(), objectsIndex.end() );
 				pSaver->Add( 1, &objectsIndex );
 				bIndexChanged = false;
 				return true;
@@ -185,22 +227,22 @@ bool CGameDatabase::SaveChangedIndex()
 
 bool CGameDatabase::DoesObjectExist( const CDBID &dbid )
 {
-	if ( elementsMap.find(dbid) != elementsMap.end() )
+	if ( elementsMap.find( dbid ) != elementsMap.end() )
 		return true;
 	else
-		return RegisterResourceFile( GetFileName(dbid) );
+		return RegisterResourceFile( GetFileName( dbid ) );
 }
 
 bool CGameDatabase::RegisterResourceFile( const std::string &szFileName )
 {
-//	CDBID dbid, _dbid( szFileName );
-//	NormalizeDBID( &dbid, _dbid );
+	//	CDBID dbid, _dbid( szFileName );
+	//	NormalizeDBID( &dbid, _dbid );
 	CDBID dbid( szFileName );
 	//
 	CElementsMap::iterator pos = elementsMap.find( dbid );
 	if ( pos == elementsMap.end() )
 	{
-		if ( ReallyRegisterResourceFile(dbid) == false )
+		if ( ReallyRegisterResourceFile( dbid ) == false )
 			return false;
 		bIndexChanged = true;
 	}
@@ -215,7 +257,9 @@ bool CGameDatabase::IsFileRegistered( const std::string &szFileName )
 
 bool CGameDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 {
-	NI_VERIFY( elementsMap.find( dbid ) == elementsMap.end(), fmt::format("Resource \"{}\" already exist!", dbid.ToString()), return false );
+	NI_VERIFY( elementsMap.find( dbid ) == elementsMap.end(),
+	           fmt::format( "Resource \"{}\" already exist!", dbid.ToString() ),
+	           return false );
 	// read object header
 	STypeObjectHeader header;
 	if ( ReadResourceHeader( &header, dbid ) )
@@ -228,7 +272,7 @@ bool CGameDatabase::ReallyRegisterResourceFile( const CDBID &dbid )
 
 CResource *CGameDatabase::GetRawObject( const CDBID &dbid )
 {
-	if ( DoesObjectExist(dbid) == false )
+	if ( DoesObjectExist( dbid ) == false )
 		return nullptr;
 	else
 	{
@@ -238,9 +282,13 @@ CResource *CGameDatabase::GetRawObject( const CDBID &dbid )
 		else
 		{
 			CName2TypeIDMap::const_iterator posTypeID = name2typeIDmap.find( posElement->second.typeHeader.szClassTypeName );
-			NI_VERIFY( posTypeID != name2typeIDmap.end(), fmt::format("Can't find class typeID for \"{}\"", posElement->second.typeHeader.szClassTypeName), return 0 );
+			NI_VERIFY( posTypeID != name2typeIDmap.end(),
+			           fmt::format( "Can't find class typeID for \"{}\"", posElement->second.typeHeader.szClassTypeName ),
+			           return 0 );
 			posElement->second.pObj = MakeObject<CResource>( posTypeID->second );
-			NI_VERIFY( posElement->second.pObj != 0, fmt::format("Can't create object of type 0x{:08x}", static_cast<uint32_t>( posTypeID->second )), return 0 );
+			NI_VERIFY( posElement->second.pObj != 0,
+			           fmt::format( "Can't create object of type 0x{:08x}", static_cast<uint32_t>( posTypeID->second ) ),
+			           return 0 );
 			CResourceHelper::SetDBID( posElement->second.pObj, dbid );
 			return posElement->second.pObj;
 		}
@@ -255,13 +303,14 @@ class CProfiler
 {
 	const std::string szObjName;
 	const uint32_t dwStartTime = 0;
+
 public:
-	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetCurrentTimeMilliseconds() ) { }
+	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetCurrentTimeMilliseconds() ) {}
 	~CProfiler()
 	{
-		const float fLoadTime = float(GetCurrentTimeMilliseconds() - dwStartTime)/1000.0f;
-//		if ( fLoadTime > 0.1 )
-//			DbgTrc( "load: %s loaded in %f sec", szObjName.c_str(), fLoadTime );
+		const float fLoadTime = float( GetCurrentTimeMilliseconds() - dwStartTime ) / 1000.0f;
+		//		if ( fLoadTime > 0.1 )
+		//			DbgTrc( "load: %s loaded in %f sec", szObjName.c_str(), fLoadTime );
 
 		fBigTimeForLoad += fLoadTime;
 		++nObjLoaded;
@@ -286,8 +335,8 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 {
 	SGameDbForceLoadGuard forceLoadGuard;
 	//
-//	CDBID dbid;
-//	NormalizeDBID( &dbid, _dbid );
+	//	CDBID dbid;
+	//	NormalizeDBID( &dbid, _dbid );
 	CResource *pObj = GetRawObject( dbid );
 	if ( pObj == 0 )
 		return 0;
@@ -295,7 +344,7 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 		return pObj;
 	else
 	{
-		CFileStream stream( GetVFS(), GetFileName(dbid) );
+		CFileStream stream( GetVFS(), GetFileName( dbid ) );
 		// here we must set special rounding and precision state to be sync during multiplayer.
 		// Each of these carries its own guard, so the state is put back on the way out.
 		NWin32Helper::CRoundingControl roundingControl( NWin32Helper::CRoundingControl::RCM_CHOP );
@@ -305,14 +354,14 @@ CResource *CGameDatabase::GetObject( const CDBID &dbid )
 			CProfiler profiler( dbid );
 			//			DebugTrace( "Loading DB object \"%s\"", GetFileName(dbid).c_str() );
 			CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
-			NI_VERIFY( pSaver != 0, fmt::format("Can't create saver to load DB object \"{}\"", dbid.ToString()), return 0 );
+			NI_VERIFY( pSaver != 0, fmt::format( "Can't create saver to load DB object \"{}\"", dbid.ToString() ), return 0 );
 			pSaver->AddPolymorphicBase( 0, pObj );
 			CResourceHelper::SetLoaded( pObj );
 			forceLoadGuard.Close();
 			CResourceHelper::CallPostLoad( pObj, false );
 			return pObj;
 		}
-		NI_ASSERT( false, fmt::format("Can't create stream to load DB object \"{}\"", dbid.ToString()) );
+		NI_ASSERT( false, fmt::format( "Can't create stream to load DB object \"{}\"", dbid.ToString() ) );
 		return 0;
 	}
 }
@@ -329,7 +378,9 @@ bool CGameDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClassTy
 			break;
 		}
 	}
-	NI_VERIFY( !szClassTypeName.empty(), fmt::format("Can't find class type name for 0x{:08x}", static_cast<uint32_t>( nClassTypeID )), return false );
+	NI_VERIFY( !szClassTypeName.empty(),
+	           fmt::format( "Can't find class type name for 0x{:08x}", static_cast<uint32_t>( nClassTypeID ) ),
+	           return false );
 	// get objects list by class type name
 	pRes->resize( 0 );
 	pRes->reserve( 512 );

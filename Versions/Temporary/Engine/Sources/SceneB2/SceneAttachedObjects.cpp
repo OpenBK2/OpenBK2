@@ -17,7 +17,8 @@ IAttachedObject *CScene::GetAttachedObject( const int nTargetID, const std::stri
 	if ( !pVO.GetPtr() )
 		return 0;
 
-	for ( SModelVisObjDesc::CAttaches::iterator itAtt = pVO->attachedObjects.begin(); itAtt != pVO->attachedObjects.end(); ++itAtt )
+	for ( SModelVisObjDesc::CAttaches::iterator itAtt = pVO->attachedObjects.begin(); itAtt != pVO->attachedObjects.end();
+	      ++itAtt )
 	{
 		SModelVisObjDesc::TAttachOfOneType &attType = itAtt->second;
 		for ( SAnimatedVisObjDescBase::TAttachOfOneType::iterator iter = attType.begin(); iter != attType.end(); ++iter )
@@ -33,7 +34,7 @@ IAttachedObject *CScene::GetAttachedObject( const int nTargetID, const std::stri
 	return 0;
 }
 
-NAnimation::ISkeletonAnimator* CScene::GetAnimator( const int nTargetID, const std::string &szBoneName )
+NAnimation::ISkeletonAnimator *CScene::GetAnimator( const int nTargetID, const std::string &szBoneName )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nTargetID );
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
@@ -71,8 +72,14 @@ CFuncBase<SFBTransform> *CScene::GetParentTransform( const int nTargetID, const 
 	return 0;
 }
 
-bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const ESceneAttachMode eMode, const NTimer::STime time,
-															CFuncBase<SFBTransform> **pTransform, int *pnBoneIndex, const bool bConstantOffset )
+bool CScene::PrepareToAttach( const int nTargetID,
+                              ESceneSubObjType eType,
+                              const std::string &szBoneName,
+                              const ESceneAttachMode eMode,
+                              const NTimer::STime time,
+                              CFuncBase<SFBTransform> **pTransform,
+                              int *pnBoneIndex,
+                              const bool bConstantOffset )
 {
 	NAnimation::ISkeletonAnimator *pAnimator = GetAnimator( nTargetID, szBoneName );
 	if ( !pAnimator )
@@ -82,14 +89,15 @@ bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const
 	{
 		CFuncBase<SFBTransform> *pParentTransform = GetParentTransform( nTargetID, szBoneName );
 		if ( pParentTransform )
-			*pTransform = new CConstantOffsetTransform( nTargetID, szBoneName, pAnimator->CreateTransform( szBoneName ), pParentTransform );
+			*pTransform = new CConstantOffsetTransform(
+					nTargetID, szBoneName, pAnimator->CreateTransform( szBoneName ), pParentTransform );
 		else
 			*pTransform = new CConstantOffsetTransform( nTargetID, szBoneName, pAnimator->CreateTransform( szBoneName ) );
 	}
 	else
 		*pTransform = pAnimator->CreateTransform( szBoneName );
 
-	if ( !(*pTransform) )
+	if ( !( *pTransform ) )
 		return false;
 
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
@@ -100,8 +108,12 @@ bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const
 	return DeleteAttachesByType( nTargetID, eType, eMode, time, *pnBoneIndex );
 }
 
-bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const ESceneAttachMode eMode, const NTimer::STime time,
-															CFuncBase<SFBTransform> **pTransform, const CVec3 &vOffset )
+bool CScene::PrepareToAttach( const int nTargetID,
+                              ESceneSubObjType eType,
+                              const ESceneAttachMode eMode,
+                              const NTimer::STime time,
+                              CFuncBase<SFBTransform> **pTransform,
+                              const CVec3 &vOffset )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
 	if ( pos == data[eScene]->visObjects.end() )
@@ -116,13 +128,17 @@ bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const
 
 	*pTransform = new CCenterOffsetTransform( nTargetID, pos->second->GetTransform(), mForward );
 
-	if ( !(*pTransform) )
+	if ( !( *pTransform ) )
 		return false;
 
 	return DeleteAttachesByType( nTargetID, eType, eMode, time, -1 );
 }
 
-bool CScene::DeleteAttachesByType( const int nTargetID, ESceneSubObjType eType, const ESceneAttachMode eMode, const NTimer::STime timeStart, const int nBoneIndex )
+bool CScene::DeleteAttachesByType( const int nTargetID,
+                                   ESceneSubObjType eType,
+                                   const ESceneAttachMode eMode,
+                                   const NTimer::STime timeStart,
+                                   const int nBoneIndex )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
 	if ( pos == data[eScene]->visObjects.end() )
@@ -135,11 +151,11 @@ bool CScene::DeleteAttachesByType( const int nTargetID, ESceneSubObjType eType, 
 	SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
 	switch ( eMode )
 	{
-	case ESAT_REPLACE_ON_TYPE:
-		pVO->ClearAttached( eType );
+		case ESAT_REPLACE_ON_TYPE:
+			pVO->ClearAttached( eType );
 
-		break;
-	case ESAT_REPLACE_ON_BONE:
+			break;
+		case ESAT_REPLACE_ON_BONE:
 		{
 			std::list<int> toErase;
 			for ( SModelVisObjDesc::TAttachOfOneType::iterator it = attaches.begin(); it != attaches.end(); ++it )
@@ -157,31 +173,47 @@ bool CScene::DeleteAttachesByType( const int nTargetID, ESceneSubObjType eType, 
 		}
 
 		break;
-	case ESAT_NO_REPLACE:
-		break;
-	default:
-		NI_ASSERT( false, fmt::format( "Wrong attach mode ({})", (int)eMode ) );
-		return false;
+		case ESAT_NO_REPLACE:
+			break;
+		default:
+			NI_ASSERT( false, fmt::format( "Wrong attach mode ({})", (int)eMode ) );
+			return false;
 	}
 
 	return true;
 }
 
-void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SModel *pSubModel, ESceneAttachMode eMode, const int nNumber, bool bForceAnimated, const bool bConstantOffset )
+void CScene::AttachSubModel( const int nTargetID,
+                             ESceneSubObjType eType,
+                             const std::string &szBoneName,
+                             const NDb::SModel *pSubModel,
+                             ESceneAttachMode eMode,
+                             const int nNumber,
+                             bool bForceAnimated,
+                             const bool bConstantOffset )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
 	int nBoneIndex;
-	if ( PrepareToAttach( nTargetID, eType, szBoneName, eMode, Singleton<IGameTimer>()->GetGameTime(), &pTransform, &nBoneIndex, bConstantOffset ) )
+	if ( PrepareToAttach( nTargetID,
+	                      eType,
+	                      szBoneName,
+	                      eMode,
+	                      Singleton<IGameTimer>()->GetGameTime(),
+	                      &pTransform,
+	                      &nBoneIndex,
+	                      bConstantOffset ) )
 	{
 		CDynamicCast<SModelVisObjDesc> pVO = data[eScene]->visObjects[nTargetID];
 		SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
 
 		IAttachedObject *pObject = 0;
 		if ( bForceAnimated || !pSubModel->animations.empty() )
-			pObject = IAttachedObject::CreateAnimatedObj( pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, GetObjectBounder( nTargetID ) );
+			pObject = IAttachedObject::CreateAnimatedObj(
+					pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, GetObjectBounder( nTargetID ) );
 		else
 		{
-			pObject = IAttachedObject::CreateStaticObj( pSubModel, pTransform, nBoneIndex, GetObjectBounder( nTargetID ), eType == ESSOT_WEAPON );
+			pObject = IAttachedObject::CreateStaticObj(
+					pSubModel, pTransform, nBoneIndex, GetObjectBounder( nTargetID ), eType == ESSOT_WEAPON );
 		}
 
 		if ( pObject )
@@ -193,18 +225,22 @@ void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const 
 					pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 			}
 
-			const int nNumber2Attach = nNumber >= 0 ? nNumber : --(pVO->n2Attach[eType]);
+			const int nNumber2Attach = nNumber >= 0 ? nNumber : --( pVO->n2Attach[eType] );
 			attaches[nNumber2Attach] = pObject;
 			const int nDebugWantToLookAtAttaches = 10;
 		}
-
 	}
 
-	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
+	CPtr<CFuncBase<SFBTransform>> pDelTransform = pTransform;
 }
 
-void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const NDb::SModel *pSubModel, ESceneAttachMode eMode,
-	const int nNumber, bool bForceAnimated, const CVec3 &vOffset )
+void CScene::AttachSubModel( const int nTargetID,
+                             ESceneSubObjType eType,
+                             const NDb::SModel *pSubModel,
+                             ESceneAttachMode eMode,
+                             const int nNumber,
+                             bool bForceAnimated,
+                             const CVec3 &vOffset )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
 	const int nBoneIndex = -1;
@@ -215,9 +251,11 @@ void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const 
 
 		IAttachedObject *pObject = 0;
 		if ( bForceAnimated || !pSubModel->animations.empty() )
-			pObject = IAttachedObject::CreateAnimatedObj( pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, 0/*GetObjectBounder( nTargetID )*/ );
+			pObject = IAttachedObject::CreateAnimatedObj(
+					pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, 0 /*GetObjectBounder( nTargetID )*/ );
 		else
-			pObject = IAttachedObject::CreateStaticObj( pSubModel, pTransform, nBoneIndex, 0/*GetObjectBounder( nTargetID )*/ );
+			pObject =
+					IAttachedObject::CreateStaticObj( pSubModel, pTransform, nBoneIndex, 0 /*GetObjectBounder( nTargetID )*/ );
 
 		if ( pObject )
 		{
@@ -228,17 +266,23 @@ void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const 
 					pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 			}
 
-			const int nNumber2Attach = nNumber >= 0 ? nNumber : --(pVO->n2Attach[eType]);
+			const int nNumber2Attach = nNumber >= 0 ? nNumber : --( pVO->n2Attach[eType] );
 			attaches[nNumber2Attach] = pObject;
 			const int nDebugWantToLookAtAttaches = 10;
 		}
-
 	}
 
-	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
+	CPtr<CFuncBase<SFBTransform>> pDelTransform = pTransform;
 }
 
-void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, CFuncBase<SFBTransform> *pTransform, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, const int nBoneIndex, bool bVertical )
+void CScene::AttachEffect( const int nTargetID,
+                           ESceneSubObjType eType,
+                           CFuncBase<SFBTransform> *pTransform,
+                           const NDb::SEffect *pEffect,
+                           NTimer::STime timeStart,
+                           ESceneAttachMode eMode,
+                           const int nBoneIndex,
+                           bool bVertical )
 {
 	CDynamicCast<SModelVisObjDesc> pVO = data[eScene]->visObjects[nTargetID];
 	SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
@@ -247,33 +291,56 @@ void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, CFuncBas
 	if ( pObject )
 	{
 		pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
-		attaches[--(pVO->n2Attach[eType])] = pObject;
+		attaches[--( pVO->n2Attach[eType] )] = pObject;
 	}
 
-	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
+	CPtr<CFuncBase<SFBTransform>> pDelTransform = pTransform;
 }
 
-void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode, bool bVertical )
+void CScene::AttachEffect( const int nTargetID,
+                           ESceneSubObjType eType,
+                           const std::string &szBoneName,
+                           const NDb::SEffect *pEffect,
+                           NTimer::STime timeStart,
+                           ESceneAttachMode eMode,
+                           bool bVertical )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
 	int nBoneIndex;
 	if ( PrepareToAttach( nTargetID, eType, szBoneName, eMode, timeStart, &pTransform, &nBoneIndex, false ) )
 		AttachEffect( nTargetID, eType, pTransform, pEffect, timeStart, eMode, nBoneIndex, bVertical );
 
-	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
+	CPtr<CFuncBase<SFBTransform>> pDelTransform = pTransform;
 }
 
-void CScene::AttachEffect( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const SHMatrix &mOffset, const NDb::SEffect *pEffect, NTimer::STime timeStart, ESceneAttachMode eMode )
+void CScene::AttachEffect( const int nTargetID,
+                           ESceneSubObjType eType,
+                           const std::string &szBoneName,
+                           const SHMatrix &mOffset,
+                           const NDb::SEffect *pEffect,
+                           NTimer::STime timeStart,
+                           ESceneAttachMode eMode )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
 	int nBoneIndex;
 	if ( PrepareToAttach( nTargetID, eType, szBoneName, eMode, timeStart, &pTransform, &nBoneIndex, false ) )
-		AttachEffect( nTargetID, eType, new CAttachedLightEffectTransform( pTransform, mOffset) , pEffect, timeStart, eMode, nBoneIndex );
+		AttachEffect( nTargetID,
+		              eType,
+		              new CAttachedLightEffectTransform( pTransform, mOffset ),
+		              pEffect,
+		              timeStart,
+		              eMode,
+		              nBoneIndex );
 
-	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
+	CPtr<CFuncBase<SFBTransform>> pDelTransform = pTransform;
 }
 
-void CScene::AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEffect *pLight, NTimer::STime timeStart, ESceneAttachMode eMode, const bool bInEditor, int nHoldID )
+void CScene::AttachLightEffect( const int nTargetID,
+                                const NDb::SAttachedLightEffect *pLight,
+                                NTimer::STime timeStart,
+                                ESceneAttachMode eMode,
+                                const bool bInEditor,
+                                int nHoldID )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
 	if ( pos == data[eScene]->visObjects.end() )
@@ -290,17 +357,19 @@ void CScene::AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEf
 	if ( bIsAnimated )
 	{
 		int nBoneIndex;
-		if ( PrepareToAttach( nTargetID, ESSOT_LIGHT, pLight->szLocatorName, eMode, timeStart, &pTransform, &nBoneIndex, false ) )
+		if ( PrepareToAttach(
+						 nTargetID, ESSOT_LIGHT, pLight->szLocatorName, eMode, timeStart, &pTransform, &nBoneIndex, false ) )
 		{
 			SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[ESSOT_LIGHT];
 
-			IAttachedObject *pObject = IAttachedObject::CreateAnimatedLightEffect( pLight, pTransform, timeStart, nBoneIndex, bInEditor );
+			IAttachedObject *pObject =
+					IAttachedObject::CreateAnimatedLightEffect( pLight, pTransform, timeStart, nBoneIndex, bInEditor );
 			if ( pObject )
 			{
 				pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 				if ( nHoldID < 0 )
-					nHoldID = --( pVO->n2Attach[ ESSOT_LIGHT ] );
-				attaches[ nHoldID ] = pObject;
+					nHoldID = --( pVO->n2Attach[ESSOT_LIGHT] );
+				attaches[nHoldID] = pObject;
 			}
 		}
 	}
@@ -319,13 +388,13 @@ void CScene::AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEf
 			{
 				pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 				if ( nHoldID < 0 )
-					nHoldID = --( pVO->n2Attach[ ESSOT_LIGHT ] );
-				attaches[ nHoldID ] = pObject;
+					nHoldID = --( pVO->n2Attach[ESSOT_LIGHT] );
+				attaches[nHoldID] = pObject;
 			}
 		}
 	}
 
-	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
+	CPtr<CFuncBase<SFBTransform>> pDelTransform = pTransform;
 }
 
 void CScene::RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber )
@@ -333,7 +402,7 @@ void CScene::RemoveAttached( const int nTargetID, ESceneSubObjType eType, const 
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
 	if ( pos != data[eScene]->visObjects.end() )
 	{
-		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second ) )
+		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second ) )
 		{
 			SModelVisObjDesc::CAttaches::iterator itAtt = pVO->attachedObjects.find( eType );
 			if ( itAtt != pVO->attachedObjects.end() )
@@ -355,17 +424,17 @@ void CScene::RemoveAllAttached( const int nTargetID, ESceneSubObjType eType )
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
 	if ( pos != data[eScene]->visObjects.end() )
 	{
-		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second ) )
+		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second ) )
 			pVO->ClearAttached( eType );
 	}
 }
 
-IAttachedObject* CScene::GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber )
+IAttachedObject *CScene::GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
 	if ( pos != data[eScene]->visObjects.end() )
 	{
-		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second ) )
+		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second ) )
 		{
 			SModelVisObjDesc::CAttaches::iterator itAtt = pVO->attachedObjects.find( eType );
 			if ( itAtt != pVO->attachedObjects.end() )

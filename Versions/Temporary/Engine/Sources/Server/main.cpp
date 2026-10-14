@@ -101,8 +101,8 @@ int main( int argc, char **argv )
 		{
 			std::fprintf( stderr, "unrecognised option: %s\n", szArg.c_str() );
 			std::fprintf( stderr,
-				"usage: Server [--database mysql|sqlite] [--database-file PATH] [--sqlite]\n"
-				"  Without either, server.xml decides, and by default that is mysql.\n" );
+			              "usage: Server [--database mysql|sqlite] [--database-file PATH] [--sqlite]\n"
+			              "  Without either, server.xml decides, and by default that is mysql.\n" );
 			return 1;
 		}
 	}

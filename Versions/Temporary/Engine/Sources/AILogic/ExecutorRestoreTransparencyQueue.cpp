@@ -14,9 +14,9 @@ EXTERNVAR CExecutorContainer theExecutorContainer;
 
 namespace NRestoreTranspConsts
 {
-	static const int nObjectsPerCalculation = 5;
-	static const int nCalcPeriod = 1;
-	static const int nCalcPeriodRandom = 2;
+static const int nObjectsPerCalculation = 5;
+static const int nCalcPeriod = 1;
+static const int nCalcPeriodRandom = 2;
 }
 
 using namespace NRestoreTranspConsts;
@@ -25,12 +25,12 @@ int CExecutorRestoreTransparencyQueue::Segment()
 {
 	// ask all object around, fill queue
 
-	for ( CObjectsToAskAround::const_iterator it = objectsToAskAround.begin();  it != objectsToAskAround.end(); ++it  )
+	for ( CObjectsToAskAround::const_iterator it = objectsToAskAround.begin(); it != objectsToAskAround.end(); ++it )
 	{
 		for ( CStObjCircleIter<false> iter( it->first, SConsts::TILE_SIZE * 30 ); !iter.IsFinished(); iter.Iterate() )
 		{
 
-			const int nNewID = (*iter)->GetUniqueId();
+			const int nNewID = ( *iter )->GetUniqueId();
 			CObjectsToRestore::iterator pos = objectsToRestore.find( nNewID );
 			if ( pos == objectsToRestore.end() )
 			{
@@ -46,8 +46,8 @@ int CExecutorRestoreTransparencyQueue::Segment()
 	// random stream from there on. That is the divergence this was traced for.
 	if ( NAsyncTrace::IsEnabled() )
 	{
-		NAsyncTrace::Write( "transp", fmt::format( "queue size={} toRestore={}",
-			objectQueue.size(), objectsToRestore.size() ) );
+		NAsyncTrace::Write( "transp",
+		                    fmt::format( "queue size={} toRestore={}", objectQueue.size(), objectsToRestore.size() ) );
 	}
 
 	if ( !objectQueue.empty() )
@@ -63,7 +63,7 @@ int CExecutorRestoreTransparencyQueue::Segment()
 			{
 				if ( CLinkObject::IsLinkObjectExists( nID ) )
 				{
-					CLinkObject * pLinkObj = CLinkObject::GetObjectByUniqueId( nID );
+					CLinkObject *pLinkObj = CLinkObject::GetObjectByUniqueId( nID );
 					CExistingObject *pObj = checked_cast<CExistingObject *>( pLinkObj );
 					if ( pObj )
 						pObj->RestoreTransparenciesImmidiately();
@@ -88,7 +88,8 @@ void CExecutorRestoreTransparencyQueue::RegisterOnEvents( IExecutorContainer *pC
 
 bool CExecutorRestoreTransparencyQueue::NotifyEvent( const CExecutorEvent &_event )
 {
-	const CExecutorEventAddToRestoreTransparencyQueue *event = static_cast<const CExecutorEventAddToRestoreTransparencyQueue *>( &_event );
+	const CExecutorEventAddToRestoreTransparencyQueue *event =
+			static_cast<const CExecutorEventAddToRestoreTransparencyQueue *>( &_event );
 
 	const int nID = event->GetID();
 	// Returning false here means RaiseEvent does not schedule this executor, so
@@ -97,19 +98,20 @@ bool CExecutorRestoreTransparencyQueue::NotifyEvent( const CExecutorEvent &_even
 	// and the lookup it turns on are traced.
 	if ( NAsyncTrace::IsEnabled() )
 	{
-		NAsyncTrace::Write( "transp", fmt::format( "notify id={} exists={}",
-			nID, nID != 0 && CLinkObject::IsLinkObjectExists( nID ) ? 1 : 0 ) );
+		NAsyncTrace::Write(
+				"transp",
+				fmt::format( "notify id={} exists={}", nID, nID != 0 && CLinkObject::IsLinkObjectExists( nID ) ? 1 : 0 ) );
 	}
 	if ( nID != 0 )
 	{
 		// add this object to queue, wake up
 		if ( CLinkObject::IsLinkObjectExists( nID ) )
 		{
-			CLinkObject * pLinkObj = CLinkObject::GetObjectByUniqueId( nID );
+			CLinkObject *pLinkObj = CLinkObject::GetObjectByUniqueId( nID );
 			CStaticObject *pObj = checked_cast<CStaticObject *>( pLinkObj );
 			theExecutorContainer.RemoveSleeping( this );
 			const CVec3 vCenter( pObj->GetCenter() );
-			objectsToAskAround[CVec2(vCenter.x, vCenter.y)] = true;
+			objectsToAskAround[CVec2( vCenter.x, vCenter.y )] = true;
 			return true;
 		}
 	}

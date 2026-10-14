@@ -59,7 +59,7 @@ extern CGlobalWarFog theWarFog;
 static float g_fRotateStatusWaitTime = 0.0f;
 extern bool g_bAgressiveMovement;
 
-START_REGISTER(StatusUpdateVars)
+START_REGISTER( StatusUpdateVars )
 REGISTER_VAR_EX( "rotate_status_wait_time", NGlobal::VarFloatHandler, &g_fRotateStatusWaitTime, 0.0f, STORAGE_NONE );
 FINISH_REGISTER
 
@@ -69,7 +69,7 @@ FINISH_REGISTER
 
 CPtr<CSoldierStatesFactory> CSoldierStatesFactory::pFactory = 0;
 
-IStatesFactory* CSoldierStatesFactory::Instance()
+IStatesFactory *CSoldierStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CSoldierStatesFactory();
@@ -80,101 +80,80 @@ IStatesFactory* CSoldierStatesFactory::Instance()
 bool CSoldierStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		( cmdType == ACTION_COMMAND_DIE								||
-			cmdType == ACTION_COMMAND_MOVE_TO						||
-			cmdType == ACTION_COMMAND_ATTACK_UNIT				||
-			cmdType == ACTION_COMMAND_ATTACK_OBJECT			||
-			cmdType == ACTION_COMMAND_ROTATE_TO					||
-			cmdType == ACTION_MOVE_BY_DIR								||
-			cmdType == ACTION_COMMAND_ENTER							||
-			cmdType == ACTION_COMMAND_IDLE_BUILDING			||
-			cmdType == ACTION_COMMAND_IDLE_TRENCH				||
-			cmdType == ACTION_COMMAND_SWARM_TO					||
-			cmdType == ACTION_COMMAND_PARADE						||
-			cmdType == ACTION_COMMAND_PLACEMINE_NOW			||
-			cmdType == ACTION_COMMAND_CLEARMINE_RADIUS	||
-			cmdType == ACTION_COMMAND_GUARD							||
-//			cmdType == ACTION_COMMAND_AMBUSH						||
-			cmdType == ACTION_COMMAND_ENTER_TRANSPORT_NOW ||
-			cmdType == ACTION_COMMAND_IDLE_TRANSPORT		||
-			cmdType == ACTION_COMMAND_DISAPPEAR ||
-			cmdType == ACTION_MOVE_PARACHUTE ||
-			cmdType == ACTION_COMMAND_USE_SPYGLASS ||
-			cmdType == ACTION_MOVE_IDLE ||
-			cmdType == ACTION_COMMAND_FOLLOW ||
-			cmdType == ACTION_COMMAND_FOLLOW_NOW ||
-			cmdType == ACTION_COMMAND_SNEAK_ON ||
-			cmdType == ACTION_COMMAND_SNEAK_OFF ||
-			cmdType == ACTION_COMMAND_FORM_FORMATION ||
-			cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||
-			cmdType == ACTION_COMMAND_SWARM_ATTACK_OBJECT ||
-			cmdType == ACTION_COMMAND_ROTATE_TO_DIR ||
-			cmdType == ACTION_COMMAND_USE ||
-			cmdType == ACTION_COMMAND_STAND_GROUND ||
-			cmdType == ACTION_COMMAND_MOVE_TO_GRID ||
-			cmdType == ACTION_COMMAND_THROW_GRENADE ||
-			cmdType == ACTION_COMMAND_THROW_ANTITANK_GRENADE ||
-			cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
-			cmdType == ACTION_COMMAND_SPY_MODE ||
-			cmdType == ACTION_COMMAND_ENTRENCH_SELF ||
-			cmdType == ACTION_MOVE_SELF_ENTRENCH ||
-			cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH
-		);
+	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_MOVE_TO ||
+	         cmdType == ACTION_COMMAND_ATTACK_UNIT || cmdType == ACTION_COMMAND_ATTACK_OBJECT ||
+	         cmdType == ACTION_COMMAND_ROTATE_TO || cmdType == ACTION_MOVE_BY_DIR || cmdType == ACTION_COMMAND_ENTER ||
+	         cmdType == ACTION_COMMAND_IDLE_BUILDING || cmdType == ACTION_COMMAND_IDLE_TRENCH ||
+	         cmdType == ACTION_COMMAND_SWARM_TO || cmdType == ACTION_COMMAND_PARADE ||
+	         cmdType == ACTION_COMMAND_PLACEMINE_NOW || cmdType == ACTION_COMMAND_CLEARMINE_RADIUS ||
+	         cmdType == ACTION_COMMAND_GUARD ||
+	         //			cmdType == ACTION_COMMAND_AMBUSH						||
+	         cmdType == ACTION_COMMAND_ENTER_TRANSPORT_NOW || cmdType == ACTION_COMMAND_IDLE_TRANSPORT ||
+	         cmdType == ACTION_COMMAND_DISAPPEAR || cmdType == ACTION_MOVE_PARACHUTE ||
+	         cmdType == ACTION_COMMAND_USE_SPYGLASS || cmdType == ACTION_MOVE_IDLE || cmdType == ACTION_COMMAND_FOLLOW ||
+	         cmdType == ACTION_COMMAND_FOLLOW_NOW || cmdType == ACTION_COMMAND_SNEAK_ON ||
+	         cmdType == ACTION_COMMAND_SNEAK_OFF || cmdType == ACTION_COMMAND_FORM_FORMATION ||
+	         cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT || cmdType == ACTION_COMMAND_SWARM_ATTACK_OBJECT ||
+	         cmdType == ACTION_COMMAND_ROTATE_TO_DIR || cmdType == ACTION_COMMAND_USE ||
+	         cmdType == ACTION_COMMAND_STAND_GROUND || cmdType == ACTION_COMMAND_MOVE_TO_GRID ||
+	         cmdType == ACTION_COMMAND_THROW_GRENADE || cmdType == ACTION_COMMAND_THROW_ANTITANK_GRENADE ||
+	         cmdType == ACTION_COMMAND_USE_FLAMETHROWER || cmdType == ACTION_COMMAND_SPY_MODE ||
+	         cmdType == ACTION_COMMAND_ENTRENCH_SELF || cmdType == ACTION_MOVE_SELF_ENTRENCH ||
+	         cmdType == ACTION_MOVE_LEAVE_SELF_ENTRENCH );
 }
 
-IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
+IUnitState *CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CAIUnit*>(pObj) != 0, "Wrong unit passed" );
-	CAIUnit *pUnit = checked_cast<CAIUnit*>(pObj);
+	NI_ASSERT( dynamic_cast<CAIUnit *>( pObj ) != 0, "Wrong unit passed" );
+	CAIUnit *pUnit = checked_cast<CAIUnit *>( pObj );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 
 	bool bSwarmAttack = false;
 
 	switch ( cmd.nCmdType )
 	{
-	case ACTION_COMMAND_USE_FLAMETHROWER:
-		// Individual flamethrower soldiers use the same one-burst, flame-only point-fire state.
-		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
+		case ACTION_COMMAND_USE_FLAMETHROWER:
+			// Individual flamethrower soldiers use the same one-burst, flame-only point-fire state.
+			pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
 
-		break;
-	case ACTION_MOVE_SELF_ENTRENCH:
-	case ACTION_COMMAND_ENTRENCH_SELF:
-		pResult = new CSoldierEntrenchSelfState( checked_cast<CSoldier*>( pUnit ) );
+			break;
+		case ACTION_MOVE_SELF_ENTRENCH:
+		case ACTION_COMMAND_ENTRENCH_SELF:
+			pResult = new CSoldierEntrenchSelfState( checked_cast<CSoldier *>( pUnit ) );
 
-		break;
-	case ACTION_MOVE_LEAVE_SELF_ENTRENCH:
-		pResult = new CSoldierLeaveSelfEntrenchState( pUnit );
+			break;
+		case ACTION_MOVE_LEAVE_SELF_ENTRENCH:
+			pResult = new CSoldierLeaveSelfEntrenchState( pUnit );
 
-		break;
-	case ACTION_COMMAND_DIE:
-		NI_ASSERT( false, "Command to die in the queue" );
+			break;
+		case ACTION_COMMAND_DIE:
+			NI_ASSERT( false, "Command to die in the queue" );
 
-		break;
-	case ACTION_COMMAND_SNEAK_OFF:
+			break;
+		case ACTION_COMMAND_SNEAK_OFF:
 		{
 			CONVERT_OBJECT( CSniper, pSniper, pUnit, "Not sniper passed" );
 			SExecutorEventParam par( EID_ABILITY_DEACTIVATE, 0, pSniper->GetUniqueId() );
 			CExecutorEventSpecialAbilityDeactivate event( par, ABILITY_CAMOFLAGE_MODE );
 			pTheExecutorsContainer->RaiseEvent( event );
 		}
-/*	case ACTION_COMMAND_AMBUSH:
+			/*	case ACTION_COMMAND_AMBUSH:
 		pResult = CCommonAmbushState::Instance( pUnit );
 
 		break;*/
-	case ACTION_MOVE_IDLE:
-		pResult = CSoldierIdleState::Instance( pUnit );
+		case ACTION_MOVE_IDLE:
+			pResult = CSoldierIdleState::Instance( pUnit );
 
-		break;
-	case ACTION_COMMAND_SPY_MODE:
+			break;
+		case ACTION_COMMAND_SPY_MODE:
 		{
 			const NDb::ESpecialAbilityParam action = NDb::ESpecialAbilityParam( int( cmd.fNumber ) );
 			if ( action != PARAM_ABILITY_ON )
 				break;
 
-			auto pTargetUnit = dynamic_cast<CAIUnit*>(CLinkObject::GetObjectByUniqueId( cmd.nObjectID ));
+			auto pTargetUnit = dynamic_cast<CAIUnit *>( CLinkObject::GetObjectByUniqueId( cmd.nObjectID ) );
 			if ( !IsValid( pTargetUnit ) )
 				break;
 
@@ -187,41 +166,44 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 			theExecutorContainer.RaiseEvent( event );
 		}
 		break;
-	case ACTION_COMMAND_USE_SPYGLASS:
+		case ACTION_COMMAND_USE_SPYGLASS:
 		{
 			CONVERT_OBJECT( CSoldier, pSoldier, pUnit, "ACTION_COMMAND_USE_SPYGLASS: not soldier passed" );
 			pResult = CSoldierUseSpyglassState::Instance( pSoldier, cmd.vPos );
 		}
 
 		break;
-	case ACTION_MOVE_PARACHUTE:
+		case ACTION_MOVE_PARACHUTE:
 		{
 			CONVERT_OBJECT( CSoldier, pSoldier, pUnit, "ACTION_MOVE_PARACHUTE: not soldier passed" );
-			pResult = CSoldierParaDroppingState::Instance( pSoldier, checked_cast<CAviation*>( GetObjectByCmd( cmd ) ) );
+			pResult = CSoldierParaDroppingState::Instance( pSoldier, checked_cast<CAviation *>( GetObjectByCmd( cmd ) ) );
 		}
 
 		break;
-	case ACTION_COMMAND_MOVE_TO:
-		pUnit->UnsetFollowState();
-		pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos );
+		case ACTION_COMMAND_MOVE_TO:
+			pUnit->UnsetFollowState();
+			pResult = CSoldierMoveToState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_SWARM_ATTACK_UNIT:
-		bSwarmAttack = true;
-	case ACTION_COMMAND_ATTACK_UNIT:
+			break;
+		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
+			bSwarmAttack = true;
+		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			CONVERT_OBJECT( CAIUnit, pTarget, GetObjectByCmd( cmd ), "Wrong unit to attack" );
 
 			if ( IsValidObj( pTarget ) )
 			{
-				if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier*>(pTarget)->IsInBuilding() )
-					pResult = CSoldierAttackUnitInBuildingState::Instance( pUnit, checked_cast<CSoldier*>(pTarget), cmd.fNumber == 0, bSwarmAttack );
+				if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pTarget )->IsInBuilding() )
+					pResult = CSoldierAttackUnitInBuildingState::Instance(
+							pUnit, checked_cast<CSoldier *>( pTarget ), cmd.fNumber == 0, bSwarmAttack );
 				else
 				{
-					if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier*>(pUnit)->IsInEntrenchment() )
-						pResult = CSoldierAttackInEtrenchState::Instance( checked_cast<CSoldier*>(pUnit), checked_cast<CAIUnit*>( pTarget ), bSwarmAttack );
+					if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pUnit )->IsInEntrenchment() )
+						pResult = CSoldierAttackInEtrenchState::Instance(
+								checked_cast<CSoldier *>( pUnit ), checked_cast<CAIUnit *>( pTarget ), bSwarmAttack );
 					else
-						pResult = CSoldierAttackState::Instance( pUnit, checked_cast<CAIUnit*>(pTarget), cmd.fNumber == 0, bSwarmAttack, false );
+						pResult = CSoldierAttackState::Instance(
+								pUnit, checked_cast<CAIUnit *>( pTarget ), cmd.fNumber == 0, bSwarmAttack, false );
 				}
 			}
 			else
@@ -229,9 +211,9 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 		}
 
 		break;
-	case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
-		bSwarmAttack = true;
-	case ACTION_COMMAND_ATTACK_OBJECT:
+		case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
+			bSwarmAttack = true;
+		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
 			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong static object to attack" );
 
@@ -239,7 +221,8 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 			if ( pStaticObj->GetObjectType() == ESOT_ARTILLERY_BULLET_STORAGE )
 			{
 				pCommand->ToUnitCmd().nCmdType = bSwarmAttack ? ACTION_COMMAND_SWARM_ATTACK_UNIT : ACTION_COMMAND_ATTACK_UNIT;
-				pCommand->ToUnitCmd().nObjectID = checked_cast<CArtilleryBulletStorage*>(pStaticObj)->GetOwner()->GetUniqueId();
+				pCommand->ToUnitCmd().nObjectID =
+						checked_cast<CArtilleryBulletStorage *>( pStaticObj )->GetOwner()->GetUniqueId();
 				pCommand->ToUnitCmd().fNumber = 0;
 				pResult = ProduceState( pObj, pCommand );
 			}
@@ -248,42 +231,47 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 		}
 
 		break;
-	case ACTION_COMMAND_THROW_GRENADE:
-	case ACTION_COMMAND_THROW_ANTITANK_GRENADE:
+		case ACTION_COMMAND_THROW_GRENADE:
+		case ACTION_COMMAND_THROW_ANTITANK_GRENADE:
 		{
-			switch( (const EActionThrowGrenadeParam)(int)(cmd.nNumber) )
+			switch ( ( const EActionThrowGrenadeParam )(int)( cmd.nNumber ) )
 			{
-			case ATGP_ATACK_UNIT:
+				case ATGP_ATACK_UNIT:
 				{
 					CONVERT_OBJECT( CAIUnit, pTarget, GetObjectByCmd( cmd ), "Wrong unit to attack" );
 
 					if ( IsValidObj( pTarget ) )
 					{
-						checked_cast<CSoldier*>( pUnit )->SetGrenadeFixed( true );
-						if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier*>(pTarget)->IsInBuilding() )
-							pResult = CSoldierAttackUnitInBuildingState::Instance( pUnit, checked_cast<CSoldier*>(pTarget), true, bSwarmAttack );
+						checked_cast<CSoldier *>( pUnit )->SetGrenadeFixed( true );
+						if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pTarget )->IsInBuilding() )
+							pResult = CSoldierAttackUnitInBuildingState::Instance(
+									pUnit, checked_cast<CSoldier *>( pTarget ), true, bSwarmAttack );
 						else
 						{
-							if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier*>(pUnit)->IsInEntrenchment() )
-								pResult = CSoldierAttackInEtrenchState::Instance( checked_cast<CSoldier*>(pUnit), checked_cast<CAIUnit*>( pTarget ), bSwarmAttack );
+							if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pUnit )->IsInEntrenchment() )
+								pResult = CSoldierAttackInEtrenchState::Instance(
+										checked_cast<CSoldier *>( pUnit ), checked_cast<CAIUnit *>( pTarget ), bSwarmAttack );
 							else
-								pResult = CSoldierAttackState::Instance( pUnit, checked_cast<CAIUnit*>(pTarget), true, bSwarmAttack, false );
+								pResult = CSoldierAttackState::Instance(
+										pUnit, checked_cast<CAIUnit *>( pTarget ), true, bSwarmAttack, false );
 						}
 					}
 					else
 						pUnit->SendAcknowledgement( ACK_INVALID_TARGET );
 				}
 				break;
-			case ATGP_ATACK_OBJECT:
+				case ATGP_ATACK_OBJECT:
 				{
 					CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong static object to attack" );
 
-					checked_cast<CSoldier*>( pUnit )->SetGrenadeFixed( true );
+					checked_cast<CSoldier *>( pUnit )->SetGrenadeFixed( true );
 					// attack the artillery
 					if ( pStaticObj->GetObjectType() == ESOT_ARTILLERY_BULLET_STORAGE )
 					{
-						pCommand->ToUnitCmd().nCmdType = bSwarmAttack ? ACTION_COMMAND_SWARM_ATTACK_UNIT : ACTION_COMMAND_ATTACK_UNIT;
-						pCommand->ToUnitCmd().nObjectID = checked_cast<CArtilleryBulletStorage*>(pStaticObj)->GetOwner()->GetUniqueId();
+						pCommand->ToUnitCmd().nCmdType =
+								bSwarmAttack ? ACTION_COMMAND_SWARM_ATTACK_UNIT : ACTION_COMMAND_ATTACK_UNIT;
+						pCommand->ToUnitCmd().nObjectID =
+								checked_cast<CArtilleryBulletStorage *>( pStaticObj )->GetOwner()->GetUniqueId();
 						pCommand->ToUnitCmd().fNumber = 0;
 						pResult = ProduceState( pObj, pCommand );
 					}
@@ -292,16 +280,16 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 				}
 
 				break;
-			case ATGP_ATACK_POINT:
-				break;
+				case ATGP_ATACK_POINT:
+					break;
 			}
 		}
 		break;
-	case ACTION_COMMAND_ROTATE_TO:
-		pResult = CSoldierTurnToPointState::Instance( pUnit, cmd.vPos );
+		case ACTION_COMMAND_ROTATE_TO:
+			pResult = CSoldierTurnToPointState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_ROTATE_TO_DIR:
+			break;
+		case ACTION_COMMAND_ROTATE_TO_DIR:
 		{
 			CVec2 vDir = cmd.vPos;
 			Normalize( &vDir );
@@ -309,27 +297,34 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 		}
 
 		break;
-	case ACTION_COMMAND_ENTER:
-		if ( cmd.fNumber == 0 )
-		{
-			CONVERT_OBJECT( CBuilding, pBuilding, GetObjectByCmd( cmd ), "Wrong static object is passed, command enter to building" );
-			pResult = CSoldierEnterState::Instance( pUnit, pBuilding );
-		}
-		else if ( cmd.fNumber == 1 )
-		{
-			CONVERT_OBJECT( CEntrenchment, pEntrenchment, GetObjectByCmd( cmd ), "Wrong static object is passed, command enter to entrenchment" );
-			pResult = CSoldierEnterEntrenchmentState::Instance( pUnit, pEntrenchment );
-		}
-		else if  ( cmd.fNumber == 2 )
-		{
-			CONVERT_OBJECT( CEntrenchmentPart, pEntrenchmentPart, GetObjectByCmd( cmd ), "Wrong static object is passed, command enter to entrenchment part" );
-			pResult = CSoldierEnterEntrenchmentState::Instance( pUnit, pEntrenchmentPart->GetOwner() );
-		}
-		else
-			NI_ASSERT( false, fmt::format( "Wrong number {:g} in command Enter", cmd.fNumber ) );
+		case ACTION_COMMAND_ENTER:
+			if ( cmd.fNumber == 0 )
+			{
+				CONVERT_OBJECT(
+						CBuilding, pBuilding, GetObjectByCmd( cmd ), "Wrong static object is passed, command enter to building" );
+				pResult = CSoldierEnterState::Instance( pUnit, pBuilding );
+			}
+			else if ( cmd.fNumber == 1 )
+			{
+				CONVERT_OBJECT( CEntrenchment,
+				                pEntrenchment,
+				                GetObjectByCmd( cmd ),
+				                "Wrong static object is passed, command enter to entrenchment" );
+				pResult = CSoldierEnterEntrenchmentState::Instance( pUnit, pEntrenchment );
+			}
+			else if ( cmd.fNumber == 2 )
+			{
+				CONVERT_OBJECT( CEntrenchmentPart,
+				                pEntrenchmentPart,
+				                GetObjectByCmd( cmd ),
+				                "Wrong static object is passed, command enter to entrenchment part" );
+				pResult = CSoldierEnterEntrenchmentState::Instance( pUnit, pEntrenchmentPart->GetOwner() );
+			}
+			else
+				NI_ASSERT( false, fmt::format( "Wrong number {:g} in command Enter", cmd.fNumber ) );
 
-		break;
-	case ACTION_COMMAND_IDLE_BUILDING:
+			break;
+		case ACTION_COMMAND_IDLE_BUILDING:
 		{
 			CONVERT_OBJECT( CBuilding, pBuilding, GetObjectByCmd( cmd ), "Wrong object to enter" );
 			CONVERT_OBJECT( CSoldier, pSoldier, pUnit, "Wrong unit passed: soldier expected" );
@@ -337,42 +332,45 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 		}
 
 		break;
-	case ACTION_COMMAND_IDLE_TRENCH:
+		case ACTION_COMMAND_IDLE_TRENCH:
 		{
-			CONVERT_OBJECT( CEntrenchment, pEntrenchment, GetObjectByCmd( cmd ), "Wrong static object is passed, command enter to entrenchment" );
+			CONVERT_OBJECT( CEntrenchment,
+			                pEntrenchment,
+			                GetObjectByCmd( cmd ),
+			                "Wrong static object is passed, command enter to entrenchment" );
 			CONVERT_OBJECT( CSoldier, pSoldier, pUnit, "Wrong unit passed: soldier expected" );
 			pResult = CSoldierRestInEntrenchmentState::Instance( pSoldier, pEntrenchment );
 		}
 
 		break;
-	case ACTION_COMMAND_SWARM_TO:
-		pResult = CCommonSwarmState::Instance( pUnit, cmd.vPos, cmd.fNumber );
+		case ACTION_COMMAND_SWARM_TO:
+			pResult = CCommonSwarmState::Instance( pUnit, cmd.vPos, cmd.fNumber );
 
-		break;
-	case ACTION_COMMAND_PARADE:
-		pResult = CSoldierParadeState::Instance( pUnit );
+			break;
+		case ACTION_COMMAND_PARADE:
+			pResult = CSoldierParadeState::Instance( pUnit );
 
-		break;
-	case ACTION_COMMAND_PLACEMINE_NOW:
-		pResult = CSoldierPlaceMineNowState::Instance( pUnit, cmd.vPos, static_cast<EMineType>(int(cmd.fNumber)) );
+			break;
+		case ACTION_COMMAND_PLACEMINE_NOW:
+			pResult = CSoldierPlaceMineNowState::Instance( pUnit, cmd.vPos, static_cast<EMineType>( int( cmd.fNumber ) ) );
 
-		break;
-	case ACTION_COMMAND_CLEARMINE_RADIUS:
-		pResult = CSoldierClearMineRadiusState::Instance( pUnit, cmd.vPos );
+			break;
+		case ACTION_COMMAND_CLEARMINE_RADIUS:
+			pResult = CSoldierClearMineRadiusState::Instance( pUnit, cmd.vPos );
 
-		break;
-	case ACTION_COMMAND_GUARD:
-		pResult = CSoldierRestState::Instance( pUnit );
+			break;
+		case ACTION_COMMAND_GUARD:
+			pResult = CSoldierRestState::Instance( pUnit );
 
-		break;
-	case ACTION_COMMAND_ENTER_TRANSPORT_NOW:
+			break;
+		case ACTION_COMMAND_ENTER_TRANSPORT_NOW:
 		{
 			CONVERT_OBJECT( CMilitaryCar, pCar, GetObjectByCmd( cmd ), "Not transport passed to enter to" );
 			pResult = CSoldierEnterTransportNowState::Instance( pUnit, pCar );
 		}
 
 		break;
-	case ACTION_COMMAND_IDLE_TRANSPORT:
+		case ACTION_COMMAND_IDLE_TRANSPORT:
 		{
 			CONVERT_OBJECT( CMilitaryCar, pCar, GetObjectByCmd( cmd ), "Not transport passed to idle" );
 			CONVERT_OBJECT( CSoldier, pSoldier, pUnit, "Wrong unit passed: soldier expected" );
@@ -380,51 +378,51 @@ IUnitState* CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 		}
 
 		break;
-	case ACTION_COMMAND_FOLLOW:
-		NI_ASSERT( dynamic_cast<CCommonUnit*>(GetObjectByCmd( cmd )) != 0, "Not common unit in follow command" );
-		pUnit->SetFollowState( checked_cast<CCommonUnit*>(GetObjectByCmd( cmd )) );
+		case ACTION_COMMAND_FOLLOW:
+			NI_ASSERT( dynamic_cast<CCommonUnit *>( GetObjectByCmd( cmd ) ) != 0, "Not common unit in follow command" );
+			pUnit->SetFollowState( checked_cast<CCommonUnit *>( GetObjectByCmd( cmd ) ) );
 
-		break;
-	case ACTION_COMMAND_FOLLOW_NOW:
+			break;
+		case ACTION_COMMAND_FOLLOW_NOW:
 		{
 			CONVERT_OBJECT( CCommonUnit, pUnitToFollowTo, GetObjectByCmd( cmd ), "Not common unit in follow command" );
 			pResult = CFollowState::Instance( pUnit, pUnitToFollowTo );
 		}
 
 		break;
-	case ACTION_COMMAND_FORM_FORMATION:
-		if ( pUnit->IsInFormation() )
-		{
-			CONVERT_OBJECT( CSoldier, pSoldier, pUnit, "Wrong unit for FORM_FORMATION command" );
-			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_FORM_FORMATION ), pSoldier, false );
-		}
+		case ACTION_COMMAND_FORM_FORMATION:
+			if ( pUnit->IsInFormation() )
+			{
+				CONVERT_OBJECT( CSoldier, pSoldier, pUnit, "Wrong unit for FORM_FORMATION command" );
+				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_FORM_FORMATION ), pSoldier, false );
+			}
 
-		break;
-	case ACTION_COMMAND_USE:
-		NI_ASSERT( cmd.fNumber >= 0, fmt::format( "Wrong number of use animation ({})", (int)cmd.fNumber ) );
-		pResult = CSoldierUseState::Instance( pUnit, EActionNotify((int)cmd.fNumber) );
+			break;
+		case ACTION_COMMAND_USE:
+			NI_ASSERT( cmd.fNumber >= 0, fmt::format( "Wrong number of use animation ({})", (int)cmd.fNumber ) );
+			pResult = CSoldierUseState::Instance( pUnit, EActionNotify( (int)cmd.fNumber ) );
 
-		break;
-	case ACTION_COMMAND_STAND_GROUND:
-		pUnit->Stop();
-		pUnit->UnsetFollowState();
-		pUnit->SetBehaviourMoving( SBehaviour::EMHoldPos );
+			break;
+		case ACTION_COMMAND_STAND_GROUND:
+			pUnit->Stop();
+			pUnit->UnsetFollowState();
+			pUnit->SetBehaviourMoving( SBehaviour::EMHoldPos );
 
-		break;
-	case ACTION_COMMAND_MOVE_TO_GRID:
-		pResult = CCommonMoveToGridState::Instance( pUnit, cmd.vPos, GetVectorByDirection( cmd.fNumber ) );
+			break;
+		case ACTION_COMMAND_MOVE_TO_GRID:
+			pResult = CCommonMoveToGridState::Instance( pUnit, cmd.vPos, GetVectorByDirection( cmd.fNumber ) );
 
-		break;
-	default:
-		NI_ASSERT( false, "Wrong command" );
+			break;
+		default:
+			NI_ASSERT( false, "Wrong command" );
 	}
 
 	return pResult;
 }
 
-IUnitState* CSoldierStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CSoldierStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	CSoldier *pSoldier = checked_cast<CSoldier*>( pUnit );
+	CSoldier *pSoldier = checked_cast<CSoldier *>( pUnit );
 	if ( pSoldier->IsInEntrenchment() )
 		return CSoldierRestInEntrenchmentState::Instance( pSoldier, pSoldier->GetEntrenchment() );
 	else
@@ -435,13 +433,12 @@ IUnitState* CSoldierStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 //*											  CSoldierRestState													*
 //*******************************************************************
 
-IUnitState* CSoldierRestState::Instance( CAIUnit *pUnit )
+IUnitState *CSoldierRestState::Instance( CAIUnit *pUnit )
 {
 	return new CSoldierRestState( pUnit );
 }
 
-CSoldierRestState::CSoldierRestState( CAIUnit *_pUnit )
-: pUnit( _pUnit ), nextMove( 0 ), bScanned( false )
+CSoldierRestState::CSoldierRestState( CAIUnit *_pUnit ) : pUnit( _pUnit ), nextMove( 0 ), bScanned( false )
 {
 	if ( pUnit->GetStats()->etype != RPG_TYPE_SNIPER )
 		pUnit->StartCamouflating();
@@ -473,15 +470,11 @@ void CSoldierRestState::Segment()
 		{
 			guardPoint = pUnit->GetUnitPointInFormation();
 			const bool bNeedFormationPoint =
-				pUnit->CanMoveForGuard() &&
-				CheckGuardPoint() &&
-				fabs2( guardPoint - pUnit->GetCenterPlain() ) > 200.0f;
+					pUnit->CanMoveForGuard() && CheckGuardPoint() && fabs2( guardPoint - pUnit->GetCenterPlain() ) > 200.0f;
 
 			// While returning to formation, allow only attacks that can be fired from the current position.
-			const uint8_t cResult =
-				bNeedFormationPoint ?
-				pUnit->AnalyzeTargetScanWithoutMoving( 0, false, false ) :
-				pUnit->AnalyzeTargetScan( 0, false, false );
+			const uint8_t cResult = bNeedFormationPoint ? pUnit->AnalyzeTargetScanWithoutMoving( 0, false, false )
+			                                            : pUnit->AnalyzeTargetScan( 0, false, false );
 
 			if ( cResult & 2 )
 				bScanned = true;
@@ -499,9 +492,14 @@ void CSoldierRestState::Segment()
 
 				bool bSent = false;
 				guardPoint = pUnit->GetUnitPointInFormation();
- 				if ( fabs2( guardPoint - vUnitCenter ) > 200.0f )
+				if ( fabs2( guardPoint - vUnitCenter ) > 200.0f )
 				{
-					const CVec2 vBestGuardPoint = GetAIMap()->GetTerrain()->GetValidPoint( pUnit->GetBoundTileRadius(), pUnit->GetCenterPlain(), guardPoint, pUnit->GetAIPassabilityClass(), false, GetAIMap() );
+					const CVec2 vBestGuardPoint = GetAIMap()->GetTerrain()->GetValidPoint( pUnit->GetBoundTileRadius(),
+					                                                                       pUnit->GetCenterPlain(),
+					                                                                       guardPoint,
+					                                                                       pUnit->GetAIPassabilityClass(),
+					                                                                       false,
+					                                                                       GetAIMap() );
 					CPtr<IStaticPath> pStaticPath = CreateStaticPathToPoint( vBestGuardPoint, VNULL2, pUnit, false, GetAIMap() );
 
 					if ( pStaticPath )
@@ -515,7 +513,8 @@ void CSoldierRestState::Segment()
 				if ( !bSent )
 					pUnit->RegisterAsBored( ACK_BORED_IDLE );
 
-				nextMove = curTime + NRandom::Random( 1500, 2000 ); RecordRandomCall();
+				nextMove = curTime + NRandom::Random( 1500, 2000 );
+				RecordRandomCall();
 
 				pUnit->FreezeByState( true );
 			}
@@ -535,18 +534,17 @@ ETryStateInterruptResult CSoldierRestState::TryInterruptState( class CAICommand 
 //*										  CSoldierAttackState													*
 //*******************************************************************
 
-IUnitState* CSoldierAttackState::Instance( CAIUnit *pUnit, CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack, const bool _bPreferGrenade )
+IUnitState *CSoldierAttackState::Instance(
+		CAIUnit *pUnit, CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack, const bool _bPreferGrenade )
 {
 	return new CSoldierAttackState( pUnit, pEnemy, bAim, bSwarmAttack, _bPreferGrenade );
 }
 
-CSoldierAttackState::CSoldierAttackState( CAIUnit *_pUnit, CAIUnit *_pEnemy, bool _bAim, const bool _bSwarmAttack, const bool _bPreferGrenade )
-: pUnit( _pUnit ), pEnemy( _pEnemy ),
-	nextShootCheck( 0 ), lastEnemyTile( -1, -1 ), bAim( _bAim ), wLastEnemyDir( 0 ), pGun( 0 ), bFinish( false ),
-	lastEnemyCenter( -1, -1 ), bSwarmAttack( _bSwarmAttack ),
-	runUpToEnemy( _pUnit, _pEnemy, false ),
-	nEnemyParty( _pEnemy->GetParty() ),
-	bPreferGrenade( _bPreferGrenade )
+CSoldierAttackState::CSoldierAttackState(
+		CAIUnit *_pUnit, CAIUnit *_pEnemy, bool _bAim, const bool _bSwarmAttack, const bool _bPreferGrenade )
+		: pUnit( _pUnit ), pEnemy( _pEnemy ), nextShootCheck( 0 ), lastEnemyTile( -1, -1 ), bAim( _bAim ),
+			wLastEnemyDir( 0 ), pGun( 0 ), bFinish( false ), lastEnemyCenter( -1, -1 ), bSwarmAttack( _bSwarmAttack ),
+			runUpToEnemy( _pUnit, _pEnemy, false ), nEnemyParty( _pEnemy->GetParty() ), bPreferGrenade( _bPreferGrenade )
 {
 	ResetTime( pEnemy );
 }
@@ -632,16 +630,16 @@ void CSoldierAttackState::AnalyzeBruteMovingPosition()
 			pUnit->SendAcknowledgement( ACK_NOT_IN_FIRE_RANGE );
 			StopFire();
 		}
-		else if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack )
-			&& ( bIdle || curTime >= nextShootCheck && lastEnemyTile != pEnemy->GetCenterTile() ) )
+		else if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack ) &&
+		          ( bIdle || curTime >= nextShootCheck && lastEnemyTile != pEnemy->GetCenterTile() ) )
 		{
 			// позиция врага сменилась или уже стоим
 			const float fRandomDist = 5.0f * SConsts::TILE_SIZE;
 
 			CPtr<IStaticPath> pStaticPath =
-				bEnemyVisible ?
-				CreateStaticPathForAttack( pUnit, pEnemy, pGun->GetWeapon()->fRangeMin, pGun->GetFireRange( 0 ), fRandomDist, true ) :
-				CreateStaticPathToPoint( pEnemy->GetCenterPlain(), VNULL2, pUnit, false, GetAIMap() );
+					bEnemyVisible ? CreateStaticPathForAttack(
+															pUnit, pEnemy, pGun->GetWeapon()->fRangeMin, pGun->GetFireRange( 0 ), fRandomDist, true )
+												: CreateStaticPathToPoint( pEnemy->GetCenterPlain(), VNULL2, pUnit, false, GetAIMap() );
 
 			if ( pStaticPath )
 			{
@@ -656,7 +654,8 @@ void CSoldierAttackState::AnalyzeBruteMovingPosition()
 			}
 
 			lastEnemyTile = pEnemy->GetCenterTile();
-			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 ); RecordRandomCall();
+			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 );
+			RecordRandomCall();
 		}
 	}
 }
@@ -664,7 +663,7 @@ void CSoldierAttackState::AnalyzeBruteMovingPosition()
 void CSoldierAttackState::AnalyzeMovingPosition()
 {
 	const bool bIdle = pUnit->IsIdle();
-	const bool bEnemyVisible=  pEnemy->IsVisible( pUnit->GetParty() );
+	const bool bEnemyVisible = pEnemy->IsVisible( pUnit->GetParty() );
 
 	if ( !bEnemyVisible && !pEnemy->IsRevealed() )
 	{
@@ -673,8 +672,8 @@ void CSoldierAttackState::AnalyzeMovingPosition()
 	}
 	else if ( ( curTime >= nextShootCheck || bIdle ) && bEnemyVisible && pGun->CanShootToUnitWOMove( pEnemy ) )
 		FireNow();
-	else if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack )
-		&& ( bIdle || curTime >= nextShootCheck && lastEnemyTile != pEnemy->GetCenterTile() ) )
+	else if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack ) &&
+	          ( bIdle || curTime >= nextShootCheck && lastEnemyTile != pEnemy->GetCenterTile() ) )
 	{
 		// в зоне поиска пути к стороне
 		if ( pGun->InGoToSideRange( pEnemy ) )
@@ -692,8 +691,8 @@ void CSoldierAttackState::AnalyzeMovingPosition()
 		else if ( bIdle || lastEnemyTile != pEnemy->GetCenterTile() )
 		{
 			// путь до расстояния, достаточно близкого до юнита, чтобы оттуда потом бежать к стороне
-			CPtr<IStaticPath> pStaticPath =
-				CreateStaticPathForAttack( pUnit, pEnemy, pGun->GetWeapon()->fRangeMin, 2 * pGun->GetFireRange( 0 ), 0.0f, true );
+			CPtr<IStaticPath> pStaticPath = CreateStaticPathForAttack(
+					pUnit, pEnemy, pGun->GetWeapon()->fRangeMin, 2 * pGun->GetFireRange( 0 ), 0.0f, true );
 
 			if ( pStaticPath )
 			{
@@ -708,12 +707,13 @@ void CSoldierAttackState::AnalyzeMovingPosition()
 			}
 
 			lastEnemyTile = pEnemy->GetCenterTile();
-			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 ); RecordRandomCall();
+			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 );
+			RecordRandomCall();
 		}
 	}
 }
 
-IStaticPath* CSoldierAttackState::BestSidePath()
+IStaticPath *CSoldierAttackState::BestSidePath()
 {
 	//DebugTrace( "CSoldierAttackState::BestSidePath() for unit %d", pUnit->GetUniqueID() );
 	const CVec2 vUnitCenter = pUnit->GetCenterPlain();
@@ -743,32 +743,37 @@ IStaticPath* CSoldierAttackState::BestSidePath()
 		if ( !pGun->CanBreach( pEnemy, i + 0 ) )
 		{
 			if ( pGun->CanBreach( pEnemy, i + 2 ) )
-				vBestSides[i] = i*16384 + 32768;
+				vBestSides[i] = i * 16384 + 32768;
 			else
 				--nCount;
 		}
-		else if ( !pGun->CanBreach( pEnemy, i + 2 ) || fabs2( vUnitCenter - vSides[i + 0] ) < fabs2( vUnitCenter - vSides[i + 2] ) )
-			vBestSides[i] = i*16384;
+		else if ( !pGun->CanBreach( pEnemy, i + 2 ) ||
+		          fabs2( vUnitCenter - vSides[i + 0] ) < fabs2( vUnitCenter - vSides[i + 2] ) )
+			vBestSides[i] = i * 16384;
 		else
-			vBestSides[i] = i*16384 + 32768;
+			vBestSides[i] = i * 16384 + 32768;
 	}
 
 	if ( nCount == 0 )
 		return 0;
 
-	uint16_t wMinAngle = ( vBestSides[0] + vBestSides[1] )/nCount - 8192*nCount;
+	uint16_t wMinAngle = ( vBestSides[0] + vBestSides[1] ) / nCount - 8192 * nCount;
 
 	if ( nCount == 2 && vBestSides[0] == 0 && vBestSides[1] == 49152 )
 		wMinAngle = 40960;
 
-	const uint16_t wAngle = wMinAngle + NRandom::Random( 0, 16384*nCount ); RecordRandomCall();
+	const uint16_t wAngle = wMinAngle + NRandom::Random( 0, 16384 * nCount );
+	RecordRandomCall();
 	const CVec2 vAngle = GetVectorByDirection( wAngle );
 
-	IStaticPath *pBestPath =
-		CreateStaticPathForSideAttack( pUnit, pEnemy,
-		vAngle, //vSides[nBestSide] - vEnemyCenter,
-		pGun->GetWeapon()->fRangeMin, pGun->GetFireRange( 0 ),
-		8.0f * SConsts::TILE_SIZE, 8192, false );
+	IStaticPath *pBestPath = CreateStaticPathForSideAttack( pUnit,
+	                                                        pEnemy,
+	                                                        vAngle, //vSides[nBestSide] - vEnemyCenter,
+	                                                        pGun->GetWeapon()->fRangeMin,
+	                                                        pGun->GetFireRange( 0 ),
+	                                                        8.0f * SConsts::TILE_SIZE,
+	                                                        8192,
+	                                                        false );
 	return pBestPath;
 }
 
@@ -790,7 +795,8 @@ void CSoldierAttackState::AnalyzeMovingToSidePosition()
 		const uint16_t wCurEnemyDir = pEnemy->GetDirection();
 		// стоим или пора проверять позицию и враг сдвинулся или повернулся
 		if ( ( g_bAgressiveMovement || theDipl.IsAIPlayer( pUnit->GetPlayer() ) ? true : bSwarmAttack ) &&
-			( bIdle || lastEnemyTile != curEnemyTile || DirsDifference( wCurEnemyDir, wLastEnemyDir ) >= ENEMY_DIR_TOLERANCE ) )
+		     ( bIdle || lastEnemyTile != curEnemyTile ||
+		       DirsDifference( wCurEnemyDir, wLastEnemyDir ) >= ENEMY_DIR_TOLERANCE ) )
 		{
 			// убежал слишком далеко
 			if ( !pGun->InGoToSideRange( pEnemy ) )
@@ -811,7 +817,8 @@ void CSoldierAttackState::AnalyzeMovingToSidePosition()
 				}
 			}
 
-			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 ); RecordRandomCall();
+			nextShootCheck = curTime + SHOOTING_CHECK + NRandom::Random( 0, 500 );
+			RecordRandomCall();
 			lastEnemyTile = curEnemyTile;
 			wLastEnemyDir = wCurEnemyDir;
 		}
@@ -821,12 +828,9 @@ void CSoldierAttackState::AnalyzeMovingToSidePosition()
 bool CSoldierAttackState::IsBruteMoving()
 {
 	const int nMinPossiblePiercing = pGun->GetMinPossiblePiercing();
-	return
-		!pUnit->CanMove() ||
-		pEnemy->GetArmor(0) <= nMinPossiblePiercing &&
-		pEnemy->GetArmor(1) <= nMinPossiblePiercing &&
-		pEnemy->GetArmor(2) <= nMinPossiblePiercing &&
-		pEnemy->GetArmor(3) <= nMinPossiblePiercing;
+	return !pUnit->CanMove() ||
+	       pEnemy->GetArmor( 0 ) <= nMinPossiblePiercing && pEnemy->GetArmor( 1 ) <= nMinPossiblePiercing &&
+	           pEnemy->GetArmor( 2 ) <= nMinPossiblePiercing && pEnemy->GetArmor( 3 ) <= nMinPossiblePiercing;
 }
 
 void CSoldierAttackState::Segment()
@@ -847,15 +851,15 @@ void CSoldierAttackState::Segment()
 				// if enemy is artillery - try attack crew
 				if ( pEnemy->GetStats()->IsArtillery() )
 				{
-					CFormation *pCrew = checked_cast_ptr<CArtillery*>(pEnemy)->GetCrew();
+					CFormation *pCrew = checked_cast_ptr<CArtillery *>( pEnemy )->GetCrew();
 					if ( pCrew )
 					{
 						NI_ASSERT( pCrew->Size() > 0, "Artillery w/o crew found!" );
 						if ( pCrew->Size() > 0 )
 						{
-							pUnit->ResetShootEstimator( (*pCrew)[0], false, pUnit->GetForbiddenGuns() );
+							pUnit->ResetShootEstimator( ( *pCrew )[0], false, pUnit->GetForbiddenGuns() );
 							for ( int i = 1; i < pCrew->Size(); ++i )
-								pUnit->AddUnitToShootEstimator( (*pCrew)[i] );
+								pUnit->AddUnitToShootEstimator( ( *pCrew )[i] );
 						}
 					}
 				}
@@ -868,7 +872,7 @@ void CSoldierAttackState::Segment()
 		// in tankpit - leave tankpit and repeat
 		if ( !pUnit->GetCurCmd()->IsFromAI() && pUnit->IsInTankPit() && eReject == ACK_NOT_IN_FIRE_RANGE )
 		{
-			theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF), pUnit );
+			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF ), pUnit );
 			return;
 		}
 		//CRAP}
@@ -895,8 +899,8 @@ void CSoldierAttackState::Segment()
 			runUpToEnemy.Segment();
 
 			// если можно перевыбирать цель, то выбрать цель
-//			if ( bSwarmAttack )
-//				pUnit->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
+			//			if ( bSwarmAttack )
+			//				pUnit->AnalyzeTargetScan( pEnemy, damageToEnemyUpdater.IsDamageUpdated(), false );
 
 			if ( !bFinish )
 			{
@@ -910,21 +914,22 @@ void CSoldierAttackState::Segment()
 						StopFire();
 						pUnit->SetCommandFinished();
 					}
-					else switch ( state )
-					{
-						case ESAS_BRUTE_MOVING:
-							AnalyzeBruteMovingPosition();
+					else
+						switch ( state )
+						{
+							case ESAS_BRUTE_MOVING:
+								AnalyzeBruteMovingPosition();
 
-							break;
-						case ESAS_MOVING:
-							AnalyzeMovingPosition();
+								break;
+							case ESAS_MOVING:
+								AnalyzeMovingPosition();
 
-							break;
-						case ESAS_MOVING_TO_SIDE:
-							AnalyzeMovingToSidePosition();
+								break;
+							case ESAS_MOVING_TO_SIDE:
+								AnalyzeMovingToSidePosition();
 
-							break;
-					}
+								break;
+						}
 				}
 			}
 		}
@@ -943,14 +948,14 @@ const CVec2 CSoldierAttackState::GetPurposePoint() const
 //*										  CSoldierMoveToState													*
 //*******************************************************************
 
-IUnitState* CSoldierMoveToState::Instance( CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse )
+IUnitState *CSoldierMoveToState::Instance( CAIUnit *pUnit, const CVec2 &point, const bool bForceReverse )
 {
 	return new CSoldierMoveToState( pUnit, point, bForceReverse );
 }
 
 CSoldierMoveToState::CSoldierMoveToState( CAIUnit *_pUnit, const CVec2 &_point, const bool _bForceReverse )
-: pUnit( _pUnit ), startTime( curTime ), bWaiting( true ), CFreeFireManager( _pUnit ),
-	point( _point ), wDirToPoint( _pUnit->GetFrontDirection() ), bLongMove( false ), bForceReverse( _bForceReverse )
+		: pUnit( _pUnit ), startTime( curTime ), bWaiting( true ), CFreeFireManager( _pUnit ), point( _point ),
+			wDirToPoint( _pUnit->GetFrontDirection() ), bLongMove( false ), bForceReverse( _bForceReverse )
 {
 	pUnit->UnlockTiles();
 	pUnit->FixUnlocking();
@@ -1005,9 +1010,11 @@ void CSoldierMoveToState::Segment()
 	{
 		if ( bForceReverse )
 			SetReversePathMode( true );
-		if ( !pUnit->GetStats()->IsInfantry() && ( pUnit->GetBehaviourFire() == SBehaviour::EFAtWill || pUnit->CanShootInMovement() ) )
+		if ( !pUnit->GetStats()->IsInfantry() &&
+		     ( pUnit->GetBehaviourFire() == SBehaviour::EFAtWill || pUnit->CanShootInMovement() ) )
 			CFreeFireManager::Analyze( pUnit, 0 );
-		if ( pUnit->IsIdle() || pUnit->GetNextCommand() != 0 && fabs2( pUnit->GetCenterPlain() - point ) <= sqr( 2.5f * (float)SConsts::TILE_SIZE ) )
+		if ( pUnit->IsIdle() || pUnit->GetNextCommand() != 0 &&
+		                            fabs2( pUnit->GetCenterPlain() - point ) <= sqr( 2.5f * (float)SConsts::TILE_SIZE ) )
 		{
 			CBasicGun *pMainGun = pUnit->GetGuns()->GetMainGun();
 			if ( pMainGun )
@@ -1015,7 +1022,8 @@ void CSoldierMoveToState::Segment()
 
 			if ( pUnit->GetNextCommand() == 0 )
 			{
-				const uint16_t wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? uint16_t( wDirToPoint ) : wDirToPoint + 32768;
+				const uint16_t wDir =
+						pUnit->GetFrontDirection() == pUnit->GetDirection() ? uint16_t( wDirToPoint ) : wDirToPoint + 32768;
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_GUARD, pUnit->GetCenterPlain(), wDir ), pUnit, false );
 				if ( bLongMove )
 					pUnit->SendAcknowledgement( NDb::ACK_MOVE_END, pUnit->GetPlayer() == theDipl.GetMyNumber() );
@@ -1050,13 +1058,14 @@ const CVec2 CSoldierMoveToState::GetPurposePoint() const
 //*											CSoldierTurnToPointState										*
 //*******************************************************************
 
-IUnitState* CSoldierTurnToPointState::Instance( CAIUnit *pUnit, const CVec2 &targCenter )
+IUnitState *CSoldierTurnToPointState::Instance( CAIUnit *pUnit, const CVec2 &targCenter )
 {
 	return new CSoldierTurnToPointState( pUnit, targCenter );
 }
 
 CSoldierTurnToPointState::CSoldierTurnToPointState( CAIUnit *_pUnit, const CVec2 &_targCenter )
-: CStatusUpdatesHelper( EUS_ROTATE, _pUnit ), pUnit( _pUnit ), lastCheck( curTime ), timeStart( curTime ), targCenter( _targCenter )
+		: CStatusUpdatesHelper( EUS_ROTATE, _pUnit ), pUnit( _pUnit ), lastCheck( curTime ), timeStart( curTime ),
+			targCenter( _targCenter )
 {
 	pUnit->Stop();
 }
@@ -1091,15 +1100,15 @@ const CVec2 CSoldierTurnToPointState::GetPurposePoint() const
 //*											CSoldierMoveByDirState											*
 //*******************************************************************
 
-IUnitState* CSoldierMoveByDirState::Instance( CAIUnit *pUnit, const CVec2 &vTarget )
+IUnitState *CSoldierMoveByDirState::Instance( CAIUnit *pUnit, const CVec2 &vTarget )
 {
 	return new CSoldierMoveByDirState( pUnit, vTarget );
 }
 
-CSoldierMoveByDirState::CSoldierMoveByDirState( CAIUnit *_pUnit, const CVec2 &vTarget )
-: pUnit( _pUnit )
+CSoldierMoveByDirState::CSoldierMoveByDirState( CAIUnit *_pUnit, const CVec2 &vTarget ) : pUnit( _pUnit )
 {
-	IPath *pPath = new CStandartDirPath( pUnit->GetCenterPlain(), Norm( vTarget - pUnit->GetCenterPlain() ), vTarget, GetAIMap()->GetTileSize() );
+	IPath *pPath = new CStandartDirPath(
+			pUnit->GetCenterPlain(), Norm( vTarget - pUnit->GetCenterPlain() ), vTarget, GetAIMap()->GetTileSize() );
 	pUnit->SendAlongPath( pPath );
 }
 
@@ -1124,13 +1133,13 @@ const CVec2 CSoldierMoveByDirState::GetPurposePoint() const
 //*											CSoldierEnterState													*
 //*******************************************************************
 
-IUnitState* CSoldierEnterState::Instance( CAIUnit *pUnit, CBuilding *pBuilding )
+IUnitState *CSoldierEnterState::Instance( CAIUnit *pUnit, CBuilding *pBuilding )
 {
 	return new CSoldierEnterState( pUnit, pBuilding );
 }
 
 CSoldierEnterState::CSoldierEnterState( CAIUnit *_pUnit, CBuilding *_pBuilding )
-:	pUnit( _pUnit ), pBuilding( _pBuilding ), state( EES_START ), nEfforts( 0 )
+		: pUnit( _pUnit ), pBuilding( _pBuilding ), state( EES_START ), nEfforts( 0 )
 {
 	int i = 0;
 	while ( i < pBuilding->GetNEntrancePoints() )
@@ -1178,15 +1187,20 @@ void CSoldierEnterState::Segment()
 			case EES_RUN_UP:
 				if ( pUnit->IsIdle() )
 				{
-					if ( nEfforts < 3 && !pBuilding->IsGoodPointForRunIn( pUnit->GetCenterPlain(), nEntrance, SConsts::TILE_SIZE ) )
+					if ( nEfforts < 3 &&
+					     !pBuilding->IsGoodPointForRunIn( pUnit->GetCenterPlain(), nEntrance, SConsts::TILE_SIZE ) )
 					{
 						++nEfforts;
 						state = EES_START;
 					}
 					else
 					{
-						pUnit->TurnToDirection( GetDirectionByVector( CVec2(pBuilding->GetCenter().x, pBuilding->GetCenter().y) - pUnit->GetCenterPlain() ), false, true );
-						theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_IDLE_BUILDING, pBuilding->GetUniqueId() ), pUnit, false );
+						pUnit->TurnToDirection( GetDirectionByVector( CVec2( pBuilding->GetCenter().x, pBuilding->GetCenter().y ) -
+						                                              pUnit->GetCenterPlain() ),
+						                        false,
+						                        true );
+						theGroupLogic.UnitCommand(
+								SAIUnitCmd( ACTION_COMMAND_IDLE_BUILDING, pBuilding->GetUniqueId() ), pUnit, false );
 					}
 				}
 
@@ -1204,7 +1218,7 @@ ETryStateInterruptResult CSoldierEnterState::TryInterruptState( class CAICommand
 const CVec2 CSoldierEnterState::GetPurposePoint() const
 {
 	if ( IsValidObj( pBuilding ) )
-		return CVec2(pBuilding->GetCenter().x,pBuilding->GetCenter().y);
+		return CVec2( pBuilding->GetCenter().x, pBuilding->GetCenter().y );
 	else
 		return CVec2( -1.0f, -1.0f );
 }
@@ -1213,13 +1227,13 @@ const CVec2 CSoldierEnterState::GetPurposePoint() const
 //*										CSoldierEnterEntrenchmentState								*
 //*******************************************************************
 
-IUnitState* CSoldierEnterEntrenchmentState::Instance( CAIUnit *pUnit, CEntrenchment *pEntrenchment )
+IUnitState *CSoldierEnterEntrenchmentState::Instance( CAIUnit *pUnit, CEntrenchment *pEntrenchment )
 {
 	return new CSoldierEnterEntrenchmentState( pUnit, pEntrenchment );
 }
 
 CSoldierEnterEntrenchmentState::CSoldierEnterEntrenchmentState( CAIUnit *_pUnit, CEntrenchment *_pEntrenchment )
-: pUnit( _pUnit ), state( EES_START ), pEntrenchment( _pEntrenchment ), nTries( 5 )
+		: pUnit( _pUnit ), state( EES_START ), pEntrenchment( _pEntrenchment ), nTries( 5 )
 {
 	if ( pEntrenchment->IsPointInside( pUnit->GetCenterPlain() ) )
 		state = EES_RUN;
@@ -1248,14 +1262,14 @@ void CSoldierEnterEntrenchmentState::Segment()
 	switch ( state )
 	{
 		case EES_START:
-		if ( nTries-- <= 0 )
-		{
-			pUnit->SetCommandFinished();
-		}
-		if ( SetPathForRunIn() )
-			state = EES_RUN;
-		else
-			pUnit->SetCommandFinished();
+			if ( nTries-- <= 0 )
+			{
+				pUnit->SetCommandFinished();
+			}
+			if ( SetPathForRunIn() )
+				state = EES_RUN;
+			else
+				pUnit->SetCommandFinished();
 
 			break;
 		case EES_RUN:
@@ -1275,9 +1289,7 @@ void CSoldierEnterEntrenchmentState::Segment()
 
 ETryStateInterruptResult CSoldierEnterEntrenchmentState::TryInterruptState( class CAICommand *pCommand )
 {
-	if ( !pCommand ||
-				pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_IDLE_TRENCH ||
-				state != EES_FINISHED )
+	if ( !pCommand || pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_IDLE_TRENCH || state != EES_FINISHED )
 	{
 		pUnit->SetCommandFinished();
 		return TSIR_YES_IMMIDIATELY;
@@ -1295,14 +1307,16 @@ const CVec2 CSoldierEnterEntrenchmentState::GetPurposePoint() const
 //*									CSoldierAttackCommonStatObjState								*
 //*******************************************************************
 
-IUnitState* CSoldierAttackCommonStatObjState::Instance( CAIUnit *pUnit, CStaticObject *pObj, bool bSwarmAttack )
+IUnitState *CSoldierAttackCommonStatObjState::Instance( CAIUnit *pUnit, CStaticObject *pObj, bool bSwarmAttack )
 {
 	return new CSoldierAttackCommonStatObjState( pUnit, pObj, bSwarmAttack );
 }
 
-CSoldierAttackCommonStatObjState::CSoldierAttackCommonStatObjState( CAIUnit *_pUnit, CStaticObject *pObj, bool _bSwarmAttack )
-: pUnit( _pUnit ), CCommonAttackCommonStatObjState( _pUnit, pObj, _bSwarmAttack ),
-bFinishAfterInsidersDead( bSwarmAttack )
+CSoldierAttackCommonStatObjState::CSoldierAttackCommonStatObjState( CAIUnit *_pUnit,
+                                                                    CStaticObject *pObj,
+                                                                    bool _bSwarmAttack )
+		: pUnit( _pUnit ), CCommonAttackCommonStatObjState( _pUnit, pObj, _bSwarmAttack ),
+			bFinishAfterInsidersDead( bSwarmAttack )
 {
 }
 
@@ -1327,11 +1341,11 @@ ETryStateInterruptResult CSoldierAttackCommonStatObjState::TryInterruptState( cl
 	}
 
 	if ( pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_ATTACK_UNIT ||
-				pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT )
+	     pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT )
 	{
-		if ( checked_cast<CAIUnit*>(GetObjectByCmd(pCommand->ToUnitCmd()))->GetStats()->IsInfantry() )
+		if ( checked_cast<CAIUnit *>( GetObjectByCmd( pCommand->ToUnitCmd() ) )->GetStats()->IsInfantry() )
 		{
-			CSoldier *pSoldier = checked_cast<CSoldier*>( GetObjectByCmd( pCommand->ToUnitCmd() ) );
+			CSoldier *pSoldier = checked_cast<CSoldier *>( GetObjectByCmd( pCommand->ToUnitCmd() ) );
 			if ( pSoldier->IsInBuilding() && pSoldier->GetBuilding() == pObj )
 				return TSIR_NO_COMMAND_INCOMPATIBLE;
 		}
@@ -1353,14 +1367,15 @@ void CSoldierAttackCommonStatObjState::Segment()
 	CCommonAttackCommonStatObjState::Segment();
 }
 
-CAIUnit* CSoldierAttackCommonStatObjState::GetUnit() const
+CAIUnit *CSoldierAttackCommonStatObjState::GetUnit() const
 {
 	return pUnit;
 }
 
 const CVec2 CSoldierAttackCommonStatObjState::GetPurposePoint() const
 {
-	if ( GetTarget() && GetTarget()->IsRefValid() && GetTarget()->IsAlive() && pUnit && pUnit->IsRefValid() && pUnit->IsAlive() )
+	if ( GetTarget() && GetTarget()->IsRefValid() && GetTarget()->IsAlive() && pUnit && pUnit->IsRefValid() &&
+	     pUnit->IsAlive() )
 		return GetTarget()->GetAttackCenter( pUnit->GetCenterPlain() );
 	else
 		return CVec2( -1.0f, -1.0f );
@@ -1370,11 +1385,12 @@ const CVec2 CSoldierAttackCommonStatObjState::GetPurposePoint() const
 //*												CSoldierParadeState												*
 //*******************************************************************
 
-IUnitState* CSoldierParadeState::Instance( class CAIUnit *pUnit )
+IUnitState *CSoldierParadeState::Instance( class CAIUnit *pUnit )
 {
-	if ( pUnit->GetStats()->IsInfantry() && checked_cast<CSoldier*>(pUnit)->IsInFormation() )
+	if ( pUnit->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pUnit )->IsInFormation() )
 	{
-		if ( CPtr<IStaticPath> pPath = CreateStaticPathToPoint( checked_cast<CSoldier*>(pUnit)->GetUnitPointInFormation(), VNULL2, pUnit, false, GetAIMap() ) )
+		if ( CPtr<IStaticPath> pPath = CreateStaticPathToPoint(
+						 checked_cast<CSoldier *>( pUnit )->GetUnitPointInFormation(), VNULL2, pUnit, false, GetAIMap() ) )
 		{
 			pUnit->SendAlongPath( pPath, VNULL2, true );
 			return new CSoldierParadeState( pUnit );
@@ -1386,10 +1402,7 @@ IUnitState* CSoldierParadeState::Instance( class CAIUnit *pUnit )
 		return 0;
 }
 
-CSoldierParadeState::CSoldierParadeState( class CAIUnit *_pUnit )
-: pUnit( _pUnit )
-{
-}
+CSoldierParadeState::CSoldierParadeState( class CAIUnit *_pUnit ) : pUnit( _pUnit ) {}
 
 void CSoldierParadeState::Segment()
 {
@@ -1419,13 +1432,15 @@ const CVec2 CSoldierParadeState::GetPurposePoint() const
 //*												CSoldierPlaceMineNowState									*
 //*******************************************************************
 
-IUnitState* CSoldierPlaceMineNowState::Instance( class CAIUnit *pUnit, const CVec2 &point, const enum EMineType nType )
+IUnitState *CSoldierPlaceMineNowState::Instance( class CAIUnit *pUnit, const CVec2 &point, const enum EMineType nType )
 {
 	return new CSoldierPlaceMineNowState( pUnit, point, nType );
 }
 
-CSoldierPlaceMineNowState::CSoldierPlaceMineNowState( class CAIUnit *_pUnit, const CVec2 &_point, const enum EMineType _nType )
-: pUnit( _pUnit ), point( _point ), nType( _nType )
+CSoldierPlaceMineNowState::CSoldierPlaceMineNowState( class CAIUnit *_pUnit,
+                                                      const CVec2 &_point,
+                                                      const enum EMineType _nType )
+		: pUnit( _pUnit ), point( _point ), nType( _nType )
 {
 	updater.AddUpdate( 0, ACTION_NOTIFY_USE_DOWN, pUnit, -1 );
 	beginAnimTime = curTime;
@@ -1435,9 +1450,10 @@ void CSoldierPlaceMineNowState::Segment()
 {
 	if ( pUnit->GetPlayer() == theDipl.GetNeutralPlayer() )
 		pUnit->SetCommandFinished();
-	else if ( curTime - beginAnimTime >= pUnit->GetStats()->GetAnimTime( GetAnimationFromAction( ACTION_NOTIFY_USE_DOWN ) ) )
+	else if ( curTime - beginAnimTime >=
+	          pUnit->GetStats()->GetAnimTime( GetAnimationFromAction( ACTION_NOTIFY_USE_DOWN ) ) )
 	{
-		theUnitCreation.CreateMine( static_cast<EMineType>(nType), CVec3(point,0.0f), pUnit->GetPlayer() );
+		theUnitCreation.CreateMine( static_cast<EMineType>( nType ), CVec3( point, 0.0f ), pUnit->GetPlayer() );
 		pUnit->SetCommandFinished();
 	}
 }
@@ -1462,13 +1478,13 @@ const CVec2 CSoldierPlaceMineNowState::GetPurposePoint() const
 //*											CSoldierClearMineRadiusState								*
 //*******************************************************************
 
-IUnitState* CSoldierClearMineRadiusState::Instance( CAIUnit *pUnit, const CVec2 &clearCenter )
+IUnitState *CSoldierClearMineRadiusState::Instance( CAIUnit *pUnit, const CVec2 &clearCenter )
 {
 	return new CSoldierClearMineRadiusState( pUnit, clearCenter );
 }
 
 CSoldierClearMineRadiusState::CSoldierClearMineRadiusState( CAIUnit *_pUnit, const CVec2 &_clearCenter )
-: pUnit( _pUnit ), clearCenter( _clearCenter ), eState( EPM_START )
+		: pUnit( _pUnit ), clearCenter( _clearCenter ), eState( EPM_START )
 {
 }
 
@@ -1481,16 +1497,18 @@ bool CSoldierClearMineRadiusState::FindMineToClear()
 	while ( !iter.IsFinished() )
 	{
 		// мину никто не собирается удалять и она в радиусе осмотра
-		if ( (*iter)->GetObjectType() == ESOT_MINE &&
-				!checked_cast<CMineStaticObject*>(*iter)->IsBeingDisarmed() &&
-				fabs2( CVec2((*iter)->GetCenter().x,(*iter)->GetCenter().y) - clearCenter ) <= sqr( float(SConsts::MINE_CLEAR_RADIUS) ) )
+		if ( ( *iter )->GetObjectType() == ESOT_MINE && !checked_cast<CMineStaticObject *>( *iter )->IsBeingDisarmed() &&
+		     fabs2( CVec2( ( *iter )->GetCenter().x, ( *iter )->GetCenter().y ) - clearCenter ) <=
+		         sqr( float( SConsts::MINE_CLEAR_RADIUS ) ) )
 		{
-			const float fDistanceToUnit2 = fabs2( CVec2((*iter)->GetCenter().x,(*iter)->GetCenter().y) - pUnit->GetCenterPlain() );
+			const float fDistanceToUnit2 =
+					fabs2( CVec2( ( *iter )->GetCenter().x, ( *iter )->GetCenter().y ) - pUnit->GetCenterPlain() );
 			if ( fDistanceToUnit2 < fBestDistance2 )
 			{
-				if ( CPtr<IStaticPath> pPath = CreateStaticPathToPoint( CVec2((*iter)->GetCenter().x,(*iter)->GetCenter().y), VNULL2, pUnit, true, GetAIMap() ) )
+				if ( CPtr<IStaticPath> pPath = CreateStaticPathToPoint(
+								 CVec2( ( *iter )->GetCenter().x, ( *iter )->GetCenter().y ), VNULL2, pUnit, true, GetAIMap() ) )
 				{
-					pMine = checked_cast<CMineStaticObject*>(*iter);
+					pMine = checked_cast<CMineStaticObject *>( *iter );
 					fBestDistance2 = fDistanceToUnit2;
 				}
 			}
@@ -1502,7 +1520,10 @@ bool CSoldierClearMineRadiusState::FindMineToClear()
 	if ( pMine != 0 )
 	{
 		pMine->SetBeingDisarmed( true );
-		pUnit->SendAlongPath( CreateStaticPathToPoint( CVec2(pMine->GetCenter().x,pMine->GetCenter().y), VNULL2, pUnit, true, GetAIMap() ), VNULL2, true );
+		pUnit->SendAlongPath(
+				CreateStaticPathToPoint( CVec2( pMine->GetCenter().x, pMine->GetCenter().y ), VNULL2, pUnit, true, GetAIMap() ),
+				VNULL2,
+				true );
 
 		return true;
 	}
@@ -1517,64 +1538,69 @@ void CSoldierClearMineRadiusState::Segment()
 		pMine = 0;
 		eState = EPM_START;
 	}
-	else switch ( eState )
-	{
-		case EPM_START:
-			if ( FindMineToClear() )
-				eState = EPM_MOVE;
-			else
-				pUnit->SetCommandFinished();
+	else
+		switch ( eState )
+		{
+			case EPM_START:
+				if ( FindMineToClear() )
+					eState = EPM_MOVE;
+				else
+					pUnit->SetCommandFinished();
 
-			break;
-		case EPM_MOVE:
-			if ( !pMine->IsRefValid() || !pMine->IsAlive() )
-			{
-				pMine = 0;
-				eState = EPM_START;
-			}
-			else if ( mDistance( pUnit->GetCenterPlain(), CVec2(pMine->GetCenter().x,pMine->GetCenter().y) ) <= SConsts::TILE_SIZE )
-			{
-				pUnit->Stop();
-
-				eState = EPM_WAITING;
-				updater.AddUpdate( 0, ACTION_NOTIFY_USE_DOWN, pUnit, -1 );
-				beginAnimTime = curTime;
-			}
-			else if ( pUnit->IsIdle() )
-			{
-				if ( mDistance( pUnit->GetCenterPlain(), CVec2( pMine->GetCenter().x,pMine->GetCenter().y ) ) <= 3 * SConsts::TILE_SIZE )
+				break;
+			case EPM_MOVE:
+				if ( !pMine->IsRefValid() || !pMine->IsAlive() )
 				{
+					pMine = 0;
+					eState = EPM_START;
+				}
+				else if ( mDistance( pUnit->GetCenterPlain(), CVec2( pMine->GetCenter().x, pMine->GetCenter().y ) ) <=
+				          SConsts::TILE_SIZE )
+				{
+					pUnit->Stop();
+
 					eState = EPM_WAITING;
 					updater.AddUpdate( 0, ACTION_NOTIFY_USE_DOWN, pUnit, -1 );
 					beginAnimTime = curTime;
 				}
-				else
+				else if ( pUnit->IsIdle() )
 				{
-					if( IsValidObj( pMine ) )
-						pMine->SetBeingDisarmed( false );
+					if ( mDistance( pUnit->GetCenterPlain(), CVec2( pMine->GetCenter().x, pMine->GetCenter().y ) ) <=
+					     3 * SConsts::TILE_SIZE )
+					{
+						eState = EPM_WAITING;
+						updater.AddUpdate( 0, ACTION_NOTIFY_USE_DOWN, pUnit, -1 );
+						beginAnimTime = curTime;
+					}
+					else
+					{
+						if ( IsValidObj( pMine ) )
+							pMine->SetBeingDisarmed( false );
+						eState = EPM_START;
+					}
+				}
+
+				break;
+			case EPM_WAITING:
+				if ( curTime - beginAnimTime >=
+				     pUnit->GetStats()->GetAnimTime( GetAnimationFromAction( ACTION_NOTIFY_USE_DOWN ) ) )
+				{
+					pMine->Delete();
+					pMine = 0;
 					eState = EPM_START;
 				}
-			}
 
-			break;
-		case EPM_WAITING:
-			if ( curTime - beginAnimTime >= pUnit->GetStats()->GetAnimTime( GetAnimationFromAction( ACTION_NOTIFY_USE_DOWN ) ) )
-			{
-				pMine->Delete();
-				pMine = 0;
-				eState = EPM_START;
-			}
-
-			break;
-	}
+				break;
+		}
 }
 
 ETryStateInterruptResult CSoldierClearMineRadiusState::TryInterruptState( class CAICommand *pCommand )
 {
-	if ( eState != EPM_WAITING || !pUnit->IsAlive() || !pCommand || pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
+	if ( eState != EPM_WAITING || !pUnit->IsAlive() || !pCommand ||
+	     pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
 	{
 		pUnit->SetCommandFinished();
-		if( IsValidObj( pMine ) )
+		if ( IsValidObj( pMine ) )
 			pMine->SetBeingDisarmed( false );
 
 		return TSIR_YES_IMMIDIATELY;
@@ -1598,13 +1624,18 @@ void CSoldierAttackUnitInBuildingState::FireNow()
 	bAim = false;
 }
 
-IUnitState* CSoldierAttackUnitInBuildingState::Instance( CAIUnit *pUnit, CSoldier *pTarget, bool bAim, const bool bSwarmAttack )
+IUnitState *
+CSoldierAttackUnitInBuildingState::Instance( CAIUnit *pUnit, CSoldier *pTarget, bool bAim, const bool bSwarmAttack )
 {
 	return new CSoldierAttackUnitInBuildingState( pUnit, pTarget, bAim, bSwarmAttack );
 }
 
-CSoldierAttackUnitInBuildingState::CSoldierAttackUnitInBuildingState( CAIUnit *_pUnit, CSoldier *pTarget, bool bAim, const bool bSwarmAttack )
-: pUnit( _pUnit ), bTriedToShootBuilding( false ), CCommonAttackUnitInBuildingState( _pUnit, pTarget, bAim, bSwarmAttack )
+CSoldierAttackUnitInBuildingState::CSoldierAttackUnitInBuildingState( CAIUnit *_pUnit,
+                                                                      CSoldier *pTarget,
+                                                                      bool bAim,
+                                                                      const bool bSwarmAttack )
+		: pUnit( _pUnit ), bTriedToShootBuilding( false ),
+			CCommonAttackUnitInBuildingState( _pUnit, pTarget, bAim, bSwarmAttack )
 {
 }
 
@@ -1633,7 +1664,7 @@ ETryStateInterruptResult CSoldierAttackUnitInBuildingState::TryInterruptState( c
 	return TSIR_YES_IMMIDIATELY;
 }
 
-CAIUnit* CSoldierAttackUnitInBuildingState::GetUnit() const
+CAIUnit *CSoldierAttackUnitInBuildingState::GetUnit() const
 {
 	return pUnit;
 }
@@ -1650,14 +1681,14 @@ const CVec2 CSoldierAttackUnitInBuildingState::GetPurposePoint() const
 //*										CSoldierEnterTransportNowState								*
 //*******************************************************************
 
-IUnitState* CSoldierEnterTransportNowState::Instance( CAIUnit *pUnit, CMilitaryCar *pTransport )
+IUnitState *CSoldierEnterTransportNowState::Instance( CAIUnit *pUnit, CMilitaryCar *pTransport )
 {
 	return new CSoldierEnterTransportNowState( pUnit, pTransport );
 }
 
 CSoldierEnterTransportNowState::CSoldierEnterTransportNowState( CAIUnit *_pUnit, CMilitaryCar *_pTransport )
-: pUnit( _pUnit ), pTransport( _pTransport ), eState( EETS_START ),
-	vLastTransportCenter( _pTransport->GetCenterPlain() ), wLastTransportDir( _pTransport->GetFrontDirection() )
+		: pUnit( _pUnit ), pTransport( _pTransport ), eState( EETS_START ),
+			vLastTransportCenter( _pTransport->GetCenterPlain() ), wLastTransportDir( _pTransport->GetFrontDirection() )
 {
 }
 
@@ -1670,7 +1701,8 @@ void CSoldierEnterTransportNowState::Segment()
 		// проверять не сдвинулся ли транспорт
 		if ( curTime - timeLastTrajectoryUpdate > pUnit->GetBehUpdateDuration() )
 		{
-			if ( vLastTransportCenter != pTransport->GetCenterPlain() || wLastTransportDir != pTransport->GetFrontDirection() )
+			if ( vLastTransportCenter != pTransport->GetCenterPlain() ||
+			     wLastTransportDir != pTransport->GetFrontDirection() )
 				eState = EETS_START;
 
 			timeLastTrajectoryUpdate = curTime;
@@ -1679,24 +1711,27 @@ void CSoldierEnterTransportNowState::Segment()
 		switch ( eState )
 		{
 			case EETS_START:
+			{
+				if ( CPtr<IStaticPath> pPath =
+				         CreateStaticPathToPoint( pTransport->GetEntrancePoint(), VNULL2, pUnit, true, GetAIMap() ) )
 				{
-					if ( CPtr<IStaticPath> pPath = CreateStaticPathToPoint( pTransport->GetEntrancePoint(), VNULL2, pUnit, true, GetAIMap() ) )
-					{
-						pUnit->SendAlongPath( pPath, VNULL2, true );
-						eState = EETS_MOVING;
-						timeLastTrajectoryUpdate = curTime;
-					}
-					else
-						pUnit->SetCommandFinished();
+					pUnit->SendAlongPath( pPath, VNULL2, true );
+					eState = EETS_MOVING;
+					timeLastTrajectoryUpdate = curTime;
 				}
+				else
+					pUnit->SetCommandFinished();
+			}
 
-				break;
+			break;
 			case EETS_MOVING:
 				if ( pUnit->IsIdle() )
 				{
-					pUnit->TurnToDirection( GetDirectionByVector( pTransport->GetCenterPlain() - pUnit->GetCenterPlain() ), false, true );
+					pUnit->TurnToDirection(
+							GetDirectionByVector( pTransport->GetCenterPlain() - pUnit->GetCenterPlain() ), false, true );
 
-					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_IDLE_TRANSPORT, pTransport->GetUniqueId()), pUnit, false );
+					theGroupLogic.UnitCommand(
+							SAIUnitCmd( ACTION_COMMAND_IDLE_TRANSPORT, pTransport->GetUniqueId() ), pUnit, false );
 					eState = EETS_FINISHED;
 				}
 
@@ -1723,13 +1758,13 @@ const CVec2 CSoldierEnterTransportNowState::GetPurposePoint() const
 //*										CSoldierParaDroppingState											*
 //*******************************************************************
 
-IUnitState* CSoldierParaDroppingState::Instance( class CSoldier *_pUnit, class CAviation *pPlane )
+IUnitState *CSoldierParaDroppingState::Instance( class CSoldier *_pUnit, class CAviation *pPlane )
 {
 	return new CSoldierParaDroppingState( _pUnit, pPlane );
 }
 
 CSoldierParaDroppingState::CSoldierParaDroppingState( class CSoldier *_pUnit, class CAviation *pPlane )
-: pUnit( _pUnit ), eState( ESPDS_FALLING_W_PARASHUTE ), timeToCloseParashute( 0 )
+		: pUnit( _pUnit ), eState( ESPDS_FALLING_W_PARASHUTE ), timeToCloseParashute( 0 )
 {
 	if ( !IsValidObj( pPlane ) )
 	{
@@ -1739,7 +1774,7 @@ CSoldierParaDroppingState::CSoldierParaDroppingState( class CSoldier *_pUnit, cl
 	pUnit->AllowLieDown( false );
 	pUnit->SetSmoothPath( new CParatrooperPath( pUnit->GetCenter(), pUnit ) );
 
-	pRememberedStats = checked_cast<const NDb::SInfantryRPGStats*>( pUnit->GetStats() );
+	pRememberedStats = checked_cast<const NDb::SInfantryRPGStats *>( pUnit->GetStats() );
 
 	// подменить падающего солдата паращютистом
 	// запустить анимацию открывания парашюта
@@ -1764,35 +1799,34 @@ void CSoldierParaDroppingState::Segment()
 	{
 		bAgain = false;
 
-		switch( eState )
+		switch ( eState )
 		{
-		case ESPDS_FALLING_W_PARASHUTE:
-			if ( pUnit->GetSmoothPath()->IsFinished() )
-			{
-				updater.AddUpdate( 0, ACTION_NOTIFY_CLOSE_PARASHUTE, pUnit, -1 );
-				eState = ESPDS_WAIT_FOR_END_UPDATES;
-				eStateToSwitch = ESPDS_CLOSING_PARASHUTE;
-				timeToCloseParashute = curTime + theUnitCreation.GetRemoveParachuteTime();
+			case ESPDS_FALLING_W_PARASHUTE:
+				if ( pUnit->GetSmoothPath()->IsFinished() )
+				{
+					updater.AddUpdate( 0, ACTION_NOTIFY_CLOSE_PARASHUTE, pUnit, -1 );
+					eState = ESPDS_WAIT_FOR_END_UPDATES;
+					eStateToSwitch = ESPDS_CLOSING_PARASHUTE;
+					timeToCloseParashute = curTime + theUnitCreation.GetRemoveParachuteTime();
+				}
 
-			}
+				break;
+			case ESPDS_CLOSING_PARASHUTE:
+				// дождаться, когда время оставшегося падения меньше или равно времени сбора парашюта
+				if ( timeToCloseParashute <= curTime )
+				{
+					CPtr<SParadropStartFinishUpdate> pUpdate = new SParadropStartFinishUpdate;
+					pUpdate->bStart = false;
+					pUpdate->pNewSoldierVisObj = pUnit->GetStats()->pvisualObject;
+					pUpdate->pParachuteVisObj = theUnitCreation.GetParachuteVisObj();
+					pUpdate->nObjUniqueID = pUnit->GetUniqueId();
+					updater.AddUpdate( pUpdate, ACTION_NOTIFY_PARADROP_STARTED, pUnit, -1 );
+					eState = ESPDS_WAIT_FOR_END_UPDATES;
+					eStateToSwitch = ESPDS_FINISH_STATE;
+				}
 
-			break;
-		case ESPDS_CLOSING_PARASHUTE:
-			// дождаться, когда время оставшегося падения меньше или равно времени сбора парашюта
-			if ( timeToCloseParashute <= curTime )
-			{
-				CPtr<SParadropStartFinishUpdate> pUpdate = new SParadropStartFinishUpdate;
-				pUpdate->bStart = false;
-				pUpdate->pNewSoldierVisObj = pUnit->GetStats()->pvisualObject;
-				pUpdate->pParachuteVisObj = theUnitCreation.GetParachuteVisObj();
-				pUpdate->nObjUniqueID = pUnit->GetUniqueId();
-				updater.AddUpdate( pUpdate, ACTION_NOTIFY_PARADROP_STARTED, pUnit, -1 );
-				eState = ESPDS_WAIT_FOR_END_UPDATES;
-				eStateToSwitch = ESPDS_FINISH_STATE;
-			}
-
-			break;
-		case ESPDS_FINISH_STATE:
+				break;
+			case ESPDS_FINISH_STATE:
 			{
 				pUnit->RestoreSmoothPath();
 				pUnit->AllowLieDown( true );
@@ -1801,27 +1835,26 @@ void CSoldierParaDroppingState::Segment()
 
 				eState = ESPDS_WATING_FOR_ALL;
 				const CVec2 vCenter = pUnit->GetCenterPlain();
-				if ( vCenter.x < 0 || vCenter.y < 0 ||
-		 				!GetAIMap()->IsTileInside( AICellsTiles::GetTile(vCenter) ) ||
-						GetTerrain()->IsLocked( pUnit->GetCenterTile(), EAC_HUMAN ) )
+				if ( vCenter.x < 0 || vCenter.y < 0 || !GetAIMap()->IsTileInside( AICellsTiles::GetTile( vCenter ) ) ||
+				     GetTerrain()->IsLocked( pUnit->GetCenterTile(), EAC_HUMAN ) )
 				{
 					pUnit->Disappear(); // при падении на технику - смерть.
 				}
 			}
 			break;
-		case ESPDS_WATING_FOR_ALL:
+			case ESPDS_WATING_FOR_ALL:
 
-			break;
-		case ESPDS_WAIT_FOR_END_UPDATES:
-			// multiplayer out of sync cure
-//			if ( curTime > timeLastEndUpdates )
-			{
-				eState = eStateToSwitch;
-				bAgain = true;
-			}
-			break;
+				break;
+			case ESPDS_WAIT_FOR_END_UPDATES:
+				// multiplayer out of sync cure
+				//			if ( curTime > timeLastEndUpdates )
+				{
+					eState = eStateToSwitch;
+					bAgain = true;
+				}
+				break;
 		}
-	} while( bAgain );
+	} while ( bAgain );
 }
 
 ETryStateInterruptResult CSoldierParaDroppingState::TryInterruptState( class CAICommand *pCommand )
@@ -1849,23 +1882,23 @@ const CVec2 CSoldierParaDroppingState::GetPurposePoint() const
 //*										CSoldierUseSpyglassState											*
 //*******************************************************************
 
-IUnitState* CSoldierUseSpyglassState::Instance( CSoldier *pSoldier, const CVec2 &point )
+IUnitState *CSoldierUseSpyglassState::Instance( CSoldier *pSoldier, const CVec2 &point )
 {
 	return new CSoldierUseSpyglassState( pSoldier, point );
 }
 
 CSoldierUseSpyglassState::CSoldierUseSpyglassState( CSoldier *_pSoldier, const CVec2 &point )
-: CStatusUpdatesHelper( EUS_USE_SPY_GLASS ), pSoldier( _pSoldier ), vPoint2Look( point )
+		: CStatusUpdatesHelper( EUS_USE_SPY_GLASS ), pSoldier( _pSoldier ), vPoint2Look( point )
 {
 	pSoldier->SendAcknowledgement( ACK_POSITIVE );
 	pSoldier->Stop();
 	//
-	const	uint16_t wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
+	const uint16_t wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
 	pSoldier->TurnToDirection( wDir2Look, false, true );
 	pSoldier->SetOwnSightRadius( SConsts::SPY_GLASS_RADIUS );
 	//NI_ASSERT( SConsts::SPY_GLASS_RADIUS / ( 2 * SConsts::TILE_SIZE ) <= theWarFog.GetMaxRadius(), "Invalid sight radius for SPY_GLASS_RADIUS" );
 	pSoldier->SetVisionAngle( SConsts::SPY_GLASS_ANGLE );
-//	pSoldier->SetAngles( wDir2Point - SConsts::SPY_GLASS_ANGLE, wDir2Point + SConsts::SPY_GLASS_ANGLE );
+	//	pSoldier->SetAngles( wDir2Point - SConsts::SPY_GLASS_ANGLE, wDir2Point + SConsts::SPY_GLASS_ANGLE );
 	pSoldier->WarFogChanged();
 
 	pSoldier->StartCamouflating();
@@ -1891,7 +1924,7 @@ void CSoldierUseSpyglassState::Segment()
 	InitStatus();
 	if ( pSoldier->IsIdle() )
 	{
-		const	uint16_t wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
+		const uint16_t wDir2Look = GetDirectionByVector( vPoint2Look - pSoldier->GetCenterPlain() );
 		if ( pSoldier->GetDirection() != wDir2Look )
 		{
 			pSoldier->TurnToDirection( wDir2Look, false, true );
@@ -1923,13 +1956,15 @@ const CVec2 CSoldierUseSpyglassState::GetPurposePoint() const
 //*										CSoldierAttackFormationState									*
 //*******************************************************************
 
-IUnitState* CSoldierAttackFormationState::Instance( CAIUnit *pUnit, CFormation *pTarget, const bool bSwarmAttack )
+IUnitState *CSoldierAttackFormationState::Instance( CAIUnit *pUnit, CFormation *pTarget, const bool bSwarmAttack )
 {
 	return new CSoldierAttackFormationState( pUnit, pTarget, bSwarmAttack );
 }
 
-CSoldierAttackFormationState::CSoldierAttackFormationState( CAIUnit *_pUnit, CFormation *_pTarget, const bool _bSwarmAttack )
-: pUnit ( _pUnit ), pTarget ( _pTarget ), bSwarmAttack( _bSwarmAttack )
+CSoldierAttackFormationState::CSoldierAttackFormationState( CAIUnit *_pUnit,
+                                                            CFormation *_pTarget,
+                                                            const bool _bSwarmAttack )
+		: pUnit( _pUnit ), pTarget( _pTarget ), bSwarmAttack( _bSwarmAttack )
 {
 }
 
@@ -1942,18 +1977,20 @@ void CSoldierAttackFormationState::Segment()
 	{
 		if ( bSwarmAttack )
 		{
-			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_SWARM_ATTACK_FORMATION, pTarget->GetUniqueId() ), pUnit );
-			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_ATTACK_UNIT, (*pTarget)[0]->GetUniqueId() ), pUnit );
+			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_SWARM_ATTACK_FORMATION, pTarget->GetUniqueId() ),
+			                                 pUnit );
+			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_SWARM_ATTACK_UNIT, ( *pTarget )[0]->GetUniqueId() ),
+			                                 pUnit );
 		}
 		else
 		{
 			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_ATTACK_FORMATION, pTarget->GetUniqueId() ), pUnit );
-			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ATTACK_UNIT, (*pTarget)[0]->GetUniqueId() ), pUnit );
+			theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ATTACK_UNIT, ( *pTarget )[0]->GetUniqueId() ),
+			                                 pUnit );
 		}
 	}
 
-	TryInterruptState ( 0 ) ;
-
+	TryInterruptState( 0 );
 }
 
 ETryStateInterruptResult CSoldierAttackFormationState::TryInterruptState( class CAICommand *pCommand )
@@ -1974,19 +2011,14 @@ const CVec2 CSoldierAttackFormationState::GetPurposePoint() const
 //*										CSoldierIdleState															*
 //*******************************************************************
 
-IUnitState* CSoldierIdleState::Instance( class CAIUnit *pUnit )
+IUnitState *CSoldierIdleState::Instance( class CAIUnit *pUnit )
 {
 	return new CSoldierIdleState( pUnit );
 }
 
-CSoldierIdleState::CSoldierIdleState( class CAIUnit *pUnit )
-: pUnit( pUnit )
-{
-}
+CSoldierIdleState::CSoldierIdleState( class CAIUnit *pUnit ) : pUnit( pUnit ) {}
 
-void CSoldierIdleState::Segment()
-{
-}
+void CSoldierIdleState::Segment() {}
 
 ETryStateInterruptResult CSoldierIdleState::TryInterruptState( class CAICommand *pCommand )
 {
@@ -2006,8 +2038,8 @@ const CVec2 CSoldierIdleState::GetPurposePoint() const
 //*										CSoldierAttackAviationState										*
 //*******************************************************************
 
-CSoldierAttackAviationState::CSoldierAttackAviationState ( class CAIUnit *pUnit, class CAviation *pPlane )
-: predictedFire( pUnit, pPlane )
+CSoldierAttackAviationState::CSoldierAttackAviationState( class CAIUnit *pUnit, class CAviation *pPlane )
+		: predictedFire( pUnit, pPlane )
 {
 	theSupremeBeing.SetAAVisible( pUnit, pPlane->GetParty(), true );
 
@@ -2018,7 +2050,7 @@ CSoldierAttackAviationState::CSoldierAttackAviationState ( class CAIUnit *pUnit,
 	// try 2nd shells
 	for ( int i = 0; i < pUnit->GetNGuns(); ++i )
 	{
-		CBasicGun * pGun = pUnit->GetGun( i );
+		CBasicGun *pGun = pUnit->GetGun( i );
 		if ( pGun->GetShellType() == 1 && pGun->GetWeapon()->nCeiling > 0 && pGun->GetTurret() != 0 )
 		{
 			predictedFire.AddGunNumber( i );
@@ -2031,7 +2063,7 @@ CSoldierAttackAviationState::CSoldierAttackAviationState ( class CAIUnit *pUnit,
 	{
 		for ( int i = 0; i < pUnit->GetNGuns(); ++i )
 		{
-			CBasicGun * pGun = pUnit->GetGun( i );
+			CBasicGun *pGun = pUnit->GetGun( i );
 			if ( pGun->GetWeapon()->nCeiling > 0 && pGun->GetTurret() != 0 )
 			{
 				predictedFire.AddGunNumber( i );
@@ -2048,8 +2080,8 @@ CSoldierAttackAviationState::CSoldierAttackAviationState ( class CAIUnit *pUnit,
 	}
 	else if ( pUnit->GetStats()->IsArtillery() )
 	{
-		NI_ASSERT( dynamic_cast<CArtillery*>(pUnit) != 0, "Wrong type of unit" );
-		CArtillery *pArt = checked_cast<CArtillery*>(pUnit);
+		NI_ASSERT( dynamic_cast<CArtillery *>( pUnit ) != 0, "Wrong type of unit" );
+		CArtillery *pArt = checked_cast<CArtillery *>( pUnit );
 		if ( !pArt->IsInstalled() )
 		{
 			pArt->ForceInstallAction();
@@ -2071,7 +2103,7 @@ ETryStateInterruptResult CSoldierAttackAviationState::TryInterruptState( class C
 	{
 		theSupremeBeing.SetAAVisible( predictedFire.GetUnit(), predictedFire.GetUnit()->GetParty() == 0 ? 1 : 0, false );
 		predictedFire.GetUnit()->SetCommandFinished();
-	  predictedFire.Stop();
+		predictedFire.Stop();
 		return TSIR_YES_IMMIDIATELY;
 	}
 
@@ -2083,7 +2115,7 @@ ETryStateInterruptResult CSoldierAttackAviationState::TryInterruptState( class C
 	return TSIR_YES_WAIT;
 }
 
-CAIUnit* CSoldierAttackAviationState::GetTargetUnit() const
+CAIUnit *CSoldierAttackAviationState::GetTargetUnit() const
 {
 	return predictedFire.GetPlane();
 }
@@ -2092,19 +2124,19 @@ CAIUnit* CSoldierAttackAviationState::GetTargetUnit() const
 //*										CSoldierFireMoraleShellState									*
 //*******************************************************************
 
-IUnitState* CSoldierFireMoraleShellState::Instance( CAIUnit * pUnit, const class CVec2 &vTarget )
+IUnitState *CSoldierFireMoraleShellState::Instance( CAIUnit *pUnit, const class CVec2 &vTarget )
 {
 	return new CSoldierFireMoraleShellState( pUnit, vTarget );
 }
 
-CSoldierFireMoraleShellState::CSoldierFireMoraleShellState( CAIUnit * pUnit, const class CVec2 &vTarget )
-: pUnit( pUnit ), nMoraleGun( -1 ), vTarget( vTarget )
+CSoldierFireMoraleShellState::CSoldierFireMoraleShellState( CAIUnit *pUnit, const class CVec2 &vTarget )
+		: pUnit( pUnit ), nMoraleGun( -1 ), vTarget( vTarget )
 {
 	// choose morale gun
 	const int nGuns = pUnit->GetNGuns();
 	for ( int i = 0; i < nGuns; ++i )
 	{
-		CBasicGun * pGun = pUnit->GetGun( i );
+		CBasicGun *pGun = pUnit->GetGun( i );
 		if ( pGun->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_MORALE )
 		{
 			if ( !pGun->CanShootToPoint( vTarget, 0.0f ) )
@@ -2143,23 +2175,21 @@ ETryStateInterruptResult CSoldierFireMoraleShellState::TryInterruptState( CAICom
 //*												CSoldierUseState													*
 //*******************************************************************
 
-IUnitState* CSoldierUseState::Instance( CAIUnit *pUnit, const EActionNotify &eState )
+IUnitState *CSoldierUseState::Instance( CAIUnit *pUnit, const EActionNotify &eState )
 {
 	return new CSoldierUseState( pUnit, eState );
 }
 
-CSoldierUseState::CSoldierUseState( CAIUnit *_pUnit, const EActionNotify &_eState )
-: pUnit( _pUnit ), eState( _eState )
+CSoldierUseState::CSoldierUseState( CAIUnit *_pUnit, const EActionNotify &_eState ) : pUnit( _pUnit ), eState( _eState )
 {
 	pUnit->Stop();
 	updater.AddUpdate( 0, eState, pUnit, -1 );
 
-	NI_ASSERT( eState == ACTION_NOTIFY_USE_UP || eState == ACTION_NOTIFY_USE_DOWN, fmt::format( "Wrong action ({}) in UseState", (int)eState ) );
+	NI_ASSERT( eState == ACTION_NOTIFY_USE_UP || eState == ACTION_NOTIFY_USE_DOWN,
+	           fmt::format( "Wrong action ({}) in UseState", (int)eState ) );
 }
 
-void CSoldierUseState::Segment()
-{
-}
+void CSoldierUseState::Segment() {}
 
 ETryStateInterruptResult CSoldierUseState::TryInterruptState( CAICommand *pCommand )
 {
@@ -2173,8 +2203,8 @@ ETryStateInterruptResult CSoldierUseState::TryInterruptState( CAICommand *pComma
 //*										  CSoldierEntrenchSelfState*
 //*******************************************************************
 
-CSoldierEntrenchSelfState::CSoldierEntrenchSelfState ( class CSoldier *_pSoldier )
-: pSoldier( _pSoldier ), fOldProgress( -1.0f )
+CSoldierEntrenchSelfState::CSoldierEntrenchSelfState( class CSoldier *_pSoldier )
+		: pSoldier( _pSoldier ), fOldProgress( -1.0f )
 {
 	pSoldier->Stop();
 	if ( !pSoldier->IsInTankPit() )
@@ -2182,20 +2212,22 @@ CSoldierEntrenchSelfState::CSoldierEntrenchSelfState ( class CSoldier *_pSoldier
 
 	float fCoeff = 1.0f;
 	int nDefaultTime = SConsts::ENTRENCH_SELF_TIME;
-	for ( int i = 0; i < (std::min<int>) ( pSoldier->GetStats()->GetActions()->specialAbilities.size(), pSoldier->GetAbilityLevel() ); ++i )
+	for ( int i = 0;
+	      i < (std::min<int>)( pSoldier->GetStats()->GetActions()->specialAbilities.size(), pSoldier->GetAbilityLevel() );
+	      ++i )
 	{
 		const int nAbility = pSoldier->GetStats()->GetActions()->specialAbilities[i]->eName;
 		if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS )
 		{
 			const NDb::SUnitSpecialAblityDesc *pSA = pSoldier->GetStats()->GetActions()->specialAbilities[i];
-			NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found");
+			NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found" );
 			if ( pSA )
 				fCoeff = pSA->fParameter;
 		}
 		else if ( nAbility == NDb::ABILITY_ENTRENCH_SELF )
 		{
 			const NDb::SUnitSpecialAblityDesc *pSA = pSoldier->GetStats()->GetActions()->specialAbilities[i];
-			NI_ASSERT( pSA, "Ability desc (Entrench Self) not found");
+			NI_ASSERT( pSA, "Ability desc (Entrench Self) not found" );
 			if ( pSA )
 				nDefaultTime = pSA->nSwitchOnTime;
 		}
@@ -2220,9 +2252,16 @@ void CSoldierEntrenchSelfState::Segment()
 		{
 			// create tank pit and set unit into it
 			const SVector vDigTile( pSoldier->GetCenterTile() );
-			const SMechUnitRPGStats *pStats = theUnitCreation.GetFoxHole( GetTerrain()->CanDigEntrenchment( vDigTile.x, vDigTile.y ) );
+			const SMechUnitRPGStats *pStats =
+					theUnitCreation.GetFoxHole( GetTerrain()->CanDigEntrenchment( vDigTile.x, vDigTile.y ) );
 			std::list<SObjTileInfo> tilesToLock;
-			CPtr<CExistingObject> pTankPit = theStatObjs.AddNewTankPit( pStats, CVec3(pSoldier->GetCenterPlain(),0.0f), pSoldier->GetFrontDirection(), 0, pStats->vAABBHalfSize, tilesToLock, pSoldier );
+			CPtr<CExistingObject> pTankPit = theStatObjs.AddNewTankPit( pStats,
+			                                                            CVec3( pSoldier->GetCenterPlain(), 0.0f ),
+			                                                            pSoldier->GetFrontDirection(),
+			                                                            0,
+			                                                            pStats->vAABBHalfSize,
+			                                                            tilesToLock,
+			                                                            pSoldier );
 			if ( pTankPit )
 			{
 				pSoldier->SetInTankPit( pTankPit );
@@ -2276,13 +2315,11 @@ const CVec2 CSoldierEntrenchSelfState::GetPurposePoint() const
 	return pSoldier->GetCenterPlain();
 }
 
-
 //*******************************************************************
 //*										  CSoldierLeaveSelfEntrenchState*
 //*******************************************************************
 
-CSoldierLeaveSelfEntrenchState::CSoldierLeaveSelfEntrenchState( class CAIUnit *_pSoldier )
-: pSoldier( _pSoldier )
+CSoldierLeaveSelfEntrenchState::CSoldierLeaveSelfEntrenchState( class CAIUnit *_pSoldier ) : pSoldier( _pSoldier )
 {
 	pSoldier->SetOffTankPit();
 	pSoldier->SetCommandFinished();
@@ -2295,9 +2332,7 @@ CSoldierLeaveSelfEntrenchState::CSoldierLeaveSelfEntrenchState( class CAIUnit *_
 	updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, pSoldier, -1 );
 }
 
-void CSoldierLeaveSelfEntrenchState::Segment()
-{
-}
+void CSoldierLeaveSelfEntrenchState::Segment() {}
 
 ETryStateInterruptResult CSoldierLeaveSelfEntrenchState::TryInterruptState( class CAICommand *pCommand )
 {
@@ -2309,7 +2344,6 @@ const CVec2 CSoldierLeaveSelfEntrenchState::GetPurposePoint() const
 {
 	return pSoldier->GetCenterPlain();
 }
-
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E6, CSoldierFireMoraleShellState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4AE, CSoldierAttackUnitInBuildingState );

@@ -6,16 +6,17 @@ struct IAICmdsAutoMagic;
 
 namespace NDb
 {
-	struct SNetGameConsts;
+struct SNetGameConsts;
 };
 namespace NNet
 {
-	struct IDriver;
+struct IDriver;
 }
 
 class CMultiplayerCommand : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CMultiplayerCommand );
+
 public:
 	enum EMultiplayerCommand
 	{
@@ -36,11 +37,14 @@ public:
 	int nPlayer;
 	int nParam;
 
-	CMultiplayerCommand() : nPlayer( -1 ) { }
-	CMultiplayerCommand( const EMultiplayerCommand _eCommand, const int _nPlayer,
-											 const int _nParam, CObjectBase *_pAILogicCommand )
-		: eCommand( _eCommand ), pAILogicCommand( _pAILogicCommand ),
-			nPlayer( _nPlayer ), nParam( _nParam ) { }
+	CMultiplayerCommand() : nPlayer( -1 ) {}
+	CMultiplayerCommand( const EMultiplayerCommand _eCommand,
+	                     const int _nPlayer,
+	                     const int _nParam,
+	                     CObjectBase *_pAILogicCommand )
+			: eCommand( _eCommand ), pAILogicCommand( _pAILogicCommand ), nPlayer( _nPlayer ), nParam( _nParam )
+	{
+	}
 };
 
 struct IMultiplayer : public CObjectBase
@@ -53,7 +57,7 @@ struct IMultiplayer : public CObjectBase
 	};
 	virtual void SendAICommand( CObjectBase *pCommand ) = 0;
 	virtual void SendDirect( int nPlayer, CObjectBase *pCommand ) = 0;
-	virtual CMultiplayerCommand* GetCommand() = 0;
+	virtual CMultiplayerCommand *GetCommand() = 0;
 	virtual void FinishSegment() = 0;
 	virtual int GetSelfPlayerNum() = 0;
 	virtual EConnectionState GetState() = 0;
@@ -62,4 +66,5 @@ struct IMultiplayer : public CObjectBase
 	virtual void SendRecv() = 0;
 };
 IMultiplayer *CreateMultiplayerHost( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts );
-IMultiplayer *CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts, const char *pszIPAddress );
+IMultiplayer *
+CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts, const char *pszIPAddress );

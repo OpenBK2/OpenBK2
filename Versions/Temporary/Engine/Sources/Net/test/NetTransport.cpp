@@ -49,6 +49,7 @@ using namespace NNet;
 class CQueuedLinks : public ILinksManager
 {
 	OBJECT_NOCOPY_METHODS( CQueuedLinks );
+
 public:
 	struct Datagram
 	{
@@ -120,8 +121,8 @@ CMemoryStream Normal( unsigned int clientID, const std::vector<unsigned char> &p
 	return packet;
 }
 
-CMemoryStream NormalBlock( unsigned int clientID, PACKET_ID packetID, unsigned int offset,
-	const unsigned char *data, unsigned char size )
+CMemoryStream NormalBlock(
+		unsigned int clientID, PACKET_ID packetID, unsigned int offset, const unsigned char *data, unsigned char size )
 {
 	CMemoryStream packet;
 	packet << static_cast<unsigned char>( 0 ) << clientID; // NORMAL
@@ -149,7 +150,7 @@ std::vector<unsigned char> LargeFrames( int count, int payloadSize )
 		const auto payload = Payload( i + 1, payloadSize );
 		stream.Write( payload.data(), payload.size() );
 	}
-	const auto *bytes = reinterpret_cast<const unsigned char*>( stream.GetBuffer() );
+	const auto *bytes = reinterpret_cast<const unsigned char *>( stream.GetBuffer() );
 	return { bytes, bytes + stream.GetSize() };
 }
 
@@ -183,7 +184,7 @@ std::vector<DirectMessage> ReadFullDirectMessages( CNetDriver &driver )
 	{
 		if ( type == IDriver::DIRECT )
 		{
-			const auto *bytes = reinterpret_cast<const unsigned char*>( packet.GetBuffer() );
+			const auto *bytes = reinterpret_cast<const unsigned char *>( packet.GetBuffer() );
 			result.emplace_back( clientID, std::vector<unsigned char>( bytes, bytes + packet.GetSize() ) );
 		}
 	}
@@ -200,7 +201,7 @@ TEST( NetTransport, ShortFinalMessageDoesNotWaitForAnotherPacket )
 	CNetDriverTestAccess::AddPeer( driver, 17, peer );
 	links->incoming.push_back( { peer, Normal( 17, { 42 } ) } );
 	driver.Step();
-	EXPECT_EQ( ReadDirectMessages( driver ), (std::vector<unsigned char>{ 42 }) );
+	EXPECT_EQ( ReadDirectMessages( driver ), ( std::vector<unsigned char>{ 42 } ) );
 }
 
 TEST( NetTransport, BufferedBurstLargerThanRingDrainsWithoutAnotherDatagram )
@@ -228,9 +229,9 @@ TEST( NetTransport, BufferedBurstLargerThanRingDrainsWithoutAnotherDatagram )
 	driver.Step();
 	const auto received = ReadFullDirectMessages( driver );
 	ASSERT_EQ( received.size(), 3u );
-	EXPECT_EQ( received[0], (DirectMessage{ 23, { 42 } }) );
-	EXPECT_EQ( received[1], (DirectMessage{ 17, Payload( 1, 20000 ) }) );
-	EXPECT_EQ( received[2], (DirectMessage{ 17, Payload( 2, 20000 ) }) );
+	EXPECT_EQ( received[0], ( DirectMessage{ 23, { 42 } } ) );
+	EXPECT_EQ( received[1], ( DirectMessage{ 17, Payload( 1, 20000 ) } ) );
+	EXPECT_EQ( received[2], ( DirectMessage{ 17, Payload( 2, 20000 ) } ) );
 }
 
 TEST( NetTransport, MaximumLegalFrameAcceptsItsLastFragment )
@@ -252,12 +253,16 @@ TEST( NetTransport, MaximumLegalFrameAcceptsItsLastFragment )
 	driver.Step();
 	EXPECT_TRUE( ReadDirectMessages( driver ).empty() );
 	// Only 1017 ring bytes remain free, but this final block is just 21 bytes.
-	links->incoming.push_back( { peer, NormalBlock( 17, packetID++, partialSize,
-		data.data() + partialSize, static_cast<unsigned char>( data.size() - partialSize ) ) } );
+	links->incoming.push_back( { peer,
+	                             NormalBlock( 17,
+	                                          packetID++,
+	                                          partialSize,
+	                                          data.data() + partialSize,
+	                                          static_cast<unsigned char>( data.size() - partialSize ) ) } );
 	driver.Step();
 	const auto received = ReadFullDirectMessages( driver );
 	ASSERT_EQ( received.size(), 1u );
-	EXPECT_EQ( received[0], (DirectMessage{ 17, Payload( 1, N_STREAM_BUFFER - 1002 ) }) );
+	EXPECT_EQ( received[0], ( DirectMessage{ 17, Payload( 1, N_STREAM_BUFFER - 1002 ) } ) );
 }
 
 TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
@@ -349,11 +354,11 @@ TEST( NetTransport, ReliableStreamSurvivesLossReorderingAndSequenceWrap )
 				delayed.erase( delayed.begin() + i );
 			}
 		}
-		for (;;)
+		for ( ;; )
 		{
 			receiver.stream.PumpIncoming();
 			unsigned char bytes[1537];
-			const int size = receiver.stream.channelInBuf.Read( bytes, sizeof(bytes) );
+			const int size = receiver.stream.channelInBuf.Read( bytes, sizeof( bytes ) );
 			if ( !size )
 				break;
 			received.insert( received.end(), bytes, bytes + size );
@@ -385,7 +390,7 @@ TEST( NetTransport, CompleteMessagesAreDeliveredBeforeFollowingLogout )
 	links->incoming.push_back( { peer, Normal( 17, { 10, 20, 30 } ) } );
 	links->incoming.push_back( { peer, Logout( 17 ) } );
 	driver.Step();
-	EXPECT_EQ( ReadDirectMessages( driver ), (std::vector<unsigned char>{ 10, 20, 30 }) );
+	EXPECT_EQ( ReadDirectMessages( driver ), ( std::vector<unsigned char>{ 10, 20, 30 } ) );
 }
 
 TEST( NetTransport, OldLogoutRecipientIDCannotRemoveAnotherConnection )
@@ -486,7 +491,7 @@ TEST( NetTransport, ReorderedAcknowledgementsAtBitmapBoundaryAreNotLost )
 		while ( sent.size() < static_cast<size_t>( shift + 2 ) )
 		{
 			unsigned char header[8];
-			CBitStream bits( header, CBitStream::write, sizeof(header) );
+			CBitStream bits( header, CBitStream::write, sizeof( header ) );
 			const PACKET_ID id = sender.WrtieAcks( &bits, 500 );
 			if ( !sent.empty() || ( id >= 64 && id < 65500 ) )
 				sent.push_back( id );
@@ -494,11 +499,11 @@ TEST( NetTransport, ReorderedAcknowledgementsAtBitmapBoundaryAreNotLost )
 		const auto receive = [&sender]( PACKET_ID incomingID, PACKET_ID lastAcknowledged )
 		{
 			unsigned char header[8];
-			CBitStream output( header, CBitStream::write, sizeof(header) );
+			CBitStream output( header, CBitStream::write, sizeof( header ) );
 			output.Write( incomingID );
 			output.Write( lastAcknowledged );
 			output.Write( uint32_t( 1 ) ); // also acknowledge the previous packet
-			CBitStream input( header, CBitStream::read, sizeof(header) );
+			CBitStream input( header, CBitStream::read, sizeof( header ) );
 			std::vector<PACKET_ID> acknowledged;
 			EXPECT_TRUE( sender.ReadAcks( &acknowledged, input ) );
 			return acknowledged;
@@ -547,7 +552,9 @@ TEST( NetTransport, ThreePeersAcknowledgeBroadcastWithDifferentLocalPeerIDs )
 	for ( auto &peer : peers )
 	{
 		CP2PTracker::SMessage message;
-		while ( peer.second.GetMessage( &message ) ) {}
+		while ( peer.second.GetMessage( &message ) )
+		{
+		}
 	}
 
 	CMemoryStream payload;

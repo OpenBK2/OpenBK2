@@ -7,11 +7,9 @@
 
 #include "AILogic_export.h"
 
-REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C81, CPahtFractionArcLineArc3D)
-
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11095C81, CPahtFractionArcLineArc3D )
 
 //	CPahtFractionArcLineArc
-
 
 void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths )
 {
@@ -30,16 +28,18 @@ void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths )
 	}
 }
 
-void CPahtFractionArcLineArc3D::Init( const SPrevPathParams &prevPath,
-																	 const CVec3 &x1, const CVec3 &v1,
-																	 const float fR0, const float fR1 )
+void CPahtFractionArcLineArc3D::Init(
+		const SPrevPathParams &prevPath, const CVec3 &x1, const CVec3 &v1, const float fR0, const float fR1 )
 {
 	Init( prevPath.p2, x1, prevPath.vSpeed, v1, fR0, fR1 );
 }
 
-void CPahtFractionArcLineArc3D::Init( const CVec3 &x0, const CVec3 &x1,			// coordinates
-					 const CVec3 &v0, const CVec3 &v1,			// directions
-					 const float r0, const float r1 )			// turn radii
+void CPahtFractionArcLineArc3D::Init( const CVec3 &x0,
+                                      const CVec3 &x1, // coordinates
+                                      const CVec3 &v0,
+                                      const CVec3 &v1, // directions
+                                      const float r0,
+                                      const float r1 ) // turn radii
 {
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "show_plane_path", 0 ) == 1 )
@@ -58,17 +58,17 @@ void CPahtFractionArcLineArc3D::Init( const CVec3 &x0, const CVec3 &x1,			// coo
 	pStart->Init( x0, v0, x1, r0 ); // forward direction, ignore v1
 	CVec3 vForwardArcFinish = pStart->GetArc() ? pStart->GetArc()->GetEndPoint() : pStart->GetLine()->GetStartPoint();
 
-	pFinish->Init( x1, -v1, vForwardArcFinish, r1 );	// backward, ignore speed on arc vForwardArcFinish
+	pFinish->Init( x1, -v1, vForwardArcFinish, r1 ); // backward, ignore speed on arc vForwardArcFinish
 	CVec3 vBackArcFinish = pFinish->GetArc() ? pFinish->GetArc()->GetEndPoint() : pFinish->GetLine()->GetStartPoint();
 
 	// improved forward
 	pStart->Init( x0, v0, vBackArcFinish, r0 );
 
-	for ( int a = 0; a < 3;  ++a )
+	for ( int a = 0; a < 3; ++a )
 	{
 		// second iteration
 		vForwardArcFinish = pStart->GetArc() ? pStart->GetArc()->GetEndPoint() : pStart->GetLine()->GetStartPoint();
-		pFinish->Init( x1, -v1, vForwardArcFinish, r1 );	// backward, ignore speed on arc vForwardArcFinish
+		pFinish->Init( x1, -v1, vForwardArcFinish, r1 ); // backward, ignore speed on arc vForwardArcFinish
 		vBackArcFinish = pFinish->GetArc() ? pFinish->GetArc()->GetEndPoint() : pFinish->GetLine()->GetStartPoint();
 		pStart->Init( x0, v0, vBackArcFinish, r0 );
 	}
@@ -81,7 +81,7 @@ void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &pa
 	CVec3 v0( 81.118164f, -28.335449f, -0.0026855469f );
 	CVec3 v1( 0.31289077f, 0.94978905f, 2.8692173e-005f );
 	float r0( 522.68530f );
-	float r1(	522.68530f	);
+	float r1( 522.68530f );
 
 	if ( paramsSet.size() == 2 )
 	{
@@ -106,12 +106,12 @@ void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &pa
 	{
 		CSegment segm;
 		segm.p1 = CVec2( points[i].x, points[i].y );
-		segm.p2 = CVec2( points[1+i].x, points[1+i].y );
+		segm.p2 = CVec2( points[1 + i].x, points[1 + i].y );
 		segm.dir = segm.p2 - segm.p1;
 		DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, 2, NDebugInfo::BLUE );
 	}
 }
 
-START_REGISTER(CPlanePaths)
+START_REGISTER( CPlanePaths )
 REGISTER_CMD( "PlanePathTest", PlanePathTest );
 FINISH_REGISTER

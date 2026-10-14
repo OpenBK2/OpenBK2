@@ -14,46 +14,52 @@ class CBasePathUnit;
 
 class CBSpline
 {
-public: int operator&( IBinSaver &saver ); private:;
-
-				CVec2 a, b, c, d;
-				CVec2 x, dx, d2x, d3x;
-				CVec2 fw_dx, fw_d2x, fw_d3x;
-				float t = 0.0f, tForward = 0.0f;
-				uint8_t cntToForward = 0;
 public:
-	CBSpline() : a( VNULL2 ), b( VNULL2 ), c( VNULL2 ), d( VNULL2 ),
-		x( VNULL2 ), dx( VNULL2 ), d2x( VNULL2 ), d3x( VNULL2 ),
-		fw_dx( VNULL2 ), fw_d2x( VNULL2 ), fw_d3x( VNULL2 ), t( 0 ), tForward( 0 ),
-		cntToForward( 0 ) {}
+	int operator&( IBinSaver &saver );
 
-		// для вычисления сплайна
-		const static float DELTA;
-		// для просмотра вперёд на предмет залоканных тайлов на пути
-		const static float DELTA_FORWARD;
-		const static int N_OF_ITERATONS;
-		const static int N_ITERS_TO_FORWARD;
+private:
+	;
 
-		void Init( const CVec2 &p3, const CVec2 &p2, const CVec2 &p1, const CVec2 &p0 );
+	CVec2 a, b, c, d;
+	CVec2 x, dx, d2x, d3x;
+	CVec2 fw_dx, fw_d2x, fw_d3x;
+	float t = 0.0f, tForward = 0.0f;
+	uint8_t cntToForward = 0;
 
-		void Iterate();
+public:
+	CBSpline()
+			: a( VNULL2 ), b( VNULL2 ), c( VNULL2 ), d( VNULL2 ), x( VNULL2 ), dx( VNULL2 ), d2x( VNULL2 ), d3x( VNULL2 ),
+				fw_dx( VNULL2 ), fw_d2x( VNULL2 ), fw_d3x( VNULL2 ), t( 0 ), tForward( 0 ), cntToForward( 0 )
+	{
+	}
 
-		const CVec2& GetPoint() const { return x; }
-		const CVec2& GetDX() const { return dx; }
-		const float GetReverseR() const;
+	// для вычисления сплайна
+	const static float DELTA;
+	// для просмотра вперёд на предмет залоканных тайлов на пути
+	const static float DELTA_FORWARD;
+	const static int N_OF_ITERATONS;
+	const static int N_ITERS_TO_FORWARD;
 
-		struct SForwardIter
-		{
-			float t = 0.0f;
-			CVec2 x;
-			CVec2 fw_dx, fw_d2x, fw_d3x;
-		};
+	void Init( const CVec2 &p3, const CVec2 &p2, const CVec2 &p1, const CVec2 &p0 );
 
-		// если pIter->t == -1, то дальше итерировать нельзя, т.к. сплайн кончился
-		const void StartForwardIterating( SForwardIter *pIter );
-		const void IterateForward( SForwardIter *pIter );
+	void Iterate();
 
-		void DumpState() const;
+	const CVec2 &GetPoint() const { return x; }
+	const CVec2 &GetDX() const { return dx; }
+	const float GetReverseR() const;
+
+	struct SForwardIter
+	{
+		float t = 0.0f;
+		CVec2 x;
+		CVec2 fw_dx, fw_d2x, fw_d3x;
+	};
+
+	// если pIter->t == -1, то дальше итерировать нельзя, т.к. сплайн кончился
+	const void StartForwardIterating( SForwardIter *pIter );
+	const void IterateForward( SForwardIter *pIter );
+
+	void DumpState() const;
 };
 
 // путь по окружности
@@ -64,61 +70,76 @@ class CCirclePath
 	float fRadius = 0.0f;
 	bool bClockWise = false;
 
-	float fCurrentDelta = 0.0f;    // текущее приращение
-	CVec2 vX, vDX;				  // координата точки и направление касательной в этой точке
-	CVec2 vLastX, vLastDX;  // координата последние точки и направление в этой точке
+	float fCurrentDelta = 0.0f; // текущее приращение
+	CVec2 vX, vDX;              // координата точки и направление касательной в этой точке
+	CVec2 vLastX, vLastDX;      // координата последние точки и направление в этой точке
 
-	bool bForwardDir = false;				// едем вперед или нет
+	bool bForwardDir = false; // едем вперед или нет
 
 public:
 	CCirclePath()
-		: fStartDir( 0 ), fDirDiff( 0 ), vCenter( 0, 0 ), fRadius( 0.0f ), bClockWise( false ),
-		fCurrentDelta( 0 ), vX( 0, 0 ), vDX( 0, 0 ), vLastX( 0, 0 ), vLastDX( 0, 0 ), bForwardDir( true ) {}
+			: fStartDir( 0 ), fDirDiff( 0 ), vCenter( 0, 0 ), fRadius( 0.0f ), bClockWise( false ), fCurrentDelta( 0 ),
+				vX( 0, 0 ), vDX( 0, 0 ), vLastX( 0, 0 ), vLastDX( 0, 0 ), bForwardDir( true )
+	{
+	}
 
-		CCirclePath( const uint16_t _wStartDir, const uint16_t _wDirDiff, const CVec2 &_vPoint, const float _fRadius, const bool _bClockWise, const bool _bForward )
+	CCirclePath( const uint16_t _wStartDir,
+	             const uint16_t _wDirDiff,
+	             const CVec2 &_vPoint,
+	             const float _fRadius,
+	             const bool _bClockWise,
+	             const bool _bForward )
 			: fRadius( _fRadius ), bClockWise( _bClockWise ), fCurrentDelta( 0 ), bForwardDir( _bForward )
+	{
+		const uint16_t wPerpDir = ( bClockWise == bForwardDir ) ? ( _wStartDir + 16386 ) : ( _wStartDir - 16386 );
+		vCenter = _vPoint - fRadius * GetVectorByDirection( wPerpDir );
+		vDX = GetVectorByDirection( _wStartDir );
+
+		const CVec2 vEndDX =
+				GetVectorByDirection( ( bClockWise ) ? ( _wStartDir - _wDirDiff ) : ( _wStartDir + _wDirDiff ) );
+		const float fEndDir = ( vEndDX.x == 0 ) ? ( ( vEndDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : atan2f( vEndDX.y, vEndDX.x );
+		fStartDir = ( vDX.x == 0 ) ? ( ( vDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : atan2f( vDX.y, vDX.x );
+		fDirDiff = ( bClockWise ) ? ( fStartDir - fEndDir ) : ( fEndDir - fStartDir );
+		while ( fDirDiff < 0 )
+			fDirDiff += FP_2PI;
+
+		vX = _vPoint;
+		vLastDX = CVec2( NMath::Cos( fEndDir ), NMath::Sin( fEndDir ) );
+		if ( !bForwardDir )
 		{
-			const uint16_t wPerpDir = ( bClockWise == bForwardDir ) ? ( _wStartDir + 16386 ) : ( _wStartDir - 16386 );
-			vCenter = _vPoint - fRadius * GetVectorByDirection( wPerpDir );
-			vDX = GetVectorByDirection( _wStartDir );
-
-			const CVec2 vEndDX = GetVectorByDirection( ( bClockWise ) ? ( _wStartDir - _wDirDiff ) : ( _wStartDir + _wDirDiff ) );
-			const float fEndDir = ( vEndDX.x == 0 ) ? ( ( vEndDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : atan2f( vEndDX.y, vEndDX.x );
-			fStartDir =  ( vDX.x == 0 ) ? ( ( vDX.y > 0 ) ? FP_PI2 : -FP_PI2 ) : atan2f( vDX.y, vDX.x );
-			fDirDiff = ( bClockWise ) ? ( fStartDir - fEndDir ) : ( fEndDir - fStartDir );
-			while ( fDirDiff < 0 )
-				fDirDiff += FP_2PI;
-
-			vX = _vPoint;
-			vLastDX = CVec2( NMath::Cos( fEndDir ), NMath::Sin( fEndDir ) );
-			if ( !bForwardDir )
-			{
-				vLastDX = -vLastDX;
-				vDX = -vDX;
-			}
-			const float fEndPerp =  ( bClockWise == bForwardDir ) ? ( fEndDir + FP_PI2 ) : ( fEndDir - FP_PI2 );
-			vLastX = CVec2( fRadius*NMath::Cos( fEndPerp ), fRadius*NMath::Sin( fEndPerp ) ) + vCenter;
+			vLastDX = -vLastDX;
+			vDX = -vDX;
 		}
+		const float fEndPerp = ( bClockWise == bForwardDir ) ? ( fEndDir + FP_PI2 ) : ( fEndDir - FP_PI2 );
+		vLastX = CVec2( fRadius * NMath::Cos( fEndPerp ), fRadius * NMath::Sin( fEndPerp ) ) + vCenter;
+	}
 
-		const CVec2 &GetX() const { return vX; }
-		const CVec2 &GetDX() const { return vDX; }
+	const CVec2 &GetX() const { return vX; }
+	const CVec2 &GetDX() const { return vDX; }
 
-		const CVec2 &GetLastX() const { return vLastX; }
-		const CVec2 &GetLastDX() const { return vLastDX; }
+	const CVec2 &GetLastX() const { return vLastX; }
+	const CVec2 &GetLastDX() const { return vLastDX; }
 
-		const bool IsForwardDir() const { return bForwardDir; }
-		// fLength - длина пути, которую необходимо пройти. Возвращаемое значение, сколько еще можно пройти,
-		// т.е. не нулевое, если завершили идти по этой окружности
-		float Iterate( const float fLength );
+	const bool IsForwardDir() const { return bForwardDir; }
+	// fLength - длина пути, которую необходимо пройти. Возвращаемое значение, сколько еще можно пройти,
+	// т.е. не нулевое, если завершили идти по этой окружности
+	float Iterate( const float fLength );
 
-		int operator&( IBinSaver &saver );
+	int operator&( IBinSaver &saver );
 };
 
 //! вызвать func для тайлов на окружности начиная от wStartAngle до wStartAngle+wDiffAngle, и до тех
 //! пор, пока func возвращает true. Возвращает дельту между начальным углом и последним углом, где
 //! func вернул true
-template<class TYPE>
-uint16_t CheckArcTiles( TYPE &func, const CVec2 &vUnit, const uint16_t wStartAngle, const uint16_t wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward, CAIMap *pAIMap )
+template <class TYPE>
+uint16_t CheckArcTiles( TYPE &func,
+                        const CVec2 &vUnit,
+                        const uint16_t wStartAngle,
+                        const uint16_t wDiffAngle,
+                        const float fRadius,
+                        const bool bClockWise,
+                        const bool bForward,
+                        CAIMap *pAIMap )
 {
 	const uint16_t wPerpAngle = ( bClockWise == bForward ) ? ( wStartAngle - 16384 ) : ( wStartAngle + 16384 );
 	const CVec2 vCenter = vUnit + fRadius * GetVectorByDirection( wPerpAngle );

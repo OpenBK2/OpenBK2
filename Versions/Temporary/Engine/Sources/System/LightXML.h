@@ -22,7 +22,7 @@ namespace NLXML
 class CXMLBase
 {
 public:
-	virtual ~CXMLBase() {  }
+	virtual ~CXMLBase() {}
 };
 
 // ************************************************************************************************************************ //
@@ -37,11 +37,11 @@ public:
 
 class CXMLAttribute : public CXMLBase
 {
-	friend class CXMLElement;	// only element can set attribute value directly
+	friend class CXMLElement; // only element can set attribute value directly
 	//
-	std::string szName;										// name
-	std::string szValue;									// value
-	mutable uint32_t dwHashCode;							// internal hash code value (for fast search)
+	std::string szName;          // name
+	std::string szValue;         // value
+	mutable uint32_t dwHashCode; // internal hash code value (for fast search)
 	//
 	void SetValue( const std::string &_szValue ) { szValue = _szValue; }
 	uint32_t GetHashCode() const
@@ -50,11 +50,14 @@ class CXMLAttribute : public CXMLBase
 			dwHashCode = std::hash<std::string>()( szName );
 		return dwHashCode;
 	}
+
 public:
-	CXMLAttribute() : dwHashCode( 0 ) {  }
+	CXMLAttribute() : dwHashCode( 0 ) {}
 	CXMLAttribute( const std::string &_szName, const std::string &_szValue )
-		: szName( _szName ), szValue( _szValue ), dwHashCode( 0 ) {  }
-	virtual ~CXMLAttribute() {  }
+			: szName( _szName ), szValue( _szValue ), dwHashCode( 0 )
+	{
+	}
+	virtual ~CXMLAttribute() {}
 	//
 	bool operator==( const CXMLAttribute &attr ) const
 	{
@@ -65,13 +68,13 @@ public:
 		return GetHashCode() != attr.GetHashCode() ? szName < attr.szName : false;
 	}
 	//
-	const char* Parse( const char *pszBegin, const char *pszEnd );
+	const char *Parse( const char *pszBegin, const char *pszEnd );
 	void Store( NLXML_STREAM &stream ) const;
 	// set/get value
 	void Set( const std::string &_szValue ) { szValue = _szValue; }
 	void Set( const CToStringConvertor &value ) { szValue = value; }
-	const std::string& GetValue() const { return szValue; }
-	const std::string& GetName() const { return szName; }
+	const std::string &GetValue() const { return szValue; }
+	const std::string &GetName() const { return szName; }
 };
 
 // ************************************************************************************************************************ //
@@ -94,22 +97,27 @@ public:
 		ELEMENT,
 		TEXT
 	};
+
 private:
-	const EType eType;										// node type (to avoid dynamic_cast)
-	uint32_t dwHashCode;											// hash code for this node by value (== 0 if empty)
+	const EType eType;   // node type (to avoid dynamic_cast)
+	uint32_t dwHashCode; // hash code for this node by value (== 0 if empty)
 protected:
-	std::string szValue;									// node value
+	std::string szValue; // node value
 public:
 	CXMLNode( const EType _eType );
 	virtual ~CXMLNode();
 	//
 	EType GetType() const { return eType; }
 	//
-	virtual const char* Parse( const char *pszBegin, const char *pszEnd ) = 0;
+	virtual const char *Parse( const char *pszBegin, const char *pszEnd ) = 0;
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const = 0;
 	//
-	const std::string& GetValue() const { return szValue; }
-	void SetValue( const std::string &_szValue ) { szValue = _szValue; dwHashCode = 0; }
+	const std::string &GetValue() const { return szValue; }
+	void SetValue( const std::string &_szValue )
+	{
+		szValue = _szValue;
+		dwHashCode = 0;
+	}
 	bool IsMatch( const std::string &szMatchValue, const uint32_t dwMatchHashCode )
 	{
 		if ( dwHashCode == 0 )
@@ -131,19 +139,21 @@ public:
 
 class CXMLMultiNode : public CXMLNode
 {
-	typedef std::vector<CXMLNode*> CNodesList;
+	typedef std::vector<CXMLNode *> CNodesList;
+
 public:
 	typedef CNodesList::iterator iterator;
 	typedef CNodesList::const_iterator const_iterator;
+
 private:
-	CNodesList children;									// children nodes
-	mutable const_iterator posOptimal;		// optimal search position (for fast incremental search)
+	CNodesList children;               // children nodes
+	mutable const_iterator posOptimal; // optimal search position (for fast incremental search)
 protected:
 	void ResetOptimalPos() const { posOptimal = children.begin(); }
-	CXMLNode* Identify( const char *pszBegin, const char *pszEnd );
+	CXMLNode *Identify( const char *pszBegin, const char *pszEnd );
+
 public:
-	CXMLMultiNode( const CXMLNode::EType _eType )
-		: CXMLNode( _eType ) {  }
+	CXMLMultiNode( const CXMLNode::EType _eType ) : CXMLNode( _eType ) {}
 	virtual ~CXMLMultiNode();
 	//
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
@@ -153,12 +163,16 @@ public:
 	const_iterator begin() const { return children.begin(); }
 	const_iterator end() const { return children.end(); }
 	//
-	void AddChild( CXMLNode *pNode ) { children.push_back( pNode ); ResetOptimalPos(); }
+	void AddChild( CXMLNode *pNode )
+	{
+		children.push_back( pNode );
+		ResetOptimalPos();
+	}
 	bool HasChildren() const { return !children.empty(); }
-	CXMLNode* GetChild( const int nIndex ) const { return nIndex < children.size() ? children[nIndex] : 0; }
-	CXMLNode* GetChildFast( const int nIndex ) const { return children[nIndex]; }
+	CXMLNode *GetChild( const int nIndex ) const { return nIndex < children.size() ? children[nIndex] : 0; }
+	CXMLNode *GetChildFast( const int nIndex ) const { return children[nIndex]; }
 	int CountChildren() const { return children.size(); }
-	CXMLNode* FindChild( const std::string &_szValue ) const;
+	CXMLNode *FindChild( const std::string &_szValue ) const;
 };
 
 // ************************************************************************************************************************ //
@@ -175,7 +189,7 @@ public:
 	CXMLComment();
 	virtual ~CXMLComment();
 	//
-	virtual const char* Parse( const char *pszBegin, const char *pszEnd );
+	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
 };
 
@@ -193,14 +207,14 @@ public:
 	CXMLText();
 	virtual ~CXMLText();
 	//
-	virtual const char* Parse( const char *pszBegin, const char *pszEnd );
+	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
 	//
 	bool IsBlank() const
 	{
 		for ( std::string::const_iterator it = szValue.begin(); it != szValue.end(); ++it )
 		{
-			if ( !isspace( uint8_t(*it) ) )
+			if ( !isspace( uint8_t( *it ) ) )
 				return false;
 		}
 		return true;
@@ -224,19 +238,20 @@ class SYSTEM_EXPORT CXMLDeclaration : public CXMLNode
 	std::string szVersion;
 	std::string szStandalone;
 	std::string szEncoding;
+
 public:
 	CXMLDeclaration();
 	virtual ~CXMLDeclaration();
 	//
-	virtual const char* Parse( const char *pszBegin, const char *pszEnd );
+	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
 	//
 	void SetVersion( const std::string &szValue ) { szVersion = szValue; }
-	const std::string& GetVersion() const { return szVersion; }
+	const std::string &GetVersion() const { return szVersion; }
 	void SetStandalone( const std::string &szValue ) { szStandalone = szValue; }
-	const std::string& GetStandalone() const { return szStandalone; }
+	const std::string &GetStandalone() const { return szStandalone; }
 	void SetEncoding( const std::string &szValue ) { szEncoding = szValue; }
-	const std::string& GetEncoding() const { return szEncoding; }
+	const std::string &GetEncoding() const { return szEncoding; }
 };
 
 // ************************************************************************************************************************ //
@@ -253,7 +268,7 @@ public:
 	CXMLUnknown();
 	virtual ~CXMLUnknown();
 	//
-	virtual const char* Parse( const char *pszBegin, const char *pszEnd );
+	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
 };
 
@@ -269,28 +284,29 @@ public:
 class SYSTEM_EXPORT CXMLElement : public CXMLMultiNode
 {
 	typedef std::list<CXMLAttribute> CAttributesList;
-	typedef std::unordered_map<std::string, CXMLAttribute*> CAttributesMap;
-	CAttributesList attributes;						// attributes
-	CAttributesMap attrmap;								//
-	std::string szText;										// text of this element
+	typedef std::unordered_map<std::string, CXMLAttribute *> CAttributesMap;
+	CAttributesList attributes; // attributes
+	CAttributesMap attrmap;     //
+	std::string szText;         // text of this element
 	//
-	const char* ReadValue( const char *pszBegin, const char *pszEnd );
+	const char *ReadValue( const char *pszBegin, const char *pszEnd );
 	void SetAttributeLocal( const std::string &szName, const std::string &szValue );
+
 public:
 	CXMLElement();
 	virtual ~CXMLElement();
 	//
-	virtual const char* Parse( const char *pszBegin, const char *pszEnd );
+	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention ) const;
 	// attributes
 	void SetAttribute( const CXMLAttribute &attribute );
 	void SetAttribute( const std::string &szName, const CToStringConvertor &value );
-	void SetAttribute( const std::string &szName, const std::string &szValue ) { SetAttributeLocal(szName, szValue); }
-	const CXMLAttribute* GetAttribute( const std::string &szName ) const;
+	void SetAttribute( const std::string &szName, const std::string &szValue ) { SetAttributeLocal( szName, szValue ); }
+	const CXMLAttribute *GetAttribute( const std::string &szName ) const;
 	void RemoveAttribute( const std::string &szName );
 	const std::list<CXMLAttribute> &GetAttributesList() const { return attributes; }
 	// text
-	const std::string& GetText() const { return szText; }
+	const std::string &GetText() const { return szText; }
 	void SetText( const std::string &_szText ) { szText = _szText; }
 	void RemoveText() { szText.clear(); }
 };
@@ -309,7 +325,7 @@ public:
 	CXMLDocument();
 	virtual ~CXMLDocument();
 	//
-	virtual const char* Parse( const char *pszBegin, const char *pszEnd );
+	virtual const char *Parse( const char *pszBegin, const char *pszEnd );
 	virtual void Store( NLXML_STREAM &stream, const std::string &szIndention = "" ) const;
 	//
 	CXMLElement *GetRootElement();

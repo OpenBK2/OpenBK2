@@ -17,25 +17,24 @@
 // Under MFC it is CMDDLDialog over IDD_MENU_DROP_DOWN_LIST.
 namespace NMenuDropDown
 {
-	class IView
-	{
-	public:
-		virtual ~IView() {}
+class IView
+{
+public:
+	virtual ~IView() {}
 
-		// Fills the list, selects the first entry and shows the window with its
-		// top-left at nX, nY on the screen, taking the focus. nCommandID is what
-		// a choice sends: ID_CC_UNDO or ID_CC_REDO.
-		virtual void Show( int nX, int nY, unsigned nCommandID, const std::list<std::string> &rEntries ) = 0;
-	};
+	// Fills the list, selects the first entry and shows the window with its
+	// top-left at nX, nY on the screen, taking the focus. nCommandID is what
+	// a choice sends: ID_CC_UNDO or ID_CC_REDO.
+	virtual void Show( int nX, int nY, unsigned nCommandID, const std::list<std::string> &rEntries ) = 0;
+};
 
-	// Hidden until Show, owned by pParent's frame. pParent is used only during
-	// this call. The caller owns the result and deletes it.
-	IView* Create( IWidget *pParent );
+// Hidden until Show, owned by pParent's frame. pParent is used only during
+// this call. The caller owns the result and deletes it.
+IView *Create( IWidget *pParent );
 
-
-	// What choosing entry nIndex does, in both: the controller container is
-	// sent nCommandID with the index as its data. A negative index, which is
-	// what a list with nothing selected answers, sends nothing -- the MFC
-	// dialog sent it and Undo and Redo ignored it.
-	void Choose( unsigned nCommandID, int nIndex );
+// What choosing entry nIndex does, in both: the controller container is
+// sent nCommandID with the index as its data. A negative index, which is
+// what a list with nothing selected answers, sends nothing -- the MFC
+// dialog sent it and Undo and Redo ignored it.
+void Choose( unsigned nCommandID, int nIndex );
 }

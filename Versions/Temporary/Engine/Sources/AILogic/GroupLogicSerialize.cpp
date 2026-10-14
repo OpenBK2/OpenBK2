@@ -39,7 +39,7 @@ int CGroupUnit::operator&( IBinSaver &saver )
 		saver.Add( 3, &nSubGroup );
 		saver.Add( 4, &vShift );
 		saver.Add( 5, &nSpecialGroup );
-		saver.Add( 6,	&nSpecialPos );
+		saver.Add( 6, &nSpecialPos );
 	}
 	return 0;
 }

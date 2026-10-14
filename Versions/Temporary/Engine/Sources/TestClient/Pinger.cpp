@@ -11,15 +11,16 @@
 
 const int MAX_ATTEMPTS = 3;
 
-CPinger::CPinger()
-{
-	REGISTER_PACKET_PROCESSOR( &CPinger::ProcessConnectServerResult )
-}
+CPinger::CPinger(){ REGISTER_PACKET_PROCESSOR( &CPinger::ProcessConnectServerResult ) }
 
-CPinger::CPinger( const int &nPeriod, const std::string &_szName, const std::string &_szPassword, const std::string &_szIP,
-									const int &_nPort, const int &_nNetVersion )
-	: nConnectPeriod( nPeriod ), szName( _szName ), szPassword( _szPassword ),
-	szIP( _szIP ), nPort( _nPort ), nNetVersion( _nNetVersion ), nAttemptsLeft( MAX_ATTEMPTS ), bConnectNow( false )
+CPinger::CPinger( const int &nPeriod,
+                  const std::string &_szName,
+                  const std::string &_szPassword,
+                  const std::string &_szIP,
+                  const int &_nPort,
+                  const int &_nNetVersion )
+		: nConnectPeriod( nPeriod ), szName( _szName ), szPassword( _szPassword ), szIP( _szIP ), nPort( _nPort ),
+			nNetVersion( _nNetVersion ), nAttemptsLeft( MAX_ATTEMPTS ), bConnectNow( false )
 {
 	REGISTER_PACKET_PROCESSOR( &CPinger::ProcessConnectServerResult )
 	nLastConnectTime = GetLongTickCount();
@@ -36,7 +37,7 @@ bool CPinger::Segment()
 			ProcessPacket( pPacket );
 	}
 
-	if ( GetLongTickCount() > nLastConnectTime + nConnectPeriod  || bConnectNow )
+	if ( GetLongTickCount() > nLastConnectTime + nConnectPeriod || bConnectNow )
 	{
 		bConnectNow = false;
 		pServerClient = new CServerClient( szIP.c_str(), nNetVersion, nPort, 30 );

@@ -6,27 +6,33 @@
 
 #include <cstdint>
 
-typedef std::vector< CPtr<IMessageReactionB2> > CMessageSequence;
-typedef std::vector< CDBPtr<NDb::SUIDesc> > CMessageSequienceDesc;
-
+typedef std::vector<CPtr<IMessageReactionB2>> CMessageSequence;
+typedef std::vector<CDBPtr<NDb::SUIDesc>> CMessageSequienceDesc;
 
 // 1 check (branches) and sequience of atim reactions for each branch
 class CMessageReactionB2 : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CMessageReactionB2 );
-	typedef std::unordered_map<int/*custom check return*/, CMessageSequence> CMessageSequences;
+	typedef std::unordered_map<int /*custom check return*/, CMessageSequence> CMessageSequences;
 
 	CPtr<IMessageCheck> pCheck;
 	CMessageSequences branches;
-	CMessageSequence commonBefore;					// always run and before any branch
-	CMessageSequence commonAfter;						// always run and after any branch
+	CMessageSequence commonBefore; // always run and before any branch
+	CMessageSequence commonAfter;  // always run and after any branch
 
-	bool Execute( const CMessageSequence *pToExecute, struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
+	bool Execute( const CMessageSequence *pToExecute,
+	              struct IScreen *pScreen,
+	              struct IScriptWrapper *pScript,
+	              struct IProgrammedReactionsAndChecks *pProg,
+	              uint16_t wKeyboardFlags ) const;
 	void InitSequienceByDesc( CMessageSequence *pCreate, const CMessageSequienceDesc &src );
 
 public:
-	CMessageReactionB2() {  }
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
+	CMessageReactionB2() {}
+	virtual bool Execute( struct IScreen *pScreen,
+	                      struct IScriptWrapper *pScript,
+	                      struct IProgrammedReactionsAndChecks *pProg,
+	                      uint16_t wKeyboardFlags ) const;
 	int operator&( IBinSaver &ss );
 	void AddCommonBefore( IMessageReactionB2 *pReaction ) { commonBefore.push_back( pReaction ); }
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
@@ -38,9 +44,13 @@ class CARSetGlobalVar : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSetGlobalVar );
 	CDBPtr<NDb::SARSetGlobalVar> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen,
+	                      struct IScriptWrapper *pScript,
+	                      struct IProgrammedReactionsAndChecks *pProg,
+	                      uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -50,9 +60,13 @@ class CARRemoveGlobalVar : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARRemoveGlobalVar );
 	CDBPtr<NDb::SARRemoveGlobalVar> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const;
+	virtual bool Execute( struct IScreen *pScreen,
+	                      struct IScriptWrapper *pScript,
+	                      struct IProgrammedReactionsAndChecks *pProg,
+	                      uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -60,9 +74,13 @@ class CARSendUIMessage : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSendUIMessage );
 	CDBPtr<NDb::SARSendUIMessage> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen,
+	                      struct IScriptWrapper *pScript,
+	                      struct IProgrammedReactionsAndChecks *pProg,
+	                      uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -70,9 +88,13 @@ class CARSendGameMessage : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSendGameMessage );
 	CDBPtr<NDb::SARSendGameMessage> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen,
+	                      struct IScriptWrapper *pScript,
+	                      struct IProgrammedReactionsAndChecks *pProg,
+	                      uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
@@ -80,8 +102,12 @@ class CARSiwtchTab : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSiwtchTab );
 	CDBPtr<NDb::SARSwitchTab> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
+	virtual bool Execute( struct IScreen *pScreen,
+	                      struct IScriptWrapper *pScript,
+	                      struct IProgrammedReactionsAndChecks *pProg,
+	                      uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };

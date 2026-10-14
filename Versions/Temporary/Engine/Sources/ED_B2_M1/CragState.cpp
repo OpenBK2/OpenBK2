@@ -41,19 +41,20 @@ bool CCragState::CanInsertVSO()
 }
 /**/
 
-NMapInfoEditor::CVSOInstanceList* CCragState::GetVSOList()
+NMapInfoEditor::CVSOInstanceList *CCragState::GetVSOList()
 {
 	//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 	return &( GetMapInfoEditor()->VSOCollector.cragList );
 }
-
 
 void CCragState::PrepareInsertVSO()
 {
 	pSelectedCragDesc = 0;
 	const unsigned nObjectTypeID = NDb::SCragDesc::typeID;
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+					 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+	     ( !objectSet.objectNameSet.empty() ) )
 	{
 		if ( objectSet.szObjectTypeName == VSO_TYPE_NAME )
 		{
@@ -62,20 +63,19 @@ void CCragState::PrepareInsertVSO()
 	}
 }
 
-
 bool CCragState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSelectionType )
 
 {
-	const NDb::SCragDesc* pCragDesc = 0;
+	const NDb::SCragDesc *pCragDesc = 0;
 	if ( NDb::SVSOInstance *pSelectedVSO = GetVSO( GetSelectedVSOID(), 0 ) )
 	{
-		pCragDesc = checked_cast<const NDb::SCragDesc*>( &( *pSelectedVSO->pDescriptor ) );
+		pCragDesc = checked_cast<const NDb::SCragDesc *>( &( *pSelectedVSO->pDescriptor ) );
 	}
 	else
 	{
 		pCragDesc = pSelectedCragDesc;
 	}
-	switch( eSelectionType )
+	switch ( eSelectionType )
 	{
 		case CVSOManager::SVSOSelection::ST_CONTROL:
 			return true;
@@ -98,7 +98,6 @@ bool CCragState::CanEditPoints( CVSOManager::SVSOSelection::ESelectionType eSele
 	}
 }
 
-
 void CCragState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 {
 	NHPTimer::STime time = 0;
@@ -113,8 +112,12 @@ void CCragState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 			for ( int nVSOIndex = 0; nVSOIndex < pVSOList->size(); ++nVSOIndex )
 			{
 				std::list<CVec3> boundingPolygon;
-				const NDb::SCragDesc *pCragDesc = checked_cast<const NDb::SCragDesc*>( &( *( ( *pVSOList )[nVSOIndex].pDescriptor ) ) );
-				CVSOManager::GetBoundingPolygon( &boundingPolygon, ( *pVSOList )[nVSOIndex].points, pCragDesc->bLeftSided ? CVSOManager::PT_OPNORMALE : CVSOManager::PT_NORMALE, 1.0f );
+				const NDb::SCragDesc *pCragDesc =
+						checked_cast<const NDb::SCragDesc *>( &( *( ( *pVSOList )[nVSOIndex].pDescriptor ) ) );
+				CVSOManager::GetBoundingPolygon( &boundingPolygon,
+				                                 ( *pVSOList )[nVSOIndex].points,
+				                                 pCragDesc->bLeftSided ? CVSOManager::PT_OPNORMALE : CVSOManager::PT_NORMALE,
+				                                 1.0f );
 				if ( ClassifyPolygon( boundingPolygon, rvPos ) != CP_OUTSIDE )
 				{
 					pPickVSOIDList->push_back( ( *pVSOList )[nVSOIndex].nVSOID );
@@ -125,7 +128,6 @@ void CCragState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 	//
 	DebugTrace( "CVSOStateEx::PickVSO(): %g", NHPTimer::GetTimePassed( &time ) );
 }
-
 
 void CCragState::InsertVSOInTerrain( const NDb::SVSOInstance &rVSO )
 {
@@ -140,7 +142,6 @@ void CCragState::InsertVSOInTerrain( const NDb::SVSOInstance &rVSO )
 	}
 }
 
-
 void CCragState::RemoveVSOFromTerrain( int nVSOID )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -153,7 +154,6 @@ void CCragState::RemoveVSOFromTerrain( int nVSOID )
 		}
 	}
 }
-
 
 void CCragState::UpdateVSOInTerrain( int nVSOID )
 {
@@ -170,6 +170,5 @@ void CCragState::UpdateVSOInTerrain( int nVSOID )
 		}
 	}
 }
-
 
 // basement storage

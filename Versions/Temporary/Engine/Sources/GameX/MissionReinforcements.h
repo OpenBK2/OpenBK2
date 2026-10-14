@@ -16,17 +16,30 @@ class CMissionReinf : public CObjectBase
 	struct SReinfInfo
 	{
 		ZDATA
-		CPtr<IButton> pButton; // possible reinf
-		CDBPtr< NDb::SReinforcement > pReinf; // enabled reinf
+		CPtr<IButton> pButton;              // possible reinf
+		CDBPtr<NDb::SReinforcement> pReinf; // enabled reinf
 		CPtr<IWindow> pIconWnd;
 		ZSKIP //CPtr<IButton> pXPLevelBtn;
-		CPtr<IProgressBar> pXPBar;
+				CPtr<IProgressBar>
+						pXPBar;
 		CPtr<IWindow> pBadWeatherWnd;
 		CPtr<IWindow> pIconDisabledWnd;
-		std::vector< CPtr<IWindow> > chevrons;
+		std::vector<CPtr<IWindow>> chevrons;
 		CPtr<IWindow> pXPBarBg;
 		CPtr<IWindow> pIconEnabledWnd;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pButton); f.Add(3,&pReinf); f.Add(4,&pIconWnd); f.Add(6,&pXPBar); f.Add(7,&pBadWeatherWnd); f.Add(8,&pIconDisabledWnd); f.Add(9,&chevrons); f.Add(10,&pXPBarBg); f.Add(11,&pIconEnabledWnd); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pButton );
+			f.Add( 3, &pReinf );
+			f.Add( 4, &pIconWnd );
+			f.Add( 6, &pXPBar );
+			f.Add( 7, &pBadWeatherWnd );
+			f.Add( 8, &pIconDisabledWnd );
+			f.Add( 9, &chevrons );
+			f.Add( 10, &pXPBarBg );
+			f.Add( 11, &pIconEnabledWnd );
+			return 0;
+		}
 
 		void ShowChevron( int nIndex );
 	};
@@ -40,17 +53,28 @@ class CMissionReinf : public CObjectBase
 		CDBPtr<NDb::SHPObjectRPGStats> pStats;
 		int nCount;
 		CPtr<IWindow> pFlagBg;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pButton); f.Add(4,&pIcon); f.Add(5,&pCountView); f.Add(6,&pStats); f.Add(7,&nCount); f.Add(8,&pFlagBg); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &pButton );
+			f.Add( 4, &pIcon );
+			f.Add( 5, &pCountView );
+			f.Add( 6, &pStats );
+			f.Add( 7, &nCount );
+			f.Add( 8, &pFlagBg );
+			return 0;
+		}
 	};
-	typedef std::unordered_map< std::string, NDb::EReinforcementType > CNameToTypes;
-	typedef std::unordered_map< NDb::EReinforcementType, SReinfInfo, SEnumHash > CReinfInfos;
+	typedef std::unordered_map<std::string, NDb::EReinforcementType> CNameToTypes;
+	typedef std::unordered_map<NDb::EReinforcementType, SReinfInfo, SEnumHash> CReinfInfos;
 
 	ZDATA
 	CPtr<CWorldClient> pWorld;
 	CPtr<IVisualNotifications> pNotifications;
 	CPtr<IWindow> pReinfPanel;
-	ZSKIP//CPtr<IWindow> pReinfMode;
-	CPtr<IProgressBar> pProgress;
+	ZSKIP //CPtr<IWindow> pReinfMode;
+			CPtr<IProgressBar>
+					pProgress;
 	CPtr<ITextView> pCount;
 	CPtr<ITextView> pName;
 	CNameToTypes nameToTypes;
@@ -65,8 +89,9 @@ class CMissionReinf : public CObjectBase
 	bool bTrackMousePos = false;
 	CVec2 vMousePos;
 	bool bAvailNotified = false;
-	ZSKIP//bool bAvailNotifyRepeat;
-	std::vector<SUnitInfo> units;
+	ZSKIP //bool bAvailNotifyRepeat;
+			std::vector<SUnitInfo>
+					units;
 	bool bFullInfoMode = false;
 	CPtr<IWindow> pCommonInfo;
 	CPtr<IWindow> pFullInfoWnd;
@@ -78,14 +103,15 @@ class CMissionReinf : public CObjectBase
 	CPtr<IWindow> pRoundProgressMask;
 	int nCalls = 0;
 	bool bDisabledByInterface = false;
-	ZSKIP//CPtr<IButton> pCloseReinfBtn;
-	CPtr<IWindow> pReinfCountPanel;
+	ZSKIP //CPtr<IButton> pCloseReinfBtn;
+			CPtr<IWindow>
+					pReinfCountPanel;
 	CPtr<IPlayer> pRoller1;
 	CPtr<IPlayer> pRoller2;
 	int nPrevReinfCount = 0;
 	bool bIsOpen = false;
 	bool bIsLight = false;
-	std::vector< CDBPtr<NDb::STexture> > textures;
+	std::vector<CDBPtr<NDb::STexture>> textures;
 	CPtr<IButton> pToggleReinfBtn;
 
 	bool bBlink = false;
@@ -96,11 +122,55 @@ class CMissionReinf : public CObjectBase
 	CPtr<IButton> pCallReinfModeBtn;
 	CPtr<IButton> pAutoShowReinfBtn;
 	bool bWasEnabled = false;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWorld); f.Add(3,&pNotifications); f.Add(4,&pReinfPanel); f.Add(6,&pProgress); f.Add(7,&pCount); f.Add(8,&pName); f.Add(9,&nameToTypes); f.Add(10,&reinfInfos); f.Add(11,&eSelected); f.Add(12,&bTrackMousePos); f.Add(13,&vMousePos); f.Add(14,&bAvailNotified); f.Add(16,&units); f.Add(17,&bFullInfoMode); f.Add(18,&pCommonInfo); f.Add(19,&pFullInfoWnd); f.Add(20,&pUnitFullInfo); f.Add(21,&pNoInfoView); f.Add(22,&bBadWeather); f.Add(23,&pRoundProgress); f.Add(24,&eSeason); f.Add(25,&pRoundProgressMask); f.Add(26,&nCalls); f.Add(27,&bDisabledByInterface); f.Add(29,&pReinfCountPanel); f.Add(30,&pRoller1); f.Add(31,&pRoller2); f.Add(32,&nPrevReinfCount); f.Add(33,&bIsOpen); f.Add(34,&bIsLight); f.Add(35,&textures); f.Add(36,&pToggleReinfBtn); f.Add(37,&bBlink); f.Add(38,&bBlinkFullTime); f.Add(39,&fBlinkStep); f.Add(40,&fBlinkDuration); f.Add(41,&fBlinkPeriod); f.Add(42,&pCallReinfModeBtn); f.Add(43,&pAutoShowReinfBtn); f.Add(44,&bWasEnabled); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pWorld );
+		f.Add( 3, &pNotifications );
+		f.Add( 4, &pReinfPanel );
+		f.Add( 6, &pProgress );
+		f.Add( 7, &pCount );
+		f.Add( 8, &pName );
+		f.Add( 9, &nameToTypes );
+		f.Add( 10, &reinfInfos );
+		f.Add( 11, &eSelected );
+		f.Add( 12, &bTrackMousePos );
+		f.Add( 13, &vMousePos );
+		f.Add( 14, &bAvailNotified );
+		f.Add( 16, &units );
+		f.Add( 17, &bFullInfoMode );
+		f.Add( 18, &pCommonInfo );
+		f.Add( 19, &pFullInfoWnd );
+		f.Add( 20, &pUnitFullInfo );
+		f.Add( 21, &pNoInfoView );
+		f.Add( 22, &bBadWeather );
+		f.Add( 23, &pRoundProgress );
+		f.Add( 24, &eSeason );
+		f.Add( 25, &pRoundProgressMask );
+		f.Add( 26, &nCalls );
+		f.Add( 27, &bDisabledByInterface );
+		f.Add( 29, &pReinfCountPanel );
+		f.Add( 30, &pRoller1 );
+		f.Add( 31, &pRoller2 );
+		f.Add( 32, &nPrevReinfCount );
+		f.Add( 33, &bIsOpen );
+		f.Add( 34, &bIsLight );
+		f.Add( 35, &textures );
+		f.Add( 36, &pToggleReinfBtn );
+		f.Add( 37, &bBlink );
+		f.Add( 38, &bBlinkFullTime );
+		f.Add( 39, &fBlinkStep );
+		f.Add( 40, &fBlinkDuration );
+		f.Add( 41, &fBlinkPeriod );
+		f.Add( 42, &pCallReinfModeBtn );
+		f.Add( 43, &pAutoShowReinfBtn );
+		f.Add( 44, &bWasEnabled );
+		return 0;
+	}
 
 	NDb::EReinforcementType ePreSelected;
 
 	NTimer::STime timeBlinkAbs;
+
 private:
 	void UpdateEnable();
 	void UpdateReinfs();
@@ -118,8 +188,8 @@ private:
 	void DisableNotifyAvailReinf();
 	void UpdateForcedAction();
 
-	const NDb::SReinforcement* GetReinfContext( const NDb::EReinforcementType eType ) const;
-	const NDb::SReinforcementTypes* GetReinfTypes() const;
+	const NDb::SReinforcement *GetReinfContext( const NDb::EReinforcementType eType ) const;
+	const NDb::SReinforcementTypes *GetReinfTypes() const;
 
 	NDb::EReinforcementType FindReinfInfo( const std::string &szName );
 	void UpdateReinfInfo();
@@ -143,6 +213,7 @@ private:
 	bool IsAviaAndCanNotFly( const NDb::EReinforcementType eType ) const;
 	bool IsAllWeatherAvia( const NDb::EReinforcementType eType ) const;
 	bool HasMasterPilot( const NDb::SReinforcement *pReinf, int nLevel ) const;
+
 public:
 	CMissionReinf();
 	~CMissionReinf();

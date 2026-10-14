@@ -1,13 +1,18 @@
 #pragma once
 
-
 class CCommandRegistratorForScript
 {
-	typedef det_map<int,bool> CRegisteredCommands;
+	typedef det_map<int, bool> CRegisteredCommands;
 	ZDATA
-		CRegisteredCommands registeredCommands;
+	CRegisteredCommands registeredCommands;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&registeredCommands); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &registeredCommands );
+		return 0;
+	}
+
 private:
 public:
 	void Register( int nCommand );

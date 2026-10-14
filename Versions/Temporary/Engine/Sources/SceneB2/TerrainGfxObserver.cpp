@@ -74,10 +74,15 @@ void CSceneTerrain::UpdatePatchGeometry( std::vector<NMeshData::SMeshData> *pMes
 		patches[nPatchInd][k].pHolder = 0;
 		if ( !meshData[k].triangles.empty() )
 		{
-			patches[nPatchInd][k].pPatch = new CMeshDataPatch( &(meshData[k]) );
+			patches[nPatchInd][k].pPatch = new CMeshDataPatch( &( meshData[k] ) );
 			//
 			if ( ( pDBDesc->pTerraSet != 0 ) && ( k < pDBDesc->pTerraSet->terraTypes.size() ) )
-				patches[nPatchInd][k].pHolder = pGameView->CreateMesh( pGameView->MakeMeshInfo( patches[nPatchInd][k].pPatch, pDBDesc->pTerraSet->terraTypes[k]->pMaterial ), placement, 0, 0, room );
+				patches[nPatchInd][k].pHolder = pGameView->CreateMesh(
+						pGameView->MakeMeshInfo( patches[nPatchInd][k].pPatch, pDBDesc->pTerraSet->terraTypes[k]->pMaterial ),
+						placement,
+						0,
+						0,
+						room );
 		}
 	}
 }
@@ -103,16 +108,21 @@ void CSceneTerrain::UpdateBorderGeometry( std::vector<NMeshData::SMeshData> *pMe
 		terraBorders[nBorderID][k].pHolder = 0;
 		if ( !meshData[k].triangles.empty() )
 		{
-			terraBorders[nBorderID][k].pPatch = new CMeshDataPatch( &(meshData[k]) );
+			terraBorders[nBorderID][k].pPatch = new CMeshDataPatch( &( meshData[k] ) );
 			//
-			terraBorders[nBorderID][k].pHolder = pGameView->CreateMesh( pGameView->MakeMeshInfo( terraBorders[nBorderID][k].pPatch, pDBDesc->pTerraSet->terraTypes[0]->pMaterial ), placement, 0, 0, room );
+			terraBorders[nBorderID][k].pHolder = pGameView->CreateMesh(
+					pGameView->MakeMeshInfo( terraBorders[nBorderID][k].pPatch, pDBDesc->pTerraSet->terraTypes[0]->pMaterial ),
+					placement,
+					0,
+					0,
+					room );
 		}
 	}
 }
 
 void CSceneTerrain::AddPrecipice( SPrecipiceGFXInfo *pGfxInfo )
 {
-	precipices.push_back( CPrecipice( pGfxInfo, pGfxInfo->nID) );
+	precipices.push_back( CPrecipice( pGfxInfo, pGfxInfo->nID ) );
 	precipices.back().CreatePatches( pGameView );
 }
 
@@ -133,9 +143,9 @@ void CSceneTerrain::RemoveAllPrecipices()
 
 void CSceneTerrain::AddRoad( SRoadGFXInfo *pGfxInfo )
 {
-	if ( HasVSO(pGfxInfo->nID, pDBDesc->roads) )
+	if ( HasVSO( pGfxInfo->nID, pDBDesc->roads ) )
 	{
-		roads.push_back( CRoad(pGfxInfo, pGfxInfo->nID) );
+		roads.push_back( CRoad( pGfxInfo, pGfxInfo->nID ) );
 		roads.back().CreatePatches( pGameView );
 	}
 }
@@ -174,7 +184,7 @@ void CSceneTerrain::RemoveAllRoads()
 
 void CSceneTerrain::AddPeak( SPeakGFXInfo *pGfxInfo )
 {
-	peaks.push_back( CPeak(pGfxInfo, pGfxInfo->nID) );
+	peaks.push_back( CPeak( pGfxInfo, pGfxInfo->nID ) );
 	peaks.back().CreatePatches( pGameView, pDBDesc );
 }
 
@@ -210,7 +220,7 @@ void CSceneTerrain::RemoveAllPeaks()
 
 void CSceneTerrain::AddFoot( SFootGFXInfo *pGfxInfo )
 {
-	foots.push_back( CFoot(pGfxInfo, pGfxInfo->nID) );
+	foots.push_back( CFoot( pGfxInfo, pGfxInfo->nID ) );
 	foots.back().CreatePatches( pGameView, pDBDesc );
 }
 
@@ -248,9 +258,9 @@ void CSceneTerrain::AddRiver( const SRiverGFXInfo *pGfxInfo )
 {
 	if ( !bDisableRivers )
 	{
-		if ( HasVSO(pGfxInfo->nID, pDBDesc->rivers) )
+		if ( HasVSO( pGfxInfo->nID, pDBDesc->rivers ) )
 		{
-			rivers.push_back( CRiver(pGfxInfo, pGfxInfo->nID, pAbsTimer.GetPtr()) );
+			rivers.push_back( CRiver( pGfxInfo, pGfxInfo->nID, pAbsTimer.GetPtr() ) );
 			rivers.back().CreatePatches( pGameView );
 		}
 	}
@@ -273,7 +283,7 @@ void CSceneTerrain::RemoveAllRivers()
 
 void CSceneTerrain::AddTerraSpot( STerraSpotGFXInfo *pGfxInfo )
 {
-	if ( HasSpotVSO(pGfxInfo->nID, pDBDesc->spots) )
+	if ( HasSpotVSO( pGfxInfo->nID, pDBDesc->spots ) )
 	{
 		terraspots.push_back( CTerraSpot( pGfxInfo, pGfxInfo->nID ) );
 		terraspots.back().CreatePatches( pGameView );
@@ -295,6 +305,6 @@ void CSceneTerrain::RemoveAllTerraSpots()
 	terraspots.clear();
 }
 
-START_REGISTER(TerrainGfxObserverCommands)
+START_REGISTER( TerrainGfxObserverCommands )
 REGISTER_VAR_EX( "disable_rivers", NGlobal::VarBoolHandler, &bDisableRivers, false, STORAGE_NONE );
 FINISH_REGISTER

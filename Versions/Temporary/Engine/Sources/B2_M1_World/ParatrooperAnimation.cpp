@@ -9,7 +9,7 @@ bool CParatrooperAnimationProcess::Update( const NTimer::STime &time )
 	if ( time >= timeToChange )
 	{
 		pInfantry->AIUpdateAnimationChanged( pUnitAnim, timeToChange );
-		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator(nParachuteID) )
+		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nParachuteID ) )
 		{
 			if ( !pParaAnim )
 				return false;

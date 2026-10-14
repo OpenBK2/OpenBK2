@@ -37,10 +37,10 @@ public:
 	{
 		enum EType
 		{
-			TYPE_INSERT		= 0,
-			TYPE_REMOVE		= 1,
-			TYPE_CHANGE		= 2,
-			TYPE_EXPAND		= 3,
+			TYPE_INSERT = 0,
+			TYPE_REMOVE = 1,
+			TYPE_CHANGE = 2,
+			TYPE_EXPAND = 3,
 		};
 		//
 		struct SArrayData
@@ -92,10 +92,13 @@ public:
 	bool AddInsertOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );
 	bool AddRemoveOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );
 	bool AddExpandOperation( const std::string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator );
-	bool AddChangeOperation( const std::string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator );
+	bool
+	AddChangeOperation( const std::string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator );
 	//
-	template<class TValue>
-	bool AddChangeValueOperation( const std::string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
+	template <class TValue>
+	bool AddChangeValueOperation( const std::string &rszPropertyName,
+	                              const TValue &rNewData,
+	                              IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
 		//
@@ -113,8 +116,10 @@ public:
 		return posNewUndoData->Redo( pObjectManipulator, 0 );
 	}
 	//
-	template<class TValue, class TFieldType>
-	bool AddChangeVec2Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
+	template <class TValue, class TFieldType>
+	bool AddChangeVec2Operation( const std::string &rszPropertyName,
+	                             const TValue &rvNewData,
+	                             IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec2Operation() pObjectManipulator == 0" );
 		//
@@ -150,8 +155,10 @@ public:
 		return true;
 	}
 	//
-	template<class TValue, class TFieldType>
-	bool AddChangeVec3Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
+	template <class TValue, class TFieldType>
+	bool AddChangeVec3Operation( const std::string &rszPropertyName,
+	                             const TValue &rvNewData,
+	                             IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec3Operation() pObjectManipulator == 0" );
 		//
@@ -199,8 +206,10 @@ public:
 		return true;
 	}
 	//
-	template<class TValue, class TFieldType>
-	bool AddChangeVec4Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
+	template <class TValue, class TFieldType>
+	bool AddChangeVec4Operation( const std::string &rszPropertyName,
+	                             const TValue &rvNewData,
+	                             IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec4Operation() pObjectManipulator == 0" );
 		//
@@ -261,8 +270,10 @@ public:
 	}
 	//
 	//
-	template<class TValue, class TElementType>
-	bool AddChangeArrayOperation( const std::string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
+	template <class TValue, class TElementType>
+	bool AddChangeArrayOperation( const std::string &rszPropertyName,
+	                              const TValue &rNewData,
+	                              IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeArrayOperation() pObjectManipulator == 0" );
 		//
@@ -289,7 +300,12 @@ public:
 			}
 			// Устанавливаем значение
 			{
-				const std::string szElementName = fmt::format( "{}{:c}{:c}{}{:c}", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
+				const std::string szElementName = fmt::format( "{}{:c}{:c}{}{:c}",
+				                                               rszPropertyName.c_str(),
+				                                               LEVEL_SEPARATOR_CHAR,
+				                                               ARRAY_NODE_START_CHAR,
+				                                               nElementIndex,
+				                                               ARRAY_NODE_END_CHAR );
 				TElementType oldData;
 				if ( !CManipulatorManager::GetValue( &oldData, pObjectManipulator, szElementName ) )
 				{
@@ -309,8 +325,13 @@ public:
 			++nElementIndex;
 		}
 		// Удаляем лишние элементы
-		const std::string szElementName = fmt::format( "{}{:c}{:c}{}{:c}", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
-		for ( ;nElementIndex < nExistingElementCount; --nExistingElementCount )
+		const std::string szElementName = fmt::format( "{}{:c}{:c}{}{:c}",
+		                                               rszPropertyName.c_str(),
+		                                               LEVEL_SEPARATOR_CHAR,
+		                                               ARRAY_NODE_START_CHAR,
+		                                               nElementIndex,
+		                                               ARRAY_NODE_END_CHAR );
+		for ( ; nElementIndex < nExistingElementCount; --nExistingElementCount )
 		{
 			TElementType oldData;
 			if ( !CManipulatorManager::GetValue( &oldData, pObjectManipulator, szElementName ) )
@@ -330,7 +351,8 @@ public:
 			{
 				posNewUndoData->oldValue = nElementIndex;
 			}
-			SUndoData::CValueDataList::iterator posValueData = posNewUndoData->valueList.insert( posNewUndoData->valueList.end(), SUndoData::SValueData() );
+			SUndoData::CValueDataList::iterator posValueData =
+					posNewUndoData->valueList.insert( posNewUndoData->valueList.end(), SUndoData::SValueData() );
 			posValueData->szName = szElementName;
 			posValueData->value = oldData;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -341,12 +363,16 @@ public:
 		return true;
 	}
 	template <class TValue>
-		bool AddChangeValueOperation( const std::string &rszPropertyName, const std::vector<TValue> &rNewData, IManipulator *pObjectManipulator )
+	bool AddChangeValueOperation( const std::string &rszPropertyName,
+	                              const std::vector<TValue> &rNewData,
+	                              IManipulator *pObjectManipulator )
 	{
 		return AddChangeArrayOperation<std::vector<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
 	template <class TValue>
-		bool AddChangeValueOperation( const std::string &rszPropertyName, const std::list<TValue> &rNewData, IManipulator *pObjectManipulator )
+	bool AddChangeValueOperation( const std::string &rszPropertyName,
+	                              const std::list<TValue> &rNewData,
+	                              IManipulator *pObjectManipulator )
 	{
 		return AddChangeArrayOperation<std::list<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
@@ -357,8 +383,10 @@ public:
 // accepted. They stay specializations rather than becoming overloads because
 // callers name the template argument (AddChangeValueOperation<unsigned>( ... )
 // among them), and a call written that way would pass an overload by.
-template<>
-inline bool CObjectBaseController::AddChangeValueOperation<unsigned>( const std::string &rszPropertyName, const unsigned &rNewData, IManipulator *pObjectManipulator )
+template <>
+inline bool CObjectBaseController::AddChangeValueOperation<unsigned>( const std::string &rszPropertyName,
+                                                                      const unsigned &rNewData,
+                                                                      IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
 	//
@@ -376,20 +404,26 @@ inline bool CObjectBaseController::AddChangeValueOperation<unsigned>( const std:
 	return posNewUndoData->Redo( pObjectManipulator, 0 );
 }
 
-template<>
-inline bool CObjectBaseController::AddChangeValueOperation<CVec2>( const std::string &rszPropertyName, const CVec2 &vNewData, IManipulator *pObjectManipulator )
+template <>
+inline bool CObjectBaseController::AddChangeValueOperation<CVec2>( const std::string &rszPropertyName,
+                                                                   const CVec2 &vNewData,
+                                                                   IManipulator *pObjectManipulator )
 {
 	return AddChangeVec2Operation<CVec2, float>( rszPropertyName, vNewData, pObjectManipulator );
 }
 
-template<>
-inline bool CObjectBaseController::AddChangeValueOperation<CVec3>( const std::string &rszPropertyName, const CVec3 &vNewData, IManipulator *pObjectManipulator )
+template <>
+inline bool CObjectBaseController::AddChangeValueOperation<CVec3>( const std::string &rszPropertyName,
+                                                                   const CVec3 &vNewData,
+                                                                   IManipulator *pObjectManipulator )
 {
 	return AddChangeVec3Operation<CVec3, float>( rszPropertyName, vNewData, pObjectManipulator );
 }
 
-template<>
-inline bool CObjectBaseController::AddChangeValueOperation<CVec4>( const std::string &rszPropertyName, const CVec4 &vNewData, IManipulator *pObjectManipulator )
+template <>
+inline bool CObjectBaseController::AddChangeValueOperation<CVec4>( const std::string &rszPropertyName,
+                                                                   const CVec4 &vNewData,
+                                                                   IManipulator *pObjectManipulator )
 {
 	return AddChangeVec4Operation<CVec4, float>( rszPropertyName, vNewData, pObjectManipulator );
 }

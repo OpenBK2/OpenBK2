@@ -35,12 +35,12 @@ inline const SVector GetTile( const CVec2 &point )
 inline const CVec2 GetCenterOfTile( const float x, const float y )
 {
 	const SVector tile( GetTile( x, y ) );
-	return CVec2( tile.x * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE/2,
-		tile.y * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE/2 );
+	return CVec2( tile.x * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE / 2,
+	              tile.y * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE / 2 );
 }
 
 // get center of the tile in point's coordinates by the point's coordinates
-inline const CVec2 GetCenterOfTile( const CVec2& point )
+inline const CVec2 GetCenterOfTile( const CVec2 &point )
 {
 	return GetCenterOfTile( point.x, point.y );
 }
@@ -48,7 +48,8 @@ inline const CVec2 GetCenterOfTile( const CVec2& point )
 // point coordinates by AI tile coordinates
 inline const CVec2 GetPointByTile( const int x, const int y )
 {
-	return CVec2( x * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE/2, y * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE/2 );
+	return CVec2( x * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE / 2,
+	              y * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE / 2 );
 }
 
 inline const CVec2 GetPointByTile( const SVector &tile )

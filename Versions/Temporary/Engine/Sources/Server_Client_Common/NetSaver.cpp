@@ -14,14 +14,19 @@
 class CUnknownPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CUnknownPacket );
+
 public:
 	CMemoryStream stream;
 	int nTypeID;
 
 	ZDATA
-	ZEND int operator&( IBinSaver &f ) { NI_ASSERT( false, "can't serialize unknown packet" ); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		NI_ASSERT( false, "can't serialize unknown packet" );
+		return 0;
+	}
 
-	CUnknownPacket() { }
+	CUnknownPacket() {}
 };
 
 REGISTER_SAVELOAD_CLASS( SERVER_CLIENT_COMMON, UNKNOWN_PACKET_TYPE_ID, CUnknownPacket );
@@ -40,16 +45,11 @@ class CNetSaver : public IBinSaver
 	CMemoryStream *pRes;
 	ESaverMode mode;
 
-	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber )
-	{
-		return true;
-	}
-	virtual void FinishChunk()
-	{
-	}
+	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) { return true; }
+	virtual void FinishChunk() {}
 	virtual int CountChunks( const chunk_id idChunk )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		return 0;
 	}
 
@@ -123,7 +123,7 @@ class CNetSaver : public IBinSaver
 			const int nTypeID = NObjectFactory::GetObjectTypeID( pObject );
 			if ( nTypeID == UNKNOWN_PACKET_TYPE_ID )
 			{
-				CUnknownPacket *pPacket = dynamic_cast<CUnknownPacket*>( pObject );
+				CUnknownPacket *pPacket = dynamic_cast<CUnknownPacket *>( pObject );
 
 				TPACKET_ID cTypeID = pPacket->nTypeID;
 				pRes->Write( &cTypeID, sizeof( cTypeID ) );
@@ -131,8 +131,8 @@ class CNetSaver : public IBinSaver
 			}
 			else
 			{
-//				NI_ASSERT( nTypeID >= 0 && nTypeID < 255, StrFmt( "wrong packet type id (%d), range should be [0..254]", nTypeID ) );
-//				if ( nTypeID >= 0 && nTypeID < 255 )
+				//				NI_ASSERT( nTypeID >= 0 && nTypeID < 255, StrFmt( "wrong packet type id (%d), range should be [0..254]", nTypeID ) );
+				//				if ( nTypeID >= 0 && nTypeID < 255 )
 				{
 					TPACKET_ID cTypeID = nTypeID;
 					pRes->Write( &cTypeID, sizeof( cTypeID ) );
@@ -142,7 +142,7 @@ class CNetSaver : public IBinSaver
 		}
 	}
 
-	virtual CObjectBase* LoadObject()
+	virtual CObjectBase *LoadObject()
 	{
 		TPACKET_ID cTypeID;
 		pRes->Read( &cTypeID, sizeof( cTypeID ) );
@@ -163,21 +163,21 @@ class CNetSaver : public IBinSaver
 			{
 				CUnknownPacket *pPacket = new CUnknownPacket();
 				pPacket->nTypeID = cTypeID;
-				pRes->ReadTo( &(pPacket->stream), pRes->GetSize() - pRes->GetPosition() );
+				pRes->ReadTo( &( pPacket->stream ), pRes->GetSize() - pRes->GetPosition() );
 
 				return pPacket;
 			}
 		}
 	}
+
 public:
 	virtual bool IsReading() { return mode == SAVER_MODE_READ; }
 	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
 	CNetSaver() : pRes( 0 ) {}
-	CNetSaver( CMemoryStream *_pRes, ESaverMode _mode )
-		: pRes(_pRes), mode(_mode) {}
+	CNetSaver( CMemoryStream *_pRes, ESaverMode _mode ) : pRes( _pRes ), mode( _mode ) {}
 };
 
-IBinSaver* CreateNetSaver( CMemoryStream *pStream, ESaverMode mode )
+IBinSaver *CreateNetSaver( CMemoryStream *pStream, ESaverMode mode )
 {
-	return new CNetSaver( pStream , mode );
+	return new CNetSaver( pStream, mode );
 }

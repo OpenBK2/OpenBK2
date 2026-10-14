@@ -20,7 +20,7 @@ const int nTorpedoSearchRadius = 10 * AI_TILE_SIZE;
 
 CPtr<CTorpedoStatesFactory> CTorpedoStatesFactory::pFactory = 0;
 
-IStatesFactory* CTorpedoStatesFactory::Instance()
+IStatesFactory *CTorpedoStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CTorpedoStatesFactory();
@@ -33,15 +33,15 @@ bool CTorpedoStatesFactory::CanCommandBeExecuted( class CAICommand *pCommand )
 	return false;
 }
 
-IUnitState* CTorpedoStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
+IUnitState *CTorpedoStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
 {
 	return 0;
 }
 
-IUnitState* CTorpedoStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CTorpedoStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CUnitTorpedo*>( pUnit ) != 0, "Wrong unit type" );
-	CUnitTorpedo *pTorpedo = checked_cast<CUnitTorpedo*>( pUnit );
+	NI_ASSERT( dynamic_cast<CUnitTorpedo *>( pUnit ) != 0, "Wrong unit type" );
+	CUnitTorpedo *pTorpedo = checked_cast<CUnitTorpedo *>( pUnit );
 
 	CVec2 vDir = pTorpedo->GetCenterPlain() + 1000 * GetVectorByDirection( pTorpedo->GetDirection() );
 	CTorpedoAttackState *pState = new CTorpedoAttackState( pTorpedo, vDir );
@@ -51,8 +51,7 @@ IUnitState* CTorpedoStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 
 // CTorpedoAttackState
 
-CTorpedoAttackState::CTorpedoAttackState( CUnitTorpedo *pUnit, const CVec2 &_vPoint )
-: pTorpedo( pUnit )
+CTorpedoAttackState::CTorpedoAttackState( CUnitTorpedo *pUnit, const CVec2 &_vPoint ) : pTorpedo( pUnit )
 {
 	// Calculate movement parameters
 
@@ -63,13 +62,19 @@ CTorpedoAttackState::CTorpedoAttackState( CUnitTorpedo *pUnit, const CVec2 &_vPo
 	pUnit->SendAlongSmoothPath( pPath );
 }
 
-void CTorpedoAttackState::Segment()
-{
-}
+void CTorpedoAttackState::Segment() {}
 
 // CUnitTorpedo
 
-void CUnitTorpedo::Init( const CVec2 &center, const int z, CAIUnit *_pOwner, const SWeaponRPGStats *_pShooterStats, const SMechUnitRPGStats *_pTorpedoStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
+void CUnitTorpedo::Init( const CVec2 &center,
+                         const int z,
+                         CAIUnit *_pOwner,
+                         const SWeaponRPGStats *_pShooterStats,
+                         const SMechUnitRPGStats *_pTorpedoStats,
+                         const float fHP,
+                         const uint16_t dir,
+                         const uint8_t player,
+                         ICollisionsCollector *pCollisionsCollector )
 {
 	pShooterStats = _pShooterStats;
 	pTorpedoStats = _pTorpedoStats;
@@ -100,17 +105,17 @@ void CUnitTorpedo::Segment()
 		return;
 
 	// Check for impending collisions
-	for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, GetCenterPlain(), nTorpedoSearchRadius );
-		!iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0, 3> iter( 0, ANY_PARTY, GetCenterPlain(), nTorpedoSearchRadius ); !iter.IsFinished();
+	      iter.Iterate() )
 	{
 		CPtr<CAIUnit> curUnit = *iter;
 		if ( curUnit == this )
 			continue;
 
-		if ( curUnit == pOwner )			// torpedo is under the owner, continue
+		if ( curUnit == pOwner ) // torpedo is under the owner, continue
 			return;
 
-		if ( curUnit->GetStats() == GetStats() )		// another torpedo
+		if ( curUnit->GetStats() == GetStats() ) // another torpedo
 			continue;
 
 		if ( curUnit->IsAlive() && !curUnit->GetStats()->IsAviation() )
@@ -133,7 +138,7 @@ void CUnitTorpedo::Segment()
 
 void CUnitTorpedo::Die( const bool fromExplosion, const float fDamage )
 {
-	if ( fromExplosion )	// hit an object
+	if ( fromExplosion ) // hit an object
 	{
 		CAIUnit::Die( false, fDamage );
 		CVec3 vExplPoint( vContactPoint, GetHeights()->GetZ( vContactPoint ) );
@@ -144,21 +149,27 @@ void CUnitTorpedo::Die( const bool fromExplosion, const float fDamage )
 		theShellsStore.AddShell( shell );
 		updater.AddUpdate( 0, ACTION_NOTIFY_DISSAPEAR_OBJ, this, 1 );
 	}
-	else			// reached edge of map
+	else // reached edge of map
 	{
 		CAIUnit::Die( false, fDamage );
 		updater.AddUpdate( 0, ACTION_NOTIFY_DISSAPEAR_OBJ, this, 0 );
 	}
 }
 
-const bool CUnitTorpedo::IterateUnits( const CVec2 &vCenter, const float fRadius,	const bool bOnlyMech, const SIterateUnitsCallback &callback ) const
+const bool CUnitTorpedo::IterateUnits( const CVec2 &vCenter,
+                                       const float fRadius,
+                                       const bool bOnlyMech,
+                                       const SIterateUnitsCallback &callback ) const
 {
 	return true;
 }
 
 // CTorpedoPath
 
-bool CTorpedoPath::Init( CBasePathUnit *_pUnit, const class CVec2 &_vCurPoint, const CVec2 &_vEndPoint, const float fSpeed )
+bool CTorpedoPath::Init( CBasePathUnit *_pUnit,
+                         const class CVec2 &_vCurPoint,
+                         const CVec2 &_vEndPoint,
+                         const float fSpeed )
 {
 	pUnit = _pUnit;
 	vCurPoint = _vCurPoint;

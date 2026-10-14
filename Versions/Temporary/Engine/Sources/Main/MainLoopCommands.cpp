@@ -8,6 +8,7 @@
 class CICExitGame : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICExitGame );
+
 public:
 	void Exec()
 	{
@@ -27,6 +28,7 @@ public:
 class CICFinalExitGame : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICFinalExitGame );
+
 public:
 	void Exec()
 	{
@@ -49,7 +51,7 @@ IBinSaver *CreateSaveLoadSaver( CDataStream *pStream, ESaverMode mode )
 	return CreateBinSaver( pStream, mode, external );
 }
 
-IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector< CPtr<IDebugSaveCheckObj> > &checkers )
+IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector<CPtr<IDebugSaveCheckObj>> &checkers )
 {
 	std::vector<SBinSaverExternalObject> external;
 	std::vector<int> singletonIDs;
@@ -64,8 +66,6 @@ IBinSaver *CreateSaveSaverWithCheckers( CDataStream *pStream, std::vector< CPtr<
 	return CreateBinSaverWithCheckers( pStream, external, checkers );
 }
 
-
-
 static std::string GetSavePathName( const std::string &szName )
 {
 	return NProfile::GetSaveDir() + szName + ".sav";
@@ -74,6 +74,7 @@ static std::string GetSavePathName( const std::string &szName )
 class CICSave : public CICSaveBase
 {
 	OBJECT_NOCOPY_METHODS( CICSave );
+
 public:
 	CICSave() {}
 	CICSave( const std::string &szFileName ) : CICSaveBase( szFileName ) {}
@@ -99,12 +100,17 @@ public:
 	}
 #endif //_FINALRELEASE
 	//
-	int operator&( IBinSaver &saver ) { saver.Add( 1, static_cast<CICSaveBase*>(this) ); return 0; }
+	int operator&( IBinSaver &saver )
+	{
+		saver.Add( 1, static_cast<CICSaveBase *>( this ) );
+		return 0;
+	}
 };
 
 class CICLoad : public CICLoadBase
 {
 	OBJECT_NOCOPY_METHODS( CICLoad );
+
 public:
 	CICLoad() {}
 	CICLoad( const std::string &szFileName ) : CICLoadBase( szFileName ) {}
@@ -116,11 +122,11 @@ public:
 		{
 			case STG_START:
 				WriteToPipe( PIPE_CHAT, "Loading...", 0xffff0000 );
-			break;
+				break;
 
 			case STG_AFTER_LOAD_DONE:
 				WriteToPipe( PIPE_CHAT, "Load done.", 0xffff0000 );
-			break;
+				break;
 		}
 	}
 #endif //_FINALRELEASE
@@ -129,23 +135,16 @@ public:
 class CICCloseInterface : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICCloseInterface );
+
 public:
-	void Exec()
-	{
-		NMainLoop::PopInterface();
-	}
+	void Exec() { NMainLoop::PopInterface(); }
 };
 
 // CICLoadBase
 
-CICLoadBase::CICLoadBase()
-{
-}
+CICLoadBase::CICLoadBase() {}
 
-CICLoadBase::CICLoadBase( const std::string &_szFileName ) :
-	szFileName(_szFileName)
-{
-}
+CICLoadBase::CICLoadBase( const std::string &_szFileName ) : szFileName( _szFileName ) {}
 
 void CICLoadBase::Configure( const char *pszConfig )
 {
@@ -175,14 +174,9 @@ void CICLoadBase::Exec()
 
 // CICSaveBase
 
-CICSaveBase::CICSaveBase()
-{
-}
+CICSaveBase::CICSaveBase() {}
 
-CICSaveBase::CICSaveBase( const std::string &_szFileName ) :
-	szFileName( _szFileName )
-{
-}
+CICSaveBase::CICSaveBase( const std::string &_szFileName ) : szFileName( _szFileName ) {}
 
 void CICSaveBase::Configure( const char *pszConfig )
 {
@@ -242,7 +236,7 @@ static void CmdFinalExit( const std::string &szID, const std::vector<std::wstrin
 	NMainLoop::Command( CreateICFinalExitGame() );
 }
 
-START_REGISTER(MainLoop)
+START_REGISTER( MainLoop )
 REGISTER_CMD( "exit", CmdExit );
 REGISTER_CMD( "final_exit", CmdFinalExit );
 FINISH_REGISTER

@@ -5,7 +5,6 @@
 #include "System/MetaProg.h"
 #include "Misc/StrProc.h"
 
-
 // ************************************************************************************************************************ //
 // **
 // **
@@ -52,27 +51,27 @@ void ConvertParam( std::wstring *pRes, const std::wstring &wszParam )
 	*pRes = wszParam;
 }
 
-#define MAKE_PARAMETER( num, nNumParams )				\
-	TS##num p##num;																\
-	if ( nNumParams > num - 1 )										\
-		ConvertParam( &p##num, paramsSet[num - 1] );\
-	else																					\
+#define MAKE_PARAMETER( num, nNumParams )        \
+	TS##num p##num;                                \
+	if ( nNumParams > num - 1 )                    \
+		ConvertParam( &p##num, paramsSet[num - 1] ); \
+	else                                           \
 		p##num = def##num;
 
 class CConsoleFunc0 : public IConsoleFunc
 {
 	OBJECT_NOCOPY_METHODS( CConsoleFunc0 );
-	void (*pfnFunc)();
+	void ( *pfnFunc )();
 	//
 	CConsoleFunc0() {}
+
 public:
-	CConsoleFunc0( void (*_pfnFunc)() )
-		: pfnFunc( _pfnFunc ) {}
+	CConsoleFunc0( void ( *_pfnFunc )() ) : pfnFunc( _pfnFunc ) {}
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 	{
 		const int nNumParams = paramsSet.size();
-		(*pfnFunc)();
+		( *pfnFunc )();
 		return true;
 	}
 };
@@ -86,26 +85,26 @@ template <typename T1>
 class CConsoleFunc1 : public IConsoleFunc
 {
 	OBJECT_NOCOPY_METHODS( CConsoleFunc1 );
-	void (*pfnFunc)( T1 p1 );
+	void ( *pfnFunc )( T1 p1 );
 	typedef typename NMeta::CTypeTraits<T1>::TStripType TS1;
 	TS1 def1;
 	//
 	CConsoleFunc1() {}
+
 public:
-	CConsoleFunc1( void (*_pfnFunc)( T1 _p1 ), const TS1 &_def1 )
-		: pfnFunc( _pfnFunc ), def1( _def1 ) {}
+	CConsoleFunc1( void ( *_pfnFunc )( T1 _p1 ), const TS1 &_def1 ) : pfnFunc( _pfnFunc ), def1( _def1 ) {}
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 	{
 		const int nNumParams = paramsSet.size();
 		MAKE_PARAMETER( 1, nNumParams );
-		(*pfnFunc)( p1 );
+		( *pfnFunc )( p1 );
 		return true;
 	}
 };
 
 template <typename T1>
-IConsoleFunc *MakeConsoleFunc( void (*_pfnFunc)( T1 _p1 ), T1 _p1 )
+IConsoleFunc *MakeConsoleFunc( void ( *_pfnFunc )( T1 _p1 ), T1 _p1 )
 {
 	return new CConsoleFunc1( _pfnFunc, _p1 );
 }
@@ -114,29 +113,32 @@ template <typename T1, typename T2>
 class CConsoleFunc2 : public IConsoleFunc
 {
 	OBJECT_NOCOPY_METHODS( CConsoleFunc2 );
-	void (*pfnFunc)( T1 p1, T2 p2 );
+	void ( *pfnFunc )( T1 p1, T2 p2 );
 	typedef typename NMeta::CTypeTraits<T1>::TStripType TS1;
 	typedef typename NMeta::CTypeTraits<T2>::TStripType TS2;
 	TS1 def1;
 	TS2 def2;
 	//
 	CConsoleFunc2() {}
+
 public:
-	CConsoleFunc2( void (*_pfnFunc)( T1 _p1, T2 _p2 ), const TS1 &_def1, const TS2 &_def2 )
-		: pfnFunc( _pfnFunc ), def1( _def1 ), def2( _def2 ) {}
+	CConsoleFunc2( void ( *_pfnFunc )( T1 _p1, T2 _p2 ), const TS1 &_def1, const TS2 &_def2 )
+			: pfnFunc( _pfnFunc ), def1( _def1 ), def2( _def2 )
+	{
+	}
 	//
 	bool Execute( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 	{
 		const int nNumParams = paramsSet.size();
 		MAKE_PARAMETER( 1, nNumParams );
 		MAKE_PARAMETER( 2, nNumParams );
-		(*pfnFunc)( p1, p2 );
+		( *pfnFunc )( p1, p2 );
 		return true;
 	}
 };
 
 template <typename T1, typename T2>
-IConsoleFunc *MakeConsoleFunc( void (*_pfnFunc)( T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
+IConsoleFunc *MakeConsoleFunc( void ( *_pfnFunc )( T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 {
 	return new CConsoleFunc2( _pfnFunc, _p1, _p2 );
 }

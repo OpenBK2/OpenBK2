@@ -11,7 +11,7 @@ extern NTimer::STime curTime;
 // non-reentrant
 inline void MPLog( const char *pszInfo, ... )
 {
-  static char buff[2048];
+	static char buff[2048];
 
 	if ( curTime >= timeToLogStart && curTime <= timeToLogFinish )
 	{

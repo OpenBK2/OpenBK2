@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 
-
 // Drives an interactive child process through its standard streams: a script
 // goes to the child's stdin, and its stdout is read back until a prompt marker
 // says the script has run. CInteractiveMaya is the only user; it talks MEL to
@@ -22,7 +21,7 @@ class CInteractiveProcess
 	std::unique_ptr<SImpl> pImpl;
 
 public:
-	CInteractiveProcess( int nResponseWaitTimeout = (60 * 1000) );
+	CInteractiveProcess( int nResponseWaitTimeout = ( 60 * 1000 ) );
 	// Out of line like the constructor, and for the same reason: unique_ptr
 	// needs SImpl to be a complete type to destroy it, and it is not one here.
 	~CInteractiveProcess();
@@ -32,6 +31,10 @@ public:
 	void SetResponseTimeout( int nResponseWaitTimeout );
 
 	bool Start( const std::string &szCommandLine, std::string *pszErrorMessage );
-	bool Execute( const std::string &szScript, const std::string &szResponseEndLabel, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage );
+	bool Execute( const std::string &szScript,
+	              const std::string &szResponseEndLabel,
+	              std::string *pszOutput,
+	              std::string *pszErrorOutput,
+	              std::string *pszErrorMessage );
 	bool Stop( const std::string &szQuitScript );
 };

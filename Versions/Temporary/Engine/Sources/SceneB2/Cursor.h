@@ -2,10 +2,12 @@
 
 #include "SceneB2_export.h"
 
-
 struct ICursor : public CObjectBase
 {
-	enum { tidTypeID = 0x3014EC00 };
+	enum
+	{
+		tidTypeID = 0x3014EC00
+	};
 
 	virtual bool Init() = 0;
 	// cursor mode
@@ -30,4 +32,7 @@ struct ICursor : public CObjectBase
 };
 
 SCENEB2_EXPORT ICursor *CreateCursor();
-inline ICursor* Cursor() { return Singleton<ICursor>(); }
+inline ICursor *Cursor()
+{
+	return Singleton<ICursor>();
+}

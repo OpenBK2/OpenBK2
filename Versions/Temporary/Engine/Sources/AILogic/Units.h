@@ -16,32 +16,35 @@ class CPlanesIter;
 class CDeadPlanesIter;
 namespace NDb
 {
-	struct SUnitStatsModifier;
+struct SUnitStatsModifier;
 }
-template<uint8_t cOnlyVisible, int nSize> class CUnitsIter;
+template <uint8_t cOnlyVisible, int nSize>
+class CUnitsIter;
 
 class CUnits : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CUnits );
+
 public:
 	int operator&( IBinSaver &saver );
+
 private:
 	struct SInitializedWord
 	{
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nValue = {};
-		SInitializedWord() : nValue ( 0 ) {}
-		SInitializedWord( int _nValue ) : nValue ( _nValue ) {}
+		SInitializedWord() : nValue( 0 ) {}
+		SInitializedWord( int _nValue ) : nValue( _nValue ) {}
 	};
 
-	typedef det_map<int/*UniqueID*/, int/*CUnits internal ID*/ > CIDsRemap;
+	typedef det_map<int /*UniqueID*/, int /*CUnits internal ID*/> CIDsRemap;
 	CIDsRemap idsRemap;
 	// все юниты, распределённые по дипл. сторонам
-	CListsSet< CObj<CAIUnit> > units;
-	det_map< int, CObj<CFormation> > formations;
+	CListsSet<CObj<CAIUnit>> units;
+	det_map<int, CObj<CFormation>> formations;
 	std::vector<int> sizes;
 	// самолёты
-	std::list< CObj<CAviation> > planes;
+	std::list<CObj<CAviation>> planes;
 	// все операции проводятся с большими ячейками
 
 	int nBigCellsSizeX = {}, nBigCellsSizeY = {};
@@ -51,41 +54,45 @@ private:
 	// номер ячейки
 	CArray2D<uint16_t> nCell;
 	// список юнитов для каждой из ячеек, 0 - not visible for enemy, 1 - visible for enemy
-	std::vector< CListsSet<SInitializedWord> > unitsInCells;
+	std::vector<CListsSet<SInitializedWord>> unitsInCells;
 	// позиция юнита в ячейках
 	struct SUnitPosition
 	{
-		int nCellID = {}; int nUnitPos = {}; SVector cell;
-		SUnitPosition() : nCellID(0), nUnitPos(0), cell( 0, 0 ) { }
+		int nCellID = {};
+		int nUnitPos = {};
+		SVector cell;
+		SUnitPosition() : nCellID( 0 ), nUnitPos( 0 ), cell( 0, 0 ) {}
 	};
 	std::vector<SUnitPosition> posUnitInCell;
 
-	enum { N_CELLS_LEVELS = 3 };
+	enum
+	{
+		N_CELLS_LEVELS = 3
+	};
 	CArray2D<uint16_t> numUnits[2][N_CELLS_LEVELS][3][2];
 
 	// для нумерации ячеек
 	CFreeIds cellsIds;
 	// для сериализации
-	det_map< int, SVector > cellIdToCoord;
-
+	det_map<int, SVector> cellIdToCoord;
 
 	// CRAP{ for debug
 	det_set<int> unitsInCellsSet;
 	// CRAP}
 
-	std::vector< det_map<int, int> > nUnitsOfType;
+	std::vector<det_map<int, int>> nUnitsOfType;
 
 	//
-	void AddUnitToConcreteCell( class CAIUnit* pUnit, const SVector &cell, bool bWithLeveledCelles );
+	void AddUnitToConcreteCell( class CAIUnit *pUnit, const SVector &cell, bool bWithLeveledCelles );
 	void AddUnitToCell( class CAIUnit *pUnit, const CVec2 &newPos, bool bWithLeveledCelles );
 
 	void AddUnitToLeveledCells( CAIUnit *pUnit, const SVector &bigCell, const int nVis );
 	void DelUnitFromLeveledCells( CAIUnit *pUnit, const SVector &bigCell, const int nVis );
 	const bool IsUnitInCell( const int nUnitID ) const;
-	CAIUnit* operator[]( const int id );
+	CAIUnit *operator[]( const int id );
 
 public:
-	CUnits() { }
+	CUnits() {}
 
 	void Init();
 	void Clear() { DestroyContents(); }
@@ -125,25 +132,28 @@ public:
 	void UpdateUnitVis4Enemy( CAIUnit *pUnit );
 	const int GetVisIndex( CAIUnit *pUnit );
 
-	bool IsBigCellInside( const SVector &bigCell ) { return ( bigCell.x >= 0 && bigCell.y >= 0 && bigCell.x < nBigCellsSizeX && bigCell.y < nBigCellsSizeY ); }
+	bool IsBigCellInside( const SVector &bigCell )
+	{
+		return ( bigCell.x >= 0 && bigCell.y >= 0 && bigCell.x < nBigCellsSizeX && bigCell.y < nBigCellsSizeY );
+	}
 
 	void ApplyModifierToAll( const NDb::SUnitStatsModifier *pBonus, const bool bForward );
 
 	// for debug
 	void CheckCorrectness( const SVector &tile );
 	void CheckUnitCell();
-	void WriteSpatialCellDebugInfo( FILE* f );
+	void WriteSpatialCellDebugInfo( FILE *f );
 
-  friend class CGlobalIter;
+	friend class CGlobalIter;
 	friend class CPlanesIter;
 	friend class CDeadPlanesIter;
 
-	friend class CUnitsIter<0,3>;
-	friend class CUnitsIter<0,2>;
-	friend class CUnitsIter<0,1>;
-	friend class CUnitsIter<0,0>;
-	friend class CUnitsIter<1,3>;
-	friend class CUnitsIter<1,2>;
-	friend class CUnitsIter<1,1>;
-	friend class CUnitsIter<1,0>;
+	friend class CUnitsIter<0, 3>;
+	friend class CUnitsIter<0, 2>;
+	friend class CUnitsIter<0, 1>;
+	friend class CUnitsIter<0, 0>;
+	friend class CUnitsIter<1, 3>;
+	friend class CUnitsIter<1, 2>;
+	friend class CUnitsIter<1, 1>;
+	friend class CUnitsIter<1, 0>;
 };

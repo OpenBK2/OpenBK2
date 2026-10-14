@@ -7,7 +7,7 @@ BASIC_REGISTER_CLASS( SERVER_CLIENT_COMMON, IPacketProcessorFun );
 bool CPacketProcessorBase::ProcessPacket( CNetPacket *pPacket )
 {
 	const int nTypeID = NObjectFactory::GetObjectTypeID( pPacket );
-	std::unordered_map<int, CPtr<IPacketProcessorFun> >::iterator iter = packetProcessorFuns.find( nTypeID );
+	std::unordered_map<int, CPtr<IPacketProcessorFun>>::iterator iter = packetProcessorFuns.find( nTypeID );
 	if ( iter != packetProcessorFuns.end() )
 	{
 		IPacketProcessorFun *pProcessor = iter->second;
@@ -22,7 +22,7 @@ void CPacketProcessorBase::PushPacket( CNetPacket *pPacket )
 	packets.push_back( pPacket );
 }
 
-CNetPacket* CPacketProcessorBase::GetPacket()
+CNetPacket *CPacketProcessorBase::GetPacket()
 {
 	if ( packets.empty() )
 		return 0;

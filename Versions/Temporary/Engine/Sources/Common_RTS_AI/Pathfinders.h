@@ -2,5 +2,4 @@
 
 #include "Common_RTS_AI_export.h"
 
-
 COMMON_RTS_AI_EXPORT void RegisterPathfinderSingleton();

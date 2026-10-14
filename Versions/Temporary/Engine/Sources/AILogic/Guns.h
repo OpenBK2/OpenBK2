@@ -7,8 +7,8 @@
 
 namespace NDb
 {
-	struct SWeaponRPGStats;
-	struct SBaseGunRPGStats;
+struct SWeaponRPGStats;
+struct SBaseGunRPGStats;
 }
 class CAIUnit;
 
@@ -19,6 +19,7 @@ class CAIUnit;
 struct SCommonGunInfo : public CAIObjectBase
 {
 	OBJECT_BASIC_METHODS( SCommonGunInfo );
+
 public:
 	ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -27,46 +28,82 @@ public:
 	NTimer::STime lastShoot = {};
 	int nGun = {};
 	int nPlatform = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bFiring); f.Add(3,&nAmmo); f.Add(4,&lastShoot); f.Add(5,&nGun); f.Add(6,&nPlatform); return 0; }
-public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &bFiring );
+		f.Add( 3, &nAmmo );
+		f.Add( 4, &lastShoot );
+		f.Add( 5, &nGun );
+		f.Add( 6, &nPlatform );
+		return 0;
+	}
 
-	SCommonGunInfo() { }
-	SCommonGunInfo( bool _bFiring, const int _nAmmo, const int _nPlatform, const int _nGun ) : bFiring( _bFiring ), nAmmo( _nAmmo ), nPlatform( _nPlatform ), lastShoot( 0 ), nGun( _nGun ) { }
+public:
+	SCommonGunInfo() {}
+	SCommonGunInfo( bool _bFiring, const int _nAmmo, const int _nPlatform, const int _nGun )
+			: bFiring( _bFiring ), nAmmo( _nAmmo ), nPlatform( _nPlatform ), lastShoot( 0 ), nGun( _nGun )
+	{
+	}
 };
 
 struct IGunsFactory
 {
-	enum EGunTypes { MOMENT_CML_GUN, MOMENT_BURST_GUN, VIS_CML_BALLIST_GUN, VIS_BURST_BALLIST_GUN, PLANE_GUN, MORALE_GUN, TORPEDO_GUN, ROCKET_GUN, FLAME_GUN };
+	enum EGunTypes
+	{
+		MOMENT_CML_GUN,
+		MOMENT_BURST_GUN,
+		VIS_CML_BALLIST_GUN,
+		VIS_BURST_BALLIST_GUN,
+		PLANE_GUN,
+		MORALE_GUN,
+		TORPEDO_GUN,
+		ROCKET_GUN,
+		FLAME_GUN
+	};
 
-	virtual class CBasicGun* CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const = 0;
+	virtual class CBasicGun *
+	CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const = 0;
 	virtual int GetNCommonGun() const = 0;
 };
 
 class CBasicGunCRAPSaver : public CLinkObject
 {
-	ZDATA_(CLinkObject)
+	ZDATA_( CLinkObject )
 public:
 protected:
 	CDBPtr<SWeaponRPGStats> pWeapon;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pWeapon); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CLinkObject *)this );
+		f.Add( 2, &pWeapon );
+		return 0;
+	}
 };
 
 class CBasicGun : public CBasicGunCRAPSaver
 {
 
-	enum EShootState { EST_TURNING, EST_AIMING, WAIT_FOR_ACTION_POINT, EST_SHOOTING, EST_REST };
+	enum EShootState
+	{
+		EST_TURNING,
+		EST_AIMING,
+		WAIT_FOR_ACTION_POINT,
+		EST_SHOOTING,
+		EST_REST
+	};
+
 protected:
 	// parallelGuns below is protected, so the type that names it has to be too:
 	// CTurretGun::TraceAim iterates it.
-	typedef std::list< CPtr<CBasicGun> > CParallelGuns;
-private:
+	typedef std::list<CPtr<CBasicGun>> CParallelGuns;
 
-	ZDATA_(CBasicGunCRAPSaver)
-protected:
-	ZSKIP//	CDBPtr<SWeaponRPGStats> pWeapon;
 private:
-	EShootState shootState = {};
+	ZDATA_( CBasicGunCRAPSaver )
+protected:
+ZSKIP //	CDBPtr<SWeaponRPGStats> pWeapon;
+		private : EShootState shootState = {};
 
 	bool bWaitForReload = {}; //specific for artillery
 
@@ -74,7 +111,6 @@ private:
 	bool bCanShoot = {};
 	// сколько ещё осталось в очереди
 	int nShotsLast = {};
-
 
 	IGunsFactory::EGunTypes eType = {};
 	EUnitAckType eRejectReason = {};
@@ -110,14 +146,47 @@ protected:
 	bool bParallelGun = {};
 	NTimer::STime lastCheckTurnTime = {};
 	bool bIgnoreObstacles = {};
+
 private:
 	CPtr<CAIUnit> pCanShootCachedEnemy;
 	bool bCanShootToUnitWOMove = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBasicGunCRAPSaver*)this); f.Add(3,&shootState); f.Add(4,&bWaitForReload); f.Add(5,&bCanShoot); f.Add(6,&nShotsLast); f.Add(7,&eType); f.Add(8,&eRejectReason); f.Add(9,&vLastShotPoint); f.Add(10,&fRandom4Aim); f.Add(11,&fRandom4Relax); f.Add(12,&nShellType); f.Add(13,&pOwner); f.Add(14,&nOwnerParty); f.Add(15,&pCommonGunInfo); f.Add(16,&pEnemy); f.Add(17,&target); f.Add(18,&lastCheck); f.Add(19,&lastEnemyPos); f.Add(20,&bAngleLocked); f.Add(21,&bAim); f.Add(22,&bGrenade); f.Add(23,&z); f.Add(24,&parallelGuns); f.Add(25,&bParallelGun); f.Add(26,&lastCheckTurnTime); f.Add(27,&bIgnoreObstacles); f.Add(28,&pCanShootCachedEnemy); f.Add(29,&bCanShootToUnitWOMove); f.Add(30,&pAntiAviationTarget); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CBasicGunCRAPSaver *)this );
+		f.Add( 3, &shootState );
+		f.Add( 4, &bWaitForReload );
+		f.Add( 5, &bCanShoot );
+		f.Add( 6, &nShotsLast );
+		f.Add( 7, &eType );
+		f.Add( 8, &eRejectReason );
+		f.Add( 9, &vLastShotPoint );
+		f.Add( 10, &fRandom4Aim );
+		f.Add( 11, &fRandom4Relax );
+		f.Add( 12, &nShellType );
+		f.Add( 13, &pOwner );
+		f.Add( 14, &nOwnerParty );
+		f.Add( 15, &pCommonGunInfo );
+		f.Add( 16, &pEnemy );
+		f.Add( 17, &target );
+		f.Add( 18, &lastCheck );
+		f.Add( 19, &lastEnemyPos );
+		f.Add( 20, &bAngleLocked );
+		f.Add( 21, &bAim );
+		f.Add( 22, &bGrenade );
+		f.Add( 23, &z );
+		f.Add( 24, &parallelGuns );
+		f.Add( 25, &bParallelGun );
+		f.Add( 26, &lastCheckTurnTime );
+		f.Add( 27, &bIgnoreObstacles );
+		f.Add( 28, &pCanShootCachedEnemy );
+		f.Add( 29, &bCanShootToUnitWOMove );
+		f.Add( 30, &pAntiAviationTarget );
+		return 0;
+	}
 
 private:
-
 	void Aiming();
 	void WaitForActionPoint();
 	void Shooting();
@@ -131,14 +200,14 @@ private:
 
 	bool CanShotBecauseOfObstacles( const CVec2 &point, const float fZ );
 	void ToRestStateWOParallel();
+
 protected:
-
-
 	const NTimer::STime GetActionPoint() const;
 	//
 	virtual bool TurnGunToEnemy( const CVec2 &vEnemyCenter, const float zDiff ) = 0;
 	// можно ли прямо сейчас стрельнуть по point ( не вращая ни turret ни base ), погрешность - угол addAngle, cDeltaAngle - учитывать ли deltaAngle
-	virtual bool IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const = 0;
+	virtual bool
+	IsGoodAngle( const CVec2 &point, const uint16_t addAngle, const float z, const uint8_t cDeltaAngle ) const = 0;
 	virtual void ToRestState();
 	virtual void Rest() = 0;
 	virtual bool AnalyzeTurning() = 0;
@@ -151,16 +220,24 @@ protected:
 	bool CanShootToTargetWOMove();
 
 	void InitRandoms();
-	const NDb::SUnitStatsModifier* GetAntiAviationModifier() const;
+	const NDb::SUnitStatsModifier *GetAntiAviationModifier() const;
+
 public:
-	CBasicGun() : pOwner( 0 ), pAntiAviationTarget( 0 ), bParallelGun( false ), vLastShotPoint( VNULL3	), lastCheckTurnTime( 0 ), bCanShootToUnitWOMove( false ) { }
-	CBasicGun( class CAIUnit *pOwner, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType );
+	CBasicGun()
+			: pOwner( 0 ), pAntiAviationTarget( 0 ), bParallelGun( false ), vLastShotPoint( VNULL3 ), lastCheckTurnTime( 0 ),
+				bCanShootToUnitWOMove( false )
+	{
+	}
+	CBasicGun( class CAIUnit *pOwner,
+	           const uint8_t nShellType,
+	           SCommonGunInfo *pCommonGunInfo,
+	           const IGunsFactory::EGunTypes eType );
 
 	virtual int GetShellType() const { return nShellType; }
 
 	virtual const float GetAimTime( bool bRandomize = true ) const;
 	virtual const float GetRelaxTime( bool bRandomize = true ) const;
-	virtual class CAIUnit* GetOwner() const { return pOwner; }
+	virtual class CAIUnit *GetOwner() const { return pOwner; }
 	virtual void SetOwner( CAIUnit *pOwner );
 	bool IsGrenade() const { return bGrenade; }
 
@@ -186,12 +263,12 @@ public:
 	virtual void ClearWaitForReload() { bWaitForReload = false; }
 
 	// в данный момент в состоянии наводки и стрельбы
-	virtual bool IsFiring() const ;
+	virtual bool IsFiring() const;
 	bool IsBursting() const { return shootState == WAIT_FOR_ACTION_POINT || shootState == EST_SHOOTING; }
 
-	virtual const SBaseGunRPGStats& GetGun() const;
-	virtual const SWeaponRPGStats* GetWeapon() const;
-	virtual const SWeaponRPGStats::SShell& GetShell() const;
+	virtual const SBaseGunRPGStats &GetGun() const;
+	virtual const SWeaponRPGStats *GetWeapon() const;
+	virtual const SWeaponRPGStats::SShell &GetShell() const;
 
 	virtual bool IsRelaxing() const;
 	// можно ли стрельнуть по pEnemy, не вращая ни base ни turret, cDeltaAngle - учитывать ли deltaAngle
@@ -201,7 +278,11 @@ public:
 	// стрельба, когда двигаться запрещено
 	virtual bool CanShootToUnitWOMove( class CAIUnit *pEnemy );
 	virtual bool CanShootToObjectWOMove( class CStaticObject *pObj );
-	virtual bool CanShootToPointWOMove( const CVec2 &point, const float fZ, const uint16_t wHorAddAngle = 0, const uint16_t wVertAddAngle = 0, CAIUnit *pEnemy = 0 );
+	virtual bool CanShootToPointWOMove( const CVec2 &point,
+	                                    const float fZ,
+	                                    const uint16_t wHorAddAngle = 0,
+	                                    const uint16_t wVertAddAngle = 0,
+	                                    CAIUnit *pEnemy = 0 );
 
 	// можно ли дострельнуть по высоте
 	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;
@@ -210,7 +291,10 @@ public:
 	// можно ли стрельнуть в объект по прямому приказу
 	virtual bool CanShootToUnit( class CAIUnit *pEnemy );
 	virtual bool CanShootToObject( class CStaticObject *pObj );
-	virtual bool CanShootToPoint( const CVec2 &point, const float fZ, const uint16_t wHorAddAngle = 0, const uint16_t wVertAddAngle = 0 );
+	virtual bool CanShootToPoint( const CVec2 &point,
+	                              const float fZ,
+	                              const uint16_t wHorAddAngle = 0,
+	                              const uint16_t wVertAddAngle = 0 );
 
 	// можно пристрелить, не поворачивая base ( turret вращать можно )
 	virtual bool IsInShootCone( const CVec2 &point, const uint16_t wAddAngle = 0 ) const;
@@ -236,7 +320,7 @@ public:
 	void DontShoot() { bCanShoot = false; }
 	// отменяет DontShoot()
 	void CanShoot() { bCanShoot = true; }
-	bool IsShootAllowed(){ return bCanShoot; }
+	bool IsShootAllowed() { return bCanShoot; }
 
 	// стреляет ли общий gun ( с учётом патронов - т.е. учитываются все guns, находящиеся с ним в одном стволе )
 	bool IsCommonGunFiring() const { return pCommonGunInfo->bFiring; }
@@ -251,12 +335,12 @@ public:
 	int GetNAmmo() const { return pCommonGunInfo->nAmmo; }
 	void SetNAmmo( int nAmmo ) { pCommonGunInfo->nAmmo = nAmmo; }
 
-	virtual struct IBallisticTraj* CreateTraj( const CVec3 &vTarget ) const;
+	virtual struct IBallisticTraj *CreateTraj( const CVec3 &vTarget ) const;
 	virtual void Fire( const CVec2 &target, const float z, const bool bShowBombEffect );
 	virtual uint16_t GetTrajectoryZAngle( const CVec3 &vToAim ) const;
 
 	// сказать, почему отказался стрелять
-	virtual const EUnitAckType& GetRejectReason() const { return eRejectReason; }
+	virtual const EUnitAckType &GetRejectReason() const { return eRejectReason; }
 	virtual void SetRejectReason( const EUnitAckType &eReason );
 
 	virtual const bool IsVisible( const uint8_t party ) const { return true; }
@@ -291,7 +375,7 @@ public:
 
 	virtual uint16_t GetHorTurnConstraint() const = 0;
 	virtual uint16_t GetVerTurnConstraint() const = 0;
-	virtual class CTurret* GetTurret() const = 0;
+	virtual class CTurret *GetTurret() const = 0;
 
 	// направление, по которому в данный момент смотрит орудие
 	virtual const uint16_t GetGlobalDir() const = 0;

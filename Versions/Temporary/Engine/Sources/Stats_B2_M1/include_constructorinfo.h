@@ -4,10 +4,10 @@ void GetGunPlatformIndex( const int nUniqueID, const int nPlatform, const int nG
 	if ( ConstructorInfo() )
 	{
 		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
-		if (  ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
+		if ( ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) )
 		{
-			*pnPlatform = (*pPlatforms)[nPlatform].nPlatformIndex;
-			*pnGun = (*pPlatforms)[nPlatform].gunIndexes[nGun];
+			*pnPlatform = ( *pPlatforms )[nPlatform].nPlatformIndex;
+			*pnGun = ( *pPlatforms )[nPlatform].gunIndexes[nGun];
 			return;
 		}
 	}

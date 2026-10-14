@@ -2,11 +2,11 @@
 
 #include "MapEditorLib/Interface_EditorAI.h"
 
-class  CEditorAI : public IEditorAI
+class CEditorAI : public IEditorAI
 {
 	OBJECT_NOCOPY_METHODS( CEditorAI );
 	//
 public:
 	// IEditorAI
-	struct ITerraAIObserver* CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY );
+	struct ITerraAIObserver *CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY );
 };

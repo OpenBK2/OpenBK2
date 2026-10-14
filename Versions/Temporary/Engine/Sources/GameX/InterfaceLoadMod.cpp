@@ -14,11 +14,7 @@ const int NO_MOD = -1;
 
 // CInterfaceLoadMod
 
-CInterfaceLoadMod::CInterfaceLoadMod() :
-	CInterfaceScreenBase( "LoadMod", "load_mod" ),
-	nInitialMod( NO_MOD )
-{
-}
+CInterfaceLoadMod::CInterfaceLoadMod() : CInterfaceScreenBase( "LoadMod", "load_mod" ), nInitialMod( NO_MOD ) {}
 
 bool CInterfaceLoadMod::Init()
 {
@@ -100,7 +96,9 @@ void CInterfaceLoadMod::MakeInterior()
 	UpdateSelection();
 }
 
-void CInterfaceLoadMod::AddMod( const std::wstring &wszName, const std::wstring &wszDesc, const NFile::CFilePath &szFullFolderPath )
+void CInterfaceLoadMod::AddMod( const std::wstring &wszName,
+                                const std::wstring &wszDesc,
+                                const NFile::CFilePath &szFullFolderPath )
 {
 	SMod mod;
 	mod.pWnd = AddWindowCopy( pModsListCont, pModsListItemTemplate );
@@ -122,7 +120,7 @@ void CInterfaceLoadMod::AddMod( const std::wstring &wszName, const std::wstring 
 	mods.push_back( mod );
 }
 
-const CInterfaceLoadMod::SMod* CInterfaceLoadMod::FindSelected() const
+const CInterfaceLoadMod::SMod *CInterfaceLoadMod::FindSelected() const
 {
 	IWindow *pSelectedWnd = 0;
 	if ( pModsListCont )
@@ -184,8 +182,8 @@ bool CInterfaceLoadMod::OnAccept()
 	const SMod *pMod = FindSelected();
 	SelectMod( pMod );
 
-//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-//	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
+	//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+	//	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 
 	return true;
 }
@@ -208,7 +206,7 @@ void CInterfaceLoadMod::SelectMod( const SMod *pMod )
 {
 	if ( pMod )
 	{
-		if ( NMOD::DoesMODAttached(pMod->szFullFolderPath) == false )
+		if ( NMOD::DoesMODAttached( pMod->szFullFolderPath ) == false )
 		{
 			NMOD::AttachMOD( pMod->szFullFolderPath );
 			NGlobal::ProcessCommand( L"menu" );
@@ -288,18 +286,14 @@ bool CInterfaceLoadMod::StepLocal( bool bAppActive )
 
 // CICLoadMod
 
-void CICLoadMod::PreCreate()
-{
-}
+void CICLoadMod::PreCreate() {}
 
 void CICLoadMod::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICLoadMod::Configure( const char *pszConfig )
-{
-}
+void CICLoadMod::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17263C01, CInterfaceLoadMod )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_LOAD_MOD, CICLoadMod )

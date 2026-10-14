@@ -4,7 +4,6 @@
 
 #include "Common_RTS_AI_export.h"
 
-
 #include "BasePathUnit.h"
 #include "StandartSmoothPath.h"
 
@@ -16,7 +15,10 @@ struct SGeometryCellInfo
 	int nPriority = 0;
 
 	SGeometryCellInfo() : vCellPosition( VNULL2 ), nPriority( -1 ) {}
-	SGeometryCellInfo( const CVec2 &_vCellPosition, const int _nPriority ) : vCellPosition( _vCellPosition ), nPriority( _nPriority ) {}
+	SGeometryCellInfo( const CVec2 &_vCellPosition, const int _nPriority )
+			: vCellPosition( _vCellPosition ), nPriority( _nPriority )
+	{
+	}
 };
 
 //! гладкий путь для группы (формации), позиции не привязаны (!!!) к юнитам, позиции привязаны к некоему приоритету (индексу),
@@ -46,16 +48,20 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	//! набор положений внутри группы
 	typedef std::vector<SCellInfo> CCells;
 	//! связь между набором положений и типом (priority) юнитов
-	typedef std::unordered_map< int, CCells > CPriorityCells; // Using std::unoreded_map is fine here since no iteration is done!
+	typedef std::unordered_map<int, CCells>
+			CPriorityCells; // Using std::unoreded_map is fine here since no iteration is done!
 	//
 	struct SGeometry
 	{
 		CPriorityCells geometry;
-    float fMaxProjection = 0.0f;
+		float fMaxProjection = 0.0f;
 		float fRadius = 0.0f;
 
 		SGeometry() : fMaxProjection( 0.0f ), fRadius( 0.0f ) {}
-		SGeometry( const CPriorityCells &_geometry, const float _fMaxProjection, const float _fRadius ) : geometry( _geometry ), fMaxProjection( _fMaxProjection ), fRadius( _fRadius ) {}
+		SGeometry( const CPriorityCells &_geometry, const float _fMaxProjection, const float _fRadius )
+				: geometry( _geometry ), fMaxProjection( _fMaxProjection ), fRadius( _fRadius )
+		{
+		}
 
 		int operator&( IBinSaver &saver )
 		{
@@ -73,8 +79,8 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		int nCell = 0;
 		int nPriority = 0;
 
-		SUnitInfo(): pUnit( 0 ), nCell( -1 ), nPriority( -1 ) {}
-		SUnitInfo( CBasePathUnit *_pUnit, const int _nPriority ): pUnit( _pUnit ), nCell( -1 ), nPriority( _nPriority ) {}
+		SUnitInfo() : pUnit( 0 ), nCell( -1 ), nPriority( -1 ) {}
+		SUnitInfo( CBasePathUnit *_pUnit, const int _nPriority ) : pUnit( _pUnit ), nCell( -1 ), nPriority( _nPriority ) {}
 
 		int operator&( IBinSaver &saver )
 		{
@@ -95,18 +101,30 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 				return unitInfo1.nPriority > unitInfo2.nPriority;
 		}
 	};
-	typedef det_map< int, SUnitInfo > CUnitsMap;
-  //
+	typedef det_map<int, SUnitInfo> CUnitsMap;
+	//
 	OBJECT_BASIC_METHODS( CGroupSmoothPath )
 	ZDATA_( CStandartSmoothPathBasis )
-		std::vector<SGeometry> geometries;
-		CUnitsMap units;
-		int nCurrentGeometry = 0;
-		int nUnitsCount = 0;
-		int nCellsCount = 0;
-		float fMaxPathShift = 0.0f;
-		float fSpeedCoeff = 0.0f;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStandartSmoothPathBasis *)this); f.Add(2,&geometries); f.Add(3,&units); f.Add(4,&nCurrentGeometry); f.Add(5,&nUnitsCount); f.Add(6,&nCellsCount); f.Add(7,&fMaxPathShift); f.Add(8,&fSpeedCoeff); return 0; }
+	std::vector<SGeometry> geometries;
+	CUnitsMap units;
+	int nCurrentGeometry = 0;
+	int nUnitsCount = 0;
+	int nCellsCount = 0;
+	float fMaxPathShift = 0.0f;
+	float fSpeedCoeff = 0.0f;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CStandartSmoothPathBasis *)this );
+		f.Add( 2, &geometries );
+		f.Add( 3, &units );
+		f.Add( 4, &nCurrentGeometry );
+		f.Add( 5, &nUnitsCount );
+		f.Add( 6, &nCellsCount );
+		f.Add( 7, &fMaxPathShift );
+		f.Add( 8, &fSpeedCoeff );
+		return 0;
+	}
+
 protected:
 	const CVec2 GetDirection() const { return GetUnit()->GetDirectionVector(); }
 	//! получить смещение юнита в формации
@@ -121,7 +139,10 @@ protected:
 	void RecalcCells();
 
 public:
-	CGroupSmoothPath() : nCurrentGeometry( 0 ), nUnitsCount( 0 ), nCellsCount( 0 ), fMaxPathShift( 0.0f ), fSpeedCoeff( 1.0f ) {}
+	CGroupSmoothPath()
+			: nCurrentGeometry( 0 ), nUnitsCount( 0 ), nCellsCount( 0 ), fMaxPathShift( 0.0f ), fSpeedCoeff( 1.0f )
+	{
+	}
 
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 
@@ -149,7 +170,10 @@ public:
 	virtual void Segment( const NTimer::STime timeDiff );
 
 	//! получить смещение юнита относительно текущего центра формации, с учетом текущего направления формации
-	virtual const CVec2 GetUnitShift( const CBasePathUnit *pUnit ) const { return GetDirection() ^ GetUnitFormationShift( pUnit ); };
+	virtual const CVec2 GetUnitShift( const CBasePathUnit *pUnit ) const
+	{
+		return GetDirection() ^ GetUnitFormationShift( pUnit );
+	};
 	//! получить текущие координаты юнита
 	virtual const CVec2 GetUnitCenter( const CBasePathUnit *pUnit ) const { return GetCenter() + GetUnitShift( pUnit ); };
 	//! получить центр юнита, где юнит может встать на прямой между центром формации и юнитом
@@ -157,5 +181,8 @@ public:
 	//! получить текущее направление юнита
 	virtual const CVec2 GetUnitDirection( const CBasePathUnit *pUnit ) const { return GetUnit()->GetDirectionVector(); }
 	//! получить проекцию позиции юнита на путь (ушел вперед/назад)
-	virtual const float GetUnitPathShift( const CBasePathUnit *pUnit ) const { return GetDirection() * ( pUnit->GetCenterPlain() - GetCenter() ) - GetUnitFormationProjection( pUnit ); }
+	virtual const float GetUnitPathShift( const CBasePathUnit *pUnit ) const
+	{
+		return GetDirection() * ( pUnit->GetCenterPlain() - GetCenter() ) - GetUnitFormationProjection( pUnit );
+	}
 };

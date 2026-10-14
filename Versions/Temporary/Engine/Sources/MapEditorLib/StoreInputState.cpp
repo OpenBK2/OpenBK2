@@ -13,7 +13,6 @@ void CStoreInputState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouseP
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-
 bool CStoreInputState::OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -28,7 +27,6 @@ bool CStoreInputState::OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int>
 	return true;
 }
 
-
 void CStoreInputState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -40,7 +38,6 @@ void CStoreInputState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMous
 	//
 	OnInputStateEvent( inputStateEventInfo );
 }
-
 
 void CStoreInputState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -54,7 +51,6 @@ void CStoreInputState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMouseP
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-
 void CStoreInputState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -66,7 +62,6 @@ void CStoreInputState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMo
 	//
 	OnInputStateEvent( inputStateEventInfo );
 }
-
 
 void CStoreInputState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -80,7 +75,6 @@ void CStoreInputState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMous
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-
 void CStoreInputState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -92,7 +86,6 @@ void CStoreInputState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMouseP
 	//
 	OnInputStateEvent( inputStateEventInfo );
 }
-
 
 void CStoreInputState::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -106,7 +99,6 @@ void CStoreInputState::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMo
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-
 void CStoreInputState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -118,7 +110,6 @@ void CStoreInputState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMous
 	//
 	OnInputStateEvent( inputStateEventInfo );
 }
-
 
 void CStoreInputState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -132,7 +123,6 @@ void CStoreInputState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMouseP
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-
 void CStoreInputState::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -144,7 +134,6 @@ void CStoreInputState::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMo
 	//
 	OnInputStateEvent( inputStateEventInfo );
 }
-
 
 void CStoreInputState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -159,7 +148,6 @@ void CStoreInputState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFl
 	OnInputStateEvent( inputStateEventInfo );
 }
 
-
 void CStoreInputState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	SInputStateEventInfo inputStateEventInfo;
@@ -172,7 +160,6 @@ void CStoreInputState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlag
 	//
 	OnInputStateEvent( inputStateEventInfo );
 }
-
 
 void CStoreInputState::OnContextMenu( const CTPoint<int> &rMousePoint )
 {

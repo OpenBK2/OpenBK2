@@ -34,8 +34,10 @@ void CTerraGen::GenerateTerrain()
 	terrainNorms.FillEvery( V3_AXIS_Z );
 
 	std::vector<NDb::STerrainAIProperties> params;
-	for ( std::vector< CDBPtr<NDb::STGTerraType> >::const_iterator it = pDesc->pTerraSet->terraTypes.begin(); it != pDesc->pTerraSet->terraTypes.end(); ++it )
-		params.push_back( (*it)->aIProperty );
+	for ( std::vector<CDBPtr<NDb::STGTerraType>>::const_iterator it = pDesc->pTerraSet->terraTypes.begin();
+	      it != pDesc->pTerraSet->terraTypes.end();
+	      ++it )
+		params.push_back( ( *it )->aIProperty );
 
 	SetTerraTypesToAI( params );
 
@@ -49,7 +51,6 @@ void CTerraGen::GenerateTerrain()
 	TIME_STAT_FINISH( GenerateTerraGeometry )
 }
 
-
 void CTerraGen::ResetTile( const int nTileX, const int nTileY )
 {
 	const float x = Tile2Vis( nTileX );
@@ -59,15 +60,17 @@ void CTerraGen::ResetTile( const int nTileX, const int nTileY )
 	tile.vertices.resize( 0 );
 	tile.vertices.reserve( 4 );
 	tile.vertices.resize( 0 );
-	tile.vertices.push_back( CVec3fEx(x, y, terrainInfo.heights[nTileY][nTileX], 0) );
-	tile.vertices.push_back( CVec3fEx(x + DEF_TILE_SIZE, y, terrainInfo.heights[nTileY][nTileX + 1], 0) );
-	tile.vertices.push_back( CVec3fEx(x + DEF_TILE_SIZE, y + DEF_TILE_SIZE, terrainInfo.heights[nTileY + 1][nTileX + 1], 0) );
-	tile.vertices.push_back( CVec3fEx(x, y + DEF_TILE_SIZE, terrainInfo.heights[nTileY + 1][nTileX], 0) );
+	tile.vertices.push_back( CVec3fEx( x, y, terrainInfo.heights[nTileY][nTileX], 0 ) );
+	tile.vertices.push_back( CVec3fEx( x + DEF_TILE_SIZE, y, terrainInfo.heights[nTileY][nTileX + 1], 0 ) );
+	tile.vertices.push_back(
+			CVec3fEx( x + DEF_TILE_SIZE, y + DEF_TILE_SIZE, terrainInfo.heights[nTileY + 1][nTileX + 1], 0 ) );
+	tile.vertices.push_back( CVec3fEx( x, y + DEF_TILE_SIZE, terrainInfo.heights[nTileY + 1][nTileX], 0 ) );
 	tile.addHeights.resize( 4 );
 
 	tile.addHeights[0] = terrainInfo.riverHeights[nTileY][nTileX] + terrainInfo.addHeights[nTileY][nTileX];
 	tile.addHeights[1] = terrainInfo.riverHeights[nTileY][nTileX + 1] + terrainInfo.addHeights[nTileY][nTileX + 1];
-	tile.addHeights[2] = terrainInfo.riverHeights[nTileY + 1][nTileX + 1] + terrainInfo.addHeights[nTileY + 1][nTileX + 1];
+	tile.addHeights[2] =
+			terrainInfo.riverHeights[nTileY + 1][nTileX + 1] + terrainInfo.addHeights[nTileY + 1][nTileX + 1];
 	tile.addHeights[3] = terrainInfo.riverHeights[nTileY + 1][nTileX] + terrainInfo.addHeights[nTileY + 1][nTileX];
 
 	tile.triangles.resize( 2 );
@@ -78,7 +81,6 @@ void CTerraGen::ResetTile( const int nTileX, const int nTileY )
 	tile.triangles[1].i2 = 3;
 	tile.triangles[1].i3 = 0;
 }
-
 
 void CTerraGen::ResetTerrainTiles( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 )
 {
@@ -91,7 +93,6 @@ void CTerraGen::ResetTerrainTiles( const int nTileX1, const int nTileY1, const i
 	}
 }
 
-
 #define MAX_PACK_ZERO_NUM 255
 
 union uF2I
@@ -99,7 +100,6 @@ union uF2I
 	float f;
 	uint32_t n;
 };
-
 
 static void PackFloatArrToRaw( std::vector<uint8_t> *pDst, const float *pData, const int nLength )
 {
@@ -113,7 +113,7 @@ static void PackFloatArrToRaw( std::vector<uint8_t> *pDst, const float *pData, c
 	while ( nCnt < nLength )
 	{
 		nZeroCnt = 0;
-		while ( (nZeroCnt < MAX_PACK_ZERO_NUM) && (nCnt < nLength) && (fabs(pData[nCnt]) < EPS_VALUE) )
+		while ( ( nZeroCnt < MAX_PACK_ZERO_NUM ) && ( nCnt < nLength ) && ( fabs( pData[nCnt] ) < EPS_VALUE ) )
 		{
 			++nZeroCnt;
 			++nCnt;
@@ -123,14 +123,13 @@ static void PackFloatArrToRaw( std::vector<uint8_t> *pDst, const float *pData, c
 		{
 			uf2i.f = pData[nCnt];
 			pDst->push_back( uf2i.n & 0xff );
-			pDst->push_back( (uf2i.n >> 8) & 0xff );
-			pDst->push_back( (uf2i.n >> 16) & 0xff );
-			pDst->push_back( (uf2i.n >> 24) & 0xff );
+			pDst->push_back( ( uf2i.n >> 8 ) & 0xff );
+			pDst->push_back( ( uf2i.n >> 16 ) & 0xff );
+			pDst->push_back( ( uf2i.n >> 24 ) & 0xff );
 			++nCnt;
 		}
 	}
 }
-
 
 static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vector<uint8_t> &src )
 {
@@ -138,14 +137,14 @@ static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vec
 	std::vector<uint8_t>::const_iterator it = src.begin();
 	uF2I uf2i;
 
-	while ( (k < nLength) && (it != src.end()) )
+	while ( ( k < nLength ) && ( it != src.end() ) )
 	{
 		if ( *it == 0 )
 		{
-			uf2i.n = *(++it);
-			uf2i.n |= uint32_t( *(++it) ) << 8;
-			uf2i.n |= uint32_t( *(++it) ) << 16;
-			uf2i.n |= uint32_t( *(++it) ) << 24;
+			uf2i.n = *( ++it );
+			uf2i.n |= uint32_t( *( ++it ) ) << 8;
+			uf2i.n |= uint32_t( *( ++it ) ) << 16;
+			uf2i.n |= uint32_t( *( ++it ) ) << 24;
 			pData[k++] = uf2i.f;
 		}
 		else
@@ -165,7 +164,6 @@ static void UnpackRawToFloatArr( float *pData, const int nLength, const std::vec
 	}
 }
 
-
 #define DEF_OPTIMIZE_FLOAT2SHORT 100.0f
 #define DEF_OPTIMIZE_SHORT2FLOAT 0.01f
 
@@ -184,9 +182,9 @@ void CTerraGen::OptimizeTerrainInfo()
 			const CVec2 vMax( (float)( i + 1 ) * DEF_TILE_SIZE + DEF_EPS, (float)( g + 1 ) * DEF_TILE_SIZE + DEF_EPS );
 			for ( std::vector<STriangle>::const_iterator it = tile.triangles.begin(); it != tile.triangles.end(); ++it )
 			{
-				if ( (IsInsideBB(CVec2(tile.vertices[it->i1].x, tile.vertices[it->i1].y), vMin, vMax)) &&
-						 (IsInsideBB(CVec2(tile.vertices[it->i2].x, tile.vertices[it->i2].y), vMin, vMax)) &&
-						 (IsInsideBB(CVec2(tile.vertices[it->i3].x, tile.vertices[it->i3].y), vMin, vMax)) )
+				if ( ( IsInsideBB( CVec2( tile.vertices[it->i1].x, tile.vertices[it->i1].y ), vMin, vMax ) ) &&
+				     ( IsInsideBB( CVec2( tile.vertices[it->i2].x, tile.vertices[it->i2].y ), vMin, vMax ) ) &&
+				     ( IsInsideBB( CVec2( tile.vertices[it->i3].x, tile.vertices[it->i3].y ), vMin, vMax ) ) )
 					trgs.push_back( *it );
 			}
 			tile.triangles = trgs;
@@ -203,11 +201,12 @@ void CTerraGen::OptimizeTerrainInfo()
 		{
 			const STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
 			const float fTileX = (float)i * DEF_TILE_SIZE;
-			if (	(tile.triangles.size() != 2) ||
-						(fabs2(tile.vertices[0].GetVec2() - CVec2(fTileX, fTileY)) > DEF_EPS) ||
-						(fabs2(tile.vertices[1].GetVec2() - CVec2(fTileX + DEF_TILE_SIZE, fTileY)) > DEF_EPS) ||
-						(fabs2(tile.vertices[2].GetVec2() - CVec2(fTileX + DEF_TILE_SIZE, fTileY + DEF_TILE_SIZE)) > DEF_EPS) ||
-						(fabs2(tile.vertices[3].GetVec2() - CVec2(fTileX, fTileY + DEF_TILE_SIZE)) > DEF_EPS) )
+			if ( ( tile.triangles.size() != 2 ) ||
+			     ( fabs2( tile.vertices[0].GetVec2() - CVec2( fTileX, fTileY ) ) > DEF_EPS ) ||
+			     ( fabs2( tile.vertices[1].GetVec2() - CVec2( fTileX + DEF_TILE_SIZE, fTileY ) ) > DEF_EPS ) ||
+			     ( fabs2( tile.vertices[2].GetVec2() - CVec2( fTileX + DEF_TILE_SIZE, fTileY + DEF_TILE_SIZE ) ) >
+			       DEF_EPS ) ||
+			     ( fabs2( tile.vertices[3].GetVec2() - CVec2( fTileX, fTileY + DEF_TILE_SIZE ) ) > DEF_EPS ) )
 			{
 				//terrainInfo.optimizedTiles.push_back( STerrainInfo::SOptimizedTile() );
 				//terrainInfo.optimizedTiles.back().nIndex = g * terrainInfo.tiles.GetSizeX() + i;
@@ -218,12 +217,14 @@ void CTerraGen::OptimizeTerrainInfo()
 				//	terrainInfo.optimizedTiles.back().vertices.push_back( GetVec3( *itVert ) );
 				//terrainInfo.optimizedTiles.back().addHeights = tile.addHeights;
 
-				std::vector<STerrainInfo::SOptimizedTile>::iterator itAdd = terrainInfo.optimizedTiles.insert( terrainInfo.optimizedTiles.end(), STerrainInfo::SOptimizedTile() );
+				std::vector<STerrainInfo::SOptimizedTile>::iterator itAdd =
+						terrainInfo.optimizedTiles.insert( terrainInfo.optimizedTiles.end(), STerrainInfo::SOptimizedTile() );
 				itAdd->nIndex = g * terrainInfo.tiles.GetSizeX() + i;
 				itAdd->triangles = tile.triangles;
 				itAdd->vertices.reserve( tile.vertices.size() );
 				itAdd->vertices.resize( 0 );
-				for ( std::vector<CVec3fEx>::const_iterator itVert = tile.vertices.begin(); itVert != tile.vertices.end(); ++itVert )
+				for ( std::vector<CVec3fEx>::const_iterator itVert = tile.vertices.begin(); itVert != tile.vertices.end();
+				      ++itVert )
 					itAdd->vertices.push_back( itVert->GetVec3() );
 				itAdd->addHeights = tile.addHeights;
 			}
@@ -244,15 +245,15 @@ void CTerraGen::OptimizeTerrainInfo()
 	//terrainInfo.seaMask.Clear();
 
 	// optimize waterAddHeights
-	PackFloatArrToRaw( &terrainInfo.waterAddHeightsPacked, &(terrainInfo.waterAddHeights[0][0]),
-										 terrainInfo.waterAddHeights.GetSizeX() * terrainInfo.waterAddHeights.GetSizeY() );
+	PackFloatArrToRaw( &terrainInfo.waterAddHeightsPacked,
+	                   &( terrainInfo.waterAddHeights[0][0] ),
+	                   terrainInfo.waterAddHeights.GetSizeX() * terrainInfo.waterAddHeights.GetSizeY() );
 }
-
 
 void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 {
 	// restore heights
-	if ( (terrainInfo.heights.GetSizeX() == 0) && (terrainInfo.heights.GetSizeY() == 0) )
+	if ( ( terrainInfo.heights.GetSizeX() == 0 ) && ( terrainInfo.heights.GetSizeY() == 0 ) )
 	{
 		terrainInfo.heights.SetSizes( terrainInfo.optimizedHeights.GetSizeX(), terrainInfo.optimizedHeights.GetSizeY() );
 		for ( int g = 0; g < terrainInfo.heights.GetSizeY(); ++g )
@@ -266,9 +267,10 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 
 	//terrainInfo.heights.FillEvery( 4.0f );
 
-	if ( (terrainInfo.addHeights.GetSizeX() == 0) && (terrainInfo.addHeights.GetSizeY() == 0) )
+	if ( ( terrainInfo.addHeights.GetSizeX() == 0 ) && ( terrainInfo.addHeights.GetSizeY() == 0 ) )
 	{
-		terrainInfo.addHeights.SetSizes( terrainInfo.optimizedAddHeights.GetSizeX(), terrainInfo.optimizedAddHeights.GetSizeY() );
+		terrainInfo.addHeights.SetSizes( terrainInfo.optimizedAddHeights.GetSizeX(),
+		                                 terrainInfo.optimizedAddHeights.GetSizeY() );
 		for ( int g = 0; g < terrainInfo.addHeights.GetSizeY(); ++g )
 		{
 			for ( int i = 0; i < terrainInfo.addHeights.GetSizeX(); ++i )
@@ -279,7 +281,8 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 	}
 
 	//CRAP { for support of maps without riverHeights
-	if ( (terrainInfo.riverHeights.GetSizeX() != terrainInfo.addHeights.GetSizeX()) || (terrainInfo.riverHeights.GetSizeY() != terrainInfo.addHeights.GetSizeY()) )
+	if ( ( terrainInfo.riverHeights.GetSizeX() != terrainInfo.addHeights.GetSizeX() ) ||
+	     ( terrainInfo.riverHeights.GetSizeY() != terrainInfo.addHeights.GetSizeY() ) )
 	{
 		terrainInfo.riverHeights.SetSizes( terrainInfo.addHeights.GetSizeX(), terrainInfo.addHeights.GetSizeY() );
 		terrainInfo.riverHeights.FillEvery( 0.0f );
@@ -295,23 +298,25 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 	// CRAP }
 
 	// restore tiles
-	if ( (terrainInfo.tiles.GetSizeX() == 0) && (terrainInfo.tiles.GetSizeY() == 0) )
+	if ( ( terrainInfo.tiles.GetSizeX() == 0 ) && ( terrainInfo.tiles.GetSizeY() == 0 ) )
 	{
 		terrainInfo.tiles.SetSizes( pDesc->nNumPatchesX * DEF_PATCH_SIZE, pDesc->nNumPatchesY * DEF_PATCH_SIZE );
 
-		for ( std::vector<STerrainInfo::SOptimizedTile>::const_iterator it = terrainInfo.optimizedTiles.begin(); it != terrainInfo.optimizedTiles.end(); ++it )
+		for ( std::vector<STerrainInfo::SOptimizedTile>::const_iterator it = terrainInfo.optimizedTiles.begin();
+		      it != terrainInfo.optimizedTiles.end();
+		      ++it )
 		{
 			const int nIndX = it->nIndex % terrainInfo.tiles.GetSizeX();
 			const int nIndY = it->nIndex / terrainInfo.tiles.GetSizeX();
 			NI_ASSERT( nIndX < terrainInfo.tiles.GetSizeX() && nIndY < terrainInfo.tiles.GetSizeY(), "Wrong tiles data" );
-			if ( (nIndX < terrainInfo.tiles.GetSizeX()) && (nIndY < terrainInfo.tiles.GetSizeY()) )
+			if ( ( nIndX < terrainInfo.tiles.GetSizeX() ) && ( nIndY < terrainInfo.tiles.GetSizeY() ) )
 			{
 				STerrainInfo::STile &tile = terrainInfo.tiles[nIndY][nIndX];
 				tile.triangles = it->triangles;
 				tile.vertices.reserve( it->vertices.size() );
 				tile.vertices.resize( 0 );
 				for ( std::vector<CVec3>::const_iterator itVert = it->vertices.begin(); itVert != it->vertices.end(); ++itVert )
-					tile.vertices.push_back( CVec3fEx(*itVert, 0) );
+					tile.vertices.push_back( CVec3fEx( *itVert, 0 ) );
 				tile.addHeights = it->addHeights;
 			}
 		}
@@ -339,9 +344,9 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 	// restore waterAddHeights
 	terrainInfo.waterAddHeights.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 	terrainInfo.waterAddHeights.FillZero();
-	UnpackRawToFloatArr(	&(terrainInfo.waterAddHeights[0][0]),
-												terrainInfo.waterAddHeights.GetSizeX() * terrainInfo.waterAddHeights.GetSizeY(),
-												terrainInfo.waterAddHeightsPacked );
+	UnpackRawToFloatArr( &( terrainInfo.waterAddHeights[0][0] ),
+	                     terrainInfo.waterAddHeights.GetSizeX() * terrainInfo.waterAddHeights.GetSizeY(),
+	                     terrainInfo.waterAddHeightsPacked );
 
 	//InitWaterParams();
 }

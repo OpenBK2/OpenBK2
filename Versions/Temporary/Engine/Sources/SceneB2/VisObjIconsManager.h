@@ -8,7 +8,7 @@
 
 namespace NGScene
 {
-	class I2DGameView;
+class I2DGameView;
 }
 
 class CVisObjIconsManager : public CObjectBase
@@ -43,10 +43,10 @@ public:
 		int nIconDamagedBuilding;
 		//
 		SObjIcon() {}
-		SObjIcon( const int _nID, const float _fDepth ) : nID(_nID), fDepth(_fDepth) {}
+		SObjIcon( const int _nID, const float _fDepth ) : nID( _nID ), fDepth( _fDepth ) {}
 		//
-		bool operator < ( const SObjIcon &v ) const { return fDepth < v.fDepth; }
-		bool IsEmpty() const { return icons.empty() && (nHPBarBaseLength <= 0); }
+		bool operator<( const SObjIcon &v ) const { return fDepth < v.fDepth; }
+		bool IsEmpty() const { return icons.empty() && ( nHPBarBaseLength <= 0 ); }
 	};
 	//
 private:
@@ -57,11 +57,11 @@ private:
 		int nPriority;
 		CTRect<float> texCoords;
 		//
-		bool operator < ( const SSingleIcon &v ) const { return nPriority < v.nPriority; }
+		bool operator<( const SSingleIcon &v ) const { return nPriority < v.nPriority; }
 	};
 	//
 	std::unordered_map<int, int> type2VectorHash; // hash from EIconTypeEnum to singleIcons index
-	std::vector<CTRect<float> > hpBarTexCoords;
+	std::vector<CTRect<float>> hpBarTexCoords;
 	std::vector<float> hpBarRanges;
 	std::vector<SSingleIcon> singleIcons;
 	//list<SObjIcon> objIcons; // icons data

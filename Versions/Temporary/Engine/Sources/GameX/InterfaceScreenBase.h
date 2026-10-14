@@ -7,14 +7,14 @@
 
 namespace NGScene
 {
-	class CRTPtr;
+class CRTPtr;
 }
 
 class CInterfaceScreenBase : public IInterfaceBase, protected NInput::CGMORegContainer
 {
 	NInput::CGMORegContainer importantMsgs;
-	const std::string szInterfaceType;		// interface type - "InterMission", "Mission", etc.
-	const std::string szBindSection;			// this interface bind section
+	const std::string szInterfaceType; // interface type - "InterMission", "Mission", etc.
+	const std::string szBindSection;   // this interface bind section
 	//
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NTimer::STime nTime = {};
@@ -22,7 +22,7 @@ class CInterfaceScreenBase : public IInterfaceBase, protected NInput::CGMORegCon
 	bool bInFocus = {};
 	CVec2 vLastScreenSize;
 	bool bShowScreenOnGetFocus = {};
-	std::unordered_map<int,bool> registeredIDsForMLHandler;
+	std::unordered_map<int, bool> registeredIDsForMLHandler;
 
 	// Is interface transparent and we should draw under it
 	bool bIsTransparent = {};
@@ -40,6 +40,7 @@ private:
 	bool OnShowConsole( const struct SGameMessage &msg );
 	void SetVersionWindowAfterLoad();
 	void FillVersionWindow();
+
 protected:
 	CObj<IScreen> pScreen;
 
@@ -66,25 +67,28 @@ protected:
 	// Пауза вне игры, обусловленная интерфейсом
 	void PauseIntermission( bool bPause );
 
-	const std::string& GetBindSection() const { return szBindSection; }
+	const std::string &GetBindSection() const { return szBindSection; }
 	virtual void RestoreBindSection();
 
 	void AddScreen( struct IProgrammedReactionsAndChecks *pReactions );
-	IScreen* GetScreen() { return pScreen; }
+	IScreen *GetScreen() { return pScreen; }
 
 	template <typename TObj, typename TMsg>
-		void AddImportantObserver( const std::string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg ) )
+	void AddImportantObserver( const std::string &szMsgName, bool ( TObj::*_pfnMemFun )( const TMsg &_msg ) )
 	{
 		importantMsgs.AddObserver( szMsgName, _pfnMemFun );
 	}
 
-	void SetDynamicTextView( ITextView *pView, const std::vector< std::pair<std::wstring, std::wstring> > &params );
-	void SetDynamicTooltip( IWindow *pWnd, const std::wstring &wszTooltip, const std::vector< std::pair<std::wstring, std::wstring> > &params );
+	void SetDynamicTextView( ITextView *pView, const std::vector<std::pair<std::wstring, std::wstring>> &params );
+	void SetDynamicTooltip( IWindow *pWnd,
+	                        const std::wstring &wszTooltip,
+	                        const std::vector<std::pair<std::wstring, std::wstring>> &params );
 
 	void SetMainWindowTexture( IWindow *pMainWindow, const NDb::STexture *pTexture );
 
 	// disable explicit destruction
 	~CInterfaceScreenBase();
+
 public:
 	CInterfaceScreenBase( const std::string &_szInterfaceType, const std::string &_szBindSection );
 	//
@@ -102,7 +106,7 @@ public:
 	virtual void AfterLoad();
 	virtual void Draw( NGScene::CRTPtr *pTexture = 0 );
 
-	const std::string& GetInterfaceType() const { return szInterfaceType; }
+	const std::string &GetInterfaceType() const { return szInterfaceType; }
 
 	virtual void HideUnfocusedScreen();
 };
@@ -113,11 +117,12 @@ class CInterfaceCommandBase : public IInterfaceCommand
 protected:
 	typedef TInterfaceScreen IInterface;
 	//
-	CInterfaceCommandBase() {  }
-	virtual ~CInterfaceCommandBase() {  }
+	CInterfaceCommandBase() {}
+	virtual ~CInterfaceCommandBase() {}
 	//
 	virtual void PreCreate() { NMainLoop::ResetStack(); }
 	virtual void PostCreate( IInterface *pInterface ) { NMainLoop::PushInterface( pInterface ); }
+
 public:
 	void Exec()
 	{
@@ -131,10 +136,12 @@ public:
 	}
 };
 
-bool AddUIScreen( IScreen *pWindowScreen, const std::string &szScreenEntryName, IProgrammedReactionsAndChecks *pReactions );
+bool AddUIScreen( IScreen *pWindowScreen,
+                  const std::string &szScreenEntryName,
+                  IProgrammedReactionsAndChecks *pReactions );
 
-#define INTERFACE_COMMAND_DECLARE( CommandName, InterfaceName )		\
-class CommandName : public CInterfaceCommandBase< InterfaceName >	\
-{																																	\
-	OBJECT_NOCOPY_METHODS( CommandName );														\
-};
+#define INTERFACE_COMMAND_DECLARE( CommandName, InterfaceName )   \
+	class CommandName : public CInterfaceCommandBase<InterfaceName> \
+	{                                                               \
+		OBJECT_NOCOPY_METHODS( CommandName );                         \
+	};

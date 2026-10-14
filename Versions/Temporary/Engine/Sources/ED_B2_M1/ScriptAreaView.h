@@ -21,9 +21,9 @@
 // dialog header to get a plain struct.
 struct SScriptAreaWindowData
 {
-	NDb::EScriptAreaTypes eAreaType;	// какая радио-кнопка выбрана в диалоге
+	NDb::EScriptAreaTypes eAreaType; // какая радио-кнопка выбрана в диалоге
 	//
-	struct SScriptArea	// данные для создания row в списке областей
+	struct SScriptArea // данные для создания row в списке областей
 	{
 		std::string szName;
 		int nScriptAreaID;
@@ -31,24 +31,21 @@ struct SScriptAreaWindowData
 		//
 		SScriptArea() : nScriptAreaID( INVALID_NODE_ID ), eType( NDb::EAT_CIRCLE ) {}
 	};
-	std::vector<SScriptArea> scriptAreaList;				// содержимое лист-контрола
-	std::vector<unsigned> selectedScriptAreaIDList;		// ID поселекченных областей
+	std::vector<SScriptArea> scriptAreaList;        // содержимое лист-контрола
+	std::vector<unsigned> selectedScriptAreaIDList; // ID поселекченных областей
 	//
-	enum EChangeMask	// что изменилось ( GET ) или что нужно изменить в диалоге ( SET )
+	enum EChangeMask // что изменилось ( GET ) или что нужно изменить в диалоге ( SET )
 	{
-		CHANGE_NONE				= 0x00000000,
-		CHANGE_AREAS			= 0x00000001,	// обновить список областей ( SET )
-		CHANGE_SELECTION	= 0x00000002,	// обновить selection ( GET+SET )
-		CHANGE_DEL_SEL		= 0x00000004,	// удалить выделенные области ( GET )
-		CHANGE_AREA_TYPE	= 0x00000008,	// какая радио-кнопка выбрана в диалоге ( GET + SET )
-		CHANGE_SET_ALL		= ( CHANGE_AREAS | CHANGE_SELECTION | CHANGE_AREA_TYPE ),
+		CHANGE_NONE = 0x00000000,
+		CHANGE_AREAS = 0x00000001,     // обновить список областей ( SET )
+		CHANGE_SELECTION = 0x00000002, // обновить selection ( GET+SET )
+		CHANGE_DEL_SEL = 0x00000004,   // удалить выделенные области ( GET )
+		CHANGE_AREA_TYPE = 0x00000008, // какая радио-кнопка выбрана в диалоге ( GET + SET )
+		CHANGE_SET_ALL = ( CHANGE_AREAS | CHANGE_SELECTION | CHANGE_AREA_TYPE ),
 	};
 	EChangeMask eChangeMask;
 	//
-	SScriptAreaWindowData()
-	{
-		Clear();
-	}
+	SScriptAreaWindowData() { Clear(); }
 	//
 	void Clear()
 	{
@@ -59,7 +56,6 @@ struct SScriptAreaWindowData
 	}
 };
 
-
 // The palette's half of the exchange, whichever toolkit draws it.
 //
 // The first palette to use the *whole* of CPaletteCommands rather than override
@@ -67,7 +63,6 @@ struct SScriptAreaWindowData
 // neither HandleCommand nor UpdateCommand needs writing at all. Both palettes
 // implement the two halves and inherit the dispatch.
 typedef CPaletteCommands<SScriptAreaWindowData> CScriptAreaCommands;
-
 
 // The script area palette, behind a boundary that names no toolkit.
 //
@@ -77,8 +72,8 @@ typedef CPaletteCommands<SScriptAreaWindowData> CScriptAreaCommands;
 // re-apply the selection, delete what is selected, or take a new area type.
 namespace NScriptAreaView
 {
-	// Creates the palette in pPage, its page of the shortcut bar, registers it
-	// in pPalettes, which owns it from then on, and returns it. Null if it could
-	// not be created.
-	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage );
+// Creates the palette in pPage, its page of the shortcut bar, registers it
+// in pPalettes, which owns it from then on, and returns it. Null if it could
+// not be created.
+IWidget *Create( CPaletteList *pPalettes, IWidget *pPage );
 }

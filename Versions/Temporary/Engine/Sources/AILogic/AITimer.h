@@ -1,9 +1,9 @@
 #pragma once
 
-
 class CAITimer
 {
 	static struct IGameTimer *pTimer;
+
 public:
 	CAITimer();
 	static NTimer::STime GetSegmentTime();

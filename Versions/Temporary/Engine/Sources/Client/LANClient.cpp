@@ -25,11 +25,9 @@ CLANClient *CLANClient::Create( const int nNetGameVersion, const int nGamePort, 
 	return pClient;
 }
 
-CLANClient::~CLANClient()
-{
-}
+CLANClient::~CLANClient() {}
 
-CNetPacket* CLANClient::GetPacket()
+CNetPacket *CLANClient::GetPacket()
 {
 	if ( !packets.empty() )
 	{
@@ -63,7 +61,7 @@ void CLANClient::SendGamePacket( class CNetPacket *pPacket, bool bBroadcast )
 		pSaver->Add( 1, &pNetPacket );
 	}
 
-	for( std::list<int>::iterator it = clients.begin(); it != clients.end(); ++it )
+	for ( std::list<int>::iterator it = clients.begin(); it != clients.end(); ++it )
 	{
 		if ( bBroadcast )
 		{
@@ -109,13 +107,13 @@ void CLANClient::Segment()
 
 		switch ( eMsgID )
 		{
-		case NNet::IDriver::DIRECT:
-		case NNet::IDriver::BROADCAST:
+			case NNet::IDriver::DIRECT:
+			case NNet::IDriver::BROADCAST:
 			{
 				pSaver->Add( 1, &pNetPacket );
 				break;
 			}
-		case NNet::IDriver::NEW_CLIENT:
+			case NNet::IDriver::NEW_CLIENT:
 			{
 				pNetPacket = new CNetNewClient();
 
@@ -132,7 +130,7 @@ void CLANClient::Segment()
 				}
 			}
 			break;
-		case NNet::IDriver::REMOVE_CLIENT:
+			case NNet::IDriver::REMOVE_CLIENT:
 			{
 				std::list<int>::iterator it = clients.begin();
 				for ( ; it != clients.end() && *it != nClientID; ++it )
@@ -148,13 +146,13 @@ void CLANClient::Segment()
 				}
 			}
 			break;
-		case NNet::IDriver::KICKED:
+			case NNet::IDriver::KICKED:
 			{
 				pNetPacket = new CGameClientWasKicked( -1, -1 );
 			}
 			break;
-		default:
-			break;
+			default:
+				break;
 		}
 
 		if ( pNetPacket )
@@ -165,7 +163,8 @@ void CLANClient::Segment()
 	}
 }
 
-bool CLANClient::GetGameInfo( int nIdx, NNet::CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, NNet::IDriver::SGameInfo *pGameInfo )
+bool CLANClient::GetGameInfo(
+		int nIdx, NNet::CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, NNet::IDriver::SGameInfo *pGameInfo )
 {
 	return pNetDriver->GetGameInfo( nIdx, pAddr, pWrongVersion, pPing, pGameInfo );
 }

@@ -6,35 +6,35 @@ namespace NCodePages
 namespace
 {
 
-struct SCodePage
-{
-	int nCharset;
-	int nCodePage;
-	const uint16_t *pUpperHalf;			// bytes 0x80..0xFF
-};
+	struct SCodePage
+	{
+		int nCharset;
+		int nCodePage;
+		const uint16_t *pUpperHalf; // bytes 0x80..0xFF
+	};
 
 #include "CodePageTables.inc"
 
-const SCodePage *FindCodePage( int nCharset )
-{
-	// TranslateCharsetInfo has no code page for DEFAULT, MAC or OEM, and FontGen
-	// then fell back to the build machine's own ANSI code page, so a bake
-	// depended on the locale of whoever ran it. A portable tool has no such
-	// thing to fall back to, and a machine-dependent result is not worth
-	// reproducing anyway, so those three read as 1252, which is ANSI_CHARSET.
-	if ( nCharset == CHARSET_DEFAULT || nCharset == CHARSET_MAC || nCharset == CHARSET_OEM )
+	const SCodePage *FindCodePage( int nCharset )
 	{
-		nCharset = CHARSET_ANSI;
-	}
-	for ( const SCodePage &page : CODE_PAGES )
-	{
-		if ( page.nCharset == nCharset )
+		// TranslateCharsetInfo has no code page for DEFAULT, MAC or OEM, and FontGen
+		// then fell back to the build machine's own ANSI code page, so a bake
+		// depended on the locale of whoever ran it. A portable tool has no such
+		// thing to fall back to, and a machine-dependent result is not worth
+		// reproducing anyway, so those three read as 1252, which is ANSI_CHARSET.
+		if ( nCharset == CHARSET_DEFAULT || nCharset == CHARSET_MAC || nCharset == CHARSET_OEM )
 		{
-			return &page;
+			nCharset = CHARSET_ANSI;
 		}
+		for ( const SCodePage &page : CODE_PAGES )
+		{
+			if ( page.nCharset == nCharset )
+			{
+				return &page;
+			}
+		}
+		return nullptr;
 	}
-	return nullptr;
-}
 
 }
 

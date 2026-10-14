@@ -6,7 +6,7 @@
 
 class CVSOStateEx : public CVSOState
 {
-	const NDb::SCragDesc* pSelectedCragDesc;
+	const NDb::SCragDesc *pSelectedCragDesc;
 	NDb::SVSOInstance oldVSOInstance;
 	void ClearOldVSOInstance()
 	{
@@ -23,15 +23,20 @@ protected:
 	//
 	virtual void PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList );
 	virtual bool CanInsertVSO();
-	virtual NDb::SVSOInstance* GetVSO( int nVSOID, int *pnVSOIndex );
+	virtual NDb::SVSOInstance *GetVSO( int nVSOID, int *pnVSOIndex );
 	virtual int GetFreeVSOID();
-	virtual void UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::SVSOSelection::ESelectionType eSelectionType, unsigned nFlags );
+	virtual void UpdateVSO( int nVSOID,
+	                        EUpdateType eEpdateType,
+	                        CVSOManager::SVSOSelection::ESelectionType eSelectionType,
+	                        unsigned nFlags );
 	virtual int InsertVSO( const std::vector<CVec3> &rControlPointList );
 	virtual void RemoveVSO( int nVSOID );
 
-	virtual bool InsertVSOToBase( class CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO );
+	virtual bool
+	InsertVSOToBase( class CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO );
 	virtual bool RemoveVSOFromBase( class CObjectBaseController *pObjectController, int nVSOIndex );
-	virtual bool UpdateVSOInBase( class CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO );
+	virtual bool
+	UpdateVSOInBase( class CObjectBaseController *pObjectController, int nVSOIndex, const NDb::SVSOInstance &rVSO );
 
 public:
 	//конструкторы и операторы присваивания
@@ -53,7 +58,7 @@ public:
 	// VSO type in CMapInfoController::SVSOUndoData structure (like CMapInfoController::SVSOUndoData::VSO_ROAD )
 	virtual const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const = 0;
 	// VSO list in pMapInfo structure ( like pMapInfo->roads )
-	virtual NMapInfoEditor::CVSOInstanceList* GetVSOList() = 0;
+	virtual NMapInfoEditor::CVSOInstanceList *GetVSOList() = 0;
 	//
 	// Terrain only
 	virtual void InsertVSOInTerrain( const NDb::SVSOInstance &rVSO ) = 0;

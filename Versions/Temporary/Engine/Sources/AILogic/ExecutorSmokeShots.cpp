@@ -4,8 +4,8 @@
 
 #include "AILogic_export.h"
 
-CExecutorSmokeShots::CExecutorSmokeShots( CAIUnit *_pUnit	) :
-CExecutorUnitBonus ( NDb::ABILITY_SMOKE_SHOTS, _pUnit, TID_SMOKE_SHOTS )
+CExecutorSmokeShots::CExecutorSmokeShots( CAIUnit *_pUnit )
+		: CExecutorUnitBonus( NDb::ABILITY_SMOKE_SHOTS, _pUnit, TID_SMOKE_SHOTS )
 {
 }
 
@@ -27,7 +27,7 @@ void CExecutorSmokeShots::SwitchOnEnd()
 
 int CExecutorSmokeShots::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CExecutorUnitBonus*>( this ) );
+	saver.Add( 1, static_cast<CExecutorUnitBonus *>( this ) );
 
 	return 0;
 }

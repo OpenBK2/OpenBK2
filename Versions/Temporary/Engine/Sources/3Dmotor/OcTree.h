@@ -1,36 +1,47 @@
 #pragma once
 template <class TFinal, int N_MIN_NODE, bool B_GROW_ROOT = false>
-class COcTreeNode: public CObjectBase
+class COcTreeNode : public CObjectBase
 {
-	typedef COcTreeNode<TFinal,N_MIN_NODE,B_GROW_ROOT> CSelf;
+	typedef COcTreeNode<TFinal, N_MIN_NODE, B_GROW_ROOT> CSelf;
 	CVec3 ptBase;
 	float fSize;
 	CObj<TFinal> links[8];
 	CPtr<TFinal> pUpLink;
 
 	//! get multiplier to fSize*sqrt(3) to calc maximal element size
-	float GetMaxElementSize() const { return 0.25f * fSize * sqrt(3.0f); }
+	float GetMaxElementSize() const { return 0.25f * fSize * sqrt( 3.0f ); }
 	// Grow the root in place so references to its update lists and existing nodes
 	// stay valid. Subclasses can preserve cached subtree state on the newly
 	// created parent through InitGrownChild.
 	void GrowRootToContain( const CVec3 &ptCenter )
 	{
-		while ( ptCenter.x < ptBase.x || ptCenter.x >= ptBase.x + fSize ||
-			ptCenter.y < ptBase.y || ptCenter.y >= ptBase.y + fSize ||
-			ptCenter.z < ptBase.z || ptCenter.z >= ptBase.z + fSize )
+		while ( ptCenter.x < ptBase.x || ptCenter.x >= ptBase.x + fSize || ptCenter.y < ptBase.y ||
+		        ptCenter.y >= ptBase.y + fSize || ptCenter.z < ptBase.z || ptCenter.z >= ptBase.z + fSize )
 		{
 			CVec3 ptNewBase = ptBase;
 			int nOldRootIndex = 0;
-			if ( ptCenter.x < ptBase.x ) { ptNewBase.x -= fSize; nOldRootIndex |= 1; }
-			if ( ptCenter.y < ptBase.y ) { ptNewBase.y -= fSize; nOldRootIndex |= 2; }
-			if ( ptCenter.z < ptBase.z ) { ptNewBase.z -= fSize; nOldRootIndex |= 4; }
+			if ( ptCenter.x < ptBase.x )
+			{
+				ptNewBase.x -= fSize;
+				nOldRootIndex |= 1;
+			}
+			if ( ptCenter.y < ptBase.y )
+			{
+				ptNewBase.y -= fSize;
+				nOldRootIndex |= 2;
+			}
+			if ( ptCenter.z < ptBase.z )
+			{
+				ptNewBase.z -= fSize;
+				nOldRootIndex |= 4;
+			}
 
 			// Put the old children beneath a node with their original extent.
 			// Root-owned objects remain on the now larger root; moving them would
 			// invalidate external owners and updatable-object lists.
 			CObj<TFinal> pOldRoot = new TFinal;
 			pOldRoot->SetSize( ptBase, fSize );
-			pOldRoot->SetUpLink( static_cast<TFinal*>( this ) );
+			pOldRoot->SetUpLink( static_cast<TFinal *>( this ) );
 			InitGrownChild( pOldRoot );
 			for ( int i = 0; i < 8; ++i )
 			{
@@ -43,12 +54,18 @@ class COcTreeNode: public CObjectBase
 			SetSize( ptNewBase, fSize * 2 );
 		}
 	}
+
 protected:
 	// The default tree has no cached state associated with its child links.
 	virtual void InitGrownChild( TFinal *pChild ) const {}
 	void SetUpLink( TFinal *_p ) { pUpLink = _p; }
+
 public:
-	void SetSize( const CVec3 &_ptBase, float _fSize ) { ptBase = _ptBase; fSize = _fSize; }
+	void SetSize( const CVec3 &_ptBase, float _fSize )
+	{
+		ptBase = _ptBase;
+		fSize = _fSize;
+	}
 	float GetSize() const { return fSize; }
 	bool Walk()
 	{
@@ -71,18 +88,22 @@ public:
 		pRes->ptCenter.x = ptBase.x + fSize * 0.5f;
 		pRes->ptCenter.y = ptBase.y + fSize * 0.5f;
 		pRes->ptCenter.z = ptBase.z + fSize * 0.5f;
-		pRes->fRadius = fSize * sqrt(3.0f) * 0.5f + GetMaxElementSize();
+		pRes->fRadius = fSize * sqrt( 3.0f ) * 0.5f + GetMaxElementSize();
 	}
 	void GetBound( SBound *pRes ) const
 	{
 		float fHalfSize = fSize * 0.5;
 		float fS = fHalfSize + GetMaxElementSize();
-		pRes->BoxExInit( ptBase + CVec3( fHalfSize, fHalfSize, fHalfSize ), CVec3(fS,fS,fS) );
+		pRes->BoxExInit( ptBase + CVec3( fHalfSize, fHalfSize, fHalfSize ), CVec3( fS, fS, fS ) );
 	}
 
-	TFinal* GetUpLink() const { return pUpLink; }
-	TFinal* GetNode( int nIdx ) { ASSERT( nIdx >= 0 && nIdx < 8 ); return links[nIdx]; }
-	TFinal* GetNode( const CVec3 &ptCenter, float fRadius )
+	TFinal *GetUpLink() const { return pUpLink; }
+	TFinal *GetNode( int nIdx )
+	{
+		ASSERT( nIdx >= 0 && nIdx < 8 );
+		return links[nIdx];
+	}
+	TFinal *GetNode( const CVec3 &ptCenter, float fRadius )
 	{
 		// Otherwise centers past the initial [-128, 896) extent get assigned to
 		// edge cells whose culling bounds do not contain the geometry.
@@ -91,7 +112,7 @@ public:
 			if ( !pUpLink )
 				GrowRootToContain( ptCenter );
 		}
-		TFinal *pThis = static_cast<TFinal*>( this );
+		TFinal *pThis = static_cast<TFinal *>( this );
 		float fLowerSize = 0.5f * GetMaxElementSize();
 		if ( fSize <= N_MIN_NODE || fRadius >= fLowerSize )
 			return pThis;

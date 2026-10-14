@@ -27,7 +27,7 @@ struct ISceneSurface
 	// pCore refused it.
 	virtual bool Create( IFrameWindow *pFrame, CChildFrameWndBase *pCore ) = 0;
 	// What IMainFrame::SetChildFrameWindowContents is given.
-	virtual IWidget* GetWidget() = 0;
+	virtual IWidget *GetWidget() = 0;
 	// The window the renderer draws in.
 	virtual HWND GetHandle() const = 0;
 
@@ -63,9 +63,8 @@ struct ISceneSurface
 	virtual void SetScrollBarPos( bool bVertical, int nPos ) = 0;
 };
 
-
 namespace NSceneSurface
 {
-	// The surface this session uses. Owned by the caller.
-	ISceneSurface* Create();
+// The surface this session uses. Owned by the caller.
+ISceneSurface *Create();
 }

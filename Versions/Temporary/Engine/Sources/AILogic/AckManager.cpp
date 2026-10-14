@@ -21,14 +21,9 @@ int CAckManager::operator&( IBinSaver &saver )
 	return 0;
 }
 
-CAckManager::CAckManager()
-: ackIndex ( 0 )
-{
-}
+CAckManager::CAckManager() : ackIndex( 0 ) {}
 
-CAckManager::~CAckManager()
-{
-}
+CAckManager::~CAckManager() {}
 
 void CAckManager::Clear()
 {
@@ -81,7 +76,7 @@ void CAckManager::AddAcknowledgment( const SAIAcknowledgment &ack )
 	acknowledgements.push_back( ack );
 }
 
-void CAckManager::AddAcknowledgment(	EUnitAckType eAck, CUpdatableObj *pObject, const int nSet )
+void CAckManager::AddAcknowledgment( EUnitAckType eAck, CUpdatableObj *pObject, const int nSet )
 {
 	SAIAcknowledgment ack( eAck, pObject->GetUniqueId(), nSet );
 	AddAcknowledgment( ack );
@@ -89,14 +84,16 @@ void CAckManager::AddAcknowledgment(	EUnitAckType eAck, CUpdatableObj *pObject, 
 
 void CAckManager::RegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject )
 {
-	if ( pObject->GetPlayer() != theDipl.GetMyNumber() ) return;
+	if ( pObject->GetPlayer() != theDipl.GetMyNumber() )
+		return;
 	//NI_ASSERT( eBored <= _ACK_BORED_END && eBored >= _ACK_BORED_BEGIN, "not bored ack passed" );
 	bored[eBored][pObject->GetUniqueId()] = CUnitBoredPresence( pObject, true );
 }
 
 void CAckManager::UnRegisterAsBored( EUnitAckType eBored, class CAIUnit *pObject )
 {
-	if ( pObject->GetPlayer() != theDipl.GetMyNumber() ) return;
+	if ( pObject->GetPlayer() != theDipl.GetMyNumber() )
+		return;
 	// если этот юнит есть в списке, то он удаляется.
 	//NI_ASSERT( eBored <= _ACK_BORED_END && eBored >= _ACK_BORED_BEGIN, "not bored ack passed" );
 	bored[eBored][pObject->GetUniqueId()] = CUnitBoredPresence( pObject, false );

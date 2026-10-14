@@ -10,7 +10,7 @@ class CRunModeInterfaceBase : public IInterfaceBase, protected NInput::CGMORegCo
 {
 public:
 	// lifecycle
-	CRunModeInterfaceBase( CTimeCounter * pTimer = 0 );
+	CRunModeInterfaceBase( CTimeCounter *pTimer = 0 );
 	virtual ~CRunModeInterfaceBase();
 
 	// IInterfaceBase
@@ -23,6 +23,6 @@ public:
 
 	// members
 protected:
-	CTimeCounter * pTimer;
+	CTimeCounter *pTimer;
 	uint32_t dwTime;
 };

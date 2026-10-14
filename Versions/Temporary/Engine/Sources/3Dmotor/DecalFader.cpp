@@ -8,13 +8,14 @@ namespace NGScene
 static const float fFadeLimit = 0.01f;
 static const float fFadeLog = log( fFadeLimit );
 
-CDecalFader::CDecalFader( CObjectBase *_pDecal, STime _tFadeInStart, STime _tFadeInEnd, STime _tFadeOutStart, STime _tFadeOutEnd, CFuncBase<STime> *_pTime ) :
-	pTime(_pTime),
-	tFadeInStart( _tFadeInStart ),
-	tFadeInEnd( _tFadeInEnd ),
-	tFadeOutStart( _tFadeOutStart ),
-	tFadeOutEnd( _tFadeOutEnd ),
-	bFrozen( false )
+CDecalFader::CDecalFader( CObjectBase *_pDecal,
+                          STime _tFadeInStart,
+                          STime _tFadeInEnd,
+                          STime _tFadeOutStart,
+                          STime _tFadeOutEnd,
+                          CFuncBase<STime> *_pTime )
+		: pTime( _pTime ), tFadeInStart( _tFadeInStart ), tFadeInEnd( _tFadeInEnd ), tFadeOutStart( _tFadeOutStart ),
+			tFadeOutEnd( _tFadeOutEnd ), bFrozen( false )
 {
 	ASSERT( tFadeInStart <= tFadeInEnd );
 	ASSERT( tFadeInEnd <= tFadeOutStart );
@@ -63,7 +64,7 @@ bool CDecalFader::Update( void *p )
 
 	const float fVal = GetFadeValue( tCurrent );
 
-	std::vector<CMObj<CObjectBase> > &decals = pDecal->GetDecals();
+	std::vector<CMObj<CObjectBase>> &decals = pDecal->GetDecals();
 	for ( int i = 0; i < decals.size(); ++i )
 	{
 		CDynamicCast<ISomePart> pPart = decals[i];
@@ -97,7 +98,7 @@ void CDecalFader::SetToFadeIn()
 	}
 
 	const float fVal = GetFadeValue( tCurrent );
-	const STime tNeed = tFadeOutStart + logf(fVal) * ( tFadeOutEnd - tFadeOutStart ) / fFadeLog;
+	const STime tNeed = tFadeOutStart + logf( fVal ) * ( tFadeOutEnd - tFadeOutStart ) / fFadeLog;
 	ShiftTimes( tCurrent - tNeed );
 }
 
@@ -110,7 +111,7 @@ void CDecalFader::Freeze()
 	pTime.Refresh();
 	const STime tCurrent = pTime->GetValue();
 
-	ShiftTimes( -int(tCurrent) );
+	ShiftTimes( -int( tCurrent ) );
 }
 
 void CDecalFader::Unfreeze()

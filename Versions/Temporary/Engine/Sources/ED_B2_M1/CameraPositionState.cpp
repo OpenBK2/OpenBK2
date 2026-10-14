@@ -53,7 +53,6 @@ static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMa
 	return false;
 }
 
-
 static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCameraPos &rCamPos, int nPlayerIndex )
 {
 	if ( !pMapInfoMan )
@@ -80,7 +79,6 @@ static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCamera
 	return bResult;
 }
 
-
 static bool GetCameraPosition( SCameraPos *pCamPos )
 {
 	if ( !Camera() || !pCamPos )
@@ -94,20 +92,17 @@ static bool GetCameraPosition( SCameraPos *pCamPos )
 	return true;
 }
 
-
 //
 //
 //		START CAMERA POSITION STATE
 //
 //
 
-CCameraPositionState::CCameraPositionState( CMapInfoEditor* _pMapInfoEditor )
-	: pMapInfoEditor( _pMapInfoEditor ),
-	nCurrentPlayer( 0 )
+CCameraPositionState::CCameraPositionState( CMapInfoEditor *_pMapInfoEditor )
+		: pMapInfoEditor( _pMapInfoEditor ), nCurrentPlayer( 0 )
 {
 	NI_ASSERT( pMapInfoEditor != 0, "CCameraPositionState(): Invalid parameter: pMapInfoEditor == 0" );
 }
-
 
 void CCameraPositionState::Enter()
 {
@@ -119,7 +114,6 @@ void CCameraPositionState::Enter()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }
 
-
 void CCameraPositionState::Leave()
 {
 	cameraPositions.clear();
@@ -127,7 +121,6 @@ void CCameraPositionState::Leave()
 	//
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_CAMERA_POSITION_STATE );
 }
-
 
 void CCameraPositionState::SavePosition()
 {
@@ -141,7 +134,6 @@ void CCameraPositionState::SavePosition()
 	}
 }
 
-
 bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch ( nCommandID )
@@ -154,7 +146,8 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 		case ID_CPE_ON_PLAYER_CHANGED:
 		{
 			SCameraPositionWindowData data;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&data) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &data ) );
 			nCurrentPlayer = data.nPlayerIndex;
 			RefreshWindow( true );
 			return true;
@@ -162,7 +155,8 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 		case ID_CPW_PARAM_TYPE_CHANGED:
 		{
 			SCameraPositionWindowData data;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&data) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &data ) );
 			nCurrentPlayer = data.nPlayerIndex;
 			// A map may have no players, or a combo may have no selection yet.
 			if ( nCurrentPlayer < 0 || nCurrentPlayer >= cameraPositions.size() )
@@ -183,7 +177,6 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 	return false;
 }
 
-
 bool CCameraPositionState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CCameraPositionState::UpdateCommand(), pbEnable == 0" );
@@ -193,8 +186,8 @@ bool CCameraPositionState::UpdateCommand( unsigned nCommandID, bool *pbEnable, b
 	{
 		case ID_UPDATE_EDIT_PARAMETERS:
 		{
-			(*pbEnable) = true;
-			(*pbCheck) = false;
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
 			return true;
 		}
 		default:
@@ -203,7 +196,6 @@ bool CCameraPositionState::UpdateCommand( unsigned nCommandID, bool *pbEnable, b
 	}
 	return false;
 }
-
 
 int CCameraPositionState::GetPlayersCountFromDB()
 {
@@ -227,13 +219,11 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 		nCurrentPlayer = data.nPlayerCount > 0 ? 0 : -1;
 	data.nPlayerIndex = nCurrentPlayer;
 	data.bAllParams = nCurrentPlayer >= 0 && !cameraPositions[nCurrentPlayer].bUseAnchorOnly;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW,
-																												ID_WINDOW_SET_DIALOG_DATA,
-																												reinterpret_cast<uintptr_t>(&data) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_SET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &data ) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }
-
 
 void CCameraPositionState::Draw( IPaintContext *pPaintDC )
 {
@@ -253,7 +243,8 @@ void CCameraPositionState::Draw( IPaintContext *pPaintDC )
 		vPos.z = GetTerrainHeight( vPos.x, vPos.y );
 
 		sceneDrawTool.DrawCircle( vPos, SELECTION_POINT_RADIUS, SELECTION_POINT_PARTS, SELECTION_COLOR, false );
-		sceneDrawTool.DrawCircle( vPos, SCENE_OBJECT_SELECTION_RADIUS0, SCENE_OBJECT_SELECTION_PARTS, SCENE_OBJECT_SELECTION_COLOR, false );
+		sceneDrawTool.DrawCircle(
+				vPos, SCENE_OBJECT_SELECTION_RADIUS0, SCENE_OBJECT_SELECTION_PARTS, SCENE_OBJECT_SELECTION_COLOR, false );
 
 		if ( i == nCurrentPlayer )
 		{
@@ -265,7 +256,8 @@ void CCameraPositionState::Draw( IPaintContext *pPaintDC )
 				for ( int i = 0; i < 10; ++i )
 				{
 					float fRad = i;
-					sceneDrawTool.DrawCircle( vPos, SELECTION_POINT_RADIUS * (fRad/10), SELECTION_POINT_PARTS, SELECTION_COLOR, false );
+					sceneDrawTool.DrawCircle(
+							vPos, SELECTION_POINT_RADIUS * ( fRad / 10 ), SELECTION_POINT_PARTS, SELECTION_COLOR, false );
 				}
 			}
 		}
@@ -273,11 +265,10 @@ void CCameraPositionState::Draw( IPaintContext *pPaintDC )
 	sceneDrawTool.Draw();
 }
 
-
 void CCameraPositionState::PostDraw( IPaintContext *pPaintDC )
 {
 	CPtr<IEditorScene> pScene = EditorScene();
-  if ( !pScene )
+	if ( !pScene )
 		return;
 
 	ICamera *pCamera = Camera();
@@ -295,10 +286,9 @@ void CCameraPositionState::PostDraw( IPaintContext *pPaintDC )
 		AI2Vis( &pos, pos );
 
 		if ( TestRayInFrustrum( pos, ts, pScene->GetScreenRect(), &res ) )
-			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "Player {} camera", i ) , res );
+			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "Player {} camera", i ), res );
 	}
 }
-
 
 void CCameraPositionState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -310,7 +300,7 @@ void CCameraPositionState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &r
 		return;
 
 	CVec3 vPickedPosOnTerrain = VNULL3;
-	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2(rMousePoint.x, rMousePoint.y) );
+	Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
 
 	bMove = false;
 	float fDist = 0;
@@ -331,7 +321,6 @@ void CCameraPositionState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &r
 	}
 }
 
-
 void CCameraPositionState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( cameraPositions.size() == 0 ) // no points
@@ -339,7 +328,7 @@ void CCameraPositionState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMo
 	if ( nCurrentPlayer < 0 ) // empty selection
 		return;
 
-	CVec3 *pMovingPoint = &(cameraPositions[nCurrentPlayer].vAnchor);
+	CVec3 *pMovingPoint = &( cameraPositions[nCurrentPlayer].vAnchor );
 
 	if ( bMove )
 	{
@@ -348,17 +337,16 @@ void CCameraPositionState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMo
 		vMapAISize.y = pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH * AI_TILES_IN_VIS_TILE * AI_TILE_SIZE;
 
 		CVec3 vPickedPosOnTerrain = VNULL3;
-		Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2(rMousePoint.x, rMousePoint.y) );
+		Get2DPosOnMapHeights( &vPickedPosOnTerrain, CVec2( rMousePoint.x, rMousePoint.y ) );
 
 		vPickedPosOnTerrain.x = Clamp( vPickedPosOnTerrain.x, 0.0f, vMapAISize.x );
 		vPickedPosOnTerrain.y = Clamp( vPickedPosOnTerrain.y, 0.0f, vMapAISize.y );
 		vPickedPosOnTerrain.z = 0;
 
 		AI2Vis( &vPickedPosOnTerrain );
-		(*pMovingPoint) = vPickedPosOnTerrain;
+		( *pMovingPoint ) = vPickedPosOnTerrain;
 	}
 }
-
 
 void CCameraPositionState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -371,7 +359,6 @@ void CCameraPositionState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMo
 	SetStartCameraPositionInDB( pMapInfoEditor->GetViewManipulator(), cameraPositions[nCurrentPlayer], nCurrentPlayer );
 	bMove = false;
 }
-
 
 void CCameraPositionState::GetDBInfo()
 {

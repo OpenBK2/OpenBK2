@@ -16,9 +16,9 @@
 // the root element names a known resource type is the caller's to check.
 namespace NXdbValidation
 {
-	// Whether the nSize bytes at pData, the whole file as the engine will read
-	// it, are a well-formed XML document in UTF-8 with no DOCTYPE. True, with the
-	// root element's name in *pszRootName, if so; false, with a message for the
-	// user in *pszError, if not.
-	bool CheckDocument( const char *pData, int nSize, std::string *pszRootName, std::string *pszError );
+// Whether the nSize bytes at pData, the whole file as the engine will read
+// it, are a well-formed XML document in UTF-8 with no DOCTYPE. True, with the
+// root element's name in *pszRootName, if so; false, with a message for the
+// user in *pszError, if not.
+bool CheckDocument( const char *pData, int nSize, std::string *pszRootName, std::string *pszError );
 }

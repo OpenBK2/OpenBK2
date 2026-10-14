@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-
 #include "Database.h"
 #include "EditorDb.h"
 #include "HeaderXmlSaxVisitor.h"
@@ -12,8 +11,7 @@
 #include "System/VFS.h"
 #include "System/FilePath.h"
 
-BASIC_REGISTER_CLASS(LIBDB, NDb::IDbObserver);
-
+BASIC_REGISTER_CLASS( LIBDB, NDb::IDbObserver );
 
 namespace NDb
 {
@@ -32,14 +30,19 @@ CBasicDatabase *CreateGameDatabase();
 static CObj<CBasicDatabase> s_pMainDatabase;
 static struct SDatabaseAutoMagic
 {
-	~SDatabaseAutoMagic()
-	{
-		CloseDatabase();
-	}
+	~SDatabaseAutoMagic() { CloseDatabase(); }
 } aDatabaseAutoMagic;
 
-void SetDatabaseDataChanged() { if ( s_pMainDatabase ) s_pMainDatabase->SetDataChanged(); }
-void SetDatabaseDataChanged( const CDBID &dbid ) { if ( s_pMainDatabase ) s_pMainDatabase->SetDataChanged( dbid ); }
+void SetDatabaseDataChanged()
+{
+	if ( s_pMainDatabase )
+		s_pMainDatabase->SetDataChanged();
+}
+void SetDatabaseDataChanged( const CDBID &dbid )
+{
+	if ( s_pMainDatabase )
+		s_pMainDatabase->SetDataChanged( dbid );
+}
 
 bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator, EDatabaseMode eMode )
 {
@@ -116,7 +119,7 @@ bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew )
 	return s_pMainDatabase->RenameObject( dbidOld, dbidNew );
 }
 
-bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames )
+bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames )
 {
 	return s_pMainDatabase->RenameObjects( renames );
 }
@@ -148,7 +151,7 @@ void DropCachedResources()
 		s_pMainDatabase->DropCachedResources();
 }
 
-bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes )
+bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes )
 {
 	return s_pMainDatabase->GetClassesList( pRes );
 }
@@ -175,7 +178,7 @@ void AddDbObserver( IDbObserver *pObserver )
 
 bool CBasicDatabase::ReadResourceHeader( STypeObjectHeader *pHeader, const CDBID &dbid )
 {
-	CFileStream stream( pVFS, GetFileName(dbid) );
+	CFileStream stream( pVFS, GetFileName( dbid ) );
 	if ( stream.IsOk() )
 	{
 		// Loose XDBs saved by modern text editors may start with a UTF-8 BOM.
@@ -225,7 +228,7 @@ bool HasChangedObjects()
 void NormalizeDBID( CDBID *pRes, const CDBID &dbid )
 {
 	std::string szRes = dbid.ToString();
-//	NStr::ToLowerASCII( &szRes, dbid.ToString() );
+	//	NStr::ToLowerASCII( &szRes, dbid.ToString() );
 	NStr::ReplaceAllChars( &szRes, '\\', '/' );
 	*pRes = szRes;
 }

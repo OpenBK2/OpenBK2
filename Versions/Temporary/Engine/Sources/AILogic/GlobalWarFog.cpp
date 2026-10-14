@@ -77,8 +77,11 @@ struct SGetLastVisitor
 	const bool GetReturnValue() const { return bLastVisit; }
 };
 
-CGlobalWarFog::SWarForFullUnitInfo::SWarForFullUnitInfo( const SWarFogUnitInfo &unitInfo, const int _nParty, const int nSpiralLength ) : SWarFogUnitInfo( unitInfo ),
-	vOldPos( unitInfo.vPos ), nOldRadius( unitInfo.nRadius ), nParty( _nParty ), updateFlag( UPD_CREATE_NEW_UNIT )
+CGlobalWarFog::SWarForFullUnitInfo::SWarForFullUnitInfo( const SWarFogUnitInfo &unitInfo,
+                                                         const int _nParty,
+                                                         const int nSpiralLength )
+		: SWarFogUnitInfo( unitInfo ), vOldPos( unitInfo.vPos ), nOldRadius( unitInfo.nRadius ), nParty( _nParty ),
+			updateFlag( UPD_CREATE_NEW_UNIT )
 {
 	visValues.SetSize( nSpiralLength );
 	visValues.FillZero();
@@ -138,10 +141,10 @@ void CGlobalWarFog::ReInit()
 void CGlobalWarFog::Init( const int _nSizeX, const int _nSizeY, const int _nMaxRadius, const float _fUnitHeight )
 {
 	nUnitHeight = _fUnitHeight * HEIGHT_MULTIPLYER;
-	nMaxRadius = _nMaxRadius/AI_TILES_IN_VIS_TILE;
+	nMaxRadius = _nMaxRadius / AI_TILES_IN_VIS_TILE;
 
-	nSizeX = _nSizeX/AI_TILES_IN_VIS_TILE;
-	nSizeY = _nSizeY/AI_TILES_IN_VIS_TILE;
+	nSizeX = _nSizeX / AI_TILES_IN_VIS_TILE;
+	nSizeY = _nSizeY / AI_TILES_IN_VIS_TILE;
 
 	warFog.resize( 2 ); // only two parties, see comment for CGlobalWarFog::SWarForFullUnitInfo.nParty !!!
 	for ( int i = 0; i < warFog.size(); ++i )
@@ -189,7 +192,8 @@ void CGlobalWarFog::RecalculateArea( const SVector &vTile )
 		areas[vTile.y][vTile.x].FillZero();
 		for ( int i = 0; i < GetSpiralLength(); ++i )
 		{
-			if ( mask.GetData( GetSpiralPoint( i ).vOffset.x + GetMaxRadius(), GetSpiralPoint( i ).vOffset.y + GetMaxRadius() ) )
+			if ( mask.GetData( GetSpiralPoint( i ).vOffset.x + GetMaxRadius(),
+			                   GetSpiralPoint( i ).vOffset.y + GetMaxRadius() ) )
 				areas[vTile.y][vTile.x].SetData( i );
 		}
 
@@ -225,7 +229,13 @@ void CGlobalWarFog::SetTileHeight( const int x, const int y, const float fHeight
 
 void CGlobalWarFog::AddUnit( const int nID, const SWarFogUnitInfo &updateInfo, const int nParty )
 {
-	NI_ASSERT( updateInfo.bPlane || IsTileInside( updateInfo.vPos ), fmt::format( "Trying add unit {} with wrong position ({} x {}), size of map: {} x {}", nID, updateInfo.vPos.x, updateInfo.vPos.y, GetSizeX(), GetSizeY() ) );
+	NI_ASSERT( updateInfo.bPlane || IsTileInside( updateInfo.vPos ),
+	           fmt::format( "Trying add unit {} with wrong position ({} x {}), size of map: {} x {}",
+	                        nID,
+	                        updateInfo.vPos.x,
+	                        updateInfo.vPos.y,
+	                        GetSizeX(),
+	                        GetSizeY() ) );
 	//NI_ASSERT( updateInfo.nRadius <= GetMaxRadius(), fmt::format( "WARNING: nMaxRadius exceed (nMaxRadius = {}, updateInfo.nRadius = {})", GetMaxRadius(), updateInfo.nRadius ) );
 	NI_ASSERT( units.find( nID ) == units.end(), fmt::format( "Unit with id = {} already exists in warfog.", nID ) );
 
@@ -317,9 +327,9 @@ void CGlobalWarFog::SynchronizeHeights( const SVector &vUpLeftTile, const SVecto
 	const int nX2 = vBottomRightTile.x;
 	const int nY2 = vBottomRightTile.y;
 
-	for ( int y = nY1; y < nY2-1; ++y )
+	for ( int y = nY1; y < nY2 - 1; ++y )
 	{
-		for ( int x = nX1; x < nX2-1; ++x )
+		for ( int x = nX1; x < nX2 - 1; ++x )
 		{
 			SetTileHeight( x, y, ::GetHeights()->GetTileHeight( x * AI_TILES_IN_VIS_TILE, y * AI_TILES_IN_VIS_TILE ) );
 			staticObjects[y][x] = -1;
@@ -353,7 +363,7 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 
 	CPtr<CWarFogVisibility> pVisibility = CreateWarFogVisibility( this, unitInfo );
 
-	const int nClsLength = lengths[ (std::min)( unitInfo.nRadius, CAMOUFLAGE_RADIUS ) ];
+	const int nClsLength = lengths[(std::min)( unitInfo.nRadius, CAMOUFLAGE_RADIUS )];
 	for ( int i = 0; i < nClsLength; ++i )
 	{
 		const SVector vTile = unitInfo.vPos + GetSpiralPoint( i ).vOffset;
@@ -369,7 +379,7 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 			unitInfo.visValues.RemoveData( i );
 	}
 
-	const int nLength = lengths[ unitInfo.nRadius ];
+	const int nLength = lengths[unitInfo.nRadius];
 	for ( int i = nClsLength; i < nLength; ++i )
 	{
 		const SVector vTile = unitInfo.vPos + GetSpiralPoint( i ).vOffset;
@@ -439,25 +449,25 @@ void CGlobalWarFog::Segment()
 		TWarFogUnitsMap::iterator pos = units.find( updateUnitList.Pop() );
 		if ( pos == units.end() )
 			break;
-    else if ( pos->second.updateFlag != UPD_UPDATED )
+		else if ( pos->second.updateFlag != UPD_UPDATED )
 		{
 			switch ( pos->second.updateFlag )
 			{
-			case UPD_DELETE_UNIT:
-				RemoveVisibleTiles( pos->first, pos->second );
-				units.erase( pos );
-				break;
-			case UPD_CREATE_NEW_UNIT:
-				AddVisibleTiles( pos->first, pos->second );
-				break;
-			case UPD_CHANGE_PARTY:
-				RemoveVisibleTiles( pos->first, pos->second );
-				pos->second.nParty = 1 - pos->second.nParty;
-				AddVisibleTiles( pos->first, pos->second );
-				break;
-			default:
-				RemoveVisibleTiles( pos->first, pos->second );
-				AddVisibleTiles( pos->first, pos->second );
+				case UPD_DELETE_UNIT:
+					RemoveVisibleTiles( pos->first, pos->second );
+					units.erase( pos );
+					break;
+				case UPD_CREATE_NEW_UNIT:
+					AddVisibleTiles( pos->first, pos->second );
+					break;
+				case UPD_CHANGE_PARTY:
+					RemoveVisibleTiles( pos->first, pos->second );
+					pos->second.nParty = 1 - pos->second.nParty;
+					AddVisibleTiles( pos->first, pos->second );
+					break;
+				default:
+					RemoveVisibleTiles( pos->first, pos->second );
+					AddVisibleTiles( pos->first, pos->second );
 			}
 		}
 	}
@@ -474,7 +484,7 @@ bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && theDipl.GetMyParty() == nParty )
 		return true;
 
-	return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0;
+	return warFog[nParty][tile.y / AI_TILES_IN_VIS_TILE][tile.x / AI_TILES_IN_VIS_TILE].nVisible != 0;
 }
 
 bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool bCamouflated ) const
@@ -487,9 +497,9 @@ bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool b
 		return true;
 
 	if ( bCamouflated )
-		return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nCloseVisible != 0;
+		return warFog[nParty][tile.y / AI_TILES_IN_VIS_TILE][tile.x / AI_TILES_IN_VIS_TILE].nCloseVisible != 0;
 	else
-		return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0;
+		return warFog[nParty][tile.y / AI_TILES_IN_VIS_TILE][tile.x / AI_TILES_IN_VIS_TILE].nVisible != 0;
 }
 
 void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &scriptArea, bool bOpen )
@@ -526,7 +536,7 @@ void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &script
 
 void CGlobalWarFog::AddStaticObjectTile( const SVector &vTile, const int nObjectID, const float fHeight )
 {
-	const SVector vVisTile( vTile.x/AI_TILES_IN_VIS_TILE, vTile.y/AI_TILES_IN_VIS_TILE );
+	const SVector vVisTile( vTile.x / AI_TILES_IN_VIS_TILE, vTile.y / AI_TILES_IN_VIS_TILE );
 	if ( GetStaticObjectAtTile( vVisTile ) == -1 )
 	{
 		SetTileHeight( vVisTile, fHeight + ::GetHeights()->GetTileHeight( vTile.x, vTile.y ) );
@@ -536,7 +546,7 @@ void CGlobalWarFog::AddStaticObjectTile( const SVector &vTile, const int nObject
 
 void CGlobalWarFog::RemoveStaticObjectTile( const SVector &vTile, const int nObjectID )
 {
-	const SVector vVisTile( vTile.x/AI_TILES_IN_VIS_TILE, vTile.y/AI_TILES_IN_VIS_TILE );
+	const SVector vVisTile( vTile.x / AI_TILES_IN_VIS_TILE, vTile.y / AI_TILES_IN_VIS_TILE );
 	if ( GetStaticObjectAtTile( vVisTile ) == nObjectID )
 	{
 		SetTileHeight( vVisTile, ::GetHeights()->GetTileHeight( vTile.x, vTile.y ) );
@@ -570,7 +580,7 @@ bool CGlobalWarFog::IsTraceable( const SVector &tile1, const SVector &tile2 )
 	}
 	else
 	{
-		const int nSpiralPointIndex = spiralCoords[vOffset.y + GetMaxRadius() ][vOffset.x + GetMaxRadius()];
+		const int nSpiralPointIndex = spiralCoords[vOffset.y + GetMaxRadius()][vOffset.x + GetMaxRadius()];
 		if ( nSpiralPointIndex == -1 )
 		{
 			CWarFogTracerInternal<SGetLastVisitor> traceableTracer( this, SGetLastVisitor() );
@@ -589,7 +599,10 @@ bool CGlobalWarFog::GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nP
 {
 	*pWarFogInfo = &miniMapWarFog;
 	const NTimer::STime nFogCalcTime = GameTimer()->GetGameTime();
-	const int nShift = (bNeedFullCalc || bFirstTime) ? ( miniMapWarFog.GetSizeY() ) : ( miniMapWarFog.GetSizeY() * ( nFogCalcTime - nLastFogCalcTime ) / SConsts::WAR_FOG_FULL_UPDATE + 1);
+	const int nShift =
+			( bNeedFullCalc || bFirstTime )
+					? ( miniMapWarFog.GetSizeY() )
+					: ( miniMapWarFog.GetSizeY() * ( nFogCalcTime - nLastFogCalcTime ) / SConsts::WAR_FOG_FULL_UPDATE + 1 );
 	if ( bFirstTime )
 		nMiniMapY = 0;
 	nLastFogCalcTime = nFogCalcTime;
@@ -599,32 +612,38 @@ bool CGlobalWarFog::GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nP
 	{
 		if ( y == 0 )
 		{
-			miniMapSums[0] = GetClientTileVis( 0, AI_TILES_IN_VIS_TILE, nParty ) + GetClientTileVis( AI_TILES_IN_VIS_TILE, AI_TILES_IN_VIS_TILE, nParty );
+			miniMapSums[0] = GetClientTileVis( 0, AI_TILES_IN_VIS_TILE, nParty ) +
+			                 GetClientTileVis( AI_TILES_IN_VIS_TILE, AI_TILES_IN_VIS_TILE, nParty );
 			miniMapSums[1] = miniMapSums[0];
-			miniMapWarFog[0][0] = ( GetClientTileVis( 0, 0, nParty ) + GetClientTileVis( AI_TILES_IN_VIS_TILE, 0, nParty ) +
-				miniMapSums[0] ) / 4;
+			miniMapWarFog[0][0] =
+					( GetClientTileVis( 0, 0, nParty ) + GetClientTileVis( AI_TILES_IN_VIS_TILE, 0, nParty ) + miniMapSums[0] ) /
+					4;
 			miniMapWarFog[0][1] = miniMapWarFog[0][0];
 			miniMapWarFog[1][0] = miniMapWarFog[0][0];
 			miniMapWarFog[1][1] = miniMapWarFog[0][0];
 			for ( int x = 2; x < miniMapWarFog.GetSizeX(); ++x )
 			{
-				miniMapSums[x] = GetClientTileVis( x*AI_TILES_IN_VIS_TILE, AI_TILES_IN_VIS_TILE, nParty ) + GetClientTileVis( (x - 1)*AI_TILES_IN_VIS_TILE, AI_TILES_IN_VIS_TILE, nParty );
-				miniMapWarFog[0][x] = ( GetClientTileVis( x*AI_TILES_IN_VIS_TILE, 0, nParty ) + GetClientTileVis( (x - 1)*AI_TILES_IN_VIS_TILE, 0, nParty ) +
-					miniMapSums[x] ) / 4;
+				miniMapSums[x] = GetClientTileVis( x * AI_TILES_IN_VIS_TILE, AI_TILES_IN_VIS_TILE, nParty ) +
+				                 GetClientTileVis( ( x - 1 ) * AI_TILES_IN_VIS_TILE, AI_TILES_IN_VIS_TILE, nParty );
+				miniMapWarFog[0][x] = ( GetClientTileVis( x * AI_TILES_IN_VIS_TILE, 0, nParty ) +
+				                        GetClientTileVis( ( x - 1 ) * AI_TILES_IN_VIS_TILE, 0, nParty ) + miniMapSums[x] ) /
+				                      4;
 				miniMapWarFog[1][x] = miniMapWarFog[0][x];
 			}
 		}
 		else if ( y > 1 )
 		{
 			int nNewSum;
-			nNewSum = GetClientTileVis( 0, y*AI_TILES_IN_VIS_TILE, nParty ) + GetClientTileVis( AI_TILES_IN_VIS_TILE, y*AI_TILES_IN_VIS_TILE, nParty );
+			nNewSum = GetClientTileVis( 0, y * AI_TILES_IN_VIS_TILE, nParty ) +
+			          GetClientTileVis( AI_TILES_IN_VIS_TILE, y * AI_TILES_IN_VIS_TILE, nParty );
 			miniMapWarFog[y][0] = ( miniMapSums[0] + nNewSum ) / 4;
 			miniMapWarFog[y][1] = ( miniMapSums[0] + nNewSum ) / 4;
 			miniMapSums[0] = nNewSum;
 			miniMapSums[1] = miniMapSums[0];
 			for ( int x = 2; x < miniMapWarFog.GetSizeX(); ++x )
 			{
-				nNewSum = GetClientTileVis( x*AI_TILES_IN_VIS_TILE, y*AI_TILES_IN_VIS_TILE, nParty ) + GetClientTileVis( (x - 1)*AI_TILES_IN_VIS_TILE, y*AI_TILES_IN_VIS_TILE, nParty );
+				nNewSum = GetClientTileVis( x * AI_TILES_IN_VIS_TILE, y * AI_TILES_IN_VIS_TILE, nParty ) +
+				          GetClientTileVis( ( x - 1 ) * AI_TILES_IN_VIS_TILE, y * AI_TILES_IN_VIS_TILE, nParty );
 				miniMapWarFog[y][x] = ( miniMapSums[x] + nNewSum ) / 4;
 				miniMapSums[x] = nNewSum;
 			}
@@ -648,7 +667,7 @@ void CGlobalWarFog::DumpWarFog()
 		}
 
 	DebugTrace( "Min height = %d, Max height = %d", nMinHeight, nMaxHeight );
-/*
+	/*
 	CArray2D<uint32_t> image;
 	const float fDeltaHeight = 255/(float)( nMaxHeight - nMinHeight );
 	image.SetSizes( heights.GetSizeX(), heights.GetSizeY() );

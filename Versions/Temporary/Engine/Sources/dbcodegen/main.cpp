@@ -36,15 +36,16 @@ void ThrowOutEqual( std::vector<std::string> *pArray )
 		return;
 	}
 
-	std::sort( pArray->begin(), pArray->end(),
-		[]( const std::string &a, const std::string &b ) { return LowerCaseKey( a ) < LowerCaseKey( b ); } );
+	std::sort( pArray->begin(),
+	           pArray->end(),
+	           []( const std::string &a, const std::string &b ) { return LowerCaseKey( a ) < LowerCaseKey( b ); } );
 
 	int k = 0;
 	for ( int i = 1; i < pArray->size(); ++i )
 	{
-		if ( LowerCaseKey( (*pArray)[k] ) != LowerCaseKey( (*pArray)[i] ) )
+		if ( LowerCaseKey( ( *pArray )[k] ) != LowerCaseKey( ( *pArray )[i] ) )
 		{
-			(*pArray)[++k] = (*pArray)[i];
+			( *pArray )[++k] = ( *pArray )[i];
 		}
 	}
 	pArray->resize( k + 1 );
@@ -68,7 +69,7 @@ bool ReadFileList( std::vector<std::string> *pFiles, const std::string &szFileLi
 	std::string szLine;
 	while ( std::getline( stream, szLine ) )
 	{
-		while ( !szLine.empty() && (szLine.back() == '\r' || szLine.back() == ' ') )
+		while ( !szLine.empty() && ( szLine.back() == '\r' || szLine.back() == ' ' ) )
 		{
 			szLine.pop_back();
 		}
@@ -83,7 +84,6 @@ bool ReadFileList( std::vector<std::string> *pFiles, const std::string &szFileLi
 }
 }
 
-
 int PORT_CDECL main( int argc, char *argv[] )
 {
 	const std::string szCurrDir = NFile::GetNormalizedCurrDir();
@@ -96,20 +96,18 @@ int PORT_CDECL main( int argc, char *argv[] )
 	// unused by the game. The options are the original ones, except that
 	// --file-list replaced --config-file.
 	po::options_description options( "Options" );
-	options.add_options()
-		( "show-version",   "show product version" )
-		( "all",            "generate types.xml and sources" )
-		( "nocopy",         "only generate new source files (and don't copy to version)" )
-		( "types",          "only generate new types.xml" )
-		( "file-list",      po::value<std::string>( &szFileList ),
-		                    "file listing the .cll files to compile, one per line; the build writes "
-		                    "type-descriptions.txt beside dbcodegen" )
-		( "types-path",     po::value<std::string>( &szTypesPath ),
-		                    "set path to store types.xml (default: current dir)" )
-		( "sources-path",   po::value<std::string>( &szSourcesPath ),
-		                    "set the root of the sources, where base.cll and game.cll are and "
-		                    "generated files go (default: current dir)" )
-		( "help",           "show this message" );
+	options.add_options()( "show-version", "show product version" )( "all", "generate types.xml and sources" )(
+			"nocopy", "only generate new source files (and don't copy to version)" )( "types",
+	                                                                              "only generate new types.xml" )(
+			"file-list",
+			po::value<std::string>( &szFileList ),
+			"file listing the .cll files to compile, one per line; the build writes "
+			"type-descriptions.txt beside dbcodegen" )(
+			"types-path", po::value<std::string>( &szTypesPath ), "set path to store types.xml (default: current dir)" )(
+			"sources-path",
+			po::value<std::string>( &szSourcesPath ),
+			"set the root of the sources, where base.cll and game.cll are and "
+			"generated files go (default: current dir)" )( "help", "show this message" );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
@@ -124,8 +122,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 		// and the other double dash ones.
 		po::store( po::command_line_parser( argc, argv )
 		               .options( options )
-		               .style( po::command_line_style::default_style
-		                       | po::command_line_style::allow_long_disguise )
+		               .style( po::command_line_style::default_style | po::command_line_style::allow_long_disguise )
 		               .run(),
 		           args );
 		po::notify( args );
@@ -138,18 +135,19 @@ int PORT_CDECL main( int argc, char *argv[] )
 	}
 	// The modes are exclusive; the old parser refused a second one as
 	// ambiguous rather than picking either, so this does too.
-	const int nModes = int( args.count( "all" ) + args.count( "nocopy" ) + args.count( "types" ) + args.count( "show-version" ) );
+	const int nModes =
+			int( args.count( "all" ) + args.count( "nocopy" ) + args.count( "types" ) + args.count( "show-version" ) );
 	if ( nModes > 1 )
 	{
 		printf( "ERROR: -all, -nocopy, -types and -show-version are exclusive\n\n" );
 		std::cout << options << std::endl;
 		return 0xDEAD;
 	}
-	const ECodeGenOpts eCodeGenOpts = args.count( "all" )          ? CODE_GEN_NORMAL
-	                                : args.count( "nocopy" )       ? CODE_GEN_NOCOPY
-	                                : args.count( "types" )        ? CODE_GEN_TYPES
-	                                : args.count( "show-version" ) ? CODE_GEN_SHOW_VERSION
-	                                :                                CODE_GEN_UNKNOWN;
+	const ECodeGenOpts eCodeGenOpts = args.count( "all" )            ? CODE_GEN_NORMAL
+	                                  : args.count( "nocopy" )       ? CODE_GEN_NOCOPY
+	                                  : args.count( "types" )        ? CODE_GEN_TYPES
+	                                  : args.count( "show-version" ) ? CODE_GEN_SHOW_VERSION
+	                                                                 : CODE_GEN_UNKNOWN;
 	if ( eCodeGenOpts == CODE_GEN_UNKNOWN || args.count( "help" ) )
 	{
 		printf( "Usage: dbcodegen [options]\n\n" );

@@ -28,15 +28,15 @@ protected:
 
 	enum EUnitMode
 	{
-		EUM_MOVING		= 1<<0,
-		EUM_FIGHTING	= 1<<1,
+		EUM_MOVING = 1 << 0,
+		EUM_FIGHTING = 1 << 1,
 	};
 
 	virtual EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags ) = 0;
 
 public:
 	CExecutorUnitCombatBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID );
-	CExecutorUnitCombatBonus() { }
+	CExecutorUnitCombatBonus() {}
 
 	int Segment();
 	int operator&( IBinSaver &saver );

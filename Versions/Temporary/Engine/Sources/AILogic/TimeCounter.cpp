@@ -10,11 +10,10 @@ extern NTimer::STime curTime;
 namespace NAI
 {
 CTimeCounter::CTimeCounter()
- : printTime( 0 ), counters( 100 ), startTimes( 100 ), names( 100 ), variables( 100 ),
-	 nMaxIndex( -1 ), nMaxVar( -1 )
+		: printTime( 0 ), counters( 100 ), startTimes( 100 ), names( 100 ), variables( 100 ), nMaxIndex( -1 ), nMaxVar( -1 )
 {
-	memset( &counters[0], 0, sizeof(counters[0] * counters.size()) );
-	memset( &startTimes[0], 0, sizeof(startTimes[0] * startTimes.size()) );
+	memset( &counters[0], 0, sizeof( counters[0] * counters.size() ) );
+	memset( &startTimes[0], 0, sizeof( startTimes[0] * startTimes.size() ) );
 	RegisterCounter( 0, "GroupLogic" );
 	RegisterCounter( 1, "Warfog" );
 	RegisterCounter( 2, "KilledUnits" );
@@ -85,7 +84,6 @@ CTimeCounter::CTimeCounter()
 	RegisterCounter( 61, "5" );
 	RegisterCounter( 62, "6" );
 
-
 	RegisterCounter( 63, "general" );
 	RegisterCounter( 64, "general_removedead" );
 	RegisterCounter( 65, "general_removeenemies" );
@@ -105,11 +103,11 @@ void CTimeCounter::Count( const int nName, const bool bStart )
 
 	if ( bStart )
 	{
-		NHPTimer::GetTime( &(startTimes[nName]) );
+		NHPTimer::GetTime( &( startTimes[nName] ) );
 	}
 	else
 	{
-		const double time = NHPTimer::GetTimePassed( &(startTimes[nName]) );
+		const double time = NHPTimer::GetTimePassed( &( startTimes[nName] ) );
 		counters[nName] += time;
 
 		if ( curTime > printTime )
@@ -123,10 +121,10 @@ void CTimeCounter::Count( const int nName, const bool bStart )
 void CTimeCounter::Count( const std::string &szName, const bool bStart )
 {
 	if ( bStart )
-		NHPTimer::GetTime( &(szStartTimes[szName]) );
+		NHPTimer::GetTime( &( szStartTimes[szName] ) );
 	else
 	{
-		const double time = NHPTimer::GetTimePassed( &(szStartTimes[szName]) );
+		const double time = NHPTimer::GetTimePassed( &( szStartTimes[szName] ) );
 
 		if ( szCounters.find( szName ) == szCounters.end() )
 			szCounters[szName] = 0;
@@ -150,7 +148,8 @@ void CTimeCounter::PrintCounters()
 	{
 		const int name = i;
 		const double fTime = counters[i];
-		if ( fTime > 0.0f ) {
+		if ( fTime > 0.0f )
+		{
 			const auto message = fmt::format( "{} = {:g}", names[name].c_str(), fTime );
 			pConsoleBuffer->WriteASCII( 11, message.c_str(), 0, true );
 		}
@@ -159,7 +158,8 @@ void CTimeCounter::PrintCounters()
 	for ( det_map<std::string, double>::const_iterator iter = szCounters.begin(); iter != szCounters.end(); ++iter )
 	{
 		const double fTime = iter->second;
-		if ( fTime > 0.0f ) {
+		if ( fTime > 0.0f )
+		{
 			const auto message = fmt::format( "{} = {:g}", iter->first, fTime );
 			pConsoleBuffer->WriteASCII( 11, message.c_str(), 0, true );
 		}
@@ -169,7 +169,8 @@ void CTimeCounter::PrintCounters()
 	pConsoleBuffer->WriteASCII( 11, "Variables", 0, true );
 	for ( int i = 0; i <= nMaxVar; ++i )
 	{
-		if ( variables[i] != 0 ) {
+		if ( variables[i] != 0 )
+		{
 			const auto message = fmt::format( "variable {} = {:g}", i, variables[i] );
 			pConsoleBuffer->WriteASCII( 11, message.c_str(), 0, true );
 		}

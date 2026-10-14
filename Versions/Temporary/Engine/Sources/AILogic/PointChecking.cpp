@@ -32,9 +32,8 @@ bool CAttackPointChecking::IsGoodTile( const SVector &curTile ) const
 
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
-	return
-		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
-		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
+	return fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
+	       fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 }
 
 //*******************************************************************
@@ -55,13 +54,12 @@ bool CAttackSideChecking::IsGoodTile( const SVector &curTile ) const
 	if ( !CheckObstacles( bIgnoreObstacles, curTile, targetTile ) )
 		return false;
 
-	const uint16_t wCurDir = GetDirectionByVector( (curTile - targetTile).ToCVec2() );
+	const uint16_t wCurDir = GetDirectionByVector( ( curTile - targetTile ).ToCVec2() );
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
-	const bool bRet =
-		DirsDifference( wCurDir, wAttackDir ) <= wHalfAngle &&
-		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
-		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
+	const bool bRet = DirsDifference( wCurDir, wAttackDir ) <= wHalfAngle &&
+	                  fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
+	                  fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 
 	return bRet;
 }
@@ -70,8 +68,11 @@ bool CAttackSideChecking::IsGoodTile( const SVector &curTile ) const
 //*											CAttackStObjectChecking											*
 //*******************************************************************
 
-CAttackStObjectChecking::CAttackStObjectChecking( const float _fRangeMin, const float _fRangeMax, CStaticObject *_pObj, const bool _bIgnoreObstacles  )
-: fRangeMin( _fRangeMin ), fRangeMax( _fRangeMax ), pObj( _pObj ), bIgnoreObstacles( _bIgnoreObstacles )
+CAttackStObjectChecking::CAttackStObjectChecking( const float _fRangeMin,
+                                                  const float _fRangeMax,
+                                                  CStaticObject *_pObj,
+                                                  const bool _bIgnoreObstacles )
+		: fRangeMin( _fRangeMin ), fRangeMax( _fRangeMax ), pObj( _pObj ), bIgnoreObstacles( _bIgnoreObstacles )
 {
 }
 
@@ -86,7 +87,6 @@ bool CAttackStObjectChecking::IsGoodTile( const SVector &curTile ) const
 
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
-	return
-		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
-		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
+	return fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
+	       fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 }

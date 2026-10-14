@@ -15,8 +15,9 @@ class CControlLobby : public CPacketProcessor
 
 	std::unordered_set<int> connecting;
 	std::unordered_map<int, int64_t> askedNumbers;
+
 public:
-	CControlLobby() { }
+	CControlLobby() {}
 	CControlLobby( class CClients *pClients, class CNet *pNet, const std::string &szCfgFile );
 
 	virtual bool Segment() { return true; }
@@ -33,5 +34,4 @@ public:
 	bool ProcessForgottenPasswordPacket( class CForgottenPasswordPacket *pPacket );
 
 	bool CanBePaused() { return false; }
-
 };

@@ -16,9 +16,9 @@
 
 #include <fmt/format.h>
 
-const wchar_t* DYNAMIC_TAG_MISSION_NAME = L"mission_name";
-const wchar_t* DYNAMIC_TAG_MISSION_STATUS = L"mission_status";
-const wchar_t* DYNAMIC_TAG_FINAL_MISSION_LOCKS = L"final_mission_locks";
+const wchar_t *DYNAMIC_TAG_MISSION_NAME = L"mission_name";
+const wchar_t *DYNAMIC_TAG_MISSION_STATUS = L"mission_status";
+const wchar_t *DYNAMIC_TAG_FINAL_MISSION_LOCKS = L"final_mission_locks";
 
 // Too much is done in ChapterMap's Init()
 // So it has been moved to this file
@@ -39,7 +39,7 @@ void CInterfaceChapterMapMenu::InitLoadControls()
 	pMissionDescBtn = GetChildChecked<IButton>( pScreen, "MissionDescBtn", true );
 
 	pFrontlines = GetChildChecked<IPotentialLines>( pScreen, "Frontlines", true );
-	pFrontlines->ShowWindow( true );		// It is initially hidden (to avoid crashes in editor)
+	pFrontlines->ShowWindow( true ); // It is initially hidden (to avoid crashes in editor)
 
 	pReinfRoller1 = GetChildChecked<IPlayer>( pMain, "ReinfQty1", true );
 	pReinfRoller2 = GetChildChecked<IPlayer>( pMain, "ReinfQty2", true );
@@ -109,7 +109,10 @@ void CInterfaceChapterMapMenu::InitLoadControls()
 		if ( bonusButtons[i].pBonusWnd )
 		{
 			bonusButtons[i].pBonusWnd->SetPlacement( nButtonX + vBonusGridBonusTemplateDelta.x,
-				nButtonY + vBonusGridBonusTemplateDelta.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+			                                         nButtonY + vBonusGridBonusTemplateDelta.y,
+			                                         0,
+			                                         0,
+			                                         EWPF_POS_X | EWPF_POS_Y );
 		}
 	}
 
@@ -180,8 +183,8 @@ void CInterfaceChapterMapMenu::InitReinforcements()
 		int nIndex = pUIC->reinfButtons[i].eType;
 		reinfButtons[nIndex].pButton = pButtonElement;
 
-		if ( pRButton && CHECK_TEXT_NOT_EMPTY_PRE(pRButton->,Tooltip) )
-			reinfButtons[nIndex].wszDefaultTooltip = GET_TEXT_PRE(pRButton->,Tooltip);
+		if ( pRButton && CHECK_TEXT_NOT_EMPTY_PRE( pRButton->, Tooltip ) )
+			reinfButtons[nIndex].wszDefaultTooltip = GET_TEXT_PRE( pRButton->, Tooltip );
 
 		reinfButtons[nIndex].pIcon = pButtonElement->GetChild( "Icon", true );
 		reinfButtons[nIndex].pUnknownWnd = GetChildChecked<IWindow>( pButtonElement, "Unknown", true );
@@ -211,7 +214,10 @@ void CInterfaceChapterMapMenu::InitReinforcements()
 			{
 				pUpgradableWnd->SetName( fmt::format( "FixUpgrade{}", nIndex ) );
 				pUpgradableWnd->SetPlacement( nButtonX + vReinfGridUpgradableTemplateDelta.x,
-					nButtonY + vReinfGridUpgradableTemplateDelta.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+				                              nButtonY + vReinfGridUpgradableTemplateDelta.y,
+				                              0,
+				                              0,
+				                              EWPF_POS_X | EWPF_POS_Y );
 			}
 		}
 	}
@@ -238,8 +244,9 @@ void CInterfaceChapterMapMenu::InitMissions()
 	const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();
 
 	int nIndex = 0;
-	for ( std::vector< NDb::SMissionEnableInfo >::const_iterator it = pChapter->missionPath.begin();
-		it != pChapter->missionPath.end(); ++it, ++nIndex )
+	for ( std::vector<NDb::SMissionEnableInfo>::const_iterator it = pChapter->missionPath.begin();
+	      it != pChapter->missionPath.end();
+	      ++it, ++nIndex )
 	{
 		const NDb::SMissionEnableInfo &info = *it;
 
@@ -269,7 +276,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 		if ( target.pRecommended )
 			target.pRecommended->GetPlacement( &target.nRecommendedX, &target.nRecommendedY, 0, 0 );
 
-		IButton *pTargetButton = dynamic_cast<IButton*>( pElement );
+		IButton *pTargetButton = dynamic_cast<IButton *>( pElement );
 
 		target.nX = pHelper->missions[nIndex].vPos.x;
 		target.nY = pHelper->missions[nIndex].vPos.y;
@@ -284,7 +291,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 		pElement->ShowWindow( true );
 		pElement->SetPlacement( nX, nY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 
-		target.pWindow = dynamic_cast<IButton*>( pElement );
+		target.pWindow = dynamic_cast<IButton *>( pElement );
 		target.pDBInfo = info.pMap;
 		target.eState = EMS_DISABLED;
 		target.nCalls = info.nRecommendedCalls;
@@ -312,14 +319,15 @@ void CInterfaceChapterMapMenu::InitMissions()
 		}
 
 		std::wstring wszMapName;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(info.pMap->,LocalizedName) )
-			wszMapName = GET_TEXT_PRE(info.pMap->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( info.pMap->, LocalizedName ) )
+			wszMapName = GET_TEXT_PRE( info.pMap->, LocalizedName );
 		std::wstring wszTooltipTemplate;
 		std::wstring wszMapStatus;
-		bool bFinalLocked = bFinalMission && (target.eState == EMS_DISABLED);
+		bool bFinalLocked = bFinalMission && ( target.eState == EMS_DISABLED );
 		if ( IScreen *pScreen = GetScreen() )
 		{
-			wszTooltipTemplate = pScreen->GetTextEntry( !bFinalLocked ? "T_MISSION_TOOLTIP" : "T_MISSION_TOOLTIP_FINAL_LOCKED" );
+			wszTooltipTemplate =
+					pScreen->GetTextEntry( !bFinalLocked ? "T_MISSION_TOOLTIP" : "T_MISSION_TOOLTIP_FINAL_LOCKED" );
 
 			if ( target.eState == EMS_COMPLETED )
 				wszMapStatus = pScreen->GetTextEntry( "T_MISSION_COMPLETED" );
@@ -328,7 +336,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 			else if ( target.eState == EMS_DISABLED )
 				wszMapStatus = pScreen->GetTextEntry( "T_MISSION_UNAVAILABLE" );
 		}
-		std::vector< std::pair<std::wstring, std::wstring> > params;
+		std::vector<std::pair<std::wstring, std::wstring>> params;
 		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_MISSION_NAME, wszMapName ) );
 		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_MISSION_STATUS, wszMapStatus ) );
 		if ( bFinalLocked )
@@ -346,7 +354,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 		nY += nSizeY;
 		pBonusTemplate->GetPlacement( 0, 0, &nSizeX, &nSizeY );
 		//nX -= ( nSizeX + 1 ) * info.reward.size() / 2;
-		target.rewardDescs = info.reward;			// store dbptrs to bonus descs
+		target.rewardDescs = info.reward; // store dbptrs to bonus descs
 		for ( int i = 0; i < info.reward.size(); ++i )
 		{
 			const NDb::SChapterBonus *pBonus = info.reward[i];
@@ -356,7 +364,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 				continue;
 
 			// Add symbol
-			IButton *pRewardButton = dynamic_cast<IButton*>( AddWindowCopy( pChapterMapBgr, pBonusTemplate ) );
+			IButton *pRewardButton = dynamic_cast<IButton *>( AddWindowCopy( pChapterMapBgr, pBonusTemplate ) );
 			if ( pRewardButton )
 				pRewardButton->ShowWindow( true );
 			else
@@ -378,7 +386,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 			NI_ASSERT( pReinfIcon, "Required part not found in mission bonus button" );
 			switch ( pBonus->eBonusType )
 			{
-			case NDb::CBT_ADD_CALLS:
+				case NDb::CBT_ADD_CALLS:
 				{
 					NI_ASSERT( 0, fmt::format( "Design: Illegal reward type CBT_ADD_CALLS for mission {}", nIndex ) );
 					/*pRewardButton->SetState( 2 );
@@ -387,9 +395,9 @@ void CInterfaceChapterMapMenu::InitMissions()
 				}
 				break;
 
-			case NDb::CBT_REINF_DISABLE:
-				NI_ASSERT( 0, fmt::format( "Design: Illegal reward type CBT_REINF_DISABLE for mission {}", nIndex ) );
-				/*pRewardButton->SetState( pBonus->bApplyToEnemy ? 1 : 0 );
+				case NDb::CBT_REINF_DISABLE:
+					NI_ASSERT( 0, fmt::format( "Design: Illegal reward type CBT_REINF_DISABLE for mission {}", nIndex ) );
+					/*pRewardButton->SetState( pBonus->bApplyToEnemy ? 1 : 0 );
 				pReinfIcon->GetChild( 0 )->ShowWindow( true );			// Show cross-over
 				for ( int j = 0; j < pUIC->reinfButtons.size(); ++j )
 				{
@@ -400,26 +408,26 @@ void CInterfaceChapterMapMenu::InitMissions()
 					}
 				}
 				pReinfIcon->ShowWindow( true );*/
-				break;
+					break;
 
-			case NDb::CBT_REINF_CHANGE:
-				pRewardButton->SetState( pBonus->bApplyToEnemy ? 1 : 0 );
-				if ( pBonus->pReinforcementSet->pIconTexture )
-					pReinfIcon->SetTexture( pBonus->pReinforcementSet->pIconTexture );
-				else
-				{
-					for ( int j = 0; j < pUIC->reinfButtons.size(); ++j )
+				case NDb::CBT_REINF_CHANGE:
+					pRewardButton->SetState( pBonus->bApplyToEnemy ? 1 : 0 );
+					if ( pBonus->pReinforcementSet->pIconTexture )
+						pReinfIcon->SetTexture( pBonus->pReinforcementSet->pIconTexture );
+					else
 					{
-						if ( pUIC->reinfButtons[j].eType == pBonus->eReinforcementType && pUIC->reinfButtons[j].pTexture )
+						for ( int j = 0; j < pUIC->reinfButtons.size(); ++j )
 						{
-							pReinfIcon->SetTexture( pUIC->reinfButtons[j].pTexture );
-							break;
+							if ( pUIC->reinfButtons[j].eType == pBonus->eReinforcementType && pUIC->reinfButtons[j].pTexture )
+							{
+								pReinfIcon->SetTexture( pUIC->reinfButtons[j].pTexture );
+								break;
+							}
 						}
 					}
-				}
-				pReinfIcon->ShowWindow( true );
-				pReinfIcon->SetTooltip( wszRewardPrefix + MakeTooltip( pBonus->pReinforcementSet ) );
-				break;
+					pReinfIcon->ShowWindow( true );
+					pReinfIcon->SetTooltip( wszRewardPrefix + MakeTooltip( pBonus->pReinforcementSet ) );
+					break;
 			}
 
 			pRewardButton->ShowWindow( false );
@@ -434,7 +442,10 @@ void CInterfaceChapterMapMenu::InitMissions()
 			reward.pBonusWnd = AddWindowCopy( pChapterMapBgr, pBonusGridBonusTemplate );
 			if ( reward.pBonusWnd )
 				reward.pBonusWnd->SetPlacement( nRewardX + vBonusGridBonusTemplateDelta.x,
-					nRewardY + vBonusGridBonusTemplateDelta.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+				                                nRewardY + vBonusGridBonusTemplateDelta.y,
+				                                0,
+				                                0,
+				                                EWPF_POS_X | EWPF_POS_Y );
 			target.rewards.push_back( reward );
 			target.rewardDescs[i] = pBonus;
 		}
@@ -450,7 +461,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 
 		if ( pLastMission == info.pMap.GetPtr() && bIsMissionWon )
 		{
-			nFrontLineAnim = targets.size();														// Start front-line animation
+			nFrontLineAnim = targets.size(); // Start front-line animation
 			fTargetValue = target.fValue0;
 			timeStartEffect = 0;
 			nDelay = 3;
@@ -464,7 +475,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 	}
 
 	// Choose Recommended mission
-	nRecommendedTarget = 0;				// Final is selected by default
+	nRecommendedTarget = 0; // Final is selected by default
 	int nRecommendedValue = -1;
 	for ( int i = 1; i < targets.size(); ++i )
 	{
@@ -478,7 +489,11 @@ void CInterfaceChapterMapMenu::InitMissions()
 	SwitchTargetState( nRecommendedTarget, false );
 
 	SelectTarget( nRecommendedTarget );
-	pFrontlines->SetParams( pChapter->szSeaNoiseMask, pChapter->szDifferentColourMap, pHelper->vMainStrike, pChapter->nPositiveColour, pChapter->nNegativeColour );
+	pFrontlines->SetParams( pChapter->szSeaNoiseMask,
+	                        pChapter->szDifferentColourMap,
+	                        pHelper->vMainStrike,
+	                        pChapter->nPositiveColour,
+	                        pChapter->nNegativeColour );
 }
 
 void CInterfaceChapterMapMenu::EffectStart( EExitDestination eWhereTo )
@@ -533,10 +548,10 @@ void CInterfaceChapterMapMenu::OnEffectFinish()
 
 	switch ( eExitDir )
 	{
-	case EED_RE_ENTER:
-		// Do nothing?
-		break;
-	case EED_ENTER:
+		case EED_RE_ENTER:
+			// Do nothing?
+			break;
+		case EED_ENTER:
 		{
 			int nOldCalls = Singleton<IScenarioTracker>()->GetReinforcementCallsOld();
 			PlayReinfRollerAnim( nOldCalls, nCallsLeft - nCurrentMissionReinfs );
@@ -550,7 +565,7 @@ void CInterfaceChapterMapMenu::OnEffectFinish()
 
 					if ( target.pDBInfo == pLastMission )
 					{
-						nFrontLineAnim = i;														// Start front-line animation
+						nFrontLineAnim = i; // Start front-line animation
 						timeStartEffect = 0;
 						nDelay = 1;
 
@@ -563,11 +578,11 @@ void CInterfaceChapterMapMenu::OnEffectFinish()
 
 			break;
 		}
-	case EED_BACK:
+		case EED_BACK:
 		{
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
-			bool bIsTutorial = (pST != 0 ) ? pST->IsTutorialCampaign() : false;
-			bool bIsCustom = (pST != 0 ) ? pST->IsCustomCampaign() : false;
+			bool bIsTutorial = ( pST != 0 ) ? pST->IsTutorialCampaign() : false;
+			bool bIsCustom = ( pST != 0 ) ? pST->IsCustomCampaign() : false;
 
 			InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_NONE );
 
@@ -589,19 +604,19 @@ void CInterfaceChapterMapMenu::OnEffectFinish()
 
 			break;
 		}
-	case EED_ARMY_MANAGER:
+		case EED_ARMY_MANAGER:
 		{
 			NMainLoop::Command( ML_COMMAND_ARMY_SCREEN, "" );
 
 			break;
 		}
-	case EED_SAVE:
+		case EED_SAVE:
 		{
 			NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
 			NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "save_from_main_menu" );
 			break;
 		}
-	case EED_PLAYER_INFO:
+		case EED_PLAYER_INFO:
 		{
 			NMainLoop::Command( ML_COMMAND_PLAYER_STATS, "" );
 			break;

@@ -4,7 +4,8 @@
 
 #include "Image_export.h"
 
-template<class T> class CArray2D;
+template <class T>
+class CArray2D;
 
 namespace NGfx
 {
@@ -22,29 +23,43 @@ enum EImageType
 	IMAGE_TYPE_TRANSPARENT_ADD,
 };
 
-bool Copy( const CArray2D<uint32_t> &src, const CTRect<long> *pSrcRect, CArray2D<uint32_t> &dst, const CTPoint<long> &dstPos = CTPoint<long>(0, 0) );
-bool CopyAB( const CArray2D<uint32_t> &src, const CTRect<long> *pSrcRect, CArray2D<uint32_t> &dst, const CTPoint<long> &dstPos = CTPoint<long>(0, 0) );
+bool Copy( const CArray2D<uint32_t> &src,
+           const CTRect<long> *pSrcRect,
+           CArray2D<uint32_t> &dst,
+           const CTPoint<long> &dstPos = CTPoint<long>( 0, 0 ) );
+bool CopyAB( const CArray2D<uint32_t> &src,
+             const CTRect<long> *pSrcRect,
+             CArray2D<uint32_t> &dst,
+             const CTPoint<long> &dstPos = CTPoint<long>( 0, 0 ) );
 //
 bool LoadAnyImage( CArray2D<uint32_t> *pRes, CDataStream *pStream );
-IMAGE_EXPORT bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
-	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize );
+IMAGE_EXPORT bool ConvertAndSaveAsDDS( const std::string &szFileName,
+                                       const CArray2D<uint32_t> &srcImage,
+                                       EImageType eImageType,
+                                       NGfx::EPixelFormat nSubFormat,
+                                       int nNumMipLevels,
+                                       bool bWrapX,
+                                       bool bWrapY,
+                                       float fMappingSize );
 
 struct SColor
 {
-  union
-  {
-    struct
-    {
-      uint8_t b, g, r, a;
-    };
-    uint32_t dwColor;
-  };
-  //
-  // Initialize one complete union arm without changing the overlapping byte aliases.
-  SColor() : dwColor( 0 ) {  }
-  SColor( const uint32_t _dwColor ) : dwColor( _dwColor ) {  }
-  SColor( const uint8_t _a, const uint8_t _r, const uint8_t _g, const uint8_t _b ) : a( _a ), r( _r ), g( _g ), b( _b ) {  }
-  //
-  operator uint32_t() const { return dwColor; }
+	union
+	{
+		struct
+		{
+			uint8_t b, g, r, a;
+		};
+		uint32_t dwColor;
+	};
+	//
+	// Initialize one complete union arm without changing the overlapping byte aliases.
+	SColor() : dwColor( 0 ) {}
+	SColor( const uint32_t _dwColor ) : dwColor( _dwColor ) {}
+	SColor( const uint8_t _a, const uint8_t _r, const uint8_t _g, const uint8_t _b ) : a( _a ), r( _r ), g( _g ), b( _b )
+	{
+	}
+	//
+	operator uint32_t() const { return dwColor; }
 };
 }

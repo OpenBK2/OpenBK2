@@ -6,14 +6,19 @@
 namespace NNet
 {
 /////////////////////////////////////////////////////////////////////////////////////
-template<int N_SIZE>
+template <int N_SIZE>
 class CRingBuffer
 {
 	unsigned int nReadPtr, nWritePtr;
-	char szBuffer[ N_SIZE ];
+	char szBuffer[N_SIZE];
+
 public:
-	CRingBuffer() { nReadPtr = 0; nWritePtr = 0; }
-	int GetSize() const { return (nWritePtr - nReadPtr + N_SIZE) % N_SIZE; }
+	CRingBuffer()
+	{
+		nReadPtr = 0;
+		nWritePtr = 0;
+	}
+	int GetSize() const { return ( nWritePtr - nReadPtr + N_SIZE ) % N_SIZE; }
 	int GetBufSize() const { return N_SIZE - 1 - GetSize(); }
 	int Peek( void *pBuf, int nBufSize )
 	{
@@ -22,7 +27,7 @@ public:
 		{
 			int nRight = N_SIZE - nReadPtr;
 			memcpy( pBuf, szBuffer + nReadPtr, nRight );
-			memcpy( ((char*)pBuf) + nRight, szBuffer, nRes - nRight );
+			memcpy( ( (char *)pBuf ) + nRight, szBuffer, nRes - nRight );
 		}
 		else
 		{
@@ -45,7 +50,7 @@ public:
 		{
 			int nRight = N_SIZE - nWritePtr;
 			memcpy( szBuffer + nWritePtr, pBuf, nRight );
-			memcpy( szBuffer, ((const char*)pBuf) + nRight, nRes - nRight );
+			memcpy( szBuffer, ( (const char *)pBuf ) + nRight, nRes - nRight );
 			nWritePtr = ( nWritePtr + nRes ) % N_SIZE;
 		}
 		else
@@ -60,7 +65,7 @@ public:
 // streamed connection, input/output buffers
 const int N_STREAM_BUFFER = 32768;
 //const int N_STREAM_BUFFER = 128000;
-const int N_MAX_PACKET_SIZE = 1024; // low level packet size
+const int N_MAX_PACKET_SIZE = 1024;      // low level packet size
 const int N_MAX_STREAM_BLOCK_SIZE = 255; // one-byte length in SChannelBlock
 class CStreamTracker
 {
@@ -79,10 +84,11 @@ public:
 	void Rollback( const std::vector<PACKET_ID> &pkts );
 	void Erase( const std::vector<PACKET_ID> &pkts );
 	void Commit( const std::vector<PACKET_ID> &pkts );
+
 private:
 	CRingBuffer<N_STREAM_BUFFER> channelOutBuf;
 	typedef unsigned int CHANNEL_DATA_OFFSET;
-#pragma pack(push,1)
+#pragma pack( push, 1 )
 	struct SChannelBlock
 	{
 		CHANNEL_DATA_OFFSET nOffset;
@@ -90,17 +96,17 @@ private:
 		char cData[256];
 		PACKET_ID nPkt;
 
-		int GetSendSize() const { return sizeof(nOffset) + sizeof(nLength) + nLength; }
-		static int GetHeaderSize() { return sizeof(CHANNEL_DATA_OFFSET) + sizeof(unsigned char); }
+		int GetSendSize() const { return sizeof( nOffset ) + sizeof( nLength ) + nLength; }
+		static int GetHeaderSize() { return sizeof( CHANNEL_DATA_OFFSET ) + sizeof( unsigned char ); }
 	};
-#pragma pack(pop)
+#pragma pack( pop )
 
 	// streaming data control structures
 	// текущее смещение отсылаемых и принимаемых данных
 	CHANNEL_DATA_OFFSET nChannelOutputOffset, nChannelInputOffset;
 	typedef std::list<SChannelBlock> SChannelBlockList;
 	SChannelBlockList channelOutFlyList, channelOutList, channelInList;
-	std::unordered_map< PACKET_ID, PACKET_ID > reassign;
+	std::unordered_map<PACKET_ID, PACKET_ID> reassign;
 
 	static bool IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET test );
 };

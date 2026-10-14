@@ -19,7 +19,7 @@ bool CObjectFilter::SEntry::Match( const std::string &szFullName, const std::str
 	//
 	for ( std::vector<std::string>::const_iterator it = matches.begin(); it != matches.end(); ++it )
 	{
-		if ( szFullName.compare(0, it->size(), *it) == 0 )
+		if ( szFullName.compare( 0, it->size(), *it ) == 0 )
 			return true;
 	}
 	return false;
@@ -36,13 +36,13 @@ bool CObjectFilter::Match( const std::string &_szFullName, const std::string &sz
 	//
 	for ( std::vector<SEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 	{
-		if ( it->eOpType == SEntry::OPERATION_UNION && it->Match(szFullName, szClassTypeName) != false )
+		if ( it->eOpType == SEntry::OPERATION_UNION && it->Match( szFullName, szClassTypeName ) != false )
 			bResult = true;
 		else if ( it->eOpType == SEntry::OPERATION_INTERSECTION &&
-			        (bResult == false || it->Match(szFullName, szClassTypeName) == false) )
+		          ( bResult == false || it->Match( szFullName, szClassTypeName ) == false ) )
 			return false;
 		else if ( it->eOpType == SEntry::OPERATION_DIFFERENCE &&
-			        (bResult == false || it->Match(szFullName, szClassTypeName) != false) )
+		          ( bResult == false || it->Match( szFullName, szClassTypeName ) != false ) )
 			return false;
 	}
 	return bResult;
@@ -62,7 +62,9 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 			eOpType = SEntry::OPERATION_DIFFERENCE;
 		else
 		{
-			NI_ASSERT( false, fmt::format("Unknown operation type \"{}\" (valid are: union, intersection, difference)", szOpType) );
+			NI_ASSERT(
+					false,
+					fmt::format( "Unknown operation type \"{}\" (valid are: union, intersection, difference)", szOpType ) );
 		}
 	}
 	else
@@ -70,15 +72,15 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 		std::string szOpType = "UNKNOWN";
 		switch ( eOpType )
 		{
-		case SEntry::OPERATION_UNION:
-			szOpType = "union";
-			break;
-		case SEntry::OPERATION_INTERSECTION:
-			szOpType = "intersection";
-			break;
-		case SEntry::OPERATION_DIFFERENCE:
-			szOpType = "difference";
-			break;
+			case SEntry::OPERATION_UNION:
+				szOpType = "union";
+				break;
+			case SEntry::OPERATION_INTERSECTION:
+				szOpType = "intersection";
+				break;
+			case SEntry::OPERATION_DIFFERENCE:
+				szOpType = "difference";
+				break;
 		}
 		saver.Add( "Operation", &szOpType );
 	}
@@ -88,7 +90,7 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 	if ( saver.IsReading() )
 	{
 		for ( std::vector<std::string>::iterator it = matches.begin(); it != matches.end(); ++it )
-			NormalizeFileName( &(*it) );
+			NormalizeFileName( &( *it ) );
 	}
 	return 0;
 }

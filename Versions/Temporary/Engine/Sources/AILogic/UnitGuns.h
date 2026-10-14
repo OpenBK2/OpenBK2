@@ -24,23 +24,50 @@ class CUnitGuns : public CAIObjectBase
 	float fMaxFireRange = {};
 	bool bCanShootToPlanes = {};
 
-	std::vector< CPtr<SCommonGunInfo> > commonGunsInfo;
-	std::vector< CObj<CBasicGun> > guns;
+	std::vector<CPtr<SCommonGunInfo>> commonGunsInfo;
+	std::vector<CObj<CBasicGun>> guns;
 	std::vector<int> gunsBegins;
 	int nCommonGuns = {};
 	// с priority 0
 	int nMainGun = {};
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&fMaxFireRange); f.Add(3,&bCanShootToPlanes); f.Add(4,&commonGunsInfo); f.Add(5,&guns); f.Add(6,&gunsBegins); f.Add(7,&nCommonGuns); f.Add(8,&nMainGun); return 0; }
+
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &fMaxFireRange );
+		f.Add( 3, &bCanShootToPlanes );
+		f.Add( 4, &commonGunsInfo );
+		f.Add( 5, &guns );
+		f.Add( 6, &gunsBegins );
+		f.Add( 7, &nCommonGuns );
+		f.Add( 8, &nMainGun );
+		return 0;
+	}
 
 	//
-	void FindTimeToTurn( class CAIUnit *pOwner, const uint16_t wWillPower, class CTurret *pTurret, class CAIUnit *pEnemy, const SVector &finishTile, const bool bIsEnemyInFireRange, NTimer::STime *pTimeToTurn ) const;
+	void FindTimeToTurn( class CAIUnit *pOwner,
+	                     const uint16_t wWillPower,
+	                     class CTurret *pTurret,
+	                     class CAIUnit *pEnemy,
+	                     const SVector &finishTile,
+	                     const bool bIsEnemyInFireRange,
+	                     NTimer::STime *pTimeToTurn ) const;
 
-	bool FindTimeToStatObjGo( class CAIUnit *pUnit, class CStaticObject *pObj, const SWeaponRPGStats *pStats, CUnitGuns::SWeaponPathInfo &pInfo ) const;
+	bool FindTimeToStatObjGo( class CAIUnit *pUnit,
+	                          class CStaticObject *pObj,
+	                          const SWeaponRPGStats *pStats,
+	                          CUnitGuns::SWeaponPathInfo &pInfo ) const;
+
 public:
-	CUnitGuns() : fMaxFireRange( -1 ), bCanShootToPlanes( false ), nCommonGuns( 0 ), nMainGun( 0 ) { }
+	CUnitGuns() : fMaxFireRange( -1 ), bCanShootToPlanes( false ), nCommonGuns( 0 ), nMainGun( 0 ) {}
 	virtual void Init( class CCommonUnit *pCommonUnit ) = 0;
 
-	bool AddGun( const struct IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo );
+	bool AddGun( const struct IGunsFactory &gunsFactory,
+	             const int nPlatform,
+	             const int nGunInStats,
+	             const SWeaponRPGStats *pWeapon,
+	             int *nGuns,
+	             const int nAmmo );
 	void SetOwner( class CAIUnit *pUnit );
 
 	const uint8_t GetNTotalGuns() const { return guns.size(); }
@@ -48,11 +75,11 @@ public:
 
 	//
 	virtual int GetNGuns() const { return guns.size(); }
-	virtual class CBasicGun* GetGun( const int n ) const { return guns[n]; }
+	virtual class CBasicGun *GetGun( const int n ) const { return guns[n]; }
 	// если есть пушки, которыми можно пристреливаться, то выдаёт первую из них, иначе 0
-	virtual class CBasicGun* GetFirstArtilleryGun() const = 0;
+	virtual class CBasicGun *GetFirstArtilleryGun() const = 0;
 
-	class CBasicGun* ChooseGunForStatObj( class CAIUnit *pOwner, class CStaticObject *pObj, NTimer::STime *pTime );
+	class CBasicGun *ChooseGunForStatObj( class CAIUnit *pOwner, class CStaticObject *pObj, NTimer::STime *pTime );
 
 	const bool CanShootToPlanes() const { return bCanShootToPlanes; }
 	float GetMaxFireRange( const class CAIUnit *pOwner ) const;
@@ -60,7 +87,7 @@ public:
 	const int GetNCommonGuns() const { return nCommonGuns; }
 	// Returns the dense common-gun index used by ammo and resupply bookkeeping.
 	int GetCommonGunIndex( const CBasicGun *pGun ) const;
-	const SBaseGunRPGStats& GetCommonGunStats( const int nCommonGun ) const;
+	const SBaseGunRPGStats &GetCommonGunStats( const int nCommonGun ) const;
 	int GetNAmmo( const int nCommonGun ) const;
 	// nAmmo со знаком
 	void ChangeAmmo( const int nCommonGun, const int nAmmo );
@@ -71,7 +98,7 @@ public:
 	bool DoesExistRejectReason( const EUnitAckType &ackType ) const;
 
 	// gun с priority 0
-	class CBasicGun* GetMainGun() const;
+	class CBasicGun *GetMainGun() const;
 
 	virtual const int GetActiveShellType() const = 0;
 	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType ) = 0;
@@ -81,28 +108,42 @@ class CMechUnitGuns : public CUnitGuns
 {
 	OBJECT_BASIC_METHODS( CMechUnitGuns );
 
-	ZDATA_(CUnitGuns)
+	ZDATA_( CUnitGuns )
 	int nFirstArtGun = {};
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CUnitGuns*)this); f.Add(2,&nFirstArtGun); return 0; }
+
 public:
-	CMechUnitGuns() : nFirstArtGun( -1 ) { }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CUnitGuns *)this );
+		f.Add( 2, &nFirstArtGun );
+		return 0;
+	}
+
+public:
+	CMechUnitGuns() : nFirstArtGun( -1 ) {}
 	virtual void Init( class CCommonUnit *pCommonUnit );
 
 	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType );
 	virtual const int GetActiveShellType() const;
 
-	virtual class CBasicGun* GetFirstArtilleryGun() const;
+	virtual class CBasicGun *GetFirstArtilleryGun() const;
 };
 
 class CInfantryGuns : public CUnitGuns
 {
 	OBJECT_BASIC_METHODS( CInfantryGuns );
-	ZDATA_(CUnitGuns)
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CUnitGuns*)this); return 0; }
+	ZDATA_( CUnitGuns )
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CUnitGuns *)this );
+		return 0;
+	}
+
 public:
 	virtual void Init( class CCommonUnit *pCommonUnit );
 
-	virtual class CBasicGun* GetFirstArtilleryGun() const { return 0; }
+	virtual class CBasicGun *GetFirstArtilleryGun() const { return 0; }
 
 	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType ) { return false; }
 	virtual const int GetActiveShellType() const { return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH; }

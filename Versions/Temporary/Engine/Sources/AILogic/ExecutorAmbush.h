@@ -9,12 +9,12 @@ class CExecutorAmbush : public CExecutorUnitCombatBonus
 	OBJECT_BASIC_METHODS( CExecutorAmbush );
 
 protected:
-
-	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags );
+	CExecutorUnitCombatBonus::EAbilityCombatReaction OnModeChange( const uint16_t oldModeFlags,
+	                                                               const uint16_t newModeFlags );
 
 public:
 	CExecutorAmbush( CAIUnit *_pUnit );
-	CExecutorAmbush() { }
+	CExecutorAmbush() {}
 
 	int operator&( IBinSaver &saver );
 };

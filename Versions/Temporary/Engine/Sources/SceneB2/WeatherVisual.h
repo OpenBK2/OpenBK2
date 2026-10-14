@@ -8,22 +8,22 @@
 
 namespace NDb
 {
-	enum EWeatherState
-	{
-		EWS_CLEAR,
-		EWS_BAD,
-		EWS_FADE_IN,	// start
-		EWS_FADE_OUT,	// finish
-		EWS_UNKNOWN
-	};
-	struct SWeatherDesc;
+enum EWeatherState
+{
+	EWS_CLEAR,
+	EWS_BAD,
+	EWS_FADE_IN,  // start
+	EWS_FADE_OUT, // finish
+	EWS_UNKNOWN
+};
+struct SWeatherDesc;
 }
 
 namespace NGScene
 {
-	class CCVec3;
-	class CAnimLightInfo;
-	class CAnimLight;
+class CCVec3;
+class CAnimLightInfo;
+class CAnimLight;
 };
 
 struct IFullScreenFader;
@@ -41,8 +41,8 @@ class CWeatherVisual : public CFuncBase<bool>
 		int nNumPart = {};
 
 	public:
-		CWeatherPart() : nNumPart(-1) {}
-		CWeatherPart( CWeatherVisual *_pWeather, int _nNumPart ) : pWeather(_pWeather), nNumPart(_nNumPart) {}
+		CWeatherPart() : nNumPart( -1 ) {}
+		CWeatherPart( CWeatherVisual *_pWeather, int _nNumPart ) : pWeather( _pWeather ), nNumPart( _nNumPart ) {}
 
 		bool NeedUpdate() { return pWeather.Refresh(); }
 		void Recalc();
@@ -50,8 +50,8 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	NTimer::STime timeStart = {};
 	NTimer::STime timeLength = {};
-	CDGPtr< CFuncBase<STime> > pTimer;
-	CDGPtr<CFuncBase<STime>, CPtr<CFuncBase<STime> > > pAbsTimer;
+	CDGPtr<CFuncBase<STime>> pTimer;
+	CDGPtr<CFuncBase<STime>, CPtr<CFuncBase<STime>>> pAbsTimer;
 	CDBPtr<NDb::SWeatherDesc> pDesc;
 	bool bActive = {};
 	//bool bExistLightning;
@@ -70,8 +70,8 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	float fFadeCoeff = {};
 
-	std::vector< CDGPtr<CPtrFuncBase<NGScene::CAnimLightInfo> > > lightningLoaders;
-	CDGPtr<CPtrFuncBase<NGScene::CAnimLight> > pLightningAnimator;
+	std::vector<CDGPtr<CPtrFuncBase<NGScene::CAnimLightInfo>>> lightningLoaders;
+	CDGPtr<CPtrFuncBase<NGScene::CAnimLight>> pLightningAnimator;
 	CObj<NGScene::CCVec3> pLightningColor;
 	CPtr<IFullScreenFader> pScreenFader;
 
@@ -86,7 +86,11 @@ class CWeatherVisual : public CFuncBase<bool>
 	void UpdateAmbientSound();
 
 	void Recalc();
-	bool NeedUpdate() { UpdateAmbientSound(); return (pTimer != 0 ? pTimer.Refresh() : false) || WasCameraMoved(); }
+	bool NeedUpdate()
+	{
+		UpdateAmbientSound();
+		return ( pTimer != 0 ? pTimer.Refresh() : false ) || WasCameraMoved();
+	}
 
 	void InitParts();
 	void UpdateAreas();
@@ -95,16 +99,17 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	bool WasCameraMoved() const
 	{
-		return ( (fabs(vCameraAnchor - Camera()->GetAnchor()) > FP_EPSILON) ||
-						 (fabs(vCameraEye - Camera()->GetPos()) > FP_EPSILON) );
+		return ( ( fabs( vCameraAnchor - Camera()->GetAnchor() ) > FP_EPSILON ) ||
+		         ( fabs( vCameraEye - Camera()->GetPos() ) > FP_EPSILON ) );
 	}
 	void UpdateViewNormal()
 	{
 		vCameraAnchor = Camera()->GetAnchor();
 		vCameraEye = Camera()->GetPos();
 		//
-		vViewNormal = CVec3( -(vCameraEye.y - vCameraAnchor.y), vCameraEye.x - vCameraAnchor.x, 0 );
-		vViewNormal3 = CVec3( (vCameraAnchor.z - vCameraEye.z), -(vCameraAnchor.z - vCameraEye.z), fabs(vViewNormal) );
+		vViewNormal = CVec3( -( vCameraEye.y - vCameraAnchor.y ), vCameraEye.x - vCameraAnchor.x, 0 );
+		vViewNormal3 =
+				CVec3( ( vCameraAnchor.z - vCameraEye.z ), -( vCameraAnchor.z - vCameraEye.z ), fabs( vViewNormal ) );
 		::Normalize( &vViewNormal );
 		vViewNormal3.x *= vViewNormal.y;
 		vViewNormal3.y *= vViewNormal.x;
@@ -115,8 +120,11 @@ class CWeatherVisual : public CFuncBase<bool>
 
 public:
 	CWeatherVisual() {}
-	CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBase<STime> *_pTimer, IFullScreenFader *pScreenFader,
-		CDBPtr<NDb::SAmbientLight> pNormalWeatherLight, CDBPtr<NDb::SAmbientLight> pBadWeatherLight );
+	CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc,
+	                CFuncBase<STime> *_pTimer,
+	                IFullScreenFader *pScreenFader,
+	                CDBPtr<NDb::SAmbientLight> pNormalWeatherLight,
+	                CDBPtr<NDb::SAmbientLight> pBadWeatherLight );
 
 	NGScene::IGameView::SMeshInfo MakeMeshInfo();
 

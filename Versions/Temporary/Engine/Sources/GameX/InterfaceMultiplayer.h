@@ -3,13 +3,17 @@
 
 #include "InterfaceMPBase.h"
 
-class CInterfaceMultiplayer : public CInterfaceScreenBase,
-	public IProgrammedReactionsAndChecks
+class CInterfaceMultiplayer : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMultiplayer );
 
-	ZDATA_(CInterfaceScreenBase)
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); return 0; }
+	ZDATA_( CInterfaceScreenBase )
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		return 0;
+	}
+
 private:
 	void RegisterObservers();
 
@@ -22,6 +26,7 @@ private:
 	//}
 protected:
 	~CInterfaceMultiplayer();
+
 public:
 	CInterfaceMultiplayer();
 
@@ -44,6 +49,7 @@ class CICMultiplayer : public CInterfaceCommandBase<CInterfaceMultiplayer>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

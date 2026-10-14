@@ -1,13 +1,12 @@
 #pragma once
 #include "3Dmotor_export.h"
 
-
 #include "System/time.hpp"
 #include "GParticleFormat.h"
 namespace NDb
 {
-	struct SLightInstance;
-	struct SAnimLight;
+struct SLightInstance;
+struct SAnimLight;
 }
 
 namespace NGScene
@@ -18,8 +17,12 @@ class TKeyVector
 {
 public:
 	ZDATA
-	std::vector< TKey<TValue> > keys;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&keys); return 0; }
+	std::vector<TKey<TValue>> keys;
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &keys );
+		return 0;
+	}
 	void GetValue( float fT, TValue *pRes ) const
 	{
 		int nKeys = keys.size();
@@ -29,9 +32,9 @@ public:
 			return;
 		}
 		int s = 0, e = nKeys - 1;
-		while( e - s > 1 )
+		while ( e - s > 1 )
 		{
-			int n = (s + e) / 2;
+			int n = ( s + e ) / 2;
 			if ( keys[n].nT <= fT )
 				s = n;
 			else
@@ -39,7 +42,7 @@ public:
 		}
 		const TKey<TValue> &start = keys[s];
 		const TKey<TValue> &end = keys[e];
-		float fAlpha = (fT - start.nT) / (end.nT - start.nT);
+		float fAlpha = ( fT - start.nT ) / ( end.nT - start.nT );
 		Interpolate( start.GetValue(), end.GetValue(), 1 - fAlpha, fAlpha, pRes );
 	}
 };
@@ -55,9 +58,10 @@ public:
 	bool bEnd;
 };*/
 
-class CAnimLightInfo: public CObjectBase
+class CAnimLightInfo : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CAnimLightInfo);
+	OBJECT_BASIC_METHODS( CAnimLightInfo );
+
 public:
 	float fFrameRate;
 	float fTStart;
@@ -67,33 +71,48 @@ public:
 	TKeyVector<float> radius;
 };
 
-class _3DMOTOR_EXPORT CLightLoader: public CLazyResourceLoader<CDBPtr<NDb::SAnimLight>, CAnimLightInfo>
+class _3DMOTOR_EXPORT CLightLoader : public CLazyResourceLoader<CDBPtr<NDb::SAnimLight>, CAnimLightInfo>
 {
-	OBJECT_BASIC_METHODS(CLightLoader);
-	virtual CFileRequest* CreateRequest();
+	OBJECT_BASIC_METHODS( CLightLoader );
+	virtual CFileRequest *CreateRequest();
 	virtual void RecalcValue( CFileRequest *p );
 };
 
 class CAnimLight;
-class _3DMOTOR_EXPORT CLightAnimator: public CPtrFuncBase<CAnimLight>
+class _3DMOTOR_EXPORT CLightAnimator : public CPtrFuncBase<CAnimLight>
 {
-	OBJECT_BASIC_METHODS(CLightAnimator);
+	OBJECT_BASIC_METHODS( CLightAnimator );
+
 protected:
 	virtual bool NeedUpdate() { return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh(); }
 	virtual void Recalc();
+
 private:
 	ZDATA
 	float fScale;
 	STime stBeginTime;
 	CDBPtr<NDb::SLightInstance> pInstance;
+
 public:
-	CDGPtr< CFuncBase<STime> > pTime;
-	CDGPtr< CFuncBase<SFBTransform> > pPlacement;
-	CDGPtr< CPtrFuncBase<CAnimLightInfo> > pInfo;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&fScale); f.Add(3,&stBeginTime); f.Add(4,&pInstance); f.Add(5,&pTime); f.Add(6,&pPlacement); f.Add(7,&pInfo); return 0; }
+	CDGPtr<CFuncBase<STime>> pTime;
+	CDGPtr<CFuncBase<SFBTransform>> pPlacement;
+	CDGPtr<CPtrFuncBase<CAnimLightInfo>> pInfo;
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &fScale );
+		f.Add( 3, &stBeginTime );
+		f.Add( 4, &pInstance );
+		f.Add( 5, &pTime );
+		f.Add( 6, &pPlacement );
+		f.Add( 7, &pInfo );
+		return 0;
+	}
 
 	CLightAnimator() {}
-	CLightAnimator( const NDb::SLightInstance *_pInstance, STime t, float _fScale ): pInstance(_pInstance), stBeginTime(t), fScale(_fScale) {}
+	CLightAnimator( const NDb::SLightInstance *_pInstance, STime t, float _fScale )
+			: pInstance( _pInstance ), stBeginTime( t ), fScale( _fScale )
+	{
+	}
 };
 
 }

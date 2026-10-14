@@ -10,59 +10,61 @@
 
 namespace NCheckSums
 {
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	struct SCheckSumBufferStorage
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+struct SCheckSumBufferStorage
+{
+	std::vector<uint8_t> buf;
+	int nCnt = 0;
+	//
+	SCheckSumBufferStorage() : buf( 10 ), nCnt( 0 ) {}
+	SCheckSumBufferStorage( const int nBufSize ) : buf( nBufSize ), nCnt( 0 ) {}
+	//
+	void Clear()
 	{
-		std::vector<uint8_t> buf;
-		int nCnt = 0;
-		//
-		SCheckSumBufferStorage() : buf( 10 ), nCnt( 0 ) {  }
-		SCheckSumBufferStorage( const int nBufSize ) : buf( nBufSize ), nCnt( 0 ) {  }
-		//
-		void Clear() { buf.clear(); nCnt = 0; }
-		// copy to CRC buffer data by type
-		template <class T>
-			void CopyToBuf( const T &data )
-		{
-			const int nRequiredSize = nCnt + sizeof( data );
-			if ( nRequiredSize >= buf.size() )
-				buf.resize( nRequiredSize * 1.5 );
-			memcpy( &(buf[0]) + nCnt, &data, sizeof( data ) );
-			nCnt += sizeof( data );
-		}
-		// copy to CRC buffer data by size
-		void CopyToBufRaw( const void *pData, const int nDataSize )
-		{
-			const int nRequiredSize = nCnt + nDataSize;
-			if ( nRequiredSize >= buf.size() )
-				buf.resize( nRequiredSize * 1.5 );
-			memcpy( &(buf[0]) + nCnt, pData, nDataSize );
-			nCnt += nDataSize;
-		}
-		// calculate CRC of the buffer
-		const uLong GetCRC() const
-		{
-			return nCnt > 0 ? crc32( 0, &(buf[0]), nCnt ) : 0;
-		}
-		//
-		int GetSize() const { return nCnt; }
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		buf.clear();
+		nCnt = 0;
+	}
+	// copy to CRC buffer data by type
 	template <class T>
-		inline void CopyToBuf( SCheckSumBufferStorage *pStorage, const T &data )
+	void CopyToBuf( const T &data )
 	{
-		pStorage->CopyToBuf( data );
+		const int nRequiredSize = nCnt + sizeof( data );
+		if ( nRequiredSize >= buf.size() )
+			buf.resize( nRequiredSize * 1.5 );
+		memcpy( &( buf[0] ) + nCnt, &data, sizeof( data ) );
+		nCnt += sizeof( data );
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline void CopyToBufRaw( SCheckSumBufferStorage *pStorage, const void *pData, const int nDataSize )
+	// copy to CRC buffer data by size
+	void CopyToBufRaw( const void *pData, const int nDataSize )
 	{
-		pStorage->CopyToBufRaw( pData, nDataSize );
+		const int nRequiredSize = nCnt + nDataSize;
+		if ( nRequiredSize >= buf.size() )
+			buf.resize( nRequiredSize * 1.5 );
+		memcpy( &( buf[0] ) + nCnt, pData, nDataSize );
+		nCnt += nDataSize;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline const uLong GetCRC( SCheckSumBufferStorage *pStorage )
-	{
-		return pStorage->GetCRC();
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// calculate CRC of the buffer
+	const uLong GetCRC() const { return nCnt > 0 ? crc32( 0, &( buf[0] ), nCnt ) : 0; }
+	//
+	int GetSize() const { return nCnt; }
 };
-COMMON_RTS_AI_EXPORT IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog * pLog, const uint32_t segmentTime );
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+inline void CopyToBuf( SCheckSumBufferStorage *pStorage, const T &data )
+{
+	pStorage->CopyToBuf( data );
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline void CopyToBufRaw( SCheckSumBufferStorage *pStorage, const void *pData, const int nDataSize )
+{
+	pStorage->CopyToBufRaw( pData, nDataSize );
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+inline const uLong GetCRC( SCheckSumBufferStorage *pStorage )
+{
+	return pStorage->GetCRC();
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+};
+COMMON_RTS_AI_EXPORT IBinSaver *
+CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog *pLog, const uint32_t segmentTime );

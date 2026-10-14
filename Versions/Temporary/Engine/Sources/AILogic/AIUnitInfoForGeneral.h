@@ -20,11 +20,24 @@ class CAIUnitInfoForGeneral : public CAIObjectBase
 
 	float fWeight = {};
 	CVec2 vLastRegisteredGeneralPos;
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&lastVisibleTime); f.Add(4,&vLastVisiblePosition); f.Add(5,&lastVisibleAntiArtTime); f.Add(6,&vLastVisibleAntiArtCenter); f.Add(7,&fDistToLastVisibleAntiArt); f.Add(8,&nextTimeToReportGeneral); f.Add(9,&fWeight); f.Add(10,&vLastRegisteredGeneralPos); return 0; }
 
 public:
-	CAIUnitInfoForGeneral() : pOwner( 0 ), fWeight( 0 ), vLastRegisteredGeneralPos( VNULL2 ) { }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pOwner );
+		f.Add( 3, &lastVisibleTime );
+		f.Add( 4, &vLastVisiblePosition );
+		f.Add( 5, &lastVisibleAntiArtTime );
+		f.Add( 6, &vLastVisibleAntiArtCenter );
+		f.Add( 7, &fDistToLastVisibleAntiArt );
+		f.Add( 8, &nextTimeToReportGeneral );
+		f.Add( 9, &fWeight );
+		f.Add( 10, &vLastRegisteredGeneralPos );
+		return 0;
+	}
+
+public:
+	CAIUnitInfoForGeneral() : pOwner( 0 ), fWeight( 0 ), vLastRegisteredGeneralPos( VNULL2 ) {}
 	CAIUnitInfoForGeneral( class CAIUnit *pOwner );
 
 	void Segment();
@@ -34,15 +47,19 @@ public:
 
 	void Die();
 
-	class CAIUnit* GetOwner() const { return pOwner; }
+	class CAIUnit *GetOwner() const { return pOwner; }
 
-	void SetWeight( const float _fWeight ) { fWeight = int(_fWeight * 100) / 100.0f; }
+	void SetWeight( const float _fWeight ) { fWeight = int( _fWeight * 100 ) / 100.0f; }
 	const float GetWeight() const { return fWeight; }
 	void SetRegisteredPos( const CVec2 &vPos ) { vLastRegisteredGeneralPos = vPos; }
-	const CVec2& GetRegisteredPos() const { return vLastRegisteredGeneralPos; }
+	const CVec2 &GetRegisteredPos() const { return vLastRegisteredGeneralPos; }
 
 	const NTimer::STime GetLastTimeOfVisibility() const { return (std::max)( lastVisibleAntiArtTime, lastVisibleTime ); }
-	void SetLastVisibleTime( const NTimer::STime time ) { lastVisibleTime = time; lastVisibleAntiArtTime = time; }
+	void SetLastVisibleTime( const NTimer::STime time )
+	{
+		lastVisibleTime = time;
+		lastVisibleAntiArtTime = time;
+	}
 
 	bool IsLastVisibleAntiArt() const { return lastVisibleAntiArtTime > lastVisibleTime; }
 };

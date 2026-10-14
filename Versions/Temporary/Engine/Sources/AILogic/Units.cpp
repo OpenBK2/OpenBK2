@@ -26,7 +26,7 @@ extern NTimer::STime curTime;
 
 const SVector GetLeveledCell( const SVector &bigCell, const int nCellLevel )
 {
-	return SVector( bigCell.x / (1 << (nCellLevel+1)), bigCell.y / (1 << (nCellLevel+1) ) );
+	return SVector( bigCell.x / ( 1 << ( nCellLevel + 1 ) ), bigCell.y / ( 1 << ( nCellLevel + 1 ) ) );
 }
 
 const bool CUnits::IsUnitInCell( const int nUnitID ) const
@@ -36,7 +36,7 @@ const bool CUnits::IsUnitInCell( const int nUnitID ) const
 
 void CUnits::Init()
 {
-  nUnitsOfType.resize( 3 );
+	nUnitsOfType.resize( 3 );
 
 	units.IncreaseListsNum( 3 + 1 );
 	posUnitInCell.resize( SConsts::AI_START_VECTOR_SIZE );
@@ -60,11 +60,8 @@ void CUnits::Init()
 			{
 				for ( int nType = 0; nType < 2; ++nType )
 				{
-					numUnits[nVis][nCellLevel][nDipl][nType].SetSizes
-					(
-						nBigCellsSizeX / ( 1 << (nCellLevel+1) ) + 1,
-						nBigCellsSizeY / ( 1 << (nCellLevel+1) ) + 1
-					);
+					numUnits[nVis][nCellLevel][nDipl][nType].SetSizes( nBigCellsSizeX / ( 1 << ( nCellLevel + 1 ) ) + 1,
+					                                                   nBigCellsSizeY / ( 1 << ( nCellLevel + 1 ) ) + 1 );
 
 					numUnits[nVis][nCellLevel][nDipl][nType].FillZero();
 				}
@@ -118,7 +115,8 @@ void CUnits::DelUnitFromLeveledCells( CAIUnit *pUnit, const SVector &bigCell, co
 		const SVector leveledCell( GetLeveledCell( bigCell, i ) );
 		--numUnits[nVis][i][nUnitParty][!bUnitMech][leveledCell.y][leveledCell.x];
 
-		NI_ASSERT( numUnits[nVis][i][nUnitParty][!bUnitMech][leveledCell.y][leveledCell.x] >= 0, "Wrong number of units in leveled cell" );
+		NI_ASSERT( numUnits[nVis][i][nUnitParty][!bUnitMech][leveledCell.y][leveledCell.x] >= 0,
+		           "Wrong number of units in leveled cell" );
 	}
 }
 
@@ -155,7 +153,8 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 		nCell[cell.y][cell.x] = cellsIds.Get();
 
 	// добавить юнит в список стоящих на этой ячейке
-	const int newId = nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + uint8_t( pUnit->GetStats()->IsInfantry() ) ) + 1;
+	const int newId =
+			nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + uint8_t( pUnit->GetStats()->IsInfantry() ) ) + 1;
 
 	if ( newId >= unitsInCells[0].GetListsNum() || newId >= unitsInCells[1].GetListsNum() )
 	{
@@ -163,7 +162,7 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 		unitsInCells[1].IncreaseListsNum( newId * 1.5 );
 	}
 
-//	NI_ASSERT( !IsUnitInCell( nUnitID ), "Unit is in cell, trying to add to another cell" );
+	//	NI_ASSERT( !IsUnitInCell( nUnitID ), "Unit is in cell, trying to add to another cell" );
 
 	posUnitInCell[nUnitID].nCellID = newId;
 	posUnitInCell[nUnitID].nUnitPos = unitsInCells[nVisIndex].Add( newId, nUnitID );
@@ -172,7 +171,7 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 	if ( bWithLeveledCelles )
 		AddUnitToLeveledCells( pUnit, cell, nVisIndex );
 
-//	NI_ASSERT( unitsInCellsSet.find( nUnitID ) == unitsInCellsSet.end(), "Unit is in cell" );
+	//	NI_ASSERT( unitsInCellsSet.find( nUnitID ) == unitsInCellsSet.end(), "Unit is in cell" );
 	unitsInCellsSet.insert( nUnitID );
 }
 
@@ -237,7 +236,7 @@ void CUnits::AddUnitToUnits( CAIUnit *pUnit, const int nPlayer, const int nUnitT
 void CUnits::AddUnitToMap( CAIUnit *pUnit )
 {
 	if ( pUnit->GetStats()->IsAviation() )
-		planes.push_back( checked_cast<CAviation*>(pUnit) );
+		planes.push_back( checked_cast<CAviation *>( pUnit ) );
 
 	const int nUnitUniqueID = pUnit->GetUniqueId();
 
@@ -286,7 +285,7 @@ void CUnits::DeleteUnitFromMap( CAIUnit *pUnit )
 	if ( units.GetEl( nUnitID ) != 0 )
 	{
 		DelUnitFromCell( pUnit, true );
-//		units.GetEl( nUnitID ) = 0;
+		//		units.GetEl( nUnitID ) = 0;
 	}
 
 	const int nType = pUnit->GetStats()->etype;
@@ -322,7 +321,7 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 	const bool bInOldCell = IsUnitInCell( nUnitID );
 
 	NI_ASSERT( !bInOldCell || IsBigCellInside( oldBigCell ),
-								fmt::format( "Wrong old big cell ({},{})", oldBigCell.x, oldBigCell.y ) );
+	           fmt::format( "Wrong old big cell ({},{})", oldBigCell.x, oldBigCell.y ) );
 	if ( oldBigCell != newBigCell || !bInOldCell )
 	{
 		//DEBUG{
@@ -356,7 +355,8 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 				if ( bInOldCell )
 				{
 					--numUnits[nVisIndex][i][nUnitParty][!bUnitMech][oldLeveledCell.y][oldLeveledCell.x];
-					NI_ASSERT( numUnits[nVisIndex][i][nUnitParty][!bUnitMech][oldLeveledCell.y][oldLeveledCell.x] >= 0, "Wrong number of units in leveled cell" );
+					NI_ASSERT( numUnits[nVisIndex][i][nUnitParty][!bUnitMech][oldLeveledCell.y][oldLeveledCell.x] >= 0,
+					           "Wrong number of units in leveled cell" );
 				}
 
 				if ( bInNewCell )
@@ -370,17 +370,17 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 	theSupremeBeing.UnitChangedPosition( pUnit, newPos );
 }
 
-CAIUnit* CUnits::operator[]( const int id )
+CAIUnit *CUnits::operator[]( const int id )
 {
-	if ( id == 0 /*|| !units.GetEl( id )->IsRefValid() */)
-		return 0;			// Cheat to avoid assert for trains
-	CAIUnit * pUnit = units.GetEl( id );
+	if ( id == 0 /*|| !units.GetEl( id )->IsRefValid() */ )
+		return 0; // Cheat to avoid assert for trains
+	CAIUnit *pUnit = units.GetEl( id );
 
-//	NI_ASSERT( pUnit != 0, fmt::format("zero ID (id = {})", id) );
+	//	NI_ASSERT( pUnit != 0, fmt::format("zero ID (id = {})", id) );
 	if ( pUnit == 0 )
 		return 0;
 
-	NI_ASSERT( pUnit->IsRefValid(), fmt::format("Invalid Ref (id = {})", id) );
+	NI_ASSERT( pUnit->IsRefValid(), fmt::format( "Invalid Ref (id = {})", id ) );
 	if ( !pUnit->IsRefValid() )
 		return 0;
 
@@ -422,7 +422,7 @@ const int CUnits::GetNSoldiers( const CVec2 &vCenter, const float fRadius, const
 {
 	int cnt = 0;
 	const float fRadius2 = sqr( fRadius );
-	for ( CUnitsIter<0,0> iter( nParty, EDI_FRIEND, vCenter, fRadius ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0, 0> iter( nParty, EDI_FRIEND, vCenter, fRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
 		if ( IsValidObj( pUnit ) && pUnit->GetStats()->IsInfantry() )
@@ -440,7 +440,7 @@ const int CUnits::GetNUnits( const CVec2 &vCenter, const float fRadius, const in
 {
 	int cnt = 0;
 	const float fRadius2 = sqr( fRadius );
-	for ( CUnitsIter<0,0> iter( nParty, EDI_FRIEND, vCenter, fRadius ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0, 0> iter( nParty, EDI_FRIEND, vCenter, fRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
 		if ( !pUnit )
@@ -513,7 +513,7 @@ void CUnits::CheckUnitCell()
 	*/
 }
 
-void CUnits::WriteSpatialCellDebugInfo( FILE* f )
+void CUnits::WriteSpatialCellDebugInfo( FILE *f )
 {
 	if ( !f )
 		return;
@@ -543,7 +543,8 @@ void CUnits::WriteSpatialCellDebugInfo( FILE* f )
 					for ( int nInfantry = 0; nInfantry < 2; ++nInfantry )
 					{
 						const int nListID = nCell[y][x] * 2 * 3 + 2 * nParty + nInfantry + 1;
-						for ( int nIter = unitsInCells[nVis].begin( nListID ); nIter != unitsInCells[nVis].end(); nIter = unitsInCells[nVis].GetNext( nIter ) )
+						for ( int nIter = unitsInCells[nVis].begin( nListID ); nIter != unitsInCells[nVis].end();
+						      nIter = unitsInCells[nVis].GetNext( nIter ) )
 						{
 							++nRealCellEntries;
 							++nListEntries;
@@ -564,7 +565,7 @@ void CUnits::WriteSpatialCellDebugInfo( FILE* f )
 								bBadEntry = true;
 							else
 							{
-								pCellUnit = (*this)[nUnitID];
+								pCellUnit = ( *this )[nUnitID];
 								if ( !pCellUnit )
 									bBadEntry = true;
 								else
@@ -574,16 +575,33 @@ void CUnits::WriteSpatialCellDebugInfo( FILE* f )
 									actualCell = AICellsTiles::GetBigCell( pCellUnit->GetCenterPlain() );
 									bWrongActualCell = !( actualCell == cell );
 									bSolidUnitInCell = pCellUnit->IsInSolidPlace();
-									bWrongTrackedPos = posUnitInCell[nUnitID].nCellID != nListID || posUnitInCell[nUnitID].nUnitPos != nIter;
+									bWrongTrackedPos =
+											posUnitInCell[nUnitID].nCellID != nListID || posUnitInCell[nUnitID].nUnitPos != nIter;
 								}
 							}
 
 							if ( bBadEntry || bWrongTrackedPos || bWrongActualCell || bSolidUnitInCell )
 							{
 								++nBadListEntries;
-								fprintf( f, "\tCell(%d,%d) vis=%d party=%d infantry=%d list=%d iter=%d unitID=%d uid=%d player=%d actualCell=(%d,%d) bad=%d wrongTracked=%d wrongActualCell=%d solid=%d\n",
-									x, y, nVis, nParty, nInfantry, nListID, nIter, nUnitID, nUID, nPlayer,
-									actualCell.x, actualCell.y, bBadEntry, bWrongTrackedPos, bWrongActualCell, bSolidUnitInCell );
+								fprintf(
+										f,
+										"\tCell(%d,%d) vis=%d party=%d infantry=%d list=%d iter=%d unitID=%d uid=%d player=%d actualCell=(%d,%d) bad=%d wrongTracked=%d wrongActualCell=%d solid=%d\n",
+										x,
+										y,
+										nVis,
+										nParty,
+										nInfantry,
+										nListID,
+										nIter,
+										nUnitID,
+										nUID,
+										nPlayer,
+										actualCell.x,
+										actualCell.y,
+										bBadEntry,
+										bWrongTrackedPos,
+										bWrongActualCell,
+										bSolidUnitInCell );
 							}
 						}
 					}
@@ -593,17 +611,28 @@ void CUnits::WriteSpatialCellDebugInfo( FILE* f )
 			if ( nRealCellEntries != nUnitsCell[y][x] )
 			{
 				++nCountMismatches;
-				fprintf( f, "\tCell(%d,%d) count mismatch: nUnitsCell=%d realListEntries=%d cellID=%d\n",
-					x, y, (int)nUnitsCell[y][x], nRealCellEntries, (int)nCell[y][x] );
+				fprintf( f,
+				         "\tCell(%d,%d) count mismatch: nUnitsCell=%d realListEntries=%d cellID=%d\n",
+				         x,
+				         y,
+				         (int)nUnitsCell[y][x],
+				         nRealCellEntries,
+				         (int)nCell[y][x] );
 			}
 		}
 	}
 
-	fprintf( f, "\tSummary: occupiedCells=%d listEntries=%d badEntries=%d countMismatches=%d\n",
-		nOccupiedCells, nListEntries, nBadListEntries, nCountMismatches );
+	fprintf( f,
+	         "\tSummary: occupiedCells=%d listEntries=%d badEntries=%d countMismatches=%d\n",
+	         nOccupiedCells,
+	         nListEntries,
+	         nBadListEntries,
+	         nCountMismatches );
 	fprintf( f, "\n" );
 
-	fprintf( f, "Spatial cell membership [UID, UnitID, Player, Party, ActualCell, TrackedCell, CellID, UnitPos, VisIndex, InSet, ListHits]:\n" );
+	fprintf(
+			f,
+			"Spatial cell membership [UID, UnitID, Player, Party, ActualCell, TrackedCell, CellID, UnitPos, VisIndex, InSet, ListHits]:\n" );
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
@@ -630,10 +659,24 @@ void CUnits::WriteSpatialCellDebugInfo( FILE* f )
 
 		const int nInSet = unitsInCellsSet.find( nUnitID ) != unitsInCellsSet.end();
 		const int nListHits = unitListHits[nUnitID];
-		fprintf( f, "\tUID=%d UnitID=%d Player=%d Party=%d actual=(%d,%d) tracked=(%d,%d) cellID=%d unitPos=%d vis=%d inSet=%d listHits=%d inSolid=%d inCell=%d\n",
-			nUID, nUnitID, (int)pUnit->GetPlayer(), (int)pUnit->GetParty(),
-			actualCell.x, actualCell.y, trackedCell.x, trackedCell.y, nCellID, nUnitPos, nVisIndex,
-			nInSet, nListHits, pUnit->IsInSolidPlace(), bInCell );
+		fprintf(
+				f,
+				"\tUID=%d UnitID=%d Player=%d Party=%d actual=(%d,%d) tracked=(%d,%d) cellID=%d unitPos=%d vis=%d inSet=%d listHits=%d inSolid=%d inCell=%d\n",
+				nUID,
+				nUnitID,
+				(int)pUnit->GetPlayer(),
+				(int)pUnit->GetParty(),
+				actualCell.x,
+				actualCell.y,
+				trackedCell.x,
+				trackedCell.y,
+				nCellID,
+				nUnitPos,
+				nVisIndex,
+				nInSet,
+				nListHits,
+				pUnit->IsInSolidPlace(),
+				bInCell );
 	}
 	fprintf( f, "\n" );
 }

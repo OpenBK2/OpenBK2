@@ -2,8 +2,10 @@ name: Hygiene
 
 # The same hooks a commit runs locally, run again here, because a hook is only
 # installed in the clones where somebody installed it. Encoding, line endings,
-# the newline at the end of a file and trailing whitespace; the rules they
-# enforce are declared in .editorconfig for editors and .gitattributes for git.
+# the newline at the end of a file, trailing whitespace, and clang-format over
+# whole sources. The rules are declared in .editorconfig for editors,
+# .gitattributes for git and .clang-format for the formatter; see "file hygiene"
+# in Contributing.md.
 #
 # Cheap enough to run on everything it covers: no compiler, no game data, about
 # 3900 files. It gates nothing the build gates, so it runs beside the build jobs
@@ -21,21 +23,17 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      # fetch-depth 0 because the clang-format step diffs against the base of
-      # the change, and a shallow clone has no base to diff against.
-      #
       # Only the paths the hooks cover. The full tree is 11 GB and 238k files,
       # almost all of it game data that these rules deliberately say nothing
       # about; see build-windows.yml for the reasoning behind sparse checkouts
       # here. Cone mode always materialises the files at the repository root,
       # which is where the configuration and most of the Markdown live.
       #
-      # Submodules are left out: third_party is excluded in the hook config, so
-      # checking it out would only cost time.
+      # No history is fetched and no submodules: every hook judges a file by its
+      # own contents, so there is nothing to compare against.
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
           sparse-checkout: |
             .github
             cmake
@@ -68,40 +66,10 @@ jobs:
       #
       # --show-diff-on-failure prints the fix rather than only the verdict,
       # which is usually enough to apply by hand without installing anything.
-      # SKIP is the clang-format hook: its pre-commit entry diffs the index
-      # against HEAD, which says nothing here, where nothing is staged. The step
-      # below runs the same script against the base of the change instead.
       - name: Run the hygiene hooks
-        env:
-          SKIP: clang-format-changed
         run: >
           pre-commit run --show-diff-on-failure --color=always
           --files $(git ls-files --
           .github cmake scripts docs OBK2_Examples
           Versions/Temporary/Engine/Sources
           '*.md' CMakeLists.txt CMakePresets.json)
-
-      # The style is enforced on the lines a change writes, not on the tree: a
-      # whole-tree pass would rewrite about a third of every source file. So
-      # what is checked is the diff, which needs a base to compare against.
-      #
-      # For a pull request that is the merge base with the target branch. For a
-      # push it is the commit before it, and github.event.before is all zeroes
-      # when the push created the branch, in which case there is no base and
-      # nothing to check.
-      - name: Work out what to compare against
-        id: base
-        run: |
-          if [ -n "${{ github.event.pull_request.base.sha }}" ]; then
-            echo "ref=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ] \
-               && git cat-file -e "${{ github.event.before }}^{commit}" 2>/dev/null; then
-            echo "ref=${{ github.event.before }}" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Check the formatting of the changed lines
-        if: steps.base.outputs.ref != ''
-        run: |
-          pip install 'clang-format==22.1.8'
-          python scripts/hygiene/clang-format-changed.py \
-              --base '${{ steps.base.outputs.ref }}' --check

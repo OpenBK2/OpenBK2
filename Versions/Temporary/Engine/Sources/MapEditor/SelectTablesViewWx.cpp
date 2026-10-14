@@ -2,7 +2,6 @@
 
 #include "SelectTablesView.h"
 
-
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -23,122 +22,109 @@
 
 namespace
 {
-	// The file CResizeDialog keeps this dialog's placement in, which is its
-	// class name -- so the MFC dialog and this one open where the other was
-	// left, as they already share the format.
-	const char *const PSZ_STATE_NAME = "CSelectTablesDialog";
+// The file CResizeDialog keeps this dialog's placement in, which is its
+// class name -- so the MFC dialog and this one open where the other was
+// left, as they already share the format.
+const char *const PSZ_STATE_NAME = "CSelectTablesDialog";
 
+// The anchors from CSelectTablesDialog's constructor, translated:
+//
+//   IDC_CT_TABLES_LIST  ANCHORE_LEFT_TOP | RESIZE_HOR_VER  -> proportion 1, wxEXPAND
+//   IDOK, IDCANCEL      ANCHORE_RIGHT_BOTTOM                -> a bottom row, right aligned
+//
+// That is the whole of this dialog's layout, and it is the smallest real
+// instance of the CResizeDialog-anchor to wx-sizer mapping that the .rc
+// converter will have to do 49 times.
+// CWxToolDialog rather than wxDialog: IDD_CHOOSE_TABLES is EXSTYLE
+// WS_EX_TOOLWINDOW like almost every template in this editor, and the first
+// pass at this dialog dropped it. See WxToolDialog.h.
+class CSelectTablesWxDialog : public CWxToolDialog
+{
+	wxCheckListBox *pTablesList = nullptr;
+	// Size and position in CSelectTablesDialog's file. A dialog opening for
+	// the first time has none, and is centred over the frame instead.
+	NWxPlacement::CSizedPlacement placement{ PSZ_STATE_NAME };
 
-	// The anchors from CSelectTablesDialog's constructor, translated:
-	//
-	//   IDC_CT_TABLES_LIST  ANCHORE_LEFT_TOP | RESIZE_HOR_VER  -> proportion 1, wxEXPAND
-	//   IDOK, IDCANCEL      ANCHORE_RIGHT_BOTTOM                -> a bottom row, right aligned
-	//
-	// That is the whole of this dialog's layout, and it is the smallest real
-	// instance of the CResizeDialog-anchor to wx-sizer mapping that the .rc
-	// converter will have to do 49 times.
-	// CWxToolDialog rather than wxDialog: IDD_CHOOSE_TABLES is EXSTYLE
-	// WS_EX_TOOLWINDOW like almost every template in this editor, and the first
-	// pass at this dialog dropped it. See WxToolDialog.h.
-	class CSelectTablesWxDialog : public CWxToolDialog
-	{
-		wxCheckListBox *pTablesList = nullptr;
-		// Size and position in CSelectTablesDialog's file. A dialog opening for
-		// the first time has none, and is centred over the frame instead.
-		NWxPlacement::CSizedPlacement placement { PSZ_STATE_NAME };
-
-	public:
-		CSelectTablesWxDialog( wxWindow *pParent,
-													 const std::list<std::string> &rTables,
-													 const CTableSet &rSelected )
+public:
+	CSelectTablesWxDialog( wxWindow *pParent, const std::list<std::string> &rTables, const CTableSet &rSelected )
 			// "Game Database Tables" is the CAPTION in IDD_CHOOSE_TABLES. The
 			// first pass at this dialog invented "Select tables" from the class
 			// name, which is what NSelectTables::Run is called, not what the
 			// window has ever said.
-			: CWxToolDialog( pParent, wxID_ANY, "Game Database Tables",
-											 wxDefaultPosition, wxSize( 260, 300 ),
-											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
-		{
-			pTablesList = NWx::Child<wxCheckListBox>( this, wxID_ANY,
-				wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SORT );
+			: CWxToolDialog( pParent,
+	                     wxID_ANY,
+	                     "Game Database Tables",
+	                     wxDefaultPosition,
+	                     wxSize( 260, 300 ),
+	                     wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+	{
+		pTablesList = NWx::Child<wxCheckListBox>( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SORT );
 
-			// Database enumeration order is arbitrary. Let wx sort the names;
-			// Append returns the sorted insertion index, so each check stays
-			// attached to its object type as later names are inserted.
-			for ( std::list<std::string>::const_iterator itTable = rTables.begin();
-						itTable != rTables.end(); ++itTable )
+		// Database enumeration order is arbitrary. Let wx sort the names;
+		// Append returns the sorted insertion index, so each check stays
+		// attached to its object type as later names are inserted.
+		for ( std::list<std::string>::const_iterator itTable = rTables.begin(); itTable != rTables.end(); ++itTable )
+		{
+			const int nIndex = pTablesList->Append( wxString::FromUTF8( itTable->c_str() ) );
+			pTablesList->Check( nIndex, rSelected.find( *itTable ) != rSelected.end() );
+		}
+
+		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
+		pSizer->Add( pTablesList, wxSizerFlags( 1 ).Expand().Border( wxALL, 6 ) );
+		// CreateStdDialogButtonSizer gives the platform's own OK/Cancel order,
+		// which is one of the things a toolkit is for.
+		pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ), wxSizerFlags().Right().Border( wxALL, 6 ) );
+		SetSizer( pSizer );
+		SetMinSize( wxSize( 204, 106 ) ); // GetMinimumXDimension/YDimension
+
+		// Where it was left last time. CSelectTablesDialog is a CResizeDialog
+		// with a state file of its own, so it has always reopened where it was
+		// put; this dialog did not, until it was measured against that one.
+		placement.Restore( this );
+	}
+
+	// Whether it opened where it was left last time.
+	bool WasPlaced() const { return placement.WasPlaced(); }
+
+	// On the way out whichever button was used, as CResizeDialog's OnDestroy
+	// does.
+	void SaveState() { placement.Save( this ); }
+
+	void ReadSelection( CTableSet *pSelectedTables ) const
+	{
+		pSelectedTables->clear();
+		const unsigned nCount = pTablesList->GetCount();
+		for ( unsigned nIndex = 0; nIndex < nCount; ++nIndex )
+		{
+			if ( pTablesList->IsChecked( nIndex ) )
 			{
-				const int nIndex = pTablesList->Append( wxString::FromUTF8( itTable->c_str() ) );
-				pTablesList->Check( nIndex, rSelected.find( *itTable ) != rSelected.end() );
-			}
-
-			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
-			pSizer->Add( pTablesList, wxSizerFlags( 1 ).Expand().Border( wxALL, 6 ) );
-			// CreateStdDialogButtonSizer gives the platform's own OK/Cancel order,
-			// which is one of the things a toolkit is for.
-			pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
-									 wxSizerFlags().Right().Border( wxALL, 6 ) );
-			SetSizer( pSizer );
-			SetMinSize( wxSize( 204, 106 ) );		// GetMinimumXDimension/YDimension
-
-			// Where it was left last time. CSelectTablesDialog is a CResizeDialog
-			// with a state file of its own, so it has always reopened where it was
-			// put; this dialog did not, until it was measured against that one.
-			placement.Restore( this );
-		}
-
-		// Whether it opened where it was left last time.
-		bool WasPlaced() const
-		{
-			return placement.WasPlaced();
-		}
-
-
-		// On the way out whichever button was used, as CResizeDialog's OnDestroy
-		// does.
-		void SaveState()
-		{
-			placement.Save( this );
-		}
-
-
-		void ReadSelection( CTableSet *pSelectedTables ) const
-		{
-			pSelectedTables->clear();
-			const unsigned nCount = pTablesList->GetCount();
-			for ( unsigned nIndex = 0; nIndex < nCount; ++nIndex )
-			{
-				if ( pTablesList->IsChecked( nIndex ) )
-				{
-					InsertHashSetElement( pSelectedTables,
-																std::string( pTablesList->GetString( nIndex ).utf8_str() ) );
-				}
+				InsertHashSetElement( pSelectedTables, std::string( pTablesList->GetString( nIndex ).utf8_str() ) );
 			}
 		}
-	};
+	}
+};
 }
-
 
 namespace NSelectTables
 {
-	bool Run( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables )
+bool Run( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables )
+{
+	if ( pSelectedTables == 0 )
 	{
-		if ( pSelectedTables == 0 )
-		{
-			return false;
-		}
-		CSelectTablesWxDialog dialog( ToWxOwnerWindow( pParent ), rTables, *pSelectedTables );
-		if ( !dialog.WasPlaced() )
-		{
-			dialog.CentreOnParent();
-		}
-		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
-		dialog.SaveState();
-
-		if ( bAccepted )
-		{
-			dialog.ReadSelection( pSelectedTables );
-		}
-		return bAccepted;
+		return false;
 	}
+	CSelectTablesWxDialog dialog( ToWxOwnerWindow( pParent ), rTables, *pSelectedTables );
+	if ( !dialog.WasPlaced() )
+	{
+		dialog.CentreOnParent();
+	}
+	const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
+	dialog.SaveState();
+
+	if ( bAccepted )
+	{
+		dialog.ReadSelection( pSelectedTables );
+	}
+	return bAccepted;
+}
 }

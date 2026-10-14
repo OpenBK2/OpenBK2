@@ -14,8 +14,7 @@ class CExecutorFormationFirstAid : public CExecutorUnitBase
 
 	// if 1.0 then ability is ready to on
 	float OnAbilityOff();
-	void SwitchingOffEnd() { }
-
+	void SwitchingOffEnd() {}
 
 	void SwitchingOffStart();
 
@@ -26,9 +25,10 @@ class CExecutorFormationFirstAid : public CExecutorUnitBase
 	CCommonUnit *GetUnit();
 
 	const bool IsValidInternal() const;
+
 public:
 	CExecutorFormationFirstAid( CFormation *_pUnit );
-	CExecutorFormationFirstAid() {  }
+	CExecutorFormationFirstAid() {}
 
 	int Segment();
 	bool NotifyEvent( const CExecutorEvent &event );

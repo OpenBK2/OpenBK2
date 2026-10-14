@@ -7,13 +7,13 @@
 namespace NGScene
 {
 
-template<class T>
+template <class T>
 static void CalcDU( T *pRes, const CVec3 &vNormal )
 {
 	NGfx::CalcCompactVector( &pRes->normal, vNormal );
-	CVec3 vTexU = vNormal ^ CVec3(0.3f,0.3f,0.3f);
+	CVec3 vTexU = vNormal ^ CVec3( 0.3f, 0.3f, 0.3f );
 	if ( fabs2( vTexU ) < 0.01f )
-		vTexU = vNormal ^ CVec3(0,1,0);
+		vTexU = vNormal ^ CVec3( 0, 1, 0 );
 	Normalize( &vTexU );
 	CVec3 vTexV = vTexU ^ vNormal;
 	NGfx::CalcCompactVector( &pRes->texU, vTexU );
@@ -22,8 +22,10 @@ static void CalcDU( T *pRes, const CVec3 &vNormal )
 
 // CMemObjectInfo
 
-CMemObjectInfo::CMemObjectInfo( const std::vector<STriangle> &_tris, const std::vector<CVec3> &_points,
-	const std::vector<CVec3> &_normals ) : tris(_tris), points(_points), normals(_normals)
+CMemObjectInfo::CMemObjectInfo( const std::vector<STriangle> &_tris,
+                                const std::vector<CVec3> &_points,
+                                const std::vector<CVec3> &_normals )
+		: tris( _tris ), points( _points ), normals( _normals )
 {
 }
 

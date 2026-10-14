@@ -31,24 +31,29 @@
 // visible at the call site. See MapEditorLib/MainWindow.h for the same trap.
 namespace NMessage
 {
-	// MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2: the question the editor asks
-	// before throwing work away, with No as the default so that hitting return
-	// discards nothing.
-	MAPEDITORLIB_EXPORT bool AskYesNo( const std::string &rszText );
+// MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2: the question the editor asks
+// before throwing work away, with No as the default so that hitting return
+// discards nothing.
+MAPEDITORLIB_EXPORT bool AskYesNo( const std::string &rszText );
 
-	// The same with a third way out, and No still the default: MB_DEFBUTTON2 put
-	// it on No, and on the prompt this mostly serves -- save the changes before
-	// closing? -- that is what decides what the return key does.
-	enum EAnswer { ANSWER_YES, ANSWER_NO, ANSWER_CANCEL };
+// The same with a third way out, and No still the default: MB_DEFBUTTON2 put
+// it on No, and on the prompt this mostly serves -- save the changes before
+// closing? -- that is what decides what the return key does.
+enum EAnswer
+{
+	ANSWER_YES,
+	ANSWER_NO,
+	ANSWER_CANCEL
+};
 
-	MAPEDITORLIB_EXPORT EAnswer AskYesNoCancel( const std::string &rszText );
+MAPEDITORLIB_EXPORT EAnswer AskYesNoCancel( const std::string &rszText );
 
-	MAPEDITORLIB_EXPORT void Error( const std::string &rszText );
-	MAPEDITORLIB_EXPORT void Warning( const std::string &rszText );
-	MAPEDITORLIB_EXPORT void Information( const std::string &rszText );
+MAPEDITORLIB_EXPORT void Error( const std::string &rszText );
+MAPEDITORLIB_EXPORT void Warning( const std::string &rszText );
+MAPEDITORLIB_EXPORT void Information( const std::string &rszText );
 
-	// For the few that name the job rather than the application: an export, an
-	// import or a registration says which one it was.
-	MAPEDITORLIB_EXPORT void Error( const std::string &rszText, const std::string &rszTitle );
-	MAPEDITORLIB_EXPORT void Information( const std::string &rszText, const std::string &rszTitle );
+// For the few that name the job rather than the application: an export, an
+// import or a registration says which one it was.
+MAPEDITORLIB_EXPORT void Error( const std::string &rszText, const std::string &rszTitle );
+MAPEDITORLIB_EXPORT void Information( const std::string &rszText, const std::string &rszTitle );
 }

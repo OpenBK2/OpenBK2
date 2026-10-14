@@ -2,7 +2,6 @@
 
 #include "Main_export.h"
 
-
 // ************************************************************************************************************************ //
 // **
 // ** main loop, interface and interface command
@@ -28,7 +27,7 @@ struct IInterfaceBase : virtual public CObjectBase
 struct IInterfaceCommand : public CObjectBase
 {
 	virtual void Exec() = 0;
-	virtual void Configure( const char *pszConfig ) {  }
+	virtual void Configure( const char *pszConfig ) {}
 };
 
 namespace NMainLoop
@@ -37,7 +36,7 @@ MAIN_EXPORT bool StepApp( bool bActive ); // return false on exit state
 MAIN_EXPORT void ResetStack();
 MAIN_EXPORT void Command( IInterfaceCommand *pCommand );
 MAIN_EXPORT void Command( int nCommandID, const char *pszConfiguration );
-MAIN_EXPORT const std::string& GetBaseDir();
+MAIN_EXPORT const std::string &GetBaseDir();
 void InitMainLoop();
 MAIN_EXPORT void PushInterface( IInterfaceBase *pInterface );
 MAIN_EXPORT void PopInterface();
@@ -58,13 +57,16 @@ void AfterLoad();
 
 struct IFilesInspector : public CObjectBase
 {
-	enum { tidTypeID = 0x10075C03 };
+	enum
+	{
+		tidTypeID = 0x10075C03
+	};
 	// add new entry
 	virtual bool AddEntry( const std::string &szName, struct IFilesInspectorEntry *pEntry ) = 0;
 	// remove entry
 	virtual bool RemoveEntry( const std::string &szName ) = 0;
 	// get entry
-	virtual struct IFilesInspectorEntry* GetEntry( const std::string &szName ) = 0;
+	virtual struct IFilesInspectorEntry *GetEntry( const std::string &szName ) = 0;
 	// clear all entries
 	virtual void Clear() = 0;
 };

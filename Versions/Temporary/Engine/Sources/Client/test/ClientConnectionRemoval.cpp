@@ -41,10 +41,7 @@ struct CPlayGameProcessorTestAccess
 		client.processors.push_back( client.pPlayGameProcessor.GetPtr() );
 	}
 
-	static void AddRelay( CServerClient &client, int clientID )
-	{
-		AddRelay( *client.pPlayGameProcessor, clientID );
-	}
+	static void AddRelay( CServerClient &client, int clientID ) { AddRelay( *client.pPlayGameProcessor, clientID ); }
 };
 
 namespace
@@ -79,6 +76,7 @@ CPtr<CNetPacket> RoundTrip( CNetPacket *packet )
 class CRecordingDriver : public NNet::IDriver
 {
 	OBJECT_NOCOPY_METHODS( CRecordingDriver );
+
 public:
 	std::vector<CMemoryStream> sent;
 	std::list<CMemoryStream> received;
@@ -121,8 +119,8 @@ public:
 
 void ReceiveDrop( CPlayGameProcessor &processor, int sender, int slot, int segment )
 {
-	CPtr<CNetPacket> forwarded = new CThroughServerGamePacket( 0, sender,
-		new CB2DropPlayerAtSegmentPacket( 0, slot, segment ) );
+	CPtr<CNetPacket> forwarded =
+			new CThroughServerGamePacket( 0, sender, new CB2DropPlayerAtSegmentPacket( 0, slot, segment ) );
 	CPtr<CNetPacket> received = RoundTrip( forwarded );
 	ASSERT_TRUE( processor.ProcessPacket( received ) );
 }
@@ -130,7 +128,7 @@ void ReceiveDrop( CPlayGameProcessor &processor, int sender, int slot, int segme
 void ExpectDrop( CPlayGameProcessor &processor, int sender, int slot, int segment )
 {
 	CPtr<CNetPacket> packet = processor.GetPacket();
-	auto *drop = dynamic_cast<CB2DropPlayerAtSegmentPacket*>( packet.GetPtr() );
+	auto *drop = dynamic_cast<CB2DropPlayerAtSegmentPacket *>( packet.GetPtr() );
 	ASSERT_NE( drop, nullptr );
 	EXPECT_EQ( drop->nClientID, sender );
 	EXPECT_EQ( drop->nSlotToDrop, slot );
@@ -155,7 +153,7 @@ TEST( ClientConnectionRemoval, HostFinalDropSurvivesDeathInSameServerBatch )
 	EXPECT_FALSE( CPlayGameProcessorTestAccess::HasConnection( processor, hostID ) );
 	ExpectDrop( processor, hostID, 2, 7645 );
 	CPtr<CNetPacket> packet = processor.GetPacket();
-	ASSERT_NE( dynamic_cast<CGameClientRemoved*>( packet.GetPtr() ), nullptr );
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ), nullptr );
 	EXPECT_EQ( packet->nClientID, hostID );
 	EXPECT_EQ( processor.GetPacket(), nullptr );
 }
@@ -166,18 +164,18 @@ TEST( ClientConnectionRemoval, FullServerReceiveBatchKeepsFinalDropBeforeDeath )
 	CServerClient client;
 	CPlayGameProcessorTestAccess::InitServerClient( client, driver );
 	CPlayGameProcessorTestAccess::AddRelay( client, hostID );
-	driver->received.push_back( Serialize( new CThroughServerGamePacket( 0, hostID,
-		new CB2DropPlayerAtSegmentPacket( 0, 2, 7645 ) ) ) );
+	driver->received.push_back(
+			Serialize( new CThroughServerGamePacket( 0, hostID, new CB2DropPlayerAtSegmentPacket( 0, 2, 7645 ) ) ) );
 	driver->received.push_back( Serialize( new CGameClientDead( 0, hostID ) ) );
 	client.Segment();
 	CPtr<CNetPacket> packet = client.GetPacket();
-	auto *drop = dynamic_cast<CB2DropPlayerAtSegmentPacket*>( packet.GetPtr() );
+	auto *drop = dynamic_cast<CB2DropPlayerAtSegmentPacket *>( packet.GetPtr() );
 	ASSERT_NE( drop, nullptr );
 	EXPECT_EQ( drop->nClientID, hostID );
 	EXPECT_EQ( drop->nSlotToDrop, 2 );
 	EXPECT_EQ( drop->nSegment, 7645 );
 	packet = client.GetPacket();
-	ASSERT_NE( dynamic_cast<CGameClientRemoved*>( packet.GetPtr() ), nullptr );
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ), nullptr );
 	EXPECT_EQ( packet->nClientID, hostID );
 	EXPECT_EQ( client.GetPacket(), nullptr );
 }
@@ -194,7 +192,7 @@ TEST( ClientConnectionRemoval, AllQueuedPacketsKeepTheirOrderBeforeRemoval )
 	ExpectDrop( processor, hostID, 1, 7638 );
 	ExpectDrop( processor, hostID, 2, 7645 );
 	CPtr<CNetPacket> packet = processor.GetPacket();
-	EXPECT_NE( dynamic_cast<CGameClientRemoved*>( packet.GetPtr() ), nullptr );
+	EXPECT_NE( dynamic_cast<CGameClientRemoved *>( packet.GetPtr() ), nullptr );
 	EXPECT_EQ( processor.GetPacket(), nullptr );
 }
 
@@ -222,7 +220,7 @@ TEST( ClientConnectionRemoval, RemovingOneRelayPreservesOtherRelayQueue )
 	ReceiveDeath( processor, hostID );
 	ExpectDrop( processor, hostID, 2, 7645 );
 	CPtr<CNetPacket> removed = processor.GetPacket();
-	ASSERT_NE( dynamic_cast<CGameClientRemoved*>( removed.GetPtr() ), nullptr );
+	ASSERT_NE( dynamic_cast<CGameClientRemoved *>( removed.GetPtr() ), nullptr );
 	EXPECT_EQ( processor.GetPacket(), nullptr );
 	EXPECT_TRUE( CPlayGameProcessorTestAccess::HasConnection( processor, teammateID ) );
 	processor.Segment();
@@ -257,15 +255,15 @@ TEST( ClientConnectionRemoval, PersistentControlEnvelopeIsSentAndSurvivesLocalLe
 	EXPECT_EQ( client.GetPacket(), nullptr ); // outgoing envelopes must never echo locally
 	ASSERT_EQ( driver->sent.size(), 2u );
 	CPtr<CNetPacket> forwarded = Deserialize( driver->sent[0] );
-	auto *envelope = dynamic_cast<CDirectPacketToClient*>( forwarded.GetPtr() );
+	auto *envelope = dynamic_cast<CDirectPacketToClient *>( forwarded.GetPtr() );
 	ASSERT_NE( envelope, nullptr );
 	EXPECT_EQ( envelope->nClient, teammateID );
-	auto *finalDrop = dynamic_cast<CB2DropPlayerAtSegmentPacket*>( envelope->pPacket.GetPtr() );
+	auto *finalDrop = dynamic_cast<CB2DropPlayerAtSegmentPacket *>( envelope->pPacket.GetPtr() );
 	ASSERT_NE( finalDrop, nullptr );
 	EXPECT_EQ( finalDrop->nSlotToDrop, 2 );
 	EXPECT_EQ( finalDrop->nSegment, 7645 );
 	CPtr<CNetPacket> leave = Deserialize( driver->sent[1] );
-	ASSERT_NE( dynamic_cast<CLeaveGamePacket*>( leave.GetPtr() ), nullptr );
+	ASSERT_NE( dynamic_cast<CLeaveGamePacket *>( leave.GetPtr() ), nullptr );
 }
 
 TEST( ClientConnectionRemoval, IncomingPersistentControlNeedsNoPeerConnection )
@@ -273,12 +271,11 @@ TEST( ClientConnectionRemoval, IncomingPersistentControlNeedsNoPeerConnection )
 	CPtr<CRecordingDriver> driver = new CRecordingDriver();
 	CServerClient client;
 	CPlayGameProcessorTestAccess::InitServerClient( client, driver );
-	CPtr<CNetPacket> envelope = new CDirectPacketToClient( 0, hostID,
-		new CB2DropPlayerAtSegmentPacket( 0, 2, 7645 ) );
+	CPtr<CNetPacket> envelope = new CDirectPacketToClient( 0, hostID, new CB2DropPlayerAtSegmentPacket( 0, 2, 7645 ) );
 	driver->received.push_back( Serialize( envelope ) );
 	client.Segment();
 	CPtr<CNetPacket> packet = client.GetPacket();
-	auto *drop = dynamic_cast<CB2DropPlayerAtSegmentPacket*>( packet.GetPtr() );
+	auto *drop = dynamic_cast<CB2DropPlayerAtSegmentPacket *>( packet.GetPtr() );
 	ASSERT_NE( drop, nullptr );
 	EXPECT_EQ( drop->nClientID, hostID );
 	EXPECT_EQ( drop->nSlotToDrop, 2 );
@@ -304,10 +301,10 @@ TEST( ClientConnectionRemoval, PausedPersistentEnvelopesRetainSeparateRecipients
 	for ( int i = 0; i < 2; ++i )
 	{
 		CPtr<CNetPacket> packet = Deserialize( driver->sent[i] );
-		auto *envelope = dynamic_cast<CDirectPacketToClient*>( packet.GetPtr() );
+		auto *envelope = dynamic_cast<CDirectPacketToClient *>( packet.GetPtr() );
 		ASSERT_NE( envelope, nullptr );
 		EXPECT_EQ( envelope->nClient, teammateID + i );
-		EXPECT_NE( dynamic_cast<CB2DropPlayerAtSegmentPacket*>( envelope->pPacket.GetPtr() ), nullptr );
+		EXPECT_NE( dynamic_cast<CB2DropPlayerAtSegmentPacket *>( envelope->pPacket.GetPtr() ), nullptr );
 	}
 	EXPECT_EQ( drop->nClientID, 0 );
 }
@@ -321,7 +318,7 @@ TEST( ClientConnectionRemoval, ServerForwardsUnknownInnerControlWithoutChangingI
 	CMemoryStream incoming;
 	incoming << int( 40 ) << teammateID << unknownType << uint8_t( 2 ) << int( 7645 );
 	CPtr<CNetPacket> packet = Deserialize( incoming );
-	auto *envelope = dynamic_cast<CDirectPacketToClient*>( packet.GetPtr() );
+	auto *envelope = dynamic_cast<CDirectPacketToClient *>( packet.GetPtr() );
 	ASSERT_NE( envelope, nullptr );
 	ASSERT_NE( envelope->pPacket.GetPtr(), nullptr );
 	EXPECT_EQ( NObjectFactory::GetObjectTypeID( envelope->pPacket.GetPtr() ), UNKNOWN_PACKET_TYPE_ID );

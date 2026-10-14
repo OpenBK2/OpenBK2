@@ -22,8 +22,9 @@ struct SSingleSide
 
 	SSingleSide() : bSingleSide( false ) {}
 	SSingleSide( const bool _bSingleSide, const float _fOffset1, const float _fOffset2 )
-		: bSingleSide( _bSingleSide ), fOffset1( _fOffset1 ), fOffset2( _fOffset2 )
-	{ }
+			: bSingleSide( _bSingleSide ), fOffset1( _fOffset1 ), fOffset2( _fOffset2 )
+	{
+	}
 };
 
 //
@@ -32,7 +33,7 @@ struct SSingleSide
 //
 //
 
-class COMMON_RTS_AI_EXPORT CTerraAIObserver :	public ITerraAIObserver
+class COMMON_RTS_AI_EXPORT CTerraAIObserver : public ITerraAIObserver
 {
 	OBJECT_NOCOPY_METHODS( CTerraAIObserver )
 
@@ -44,12 +45,17 @@ protected:
 
 	CObj<CPassMarkersDraw> pMarkers;
 	bool bShowPassability = false;
+
 public:
 	ZEND int operator&( IBinSaver &f );
 
 	virtual void AddVSO( const NDb::SVSOInstance *pVSO );
-	virtual void GetTilesUnderVSO( const NDb::SVSOInstance *pVSO, const int j, const float fCoeff, std::list<SVector> *pTiles,
-												 const SSingleSide &singleSide, bool bInverse = false );
+	virtual void GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
+	                               const int j,
+	                               const float fCoeff,
+	                               std::list<SVector> *pTiles,
+	                               const SSingleSide &singleSide,
+	                               bool bInverse = false );
 
 	void InitPassMarkers( CAIMap *_pAIMap );
 	void ClearPassMarkers();
@@ -69,8 +75,10 @@ public:
 	//
 	virtual void UpdateZ( CVec3 *pvPos );
 	virtual void SetTerraTypes( const std::vector<NDb::STerrainAIProperties> &params );
-	virtual void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
-	virtual void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights );
+	virtual void
+	UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
+	virtual void
+	UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heights );
 
 	virtual float GetZ( float x, float y ) const;
 	virtual float GetTileHeight( int nX, int nY ) const;

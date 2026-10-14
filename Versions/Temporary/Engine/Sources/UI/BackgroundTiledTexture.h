@@ -16,13 +16,13 @@
 //CRAP}
 namespace NDb
 {
-	struct SBackgroundTiledTexture;
-	struct SSubRect;
+struct SBackgroundTiledTexture;
+struct SSubRect;
 }
 
 class CBackgroundTiledTexture : public CBackground
 {
-	OBJECT_BASIC_METHODS(CBackgroundTiledTexture)
+	OBJECT_BASIC_METHODS( CBackgroundTiledTexture )
 	CPtr<NDb::SBackgroundTiledTexture> pDesc;
 	CRectLayout layout;
 	//vector<SGFXRect2> rects;						// drawind rects
@@ -35,7 +35,7 @@ class CBackgroundTiledTexture : public CBackground
 
 public:
 	CBackgroundTiledTexture();
-	virtual void Visit( struct IUIVisitor * pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual int operator&( IBinSaver &ss );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 

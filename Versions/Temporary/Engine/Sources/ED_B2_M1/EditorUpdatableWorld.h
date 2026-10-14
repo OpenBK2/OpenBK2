@@ -27,8 +27,16 @@ public:
 //
 namespace NCreateUpdate
 {
-	// map editor update
-	CObjectBase* InsertObject( int nObjectID, int nTypeID, int nRecordID, const CVec3 &rvPlacement, const CQuat &rRotation, float fHP, int nPlayer, int nDiplInfo, int nFrameIndex );
-	CObjectBase* RemoveObject( int nObjectID );
-	CObjectBase* MoveObject( int nObjectID, const CVec3 &rvPlacement, const CQuat &rRotation );
+// map editor update
+CObjectBase *InsertObject( int nObjectID,
+                           int nTypeID,
+                           int nRecordID,
+                           const CVec3 &rvPlacement,
+                           const CQuat &rRotation,
+                           float fHP,
+                           int nPlayer,
+                           int nDiplInfo,
+                           int nFrameIndex );
+CObjectBase *RemoveObject( int nObjectID );
+CObjectBase *MoveObject( int nObjectID, const CVec3 &rvPlacement, const CQuat &rRotation );
 };

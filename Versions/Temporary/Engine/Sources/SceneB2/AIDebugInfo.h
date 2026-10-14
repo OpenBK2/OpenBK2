@@ -4,113 +4,117 @@
 
 namespace NDb
 {
-	struct SMaterial;
-	struct SPassProfile;
+struct SMaterial;
+struct SPassProfile;
 }
 
 namespace NAIVisInfo
 {
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CEngineInfo: public CPtrFuncBase<NGScene::CObjectInfo>
-	{
-		CObj<CObjectBase> pMesh;
-		CDBPtr<NDb::SMaterial> pMaterial;
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CEngineInfo : public CPtrFuncBase<NGScene::CObjectInfo>
+{
+	CObj<CObjectBase> pMesh;
+	CDBPtr<NDb::SMaterial> pMaterial;
 
-		std::vector<CVec2> aiVerts;
-		std::vector<STriangle> tris;
+	std::vector<CVec2> aiVerts;
+	std::vector<STriangle> tris;
 
-		bool bNeedUpdate;
-	protected:
-		virtual bool NeedUpdate()
-		{
-			return bNeedUpdate;
-		}
+	bool bNeedUpdate;
 
-		virtual void Recalc();
-	public:
-		void InitEngineInfo( const NDb::SMaterial *pColor );
-		void Invalidate();
+protected:
+	virtual bool NeedUpdate() { return bNeedUpdate; }
 
-		void SetVerts( std::vector<CVec2> &_aiVerts ) { aiVerts = _aiVerts; }
-		void SetTris( std::vector<STriangle> &_aiTris ) { tris = _aiTris; }
+	virtual void Recalc();
 
-		void SetNeedUpdate( const bool _bNeedUpdate ) { bNeedUpdate = _bNeedUpdate; }
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CEngineInfoHolder
-	{
-		CObj<CEngineInfo> pEngineInfo;
-	public:
-		CEngineInfoHolder() { pEngineInfo = new CEngineInfo(); }
-		~CEngineInfoHolder() { pEngineInfo->Invalidate(); }
+public:
+	void InitEngineInfo( const NDb::SMaterial *pColor );
+	void Invalidate();
 
-		void InitEngineInfo( const NDb::SMaterial *pColor ) { pEngineInfo->InitEngineInfo( pColor ); }
-		void SetNeedUpdate( const bool bNeedUpdate ) { pEngineInfo->SetNeedUpdate( bNeedUpdate ); }
+	void SetVerts( std::vector<CVec2> &_aiVerts ) { aiVerts = _aiVerts; }
+	void SetTris( std::vector<STriangle> &_aiTris ) { tris = _aiTris; }
 
-		void SetVerts( std::vector<CVec2> &aiVerts ) { pEngineInfo->SetVerts( aiVerts ); }
-		void SetTris( std::vector<STriangle> &aiTris ) { pEngineInfo->SetTris( aiTris ); }
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CDebugObject : public CObjectBase
-	{
-	public:
-		virtual void SetColor( const NDb::SMaterial *pColor ) = 0;
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CDebugSegment : public CDebugObject, public CEngineInfoHolder
-	{
-		OBJECT_BASIC_METHODS( CDebugSegment );
+	void SetNeedUpdate( const bool _bNeedUpdate ) { bNeedUpdate = _bNeedUpdate; }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CEngineInfoHolder
+{
+	CObj<CEngineInfo> pEngineInfo;
 
-		static const float F_MIN_AI_THICKNESS;
-		static const float F_AI_SPLICE_LEN;
+public:
+	CEngineInfoHolder() { pEngineInfo = new CEngineInfo(); }
+	~CEngineInfoHolder() { pEngineInfo->Invalidate(); }
 
-		std::vector<CSegment> segmentsSplice;
+	void InitEngineInfo( const NDb::SMaterial *pColor ) { pEngineInfo->InitEngineInfo( pColor ); }
+	void SetNeedUpdate( const bool bNeedUpdate ) { pEngineInfo->SetNeedUpdate( bNeedUpdate ); }
 
-		float fThick;
-		CVec2 vDirPerp;
-	public:
-		void Init( const CSegment &aiSegment, const int nThickness );
-		void SetPosition( const CSegment &aiSegment );
+	void SetVerts( std::vector<CVec2> &aiVerts ) { pEngineInfo->SetVerts( aiVerts ); }
+	void SetTris( std::vector<STriangle> &aiTris ) { pEngineInfo->SetTris( aiTris ); }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CDebugObject : public CObjectBase
+{
+public:
+	virtual void SetColor( const NDb::SMaterial *pColor ) = 0;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CDebugSegment : public CDebugObject, public CEngineInfoHolder
+{
+	OBJECT_BASIC_METHODS( CDebugSegment );
 
-		void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CDebugCircle : public CDebugObject, public CEngineInfoHolder
-	{
-		OBJECT_BASIC_METHODS( CDebugCircle );
+	static const float F_MIN_AI_THICKNESS;
+	static const float F_AI_SPLICE_LEN;
 
-		static const float F_AI_TURN_X;
-		static const float F_AI_TURN_Y;
-		static const int N_SPLICE;
-	public:
-		void Init( const CCircle &aiCircle );
-		void SetPosition( const CCircle &aiCircle );
+	std::vector<CSegment> segmentsSplice;
 
-		void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CDebugMarker : public CDebugObject, public CEngineInfoHolder
-	{
-		OBJECT_BASIC_METHODS( CDebugMarker );
-	public:
-		void Init( const std::vector<SVector> &tiles ) { Init( tiles, 0, tiles.size() ); }
-		void Init( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
-		void SetPosition( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
+	float fThick;
+	CVec2 vDirPerp;
 
-		void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CDebugMarkers : public CDebugObject
-	{
-		OBJECT_BASIC_METHODS( CDebugMarkers );
+public:
+	void Init( const CSegment &aiSegment, const int nThickness );
+	void SetPosition( const CSegment &aiSegment );
 
-		typedef std::vector< CPtr<CDebugMarker> > TMarkers;
-		TMarkers markers;
-	public:
-		void Init( const std::vector<SVector> &tiles );
-		void SetPosition( const std::vector<SVector> &tiles );
+	void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CDebugCircle : public CDebugObject, public CEngineInfoHolder
+{
+	OBJECT_BASIC_METHODS( CDebugCircle );
 
-		void SetColor( const NDb::SMaterial *pColor );
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	static const float F_AI_TURN_X;
+	static const float F_AI_TURN_Y;
+	static const int N_SPLICE;
+
+public:
+	void Init( const CCircle &aiCircle );
+	void SetPosition( const CCircle &aiCircle );
+
+	void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CDebugMarker : public CDebugObject, public CEngineInfoHolder
+{
+	OBJECT_BASIC_METHODS( CDebugMarker );
+
+public:
+	void Init( const std::vector<SVector> &tiles ) { Init( tiles, 0, tiles.size() ); }
+	void Init( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
+	void SetPosition( const std::vector<SVector> &tiles, const int nStart, const int nEnd );
+
+	void SetColor( const NDb::SMaterial *pColor ) { InitEngineInfo( pColor ); }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CDebugMarkers : public CDebugObject
+{
+	OBJECT_BASIC_METHODS( CDebugMarkers );
+
+	typedef std::vector<CPtr<CDebugMarker>> TMarkers;
+	TMarkers markers;
+
+public:
+	void Init( const std::vector<SVector> &tiles );
+	void SetPosition( const std::vector<SVector> &tiles );
+
+	void SetColor( const NDb::SMaterial *pColor );
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

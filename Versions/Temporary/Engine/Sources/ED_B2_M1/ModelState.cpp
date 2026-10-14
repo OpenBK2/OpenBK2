@@ -58,31 +58,35 @@ class CEffectPreviewTime : public CFuncBase<NTimer::STime>
 	void Recalc() override
 	{
 		const NTimer::STime now = clock->GetValue();
-		if ( !started ) { start = now; started = true; }
+		if ( !started )
+		{
+			start = now;
+			started = true;
+		}
 		value = ( now - start ) % duration;
 	}
+
 public:
 	CEffectPreviewTime() {}
-	CEffectPreviewTime( CFuncBase<NTimer::STime> *source, float seconds ) : clock(source)
+	CEffectPreviewTime( CFuncBase<NTimer::STime> *source, float seconds ) : clock( source )
 	{
-		duration = static_cast<NTimer::STime>( Clamp(seconds, 0.1f, 3600.0f) * 1000 );
+		duration = static_cast<NTimer::STime>( Clamp( seconds, 0.1f, 3600.0f ) * 1000 );
 	}
 };
 }
 
-CModelState::CModelState( CModelEditor *_pModelEditor ) : nModelSceneID( INVALID_NODE_ID ), pModelEditor( _pModelEditor ), pMutableModel( 0 ), eModelEditorType( ET_MODEL )
+CModelState::CModelState( CModelEditor *_pModelEditor )
+		: nModelSceneID( INVALID_NODE_ID ), pModelEditor( _pModelEditor ), pMutableModel( 0 ), eModelEditorType( ET_MODEL )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_STATE, this );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MODEL_STATE, ID_MODEL_RELOAD_EDITOR, ID_MODEL_SPEED_UP );
 }
-
 
 CModelState::~CModelState()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MODEL_STATE );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MODEL_STATE );
 }
-
 
 void CModelState::Enter()
 {
@@ -96,7 +100,8 @@ void CModelState::Enter()
 				// Default setting for stats is not as usual
 				pModelEditor->editorSettings.bDrawAnimations = false;
 				pModelEditor->editorSettings.bDrawTerrain = false;
-				pUserData->SerializeSettings( pModelEditor->editorSettings, "UnitStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+				pUserData->SerializeSettings(
+						pModelEditor->editorSettings, "UnitStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 
 				if ( !NWxKey::IsDown( VK_CONTROL ) )
 				{
@@ -107,7 +112,8 @@ void CModelState::Enter()
 			}
 			else
 			{
-				pUserData->SerializeSettings( pModelEditor->editorSettings, "Model", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+				pUserData->SerializeSettings(
+						pModelEditor->editorSettings, "Model", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 				eModelEditorType = ET_MODEL;
 			}
 		}
@@ -124,7 +130,8 @@ void CModelState::Enter()
 		UpdateSceneColor( false );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_ALL );
 
-		NI_ASSERT( !( pModelEditor->GetObjectSet().objectNameSet.empty() ), "CModelState::Enter() GetObjectSet().objectNameSet is empty" );
+		NI_ASSERT( !( pModelEditor->GetObjectSet().objectNameSet.empty() ),
+		           "CModelState::Enter() GetObjectSet().objectNameSet is empty" );
 		IEditorScene *pScene = EditorScene();
 		NI_ASSERT( pScene != 0, "CModelState::Enter(): pScene == 0" );
 		//
@@ -133,12 +140,14 @@ void CModelState::Enter()
 		UpdateLight();
 		// Обновляем сцену
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CModelInterfaceCommand( new CModelInterface() ) ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_SCENE,
+				ID_SCENE_ENABLE_GAME_INPUT,
+				reinterpret_cast<uintptr_t>( new CModelInterfaceCommand( new CModelInterface() ) ) );
 	}
 	//
 	CDefaultInputState::Enter();
 }
-
 
 void CModelState::Leave()
 {
@@ -165,17 +174,18 @@ void CModelState::Leave()
 			SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 			if ( pModelEditor->GetObjectSet().szObjectTypeName == "MechUnitRPGStats" )
 			{
-				pUserData->SerializeSettings( pModelEditor->editorSettings, "UnitStats", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+				pUserData->SerializeSettings(
+						pModelEditor->editorSettings, "UnitStats", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 			}
 			else
 			{
-				pUserData->SerializeSettings( pModelEditor->editorSettings, "Model", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+				pUserData->SerializeSettings(
+						pModelEditor->editorSettings, "Model", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 			}
 		}
 		pModelEditor->DeleteTarget();
 	}
 }
-
 
 void CModelState::ClearScene( bool bClearAll )
 {
@@ -190,7 +200,9 @@ void CModelState::ClearScene( bool bClearAll )
 				nModelSceneID = INVALID_NODE_ID;
 			}
 		}
-		for ( std::list<int>::const_iterator itAnimModelSceneID = animModelSceneIDList.begin(); itAnimModelSceneID != animModelSceneIDList.end(); ++itAnimModelSceneID )
+		for ( std::list<int>::const_iterator itAnimModelSceneID = animModelSceneIDList.begin();
+		      itAnimModelSceneID != animModelSceneIDList.end();
+		      ++itAnimModelSceneID )
 		{
 			if ( ( *itAnimModelSceneID ) != INVALID_NODE_ID )
 			{
@@ -201,7 +213,6 @@ void CModelState::ClearScene( bool bClearAll )
 	}
 }
 
-
 void CModelState::UpdateTerrain()
 {
 	if ( pModelEditor != 0 )
@@ -211,11 +222,18 @@ void CModelState::UpdateTerrain()
 			const int nGridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
 			const CVec2 vGridSize = CVec2( nGridSize * VIS_TILE_SIZE, nGridSize * VIS_TILE_SIZE );
 			const CVec4 vColorWithAlpha( Clamp( pModelEditor->editorSettings.vTerrainColor.r / 255.0f, 0.0f, 1.0f ),
-																	 Clamp( pModelEditor->editorSettings.vTerrainColor.g / 255.0f, 0.0f, 1.0f ),
-																	 Clamp( pModelEditor->editorSettings.vTerrainColor.b / 255.0f, 0.0f, 1.0f ),
-																	 Clamp( pModelEditor->editorSettings.vTerrainColor.a / 255.0f, 0.0f, 1.0f ) );
-			const float fDefaultDiff = pModelEditor->editorSettings.bShowGrid ? pModelEditor->editorSettings.fDefaultDiff : 0.0f;
-			pPlane = BuildPlane( pModelEditor->editorSettings.vShift, vGridSize, vColorWithAlpha, nGridSize, nGridSize, fDefaultDiff, pModelEditor->editorSettings.bDoubleSided );
+			                             Clamp( pModelEditor->editorSettings.vTerrainColor.g / 255.0f, 0.0f, 1.0f ),
+			                             Clamp( pModelEditor->editorSettings.vTerrainColor.b / 255.0f, 0.0f, 1.0f ),
+			                             Clamp( pModelEditor->editorSettings.vTerrainColor.a / 255.0f, 0.0f, 1.0f ) );
+			const float fDefaultDiff =
+					pModelEditor->editorSettings.bShowGrid ? pModelEditor->editorSettings.fDefaultDiff : 0.0f;
+			pPlane = BuildPlane( pModelEditor->editorSettings.vShift,
+			                     vGridSize,
+			                     vColorWithAlpha,
+			                     nGridSize,
+			                     nGridSize,
+			                     fDefaultDiff,
+			                     pModelEditor->editorSettings.bDoubleSided );
 		}
 		else
 		{
@@ -223,7 +241,6 @@ void CModelState::UpdateTerrain()
 		}
 	}
 }
-
 
 void CModelState::UpdateModels( bool bUpdateAll )
 {
@@ -238,11 +255,11 @@ void CModelState::UpdateModels( bool bUpdateAll )
 				const std::string &type = pModelEditor->GetObjectSet().szObjectTypeName;
 				if ( type == "Effect" || type == "ComplexEffect" )
 				{
-					std::vector<const NDb::SEffect*> effects;
+					std::vector<const NDb::SEffect *> effects;
 					const CDBID dbid = pModelEditor->GetObjectSet().objectNameSet.begin()->first;
 					if ( type == "Effect" )
-						effects.push_back( NDb::Get<NDb::SEffect>(dbid) );
-					else if ( const NDb::SComplexEffect *complex = NDb::Get<NDb::SComplexEffect>(dbid) )
+						effects.push_back( NDb::Get<NDb::SEffect>( dbid ) );
+					else if ( const NDb::SComplexEffect *complex = NDb::Get<NDb::SComplexEffect>( dbid ) )
 					{
 						if ( complex->sceneEffects.empty() )
 							effects.push_back( complex->pSceneEffect );
@@ -253,7 +270,8 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					const int gridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
 					const CVec3 center( gridSize * VIS_TILE_SIZE / 2, gridSize * VIS_TILE_SIZE / 2, 0 );
 					const int copies = pModelEditor->editorSettings.bDrawAnimations
-						? Clamp<int>(pModelEditor->editorSettings.nMaxAnimationsCount, 0, 64) : 0;
+					                       ? Clamp<int>( pModelEditor->editorSettings.nMaxAnimationsCount, 0, 64 )
+					                       : 0;
 					for ( int i = 0; !effects.empty() && i <= copies; ++i )
 					{
 						const NDb::SEffect *effect = effects[i % effects.size()];
@@ -263,18 +281,20 @@ void CModelState::UpdateModels( bool bUpdateAll )
 						CVec3 pos = center;
 						if ( i > 0 && pModelEditor->editorSettings.bAnimationsCircle )
 						{
-							angle = (i - 1) * FP_2PI / copies;
-							pos += CVec3(pModelEditor->editorSettings.fAnimationsCircleDistance * VIS_TILE_SIZE, 0, 0);
+							angle = ( i - 1 ) * FP_2PI / copies;
+							pos += CVec3( pModelEditor->editorSettings.fAnimationsCircleDistance * VIS_TILE_SIZE, 0, 0 );
 							RotatePoint( &pos, angle, center );
 						}
 						else if ( i > 0 )
 							pos.x += i * pModelEditor->editorSettings.fAnimationsBetweenDistance * VIS_TILE_SIZE;
 						SFBTransform placement;
-						MakeMatrix( &placement.forward, pos + pModelEditor->editorSettings.vShift,
-							CQuat(angle, V3_AXIS_Z), CVec3(1, 1, 1) );
+						MakeMatrix( &placement.forward,
+						            pos + pModelEditor->editorSettings.vShift,
+						            CQuat( angle, V3_AXIS_Z ),
+						            CVec3( 1, 1, 1 ) );
 						placement.backward.HomogeneousInverse( placement.forward );
-						CObj<CEffectPreviewTime> time = new CEffectPreviewTime(pScene->GetGameTimer(), effect->fDuration);
-						previewEffects.push_back( pScene->GetGView()->CreateParticles(effect, 0, time, placement) );
+						CObj<CEffectPreviewTime> time = new CEffectPreviewTime( pScene->GetGameTimer(), effect->fDuration );
+						previewEffects.push_back( pScene->GetGView()->CreateParticles( effect, 0, time, placement ) );
 					}
 				}
 				else
@@ -286,7 +306,8 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					}
 					else if ( pModelEditor->GetObjectSet().szObjectTypeName == "VisObj" )
 					{
-						if ( const NDb::SVisObj *pVisObj = NDb::Get<NDb::SVisObj>( pModelEditor->GetObjectSet().objectNameSet.begin()->first ) )
+						if ( const NDb::SVisObj *pVisObj =
+						         NDb::Get<NDb::SVisObj>( pModelEditor->GetObjectSet().objectNameSet.begin()->first ) )
 						{
 							for ( int nModelIndex = 0; nModelIndex < pVisObj->models.size(); ++nModelIndex )
 							{
@@ -304,8 +325,10 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					}
 					else if ( pModelEditor->GetObjectSet().szObjectTypeName == "Geometry" )
 					{
-						const NDb::SMaterial *pMaterial = NDb::Get<NDb::SMaterial>( pModelEditor->editorSettings.defaultMaterialDBID );
-						const NDb::SGeometry *pGeometry = NDb::Get<NDb::SGeometry>( pModelEditor->GetObjectSet().objectNameSet.begin()->first );
+						const NDb::SMaterial *pMaterial =
+								NDb::Get<NDb::SMaterial>( pModelEditor->editorSettings.defaultMaterialDBID );
+						const NDb::SGeometry *pGeometry =
+								NDb::Get<NDb::SGeometry>( pModelEditor->GetObjectSet().objectNameSet.begin()->first );
 						if ( ( pMaterial != 0 ) && ( pGeometry != 0 ) )
 						{
 							pMutableModel = new NDb::SModel();
@@ -320,8 +343,10 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					}
 					else if ( pModelEditor->GetObjectSet().szObjectTypeName == "Material" )
 					{
-						const NDb::SMaterial *pMaterial = NDb::Get<NDb::SMaterial>( pModelEditor->GetObjectSet().objectNameSet.begin()->first );
-						const NDb::SGeometry *pGeometry = NDb::Get<NDb::SGeometry>( pModelEditor->editorSettings.defaultGeometryDBID );
+						const NDb::SMaterial *pMaterial =
+								NDb::Get<NDb::SMaterial>( pModelEditor->GetObjectSet().objectNameSet.begin()->first );
+						const NDb::SGeometry *pGeometry =
+								NDb::Get<NDb::SGeometry>( pModelEditor->editorSettings.defaultGeometryDBID );
 						if ( ( pMaterial != 0 ) && ( pGeometry != 0 ) )
 						{
 							pMutableModel = new NDb::SModel();
@@ -336,7 +361,8 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					}
 					else if ( pModelEditor->GetObjectSet().szObjectTypeName == "MechUnitRPGStats" )
 					{
-						const NDb::SMechUnitRPGStats *pUnitStats = NDb::Get<NDb::SMechUnitRPGStats>( pModelEditor->GetObjectSet().objectNameSet.begin()->first );
+						const NDb::SMechUnitRPGStats *pUnitStats =
+								NDb::Get<NDb::SMechUnitRPGStats>( pModelEditor->GetObjectSet().objectNameSet.begin()->first );
 						if ( pUnitStats->pvisualObject )
 						{
 							for ( int iModel = 0; iModel < pUnitStats->pvisualObject->models.size(); ++iModel )
@@ -361,14 +387,18 @@ void CModelState::UpdateModels( bool bUpdateAll )
 						{
 							CVec3 vPos = vModelPos + pModelEditor->editorSettings.vShift;
 							Vis2AIFast( &vPos );
-							nModelSceneID = pScene->AddObject( -1, pModel, vPos, QNULL, CVec3( 1.0f, 1.0f, 1.0f ), OBJ_ANIM_MODE_DEFAULT, 0 );
+							nModelSceneID =
+									pScene->AddObject( -1, pModel, vPos, QNULL, CVec3( 1.0f, 1.0f, 1.0f ), OBJ_ANIM_MODE_DEFAULT, 0 );
 						}
 						//
 						if ( ( pModel->pSkeleton != 0 ) && ( pModelEditor->editorSettings.bDrawAnimations ) )
 						{
 							const int nMaxAnimationsCount = Clamp<int>( pModelEditor->editorSettings.nMaxAnimationsCount, 0, 64 );
 							int nAnimationIndex = 0;
-							for ( std::vector<CDBPtr<NDb::SAnimBase> >::const_iterator itAnimation = pModel->pSkeleton->animations.begin(); itAnimation != pModel->pSkeleton->animations.end(); ++itAnimation )
+							for ( std::vector<CDBPtr<NDb::SAnimBase>>::const_iterator itAnimation =
+							          pModel->pSkeleton->animations.begin();
+							      itAnimation != pModel->pSkeleton->animations.end();
+							      ++itAnimation )
 							{
 								if ( nAnimationIndex >= nMaxAnimationsCount )
 								{
@@ -377,22 +407,30 @@ void CModelState::UpdateModels( bool bUpdateAll )
 								CVec3 vAnimationPos = VNULL3;
 								if ( pModelEditor->editorSettings.bAnimationsCircle )
 								{
-									vAnimationPos = vModelPos + CVec3( pModelEditor->editorSettings.fAnimationsCircleDistance * VIS_TILE_SIZE, 0.0f, 0.0f );
+									vAnimationPos =
+											vModelPos +
+											CVec3( pModelEditor->editorSettings.fAnimationsCircleDistance * VIS_TILE_SIZE, 0.0f, 0.0f );
 									RotatePoint( &vAnimationPos, nAnimationIndex * FP_2PI / nMaxAnimationsCount, vModelPos );
 								}
 								else
 								{
-									vAnimationPos = vModelPos + CVec3( ( nAnimationIndex + 1 ) * pModelEditor->editorSettings.fAnimationsBetweenDistance * VIS_TILE_SIZE, 0.0f, 0.0f );
+									vAnimationPos =
+											vModelPos + CVec3( ( nAnimationIndex + 1 ) *
+									                           pModelEditor->editorSettings.fAnimationsBetweenDistance * VIS_TILE_SIZE,
+									                       0.0f,
+									                       0.0f );
 								}
 								CVec3 vPos = vAnimationPos + pModelEditor->editorSettings.vShift;
 								Vis2AIFast( &vPos );
-								const int nAnimObjectSceneID = pScene->AddObject( -1, pModel, vPos, QNULL, CVec3( 1.0f, 1.0f, 1.0f ), OBJ_ANIM_MODE_DEFAULT, 0 );
+								const int nAnimObjectSceneID =
+										pScene->AddObject( -1, pModel, vPos, QNULL, CVec3( 1.0f, 1.0f, 1.0f ), OBJ_ANIM_MODE_DEFAULT, 0 );
 								if ( nAnimObjectSceneID != INVALID_NODE_ID )
 								{
 									const int nAnimationIndexInFile = 0;
 									if ( *itAnimation && pScene->GetAnimator( nAnimObjectSceneID ) )
 									{
-										pScene->GetAnimator( nAnimObjectSceneID )->AddAnimation( 0, NAnimation::SAnimHandle( *itAnimation, nAnimationIndexInFile ), true );
+										pScene->GetAnimator( nAnimObjectSceneID )
+												->AddAnimation( 0, NAnimation::SAnimHandle( *itAnimation, nAnimationIndexInFile ), true );
 										animModelSceneIDList.push_back( nAnimObjectSceneID );
 									}
 									else
@@ -411,7 +449,6 @@ void CModelState::UpdateModels( bool bUpdateAll )
 	}
 }
 
-
 void CModelState::UpdateLight()
 {
 	if ( pModelEditor != 0 )
@@ -423,7 +460,8 @@ void CModelState::UpdateLight()
 		}
 		if ( pLight == 0 )
 		{
-			if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( "AmbientLight" ) )
+			if ( CPtr<IManipulator> pFolderManipulator =
+			         Singleton<IResourceManager>()->CreateFolderManipulator( "AmbientLight" ) )
 			{
 				std::string szLight = NEditorOptions::GetMiscString( "Light" );
 				if ( szLight.empty() )
@@ -445,7 +483,6 @@ void CModelState::UpdateLight()
 	}
 }
 
-
 void CModelState::UpdateTime( bool bReset )
 {
 	if ( pModelEditor != 0 )
@@ -462,7 +499,6 @@ void CModelState::UpdateTime( bool bReset )
 	}
 }
 
-
 void CModelState::UpdateSceneColor( bool bReset )
 {
 	if ( pModelEditor != 0 )
@@ -474,13 +510,12 @@ void CModelState::UpdateSceneColor( bool bReset )
 		else
 		{
 			const CVec3 vBackgroundColor( Clamp( pModelEditor->editorSettings.vSceneColor.r / 255.0f, 0.0f, 1.0f ),
-																		Clamp( pModelEditor->editorSettings.vSceneColor.g / 255.0f, 0.0f, 1.0f ),
-																		Clamp( pModelEditor->editorSettings.vSceneColor.b / 255.0f, 0.0f, 1.0f ) );
+			                              Clamp( pModelEditor->editorSettings.vSceneColor.g / 255.0f, 0.0f, 1.0f ),
+			                              Clamp( pModelEditor->editorSettings.vSceneColor.b / 255.0f, 0.0f, 1.0f ) );
 			EditorScene()->SetBackgroundColor( vBackgroundColor );
 		}
 	}
 }
-
 
 void CModelState::UpdateAIGeometry( bool bReset )
 {
@@ -520,20 +555,20 @@ void CModelState::SetTerrain()
 }
 /**/
 
-
 void CModelState::SetLight()
 {
 	if ( pModelEditor != 0 )
 	{
 		std::string szObjectTypeName = "AmbientLight";
-		if ( Singleton<IMainFrameContainer>()->Get()->BrowseForObject( &( pModelEditor->editorSettings.lightDBID ), &szObjectTypeName, false, true ) )
+		if ( Singleton<IMainFrameContainer>()->Get()->BrowseForObject(
+						 &( pModelEditor->editorSettings.lightDBID ), &szObjectTypeName, false, true ) )
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_LIGHT_INDEX );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_LIGHT_INDEX );
 			UpdateLight();
 		}
 	}
 }
-
 
 void CModelState::CenterCamera()
 {
@@ -544,7 +579,6 @@ void CModelState::CenterCamera()
 		Singleton<ICamera>()->SetAnchor( vModelPos + pModelEditor->editorSettings.vShift );
 	}
 }
-
 
 void CModelState::SaveCamera( bool bDefaultCamera )
 {
@@ -566,9 +600,8 @@ void CModelState::SaveCamera( bool bDefaultCamera )
 		if ( pCameraPlacement != 0 )
 		{
 			pCameraPlacement->vAnchor = Singleton<ICamera>()->GetAnchor();
-			Singleton<ICamera>()->GetPlacement( &( pCameraPlacement->fDistance ),
-																					&( pCameraPlacement->fPitch ),
-																					&( pCameraPlacement->fYaw ) );
+			Singleton<ICamera>()->GetPlacement(
+					&( pCameraPlacement->fDistance ), &( pCameraPlacement->fPitch ), &( pCameraPlacement->fYaw ) );
 			pCameraPlacement->fFOV = Singleton<ICamera>()->GetFOV();
 			pCameraPlacement->SetValid( true );
 		}
@@ -610,15 +643,12 @@ void CModelState::ResetCamera( bool bDefaultCamera )
 			pCameraPlacement->fFOV = 26.0f;
 		}
 		Singleton<ICamera>()->SetAnchor( pCameraPlacement->vAnchor );
-		Singleton<ICamera>()->SetPlacement( pCameraPlacement->fDistance,
-																				pCameraPlacement->fPitch,
-																				pCameraPlacement->fYaw );
+		Singleton<ICamera>()->SetPlacement( pCameraPlacement->fDistance, pCameraPlacement->fPitch, pCameraPlacement->fYaw );
 		Singleton<ICamera>()->SetFOV( pCameraPlacement->fFOV );
 		//EditorScene()->SetFOV( pCameraPlacement->fFOV );
 		SaveCamera( false );
 	}
 }
-
 
 void CModelState::OnContextMenu( const CTPoint<int> &rMousePoint )
 {
@@ -634,23 +664,16 @@ void CModelState::OnContextMenu( const CTPoint<int> &rMousePoint )
 		// Windows as much as anywhere. The built DLL holds nothing but VERSION.
 		IMainFrame *const pMainFrame = Singleton<IMainFrameContainer>()->Get();
 		if ( ( pMainFrame != 0 ) &&
-				 pMainFrame->PopupResourceMenu( IDM_MODEL_CONTEXT_MENU, MCM_STATE, rMousePoint.x, rMousePoint.y ) )
+		     pMainFrame->PopupResourceMenu( IDM_MODEL_CONTEXT_MENU, MCM_STATE, rMousePoint.x, rMousePoint.y ) )
 		{
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 		}
 	}
 }
 
+void CModelState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
 
-void CModelState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-}
-
-
-void CModelState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-}
-
+void CModelState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
 
 void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> editorSettings
 {
@@ -724,7 +747,8 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_TERRAIN_SIZE_INDEX )
 	{
-		if ( ( editParameters.nTerrainSizeIndex >= 0 ) && ( editParameters.nTerrainSizeIndex < editParameters.terrainSizeList.size() ) )
+		if ( ( editParameters.nTerrainSizeIndex >= 0 ) &&
+		     ( editParameters.nTerrainSizeIndex < editParameters.terrainSizeList.size() ) )
 		{
 			if ( pModelEditor->editorSettings.nGridSize != ( editParameters.nTerrainSizeIndex + 8 ) )
 			{
@@ -741,8 +765,8 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	if ( editParameters.nFlags & MODEL_EP_TERRAIN_COLOR )
 	{
 		if ( ( pModelEditor->editorSettings.vTerrainColor.r != editParameters.vTerrainColor.r ) ||
-				 ( pModelEditor->editorSettings.vTerrainColor.g != editParameters.vTerrainColor.g ) ||
-				 ( pModelEditor->editorSettings.vTerrainColor.b != editParameters.vTerrainColor.b ) )
+		     ( pModelEditor->editorSettings.vTerrainColor.g != editParameters.vTerrainColor.g ) ||
+		     ( pModelEditor->editorSettings.vTerrainColor.b != editParameters.vTerrainColor.b ) )
 		{
 			pModelEditor->editorSettings.vTerrainColor.r = editParameters.vTerrainColor.r;
 			pModelEditor->editorSettings.vTerrainColor.g = editParameters.vTerrainColor.g;
@@ -798,7 +822,8 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_COUNT_INDEX )
 	{
-		if ( ( editParameters.nAnimCountIndex >= 0 ) && ( editParameters.nAnimCountIndex < editParameters.animCountList.size() ) )
+		if ( ( editParameters.nAnimCountIndex >= 0 ) &&
+		     ( editParameters.nAnimCountIndex < editParameters.animCountList.size() ) )
 		{
 			if ( pModelEditor->editorSettings.nMaxAnimationsCount != editParameters.nAnimCountIndex )
 			{
@@ -815,7 +840,8 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_SPEED_INDEX )
 	{
-		if ( ( editParameters.nAnimSpeedIndex >= 0 ) && ( editParameters.nAnimSpeedIndex < editParameters.animSpeedList.size() ) )
+		if ( ( editParameters.nAnimSpeedIndex >= 0 ) &&
+		     ( editParameters.nAnimSpeedIndex < editParameters.animSpeedList.size() ) )
 		{
 			if ( pModelEditor->editorSettings.nGameTimerSpeed != ( editParameters.nAnimSpeedIndex - 10 ) )
 			{
@@ -842,7 +868,8 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_RADIUS_INDEX )
 	{
-		if ( ( editParameters.nAnimRadiusIndex >= 0 ) && ( editParameters.nAnimRadiusIndex < editParameters.animRadiusList.size() ) )
+		if ( ( editParameters.nAnimRadiusIndex >= 0 ) &&
+		     ( editParameters.nAnimRadiusIndex < editParameters.animRadiusList.size() ) )
 		{
 			if ( (int)( pModelEditor->editorSettings.fAnimationsCircleDistance ) != ( editParameters.nAnimRadiusIndex + 2 ) )
 			{
@@ -859,9 +886,11 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_DISTANCE_INDEX )
 	{
-		if ( ( editParameters.nAnimDistanceIndex >= 0 ) && ( editParameters.nAnimDistanceIndex < editParameters.animDistanceList.size() ) )
+		if ( ( editParameters.nAnimDistanceIndex >= 0 ) &&
+		     ( editParameters.nAnimDistanceIndex < editParameters.animDistanceList.size() ) )
 		{
-			if ( (int)( pModelEditor->editorSettings.fAnimationsBetweenDistance ) != ( editParameters.nAnimDistanceIndex + 2 ) )
+			if ( (int)( pModelEditor->editorSettings.fAnimationsBetweenDistance ) !=
+			     ( editParameters.nAnimDistanceIndex + 2 ) )
 			{
 				pModelEditor->editorSettings.fAnimationsBetweenDistance = editParameters.nAnimDistanceIndex + 2;
 				bUpdateModels = true;
@@ -882,9 +911,11 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_AI_GEOMETRY_TYPE )
 	{
-		if ( pModelEditor->editorSettings.bShowSolidAIGeometry != ( editParameters.eAIGeometryType == SEditParameters::AIGT_SOLID ) )
+		if ( pModelEditor->editorSettings.bShowSolidAIGeometry !=
+		     ( editParameters.eAIGeometryType == SEditParameters::AIGT_SOLID ) )
 		{
-			pModelEditor->editorSettings.bShowSolidAIGeometry = ( editParameters.eAIGeometryType == SEditParameters::AIGT_SOLID );
+			pModelEditor->editorSettings.bShowSolidAIGeometry =
+					( editParameters.eAIGeometryType == SEditParameters::AIGT_SOLID );
 			bUpdateAIGeometry = true;
 			bUpdateScene = true;
 			//DebugTrace( "CModelState::GetEditParameters( MODEL_EP_AI_GEOMETRY_TYPE ): success");
@@ -938,7 +969,6 @@ void CModelState::GetEditParameters( unsigned nFlags ) // editParameters -> edit
 	}
 }
 
-
 void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> editParameters
 {
 	if ( pModelEditor == 0 )
@@ -949,7 +979,8 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 	if ( editParameters.nFlags & MODEL_EP_LIGHT_COUNT )
 	{
 		editParameters.lightList.clear();
-		if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( "AmbientLight" ) )
+		if ( CPtr<IManipulator> pFolderManipulator =
+		         Singleton<IResourceManager>()->CreateFolderManipulator( "AmbientLight" ) )
 		{
 			if ( CPtr<IManipulatorIterator> pFolderIterator = pFolderManipulator->Iterate( true, ECT_CACHE_GLOBAL ) )
 			{
@@ -1001,7 +1032,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		editParameters.terrainSizeList.clear();
 		for ( int nTerrainSizeIndex = 8; nTerrainSizeIndex <= 64; ++nTerrainSizeIndex )
 		{
-			editParameters.terrainSizeList.push_back( std::to_string(  nTerrainSizeIndex ) );
+			editParameters.terrainSizeList.push_back( std::to_string( nTerrainSizeIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_TERRAIN_SIZE_INDEX )
@@ -1011,7 +1042,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		{
 			editParameters.nTerrainSizeIndex = 0;
 		}
-		if (	editParameters.nTerrainSizeIndex >= editParameters.terrainSizeList.size() )
+		if ( editParameters.nTerrainSizeIndex >= editParameters.terrainSizeList.size() )
 		{
 			editParameters.nTerrainSizeIndex = editParameters.terrainSizeList.size() - 1;
 		}
@@ -1043,7 +1074,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		editParameters.animCountList.clear();
 		for ( int nAnimCountIndex = 0; nAnimCountIndex <= 64; ++nAnimCountIndex )
 		{
-			editParameters.animCountList.push_back( std::to_string(  nAnimCountIndex ) );
+			editParameters.animCountList.push_back( std::to_string( nAnimCountIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_COUNT_INDEX )
@@ -1053,7 +1084,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		{
 			editParameters.nAnimCountIndex = 0;
 		}
-		if (	editParameters.nAnimCountIndex >= editParameters.animCountList.size() )
+		if ( editParameters.nAnimCountIndex >= editParameters.animCountList.size() )
 		{
 			editParameters.nAnimCountIndex = editParameters.animCountList.size() - 1;
 		}
@@ -1063,7 +1094,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		editParameters.animSpeedList.clear();
 		for ( int nAnimSpeedIndex = -10; nAnimSpeedIndex <= 10; ++nAnimSpeedIndex )
 		{
-			editParameters.animSpeedList.push_back( std::to_string(  nAnimSpeedIndex ) );
+			editParameters.animSpeedList.push_back( std::to_string( nAnimSpeedIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_SPEED_INDEX )
@@ -1073,21 +1104,22 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		{
 			editParameters.nAnimSpeedIndex = 0;
 		}
-		if (	editParameters.nAnimSpeedIndex >= editParameters.animSpeedList.size() )
+		if ( editParameters.nAnimSpeedIndex >= editParameters.animSpeedList.size() )
 		{
 			editParameters.nAnimSpeedIndex = editParameters.animSpeedList.size() - 1;
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_TYPE )
 	{
-		editParameters.eAnimType = pModelEditor->editorSettings.bAnimationsCircle ? SEditParameters::AT_CIRCLE : SEditParameters::AT_LINE;
+		editParameters.eAnimType =
+				pModelEditor->editorSettings.bAnimationsCircle ? SEditParameters::AT_CIRCLE : SEditParameters::AT_LINE;
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_RADIUS_COUNT )
 	{
 		editParameters.animRadiusList.clear();
 		for ( int nAnimRadiusIndex = 2; nAnimRadiusIndex <= 32; ++nAnimRadiusIndex )
 		{
-			editParameters.animRadiusList.push_back( std::to_string(  nAnimRadiusIndex ) );
+			editParameters.animRadiusList.push_back( std::to_string( nAnimRadiusIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_RADIUS_INDEX )
@@ -1097,7 +1129,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		{
 			editParameters.nAnimRadiusIndex = 0;
 		}
-		if (	editParameters.nAnimRadiusIndex >= editParameters.animRadiusList.size() )
+		if ( editParameters.nAnimRadiusIndex >= editParameters.animRadiusList.size() )
 		{
 			editParameters.nAnimRadiusIndex = editParameters.animRadiusList.size() - 1;
 		}
@@ -1107,7 +1139,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		editParameters.animDistanceList.clear();
 		for ( int nAnimDistanceIndex = 2; nAnimDistanceIndex <= 16; ++nAnimDistanceIndex )
 		{
-			editParameters.animDistanceList.push_back( std::to_string(  nAnimDistanceIndex ) );
+			editParameters.animDistanceList.push_back( std::to_string( nAnimDistanceIndex ) );
 		}
 	}
 	if ( editParameters.nFlags & MODEL_EP_ANIM_DISTANCE_INDEX )
@@ -1117,7 +1149,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 		{
 			editParameters.nAnimDistanceIndex = 0;
 		}
-		if (	editParameters.nAnimDistanceIndex >= editParameters.animDistanceList.size() )
+		if ( editParameters.nAnimDistanceIndex >= editParameters.animDistanceList.size() )
 		{
 			editParameters.nAnimDistanceIndex = editParameters.animDistanceList.size() - 1;
 		}
@@ -1128,10 +1160,11 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 	}
 	if ( editParameters.nFlags & MODEL_EP_AI_GEOMETRY_TYPE )
 	{
-		editParameters.eAIGeometryType = pModelEditor->editorSettings.bShowSolidAIGeometry ? SEditParameters::AIGT_SOLID : SEditParameters::AIGT_TRANSPARENT;
+		editParameters.eAIGeometryType = pModelEditor->editorSettings.bShowSolidAIGeometry
+		                                     ? SEditParameters::AIGT_SOLID
+		                                     : SEditParameters::AIGT_TRANSPARENT;
 	}
 }
-
 
 bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
@@ -1140,12 +1173,13 @@ bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		return false;
 	}
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MODEL_DRAW_TERRAIN:
 		{
 			pModelEditor->editorSettings.bDrawTerrain = !pModelEditor->editorSettings.bDrawTerrain;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_TERRAIN );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_TERRAIN );
 			UpdateTerrain();
 			break;
 		}
@@ -1159,7 +1193,8 @@ bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_MODEL_DRAW_AI_GEOMETRY:
 		{
 			pModelEditor->editorSettings.bDrawAIGeometry = !pModelEditor->editorSettings.bDrawAIGeometry;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_AI_GEOMETRY );
+			Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_AI_GEOMETRY );
 			UpdateAIGeometry( false );
 			break;
 		}
@@ -1207,7 +1242,8 @@ bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			if ( pModelEditor->editorSettings.nGameTimerSpeed > ( -10 ) )
 			{
 				--( pModelEditor->editorSettings.nGameTimerSpeed );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_ANIM_SPEED_INDEX );
+				Singleton<ICommandHandlerContainer>()->HandleCommand(
+						CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_ANIM_SPEED_INDEX );
 				UpdateTime( false );
 			}
 			break;
@@ -1217,7 +1253,8 @@ bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			if ( pModelEditor->editorSettings.nGameTimerSpeed < 10 )
 			{
 				++( pModelEditor->editorSettings.nGameTimerSpeed );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_ANIM_SPEED_INDEX );
+				Singleton<ICommandHandlerContainer>()->HandleCommand(
+						CHID_MODEL_STATE, ID_SET_EDIT_PARAMETERS, MODEL_EP_ANIM_SPEED_INDEX );
 				UpdateTime( false );
 			}
 			break;
@@ -1244,7 +1281,6 @@ bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return true;
 }
 
-
 bool CModelState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CModelState::UpdateCommand(), pbEnable == 0" );
@@ -1257,7 +1293,7 @@ bool CModelState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 	//
 	( *pbEnable ) = false;
 	( *pbCheck ) = false;
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MODEL_DRAW_TERRAIN:
 		{
@@ -1339,8 +1375,8 @@ bool CModelState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 	return false;
 }
 
-
-CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, const CVec4 &color, int nXStripCount, int nYStripCount, bool bDoubleSided )
+CObjectBase *CModelState::BuildPlane(
+		const CVec3 &vStart, const CVec2 &vSize, const CVec4 &color, int nXStripCount, int nYStripCount, bool bDoubleSided )
 {
 	if ( ( nXStripCount * nYStripCount ) > 0 )
 	{
@@ -1368,19 +1404,19 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 				for ( int nX = 0; nX < nXStripCount; ++nX )
 				{
 					tris.push_back( STriangle( nX + nY * ( nXStripCount + 1 ),
-																		 nX + nY * ( nXStripCount + 1 ) + 1,
-																		 nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1 ) );
+					                           nX + nY * ( nXStripCount + 1 ) + 1,
+					                           nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1 ) );
 					tris.push_back( STriangle( nX + nY * ( nXStripCount + 1 ),
-																		 nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1,
-																		 nX + ( nY + 1 ) * ( nXStripCount + 1 ) ) );
+					                           nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1,
+					                           nX + ( nY + 1 ) * ( nXStripCount + 1 ) ) );
 					if ( bDoubleSided )
 					{
 						tris.push_back( STriangle( nX + nY * ( nXStripCount + 1 ),
-																			 nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1,
-																			 nX + nY * ( nXStripCount + 1 ) + 1  ) );
+						                           nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1,
+						                           nX + nY * ( nXStripCount + 1 ) + 1 ) );
 						tris.push_back( STriangle( nX + nY * ( nXStripCount + 1 ),
-																			 nX + ( nY + 1 ) * ( nXStripCount + 1 ),
-																			 nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1 ) );
+						                           nX + ( nY + 1 ) * ( nXStripCount + 1 ),
+						                           nX + ( nY + 1 ) * ( nXStripCount + 1 ) + 1 ) );
 					}
 				}
 			}
@@ -1388,7 +1424,8 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 			pMemObject->Create( points, tris );
 			NGScene::IGameView *pGameView = EditorScene()->GetGView();
 			NGScene::IGameView::SMeshInfo meshInfo;
-			meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( NGScene::CreateObjectInfo( pMemObject ), pGameView->CreateMaterial( color, true ) ) );
+			meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( NGScene::CreateObjectInfo( pMemObject ),
+			                                                         pGameView->CreateMaterial( color, true ) ) );
 			return pGameView->CreateMesh( meshInfo, MakeTransform( vStart ), 0, 0 );
 		}
 	}
@@ -1418,15 +1455,21 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 			pMemObject->Create( points, tris );
 			NGScene::IGameView *pGameView = EditorScene()->GetGView();
 			NGScene::IGameView::SMeshInfo meshInfo;
-			meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( NGScene::CreateObjectInfo( pMemObject ), pGameView->CreateMaterial( color, true ) ) );
+			meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( NGScene::CreateObjectInfo( pMemObject ),
+			                                                         pGameView->CreateMaterial( color, true ) ) );
 			return pGameView->CreateMesh( meshInfo, MakeTransform( vStart ), 0, 0 );
 		}
 	}
 	return 0;
 }
 
-
-CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, const CVec4 &color, int nXStripCount, int nYStripCount, float fDiff, bool bDoubleSided )
+CObjectBase *CModelState::BuildPlane( const CVec3 &vStart,
+                                      const CVec2 &vSize,
+                                      const CVec4 &color,
+                                      int nXStripCount,
+                                      int nYStripCount,
+                                      float fDiff,
+                                      bool bDoubleSided )
 {
 	NI_ASSERT( nXStripCount * nYStripCount, "Zero nStrip value" );
 	if ( ( nXStripCount * nYStripCount ) == 0 )
@@ -1452,18 +1495,10 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 		{
 			for ( int nX = 0; nX < nXStripCount; ++nX )
 			{
-				points.push_back( CVec3( nX * fStepX + fDiff / 2.0f,
-																 nY * fStepY + fDiff / 2.0f,
-																 0.0f ) );
-				points.push_back( CVec3( ( nX + 1 ) * fStepX - fDiff / 2.0f,
-																 nY * fStepY + fDiff / 2.0f,
-																 0.0f ) );
-				points.push_back( CVec3( ( nX + 1 ) * fStepX - fDiff / 2.0f,
-																 ( nY + 1 ) * fStepY - fDiff / 2.0f,
-																 0.0f ) );
-				points.push_back( CVec3( nX * fStepX + fDiff / 2.0f,
-																 ( nY + 1 ) * fStepY - fDiff / 2.0f,
-																 0.0f ) );
+				points.push_back( CVec3( nX * fStepX + fDiff / 2.0f, nY * fStepY + fDiff / 2.0f, 0.0f ) );
+				points.push_back( CVec3( ( nX + 1 ) * fStepX - fDiff / 2.0f, nY * fStepY + fDiff / 2.0f, 0.0f ) );
+				points.push_back( CVec3( ( nX + 1 ) * fStepX - fDiff / 2.0f, ( nY + 1 ) * fStepY - fDiff / 2.0f, 0.0f ) );
+				points.push_back( CVec3( nX * fStepX + fDiff / 2.0f, ( nY + 1 ) * fStepY - fDiff / 2.0f, 0.0f ) );
 			}
 		}
 		//
@@ -1485,7 +1520,8 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 		pMemObject->Create( points, tris );
 		NGScene::IGameView *pGameView = EditorScene()->GetGView();
 		NGScene::IGameView::SMeshInfo meshInfo;
-		meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( NGScene::CreateObjectInfo( pMemObject ), pGameView->CreateMaterial( color, true ) ) );
+		meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( NGScene::CreateObjectInfo( pMemObject ),
+		                                                         pGameView->CreateMaterial( color, true ) ) );
 		return pGameView->CreateMesh( meshInfo, MakeTransform( vStart ), 0, 0 );
 	}
 	return 0;
@@ -1543,7 +1579,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 	return nIntersectionPointCount;
 }
 /**/
-	/**
+/**
 	if ( Singleton<IFolderCallback>()->IsUniqueName( "EditorTest", "1\\1" ) )
 	{
 		DebugTrace( "CModelState::OnKeyDown(): 1\\1 unique" );
@@ -1561,7 +1597,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 		DebugTrace( "CModelState::OnKeyDown(): 1\\1\\ exists" );
 	}
 	/**/
-	/**
+/**
 	std::vector<CVec3> vPointList;
 	CVec3 vBegin( 7.0f, 0.0f, 0.0f );
 	CVec3 vEnd( 7.0f, 16.0f, 0.0f );

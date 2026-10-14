@@ -38,12 +38,15 @@ std::string TextureSourcePath( IManipulator *pManipulator, const std::string &so
 		return source;
 	// SrcName may be absolute, relative to the configured source directory,
 	// or beside its XDB in the mounted game/mod data.
-	const auto path = std::filesystem::u8path(source);
+	const auto path = std::filesystem::u8path( source );
 	if ( path.is_absolute() )
 		return source;
-	const std::string local = NFile::JoinPath(NFile::GetFilePath(NDb::GetFileName(pManipulator->GetDBID())), source);
-	for ( const std::string &candidate : {
-		local, source, NFile::JoinPath(Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, source) } )
+	const std::string local =
+			NFile::JoinPath( NFile::GetFilePath( NDb::GetFileName( pManipulator->GetDBID() ) ), source );
+	for ( const std::string &candidate :
+	      { local,
+	        source,
+	        NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, source ) } )
 	{
 		CFileStream stream( NVFS::GetMainVFS(), candidate );
 		if ( stream.IsOk() && stream.CanRead() )
@@ -55,12 +58,11 @@ std::string TextureSourcePath( IManipulator *pManipulator, const std::string &so
 
 REGISTER_EXPORTER_IN_DLL( Texture, CTextureExporter )
 
-
-EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
-																							const std::string &rszObjectTypeName,
-																							const std::string &rszObjectName,
-																							bool bForce,
-																							EXPORT_TYPE exportType )
+EXPORT_RESULT CTextureExporter::ExportObject( IManipulator *pManipulator,
+                                              const std::string &rszObjectTypeName,
+                                              const std::string &rszObjectName,
+                                              bool bForce,
+                                              EXPORT_TYPE exportType )
 {
 	NI_ASSERT( pManipulator != 0, "CTextureExporter::ExportObject() pManipulator == 0 )" );
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
@@ -81,7 +83,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	CManipulatorManager::GetValue( &szSourceValue, pManipulator, "SrcName" );
 	const std::string szSource = TextureSourcePath( pManipulator, szSourceValue );
 	//
-	if ( szSourceValue.empty() || !NVFS::GetMainVFS()->DoesFileExist(szSource) )
+	if ( szSourceValue.empty() || !NVFS::GetMainVFS()->DoesFileExist( szSource ) )
 	{
 		NLog::Log( LT_ERROR, "Source texture empty or source file doesn't exist!\n" );
 		NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
@@ -91,11 +93,12 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	std::string szRealDestination = NFile::CutFileExt( rszObjectName, "xdb" ) + ".dds";
 	NFile::NormalizePath( &szRealDestination );
 	const std::string dbDestination = szRealDestination;
-	szRealDestination = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szRealDestination;
+	szRealDestination =
+			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szRealDestination;
 	NFile::NormalizePath( &szRealDestination );
 	std::string szDestination; // Allocate the temporary file only after input validation.
 	// check for source and destination times if not forced mode
-	if ( CheckFilesUpdated(szSource, szRealDestination, bForce) )
+	if ( CheckFilesUpdated( szSource, szRealDestination, bForce ) )
 	{
 		CManipulatorManager::SetValue( dbDestination, pManipulator, "DestName" );
 		return ER_SUCCESS;
@@ -186,20 +189,20 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 				// load TGA or PSD file
 				if ( NImage::RecognizeFormatTGA( &stream ) == true )
 				{
-					if ( !NImage::LoadTGAImage(image, &stream) )
+					if ( !NImage::LoadTGAImage( image, &stream ) )
 					{
-						NLog::Log(LT_ERROR, "Cannot decode TGA texture: %s\n", szSource.c_str());
+						NLog::Log( LT_ERROR, "Cannot decode TGA texture: %s\n", szSource.c_str() );
 						return ER_FAIL;
 					}
 				}
 				else
 				{
 					int nRes = NImage::RecognizeFormatPSD( &stream );
-					if (  nRes == 1 )
+					if ( nRes == 1 )
 						NImage::LoadImagePSD( image, &stream );
 					else
 					{
-						if (nRes == 2)
+						if ( nRes == 2 )
 						{
 							NLog::Log( LT_ERROR, "Source PSD texture must be in a valid PSD-format: RGB, 8-bit per channel!\n" );
 							NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
@@ -218,7 +221,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 				//
 				if ( image.GetSizeX() <= 0 || image.GetSizeY() <= 0 || !stream.IsOk() )
 				{
-					NLog::Log(LT_ERROR, "Empty or invalid source image: %s\n", szSource.c_str());
+					NLog::Log( LT_ERROR, "Empty or invalid source image: %s\n", szSource.c_str() );
 					return ER_FAIL;
 				}
 				if ( szUsageType == "TEXTURE_2D" )
@@ -237,16 +240,19 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 				else
 				{
 					// non-2d texture must be power of 2
-					if ( image.GetSizeX() != GetNextPow2(image.GetSizeX()) ||image.GetSizeY() != GetNextPow2(image.GetSizeY()) )
+					if ( image.GetSizeX() != GetNextPow2( image.GetSizeX() ) ||
+					     image.GetSizeY() != GetNextPow2( image.GetSizeY() ) )
 					{
 						const std::string szError = fmt::format( "Source image \"{}\" must be power two size ({} : {})\n",
-							                             szSource.c_str(), image.GetSizeX(), image.GetSizeY() );
+						                                         szSource.c_str(),
+						                                         image.GetSizeX(),
+						                                         image.GetSizeY() );
 						NLog::Log( LT_ERROR, "Source image size must be power of 2\n" );
 						NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
 						NLog::Log( LT_ERROR, "\tSource image: %s\n", szSource.c_str() );
-						if ( image.GetSizeX() != GetNextPow2(image.GetSizeX()) )
+						if ( image.GetSizeX() != GetNextPow2( image.GetSizeX() ) )
 							NLog::Log( LT_ERROR, "\tWidth: %d\n", image.GetSizeX() );
-						if ( image.GetSizeY() != GetNextPow2(image.GetSizeY()) )
+						if ( image.GetSizeY() != GetNextPow2( image.GetSizeY() ) )
 							NLog::Log( LT_ERROR, "\tHeight: %d\n", image.GetSizeY() );
 						return ER_FAIL;
 					}
@@ -256,7 +262,8 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 					NImage::FlipY( image );
 				szDestination = NFile::GetTempFileName();
 				// No device: compression is a CPU pass over the pixels now.
-				bResult = NImage::ConvertAndSaveAsDDS( szDestination, image, eImageType, ePixelFormat, nMips, bWrapX, bWrapY, fMSize );
+				bResult = NImage::ConvertAndSaveAsDDS(
+						szDestination, image, eImageType, ePixelFormat, nMips, bWrapX, bWrapY, fMSize );
 			}
 			else
 			{
@@ -267,7 +274,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 		}
 	}
 	//
-	if ( bResult && CheckDestination(szDestination, rszObjectName) != false )
+	if ( bResult && CheckDestination( szDestination, rszObjectName ) != false )
 	{
 		// Use the same checked replacement as map saves: respect destination
 		// permissions and preserve the previous DDS if committing it fails.
@@ -293,7 +300,8 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 			pManipulator->SetValue( "Width", imageSize.x );
 			pManipulator->SetValue( "Height", imageSize.y );
 			// set IsDXT
-			if ( (szFormat == "TF_DXT1") || (szFormat == "TF_DXT2") || (szFormat == "TF_DXT3") || (szFormat == "TF_DXT4") || (szFormat == "TF_DXT5") )
+			if ( ( szFormat == "TF_DXT1" ) || ( szFormat == "TF_DXT2" ) || ( szFormat == "TF_DXT3" ) ||
+			     ( szFormat == "TF_DXT4" ) || ( szFormat == "TF_DXT5" ) )
 				pManipulator->SetValue( "IsDXT", true );
 			else
 				pManipulator->SetValue( "IsDXT", false );
@@ -317,25 +325,23 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	return ER_FAIL;
 }
 
-
 int GetDDSBPP( const SDDSHeader &hdr )
 {
 	if ( hdr.ddspf.dwFlags & DDS_FOURCC )
-		return hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','1') ? 4 : 8;
-	else if ( (hdr.ddspf.dwFlags & DDS_RGB) == DDS_RGB )
+		return hdr.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) ? 4 : 8;
+	else if ( ( hdr.ddspf.dwFlags & DDS_RGB ) == DDS_RGB )
 		return hdr.ddspf.dwRGBBitCount;
 	else
 		return 8;
 }
 
-
-EXPORT_RESULT CTextureExporter::CheckObject( IManipulator* pManipulator,
-																						 const std::string &rszObjectTypeName,
-																						 const std::string &rszObjectName,
-																						 bool bExport,
-																						 EXPORT_TYPE exportType )
+EXPORT_RESULT CTextureExporter::CheckObject( IManipulator *pManipulator,
+                                             const std::string &rszObjectTypeName,
+                                             const std::string &rszObjectName,
+                                             bool bExport,
+                                             EXPORT_TYPE exportType )
 {
-  if ( bExport ) // skip checking after export
+	if ( bExport ) // skip checking after export
 	{
 		return ER_SUCCESS;
 	}
@@ -355,21 +361,24 @@ EXPORT_RESULT CTextureExporter::CheckObject( IManipulator* pManipulator,
 	// check texture file name
 	if ( bStandardExport && !NFile::IsValidFileName( szSrcFileName.c_str() ) )
 	{
-		const std::string szError = fmt::format( "Texture \"{}\" has invalid source file name \"{}\"\n", rszObjectName.c_str(), szSrcFileName.c_str() );
+		const std::string szError = fmt::format(
+				"Texture \"{}\" has invalid source file name \"{}\"\n", rszObjectName.c_str(), szSrcFileName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
 	// check source file (!)
 	if ( bStandardExport && !NVFS::GetMainVFS()->DoesFileExist( szSrcFileName ) )
 	{
-		const std::string szError = fmt::format( "Texture \"{}\" source file \"{}\" doesn't exist!\n", rszObjectName.c_str(), szSrcFileName.c_str() );
+		const std::string szError = fmt::format(
+				"Texture \"{}\" source file \"{}\" doesn't exist!\n", rszObjectName.c_str(), szSrcFileName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
 	// check destination
 	std::string szDestValue;
 	CManipulatorManager::GetValue( &szDestValue, pManipulator, "DestName" );
-	const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDestValue;
+	const std::string szDstFileName =
+			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDestValue;
 	if ( CheckDestination( szDstFileName, rszObjectName ) == false )
 		return ER_FAIL;
 	//
@@ -391,7 +400,7 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 	try
 	{
 		SDDSFileHeader fhdr;
-		stream.Read( &fhdr, sizeof(fhdr) );
+		stream.Read( &fhdr, sizeof( fhdr ) );
 		if ( fhdr.dwSignature != SDDSFileHeader::SIGNATURE )
 		{
 			NLog::Log( LT_ERROR, "Invalid header in texture\n" );
@@ -407,8 +416,8 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 			++nNumMipLevels;
 		//BUGFIX}
 
-		if ( fhdr.header.dwSize != sizeof(SDDSHeader) || fhdr.header.ddspf.dwSize != sizeof(SDDSPixelFormat) ||
-			fhdr.header.dwWidth == 0 || fhdr.header.dwHeight == 0 || nNumMipLevels > 32 )
+		if ( fhdr.header.dwSize != sizeof( SDDSHeader ) || fhdr.header.ddspf.dwSize != sizeof( SDDSPixelFormat ) ||
+		     fhdr.header.dwWidth == 0 || fhdr.header.dwHeight == 0 || nNumMipLevels > 32 )
 			return false;
 		// DXT stores a whole 4x4 block even for the small mip levels; rectangular
 		// images also stop halving each dimension once it reaches one pixel.
@@ -417,12 +426,12 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 		for ( int i = 0; i < nNumMipLevels; ++i )
 		{
 			if ( fhdr.header.ddspf.dwFlags & DDS_FOURCC )
-				nTotalSize += ((width + 3) / 4) * ((height + 3) / 4) *
-					(fhdr.header.ddspf.dwFourCC == MAKEFOURCC('D','X','T','1') ? 8 : 16);
+				nTotalSize += ( ( width + 3 ) / 4 ) * ( ( height + 3 ) / 4 ) *
+				              ( fhdr.header.ddspf.dwFourCC == MAKEFOURCC( 'D', 'X', 'T', '1' ) ? 8 : 16 );
 			else
-				nTotalSize += width * height * GetDDSBPP(fhdr.header) / 8;
-			width = (std::max)(uint64_t(1), width / 2);
-			height = (std::max)(uint64_t(1), height / 2);
+				nTotalSize += width * height * GetDDSBPP( fhdr.header ) / 8;
+			width = (std::max)( uint64_t( 1 ), width / 2 );
+			height = (std::max)( uint64_t( 1 ), height / 2 );
 		}
 		if ( nTotalSize != nTextureDataSize )
 		{

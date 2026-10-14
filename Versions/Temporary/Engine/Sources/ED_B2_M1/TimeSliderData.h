@@ -14,22 +14,21 @@
 // TimeSliderControl.h includes this and adds the MFC control; the wx panel in
 // MoviesEditorViewWx.cpp includes it and draws the same data.
 
-#define DEF_SEL_RAD	0.1f
+#define DEF_SEL_RAD 0.1f
 
 // How the timeline is painted, shared for the same reason: two sets of colours
 // would be two timelines that look different for no reason anybody chose.
 // 0x00BBGGRR, as Win32 COLORREFs are, and unpacked by each front end.
-#define TSL_BG_COLOR				RGB( 0xBB, 0xBB, 0xBB )
-#define TSL_BG_E_COLOR			RGB( 0x33, 0x33, 0x33 )
-#define TSL_KEY_COLOR				RGB( 0xBB, 0x00, 0x00 )
-#define TSL_AKEY_COLOR			RGB( 0x33, 0x33, 0x00 )
-#define TSL_GRID_COLOR			RGB( 0x33, 0x33, 0x33 )
-#define TSL_SLIDER_COLOR		RGB( 0x00, 0x00, 0xBB )
-#define TSL_SEL_SPACE_COLOR	RGB( 0x00, 0xBB, 0xBB )
-#define TSL_DEF_SPACING				50
-#define TSL_DEF_CURSOR_WIDTH	20
-#define TSL_DEF_SPACING_SCALE_COEFF	2.0f
-
+#define TSL_BG_COLOR RGB( 0xBB, 0xBB, 0xBB )
+#define TSL_BG_E_COLOR RGB( 0x33, 0x33, 0x33 )
+#define TSL_KEY_COLOR RGB( 0xBB, 0x00, 0x00 )
+#define TSL_AKEY_COLOR RGB( 0x33, 0x33, 0x00 )
+#define TSL_GRID_COLOR RGB( 0x33, 0x33, 0x33 )
+#define TSL_SLIDER_COLOR RGB( 0x00, 0x00, 0xBB )
+#define TSL_SEL_SPACE_COLOR RGB( 0x00, 0xBB, 0xBB )
+#define TSL_DEF_SPACING 50
+#define TSL_DEF_CURSOR_WIDTH 20
+#define TSL_DEF_SPACING_SCALE_COEFF 2.0f
 
 //
 //	Movie Slider Key Data
@@ -51,7 +50,6 @@ struct SMovieKeyData
 	}
 };
 
-
 //
 //	Movie Slider Data
 //
@@ -64,7 +62,7 @@ private:
 public:
 	float fStartTime, fLength, fScale;
 
-//	bool bSelectionMode;
+	//	bool bSelectionMode;
 	float fSelectionStart;
 	float fSelectionLength;
 
@@ -112,25 +110,22 @@ public:
 			if ( itKey->bActive )
 				++nCount;
 		}
-		return (nCount == 1);
+		return ( nCount == 1 );
 	}
 	//
-	bool IsSelectionValid() const
-	{
-		return ( fabs(fSelectionLength) > FP_EPSILON );
-	}
+	bool IsSelectionValid() const { return ( fabs( fSelectionLength ) > FP_EPSILON ); }
 	//
 	bool IsPointUnderCursor( const float fPoint ) const
 	{
 		//
-		return ( fabs(fPoint - fCursorTime) < DEF_SEL_RAD );
+		return ( fabs( fPoint - fCursorTime ) < DEF_SEL_RAD );
 	}
 	bool IsPointInsideSelection( const float fPoint ) const
 	{
 		const float fStart = (std::min)( fSelectionStart, fSelectionStart + fSelectionLength );
 		const float fEnd = (std::max)( fSelectionStart, fSelectionStart + fSelectionLength );
 
-		return ( (IsSelectionValid() && (fPoint >= fStart) && (fPoint <= fEnd)) || (IsPointUnderCursor(fPoint)) );
+		return ( ( IsSelectionValid() && ( fPoint >= fStart ) && ( fPoint <= fEnd ) ) || ( IsPointUnderCursor( fPoint ) ) );
 	}
 	//
 	void UpdateSelection()
@@ -148,15 +143,9 @@ public:
 		fMoveToValue = 0.0f;
 	}
 	//
-	void SetCursorPos( float fTime )
-	{
-		fCursorTime = fTime;
-	}
+	void SetCursorPos( float fTime ) { fCursorTime = fTime; }
 	//
-	float GetCursorPos() const
-	{
-		return fCursorTime;
-	}
+	float GetCursorPos() const { return fCursorTime; }
 	//
 	float GetFirstKeyTime() const
 	{
@@ -211,7 +200,7 @@ public:
 	{
 		NI_VERIFY( keys.size() > 0, "", return 0.0f )
 
-			int i = -1;
+		int i = -1;
 		float fDiff = FP_MAX_VALUE;
 		//
 		for ( int j = 0; j < keys.size(); ++j )
@@ -231,9 +220,7 @@ public:
 		//
 		return keys[i].fTime;
 	}
-
 };
-
 
 // The grid spacing the timeline draws at, for a given length, scale and pixel
 // width. Shared so that both timelines put their grid lines in the same places.
@@ -246,12 +233,13 @@ public:
 inline float CalcTimeSliderSpacing( float fLength, float fScale, int nWidth )
 {
 	const float fSpan = fLength * fScale;
-	if ( (fSpan <= 0.0f) || (nWidth <= 0) )
+	if ( ( fSpan <= 0.0f ) || ( nWidth <= 0 ) )
 	{
 		return 1.0f;
 	}
-	const float fSpacing = pow( TSL_DEF_SPACING_SCALE_COEFF,
-															(int)(log(fSpan * TSL_DEF_SPACING / nWidth)/log(TSL_DEF_SPACING_SCALE_COEFF) - 1) );
+	const float fSpacing =
+			pow( TSL_DEF_SPACING_SCALE_COEFF,
+	         (int)( log( fSpan * TSL_DEF_SPACING / nWidth ) / log( TSL_DEF_SPACING_SCALE_COEFF ) - 1 ) );
 	// a span small enough to underflow the power would do the same as above
 	return ( fSpacing > 0.0f ) ? fSpacing : 1.0f;
 }

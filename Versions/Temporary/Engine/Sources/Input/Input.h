@@ -40,7 +40,10 @@ struct SMessage
 
 	SMessage() {}
 	SMessage( int _nAction, EPOVAxis _ePOVAxis, EControlType _cType, int _nParam, bool _bState, STime _tTime )
-		: nAction(_nAction), ePOVAxis(_ePOVAxis), cType(_cType), nParam(_nParam), bState(_bState), tTime(_tTime) {}
+			: nAction( _nAction ), ePOVAxis( _ePOVAxis ), cType( _cType ), nParam( _nParam ), bState( _bState ),
+				tTime( _tTime )
+	{
+	}
 };
 
 INPUT_EXPORT bool InitInput( HWND hWnd, bool bNonExclusiveMode = false, int nSampleBufferSize = -1 );
@@ -56,6 +59,11 @@ void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity );
 INPUT_EXPORT std::string GetControlLocalName( int nAction );
 
 //
-INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType );
+INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg,
+                                  std::string *pszGameMessage,
+                                  int *pnParam1,
+                                  int *pnParam2,
+                                  int *pnCount,
+                                  NInput::EControlType *peControlType );
 
 };

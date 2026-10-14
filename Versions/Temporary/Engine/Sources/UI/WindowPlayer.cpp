@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-REGISTER_SAVELOAD_CLASS(UI, 0x170A7B82, CWindowPlayer);
+REGISTER_SAVELOAD_CLASS( UI, 0x170A7B82, CWindowPlayer );
 
 // CWindowPlayer
 
@@ -28,7 +28,6 @@ int CWindowPlayer::SMovie::operator&( IBinSaver &saver )
 	return 0;
 }
 
-
 int CWindowPlayer::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pInstance );
@@ -36,13 +35,13 @@ int CWindowPlayer::operator&( IBinSaver &saver )
 	saver.Add( 3, &pPlayer );
 	saver.Add( 4, &movies );
 	saver.Add( 5, &nCurrMovie );
-	saver.Add( 6, static_cast<CWindow*>( this ) );
+	saver.Add( 6, static_cast<CWindow *>( this ) );
 	return 0;
 }
 
 void CWindowPlayer::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowPlayer *pDesc( checked_cast<const NDb::SWindowPlayer*>( _pDesc ) );
+	const NDb::SWindowPlayer *pDesc( checked_cast<const NDb::SWindowPlayer *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 	CWindow::InitByDesc( _pDesc );
 	pShared = checked_cast_ptr<const NDb::SWindowPlayerShared *>( pDesc->pShared );
@@ -79,17 +78,42 @@ void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 	{
 		float fScale = (std::min)( dstRect.Width() / textureRect.Width(), dstRect.Height() / textureRect.Height() );
 		CTPoint<float> shift( ( dstRect.Width() - textureRect.Width() * fScale ) / 2,
-			( dstRect.Height() - textureRect.Height() * fScale ) / 2 );
+		                      ( dstRect.Height() - textureRect.Height() * fScale ) / 2 );
 
 		CRectLayout black_rects;
-		black_rects.AddRect( dstRect.x1, dstRect.y1, shift.x, dstRect.Height(), CTRect<float>( 0, 0, 0, 0 ), NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
-		black_rects.AddRect( dstRect.x1, dstRect.y1, dstRect.Width(), shift.y, CTRect<float>( 0, 0, 0, 0 ), NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
-		black_rects.AddRect( dstRect.x1 + dstRect.Width() - shift.x, dstRect.y1, shift.x, dstRect.Height(), CTRect<float>( 0, 0, 0, 0 ), NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
-		black_rects.AddRect( dstRect.x1, dstRect.y1 + dstRect.Height() - shift.y, dstRect.Width(), shift.y, CTRect<float>( 0, 0, 0, 0 ), NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
-		pVisitor->VisitUITextureRect( (CPtrFuncBase<NGfx::CTexture>*)0, 3, black_rects );
+		black_rects.AddRect( dstRect.x1,
+		                     dstRect.y1,
+		                     shift.x,
+		                     dstRect.Height(),
+		                     CTRect<float>( 0, 0, 0, 0 ),
+		                     NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
+		black_rects.AddRect( dstRect.x1,
+		                     dstRect.y1,
+		                     dstRect.Width(),
+		                     shift.y,
+		                     CTRect<float>( 0, 0, 0, 0 ),
+		                     NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
+		black_rects.AddRect( dstRect.x1 + dstRect.Width() - shift.x,
+		                     dstRect.y1,
+		                     shift.x,
+		                     dstRect.Height(),
+		                     CTRect<float>( 0, 0, 0, 0 ),
+		                     NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
+		black_rects.AddRect( dstRect.x1,
+		                     dstRect.y1 + dstRect.Height() - shift.y,
+		                     dstRect.Width(),
+		                     shift.y,
+		                     CTRect<float>( 0, 0, 0, 0 ),
+		                     NGfx::SPixel8888( 0, 0, 0, 0xFF ) );
+		pVisitor->VisitUITextureRect( (CPtrFuncBase<NGfx::CTexture> *)0, 3, black_rects );
 
 		CRectLayout rects;
-		rects.AddRect( dstRect.x1 + shift.x, dstRect.y1 + shift.y, textureRect.Width() * fScale, textureRect.Height() * fScale, textureRect, 0xFFFFFFFF );
+		rects.AddRect( dstRect.x1 + shift.x,
+		               dstRect.y1 + shift.y,
+		               textureRect.Width() * fScale,
+		               textureRect.Height() * fScale,
+		               textureRect,
+		               0xFFFFFFFF );
 		pVisitor->VisitUITextureRect( pPlayer, 3, rects );
 	}
 	else
@@ -219,7 +243,8 @@ void CWindowPlayer::UpdatePlayer()
 	if ( nCurrMovie < movies.size() )
 	{
 		pPlayer = NGScene::CreateVideoPlayer( movies[nCurrMovie].szFileName + ".bik", GetSceneFlags() );
-		if (!pPlayer || !pPlayer->OpenVideo()) {
+		if ( !pPlayer || !pPlayer->OpenVideo() )
+		{
 			pPlayer = NGScene::CreateVideoPlayer( movies[nCurrMovie].szFileName + ".ogm", GetSceneFlags() );
 		}
 		if ( pPlayer )
@@ -254,6 +279,5 @@ void CWindowPlayer::PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip
 			pPlayer->SetCurrentFrame( nStartFrame );
 			pPlayer->Pause( true );
 		}
-
 	}
 }

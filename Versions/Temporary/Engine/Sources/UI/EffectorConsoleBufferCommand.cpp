@@ -5,10 +5,7 @@
 
 REGISTER_SAVELOAD_CLASS( UI, 0x110953C0, CEffectorConsoleBufferCommand )
 
-
-
 //		CARSetSpecialAbility
-
 
 int CEffectorConsoleBufferCommand::operator&( IBinSaver &saver )
 {
@@ -18,11 +15,11 @@ int CEffectorConsoleBufferCommand::operator&( IBinSaver &saver )
 }
 
 void CEffectorConsoleBufferCommand::Configure( const NDb::SUIStateBase *_pCmd,
-																							struct IScreen *pScreen,
-																							SWindowContext *pContext,
-																							const std::string &szAnimatedWindow )
+                                               struct IScreen *pScreen,
+                                               SWindowContext *pContext,
+                                               const std::string &szAnimatedWindow )
 {
-	const NDb::SUIConsoleCommand *pCmd( checked_cast<const NDb::SUIConsoleCommand*>( _pCmd ) );
+	const NDb::SUIConsoleCommand *pCmd( checked_cast<const NDb::SUIConsoleCommand *>( _pCmd ) );
 	CParam<std::string> elementToAsk( pCmd->szEditBoxName );
 	if ( pCmd->szEditBoxName.empty() )
 		elementToAsk = szAnimatedWindow;
@@ -35,9 +32,9 @@ const int CEffectorConsoleBufferCommand::Segment( const int timeDiff, struct ISc
 {
 	// check IWindow that is passed as a param for string.
 	// then pass this string to console buffer
-	IWindow * pWnd = pScreen->GetElement( szEditBoxName, true );
+	IWindow *pWnd = pScreen->GetElement( szEditBoxName, true );
 	NI_ASSERT( pWnd != 0, fmt::format( "cannot find window \"{}\" to ask string", szEditBoxName ) );
-	IEditLine *pEdit = dynamic_cast<IEditLine*>( pWnd );
+	IEditLine *pEdit = dynamic_cast<IEditLine *>( pWnd );
 	NI_ASSERT( pEdit != 0, fmt::format( "it is not edit line \"{}\" ", szEditBoxName ) );
 
 	WriteToPipe( PIPE_CONSOLE_CMDS, pEdit->GetText() );

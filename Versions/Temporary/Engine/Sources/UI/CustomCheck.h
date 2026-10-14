@@ -9,55 +9,71 @@
 
 class CCheckRunScript : public IMessageCheck
 {
-	OBJECT_BASIC_METHODS(CCheckRunScript)
+	OBJECT_BASIC_METHODS( CCheckRunScript )
 	CDBPtr<NDb::SCheckRunScript> pDesc;
+
 public:
-	CCheckRunScript() {  }
+	CCheckRunScript() {}
 	int operator&( IBinSaver &ss );
-	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen,
+	                   struct IScriptWrapper *pScript,
+	                   struct IProgrammedReactionsAndChecks *pProg,
+	                   uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 };
 
 class CCheckPreprogrammed : public IMessageCheck
 {
-	OBJECT_BASIC_METHODS(CCheckPreprogrammed)
-		CDBPtr<NDb::SCheckPreprogrammed> pDesc;
+	OBJECT_BASIC_METHODS( CCheckPreprogrammed )
+	CDBPtr<NDb::SCheckPreprogrammed> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen,
+	                   struct IScriptWrapper *pScript,
+	                   struct IProgrammedReactionsAndChecks *pProg,
+	                   uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-
 };
 
 class CCheckIsWindowEnabled : public IMessageCheck
 {
-	OBJECT_BASIC_METHODS(CCheckIsWindowEnabled)
-		CDBPtr<NDb::SCheckIsWindowEnabled> pDesc;
+	OBJECT_BASIC_METHODS( CCheckIsWindowEnabled )
+	CDBPtr<NDb::SCheckIsWindowEnabled> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen,
+	                   struct IScriptWrapper *pScript,
+	                   struct IProgrammedReactionsAndChecks *pProg,
+	                   uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-
 };
 
 class CCheckIsWindowVisible : public IMessageCheck
 {
-	OBJECT_BASIC_METHODS(CCheckIsWindowVisible)
+	OBJECT_BASIC_METHODS( CCheckIsWindowVisible )
 	CDBPtr<NDb::SCheckIsWindowVisible> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen,
+	                   struct IScriptWrapper *pScript,
+	                   struct IProgrammedReactionsAndChecks *pProg,
+	                   uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-
 };
 
 class CCheckIsTabActive : public IMessageCheck
 {
-	OBJECT_BASIC_METHODS(CCheckIsTabActive)
+	OBJECT_BASIC_METHODS( CCheckIsTabActive )
 	CDBPtr<NDb::SCheckIsTabActive> pDesc;
+
 public:
 	int operator&( IBinSaver &ss );
-	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags  ) const;
+	virtual int Check( struct IScreen *pScreen,
+	                   struct IScriptWrapper *pScript,
+	                   struct IProgrammedReactionsAndChecks *pProg,
+	                   uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-
 };

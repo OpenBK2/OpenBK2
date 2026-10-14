@@ -15,26 +15,22 @@
 static float END_GAME_FADE_TIME = 2.5f;
 static float END_GAME_ROTATE_TIME = 10.0f;
 static float END_GAME_CAMERA_YAW_SPEED = 1.0f;
-const char* END_GAME_CAMERA_LOCKER = "end_game_locker";
+const char *END_GAME_CAMERA_LOCKER = "end_game_locker";
 const float SET_YAW_SPEED_DELAY = 0.1f;
 const int SET_YAW_SPEED_STEPS = 5;
 const float SET_YAW_SPEED_STEP_TIME = 0.1f;
 
 // CInterfaceWinLoose
 
-CInterfaceWinLoose::CInterfaceWinLoose() :
-	CInterfaceScreenBase( "WinLooseDialog", "esc_menu" ),
-	eUIState( EUIS_NORMAL ),
-	timeAbsLast( 0 ),
-	bWin( false ),
-	nSetYawSpeedStep( 0 ),
-	fSetYawSpeedTime( 0.0f )
+CInterfaceWinLoose::CInterfaceWinLoose()
+		: CInterfaceScreenBase( "WinLooseDialog", "esc_menu" ), eUIState( EUIS_NORMAL ), timeAbsLast( 0 ), bWin( false ),
+			nSetYawSpeedStep( 0 ), fSetYawSpeedTime( 0.0f )
 {
 }
 
 bool CInterfaceWinLoose::Init()
 {
-	if (  Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+	if ( Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 	{
 		//Make screenshot before anything else
 		InterfaceState()->GetScreenShotTexture()->Generate( true );
@@ -100,10 +96,10 @@ void CInterfaceWinLoose::NextScreen()
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 
-	if (  Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+	if ( Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-//		NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
+		//		NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
 		NMainLoop::Command( ML_COMMAND_SINGLE_STATISTIC, "" );
 	}
 	else
@@ -235,9 +231,7 @@ CVec3 CInterfaceWinLoose::GetAnchor() const
 
 // CICWinLooseDialog
 
-void CICWinLooseDialog::PreCreate()
-{
-}
+void CICWinLooseDialog::PreCreate() {}
 
 void CICWinLooseDialog::PostCreate( IInterface *pInterface )
 {
@@ -256,7 +250,7 @@ void CICWinLooseDialog::Configure( const char *pszConfig )
 		bWin = true;
 }
 
-START_REGISTER(WinLooseCommands)
+START_REGISTER( WinLooseCommands )
 
 REGISTER_VAR_EX( "win_loose_rotate_speed", NGlobal::VarFloatHandler, &END_GAME_CAMERA_YAW_SPEED, 1.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "win_loose_rotate_time", NGlobal::VarFloatHandler, &END_GAME_ROTATE_TIME, 10.0f, STORAGE_NONE );

@@ -10,6 +10,7 @@ namespace
 class CTestNode : public COcTreeNode<CTestNode, 8, true>
 {
 	OBJECT_NOCOPY_METHODS( CTestNode );
+
 public:
 	bool occupied = false;
 
@@ -64,7 +65,8 @@ TEST( OcTree, EnclosesGeometryBeyondTwentyPatches )
 	{
 		SCOPED_TRACE( patches );
 		for ( const CVec3 &center : { CVec3( patches * 44 - 2, 200, 0 ),
-			CVec3( 200, patches * 44 - 2, 0 ), CVec3( patches * 44 - 2, patches * 44 - 2, 0 ) } )
+		                              CVec3( 200, patches * 44 - 2, 0 ),
+		                              CVec3( patches * 44 - 2, patches * 44 - 2, 0 ) } )
 		{
 			CTestNode *node = root->GetNode( center, 1 );
 			node->occupied = true;
@@ -105,8 +107,8 @@ TEST( OcTree, GrowthPreservesExistingNodesAndParentLinks )
 	CTestNode *first = root->GetNode( original, 1 );
 	first->occupied = true;
 	// Exercise both directions on all axes, including the old exact boundaries.
-	for ( const CVec3 &center : { CVec3( 896, 200, 0 ), CVec3( 4000, 5000, 2000 ),
-		CVec3( -3000, -4000, -2000 ), CVec3( 10000, 0, 0 ) } )
+	for ( const CVec3 &center :
+	      { CVec3( 896, 200, 0 ), CVec3( 4000, 5000, 2000 ), CVec3( -3000, -4000, -2000 ), CVec3( 10000, 0, 0 ) } )
 	{
 		CTestNode *node = root->GetNode( center, 1 );
 		node->occupied = true;

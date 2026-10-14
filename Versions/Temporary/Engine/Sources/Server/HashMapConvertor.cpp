@@ -4,11 +4,14 @@
 namespace NHashMapConvertor
 {
 
-void ConvertNumber( std::unordered_map<std::string,int> *pHashMap, const std::string &szName, int *pValue, const bool bRead )
+void ConvertNumber( std::unordered_map<std::string, int> *pHashMap,
+                    const std::string &szName,
+                    int *pValue,
+                    const bool bRead )
 {
 	if ( bRead )
 	{
-		std::unordered_map<std::string,int>::const_iterator it = pHashMap->find( szName );
+		std::unordered_map<std::string, int>::const_iterator it = pHashMap->find( szName );
 		if ( it != pHashMap->end() )
 			*pValue = it->second;
 		else
@@ -16,11 +19,14 @@ void ConvertNumber( std::unordered_map<std::string,int> *pHashMap, const std::st
 	}
 	else
 	{
-		(*pHashMap)[szName] = *pValue;
+		( *pHashMap )[szName] = *pValue;
 	}
 }
 
-void ConvertVector( std::unordered_map<std::string,int> *pHashMap, const std::string &szPrefix, std::vector<int> *pVector, const bool bRead )
+void ConvertVector( std::unordered_map<std::string, int> *pHashMap,
+                    const std::string &szPrefix,
+                    std::vector<int> *pVector,
+                    const bool bRead )
 {
 	if ( bRead )
 	{
@@ -29,13 +35,13 @@ void ConvertVector( std::unordered_map<std::string,int> *pHashMap, const std::st
 		szName.reserve( szPrefix.size() + 3 );
 		szName = szPrefix + "0";
 		int i = 0;
-		std::unordered_map<std::string,int>::const_iterator it = pHashMap->find( szName );
+		std::unordered_map<std::string, int>::const_iterator it = pHashMap->find( szName );
 		while ( it != pHashMap->end() )
 		{
 			pVector->push_back( it->second );
 			++i;
 			szName.erase( szPrefix.size(), szName.size() - szPrefix.size() );
-			szName += std::to_string(  i );
+			szName += std::to_string( i );
 			it = pHashMap->find( szName );
 		}
 	}
@@ -46,8 +52,8 @@ void ConvertVector( std::unordered_map<std::string,int> *pHashMap, const std::st
 		szName = szPrefix;
 		for ( int i = 0; i < pVector->size(); ++i )
 		{
-			szName += std::to_string(  i );
-			(*pHashMap)[szName] = (*pVector)[i];
+			szName += std::to_string( i );
+			( *pHashMap )[szName] = ( *pVector )[i];
 			szName.erase( szPrefix.size(), szName.size() - szPrefix.size() );
 		}
 	}

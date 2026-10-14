@@ -9,19 +9,17 @@ namespace NNet
 /////////////////////////////////////////////////////////////////////////////////////
 // CStreamTracker
 /////////////////////////////////////////////////////////////////////////////////////
-CStreamTracker::CStreamTracker(): nChannelOutputOffset(0), nChannelInputOffset(0)
-{
-}
+CStreamTracker::CStreamTracker() : nChannelOutputOffset( 0 ), nChannelInputOffset( 0 ) {}
 // return true if test offset is before border
 bool CStreamTracker::IsBefore( CHANNEL_DATA_OFFSET border, CHANNEL_DATA_OFFSET test )
 {
-	return ((CHANNEL_DATA_OFFSET)(test - border)) > 0x80000000;
+	return ( (CHANNEL_DATA_OFFSET)( test - border ) ) > 0x80000000;
 }
 /////////////////////////////////////////////////////////////////////////////////////
 void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit )
 {
-//	cout << "CHANNEL stats " << channelOutFlyList.size() << " " << channelOutList.size();
-//	cout << " " << channelInList.size() << " " << reassign.size() << endl;
+	//	cout << "CHANNEL stats " << channelOutFlyList.size() << " " << channelOutList.size();
+	//	cout << " " << channelInList.size() << " " << reassign.size() << endl;
 	ASSERT( nSizeLimit <= N_MAX_PACKET_SIZE );
 	if ( channelOutList.empty() )
 	{
@@ -57,7 +55,8 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 			channelOutBuf.Read( block.cData, nSize );
 			nChannelOutputOffset += nSize;
 #ifdef LOG
-			cout << "pkt" << nPkt << "send new block offs=" << (unsigned)block.nOffset << " size=" << (unsigned)block.nLength << endl;
+			cout << "pkt" << nPkt << "send new block offs=" << (unsigned)block.nOffset << " size=" << (unsigned)block.nLength
+					 << endl;
 #endif
 		}
 	}
@@ -80,7 +79,7 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 #endif
 		PACKET_ID oldPkt = ibest->nPkt;
 		channelOutFlyList.splice( channelOutFlyList.end(), channelOutList, ibest );
-		reassign[ oldPkt ] = nPkt;
+		reassign[oldPkt] = nPkt;
 	}
 	// send channel data
 	SChannelBlock &block = channelOutFlyList.back();
@@ -99,7 +98,7 @@ void CStreamTracker::ReadMsg( CBitStream &bits )
 #ifdef LOG
 	cout << "recv pkt offs=" << (unsigned)block.nOffset << " size=" << (unsigned)block.nLength << endl;
 #endif
-		// is not this data already received?
+	// is not this data already received?
 	if ( IsBefore( nChannelInputOffset, block.nOffset ) || block.nLength == 0 )
 	{
 #ifdef LOG
@@ -116,7 +115,7 @@ void CStreamTracker::PumpIncoming()
 	// Received blocks have already been acknowledged. Resume assembly whenever
 	// the consumer frees ring space; another datagram may never arrive.
 	// gather input blocks into stream
-	for(;;)
+	for ( ;; )
 	{
 		bool bCont = false;
 		for ( SChannelBlockList::iterator i = channelInList.begin(); i != channelInList.end(); )
@@ -174,7 +173,7 @@ void CStreamTracker::Erase( const std::vector<PACKET_ID> &pkts )
 	for ( int i = 0; i < pkts.size(); ++i )
 	{
 		PACKET_ID nPkt = pkts[i];
-		std::unordered_map< PACKET_ID, PACKET_ID >::iterator k = reassign.find( nPkt );
+		std::unordered_map<PACKET_ID, PACKET_ID>::iterator k = reassign.find( nPkt );
 		if ( k != reassign.end() )
 			reassign.erase( k );
 	}
@@ -185,9 +184,9 @@ void CStreamTracker::Commit( const std::vector<PACKET_ID> &pkts )
 	for ( int i = 0; i < pkts.size(); ++i )
 	{
 		PACKET_ID nPkt = pkts[i];
-		for(;;)
+		for ( ;; )
 		{
-			std::unordered_map< PACKET_ID, PACKET_ID >::iterator k = reassign.find( nPkt );
+			std::unordered_map<PACKET_ID, PACKET_ID>::iterator k = reassign.find( nPkt );
 			if ( k == reassign.end() )
 				break;
 #ifdef LOG

@@ -10,5 +10,5 @@
 // got them.
 namespace NAbout
 {
-	void Run( IWidget *pParent );
+void Run( IWidget *pParent );
 }

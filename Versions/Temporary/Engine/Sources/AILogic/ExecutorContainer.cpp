@@ -7,8 +7,7 @@
 #include "AILogic_export.h"
 
 CExecutorContainer theExecutorContainer;
-struct IExecutorContainer * pTheExecutorsContainer = 0;
-
+struct IExecutorContainer *pTheExecutorsContainer = 0;
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1105F483, CExecutorContainer )
 
@@ -33,7 +32,7 @@ void CExecutorContainer::Clear()
 
 void CExecutorContainer::Init()
 {
-	Clear();			// trying to keep it synced
+	Clear(); // trying to keep it synced
 	executors.resize( MAX_SEGMENT_DELAY );
 	nCurTime = 0;
 	checkIter = sleeping.end();
@@ -41,7 +40,7 @@ void CExecutorContainer::Init()
 
 void CExecutorContainer::AddSleeping( CExecutor *pExecutor )
 {
-	sleeping.insert( std::pair<CPtr<CExecutor>, bool>(pExecutor,true) );
+	sleeping.insert( std::pair<CPtr<CExecutor>, bool>( pExecutor, true ) );
 }
 
 void CExecutorContainer::Add( CExecutor *pExecutor )
@@ -51,11 +50,14 @@ void CExecutorContainer::Add( CExecutor *pExecutor )
 	// was scheduled from.
 	if ( NAsyncTrace::IsEnabled() )
 	{
-		NAsyncTrace::Write( "exec", fmt::format( "scheduled uid={} id={} next={} bucket={}",
-			pExecutor->GetInstanceID(), pExecutor->GetID(), pExecutor->GetNextTime(),
-			MakeIndex( pExecutor->GetNextTime() ) ) );
+		NAsyncTrace::Write( "exec",
+		                    fmt::format( "scheduled uid={} id={} next={} bucket={}",
+		                                 pExecutor->GetInstanceID(),
+		                                 pExecutor->GetID(),
+		                                 pExecutor->GetNextTime(),
+		                                 MakeIndex( pExecutor->GetNextTime() ) ) );
 	}
-	executors[MakeIndex(pExecutor->GetNextTime())].push_back( SExID(pExecutor->GetID(), pExecutor) );
+	executors[MakeIndex( pExecutor->GetNextTime() )].push_back( SExID( pExecutor->GetID(), pExecutor ) );
 }
 
 void CExecutorContainer::RegisterOnEvent( CExecutor *pExecutor, const SExecutorEventParam &ev )
@@ -82,27 +84,26 @@ void CExecutorContainer::RaiseEvent( const CExecutorEvent &event )
 		bEventRoze = false;
 		return;
 	}
-	CExecutorIDList &cur = executors[MakeIndex(0)];
+	CExecutorIDList &cur = executors[MakeIndex( 0 )];
 	for ( CExecutorList::iterator it = pos->second.begin(); it != pos->second.end(); ++it )
 	{
-		if ( (*it)->NotifyEvent( event ) )				// want to run this segment
+		if ( ( *it )->NotifyEvent( event ) ) // want to run this segment
 		{
-			(*it)->IncID();
-			cur.push_back( SExID( (*it)->GetID(), (*it) ) );
+			( *it )->IncID();
+			cur.push_back( SExID( ( *it )->GetID(), ( *it ) ) );
 		}
 	}
 
 	bEventRoze = false;
 }
 
-
 void CExecutorContainer::Segment()
 {
-	CExecutorIDList &cur = executors[MakeIndex(0)];
+	CExecutorIDList &cur = executors[MakeIndex( 0 )];
 	for ( CExecutorIDList::iterator it = cur.begin(); it != cur.end(); )
 	{
-		CExecutor *pEx = (*it).pEx;
-		const int nID = (*it).nID;
+		CExecutor *pEx = ( *it ).pEx;
+		const int nID = ( *it ).nID;
 
 		if ( pEx->GetID() != nID )
 		{
@@ -111,19 +112,19 @@ void CExecutorContainer::Segment()
 		else
 		{
 			const int nNextTime = pEx->Segment();
-			if ( nNextTime > 0 )									// move to desired time
+			if ( nNextTime > 0 ) // move to desired time
 			{
 				CExecutorIDList::iterator next = it;
 				++next;
-				executors[MakeIndex(nNextTime)].splice( executors[MakeIndex(nNextTime)].end(), cur, it );
+				executors[MakeIndex( nNextTime )].splice( executors[MakeIndex( nNextTime )].end(), cur, it );
 				it = next;
 			}
-			else if ( nNextTime == 0 )						// sleep
+			else if ( nNextTime == 0 ) // sleep
 			{
 				sleeping[pEx];
 				it = cur.erase( it );
 			}
-			else																	// delete executor
+			else // delete executor
 				it = cur.erase( it );
 		}
 	}

@@ -21,10 +21,16 @@ class CConnectServerProcessor : public CPacketProcessor
 	std::string szCDKey;
 	std::string szEMail;
 
-	enum EConnectType { ECT_LOGIN, ECT_REGISTER, ECT_FORGOT_PASSWORD };
+	enum EConnectType
+	{
+		ECT_LOGIN,
+		ECT_REGISTER,
+		ECT_FORGOT_PASSWORD
+	};
 	EConnectType eConnectType;
+
 public:
-	CConnectServerProcessor() : eConnectState( ECS_INACTIVE ) { }
+	CConnectServerProcessor() : eConnectState( ECS_INACTIVE ) {}
 	CConnectServerProcessor( class CNet *pServer, bool bCheckConnect );
 
 	bool Segment();

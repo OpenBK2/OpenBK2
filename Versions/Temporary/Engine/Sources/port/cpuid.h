@@ -42,11 +42,11 @@
 // 0x80000000 leaves, which are AMD's, and in cache and topology enumeration.
 // Neither is queried here, so there is no vendor branch.
 #if BOOST_ARCH_X86
-#	if BOOST_OS_WINDOWS
-#		include <intrin.h>
-#	else
-#		include <cpuid.h>
-#	endif
+#if BOOST_OS_WINDOWS
+#include <intrin.h>
+#else
+#include <cpuid.h>
+#endif
 #endif
 
 //! CPUID for a leaf that takes no subleaf. Fills eax, ebx, ecx, edx in that order.

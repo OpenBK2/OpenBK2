@@ -32,17 +32,21 @@ ITerraManager *CScene::GetTerraManager()
 	return data[eScene]->pTerraManager;
 }
 
-void CScene::SetSoundSceneMode( const enum ESoundSceneMode eMode )
-{
+void CScene::SetSoundSceneMode( const enum ESoundSceneMode eMode ) {}
 
-}
-
-void CScene::AddTrack( const int nID, const float fFadingSpeed,
-											 const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4,
-											 const CVec2 &vNorm, const float _fWidth, const float fAplha )
+void CScene::AddTrack( const int nID,
+                       const float fFadingSpeed,
+                       const CVec2 &_v1,
+                       const CVec2 &_v2,
+                       const CVec2 &_v3,
+                       const CVec2 &_v4,
+                       const CVec2 &vNorm,
+                       const float _fWidth,
+                       const float fAplha )
 {
 	if ( data[eScene]->pTracksManager )
-		data[eScene]->pTerraManager->AddTrack( nID, fFadingSpeed, _v1, _v2, _v3, _v4, vNorm, _fWidth, fAplha, data[eScene]->pTracksManager );
+		data[eScene]->pTerraManager->AddTrack(
+				nID, fFadingSpeed, _v1, _v2, _v3, _v4, vNorm, _fWidth, fAplha, data[eScene]->pTracksManager );
 }
 
 void CScene::AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial )
@@ -50,7 +54,8 @@ void CScene::AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SM
 	data[eScene]->pTerraManager->AddExplosion( _vMin, _vMax, pMaterial );
 }
 
-void CScene::AddDebris( const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial )
+void CScene::AddDebris(
+		const CVec2 &vSize, const CVec2 &vCenter, float fAngle, float fWidth, const NDb::SMaterial *pMaterial )
 {
 	data[eScene]->pTerraManager->AddDynamicDebris( vCenter, vSize, fAngle, fWidth, pMaterial );
 }
@@ -83,7 +88,9 @@ void CScene::SetLight( const NDb::SAmbientLight *pLight )
 		data[eScene]->pInterfaceView->SetAmbient( pLight );
 		data[eScene]->pInterfaceAmbientLight = pLight;
 	}
-	for ( SSceneData::CScreensData::iterator iData = data[eScene]->screensData.begin(); iData != data[eScene]->screensData.end(); ++iData )
+	for ( SSceneData::CScreensData::iterator iData = data[eScene]->screensData.begin();
+	      iData != data[eScene]->screensData.end();
+	      ++iData )
 	{
 		SSceneData::SScreenData &screenData = *iData;
 
@@ -94,7 +101,8 @@ void CScene::SetLight( const NDb::SAmbientLight *pLight )
 int CScene::AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptOrigin, float fR )
 {
 	const int nObjectID = GetID( nID );
-	NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", static_cast<uint32_t>( nObjectID )) );
+	NI_ASSERT( data[eScene]->visObjects.find( nObjectID ) == data[eScene]->visObjects.end(),
+	           fmt::format( "Object 0x{:08x} already exist", static_cast<uint32_t>( nObjectID ) ) );
 
 	if ( CObjectBase *pObj = data[eScene]->GetGScene()->AddPointLight( ptColor, ptOrigin, fR ) )
 	{
@@ -158,7 +166,7 @@ bool CScene::ProcessEvent( const SGameMessage &msg )
 void CScene::AfterLoad()
 {
 	// check for after-load already done
-	if ( (data.size() <= eScene) || (data[eScene]->p2DView != 0) && (data[eScene]->GetGScene() != 0) )
+	if ( ( data.size() <= eScene ) || ( data[eScene]->p2DView != 0 ) && ( data[eScene]->GetGScene() != 0 ) )
 		return;
 
 	data[eScene]->pAbsTimer->Set( GameTimer()->GetAbsTime() );
@@ -166,13 +174,20 @@ void CScene::AfterLoad()
 
 	CreateGScene();
 
-	for ( SSceneData::CVisObjectsMap::iterator it = data[eScene]->visObjects.begin(); it != data[eScene]->visObjects.end(); ++it )
+	for ( SSceneData::CVisObjectsMap::iterator it = data[eScene]->visObjects.begin();
+	      it != data[eScene]->visObjects.end();
+	      ++it )
 	{
 		it->second->ClearObject();
-		it->second->ReCreateObject( data[eScene]->GetGScene(), data[eScene]->pSyncSrc, data[eScene]->pGameTimer, data[eScene]->showModes[SCENE_SHOW_BBOXES] );
+		it->second->ReCreateObject( data[eScene]->GetGScene(),
+		                            data[eScene]->pSyncSrc,
+		                            data[eScene]->pGameTimer,
+		                            data[eScene]->showModes[SCENE_SHOW_BBOXES] );
 	}
 
-	for ( SSceneData::CScreensData::iterator iData = data[eScene]->screensData.begin(); iData != data[eScene]->screensData.end(); ++iData )
+	for ( SSceneData::CScreensData::iterator iData = data[eScene]->screensData.begin();
+	      iData != data[eScene]->screensData.end();
+	      ++iData )
 	{
 		SSceneData::SScreenData &screenData = *iData;
 
@@ -182,7 +197,9 @@ void CScene::AfterLoad()
 		screenData.p3DView->SetAmbient( data[eScene]->pSceneConsts->pInterfaceLight );
 
 		screenData.pScreen->AfterLoad();
-		for ( SSceneData::CVisObjectsMap::iterator it = screenData.interfaceVisObjects.begin(); it != screenData.interfaceVisObjects.end(); ++it )
+		for ( SSceneData::CVisObjectsMap::iterator it = screenData.interfaceVisObjects.begin();
+		      it != screenData.interfaceVisObjects.end();
+		      ++it )
 		{
 			it->second->ClearObject();
 			it->second->ReCreateObject( screenData.p3DView, 0, data[eScene]->pAbsTimer, false );
@@ -200,16 +217,19 @@ void CScene::AfterLoad()
 	// holded objects
 	if ( eScene == SCENE_MISSION )
 	{
-		std::list<CObjectBase*> holdedObjects;
+		std::list<CObjectBase *> holdedObjects;
 		GetSceneHoldedObjects( &holdedObjects, true );
-		for ( std::list<CObjectBase*>::iterator it = holdedObjects.begin(); it != holdedObjects.end(); ++it )
+		for ( std::list<CObjectBase *>::iterator it = holdedObjects.begin(); it != holdedObjects.end(); ++it )
 		{
-			if ( SVisObjDescBase *pVOD = dynamic_cast<SVisObjDescBase*>(*it) )
+			if ( SVisObjDescBase *pVOD = dynamic_cast<SVisObjDescBase *>( *it ) )
 			{
 				pVOD->ClearObject();
-				pVOD->ReCreateObject( data[eScene]->GetGScene(), data[eScene]->pSyncSrc, data[eScene]->pGameTimer, data[eScene]->showModes[SCENE_SHOW_BBOXES] );
+				pVOD->ReCreateObject( data[eScene]->GetGScene(),
+				                      data[eScene]->pSyncSrc,
+				                      data[eScene]->pGameTimer,
+				                      data[eScene]->showModes[SCENE_SHOW_BBOXES] );
 			}
-			else if ( IAttachedObject *pAO = dynamic_cast<IAttachedObject*>(*it) )
+			else if ( IAttachedObject *pAO = dynamic_cast<IAttachedObject *>( *it ) )
 				pAO->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 		}
 	}
@@ -227,13 +247,18 @@ void CScene::AfterLoad()
 
 	// after load for icons
 	NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
-	for ( SSceneData::CSceneIconsMap::iterator it = data[eScene]->iconsMap.begin(); it != data[eScene]->iconsMap.end(); ++it )
+	for ( SSceneData::CSceneIconsMap::iterator it = data[eScene]->iconsMap.begin(); it != data[eScene]->iconsMap.end();
+	      ++it )
 	{
 		if ( it->second.pPatch )
 		{
 			it->second.pPatch->AttachSyncSrc( data[eScene]->pIconSyncSrc );
-			it->second.pHolder = data[eScene]->GetGScene()->CreateDynamicMesh( data[eScene]->GetGScene()->MakeMeshInfo( it->second.pPatch,
-				it->second.pPatch->GetMaterial() ), 0, it->second.pPatch->GetBound(), NGScene::MakeLargeHintBound(), room );
+			it->second.pHolder = data[eScene]->GetGScene()->CreateDynamicMesh(
+					data[eScene]->GetGScene()->MakeMeshInfo( it->second.pPatch, it->second.pPatch->GetMaterial() ),
+					0,
+					it->second.pPatch->GetBound(),
+					NGScene::MakeLargeHintBound(),
+					room );
 		}
 	}
 
@@ -251,46 +276,45 @@ bool CScene::GetVisObjPlacement( const int nID, SFBTransform *pTransform ) const
 	SSceneData::CVisObjectsMap::const_iterator pos = data[eScene]->visObjects.find( nID );
 	if ( pos == data[eScene]->visObjects.end() )
 		return false;
-	(*pTransform).forward = pos->second->GetPlacement().forward;
-	(*pTransform).backward = pos->second->GetPlacement().backward;
+	( *pTransform ).forward = pos->second->GetPlacement().forward;
+	( *pTransform ).backward = pos->second->GetPlacement().backward;
 	return true;
 }
 
 namespace NScene
 {
-static const uint32_t overdrawColors[] =
-{
-	0x00000055,
-	0x000000AA,
-	0x000000FF,
-	0x000055FF,
-	0x0000AAFF,
-	0x0000FFFF,
-	0x0000FFAA,
-	0x0000FF55,
-	0x0000FF00,
-	0x0055FF00,
-	0x00AAFF00,
-	0x00FFFF00,
-	0x00FFAA00,
-	0x00FF7F00,
-	0x00FF5500,
-	0x00FF0000,
-	0x00FF002A,
-	0x00FF0055,
-	0x00FF00AA,
-	0x00FF00FF
-};
+static const uint32_t overdrawColors[] = { 0x00000055,
+                                           0x000000AA,
+                                           0x000000FF,
+                                           0x000055FF,
+                                           0x0000AAFF,
+                                           0x0000FFFF,
+                                           0x0000FFAA,
+                                           0x0000FF55,
+                                           0x0000FF00,
+                                           0x0055FF00,
+                                           0x00AAFF00,
+                                           0x00FFFF00,
+                                           0x00FFAA00,
+                                           0x00FF7F00,
+                                           0x00FF5500,
+                                           0x00FF0000,
+                                           0x00FF002A,
+                                           0x00FF0055,
+                                           0x00FF00AA,
+                                           0x00FF00FF };
 };
 
 void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 {
 	std::unordered_map<uint32_t, int> colors;
-	for ( int i = 0; i < std::size(NScene::overdrawColors); ++i )
-		colors[ NScene::overdrawColors[i] ] = i + 1;
+	for ( int i = 0; i < std::size( NScene::overdrawColors ); ++i )
+		colors[NScene::overdrawColors[i]] = i + 1;
 	// turn UI off, overdraw on
-	while ( ToggleShow(SCENE_SHOW_UI) != false );
-	while ( ToggleShow(SCENE_SHOW_OVERDRAW) == false );
+	while ( ToggleShow( SCENE_SHOW_UI ) != false )
+		;
+	while ( ToggleShow( SCENE_SHOW_OVERDRAW ) == false )
+		;
 
 	// draw and make screenshot
 	if ( NGlobal::GetVar( "m1", 0 ) )
@@ -322,14 +346,14 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 				int nOverdraw = 0;
 				float fMaxDiff2 = 1000000;
 				float r = ( color >> 16 ) & 0xff;
-				float g = ( color >>	8 ) & 0xff;
-				float b = (		color		) & 0xff;
-				for ( int i = 0; i < std::size(NScene::overdrawColors); ++i )
+				float g = ( color >> 8 ) & 0xff;
+				float b = ( color ) & 0xff;
+				for ( int i = 0; i < std::size( NScene::overdrawColors ); ++i )
 				{
 					uint32_t localColor = NScene::overdrawColors[i];
 					float lr = ( localColor >> 16 ) & 0xff;
-					float lg = ( localColor >>	8 ) & 0xff;
-					float lb = (		localColor		) & 0xff;
+					float lg = ( localColor >> 8 ) & 0xff;
+					float lb = ( localColor ) & 0xff;
 					float fDiff2 = fabs2( r - lr, g - lg, b - lb );
 					if ( fDiff2 < fMaxDiff2 )
 					{
@@ -346,6 +370,8 @@ void CScene::CalcAverageOverdrawMsg( const SGameMessage &msg )
 	data[eScene]->fAveOverdraw = float( nTotalOverdraw ) / float( image.GetSizeX() * image.GetSizeY() );
 	//
 	// turn UI on, overdraw off
-	while ( ToggleShow(SCENE_SHOW_UI) == false );
-	while ( ToggleShow(SCENE_SHOW_OVERDRAW) != false );
+	while ( ToggleShow( SCENE_SHOW_UI ) == false )
+		;
+	while ( ToggleShow( SCENE_SHOW_OVERDRAW ) != false )
+		;
 }

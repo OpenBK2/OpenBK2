@@ -3,9 +3,9 @@
 #include "GeneralConsts.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int SGeneralConsts::TIME_DONT_SEE_ENEMY_BEFORE_FORGET = 60000; //A minute, Originally was 5000;
-int SGeneralConsts::SCOUT_FREE_POINT = 300;						// скаут шлется в точку, если в этом радиусе от нее нет наших
+int SGeneralConsts::SCOUT_FREE_POINT = 300; // скаут шлется в точку, если в этом радиусе от нее нет наших
 int SGeneralConsts::SCOUT_POINTS = 4;
-NTimer::STime SGeneralConsts::TIME_SONT_SEE_AA_BEFORE_FORGET = 180000;			// связать с временем регенерации самолетов
+NTimer::STime SGeneralConsts::TIME_SONT_SEE_AA_BEFORE_FORGET = 180000; // связать с временем регенерации самолетов
 
 int SGeneralConsts::AVIATION_PERIOD_MAX = 60000;
 int SGeneralConsts::AVIATION_PERIOD_MIN = 10000;
@@ -72,11 +72,11 @@ void SGeneralConsts::Init()
 	TIME_TO_FORGET_ANTI_ARTILLERY = NGlobal::GetVar( "AI.General.Artillery.TimeToForgetAntiArtillery", 240000 );
 	TIME_TO_FORGET_UNIT = NGlobal::GetVar( "AI.General.Artillery.TimeToForgetUnit", 120000 );
 	TIME_TO_ARTILLERY_FIRE = NGlobal::GetVar( "AI.General.Artillery.TimeToArtilleryFire", 3000.0f );
-	PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE = NGlobal::GetVar( "AI.General.Artillery.ProbabilityToShootAfterArtilleryFire", 1.0f );
+	PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE =
+			NGlobal::GetVar( "AI.General.Artillery.ProbabilityToShootAfterArtilleryFire", 1.0f );
 	SHOOTS_OF_ARTILLERY_FIRE = NGlobal::GetVar( "AI.General.Artillery.ShootsOfArtilleryFire", 10.0f );
 	MIN_WEIGHT_TO_ARTILLERY_FIRE = NGlobal::GetVar( "AI.General.Artillery.MinWeightToArtilleryFire", 3.0f );
 	MIN_WEIGHT_TO_SEND_BOMBERS = NGlobal::GetVar( "AI.General.Artillery.MinWeightToSendBombers", 100.0f );
-
 
 	GENERAL_UPDATE_PERIOD = NGlobal::GetVar( "AI.General.UpdatePeriod", 3000 );
 	REPAIR_STORAGE_PROBABILITY = NGlobal::GetVar( "AI.General.Intendant.ProbabilityToRepairStorage", 0.1f );
@@ -87,12 +87,14 @@ void SGeneralConsts::Init()
 	SWARM_WEIGHT_COEFFICIENT = NGlobal::GetVar( "AI.General.Swarm.WeightCoefficient", 1.0f );
 
 	RESUPPLY_CELL_AFTER_TRANSPORT_DEATH = NGlobal::GetVar( "AI.General.Intendant.ResupplyCellPeriodAfterDeath", 10000 );
-	RESUPPLY_CELL_AFTER_TRANSPORT_DEATH_RAND = NGlobal::GetVar( "AI.General.Intendant.ResupplyCellPeriodAfterDeathRandom", 20000 );
+	RESUPPLY_CELL_AFTER_TRANSPORT_DEATH_RAND =
+			NGlobal::GetVar( "AI.General.Intendant.ResupplyCellPeriodAfterDeathRandom", 20000 );
 	INTENDANT_DANGEROUS_CELL_RADIUS = NGlobal::GetVar( "AI.General.Intendant.DangerousCellRadius", 1000 );
 
 	RECAPTURE_STORAGE_MAX_DISTANCE = NGlobal::GetVar( "AI.General.Intendant.RecaptureStorageMaxDistance", 2000.0f );
 	RECAPTURE_ARTILLERY_TANKS_NUMBER = NGlobal::GetVar( "AI.General.Intendant.RecaptureStorageMaxUnits", 2 );
-	TIME_DONT_SEE_EMPTY_ARTILLERY_BEFORE_FORGET = NGlobal::GetVar( "AI.General.Intendant.TimeDontSeeEmptyArtilleryBeforeForget", 2000 );
+	TIME_DONT_SEE_EMPTY_ARTILLERY_BEFORE_FORGET =
+			NGlobal::GetVar( "AI.General.Intendant.TimeDontSeeEmptyArtilleryBeforeForget", 2000 );
 
 	TIME_TO_WAIT_SWARM_READY = NGlobal::GetVar( "AI.General.Swarm.WaitTime", 10 );
 	TIME_TO_WAIT_SWARM_READY_RANDOM = NGlobal::GetVar( "AI.General.Swarm.WaitTimeRandom", 10 );

@@ -3,26 +3,52 @@
 
 class CMOSquad : public IMOSquad
 {
-  OBJECT_NOCOPY_METHODS( CMOSquad );
+	OBJECT_NOCOPY_METHODS( CMOSquad );
 
-  ZDATA_(IMOSquad)
+	ZDATA_( IMOSquad )
 	CUnitsList units;
 	CPtr<IMOUnit> pServedGun;
 	ZSKIP //bool bCanCatchArtillery;
-	CPtr<IMOContainer> pContainer;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IMOSquad*)this); f.Add(2,&units); f.Add(3,&pServedGun); f.Add(5,&pContainer); return 0; }
+			CPtr<IMOContainer>
+					pContainer;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (IMOSquad *)this );
+		f.Add( 2, &units );
+		f.Add( 3, &pServedGun );
+		f.Add( 5, &pContainer );
+		return 0;
+	}
+
 private:
 	bool IsInSquad( struct IMOUnit *pUnit );
 	void UpdateServedGunCrew( const bool bClearCrew );
+
 public:
 	CMOSquad();
-	~CMOSquad(void);
+	~CMOSquad( void );
 
-	void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason ) {}
-	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
+	void AIUpdatePlacement( const struct SAINotifyPlacement &placement,
+	                        struct IScene *pScene,
+	                        struct ISoundScene *pSoundScene,
+	                        NDb::ESeason eSeason )
+	{
+	}
+	virtual IClientUpdatableProcess *
+	AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+	{
+		return 0;
+	}
 
-	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
-	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor ) { return true; }
+	virtual bool Create( const int nUniqueID,
+	                     const SAIBasicUpdate *_pUpdate,
+	                     NDb::ESeason eSeason,
+	                     const NDb::EDayNight eDayTime,
+	                     bool bInEditor );
+	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+	{
+		return true;
+	}
 	//void GetSpecialAbilities( CSpecialAbilities *pAbilities ) const;
 	bool AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update );
 	void GetStatus( SObjectStatus *pStatus ) const;
@@ -31,13 +57,18 @@ public:
 	bool LoadSquad( struct IMOSquad *pSquad, bool bEnter ) { return false; }
 	// show icons of the passangers
 	void UpdatePassangers() {}
-	void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const;
+	void GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const;
 	int GetPassangersCount() const { return units.size(); }
 	// get free places
 	int GetFreePlaces() const { return 0; }
 	int GetFreeMechPlaces() const { return 0; }
 	// firing... (from container of by himself)
-	void AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason ) { }
+	void AIUpdateShot( const struct SAINotifyBaseShot &shot,
+	                   const NTimer::STime &currTime,
+	                   IScene *pScene,
+	                   NDb::ESeason eSeason )
+	{
+	}
 	//
 	virtual bool NeedShowInterrior() const;
 	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
@@ -47,7 +78,7 @@ public:
 	void GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	void GetEnabledActions( CUserActions *pActions, EActionsType eActions ) const;
 	int GetAbilityTier( NDb::EUserAction eAction ) const;
-	const NDb::SUnitSpecialAblityDesc* GetAbilityDesc( NDb::EUserAction eAction ) const;
+	const NDb::SUnitSpecialAblityDesc *GetAbilityDesc( NDb::EUserAction eAction ) const;
 	void GetAbilityInfo( CAbilityInfo &abilityList ) const;
 	virtual void Select( bool bSelect );
 	void SetSelectionGroup( int nSelectionGroup );
@@ -55,10 +86,12 @@ public:
 	void AIUpdateModifyEntranceState( bool bOpen ) {}
 	bool IsOpen() const { return true; }
 
-	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
+	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
+	                        struct ISoundScene *pSoundScene,
+	                        IClientAckManager *pAckManager );
 	void AIUpdateServedArtillery( IMOUnit *pMOUnit );
 
-	IMOUnit* GetServedGun() const { return pServedGun; }
+	IMOUnit *GetServedGun() const { return pServedGun; }
 
 	bool AIUpdateAction( bool bEnable, EActionCommand eAction );
 	virtual bool IsSquad() const { return true; }
@@ -70,7 +103,7 @@ public:
 	void FillIconsInfoForFirstUnit( SSceneObjIconInfo &iconInfo );
 	void UpdateSquadIcons();
 	void SetContainer( IMOContainer *_pContainer ) { pContainer = _pContainer; }
-	IMOContainer* GetContainer() const { return pContainer; }
+	IMOContainer *GetContainer() const { return pContainer; }
 
 	// Инициализирует параметры, зависящие только от базы.
 	static void InitByDB();

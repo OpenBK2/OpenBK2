@@ -5,17 +5,18 @@
 class CInterfaceEscMenu : public CInterfaceScreenBase
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceEscMenu );
+
 public:
 	class CReactions : public IProgrammedReactionsAndChecks
 	{
-		OBJECT_NOCOPY_METHODS(CReactions);
+		OBJECT_NOCOPY_METHODS( CReactions );
 		CPtr<IWindow> pScreen;
 		CPtr<CInterfaceEscMenu> pInterface;
+
 	public:
-		CReactions() {  }
-		~CReactions()	{	}
-		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface ) :
-			pScreen( _pScreen ), pInterface( _pInterface ) {   }
+		CReactions() {}
+		~CReactions() {}
+		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface ) : pScreen( _pScreen ), pInterface( _pInterface ) {}
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 
@@ -26,6 +27,7 @@ public:
 			return 0;
 		}
 	};
+
 private:
 	enum EMode
 	{
@@ -36,7 +38,7 @@ private:
 		EMODE_FINISH_REPLAY,
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CObj<CReactions> pReactions;
 	EMode eMode;
 	bool bClosed;
@@ -48,7 +50,22 @@ private:
 	CPtr<IButton> pEndMissionExitToMainMenuBtn;
 	CPtr<IButton> pEndMissionExitToChapterMapBtn;
 	CPtr<IButton> pLoadBtn;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pReactions); f.Add(3,&eMode); f.Add(4,&bClosed); f.Add(5,&pEscMenu); f.Add(6,&pMPEscMenu); f.Add(7,&pEndMissionSubMenu); f.Add(8,&pMPEndMissionSubMenu); f.Add(9,&pEndMissionExitToMainMenuBtn); f.Add(10,&pEndMissionExitToChapterMapBtn); f.Add(11,&pLoadBtn); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pReactions );
+		f.Add( 3, &eMode );
+		f.Add( 4, &bClosed );
+		f.Add( 5, &pEscMenu );
+		f.Add( 6, &pMPEscMenu );
+		f.Add( 7, &pEndMissionSubMenu );
+		f.Add( 8, &pMPEndMissionSubMenu );
+		f.Add( 9, &pEndMissionExitToMainMenuBtn );
+		f.Add( 10, &pEndMissionExitToChapterMapBtn );
+		f.Add( 11, &pLoadBtn );
+		return 0;
+	}
+
 private:
 	void MsgTryExitMainMenu( const SGameMessage &msg );
 	void MsgTryExitWindows( const SGameMessage &msg );
@@ -73,8 +90,10 @@ private:
 
 	void GoMainMenu();
 	void GoChapterMap();
+
 protected:
 	~CInterfaceEscMenu();
+
 public:
 	CInterfaceEscMenu();
 
@@ -93,6 +112,7 @@ class CICEscMenu : public CInterfaceCommandBase<CInterfaceEscMenu>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

@@ -28,7 +28,6 @@ EXTERNVAR ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBA
 
 using namespace NMapInfoEditor;
 
-
 class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
 	friend class CVSOState;
@@ -92,7 +91,7 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	unsigned nMapInfoViewToolbarID;
 	IDockPanel *pwndMiniMap; // MiniMap docking window
 	IDockPanel *pwndShortcutBar;
-	IDockPanel *pwndMoviesEditor;	// Script MovieEditor docking window
+	IDockPanel *pwndMoviesEditor; // Script MovieEditor docking window
 	// The panes are the frame's; their contents are whichever toolkit's this
 	// session runs, and are owned here. See MiniMapView.h and
 	// MoviesEditorView.h. Null until CreateControls has made them.
@@ -117,9 +116,12 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 public:
 	//IEditor
 	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	IView* GetView() { return this; }
-	IInputState* GetInputState() { return pMapInfoState; }
-	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	IView *GetView() { return this; }
+	IInputState *GetInputState() { return pMapInfoState; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	{
+		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
+	}
 	//IEditor
 	void CreateControls();
 	void ResetGUI( bool bActive ) override;
@@ -135,9 +137,10 @@ public:
 	void GetChangesFromController( CObjectBaseController *pObjectController, bool bRedo );
 
 	// Создание Undo Operation
-	virtual CMapInfoController* CreateController()
+	virtual CMapInfoController *CreateController()
 	{
-		CMapInfoController* pMapInfoController = CDefaultView::CreateController<CMapInfoController>( static_cast<CMapInfoController*>( 0 ) );
+		CMapInfoController *pMapInfoController =
+				CDefaultView::CreateController<CMapInfoController>( static_cast<CMapInfoController *>( 0 ) );
 		if ( pMapInfoController )
 		{
 			pMapInfoController->SetTemporaryLabel( CMapInfoController::TEMPORARY_LABEL );
@@ -145,8 +148,8 @@ public:
 		return pMapInfoController;
 	}
 	//CDefaultView
-	void Undo( IController* pController );
-	void Redo( IController* pController );
+	void Undo( IController *pController );
+	void Redo( IController *pController );
 
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );

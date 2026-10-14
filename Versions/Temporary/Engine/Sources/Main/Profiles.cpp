@@ -43,7 +43,7 @@ static bool IsDefaultProfileName( const std::string &szName )
 static std::wstring GetProfileName( const std::string &szDir, const std::string &_szDirName )
 {
 	CFileStream stream( NFile::JoinPath( szDir, _szDirName, "name.txt" ), CFileStream::WIN_READ_ONLY );
-	if  ( stream.IsOk() )
+	if ( stream.IsOk() )
 	{
 		int nLength = stream.GetSize();
 		if ( nLength > 0 )
@@ -97,7 +97,7 @@ static std::string GetProfileDir( const std::wstring &szName )
 		}
 		// create dir
 		const auto guid = boost::uuids::random_generator()();
-		szResDir = NFile::JoinPath( szRoot, boost::uuids::to_string(guid) ) + NFile::PATH_SEPARATOR;
+		szResDir = NFile::JoinPath( szRoot, boost::uuids::to_string( guid ) ) + NFile::PATH_SEPARATOR;
 		NFile::CreatePath( szResDir );
 		// write name
 		{
@@ -232,7 +232,7 @@ static void ChangeProfile( const std::string &szID, const std::vector<std::wstri
 		csSystem << "Usage: change_profile <user name>" << endl;
 }
 
-START_REGISTER(Profiles)
+START_REGISTER( Profiles )
 REGISTER_CMD( "remove_profile", RemoveProfile );
 REGISTER_CMD( "change_profile", ChangeProfile );
 REGISTER_VAR( "profile_name", 0, "default", STORAGE_GLOBAL )

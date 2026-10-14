@@ -28,25 +28,25 @@ void CMouseTranslatorB1::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDi
 {
 	switch ( GetActionState() )
 	{
-	case AS_SCROLL:
-		if ( !bMouseMoveDirect )
-			RaiseEvent( "scroll_map_true", vPos );
-		break;
-	case AS_SELECT:
-		RaiseEvent( "update_selection", vPos );
-		break;
-	case AS_MOVE:
-		if ( IsAltDown() )
-		{
-			RaiseEvent( "update_direction", vPos );
-			bUpdateDir = true;
-		}
-		else if ( bUpdateDir )
-		{
-			RaiseEvent( "cancel_direction" );
-			bUpdateDir = false;
-		}
-		break;
+		case AS_SCROLL:
+			if ( !bMouseMoveDirect )
+				RaiseEvent( "scroll_map_true", vPos );
+			break;
+		case AS_SELECT:
+			RaiseEvent( "update_selection", vPos );
+			break;
+		case AS_MOVE:
+			if ( IsAltDown() )
+			{
+				RaiseEvent( "update_direction", vPos );
+				bUpdateDir = true;
+			}
+			else if ( bUpdateDir )
+			{
+				RaiseEvent( "cancel_direction" );
+				bUpdateDir = false;
+			}
+			break;
 	}
 }
 
@@ -55,37 +55,37 @@ void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 	int nSelectAction;
 	switch ( GetActionState() )
 	{
-	case AS_MOVE:
-		if ( !IsDownSamePos() )
-			RaiseEvent ( "set_direction", vPos );
-		else
-			RaiseEvent ( "cancel_direction", vPos );
-		break;
-	case AS_SELECT:
-	{
-		const bool bSelectByRect = !IsDownSamePos();
-		if ( !IsShiftDown() )
-		{
-			if ( !bSelectByRect )
-				nSelectAction = SA_CLEAR_ALWAYS;
+		case AS_MOVE:
+			if ( !IsDownSamePos() )
+				RaiseEvent( "set_direction", vPos );
 			else
-				nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
-		}
-		else if ( !bSelectByRect )
-			nSelectAction = SA_INVERSE;
-		else
-			nSelectAction = SA_PRESERVE;
-		if ( IsCtrlDown() && !bSelectByRect )
-			nSelectAction |= SA_ONE_TYPE;
-		if ( bSelectByRect )
+				RaiseEvent( "cancel_direction", vPos );
+			break;
+		case AS_SELECT:
 		{
-			nSelectAction |= SA_SELECT_BY_RECT;
-			// Use the release point as the final rectangle corner even if no last mouse-move event was delivered.
-			RaiseEvent( "update_selection", vPos );
+			const bool bSelectByRect = !IsDownSamePos();
+			if ( !IsShiftDown() )
+			{
+				if ( !bSelectByRect )
+					nSelectAction = SA_CLEAR_ALWAYS;
+				else
+					nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
+			}
+			else if ( !bSelectByRect )
+				nSelectAction = SA_INVERSE;
+			else
+				nSelectAction = SA_PRESERVE;
+			if ( IsCtrlDown() && !bSelectByRect )
+				nSelectAction |= SA_ONE_TYPE;
+			if ( bSelectByRect )
+			{
+				nSelectAction |= SA_SELECT_BY_RECT;
+				// Use the release point as the final rectangle corner even if no last mouse-move event was delivered.
+				RaiseEvent( "update_selection", vPos );
+			}
+			RaiseEvent( "end_selection", nSelectAction );
+			break;
 		}
-		RaiseEvent( "end_selection", nSelectAction );
-		break;
-	}
 	}
 }
 
@@ -98,7 +98,7 @@ void CMouseTranslatorB1::OnLButtonDown( const CVec2 &vPos, bool bObject )
 void CMouseTranslatorB1::OnRButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
-			RaiseEvent( "set_target", vPos );
+		RaiseEvent( "set_target", vPos );
 	else
 	{
 		if ( bObject )
@@ -115,15 +115,9 @@ void CMouseTranslatorB1::OnRButtonDown( const CVec2 &vPos, bool bObject )
 	}
 }
 
-void CMouseTranslatorB1::OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode )
-{
+void CMouseTranslatorB1::OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode ) {}
 
-}
-
-void CMouseTranslatorB1::OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode )
-{
-
-}
+void CMouseTranslatorB1::OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode ) {}
 
 // ************************************************************************************************************************ //
 // **
@@ -133,14 +127,12 @@ void CMouseTranslatorB1::OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMo
 // **
 // ************************************************************************************************************************ //
 
-CMouseTranslatorB2Base::CMouseTranslatorB2Base() :
-	CMouseTranslator( 0 )
+CMouseTranslatorB2Base::CMouseTranslatorB2Base() : CMouseTranslator( 0 )
 {
 	InitPrivate();
 }
 
-CMouseTranslatorB2Base::CMouseTranslatorB2Base( CSelector *_pSelector ) :
-	CMouseTranslator( _pSelector )
+CMouseTranslatorB2Base::CMouseTranslatorB2Base( CSelector *_pSelector ) : CMouseTranslator( _pSelector )
 {
 	InitPrivate();
 }
@@ -161,16 +153,16 @@ void CMouseTranslatorB2Base::OnMouseMove( const CVec2 &vPos, const bool bMouseMo
 {
 	switch ( GetActionState() )
 	{
-	case AS_SCROLL:
-		if ( !bMouseMoveDirect )
-			RaiseEvent( "scroll_map_true", vPos );
-		break;
-	case AS_SELECT:
-		RaiseEvent( "update_selection", vPos );
-		break;
-	case AS_MOVE:
-		NInput::PostEvent( "update_direction", PackCoords( vPos ), IsDownSamePos( vPos ) || IsDownSameTime() );
-		break;
+		case AS_SCROLL:
+			if ( !bMouseMoveDirect )
+				RaiseEvent( "scroll_map_true", vPos );
+			break;
+		case AS_SELECT:
+			RaiseEvent( "update_selection", vPos );
+			break;
+		case AS_MOVE:
+			NInput::PostEvent( "update_direction", PackCoords( vPos ), IsDownSamePos( vPos ) || IsDownSameTime() );
+			break;
 	}
 }
 
@@ -179,40 +171,40 @@ void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 	int nSelectAction;
 	switch ( GetActionState() )
 	{
-	case AS_MOVE:
-		if ( !IsDownSamePos() && !IsDownSameTime() )
-			RaiseEvent ( "set_direction", vPos );
-		else
-			RaiseEvent ( "cancel_direction", vPos );
-		break;
-	case AS_SELECT:
-	{
-		const bool bSelectByRect = !IsDownSamePos();
-		if ( !IsShiftDown() )
-			nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
-		else if ( !bSelectByRect )
-			nSelectAction = SA_INVERSE;
-		else
-			nSelectAction = SA_PRESERVE;
-		if ( IsCtrlDown() )
-			nSelectAction |= SA_ONE_TYPE;
-		if ( bSelectByRect )
+		case AS_MOVE:
+			if ( !IsDownSamePos() && !IsDownSameTime() )
+				RaiseEvent( "set_direction", vPos );
+			else
+				RaiseEvent( "cancel_direction", vPos );
+			break;
+		case AS_SELECT:
 		{
-			nSelectAction |= SA_SELECT_BY_RECT;
-			// Use the release point as the final rectangle corner even if no last mouse-move event was delivered.
-			RaiseEvent( "update_selection", vPos );
+			const bool bSelectByRect = !IsDownSamePos();
+			if ( !IsShiftDown() )
+				nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
+			else if ( !bSelectByRect )
+				nSelectAction = SA_INVERSE;
+			else
+				nSelectAction = SA_PRESERVE;
+			if ( IsCtrlDown() )
+				nSelectAction |= SA_ONE_TYPE;
+			if ( bSelectByRect )
+			{
+				nSelectAction |= SA_SELECT_BY_RECT;
+				// Use the release point as the final rectangle corner even if no last mouse-move event was delivered.
+				RaiseEvent( "update_selection", vPos );
+			}
+			RaiseEvent( "end_selection", nSelectAction );
+			Camera()->SwitchManualScrolling( "mouse_translator", true );
+			break;
 		}
-		RaiseEvent( "end_selection", nSelectAction );
-		Camera()->SwitchManualScrolling( "mouse_translator", true );
-		break;
-	}
 	}
 }
 
 void CMouseTranslatorB2Base::OnLButtonDown( const CVec2 &vPos, bool bObject )
 {
 	if ( IsDownTargetMode() )
-			RaiseEventAndFlags( "set_target", vPos );
+		RaiseEventAndFlags( "set_target", vPos );
 	else
 	{
 		RaiseEvent( "start_selection", vPos );
@@ -301,11 +293,8 @@ void CMouseTranslatorB2Base::CheckForcedAction()
 // **
 // ************************************************************************************************************************ //
 
-CMouseTranslator::CMouseTranslator( CSelector *_pSelector )	:
-	pSelector( _pSelector ),
-	bindShift( "shift_key" ),
-	bindCtrl( "ctrl_key" ),
-	bindAlt( "alt_key" )
+CMouseTranslator::CMouseTranslator( CSelector *_pSelector )
+		: pSelector( _pSelector ), bindShift( "shift_key" ), bindCtrl( "ctrl_key" ), bindAlt( "alt_key" )
 {
 	ResetState();
 
@@ -319,9 +308,9 @@ bool CMouseTranslator::IsSelected( class CMapObj *pMO ) const
 	if ( pMO )
 	{
 		if ( pSelector->CanSelect( pMO ) )
-			return pSelector->IsSelected( checked_cast<CMOSelectable*>(pMO) );
+			return pSelector->IsSelected( checked_cast<CMOSelectable *>( pMO ) );
 		else
-      return false;
+			return false;
 	}
 	else
 		return !pSelector->IsEmpty();
@@ -346,7 +335,7 @@ int CMouseTranslator::GetFlags() const
 
 void CMouseTranslator::DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
-//	if ( eActionState == AS_SELECT && pMO && IsSelected( pMO ) )
+	//	if ( eActionState == AS_SELECT && pMO && IsSelected( pMO ) )
 	if ( pMO && IsSelected( pMO ) )
 	{
 		RaiseEvent( "start_selection", vPos );
@@ -399,7 +388,7 @@ void CMouseTranslator::DoRButtonDown( const CVec2 &vPos, class CMapObj *pMO, boo
 
 void CMouseTranslator::DoRButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
-//	bDownSamePos = ( vPos == vDownPos );
+	//	bDownSamePos = ( vPos == vDownPos );
 	bDownSamePos = IsDownSamePos( vPos );
 	bDownSameTime = IsDownSameTime( Singleton<IGameTimer>()->GetAbsTime() );
 	if ( eButtonState == BS_RIGHT_DOWN )
@@ -417,7 +406,7 @@ bool CMouseTranslator::ProcessEvent( const SGameMessage &event )
 	bindCtrl.ProcessEvent( event );
 	bindAlt.ProcessEvent( event );
 
-	return CGMORegContainer::ProcessEvent(event, this);
+	return CGMORegContainer::ProcessEvent( event, this );
 }
 
 void CMouseTranslator::OnGetFocus( bool bFocus )

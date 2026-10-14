@@ -51,8 +51,7 @@ void CScriptPathPointsState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &r
 
 	// Mouse capture can deliver a release outside the view. Misses must not add {0, 0}.
 	const CVec2 screenSize = pScene->GetScreenRect();
-	if ( rMousePoint.x < 0 || rMousePoint.y < 0 ||
-		 rMousePoint.x >= screenSize.x || rMousePoint.y >= screenSize.y )
+	if ( rMousePoint.x < 0 || rMousePoint.y < 0 || rMousePoint.x >= screenSize.x || rMousePoint.y >= screenSize.y )
 		return;
 
 	CVec3 vNear, vFar, vPoint;

@@ -37,14 +37,20 @@ static std::wstring EraseTags( const std::wstring &szStr )
 
 // CConsoleBuffer
 
-void CConsoleBuffer::WriteASCII( const int nStreamID, const char *pszString, const uint32_t color, const bool bPersistentMsg )
+void CConsoleBuffer::WriteASCII( const int nStreamID,
+                                 const char *pszString,
+                                 const uint32_t color,
+                                 const bool bPersistentMsg )
 {
 	if ( pszString == 0 )
 		return;
 	Write( nStreamID, NStr::ToUnicode( pszString ), color, bPersistentMsg );
 }
 
-void CConsoleBuffer::Write( const int nStreamID, const std::wstring &szString, const uint32_t color, const bool bPersistentMsg )
+void CConsoleBuffer::Write( const int nStreamID,
+                            const std::wstring &szString,
+                            const uint32_t color,
+                            const bool bPersistentMsg )
 {
 	++nSlowCompress;
 	if ( ( nSlowCompress & 1023 ) == 0 )
@@ -57,7 +63,7 @@ void CConsoleBuffer::Write( const int nStreamID, const std::wstring &szString, c
 	l.nStream = nStreamID;
 	l.bPersistent = bPersistentMsg;
 	l.szText = szString;
-	l.dwColor= color;
+	l.dwColor = color;
 
 	if ( bWriteLog )
 	{
@@ -85,8 +91,8 @@ bool CConsoleBuffer::GetNextLine( SConsoleLine *pRes, int *pSequenceID )
 	}
 	if ( nBest == -1 )
 		return false;
-	*pRes = lines[ nBest ];
-	nSeq = lines[ nBest ].nSequenceID;
+	*pRes = lines[nBest];
+	nSeq = lines[nBest].nSequenceID;
 	return true;
 }
 
@@ -103,7 +109,7 @@ void CConsoleBuffer::CompressLines()
 	for ( int k = 0; k < lines.size(); ++k )
 	{
 		if ( take[k] )
-			lines[ nDst++ ] = lines[k];
+			lines[nDst++] = lines[k];
 	}
 	lines.resize( nDst );
 }
@@ -204,6 +210,6 @@ void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream )
 }
 
 REGISTER_SAVELOAD_CLASS( SYSTEM, 0x300C8D40, CConsoleBuffer )
-START_REGISTER(ConsoleBufferInternal)
-	REGISTER_VAR_EX( "game_writelog", NGlobal::VarBoolHandler, &bWriteLog, false, STORAGE_NONE )
+START_REGISTER( ConsoleBufferInternal )
+REGISTER_VAR_EX( "game_writelog", NGlobal::VarBoolHandler, &bWriteLog, false, STORAGE_NONE )
 FINISH_REGISTER

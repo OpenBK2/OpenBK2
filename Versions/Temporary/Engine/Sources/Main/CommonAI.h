@@ -2,7 +2,10 @@
 
 struct ICommonAI : public CObjectBase
 {
-	enum { tidTypeID = 0x30121380 };
+	enum
+	{
+		tidTypeID = 0x30121380
+	};
 
 	virtual void Segment() = 0;
 	virtual bool IsSuspended() const = 0;
@@ -19,5 +22,5 @@ struct ICommonAI : public CObjectBase
 	virtual void SetNetGame( const bool bNetGame ) = 0;
 	virtual void NeutralizePlayer( const int nPlayer ) = 0;
 
-	virtual void ProcessCommand( CObjectBase *pCommand ) { }
+	virtual void ProcessCommand( CObjectBase *pCommand ) {}
 };

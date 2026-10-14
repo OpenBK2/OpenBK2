@@ -6,9 +6,9 @@
 namespace NScript
 {
 
-int luaGarbageCollector( lua_State* pState );
+int luaGarbageCollector( lua_State *pState );
 
-void luaPushCPtr( lua_State* pState, CObjectBase *pObj )
+void luaPushCPtr( lua_State *pState, CObjectBase *pObj )
 {
 	Script script( pState );
 	if ( !IsValid( pObj ) )
@@ -17,7 +17,7 @@ void luaPushCPtr( lua_State* pState, CObjectBase *pObj )
 		script.PushUserTag( pObj, tagLuaCPtr );
 }
 
-void luaPushCObj( lua_State* pState, CObjectBase *pObj )
+void luaPushCObj( lua_State *pState, CObjectBase *pObj )
 {
 	Script script( pState );
 	if ( !IsValid( pObj ) )
@@ -26,7 +26,7 @@ void luaPushCObj( lua_State* pState, CObjectBase *pObj )
 		script.PushUserTag( pObj, tagLuaCObj );
 }
 
-CObjectBase* luaGetPtr( const Script::Object &o )
+CObjectBase *luaGetPtr( const Script::Object &o )
 {
 	if ( !o.IsUserData() )
 		return 0;
@@ -35,7 +35,7 @@ CObjectBase* luaGetPtr( const Script::Object &o )
 	return o.GetUserData();
 }
 
-int luaMakeCPtr( lua_State* pState )
+int luaMakeCPtr( lua_State *pState )
 {
 	Script script( pState );
 	Script::Object o = script.GetTopObject();
@@ -46,7 +46,7 @@ int luaMakeCPtr( lua_State* pState )
 	return 1;
 }
 
-int luaMakeCObj( lua_State* pState )
+int luaMakeCObj( lua_State *pState )
 {
 	Script script( pState );
 	Script::Object o = script.GetTopObject();
@@ -67,7 +67,7 @@ bool luaIsValidPtr( const Script::Object &o )
 	return o.IsUserData() && IsValid( luaGetPtr( o ) );
 }
 
-int luaIsValid( lua_State* pState )
+int luaIsValid( lua_State *pState )
 {
 	Script script( pState );
 	luaPushBool( pState, luaIsValidPtr( script.GetObject( 1 ) ) );

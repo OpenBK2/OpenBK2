@@ -21,7 +21,7 @@
 // **
 // ************************************************************************************************************************ //
 
-std::vector< std::list<unsigned long> > CControlSumCheckCommand::checkSums;
+std::vector<std::list<unsigned long>> CControlSumCheckCommand::checkSums;
 uint16_t CControlSumCheckCommand::wMask;
 
 void CControlSumCheckCommand::Execute()
@@ -174,14 +174,14 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 {
 	NGlobal::SetVar( "out_of_sync", 0 );
 	int nOutOfSyncs = 0;
-	int nOutOfSyncWith = 0;		// number of players we are async with
+	int nOutOfSyncWith = 0; // number of players we are async with
 	std::vector<bool> asyncWith;
 	asyncWith.resize( 16, false );
 	unsigned long checkSum;
 
 	const int nIndex = nStartSegment % nHistoryLength;
 
-	if ( nIndex >= 0 )			// First few segments give negative index
+	if ( nIndex >= 0 ) // First few segments give negative index
 	{
 		checkSum = checkSums[nOurNumber][nIndex];
 
@@ -189,7 +189,7 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 		for ( int j = 0; j < 16; ++j )
 		{
 			if ( j == nOurNumber || ( wMask & ( 1UL << j ) ) == 0 )
-				continue;		// Own player / No player
+				continue; // Own player / No player
 
 			if ( checkSums[j][nIndex] != checkSum )
 			{
@@ -213,7 +213,7 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 		for ( int j = 0; j < 16; ++j )
 		{
 			if ( j == nOurNumber || ( wMask & ( 1UL << j ) ) == 0 )
-				continue;		// Own player / No player
+				continue; // Own player / No player
 
 			if ( checkSums[j][i] != checkSum )
 			{
@@ -234,7 +234,7 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 		//DEBUG}
 		NGlobal::SetVar( "out_of_sync", 1 );
 		const auto mesage = fmt::format( "ASYNC( {} with {} )", nOutOfSyncs, nOutOfSyncWith );
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, mesage.c_str());
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, mesage.c_str() );
 
 		// Drop out if many players
 		if ( nOutOfSyncWith > 1 )

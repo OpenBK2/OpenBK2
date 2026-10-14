@@ -4,11 +4,10 @@
 
 namespace NDb
 {
-	struct SMedal;
+struct SMedal;
 }
 
-class CInterfaceMPLadderStatistics : public CInterfaceScreenBase,
-	public IProgrammedReactionsAndChecks
+class CInterfaceMPLadderStatistics : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPLadderStatistics );
 
@@ -18,7 +17,7 @@ class CInterfaceMPLadderStatistics : public CInterfaceScreenBase,
 		CDBPtr<NDb::SMedal> pMedal;
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
 	CPtr<CInterfaceMPScreenBase> pPrevMPScreen;
 	CPtr<ITextView> pWaiting;
@@ -29,12 +28,29 @@ class CInterfaceMPLadderStatistics : public CInterfaceScreenBase,
 	std::vector<std::wstring> countryNames;
 	std::vector<SMedalDesc> medals;
 	CPtr<IWindow> pMedalPopup;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&pPrevMPScreen); f.Add(4,&pWaiting); f.Add(5,&pAdvList); f.Add(6,&pAdv4Template); f.Add(7,&pAdv2Template); f.Add(8,&pAdv1Template); f.Add(9,&countryNames); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 3, &pPrevMPScreen );
+		f.Add( 4, &pWaiting );
+		f.Add( 5, &pAdvList );
+		f.Add( 6, &pAdv4Template );
+		f.Add( 7, &pAdv2Template );
+		f.Add( 8, &pAdv1Template );
+		f.Add( 9, &countryNames );
+		return 0;
+	}
+
 private:
 	bool OnBackReaction();
 	void OnLadderStatsMessage( struct SMPUILadderStatsMessage *pMsg );
-	void Add4Line( const std::wstring &wszItem1, const std::wstring &wszItem2, const std::wstring &wszItem3, const std::wstring &wszItem4 );
+	void Add4Line( const std::wstring &wszItem1,
+	               const std::wstring &wszItem2,
+	               const std::wstring &wszItem3,
+	               const std::wstring &wszItem4 );
 	void Add2Line( const std::wstring &wszItem1, const std::wstring &wszItem2 );
 	void Add1Line( const std::wstring &wszItem );
 	void AddWinLoseSummary( const SLadderStatistics &info, const std::wstring &wszName, int nUseSolo, int nUseTeam );
@@ -42,6 +58,7 @@ private:
 
 protected:
 	~CInterfaceMPLadderStatistics();
+
 public:
 	CInterfaceMPLadderStatistics();
 	bool Init();
@@ -60,6 +77,7 @@ class CICMPLadderStatistics : public CInterfaceCommandBase<CInterfaceMPLadderSta
 	std::string szNick;
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

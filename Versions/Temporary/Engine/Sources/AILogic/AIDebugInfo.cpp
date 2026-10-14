@@ -18,9 +18,11 @@ struct SProfileInfo
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	uint16_t wDir = {};
 
-	SProfileInfo() { }
+	SProfileInfo() {}
 	SProfileInfo( const CVec2 &_vCenter, const uint16_t _wDir, const NDb::SPassProfile &_profile )
-		: vCenter( _vCenter ), wDir( _wDir ), profile( _profile ) { }
+			: vCenter( _vCenter ), wDir( _wDir ), profile( _profile )
+	{
+	}
 };
 
 static det_map<int, SProfileInfo> profiles;
@@ -53,14 +55,15 @@ void ToggleLockProfiles()
 				{
 					if ( bShow )
 					{
-						const float fAngle = float(wDir) / 65536 * FP_2PI;
-						const CVec2 vRotation( NMath::Cos(fAngle), NMath::Sin(fAngle) );
+						const float fAngle = float( wDir ) / 65536 * FP_2PI;
+						const CVec2 vRotation( NMath::Cos( fAngle ), NMath::Sin( fAngle ) );
 
-						CSegment segm( vCenter + (profile.polygons[i].verts[j] ^ vRotation), vCenter + (profile.polygons[i].verts[j + 1] ^ vRotation) );
-						DebugInfoManager()->CreateSegment( (nCnt << 20) | iter->first, segm, 4, NDebugInfo::WHITE );
+						CSegment segm( vCenter + ( profile.polygons[i].verts[j] ^ vRotation ),
+						               vCenter + ( profile.polygons[i].verts[j + 1] ^ vRotation ) );
+						DebugInfoManager()->CreateSegment( ( nCnt << 20 ) | iter->first, segm, 4, NDebugInfo::WHITE );
 					}
 					else
-						DebugInfoManager()->DeleteObject( (nCnt << 20) | iter->first );
+						DebugInfoManager()->DeleteObject( ( nCnt << 20 ) | iter->first );
 
 					++nCnt;
 				}

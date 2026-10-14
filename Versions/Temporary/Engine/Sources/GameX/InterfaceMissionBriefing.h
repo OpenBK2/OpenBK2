@@ -4,7 +4,7 @@
 
 namespace NDb
 {
-	struct SMapInfo;
+struct SMapInfo;
 }
 
 class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
@@ -17,10 +17,16 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 		CPtr<IWindow> pWnd;
 		CPtr<ITextView> pNameView;
 		std::vector<CVec2> mapPositions;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pNameView); f.Add(4,&mapPositions); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &pNameView );
+			f.Add( 4, &mapPositions );
+			return 0;
+		}
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pTopPanel;
 	CPtr<IWindow> pBottomPanel;
@@ -33,18 +39,39 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 	CPtr<IMiniMap> pMinimap;
 	CPtr<IScrollableContainer> pObjectivesListCont;
 	ZSKIP //CPtr<IWindow> pObjectivesListItemTemplate;
-	CDBPtr<NDb::SMapInfo> pMapInfo;
-	ZSKIP //vector<SObjective> objectives;
-	ZSKIP //int nSelectedObjective;
-	CPtr<ITextView> pHeaderView;
+			CDBPtr<NDb::SMapInfo>
+					pMapInfo;
+	ZSKIP     //vector<SObjective> objectives;
+			ZSKIP //int nSelectedObjective;
+					CPtr<ITextView>
+							pHeaderView;
 	CPtr<ITextView> pObjectivesView;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pTopPanel); f.Add(4,&pBottomPanel); f.Add(5,&pMissionDescPanel); f.Add(6,&pMinimapPanel); f.Add(7,&pObjectivesListPanel); f.Add(8,&pMissionDescCont); f.Add(9,&pMissionDescView); f.Add(10,&pMinimap); f.Add(11,&pObjectivesListCont); f.Add(13,&pMapInfo); f.Add(16,&pHeaderView); f.Add(17,&pObjectivesView); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMainWnd );
+		f.Add( 3, &pTopPanel );
+		f.Add( 4, &pBottomPanel );
+		f.Add( 5, &pMissionDescPanel );
+		f.Add( 6, &pMinimapPanel );
+		f.Add( 7, &pObjectivesListPanel );
+		f.Add( 8, &pMissionDescCont );
+		f.Add( 9, &pMissionDescView );
+		f.Add( 10, &pMinimap );
+		f.Add( 11, &pObjectivesListCont );
+		f.Add( 13, &pMapInfo );
+		f.Add( 16, &pHeaderView );
+		f.Add( 17, &pObjectivesView );
+		return 0;
+	}
+
 private:
 	void MakeInterior();
 	void MissionStart();
 
 	bool OnBack();
 	bool OnPlay();
+
 public:
 	CInterfaceMissionBriefing();
 
@@ -62,6 +89,7 @@ class CICMissionBriefing : public CInterfaceCommandBase<CInterfaceMissionBriefin
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

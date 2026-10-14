@@ -10,9 +10,10 @@ extern CEventUpdater updater;
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x120A4B00, CExecutorPlaceCharge )
 
 CExecutorPlaceCharge::CExecutorPlaceCharge( CAIUnit *_pSoldier, NDb::EUnitSpecialAbility _eAbility )
-: CExecutor(TID_PLACE_CHARGE, 1000/SConsts::AI_SEGMENT_DURATION), eState( EASS_READY_TO_ON ), eAbility( _eAbility )
+		: CExecutor( TID_PLACE_CHARGE, 1000 / SConsts::AI_SEGMENT_DURATION ), eState( EASS_READY_TO_ON ),
+			eAbility( _eAbility )
 {
-	pSoldier = checked_cast<CSoldier*>( _pSoldier );
+	pSoldier = checked_cast<CSoldier *>( _pSoldier );
 	UpdateState( EASS_READY_TO_ON );
 }
 
@@ -26,7 +27,7 @@ int CExecutorPlaceCharge::Segment()
 
 void CExecutorPlaceCharge::UpdateState( const EAbilitySwitchState eState )
 {
-	CPtr< SAISpecialAbilityUpdate > pUpdate = new SAISpecialAbilityUpdate;
+	CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 
 	pUpdate->info.nAbilityType = eAbility;
 	pUpdate->info.state = eState;
@@ -49,22 +50,22 @@ bool CExecutorPlaceCharge::NotifyEvent( const CExecutorEvent &event )
 
 	switch ( event.GetParam().eEventID )
 	{
-	case EID_ABILITY_ENABLE:
-		if ( eState != EASS_READY_TO_ON )
-		{
-			eState = EASS_READY_TO_ON;
-			UpdateState( EASS_READY_TO_ON );
-		}
-		return true;
-	case EID_ABILITY_DISABLE:
-		if ( eState != EASS_DISABLE )
-		{
-			eState = EASS_DISABLE;
-			UpdateState( EASS_DISABLE );
-		}
-		return true;
-	default:
-		return false;
+		case EID_ABILITY_ENABLE:
+			if ( eState != EASS_READY_TO_ON )
+			{
+				eState = EASS_READY_TO_ON;
+				UpdateState( EASS_READY_TO_ON );
+			}
+			return true;
+		case EID_ABILITY_DISABLE:
+			if ( eState != EASS_DISABLE )
+			{
+				eState = EASS_DISABLE;
+				UpdateState( EASS_DISABLE );
+			}
+			return true;
+		default:
+			return false;
 	}
 }
 

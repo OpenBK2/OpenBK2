@@ -37,7 +37,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 std::vector<std::string> Scan( const std::string &szText, const std::string &szOwner )
 {
@@ -64,8 +65,7 @@ const char szOwner[] = "Bridges/Africa/bridge.xdb";
 TEST( DBReferenceScan, AbsoluteReference )
 {
 	const std::vector<std::string> refs = Scan(
-		"<Bridge><RPGStats href=\"/Bridges/Africa/bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/></Bridge>",
-		szOwner );
+			"<Bridge><RPGStats href=\"/Bridges/Africa/bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/></Bridge>", szOwner );
 	ASSERT_EQ( 1u, refs.size() );
 	EXPECT_EQ( Norm( "Bridges/Africa/bridgerpgstats.xdb" ), refs[0] );
 }
@@ -73,9 +73,8 @@ TEST( DBReferenceScan, AbsoluteReference )
 // SaveRefToNode writes a bare file name when the target sits beside its owner.
 TEST( DBReferenceScan, ReferenceRelativeToItsOwner )
 {
-	const std::vector<std::string> refs = Scan(
-		"<Bridge><RPGStats href=\"bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/></Bridge>",
-		szOwner );
+	const std::vector<std::string> refs =
+			Scan( "<Bridge><RPGStats href=\"bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/></Bridge>", szOwner );
 	ASSERT_EQ( 1u, refs.size() );
 	EXPECT_EQ( Norm( "Bridges/Africa/bridgerpgstats.xdb" ), refs[0] );
 }
@@ -86,14 +85,14 @@ TEST( DBReferenceScan, ReferenceRelativeToItsOwner )
 // look like a database object.
 TEST( DBReferenceScan, PlainFilePathsAreNotObjectReferences )
 {
-	const std::vector<std::string> refs = Scan(
-		"<Obj>"
-		"<Texture href=\"/Bridges/AfricaBridge/c1.tga\"/>"
-		"<Model href=\"/Bridges/AfricaBridge/c1.mb\"/>"
-		"<Name href=\"/Bridges/Africa/name.txt\"/>"
-		"<Stats href=\"/Bridges/Africa/bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/>"
-		"</Obj>",
-		szOwner );
+	const std::vector<std::string> refs =
+			Scan( "<Obj>"
+	          "<Texture href=\"/Bridges/AfricaBridge/c1.tga\"/>"
+	          "<Model href=\"/Bridges/AfricaBridge/c1.mb\"/>"
+	          "<Name href=\"/Bridges/Africa/name.txt\"/>"
+	          "<Stats href=\"/Bridges/Africa/bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/>"
+	          "</Obj>",
+	          szOwner );
 	ASSERT_EQ( 1u, refs.size() );
 	EXPECT_EQ( Norm( "Bridges/Africa/bridgerpgstats.xdb" ), refs[0] );
 }
@@ -109,13 +108,12 @@ TEST( DBReferenceScan, EmptyHRefIsIgnored )
 
 TEST( DBReferenceScan, SeveralReferencesInOneFile )
 {
-	const std::vector<std::string> refs = Scan(
-		"<Obj>"
-		"<A href=\"/a/one.xdb#xpointer(/One)\"/>"
-		"<B href=\"two.xdb#xpointer(/Two)\"/>"
-		"<C href=\"/a/b/three.xdb#xpointer(/Three)\"/>"
-		"</Obj>",
-		szOwner );
+	const std::vector<std::string> refs = Scan( "<Obj>"
+	                                            "<A href=\"/a/one.xdb#xpointer(/One)\"/>"
+	                                            "<B href=\"two.xdb#xpointer(/Two)\"/>"
+	                                            "<C href=\"/a/b/three.xdb#xpointer(/Three)\"/>"
+	                                            "</Obj>",
+	                                            szOwner );
 	ASSERT_EQ( 3u, refs.size() );
 	EXPECT_EQ( Norm( "a/one.xdb" ), refs[0] );
 	EXPECT_EQ( Norm( "Bridges/Africa/two.xdb" ), refs[1] );
@@ -132,8 +130,8 @@ TEST( DBReferenceScan, TruncatedInputTerminates )
 	EXPECT_TRUE( Scan( "href=\"", szOwner ).empty() );
 
 	// A good reference before the truncation is still reported.
-	const std::vector<std::string> refs = Scan(
-		"<Obj><A href=\"/a/one.xdb#xpointer(/One)\"/><B href=\"/a/two.xdb", szOwner );
+	const std::vector<std::string> refs =
+			Scan( "<Obj><A href=\"/a/one.xdb#xpointer(/One)\"/><B href=\"/a/two.xdb", szOwner );
 	ASSERT_EQ( 1u, refs.size() );
 	EXPECT_EQ( Norm( "a/one.xdb" ), refs[0] );
 }
@@ -142,8 +140,7 @@ TEST( DBReferenceScan, TruncatedInputTerminates )
 // with no directory in it must not walk off the front of the string.
 TEST( DBReferenceScan, OwnerWithNoDirectory )
 {
-	const std::vector<std::string> refs = Scan(
-		"<Obj><A href=\"two.xdb#xpointer(/Two)\"/></Obj>", "one.xdb" );
+	const std::vector<std::string> refs = Scan( "<Obj><A href=\"two.xdb#xpointer(/Two)\"/></Obj>", "one.xdb" );
 	ASSERT_EQ( 1u, refs.size() );
 	EXPECT_EQ( Norm( "two.xdb" ), refs[0] );
 }
@@ -152,9 +149,9 @@ TEST( DBReferenceScan, OwnerWithNoDirectory )
 // treats the two as the same separator.
 TEST( DBReferenceScan, BackslashSeparators )
 {
-	const std::vector<std::string> refs = Scan(
-		"<Obj><A href=\"\\Bridges\\Africa\\bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/></Obj>",
-		"Bridges\\Africa\\bridge.xdb" );
+	const std::vector<std::string> refs =
+			Scan( "<Obj><A href=\"\\Bridges\\Africa\\bridgerpgstats.xdb#xpointer(/BridgeRPGStats)\"/></Obj>",
+	          "Bridges\\Africa\\bridge.xdb" );
 	ASSERT_EQ( 1u, refs.size() );
 	EXPECT_EQ( Norm( "Bridges/Africa/bridgerpgstats.xdb" ), refs[0] );
 }

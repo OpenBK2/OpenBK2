@@ -15,7 +15,6 @@
 #include "MapEditorLib/Interface_Exporter.h"
 #include "SeasonMnemonics.h"
 
-
 //#include "MiniMap_Addons.h"
 #include "B2_M1_Terrain/fmtVSO.h"
 #include "Image/Targa.h"
@@ -28,14 +27,13 @@
 
 namespace NImage
 {
-	template <>
-	inline void __fill_tga_header<NImage::SColor>( STGAFileHeader *pHdr )
-	{
-		pHdr->cImageType = TGAIT_TRUE_COLOR;
-		pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
-	}
+template <>
+inline void __fill_tga_header<NImage::SColor>( STGAFileHeader *pHdr )
+{
+	pHdr->cImageType = TGAIT_TRUE_COLOR;
+	pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
+}
 };
-
 
 bool CMapInfoEditor::CreateMinimapImage()
 {
@@ -46,11 +44,13 @@ bool CMapInfoEditor::CreateMinimapImage()
 	CPtr<IManipulator> material;
 	if ( !materialName.empty() && materialName != " " )
 		material = pRM->CreateObjectManipulator( "Material", materialName );
-	if ( material ) CManipulatorManager::GetValue( &textureName, material, "Texture" );
+	if ( material )
+		CManipulatorManager::GetValue( &textureName, material, "Texture" );
 	CPtr<IManipulator> texture;
 	if ( !textureName.empty() && textureName != " " )
 		texture = pRM->CreateObjectManipulator( "Texture", textureName );
-	if ( texture ) CManipulatorManager::GetValue( &source, texture, "SrcName" );
+	if ( texture )
+		CManipulatorManager::GetValue( &source, texture, "SrcName" );
 	if ( !pMapInfo || !texture || source.empty() || source == " " )
 	{
 		szSaveError = "The map has no valid minimap material, texture or source image path.";
@@ -67,14 +67,16 @@ bool CMapInfoEditor::CreateMinimapImage()
 	// Use the same mounted mod source that the texture exporter will read.
 	NMinimapImage::CCreateParameterList parameters;
 	parameters.emplace_back( source, CTPoint<int>( 256, 256 ) );
-	if ( !NMinimapImage::Create( pMapInfo, Scene()->GetTerraManager()->GetTerraInfo(), minimap, parameters, &szSaveError ) )
+	if ( !NMinimapImage::Create(
+					 pMapInfo, Scene()->GetTerraManager()->GetTerraInfo(), minimap, parameters, &szSaveError ) )
 		return false;
-	const EXPORT_RESULT result = Singleton<IExporterContainer>()->ExportObject( texture, "Texture", textureName, true, false );
+	const EXPORT_RESULT result =
+			Singleton<IExporterContainer>()->ExportObject( texture, "Texture", textureName, true, false );
 	if ( result != ER_SUCCESS )
 	{
 		szSaveError = "Could not export the minimap DDS:\n" +
-			NVFS::GetWritePath( NVFS::GetMainFileCreator(), NFile::CutFileExt( textureName, "xdb" ) + ".dds" ) +
-			"\nSee the Log window for the texture export error.";
+		              NVFS::GetWritePath( NVFS::GetMainFileCreator(), NFile::CutFileExt( textureName, "xdb" ) + ".dds" ) +
+		              "\nSee the Log window for the texture export error.";
 		return false;
 	}
 	return true;

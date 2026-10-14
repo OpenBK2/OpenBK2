@@ -20,6 +20,7 @@ class CStructureSaver : public IBinSaver
 public:
 	typedef std::string stdString;
 	typedef std::wstring stdWString;
+
 private:
 	// Defensive member defaults; explicit constructor/mode values take precedence.
 	CDataStream *pRes = nullptr;
@@ -44,7 +45,7 @@ private:
 	bool bIsReading = false, bPackResult = false, bMode64 = false;
 	// maps objects addresses during save(first) to addresses during load(second) - during loading
 	// or serves as a sign that some object has been already stored - during storing
-	typedef std::unordered_map<void*,CPtr<CObjectBase>> CObjectsHash;
+	typedef std::unordered_map<void *, CPtr<CObjectBase>> CObjectsHash;
 	CObjectsHash objects;
 	// During storing, the ID each object is written under. It used to be the
 	// object's address, which made every save differ from run to run, and in the
@@ -53,15 +54,15 @@ private:
 	// objects are first reached, which the serialization order fixes. A reader
 	// only ever uses them as keys to match references to objects, so files
 	// written either way load either way.
-	typedef std::unordered_map<void*,uintptr_t> CPObjectsHash;
+	typedef std::unordered_map<void *, uintptr_t> CPObjectsHash;
 	CPObjectsHash storedObjects;
-	uintptr_t nNextObjectID = 1;			// 0 is the null pointer
+	uintptr_t nNextObjectID = 1; // 0 is the null pointer
 	uintptr_t GetStoredObjectID( CObjectBase *pObject, bool *pbNew );
-	typedef std::unordered_map<int,CObjectBase*> CExternalHash;
+	typedef std::unordered_map<int, CObjectBase *> CExternalHash;
 	CExternalHash externalObjects;
-	std::list<CObjectBase*> toStore;
+	std::list<CObjectBase *> toStore;
 	int nVersion = 0;
-	std::vector< CPtr<IDebugSaveCheckObj> > checkers;
+	std::vector<CPtr<IDebugSaveCheckObj>> checkers;
 
 	bool ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &res );
 	bool WriteShortChunk( SChunkLevel &dst, chunk_id dwID, const unsigned char *pData, int nLength );
@@ -80,7 +81,7 @@ private:
 	void DataChunkString( stdWString &data );
 	// storing/loading pointers to objects
 	void StoreObject( CObjectBase *pObject );
-	CObjectBase* LoadObject();
+	CObjectBase *LoadObject();
 	void RegisterExternalObject( CObjectBase *pObject, int nID );
 	//
 	void Start( const std::vector<SBinSaverExternalObject> &ext );
@@ -89,7 +90,8 @@ private:
 	bool IsReading() { return bIsReading; }
 	int GetVersion() const { return nVersion; }
 
-	void SetMode(const ESaverMode mode) {
+	void SetMode( const ESaverMode mode )
+	{
 		bIsReading = mode == SAVER_MODE_READ || mode == SAVER_MODE_READ_64;
 		bPackResult = mode == SAVER_MODE_WRITE_COMPRESSED || mode == SAVER_MODE_WRITE_COMPRESSED_64;
 		bMode64 = mode == SAVER_MODE_READ_64 || mode == SAVER_MODE_WRITE_64 || mode == SAVER_MODE_WRITE_COMPRESSED_64;
@@ -98,16 +100,19 @@ private:
 public:
 	CStructureSaver() : pRes( 0 ) {}
 	CStructureSaver( CDataStream *_pRes, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext )
-		: pRes( _pRes )
+			: pRes( _pRes )
 	{
-		SetMode(mode);
+		SetMode( mode );
 		Start( ext );
 	}
 
-	CStructureSaver( CDataStream *_pRes, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext, std::vector< CPtr<IDebugSaveCheckObj> > &_checkers )
-		: pRes( _pRes ), checkers( _checkers ), bDestroy( false )
+	CStructureSaver( CDataStream *_pRes,
+	                 ESaverMode mode,
+	                 const std::vector<SBinSaverExternalObject> &ext,
+	                 std::vector<CPtr<IDebugSaveCheckObj>> &_checkers )
+			: pRes( _pRes ), checkers( _checkers ), bDestroy( false )
 	{
-		SetMode(mode);
+		SetMode( mode );
 		Start( ext );
 	}
 

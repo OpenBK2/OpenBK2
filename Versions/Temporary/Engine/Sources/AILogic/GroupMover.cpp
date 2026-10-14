@@ -22,7 +22,7 @@
 extern NTimer::STime curTime;
 
 static const float DIST_THRESHOLD = 256.0f;
-static const float FORCE_COEFF    = 0.25f;
+static const float FORCE_COEFF = 0.25f;
 static const int BALANCE_STEP_COUNT = 4;
 static const NTimer::STime PATH_LIFE_TIME = 500;
 
@@ -34,7 +34,9 @@ struct SForce
 	CVec2 vPosition;
 
 	SForce() : nUnitID( -1 ), vForce( VNULL2 ), vPosition( VNULL2 ) {}
-	SForce( const int _nUnitID, const CVec2 &_vPosition ) : nUnitID( _nUnitID ), vForce( VNULL2 ), vPosition( _vPosition ) {}
+	SForce( const int _nUnitID, const CVec2 &_vPosition ) : nUnitID( _nUnitID ), vForce( VNULL2 ), vPosition( _vPosition )
+	{
+	}
 };
 
 struct SUnitHash
@@ -76,7 +78,6 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 		return;
 	}
 
-
 	// remove invalid units from hash
 	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); )
 	{
@@ -102,9 +103,8 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 		forces.push_back( SForce( it->second.pUnit->GetUniqueID(), it->second.vPosition ) );
 
 	// sort forces by uniqueID for determinism
-	std::sort(forces.begin(), forces.end(), [](const SForce& f1, const SForce& f2) {
-		return f1.nUnitID < f2.nUnitID;
-	});
+	std::sort(
+			forces.begin(), forces.end(), []( const SForce &f1, const SForce &f2 ) { return f1.nUnitID < f2.nUnitID; } );
 
 	bool bNullForces = false;
 	for ( int i = 0; i < BALANCE_STEP_COUNT && !bNullForces; ++i )
@@ -123,7 +123,10 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 					if ( fDistance >= FP_EPSILON )
 						vDirection /= fDistance;
 					else
-						{ vDirection = GetVectorByDirection( NRandom::Random( 0, 65535 ) ); RecordRandomCall(); }
+					{
+						vDirection = GetVectorByDirection( NRandom::Random( 0, 65535 ) );
+						RecordRandomCall();
+					}
 
 					const CVec2 vForce = FORCE_COEFF * ( DIST_THRESHOLD - fDistance ) * vDirection;
 					it->vForce += vForce;
@@ -141,21 +144,26 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 	}
 
 	int nCount = 0;
-	std::map<int, SSubGroupUnitInfo*> sortedUnits;
+	std::map<int, SSubGroupUnitInfo *> sortedUnits;
 
 	for ( TSubGroupUnits::iterator it = units.begin(); it != units.end(); ++it )
 	{
 		sortedUnits[it->first] = &it->second;
 	}
 
-	for (auto it = sortedUnits.begin(); it != sortedUnits.end(); it++, nCount++)
+	for ( auto it = sortedUnits.begin(); it != sortedUnits.end(); it++, nCount++ )
 	{
-		it->second->vPosition = GetAIMap()->GetTerrain()->GetValidPoint( it->second->pUnit->GetBoundTileRadius(), vPosition, forces[nCount].vPosition, it->second->pUnit->GetAIPassabilityClass(), false, GetAIMap() );
+		it->second->vPosition = GetAIMap()->GetTerrain()->GetValidPoint( it->second->pUnit->GetBoundTileRadius(),
+		                                                                 vPosition,
+		                                                                 forces[nCount].vPosition,
+		                                                                 it->second->pUnit->GetAIPassabilityClass(),
+		                                                                 false,
+		                                                                 GetAIMap() );
 		it->second->vPosition = forces[nCount].vPosition;
 	}
 }
 
-IStaticPath* CGroupMover::SSubGroup::CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vDefaultPoint )
+IStaticPath *CGroupMover::SSubGroup::CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vDefaultPoint )
 {
 	TSubGroupUnits::const_iterator pos = units.find( pUnit->GetUniqueID() );
 	if ( pos == units.end() )
@@ -164,12 +172,15 @@ IStaticPath* CGroupMover::SSubGroup::CreateStaticPath( CCommonUnit *pUnit, const
 		return paths[pUnit->GetAIPassabilityClass()].CreateStaticPath( pUnit, pos->second.vPosition );
 }
 
-IStaticPath* CGroupMover::SSubGroup::SSubGroupPathInfo::CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint )
+IStaticPath *CGroupMover::SSubGroup::SSubGroupPathInfo::CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint )
 {
-	if ( IsValid( pStaticPath ) && pUnit->GetBoundTileRadius() <= nBoundTileRadius && curTime - timeCalced < PATH_LIFE_TIME &&
-		fabs2( vStartPoint - pUnit->GetCenterPlain() ) < sqr( SConsts::GROUP_DISTANCE ) && fabs2( vFinishPoint - vPoint ) < sqr( SConsts::GROUP_DISTANCE ) )
+	if ( IsValid( pStaticPath ) && pUnit->GetBoundTileRadius() <= nBoundTileRadius &&
+	     curTime - timeCalced < PATH_LIFE_TIME &&
+	     fabs2( vStartPoint - pUnit->GetCenterPlain() ) < sqr( SConsts::GROUP_DISTANCE ) &&
+	     fabs2( vFinishPoint - vPoint ) < sqr( SConsts::GROUP_DISTANCE ) )
 	{
-		const CVec2 vValidPoint = GetAIMap()->GetTerrain()->GetValidPoint( pUnit->GetBoundTileRadius(), vFinishPoint, vPoint, pUnit->GetAIPassabilityClass(), false, GetAIMap() );
+		const CVec2 vValidPoint = GetAIMap()->GetTerrain()->GetValidPoint(
+				pUnit->GetBoundTileRadius(), vFinishPoint, vPoint, pUnit->GetAIPassabilityClass(), false, GetAIMap() );
 		pUnit->SetGroupShift( vValidPoint - vFinishPoint );
 	}
 	else
@@ -208,7 +219,7 @@ const bool CGroupMover::CalcPositions()
 		return true;
 
 	// reset subgroups for units
-	typedef std::map<int, CPtr<CCommonUnit> > TUnitsHashSet;
+	typedef std::map<int, CPtr<CCommonUnit>> TUnitsHashSet;
 	TUnitsHashSet sortedUnits;
 	for ( TGroup::const_iterator it = group.begin(); it != group.end(); ++it )
 	{
@@ -222,7 +233,7 @@ const bool CGroupMover::CalcPositions()
 	// split all units to subgroups
 	int nCurrentGroup = 0;
 	TUnitsHashSet unitsToCheck;
-	while( !sortedUnits.empty() || !unitsToCheck.empty() )
+	while ( !sortedUnits.empty() || !unitsToCheck.empty() )
 	{
 		if ( unitsToCheck.empty() )
 		{
@@ -235,7 +246,7 @@ const bool CGroupMover::CalcPositions()
 		else
 		{
 			TUnitsHashSet::iterator pos = unitsToCheck.begin();
-			for( TUnitsHashSet::iterator it = sortedUnits.begin(); it != sortedUnits.end(); )
+			for ( TUnitsHashSet::iterator it = sortedUnits.begin(); it != sortedUnits.end(); )
 			{
 				if ( CanBeOneGroup( pos->second, it->second ) )
 				{
@@ -274,7 +285,7 @@ const bool CGroupMover::CalcPositions()
 	return true;
 }
 
-IStaticPath* CGroupMover::CreateStaticPath( CCommonUnit *pUnit )
+IStaticPath *CGroupMover::CreateStaticPath( CCommonUnit *pUnit )
 {
 	if ( !CalcPositions() )
 		return 0;
@@ -315,11 +326,10 @@ CVec2 CGroupMover::GetMoveTarget( CCommonUnit *pUnit )
 CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 {
 	if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
-		command.nCmdType == ACTION_COMMAND_SWARM_TO ||
-		command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE ||
-		command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
-		command.nCmdType == ACTION_COMMAND_RESUPPLY_HR || command.nCmdType == ACTION_COMMAND_RESUPPLY ||
-		command.nCmdType == ACTION_COMMAND_REPAIR )
+	     command.nCmdType == ACTION_COMMAND_SWARM_TO || command.nCmdType == ACTION_COMMAND_PLACEMINE ||
+	     command.nCmdType == ACTION_COMMAND_CLEARMINE || command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY ||
+	     command.nCmdType == ACTION_COMMAND_UNLOAD || command.nCmdType == ACTION_COMMAND_RESUPPLY_HR ||
+	     command.nCmdType == ACTION_COMMAND_RESUPPLY || command.nCmdType == ACTION_COMMAND_REPAIR )
 		return new CGroupMover( command.vPos );
 	return 0;
 }

@@ -4,7 +4,7 @@
 
 #include <fmt/format.h>
 
-extern CScripts* pScripts;
+extern CScripts *pScripts;
 CCommandRegistratorForScript theCommandTrackerForScript;
 
 void CCommandRegistratorForScript::Register( int nCommand )
@@ -12,9 +12,11 @@ void CCommandRegistratorForScript::Register( int nCommand )
 	registeredCommands[nCommand] = true;
 }
 
-void CCommandRegistratorForScript::Called( int nCommand ) {
-	if ( !registeredCommands.empty() && registeredCommands.find( nCommand ) != registeredCommands.end() ) {
+void CCommandRegistratorForScript::Called( int nCommand )
+{
+	if ( !registeredCommands.empty() && registeredCommands.find( nCommand ) != registeredCommands.end() )
+	{
 		const auto function = fmt::format( "OnRegisteredCommand( {} )", nCommand );
-		pScripts->CallScriptFunction(function.c_str());
+		pScripts->CallScriptFunction( function.c_str() );
 	}
 }

@@ -17,29 +17,22 @@ struct SViewFilterData
 			return 0;
 		}
 	};
-	std::vector<SObjTypeFilter> objTypeFilter;			// показывать или нет объекты (units, buildings, static ...)
-	bool bShowGrid;														// отображать сетку
-	std::string szGridSize;												// тип(размер) сетки
-	bool bShowBBoxes;													// показывать bounding boxes для моделей
-	bool bWireFrame;													// режим ренедеринга wireframe
-	bool bShowTerrain;												// показывать terrain
-	bool bShowShadows;												// показывать тени
-	bool bShowWarfog;													// показывать warfog
-	bool bShowStats;													// показывать статистику
-	bool bMipmap;															// отображать уровни текстур
-	bool bOverdraw;														// отображать число перерисовок пикселов
+	std::vector<SObjTypeFilter> objTypeFilter; // показывать или нет объекты (units, buildings, static ...)
+	bool bShowGrid;                            // отображать сетку
+	std::string szGridSize;                    // тип(размер) сетки
+	bool bShowBBoxes;                          // показывать bounding boxes для моделей
+	bool bWireFrame;                           // режим ренедеринга wireframe
+	bool bShowTerrain;                         // показывать terrain
+	bool bShowShadows;                         // показывать тени
+	bool bShowWarfog;                          // показывать warfog
+	bool bShowStats;                           // показывать статистику
+	bool bMipmap;                              // отображать уровни текстур
+	bool bOverdraw;                            // отображать число перерисовок пикселов
 	///
-	SViewFilterData() :
-	bShowGrid( false ),
-		szGridSize( RCSTR("Visual tile") ),
-		bShowBBoxes( false ),
-		bWireFrame( false ),
-		bShowTerrain( true ),
-		bShowShadows( true ),
-		bShowWarfog( true ),
-		bShowStats( false ),
-		bMipmap( false ),
-		bOverdraw( false )
+	SViewFilterData()
+			: bShowGrid( false ), szGridSize( RCSTR( "Visual tile" ) ), bShowBBoxes( false ), bWireFrame( false ),
+				bShowTerrain( true ), bShowShadows( true ), bShowWarfog( true ), bShowStats( false ), bMipmap( false ),
+				bOverdraw( false )
 	{
 		std::vector<std::string> typeNames;
 		GetObjectTypesForFiltering( &typeNames );
@@ -52,30 +45,26 @@ struct SViewFilterData
 		}
 	}
 	///
-	void SetDefault()
-	{
-		*this = SViewFilterData();
-	}
+	void SetDefault() { *this = SViewFilterData(); }
 	///
 	void GetObjectTypesForFiltering( std::vector<std::string> *pObjTypes )
 	{
 		if ( !pObjTypes )
 			return;
 		// эти типы объектов можно будет показывать/скрывать
-		const char *pszObjTypeNames[] =
-		{
-				"ObjectRPGStats",
-				"MechUnitRPGStats",
-				"BuildingRPGStats",
-				"FenceRPGStats",
-				"EntrenchmentRPGStats",
-				"SquadRPGStats",
-				"BridgeRPGStats",
-				"TerraObjSetRPGStats",
-				"MineRPGStats",
+		const char *pszObjTypeNames[] = {
+			"ObjectRPGStats",
+			"MechUnitRPGStats",
+			"BuildingRPGStats",
+			"FenceRPGStats",
+			"EntrenchmentRPGStats",
+			"SquadRPGStats",
+			"BridgeRPGStats",
+			"TerraObjSetRPGStats",
+			"MineRPGStats",
 		};
 		pObjTypes->clear();
-		for ( int i = 0; i < sizeof(pszObjTypeNames)/sizeof(pszObjTypeNames[0]); ++i )
+		for ( int i = 0; i < sizeof( pszObjTypeNames ) / sizeof( pszObjTypeNames[0] ); ++i )
 		{
 			pObjTypes->push_back( pszObjTypeNames[i] );
 		}
@@ -95,13 +84,13 @@ struct SViewFilterData
 		if ( xs.IsReading() )
 		{
 			std::vector<std::string> typeNames;
-//			std::vector<std::string> newTypeNames;
+			//			std::vector<std::string> newTypeNames;
 			GetObjectTypesForFiltering( &typeNames );
 			// очистить список считанный из файла от типов, которых нет в pszObjTypeNames[]
 			for ( std::vector<SObjTypeFilter>::iterator it = objTypeFilter.begin(); it != objTypeFilter.end(); )
 			{
 				bool bInvalidType = true;
-				for ( int j = 0; j < typeNames.size() ; ++j )
+				for ( int j = 0; j < typeNames.size(); ++j )
 				{
 					if ( typeNames[j] == it->szObjTypeName )
 					{
@@ -112,7 +101,7 @@ struct SViewFilterData
 				if ( bInvalidType )
 				{
 					objTypeFilter.erase( it );
-					if (  it == objTypeFilter.end() )
+					if ( it == objTypeFilter.end() )
 						break;
 				}
 				else

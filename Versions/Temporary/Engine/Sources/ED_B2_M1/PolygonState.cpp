@@ -14,11 +14,11 @@
 
 #include <zconf.h>
 
-const float	CPolygonState::CONTROL_POINT_RADIUS	= AI_TILE_SIZE / 1.0f;
-const int		CPolygonState::CONTROL_POINT_PARTS	= 8;
-const float	CPolygonState::CENTER_POINT_RADIUS	= AI_TILE_SIZE / 1.5f;
-const uint32_t	CPolygonState::CONTROL_POINT_COLOR	= 0xFFFF4040;
-const uint32_t	CPolygonState::CONTROL_LINE_COLOR		= 0xFFFF4040;
+const float CPolygonState::CONTROL_POINT_RADIUS = AI_TILE_SIZE / 1.0f;
+const int CPolygonState::CONTROL_POINT_PARTS = 8;
+const float CPolygonState::CENTER_POINT_RADIUS = AI_TILE_SIZE / 1.5f;
+const uint32_t CPolygonState::CONTROL_POINT_COLOR = 0xFFFF4040;
+const uint32_t CPolygonState::CONTROL_LINE_COLOR = 0xFFFF4040;
 
 void CPolygonSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -29,7 +29,8 @@ void CPolygonSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		pParentState->pickPolygonIDList.clear();
 		pParentState->nSelectedIndex = INVALID_NODE_ID;
 		//
-		pParentState->PickPolygon( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, &( pParentState->pickPolygonIDList ) );
+		pParentState->PickPolygon( pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+		                           &( pParentState->pickPolygonIDList ) );
 		// Выделяем верхний Polygon
 		if ( !pParentState->pickPolygonIDList.empty() )
 		{
@@ -48,7 +49,6 @@ void CPolygonSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CPolygonSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -61,7 +61,8 @@ void CPolygonSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMou
 			pParentState->ValidateSelectedIndex();
 			pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), CPolygonState::UT_START );
 			// Запоманаем первоначальное расположение контрольных точек
-			if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
+			if ( CPolygonState::CControlPointList *pControlPointList =
+			         pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 			{
 				pParentState->controlPointList = ( *pControlPointList );
 			}
@@ -76,7 +77,6 @@ void CPolygonSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMou
 		}
 	}
 }
-
 
 void CPolygonSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -95,46 +95,51 @@ void CPolygonSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
 	{
 		pParentState->pStoreInputState->OnMouseMove( nFlags, rMousePoint );
 		//
-		if ( ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID ) &&
-				 ( nFlags & MK_LBUTTON ) &&
-				 ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) &&
-				 pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
+		if ( ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID ) && ( nFlags & MK_LBUTTON ) &&
+		     ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) &&
+		     pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 		{
-			if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
+			if ( CPolygonState::CControlPointList *pControlPointList =
+			         pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 			{
 				CPolygonState::EMoveType eMoveType = pParentState->GetMoveType();
-				switch( eMoveType )
+				switch ( eMoveType )
 				{
 					case CPolygonState::MT_SINGLE:
 					default:
 					{
-						( *pControlPointList )[pParentState->nSelectedControlPoint] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																																					 pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+						( *pControlPointList )[pParentState->nSelectedControlPoint] +=
+								pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+								pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 						break;
 					}
 					case CPolygonState::MT_MULTI:
 					{
 						if ( ( nFlags & MK_CONTROL ) == 0 )
 						{
-							for ( int nControlPointIndex = pParentState->nSelectedControlPoint; nControlPointIndex < pControlPointList->size(); ++nControlPointIndex )
+							for ( int nControlPointIndex = pParentState->nSelectedControlPoint;
+							      nControlPointIndex < pControlPointList->size();
+							      ++nControlPointIndex )
 							{
-								( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																															pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+								( *pControlPointList )[nControlPointIndex] +=
+										pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+										pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 							}
 						}
 						else
 						{
-							for ( int nControlPointIndex = 0; nControlPointIndex <= pParentState->nSelectedControlPoint; ++nControlPointIndex )
+							for ( int nControlPointIndex = 0; nControlPointIndex <= pParentState->nSelectedControlPoint;
+							      ++nControlPointIndex )
 							{
-								( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																															pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+								( *pControlPointList )[nControlPointIndex] +=
+										pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+										pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 							}
 						}
 						break;
@@ -143,8 +148,9 @@ void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 					{
 						for ( int nControlPointIndex = 0; nControlPointIndex < pControlPointList->size(); ++nControlPointIndex )
 						{
-							( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
-																														pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
+							( *pControlPointList )[nControlPointIndex] +=
+									pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
+									pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 						}
 						break;
 					}
@@ -160,7 +166,6 @@ void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-
 void CPolygonEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -170,11 +175,13 @@ void CPolygonEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMou
 		pParentState->nSelectedControlPoint = INVALID_NODE_ID;
 		if ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID )
 		{
-			if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
+			if ( CPolygonState::CControlPointList *pControlPointList =
+			         pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 			{
 				for ( int nControlPointIndex = 0; nControlPointIndex < pControlPointList->size(); ++nControlPointIndex )
 				{
-					CVec3 vDifference = pParentState->pStoreInputState->lastEventInfo.vTerrainPos - ( *pControlPointList )[nControlPointIndex];
+					CVec3 vDifference =
+							pParentState->pStoreInputState->lastEventInfo.vTerrainPos - ( *pControlPointList )[nControlPointIndex];
 					vDifference.z = 0.0f;
 					if ( fabs( vDifference ) <= CPolygonState::CONTROL_POINT_RADIUS )
 					{
@@ -199,12 +206,14 @@ void CPolygonEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMou
 		pParentState->pickPolygonIDList.clear();
 		pParentState->nSelectedIndex = INVALID_NODE_ID;
 		//
-		pParentState->PickPolygon( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, &( pParentState->pickPolygonIDList ) );
+		pParentState->PickPolygon( pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+		                           &( pParentState->pickPolygonIDList ) );
 		bool bReturnOldPolygon = true;
 		if ( !pParentState->pickPolygonIDList.empty() )
 		{
 			bool bOldPolygonNotPresent = true;
-			for ( int nSelectedPolygonIndex = 0; nSelectedPolygonIndex < pParentState->pickPolygonIDList.size(); ++nSelectedPolygonIndex )
+			for ( int nSelectedPolygonIndex = 0; nSelectedPolygonIndex < pParentState->pickPolygonIDList.size();
+			      ++nSelectedPolygonIndex )
 			{
 				if ( nSelectedPolygonID == pParentState->pickPolygonIDList[nSelectedPolygonIndex] )
 				{
@@ -232,7 +241,6 @@ void CPolygonEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMou
 	}
 }
 
-
 void CPolygonEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -240,7 +248,7 @@ void CPolygonEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMouse
 		pParentState->pStoreInputState->OnLButtonUp( nFlags, rMousePoint );
 		//
 		if ( ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID ) &&
-				 ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) )
+		     ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) )
 		{
 			pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), CPolygonState::UT_FINISH_MOVE );
 		}
@@ -250,7 +258,6 @@ void CPolygonEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMouse
 	}
 }
 
-
 void CPolygonEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -258,7 +265,7 @@ void CPolygonEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rM
 		pParentState->pStoreInputState->OnLButtonDblClk( nFlags, rMousePoint );
 		//
 		if ( ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID ) &&
-				 ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) )
+		     ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) )
 		{
 			pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), CPolygonState::UT_FINISH );
 		}
@@ -272,7 +279,6 @@ void CPolygonEditState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -282,9 +288,10 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 		if ( nChar == VK_INSERT )
 		{
 			if ( ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID ) &&
-					 ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) )
+			     ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) )
 			{
-				if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
+				if ( CPolygonState::CControlPointList *pControlPointList =
+				         pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 				{
 					int nShift = ( ( nFlags & MK_CONTROL ) == 0 ) ? 1 : -1;
 					if ( pParentState->nSelectedControlPoint == ( pControlPointList->size() - 1 ) )
@@ -296,7 +303,7 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 						nShift = 1;
 					}
 					if ( ( ( pParentState->nSelectedControlPoint + nShift ) > ( pControlPointList->size() - 1 ) ) ||
-							 ( ( pParentState->nSelectedControlPoint + nShift ) < 0 ) )
+					     ( ( pParentState->nSelectedControlPoint + nShift ) < 0 ) )
 					{
 						nShift = 0;
 					}
@@ -305,7 +312,8 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 						const CVec3 vBegin = ( *pControlPointList )[pParentState->nSelectedControlPoint];
 						const CVec3 vEnd = ( *pControlPointList )[pParentState->nSelectedControlPoint + nShift];
 						const CVec3 vNewControlPoint = ( vBegin + vEnd ) / 2.0f;
-						pControlPointList->insert( pControlPointList->begin() + ( pParentState->nSelectedControlPoint + nShift ), vNewControlPoint );
+						pControlPointList->insert( pControlPointList->begin() + ( pParentState->nSelectedControlPoint + nShift ),
+						                           vNewControlPoint );
 						pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), CPolygonState::UT_CHANGE_POINT_NUMBER );
 						//
 						Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -324,12 +332,14 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 			{
 				if ( nChar == VK_ESCAPE )
 				{
-					if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
+					if ( CPolygonState::CControlPointList *pControlPointList =
+					         pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 					{
 						( *pControlPointList ) = pParentState->controlPointList;
 					}
 				}
-				pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), ( nChar != VK_ESCAPE ) ? CPolygonState::UT_FINISH : CPolygonState::UT_CANCEL );
+				pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(),
+				                             ( nChar != VK_ESCAPE ) ? CPolygonState::UT_FINISH : CPolygonState::UT_CANCEL );
 			}
 			//
 			pParentState->nSelectedControlPoint = INVALID_NODE_ID;
@@ -343,7 +353,6 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 		}
 	}
 }
-
 
 void CPolygonAddState::InsertPolygon()
 {
@@ -378,7 +387,8 @@ void CPolygonAddState::InsertPolygon()
 		pParentState->nSelectedIndex = 0;
 		//
 		// Запоманаем первоначальное расположение контрольных точек
-		if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
+		if ( CPolygonState::CControlPointList *pControlPointList =
+		         pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
 		{
 			pParentState->controlPointList = ( *pControlPointList );
 		}
@@ -408,7 +418,6 @@ void CPolygonAddState::InsertPolygon()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CPolygonAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -421,7 +430,6 @@ void CPolygonAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouseP
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-
 
 void CPolygonAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -442,7 +450,6 @@ void CPolygonAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMouseP
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-
 
 void CPolygonAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -469,7 +476,6 @@ void CPolygonAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMouseP
 	}
 }
 
-
 void CPolygonAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -478,7 +484,6 @@ void CPolygonAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMo
 		InsertPolygon();
 	}
 }
-
 
 void CPolygonAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -503,7 +508,6 @@ void CPolygonAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFl
 	}
 }
 
-
 void CPolygonState::Enter()
 {
 	nSelectedControlPoint = INVALID_NODE_ID;
@@ -520,7 +524,6 @@ void CPolygonState::Enter()
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-
 
 void CPolygonState::Leave()
 {
@@ -550,7 +553,6 @@ void CPolygonState::Leave()
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CPolygonState::Draw( IPaintContext *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -567,7 +569,8 @@ void CPolygonState::Draw( IPaintContext *pPaintDC )
 						CVec3 vControlPoint = ( *pControlPointList )[nControlPointIndex];
 						UpdateTerrainHeight( &vControlPoint );
 						//
-						sceneDrawTool.DrawCircle( vControlPoint, CONTROL_POINT_RADIUS, CONTROL_POINT_PARTS, CONTROL_POINT_COLOR, false );
+						sceneDrawTool.DrawCircle(
+								vControlPoint, CONTROL_POINT_RADIUS, CONTROL_POINT_PARTS, CONTROL_POINT_COLOR, false );
 						pointList.push_back( vControlPoint );
 					}
 					sceneDrawTool.DrawPolyline( pointList, CONTROL_LINE_COLOR, IsClosedPolygon(), false );
@@ -580,7 +583,7 @@ void CPolygonState::Draw( IPaintContext *pPaintDC )
 							CVec3 vControlPoint = ( *pControlPointList )[nSelectedControlPoint];
 							UpdateTerrainHeight( &vControlPoint );
 							//
-							while( fRadius > 0.0f )
+							while ( fRadius > 0.0f )
 							{
 								sceneDrawTool.DrawCircle( vControlPoint, fRadius, CONTROL_POINT_PARTS, CONTROL_POINT_COLOR, false );
 								fRadius -= 2.0f;
@@ -593,7 +596,9 @@ void CPolygonState::Draw( IPaintContext *pPaintDC )
 		else if ( GetActiveInputStateIndex() == IS_ADD )
 		{
 			std::list<CVec3> pointList;
-			for ( CControlPointList::const_iterator itControlPoint = controlPointList.begin(); itControlPoint != controlPointList.end(); ++itControlPoint )
+			for ( CControlPointList::const_iterator itControlPoint = controlPointList.begin();
+			      itControlPoint != controlPointList.end();
+			      ++itControlPoint )
 			{
 				CVec3 vPoint = *itControlPoint;
 				UpdateTerrainHeight( &vPoint );
@@ -610,7 +615,6 @@ void CPolygonState::Draw( IPaintContext *pPaintDC )
 		}
 	}
 }
-
 
 void CPolygonState::OnDelete()
 {
@@ -655,17 +659,15 @@ void CPolygonState::OnDelete()
 	}
 }
 
-
-void CPolygonState::OnSetFocus( IWidget* pNewWnd )
+void CPolygonState::OnSetFocus( IWidget *pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
-
 bool CPolygonState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_SELECTION_CLEAR:
 		{
@@ -678,13 +680,12 @@ bool CPolygonState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CPolygonState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CPolygonState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CPolygonState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_SELECTION_CLEAR:
 		{
@@ -697,6 +698,5 @@ bool CPolygonState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pb
 	}
 	return false;
 }
-
 
 // basement storage

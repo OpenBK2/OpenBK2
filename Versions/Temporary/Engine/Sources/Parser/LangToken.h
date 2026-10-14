@@ -2,7 +2,7 @@
 
 namespace NLang
 {
-	class CLangNode;
+class CLangNode;
 }
 
 struct SToken
@@ -10,7 +10,7 @@ struct SToken
 	std::string psz;
 	CPtr<NLang::CLangNode> pNode;
 
-	SToken() { }
+	SToken() {}
 };
 
 #define YYSTYPE SToken

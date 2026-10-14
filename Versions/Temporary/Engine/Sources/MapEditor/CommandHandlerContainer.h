@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-class  CCommandHandlerContainer : public ICommandHandlerContainer
+class CCommandHandlerContainer : public ICommandHandlerContainer
 {
 	OBJECT_NOCOPY_METHODS( CCommandHandlerContainer );
 	//
@@ -17,7 +17,7 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 
 		SCommandRange() {}
 		SCommandRange( const SCommandRange &rCommandRange ) : commandIDSet( rCommandRange.commandIDSet ) {}
-		SCommandRange& operator=( const SCommandRange &rCommandRange )
+		SCommandRange &operator=( const SCommandRange &rCommandRange )
 		{
 			if ( &rCommandRange != this )
 			{
@@ -29,7 +29,7 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 	//
 	typedef std::unordered_map<unsigned, SCommandRange> CCommandHandlerIDToCommandIDMap;
 	typedef std::unordered_map<unsigned, unsigned> CCommandIDToCommandHandlerIDMap;
-	typedef std::unordered_map<unsigned, ICommandHandler*> CCommandHandlerMap;
+	typedef std::unordered_map<unsigned, ICommandHandler *> CCommandHandlerMap;
 	//
 	CCommandHandlerIDToCommandIDMap commandHandlerIDToCommandIDMap;
 	CCommandIDToCommandHandlerIDMap commandIDToCommandHandlerIDMap;
@@ -42,7 +42,7 @@ public:
 	void Set( unsigned nType, ICommandHandler *pCommandHandler );
 	void Remove( unsigned nType, ICommandHandler *pCommandHandler );
 	void Remove( unsigned nType );
-	ICommandHandler* Get( unsigned nType );
+	ICommandHandler *Get( unsigned nType );
 	bool HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );

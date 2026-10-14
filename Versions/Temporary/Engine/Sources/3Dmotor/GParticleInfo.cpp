@@ -8,9 +8,14 @@
 
 const float F_PRIORITY_DIST = 0.01f;
 
-static CVec3 NormalizedDif( const CVec3 &a, const CVec3 &b ) { CVec3 d( a - b ); Normalize(&d); return d; }
+static CVec3 NormalizedDif( const CVec3 &a, const CVec3 &b )
+{
+	CVec3 d( a - b );
+	Normalize( &d );
+	return d;
+}
 
-namespace	NGScene
+namespace NGScene
 {
 static float fRandomShifts[12] = { 0.02f, -0.05f, 0.07f, -0.12f, 0, 0.03f, 0.08f, -0.04f };
 
@@ -21,7 +26,7 @@ void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture 
 	ASSERT( NGfx::HasSameContainer( NGfx::GetTransparentTextureCache(), pHolder ) );
 	if ( !NGfx::HasSameContainer( NGfx::GetTransparentTextureCache(), pHolder ) )
 	{
-		memset( pRes, 0, sizeof(*pRes) );
+		memset( pRes, 0, sizeof( *pRes ) );
 		return;
 	}
 	float fU1 = 1.0f / place.size.x;
@@ -30,10 +35,10 @@ void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture 
 	float fVStart = ( place.place.y1 + fOffset ) * fV1;
 	float fUFinish = ( place.place.x2 - fOffset ) * fU1;
 	float fVFinish = ( place.place.y2 - fOffset ) * fV1;
-	NGfx::CalcTexCoords( &pRes->vUVs[0], fUStart, fVStart );//fVFinish );
-	NGfx::CalcTexCoords( &pRes->vUVs[1], fUFinish, fVStart );//fVFinish );
-	NGfx::CalcTexCoords( &pRes->vUVs[2], fUFinish, fVFinish );//fVStart );
-	NGfx::CalcTexCoords( &pRes->vUVs[3], fUStart, fVFinish );//fVStart );
+	NGfx::CalcTexCoords( &pRes->vUVs[0], fUStart, fVStart );   //fVFinish );
+	NGfx::CalcTexCoords( &pRes->vUVs[1], fUFinish, fVStart );  //fVFinish );
+	NGfx::CalcTexCoords( &pRes->vUVs[2], fUFinish, fVFinish ); //fVStart );
+	NGfx::CalcTexCoords( &pRes->vUVs[3], fUStart, fVFinish );  //fVStart );
 }
 
 static void GetGrassTexturePlace( std::vector<STransparentTexturePlace> *pRes, int nGrass, NGfx::CTexture *pTex )
@@ -59,9 +64,9 @@ static void GetGrassTexturePlace( std::vector<STransparentTexturePlace> *pRes, i
 	pRes->resize( nGrass * nGrass );
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
-		int nCornerU  = (k % nGrass) * nElSizeU;
-		int nCornerV  = (k / nGrass) * nElSizeV;
-		STransparentTexturePlace &res = (*pRes)[k];
+		int nCornerU = ( k % nGrass ) * nElSizeU;
+		int nCornerV = ( k / nGrass ) * nElSizeV;
+		STransparentTexturePlace &res = ( *pRes )[k];
 		for ( int i = 0; i < 4; ++i )
 		{
 			int nU = nCornerU + uvShift[i].x;
@@ -73,15 +78,15 @@ static void GetGrassTexturePlace( std::vector<STransparentTexturePlace> *pRes, i
 }
 
 static void InitTexturePlaces( std::vector<STransparentTexturePlace> *pRes,
-	const std::vector<CObj<CPtrFuncBase<NGfx::CTexture> > > &tex )
+                               const std::vector<CObj<CPtrFuncBase<NGfx::CTexture>>> &tex )
 {
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
-		CDGPtr<CPtrFuncBase<NGfx::CTexture> > pTex( tex[k] );
+		CDGPtr<CPtrFuncBase<NGfx::CTexture>> pTex( tex[k] );
 		if ( !IsValid( pTex ) )
 			continue;
 		pTex.Refresh();
-		GetTransparentTexturePlace( &(*pRes)[k], pTex->GetValue() );
+		GetTransparentTexturePlace( &( *pRes )[k], pTex->GetValue() );
 	}
 }
 
@@ -89,13 +94,13 @@ static void InitTexturePlaces( std::vector<STransparentTexturePlace> *pRes,
 
 const int N_SIN_TABLE_PERIOD = 512;
 const float F_SIN_TABLE_MULT = N_SIN_TABLE_PERIOD / FP_2PI;
-static float fSinTable[ N_SIN_TABLE_PERIOD * 2];
+static float fSinTable[N_SIN_TABLE_PERIOD * 2];
 struct SSinCosTableInit
 {
 	SSinCosTableInit()
 	{
 		for ( int k = 0; k < N_SIN_TABLE_PERIOD * 2 - 1; ++k )
-			fSinTable[k] = sin ( k * FP_2PI / N_SIN_TABLE_PERIOD );
+			fSinTable[k] = sin( k * FP_2PI / N_SIN_TABLE_PERIOD );
 	}
 } sinCosTable;
 inline void FastSinCos( float fAngle, float *pfSin, float *pfCos )
@@ -104,20 +109,20 @@ inline void FastSinCos( float fAngle, float *pfSin, float *pfCos )
 	int n = Float2Int( fA - 0.5f );
 	float fResidual = fA - n;
 	n &= N_SIN_TABLE_PERIOD - 1;
-	*pfSin = fSinTable[n] + ( fSinTable[n+1] - fSinTable[n] ) * fResidual;
+	*pfSin = fSinTable[n] + ( fSinTable[n + 1] - fSinTable[n] ) * fResidual;
 	n += N_SIN_TABLE_PERIOD / 4;
-	*pfCos = fSinTable[n] + ( fSinTable[n+1] - fSinTable[n] ) * fResidual;
+	*pfCos = fSinTable[n] + ( fSinTable[n + 1] - fSinTable[n] ) * fResidual;
 }
 void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 {
-	if ( !IsValid(pInfo) )
+	if ( !IsValid( pInfo ) )
 		return;
 	pInfo.Refresh();
 	CParticlesInfo *pParticles = pInfo->GetValue();
 	if ( !pParticles )
 		return;
 
-	if ( bLeaveParticlesWhereStarted  )
+	if ( bLeaveParticlesWhereStarted )
 	{
 		if ( transforms.size() < frames.size() )
 		{
@@ -138,7 +143,8 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 					transforms[iFrame].swap( transforms[iTransformedFrame] );
 					doneTransforms[iFrame].swap( doneTransforms[iTransformedFrame] );
 					std::swap( particlesFrames[iFrame], particlesFrames[iTransformedFrame] );
-					bFound = true;;
+					bFound = true;
+					;
 					break;
 				}
 			}
@@ -154,7 +160,6 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 				particlesFrames[iFrame] = frames[iFrame].nNumFrame;
 			}
 		}
-
 	}
 
 	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
@@ -174,7 +179,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 	static std::vector<char> filterParticles;
 	static std::vector<float> warfog;
 	static std::vector<CVec3> positions;
-		int nParticles = pParticles->nParticles;
+	int nParticles = pParticles->nParticles;
 	if ( filterParticles.size() < nParticles )
 		filterParticles.resize( nParticles );
 
@@ -185,17 +190,15 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 		char *pDropParticles = &filterParticles[0];
 
 		int nDst = 0;
-		if ( positions.size() < nParticles)
+		if ( positions.size() < nParticles )
 			positions.resize( nParticles );
 		for ( int n = 0; n < nParticles; ++n )
 		{
 			const SParticle &part = pParticles->particles[n];
-			if ( frame.fT >= part.nTStart && frame.fT < part.nTEnd &&
-				(frame.bLastCycle || part.nTStart <= fCycleEnd) &&
-				( fTStopGeneration < 0 || (!frame.bLastCycle) || part.nTStart < fTStopGeneration )
-				)
+			if ( frame.fT >= part.nTStart && frame.fT < part.nTEnd && ( frame.bLastCycle || part.nTStart <= fCycleEnd ) &&
+			     ( fTStopGeneration < 0 || ( !frame.bLastCycle ) || part.nTStart < fTStopGeneration ) )
 			{
-				const SParticleFrame &frame = frames[ nFrame ];
+				const SParticleFrame &frame = frames[nFrame];
 				CVec3 pos;
 				part.pos.GetValue( frame.fT, &pos );
 				if ( bDoWrap )
@@ -216,7 +219,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 				}
 				else
 					transform.RotateHVector( &pos, pos );
-				positions[ nDst++ ] = pos;
+				positions[nDst++] = pos;
 				pDropParticles[n] = 0;
 			}
 			else
@@ -240,12 +243,12 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 				if ( pDropParticles[k] )
 					continue;
 				++nDst;
-				if ( filter[ nDst - 1 ] )
+				if ( filter[nDst - 1] )
 				{
 					pDropParticles[k] = 1;
 					continue;
 				}
-				positions[ nRes++ ] = positions[ nDst - 1 ];
+				positions[nRes++] = positions[nDst - 1];
 			}
 			positions.resize( nRes );
 		}
@@ -280,7 +283,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			if ( pDropParticles[n] )
 				continue;
 			++nDst;
-			const SParticleFrame &frame = frames[ nFrame ];
+			const SParticleFrame &frame = frames[nFrame];
 
 			float rot;
 			CVec2 scale;
@@ -288,7 +291,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			unsigned int nSprite;
 			uint32_t dwColor;
 
-			float fFog = pWarFog[ ( nDst - 1 ) & nWarFogStepMask ] * fFade;
+			float fFog = pWarFog[( nDst - 1 ) & nWarFogStepMask] * fFade;
 			part.color.GetValue( frame.fT, fFog, &dwColor );
 			if ( dwColor == 0 )
 				continue;
@@ -308,7 +311,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			//CVec2 v[4];
 			float fHalfScale = fScale * 0.5f;
 			float fScaleX = scale.x * fHalfScale, fScaleY = scale.y * fHalfScale;
-			float fPivotX = - fScaleX * pivot.x, fPivotY = -fScaleY * pivot.y;
+			float fPivotX = -fScaleX * pivot.x, fPivotY = -fScaleY * pivot.y;
 			float fTPivotX = fCos * fPivotX - fSin * fPivotY;
 			float fTPivotY = fSin * fPivotX + fCos * fPivotY;
 			float fTScaleXX = fCos * fScaleX;
@@ -319,34 +322,35 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			//v[1].x = fPivotX + fScaleX;  v[1].y = fPivotY - fScaleY;
 			//v[2].x = fPivotX + fScaleX;  v[2].y = fPivotY + fScaleY;
 			//v[3].x = fPivotX - fScaleX;  v[3].y = fPivotY + fScaleY;
-			float fZShiftScale = fHalfScale * ( fabs(scale.x) + fabs(scale.y) );
-			int nRnd = ( n * n + nFrame ) & 7, nRndStep = n|1;
+			float fZShiftScale = fHalfScale * ( fabs( scale.x ) + fabs( scale.y ) );
+			int nRnd = ( n * n + nFrame ) & 7, nRndStep = n | 1;
 
-			CVec3 pos = positions[ nDst - 1 ];
+			CVec3 pos = positions[nDst - 1];
 			CVec3 vPos[4];
-#define ONE_VERTEX( N, xx, yy )\
-			{\
-			float x = fTPivotX + xx * fTScaleXX + yy * fTScaleYX;\
-			float y = fTPivotY + xx * fTScaleXY + yy * fTScaleYY;\
-			float fDZ = fRandomShifts[ nRnd ] * fZShiftScale;\
-			vPos[N].x = pos.x + x * orientation.vBasic[0].x + y * orientation.vBasic[1].x + fDZ * orientation.vBasic[2].x;\
-			vPos[N].y = pos.y + x * orientation.vBasic[0].y + y * orientation.vBasic[1].y + fDZ * orientation.vBasic[2].y;\
-			vPos[N].z = pos.z + x * orientation.vBasic[0].z + y * orientation.vBasic[1].z + fDZ * orientation.vBasic[2].z;\
-			nRnd = ( nRnd + nRndStep ) & 7;\
-			}
-			ONE_VERTEX( 0, -1 , -1 )
-			ONE_VERTEX( 1,  1 , -1 )
-			ONE_VERTEX( 2,  1 ,  1 )
-			ONE_VERTEX( 3, -1 ,  1 )
+#define ONE_VERTEX( N, xx, yy )                                                                                    \
+	{                                                                                                                \
+		float x = fTPivotX + xx * fTScaleXX + yy * fTScaleYX;                                                          \
+		float y = fTPivotY + xx * fTScaleXY + yy * fTScaleYY;                                                          \
+		float fDZ = fRandomShifts[nRnd] * fZShiftScale;                                                                \
+		vPos[N].x = pos.x + x * orientation.vBasic[0].x + y * orientation.vBasic[1].x + fDZ * orientation.vBasic[2].x; \
+		vPos[N].y = pos.y + x * orientation.vBasic[0].y + y * orientation.vBasic[1].y + fDZ * orientation.vBasic[2].y; \
+		vPos[N].z = pos.z + x * orientation.vBasic[0].z + y * orientation.vBasic[1].z + fDZ * orientation.vBasic[2].z; \
+		nRnd = ( nRnd + nRndStep ) & 7;                                                                                \
+	}
+			ONE_VERTEX( 0, -1, -1 )
+			ONE_VERTEX( 1, 1, -1 )
+			ONE_VERTEX( 2, 1, 1 )
+			ONE_VERTEX( 3, -1, 1 )
 #undef ONE_VERTEX
-			pRender->AddParticle( vPos, dwColor, texturePlaces[nSprite], pos * orientation.vDepth + (float)nPriority * F_PRIORITY_DIST );
+			pRender->AddParticle(
+					vPos, dwColor, texturePlaces[nSprite], pos * orientation.vDepth + (float)nPriority * F_PRIORITY_DIST );
 		}
 	}
 }
 
-const float FP_DROP_H = 1.75f; // 0.4f
+const float FP_DROP_H = 1.75f;  // 0.4f
 const float FP_DROP_W = 0.033f; // 0.033f
-static float fRainDropShifts[4][2] = { { 0, 0 }, {FP_DROP_W,0}, {FP_DROP_W, FP_DROP_H}, {0,FP_DROP_H} };
+static float fRainDropShifts[4][2] = { { 0, 0 }, { FP_DROP_W, 0 }, { FP_DROP_W, FP_DROP_H }, { 0, FP_DROP_H } };
 void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 {
 	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
@@ -354,18 +358,18 @@ void CRainParticleEffect::AddParticles( IParticleOutput *pRender )
 	InitTexturePlaces( &texturePlaces, textures );
 	for ( int nParticle = 0; nParticle < positions.size(); ++nParticle )
 	{
-		CVec3 pos = positions[ nParticle ];
-		CVec3 vSide = ( pos - orientation.vBasic[3] ) ^ CVec3(0,0,1);
+		CVec3 pos = positions[nParticle];
+		CVec3 vSide = ( pos - orientation.vBasic[3] ) ^ CVec3( 0, 0, 1 );
 		Normalize( &vSide );
 		CVec3 vPos[4];
 		for ( int i = 0; i < 4; ++i )
 			vPos[i] = pos + fRainDropShifts[i][0] * vSide + directions[nParticle] * fRainDropShifts[i][1];
-		pRender->AddParticle( vPos, 0xffffffff, texturePlaces[ faces[nParticle] ], pos * orientation.vDepth );
+		pRender->AddParticle( vPos, 0xffffffff, texturePlaces[faces[nParticle]], pos * orientation.vDepth );
 	}
 }
 
 }
 
 using namespace NGScene;
-BASIC_REGISTER_CLASS(_3DMOTOR, CStandardParticleEffect)
-BASIC_REGISTER_CLASS(_3DMOTOR, CParticleEffect)
+BASIC_REGISTER_CLASS( _3DMOTOR, CStandardParticleEffect )
+BASIC_REGISTER_CLASS( _3DMOTOR, CParticleEffect )

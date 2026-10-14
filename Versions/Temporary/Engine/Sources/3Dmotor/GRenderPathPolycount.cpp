@@ -7,9 +7,9 @@ namespace NGScene
 void RenderPolycount( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *pRender, CSceneFragments &scene )
 {
 	CRenderCmdList lightOps;
-	const std::vector<SRenderFragmentInfo*> &fragments = scene.GetFragments();
+	const std::vector<SRenderFragmentInfo *> &fragments = scene.GetFragments();
 	std::vector<CVec4> colors;
-	colors.resize( fragments.size(), CVec4(0,0,0,0) );
+	colors.resize( fragments.size(), CVec4( 0, 0, 0, 0 ) );
 	for ( int k = 0; k < fragments.size(); ++k )
 	{
 		if ( scene.IsFilteredFragment( k ) )
@@ -19,7 +19,7 @@ void RenderPolycount( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *
 		float fFade = f.vars.fFade;
 		CVec4 &vColor = colors[k];
 		fFade = sqrt( fFade );
-		vColor = CVec4(1,0,0,1) * ( 1 - fFade ) + CVec4(0,0,1,1) * fFade;
+		vColor = CVec4( 1, 0, 0, 1 ) * ( 1 - fFade ) + CVec4( 0, 0, 1, 1 ) * fFade;
 
 		COpGenContext fi( &lightOps.ops, &f );
 		fi.AddOperation( RO_SOLID_COLOR, 100, 0, 0, &vColor, 0.0f, 0.0f );

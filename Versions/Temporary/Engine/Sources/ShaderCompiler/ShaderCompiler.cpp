@@ -54,16 +54,39 @@ struct SProcedure
 	}
 };
 
-const char* pszCmds[] = {
-"add", "dp3", "dp4", "dst", "expp", "lit", "logp", "mad", "max", "min", "mov", "mul", "rcp",
-"rsq", "sge", "slt", "sub", "exp", "frc", "log", "m3x2", "m3x3", "m3x4", "m4x3", "m4x4", 0 };
+const char *pszCmds[] = { "add",
+                          "dp3",
+                          "dp4",
+                          "dst",
+                          "expp",
+                          "lit",
+                          "logp",
+                          "mad",
+                          "max",
+                          "min",
+                          "mov",
+                          "mul",
+                          "rcp",
+                          "rsq",
+                          "sge",
+                          "slt",
+                          "sub",
+                          "exp",
+                          "frc",
+                          "log",
+                          "m3x2",
+                          "m3x3",
+                          "m3x4",
+                          "m4x3",
+                          "m4x4",
+                          0 };
 
-const char* pszRegs[] = {
+const char *pszRegs[] = {
 	"oD0", "oD1", "oT0", "oT1", "oT2", "oT3", "oT4", "oT5", "oT6", "oT7", "oFog", "oPos", "oPts", 0 };
 
 static bool IsVSRegister( const char *pTest, const char c )
 {
-	if ( toupper(c) != toupper( pTest[0] ) )
+	if ( toupper( c ) != toupper( pTest[0] ) )
 		return false;
 	for ( ++pTest; pTest[0]; ++pTest )
 	{
@@ -73,27 +96,19 @@ static bool IsVSRegister( const char *pTest, const char c )
 	return true;
 }
 
-
 static bool IsAddressInstruction( const char *pTest )
 {
 	// Check if pTest looks "c[a0.x+Number]", parser create the lexem without spaces.
 	return true;
-	if ( strlen(pTest) < 7 )
+	if ( strlen( pTest ) < 7 )
 		return false;
 
-	if ( toupper( pTest[0] ) != 'C' &&
-		   pTest[1] != '[' &&
-			 toupper( pTest[2] ) != 'A' &&
-			 toupper( pTest[3] ) != '0' &&
-			 pTest[4] != '.' &&
-			 toupper( pTest[5] ) != 'X' &&
-			 toupper( pTest[6] ) != '+'
-		 )
+	if ( toupper( pTest[0] ) != 'C' && pTest[1] != '[' && toupper( pTest[2] ) != 'A' && toupper( pTest[3] ) != '0' &&
+	     pTest[4] != '.' && toupper( pTest[5] ) != 'X' && toupper( pTest[6] ) != '+' )
 		return false;
 
 	return true;
 }
-
 
 struct SProgram
 {
@@ -132,18 +147,20 @@ class CProgramParser
 	{
 		string sz = StripAfterDot( p );
 		const char *psz = sz.c_str();
-		return IsOneOf( pszRegs, psz )  || IsVSRegister( psz, 'V' ) || IsVSRegister( psz, 'C' ) || IsVSRegister( psz, 'A' ) ||
-			cur.GetLocalVar(psz) != -1 || cur.GetParam(psz) != -1 || IsAddressInstruction( psz );
+		return IsOneOf( pszRegs, psz ) || IsVSRegister( psz, 'V' ) || IsVSRegister( psz, 'C' ) ||
+		       IsVSRegister( psz, 'A' ) || cur.GetLocalVar( psz ) != -1 || cur.GetParam( psz ) != -1 ||
+		       IsAddressInstruction( psz );
 	}
 	void ShitHappened( const string &szInfo )
 	{
 		szError = szInfo;
 		state = _ERROR;
 	}
+
 public:
-	CProgramParser( SProgram &_p ): prog(_p), state(PROCEDURE) {}
+	CProgramParser( SProgram &_p ) : prog( _p ), state( PROCEDURE ) {}
 	bool IsError() const { return state == _ERROR; }
-	const string& GetError() const { return szError; }
+	const string &GetError() const { return szError; }
 	void Finish()
 	{
 		if ( !cur.cmds.empty() )
@@ -172,7 +189,7 @@ public:
 					cur.szName = lexems[1].szData;
 					if ( prog.GetProc( cur.szName.c_str() ) != -1 )
 					{
-						ShitHappened( string("proc ") + cur.szName + " is already defined" );
+						ShitHappened( string( "proc " ) + cur.szName + " is already defined" );
 						return;
 					}
 					cur.bExtern = lexems[0].szData == "proc";
@@ -180,7 +197,8 @@ public:
 						cur.params.push_back( lexems[k].szData );
 					if ( cur.bExtern && !cur.params.empty() )
 					{
-						ShitHappened( string("proc ") + cur.szName + " should have no params, only funcs are allowed to have them" );
+						ShitHappened( string( "proc " ) + cur.szName +
+						              " should have no params, only funcs are allowed to have them" );
 						return;
 					}
 				}
@@ -195,14 +213,14 @@ public:
 					cmd.szCmd = lexems[0].szData;
 					if ( !prog.IsValidCommand( cmd.szCmd.c_str() ) )
 					{
-						ShitHappened( string("unrecognised command ") + cmd.szCmd );
+						ShitHappened( string( "unrecognised command " ) + cmd.szCmd );
 						return;
 					}
 					for ( int k = 1; k < lexems.size(); ++k )
 					{
 						if ( !IsValidVarName( lexems[k].szData.c_str() ) )
 						{
-							ShitHappened( string("invalid command parameter ") + lexems[k].szData );
+							ShitHappened( string( "invalid command parameter " ) + lexems[k].szData );
 							return;
 						}
 						cmd.params.push_back( lexems[k].szData );
@@ -212,7 +230,7 @@ public:
 					{
 						if ( prog.procs[nCmd].params.size() != cmd.params.size() )
 						{
-							ShitHappened( string("invalid number of params of cmd ") + cmd.szCmd );
+							ShitHappened( string( "invalid number of params of cmd " ) + cmd.szCmd );
 							return;
 						}
 					}
@@ -232,10 +250,14 @@ struct CVSCompiler
 		int nIP, nBaseRegister;
 		vector<string> args;
 
-		SStkFrame( const SProcedure *_pProc, int _nBaseRegister ): pProc(_pProc), nBaseRegister(_nBaseRegister), nIP(0) {}
+		SStkFrame( const SProcedure *_pProc, int _nBaseRegister )
+				: pProc( _pProc ), nBaseRegister( _nBaseRegister ), nIP( 0 )
+		{
+		}
 	};
+
 public:
-	CVSCompiler( const SProgram &_p ): prog(_p) {}
+	CVSCompiler( const SProgram &_p ) : prog( _p ) {}
 	void GenerateShader( string *pRes, const char *pszProcName )
 	{
 		string &res = *pRes;
@@ -319,7 +341,8 @@ enum EState
 static bool bAssemblyFailed = false;
 
 #if SHADERCOMPILER_WITH_D3DX
-typedef HRESULT ( WINAPI *TD3DXAssembleShader )( LPCSTR, UINT, CONST D3DXMACRO *, LPD3DXINCLUDE, DWORD, LPD3DXBUFFER *, LPD3DXBUFFER * );
+typedef HRESULT( WINAPI *TD3DXAssembleShader )(
+		LPCSTR, UINT, CONST D3DXMACRO *, LPD3DXINCLUDE, DWORD, LPD3DXBUFFER *, LPD3DXBUFFER * );
 
 // D3DXAssembleShader from d3dx9_43.dll, loaded rather than linked so that the
 // tool still runs where the DirectX runtime is not installed, without the
@@ -345,14 +368,14 @@ static bool AssembleWithD3DX( TD3DXAssembleShader pAssemble, const string &s, ve
 	const HRESULT hr = pAssemble( s.c_str(), (UINT)s.length(), 0, 0, 0, &pCode, &pError );
 	if ( pError )
 	{
-		*pszError = (const char*)pError->GetBufferPointer();
+		*pszError = (const char *)pError->GetBufferPointer();
 		pError->Release();
 	}
 	if ( FAILED( hr ) || !pCode )
 	{
 		return false;
 	}
-	const uint32_t *p = (const uint32_t*)pCode->GetBufferPointer();
+	const uint32_t *p = (const uint32_t *)pCode->GetBufferPointer();
 	pRes->assign( p, p + pCode->GetBufferSize() / 4 );
 	pCode->Release();
 	return true;
@@ -442,7 +465,7 @@ static void FinishState( char *pszFinish )
 		case NONE:
 			break;
 		case VSHADER:
-/*			{
+			/*			{
 				SVShader v;
 				v.szName = szName;
 				v.szShader = pszShader;
@@ -453,17 +476,17 @@ static void FinishState( char *pszFinish )
 		case PSHADER14:
 		case PSHADER_RS:
 		case PSHADER_TSS:
-			{
-				SPShader p;
-				p.szName = szName;
-				CompileShader( PreCompileShader( pszShader ), szName, "pixel", &p.psShader11 );
-				if ( pszShader14 )
-					CompileShader( PreCompileShader( pszShader14 ), szName, "pixel14", &p.psShader14 );
-				p.states = rs;
-				p.shader = tss;
-				pixelShaders.push_back( p );
-			}
-			break;
+		{
+			SPShader p;
+			p.szName = szName;
+			CompileShader( PreCompileShader( pszShader ), szName, "pixel", &p.psShader11 );
+			if ( pszShader14 )
+				CompileShader( PreCompileShader( pszShader14 ), szName, "pixel14", &p.psShader14 );
+			p.states = rs;
+			p.shader = tss;
+			pixelShaders.push_back( p );
+		}
+		break;
 		case PS_PROC:
 			psProcHash[szName] = pszShader;
 			break;
@@ -592,7 +615,7 @@ static void ParseFile( char *pszFile )
 				return;
 			}
 		}
-		if ( pszParse[0] == ';' || (pszParse[0] == '/' && pszParse[1] == '/' ) )
+		if ( pszParse[0] == ';' || ( pszParse[0] == '/' && pszParse[1] == '/' ) )
 			continue;
 		switch ( parseState )
 		{
@@ -649,7 +672,7 @@ static void ParseFile( char *pszFile )
 	}
 }
 
-int PORT_CDECL main( int argc, char* argv[] )
+int PORT_CDECL main( int argc, char *argv[] )
 {
 	if ( argc != 3 )
 	{
@@ -669,7 +692,7 @@ int PORT_CDECL main( int argc, char* argv[] )
 	ParseFile( source.data() );
 	if ( szError != "" )
 	{
-		cout << argv[1] << " has an error (0): error X5328: "  << "at line " << nLine << ": " << szError << endl << endl;
+		cout << argv[1] << " has an error (0): error X5328: " << "at line " << nLine << ": " << szError << endl << endl;
 		return 1;
 	}
 	if ( bAssemblyFailed )

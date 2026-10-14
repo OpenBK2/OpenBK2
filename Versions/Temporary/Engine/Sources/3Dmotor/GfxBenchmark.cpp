@@ -12,7 +12,6 @@
 
 #include <algorithm>
 
-
 // ? tnl mode
 // ? measure texture amount influence
 namespace NGfx
@@ -43,7 +42,7 @@ struct STestData
 	}
 	void Init()
 	{
-		CBufferLock<SGeomVecFull> g( &pGeom, (N_GRID_SIZE+1) * (N_GRID_SIZE+1) );
+		CBufferLock<SGeomVecFull> g( &pGeom, ( N_GRID_SIZE + 1 ) * ( N_GRID_SIZE + 1 ) );
 		SGeomVecFull zeroVec;
 		Zero( zeroVec );
 		zeroVec.texU.dw = 0xffffffff;
@@ -54,11 +53,11 @@ struct STestData
 			{
 				float fU = y / ( (float)N_GRID_SIZE );
 				float fV = x / ( (float)N_GRID_SIZE );
-				int nDst = y * (N_GRID_SIZE+1) + x;
-				SGeomVecFull &dst = g[ nDst ];
+				int nDst = y * ( N_GRID_SIZE + 1 ) + x;
+				SGeomVecFull &dst = g[nDst];
 				dst = zeroVec;
 				dst.pos = CVec3( -2 + 4 * fU, -2 + 4 * fV, 0 );
-				CalcCompactVector( &dst.normal, CVec3(0,0,1) );
+				CalcCompactVector( &dst.normal, CVec3( 0, 0, 1 ) );
 				CalcTexCoords( &dst.tex, fU, fV );
 				//CalcTexCoords( &dst.tex, fV, fU ); // somehow this is faster
 			}
@@ -67,8 +66,9 @@ struct STestData
 		CBufferLock<S3DTriangle> t( &pTris, N_FILL_PASSES * 2 );
 		for ( int i = 0; i < N_FILL_PASSES; ++i )
 		{
-			t[i*2+0] = NGfx::S3DTriangle( i%5, N_GRID_SIZE * (N_GRID_SIZE+1) + N_GRID_SIZE, N_GRID_SIZE );
-			t[i*2+1] = NGfx::S3DTriangle( i%3, N_GRID_SIZE * (N_GRID_SIZE+1), N_GRID_SIZE * (N_GRID_SIZE+1) + N_GRID_SIZE );
+			t[i * 2 + 0] = NGfx::S3DTriangle( i % 5, N_GRID_SIZE * ( N_GRID_SIZE + 1 ) + N_GRID_SIZE, N_GRID_SIZE );
+			t[i * 2 + 1] = NGfx::S3DTriangle(
+					i % 3, N_GRID_SIZE * ( N_GRID_SIZE + 1 ), N_GRID_SIZE * ( N_GRID_SIZE + 1 ) + N_GRID_SIZE );
 		}
 		//t[0] = NGfx::S3DTriangle( N_GRID_SIZE * (N_GRID_SIZE+1), N_GRID_SIZE * (N_GRID_SIZE+1) + N_GRID_SIZE, N_GRID_SIZE );
 		//t[0] = NGfx::S3DTriangle( 0, N_GRID_SIZE * (N_GRID_SIZE+1), N_GRID_SIZE );
@@ -78,7 +78,7 @@ struct STestData
 			for ( int x = 0; x < N_GRID_SIZE; ++x )
 			{
 				int nBase = y * ( N_GRID_SIZE + 1 ) + x;
-				tMany[ y * N_GRID_SIZE + x ] = NGfx::S3DTriangle( nBase, nBase + ( N_GRID_SIZE + 1 ) + 1, nBase + 1 );
+				tMany[y * N_GRID_SIZE + x] = NGfx::S3DTriangle( nBase, nBase + ( N_GRID_SIZE + 1 ) + 1, nBase + 1 );
 			}
 		}
 
@@ -87,7 +87,11 @@ struct STestData
 		FillTex( &pTex, 8, 2 );
 		FillTex( &pDepth, 8, 1 );
 	}
-	void ClearTex() { pTex = 0; pDepth = 0; }
+	void ClearTex()
+	{
+		pTex = 0;
+		pDepth = 0;
+	}
 	void InitFullSizeTex()
 	{
 		FillTex( &pTex, 512, 7 ); //FillTex( &pTex, 1024, 5 );
@@ -113,7 +117,7 @@ static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom
 		//Flip();
 	}
 	std::sort( times.begin(), times.end() );
-	return times[ times.size() / 2 ];
+	return times[times.size() / 2];
 }
 
 static SPerformanceInfo perf;
@@ -129,7 +133,7 @@ void PerformBenchmark()
 	CTransformStack ts;
 	ts.MakeProjective( 1 );
 	SHMatrix cameraPos;
-	MakeMatrix( &cameraPos, CVec3( 0,0,4 ), CVec3(0,0,-1) );
+	MakeMatrix( &cameraPos, CVec3( 0, 0, 4 ), CVec3( 0, 0, -1 ) );
 	ts.SetCamera( cameraPos );
 
 	STestData td;
@@ -143,21 +147,21 @@ void PerformBenchmark()
 		rc.SetVertexShader( vsG3DiffuseTex );
 		rc.SetTransform( ts.Get() );
 
-		rc.SetVSConst( 14, CVec4(0.25,0.25,0.25,0.25) );
-		rc.SetVSConst( 15, CVec4(0,0,-1,0) );
+		rc.SetVSConst( 14, CVec4( 0.25, 0.25, 0.25, 0.25 ) );
+		rc.SetVSConst( 15, CVec4( 0, 0, -1, 0 ) );
 
-		rc.SetVSConst( 24, CVec4(0,0,0.001f,0.1f) );
+		rc.SetVSConst( 24, CVec4( 0, 0, 0.001f, 0.1f ) );
 		rc.SetVSConst( 25, CVec4( 0.2f, 0, 0, 0 ) );
 		rc.SetVSConst( 26, CVec4( 0, 0.2f, 0, 0 ) );
-		rc.SetVSConst( 27, CVec4(0,0,1,1) );
+		rc.SetVSConst( 27, CVec4( 0, 0, 1, 1 ) );
 
-		rc.SetVSConst( 29, CVec4(0.5,0.5,0.5,0.5) );
-		rc.SetVSConst( 30, CVec4( 0.4f, 0.6f,0,0) );
+		rc.SetVSConst( 29, CVec4( 0.5, 0.5, 0.5, 0.5 ) );
+		rc.SetVSConst( 30, CVec4( 0.4f, 0.6f, 0, 0 ) );
 		rc.SetTexture( 0, td.pTex, NGfx::FILTER_BEST );
 		rc.SetTexture( 1, td.pDepth, NGfx::FILTER_LINEAR );
 		rc.SetAlphaRef( 0 );
-		rc.SetVSConst( 35, CVec4(0,0,0,1e-5f) );
-		rc.SetPSConst( 4, CVec4( 0,0,0, 124/256.0f ) );
+		rc.SetVSConst( 35, CVec4( 0, 0, 0, 1e-5f ) );
+		rc.SetPSConst( 4, CVec4( 0, 0, 0, 124 / 256.0f ) );
 
 		CVec2 vScreenSize = GetScreenRect();
 		float fPixels = N_FILL_PASSES * 0.25 * vScreenSize.x * vScreenSize.y;

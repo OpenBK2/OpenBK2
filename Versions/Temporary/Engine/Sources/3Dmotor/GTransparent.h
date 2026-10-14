@@ -9,10 +9,10 @@
 class CTransformStack;
 namespace NGfx
 {
-	class CRenderContext;
-	class CTexture;
-	class CTriList;
-	class CCubeTexture;
+class CRenderContext;
+class CTexture;
+class CTriList;
+class CCubeTexture;
 }
 
 namespace NGScene
@@ -28,7 +28,7 @@ struct SMaterialParams
 	IMaterial *pMaterial;
 	SPerPartVariables vars;
 
-	SMaterialParams() : pMaterial(0) {}
+	SMaterialParams() : pMaterial( 0 ) {}
 	bool operator==( const SMaterialParams &a ) const { return a.pMaterial == pMaterial && a.vars == vars; }
 	bool operator!=( const SMaterialParams &a ) const { return !( *this == a ); }
 	void Clear() { pMaterial = 0; }
@@ -41,19 +41,20 @@ struct STransparentObjectInfo
 	SMaterialParams material;
 };
 
-class IParticles: public CObjectBase
+class IParticles : public CObjectBase
 {
 public:
-	virtual CParticleEffect* GetEffect() = 0;
+	virtual CParticleEffect *GetEffect() = 0;
 	virtual void SetFade( float fVal ) = 0;
 	virtual void Unlink() = 0;
 };
 
-class CTranspLightTexture :
-	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTranspLightTexture>
+class CTranspLightTexture
+		: public NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CTranspLightTexture>
 {
-	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTranspLightTexture> CBase;
-	OBJECT_NOCOPY_METHODS(CTranspLightTexture);
+	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CTranspLightTexture> CBase;
+	OBJECT_NOCOPY_METHODS( CTranspLightTexture );
+
 public:
 	CTRect<int> region;
 };
@@ -61,8 +62,11 @@ public:
 class IReportParticlesGeometry
 {
 public:
-	virtual void AddParticles( IVBCombiner *pVertices, CFuncBase<std::vector<NGfx::STriangleList> > *pTrilists,
-		int nPart, int nParticles, const SBound &bv ) = 0;
+	virtual void AddParticles( IVBCombiner *pVertices,
+	                           CFuncBase<std::vector<NGfx::STriangleList>> *pTrilists,
+	                           int nPart,
+	                           int nParticles,
+	                           const SBound &bv ) = 0;
 };
 
 struct STransparentInfo
@@ -90,15 +94,22 @@ struct STransparentRenderContext
 	SRenderPathContext *pRPC;
 	const SLightInfo &lightInfo;
 
-	STransparentRenderContext( bool _bTnLMode, NGfx::CRenderContext *_pRC, NGfx::CTexture *_pParticleLight,
-		NGfx::CCubeTexture *_pSky, ERenderPath _renderPath,
-		SRenderPathContext *_pRPC, const SLightInfo &_lightInfo )
-		: bTnLMode(_bTnLMode), pRC(_pRC), pParticleLight(_pParticleLight), pSky(_pSky), renderPath(_renderPath), pRPC(_pRPC), lightInfo(_lightInfo) {}
+	STransparentRenderContext( bool _bTnLMode,
+	                           NGfx::CRenderContext *_pRC,
+	                           NGfx::CTexture *_pParticleLight,
+	                           NGfx::CCubeTexture *_pSky,
+	                           ERenderPath _renderPath,
+	                           SRenderPathContext *_pRPC,
+	                           const SLightInfo &_lightInfo )
+			: bTnLMode( _bTnLMode ), pRC( _pRC ), pParticleLight( _pParticleLight ), pSky( _pSky ), renderPath( _renderPath ),
+				pRPC( _pRPC ), lightInfo( _lightInfo )
+	{
+	}
 };
 
 class CTransparentRenderer : public CObjectBase, public IParticleOutput
 {
-	OBJECT_NOCOPY_METHODS(CTransparentRenderer);
+	OBJECT_NOCOPY_METHODS( CTransparentRenderer );
 	SParticleLightInfo litParticlesAlloc, kernel, *pLMAlloc;
 	SParticleOrientationInfo orientation;
 
@@ -115,7 +126,7 @@ class CTransparentRenderer : public CObjectBase, public IParticleOutput
 	CObj<CShaderParticlesGeometry> pShaderParticlesGeometry;
 	CObj<CTnLParticlesGeometry> pTnLParticlesGeometry;
 	CObj<CParticlesTriList> pParticlesTrilist;
-	int nTargetParticle, nTargetStart, nPieceStart;//nEffectParticle;
+	int nTargetParticle, nTargetStart, nPieceStart; //nEffectParticle;
 	STransparentInfo *pWriteParticles;
 	CParticleEffect *pCurrentEffect;
 	SBound currentEffectBV;
@@ -127,28 +138,33 @@ class CTransparentRenderer : public CObjectBase, public IParticleOutput
 	uint32_t dwLitColor, dwNormalColor;
 	const SPerVertexLightState *pLightState;
 
-	STransparentInfo* AddFragment();
+	STransparentInfo *AddFragment();
 	void AllocParticlesWriteBuffer();
 	void FinishParticlesPiece();
 	void StartParticlesPiece();
 	void RealRender( const STransparentRenderContext &trc );
-	void AddParticleOverflow( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace,
-		float fDepth );
+	void
+	AddParticleOverflow( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tPlace, float fDepth );
 	ZDATA
 public:
 	ZEND int operator&( CStructureSaver &f ) { return 0; }
+
 public:
-	CTransparentRenderer() : nTotalParticles(0), nLitParticles(0) {}
-	CTransparentRenderer( const CTransformStack &ts, const CTPoint<int> &vLightBuffersize, bool bUseFakeLM,
-		uint32_t dwLitColor, uint32_t dwNormalColor, const SPerVertexLightState *_pLightState );
-	virtual const SParticleOrientationInfo& GetOrientationInfo() const { return orientation; }
-	virtual const SParticleLightInfo& GetKernelLightInfo() const { return kernel; }
-	virtual void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex,
-		float fDepth );
+	CTransparentRenderer() : nTotalParticles( 0 ), nLitParticles( 0 ) {}
+	CTransparentRenderer( const CTransformStack &ts,
+	                      const CTPoint<int> &vLightBuffersize,
+	                      bool bUseFakeLM,
+	                      uint32_t dwLitColor,
+	                      uint32_t dwNormalColor,
+	                      const SPerVertexLightState *_pLightState );
+	virtual const SParticleOrientationInfo &GetOrientationInfo() const { return orientation; }
+	virtual const SParticleLightInfo &GetKernelLightInfo() const { return kernel; }
+	virtual void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex, float fDepth );
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes );
 
 	void AddParticles( IParticles *pParticles, bool bIsLit, const SBound &bv, IReportParticlesGeometry *pStore );
-	void AddElement( SRenderGeometryInfo *pGeometry, IMaterial *pMaterial, const SPerPartVariables &vars, int nIndex, float fDepth );
+	void AddElement(
+			SRenderGeometryInfo *pGeometry, IMaterial *pMaterial, const SPerPartVariables &vars, int nIndex, float fDepth );
 	void FinishParticles();
 	void Render( const STransparentRenderContext &trc );
 	int GetTotalParticles() const { return nTotalParticles; }

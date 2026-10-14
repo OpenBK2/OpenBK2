@@ -22,15 +22,15 @@ enum EActionState
 	AS_MOVE
 };
 
-#define SA_PRESERVE               0x00000000   //
-#define SA_CLEAR_IF_NEW_NOT_EMPTY	0x00000001   //  нельзя комбинировать
-#define SA_CLEAR_ALWAYS           0x00000002   //
-#define SA_INVERSE								0x00000003   //
-#define SA_PREVIOS_SELECTION			0x0000000F
+#define SA_PRESERVE 0x00000000               //
+#define SA_CLEAR_IF_NEW_NOT_EMPTY 0x00000001 //  нельзя комбинировать
+#define SA_CLEAR_ALWAYS 0x00000002           //
+#define SA_INVERSE 0x00000003                //
+#define SA_PREVIOS_SELECTION 0x0000000F
 
-#define SA_ONE_TYPE								0x00000010
-#define SA_ON_WORLD								0x00000020
-#define SA_SELECT_BY_RECT					0x00000040
+#define SA_ONE_TYPE 0x00000010
+#define SA_ON_WORLD 0x00000020
+#define SA_SELECT_BY_RECT 0x00000040
 
 /*****************************************************************************************************************************
 События от MouseTranslator:        Параметры события:
@@ -66,8 +66,8 @@ class CMouseTranslator : protected NInput::CGMORegContainer, public CObjectBase
 {
 	CPtr<CSelector> pSelector;
 
-	EButtonState	eButtonState;
-	EActionState	eActionState;
+	EButtonState eButtonState;
+	EActionState eActionState;
 
 	NInput::CBind bindShift;
 	NInput::CBind bindCtrl;
@@ -75,12 +75,12 @@ class CMouseTranslator : protected NInput::CGMORegContainer, public CObjectBase
 
 	bool bDownTargetMode;
 
-	CVec2	vDownPos;
+	CVec2 vDownPos;
 	bool bDownSamePos;
 
 	NTimer::STime downTime;
 	bool bDownSameTime;
-//	bool bCanDoRotate;
+	//	bool bCanDoRotate;
 private:
 	void MsgCancelAction( const SGameMessage &msg );
 
@@ -94,6 +94,7 @@ private:
 	}
 
 	int GetFlags() const;
+
 protected:
 	bool IsSelected( class CMapObj *pMO ) const;
 
@@ -103,16 +104,10 @@ protected:
 	bool IsDownSamePos( const CVec2 &vPos ) const;
 	bool IsDownSameTime() const { return bDownSameTime; }
 	bool IsDownSameTime( const NTimer::STime &curTime ) const;
-//	bool IsCanDoRotate() const { return bCanDoRotate; }
+	//	bool IsCanDoRotate() const { return bCanDoRotate; }
 
-	void RaiseEvent( const char *pszEventName )
-	{
-		NInput::PostEvent( pszEventName, 0, 0 );
-	}
-	void RaiseEvent( const char *pszEventName, int nParam )
-	{
-		NInput::PostEvent( pszEventName, nParam, 0 );
-	}
+	void RaiseEvent( const char *pszEventName ) { NInput::PostEvent( pszEventName, 0, 0 ); }
+	void RaiseEvent( const char *pszEventName, int nParam ) { NInput::PostEvent( pszEventName, nParam, 0 ); }
 	void RaiseEvent( const char *pszEventName, const CVec2 &vPos )
 	{
 		NInput::PostEvent( pszEventName, PackCoords( vPos ), 0 );
@@ -137,6 +132,7 @@ protected:
 	virtual void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode ) = 0;
 
 	virtual void CancelAction();
+
 public:
 	CMouseTranslator( CSelector *_pSelector );
 
@@ -177,6 +173,7 @@ class CMouseTranslatorB1 : public CMouseTranslator
 {
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB1 );
 	bool bUpdateDir;
+
 protected:
 	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect );
 	void OnButtonUp( const CVec2 &vPos );
@@ -184,18 +181,27 @@ protected:
 	void OnRButtonDown( const CVec2 &vPos, bool bObject );
 	void OnMinimapLButtonDown( const CVec2 &vPos, bool bTargetMode );
 	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode );
+
 public:
-	CMouseTranslatorB1() : CMouseTranslator( 0 )	{ };
-	CMouseTranslatorB1( CSelector *_pSelector ) : CMouseTranslator( _pSelector )	{ };
+	CMouseTranslatorB1() : CMouseTranslator( 0 ) {};
+	CMouseTranslatorB1( CSelector *_pSelector ) : CMouseTranslator( _pSelector ) {};
 };
 
 class CMouseTranslatorB2Base : public CMouseTranslator
 {
-	ZDATA_(CMouseTranslator)
+	ZDATA_( CMouseTranslator )
 	ZONSERIALIZE
 	bool bWasForcedAction;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMouseTranslator*)this); OnSerialize( f ); f.Add(2,&bWasForcedAction); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CMouseTranslator *)this );
+		OnSerialize( f );
+		f.Add( 2, &bWasForcedAction );
+		return 0;
+	}
+
 private:
 	void InitPrivate();
 	void OnSerialize( IBinSaver &f )
@@ -205,6 +211,7 @@ private:
 	}
 	void ResetState();
 	void CheckForcedAction();
+
 protected:
 	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect );
 	void OnButtonUp( const CVec2 &vPos );
@@ -218,6 +225,7 @@ protected:
 	void MsgNotifyForcedAction( const SGameMessage &msg );
 
 	bool ProcessEvent( const SGameMessage &event );
+
 public:
 	CMouseTranslatorB2Base();
 	CMouseTranslatorB2Base( CSelector *_pSelector );
@@ -227,13 +235,15 @@ class CMouseTranslatorB2Game : public CMouseTranslatorB2Base
 {
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB2Game );
 	ZDATA_( CMouseTranslatorB2Base )
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMouseTranslatorB2Base *)this); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CMouseTranslatorB2Base *)this );
+		return 0;
+	}
+
 public:
 	CMouseTranslatorB2Game() {}
-	CMouseTranslatorB2Game( CSelector *_pSelector )
-		: CMouseTranslatorB2Base( _pSelector )
-	{
-	}
+	CMouseTranslatorB2Game( CSelector *_pSelector ) : CMouseTranslatorB2Base( _pSelector ) {}
 };
 
 class CMouseTranslatorB2Replay : public CMouseTranslatorB2Base
@@ -241,7 +251,12 @@ class CMouseTranslatorB2Replay : public CMouseTranslatorB2Base
 	OBJECT_NOCOPY_METHODS( CMouseTranslatorB2Replay );
 
 	ZDATA_( CMouseTranslatorB2Base )
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMouseTranslatorB2Base *)this); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CMouseTranslatorB2Base *)this );
+		return 0;
+	}
+
 protected:
 	void OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect )
 	{
@@ -258,10 +273,8 @@ protected:
 	{
 		CMouseTranslatorB2Base::OnMinimapRButtonDown( vPos, bTargetMode );
 	}
+
 public:
 	CMouseTranslatorB2Replay() {}
-	CMouseTranslatorB2Replay( CSelector *_pSelector )
-		: CMouseTranslatorB2Base( _pSelector )
-	{
-	}
+	CMouseTranslatorB2Replay( CSelector *_pSelector ) : CMouseTranslatorB2Base( _pSelector ) {}
 };

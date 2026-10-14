@@ -4,7 +4,7 @@
 
 namespace NDb
 {
-	struct SMapInfo;
+struct SMapInfo;
 }
 
 class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
@@ -23,10 +23,22 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 		std::wstring wszSize;
 		std::wstring wszSeason;
 		std::wstring wszDesc;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMapInfo); f.Add(3,&pWnd); f.Add(4,&pFlagWnd); f.Add(5,&pNameView); f.Add(6,&pSizeView); f.Add(7,&wszName); f.Add(8,&wszSize); f.Add(9,&wszSeason); f.Add(10,&wszDesc); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pMapInfo );
+			f.Add( 3, &pWnd );
+			f.Add( 4, &pFlagWnd );
+			f.Add( 5, &pNameView );
+			f.Add( 6, &pSizeView );
+			f.Add( 7, &wszName );
+			f.Add( 8, &wszSize );
+			f.Add( 9, &wszSeason );
+			f.Add( 10, &wszDesc );
+			return 0;
+		}
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pTopPanel;
 	CPtr<IWindow> pBottomPanel;
@@ -45,11 +57,33 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 	CPtr<IWindow> pMissionDescItemHeader;
 	CPtr<ITextView> pMissionDescItemNameView;
 	CPtr<ITextView> pMissionDescItemSeasonView;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pTopPanel); f.Add(4,&pBottomPanel); f.Add(5,&pMissionsListPanel); f.Add(6,&pMinimapPanel); f.Add(7,&pMissionDescPanel); f.Add(8,&pMissionsListItemTemplate); f.Add(9,&pMissionsListCont); f.Add(10,&pMissionDescView); f.Add(11,&pMissionDescCont); f.Add(12,&pMinimap); f.Add(13,&pDifficultyComboBox); f.Add(14,&pPlayBtn); f.Add(15,&missions); f.Add(16,&pMissionDescItemHeader); f.Add(17,&pMissionDescItemNameView); f.Add(18,&pMissionDescItemSeasonView); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMainWnd );
+		f.Add( 3, &pTopPanel );
+		f.Add( 4, &pBottomPanel );
+		f.Add( 5, &pMissionsListPanel );
+		f.Add( 6, &pMinimapPanel );
+		f.Add( 7, &pMissionDescPanel );
+		f.Add( 8, &pMissionsListItemTemplate );
+		f.Add( 9, &pMissionsListCont );
+		f.Add( 10, &pMissionDescView );
+		f.Add( 11, &pMissionDescCont );
+		f.Add( 12, &pMinimap );
+		f.Add( 13, &pDifficultyComboBox );
+		f.Add( 14, &pPlayBtn );
+		f.Add( 15, &missions );
+		f.Add( 16, &pMissionDescItemHeader );
+		f.Add( 17, &pMissionDescItemNameView );
+		f.Add( 18, &pMissionDescItemSeasonView );
+		return 0;
+	}
+
 private:
 	void MakeInterior();
 	void AddMission( const NDb::SMapInfo *pMapInfo );
-	const SMission* FindSelected() const;
+	const SMission *FindSelected() const;
 
 	bool OnBack();
 	bool OnPlay();
@@ -59,6 +93,7 @@ private:
 	void MissionStart( const NDb::SMapInfo *pMapInfo );
 	void UpdateSelection( bool bFirstTime );
 	void UpdateDifficulty( const SMission *pMission, bool bFirstTime );
+
 public:
 	CInterfaceCustomMissions();
 
@@ -74,13 +109,14 @@ public:
 	//}
 };
 
-#if !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
+#if !defined( _SINGLE_DEMO ) || defined( _MP_DEMO )
 class CICCustomMissions : public CInterfaceCommandBase<CInterfaceCustomMissions>
 {
 	OBJECT_BASIC_METHODS( CICCustomMissions );
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

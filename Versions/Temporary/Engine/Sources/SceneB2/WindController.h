@@ -22,9 +22,9 @@ class SCENEB2_EXPORT CWindController : public CObjectBase
 	//Computed
 	int nCycleLength = {};
 	float fSpeedCoeff = {};
-	float fCoeffX = {}, fCoeffY = {};		//For turning
+	float fCoeffX = {}, fCoeffY = {}; //For turning
 
-	float CoeffFunc( int nParam );			//Has positive values (up to 1.0) in [0, 1000], zero elsewhere.
+	float CoeffFunc( int nParam ); //Has positive values (up to 1.0) in [0, 1000], zero elsewhere.
 public:
 	CWindController() {}
 	CWindController( IGameTimer *_pTimer, const float _fWindDirection, const float _fWindIntensity );
@@ -32,7 +32,11 @@ public:
 	void SetWindParams( const float _fWindDirection, const float _fWindIntensity );
 	float GetWindDirection() const { return fWindDirection; }
 	float GetWindIntensity() const { return fWindIntensity; }
-	void GetDirCoeff( float *pCX, float *pCY ) const { *pCX = fCoeffX; *pCY = fCoeffY; }
+	void GetDirCoeff( float *pCX, float *pCY ) const
+	{
+		*pCX = fCoeffX;
+		*pCY = fCoeffY;
+	}
 	float GetWindCoeff( const CVec2 &vPos );
 
 	int operator&( IBinSaver &saver );

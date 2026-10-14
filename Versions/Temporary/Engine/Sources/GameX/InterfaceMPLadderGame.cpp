@@ -22,10 +22,7 @@
 
 // CInterfaceMPLadderGame
 
-CInterfaceMPLadderGame::CInterfaceMPLadderGame() :
-CInterfaceScreenBase( "MPLadderGame", "ladder_game" )
-{
-}
+CInterfaceMPLadderGame::CInterfaceMPLadderGame() : CInterfaceScreenBase( "MPLadderGame", "ladder_game" ) {}
 
 CInterfaceMPLadderGame::~CInterfaceMPLadderGame()
 {
@@ -51,9 +48,7 @@ bool CInterfaceMPLadderGame::Init()
 	return true;
 }
 
-void CInterfaceMPLadderGame::RegisterObservers()
-{
-}
+void CInterfaceMPLadderGame::RegisterObservers() {}
 
 void CInterfaceMPLadderGame::FillMapData()
 {
@@ -69,16 +64,16 @@ void CInterfaceMPLadderGame::FillMapData()
 
 void CInterfaceMPLadderGame::InitControls()
 {
-	pGameTypeBox = GetChildChecked<IComboBox> ( pMain, "Players", true );
-	pSide =  GetChildChecked<IComboBox> ( pMain, "Side", true );
-	pTechLevel = GetChildChecked<IComboBox> ( pMain, "TechLevel", true );
-	pList = GetChildChecked<IListControl> ( pMain, "Maps", true );
-	pMapName = GetChildChecked<ITextView>( pMain,  "MapName", true );
-	pStartButton = GetChildChecked<IButton>( pMain,  "ButtonStartGame", true );
+	pGameTypeBox = GetChildChecked<IComboBox>( pMain, "Players", true );
+	pSide = GetChildChecked<IComboBox>( pMain, "Side", true );
+	pTechLevel = GetChildChecked<IComboBox>( pMain, "TechLevel", true );
+	pList = GetChildChecked<IListControl>( pMain, "Maps", true );
+	pMapName = GetChildChecked<ITextView>( pMain, "MapName", true );
+	pStartButton = GetChildChecked<IButton>( pMain, "ButtonStartGame", true );
 	if ( pStartButton )
 		pStartButton->Enable( false );
 
-	pChecksumPWL = GetChildChecked<IWindow>( pMain,  "ChecksumPWL", true );
+	pChecksumPWL = GetChildChecked<IWindow>( pMain, "ChecksumPWL", true );
 	if ( pChecksumPWL )
 		pChecksumPWL->ShowWindow( false );
 
@@ -102,14 +97,14 @@ void CInterfaceMPLadderGame::SetControls()
 
 		if ( pMPConsts )
 		{
-			typedef const std::vector< NDb::SMultiplayerSide> MPSides;
+			typedef const std::vector<NDb::SMultiplayerSide> MPSides;
 			MPSides &sides = pMPConsts->sides;
 			for ( MPSides::const_iterator it = sides.begin(); it != sides.end(); it++ )
 			{
 				const NDb::SMultiplayerSide &side = *it;
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(side.,Name) )
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( side., Name ) )
 				{
-					pData = new CTextData( GET_TEXT_PRE(side.,Name) );
+					pData = new CTextData( GET_TEXT_PRE( side., Name ) );
 					pSide->AddItem( pData );
 				}
 			}
@@ -125,14 +120,14 @@ void CInterfaceMPLadderGame::SetControls()
 		pTechLevel->Select( 0 );
 		if ( pMPConsts )
 		{
-			typedef const std::vector< NDb::SMultiplayerTechLevel> MPTechLevels;
+			typedef const std::vector<NDb::SMultiplayerTechLevel> MPTechLevels;
 			MPTechLevels &techlevels = pMPConsts->techLevels;
 			for ( MPTechLevels::const_iterator it = techlevels.begin(); it != techlevels.end(); it++ )
 			{
 				const NDb::SMultiplayerTechLevel &techlevel = *it;
-				if ( CHECK_TEXT_NOT_EMPTY_PRE(techlevel.,Name) )
+				if ( CHECK_TEXT_NOT_EMPTY_PRE( techlevel., Name ) )
 				{
-					pData = new CTextData( GET_TEXT_PRE(techlevel.,Name) );
+					pData = new CTextData( GET_TEXT_PRE( techlevel., Name ) );
 					pTechLevel->AddItem( pData );
 				}
 			}
@@ -174,7 +169,7 @@ void CInterfaceMPLadderGame::CheckEnableStartButton()
 	int nMaps = 0;
 	for ( int i = 0; i < maps.size(); ++i )
 	{
-		CLadderMapData &mapData = *(maps[i]);
+		CLadderMapData &mapData = *( maps[i] );
 		mapData.bSelected = ( mapData.pSwitch->GetState() == 1 );
 		if ( mapData.bSelected && mapData.bAllowed )
 			++nMaps;
@@ -188,23 +183,27 @@ void CInterfaceMPLadderGame::UpdateInterior()
 	NI_VERIFY( pList, "No maps list", return );
 
 	pList->RemoveAllElements();
-	for ( CMPMaps::iterator it = maps.begin(); it!= maps.end(); it++ )
+	for ( CMPMaps::iterator it = maps.begin(); it != maps.end(); it++ )
 	{
 		pList->AddItem( *it );
 	}
 	pList->Update();
 }
 
-void CInterfaceMPLadderGame::CItemLadderMapListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
+void CInterfaceMPLadderGame::CItemLadderMapListViewer::MakeInterior( CObjectBase *pWindow,
+                                                                     const CObjectBase *pData ) const
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
 	CDynamicCast<CLadderMapData> pInfo = pData;
 	NI_VERIFY( pInfo, "Wrong data", return );
 
-	NMPSetData::SetChildText( pItem,  "ItemMapName", GET_TEXT_PRE( pInfo->pMapDesc->, MapName ) );
-	NMPSetData::SetChildText( pItem,  "ItemMapSize", 	NStr::ToUnicode( fmt::format( "{} x {}", pInfo->pMapDesc->nSizeX, pInfo->pMapDesc->nSizeY ) ) );
-	NMPSetData::SetChildText( pItem,  "ItemMaxPlayers", NStr::ToUnicode( std::to_string( pInfo->pMapDesc->nPlayers ) ) );
+	NMPSetData::SetChildText( pItem, "ItemMapName", GET_TEXT_PRE( pInfo->pMapDesc->, MapName ) );
+	NMPSetData::SetChildText(
+			pItem,
+			"ItemMapSize",
+			NStr::ToUnicode( fmt::format( "{} x {}", pInfo->pMapDesc->nSizeX, pInfo->pMapDesc->nSizeY ) ) );
+	NMPSetData::SetChildText( pItem, "ItemMaxPlayers", NStr::ToUnicode( std::to_string( pInfo->pMapDesc->nPlayers ) ) );
 	pInfo->pSwitch = GetChildChecked<IButton>( pItem, "Status", true );
 	if ( pInfo->pSwitch )
 	{
@@ -273,7 +272,7 @@ bool CInterfaceMPLadderGame::OnStartGameReaction( const std::string &szSender )
 	// Maps
 	for ( int i = 0; i < maps.size(); ++i )
 	{
-		CLadderMapData &mapData = *(maps[i]);
+		CLadderMapData &mapData = *( maps[i] );
 		if ( mapData.pSwitch->GetState() == 1 && mapData.bAllowed )
 			pMsg->maps.push_back( i );
 	}
@@ -293,7 +292,7 @@ bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
 
 	if ( !pSelected || !pSelected->pMap )
 	{
-		NI_ASSERT( 0, fmt::format( "DATA: Invalid MP map descriptor: {}", NDb::GetResName( pSelected )  ) );
+		NI_ASSERT( 0, fmt::format( "DATA: Invalid MP map descriptor: {}", NDb::GetResName( pSelected ) ) );
 		return true;
 	}
 	wszName = GET_TEXT_PRE( pSelected->, MapName );
@@ -305,13 +304,13 @@ bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
 			if ( pWindowMiniMap )
 			{
 				pWindowMiniMap->SetLoadingMapParams( pSelected->pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-					pSelected->pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
+				                                     pSelected->pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
 				pWindowMiniMap->SetMaterial( pMiniMap );
 				pWindowMiniMap->ShowWindow( true );
 			}
 		}
 	}
-	NMPSetData::SetText( pMapName, wszName);
+	NMPSetData::SetText( pMapName, wszName );
 	if ( pPicture )
 		pPicture->SetTexture( pMiniMapTexture );
 
@@ -330,7 +329,7 @@ bool CInterfaceMPLadderGame::OnTeamSizeChanged()
 	int nMinPlayers = pGameTypeBox->GetSelectedIndex() * 2;
 	for ( int i = 0; i < maps.size(); ++i )
 	{
-		CLadderMapData &mapData = *(maps[i]);
+		CLadderMapData &mapData = *( maps[i] );
 		mapData.bAllowed = ( mapData.pMapDesc->nPlayers >= nMinPlayers );
 		mapData.pSwitch->ShowWindow( mapData.bAllowed );
 	}
@@ -356,18 +355,14 @@ bool CInterfaceMPLadderGame::StepLocal( bool bAppActive )
 
 // CICMPLadderGame
 
-void CICMPLadderGame::PreCreate()
-{
-}
+void CICMPLadderGame::PreCreate() {}
 
 void CICMPLadderGame::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMPLadderGame::Configure( const char *pszConfig )
-{
-}
+void CICMPLadderGame::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x321B6380, CInterfaceMPLadderGame );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_LADDER_GAME, CICMPLadderGame );

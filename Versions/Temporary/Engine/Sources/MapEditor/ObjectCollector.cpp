@@ -33,11 +33,11 @@ int CObjectFilterCollector::SObjectFilter::operator&( IXmlSaver &saver )
 	return 0;
 }
 
-
 const std::string CObjectCollector::DEFAULT_DATA_EXTRACTOR_TYPE = "_DEFAULT_DATA_EXTRACTOR_TYPE_";
 
-
-bool CObjectFilterCollector::SObjectFilter::InsertObjectToCollection( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName, const std::string &rszObjectName ) const
+bool CObjectFilterCollector::SObjectFilter::InsertObjectToCollection( CObjectCollection *pObjectCollection,
+                                                                      const std::string &rszObjectTypeName,
+                                                                      const std::string &rszObjectName ) const
 {
 	if ( pObjectCollection != 0 )
 	{
@@ -60,13 +60,14 @@ bool CObjectFilterCollector::SObjectFilter::InsertObjectToCollection( CObjectCol
 	return false;
 }
 
-
-int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName ) const
+int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollection *pObjectCollection,
+                                                                const std::string &rszObjectTypeName ) const
 {
 	int nObjectsFound = 0;
 	if ( pObjectCollection != 0 )
 	{
-		if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( rszObjectTypeName ) )
+		if ( CPtr<IManipulator> pFolderManipulator =
+		         Singleton<IResourceManager>()->CreateFolderManipulator( rszObjectTypeName ) )
 		{
 			CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_NO_CACHE );
 			if ( pFolderManipulatorIterator != 0 )
@@ -92,12 +93,13 @@ int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollectio
 	return nObjectsFound;
 }
 
-
-void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObjectNameCollection *pObjectNameCollection, const SPart &rPart ) const
+void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObjectNameCollection *pObjectNameCollection,
+                                                                         const SPart &rPart ) const
 {
 	if ( pObjectNameCollection != 0 )
 	{
-		if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( rPart.szObjectType ) )
+		if ( CPtr<IManipulator> pFolderManipulator =
+		         Singleton<IResourceManager>()->CreateFolderManipulator( rPart.szObjectType ) )
 		{
 			CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_NO_CACHE );
 			if ( pFolderManipulatorIterator != 0 )
@@ -114,7 +116,7 @@ void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObject
 							if ( szObjectName.size() >= itName->size() )
 							{
 								const int nMinSize = (std::min)( szObjectName.size(), itName->size() );
-								if ( NFile::ComparePathEq(0, nMinSize, szObjectName, 0, nMinSize, *itName) == true )
+								if ( NFile::ComparePathEq( 0, nMinSize, szObjectName, 0, nMinSize, *itName ) == true )
 								{
 									bMatch = true;
 									break;
@@ -132,18 +134,20 @@ void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObject
 	}
 }
 
-
-void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pDestination, const CObjectNameCollection &rSource, const std::string &szOperationType ) const
+void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pDestination,
+                                                       const CObjectNameCollection &rSource,
+                                                       const std::string &szOperationType ) const
 {
 	if ( pDestination != 0 )
 	{
-		if ( szOperationType == "UNION" )									// class set
+		if ( szOperationType == "UNION" ) // class set
 		{
 			pDestination->insert( rSource.begin(), rSource.end() );
 		}
-		else if ( szOperationType == "MEET" )							// meet of set
+		else if ( szOperationType == "MEET" ) // meet of set
 		{
-			for ( CObjectNameCollection::iterator itObjectNameCollection = pDestination->begin(); itObjectNameCollection != pDestination->end();  )
+			for ( CObjectNameCollection::iterator itObjectNameCollection = pDestination->begin();
+			      itObjectNameCollection != pDestination->end(); )
 			{
 				if ( rSource.find( itObjectNameCollection->first ) == rSource.end() )
 				{
@@ -155,9 +159,11 @@ void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pD
 				}
 			}
 		}
-		else if ( szOperationType == "SUB" )							// set substruction
+		else if ( szOperationType == "SUB" ) // set substruction
 		{
-			for ( CObjectNameCollection::const_iterator itObjectNameCollection = rSource.begin(); itObjectNameCollection != rSource.end(); ++itObjectNameCollection )
+			for ( CObjectNameCollection::const_iterator itObjectNameCollection = rSource.begin();
+			      itObjectNameCollection != rSource.end();
+			      ++itObjectNameCollection )
 			{
 				CObjectNameCollection::iterator posObjectNameCollection = pDestination->find( itObjectNameCollection->first );
 				if ( posObjectNameCollection != pDestination->end() )
@@ -168,7 +174,6 @@ void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pD
 		}
 	}
 }
-
 
 int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollection *pObjectCollection ) const
 {
@@ -203,9 +208,13 @@ int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollectio
 		}
 	}
 	// add result sets
-	for ( CObjectCollection::const_iterator itObjectCollection = objectCollection.begin(); itObjectCollection != objectCollection.end(); ++itObjectCollection )
+	for ( CObjectCollection::const_iterator itObjectCollection = objectCollection.begin();
+	      itObjectCollection != objectCollection.end();
+	      ++itObjectCollection )
 	{
-		for ( CObjectNameCollection::const_iterator itObjectNameCollection = itObjectCollection->second.begin(); itObjectNameCollection != itObjectCollection->second.end(); ++itObjectNameCollection )
+		for ( CObjectNameCollection::const_iterator itObjectNameCollection = itObjectCollection->second.begin();
+		      itObjectNameCollection != itObjectCollection->second.end();
+		      ++itObjectNameCollection )
 		{
 			if ( InsertObjectToCollection( pObjectCollection, itObjectCollection->first, itObjectNameCollection->first ) )
 			{
@@ -222,14 +231,14 @@ int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollectio
 	return nObjectCollectionCount;
 }
 
-
-bool CObjectFilterCollector::SObjectFilter::Match( const std::string &szObjectTypeName, const std::string &szObjectName ) const
+bool CObjectFilterCollector::SObjectFilter::Match( const std::string &szObjectTypeName,
+                                                   const std::string &szObjectName ) const
 {
 	return false;
 }
 
-
-const CObjectFilterCollector::SObjectFilter* CObjectFilterCollector::LocateObjectFilter( const std::string &rszFilterType, const int nFilterIndex ) const
+const CObjectFilterCollector::SObjectFilter *
+CObjectFilterCollector::LocateObjectFilter( const std::string &rszFilterType, const int nFilterIndex ) const
 {
 	CObjectFilterListMap::const_iterator posObjectFilterList = objectFilterListMap.find( rszFilterType );
 	if ( posObjectFilterList != objectFilterListMap.end() )
@@ -241,7 +250,6 @@ const CObjectFilterCollector::SObjectFilter* CObjectFilterCollector::LocateObjec
 	}
 	return 0;
 }
-
 
 bool CObjectFilterCollector::Load( CDataStream *pStream )
 {
@@ -258,7 +266,6 @@ bool CObjectFilterCollector::Load( CDataStream *pStream )
 	return true;
 }
 
-
 bool CObjectFilterCollector::Save( CDataStream *pStream )
 {
 	try
@@ -274,8 +281,7 @@ bool CObjectFilterCollector::Save( CDataStream *pStream )
 	return true;
 }
 
-
-int CObjectFilterCollector::GetFilterList( CFilterList* pFilterList, const std::string &rszFilterType ) const
+int CObjectFilterCollector::GetFilterList( CFilterList *pFilterList, const std::string &rszFilterType ) const
 {
 	if ( pFilterList != 0 )
 	{
@@ -293,47 +299,45 @@ int CObjectFilterCollector::GetFilterList( CFilterList* pFilterList, const std::
 	return 0;
 }
 
-
 bool CObjectFilterCollector::IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const
 {
-	if ( const SObjectFilter* pObjectFilter = LocateObjectFilter( rszFilterType, nFilterIndex ) )
+	if ( const SObjectFilter *pObjectFilter = LocateObjectFilter( rszFilterType, nFilterIndex ) )
 	{
 		return pObjectFilter->bSeparator;
 	}
 	return false;
 }
 
-
-const IObjectFilter* CObjectFilterCollector::Get( const std::string &rszFilterType, const int nFilterIndex ) const
+const IObjectFilter *CObjectFilterCollector::Get( const std::string &rszFilterType, const int nFilterIndex ) const
 {
 	return LocateObjectFilter( rszFilterType, nFilterIndex );
 }
 
-
-int CObjectFilterCollector::ShowFilterSelectionDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex )
+int CObjectFilterCollector::ShowFilterSelectionDialog( IWidget *pParentWidget,
+                                                       std::string *pszFilterType,
+                                                       int *pnFilterIndex )
 {
 	return wxID_CANCEL;
 }
 
-
-int CObjectFilterCollector::ShowFilterCreationDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex )
+int CObjectFilterCollector::ShowFilterCreationDialog( IWidget *pParentWidget,
+                                                      std::string *pszFilterType,
+                                                      int *pnFilterIndex )
 {
 	return wxID_CANCEL;
 }
-
 
 namespace
 {
-	// The fallback icon for an object with no picture of its own. This is the
-	// one part of these lists that comes from a resource rather than from the
-	// data extractors, so it is the one part still waiting on the generated
-	// resource tables; NWxResourceImages is where that arrives.
-	wxBitmap LoadResourceBitmap( unsigned nID )
-	{
-		return wxBitmap( NWxResourceImages::ReadBitmapResource( nID ) );
-	}
+// The fallback icon for an object with no picture of its own. This is the
+// one part of these lists that comes from a resource rather than from the
+// data extractors, so it is the one part still waiting on the generated
+// resource tables; NWxResourceImages is where that arrives.
+wxBitmap LoadResourceBitmap( unsigned nID )
+{
+	return wxBitmap( NWxResourceImages::ReadBitmapResource( nID ) );
 }
-
+}
 
 void CObjectCollector::CreateImageLists()
 {
@@ -361,18 +365,19 @@ void CObjectCollector::CreateImageLists()
 	const int nDefaultSmallImageIndex = smallImageList.Add( defaultSmallObjectBitmap, zeroColor );
 	// The lists copied them.
 	// wxBitmap frees itself, and the lists copied what they were given.
-	NI_ASSERT( nDefaultNormalImageIndex == nDefaultSmallImageIndex, fmt::format( "nDefaultNormalImageIndex != nDefaultSmallImageIndex" ) );
+	NI_ASSERT( nDefaultNormalImageIndex == nDefaultSmallImageIndex,
+	           fmt::format( "nDefaultNormalImageIndex != nDefaultSmallImageIndex" ) );
 	nDefaultImageIndex = nDefaultNormalImageIndex;
 }
 
-
-const std::string& CObjectCollector::LocateExtractorType( const std::string &rszObjectTypeName ) const
+const std::string &CObjectCollector::LocateExtractorType( const std::string &rszObjectTypeName ) const
 {
 	for ( CDataExtractorTypeMap::const_iterator itDataExtractorType = dataExtractorTypeMap.begin();
-				itDataExtractorType != dataExtractorTypeMap.end();
-				++itDataExtractorType )
+	      itDataExtractorType != dataExtractorTypeMap.end();
+	      ++itDataExtractorType )
 	{
-		CObjectTypeNameList::const_iterator posObjectTypeName = find( itDataExtractorType->second.begin(), itDataExtractorType->second.end(), rszObjectTypeName );
+		CObjectTypeNameList::const_iterator posObjectTypeName =
+				find( itDataExtractorType->second.begin(), itDataExtractorType->second.end(), rszObjectTypeName );
 		if ( posObjectTypeName != itDataExtractorType->second.end() )
 		{
 			return itDataExtractorType->first;
@@ -381,8 +386,8 @@ const std::string& CObjectCollector::LocateExtractorType( const std::string &rsz
 	return DEFAULT_DATA_EXTRACTOR_TYPE;
 }
 
-
-const IObjectCollector::SObjectParams* CObjectCollector::LocateObjectParams( const std::string &rszObjectTypeName, const std::string &rszObjectName ) const
+const IObjectCollector::SObjectParams *CObjectCollector::LocateObjectParams( const std::string &rszObjectTypeName,
+                                                                             const std::string &rszObjectName ) const
 {
 	CObjectCollection::const_iterator posObjectCollection = objectCollection.find( rszObjectTypeName );
 	if ( posObjectCollection != objectCollection.end() )
@@ -396,8 +401,9 @@ const IObjectCollector::SObjectParams* CObjectCollector::LocateObjectParams( con
 	return 0;
 }
 
-
-const IObjectCollector::SObjectParams* CObjectCollector::GetObjectParams( const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType )
+const IObjectCollector::SObjectParams *CObjectCollector::GetObjectParams( const std::string &rszObjectTypeName,
+                                                                          const std::string &rszObjectName,
+                                                                          const std::string &rszDataExtractorType )
 {
 	const SObjectParams *pLocatedObjectParams = LocateObjectParams( rszObjectTypeName, rszObjectName );
 	if ( pLocatedObjectParams == 0 )
@@ -408,8 +414,10 @@ const IObjectCollector::SObjectParams* CObjectCollector::GetObjectParams( const 
 	return pLocatedObjectParams;
 }
 
-
-void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType )
+void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams,
+                                         const std::string &rszObjectTypeName,
+                                         const std::string &rszObjectName,
+                                         const std::string &rszDataExtractorType )
 {
 	if ( pObjectParams )
 	{
@@ -424,12 +432,8 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 			CArray2D<uint32_t> normalImage;
 			CArray2D<uint32_t> smallImage;
 			std::string szLabel;
-			nFlags = posDataExtractor->second->GetObjectData( &normalImage,
-																														&smallImage,
-																														&szLabel,
-																														rszObjectTypeName,
-																														rszObjectName,
-																														rszDataExtractorType );
+			nFlags = posDataExtractor->second->GetObjectData(
+					&normalImage, &smallImage, &szLabel, rszObjectTypeName, rszObjectName, rszDataExtractorType );
 			if ( ( nFlags & OCDE_NORMAL_BITMAP ) && ( nFlags & OCDE_SMALL_BITMAP ) )
 			{
 				//
@@ -459,14 +463,17 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 			}
 			else
 			{
-				pObjectParams->szLabel = fmt::format( "{}{:c}{}", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() );
+				pObjectParams->szLabel =
+						fmt::format( "{}{:c}{}", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() );
 			}
 		}
 	}
 }
 
-
-bool CObjectCollector::InsertObjectToCollection( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName, const std::string &rszObjectName, const SObjectParams* pObjectParams ) const
+bool CObjectCollector::InsertObjectToCollection( CObjectCollection *pObjectCollection,
+                                                 const std::string &rszObjectTypeName,
+                                                 const std::string &rszObjectName,
+                                                 const SObjectParams *pObjectParams ) const
 {
 	bool bResult = false;
 	if ( pObjectCollection != 0 )
@@ -494,8 +501,9 @@ bool CObjectCollector::InsertObjectToCollection( CObjectCollection *pObjectColle
 	return bResult;
 }
 
-
-bool CObjectCollector::InsertObjectToCollection( const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType )
+bool CObjectCollector::InsertObjectToCollection( const std::string &rszObjectTypeName,
+                                                 const std::string &rszObjectName,
+                                                 const std::string &rszDataExtractorType )
 {
 	CObjectCollection::iterator posObjectCollection = objectCollection.find( rszObjectTypeName );
 	if ( posObjectCollection == objectCollection.end() )
@@ -512,7 +520,8 @@ bool CObjectCollector::InsertObjectToCollection( const std::string &rszObjectTyp
 			posObjectNameCollection = posObjectCollection->second.find( rszObjectName );
 			if ( posObjectNameCollection != posObjectCollection->second.end() )
 			{
-				FillObjectParams( &( posObjectNameCollection->second ), rszObjectTypeName, rszObjectName, rszDataExtractorType );
+				FillObjectParams(
+						&( posObjectNameCollection->second ), rszObjectTypeName, rszObjectName, rszDataExtractorType );
 				return true;
 			}
 		}
@@ -520,8 +529,8 @@ bool CObjectCollector::InsertObjectToCollection( const std::string &rszObjectTyp
 	return false;
 }
 
-
-bool CObjectCollector::RemoveObjectFromCollection( const std::string &rszObjectTypeName, const std::string &rszObjectName )
+bool CObjectCollector::RemoveObjectFromCollection( const std::string &rszObjectTypeName,
+                                                   const std::string &rszObjectName )
 {
 	CObjectCollection::iterator posObjectCollection = objectCollection.find( rszObjectTypeName );
 	if ( posObjectCollection != objectCollection.end() )
@@ -542,14 +551,14 @@ bool CObjectCollector::RemoveObjectFromCollection( const std::string &rszObjectT
 	return false;
 }
 
-
-void CObjectCollector::InsertObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, const std::string &rszDataExtractorType )
+void CObjectCollector::InsertObject( const std::string &rszObjectTypeName,
+                                     const std::string &rszObjectName,
+                                     const std::string &rszDataExtractorType )
 {
 	if ( InsertObjectToCollection( rszObjectTypeName, rszObjectName, rszDataExtractorType ) )
 	{
 	}
 }
-
 
 void CObjectCollector::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
@@ -557,7 +566,6 @@ void CObjectCollector::RemoveObject( const std::string &rszObjectTypeName, const
 	{
 	}
 }
-
 
 bool CObjectCollector::Load( CDataStream *pStream )
 {
@@ -574,7 +582,6 @@ bool CObjectCollector::Load( CDataStream *pStream )
 	return true;
 }
 
-
 bool CObjectCollector::Save( CDataStream *pStream )
 {
 	try
@@ -590,33 +597,32 @@ bool CObjectCollector::Save( CDataStream *pStream )
 	return true;
 }
 
-
 void CObjectCollector::RegisterDataExtractor( IObjectDataExtractor *pDataExtractor )
 {
 	RegisterDataExtractor( DEFAULT_DATA_EXTRACTOR_TYPE, pDataExtractor );
 }
 
-
-void CObjectCollector::RegisterDataExtractor( const std::string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor )
+void CObjectCollector::RegisterDataExtractor( const std::string &rszDataExtractorType,
+                                              IObjectDataExtractor *pDataExtractor )
 {
 	if ( dataExtractorMap.find( rszDataExtractorType ) != dataExtractorMap.end() )
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Object data extractor already registered\n" );
-		pLogger->Log( LT_ERROR, fmt::format("\tType: {}\n", rszDataExtractorType.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tType: {}\n", rszDataExtractorType.c_str() ) );
 		return;
 	}
 	//
 	dataExtractorMap[rszDataExtractorType] = pDataExtractor;
 }
 
-
 int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName )
 {
 	int nObjectsFound = 0;
 	if ( pObjectCollection != 0 )
 	{
-		if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( rszObjectTypeName ) )
+		if ( CPtr<IManipulator> pFolderManipulator =
+		         Singleton<IResourceManager>()->CreateFolderManipulator( rszObjectTypeName ) )
 		{
 			CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_NO_CACHE );
 			if ( pFolderManipulatorIterator != 0 )
@@ -629,7 +635,8 @@ int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const s
 						std::string szObjectName;
 						if ( pFolderManipulatorIterator->GetName( &szObjectName ) )
 						{
-							const SObjectParams *pObjectParams = GetObjectParams( rszObjectTypeName, szObjectName, rszDataExtractorType );
+							const SObjectParams *pObjectParams =
+									GetObjectParams( rszObjectTypeName, szObjectName, rszDataExtractorType );
 							if ( pObjectParams != 0 )
 							{
 								if ( InsertObjectToCollection( pObjectCollection, rszObjectTypeName, szObjectName, pObjectParams ) )
@@ -647,7 +654,6 @@ int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const s
 	return nObjectsFound;
 }
 
-
 int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter )
 {
 	int nObjectsFound = 0;
@@ -656,19 +662,25 @@ int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const I
 		IObjectFilter::CObjectCollection filteredObjectCollection;
 		if ( pObjectFilter->GetObjectCollection( &filteredObjectCollection ) > 0 )
 		{
-			for ( IObjectFilter::CObjectCollection::const_iterator posFilteredObjectCollection = filteredObjectCollection.begin();
-						posFilteredObjectCollection != filteredObjectCollection.end();
-						++posFilteredObjectCollection )
+			for ( IObjectFilter::CObjectCollection::const_iterator posFilteredObjectCollection =
+			          filteredObjectCollection.begin();
+			      posFilteredObjectCollection != filteredObjectCollection.end();
+			      ++posFilteredObjectCollection )
 			{
 				const std::string &rszDataExtractorType = LocateExtractorType( posFilteredObjectCollection->first );
-				for ( IObjectFilter::CObjectNameCollection::const_iterator posFilteredObjectNameCollection = posFilteredObjectCollection->second.begin();
-							posFilteredObjectNameCollection != posFilteredObjectCollection->second.end();
-							++posFilteredObjectNameCollection )
+				for ( IObjectFilter::CObjectNameCollection::const_iterator posFilteredObjectNameCollection =
+				          posFilteredObjectCollection->second.begin();
+				      posFilteredObjectNameCollection != posFilteredObjectCollection->second.end();
+				      ++posFilteredObjectNameCollection )
 				{
-					const SObjectParams *pObjectParams = GetObjectParams( posFilteredObjectCollection->first, posFilteredObjectNameCollection->first, rszDataExtractorType );
+					const SObjectParams *pObjectParams = GetObjectParams(
+							posFilteredObjectCollection->first, posFilteredObjectNameCollection->first, rszDataExtractorType );
 					if ( pObjectParams != 0 )
 					{
-						if ( InsertObjectToCollection( pObjectCollection, posFilteredObjectCollection->first, posFilteredObjectNameCollection->first, pObjectParams ) )
+						if ( InsertObjectToCollection( pObjectCollection,
+						                               posFilteredObjectCollection->first,
+						                               posFilteredObjectNameCollection->first,
+						                               pObjectParams ) )
 						{
 							++nObjectsFound;
 						}
@@ -680,10 +692,12 @@ int CObjectCollector::ApplyFilter( CObjectCollection *pObjectCollection, const I
 	return nObjectsFound;
 }
 
-
-bool CObjectCollector::GetObjectParams( SObjectParams* pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName )
+bool CObjectCollector::GetObjectParams( SObjectParams *pObjectParams,
+                                        const std::string &rszObjectTypeName,
+                                        const std::string &rszObjectName )
 {
-	const SObjectParams *pLocatedObjectParams = GetObjectParams( rszObjectTypeName, rszObjectName, LocateExtractorType( rszObjectTypeName ) );
+	const SObjectParams *pLocatedObjectParams =
+			GetObjectParams( rszObjectTypeName, rszObjectName, LocateExtractorType( rszObjectTypeName ) );
 	if ( pLocatedObjectParams != 0 )
 	{
 		if ( pObjectParams != 0 )
@@ -695,11 +709,9 @@ bool CObjectCollector::GetObjectParams( SObjectParams* pObjectParams, const std:
 	return false;
 }
 
-
-IImageList* CObjectCollector::GetImageList( int nImageListType )
+IImageList *CObjectCollector::GetImageList( int nImageListType )
 {
 	return ( nImageListType == IObjectCollector::IMAGE_LIST_SMALL ) ? &smallImageList : &normalImageList;
 }
-
 
 // basement storage

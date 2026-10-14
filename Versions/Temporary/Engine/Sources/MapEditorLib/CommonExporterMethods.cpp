@@ -26,12 +26,12 @@ std::string GetGrannyExportSettingsFileName( const std::string &szTypeName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	SUserData::SMayaExportData::CGrannyExportSettingsMap::const_iterator pos =
-		pUserData->constUserData.mayaExportData.grannyExportSettings.find( szTypeName );
-	std::string szSettingsFileName = pos == pUserData->constUserData.mayaExportData.grannyExportSettings.end() ? "" : pos->second;
+			pUserData->constUserData.mayaExportData.grannyExportSettings.find( szTypeName );
+	std::string szSettingsFileName =
+			pos == pUserData->constUserData.mayaExportData.grannyExportSettings.end() ? "" : pos->second;
 	NStr::ReplaceAllChars( &szSettingsFileName, '\\', '/' );
 	return szSettingsFileName;
 }
-
 
 bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced )
 {
@@ -47,24 +47,23 @@ bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool
 
 void MakeDoubleSlash( std::string *pszPath )
 {
-  NI_ASSERT( pszPath != 0, "MakeDoubleSlash() pszPath == 0" );
+	NI_ASSERT( pszPath != 0, "MakeDoubleSlash() pszPath == 0" );
 	//
 	for ( std::string::iterator itChar = pszPath->begin(); itChar != pszPath->end(); ++itChar )
-	if ( ( *itChar ) == '\\' )
-	{
-		int nCount = 0;
-		while ( ( itChar != pszPath->end() ) && ( ( *itChar ) == '\\' ) )
+		if ( ( *itChar ) == '\\' )
 		{
-			++itChar;
-			++nCount;
+			int nCount = 0;
+			while ( ( itChar != pszPath->end() ) && ( ( *itChar ) == '\\' ) )
+			{
+				++itChar;
+				++nCount;
+			}
+			if ( ( nCount & 0x1 ) > 0 )
+			{
+				itChar = pszPath->insert( itChar, '\\' );
+			}
 		}
-		if ( ( nCount & 0x1 ) > 0 )
-		{
-			itChar = pszPath->insert( itChar, '\\' );
-		}
-	}
 }
-
 
 void MEStartScript( std::string *pszScriptText, bool bGUIMode )
 {
@@ -75,10 +74,9 @@ void MEStartScript( std::string *pszScriptText, bool bGUIMode )
 	pszScriptText->clear();
 }
 
-
-void MEFinishScript(std::string *pszScriptText, bool bGUIMode )
+void MEFinishScript( std::string *pszScriptText, bool bGUIMode )
 {
-  NI_ASSERT( pszScriptText != 0, "MEFinishScript() pszScriptText == 0" );
+	NI_ASSERT( pszScriptText != 0, "MEFinishScript() pszScriptText == 0" );
 	//
 	if ( bGUIMode )
 	{
@@ -88,8 +86,10 @@ void MEFinishScript(std::string *pszScriptText, bool bGUIMode )
 	MakeDoubleSlash( pszScriptText );
 }
 
-
-bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode )
+bool MERunScript( const std::string &rszScriptText,
+                  const std::string &rszFileNamePostfix,
+                  bool bNeedExport,
+                  bool bGUIMode )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 
@@ -162,19 +162,18 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 	if ( bNeedExport )
 	{
 		// Запускаем Maya
-		const std::string &szUserDataToolFileName = "maya.exe";//GetOption( &SUserData::SMayaExportData::szToolFileName );
+		const std::string &szUserDataToolFileName = "maya.exe"; //GetOption( &SUserData::SMayaExportData::szToolFileName );
 		const std::string szGUIMode = bGUIMode ? " " : " -batch ";
 		const std::string szCommandLine = fmt::format( "{}{}-script \"{}\" -log \"{}\"",
-																				szUserDataToolFileName.c_str(),
-																				szGUIMode.c_str(),
-																				szScriptFileName.c_str(),
-																				szLogFileName.c_str() );
+		                                               szUserDataToolFileName.c_str(),
+		                                               szGUIMode.c_str(),
+		                                               szScriptFileName.c_str(),
+		                                               szLogFileName.c_str() );
 		//
 		bResult = RunAndWait( std::string(), szCommandLine, std::string() );
 	}
 	return bResult;
 }
-
 
 // Получить размер картинки
 bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
@@ -196,7 +195,6 @@ bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 	return true;
 }
 
-
 // Получить размер картинки
 bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 {
@@ -217,18 +215,15 @@ bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 	return true;
 }
 
-
 void CutExtension( std::string *pFileName, const char *pszExt )
 {
 	const int nPos = pFileName->rfind( '.' );
 	if ( nPos == std::string::npos )
 		return;
 	//
-	if ( pFileName->compare(nPos + 1, -1, pszExt) == 0 )
+	if ( pFileName->compare( nPos + 1, -1, pszExt ) == 0 )
 		pFileName->resize( nPos );
 }
-
-
 
 void NormalizeFilePath( std::string *pszPath )
 {
@@ -241,7 +236,6 @@ void NormalizeFilePath( std::string *pszPath )
 	}
 }
 
-
 bool BuildSrcFilePath( std::string *pszFilePath, const std::string &szRefValue )
 {
 	if ( szRefValue.size() )
@@ -252,7 +246,6 @@ bool BuildSrcFilePath( std::string *pszFilePath, const std::string &szRefValue )
 	}
 	return true;
 }
-
 
 bool BuildSrcFilePath( std::string *pszFilePath, IManipulator *pManipulator, const std::string &szRefFieldDBPath )
 {
@@ -270,26 +263,25 @@ bool BuildSrcFilePath( std::string *pszFilePath, IManipulator *pManipulator, con
 	{
 		std::string szType;
 		pManipulator->GetType( std::string(), &szType );
-		NI_ASSERT( false, fmt::format("Field {} not found in object of type {}", szRefFieldDBPath.c_str(), szType.c_str()) );
+		NI_ASSERT( false,
+		           fmt::format( "Field {} not found in object of type {}", szRefFieldDBPath.c_str(), szType.c_str() ) );
 	}
 
 	return false;
 }
 
-
-std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &szDestFolder )
+std::string BuildDestFilePath( IManipulator *pManipulator, const std::string &szDestFolder )
 {
 	CVariant varUID;
 	bool bResult = CManipulatorManager::GetValue( &varUID, pManipulator, "uid" );
 	if ( !bResult )
 	{
-		return szDestFolder + std::to_string(  pManipulator->GetID( "" ) );
+		return szDestFolder + std::to_string( pManipulator->GetID( "" ) );
 	}
 	boost::uuids::uuid uid;
 	memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );
 	return szDestFolder + boost::uuids::to_string( uid );
 }
-
 
 bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 {
@@ -313,8 +305,7 @@ bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 				std::string szLocalMayaScriptPath( szMayaScriptPath );
 				NormalizeFilePath( &szLocalMayaScriptPath );
 				szScript += fmt::format( "putenv \"MAYA_SCRIPT_PATH\" (\"{};\" + `getenv \"MAYA_SCRIPT_PATH\"`)",
-						szLocalMayaScriptPath.c_str()
-						);
+				                         szLocalMayaScriptPath.c_str() );
 				szScript += ";\n";
 			}
 			if ( !szStartupScript.empty() )
@@ -349,7 +340,6 @@ bool StartupMayaProcess( CInteractiveMaya *pMayaProcess )
 	return true;
 }
 
-
 bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime, bool bReportAsError )
 {
 	NHPTimer::STime timeCurr, timeOriginal;
@@ -374,8 +364,8 @@ bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime, bool
 	// error - stream doesn't exist
 	ILogger *pLogger = NLog::GetLogger();
 	const ELogOutputType eLogType = bReportAsError ? LT_ERROR : LT_IMPORTANT;
-	pLogger->Log( eLogType, fmt::format("Can't access file - possibly it still not exist\n") );
-	pLogger->Log( eLogType, fmt::format("\tFile name: {}\n", szFileName.c_str()) );
+	pLogger->Log( eLogType, fmt::format( "Can't access file - possibly it still not exist\n" ) );
+	pLogger->Log( eLogType, fmt::format( "\tFile name: {}\n", szFileName.c_str() ) );
 	return false;
 }
 
@@ -395,12 +385,12 @@ bool ExecuteMayaScript( const std::string &szScript )
 	return true;
 }
 
-
 bool GetSelectedObjects( SObjectSet *pObjectSet, const std::string &szObjectTypeName )
 {
 	NI_ASSERT( pObjectSet != 0, "GetSelectedObjects(): SObjectSet == 0" );
 	//
-	bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( pObjectSet ) );
+	bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( pObjectSet ) );
 	bResult = bResult && ( pObjectSet->szObjectTypeName == szObjectTypeName );
 	bResult = bResult && ( !pObjectSet->objectNameSet.empty() );
 	//

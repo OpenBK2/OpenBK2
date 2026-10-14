@@ -28,7 +28,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 // Every byte is derived from its offset, so a wrong byte names the offset it
 // was really taken from.
@@ -39,8 +40,7 @@ unsigned char ByteAt( size_t nOffset )
 
 std::filesystem::path TempFile( const char *pszName )
 {
-	const std::filesystem::path dir =
-		std::filesystem::temp_directory_path() / "bk2_mappedstream_test";
+	const std::filesystem::path dir = std::filesystem::temp_directory_path() / "bk2_mappedstream_test";
 	std::error_code ec;
 	std::filesystem::create_directories( dir, ec );
 	return dir / pszName;
@@ -86,9 +86,8 @@ void ExpectPattern( const std::filesystem::path &path, size_t nTotal )
 	{
 		if ( p[i] != ByteAt( i ) )
 		{
-			FAIL() << "first mismatch at offset " << i
-			       << ": got " << static_cast<int>( p[i] )
-			       << ", expected " << static_cast<int>( ByteAt( i ) );
+			FAIL() << "first mismatch at offset " << i << ": got " << static_cast<int>( p[i] ) << ", expected "
+						 << static_cast<int>( ByteAt( i ) );
 		}
 	}
 }
@@ -107,9 +106,15 @@ TEST( MappedStream, SmallFileRoundTrips )
 // 4096, so the sizes either side of that boundary are the interesting ones.
 TEST( MappedStream, SizesAroundTheGrowthBoundary )
 {
-	for ( const size_t nTotal : { size_t( 0 ), size_t( 1 ), size_t( 4095 ), size_t( 4096 ),
-	                              size_t( 4097 ), size_t( 8192 ), size_t( 65535 ),
-	                              size_t( 65536 ), size_t( 65537 ) } )
+	for ( const size_t nTotal : { size_t( 0 ),
+	                              size_t( 1 ),
+	                              size_t( 4095 ),
+	                              size_t( 4096 ),
+	                              size_t( 4097 ),
+	                              size_t( 8192 ),
+	                              size_t( 65535 ),
+	                              size_t( 65536 ),
+	                              size_t( 65537 ) } )
 	{
 		const auto path = TempFile( "boundary.bin" );
 		WritePattern( path, nTotal, 128 );
@@ -127,7 +132,7 @@ TEST( MappedStream, GrowsAcrossManyRemaps )
 {
 	const auto path = TempFile( "grow.bin" );
 	const size_t nTotal = 4u * 1024u * 1024u;
-	WritePattern( path, nTotal, 977 );	// deliberately not a power of two
+	WritePattern( path, nTotal, 977 ); // deliberately not a power of two
 	ExpectPattern( path, nTotal );
 }
 

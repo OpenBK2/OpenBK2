@@ -11,23 +11,42 @@ class CAnimUnitMech : public IAnimUnit
 	struct SMovingState
 	{
 	public:
-		enum EMovingState { EMS_STOPPED, EMS_MOVING, EMS_STOPPED_TO_MOVING, EMS_MOVING_TO_STOPPED };
+		enum EMovingState
+		{
+			EMS_STOPPED,
+			EMS_MOVING,
+			EMS_STOPPED_TO_MOVING,
+			EMS_MOVING_TO_STOPPED
+		};
 		ZDATA
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		EMovingState state = {};
 		NTimer::STime timeOfIntentionStart = {};
-	public:
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&state); f.Add(3,&timeOfIntentionStart); return 0; }
 
-		SMovingState() : state( EMS_STOPPED ), timeOfIntentionStart( 0 ) { }
+	public:
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &state );
+			f.Add( 3, &timeOfIntentionStart );
+			return 0;
+		}
+
+		SMovingState() : state( EMS_STOPPED ), timeOfIntentionStart( 0 ) {}
 	};
 	ZDATA
 	CPtr<CAIUnit> pOwner;
 	SMovingState movingState;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&movingState); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pOwner );
+		f.Add( 3, &movingState );
+		return 0;
+	}
+
 public:
-	CAnimUnitMech() : pOwner( 0 ) { }
+	CAnimUnitMech() : pOwner( 0 ) {}
 	virtual void Init( class CAIUnit *pOwner );
 
 	virtual void AnimationSet( int nAnimation );
@@ -37,5 +56,5 @@ public:
 
 	virtual void Segment();
 
-	virtual void StopCurAnimation() { }
+	virtual void StopCurAnimation() {}
 };

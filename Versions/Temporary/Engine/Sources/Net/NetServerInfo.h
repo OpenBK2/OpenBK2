@@ -16,12 +16,13 @@ public:
 	struct SServerInfo
 	{
 		CNodeAddress addr;
-		float fValidTimeLeft;   // how much time left until server info expires//TimeSinceUpdate;
-		float fPing;            // ping to server in seconds
-		bool bWrongVersion;     // to catch different version
+		float fValidTimeLeft; // how much time left until server info expires//TimeSinceUpdate;
+		float fPing;          // ping to server in seconds
+		bool bWrongVersion;   // to catch different version
 		CMemoryStream info;
 	};
 	typedef std::list<SServerInfo> CServerInfoList;
+
 private:
 	CServerInfoList servers;
 	float fTime, fRequestDelay;
@@ -29,17 +30,22 @@ private:
 	bool bDoReply;
 	CMemoryStream serverInfo;
 
-	SServerInfo& GetInfo( const CNodeAddress &addr );
+	SServerInfo &GetInfo( const CNodeAddress &addr );
+
 public:
 	CServerInfoSupport( APPLICATION_ID _nApplicationID );
 	//
 	void Init( APPLICATION_ID _applicationID ) { applicationID = _applicationID; }
 	//
 	void Step( float fDeltaTime );
-	CServerInfoList& GetServers() { return servers; }
+	CServerInfoList &GetServers() { return servers; }
 	// requests reply	support
 	bool DoReplyRequest() const { return bDoReply; }
-	void StartReply( const CMemoryStream &info ) { bDoReply = true; serverInfo = info; }
+	void StartReply( const CMemoryStream &info )
+	{
+		bDoReply = true;
+		serverInfo = info;
+	}
 	void StopReply() { bDoReply = false; }
 	// packets forming
 	void ReplyServerInfoRequest( CBitStream &bits, CBitStream *pDstBits );

@@ -34,45 +34,45 @@ std::string BuilderSourcePath( const std::string &source )
 {
 	// File pickers normally return source-folder-relative names, but typed
 	// absolute paths and either platform's separators must work as well.
-	std::string path = NFile::IsPathRelative(source)
-		? NFile::JoinPath(Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, source)
-		: source;
-	NFile::NormalizePath(&path);
+	std::string path =
+			NFile::IsPathRelative( source )
+					? NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, source )
+					: source;
+	NFile::NormalizePath( &path );
 	return path;
 }
 
-bool PrepareResource( const std::string &type, const std::string &name,
-	CPtr<IManipulator> *resource, bool *created )
+bool PrepareResource( const std::string &type, const std::string &name, CPtr<IManipulator> *resource, bool *created )
 {
 	IResourceManager *manager = Singleton<IResourceManager>();
 	IFolderCallback *folders = Singleton<IFolderCallback>();
 	*created = false;
-	if ( !folders->IsUniqueName(type, name) )
+	if ( !folders->IsUniqueName( type, name ) )
 	{
-		*resource = manager->CreateObjectManipulator(type, name);
+		*resource = manager->CreateObjectManipulator( type, name );
 		// DoesFileExist also trusts cached VFS entries; stats checks the backing file.
 		NVFS::SFileStats stats;
-		const bool fileExists = NVFS::GetMainVFS()->GetFileStats(&stats, NDb::GetFileName(CDBID(name)));
+		const bool fileExists = NVFS::GetMainVFS()->GetFileStats( &stats, NDb::GetFileName( CDBID( name ) ) );
 		if ( *resource )
 		{
 			// Reuse unsaved resources and restore cached resources deleted on disk.
 			if ( !fileExists )
-				(*resource)->GetObjMan()->SetChanged();
+				( *resource )->GetObjMan()->SetChanged();
 			return true;
 		}
 		// The index can retain a resource after its XDB was deleted. Remove that
 		// stale entry before recreating it, keeping its name so references survive.
-		if ( fileExists || !folders->RemoveObject(type, name, false) )
+		if ( fileExists || !folders->RemoveObject( type, name, false ) )
 		{
-			NLog::Log(LT_ERROR, "Create VisObj: cannot recreate %s '%s'.\n", type.c_str(), name.c_str());
+			NLog::Log( LT_ERROR, "Create VisObj: cannot recreate %s '%s'.\n", type.c_str(), name.c_str() );
 			return false;
 		}
 	}
-	if ( folders->InsertObject(type, name) )
-		*resource = manager->CreateObjectManipulator(type, name);
-	*created = (*resource != nullptr);
+	if ( folders->InsertObject( type, name ) )
+		*resource = manager->CreateObjectManipulator( type, name );
+	*created = ( *resource != nullptr );
 	if ( !*created )
-		NLog::Log(LT_ERROR, "Create VisObj: cannot create %s '%s'.\n", type.c_str(), name.c_str());
+		NLog::Log( LT_ERROR, "Create VisObj: cannot create %s '%s'.\n", type.c_str(), name.c_str() );
 	return *created;
 }
 
@@ -80,52 +80,50 @@ bool EnsureResourceReference( IManipulator *parent, const std::string &field, co
 {
 	// Loading a parent while its child is missing can clear the reference.
 	// Repair that link after recreation, preserving any valid custom reference.
-	CPtr<IManipulator> child = CManipulatorManager::CreateManipulatorFromReference(field, parent, nullptr, nullptr, nullptr);
-	return child || CManipulatorManager::SetValue(name, parent, field, true);
+	CPtr<IManipulator> child =
+			CManipulatorManager::CreateManipulatorFromReference( field, parent, nullptr, nullptr, nullptr );
+	return child || CManipulatorManager::SetValue( name, parent, field, true );
 }
 }
 
 REGISTER_BUILDER_IN_DLL( VisObj, CVisObjBuilder )
 
-const char CVisObjBuilder::VISOBJ_TYPE_NAME[]							= "VisObj";
-const char CVisObjBuilder::MODEL_TYPE_NAME[]							= "Model";
-const char CVisObjBuilder::MATERIAL_TYPE_NAME[]						= "Material";
-const char CVisObjBuilder::TEXTURE_TYPE_NAME[]						= "Texture";
-const char CVisObjBuilder::GEOMETRY_TYPE_NAME[]						= "Geometry";
-const char CVisObjBuilder::AIGEOMETRY_TYPE_NAME[]					= "AIGeometry";
-const char CVisObjBuilder::SKELETON_TYPE_NAME[]						= "Skeleton";
-const char CVisObjBuilder::TEXTURE_FILE_NAME_EXTENTION[]	= ".tga";
-const std::string CVisObjBuilder::BUILD_DATA_TYPE_NAME					= "VisObjBuilder";
-const std::string CVisObjBuilder::RESOURCE_PREFIX[RT_COUNT] =
-{
+const char CVisObjBuilder::VISOBJ_TYPE_NAME[] = "VisObj";
+const char CVisObjBuilder::MODEL_TYPE_NAME[] = "Model";
+const char CVisObjBuilder::MATERIAL_TYPE_NAME[] = "Material";
+const char CVisObjBuilder::TEXTURE_TYPE_NAME[] = "Texture";
+const char CVisObjBuilder::GEOMETRY_TYPE_NAME[] = "Geometry";
+const char CVisObjBuilder::AIGEOMETRY_TYPE_NAME[] = "AIGeometry";
+const char CVisObjBuilder::SKELETON_TYPE_NAME[] = "Skeleton";
+const char CVisObjBuilder::TEXTURE_FILE_NAME_EXTENTION[] = ".tga";
+const std::string CVisObjBuilder::BUILD_DATA_TYPE_NAME = "VisObjBuilder";
+const std::string CVisObjBuilder::RESOURCE_PREFIX[RT_COUNT] = {
 	CVisObjBuilder::MODEL_TYPE_NAME,
 	CVisObjBuilder::MATERIAL_TYPE_NAME,
 	CVisObjBuilder::TEXTURE_TYPE_NAME,
 	CVisObjBuilder::GEOMETRY_TYPE_NAME,
 	CVisObjBuilder::AIGEOMETRY_TYPE_NAME,
 	CVisObjBuilder::SKELETON_TYPE_NAME,
-//	fmt::format( "{}", CVisObjBuilder::MODEL_TYPE_NAME ),
-//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME ),
-//	fmt::format( "{}\\{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME, CVisObjBuilder::TEXTURE_TYPE_NAME ),
-//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME ),
-//	fmt::format( "{}\\{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME, CVisObjBuilder::AIGEOMETRY_TYPE_NAME ),
-//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::SKELETON_TYPE_NAME ),
+	//	fmt::format( "{}", CVisObjBuilder::MODEL_TYPE_NAME ),
+	//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME ),
+	//	fmt::format( "{}\\{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::MATERIAL_TYPE_NAME, CVisObjBuilder::TEXTURE_TYPE_NAME ),
+	//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME ),
+	//	fmt::format( "{}\\{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::GEOMETRY_TYPE_NAME, CVisObjBuilder::AIGEOMETRY_TYPE_NAME ),
+	//	fmt::format( "{}\\{}", CVisObjBuilder::MODEL_TYPE_NAME, CVisObjBuilder::SKELETON_TYPE_NAME ),
 };
-
 
 CVisObjBuilder::CVisObjBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_VISOBJ_BUILDER, this );
-	Singleton<ICommandHandlerContainer>()->Register( CHID_VISOBJ_BUILDER, ID_TOOLS_CREATE_VIS_OBJ, ID_TOOLS_CREATE_VIS_OBJ );
+	Singleton<ICommandHandlerContainer>()->Register(
+			CHID_VISOBJ_BUILDER, ID_TOOLS_CREATE_VIS_OBJ, ID_TOOLS_CREATE_VIS_OBJ );
 }
-
 
 CVisObjBuilder::~CVisObjBuilder()
 {
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_VISOBJ_BUILDER );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_VISOBJ_BUILDER );
 }
-
 
 void CVisObjBuilder::GetSeasonedFolderName( std::string *pszFileName, NDb::ESeason eSeason )
 {
@@ -140,7 +138,6 @@ void CVisObjBuilder::GetSeasonedFolderName( std::string *pszFileName, NDb::ESeas
 	}
 }
 
-
 void CVisObjBuilder::GetSeasonedFileName( std::string *pszFileName, NDb::ESeason eSeason )
 {
 	if ( pszFileName )
@@ -154,8 +151,9 @@ void CVisObjBuilder::GetSeasonedFileName( std::string *pszFileName, NDb::ESeason
 	}
 }
 
-
-void CVisObjBuilder::GetResourceFileName( std::string *pszResourceFileName, EResourceType eResourceType, const std::string &rszVisObjFileName )
+void CVisObjBuilder::GetResourceFileName( std::string *pszResourceFileName,
+                                          EResourceType eResourceType,
+                                          const std::string &rszVisObjFileName )
 {
 	if ( pszResourceFileName )
 	{
@@ -165,16 +163,15 @@ void CVisObjBuilder::GetResourceFileName( std::string *pszResourceFileName, ERes
 		std::string szResourceFileName;
 		CStringManager::SplitFileName( 0, &szResourceFileName, 0, *pszResourceFileName );
 		( *pszResourceFileName ) = szVisObjFilePath + szResourceFileName + "_" + RESOURCE_PREFIX[eResourceType] + ".xdb";
-//		( *pszResourceFileName ) = szVisObjFilePath + RESOURCE_PREFIX[eResourceType] + std::string( "\\" ) + szResourceFileName + ".xdb";
+		//		( *pszResourceFileName ) = szVisObjFilePath + RESOURCE_PREFIX[eResourceType] + std::string( "\\" ) + szResourceFileName + ".xdb";
 	}
 }
 
-
 bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
-																		 IManipulator *pBuildDataManipulator,
-																		 const std::string &rszMBFullFileName,
-																		 const std::string &rszTGAFullFileName,
-																		 NDb::ESeason eSeason )
+                                     IManipulator *pBuildDataManipulator,
+                                     const std::string &rszMBFullFileName,
+                                     const std::string &rszTGAFullFileName,
+                                     NDb::ESeason eSeason )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CTerrainBuilder::AddVisObjEntry() pBuildDataManipulator == 0" );
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -210,7 +207,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	std::string szTGASeasonedFullFileName = szTGAFullFileName;
 	{
 		GetSeasonedFileName( &szMBSeasonedFullFileName, eSeason );
-		bMBSeasonedFileExists = NFile::DoesFileExist( BuilderSourcePath(szMBSeasonedFullFileName) );
+		bMBSeasonedFileExists = NFile::DoesFileExist( BuilderSourcePath( szMBSeasonedFullFileName ) );
 		if ( bMBSeasonedFileExists )
 		{
 			GetSeasonedFileName( &szMBSeasonedFileName, eSeason );
@@ -223,8 +220,8 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		}
 		//
 		GetSeasonedFileName( &szTGASeasonedFullFileName, eSeason );
-		bTGASeasonedFileExists = NFile::DoesFileExist( BuilderSourcePath(szTGASeasonedFullFileName) );
-		if( bTGASeasonedFileExists )
+		bTGASeasonedFileExists = NFile::DoesFileExist( BuilderSourcePath( szTGASeasonedFullFileName ) );
+		if ( bTGASeasonedFileExists )
 		{
 			GetSeasonedFileName( &szTGASeasonedFileName, eSeason );
 		}
@@ -247,7 +244,8 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	CManipulatorManager::GetValue( &szAIRootMesh, pBuildDataManipulator, "AIRootMesh" );
 	CManipulatorManager::GetValue( &szCommonSkeletonName, pBuildDataManipulator, "Skeleton" );
 	//
-	CPtr<IManipulator> pVisObjManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, rszUniqueObjectName );
+	CPtr<IManipulator> pVisObjManipulator =
+			pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, rszUniqueObjectName );
 	if ( pVisObjManipulator == 0 )
 	{
 		return false;
@@ -281,10 +279,10 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	// Import the complete package even if "export after creation" is off, so
 	// the new VisObj never depends on a model outside the data/mod folder.
 	std::string modelReference, importError;
-	if ( !NEditorGltf::ImportModelFile(rszUniqueObjectName, BuilderSourcePath(szMBSeasonedFullFileName),
-		&modelReference, &importError) )
+	if ( !NEditorGltf::ImportModelFile(
+					 rszUniqueObjectName, BuilderSourcePath( szMBSeasonedFullFileName ), &modelReference, &importError ) )
 	{
-		NMessage::Error(importError, "Create VisObj");
+		NMessage::Error( importError, "Create VisObj" );
 		return false;
 	}
 	// добавляем модель
@@ -292,52 +290,54 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	bool modelCreated, materialCreated, textureCreated, geometryCreated, aiGeometryCreated, skeletonCreated;
 	// Check every dependency independently: an existing Material or Geometry
 	// can still refer to a Texture or AIGeometry whose file was deleted.
-	if ( !PrepareResource(MODEL_TYPE_NAME, szModelName, &model, &modelCreated) ||
-		!PrepareResource(MATERIAL_TYPE_NAME, szMaterialName, &material, &materialCreated) ||
-		!PrepareResource(TEXTURE_TYPE_NAME, szTextureName, &texture, &textureCreated) ||
-		!PrepareResource(GEOMETRY_TYPE_NAME, szGeometryName, &geometry, &geometryCreated) ||
-		!PrepareResource(AIGEOMETRY_TYPE_NAME, szAIGeometryName, &aiGeometry, &aiGeometryCreated) ||
-		!PrepareResource(SKELETON_TYPE_NAME, szSkeletonName, &skeleton, &skeletonCreated) )
+	if ( !PrepareResource( MODEL_TYPE_NAME, szModelName, &model, &modelCreated ) ||
+	     !PrepareResource( MATERIAL_TYPE_NAME, szMaterialName, &material, &materialCreated ) ||
+	     !PrepareResource( TEXTURE_TYPE_NAME, szTextureName, &texture, &textureCreated ) ||
+	     !PrepareResource( GEOMETRY_TYPE_NAME, szGeometryName, &geometry, &geometryCreated ) ||
+	     !PrepareResource( AIGEOMETRY_TYPE_NAME, szAIGeometryName, &aiGeometry, &aiGeometryCreated ) ||
+	     !PrepareResource( SKELETON_TYPE_NAME, szSkeletonName, &skeleton, &skeletonCreated ) )
 		return false;
 
 	bool bResult = true;
 	if ( textureCreated )
 	{
-		bResult = CManipulatorManager::SetValue(szTGASeasonedFullFileName, texture, "SrcName", false);
+		bResult = CManipulatorManager::SetValue( szTGASeasonedFullFileName, texture, "SrcName", false );
 		const bool opaque = szTextureType == "AM_OPAQUE";
-		bResult = bResult && CManipulatorManager::SetValue(opaque ? "CONVERT_ORDINARY" : "CONVERT_TRANSPARENT", texture, "ConversionType", false);
-		bResult = bResult && CManipulatorManager::SetValue(opaque ? "TF_DXT1" : "TF_DXT3", texture, "Format", false);
+		bResult = bResult && CManipulatorManager::SetValue(
+														 opaque ? "CONVERT_ORDINARY" : "CONVERT_TRANSPARENT", texture, "ConversionType", false );
+		bResult = bResult && CManipulatorManager::SetValue( opaque ? "TF_DXT1" : "TF_DXT3", texture, "Format", false );
 	}
 	if ( materialCreated )
 	{
-		bResult = bResult && CManipulatorManager::SetValue(szTextureType, material, "AlphaMode", false);
+		bResult = bResult && CManipulatorManager::SetValue( szTextureType, material, "AlphaMode", false );
 	}
-	bResult = bResult && EnsureResourceReference(material, "Texture", szTextureName);
+	bResult = bResult && EnsureResourceReference( material, "Texture", szTextureName );
 	if ( aiGeometryCreated )
 	{
-		bResult = bResult && CManipulatorManager::SetValue(modelReference, aiGeometry, "ModelFileRef", false);
-		bResult = bResult && CManipulatorManager::SetValue(szAIRootMesh, aiGeometry, "RootMesh", false);
-		bResult = bResult && CManipulatorManager::SetValue(szRootJoint == szRootMesh ? szAIRootMesh : szRootJoint, aiGeometry, "RootJoint", false);
+		bResult = bResult && CManipulatorManager::SetValue( modelReference, aiGeometry, "ModelFileRef", false );
+		bResult = bResult && CManipulatorManager::SetValue( szAIRootMesh, aiGeometry, "RootMesh", false );
+		bResult = bResult && CManipulatorManager::SetValue(
+														 szRootJoint == szRootMesh ? szAIRootMesh : szRootJoint, aiGeometry, "RootJoint", false );
 	}
 	if ( geometryCreated )
 	{
-		bResult = bResult && CManipulatorManager::SetValue(modelReference, geometry, "ModelFileRef", false);
-		bResult = bResult && CManipulatorManager::SetValue(szRootMesh, geometry, "RootMesh", false);
-		bResult = bResult && CManipulatorManager::SetValue(szRootJoint, geometry, "RootJoint", false);
+		bResult = bResult && CManipulatorManager::SetValue( modelReference, geometry, "ModelFileRef", false );
+		bResult = bResult && CManipulatorManager::SetValue( szRootMesh, geometry, "RootMesh", false );
+		bResult = bResult && CManipulatorManager::SetValue( szRootJoint, geometry, "RootJoint", false );
 	}
-	bResult = bResult && EnsureResourceReference(geometry, "AIGeometry", szAIGeometryName);
+	bResult = bResult && EnsureResourceReference( geometry, "AIGeometry", szAIGeometryName );
 	if ( skeletonCreated )
 	{
-		bResult = bResult && CManipulatorManager::SetValue(modelReference, skeleton, "ModelFileRef", false);
-		bResult = bResult && CManipulatorManager::SetValue(szRootJoint, skeleton, "RootJoint", false);
+		bResult = bResult && CManipulatorManager::SetValue( modelReference, skeleton, "ModelFileRef", false );
+		bResult = bResult && CManipulatorManager::SetValue( szRootJoint, skeleton, "RootJoint", false );
 	}
 	int nMaterialCount = 0;
-	bResult = bResult && CManipulatorManager::GetValue(&nMaterialCount, model, "Materials");
+	bResult = bResult && CManipulatorManager::GetValue( &nMaterialCount, model, "Materials" );
 	if ( bResult && nMaterialCount == 0 )
-		bResult = model->InsertNode("Materials");
-	bResult = bResult && model->SetValue("Materials.[0]", szMaterialName);
-	bResult = bResult && model->SetValue("Geometry", szGeometryName);
-	bResult = bResult && model->SetValue("Skeleton", szSkeletonName);
+		bResult = model->InsertNode( "Materials" );
+	bResult = bResult && model->SetValue( "Materials.[0]", szMaterialName );
+	bResult = bResult && model->SetValue( "Geometry", szGeometryName );
+	bResult = bResult && model->SetValue( "Skeleton", szSkeletonName );
 	// Add a seasonal entry only after its complete resource graph is available.
 	bResult = bResult && pVisObjManipulator->InsertNode( "Models" );
 	if ( bResult )
@@ -352,41 +352,47 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		}
 	}
 	if ( !bResult )
-		NLog::Log(LT_ERROR, "Create VisObj: cannot initialize resources for '%s' (%s).\n", rszUniqueObjectName.c_str(), szSeasonName.c_str());
+		NLog::Log( LT_ERROR,
+		           "Create VisObj: cannot initialize resources for '%s' (%s).\n",
+		           rszUniqueObjectName.c_str(),
+		           szSeasonName.c_str() );
 	return bResult;
 }
 
-
 //CRAP{ PLAIN_TEXT
-bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
+                                       std::string *pszDescription,
+                                       IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CVisObjBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CVisObjBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();
 	// Считываем данные
 	std::string szMBFullFileName;
-	if ( !CManipulatorManager::GetValue( &szMBFullFileName, pBuildDataManipulator, "ModelFileName" ) || szMBFullFileName.empty() )
+	if ( !CManipulatorManager::GetValue( &szMBFullFileName, pBuildDataManipulator, "ModelFileName" ) ||
+	     szMBFullFileName.empty() )
 	{
 		( *pszDescription ) = "<ModelFileName> must be filled.";
 		return false;
 	}
-	if ( !NEditorGltf::IsGltfFileName(szMBFullFileName) )
+	if ( !NEditorGltf::IsGltfFileName( szMBFullFileName ) )
 	{
 		*pszDescription = "<ModelFileName> must be a .glb or .gltf file. Maya source export is no longer supported.";
 		return false;
 	}
-	if ( !NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
+	if ( !NFile::DoesFileExist( BuilderSourcePath( szMBFullFileName ) ) )
 	{
 		( *pszDescription ) = "<ModelFileName> is invalid file name. Can't find file.";
 		return false;
 	}
 	std::string szTGAFullFileName;
-	if ( !CManipulatorManager::GetValue( &szTGAFullFileName, pBuildDataManipulator, "TextureFileName" ) || szTGAFullFileName.empty() )
+	if ( !CManipulatorManager::GetValue( &szTGAFullFileName, pBuildDataManipulator, "TextureFileName" ) ||
+	     szTGAFullFileName.empty() )
 	{
 		( *pszDescription ) = "<TextureFileName> must be filled.";
 		return false;
 	}
-	if ( !NFile::DoesFileExist( BuilderSourcePath(szTGAFullFileName) ) )
+	if ( !NFile::DoesFileExist( BuilderSourcePath( szTGAFullFileName ) ) )
 	{
 		( *pszDescription ) = "<TextureFileName> is invalid file name. Can't find file.";
 		return false;
@@ -419,14 +425,13 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std:
 }
 //CRAP} PLAIN_TEXT
 
-
 bool CVisObjBuilder::InternalInsertObject( std::string *pszObjectTypeName,
-																					 std::string *pszUniqueObjectName,
-																					 bool bFromMainMenu,
-																					 bool *pbCanChangeObjectName,
-																					 bool *pbNeedExport,
-																					 bool *pbNeedEdit,
-																					 IManipulator *pBuildDataManipulator )
+                                           std::string *pszUniqueObjectName,
+                                           bool bFromMainMenu,
+                                           bool *pbCanChangeObjectName,
+                                           bool *pbNeedExport,
+                                           bool *pbNeedEdit,
+                                           IManipulator *pBuildDataManipulator )
 {
 	NI_ASSERT( pszObjectTypeName != 0, "CVisObjBuilder::InternalInsertObject() pszObjectTypeName == 0" );
 	NI_ASSERT( pszUniqueObjectName != 0, "CVisObjBuilder::InternalInsertObject() pszUniqueObjectName == 0" );
@@ -443,16 +448,27 @@ bool CVisObjBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 	if ( bResult )
 	{
 		// Добавляем VisObjEntry для каждого сезона
-		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_WINTER );
-		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_SPRING );
-		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_SUMMER );
-		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_AUTUMN );
-		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_AFRICA );
-		bResult = bResult && AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_ASIA );
+		bResult =
+				bResult &&
+				AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_WINTER );
+		bResult =
+				bResult &&
+				AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_SPRING );
+		bResult =
+				bResult &&
+				AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_SUMMER );
+		bResult =
+				bResult &&
+				AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_AUTUMN );
+		bResult =
+				bResult &&
+				AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_AFRICA );
+		bResult =
+				bResult &&
+				AddVisObjEntry( *pszUniqueObjectName, pBuildDataManipulator, std::string(), std::string(), NDb::SEASON_ASIA );
 	}
 	return bResult;
 }
-
 
 bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 {
@@ -471,7 +487,8 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 	std::string szBuildDataName;
 	if ( Singleton<IBuilderContainer>()->FillBuildData( &szBuildDataTypeName, &szBuildDataName, &buildDataParams, this ) )
 	{
-		if ( CPtr<IManipulator> pBuildDataManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
+		if ( CPtr<IManipulator> pBuildDataManipulator =
+		         Singleton<IResourceManager>()->CreateObjectManipulator( szBuildDataTypeName, szBuildDataName ) )
 		{
 			std::string szDescription;
 			if ( !IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
@@ -487,7 +504,7 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			CManipulatorManager::GetValue( &szTGAFileFolder, pBuildDataManipulator, "TextureFileName" );
 			// Keep the existing 1/2/3 and seasonal naming convention in the
 			// selected GLB or GLTF format, including case on Linux.
-			const std::string modelExtension = NFile::GetFileExt(szMBFileFolder);
+			const std::string modelExtension = NFile::GetFileExt( szMBFileFolder );
 			CStringManager::CutFileName( &szMBFileFolder );
 			CStringManager::CutFileName( &szTGAFileFolder );
 			//
@@ -496,17 +513,19 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			//определяем количество mb и tga файлов
 			int nMBFileCount = 0;
 			int nTGAFileCount = 0;
-			while ( NFile::DoesFileExist( BuilderSourcePath(fmt::format("{}{}{}", szMBFileFolder, nMBFileCount + 1, modelExtension)) ) )
+			while ( NFile::DoesFileExist(
+					BuilderSourcePath( fmt::format( "{}{}{}", szMBFileFolder, nMBFileCount + 1, modelExtension ) ) ) )
 			{
 				++nMBFileCount;
 			}
-			while ( NFile::DoesFileExist( BuilderSourcePath(fmt::format("{}{}.tga", szTGAFileFolder, nTGAFileCount + 1)) ) )
+			while (
+					NFile::DoesFileExist( BuilderSourcePath( fmt::format( "{}{}.tga", szTGAFileFolder, nTGAFileCount + 1 ) ) ) )
 			{
 				++nTGAFileCount;
 			}
 			bResult = ( nMBFileCount > 0 ) && ( nTGAFileCount > 0 );
 			//whole
-			if (  bResult )
+			if ( bResult )
 			{
 				const std::string szVisObjName = szVisObjFolder + "whole.xdb";
 				const std::string szMBFullFileName = szMBFileFolder + "1" + modelExtension;
@@ -521,19 +540,31 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 					pManipulator->RemoveNode( "Models" );
 				}
 				// Добавляем VisObjEntry для каждого сезона
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
+				bResult =
+						bResult && AddVisObjEntry(
+													 szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
 			}
 			//destroyed
-			if (  bResult && ( nTGAFileCount > 1 ) )
+			if ( bResult && ( nTGAFileCount > 1 ) )
 			{
 				const std::string szVisObjName = szVisObjFolder + "destroyed.xdb";
 				std::string szMBFullFileName = szMBFileFolder + "2" + modelExtension;
-				if ( !NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
+				if ( !NFile::DoesFileExist( BuilderSourcePath( szMBFullFileName ) ) )
 				{
 					szMBFullFileName = szMBFileFolder + "1" + modelExtension;
 				}
@@ -549,15 +580,27 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 					pManipulator->RemoveNode( "Models" );
 				}
 				// Добавляем VisObjEntry для каждого сезона
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
-				bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
+				bResult = bResult &&
+				          AddVisObjEntry(
+											szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
+				bResult =
+						bResult && AddVisObjEntry(
+													 szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
 			}
 			//damaged
-			if (  bResult )
+			if ( bResult )
 			{
 				for ( int nTGAFileIndex = 3; nTGAFileIndex <= nTGAFileCount; ++nTGAFileIndex )
 				{
@@ -571,24 +614,37 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 					}
 					else
 					{
-						CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
+						CPtr<IManipulator> pManipulator =
+								pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 						pManipulator->RemoveNode( "Models" );
 					}
 					// Добавляем VisObjEntry для каждого сезона
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
 				}
 			}
 			//anim
-			if (  bResult )
+			if ( bResult )
 			{
 				const std::string szMBFullFileName = szMBFileFolder + "2" + modelExtension;
 				const std::string szTGAFullFileName = szTGAFileFolder + "1.tga";
-				if ( NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
+				if ( NFile::DoesFileExist( BuilderSourcePath( szMBFullFileName ) ) )
 				{
 					const std::string szVisObjName = szVisObjFolder + "anim.xdb";
 					if ( pFolderCallback->IsUniqueName( VISOBJ_TYPE_NAME, szVisObjName ) )
@@ -597,24 +653,37 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 					}
 					else
 					{
-						CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
+						CPtr<IManipulator> pManipulator =
+								pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 						pManipulator->RemoveNode( "Models" );
 					}
 					// Добавляем VisObjEntry для каждого сезона
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
 				}
 			}
 			//transp
-			if (  bResult )
+			if ( bResult )
 			{
 				const std::string szMBFullFileName = szMBFileFolder + "3" + modelExtension;
 				const std::string szTGAFullFileName = szTGAFileFolder + "1.tga";
-				if ( NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
+				if ( NFile::DoesFileExist( BuilderSourcePath( szMBFullFileName ) ) )
 				{
 					const std::string szVisObjName = szVisObjFolder + "transp.xdb";
 					if ( pFolderCallback->IsUniqueName( VISOBJ_TYPE_NAME, szVisObjName ) )
@@ -623,16 +692,29 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 					}
 					else
 					{
-						CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
+						CPtr<IManipulator> pManipulator =
+								pResourceManager->CreateObjectManipulator( VISOBJ_TYPE_NAME, szVisObjName );
 						pManipulator->RemoveNode( "Models" );
 					}
 					// Добавляем VisObjEntry для каждого сезона
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
-					bResult = bResult && AddVisObjEntry( szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_WINTER );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SPRING );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_SUMMER );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AUTUMN );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_AFRICA );
+					bResult = bResult &&
+					          AddVisObjEntry(
+												szVisObjName, pBuildDataManipulator, szMBFullFileName, szTGAFullFileName, NDb::SEASON_ASIA );
 				}
 			}
 			return bResult;
@@ -641,15 +723,15 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 	return false;
 }
 
-
 bool CVisObjBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_TOOLS_CREATE_VIS_OBJ:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "VisObj" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -657,7 +739,7 @@ bool CVisObjBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				const std::string szObjectName = selectionSet.objectNameList.front().ToString();
 				// Folder selections can use either platform's separator.
-				bResult = !szObjectName.empty() && NFile::IsFolderSeparator(szObjectName.back());
+				bResult = !szObjectName.empty() && NFile::IsFolderSeparator( szObjectName.back() );
 				bResult = bResult && CreateVisObj( szObjectName );
 			}
 			return bResult;
@@ -668,18 +750,18 @@ bool CVisObjBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CVisObjBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CAnimationBuilder::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAnimationBuilder::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_TOOLS_CREATE_VIS_OBJ:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand(
+					CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "VisObj" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -687,7 +769,7 @@ bool CVisObjBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 			{
 				const std::string szObjectName = selectionSet.objectNameList.front().ToString();
 				// Folder selections can use either platform's separator.
-				bResult = !szObjectName.empty() && NFile::IsFolderSeparator(szObjectName.back());
+				bResult = !szObjectName.empty() && NFile::IsFolderSeparator( szObjectName.back() );
 				( *pbEnable ) = bResult;
 				( *pbCheck ) = false;
 			}
@@ -699,13 +781,11 @@ bool CVisObjBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	return false;
 }
 
-
 bool CVisObjBuilder::RemoveTexture( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
 	Singleton<IFolderCallback>()->RemoveObject( rszObjectTypeName, rszObjectName, true );
 	return true;
 }
-
 
 bool CVisObjBuilder::RemoveAIGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
@@ -713,13 +793,11 @@ bool CVisObjBuilder::RemoveAIGeometry( const std::string &rszObjectTypeName, con
 	return true;
 }
 
-
 bool CVisObjBuilder::RemoveAnimation( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
 	Singleton<IFolderCallback>()->RemoveObject( rszObjectTypeName, rszObjectName, true );
 	return true;
 }
-
 
 bool CVisObjBuilder::RemoveMaterial( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
@@ -747,7 +825,6 @@ bool CVisObjBuilder::RemoveMaterial( const std::string &rszObjectTypeName, const
 	return true;
 }
 
-
 bool CVisObjBuilder::RemoveGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
@@ -762,7 +839,8 @@ bool CVisObjBuilder::RemoveGeometry( const std::string &rszObjectTypeName, const
 	std::string szAIGeometryName;
 	{
 		const std::string szRefValueName = "AIGeometry";
-		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szAIGeometryTypeName, &szAIGeometryName, 0 );
+		CManipulatorManager::GetParamsFromReference(
+				szRefValueName, pManipulator, &szAIGeometryTypeName, &szAIGeometryName, 0 );
 	}
 	if ( pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, true ) )
 	{
@@ -773,7 +851,6 @@ bool CVisObjBuilder::RemoveGeometry( const std::string &rszObjectTypeName, const
 	}
 	return true;
 }
-
 
 bool CVisObjBuilder::RemoveSkeleton( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
@@ -795,7 +872,8 @@ bool CVisObjBuilder::RemoveSkeleton( const std::string &rszObjectTypeName, const
 			{
 				const std::string szRefValueName = fmt::format( "Animations.[{}]", nAnimationIndex );
 				std::string szAnimationName;
-				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szAnimationTypeName, &szAnimationName, 0 );
+				CManipulatorManager::GetParamsFromReference(
+						szRefValueName, pManipulator, &szAnimationTypeName, &szAnimationName, 0 );
 				if ( !szAnimationName.empty() )
 				{
 					animationNameList.push_back( szAnimationName );
@@ -805,14 +883,15 @@ bool CVisObjBuilder::RemoveSkeleton( const std::string &rszObjectTypeName, const
 	}
 	if ( pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, true ) )
 	{
-		for ( std::list<std::string>::const_iterator itAnimationName = animationNameList.begin(); itAnimationName != animationNameList.end(); ++itAnimationName )
+		for ( std::list<std::string>::const_iterator itAnimationName = animationNameList.begin();
+		      itAnimationName != animationNameList.end();
+		      ++itAnimationName )
 		{
 			RemoveAnimation( szAnimationTypeName, *itAnimationName );
 		}
 	}
 	return true;
 }
-
 
 bool CVisObjBuilder::RemoveModel( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
@@ -834,7 +913,8 @@ bool CVisObjBuilder::RemoveModel( const std::string &rszObjectTypeName, const st
 			{
 				const std::string szRefValueName = fmt::format( "Materials.[{}]", nMaterialIndex );
 				std::string szMaterialName;
-				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szMaterialTypeName, &szMaterialName, 0 );
+				CManipulatorManager::GetParamsFromReference(
+						szRefValueName, pManipulator, &szMaterialTypeName, &szMaterialName, 0 );
 				if ( !szMaterialName.empty() )
 				{
 					materialNameList.push_back( szMaterialName );
@@ -847,18 +927,22 @@ bool CVisObjBuilder::RemoveModel( const std::string &rszObjectTypeName, const st
 	std::string szGeometryName;
 	{
 		const std::string szRefValueName = "Geometry";
-		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szGeometryTypeName, &szGeometryName, 0 );
+		CManipulatorManager::GetParamsFromReference(
+				szRefValueName, pManipulator, &szGeometryTypeName, &szGeometryName, 0 );
 	}
 	//
 	std::string szSkeletonTypeName;
 	std::string szSkeletonName;
 	{
 		const std::string szRefValueName = "Skeleton";
-		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szSkeletonTypeName, &szSkeletonName, 0 );
+		CManipulatorManager::GetParamsFromReference(
+				szRefValueName, pManipulator, &szSkeletonTypeName, &szSkeletonName, 0 );
 	}
 	if ( pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, true ) )
 	{
-		for ( std::list<std::string>::const_iterator itMaterialName = materialNameList.begin(); itMaterialName != materialNameList.end(); ++itMaterialName )
+		for ( std::list<std::string>::const_iterator itMaterialName = materialNameList.begin();
+		      itMaterialName != materialNameList.end();
+		      ++itMaterialName )
 		{
 			RemoveMaterial( szMaterialTypeName, *itMaterialName );
 		}
@@ -873,7 +957,6 @@ bool CVisObjBuilder::RemoveModel( const std::string &rszObjectTypeName, const st
 	}
 	return true;
 }
-
 
 bool CVisObjBuilder::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
@@ -905,7 +988,9 @@ bool CVisObjBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 	}
 	if ( pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, false ) )
 	{
-		for ( std::list<std::string>::const_iterator itModelName = modelNameList.begin(); itModelName != modelNameList.end(); ++itModelName )
+		for ( std::list<std::string>::const_iterator itModelName = modelNameList.begin();
+		      itModelName != modelNameList.end();
+		      ++itModelName )
 		{
 			RemoveModel( szModelTypeName, *itModelName );
 		}

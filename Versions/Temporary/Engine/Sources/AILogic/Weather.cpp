@@ -24,10 +24,7 @@ void CWeather::Clear()
 	Init();
 }
 
-CWeather::CWeather()
-	: eState( EWS_CLEAR ),
-	bAutoChangeWeather( true ),
-	timeNextCheck( 0 )
+CWeather::CWeather() : eState( EWS_CLEAR ), bAutoChangeWeather( true ), timeNextCheck( 0 )
 {
 	Init();
 }
@@ -39,17 +36,17 @@ void CWeather::Init()
 
 const float CWeather::GetNextTimeRandom()
 {
-	if ( !theUnitCreation.GetMap() || theUnitCreation.GetMap()->weather.fWeatherPeriod == 0.0f )		// No bad weather
+	if ( !theUnitCreation.GetMap() || theUnitCreation.GetMap()->weather.fWeatherPeriod == 0.0f ) // No bad weather
 		return 0;
 
 	RecordRandomCall();
 	return 1000 * ( theUnitCreation.GetMap()->weather.fWeatherPeriod +
-		NRandom::Random( 0.0f, theUnitCreation.GetMap()->weather.fWeatherPeriodRandom ));
+	                NRandom::Random( 0.0f, theUnitCreation.GetMap()->weather.fWeatherPeriodRandom ) );
 }
 
 void CWeather::SwitchAutomatic( const bool bSwitchAutomatic )
 {
-	if ( !theUnitCreation.GetMap() || theUnitCreation.GetMap()->weather.fWeatherPeriod == 0.0f )		// No bad weather
+	if ( !theUnitCreation.GetMap() || theUnitCreation.GetMap()->weather.fWeatherPeriod == 0.0f ) // No bad weather
 	{
 		bAutoChangeWeather = false;
 		return;
@@ -69,7 +66,7 @@ void CWeather::Switch( const bool bActive )
 
 void CWeather::Off()
 {
-	if ( (eState == EWS_BAD) || (eState == EWS_FADE_IN) )
+	if ( ( eState == EWS_BAD ) || ( eState == EWS_FADE_IN ) )
 	{
 		eState = EWS_FADE_OUT;
 		CPtr<SWeatherChangedUpdate> pUpdate = new SWeatherChangedUpdate;
@@ -86,7 +83,7 @@ void CWeather::Off()
 
 void CWeather::On()
 {
-	if ( (eState == EWS_CLEAR) || (eState == EWS_FADE_OUT) )
+	if ( ( eState == EWS_CLEAR ) || ( eState == EWS_FADE_OUT ) )
 	{
 		eState = EWS_FADE_IN;
 		CPtr<SWeatherChangedUpdate> pUpdate = new SWeatherChangedUpdate;
@@ -100,7 +97,8 @@ void CWeather::On()
 
 		bool bReturnPlane = false;
 		for ( CPlanesIter it; !it.IsFinished() && !bReturnPlane; it.Iterate() )
-			bReturnPlane = (*it)->GetPlayer() == theDipl.GetMyNumber() && (*it)->GetUnitAbilityDesc( NDb::ABILITY_MASTER_PILOT ) == 0;
+			bReturnPlane = ( *it )->GetPlayer() == theDipl.GetMyNumber() &&
+			               ( *it )->GetUnitAbilityDesc( NDb::ABILITY_MASTER_PILOT ) == 0;
 		if ( bReturnPlane )
 			updater.AddUpdate( new SPlaneReturnsUpdate, ACTION_NOTIFY_PLANE_RETURNS_DUE_WEATHER, 0, 0 );
 		DebugTrace( "Bad weather turning on" );
@@ -114,32 +112,32 @@ bool CWeather::IsActive() const
 
 void CWeather::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EWS_CLEAR:
-		if ( bAutoChangeWeather && timeNextCheck < curTime )
-			On();
-		break;
-		//
-	case EWS_BAD:
-		if ( bAutoChangeWeather && timeNextCheck < curTime + SConsts::TIME_TO_WEATHER_FADE_OFF * 1000 )
-			Off();
-		break;
-		//
-	case EWS_FADE_IN:
-		if ( timeNextCheck < curTime )
-		{
-			eState = EWS_BAD;
-			timeNextCheck = curTime + GetNextTimeRandom();
-		}
-		break;
-		//
-	case EWS_FADE_OUT:
-		if ( timeNextCheck < curTime )
-		{
-			eState = EWS_CLEAR;
-			timeNextCheck = curTime + GetNextTimeRandom();
-		}
-		break;
+		case EWS_CLEAR:
+			if ( bAutoChangeWeather && timeNextCheck < curTime )
+				On();
+			break;
+			//
+		case EWS_BAD:
+			if ( bAutoChangeWeather && timeNextCheck < curTime + SConsts::TIME_TO_WEATHER_FADE_OFF * 1000 )
+				Off();
+			break;
+			//
+		case EWS_FADE_IN:
+			if ( timeNextCheck < curTime )
+			{
+				eState = EWS_BAD;
+				timeNextCheck = curTime + GetNextTimeRandom();
+			}
+			break;
+			//
+		case EWS_FADE_OUT:
+			if ( timeNextCheck < curTime )
+			{
+				eState = EWS_CLEAR;
+				timeNextCheck = curTime + GetNextTimeRandom();
+			}
+			break;
 	}
 }

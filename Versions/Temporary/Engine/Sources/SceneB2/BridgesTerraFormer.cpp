@@ -20,13 +20,13 @@ inline float GetBridgeTerraProfile( const float x )
 
 void CTerraGen::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight )
 {
-	const CVec2 p1( AI2Vis(_p1.x), AI2Vis(_p1.y) );
-	const CVec2 p2( AI2Vis(_p2.x), AI2Vis(_p2.y) );
+	const CVec2 p1( AI2Vis( _p1.x ), AI2Vis( _p1.y ) );
+	const CVec2 p2( AI2Vis( _p2.x ), AI2Vis( _p2.y ) );
 
 	CVec2 vNorm( p2.y - p1.y, p1.x - p2.x );
 
-	NI_ASSERT( fabs2(vNorm) > DEF_EPS, "Wrong bridge's stayed points" );
-	if ( fabs2(vNorm) <= DEF_EPS )
+	NI_ASSERT( fabs2( vNorm ) > DEF_EPS, "Wrong bridge's stayed points" );
+	if ( fabs2( vNorm ) <= DEF_EPS )
 		return;
 
 	Normalize( &vNorm );
@@ -39,25 +39,34 @@ void CTerraGen::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 	const CVec2 vNode3( p2.x + vNorm.x * fWidthHalf, p2.y + vNorm.y * fWidthHalf );
 	const CVec2 vNode4( p2.x - vNorm.x * fWidthHalf, p2.y - vNorm.y * fWidthHalf );
 
-	const CVec2i v1( int(vNode1.x * DEF_INV_TILE_SIZE), int(vNode1.y * DEF_INV_TILE_SIZE) );
-	const CVec2i v2( int(vNode2.x * DEF_INV_TILE_SIZE), int(vNode2.y * DEF_INV_TILE_SIZE) );
-	const CVec2i v3( int(vNode3.x * DEF_INV_TILE_SIZE), int(vNode3.y * DEF_INV_TILE_SIZE) );
-	const CVec2i v4( int(vNode4.x * DEF_INV_TILE_SIZE), int(vNode4.y * DEF_INV_TILE_SIZE) );
+	const CVec2i v1( int( vNode1.x * DEF_INV_TILE_SIZE ), int( vNode1.y * DEF_INV_TILE_SIZE ) );
+	const CVec2i v2( int( vNode2.x * DEF_INV_TILE_SIZE ), int( vNode2.y * DEF_INV_TILE_SIZE ) );
+	const CVec2i v3( int( vNode3.x * DEF_INV_TILE_SIZE ), int( vNode3.y * DEF_INV_TILE_SIZE ) );
+	const CVec2i v4( int( vNode4.x * DEF_INV_TILE_SIZE ), int( vNode4.y * DEF_INV_TILE_SIZE ) );
 
 	const CVec2 vt1( (float)v1.x * DEF_TILE_SIZE, (float)v1.y * DEF_TILE_SIZE );
 	const CVec2 vt2( (float)v2.x * DEF_TILE_SIZE, (float)v2.y * DEF_TILE_SIZE );
 	const CVec2 vt3( (float)v3.x * DEF_TILE_SIZE, (float)v3.y * DEF_TILE_SIZE );
 	const CVec2 vt4( (float)v4.x * DEF_TILE_SIZE, (float)v4.y * DEF_TILE_SIZE );
 
-	const CVec2i vMin( (std::min)((std::min)(v1.x, v2.x), (std::min)(v3.x, v4.x)) - DEF_EXPAND_TILES_NUM_EXT,
-										 (std::min)((std::min)(v1.y, v2.y), (std::min)(v3.y, v4.y)) - DEF_EXPAND_TILES_NUM_EXT );
-	const CVec2i vMax( (std::max)((std::max)(v1.x, v2.x), (std::max)(v3.x, v4.x)) + DEF_EXPAND_TILES_NUM_EXT,
-										 (std::max)((std::max)(v1.y, v2.y), (std::max)(v3.y, v4.y)) + DEF_EXPAND_TILES_NUM_EXT );
+	const CVec2i vMin( (std::min)( (std::min)( v1.x, v2.x ), (std::min)( v3.x, v4.x ) ) - DEF_EXPAND_TILES_NUM_EXT,
+	                   (std::min)( (std::min)( v1.y, v2.y ), (std::min)( v3.y, v4.y ) ) - DEF_EXPAND_TILES_NUM_EXT );
+	const CVec2i vMax( (std::max)( (std::max)( v1.x, v2.x ), (std::max)( v3.x, v4.x ) ) + DEF_EXPAND_TILES_NUM_EXT,
+	                   (std::max)( (std::max)( v1.y, v2.y ), (std::max)( v3.y, v4.y ) ) + DEF_EXPAND_TILES_NUM_EXT );
 
 	CArray2D<uint8_t> bridgeMask( vMax.x - vMin.x + 1, vMax.y - vMin.y + 1 );
 	bridgeMask.FillZero();
 
-	DrawRect( &bridgeMask, v1.x - vMin.x, v1.y - vMin.y, v2.x - vMin.x, v2.y - vMin.y, v3.x - vMin.x, v3.y - vMin.y, v4.x - vMin.x, v4.y - vMin.y, 1 );
+	DrawRect( &bridgeMask,
+	          v1.x - vMin.x,
+	          v1.y - vMin.y,
+	          v2.x - vMin.x,
+	          v2.y - vMin.y,
+	          v3.x - vMin.x,
+	          v3.y - vMin.y,
+	          v4.x - vMin.x,
+	          v4.y - vMin.y,
+	          1 );
 
 	WiseFill( &bridgeMask, 1 );
 
@@ -72,10 +81,12 @@ void CTerraGen::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 
 	const int nFirstX = vMin.x >= 0 ? 0 : -vMin.x;
 	const int nFirstY = vMin.y >= 0 ? 0 : -vMin.y;
-	const int nLastX = ( vMin.x + bridgeMask.GetSizeX() ) <= terrainInfo.heights.GetSizeX() ? bridgeMask.GetSizeX() :
-										 ( terrainInfo.heights.GetSizeX() - vMin.x );
-	const int nLastY = ( vMin.y + bridgeMask.GetSizeY() ) <= terrainInfo.heights.GetSizeY() ? bridgeMask.GetSizeY() :
-										 ( terrainInfo.heights.GetSizeY() - vMin.y );
+	const int nLastX = ( vMin.x + bridgeMask.GetSizeX() ) <= terrainInfo.heights.GetSizeX()
+	                       ? bridgeMask.GetSizeX()
+	                       : ( terrainInfo.heights.GetSizeX() - vMin.x );
+	const int nLastY = ( vMin.y + bridgeMask.GetSizeY() ) <= terrainInfo.heights.GetSizeY()
+	                       ? bridgeMask.GetSizeY()
+	                       : ( terrainInfo.heights.GetSizeY() - vMin.y );
 
 	for ( int g = nFirstY; g < nLastY; ++g )
 	{
@@ -94,22 +105,25 @@ void CTerraGen::ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 				{
 					const float fX = (float)nIndX * DEF_TILE_SIZE;
 					const float fY = (float)nIndY * DEF_TILE_SIZE;
-					const float fDist1 = GetDistToSegment( CVec2(fX, fY), vt1, vt2 );
-					const float fDist2 = GetDistToSegment( CVec2(fX, fY), vt3, vt4 );
+					const float fDist1 = GetDistToSegment( CVec2( fX, fY ), vt1, vt2 );
+					const float fDist2 = GetDistToSegment( CVec2( fX, fY ), vt3, vt4 );
 
-					const float fDist = sqrt( (std::min)(fDist1, fDist2) );
-					const float fCoeff = GetBridgeTerraProfile( Clamp((fDist - DEF_CONST_DIST) * DEF_INV_INTERPOLATE_DIST, 0.0f, 1.0f) );
-					terrainInfo.heights[nIndY][nIndX] = (std::min)( terrainInfo.heights[nIndY][nIndX] * fCoeff + fBridgeHeight * (1.0f - fCoeff), fBridgeHeight );
+					const float fDist = sqrt( (std::min)( fDist1, fDist2 ) );
+					const float fCoeff =
+							GetBridgeTerraProfile( Clamp( ( fDist - DEF_CONST_DIST ) * DEF_INV_INTERPOLATE_DIST, 0.0f, 1.0f ) );
+					terrainInfo.heights[nIndY][nIndX] =
+							(std::min)( terrainInfo.heights[nIndY][nIndX] * fCoeff + fBridgeHeight * ( 1.0f - fCoeff ),
+					                fBridgeHeight );
 					terrainAIInfo.heights[nIndY][nIndX] = Vis2AIFast( terrainInfo.heights[nIndY][nIndX] );
 				}
 			}
 		}
 	}
 
-	const CVec2i vMinTile( Clamp(nFirstX + vMin.x - 1, 0, terrainInfo.tiles.GetSizeX() - 1),
-												 Clamp(nFirstY + vMin.y - 1, 0, terrainInfo.tiles.GetSizeY() - 1) );
-	const CVec2i vMaxTile( Clamp(nLastX + vMin.x + 1, 0, terrainInfo.tiles.GetSizeX() - 1),
-												 Clamp(nLastY + vMin.y + 1, 0, terrainInfo.tiles.GetSizeY() - 1) );
+	const CVec2i vMinTile( Clamp( nFirstX + vMin.x - 1, 0, terrainInfo.tiles.GetSizeX() - 1 ),
+	                       Clamp( nFirstY + vMin.y - 1, 0, terrainInfo.tiles.GetSizeY() - 1 ) );
+	const CVec2i vMaxTile( Clamp( nLastX + vMin.x + 1, 0, terrainInfo.tiles.GetSizeX() - 1 ),
+	                       Clamp( nLastY + vMin.y + 1, 0, terrainInfo.tiles.GetSizeY() - 1 ) );
 
 	UpdateVectorAreaInfo( vMinTile.x, vMinTile.y, vMaxTile.x, vMaxTile.y, TERRAIN_UPDATE_ALL );
 }

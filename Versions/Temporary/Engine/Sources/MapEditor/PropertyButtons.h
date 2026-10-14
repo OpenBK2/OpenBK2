@@ -24,50 +24,50 @@
 // shell's folder browser.
 namespace NPropertyButton
 {
-	enum EButton
-	{
-		BUTTON_BROWSE,
-		BUTTON_NEW,
-		BUTTON_EDIT,
-	};
+enum EButton
+{
+	BUTTON_BROWSE,
+	BUTTON_NEW,
+	BUTTON_EDIT,
+};
 
-	// What a button is pressed on.
-	struct SContext
-	{
-		// The property's full name, "Weather.WindForce" -- the name the tree gave
-		// its editor, and what New names a new object or file after.
-		std::string szName;
-		EPCIEType nType = PCIE_UNKNOWN;
-		const SPropertyDesc *pDesc = nullptr;
-		// The objects the pane shows. New puts what it makes beside the first.
-		const SObjectSet *pObjectSet = nullptr;
-		// The window the dialogs belong to. Borrowed for the call.
-		IWidget *pOwner = nullptr;
-		// False keeps a dialog's answer out of the box, as an ES_READONLY edit
-		// box did, and opens the text editors read-only.
-		bool bEditable = true;
-	};
+// What a button is pressed on.
+struct SContext
+{
+	// The property's full name, "Weather.WindForce" -- the name the tree gave
+	// its editor, and what New names a new object or file after.
+	std::string szName;
+	EPCIEType nType = PCIE_UNKNOWN;
+	const SPropertyDesc *pDesc = nullptr;
+	// The objects the pane shows. New puts what it makes beside the first.
+	const SObjectSet *pObjectSet = nullptr;
+	// The window the dialogs belong to. Borrowed for the call.
+	IWidget *pOwner = nullptr;
+	// False keeps a dialog's answer out of the box, as an ES_READONLY edit
+	// box did, and opens the text editors read-only.
+	bool bEditable = true;
+};
 
-	// Where the folder picker is remembered in SUserData::filePathMap.
-	const char *const PSZ_FOLDER_PATH_LABEL = "_FOLDER_";
+// Where the folder picker is remembered in SUserData::filePathMap.
+const char *const PSZ_FOLDER_PATH_LABEL = "_FOLDER_";
 
-	// The buttons a type's editor has, in order: "..." for all of them, then
-	// "New" for the new references and the new text file, and "Edit" for both
-	// text files. Empty for a type with no buttons.
-	void GetButtons( EPCIEType nType, std::vector<EButton> *pButtons );
+// The buttons a type's editor has, in order: "..." for all of them, then
+// "New" for the new references and the new text file, and "Edit" for both
+// text files. Empty for a type with no buttons.
+void GetButtons( EPCIEType nType, std::vector<EButton> *pButtons );
 
-	// The caption, from the editor's string table.
-	std::string GetTitle( EButton eButton );
+// The caption, from the editor's string table.
+std::string GetTitle( EButton eButton );
 
-	// Runs a button. rszText is the text in the value box now. True with the
-	// box's new text in *pszNewText; false when the box is to stay as it is --
-	// a cancelled dialog, a read-only context, or a button whose work is done
-	// elsewhere, like a text file edited and saved to disk.
-	bool Press( EButton eButton, const SContext &rContext, const std::string &rszText, std::string *pszNewText );
+// Runs a button. rszText is the text in the value box now. True with the
+// box's new text in *pszNewText; false when the box is to stay as it is --
+// a cancelled dialog, a read-only context, or a button whose work is done
+// elsewhere, like a text file edited and saved to disk.
+bool Press( EButton eButton, const SContext &rContext, const std::string &rszText, std::string *pszNewText );
 
-	// The colour picker, opened full on nStart over the frame pOwner belongs
-	// to, with the user's custom colours. Colours are COLORREF's 0x00BBGGRR.
-	// True and the colour in *pnResult on OK.
-	bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
+// The colour picker, opened full on nStart over the frame pOwner belongs
+// to, with the user's custom colours. Colours are COLORREF's 0x00BBGGRR.
+// True and the colour in *pnResult on OK.
+bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
 
 }

@@ -18,12 +18,12 @@
 
 #include <cstdint>
 
-#define DEF_VIS_PATCH_SIZE ( AI2Vis(AI_TILES_IN_PATCH * AI_TILE_SIZE) )
+#define DEF_VIS_PATCH_SIZE ( AI2Vis( AI_TILES_IN_PATCH * AI_TILE_SIZE ) )
 
 namespace NWeather
 {
-	static float s_fEffectsSpeedCoeff = 1.0f;
-	static float s_fWndAffectsCoeff = 0.05f;
+static float s_fEffectsSpeedCoeff = 1.0f;
+static float s_fWndAffectsCoeff = 0.05f;
 }
 
 void CWeatherVisual::CWeatherPart::Recalc()
@@ -36,22 +36,21 @@ void CWeatherVisual::CWeatherPart::Recalc()
 
 	pWeather.Refresh();
 	std::vector<NGScene::CObjectInfo::SData> *pVisualData = pWeather->GetVisualData();
-	if ( nNumPart >= pVisualData->size() || (*pVisualData)[nNumPart].verts.empty() )
+	if ( nNumPart >= pVisualData->size() || ( *pVisualData )[nNumPart].verts.empty() )
 		pValue->Clear();
 	else
-		pValue->AssignFast( &(*pVisualData)[nNumPart] );
+		pValue->AssignFast( &( *pVisualData )[nNumPart] );
 }
 
-CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBase<STime> *_pTimer, IFullScreenFader *_pScreenFader,
-							 CDBPtr<NDb::SAmbientLight> _pNormalWeatherLight, CDBPtr<NDb::SAmbientLight> _pBadWeatherLight )
-	: pDesc( _pWeatherDesc ),
-	pTimer( _pTimer ),
-	bActive( false ),
-	//bExistLightning( false ),
-	eState( NDb::EWS_UNKNOWN ),
-	pScreenFader( _pScreenFader ),
-	pNormalWeatherLight( _pNormalWeatherLight ),
-	pBadWeatherLight( _pBadWeatherLight )
+CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc,
+                                CFuncBase<STime> *_pTimer,
+                                IFullScreenFader *_pScreenFader,
+                                CDBPtr<NDb::SAmbientLight> _pNormalWeatherLight,
+                                CDBPtr<NDb::SAmbientLight> _pBadWeatherLight )
+		: pDesc( _pWeatherDesc ), pTimer( _pTimer ), bActive( false ),
+			//bExistLightning( false ),
+			eState( NDb::EWS_UNKNOWN ), pScreenFader( _pScreenFader ), pNormalWeatherLight( _pNormalWeatherLight ),
+			pBadWeatherLight( _pBadWeatherLight )
 {
 	InitParts();
 }
@@ -65,14 +64,16 @@ NGScene::IGameView::SMeshInfo CWeatherVisual::MakeMeshInfo()
 	{
 		if ( pDesc->partMaterials[i] )
 		{
-			meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( new CWeatherPart( this, i ), Scene()->GetGView()->CreateMaterial( pDesc->partMaterials[i] ) ) );
+			meshInfo.parts.push_back( NGScene::IGameView::SPartInfo(
+					new CWeatherPart( this, i ), Scene()->GetGView()->CreateMaterial( pDesc->partMaterials[i] ) ) );
 			++nVisualParts;
 		}
 	}
 
 	if ( nVisualParts == 0 && pDesc->pPartMaterial )
 	{
-		meshInfo.parts.push_back( NGScene::IGameView::SPartInfo( new CWeatherPart( this, 0 ), Scene()->GetGView()->CreateMaterial( pDesc->pPartMaterial ) ) );
+		meshInfo.parts.push_back( NGScene::IGameView::SPartInfo(
+				new CWeatherPart( this, 0 ), Scene()->GetGView()->CreateMaterial( pDesc->pPartMaterial ) ) );
 		nVisualParts = 1;
 	}
 	return meshInfo;
@@ -80,8 +81,8 @@ NGScene::IGameView::SMeshInfo CWeatherVisual::MakeMeshInfo()
 
 void CWeatherVisual::InitParts()
 {
-	if ( !IsValid(pLightningColor) )
-		pLightningColor = new NGScene::CCVec3( CVec3(0, 0, 0) );
+	if ( !IsValid( pLightningColor ) )
+		pLightningColor = new NGScene::CCVec3( CVec3( 0, 0, 0 ) );
 
 	nVisualParts = 0;
 	parts.resize( pDesc->nIntensity );
@@ -112,7 +113,10 @@ void CWeatherVisual::InitParts()
 	UpdateViewNormal();
 
 	pTimer.Refresh();
-	timeLightStop = pTimer->GetValue() + 1000*60/(pDesc->fLightningsPerMinute + NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ));
+	timeLightStop =
+			pTimer->GetValue() +
+			1000 * 60 /
+					( pDesc->fLightningsPerMinute + NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ) );
 	timeThunder = 0;
 
 	//fWindForce = Scene()->GetWindController()->GetWindIntensity();
@@ -154,7 +158,7 @@ void CWeatherVisual::Recalc()
 
 	const NTimer::STime currTime = pTimer->GetValue();
 
-	const float fTimeDelta = (currTime - timeLastRecalc) * NWeather::s_fEffectsSpeedCoeff;
+	const float fTimeDelta = ( currTime - timeLastRecalc ) * NWeather::s_fEffectsSpeedCoeff;
 	timeLastRecalc = currTime;
 
 	// update drawing areas in case of camera has been moved
@@ -184,7 +188,7 @@ void CWeatherVisual::Recalc()
 		case NDb::EWS_FADE_IN:
 		{
 			if ( timeLength > 0 )
-				fFadeCoeff = Clamp( (timeLastRecalc - timeStart)/(float)timeLength, 0.0f, 1.0f );
+				fFadeCoeff = Clamp( ( timeLastRecalc - timeStart ) / (float)timeLength, 0.0f, 1.0f );
 			else
 				fFadeCoeff = 1.0;
 			if ( fFadeCoeff == 1.0 )
@@ -195,7 +199,7 @@ void CWeatherVisual::Recalc()
 		case NDb::EWS_FADE_OUT:
 		{
 			if ( timeLength > 0 )
-				fFadeCoeff = 1.0f - Clamp( (timeLastRecalc - timeStart)/(float)timeLength, 0.0f, 1.0f );
+				fFadeCoeff = 1.0f - Clamp( ( timeLastRecalc - timeStart ) / (float)timeLength, 0.0f, 1.0f );
 			if ( fFadeCoeff == 0.0 )
 			{
 				eState = NDb::EWS_CLEAR;
@@ -225,16 +229,16 @@ void CWeatherVisual::Recalc()
 		}
 	}
 
-	if ( (pDesc->eType == NDb::WEATHER_RAIN) &&	//
-			 (fFadeCoeff > 0.9f) &&									// no lightning in the beginning of rain
-			 !pDesc->lightnings.empty() && bActive )					//
+	if ( ( pDesc->eType == NDb::WEATHER_RAIN ) && //
+	     ( fFadeCoeff > 0.9f ) &&                 // no lightning in the beginning of rain
+	     !pDesc->lightnings.empty() && bActive )  //
 	{
 		// do we need to play thunder sound
-		if ( (timeThunder > 0) && (timeThunder <= timeLastRecalc) )
+		if ( ( timeThunder > 0 ) && ( timeThunder <= timeLastRecalc ) )
 		{
 			if ( !pDesc->randomSounds.empty() )
 			{
-				const NDb::SComplexSoundDesc *pSound = pDesc->randomSounds[NWin32Random::Random(pDesc->randomSounds.size())];
+				const NDb::SComplexSoundDesc *pSound = pDesc->randomSounds[NWin32Random::Random( pDesc->randomSounds.size() )];
 				if ( pSound )
 					SoundScene()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 1.0f );
 			}
@@ -246,13 +250,14 @@ void CWeatherVisual::Recalc()
 			// there is no lightning at this moment: we can generate it
 			if ( timeLightStop < timeLastRecalc )
 			{
-				int nRandom = NWin32Random::Random(0, pDesc->lightnings.size() );
+				int nRandom = NWin32Random::Random( 0, pDesc->lightnings.size() );
 				nRandom = Clamp<int>( nRandom, 0, pDesc->lightnings.size() - 1 );
 
 				const NDb::SLightInstance *pInstance = pDesc->lightnings[nRandom];
 				if ( pInstance )
 				{
-					NGScene::CLightAnimator *pAnimator = new NGScene::CLightAnimator( pInstance, pTimer->GetValue(), pInstance->fScale );
+					NGScene::CLightAnimator *pAnimator =
+							new NGScene::CLightAnimator( pInstance, pTimer->GetValue(), pInstance->fScale );
 					pAnimator->pInfo = lightningLoaders[nRandom];
 					pAnimator->pTime = pTimer;
 					SFBTransform transform;
@@ -261,21 +266,24 @@ void CWeatherVisual::Recalc()
 					pAnimator->pPlacement = new CCSFBTransform( transform );
 
 					pLightningAnimator = pAnimator;
-					pLightningColor->Set( CVec3( 0, 0, 0) );
-					if ( IsValid(pScreenFader) )
+					pLightningColor->Set( CVec3( 0, 0, 0 ) );
+					if ( IsValid( pScreenFader ) )
 						pScreenFader->AddColorModificator( pLightningColor, false );
 
 					timeThunder = timeLastRecalc + NWin32Random::Random( 100, 1000 );
 				}
 
-				timeLightStop = timeLastRecalc + 1000*60/(pDesc->fLightningsPerMinute + NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ));
+				timeLightStop =
+						timeLastRecalc + 1000 * 60 /
+																 ( pDesc->fLightningsPerMinute +
+				                           NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ) );
 			}
 		}
 	}
 
 	for ( int i = 0; i < parts.size() * fFadeCoeff; ++i )
 	{
-		if ( !partsPresent[i] )	// "The particle has left the building"
+		if ( !partsPresent[i] ) // "The particle has left the building"
 			continue;
 
 		// Calculate everything
@@ -318,8 +326,8 @@ void CWeatherVisual::Recalc()
 
 				if ( bActive )
 				{
-					parts[i].z = AI2Vis( Scene()->GetTerraManager()->GetZ(Vis2AI(parts[i].x), Vis2AI(parts[i].y)) );
-					parts[i].z +=	pDesc->fFallHeight * ( 2.0f +	NMath::Sin(0.002f * timeLastRecalc + i + parts[i].x) );
+					parts[i].z = AI2Vis( Scene()->GetTerraManager()->GetZ( Vis2AI( parts[i].x ), Vis2AI( parts[i].y ) ) );
+					parts[i].z += pDesc->fFallHeight * ( 2.0f + NMath::Sin( 0.002f * timeLastRecalc + i + parts[i].x ) );
 				}
 				else
 					parts[i].z -= pDesc->fSpeed * fTimeDelta * 0.1f;
@@ -362,8 +370,9 @@ void CWeatherVisual::Recalc()
 
 	// We shouln't draw particles in the black border of the map
 	const NDb::STerrain *pTerraDesc = Scene()->GetTerraManager()->GetDesc();
-	CVec2 vMinCoords( 4*VIS_TILE_SIZE, 4*VIS_TILE_SIZE );
-	CVec2 vMaxCoords( pTerraDesc->nNumPatchesX*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE, pTerraDesc->nNumPatchesY*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE );
+	CVec2 vMinCoords( 4 * VIS_TILE_SIZE, 4 * VIS_TILE_SIZE );
+	CVec2 vMaxCoords( pTerraDesc->nNumPatchesX * DEF_VIS_PATCH_SIZE - 4 * VIS_TILE_SIZE,
+	                  pTerraDesc->nNumPatchesY * DEF_VIS_PATCH_SIZE - 4 * VIS_TILE_SIZE );
 
 	uint32_t dwColor = NGfx::GetDWORDColor( GetParticlesColor() );
 
@@ -389,7 +398,7 @@ void CWeatherVisual::Recalc()
 
 				switch ( pDesc->eType )
 				{
-				case NDb::WEATHER_RAIN:
+					case NDb::WEATHER_RAIN:
 					{
 						if ( pDesc->bWindAffected )
 						{
@@ -397,12 +406,11 @@ void CWeatherVisual::Recalc()
 							vPos.y += vPos.z * vWindOffset.y;
 						}
 
-						if ( vPos.x <= vMinCoords.x || vPos.y <= vMinCoords.y ||
-							vPos.x >= vMaxCoords.x || vPos.y >= vMaxCoords.y )
+						if ( vPos.x <= vMinCoords.x || vPos.y <= vMinCoords.y || vPos.x >= vMaxCoords.x || vPos.y >= vMaxCoords.y )
 							continue;
 
 						CVec3 vPos2( vPos );
-						float fHeight = AI2Vis(Scene()->GetZ( Vis2AI(vPos2.x), Vis2AI(vPos2.y) ));
+						float fHeight = AI2Vis( Scene()->GetZ( Vis2AI( vPos2.x ), Vis2AI( vPos2.y ) ) );
 						if ( vPos.z < fHeight )
 							continue;
 
@@ -418,8 +426,8 @@ void CWeatherVisual::Recalc()
 						data.verts[nIndex4 + 1].pos = vPos2;
 					}
 					break;
-					//
-				case NDb::WEATHER_SNOW:
+						//
+					case NDb::WEATHER_SNOW:
 					{
 						if ( pDesc->bWindAffected )
 						{
@@ -427,15 +435,14 @@ void CWeatherVisual::Recalc()
 							vPos.y += vPos.z * vWindOffset.y;
 						}
 
-						if ( vPos.x <= vMinCoords.x || vPos.y <= vMinCoords.y ||
-							vPos.x >= vMaxCoords.x || vPos.y >= vMaxCoords.y )
+						if ( vPos.x <= vMinCoords.x || vPos.y <= vMinCoords.y || vPos.x >= vMaxCoords.x || vPos.y >= vMaxCoords.y )
 							continue;
 
 						CVec3 vPos2( vPos );
-						vPos2.x += NMath::Sin( vPos.z / (i % 3 + 3) + vPos.x ) * pDesc->fTrajectoryParameter;
-						vPos2.y += NMath::Sin( vPos.z / (i % 3 + 3) + vPos.y ) * pDesc->fTrajectoryParameter;
+						vPos2.x += NMath::Sin( vPos.z / ( i % 3 + 3 ) + vPos.x ) * pDesc->fTrajectoryParameter;
+						vPos2.y += NMath::Sin( vPos.z / ( i % 3 + 3 ) + vPos.y ) * pDesc->fTrajectoryParameter;
 
-						float fHeight = AI2Vis(Scene()->GetZ( Vis2AI(vPos2.x), Vis2AI(vPos2.y) ));
+						float fHeight = AI2Vis( Scene()->GetZ( Vis2AI( vPos2.x ), Vis2AI( vPos2.y ) ) );
 						if ( vPos2.z < fHeight )
 							continue;
 
@@ -443,13 +450,13 @@ void CWeatherVisual::Recalc()
 						data.verts[nIndex4 + 1].pos = vPos2 - vViewNormal3 * pDesc->fPartSize;
 					}
 					break;
-					//
-				case NDb::WEATHER_SANDSTORM:
+						//
+					case NDb::WEATHER_SANDSTORM:
 					{
 						CVec3 vPos2( vPos );
 
-						float fHeight = AI2Vis(Scene()->GetZ( Vis2AI(vPos2.x), Vis2AI(vPos2.y) ));
-						vPos2.z = (std::max)( vPos.z - pDesc->fTrajectoryParameter,fHeight );
+						float fHeight = AI2Vis( Scene()->GetZ( Vis2AI( vPos2.x ), Vis2AI( vPos2.y ) ) );
+						vPos2.z = (std::max)( vPos.z - pDesc->fTrajectoryParameter, fHeight );
 
 						data.verts[nIndex4 + 0].pos = vPos2;
 						//data.verts[nIndex4 + 1].pos = vPos2 - vViewNormal * pDesc->fPartSize;
@@ -467,10 +474,10 @@ void CWeatherVisual::Recalc()
 				data.verts[nIndex4 + 2].tex = CVec2( 1, 0 );
 				data.verts[nIndex4 + 3].tex = CVec2( 1, 1 );
 
-				CalcCompactVector( &(data.verts[nIndex4 + 0].normal), V3_AXIS_Z );
-				CalcCompactVector( &(data.verts[nIndex4 + 1].normal), V3_AXIS_Z );
-				CalcCompactVector( &(data.verts[nIndex4 + 2].normal), V3_AXIS_Z );
-				CalcCompactVector( &(data.verts[nIndex4 + 3].normal), V3_AXIS_Z );
+				CalcCompactVector( &( data.verts[nIndex4 + 0].normal ), V3_AXIS_Z );
+				CalcCompactVector( &( data.verts[nIndex4 + 1].normal ), V3_AXIS_Z );
+				CalcCompactVector( &( data.verts[nIndex4 + 2].normal ), V3_AXIS_Z );
+				CalcCompactVector( &( data.verts[nIndex4 + 3].normal ), V3_AXIS_Z );
 
 				data.verts[nIndex4 + 0].texU.dw = dwColor;
 				data.verts[nIndex4 + 0].texV.dw = dwColor;
@@ -489,7 +496,6 @@ void CWeatherVisual::Recalc()
 				data.geometry[nIndex2 + 1].i3 = nIndex4 + 3;
 
 				++partsIndex[nNumPart];
-
 			}
 		}
 	}
@@ -502,7 +508,6 @@ void CWeatherVisual::Recalc()
 	}
 }
 
-
 void CWeatherVisual::UpdateAreas()
 {
 	const NDb::STerrain *pTerraDesc = Scene()->GetTerraManager()->GetDesc();
@@ -514,37 +519,42 @@ void CWeatherVisual::UpdateAreas()
 	CVec2 vScreenSize = Scene()->GetScreenRect();
 
 	// Top left - ( 0, 0 )
-	Scene()->PickZeroHeight( &vZero, CVec2(0, 0) );
+	Scene()->PickZeroHeight( &vZero, CVec2( 0, 0 ) );
 	vZero /= AI_TILES_IN_PATCH * AI_TILE_SIZE;
-	vBBMin.Minimize( CVec2(vZero.x, vZero.y) );
-	vBBMax.Maximize( CVec2(vZero.x, vZero.y) );
+	vBBMin.Minimize( CVec2( vZero.x, vZero.y ) );
+	vBBMax.Maximize( CVec2( vZero.x, vZero.y ) );
 
 	// Top right - ( 1024, 0 )
-	Scene()->PickZeroHeight( &vZero, CVec2(vScreenSize.x, 0) );
+	Scene()->PickZeroHeight( &vZero, CVec2( vScreenSize.x, 0 ) );
 	vZero /= AI_TILES_IN_PATCH * AI_TILE_SIZE;
-	vBBMin.Minimize( CVec2(vZero.x, vZero.y) );
-	vBBMax.Maximize( CVec2(vZero.x, vZero.y) );
+	vBBMin.Minimize( CVec2( vZero.x, vZero.y ) );
+	vBBMax.Maximize( CVec2( vZero.x, vZero.y ) );
 
 	// Bottom left - ( 0, 768 )
-	Scene()->PickZeroHeight( &vZero, CVec2(0, vScreenSize.y) );
+	Scene()->PickZeroHeight( &vZero, CVec2( 0, vScreenSize.y ) );
 	vZero /= AI_TILES_IN_PATCH * AI_TILE_SIZE;
-	vBBMin.Minimize( CVec2(vZero.x, vZero.y) );
-	vBBMax.Maximize( CVec2(vZero.x, vZero.y) );
+	vBBMin.Minimize( CVec2( vZero.x, vZero.y ) );
+	vBBMax.Maximize( CVec2( vZero.x, vZero.y ) );
 
 	// Bottom right - ( 1024, 768 )
-	Scene()->PickZeroHeight( &vZero, CVec2(vScreenSize.x, vScreenSize.y) );
+	Scene()->PickZeroHeight( &vZero, CVec2( vScreenSize.x, vScreenSize.y ) );
 	vZero /= AI_TILES_IN_PATCH * AI_TILE_SIZE;
-	vBBMin.Minimize( CVec2(vZero.x, vZero.y) );
-	vBBMax.Maximize( CVec2(vZero.x, vZero.y) );
+	vBBMin.Minimize( CVec2( vZero.x, vZero.y ) );
+	vBBMax.Maximize( CVec2( vZero.x, vZero.y ) );
 
 	//vBBMin -= CVec2( 1, 1 );
 	vBBMax += CVec2( 1, 1 );
 
-	vBBMin.Set( Clamp((int)vBBMin.x, 0, pTerraDesc->nNumPatchesX), Clamp((int)vBBMin.y, 0, pTerraDesc->nNumPatchesY) );
-	vBBMax.Set( Clamp((int)vBBMax.x, 0, pTerraDesc->nNumPatchesX), Clamp((int)vBBMax.y, 0, pTerraDesc->nNumPatchesY) );
+	vBBMin.Set( Clamp( (int)vBBMin.x, 0, pTerraDesc->nNumPatchesX ),
+	            Clamp( (int)vBBMin.y, 0, pTerraDesc->nNumPatchesY ) );
+	vBBMax.Set( Clamp( (int)vBBMax.x, 0, pTerraDesc->nNumPatchesX ),
+	            Clamp( (int)vBBMax.y, 0, pTerraDesc->nNumPatchesY ) );
 }
 
-static inline float Lerp( float fFactor, float fA, float fB ) { return fA*(1-fFactor) + fB*fFactor; }
+static inline float Lerp( float fFactor, float fA, float fB )
+{
+	return fA * ( 1 - fFactor ) + fB * fFactor;
+}
 
 void CWeatherVisual::UpdateLights( float fFadeCoeff )
 {
@@ -567,10 +577,13 @@ void CWeatherVisual::UpdateLights( float fFadeCoeff )
 		pCurrentWeatherLight = pNormalWeatherLight->Duplicate();
 
 	pCurrentWeatherLight->vLightColor.Lerp( fFadeCoeff, pNormalWeatherLight->vLightColor, pBadWeatherLight->vLightColor );
-	pCurrentWeatherLight->vAmbientColor.Lerp( fFadeCoeff, pNormalWeatherLight->vAmbientColor, pBadWeatherLight->vAmbientColor );
+	pCurrentWeatherLight->vAmbientColor.Lerp(
+			fFadeCoeff, pNormalWeatherLight->vAmbientColor, pBadWeatherLight->vAmbientColor );
 	pCurrentWeatherLight->vShadeColor.Lerp( fFadeCoeff, pNormalWeatherLight->vShadeColor, pBadWeatherLight->vShadeColor );
-	pCurrentWeatherLight->vIncidentShadowColor.Lerp( fFadeCoeff, pNormalWeatherLight->vIncidentShadowColor, pBadWeatherLight->vIncidentShadowColor );
-	pCurrentWeatherLight->vParticlesColor.Lerp( fFadeCoeff, pNormalWeatherLight->vParticlesColor, pBadWeatherLight->vParticlesColor );
+	pCurrentWeatherLight->vIncidentShadowColor.Lerp(
+			fFadeCoeff, pNormalWeatherLight->vIncidentShadowColor, pBadWeatherLight->vIncidentShadowColor );
+	pCurrentWeatherLight->vParticlesColor.Lerp(
+			fFadeCoeff, pNormalWeatherLight->vParticlesColor, pBadWeatherLight->vParticlesColor );
 
 	Scene()->GetGView()->SetAmbient( pCurrentWeatherLight );
 }
@@ -601,13 +614,14 @@ void CWeatherVisual::PlayAmbientSound()
 	if ( pDesc->ambientSound.empty() )
 		return;
 
-	const int nSound = Clamp<int>( NWin32Random::Random(0, pDesc->ambientSound.size()), 0, pDesc->ambientSound.size()-1 );
+	const int nSound =
+			Clamp<int>( NWin32Random::Random( 0, pDesc->ambientSound.size() ), 0, pDesc->ambientSound.size() - 1 );
 
-	const NDb::SComplexSoundDesc *pSound =  pDesc->ambientSound[nSound].pAmbientSound;
+	const NDb::SComplexSoundDesc *pSound = pDesc->ambientSound[nSound].pAmbientSound;
 	if ( pSound )
 		SoundScene()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, 0, 1.0f );
 
-	timeNextAmbientSound = pAbsTimer->GetValue() + pDesc->ambientSound[nSound].fSoundLength*1000;
+	timeNextAmbientSound = pAbsTimer->GetValue() + pDesc->ambientSound[nSound].fSoundLength * 1000;
 }
 
 CVec4 CWeatherVisual::GetParticlesColor()
@@ -635,14 +649,16 @@ void CWeatherVisual::SwitchOn( NTimer::STime _timeLength )
 	pTimer.Refresh();
 	timeStart = pTimer->GetValue();
 	timeLastRecalc = timeStart;
-	timeLightStop = pTimer->GetValue() + 1000*60/(pDesc->fLightningsPerMinute + NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ));
+	timeLightStop =
+			pTimer->GetValue() +
+			1000 * 60 /
+					( pDesc->fLightningsPerMinute + NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ) );
 	timeThunder = 0;
 	PlayAmbientSound();
 
 	eState = NDb::EWS_FADE_IN;
 	bActive = true;
 }
-
 
 void CWeatherVisual::SwitchOff( NTimer::STime _timeLength )
 {
@@ -655,9 +671,7 @@ void CWeatherVisual::SwitchOff( NTimer::STime _timeLength )
 
 	if ( IsValid( pScreenFader ) )
 		pScreenFader->RemoveColorModificator( pLightningColor );
-
 }
-
 
 int CWeatherVisual::operator&( IBinSaver &saver )
 {
@@ -681,10 +695,10 @@ int CWeatherVisual::operator&( IBinSaver &saver )
 	return 0;
 }
 
-
 START_REGISTER( Weather )
-	REGISTER_VAR_EX( "weather_speed_coeff", NGlobal::VarFloatHandler, &NWeather::s_fEffectsSpeedCoeff, 1.0f, STORAGE_NONE )
-	REGISTER_VAR_EX( "weather_wnd_affects_coeff", NGlobal::VarFloatHandler, &NWeather::s_fWndAffectsCoeff, 0.05f, STORAGE_NONE )
+REGISTER_VAR_EX( "weather_speed_coeff", NGlobal::VarFloatHandler, &NWeather::s_fEffectsSpeedCoeff, 1.0f, STORAGE_NONE )
+REGISTER_VAR_EX(
+		"weather_wnd_affects_coeff", NGlobal::VarFloatHandler, &NWeather::s_fWndAffectsCoeff, 0.05f, STORAGE_NONE )
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1B1A5C80, CWeatherVisual )

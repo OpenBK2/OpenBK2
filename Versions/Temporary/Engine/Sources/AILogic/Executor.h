@@ -5,50 +5,50 @@
 
 class CExecutor;
 
-extern struct IExecutorContainer * pTheExecutorsContainer;
+extern struct IExecutorContainer *pTheExecutorsContainer;
 
 enum EExecutorTypeID
 {
-	TID_NONE										= 0,
-	TID_STATIC_OBJECT_SEGMENT		= 1,
+	TID_NONE = 0,
+	TID_STATIC_OBJECT_SEGMENT = 1,
 	TID_TRANSPORT_HEAL_INFANTRY = 2,
-	TID_SNIPER_CAMOUFLAGE				= 3,
-	TID_THROW_GRENADE						= 4,
-	TID_PLACE_CHARGE            = 5,
-	TID_SOLDIER_ENTRENCH_SELF		= 6,
-	TID_PLANE_DROP_BOMBS_OBJECT	= 7,
-	TID_PLANE_DROP_BOMBS_AREA		= 8,
-	TID_RESTORE_TRANSPARENCY		= 9,
-	TID_AMBUSH									= 10,
-	TID_BONUS										= 11,
-	TID_ADRENALINE_RUSH					= 12,
-	TID_CAUTION									= 13,
-	TID_COUNTER_FIRE						= 14,
-	TID_EXACT_SHOT							= 15,
-	TID_FIRST_AID								= 16,
-	TID_MOVE_BY_FORMATION				= 17,
-	TID_CAMOUFLAGE							= 18,
-	TID_SMOKE_SHOTS							= 19,
-	TID_LINKED_GRENADES					= 20,
-	TID_TRACK_TARGETTING				= 21,
-	TID_SPY_MODE								= 22,
-	TID_TIMED_CHARGE						= 23,
-	TID_FAKE_CORPSE							= 24,
+	TID_SNIPER_CAMOUFLAGE = 3,
+	TID_THROW_GRENADE = 4,
+	TID_PLACE_CHARGE = 5,
+	TID_SOLDIER_ENTRENCH_SELF = 6,
+	TID_PLANE_DROP_BOMBS_OBJECT = 7,
+	TID_PLANE_DROP_BOMBS_AREA = 8,
+	TID_RESTORE_TRANSPARENCY = 9,
+	TID_AMBUSH = 10,
+	TID_BONUS = 11,
+	TID_ADRENALINE_RUSH = 12,
+	TID_CAUTION = 13,
+	TID_COUNTER_FIRE = 14,
+	TID_EXACT_SHOT = 15,
+	TID_FIRST_AID = 16,
+	TID_MOVE_BY_FORMATION = 17,
+	TID_CAMOUFLAGE = 18,
+	TID_SMOKE_SHOTS = 19,
+	TID_LINKED_GRENADES = 20,
+	TID_TRACK_TARGETTING = 21,
+	TID_SPY_MODE = 22,
+	TID_TIMED_CHARGE = 23,
+	TID_FAKE_CORPSE = 24,
 	TID_ALLOW_FAKE_OBJ_TO_CRUSH = 25,
-	TID_TRANSPORT_REINFORCEMENT	= 26,
+	TID_TRANSPORT_REINFORCEMENT = 26,
 	TID_TRANSPORT_LOOK_FOR_ENEMY_UNLOAD_INFANTRY = 27,
 	// attack group
-	TID_ATTACKGROUP							= 28,
-	TID_BURNING_FUEL						= 29,
+	TID_ATTACKGROUP = 28,
+	TID_BURNING_FUEL = 29,
 	// super weapon contorller
-	TID_SUPER_WEAPON						= 30,
+	TID_SUPER_WEAPON = 30,
 
 	_TID_COUNT,
 };
 
 enum EExecutorEventID
 {
-	EID_ABILITY_ACTIVATE,									// event when ability with nonzero group run (all abilities from this group are disabled)
+	EID_ABILITY_ACTIVATE, // event when ability with nonzero group run (all abilities from this group are disabled)
 	EID_ABILITY_DEACTIVATE,
 	EID_ABILITY_DISABLE,
 	EID_ABILITY_ENABLE,
@@ -86,23 +86,27 @@ struct SExecutorEventParam
 {
 	ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	EExecutorEventID eEventID = {};							// what event
-	int nExecutorID = {};												// for executor generated event
-	int nUnitID = {};														// for unit generated event (legacy)
+	EExecutorEventID eEventID = {}; // what event
+	int nExecutorID = {};           // for executor generated event
+	int nUnitID = {};               // for unit generated event (legacy)
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eEventID); f.Add(3,&nExecutorID); f.Add(4,&nUnitID); return 0; }
-	SExecutorEventParam() : eEventID( (EExecutorEventID)0 ), nExecutorID( 0 ), nUnitID( 0 ) { }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &eEventID );
+		f.Add( 3, &nExecutorID );
+		f.Add( 4, &nUnitID );
+		return 0;
+	}
+	SExecutorEventParam() : eEventID( (EExecutorEventID)0 ), nExecutorID( 0 ), nUnitID( 0 ) {}
 	SExecutorEventParam( const EExecutorEventID _eEventID, const int _nExecutorID, const int _nUnitID )
-		: eEventID( _eEventID ), nExecutorID( _nExecutorID ), nUnitID( _nUnitID )
+			: eEventID( _eEventID ), nExecutorID( _nExecutorID ), nUnitID( _nUnitID )
 	{
 	}
 
-	virtual const class CAICommand * GetCommand() const { return 0; }
+	virtual const class CAICommand *GetCommand() const { return 0; }
 	bool operator==( const SExecutorEventParam &param ) const
 	{
-		return (eEventID == param.eEventID) &&
-			(nExecutorID == param.nExecutorID) &&
-			(nUnitID == param.nUnitID);
+		return ( eEventID == param.eEventID ) && ( nExecutorID == param.nExecutorID ) && ( nUnitID == param.nUnitID );
 	}
 };
 
@@ -111,16 +115,20 @@ class CExecutorEvent
 {
 	ZDATA
 	SExecutorEventParam param;
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&param); return 0; }
 
 public:
-	CExecutorEvent( const SExecutorEventParam &_param ) : param( _param ) {  }
-	CExecutorEvent() {  }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &param );
+		return 0;
+	}
+
+public:
+	CExecutorEvent( const SExecutorEventParam &_param ) : param( _param ) {}
+	CExecutorEvent() {}
 	const SExecutorEventParam &GetParam() const { return param; }
 
 	void SetParam( const SExecutorEventParam &_param ) { param = _param; }
-
 };
 
 // object added to restore transparency queue.
@@ -128,15 +136,16 @@ public:
 class CExecutorEventAddToRestoreTransparencyQueue : public CExecutorEvent
 {
 	int nID = {};
+
 public:
 	CExecutorEventAddToRestoreTransparencyQueue( const SExecutorEventParam &_param, const int _nID )
-		: nID( _nID ), CExecutorEvent( _param )
+			: nID( _nID ), CExecutorEvent( _param )
 	{
 	}
 	const int GetID() const { return nID; }
 	int operator&( IBinSaver &saver )
 	{
-		saver.Add( 1, static_cast<CExecutorEvent*>( this ) );
+		saver.Add( 1, static_cast<CExecutorEvent *>( this ) );
 		saver.Add( 2, &nID );
 		return 0;
 	}
@@ -146,77 +155,97 @@ public:
 // without treating activation and deactivation events as unrelated sibling types.
 class CExecutorEventSpecialAbility : public CExecutorEvent
 {
-	ZDATA_(CExecutorEvent)
+	ZDATA_( CExecutorEvent )
 	NDb::EUnitSpecialAbility eAbility = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorEvent*)this); f.Add(2,&eAbility); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutorEvent *)this );
+		f.Add( 2, &eAbility );
+		return 0;
+	}
 
 	const NDb::EUnitSpecialAbility GetAbility() const { return eAbility; }
 
-	CExecutorEventSpecialAbility() {  }
-	CExecutorEventSpecialAbility( const SExecutorEventParam &param,
-		const NDb::EUnitSpecialAbility _eAbility )
-		: CExecutorEvent( param ), eAbility( _eAbility )
+	CExecutorEventSpecialAbility() {}
+	CExecutorEventSpecialAbility( const SExecutorEventParam &param, const NDb::EUnitSpecialAbility _eAbility )
+			: CExecutorEvent( param ), eAbility( _eAbility )
 	{
 	}
 };
 
 class CExecutorEventSpecialAbilityActivate : public CExecutorEventSpecialAbility
 {
-	ZDATA_(CExecutorEventSpecialAbility)
+	ZDATA_( CExecutorEventSpecialAbility )
 	CDBPtr<NDb::SUnitSpecialAblityDesc> pDesc;
 	CPtr<CAICommand> pCommand;
 	// Keep the legacy flat chunks: event=1, ability=2, description=3, command=4.
-	ZEND int operator&( IBinSaver &f ) { CExecutorEventSpecialAbility::operator&( f ); f.Add(3,&pDesc); f.Add(4,&pCommand); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		CExecutorEventSpecialAbility::operator&( f );
+		f.Add( 3, &pDesc );
+		f.Add( 4, &pCommand );
+		return 0;
+	}
+
 public:
+	const CAICommand *GetCommand() const { return pCommand; }
+	const NDb::SUnitSpecialAblityDesc *GetDesc() const { return pDesc; }
 
-	const CAICommand * GetCommand() const { return pCommand; }
-	const NDb::SUnitSpecialAblityDesc * GetDesc() const { return pDesc; }
-
-	CExecutorEventSpecialAbilityActivate() {  }
+	CExecutorEventSpecialAbilityActivate() {}
 	CExecutorEventSpecialAbilityActivate( const SExecutorEventParam &_param,
-																				const NDb::EUnitSpecialAbility _eAbility,
-																				class CAICommand *_pCommand,
-																				const NDb::SUnitSpecialAblityDesc *_pDesc )
-		: CExecutorEventSpecialAbility( _param, _eAbility ), pDesc( _pDesc ), pCommand( _pCommand )
+	                                      const NDb::EUnitSpecialAbility _eAbility,
+	                                      class CAICommand *_pCommand,
+	                                      const NDb::SUnitSpecialAblityDesc *_pDesc )
+			: CExecutorEventSpecialAbility( _param, _eAbility ), pDesc( _pDesc ), pCommand( _pCommand )
 	{
 	}
 };
 
 class CExecutorEventSpecialAbilityDeactivate : public CExecutorEventSpecialAbility
 {
-	ZDATA_(CExecutorEventSpecialAbility)
+	ZDATA_( CExecutorEventSpecialAbility )
 	// Deactivation retains the same flat event and ability chunks as older saves.
 	ZEND int operator&( IBinSaver &f ) { return CExecutorEventSpecialAbility::operator&( f ); }
-public:
 
-	CExecutorEventSpecialAbilityDeactivate() {  }
-	CExecutorEventSpecialAbilityDeactivate( const SExecutorEventParam &param,
-		const NDb::EUnitSpecialAbility _eAbility )
-		: CExecutorEventSpecialAbility( param, _eAbility )
+public:
+	CExecutorEventSpecialAbilityDeactivate() {}
+	CExecutorEventSpecialAbilityDeactivate( const SExecutorEventParam &param, const NDb::EUnitSpecialAbility _eAbility )
+			: CExecutorEventSpecialAbility( param, _eAbility )
 	{
 	}
-
 };
 
 class CExecutorEventSpecialAbilitySetTarget : public CExecutorEventSpecialAbility
 {
-	ZDATA_(CExecutorEventSpecialAbility)
+	ZDATA_( CExecutorEventSpecialAbility )
 	CVec2 vCoords;
 	CDBPtr<NDb::SHPObjectRPGStats> pTarget;
-public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorEventSpecialAbility*)this); f.Add(2,&vCoords); f.Add(3,&pTarget); return 0; }
 
 public:
-	CExecutorEventSpecialAbilitySetTarget() {  }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutorEventSpecialAbility *)this );
+		f.Add( 2, &vCoords );
+		f.Add( 3, &pTarget );
+		return 0;
+	}
+
+public:
+	CExecutorEventSpecialAbilitySetTarget() {}
 	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param,
-		const NDb::EUnitSpecialAbility _eAbility, const CVec2 _vCoords )
-		: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( _vCoords )
-	{	}
+	                                       const NDb::EUnitSpecialAbility _eAbility,
+	                                       const CVec2 _vCoords )
+			: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( _vCoords )
+	{
+	}
 	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param,
-		const NDb::EUnitSpecialAbility _eAbility, const NDb::SHPObjectRPGStats *_pTarget )
-		: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( VNULL2 ), pTarget(_pTarget)
-	{	}
+	                                       const NDb::EUnitSpecialAbility _eAbility,
+	                                       const NDb::SHPObjectRPGStats *_pTarget )
+			: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( VNULL2 ), pTarget( _pTarget )
+	{
+	}
 	const CVec2 GetTargetCoords() const { return vCoords; }
 	const NDb::SHPObjectRPGStats *GetTarget() const { return pTarget; }
 };
@@ -224,15 +253,26 @@ public:
 class CExecutorEventSuperWeaponControl : public CExecutorEvent
 {
 	ZDATA_( CExecutorEvent )
-		int nPlayer = {};
-		int nUnitID = {};
-		bool bEnabled = {};
+	int nPlayer = {};
+	int nUnitID = {};
+	bool bEnabled = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutorEvent *)this); f.Add(2,&nPlayer); f.Add(3,&nUnitID); f.Add(4,&bEnabled); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutorEvent *)this );
+		f.Add( 2, &nPlayer );
+		f.Add( 3, &nUnitID );
+		f.Add( 4, &bEnabled );
+		return 0;
+	}
 
 	CExecutorEventSuperWeaponControl() : nPlayer( -1 ), bEnabled( false ), nUnitID( -1 ) {}
 	CExecutorEventSuperWeaponControl( const int _nPlayer, const bool _bEnabled, const int _nUnitID )
-		: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_CONTROL, -1, -1 ) ), nPlayer( _nPlayer ), bEnabled( _bEnabled ), nUnitID( _nUnitID ) {}
+			: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_CONTROL, -1, -1 ) ), nPlayer( _nPlayer ),
+				bEnabled( _bEnabled ), nUnitID( _nUnitID )
+	{
+	}
 
 	const int GetPlayer() const { return nPlayer; }
 	const bool IsEnabled() const { return bEnabled; }
@@ -242,20 +282,29 @@ public:
 class CExecutorEventSuperWeaponUse : public CExecutorEvent
 {
 	ZDATA_( CExecutorEvent )
-		int nPlayer = {};
-		CVec2 vTarget;
+	int nPlayer = {};
+	CVec2 vTarget;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutorEvent *)this); f.Add(2,&nPlayer); f.Add(3,&vTarget); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutorEvent *)this );
+		f.Add( 2, &nPlayer );
+		f.Add( 3, &vTarget );
+		return 0;
+	}
 
 	CExecutorEventSuperWeaponUse() : nPlayer( -1 ), vTarget( VNULL2 ) {}
 	CExecutorEventSuperWeaponUse( const int _nPlayer, const CVec2 &_vTarget )
-		: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_USE, -1, -1 ) ), nPlayer( _nPlayer ), vTarget( _vTarget ) {}
+			: CExecutorEvent( SExecutorEventParam( EID_SUPER_WEAPON_USE, -1, -1 ) ), nPlayer( _nPlayer ), vTarget( _vTarget )
+	{
+	}
 
 	const int GetPlayer() const { return nPlayer; }
 	const CVec2 &GetTarget() const { return vTarget; }
 };
 
-struct IExecutor :	public CAIObjectBase
+struct IExecutor : public CAIObjectBase
 {
 	//  __it is optimization trick__
 	// if IsExecutorValid() return GetNextTime. (see CExecutor)
@@ -266,10 +315,7 @@ struct IExecutor :	public CAIObjectBase
 	virtual bool NotifyEvent( const CExecutorEvent &event ) = 0;
 	// if return false then this executor is to be deleted from any list
 	virtual bool IsExecutorValid() const = 0;
-	virtual int operator&( IBinSaver &saver )
-	{
-		return 0;
-	}
+	virtual int operator&( IBinSaver &saver ) { return 0; }
 };
 
 class CExecutor : public IExecutor
@@ -278,22 +324,29 @@ class CExecutor : public IExecutor
 	EExecutorTypeID eTypeID = {};
 	bool bActive = {};
 	int nUniqueID = {};
-	int nNextTime = {};													// when this executor will be called after segment
+	int nNextTime = {}; // when this executor will be called after segment
 	int nID = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eTypeID); f.Add(3,&bActive); f.Add(4,&nUniqueID); f.Add(5,&nNextTime); f.Add(6,&nID); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &eTypeID );
+		f.Add( 3, &bActive );
+		f.Add( 4, &nUniqueID );
+		f.Add( 5, &nNextTime );
+		f.Add( 6, &nID );
+		return 0;
+	}
+
 protected:
 	void SetNextTime( const int _nNextTime ) { nNextTime = _nNextTime; }
 
 	CExecutor( const EExecutorTypeID _eTypeID, const int _nNextTime );
 	CExecutor();
 	virtual ~CExecutor();
-public:
 
-	void IncID()
-	{
-		++nID;
-	}
+public:
+	void IncID() { ++nID; }
 	const int GetID() const { return nID; }
 
 	// return POSITIVE time, that must pass before next execution.
@@ -329,17 +382,16 @@ struct SExecutorEventParamHash
 		// scheduled, so two clients that dropped different events would disagree
 		// about the simulation, which is an ASYNC and not a cosmetic fault.
 		std::size_t seed = 0;
-		boost::hash_combine(seed, static_cast<size_t>(e.eEventID));
-		boost::hash_combine(seed, e.nExecutorID);
-		boost::hash_combine(seed, e.nUnitID);
+		boost::hash_combine( seed, static_cast<size_t>( e.eEventID ) );
+		boost::hash_combine( seed, e.nExecutorID );
+		boost::hash_combine( seed, e.nUnitID );
 		return seed;
 	}
 };
 
 struct SExecutorPtrHash
 {
-	int operator()( const CPtr<CExecutor> &p ) const
-		{	return p->GetInstanceID(); }
+	int operator()( const CPtr<CExecutor> &p ) const { return p->GetInstanceID(); }
 };
 
 struct IExecutorContainer : public CAIObjectBase
@@ -356,5 +408,4 @@ struct IExecutorContainer : public CAIObjectBase
 
 	virtual int CreateID() = 0;
 	virtual void ReturnID( const int id ) = 0;
-
 };

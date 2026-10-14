@@ -25,9 +25,17 @@ struct SVideoMode
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nXSize = {}, nYSize = {}, nBpp = {}, nRefreshRate = {};
 	EFS fullScreen = {};
-	SVideoMode() { nXSize = 800, nYSize = 600; nBpp = 32; nRefreshRate = 0; fullScreen = WINDOWED; }
+	SVideoMode()
+	{
+		nXSize = 800, nYSize = 600;
+		nBpp = 32;
+		nRefreshRate = 0;
+		fullScreen = WINDOWED;
+	}
 	SVideoMode( int _nXSize, int _nYSize, int _nBpp, EFS _fullScreen, int _nRefreshRate = 0 )
-		:nXSize(_nXSize), nYSize(_nYSize), nBpp(_nBpp), nRefreshRate(_nRefreshRate), fullScreen(_fullScreen) {}
+			: nXSize( _nXSize ), nYSize( _nYSize ), nBpp( _nBpp ), nRefreshRate( _nRefreshRate ), fullScreen( _fullScreen )
+	{
+	}
 };
 
 struct SSystemInfo
@@ -40,9 +48,12 @@ struct SRenderTargetDesc
 {
 	int nResolution = {}, nFormatID = {};
 
-	SRenderTargetDesc() : nResolution(-1), nFormatID(-1) {}
-	SRenderTargetDesc( int _nResolution, int _nFormatID ) : nResolution(_nResolution), nFormatID(_nFormatID) {}
-	bool operator==( const SRenderTargetDesc &a ) const { return nResolution == a.nResolution && nFormatID == a.nFormatID; }
+	SRenderTargetDesc() : nResolution( -1 ), nFormatID( -1 ) {}
+	SRenderTargetDesc( int _nResolution, int _nFormatID ) : nResolution( _nResolution ), nFormatID( _nFormatID ) {}
+	bool operator==( const SRenderTargetDesc &a ) const
+	{
+		return nResolution == a.nResolution && nFormatID == a.nFormatID;
+	}
 };
 struct SRTDescHash
 {
@@ -50,24 +61,33 @@ struct SRTDescHash
 };
 struct SRenderTargetsInfo
 {
-	typedef std::unordered_map<SRenderTargetDesc,int,SRTDescHash> CRTHash;
-	CRTHash targets; // resolution to number
+	typedef std::unordered_map<SRenderTargetDesc, int, SRTDescHash> CRTHash;
+	CRTHash targets;     // resolution to number
 	CRTHash cubeTargets; // resolution to number
 	int nRegisters = {};
 	int nFloatRegisters = {};
-	SRenderTargetsInfo() : nRegisters(0), nFloatRegisters(0) {}
+	SRenderTargetsInfo() : nRegisters( 0 ), nFloatRegisters( 0 ) {}
 
-	void Clear() { targets.clear(); cubeTargets.clear(); nRegisters = 0; nFloatRegisters = 0; }
+	void Clear()
+	{
+		targets.clear();
+		cubeTargets.clear();
+		nRegisters = 0;
+		nFloatRegisters = 0;
+	}
 	static void Add( CRTHash *pRes, int nResolution, int nFormatID, int nTargets )
 	{
 		SRenderTargetDesc desc( nResolution, nFormatID );
 		if ( pRes->find( desc ) == pRes->end() )
-			(*pRes)[ desc ] = nTargets;
+			( *pRes )[desc] = nTargets;
 		else
-			(*pRes)[ desc ] += nTargets;
+			( *pRes )[desc] += nTargets;
 	}
 	void AddTex( int nResolution, int nFormatID, int nTargets ) { Add( &targets, nResolution, nFormatID, nTargets ); }
-	void AddCube( int nResolution, int nFormatID, int nTargets ) { Add( &cubeTargets, nResolution, nFormatID, nTargets ); }
+	void AddCube( int nResolution, int nFormatID, int nTargets )
+	{
+		Add( &cubeTargets, nResolution, nFormatID, nTargets );
+	}
 	void Add( const SRenderTargetsInfo &a )
 	{
 		for ( CRTHash::const_iterator i = a.targets.begin(); i != a.targets.end(); ++i )
@@ -96,7 +116,7 @@ void MakeScreenShotHQ( CArray2D<SPixel8888> *pRes, bool bCorrectGamma );
 void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma );
 _3DMOTOR_EXPORT void CheckBackBufferSize();
 int GetDeviceCreationID();
-const SSystemInfo& GetSystemInfo();
+const SSystemInfo &GetSystemInfo();
 bool Is16BitMode();
 bool Is16BitDesktop();
 bool IsDXTSupported();
@@ -105,8 +125,8 @@ const int GetAdapterToUse();
 
 void D3DAssertFailed( HRESULT hRes, fmt::string_view fmtStr, fmt::printf_args args );
 
-template < typename... TArgs >
-void D3DASSERT( HRESULT hRes, fmt::string_view fmtStr, const TArgs &... args )
+template <typename... TArgs>
+void D3DASSERT( HRESULT hRes, fmt::string_view fmtStr, const TArgs &...args )
 {
 	// The success path formats nothing. D3DASSERT wraps calls made per draw, and the
 	// old body reached its formatting only after this same test, so the cost stays
@@ -123,8 +143,13 @@ void D3DASSERT( HRESULT hRes, fmt::string_view fmtStr, const TArgs &... args )
 struct SRenderStats
 {
 	int nVertices = {}, nTris = {}, nDIPs = {};
-	SRenderStats(): nVertices(0), nTris(0), nDIPs(0) {}
-	void Clear() { nVertices = 0; nTris = 0; nDIPs = 0;}
+	SRenderStats() : nVertices( 0 ), nTris( 0 ), nDIPs( 0 ) {}
+	void Clear()
+	{
+		nVertices = 0;
+		nTris = 0;
+		nDIPs = 0;
+	}
 };
 EXTERNVAR SRenderStats renderStats;
 }

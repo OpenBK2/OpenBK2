@@ -14,13 +14,12 @@
 class CForegroundTextString;
 class CWindow;
 
-
 struct SWindowCompare
 {
 	bool operator()( const CObj<CWindow> &o1, const CObj<CWindow> &o2 ) const;
 };
 
-typedef std::pair<int/*animation ID*/, CPtr<CWindow> > CWindowAnimationID;
+typedef std::pair<int /*animation ID*/, CPtr<CWindow>> CWindowAnimationID;
 
 struct SAnimationIDHash
 {
@@ -29,9 +28,9 @@ struct SAnimationIDHash
 
 enum EMouseStateB2
 {
-	MSTATE_FREE				= 0,
-	MSTATE_BUTTON1		= 1,
-	MSTATE_BUTTON2		= 2,
+	MSTATE_FREE = 0,
+	MSTATE_BUTTON1 = 1,
+	MSTATE_BUTTON2 = 2,
 };
 
 class UI_EXPORT CUIMORegConttainer : public NInput::CGMORegContainer
@@ -55,30 +54,32 @@ class UI_EXPORT CWindow : virtual public IWindow, public CUIMORegConttainer
 	CPtr<IWindow> pCustomTooltip;
 	std::wstring wszCustomTooltip;
 
-	CPtr<CWindow> pParent;									// parent window.
-	CObj<CWindow> pFocusedChild;									// child or its parent that has keyboard focus
+	CPtr<CWindow> pParent;       // parent window.
+	CObj<CWindow> pFocusedChild; // child or its parent that has keyboard focus
 	bool bFocused;
 	CDBID nOutlineType;
-	CObj<CWindow> pHighlighted;							// window currently under mouse cursor
-	std::vector< CObj<CWindow> > pressed;		// pressed with each mouse button
+	CObj<CWindow> pHighlighted;         // window currently under mouse cursor
+	std::vector<CObj<CWindow>> pressed; // pressed with each mouse button
 	CVec2 vScreenPos;
 	IClickNotify *pClickNotify;
 
 	CObj<class CPlacedText> pPlacedText;
 
 	bool bDelayChildRemove; // valid only during ProcessEvent
-	std::vector<CObj<CWindow> > removedChildren;
+	std::vector<CObj<CWindow>> removedChildren;
 	float fFadeValue;
 	float fInternalFadeValue;
 	int nIDForMLHandler;
+
 protected:
-	CObj<IWindowPart> pBackground;					// may be 0
+	CObj<IWindowPart> pBackground; // may be 0
 	CObj<IWindowPart> pForeground;
-	typedef CSortedVector< CObj<CWindow>, SWindowCompare > CDrawOrder;
+	typedef CSortedVector<CObj<CWindow>, SWindowCompare> CDrawOrder;
 	CDrawOrder drawOrder;
 
 	CUIMORegConttainer priorityEvents; // events for that parent have priority over children
 	CPtr<SWindowContext> pContext;
+
 private:
 	// end dynamic data
 
@@ -90,38 +91,41 @@ private:
 
 	// message handler
 	DECLARE_HANDLE_MAP;
-	DECLARE_MESSAGE_HANDLER(ShowWindow);
-	DECLARE_MESSAGE_HANDLER(SetFocus);
-	DECLARE_MESSAGE_HANDLER(Enable);
+	DECLARE_MESSAGE_HANDLER( ShowWindow );
+	DECLARE_MESSAGE_HANDLER( SetFocus );
+	DECLARE_MESSAGE_HANDLER( Enable );
 
 	void ProcessFocused( CWindow *pChild );
 	void ProcessUnfocused( CWindow *pChild );
 	void DelayedChildRemove();
+
 protected:
 	CDBPtr<NDb::SWindowShared> pShared;
-	virtual NDb::SWindow* GetInstance() = 0;
+	virtual NDb::SWindow *GetInstance() = 0;
 	//g trick not to create 2 virtual functions.
-	const NDb::SWindow* GetInstance() const { return const_cast<CWindow*>( this )->GetInstance(); }
+	const NDb::SWindow *GetInstance() const { return const_cast<CWindow *>( this )->GetInstance(); }
 
 	CWindow();
 
 	void SetTextPlacement( const struct NDb::SWindowPlacement &placement );
 
-	CWindow* PickInternal( const CVec2 &vPos, const bool bRecursive );
-	const char* GetPressedName( const int nButton )
+	CWindow *PickInternal( const CVec2 &vPos, const bool bRecursive );
+	const char *GetPressedName( const int nButton )
 	{
 		if ( pressed.size() > nButton && pressed[nButton] )
 			return pressed[nButton]->GetName().c_str();
 		return 0;
 	}
-	int RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const std::string &szCommanEffect,
-																const bool bWaitOnGraphics, const bool bForward );
+	int RunAnimationAndCommands( const NDb::SUIStateSequence &seq,
+	                             const std::string &szCommanEffect,
+	                             const bool bWaitOnGraphics,
+	                             const bool bForward );
 
 	// Returns root window
-	CWindow* GetRoot();
+	CWindow *GetRoot();
 
 	// Returns a final focused window (not any of its parents)
-	CWindow* FindFocusedWindow();
+	CWindow *FindFocusedWindow();
 	// Removes focus from a focused window
 	void RemoveAnyFocus();
 	// if pressed window is not focused window (or its parent) - remove focus from former window
@@ -130,9 +134,9 @@ protected:
 	// for debug purpose only
 	int CheckNamedChildrenCount( const std::string &szName, bool bRecursive );
 
-	virtual const std::wstring& GetDBFormatText() const;
-	virtual const std::wstring& GetDBInstanceText() const;
-	virtual const NDb::SWindowPlacement* GetDBTextPlacement() const;
+	virtual const std::wstring &GetDBFormatText() const;
+	virtual const std::wstring &GetDBInstanceText() const;
+	virtual const NDb::SWindowPlacement *GetDBTextPlacement() const;
 	virtual void OnChangeVisibility( bool bShow );
 	virtual bool IsRelatedFocus( IWindow *pWindow ) const { return this == pWindow; }
 
@@ -140,6 +144,7 @@ protected:
 
 	virtual bool IsActiveArea( const CVec2 &vPos ) const;
 	void VisitText( struct IUIVisitor *pVisitor );
+
 public:
 	void InitStatic();
 
@@ -165,7 +170,7 @@ public:
 	virtual void Reposition( const CTRect<float> &parentRect );
 	virtual void Init();
 	// window may want to be notified about finish state sequience, that it launched
-	virtual void NotifyStateSequenceFinished() { }
+	virtual void NotifyStateSequenceFinished() {}
 
 	// placement flags = OR of number EWindowPlacementFlags
 	virtual void GetPlacement( int *pX, int *pY, int *pSizeX, int *pSizeY ) const;
@@ -173,7 +178,7 @@ public:
 	CTRect<int> GetPlacement() const;
 	virtual void SetPlacement( const CTRect<int> &rc, const uint32_t flags );
 
-	struct IScreen* GetScreen();
+	struct IScreen *GetScreen();
 	bool UsesHudFontScale() const override;
 	// is point (in screen coordinates) inside control
 	bool IsInside( const CVec2 &vPos ) const;
@@ -183,14 +188,8 @@ public:
 
 	void ShowWindow( const bool bShow );
 	bool IsVisible() const;
-	const NDb::EPositionAllign GetVerAllign() const
-	{
-		return GetInstance()->placement.verAllign.first ;
-	}
-	const NDb::EPositionAllign GetHorAllign() const
-	{
-		return GetInstance()->placement.horAllign.first ;
-	}
+	const NDb::EPositionAllign GetVerAllign() const { return GetInstance()->placement.verAllign.first; }
+	const NDb::EPositionAllign GetHorAllign() const { return GetInstance()->placement.horAllign.first; }
 	void SetAllign( const NDb::EPositionAllign eHorAllign, const NDb::EPositionAllign eVerAllign )
 	{
 		GetInstance()->placement.horAllign = eHorAllign;
@@ -198,7 +197,7 @@ public:
 	}
 
 	void SetClickNotify( IClickNotify *pNotify ) { pClickNotify = pNotify; }
-		// children/parent work
+	// children/parent work
 	void AddChild( IWindow *pWnd, bool bDoReposition );
 	// close window (remove it from parent's children stack)
 	void Close();
@@ -207,17 +206,17 @@ public:
 	IWindow *GetChild( int nIndex );
 	void RemoveChild( IWindow *_pChild );
 	void RemoveChild( const std::string &szChildName );
-	IWindow* GetChild( const std::string &_szName, const bool bRecursive );
-	IWindow* GetVisibleChild( const std::string &_szName, const bool bRecursive );
+	IWindow *GetChild( const std::string &_szName, const bool bRecursive );
+	IWindow *GetVisibleChild( const std::string &_szName, const bool bRecursive );
 	// deep children
-	CWindow* GetDeepChild( const std::string &_szName );
+	CWindow *GetDeepChild( const std::string &_szName );
 	virtual void SetParent( CWindow *pParent );
-	CWindow* GetParent() const { return pParent; }
+	CWindow *GetParent() const { return pParent; }
 
-	const std::string & GetName() const;
+	const std::string &GetName() const;
 	void SetName( const std::string &_szName );
 	// return minimal width that text is displayed properly
-	int GetOptimalWidth() const ;
+	int GetOptimalWidth() const;
 
 	// broadcast UI message processing
 	// return true if message is processed and don't need to process it anymore
@@ -242,16 +241,16 @@ public:
 	virtual bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
 	virtual bool OnMouseMove( const CVec2 &vPos, const int nMouseState );
 	//virtual void OnChar( const wchar_t chr );
-	virtual IWindow* Pick( const CVec2 &vPos, const bool bRecursive  );
-	virtual void SetOutline( const CDBID &outlineType=CDBID() );
+	virtual IWindow *Pick( const CVec2 &vPos, const bool bRecursive );
+	virtual void SetOutline( const CDBID &outlineType = CDBID() );
 	virtual void SetTextString( const std::wstring &szText );
-	const wchar_t * GetTextString() const;
+	const wchar_t *GetTextString() const;
 	virtual std::wstring GetDBText() const;
-	virtual SWindowContext * GetContext();
-	virtual const struct NDb::SUIDesc * GetDesc() const { return pWindowStats; }
-	virtual IWindow* GetParentWindow() const	{ return pParent; }
-	virtual const struct NDb::SWindowShared * GetSharedDesc() const { return pShared; }
-	virtual IWindow* GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false );
+	virtual SWindowContext *GetContext();
+	virtual const struct NDb::SUIDesc *GetDesc() const { return pWindowStats; }
+	virtual IWindow *GetParentWindow() const { return pParent; }
+	virtual const struct NDb::SWindowShared *GetSharedDesc() const { return pShared; }
+	virtual IWindow *GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false );
 	virtual bool IsPointInsideOfChildren( const CVec2 &vPoint );
 
 	// game message sink
@@ -259,7 +258,7 @@ public:
 
 	//get manipulator for editor functionality
 	// help context
-	const std::wstring& GetDBTooltipStr() const;	// old function, need to be removed
+	const std::wstring &GetDBTooltipStr() const; // old function, need to be removed
 	virtual IWindow *DemandTooltip();
 	//
 	virtual void SetTooltip( const std::wstring &wszTooltip );

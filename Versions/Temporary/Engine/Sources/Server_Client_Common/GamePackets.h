@@ -9,15 +9,22 @@
 class CCreateGamePacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CCreateGamePacket );
+
 public:
 	ZDATA
-		CPtr<SGameInfo> pInitialGameInfo;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pInitialGameInfo); return 0; }
+	CPtr<SGameInfo> pInitialGameInfo;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pInitialGameInfo );
+		return 0;
+	}
 
-	CCreateGamePacket() { }
-	CCreateGamePacket( const int nClientID ) : CNetPacket( nClientID ), pInitialGameInfo( 0 ) { }
-	CCreateGamePacket( const int nClientID, SGameInfo *_pInitialGameInfo ) :
-		CNetPacket( nClientID ), pInitialGameInfo( _pInitialGameInfo ) {}
+	CCreateGamePacket() {}
+	CCreateGamePacket( const int nClientID ) : CNetPacket( nClientID ), pInitialGameInfo( 0 ) {}
+	CCreateGamePacket( const int nClientID, SGameInfo *_pInitialGameInfo )
+			: CNetPacket( nClientID ), pInitialGameInfo( _pInitialGameInfo )
+	{
+	}
 };
 
 /** hearbeat packet */
@@ -26,13 +33,16 @@ class CGameHeartBeatPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameHeartBeatPacket )
 public:
 	ZDATA
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		int nGameID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); return 0; }
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nGameID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		return 0;
+	}
 
-	CGameHeartBeatPacket() { }
-	CGameHeartBeatPacket( const int nClientID, const int _nGameID )
-		: CNetPacket( nClientID ), nGameID( _nGameID ) { }
+	CGameHeartBeatPacket() {}
+	CGameHeartBeatPacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
 };
 
 class CGameStartLoadingPacket : public CNetPacket
@@ -40,12 +50,15 @@ class CGameStartLoadingPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameStartLoadingPacket )
 public:
 	ZDATA
-		int nGameID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); return 0; }
+	int nGameID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		return 0;
+	}
 
 	CGameStartLoadingPacket() {}
-	CGameStartLoadingPacket( const int nClientID, const int _nGameID )
-		: CNetPacket( nClientID ), nGameID( _nGameID ) {}
+	CGameStartLoadingPacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
 };
 
 /** kill the game */
@@ -54,12 +67,15 @@ class CKillGamePacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CKillGamePacket )
 public:
 	ZDATA
-		int nGameID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); return 0; }
+	int nGameID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		return 0;
+	}
 
-	CKillGamePacket() { }
-	CKillGamePacket( const int nClientID, const int _nGameID )
-		: CNetPacket( nClientID ), nGameID( _nGameID ) { }
+	CKillGamePacket() {}
+	CKillGamePacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
 };
 
 /** connect to game */
@@ -68,27 +84,38 @@ class CConnectGamePacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CConnectGamePacket )
 public:
 	ZDATA
-		int nGameID = {};
-		std::string szPassword;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); f.Add(3,&szPassword); return 0; }
+	int nGameID = {};
+	std::string szPassword;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		f.Add( 3, &szPassword );
+		return 0;
+	}
 
-	CConnectGamePacket() { }
+	CConnectGamePacket() {}
 	CConnectGamePacket( const int nClientID, const int _nGameID, const std::string &_szPassword )
-		: CNetPacket( nClientID ), nGameID( _nGameID ), szPassword( _szPassword ) { }
+			: CNetPacket( nClientID ), nGameID( _nGameID ), szPassword( _szPassword )
+	{
+	}
 };
 
 /** id of game we connected to */
 class CConnectedGameID : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CConnectedGameID );
+
 public:
 	ZDATA
-		int nGameID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); return 0; }
+	int nGameID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		return 0;
+	}
 
-	CConnectedGameID() { }
-	CConnectedGameID( const int nClientID, const int _nGameID )
-		: CNetPacket( nClientID ), nGameID( _nGameID ) { }
+	CConnectedGameID() {}
+	CConnectedGameID( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
 };
 
 /** leave the game */
@@ -97,12 +124,15 @@ class CLeaveGamePacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLeaveGamePacket )
 public:
 	ZDATA
-		int nGameID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); return 0; }
+	int nGameID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		return 0;
+	}
 
-	CLeaveGamePacket() { }
-	CLeaveGamePacket( const int nClientID, const int _nGameID )
-		: CNetPacket( nClientID ), nGameID( _nGameID ) { }
+	CLeaveGamePacket() {}
+	CLeaveGamePacket( const int nClientID, const int _nGameID ) : CNetPacket( nClientID ), nGameID( _nGameID ) {}
 };
 
 /** connect with game failed */
@@ -119,26 +149,33 @@ public:
 	};
 
 	ZDATA
-		EReason eReason = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eReason); return 0; }
+	EReason eReason = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &eReason );
+		return 0;
+	}
 
-	CConnectGameFailed() : eReason( ER_UNKNOWN ) { }
-	CConnectGameFailed( const int nClientID, const EReason _eReason )
-		: CNetPacket( nClientID ), eReason( _eReason ) { }
+	CConnectGameFailed() : eReason( ER_UNKNOWN ) {}
+	CConnectGameFailed( const int nClientID, const EReason _eReason ) : CNetPacket( nClientID ), eReason( _eReason ) {}
 };
 
 /** game was killed */
 class CGameKilled : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CGameKilled );
+
 public:
 	ZDATA
-		int nGame = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGame); return 0; }
+	int nGame = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGame );
+		return 0;
+	}
 
-	CGameKilled() { }
-	CGameKilled( const int nClientID, const int _nGame )
-		: CNetPacket( nClientID ), nGame( _nGame ) { }
+	CGameKilled() {}
+	CGameKilled( const int nClientID, const int _nGame ) : CNetPacket( nClientID ), nGame( _nGame ) {}
 };
 
 /** client left the game */
@@ -149,8 +186,8 @@ public:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
-	CGameClientRemoved() { }
-	CGameClientRemoved( const int nClient ) : CNetPacket( nClient ) { }
+	CGameClientRemoved() {}
+	CGameClientRemoved( const int nClient ) : CNetPacket( nClient ) {}
 };
 
 /** new client connected */
@@ -161,8 +198,8 @@ public:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
-	CNewGameClient() { }
-	CNewGameClient( const int nClient ) : CNetPacket( nClient ) { }
+	CNewGameClient() {}
+	CNewGameClient( const int nClient ) : CNetPacket( nClient ) {}
 };
 
 /** kick client from game*/
@@ -171,27 +208,38 @@ class CGameKickClient : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameKickClient )
 public:
 	ZDATA
-		int nKicked = {};
-		int nGameID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nKicked); f.Add(3,&nGameID); return 0; }
+	int nKicked = {};
+	int nGameID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nKicked );
+		f.Add( 3, &nGameID );
+		return 0;
+	}
 
-	CGameKickClient() { }
+	CGameKickClient() {}
 	CGameKickClient( const int nClientID, const int _nGameID, const int _nKicked )
-		: CNetPacket( nClientID ), nKicked( _nKicked ), nGameID( _nGameID ) { }
+			: CNetPacket( nClientID ), nKicked( _nKicked ), nGameID( _nGameID )
+	{
+	}
 };
 
 /** this client was kicked */
 class CGameClientWasKicked : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CGameClientWasKicked );
+
 public:
 	ZDATA
-		int nKicked = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nKicked); return 0; }
+	int nKicked = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nKicked );
+		return 0;
+	}
 
-	CGameClientWasKicked() { }
-	CGameClientWasKicked( const int nClientID, const int _nKicked )
-		: CNetPacket( nClientID ), nKicked( _nKicked ) { }
+	CGameClientWasKicked() {}
+	CGameClientWasKicked( const int nClientID, const int _nKicked ) : CNetPacket( nClientID ), nKicked( _nKicked ) {}
 };
 
 /** info to server that game info was updated */
@@ -201,11 +249,14 @@ class CUpdateGameInfo : public CNetPacket
 public:
 	ZDATA
 	SGameInfo gameInfo;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&gameInfo); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &gameInfo );
+		return 0;
+	}
 
-	CUpdateGameInfo() { }
-	CUpdateGameInfo( const int nClientID, const SGameInfo &_gameInfo )
-		: CNetPacket( nClientID ), gameInfo( _gameInfo ) { }
+	CUpdateGameInfo() {}
+	CUpdateGameInfo( const int nClientID, const SGameInfo &_gameInfo ) : CNetPacket( nClientID ), gameInfo( _gameInfo ) {}
 };
 
 /** specific internal info about game, sent to connected users */
@@ -214,13 +265,20 @@ class CSpecificGameInfo : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CSpecificGameInfo )
 public:
 	ZDATA
-		int nGameID = {};
-		CPtr<CNetPacket> pInfo;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGameID); f.Add(3,&pInfo); return 0; }
+	int nGameID = {};
+	CPtr<CNetPacket> pInfo;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nGameID );
+		f.Add( 3, &pInfo );
+		return 0;
+	}
 
-	CSpecificGameInfo() { }
+	CSpecificGameInfo() {}
 	CSpecificGameInfo( const int nClientID, const int _nGameID, CNetPacket *_pInfo )
-		: CNetPacket( nClientID ), nGameID( _nGameID ), pInfo( _pInfo ) { }
+			: CNetPacket( nClientID ), nGameID( _nGameID ), pInfo( _pInfo )
+	{
+	}
 };
 
 /** incremental update of clients in the lobby */
@@ -229,15 +287,23 @@ class CLobbyGamesPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CLobbyGamesPacket )
 public:
 	ZDATA
-		uint32_t dwVersion = {};
-		bool bFullUpdate = {};
-		std::list<int> removed;
-		std::list<SGameInfo> added;
-		std::list<SGameInfo> changed;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); f.Add(3,&bFullUpdate); f.Add(4,&removed); f.Add(5,&added); f.Add(6,&changed); return 0; }
+	uint32_t dwVersion = {};
+	bool bFullUpdate = {};
+	std::list<int> removed;
+	std::list<SGameInfo> added;
+	std::list<SGameInfo> changed;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &dwVersion );
+		f.Add( 3, &bFullUpdate );
+		f.Add( 4, &removed );
+		f.Add( 5, &added );
+		f.Add( 6, &changed );
+		return 0;
+	}
 
-	CLobbyGamesPacket() { }
-	CLobbyGamesPacket( const int nClientID ) : CNetPacket( nClientID ) { }
+	CLobbyGamesPacket() {}
+	CLobbyGamesPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
 
 // game room debug support
@@ -246,13 +312,17 @@ class CGameTestBroadcastMsg : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameTestBroadcastMsg )
 public:
 	ZDATA
-		int nNumber = {};
+	int nNumber = {};
 	std::string szStr;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nNumber); f.Add(3,&szStr); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nNumber );
+		f.Add( 3, &szStr );
+		return 0;
+	}
 
-	CGameTestBroadcastMsg() { }
-	CGameTestBroadcastMsg( const int _nNumber, const std::string &_szStr )
-		: nNumber( _nNumber ), szStr( _szStr ) { }
+	CGameTestBroadcastMsg() {}
+	CGameTestBroadcastMsg( const int _nNumber, const std::string &_szStr ) : nNumber( _nNumber ), szStr( _szStr ) {}
 };
 
 // game room debug support
@@ -261,15 +331,21 @@ class CGameTestDirectMsg : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameTestDirectMsg )
 public:
 	ZDATA
-		int nNumber = {};
+	int nNumber = {};
 	std::string szStr;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nNumber); f.Add(3,&szStr); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nNumber );
+		f.Add( 3, &szStr );
+		return 0;
+	}
 
-	CGameTestDirectMsg() { }
+	CGameTestDirectMsg() {}
 	CGameTestDirectMsg( const int nClientID, const int _nNumber, const std::string &_szStr )
-		: CNetPacket( nClientID ), nNumber( _nNumber ), szStr( _szStr ) { }
+			: CNetPacket( nClientID ), nNumber( _nNumber ), szStr( _szStr )
+	{
+	}
 };
-
 
 // internal packets
 /** connection opened, client nServerID ready to receive other gamers connections */
@@ -278,13 +354,20 @@ class CNewGameConnectingClient : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CNewGameConnectingClient )
 public:
 	ZDATA
-		int nServerID = {};
-		int nConnection = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nServerID); f.Add(3,&nConnection); return 0; }
+	int nServerID = {};
+	int nConnection = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nServerID );
+		f.Add( 3, &nConnection );
+		return 0;
+	}
 
-	CNewGameConnectingClient() { }
+	CNewGameConnectingClient() {}
 	CNewGameConnectingClient( const int nClientID, const int _nServerID, const int _nConnection )
-		: CNetPacket( nClientID ), nServerID( _nServerID ), nConnection( _nConnection ) { }
+			: CNetPacket( nClientID ), nServerID( _nServerID ), nConnection( _nConnection )
+	{
+	}
 };
 
 /** answer to connection opened */
@@ -293,12 +376,18 @@ class CGameConnectingClientAccepted : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameConnectingClientAccepted )
 public:
 	ZDATA
-		int nConnection = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nConnection); return 0; }
+	int nConnection = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nConnection );
+		return 0;
+	}
 
-	CGameConnectingClientAccepted() { }
+	CGameConnectingClientAccepted() {}
 	CGameConnectingClientAccepted( const int nClientID, const int _nConnection )
-		: CNetPacket( nClientID ), nConnection( _nConnection ) { }
+			: CNetPacket( nClientID ), nConnection( _nConnection )
+	{
+	}
 };
 
 /** info to server, client want to connect to client nClient2Connect through connection nMyConnect */
@@ -307,13 +396,20 @@ class CWant2Connect2Client : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CWant2Connect2Client )
 public:
 	ZDATA
-		int nClient2Connect = {};
-		int nMyConnect = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nClient2Connect); f.Add(3,&nMyConnect); return 0; }
+	int nClient2Connect = {};
+	int nMyConnect = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nClient2Connect );
+		f.Add( 3, &nMyConnect );
+		return 0;
+	}
 
-	CWant2Connect2Client() { }
+	CWant2Connect2Client() {}
 	CWant2Connect2Client( const int nClientID, const int _nClient2Connect, const int _nMyConnect )
-		: CNetPacket( nClientID ), nClient2Connect( _nClient2Connect ), nMyConnect( _nMyConnect ) { }
+			: CNetPacket( nClientID ), nClient2Connect( _nClient2Connect ), nMyConnect( _nMyConnect )
+	{
+	}
 };
 
 /** answer to connect game, passing list of game clients */
@@ -322,11 +418,15 @@ class CAnswerConnectGame : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CAnswerConnectGame )
 public:
 	ZDATA
-		std::list<int> clients;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&clients); return 0; }
+	std::list<int> clients;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &clients );
+		return 0;
+	}
 
-	CAnswerConnectGame() { }
-	CAnswerConnectGame( const int nClientID ) : CNetPacket( nClientID ) { }
+	CAnswerConnectGame() {}
+	CAnswerConnectGame( const int nClientID ) : CNetPacket( nClientID ) {}
 };
 
 /** info from server about asked client, goes to connection effort */
@@ -335,14 +435,22 @@ class CClientGameConnectInfo : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CClientGameConnectInfo )
 public:
 	ZDATA
-		std::string szIP;
-		int nPort = {};
-		int nClient2Connect = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szIP); f.Add(3,&nPort); f.Add(4,&nClient2Connect); return 0; }
+	std::string szIP;
+	int nPort = {};
+	int nClient2Connect = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szIP );
+		f.Add( 3, &nPort );
+		f.Add( 4, &nClient2Connect );
+		return 0;
+	}
 
-	CClientGameConnectInfo() { }
+	CClientGameConnectInfo() {}
 	CClientGameConnectInfo( const int nClientID, const std::string &_szIP, const int _nPort, const int _nClient2Connect )
-		: CNetPacket( nClientID ), szIP( _szIP ), nPort( _nPort ), nClient2Connect( _nClient2Connect ) { }
+			: CNetPacket( nClientID ), szIP( _szIP ), nPort( _nPort ), nClient2Connect( _nClient2Connect )
+	{
+	}
 };
 
 /** info from server about client which want to connect, creates new connection to the client */
@@ -351,14 +459,22 @@ class CClientWantToConnect : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CClientWantToConnect )
 public:
 	ZDATA
-		std::string szIP;
-		int nPort = {};
-		int nWantedClient = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szIP); f.Add(3,&nPort); f.Add(4,&nWantedClient); return 0; }
+	std::string szIP;
+	int nPort = {};
+	int nWantedClient = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szIP );
+		f.Add( 3, &nPort );
+		f.Add( 4, &nWantedClient );
+		return 0;
+	}
 
-	CClientWantToConnect() { }
+	CClientWantToConnect() {}
 	CClientWantToConnect( const int nClientID, const int _nWantedClient, const std::string &_szIP, const int _nPort )
-		: CNetPacket( nClientID ), nWantedClient( _nWantedClient ), szIP( _szIP ), nPort( _nPort ) { }
+			: CNetPacket( nClientID ), nWantedClient( _nWantedClient ), szIP( _szIP ), nPort( _nPort )
+	{
+	}
 };
 
 /** Info about client, who just connected to us (through the pAcceptGamersNet connection)*/
@@ -367,12 +483,15 @@ class CIndentityPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CIndentityPacket )
 public:
 	ZDATA
-		int nServerID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nServerID); return 0; }
+	int nServerID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nServerID );
+		return 0;
+	}
 
-	CIndentityPacket() { }
-	CIndentityPacket( const int nClientID, const int _nServerID )
-		: CNetPacket( nClientID ), nServerID( _nServerID ) { }
+	CIndentityPacket() {}
+	CIndentityPacket( const int nClientID, const int _nServerID ) : CNetPacket( nClientID ), nServerID( _nServerID ) {}
 };
 
 class CThroughServerConnectionPacket : public CNetPacket
@@ -380,13 +499,20 @@ class CThroughServerConnectionPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CThroughServerConnectionPacket )
 public:
 	ZDATA
-		int nClientWith = {};
-		int nGameID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nClientWith); f.Add(3,&nGameID); return 0; }
+	int nClientWith = {};
+	int nGameID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nClientWith );
+		f.Add( 3, &nGameID );
+		return 0;
+	}
 
-	CThroughServerConnectionPacket() { }
+	CThroughServerConnectionPacket() {}
 	CThroughServerConnectionPacket( const int nClientID, const int _nClientWith, const int _nGameID )
-		: CNetPacket( nClientID ), nClientWith( _nClientWith ), nGameID( _nGameID ) { }
+			: CNetPacket( nClientID ), nClientWith( _nClientWith ), nGameID( _nGameID )
+	{
+	}
 };
 
 class CGameClientDead : public CNetPacket
@@ -394,38 +520,59 @@ class CGameClientDead : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CGameClientDead )
 public:
 	ZDATA
-		int nDeadClient = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nDeadClient); return 0; }
+	int nDeadClient = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nDeadClient );
+		return 0;
+	}
 
-	CGameClientDead() { }
-	CGameClientDead( const int nClientID, const int _nDeadClient )
-		: CNetPacket( nClientID ), nDeadClient( _nDeadClient ) { }
+	CGameClientDead() {}
+	CGameClientDead( const int nClientID, const int _nDeadClient ) : CNetPacket( nClientID ), nDeadClient( _nDeadClient )
+	{
+	}
 };
 
 class CThroughServerGamePacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CThroughServerGamePacket );
+
 public:
 	ZDATA
-		int nClient = {};
-		CPtr<CNetPacket> pGamePacket;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nClient); f.Add(3,&pGamePacket); return 0; }
+	int nClient = {};
+	CPtr<CNetPacket> pGamePacket;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nClient );
+		f.Add( 3, &pGamePacket );
+		return 0;
+	}
 
-	CThroughServerGamePacket() { }
+	CThroughServerGamePacket() {}
 	CThroughServerGamePacket( const int nClientID, const int nClientTo, CNetPacket *_pGamePacket )
-		: CNetPacket( nClientID ), nClient( nClientTo ), pGamePacket( _pGamePacket ) { }
+			: CNetPacket( nClientID ), nClient( nClientTo ), pGamePacket( _pGamePacket )
+	{
+	}
 };
 
 class CPingPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CPingPacket );
+
 public:
 	ZDATA
-		int nSendTime = {};
-		int nFromID = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSendTime); f.Add(3,&nFromID); return 0; }
+	int nSendTime = {};
+	int nFromID = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSendTime );
+		f.Add( 3, &nFromID );
+		return 0;
+	}
 
-	CPingPacket() { }
+	CPingPacket() {}
 	CPingPacket( const int nClientID, const int _nFromID, const int _nSendTime )
-		: CNetPacket( nClientID ), nFromID( _nFromID ), nSendTime( _nSendTime ) {}
+			: CNetPacket( nClientID ), nFromID( _nFromID ), nSendTime( _nSendTime )
+	{
+	}
 };

@@ -18,17 +18,17 @@
 // Destructor()
 struct IEditor : public CObjectBase
 {
-    // Restore GUI visibility without recreating the document or editing state.
-    virtual void ResetGUI( bool bActive ) {}
+	// Restore GUI visibility without recreating the document or editing state.
+	virtual void ResetGUI( bool bActive ) {}
 
 	// передается в View
 	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) = 0;
 	// получить тип child frame
 	virtual void GetChildFrameType( std::string *pszChildFrameTypeName ) = 0;
 	// получить непосредственно - редактор.
-	virtual IView* GetView() = 0;
+	virtual IView *GetView() = 0;
 	// получить непосредственно - IInputState
-	virtual IInputState* GetInputState() = 0;
+	virtual IInputState *GetInputState() = 0;
 	// создать дополнительные контролы ( вызывается при создании MainFrame до считывания положения панелей)
 	virtual void CreateControls() = 0;
 	// создать дополнительные контролы ( вызывается при создании MainFrame после считывания панелей)
@@ -53,29 +53,32 @@ struct IEditor : public CObjectBase
 	virtual std::string GetSaveError() const { return std::string(); }
 };
 
-
 struct IEditorContainer : public CObjectBase
 {
-    virtual void ResetGUI() = 0;
+	virtual void ResetGUI() = 0;
 
-	enum { tidTypeID = 0x1408A3C0 };
+	enum
+	{
+		tidTypeID = 0x1408A3C0
+	};
 	//
 	// Проверить на существование редактора
 	virtual bool CanCreate( const std::string &rszObjectTypeName ) = 0;
 	// Методы создания и удаления редакторов
 	virtual void Create( const std::string &rszObjectTypeName ) = 0;
-	virtual void AddExtendObjectType( const std::string &rszBaseObjectTypeName, const std::string &rszExtendObjectTypeName ) = 0;
+	virtual void AddExtendObjectType( const std::string &rszBaseObjectTypeName,
+	                                  const std::string &rszExtendObjectTypeName ) = 0;
 	virtual void Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame ) = 0;
 	// Получить редактор
-	virtual IEditor* Create( IManipulator* _pManipulator, const SObjectSet &rObjectSet ) = 0;
+	virtual IEditor *Create( IManipulator *_pManipulator, const SObjectSet &rObjectSet ) = 0;
 	// Перегрузить редактор ( тот которому сделали Enter )
 	virtual void ReloadActiveEditor( bool bClearResources ) = 0;
 	// Закрыть активный редактор ( тот которому сделали Enter )
 	virtual void DestroyActiveEditor( bool bDestroyChildFrame ) = 0;
 	// Получить активный редактор
-	virtual IEditor* GetActiveEditor() = 0;
+	virtual IEditor *GetActiveEditor() = 0;
 	// Получить IInputState куда отсылать сообщения из DirectX окна
-	virtual IInputState* GetActiveInputState() = 0;
+	virtual IInputState *GetActiveInputState() = 0;
 	//
 	// Специальные методы, вызываются из MainFrame
 	// Вызвать методы CreateControls() у всех зарегистрированныз редакторов

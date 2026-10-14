@@ -18,7 +18,7 @@ struct SLadderStatistics
 	};
 
 	ZDATA
-// From database
+	// From database
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nLevel = {};
 	int nXP = {};
@@ -38,15 +38,44 @@ struct SLadderStatistics
 	std::vector<int> raceLossesTeam;
 	std::vector<int> medals;
 	int nRace = {};
-// From constants
+	// From constants
 	int nLevelXP = {};
 	int nNextLevelXP = {};
 
 	std::vector<int> techsPlayed;
 	std::vector<int> mapsPlayed;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLevel); f.Add(3,&nXP); f.Add(4,&nMaxXPEarned); f.Add(5,&nMaxXPLost); f.Add(6,&nUnitsKilled); f.Add(7,&nUnitsLost); f.Add(8,&nUnitEff); f.Add(9,&nKeyPointEff); f.Add(10,&nFavouriteReinforcement); f.Add(11,&nStrongestAgainst); f.Add(12,&nWeakestAgainst); f.Add(13,&nTotalPlayTime); f.Add(14,&raceWinsSolo); f.Add(15,&raceLossesSolo); f.Add(16,&raceWinsTeam); f.Add(17,&raceLossesTeam); f.Add(18,&medals); f.Add(19,&nRace); f.Add(20,&nLevelXP); f.Add(21,&nNextLevelXP); f.Add(22,&techsPlayed); f.Add(23,&mapsPlayed); return 0; }
-	SLadderStatistics() : nLevel( -1 ), nXP( 0 ), nLevelXP( 0 ), nNextLevelXP( 0 ), nMaxXPEarned( 0 ), nMaxXPLost( 0 ), nFavouriteReinforcement( -1 ),
-		nUnitsKilled( 0 ), nUnitsLost( 0 ), nUnitEff( 0 ), nKeyPointEff( 0 ), nStrongestAgainst( -1 ), nWeakestAgainst( -1 ), nTotalPlayTime( 0 ), nRace( -1 ) {}
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nLevel );
+		f.Add( 3, &nXP );
+		f.Add( 4, &nMaxXPEarned );
+		f.Add( 5, &nMaxXPLost );
+		f.Add( 6, &nUnitsKilled );
+		f.Add( 7, &nUnitsLost );
+		f.Add( 8, &nUnitEff );
+		f.Add( 9, &nKeyPointEff );
+		f.Add( 10, &nFavouriteReinforcement );
+		f.Add( 11, &nStrongestAgainst );
+		f.Add( 12, &nWeakestAgainst );
+		f.Add( 13, &nTotalPlayTime );
+		f.Add( 14, &raceWinsSolo );
+		f.Add( 15, &raceLossesSolo );
+		f.Add( 16, &raceWinsTeam );
+		f.Add( 17, &raceLossesTeam );
+		f.Add( 18, &medals );
+		f.Add( 19, &nRace );
+		f.Add( 20, &nLevelXP );
+		f.Add( 21, &nNextLevelXP );
+		f.Add( 22, &techsPlayed );
+		f.Add( 23, &mapsPlayed );
+		return 0;
+	}
+	SLadderStatistics()
+			: nLevel( -1 ), nXP( 0 ), nLevelXP( 0 ), nNextLevelXP( 0 ), nMaxXPEarned( 0 ), nMaxXPLost( 0 ),
+				nFavouriteReinforcement( -1 ), nUnitsKilled( 0 ), nUnitsLost( 0 ), nUnitEff( 0 ), nKeyPointEff( 0 ),
+				nStrongestAgainst( -1 ), nWeakestAgainst( -1 ), nTotalPlayTime( 0 ), nRace( -1 )
+	{
+	}
 
 	static bool HasMedal( const std::vector<int> &medals, const int nRace, const int _nMedalType )
 	{
@@ -61,7 +90,6 @@ struct SLadderStatistics
 		const int nMedalType = Clamp( _nMedalType, 0, 15 );
 		if ( pMedals->size() < ( nRace + 1 ) )
 			pMedals->resize( nRace, 0 );
-		(*pMedals)[nRace] |= 0x0001 << nMedalType;
+		( *pMedals )[nRace] |= 0x0001 << nMedalType;
 	}
-
 };

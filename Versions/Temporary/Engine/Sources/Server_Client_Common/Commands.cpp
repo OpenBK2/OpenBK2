@@ -15,8 +15,7 @@ struct SStringToCommand
 	const char *pszHelp;
 };
 
-static SStringToCommand szCommandsList[] =
-{
+static SStringToCommand szCommandsList[] = {
 	// client
 	{ "register", ESC_REGISTER, false, "usage: <name> <password> <CDKey> <email>" },
 	{ "login", ESC_LOGIN, false, "usage: <name> <password>" },
@@ -33,7 +32,10 @@ static SStringToCommand szCommandsList[] =
 
 	{ "create_game", ESC_CREATE_GAME, false, "usage: no arguments" },
 	{ "kill_game", ESC_KILL_GAME, false, "kill the game, usage: no arguments(kill currently playing) or nGameID" },
-	{ "send_game_info", ESC_SEND_GAME_INFO, false, "usage: <game name> <max number of players> <password> <1|0 (can connect to this game or not)>" },
+	{ "send_game_info",
+    ESC_SEND_GAME_INFO,
+    false,
+    "usage: <game name> <max number of players> <password> <1|0 (can connect to this game or not)>" },
 	{ "games", ESC_GET_LOBBY_GAMES, false, "get list of games in the lobby, usage: no arguments" },
 	{ "leave_game", ESC_LEAVE_GAME, false, "leave currently playing game, usage: no arguments" },
 	{ "connect_game", ESC_CONNECT_GAME, false, "usage: <game id> [<password>]" },
@@ -43,15 +45,21 @@ static SStringToCommand szCommandsList[] =
 	{ "direct_msg", ESC_DIRECT_MSG, false, "send direct msg to client, usage: <client id>" },
 	{ "game_clients", ESC_GAME_CLIENTS, false, "shows clients in the currently playing game, usage: <no arguments>" },
 	{ "update_specific_game_info", ESC_SPEC_GAME_INFO, false, "send specific internal game info, usage: <map name> " },
-	{ "pause_server_connection", ESC_PAUSE_SERVER_CONN, false, "pause connection to server, usage: <1|0 (pause or not)>" },
+	{ "pause_server_connection",
+    ESC_PAUSE_SERVER_CONN,
+    false,
+    "pause connection to server, usage: <1|0 (pause or not)>" },
 	{ "pause_accept_gamers_net", ESC_PAUSE_ACCEPT, false, "pause accept players, usage: <1|0 (pause or not)>" },
-	{ "pause_connect_gamers_net", ESC_PAUSE_CONNECT, false, "pause connect to player, usage: <client id> <1|0 (pause or not)>" },
+	{ "pause_connect_gamers_net",
+    ESC_PAUSE_CONNECT,
+    false,
+    "pause connect to player, usage: <client id> <1|0 (pause or not)>" },
 	{ "pause_client_module", ESC_PAUSE_CLIENT, false, "pause whole client modle, usage: <1|0 (pause or not)>" },
 
 	{ "chat_bc", ESC_CHAT_LOBBY, false, "send chat channel broadcast message , usage: <chat message>" },
 	{ "chat_private", ESC_CHAT_PRIVATE, false, "usage: <chat message> <user nick>" },
 	{ "afk", ESC_AFK, false, "away from keyboard/in-game, usage: no arguments" },
-	{ "chat_join", ESC_CHAT_JOIN, false, "join chat channel, usage: <channel name>"  },
+	{ "chat_join", ESC_CHAT_JOIN, false, "join chat channel, usage: <channel name>" },
 	{ "chat_ignore", ESC_CHAT_IGNORE, false, "add/remove user to/from ignorelist, usage: <nick> <1/0>" },
 	{ "chat_friend", ESC_CHAT_FRIEND, false, "add/remove user to/from friendlist, usage: <nick> <1/0>" },
 	{ "chat_channels", ESC_CHAT_CHANNELS, false, "list chat channels, usage: no arguments" },
@@ -77,12 +85,11 @@ static SStringToCommand szCommandsList[] =
 	{ 0, ESC_NONE },
 };
 
-#define REGISTER_PARSE( cmd, FuncName, _bServer )	\
-if ( _bServer == bServer )	\
-parseCmdFuncs[cmd] = &CCommands::FuncName;
+#define REGISTER_PARSE( cmd, FuncName, _bServer ) \
+	if ( _bServer == bServer )                      \
+		parseCmdFuncs[cmd] = &CCommands::FuncName;
 
-CCommands::CCommands( const bool _bServer )
-: bServer( _bServer )
+CCommands::CCommands( const bool _bServer ) : bServer( _bServer )
 {
 	// client
 	REGISTER_PARSE( ESC_REGISTER, ParseRegisterServer, false );
@@ -172,7 +179,10 @@ const EServerClientCommands CCommands::FindCmd( const std::string &szCommand )
 void CCommands::ParseLoginServer( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 3 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 	pCmd->params.push_back( szWords[2] );
@@ -181,7 +191,10 @@ void CCommands::ParseLoginServer( std::vector<std::string> &szWords, SCommand *p
 void CCommands::ParseRegisterServer( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 5 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 	pCmd->params.push_back( szWords[2] );
@@ -192,14 +205,20 @@ void CCommands::ParseRegisterServer( std::vector<std::string> &szWords, SCommand
 void CCommands::ParseEnterLobby( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	NStr::ToLower( &szWords[1] );
 	static std::string szOut;
 	if ( szWords[1] != "custom" && szWords[1] != "ladder" )
 	{
 		szOut = fmt::format( "Unknown lobby {}\n", szWords[1] );
-		{ SetErrorMsg( szOut ); return; }
+		{
+			SetErrorMsg( szOut );
+			return;
+		}
 	}
 
 	pCmd->params.push_back( szWords[1] );
@@ -208,13 +227,19 @@ void CCommands::ParseEnterLobby( std::vector<std::string> &szWords, SCommand *pC
 void CCommands::ParseLeaveLobby( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseChatLobby( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() < 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	for ( int i = 2; i < szWords.size(); ++i )
 		szWords[1] += " " + szWords[i];
@@ -225,7 +250,10 @@ void CCommands::ParseChatLobby( std::vector<std::string> &szWords, SCommand *pCm
 void CCommands::ParseChatPrivate( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() < 3 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	for ( int i = 2; i < szWords.size() - 1; ++i )
 		szWords[1] += " " + szWords[i];
@@ -237,13 +265,19 @@ void CCommands::ParseChatPrivate( std::vector<std::string> &szWords, SCommand *p
 void CCommands::ParseAFK( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseChatJoin( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -251,19 +285,28 @@ void CCommands::ParseChatJoin( std::vector<std::string> &szWords, SCommand *pCmd
 void CCommands::ParseChatChannels( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseChatIgnore( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 3 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	static std::string szOut;
 	if ( szWords[2] != "1" && szWords[2] != "0" )
 	{
 		szOut = fmt::format( "Use 0 or 1 instead of {}\n", szWords[2] );
-		{ SetErrorMsg( szOut ); return; }
+		{
+			SetErrorMsg( szOut );
+			return;
+		}
 	}
 
 	pCmd->params.push_back( szWords[1] );
@@ -278,7 +321,10 @@ void CCommands::ParseChatFriend( std::vector<std::string> &szWords, SCommand *pC
 void CCommands::ParseChatWhere( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -286,7 +332,10 @@ void CCommands::ParseChatWhere( std::vector<std::string> &szWords, SCommand *pCm
 void CCommands::ParseSetClientState( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	NStr::ToLower( &szWords[1] );
 
@@ -294,7 +343,10 @@ void CCommands::ParseSetClientState( std::vector<std::string> &szWords, SCommand
 	if ( szWords[1] != "online" && szWords[1] != "away" && szWords[1] != "ingame" )
 	{
 		szOut = fmt::format( "Unknown state {}\n", szWords[1] );
-		{ SetErrorMsg( szOut ); return; }
+		{
+			SetErrorMsg( szOut );
+			return;
+		}
 	}
 
 	ECommonClientState eState = ES_ONLINE;
@@ -305,13 +357,16 @@ void CCommands::ParseSetClientState( std::vector<std::string> &szWords, SCommand
 	if ( szWords[1] == "ingame" )
 		eState = ES_INGAME;
 
-	pCmd->params.push_back( std::to_string(  (int)eState ) );
+	pCmd->params.push_back( std::to_string( (int)eState ) );
 }
 
 void CCommands::ParseClientsList( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 && szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	if ( szWords.size() == 2 )
 	{
@@ -320,17 +375,23 @@ void CCommands::ParseClientsList( std::vector<std::string> &szWords, SCommand *p
 		if ( szWords[1] != "custom" )
 		{
 			szOut = fmt::format( "unknown lobby {}\n", szWords[1] );
-			{ SetErrorMsg( szOut ); return; }
+			{
+				SetErrorMsg( szOut );
+				return;
+			}
 		}
 
-		pCmd->params.push_back( std::to_string(  (int)ERID_CUSTOM ) );
+		pCmd->params.push_back( std::to_string( (int)ERID_CUSTOM ) );
 	}
 }
 
 void CCommands::ParseClientState( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -338,7 +399,10 @@ void CCommands::ParseClientState( std::vector<std::string> &szWords, SCommand *p
 void CCommands::ParseKick( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -346,44 +410,65 @@ void CCommands::ParseKick( std::vector<std::string> &szWords, SCommand *pCmd )
 void CCommands::ParseReloadConfig( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseShowStatistics( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseClientGetLobbyClients( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseGames( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	static std::string szOut;
 	if ( szWords[1] != "custom" )
 	{
 		szOut = fmt::format( "Unknown lobby {}", szWords[1] );
-		{ SetErrorMsg( szOut ); return; }
+		{
+			SetErrorMsg( szOut );
+			return;
+		}
 	}
 }
 
 void CCommands::ParseCreateGame( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseKillGame( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() > 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 	else
 	{
 		if ( szWords.size() == 2 )
@@ -394,7 +479,10 @@ void CCommands::ParseKillGame( std::vector<std::string> &szWords, SCommand *pCmd
 void CCommands::ParseSendGameInfo( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 5 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 	pCmd->params.push_back( szWords[2] );
@@ -405,13 +493,19 @@ void CCommands::ParseSendGameInfo( std::vector<std::string> &szWords, SCommand *
 void CCommands::ParseGetLobbyGames( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseLeaveGame( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd )
@@ -439,7 +533,10 @@ void CCommands::ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd )
 			{
 				static std::string szOut;
 				szOut = fmt::format( "{}\n", szCommandsList[i].pszHelp );
-				{ SetErrorMsg( szOut ); return; }
+				{
+					SetErrorMsg( szOut );
+					return;
+				}
 			}
 
 			++i;
@@ -447,14 +544,20 @@ void CCommands::ParseHelp( std::vector<std::string> &szWords, SCommand *pCmd )
 
 		static std::string szOut;
 		szOut = fmt::format( "command {} not found\n", szWords[1] );
-		{ SetErrorMsg( szOut ); return; }
+		{
+			SetErrorMsg( szOut );
+			return;
+		}
 	}
 }
 
 void CCommands::ParseConnectGame( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() < 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 
@@ -484,7 +587,10 @@ void CCommands::ParseGameBroadcast( std::vector<std::string> &szWords, SCommand 
 void CCommands::ParseGameDirect( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() < 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 
@@ -501,7 +607,10 @@ void CCommands::ParseGameDirect( std::vector<std::string> &szWords, SCommand *pC
 void CCommands::ParseGameKickClient( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -509,7 +618,10 @@ void CCommands::ParseGameKickClient( std::vector<std::string> &szWords, SCommand
 void CCommands::ParseDirectMsg( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -522,13 +634,19 @@ void CCommands::ParseShowLobbies( std::vector<std::string> &szWords, SCommand *p
 void CCommands::ParseShowGameClients( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParsePauseServerConn( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -536,7 +654,10 @@ void CCommands::ParsePauseServerConn( std::vector<std::string> &szWords, SComman
 void CCommands::ParsePauseAccept( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -544,7 +665,10 @@ void CCommands::ParsePauseAccept( std::vector<std::string> &szWords, SCommand *p
 void CCommands::ParsePauseConnect( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 3 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 	pCmd->params.push_back( szWords[2] );
@@ -553,7 +677,10 @@ void CCommands::ParsePauseConnect( std::vector<std::string> &szWords, SCommand *
 void CCommands::ParseSpecGameInfo( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() < 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	std::string szMapName = szWords[1];
 	for ( int i = 2; i < szWords.size(); ++i )
@@ -565,7 +692,10 @@ void CCommands::ParseSpecGameInfo( std::vector<std::string> &szWords, SCommand *
 void CCommands::ParsePauseClient( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -573,14 +703,19 @@ void CCommands::ParsePauseClient( std::vector<std::string> &szWords, SCommand *p
 void CCommands::ParseLadderTest( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
-
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseLadderWin( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() < 3 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 	for ( int i = 1; i < szWords.size(); ++i )
 	{
 		pCmd->params.push_back( szWords[i] );
@@ -590,7 +725,10 @@ void CCommands::ParseLadderWin( std::vector<std::string> &szWords, SCommand *pCm
 void CCommands::ParseLadderInfo( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 }
@@ -598,7 +736,10 @@ void CCommands::ParseLadderInfo( std::vector<std::string> &szWords, SCommand *pC
 void CCommands::ParseForgotPassword( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 3 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 	pCmd->params.push_back( szWords[2] );
@@ -607,7 +748,10 @@ void CCommands::ParseForgotPassword( std::vector<std::string> &szWords, SCommand
 void CCommands::ParseMultiTest( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 3 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 
 	pCmd->params.push_back( szWords[1] );
 	pCmd->params.push_back( szWords[2] );
@@ -616,13 +760,19 @@ void CCommands::ParseMultiTest( std::vector<std::string> &szWords, SCommand *pCm
 void CCommands::ParsePing( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 1 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 }
 
 void CCommands::ParseBroadcast( std::vector<std::string> &szWords, SCommand *pCmd )
 {
 	if ( szWords.size() != 2 )
-		{ SetErrorMsg( "Wrong number of arguments\n" ); return; }
+	{
+		SetErrorMsg( "Wrong number of arguments\n" );
+		return;
+	}
 	pCmd->params.push_back( szWords[1] );
 }
 
@@ -651,7 +801,7 @@ bool CCommands::LineEntered( const std::string &szLineEntered, std::string *pszE
 			PARSE_CMD_FUNC pfnFunc = iter->second;
 			SCommand cmd;
 			cmd.nCmd = eCmd;
-			(this->*pfnFunc)( szWords, &cmd );
+			( this->*pfnFunc )( szWords, &cmd );
 			const std::string &szErrorMsg = GetErrorMsg();
 			if ( szErrorMsg.empty() )
 			{
@@ -665,7 +815,6 @@ bool CCommands::LineEntered( const std::string &szLineEntered, std::string *pszE
 				return false;
 			}
 		}
-
 	}
 	else
 		return true;

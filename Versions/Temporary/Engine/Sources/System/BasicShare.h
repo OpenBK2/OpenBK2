@@ -1,45 +1,54 @@
 #pragma once
 #include "System_export.h"
 
-
 class CBasicShareBase
 {
 	SYSTEM_EXPORT friend void RegisterBasicShareBase( class CBasicShareBase *pBase );
 	int nID;
 	CBasicShareBase *pNext;
+
 protected:
 	int GetID() { return nID; }
-	virtual void CreateHolder( std::list<CObj<CObjectBase> > *pHolder ) = 0;
+	virtual void CreateHolder( std::list<CObj<CObjectBase>> *pHolder ) = 0;
+
 public:
-	CBasicShareBase( int _nID ): nID( _nID ) { RegisterBasicShareBase(this); }
+	CBasicShareBase( int _nID ) : nID( _nID ) { RegisterBasicShareBase( this ); }
 	virtual int operator&( IBinSaver &f ) = 0;
 	//
 	SYSTEM_EXPORT friend void SerializeShared( IBinSaver *pFile );
 	friend void CreateSharedHolder( class CSharedHolder *pHolder );
 };
 
-template <class TKey, class TValue, class THash = std::hash<TKey> >
-class CBasicShare: public CBasicShareBase
+template <class TKey, class TValue, class THash = std::hash<TKey>>
+class CBasicShare : public CBasicShareBase
 {
 public:
-	typedef std::unordered_map< TKey, CPtr<TValue>, THash > CDataHash;
+	typedef std::unordered_map<TKey, CPtr<TValue>, THash> CDataHash;
+
 private:
 	bool bKeepData;
 	CDataHash data;
 	//
-	virtual void CreateHolder( std::list<CObj<CObjectBase> > *pHolder )
+	virtual void CreateHolder( std::list<CObj<CObjectBase>> *pHolder )
 	{
 		for ( typename CDataHash::const_iterator i = data.begin(); i != data.end(); ++i )
 			pHolder->push_back( i->second.GetPtr() );
 	}
+
 protected:
-	virtual TValue* Create( const TKey &key ) { TValue *pRes = new TValue; pRes->SetKey(key); return pRes; }
+	virtual TValue *Create( const TKey &key )
+	{
+		TValue *pRes = new TValue;
+		pRes->SetKey( key );
+		return pRes;
+	}
+
 public:
-	CBasicShare( int nID, bool _bKeepData = true ): CBasicShareBase( nID ), bKeepData(_bKeepData) {}
+	CBasicShare( int nID, bool _bKeepData = true ) : CBasicShareBase( nID ), bKeepData( _bKeepData ) {}
 	//DEBUG{
 	void Clear() { data.clear(); }
 	//DEBUG}
-	TValue* Get( const TKey &key )
+	TValue *Get( const TKey &key )
 	{
 		typename CDataHash::iterator i = data.find( key );
 		if ( i == data.end() )
@@ -52,7 +61,7 @@ public:
 			i->second = Create( key );
 		return i->second;
 	}
-	const CDataHash& GetAll() { return data; }
+	const CDataHash &GetAll() { return data; }
 	int operator&( IBinSaver &f )
 	{
 		if ( !bKeepData )
@@ -86,9 +95,10 @@ public:
 class CSharedHolder
 {
 	friend void CreateSharedHolder( CSharedHolder *pHolder );
-	std::list<CObj<CObjectBase> > objs;
+	std::list<CObj<CObjectBase>> objs;
+
 public:
-	CSharedHolder() { CreateSharedHolder(this); }
+	CSharedHolder() { CreateSharedHolder( this ); }
 };
 
 SYSTEM_EXPORT void SerializeShared( IBinSaver *pFile );

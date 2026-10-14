@@ -7,8 +7,8 @@
 
 namespace NGfx
 {
-	class CGeometry;
-	class CTexture;
+class CGeometry;
+class CTexture;
 }
 namespace NGScene
 {
@@ -25,10 +25,11 @@ struct SParticleLightInfo
 	{
 		vLightSize = CVec2( nSizeX, nSizeY );
 		int nDU = 65536 / nTotalX, nDV = 65536 / nTotalY;
-		vStart.nU = nDU / 2 - 4 - 0x8000; vStart.nV = nDV / 2 - 4 - 0x8000;
+		vStart.nU = nDU / 2 - 4 - 0x8000;
+		vStart.nV = nDV / 2 - 4 - 0x8000;
 		nCheckStart = vStart.nU;
-		vSize.nU = nDU * (nSizeX - 1) + 8;
-		vSize.nV = nDV * (nSizeY - 1) + 8;
+		vSize.nU = nDU * ( nSizeX - 1 ) + 8;
+		vSize.nV = nDV * ( nSizeY - 1 ) + 8;
 		vTrueStep.nU = nDU * nSizeX;
 		vTrueStep.nV = nDV * nSizeY;
 		if ( bIncremental )
@@ -38,7 +39,11 @@ struct SParticleLightInfo
 		else
 			StopIncrementing();
 	}
-	void StopIncrementing() { vStep.nU = 0; vStep.nV = 0; }
+	void StopIncrementing()
+	{
+		vStep.nU = 0;
+		vStep.nV = 0;
+	}
 	void ForcedInc()
 	{
 		vStart.nU += vTrueStep.nU;
@@ -70,10 +75,10 @@ const float F_PARTICLE_OVER = 1e10f;
 class IParticleOutput
 {
 public:
-	virtual const SParticleOrientationInfo& GetOrientationInfo() const = 0;
-	const CVec3& GetDepth() const { return GetOrientationInfo().vDepth; }
-	virtual void AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex,
-		float fDepth ) = 0;
+	virtual const SParticleOrientationInfo &GetOrientationInfo() const = 0;
+	const CVec3 &GetDepth() const { return GetOrientationInfo().vDepth; }
+	virtual void
+	AddParticle( const CVec3 vPos[4], uint32_t dwColor, const STransparentTexturePlace &tex, float fDepth ) = 0;
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes ) = 0;
 };
 
@@ -83,7 +88,7 @@ class CParticleEffect : public CObjectBase
 public:
 	bool bEnd; // true if effect finished
 	int nGrassSize;
-	std::vector<CObj<CPtrFuncBase<NGfx::CTexture> > > textures;
+	std::vector<CObj<CPtrFuncBase<NGfx::CTexture>>> textures;
 	CObj<IParticleFilter> pFilter;
 
 	// function should be const but it is impossible due to DGPtrs presence
@@ -101,19 +106,21 @@ struct SParticleFrame
 	int nNumFrame;
 };
 
-class CStandardParticleEffect: public CParticleEffect
+class CStandardParticleEffect : public CParticleEffect
 {
-	OBJECT_BASIC_METHODS(CStandardParticleEffect);
+	OBJECT_BASIC_METHODS( CStandardParticleEffect );
+
 protected:
-	CStandardParticleEffect() : fFade(1.0f) {}
+	CStandardParticleEffect() : fFade( 1.0f ) {}
+
 public:
 	CVec2 pivot;
 	float fEndCycle;
 	float fScale;
 	bool bLeaveParticlesWhereStarted, bSampleCenterWarfog;
 
-	std::vector<std::vector<SHMatrix> > transforms;
-	std::vector<std::vector<char> > doneTransforms;
+	std::vector<std::vector<SHMatrix>> transforms;
+	std::vector<std::vector<char>> doneTransforms;
 	std::vector<int> particlesFrames;
 
 	float fTStopGeneration;
@@ -121,13 +128,13 @@ public:
 
 	SHMatrix transform;
 	std::vector<SParticleFrame> frames;
-	CDGPtr< CPtrFuncBase<CParticlesInfo>, CPtr<CPtrFuncBase<CParticlesInfo> > > pInfo;
+	CDGPtr<CPtrFuncBase<CParticlesInfo>, CPtr<CPtrFuncBase<CParticlesInfo>>> pInfo;
 	CVec2 vWrap;
 
 	float fFade;
 	int nPriority;
 
-	CStandardParticleEffect( int _nPriority ) : fFade(1.0f), nPriority(_nPriority) {}
+	CStandardParticleEffect( int _nPriority ) : fFade( 1.0f ), nPriority( _nPriority ) {}
 	void AddParticles( IParticleOutput *pRender );
 	virtual bool IsEmpty() const { return frames.empty(); }
 	void SetFade( float fVal ) { fFade = fVal; }
@@ -135,13 +142,14 @@ public:
 
 class CRainParticleEffect : public CParticleEffect
 {
-	OBJECT_BASIC_METHODS(CRainParticleEffect );
+	OBJECT_BASIC_METHODS( CRainParticleEffect );
 	void AddParticles( IParticleOutput *pRender );
+
 public:
 	std::vector<CVec3> positions;
 	std::vector<char> faces;
 	std::vector<CVec3> directions;
-//	CDGPtr< CPtrFuncBase<CParticlesInfo>, CPtr<CPtrFuncBase<CParticlesInfo> > > pInfo;
+	//	CDGPtr< CPtrFuncBase<CParticlesInfo>, CPtr<CPtrFuncBase<CParticlesInfo> > > pInfo;
 };
 
 void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture *pTex, float fOffset = 0.5f );

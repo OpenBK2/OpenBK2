@@ -1,7 +1,6 @@
 // UIScreen.cpp: implementation of the CWindowScreen class.
 //
 
-
 #include "stdafx.h"
 
 #include "port/virtualkey.h"
@@ -16,36 +15,35 @@
 
 #include <fmt/format.h>
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075B80, CWindowScreen)
-
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B80, CWindowScreen )
 
 // CWindowScreen
 
-
 NGScene::I2DGameView *CWindowScreen::p2DGameView = 0;
 
-void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator &ss, CStateSequiences &src, CStateSequiences *dst, CWindowScreen *pS )
+void StartEffectAndDeleteIfNeeded( CStateSequiences::iterator &ss,
+                                   CStateSequiences &src,
+                                   CStateSequiences *dst,
+                                   CWindowScreen *pS )
 {
 	ss->Segment( 1, pS ); // advance a little (to run all immediate reactions)
 	if ( ss->IsEnd() )
 	{
 		if ( ss->IsToBeDeleted() || !dst )
 			ss = src.erase( ss );
-		else {
+		else
+		{
 			// animation finished, but may be reversed.
-			auto next = std::next(ss);
-			dst->splice(dst->end(), src, ss);
+			auto next = std::next( ss );
+			dst->splice( dst->end(), src, ss );
 			ss = next;
 		}
 	}
 }
 
 CWindowScreen::CWindowScreen()
-: nMouseButtonState( 0 ),
-	bindShift( "shift_key" ),
-	bindCtrl( "ctrl_key" ),
-	bindAlt( "alt_key" ),
-	bIsScreenFocused( false )
+		: nMouseButtonState( 0 ), bindShift( "shift_key" ), bindCtrl( "ctrl_key" ), bindAlt( "alt_key" ),
+			bIsScreenFocused( false )
 {
 	priorityEvents.AddObserver( "win_left_button_down", &CWindowScreen::MsgOnLMouseDown );
 	priorityEvents.AddObserver( "win_left_button_up", &CWindowScreen::MsgOnLMouseUp );
@@ -68,7 +66,7 @@ void CWindowScreen::UpdateResolution()
 
 void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowScreen *pDesc( checked_cast<const NDb::SWindowScreen*>( _pDesc ) );
+	const NDb::SWindowScreen *pDesc( checked_cast<const NDb::SWindowScreen *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 
 	CWindow::InitByDesc( _pDesc );
@@ -77,9 +75,11 @@ void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	CWindow::InitStatic();
 
 	for ( std::vector<NDb::SCommandSequienceEntry>::const_iterator it = pDesc->commandSequiences.begin();
-				it != pDesc->commandSequiences.end(); ++it )
+	      it != pDesc->commandSequiences.end();
+	      ++it )
 	{
-		NI_ASSERT( commandSequiences.find( it->szName ) == commandSequiences.end(), fmt::format( "duplicate reaction name \"{}\"", it->szName ) );
+		NI_ASSERT( commandSequiences.find( it->szName ) == commandSequiences.end(),
+		           fmt::format( "duplicate reaction name \"{}\"", it->szName ) );
 		commandSequiences[it->szName] = it->sequence;
 	}
 }
@@ -162,7 +162,7 @@ IWindow *CWindowScreen::Pick( const CVec2 &vPos, const bool bRecursive )
 	return PickInternal( vPosOnScreen, bRecursive );
 }
 
-CButtonGroup * CWindowScreen::CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent )
+CButtonGroup *CWindowScreen::CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent )
 {
 	SButtonGroupID id( nID, pParent );
 	if ( !buttonGroups[id] )
@@ -228,7 +228,7 @@ void CWindowScreen::OnGetFocus( const bool bFocus )
 void CWindowScreen::InitSingletonWindows()
 {
 	// add console as one of children
-	IWindow * pConsole = Singleton<IDebugSingleton>()->GetConsole();
+	IWindow *pConsole = Singleton<IDebugSingleton>()->GetConsole();
 	if ( pConsole )
 	{
 		if ( !GetChild( pConsole->GetName(), false ) )
@@ -246,7 +246,7 @@ void CWindowScreen::InitSingletonWindows()
 		pDebug->Init();
 	}
 
-	IWindow *pStatSystem = dynamic_cast<IWindow*>( Singleton<IDebugSingleton>()->GetStatsWindow() );
+	IWindow *pStatSystem = dynamic_cast<IWindow *>( Singleton<IDebugSingleton>()->GetStatsWindow() );
 	if ( pStatSystem )
 	{
 		if ( !GetChild( pStatSystem->GetName(), false ) )
@@ -283,7 +283,9 @@ void CWindowScreen::UndoStateCommandSequence( const std::string &szCmdSeq )
 	}
 }
 
-void CWindowScreen::RegisterEffect( const std::string &szEffect, const std::vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable )
+void CWindowScreen::RegisterEffect( const std::string &szEffect,
+                                    const std::vector<CDBPtr<NDb::SUIStateBase>> &cmds,
+                                    const bool bReversable )
 {
 	commandSequiences[szEffect].commands = cmds;
 	commandSequiences[szEffect].bReversable = bReversable;
@@ -309,7 +311,7 @@ void CWindowScreen::Segment( const int timeDiff )
 	ProcessMessage( msg );
 	}*/
 	for ( CSegmentObjs::iterator it = segmentObjs.begin(); it != segmentObjs.end(); ++it )
-		(*it)->Segment( timeDiff );
+		( *it )->Segment( timeDiff );
 
 	if ( bIsScreenFocused )
 		tooltips.Segment( timeDiff, this );
@@ -334,7 +336,7 @@ void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 
 			if ( states.IsToBeDeleted() )
 				ss = stateSequiences.erase( ss );
-			else																// animation finished, but may be reversed.
+			else // animation finished, but may be reversed.
 				finishedAnimations.splice( finishedAnimations.end(), stateSequiences, ss++ );
 		}
 		else
@@ -353,15 +355,15 @@ void CWindowScreen::ProcessStateSequiences( const int timeDiff )
 	// process segments to all active states.
 	for ( CStateSequiences::iterator ss = stateSequiences.begin(); ss != stateSequiences.end(); )
 	{
-		if ( !(*ss).IsEnd() )
+		if ( !( *ss ).IsEnd() )
 		{
-			(*ss).Segment( timeDiff, this );
+			( *ss ).Segment( timeDiff, this );
 
-			if ( (*ss).IsEnd() )
+			if ( ( *ss ).IsEnd() )
 			{
-				if ( (*ss).IsToBeDeleted() )
+				if ( ( *ss ).IsToBeDeleted() )
 					ss = stateSequiences.erase( ss );
-				else																// animation finished, but may be reversed.
+				else // animation finished, but may be reversed.
 					finishedAnimations.splice( finishedAnimations.end(), stateSequiences, ss++ );
 				continue;
 			}
@@ -385,19 +387,23 @@ bool CWindowScreen::IsRegisteredToSegment( struct IWindow *pWnd ) const
 
 void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
 {
-	if ( 0 == nAnimationID ) return;
+	if ( 0 == nAnimationID )
+		return;
 
 	// first search in finished animations
-	auto it = std::find_if(finishedAnimations.begin(), finishedAnimations.end(),
-						   [&](const auto &elem){ return elem.GetID().first == nAnimationID; });
-	if (it != finishedAnimations.end()) {
+	auto it = std::find_if( finishedAnimations.begin(),
+	                        finishedAnimations.end(),
+	                        [&]( const auto &elem ) { return elem.GetID().first == nAnimationID; } );
+	if ( it != finishedAnimations.end() )
+	{
 		it->Reverse();
-		auto ss = std::find_if(stateSequiences.begin(), stateSequiences.end(),
-						   [&](const auto &elem){ return elem.GetID() == it->GetID(); });
+		auto ss = std::find_if( stateSequiences.begin(),
+		                        stateSequiences.end(),
+		                        [&]( const auto &elem ) { return elem.GetID() == it->GetID(); } );
 
-		if (ss != stateSequiences.end())
+		if ( ss != stateSequiences.end() )
 		{
-			StartEffectAndDeleteIfNeeded(ss, stateSequiences, &finishedAnimations, this);
+			StartEffectAndDeleteIfNeeded( ss, stateSequiences, &finishedAnimations, this );
 		}
 	}
 	// then find animation and try to reverse
@@ -429,7 +435,8 @@ uint16_t CWindowScreen::GetKeyboardFlags() const
 
 int CWindowScreen::RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow )
 {
-	if ( seq.commands.empty() ) return 0;
+	if ( seq.commands.empty() )
+		return 0;
 	const int nID = animationIDs.Get();
 	stateSequiences.push_front( CStates( seq, "", seq.bReversable, GetKeyboardFlags() ) );
 	CStateSequiences::iterator ss = stateSequiences.begin();
@@ -438,7 +445,11 @@ int CWindowScreen::RunAnimationSequienceForward( const NDb::SUIStateSequence &se
 	return nID;
 }
 
-void CWindowScreen::RunStateCommandSequience( const std::string &szCmdSeq, IWindow *_pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait )
+void CWindowScreen::RunStateCommandSequience( const std::string &szCmdSeq,
+                                              IWindow *_pSequenceParent,
+                                              SWindowContext *pContext,
+                                              const bool bForward,
+                                              const int nAnimationToWait )
 {
 	if ( CDynamicCast<CWindow> pSequenceParent = _pSequenceParent )
 	{
@@ -461,7 +472,10 @@ void CWindowScreen::RunStateCommandSequience( const std::string &szCmdSeq, IWind
 	}
 }
 
-void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdSeq, CWindow *pSequenceParent, SWindowContext *pContext, const bool bForward )
+void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdSeq,
+                                                       CWindow *pSequenceParent,
+                                                       SWindowContext *pContext,
+                                                       const bool bForward )
 {
 	if ( szCmdSeq.empty() )
 		return;
@@ -479,7 +493,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 			if ( szCmdSeq == it->GetName() )
 			{
 				bFound = true;
-				if ( !it->IsForward() )							// reversed one found
+				if ( !it->IsForward() ) // reversed one found
 					it->Reverse();
 			}
 		}
@@ -502,7 +516,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		{
 			if ( szCmdSeq == it->GetName() )
 			{
-				NI_ASSERT( !bFound, fmt::format( "duplicate sequience to reverse found in stateSequieces \"{}\"", szCmdSeq) );
+				NI_ASSERT( !bFound, fmt::format( "duplicate sequience to reverse found in stateSequieces \"{}\"", szCmdSeq ) );
 				it->Reverse();
 				it->SetContext( pContext );
 				StartEffectAndDeleteIfNeeded( it, stateSequiences, 0, this );
@@ -513,14 +527,15 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		{
 			if ( szCmdSeq == it->GetName() )
 			{
-				NI_ASSERT( !bFound, fmt::format( "duplicate sequience to reverse found in finishedAnimations \"{}\"", szCmdSeq ) );
+				NI_ASSERT( !bFound,
+				           fmt::format( "duplicate sequience to reverse found in finishedAnimations \"{}\"", szCmdSeq ) );
 				it->Reverse();
 				it->SetContext( pContext );
 				it->Segment( 1, this ); // advance a little (to run all imidiate reactions)
 				if ( it->IsEnd() )
 					it = finishedAnimations.erase( it );
 				else
-          stateSequiences.splice( stateSequiences.end(), finishedAnimations, it++ );
+					stateSequiences.splice( stateSequiences.end(), finishedAnimations, it++ );
 				bFound = true;
 			}
 			else
@@ -536,8 +551,11 @@ void CWindowScreen::SetWindowText( const std::string &szWindowName, const std::w
 	NI_ASSERT( pChild != 0, fmt::format( "cannot find deeper child \"{}\"", szWindowName ) );
 	if ( pChild )
 	{
-		ITextView *pText = dynamic_cast<ITextView*>( pChild );
-		NI_ASSERT( pText != 0, fmt::format( "attemt to set text \"{}\" to window that doesn't have text \"{}\"", NStr::ToMBCS(szText.c_str()), szWindowName ) );
+		ITextView *pText = dynamic_cast<ITextView *>( pChild );
+		NI_ASSERT( pText != 0,
+		           fmt::format( "attemt to set text \"{}\" to window that doesn't have text \"{}\"",
+		                        NStr::ToMBCS( szText.c_str() ),
+		                        szWindowName ) );
 		if ( pText )
 			pText->SetText( szText );
 	}
@@ -568,11 +586,13 @@ void CWindowScreen::InitScreen()
 	for ( CButtonGroups::iterator it = buttonGroups.begin(); it != buttonGroups.end(); ++it )
 	{
 		it->second->Init();
-		dynamic_cast_ptr<CWindow*>(it->first.pParent)->RepositionChildren();
+		dynamic_cast_ptr<CWindow *>( it->first.pParent )->RepositionChildren();
 	}
 }
 
-void CWindowScreen::SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView )
+void CWindowScreen::SetGView( NGScene::I2DGameView *_p2DGameView,
+                              NGScene::IGameView *_pGameView,
+                              NGScene::IGameView *_pInterface3DView )
 {
 	p2DGameView = _p2DGameView;
 	pInterface3DView = _pInterface3DView;
@@ -581,7 +601,7 @@ void CWindowScreen::SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGame
 
 int CWindowScreen::operator&( struct IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 2, &stateSequiences );
 	saver.Add( 3, &messageReactions );
 	saver.Add( 4, &pReactionsAndChecks );
@@ -608,14 +628,14 @@ void CWindowScreen::AfterLoad()
 	CWindow::AfterLoad();
 }
 
-IWindow* CWindowScreen::AddElement( const struct NDb::SUIDesc *pDesc )
+IWindow *CWindowScreen::AddElement( const struct NDb::SUIDesc *pDesc )
 {
 	//CRAP{ FIND OUT WHO USE THIS
 	return CUIFactory::MakeWindow( pDesc );
 	//CRAP}
 }
 
-const std::wstring& CWindowScreen::GetTextEntry( const std::string &szName ) const
+const std::wstring &CWindowScreen::GetTextEntry( const std::string &szName ) const
 {
 	static std::wstring empty;
 	if ( !pInstance )
@@ -631,7 +651,7 @@ const std::wstring& CWindowScreen::GetTextEntry( const std::string &szName ) con
 
 bool CWindowScreen::ActivateNextInTabOrder()
 {
-	CWindow* pFocused = FindFocusedWindow();
+	CWindow *pFocused = FindFocusedWindow();
 	int nFocused = -1;
 	if ( pFocused && tabOrder.Size() != 0 )
 	{
@@ -648,7 +668,7 @@ bool CWindowScreen::ActivateNextInTabOrder()
 		const int nNewFocused = nFocused + 1;
 		for ( int i = 0; i < tabOrder.Size(); ++i )
 		{
-			CWindow * pTry = tabOrder[(i+nNewFocused)%tabOrder.Size()].first;
+			CWindow *pTry = tabOrder[( i + nNewFocused ) % tabOrder.Size()].first;
 			if ( pTry->IsVisible() && pTry->IsEnabled() )
 			{
 				pTry->SetFocus( true );
@@ -659,8 +679,8 @@ bool CWindowScreen::ActivateNextInTabOrder()
 	return false;
 }
 
-void CWindowScreen::RegisterTabOrder( IWindow * pWindow, int nTabOrder )
+void CWindowScreen::RegisterTabOrder( IWindow *pWindow, int nTabOrder )
 {
 	if ( nTabOrder != -1 )
-		tabOrder.Push( std::pair<CObj<CWindow>, int>(dynamic_cast<CWindow*>(pWindow), nTabOrder) );
+		tabOrder.Push( std::pair<CObj<CWindow>, int>( dynamic_cast<CWindow *>( pWindow ), nTabOrder ) );
 }

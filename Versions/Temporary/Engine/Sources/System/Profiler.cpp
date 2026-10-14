@@ -41,15 +41,15 @@ void DumpStats()
 		for ( int i = 0; i < sortedTimes.size(); ++i )
 		{
 			const std::string szProfileInfo = sortedTimes[i];
-			DbgTrc( "%s : time %d", szProfileInfo.c_str(), (*pTimes)[szProfileInfo] );
+			DbgTrc( "%s : time %d", szProfileInfo.c_str(), ( *pTimes )[szProfileInfo] );
 		}
 
 		DbgTrc( "========================================" );
 	}
 }
 
-CProfiler::CProfiler( const char* pszFile, const int _nLine )
-: szFile( pszFile ), nLine( _nLine ), dwStartTime( GetCurrentTimeMilliseconds() )
+CProfiler::CProfiler( const char *pszFile, const int _nLine )
+		: szFile( pszFile ), nLine( _nLine ), dwStartTime( GetCurrentTimeMilliseconds() )
 {
 }
 
@@ -76,6 +76,6 @@ static void Profile( const std::string &szID, const std::vector<std::wstring> &p
 	NProfiler::DumpStats();
 }
 
-START_REGISTER(ProfileCommands)
+START_REGISTER( ProfileCommands )
 REGISTER_CMD( "profile", Profile )
 FINISH_REGISTER

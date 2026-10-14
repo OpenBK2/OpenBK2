@@ -32,9 +32,10 @@ class SYSTEM_EXPORT CMMFile
 	int nFileSize = 0;
 	bool bValid = false;
 	bool bMapped = false;
+
 public:
-	CMMFile( const CMMFile& ) = delete;
-	void operator=( const CMMFile& ) = delete;
+	CMMFile( const CMMFile & ) = delete;
+	void operator=( const CMMFile & ) = delete;
 
 	CMMFile() = default;
 	CMMFile( const char *pszName, EStreamAccess access );
@@ -45,12 +46,12 @@ public:
 	void MapFile( int nSize, bool bCanWrite );
 	void UnmapFile();
 
-	boost::interprocess::file_mapping& GetMapping() { return mapping; }
+	boost::interprocess::file_mapping &GetMapping() { return mapping; }
 	//! Whether MapFile last succeeded. A fragment reads the file directly when
 	//! this is false, which is how archives were read before mapping them.
 	bool IsMapped() const { return bMapped; }
 	bool IsOk() const { return bValid; }
-	const std::string& GetFileName() const { return szFileName; }
+	const std::string &GetFileName() const { return szFileName; }
 };
 
 class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
@@ -69,9 +70,10 @@ class SYSTEM_EXPORT CMemoryMappedFile : public CMappedStream
 	void *MapFile( int nSize );
 	void UnmapFile( void *p );
 	void FlushFile( void *p );
+
 public:
-	CMemoryMappedFile( const CMemoryMappedFile& ) = delete;
-	void operator=( const CMemoryMappedFile& ) = delete;
+	CMemoryMappedFile( const CMemoryMappedFile & ) = delete;
+	void operator=( const CMemoryMappedFile & ) = delete;
 
 	CMemoryMappedFile( const char *pszName, EStreamAccess access = STREAM_ACCESS_READ_WRITE ) : file( pszName, access )
 	{
@@ -104,11 +106,16 @@ class SYSTEM_EXPORT CMemoryMappedFileFragment : public CMappedStream
 	unsigned char *pOwnedBuffer = nullptr;
 
 	virtual int GetFileSize() { return nSize; }
-	virtual void SetFileSize( int nSize ) { ASSERT(0); }
+	virtual void SetFileSize( int nSize ) { ASSERT( 0 ); }
 	virtual void *MapFile( int nSize );
 	virtual void UnmapFile( void *p );
 	virtual void FlushFile( void *p );
+
 public:
-	CMemoryMappedFileFragment( CMMFile *_pFile, int _nOffset, int _nSize ) : pFile(_pFile), nOffset(_nOffset), nSize(_nSize) { StartAccess( F_CanRead ); }
+	CMemoryMappedFileFragment( CMMFile *_pFile, int _nOffset, int _nSize )
+			: pFile( _pFile ), nOffset( _nOffset ), nSize( _nSize )
+	{
+		StartAccess( F_CanRead );
+	}
 	~CMemoryMappedFileFragment() { FinishAccess(); }
 };

@@ -18,10 +18,10 @@ struct SStoredPiece
 		f.Add( 3, &weights );
 		f.Add( 10, &fVolume );
 		f.Add( 11, &juncs );
-//		f.Add( 13, &precalc );
+		//		f.Add( 13, &precalc );
 		return 0;
 	}
 };
 
-typedef std::unordered_map<int, SStoredPiece > CStoredPieceMap;
+typedef std::unordered_map<int, SStoredPiece> CStoredPieceMap;
 const int N_PIECES_CHUNK = 4;

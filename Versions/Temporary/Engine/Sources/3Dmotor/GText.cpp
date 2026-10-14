@@ -9,21 +9,12 @@ namespace NGScene
 {
 
 //! Размер TAB-а
-const int
-	N_TAB_SIZE		= 32;
-const wchar_t
-	WC_TAG_BEGIN	= L'<',
-	WC_TAG_END		= L'>';
-const int
-	FONT_SIZE_MASK			= 0x00FFFFFF,
-	FONT_SIZE_PIXELS		= 0x10000000,
-	FONT_SIZE_POINTS		= 0x20000000;
-const int
-	FONT_SIZE_SMALL			= 0x00000010 | FONT_SIZE_POINTS,
-	FONT_SIZE_NORMAL		= 0x00000016 | FONT_SIZE_POINTS,
-	FONT_SIZE_LARGE			= 0x00000020 | FONT_SIZE_POINTS,
-	FONT_SIZE_XLARGE		= 0x00000030 | FONT_SIZE_POINTS,
-	FONT_SIZE_XXLARGE		= 0x00000040 | FONT_SIZE_POINTS;
+const int N_TAB_SIZE = 32;
+const wchar_t WC_TAG_BEGIN = L'<', WC_TAG_END = L'>';
+const int FONT_SIZE_MASK = 0x00FFFFFF, FONT_SIZE_PIXELS = 0x10000000, FONT_SIZE_POINTS = 0x20000000;
+const int FONT_SIZE_SMALL = 0x00000010 | FONT_SIZE_POINTS, FONT_SIZE_NORMAL = 0x00000016 | FONT_SIZE_POINTS,
+					FONT_SIZE_LARGE = 0x00000020 | FONT_SIZE_POINTS, FONT_SIZE_XLARGE = 0x00000030 | FONT_SIZE_POINTS,
+					FONT_SIZE_XXLARGE = 0x00000040 | FONT_SIZE_POINTS;
 
 // Enums
 enum ECharType
@@ -55,10 +46,15 @@ struct SState
 	ZDATA
 	SFont sFont;
 	NGfx::SPixel8888 sColor;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&sFont); f.Add(3,&sColor); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &sFont );
+		f.Add( 3, &sColor );
+		return 0;
+	}
 
 	SState() {}
-	SState( const SFont &_sFont, const NGfx::SPixel8888 &_sColor ): sFont( _sFont ), sColor( _sColor ) {}
+	SState( const SFont &_sFont, const NGfx::SPixel8888 &_sColor ) : sFont( _sFont ), sColor( _sColor ) {}
 };
 struct SFontInfo
 {
@@ -66,7 +62,13 @@ struct SFontInfo
 	CVec2 scale;
 	CPtr<CFontInfo> pFont;
 	CPtr<CFontFormatInfo> pInfo;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&scale); f.Add(3,&pFont); f.Add(4,&pInfo); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &scale );
+		f.Add( 3, &pFont );
+		f.Add( 4, &pInfo );
+		return 0;
+	}
 };
 struct SChunk
 {
@@ -76,20 +78,33 @@ struct SChunk
 	SState sState;
 	std::wstring wsText;
 	ECharType eType;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nCount); f.Add(3,&nIndex); f.Add(4,&sState); f.Add(5,&wsText); f.Add(6,&eType); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &nCount );
+		f.Add( 3, &nIndex );
+		f.Add( 4, &sState );
+		f.Add( 5, &wsText );
+		f.Add( 6, &eType );
+		return 0;
+	}
 
 	SChunk() {}
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, int _nCount )
-		: eType( _eType ), nIndex( _nIndex ), sState( _sState ), nCount( _nCount ) {}
+			: eType( _eType ), nIndex( _nIndex ), sState( _sState ), nCount( _nCount )
+	{
+	}
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, const std::wstring &_wsText )
-		: eType( _eType ), nIndex( _nIndex ), sState( _sState ), wsText( _wsText ) {}
+			: eType( _eType ), nIndex( _nIndex ), sState( _sState ), wsText( _wsText )
+	{
+	}
 };
 
 // CTextFormater
 
-class CTextFormater: public CFuncBase<SText>
+class CTextFormater : public CFuncBase<SText>
 {
-	OBJECT_BASIC_METHODS(CTextFormater);
+	OBJECT_BASIC_METHODS( CTextFormater );
+
 private:
 	ZDATA
 	bool bDynamic;
@@ -101,18 +116,37 @@ private:
 	std::vector<SChunk> chunksList;
 	CTPoint<int> sSize;
 	CTPoint<float> sRealSize;
+
 public:
 	bool bProcessTAGs;
 	CPtr<CTextLocaleInfo> pLocale;
-	CDGPtr< CFuncBase<CVec2> > pScreenRect;
-	CDGPtr< CFuncBase< std::wstring > > pText;
-	CDGPtr< CFuncBase< CTPoint<int> > > pSize;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&bDynamic); f.Add(3,&fLineWidth); f.Add(4,&fLineHeight); f.Add(5,&fLastLineHeight); f.Add(6,&sState); f.Add(7,&sFontInfo); f.Add(8,&eAlignStyle); f.Add(9,&chunksList); f.Add(10,&sSize); f.Add(11,&sRealSize); f.Add(12,&bProcessTAGs); f.Add(13,&pLocale); f.Add(14,&pScreenRect); f.Add(15,&pText); f.Add(16,&pSize); return 0; }
+	CDGPtr<CFuncBase<CVec2>> pScreenRect;
+	CDGPtr<CFuncBase<std::wstring>> pText;
+	CDGPtr<CFuncBase<CTPoint<int>>> pSize;
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &bDynamic );
+		f.Add( 3, &fLineWidth );
+		f.Add( 4, &fLineHeight );
+		f.Add( 5, &fLastLineHeight );
+		f.Add( 6, &sState );
+		f.Add( 7, &sFontInfo );
+		f.Add( 8, &eAlignStyle );
+		f.Add( 9, &chunksList );
+		f.Add( 10, &sSize );
+		f.Add( 11, &sRealSize );
+		f.Add( 12, &bProcessTAGs );
+		f.Add( 13, &pLocale );
+		f.Add( 14, &pScreenRect );
+		f.Add( 15, &pText );
+		f.Add( 16, &pSize );
+		return 0;
+	}
 
 protected:
 	void Generate();
 	void GenerateLine();
-	CRectLayout* GetLayout( const SFont &sFont );
+	CRectLayout *GetLayout( const SFont &sFont );
 	void GetFontFormatInfo( const SFont &sFont, SFontInfo *pInfo );
 
 	void TagFont( const std::wstring &wsTag );
@@ -131,7 +165,11 @@ public:
 	CTextFormater() {}
 };
 
-CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *pScreenRect, CFuncBase< std::wstring > *pText, CFuncBase< CTPoint<int> > *pSize, bool bProcessTAGs )
+CFuncBase<SText> *CreateTextFormater( CTextLocaleInfo *pInfo,
+                                      CFuncBase<CVec2> *pScreenRect,
+                                      CFuncBase<std::wstring> *pText,
+                                      CFuncBase<CTPoint<int>> *pSize,
+                                      bool bProcessTAGs )
 {
 	CTextFormater *pTextFormater = new CTextFormater;
 	pTextFormater->bProcessTAGs = bProcessTAGs;
@@ -161,7 +199,7 @@ void CTextFormater::Generate()
 	int nTemp = 0, nWordBegin = 0;
 	float fWordWidth = 0, fWordHeight = 0;
 	wchar_t wcChar = 0, wcLastChar = 0;
-	ECharType eThisChar = CHAR_NEWLINE, eLastChar = CHAR_NEWLINE ;
+	ECharType eThisChar = CHAR_NEWLINE, eLastChar = CHAR_NEWLINE;
 
 	bDynamic = false;
 	sState = SState( SFont( FONT_SIZE_NORMAL, "System" ), NGfx::SPixel8888( 255, 255, 255, 255 ) );
@@ -180,7 +218,7 @@ void CTextFormater::Generate()
 	if ( sSize.x == -1 )
 	{
 		bDynamic = true;
-		sSize.x = 0x7fffffff;//numeric_limits<int>::max();
+		sSize.x = 0x7fffffff; //numeric_limits<int>::max();
 	}
 	sRealSize = CTPoint<float>( 0, 0 );
 
@@ -207,7 +245,8 @@ void CTextFormater::Generate()
 			{
 				fLineWidth += fWordWidth;
 				fLineHeight = (std::max)( fLineHeight, fWordHeight );
-				chunksList.push_back( SChunk( CHAR_ALNUM, nWordBegin, sState, wsText.substr( nWordBegin, nTemp - nWordBegin ) ) );
+				chunksList.push_back(
+						SChunk( CHAR_ALNUM, nWordBegin, sState, wsText.substr( nWordBegin, nTemp - nWordBegin ) ) );
 			}
 			else if ( ( eLastChar == CHAR_SPACE ) && !chunksList.empty() )
 			{
@@ -273,7 +312,7 @@ void CTextFormater::Generate()
 		nTemp++;
 		eLastChar = eThisChar;
 		wcLastChar = wcChar;
-	}while( wcChar != 0 );
+	} while ( wcChar != 0 );
 
 	value.sSize.x = (int)( sRealSize.x );
 	value.sSize.y = (int)( sRealSize.y );
@@ -403,13 +442,13 @@ void CTextFormater::ProcessTAG( const std::wstring &wsTag )
 	else if ( wsTag.compare( L"left" ) == 0 )
 		eAlignStyle = ALIGN_LEFT;
 	else if ( wsTag.compare( L"right" ) == 0 )
-		eAlignStyle	= ALIGN_RIGHT;
+		eAlignStyle = ALIGN_RIGHT;
 	else if ( wsTag.compare( L"center" ) == 0 )
-		eAlignStyle	= ALIGN_CENTER;
+		eAlignStyle = ALIGN_CENTER;
 	else if ( wsTag.compare( L"justify" ) == 0 )
-		eAlignStyle	= ALIGN_JUSTIFY;
+		eAlignStyle = ALIGN_JUSTIFY;
 	else if ( wsTag.compare( L"nowrap" ) == 0 )
-		eAlignStyle	= ALIGN_NOWRAP;
+		eAlignStyle = ALIGN_NOWRAP;
 	else if ( wsTag.substr( 0, 4 ).compare( L"font" ) == 0 )
 		TagFont( wsTag );
 	else if ( wsTag.substr( 0, 5 ).compare( L"color" ) == 0 )
@@ -422,7 +461,7 @@ struct SWString
 	std::wstring wsString;
 
 	SWString() {}
-	SWString( ECharType _eType, const std::wstring &_wsString ): eType( _eType ), wsString( _wsString ) {}
+	SWString( ECharType _eType, const std::wstring &_wsString ) : eType( _eType ), wsString( _wsString ) {}
 };
 
 void SplitString( const std::wstring &wsString, std::vector<SWString> *pParts )
@@ -457,7 +496,7 @@ void SplitString( const std::wstring &wsString, std::vector<SWString> *pParts )
 
 		nTemp++;
 		eLastChar = eThisChar;
-	}while( wcChar != 0 );
+	} while ( wcChar != 0 );
 }
 
 void CTextFormater::TagFont( const std::wstring &wsTag )
@@ -569,7 +608,7 @@ void CTextFormater::TagColor( const std::wstring &wsTag )
 		swscanf( iTemp->wsString.c_str(), L"%x", &sState.sColor.dwColor );
 }
 
-CRectLayout* CTextFormater::GetLayout( const SFont &sFont )
+CRectLayout *CTextFormater::GetLayout( const SFont &sFont )
 {
 	SFont sSearch( sFont );
 	sSearch.nSize = 12;
@@ -589,8 +628,8 @@ CRectLayout* CTextFormater::GetLayout( const SFont &sFont )
 	SText::SFontLayout *pLayout = &*value.rectLayouts.insert( value.rectLayouts.end(), SText::SFontLayout() );
 	pLayout->sFont = sFont;
 	pLayout->pFontInfo = sFontInfo.pFont;
-//	pLayout->sLayout.scale.x = sFontInfo.scale.x;
-//	pLayout->sLayout.scale.y = sFontInfo.scale.y;
+	//	pLayout->sLayout.scale.x = sFontInfo.scale.x;
+	//	pLayout->sLayout.scale.y = sFontInfo.scale.y;
 
 	return &pLayout->sLayout;
 }
@@ -614,7 +653,7 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 		ASSERT( 0 );
 
 	CPtr<CFontInfo> pFont = pLocale->GetFont( sSearch );
-	CDGPtr< CPtrFuncBase<CFontFormatInfo> > pInfo( pFont->GetFormatInfo() );
+	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pInfo( pFont->GetFormatInfo() );
 	pInfo.Refresh();
 	pFontInfo->pFont = pFont;
 	pFontInfo->pInfo = pInfo->GetValue();
@@ -622,7 +661,9 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 	// Runtime glyphs already contain both screen scales. Resizing their
 	// enlarged accent cells back to the requested line height shrinks the text.
 	const bool bRasterized = pFont->IsRasterized();
-	pFontInfo->scale.x = bRasterized ? 1.0f : (float)( sSearch.nWidth > 0 ? sSearch.nWidth : sSearch.nSize ) / pFontInfo->pInfo->GetLineSpace();
+	pFontInfo->scale.x =
+			bRasterized ? 1.0f
+									: (float)( sSearch.nWidth > 0 ? sSearch.nWidth : sSearch.nSize ) / pFontInfo->pInfo->GetLineSpace();
 	pFontInfo->scale.y = bRasterized ? 1.0f : (float)sSearch.nSize / pFontInfo->pInfo->GetLineSpace();
 
 	return;

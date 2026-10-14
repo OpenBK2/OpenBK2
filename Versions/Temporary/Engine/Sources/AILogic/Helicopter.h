@@ -6,7 +6,7 @@ class CHelicopter : public CAviation
 {
 	OBJECT_NOCOPY_METHODS( CHelicopter );
 
-	ZDATA_(CAviation)
+	ZDATA_( CAviation )
 	CVec3 vHeliNextPos;
 	CVec3 vHeliNextSpeed;
 	CVec3 vHeliNextNormal;
@@ -39,22 +39,69 @@ class CHelicopter : public CAviation
 	uint16_t wVisualFinishDirection = {};
 	uint16_t wDesiredDirection = {};
 	bool bDesiredDirectionSet = {};
+
 protected:
 	virtual void UpdatePlacement( const CVec3 &vOldPosition, const uint16_t wOldDirection, const bool bNeedUpdate );
 	bool AdvanceDesiredDirection( const NTimer::STime timeDiff );
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAviation*)this); f.Add(2,&vHeliNextPos); f.Add(3,&vHeliNextSpeed); f.Add(4,&vHeliNextNormal); f.Add(5,&vMoveTarget); f.Add(6,&vVisualAimPoint); f.Add(7,&bMoveTargetSet); f.Add(8,&bVisualAimPointSet); f.Add(9,&bAttackTilt); f.Add(10,&bDeadSpiralStarted); f.Add(11,&vDeathStartPos); f.Add(12,&vDeathVelocity); f.Add(13,&fDeathGroundZ); f.Add(14,&fDeathSpiralAngle); f.Add(15,&fDeathSelfRotation); f.Add(16,&fMovementVisualAngle); f.Add(17,&fSideVisualAngle); f.Add(18,&timeDeathStarted); f.Add(19,&wVisualStartDirection); f.Add(20,&wVisualFinishDirection); f.Add(21,&fVisualStartMovementAngle); f.Add(22,&fVisualFinishMovementAngle); f.Add(23,&fVisualStartSideAngle); f.Add(24,&fVisualFinishSideAngle); f.Add(25,&wDesiredDirection); f.Add(26,&bDesiredDirectionSet); f.Add(27,&fAttackVisualAngle); f.Add(28,&fVisualStartAttackAngle); f.Add(29,&fVisualFinishAttackAngle); f.Add(30,&fDeathSpiralRadius); f.Add(31,&fDeathSpiralSteps); f.Add(32,&fDeathSpiralDownAcceleration); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CAviation *)this );
+		f.Add( 2, &vHeliNextPos );
+		f.Add( 3, &vHeliNextSpeed );
+		f.Add( 4, &vHeliNextNormal );
+		f.Add( 5, &vMoveTarget );
+		f.Add( 6, &vVisualAimPoint );
+		f.Add( 7, &bMoveTargetSet );
+		f.Add( 8, &bVisualAimPointSet );
+		f.Add( 9, &bAttackTilt );
+		f.Add( 10, &bDeadSpiralStarted );
+		f.Add( 11, &vDeathStartPos );
+		f.Add( 12, &vDeathVelocity );
+		f.Add( 13, &fDeathGroundZ );
+		f.Add( 14, &fDeathSpiralAngle );
+		f.Add( 15, &fDeathSelfRotation );
+		f.Add( 16, &fMovementVisualAngle );
+		f.Add( 17, &fSideVisualAngle );
+		f.Add( 18, &timeDeathStarted );
+		f.Add( 19, &wVisualStartDirection );
+		f.Add( 20, &wVisualFinishDirection );
+		f.Add( 21, &fVisualStartMovementAngle );
+		f.Add( 22, &fVisualFinishMovementAngle );
+		f.Add( 23, &fVisualStartSideAngle );
+		f.Add( 24, &fVisualFinishSideAngle );
+		f.Add( 25, &wDesiredDirection );
+		f.Add( 26, &bDesiredDirectionSet );
+		f.Add( 27, &fAttackVisualAngle );
+		f.Add( 28, &fVisualStartAttackAngle );
+		f.Add( 29, &fVisualFinishAttackAngle );
+		f.Add( 30, &fDeathSpiralRadius );
+		f.Add( 31, &fDeathSpiralSteps );
+		f.Add( 32, &fDeathSpiralDownAcceleration );
+		return 0;
+	}
 
 	CHelicopter();
 
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
-	virtual IStatesFactory* GetStatesFactory() const;
+	virtual void Init( const CVec2 &center,
+	                   const int z,
+	                   const SUnitBaseRPGStats *pStats,
+	                   const float fHP,
+	                   const uint16_t dir,
+	                   const uint8_t player,
+	                   ICollisionsCollector *pCollisionsCollector );
+	virtual IStatesFactory *GetStatesFactory() const;
 
 	virtual void Segment();
 	virtual void FirstSegment( const NTimer::STime timeDiff ) {}
 	virtual void SecondSegment( const NTimer::STime timeDiff );
 	virtual void Stop();
-	virtual void StopTurning() { CBasePathUnit::StopTurning(); bDesiredDirectionSet = false; }
+	virtual void StopTurning()
+	{
+		CBasePathUnit::StopTurning();
+		bDesiredDirectionSet = false;
+	}
 	virtual void SetDirection( const uint16_t wDirection, const bool bNeedUpdate = true );
 	virtual const bool TurnToDirection( const uint16_t wDirection, const bool bCanBackward, const bool bCanForward );
 
@@ -77,7 +124,7 @@ public:
 	virtual CVec3 GetPosNext() const { return vHeliNextPos; }
 	virtual CVec3 GetSpeedNext() const { return vHeliNextSpeed; }
 	virtual CVec3 GetNormalNext() const { return vHeliNextNormal; }
-	virtual const IManuver * GetManuver() const { return 0; }
+	virtual const IManuver *GetManuver() const { return 0; }
 	virtual void SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &_vNormal );
 
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
@@ -96,8 +143,8 @@ public:
 	bool IsDeathSpiralFinished() const { return bDeadSpiralStarted && GetCenter().z <= fDeathGroundZ + 0.1f; }
 	CVec2 GetLeavePoint() const;
 
-	const NDb::SHelicopterStats* GetHelicopterStats() const;
+	const NDb::SHelicopterStats *GetHelicopterStats() const;
 	float GetFlightZ( const CVec2 &vPoint ) const;
 
-	virtual CArtillery* GetTowedArtillery() const { return 0; }
+	virtual CArtillery *GetTowedArtillery() const { return 0; }
 };

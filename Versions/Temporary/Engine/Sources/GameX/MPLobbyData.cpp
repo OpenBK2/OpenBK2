@@ -22,7 +22,7 @@ void CClientListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *p
 	SetData( pWindow, pData );
 }
 
-void CClientListViewer::SetData ( CObjectBase *pWindow, const CObjectBase *pData  ) const
+void CClientListViewer::SetData( CObjectBase *pWindow, const CObjectBase *pData ) const
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );

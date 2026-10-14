@@ -10,7 +10,7 @@ struct SLightStateCalcSeed
 {
 	int nSeed;
 
-	SLightStateCalcSeed() : nSeed(0) {}
+	SLightStateCalcSeed() : nSeed( 0 ) {}
 };
 
 class CLightState
@@ -19,6 +19,7 @@ class CLightState
 	void AddParallel( const SSphere &_bound, const CVec3 &vDir, const CVec3 &vColor );
 	void AddPoint( const CVec3 &vCenter, float fRadius, const CVec3 &_vColor );
 	CPtr<IGScene> pVis;
+
 public:
 	struct SSemiPointLight
 	{
@@ -28,7 +29,9 @@ public:
 
 		SSemiPointLight() {}
 		SSemiPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, const CVec3 &_vNormal, float _fRadius )
-			: vColor(_vColor), vCenter(_vCenter), vNormal(_vNormal), fRadius(_fRadius) {}
+				: vColor( _vColor ), vCenter( _vCenter ), vNormal( _vNormal ), fRadius( _fRadius )
+		{
+		}
 	};
 	struct SPointLight
 	{
@@ -37,19 +40,34 @@ public:
 		//bool bCastShadow;
 
 		SPointLight() {}
-		SPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, float _fR )//, bool _bCastShadow )
-			: vColor(_vColor), vCenter(_vCenter), fRadius(_fR) {}//, bCastShadow(_bCastShadow) {}
+		SPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, float _fR ) //, bool _bCastShadow )
+				: vColor( _vColor ), vCenter( _vCenter ), fRadius( _fR )
+		{
+		} //, bCastShadow(_bCastShadow) {}
 	};
 	ZDATA
 	std::vector<SSemiPointLight> semiPoints;
 	std::vector<SPointLight> points;
 	std::vector<CVec3> skyDirections;
 	CVec3 vAmbientColor;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&semiPoints); f.Add(3,&points); f.Add(4,&skyDirections); f.Add(5,&vAmbientColor); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &semiPoints );
+		f.Add( 3, &points );
+		f.Add( 4, &skyDirections );
+		f.Add( 5, &vAmbientColor );
+		return 0;
+	}
 
-	void Clear() { semiPoints.clear(); points.clear(); skyDirections.clear(); }
+	void Clear()
+	{
+		semiPoints.clear();
+		points.clear();
+		skyDirections.clear();
+	}
 	CVec3 GenerateSkyDir( SLightStateCalcSeed *pSeed, int nSkyDirs );
-	void CreateScattered( SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, IGScene *pVis, int nSkyDirs );
+	void CreateScattered(
+			SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, IGScene *pVis, int nSkyDirs );
 	void CreateSimple( SLightStateCalcSeed *pSeed, const SSphere &_bounds, const SPerVertexLightState &l, int nSkyDirs );
 };
 

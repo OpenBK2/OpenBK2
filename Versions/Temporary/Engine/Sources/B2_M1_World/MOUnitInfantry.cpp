@@ -14,8 +14,8 @@
 
 void CMOUnitInfantry::SetVisible( const bool bVisible, const NDb::ESeason eSeason, const bool bIsNight )
 {
-//	if ( GetTransport() != 0 && bVisible )
-//		return;
+	//	if ( GetTransport() != 0 && bVisible )
+	//		return;
 	//
 	CMOUnit::SetVisible( bVisible, eSeason, bIsNight );
 	if ( nParachuteID != -1 )
@@ -26,7 +26,7 @@ void CMOUnitInfantry::SetVisible( const bool bVisible, const NDb::ESeason eSeaso
 
 void CMOUnitInfantry::InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc )
 {
-	const NDb::SInfantryRPGStats* pStats = GetStatsLocal();
+	const NDb::SInfantryRPGStats *pStats = GetStatsLocal();
 	const int nUniqueID = GetID();
 	IScene *pScene = Scene();
 
@@ -38,7 +38,11 @@ void CMOUnitInfantry::InitAttached( const NDb::ESeason eSeason, IChooseAttached 
 	}
 }
 
-bool CMOUnitInfantry::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
+bool CMOUnitInfantry::Create( const int nUniqueID,
+                              const SAIBasicUpdate *_pUpdate,
+                              NDb::ESeason eSeason,
+                              const NDb::EDayNight eDayTime,
+                              bool bInEditor )
 {
 	const bool bResult = CMOUnit::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor );
 	if ( bResult )
@@ -54,7 +58,10 @@ bool CMOUnitInfantry::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdat
 }
 
 static bool s_bTestDrawWeapon = true;
-bool CMOUnitInfantry::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+bool CMOUnitInfantry::CreateSceneObject( const int nUniqueID,
+                                         const SAINewUnitUpdate *pUpdate,
+                                         NDb::ESeason eSeason,
+                                         bool bInEditor )
 {
 	if ( CMOUnit::CreateSceneObject( nUniqueID, pUpdate, eSeason, bInEditor ) == false )
 		return false;
@@ -67,7 +74,7 @@ bool CMOUnitInfantry::CreateSceneObject( const int nUniqueID, const SAINewUnitUp
 
 void CMOUnitInfantry::SetupWeapon( NDb::ESeason eSeason )
 {
-	const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
+	const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats *>( GetStats() );
 	if ( pStats && pStats->GetGunsSize( GetID(), 0 ) > 0 )
 	{
 		if ( CDBPtr<NDb::SWeaponRPGStats> pWeaponStats = pStats->GetGun( GetID(), 0, 0 ).pWeapon )
@@ -75,7 +82,8 @@ void CMOUnitInfantry::SetupWeapon( NDb::ESeason eSeason )
 			if ( CDBPtr<NDb::SVisObj> pVisObj = pWeaponStats->pVisObj )
 			{
 				CDBPtr<NDb::SModel> pModel = GetModel( pVisObj, eSeason );
-				Scene()->AttachSubModel( GetID(), ESSOT_WEAPON, pStats->szGunBoneName, pModel, ESAT_REPLACE_ON_TYPE, 0, false, false );
+				Scene()->AttachSubModel(
+						GetID(), ESSOT_WEAPON, pStats->szGunBoneName, pModel, ESAT_REPLACE_ON_TYPE, 0, false, false );
 			}
 		}
 	}
@@ -87,7 +95,7 @@ void CMOUnitInfantry::ChangeRPGStats( const struct SAIChangeDBIDUpdate &update, 
 
 	const NDb::SInfantryRPGStats *pNewStats = checked_cast_ptr<const NDb::SInfantryRPGStats *>( update.info.pStats );
 	const NDb::SVisObj *pNewVO = pNewStats->pvisualObject;
-	const NDb::SInfantryRPGStats *pOldStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
+	const NDb::SInfantryRPGStats *pOldStats = checked_cast<const NDb::SInfantryRPGStats *>( GetStats() );
 
 	if ( !pNewVO )
 		return;
@@ -128,15 +136,15 @@ void CMOUnitInfantry::GetStatus( SObjectStatus *pStatus ) const
 		weapon.nCount = 1;
 		weapon.bPrimary = gun.bIsPrimary;
 
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(gun.pWeapon->,LocalizedName) )
-			weapon.szLocalizedName = GET_TEXT_PRE(gun.pWeapon->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( gun.pWeapon->, LocalizedName ) )
+			weapon.szLocalizedName = GET_TEXT_PRE( gun.pWeapon->, LocalizedName );
 
 		weapon.nDamage = pShell->fDamagePower;
 		weapon.nPenetration = pShell->nPiercing;
 		weapon.nMaxAmmo = gun.nAmmo;
 
 		if ( weapon.pWeaponID && weapon.pWeaponID->eWeaponType != NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON &&
-			weapon.pWeaponID->eWeaponType != NDb::SWeaponRPGStats::WEAPON_HIDED ) // exclude grenades
+		     weapon.pWeaponID->eWeaponType != NDb::SWeaponRPGStats::WEAPON_HIDED ) // exclude grenades
 			pStatus->AddWeapon( weapon );
 	}
 
@@ -159,16 +167,19 @@ void CMOUnitInfantry::SetSquad( struct IMOSquad *_pSquad )
 
 	if ( pSquad )
 	{
-		bool bNeedUpdate = (GetIconsSetInfo().fHPBarLen != pSquad->GetIconsSetInfo().fHPBarLen );
+		bool bNeedUpdate = ( GetIconsSetInfo().fHPBarLen != pSquad->GetIconsSetInfo().fHPBarLen );
 		SetIconsSetInfo( pSquad->GetIconsSetInfo() );
 		if ( bNeedUpdate )
 			UpdateIcons();
 	}
 }
 
-void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason )
+void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot,
+                                    const NTimer::STime &currTime,
+                                    IScene *pScene,
+                                    NDb::ESeason eSeason )
 {
-	const SAINotifyInfantryShot &infShot = *( static_cast<const SAINotifyInfantryShot*>(&shot) );
+	const SAINotifyInfantryShot &infShot = *( static_cast<const SAINotifyInfantryShot *>( &shot ) );
 	const SAINotifyInfantryShot *pInfShot = &infShot;
 	NI_ASSERT( pInfShot, "Wrong infantry shot notification" );
 	if ( !pInfShot )
@@ -181,16 +192,16 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 
 	const CDBPtr<NDb::SWeaponRPGStats> *ppWeapon = &pInfShot->pWeapon;
 
-	if ( ! (*ppWeapon) )
+	if ( !( *ppWeapon ) )
 	{
-		ppWeapon = & ( GetStatsLocal()->GetGun( pInfShot->nObjUniqueID, pInfShot->nPlatform, pInfShot->nGun ).pWeapon );
+		ppWeapon = &( GetStatsLocal()->GetGun( pInfShot->nObjUniqueID, pInfShot->nPlatform, pInfShot->nGun ).pWeapon );
 	}
 
 	const CDBPtr<NDb::SWeaponRPGStats> &pWeapon = *ppWeapon;
 
 	// Фокус}
 
-	pEffectTemp = pWeapon->shells[ pInfShot->cShell ].pEffectGunFire.GetPtr();
+	pEffectTemp = pWeapon->shells[pInfShot->cShell].pEffectGunFire.GetPtr();
 
 	const NDb::SComplexEffect *pEffect = pEffectTemp;
 	if ( !pEffect )
@@ -208,7 +219,7 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 	const NDb::SEffect *pVisEffect = pEffect->GetSceneEffect();
 	if ( pVisEffect && IsVisible() )
 	{
-		const NDb::SInfantryRPGStats *pInfStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
+		const NDb::SInfantryRPGStats *pInfStats = checked_cast<const NDb::SInfantryRPGStats *>( GetStats() );
 		NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( GetID(), pInfStats->szGunBoneName );
 		if ( !pAnimator )
 			return;
@@ -222,20 +233,28 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 		SHMatrix mShootOffset( gun.vShootPointOffset, qFireRot );
 		//
 		//
-		Scene()->AttachEffect( GetID(), ESSOT_GUN_FIRE, pInfStats->szGunBoneName, mShootOffset, pVisEffect, (std::min)( shot.time, currTime ), ESAT_REPLACE_ON_BONE );
+		Scene()->AttachEffect( GetID(),
+		                       ESSOT_GUN_FIRE,
+		                       pInfStats->szGunBoneName,
+		                       mShootOffset,
+		                       pVisEffect,
+		                       (std::min)( shot.time, currTime ),
+		                       ESAT_REPLACE_ON_BONE );
 		//
 	}
 	AddShotTrace( pWeapon, shot, currTime, pScene );
 }
 
-void CMOUnitInfantry::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon, const struct SAINotifyBaseShot &shot,
-																	  const NTimer::STime &currTime, IScene *pScene )
+void CMOUnitInfantry::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon,
+                                    const struct SAINotifyBaseShot &shot,
+                                    const NTimer::STime &currTime,
+                                    IScene *pScene )
 {
-	const SAINotifyInfantryShot &infShot = *( static_cast<const SAINotifyInfantryShot*>(&shot) );
+	const SAINotifyInfantryShot &infShot = *( static_cast<const SAINotifyInfantryShot *>( &shot ) );
 	if ( (pWeapon->shells[infShot.cShell].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_LINE) /*&&
 			 (NWin32Random::Random(100) + 1 <= pWeapon->shells[infShot.cShell].fTraceProbability * 100.0f)*/ )
 	{
-		const NDb::SInfantryRPGStats *pInfStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
+		const NDb::SInfantryRPGStats *pInfStats = checked_cast<const NDb::SInfantryRPGStats *>( GetStats() );
 		NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( GetID(), pInfStats->szGunBoneName );
 		if ( !pAnimator )
 			return;
@@ -245,9 +264,9 @@ void CMOUnitInfantry::AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon, 
 		CVec3 vEnd( shot.vDestPos );
 		AI2Vis( &vEnd );
 		if ( vEnd.z == 0 )
-			vEnd.z = AI2Vis( Scene()->GetZ(shot.vDestPos.x, shot.vDestPos.y) );
+			vEnd.z = AI2Vis( Scene()->GetZ( shot.vDestPos.x, shot.vDestPos.y ) );
 		//
-		pScene->AddShotTrace( vStart, vEnd, currTime, &(pWeapon->shells[infShot.cShell]) );
+		pScene->AddShotTrace( vStart, vEnd, currTime, &( pWeapon->shells[infShot.cShell] ) );
 	}
 }
 
@@ -266,7 +285,7 @@ void CMOUnitInfantry::GetActionsBy( CUserActions *pActions ) const
 
 	if ( pSquad )
 	{
-		if ( const NDb::SSquadRPGStats *pStats = checked_cast<const NDb::SSquadRPGStats*>( pSquad->GetStats() ) )
+		if ( const NDb::SSquadRPGStats *pStats = checked_cast<const NDb::SSquadRPGStats *>( pSquad->GetStats() ) )
 		{
 			if ( pStats->formations.size() > 1 )
 			{
@@ -310,7 +329,10 @@ void CMOUnitInfantry::GetPossibleActions( CUserActions *pActions ) const
 	GetActionsBy( pActions );
 }
 
-void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason )
+void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placement,
+                                         struct IScene *pScene,
+                                         struct ISoundScene *pSoundScene,
+                                         NDb::ESeason eSeason )
 {
 	CMOUnit::AIUpdatePlacement( placement, pScene, pSoundScene, eSeason );
 	if ( HasMoveAnimation() )
@@ -328,12 +350,16 @@ void CMOUnitInfantry::AIUpdatePlacement( const struct SAINotifyPlacement &placem
 	}
 }
 
-void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager  )
+void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
+                                        const NDb::ESeason eSeason,
+                                        const bool bIsNight,
+                                        struct ISoundScene *pSoundScene,
+                                        IClientAckManager *pAckManager )
 {
 	const bool bIsM1 = NGlobal::GetVar( "m1", 0 ) != 0;
 	if ( !IsVisible() && !bIsM1 )
 	{
-//		Scene()->ShowObject( GetID(), true );
+		//		Scene()->ShowObject( GetID(), true );
 		SetVisible( true, eSeason, bIsNight );
 	}
 
@@ -342,7 +368,7 @@ void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const 
 	SetSquad( 0 );
 	SetCanSelect( false );
 
-  NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
+	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
 
 	if ( pAnimator != 0 )
 	{
@@ -359,10 +385,12 @@ void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const 
 		{
 			const int nAnimID = pUpdate->dieAnimation.nParam & 0x0000ffff;
 			const int nAnimType = ( pUpdate->dieAnimation.nParam & 0x0fff0000 ) >> 16;
-			const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
-			if ( (nAnimID >= 0) && (nAnimType < pStats->animdescs.size()) && (nAnimID < pStats->animdescs[nAnimType].anims.size()) )
+			const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats *>( GetStats() );
+			if ( ( nAnimID >= 0 ) && ( nAnimType < pStats->animdescs.size() ) &&
+			     ( nAnimID < pStats->animdescs[nAnimType].anims.size() ) )
 			{
-				if ( const NDb::SAnimB2 *pAnimation = checked_cast<const NDb::SAnimB2*>( pStats->animdescs[nAnimType].anims[nAnimID].pAnimation.GetPtr() ) )
+				if ( const NDb::SAnimB2 *pAnimation =
+				         checked_cast<const NDb::SAnimB2 *>( pStats->animdescs[nAnimType].anims[nAnimID].pAnimation.GetPtr() ) )
 				{
 					SetLoopedAnimation( pAnimation->bLooped );
 					AddAnimation( pAnimation, nStartTime, pAnimator );
@@ -373,7 +401,9 @@ void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const 
 	}
 }
 
-void CMOUnitInfantry::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMOUnitInfantry::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
+                                         struct ISoundScene *pSoundScene,
+                                         IClientAckManager *pAckManager )
 {
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
 
@@ -398,14 +428,21 @@ void CMOUnitInfantry::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb:
 	*/
 }
 
-CMOProjectile* CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *pUpdate )
+CMOProjectile *CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *pUpdate )
 {
-	const NDb::SWeaponRPGStats *pWeapon = GetStatsLocal()->GetGun( GetID(), pUpdate->info.nPlatform, pUpdate->info.nGun ).pWeapon;
-	NI_ASSERT( pWeapon != 0, fmt::format( "Can't find weapon for mechunit \"{}\", nCommonGun {}", GetStatsLocal()->GetDBID().ToString(), pUpdate->info.nGun ) );
+	const NDb::SWeaponRPGStats *pWeapon =
+			GetStatsLocal()->GetGun( GetID(), pUpdate->info.nPlatform, pUpdate->info.nGun ).pWeapon;
+	NI_ASSERT( pWeapon != 0,
+	           fmt::format( "Can't find weapon for mechunit \"{}\", nCommonGun {}",
+	                        GetStatsLocal()->GetDBID().ToString(),
+	                        pUpdate->info.nGun ) );
 	if ( pWeapon == 0 )
 		return 0;
 
-	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(), fmt::format( "Wrong number of shell ({}), total number of shells ({})", pUpdate->info.nShell, pWeapon->shells.size() ) );
+	NI_ASSERT( pUpdate->info.nShell < pWeapon->shells.size(),
+	           fmt::format( "Wrong number of shell ({}), total number of shells ({})",
+	                        pUpdate->info.nShell,
+	                        pWeapon->shells.size() ) );
 	if ( pUpdate->info.nShell >= pWeapon->shells.size() )
 		return 0;
 	//
@@ -416,7 +453,8 @@ CMOProjectile* CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *
 	CPtr<CMOProjectile> pProjectile = new CMOProjectile();
 	const NDb::SWeaponRPGStats::SShell &shell = pWeapon->shells[pUpdate->info.nShell];
 	const CVec3 vRotationSpeedRad = shell.pMissleParams ? shell.pMissleParams->vVisProjectileRotationRad : VNULL3;
-	if ( pProjectile->Create( pUpdate, shell.pvisProjectile, vShootPointTransition, QNULL, shell.pEffectTrajectory, vRotationSpeedRad ) )
+	if ( pProjectile->Create(
+					 pUpdate, shell.pvisProjectile, vShootPointTransition, QNULL, shell.pEffectTrajectory, vRotationSpeedRad ) )
 		return pProjectile.Extract();
 	else
 		return 0;
@@ -424,7 +462,7 @@ CMOProjectile* CMOUnitInfantry::LaunchProjectile( const SAINewProjectileUpdate *
 
 void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
-	bool bServed = (pSquad != 0) && (pSquad->GetServedGun() != 0);
+	bool bServed = ( pSquad != 0 ) && ( pSquad->GetServedGun() != 0 );
 	bool bShowIcons = IsVisible() && !bServed && !pTransport && IsFirstUnit();
 	if ( NGlobal::GetVar( "m1", 0 ) == 1 )
 	{
@@ -432,12 +470,12 @@ void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 	}
 	else
 	{
-//		SetIconsHitbar( IsVisible() && IsSelected(), IsSelected() );
-//		bool bServed = (pSquad != 0) && (pSquad->GetServedGun() != 0);
-//		SetIconsHitbar( IsVisible() && !bServed && !pTransport, IsSelected() );
+		//		SetIconsHitbar( IsVisible() && IsSelected(), IsSelected() );
+		//		bool bServed = (pSquad != 0) && (pSquad->GetServedGun() != 0);
+		//		SetIconsHitbar( IsVisible() && !bServed && !pTransport, IsSelected() );
 		SetIconsHitbar( bShowIcons, CMOSelectable::IsSelected() );
 	}
-//	SetIconsGroup( IsVisible() ? (IsSelected() ? GetSelectionGroup() : -1) : -1, IsSelected() );
+	//	SetIconsGroup( IsVisible() ? (IsSelected() ? GetSelectionGroup() : -1) : -1, IsSelected() );
 	SetIconsGroup( bShowIcons ? GetSelectionGroup() : -1, CMOSelectable::IsSelected() );
 
 	CMOUnit::FillIconsInfo( iconInfo );
@@ -449,19 +487,19 @@ void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 void CMOUnitInfantry::Select( bool bSelect )
 {
 	// show unit selections
-  if ( bSelect )
-    Scene()->SelectObject( GetID(), GetCenter(), GetSelectionScale(), GetSelectionType() );
-  else
-    Scene()->UnselectObject( GetID() );
+	if ( bSelect )
+		Scene()->SelectObject( GetID(), GetCenter(), GetSelectionScale(), GetSelectionType() );
+	else
+		Scene()->UnselectObject( GetID() );
 
-  CMOSelectable::Select( bSelect );
+	CMOSelectable::Select( bSelect );
 
-  UpdateIcons();
+	UpdateIcons();
 }
 
 void CMOUnitInfantry::SetTransport( IMOContainer *_pTransport )
 {
-	bool bChanged = (pTransport != _pTransport);
+	bool bChanged = ( pTransport != _pTransport );
 
 	pTransport = _pTransport;
 
@@ -471,12 +509,14 @@ void CMOUnitInfantry::SetTransport( IMOContainer *_pTransport )
 		pSquad->UpdateSquadIcons();
 }
 
-IClientUpdatableProcess *CMOUnitInfantry::AIUpdateStartFinishParadrop( const SParadropStartFinishUpdate *pUpdate, NDb::ESeason eSeason )
+IClientUpdatableProcess *CMOUnitInfantry::AIUpdateStartFinishParadrop( const SParadropStartFinishUpdate *pUpdate,
+                                                                       NDb::ESeason eSeason )
 {
 	return pUpdate->bStart ? StartParadrop( pUpdate, eSeason ) : FinishParadrop( pUpdate, eSeason );
 }
 
-IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFinishUpdate *pUpdate, NDb::ESeason eSeason )
+IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFinishUpdate *pUpdate,
+                                                         NDb::ESeason eSeason )
 {
 	const NDb::SVisObj *pUnitVisObj = pUpdate->pNewSoldierVisObj;
 	const NDb::SVisObj *pParachuteVisObj = pUpdate->pParachuteVisObj;
@@ -494,9 +534,14 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 	CVec3 vParachutePos, vParachuteScale;
 	CQuat qParachuteRot;
 	GetPlacement( &vParachutePos, &qParachuteRot, &vParachuteScale );
-	nParachuteID = Scene()->AddObject( OBJECT_ID_GENERATE, pParachuteModel,
-		vParachutePos, qParachuteRot, vParachuteScale,
-		OBJ_ANIM_MODE_FORCE_ANIMATED, 0, 0 );
+	nParachuteID = Scene()->AddObject( OBJECT_ID_GENERATE,
+	                                   pParachuteModel,
+	                                   vParachutePos,
+	                                   qParachuteRot,
+	                                   vParachuteScale,
+	                                   OBJ_ANIM_MODE_FORCE_ANIMATED,
+	                                   0,
+	                                   0 );
 	//
 	const NTimer::STime timeBegin = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );
 	// change animation for main model
@@ -507,13 +552,13 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 		const NDb::SAnimB2 *pAnim = checked_cast_ptr<const NDb::SAnimB2 *>( pUnitModel->pSkeleton->animations[i] );
 		switch ( pAnim->eType )
 		{
-		case NDb::ANIMATION_USE:
-			AIUpdateAnimationChanged( pAnim, timeBegin );
-			nBeginAnimLength = pAnim->nLength;
-			break;
-		case NDb::ANIMATION_IDLE:
-			pUnitIdleAnim = pAnim;
-			break;
+			case NDb::ANIMATION_USE:
+				AIUpdateAnimationChanged( pAnim, timeBegin );
+				nBeginAnimLength = pAnim->nLength;
+				break;
+			case NDb::ANIMATION_IDLE:
+				pUnitIdleAnim = pAnim;
+				break;
 		}
 	}
 	// change animation for parachute
@@ -523,29 +568,31 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 		const NDb::SAnimB2 *pAnim = checked_cast_ptr<const NDb::SAnimB2 *>( pParachuteModel->pSkeleton->animations[i] );
 		switch ( pAnim->eType )
 		{
-		case NDb::ANIMATION_USE:
-			if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nParachuteID ) )
-			{
-				pAnimator->ClearAllAnimations();
-				AddAnimation( pAnim, timeBegin, pAnimator );
-			}
-			break;
+			case NDb::ANIMATION_USE:
+				if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( nParachuteID ) )
+				{
+					pAnimator->ClearAllAnimations();
+					AddAnimation( pAnim, timeBegin, pAnimator );
+				}
+				break;
 
-		case NDb::ANIMATION_IDLE:
-			pParachuteIdleAnim = pAnim;
-			break;
+			case NDb::ANIMATION_IDLE:
+				pParachuteIdleAnim = pAnim;
+				break;
 		}
 	}
 	//
 	Scene()->ShowObject( GetID(), IsVisible() );
 	//
 	if ( pUnitIdleAnim != 0 && nBeginAnimLength != -1 )
-		return new CParatrooperAnimationProcess( this, timeBegin + nBeginAnimLength, pUnitIdleAnim, nParachuteID, pParachuteIdleAnim );
+		return new CParatrooperAnimationProcess(
+				this, timeBegin + nBeginAnimLength, pUnitIdleAnim, nParachuteID, pParachuteIdleAnim );
 	//
 	return 0;
 }
 
-IClientUpdatableProcess *CMOUnitInfantry::FinishParadrop( const SParadropStartFinishUpdate *pUpdate, NDb::ESeason eSeason )
+IClientUpdatableProcess *CMOUnitInfantry::FinishParadrop( const SParadropStartFinishUpdate *pUpdate,
+                                                          NDb::ESeason eSeason )
 {
 	const NDb::SVisObj *pUnitVisObj = pUpdate->pNewSoldierVisObj;
 	const NDb::SVisObj *pParachuteVisObj = pUpdate->pParachuteVisObj;
@@ -588,7 +635,7 @@ IClientUpdatableProcess *CMOUnitInfantry::FinishParadrop( const SParadropStartFi
 	}
 	//
 	const NDb::SAnimB2 *pIdleAnim = 0;
-	if ( const NDb::SUnitBaseRPGStats *pStats = dynamic_cast<const NDb::SUnitBaseRPGStats*>(GetStats()) )
+	if ( const NDb::SUnitBaseRPGStats *pStats = dynamic_cast<const NDb::SUnitBaseRPGStats *>( GetStats() ) )
 	{
 		if ( NDb::ANIMATION_IDLE < pStats->animdescs.size() && !pStats->animdescs[NDb::ANIMATION_IDLE].anims.empty() )
 			pIdleAnim = checked_cast_ptr<const NDb::SAnimB2 *>( pStats->animdescs[NDb::ANIMATION_IDLE].anims[0].pAnimation );
@@ -613,12 +660,14 @@ void CMOUnitInfantry::HideParachute()
 
 const CVec3 CMOUnitInfantry::GetFirePoint( const int nPlatform, const int nGun ) const
 {
-	const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
+	const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats *>( GetStats() );
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID(), pStats->szGunBoneName );
 	if ( !pAnimator )
 		return VNULL3;
 	SHMatrix mShootPoint;
-	NI_VERIFY( pAnimator->GetBonePosition( pStats->szGunBoneName.c_str(), &mShootPoint ), fmt::format( "Shoot point not found for infantry gun (bone's name \"{}\")", pStats->szGunBoneName ), return VNULL3 );
+	NI_VERIFY( pAnimator->GetBonePosition( pStats->szGunBoneName.c_str(), &mShootPoint ),
+	           fmt::format( "Shoot point not found for infantry gun (bone's name \"{}\")", pStats->szGunBoneName ),
+	           return VNULL3 );
 	return CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 );
 }
 
@@ -636,7 +685,7 @@ bool CMOUnitInfantry::IsVisible() const
 
 void CMOUnitInfantry::SetEntrench( bool bEntrench )
 {
-	bool bChanged = (bEntrenched != bEntrench);
+	bool bChanged = ( bEntrenched != bEntrench );
 
 	bEntrenched = bEntrench;
 

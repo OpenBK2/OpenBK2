@@ -27,7 +27,7 @@ CConnectServerProcessor::CConnectServerProcessor( CNet *_pServer, bool _bCheckCo
 
 bool CConnectServerProcessor::Segment()
 {
-	switch( eConnectState )
+	switch ( eConnectState )
 	{
 		case ECS_INACTIVE:
 			break;
@@ -79,7 +79,7 @@ bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckCo
 		CPtr<CPrimeNumbers> pPrime = new CPrimeNumbers();
 
 		int nCnt = 0;
-		while ( nCnt < pPrime->GetNNumbers() && pPrime->GetPrime( nCnt ) <=	sqrt( double(pCheckConnectPacket->nNumber )) )
+		while ( nCnt < pPrime->GetNNumbers() && pPrime->GetPrime( nCnt ) <= sqrt( double( pCheckConnectPacket->nNumber ) ) )
 		{
 			const int64_t nPrime1 = pPrime->GetPrime( nCnt );
 			const int64_t nModule = pCheckConnectPacket->nNumber % nPrime1;
@@ -91,10 +91,14 @@ bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckCo
 				CNetPacket *pPacket;
 				if ( eConnectType != ECT_FORGOT_PASSWORD )
 				{
-					pPacket = new CCheckConnectAnswerPacket(
-						nPrime1, nPrime2,
-						eConnectType == ECT_LOGIN ? CCheckConnectAnswerPacket::ECT_LOGIN : CCheckConnectAnswerPacket::ECT_REGISTER,
-						szNick, szPassword, szCDKey, szEMail );
+					pPacket = new CCheckConnectAnswerPacket( nPrime1,
+					                                         nPrime2,
+					                                         eConnectType == ECT_LOGIN ? CCheckConnectAnswerPacket::ECT_LOGIN
+					                                                                   : CCheckConnectAnswerPacket::ECT_REGISTER,
+					                                         szNick,
+					                                         szPassword,
+					                                         szCDKey,
+					                                         szEMail );
 				}
 				else
 				{

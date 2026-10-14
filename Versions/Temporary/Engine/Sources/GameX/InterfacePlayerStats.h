@@ -6,6 +6,7 @@
 class CInterfacePlayerStats : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfacePlayerStats );
+
 private:
 	struct SMedal
 	{
@@ -17,10 +18,20 @@ private:
 		CDBPtr<NDb::STexture> pPicture;
 		std::wstring wszName;
 		std::wstring wszDesc;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pNameView); f.Add(5,&pIcon); f.Add(6,&pPicture); f.Add(7,&wszName); f.Add(8,&wszDesc); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &pIconWnd );
+			f.Add( 4, &pNameView );
+			f.Add( 5, &pIcon );
+			f.Add( 6, &pPicture );
+			f.Add( 7, &wszName );
+			f.Add( 8, &wszDesc );
+			return 0;
+		}
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
 	CPtr<IWindow> pHeaderPanel;
 	CPtr<IWindow> pBottomPanel;
@@ -55,7 +66,41 @@ private:
 	NUIElementsHelper::SExpProgressRank expProgressRank;
 	float fLastVisiblePlayerStatsExpCareer;
 	float fLastVisiblePlayerStatsExpNextRank;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&pHeaderPanel); f.Add(4,&pBottomPanel); f.Add(5,&pPlayerInfoPanel); f.Add(6,&pMedalInfoPanel); f.Add(7,&pMedalListPanel); f.Add(8,&pPlayerNameView); f.Add(9,&pPlayerRankPicture); f.Add(10,&pUnitsKilledView); f.Add(11,&pUnitsLostView); f.Add(12,&pMissionsPassedView); f.Add(13,&pInGameTimeView); f.Add(14,&pFavoriteReinfView); f.Add(15,&pMedalNameView); f.Add(16,&pMedalPicture); f.Add(17,&pMedalDescView); f.Add(18,&medals); f.Add(19,&pMedalCont); f.Add(20,&pMedalItem); f.Add(21,&pRankNameView); f.Add(22,&pBaseCareerBar); f.Add(23,&pNewCareerBar); f.Add(24,&pBaseNextRankBar); f.Add(25,&pNewNextRankBar); f.Add(26,&pNextRankProgressView); f.Add(27,&expProgressCareer); f.Add(28,&expProgressRank); f.Add(29,&fLastVisiblePlayerStatsExpCareer); f.Add(30,&fLastVisiblePlayerStatsExpNextRank); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 3, &pHeaderPanel );
+		f.Add( 4, &pBottomPanel );
+		f.Add( 5, &pPlayerInfoPanel );
+		f.Add( 6, &pMedalInfoPanel );
+		f.Add( 7, &pMedalListPanel );
+		f.Add( 8, &pPlayerNameView );
+		f.Add( 9, &pPlayerRankPicture );
+		f.Add( 10, &pUnitsKilledView );
+		f.Add( 11, &pUnitsLostView );
+		f.Add( 12, &pMissionsPassedView );
+		f.Add( 13, &pInGameTimeView );
+		f.Add( 14, &pFavoriteReinfView );
+		f.Add( 15, &pMedalNameView );
+		f.Add( 16, &pMedalPicture );
+		f.Add( 17, &pMedalDescView );
+		f.Add( 18, &medals );
+		f.Add( 19, &pMedalCont );
+		f.Add( 20, &pMedalItem );
+		f.Add( 21, &pRankNameView );
+		f.Add( 22, &pBaseCareerBar );
+		f.Add( 23, &pNewCareerBar );
+		f.Add( 24, &pBaseNextRankBar );
+		f.Add( 25, &pNewNextRankBar );
+		f.Add( 26, &pNextRankProgressView );
+		f.Add( 27, &expProgressCareer );
+		f.Add( 28, &expProgressRank );
+		f.Add( 29, &fLastVisiblePlayerStatsExpCareer );
+		f.Add( 30, &fLastVisiblePlayerStatsExpNextRank );
+		return 0;
+	}
+
 private:
 	void MakeInterior();
 	void InitInteriorView();
@@ -65,6 +110,7 @@ private:
 	bool OnSelectMedal();
 
 	void SelectMedal( int nIndex, bool bForce );
+
 public:
 	CInterfacePlayerStats();
 
@@ -83,6 +129,7 @@ class CICPlayerStats : public CInterfaceCommandBase<CInterfacePlayerStats>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

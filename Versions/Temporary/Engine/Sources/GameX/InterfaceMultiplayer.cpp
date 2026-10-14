@@ -18,10 +18,7 @@
 
 // CInterfaceMultiplayer
 
-CInterfaceMultiplayer::CInterfaceMultiplayer() :
-	CInterfaceScreenBase( "Multiplayer", "multiplayer" )
-{
-}
+CInterfaceMultiplayer::CInterfaceMultiplayer() : CInterfaceScreenBase( "Multiplayer", "multiplayer" ) {}
 
 CInterfaceMultiplayer::~CInterfaceMultiplayer()
 {
@@ -79,9 +76,7 @@ bool CInterfaceMultiplayer::StepLocal( bool bAppActive )
 	return bResult;
 }
 
-void CInterfaceMultiplayer::RegisterObservers()
-{
-}
+void CInterfaceMultiplayer::RegisterObservers() {}
 
 void CInterfaceMultiplayer::OnGetFocus( bool bFocus )
 {
@@ -143,7 +138,7 @@ bool CInterfaceMultiplayer::OnLoadReplay( const std::string &szSender )
 	return true;
 }
 
-bool CInterfaceMultiplayer::OnProfileManagerMenu( )
+bool CInterfaceMultiplayer::OnProfileManagerMenu()
 {
 	NMainLoop::Command( ML_COMMAND_PROFILE_MENU, "" );
 	return true;
@@ -164,18 +159,14 @@ void CInterfaceMultiplayer::AfterLoad()
 #ifndef _SINGLE_DEMO
 // CICMultiplayer
 
-void CICMultiplayer::PreCreate()
-{
-}
+void CICMultiplayer::PreCreate() {}
 
 void CICMultiplayer::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMultiplayer::Configure( const char *pszConfig )
-{
-}
+void CICMultiplayer::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17130C81, CInterfaceMultiplayer );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MULTIPLAYER_MENU, CICMultiplayer );

@@ -14,7 +14,7 @@ struct SNetDriverConsts
 	float fServerListTimeout;
 
 	SNetDriverConsts() : fTimeout( 60 ), fServerListTimeout( 20 ) {}
-	SNetDriverConsts( const int _nTimeOut ) : fTimeout( _nTimeOut ), fServerListTimeout( 20 ) { }
+	SNetDriverConsts( const int _nTimeOut ) : fTimeout( _nTimeOut ), fServerListTimeout( 20 ) {}
 };
 
 // abstraction from SOCKET
@@ -24,7 +24,7 @@ struct ILinksManager : public CObjectBase
 	virtual bool IsLocalAddr( const CNodeAddress &test ) const = 0;
 	virtual bool Send( const CNodeAddress &dst, CMemoryStream &pkt ) const = 0;
 	virtual bool Recv( class CNodeAddress *pSrc, CMemoryStream *pPkt ) const = 0;
-	virtual bool GetSelfAddress( class  CNodeAddressSet *pRes ) const = 0;
+	virtual bool GetSelfAddress( class CNodeAddressSet *pRes ) const = 0;
 };
 
 struct IDriver : public CObjectBase
@@ -57,12 +57,12 @@ struct IDriver : public CObjectBase
 	};
 	enum EServerGameMode
 	{
-		ESGM_WAIT,						// waiting for players to join
-		ESGM_SETTINGS,				// players are determining game parameters, no joining allowed
-		ESGM_CLOSEDPLAYING,		// game is in progress, no joining allowed
-		ESGM_OPENPLAYING,			// game is in progress, players may still join
-		ESGM_DEBRIEFING,			// game is over, stats/info is being shown, no joining allowed
-		ESGM_EXITING,					// server is shutting down, remove from server list
+		ESGM_WAIT,          // waiting for players to join
+		ESGM_SETTINGS,      // players are determining game parameters, no joining allowed
+		ESGM_CLOSEDPLAYING, // game is in progress, no joining allowed
+		ESGM_OPENPLAYING,   // game is in progress, players may still join
+		ESGM_DEBRIEFING,    // game is over, stats/info is being shown, no joining allowed
+		ESGM_EXITING,       // server is shutting down, remove from server list
 	};
 
 	struct SGameInfo
@@ -81,15 +81,31 @@ struct IDriver : public CObjectBase
 		std::string szModVersion;
 
 		CMemoryStream gameSettings;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszServerName); f.Add(3,&nHostPort); f.Add(4,&wszMapName); f.Add(5,&szGameType); f.Add(6,&nCurPlayers); f.Add(7,&nMaxPlayers); f.Add(8,&eGameMode); f.Add(9,&bPasswordRequired); f.Add(10,&szModName); f.Add(11,&szModVersion); f.Add(12,&gameSettings); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &wszServerName );
+			f.Add( 3, &nHostPort );
+			f.Add( 4, &wszMapName );
+			f.Add( 5, &szGameType );
+			f.Add( 6, &nCurPlayers );
+			f.Add( 7, &nMaxPlayers );
+			f.Add( 8, &eGameMode );
+			f.Add( 9, &bPasswordRequired );
+			f.Add( 10, &szModName );
+			f.Add( 11, &szModVersion );
+			f.Add( 12, &gameSettings );
+			return 0;
+		}
 
 		SGameInfo()
-			: wszServerName( L"" ), nHostPort( 0 ), wszMapName( L"" ), szGameType( "" ),
-				nCurPlayers( 0 ), nMaxPlayers( 0 ), eGameMode( ESGM_SETTINGS ), bPasswordRequired( false ),
-				szModName( "" ), szModVersion( "" ) { }
+				: wszServerName( L"" ), nHostPort( 0 ), wszMapName( L"" ), szGameType( "" ), nCurPlayers( 0 ), nMaxPlayers( 0 ),
+					eGameMode( ESGM_SETTINGS ), bPasswordRequired( false ), szModName( "" ), szModVersion( "" )
+		{
+		}
 	};
 	//
-	virtual void Init( const APPLICATION_ID nApplicationID, const int nGamePort, bool bClientOnly, ILinksManager *pLinksManager ) = 0;
+	virtual void
+	Init( const APPLICATION_ID nApplicationID, const int nGamePort, bool bClientOnly, ILinksManager *pLinksManager ) = 0;
 	// get current state (active/inactive/connecting)
 	virtual EState GetState() const = 0;
 	// get reject reason (then )
@@ -107,7 +123,8 @@ struct IDriver : public CObjectBase
 	// stop accepting new players (for server)
 	virtual void StopNewPlayerAccept() = 0;
 	// get game info (for client)
-	virtual bool GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo ) = 0;
+	virtual bool
+	GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo ) = 0;
 	// refresh servers list ( for client )
 	virtual void RefreshServersList() = 0;
 	// send broadcast message for all
@@ -136,10 +153,10 @@ struct IDriver : public CObjectBase
 	virtual const int GetPort( const int nClientID ) = 0;
 };
 
-NET_EXPORT IDriver* CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );
+NET_EXPORT IDriver *CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast = true );
 
-NET_EXPORT ILinksManager* CreateClientLinksManager();
-NET_EXPORT ILinksManager* CreateServerLinksManager( const int nPort );
+NET_EXPORT ILinksManager *CreateClientLinksManager();
+NET_EXPORT ILinksManager *CreateServerLinksManager( const int nPort );
 
 NET_EXPORT void GetNOPStream( CMemoryStream *pNOP );
 

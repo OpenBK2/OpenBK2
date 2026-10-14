@@ -36,7 +36,7 @@ void CPrecipice::CreatePatches( NGScene::IGameView *pGView )
 	for ( std::vector<NMeshData::SMeshData>::iterator it = pInfo->patches.begin(); it != pInfo->patches.end(); ++it )
 	{
 		SPrecipicePatchHolder patch;
-		patch.pPatch = new CMeshDataPatch( &(*it) );
+		patch.pPatch = new CMeshDataPatch( &( *it ) );
 		patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pMaterial ), placement, 0, 0 );
 		patches.push_back( patch );
 	}
@@ -82,7 +82,12 @@ void CPeak::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTer
 			{
 				visPatches.push_back( SPeakPatchHolder() );
 				visPatches.back().pPatch = new CPeakPatch( &data );
-				visPatches.back().pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( visPatches.back().pPatch, pTerraDesc->pTerraSet->terraTypes[i]->pPeakMaterial ), placement, 0, 0, room );
+				visPatches.back().pHolder = pGView->CreateMesh(
+						pGView->MakeMeshInfo( visPatches.back().pPatch, pTerraDesc->pTerraSet->terraTypes[i]->pPeakMaterial ),
+						placement,
+						0,
+						0,
+						room );
 			}
 		}
 	}
@@ -100,8 +105,9 @@ void CFoot::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTer
 	for ( std::vector<NMeshData::SMeshData>::iterator it = pInfo->patches.begin(); it != pInfo->patches.end(); ++it )
 	{
 		patches.push_back( SFootPatchHolder() );
-		patches.back().pPatch = new CMeshDataPatch( &(*it) );
-		patches.back().pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patches.back().pPatch, pInfo->pMaterial ), placement, 0, 0 );
+		patches.back().pPatch = new CMeshDataPatch( &( *it ) );
+		patches.back().pHolder =
+				pGView->CreateMesh( pGView->MakeMeshInfo( patches.back().pPatch, pInfo->pMaterial ), placement, 0, 0 );
 	}
 }
 
@@ -153,7 +159,9 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 			CCSBound *pBound = new CCSBound();
 			// calc bound
 			CVec3 vMin( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE ), vMax( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-			for ( std::vector<NGScene::SVertex>::const_iterator it = pInfo->waterPatches[i].vertices.begin(); it != pInfo->waterPatches[i].vertices.end(); ++it )
+			for ( std::vector<NGScene::SVertex>::const_iterator it = pInfo->waterPatches[i].vertices.begin();
+			      it != pInfo->waterPatches[i].vertices.end();
+			      ++it )
 			{
 				vMin.Minimize( it->pos );
 				vMax.Maximize( it->pos );
@@ -164,7 +172,12 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 			//
 			SRiverPatchHolder patch;
 			patch.pPatch = new CRiverPatch( &pInfo->waterPatches[i], pInfo->pDesc->waterLayers[0].fStreamSpeed, pTimer );
-			patch.pHolder = pGView->CreateDynamicMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->waterLayers[0].materials[0] ), 0, pBound, NGScene::MakeLargeHintBound(), room );
+			patch.pHolder =
+					pGView->CreateDynamicMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->waterLayers[0].materials[0] ),
+			                               0,
+			                               pBound,
+			                               NGScene::MakeLargeHintBound(),
+			                               room );
 			waterPatches.push_back( patch );
 		}
 	}
@@ -184,7 +197,9 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 			CCSBound *pBound = new CCSBound();
 			// calc bound
 			CVec3 vMin( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE ), vMax( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
-			for ( std::vector<NGScene::SVertex>::const_iterator it = pInfo->water2Patches[i].vertices.begin(); it != pInfo->water2Patches[i].vertices.end(); ++it )
+			for ( std::vector<NGScene::SVertex>::const_iterator it = pInfo->water2Patches[i].vertices.begin();
+			      it != pInfo->water2Patches[i].vertices.end();
+			      ++it )
 			{
 				vMin.Minimize( it->pos );
 				vMax.Maximize( it->pos );
@@ -195,7 +210,12 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 			//
 			SRiverPatchHolder patch;
 			patch.pPatch = new CRiverPatch( &pInfo->water2Patches[i], pInfo->pDesc->waterLayers[1].fStreamSpeed, pTimer );
-			patch.pHolder = pGView->CreateDynamicMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->waterLayers[1].materials[0] ), 0, pBound, NGScene::MakeLargeHintBound(), room );
+			patch.pHolder =
+					pGView->CreateDynamicMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->waterLayers[1].materials[0] ),
+			                               0,
+			                               pBound,
+			                               NGScene::MakeLargeHintBound(),
+			                               room );
 			water2Patches.push_back( patch );
 		}
 	}
@@ -207,7 +227,8 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 	{
 		SRiverPatchHolder patch;
 		patch.pPatch = new CRiverPatch( &pInfo->bottomPatches[i], 0, 0 );
-		patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->pBottomMaterial ), placement, 0, 0 );
+		patch.pHolder =
+				pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->pBottomMaterial ), placement, 0, 0 );
 		bottomPatches.push_back( patch );
 	}
 }
@@ -234,23 +255,29 @@ void CRoad::CreatePatches( NGScene::IGameView *pGView )
 		{
 			case SRoadGFXInfo::CENTER:
 				if ( pInfo->pDesc->center.materials[0] )
-					patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->center.materials[0] ), placement, 0, 0, room );
+					patch.pHolder = pGView->CreateMesh(
+							pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->center.materials[0] ), placement, 0, 0, room );
 				else
-					NI_ASSERT( pInfo->pDesc->center.materials[0], fmt::format( "Center material is not set for road {}", pInfo->nID ) );
+					NI_ASSERT( pInfo->pDesc->center.materials[0],
+					           fmt::format( "Center material is not set for road {}", pInfo->nID ) );
 				break;
 
 			case SRoadGFXInfo::LEFT_BORDER:
 				if ( pInfo->pDesc->leftBorder.pMaterial )
-					patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->leftBorder.pMaterial ), placement, 0, 0, room );
+					patch.pHolder = pGView->CreateMesh(
+							pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->leftBorder.pMaterial ), placement, 0, 0, room );
 				else
-					NI_ASSERT( pInfo->pDesc->leftBorder.pMaterial, fmt::format( "Left border material is not set for road {}", pInfo->nID ) );
+					NI_ASSERT( pInfo->pDesc->leftBorder.pMaterial,
+					           fmt::format( "Left border material is not set for road {}", pInfo->nID ) );
 				break;
 
 			case SRoadGFXInfo::RIGHT_BORDER:
 				if ( pInfo->pDesc->rightBorder.pMaterial )
-					patch.pHolder = pGView->CreateMesh( pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->rightBorder.pMaterial ), placement, 0, 0, room );
+					patch.pHolder = pGView->CreateMesh(
+							pGView->MakeMeshInfo( patch.pPatch, pInfo->pDesc->rightBorder.pMaterial ), placement, 0, 0, room );
 				else
-					NI_ASSERT( pInfo->pDesc->rightBorder.pMaterial, fmt::format( "Right border material is not set for road {}", pInfo->nID ) );
+					NI_ASSERT( pInfo->pDesc->rightBorder.pMaterial,
+					           fmt::format( "Right border material is not set for road {}", pInfo->nID ) );
 				break;
 		}
 		patches.push_back( patch );
@@ -271,8 +298,10 @@ void CTerraSpot::CreatePatches( NGScene::IGameView *pGView )
 
 // terrain
 
-CSceneTerrain::CSceneTerrain( const NDb::STerrain *_pDBDesc, NGScene::IGameView *_pGameView, CFuncBase<STime> *_pAbsTimer )
-: pDBDesc( _pDBDesc ), pGameView( _pGameView ), pAbsTimer( _pAbsTimer )
+CSceneTerrain::CSceneTerrain( const NDb::STerrain *_pDBDesc,
+                              NGScene::IGameView *_pGameView,
+                              CFuncBase<STime> *_pAbsTimer )
+		: pDBDesc( _pDBDesc ), pGameView( _pGameView ), pAbsTimer( _pAbsTimer )
 {
 	//patches.resize( pDBDesc->nNumPatchesX * pDBDesc->nNumPatchesY );
 	patches.resize( pDBDesc->nNumPatchesX * pDBDesc->nNumPatchesY * DEF_BREAK_TERRA_PATCHES );
@@ -287,7 +316,9 @@ void CSceneTerrain::HideTerrain( bool bHide )
 {
 	if ( bHide )
 	{
-		for ( std::vector<std::vector<STerrainPatchHolder> >::iterator itPatchesArr = patches.begin(); itPatchesArr != patches.end(); ++itPatchesArr )
+		for ( std::vector<std::vector<STerrainPatchHolder>>::iterator itPatchesArr = patches.begin();
+		      itPatchesArr != patches.end();
+		      ++itPatchesArr )
 		{
 			for ( std::vector<STerrainPatchHolder>::iterator it = itPatchesArr->begin(); it != itPatchesArr->end(); ++it )
 			{
@@ -303,14 +334,21 @@ void CSceneTerrain::HideTerrain( bool bHide )
 		Identity( &placement.forward );
 		Identity( &placement.backward );
 
-		for ( std::vector<std::vector<STerrainPatchHolder> >::iterator itPatchesArr = patches.begin(); itPatchesArr != patches.end(); ++itPatchesArr )
+		for ( std::vector<std::vector<STerrainPatchHolder>>::iterator itPatchesArr = patches.begin();
+		      itPatchesArr != patches.end();
+		      ++itPatchesArr )
 		{
 			for ( int k = 0; k < itPatchesArr->size(); ++k )
 			{
 				NGScene::IGameView::SMeshInfo meshInfo;
 
-				if ( ( (*itPatchesArr)[k].pPatch != 0 ) && ( pDBDesc->pTerraSet != 0 ) && ( k < pDBDesc->pTerraSet->terraTypes.size() ) )
-					(*itPatchesArr)[k].pHolder = pGameView->CreateMesh( pGameView->MakeMeshInfo( (*itPatchesArr)[k].pPatch, pDBDesc->pTerraSet->terraTypes[k]->pMaterial ), placement, 0, 0 );
+				if ( ( ( *itPatchesArr )[k].pPatch != 0 ) && ( pDBDesc->pTerraSet != 0 ) &&
+				     ( k < pDBDesc->pTerraSet->terraTypes.size() ) )
+					( *itPatchesArr )[k].pHolder = pGameView->CreateMesh(
+							pGameView->MakeMeshInfo( ( *itPatchesArr )[k].pPatch, pDBDesc->pTerraSet->terraTypes[k]->pMaterial ),
+							placement,
+							0,
+							0 );
 			}
 		}
 	}

@@ -92,17 +92,17 @@
 // The OEM keys are the ones whose engraving moves with the layout. The number is
 // the position, and the character named beside it is what a US keyboard prints
 // there, which is the only layout these codes are defined against.
-#define VK_OEM_1 0xBA        // ; :
-#define VK_OEM_PLUS 0xBB     // = +
-#define VK_OEM_COMMA 0xBC    // , <
-#define VK_OEM_MINUS 0xBD    // - _
-#define VK_OEM_PERIOD 0xBE   // . >
-#define VK_OEM_2 0xBF        // / ?
-#define VK_OEM_3 0xC0        // ` ~
-#define VK_OEM_4 0xDB        // [ {
-#define VK_OEM_5 0xDC        // backslash |
-#define VK_OEM_6 0xDD        // ] }
-#define VK_OEM_7 0xDE        // ' "
-#define VK_OEM_102 0xE2      // the extra key on a 102 key board
+#define VK_OEM_1 0xBA      // ; :
+#define VK_OEM_PLUS 0xBB   // = +
+#define VK_OEM_COMMA 0xBC  // , <
+#define VK_OEM_MINUS 0xBD  // - _
+#define VK_OEM_PERIOD 0xBE // . >
+#define VK_OEM_2 0xBF      // / ?
+#define VK_OEM_3 0xC0      // ` ~
+#define VK_OEM_4 0xDB      // [ {
+#define VK_OEM_5 0xDC      // backslash |
+#define VK_OEM_6 0xDD      // ] }
+#define VK_OEM_7 0xDE      // ' "
+#define VK_OEM_102 0xE2    // the extra key on a 102 key board
 
 #endif

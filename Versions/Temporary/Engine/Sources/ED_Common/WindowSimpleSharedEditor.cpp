@@ -12,8 +12,7 @@
 
 REGISTER_EDITOR_IN_DLL( WindowSimpleShared, CWindowSimpleSharedEditor )
 
-#define REGISTER_EDITOR_LOCAL( name ) \
-	REGISTER_EDITOR_IN_DLL( name, CWindowSimpleSharedEditor )
+#define REGISTER_EDITOR_LOCAL( name ) REGISTER_EDITOR_IN_DLL( name, CWindowSimpleSharedEditor )
 
 REGISTER_EDITOR_LOCAL( WindowScreen )
 REGISTER_EDITOR_LOCAL( WindowSimple )
@@ -40,26 +39,24 @@ REGISTER_EDITOR_LOCAL( WindowTooltip )
 
 #undef REGISTER_EDITOR_LOCAL
 
-CWindowSimpleSharedEditor::CWindowSimpleSharedEditor()
-{
-}
-
+CWindowSimpleSharedEditor::CWindowSimpleSharedEditor() {}
 
 void CWindowSimpleSharedEditor::Create()
 {
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		pUserData->SerializeSettings( editorSettings, "WindowSimpleShared", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+		pUserData->SerializeSettings(
+				editorSettings, "WindowSimpleShared", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 	}
 	PushState( GetObjectSet(), new CWindowSimpleSharedState( this ), false );
 }
-
 
 void CWindowSimpleSharedEditor::Destroy()
 {
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		pUserData->SerializeSettings( editorSettings, "WindowSimpleShared", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+		pUserData->SerializeSettings(
+				editorSettings, "WindowSimpleShared", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 	}
 
 	// call PopState for last state only
@@ -74,8 +71,9 @@ void CWindowSimpleSharedEditor::Destroy()
 	}
 }
 
-
-void CWindowSimpleSharedEditor::PushState( const SObjectSet & _objectSet, CDefaultInputState * pState, bool bCallEnterLeave )
+void CWindowSimpleSharedEditor::PushState( const SObjectSet &_objectSet,
+                                           CDefaultInputState *pState,
+                                           bool bCallEnterLeave )
 {
 	if ( bCallEnterLeave )
 	{
@@ -94,7 +92,6 @@ void CWindowSimpleSharedEditor::PushState( const SObjectSet & _objectSet, CDefau
 	}
 }
 
-
 void CWindowSimpleSharedEditor::PopState()
 {
 	states.back().pState->Leave();
@@ -109,11 +106,11 @@ void CWindowSimpleSharedEditor::PopState()
 	}
 }
 
-
-bool CWindowSimpleSharedEditor::SetupState( const SObjectSet & _objectSet )
+bool CWindowSimpleSharedEditor::SetupState( const SObjectSet &_objectSet )
 {
 	const std::string szTypeName = _objectSet.szObjectTypeName;
-	if ( CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szTypeName, _objectSet.objectNameSet.begin()->first ) )
+	if ( CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+					 szTypeName, _objectSet.objectNameSet.begin()->first ) )
 	{
 		std::string tempLabel;
 		GetTemporaryLabel( &tempLabel );
@@ -124,8 +121,9 @@ bool CWindowSimpleSharedEditor::SetupState( const SObjectSet & _objectSet )
 	return false;
 }
 
-
-bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator, const std::string &rObjectTypeName, const CDBID &rDBID )
+bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator,
+                                         const std::string &rObjectTypeName,
+                                         const CDBID &rDBID )
 {
 	CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
 	NI_ASSERT( pTableManipulator != 0, "CWindowSimpleSharedEditor::BeginUndo: pTableManipulator == 0" );
@@ -144,9 +142,8 @@ bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator, const std::
 		pUndoManipulator->GetNameList( &( pUndoController->GetNameList() ) );
 	}
 	bUOResult = true;
-	return (pUndoManipulator != 0) && (pUndoController != 0);
+	return ( pUndoManipulator != 0 ) && ( pUndoController != 0 );
 }
-
 
 bool CWindowSimpleSharedEditor::UOEnd()
 {
@@ -161,10 +158,9 @@ bool CWindowSimpleSharedEditor::UOEnd()
 	return false;
 }
 
-
-bool CWindowSimpleSharedEditor::UOSetValue( const std::string & szName, const CVariant & newValue )
+bool CWindowSimpleSharedEditor::UOSetValue( const std::string &szName, const CVariant &newValue )
 {
-	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult)
+	if ( ( pUndoManipulator != 0 ) && ( pUndoController != 0 ) && bUOResult )
 	{
 		if ( pUndoController->GetInternalController()->AddChangeOperation( szName, newValue, pUndoManipulator ) )
 		{
@@ -175,10 +171,11 @@ bool CWindowSimpleSharedEditor::UOSetValue( const std::string & szName, const CV
 	return false;
 }
 
-
-bool CWindowSimpleSharedEditor::UOInsertNode( const std::string &szName, const std::string &szChildTypeName, const CDBID &rDBID )
+bool CWindowSimpleSharedEditor::UOInsertNode( const std::string &szName,
+                                              const std::string &szChildTypeName,
+                                              const CDBID &rDBID )
 {
-	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult)
+	if ( ( pUndoManipulator != 0 ) && ( pUndoController != 0 ) && bUOResult )
 	{
 		if ( pUndoController->GetInternalController()->AddInsertOperation( szName, NODE_ADD_INDEX, pUndoManipulator ) )
 		{
@@ -190,10 +187,12 @@ bool CWindowSimpleSharedEditor::UOInsertNode( const std::string &szName, const s
 	return false;
 }
 
-
-bool CWindowSimpleSharedEditor::UORemoveNode( const std::string &szName, int nIndex, const std::string &szChildTypeName, const CDBID &rDBID )
+bool CWindowSimpleSharedEditor::UORemoveNode( const std::string &szName,
+                                              int nIndex,
+                                              const std::string &szChildTypeName,
+                                              const CDBID &rDBID )
 {
-	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult )
+	if ( ( pUndoManipulator != 0 ) && ( pUndoController != 0 ) && bUOResult )
 	{
 		if ( pUndoController->GetInternalController()->AddRemoveOperation( szName, nIndex, pUndoManipulator ) )
 		{
@@ -205,130 +204,135 @@ bool CWindowSimpleSharedEditor::UORemoveNode( const std::string &szName, int nIn
 	return false;
 }
 
-
-bool CWindowSimpleSharedEditor::InsertObject( IManipulator *pManipulator, const std::string & szName )
+bool CWindowSimpleSharedEditor::InsertObject( IManipulator *pManipulator, const std::string &szName )
 {
 	//TODO: implement undo-op
 	return pManipulator->InsertNode( szName );
 }
 
-
-bool CWindowSimpleSharedEditor::RemoveObject( IManipulator *pManipulator, const std::string & szName )
+bool CWindowSimpleSharedEditor::RemoveObject( IManipulator *pManipulator, const std::string &szName )
 {
 	//TODO: implement undo-op
 	return pManipulator->RemoveNode( szName );
 }
 
-
-void CWindowSimpleSharedEditor::Undo( IController* pController )
+void CWindowSimpleSharedEditor::Undo( IController *pController )
 {
 	std::string tempLabel;
 	pController->GetTemporaryLabel( &tempLabel );
 
 	if ( tempLabel == CWindowSimpleSharedController::GetTemporaryLabel() )
 	{
-		if ( CWindowSimpleSharedController *pCustomController = dynamic_cast<CWindowSimpleSharedController*>( pController ) )
+		if ( CWindowSimpleSharedController *pCustomController =
+		         dynamic_cast<CWindowSimpleSharedController *>( pController ) )
 		{
 			CObjectBaseController *pObjectController = pCustomController->GetInternalController();
 			pObjectController->Undo( true, true, 0 );
 
-			const std::string & szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
-			for ( CObjectController::CUndoDataList::const_iterator posUndoData = pObjectController->undoDataList.begin(); posUndoData != pObjectController->undoDataList.end(); ++posUndoData )
+			const std::string &szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
+			for ( CObjectController::CUndoDataList::const_iterator posUndoData = pObjectController->undoDataList.begin();
+			      posUndoData != pObjectController->undoDataList.end();
+			      ++posUndoData )
 			{
 				const std::string szName = posUndoData->szName;
 				switch ( posUndoData->eType )
 				{
 					///////////////////////////////////////////
 					case CObjectController::SUndoData::TYPE_INSERT:
-						{
-							dynamic_cast<CWindowSimpleSharedState*>(GetInputState())->UndoInsert( pCustomController->GetChildTypeName(), pCustomController->GetChildID(), szName );
-							//DebugTrace( "Undo: TYPE_INSERT %s[%d] %s %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->oldValue ) );
-						}
-						break;
+					{
+						dynamic_cast<CWindowSimpleSharedState *>( GetInputState() )
+								->UndoInsert( pCustomController->GetChildTypeName(), pCustomController->GetChildID(), szName );
+						//DebugTrace( "Undo: TYPE_INSERT %s[%d] %s %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->oldValue ) );
+					}
+					break;
 
 					///////////////////////////////////////////
 					case CObjectController::SUndoData::TYPE_REMOVE:
-						{
-							dynamic_cast<CWindowSimpleSharedState*>(GetInputState())->UndoRemove( pCustomController->GetChildTypeName(), pCustomController->GetChildID(), szName );
-							//DebugTrace( "Undo: TYPE_REMOVE %s[%d] %s %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->newValue ) );
-						}
-						break;
+					{
+						dynamic_cast<CWindowSimpleSharedState *>( GetInputState() )
+								->UndoRemove( pCustomController->GetChildTypeName(), pCustomController->GetChildID(), szName );
+						//DebugTrace( "Undo: TYPE_REMOVE %s[%d] %s %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->newValue ) );
+					}
+					break;
 
 					///////////////////////////////////////////
 					case CObjectController::SUndoData::TYPE_CHANGE:
-						{
-							dynamic_cast<CWindowSimpleSharedState*>(GetInputState())->UndoChange( szTypeName, pObjectController->GetObjectSet().objectNameSet.begin()->first, szName, posUndoData->oldValue );
-							//DebugTrace( "Undo: TYPE_CHANGE %s[%d] %s", szTypeName.c_str(), nID, szName.c_str() );
-						}
-						break;
+					{
+						dynamic_cast<CWindowSimpleSharedState *>( GetInputState() )
+								->UndoChange( szTypeName,
+						                  pObjectController->GetObjectSet().objectNameSet.begin()->first,
+						                  szName,
+						                  posUndoData->oldValue );
+						//DebugTrace( "Undo: TYPE_CHANGE %s[%d] %s", szTypeName.c_str(), nID, szName.c_str() );
+					}
+					break;
 				}
 			}
 		}
 	}
 }
 
-
-void CWindowSimpleSharedEditor::Redo( IController* pController )
+void CWindowSimpleSharedEditor::Redo( IController *pController )
 {
 	std::string tempLabel;
 	pController->GetTemporaryLabel( &tempLabel );
 
 	if ( tempLabel == CWindowSimpleSharedController::GetTemporaryLabel() )
 	{
-		if ( CWindowSimpleSharedController *pCustomController = dynamic_cast<CWindowSimpleSharedController*>( pController ) )
+		if ( CWindowSimpleSharedController *pCustomController =
+		         dynamic_cast<CWindowSimpleSharedController *>( pController ) )
 		{
 			CObjectBaseController *pObjectController = pCustomController->GetInternalController();
 			pObjectController->Redo( false, true, 0 );
 
-			const std::string & szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
+			const std::string &szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
 
-			for ( CObjectController::CUndoDataList::const_iterator posUndoData = pObjectController->undoDataList.begin(); posUndoData != pObjectController->undoDataList.end(); ++posUndoData )
+			for ( CObjectController::CUndoDataList::const_iterator posUndoData = pObjectController->undoDataList.begin();
+			      posUndoData != pObjectController->undoDataList.end();
+			      ++posUndoData )
 			{
 				const std::string szName = posUndoData->szName;
 				switch ( posUndoData->eType )
 				{
 					///////////////////////////////////////////
 					case CObjectController::SUndoData::TYPE_INSERT:
-						{
-							//DebugTrace( "Redo: TYPE_INSERT %s[%d] %s %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->oldValue ) );
-						}
-						break;
+					{
+						//DebugTrace( "Redo: TYPE_INSERT %s[%d] %s %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->oldValue ) );
+					}
+					break;
 
 					///////////////////////////////////////////
 					case CObjectController::SUndoData::TYPE_REMOVE:
-						{
-							//DebugTrace( "Redo: TYPE_REMOVE %s[%d] %s  %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->newValue ) );
-						}
-						break;
+					{
+						//DebugTrace( "Redo: TYPE_REMOVE %s[%d] %s  %d", szTypeName.c_str(), nID, szName.c_str(), (int)( posUndoData->newValue ) );
+					}
+					break;
 
 					///////////////////////////////////////////
 					case CObjectController::SUndoData::TYPE_CHANGE:
-						{
-							//DebugTrace( "Redo: TYPE_CHANGE %s[%d] %s", szTypeName.c_str(), nID, szName.c_str() );
-						}
-						break;
+					{
+						//DebugTrace( "Redo: TYPE_CHANGE %s[%d] %s", szTypeName.c_str(), nID, szName.c_str() );
+					}
+					break;
 				}
 			}
 		}
 	}
 }
-
 
 void CWindowSimpleSharedEditor::PushRunModeState( const std::string &rszEditorTypeName, const CDBID &rDBID )
 {
 	PushState( GetObjectSet(), new CUIRunModeState( this, rszEditorTypeName, rDBID ), true );
 }
 
-
 void CWindowSimpleSharedEditor::PopRunModeState()
 {
 	PopState();
 }
 
-
 void CWindowSimpleSharedEditor::RemoveViewManipulator()
 {
-	if( HasMoreThanOnePushedStates() )
+	if ( HasMoreThanOnePushedStates() )
 	{
 		// call Leave only for last state
 		states.back().pState->Leave();

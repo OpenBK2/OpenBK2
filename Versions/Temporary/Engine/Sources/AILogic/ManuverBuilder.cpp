@@ -12,12 +12,12 @@ CManuvers CManuverBuilder::manuvers;
 std::vector<int> CManuverBuilder::suitableIndeces;
 CManuverStateDesc CManuverBuilder::state;
 
-
-struct IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPlanesFormation * pPos, const CVec3 &vEnemy, int nAttacker )
+struct IManuver *
+CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPlanesFormation *pPos, const CVec3 &vEnemy, int nAttacker )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
 	const CVec3 vPos( pPos->GetPosB2() );
-	const float fMinPathLength = 2.0f * pref.GetR( pref.GetMaxSpeed() ) ;
+	const float fMinPathLength = 2.0f * pref.GetR( pref.GetMaxSpeed() );
 	const CVec2 vDir( GetVectorByDirection( GetAngle( nAttacker ) ) );
 
 	const float fDiveAngle = pref.GetDivingAngle() * 2.0f * PI / 65535;
@@ -36,14 +36,12 @@ struct IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPla
 		vAttackPos.y += vDir.y * fMinPathLength;
 	}
 	Normalize( &vDirection );
-	CManuverPrepareGroundAttack * pManuver = new CManuverPrepareGroundAttack;
+	CManuverPrepareGroundAttack *pManuver = new CManuverPrepareGroundAttack;
 	pManuver->Init( pPos, vAttackPos, vDirection );
 	return pManuver;
 }
 
-
 //	CManuverBuilder
-
 
 //#define STRING_ENUM_ADD(TypeConverter,eEnum) TypeConverter[#eEnum] = eEnum;
 
@@ -57,7 +55,8 @@ void CManuverBuilder::Init( const NDb::SAIGameConsts *_pConsts )
 		manuvers[pConsts->planeManuvers[i]->eAttitude].push_back( i );
 }
 
-const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &current, const CPlanePreferences &pref ) const
+const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &current,
+                                                   const CPlanePreferences &pref ) const
 {
 	CManuvers::const_iterator manuverPos = manuvers.find( current.GetAtt() );
 
@@ -85,16 +84,19 @@ const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &curr
 	return 0;
 }
 
-struct IManuver * CManuverBuilder::CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
+struct IManuver *CManuverBuilder::CreateDefaultManuver( const enum EPlanesAttitude att,
+                                                        class CPlanesFormation *pPos,
+                                                        class CPlanesFormation *pEnemy )
 {
 	if ( EPA_RETREAT == att )
 	{
 		// horisontal manuver in random direction
 		const CVec3 vSpeed( pPos->GetSpeedB2() );
 		const float fSpeed( fabs( vSpeed ) );
-		CVec3 vPerp ( -vSpeed.y, vSpeed.x, 0 );
+		CVec3 vPerp( -vSpeed.y, vSpeed.x, 0 );
 		Normalize( &vPerp );
-		vPerp *= ( NRandom::Random(0,1) == 1 ? -1 : 1 ); RecordRandomCall();
+		vPerp *= ( NRandom::Random( 0, 1 ) == 1 ? -1 : 1 );
+		RecordRandomCall();
 
 		const CVec3 vPoint( pPos->GetPosB2() + 2.1f * vPerp * pPos->GetPreferencesB2().GetR( fSpeed ) );
 		return CreatePointManuver( pPos, vPoint, false );
@@ -124,7 +126,7 @@ CVec3 CManuverBuilder::CalcAttackerPoint( class CPlanesFormation *pAttacker, cla
 
 CVec3 CalcOffsetByIndex( int nIndex )
 {
-	return CVec3( -200 - 50 * nIndex, nIndex * 50 * ( nIndex % 3 - 1 ), nIndex * 50 * ( ( (nIndex + 1 ) % 3 - 1 ) ) );
+	return CVec3( -200 - 50 * nIndex, nIndex * 50 * ( nIndex % 3 - 1 ), nIndex * 50 * ( ( ( nIndex + 1 ) % 3 - 1 ) ) );
 }
 
 int CManuverBuilder::RegisterAsAttacker( class CPlanesFormation *pAttacker, class CPlanesFormation *pEnemy )
@@ -147,15 +149,17 @@ int CManuverBuilder::RegisterAsAttacker( class CPlanesFormation *pAttacker, clas
 		}
 	}
 	int nIndex = attacks[pEnemy->GetFormationID()].size();
-	attacks[pEnemy->GetFormationID()].push_back( std::pair<int,CVec3>( pAttacker->GetFormationID(), CalcOffsetByIndex( attacks[pEnemy->GetFormationID()].size() ) ) );
+	attacks[pEnemy->GetFormationID()].push_back( std::pair<int, CVec3>(
+			pAttacker->GetFormationID(), CalcOffsetByIndex( attacks[pEnemy->GetFormationID()].size() ) ) );
 	return nIndex;
 }
 
-struct IManuver* CManuverBuilder::CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal )
+struct IManuver *
+CManuverBuilder::CreatePointManuver( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal )
 {
 	const float fDist = fabs( pPos->GetPosB2() - vPoint );
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
-	const float fR ( pref.GetR( fabs( pPos->GetSpeedB2() ) ) );
+	const float fR( pref.GetR( fabs( pPos->GetSpeedB2() ) ) );
 
 	if ( bToHorisontal && fDist > fR * 2.5f )
 	{
@@ -173,12 +177,12 @@ struct IManuver* CManuverBuilder::CreatePointManuver ( class CPlanesFormation *p
 
 EPlanesAttitude CManuverBuilder::GetAttitude( class CPlanesFormation *pPlane, class CPlanesFormation *pEnemy ) const
 {
-	if ( pPlane->IsBeingAttackedB2()  )
+	if ( pPlane->IsBeingAttackedB2() )
 		return EPA_RETREAT;
 	return EPA_ATTACK;
 }
 
-struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID )
+struct IManuver *CManuverBuilder::CreateManuver( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID )
 {
 	//return CreateDefaultManuver( att, pPos, pEnemy );
 	// create maneuver to attack ground unit
@@ -186,7 +190,7 @@ struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, 
 
 	SGRoundAttackTarget &target = groundAttacks[nTargetUniqueID];
 
-	while( true )
+	while ( true )
 	{
 		for ( int i = 0; i < target.nMaxAttakers; ++i )
 			if ( target.attackers[i] == nFormationID )
@@ -206,7 +210,7 @@ struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, 
 	return 0;
 }
 
-struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
+struct IManuver *CManuverBuilder::CreateManuver( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy )
 {
 	EPlanesAttitude att = GetAttitude( pPos, pEnemy );
 	state.Init( att, pPos, pEnemy );
@@ -221,5 +225,5 @@ struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, 
 		return pManuver;
 	}
 	else*/
-		return CreateDefaultManuver( att, pPos, pEnemy );
+	return CreateDefaultManuver( att, pPos, pEnemy );
 }

@@ -8,8 +8,8 @@
 
 namespace NVFS
 {
-	struct IVFS;
-	struct IFileCreator;
+struct IVFS;
+struct IFileCreator;
 }
 
 namespace NDb
@@ -27,14 +27,18 @@ namespace NTypeDef
 class COldTypeIDs
 {
 	typedef std::unordered_map<int, CDBID> CRecordID2DBIDMap;
-	typedef std::unordered_map< int, CRecordID2DBIDMap> COldTypesMap;
+	typedef std::unordered_map<int, CRecordID2DBIDMap> COldTypesMap;
 	COldTypesMap oldTypesMap;
+
 public:
 	bool RegisterOldType( const int nTypeID, const int nRecordID, const CDBID &dbid )
 	{
 		if ( oldTypesMap[nTypeID].find( nRecordID ) != oldTypesMap[nTypeID].end() )
 		{
-			DebugTrace( "object with ID = %d already registered (old \"%s\", new \"%s\")", nRecordID, oldTypesMap[nTypeID][nRecordID].ToString().c_str(), dbid.ToString().c_str() );
+			DebugTrace( "object with ID = %d already registered (old \"%s\", new \"%s\")",
+			            nRecordID,
+			            oldTypesMap[nTypeID][nRecordID].ToString().c_str(),
+			            dbid.ToString().c_str() );
 			return false;
 		}
 		oldTypesMap[nTypeID][nRecordID] = dbid;
@@ -64,6 +68,7 @@ class CBasicDatabase : public CObjectBase, public CDbObserverContainer
 	CPtr<NVFS::IFileCreator> pFileCreator;
 	// Keep a defined declaration default alongside the runtime constructor state.
 	bool bDataChanged = false;
+
 protected:
 	NVFS::IFileCreator *GetFileCreator() const { return pFileCreator; }
 	NVFS::IVFS *GetVFS() const { return pVFS; }
@@ -80,7 +85,7 @@ protected:
 	}
 	//
 public:
-	CBasicDatabase(): bDataChanged( false ) {}
+	CBasicDatabase() : bDataChanged( false ) {}
 	//
 	virtual bool OpenDatabase( NVFS::IVFS *pVFS, NVFS::IFileCreator *pFileCreator ) = 0;
 	virtual bool RegisterResourceFile( const std::string &szFileName ) = 0;
@@ -96,7 +101,7 @@ public:
 	virtual bool RemoveObject( const CDBID &dbid ) = 0;
 	virtual bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) = 0;
 	// renames several objects, scanning for references once rather than once each
-	virtual bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames ) = 0;
+	virtual bool RenameObjects( const std::vector<std::pair<CDBID, CDBID>> &renames ) = 0;
 	// every object in the database that points at this one
 	virtual bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid ) = 0;
 	//
@@ -106,7 +111,7 @@ public:
 	virtual void DropCachedResources() = 0;
 	//
 	// retrieve all terminal classes list
-	virtual bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes ) = 0;
+	virtual bool GetClassesList( std::vector<NTypeDef::STypeClass *> *pRes ) = 0;
 	// retrieve all objects by type
 	virtual bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName ) = 0;
 	virtual bool GetObjectsList( std::vector<CDBID> *pRes, const int nClassTypeID ) = 0;
@@ -114,7 +119,11 @@ public:
 	virtual std::string GetClassTypeName( const CDBID &dbid ) = 0;
 	// changed DB objects - checks and reports
 	void SetDataChanged() { bDataChanged = true; }
-	void SetDataChanged( const CDBID &dbid ) { SetDataChanged(); ReportObjectChanged(dbid); }
+	void SetDataChanged( const CDBID &dbid )
+	{
+		SetDataChanged();
+		ReportObjectChanged( dbid );
+	}
 	void ResetDataChanged() { bDataChanged = false; }
 	bool HasChangedObjects() const { return bDataChanged; }
 };

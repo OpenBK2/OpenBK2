@@ -2,7 +2,6 @@
 
 #include "AIGeneralDialogs.h"
 
-
 #include <fmt/format.h>
 
 #include "AIGeneralTypes.h"
@@ -38,162 +37,158 @@
 
 namespace
 {
-	// Where both dialogs start; see the note at the top.
-	void FocusOk( wxDialog *pDialog )
+// Where both dialogs start; see the note at the top.
+void FocusOk( wxDialog *pDialog )
+{
+	if ( wxWindow *pOk = pDialog->FindWindow( wxID_OK ) )
 	{
-		if ( wxWindow *pOk = pDialog->FindWindow( wxID_OK ) )
-		{
-			pOk->SetFocus();
-		}
+		pOk->SetFocus();
 	}
-
-
-	// "Mobile reinforcement", IDD_DLG_AIGEN_MOBILE_ID: one label, one edit box.
-	class CAIGenMobileWxDialog : public CWxToolDialog
-	{
-		wxTextCtrl *pMobileID = nullptr;
-
-	public:
-		CAIGenMobileWxDialog( wxWindow *pParent, int nMobileID )
-			: CWxToolDialog( pParent, wxID_ANY, "Mobile reinforcement" )
-		{
-			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
-			wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
-			pRow->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Mobile reinforcement ScriptID:" ),
-								 wxSizerFlags().Centre().Border( wxRIGHT, 6 ) );
-			pMobileID = NWx::Child<wxTextCtrl>( this, wxID_ANY, fmt::format( "{}", nMobileID ),
-																					wxDefaultPosition, wxSize( ConvertDialogToPixels( wxSize( 81, 0 ) ).x, -1 ) );
-			pRow->Add( pMobileID, wxSizerFlags( 1 ).Centre() );
-			pSizer->Add( pRow, wxSizerFlags().Expand().Border( wxALL, 8 ) );
-			pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
-									 wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
-			SetSizerAndFit( pSizer );
-			FocusOk( this );
-		}
-
-		// OnOK's sscanf: what does not parse is 0.
-		int GetMobileID() const
-		{
-			int nMobileID = 0;
-			sscanf( std::string( pMobileID->GetValue().utf8_str() ).c_str(), "%d", &nMobileID );
-			return nMobileID;
-		}
-	};
-
-
-	// "Parcel properties", IDD_DLG_AIGEN_PARCEL: a type and an importance.
-	class CAIGenParcelWxDialog : public CWxToolDialog
-	{
-		wxChoice *pType = nullptr;
-		wxTextCtrl *pImportance = nullptr;
-
-	public:
-		CAIGenParcelWxDialog( wxWindow *pParent, NDb::EParcelType eType, float fImportance )
-			: CWxToolDialog( pParent, wxID_ANY, "Parcel properties" )
-		{
-			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
-			wxFlexGridSizer *pGrid = new wxFlexGridSizer( 2, wxSize( 6, 4 ) );
-			pGrid->AddGrowableCol( 1 );
-
-			pGrid->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Parcel type:" ), wxSizerFlags().CentreVertical() );
-			// Unsorted, as the template's combo box is, so a type's position is
-			// its value: the original reads GetCurSel back as the enum.
-			pType = NWx::Child<wxChoice>( this, wxID_ANY, wxDefaultPosition,
-																		wxSize( ConvertDialogToPixels( wxSize( 93, 0 ) ).x, -1 ) );
-			for ( int nType = 0; nType < typeAIGeneralParcel.Size(); ++nType )
-			{
-				pType->Append( wxString::FromUTF8( typeAIGeneralParcel.GetMnemonic( nType ).c_str() ) );
-			}
-			// SelectString in the original, which is a case-insensitive prefix
-			// match; the whole name is what was meant, and FindString cannot
-			// land on a longer name that merely starts the same way. Case
-			// insensitive still, as CB_SELECTSTRING is.
-			const int nSelection = pType->FindString( wxString::FromUTF8( typeAIGeneralParcel.GetMnemonic( eType ).c_str() ), false );
-			if ( nSelection != wxNOT_FOUND )
-			{
-				pType->SetSelection( nSelection );
-			}
-			pGrid->Add( pType, wxSizerFlags().Expand() );
-
-			pGrid->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Importance:" ), wxSizerFlags().CentreVertical() );
-			// "{:f}", six decimals, as the original writes it.
-			pImportance = NWx::Child<wxTextCtrl>( this, wxID_ANY, fmt::format( "{:f}", fImportance ) );
-			pGrid->Add( pImportance, wxSizerFlags().Expand() );
-
-			pSizer->Add( pGrid, wxSizerFlags().Expand().Border( wxALL, 8 ) );
-			pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
-									 wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
-			SetSizerAndFit( pSizer );
-			FocusOk( this );
-		}
-
-		// OnOK's reading of the combo box: the selected position as the enum,
-		// which is -1 with nothing selected, exactly as GetCurSel is.
-		NDb::EParcelType GetType() const
-		{
-			return static_cast<NDb::EParcelType>( pType->GetSelection() );
-		}
-
-		// OnOK's sscanf: what does not parse is 0.
-		float GetImportance() const
-		{
-			float fImportance = 0;
-			sscanf( std::string( pImportance->GetValue().utf8_str() ).c_str(), "%f", &fImportance );
-			return fImportance;
-		}
-	};
 }
 
+// "Mobile reinforcement", IDD_DLG_AIGEN_MOBILE_ID: one label, one edit box.
+class CAIGenMobileWxDialog : public CWxToolDialog
+{
+	wxTextCtrl *pMobileID = nullptr;
+
+public:
+	CAIGenMobileWxDialog( wxWindow *pParent, int nMobileID ) : CWxToolDialog( pParent, wxID_ANY, "Mobile reinforcement" )
+	{
+		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
+		wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
+		pRow->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Mobile reinforcement ScriptID:" ),
+		           wxSizerFlags().Centre().Border( wxRIGHT, 6 ) );
+		pMobileID = NWx::Child<wxTextCtrl>( this,
+		                                    wxID_ANY,
+		                                    fmt::format( "{}", nMobileID ),
+		                                    wxDefaultPosition,
+		                                    wxSize( ConvertDialogToPixels( wxSize( 81, 0 ) ).x, -1 ) );
+		pRow->Add( pMobileID, wxSizerFlags( 1 ).Centre() );
+		pSizer->Add( pRow, wxSizerFlags().Expand().Border( wxALL, 8 ) );
+		pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
+		             wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
+		SetSizerAndFit( pSizer );
+		FocusOk( this );
+	}
+
+	// OnOK's sscanf: what does not parse is 0.
+	int GetMobileID() const
+	{
+		int nMobileID = 0;
+		sscanf( std::string( pMobileID->GetValue().utf8_str() ).c_str(), "%d", &nMobileID );
+		return nMobileID;
+	}
+};
+
+// "Parcel properties", IDD_DLG_AIGEN_PARCEL: a type and an importance.
+class CAIGenParcelWxDialog : public CWxToolDialog
+{
+	wxChoice *pType = nullptr;
+	wxTextCtrl *pImportance = nullptr;
+
+public:
+	CAIGenParcelWxDialog( wxWindow *pParent, NDb::EParcelType eType, float fImportance )
+			: CWxToolDialog( pParent, wxID_ANY, "Parcel properties" )
+	{
+		wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
+		wxFlexGridSizer *pGrid = new wxFlexGridSizer( 2, wxSize( 6, 4 ) );
+		pGrid->AddGrowableCol( 1 );
+
+		pGrid->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Parcel type:" ), wxSizerFlags().CentreVertical() );
+		// Unsorted, as the template's combo box is, so a type's position is
+		// its value: the original reads GetCurSel back as the enum.
+		pType = NWx::Child<wxChoice>(
+				this, wxID_ANY, wxDefaultPosition, wxSize( ConvertDialogToPixels( wxSize( 93, 0 ) ).x, -1 ) );
+		for ( int nType = 0; nType < typeAIGeneralParcel.Size(); ++nType )
+		{
+			pType->Append( wxString::FromUTF8( typeAIGeneralParcel.GetMnemonic( nType ).c_str() ) );
+		}
+		// SelectString in the original, which is a case-insensitive prefix
+		// match; the whole name is what was meant, and FindString cannot
+		// land on a longer name that merely starts the same way. Case
+		// insensitive still, as CB_SELECTSTRING is.
+		const int nSelection =
+				pType->FindString( wxString::FromUTF8( typeAIGeneralParcel.GetMnemonic( eType ).c_str() ), false );
+		if ( nSelection != wxNOT_FOUND )
+		{
+			pType->SetSelection( nSelection );
+		}
+		pGrid->Add( pType, wxSizerFlags().Expand() );
+
+		pGrid->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Importance:" ), wxSizerFlags().CentreVertical() );
+		// "{:f}", six decimals, as the original writes it.
+		pImportance = NWx::Child<wxTextCtrl>( this, wxID_ANY, fmt::format( "{:f}", fImportance ) );
+		pGrid->Add( pImportance, wxSizerFlags().Expand() );
+
+		pSizer->Add( pGrid, wxSizerFlags().Expand().Border( wxALL, 8 ) );
+		pSizer->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ),
+		             wxSizerFlags().Centre().Border( wxLEFT | wxRIGHT | wxBOTTOM, 8 ) );
+		SetSizerAndFit( pSizer );
+		FocusOk( this );
+	}
+
+	// OnOK's reading of the combo box: the selected position as the enum,
+	// which is -1 with nothing selected, exactly as GetCurSel is.
+	NDb::EParcelType GetType() const { return static_cast<NDb::EParcelType>( pType->GetSelection() ); }
+
+	// OnOK's sscanf: what does not parse is 0.
+	float GetImportance() const
+	{
+		float fImportance = 0;
+		sscanf( std::string( pImportance->GetValue().utf8_str() ).c_str(), "%f", &fImportance );
+		return fImportance;
+	}
+};
+}
 
 namespace NAIGenMobileDialog
 {
-	bool Run( IWidget *pParent, int *pMobileID )
+bool Run( IWidget *pParent, int *pMobileID )
+{
+	if ( pMobileID == 0 )
 	{
-		if ( pMobileID == 0 )
-		{
-			return false;
-		}
-		CAIGenMobileWxDialog dialog( ToWxOwnerWindow( pParent ), *pMobileID );
-		NWxPlacement::CPlacement placement( "CAIGenMobileDlg" );
-		if ( !placement.Restore( &dialog ) )
-		{
-			dialog.CentreOnParent();
-		}
-		const int nResult = dialog.ShowModal();
-		// Kept whichever button was used, as CResizeDialog does on destroy.
-		placement.Save( &dialog );
-		if ( nResult != wxID_OK )
-		{
-			return false;
-		}
-		( *pMobileID ) = dialog.GetMobileID();
-		return true;
+		return false;
 	}
+	CAIGenMobileWxDialog dialog( ToWxOwnerWindow( pParent ), *pMobileID );
+	NWxPlacement::CPlacement placement( "CAIGenMobileDlg" );
+	if ( !placement.Restore( &dialog ) )
+	{
+		dialog.CentreOnParent();
+	}
+	const int nResult = dialog.ShowModal();
+	// Kept whichever button was used, as CResizeDialog does on destroy.
+	placement.Save( &dialog );
+	if ( nResult != wxID_OK )
+	{
+		return false;
+	}
+	( *pMobileID ) = dialog.GetMobileID();
+	return true;
 }
-
+}
 
 namespace NAIGenParcelDialog
 {
-	bool Run( IWidget *pParent, NDb::EParcelType *pType, float *pImportance )
+bool Run( IWidget *pParent, NDb::EParcelType *pType, float *pImportance )
+{
+	if ( ( pType == 0 ) || ( pImportance == 0 ) )
 	{
-		if ( ( pType == 0 ) || ( pImportance == 0 ) )
-		{
-			return false;
-		}
-		CAIGenParcelWxDialog dialog( ToWxOwnerWindow( pParent ), *pType, *pImportance );
-		NWxPlacement::CPlacement placement( "CAIGenParcelDlg" );
-		if ( !placement.Restore( &dialog ) )
-		{
-			dialog.CentreOnParent();
-		}
-		const int nResult = dialog.ShowModal();
-		placement.Save( &dialog );
-		if ( nResult != wxID_OK )
-		{
-			return false;
-		}
-		( *pType ) = dialog.GetType();
-		( *pImportance ) = dialog.GetImportance();
-		return true;
+		return false;
 	}
+	CAIGenParcelWxDialog dialog( ToWxOwnerWindow( pParent ), *pType, *pImportance );
+	NWxPlacement::CPlacement placement( "CAIGenParcelDlg" );
+	if ( !placement.Restore( &dialog ) )
+	{
+		dialog.CentreOnParent();
+	}
+	const int nResult = dialog.ShowModal();
+	placement.Save( &dialog );
+	if ( nResult != wxID_OK )
+	{
+		return false;
+	}
+	( *pType ) = dialog.GetType();
+	( *pImportance ) = dialog.GetImportance();
+	return true;
+}
 }

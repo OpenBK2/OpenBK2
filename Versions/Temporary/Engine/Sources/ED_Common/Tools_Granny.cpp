@@ -23,7 +23,6 @@ int CalculateGrannyTypedefOffset( granny_data_type_definition *pType, const char
 	return INVALID_GRANNY_TYPEDEF_OFFSET;
 }
 
-
 int CalculateGrannyMemberArraySize( granny_data_type_definition *pType, const char *pName )
 {
 	while ( pType && ( pType->Type != GrannyEndMember ) )
@@ -50,11 +49,12 @@ bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pIn
 	for ( int nMeshIndex = 0; nMeshIndex < pInfo->MeshCount; ++nMeshIndex )
 	{
 		granny_mesh *pMesh = pInfo->Meshes[nMeshIndex];
-		const int nPositionOffset = CalculateGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
+		const int nPositionOffset =
+				CalculateGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
 		const int nVertexSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 		if ( nPositionOffset != INVALID_GRANNY_TYPEDEF_OFFSET )
 		{
-			char *pUntypedVertices = (char*)( pMesh->PrimaryVertexData->Vertices );
+			char *pUntypedVertices = (char *)( pMesh->PrimaryVertexData->Vertices );
 			for ( int nVertexIndex = 0; nVertexIndex < pMesh->PrimaryVertexData->VertexCount; ++nVertexIndex )
 			{
 				char *pVertex = pUntypedVertices + nVertexIndex * nVertexSize;
@@ -105,11 +105,12 @@ bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pIn
 		granny_mesh *pMesh = pInfo->Meshes[nMeshIndex];
 		if ( szMeshName == pMesh->Name )
 		{
-			const int nPositionOffset = CalculateGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
+			const int nPositionOffset =
+					CalculateGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
 			const int nVertexSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 			if ( nPositionOffset != INVALID_GRANNY_TYPEDEF_OFFSET )
 			{
-				char *pUntypedVertices = (char*)( pMesh->PrimaryVertexData->Vertices );
+				char *pUntypedVertices = (char *)( pMesh->PrimaryVertexData->Vertices );
 				for ( int nVertexIndex = 0; nVertexIndex < pMesh->PrimaryVertexData->VertexCount; ++nVertexIndex )
 				{
 					char *pVertex = pUntypedVertices + nVertexIndex * nVertexSize;
@@ -143,12 +144,13 @@ void GetVerticesFromGrannyMesh( granny_mesh *pMesh, std::vector<CVec3> *pVertexL
 	NI_ASSERT( pMesh != 0, "GetVerticesFromGrannyMesh(): pMesh == 0" );
 	NI_ASSERT( pVertexList != 0, "GetVerticesFromGrannyMesh(): pVertexList == 0" );
 	//
-	const int nPositionOffset = CalculateGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
+	const int nPositionOffset =
+			CalculateGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
 	const int nVertexSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
 	if ( nPositionOffset != INVALID_GRANNY_TYPEDEF_OFFSET )
 	{
 		pVertexList->resize( pMesh->PrimaryVertexData->VertexCount );
-		char *pUntypedVertices = (char*)( pMesh->PrimaryVertexData->Vertices );
+		char *pUntypedVertices = (char *)( pMesh->PrimaryVertexData->Vertices );
 		//
 		for ( int nVertexIndex = 0; nVertexIndex < pMesh->PrimaryVertexData->VertexCount; ++nVertexIndex )
 		{
@@ -159,7 +161,6 @@ void GetVerticesFromGrannyMesh( granny_mesh *pMesh, std::vector<CVec3> *pVertexL
 		}
 	}
 }
-
 
 void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, std::vector<STriangle> *pTriangleList )
 {
@@ -178,20 +179,23 @@ void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, std::vector<STriangle> *pTr
 	for ( int nTriangleIndex = 0; nTriangleIndex < nTriangleCount; ++nTriangleIndex )
 	{
 		std::vector<STriangle>::iterator posTriangle = pTriangleList->insert( pTriangleList->end(), STriangle() );
-		posTriangle->i1 = pTriTopology->Indices[ nGlobalIndex + 0 ];
-		posTriangle->i2 = pTriTopology->Indices[ nGlobalIndex + 1 ];
-		posTriangle->i3 = pTriTopology->Indices[ nGlobalIndex + 2 ];
+		posTriangle->i1 = pTriTopology->Indices[nGlobalIndex + 0];
+		posTriangle->i2 = pTriTopology->Indices[nGlobalIndex + 1];
+		posTriangle->i3 = pTriTopology->Indices[nGlobalIndex + 2];
 		nGlobalIndex += 3;
 	}
 }
 
-bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const std::string &rszFileName, const std::string &rszDesiredSkeletonName, bool bFromRoot )
+bool ReadAttributes( CGrannyBoneAttributesList *pBoneList,
+                     const std::string &rszFileName,
+                     const std::string &rszDesiredSkeletonName,
+                     bool bFromRoot )
 {
 	granny_file *pFile = GrannyReadEntireFile( rszFileName.c_str() );
 	if ( pFile == 0 )
 		return false;
 	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
-	if ( (pInfo == 0) || (pInfo->SkeletonCount != 1) )
+	if ( ( pInfo == 0 ) || ( pInfo->SkeletonCount != 1 ) )
 		return false;
 	//
 	bool bRetVal = ReadAttributes( pBoneList, pInfo, rszDesiredSkeletonName, bFromRoot );
@@ -200,7 +204,10 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const std::string &rs
 	return bRetVal;
 }
 
-bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pInfo, const std::string &rszDesiredSkeletonName, bool bFromRoot )
+bool ReadAttributes( CGrannyBoneAttributesList *pBoneList,
+                     granny_file_info *pInfo,
+                     const std::string &rszDesiredSkeletonName,
+                     bool bFromRoot )
 {
 	NI_ASSERT( pBoneList != 0, "ReadAttributes() pBoneList == 0" );
 	//
@@ -238,7 +245,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
 				/**/
 				NStr::ToLowerASCII( &szName );
-				const float fValue = *(float*)( ((uint8_t*)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object) + nOffset );
+				const float fValue = *(float *)( ( (uint8_t *)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object ) + nOffset );
 				posBone->attributeMap[szName] = fValue;
 				nOffset += 4;
 				/**
@@ -252,7 +259,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
 				/**/
 				NStr::ToLowerASCII( &szName );
-				const float fValue = *(int*)( ((uint8_t*)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object) + nOffset );
+				const float fValue = *(int *)( ( (uint8_t *)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object ) + nOffset );
 				posBone->attributeMap[szName] = fValue;
 				/**
 				DebugTrace( "Read Attribute: <%s:%g>", szName.c_str(), fValue );
@@ -262,23 +269,24 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 			else if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyStringMember )
 			{
 				nOffset += 4;
-//				const int nMemberSize = GrannyGetMemberTypeSize( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
-//				const int nTotalSize = GrannyGetTotalObjectSize( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
-//				bool bHasPointers = GrannyMemberHasPointers( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
-//				ILogger *pLogger = NLog::GetLogger();
-//				pLogger->Log( LT_ERROR, fmt::format("Attribute of type 'std::string' for \"{}\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
-//				break;
+				//				const int nMemberSize = GrannyGetMemberTypeSize( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
+				//				const int nTotalSize = GrannyGetTotalObjectSize( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
+				//				bool bHasPointers = GrannyMemberHasPointers( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
+				//				ILogger *pLogger = NLog::GetLogger();
+				//				pLogger->Log( LT_ERROR, fmt::format("Attribute of type 'std::string' for \"{}\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
+				//				break;
 			}
 			else
 			{
-				NLog::GetLogger()->Log( LT_IMPORTANT, fmt::format("Unknown attribute type for \"{}\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
+				NLog::GetLogger()->Log( LT_IMPORTANT,
+				                        fmt::format( "Unknown attribute type for \"{}\"\n",
+				                                     pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name ) );
 				break;
 			}
 		}
 	}
 	return true;
 }
-
 
 bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, float *pfValue ) const
 {
@@ -297,7 +305,6 @@ bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, f
 	}
 }
 
-
 bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, int *pnValue ) const
 {
 	float fAttributeValue = 0.0f;
@@ -312,7 +319,6 @@ bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, i
 	return false;
 }
 
-
 bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, bool *pbValue ) const
 {
 	float fAttributeValue = 0.0f;
@@ -326,7 +332,6 @@ bool SGrannyBoneAttributes::GetAttribute( const std::string &rszAttributeName, b
 	}
 	return false;
 }
-
 
 // ************************************************************************************************************************ //
 // **

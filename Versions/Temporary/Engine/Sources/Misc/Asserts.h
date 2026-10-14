@@ -26,59 +26,78 @@ enum EBSUReport
 
 namespace NBSU
 {
-	MISC_EXPORT EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition, const char *pszDescription,
-		const char *pszFileName, int nLineNumber );
+MISC_EXPORT EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition,
+                                                  const char *pszDescription,
+                                                  const char *pszFileName,
+                                                  int nLineNumber );
 };
 
 // ASSERT macros.
 // For showing calling stack when errors occur in major functions.
 // Meant to be enabled in release builds.
 #if defined( _DO_ASSERT_SLOW )
-#define NI_ASSERT( x, user_text )    NI_FORCE_ASSERT( x, #x, user_text )
-#define NI_VERIFY( x, user_text, statement )  { bool bCheck = (x); NI_FORCE_ASSERT( bCheck, #x, user_text ); if ( !bCheck ) { statement; } }
+#define NI_ASSERT( x, user_text ) NI_FORCE_ASSERT( x, #x, user_text )
+#define NI_VERIFY( x, user_text, statement )  \
+	{                                           \
+		bool bCheck = ( x );                      \
+		NI_FORCE_ASSERT( bCheck, #x, user_text ); \
+		if ( !bCheck )                            \
+		{                                         \
+			statement;                              \
+		}                                         \
+	}
 #else
-#define NI_ASSERT( x, user_text ) ((void)0);
-#define NI_VERIFY( x, user_text, statement ) { if ( !( x ) ) { statement; } }
+#define NI_ASSERT( x, user_text ) ( (void)0 );
+#define NI_VERIFY( x, user_text, statement ) \
+	{                                          \
+		if ( !( x ) )                            \
+		{                                        \
+			statement;                             \
+		}                                        \
+	}
 #endif // use ctrl + }
 //
 // main ASSERT macros
 //
 #if defined( _DO_ASSERT_SLOW )
-#define NI_FORCE_ASSERT( x, msg, user_text )   												\
-{																																			\
-if ( !(x) )                                                           \
-{                                                                     \
-	static bool bIgnore;                                                \
-	/* the text is a literal from most callers and the std::string that */ \
-	/* fmt::format returns from the rest; bind it once so both work     */ \
-	const std::string szAssertText( user_text );                        \
-	if ( !bIgnore )                                                     \
-	{                                                                   \
-		if ( is_debugger_present() )                                      \
-		{																																	\
-			DbgTrcRaw( szAssertText.c_str() );																	\
-			breakpoint();                                                   \
-		}																																	\
-		else                                                              \
-		{                                                                 \
-			switch( NBSU::ReportAssert(msg, szAssertText.c_str(), __FILE__, __LINE__) )\
-			{                                                               \
-				case BSU_CONTINUE: break;                                     \
-				case BSU_DEBUG: breakpoint(); break;                          \
-				case BSU_IGNORE: break;                                       \
-				/* Abort: stop in a debugger if one is attached, else end the */ \
-				/* process. That is what Win32's FatalExit did, which this    */ \
-				/* called and which no other platform has.                     */ \
-				case BSU_ABORT:                                               \
-					breakpoint();                                               \
-					break;																									  	\
-			}                                                               \
-		}                                                                 \
-	}                                                                   \
-}																																			\
-}
+#define NI_FORCE_ASSERT( x, msg, user_text )                                             \
+	{                                                                                      \
+		if ( !( x ) )                                                                        \
+		{                                                                                    \
+			static bool bIgnore;                                                               \
+			/* the text is a literal from most callers and the std::string that */             \
+			/* fmt::format returns from the rest; bind it once so both work     */             \
+			const std::string szAssertText( user_text );                                       \
+			if ( !bIgnore )                                                                    \
+			{                                                                                  \
+				if ( is_debugger_present() )                                                     \
+				{                                                                                \
+					DbgTrcRaw( szAssertText.c_str() );                                             \
+					breakpoint();                                                                  \
+				}                                                                                \
+				else                                                                             \
+				{                                                                                \
+					switch ( NBSU::ReportAssert( msg, szAssertText.c_str(), __FILE__, __LINE__ ) ) \
+					{                                                                              \
+						case BSU_CONTINUE:                                                           \
+							break;                                                                     \
+						case BSU_DEBUG:                                                              \
+							breakpoint();                                                              \
+							break;                                                                     \
+						case BSU_IGNORE:                                                             \
+							break;                                                                     \
+						/* Abort: stop in a debugger if one is attached, else end the */             \
+						/* process. That is what Win32's FatalExit did, which this    */             \
+						/* called and which no other platform has.                     */            \
+						case BSU_ABORT:                                                              \
+							breakpoint();                                                              \
+							break;                                                                     \
+					}                                                                              \
+				}                                                                                \
+			}                                                                                  \
+		}                                                                                    \
+	}
 #endif // use ctrl + }
-
 
 // ************************************************************************************************************************ //
 // **
@@ -102,13 +121,13 @@ inline TOut dynamic_cast_ptr( TPtr ptr )
 template <class TOut, class TIn>
 inline TOut checked_cast( TIn obj )
 {
-	NI_ASSERT( !((obj != 0) && (dynamic_cast<TOut>(obj) == 0)), "Wrong checked cast" );
+	NI_ASSERT( !( ( obj != 0 ) && ( dynamic_cast<TOut>( obj ) == 0 ) ), "Wrong checked cast" );
 	return static_cast<TOut>( obj );
 }
 template <class TOut, class TIn>
 inline TOut checked_cast_ptr( TIn ptr )
 {
-	NI_ASSERT( !((ptr.GetPtr() != 0) && (dynamic_cast<TOut>(ptr.GetPtr()) == 0)), "Wrong checked cast" );
+	NI_ASSERT( !( ( ptr.GetPtr() != 0 ) && ( dynamic_cast<TOut>( ptr.GetPtr() ) == 0 ) ), "Wrong checked cast" );
 	return static_cast<TOut>( ptr.GetPtr() );
 }
 #else
@@ -119,7 +138,7 @@ inline TOut checked_cast_ptr( TIn ptr )
 #ifdef ASSERT
 #undef ASSERT
 #endif
-#define ASSERT(a) NI_ASSERT(a,#a)
+#define ASSERT( a ) NI_ASSERT( a, #a )
 
 // ************************************************************************************************************************ //
 // **
@@ -190,9 +209,10 @@ inline TOut checked_cast_ptr( TIn ptr )
 #ifdef VERIFY
 #undef VERIFY
 #endif
-#define VERIFY( f )                                                                             \
-	( []( const bool bVerified ) -> bool                                                           \
-		{                                                                                           \
-			NI_ASSERT( bVerified, "VERIFY( " #f " ) failed" );                                       \
-			return bVerified;                                                                       \
-		}( !!( f ) ) )
+#define VERIFY( f )                                        \
+	(                                                        \
+			[]( const bool bVerified ) -> bool                   \
+			{                                                    \
+				NI_ASSERT( bVerified, "VERIFY( " #f " ) failed" ); \
+				return bVerified;                                  \
+			}( !!( f ) ) )

@@ -13,7 +13,8 @@ class CTerrain;
 class CArray2D1Bit;
 struct SObjTileInfo;
 
-template <int N> struct SGenericNumber
+template <int N>
+struct SGenericNumber
 {
 	int operator()() const { return N; }
 };
@@ -23,28 +24,64 @@ class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CAIMap );
 
 	ZDATA
-		int nSizeX = 0, nSizeY = 0;
-		int nTileSize = 0;
-		int nMaxUnitTileRadius = 0;
-		int nMaxMapSize = 0;
-    ZONSERIALIZE
-	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nSizeX); f.Add(3,&nSizeY); f.Add(4,&nTileSize); f.Add(5,&nMaxUnitTileRadius); f.Add(6,&nMaxMapSize); OnSerialize( f ); return 0; } private:
+	int nSizeX = 0, nSizeY = 0;
+	int nTileSize = 0;
+	int nMaxUnitTileRadius = 0;
+	int nMaxMapSize = 0;
+	ZONSERIALIZE
+ZEND public : int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSizeX );
+		f.Add( 3, &nSizeY );
+		f.Add( 4, &nTileSize );
+		f.Add( 5, &nMaxUnitTileRadius );
+		f.Add( 6, &nMaxMapSize );
+		OnSerialize( f );
+		return 0;
+	}
+
+private:
 	// don't serialize, restore after load
 	CObj<CStaticMapHeights> pHeights;
 	CObj<CTerrain> pTerrain;
 
 	template <class TContainter, int N>
-		inline bool ProcessLargeCircleTiles( const CVec2 &vCenter, const float fRadius, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& );
+	inline bool ProcessLargeCircleTiles( const CVec2 &vCenter,
+	                                     const float fRadius,
+	                                     TContainter *pTiles,
+	                                     const EAIClasses aiClass,
+	                                     const SGenericNumber<N> & );
 	template <class TContainter, int N>
-		inline bool ProcessCircleTiles( const CVec2 &vCenter, const float fRadius, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& );
+	inline bool ProcessCircleTiles( const CVec2 &vCenter,
+	                                const float fRadius,
+	                                TContainter *pTiles,
+	                                const EAIClasses aiClass,
+	                                const SGenericNumber<N> & );
 	template <class TContainter, int N>
-		inline bool ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles, const EAIClasses aiClass, const SGenericNumber<N>& );
+	inline bool ProcessQuadrangleTiles( const CVec2 &v1,
+	                                    const CVec2 &v2,
+	                                    const CVec2 &v3,
+	                                    const CVec2 &v4,
+	                                    TContainter *pTiles,
+	                                    const EAIClasses aiClass,
+	                                    const SGenericNumber<N> & );
 	template <class TContainter>
-		inline void PushTile( const SVector &vCenter, const SVector &tile, TContainter *tiles, CArray2D1Bit &mask, const int nMaxRadius );
+	inline void
+	PushTile( const SVector &vCenter, const SVector &tile, TContainter *tiles, CArray2D1Bit &mask, const int nMaxRadius );
 	template <class TContainter>
-		inline bool Process8Tiles( const SVector &vCenter, const SVector &vOffset, TContainter *pTiles, const EAIClasses aiClass, const bool bAddOnly, CArray2D1Bit &mask );
+	inline bool Process8Tiles( const SVector &vCenter,
+	                           const SVector &vOffset,
+	                           TContainter *pTiles,
+	                           const EAIClasses aiClass,
+	                           const bool bAddOnly,
+	                           CArray2D1Bit &mask );
 	template <class TContainter>
-		inline bool ProcessLineTiles( const SVector &vCenter, const SVector &vOffset, TContainter *pTiles, const EAIClasses aiClass, const bool bAddOnly, CArray2D1Bit &mask );
+	inline bool ProcessLineTiles( const SVector &vCenter,
+	                              const SVector &vOffset,
+	                              TContainter *pTiles,
+	                              const EAIClasses aiClass,
+	                              const bool bAddOnly,
+	                              CArray2D1Bit &mask );
 
 	std::vector<SVector> &GetTilesForCircle( const float fRadius );
 	void AddTile( const SVector &tile, std::vector<SVector> &tiles, CArray2D1Bit &mask, const int nMaxRadius );
@@ -59,11 +96,12 @@ class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 	void OnSerialize( IBinSaver &saver );
 
 public:
-	CAIMap() : nMaxMapSize( 0 ) { }
-	CAIMap( const int nSizeX, const int nSizeY, const int nTileSize, const int nMaxUnitTileRadius, const int nMaxMapSize );
+	CAIMap() : nMaxMapSize( 0 ) {}
+	CAIMap(
+			const int nSizeX, const int nSizeY, const int nTileSize, const int nMaxUnitTileRadius, const int nMaxMapSize );
 
-	CStaticMapHeights* GetHeights() const { return pHeights; }
-	CTerrain* GetTerrain() const { return pTerrain; }
+	CStaticMapHeights *GetHeights() const { return pHeights; }
+	CTerrain *GetTerrain() const { return pTerrain; }
 
 	const int GetSizeX() const { return nSizeX; }
 	const int GetSizeY() const { return nSizeY; }
@@ -91,18 +129,19 @@ public:
 	bool IsCircleOnLockedTiles( const CCircle &circle, const EAIClasses aiClass );
 
 	// возвращает tiles, которые накрывает данный четырёхугольник
-	template<class TContainter>
-		inline void GetTilesCoveredByQuadrangle( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles );
+	template <class TContainter>
+	inline void GetTilesCoveredByQuadrangle(
+			const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, TContainter *pTiles );
 	// возвращает tiles, которые накрывает данный rect
-	template<class TContainter>
-		inline void GetTilesCoveredByRect( const SRect &rect, TContainter *pTiles );
-	template<class TContainter>
-		inline void GetTilesCoveredByCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles );
-	template<class TContainter>
-		inline void GetTilesCoveredByLargeCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles );
+	template <class TContainter>
+	inline void GetTilesCoveredByRect( const SRect &rect, TContainter *pTiles );
+	template <class TContainter>
+	inline void GetTilesCoveredByCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles );
+	template <class TContainter>
+	inline void GetTilesCoveredByLargeCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles );
 	//возвращает tiles, которые пересекаются со сторонами данного rect
-	template<class TContainter>
-		inline void GetTilesCoveredByRectSides( const SRect &rect, TContainter *pTiles );
+	template <class TContainter>
+	inline void GetTilesCoveredByRectSides( const SRect &rect, TContainter *pTiles );
 
 	void Clear();
 };

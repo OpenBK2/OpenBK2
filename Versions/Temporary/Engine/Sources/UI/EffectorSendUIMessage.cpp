@@ -2,16 +2,15 @@
 #include "UIInternal.h"
 #include "EffectorSendUIMessage.h"
 
-
 //CEffectorSendUIMessage
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075C06, CEffectorSendUIMessage );
+REGISTER_SAVELOAD_CLASS( UI, 0x11075C06, CEffectorSendUIMessage );
 
 int CEffectorSendUIMessage::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pElement );
 	saver.Add( 2, &szMessageID );
-	saver.Add( 3, &szParam);
+	saver.Add( 3, &szParam );
 	saver.Add( 4, &nForwardParam );
 	saver.Add( 5, &nBackParam );
 	saver.Add( 6, &szAnimatedWindow );
@@ -20,9 +19,12 @@ int CEffectorSendUIMessage::operator&( IBinSaver &saver )
 	return 0;
 }
 
-void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &_szAnimatedWindow )
+void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd,
+                                        struct IScreen *pScreen,
+                                        SWindowContext *pContext,
+                                        const std::string &_szAnimatedWindow )
 {
-	const NDb::SUISSendUIMessage *pCmd( checked_cast<const NDb::SUISSendUIMessage*>( _pCmd ) );
+	const NDb::SUISSendUIMessage *pCmd( checked_cast<const NDb::SUISSendUIMessage *>( _pCmd ) );
 	CParam<std::string> messageID( pCmd->szMessageID );
 	CParam<std::string> param( pCmd->szParam );
 	CParam<int> forwardParam( pCmd->nForwardParam );
@@ -57,7 +59,7 @@ const int CEffectorSendUIMessage::Segment( const int timeDiff, struct IScreen *p
 	if ( !szAnimatedWindow.empty() )
 	{
 		IWindow *pWnd = pScreen->GetElement( szAnimatedWindow, true );
-	//	NI_ASSERT( pWnd != NULL, StrFmt( "Animated window not found: %s", szAnimatedWindow.c_str() ) );
+		//	NI_ASSERT( pWnd != NULL, StrFmt( "Animated window not found: %s", szAnimatedWindow.c_str() ) );
 		if ( pWnd )
 		{
 			bResult = pWnd->ProcessMessage( SBUIMessage( szMessageID, szParam, bForward ? nForwardParam : nBackParam ) );

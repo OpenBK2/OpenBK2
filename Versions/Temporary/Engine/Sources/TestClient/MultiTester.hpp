@@ -37,7 +37,7 @@ private:
 	std::unordered_set<int> playersToWait;
 	int nGameID;
 	std::unordered_set<int> winnersSet;
-	std::unordered_map<int,int> playersRaces;
+	std::unordered_map<int, int> playersRaces;
 
 	void LoginStage();
 	void EnterLobbyStage();
@@ -56,8 +56,14 @@ private:
 public:
 	CMultiTester();
 
-	void Init( const std::string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
-		const std::string &_szName, const std::string &_szPassword, const std::string &_szCDKey, const int _cTestMode );
+	void Init( const std::string &_szServerAddress,
+	           const int _nNetVersion,
+	           const int _nServerPort,
+	           const int _nTimeOut,
+	           const std::string &_szName,
+	           const std::string &_szPassword,
+	           const std::string &_szCDKey,
+	           const int _cTestMode );
 	virtual bool Segment();
 	bool IsActive() const;
 	bool IsCancelled() const { return bCancelled; }

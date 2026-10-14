@@ -7,18 +7,16 @@
 
 namespace NDb
 {
-	struct SAIGameConsts;
+struct SAIGameConsts;
 }
-
 
 //	CManuverBuilder ::
 
-
 typedef std::list<int> CManuverIndices;
-typedef det_map<int/*EPlanesAttitude*/, CManuverIndices> CManuvers;
+typedef det_map<int /*EPlanesAttitude*/, CManuverIndices> CManuvers;
 class CManuverBuilder
 {
-	static CManuverStateDesc state;				// temprorary value, used inside CreateManuver()
+	static CManuverStateDesc state; // temprorary value, used inside CreateManuver()
 	static std::vector<int> suitableIndeces;
 	static CManuvers manuvers;
 
@@ -29,37 +27,51 @@ class CManuverBuilder
 		int nMaxAttakers = {};
 		SAIAngle wStartAngle;
 		std::vector<int> attackers;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nMaxAttakers); f.Add(3,&wStartAngle); f.Add(4,&attackers); return 0; }
-		uint16_t GetAngle( int nAttacker ) const
+		ZEND int operator&( IBinSaver &f )
 		{
-			return wStartAngle + 65535 / nMaxAttakers * nAttacker;
+			f.Add( 2, &nMaxAttakers );
+			f.Add( 3, &wStartAngle );
+			f.Add( 4, &attackers );
+			return 0;
 		}
-		struct IManuver* CreateManuver( class CPlanesFormation * pPos, const CVec3 &vPos, int nAttacker );
+		uint16_t GetAngle( int nAttacker ) const { return wStartAngle + 65535 / nMaxAttakers * nAttacker; }
+		struct IManuver *CreateManuver( class CPlanesFormation *pPos, const CVec3 &vPos, int nAttacker );
 		void IncreaseMaxAttackers()
 		{
 			nMaxAttakers += 2;
 			attackers.resize( nMaxAttakers, 0 );
 		}
-		SGRoundAttackTarget() : nMaxAttakers( 9 ), attackers( nMaxAttakers, 0 ), wStartAngle( NRandom::Random(65535) ) { RecordRandomCall(); }
+		SGRoundAttackTarget() : nMaxAttakers( 9 ), attackers( nMaxAttakers, 0 ), wStartAngle( NRandom::Random( 65535 ) )
+		{
+			RecordRandomCall();
+		}
 	};
 
 	typedef det_map<int, SGRoundAttackTarget> CGroundAttacks;
-	typedef std::vector<std::pair<int,CVec3> > CAttackerOffsets;
+	typedef std::vector<std::pair<int, CVec3>> CAttackerOffsets;
 	typedef det_map<int, CAttackerOffsets> CAviaAttacks;
 
 	ZDATA
 	CDBPtr<NDb::SAIGameConsts> pConsts;
 	CAviaAttacks attacks;
 	CGroundAttacks groundAttacks;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pConsts); f.Add(3,&attacks); f.Add(4,&groundAttacks); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pConsts );
+		f.Add( 3, &attacks );
+		f.Add( 4, &groundAttacks );
+		return 0;
+	}
 	// manuvers
 
 	// choose maneuver to perform. return 0 if none chosen
-	const SManuverDescriptor * Choose( const CManuverStateDesc &current, const class CPlanePreferences &pref ) const;
+	const SManuverDescriptor *Choose( const CManuverStateDesc &current, const class CPlanePreferences &pref ) const;
 
 	// default plane's behaviour. _must_ always return non null IManuver
-	struct IManuver * CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
+	struct IManuver *
+	CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
 
 	enum EPlanesAttitude GetAttitude( class CPlanesFormation *pPlane, class CPlanesFormation *pEnemy ) const;
 
@@ -75,12 +87,12 @@ public:
 	}
 
 	// manuvers for air fight.
-	struct IManuver* CreateManuver( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
+	struct IManuver *CreateManuver( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
 
 	// manuvers for ground attack
-	struct IManuver* CreateManuver( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID );
+	struct IManuver *CreateManuver( class CPlanesFormation *pPos, const CVec3 &vPos, int nTargetUniqueID );
 
 	// for travel to point. suitable for fighter patrol, bombers, etc.
 	// if bToHorisontal == true then plane will first start horizonal move, then point move
-	struct IManuver* CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal );
+	struct IManuver *CreatePointManuver( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal );
 };

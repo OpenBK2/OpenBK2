@@ -6,7 +6,8 @@
 
 const float nOrientation = -1.0f;
 
-void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 )
+void GetDirectedCirclesByTangent(
+		const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 )
 {
 	const CVec2 v( -tang.y, tang.x );
 
@@ -22,15 +23,14 @@ void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float
 // travel angle from start to finish. returned angle is in range [0, 65535]
 uint16_t DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir )
 {
-	return DirectedDirsDifference( GetDirectionByVector(vStart), GetDirectionByVector(vFinish), nDir );
+	return DirectedDirsDifference( GetDirectionByVector( vStart ), GetDirectionByVector( vFinish ), nDir );
 }
 
 // travel angle from start to finish. returned angle is in range [0, 65535]
 uint16_t DirectedDirsDifference( const uint16_t wStart, const uint16_t wFinish, const int nDir )
 {
-	return ( nDir == -1 ?  /*positive direction*/wFinish - wStart : /*negative direction*/wStart - wFinish );
+	return ( nDir == -1 ? /*positive direction*/ wFinish - wStart : /*negative direction*/ wStart - wFinish );
 }
-
 
 // returns internal tangent (circles are at the opposite semiplanes from tangent)
 bool GetInternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
@@ -59,10 +59,9 @@ bool GetInternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11,
 	return true;
 }
 
-
-
 // same as below, exept thar c1 MUST have greater radius than c2
-static void GetExternalTangentPointsFirstGreater( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
+static void GetExternalTangentPointsFirstGreater(
+		const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
 {
 	CCircle reduced = c1;
 	reduced.r -= c2.r;
@@ -87,7 +86,8 @@ static void GetExternalTangentPointsFirstGreater( const CCircle &c1, const CCirc
 // v11 & v21 - 1st tangent line, v21 & v22 - 2nd tangent line
 // 1ST INDEX - CIRCLE
 // 2ND INDEX - TANGENT LINE
-static bool GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
+static bool
+GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
 {
 	if ( !c1.r || !c2.r || c1.center == c2.center )
 		return false;
@@ -96,7 +96,7 @@ static bool GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec
 	{
 		// tangent line is parallel to line connecting centers
 		CVec2 vC1toC2( c2.center - c1.center );
-		CVec2 vPerp ( -vC1toC2.y, vC1toC2.x );
+		CVec2 vPerp( -vC1toC2.y, vC1toC2.x );
 		Normalize( &vPerp );
 
 		vPerp *= c1.r;
@@ -132,7 +132,7 @@ bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirect
 
 	const CVec2 vRadius( v11 - from.center );
 	const CVec2 vTangent( v21 - v11 );
-	if (  boost::math::sign( vRadius.y * vTangent.x - vRadius.x * vTangent.y ) == from.nDir )
+	if ( boost::math::sign( vRadius.y * vTangent.x - vRadius.x * vTangent.y ) == from.nDir )
 	{
 		*v1 = v11;
 		*v2 = v21;

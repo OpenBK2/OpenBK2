@@ -50,8 +50,14 @@ CMultiTester::CMultiTester()
 	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessNewGameClient )
 }
 
-void CMultiTester::Init( const std::string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
-												 const std::string &_szName, const std::string &_szPassword, const std::string &_szCDKey, const int _nTestMode )
+void CMultiTester::Init( const std::string &_szServerAddress,
+                         const int _nNetVersion,
+                         const int _nServerPort,
+                         const int _nTimeOut,
+                         const std::string &_szName,
+                         const std::string &_szPassword,
+                         const std::string &_szCDKey,
+                         const int _nTestMode )
 {
 	nTestMode = _nTestMode;
 	szServerAddress = _szServerAddress;
@@ -91,7 +97,7 @@ void CMultiTester::Activate()
 
 bool CMultiTester::Segment()
 {
-  if ( bCancelled || !pServerClient )
+	if ( bCancelled || !pServerClient )
 		return false;
 
 	pServerClient->Segment();
@@ -110,20 +116,20 @@ bool CMultiTester::Segment()
 	if ( !IsActive() )
 		return true;
 
-	switch( nStage )
+	switch ( nStage )
 	{
-	case LOGIN:
-		LoginStage();
-		break;
-	case ENTER_LOBBY:
-		EnterLobbyStage();
-		break;
-	case ENTER_CHAT:
-		EnterChatStage();
-		break;
-	case MAIN_STAGE:
-		MainStage();
-		break;
+		case LOGIN:
+			LoginStage();
+			break;
+		case ENTER_LOBBY:
+			EnterLobbyStage();
+			break;
+		case ENTER_CHAT:
+			EnterChatStage();
+			break;
+		case MAIN_STAGE:
+			MainStage();
+			break;
 	}
 	return true;
 }
@@ -143,7 +149,12 @@ bool CMultiTester::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} logged in\n", szName ).c_str() );
 		return true;
 	}
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} login failed from client id={}, reason={}\n", szName, pPacket->nClientID, static_cast<int>( pPacket->eRejectReason ) ).c_str() );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
+	                                         fmt::format( "{} login failed from client id={}, reason={}\n",
+	                                                      szName,
+	                                                      pPacket->nClientID,
+	                                                      static_cast<int>( pPacket->eRejectReason ) )
+	                                             .c_str() );
 	bCancelled = true;
 	return true;
 }
@@ -193,7 +204,8 @@ bool CMultiTester::ProcessClientRemoved( CNetRemoveClient *pPacket )
 {
 	if ( pPacket->nClientID == 0 )
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} connection lost\n", szName ).c_str() );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
+		                                         fmt::format( "{} connection lost\n", szName ).c_str() );
 		bCancelled = true;
 		pServerClient = 0;
 	}
@@ -259,8 +271,13 @@ void CMultiTester::TestLadder()
 		RandomizeList( &techLevels );
 		techLevels.pop_front();
 		techLevels.pop_front();
-		pServerClient->SendPacket( new CLadderInfoPacket( 0, NWin32Random::Random( 0, 2 ), NWin32Random::Random( 0, 2 ) == 1,
-			NWin32Random::Random( 1, 4 ), techLevels, maps, 12345 ) );
+		pServerClient->SendPacket( new CLadderInfoPacket( 0,
+		                                                  NWin32Random::Random( 0, 2 ),
+		                                                  NWin32Random::Random( 0, 2 ) == 1,
+		                                                  NWin32Random::Random( 1, 4 ),
+		                                                  techLevels,
+		                                                  maps,
+		                                                  12345 ) );
 		bLadderInfoSend = true;
 		return;
 	}
@@ -320,10 +337,10 @@ bool CMultiTester::ProcessNewGameClient( CNewGameClient *pPacket )
 {
 	playersToWait.erase( pPacket->nClientID );
 
-  if ( playersToWait.empty() )
+	if ( playersToWait.empty() )
 	{
-		std::unordered_map<int, std::vector<int> >	units;
-		for ( std::unordered_map<int,int>::iterator it = playersRaces.begin(); it != playersRaces.end(); ++it )
+		std::unordered_map<int, std::vector<int>> units;
+		for ( std::unordered_map<int, int>::iterator it = playersRaces.begin(); it != playersRaces.end(); ++it )
 		{
 			const int nPlayerID = it->first;
 			units[nPlayerID] = std::vector<int>( 20, 1 );

@@ -9,14 +9,14 @@ namespace NGScene
 {
 struct SLightmapInfo
 {
-	uint16_t n1, n2, n3, n4;    // vertices indexing
-	char nOrder1, nOrder2;  // first(1,2,3) | 0x4 for inverse
+	uint16_t n1, n2, n3, n4; // vertices indexing
+	char nOrder1, nOrder2;   // first(1,2,3) | 0x4 for inverse
 };
 
 struct SLMLOD
 {
 	std::vector<NRectPacker::SRect> lmaps;
-	CTPoint<int> lmSize;  // in pixels
+	CTPoint<int> lmSize; // in pixels
 };
 
 // CSquarePacker
@@ -25,7 +25,10 @@ struct SEdgeInfo
 {
 	int nU, nV, nXSize, nYSize;
 };
-inline bool operator==( const SEdgeInfo &a, const SEdgeInfo &b ) { return memcmp( &a, &b, sizeof(a) ) == 0; }
+inline bool operator==( const SEdgeInfo &a, const SEdgeInfo &b )
+{
+	return memcmp( &a, &b, sizeof( a ) ) == 0;
+}
 struct SEdgeInfoHash
 {
 	int operator()( const SEdgeInfo &e ) const { return e.nU ^ e.nV ^ e.nXSize ^ e.nYSize; }
@@ -41,7 +44,10 @@ class CSquarePacker
 		uint16_t nXSize, nYSize;
 		STriInfo() {}
 		STriInfo( int _n1, int _n2, int _n3, bool _bInverse, char _nFirst, uint16_t _nXSize, uint16_t _nYSize )
-			: n1(_n1), n2(_n2), n3(_n3), bInverse(_bInverse), nFirst(_nFirst), nFirst1(0), bInverse1(false),nXSize(_nXSize), nYSize(_nYSize){}
+				: n1( _n1 ), n2( _n2 ), n3( _n3 ), bInverse( _bInverse ), nFirst( _nFirst ), nFirst1( 0 ), bInverse1( false ),
+					nXSize( _nXSize ), nYSize( _nYSize )
+		{
+		}
 	};
 	std::vector<STriInfo> squares;
 	const CObjectInfo::SData &info;
@@ -51,9 +57,10 @@ class CSquarePacker
 	int nMaxSize;
 
 	void PushTriangle( int n1, int n2, int n3, char nFirst );
+
 public:
 	CSquarePacker( int _nMaxSize, const CObjectInfo::SData &_info, float _fTexelPerMeter )
-		: info(_info), fTexelsPerMeter(_fTexelPerMeter), nMaxSize(_nMaxSize)
+			: info( _info ), fTexelsPerMeter( _fTexelPerMeter ), nMaxSize( _nMaxSize )
 	{
 	}
 	void AddTriangle( int n1, int n2, int n3 );
@@ -71,16 +78,16 @@ inline int RoundToGood( int n )
 		if ( nTest >= n )
 			return nTest;
 	}
-	ASSERT(0);
+	ASSERT( 0 );
 	return n;
 }
 
 // n1 - vertex with largest angle
 void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 {
-	const CVec3 &v1 = info.verts[n1].pos;//GetPositions()[ info.GetPositionIndices()[n1] ];
-	const CVec3 &v2 = info.verts[n2].pos;//GetPositions()[ info.GetPositionIndices()[n2] ];
-	const CVec3 &v3 = info.verts[n3].pos;//GetPositions()[ info.GetPositionIndices()[n3] ];
+	const CVec3 &v1 = info.verts[n1].pos; //GetPositions()[ info.GetPositionIndices()[n1] ];
+	const CVec3 &v2 = info.verts[n2].pos; //GetPositions()[ info.GetPositionIndices()[n2] ];
+	const CVec3 &v3 = info.verts[n3].pos; //GetPositions()[ info.GetPositionIndices()[n3] ];
 	// calc sizes
 	float fSize21 = fabs( v2 - v1 );
 	float fSize31 = fabs( v3 - v1 );
@@ -135,9 +142,9 @@ void CSquarePacker::PushTriangle( int n1, int n2, int n3, char nFirst )
 void CSquarePacker::AddTriangle( int n1, int n2, int n3 )
 {
 	// select largest angle
-	const CVec3 &v1 = info.verts[n1].pos;//GetPositions()[ info.GetPositionIndices()[n1] ];
-	const CVec3 &v2 = info.verts[n2].pos;//GetPositions()[ info.GetPositionIndices()[n2] ];
-	const CVec3 &v3 = info.verts[n3].pos;//GetPositions()[ info.GetPositionIndices()[n3] ];
+	const CVec3 &v1 = info.verts[n1].pos; //GetPositions()[ info.GetPositionIndices()[n1] ];
+	const CVec3 &v2 = info.verts[n2].pos; //GetPositions()[ info.GetPositionIndices()[n2] ];
+	const CVec3 &v3 = info.verts[n3].pos; //GetPositions()[ info.GetPositionIndices()[n3] ];
 	float f1 = fabs2( v2 - v3 );
 	float f2 = fabs2( v1 - v3 );
 	float f3 = fabs2( v1 - v2 );
@@ -195,9 +202,11 @@ void CSquarePacker::Build( SLMLOD *pLMLOD, std::vector<SLightmapInfo> *pLMaps )
 }
 
 static void CalcMirroredVector( NGfx::SCompactVector *pRes,
-	const NGfx::SCompactVector &a, const NGfx::SCompactVector &b, const NGfx::SCompactVector &c )
+                                const NGfx::SCompactVector &a,
+                                const NGfx::SCompactVector &b,
+                                const NGfx::SCompactVector &c )
 {
-	CVec3 v = NGfx::GetVector(a) + NGfx::GetVector(b) - NGfx::GetVector(c);
+	CVec3 v = NGfx::GetVector( a ) + NGfx::GetVector( b ) - NGfx::GetVector( c );
 	Normalize( &v );
 	NGfx::CalcCompactVector( pRes, v );
 }
@@ -208,15 +217,20 @@ static void CopyVertex( SVertex *pDst, CVec2 *pSecondTex, const SVertex &src, co
 	NGfx::SShortTextureUV lm;
 	NGfx::CalcLMCoords( &lm, tex.x, tex.y );
 	// using inverse xform from one used in GCombiner
-	*pSecondTex = NGfx::GetTexCoords( lm );//tex;
+	*pSecondTex = NGfx::GetTexCoords( lm ); //tex;
 }
 
-static void GenVertices( std::vector<SVertex> *pRes, std::vector<CVec2> *pSecondTex, const std::vector<SVertex> &src,
-	const SLMLOD &lmLOD, const std::vector<SLightmapInfo> &lmaps, int nLMSize, const CTPoint<int> &_shift,
-	float fLMUVShift )
+static void GenVertices( std::vector<SVertex> *pRes,
+                         std::vector<CVec2> *pSecondTex,
+                         const std::vector<SVertex> &src,
+                         const SLMLOD &lmLOD,
+                         const std::vector<SLightmapInfo> &lmaps,
+                         int nLMSize,
+                         const CTPoint<int> &_shift,
+                         float fLMUVShift )
 {
 	// hard times - lm vertex buffer is required
-	float fLMSize1 = 1.0f / nLMSize;//NGfx::GetLMTexResolution();
+	float fLMSize1 = 1.0f / nLMSize; //NGfx::GetLMTexResolution();
 	ASSERT( lmLOD.lmaps.size() == lmaps.size() );
 	int nLMs = lmaps.size();
 	pRes->resize( nLMs * 4 );
@@ -226,17 +240,15 @@ static void GenVertices( std::vector<SVertex> *pRes, std::vector<CVec2> *pSecond
 	{
 		//CTRect<int> lmRegion = p->GetLMRegion();
 		CTRect<int> lmRegion;
-		lmRegion.Set(
-			_shift.x, _shift.y,
-			_shift.x + lmLOD.lmSize.x, _shift.y + lmLOD.lmSize.y );
+		lmRegion.Set( _shift.x, _shift.y, _shift.x + lmLOD.lmSize.x, _shift.y + lmLOD.lmSize.y );
 		int nShiftX = lmRegion.x1;
 		int nShiftY = lmRegion.y1;
 		for ( int k = 0; k < lmaps.size(); ++k )
 		{
 			const SLightmapInfo &lm = lmaps[k];
-			const SVertex &v1 = src[ lm.n1 ];
-			const SVertex &v2 = src[ lm.n2 ];
-			const SVertex &v3 = src[ lm.n3 ];
+			const SVertex &v1 = src[lm.n1];
+			const SVertex &v2 = src[lm.n2];
+			const SVertex &v3 = src[lm.n3];
 			SVertex v4;
 			if ( lm.nOrder2 == 0 )
 			{
@@ -257,23 +269,25 @@ static void GenVertices( std::vector<SVertex> *pRes, std::vector<CVec2> *pSecond
 				CalcMirroredVector( &v4.texV, v2.texV, v3.texV, v1.texV );
 			}
 			else
-				v4 = src[ lm.n4 ];
+				v4 = src[lm.n4];
 			const NRectPacker::SRect &lmmap = lmLOD.lmaps[k];
 			float fU = ( lmmap.nXShift + nShiftX ) * fLMSize1;
 			float fV = ( lmmap.nYShift + nShiftY ) * fLMSize1;
 			float fDU = lmmap.nXSize * fLMSize1;
 			float fDV = lmmap.nYSize * fLMSize1;
 			float fDelta = fLMUVShift * fLMSize1;
-			CopyVertex( &(*pRes)[iVert+0], &(*pSecondTex)[iVert+0], v1, CVec2( fU + fDelta, fV + fDelta ) );
-			CopyVertex( &(*pRes)[iVert+1], &(*pSecondTex)[iVert+1], v2, CVec2( fU + fDU - fDelta, fV + fDelta ) );
-			CopyVertex( &(*pRes)[iVert+2], &(*pSecondTex)[iVert+2], v3, CVec2( fU + fDelta, fV + fDV - fDelta ) );
-			CopyVertex( &(*pRes)[iVert+3], &(*pSecondTex)[iVert+3], v4, CVec2( fU + fDU - fDelta, fV + fDV - fDelta ) );
+			CopyVertex( &( *pRes )[iVert + 0], &( *pSecondTex )[iVert + 0], v1, CVec2( fU + fDelta, fV + fDelta ) );
+			CopyVertex( &( *pRes )[iVert + 1], &( *pSecondTex )[iVert + 1], v2, CVec2( fU + fDU - fDelta, fV + fDelta ) );
+			CopyVertex( &( *pRes )[iVert + 2], &( *pSecondTex )[iVert + 2], v3, CVec2( fU + fDelta, fV + fDV - fDelta ) );
+			CopyVertex(
+					&( *pRes )[iVert + 3], &( *pSecondTex )[iVert + 3], v4, CVec2( fU + fDU - fDelta, fV + fDV - fDelta ) );
 			iVert += 4;
 		}
 	}
 }
 
-static void BuildLM( const CObjectInfo::SData &src, float fLMResolution, int nLMSize, SLMLOD *pLOD, std::vector<SLightmapInfo> *pLMaps )
+static void BuildLM(
+		const CObjectInfo::SData &src, float fLMResolution, int nLMSize, SLMLOD *pLOD, std::vector<SLightmapInfo> *pLMaps )
 {
 	SLMLOD &lmLOD = *pLOD;
 	std::vector<SLightmapInfo> &lmaps = *pLMaps;
@@ -287,8 +301,12 @@ static void BuildLM( const CObjectInfo::SData &src, float fLMResolution, int nLM
 	packer.Build( &lmLOD, &lmaps );
 }
 
-void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src,
-	float fLMResolution, int nLMSize, const CTPoint<int> &_shift )
+void MakeLMGeometry( CObjectInfo::SData *pRes,
+                     CTPoint<int> *pSize,
+                     const CObjectInfo::SData &src,
+                     float fLMResolution,
+                     int nLMSize,
+                     const CTPoint<int> &_shift )
 {
 	SLMLOD lmLOD;
 	std::vector<SLightmapInfo> lmaps;
@@ -317,8 +335,13 @@ void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjec
 	*pSize = lmLOD.lmSize;
 }
 
-void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src,
-	float fLMResolution, int nLMSize, const CTPoint<int> &_shift, std::vector<SLMQuad> *pQuads )
+void MakeLMCalcGeometry( CObjectInfo::SData *pRes,
+                         CTPoint<int> *pSize,
+                         const CObjectInfo::SData &src,
+                         float fLMResolution,
+                         int nLMSize,
+                         const CTPoint<int> &_shift,
+                         std::vector<SLMQuad> *pQuads )
 {
 	SLMLOD lmLOD;
 	std::vector<SLightmapInfo> lmaps;
@@ -329,11 +352,11 @@ void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CO
 	for ( int k = 0; k < lmaps.size(); ++k )
 	{
 		int nOffset = k * 4;
-		STriangle &tri1 = lmTris[ k*2 ];
+		STriangle &tri1 = lmTris[k * 2];
 		tri1.i1 = nOffset + 0;
 		tri1.i2 = nOffset + 1;
 		tri1.i3 = nOffset + 2;
-		STriangle &tri2 = lmTris[ k*2 + 1 ];
+		STriangle &tri2 = lmTris[k * 2 + 1];
 		tri2.i1 = nOffset + 3;
 		tri2.i2 = nOffset + 2;
 		tri2.i3 = nOffset + 1;
@@ -351,7 +374,7 @@ void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CO
 		{
 			const SLightmapInfo &lm = lmaps[k];
 			const NRectPacker::SRect &r = lmLOD.lmaps[k];
-			SLMQuad &q = (*pQuads)[k];
+			SLMQuad &q = ( *pQuads )[k];
 			q.bFull = lm.nOrder2 != 0;
 			q.quad.SetRect( r.nXShift, r.nYShift, r.nXShift + r.nXSize, r.nYShift + r.nYSize );
 		}
@@ -370,22 +393,23 @@ void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 	{
 		SVertex &v = pRes->verts[k];
 		const SUVInfo &uv = verts[k];
-		v.pos = pos[ posIndices[ k ] ];
+		v.pos = pos[posIndices[k]];
 		v.normal = uv.normal;
 		v.texU = uv.texU;
 		v.texV = uv.texV;
 		v.tex = NGfx::GetTexCoords( uv.tex );
 	}
 	pRes->weights.resize( verts.size() );
-	if( weights.empty() )return;
+	if ( weights.empty() )
+		return;
 	for ( int k = 0; k < verts.size(); ++k )
 	{
 		const SRealVertexWeight &w = weights[posIndices[k]];
 		SVertexWeight &vw = pRes->weights[k];
 		ASSERT( sizeof( vw.cBoneIndices ) == sizeof( w.cBoneIndices ) );
 		ASSERT( sizeof( vw.fWeights ) == sizeof( w.fWeights ) );
-		memcpy( vw.cBoneIndices, w.cBoneIndices, sizeof(vw.cBoneIndices) );
-		memcpy( vw.fWeights, w.fWeights, sizeof(vw.fWeights) );
+		memcpy( vw.cBoneIndices, w.cBoneIndices, sizeof( vw.cBoneIndices ) );
+		memcpy( vw.fWeights, w.fWeights, sizeof( vw.fWeights ) );
 	}
 }
 }

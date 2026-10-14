@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "3Dmotor/G2DView.h"
 #include "UI/UIVisitor.h"
 #include "UI/UIML.h"
@@ -11,7 +10,7 @@ class CUIVisitor : public IUIVisitor
 	CObj<NGScene::I2DGameView> p2DView;
 
 	CTRect<float> rcClip;
-	std::list< CTRect<float> > rcStoredClip;
+	std::list<CTRect<float>> rcStoredClip;
 	bool bClipApplied;
 
 	virtual void ClipRestore()
@@ -25,7 +24,7 @@ class CUIVisitor : public IUIVisitor
 	virtual void ClipSet( const CTRect<float> &_rClip )
 	{
 		rcStoredClip.push_back( rcClip );
-		rcClip.Intersect(_rClip);
+		rcClip.Intersect( _rClip );
 		bClipApplied = true;
 	}
 
@@ -42,7 +41,10 @@ public:
 		rcClip.y2 = vScreenSize.y;
 		bClipApplied = false;
 	}
-	void VisitZClearRect( const CRectLayout &_sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow, float fZ=1.0f )
+	void VisitZClearRect( const CRectLayout &_sLayout,
+	                      const CTPoint<float> &sPosition,
+	                      const CTRect<float> &sClipWindow,
+	                      float fZ = 1.0f )
 	{
 		CRectLayout sLayout = _sLayout;
 		sLayout.fZ = fZ;
@@ -52,14 +54,18 @@ public:
 	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rects )
 	{
 		// recalc to new size
-		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0,0 ), rcClip );
+		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
-	void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects )
+	void
+	VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects )
 	{
-		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0,0 ), rcClip );
+		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0, 0 ), rcClip );
 	}
-	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect,
-		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
+	void VisitUIRect( const NDb::STexture *pTexture,
+	                  const int nShadingEffect,
+	                  const CVec2 *pPos4,
+	                  const NGfx::SPixel8888 *pColors4,
+	                  const CTRect<float> &rectTexture )
 	{
 		ASSERT( 0 ); // not implemented
 	}

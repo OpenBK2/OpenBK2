@@ -9,12 +9,13 @@
 
 extern CEventUpdater updater;
 
-CExecutorSpyMode::CExecutorSpyMode( CAIUnit *_pUnit	) :
-CExecutorUnitCombatBonus ( NDb::ABILITY_SPY_MODE, _pUnit, TID_SPY_MODE ), bMasked( false )
+CExecutorSpyMode::CExecutorSpyMode( CAIUnit *_pUnit )
+		: CExecutorUnitCombatBonus( NDb::ABILITY_SPY_MODE, _pUnit, TID_SPY_MODE ), bMasked( false )
 {
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorSpyMode::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorSpyMode::OnModeChange( const uint16_t oldModeFlags,
+                                                                                 const uint16_t newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && ( newModeFlags & CExecutorUnitCombatBonus::EUM_FIGHTING ) )
 	{
@@ -97,7 +98,8 @@ bool CExecutorSpyMode::NotifyEvent( const CExecutorEvent &event )
 
 	if ( event.GetParam().eEventID == EID_ABILITY_SET_TARGET )
 	{
-		const CExecutorEventSpecialAbilitySetTarget *pEST = static_cast<const CExecutorEventSpecialAbilitySetTarget *>( pEv );
+		const CExecutorEventSpecialAbilitySetTarget *pEST =
+				static_cast<const CExecutorEventSpecialAbilitySetTarget *>( pEv );
 		if ( !pEST )
 			return false;
 
@@ -114,7 +116,7 @@ bool CExecutorSpyMode::NotifyEvent( const CExecutorEvent &event )
 
 int CExecutorSpyMode::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CExecutorUnitCombatBonus*>( this ) );
+	saver.Add( 1, static_cast<CExecutorUnitCombatBonus *>( this ) );
 	saver.Add( 2, &pEnemyStats );
 	saver.Add( 3, &bMasked );
 

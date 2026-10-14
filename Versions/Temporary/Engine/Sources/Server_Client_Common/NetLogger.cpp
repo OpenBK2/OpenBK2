@@ -12,7 +12,7 @@
 #include <fmt/format.h>
 
 #ifdef _FINALRELEASE
-	#define _DONT_LOG_PACKETS
+#define _DONT_LOG_PACKETS
 #endif
 //#define _DONT_LOG_PACKETS
 
@@ -35,7 +35,7 @@ void CNetLogger::OpenLogFile( const std::string &szNick )
 void CNetLogger::CloseLogFile( const std::string &szNick )
 {
 #ifndef _DONT_LOG_PACKETS
-	std::unordered_map<std::string, FILE*>::iterator iter = logs.find( szNick	);
+	std::unordered_map<std::string, FILE *>::iterator iter = logs.find( szNick );
 	if ( iter != logs.end() )
 	{
 		fclose( iter->second );
@@ -47,7 +47,7 @@ void CNetLogger::CloseLogFile( const std::string &szNick )
 CNetLogger::~CNetLogger()
 {
 #ifndef _DONT_LOG_PACKETS
-	for ( std::unordered_map<std::string, FILE*>::iterator iter = logs.begin(); iter != logs.end(); ++iter )
+	for ( std::unordered_map<std::string, FILE *>::iterator iter = logs.begin(); iter != logs.end(); ++iter )
 		fclose( iter->second );
 #endif
 }
@@ -55,7 +55,7 @@ CNetLogger::~CNetLogger()
 void CNetLogger::Log( const std::string &wszNick, const std::string &szLog )
 {
 #ifndef _DONT_LOG_PACKETS
-	std::unordered_map<std::string, FILE*>::iterator iter = logs.find( wszNick	);
+	std::unordered_map<std::string, FILE *>::iterator iter = logs.find( wszNick );
 	if ( logs.find( wszNick ) != logs.end() )
 	{
 		std::string szStr;
@@ -75,8 +75,8 @@ void CNetLogger::Log( const std::string &wszNick, const std::string &szLog )
 			}
 		}
 
-		const std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-			now.time_since_epoch() ) % std::chrono::seconds( 1 );
+		const std::chrono::milliseconds ms =
+				std::chrono::duration_cast<std::chrono::milliseconds>( now.time_since_epoch() ) % std::chrono::seconds( 1 );
 		szStr += fmt::format( ".{}\n", ms.count() );
 
 		szStr += "\t" + szLog + "\n";
@@ -95,10 +95,7 @@ static CNetLogger *pLogger = 0;
 
 static struct SNetLoggerLife
 {
-	SNetLoggerLife()
-	{
-		pLogger = new CNetLogger();
-	}
+	SNetLoggerLife() { pLogger = new CNetLogger(); }
 
 	~SNetLoggerLife()
 	{
@@ -107,7 +104,7 @@ static struct SNetLoggerLife
 	}
 } netLoggerLife;
 
-CNetLogger* GetNetLogger()
+CNetLogger *GetNetLogger()
 {
 	return pLogger;
 }
@@ -130,7 +127,7 @@ static struct SLogSaverLife
 	}
 } logSaverLife;
 
-const char* GetPacketInfo( CNetPacket *pPacket )
+const char *GetPacketInfo( CNetPacket *pPacket )
 {
 #ifndef _DONT_LOG_PACKETS
 	CPtr<CNetPacket> pNetPacket = pPacket;

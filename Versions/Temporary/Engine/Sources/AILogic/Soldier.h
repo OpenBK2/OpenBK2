@@ -20,7 +20,7 @@ class CSoldier : public CAIUnit
 		EOIO_UNKNOWN
 	};
 
-	ZDATA_(CAIUnit)
+	ZDATA_( CAIUnit )
 	ZSKIP
 	ZONSERIALIZE
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -28,9 +28,8 @@ class CSoldier : public CAIUnit
 
 	CDBPtr<NDb::SInfantryRPGStats> pStats;
 	CDBPtr<NDb::SInfantryRPGStats> pRememberedStats; // for paratroopers
-		// орудийные стволы
+																									 // орудийные стволы
 	CPtr<CUnitGuns> pGuns;
-
 
 	SStaticObjectSlotInfo slotInfo;
 
@@ -47,7 +46,7 @@ class CSoldier : public CAIUnit
 	CPtr<CFormation> pFormation;
 	CPtr<CFormation> pMemorizedFormation;
 	CPtr<CFormation> pVirtualFormation;
-//	uint8_t cFormSlot;
+	//	uint8_t cFormSlot;
 	bool bWait2Form = {};
 
 	bool bAllowLieDown = {}; // может ли солдат ложиться под обстрелом (или стоит как оловянный one.)
@@ -56,18 +55,54 @@ class CSoldier : public CAIUnit
 	NTimer::STime nextPathSegmTime = {};
 	NTimer::STime nextLogicSegmTime = {};
 
-	std::list< CPtr<CMineStaticObject> > detonatableCharges;
-	std::pair<int,int> numControlledCharges;
-	std::pair<int,int> numBlastingCharges;
-	std::pair<int,int> numLandMines;
+	std::list<CPtr<CMineStaticObject>> detonatableCharges;
+	std::pair<int, int> numControlledCharges;
+	std::pair<int, int> numBlastingCharges;
+	std::pair<int, int> numLandMines;
 
 	bool bBeingHealed = {};
-	public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAIUnit*)this); OnSerialize( f ); f.Add(3,&eInsideType); f.Add(4,&pStats); f.Add(5,&pRememberedStats); f.Add(6,&pGuns); f.Add(7,&slotInfo); f.Add(8,&wMinAngle); f.Add(9,&wMaxAngle); f.Add(10,&fOwnSightRadius); f.Add(11,&bInFirePlace); f.Add(12,&bInSolidPlace); f.Add(13,&lastHit); f.Add(14,&lastCheck); f.Add(15,&lastMineCheck); f.Add(16,&lastDirUpdate); f.Add(17,&bLying); f.Add(18,&pFormation); f.Add(19,&pMemorizedFormation); f.Add(20,&pVirtualFormation); f.Add(21,&bWait2Form); f.Add(22,&bAllowLieDown); f.Add(23,&nextSegmTime); f.Add(24,&timeBWSegments); f.Add(25,&nextPathSegmTime); f.Add(26,&nextLogicSegmTime); f.Add(27,&detonatableCharges); f.Add(28,&numControlledCharges); f.Add(29,&numBlastingCharges); f.Add(30,&numLandMines); f.Add(31,&bBeingHealed); return 0; }
+
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CAIUnit *)this );
+		OnSerialize( f );
+		f.Add( 3, &eInsideType );
+		f.Add( 4, &pStats );
+		f.Add( 5, &pRememberedStats );
+		f.Add( 6, &pGuns );
+		f.Add( 7, &slotInfo );
+		f.Add( 8, &wMinAngle );
+		f.Add( 9, &wMaxAngle );
+		f.Add( 10, &fOwnSightRadius );
+		f.Add( 11, &bInFirePlace );
+		f.Add( 12, &bInSolidPlace );
+		f.Add( 13, &lastHit );
+		f.Add( 14, &lastCheck );
+		f.Add( 15, &lastMineCheck );
+		f.Add( 16, &lastDirUpdate );
+		f.Add( 17, &bLying );
+		f.Add( 18, &pFormation );
+		f.Add( 19, &pMemorizedFormation );
+		f.Add( 20, &pVirtualFormation );
+		f.Add( 21, &bWait2Form );
+		f.Add( 22, &bAllowLieDown );
+		f.Add( 23, &nextSegmTime );
+		f.Add( 24, &timeBWSegments );
+		f.Add( 25, &nextPathSegmTime );
+		f.Add( 26, &nextLogicSegmTime );
+		f.Add( 27, &detonatableCharges );
+		f.Add( 28, &numControlledCharges );
+		f.Add( 29, &numBlastingCharges );
+		f.Add( 30, &numLandMines );
+		f.Add( 31, &bBeingHealed );
+		return 0;
+	}
 	void OnSerialize( IBinSaver &f );
 	//
 	void UpdateLyingPosition();
 	const bool NeedReturnToFormation() const;
+
 protected:
 	virtual void PrepareToDelete();
 
@@ -76,32 +111,41 @@ protected:
 	//
 	virtual void RevealNearestMines( const bool bIncludingAP );
 
-	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty ) ;
+	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty );
 	// soldier doesn't have anti aircraft guns yet
 	virtual uint32_t InitSupportAntiAircraftGuns() { return 0; }
 	virtual void AdjustSpeed();
 
 public:
-	CSoldier() : pFormation( 0 ), eInsideType( EOIO_NONE ),
-							 wMinAngle( 0 ), wMaxAngle( 0 ), bInFirePlace( false ), bInSolidPlace( false ),
-							 fOwnSightRadius( -1 ), numBlastingCharges( 0, 0 ), numControlledCharges( 0, 0 ), numLandMines( 0,0 ) { }
+	CSoldier()
+			: pFormation( 0 ), eInsideType( EOIO_NONE ), wMinAngle( 0 ), wMaxAngle( 0 ), bInFirePlace( false ),
+				bInSolidPlace( false ), fOwnSightRadius( -1 ), numBlastingCharges( 0, 0 ), numControlledCharges( 0, 0 ),
+				numLandMines( 0, 0 )
+	{
+	}
 
 	virtual ~CSoldier();
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
+	virtual void Init( const CVec2 &center,
+	                   const int z,
+	                   const SUnitBaseRPGStats *pStats,
+	                   const float fHP,
+	                   const uint16_t dir,
+	                   const uint8_t player,
+	                   ICollisionsCollector *pCollisionsCollector );
 
 	void SetRememberedStats( const NDb::SInfantryRPGStats *_pRememberedStats ) { pRememberedStats = pRememberedStats; }
 	virtual const SUnitBaseRPGStats *GetStats() const { return pStats; }
-	virtual IStatesFactory* GetStatesFactory() const;
+	virtual IStatesFactory *GetStatesFactory() const;
 
 	virtual void SetDirection( const uint16_t newDir );
 
 	virtual void AllowLieDown( bool _bAllowLieDown );
 	bool IsAllowedToLieDown() const { return bAllowLieDown; }
-	void MoveToEntrenchFireplace( const CVec3 &coord, const int _nSlot  );
+	void MoveToEntrenchFireplace( const CVec3 &coord, const int _nSlot );
 
-	class CBuilding* GetBuilding() const;
-	class CEntrenchment* GetEntrenchment() const;
-	class CMilitaryCar* GetTransportUnit() const;
+	class CBuilding *GetBuilding() const;
+	class CEntrenchment *GetEntrenchment() const;
+	class CMilitaryCar *GetTransportUnit() const;
 
 	void SetInBuilding( class CBuilding *pBuilding );
 	void SetInEntrenchment( class CEntrenchment *pEntrenchment );
@@ -113,13 +157,18 @@ public:
 	virtual bool IsInFirePlace() const;
 	void SetToFirePlace();
 	void SetToSolidPlace();
-	virtual bool IsFree() const ;
+	virtual bool IsFree() const;
 
-	void SetNSlot( const int nSlot );// { slotInfo.nSlot = nSlot; }
+	void SetNSlot( const int nSlot ); // { slotInfo.nSlot = nSlot; }
 	const int GetSlot() const { return slotInfo.nSlot; }
-	const SStaticObjectSlotInfo& GetSlotInfo() const { return slotInfo; }
+	const SStaticObjectSlotInfo &GetSlotInfo() const { return slotInfo; }
 	//SStaticObjectSlotInfo& GetSlotInfo() { return slotInfo; }
-	void SetSlotInfo( const int nSlot, const int nType, const int nIndex ) { SetNSlot( nSlot ); slotInfo.nType = nType; slotInfo.nIndex = nIndex; }
+	void SetSlotInfo( const int nSlot, const int nType, const int nIndex )
+	{
+		SetNSlot( nSlot );
+		slotInfo.nType = nType;
+		slotInfo.nIndex = nIndex;
+	}
 	void SetSlotIndex( const int nIndex ) { slotInfo.nIndex = nIndex; }
 	const int GetSlotIndex() const { return slotInfo.nIndex; }
 
@@ -139,7 +188,7 @@ public:
 	bool IsInTransport() const { return eInsideType == EOIO_TRANSPORT; }
 
 	// для стрельбы  - заполняются поля typeID, pUnit и номер слота, если нужно
-	virtual void  GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const;
+	virtual void GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const;
 	// для бросания гранат - заполняются поля typeID, pUnit и номер слота, если нужно
 	void GetThrowInfo( struct SAINotifyInfantryShot *pThrowInfo ) const;
 	void GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const;
@@ -156,10 +205,7 @@ public:
 	{
 		return !IsBeingHealed() && IsFree() && GetBehaviourMoving() != SBehaviour::EMHoldPos && !IsInTankPit();
 	}
-	virtual const bool CanMoveCritical() const
-	{
-		return IsFree() && !IsInTankPit();
-	}
+	virtual const bool CanMoveCritical() const { return IsFree() && !IsInTankPit(); }
 
 	virtual bool InVisCone( const CVec2 &point ) const;
 	void SetOwnSightRadius( const float _fOwnSightRadius ) { fOwnSightRadius = _fOwnSightRadius; }
@@ -182,17 +228,17 @@ public:
 	virtual void FreezeSegment();
 
 	// формация
-	void SetFormation( class CFormation* pFormation );
+	void SetFormation( class CFormation *pFormation );
 	virtual bool IsInFormation() const { return pFormation != 0; }
-	virtual class CFormation* GetFormation() const { return pFormation; }
+	virtual class CFormation *GetFormation() const { return pFormation; }
 	virtual const CVec2 GetUnitPointInFormation() const;
-//	virtual const int GetFormationSlot() const { return cFormSlot; }
+	//	virtual const int GetFormationSlot() const { return cFormSlot; }
 	virtual const bool CanShootToPlanes() const;
 
 	//
 	virtual int GetNGuns() const;
-	virtual class CBasicGun* GetGun( const int n ) const;
-	virtual class CTurret* GetTurret( const int nTurret ) const;
+	virtual class CBasicGun *GetGun( const int n ) const;
+	virtual class CTurret *GetTurret( const int nTurret ) const;
 	virtual const int GetNTurrets() const;
 	virtual int GetNAmmo( const int nCommonGun ) const;
 	virtual void Fired( const float fGunRadius, const int nGun );
@@ -200,7 +246,7 @@ public:
 	virtual void ChangeAmmo( const int nCommonGun, const int nAmmo );
 	virtual bool IsCommonGunFiring( const int nCommonGun ) const;
 
-	virtual class CBasicGun* ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
+	virtual class CBasicGun *ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime );
 
 	virtual void GetFogInfo( SWarFogUnitInfo *pInfo ) const;
 	virtual void WarFogChanged();
@@ -212,10 +258,13 @@ public:
 
 	virtual bool IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeRadius );
 
-	virtual bool ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
+	virtual bool ProcessAreaDamage( const class CExplosion *pExpl,
+	                                const int nArmorDir,
+	                                const float fRadius,
+	                                const float fSmallRadius );
 
 	virtual void MemCurFormation();
-	class CFormation* GetMemFormation() { return pMemorizedFormation; }
+	class CFormation *GetMemFormation() { return pMemorizedFormation; }
 	void SetVirtualFormation( class CFormation *pFormation );
 
 	void SetWait2FormFlag( bool bNewValue ) { bWait2Form = bNewValue; }
@@ -237,8 +286,12 @@ public:
 	virtual bool CanJoinToFormation() const;
 
 	// поискать цель, текущая цель для атаки - pCurTarget
-	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
-	virtual void TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit );
+	virtual void
+	LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
+	virtual void TakeDamage( const float fDamage,
+	                         const SWeaponRPGStats::SShell *pShell,
+	                         const int nPlayerOfShoot,
+	                         CAIUnit *pShotUnit );
 
 	virtual const NTimer::STime GetNextSegmTime() const { return nextSegmTime; }
 	virtual void NullSegmTime() { timeBWSegments = 0; }
@@ -251,10 +304,10 @@ public:
 
 	virtual const NTimer::STime GetBehUpdateDuration() const { return SConsts::SOLDIER_BEH_UPDATE_DURATION; }
 
-	virtual class CArtillery* GetArtilleryIfCrew() const;
+	virtual class CArtillery *GetArtilleryIfCrew() const;
 
-	virtual const CUnitGuns* GetGuns() const { return pGuns; }
-	virtual CUnitGuns* GetGuns() { return pGuns; }
+	virtual const CUnitGuns *GetGuns() const { return pGuns; }
+	virtual CUnitGuns *GetGuns() { return pGuns; }
 	virtual int HasGrenades() const;
 	virtual void SetGrenadeAutocast( bool bOn );
 	virtual void SetGrenadeFixed( bool bOn );
@@ -282,17 +335,22 @@ public:
 class CInfantry : public CSoldier
 {
 	OBJECT_BASIC_METHODS( CInfantry );
-	ZDATA_(CSoldier)
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CSoldier*)this); return 0; }
+	ZDATA_( CSoldier )
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CSoldier *)this );
+		return 0;
+	}
+
 public:
-	CInfantry() { }
+	CInfantry() {}
 };
 
 class CSniper : public CSoldier
 {
 	OBJECT_BASIC_METHODS( CSniper );
 
-	ZDATA_(CSoldier)
+	ZDATA_( CSoldier )
 	NTimer::STime lastVisibilityCheck = {};
 	// виден ли для противоположной party
 	bool bVisible = {};
@@ -300,13 +358,29 @@ class CSniper : public CSoldier
 	bool bSneak = {};
 	// вероятность снять камуфляж при выстреле, если находимся в sneak mode
 	float fCamouflageRemoveWhenShootProbability = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CSoldier*)this); f.Add(2,&lastVisibilityCheck); f.Add(3,&bVisible); f.Add(4,&bSneak); f.Add(5,&fCamouflageRemoveWhenShootProbability); return 0; }
-protected:
-	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty ) ;
-public:
-	CSniper() : lastVisibilityCheck( 0 ), bVisible( false ), bSneak( false ) { }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CSoldier *)this );
+		f.Add( 2, &lastVisibilityCheck );
+		f.Add( 3, &bVisible );
+		f.Add( 4, &bSneak );
+		f.Add( 5, &fCamouflageRemoveWhenShootProbability );
+		return 0;
+	}
 
-	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
+protected:
+	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty );
+
+public:
+	CSniper() : lastVisibilityCheck( 0 ), bVisible( false ), bSneak( false ) {}
+
+	virtual void Init( const CVec2 &center,
+	                   const int z,
+	                   const SUnitBaseRPGStats *pStats,
+	                   const float fHP,
+	                   const uint16_t dir,
+	                   const uint8_t player,
+	                   ICollisionsCollector *pCollisionsCollector );
 
 	virtual void Segment();
 
@@ -315,7 +389,7 @@ public:
 	//virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
 	//void SetSneak( const bool bSneakMode );
 
-	virtual void Fired( const float fGunRadius, const int nGun  );
+	virtual void Fired( const float fGunRadius, const int nGun );
 };
 /*
 extern CGlobalWarFog theWarFog;

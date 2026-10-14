@@ -35,18 +35,26 @@ void CMLStream::InsertString( const std::wstring &wsInsertText )
 
 // CML
 
-class CML: public IML
+class CML : public IML
 {
-	OBJECT_BASIC_METHODS(CML)
+	OBJECT_BASIC_METHODS( CML )
 private:
 	ZDATA
 	std::wstring text;
 	CTPoint<int> size;
 	CObj<CMLStream> pStream;
 	CObj<IReflowLayout> pLayout;
-	std::unordered_map<std::wstring,CObj<IHandler> > tagsMap;
+	std::unordered_map<std::wstring, CObj<IHandler>> tagsMap;
 	CObj<SFadeValue> sFadeValue;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&text); f.Add(3,&size); f.Add(4,&pStream); f.Add(5,&pLayout); f.Add(6,&tagsMap); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &text );
+		f.Add( 3, &size );
+		f.Add( 4, &pStream );
+		f.Add( 5, &pLayout );
+		f.Add( 6, &tagsMap );
+		return 0;
+	}
 
 public:
 	CML();
@@ -55,13 +63,12 @@ public:
 	void SetHandler( const std::wstring &tag, IHandler *pHandler );
 	void SetFade( float fFade, int nWidth );
 
-
 	void Generate( NGScene::ILayoutFakeView *pView, int nWidth );
 
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<int>& GetSize() const { return size; }
+	const CTPoint<int> &GetSize() const { return size; }
 };
 
 CML::CML()
@@ -141,9 +148,9 @@ void CML::Generate( NGScene::ILayoutFakeView *pView, int nWidth )
 			thisChar = CHAR_ALNUM;
 		else if ( iswpunct( wcChar ) )
 			thisChar = bTAG ? CHAR_PUNCTUATION : CHAR_ALNUM; //// CRAP: Tag need separate '='
-		else if  ( !bBracketsBlock && ( wcChar == L' ' ) )
+		else if ( !bBracketsBlock && ( wcChar == L' ' ) )
 			thisChar = CHAR_SPACE;
-		else if  ( bBracketsBlock && ( wcChar == L' ' ) )
+		else if ( bBracketsBlock && ( wcChar == L' ' ) )
 			thisChar = lastChar;
 		else if ( ( wcChar == L'\0' ) || ( wcChar == L'\n' ) )
 			thisChar = CHAR_EOL;
@@ -172,7 +179,7 @@ void CML::Generate( NGScene::ILayoutFakeView *pView, int nWidth )
 
 			if ( !paramsSet.empty() )
 			{
-				std::unordered_map<std::wstring,CObj<IHandler> >::const_iterator iTemp = tagsMap.find( paramsSet.front() );
+				std::unordered_map<std::wstring, CObj<IHandler>>::const_iterator iTemp = tagsMap.find( paramsSet.front() );
 				if ( ( iTemp != tagsMap.end() ) && ( iTemp->second != 0 ) )
 					iTemp->second->Exec( pStream, pLayout, paramsSet );
 			}
@@ -195,14 +202,14 @@ void CML::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &positio
 	pLayout->Render( pView, position, window );
 }
 
-void CML::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window )
+void CML::Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window )
 {
 	pLayout->Render( pRender, position, window );
 }
 
 // CreateML
 
-IML* CreateML()
+IML *CreateML()
 {
 	return new CML;
 }

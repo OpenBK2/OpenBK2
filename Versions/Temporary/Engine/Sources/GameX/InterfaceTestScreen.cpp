@@ -16,10 +16,7 @@
 
 // CInterfaceTestScreen
 
-CInterfaceTestScreen::CInterfaceTestScreen() :
-	CInterfaceScreenBase( "TestScreen", "default" )
-{
-}
+CInterfaceTestScreen::CInterfaceTestScreen() : CInterfaceScreenBase( "TestScreen", "default" ) {}
 
 bool CInterfaceTestScreen::Init()
 {
@@ -38,11 +35,10 @@ void CInterfaceTestScreen::SetScreen( const CDBID &_dbid )
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 
 	pScreen->SetGView( Scene()->GetG2DView() );
-	pScreen->Load( NDb::Get<NDb::SWindowScreen>(dbid), this );
+	pScreen->Load( NDb::Get<NDb::SWindowScreen>( dbid ), this );
 	Singleton<IScene>()->AddScreen( pScreen );
 
 	pScreen->RegisterObservers();
-
 }
 
 bool CInterfaceTestScreen::StepLocal( bool bAppActive )
@@ -50,15 +46,12 @@ bool CInterfaceTestScreen::StepLocal( bool bAppActive )
 	if ( !CInterfaceScreenBase::StepLocal( bAppActive ) )
 		return false;
 
-
 	return true;
 }
 
 // CICTestScreen
 
-void CICTestScreen::PreCreate( )
-{
-}
+void CICTestScreen::PreCreate() {}
 
 void CICTestScreen::PostCreate( IInterface *pInterface )
 {
@@ -71,7 +64,6 @@ void CICTestScreen::Configure( const char *pszConfig )
 	dbid = pszConfig;
 }
 
-
 void StartTestScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
@@ -83,7 +75,7 @@ void StartTestScreen( const std::string &szID, const std::vector<std::wstring> &
 #endif //_FINALRELEASE
 }
 
-START_REGISTER(TestScreenCommands)
+START_REGISTER( TestScreenCommands )
 REGISTER_CMD( "test_screen", StartTestScreen )
 FINISH_REGISTER
 

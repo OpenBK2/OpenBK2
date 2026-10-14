@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MapEditorLib/Interface_Builder.h"		// CTableSet
+#include "MapEditorLib/Interface_Builder.h" // CTableSet
 #include "MapEditorLib/Interface_Widget.h"
 
 #include <list>
@@ -26,13 +26,11 @@
 // was already there; it just had an MFC class sitting on it.
 namespace NSelectTables
 {
-	// Runs the dialog modally over pParent.
-	//
-	// rTables is every table the database offers; pSelectedTables is the set
-	// that is ticked on the way in and, if this returns true, the set the user
-	// ticked on the way out. Returns false if the dialog was cancelled, and then
-	// pSelectedTables is untouched.
-	bool Run( IWidget *pParent,
-						const std::list<std::string> &rTables,
-						CTableSet *pSelectedTables );
+// Runs the dialog modally over pParent.
+//
+// rTables is every table the database offers; pSelectedTables is the set
+// that is ticked on the way in and, if this returns true, the set the user
+// ticked on the way out. Returns false if the dialog was cancelled, and then
+// pSelectedTables is untouched.
+bool Run( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables );
 }

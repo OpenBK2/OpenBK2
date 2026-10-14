@@ -43,13 +43,18 @@ void CScene::SetMarkerPosition( CObjectBase *pMarker, const list<CVec2> &tiles )
 }
 */
 
-void CScene::AddShootArea( int nID, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, const CVec3 &vColor, const CVec2 &vCenter )
+void CScene::AddShootArea( int nID,
+                           float fStartAngle,
+                           float fEndAngle,
+                           float fMinRadius,
+                           float fMaxRadius,
+                           const CVec3 &vColor,
+                           const CVec2 &vCenter )
 {
 	CVec2 vCenterVis = vCenter;
 	AI2Vis( &vCenterVis );
-	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CShootAreaMesh( vCenterVis, fStartAngle, fEndAngle,
-																																				 AI2Vis(fMinRadius), AI2Vis(fMaxRadius),
-																																				 data[eScene]->pTerraManager );
+	CPtr<CPtrFuncBase<NGScene::CObjectInfo>> pGeom = new CShootAreaMesh(
+			vCenterVis, fStartAngle, fEndAngle, AI2Vis( fMinRadius ), AI2Vis( fMaxRadius ), data[eScene]->pTerraManager );
 	NGScene::IGameView::SMeshInfo meshInfo;
 	meshInfo.parts.resize( 1 );
 	meshInfo.parts[0].pGeometry = pGeom;
@@ -57,14 +62,16 @@ void CScene::AddShootArea( int nID, float fStartAngle, float fEndAngle, float fM
 	SFBTransform transform;
 	transform.forward.Set( CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
 	transform.backward.Set( -CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
-	data[eScene]->markers[ESMT_SHOOT_AREA][nID].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
+	data[eScene]->markers[ESMT_SHOOT_AREA][nID].push_back(
+			data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
 }
 
 void CScene::AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &vColor )
 {
 	CVec2 vCenterVis = vCenter;
 	AI2Vis( &vCenterVis );
-	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CShootAreaMesh( vCenterVis, 0, 0, AI2Vis(0.0f), AI2Vis(fRadius), data[eScene]->pTerraManager );
+	CPtr<CPtrFuncBase<NGScene::CObjectInfo>> pGeom =
+			new CShootAreaMesh( vCenterVis, 0, 0, AI2Vis( 0.0f ), AI2Vis( fRadius ), data[eScene]->pTerraManager );
 
 	NGScene::IGameView::SMeshInfo meshInfo;
 	meshInfo.parts.resize( 1 );
@@ -73,7 +80,8 @@ void CScene::AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &
 	SFBTransform transform;
 	transform.forward.Set( CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
 	transform.backward.Set( -CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
-	data[eScene]->markers[ESMT_KEY_AREA][0].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
+	data[eScene]->markers[ESMT_KEY_AREA][0].push_back(
+			data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
 }
 
 void CScene::ClearKeyPointAreas()
@@ -87,7 +95,7 @@ void CScene::AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, con
 	CVec2 vEndVis = vEnd;
 	AI2Vis( &vStartVis );
 	AI2Vis( &vEndVis );
-	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CLineMesh( vStartVis, vEndVis, data[eScene]->pTerraManager );
+	CPtr<CPtrFuncBase<NGScene::CObjectInfo>> pGeom = new CLineMesh( vStartVis, vEndVis, data[eScene]->pTerraManager );
 	NGScene::IGameView::SMeshInfo meshInfo;
 	meshInfo.parts.resize( 1 );
 	meshInfo.parts[0].pGeometry = pGeom;
@@ -106,9 +114,11 @@ void CScene::ClearMarkers( ESceneMarkerType eType, int nID )
 		data[eScene]->markers[eType].erase( nID );
 }
 
-CObjectBase* CScene::CreateCircle( CFuncBase<SFBTransform> *pTransform, float fRadius, const CVec3 &vColor, float fWidth )
+CObjectBase *
+CScene::CreateCircle( CFuncBase<SFBTransform> *pTransform, float fRadius, const CVec3 &vColor, float fWidth )
 {
-	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CShootAreaMesh( pTransform, 0, 0, AI2Vis(0.0f), AI2Vis(fRadius), data[eScene]->pTerraManager, fWidth );
+	CPtr<CPtrFuncBase<NGScene::CObjectInfo>> pGeom =
+			new CShootAreaMesh( pTransform, 0, 0, AI2Vis( 0.0f ), AI2Vis( fRadius ), data[eScene]->pTerraManager, fWidth );
 
 	NGScene::IGameView::SMeshInfo meshInfo;
 	meshInfo.parts.resize( 1 );

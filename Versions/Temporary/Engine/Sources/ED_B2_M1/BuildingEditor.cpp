@@ -35,12 +35,9 @@ REGISTER_EDITOR_IN_DLL( BuildingRPGStats, CBuildingEditor )
 const int N_POINT_TYPES_NUM = 5;
 std::string listLabels[N_POINT_TYPES_NUM];
 
-CBuildingEditor::CBuildingEditor() :
-	pBuildingState(0),
-	pwndShortcutBar(0),
-	vLastCameraAnchor(VNULL3),
-	szCurrSeason( "SEASON_SUMMER" ),
-	bDrawPassability(false)
+CBuildingEditor::CBuildingEditor()
+		: pBuildingState( 0 ), pwndShortcutBar( 0 ), vLastCameraAnchor( VNULL3 ), szCurrSeason( "SEASON_SUMMER" ),
+			bDrawPassability( false )
 {
 	listLabels[0] = NResources::GetString( IDS_SMOKE_POINTS );
 	listLabels[1] = NResources::GetString( IDS_FIRE_POINTS );
@@ -49,9 +46,7 @@ CBuildingEditor::CBuildingEditor() :
 	listLabels[4] = NResources::GetString( IDS_DAMAGE_LEVELS );
 }
 
-CBuildingEditor::~CBuildingEditor()
-{
-}
+CBuildingEditor::~CBuildingEditor() {}
 
 const std::string &CBuildingEditor::GetCurrSeason() const
 {
@@ -62,7 +57,7 @@ void CBuildingEditor::ChangeSeason( const NDb::ESeason eSeason )
 {
 	szCurrSeason = typeSeasonMnemonics.GetMnemonic( eSeason );
 	std::string szMapName = NEditorOptions::GetBgMap( GetCurrSeason() );
-	CVec3 vCameraAnchor( NEditorOptions::GetBgMapAnchor(GetCurrSeason()) );
+	CVec3 vCameraAnchor( NEditorOptions::GetBgMapAnchor( GetCurrSeason() ) );
 	if ( vCameraAnchor == VNULL3 )
 	{
 		vCameraAnchor.x = 16.0f * VIS_TILE_SIZE;
@@ -80,24 +75,23 @@ void CBuildingEditor::ChangeSeason( const NDb::ESeason eSeason )
 
 void CBuildingEditor::ResetGUI( bool bActive )
 {
-    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-    if ( !bActive )
-        pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
-    // Copy only GUI fields from the defaults, preserving all editing settings.
-    const CBuildingRPGStatsEditorSettings defaults;
-    editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
-    pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+	if ( !bActive )
+		pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+	// Copy only GUI fields from the defaults, preserving all editing settings.
+	const CBuildingRPGStatsEditorSettings defaults;
+	editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
+	pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
-    if ( pwndShortcutBar )
-        pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
+	if ( pwndShortcutBar )
+		pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
 }
-
 
 void CBuildingEditor::CreateControls()
 {
 	unsigned nID = ID_BUILDING_EDITOR_DW;
-	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->
-		CreateControlBar( &nID, "BuildingEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) )
+	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+					 &nID, "BuildingEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) )
 	{
 		nID = ID_BUILDING_EDITOR_SHORTCUT_PANE_0;
 		pShortcutBarView.reset( NShortcutBar::Create() );
@@ -110,17 +104,18 @@ void CBuildingEditor::CreateControls()
 			for ( int i = 0; i < N_POINT_TYPES_NUM; ++i )
 			{
 				const std::string szLabel = listLabels[i];
-				pShortcutBarView->AddTab( nBar, szLabel, [i, szLabel]( CPaletteList *pPalettes, IWidget *pPage )
-				{
-					return NPointListView::Create( pPalettes, pPage, i, szLabel );
-				} );
+				pShortcutBarView->AddTab( nBar,
+				                          szLabel,
+				                          [i, szLabel]( CPaletteList *pPalettes, IWidget *pPage )
+				                          { return NPointListView::Create( pPalettes, pPage, i, szLabel ); } );
 			}
 			pShortcutBarView->ActivateTab( nBar, 0 );
 			std::string strPaneLabel = NResources::GetString( IDS_BUILDING_POINTS );
 			pShortcutBarView->EndBar( nBar, strPaneLabel );
 			pShortcutBarView->SelectBar( 0 );
 			//
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar,
+			                                                                      pShortcutBarView->GetWidget() );
 			pwndShortcutBar->Show( false );
 			pwndShortcutBar->ShowWithoutLayout( true );
 			pShortcutBarView->Show( true );
@@ -195,11 +190,9 @@ bool CBuildingEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *
 	return false;
 }
 
-void CBuildingEditor::Undo( IController* pController )
-{ }
+void CBuildingEditor::Undo( IController *pController ) {}
 
-void CBuildingEditor::Redo( IController* pController )
-{ }
+void CBuildingEditor::Redo( IController *pController ) {}
 
 void CBuildingEditor::ReloadModel( NDb::ESeason eSeason )
 {
@@ -220,7 +213,8 @@ void CBuildingEditor::ReloadModel( NDb::ESeason eSeason )
 
 	Camera()->SetAnchor( vVisCameraPos );
 
-	if ( const NDb::SBuildingRPGStats *pBuildingStats = NDb::Get<NDb::SBuildingRPGStats>( GetObjectSet().objectNameSet.begin()->first ) )
+	if ( const NDb::SBuildingRPGStats *pBuildingStats =
+	         NDb::Get<NDb::SBuildingRPGStats>( GetObjectSet().objectNameSet.begin()->first ) )
 	{
 		Vis2AI( &vVisCameraPos );
 		vBuildingPos = vVisCameraPos;
@@ -255,7 +249,7 @@ void CBuildingEditor::ReloadModel( NDb::ESeason eSeason )
 		if ( pBuilding->Create( EDITOR_BUILDING_ID, pNewUnitUpdate, eSeason, NDb::DAY_DAY, true ) == false )
 		{
 			NLog::Log( LT_ERROR, "Failed to create building\n" );
-			NLog::Log( LT_ERROR, "\tObject ID: %s\n", NDb::GetResName(pBuildingStats) );
+			NLog::Log( LT_ERROR, "\tObject ID: %s\n", NDb::GetResName( pBuildingStats ) );
 			pBuilding = 0;
 		}
 	}
@@ -267,7 +261,6 @@ void CBuildingEditor::ReloadModel( NDb::ESeason eSeason )
 // The one colour the passability overlay is drawn in: text, cell outlines and
 // cell fill each spelled RGB(255,128,64) separately before.
 static const TWidgetColor PASSABILITY_COLOR = RGB( 255, 128, 64 );
-
 
 void CBuildingEditor::DrawPassability( IPaintContext *pPaintContext )
 {
@@ -358,10 +351,10 @@ CVec3 CBuildingEditor::GetBuildingPos()
 	return vBuildingPos;
 }
 
-IManipulator* CBuildingEditor::CreateBuildingManipulator()
+IManipulator *CBuildingEditor::CreateBuildingManipulator()
 {
 	return Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName,
-																																 GetObjectSet().objectNameSet.begin()->first );
+	                                                               GetObjectSet().objectNameSet.begin()->first );
 }
 
 int CBuildingRPGStatsEditorSettings::operator&( IXmlSaver &xs )

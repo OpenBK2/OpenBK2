@@ -120,14 +120,15 @@ bool IsMapFullyFree( const SRect &rect, CAIUnit *pUnit )
 
 	const CVec2 vAABBHalfSize( ( nMinX + nMaxX ) * 0.5f, ( nMinY + nMaxY ) * 0.5f );
 
-	for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, rect.center, (std::max)( vAABBHalfSize.x, vAABBHalfSize.y ) ); !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<0, 3> iter( 0, ANY_PARTY, rect.center, (std::max)( vAABBHalfSize.x, vAABBHalfSize.y ) );
+	      !iter.IsFinished();
+	      iter.Iterate() )
 	{
 		CAIUnit *pIterUnit = *iter;
 		if ( pIterUnit && pIterUnit->IsRefValid() )
 		{
-			if ( pIterUnit != pUnit &&
-				( pIterUnit->IsAlive() || !pIterUnit->GetStats()->IsInfantry() ) &&
-				pIterUnit->GetUnitRect().IsIntersected( rect ) )
+			if ( pIterUnit != pUnit && ( pIterUnit->IsAlive() || !pIterUnit->GetStats()->IsInfantry() ) &&
+			     pIterUnit->GetUnitRect().IsIntersected( rect ) )
 				return false;
 		}
 	}
@@ -141,25 +142,30 @@ const CVec2 CAIUnit::GetGunCenter( const int nGun, const int nPlatform ) const
 	if ( pStats->IsInfantry() )
 		return GetCenterPlain();
 
-	const NDb::SMechUnitRPGStats* pMechStats = checked_cast<const NDb::SMechUnitRPGStats*>( pStats );
+	const NDb::SMechUnitRPGStats *pMechStats = checked_cast<const NDb::SMechUnitRPGStats *>( pStats );
 	const CVec3 vGunPos = pMechStats->GetPlatform( nUniqueID, nPlatform ).vAIRotatePointPos;
 	const CVec2 vGunPos2D( vGunPos.y, -vGunPos.x );
 	const CVec2 vCenter2D( GetCenterPlain() );
 	const CVec2 vDir( GetFrontDirectionVector() );
-	return vCenter2D + (vGunPos2D ^ vDir);
+	return vCenter2D + ( vGunPos2D ^ vDir );
 }
 
-CAIUnit * CAIUnit::GetUnitByUniqueID( const int nUniqueID )
+CAIUnit *CAIUnit::GetUnitByUniqueID( const int nUniqueID )
 {
-	return checked_cast<CAIUnit*>( CLinkObject::GetObjectByUniqueId( nUniqueID ) );
+	return checked_cast<CAIUnit *>( CLinkObject::GetObjectByUniqueId( nUniqueID ) );
 }
 
-void CAIUnit::SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforcementType eKillerType, NDb::EReinforcementType eDeadType )
+void CAIUnit::SendNTotalKilledUnits( const int nPlayerOfShoot,
+                                     NDb::EReinforcementType eKillerType,
+                                     NDb::EReinforcementType eDeadType )
 {
 	theStatistics.UnitKilled( nPlayerOfShoot, GetPlayer(), GetStats()->fExpPrice, eKillerType, eDeadType, IsInfantry() );
 }
 
-const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRect, const CVec2 &explCoord, const int nRandPiercing, const int nRandArmor ) const
+const SAINotifyHitInfo::EHitType CAIUnit::ProcessExactHit( const SRect &combatRect,
+                                                           const CVec2 &explCoord,
+                                                           const int nRandPiercing,
+                                                           const int nRandArmor ) const
 {
 	// попали по комбат системе
 	if ( combatRect.IsPointInside( explCoord ) )
@@ -178,10 +184,14 @@ const int CAIUnit::GetRandArmorByDir( const int nArmorDir, const uint16_t wAttac
 {
 	switch ( nArmorDir )
 	{
-		case 0:	return GetRandomArmor( unitRect.GetSide( wAttackDir ) );
-		case 1: return GetRandomArmor( RPG_BOTTOM );
-		case 2: return GetRandomArmor( RPG_TOP );
-		default: NI_VERIFY( false, "Wrong armor dir", return 0 );
+		case 0:
+			return GetRandomArmor( unitRect.GetSide( wAttackDir ) );
+		case 1:
+			return GetRandomArmor( RPG_BOTTOM );
+		case 2:
+			return GetRandomArmor( RPG_TOP );
+		default:
+			NI_VERIFY( false, "Wrong armor dir", return 0 );
 	}
 
 	return 0;
@@ -196,23 +206,25 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 		const CVec2 vExplCoord( vExplCoord3D.x, vExplCoord3D.y );
 		const NDb::SWeaponRPGStats::SShell &shell = pExpl->GetShellStats();
 		const bool bConfiguredOverheadImpact =
-			shell.etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK &&
-			shell.pMissleParams && shell.pMissleParams->bAimsForTop &&
-			fabs( GetVisZ() + AI_TILE_SIZE + shell.pMissleParams->fTopTargetingHeight - vExplCoord3D.z ) <= AI_TILE_SIZE * 2.0f;
+				shell.etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ATGM_TOP_ATTACK && shell.pMissleParams &&
+				shell.pMissleParams->bAimsForTop &&
+				fabs( GetVisZ() + AI_TILE_SIZE + shell.pMissleParams->fTopTargetingHeight - vExplCoord3D.z ) <=
+						AI_TILE_SIZE * 2.0f;
 
 		// попали визуально
 		// DebugTrace( "Player %d: %2.3f, %s", player, fabs( GetCenterPlain() - vExplCoord ), unitRect.IsPointInside( vExplCoord ) ? "true" : "false" );
 		// An overhead fuse is an exact hit at its configured visual height, even beyond legacy unit-height tolerance.
 		if ( ( bConfiguredOverheadImpact || fabs( GetVisZ() - vExplCoord3D.z ) <= AI_TILES_IN_VIS_TILE * AI_TILE_SIZE ) &&
-			 unitRect.IsPointInside( vExplCoord ) )
+		     unitRect.IsPointInside( vExplCoord ) )
 		{
 			const int nRandArmor = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect );
 			// если бьёт снизу, or with ignore AABBCoef ability on, то не сжимать
 			CAIUnit *pWhoFired = pExpl->GetWhoFire();
-			if ( nArmorDir != 1 && (IsValidObj(pWhoFired) && !pWhoFired->IsIgnoreAABBCoeff()) )
+			if ( nArmorDir != 1 && ( IsValidObj( pWhoFired ) && !pWhoFired->IsIgnoreAABBCoeff() ) )
 				unitRect.Compress( GetRemissiveCoeff() );
 
-			const SAINotifyHitInfo::EHitType eHitType = ProcessExactHit( unitRect, vExplCoord, pExpl->GetRandomPiercing(), nRandArmor );
+			const SAINotifyHitInfo::EHitType eHitType =
+					ProcessExactHit( unitRect, vExplCoord, pExpl->GetRandomPiercing(), nRandArmor );
 
 			if ( pExpl->GetWhoFire() )
 			{
@@ -225,8 +237,8 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 				}
 			}
 
-			if ( eHitType == SAINotifyHitInfo::EHT_HIT || theCheats.GetFirstShoot( pExpl->GetPlayerOfShoot() ) == 1
-				|| (IsValidObj(pWhoFired) && pWhoFired->IsTargetingTrack()) )
+			if ( eHitType == SAINotifyHitInfo::EHT_HIT || theCheats.GetFirstShoot( pExpl->GetPlayerOfShoot() ) == 1 ||
+			     ( IsValidObj( pWhoFired ) && pWhoFired->IsTargetingTrack() ) )
 				// Always hit if cheating or track targetting
 				TakeDamage( pExpl->GetRandomDamage(), &pExpl->GetShellStats(), pExpl->GetPlayerOfShoot(), pExpl->GetWhoFire() );
 
@@ -234,7 +246,7 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 				pExpl->AddHitToSend( new CHitInfo( pExpl, this, eHitType, vExplCoord3D ) );
 			else
 			{
-				CSoldier *pSoldier = checked_cast<CSoldier*>(this);
+				CSoldier *pSoldier = checked_cast<CSoldier *>( this );
 				if ( !pSoldier->IsInBuilding() )
 					pExpl->AddHitToSend( new CHitInfo( pExpl, this, eHitType, vExplCoord3D ) );
 			}
@@ -246,7 +258,10 @@ bool CAIUnit::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmorDir, con
 	return false;
 }
 
-bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius )
+bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl,
+                                 const int nArmorDir,
+                                 const float fRadius,
+                                 const float fSmallRadius )
 {
 	const CVec3 vExplCoord3D( pExpl->GetExplCoordinates() );
 	const CVec2 vExplCoord2D( vExplCoord3D.x, vExplCoord3D.y );
@@ -277,10 +292,14 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmor
 			bCircleHit = unitRect.IsIntersectCircle( vExplCoord2D, fSmallRadius );
 			if ( bCircleHit )
 			{
-				bArmorPassed = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect ) <= SConsts::ARMOR_FOR_AREA_DAMAGE;
+				bArmorPassed =
+						GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir(), unitRect ) <= SConsts::ARMOR_FOR_AREA_DAMAGE;
 				if ( bArmorPassed )
 				{
-					TakeDamage( pExpl->GetRandomDamage() * SConsts::AREA_DAMAGE_COEFF, &pExpl->GetShellStats(), pExpl->GetPlayerOfShoot(), pExpl->GetWhoFire() );
+					TakeDamage( pExpl->GetRandomDamage() * SConsts::AREA_DAMAGE_COEFF,
+					            &pExpl->GetShellStats(),
+					            pExpl->GetPlayerOfShoot(),
+					            pExpl->GetWhoFire() );
 					bDamageApplied = true;
 				}
 			}
@@ -289,9 +308,22 @@ bool CAIUnit::ProcessAreaDamage( const class CExplosion *pExpl, const int nArmor
 
 	const uint64_t nRngAfter = NAsyncExplosionDebug::GetRandomCallCounter();
 	// Keep the last area-damage decisions in the async dump so candidate/order/RNG drift can be compared across clients.
-	NAsyncExplosionDebug::RecordAreaDamageTrace( "unit_area", pExpl, this, nArmorDir, fRadius, fSmallRadius,
-		bPreconditionsPassed, bCoverCalled, bSavedByCover, bCircleHit, bArmorPassed, bDamageApplied,
-		fDist2, fZDiff, nRngBefore, nRngAfter );
+	NAsyncExplosionDebug::RecordAreaDamageTrace( "unit_area",
+	                                             pExpl,
+	                                             this,
+	                                             nArmorDir,
+	                                             fRadius,
+	                                             fSmallRadius,
+	                                             bPreconditionsPassed,
+	                                             bCoverCalled,
+	                                             bSavedByCover,
+	                                             bCircleHit,
+	                                             bArmorPassed,
+	                                             bDamageApplied,
+	                                             fDist2,
+	                                             fZDiff,
+	                                             nRngBefore,
+	                                             nRngAfter );
 
 	return bDamageApplied;
 }
@@ -313,7 +345,7 @@ void CAIUnit::IncreaseHitPoints( const float fInc )
 
 	if ( fHitPoints != fMaxHP )
 	{
-		const float fFormerHP = fHitPoints ;
+		const float fFormerHP = fHitPoints;
 		fHitPoints = (std::min)( fMaxHP, fHitPoints + fInc );
 		updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	}
@@ -321,11 +353,18 @@ void CAIUnit::IncreaseHitPoints( const float fInc )
 
 int nCntGuns = 0;
 float fRange = 0;
-void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const uint16_t dir, const uint8_t _player, ICollisionsCollector *pCollisionsCollector )
+void CAIUnit::Init( const CVec2 &center,
+                    const int z,
+                    const float fHP,
+                    const uint16_t dir,
+                    const uint8_t _player,
+                    ICollisionsCollector *pCollisionsCollector )
 {
 	lastScanTime = curTime;
-	realScanDuration = NRandom::Random( 1500, 2500 ); RecordRandomCall();
-	targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
+	realScanDuration = NRandom::Random( 1500, 2500 );
+	RecordRandomCall();
+	targetScanRandom = NRandom::Random( 800, 1000 );
+	RecordRandomCall();
 	//nAbilityLevel = -1;
 	bTrampled = false;
 	pStatsModifiers = new NDb::SUnitStatsModifier;
@@ -344,7 +383,7 @@ void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const uin
 	nGrenades = 0;
 	bFreeEnemySearch = false;
 	SetAlive( true );
-//	bVisibleByPlayer = false;
+	//	bVisibleByPlayer = false;
 	targetScanRandom = 0;
 
 	nVisIndexInUnits = 0;
@@ -354,19 +393,18 @@ void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const uin
 	nextRevealCheck = 0;
 	vPlaceOfReveal = VNULL2;
 
-	pAnimUnit = GetStats()->IsInfantry() ?
-							MakeObject<IAnimUnit>( AI_ANIM_UNIT_SOLDIER ) : MakeObject<IAnimUnit>( AI_ANIM_UNIT_MECH );
+	pAnimUnit = GetStats()->IsInfantry() ? MakeObject<IAnimUnit>( AI_ANIM_UNIT_SOLDIER )
+	                                     : MakeObject<IAnimUnit>( AI_ANIM_UNIT_MECH );
 	pAnimUnit->Init( this );
 
 	CCommonUnit::Init( CVec3( center, z ), dir, pCollisionsCollector );
 	UpdateAmphibianWaterModifier();
 
-	{//reinforcement price init
+	{ //reinforcement price init
 		const SUnitBaseRPGStats *pStats = GetStats();
 		if ( pStats->GetTypeID() == SMechUnitRPGStats::typeID )
-			SetPrice( checked_cast<const SMechUnitRPGStats*>( pStats )->fReinforcementPrice );
+			SetPrice( checked_cast<const SMechUnitRPGStats *>( pStats )->fReinforcementPrice );
 	}
-
 
 	//
 	InitGuns();
@@ -381,8 +419,8 @@ void CAIUnit::Init( const CVec2 &center, const int z, const float fHP, const uin
 
 	pUnitInfoForGeneral = new CAIUnitInfoForGeneral( this );
 
-	theGroupLogic.RegisterSegments( this, dynamic_cast<CAILogic*>(Singleton<IAILogic>())->IsFirstTime(), true );
-	theGroupLogic.RegisterPathSegments( this, dynamic_cast<CAILogic*>(Singleton<IAILogic>())->IsFirstTime() );
+	theGroupLogic.RegisterSegments( this, dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->IsFirstTime(), true );
+	theGroupLogic.RegisterPathSegments( this, dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->IsFirstTime() );
 
 	bAlwaysVisible = ( GetStats()->szParentName == "CoastBattery_Todt" );
 	visible4Party.resize( 3, false );
@@ -412,7 +450,7 @@ void CAIUnit::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 
 	pNewUnitInfo->pStats = GetStats();
 	pNewUnitInfo->eDipl = theDipl.GetDiplStatus( theDipl.GetMyNumber(), GetPlayer() );
-	pNewUnitInfo->nFrameIndex = /*GetScenarioUnit() ? GetScenarioUnit()->GetScenarioID() : */-1;
+	pNewUnitInfo->nFrameIndex = /*GetScenarioUnit() ? GetScenarioUnit()->GetScenarioID() : */ -1;
 	pNewUnitInfo->fHitPoints = GetHitPoints();
 	pNewUnitInfo->fResize = 1.0f;
 	pNewUnitInfo->nPlayer = GetPlayer();
@@ -421,13 +459,13 @@ void CAIUnit::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->nExpLevel = theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() );
 }
 
-const NDb::SAmphibianStats* CAIUnit::GetAmphibianStats() const
+const NDb::SAmphibianStats *CAIUnit::GetAmphibianStats() const
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
 	if ( !pStats || pStats->GetTypeID() != SMechUnitRPGStats::typeID )
 		return 0;
 
-	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats*>( pStats );
+	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats *>( pStats );
 	if ( !pMechStats->IsAmphibious() || !pMechStats->pAmphibianStats )
 		return 0;
 
@@ -436,8 +474,7 @@ const NDb::SAmphibianStats* CAIUnit::GetAmphibianStats() const
 
 bool CAIUnit::IsAmphibianWaterTile( const SVector &tile ) const
 {
-	return GetAIMap()->IsTileInside( tile ) &&
-		GetTerrain()->GetTerrainType( tile ) == ETT_WATER_TERRAIN;
+	return GetAIMap()->IsTileInside( tile ) && GetTerrain()->GetTerrainType( tile ) == ETT_WATER_TERRAIN;
 }
 
 bool CAIUnit::IsAmphibianWaterPoint( const CVec2 &point ) const
@@ -519,7 +556,8 @@ void CAIUnit::UpdateAmphibianWaterModifier()
 const bool CAIUnit::CanMoveBetweenTiles( const SVector &fromTile, const SVector &toTile ) const
 {
 	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
-	if ( !pAmphibianStats || fromTile == toTile || !GetAIMap()->IsTileInside( fromTile ) || !GetAIMap()->IsTileInside( toTile ) )
+	if ( !pAmphibianStats || fromTile == toTile || !GetAIMap()->IsTileInside( fromTile ) ||
+	     !GetAIMap()->IsTileInside( toTile ) )
 		return true;
 
 	const bool bFromWater = IsAmphibianWaterTile( fromTile );
@@ -527,7 +565,7 @@ const bool CAIUnit::CanMoveBetweenTiles( const SVector &fromTile, const SVector 
 	if ( bFromWater == bToWater )
 		return true;
 
-	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats*>( GetStats() );
+	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats *>( GetStats() );
 	if ( pMechStats->fMaxHeight <= 0.0f && !pMechStats->IsAmphibious() )
 		return true;
 
@@ -535,14 +573,15 @@ const bool CAIUnit::CanMoveBetweenTiles( const SVector &fromTile, const SVector 
 	const SVector &waterTile = bFromWater ? fromTile : toTile;
 	const float fLandHeight = GetHeights()->GetZ( GetAIMap()->GetPointByTile( landTile ) );
 	const float fWaterHeight = GetHeights()->GetZ( GetAIMap()->GetPointByTile( waterTile ) );
-	return (std::abs)(fLandHeight - fWaterHeight) <= pMechStats->fMaxHeight;
+	return (std::abs)( fLandHeight - fWaterHeight ) <= pMechStats->fMaxHeight;
 }
 
 void CAIUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
 {
 	CCommonUnit::GetPlacement( pPlacement, timeDiff );
 
-	const CVec2 vPlacement = pPlacement->bNewFormat ? CVec2( pPlacement->vPlacement.x, pPlacement->vPlacement.y ) : pPlacement->center;
+	const CVec2 vPlacement =
+			pPlacement->bNewFormat ? CVec2( pPlacement->vPlacement.x, pPlacement->vPlacement.y ) : pPlacement->center;
 	pPlacement->fWaterCoeff = bRestInside ? 0.0f : GetAmphibianWaterCoeff( vPlacement );
 
 	if ( !GetAmphibianStats() || !pPlacement->bNewFormat || pPlacement->fWaterCoeff <= 0.0f )
@@ -684,11 +723,13 @@ void CAIUnit::Die( const bool fromExplosion, const float fDamage )
 			theGraveyard.AddToSoonBeDead( this, fDamage );
 
 			if ( fromExplosion && GetStats()->IsInfantry() && IsFree() )
-				{ timeToDeath = curTime + NRandom::Random( 0, 1000 ); RecordRandomCall(); }
+			{
+				timeToDeath = curTime + NRandom::Random( 0, 1000 );
+				RecordRandomCall();
+			}
 			else
 				timeToDeath = curTime;
 			//}
-
 		}
 
 		theStatistics.UnitDead( this );
@@ -717,27 +758,28 @@ bool CAIUnit::CalculateUnitVisibility4PartyInner( const uint8_t party ) const
 	{
 		const uint8_t cParty = theDipl.GetNParty( player );
 
-		return GetStats()->IsAviation() || party == cParty || theWarFog.IsUnitVisible( GetCenterTile(), party, IsCamoulflated());
+		return GetStats()->IsAviation() || party == cParty ||
+		       theWarFog.IsUnitVisible( GetCenterTile(), party, IsCamoulflated() );
 	}
 }
 
-void CAIUnit::UpdateCrewAndTruckVisibility( uint8_t party,  bool bNewVisibility )
+void CAIUnit::UpdateCrewAndTruckVisibility( uint8_t party, bool bNewVisibility )
 {
 	if ( GetStats()->IsArtillery() )
 	{
-		CFormation *pServingFormation = (checked_cast<CArtillery*>(this))->GetCrew();
+		CFormation *pServingFormation = ( checked_cast<CArtillery *>( this ) )->GetCrew();
 		if ( pServingFormation )
 		{
 			for ( int i = 0; i < pServingFormation->Size(); ++i )
 			{
-				(*pServingFormation)[i]->SetVisibility( party, bNewVisibility );
+				( *pServingFormation )[i]->SetVisibility( party, bNewVisibility );
 				if ( party == theCheats.GetNPartyForWarFog() )
-					updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, (*pServingFormation)[i], bNewVisibility );
+					updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, ( *pServingFormation )[i], bNewVisibility );
 			}
 		}
 		if ( GetState()->GetName() == EUSN_BEING_TOWED )
 		{
-			CAIUnit * pTransport = checked_cast<CArtilleryBeingTowedState*>( GetState() )->GetTowingTransport();
+			CAIUnit *pTransport = checked_cast<CArtilleryBeingTowedState *>( GetState() )->GetTowingTransport();
 			if ( pTransport )
 			{
 				pTransport->SetVisibility( party, bNewVisibility );
@@ -750,10 +792,9 @@ void CAIUnit::UpdateCrewAndTruckVisibility( uint8_t party,  bool bNewVisibility 
 
 bool CAIUnit::UpdateUnitVisibilityForParty( const uint8_t party, const bool bVisibility )
 {
-	const int bVisibilityChanged = int(bVisibility) != visible4Party[party];
+	const int bVisibilityChanged = int( bVisibility ) != visible4Party[party];
 	int bNewVisibility = visible4Party[party];
-	if ( lastTimeOfVis[party] == 0 && ( party == theCheats.GetNPartyForWarFog() ||
-																			party == theDipl.GetMyParty()) )
+	if ( lastTimeOfVis[party] == 0 && ( party == theCheats.GetNPartyForWarFog() || party == theDipl.GetMyParty() ) )
 	{
 		UpdateCrewAndTruckVisibility( party, bVisibility );
 		updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, this, bVisibility );
@@ -801,7 +842,7 @@ bool CAIUnit::UpdateUnitVisibilityForParty( const uint8_t party, const bool bVis
 				if ( IsInTankPit() )
 					UpdateTankPitVisibility( bVisibilityChanged, bNewVisibility );
 				if ( GetStats()->IsArtillery() )
-					(checked_cast<CArtillery*>(this))->UpdateAmmoBoxVisibility( bVisibilityChanged, bNewVisibility );
+					( checked_cast<CArtillery *>( this ) )->UpdateAmmoBoxVisibility( bVisibilityChanged, bNewVisibility );
 			}
 
 			UpdateCrewAndTruckVisibility( party, bNewVisibility );
@@ -826,23 +867,23 @@ void CAIUnit::GetTilesForVisibility( CTilesSet *pTiles ) const
 
 bool CAIUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
-	return
-		( (eAction == ACTION_NOTIFY_DEAD_UNIT && curTime != 0 && !theGraveyard.IsDiedVisible( GetUniqueID() ) )||
-			eAction == ACTION_NOTIFY_GET_DEAD_UNITS_UPDATE ||
-			eAction == ACTION_NOTIFY_NEW_ST_OBJ );
+	return ( ( eAction == ACTION_NOTIFY_DEAD_UNIT && curTime != 0 && !theGraveyard.IsDiedVisible( GetUniqueID() ) ) ||
+	         eAction == ACTION_NOTIFY_GET_DEAD_UNITS_UPDATE || eAction == ACTION_NOTIFY_NEW_ST_OBJ );
 }
 
 void CAIUnit::CheckForReveal()
 {
 	if ( !theDipl.IsNetGame() && nextRevealCheck <= curTime )
 	{
-		nextRevealCheck = curTime + 1000 + NRandom::Random( 0, 1000 ); RecordRandomCall();
+		nextRevealCheck = curTime + 1000 + NRandom::Random( 0, 1000 );
+		RecordRandomCall();
 		if ( bQueredToReveal )
 		{
 			bQueredToReveal = false;
 			if ( !bRevealed )
 			{
-				bRevealed = NRandom::Random( 0.0f, 1.0f ) < SConsts::REVEAL_INFO[GetStats()->etype].fRevealByQuery; RecordRandomCall();
+				bRevealed = NRandom::Random( 0.0f, 1.0f ) < SConsts::REVEAL_INFO[GetStats()->etype].fRevealByQuery;
+				RecordRandomCall();
 				if ( bRevealed )
 					timeOfReveal = curTime;
 			}
@@ -853,9 +894,10 @@ void CAIUnit::CheckForReveal()
 		{
 			const int nType = GetStats()->etype;
 			bRevealed =
-				timeOfReveal + SConsts::REVEAL_INFO[nType].nTimeOfReveal >= curTime &&
-				fabs2( GetCenterPlain() - vPlaceOfReveal ) < sqr(SConsts::REVEAL_INFO[nType].fForgetRevealDistance) &&
-				NRandom::Random( 0.0f, 1.0f ) < 1 - SConsts::REVEAL_INFO[nType].fRevealByMovingOff; RecordRandomCall();
+					timeOfReveal + SConsts::REVEAL_INFO[nType].nTimeOfReveal >= curTime &&
+					fabs2( GetCenterPlain() - vPlaceOfReveal ) < sqr( SConsts::REVEAL_INFO[nType].fForgetRevealDistance ) &&
+					NRandom::Random( 0.0f, 1.0f ) < 1 - SConsts::REVEAL_INFO[nType].fRevealByMovingOff;
+			RecordRandomCall();
 		}
 	}
 }
@@ -876,10 +918,8 @@ void CAIUnit::Segment()
 		if ( theDipl.GetNeutralPlayer() != GetPlayer() )
 		{
 			const int nEnemyParty = 1 - GetParty();
-			pUnitInfoForGeneral->UpdateAntiArtFire(
-				pAntiArtillery->GetLastHeardTime( nEnemyParty ),
-				pAntiArtillery->GetRevealCircle( nEnemyParty ).center
-			);
+			pUnitInfoForGeneral->UpdateAntiArtFire( pAntiArtillery->GetLastHeardTime( nEnemyParty ),
+			                                        pAntiArtillery->GetRevealCircle( nEnemyParty ).center );
 		}
 	}
 
@@ -891,7 +931,7 @@ void CAIUnit::Segment()
 	if ( timeLastAttackedAck != 0 && timeLastAttackedAck + 20000 < curTime )
 	{
 		// if ( GetPlayer() == theDipl.GetMyNumber() )
-			// theFeedBackSystem.RemoveFeedback( nUniqueID, EFB_UNDER_ATTACK );
+		// theFeedBackSystem.RemoveFeedback( nUniqueID, EFB_UNDER_ATTACK );
 		timeLastAttackedAck = 0;
 	}
 }
@@ -935,7 +975,7 @@ void CAIUnit::FreezeSegment()
 const bool CAIUnit::IsVisibleByPlayer()
 {
 	return visible4Party[theCheats.GetNPartyForWarFog()];
-//	return bVisibleByPlayer;
+	//	return bVisibleByPlayer;
 }
 
 void CAIUnit::CalcVisibility( const bool bIgnoreTime )
@@ -945,12 +985,13 @@ void CAIUnit::CalcVisibility( const bool bIgnoreTime )
 		for ( int i = 0; i < 3; ++i )
 		{
 			const bool bVisibility = CalculateUnitVisibility4Party( i );
-			const bool bVisibilityChanged = bool(visible4Party[i]) != bVisibility;
+			const bool bVisibilityChanged = bool( visible4Party[i] ) != bVisibility;
 			visible4Party[i] = bVisibility;
 			if ( bVisibilityChanged )
 			{
 				theSupremeBeing.SetUnitVisible( this, i, bVisibility );
-				if ( theDipl.GetNeutralPlayer() != GetPlayer() && !theDipl.IsAIPlayer( GetPlayer() ) && theDipl.IsAIPlayer( i ) )
+				if ( theDipl.GetNeutralPlayer() != GetPlayer() && !theDipl.IsAIPlayer( GetPlayer() ) &&
+				     theDipl.IsAIPlayer( i ) )
 					pUnitInfoForGeneral->UpdateVisibility( bVisibility );
 
 				if ( bVisibility && GetParty() == theDipl.GetNeutralParty() )
@@ -991,7 +1032,7 @@ bool CAIUnit::CanCommandBeExecuted( CAICommand *pCommand )
 
 bool CAIUnit::CanCommandBeExecutedByStats( CAICommand *pCommand )
 {
-	return CanCommandBeExecutedByStats( pCommand->ToUnitCmd().nCmdType);
+	return CanCommandBeExecutedByStats( pCommand->ToUnitCmd().nCmdType );
 }
 
 bool CAIUnit::CanCommandBeExecutedByStats( int nCmd ) const
@@ -1002,15 +1043,15 @@ bool CAIUnit::CanCommandBeExecutedByStats( int nCmd ) const
 		if ( pStats->GetTypeID() != NDb::SMechUnitRPGStats::typeID )
 			return false;
 
-		const NDb::SMechUnitRPGStats *pMechStats = checked_cast<const NDb::SMechUnitRPGStats*>( pStats );
+		const NDb::SMechUnitRPGStats *pMechStats = checked_cast<const NDb::SMechUnitRPGStats *>( pStats );
 		// Rocket/AA artillery may reverse only when no movement mode defines gunner positions.
-		const bool bReverseArtilleryType = pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET ||
-			pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN;
-		const bool bCanReverseByType = bReverseArtilleryType ? !pMechStats->HasConfiguredGunners() :
-			( pMechStats->IsArmor() || pMechStats->IsSPG() || pMechStats->IsTransport() );
-		return bCanReverseByType &&
-			pMechStats->eSelectionType != NDb::SELECTION_TYPE_WATER &&
-			pMechStats->HasCommand( ACTION_COMMAND_MOVE_TO );
+		const bool bReverseArtilleryType =
+				pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_ROCKET || pMechStats->eDBtype == NDb::DB_RPG_TYPE_ART_AAGUN;
+		const bool bCanReverseByType = bReverseArtilleryType
+		                                   ? !pMechStats->HasConfiguredGunners()
+		                                   : ( pMechStats->IsArmor() || pMechStats->IsSPG() || pMechStats->IsTransport() );
+		return bCanReverseByType && pMechStats->eSelectionType != NDb::SELECTION_TYPE_WATER &&
+		       pMechStats->HasCommand( ACTION_COMMAND_MOVE_TO );
 	}
 	return GetStats()->HasCommand( nCmd );
 }
@@ -1035,7 +1076,10 @@ const float CAIUnit::GetCamouflage() const
 	return fCamoflage;
 }
 
-void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CAIUnit::TakeDamage( const float _fDamage,
+                          const SWeaponRPGStats::SShell *pShell,
+                          const int nPlayerOfShoot,
+                          CAIUnit *pShotUnit )
 {
 	if ( fHitPoints > 0 )
 	{
@@ -1043,8 +1087,10 @@ void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *p
 
 		const float fFormerHP = fHitPoints;
 		const int nPartyOfShoot = theDipl.GetNParty( nPlayerOfShoot );
-		const float fDamage = nPartyOfShoot == theDipl.GetNeutralParty() ? _fDamage : GetStatsModifier()->durability.Get( _fDamage );
-		if ( ( fHitPoints -= fDamage * ( 1 - theCheats.GetImmortals( GetPlayer() ) ) ) <= 0 || theCheats.GetFirstShoot( nPlayerOfShoot ) == 1 )
+		const float fDamage =
+				nPartyOfShoot == theDipl.GetNeutralParty() ? _fDamage : GetStatsModifier()->durability.Get( _fDamage );
+		if ( ( fHitPoints -= fDamage * ( 1 - theCheats.GetImmortals( GetPlayer() ) ) ) <= 0 ||
+		     theCheats.GetFirstShoot( nPlayerOfShoot ) == 1 )
 		{
 			if ( pShotUnit && pShotUnit->IsAlive() )
 			{
@@ -1053,7 +1099,9 @@ void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *p
 			}
 			else
 			{
-				SendNTotalKilledUnits( nPlayerOfShoot, NDb::_RT_NONE, GetReinforcementType() );			// It was a mine (or the unit is dead)
+				SendNTotalKilledUnits( nPlayerOfShoot,
+				                       NDb::_RT_NONE,
+				                       GetReinforcementType() ); // It was a mine (or the unit is dead)
 			}
 
 			bool bDisappear = false;
@@ -1073,13 +1121,14 @@ void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *p
 						theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DISAPPEAR ), this, false );
 				}
 				//if ( GetStats()->IsInfantry() )
-					theGraveyard.AddBridgeKilledSoldier( GetCenterTile(), this );
+				theGraveyard.AddBridgeKilledSoldier( GetCenterTile(), this );
 			}
 
 			if ( !bDisappear )
 			{
 				const bool bFromExpl = ( pShell != 0 && pShell->fArea2 != 0 );
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DIE, fDamage, bFromExpl ), checked_cast<CAIUnit*>( this ), false );
+				theGroupLogic.UnitCommand(
+						SAIUnitCmd( ACTION_COMMAND_DIE, fDamage, bFromExpl ), checked_cast<CAIUnit *>( this ), false );
 			}
 		}
 		else // юнит не умер
@@ -1095,7 +1144,8 @@ void CAIUnit::TakeDamage( const float _fDamage, const SWeaponRPGStats::SShell *p
 					theSupremeBeing.UnitAskedForResupply( this, pStats->IsInfantry() ? ERT_MEDICINE : ERT_REPAIR, true );
 			}
 
-			if ( IsValid( pShotUnit ) && !pShotUnit->IsAviation() && theDipl.GetDiplStatus( pShotUnit->GetPlayer(), GetPlayer() ) == EDI_ENEMY )
+			if ( IsValid( pShotUnit ) && !pShotUnit->IsAviation() &&
+			     theDipl.GetDiplStatus( pShotUnit->GetPlayer(), GetPlayer() ) == EDI_ENEMY )
 				timeLastAttacked = curTime;
 		}
 	}
@@ -1130,8 +1180,9 @@ void CAIUnit::UpdateUnitsRequestsForResupply()
 {
 	if ( !theDipl.IsNetGame() )
 	{
-		if ( !IsAlive() || IsRefInvalid() ) return;
-			// when gun crew is killed, ask to refill it again
+		if ( !IsAlive() || IsRefInvalid() )
+			return;
+		// when gun crew is killed, ask to refill it again
 		if ( theDipl.GetNParty( GetPlayer() ) == theDipl.GetNeutralParty() )
 		{
 			if ( GetStats()->IsArtillery() )
@@ -1139,7 +1190,7 @@ void CAIUnit::UpdateUnitsRequestsForResupply()
 		}
 		else
 		{
-			const SUnitBaseRPGStats * pStats = GetStats();
+			const SUnitBaseRPGStats *pStats = GetStats();
 			if ( !pStats->IsAviation() )
 			{
 				const int nCommonGuns = GetNCommonGuns();
@@ -1207,7 +1258,6 @@ void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 			theGroupLogic.UnregisterGroup( nGroup );
 	}
 
-
 	UpdateUnitsRequestsForResupply();
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
@@ -1219,7 +1269,7 @@ void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 	{
 		// for initialization of gun owner party
 		// infantry can possess of artillery gun, so we check for owner
-		if ( GetGun(i)->GetOwner() == this )
+		if ( GetGun( i )->GetOwner() == this )
 			GetGun( i )->SetOwner( this );
 	}
 
@@ -1263,8 +1313,8 @@ void CAIUnit::CheckAmmoStatus()
 
 void CAIUnit::ChangeAmmo( const int nCommonGun, const int nAmmo )
 {
-	CUnitGuns * pGuns = GetGuns();
-//	const int nFormerAmmo = pGuns->GetNAmmo( nCommonGun );
+	CUnitGuns *pGuns = GetGuns();
+	//	const int nFormerAmmo = pGuns->GetNAmmo( nCommonGun );
 	pGuns->ChangeAmmo( nCommonGun, nAmmo );
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	CheckAmmoStatus();
@@ -1279,9 +1329,9 @@ void CAIUnit::CreateAntiArtillery( const float fMaxRevealRadius )
 const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const uint32_t dwGuns ) const
 {
 	float fSpeed = 0;
-	for ( int i = 0; i < sizeof(dwGuns) * 8 && i < GetNGuns(); ++i )
+	for ( int i = 0; i < sizeof( dwGuns ) * 8 && i < GetNGuns(); ++i )
 	{
-		if ( (dwGuns & i<<i) )
+		if ( ( dwGuns & i << i ) )
 			fSpeed += GetKillSpeed( pEnemy, GetGun( i ) );
 	}
 
@@ -1291,10 +1341,10 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, const uint32_t dwGuns ) cons
 const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, const uint32_t dwGuns ) const
 {
 	float fSpeed = 0;
-	const int nGuns = (std::min)( int(sizeof(dwGuns) * 8), GetNGuns() );
+	const int nGuns = (std::min)( int( sizeof( dwGuns ) * 8 ), GetNGuns() );
 	for ( int i = 0; i < nGuns; ++i )
 	{
-		if ( (dwGuns & i<<i) )
+		if ( ( dwGuns & i << i ) )
 			fSpeed += GetKillSpeed( pStats, vCenter, GetGun( i ) );
 	}
 
@@ -1335,8 +1385,6 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 		}
 	}
 
-
-
 	if ( fPiercingProbability == 0.0f )
 		return 0;
 	else
@@ -1349,7 +1397,7 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 			const int nBursts = ( fMaxHP / fPiercingProbability ) / ( pGun->GetDamage() * nAmmoPerBurst ) + 1;
 
 			const float fTimeToKill =
-				pGun->GetAimTime( false ) + nBursts * ( pGun->GetRelaxTime( false ) + pGun->GetFireRate() * nAmmoPerBurst );
+					pGun->GetAimTime( false ) + nBursts * ( pGun->GetRelaxTime( false ) + pGun->GetFireRate() * nAmmoPerBurst );
 
 			NI_ASSERT( std::isfinite( nBursts ), "Wrong nBursts (infinity)" );
 			NI_ASSERT( std::isfinite( fTimeToKill ), "Wrong fTimeToKill (infinity)" );
@@ -1358,7 +1406,7 @@ const float CAIUnit::GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 
 			return fMaxHP / fTimeToKill;
 		}
 		else
-			return 1.0f;		// For the projector
+			return 1.0f; // For the projector
 	}
 }
 
@@ -1417,7 +1465,7 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 			const int nBursts = ( fMaxHP / ( fPiercingProbability * fCover ) ) / ( pGun->GetDamage() * nAmmoPerBurst ) + 1;
 
 			const float fTimeToKill =
-				pGun->GetAimTime( false ) + nBursts * ( pGun->GetRelaxTime( false ) + pGun->GetFireRate() * nAmmoPerBurst );
+					pGun->GetAimTime( false ) + nBursts * ( pGun->GetRelaxTime( false ) + pGun->GetFireRate() * nAmmoPerBurst );
 
 			NI_ASSERT( std::isfinite( nBursts ), "Wrong nBursts (infinity)" );
 			NI_ASSERT( std::isfinite( fTimeToKill ), "Wrong fTimeToKill (infinity)" );
@@ -1433,7 +1481,7 @@ const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy, CBasicGun *pGun ) const
 const float CAIUnit::GetKillSpeed( CAIUnit *pEnemy ) const
 {
 	int i = 0;
-	while ( i < GetNGuns() && !GetGun(i)->CanShootToUnit( pEnemy ) )
+	while ( i < GetNGuns() && !GetGun( i )->CanShootToUnit( pEnemy ) )
 		++i;
 
 	if ( i >= GetNGuns() )
@@ -1463,18 +1511,20 @@ void CAIUnit::UpdateTakenDamagePower( const float fUpdate )
 void CAIUnit::ResetTargetScan()
 {
 	GetLastBehTime() = 0;
-//	SetTargetScanRandom();
-	targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
+	//	SetTargetScanRandom();
+	targetScanRandom = NRandom::Random( 800, 1000 );
+	RecordRandomCall();
 }
 
 void CAIUnit::ResetGunChoosing()
 {
 	GetLastBehTime() = curTime;
-//	SetTargetScanRandom();
-	targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
+	//	SetTargetScanRandom();
+	targetScanRandom = NRandom::Random( 800, 1000 );
+	RecordRandomCall();
 }
 
-CBasicGun* CAIUnit::AnalyzeGunChoose( CAIUnit *pEnemy )
+CBasicGun *CAIUnit::AnalyzeGunChoose( CAIUnit *pEnemy )
 {
 	if ( IsTimeToAnalyzeTargetScan() )
 	{
@@ -1494,20 +1544,23 @@ void CAIUnit::SetTargetScanRandom()
 	{
 		if ( GetState() && GetState()->IsAttackingState() )
 		{
-			targetScanRandom = NRandom::Random( 800, 2500 ); RecordRandomCall();
+			targetScanRandom = NRandom::Random( 800, 2500 );
+			RecordRandomCall();
 		}
 		else
 		{
-			targetScanRandom = NRandom::Random( 800, 3500 ); RecordRandomCall();
+			targetScanRandom = NRandom::Random( 800, 3500 );
+			RecordRandomCall();
 		}
 	}
 	else
 	{
-		targetScanRandom = NRandom::Random( 800, 1000 ); RecordRandomCall();
+		targetScanRandom = NRandom::Random( 800, 1000 );
+		RecordRandomCall();
 	}
 }
 
-IObstacle* CAIUnit::LookForObstacle()
+IObstacle *CAIUnit::LookForObstacle()
 {
 	if ( CanShoot() && theSupremeBeing.MustShootToObstacles( GetPlayer() ) )
 	{
@@ -1526,28 +1579,36 @@ const float CAIUnit::GetTargetScanRadius()
 	if ( theDipl.IsAIPlayer( GetPlayer() ) && GetFirstArtilleryGun() != 0 && !DoesReservePosExist() )
 		return GetFirstArtilleryGun()->GetFireRange( 0 );
 	else if ( GetStats()->etype == RPG_TYPE_OFFICER )
-		return (std::min)( GetGun(0)->GetFireRange( 0 ) * SConsts::OFFICER_COEFFICIENT_FOR_SCAN, GetSightRadius() );
+		return (std::min)( GetGun( 0 )->GetFireRange( 0 ) * SConsts::OFFICER_COEFFICIENT_FOR_SCAN, GetSightRadius() );
 	else if ( GetStats()->IsArtillery() )
 		return (std::min)( GetMaxFireRange(), SConsts::MAX_FIRE_RANGE_TO_SHOOT_BY_LINE );
 	else
 	{
-		const float fCallForHelpRadius = theDipl.IsAIPlayer( GetPlayer() ) ? SConsts::AI_CALL_FOR_HELP_RADIUS : SConsts::CALL_FOR_HELP_RADIUS;
+		const float fCallForHelpRadius =
+				theDipl.IsAIPlayer( GetPlayer() ) ? SConsts::AI_CALL_FOR_HELP_RADIUS : SConsts::CALL_FOR_HELP_RADIUS;
 		float fFireRange = GetSightRadius();
-		for(int i = 0; i < GetNGuns(); i++)
-			fFireRange = (std::max)(fFireRange, GetGun(i)->GetFireRange(0.0f));
+		for ( int i = 0; i < GetNGuns(); i++ )
+			fFireRange = (std::max)( fFireRange, GetGun( i )->GetFireRange( 0.0f ) );
 
 		return (std::min)( fCallForHelpRadius, fFireRange );
 	}
 }
 
-bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun, const float fRange, const bool bIteratePlanes, const bool bIterateBuildings )
+bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
+                                    const bool bDamageUpdated,
+                                    CAIUnit **pBestTarget,
+                                    CBasicGun **pGun,
+                                    const float fRange,
+                                    const bool bIteratePlanes,
+                                    const bool bIterateBuildings )
 {
 	if ( curTime < lastScanTime + realScanDuration )
 	{
-		for ( std::list< CPtr<CAIUnit> >::iterator it = targetsCache.begin(); it != targetsCache.end(); )
+		for ( std::list<CPtr<CAIUnit>>::iterator it = targetsCache.begin(); it != targetsCache.end(); )
 		{
 			CPtr<CAIUnit> pCachedEnemy = *it;
-			if ( IsValid( pCachedEnemy ) && pCachedEnemy->IsAlive() && theDipl.GetDiplStatus( GetPlayer(), pCachedEnemy->GetPlayer() ) == EDI_ENEMY )
+			if ( IsValid( pCachedEnemy ) && pCachedEnemy->IsAlive() &&
+			     theDipl.GetDiplStatus( GetPlayer(), pCachedEnemy->GetPlayer() ) == EDI_ENEMY )
 			{
 				AddUnitToShootEstimator( pCachedEnemy );
 				break;
@@ -1563,22 +1624,24 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 
 	const CVec2 vCenter( GetCenterPlain() );
 
-	for ( CUnitsIter<1,3> iter( GetParty(), EDI_ENEMY, vCenter, fRange ); theScanLimiter.CanScan() && !iter.IsFinished(); iter.Iterate() )
+	for ( CUnitsIter<1, 3> iter( GetParty(), EDI_ENEMY, vCenter, fRange ); theScanLimiter.CanScan() && !iter.IsFinished();
+	      iter.Iterate() )
 	{
 		CAIUnit *pTarget = *iter;
-		if ( IsValidObj( pTarget ) && pTarget->IsNoticableByUnit( this, fRange ) && pTarget->GetState()->GetName() != EUSN_PARTROOP )
+		if ( IsValidObj( pTarget ) && pTarget->IsNoticableByUnit( this, fRange ) &&
+		     pTarget->GetState()->GetName() != EUSN_PARTROOP )
 		{
 			// для вражеской артиллерии добавить всех артиллеристов
 			bool bDoNotAddThisUnit = false;
 			if ( pTarget->GetStats()->IsArtillery() )
 			{
-				CArtillery *pArt = checked_cast<CArtillery*>( pTarget ) ;
+				CArtillery *pArt = checked_cast<CArtillery *>( pTarget );
 				if ( pArt->HasServeCrew() )
 				{
 					CFormation *pCrew = pArt->GetCrew();
-					for ( int i=0; i < pCrew->Size(); ++i )
+					for ( int i = 0; i < pCrew->Size(); ++i )
 					{
-						CSoldier *pSoldier = (*pCrew)[i];
+						CSoldier *pSoldier = ( *pCrew )[i];
 						if ( pSoldier->IsNoticableByUnit( this, fRange ) )
 						{
 							AddUnitToShootEstimator( pSoldier );
@@ -1601,13 +1664,15 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 	// по юнитам в домиках
 	if ( bIterateBuildings )
 	{
-		for ( CStObjCircleIter<true> iter( GetCenterPlain(), fRange ); theScanLimiter.CanScan() && !iter.IsFinished(); iter.Iterate() )
+		for ( CStObjCircleIter<true> iter( GetCenterPlain(), fRange ); theScanLimiter.CanScan() && !iter.IsFinished();
+		      iter.Iterate() )
 		{
 			CExistingObject *pTarget = *iter;
 
 			for ( int i = 0; i < pTarget->GetNDefenders(); ++i )
 			{
-				if ( theDipl.GetDiplStatus( GetPlayer(), pTarget->GetPlayer() ) == EDI_ENEMY && pTarget->GetUnit( i )->IsNoticableByUnit( this, fRange ) )
+				if ( theDipl.GetDiplStatus( GetPlayer(), pTarget->GetPlayer() ) == EDI_ENEMY &&
+				     pTarget->GetUnit( i )->IsNoticableByUnit( this, fRange ) )
 				{
 					AddUnitToShootEstimator( pTarget->GetUnit( i ) );
 					if ( targetsCache.size() < MAX_TARGETS_CACHE_SIZE )
@@ -1628,7 +1693,7 @@ bool CAIUnit::LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpda
 
 		for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
 		{
-			if ( theDipl.GetDiplStatus( GetPlayer(), (*iter)->GetPlayer() ) == EDI_ENEMY )
+			if ( theDipl.GetDiplStatus( GetPlayer(), ( *iter )->GetPlayer() ) == EDI_ENEMY )
 				estimatorAA.AddUnit( *iter );
 		}
 
@@ -1650,12 +1715,12 @@ void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAI
 		bool bHadTarget = pCurTarget != 0;
 		const float fRange = GetTargetScanRadius();
 
-		if ( !g_bUseSmartScan
-			|| !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.125f, false, false )
-			|| !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.250f, false, false )
-			|| !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.500f, false, false )
-			|| !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.750f, false, true ) )
-				LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange, true, true );
+		if ( !g_bUseSmartScan ||
+		     !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.125f, false, false ) ||
+		     !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.250f, false, false ) ||
+		     !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.500f, false, false ) ||
+		     !LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange * 0.750f, false, true ) )
+			LookForTargetInRange( pCurTarget, bDamageUpdated, pBestTarget, pGun, fRange, true, true );
 
 		if ( curTime >= lastScanTime + realScanDuration )
 		{
@@ -1663,16 +1728,24 @@ void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAI
 			if ( GetStats()->IsInfantry() )
 			{
 				if ( GetState() && GetState()->IsAttackingState() )
-					{ realScanDuration = NRandom::Random( 2500, 6000 ); RecordRandomCall(); }
+				{
+					realScanDuration = NRandom::Random( 2500, 6000 );
+					RecordRandomCall();
+				}
 				else
-					{ realScanDuration = NRandom::Random( 3500, 7000 ); RecordRandomCall(); }
+				{
+					realScanDuration = NRandom::Random( 3500, 7000 );
+					RecordRandomCall();
+				}
 			}
 			else
-				{ realScanDuration = NRandom::Random( 1500, 3000 ); RecordRandomCall(); }
+			{
+				realScanDuration = NRandom::Random( 1500, 3000 );
+				RecordRandomCall();
+			}
 		}
 
-
-		if ( !bHadTarget && *pBestTarget && !(*pBestTarget)->IsAviation() ) // target just found
+		if ( !bHadTarget && *pBestTarget && !( *pBestTarget )->IsAviation() ) // target just found
 			SendAcknowledgement( NDb::ACK_ENEMY_FOUND, GetParty() == theDipl.GetMyParty() );
 	}
 	else
@@ -1682,7 +1755,10 @@ void CAIUnit::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAI
 	}
 }
 
-void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun )
+void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget,
+                                const bool bDamageUpdated,
+                                CAIUnit **pBestTarget,
+                                CBasicGun **pGun )
 {
 	CAIUnit *pChosenTarget = *pBestTarget;
 	CBasicGun *pChosenGun = *pGun;
@@ -1693,15 +1769,16 @@ void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, 
 
 	CAIUnit::LookForTarget( pCurTarget, bDamageUpdated, pBestTarget, pGun );
 	// цель вне конуса обстрела есть
-	if ( (*pBestTarget) != 0 )
+	if ( ( *pBestTarget ) != 0 )
 	{
 		// цель уже под сильным огнём
-		const float fDamagePower = (*pBestTarget)->GetTakenDamagePower();
+		const float fDamagePower = ( *pBestTarget )->GetTakenDamagePower();
 
 		if ( fDamagePower != 0 )
 		{
-			const float fKillEnemyTime = (*pBestTarget)->GetHitPoints() / fDamagePower;
-			if ( fKillEnemyTime < 2000 && ( (*pBestTarget)->GetStats()->IsInfantry() || (*pBestTarget)->GetStats()->IsTransport() ) )
+			const float fKillEnemyTime = ( *pBestTarget )->GetHitPoints() / fDamagePower;
+			if ( fKillEnemyTime < 2000 &&
+			     ( ( *pBestTarget )->GetStats()->IsInfantry() || ( *pBestTarget )->GetStats()->IsTransport() ) )
 			{
 				*pBestTarget = pChosenTarget;
 				*pGun = pChosenGun;
@@ -1713,7 +1790,7 @@ void CAIUnit::LookForFarTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, 
 		*pBestTarget = pChosenTarget;
 		*pGun = pChosenGun;
 	}
-	if ( !bHadTarget && *pBestTarget && !(*pBestTarget)->IsAviation() ) // target just found
+	if ( !bHadTarget && *pBestTarget && !( *pBestTarget )->IsAviation() ) // target just found
 		SendAcknowledgement( NDb::ACK_ENEMY_FOUND, GetParty() == theDipl.GetMyParty() );
 
 	bFreeEnemySearch = false;
@@ -1752,23 +1829,33 @@ const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 	return false;
 }
 
-uint8_t CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
+uint8_t CAIUnit::AnalyzeTargetScan( CAIUnit *pCurTarget,
+                                    const bool bDamageUpdated,
+                                    const bool bScanForObstacles,
+                                    CObjectBase *pCheckBuilding )
 {
 	return AnalyzeTargetScanInternal( pCurTarget, bDamageUpdated, bScanForObstacles, pCheckBuilding, false );
 }
 
-uint8_t CAIUnit::AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding )
+uint8_t CAIUnit::AnalyzeTargetScanWithoutMoving( CAIUnit *pCurTarget,
+                                                 const bool bDamageUpdated,
+                                                 const bool bScanForObstacles,
+                                                 CObjectBase *pCheckBuilding )
 {
 	return AnalyzeTargetScanInternal( pCurTarget, bDamageUpdated, bScanForObstacles, pCheckBuilding, true );
 }
 
-uint8_t CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving )
+uint8_t CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget,
+                                            const bool bDamageUpdated,
+                                            const bool bScanForObstacles,
+                                            CObjectBase *pCheckBuilding,
+                                            const bool bOnlyShootWithoutMoving )
 {
 	if ( IsTimeToAnalyzeTargetScan() && theScanLimiter.CanScan() )
 	{
 		GetLastBehTime() = curTime;
 		SetTargetScanRandom();
-	//		CAICommand *pCommand = GetCurCmd();
+		//		CAICommand *pCommand = GetCurCmd();
 
 		// если огонь по всему
 		if ( GetBehaviourFire() == SBehaviour::EFAtWill )
@@ -1780,7 +1867,8 @@ uint8_t CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDam
 			LookForTarget( pCurTarget, bDamageUpdated, &pTarget, &pGun );
 
 			if ( pTarget != 0 && pCheckBuilding != 0 && pTarget->GetStats()->IsInfantry() &&
-					 checked_cast<CSoldier*>(pTarget)->IsInBuilding() && checked_cast<CSoldier*>(pTarget)->GetBuilding() == pCheckBuilding )
+			     checked_cast<CSoldier *>( pTarget )->IsInBuilding() &&
+			     checked_cast<CSoldier *>( pTarget )->GetBuilding() == pCheckBuilding )
 				pTarget = 0;
 
 			// Formation recovery may scan for nearby threats, but should not start an attack that needs a move first.
@@ -1862,24 +1950,28 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 	if ( pDeathAnimType )
 		*pDeathAnimType = NDb::ANIMATION_DEATH;
 
-	const SMechUnitRPGStats* mechStats = dynamic_cast<const SMechUnitRPGStats*>(pStats);
+	const SMechUnitRPGStats *mechStats = dynamic_cast<const SMechUnitRPGStats *>( pStats );
 	const bool bAmphibianWaterDeath = GetAmphibianStats() != 0 && IsInWater();
 	if ( bAmphibianWaterDeath )
 	{
 		// Amphibians that die in water never use fatality; prefer the dedicated water death if present.
-		if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_WATER && !pStats->animdescs[NDb::ANIMATION_DEATH_WATER].anims.empty() )
+		if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_WATER &&
+		     !pStats->animdescs[NDb::ANIMATION_DEATH_WATER].anims.empty() )
 		{
-			const int nDeathAnim = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_WATER].anims.size() ); RecordRandomCall();
+			const int nDeathAnim = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_WATER].anims.size() );
+			RecordRandomCall();
 			if ( pDeathAnimType )
 				*pDeathAnimType = NDb::ANIMATION_DEATH_WATER;
 			return -1 * int( nDeathAnim + 2 );
 		}
 		else if ( mechStats && mechStats->pAnimableModel )
 		{
-			auto water_death_anims = GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_WATER );
+			auto water_death_anims =
+					GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_WATER );
 			if ( !water_death_anims.empty() )
 			{
-				const int nDeathAnim = NRandom::Random( water_death_anims.size() ); RecordRandomCall();
+				const int nDeathAnim = NRandom::Random( water_death_anims.size() );
+				RecordRandomCall();
 				if ( pDeathAnimType )
 					*pDeathAnimType = NDb::ANIMATION_DEATH_WATER;
 				return -1 * int( nDeathAnim + 2 );
@@ -1890,25 +1982,29 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 	}
 
 	// for ships play fatality on deep water & ordinary death on shallow water
-	if ( (mechStats && (mechStats->eUnitType == EDesignUnitType::Torpedo_Boat || mechStats->eUnitType == EDesignUnitType::Landing_Boat || mechStats->IsNaval())) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && !GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) )
+	if ( ( mechStats && ( mechStats->eUnitType == EDesignUnitType::Torpedo_Boat ||
+	                      mechStats->eUnitType == EDesignUnitType::Landing_Boat || mechStats->IsNaval() ) ) &&
+	     !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) &&
+	     !GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) )
 	{
 		// shallow water
 		return -1;
 	}
-	if ( !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) && GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) || // deep water
-			 (
-			 ((NRandom::Random( 0.0f, 1.0f ) < SConsts::FATALITY_PROBABILITY) & RecordRandomCall()) ||
-			 fDamage / GetStats()->fMaxHP > SConsts::DAMAGE_FOR_MASSIVE_DAMAGE_FATALITY &&
-			 ((NRandom::Random( 0.0f, 0.1f ) < SConsts::MASSIVE_DAMAGE_FATALITY_PROBABILITY) & RecordRandomCall())
-			 )
-		 )
+	if ( !GetTerrain()->IsLocked( GetCenterTile(), EAC_WATER ) &&
+	         GetTerrain()->IsLocked( GetCenterTile(), EAC_TERRAIN ) || // deep water
+	     ( ( ( NRandom::Random( 0.0f, 1.0f ) < SConsts::FATALITY_PROBABILITY ) & RecordRandomCall() ) ||
+	       fDamage / GetStats()->fMaxHP > SConsts::DAMAGE_FOR_MASSIVE_DAMAGE_FATALITY &&
+	           ( ( NRandom::Random( 0.0f, 0.1f ) < SConsts::MASSIVE_DAMAGE_FATALITY_PROBABILITY ) &
+	             RecordRandomCall() ) ) )
 	{
-		if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY && !pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.empty() )
+		if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY &&
+		     !pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.empty() )
 		{
-			const int nFatality = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() ); RecordRandomCall();
+			const int nFatality = NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() );
+			RecordRandomCall();
 
 			const int nRect = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_A;
-			CVec2 vRectCenter(VNULL2), vRectHalfSize(VNULL2);
+			CVec2 vRectCenter( VNULL2 ), vRectHalfSize( VNULL2 );
 			if ( !pStats->aabb_as.empty() && nRect != -1 && pStats->aabb_as.size() > nRect )
 			{
 				vRectCenter = pStats->aabb_as[nRect].vCenter;
@@ -1919,7 +2015,8 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 			const CVec2 vFrontDir = GetVectorByDirection( GetFrontDirection() );
 			const CVec2 vRectTurn( vFrontDir.y, -vFrontDir.x );
 
-			fatalityRect.InitRect( GetCenterPlain() + ( (vRectCenter) ^ vRectTurn ), vFrontDir, vRectHalfSize.y, vRectHalfSize.x );
+			fatalityRect.InitRect(
+					GetCenterPlain() + ( ( vRectCenter ) ^ vRectTurn ), vFrontDir, vRectHalfSize.y, vRectHalfSize.x );
 
 			UnlockTiles();
 			bool bFree = IsMapFullyFree( fatalityRect, this );
@@ -1928,34 +2025,37 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 			if ( bFree )
 				return nFatality;
 		}
-		else if (mechStats && mechStats->pAnimableModel)
+		else if ( mechStats && mechStats->pAnimableModel )
 		{
-			auto fatality_anims = GetVisObjAnimsFromModel(mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_FATALITY);
+			auto fatality_anims =
+					GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_FATALITY );
 
-			if (fatality_anims.size() < 1)
+			if ( fatality_anims.size() < 1 )
 			{
-				auto death_anims = GetVisObjAnimsFromModel(mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH);
+				auto death_anims = GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH );
 
-				if (death_anims.empty())
+				if ( death_anims.empty() )
 					return -1;
 
 				goto death_animable_anim;
 			}
 
-			const int nFatality = NRandom::Random( fatality_anims.size() ); RecordRandomCall();
+			const int nFatality = NRandom::Random( fatality_anims.size() );
+			RecordRandomCall();
 
 			int nRect = -1;
 
-			if (pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY && pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality)
+			if ( pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY &&
+			     pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality )
 				nRect = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_A;
 
-			CVec2 vRectCenter(VNULL2), vRectHalfSize(VNULL2);
+			CVec2 vRectCenter( VNULL2 ), vRectHalfSize( VNULL2 );
 			if ( !pStats->aabb_as.empty() && nRect != -1 && pStats->aabb_as.size() > nRect )
 			{
 				vRectCenter = pStats->aabb_as[nRect].vCenter;
 				vRectHalfSize = pStats->aabb_as[nRect].vHalfSize;
 			}
-			if (nRect == -1)
+			if ( nRect == -1 )
 			{
 				vRectCenter = pStats->vAABBCenter;
 				vRectHalfSize = pStats->vAABBHalfSize;
@@ -1966,7 +2066,8 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 			const CVec2 vFrontDir = GetVectorByDirection( GetFrontDirection() );
 			const CVec2 vRectTurn( vFrontDir.y, -vFrontDir.x );
 
-			fatalityRect.InitRect( GetCenterPlain() + ( (vRectCenter) ^ vRectTurn ), vFrontDir, vRectHalfSize.y, vRectHalfSize.x );
+			fatalityRect.InitRect(
+					GetCenterPlain() + ( ( vRectCenter ) ^ vRectTurn ), vFrontDir, vRectHalfSize.y, vRectHalfSize.x );
 
 			UnlockTiles();
 			bool bFree = IsMapFullyFree( fatalityRect, this );
@@ -1977,15 +2078,16 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 		}
 	}
 
-	death_animable_anim:
+death_animable_anim:
 	if ( pDeathAnimType )
 		*pDeathAnimType = NDb::ANIMATION_DEATH;
 	// Decide the param for death anim
-	if ((pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty()) && mechStats && mechStats->pAnimableModel)
+	if ( ( pStats->animdescs.size() < NDb::ANIMATION_DEATH || pStats->animdescs[NDb::ANIMATION_DEATH].anims.empty() ) &&
+	     mechStats && mechStats->pAnimableModel )
 	{
-		auto death_anims = GetVisObjAnimsFromModel(mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH);
+		auto death_anims = GetVisObjAnimsFromModel( mechStats->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH );
 
-		if (death_anims.empty())
+		if ( death_anims.empty() )
 			return -1;
 
 		RecordRandomCall();
@@ -1997,11 +2099,14 @@ const int CAIUnit::ChooseFatality( const float fDamage, NDb::EAnimationType *pDe
 	else
 	{
 		RecordRandomCall();
-		return -1 * int(NRandom::Random(pStats->animdescs[NDb::ANIMATION_DEATH].anims.size()) + 2);
+		return -1 * int( NRandom::Random( pStats->animdescs[NDb::ANIMATION_DEATH].anims.size() ) + 2 );
 	}
 }
 
-void CAIUnit::InitializeShootArea( SShootArea *pArea, CBasicGun *pGun, const float fRangeMin, const float fRangeMax ) const
+void CAIUnit::InitializeShootArea( SShootArea *pArea,
+                                   CBasicGun *pGun,
+                                   const float fRangeMin,
+                                   const float fRangeMax ) const
 {
 	pArea->vCenter3D = CVec3( GetCenterPlain(), 0.0f );
 	pArea->fMinR = fRangeMin;
@@ -2010,9 +2115,7 @@ void CAIUnit::InitializeShootArea( SShootArea *pArea, CBasicGun *pGun, const flo
 	if ( NeedDeinstall() || !CanMove() && !CanRotate() )
 	{
 		const uint16_t wConstraint =
-			pGun ?
-			pGun->GetTurret() ? pGun->GetTurret()->GetHorTurnConstraint() : pGun->GetWeapon()->wDeltaAngle :
-			65535;
+				pGun ? pGun->GetTurret() ? pGun->GetTurret()->GetHorTurnConstraint() : pGun->GetWeapon()->wDeltaAngle : 65535;
 
 		if ( wConstraint >= 32767 )
 		{
@@ -2040,20 +2143,18 @@ void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 		pShootAreas->areas.back().eType = SShootArea::ESAT_BALLISTIC;
 
 		CBasicGun *pGun = GetFirstArtilleryGun();
-		InitializeShootArea( &(pShootAreas->areas.back()), pGun, pGun->GetWeapon()->fRangeMin, pGun->GetFireRangeMax() );
+		InitializeShootArea( &( pShootAreas->areas.back() ), pGun, pGun->GetWeapon()->fRangeMin, pGun->GetFireRangeMax() );
 	}
-//	else
+	//	else
 	{
 		float fMaxFireRange = -1.0f;
 		float fMinFireRange = 1000000.0f;
 		CBasicGun *pGun = 0;
 		for ( int i = 0; i < GetNGuns(); ++i )
 		{
-			if ( GetGun( i )->GetShell().IsLineTrajectory() ||
-					 GetGun( i )->GetShell().IsATGMTrajectory() ||
-					 GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ||
-					 GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET
-					)
+			if ( GetGun( i )->GetShell().IsLineTrajectory() || GetGun( i )->GetShell().IsATGMTrajectory() ||
+			     GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE ||
+			     GetGun( i )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_ROCKET )
 			{
 				CBasicGun *pGunI = GetGun( i );
 				const float fLocalFireRange = pGunI->GetFireRange( 0.0f );
@@ -2083,7 +2184,7 @@ void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 			*pnAreas = 1;
 			pShootAreas->areas.push_back( SShootArea() );
 			pShootAreas->areas.back().eType = SShootArea::ESAT_LINE;
-			InitializeShootArea( &(pShootAreas->areas.back()), pGun, fMinFireRange, fMaxFireRange );
+			InitializeShootArea( &( pShootAreas->areas.back() ), pGun, fMinFireRange, fMaxFireRange );
 		}
 	}
 
@@ -2092,7 +2193,7 @@ void CAIUnit::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 		*pnAreas = 1;
 		pShootAreas->areas.push_back( SShootArea() );
 		pShootAreas->areas.back().eType = SShootArea::ESAT_AA;
-		InitializeShootArea( &(pShootAreas->areas.back()), 0, 0.0f, GetMaxFireRange() );
+		InitializeShootArea( &( pShootAreas->areas.back() ), 0, 0.0f, GetMaxFireRange() );
 	}
 }
 
@@ -2101,12 +2202,13 @@ void CAIUnit::SetInTankPit( CExistingObject *_pTankPit )
 	pTankPit = _pTankPit;
 	bVirtualTankPit = false;
 	bIsInTankPit = true;
-	ApplyStatsModifier( checked_cast<const NDb::SMechUnitRPGStats*>(pTankPit->GetStats())->pInnerUnitBonus, true );
+	ApplyStatsModifier( checked_cast<const NDb::SMechUnitRPGStats *>( pTankPit->GetStats() )->pInnerUnitBonus, true );
 
 	if ( IsInTankPit() )
 		UpdateTankPitVisibility( true, visible4Party[theCheats.GetNPartyForWarFog()] );
 
-	updater.AddUpdate( CreateStatusUpdate( EUS_IN_TANK_PIT, IsInTankPit(), 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+	updater.AddUpdate(
+			CreateStatusUpdate( EUS_IN_TANK_PIT, IsInTankPit(), 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 }
 
 void CAIUnit::UpdateTankPitVisibility( const bool bVisibilityChanged, const bool bVisible )
@@ -2124,13 +2226,14 @@ void CAIUnit::SetOffTankPit()
 {
 	if ( IsValidObj( pTankPit ) )
 	{
-		ApplyStatsModifier( checked_cast<const NDb::SMechUnitRPGStats*>(pTankPit->GetStats())->pInnerUnitBonus, false );
+		ApplyStatsModifier( checked_cast<const NDb::SMechUnitRPGStats *>( pTankPit->GetStats() )->pInnerUnitBonus, false );
 		theStatObjs.DeleteInternalObjectInfo( pTankPit );
 	}
 	pTankPit = 0;
 	bVirtualTankPit = false;
 	bIsInTankPit = false;
-	updater.AddUpdate( CreateStatusUpdate( EUS_IN_TANK_PIT, IsInTankPit(), 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+	updater.AddUpdate(
+			CreateStatusUpdate( EUS_IN_TANK_PIT, IsInTankPit(), 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 }
 
 void CAIUnit::SetCamoulfage()
@@ -2141,23 +2244,24 @@ void CAIUnit::SetCamoulfage()
 		SetBehaviourFire( SBehaviour::EFNoFire );
 	}
 	else
-    fCamoflage = Clamp( 1.0f - GetStatsModifier()->camouflage.Get( GetStats()->fCamouflage ), 0.0f, 1.0f );
+		fCamoflage = Clamp( 1.0f - GetStatsModifier()->camouflage.Get( GetStats()->fCamouflage ), 0.0f, 1.0f );
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_SET_CAMOUFLAGE, this, -1 );
 }
 
 void CAIUnit::RemoveCamouflage( ECamouflageRemoveReason eReason )
 {
-	if ( CanCommandBeExecutedByStats( GetCommandByAbility( ABILITY_CAMOFLAGE_MODE ) ) || CanCommandBeExecutedByStats( GetCommandByAbility( ABILITY_ADAVNCED_CAMOFLAGE_MODE ) ) )
+	if ( CanCommandBeExecutedByStats( GetCommandByAbility( ABILITY_CAMOFLAGE_MODE ) ) ||
+	     CanCommandBeExecutedByStats( GetCommandByAbility( ABILITY_ADAVNCED_CAMOFLAGE_MODE ) ) )
 	{
-		switch( eReason )
+		switch ( eReason )
 		{
 			case ECRR_SELF_SHOOT:
-				{
-					SExecutorEventParam par( EID_FIRE_CAMOFLATED, 0, GetUniqueId() );
-					theExecutorContainer.RaiseEvent( par );
-				}
-				break;
+			{
+				SExecutorEventParam par( EID_FIRE_CAMOFLATED, 0, GetUniqueId() );
+				theExecutorContainer.RaiseEvent( par );
+			}
+			break;
 			case ECRR_USER_COMMAND:
 				fCamoflage = 1.0f;
 				updater.AddUpdate( 0, ACTION_NOTIFY_REMOVE_CAMOUFLAGE, this, -1 );
@@ -2197,7 +2301,7 @@ void CAIUnit::AnalyzeCamouflage()
 		{
 			const uint8_t cParty = theDipl.GetNParty( player );
 			if ( cParty != theDipl.GetNeutralParty() && IsVisible( 1 - cParty ) ||
-					 cParty == theDipl.GetNeutralParty() && ( IsVisible( 0 ) || IsVisible( 1 ) ) )
+			     cParty == theDipl.GetNeutralParty() && ( IsVisible( 0 ) || IsVisible( 1 ) ) )
 			{
 				camouflateTime = curTime;
 				if ( IsCamoulflated() )
@@ -2212,7 +2316,7 @@ void CAIUnit::AnalyzeCamouflage()
 void CAIUnit::EnemyKilled( CAIUnit *pEnemy )
 {
 	if ( pEnemy && pEnemy->IsRefValid() &&
-			 theDipl.GetDiplStatusForParties( GetParty(), pEnemy->GetParty() ) == EDI_ENEMY )
+	     theDipl.GetDiplStatusForParties( GetParty(), pEnemy->GetParty() ) == EDI_ENEMY )
 	{
 		if ( pEnemy->IsVisible( GetParty() ) )
 		{
@@ -2226,10 +2330,11 @@ void CAIUnit::EnemyKilled( CAIUnit *pEnemy )
 		float fPrice = pEnemy->GetStats()->fPrice;
 		if ( pEnemy->IsInFormation() )
 		{
-			CFormation* pFormation = pEnemy->GetFormation();
-			if ( pFormation->Size() == 1 && (*pFormation)[0] == pEnemy && pFormation->GetState()->GetName() == EUSN_GUN_CREW_STATE )
+			CFormation *pFormation = pEnemy->GetFormation();
+			if ( pFormation->Size() == 1 && ( *pFormation )[0] == pEnemy &&
+			     pFormation->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 			{
-				CAIUnit *pArtillery = checked_cast<CFormationGunCrewState*>( pFormation->GetState() )->GetArtillery();
+				CAIUnit *pArtillery = checked_cast<CFormationGunCrewState *>( pFormation->GetState() )->GetArtillery();
 				theStatistics.IncreasePlayerExperience( GetPlayer(), GetReinforcementType(), pArtillery->GetPriceMax() );
 				fPrice += pArtillery->GetStats()->fPrice;
 			}
@@ -2241,8 +2346,7 @@ bool CAIUnit::IsNoticableByUnit( CCommonUnit *pUnit, const float fNoticeRadius )
 {
 	const bool bRadiusOk = fabs2( pUnit->GetCenter() - GetCenter() ) <= sqr( fNoticeRadius );
 
-	return
-		bRadiusOk && ( IsVisible( pUnit->GetParty() ) || IsRevealed() && pUnit->CanMove() && !pUnit->NeedDeinstall() );
+	return bRadiusOk && ( IsVisible( pUnit->GetParty() ) || IsRevealed() && pUnit->CanMove() && !pUnit->NeedDeinstall() );
 }
 
 void CAIUnit::UpdateArea( const EActionNotify eAction )
@@ -2253,19 +2357,21 @@ void CAIUnit::UpdateArea( const EActionNotify eAction )
 void CAIUnit::SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce )
 {
 	const SUnitBaseRPGStats *pStats = GetStats();
-	if ( pStats && GetPlayer() == theDipl.GetMyNumber() && ( bForce || pCommand && pCommand->IsRefValid() && !pCommand->IsFromAI() ) )
+	if ( pStats && GetPlayer() == theDipl.GetMyNumber() &&
+	     ( bForce || pCommand && pCommand->IsRefValid() && !pCommand->IsFromAI() ) )
 	{
 		bool bSend = false;
 		int nSet = 0;
 		if ( pStats->IsInfantry() && GetStats()->etype == RPG_TYPE_ENGINEER )
 		{
 			//nu i krivzna ...
-			IUnitState *pCurrentState = checked_cast<CSoldier*>(this)->GetFormation()->GetState();
+			IUnitState *pCurrentState = checked_cast<CSoldier *>( this )->GetFormation()->GetState();
 			if ( pCurrentState && pCurrentState->GetName() == EUSN_GUN_CREW_STATE )
 			{
-				CArtillery* pArtillery = checked_cast<CFormationGunCrewState*>(pCurrentState)->GetArtillery();
+				CArtillery *pArtillery = checked_cast<CFormationGunCrewState *>( pCurrentState )->GetArtillery();
 				bSend = true;
-				if ( pArtillery->GetStats()->etype == RPG_TYPE_ART_HEAVY_GUN || pArtillery->GetStats()->etype == RPG_TYPE_ART_HOWITZER )
+				if ( pArtillery->GetStats()->etype == RPG_TYPE_ART_HEAVY_GUN ||
+				     pArtillery->GetStats()->etype == RPG_TYPE_ART_HOWITZER )
 					nSet = 1;
 			}
 		}
@@ -2330,27 +2436,44 @@ const int CAIUnit::GetRandomArmor( const int nSide ) const
 
 const float CAIUnit::GetCover() const
 {
-	return  GetStatsModifier()->cover.Get( 1.0f );
+	return GetStatsModifier()->cover.Get( 1.0f );
 }
 
 bool CAIUnit::IsSavedByCover() const
 {
 	RecordRandomCall();
-	return
-		NRandom::Random( 0.0f, 1.0f ) >= GetCover();
+	return NRandom::Random( 0.0f, 1.0f ) >= GetCover();
 }
 
-const int CAIUnit::GetNCommonGuns() const { return GetGuns() ? GetGuns()->GetNCommonGuns() : 0; }
+const int CAIUnit::GetNCommonGuns() const
+{
+	return GetGuns() ? GetGuns()->GetNCommonGuns() : 0;
+}
 
-int CAIUnit::GetCommonGunIndex( const CBasicGun *pGun ) const { return GetGuns() ? GetGuns()->GetCommonGunIndex( pGun ) : -1; }
+int CAIUnit::GetCommonGunIndex( const CBasicGun *pGun ) const
+{
+	return GetGuns() ? GetGuns()->GetCommonGunIndex( pGun ) : -1;
+}
 
-const SBaseGunRPGStats& CAIUnit::GetCommonGunStats( const int nCommonGun ) const { return GetGuns()->GetCommonGunStats( nCommonGun ); }
+const SBaseGunRPGStats &CAIUnit::GetCommonGunStats( const int nCommonGun ) const
+{
+	return GetGuns()->GetCommonGunStats( nCommonGun );
+}
 
-int CAIUnit::GetNAmmo( const int nCommonGun ) const { return GetGuns()->GetNAmmo( nCommonGun ); }
+int CAIUnit::GetNAmmo( const int nCommonGun ) const
+{
+	return GetGuns()->GetNAmmo( nCommonGun );
+}
 
-bool CAIUnit::IsCommonGunFiring( const int nCommonGun ) const { return GetGuns()->IsCommonGunFiring( nCommonGun ); }
+bool CAIUnit::IsCommonGunFiring( const int nCommonGun ) const
+{
+	return GetGuns()->IsCommonGunFiring( nCommonGun );
+}
 
-const float CAIUnit::GetPassability() const { return GetStats()->fPassability; }
+const float CAIUnit::GetPassability() const
+{
+	return GetStats()->fPassability;
+}
 
 void CAIUnit::SetDirection( const uint16_t wDirection )
 {
@@ -2380,7 +2503,7 @@ const float CAIUnit::GetTimeToForget() const
 	return SGeneralConsts::TIME_TO_FORGET_UNIT;
 }
 
-CAIUnitInfoForGeneral* CAIUnit::GetUnitInfoForGeneral() const
+CAIUnitInfoForGeneral *CAIUnit::GetUnitInfoForGeneral() const
 {
 	return pUnitInfoForGeneral;
 }
@@ -2392,16 +2515,13 @@ void CAIUnit::SetLastVisibleTime( const NTimer::STime time )
 
 const bool CAIUnit::CanMove() const
 {
-	return
-		!IsRestInside() &&
-		GetBehaviourMoving() != SBehaviour::EMHoldPos &&
-		GetStats()->fSpeed != 0 ; //optimisation (returned true in CBasePathUnit) "&& CCommonUnit::CanMove();"
+	return !IsRestInside() && GetBehaviourMoving() != SBehaviour::EMHoldPos &&
+	       GetStats()->fSpeed != 0; //optimisation (returned true in CBasePathUnit) "&& CCommonUnit::CanMove();"
 }
 
 const bool CAIUnit::CanMoveCritical() const
 {
-	return
-		GetStats()->fSpeed != 0 && CanMove();
+	return GetStats()->fSpeed != 0 && CanMove();
 }
 
 const bool CAIUnit::CanRotate() const
@@ -2453,7 +2573,7 @@ bool CAIUnit::IsLocked( const CBasicGun *pGun ) const
 void CAIUnit::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType )
 {
 	if ( GetGuns()->SetActiveShellType( eShellType ) )
-		updater.AddUpdate( 0, ACTION_NOTIFY_SHELLTYPE_CHANGED, this, static_cast<int>(eShellType) );
+		updater.AddUpdate( 0, ACTION_NOTIFY_SHELLTYPE_CHANGED, this, static_cast<int>( eShellType ) );
 }
 
 void CAIUnit::AnimationSet( int nAnimation )
@@ -2483,9 +2603,8 @@ void CAIUnit::StopCurAnimation()
 
 void CAIUnit::WantedToReveal( CAIUnit *pWhoRevealed )
 {
-	if ( !theDipl.IsNetGame() &&
-			 theDipl.GetMyNumber() == GetPlayer() &&
-			 theDipl.GetDiplStatus( pWhoRevealed->GetPlayer(), GetPlayer() ) == EDI_ENEMY )
+	if ( !theDipl.IsNetGame() && theDipl.GetMyNumber() == GetPlayer() &&
+	     theDipl.GetDiplStatus( pWhoRevealed->GetPlayer(), GetPlayer() ) == EDI_ENEMY )
 		bQueredToReveal = true;
 }
 
@@ -2501,21 +2620,21 @@ const bool CAIUnit::IsInfantry() const
 
 bool CAIUnit::CanMoveAfterUserCommand() const
 {
-	return GetStats()->HasCommand( ACTION_COMMAND_MOVE_TO ) &&
-				 GetStats()->fSpeed != 0 && CanMove();
+	return GetStats()->HasCommand( ACTION_COMMAND_MOVE_TO ) && GetStats()->fSpeed != 0 && CanMove();
 }
 
-void CAIUnit::NotifyAbilityRun( class CAICommand * pCommand )
+void CAIUnit::NotifyAbilityRun( class CAICommand *pCommand )
 {
 	// if the command is ability command
-	const NDb::EUnitSpecialAbility eAbility = (NDb::EUnitSpecialAbility)GetAbilityByCommand( pCommand->ToUnitCmd().nCmdType );
+	const NDb::EUnitSpecialAbility eAbility =
+			(NDb::EUnitSpecialAbility)GetAbilityByCommand( pCommand->ToUnitCmd().nCmdType );
 	if ( NDb::ABILITY_NOT_ABILITY == eAbility )
 		return;
 
 	const NDb::SUnitSpecialAblityDesc *pDesc = GetUnitAbilityDesc( eAbility );
 	if ( pDesc )
 	{
-		const NDb::ESpecialAbilityParam action = NDb::ESpecialAbilityParam(int(pCommand->ToUnitCmd().fNumber));
+		const NDb::ESpecialAbilityParam action = NDb::ESpecialAbilityParam( int( pCommand->ToUnitCmd().fNumber ) );
 		ProduceEventByAction( eAbility, action, pCommand );
 	}
 }
@@ -2546,13 +2665,20 @@ const int CAIUnit::GetAbilityLevel()
 
 void CAIUnit::InitSpecialAbilities( int nFromLevel )
 {
-	NI_ASSERT( GetStats()->GetActions() != 0, fmt::format("Empty actions set for unit \"{}\" of type \"{}\"", NDb::GetResName(GetStats()), typeid(*GetStats()).name()) );
+	NI_ASSERT( GetStats()->GetActions() != 0,
+	           fmt::format( "Empty actions set for unit \"{}\" of type \"{}\"",
+	                        NDb::GetResName( GetStats() ),
+	                        typeid( *GetStats() ).name() ) );
 	pShootInMovementExecutor = 0;
 	// start SpecialAbility executors (that are possible for this unit)
 	const int nActiveAbilities = (std::min<int>)( GetStats()->GetActions()->specialAbilities.size(), GetAbilityLevel() );
 	for ( int i = nFromLevel; i < nActiveAbilities; ++i )
 	{
-		NI_ASSERT( GetStats()->GetActions()->specialAbilities[i] != 0, fmt::format("Empty ability {} for unit \"{}\" of type \"{}\"", i, NDb::GetResName(GetStats()), typeid(*GetStats()).name()) )
+		NI_ASSERT( GetStats()->GetActions()->specialAbilities[i] != 0,
+		           fmt::format( "Empty ability {} for unit \"{}\" of type \"{}\"",
+		                        i,
+		                        NDb::GetResName( GetStats() ),
+		                        typeid( *GetStats() ).name() ) )
 		if ( GetStats()->GetActions()->specialAbilities[i] != 0 )
 			InitAbility( GetStats()->GetActions()->specialAbilities[i]->eName );
 	}
@@ -2563,7 +2689,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 	// unit can run this command, and ability
 	switch ( nAbility )
 	{
-	case NDb::ABILITY_DROP_BOMBS:
+		case NDb::ABILITY_DROP_BOMBS:
 		{
 			UpdateEnableAblitiy( nAbility );
 			CPtr<CExecutor> pEx = new CExecutorPlaneDropBombsObject( this );
@@ -2576,14 +2702,14 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		}
 		break;
 
-		// state abilities (enabled upon map start)
-	case NDb::ABILITY_USE_BINOCULAR:
-		UpdateEnableAblitiy( nAbility );
-		// not ability
-	case NDb::ABILITY_NOT_ABILITY:
-		break;
-	case NDb::ABILITY_THROW_GRENADE:
-	case NDb::ABILITY_THROW_ANTITANK_GRENADE:
+			// state abilities (enabled upon map start)
+		case NDb::ABILITY_USE_BINOCULAR:
+			UpdateEnableAblitiy( nAbility );
+			// not ability
+		case NDb::ABILITY_NOT_ABILITY:
+			break;
+		case NDb::ABILITY_THROW_GRENADE:
+		case NDb::ABILITY_THROW_ANTITANK_GRENADE:
 		{
 			CPtr<CExecutor> pEx = new CExecutorThrowGrenade( this, nAbility );
 			theExecutorContainer.Add( pEx );
@@ -2597,7 +2723,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			}
 		}
 		break;
-	case NDb::ABILITY_AMBUSH:
+		case NDb::ABILITY_AMBUSH:
 		{
 			CPtr<CExecutor> pEx = new CExecutorAmbush( this );
 			theExecutorContainer.Add( pEx );
@@ -2605,7 +2731,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_CAMOFLAGE_MODE:
+		case NDb::ABILITY_CAMOFLAGE_MODE:
 		{
 			CPtr<CExecutor> pEx = new CExecutorCamouflage( this );
 			theExecutorContainer.Add( pEx );
@@ -2613,7 +2739,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE:
+		case NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE:
 		{
 			// create camoflage executor. register it on needed events.
 			CPtr<CExecutor> pEx = new CExecutorSniperCamouflage( this, nAbility == NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE );
@@ -2622,44 +2748,44 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_PLACE_CHARGE:
-	//case NDb::ABILITY_PLACE_CONTROLLED_CHARGE:
-		{
-			CPtr<CExecutor> pEx = new CExecutorPlaceCharge( this, nAbility );
-			theExecutorContainer.Add( pEx );
-			pEx->RegisterOnEvents( &theExecutorContainer );
-			UpdateEnableAblitiy( nAbility );
-		}
-		break;
-	case NDb::ABILITY_RADIO_CONTROLLED_MODE:
-	//case NDb::ABILITY_DETONATE:
-		{
-			CPtr<CExecutor> pEx1 = new CExecutorPlaceCharge( this, NDb::ABILITY_PLACE_CONTROLLED_CHARGE );
-			theExecutorContainer.Add( pEx1 );
-			pEx1->RegisterOnEvents( &theExecutorContainer );
+		case NDb::ABILITY_PLACE_CHARGE:
+			//case NDb::ABILITY_PLACE_CONTROLLED_CHARGE:
+			{
+				CPtr<CExecutor> pEx = new CExecutorPlaceCharge( this, nAbility );
+				theExecutorContainer.Add( pEx );
+				pEx->RegisterOnEvents( &theExecutorContainer );
+				UpdateEnableAblitiy( nAbility );
+			}
+			break;
+		case NDb::ABILITY_RADIO_CONTROLLED_MODE:
+			//case NDb::ABILITY_DETONATE:
+			{
+				CPtr<CExecutor> pEx1 = new CExecutorPlaceCharge( this, NDb::ABILITY_PLACE_CONTROLLED_CHARGE );
+				theExecutorContainer.Add( pEx1 );
+				pEx1->RegisterOnEvents( &theExecutorContainer );
 
-			CPtr<CExecutor> pEx2 = new CExecutorPlaceCharge( this, NDb::ABILITY_DETONATE );
-			theExecutorContainer.Add( pEx2 );
-			pEx2->RegisterOnEvents( &theExecutorContainer );
-			SExecutorEventParam par( EID_ABILITY_DISABLE, 0, GetUniqueId() );
-			CExecutorEventSpecialAbility event( par, NDb::ABILITY_DETONATE );
-			pTheExecutorsContainer->RaiseEvent( event );
-			UpdateEnableAblitiy( nAbility );
-		}
-		break;
-	case NDb::ABILITY_HOLD_SECTOR:
+				CPtr<CExecutor> pEx2 = new CExecutorPlaceCharge( this, NDb::ABILITY_DETONATE );
+				theExecutorContainer.Add( pEx2 );
+				pEx2->RegisterOnEvents( &theExecutorContainer );
+				SExecutorEventParam par( EID_ABILITY_DISABLE, 0, GetUniqueId() );
+				CExecutorEventSpecialAbility event( par, NDb::ABILITY_DETONATE );
+				pTheExecutorsContainer->RaiseEvent( event );
+				UpdateEnableAblitiy( nAbility );
+			}
+			break;
+		case NDb::ABILITY_HOLD_SECTOR:
 		{
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_ENTRENCH_SELF:
+		case NDb::ABILITY_ENTRENCH_SELF:
 		{
 			CPtr<CExecutor> pEx = new CExecutorSoldierEntrench( this );
 			theExecutorContainer.Add( pEx );
 			pEx->RegisterOnEvents( &theExecutorContainer );
 		}
 		break;
-	case NDb::ABILITY_TRACK_TARGETING:
+		case NDb::ABILITY_TRACK_TARGETING:
 		{
 			CPtr<CExecutor> pEx = new CExecutorTrackTargetting( this );
 			theExecutorContainer.Add( pEx );
@@ -2667,44 +2793,44 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_CRITICAL_TARGETING:
+		case NDb::ABILITY_CRITICAL_TARGETING:
 		{
 			CPtr<CExecutor> pEx = new CExecutorUnitBonus( NDb::ABILITY_CRITICAL_TARGETING, this );
 			theExecutorContainer.Add( pEx );
 			pEx->RegisterOnEvents( &theExecutorContainer );
 		}
 		break;
-	case NDb::ABILITY_RAPID_FIRE_MODE:
-	case NDb::ABILITY_RAPID_SHOT_MODE:			// Two enums?
+		case NDb::ABILITY_RAPID_FIRE_MODE:
+		case NDb::ABILITY_RAPID_SHOT_MODE: // Two enums?
 		{
 			CPtr<CExecutor> pEx = new CExecutorUnitBonus( NDb::ABILITY_RAPID_FIRE_MODE, this );
 			theExecutorContainer.Add( pEx );
 			pEx->RegisterOnEvents( &theExecutorContainer );
 		}
 		break;
-	case NDb::ABILITY_FLAMETHROWER:
-		break;																// Flamethrower is just an icon
-	case NDb::ABILITY_MOBILE_FORTRESS:
-		break;																// Mobile Fortress is just an icon
-	case NDb::ABILITY_SUPRESS:
-		UpdateEnableAblitiy( nAbility );
-		break;																// Suppress fire is handled elsewhere
-	case NDb::ABILITY_FIRE_ROCKETS:
-		UpdateEnableAblitiy( nAbility );
-		break;																// Single-salvo point fire is handled by unit states
-	case NDb::ABILITY_USE_FLAMETHROWER:
-		UpdateEnableAblitiy( nAbility );
-		break;																// Flame-only point fire is handled by unit states
-	case NDb::ABILITY_SUPPORT_FIRE:
-		UpdateEnableAblitiy( nAbility );
-		break;																// Support fire is handled elsewhere
-	case NDb::ABILITY_PATROL:
-		UpdateEnableAblitiy( nAbility );
-		break;																// Patrol is handled elsewhere
-	case NDb::ABILITY_ZEROING_IN:
-		UpdateEnableAblitiy( nAbility );
-		break;																// Zeroing In is handled elsewhere
-	case NDb::ABILITY_CAUTION:
+		case NDb::ABILITY_FLAMETHROWER:
+			break; // Flamethrower is just an icon
+		case NDb::ABILITY_MOBILE_FORTRESS:
+			break; // Mobile Fortress is just an icon
+		case NDb::ABILITY_SUPRESS:
+			UpdateEnableAblitiy( nAbility );
+			break; // Suppress fire is handled elsewhere
+		case NDb::ABILITY_FIRE_ROCKETS:
+			UpdateEnableAblitiy( nAbility );
+			break; // Single-salvo point fire is handled by unit states
+		case NDb::ABILITY_USE_FLAMETHROWER:
+			UpdateEnableAblitiy( nAbility );
+			break; // Flame-only point fire is handled by unit states
+		case NDb::ABILITY_SUPPORT_FIRE:
+			UpdateEnableAblitiy( nAbility );
+			break; // Support fire is handled elsewhere
+		case NDb::ABILITY_PATROL:
+			UpdateEnableAblitiy( nAbility );
+			break; // Patrol is handled elsewhere
+		case NDb::ABILITY_ZEROING_IN:
+			UpdateEnableAblitiy( nAbility );
+			break; // Zeroing In is handled elsewhere
+		case NDb::ABILITY_CAUTION:
 		{
 			CPtr<CExecutor> pEx = new CExecutorCaution( this );
 			theExecutorContainer.Add( pEx );
@@ -2712,7 +2838,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_ADRENALINE_RUSH:
+		case NDb::ABILITY_ADRENALINE_RUSH:
 		{
 			CPtr<CExecutor> pEx = new CExecutorAdrenalineRush( this );
 			theExecutorContainer.Add( pEx );
@@ -2720,19 +2846,22 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_MANUVERABLE_FIGHT_MODE:		// AKA Shoot In Movement
+		case NDb::ABILITY_MANUVERABLE_FIGHT_MODE: // AKA Shoot In Movement
 		{
 			pShootInMovementExecutor = new CExecutorUnitBonus( NDb::ABILITY_MANUVERABLE_FIGHT_MODE, this );
 			theExecutorContainer.Add( pShootInMovementExecutor );
 			pShootInMovementExecutor->RegisterOnEvents( &theExecutorContainer );
 		}
 		break;
-	case NDb::ABILITY_ANTIATRILLERY_FIRE:				// AKA Counter-Fire
+		case NDb::ABILITY_ANTIATRILLERY_FIRE: // AKA Counter-Fire
 		{
-			NI_ASSERT( GetStats()->IsArtillery(), fmt::format("Skill (Counter-fire) suitable for artillery only (type {}, ID = \"{}\")", typeid(*GetStats()).name(), NDb::GetResName(GetStats())) );
+			NI_ASSERT( GetStats()->IsArtillery(),
+			           fmt::format( "Skill (Counter-fire) suitable for artillery only (type {}, ID = \"{}\")",
+			                        typeid( *GetStats() ).name(),
+			                        NDb::GetResName( GetStats() ) ) );
 			if ( GetStats()->IsArtillery() )
 			{
-				CArtillery *pArtUnit = dynamic_cast<CArtillery*>( this );
+				CArtillery *pArtUnit = dynamic_cast<CArtillery *>( this );
 				CPtr<CExecutor> pEx = new CExecutorCounterFire( pArtUnit );
 				theExecutorContainer.Add( pEx );
 				pEx->RegisterOnEvents( &theExecutorContainer );
@@ -2740,25 +2869,25 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			}
 		}
 		break;
-	case NDb::ABILITY_SMOKE_SHOTS:
+		case NDb::ABILITY_SMOKE_SHOTS:
 		{
 			CPtr<CExecutor> pEx = new CExecutorSmokeShots( this );
 			theExecutorContainer.Add( pEx );
 			pEx->RegisterOnEvents( &theExecutorContainer );
 		}
 		break;
-	case NDb::ABILITY_FIRST_AID:
+		case NDb::ABILITY_FIRST_AID:
 		{
 			// formation creates executor
 		}
 		break;
-	case NDb::ABILITY_MASTER_OF_STREETS:
+		case NDb::ABILITY_MASTER_OF_STREETS:
 		{
 			// No executor (yet)
 			// TODO
 		}
 		break;
-	case NDb::ABILITY_LINKED_GRENADES:
+		case NDb::ABILITY_LINKED_GRENADES:
 		{
 			CPtr<CExecutor> pEx = new CExecutorLinkedGrenades( this );
 			theExecutorContainer.Add( pEx );
@@ -2766,7 +2895,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_EXACT_SHOT:
+		case NDb::ABILITY_EXACT_SHOT:
 		{
 			CPtr<CExecutor> pEx = new CExecutorExactShot( this );
 			theExecutorContainer.Add( pEx );
@@ -2774,19 +2903,19 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_COVER_FIRE:
+		case NDb::ABILITY_COVER_FIRE:
 		{
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_EXACT_BOMBING:
-		{			// It is just a stat bonus
+		case NDb::ABILITY_EXACT_BOMBING:
+		{ // It is just a stat bonus
 			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_EXACT_BOMBING );
 			if ( pSA )
 				ApplyStatsModifier( pSA->pStatsBonus, true );
 		}
 		break;
-	case NDb::ABILITY_SPY_MODE:
+		case NDb::ABILITY_SPY_MODE:
 		{
 			NI_ASSERT( GetStats()->IsInfantry(), "Skill (Spy Mode) suitable for infantry only" );
 			if ( !GetStats()->IsInfantry() )
@@ -2797,33 +2926,33 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_SKY_GUARD:
-		{			// It is just a stat bonus
+		case NDb::ABILITY_SKY_GUARD:
+		{ // It is just a stat bonus
 			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_SKY_GUARD );
 			if ( pSA )
 				ApplyStatsModifier( pSA->pStatsBonus, true );
 		}
 		break;
-	case NDb::ABILITY_MASTER_PILOT:
+		case NDb::ABILITY_MASTER_PILOT:
 		{
 			// No executor (yet)
 			// TODO
 		}
 		break;
-	case NDb::ABILITY_SURVIVAL:
-		{			// It is just a stat bonus
+		case NDb::ABILITY_SURVIVAL:
+		{ // It is just a stat bonus
 			const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( NDb::ABILITY_SURVIVAL );
 			if ( pSA )
 				ApplyStatsModifier( pSA->pStatsBonus, true );
 		}
 		break;
-	case NDb::ABILITY_TANK_HUNTER:
+		case NDb::ABILITY_TANK_HUNTER:
 		{
 			// No executor (yet)
 			// TODO
 		}
 		break;
-	case NDb::ABILITY_OVERLOAD_MODE:
+		case NDb::ABILITY_OVERLOAD_MODE:
 		{
 			UpdateEnableAblitiy( nAbility );
 			CPtr<CExecutor> pEx = new CExecutorUnitBonus( NDb::ABILITY_OVERLOAD_MODE, this );
@@ -2831,29 +2960,29 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 			pEx->RegisterOnEvents( &theExecutorContainer );
 		}
 		break;
-	case NDb::ABILITY_DIG_TRENCHES:
+		case NDb::ABILITY_DIG_TRENCHES:
 		{
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	case NDb::ABILITY_REMOVE_MINE_FIELD:
+		case NDb::ABILITY_REMOVE_MINE_FIELD:
 		{
 			UpdateEnableAblitiy( nAbility );
 		}
 		break;
-	default:
-		DebugTrace( "Unknown ability %i", fmt::underlying( nAbility ) );
-//		NI_ASSERT( false, StrFmt( "Unknown ability %i", nAbility ) );
+		default:
+			DebugTrace( "Unknown ability %i", fmt::underlying( nAbility ) );
+			//		NI_ASSERT( false, StrFmt( "Unknown ability %i", nAbility ) );
 	}
 }
 
 const bool CAIUnit::CanShootInMovement()
 {
-	if ( GetStats()->IsAviation() )			// Aviation can always shoot in movement
+	if ( GetStats()->IsAviation() ) // Aviation can always shoot in movement
 		return true;
 
 	if ( pShootInMovementExecutor )
-	{				// Has this ability, check if it is active
+	{ // Has this ability, check if it is active
 		if ( pShootInMovementExecutor->GetState() == EASS_ACTIVE )
 		{
 			return true;
@@ -2871,9 +3000,9 @@ void CAIUnit::SetHoldSector()
 {
 	if ( !bHoldingSector )
 	{
-		if ( CUnitGuns* pGuns = GetGuns() )
+		if ( CUnitGuns *pGuns = GetGuns() )
 		{
-			if ( CBasicGun* pMainGun = pGuns->GetMainGun() )
+			if ( CBasicGun *pMainGun = pGuns->GetMainGun() )
 			{
 				Lock( pMainGun );
 				if ( CTurret *pTurret = pMainGun->GetTurret() )
@@ -2892,7 +3021,7 @@ void CAIUnit::SetHoldSector()
 		if ( pSA && pSA->pStatsBonus )
 			ApplyStatsModifier( pSA->pStatsBonus, true );
 
-		CPtr< SAISpecialAbilityUpdate > pUpdate = new SAISpecialAbilityUpdate;
+		CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 		pUpdate->info.nAbilityType = NDb::ABILITY_HOLD_SECTOR;
 		pUpdate->info.state = EASS_ACTIVE;
 		pUpdate->info.nObjUniqueID = GetUniqueId();
@@ -2907,9 +3036,9 @@ void CAIUnit::ResetHoldSector()
 {
 	if ( bHoldingSector )
 	{
-		if ( CUnitGuns* pGuns = GetGuns() )
+		if ( CUnitGuns *pGuns = GetGuns() )
 		{
-			if ( CBasicGun* pMainGun = pGuns->GetMainGun() )
+			if ( CBasicGun *pMainGun = pGuns->GetMainGun() )
 			{
 				Unlock( pMainGun );
 				if ( CTurret *pTurret = pMainGun->GetTurret() )
@@ -2926,14 +3055,14 @@ void CAIUnit::ResetHoldSector()
 		if ( pSA && pSA->pStatsBonus )
 			ApplyStatsModifier( pSA->pStatsBonus, false );
 
-		CPtr< SAISpecialAbilityUpdate > pUpdate = new SAISpecialAbilityUpdate;
+		CPtr<SAISpecialAbilityUpdate> pUpdate = new SAISpecialAbilityUpdate;
 		pUpdate->info.nAbilityType = NDb::ABILITY_HOLD_SECTOR;
 		pUpdate->info.state = EASS_READY_TO_ON;
 		pUpdate->info.nObjUniqueID = GetUniqueId();
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, this, -1 );
 
 		updater.AddUpdate( CreateStatusUpdate( EUS_HOLD_SECTOR, true, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
- 		bHoldingSector = false;
+		bHoldingSector = false;
 	}
 }
 
@@ -2945,10 +3074,11 @@ void CAIUnit::SetTrackTargeting( bool bOn )
 	if ( pDesc )
 	{
 		bTargetingTrack = bOn;
-		if (  pDesc->pStatsBonus )
-			ApplyStatsModifier(  pDesc->pStatsBonus, bOn );
+		if ( pDesc->pStatsBonus )
+			ApplyStatsModifier( pDesc->pStatsBonus, bOn );
 
-		updater.AddUpdate( CreateStatusUpdate( EUS_TRACK_TARGET, bTargetingTrack, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+		updater.AddUpdate(
+				CreateStatusUpdate( EUS_TRACK_TARGET, bTargetingTrack, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 	}
 }
 
@@ -2961,14 +3091,14 @@ void CAIUnit::SetIgnoreAABBCoeff( const bool bIgnore )
 		if ( pDesc )
 		{
 			bIgnoreAABBCoeff = bIgnore;
-			if (  pDesc->pStatsBonus )
-				ApplyStatsModifier(  pDesc->pStatsBonus, bIgnore );
+			if ( pDesc->pStatsBonus )
+				ApplyStatsModifier( pDesc->pStatsBonus, bIgnore );
 
-			updater.AddUpdate( CreateStatusUpdate( EUS_TRACK_TARGET, bIgnoreAABBCoeff, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
+			updater.AddUpdate(
+					CreateStatusUpdate( EUS_TRACK_TARGET, bIgnoreAABBCoeff, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, this, -1 );
 		}
 	}
 }
-
 
 bool CAIUnit::IsRestInside() const
 {
@@ -2983,7 +3113,7 @@ void CAIUnit::SetRestInside( const bool bInside, CAIUnit *pTransport )
 
 void CAIUnit::GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const
 {
-	pInfo->nTargetUniqueID = pObjInside ? checked_cast<CUpdatableObj*>(pObjInside)->GetUniqueId() : 0;
+	pInfo->nTargetUniqueID = pObjInside ? checked_cast<CUpdatableObj *>( pObjInside )->GetUniqueId() : 0;
 	pInfo->bEnter = IsRestInside();
 	pInfo->nInfantryUniqueID = GetUniqueId();
 }
@@ -2995,7 +3125,7 @@ const float CAIUnit::GetAimTimeBonus() const
 	return 1.0f;
 }
 
-const SRect & CAIUnit::GetUnitRect() const
+const SRect &CAIUnit::GetUnitRect() const
 {
 	static SRect unitRect;
 
@@ -3070,8 +3200,12 @@ void CAIUnit::UnitTrampled( const CBasePathUnit *pTramplerUnit )
 	if ( pUnit == 0 )
 		return;
 
-	theStatistics.UnitKilled( pUnit->GetPlayer(), GetPlayer(), GetStats()->fExpPrice, pUnit->GetReinforcementType(),
-		GetReinforcementType(), IsInfantry() );
+	theStatistics.UnitKilled( pUnit->GetPlayer(),
+	                          GetPlayer(),
+	                          GetStats()->fExpPrice,
+	                          pUnit->GetReinforcementType(),
+	                          GetReinforcementType(),
+	                          IsInfantry() );
 
 	bTrampled = true;
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DIE, false ), this, false );
@@ -3079,25 +3213,30 @@ void CAIUnit::UnitTrampled( const CBasePathUnit *pTramplerUnit )
 
 void CAIUnit::UpdateVisibilityForced()
 {
-	const bool bVisible = visible4Party[theDipl.GetMyParty()] || visible4Party[theCheats.GetNPartyForWarFog()] ;
+	const bool bVisible = visible4Party[theDipl.GetMyParty()] || visible4Party[theCheats.GetNPartyForWarFog()];
 	updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_VISIBILITY, this, bVisible );
 }
 
-const NDb::SUnitSpecialAblityDesc * CAIUnit::GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType )
+const NDb::SUnitSpecialAblityDesc *CAIUnit::GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType )
 {
-	const NDb::EUnitSpecialAbility eAbility = ( eType == NDb::ABILITY_PLACE_CONTROLLED_CHARGE || eType == NDb::ABILITY_DETONATE ) ? NDb::ABILITY_RADIO_CONTROLLED_MODE : eType;
-	const std::vector< CDBPtr< SUnitSpecialAblityDesc > > &abilities = GetStats()->GetActions()->specialAbilities;
+	const NDb::EUnitSpecialAbility eAbility =
+			( eType == NDb::ABILITY_PLACE_CONTROLLED_CHARGE || eType == NDb::ABILITY_DETONATE )
+					? NDb::ABILITY_RADIO_CONTROLLED_MODE
+					: eType;
+	const std::vector<CDBPtr<SUnitSpecialAblityDesc>> &abilities = GetStats()->GetActions()->specialAbilities;
 	const int nMaxAbilityCount = (std::min<int>)( GetAbilityLevel(), abilities.size() );
 	for ( int i = 0; i < nMaxAbilityCount; ++i )
 	{
-		NI_ASSERT( abilities[i], fmt::format("No ability desc. Unit \"{}\", ability {}", NDb::GetResName(GetStats()), i ) );
+		NI_ASSERT( abilities[i],
+		           fmt::format( "No ability desc. Unit \"{}\", ability {}", NDb::GetResName( GetStats() ), i ) );
 		if ( abilities[i]->eName == eAbility )
 		{
 			if ( eAbility == NDb::ABILITY_RADIO_CONTROLLED_MODE )
 			{
-				for ( int n = i+1; n < abilities.size(); ++n )
+				for ( int n = i + 1; n < abilities.size(); ++n )
 				{
-					NI_ASSERT( abilities[n], fmt::format("No ability desc. Unit \"{}\", ability {}", NDb::GetResName(GetStats()), n ) );
+					NI_ASSERT( abilities[n],
+					           fmt::format( "No ability desc. Unit \"{}\", ability {}", NDb::GetResName( GetStats() ), n ) );
 					if ( abilities[n]->eName == eType )
 						return abilities[n];
 				}
@@ -3122,7 +3261,6 @@ const bool CAIUnit::CanLockTiles() const
 	if ( GetState()->GetName() != EUSN_MECHUNIT_REST_ON_BOARD )
 		return CCommonUnit::CanLockTiles();
 	return false;
-
 }
 
 const bool CAIUnit::IsRound() const
@@ -3139,7 +3277,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 	{
 		bool bOldRemoved = false;
 		bool bNewApplied = false;
-		const NDb::SAIGameConsts *pConsts = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GetAIConsts();
+		const NDb::SAIGameConsts *pConsts = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetAIConsts();
 
 		for ( int i = 0; i < pConsts->common.expLevels.size(); ++i )
 		{
@@ -3173,12 +3311,12 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 			}
 		}
 
-
 		eReinforcementType = eType;
 	}
 }
 
 START_REGISTER( AIUnit )
 REGISTER_VAR_EX( "ai_use_smart_scan", NGlobal::VarBoolHandler, &g_bUseSmartScan, true, STORAGE_NONE );
-REGISTER_VAR_EX( "AI.Common.TimeForDangerousTurnRound", NGlobal::VarIntHandler, &g_dwTimeForDangerousTurnRound, 3000, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"AI.Common.TimeForDangerousTurnRound", NGlobal::VarIntHandler, &g_dwTimeForDangerousTurnRound, 3000, STORAGE_NONE );
 FINISH_REGISTER

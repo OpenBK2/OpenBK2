@@ -70,8 +70,8 @@ TEST( GrannyWeights, ConvertsOneThroughFourInfluencesAndClearsUnusedSlots )
 			}
 			for ( int j = 0; j < width; ++j )
 			{
-				source.Weight( vertex, j ) = static_cast<granny_uint8>( j + 1 == width ? 255 - (width - 1) * 40 : 40 );
-				source.Index( vertex, j ) = static_cast<granny_uint8>( (j + vertex) % 4 );
+				source.Weight( vertex, j ) = static_cast<granny_uint8>( j + 1 == width ? 255 - ( width - 1 ) * 40 : 40 );
+				source.Index( vertex, j ) = static_cast<granny_uint8>( ( j + vertex ) % 4 );
 			}
 		}
 		ASSERT_EQ( nullptr, source.Convert( &result ) );

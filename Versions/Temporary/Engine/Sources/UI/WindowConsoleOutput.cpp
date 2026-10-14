@@ -9,11 +9,11 @@
 
 #include <fmt/format.h>
 
-static const int CONSOLE_HEIGHT = 240;			//Высота консоли в пикселах
-static const int TEXT_VERTICAL_SIZE = 20;		//Размер шрифта по вертикали
-static const int MINUS_PAGE_SIZE = 5;				//Специальная константа отступа для PgUp PgDown,
+static const int CONSOLE_HEIGHT = 240;    //Высота консоли в пикселах
+static const int TEXT_VERTICAL_SIZE = 20; //Размер шрифта по вертикали
+static const int MINUS_PAGE_SIZE = 5;     //Специальная константа отступа для PgUp PgDown,
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11095B00, CWindowConsoleOutput )
+REGISTER_SAVELOAD_CLASS( UI, 0x11095B00, CWindowConsoleOutput )
 
 int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 {
@@ -23,8 +23,11 @@ int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 	return 0;
 }
 
-CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth, IWindow *pFontScaleWindow )
-: szString( pszStr ), dwColor( col )
+CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr,
+                                                  uint32_t col,
+                                                  const int nWidth,
+                                                  IWindow *pFontScaleWindow )
+		: szString( pszStr ), dwColor( col )
 {
 	const std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:08X}>", col ) ) + pszStr;
 	pGfxText = CreateML( pFontScaleWindow );
@@ -35,7 +38,7 @@ CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, uint32_
 
 int CWindowConsoleOutput::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 2, &pShared );
 	saver.Add( 3, &pInstance );
 	saver.Add( 4, &pUpperSign );
@@ -57,7 +60,7 @@ void CWindowConsoleOutput::AddString( const std::wstring &szString, const uint32
 {
 	int nSizeX;
 	GetPlacement( 0, 0, &nSizeX, 0 );
-	vectorOfStrings.push_back( SColorString(szString.c_str(), color, nSizeX, this) );
+	vectorOfStrings.push_back( SColorString( szString.c_str(), color, nSizeX, this ) );
 }
 
 void CWindowConsoleOutput::Scroll( const int bUp )
@@ -101,14 +104,15 @@ void CWindowConsoleOutput::Segment( const int timeDiff )
 
 void CWindowConsoleOutput::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowConsoleOutput *pDesc( checked_cast<const NDb::SWindowConsoleOutput*>( _pDesc ) );
+	const NDb::SWindowConsoleOutput *pDesc( checked_cast<const NDb::SWindowConsoleOutput *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 	CWindow::InitByDesc( _pDesc );
 
 	pShared = checked_cast_ptr<const NDb::SWindowConsoleOutputShared *>( pDesc->pShared );
 	pUpperSign = CreateML( this );
 	CUIFactory::RegisterMLHandlers( pUpperSign );
-	pUpperSign->SetText( L"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", 0 );
+	pUpperSign->SetText(
+			L"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", 0 );
 }
 
 void CWindowConsoleOutput::ToBegin()

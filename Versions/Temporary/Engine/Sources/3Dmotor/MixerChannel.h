@@ -8,27 +8,32 @@ namespace NAnimation
 
 class CMixerChannel : public CFuncBase<float>
 {
-	OBJECT_NOCOPY_METHODS(CMixerChannel);
+	OBJECT_NOCOPY_METHODS( CMixerChannel );
 
 private:
 	ZDATA
-	CDGPtr<CFuncBase<float> > pAnimatedChannel;
-	CDGPtr<CFuncBase<float> > pMasterChannel;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimatedChannel); f.Add(3,&pMasterChannel); return 0; }
+	CDGPtr<CFuncBase<float>> pAnimatedChannel;
+	CDGPtr<CFuncBase<float>> pMasterChannel;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pAnimatedChannel );
+		f.Add( 3, &pMasterChannel );
+		return 0;
+	}
 
 protected:
-	CMixerChannel() : CFuncBase<float>(0.f) {}
+	CMixerChannel() : CFuncBase<float>( 0.f ) {}
 
 	virtual bool NeedUpdate()
 	{
 		bool bMasterChanged = pMasterChannel.Refresh();
-		bool bAnimatedChanged = (IsValid(pAnimatedChannel) ? pAnimatedChannel.Refresh() : false);
+		bool bAnimatedChanged = ( IsValid( pAnimatedChannel ) ? pAnimatedChannel.Refresh() : false );
 		return bMasterChanged || bAnimatedChanged;
 	}
 	virtual void Recalc()
 	{
 		value = pMasterChannel->GetValue();
-		if ( IsValid(pAnimatedChannel) )
+		if ( IsValid( pAnimatedChannel ) )
 		{
 			value *= pAnimatedChannel->GetValue();
 		}
@@ -36,9 +41,9 @@ protected:
 
 public:
 	CMixerChannel( CFuncBase<float> *_pMasterChannel, CFuncBase<float> *_pAnimatedChannel, float fDefaultValue = 0.f )
-		: CFuncBase<float>(fDefaultValue), pMasterChannel(_pMasterChannel), pAnimatedChannel(_pAnimatedChannel)
+			: CFuncBase<float>( fDefaultValue ), pMasterChannel( _pMasterChannel ), pAnimatedChannel( _pAnimatedChannel )
 	{
-		ASSERT( IsValid(pMasterChannel) );
+		ASSERT( IsValid( pMasterChannel ) );
 	}
 };
 }

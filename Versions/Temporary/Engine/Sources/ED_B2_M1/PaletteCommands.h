@@ -25,7 +25,7 @@
 // The point is not the twenty lines saved. It is that a palette moving to wx
 // has two implementations of it for a while, and the dispatch is exactly the
 // kind of thing that would be copied into the second one and then drift.
-template<class TDialogData>
+template <class TDialogData>
 class CPaletteCommands : public ICommandHandler
 {
 public:
@@ -35,7 +35,7 @@ public:
 	//	ICommandHandler
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	{
-		TDialogData *pData = reinterpret_cast<TDialogData*>( dwData );
+		TDialogData *pData = reinterpret_cast<TDialogData *>( dwData );
 		// The unit start commands palette guarded this and the others did not,
 		// which is the sort of difference that survives only because nobody
 		// compared them. Guarded for all of them now: a null here means the
@@ -67,17 +67,16 @@ public:
 		//
 		switch ( nCommandID )
 		{
-		case ID_WINDOW_SET_DIALOG_DATA:
-		case ID_WINDOW_GET_DIALOG_DATA:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		default:
-			return false;
+			case ID_WINDOW_SET_DIALOG_DATA:
+			case ID_WINDOW_GET_DIALOG_DATA:
+				( *pbEnable ) = true;
+				( *pbCheck ) = false;
+				return true;
+			default:
+				return false;
 		}
 	}
 };
-
 
 // The same thing for the other family. Five palettes -- field, heights, map
 // objects, models and VSO -- do not hand over a whole dialog struct. They
@@ -94,7 +93,7 @@ public:
 // Three of the five answer commands of their own as well. HandleCommand and
 // UpdateCommand stay virtual for them: a palette with more to say overrides
 // them and falls through to here for the pair it does not handle itself.
-template<class TEditParameters>
+template <class TEditParameters>
 class CEditParameterCommands : public ICommandHandler
 {
 public:
@@ -115,10 +114,10 @@ public:
 		switch ( nCommandID )
 		{
 			case ID_GET_EDIT_PARAMETERS:
-				return GetEditParameters( reinterpret_cast<TEditParameters*>( dwData ) );
+				return GetEditParameters( reinterpret_cast<TEditParameters *>( dwData ) );
 			//
 			case ID_SET_EDIT_PARAMETERS:
-				return SetEditParameters( *reinterpret_cast<const TEditParameters*>( dwData ) );
+				return SetEditParameters( *reinterpret_cast<const TEditParameters *>( dwData ) );
 		}
 		return false;
 	}
@@ -130,13 +129,13 @@ public:
 		//
 		switch ( nCommandID )
 		{
-		case ID_GET_EDIT_PARAMETERS:
-		case ID_SET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		default:
-			return false;
+			case ID_GET_EDIT_PARAMETERS:
+			case ID_SET_EDIT_PARAMETERS:
+				( *pbEnable ) = true;
+				( *pbCheck ) = false;
+				return true;
+			default:
+				return false;
 		}
 	}
 };

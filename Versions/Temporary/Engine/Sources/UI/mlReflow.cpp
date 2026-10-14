@@ -13,17 +13,17 @@ namespace NML
 
 // CReflowState
 
-class CReflowState: public IReflowState
+class CReflowState : public IReflowState
 {
 private:
-	typedef std::list<CPtr<IVisReflowObject> > TVisObjects;
+	typedef std::list<CPtr<IVisReflowObject>> TVisObjects;
 	struct SRange
 	{
 		float fValue;
 		float fHeight;
 
 		SRange() {}
-		SRange( float _fValue, float _fHeight ): fValue(_fValue), fHeight(_fHeight) {}
+		SRange( float _fValue, float _fHeight ) : fValue( _fValue ), fHeight( _fHeight ) {}
 	};
 	struct SLine
 	{
@@ -37,13 +37,23 @@ private:
 		TVisObjects line;
 
 		SLine() {}
-		SLine( float _fLeft, float _fRight, float _fY, float _fWidth, float _fHeight, EHAlign _nHAlign, EVAlign _nVAlign, const TVisObjects &_line ):
-			fLeft(_fLeft), fRight(_fRight), fY(_fY), fWidth(_fWidth), fHeight(_fHeight), nHAlign(_nHAlign), nVAlign(_nVAlign), line(_line) {}
+		SLine( float _fLeft,
+		       float _fRight,
+		       float _fY,
+		       float _fWidth,
+		       float _fHeight,
+		       EHAlign _nHAlign,
+		       EVAlign _nVAlign,
+		       const TVisObjects &_line )
+				: fLeft( _fLeft ), fRight( _fRight ), fY( _fY ), fWidth( _fWidth ), fHeight( _fHeight ), nHAlign( _nHAlign ),
+					nVAlign( _nVAlign ), line( _line )
+		{
+		}
 	};
 
 	float fWidth;
 	SState state;
-	NGScene::ILayoutFakeView* pView;
+	NGScene::ILayoutFakeView *pView;
 	////
 	float fLineWidth;
 	float fLineHeight;
@@ -57,21 +67,22 @@ protected:
 	void RemoveSpaces();
 
 public:
-	CReflowState( NGScene::ILayoutFakeView* pView, float fWidth );
+	CReflowState( NGScene::ILayoutFakeView *pView, float fWidth );
 
-	const SState& GetState() const { return state; }
+	const SState &GetState() const { return state; }
 	void SetState( const SState &_state ) { state = _state; }
 
 	void AddObject( IVisReflowObject *pObject );
 	void CreateLine( bool bEndBlock );
 	void Finalize();
 
-	const CTPoint<float>& GetSize() const { return size; }
-	NGScene::ILayoutFakeView* GetScene() const { return pView; }
+	const CTPoint<float> &GetSize() const { return size; }
+	NGScene::ILayoutFakeView *GetScene() const { return pView; }
 };
 
-CReflowState::CReflowState( NGScene::ILayoutFakeView* _pView, float _fWidth ):
-	pView(_pView), fWidth(_fWidth), fLineWidth(0), fLineHeight(0), rangeLeft(0,-1), rangeRight(_fWidth,-1), size(0,0)
+CReflowState::CReflowState( NGScene::ILayoutFakeView *_pView, float _fWidth )
+		: pView( _pView ), fWidth( _fWidth ), fLineWidth( 0 ), fLineHeight( 0 ), rangeLeft( 0, -1 ),
+			rangeRight( _fWidth, -1 ), size( 0, 0 )
 {
 }
 
@@ -82,12 +93,12 @@ void CReflowState::AddObject( IVisReflowObject *pObject )
 
 	const CTPoint<float> &visSize = pObject->GetSize();
 
-	switch( state.nHAlign )
+	switch ( state.nHAlign )
 	{
-	case EHA_LEFT:
-	case EHA_RIGHT:
-	case EHA_CENTER:
-	case EHA_JUSTIFY:
+		case EHA_LEFT:
+		case EHA_RIGHT:
+		case EHA_CENTER:
+		case EHA_JUSTIFY:
 		{
 			if ( ( fLineWidth + visSize.x ) > ( rangeRight.fValue - rangeLeft.fValue ) )
 				CreateLine( false );
@@ -97,19 +108,19 @@ void CReflowState::AddObject( IVisReflowObject *pObject )
 			fLineHeight = (std::max)( visSize.y, fLineHeight );
 			break;
 		}
-	case EHA_NOWRAP:
+		case EHA_NOWRAP:
 		{
 			line.push_back( pObject );
 			fLineWidth += visSize.x;
 			fLineHeight = (std::max)( visSize.y, fLineHeight );
 			break;
 		}
-	case EHA_WRAP_LEFT:
+		case EHA_WRAP_LEFT:
 		{
 			lineLeft.push_back( pObject );
 			break;
 		}
-	case EHA_WRAP_RIGHT:
+		case EHA_WRAP_RIGHT:
 		{
 			lineRight.push_back( pObject );
 			break;
@@ -123,7 +134,8 @@ void CReflowState::CreateLine( bool bEndBlock )
 	RemoveSpaces();
 
 	EHAlign nHAlign = !bEndBlock ? state.nHAlign : EHA_LEFT;
-	lines.push_back( SLine( rangeLeft.fValue, rangeRight.fValue, size.y, fLineWidth, fLineHeight, nHAlign, state.nVAlign, line ) );
+	lines.push_back(
+			SLine( rangeLeft.fValue, rangeRight.fValue, size.y, fLineWidth, fLineHeight, nHAlign, state.nVAlign, line ) );
 
 	size.y += fLineHeight;
 	fLineWidth = 0;
@@ -147,27 +159,27 @@ void CReflowState::Finalize()
 
 		float fX = line.fLeft;
 		float fSpaceMul = 1.0f;
-		switch( line.nHAlign )
+		switch ( line.nHAlign )
 		{
-		case EHA_RIGHT:
+			case EHA_RIGHT:
 			{
 				float fTotalWidth = line.fRight - line.fLeft;
 				fX = line.fLeft + fTotalWidth - line.fWidth;
 				break;
 			}
-		case EHA_CENTER:
+			case EHA_CENTER:
 			{
 				float fTotalWidth = line.fRight - line.fLeft;
 				fX = line.fLeft + Float2Int( ( fTotalWidth - line.fWidth ) / 2 );
 				break;
 			}
-		case EHA_JUSTIFY:
+			case EHA_JUSTIFY:
 			{
 				float fSpaceSize = 0;
-				for( TVisObjects::iterator iObject = line.line.begin(); iObject != line.line.end(); ++iObject )
+				for ( TVisObjects::iterator iObject = line.line.begin(); iObject != line.line.end(); ++iObject )
 				{
-					if ( (*iObject)->IsSpace() )
-						fSpaceSize += (*iObject)->GetSize().x;
+					if ( ( *iObject )->IsSpace() )
+						fSpaceSize += ( *iObject )->GetSize().x;
 				}
 
 				float fTotalWidth = line.fRight - line.fLeft - line.fWidth + fSpaceSize;
@@ -176,24 +188,24 @@ void CReflowState::Finalize()
 			}
 		}
 
-		for( TVisObjects::iterator iObject = line.line.begin(); iObject != line.line.end(); ++iObject )
+		for ( TVisObjects::iterator iObject = line.line.begin(); iObject != line.line.end(); ++iObject )
 		{
-			const CTPoint<float> &visSize = (*iObject)->GetSize();
+			const CTPoint<float> &visSize = ( *iObject )->GetSize();
 
-			switch( line.nVAlign )
+			switch ( line.nVAlign )
 			{
-			case EVA_TOP:
-				(*iObject)->SetPosition( CTPoint<float>( fX, line.fY ) );
-				break;
-			case EVA_BOTTOM:
-				(*iObject)->SetPosition( CTPoint<float>( fX, line.fY + line.fHeight - visSize.y ) );
-				break;
-			default:
-				(*iObject)->SetPosition( CTPoint<float>( fX, line.fY + ( line.fHeight - visSize.y ) / 2 ) );
-				break;
+				case EVA_TOP:
+					( *iObject )->SetPosition( CTPoint<float>( fX, line.fY ) );
+					break;
+				case EVA_BOTTOM:
+					( *iObject )->SetPosition( CTPoint<float>( fX, line.fY + line.fHeight - visSize.y ) );
+					break;
+				default:
+					( *iObject )->SetPosition( CTPoint<float>( fX, line.fY + ( line.fHeight - visSize.y ) / 2 ) );
+					break;
 			}
 
-			if ( (*iObject)->IsSpace() )
+			if ( ( *iObject )->IsSpace() )
 				fX += visSize.x * fSpaceMul;
 			else
 				fX += visSize.x;
@@ -205,22 +217,22 @@ void CReflowState::Finalize()
 
 void CReflowState::ProcessWraped()
 {
-	for( TVisObjects::iterator iTemp = lineLeft.begin(); iTemp != lineLeft.end(); ++iTemp )
+	for ( TVisObjects::iterator iTemp = lineLeft.begin(); iTemp != lineLeft.end(); ++iTemp )
 	{
-		const CTPoint<float> &visSize = (*iTemp)->GetSize();
+		const CTPoint<float> &visSize = ( *iTemp )->GetSize();
 
-		(*iTemp)->SetPosition( CTPoint<float>( rangeLeft.fValue, size.y ) );
+		( *iTemp )->SetPosition( CTPoint<float>( rangeLeft.fValue, size.y ) );
 		size.x = (std::max)( size.x, rangeLeft.fValue + visSize.x );
 
 		rangeLeft.fValue += visSize.x;
 		rangeLeft.fHeight = (std::max)( rangeLeft.fHeight, size.y + visSize.y );
 	}
 
-	for( TVisObjects::iterator iTemp = lineRight.begin(); iTemp != lineRight.end(); ++iTemp )
+	for ( TVisObjects::iterator iTemp = lineRight.begin(); iTemp != lineRight.end(); ++iTemp )
 	{
-		const CTPoint<float> &visSize = (*iTemp)->GetSize();
+		const CTPoint<float> &visSize = ( *iTemp )->GetSize();
 
-		(*iTemp)->SetPosition( CTPoint<float>( rangeRight.fValue - visSize.x, size.y ) );
+		( *iTemp )->SetPosition( CTPoint<float>( rangeRight.fValue - visSize.x, size.y ) );
 		size.x = (std::max)( size.x, rangeRight.fValue );
 
 		rangeRight.fValue -= visSize.x;
@@ -233,9 +245,9 @@ void CReflowState::ProcessWraped()
 
 void CReflowState::RemoveSpaces()
 {
-	for( TVisObjects::iterator iTemp = line.begin(); iTemp != line.end(); )
+	for ( TVisObjects::iterator iTemp = line.begin(); iTemp != line.end(); )
 	{
-		if ( !(*iTemp)->IsSpace() )
+		if ( !( *iTemp )->IsSpace() )
 			break;
 
 		iTemp = line.erase( iTemp );
@@ -246,7 +258,7 @@ void CReflowState::RemoveSpaces()
 		TVisObjects::iterator iTemp = line.end();
 		--iTemp;
 
-		if ( (*iTemp)->IsSpace() )
+		if ( ( *iTemp )->IsSpace() )
 			line.erase( iTemp );
 		else
 			break;
@@ -255,15 +267,20 @@ void CReflowState::RemoveSpaces()
 
 // CReflowLayout
 
-class CReflowLayout: public IReflowLayout
+class CReflowLayout : public IReflowLayout
 {
-	OBJECT_BASIC_METHODS(CReflowLayout)
+	OBJECT_BASIC_METHODS( CReflowLayout )
 private:
-	typedef std::list<CPtr<IReflowObject> > TObjects;
+	typedef std::list<CPtr<IReflowObject>> TObjects;
 	ZDATA
 	TObjects objects;
 	CTPoint<float> size;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&objects); f.Add(3,&size); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &objects );
+		f.Add( 3, &size );
+		return 0;
+	}
 
 public:
 	CReflowLayout();
@@ -273,15 +290,12 @@ public:
 	void Generate( NGScene::ILayoutFakeView *pView, float fWidth );
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<float>& GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const { return size; }
 };
 
-CReflowLayout::CReflowLayout():
-	size( 0, 0 )
-{
-}
+CReflowLayout::CReflowLayout() : size( 0, 0 ) {}
 
 void CReflowLayout::AddObject( IReflowObject *pObject )
 {
@@ -291,7 +305,7 @@ void CReflowLayout::AddObject( IReflowObject *pObject )
 void CReflowLayout::Generate( NGScene::ILayoutFakeView *pView, float fWidth )
 {
 	CReflowState state( pView, fWidth );
-	for( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
+	for ( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
 	{
 		IReflowObject *pObject = *iTemp;
 		if ( !IsValid( pObject ) )
@@ -307,18 +321,22 @@ void CReflowLayout::Generate( NGScene::ILayoutFakeView *pView, float fWidth )
 	size = state.GetSize();
 }
 
-void CReflowLayout::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window )
+void CReflowLayout::Render( NGScene::ILayoutFakeView *pView,
+                            const CTPoint<float> &position,
+                            const CTRect<float> &window )
 {
-	for( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
+	for ( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
 	{
 		if ( CDynamicCast<IVisReflowObject> pVisObject = *iTemp )
 			pVisObject->Render( pView, position, window );
 	}
 }
 
-void CReflowLayout::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window )
+void CReflowLayout::Render( std::list<CTRect<float>> *pRender,
+                            const CTPoint<float> &position,
+                            const CTRect<float> &window )
 {
-	for( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
+	for ( TObjects::iterator iTemp = objects.begin(); iTemp != objects.end(); ++iTemp )
 	{
 		if ( CDynamicCast<IVisReflowObject> pVisObject = *iTemp )
 			pVisObject->Render( pRender, position, window );
@@ -327,7 +345,7 @@ void CReflowLayout::Render( std::list<CTRect<float> > *pRender, const CTPoint<fl
 
 // CreateReflowLayout
 
-IReflowLayout* CreateReflowLayout()
+IReflowLayout *CreateReflowLayout()
 {
 	return new CReflowLayout();
 }

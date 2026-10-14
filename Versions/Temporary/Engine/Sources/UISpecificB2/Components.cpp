@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
+IWindow *AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 {
 	IWindow *pWnd = Singleton<IUIInitialization>()->CreateWindowFromDesc( pDesc );
 	if ( !pWnd )
@@ -21,7 +21,7 @@ IWindow* AddWindowCopy( IWindow *pParent, const struct NDb::SUIDesc *pDesc )
 	return pWnd;
 }
 
-IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample )
+IWindow *AddWindowCopy( IWindow *pParent, const IWindow *pSample )
 {
 	if ( !pSample )
 		return 0;
@@ -30,10 +30,8 @@ IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSample )
 
 // CTextureRoundSegmentVisitor
 
-CTextureRoundSegmentVisitor::CTextureRoundSegmentVisitor() :
-	fStartAngle( 0 ),
-	fFinishAngle( FP_2PI ),
-	colors( 4, 0xFFFFFFFF )
+CTextureRoundSegmentVisitor::CTextureRoundSegmentVisitor()
+		: fStartAngle( 0 ), fFinishAngle( FP_2PI ), colors( 4, 0xFFFFFFFF )
 {
 }
 
@@ -74,7 +72,7 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 
 	float fMinAngle = -FP_PI4;
 	float fMaxAngle = FP_PI4;
-/*	if ( fStartAngle > fFinishAngle )
+	/*	if ( fStartAngle > fFinishAngle )
 	{
 		fStartAngle -= FP_2PI;
 		fMinAngle -= FP_2PI;
@@ -85,7 +83,7 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 		float fMinAngle2 = fMinAngle;
 		float fMaxAngle2 = fMaxAngle;
 		bool bResult = ClampAngles( &fMinAngle2, &fMaxAngle2, fStartAngle, fFinishAngle );
-/*		if ( fStartAngle <= fFinishAngle )
+		/*		if ( fStartAngle <= fFinishAngle )
 		{
 			fMinAngle2 = Max( fMinAngle, fStartAngle );
 			fMaxAngle2 = Min( fMaxAngle, fFinishAngle );
@@ -96,7 +94,7 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 			fMaxAngle2 = Min( fMaxAngle, fFinishAngle );
 		}*/
 
-//		if ( fStartAngle <= fFinishAngle ? fMinAngle2 < fMaxAngle2 : fMinAngle2 > fMaxAngle2 )
+		//		if ( fStartAngle <= fFinishAngle ? fMinAngle2 < fMaxAngle2 : fMinAngle2 > fMaxAngle2 )
 		if ( bResult )
 		{
 			float fMinCos = cosf( fMinAngle2 );
@@ -163,8 +161,13 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 	}
 }
 
-void CTextureRoundSegmentVisitor::DrawTriangle( struct IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,
-	const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3 )
+void CTextureRoundSegmentVisitor::DrawTriangle( struct IUIVisitor *pVisitor,
+                                                const CVec2 &v1,
+                                                const CVec2 &v2,
+                                                const CVec2 &v3,
+                                                const CVec2 &vTex1,
+                                                const CVec2 &vTex2,
+                                                const CVec2 &vTex3 )
 {
 	// CRAP - выводится просто цвет без текстуры, сделать вывод с текстурой нетривиально,
 	// сейчас такой возможности нет (и нельзя будет пользоваться 2D-текстурой, если совсем не заморочиться)

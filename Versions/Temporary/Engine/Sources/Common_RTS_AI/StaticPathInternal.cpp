@@ -17,17 +17,17 @@ BASIC_REGISTER_CLASS( COMMON_RTS_AI, IStaticPath );
 //*******************************************************************
 
 CCommonStaticPath::CCommonStaticPath( CCommonPathFinder *pStaticPathFinder, CAIMap *_pAIMap )
-: nLen( pStaticPathFinder->GetPathLength() ),
-	startTile( pStaticPathFinder->GetStartTile() ), finishTile( pStaticPathFinder->GetFinishTile() ),
-	finishPoint( pStaticPathFinder->GetFinishPoint() ), pAIMap( _pAIMap )
+		: nLen( pStaticPathFinder->GetPathLength() ), startTile( pStaticPathFinder->GetStartTile() ),
+			finishTile( pStaticPathFinder->GetFinishTile() ), finishPoint( pStaticPathFinder->GetFinishPoint() ),
+			pAIMap( _pAIMap )
 {
 	NI_ASSERT( nLen >= 0 && nLen <= pStaticPathFinder->GetPathLength(), "Wrong length" );
 
 	if ( path.size() < nLen )
-		path.resize( nLen * 1.5, SVector(0,0) );
+		path.resize( nLen * 1.5, SVector( 0, 0 ) );
 
 	if ( nLen > 0 )
-		pStaticPathFinder->GetTiles( &(path[0]), nLen );
+		pStaticPathFinder->GetTiles( &( path[0] ), nLen );
 }
 
 void CCommonStaticPath::MoveStartTileTo( const int nStart )
@@ -59,20 +59,20 @@ bool CCommonStaticPath::MergePath( IStaticPath *pAppendant, const int _nStartTil
 	const int nAppendantLength = pAppendant->GetLength();
 	if ( nAppendantLength <= _nStartTile )
 		return false;
-	if ( mDistance( pAppendant->GetTile( _nStartTile ), path[nLen-1] ) > 2 )
+	if ( mDistance( pAppendant->GetTile( _nStartTile ), path[nLen - 1] ) > 2 )
 		return false;
-	const int nStartTile = pAppendant->GetTile( _nStartTile ) == path[nLen-1] ? _nStartTile + 1 : _nStartTile;
+	const int nStartTile = pAppendant->GetTile( _nStartTile ) == path[nLen - 1] ? _nStartTile + 1 : _nStartTile;
 	const int nTilesToAppend = nAppendantLength - nStartTile;
-	if ( nTilesToAppend > (std::numeric_limits<int>::max)() - nLen )
+	if ( nTilesToAppend > ( std::numeric_limits<int>::max )() - nLen )
 		return false;
 	const int nNewLength = nLen + nTilesToAppend;
 	// path can contain allocation padding or a trimmed suffix; only nLen tiles
 	// belong to the route. Keep one extra endpoint for MoveStartTileTo(nLen).
 	if ( path.size() <= nNewLength )
-		path.resize( size_t(nNewLength) + 1 );
+		path.resize( size_t( nNewLength ) + 1 );
 	// Keep both logical lengths unchanged while copying, including self-appends.
 	for ( int i = nStartTile; i < nAppendantLength; ++i )
-		path[nLen + (i - nStartTile)] = pAppendant->GetTile( i );
+		path[nLen + ( i - nStartTile )] = pAppendant->GetTile( i );
 	nLen = nNewLength;
 	finishTile = path[nLen - 1];
 	path[nLen] = finishTile;

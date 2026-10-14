@@ -12,18 +12,16 @@
 #include <cstdint>
 
 bool g_bThickLock;
-START_REGISTER(ObjectProfile)
-	REGISTER_VAR_EX( "thick_lock", NGlobal::VarBoolHandler, &g_bThickLock, false, STORAGE_NONE );
+START_REGISTER( ObjectProfile )
+REGISTER_VAR_EX( "thick_lock", NGlobal::VarBoolHandler, &g_bThickLock, false, STORAGE_NONE );
 FINISH_REGISTER
-
 
 struct STilesCollector
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	det_set<SVector, STilesHash> *pTilesUnder = {};
 
-	STilesCollector( det_set<SVector, STilesHash> *_pTilesUnder )
-		: pTilesUnder( _pTilesUnder ) { }
+	STilesCollector( det_set<SVector, STilesHash> *_pTilesUnder ) : pTilesUnder( _pTilesUnder ) {}
 
 	void operator()( const int x, const int y )
 	{
@@ -38,14 +36,13 @@ struct STilesArray2DCollector
 	CArray2D<uint8_t> *pTiles = {};
 	SVector vTile;
 
-	STilesArray2DCollector( SVector &_vTile, CArray2D<uint8_t> *_pTiles )
-		: pTiles( _pTiles ), vTile( _vTile ) { }
+	STilesArray2DCollector( SVector &_vTile, CArray2D<uint8_t> *_pTiles ) : pTiles( _pTiles ), vTile( _vTile ) {}
 
 	void operator()( const int x, const int y )
 	{
 		const SVector tile( x, y );
 		if ( GetAIMap()->IsTileInside( tile ) )
-			(*pTiles)[y - vTile.y][x - vTile.x] = true;
+			( *pTiles )[y - vTile.y][x - vTile.x] = true;
 	}
 };
 
@@ -71,14 +68,17 @@ void CObjectProfile::AddCentersOfSmallPolygons()
 
 		if ( !bBig )
 		{
-			const SVector tile = AICellsTiles::GetTile( vCenter + (vMassCenter ^ vRotation) );
+			const SVector tile = AICellsTiles::GetTile( vCenter + ( vMassCenter ^ vRotation ) );
 			if ( GetAIMap()->IsTileInside( tile ) )
 				tilesUnder.insert( tile );
 		}
 	}
 }
 
-void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCenter, const CVec2 &_vRotation, const bool bForceThickLock )
+void CObjectProfile::Init( const NDb::SPassProfile &_profile,
+                           const CVec2 &_vCenter,
+                           const CVec2 &_vRotation,
+                           const bool bForceThickLock )
 {
 	profile = _profile;
 	vCenter = _vCenter;
@@ -93,7 +93,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 		for ( int j = 0; j < profile.polygons[i].verts.size(); ++j )
 		{
 			const CVec2 vRawVert = profile.polygons[i].verts[j];
-			const CVec2 vVert = vCenter + (vRawVert ^ vRotation);
+			const CVec2 vVert = vCenter + ( vRawVert ^ vRotation );
 
 			vLeftDown.x = (std::min)( vLeftDown.x, vVert.x );
 			vLeftDown.y = (std::min)( vLeftDown.y, vVert.y );
@@ -123,10 +123,10 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 		for ( int j = 0; j < profile.polygons[i].verts.size() - 1; ++j )
 		{
 			const CVec2 vRawVert = profile.polygons[i].verts[j];
-			const CVec2 vVert = vCenter + (vRawVert ^ vRotation);
+			const CVec2 vVert = vCenter + ( vRawVert ^ vRotation );
 			// by Bresenham
 			const SVector startTile( AICellsTiles::GetTile( vVert ) );
-			const CVec2 vNextVert( vCenter + (profile.polygons[i].verts[j+1] ^ vRotation) );
+			const CVec2 vNextVert( vCenter + ( profile.polygons[i].verts[j + 1] ^ vRotation ) );
 			const SVector endTile( AICellsTiles::GetTile( vNextVert ) );
 			MakeLine2( startTile.x, startTile.y, endTile.x, endTile.y, collector );
 		}
@@ -141,7 +141,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 			if ( GetAIMap()->IsTileInside( tile ) )
 			{
 				const CVec2 vLeftDown( tile.x * SAIConsts::TILE_SIZE, tile.y * SAIConsts::TILE_SIZE );
-				const CVec2 v5( vLeftDown.x + SAIConsts::TILE_SIZE/2, vLeftDown.y + SAIConsts::TILE_SIZE/2 );
+				const CVec2 v5( vLeftDown.x + SAIConsts::TILE_SIZE / 2, vLeftDown.y + SAIConsts::TILE_SIZE / 2 );
 				if ( IsPointInside( v5 ) )
 					tilesUnder.insert( tile );
 			}
@@ -174,11 +174,17 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 		tilesUnderVector.push_back( *iter );
 }
 
-CObjectProfile::CObjectProfile( const NDb::SPassProfile &profile, const CVec3 &vCenter3D, const uint16_t wDir, const bool bForceThickLock )
+CObjectProfile::CObjectProfile( const NDb::SPassProfile &profile,
+                                const CVec3 &vCenter3D,
+                                const uint16_t wDir,
+                                const bool bForceThickLock )
 {
 	// client calculates dir slightly different from AI
-	const float fAngle = float(wDir) / 65536 * FP_2PI;
-	Init( profile, CVec2( vCenter3D.x, vCenter3D.y ), CVec2( NMath::Cos(fAngle), NMath::Sin(fAngle) ), bForceThickLock );
+	const float fAngle = float( wDir ) / 65536 * FP_2PI;
+	Init( profile,
+	      CVec2( vCenter3D.x, vCenter3D.y ),
+	      CVec2( NMath::Cos( fAngle ), NMath::Sin( fAngle ) ),
+	      bForceThickLock );
 }
 
 CObjectProfile::CObjectProfile( const SRect &unitRect, const bool bForceThickLock )
@@ -211,12 +217,9 @@ static const float SignEps( const float x )
 static bool IsPointInsideSegment( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 {
 	CLine2 line( v1, v2 );
-	return
-		fabs( line.DistToPoint( vPoint ) ) < fEps &&
-		SignEps( vPoint.x - v1.x ) * SignEps( v2.x - vPoint.x ) >= 0 &&
-		SignEps( vPoint.y - v1.y ) * SignEps( v2.y - vPoint.y ) >= 0;
+	return fabs( line.DistToPoint( vPoint ) ) < fEps && SignEps( vPoint.x - v1.x ) * SignEps( v2.x - vPoint.x ) >= 0 &&
+	       SignEps( vPoint.y - v1.y ) * SignEps( v2.y - vPoint.y ) >= 0;
 }
-
 
 bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 {
@@ -231,23 +234,23 @@ bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 		int nCount = 0;
 		for ( int i = 0; i < points.size() - 1; ++i )
 		{
-			if ( IsPointInsideSegment( vPoint, points[i], points[i+1] ) )
+			if ( IsPointInsideSegment( vPoint, points[i], points[i + 1] ) )
 				return true;
 
-			if ( points[i].y != points[i+1].y )
+			if ( points[i].y != points[i + 1].y )
 			{
-				if ( points[i].y == vPoint.y || points[i+1].y == vPoint.y )
+				if ( points[i].y == vPoint.y || points[i + 1].y == vPoint.y )
 				{
-					if ( points[i].y == vPoint.y && points[i].y > points[i+1].y && points[i].x > vPoint.x ||
-						points[i+1].y == vPoint.y && points[i+1].y > points[i].y && points[i+1].x > vPoint.x )
+					if ( points[i].y == vPoint.y && points[i].y > points[i + 1].y && points[i].x > vPoint.x ||
+					     points[i + 1].y == vPoint.y && points[i + 1].y > points[i].y && points[i + 1].x > vPoint.x )
 					{
 						++nCount;
 					}
 				}
-				else if ( boost::math::sign( vPoint.y - points[i].y ) * boost::math::sign( points[i+1].y - vPoint.y ) > 0 )
+				else if ( boost::math::sign( vPoint.y - points[i].y ) * boost::math::sign( points[i + 1].y - vPoint.y ) > 0 )
 				{
-					const float fT = (vPoint.y - points[i].y)/(points[i+1].y - points[i].y);
-					const float fX = points[i].x + fT * (points[i+1].x - points[i].x);
+					const float fT = ( vPoint.y - points[i].y ) / ( points[i + 1].y - points[i].y );
+					const float fX = points[i].x + fT * ( points[i + 1].x - points[i].x );
 
 					if ( fX > vPoint.x )
 						++nCount;
@@ -255,7 +258,7 @@ bool CObjectProfile::IsPointInside( const CVec2 &_vPoint ) const
 			}
 		}
 
-		if ( nCount%2 == 1 )
+		if ( nCount % 2 == 1 )
 			return true;
 	}
 
@@ -269,7 +272,8 @@ bool CObjectProfile::IsTileInside( const SVector &tile ) const
 
 bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 {
-	if ( IsPointInside( unitRect.v1() ) || IsPointInside( unitRect.v2() ) || IsPointInside( unitRect.v3() ) || IsPointInside( unitRect.v4() ) )
+	if ( IsPointInside( unitRect.v1() ) || IsPointInside( unitRect.v2() ) || IsPointInside( unitRect.v3() ) ||
+	     IsPointInside( unitRect.v4() ) )
 		return true;
 
 	for ( int k = 0; k < profile.polygons.size(); ++k )
@@ -277,7 +281,7 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 		const std::vector<CVec2> &points = profile.polygons[k].verts;
 		for ( int i = 0; i < points.size() - 1; ++i )
 		{
-			const CVec2 vPoint = vCenter + (points[i] ^ vRotation);
+			const CVec2 vPoint = vCenter + ( points[i] ^ vRotation );
 			if ( unitRect.IsPointInside( vPoint ) )
 				return true;
 		}

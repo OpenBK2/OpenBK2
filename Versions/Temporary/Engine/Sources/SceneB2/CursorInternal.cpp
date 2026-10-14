@@ -10,8 +10,8 @@
 BASIC_REGISTER_CLASS( SCENEB2, ICursor );
 
 CCursor::CCursor()
-: nCurrMode( 0 ), hCurrCursor( 0 ), nCurrStep( 0 ), nStepCount( 0 ),
-  bAcquired( false ), bShow( true ), bCanShow( true )
+		: nCurrMode( 0 ), hCurrCursor( 0 ), nCurrStep( 0 ), nStepCount( 0 ), bAcquired( false ), bShow( true ),
+			bCanShow( true )
 {
 	Show( false );
 }
@@ -37,13 +37,13 @@ void CCursor::ClearModes()
 
 void CCursor::RegisterMode( const int nMode, const std::string &szFileName )
 {
-//	NI_ASSERT( modes.find(nMode) == modes.end(), StrFmt("Cursor mode %d already registered", nMode) );
+	//	NI_ASSERT( modes.find(nMode) == modes.end(), StrFmt("Cursor mode %d already registered", nMode) );
 	if ( szFileName.empty() || szFileName == " " )
 		return;
 
 	//
 	NWinCursor::TCursor hCursor = NWinCursor::LoadCursor( szFileName );
-	NI_ASSERT( hCursor != 0, fmt::format("Can't load cursor \"{}\" from file", szFileName) );
+	NI_ASSERT( hCursor != 0, fmt::format( "Can't load cursor \"{}\" from file", szFileName ) );
 	if ( hCursor != 0 )
 	{
 		modes[nMode] = hCursor;
@@ -59,7 +59,7 @@ bool CCursor::SetMode( const int nMode )
 		CModesMap::const_iterator posCursor = modes.find( nMode );
 		if ( posCursor == modes.end() )
 			posCursor = modes.find( 0 );
-	//	hCurrCursor = modes[eMode];
+		//	hCurrCursor = modes[eMode];
 		// Only a change of cursor restarts the animation, which is what Win32
 		// does when a new animated cursor is set. Testing the cursor rather than
 		// the mode matters because the callers set a mode every frame, and
@@ -83,7 +83,7 @@ void CCursor::RestartAnimation()
 	nCurrStep = 0;
 	nStepCount = NWinCursor::GetStepCount( hCurrCursor );
 	timeNextStep = std::chrono::steady_clock::now() +
-		std::chrono::milliseconds( NWinCursor::GetStepDelay( hCurrCursor, nCurrStep ) );
+	               std::chrono::milliseconds( NWinCursor::GetStepDelay( hCurrCursor, nCurrStep ) );
 }
 
 void CCursor::Step()
@@ -133,8 +133,8 @@ void CCursor::CanShow( const bool _bCanShow )
 	bCanShow = _bCanShow;
 	if ( !bCanShow )
 		Show( false );
-//	else
-//		OnSetCursor();
+	//	else
+	//		OnSetCursor();
 }
 
 void CCursor::SetBounds( const int x1, const int y1, const int x2, const int y2 )
@@ -184,7 +184,8 @@ int CCursor::operator&( IBinSaver &saver )
 		ClearModes();
 		std::unordered_map<int, std::string> modesFilesCopy = modesFiles;
 		modesFiles.clear();
-		for ( std::unordered_map<int, std::string>::iterator iter = modesFilesCopy.begin(); iter != modesFilesCopy.end(); ++iter )
+		for ( std::unordered_map<int, std::string>::iterator iter = modesFilesCopy.begin(); iter != modesFilesCopy.end();
+		      ++iter )
 			RegisterMode( iter->first, iter->second );
 
 		Show( bShow );

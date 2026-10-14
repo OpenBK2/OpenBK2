@@ -20,16 +20,15 @@
 
 #include "lstate.h"
 
-
 namespace NScript
 {
-	CObjectBase* luaGetPtr( const Script::Object &o );
+CObjectBase *luaGetPtr( const Script::Object &o );
 }
 
-static int Script_LOG(lua_State* state)
+static int Script_LOG( lua_State *state )
 {
-	Script script(state);
-	Script::Object obj = script.GetObject(script.GetTop());
+	Script script( state );
+	Script::Object obj = script.GetObject( script.GetTop() );
 	// Was its own copy of the same platform split. Off Windows this now reaches
 	// stderr rather than stdout, which is where the rest of the engine's tracing
 	// goes and keeps it apart from what the game itself prints.
@@ -37,8 +36,7 @@ static int Script_LOG(lua_State* state)
 	return 0;
 }
 
-char *pErrToString[] =
-{
+char *pErrToString[] = {
 	"OK",
 	"Error while running the chunk",
 	"Error opening the file",
@@ -58,36 +56,34 @@ int Script::RegisterNewTag( const SRegFunction *pList )
 {
 	const SRegFunction *pCur = pList;
 	int nTag = NewTag();
-	for(; pCur->func && pCur->name; ++pCur )
+	for ( ; pCur->func && pCur->name; ++pCur )
 	{
 		PushCFunction( pCur->func );
 		std::string str( pCur->name );
 		str += nTag;
-		lua_RegisterFunc( pCur->func, MakeUniqueName(m_state, str.c_str()) );
+		lua_RegisterFunc( pCur->func, MakeUniqueName( m_state, str.c_str() ) );
 		SetTagMethod( nTag, pCur->name );
 	}
 	return nTag;
 }
 
-
 // lua_register
-void Script::Register( const char* funcName, lua_CFunction function )
+void Script::Register( const char *funcName, lua_CFunction function )
 {
-	lua_register(m_state, funcName, function);
+	lua_register( m_state, funcName, function );
 }
 
 void Script::Register( const SRegFunction *pList )
 {
-	for( const SRegFunction *p = pList; p->func && p->name; ++p )
+	for ( const SRegFunction *p = pList; p->func && p->name; ++p )
 		Register( p->name, p->func );
 }
 
 void Script::RegisterSaveLoad( const SRegFunction *pList )
 {
-	for( const SRegFunction *p = pList; p->func && p->name; ++p )
-		lua_RegisterFunc( p->func, MakeUniqueName(m_state, p->name) );
+	for ( const SRegFunction *p = pList; p->func && p->name; ++p )
+		lua_RegisterFunc( p->func, MakeUniqueName( m_state, p->name ) );
 }
-
 
 static void luaErrorNEA( Script *pScript, const std::string &szFuncName )
 {
@@ -116,7 +112,10 @@ static void luaWarningNVA( Script *pScript, const std::string &szFuncName, int n
 	csSystem << str << endl;
 }
 
-bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std::vector<SLuaParams> *pParams, bool bLog )
+bool Script::CheckArgs( const char *szArgList,
+                        const std::string &sFuncName,
+                        std::vector<SLuaParams> *pParams,
+                        bool bLog )
 {
 	pParams->clear();
 	const char *pCurChar = szArgList;
@@ -149,7 +148,7 @@ bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std
 		if ( nCurArg <= nArgs )
 		{
 			Object o = GetObject( nCurArg );
-			switch( cTypeID )
+			switch ( cTypeID )
 			{
 				case 'n':
 					isOK = o.IsNumber();
@@ -204,7 +203,7 @@ bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std
 		else if ( bHasDefaultValue )
 		{
 			// параметры по умолчанию
-			switch( cTypeID )
+			switch ( cTypeID )
 			{
 				case 'n':
 					param.f = NStr::ToFloat( szDefaultValue );
@@ -237,130 +236,121 @@ bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std
 	return true;
 }
 
-Script::Script( const char* instanceName, bool initStandardLibrary, lua_CFunction logFunction )
-	: m_ownState(false), nPushCount( 0 )
+Script::Script( const char *instanceName, bool initStandardLibrary, lua_CFunction logFunction )
+		: m_ownState( false ), nPushCount( 0 )
 {
-	m_state = lua_open(0, instanceName);
+	m_state = lua_open( 0, instanceName );
 	m_ownState = true;
 
 	// Register some basic functions with Lua.
-//	Register("LOG", Script_LOG);
+	//	Register("LOG", Script_LOG);
 	if ( !logFunction )
-		Register("_ERRORMESSAGE", Script_LOG);
+		Register( "_ERRORMESSAGE", Script_LOG );
 	else
-		Register("_ERRORMESSAGE", logFunction);
+		Register( "_ERRORMESSAGE", logFunction );
 }
-
 
 /**
 	@return Retrieves the value at [section].[entry].  If either
 		[section] or [entry] doesn't exist, [defaultValue] is returned.
 **/
-int Script::ConfigGetInteger(const char* section, const char* entry,
-							 int defaultValue)
+int Script::ConfigGetInteger( const char *section, const char *entry, int defaultValue )
 {
-	return static_cast<int>(ConfigGetReal(section, entry, defaultValue));
+	return static_cast<int>( ConfigGetReal( section, entry, defaultValue ) );
 }
-
 
 /**
 	@return Retrieves the value at [section].[entry].  If either
 		[section] or [entry] doesn't exist, [defaultValue] is returned.
 **/
-float Script::ConfigGetReal(const char* section, const char* entry,
-							double defaultValue)
+float Script::ConfigGetReal( const char *section, const char *entry, double defaultValue )
 {
-	AutoBlock block(*this);
+	AutoBlock block( *this );
 
-	Object obj = GetGlobal(section);
-	if (obj.IsNil())
+	Object obj = GetGlobal( section );
+	if ( obj.IsNil() )
 		return (float)defaultValue;
-	obj = obj.GetByName(entry);
-	if (obj.IsNumber())
+	obj = obj.GetByName( entry );
+	if ( obj.IsNumber() )
 		return obj.GetNumber();
 	return (float)defaultValue;
 }
 
-
 /**
 	@return Retrieves the value at [section].[entry].  If either
 		[section] or [entry] doesn't exist, [defaultValue] is returned.
 **/
-const char* Script::ConfigGetString(const char* section, const char* entry,
-									const char* defaultValue)
+const char *Script::ConfigGetString( const char *section, const char *entry, const char *defaultValue )
 {
-	AutoBlock block(*this);
+	AutoBlock block( *this );
 
-	Object obj = GetGlobal(section);
-	if (obj.IsNil())
+	Object obj = GetGlobal( section );
+	if ( obj.IsNil() )
 		return defaultValue;
-	obj = obj.GetByName(entry);
-	if (obj.IsString())
+	obj = obj.GetByName( entry );
+	if ( obj.IsString() )
 		return obj.GetString();
 	return defaultValue;
 }
 
-
 /**
 	Assigns [value] to [section].[entry].
 **/
-void Script::ConfigSetInteger(const char* section, const char* entry, int value)
+void Script::ConfigSetInteger( const char *section, const char *entry, int value )
 {
-	AutoBlock block(*this);
+	AutoBlock block( *this );
 
 	// section.entry = value
 	// Difficult in code.  Do it this way.
-	Object sectionTable = GetGlobal(section);
+	Object sectionTable = GetGlobal( section );
 
 	// If the global table isn't there, then create it.
-	if (sectionTable.IsNil())
+	if ( sectionTable.IsNil() )
 	{
-		sectionTable = GetGlobals().CreateTable(section);
+		sectionTable = GetGlobals().CreateTable( section );
 	}
 
-	sectionTable.SetNumber(entry, value);
+	sectionTable.SetNumber( entry, value );
 }
 
-
 /**
 	Assigns [value] to [section].[entry].
 **/
-void Script::ConfigSetReal(const char* section, const char* entry, double value)
+void Script::ConfigSetReal( const char *section, const char *entry, double value )
 {
-	AutoBlock block(*this);
+	AutoBlock block( *this );
 
 	// section.entry = value
 	// Difficult in code.  Do it this way.
-	Object sectionTable = GetGlobal(section);
+	Object sectionTable = GetGlobal( section );
 
 	// If the global table isn't there, then create it.
-	if (sectionTable.IsNil())
+	if ( sectionTable.IsNil() )
 	{
-		sectionTable = GetGlobals().CreateTable(section);
+		sectionTable = GetGlobals().CreateTable( section );
 	}
 
-	sectionTable.SetNumber(entry, value);
+	sectionTable.SetNumber( entry, value );
 }
 
-
 /**
 	Assigns [value] to [section].[entry].
 **/
-void Script::ConfigSetString(const char* section, const char* entry, const char* value)
+void Script::ConfigSetString( const char *section, const char *entry, const char *value )
 {
-	AutoBlock block(*this);
+	AutoBlock block( *this );
 
 	// section.entry = value
 	// Difficult in code.  Do it this way.
-	Object sectionTable = GetGlobal(section);
+	Object sectionTable = GetGlobal( section );
 
 	// If the global table isn't there, then create it.
-	if (sectionTable.IsNil())
+	if ( sectionTable.IsNil() )
 	{
-		sectionTable = GetGlobals().CreateTable(section);
+		sectionTable = GetGlobals().CreateTable( section );
 	}
 
-	sectionTable.SetString(entry, value);
+	sectionTable.SetString( entry, value );
 }
 
 static std::string IndentString( unsigned int indentLevel )
@@ -371,17 +361,18 @@ static std::string IndentString( unsigned int indentLevel )
 	return str;
 }
 
-std::string Script::GetObjectAsText( const char* name, Script::Object value, bool bDecorateOutput, unsigned int indentLevel )
+std::string
+Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateOutput, unsigned int indentLevel )
 {
-	Script& script = *this;
+	Script &script = *this;
 	std::string strRet;
 
 	// Indent the line the number of spaces for the current indentation level.
 	const unsigned int INDENT_SIZE = 2;
 	const unsigned int indentSpaces = indentLevel * INDENT_SIZE;
-	strRet += IndentString(indentSpaces);
+	strRet += IndentString( indentSpaces );
 
-	if (name)
+	if ( name )
 	{
 		strRet += name;
 		strRet += " = ";
@@ -409,11 +400,11 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 		if ( bDecorateOutput )
 			strRet += '"';
 	}
-	else if (value.IsTable())
+	else if ( value.IsTable() )
 	{
 		// Write the table header.
 		strRet += "\n";
-		strRet += IndentString(indentSpaces);
+		strRet += IndentString( indentSpaces );
 		strRet += "{\n";
 
 		// Rename, just for ease of reading.
@@ -428,24 +419,24 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 		// Block to search for array items.
 		{
 			// Pop the stack state when done.
-			Script::AutoBlock block(script);
+			Script::AutoBlock block( script );
 
 			// Grab index 1 and index 2 of the table.
-			Object value1 = table.GetByTableIndex(1);
-			Object value2 = table.GetByTableIndex(2);
+			Object value1 = table.GetByTableIndex( 1 );
+			Object value2 = table.GetByTableIndex( 2 );
 
 			// If they both exist, then there is a sequential list.
-			if (!value1.IsNil()  &&  !value2.IsNil())
+			if ( !value1.IsNil() && !value2.IsNil() )
 			{
 				// Cycle through the list.
 				bool firstSequential = true;
-				for ( ; ; ++upperIndex )
+				for ( ;; ++upperIndex )
 				{
 					// Restore the stack state each iteration.
-					Script::AutoBlock block(script);
+					Script::AutoBlock block( script );
 
 					// Try retrieving the table entry at upperIndex.
-					Object value = table.GetByTableIndex(upperIndex);
+					Object value = table.GetByTableIndex( upperIndex );
 
 					// If it doesn't exist, then exit the loop.
 					if ( value.IsNil() )
@@ -465,7 +456,7 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 		}
 
 		// Did we find any sequential table values?
-		if (upperIndex > 1)
+		if ( upperIndex > 1 )
 		{
 			hasSequential = true;
 		}
@@ -474,27 +465,27 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 		int i;
 		script.PushNil();
 		script.PushNil();
-		while ( (i = table.Next()) != 0 )
+		while ( ( i = table.Next() ) != 0 )
 		{
 			char keyName[255];
 
 			// Retrieve the table entry's key and value.
-			Object key = script.GetObject(script.GetTop() - 1);
-			Object value = script.GetObject(script.GetTop());
+			Object key = script.GetObject( script.GetTop() - 1 );
+			Object value = script.GetObject( script.GetTop() );
 
 			// Is the key a number?
-			if (key.IsNumber())
+			if ( key.IsNumber() )
 			{
 				// Yes, were there sequential array items in this table?
-				if (hasSequential)
+				if ( hasSequential )
 				{
 					// Is the array item's key an integer?
 					float realNum = key.GetNumber();
 					int intNum = (int)realNum;
-					if (realNum == (float)intNum)
+					if ( realNum == (float)intNum )
 					{
 						// Yes.  Is it between 1 and upperIndex?
-						if (intNum >= 1  &&  intNum < upperIndex)
+						if ( intNum >= 1 && intNum < upperIndex )
 						{
 							// We already wrote it as part of the sequential
 							// list.
@@ -504,18 +495,18 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 				}
 
 				// Build the table entry name for the number.
-				sprintf(keyName, "[%.16g]", key.GetNumber());
+				sprintf( keyName, "[%.16g]", key.GetNumber() );
 			}
 			else
 			{
 				// Build the table entry name for the string key name.
-				strcpy(keyName, key.GetString());
+				strcpy( keyName, key.GetString() );
 			}
 
 			// If we wrote a sequential list, the value we're about to write
 			// is not nil, and we haven't written the semicolon to separate
 			// the sequential table entries from the keyed table entries...
-			if (hasSequential  &&  !value.IsNil()  &&  !wroteSemi)
+			if ( hasSequential && !value.IsNil() && !wroteSemi )
 			{
 				// Then add a comma (for good measure) and the semicolon.
 				strRet += ", ;\n";
@@ -531,43 +522,43 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 
 		// If we wrote a sequential list and haven't written a semicolon, then
 		// there were no keyed table entries.  Just write the final comma.
-		if (hasSequential  &&  !wroteSemi)
+		if ( hasSequential && !wroteSemi )
 		{
 			strRet += ",\n";
 		}
 
 		// Indent, with the intent of closing up the table.
-		strRet += IndentString(indentSpaces);
+		strRet += IndentString( indentSpaces );
 
 		// Close the table.  The comma is written when WriteObject()
 		// returns from the recursive call.
 		strRet += "}";
 	}
-	if (indentLevel == 0 && bDecorateOutput)
+	if ( indentLevel == 0 && bDecorateOutput )
 		strRet += "\n";
 	return strRet;
 }
 
-std::string Script::GetObjectAsText( const char* name, bool bDecorateOutput )
+std::string Script::GetObjectAsText( const char *name, bool bDecorateOutput )
 {
 	std::string strRet;
-	AutoBlock block(*this);
-	GetGlobal(name);
-	Object value = GetObject(GetTop());
+	AutoBlock block( *this );
+	GetGlobal( name );
+	Object value = GetObject( GetTop() );
 	if ( !value.IsNil() )
 		return GetObjectAsText( name, value, bDecorateOutput, 0 );
 	else
-		return std::string("There is no global entity with name \"") + name + "\"";
+		return std::string( "There is no global entity with name \"" ) + name + "\"";
 }
 
 std::string Script::GetStateAsText()
 {
 	std::string str;
 	// For safety, just in case we leave something behind on the script stack.
-	AutoBlock block(*this);
+	AutoBlock block( *this );
 
 	// Run through all the globals.
-	str+="Globals: \n";
+	str += "Globals: \n";
 	int i;
 	Object table = GetGlobals();
 	PushNil();
@@ -575,11 +566,11 @@ std::string Script::GetStateAsText()
 	while ( ( i = table.Next() ) != 0 )
 	{
 		// Retrieve the global's key and value.
-		Object key = GetObject(GetTop() - 1);
-		Object value = GetObject(GetTop());
+		Object key = GetObject( GetTop() - 1 );
+		Object value = GetObject( GetTop() );
 
 		// Save the global to the text file.
-		if ( strcmp(key.GetString(), "_VERSION" ) != 0 )
+		if ( strcmp( key.GetString(), "_VERSION" ) != 0 )
 		{
 			str += GetObjectAsText( key.GetString(), value, 0 );
 		}
@@ -587,7 +578,7 @@ std::string Script::GetStateAsText()
 	char buf[30];
 	int nThreads = m_state->threads.size();
 	sprintf( buf, "Threads number = %zu \n", m_state->threads.size() );
-	str+=buf;
+	str += buf;
 	for ( CThreads::iterator i = m_state->threads.begin(); i != m_state->threads.end(); ++i )
 	{
 		CLuaThread &tred = **i;
@@ -596,14 +587,14 @@ std::string Script::GetStateAsText()
 		if ( tred.top > 0 )
 		{
 			str += ", elemtypes:";
-			for (StkId id = 0; id < tred.top; ++id )
+			for ( StkId id = 0; id < tred.top; ++id )
 			{
 				sprintf( buf, " %d", LObj( m_state, id )->GetType() );
 				str += buf;
 			}
 		}
 		sprintf( buf, "\n" );
-		str+=buf;
+		str += buf;
 	}
 	return str;
 }
@@ -616,7 +607,7 @@ int Script::operator&( IBinSaver &f )
 			lua_close( m_state );
 		f.Add( 2, &m_ownState );
 		ASSERT( m_ownState );
-		m_state = lua_open(0);
+		m_state = lua_open( 0 );
 		f.Add( 3, m_state ); // все правильно, амперсенд не нужен
 	}
 	else

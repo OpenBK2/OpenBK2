@@ -1,7 +1,7 @@
 #pragma once
 namespace NGfx
 {
-	class CRenderContext;
+class CRenderContext;
 }
 class CTransformStack;
 namespace NGScene

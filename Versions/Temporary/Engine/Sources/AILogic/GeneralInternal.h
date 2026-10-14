@@ -18,38 +18,38 @@ class CGeneralIntendant;
 
 class CGeneral : public CCommander, public IEnemyContainer
 {
-	OBJECT_BASIC_METHODS(CGeneral);
+	OBJECT_BASIC_METHODS( CGeneral );
 
-	typedef det_map< int/*request ID*/, CPtr<IGeneralTask> > RequestedTasks;
-	typedef std::pair< CPtr<CAIUnit>, NTimer::STime> CUnitTimeSeen;
-	typedef det_map< int/* unit unique ID*/, CUnitTimeSeen > CEnemyVisibility;
+	typedef det_map<int /*request ID*/, CPtr<IGeneralTask>> RequestedTasks;
+	typedef std::pair<CPtr<CAIUnit>, NTimer::STime> CUnitTimeSeen;
+	typedef det_map<int /* unit unique ID*/, CUnitTimeSeen> CEnemyVisibility;
 
 	//{ do not save these, it is only for IN-Segment use
-	CEnemyVisibility::iterator curProcessed;	// cannot be saved, so there will be some tricks
+	CEnemyVisibility::iterator curProcessed; // cannot be saved, so there will be some tricks
 	std::list<int> erased;
 	//}
 
-	ZDATA_(CCommander)
-		ZONSERIALIZE
+	ZDATA_( CCommander )
+	ZONSERIALIZE
 	CFreeIds requestIDs;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	int nParty = {};													// general is for this player
+	int nParty = {}; // general is for this player
 
 	CEnemyVisibility enemys;
 	CEnemyVisibility antiAviation;
 
-	CommonUnits infantryInTrenches;				//commander strores only unasigned units
+	CommonUnits infantryInTrenches; //commander strores only unasigned units
 	CommonUnits infantryFree;
 	CommonUnits tanksFree;
 	CommonUnits stationaryTanks;
 	CommonUnits transportsFree;
 
-	NTimer::STime timeNextUpdate = {};					// next update of this general
+	NTimer::STime timeNextUpdate = {}; // next update of this general
 	det_set<int> mobileReinforcementGroupIDs;
 
 	//Distribution of availability of own units in reinforcements.
-	std::vector<float>	enemyByRType;					// Current balance of forces (enemy's distribution of reinfs minus own forces)
-	int						nAirReinfTurnCounter = {};		// counter to give reinforcement to AirGeneral every n-th turn
+	std::vector<float> enemyByRType; // Current balance of forces (enemy's distribution of reinfs minus own forces)
+	int nAirReinfTurnCounter = {};   // counter to give reinforcement to AirGeneral every n-th turn
 
 	CObj<CGeneralAirForce> pAirForce;
 	CObj<CGeneralArtillery> pGeneralArtillery;
@@ -62,12 +62,39 @@ class CGeneral : public CCommander, public IEnemyContainer
 	NTimer::STime lastBombardmentCheck = {};
 	// 0 - артиллерия, 1 - бомберы
 	uint8_t cBombardmentType = {};
-	bool bSendReserves = {};										// send tanks to swarm
+	bool bSendReserves = {}; // send tanks to swarm
 	int nMaxAllowedMobileTanks = {};
 
-	public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); OnSerialize( f ); f.Add(2,&requestIDs); f.Add(3,&nParty); f.Add(4,&enemys); f.Add(5,&antiAviation); f.Add(6,&infantryInTrenches); f.Add(7,&infantryFree); f.Add(8,&tanksFree); f.Add(9,&stationaryTanks); f.Add(10,&transportsFree); f.Add(11,&timeNextUpdate); f.Add(12,&mobileReinforcementGroupIDs); f.Add(13,&enemyByRType); f.Add(14,&nAirReinfTurnCounter); f.Add(15,&pAirForce); f.Add(16,&pGeneralArtillery); f.Add(17,&pIntendant); f.Add(18,&requestedTasks); f.Add(19,&resContainer); f.Add(20,&lastBombardmentCheck); f.Add(21,&cBombardmentType); f.Add(22,&bSendReserves); f.Add(23,&nMaxAllowedMobileTanks); return 0; }
-		void OnSerialize( IBinSaver &saver );
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CCommander *)this );
+		OnSerialize( f );
+		f.Add( 2, &requestIDs );
+		f.Add( 3, &nParty );
+		f.Add( 4, &enemys );
+		f.Add( 5, &antiAviation );
+		f.Add( 6, &infantryInTrenches );
+		f.Add( 7, &infantryFree );
+		f.Add( 8, &tanksFree );
+		f.Add( 9, &stationaryTanks );
+		f.Add( 10, &transportsFree );
+		f.Add( 11, &timeNextUpdate );
+		f.Add( 12, &mobileReinforcementGroupIDs );
+		f.Add( 13, &enemyByRType );
+		f.Add( 14, &nAirReinfTurnCounter );
+		f.Add( 15, &pAirForce );
+		f.Add( 16, &pGeneralArtillery );
+		f.Add( 17, &pIntendant );
+		f.Add( 18, &requestedTasks );
+		f.Add( 19, &resContainer );
+		f.Add( 20, &lastBombardmentCheck );
+		f.Add( 21, &cBombardmentType );
+		f.Add( 22, &bSendReserves );
+		f.Add( 23, &nMaxAllowedMobileTanks );
+		return 0;
+	}
+	void OnSerialize( IBinSaver &saver );
 	// сегмент принятия решения - начинать арт. обстрел / бомбардировку или нет
 	void BombardmentSegment();
 	// дать команду начать арт. обстрел
@@ -75,7 +102,7 @@ class CGeneral : public CCommander, public IEnemyContainer
 
 	//Checks for reinforcement and calls if available
 	void CheckAvailableReinforcement();
-	void InitRearManager();								//do map-dependent calculations
+	void InitRearManager(); //do map-dependent calculations
 	enum EBalanceAction
 	{
 		BA_ADD_ENEMY,
@@ -90,17 +117,16 @@ class CGeneral : public CCommander, public IEnemyContainer
 	void ArtilleryBombardment();
 	void AviationBombardment();
 	void Bombardment();
+
 public:
 	CGeneral()
-		: nParty( -1 ),
-			lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ),
-			nAirReinfTurnCounter( 0 ), nMaxAllowedMobileTanks( 0 )
+			: nParty( -1 ), lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ), nAirReinfTurnCounter( 0 ),
+				nMaxAllowedMobileTanks( 0 )
 	{
 		curProcessed = enemys.end();
 	}
-	CGeneral( const int _nParty ) : nParty( _nParty ),
-		lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ),
-		nAirReinfTurnCounter( 0 )
+	CGeneral( const int _nParty )
+			: nParty( _nParty ), lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ), nAirReinfTurnCounter( 0 )
 	{
 		curProcessed = enemys.end();
 	}
@@ -109,7 +135,7 @@ public:
 	void Init( const struct NDb::SAIGeneralSide &mapInfo );
 	void Init();
 	// появились новые юниты
-	void GiveNewUnits( const std::list<CCommonUnit*> &pUnits,  bool bFromReinforcement = false );
+	void GiveNewUnits( const std::list<CCommonUnit *> &pUnits, bool bFromReinforcement = false );
 
 	// для манипулирования мобильными резервами
 	bool IsMobileReinforcement( int nGroupID ) const;
@@ -135,21 +161,23 @@ public:
 
 	void Segment();
 
-	virtual void CancelRequest( int nRequestID, enum EForceType eType  );
-	virtual int /*request ID*/RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
-
+	virtual void CancelRequest( int nRequestID, enum EForceType eType );
+	virtual int /*request ID*/ RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
 
 	// для очагов сопротивления
 	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
-		const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
-		const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt );
+	                          const NTimer::STime lastVisibleTimeDelta,
+	                          const CVec2 &vLastVisiblePos,
+	                          const NTimer::STime lastAntiArtTimeDelta,
+	                          const CVec2 &vLastVisibleAntiArtCenter,
+	                          const float fDistToLastVisibleAntiArt );
 	void UnitDied( class CAIUnitInfoForGeneral *pInfo );
-	void UnitDied( class CCommonUnit * pUnit );
+	void UnitDied( class CCommonUnit *pUnit );
 	void UnitChangedParty( CAIUnit *pUnit, const int nNewParty );
 
 	// to allow Intendant tracking registered units
-	void UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 &vNewPos );
-	void UnitAskedForResupply( class CCommonUnit * pUnit, const EResupplyType eType, const bool bSet );
+	void UnitChangedPosition( class CCommonUnit *pUnit, const CVec2 &vNewPos );
+	void UnitAskedForResupply( class CCommonUnit *pUnit, const EResupplyType eType, const bool bSet );
 
 	void SetCellInUse( const int nResistanceCellNumber, bool bInUse );
 	bool IsInResistanceCircle( const CVec2 &vPoint ) const;

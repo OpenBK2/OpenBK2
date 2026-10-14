@@ -16,17 +16,12 @@ struct SFileStreamHolder
 {
 	CDataStream *pStream;
 
-	SFileStreamHolder() : pStream( 0 ) { }
-	~SFileStreamHolder()
-	{
-		delete pStream;
-	}
+	SFileStreamHolder() : pStream( 0 ) {}
+	~SFileStreamHolder() { delete pStream; }
 };
-
 
 MAPEDITORLIB_EXPORT void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
 MAPEDITORLIB_EXPORT void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
-
 
 // Each overload that does the work comes before the one that adds a file
 // extension and forwards to it. The forwarding call names the resource type, so
@@ -38,7 +33,7 @@ MAPEDITORLIB_EXPORT void CreateStreamHolder( SFileStreamHolder *pStreamHolder, c
 // called them, and the TypedSuper ones could never have compiled, since
 // IBinSaver has no AddTypedSuper.
 
-template<class TResource>
+template <class TResource>
 bool LoadXMLResource( const std::string &rszResourceFileName, const std::string &rszChunkLabel, TResource &rResource )
 {
 	SFileStreamHolder streamHolder;
@@ -54,18 +49,19 @@ bool LoadXMLResource( const std::string &rszResourceFileName, const std::string 
 	return false;
 }
 
-
 // Legacy
-template<class TResource>
-bool LoadXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, const std::string &rszChunkLabel, TResource &rResource )
+template <class TResource>
+bool LoadXMLResource( const std::string &rszResourceFileName,
+                      const std::string &rszExtention,
+                      const std::string &rszChunkLabel,
+                      TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
 	return LoadXMLResource( szResourceFileName, rszChunkLabel, rResource );
 }
 
-
-template<class TResource>
+template <class TResource>
 bool LoadTypedSuperXMLResource( const std::string &rszResourceFileName, TResource &rResource )
 {
 	SFileStreamHolder streamHolder;
@@ -81,18 +77,18 @@ bool LoadTypedSuperXMLResource( const std::string &rszResourceFileName, TResourc
 	return false;
 }
 
-
 // Legacy
-template<class TResource>
-bool LoadTypedSuperXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
+template <class TResource>
+bool LoadTypedSuperXMLResource( const std::string &rszResourceFileName,
+                                const std::string &rszExtention,
+                                TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
 	return LoadTypedSuperXMLResource( szResourceFileName, rResource );
 }
 
-
-template<class TResource>
+template <class TResource>
 bool SaveXMLResource( const std::string &rszResourceFileName, const std::string &rszChunkLabel, TResource &rResource )
 {
 	SFileStreamHolder streamHolder;
@@ -108,17 +104,18 @@ bool SaveXMLResource( const std::string &rszResourceFileName, const std::string 
 	return false;
 }
 
-
-template<class TResource>
-bool SaveXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, const std::string &rszChunkLabel, TResource &rResource )
+template <class TResource>
+bool SaveXMLResource( const std::string &rszResourceFileName,
+                      const std::string &rszExtention,
+                      const std::string &rszChunkLabel,
+                      TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
 	return SaveXMLResource( szResourceFileName, rszChunkLabel, rResource );
 }
 
-
-template<class TResource>
+template <class TResource>
 bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName, TResource &rResource )
 {
 	SFileStreamHolder streamHolder;
@@ -134,18 +131,17 @@ bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName, TResourc
 	return false;
 }
 
-
-template<class TResource>
-bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
+template <class TResource>
+bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName,
+                                const std::string &rszExtention,
+                                TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
 	return SaveTypedSuperXMLResource( szResourceFileName, rResource );
 }
 
-
 //bool CheckLatestBINResource( const std::string &rszResourceFileName, const std::string &rszXMLExtention, const std::string &rszBINExtention );
-
 
 // возвращаемое значение:
 // true - путь существует в указанном каталоге
@@ -160,10 +156,13 @@ bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName, const st
 // если путь уже был абсолютным и начало пути не совпадает с указанным, то путь не изменяется
 // если путь уже был абсолютным и начало пути совпадает с указанным, то путь изменяется на относительный ( при bReturnAbsolutePath == false )
 // если путь был относительным, к нему прибавляется указаанный путь ( при bReturnAbsolutePath == true )
-MAPEDITORLIB_EXPORT bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const std::string &rszPathPrefix, bool *pbAbsolutePath );
+MAPEDITORLIB_EXPORT bool NormalizePath( std::string *pszPath,
+                                        bool bFile,
+                                        bool bExists,
+                                        bool bReturnAbsolutePath,
+                                        const std::string &rszPathPrefix,
+                                        bool *pbAbsolutePath );
 MAPEDITORLIB_EXPORT bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath );
-
-
 
 struct SEnumFilesInDataStorageParameter
 {
@@ -175,8 +174,7 @@ struct SEnumFilesInDataStorageParameter
 	int nExtentionLength;
 };
 
-
-typedef std::unordered_map<std::string, std::unordered_map<std::string, unsigned> > CEnumFolderMap;
+typedef std::unordered_map<std::string, std::unordered_map<std::string, unsigned>> CEnumFolderMap;
 struct SEnumFolderStructureParameter
 {
 	int nIgnoreFolderCount;
@@ -187,16 +185,21 @@ struct SEnumFolderStructureParameter
 	bool IsFolderRelative( const std::string &rszFolder, const std::string &rszRelativeFolder );
 	void SetRelativeFolder( const std::string &rszFolder, const std::string &rszRelativeFolder );
 
-	static bool IsFolderRelative( const CEnumFolderMap &rEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder );
-	static void SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder );
+	static bool IsFolderRelative( const CEnumFolderMap &rEnumFolderMap,
+	                              const std::string &rszFolder,
+	                              const std::string &rszRelativeFolder );
+	static void SetRelativeFolder( CEnumFolderMap *pEnumFolderMap,
+	                               const std::string &rszFolder,
+	                               const std::string &rszRelativeFolder );
 };
 
+void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pParameters,
+                             SEnumFolderStructureParameter *pEnumFolderStructureParameter = 0 );
 
-void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pParameters, SEnumFolderStructureParameter *pEnumFolderStructureParameter = 0 );
-
-
-bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLine, const std::string &rszDirectory, bool bWait );
-
+bool ExecuteProcess( const std::string &rszCommand,
+                     const std::string &rszCmdLine,
+                     const std::string &rszDirectory,
+                     bool bWait );
 
 // The narrow text in these is std::string, UTF-8; the CString overloads went
 // with MFC, and the std::string ones that only converted to them are these now.
@@ -213,15 +216,23 @@ MAPEDITORLIB_EXPORT void Unicode2MBSC( std::string *pszText, const std::wstring 
 // way; nothing about what it does changed.
 MAPEDITORLIB_EXPORT void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText );
 
-
 // The optional repair flag identifies files written by the old Linux UTF-32 bug.
-MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, bool bRemove_0D, bool *pbNeedsUnicodeRepair = nullptr );
-MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, bool bRemove_0D, bool *pbNeedsUnicodeRepair = nullptr );
+MAPEDITORLIB_EXPORT void File2String( std::string *pszText,
+                                      bool *pbUnicode,
+                                      const std::vector<uint8_t> &rBuffer,
+                                      bool bRemove_0D,
+                                      bool *pbNeedsUnicodeRepair = nullptr );
+MAPEDITORLIB_EXPORT void File2String( std::string *pszText,
+                                      bool *pbUnicode,
+                                      const std::string &rszTextPath,
+                                      bool bRemove_0D,
+                                      bool *pbNeedsUnicodeRepair = nullptr );
 MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D );
 MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D );
 
-
-MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const std::string &rszText, bool bUnicode, bool bAdd_0D );
-MAPEDITORLIB_EXPORT void String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void
+String2File( std::vector<uint8_t> *pBuffer, const std::string &rszText, bool bUnicode, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void
+String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, bool bAdd_0D );
 MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D );
 MAPEDITORLIB_EXPORT void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D );

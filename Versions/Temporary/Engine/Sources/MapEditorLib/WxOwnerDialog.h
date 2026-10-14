@@ -17,20 +17,19 @@
 
 class CWxOwnerDialog : public CWxToolDialog
 {
-	CWxWindowWidget owner { this };
+	CWxWindowWidget owner{ this };
 
 public:
-	CWxOwnerDialog( wxWindow *pParent, wxWindowID id, const wxString &rTitle,
-									const wxPoint &rPos = wxDefaultPosition,
-									const wxSize &rSize = wxDefaultSize,
-									long nStyle = wxDEFAULT_DIALOG_STYLE )
-		: CWxToolDialog( pParent, id, rTitle, rPos, rSize, nStyle )
+	CWxOwnerDialog( wxWindow *pParent,
+	                wxWindowID id,
+	                const wxString &rTitle,
+	                const wxPoint &rPos = wxDefaultPosition,
+	                const wxSize &rSize = wxDefaultSize,
+	                long nStyle = wxDEFAULT_DIALOG_STYLE )
+			: CWxToolDialog( pParent, id, rTitle, rPos, rSize, nStyle )
 	{
 	}
 
 	// What a dialog opened from this one is given as its owner.
-	IWidget* GetOwnerWidget()
-	{
-		return &owner;
-	}
+	IWidget *GetOwnerWidget() { return &owner; }
 };

@@ -9,57 +9,63 @@ namespace NFontRaster
 namespace
 {
 
-// Lays the glyphs out in rows, left to right, nPadding apart and nPadding from
-// the atlas edge. Returns the height used, or -1 if a glyph is wider than the
-// atlas. Positions are written only when pGlyphs is not null, so the same walk
-// both sizes the atlas and fills it.
-int PackRows( const std::vector<SGlyphBitmap> &rendered, const int nCellHeight, const int nPadding, const int nAtlasWidth,
-	std::vector<SGlyph> *pGlyphs )
-{
-	int x = nPadding, y = nPadding;
-	for ( size_t i = 0; i < rendered.size(); ++i )
+	// Lays the glyphs out in rows, left to right, nPadding apart and nPadding from
+	// the atlas edge. Returns the height used, or -1 if a glyph is wider than the
+	// atlas. Positions are written only when pGlyphs is not null, so the same walk
+	// both sizes the atlas and fills it.
+	int PackRows( const std::vector<SGlyphBitmap> &rendered,
+	              const int nCellHeight,
+	              const int nPadding,
+	              const int nAtlasWidth,
+	              std::vector<SGlyph> *pGlyphs )
 	{
-		const SGlyphBitmap &glyph = rendered[i];
-		const int nWidth = glyph.nB + std::max( glyph.nC, 0 );
-		if ( nWidth + 2 * nPadding > nAtlasWidth )
+		int x = nPadding, y = nPadding;
+		for ( size_t i = 0; i < rendered.size(); ++i )
 		{
-			return -1;
+			const SGlyphBitmap &glyph = rendered[i];
+			const int nWidth = glyph.nB + std::max( glyph.nC, 0 );
+			if ( nWidth + 2 * nPadding > nAtlasWidth )
+			{
+				return -1;
+			}
+			if ( x + nWidth + nPadding > nAtlasWidth )
+			{
+				x = nPadding;
+				y += nCellHeight + nPadding;
+			}
+			if ( pGlyphs != nullptr )
+			{
+				SGlyph &out = ( *pGlyphs )[i];
+				out.nCodePoint = glyph.nCodePoint;
+				out.x1 = x;
+				out.y1 = y;
+				out.x2 = x + nWidth;
+				out.y2 = y + nCellHeight;
+				out.nA = glyph.nA;
+				out.nBC = glyph.nB + glyph.nC;
+				out.nWidth = nWidth;
+			}
+			x += nWidth + nPadding;
 		}
-		if ( x + nWidth + nPadding > nAtlasWidth )
-		{
-			x = nPadding;
-			y += nCellHeight + nPadding;
-		}
-		if ( pGlyphs != nullptr )
-		{
-			SGlyph &out = ( *pGlyphs )[i];
-			out.nCodePoint = glyph.nCodePoint;
-			out.x1 = x;
-			out.y1 = y;
-			out.x2 = x + nWidth;
-			out.y2 = y + nCellHeight;
-			out.nA = glyph.nA;
-			out.nBC = glyph.nB + glyph.nC;
-			out.nWidth = nWidth;
-		}
-		x += nWidth + nPadding;
+		return y + nCellHeight + nPadding;
 	}
-	return y + nCellHeight + nPadding;
-}
 
-int NextPowerOfTwo( const int n )
-{
-	int nResult = 1;
-	while ( nResult < n )
+	int NextPowerOfTwo( const int n )
 	{
-		nResult <<= 1;
+		int nResult = 1;
+		while ( nResult < n )
+		{
+			nResult <<= 1;
+		}
+		return nResult;
 	}
-	return nResult;
-}
 
 }
 
-bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints, SFont *pResult, std::string *pszError )
+bool Rasterise( const SOptions &options,
+                const std::vector<uint32_t> &codePoints,
+                SFont *pResult,
+                std::string *pszError )
 {
 	*pResult = SFont();
 	std::unique_ptr<CFace> pFace = CFace::OpenFile( options.szFontFile, options.nFaceIndex, pszError );
@@ -114,7 +120,8 @@ bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints
 			}
 			// widths are tried narrowest first, so a strict comparison keeps the
 			// squarer of two equal areas
-			if ( nBestWidth == 0 || static_cast<long long>( nWidth ) * nHeight < static_cast<long long>( nBestWidth ) * nBestHeight )
+			if ( nBestWidth == 0 ||
+			     static_cast<long long>( nWidth ) * nHeight < static_cast<long long>( nBestWidth ) * nBestHeight )
 			{
 				nBestWidth = nWidth;
 				nBestHeight = nHeight;

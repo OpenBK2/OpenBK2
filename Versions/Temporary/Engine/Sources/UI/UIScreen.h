@@ -11,7 +11,7 @@ class CButtonGroup;
 
 namespace NGScene
 {
-	class I2DGameView;
+class I2DGameView;
 }
 
 struct STabPairCompare
@@ -26,22 +26,22 @@ typedef std::list<CStates> CStateSequiences;
 
 class CWindowScreen : public CWindow, public IScreen
 {
-	OBJECT_NOCOPY_METHODS(CWindowScreen);
+	OBJECT_NOCOPY_METHODS( CWindowScreen );
 
 	CTooltips tooltips;
 
 	CStateSequiences stateSequiences;
-	CStateSequiences finishedAnimations;					// finished reversable animations contained here
+	CStateSequiences finishedAnimations; // finished reversable animations contained here
 
 	// window may produce animation and command sequience. command sequence may
 	// have run after animation is finished.
 	CFreeIds animationIDs;
 
-	typedef std::unordered_map<CWindowAnimationID, CStates, SAnimationIDHash > CWatingForAnimation;
+	typedef std::unordered_map<CWindowAnimationID, CStates, SAnimationIDHash> CWatingForAnimation;
 	CWatingForAnimation watingForAnimation;
 
 	// segment calling
-	typedef std::unordered_set< CObj<IWindow> > CSegmentObjs;
+	typedef std::unordered_set<CObj<IWindow>> CSegmentObjs;
 	CSegmentObjs segmentObjs;
 
 	// message reactions
@@ -63,7 +63,7 @@ class CWindowScreen : public CWindow, public IScreen
 	NInput::CBind bindAlt;
 
 protected:
-	virtual NDb::SWindow* GetInstance() { return pInstance; }
+	virtual NDb::SWindow *GetInstance() { return pInstance; }
 	uint16_t GetKeyboardFlags() const;
 
 public:
@@ -71,12 +71,9 @@ public:
 	{
 		int nGroupID;
 		CPtr<IWindow> pParent;
-		SButtonGroupID() {  }
-		SButtonGroupID( const int _nGroupID, IWindow *_pParent ) : nGroupID( _nGroupID ), pParent( _pParent ) {  }
-		bool operator==( const SButtonGroupID &id ) const
-		{
-			return id.nGroupID == nGroupID && id.pParent == pParent;
-		}
+		SButtonGroupID() {}
+		SButtonGroupID( const int _nGroupID, IWindow *_pParent ) : nGroupID( _nGroupID ), pParent( _pParent ) {}
+		bool operator==( const SButtonGroupID &id ) const { return id.nGroupID == nGroupID && id.pParent == pParent; }
 		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &nGroupID );
@@ -88,12 +85,13 @@ public:
 	{
 		int operator()( const SButtonGroupID &id ) const
 		{
-			std::hash<const void*> pr;
-			return (pr( id.pParent ) << 4) & id.nGroupID;
+			std::hash<const void *> pr;
+			return ( pr( id.pParent ) << 4 ) & id.nGroupID;
 		}
 	};
+
 private:
-	typedef std::unordered_map<SButtonGroupID, CObj<CButtonGroup>, SButtonGroupIDHash > CButtonGroups;
+	typedef std::unordered_map<SButtonGroupID, CObj<CButtonGroup>, SButtonGroupIDHash> CButtonGroups;
 	CButtonGroups buttonGroups;
 
 	// all state descriptor sequiences possible on this screen
@@ -105,23 +103,26 @@ private:
 	static NGScene::I2DGameView *p2DGameView;
 	CPtr<NGScene::IGameView> pInterface3DView;
 
-
 	void InitScreen();
 	void InitSingletonWindows();
 
 	void ProcessStateSequiences( const int timeDiff );
 	IUIEffector *RunStateCommand( const NDb::SUIStateBase &cmd );
 
-	void RunStateCommandSequienceImmidiate( const std::string &szCmdSeq, CWindow *pSequenceParent, SWindowContext *pContext, const bool bForward );
+	void RunStateCommandSequienceImmidiate( const std::string &szCmdSeq,
+	                                        CWindow *pSequenceParent,
+	                                        SWindowContext *pContext,
+	                                        const bool bForward );
 	bool ActivateNextInTabOrder(); // returns true if activated, otherwise returns false
 public:
 	CWindowScreen();
 	void SetHudFontScale( bool bHud ) override { bHudFontScale = bHud; }
 	bool UsesHudFontScale() const override { return bHudFontScale; }
 
-	static NGScene::I2DGameView * Get2DGameView() { return p2DGameView; }
+	static NGScene::I2DGameView *Get2DGameView() { return p2DGameView; }
 
-	void SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView );
+	void
+	SetGView( NGScene::I2DGameView *_p2DGameView, NGScene::IGameView *_pGameView, NGScene::IGameView *_pInterface3DView );
 	NGScene::IGameView *GetInterface3DView() { return pInterface3DView; }
 
 	int operator&( struct IBinSaver &saver );
@@ -132,13 +133,17 @@ public:
 	bool OnMouseMove( const CVec2 &vPos, const int nMouseState );
 	bool OnKey( const SGameMessage &msg );
 
-	CButtonGroup * CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent );
+	CButtonGroup *CreateButtonGroup( const int nID, IWindow *pButton, IWindow *pParent );
 
 	// run animation sequience on provided window. return ID of animation.
-	int /*AnimationID*/RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow );
+	int /*AnimationID*/ RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow );
 	void RunAnimationSequienceBack( const int nAnimationID );
 	// run szCmdSeq effect. if nAnimationToWait provided, then wait untill animation is finished, then run szCmdSeq.
-	void RunStateCommandSequience( const std::string &szCmdSeq, struct IWindow *pSequenceParent, SWindowContext *pContext, const bool bForward, const int nAnimationToWait = 0 );
+	void RunStateCommandSequience( const std::string &szCmdSeq,
+	                               struct IWindow *pSequenceParent,
+	                               SWindowContext *pContext,
+	                               const bool bForward,
+	                               const int nAnimationToWait = 0 );
 	// instantly undo command sequence (run in backward direction)
 	void UndoStateCommandSequence( const std::string &szCmdSeq );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
@@ -153,7 +158,9 @@ public:
 	void UpdateResolution();
 	void SetWindowText( const std::string &szWindowName, const std::wstring &szText );
 	void RegisterEffect( const std::string &szEffect, const NDb::SUIStateSequence &cmds );
-	void RegisterEffect( const std::string &szEffect, const std::vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable );
+	void RegisterEffect( const std::string &szEffect,
+	                     const std::vector<CDBPtr<NDb::SUIStateBase>> &cmds,
+	                     const bool bReversable );
 	void RegisterReaction( const std::string &szReactionKey, struct IMessageReactionB2 *pReaction );
 	void RegisterToSegment( struct IWindow *pWnd, const bool bRegister );
 	bool IsRegisteredToSegment( struct IWindow *pWnd ) const;
@@ -166,19 +173,19 @@ public:
 	void Reposition( IWindow *pWindow = 0 );
 	bool ProcessEvent( const struct SGameMessage &msg );
 	void ProcessUIMessage( const struct SBUIMessage &msg );
-	IWindow* GetElement( const std::string &szName, const bool bRecursive = false )
+	IWindow *GetElement( const std::string &szName, const bool bRecursive = false )
 	{
 		return CWindow::GetChild( szName, bRecursive );
 	}
-	IWindow* GetVisibleElement( const std::string &szName, const bool bRecursive = false )
+	IWindow *GetVisibleElement( const std::string &szName, const bool bRecursive = false )
 	{
 		return CWindow::GetVisibleChild( szName, bRecursive );
 	}
-	IWindow* AddElement( const struct NDb::SUIDesc *pDesc );
+	IWindow *AddElement( const struct NDb::SUIDesc *pDesc );
 	void Enable( const bool bEnable );
 
 	static void Set2DGView( NGScene::I2DGameView *p2DGameView );
 
 	virtual const std::wstring &GetTextEntry( const std::string &szName ) const;
-	void RegisterTabOrder( IWindow * pWindow, int nTabOrder );
+	void RegisterTabOrder( IWindow *pWindow, int nTabOrder );
 };

@@ -17,6 +17,7 @@ class CFinishConnectionFilter : public CPacketProcessor
 	OBJECT_NOCOPY_METHODS( CFinishConnectionFilter );
 
 	bool bConnectionAlive;
+
 public:
 	CFinishConnectionFilter();
 	virtual bool Segment();
@@ -26,8 +27,7 @@ public:
 	bool ProcessConnectServerPacket( class CConnectServerPacket *pPacket );
 };
 
-CFinishConnectionFilter::CFinishConnectionFilter()
-: bConnectionAlive( true )
+CFinishConnectionFilter::CFinishConnectionFilter() : bConnectionAlive( true )
 {
 	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessRemoveClient );
 	REGISTER_PACKET_PROCESSOR( &CFinishConnectionFilter::ProcessConnectServerPacket );
@@ -69,14 +69,21 @@ bool CFinishConnectionFilter::Segment()
 class CTestConnectionPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CTestConnectionPacket );
+
 public:
 	ZDATA
-		int nClientServerID;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nClientServerID); return 0; }
+	int nClientServerID;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nClientServerID );
+		return 0;
+	}
 
-	CTestConnectionPacket() { }
+	CTestConnectionPacket() {}
 	CTestConnectionPacket( const int nClientID, const int _nClientServerID )
-		: CNetPacket( nClientID ), nClientServerID( _nClientServerID ) { }
+			: CNetPacket( nClientID ), nClientServerID( _nClientServerID )
+	{
+	}
 };
 
 REGISTER_SAVELOAD_CLASS( CLIENT, 92, CTestConnectionPacket );
@@ -85,9 +92,10 @@ REGISTER_SAVELOAD_CLASS( CLIENT, 92, CTestConnectionPacket );
 //*                     CSimpleConnection                           *
 //*******************************************************************
 
-CSimpleConnection::CSimpleConnection( CNet *_pNet, bool _bAsClient, const int _nClientServerID, const int _nClientLocalID, const int _nMyServerID )
-: pNet( _pNet ), bAsClient( _bAsClient ), nClientServerID( _nClientServerID ), nClientLocalID( _nClientLocalID ),
-	nMyServerID( _nMyServerID ), bConnectionTested( false )
+CSimpleConnection::CSimpleConnection(
+		CNet *_pNet, bool _bAsClient, const int _nClientServerID, const int _nClientLocalID, const int _nMyServerID )
+		: pNet( _pNet ), bAsClient( _bAsClient ), nClientServerID( _nClientServerID ), nClientLocalID( _nClientLocalID ),
+			nMyServerID( _nMyServerID ), bConnectionTested( false )
 {
 	pFinishConnection = new CFinishConnectionFilter();
 	pNet->SendPacket( new CTestConnectionPacket( nClientLocalID, nMyServerID ) );
@@ -101,7 +109,7 @@ void CSimpleConnection::SendGamePacket( CNetPacket *pPacket )
 
 int CSimpleConnection::CheckTestConnection( CNetPacket *pPacket )
 {
-	if ( CTestConnectionPacket *pTestPacket = dynamic_cast<CTestConnectionPacket*>( pPacket ) )
+	if ( CTestConnectionPacket *pTestPacket = dynamic_cast<CTestConnectionPacket *>( pPacket ) )
 	{
 		CPtr<CNetPacket> pPacketToDelete = pTestPacket;
 		if ( pTestPacket->nClientServerID == nClientServerID )
@@ -149,7 +157,7 @@ bool CSimpleConnection::ProcessPacketFromPlayersNet( CNetPacket *pPacket )
 		return false;
 }
 
-CNetPacket* CSimpleConnection::GetPacket()
+CNetPacket *CSimpleConnection::GetPacket()
 {
 	if ( !packets.empty() )
 	{
@@ -161,7 +169,7 @@ CNetPacket* CSimpleConnection::GetPacket()
 	if ( !bAsClient )
 		return 0;
 
-	if ( CNetPacket* pPacket = pFinishConnection->GetPacket() )
+	if ( CNetPacket *pPacket = pFinishConnection->GetPacket() )
 		return pPacket;
 
 	CNetPacket *pPacket = pNet->ReceivePacket();
@@ -198,9 +206,10 @@ void CSimpleConnection::TogglePauseNet( const bool bPause ) const
 //*******************************************************************
 
 CThroughServerConnection::CThroughServerConnection( const int _nClientServerID, CNet *_pNet )
-: nClientServerID( _nClientServerID ), pNet( _pNet ), bConnectionTested( false )
+		: nClientServerID( _nClientServerID ), pNet( _pNet ), bConnectionTested( false )
 {
-	pNet->SendPacket( new CThroughServerGamePacket( 0, nClientServerID, new CTestConnectionPacket( nClientServerID, nClientServerID ) ) );
+	pNet->SendPacket( new CThroughServerGamePacket(
+			0, nClientServerID, new CTestConnectionPacket( nClientServerID, nClientServerID ) ) );
 }
 
 void CThroughServerConnection::SendGamePacket( CNetPacket *pPacket )
@@ -210,15 +219,16 @@ void CThroughServerConnection::SendGamePacket( CNetPacket *pPacket )
 
 bool CThroughServerConnection::ProcessPacketFromServer( CNetPacket *pRawPacket )
 {
-	CPtr<CThroughServerGamePacket> pPacket = dynamic_cast<CThroughServerGamePacket*>( pRawPacket );
+	CPtr<CThroughServerGamePacket> pPacket = dynamic_cast<CThroughServerGamePacket *>( pRawPacket );
 	if ( pPacket && pPacket->nClient == nClientServerID )
 	{
-		if ( CTestConnectionPacket* pTestPacket = dynamic_cast_ptr<CTestConnectionPacket*>( pPacket->pGamePacket ) )
+		if ( CTestConnectionPacket *pTestPacket = dynamic_cast_ptr<CTestConnectionPacket *>( pPacket->pGamePacket ) )
 		{
 			if ( !bConnectionTested )
 			{
 				bConnectionTested = true;
-				pNet->SendPacket( new CThroughServerGamePacket( 0, nClientServerID, new CTestConnectionPacket( nClientServerID, nClientServerID ) ) );
+				pNet->SendPacket( new CThroughServerGamePacket(
+						0, nClientServerID, new CTestConnectionPacket( nClientServerID, nClientServerID ) ) );
 
 				packets.push_back( new CNewGameClient( nClientServerID ) );
 			}
@@ -235,7 +245,7 @@ bool CThroughServerConnection::ProcessPacketFromServer( CNetPacket *pRawPacket )
 	return false;
 }
 
-CNetPacket* CThroughServerConnection::GetPacket()
+CNetPacket *CThroughServerConnection::GetPacket()
 {
 	if ( !packets.empty() )
 	{

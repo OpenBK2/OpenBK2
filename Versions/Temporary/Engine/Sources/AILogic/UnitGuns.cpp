@@ -25,7 +25,12 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C8, CInfantryGuns );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C9, SCommonGunInfo );
 BASIC_REGISTER_CLASS( AILOGIC, CUnitGuns );
 
-bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo )
+bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory,
+                        const int nPlatform,
+                        const int nGunInStats,
+                        const SWeaponRPGStats *pWeapon,
+                        int *nGuns,
+                        const int nAmmo )
 {
 	NI_VERIFY( pWeapon != 0, "Gun w/o weapon! See next assert for unit ID", return false );
 	//
@@ -38,7 +43,7 @@ bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatf
 	commonGunsInfo[nCommonGun] = new SCommonGunInfo( false, nAmmo, nPlatform, nGunInStats );
 
 	gunsBegins[nCommonGun] = *nGuns;
-	gunsBegins[nCommonGun+1] = *nGuns + pWeapon->shells.size();
+	gunsBegins[nCommonGun + 1] = *nGuns + pWeapon->shells.size();
 
 	if ( nCommonGuns < nCommonGun + 1 )
 		nCommonGuns = nCommonGun + 1;
@@ -50,7 +55,7 @@ bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatf
 		CBasicGun *pGun;
 
 		if ( pWeapon->shells[i].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
-			pGun = gunsFactory.CreateGun( IGunsFactory::PLANE_GUN, i, commonGunsInfo[nCommonGun] );//when create bomb
+			pGun = gunsFactory.CreateGun( IGunsFactory::PLANE_GUN, i, commonGunsInfo[nCommonGun] ); //when create bomb
 		else if ( pWeapon->shells[i].IsATGMTrajectory() )
 		{
 			// ATGMs are always visible, dynamically updated projectiles.
@@ -84,7 +89,7 @@ bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatf
 				pGun = gunsFactory.CreateGun( IGunsFactory::VIS_BURST_BALLIST_GUN, i, commonGunsInfo[nCommonGun] );
 		}
 
-		guns[(*nGuns)++] = pGun;
+		guns[( *nGuns )++] = pGun;
 		if ( pWeapon->fRangeMax > fMaxFireRange )
 			fMaxFireRange = pWeapon->fRangeMax;
 
@@ -92,7 +97,7 @@ bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatf
 			bCanShootToPlanes = true;
 
 		if ( i == 0 && pGun->GetGun().nPriority == 0 )
-			nMainGun = (*nGuns) - 1;
+			nMainGun = ( *nGuns ) - 1;
 	}
 	return true;
 }
@@ -103,13 +108,19 @@ void CUnitGuns::Segment()
 		guns[i]->Segment();
 }
 
-void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const uint16_t wWillPower, CTurret *pTurret, CAIUnit *pEnemy, const SVector &finishTile, const bool bIsEnemyInFireRange, NTimer::STime *pTimeToTurn ) const
+void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner,
+                                const uint16_t wWillPower,
+                                CTurret *pTurret,
+                                CAIUnit *pEnemy,
+                                const SVector &finishTile,
+                                const bool bIsEnemyInFireRange,
+                                NTimer::STime *pTimeToTurn ) const
 {
 	*pTimeToTurn = 0;
 	// нужно учесть время на развороты
 	if ( pOwner->CanRotate() && ( !bIsEnemyInFireRange || pTurret == 0 ) )
 	{
-		const uint16_t finishToEnemyDir = GetDirectionByVector( (pEnemy->GetCenterTile() - finishTile).ToCVec2() );
+		const uint16_t finishToEnemyDir = GetDirectionByVector( ( pEnemy->GetCenterTile() - finishTile ).ToCVec2() );
 		const uint16_t dirsDiff( DirsDifference( pOwner->GetDirection(), finishToEnemyDir ) );
 
 		if ( dirsDiff > wWillPower )
@@ -122,22 +133,26 @@ void CUnitGuns::FindTimeToTurn( CAIUnit *pOwner, const uint16_t wWillPower, CTur
 
 		uint16_t finalAngle;
 		if ( !bIsEnemyInFireRange )
-			finalAngle = GetDirectionByVector( (pEnemy->GetCenterTile() - finishTile).ToCVec2() );
+			finalAngle = GetDirectionByVector( ( pEnemy->GetCenterTile() - finishTile ).ToCVec2() );
 		else
-			finalAngle = GetDirectionByVector( (pEnemy->GetCenterTile() - pOwner->GetCenterTile()).ToCVec2() );
+			finalAngle = GetDirectionByVector( ( pEnemy->GetCenterTile() - pOwner->GetCenterTile() ).ToCVec2() );
 
 		const uint16_t dirsDiff = DirsDifference( finalAngle, startAngle );
 
 		if ( dirsDiff > wWillPower )
 		{
 			const uint16_t wHorizontalRotationSpeed = pTurret->GetHorRotateSpeed();
-			NI_ASSERT( wHorizontalRotationSpeed != 0, fmt::format("horizontal rotation speed == 0 for \"{}\"", pOwner->GetStats()->szKeyName) );
+			NI_ASSERT( wHorizontalRotationSpeed != 0,
+			           fmt::format( "horizontal rotation speed == 0 for \"{}\"", pOwner->GetStats()->szKeyName ) );
 			*pTimeToTurn += DirsDifference( startAngle, finalAngle ) / wHorizontalRotationSpeed;
 		}
 	}
 }
 
-bool CUnitGuns::FindTimeToStatObjGo( CAIUnit *pUnit, CStaticObject *pObj, const SWeaponRPGStats *pStats, CUnitGuns::SWeaponPathInfo &info ) const
+bool CUnitGuns::FindTimeToStatObjGo( CAIUnit *pUnit,
+                                     CStaticObject *pObj,
+                                     const SWeaponRPGStats *pStats,
+                                     CUnitGuns::SWeaponPathInfo &info ) const
 {
 	const float fFireRangeMax = GetFireRangeMax( pStats, pUnit );
 	CPtr<IStaticPath> pPath = CreateStaticPathForStObjAttack( pUnit, pObj, pStats->fRangeMin, fFireRangeMax, false );
@@ -151,7 +166,7 @@ bool CUnitGuns::FindTimeToStatObjGo( CAIUnit *pUnit, CStaticObject *pObj, const 
 	return true;
 }
 
-CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj, NTimer::STime *pTime )
+CBasicGun *CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj, NTimer::STime *pTime )
 {
 	if ( pOwner->GetNGuns() == 0 )
 		return 0;
@@ -159,12 +174,12 @@ CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 	*pTime = 0;
 	int nGun = -1;
 
-	std::list< SWeaponPathInfo > pathInfo666( 0 );
-	const SWeaponRPGStats *pWStats = pOwner->GetGun(0)->GetWeapon();
+	std::list<SWeaponPathInfo> pathInfo666( 0 );
+	const SWeaponRPGStats *pWStats = pOwner->GetGun( 0 )->GetWeapon();
 	int i = 0;
 	do
 	{
-		CBasicGun *pGun = pOwner->GetGun(i);
+		CBasicGun *pGun = pOwner->GetGun( i );
 		const SWeaponRPGStats::SShell &shell = pGun->GetShell();
 		// разрывными снарядами и возможно дострелить
 		if ( shell.eDamageType != NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH || shell.fArea2 <= 0 )
@@ -202,7 +217,7 @@ CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 
 		++i;
 		if ( i < GetNTotalGuns() )
-			pWStats = pOwner->GetGun(i)->GetWeapon();
+			pWStats = pOwner->GetGun( i )->GetWeapon();
 	} while ( i < pOwner->GetNGuns() );
 
 	if ( nGun == -1 )
@@ -229,22 +244,25 @@ int CUnitGuns::GetCommonGunIndex( const CBasicGun *pGun ) const
 	return -1;
 }
 
-const SBaseGunRPGStats& CUnitGuns::GetCommonGunStats( const int nCommonGun ) const
+const SBaseGunRPGStats &CUnitGuns::GetCommonGunStats( const int nCommonGun ) const
 {
-	NI_ASSERT( nCommonGun < nCommonGuns, fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
+	NI_ASSERT( nCommonGun < nCommonGuns,
+	           fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
 	return guns[gunsBegins[nCommonGun]]->GetGun();
 }
 
 int CUnitGuns::GetNAmmo( const int nCommonGun ) const
 {
-	NI_ASSERT( nCommonGun < nCommonGuns, fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
+	NI_ASSERT( nCommonGun < nCommonGuns,
+	           fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
 	return commonGunsInfo[nCommonGun]->nAmmo;
 }
 
 // nAmmo со знаком
 void CUnitGuns::ChangeAmmo( const int nCommonGun, const int nAmmo )
 {
-	NI_ASSERT( nCommonGun < nCommonGuns, fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
+	NI_ASSERT( nCommonGun < nCommonGuns,
+	           fmt::format( "Wrong number of gun ({}), total number of guns ({})", nCommonGun, nCommonGuns ) );
 	commonGunsInfo[nCommonGun]->nAmmo += nAmmo;
 	commonGunsInfo[nCommonGun]->nAmmo = Clamp( commonGunsInfo[nCommonGun]->nAmmo, 0, GetNAmmo( nCommonGun ) );
 }
@@ -294,7 +312,7 @@ bool CUnitGuns::DoesExistRejectReason( const EUnitAckType &ackType ) const
 	return false;
 }
 
-CBasicGun* CUnitGuns::GetMainGun() const
+CBasicGun *CUnitGuns::GetMainGun() const
 {
 	if ( guns.size() != 0 )
 		return guns[nMainGun];
@@ -313,8 +331,8 @@ float CUnitGuns::GetMaxFireRange( const CAIUnit *pOwner ) const
 
 void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 {
-	CAIUnit *pUnit = checked_cast<CAIUnit*>(pCommonUnit);
-	const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
+	CAIUnit *pUnit = checked_cast<CAIUnit *>( pCommonUnit );
+	const SMechUnitRPGStats *pStats = checked_cast<const SMechUnitRPGStats *>( pUnit->GetStats() );
 
 	int nGuns = 0;
 	float fMaxRevealRadius = 0;
@@ -325,9 +343,9 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 		for ( int j = 0; j < pStats->GetGunsSize( pUnit->GetUniqueId(), i ); ++j )
 		{
 			const SBaseGunRPGStats &gun = pStats->GetGun( pUnit->GetUniqueId(), i, j );
-			if ( gun.pWeapon  )
+			if ( gun.pWeapon )
 			{
-				AddGun( CUnitsGunsFactory( pUnit, nCommonGun++, i-1 ), i, j, gun.pWeapon, &nGuns, gun.nAmmo );
+				AddGun( CUnitsGunsFactory( pUnit, nCommonGun++, i - 1 ), i, j, gun.pWeapon, &nGuns, gun.nAmmo );
 
 				if ( gun.pWeapon->fRevealRadius > fMaxRevealRadius )
 					fMaxRevealRadius = gun.pWeapon->fRevealRadius;
@@ -340,13 +358,9 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 
 	int i = 0;
 	while ( i < GetNGuns() &&
-					(
-						GetGun(i)->GetShell().IsLineTrajectory() ||
-						GetGun(i)->GetShell().IsATGMTrajectory() ||
-						GetGun(i)->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_MORALE ||
-						GetGun(i)->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_FOG
-					)
-				)
+	        ( GetGun( i )->GetShell().IsLineTrajectory() || GetGun( i )->GetShell().IsATGMTrajectory() ||
+	          GetGun( i )->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_MORALE ||
+	          GetGun( i )->GetShell().eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_FOG ) )
 		++i;
 
 	nFirstArtGun = ( i < GetNGuns() ) ? i : -1;
@@ -356,9 +370,7 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 		if ( GetGun( i )->GetGun().nPriority == 0 )
 		{
 			int j = 0;
-			while ( j < i &&
-							( GetGun( j )->GetGun().nPriority != 0 ||
-							  GetGun( j )->IsCommonEqual( GetGun( i ) ) ) )
+			while ( j < i && ( GetGun( j )->GetGun().nPriority != 0 || GetGun( j )->IsCommonEqual( GetGun( i ) ) ) )
 				++j;
 
 			if ( j < i )
@@ -374,18 +386,14 @@ bool CMechUnitGuns::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShe
 {
 	int i = 0;
 	while ( i < GetNGuns() &&
-					(
-					GetGun(i)->GetShell().IsLineTrajectory() ||
-					GetGun(i)->GetShell().IsATGMTrajectory() ||
-					GetGun(i)->GetShell().eDamageType != eShellType
-					)
-				)
+	        ( GetGun( i )->GetShell().IsLineTrajectory() || GetGun( i )->GetShell().IsATGMTrajectory() ||
+	          GetGun( i )->GetShell().eDamageType != eShellType ) )
 	{
 		++i;
 	}
 	if ( i < GetNGuns() && nFirstArtGun != i )
 	{
-		nFirstArtGun = i ;
+		nFirstArtGun = i;
 		return true;
 	}
 	return false;
@@ -396,14 +404,15 @@ const int CMechUnitGuns::GetActiveShellType() const
 	if ( nFirstArtGun == -1 )
 		return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH;
 	else
-		return GetGun(nFirstArtGun)->GetShell().eDamageType;
+		return GetGun( nFirstArtGun )->GetShell().eDamageType;
 }
 
-class CBasicGun* CMechUnitGuns::GetFirstArtilleryGun() const
+class CBasicGun *CMechUnitGuns::GetFirstArtilleryGun() const
 {
 	if ( nFirstArtGun >= 0 )
 		return GetGun( nFirstArtGun );
-	else return 0;
+	else
+		return 0;
 }
 
 //*******************************************************************
@@ -412,14 +421,19 @@ class CBasicGun* CMechUnitGuns::GetFirstArtilleryGun() const
 
 void CInfantryGuns::Init( CCommonUnit *pCommonUnit )
 {
-	CSoldier *pUnit = checked_cast<CSoldier*>(pCommonUnit);
-	const SInfantryRPGStats *pStats = checked_cast<const SInfantryRPGStats*>( pUnit->GetStats() );
+	CSoldier *pUnit = checked_cast<CSoldier *>( pCommonUnit );
+	const SInfantryRPGStats *pStats = checked_cast<const SInfantryRPGStats *>( pUnit->GetStats() );
 
 	int nGuns = 0;
 	const int nUnitUniqueID = pUnit->GetUniqueId();
 	for ( int i = 0; i < pStats->GetGunsSize( nUnitUniqueID, 0 ); ++i )
 	{
-		bool bSuccess = AddGun( CUnitsGunsFactory( pUnit, i, -1 ), 0, i, pStats->GetGun( nUnitUniqueID, 0, i ).pWeapon, &nGuns, pStats->GetGun( nUnitUniqueID, 0, i ).nAmmo );
-		NI_ASSERT( bSuccess, fmt::format("Can't add gun to unit \"{}\"", NDb::GetResName(pStats)) );
+		bool bSuccess = AddGun( CUnitsGunsFactory( pUnit, i, -1 ),
+		                        0,
+		                        i,
+		                        pStats->GetGun( nUnitUniqueID, 0, i ).pWeapon,
+		                        &nGuns,
+		                        pStats->GetGun( nUnitUniqueID, 0, i ).nAmmo );
+		NI_ASSERT( bSuccess, fmt::format( "Can't add gun to unit \"{}\"", NDb::GetResName( pStats ) ) );
 	}
 }

@@ -14,7 +14,7 @@ struct CNativeDockHint::SImpl
 
 	static gboolean Draw( GtkWidget *pWidget, cairo_t *pContext, gpointer pData )
 	{
-		const SImpl &impl = *static_cast<SImpl*>( pData );
+		const SImpl &impl = *static_cast<SImpl *>( pData );
 		const int nWidth = gtk_widget_get_allocated_width( pWidget );
 		const int nHeight = gtk_widget_get_allocated_height( pWidget );
 		const wxColour color = wxSystemSettings::GetColour( wxSYS_COLOUR_HOTLIGHT );
@@ -23,15 +23,14 @@ struct CNativeDockHint::SImpl
 		const double b = color.Blue() / 255.0;
 
 		cairo_set_operator( pContext, CAIRO_OPERATOR_SOURCE );
-		cairo_set_source_rgba( pContext, r, g, b,
-			impl.bResizeHint || !impl.bComposited ? 1.0 : 0.25 );
+		cairo_set_source_rgba( pContext, r, g, b, impl.bResizeHint || !impl.bComposited ? 1.0 : 0.25 );
 		cairo_paint( pContext );
 		if ( !impl.bResizeHint && nWidth > 2 * impl.nBorder && nHeight > 2 * impl.nBorder )
 		{
 			cairo_set_source_rgba( pContext, r, g, b, 1.0 );
 			cairo_set_line_width( pContext, impl.nBorder );
-			cairo_rectangle( pContext, impl.nBorder / 2.0, impl.nBorder / 2.0,
-				nWidth - impl.nBorder, nHeight - impl.nBorder );
+			cairo_rectangle(
+					pContext, impl.nBorder / 2.0, impl.nBorder / 2.0, nWidth - impl.nBorder, nHeight - impl.nBorder );
 			cairo_stroke( pContext );
 		}
 		return TRUE;
@@ -89,11 +88,11 @@ void CNativeDockHint::Show( const wxRect &rScreenRect, bool bResizeHint )
 	// proposed dock with an opaque rectangle. The narrow sash stays solid.
 	cairo_rectangle_int_t outer = { 0, 0, rScreenRect.width, rScreenRect.height };
 	cairo_region_t *const pShape = cairo_region_create_rectangle( &outer );
-	if ( !pImpl->bComposited && !bResizeHint &&
-		rScreenRect.width > 2 * pImpl->nBorder && rScreenRect.height > 2 * pImpl->nBorder )
+	if ( !pImpl->bComposited && !bResizeHint && rScreenRect.width > 2 * pImpl->nBorder &&
+	     rScreenRect.height > 2 * pImpl->nBorder )
 	{
-		cairo_rectangle_int_t inner = { pImpl->nBorder, pImpl->nBorder,
-			rScreenRect.width - 2 * pImpl->nBorder, rScreenRect.height - 2 * pImpl->nBorder };
+		cairo_rectangle_int_t inner = {
+			pImpl->nBorder, pImpl->nBorder, rScreenRect.width - 2 * pImpl->nBorder, rScreenRect.height - 2 * pImpl->nBorder };
 		cairo_region_subtract_rectangle( pShape, &inner );
 	}
 	gtk_widget_shape_combine_region( pImpl->pWindow, pShape );

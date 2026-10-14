@@ -4,7 +4,6 @@
 #include "MapEditorLib/DefaultView.h"
 #include "TextureState.h"
 
-
 class CTextureEditor : public CEditorBase, public CDefaultView
 {
 	OBJECT_NOCOPY_METHODS( CTextureEditor );
@@ -16,9 +15,12 @@ class CTextureEditor : public CEditorBase, public CDefaultView
 public:
 	//IEditor
 	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
-	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
-	IView* GetView() { return this;  }
-	IInputState* GetInputState() { return pState; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName )
+	{
+		( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__";
+	}
+	IView *GetView() { return this; }
+	IInputState *GetInputState() { return pState; }
 	void Create();
 	void Destroy();
 	void CreateControls() {}
@@ -27,10 +29,10 @@ public:
 	void DestroyControls() {}
 
 	//CDefaultView
-	void Undo( IController* pController ) {}
-	void Redo( IController* pController ) {}
+	void Undo( IController *pController ) {}
+	void Redo( IController *pController ) {}
 
 	// members
 protected:
-	CTextureState * pState;
+	CTextureState *pState;
 };

@@ -22,10 +22,7 @@ class CBuildingState : public CMultiInputState, public ICommandHandler
 	bool bNeedLoadEnterConfig;
 
 	// Методы общего назначения
-	bool IsMultiInputState( int nStateIndex )
-	{
-		return (nStateIndex == IS_POINTS);
-	}
+	bool IsMultiInputState( int nStateIndex ) { return ( nStateIndex == IS_POINTS ); }
 
 	void LoadEnterConfig();
 

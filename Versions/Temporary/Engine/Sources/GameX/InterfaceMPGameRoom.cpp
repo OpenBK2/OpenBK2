@@ -35,11 +35,11 @@ static bool s_bMPAllowStartGame;
 
 // CInterfaceMPGameRoom
 
-CInterfaceMPGameRoom::CInterfaceMPGameRoom() :
-CInterfaceMPScreenBase( "MPGameRoom", "game_room" )
+CInterfaceMPGameRoom::CInterfaceMPGameRoom() : CInterfaceMPScreenBase( "MPGameRoom", "game_room" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPGameRoom::OnChatMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_GAME_ROOM_INIT, SMPUIGameRoomInitMessage, &CInterfaceMPGameRoom::OnGameRoomInitMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_GAME_ROOM_INIT, SMPUIGameRoomInitMessage, &CInterfaceMPGameRoom::OnGameRoomInitMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_SLOT, SMPUIUpdateSlotMessage, &CInterfaceMPGameRoom::OnUpdateSlotMessage );
 }
 
@@ -171,18 +171,18 @@ bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::stri
 	return false;
 }
 
-int CInterfaceMPGameRoom::SelectionIndexToNationIndex(int nSelectionIndex)
+int CInterfaceMPGameRoom::SelectionIndexToNationIndex( int nSelectionIndex )
 {
 	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
 	int nTechLevel = gameDesc.nTechLevel;
-	const std::vector< NDb::SMultiplayerSide > &sides = pMPConsts->sides;
+	const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
 
 	if ( !sides[0].techLevels[nTechLevel].bDisabled && nSelectionIndex == 0 )
-			return 0;
+		return 0;
 
 	// nSelectionIndex is always >= 1
 	int nValidIndex = 0;
-	for(int i = 0; i < sides.size(); i++)
+	for ( int i = 0; i < sides.size(); i++ )
 	{
 		if ( !sides[i].techLevels[nTechLevel].bDisabled )
 			nValidIndex++;
@@ -195,14 +195,14 @@ int CInterfaceMPGameRoom::SelectionIndexToNationIndex(int nSelectionIndex)
 	return 0;
 }
 
-int CInterfaceMPGameRoom::NationIndexToSelectionIndex(int nCountryIndex)
+int CInterfaceMPGameRoom::NationIndexToSelectionIndex( int nCountryIndex )
 {
 	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
 	int nTechLevel = gameDesc.nTechLevel;
-	const std::vector< NDb::SMultiplayerSide > &sides = pMPConsts->sides;
+	const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
 
 	int nValidIndex = -1;
-	for(int i = 0; i <= nCountryIndex; i++)
+	for ( int i = 0; i <= nCountryIndex; i++ )
 	{
 		if ( !sides[i].techLevels[nTechLevel].bDisabled )
 			nValidIndex++;
@@ -232,9 +232,10 @@ bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
 		bRequestedSlotChangeClosed = bWantClosed;
 
 		// Ask user
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-			GetScreen()->GetTextEntry( "ASK_KICK_PLAYER" ) ).c_str() );
+		NMainLoop::Command(
+				ML_COMMAND_MESSAGE_BOX,
+				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", GetScreen()->GetTextEntry( "ASK_KICK_PLAYER" ) )
+						.c_str() );
 
 		return true;
 	}
@@ -251,13 +252,13 @@ bool CInterfaceMPGameRoom::OnChangeSideReaction()
 	// Process country change
 	SUISlot &slot = slots[nOwnSlot];
 	int nIndex = slot.pCountry->GetSelectedIndex();
-	if ( nIndex == 0 )		// Random
+	if ( nIndex == 0 ) // Random
 	{
 		slot.info.bRandomCountry = true;
 	}
 	else
 	{
-		slot.info.nCountry = SelectionIndexToNationIndex(nIndex);
+		slot.info.nCountry = SelectionIndexToNationIndex( nIndex );
 		slot.info.bRandomCountry = false;
 	}
 
@@ -362,14 +363,14 @@ void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 	if ( slots[nSlot].info.bRandomCountry )
 	{
 		const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
-		const std::vector< NDb::SMultiplayerSide > &sides = pMPConsts->sides;
+		const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
 		int nTechLevel = gameDesc.nTechLevel;
 
 		// Build a list of valid nation indexes and pick a random one from there
-		std::vector< int > validIndexes;
+		std::vector<int> validIndexes;
 		for ( int i = 0; i < sides.size(); i++ )
 			if ( !sides[i].techLevels[nTechLevel].bDisabled )
-				validIndexes.push_back(i);
+				validIndexes.push_back( i );
 
 		slots[nSlot].info.nCountry = validIndexes[NWin32Random::Random( validIndexes.size() )];
 	}
@@ -402,7 +403,6 @@ bool CInterfaceMPGameRoom::OnChatEnter()
 		}
 	}
 	return true;
-
 };
 
 bool CInterfaceMPGameRoom::OnChatEscape()
@@ -416,7 +416,8 @@ bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 	if ( pMsg->szName.empty() )
 		wszText = pMsg->wszText;
 	else
-		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" + NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
+		wszText = L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" +
+		          NStr::ToUnicode( pMsg->szName ) + L": " + pMsg->wszText;
 	pChatWrapper->AddItem( wszText );
 
 	// notify the user if the app is minimized or unfocused
@@ -452,26 +453,27 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		std::string szReasonCode = "DISCONNECT_UNKNOWN";
 		switch ( pMsg->eResult )
 		{
-		case SMPUIGameRoomInitMessage::ERR_GAME_FULL:
-			szReasonCode = "DISCONNECT_GAME_FULL";
-			break;
-		case SMPUIGameRoomInitMessage::ERR_CHECKSUM:
-			szReasonCode = "DISCONNECT_CHECKSUM";
-			break;
-		case SMPUIGameRoomInitMessage::ERR_KICKED:
-			szReasonCode = "DISCONNECT_KICKED";
-			break;
-		case SMPUIGameRoomInitMessage::ERR_GAME_KILLED:
-			szReasonCode = "DISCONNECT_GAME_KILLED";
-			break;
-		case SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED:
-			szReasonCode = "DISCONNECT_CONNECT_FAIL";
-			break;
+			case SMPUIGameRoomInitMessage::ERR_GAME_FULL:
+				szReasonCode = "DISCONNECT_GAME_FULL";
+				break;
+			case SMPUIGameRoomInitMessage::ERR_CHECKSUM:
+				szReasonCode = "DISCONNECT_CHECKSUM";
+				break;
+			case SMPUIGameRoomInitMessage::ERR_KICKED:
+				szReasonCode = "DISCONNECT_KICKED";
+				break;
+			case SMPUIGameRoomInitMessage::ERR_GAME_KILLED:
+				szReasonCode = "DISCONNECT_GAME_KILLED";
+				break;
+			case SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED:
+				szReasonCode = "DISCONNECT_CONNECT_FAIL";
+				break;
 		}
 		std::wstring wszReason = GetScreen()->GetTextEntry( szReasonCode );
 		if ( wszReason.length() > 0 )
 		{
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszReason ).c_str() );
+			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+			                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszReason ).c_str() );
 		}
 		return true;
 	}
@@ -489,12 +491,13 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	const int nPlayers = gameDesc.nPlayers;
 
 	// Prepare info for slots (country list, colour list)
-	pTechLevel->SetText( pTechLevel->GetDBText() + GET_TEXT_PRE(pMPConsts->techLevels[gameDesc.nTechLevel].,Name) );
-	pNumPlayers->SetText( pNumPlayers->GetDBText() + NStr::ToUnicode( std::to_string(  nPlayers ) ) );
+	pTechLevel->SetText( pTechLevel->GetDBText() + GET_TEXT_PRE( pMPConsts->techLevels[gameDesc.nTechLevel]., Name ) );
+	pNumPlayers->SetText( pNumPlayers->GetDBText() + NStr::ToUnicode( std::to_string( nPlayers ) ) );
 	pMapName->SetText( pMapName->GetDBText() + GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) );
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + NStr::ToUnicode( fmt::format( "{} min", gameDesc.nTimeLimit ) ) );
-	pCaptureTime->SetText( pCaptureTime->GetDBText() + NStr::ToUnicode( fmt::format( "{} sec", gameDesc.nCaptureTime ) ) );
-	pGameSpeed->SetText( pGameSpeed->GetDBText() + NStr::ToUnicode( std::to_string(  gameDesc.nGameSpeed ) ) );
+	pCaptureTime->SetText( pCaptureTime->GetDBText() +
+	                       NStr::ToUnicode( fmt::format( "{} sec", gameDesc.nCaptureTime ) ) );
+	pGameSpeed->SetText( pGameSpeed->GetDBText() + NStr::ToUnicode( std::to_string( gameDesc.nGameSpeed ) ) );
 	pUnitExperience->SetState( gameDesc.bUnitExp ? 1 : 0 );
 
 	IButton *pRandomPlacement = GetChildChecked<IButton>( pAdvancedPopup, "RandomPlacement", true );
@@ -521,15 +524,16 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 
 		//Set viewer
 		slot.pCountry->SetViewer( new CTextureViewer() );
-		CPtr<CTextureData> pRandomItem = new CTextureData( pMPConsts->pRandomCountryIcon, GetScreen()->GetTextEntry( "TT_RANDOM_COUNTRY" ) );
+		CPtr<CTextureData> pRandomItem =
+				new CTextureData( pMPConsts->pRandomCountryIcon, GetScreen()->GetTextEntry( "TT_RANDOM_COUNTRY" ) );
 		slot.pCountry->AddItem( pRandomItem );
 		for ( int j = 0; j < pMPConsts->sides.size(); ++j )
 		{
-			if ( pMPConsts->sides[j].pPartyInfo &&
-				 !pMPConsts->sides[j].techLevels[gameDesc.nTechLevel].bDisabled &&
-				 CHECK_TEXT_NOT_EMPTY_PRE(pMPConsts->sides[j].,Name))
+			if ( pMPConsts->sides[j].pPartyInfo && !pMPConsts->sides[j].techLevels[gameDesc.nTechLevel].bDisabled &&
+			     CHECK_TEXT_NOT_EMPTY_PRE( pMPConsts->sides[j]., Name ) )
 			{
-				CPtr<CTextureData> pData = new CTextureData( pMPConsts->sides[j].pListItemIcon, GET_TEXT_PRE(pMPConsts->sides[j].,Name) );
+				CPtr<CTextureData> pData =
+						new CTextureData( pMPConsts->sides[j].pListItemIcon, GET_TEXT_PRE( pMPConsts->sides[j]., Name ) );
 				slot.pCountry->AddItem( pData );
 			}
 		}
@@ -621,7 +625,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 		if ( slot.info.bRandomCountry )
 			slot.pCountry->Select( 0 );
 		else
-			slot.pCountry->Select( NationIndexToSelectionIndex(slot.info.nCountry) + 1 );
+			slot.pCountry->Select( NationIndexToSelectionIndex( slot.info.nCountry ) + 1 );
 		slot.pTeam->SetState( slot.info.nTeam );
 		slot.pColour->Select( slot.info.nColour );
 		slot.pAccept->SetState( slot.info.bAccept ? 1 : 0 );
@@ -689,7 +693,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 		if ( pWindowMiniMap )
 		{
 			pWindowMiniMap->SetLoadingMapParams( pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-				pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
+			                                     pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
 			pWindowMiniMap->SetMaterial( pMapInfo->pMiniMap );
 			pWindowMiniMap->ShowWindow( true );
 		}
@@ -703,7 +707,13 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 	nTeams[0] = 0;
 	nTeams[1] = 0;
 	int nColourMask = 0;
-	enum { E_OK, E_SIDE, E_COLOUR, E_ACCEPT } eState = E_OK;
+	enum
+	{
+		E_OK,
+		E_SIDE,
+		E_COLOUR,
+		E_ACCEPT
+	} eState = E_OK;
 
 	for ( int i = 0; i < slots.size(); ++i )
 	{
@@ -795,15 +805,13 @@ static uint32_t ConvertColor( const CVec3 &vColor )
 	const int g = vColor.g * 255.0f;
 	const int b = vColor.b * 255.0f;
 
-	return 0xFF000000 + (( r & 0xFF ) << 16) + (( g & 0xFF ) << 8) + ( b & 0xFF );
+	return 0xFF000000 + ( ( r & 0xFF ) << 16 ) + ( ( g & 0xFF ) << 8 ) + ( b & 0xFF );
 }
 
 #ifndef _SINGLE_DEMO
 // CICMPGameRoom
 
-void CICMPGameRoom::PreCreate()
-{
-}
+void CICMPGameRoom::PreCreate() {}
 
 void CICMPGameRoom::PostCreate( IInterface *pInterface )
 {
@@ -815,7 +823,7 @@ void CICMPGameRoom::Configure( const char *pszConfig )
 	str = pszConfig;
 }
 
-START_REGISTER(MPGameRoomCommands)
+START_REGISTER( MPGameRoomCommands )
 
 REGISTER_VAR_EX( "mp_allow_start_game", NGlobal::VarBoolHandler, &s_bMPAllowStartGame, 0, STORAGE_NONE );
 

@@ -99,7 +99,8 @@ void CMPManagerMode::StartGame()
 		NI_ASSERT( nTranSlot <= nSlotsUsed, "PRG: Incorrectly counted used slots." );
 	}
 	pScenarioTracker->SetMultiplayerInfo( scenarioInfo );
-	NI_ASSERT( nTranSlot == nSlotsUsed, fmt::format( "PRG: Incorrectly counted used slots - {}/{}.", nTranSlot, nSlotsUsed ) );
+	NI_ASSERT( nTranSlot == nSlotsUsed,
+	           fmt::format( "PRG: Incorrectly counted used slots - {}/{}.", nTranSlot, nSlotsUsed ) );
 	pScenarioTracker->SetLocalPlayer( nOwnSlot );
 
 	NGlobal::SetVar( "multiplayer_time_limit", -1 );
@@ -128,26 +129,25 @@ void CMPManagerMode::StartGame()
 		traceSlot.bPresent = slots[i].bPresent;
 		traceSlots.push_back( traceSlot );
 	}
-	const std::string szMapName = gameDesc.pMPMap ? NStr::ToMBCS( GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) ) : std::string( "unknown" );
+	const std::string szMapName =
+			gameDesc.pMPMap ? NStr::ToMBCS( GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) ) : std::string( "unknown" );
 	NGameX::MatchPacketTrace_Reset();
-	NGameX::MatchPacketTrace_SetHeader(
-		nGameID,
-		szSessionName,
-		szMapName,
-		ulGameCheckSum,
-		GetOwnClientID(),
-		nOwnSlot,
-		nHostClientID,
-		dwInitialPlayers,
-		GetPresentMask(),
-		IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0,
-		traceSlots );
-	NGameX::MatchPacketTrace_Log(
-		pTransceiver->GetCurrentCommonSegment(),
-		"STATE",
-		"StartGame",
-		GetOwnClientID(),
-		fmt::format( "slots_used={} initial_players={:08X}", nSlotsUsed, dwInitialPlayers ) );
+	NGameX::MatchPacketTrace_SetHeader( nGameID,
+	                                    szSessionName,
+	                                    szMapName,
+	                                    ulGameCheckSum,
+	                                    GetOwnClientID(),
+	                                    nOwnSlot,
+	                                    nHostClientID,
+	                                    dwInitialPlayers,
+	                                    GetPresentMask(),
+	                                    IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0,
+	                                    traceSlots );
+	NGameX::MatchPacketTrace_Log( pTransceiver->GetCurrentCommonSegment(),
+	                              "STATE",
+	                              "StartGame",
+	                              GetOwnClientID(),
+	                              fmt::format( "slots_used={} initial_players={:08X}", nSlotsUsed, dwInitialPlayers ) );
 
 	timeEndMatch = 0;
 	bOutcomeKnown = false;
@@ -155,7 +155,7 @@ void CMPManagerMode::StartGame()
 
 void CMPManagerMode::WinGame()
 {
-//	WriteToPipe( PIPE_CHAT, StrFmt( "You won the game" ) );
+	//	WriteToPipe( PIPE_CHAT, StrFmt( "You won the game" ) );
 
 	Singleton<IScenarioTracker>()->MissionWin();
 	nWinningSide = slots[nOwnSlot].nTeam;
@@ -166,7 +166,7 @@ void CMPManagerMode::WinGame()
 
 void CMPManagerMode::LoseGame()
 {
-//	WriteToPipe( PIPE_CHAT, StrFmt( "You lost the game" ) );
+	//	WriteToPipe( PIPE_CHAT, StrFmt( "You lost the game" ) );
 
 	Singleton<IScenarioTracker>()->MissionCancel();
 	nWinningSide = ( slots[nOwnSlot].nTeam == 0 ) ? 1 : 0;
@@ -180,19 +180,18 @@ void CMPManagerMode::ScheduleWinGame()
 	if ( bOutcomeKnown || !IsValid( pTransceiver ) )
 		return;
 
-	NGameX::MatchPacketTrace_Log(
-		pTransceiver->GetCurrentCommonSegment(),
-		"DECISION",
-		"ScheduleWinGame",
-		GetOwnClientID(),
-		fmt::format( "game_id={}", nGameID ) );
+	NGameX::MatchPacketTrace_Log( pTransceiver->GetCurrentCommonSegment(),
+	                              "DECISION",
+	                              "ScheduleWinGame",
+	                              GetOwnClientID(),
+	                              fmt::format( "game_id={}", nGameID ) );
 	// All-left victories must use the announced drop boundary, not the local
 	// frame that noticed it. Surviving teammates can be several ticks apart.
 	int nLastOpponentDrop = -1;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		if ( ( dwInitialPlayers & ( 1UL << i ) ) != 0 && slots[i].nTeam != slots[nOwnSlot].nTeam &&
-			i < scheduledDropSegmentBySlot.size() )
+		     i < scheduledDropSegmentBySlot.size() )
 			nLastOpponentDrop = (std::max)( nLastOpponentDrop, scheduledDropSegmentBySlot[i] );
 	}
 	pTransceiver->ScheduleGameEnd( nLastOpponentDrop );
@@ -202,34 +201,33 @@ void CMPManagerMode::ScheduleWinGame()
 
 void CMPManagerMode::ScheduleLoseGame()
 {
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"TX",
-		"CB2GameLostPacket",
-		GetOwnClientID(),
-		fmt::format( "game_id={}", nGameID ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "TX",
+	                              "CB2GameLostPacket",
+	                              GetOwnClientID(),
+	                              fmt::format( "game_id={}", nGameID ) );
 	CB2GameLostPacket *pPkt = new CB2GameLostPacket( 0, nGameID, pTransceiver->ScheduleGameEnd( -1 ) );
 	BroadcastGameControlPacket( pPkt );
 	bWinOnGameEnd = false;
 	bOutcomeKnown = true;
 }
 
-std::string GenerateDateTimeReplayFilename() {
-    // Get current time
-    auto now = std::chrono::system_clock::now();
-    auto time_t = std::chrono::system_clock::to_time_t(now);
+std::string GenerateDateTimeReplayFilename()
+{
+	// Get current time
+	auto now = std::chrono::system_clock::now();
+	auto time_t = std::chrono::system_clock::to_time_t( now );
 
-    // Convert to local time
-    std::tm local_time = *std::localtime(&time_t);
+	// Convert to local time
+	std::tm local_time = *std::localtime( &time_t );
 
-    // Create string stream for formatting
-    std::ostringstream oss;
+	// Create string stream for formatting
+	std::ostringstream oss;
 
-    // Format: "MatchFrom_YYYY-MM-DD_HOURS-MINS-SECONDS"
-    oss << "MatchFrom_"
-        << std::put_time(&local_time, "%Y-%m-%d_%H-%M-%S");
+	// Format: "MatchFrom_YYYY-MM-DD_HOURS-MINS-SECONDS"
+	oss << "MatchFrom_" << std::put_time( &local_time, "%Y-%m-%d_%H-%M-%S" );
 
-    return oss.str();
+	return oss.str();
 }
 
 void CMPManagerMode::EndGame()
@@ -241,17 +239,17 @@ void CMPManagerMode::EndGame()
 	dwUserPausedPlayers = 0;
 	bInitialLoadInProgress = false;
 	ShowWaitWindow( false );
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"STATE",
-		"EndGame",
-		GetOwnClientID(),
-		fmt::format( "winning_side={}", nWinningSide ) );
-	NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "STATE",
+	                              "EndGame",
+	                              GetOwnClientID(),
+	                              fmt::format( "winning_side={}", nWinningSide ) );
+	NGameX::MatchPacketTrace_SetFinalState(
+			GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
 	NGameX::MatchPacketTrace_Flush( "match_end" );
 
 	if ( IsValid( pTransceiver ) )
-		pCommandsHistory = dynamic_cast<CCommandsHistory*>(pTransceiver->GetCommandsHistory());
+		pCommandsHistory = dynamic_cast<CCommandsHistory *>( pTransceiver->GetCommandsHistory() );
 	else
 		pCommandsHistory = 0;
 	// Improve the replay file name
@@ -287,7 +285,7 @@ void CMPManagerMode::CheckEndGameConditions()
 		return;
 
 	if ( CheckInstantLose() )
-	return;
+		return;
 
 	return;
 }
@@ -302,7 +300,7 @@ bool CMPManagerMode::CheckAllLeftWin()
 		for ( int i = 0; i < slots.size(); ++i )
 		{
 			if ( IsPlayerPresent( i ) && slots[nOwnSlot].nTeam + slots[i].nTeam == 1 )
-				++nOppositePlayers;		// one of them is 1 and another is 0, i.e. enemies
+				++nOppositePlayers; // one of them is 1 and another is 0, i.e. enemies
 		}
 
 		if ( nOppositePlayers == 0 )
@@ -331,7 +329,7 @@ bool CMPManagerMode::CheckScoreWinLose()
 	if ( curGameTime > timeEndMatch )
 		NGlobal::SetVar( "multiplayer_time_limit", -1 );
 	else
-		NGlobal::SetVar( "multiplayer_time_limit", int(timeEndMatch) / 1000 );
+		NGlobal::SetVar( "multiplayer_time_limit", int( timeEndMatch ) / 1000 );
 
 	if ( timeEndMatch > 0 && curGameTime > timeEndMatch )
 	{
@@ -340,7 +338,7 @@ bool CMPManagerMode::CheckScoreWinLose()
 
 		if ( nOwnTeam == nLostTeam )
 		{
-//			WriteToPipe( PIPE_CHAT, StrFmt( "Game time over, lost by score" ) );
+			//			WriteToPipe( PIPE_CHAT, StrFmt( "Game time over, lost by score" ) );
 			ScheduleLoseGame();
 			return true;
 		}
@@ -391,12 +389,12 @@ bool CMPManagerMode::CheckKeyBuildingsWinLose()
 	{
 		if ( nNewWinningSide != 2 )
 		{
-			nSecondsLeft = (std::max) ( 0, int( ( int(timeResolution) - int(curGameTime) ) / 1000 ) );
+			nSecondsLeft = (std::max)( 0, int( ( int( timeResolution ) - int( curGameTime ) ) / 1000 ) );
 			if ( curGameTime > timeResolution )
 			{
 				if ( nWinningSide != slots[nOwnSlot].nTeam )
 				{
-//					WriteToPipe( PIPE_CHAT, StrFmt( "Lost all keypoints, timeout exceeded" ) );
+					//					WriteToPipe( PIPE_CHAT, StrFmt( "Lost all keypoints, timeout exceeded" ) );
 					ScheduleLoseGame();
 					return true;
 				}
@@ -432,7 +430,7 @@ bool CMPManagerMode::CheckInstantLose()
 
 		if ( nWinningSide + nOwnTeam == 1 && Singleton<IAILogic>()->HasPlayerNoUnits( nOwnSlot ) )
 		{
-//			WriteToPipe( PIPE_CHAT, StrFmt( "All keypoints lost, instant loss" ) );
+			//			WriteToPipe( PIPE_CHAT, StrFmt( "All keypoints lost, instant loss" ) );
 			ScheduleLoseGame();
 			return true;
 		}
@@ -492,12 +490,11 @@ void CMPManagerMode::AnalyzeLaggers()
 			lagInfo.dwHatedBy = 0;
 			lagInfo.timeStartLag = 0;
 			CPtr<CB2LagTimeUpdatePacket> pPkt = new CB2LagTimeUpdatePacket( 0, i, lagInfo.nLagLeft );
-			NGameX::MatchPacketTrace_Log(
-				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-				"TX",
-				"CB2LagTimeUpdatePacket",
-				GetOwnClientID(),
-				fmt::format( "player={} time_left={}", i, lagInfo.nLagLeft ) );
+			NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			                              "TX",
+			                              "CB2LagTimeUpdatePacket",
+			                              GetOwnClientID(),
+			                              fmt::format( "player={} time_left={}", i, lagInfo.nLagLeft ) );
 			pClient->SendGamePacket( pPkt, true );
 			//DebugTrace( "*** LAG STOP for player %d at time %d, time left %d", i, curTime, lagInfo.nLagLeft );
 		}
@@ -509,32 +506,31 @@ void CMPManagerMode::AnalyzeLaggers()
 				if ( !( lagInfo.dwHatedBy & ( 1UL << nOwnSlot ) ) )
 				{
 					CPtr<CB2SuggestKickPacket> pPkt = new CB2SuggestKickPacket( 0, i );
-					NGameX::MatchPacketTrace_Log(
-						IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-						"TX",
-						"CB2SuggestKickPacket",
-						GetOwnClientID(),
-						fmt::format( "slot_to_kick={}", i ) );
+					NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+					                              "TX",
+					                              "CB2SuggestKickPacket",
+					                              GetOwnClientID(),
+					                              fmt::format( "slot_to_kick={}", i ) );
 					pClient->SendGamePacket( pPkt, true );
 					const uint32_t dwPreVoteMask = lagInfo.dwHatedBy;
 					lagInfo.dwHatedBy |= ( 1UL << nOwnSlot );
 					NGameX::MatchPacketTrace_Log(
-						IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-						"DECISION",
-						"SetOwnKickVote",
-						GetOwnClientID(),
-						fmt::format( "slot={} pre_votes={:08X} post_votes={:08X}", i, dwPreVoteMask, lagInfo.dwHatedBy ) );
+							IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+							"DECISION",
+							"SetOwnKickVote",
+							GetOwnClientID(),
+							fmt::format( "slot={} pre_votes={:08X} post_votes={:08X}", i, dwPreVoteMask, lagInfo.dwHatedBy ) );
 				}
 				// Kick voting is game-control-host authoritative; authority migrates if the original host leaves.
 				const uint32_t dwEligibleVoters = ( dwPlayers & ~dwLaggers ) & ~( 1UL << i );
 				if ( dwEligibleVoters != 0 && lagInfo.dwHatedBy == dwEligibleVoters )
 				{
-					const int nReplacementHostClientID = bLaggingGameControlHost ? GetReplacementHostClientID( nHostClientID ) : -1;
+					const int nReplacementHostClientID =
+							bLaggingGameControlHost ? GetReplacementHostClientID( nHostClientID ) : -1;
 					const bool bOwnsDropAuthority =
-						IsGameControlHost() || ( bLaggingGameControlHost && GetOwnClientID() == nReplacementHostClientID );
-					if ( bOwnsDropAuthority && IsValid( pTransceiver ) &&
-						i >= 0 && i < scheduledDropSegmentBySlot.size() &&
-						scheduledDropSegmentBySlot[i] < 0 )
+							IsGameControlHost() || ( bLaggingGameControlHost && GetOwnClientID() == nReplacementHostClientID );
+					if ( bOwnsDropAuthority && IsValid( pTransceiver ) && i >= 0 && i < scheduledDropSegmentBySlot.size() &&
+					     scheduledDropSegmentBySlot[i] < 0 )
 					{
 						if ( bLaggingGameControlHost )
 							PromoteGameControlHostAfterRemoval( nHostClientID );
@@ -542,14 +538,19 @@ void CMPManagerMode::AnalyzeLaggers()
 							KickPlayerFromSlot( i );
 						const int nDropSegment = pTransceiver->GetCurrentCommonSegment();
 						NGameX::MatchPacketTrace_Log(
-							nDropSegment,
-							"DECISION",
-							"LagKickConsensusReached",
-							GetOwnClientID(),
-							fmt::format( "slot={} eligible={:08X} votes={:08X} control_host={} replacement={}",
-								i, dwEligibleVoters, lagInfo.dwHatedBy, bLaggingGameControlHost ? 1 : 0, nReplacementHostClientID ) );
+								nDropSegment,
+								"DECISION",
+								"LagKickConsensusReached",
+								GetOwnClientID(),
+								fmt::format( "slot={} eligible={:08X} votes={:08X} control_host={} replacement={}",
+						                 i,
+						                 dwEligibleVoters,
+						                 lagInfo.dwHatedBy,
+						                 bLaggingGameControlHost ? 1 : 0,
+						                 nReplacementHostClientID ) );
 						ScheduleSynchronizedPlayerDrop( i, nDropSegment );
-						BroadcastSynchronizedPlayerDrop( i, nDropSegment, bLaggingGameControlHost ? "host_lag_timeout" : "lag_kick" );
+						BroadcastSynchronizedPlayerDrop(
+								i, nDropSegment, bLaggingGameControlHost ? "host_lag_timeout" : "lag_kick" );
 					}
 				}
 			}
@@ -605,6 +606,11 @@ void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 		if ( !slot.bPresent )
 			DebugTrace( "+++ New Slot %d: empty", i );
 		else
-			DebugTrace( "+++ New Slot %d: %s, CID %d, side %d, team %d", i, slot.szName.c_str(), slot.nClientID, slot.nCountry, slot.nTeam );
+			DebugTrace( "+++ New Slot %d: %s, CID %d, side %d, team %d",
+			            i,
+			            slot.szName.c_str(),
+			            slot.nClientID,
+			            slot.nCountry,
+			            slot.nTeam );
 	}
 }

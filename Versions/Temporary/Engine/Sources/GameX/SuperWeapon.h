@@ -3,7 +3,7 @@
 class CMapObj;
 namespace NDb
 {
-	struct SHPObjectRPGStats;
+struct SHPObjectRPGStats;
 }
 
 struct IMissionSuperWeapon : public CObjectBase

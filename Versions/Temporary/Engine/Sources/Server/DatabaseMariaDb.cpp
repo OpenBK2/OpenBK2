@@ -32,8 +32,9 @@ class CMariaDbDatabase : public IDatabase
 	//! whether the statement was supposed to have columns at all. That is what
 	//! mysql_field_count is for.
 	bool StoreResult( CDbResult *pResult );
+
 public:
-	CMariaDbDatabase() : pMySQL( 0 ) { }
+	CMariaDbDatabase() : pMySQL( 0 ) {}
 	virtual ~CMariaDbDatabase() { Close(); }
 
 	virtual bool Connect( const SDbConnection &connection );
@@ -64,9 +65,14 @@ bool CMariaDbDatabase::Connect( const SDbConnection &_connection )
 	my_bool bReconnect = 1;
 	mysql_options( pMySQL, MYSQL_OPT_RECONNECT, &bReconnect );
 
-	if ( mysql_real_connect( pMySQL, connection.szHost.c_str(), connection.szUser.c_str(),
-			connection.szPassword.c_str(), connection.szDatabase.c_str(),
-			connection.nPort, 0, 0 ) == 0 )
+	if ( mysql_real_connect( pMySQL,
+	                         connection.szHost.c_str(),
+	                         connection.szUser.c_str(),
+	                         connection.szPassword.c_str(),
+	                         connection.szDatabase.c_str(),
+	                         connection.nPort,
+	                         0,
+	                         0 ) == 0 )
 	{
 		szLastError = mysql_error( pMySQL );
 		mysql_close( pMySQL );
@@ -182,8 +188,8 @@ std::string CMariaDbDatabase::Escape( const std::string &szValue ) const
 	// the API asks callers to allocate for.
 	std::string szEscaped;
 	szEscaped.resize( szValue.length() * 2 + 1 );
-	const unsigned long nLength = mysql_real_escape_string( pMySQL, &szEscaped[0],
-		szValue.c_str(), static_cast<unsigned long>( szValue.length() ) );
+	const unsigned long nLength = mysql_real_escape_string(
+			pMySQL, &szEscaped[0], szValue.c_str(), static_cast<unsigned long>( szValue.length() ) );
 	szEscaped.resize( nLength );
 	return szEscaped;
 }
@@ -208,7 +214,7 @@ std::unordered_set<std::string> CMariaDbDatabase::GetColumns( const std::string 
 
 }
 
-IDatabase* CreateMariaDbDatabase()
+IDatabase *CreateMariaDbDatabase()
 {
 	return new CMariaDbDatabase();
 }

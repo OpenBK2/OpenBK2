@@ -6,8 +6,8 @@
 
 namespace NDb
 {
-	struct SMapInfo;
-	struct SAIGameConsts;
+struct SMapInfo;
+struct SAIGameConsts;
 }
 
 enum EActionNotify : unsigned int;
@@ -24,7 +24,10 @@ enum EActionCommand : int;
 
 struct IAILogic : public ICommonB2M1AI
 {
-	enum { tidTypeID = 0x3015CB01 };
+	enum
+	{
+		tidTypeID = 0x3015CB01
+	};
 
 	virtual void Suspend() = 0;
 	virtual void Resume() = 0;
@@ -32,15 +35,18 @@ struct IAILogic : public ICommonB2M1AI
 	virtual bool IsMissionLoaded() const = 0;
 
 	virtual void SetProgressHook( IProgressHook *pProgress ) = 0;
-	virtual void Init( ICheckSumLog *pCheckSumLog, const struct NDb::SMapInfo *pMapInfo, const NDb::SAIGameConsts *pConsts, struct IAIScenarioTracker *_pScenarioTracker ) = 0;
-	virtual void LogCheckSum( ICheckSumLog *pCheckSumLog ) { }
+	virtual void Init( ICheckSumLog *pCheckSumLog,
+	                   const struct NDb::SMapInfo *pMapInfo,
+	                   const NDb::SAIGameConsts *pConsts,
+	                   struct IAIScenarioTracker *_pScenarioTracker ) = 0;
+	virtual void LogCheckSum( ICheckSumLog *pCheckSumLog ) {}
 	virtual void InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo ) = 0;
 	virtual void PostMapLoad() {}
 
 	virtual void ToggleWarFog( const bool bWarFog ) = 0;
 	virtual int GetMiniMapWarFogSizeX() const = 0;
 	virtual int GetMiniMapWarFogSizeY() const = 0;
-	virtual const bool GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits ) = 0;
+	virtual const bool GetMiniMapUnitsInfo( std::vector<SMiniMapUnitInfo> &vUnits ) = 0;
 	virtual bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime ) = 0;
 
 	virtual bool UpdateAcknowledgment( SAIAcknowledgment &pAck ) = 0;
@@ -49,20 +55,23 @@ struct IAILogic : public ICommonB2M1AI
 	virtual bool IsCombatSituation() = 0;
 
 	virtual void PrepareUpdates() = 0;
-	virtual CObjectBase* GetUpdate() = 0;
+	virtual CObjectBase *GetUpdate() = 0;
 
 	virtual float GetZ( const CVec2 &vPoint ) const = 0;
 	virtual const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const = 0;
-	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const  = 0;
-	virtual struct ITerraAIObserver* CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
+	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
+	virtual struct ITerraAIObserver *CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
 
 	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup ) = 0;
 	virtual void UnregisterGroup( const int nGroup ) = 0;
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) = 0;
 	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer ) = 0;
-	virtual const	int GenerateGroupNumber() = 0;
+	virtual const int GenerateGroupNumber() = 0;
 
-	virtual void RequestBuildPreview( const EActionCommand eBuildCommand, const CVec2 &vStart, const CVec2 &vEnd, bool bFinished = false ) = 0;
+	virtual void RequestBuildPreview( const EActionCommand eBuildCommand,
+	                                  const CVec2 &vStart,
+	                                  const CVec2 &vEnd,
+	                                  bool bFinished = false ) = 0;
 
 	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eAction, bool bShow ) = 0;
 	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas ) = 0;
@@ -75,7 +84,7 @@ struct IAILogic : public ICommonB2M1AI
 
 	virtual void SetGlobeScriptHandler( struct IGlobeScriptHandler *pHandler ) = 0;
 
-	virtual class CStaticMapHeights* GetHeights() const = 0;
+	virtual class CStaticMapHeights *GetHeights() const = 0;
 
 	virtual void Segment() = 0;
 	virtual bool IsSuspended() const = 0;

@@ -5,11 +5,7 @@
 
 //REGISTER_EDITOR_IN_DLL( TerrainDesc, CTerrainEditor )
 
-
-CTerrainEditor::CTerrainEditor() : pTerrainState( 0 )
-{
-}
-
+CTerrainEditor::CTerrainEditor() : pTerrainState( 0 ) {}
 
 void CTerrainEditor::Create()
 {
@@ -18,7 +14,6 @@ void CTerrainEditor::Create()
 		pTerrainState = new CTerrainState( this );
 	}
 }
-
 
 void CTerrainEditor::Destroy()
 {

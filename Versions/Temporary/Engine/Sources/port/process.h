@@ -17,7 +17,6 @@
 extern char **environ;
 #endif
 
-
 #if !BOOST_OS_WINDOWS
 // A word the shell will take as it stands. Single quotes stop every expansion
 // sh does; an embedded quote is the one thing they cannot hold, so it is
@@ -39,14 +38,12 @@ inline std::string ShellQuote( const std::string &rszText )
 	return quoted + "'";
 }
 
-
 // 'cd <dir> && exec <program> <arguments>', the shell's way of saying what
 // CreateProcess and ShellExecuteEx say with their own arguments. An empty
 // program means szArguments is already a whole command line, which is how
 // CreateProcess reads a null lpApplicationName.
-inline std::string BuildShellCommand( const std::string &szProgram,
-																			const std::string &szArguments,
-																			const std::string &szWorkingDir )
+inline std::string
+BuildShellCommand( const std::string &szProgram, const std::string &szArguments, const std::string &szWorkingDir )
 {
 	std::string command;
 	if ( !szWorkingDir.empty() )
@@ -111,7 +108,6 @@ inline bool LaunchDetached( const std::string &szCommand )
 #endif
 }
 
-
 // Launch one named program, with arguments, from a working directory, and do
 // not wait for it. The editor starts the game this way.
 //
@@ -129,9 +125,8 @@ inline bool LaunchDetached( const std::string &szCommand )
 // because posix_spawn has no portable way to set the child's directory:
 // addchdir_np is a glibc extension and recent. 'cd <dir> && exec <program>
 // <arguments>' says the same thing with the shell already here.
-inline bool LaunchDetachedIn( const std::string &szProgram,
-															const std::string &szArguments,
-															const std::string &szWorkingDir )
+inline bool
+LaunchDetachedIn( const std::string &szProgram, const std::string &szArguments, const std::string &szWorkingDir )
 {
 	if ( szProgram.empty() )
 	{
@@ -152,7 +147,6 @@ inline bool LaunchDetachedIn( const std::string &szProgram,
 #endif
 }
 
-
 // Run one program and wait for it to finish, answering whether it started.
 //
 // The editor shells out to small command line tools this way, and waits
@@ -170,9 +164,9 @@ inline bool LaunchDetachedIn( const std::string &szProgram,
 // what the return value reports: a tool that ran and failed returns true with
 // a non-zero code, exactly as CreateProcess plus WaitForSingleObject did.
 inline bool RunAndWait( const std::string &szProgram,
-												const std::string &szArguments,
-												const std::string &szWorkingDir,
-												int *pnExitCode = nullptr )
+                        const std::string &szArguments,
+                        const std::string &szWorkingDir,
+                        int *pnExitCode = nullptr )
 {
 	if ( pnExitCode != nullptr )
 	{
@@ -190,10 +184,15 @@ inline bool RunAndWait( const std::string &szProgram,
 	// buffer of its own rather than the caller's string.
 	std::string szCommandLine( szArguments );
 	if ( !::CreateProcessA( szProgram.empty() ? 0 : szProgram.c_str(),
-													szCommandLine.empty() ? 0 : &szCommandLine[0],
-													0, 0, FALSE, 0, 0,
-													szWorkingDir.empty() ? 0 : szWorkingDir.c_str(),
-													&startInfo, &procInfo ) )
+	                        szCommandLine.empty() ? 0 : &szCommandLine[0],
+	                        0,
+	                        0,
+	                        FALSE,
+	                        0,
+	                        0,
+	                        szWorkingDir.empty() ? 0 : szWorkingDir.c_str(),
+	                        &startInfo,
+	                        &procInfo ) )
 	{
 		return false;
 	}
@@ -235,8 +234,8 @@ inline bool RunAndWait( const std::string &szProgram,
 		// so there is no extra process between. 128 plus the signal for a death
 		// by signal is the shell's convention, and is used here for the same
 		// reason: the caller wants one number.
-		*pnExitCode = WIFEXITED( nStatus ) ? WEXITSTATUS( nStatus )
-																			 : ( WIFSIGNALED( nStatus ) ? ( 128 + WTERMSIG( nStatus ) ) : -1 );
+		*pnExitCode =
+				WIFEXITED( nStatus ) ? WEXITSTATUS( nStatus ) : ( WIFSIGNALED( nStatus ) ? ( 128 + WTERMSIG( nStatus ) ) : -1 );
 	}
 	return true;
 #endif

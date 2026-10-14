@@ -4,7 +4,6 @@
 
 class CMainFrameLoggerSink;
 
-
 class CMainFrameContainer : public IMainFrameContainer
 {
 	OBJECT_NOCOPY_METHODS( CMainFrameContainer );
@@ -17,7 +16,7 @@ public:
 	~CMainFrameContainer() {}
 
 	// IMainFrameContainer
-	void Set( IMainFrame* _pMainFrame, IWidget* _pMainWindow );
-	IMainFrame* Get() { return pMainFrame; }
-	IWidget* GetMainWindow() { return pMainWindow; }
+	void Set( IMainFrame *_pMainFrame, IWidget *_pMainWindow );
+	IMainFrame *Get() { return pMainFrame; }
+	IWidget *GetMainWindow() { return pMainWindow; }
 };

@@ -9,16 +9,16 @@
 
 float s_fMusicVolume;
 
-IMusicSystem * CreateMusicSystem()
+IMusicSystem *CreateMusicSystem()
 {
 	return new NMusicSystem::CMusicSystem;
 }
 
 namespace NMusicSystem
 {
-CMusicSystem * GetMusicSystem()
+CMusicSystem *GetMusicSystem()
 {
-	return checked_cast<CMusicSystem*>( Singleton<IMusicSystem>() );
+	return checked_cast<CMusicSystem *>( Singleton<IMusicSystem>() );
 }
 
 NTimer::STime GetAbsTime()
@@ -26,26 +26,23 @@ NTimer::STime GetAbsTime()
 	return Singleton<IGameTimer>()->GetAbsTime();
 }
 
-FSOUND_STREAM * OpenTrack( CDataStream *pTrack )
+FSOUND_STREAM *OpenTrack( CDataStream *pTrack )
 {
 	if ( pTrack == 0 || !pTrack->IsOk() )
 		return 0;
 
-	FSOUND_STREAM *pStreamingSound = FSOUND_Stream_Open( (const char*)(pTrack->GetBuffer()), FSOUND_2D | FSOUND_LOOP_OFF | FSOUND_LOADMEMORY, 0, pTrack->GetSize() );
+	FSOUND_STREAM *pStreamingSound = FSOUND_Stream_Open(
+			(const char *)( pTrack->GetBuffer() ), FSOUND_2D | FSOUND_LOOP_OFF | FSOUND_LOADMEMORY, 0, pTrack->GetSize() );
 	return pStreamingSound;
 }
 
 bool CMusicSystem::IsPaused( EStreamType eType ) const
 {
 	if ( eType == EST_MUSIC )
-		return pauses[EMS_MASTER] +
-		pauses[EMS_MUSIC_MASTER] +
-		pauses[EMS_MUSIC_FADE_SELF] +
-		pauses[EMS_MUSIC_FADE_FROM_VOICE];
+		return pauses[EMS_MASTER] + pauses[EMS_MUSIC_MASTER] + pauses[EMS_MUSIC_FADE_SELF] +
+		       pauses[EMS_MUSIC_FADE_FROM_VOICE];
 	else
-		return pauses[EMS_MASTER] +
-		pauses[EMS_VOICE_MASTER] +
-		pauses[EMS_VOICE_SELF];
+		return pauses[EMS_MASTER] + pauses[EMS_VOICE_MASTER] + pauses[EMS_VOICE_SELF];
 }
 
 void CMusicSystem::OnResetTimer()
@@ -72,27 +69,23 @@ void CMusicSystem::Update()
 
 	fades.Update();
 
-	const float fMusicVolume = volumes[EMS_MASTER] *
-		volumes[EMS_MUSIC_MASTER] *
-		volumes[EMS_MUSIC_FADE_SELF] *
-		volumes[EMS_MUSIC_FADE_FROM_VOICE] ;
-	const float fVoiceVolume = volumes[EMS_MASTER] *
-		volumes[EMS_VOICE_MASTER] *
-		volumes[EMS_VOICE_SELF] ;
+	const float fMusicVolume = volumes[EMS_MASTER] * volumes[EMS_MUSIC_MASTER] * volumes[EMS_MUSIC_FADE_SELF] *
+	                           volumes[EMS_MUSIC_FADE_FROM_VOICE];
+	const float fVoiceVolume = volumes[EMS_MASTER] * volumes[EMS_VOICE_MASTER] * volumes[EMS_VOICE_SELF];
 
 	if ( channels[EST_MUSIC] > 0 )
 	{
-		if ( int(fMusicVolume * 255) != FSOUND_GetVolume( channels[EST_MUSIC] ) )
+		if ( int( fMusicVolume * 255 ) != FSOUND_GetVolume( channels[EST_MUSIC] ) )
 			FSOUND_SetVolume( channels[EST_MUSIC], fMusicVolume * 255 );
-		if ( bool(FSOUND_GetPaused( channels[EST_MUSIC] )) != IsPaused( EST_MUSIC ) )
+		if ( bool( FSOUND_GetPaused( channels[EST_MUSIC] ) ) != IsPaused( EST_MUSIC ) )
 			FSOUND_SetPaused( channels[EST_MUSIC], IsPaused( EST_MUSIC ) );
 	}
 
 	if ( channels[EST_VOICE] > 0 )
 	{
-		if ( int(fVoiceVolume * 255) != FSOUND_GetVolume( channels[EST_VOICE] ) )
+		if ( int( fVoiceVolume * 255 ) != FSOUND_GetVolume( channels[EST_VOICE] ) )
 			FSOUND_SetVolume( channels[EST_VOICE], fVoiceVolume * 255 );
-		if ( bool(FSOUND_GetPaused( channels[EST_VOICE] )) != IsPaused( EST_VOICE ) )
+		if ( bool( FSOUND_GetPaused( channels[EST_VOICE] ) ) != IsPaused( EST_VOICE ) )
 			FSOUND_SetPaused( channels[EST_VOICE], IsPaused( EST_VOICE ) );
 	}
 }
@@ -213,52 +206,52 @@ void CMusicSystem::ChangePlayList( int _nPlayList )
 
 void CMusicSystem::UpdatePlayListChange()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EPST_NOT_INITTED:
+		case EPST_NOT_INITTED:
 
-		break;
-	case EPST_JUST_STARTED:
-		playlists[nDesiredPlayList]->FadeIn();
-		eState = EPST_FADING_NEW_IN;
-
-		break;
-	case EPST_PLAYING_CURRENT:
-		if ( nDesiredPlayList != nPlayList )
-		{
-			playlists[nPlayList]->FadeOut();
-			eState = EPST_FADING_OLD_OUT;
-		}
-
-		break;
-	case EPST_FADING_OLD_OUT:
-		if ( playlists[nPlayList]->IsOut() )
-		{
+			break;
+		case EPST_JUST_STARTED:
 			playlists[nDesiredPlayList]->FadeIn();
 			eState = EPST_FADING_NEW_IN;
-		}
 
-		break;
-	case EPST_FADING_NEW_IN:
-		if ( playlists[nDesiredPlayList]->IsIn() )
-		{
-			nPlayList = nDesiredPlayList;
-			eState = EPST_PLAYING_CURRENT;
-		}
+			break;
+		case EPST_PLAYING_CURRENT:
+			if ( nDesiredPlayList != nPlayList )
+			{
+				playlists[nPlayList]->FadeOut();
+				eState = EPST_FADING_OLD_OUT;
+			}
 
-		break;
+			break;
+		case EPST_FADING_OLD_OUT:
+			if ( playlists[nPlayList]->IsOut() )
+			{
+				playlists[nDesiredPlayList]->FadeIn();
+				eState = EPST_FADING_NEW_IN;
+			}
+
+			break;
+		case EPST_FADING_NEW_IN:
+			if ( playlists[nDesiredPlayList]->IsIn() )
+			{
+				nPlayList = nDesiredPlayList;
+				eState = EPST_PLAYING_CURRENT;
+			}
+
+			break;
 	}
 }
 
 int CMusicSystem::operator&( IBinSaver &f )
 {
-	f.Add(2,&nPlayList);
-	f.Add(3,&playlists);
-	f.Add(4,&pVoiceTrack);
-	f.Add(5,&volumes);
-	f.Add(6,&pauses);
-	f.Add(7,&channels);
-	f.Add(8,&fades);
+	f.Add( 2, &nPlayList );
+	f.Add( 3, &playlists );
+	f.Add( 4, &pVoiceTrack );
+	f.Add( 5, &volumes );
+	f.Add( 6, &pauses );
+	f.Add( 7, &channels );
+	f.Add( 8, &fades );
 	f.Add( 9, &nDesiredPlayList );
 	f.Add( 10, &eState );
 	f.Add( 11, &pCurrentMapMusic );
@@ -271,8 +264,8 @@ int CMusicSystem::operator&( IBinSaver &f )
 }
 }
 
-REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x11181340, CMusicSystem, NMusicSystem  );
+REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x11181340, CMusicSystem, NMusicSystem );
 
-START_REGISTER(MusicSystem)
+START_REGISTER( MusicSystem )
 REGISTER_VAR_EX( "Sound.MusicVolume", NGlobal::VarFloatHandler, &s_fMusicVolume, 0.99f, STORAGE_USER );
 FINISH_REGISTER

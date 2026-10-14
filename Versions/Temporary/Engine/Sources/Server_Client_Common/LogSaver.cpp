@@ -18,35 +18,29 @@ class CLogSaver : public IBinSaver
 	std::string *pszLog;
 
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) { return true; }
-	virtual void FinishChunk() { }
+	virtual void FinishChunk() {}
 	virtual int CountChunks( const chunk_id idChunk ) { return 0; }
 
 	virtual void DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 	{
 		switch ( nSize )
 		{
-		case 1:
-			*pszLog += fmt::format( " {}", (int)(*(reinterpret_cast<uint8_t*>(pData))) );
-			break;
-		case 2:
-			*pszLog += fmt::format( " {}", (int)(*(reinterpret_cast<uint16_t*>(pData))) );
-			break;
-		case 4:
-			*pszLog += fmt::format( " {}", (int)(*(reinterpret_cast<int*>(pData))) );
-			break;
-		default:
-			*pszLog += " long data";
-			break;
+			case 1:
+				*pszLog += fmt::format( " {}", (int)( *( reinterpret_cast<uint8_t *>( pData ) ) ) );
+				break;
+			case 2:
+				*pszLog += fmt::format( " {}", (int)( *( reinterpret_cast<uint16_t *>( pData ) ) ) );
+				break;
+			case 4:
+				*pszLog += fmt::format( " {}", (int)( *( reinterpret_cast<int *>( pData ) ) ) );
+				break;
+			default:
+				*pszLog += " long data";
+				break;
 		}
 	}
-	virtual void DataChunkString( std::string &data )
-	{
-		*pszLog += " \"" + data + "\"";
-	}
-	virtual void DataChunkString( std::wstring &data )
-	{
-		*pszLog += " \"" + NStr::ToMBCS( data ) + "\"";
-	}
+	virtual void DataChunkString( std::string &data ) { *pszLog += " \"" + data + "\""; }
+	virtual void DataChunkString( std::wstring &data ) { *pszLog += " \"" + NStr::ToMBCS( data ) + "\""; }
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject )
 	{
@@ -69,10 +63,8 @@ class CLogSaver : public IBinSaver
 			*pszLog += " null";
 	}
 
-	virtual CObjectBase* LoadObject()
-	{
-		return 0;
-	}
+	virtual CObjectBase *LoadObject() { return 0; }
+
 public:
 	virtual bool IsReading() { return false; }
 	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
@@ -80,7 +72,7 @@ public:
 	CLogSaver( std::string *_pszLog ) : pszLog( _pszLog ) {}
 };
 
-IBinSaver* CreateLogSaver( std::string *pszLog )
+IBinSaver *CreateLogSaver( std::string *pszLog )
 {
 	return new CLogSaver( pszLog );
 }

@@ -9,10 +9,12 @@ class CWindowSimple;
 
 struct IScrollableContrainerSorter
 {
-
 };
 
-class CWindowScrollableContainerBase : public CWindow, public IScrollableContainer, public ISliderNotify, public IClickNotify
+class CWindowScrollableContainerBase : public CWindow,
+																			 public IScrollableContainer,
+																			 public ISliderNotify,
+																			 public IClickNotify
 {
 	//{dynamic data
 	struct SElement
@@ -20,10 +22,10 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 		std::string szName;
 		std::string szNegativeSelection;
 		bool bSelectable;
-		int nPos;																// pChild's position inside control
-		SElement() {  }
+		int nPos; // pChild's position inside control
+		SElement() {}
 		SElement( CWindow *_pChild, const int _bSelectable, const int _nPos, CWindow *pNegativeSelecion )
-			: szName( _pChild->GetName() ), bSelectable( _bSelectable ), nPos( _nPos )
+				: szName( _pChild->GetName() ), bSelectable( _bSelectable ), nPos( _nPos )
 		{
 			if ( pNegativeSelecion )
 				szNegativeSelection = pNegativeSelecion->GetName();
@@ -42,7 +44,7 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 	{
 		CPtr<IWindowSorter> pSorter;
 		CWindow *pContainer;
-		SSortPred( IWindowSorter *_pSorter, CWindow *_pContainer ) : pSorter( _pSorter ), pContainer( _pContainer ) {  }
+		SSortPred( IWindowSorter *_pSorter, CWindow *_pContainer ) : pSorter( _pSorter ), pContainer( _pContainer ) {}
 		bool operator()( const SElement &e1, const SElement &e2 ) const
 		{
 			return pSorter->Compare( pContainer->GetChild( e1.szName, false ), pContainer->GetChild( e2.szName, false ) );
@@ -58,14 +60,14 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 	CObj<IWindow> pSelected;
 	CObj<IWindow> pPreSelected;
 	CObj<CWindow> pSelection;
-	CObj<CWindow> pPreSelection;					// shows under mouse cursor
+	CObj<CWindow> pPreSelection; // shows under mouse cursor
 
 	CDBPtr<NDb::SWindowScrollableContainerBaseShared> pShared;
 	CFreeIds elementIDs;
-	int nPosSize;															// total size of elements
+	int nPosSize; // total size of elements
 	CObj<CWindowScrollBar> pScrollBar;
-	CObj<CWindowSimple> pBorder;  // for clipping
-	CObj<CWindowSimple> pContainer;  // contains elements
+	CObj<CWindowSimple> pBorder;    // for clipping
+	CObj<CWindowSimple> pContainer; // contains elements
 	typedef std::vector<SElement> CElements;
 	CElements elements;
 	//}
@@ -78,15 +80,17 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 	void AddElement( CWindow *pElement, const bool _bSelectable, const int _nPosSize, CWindow *pNegativeSelection );
 	void RemoveElement( CWindow *pElement );
 	void UpdateSelectionPosition( IWindow *pSelection, IWindow *pSelected );
-	void SelectWithSelection( IWindow *pElement, IWindow * _pSelection );
+	void SelectWithSelection( IWindow *pElement, IWindow *_pSelection );
 	void PreSelect( IWindow *pElement );
+
 protected:
-	CWindow* GetElement( const std::string &szName );
+	CWindow *GetElement( const std::string &szName );
 	void Resort( IWindowSorter *pSorter );
 	void RemoveItems();
 	bool IsHorisontal() const;
+
 public:
-	CWindowScrollableContainerBase() : nPosSize( 0 ) {  }
+	CWindowScrollableContainerBase() : nPosSize( 0 ) {}
 	virtual void SliderPosition( const float fPosition, class CWindow *pWho );
 
 	void Segment();
@@ -100,7 +104,6 @@ public:
 	virtual void Select( IWindow *pElement );
 	void AfterLoad();
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
-
 
 	virtual int operator&( IBinSaver &saver );
 	virtual void Visit( struct IUIVisitor *pVisitor );

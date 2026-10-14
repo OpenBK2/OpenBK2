@@ -11,52 +11,60 @@
 #include "GView.h"
 #include "System/VFSOperations.h"
 
-
 namespace NGScene
 {
-std::unordered_set<std::string>  objects;
+std::unordered_set<std::string> objects;
 static bool bChessLM = false;
 static bool bDumpLM = false;
 static std::string szIntDirectoryName;
 
-void SetDumpDirectory(const std::string &szDirectoryName)
+void SetDumpDirectory( const std::string &szDirectoryName )
 {
 	objects.clear();
 	szIntDirectoryName = szDirectoryName;
 }
 
-void EnableLMGeometryDump(bool flag)
+void EnableLMGeometryDump( bool flag )
 {
 	bDumpLM = flag;
 }
 
 bool GetDumpFlag()
 {
-	return  bDumpLM;
+	return bDumpLM;
 }
 
 class CLightmapTextureCache;
-class CLMRegion :
-	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CLMRegion>
+class CLMRegion : public NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion>
 {
-	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CLMRegion> CParent;
-	OBJECT_NOCOPY_METHODS(CLMRegion);
+	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion> CParent;
+	OBJECT_NOCOPY_METHODS( CLMRegion );
+
 public:
-	int operator&( CStructureSaver &f ) { ASSERT(0); return 0; }
+	int operator&( CStructureSaver &f )
+	{
+		ASSERT( 0 );
+		return 0;
+	}
 };
 
-class CLightmapTextureCache :
-	public NCache::CGatheringCache<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion>
+class CLightmapTextureCache
+		: public NCache::CGatheringCache<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion>
 {
 	OBJECT_NOCOPY_METHODS( CLightmapTextureCache );
 	typedef NCache::CGatheringCache<NCache::CShortPtrAllocator, NCache::CQuadTreeElement, CLMRegion> CParent;
 	//CObj<NGfx::CTexture> pTexture;
 
 	void InitCache( int nSize );
+
 public:
 	CLightmapTextureCache() {}
-	CLightmapTextureCache( int nSize ) { InitCache( nSize ); }// RefreshTexture(); }
-	int operator&( CStructureSaver &f ) { ASSERT(0); return 0; }
+	CLightmapTextureCache( int nSize ) { InitCache( nSize ); } // RefreshTexture(); }
+	int operator&( CStructureSaver &f )
+	{
+		ASSERT( 0 );
+		return 0;
+	}
 	friend class CLMRegion;
 };
 
@@ -65,7 +73,7 @@ public:
 void CLightmapTextureCache::InitCache( int nSize )
 {
 	NCache::CQuadTreeElement root;
-	root.nXSize = root.nYSize = GetMSB( nSize - 1 ) + 1;//N_LM_SIZE_LOG;
+	root.nXSize = root.nYSize = GetMSB( nSize - 1 ) + 1; //N_LM_SIZE_LOG;
 	root.nShiftX = root.nShiftY = 0;
 	AddRoot( root );
 }
@@ -98,7 +106,10 @@ bool CSingleTexAlloc::AllocRegion( const CTPoint<int> &size, CTPoint<int> *pPos 
 
 // CLMAlloc
 
-bool CLMAlloc::TryAlloc( const NCache::CQuadTreeElement &elem, int nTexture, const CArray2D<NGfx::SPixel8888> &_data, CTPoint<int> *pPos )
+bool CLMAlloc::TryAlloc( const NCache::CQuadTreeElement &elem,
+                         int nTexture,
+                         const CArray2D<NGfx::SPixel8888> &_data,
+                         CTPoint<int> *pPos )
 {
 	STex &tex = textures[nTexture];
 	CLightmapTextureCache::SCachePlace place;
@@ -112,12 +123,12 @@ bool CLMAlloc::TryAlloc( const NCache::CQuadTreeElement &elem, int nTexture, con
 	// copy data
 	int nShiftX = place.resPlace.nShiftX;
 	int nShiftY = place.resPlace.nShiftY;
-	ASSERT( (1<<elem.nXSize) >= _data.GetSizeX() );
-	ASSERT( (1<<elem.nYSize) >= _data.GetSizeY() );
+	ASSERT( ( 1 << elem.nXSize ) >= _data.GetSizeX() );
+	ASSERT( ( 1 << elem.nYSize ) >= _data.GetSizeY() );
 	for ( int y = 0; y < _data.GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < _data.GetSizeX(); ++x )
-			tex.data[ y + nShiftY ][ x + nShiftX ] = _data[y][x];
+			tex.data[y + nShiftY][x + nShiftX] = _data[y][x];
 	}
 	// store result
 	*pPos = CTPoint<int>( nShiftX, nShiftY );
@@ -139,7 +150,7 @@ bool CLMAlloc::AllocRegion( const CArray2D<NGfx::SPixel8888> &_data, CTPoint<int
 	}
 	int nNew = textures.size();
 	textures.resize( nNew + 1 );
-	STex &tex = textures[ nNew ];
+	STex &tex = textures[nNew];
 	tex.data.SetSizes( N_LM_TEXTURE_SIZE, N_LM_TEXTURE_SIZE );
 	tex.data.FillEvery( NGfx::SPixel8888( 0, 0, 0, 0 ) );
 	tex.pCache = new CLightmapTextureCache( N_LM_TEXTURE_SIZE );
@@ -155,7 +166,7 @@ bool CLMAlloc::AllocRegion( const CArray2D<NGfx::SPixel8888> &_data, CTPoint<int
 
 void CLightmapTexture::Recalc()
 {
-	const CArray2D< NGfx::SPixel8888>  & cTex = pLD.GetPtr()->GetTexture(nTex);
+	const CArray2D<NGfx::SPixel8888> &cTex = pLD.GetPtr()->GetTexture( nTex );
 
 	pValue = NGfx::MakeTexture( cTex.GetSizeX(), cTex.GetSizeY(), 1, NGfx::SPixel8888::ID, NGfx::REGULAR, NGfx::CLAMP );
 	NGfx::CTextureLock<NGfx::SPixel8888> t( pValue, 0, NGfx::INPLACE );
@@ -198,7 +209,6 @@ void CLightmapTexture::Recalc()
 				*/
 
 				t[y][x] = c;
-
 			}
 		}
 	}
@@ -208,14 +218,12 @@ void CLightmapTexture::Recalc()
 
 // CLMGeometryGen
 
-
-
-extern CDGPtr<CGrannyMeshLoader> GetMeshLoader( const SPartAndSkeletonKey & key );
+extern CDGPtr<CGrannyMeshLoader> GetMeshLoader( const SPartAndSkeletonKey &key );
 
 void CLMGeometryGen::Recalc()
 {
 	CObjectInfo *p = pSrc->GetValue();
-	if ( !IsValid(p) )
+	if ( !IsValid( p ) )
 	{
 		pValue = 0;
 		return;
@@ -225,7 +233,7 @@ void CLMGeometryGen::Recalc()
 	CObjectInfo::SData data, lmData;
 
 	CTPoint<int> lmSize;
-	CGrannyMeshLoader *pML=CDynamicCast<CGrannyMeshLoader>( pSrc.GetPtr() );
+	CGrannyMeshLoader *pML = CDynamicCast<CGrannyMeshLoader>( pSrc.GetPtr() );
 
 	if ( pML != 0 )
 	{
@@ -236,11 +244,10 @@ void CLMGeometryGen::Recalc()
 		MakeSData( &data, *pML2->GetValue() );
 
 		//ASSERT ( pML2->GetValue()->b
-
 	}
 	else
 	{
-		ASSERT ( 0 )
+		ASSERT( 0 )
 		MakeSData( &data, *p );
 	}
 
@@ -256,7 +263,7 @@ void CLMGeometryGen::Recalc()
 		std::string szDest = ( szIntDirectoryName + pML->GetString() );
 		const char *str = szDest.c_str();
 		pValue->Assign( lmData, true );
-		if( bDumpLM )
+		if ( bDumpLM )
 		{
 			if ( NVFS::GetMainFileCreator() )
 			{
@@ -265,14 +272,14 @@ void CLMGeometryGen::Recalc()
 				NGScene::CObjectInfo::SBinData sBinD;
 				pValue->AssignTo( &sBinD );
 				CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
-				sBinD & *pSaver;
+				sBinD &*pSaver;
 			}
 		}
 	}
 }
 
-START_REGISTER(GLightmap)
-	REGISTER_VAR_EX( "gfx_lm_chess", NGlobal::VarBoolHandler, &bChessLM, 0, STORAGE_NONE )
+START_REGISTER( GLightmap )
+REGISTER_VAR_EX( "gfx_lm_chess", NGlobal::VarBoolHandler, &bChessLM, 0, STORAGE_NONE )
 FINISH_REGISTER
 }
 using namespace NGScene;

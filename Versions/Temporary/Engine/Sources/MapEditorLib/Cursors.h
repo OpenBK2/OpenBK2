@@ -20,29 +20,29 @@ struct IWidget;
 
 namespace NCursor
 {
-	enum EShape
-	{
-		// What the editor puts back when it is not saying anything: IDC_ARROW.
-		SHAPE_ARROW,
-		// "This is a valid target", over a link the mouse is about to make.
-		// IDC_UPARROW, which **wx has no stock cursor for**: there is no
-		// wxCURSOR_UP_ARROW, wxCURSOR_BASED_ARROW_UP is X11 only, and nothing in
-		// wx's MSW stock table maps to it. So this one is an asset of ours,
-		// res/uparrow.cur, drawn by scripts/port/mkcursor.py and embedded in
-		// CursorsWx.cpp. It is a placeholder: anyone who wants to draw a better
-		// one should, and only that file changes.
-		SHAPE_UP_ARROW,
-		// "Not here", which the drag over a rejected target shows: IDC_NO.
-		SHAPE_NO_ENTRY,
-	};
+enum EShape
+{
+	// What the editor puts back when it is not saying anything: IDC_ARROW.
+	SHAPE_ARROW,
+	// "This is a valid target", over a link the mouse is about to make.
+	// IDC_UPARROW, which **wx has no stock cursor for**: there is no
+	// wxCURSOR_UP_ARROW, wxCURSOR_BASED_ARROW_UP is X11 only, and nothing in
+	// wx's MSW stock table maps to it. So this one is an asset of ours,
+	// res/uparrow.cur, drawn by scripts/port/mkcursor.py and embedded in
+	// CursorsWx.cpp. It is a placeholder: anyone who wants to draw a better
+	// one should, and only that file changes.
+	SHAPE_UP_ARROW,
+	// "Not here", which the drag over a rejected target shows: IDC_NO.
+	SHAPE_NO_ENTRY,
+};
 
-	// The surface registers its window once; the implementation borrows it and
-	// automatically forgets it when wx destroys it. Null removes the target.
-	MAPEDITORLIB_EXPORT void SetTarget( IWidget *pWidget );
-	MAPEDITORLIB_EXPORT void Set( EShape eShape );
+// The surface registers its window once; the implementation borrows it and
+// automatically forgets it when wx destroys it. Null removes the target.
+MAPEDITORLIB_EXPORT void SetTarget( IWidget *pWidget );
+MAPEDITORLIB_EXPORT void Set( EShape eShape );
 
-	// Where the mouse is now, in screen coordinates: ::GetCursorPos, which is
-	// wxGetMousePosition. Asked for outside an event, which is why it is this
-	// and not the position a wxMouseEvent carries.
-	MAPEDITORLIB_EXPORT CTPoint<int> GetPosition();
+// Where the mouse is now, in screen coordinates: ::GetCursorPos, which is
+// wxGetMousePosition. Asked for outside an event, which is why it is this
+// and not the position a wxMouseEvent carries.
+MAPEDITORLIB_EXPORT CTPoint<int> GetPosition();
 }

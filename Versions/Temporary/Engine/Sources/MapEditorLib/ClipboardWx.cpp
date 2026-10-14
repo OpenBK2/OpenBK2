@@ -11,32 +11,31 @@
 
 namespace NClipboard
 {
-	bool SetText( const std::string &rszText )
+bool SetText( const std::string &rszText )
+{
+	if ( wxTheClipboard == nullptr )
 	{
-		if ( wxTheClipboard == nullptr )
-		{
-			return false;
-		}
-		// Open/Close rather than wxClipboardLocker, to match the wx views here
-		// and because the result of the open is wanted.
-		if ( !wxTheClipboard->Open() )
-		{
-			return false;
-		}
-		// Clear returns void, unlike Open and SetData, so clearing succeeds as
-		// soon as the clipboard is open.
-		bool bDone = true;
-		if ( rszText.empty() )
-		{
-			wxTheClipboard->Clear();
-		}
-		else
-		{
-			// wx takes the data object, as the Win32 clipboard took the HGLOBAL.
-			bDone = wxTheClipboard->SetData(
-				new wxTextDataObject( wxString::FromUTF8( rszText.c_str() ) ) );
-		}
-		wxTheClipboard->Close();
-		return bDone;
+		return false;
 	}
+	// Open/Close rather than wxClipboardLocker, to match the wx views here
+	// and because the result of the open is wanted.
+	if ( !wxTheClipboard->Open() )
+	{
+		return false;
+	}
+	// Clear returns void, unlike Open and SetData, so clearing succeeds as
+	// soon as the clipboard is open.
+	bool bDone = true;
+	if ( rszText.empty() )
+	{
+		wxTheClipboard->Clear();
+	}
+	else
+	{
+		// wx takes the data object, as the Win32 clipboard took the HGLOBAL.
+		bDone = wxTheClipboard->SetData( new wxTextDataObject( wxString::FromUTF8( rszText.c_str() ) ) );
+	}
+	wxTheClipboard->Close();
+	return bDone;
+}
 }

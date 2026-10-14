@@ -7,9 +7,17 @@
 
 #include <fmt/format.h>
 
-void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir, float _fEndAngle, const CQuat &qRot,
-																 const std::vector<std::string> &leafNames, int _nEffectID, const CVec3 &vPos,
-																 float _fEffectHeight, float fFallCycles, int nFallDuration, NTimer::STime timeStart )
+void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator,
+                                 const CVec2 &vDir,
+                                 float _fEndAngle,
+                                 const CQuat &qRot,
+                                 const std::vector<std::string> &leafNames,
+                                 int _nEffectID,
+                                 const CVec3 &vPos,
+                                 float _fEffectHeight,
+                                 float fFallCycles,
+                                 int nFallDuration,
+                                 NTimer::STime timeStart )
 {
 	fEndAngle = _fEndAngle;
 	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
@@ -57,7 +65,10 @@ float CTreeFallingMutator::GetCoeffForTime( int nTime )
 
 void CTreeFallingMutator::TransformRootBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
-	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
+	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0],
+	                               pTransform->Orientation[1],
+	                               pTransform->Orientation[2],
+	                               pTransform->Orientation[3] ) );
 	qBoneOrientation *= qRot;
 	const CVec4 &vBoneOrientation = qBoneOrientation.GetInternalVector();
 	pTransform->Orientation[0] = vBoneOrientation.x;
@@ -76,7 +87,10 @@ void CTreeFallingMutator::TransformRootBone( NAnimation::SBoneTransform *pTransf
 
 void CTreeFallingMutator::TransformLeafBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
-	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
+	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0],
+	                               pTransform->Orientation[1],
+	                               pTransform->Orientation[2],
+	                               pTransform->Orientation[3] ) );
 	qBoneOrientation *= qRot;
 	const CVec4 &vBoneOrientation = qBoneOrientation.GetInternalVector();
 	pTransform->Orientation[0] = vBoneOrientation.x;

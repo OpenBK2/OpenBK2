@@ -3,34 +3,34 @@
 
 // CObjectBase
 
-const char* CObjectBase::GetTypeName() const
+const char *CObjectBase::GetTypeName() const
 {
-	const char *pszName = typeid(*this).name(), *p;
+	const char *pszName = typeid( *this ).name(), *p;
 	p = strstr( pszName, "::" );
 	if ( !p )
 		return pszName + 6;
 	return p + 2;
 }
 
-const char* CObjectBase::GetFullTypeName() const
+const char *CObjectBase::GetFullTypeName() const
 {
-	return typeid(*this).name();
+	return typeid( *this ).name();
 }
 
 static bool bDestroyInProgress;
-static std::list<CObjectBase*> *pDestroy, *pInvalidate;
+static std::list<CObjectBase *> *pDestroy, *pInvalidate;
 
-inline std::list<CObjectBase*>& GetDestroy()
+inline std::list<CObjectBase *> &GetDestroy()
 {
 	if ( !pDestroy )
-		pDestroy = new std::list<CObjectBase*>;
+		pDestroy = new std::list<CObjectBase *>;
 	return *pDestroy;
 }
 
-inline std::list<CObjectBase*>& GetInvalidate()
+inline std::list<CObjectBase *> &GetInvalidate()
 {
 	if ( !pInvalidate )
-		pInvalidate = new std::list<CObjectBase*>;
+		pInvalidate = new std::list<CObjectBase *>;
 	return *pInvalidate;
 }
 
@@ -51,14 +51,18 @@ static void FreeLists()
 static struct STracker
 {
 	bool bIsRunning;
-	STracker(): bIsRunning(true) {}
-	~STracker() { bIsRunning = false; FreeLists(); }
+	STracker() : bIsRunning( true ) {}
+	~STracker()
+	{
+		bIsRunning = false;
+		FreeLists();
+	}
 } tracker;
 
 void CObjectBase::ReleaseObj( int nRef, int nMask )
 {
 	nObjData -= nRef;
-	if ( (nObjData & 0x7fffffff) == 0 && nRefData == 0 )
+	if ( ( nObjData & 0x7fffffff ) == 0 && nRefData == 0 )
 	{
 		if ( bDestroyInProgress )
 			GetDestroy().push_back( this );
@@ -69,7 +73,7 @@ void CObjectBase::ReleaseObj( int nRef, int nMask )
 			DestroyDelayed();
 		}
 	}
-	else if ( (nObjData & nMask) == 0 )
+	else if ( ( nObjData & nMask ) == 0 )
 	{
 		nObjData |= 0x80000000;
 		if ( bDestroyInProgress )
@@ -91,7 +95,7 @@ void CObjectBase::ReleaseObj( int nRef, int nMask )
 void CObjectBase::ReleaseRef()
 {
 	--nRefData;
-	if ( nRefData == 0 && (nObjData & 0x7fffffff) == 0 )
+	if ( nRefData == 0 && ( nObjData & 0x7fffffff ) == 0 )
 	{
 		if ( bDestroyInProgress )
 			GetDestroy().push_back( this );
@@ -107,8 +111,8 @@ void CObjectBase::ReleaseRef()
 void CObjectBase::DestroyDelayed()
 {
 	ASSERT( bDestroyInProgress );
-	std::list<CObjectBase*> &toDestroy = GetDestroy();
-	std::list<CObjectBase*> &toInvalidate = GetInvalidate();
+	std::list<CObjectBase *> &toDestroy = GetDestroy();
+	std::list<CObjectBase *> &toInvalidate = GetInvalidate();
 	while ( !toDestroy.empty() || !toInvalidate.empty() )
 	{
 		while ( !toDestroy.empty() )
@@ -132,12 +136,12 @@ void CObjectBase::DestroyDelayed()
 
 #ifdef TRACK_OBJECTS_STATISTICS
 
-std::unordered_set<CObjectBase * > *pObjectsSet; // do not initialize!
+std::unordered_set<CObjectBase *> *pObjectsSet; // do not initialize!
 
 void RegisterInObjectsSet( CObjectBase *pObject )
 {
 	if ( pObjectsSet == 0 )
-		pObjectsSet = new std::unordered_set<CObjectBase * >;
+		pObjectsSet = new std::unordered_set<CObjectBase *>;
 
 	pObjectsSet->insert( pObject );
 }
@@ -155,13 +159,7 @@ struct STypeStats
 	int nSizeOf;
 	int nSerializeSize;
 
-	STypeStats() :
-		nObjectsNumber( 0 ),
-		nValidsNumber( 0 ),
-		nInvalidsNumber( 0 ),
-		nSizeOf( 0 ),
-		nSerializeSize( 0 )
-	{}
+	STypeStats() : nObjectsNumber( 0 ), nValidsNumber( 0 ), nInvalidsNumber( 0 ), nSizeOf( 0 ), nSerializeSize( 0 ) {}
 };
 
 struct STypeStatsComparer
@@ -172,32 +170,26 @@ struct STypeStatsComparer
 	}
 };
 
-class CTrivialPointerSerialization: public IPointerSerialization
+class CTrivialPointerSerialization : public IPointerSerialization
 {
-	OBJECT_BASIC_METHODS(CTrivialPointerSerialization);
+	OBJECT_BASIC_METHODS( CTrivialPointerSerialization );
 
-	virtual int GetObjectID( CObjectBase *p )
-	{
-		return (int)p;
-	}
+	virtual int GetObjectID( CObjectBase *p ) { return (int)p; }
 
-	virtual CObjectBase *GetObject( int nID )
-	{
-		return (CObjectBase *)nID;
-	}
+	virtual CObjectBase *GetObject( int nID ) { return (CObjectBase *)nID; }
 };
 
-static void CollectObjectsStatistics( std::unordered_map< std::string, STypeStats > *pTypesMap )
+static void CollectObjectsStatistics( std::unordered_map<std::string, STypeStats> *pTypesMap )
 {
 	ASSERT( pTypesMap != 0 );
-	std::unordered_map< std::string, STypeStats > &typesMap = *pTypesMap;
+	std::unordered_map<std::string, STypeStats> &typesMap = *pTypesMap;
 
 	CMemoryStream memoryStream;
 	int nStreamSize = memoryStream.GetSize();
 	CPtr<CTrivialPointerSerialization> pPointerSerialization = new CTrivialPointerSerialization();
 	CPtr<IBinSaver> pSaver = CreateChunklessSaver( pPointerSerialization, &memoryStream, SAVER_MODE_WRITE );
 
-	for ( std::unordered_set<CObjectBase * >::iterator it = pObjectsSet->begin(); it != pObjectsSet->end(); ++it )
+	for ( std::unordered_set<CObjectBase *>::iterator it = pObjectsSet->begin(); it != pObjectsSet->end(); ++it )
 	{
 		CObjectBase *pObject = *it;
 		const char *szTypeName = pObject->GetFullTypeName();
@@ -221,12 +213,12 @@ static void CollectObjectsStatistics( std::unordered_map< std::string, STypeStat
 
 void PrintObjectsStatistics()
 {
-	std::unordered_map< std::string, STypeStats > typesMap;
+	std::unordered_map<std::string, STypeStats> typesMap;
 	CollectObjectsStatistics( &typesMap );
 
-	std::vector< std::pair<std::string, STypeStats> > statistics;
+	std::vector<std::pair<std::string, STypeStats>> statistics;
 	statistics.reserve( typesMap.size() );
-	for ( std::unordered_map< std::string, STypeStats >::iterator it = typesMap.begin(); it != typesMap.end(); ++it )
+	for ( std::unordered_map<std::string, STypeStats>::iterator it = typesMap.begin(); it != typesMap.end(); ++it )
 	{
 		statistics.push_back( std::pair<std::string, STypeStats>( it->first.data(), it->second ) );
 	}
@@ -244,15 +236,28 @@ void PrintObjectsStatistics()
 	{
 		const std::pair<std::string, STypeStats> &tmp = statistics[i];
 		const STypeStats &stats = tmp.second;
-		const int nNumberXSizeOf = stats.nObjectsNumber*stats.nSizeOf;
-		DebugTrace( "%s\t%d\t%d\t%d\t%d\t%d\t%d", tmp.first.data(), stats.nObjectsNumber, stats.nValidsNumber, stats.nInvalidsNumber, stats.nSizeOf, nNumberXSizeOf, stats.nSerializeSize );
+		const int nNumberXSizeOf = stats.nObjectsNumber * stats.nSizeOf;
+		DebugTrace( "%s\t%d\t%d\t%d\t%d\t%d\t%d",
+		            tmp.first.data(),
+		            stats.nObjectsNumber,
+		            stats.nValidsNumber,
+		            stats.nInvalidsNumber,
+		            stats.nSizeOf,
+		            nNumberXSizeOf,
+		            stats.nSerializeSize );
 		nTotalObjects += stats.nObjectsNumber;
 		nTotalValidsNumber += stats.nValidsNumber;
 		nTotalInvalidsNumber += stats.nInvalidsNumber;
 		nTotalSizeOf += nNumberXSizeOf;
 		nTotalSerializeSize += stats.nSerializeSize;
 	}
-	DebugTrace( "total (%d types)\t%d\t%d\t%d\t%d\t\t%d\t%d", statistics.size(), nTotalObjects, nTotalValidsNumber, nTotalInvalidsNumber, nTotalSizeOf, nTotalSerializeSize );
+	DebugTrace( "total (%d types)\t%d\t%d\t%d\t%d\t\t%d\t%d",
+	            statistics.size(),
+	            nTotalObjects,
+	            nTotalValidsNumber,
+	            nTotalInvalidsNumber,
+	            nTotalSizeOf,
+	            nTotalSerializeSize );
 }
 
 #endif // TRACK_OBJECTS_STATISTICS

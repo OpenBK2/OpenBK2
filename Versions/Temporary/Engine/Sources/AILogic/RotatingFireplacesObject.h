@@ -11,17 +11,32 @@ class CRotatingFireplacesObject
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nLastFireplace = {};
 		NTimer::STime lastFireplaceChange = {};
-		public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); f.Add(3,&nLastFireplace); f.Add(4,&lastFireplaceChange); return 0; }
-		SUnitInfo() : pSoldier( 0 ), nLastFireplace( 0 ), lastFireplaceChange( 0 ) { }
+
+	public:
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pSoldier );
+			f.Add( 3, &nLastFireplace );
+			f.Add( 4, &lastFireplaceChange );
+			return 0;
+		}
+		SUnitInfo() : pSoldier( 0 ), nLastFireplace( 0 ), lastFireplaceChange( 0 ) {}
 	};
 
 	ZDATA
 	std::list<SUnitInfo> units;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&units); return 0; }
+
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &units );
+		return 0;
+	}
 	//
 	bool IsBetterToGoToFireplace( class CSoldier *pSoldier, const int nFireplace ) const;
+
 public:
-	CRotatingFireplacesObject() { }
+	CRotatingFireplacesObject() {}
 
 	// вызывается после того, как юнита полностью добавили в объект
 	// nFireplace - номер fireplace в том случае, если солдат добавляется в fireplace
@@ -37,6 +52,6 @@ public:
 	// количество fireplaces
 	virtual const int GetNFirePlaces() const = 0;
 	// солдат, сидящий в fireplace, если fireplace пуст, то возвращает 0
-	virtual class CSoldier* GetSoldierInFireplace( const int nFireplace) const = 0;
+	virtual class CSoldier *GetSoldierInFireplace( const int nFireplace ) const = 0;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

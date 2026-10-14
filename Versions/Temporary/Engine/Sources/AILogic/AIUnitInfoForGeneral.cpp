@@ -16,12 +16,12 @@ extern CSupremeBeing theSupremeBeing;
 //BASIC_REGISTER_CLASS( CAIUnitInfoForGeneral );
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CAIUnitInfoForGeneral::CAIUnitInfoForGeneral( CAIUnit *_pOwner )
-: pOwner( _pOwner ),
-	lastVisibleTime( 0 ), vLastVisiblePosition( VNULL2 ),
-	lastVisibleAntiArtTime( 0 ), vLastVisibleAntiArtCenter( VNULL2 ), fDistToLastVisibleAntiArt( -1.0f ),
-	fWeight( 0 ), vLastRegisteredGeneralPos( VNULL2 )
+		: pOwner( _pOwner ), lastVisibleTime( 0 ), vLastVisiblePosition( VNULL2 ), lastVisibleAntiArtTime( 0 ),
+			vLastVisibleAntiArtCenter( VNULL2 ), fDistToLastVisibleAntiArt( -1.0f ), fWeight( 0 ),
+			vLastRegisteredGeneralPos( VNULL2 )
 {
-	nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
+	nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 );
+	RecordRandomCall();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CAIUnitInfoForGeneral::Segment()
@@ -29,7 +29,8 @@ void CAIUnitInfoForGeneral::Segment()
 	// если это юнит не управляемый AI и пришло время рассказать генералу о своём состоянии
 	if ( curTime >= nextTimeToReportGeneral && theDipl.GetNeutralParty() != pOwner->GetParty() )
 	{
-		nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
+		nextTimeToReportGeneral = curTime + NRandom::Random( 2000, 5000 );
+		RecordRandomCall();
 
 		const int nEnemyParty = 1 - pOwner->GetParty();
 		if ( pOwner->IsVisible( nEnemyParty ) )
@@ -41,11 +42,12 @@ void CAIUnitInfoForGeneral::Segment()
 		if ( lastVisibleTime != 0 || lastVisibleAntiArtTime != 0 )
 		{
 			//DebugTrace( "lastVisibleTime = %i, lastVisibleAntiArtTime = %i", lastVisibleTime, lastVisibleAntiArtTime );
-			theSupremeBeing.UpdateEnemyUnitInfo(
-				this,
-				curTime - lastVisibleTime, vLastVisiblePosition,
-				curTime - lastVisibleAntiArtTime, vLastVisibleAntiArtCenter, fDistToLastVisibleAntiArt
-			);
+			theSupremeBeing.UpdateEnemyUnitInfo( this,
+			                                     curTime - lastVisibleTime,
+			                                     vLastVisiblePosition,
+			                                     curTime - lastVisibleAntiArtTime,
+			                                     vLastVisibleAntiArtCenter,
+			                                     fDistToLastVisibleAntiArt );
 		}
 	}
 }

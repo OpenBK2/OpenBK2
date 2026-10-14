@@ -7,24 +7,37 @@
 
 namespace NDb
 {
-	struct SScriptArea;
+struct SScriptArea;
 }
 
 struct SSector
 {
 	ZDATA
-		SAIAngle wStartAngle;
-		SAIAngle wEndAngle;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wStartAngle); f.Add(3,&wEndAngle); return 0; }
+	SAIAngle wStartAngle;
+	SAIAngle wEndAngle;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &wStartAngle );
+		f.Add( 3, &wEndAngle );
+		return 0;
+	}
 
 	SSector() : wStartAngle( 0 ), wEndAngle( 65535 ) {}
-	SSector( const uint32_t _wStartAngle, const uint32_t _wEndAngle ) : wStartAngle( _wStartAngle ), wEndAngle( _wEndAngle ) {}
+	SSector( const uint32_t _wStartAngle, const uint32_t _wEndAngle )
+			: wStartAngle( _wStartAngle ), wEndAngle( _wEndAngle )
+	{
+	}
 
-	bool operator!=( const SSector &sector ) { return ( wStartAngle != sector.wStartAngle || wEndAngle != sector.wEndAngle ); }
+	bool operator!=( const SSector &sector )
+	{
+		return ( wStartAngle != sector.wStartAngle || wEndAngle != sector.wEndAngle );
+	}
 	bool IsIntersec( const SSector &sector ) const
 	{
-		return IsInTheAngle( sector.wStartAngle, wStartAngle, wEndAngle ) || IsInTheAngle( sector.wEndAngle, wStartAngle, wEndAngle ) ||
-			IsInTheAngle( wStartAngle, sector.wStartAngle, sector.wEndAngle ) || IsInTheAngle( wEndAngle, sector.wStartAngle, sector.wEndAngle );
+		return IsInTheAngle( sector.wStartAngle, wStartAngle, wEndAngle ) ||
+		       IsInTheAngle( sector.wEndAngle, wStartAngle, wEndAngle ) ||
+		       IsInTheAngle( wStartAngle, sector.wStartAngle, sector.wEndAngle ) ||
+		       IsInTheAngle( wEndAngle, sector.wStartAngle, sector.wEndAngle );
 	}
 	bool IsWholeCircle() const { return ( wEndAngle - wStartAngle == 65535 ); }
 };
@@ -32,44 +45,73 @@ struct SSector
 struct SSpiralPoint
 {
 	ZDATA
-		SVector vOffset;
-		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-		int nRadius = {};
-		SSector sector;
-		SAIAngle wAngle;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vOffset); f.Add(3,&nRadius); f.Add(4,&sector); f.Add(5,&wAngle); return 0; }
+	SVector vOffset;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nRadius = {};
+	SSector sector;
+	SAIAngle wAngle;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &vOffset );
+		f.Add( 3, &nRadius );
+		f.Add( 4, &sector );
+		f.Add( 5, &wAngle );
+		return 0;
+	}
 
 	SSpiralPoint() : vOffset( 0, 0 ), nRadius( 0 ), sector() {}
-	SSpiralPoint( const int x, const int y, const int r ) : vOffset( x, y ), nRadius( r )	{ wAngle = sector.wStartAngle = sector.wEndAngle = GetDirectionByVector( x, y ); }
+	SSpiralPoint( const int x, const int y, const int r ) : vOffset( x, y ), nRadius( r )
+	{
+		wAngle = sector.wStartAngle = sector.wEndAngle = GetDirectionByVector( x, y );
+	}
 };
 
 struct SWarFogUnitInfo
 {
 	ZDATA
-		SVector vPos;
-		SSector sector;
-		int nRadius = {};
-		bool bPlane = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPos); f.Add(3,&sector); f.Add(4,&nRadius); f.Add(5,&bPlane); return 0; }
+	SVector vPos;
+	SSector sector;
+	int nRadius = {};
+	bool bPlane = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &vPos );
+		f.Add( 3, &sector );
+		f.Add( 4, &nRadius );
+		f.Add( 5, &bPlane );
+		return 0;
+	}
 
-	SWarFogUnitInfo() : vPos( 0, 0 ) , sector(), nRadius( 0 ), bPlane( false ) {}
+	SWarFogUnitInfo() : vPos( 0, 0 ), sector(), nRadius( 0 ), bPlane( false ) {}
 };
 
 class CGlobalWarFog : public CAIObjectBase
 {
 
-// internal stuctures
+	// internal stuctures
 	struct SWarForFullUnitInfo : public SWarFogUnitInfo
 	{
 		ZDATA_( SWarFogUnitInfo )
-			SVector vOldPos;
-			int nOldRadius = {};
-			int nParty = {};	// warfog works only with two parties, so if updateFlag is UPD_CHANGE_PARTY new party is 1 - nParty ;-)
-			CArray1Bit visValues;
-			EUpdateWarFogUnitInfoFlag updateFlag = {};
-		ZEND int operator&( IBinSaver &f ) { f.Add(1,( SWarFogUnitInfo *)this); f.Add(2,&vOldPos); f.Add(3,&nOldRadius); f.Add(4,&nParty); f.Add(5,&visValues); f.Add(6,&updateFlag); return 0; }
+		SVector vOldPos;
+		int nOldRadius = {};
+		int nParty =
+				{}; // warfog works only with two parties, so if updateFlag is UPD_CHANGE_PARTY new party is 1 - nParty ;-)
+		CArray1Bit visValues;
+		EUpdateWarFogUnitInfoFlag updateFlag = {};
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 1, (SWarFogUnitInfo *)this );
+			f.Add( 2, &vOldPos );
+			f.Add( 3, &nOldRadius );
+			f.Add( 4, &nParty );
+			f.Add( 5, &visValues );
+			f.Add( 6, &updateFlag );
+			return 0;
+		}
 
-		SWarForFullUnitInfo() : SWarFogUnitInfo(), vOldPos( 0, 0 ), nOldRadius( 0 ), nParty( 0 ), updateFlag( UPD_UPDATED ) {}
+		SWarForFullUnitInfo() : SWarFogUnitInfo(), vOldPos( 0, 0 ), nOldRadius( 0 ), nParty( 0 ), updateFlag( UPD_UPDATED )
+		{
+		}
 		SWarForFullUnitInfo( const SWarFogUnitInfo &unitInfo, const int nParty, const int nSpiralLength );
 
 		void Update()
@@ -87,17 +129,17 @@ class CGlobalWarFog : public CAIObjectBase
 		SWarFogTileInfo() : nVisible( 0 ), nCloseVisible( 0 ) {}
 	};
 
-// internal types
-	typedef	det_map<int, SWarForFullUnitInfo> TWarFogUnitsMap;
+	// internal types
+	typedef det_map<int, SWarForFullUnitInfo> TWarFogUnitsMap;
 	typedef CArray2D<SWarFogTileInfo> TWarFog;
 	typedef det_set<SVector, STilesHash> TTilesToSmooth;
 
 	OBJECT_NOCOPY_METHODS( CGlobalWarFog );
-	CArray2D<CArray1Bit> areas;					// calculated spirals for every point
-	CArray2D1Bit valid;									// valid tiles on map
-	CArray2D1Bit calced;								// tiles that sometimes calced
+	CArray2D<CArray1Bit> areas; // calculated spirals for every point
+	CArray2D1Bit valid;         // valid tiles on map
+	CArray2D1Bit calced;        // tiles that sometimes calced
 	int nAreasCalced = {};
-	CArray2D<int> heights;							// heights
+	CArray2D<int> heights; // heights
 	bool bInitialization = {};
 	bool bHasInvalidTile = {};
 
@@ -107,7 +149,6 @@ class CGlobalWarFog : public CAIObjectBase
 	std::vector<uint8_t> miniMapSums;
 	int nMiniMapY = {};
 
-
 	/*
 	TTilesToSmooth miniMapSmoothTiles;
 	uint8_t cMiniMapWarFogParty;
@@ -115,27 +156,42 @@ class CGlobalWarFog : public CAIObjectBase
 	bool bFullSmooth;
 	*/
 
-	std::vector<SSpiralPoint> spiral;   // S(круга) * sizeof( SSpiralPoint ) = S(круга) * 18
-	CArray2D<int> spiralCoords;    // MaxRadius * MaxRadius
-	std::vector<int> lengths;           // MaxRadius * sizeof( int )
+	std::vector<SSpiralPoint> spiral; // S(круга) * sizeof( SSpiralPoint ) = S(круга) * 18
+	CArray2D<int> spiralCoords;       // MaxRadius * MaxRadius
+	std::vector<int> lengths;         // MaxRadius * sizeof( int )
 	ZDATA
-		int nSizeX = {};
-		int nSizeY = {};
-		int nMaxRadius = {};
-		int nUnitHeight = {};
+	int nSizeX = {};
+	int nSizeY = {};
+	int nMaxRadius = {};
+	int nUnitHeight = {};
 
-		std::vector<TWarFog> warFog;
+	std::vector<TWarFog> warFog;
 
-		CArray2D1Bit areasOpenTiles;
-		det_set<std::string> scriptAreas;
+	CArray2D1Bit areasOpenTiles;
+	det_set<std::string> scriptAreas;
 
-		CArray2D<int> staticObjects;
+	CArray2D<int> staticObjects;
 
-		TWarFogUnitsMap units;
-		CUpdateUnitContainer updateUnitList;
-		ZONSERIALIZE
+	TWarFogUnitsMap units;
+	CUpdateUnitContainer updateUnitList;
+	ZONSERIALIZE
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSizeX); f.Add(3,&nSizeY); f.Add(4,&nMaxRadius); f.Add(5,&nUnitHeight); f.Add(6,&warFog); f.Add(7,&areasOpenTiles); f.Add(8,&scriptAreas); f.Add(9,&staticObjects); f.Add(10,&units); f.Add(11,&updateUnitList); OnSerialize( f ); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSizeX );
+		f.Add( 3, &nSizeY );
+		f.Add( 4, &nMaxRadius );
+		f.Add( 5, &nUnitHeight );
+		f.Add( 6, &warFog );
+		f.Add( 7, &areasOpenTiles );
+		f.Add( 8, &scriptAreas );
+		f.Add( 9, &staticObjects );
+		f.Add( 10, &units );
+		f.Add( 11, &updateUnitList );
+		OnSerialize( f );
+		return 0;
+	}
+
 private:
 	void OnSerialize( IBinSaver &saver );
 	void ReInit();
@@ -154,7 +210,10 @@ private:
 	const int GetHeight( const SVector &tile ) const { return heights[tile.y][tile.x]; }
 	const int GetUnitHeight() const { return nUnitHeight; }
 
-	const bool IsTileInside( const int x, const int y ) const { return ( x >= 0 && y >= 0 && x < GetSizeX() && y < GetSizeY() ); }
+	const bool IsTileInside( const int x, const int y ) const
+	{
+		return ( x >= 0 && y >= 0 && x < GetSizeX() && y < GetSizeY() );
+	}
 	const bool IsTileInside( const SVector &tile ) const { return IsTileInside( tile.x, tile.y ); }
 
 	const CArray1Bit &GetVisibleInfoForTile( const SVector &tile );
@@ -167,16 +226,25 @@ private:
 	const int GetStaticObjectAtTile( const SVector &vTile ) const { return staticObjects[vTile.y][vTile.x]; }
 
 	const int GetSpiralLength() const { return spiral.size(); }
-	const int GetSpiralLength( const int nRadius ) { return lengths[ (std::min)( GetMaxRadius(), nRadius ) ]; }
-	const SSpiralPoint &GetSpiralPoint( const int nIndex ) const { return spiral[ nIndex ]; }
+	const int GetSpiralLength( const int nRadius ) { return lengths[(std::min)( GetMaxRadius(), nRadius )]; }
+	const SSpiralPoint &GetSpiralPoint( const int nIndex ) const { return spiral[nIndex]; }
 
 	void OnTileChangeVisibility( const SVector &vTile, const bool bVisible, const int nParty );
 
-	const uint8_t GetClientTileVis( const int x, const int y, const int nParty ) const { return IsTileVisible( SVector( x, y ), nParty ) ? SAIConsts::VIS_POWER : 0; }
+	const uint8_t GetClientTileVis( const int x, const int y, const int nParty ) const
+	{
+		return IsTileVisible( SVector( x, y ), nParty ) ? SAIConsts::VIS_POWER : 0;
+	}
 	const bool IsValidParty( const int nParty ) const { return nParty == 0 || nParty == 1; }
+
 public:
 	void Init( const int nSizeX, const int nSizeY, const int nMaxRadius, const float fUnitHeight );
-	void FinishInitialization() { bInitialization = false; bHasInvalidTile = true; valid.FillZero(); }
+	void FinishInitialization()
+	{
+		bInitialization = false;
+		bHasInvalidTile = true;
+		valid.FillZero();
+	}
 	void Clear();
 
 	void AddUnit( const int nID, const SWarFogUnitInfo &unitInfo, const int nParty );

@@ -4,21 +4,22 @@
 
 namespace NCamera
 {
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	class CCameraMayaMouseMutator : public CCameraBasicMouseMutator
-	{
-		OBJECT_NOCOPY_METHODS( CCameraMayaMouseMutator )
-		//
-		float GetPitchDelta();
-		float GetYawDelta();
-		float GetForwardDelta();
-		float GetStrafeDelta();
-		float GetZoomDelta();
-	public:
-		bool NeedUpdate() { return true; }
-		void Recalc();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+class CCameraMayaMouseMutator : public CCameraBasicMouseMutator
+{
+	OBJECT_NOCOPY_METHODS( CCameraMayaMouseMutator )
+	//
+	float GetPitchDelta();
+	float GetYawDelta();
+	float GetForwardDelta();
+	float GetStrafeDelta();
+	float GetZoomDelta();
 
-		int operator&( IBinSaver &saver );
-	};
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public:
+	bool NeedUpdate() { return true; }
+	void Recalc();
+
+	int operator&( IBinSaver &saver );
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

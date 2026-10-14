@@ -4,12 +4,13 @@
 
 class CListControlSorterMapSize : public IWindowSorter
 {
-	OBJECT_BASIC_METHODS(CListControlSorterMapSize)
+	OBJECT_BASIC_METHODS( CListControlSorterMapSize )
 
-		bool bAscending;
+	bool bAscending;
 	int nColumn;
+
 public:
-	CListControlSorterMapSize() : bAscending ( true ) {  }
+	CListControlSorterMapSize() : bAscending( true ) {}
 
 	int operator&( IBinSaver &saver )
 	{

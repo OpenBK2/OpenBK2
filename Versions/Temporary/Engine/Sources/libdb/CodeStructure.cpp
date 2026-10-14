@@ -13,7 +13,10 @@
 namespace NCodeGen
 {
 
-CCodeStructure::CCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
+CCodeStructure::CCodeStructure( NLang::CFileNode *pRootFile,
+                                const CNodes2TypeDefs &nodes2TypeDefs,
+                                const std::string &szRootDir,
+                                NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	for ( NLang::CFileNode::TIncludesIter iter = pRootFile->BeginIncludes(); iter != pRootFile->EndIncludes(); ++iter )
 		files.push_back( new CFile( iter->second, nodes2TypeDefs, szRootDir, pTermTypesDesc ) );
@@ -21,24 +24,25 @@ CCodeStructure::CCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDe
 
 void CCodeStructure::GenerateCode( const std::string &szRootDir )
 {
-	for ( std::list< CObj<CFile> >::iterator iter = files.begin(); iter != files.end(); ++iter )
+	for ( std::list<CObj<CFile>>::iterator iter = files.begin(); iter != files.end(); ++iter )
 	{
 		CFile *pFile = *iter;
 		pFile->GenerateCode( szRootDir );
 	}
 }
 
-
-
 // Both of these used to lowercase the root directory as well as turn '\' into
 // '/'. Here it is only cut off the front of each .cll's path by length, but
 // in GenerateCode it is where the files are written, and a lowercased
 // /home/User/... is another directory where the filesystem minds case.
-CXmlResource* GenerateCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRawRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
+CXmlResource *GenerateCodeStructure( NLang::CFileNode *pRootFile,
+                                     const CNodes2TypeDefs &nodes2TypeDefs,
+                                     const std::string &szRawRootDir,
+                                     NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	std::string szRootDir( szRawRootDir );
 	NStr::ReplaceAllChars( &szRootDir, '\\', '/' );
-	if ( szRootDir[szRootDir.size()-1] != '/' )
+	if ( szRootDir[szRootDir.size() - 1] != '/' )
 		szRootDir += "/";
 	return new CCodeStructure( pRootFile, nodes2TypeDefs, szRootDir, pTermTypesDesc );
 }
@@ -47,7 +51,7 @@ void GenerateCode( CCodeStructure *pCodeStructure, const std::string &szRawRootD
 {
 	std::string szRootDir( szRawRootDir );
 	NStr::ReplaceAllChars( &szRootDir, '\\', '/' );
-	if ( szRootDir[szRootDir.size()-1] != '/' )
+	if ( szRootDir[szRootDir.size() - 1] != '/' )
 		szRootDir += "/";
 
 	pCodeStructure->GenerateCode( szRootDir );

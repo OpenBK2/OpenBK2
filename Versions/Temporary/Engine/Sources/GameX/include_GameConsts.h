@@ -13,4 +13,4 @@ public:
 // Menu reads reuse the snapshot. Startup, mod reloads and MP attempts refresh it.
 GAMEX_EXPORT uint32_t GetMPDataVersionChecksum() const;
 GAMEX_EXPORT uint32_t RecalculateMPDataVersionChecksum() const;
-GAMEX_EXPORT uint32_t GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const;
+GAMEX_EXPORT uint32_t GetMPDataVersionChecksumWithMap( CDBPtr<NDb::SMultiplayerMap> map ) const;

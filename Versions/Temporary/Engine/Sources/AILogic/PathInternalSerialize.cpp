@@ -24,11 +24,11 @@ int CTankPitPath::operator&( IBinSaver &saver )
 	saver.Add( 2, &vCurPoint );
 	saver.Add( 3, &vEndPoint );
 	saver.Add( 4, &fSpeedLen );
-  SerializeBasePathUnit( saver, 5, &pUnit );
+	SerializeBasePathUnit( saver, 5, &pUnit );
 	return 0;
 }
 
 void CPresizePath::OnSerialize( IBinSaver &saver )
 {
-  SerializeBasePathUnit( saver, 2, &pUnit );
+	SerializeBasePathUnit( saver, 2, &pUnit );
 }

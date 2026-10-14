@@ -39,11 +39,11 @@ bool CCameraMovement::Segment( const NTimer::STime curTime )
 	}
 	else
 	{
-		const float fMoved( float(curTime - timeMoveStart ) / float( nTimeToMove ) );
-		pCamera->SetAnchor( start.vAnchor + (pos.vAnchor - start.vAnchor) * fMoved );
-		pCamera->SetPlacement( start.fDist + (pos.fDist - start.fDist) * fMoved,
-													 start.fPitch + (pos.fPitch - start.fPitch ) * fMoved,
-													 start.fYaw + (pos.fYaw - start.fYaw) * fMoved );
+		const float fMoved( float( curTime - timeMoveStart ) / float( nTimeToMove ) );
+		pCamera->SetAnchor( start.vAnchor + ( pos.vAnchor - start.vAnchor ) * fMoved );
+		pCamera->SetPlacement( start.fDist + ( pos.fDist - start.fDist ) * fMoved,
+		                       start.fPitch + ( pos.fPitch - start.fPitch ) * fMoved,
+		                       start.fYaw + ( pos.fYaw - start.fYaw ) * fMoved );
 		return true;
 	}
 }
@@ -51,7 +51,10 @@ bool CCameraMovement::Segment( const NTimer::STime curTime )
 // move to
 void CCameraMovement::SetFinishPoint( const int nPoint, const int _nTimeToMove, const NTimer::STime _curTime )
 {
-	NI_ASSERT( nPoint < pMapInfo->cameraPositions.size(), fmt::format( "attempt to move camera to position number {}, in map there is only {} positions", nPoint, pMapInfo->cameraPositions.size() ) ) ;
+	NI_ASSERT( nPoint < pMapInfo->cameraPositions.size(),
+	           fmt::format( "attempt to move camera to position number {}, in map there is only {} positions",
+	                        nPoint,
+	                        pMapInfo->cameraPositions.size() ) );
 	if ( nPoint < pMapInfo->cameraPositions.size() )
 	{
 		start.vAnchor = pCamera->GetAnchor();

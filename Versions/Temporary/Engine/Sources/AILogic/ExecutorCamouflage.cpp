@@ -12,15 +12,16 @@
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 
-CExecutorCamouflage::CExecutorCamouflage( CAIUnit *_pUnit	) :
-CExecutorUnitCombatBonus ( NDb::ABILITY_CAMOFLAGE_MODE, _pUnit, TID_CAMOUFLAGE ), nextCheckTime( 0 )
+CExecutorCamouflage::CExecutorCamouflage( CAIUnit *_pUnit )
+		: CExecutorUnitCombatBonus( NDb::ABILITY_CAMOFLAGE_MODE, _pUnit, TID_CAMOUFLAGE ), nextCheckTime( 0 )
 {
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChange( const uint16_t oldModeFlags,
+                                                                                    const uint16_t newModeFlags )
 {
 	if ( GetState() == EASS_ACTIVE && ( newModeFlags & ~CExecutorUnitCombatBonus::EUM_MOVING ) )
-	{					// Switch camo off if doing anything but moving
+	{ // Switch camo off if doing anything but moving
 		return EACR_FORCE_DEACTIVATE;
 	}
 	else if ( GetState() == EASS_SWITCHING_ON && newModeFlags )
@@ -32,7 +33,8 @@ CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCamouflage::OnModeChan
 
 int CExecutorCamouflage::Segment()
 {
-	const uint8_t cPartyToCheck = GetAIUnit()->GetParty() == theDipl.GetNeutralParty() ? theDipl.GetNeutralParty() : 1 - GetAIUnit()->GetParty();
+	const uint8_t cPartyToCheck =
+			GetAIUnit()->GetParty() == theDipl.GetNeutralParty() ? theDipl.GetNeutralParty() : 1 - GetAIUnit()->GetParty();
 	if ( GetState() == EASS_ACTIVE && GetAIUnit()->IsVisible( cPartyToCheck ) )
 	{
 		GetAIUnit()->SetBehaviourFire( SBehaviour::EFAtWill );
@@ -57,16 +59,16 @@ void CExecutorCamouflage::SwitchOnEnd()
 	nextCheckTime = curTime;
 
 	if ( GetAIUnit()->IsInfantry() )
-	{	// Set camo to all units in formation simultaneously
+	{ // Set camo to all units in formation simultaneously
 		CFormation *pFormation = GetAIUnit()->GetFormation();
 		if ( pFormation )
 		{
 			for ( int i = 0; i < pFormation->Size(); ++i )
 			{
-				if ( (*pFormation)[i]->GetUnitAbilityDesc( NDb::ABILITY_CAMOFLAGE_MODE ) )
+				if ( ( *pFormation )[i]->GetUnitAbilityDesc( NDb::ABILITY_CAMOFLAGE_MODE ) )
 				{
-					(*pFormation)[i]->SetCamoulfage();
-					(*pFormation)[i]->SetBehaviourFire( SBehaviour::EFNoFire );
+					( *pFormation )[i]->SetCamoulfage();
+					( *pFormation )[i]->SetBehaviourFire( SBehaviour::EFNoFire );
 				}
 			}
 		}

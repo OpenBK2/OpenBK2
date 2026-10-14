@@ -19,17 +19,15 @@ class MAPEDITORLIB_EXPORT CInteractiveMaya : public CObjectBase
 	int nExecutionCounter;
 
 	CInteractiveMaya();
+
 public:
-	static CInteractiveMaya * Get();
+	static CInteractiveMaya *Get();
 	static bool ExtractResult( std::string *pszResult, const std::string &szOutput );
 
 	void SetResponseTimeout( int nResponseWaitTimeout );
 	void SetExecutionQuota( int n );
 
-	bool IsStarted()
-	{
-		return process.IsStarted();
-	}
+	bool IsStarted() { return process.IsStarted(); }
 	bool Start();
 	bool Execute( const std::string &szScript, std::string *pszOutput, std::string *pszErrorOutput );
 	bool Stop();

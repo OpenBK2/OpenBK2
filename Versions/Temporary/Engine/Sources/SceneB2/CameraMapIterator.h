@@ -1,6 +1,5 @@
 #pragma once
 
-
 // ************************************************************************************************************************ //
 // **
 // ** camera iterator to overview entire map in orthographic projection mode
@@ -20,10 +19,16 @@ class CCameraMapIterator
 	int nNumStepsX, nNumStepsY;
 	int nCurrX, nCurrY;
 	//
-	void CalcCurrAnchor() { vCurrAnchor = vStartAnchor + vStepY*nCurrY + vStepX*nCurrX; }
+	void CalcCurrAnchor() { vCurrAnchor = vStartAnchor + vStepY * nCurrY + vStepX * nCurrX; }
+
 public:
-	CCameraMapIterator( float fFOV, float fYaw, float fPitch, float fDistance,
-											const CVec2 &vScreenSize, float fMapSizeX, float fMapSizeY );
+	CCameraMapIterator( float fFOV,
+	                    float fYaw,
+	                    float fPitch,
+	                    float fDistance,
+	                    const CVec2 &vScreenSize,
+	                    float fMapSizeX,
+	                    float fMapSizeY );
 	//
 	int GetImageSizeX() const { return nNumStepsX * nScreenSizeX; }
 	int GetImageSizeY() const { return nNumStepsY * nScreenSizeY; }

@@ -9,15 +9,15 @@
 #include <cstdint>
 
 #include <zlib.h>
-using object_storage_type = det_map<int, CObjectBase*>;
+using object_storage_type = det_map<int, CObjectBase *>;
 
-object_storage_type & GetStorage()
+object_storage_type &GetStorage()
 {
 	static object_storage_type storage;
 	return storage;
 }
 
-void AddObject( int nObject, CObjectBase * p )
+void AddObject( int nObject, CObjectBase *p )
 {
 	GetStorage()[nObject] = p;
 }
@@ -28,7 +28,7 @@ void CheckAIObjectBase( int nObj )
 	if ( pos != GetStorage().end() )
 	{
 		CCheckSumSaver saver;
-		(pos->second)->operator&( saver );
+		( pos->second )->operator&( saver );
 	}
 }
 
@@ -36,7 +36,7 @@ void CheckAIObjectBase()
 {
 	CCheckSumSaver saver;
 	for ( object_storage_type::iterator it = GetStorage().begin(); it != GetStorage().end(); ++it )
-		(it->second)->operator&( saver );
+		( it->second )->operator&( saver );
 }
 /*
 
@@ -54,15 +54,14 @@ CAIObjectBase::CAIObjectBase()
 
 static uLong nLocalCheckSum;
 
-IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, ICheckSumLog * pLog, const uint32_t segmentTime )
+IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, ICheckSumLog *pLog, const uint32_t segmentTime )
 {
 	return new CCheckSumSaver( pCheckSum, pLog, segmentTime );
 }
 
-CCheckSumSaver::CCheckSumSaver( uLong *_pCheckSum, ICheckSumLog * pLog, const NTimer::STime segmentTime  )
-: checkSumData( _pCheckSum ), checkSumString( _pCheckSum ),
- checkSumObjects( _pCheckSum ), nAddedObjects( 0 ), bDissalowStoreObjects( false ), nCount( 0 ),
- nSegment( segmentTime ), pCommandsHistory ( pLog )
+CCheckSumSaver::CCheckSumSaver( uLong *_pCheckSum, ICheckSumLog *pLog, const NTimer::STime segmentTime )
+		: checkSumData( _pCheckSum ), checkSumString( _pCheckSum ), checkSumObjects( _pCheckSum ), nAddedObjects( 0 ),
+			bDissalowStoreObjects( false ), nCount( 0 ), nSegment( segmentTime ), pCommandsHistory( pLog )
 {
 }
 
@@ -76,14 +75,14 @@ CCheckSumSaver::~CCheckSumSaver()
 	for ( CAddOrder::iterator it = addOrder.begin(); it != addOrder.end(); ++it )
 	{
 		// save object data
-		const bool bStartChunkResult = StartChunk( (chunk_id) 1, nObject );
+		const bool bStartChunkResult = StartChunk( (chunk_id)1, nObject );
 		ASSERT( bStartChunkResult );
 		// do not store object's ptr value - differ on different hosts
 		// DataChunk( 0, &pObject, 4, 1 );
 		//
 		if ( StartChunk( 1, 1 ) )
 		{
-			(*(*it))&( *this );
+			( *( *it ) ) & ( *this );
 			FinishChunk();
 		}
 		FinishChunk();
@@ -93,9 +92,8 @@ CCheckSumSaver::~CCheckSumSaver()
 }
 
 CCheckSumSaver::CCheckSumSaver()
-: checkSumData( &nLocalCheckSum ), checkSumString( &nLocalCheckSum ),
-checkSumObjects( &nLocalCheckSum ), nAddedObjects( 0 ), bDissalowStoreObjects( false ), nCount( 0 ),
-nSegment( 0 )
+		: checkSumData( &nLocalCheckSum ), checkSumString( &nLocalCheckSum ), checkSumObjects( &nLocalCheckSum ),
+			nAddedObjects( 0 ), bDissalowStoreObjects( false ), nCount( 0 ), nSegment( 0 )
 {
 	nLocalCheckSum = adler32( 0L, Z_NULL, 0 );
 }
@@ -103,13 +101,13 @@ nSegment( 0 )
 void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 {
 #ifdef _DEBUG
-	unsigned int * _pData = (unsigned int *)pData;
+	unsigned int *_pData = (unsigned int *)pData;
 	bool bFound = false;
 	if ( nSize > 2 )
 	{
 		for ( int i = 0; i < nSize / 4; ++i )
 		{
-			if ( _pData[i] == 0xcdcdcdcd || _pData[i] == 0xadadadad || _pData[i] == 0xfdfdfdfd  )
+			if ( _pData[i] == 0xcdcdcdcd || _pData[i] == 0xadadadad || _pData[i] == 0xfdfdfdfd )
 			{
 				bFound = true;
 				break;
@@ -118,16 +116,16 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	}
 	else if ( nSize == 2 )
 	{
-		uint16_t * _pData = (uint16_t *)pData;
-		if ( _pData[0]== 0xcdcd || _pData[0] == 0xadad|| _pData[0] == 0xfdfd )
+		uint16_t *_pData = (uint16_t *)pData;
+		if ( _pData[0] == 0xcdcd || _pData[0] == 0xadad || _pData[0] == 0xfdfd )
 		{
 			bFound = true;
 		}
 	}
 	else if ( nSize == 1 )
 	{
-		uint8_t * _pData = (uint8_t *)pData;
-		if ( _pData[0]== 0xcd || _pData[0] == 0xad|| _pData[0] == 0xfd )
+		uint8_t *_pData = (uint8_t *)pData;
+		if ( _pData[0] == 0xcd || _pData[0] == 0xad || _pData[0] == 0xfd )
 		{
 			bFound = true;
 		}
@@ -143,12 +141,15 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 
 		if ( nBreakCount == nCount && nSegment == nSegmentBreak )
 		{
-			DebugTrace( "break_count/break_segment reached: segment %i, count %i, data[0] = %i", nSegment, nCount, *((int*)pData) );
+			DebugTrace( "break_count/break_segment reached: segment %i, count %i, data[0] = %i",
+			            nSegment,
+			            nCount,
+			            *( (int *)pData ) );
 			breakpoint();
 		}
 
-		*checkSumData = adler32( *checkSumData, (const uint8_t*)&idChunk, sizeof(idChunk) );
-		*checkSumData = adler32( *checkSumData, (const uint8_t*)pData, nSize );
+		*checkSumData = adler32( *checkSumData, (const uint8_t *)&idChunk, sizeof( idChunk ) );
+		*checkSumData = adler32( *checkSumData, (const uint8_t *)pData, nSize );
 		//*checkSumData = adler32( *checkSumData, (const uint8_t*)&nSize, sizeof(nSize) );
 		//*checkSumData = adler32( *checkSumData, (const uint8_t*)&nChunkNumber, sizeof(nChunkNumber) );
 
@@ -156,11 +157,9 @@ void CCheckSumSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 		{
 			if ( !pCommandsHistory->AddChecksumLog( nSegment, *checkSumData, nCount ) )
 			{
-				DebugTrace( "Segment %i, count %i, data[0] = %i", nSegment, nCount, *((int*)pData) );
+				DebugTrace( "Segment %i, count %i, data[0] = %i", nSegment, nCount, *( (int *)pData ) );
 			}
 		}
-
-
 	}
 	++nCount;
 }
@@ -202,5 +201,5 @@ void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 	}
 	++nCount;
 
-	*checkSumObjects = adler32( *checkSumObjects, (const uint8_t*)&(nObj), sizeof(nObj) );
+	*checkSumObjects = adler32( *checkSumObjects, (const uint8_t *)&( nObj ), sizeof( nObj ) );
 }

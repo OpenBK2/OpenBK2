@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-#define VIEW_COLLECTION_ID ("_VIEW_COLLECTION_ID_")
+#define VIEW_COLLECTION_ID ( "_VIEW_COLLECTION_ID_" )
 
 // Те, кто создает Undo Operation могут самостоятельно выполнить их снова
 // Если такой цели нет, то команда должна сама о себе позаботится
@@ -20,26 +20,25 @@ struct IView
 	//	Выполнить операции View после конца редактирования
 	virtual void Leave() = 0;
 	// Выполнить Undo
-	virtual void Undo( IController* pController ) = 0;
+	virtual void Undo( IController *pController ) = 0;
 	// Выполнить Redo
-	virtual void Redo( IController* pController ) = 0;
+	virtual void Redo( IController *pController ) = 0;
 	// Обновить без изменения значений (вызывается при добавлении команды в IControllerContainer)
 	//virtual void Update( IController* pController ) = 0;
 	//Установить манипулятор
-	virtual void SetViewManipulator( IManipulator* _pViewManipulator,
-																	 const SObjectSet &rObjectSet,
-																	 const std::string &rszTemporaryLabel ) = 0;
+	virtual void SetViewManipulator( IManipulator *_pViewManipulator,
+	                                 const SObjectSet &rObjectSet,
+	                                 const std::string &rszTemporaryLabel ) = 0;
 	//Получить ранее установленный манипулятор
-	virtual IManipulator* GetViewManipulator() = 0;
+	virtual IManipulator *GetViewManipulator() = 0;
 	//Убрать манипулятор
 	virtual void RemoveViewManipulator() = 0;
 	virtual void GetObjectSet( SObjectSet *pObjectDet ) = 0;
 };
 
 // CRAP{ HASH_SET
-typedef std::unordered_map<IView*, uint32_t> CViewSet;
+typedef std::unordered_map<IView *, uint32_t> CViewSet;
 // CRAP} HASH_SET
-
 
 // Хранилище View
 // rszObjectTypeName - тип View
@@ -47,7 +46,10 @@ typedef std::unordered_map<IView*, uint32_t> CViewSet;
 
 struct IViewContainer : public CObjectBase
 {
-	enum { tidTypeID = 0x1408A380 };
+	enum
+	{
+		tidTypeID = 0x1408A380
+	};
 	// Добавить target
 	virtual void Add( IView *pView, const SObjectSet &rObjectSet ) = 0;
 	// Удалить target

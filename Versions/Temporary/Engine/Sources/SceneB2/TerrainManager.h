@@ -14,7 +14,7 @@ class CTerrainManager : public ITerraManager
 	//
 	CDBPtr<NDb::STerrain> pDesc;
 	CPtr<NGScene::IGameView> pGameView;
-	CDGPtr< CFuncBase<STime> > pTimer;
+	CDGPtr<CFuncBase<STime>> pTimer;
 	//
 	void InitTerragen()
 	{
@@ -32,7 +32,7 @@ public:
 	void Load( const NDb::STerrain *pDesc, CDataStream *pStream );
 	const NDb::STerrain *GetDesc() const { return pDesc; }
 	void SetAIObserver( struct ITerraAIObserver *pObserver );
-	virtual struct ITerraAIObserver* GetAIObserver();
+	virtual struct ITerraAIObserver *GetAIObserver();
 	void UpdateAIInfo() { pTerraGen->UpdateAIInfo(); }
 
 	//
@@ -62,21 +62,33 @@ public:
 	//
 	void AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const float _fWidth );
 	//
-	void CreateDebris( const std::string &szFileName, CArray2D<uint8_t> *pImage, CVec2 *pOrigin,
-										 const NDebrisBuilder::EMaskType maskType, const int nSmoothRadius,
-										 const NDebrisBuilder::EMaskSmoothType smoothType );
+	void CreateDebris( const std::string &szFileName,
+	                   CArray2D<uint8_t> *pImage,
+	                   CVec2 *pOrigin,
+	                   const NDebrisBuilder::EMaskType maskType,
+	                   const int nSmoothRadius,
+	                   const NDebrisBuilder::EMaskSmoothType smoothType );
 	// selection
 	void CreateSelection( NMeshData::SMeshData *pData, const CVec3 &vMin, const CVec3 &vMax );
 	// tracks
-	void AddTrack( const int nID, const float fFadingSpeed,
-								 const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4,
-								 const CVec2 &vNorm, const float _fWidth, const float fAplha, CTracksManager *pTracksManager );
+	void AddTrack( const int nID,
+	               const float fFadingSpeed,
+	               const CVec2 &_v1,
+	               const CVec2 &_v2,
+	               const CVec2 &_v3,
+	               const CVec2 &_v4,
+	               const CVec2 &vNorm,
+	               const float _fWidth,
+	               const float fAplha,
+	               CTracksManager *pTracksManager );
 	// explosions
 	void AddExplosion( const CVec2 &_vMin, const CVec2 &_vMax, const NDb::SMaterial *pMaterial );
 	//
-	void ModifyTerraGeometryByBrush( const int nVisTileX, const int nVisTileY, bool bCenter,
-																	 const CArray2D<float> &brush,
-																	 const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
+	void ModifyTerraGeometryByBrush( const int nVisTileX,
+	                                 const int nVisTileY,
+	                                 bool bCenter,
+	                                 const CArray2D<float> &brush,
+	                                 const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
 	//
 	void GetTerraGeometryUpdateDifferences( int *pOffsX, int *pOffsY, CArray2D<float> *pDiffs );
 	void UpdateAllObjectsInGeomModifyingArea();
@@ -86,23 +98,29 @@ public:
 	float GetTerraHeightFast( const int nTileX, const int nTileY ) const;
 	float GetRealTerraHeightFast( const int nTileX, const int nTileY ) const;
 	//
-	bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId ) { return pTerraGen->GetCragPrecVerts( pVerts, nVSOId ); }
+	bool GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId )
+	{
+		return pTerraGen->GetCragPrecVerts( pVerts, nVSOId );
+	}
 	//
 	void UpdateRiversDepthes();
 	//
-	void AddDynamicDebris(	const CVec2 &vPos, const CVec2 &vSize,
-													const float fAngle, const int nSmoothRad,
-													const NDb::SMaterial *pMaterial );
-	void ApplyBridgeTerraForm(	const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight );
+	void AddDynamicDebris( const CVec2 &vPos,
+	                       const CVec2 &vSize,
+	                       const float fAngle,
+	                       const int nSmoothRad,
+	                       const NDb::SMaterial *pMaterial );
+	void ApplyBridgeTerraForm( const CVec2 &_p1, const CVec2 &_p2, const float fWidth, const float fHeight );
 	void ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 );
 	//
 	void RestoreFromHistory();
 	//
 	void HideTerrain( bool bHide );
 	//
-	void UpdateTileAreaType(	const float fXo, const float fYo,
-														const CArray2D<uint8_t> &mask,
-														const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
+	void UpdateTileAreaType( const float fXo,
+	                         const float fYo,
+	                         const CArray2D<uint8_t> &mask,
+	                         const NTerraBrush::ETerraBrushUpdate terraBrushUpdate );
 	//
 	void GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArray2D<uint8_t> *pDiffs );
 	//
@@ -127,7 +145,7 @@ public:
 	//
 	virtual int GetTilesCountX() const { return pTerraGen->GetTilesCountX(); }
 	virtual int GetTilesCountY() const { return pTerraGen->GetTilesCountY(); }
-	virtual const STerrainInfo* const GetTerraInfo() const { return pTerraGen->GetTerraInfo(); }
+	virtual const STerrainInfo *const GetTerraInfo() const { return pTerraGen->GetTerraInfo(); }
 	//
 	int operator&( IBinSaver &saver );
 };

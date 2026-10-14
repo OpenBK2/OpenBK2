@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct SMainFolder
 {
 	static const char GAME_REGISTRY_FOLDER[];

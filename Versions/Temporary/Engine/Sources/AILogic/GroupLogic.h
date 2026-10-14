@@ -16,30 +16,37 @@ class CFreeGroupIDs
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nMaxID = {};
+
 public:
 	int operator&( IBinSaver &f ) { return 0; }
 	CFreeGroupIDs() : nMaxID( 1 ) {}
 
-	const int Get() { nMaxID += 2; return nMaxID; }
+	const int Get()
+	{
+		nMaxID += 2;
+		return nMaxID;
+	}
 	void Return( const int id ) {}
 };
 
 class CGroupLogic : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CGroupLogic );
+
 public:
 	int operator&( IBinSaver &saver );
+
 private:
-CFreeGroupIDs groupIds;
+	CFreeGroupIDs groupIds;
 	det_set<int> registeredGroups;
-	CQueuesSet< CPtr<CCommonUnit> > groupUnits;
-	std::list< CPtr<CCommonUnit> > followingUnits;
+	CQueuesSet<CPtr<CCommonUnit>> groupUnits;
+	std::list<CPtr<CCommonUnit>> followingUnits;
 
 	// 0 - all units, except of infantry; 1 - infantry
-	std::vector< NSegmObjs::CContainer< CPtr<CCommonUnit> > > segmUnits;
-	NSegmObjs::CContainer< CPtr<CCommonUnit> > freezeUnits;
-	NSegmObjs::CContainer< CPtr<CAIUnit> > firstPathUnits;
-	NSegmObjs::CContainer< CPtr<CAIUnit> > secondPathUnits;
+	std::vector<NSegmObjs::CContainer<CPtr<CCommonUnit>>> segmUnits;
+	NSegmObjs::CContainer<CPtr<CCommonUnit>> freezeUnits;
+	NSegmObjs::CContainer<CPtr<CAIUnit>> firstPathUnits;
+	NSegmObjs::CContainer<CPtr<CAIUnit>> secondPathUnits;
 
 	NTimer::STime lastSegmTime = {};
 
@@ -50,11 +57,13 @@ CFreeGroupIDs groupIds;
 		SAIAngle wAmbushDir;
 		bool bGivenCommandToRestore = {};
 
-		SAmbushInfo() : nUniqueId( -1 ), vAmbushCenter( VNULL2 ), wAmbushDir( 0 ), bGivenCommandToRestore( false ) { }
+		SAmbushInfo() : nUniqueId( -1 ), vAmbushCenter( VNULL2 ), wAmbushDir( 0 ), bGivenCommandToRestore( false ) {}
 		SAmbushInfo( const int _nUniqueId )
-			: nUniqueId( _nUniqueId ), vAmbushCenter( -1.0f, -1.0f ), wAmbushDir( 0 ), bGivenCommandToRestore( false ) { }
+				: nUniqueId( _nUniqueId ), vAmbushCenter( -1.0f, -1.0f ), wAmbushDir( 0 ), bGivenCommandToRestore( false )
+		{
+		}
 	};
-	typedef std::list< std::list<SAmbushInfo> > CAmbushGroups;
+	typedef std::list<std::list<SAmbushInfo>> CAmbushGroups;
 	CAmbushGroups ambushGroups;
 	det_set<int> ambushUnits;
 	NTimer::STime lastAmbushCheck = {};
@@ -83,8 +92,9 @@ CFreeGroupIDs groupIds;
 	static uint16_t GetSpecialGroupNumberByID( const uint16_t wID );
 	static uint16_t GetIdByGroupNumber( const uint16_t wGroup );
 	static uint16_t GetPlayerByGroupNumber( const uint16_t wGroup );
+
 public:
-	CGroupLogic() { }
+	CGroupLogic() {}
 	void Init( ICollisionsCollector *pCollisionsCollector );
 	void Clear() { DestroyContents(); }
 
@@ -113,7 +123,7 @@ public:
 	int BeginGroup( const int nGroup ) const { return groupUnits.begin( nGroup ); }
 	int EndGroup() const { return groupUnits.end(); }
 	int Next( const int nIter ) const { return groupUnits.GetNext( nIter ); }
-	class CCommonUnit* GetGroupUnit( const int nIter ) const { return groupUnits.GetEl( nIter ); }
+	class CCommonUnit *GetGroupUnit( const int nIter ) const { return groupUnits.GetEl( nIter ); }
 
 	void AddFollowingUnit( class CCommonUnit *pUnit );
 
@@ -121,11 +131,11 @@ public:
 	void RegisterPathSegments( class CAIUnit *pUnit, const bool bInitialization );
 
 	void UnregisterSegments( class CCommonUnit *pUnit );
-	void UnregisterPathSegments( class CAIUnit * pUnit );
+	void UnregisterPathSegments( class CAIUnit *pUnit );
 
 	void UnitSetToAmbush( class CCommonUnit *pUnit );
 	void GetCheckSum( unsigned long *ulChecksum );
-	void UpdateDebugChecksums(FILE* f);
+	void UpdateDebugChecksums( FILE *f );
 };
 
 const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd );

@@ -23,26 +23,42 @@ const std::string GetTypePrefix( const NDb::NTypeDef::ETypeType eType, NDb::NTyp
 
 	switch ( eType )
 	{
-	case NDb::NTypeDef::TYPE_TYPE_UNKNOWN: return "";
-	case NDb::NTypeDef::TYPE_TYPE_INT: return "n";
-	case NDb::NTypeDef::TYPE_TYPE_FLOAT: return "f";
-	case NDb::NTypeDef::TYPE_TYPE_BOOL: return "b";
-	case NDb::NTypeDef::TYPE_TYPE_GUID: return "";
-	case NDb::NTypeDef::TYPE_TYPE_STRING: return "sz";
-	case NDb::NTypeDef::TYPE_TYPE_WSTRING: return "wsz";
-	case NDb::NTypeDef::TYPE_TYPE_BINARY: return "";
-	case NDb::NTypeDef::TYPE_TYPE_ENUM: return "e";
-	case NDb::NTypeDef::TYPE_TYPE_REF: return "p";
-	case NDb::NTypeDef::TYPE_TYPE_ARRAY: return "";
-	case NDb::NTypeDef::TYPE_TYPE_STRUCT: return "";
-	case NDb::NTypeDef::TYPE_TYPE_CLASS: return "";
-	default:
-		NI_ASSERT( false, "Unknown type" );
-		return "";
+		case NDb::NTypeDef::TYPE_TYPE_UNKNOWN:
+			return "";
+		case NDb::NTypeDef::TYPE_TYPE_INT:
+			return "n";
+		case NDb::NTypeDef::TYPE_TYPE_FLOAT:
+			return "f";
+		case NDb::NTypeDef::TYPE_TYPE_BOOL:
+			return "b";
+		case NDb::NTypeDef::TYPE_TYPE_GUID:
+			return "";
+		case NDb::NTypeDef::TYPE_TYPE_STRING:
+			return "sz";
+		case NDb::NTypeDef::TYPE_TYPE_WSTRING:
+			return "wsz";
+		case NDb::NTypeDef::TYPE_TYPE_BINARY:
+			return "";
+		case NDb::NTypeDef::TYPE_TYPE_ENUM:
+			return "e";
+		case NDb::NTypeDef::TYPE_TYPE_REF:
+			return "p";
+		case NDb::NTypeDef::TYPE_TYPE_ARRAY:
+			return "";
+		case NDb::NTypeDef::TYPE_TYPE_STRUCT:
+			return "";
+		case NDb::NTypeDef::TYPE_TYPE_CLASS:
+			return "";
+		default:
+			NI_ASSERT( false, "Unknown type" );
+			return "";
 	}
 }
 
-bool ConvertToShortName( std::string *pszShortFieldName, const std::string &szFullFieldName, NDb::NTypeDef::ETypeType eType, NDb::NTypeDef::SAttributes *pTypeAttributes )
+bool ConvertToShortName( std::string *pszShortFieldName,
+                         const std::string &szFullFieldName,
+                         NDb::NTypeDef::ETypeType eType,
+                         NDb::NTypeDef::SAttributes *pTypeAttributes )
 {
 	const std::string szPrefix = GetTypePrefix( eType, pTypeAttributes );
 
@@ -58,7 +74,7 @@ bool ConvertToShortName( std::string *pszShortFieldName, const std::string &szFu
 		//
 		if ( !szPrefix.empty() )
 		{
-			if ( pszShortFieldName->compare(0, szPrefix.size(), szPrefix) != 0 )
+			if ( pszShortFieldName->compare( 0, szPrefix.size(), szPrefix ) != 0 )
 				return false;
 			else if ( szPrefix.size() == pszShortFieldName->size() )
 				return false;
@@ -73,7 +89,6 @@ bool ConvertToShortName( std::string *pszShortFieldName, const std::string &szFu
 		else
 			return true;
 	}
-
 
 	return false;
 }
@@ -97,7 +112,8 @@ static bool FindRenameInAttributes( std::string *pszResult, NDb::NTypeDef::SAttr
 	return false;
 }
 
-const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType, const NDb::NTypeDef::STypeStructBase::SField *pField )
+const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType,
+                                     const NDb::NTypeDef::STypeStructBase::SField *pField )
 {
 	NDb::NTypeDef::STypeDef *pType = pRawType;
 	if ( CDynamicCast<NDb::NTypeDef::STypeRef> pRef = pType )
@@ -166,7 +182,7 @@ const std::string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &f
 	}
 	else
 	{
-//		szResult[0] = NStr::ASCII_toupper( szResult[0] );
+		//		szResult[0] = NStr::ASCII_toupper( szResult[0] );
 		return szPrefix + szResult;
 	}
 }

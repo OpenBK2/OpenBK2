@@ -20,7 +20,6 @@
 // has no business knowing what it is. IPaintContext is the exception, because
 // the editor genuinely draws through it.
 
-
 // A widget belonging to whichever front-end is running.
 //
 // Every use of this in the interface layer is a conduit: the editor hands a
@@ -38,27 +37,24 @@ struct IWidget
 	virtual ~IWidget() {}
 	// The front-end's own widget object. Only the front-end that created this
 	// widget may interpret the result.
-	virtual void* GetNativeWidget() = 0;
+	virtual void *GetNativeWidget() = 0;
 };
-
 
 // A single image belonging to the front-end. Used by the object collector to
 // hand back the icons it renders for database objects.
 struct IImage
 {
 	virtual ~IImage() {}
-	virtual void* GetNativeImage() = 0;
+	virtual void *GetNativeImage() = 0;
 };
-
 
 // An indexed collection of same-sized images, which list and tree widgets are
 // given so their items can carry icons.
 struct IImageList
 {
 	virtual ~IImageList() {}
-	virtual void* GetNativeImageList() = 0;
+	virtual void *GetNativeImageList() = 0;
 };
-
 
 // A dockable panel on the main frame: the minimap, a shortcut bar, the movies
 // editor. Created through IMainFrame::CreateControlBar and then driven by the
@@ -84,7 +80,6 @@ struct IDockPanel : public IWidget
 	virtual void Redraw() = 0;
 };
 
-
 // A toolbar on the main frame, looked up by id. Editors only show, hide and
 // query these; the buttons on them are the toolbar manager's business.
 struct IToolBar
@@ -93,7 +88,6 @@ struct IToolBar
 	virtual void Show( bool bShow ) = 0;
 	virtual bool IsVisible() const = 0;
 };
-
 
 // A document window. Named IFrameWindow and not IChildFrame because
 // Interface_ChildFrame.h already has an IChildFrame and it means something
@@ -108,39 +102,34 @@ struct IFrameWindow : public IWidget
 	virtual void Destroy() = 0;
 };
 
-
 // Packed 0x00BBGGRR, which is what the editor's colour constants already are.
 typedef uint32_t TWidgetColor;
 
-
 enum EPenStyle
 {
-	PEN_SOLID	= 0,
-	PEN_DOT		= 1,
-	PEN_DASH	= 2,
+	PEN_SOLID = 0,
+	PEN_DOT = 1,
+	PEN_DASH = 2,
 };
-
 
 // How drawing combines with what is already on the surface. The editor uses
 // only DRAW_COPY and DRAW_NOT, the latter for rubber-band selection that has to
 // be undrawn by drawing it again.
 enum EDrawMode
 {
-	DRAW_COPY	= 0,
-	DRAW_NOT	= 1,
-	DRAW_XOR	= 2,
+	DRAW_COPY = 0,
+	DRAW_NOT = 1,
+	DRAW_XOR = 2,
 };
-
 
 // Which stock face text is drawn in. The editor only ever asked for two, both
 // through CFont::CreateStockObject, so this names them rather than carrying a
 // font descriptor no caller would fill in differently.
 enum EFontKind
 {
-	FONT_LABEL	= 0,
-	FONT_SMALL	= 1,
+	FONT_LABEL = 0,
+	FONT_SMALL = 1,
 };
-
 
 // The 2D overlay the editor's input states draw on top of the 3D viewport.
 //

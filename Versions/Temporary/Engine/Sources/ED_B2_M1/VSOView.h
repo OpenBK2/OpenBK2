@@ -16,13 +16,13 @@
 // conclusion Nival came to.
 namespace NVSOView
 {
-	// The object filter type this palette lists under. Shared rather than
-	// duplicated: both palettes pass it to the filter collector on every refill
-	// and a typo in one of them would show an empty list with no other symptom.
-	inline constexpr char FILTER_TYPE[] = "VSO";
+// The object filter type this palette lists under. Shared rather than
+// duplicated: both palettes pass it to the filter collector on every refill
+// and a typo in one of them would show an empty list with no other symptom.
+inline constexpr char FILTER_TYPE[] = "VSO";
 
-	// Creates the palette in pPage, its page of the shortcut bar, registers it
-	// in pPalettes, which owns it from then on, and returns it. Null if it could
-	// not be created.
-	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage );
+// Creates the palette in pPage, its page of the shortcut bar, registers it
+// in pPalettes, which owns it from then on, and returns it. Null if it could
+// not be created.
+IWidget *Create( CPaletteList *pPalettes, IWidget *pPage );
 }

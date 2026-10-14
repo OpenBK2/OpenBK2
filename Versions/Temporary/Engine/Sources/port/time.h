@@ -30,10 +30,8 @@
 inline uint32_t GetCurrentTimeMilliseconds()
 {
 	const auto sinceEpoch = std::chrono::steady_clock::now().time_since_epoch();
-	return static_cast<uint32_t>(
-		std::chrono::duration_cast<std::chrono::milliseconds>( sinceEpoch ).count() );
+	return static_cast<uint32_t>( std::chrono::duration_cast<std::chrono::milliseconds>( sinceEpoch ).count() );
 }
-
 
 // Thread-safe local time. The C localtime hands back a pointer into a static
 // buffer, so two threads calling it race with each other, and this is reached
@@ -59,7 +57,6 @@ inline bool GetLocalTime( std::tm *pResult, std::time_t t )
 #endif
 }
 
-
 // The layout of Win32's SYSTEMTIME, field for field and width for width.
 //
 // This is not a convenience: NSaveLoad::SSavegameEntry and the replay list each
@@ -81,8 +78,7 @@ struct SSystemTime
 };
 
 static_assert( sizeof( SSystemTime ) == 16,
-	"SSystemTime is written into savegames as raw bytes, so its size is an on-disk format" );
-
+               "SSystemTime is written into savegames as raw bytes, so its size is an on-disk format" );
 
 // Local broken-down time for a time_t, which is what FileTimeToLocalFileTime
 // followed by FileTimeToSystemTime did to a file's last write time.
@@ -111,7 +107,6 @@ inline bool GetLocalSystemTime( SSystemTime *pResult, std::time_t t )
 	return true;
 }
 
-
 // Now, in local time. What Win32's GetLocalTime( LPSYSTEMTIME ) did, milliseconds
 // included: two saves made in the same second are still ordered by this field.
 inline bool GetLocalSystemTime( SSystemTime *pResult )
@@ -122,11 +117,10 @@ inline bool GetLocalSystemTime( SSystemTime *pResult )
 		return false;
 	}
 	pResult->wMilliseconds = static_cast<uint16_t>(
-		( std::chrono::duration_cast<std::chrono::milliseconds>( now.time_since_epoch() )
-			% std::chrono::seconds( 1 ) ).count() );
+			( std::chrono::duration_cast<std::chrono::milliseconds>( now.time_since_epoch() ) % std::chrono::seconds( 1 ) )
+					.count() );
 	return true;
 }
-
 
 // Chronological order, which is what converting both to FILETIME and comparing the
 // two 64 bit values did.
@@ -135,6 +129,6 @@ inline bool GetLocalSystemTime( SSystemTime *pResult )
 // in field order would sort Sunday ahead of Monday within the same day.
 inline bool operator<( const SSystemTime &a, const SSystemTime &b )
 {
-	return std::tie( a.wYear, a.wMonth, a.wDay, a.wHour, a.wMinute, a.wSecond, a.wMilliseconds )
-		< std::tie( b.wYear, b.wMonth, b.wDay, b.wHour, b.wMinute, b.wSecond, b.wMilliseconds );
+	return std::tie( a.wYear, a.wMonth, a.wDay, a.wHour, a.wMinute, a.wSecond, a.wMilliseconds ) <
+	       std::tie( b.wYear, b.wMonth, b.wDay, b.wHour, b.wMinute, b.wSecond, b.wMilliseconds );
 }

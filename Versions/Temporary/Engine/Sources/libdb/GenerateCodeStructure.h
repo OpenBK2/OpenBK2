@@ -5,13 +5,15 @@
 
 namespace NLang
 {
-	class CFileNode;
+class CFileNode;
 }
 
 namespace NCodeGen
 {
-	struct SCodeStructure;
-	// exported for dbcodegen, which builds the file layout of the output with it
-	LIBDB_EXPORT CXmlResource* GenerateCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs,
-																			const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+struct SCodeStructure;
+// exported for dbcodegen, which builds the file layout of the output with it
+LIBDB_EXPORT CXmlResource *GenerateCodeStructure( NLang::CFileNode *pRootFile,
+                                                  const CNodes2TypeDefs &nodes2TypeDefs,
+                                                  const std::string &szRootDir,
+                                                  NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 }

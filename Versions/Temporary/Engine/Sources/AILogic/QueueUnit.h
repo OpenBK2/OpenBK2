@@ -7,16 +7,16 @@ class CAICommand;
 struct IUnitState;
 namespace NDb
 {
-	struct SUnitSpecialAblityDesc;
-	enum EUnitSpecialAbility : int;
-	enum EUnitAckType : int;
+struct SUnitSpecialAblityDesc;
+enum EUnitSpecialAbility : int;
+enum EUnitAckType : int;
 }
 
 class CQueueUnit
 {
 
 	// деки команд
-	static CDecksSet< CObj<CAICommand> > cmds;
+	static CDecksSet<CObj<CAICommand>> cmds;
 
 	ZDATA
 	// состояние
@@ -38,24 +38,36 @@ class CQueueUnit
 
 	//
 	void PopCmd( const int nID );
+
 public:
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pState); f.Add(3,&bCmdFinished); f.Add(4,&pCmdCurrent); f.Add(5,&lastChangeStateTime); f.Add(6,&bCommandAdded); f.Add(7,&bDoNotDeleteMeFromCommand); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pState );
+		f.Add( 3, &bCmdFinished );
+		f.Add( 4, &pCmdCurrent );
+		f.Add( 5, &lastChangeStateTime );
+		f.Add( 6, &bCommandAdded );
+		f.Add( 7, &bDoNotDeleteMeFromCommand );
+		return 0;
+	}
+
 private:
 protected:
 	virtual const int GetUniqueIdQU() const = 0;
+
 public:
 	void Init();
 
 	bool IsEmptyCmdQueue() const;
-	CAICommand* GetCurCmd() const;
+	CAICommand *GetCurCmd() const;
 	const bool IsCurCmdFinished() const { return bCmdFinished; }
 
 	static void Clear();
 	static void CheckCmdsSize( const int id );
 	static void DelCmdQueue( const int id );
 
-	virtual struct IStatesFactory* GetStatesFactory() const = 0;
-	virtual IUnitState* GetState() const { return pState; }
+	virtual struct IStatesFactory *GetStatesFactory() const = 0;
+	virtual IUnitState *GetState() const { return pState; }
 	virtual void SetCurState( struct IUnitState *pState );
 
 	// текущая команда кладётся в голову очереди, а сверху - pCommand
@@ -68,13 +80,13 @@ public:
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand ) = 0;
 	// может ли команда быть выполнена, исходя из статов юнита
 	virtual bool CanCommandBeExecutedByStats( class CAICommand *pCommand ) = 0;
-	virtual void NotifyAbilityRun( class CAICommand * pCommand ) = 0;
+	virtual void NotifyAbilityRun( class CAICommand *pCommand ) = 0;
 
 	void Segment();
 
 	// возвращает команду, лежащую верхней деке команд
-	class CAICommand* GetNextCommand() const;
-	class CAICommand* GetLastCommand() const;
+	class CAICommand *GetNextCommand() const;
+	class CAICommand *GetLastCommand() const;
 
 	// очистить очередь команд и обнулить текущее состояние
 	void KillStatesAndCmdsInfo();
@@ -86,7 +98,7 @@ public:
 
 	virtual const NTimer::STime GetNextSegmTime() const { return 0; }
 	// обнулить время, которое проходит между вызовами сегментов у юнита
-	virtual void NullSegmTime() { }
+	virtual void NullSegmTime() {}
 
 	const NTimer::STime GetLastChangeStateTime() const { return lastChangeStateTime; }
 
@@ -95,10 +107,10 @@ public:
 	const int GetBeginCmdsIter() const;
 	const int GetEndCmdsIter() const;
 	const int GetNextCmdsIter( const int nIter ) const;
-	class CAICommand* GetCommand( const int nIter ) const;
+	class CAICommand *GetCommand( const int nIter ) const;
 
 	// Get ability desc if the unit has it, 0 if doesn't have it
-	virtual const NDb::SUnitSpecialAblityDesc * GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType ) { return 0; }
+	virtual const NDb::SUnitSpecialAblityDesc *GetUnitAbilityDesc( const NDb::EUnitSpecialAbility eType ) { return 0; }
 
 	friend class CStaticMembers;
 };

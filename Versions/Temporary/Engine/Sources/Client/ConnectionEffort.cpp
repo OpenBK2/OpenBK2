@@ -36,13 +36,19 @@ void SetServerInfo( const std::string &_szServerIP, const int _nServerPort, cons
 	nGameNetVersion = _nGameNetVersion;
 }
 
-CConnectionEffort* CreateFirstClientEffort( const int nMyServerID, const int nClientServerID, class CNet *pNet, const int nTimeOut )
+CConnectionEffort *
+CreateFirstClientEffort( const int nMyServerID, const int nClientServerID, class CNet *pNet, const int nTimeOut )
 {
-	return new CSimpleClientEffort( nMyServerID, nClientServerID, pNet, szServerIP, nServerPort, nGameNetVersion, nTimeOut );
+	return new CSimpleClientEffort(
+			nMyServerID, nClientServerID, pNet, szServerIP, nServerPort, nGameNetVersion, nTimeOut );
 }
 
-CConnectionEffort* CreateFirstServerEffort( const int nMyServerID, const int nClientServerID,
-	const std::string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet )
+CConnectionEffort *CreateFirstServerEffort( const int nMyServerID,
+                                            const int nClientServerID,
+                                            const std::string &szClientIP,
+                                            const int nClientPort,
+                                            CNet *pNet,
+                                            CNet *pAcceptGamersNet )
 {
 	return new CSimpleServerEffort( nMyServerID, nClientServerID, szClientIP, nClientPort, pNet, pAcceptGamersNet );
 }

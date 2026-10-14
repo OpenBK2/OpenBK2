@@ -40,34 +40,34 @@ const char *EnumToString_NDb_NTypeDef_ETypeType( NDb::NTypeDef::ETypeType eType 
 {
 	switch ( eType )
 	{
-	case NDb::NTypeDef::TYPE_TYPE_UNKNOWN:
-		return "TYPE_TYPE_UNKNOWN";
-	case NDb::NTypeDef::TYPE_TYPE_INT:
-		return "TYPE_TYPE_INT";
-	case NDb::NTypeDef::TYPE_TYPE_FLOAT:
-		return "TYPE_TYPE_FLOAT";
-	case NDb::NTypeDef::TYPE_TYPE_BOOL:
-		return "TYPE_TYPE_BOOL";
-	case NDb::NTypeDef::TYPE_TYPE_GUID:
-		return "TYPE_TYPE_GUID";
-	case NDb::NTypeDef::TYPE_TYPE_STRING:
-		return "TYPE_TYPE_STRING";
-	case NDb::NTypeDef::TYPE_TYPE_WSTRING:
-		return "TYPE_TYPE_WSTRING";
-	case NDb::NTypeDef::TYPE_TYPE_BINARY:
-		return "TYPE_TYPE_BINARY";
-	case NDb::NTypeDef::TYPE_TYPE_ENUM:
-		return "TYPE_TYPE_ENUM";
-	case NDb::NTypeDef::TYPE_TYPE_STRUCT:
-		return "TYPE_TYPE_STRUCT";
-	case NDb::NTypeDef::TYPE_TYPE_CLASS:
-		return "TYPE_TYPE_CLASS";
-	case NDb::NTypeDef::TYPE_TYPE_REF:
-		return "TYPE_TYPE_REF";
-	case NDb::NTypeDef::TYPE_TYPE_ARRAY:
-		return "TYPE_TYPE_ARRAY";
-	default:
-		NI_ASSERT( false, "unknown enum" );
-		return "TYPE_TYPE_UNKNOWN";
+		case NDb::NTypeDef::TYPE_TYPE_UNKNOWN:
+			return "TYPE_TYPE_UNKNOWN";
+		case NDb::NTypeDef::TYPE_TYPE_INT:
+			return "TYPE_TYPE_INT";
+		case NDb::NTypeDef::TYPE_TYPE_FLOAT:
+			return "TYPE_TYPE_FLOAT";
+		case NDb::NTypeDef::TYPE_TYPE_BOOL:
+			return "TYPE_TYPE_BOOL";
+		case NDb::NTypeDef::TYPE_TYPE_GUID:
+			return "TYPE_TYPE_GUID";
+		case NDb::NTypeDef::TYPE_TYPE_STRING:
+			return "TYPE_TYPE_STRING";
+		case NDb::NTypeDef::TYPE_TYPE_WSTRING:
+			return "TYPE_TYPE_WSTRING";
+		case NDb::NTypeDef::TYPE_TYPE_BINARY:
+			return "TYPE_TYPE_BINARY";
+		case NDb::NTypeDef::TYPE_TYPE_ENUM:
+			return "TYPE_TYPE_ENUM";
+		case NDb::NTypeDef::TYPE_TYPE_STRUCT:
+			return "TYPE_TYPE_STRUCT";
+		case NDb::NTypeDef::TYPE_TYPE_CLASS:
+			return "TYPE_TYPE_CLASS";
+		case NDb::NTypeDef::TYPE_TYPE_REF:
+			return "TYPE_TYPE_REF";
+		case NDb::NTypeDef::TYPE_TYPE_ARRAY:
+			return "TYPE_TYPE_ARRAY";
+		default:
+			NI_ASSERT( false, "unknown enum" );
+			return "TYPE_TYPE_UNKNOWN";
 	}
 }

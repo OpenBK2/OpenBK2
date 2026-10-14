@@ -15,13 +15,16 @@ bool CFolderController::UndoWithoutUpdateViews()
 	{
 		return true;
 	}
-	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( GetObjectSet().szObjectTypeName );
+	CPtr<IManipulator> pFolderManipulator =
+			Singleton<IResourceManager>()->CreateFolderManipulator( GetObjectSet().szObjectTypeName );
 	if ( pFolderManipulator == 0 )
 	{
 		return true;
 	}
 	bool bResult = true;
-	for ( CFolderController::CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
+	for ( CFolderController::CUndoDataList::const_iterator itUndoData = undoDataList.begin();
+	      itUndoData != undoDataList.end();
+	      ++itUndoData )
 	{
 		switch ( itUndoData->eType )
 		{
@@ -51,20 +54,22 @@ bool CFolderController::UndoWithoutUpdateViews()
 	return bResult;
 }
 
-
 bool CFolderController::RedoWithoutUpdateViews()
 {
 	if ( undoDataList.empty() )
 	{
 		return true;
 	}
-	CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( GetObjectSet().szObjectTypeName );
+	CPtr<IManipulator> pFolderManipulator =
+			Singleton<IResourceManager>()->CreateFolderManipulator( GetObjectSet().szObjectTypeName );
 	if ( pFolderManipulator == 0 )
 	{
 		return true;
 	}
 	bool bResult = true;
-	for ( CFolderController::CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
+	for ( CFolderController::CUndoDataList::const_iterator itUndoData = undoDataList.begin();
+	      itUndoData != undoDataList.end();
+	      ++itUndoData )
 	{
 		uint32_t dwTime = GetCurrentTimeMilliseconds();
 		switch ( itUndoData->eType )
@@ -93,8 +98,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 				break;
 			///////////////////////////////////////////
 			case CFolderController::SUndoData::TYPE_COPY:
-				if ( ( !itUndoData->szDestination.empty() ) &&
-							( !itUndoData->szSource.empty() ) )
+				if ( ( !itUndoData->szDestination.empty() ) && ( !itUndoData->szSource.empty() ) )
 				{
 					if ( itUndoData->szDestination != itUndoData->szSource )
 					{
@@ -104,10 +108,12 @@ bool CFolderController::RedoWithoutUpdateViews()
 						if ( bResult )
 						{
 							if ( ( itUndoData->szDestination[itUndoData->szDestination.size() - 1] != PATH_SEPARATOR_CHAR ) &&
-								   ( itUndoData->szSource[itUndoData->szSource.size() - 1] != PATH_SEPARATOR_CHAR ) )
+							     ( itUndoData->szSource[itUndoData->szSource.size() - 1] != PATH_SEPARATOR_CHAR ) )
 							{
-								CPtr<IManipulator> pDestinationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName, itUndoData->szDestination );
-								CPtr<IManipulator> pSourceManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( GetObjectSet().szObjectTypeName, itUndoData->szSource );
+								CPtr<IManipulator> pDestinationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+										GetObjectSet().szObjectTypeName, itUndoData->szDestination );
+								CPtr<IManipulator> pSourceManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+										GetObjectSet().szObjectTypeName, itUndoData->szSource );
 								bResult = CManipulatorManager::CloneDBManipulator( pDestinationManipulator, pSourceManipulator, true );
 							}
 						}
@@ -120,8 +126,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 				break;
 			///////////////////////////////////////////
 			case CFolderController::SUndoData::TYPE_RENAME:
-				if ( ( !itUndoData->szDestination.empty() ) &&
-							( !itUndoData->szSource.empty() ) )
+				if ( ( !itUndoData->szDestination.empty() ) && ( !itUndoData->szSource.empty() ) )
 				{
 					if ( itUndoData->szDestination != itUndoData->szSource )
 					{
@@ -155,16 +160,15 @@ bool CFolderController::RedoWithoutUpdateViews()
 		}
 		dwTime = GetCurrentTimeMilliseconds() - dwTime;
 		DebugTrace( "CFolderController: operation:%d, type: <%s>, dest:<%s>, source:<%s>, result:%s, time: %dmc",
-								static_cast<int>( itUndoData->eType ),
-								GetObjectSet().szObjectTypeName.c_str(),
-								itUndoData->szDestination.c_str(),
-								itUndoData->szSource.c_str(),
-								bResult ? "true" : "false",
-								dwTime );
+		            static_cast<int>( itUndoData->eType ),
+		            GetObjectSet().szObjectTypeName.c_str(),
+		            itUndoData->szDestination.c_str(),
+		            itUndoData->szSource.c_str(),
+		            bResult ? "true" : "false",
+		            dwTime );
 	}
 	return bResult;
 }
-
 
 bool CFolderController::AddInsertOperation( const std::string &rszObjectName )
 {
@@ -176,7 +180,6 @@ bool CFolderController::AddInsertOperation( const std::string &rszObjectName )
 	return true;
 }
 
-
 bool CFolderController::AddRemoveOperation( const std::string &rszObjectName )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -186,7 +189,6 @@ bool CFolderController::AddRemoveOperation( const std::string &rszObjectName )
 	//
 	return true;
 }
-
 
 bool CFolderController::AddCopyOperation( const std::string &rszDestination, const std::string &rszSource )
 {
@@ -199,8 +201,9 @@ bool CFolderController::AddCopyOperation( const std::string &rszDestination, con
 	return true;
 }
 
-
-bool CFolderController::AddRenameOperation( const std::string &rszDestination, const std::string &rszSource, bool bNewHTREEITEM )
+bool CFolderController::AddRenameOperation( const std::string &rszDestination,
+                                            const std::string &rszSource,
+                                            bool bNewHTREEITEM )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
 	//
@@ -212,7 +215,6 @@ bool CFolderController::AddRenameOperation( const std::string &rszDestination, c
 	return true;
 }
 
-
 bool CFolderController::AddColorOperation( const std::string &rszObjectName, int nNewColor )
 {
 	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
@@ -223,7 +225,6 @@ bool CFolderController::AddColorOperation( const std::string &rszObjectName, int
 	//
 	return true;
 }
-
 
 bool CFolderController::AddExpandOperation( const std::string &rszObjectName, bool bExpand )
 {

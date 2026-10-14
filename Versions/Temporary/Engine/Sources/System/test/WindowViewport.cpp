@@ -66,11 +66,10 @@ TEST( WindowViewport, MouseHitsImageCenterAndClampsAtBars )
 
 TEST( WindowViewport, WarpAndPollingUseTheSameTransform )
 {
-	for ( const auto viewport : {
-		SWindowViewport::Fit( 1024, 768, 1920, 1080 ),
-		SWindowViewport::Fit( 3840, 2160, 1920, 1080 ),
-		SWindowViewport::Fit( 1920, 1080, 1280, 1024 ),
-		SWindowViewport::Fit( 1024, 768, 1365, 767 ) } )
+	for ( const auto viewport : { SWindowViewport::Fit( 1024, 768, 1920, 1080 ),
+	                              SWindowViewport::Fit( 3840, 2160, 1920, 1080 ),
+	                              SWindowViewport::Fit( 1920, 1080, 1280, 1024 ),
+	                              SWindowViewport::Fit( 1024, 768, 1365, 767 ) } )
 	{
 		for ( const float fraction : { 0.0f, 0.25f, 0.5f, 0.75f } )
 		{
@@ -109,10 +108,9 @@ TEST( WindowViewport, NativeResolutionHasIdentityCoordinates )
 
 TEST( WindowViewport, MinimizedAndUninitializedSizesAreSafe )
 {
-	for ( const auto viewport : {
-		SWindowViewport::Fit( 1024, 768, 0, 0 ),
-		SWindowViewport::Fit( 0, 0, 1920, 1080 ),
-		SWindowViewport::Fit( -1, 768, 1920, 1080 ) } )
+	for ( const auto viewport : { SWindowViewport::Fit( 1024, 768, 0, 0 ),
+	                              SWindowViewport::Fit( 0, 0, 1920, 1080 ),
+	                              SWindowViewport::Fit( -1, 768, 1920, 1080 ) } )
 	{
 		EXPECT_EQ( viewport.width, 0 );
 		EXPECT_EQ( viewport.height, 0 );

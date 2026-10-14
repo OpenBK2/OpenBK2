@@ -9,121 +9,124 @@ namespace NFontRaster
 namespace
 {
 
-// Big-endian reads that fail rather than run past the table
-bool ReadU16( const std::vector<uint8_t> &table, const uint32_t nOffset, uint16_t *pnValue )
-{
-	if ( static_cast<uint64_t>( nOffset ) + 2 > table.size() )
-		return false;
-	*pnValue = static_cast<uint16_t>( ( table[nOffset] << 8 ) | table[nOffset + 1] );
-	return true;
-}
-
-bool ReadU32( const std::vector<uint8_t> &table, const uint32_t nOffset, uint32_t *pnValue )
-{
-	uint16_t nHigh = 0, nLow = 0;
-	if ( !ReadU16( table, nOffset, &nHigh ) || !ReadU16( table, nOffset + 2, &nLow ) )
-		return false;
-	*pnValue = ( static_cast<uint32_t>( nHigh ) << 16 ) | nLow;
-	return true;
-}
-
-int CountBits( uint16_t nValue )
-{
-	int nCount = 0;
-	for ( ; nValue != 0; nValue &= nValue - 1 )
-		++nCount;
-	return nCount;
-}
-
-// The glyph's index in a Coverage table, or -1 when it is not covered
-int CoverageIndex( const std::vector<uint8_t> &table, const uint32_t nCoverage, const uint16_t nGlyph )
-{
-	uint16_t nFormat = 0, nCount = 0;
-	if ( !ReadU16( table, nCoverage, &nFormat ) || !ReadU16( table, nCoverage + 2, &nCount ) )
-		return -1;
-	// both formats are sorted by glyph, so a binary search either way
-	int nLow = 0, nHigh = static_cast<int>( nCount ) - 1;
-	while ( nLow <= nHigh )
+	// Big-endian reads that fail rather than run past the table
+	bool ReadU16( const std::vector<uint8_t> &table, const uint32_t nOffset, uint16_t *pnValue )
 	{
-		const int nMiddle = ( nLow + nHigh ) / 2;
-		if ( nFormat == 1 )
-		{
-			uint16_t nListed = 0;
-			if ( !ReadU16( table, nCoverage + 4 + nMiddle * 2, &nListed ) )
-				return -1;
-			if ( nListed == nGlyph )
-				return nMiddle;
-			if ( nListed < nGlyph )
-				nLow = nMiddle + 1;
-			else
-				nHigh = nMiddle - 1;
-		}
-		else if ( nFormat == 2 )
-		{
-			uint16_t nStart = 0, nEnd = 0, nStartIndex = 0;
-			const uint32_t nRange = nCoverage + 4 + nMiddle * 6;
-			if ( !ReadU16( table, nRange, &nStart ) || !ReadU16( table, nRange + 2, &nEnd ) || !ReadU16( table, nRange + 4, &nStartIndex ) )
-				return -1;
-			if ( nGlyph < nStart )
-				nHigh = nMiddle - 1;
-			else if ( nGlyph > nEnd )
-				nLow = nMiddle + 1;
-			else
-				return nStartIndex + ( nGlyph - nStart );
-		}
-		else
-		{
+		if ( static_cast<uint64_t>( nOffset ) + 2 > table.size() )
+			return false;
+		*pnValue = static_cast<uint16_t>( ( table[nOffset] << 8 ) | table[nOffset + 1] );
+		return true;
+	}
+
+	bool ReadU32( const std::vector<uint8_t> &table, const uint32_t nOffset, uint32_t *pnValue )
+	{
+		uint16_t nHigh = 0, nLow = 0;
+		if ( !ReadU16( table, nOffset, &nHigh ) || !ReadU16( table, nOffset + 2, &nLow ) )
+			return false;
+		*pnValue = ( static_cast<uint32_t>( nHigh ) << 16 ) | nLow;
+		return true;
+	}
+
+	int CountBits( uint16_t nValue )
+	{
+		int nCount = 0;
+		for ( ; nValue != 0; nValue &= nValue - 1 )
+			++nCount;
+		return nCount;
+	}
+
+	// The glyph's index in a Coverage table, or -1 when it is not covered
+	int CoverageIndex( const std::vector<uint8_t> &table, const uint32_t nCoverage, const uint16_t nGlyph )
+	{
+		uint16_t nFormat = 0, nCount = 0;
+		if ( !ReadU16( table, nCoverage, &nFormat ) || !ReadU16( table, nCoverage + 2, &nCount ) )
 			return -1;
-		}
-	}
-	return -1;
-}
-
-// The glyph's class in a ClassDef table; a glyph it does not list is class 0
-int ClassOf( const std::vector<uint8_t> &table, const uint32_t nClassDef, const uint16_t nGlyph )
-{
-	uint16_t nFormat = 0;
-	if ( !ReadU16( table, nClassDef, &nFormat ) )
-		return 0;
-	if ( nFormat == 1 )
-	{
-		uint16_t nStart = 0, nCount = 0, nClass = 0;
-		if ( !ReadU16( table, nClassDef + 2, &nStart ) || !ReadU16( table, nClassDef + 4, &nCount ) )
-			return 0;
-		if ( nGlyph < nStart || nGlyph >= nStart + nCount )
-			return 0;
-		return ReadU16( table, nClassDef + 6 + ( nGlyph - nStart ) * 2, &nClass ) ? nClass : 0;
-	}
-	if ( nFormat == 2 )
-	{
-		uint16_t nCount = 0;
-		if ( !ReadU16( table, nClassDef + 2, &nCount ) )
-			return 0;
+		// both formats are sorted by glyph, so a binary search either way
 		int nLow = 0, nHigh = static_cast<int>( nCount ) - 1;
 		while ( nLow <= nHigh )
 		{
 			const int nMiddle = ( nLow + nHigh ) / 2;
-			uint16_t nStart = 0, nEnd = 0, nClass = 0;
-			const uint32_t nRange = nClassDef + 4 + nMiddle * 6;
-			if ( !ReadU16( table, nRange, &nStart ) || !ReadU16( table, nRange + 2, &nEnd ) || !ReadU16( table, nRange + 4, &nClass ) )
-				return 0;
-			if ( nGlyph < nStart )
-				nHigh = nMiddle - 1;
-			else if ( nGlyph > nEnd )
-				nLow = nMiddle + 1;
+			if ( nFormat == 1 )
+			{
+				uint16_t nListed = 0;
+				if ( !ReadU16( table, nCoverage + 4 + nMiddle * 2, &nListed ) )
+					return -1;
+				if ( nListed == nGlyph )
+					return nMiddle;
+				if ( nListed < nGlyph )
+					nLow = nMiddle + 1;
+				else
+					nHigh = nMiddle - 1;
+			}
+			else if ( nFormat == 2 )
+			{
+				uint16_t nStart = 0, nEnd = 0, nStartIndex = 0;
+				const uint32_t nRange = nCoverage + 4 + nMiddle * 6;
+				if ( !ReadU16( table, nRange, &nStart ) || !ReadU16( table, nRange + 2, &nEnd ) ||
+				     !ReadU16( table, nRange + 4, &nStartIndex ) )
+					return -1;
+				if ( nGlyph < nStart )
+					nHigh = nMiddle - 1;
+				else if ( nGlyph > nEnd )
+					nLow = nMiddle + 1;
+				else
+					return nStartIndex + ( nGlyph - nStart );
+			}
 			else
-				return nClass;
+			{
+				return -1;
+			}
 		}
+		return -1;
 	}
-	return 0;
-}
+
+	// The glyph's class in a ClassDef table; a glyph it does not list is class 0
+	int ClassOf( const std::vector<uint8_t> &table, const uint32_t nClassDef, const uint16_t nGlyph )
+	{
+		uint16_t nFormat = 0;
+		if ( !ReadU16( table, nClassDef, &nFormat ) )
+			return 0;
+		if ( nFormat == 1 )
+		{
+			uint16_t nStart = 0, nCount = 0, nClass = 0;
+			if ( !ReadU16( table, nClassDef + 2, &nStart ) || !ReadU16( table, nClassDef + 4, &nCount ) )
+				return 0;
+			if ( nGlyph < nStart || nGlyph >= nStart + nCount )
+				return 0;
+			return ReadU16( table, nClassDef + 6 + ( nGlyph - nStart ) * 2, &nClass ) ? nClass : 0;
+		}
+		if ( nFormat == 2 )
+		{
+			uint16_t nCount = 0;
+			if ( !ReadU16( table, nClassDef + 2, &nCount ) )
+				return 0;
+			int nLow = 0, nHigh = static_cast<int>( nCount ) - 1;
+			while ( nLow <= nHigh )
+			{
+				const int nMiddle = ( nLow + nHigh ) / 2;
+				uint16_t nStart = 0, nEnd = 0, nClass = 0;
+				const uint32_t nRange = nClassDef + 4 + nMiddle * 6;
+				if ( !ReadU16( table, nRange, &nStart ) || !ReadU16( table, nRange + 2, &nEnd ) ||
+				     !ReadU16( table, nRange + 4, &nClass ) )
+					return 0;
+				if ( nGlyph < nStart )
+					nHigh = nMiddle - 1;
+				else if ( nGlyph > nEnd )
+					nLow = nMiddle + 1;
+				else
+					return nClass;
+			}
+		}
+		return 0;
+	}
 
 }
 
 CGposKerning::CGposKerning( std::vector<uint8_t> _table ) : table( std::move( _table ) )
 {
 	uint16_t nMajor = 0, nFeatureList = 0, nLookupList = 0;
-	if ( !ReadU16( table, 0, &nMajor ) || nMajor != 1 || !ReadU16( table, 6, &nFeatureList ) || !ReadU16( table, 8, &nLookupList ) )
+	if ( !ReadU16( table, 0, &nMajor ) || nMajor != 1 || !ReadU16( table, 6, &nFeatureList ) ||
+	     !ReadU16( table, 8, &nLookupList ) )
 		return;
 	// every lookup any "kern" feature refers to, whatever the script: the
 	// engine does no script itemisation, and fonts give every script the same
@@ -180,7 +183,7 @@ CGposKerning::CGposKerning( std::vector<uint8_t> _table ) : table( std::move( _t
 				uint16_t nExtensionType = 0;
 				uint32_t nExtensionOffset = 0;
 				if ( !ReadU16( table, nSubtable + 2, &nExtensionType ) || nExtensionType != 2 ||
-					!ReadU32( table, nSubtable + 4, &nExtensionOffset ) )
+				     !ReadU32( table, nSubtable + 4, &nExtensionOffset ) )
 					continue;
 				nSubtable += nExtensionOffset;
 			}
@@ -197,12 +200,15 @@ CGposKerning::CGposKerning( std::vector<uint8_t> _table ) : table( std::move( _t
 	}
 }
 
-int CGposKerning::FindInSubtable( const uint32_t nSubtable, const uint16_t nLeft, const uint16_t nRight, bool *pbFound ) const
+int CGposKerning::FindInSubtable( const uint32_t nSubtable,
+                                  const uint16_t nLeft,
+                                  const uint16_t nRight,
+                                  bool *pbFound ) const
 {
 	*pbFound = false;
 	uint16_t nFormat = 0, nCoverage = 0, nFormat1 = 0, nFormat2 = 0;
 	if ( !ReadU16( table, nSubtable, &nFormat ) || !ReadU16( table, nSubtable + 2, &nCoverage ) ||
-		!ReadU16( table, nSubtable + 4, &nFormat1 ) || !ReadU16( table, nSubtable + 6, &nFormat2 ) )
+	     !ReadU16( table, nSubtable + 4, &nFormat1 ) || !ReadU16( table, nSubtable + 6, &nFormat2 ) )
 		return 0;
 	const int nCovered = CoverageIndex( table, nSubtable + nCoverage, nLeft );
 	if ( nCovered < 0 )
@@ -218,7 +224,7 @@ int CGposKerning::FindInSubtable( const uint32_t nSubtable, const uint16_t nLeft
 		// a set of pairs per covered first glyph, sorted by the second
 		uint16_t nSets = 0, nSetOffset = 0, nPairs = 0;
 		if ( !ReadU16( table, nSubtable + 8, &nSets ) || nCovered >= nSets ||
-			!ReadU16( table, nSubtable + 10 + nCovered * 2, &nSetOffset ) )
+		     !ReadU16( table, nSubtable + 10 + nCovered * 2, &nSetOffset ) )
 			return 0;
 		const uint32_t nSet = nSubtable + nSetOffset;
 		if ( !ReadU16( table, nSet, &nPairs ) )
@@ -247,7 +253,7 @@ int CGposKerning::FindInSubtable( const uint32_t nSubtable, const uint16_t nLeft
 		// glyph always finds an entry, class 0 being every unlisted glyph
 		uint16_t nClassDef1 = 0, nClassDef2 = 0, nClasses1 = 0, nClasses2 = 0;
 		if ( !ReadU16( table, nSubtable + 8, &nClassDef1 ) || !ReadU16( table, nSubtable + 10, &nClassDef2 ) ||
-			!ReadU16( table, nSubtable + 12, &nClasses1 ) || !ReadU16( table, nSubtable + 14, &nClasses2 ) )
+		     !ReadU16( table, nSubtable + 12, &nClasses1 ) || !ReadU16( table, nSubtable + 14, &nClasses2 ) )
 			return 0;
 		const int nClass1 = ClassOf( table, nSubtable + nClassDef1, nLeft );
 		const int nClass2 = ClassOf( table, nSubtable + nClassDef2, nRight );

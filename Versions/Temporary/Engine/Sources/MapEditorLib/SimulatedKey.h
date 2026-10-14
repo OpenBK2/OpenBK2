@@ -46,34 +46,34 @@
 
 namespace NSimulatedKey
 {
-	inline unsigned Message()
-	{
-		static const unsigned nMessage = ::RegisterWindowMessageW( L"OBK2.SimulatedKey" );
-		return nMessage;
-	}
+inline unsigned Message()
+{
+	static const unsigned nMessage = ::RegisterWindowMessageW( L"OBK2.SimulatedKey" );
+	return nMessage;
+}
 
-	enum EOperation
-	{
-		OP_KEY = 1,
-		OP_SELECTION_START = 2,
-		OP_SELECTION_END = 3,
-	};
+enum EOperation
+{
+	OP_KEY = 1,
+	OP_SELECTION_START = 2,
+	OP_SELECTION_END = 3,
+};
 
-	enum EModifier
-	{
-		MODIFIER_CONTROL = 0x0001,
-		MODIFIER_SHIFT = 0x0002,
-	};
+enum EModifier
+{
+	MODIFIER_CONTROL = 0x0001,
+	MODIFIER_SHIFT = 0x0002,
+};
 
-	inline unsigned KeyOf( intptr_t nLParam )
-	{
-		return static_cast<unsigned>( nLParam & 0xFFFF );
-	}
+inline unsigned KeyOf( intptr_t nLParam )
+{
+	return static_cast<unsigned>( nLParam & 0xFFFF );
+}
 
-	inline bool HasModifier( intptr_t nLParam, EModifier eModifier )
-	{
-		return ( ( nLParam >> 16 ) & eModifier ) != 0;
-	}
+inline bool HasModifier( intptr_t nLParam, EModifier eModifier )
+{
+	return ( ( nLParam >> 16 ) & eModifier ) != 0;
+}
 }
 
 #endif // BOOST_OS_WINDOWS

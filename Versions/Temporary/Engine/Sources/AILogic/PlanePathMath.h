@@ -4,8 +4,14 @@
 
 #include <cstdint>
 
-inline CVec3 ToVec3( const CVec2 &v ) { return CVec3(v,0); }
-inline CVec3 ToVec3( const CVec3 &v ) { return v; }
+inline CVec3 ToVec3( const CVec2 &v )
+{
+	return CVec3( v, 0 );
+}
+inline CVec3 ToVec3( const CVec3 &v )
+{
+	return v;
+}
 extern const float nOrientation;
 
 //	CAnalyticBSpline3
@@ -15,10 +21,11 @@ class CAnalyticBSpline3
 	static const int N_PARTS_FOR_CLOSEST_POINT_SEARCHING;
 
 	CAnalyticBSpline x, y, z;
+
 public:
-	CAnalyticBSpline3() {  }
-	CAnalyticBSpline3( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 ) { Setup(p0, p1, p2, p3); }
-	CAnalyticBSpline3( const CAnalyticBSpline3 &bs ) : x( bs.x ), y( bs.y ), z( bs.z ) {  }
+	CAnalyticBSpline3() {}
+	CAnalyticBSpline3( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 ) { Setup( p0, p1, p2, p3 ); }
+	CAnalyticBSpline3( const CAnalyticBSpline3 &bs ) : x( bs.x ), y( bs.y ), z( bs.z ) {}
 	//
 	void Setup( const CVec3 &p0, const CVec3 &p1, const CVec3 &p2, const CVec3 &p3 )
 	{
@@ -26,17 +33,17 @@ public:
 		y.Setup( p0.y, p1.y, p2.y, p3.y );
 		z.Setup( p0.z, p1.z, p2.z, p3.z );
 	}
-	const CVec3 Get( const float t ) const { return CVec3( x(t), y(t), z(t) ); }
+	const CVec3 Get( const float t ) const { return CVec3( x( t ), y( t ), z( t ) ); }
 	const CVec3 operator()( const float t ) const { return Get( t ); }
-	const CVec3 GetDiff1( const float t ) const { return CVec3( x.GetDiff1(t), y.GetDiff1(t), z.GetDiff1(t) ); }
-	const CVec3 GetDiff2( const float t ) const { return CVec3( x.GetDiff2(t), y.GetDiff2(t), z.GetDiff2(t) ); }
+	const CVec3 GetDiff1( const float t ) const { return CVec3( x.GetDiff1( t ), y.GetDiff1( t ), z.GetDiff1( t ) ); }
+	const CVec3 GetDiff2( const float t ) const { return CVec3( x.GetDiff2( t ), y.GetDiff2( t ), z.GetDiff2( t ) ); }
 
 	const float GetLength( const int nPres = 100 ) const
 	{
 		float fLen = 0;
 		const float fTick = 1.0f / nPres;
 		for ( float f = fTick; f <= 1.0f; f += fTick )
-			fLen += fabs( Get(f - fTick) - Get(f) );
+			fLen += fabs( Get( f - fTick ) - Get( f ) );
 		return fLen;
 	}
 };
@@ -65,20 +72,14 @@ public:
 	TVEC Get( const float fT ) const
 	{
 		const float fTNeg = 1 - fT;
-		return p0 * fTNeg * fTNeg * fTNeg +
-					 p1 * fT * fTNeg * fTNeg +
-					 p2 * fT * fT * fTNeg +
-					 p3 * fT * fT * fT;
+		return p0 * fTNeg * fTNeg * fTNeg + p1 * fT * fTNeg * fTNeg + p2 * fT * fT * fTNeg + p3 * fT * fT * fT;
 	}
 	TVEC GetDiff1( const float fT ) const
 	{
 		const float fTNeg = 1 - fT;
-		return ( p1 - 3 * p0 ) * fTNeg * fTNeg + 2 * ( p2 - p1 ) * fT *fTNeg + ( 3 * p3 - p2 ) * fT*fT;
+		return ( p1 - 3 * p0 ) * fTNeg * fTNeg + 2 * ( p2 - p1 ) * fT * fTNeg + ( 3 * p3 - p2 ) * fT * fT;
 	}
-
 };
-
-
 
 //	CDirectedCircle
 
@@ -86,16 +87,14 @@ public:
 struct CDirectedCircle : public CCircle
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	int nDir = {};												// direction of circle rotation
+	int nDir = {}; // direction of circle rotation
 
-	CDirectedCircle() : nDir( 0 ) {  }
-	CDirectedCircle ( const CVec2 &_center, const float _r, const int _nDir )
-	: CCircle( _center, _r ), nDir( _nDir )
-	{
-	}
+	CDirectedCircle() : nDir( 0 ) {}
+	CDirectedCircle( const CVec2 &_center, const float _r, const int _nDir ) : CCircle( _center, _r ), nDir( _nDir ) {}
 };
 
-void GetDirectedCirclesByTangent( const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 );
+void GetDirectedCirclesByTangent(
+		const CVec2 &tang, const CVec2 &p, const float r, CDirectedCircle *c1, CDirectedCircle *c2 );
 
 // travel angle from start to finish. returned angle is in range [0, 65535]
 uint16_t DirectedDirsDifference( const CVec2 &vStart, const CVec2 &vFinish, const int nDir );
@@ -105,14 +104,13 @@ uint16_t DirectedDirsDifference( const uint16_t wStart, const uint16_t wFinish, 
 // return false if there are no tangens
 bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirectedCircle &to, CVec2 *v1, CVec2 *v2 );
 
-
-
 // CHermitCurve
 
 template <class TVEC>
 class CHermitCurve
 {
 	TVEC a, b, c, d;
+
 public:
 	void Setup( const TVEC &x0, const TVEC &x1, const TVEC &v0, const TVEC &v1 )
 	{

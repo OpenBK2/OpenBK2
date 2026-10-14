@@ -37,11 +37,9 @@
 
 namespace NMain
 {
-	MAIN_EXPORT bool Initialize();
+MAIN_EXPORT bool Initialize();
 }
-void ReferenceCheatForReleaseLinkerUISpecificB2()
-{
-}
+void ReferenceCheatForReleaseLinkerUISpecificB2() {}
 
 namespace NGameX
 {
@@ -75,8 +73,8 @@ GAMEX_EXPORT bool Initialize()
 		NGlobal::SetVar( "AI_SEGMENT_DURATION", 200 );
 		NMain::Initialize();
 		// scenario tracker
-//		NSingleton::RegisterSingleton( CreateScenarioTracker(), IScenarioTracker::tidTypeID );
-/*		IScenarioTracker * pScenarioTracker = CreateScenarioTracker();
+		//		NSingleton::RegisterSingleton( CreateScenarioTracker(), IScenarioTracker::tidTypeID );
+		/*		IScenarioTracker * pScenarioTracker = CreateScenarioTracker();
 		NSingleton::RegisterSingleton( pScenarioTracker, IScenarioTracker::tidTypeID );
 		NSingleton::RegisterSingleton( pScenarioTracker, IAIScenarioTracker::tidTypeID );*/
 		// sound scene
@@ -130,7 +128,9 @@ void InitConsts()
 	NI_ASSERT( pUIConsts != 0 && pSceneConsts != 0 && pClientConsts != 0, "Can't find all necessary consts" );
 	if ( pUIConsts != 0 && pSceneConsts != 0 && pClientConsts != 0 )
 	{
-		for ( std::vector<NDb::SCursor>::const_iterator it = pClientConsts->cursors.begin(); it != pClientConsts->cursors.end(); ++it )
+		for ( std::vector<NDb::SCursor>::const_iterator it = pClientConsts->cursors.begin();
+		      it != pClientConsts->cursors.end();
+		      ++it )
 			Cursor()->RegisterMode( it->eAction, it->szFileName );
 		if ( pUIConsts )
 			Singleton<IUIInitialization>()->SetUIConsts( pUIConsts );
@@ -161,8 +161,8 @@ const TYPE *GetConsts( const std::string &szVarName )
 	std::string szValue = NStr::ToMBCS( NGlobal::GetVar( szVarName, "" ) );
 	if ( szValue.empty() )
 		return 0;
-	NI_VERIFY( !NStr::IsDecNumber(szValue), "Deprecated way to identify resources. Use DBID instead!", return 0 );
-	return NDb::Get<TYPE>( CDBID(szValue) );
+	NI_VERIFY( !NStr::IsDecNumber( szValue ), "Deprecated way to identify resources. Use DBID instead!", return 0 );
+	return NDb::Get<TYPE>( CDBID( szValue ) );
 }
 
 // game root
@@ -173,7 +173,7 @@ const NDb::SGameRoot *GetGameRoot()
 // game consts
 const NDb::SGameConsts *GetGameConsts()
 {
-	if ( const NDb::SGameConsts *pConsts = GetConsts<NDb::SGameConsts>("game_consts") )
+	if ( const NDb::SGameConsts *pConsts = GetConsts<NDb::SGameConsts>( "game_consts" ) )
 		return pConsts;
 	else if ( const NDb::SGameRoot *pGameRoot = GetGameRoot() )
 		return pGameRoot->pConsts;
@@ -182,7 +182,7 @@ const NDb::SGameConsts *GetGameConsts()
 // scene consts
 const NDb::SSceneConsts *GetSceneConsts()
 {
-	if ( const NDb::SSceneConsts *pConsts = GetConsts<NDb::SSceneConsts>("scene_consts") )
+	if ( const NDb::SSceneConsts *pConsts = GetConsts<NDb::SSceneConsts>( "scene_consts" ) )
 		return pConsts;
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
 		return pGameConsts->pScene;
@@ -191,7 +191,7 @@ const NDb::SSceneConsts *GetSceneConsts()
 // client
 const NDb::SClientGameConsts *GetClientConsts()
 {
-	if ( const NDb::SClientGameConsts *pConsts = GetConsts<NDb::SClientGameConsts>("client_consts") )
+	if ( const NDb::SClientGameConsts *pConsts = GetConsts<NDb::SClientGameConsts>( "client_consts" ) )
 		return pConsts;
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
 		return pGameConsts->pClient;
@@ -200,16 +200,16 @@ const NDb::SClientGameConsts *GetClientConsts()
 // UI
 const NDb::SUIConstsB2 *GetUIConsts()
 {
-	if ( const NDb::SUIConstsB2 *pConsts = GetConsts<NDb::SUIConstsB2>("ui_consts") )
+	if ( const NDb::SUIConstsB2 *pConsts = GetConsts<NDb::SUIConstsB2>( "ui_consts" ) )
 		return pConsts;
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
-		return static_cast_ptr<const NDb::SUIConstsB2*>( pGameConsts->pUI );
+		return static_cast_ptr<const NDb::SUIConstsB2 *>( pGameConsts->pUI );
 	return 0;
 }
 // AI
 const NDb::SAIGameConsts *GetAIConsts()
 {
-	if ( const NDb::SAIGameConsts *pConsts = GetConsts<NDb::SAIGameConsts>("ai_consts") )
+	if ( const NDb::SAIGameConsts *pConsts = GetConsts<NDb::SAIGameConsts>( "ai_consts" ) )
 		return pConsts;
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
 		return pGameConsts->pAI;
@@ -218,7 +218,7 @@ const NDb::SAIGameConsts *GetAIConsts()
 // Net
 const NDb::SNetGameConsts *GetNetConsts()
 {
-	if ( const NDb::SNetGameConsts *pConsts = GetConsts<NDb::SNetGameConsts>("net_consts") )
+	if ( const NDb::SNetGameConsts *pConsts = GetConsts<NDb::SNetGameConsts>( "net_consts" ) )
 		return pConsts;
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
 		return pGameConsts->pNet;
@@ -227,7 +227,7 @@ const NDb::SNetGameConsts *GetNetConsts()
 // MP
 const NDb::SMultiplayerConsts *GetMPConsts()
 {
-	if ( const NDb::SMultiplayerConsts *pConsts = GetConsts<NDb::SMultiplayerConsts>("mp_consts") )
+	if ( const NDb::SMultiplayerConsts *pConsts = GetConsts<NDb::SMultiplayerConsts>( "mp_consts" ) )
 		return pConsts;
 	else if ( const NDb::SGameConsts *pGameConsts = GetGameConsts() )
 		return pGameConsts->pMultiplayer;

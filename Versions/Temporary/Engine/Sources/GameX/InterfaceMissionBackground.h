@@ -7,14 +7,22 @@ class CInterfaceMissionBackground : public CInterfaceMissionBase
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMissionBackground );
 
-	ZDATA_(CInterfaceMissionBase)
+	ZDATA_( CInterfaceMissionBase )
 	CObj<IScenarioTracker> pScenarioTracker;
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceMissionBase*)this); f.Add(2,&pScenarioTracker); OnSerialize( f ); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceMissionBase *)this );
+		f.Add( 2, &pScenarioTracker );
+		OnSerialize( f );
+		return 0;
+	}
+
 private:
 	void StartMissionMap( const NDb::SMapInfo *pMapInfo );
 	void MsgUnloadMission( const SGameMessage &msg );
 	void MsgTryExitWindows( const SGameMessage &msg );
+
 protected:
 	void OnSerialize( IBinSaver &saver );
 
@@ -22,6 +30,7 @@ public:
 	bool StepLocal( bool bAppActive );
 
 	~CInterfaceMissionBackground();
+
 public:
 	CInterfaceMissionBackground();
 
@@ -32,14 +41,15 @@ class CICMissionBackground : public CInterfaceCommandBase<CInterfaceMissionBackg
 {
 	OBJECT_BASIC_METHODS( CICMissionBackground );
 	//
-	void PreCreate( );
+	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 
 	int operator&( IBinSaver &saver )
 	{
-		saver.Add( 1, (CInterfaceCommandBase<CInterfaceMissionBackground>*)( this ) );
+		saver.Add( 1, (CInterfaceCommandBase<CInterfaceMissionBackground> *)( this ) );
 
 		return 0;
 	}

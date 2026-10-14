@@ -29,7 +29,7 @@ extern CFeedBackSystem theFeedBackSystem;
 extern CSupremeBeing theSupremeBeing;
 extern CEventUpdater updater;
 extern CUnitCreation theUnitCreation;
-extern CScripts* pScripts;
+extern CScripts *pScripts;
 extern CDiplomacy theDipl;
 extern CExecutorContainer theExecutorContainer;
 extern CUnits units;
@@ -49,7 +49,9 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 {
 	std::list<SObjTileInfo> tiles;
 
-	for ( CUnitsIter<0,0> it( 0, ANY_PARTY, vDefaultPos, nBoundTileRadius * FIND_POSITION_STEP * AI_TILE_SIZE ); !it.IsFinished(); it.Iterate() )
+	for ( CUnitsIter<0, 0> it( 0, ANY_PARTY, vDefaultPos, nBoundTileRadius * FIND_POSITION_STEP * AI_TILE_SIZE );
+	      !it.IsFinished();
+	      it.Iterate() )
 	{
 		CAIUnit *pUnit = *it;
 		if ( IsValid( pUnit ) )
@@ -72,10 +74,10 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 		const float fDistDelta = nBoundTileRadius * AI_TILE_SIZE;
 		bool bPositionFound = false;
 		float fDist = fDistDelta;
-    for ( int i = 1; i < FIND_POSITION_STEP && !bPositionFound; ++i, fDist += fDistDelta )
+		for ( int i = 1; i < FIND_POSITION_STEP && !bPositionFound; ++i, fDist += fDistDelta )
 		{
 			uint16_t wDir = 0;
-			for ( int n = 0; n < DIRECTION_STEP && !bPositionFound; ++n, wDir += 65536/DIRECTION_STEP )
+			for ( int n = 0; n < DIRECTION_STEP && !bPositionFound; ++n, wDir += 65536 / DIRECTION_STEP )
 			{
 				const CVec2 vTempResult = vResult + GetVectorByDirection( wDir ) * fDist;
 				if ( !PositionLocked( vTempResult, nBoundTileRadius, aiClass ) )
@@ -92,9 +94,16 @@ CVec2 FindPositionForUnit( const CVec2 &vDefaultPos, const int nBoundTileRadius,
 	return vResult;
 }
 
-void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
-	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos, const CVec2 &vPosition, uint16_t wDirection,
-	std::list< std::pair<int, CObjectBase*> > *pObjects, const int nForceID, const int nScriptID, const bool bDisableUpdates )
+void PlaceReinforcement( EReinforcementType eType,
+                         const int nPlayer,
+                         const std::vector<NDb::SReinforcementEntry> &entries,
+                         const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> &pos,
+                         const CVec2 &vPosition,
+                         uint16_t wDirection,
+                         std::list<std::pair<int, CObjectBase *>> *pObjects,
+                         const int nForceID,
+                         const int nScriptID,
+                         const bool bDisableUpdates )
 {
 	if ( !bDisableUpdates )
 	{
@@ -104,15 +113,16 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 	}
 
 	LinkInfo links;
-	std::list<CCommonUnit*> units;
+	std::list<CCommonUnit *> units;
 
 	std::list<int> freeLinks;
 	CLinkObject::GetFreeLinks( &freeLinks, entries.size() );
 	std::list<int>::const_iterator itLink = freeLinks.begin();
-	det_map<int,int> linksDistrib;
+	det_map<int, int> linksDistrib;
 	for ( int i = 0; i < entries.size(); ++i )
 	{
-		NI_ASSERT( i < pos.size(), fmt::format( "MAP DESIGN: not enough positions in deploy mask, need {}, unit not deployed", i+1 )  );
+		NI_ASSERT( i < pos.size(),
+		           fmt::format( "MAP DESIGN: not enough positions in deploy mask, need {}, unit not deployed", i + 1 ) );
 		if ( i < pos.size() )
 		{
 			CVec2 vPos2( vPosition + MoveVectorByDirection( pos[i].vPosition, wDirection ) );
@@ -141,7 +151,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 
 			// Check if initial position is inside AI map, move if necessary
 			CVec3 vPos( vPos2.x, vPos2.y, 0 );
-			if ( pStats->eGameType == SGVOGT_SQUAD || !checked_cast<const SUnitBaseRPGStats*>(pStats)->IsAviation() )
+			if ( pStats->eGameType == SGVOGT_SQUAD || !checked_cast<const SUnitBaseRPGStats *>( pStats )->IsAviation() )
 			{
 				const float fUnitSize = nBoundTileRadius * AI_TILE_SIZE;
 				vPos2.x = Clamp( vPos.x, fUnitSize, GetAIMap()->GetSizeX() * AI_TILE_SIZE - fUnitSize );
@@ -185,26 +195,32 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 			}
 
 			const int nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
-			CObjectBase *pObj = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->AddObject( nUniqueID, info, &links, false, pStats, eType );
+			CObjectBase *pObj =
+					dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->AddObject( nUniqueID, info, &links, false, pStats, eType );
 			if ( pObj )
 			{
-				pObjects->push_back( std::pair<int, CObjectBase*>( i, pObj ) );
+				pObjects->push_back( std::pair<int, CObjectBase *>( i, pObj ) );
 
-				if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit*>( pObj ) )
+				if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( pObj ) )
 				{
-					CAIUnit *pAIUnit = dynamic_cast<CAIUnit*>( pUnit );
-					CFormation *pForm = dynamic_cast<CFormation*>( pUnit );
+					CAIUnit *pAIUnit = dynamic_cast<CAIUnit *>( pUnit );
+					CFormation *pForm = dynamic_cast<CFormation *>( pUnit );
 					if ( pAIUnit )
 					{
-						const EReinforcementType eTempType = eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( pAIUnit->GetStats()->etype ) : eType;
+						const EReinforcementType eTempType =
+								eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( pAIUnit->GetStats()->etype )
+																	: eType;
 						pAIUnit->SetReinforcementType( eTempType );
 					}
 					else if ( pForm )
 					{
 						for ( int j = 0; j < pForm->Size(); ++j )
 						{
-							const EReinforcementType eTempType = eType == _RT_NONE ? NReinforcement::GetReinforcementTypeByUnitRPGType( (*pForm)[j]->GetStats()->etype ) : eType;
-							(*pForm)[j]->SetReinforcementType( eTempType );
+							const EReinforcementType eTempType =
+									eType == _RT_NONE
+											? NReinforcement::GetReinforcementTypeByUnitRPGType( ( *pForm )[j]->GetStats()->etype )
+											: eType;
+							( *pForm )[j]->SetReinforcementType( eTempType );
 						}
 					}
 					units.push_back( pUnit );
@@ -215,48 +231,74 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 
 	// send acknowledgement
 	if ( units.begin() != units.end() && nPlayer == theDipl.GetMyNumber() )
-		(*units.begin())->SendAcknowledgement( NDb::ACK_REINFORCEMENT_ARRIVED, true );
+		( *units.begin() )->SendAcknowledgement( NDb::ACK_REINFORCEMENT_ARRIVED, true );
 
 	if ( theDipl.GetNParty( nPlayer ) != theDipl.GetMyParty() &&
-		( eType == NDb::RT_BOMBERS || eType == NDb::RT_FIGHTERS || eType == NDb::RT_GROUND_ATTACK_PLANES || eType == NDb::RT_RECON ||
-		  eType == NDb::RT_EXTRA_AIR_1 || eType == NDb::RT_EXTRA_AIR_2 || eType == NDb::RT_EXTRA_AIR_3 || eType == NDb::RT_EXTRA_AIR_4 || eType == NDb::RT_EXTRA_AIR_5 ||
-		  eType == NDb::RT_EXTRA_MAXLVL_AIR_1 || eType == NDb::RT_EXTRA_MAXLVL_AIR_2 || eType == NDb::RT_EXTRA_MAXLVL_AIR_3 || eType == NDb::RT_EXTRA_MAXLVL_AIR_4 || eType == NDb::RT_EXTRA_MAXLVL_AIR_5 ) )
+	     ( eType == NDb::RT_BOMBERS || eType == NDb::RT_FIGHTERS || eType == NDb::RT_GROUND_ATTACK_PLANES ||
+	       eType == NDb::RT_RECON || eType == NDb::RT_EXTRA_AIR_1 || eType == NDb::RT_EXTRA_AIR_2 ||
+	       eType == NDb::RT_EXTRA_AIR_3 || eType == NDb::RT_EXTRA_AIR_4 || eType == NDb::RT_EXTRA_AIR_5 ||
+	       eType == NDb::RT_EXTRA_MAXLVL_AIR_1 || eType == NDb::RT_EXTRA_MAXLVL_AIR_2 ||
+	       eType == NDb::RT_EXTRA_MAXLVL_AIR_3 || eType == NDb::RT_EXTRA_MAXLVL_AIR_4 ||
+	       eType == NDb::RT_EXTRA_MAXLVL_AIR_5 ) )
 	{
 		CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
-		for ( std::list<CCommonUnit*>::iterator it = units.begin(); it != units.end(); ++it )
-			pParam->unitIDs.push_back( (*it)->GetUniqueID() );
+		for ( std::list<CCommonUnit *>::iterator it = units.begin(); it != units.end(); ++it )
+			pParam->unitIDs.push_back( ( *it )->GetUniqueID() );
 
 		if ( !bDisableUpdates )
 			updater.AddUpdate( EFB_ENEMY_AVIATION_CALLED, MAKELONG( vPosition.x, vPosition.y ), pParam );
 	}
 
-	dynamic_cast<CAILogic*>(Singleton<IAILogic>())->InitLinks( links );
+	dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->InitLinks( links );
 	theSupremeBeing.GiveNewUnitsToGenerals( units, true );
 }
 
-void PlaceSingleLandReinforcement( EReinforcementType eType, const int nPlayer, const std::vector<NDb::SReinforcementEntry> &entries,
-	const int nForceID,	const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> position, const CVec2 &vPosition, const uint16_t wDirection )
+void PlaceSingleLandReinforcement( EReinforcementType eType,
+                                   const int nPlayer,
+                                   const std::vector<NDb::SReinforcementEntry> &entries,
+                                   const int nForceID,
+                                   const std::vector<NDb::SDeployTemplate::SDeployTemplateEntry> position,
+                                   const CVec2 &vPosition,
+                                   const uint16_t wDirection )
 {
-	std::list< std::pair<int, CObjectBase*> > objects;
+	std::list<std::pair<int, CObjectBase *>> objects;
 	PlaceReinforcement( eType, nPlayer, entries, position, vPosition, wDirection, &objects, nForceID, -1, false );
 }
 
-void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const EReinforcementType eType,
-	const NDb::SDeployTemplate *pTemplate, const CVec2 &vPosition, uint16_t wDirection, const int nScriptID,
-	std::list< std::pair<int, CObjectBase*> > *pObjects, const bool bDisableUpdates )
+void PlaceSingleLandReinforcement( const int nPlayer,
+                                   const NDb::SReinforcement *pReinf,
+                                   const EReinforcementType eType,
+                                   const NDb::SDeployTemplate *pTemplate,
+                                   const CVec2 &vPosition,
+                                   uint16_t wDirection,
+                                   const int nScriptID,
+                                   std::list<std::pair<int, CObjectBase *>> *pObjects,
+                                   const bool bDisableUpdates )
 {
 	CDBPtr<NDb::SDeployTemplate> pFinalTemplate = pTemplate;
 
 	if ( pReinf->pTemplateOverride )
 		pFinalTemplate = pReinf->pTemplateOverride;
 
-	NI_ASSERT( pFinalTemplate != 0, fmt::format( "Map design error: No deploy template for player = {} reinforcement type = {}", nPlayer, int( pReinf->eType ) ) );
+	NI_ASSERT( pFinalTemplate != 0,
+	           fmt::format( "Map design error: No deploy template for player = {} reinforcement type = {}",
+	                        nPlayer,
+	                        int( pReinf->eType ) ) );
 	if ( pFinalTemplate == 0 )
 		return;
 
-	std::list< std::pair<int, CObjectBase*> > objects;
-	std::list< std::pair<int, CObjectBase*> > *pObjectsLocal = pObjects == 0 ? &objects : pObjects;
-	PlaceReinforcement( eType, nPlayer, pReinf->entries, pFinalTemplate->entries, vPosition, wDirection, pObjectsLocal, -1, nScriptID, bDisableUpdates );
+	std::list<std::pair<int, CObjectBase *>> objects;
+	std::list<std::pair<int, CObjectBase *>> *pObjectsLocal = pObjects == 0 ? &objects : pObjects;
+	PlaceReinforcement( eType,
+	                    nPlayer,
+	                    pReinf->entries,
+	                    pFinalTemplate->entries,
+	                    vPosition,
+	                    wDirection,
+	                    pObjectsLocal,
+	                    -1,
+	                    nScriptID,
+	                    bDisableUpdates );
 
 	/*list<CCommonUnit*> units;
 	for ( list< pair<int, CObjectBase*> >::iterator iter = pObjectsLocal->begin(); iter != pObjectsLocal->end(); ++iter )
@@ -271,8 +313,13 @@ void PlaceSingleLandReinforcement( const int nPlayer, const NDb::SReinforcement 
 	}*/
 }
 
-void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *pReinf, const NDb::SDeployTemplate *pTemplate,
-																	const CVec2 &vPosition, uint16_t wDirection, const int nScriptID, const CVec2 &vTarget )
+void PlaceSingleSeaReinforcement( const int nPlayer,
+                                  const NDb::SReinforcement *pReinf,
+                                  const NDb::SDeployTemplate *pTemplate,
+                                  const CVec2 &vPosition,
+                                  uint16_t wDirection,
+                                  const int nScriptID,
+                                  const CVec2 &vTarget )
 {
 	std::vector<NDb::SReinforcementEntry> entries;
 	int nMinLink = 0;
@@ -312,16 +359,17 @@ void PlaceSingleSeaReinforcement( const int nPlayer, const NDb::SReinforcement *
 		}
 	}
 
-	std::list< std::pair<int, CObjectBase*> > objects;
-	PlaceReinforcement( pReinf->eType, nPlayer, entries, pTemplate->entries, vPosition, wDirection, &objects, -1, nScriptID, false );
+	std::list<std::pair<int, CObjectBase *>> objects;
+	PlaceReinforcement(
+			pReinf->eType, nPlayer, entries, pTemplate->entries, vPosition, wDirection, &objects, -1, nScriptID, false );
 
 	// Make a list of transports
-	std::list<CAIUnit*> ships;
+	std::list<CAIUnit *> ships;
 	int i = 0;
-	for ( std::list< std::pair<int, CObjectBase*> >::iterator iter = objects.begin(); iter != objects.end(); ++iter, ++i )
+	for ( std::list<std::pair<int, CObjectBase *>>::iterator iter = objects.begin(); iter != objects.end(); ++iter, ++i )
 	{
 		CObjectBase *pObj = iter->second;
-		CAIUnit *pUnit = dynamic_cast<CAIUnit*>( pObj );
+		CAIUnit *pUnit = dynamic_cast<CAIUnit *>( pObj );
 		if ( i >= nTrCount )
 		{
 			continue;

@@ -8,7 +8,7 @@
 #include "AILogic_export.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D491,	CInTransportStatesFactory );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D491, CInTransportStatesFactory );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D492, CSoldierRestOnBoardState );
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 extern NTimer::STime curTime;
@@ -19,7 +19,7 @@ extern NTimer::STime curTime;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CPtr<CInTransportStatesFactory> CInTransportStatesFactory::pFactory = 0;
 
-IStatesFactory* CInTransportStatesFactory::Instance()
+IStatesFactory *CInTransportStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CInTransportStatesFactory();
@@ -30,17 +30,15 @@ IStatesFactory* CInTransportStatesFactory::Instance()
 bool CInTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		(	cmdType == ACTION_COMMAND_DIE ||
-			cmdType == ACTION_COMMAND_DISAPPEAR );
+	return ( cmdType == ACTION_COMMAND_DIE || cmdType == ACTION_COMMAND_DISAPPEAR );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IUnitState* CInTransportStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
+IUnitState *CInTransportStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
+	NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit type" );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 
 	switch ( cmd.nCmdType )
 	{
@@ -55,23 +53,23 @@ IUnitState* CInTransportStatesFactory::ProduceState( class CQueueUnit *pUnit, CA
 	return pResult;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IUnitState* CInTransportStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CInTransportStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
-	return CSoldierRestOnBoardState::Instance( checked_cast<CSoldier*>(pUnit), 0 );
+	NI_ASSERT( dynamic_cast<CSoldier *>( pUnit ) != 0, "Wrong unit type" );
+	return CSoldierRestOnBoardState::Instance( checked_cast<CSoldier *>( pUnit ), 0 );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************
 //*											CSoldierRestOnBoardState										*
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-IUnitState* CSoldierRestOnBoardState::Instance( CSoldier *pSoldier, CMilitaryCar *pTransport )
+IUnitState *CSoldierRestOnBoardState::Instance( CSoldier *pSoldier, CMilitaryCar *pTransport )
 {
 	return new CSoldierRestOnBoardState( pSoldier, pTransport );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilitaryCar* pTransport )
-: pSoldier( _pSoldier )
+CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilitaryCar *pTransport )
+		: pSoldier( _pSoldier )
 {
 	// если ещё не внутри транспорта
 	if ( pTransport != 0 )
@@ -88,9 +86,7 @@ CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilita
 		NI_ASSERT( pSoldier->IsInTransport(), "Wrong unit state" );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CSoldierRestOnBoardState::Segment()
-{
-}
+void CSoldierRestOnBoardState::Segment() {}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ETryStateInterruptResult CSoldierRestOnBoardState::TryInterruptState( class CAICommand *pCommand )
 {

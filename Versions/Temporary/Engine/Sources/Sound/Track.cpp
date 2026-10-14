@@ -9,14 +9,12 @@ namespace NMusicSystem
 {
 signed char F_CALLBACKAPI TrackFinishedCallBack( FSOUND_STREAM *stream, void *buff, int len, void *userdata )
 {
-	CTrack *pSFX = reinterpret_cast<CTrack*>( userdata );
+	CTrack *pSFX = reinterpret_cast<CTrack *>( userdata );
 	pSFX->NotifyTrackFinished();
 	return true;
 }
 
-
 // CTrack
-
 
 void CTrack::NotifyTrackFinished()
 {
@@ -43,45 +41,45 @@ void CTrack::OpenTrack()
 
 void CTrack::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case ETS_NOT_STARTED:
-		OpenTrack();
-		if ( pStreamingSound )
-			PlayTrack( 0 );
-		timeLastCall = GetAbsTime();
-		eState = pStreamingSound ? ETS_PLAYING : ETS_FINISHED;
+		case ETS_NOT_STARTED:
+			OpenTrack();
+			if ( pStreamingSound )
+				PlayTrack( 0 );
+			timeLastCall = GetAbsTime();
+			eState = pStreamingSound ? ETS_PLAYING : ETS_FINISHED;
 
-		break;
-	case ETS_PLAYING:
+			break;
+		case ETS_PLAYING:
 		{
 			const NTimer::STime curTime = GetAbsTime();
 			timePlayed += curTime - timeLastCall;
 			timeLastCall = curTime;
 		}
-		if ( timePlayed >= playTime.GetPlayTime() )
-		{
-			eState = ETS_FINISHED;
-			FSOUND_Stream_SetEndCallback( pStreamingSound, 0, this );
-			FSOUND_Stream_Stop( pStreamingSound );
-			GetMusicSystem()->SetChannel( 0, eType );
-		}
-		else
-		{
-			// init after load
-			if ( !GetMusicSystem()->GetChannel( eType ) )
+			if ( timePlayed >= playTime.GetPlayTime() )
 			{
-				int nTime = FSOUND_Stream_GetLengthMs( pStreamingSound );
-				if (nTime == 0)
-					break;
-				int nTrackTime = timePlayed % nTime;
-				PlayTrack( nTrackTime );
+				eState = ETS_FINISHED;
+				FSOUND_Stream_SetEndCallback( pStreamingSound, 0, this );
+				FSOUND_Stream_Stop( pStreamingSound );
+				GetMusicSystem()->SetChannel( 0, eType );
 			}
-		}
+			else
+			{
+				// init after load
+				if ( !GetMusicSystem()->GetChannel( eType ) )
+				{
+					int nTime = FSOUND_Stream_GetLengthMs( pStreamingSound );
+					if ( nTime == 0 )
+						break;
+					int nTrackTime = timePlayed % nTime;
+					PlayTrack( nTrackTime );
+				}
+			}
 
-		break;
-	case ETS_FINISHED:
-		break;
+			break;
+		case ETS_FINISHED:
+			break;
 	}
 }
 
@@ -94,7 +92,6 @@ void CTrack::OnResetTimer()
 {
 	timeLastCall = GetAbsTime();
 }
-
 
 bool CTrack::IsFinished() const
 {
@@ -126,10 +123,10 @@ bool CTrack::IsTimeToEndFade( NTimer::STime timeEndFade )
 
 int CTrack::operator&( IBinSaver &f )
 {
-	f.Add(2,&eType);
-	f.Add(3,&timePlayed);
-	f.Add(4,&timeLastCall);
-	f.Add(5,&playTime);
+	f.Add( 2, &eType );
+	f.Add( 3, &timePlayed );
+	f.Add( 4, &timeLastCall );
+	f.Add( 5, &playTime );
 	f.Add( 6, &eState );
 	f.Add( 7, &pTrack );
 	if ( f.IsReading() )

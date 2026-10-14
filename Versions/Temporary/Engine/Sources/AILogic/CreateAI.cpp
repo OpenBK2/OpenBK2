@@ -14,7 +14,7 @@ void CreateAI()
 	NSingleton::RegisterSingleton( new CUpdates2Globe(), CUpdates2Globe::tidTypeID );
 }
 
-IAILogic* CreateAI4Globe()
+IAILogic *CreateAI4Globe()
 {
 	return new CAILogic();
 }

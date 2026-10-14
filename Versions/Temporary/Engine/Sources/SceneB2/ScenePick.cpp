@@ -20,14 +20,17 @@ void CScene::PickZeroHeight( CVec3 *pvPos, const CVec2 &vScreenPos )
 	CVec3 vNear, vFar;
 	Camera()->GetProjectiveRayPoints( &vNear, &vFar, vScreenPos );
 
-	const float t = ( 0.0f - vNear.z)/( vFar.z - vNear.z );
-	pvPos->x = (( vFar.x - vNear.x )*t + vNear.x);
-	pvPos->y = (( vFar.y - vNear.y )*t + vNear.y);
+	const float t = ( 0.0f - vNear.z ) / ( vFar.z - vNear.z );
+	pvPos->x = ( ( vFar.x - vNear.x ) * t + vNear.x );
+	pvPos->y = ( ( vFar.y - vNear.y ) * t + vNear.y );
 	pvPos->z = 0.0f;
 	Vis2AI( pvPos );
 }
 
-void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, std::list<SPickObjInfo> *pPickedObjects, std::list<int> *pPickedAttached )
+void CScene::PickAllObjects( const CVec3 &vAIPos1,
+                             const CVec3 &vAIPos2,
+                             std::list<SPickObjInfo> *pPickedObjects,
+                             std::list<int> *pPickedAttached )
 {
 	CVec3 vPos1, vPos2;
 	AI2Vis( &vPos1, vAIPos1 );
@@ -57,7 +60,8 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, std::li
 		if ( pVisObjDescBase )
 		{
 			const int nID = pVisObjDescBase->GetID();
-			if ( (nID & 0x80000000) && data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
+			if ( ( nID & 0x80000000 ) &&
+			     data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
 			{
 				info.nObjID = data[eScene]->attachIDToMapObjID[nID];
 				pPickedAttached->push_back( nID );
@@ -72,7 +76,7 @@ void CScene::PickAllObjects( const CVec3 &vAIPos1, const CVec3 &vAIPos2, std::li
 
 inline float GetGridPosition( float fPosition, int nGridSize )
 {
-	return (std::min)( (int)(fPosition*nGridSize), nGridSize-1 );
+	return (std::min)( (int)( fPosition * nGridSize ), nGridSize - 1 );
 }
 
 void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, const EPickObjectsClass ePickObjsClass )
@@ -99,7 +103,8 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, 
 		{
 			const int nID = pVisObjDescBase->GetID();
 
-			if ( (nID & 0x80000000) && data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
+			if ( ( nID & 0x80000000 ) &&
+			     data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
 				pickObjects.push_back( data[eScene]->attachIDToMapObjID[nID] );
 			else
 				pickObjects.push_back( nID );
@@ -143,16 +148,19 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, 
 	return;
 }
 
-void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2,
-												 EPickObjects eRadiusCoeff, const EPickObjectsClass ePickObjsClass )
+void CScene::PickObjects( std::list<int> &pickObjects,
+                          const CVec2 &vScreenPos1,
+                          const CVec2 &vScreenPos2,
+                          EPickObjects eRadiusCoeff,
+                          const EPickObjectsClass ePickObjsClass )
 {
 	if ( fastRender.resGrid.IsEmpty() )
 		return;
 
 	// Lets find square that lies inside vScreenPos1, vScreenPos2
 	CVec2 vScreenRect = NGfx::GetScreenRect();
-	CVec2 vPosMin( vScreenPos1.x/vScreenRect.x, vScreenPos1.y/vScreenRect.y );
-	CVec2 vPosMax( vScreenPos2.x/vScreenRect.x, vScreenPos2.y/vScreenRect.y );
+	CVec2 vPosMin( vScreenPos1.x / vScreenRect.x, vScreenPos1.y / vScreenRect.y );
+	CVec2 vPosMax( vScreenPos2.x / vScreenRect.x, vScreenPos2.y / vScreenRect.y );
 
 	if ( vPosMin.x > vPosMax.x )
 		std::swap( vPosMin.x, vPosMax.x );
@@ -177,21 +185,21 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1,
 
 	int nMinX = GetGridPosition( vPosMin.x, fastRender.resGrid.GetSizeX() );
 	int nMaxX = GetGridPosition( vPosMax.x, fastRender.resGrid.GetSizeX() );
-	int nMinY = GetGridPosition( (1.0f-vPosMax.y), fastRender.resGrid.GetSizeY() );
-	int nMaxY = GetGridPosition( (1.0f-vPosMin.y), fastRender.resGrid.GetSizeY() );
+	int nMinY = GetGridPosition( ( 1.0f - vPosMax.y ), fastRender.resGrid.GetSizeY() );
+	int nMaxY = GetGridPosition( ( 1.0f - vPosMin.y ), fastRender.resGrid.GetSizeY() );
 
 	// Processing results
-	static std::vector<const CObjectBase*> foundObjects;
+	static std::vector<const CObjectBase *> foundObjects;
 	foundObjects.resize( 0 );
 
 	for ( int iY = nMinY; iY <= nMaxY; ++iY )
 	{
 		for ( int iX = nMinX; iX <= nMaxX; ++iX )
 		{
-			NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[ iY ][ iX ];
-			while( pResult )
+			NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[iY][iX];
+			while ( pResult )
 			{
-				if ( IsValid(pResult->pObject) )
+				if ( IsValid( pResult->pObject ) )
 				{
 					// Check if we already added this object
 					if ( find( foundObjects.begin(), foundObjects.end(), pResult->pObject ) == foundObjects.end() )
@@ -204,7 +212,8 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1,
 						{
 							const int nID = pVisObjDescBase->GetID();
 
-							if ( (nID & 0x80000000) && data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
+							if ( ( nID & 0x80000000 ) &&
+							     data[eScene]->attachIDToMapObjID.find( nID ) != data[eScene]->attachIDToMapObjID.end() )
 								pickObjects.push_back( data[eScene]->attachIDToMapObjID[nID] );
 							else
 								pickObjects.push_back( nID );
@@ -218,15 +227,19 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1,
 	}
 }
 
-void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
+void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects,
+                                 const CVec2 &vScreenPos1,
+                                 const CVec2 &vScreenPos2,
+                                 const SObjectFilter &canBeCovered,
+                                 const SObjectFilter &canBeObstacle )
 {
 	if ( fastRender.resGrid.IsEmpty() )
 		return;
 
 	// Lets find square that lies inside vScreenPos1, vScreenPos2
 	CVec2 vScreenRect = NGfx::GetScreenRect();
-	CVec2 vPosMin( vScreenPos1.x/vScreenRect.x, vScreenPos1.y/vScreenRect.y );
-	CVec2 vPosMax( vScreenPos2.x/vScreenRect.x, vScreenPos2.y/vScreenRect.y );
+	CVec2 vPosMin( vScreenPos1.x / vScreenRect.x, vScreenPos1.y / vScreenRect.y );
+	CVec2 vPosMax( vScreenPos2.x / vScreenRect.x, vScreenPos2.y / vScreenRect.y );
 
 	if ( vPosMin.x > vPosMax.x )
 		std::swap( vPosMin.x, vPosMax.x );
@@ -251,8 +264,8 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &
 
 	int nMinX = GetGridPosition( vPosMin.x, fastRender.resGrid.GetSizeX() );
 	int nMaxX = GetGridPosition( vPosMax.x, fastRender.resGrid.GetSizeX() );
-	int nMinY = GetGridPosition( (1.0f-vPosMax.y), fastRender.resGrid.GetSizeY() );
-	int nMaxY = GetGridPosition( (1.0f-vPosMin.y), fastRender.resGrid.GetSizeY() );
+	int nMinY = GetGridPosition( ( 1.0f - vPosMax.y ), fastRender.resGrid.GetSizeY() );
+	int nMaxY = GetGridPosition( ( 1.0f - vPosMin.y ), fastRender.resGrid.GetSizeY() );
 
 	// Processing results
 	std::unordered_set<int> foundObjects;
@@ -263,7 +276,7 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &
 		{
 			// First, lets find covered far object
 			NAI::CFastRenderer::SResult *pCovered = 0;
-			for( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[ iY ][ iX ]; pResult; pResult = pResult->pNext )
+			for ( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[iY][iX]; pResult; pResult = pResult->pNext )
 			{
 				CDynamicCast<const SVisObjDescBase> pVisObjDescBase = pResult->pObject;
 
@@ -276,9 +289,10 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &
 				continue;
 
 			// So we will add all obstacles in this node
-			for( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[ iY ][ iX ]; pResult != pCovered; pResult = pResult->pNext )
+			for ( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[iY][iX]; pResult != pCovered;
+			      pResult = pResult->pNext )
 			{
-				if ( !IsValid(pResult->pObject) )
+				if ( !IsValid( pResult->pObject ) )
 					continue;
 
 				CDynamicCast<const SVisObjDescBase> pVisObjDescBase = pResult->pObject;
@@ -300,7 +314,9 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &
 	return;
 }
 
-void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
+void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects,
+                                const SObjectFilter &canBeCovered,
+                                const SObjectFilter &canBeObstacle )
 {
 	std::unordered_set<int> foundObjects;
 	for ( int iY = 0; iY < fastRender.resGrid.GetSizeY(); ++iY )
@@ -308,9 +324,9 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFi
 		for ( int iX = 0; iX < fastRender.resGrid.GetSizeX(); ++iX )
 		{
 			bool bNodeIsCovered = false;
-			for( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[ iY ][ iX ]; pResult; pResult = pResult->pNext )
+			for ( NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[iY][iX]; pResult; pResult = pResult->pNext )
 			{
-				if ( !IsValid(pResult->pObject) )
+				if ( !IsValid( pResult->pObject ) )
 					continue;
 
 				if ( !bNodeIsCovered )
@@ -341,7 +357,7 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFi
 		}
 	}
 	return;
-/*
+	/*
 	CVec3 vCameraPos = Camera()->GetPos();
 
 	data[eScene]->pAIMapVisitor->Sync();

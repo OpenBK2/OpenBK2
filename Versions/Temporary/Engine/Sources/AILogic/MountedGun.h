@@ -8,24 +8,27 @@ class CMountedTurret;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CCommonMountedGun
 {
-	public: int operator&( IBinSaver &saver ); private:
+public:
+	int operator&( IBinSaver &saver );
 
+private:
 	CDBPtr<SBuildingRPGStats> pBuildingStats;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	class CBuilding *pBuilding = {};
 	CPtr<CMountedTurret> pTurret;
 	int nSlot = {};
+
 public:
-	CCommonMountedGun() { }
+	CCommonMountedGun() {}
 	CCommonMountedGun( class CBuilding *pObject, class CMountedTurret *pTurret, const int nSlot );
 
 	class CBuilding *GetBuilding() const { return pBuilding; };
 
-	virtual const SBaseGunRPGStats& GetGun() const;
-	virtual const SWeaponRPGStats* GetWeapon() const;
+	virtual const SBaseGunRPGStats &GetGun() const;
+	virtual const SWeaponRPGStats *GetWeapon() const;
 	virtual bool IsOnTurret() const { return true; }
 
-	virtual class CTurret* GetTurret() const;
+	virtual class CTurret *GetTurret() const;
 
 	virtual void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const;
 };
@@ -35,21 +38,34 @@ public:
 //class CMountedGun : public T, public CCommonMountedGun
 class CMountedToBaseGun : public CBaseGun, public CCommonMountedGun
 {
-	OBJECT_NOCOPY_METHODS(CMountedToBaseGun);
-	ZDATA_(CBaseGun)
-	ZPARENT(CCommonMountedGun)
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBaseGun*)this); f.Add(2,(CCommonMountedGun*)this); return 0; }
+	OBJECT_NOCOPY_METHODS( CMountedToBaseGun );
+	ZDATA_( CBaseGun )
+	ZPARENT( CCommonMountedGun )
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CBaseGun *)this );
+		f.Add( 2, (CCommonMountedGun *)this );
+		return 0;
+	}
+
 public:
-	CMountedToBaseGun() { }
+	CMountedToBaseGun() {}
 
-	CMountedToBaseGun( class CBuilding *pObject, class CMountedTurret *pTurret, const int nSlot, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, IGunsFactory::EGunTypes eType )
-	: CCommonMountedGun( pObject, pTurret, nSlot ), CBaseGun( 0, nShellType, pCommonGunInfo, eType ) { }
+	CMountedToBaseGun( class CBuilding *pObject,
+	                   class CMountedTurret *pTurret,
+	                   const int nSlot,
+	                   const uint8_t nShellType,
+	                   SCommonGunInfo *pCommonGunInfo,
+	                   IGunsFactory::EGunTypes eType )
+			: CCommonMountedGun( pObject, pTurret, nSlot ), CBaseGun( 0, nShellType, pCommonGunInfo, eType )
+	{
+	}
 
-	virtual const SBaseGunRPGStats& GetGun() const { return CCommonMountedGun::GetGun(); }
-	virtual const SWeaponRPGStats* GetWeapon() const { return CCommonMountedGun::GetWeapon(); }
+	virtual const SBaseGunRPGStats &GetGun() const { return CCommonMountedGun::GetGun(); }
+	virtual const SWeaponRPGStats *GetWeapon() const { return CCommonMountedGun::GetWeapon(); }
 	virtual bool IsOnTurret() const { return CCommonMountedGun::IsOnTurret(); }
 
-	virtual class CTurret* GetTurret() const { return CCommonMountedGun::GetTurret(); }
+	virtual class CTurret *GetTurret() const { return CCommonMountedGun::GetTurret(); }
 	virtual class CBuilding *GetMountBuilding() const { return CCommonMountedGun::GetBuilding(); }
 
 	virtual void GetInfantryShotInfo( SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const;
@@ -80,12 +96,15 @@ class CMountedGunsFactory : public IGunsFactory
 	class CBuilding *pBuilding = {};
 	class CMountedTurret *pMountedTurret = {};
 	const int nCommonGun = {};
+
 public:
 	CMountedGunsFactory( class CBuilding *_pBuilding, class CMountedTurret *_pMountedTurret, const int _nCommonGun )
-		: pBuilding( _pBuilding ), pMountedTurret( _pMountedTurret ), nCommonGun( _nCommonGun ) { }
+			: pBuilding( _pBuilding ), pMountedTurret( _pMountedTurret ), nCommonGun( _nCommonGun )
+	{
+	}
 
 	virtual int GetNCommonGun() const { return nCommonGun; }
 
-	virtual class CBasicGun* CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const;
+	virtual class CBasicGun *CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

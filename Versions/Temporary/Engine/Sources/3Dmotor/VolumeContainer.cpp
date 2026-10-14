@@ -24,9 +24,9 @@ void CVolumeContainer::Init( const CVec3 &_ptMin, const CVec3 &ptMax, float fReg
 		int nSide = 1 << i;
 		volumeData[i].tris.resize( nSide * nSide * nSide );
 		for ( int k = 0; k < volumeData[i].tris.size(); ++k )
-			volumeData[i].tris[k].resize(0);
+			volumeData[i].tris[k].resize( 0 );
 	}
-	int nSide = 1 << (nDepth - 1);
+	int nSide = 1 << ( nDepth - 1 );
 	fSize1x = nSide / ( ptMax.x - ptMin.x );
 	fSize1y = nSide / ( ptMax.y - ptMin.y );
 	fSize1z = nSide / ( ptMax.z - ptMin.z );
@@ -74,7 +74,7 @@ void CVolumeContainer::Fetch( const SBound &bound )
 		int nX1 = b.mn.x >> nShift, nX2 = b.mx.x >> nShift;
 		for ( int nZ = nZ1; nZ <= nZ2; ++nZ )
 		{
-			int nZIdx = nZ << (nLevel+nLevel);
+			int nZIdx = nZ << ( nLevel + nLevel );
 			for ( int nY = nY1; nY <= nY2; ++nY )
 			{
 				int nYZIdx = nZIdx + ( nY << nLevel );
@@ -165,8 +165,12 @@ bool CVolumeContainer::IsOut( const SVolumeBounds &t )
 void CVolumeContainer::ClipVolume( SVolumeBounds *pRes )
 {
 	int nMax = ( 1 << ( volumeData.size() - 1 ) ) - 1;
-	pRes->mn.x = (std::max)( 0, pRes->mn.x ); pRes->mn.y = (std::max)( 0, pRes->mn.y ); pRes->mn.z = (std::max)( 0, pRes->mn.z );
-	pRes->mx.x = (std::min)( nMax, pRes->mx.x ); pRes->mx.y = (std::min)( nMax, pRes->mx.y ); pRes->mx.z = (std::min)( nMax, pRes->mx.z );
+	pRes->mn.x = (std::max)( 0, pRes->mn.x );
+	pRes->mn.y = (std::max)( 0, pRes->mn.y );
+	pRes->mn.z = (std::max)( 0, pRes->mn.z );
+	pRes->mx.x = (std::min)( nMax, pRes->mx.x );
+	pRes->mx.y = (std::min)( nMax, pRes->mx.y );
+	pRes->mx.z = (std::min)( nMax, pRes->mx.z );
 }
 
 void CVolumeContainer::Add( const SVolumeBounds &b, int nData )
@@ -180,13 +184,13 @@ void CVolumeContainer::Add( const SVolumeBounds &b, int nData )
 		nD >>= 1;
 	}
 	int nShift = nDepth - 1 - nLevel;
-	for ( int nZ = b.mn.z >> nShift; nZ <= (b.mx.z >> nShift); ++nZ )
+	for ( int nZ = b.mn.z >> nShift; nZ <= ( b.mx.z >> nShift ); ++nZ )
 	{
-		for ( int nY = b.mn.y >> nShift; nY <= (b.mx.y >> nShift); ++nY )
+		for ( int nY = b.mn.y >> nShift; nY <= ( b.mx.y >> nShift ); ++nY )
 		{
-			for ( int nX = b.mn.x >> nShift; nX <= (b.mx.x >> nShift); ++nX )
+			for ( int nX = b.mn.x >> nShift; nX <= ( b.mx.x >> nShift ); ++nX )
 			{
-				int nIdx = ( nZ << (nLevel+nLevel) ) + ( nY <<nLevel ) + nX;
+				int nIdx = ( nZ << ( nLevel + nLevel ) ) + ( nY << nLevel ) + nX;
 				volumeData[nLevel].tris[nIdx].push_back( nData );
 			}
 		}

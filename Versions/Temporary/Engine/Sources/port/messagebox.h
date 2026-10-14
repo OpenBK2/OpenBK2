@@ -50,16 +50,18 @@ inline int MessageBox( HWND hParent, const char *pszText, const char *pszCaption
 	SDL_MessageBoxFlags nFlags = SDL_MESSAGEBOX_INFORMATION;
 	switch ( nType & MB_ICONMASK )
 	{
-	case MB_ICONERROR:
-		nFlags = SDL_MESSAGEBOX_ERROR;
-		break;
-	case MB_ICONEXCLAMATION:
-		nFlags = SDL_MESSAGEBOX_WARNING;
-		break;
-	default:
-		break;
+		case MB_ICONERROR:
+			nFlags = SDL_MESSAGEBOX_ERROR;
+			break;
+		case MB_ICONEXCLAMATION:
+			nFlags = SDL_MESSAGEBOX_WARNING;
+			break;
+		default:
+			break;
 	}
-	if ( !SDL_ShowSimpleMessageBox( nFlags, pszCaption != 0 ? pszCaption : "", pszText != 0 ? pszText : "",
+	if ( !SDL_ShowSimpleMessageBox( nFlags,
+	                                pszCaption != 0 ? pszCaption : "",
+	                                pszText != 0 ? pszText : "",
 	                                static_cast<SDL_Window *>( hParent ) ) )
 	{
 		// SDL says to expect this where there is no video target to draw on, and

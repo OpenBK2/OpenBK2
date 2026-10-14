@@ -56,7 +56,7 @@ struct MAPEDITORLIB_EXPORT SDialogState
 	// The same for szParameters, which the palettes that carry a filter name
 	// use. CMapObjectWindow calls resize( 1 ) in OnInitDialog and indexes [0];
 	// this is that, said once.
-	const std::string& GetStringParameter( size_t nIndex ) const
+	const std::string &GetStringParameter( size_t nIndex ) const
 	{
 		static const std::string szEmpty;
 		return nIndex < szParameters.size() ? szParameters[nIndex] : szEmpty;
@@ -72,13 +72,12 @@ struct MAPEDITORLIB_EXPORT SDialogState
 	}
 };
 
-
 // Load and save go to Editor/ResizeDialogStyles/<name>.xml under the install,
 // which is where CResizeDialog has always put them. rszDialogName is the label
 // CResizeDialog's GetXMLFilePath answers with -- the dialog's class name, by
 // convention and by the DECLARE_RESIZE_DLG_WND_COMMON_METHODS macro.
 namespace NDialogState
 {
-	MAPEDITORLIB_EXPORT bool Load( const std::string &rszDialogName, SDialogState *pState );
-	MAPEDITORLIB_EXPORT bool Save( const std::string &rszDialogName, SDialogState *pState );
+MAPEDITORLIB_EXPORT bool Load( const std::string &rszDialogName, SDialogState *pState );
+MAPEDITORLIB_EXPORT bool Save( const std::string &rszDialogName, SDialogState *pState );
 }

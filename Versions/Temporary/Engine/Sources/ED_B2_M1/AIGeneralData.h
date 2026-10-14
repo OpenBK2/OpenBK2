@@ -21,10 +21,7 @@ struct SAIGeneralPointsWindowData
 				NDb::SAIGeneralParcel();
 				Clear();
 			}
-			void Clear()
-			{
-				nCurrentPoint = -1;
-			}
+			void Clear() { nCurrentPoint = -1; }
 		};
 
 		std::vector<int> mobileScriptIDs;
@@ -32,10 +29,7 @@ struct SAIGeneralPointsWindowData
 		int nCurrentID;
 		int nCurrentParcel;
 		//
-		SAIPlayerInfo()
-		{
-			Clear();
-		}
+		SAIPlayerInfo() { Clear(); }
 		void Clear()
 		{
 			mobileScriptIDs.clear();
@@ -68,17 +62,13 @@ struct SAIGeneralPointsWindowData
 		Clear();
 		nCurrentPlayer = 0;
 	}
-	void Clear()
-	{
-		players.clear();
-	}
+	void Clear() { players.clear(); }
 	//
 	int CurrentPlayer() { return nCurrentPlayer; }
 	int CurrentParcel() { return players[CurrentPlayer()].nCurrentParcel; }
 	int CurrentID() { return players[CurrentPlayer()].nCurrentID; }
 	int CurrentPoint() { return players[CurrentPlayer()].parcels[CurrentParcel()].nCurrentPoint; }
 };
-
 
 // CMapInfoState drives this palette with the two window commands every palette
 // takes, so the dispatch is CPaletteCommands' and only the reading and writing

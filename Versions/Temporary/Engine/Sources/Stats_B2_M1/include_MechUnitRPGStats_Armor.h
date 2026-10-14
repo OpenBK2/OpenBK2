@@ -2,7 +2,6 @@
 int nMin = 0;
 int nMax = 0;
 
-
 bool ToAIUnits( bool bInEditor )
 {
 	int nArmorMin = fMin;

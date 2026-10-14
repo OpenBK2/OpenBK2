@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "EffectorRunReaction.h"
 
-REGISTER_SAVELOAD_CLASS(UI, 0x11075C04, CEffectorRunReaction)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075C04, CEffectorRunReaction )
 
 int CEffectorRunReaction::operator&( IBinSaver &saver )
 {
@@ -18,10 +18,13 @@ bool CEffectorRunReaction::IsFinished() const
 	return bFinished;
 }
 
-void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &_szAnimatedWindow )
+void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd,
+                                      struct IScreen *pScreen,
+                                      SWindowContext *pContext,
+                                      const std::string &_szAnimatedWindow )
 {
 	szAnimatedWindow = _szAnimatedWindow;
-	const NDb::SUISRunReaction *pCmd( checked_cast<const NDb::SUISRunReaction*>( _pCmd ) );
+	const NDb::SUISRunReaction *pCmd( checked_cast<const NDb::SUISRunReaction *>( _pCmd ) );
 	CParam<std::string> szReactionF( pCmd->szReactionForward );
 	CParam<std::string> szReactionB( pCmd->szReactionBack );
 	if ( pContext )
@@ -29,8 +32,8 @@ void CEffectorRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct ISc
 		szReactionF.Merge( pContext->szReactionForward );
 		szReactionB.Merge( pContext->szReactionBack );
 	}
-//	NI_ASSERT( szReactionB.IsValid(), "back reaction is invalid" );
-//	NI_ASSERT( szReactionF.IsValid(), "forward reaction is invalid" );
+	//	NI_ASSERT( szReactionB.IsValid(), "back reaction is invalid" );
+	//	NI_ASSERT( szReactionF.IsValid(), "forward reaction is invalid" );
 
 	szFwd = szReactionF.Get();
 	szBack = szReactionB.Get();

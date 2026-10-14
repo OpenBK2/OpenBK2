@@ -32,11 +32,13 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 class CNode : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CNode );
+
 public:
 	int nValue = 0;
 	CPtr<CNode> pFirst;
@@ -58,7 +60,8 @@ public:
 #define BINSAVERTEST_EXPORT
 REGISTER_SAVELOAD_CLASS( BINSAVERTEST, 0x7E57AB01, CNode )
 
-namespace {
+namespace
+{
 
 // Every graph saved stays alive for the rest of the run, so that the next one
 // cannot be allocated where it was. Freed and rebuilt, a graph tends to land on

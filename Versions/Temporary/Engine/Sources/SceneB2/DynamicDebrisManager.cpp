@@ -16,7 +16,8 @@ void CVisDynamicDebrisPatch::Recalc()
 	data.Clear();
 }
 
-void CDynamicDebrisManager::AddDynamicDebris( const NMeshData::SMeshDataTex2 &debrisData, const NDb::SMaterial *pMaterial )
+void CDynamicDebrisManager::AddDynamicDebris( const NMeshData::SMeshDataTex2 &debrisData,
+                                              const NDb::SMaterial *pMaterial )
 {
 	debrisPatches.push_back( CVisDynamicDebrisPatchHolder() );
 	CVisDynamicDebrisPatch *pCurPatch = new CVisDynamicDebrisPatch( debrisData );
@@ -27,6 +28,7 @@ void CDynamicDebrisManager::AddDynamicDebris( const NMeshData::SMeshDataTex2 &de
 		Identity( &placement.forward );
 		Identity( &placement.backward );
 		//
-		debrisPatches.back().pHolder = pGScene->CreateMesh( pGScene->MakeMeshInfo( pCurPatch, pMaterial ), placement, 0, 0 );
+		debrisPatches.back().pHolder =
+				pGScene->CreateMesh( pGScene->MakeMeshInfo( pCurPatch, pMaterial ), placement, 0, 0 );
 	}
 }

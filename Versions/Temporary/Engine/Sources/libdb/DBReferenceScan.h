@@ -18,6 +18,8 @@ namespace NDb
 //! szOwnFileName is the name of the file the text came from, because a
 //! reference may be written relative to it.
 LIBDB_EXPORT void CollectObjectReferences( std::vector<std::string> *pRes,
-	const char *pBegin, const char *pEnd, const std::string &szOwnFileName );
+                                           const char *pBegin,
+                                           const char *pEnd,
+                                           const std::string &szOwnFileName );
 
 }

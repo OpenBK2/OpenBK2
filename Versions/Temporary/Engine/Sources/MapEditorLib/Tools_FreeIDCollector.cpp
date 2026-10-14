@@ -9,7 +9,8 @@ bool CFreeIDCollector::FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedI
 	{
 		return false;
 	}
-	for ( CLockedIDNodeList::iterator itLockedIDNode = lockedIDNodeList.begin(); itLockedIDNode != lockedIDNodeList.end(); ++itLockedIDNode )
+	for ( CLockedIDNodeList::iterator itLockedIDNode = lockedIDNodeList.begin(); itLockedIDNode != lockedIDNodeList.end();
+	      ++itLockedIDNode )
 	{
 		if ( ( itLockedIDNode->nFirstID <= nID ) && ( nID <= itLockedIDNode->nLastID ) )
 		{
@@ -22,7 +23,6 @@ bool CFreeIDCollector::FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedI
 	}
 	return false;
 }
-
 
 unsigned CFreeIDCollector::LockID()
 {
@@ -61,7 +61,6 @@ unsigned CFreeIDCollector::LockID()
 	}
 }
 
-
 bool CFreeIDCollector::LockID( unsigned nID )
 {
 	if ( ( nID == INVALID_NODE_ID ) || ( nID < GetFirstID() ) )
@@ -77,7 +76,8 @@ bool CFreeIDCollector::LockID( unsigned nID )
 	}
 	//
 	CLockedIDNodeList::iterator itNextLockedIDNode = lockedIDNodeList.end();
-	for ( CLockedIDNodeList::iterator itLockedIDNode = lockedIDNodeList.begin(); itLockedIDNode != lockedIDNodeList.end(); ++itLockedIDNode )
+	for ( CLockedIDNodeList::iterator itLockedIDNode = lockedIDNodeList.begin(); itLockedIDNode != lockedIDNodeList.end();
+	      ++itLockedIDNode )
 	{
 		if ( nID < itLockedIDNode->nFirstID )
 		{
@@ -143,7 +143,6 @@ bool CFreeIDCollector::LockID( unsigned nID )
 	}
 	return true;
 }
-
 
 void CFreeIDCollector::FreeID( const unsigned nID )
 {

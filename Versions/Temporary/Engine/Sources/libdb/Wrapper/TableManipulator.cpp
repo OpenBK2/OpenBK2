@@ -16,18 +16,18 @@ CTableManipulatorWrapper::CTableManipulatorWrapper( std::vector<STypeClass *> &c
 	}
 }
 
-IManipulatorIterator* CTableManipulatorWrapper::Iterate( bool bShowHidden, ECacheType eCache )
+IManipulatorIterator *CTableManipulatorWrapper::Iterate( bool bShowHidden, ECacheType eCache )
 {
 	return new CTableManipulatorIteratorWrapper( this, bShowHidden );
 }
 
-const STypeClass* CTableManipulatorWrapper::GetType( const std::string &szName ) const
+const STypeClass *CTableManipulatorWrapper::GetType( const std::string &szName ) const
 {
 	CNamesMap::const_iterator pos = namesMap.find( szName );
 	return pos == namesMap.end() ? 0 : pos->second;
 }
 
-const STypeClass* CTableManipulatorWrapper::GetType( int nTypeID ) const
+const STypeClass *CTableManipulatorWrapper::GetType( int nTypeID ) const
 {
 	CIDsMap::const_iterator pos = idsMap.find( nTypeID );
 	return pos == idsMap.end() ? 0 : pos->second;
@@ -40,11 +40,10 @@ unsigned CTableManipulatorWrapper::GetID( const std::string &szName ) const
 		return pType->nClassTypeID;
 	else
 	{
-		NI_ASSERT( pType, fmt::format("CTableManipulatorWrapper::GetID( \"{}\" )", szName ) );
+		NI_ASSERT( pType, fmt::format( "CTableManipulatorWrapper::GetID( \"{}\" )", szName ) );
 		return -1;
 	}
 }
-
 
 bool CTableManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) const
 {
@@ -57,24 +56,21 @@ bool CTableManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) con
 	return false;
 }
 
-
 bool CTableManipulatorWrapper::GetValue( const std::string &szName, CVariant *pValue ) const
 {
 	const STypeClass *pType = GetType( szName );
 	if ( pType )
 	{
-		*pValue = pType->szTypeName;//pType->desc.szTypePath;
+		*pValue = pType->szTypeName; //pType->desc.szTypePath;
 		return true;
 	}
 	return false;
 }
 
-
 bool CTableManipulatorWrapper::IsNameExists( const std::string &rszName ) const
 {
 	return namesMap.find( rszName ) != namesMap.end();
 }
-
 
 // ************************************************************************************************************************ //
 // **
@@ -89,14 +85,14 @@ CTableManipulatorIteratorWrapper::CTableManipulatorIteratorWrapper( CTableManipu
 	pTableMan = pMan;
 	bShowHidden = _bShowHidden;
 	itCurrType = pTableMan->namesMap.begin();
-//	if ( !IsEnd() )
-//	{
-//		const STypeClass *pType = itCurrType->second;
-//		if ( !pType->IsFinal() || ( !bShowHidden && pType->desc.bHidden ) )
-//		{
-//			Next();
-//		}
-//	}
+	//	if ( !IsEnd() )
+	//	{
+	//		const STypeClass *pType = itCurrType->second;
+	//		if ( !pType->IsFinal() || ( !bShowHidden && pType->desc.bHidden ) )
+	//		{
+	//			Next();
+	//		}
+	//	}
 }
 
 bool CTableManipulatorIteratorWrapper::Next()
@@ -104,14 +100,14 @@ bool CTableManipulatorIteratorWrapper::Next()
 	if ( !IsEnd() )
 	{
 		++itCurrType;
-//		if ( !IsEnd() )
-//		{
-//			const STypeClass *pType = itCurrType->second;
-//			if ( !pType->IsFinal() || (!bShowHidden && pType->desc.bHidden) )
-//			{
-//				Next();
-//			}
-//		}
+		//		if ( !IsEnd() )
+		//		{
+		//			const STypeClass *pType = itCurrType->second;
+		//			if ( !pType->IsFinal() || (!bShowHidden && pType->desc.bHidden) )
+		//			{
+		//				Next();
+		//			}
+		//		}
 		return !IsEnd();
 	}
 	return false;

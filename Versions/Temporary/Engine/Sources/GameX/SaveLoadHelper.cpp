@@ -26,18 +26,18 @@ namespace NSaveLoad
 
 bool RECORDING_REPLAY;
 
-const int SCREENSHOT_X_SIZE = 351;//512;
-const int SCREENSHOT_Y_SIZE = 241;//384;
+const int SCREENSHOT_X_SIZE = 351; //512;
+const int SCREENSHOT_Y_SIZE = 241; //384;
 const int CHAPTERMAP_X_SIZE = 695;
 const int CHAPTERMAP_Y_SIZE = 636;
 
-const char* INFO_FILE_EXTENSION = ".sfo";
-const char* SAVE_FILE_EXTENSION = ".sav";
-const char* SAVE_NAME_PREFIX = "save_";
+const char *INFO_FILE_EXTENSION = ".sfo";
+const char *SAVE_FILE_EXTENSION = ".sav";
+const char *SAVE_NAME_PREFIX = "save_";
 
-const char* REPLAY_EXTENSION = ".replay";
-const char* REPLAY_INFO_EXTENSION = ".rfo";
-const char* REPLAY_NAME_PREFIX = "replay_";
+const char *REPLAY_EXTENSION = ".replay";
+const char *REPLAY_INFO_EXTENSION = ".rfo";
+const char *REPLAY_NAME_PREFIX = "replay_";
 
 SWaitLoadData g_WaitLoadData;
 
@@ -56,13 +56,7 @@ std::string GetReplayPath()
 
 // SSaveInfo
 
-SSaveInfo::SSaveInfo() :
-	bCustomMission( false ),
-	bQuickSave( false ),
-	bFromChapter( false ),
-	bAutoSave( false )
-{
-}
+SSaveInfo::SSaveInfo() : bCustomMission( false ), bQuickSave( false ), bFromChapter( false ), bAutoSave( false ) {}
 
 void SSaveInfo::Read( const std::string &szFullFileName )
 {
@@ -79,7 +73,11 @@ void SSaveInfo::Read( const std::string &szFullFileName )
 	}
 }
 
-void SSaveInfo::Write( const std::string &szFullFileName, const std::wstring &_wszSaveName, bool _bQuickSave, bool _bAutoSave, bool _bFromChapter )
+void SSaveInfo::Write( const std::string &szFullFileName,
+                       const std::wstring &_wszSaveName,
+                       bool _bQuickSave,
+                       bool _bAutoSave,
+                       bool _bFromChapter )
 {
 	if ( _bQuickSave )
 		InterfaceState()->GetScreenShotTexture()->Generate( true );
@@ -92,7 +90,7 @@ void SSaveInfo::Write( const std::string &szFullFileName, const std::wstring &_w
 	GenerateInfo();
 
 	//Save screenshot & desc
-	CFileStream stream(  szFullFileName, CFileStream::WIN_CREATE );
+	CFileStream stream( szFullFileName, CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 	if ( pSaver )
 		pSaver->Add( 1, this );
@@ -129,14 +127,14 @@ void SSaveInfo::GenerateInfo()
 			image1.SetSizes( nChapterMapSizeX, nChapterMapSizeY );
 			for ( int y = 0; y < image1.GetSizeY(); ++y )
 				for ( int x = 0; x < image1.GetSizeX(); ++x )
-					image1[ y ][ x ] = tmpScreenShot[ y + nScreenShotOffsetY ][ x + nScreenShotOffsetX ].dwColor;
+					image1[y][x] = tmpScreenShot[y + nScreenShotOffsetY][x + nScreenShotOffsetX].dwColor;
 		}
 		else
 		{
 			image1.SetSizes( tmpScreenShot.GetSizeX(), tmpScreenShot.GetSizeY() );
 			for ( int y = 0; y < tmpScreenShot.GetSizeY(); ++y )
 				for ( int x = 0; x < tmpScreenShot.GetSizeX(); ++x )
-					image1[ y ][ x ] = tmpScreenShot[ y ][ x ].dwColor;
+					image1[y][x] = tmpScreenShot[y][x].dwColor;
 		}
 
 		CArray2D<uint32_t> image2;
@@ -146,7 +144,7 @@ void SSaveInfo::GenerateInfo()
 		screenShot.SetSizes( nScreenShotSizeX, nScreenShotSizeY );
 		for ( int y = 0; y < screenShot.GetSizeY(); ++y )
 			for ( int x = 0; x < screenShot.GetSizeX(); ++x )
-				screenShot[ y ][ x ].dwColor = image2[ y ][ x ];
+				screenShot[y][x].dwColor = image2[y][x];
 	}
 
 	//Fill info
@@ -159,17 +157,17 @@ void SSaveInfo::GenerateInfo()
 		pFlagTexture = pCampaignDB->pSaveLoadFlag;
 
 	if ( pCampaignDB )
-		wszCampaignName = GET_TEXT_PRE(pCampaignDB->,LocalizedName);
+		wszCampaignName = GET_TEXT_PRE( pCampaignDB->, LocalizedName );
 	if ( pChapterDB )
 	{
-		wszChapterName = GET_TEXT_PRE(pChapterDB->,LocalizedNameSaveLoad);
-		wszChapterDesc = GET_TEXT_PRE(pChapterDB->,LocalizedDescription);
+		wszChapterName = GET_TEXT_PRE( pChapterDB->, LocalizedNameSaveLoad );
+		wszChapterDesc = GET_TEXT_PRE( pChapterDB->, LocalizedDescription );
 	}
 	if ( pMapInfoDB )
 	{
-		wszMissionName = GET_TEXT_PRE(pMapInfoDB->,LocalizedName);
-		wszMissionDesc = GET_TEXT_PRE(pMapInfoDB->,LocalizedDescription);
-		wszMissionLoadingDesc = GET_TEXT_PRE(pMapInfoDB->,LoadingDescription);
+		wszMissionName = GET_TEXT_PRE( pMapInfoDB->, LocalizedName );
+		wszMissionDesc = GET_TEXT_PRE( pMapInfoDB->, LocalizedDescription );
+		wszMissionLoadingDesc = GET_TEXT_PRE( pMapInfoDB->, LoadingDescription );
 	}
 	if ( bFromChapter )
 	{
@@ -204,14 +202,14 @@ void SSaveInfo::Rename( const std::string &szFullFileName, const std::wstring &w
 	wszSaveName = wszNewSaveName;
 
 	{
-		CFileStream stream(  szFullFileName, CFileStream::WIN_CREATE );
+		CFileStream stream( szFullFileName, CFileStream::WIN_CREATE );
 		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
 		if ( pSaver )
 			pSaver->Add( 1, this );
 	}
 }
 
-const NDb::STexture* SSaveInfo::GetPlayerIcon( const NDb::SMapInfo *pMapInfo, int nPlayer ) const
+const NDb::STexture *SSaveInfo::GetPlayerIcon( const NDb::SMapInfo *pMapInfo, int nPlayer ) const
 {
 	const NDb::STexture *pTexture = 0;
 
@@ -219,7 +217,8 @@ const NDb::STexture* SSaveInfo::GetPlayerIcon( const NDb::SMapInfo *pMapInfo, in
 	{
 		if ( 0 <= nPlayer && nPlayer < pMapInfo->players.size() )
 		{
-			if ( const NDb::SPartyDependentInfo *pPartyInfo = Singleton<IScenarioTracker>()->GetPlayerParty( nPlayer )/*pMapInfo->players[nPlayer].pPartyInfo*/ )
+			if ( const NDb::SPartyDependentInfo *pPartyInfo =
+			         Singleton<IScenarioTracker>()->GetPlayerParty( nPlayer ) /*pMapInfo->players[nPlayer].pPartyInfo*/ )
 			{
 				pTexture = pPartyInfo->pMinimapKeyObjectIcon;
 			}
@@ -249,22 +248,21 @@ void SSaveInfo::SetLoadInfo()
 	}
 }
 
-
 void GetSaveList( CSaveList *pSaves, int *pnLastID )
 {
 	// Get Saved Games list
 	std::string szPath = GetSavePath();
-	std::list<std::string>								names;
-	int													nNamePos, nExtPos;
+	std::list<std::string> names;
+	int nNamePos, nExtPos;
 
 	NFile::GetDirectoryFiles( szPath.c_str(), "*.sav", &names, false );
 	pSaves->clear();
-	for ( std::list<std::string>::iterator it = names.begin(); it != names.end(); ++it )			// fill in elements
+	for ( std::list<std::string>::iterator it = names.begin(); it != names.end(); ++it ) // fill in elements
 	{
 		SSavegameEntry sg;
 		sg.szFileName = *it;
 		sg.nID = *pnLastID;
-		++(*pnLastID);
+		++( *pnLastID );
 
 		// Get file title (w/o path or extension). Split by the same rule as the
 		// rest of the tree, which takes either separator; looking for a backslash
@@ -364,19 +362,21 @@ void MakeUniqueSave( const std::wstring &wszUserName, bool bQuickSave, bool bAut
 		}
 	}
 
-	NI_VERIFY( NFile::IsValidDirName( szName ), fmt::format("Wrong file name \"{}\"", szName), return );
+	NI_VERIFY( NFile::IsValidDirName( szName ), fmt::format( "Wrong file name \"{}\"", szName ), return );
 
 	NSaveLoad::SSaveInfo info;
-	info.Write( GetSavePath() + szName + INFO_FILE_EXTENSION,
-		          wszUserName, bQuickSave, bAutoSave, bFromChapter );
+	info.Write( GetSavePath() + szName + INFO_FILE_EXTENSION, wszUserName, bQuickSave, bAutoSave, bFromChapter );
 	NMainLoop::Command( ML_COMMAND_SAVE_GAME, szName.c_str() );
 }
 
 // replay serialization helpers
 
-bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo, const std::string &szFileName, const bool bRead )
+bool SerializeReplayInfo( SMultiplayerReplayInfo *pMultiplayerReplayInfo,
+                          const std::string &szFileName,
+                          const bool bRead )
 {
-	CFileStream file( fmt::format( "{}{}{}", GetReplayPath(), szFileName, REPLAY_INFO_EXTENSION ), bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
+	CFileStream file( fmt::format( "{}{}{}", GetReplayPath(), szFileName, REPLAY_INFO_EXTENSION ),
+	                  bRead ? CFileStream::WIN_READ_ONLY : CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &file, bRead ? SAVER_MODE_READ : SAVER_MODE_WRITE );
 	if ( !IsValid( pSaver ) )
 		return false;
@@ -432,7 +432,7 @@ bool DeleteReplay( const std::string &szFileName )
 
 } //NSaveLoad
 
-START_REGISTER(SaveLoad)
+START_REGISTER( SaveLoad )
 
 REGISTER_VAR_EX( "recording_replay", NGlobal::VarBoolHandler, &NSaveLoad::RECORDING_REPLAY, false, STORAGE_USER );
 

@@ -1,4 +1,4 @@
-#if !defined(__REINFORCEMENT_TYPES__)
+#if !defined( __REINFORCEMENT_TYPES__ )
 #define __REINFORCEMENT_TYPES__
 #pragma once
 

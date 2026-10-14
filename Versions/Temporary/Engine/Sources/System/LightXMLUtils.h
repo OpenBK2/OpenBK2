@@ -35,20 +35,21 @@ class CToStringConvertor
 		sprintf( buffer, "%g", value );
 		szValue = buffer;
 	}
+
 public:
-	CToStringConvertor( const char value ) { ConvertFromSigned( int(value) ); }
-	CToStringConvertor( const signed char value ) { ConvertFromSigned( int(value) ); }
+	CToStringConvertor( const char value ) { ConvertFromSigned( int( value ) ); }
+	CToStringConvertor( const signed char value ) { ConvertFromSigned( int( value ) ); }
 	CToStringConvertor( const unsigned char value ) { ConvertFromUnsigned( (unsigned int)value ); }
-	CToStringConvertor( const short value ) { ConvertFromSigned( int(value) ); }
+	CToStringConvertor( const short value ) { ConvertFromSigned( int( value ) ); }
 	CToStringConvertor( const unsigned short value ) { ConvertFromUnsigned( (unsigned int)value ); }
-	CToStringConvertor( const long value ) { ConvertFromSigned( int(value) ); }
+	CToStringConvertor( const long value ) { ConvertFromSigned( int( value ) ); }
 	CToStringConvertor( const unsigned long value ) { ConvertFromUnsigned( (unsigned int)value ); }
-	CToStringConvertor( const int value ) { ConvertFromSigned( int(value) ); }
+	CToStringConvertor( const int value ) { ConvertFromSigned( int( value ) ); }
 	CToStringConvertor( const unsigned int value ) { ConvertFromUnsigned( (unsigned int)value ); }
 	CToStringConvertor( const float value ) { ConvertFromFP( value ); }
 	CToStringConvertor( const double value ) { ConvertFromFP( value ); }
 	//
-	operator const std::string&() const { return szValue; }
+	operator const std::string &() const { return szValue; }
 };
 
 // ************************************************************************************************************************ //
@@ -78,29 +79,27 @@ class CStringComposer
 		Reserve( chars.size() + 1 );
 		chars.push_back( chr );
 	}
+
 public:
-	explicit CStringComposer( const int nBufferSize = 256 )
-	{
-		chars.reserve( nBufferSize < 8 ? 8 : nBufferSize );
-	}
+	explicit CStringComposer( const int nBufferSize = 256 ) { chars.reserve( nBufferSize < 8 ? 8 : nBufferSize ); }
 	//
-	CStringComposer& operator<<( const std::string &szString )
+	CStringComposer &operator<<( const std::string &szString )
 	{
 		AddString( szString.c_str(), szString.size() );
 		return *this;
 	}
-	CStringComposer& operator<<( const char *pszString )
+	CStringComposer &operator<<( const char *pszString )
 	{
-		AddString( pszString, strlen(pszString) );
+		AddString( pszString, strlen( pszString ) );
 		return *this;
 	}
-	CStringComposer& operator<<( const char chr )
+	CStringComposer &operator<<( const char chr )
 	{
 		AddChar( chr );
 		return *this;
 	}
 	//
-	const char* str() const { return chars.empty() ? "" : &( chars[0] ); }
+	const char *str() const { return chars.empty() ? "" : &( chars[0] ); }
 	int GetSize() const { return chars.size(); }
 	bool IsEmpty() const { return chars.empty(); }
 	void Clear() { chars.resize( 0 ); }
@@ -135,24 +134,24 @@ class CWriteStream
 			buffer.Clear();
 		}
 	}
+
 public:
-	CWriteStream( CDataStream *_pStream )
-		: pStream( _pStream ), buffer( 2048 ) {  }
+	CWriteStream( CDataStream *_pStream ) : pStream( _pStream ), buffer( 2048 ) {}
 	~CWriteStream() { DumpForced(); }
 	//
-	CWriteStream& operator<<( const std::string &szString )
+	CWriteStream &operator<<( const std::string &szString )
 	{
 		buffer << szString;
 		Dump();
 		return *this;
 	}
-	CWriteStream& operator<<( const char *pszString )
+	CWriteStream &operator<<( const char *pszString )
 	{
 		buffer << pszString;
 		Dump();
 		return *this;
 	}
-	CWriteStream& operator<<( const char chr )
+	CWriteStream &operator<<( const char chr )
 	{
 		buffer << chr;
 		Dump();
@@ -172,11 +171,11 @@ public:
 
 BOOST_FORCEINLINE bool IsWhiteSpace( const char chr )
 {
-	return (chr == ' ') || ( chr == '\n' ) || ( chr =='\r' ) || ((chr >= 0x09) && (chr <= 0x0d));
+	return ( chr == ' ' ) || ( chr == '\n' ) || ( chr == '\r' ) || ( ( chr >= 0x09 ) && ( chr <= 0x0d ) );
 }
-inline const char* SkipWhiteSpace( const char *p )
+inline const char *SkipWhiteSpace( const char *p )
 {
-	while ( (*p != 0) && IsWhiteSpace(*p) )
+	while ( ( *p != 0 ) && IsWhiteSpace( *p ) )
 		++p;
 	//
 	return p;
@@ -209,18 +208,21 @@ inline bool IsEqualSubstringIC( const std::string &szString, const char *p )
 {
 	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
 	{
-		if ( *it != tolower(*p) )
+		if ( *it != tolower( *p ) )
 			return false;
 	}
 	return true;
 }
 
-const char* GetEntity( const char *p, char *pValue );
-const char* ReadName( const char *p, std::string *pszName );
-const char* ReadText( std::string *pszText, const char *pszBegin, const char *pszEnd,
-										         const std::string &szEndTag, const bool bTrimWhiteSpace );
+const char *GetEntity( const char *p, char *pValue );
+const char *ReadName( const char *p, std::string *pszName );
+const char *ReadText( std::string *pszText,
+                      const char *pszBegin,
+                      const char *pszEnd,
+                      const std::string &szEndTag,
+                      const bool bTrimWhiteSpace );
 
-BOOST_FORCEINLINE const char* GetChar( const char *p, char *pValue )
+BOOST_FORCEINLINE const char *GetChar( const char *p, char *pValue )
 {
 	if ( *p == '&' )
 		return GetEntity( p + 1, pValue );

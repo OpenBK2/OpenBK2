@@ -30,6 +30,7 @@ class CGposKerning
 	std::vector<std::vector<uint32_t>> lookups;
 
 	int FindInSubtable( uint32_t nSubtable, uint16_t nLeft, uint16_t nRight, bool *pbFound ) const;
+
 public:
 	// Takes the GPOS table's bytes, which it keeps; an empty or unreadable
 	// table gives no kerning at all

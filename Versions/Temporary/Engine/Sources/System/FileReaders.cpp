@@ -11,25 +11,25 @@
 
 namespace
 {
-	namespace bip = boost::interprocess;
+namespace bip = boost::interprocess;
 
-	//! The mapping constructors report failure by throwing; every caller here
-	//! wants a broken stream instead, which is what the layer above expects
-	//! from a file it cannot open.
-	template < class T, class TMake >
-	bool TryMake( T *pDest, TMake makeIt )
+//! The mapping constructors report failure by throwing; every caller here
+//! wants a broken stream instead, which is what the layer above expects
+//! from a file it cannot open.
+template <class T, class TMake>
+bool TryMake( T *pDest, TMake makeIt )
+{
+	try
 	{
-		try
-		{
-			*pDest = makeIt();
-			return true;
-		}
-		catch ( const bip::interprocess_exception & )
-		{
-			*pDest = T();
-			return false;
-		}
+		*pDest = makeIt();
+		return true;
 	}
+	catch ( const bip::interprocess_exception & )
+	{
+		*pDest = T();
+		return false;
+	}
+}
 }
 
 // CMMFile
@@ -66,7 +66,7 @@ CMMFile::CMMFile( const char *pszName, EStreamAccess access ) : szFileName( pszN
 	{
 		return;
 	}
-	nFileSize = static_cast< int >( nSize );
+	nFileSize = static_cast<int>( nSize );
 	bValid = true;
 }
 
@@ -74,7 +74,7 @@ int CMMFile::GetFileSize()
 {
 	std::error_code ec;
 	const std::uintmax_t nSize = std::filesystem::file_size( std::filesystem::path( szFileName ), ec );
-	nFileSize = ec ? 0 : static_cast< int >( nSize );
+	nFileSize = ec ? 0 : static_cast<int>( nSize );
 	return nFileSize;
 }
 
@@ -90,7 +90,7 @@ void CMMFile::SetFileSize( int nSize )
 		return;
 	}
 	std::error_code ec;
-	std::filesystem::resize_file( std::filesystem::path( szFileName ), static_cast< std::uintmax_t >( nSize ), ec );
+	std::filesystem::resize_file( std::filesystem::path( szFileName ), static_cast<std::uintmax_t>( nSize ), ec );
 	if ( !ec )
 	{
 		nFileSize = nSize;
@@ -115,10 +115,8 @@ void CMMFile::MapFile( int nSize, bool bCanWrite )
 			return;
 		}
 	}
-	bMapped = TryMake( &mapping, [&]
-	{
-		return bip::file_mapping( szFileName.c_str(), bCanWrite ? bip::read_write : bip::read_only );
-	} );
+	bMapped = TryMake(
+			&mapping, [&] { return bip::file_mapping( szFileName.c_str(), bCanWrite ? bip::read_write : bip::read_only ); } );
 }
 
 void CMMFile::UnmapFile()
@@ -136,11 +134,14 @@ void *CMemoryMappedFile::MapFile( int nSize )
 	{
 		return 0;
 	}
-	const bool bMade = TryMake( &region, [&]
-	{
-		return bip::mapped_region( file.GetMapping(), CanWrite() ? bip::read_write : bip::read_only,
-		                           0, static_cast< std::size_t >( nSize ) );
-	} );
+	const bool bMade = TryMake( &region,
+	                            [&]
+	                            {
+																return bip::mapped_region( file.GetMapping(),
+		                                                       CanWrite() ? bip::read_write : bip::read_only,
+		                                                       0,
+		                                                       static_cast<std::size_t>( nSize ) );
+															} );
 	if ( !bMade )
 	{
 		file.UnmapFile();
@@ -181,11 +182,12 @@ void *CMemoryMappedFileFragment::MapFile( int nSize )
 		// allocation granularity. mapped_region rounds down itself and offsets
 		// the address it returns, which is the arithmetic this used to do by
 		// hand with dwAllocationGranularity.
-		const bool bMade = TryMake( &region, [&]
-		{
-			return bip::mapped_region( pFile->GetMapping(), bip::read_only, nOffset,
-			                           static_cast< std::size_t >( nSize ) );
-		} );
+		const bool bMade = TryMake( &region,
+		                            [&]
+		                            {
+																	return bip::mapped_region(
+																			pFile->GetMapping(), bip::read_only, nOffset, static_cast<std::size_t>( nSize ) );
+																} );
 		return bMade ? region.get_address() : 0;
 	}
 
@@ -198,8 +200,8 @@ void *CMemoryMappedFileFragment::MapFile( int nSize )
 	{
 		return 0;
 	}
-	pOwnedBuffer = new unsigned char[ nSize ];
-	if ( !f.read( reinterpret_cast< char * >( pOwnedBuffer ), nSize ) )
+	pOwnedBuffer = new unsigned char[nSize];
+	if ( !f.read( reinterpret_cast<char *>( pOwnedBuffer ), nSize ) )
 	{
 		ASSERT( 0 );
 		delete[] pOwnedBuffer;

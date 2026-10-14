@@ -35,7 +35,7 @@ class CUpdatableList
 		int nID;
 		uint8_t change;
 
-		SChange() : change( EC_NOP ) { }
+		SChange() : change( EC_NOP ) {}
 	};
 
 	std::vector<SChange> changes;
@@ -45,6 +45,7 @@ class CUpdatableList
 	//
 	void GetFullUpdate( const int nNoIncludeID, SUpdateInfo *pUpdate );
 	void GetUpdate( const int nNoIncludeID, const uint32_t dwOldVersion, SUpdateInfo *pUpdate );
+
 public:
 	CUpdatableList();
 

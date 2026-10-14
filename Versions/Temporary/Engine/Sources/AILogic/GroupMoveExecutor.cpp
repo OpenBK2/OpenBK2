@@ -45,8 +45,34 @@ struct SUnitsSortByDirection
 {
 	CVec2 vStartPoint, vDirection;
 	SUnitsSortByDirection( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
-		: vStartPoint( _vStartPoint ), vDirection( _vDirection ) {}
-		bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const
+			: vStartPoint( _vStartPoint ), vDirection( _vDirection )
+	{
+	}
+	bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const
+	{
+		const float fValue1 = GetUnitPosition( pUnitInfo1.pUnit, vStartPoint, vDirection );
+		const float fValue2 = GetUnitPosition( pUnitInfo2.pUnit, vStartPoint, vDirection );
+		if ( fValue1 == fValue2 )
+			return pUnitInfo2.pUnit->GetUniqueID() > pUnitInfo1.pUnit->GetUniqueID();
+		else
+			return fValue1 > fValue2;
+	}
+};
+
+struct SUnitsSortByPriority
+{
+	CVec2 vStartPoint, vDirection;
+
+	SUnitsSortByPriority( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
+			: vStartPoint( _vStartPoint ), vDirection( _vDirection )
+	{
+	}
+
+	bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const
+	{
+		const int nValue1 = pUnitInfo1.pUnit->GetUnitPriority();
+		const int nValue2 = pUnitInfo2.pUnit->GetUnitPriority();
+		if ( nValue1 == nValue2 )
 		{
 			const float fValue1 = GetUnitPosition( pUnitInfo1.pUnit, vStartPoint, vDirection );
 			const float fValue2 = GetUnitPosition( pUnitInfo2.pUnit, vStartPoint, vDirection );
@@ -55,36 +81,14 @@ struct SUnitsSortByDirection
 			else
 				return fValue1 > fValue2;
 		}
-};
-
-struct SUnitsSortByPriority
-{
-	CVec2 vStartPoint, vDirection;
-
-	SUnitsSortByPriority( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
-		: vStartPoint( _vStartPoint ), vDirection( _vDirection ) {}
-
-		bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const
-		{
-			const int nValue1 = pUnitInfo1.pUnit->GetUnitPriority();
-			const int nValue2 = pUnitInfo2.pUnit->GetUnitPriority();
-			if ( nValue1 == nValue2 )
-			{
-				const float fValue1 = GetUnitPosition( pUnitInfo1.pUnit, vStartPoint, vDirection );
-				const float fValue2 = GetUnitPosition( pUnitInfo2.pUnit, vStartPoint, vDirection );
-				if ( fValue1 == fValue2 )
-					return pUnitInfo2.pUnit->GetUniqueID() > pUnitInfo1.pUnit->GetUniqueID();
-				else
-					return fValue1 > fValue2;
-			}
-			else
-				return nValue1 > nValue2;
-		}
+		else
+			return nValue1 > nValue2;
+	}
 };
 
 void DebugTraceMarkStaticPath( const IStaticPath *_pPath )
 {
-	const CCommonStaticPath *pPath = dynamic_cast<const CCommonStaticPath *>(_pPath);
+	const CCommonStaticPath *pPath = dynamic_cast<const CCommonStaticPath *>( _pPath );
 
 	if ( pPath )
 	{
@@ -112,7 +116,7 @@ bool CGroupMoveExecutor::SendUnit( CCommonUnit *pUnit )
 {
 	if ( pUnit->GetState()->GetName() == EUSN_MOVE_BY_FORMATION )
 	{
-//		DebugInfoManager()->CreateCircle( GetInstanceID(), CCircle( vFinishPoint, 24 ), NAIVisInfo::RED );
+		//		DebugInfoManager()->CreateCircle( GetInstanceID(), CCircle( vFinishPoint, 24 ), NAIVisInfo::RED );
 
 		CMoveByFormationState *pState = checked_cast<CMoveByFormationState *>( pUnit->GetState() );
 		return pState->SendUnit( vFinishPoint );
@@ -124,7 +128,7 @@ bool CGroupMoveExecutor::SendUnitToPosition( CCommonUnit *pUnit, const CVec2 &vD
 {
 	if ( pUnit->GetState()->GetName() == EUSN_MOVE_BY_FORMATION )
 	{
-//		DebugInfoManager()->CreateCircle( GetInstanceID(), CCircle( vFinishPoint, 24 ), NAIVisInfo::GREEN );
+		//		DebugInfoManager()->CreateCircle( GetInstanceID(), CCircle( vFinishPoint, 24 ), NAIVisInfo::GREEN );
 
 		CMoveByFormationState *pState = checked_cast<CMoveByFormationState *>( pUnit->GetState() );
 		return pState->SendUnitToPosition( vDestination );
@@ -143,7 +147,7 @@ void CGroupMoveExecutor::FinishState( const int nUnitID )
 	}
 }
 
-const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, const struct SAIUnitCmd &cmd )
+const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit *> &_units, const struct SAIUnitCmd &cmd )
 {
 	vFinishPoint = cmd.vPos;
 
@@ -158,7 +162,7 @@ const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, co
 	cells.clear();
 	fMaxGroupSpeed = FP_MAX_VALUE;
 
-	for ( std::vector<CCommonUnit*>::const_iterator it = _units.begin(); it != _units.end(); ++it )
+	for ( std::vector<CCommonUnit *>::const_iterator it = _units.begin(); it != _units.end(); ++it )
 	{
 		CCommonUnit *pUnit = *it;
 		vGroupCenter += pUnit->GetCenterPlain();
@@ -228,7 +232,7 @@ const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, co
 					fMaxGroupSpeed = (std::min)( it->pUnit->GetMaxPossibleForwardSpeed(), fMaxGroupSpeed );
 				}
 
-				it->pUnit->SetGroupShift( pos->second[ it->nCell ] );
+				it->pUnit->SetGroupShift( pos->second[it->nCell] );
 			}
 			nAtPlaceCount = 0;
 			PeriodicalCheckForBuildFormation();
@@ -259,7 +263,9 @@ void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 		CPriorityGroupMap::iterator pos = priorityGroups.find( nPriority );
 		if ( pos == priorityGroups.end() )
 		{
-			priorityGroups[ nPriority ] = SPriorityGroupPosition( it->pUnit->GetAABBHalfSize().x*AABB_HALF_SIZE_X_MULTIPLIER, it->pUnit->GetAABBHalfSize().y*AABB_HALF_SIZE_Y_MULTIPLIER );
+			priorityGroups[nPriority] =
+					SPriorityGroupPosition( it->pUnit->GetAABBHalfSize().x * AABB_HALF_SIZE_X_MULTIPLIER,
+			                            it->pUnit->GetAABBHalfSize().y * AABB_HALF_SIZE_Y_MULTIPLIER );
 			pos = priorityGroups.find( nPriority );
 			fMaxHeight = (std::max)( pos->second.vUnitSize.x, fMaxHeight );
 			priorityValues.push_back( nPriority );
@@ -267,9 +273,9 @@ void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 		else
 			pos->second.nCount++;
 
-		const int nOrder = (pos->second.nCount-1) % COLUMN_SIZE;
+		const int nOrder = ( pos->second.nCount - 1 ) % COLUMN_SIZE;
 		if ( nOrder >= nMaxColumnSize )
-			nMaxColumnSize = nOrder+1;
+			nMaxColumnSize = nOrder + 1;
 		float fYPosition = 0.0f;
 		if ( nOrder == 0 )
 		{
@@ -285,22 +291,23 @@ void CGroupMoveExecutor::CalcPositions( const CVec2 &vDirection )
 	}
 	// окончательное формирование точек назначения
 	std::sort( priorityValues.begin(), priorityValues.end() );
-	float fSubGroupPosition = -fGroupWidth/2;
+	float fSubGroupPosition = -fGroupWidth / 2;
 	const CVec2 vUnitShift = fMaxHeight * vPerpDirection;
-	const CVec2 vGroupShift = -0.5 * (fMaxHeight * nMaxColumnSize ) * vPerpDirection;
+	const CVec2 vGroupShift = -0.5 * ( fMaxHeight * nMaxColumnSize ) * vPerpDirection;
 	for ( std::vector<int>::iterator it = priorityValues.begin(); it != priorityValues.end(); ++it )
 	{
 		std::vector<CVec2> vCells;
 		CPriorityGroupMap::iterator pos = priorityGroups.find( *it );
 		const float fSubGroupWidth = pos->second.vCells.back().y + pos->second.vUnitSize.y;
-		fSubGroupPosition += fSubGroupWidth/2;
+		fSubGroupPosition += fSubGroupWidth / 2;
 		const CVec2 vSubGroupDest = fSubGroupPosition * vDirection;
-		for ( std::vector<CVec2>::iterator itUnitPos = pos->second.vCells.begin(); itUnitPos != pos->second.vCells.end(); ++itUnitPos )
+		for ( std::vector<CVec2>::iterator itUnitPos = pos->second.vCells.begin(); itUnitPos != pos->second.vCells.end();
+		      ++itUnitPos )
 		{
 			const CVec2 vNewUnitPos( vSubGroupDest + vGroupShift + itUnitPos->x * vUnitShift - itUnitPos->y * vDirection );
 			vCells.push_back( vNewUnitPos );
 		}
-		fSubGroupPosition += fSubGroupWidth/2;
+		fSubGroupPosition += fSubGroupWidth / 2;
 		cells[*it] = vCells;
 	}
 	// все, структура CPriorityGroupMap заполнена
@@ -314,14 +321,17 @@ const bool CGroupMoveExecutor::CheckPositions() const
 	{
 		const int nPriority = itStart->pUnit->GetUnitPriority();
 		CUnitsList::const_iterator itEnd = itStart;
-		for ( ; ( itEnd != units.end() && itEnd->pUnit->GetUnitPriority() == nPriority ); ++itEnd );
+		for ( ; ( itEnd != units.end() && itEnd->pUnit->GetUnitPriority() == nPriority ); ++itEnd )
+			;
 
 		CCellsMap::const_iterator pos = cells.find( nPriority );
 		const int nSize = pos->second.size();
 
 		for ( CUnitsList::const_iterator it = itStart; it != itEnd; ++it )
 		{
-			if ( GetTerrain()->CanUnitGo( it->pUnit->GetBoundTileRadius(), GetAIMap()->GetTile( it->pUnit->GetGroupShift() + vCurrentFinishPoint ), it->pUnit->GetAIPassabilityClass() ) == FREE_NONE )
+			if ( GetTerrain()->CanUnitGo( it->pUnit->GetBoundTileRadius(),
+			                              GetAIMap()->GetTile( it->pUnit->GetGroupShift() + vCurrentFinishPoint ),
+			                              it->pUnit->GetAIPassabilityClass() ) == FREE_NONE )
 				return false;
 		}
 		itStart = itEnd;
@@ -337,7 +347,8 @@ void CGroupMoveExecutor::RecalcDestination()
 	{
 		const int nPriority = itStart->pUnit->GetUnitPriority();
 		CUnitsList::iterator itEnd = itStart;
-		for ( ; ( itEnd != units.end() && itEnd->pUnit->GetUnitPriority() == nPriority ); ++itEnd );
+		for ( ; ( itEnd != units.end() && itEnd->pUnit->GetUnitPriority() == nPriority ); ++itEnd )
+			;
 
 		CCellsMap::iterator pos = cells.find( nPriority );
 		const int nSize = pos->second.size();
@@ -386,7 +397,7 @@ void CGroupMoveExecutor::MoveToDestination()
 			nPrevPriority = nPriority;
 		}
 
-		it->pUnit->SetGroupShift( pos->second[ it->nCell ] );
+		it->pUnit->SetGroupShift( pos->second[it->nCell] );
 		it->pUnit->SetDesirableSpeed( fMaxGroupSpeed );
 		SendUnit( it->pUnit );
 	}
@@ -417,9 +428,10 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 					{
 						--itFrwd;
 						const float fFrwdUnitShift = GetUnitPosition( itFrwd->pUnit, vGroupCenter, vPerpPathDirection );
-						if ( fabs( fFrwdUnitShift - fThisUnitShift ) < MAX_DIFF_BETWEEN_SHIFTS && fabs2( it->pUnit->GetCenter() - itFrwd->pUnit->GetCenter() ) < MAX_DIFF_BETWEEN_UNITS )
+						if ( fabs( fFrwdUnitShift - fThisUnitShift ) < MAX_DIFF_BETWEEN_SHIFTS &&
+						     fabs2( it->pUnit->GetCenter() - itFrwd->pUnit->GetCenter() ) < MAX_DIFF_BETWEEN_UNITS )
 							bLockFound = true;
-					} while( itFrwd != units.begin() && !bLockFound );
+					} while ( itFrwd != units.begin() && !bLockFound );
 					if ( !bLockFound )
 						it->bCanGo = true;
 					else
@@ -438,7 +450,7 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 			if ( it->bCanGo )
 			{
 				if ( it->bGoAway )
-					SendUnitToPosition( it->pUnit, it->pUnit->GetCenterPlain() + vStartPathDirection*FORWARD_SHIFT );
+					SendUnitToPosition( it->pUnit, it->pUnit->GetCenterPlain() + vStartPathDirection * FORWARD_SHIFT );
 				else
 				{
 					CUnitsList::iterator it2 = it;
@@ -450,7 +462,8 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 					{
 						const int nPriority2 = it2->pUnit->GetUnitPriority();
 						const float fShift2 = GetUnitPosition( it2->pUnit, vGroupCenter, vPerpPathDirection );
-						if ( nPriority2 > nPriority && ( fabs( fShift - fShift2 ) < 3 * MAX_DIFF_BETWEEN_SHIFTS || abs( it->nCell%COLUMN_SIZE - it2->nCell%COLUMN_SIZE ) < 2 ) )
+						if ( nPriority2 > nPriority && ( fabs( fShift - fShift2 ) < 3 * MAX_DIFF_BETWEEN_SHIFTS ||
+						                                 abs( it->nCell % COLUMN_SIZE - it2->nCell % COLUMN_SIZE ) < 2 ) )
 							bCanGo = false;
 
 						++it2;
@@ -488,11 +501,11 @@ void CGroupMoveExecutor::DeleteUnitFromList( const int nUnitID )
 			it->pUnit->Stop();
 			nUnitsCount--;
 			units.erase( it );
-//			DebugTrace( "unit %d: deleted", nUnitID );
+			//			DebugTrace( "unit %d: deleted", nUnitID );
 			return;
 		}
 	}
-//	DebugTrace( "unit %d: no found", nUnitID );
+	//	DebugTrace( "unit %d: no found", nUnitID );
 }
 
 bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
@@ -510,11 +523,11 @@ bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
 				it->bGoAway = false;
 				return true;
 			}
-			else if ( nCell < COLUMN_SIZE || pos->second[ nCell - COLUMN_SIZE ] == CVec2( -1.0f, -1.0f ) )
+			else if ( nCell < COLUMN_SIZE || pos->second[nCell - COLUMN_SIZE] == CVec2( -1.0f, -1.0f ) )
 			{
 				if ( !it->bAtPlace )
 				{
-					pos->second[ nCell ] = CVec2( -1.0f, -1.0f );
+					pos->second[nCell] = CVec2( -1.0f, -1.0f );
 					it->bAtPlace = true;
 					it->bCanGo = false;
 					it->bGoAway = false;
@@ -535,16 +548,19 @@ bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
 			else
 			{
 				CUnitsList::iterator itFrwd = units.begin();
-				for ( ; ( itFrwd != units.end() && itFrwd->pUnit->GetUnitPriority() != nPriority ); ++itFrwd );
-				for ( ; ( itFrwd != units.end() && itFrwd->nCell != nCell - COLUMN_SIZE ); ++itFrwd );
+				for ( ; ( itFrwd != units.end() && itFrwd->pUnit->GetUnitPriority() != nPriority ); ++itFrwd )
+					;
+				for ( ; ( itFrwd != units.end() && itFrwd->nCell != nCell - COLUMN_SIZE ); ++itFrwd )
+					;
 				if ( itFrwd != units.end() )
 				{
-					const CVec2 vDestCellPoint = vCurrentFinishPoint + pos->second[ nCell-COLUMN_SIZE ];
-					if ( fabs2( itFrwd->pUnit->GetCenterPlain() - vDestCellPoint ) < fabs2( it->pUnit->GetCenterPlain() - vDestCellPoint ) )
+					const CVec2 vDestCellPoint = vCurrentFinishPoint + pos->second[nCell - COLUMN_SIZE];
+					if ( fabs2( itFrwd->pUnit->GetCenterPlain() - vDestCellPoint ) <
+					     fabs2( it->pUnit->GetCenterPlain() - vDestCellPoint ) )
 					{
 						if ( !it->bAtPlace )
 						{
-							pos->second[ nCell ] = CVec2( -1.0f, -1.0f );
+							pos->second[nCell] = CVec2( -1.0f, -1.0f );
 							it->bAtPlace = true;
 							it->bCanGo = false;
 							it->bGoAway = false;
@@ -556,12 +572,12 @@ bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
 						return true;
 					}
 					itFrwd->nCell = nCell;
-					itFrwd->pUnit->SetGroupShift( pos->second[ itFrwd->nCell ] );
-					SendUnitToPosition( itFrwd->pUnit, vCurrentFinishPoint + pos->second[ itFrwd->nCell ] );
+					itFrwd->pUnit->SetGroupShift( pos->second[itFrwd->nCell] );
+					SendUnitToPosition( itFrwd->pUnit, vCurrentFinishPoint + pos->second[itFrwd->nCell] );
 				}
 				it->nCell = nCell - COLUMN_SIZE;
-				it->pUnit->SetGroupShift( pos->second[ it->nCell ] );
-				SendUnitToPosition( it->pUnit, vCurrentFinishPoint + pos->second[ it->nCell ] );
+				it->pUnit->SetGroupShift( pos->second[it->nCell] );
+				SendUnitToPosition( it->pUnit, vCurrentFinishPoint + pos->second[it->nCell] );
 				return true;
 			}
 		}
@@ -573,18 +589,18 @@ int CGroupMoveExecutor::Segment()
 {
 	if ( units.empty() )
 	{
-//		DebugTrace( "CGroupMoveExecutor::Segment() returns -1, executor's id: %d", GetInstanceID() );
+		//		DebugTrace( "CGroupMoveExecutor::Segment() returns -1, executor's id: %d", GetInstanceID() );
 		return -1;
 	}
 
-	switch( eExecutorState )
+	switch ( eExecutorState )
 	{
-	case ES_BUILD_FORMATION:
-		PeriodicalCheckForBuildFormation();
-		break;
-	case ES_MOVE_TO_DESTINATION:
-		PeriodicalCheckForMove();
-		break;
+		case ES_BUILD_FORMATION:
+			PeriodicalCheckForBuildFormation();
+			break;
+		case ES_MOVE_TO_DESTINATION:
+			PeriodicalCheckForMove();
+			break;
 	}
 
 	return SEGMENT_PERIOD_CHECK;
@@ -605,20 +621,20 @@ bool CGroupMoveExecutor::NotifyEvent( const CExecutorEvent &_event )
 	const SExecutorEventParam param = event->GetParam();
 	if ( param.eEventID == EID_START_IDLE )
 	{
-		switch( eExecutorState )
+		switch ( eExecutorState )
 		{
-		case ES_MOVE_TO_DESTINATION:
-		case ES_DEFAULT_MOVE:
-			DeleteUnitFromList( event->GetUnitID() );
-			FinishState( event->GetUnitID() );
-			break;
-		case ES_BUILD_FORMATION:
-			if ( !TryMoveUnit( event->GetUnitID() ) )
-			{
+			case ES_MOVE_TO_DESTINATION:
+			case ES_DEFAULT_MOVE:
 				DeleteUnitFromList( event->GetUnitID() );
 				FinishState( event->GetUnitID() );
-			}
-			break;
+				break;
+			case ES_BUILD_FORMATION:
+				if ( !TryMoveUnit( event->GetUnitID() ) )
+				{
+					DeleteUnitFromList( event->GetUnitID() );
+					FinishState( event->GetUnitID() );
+				}
+				break;
 		}
 	}
 	else
@@ -628,12 +644,15 @@ bool CGroupMoveExecutor::NotifyEvent( const CExecutorEvent &_event )
 }
 
 START_REGISTER( GroupMoveExecutorVars )
-REGISTER_VAR_EX( "aabb_half_size_x_multiplier", NGlobal::VarFloatHandler, &AABB_HALF_SIZE_X_MULTIPLIER, 7.0f, STORAGE_NONE );
-REGISTER_VAR_EX( "aabb_half_size_y_multiplier", NGlobal::VarFloatHandler, &AABB_HALF_SIZE_Y_MULTIPLIER, 3.5f, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"aabb_half_size_x_multiplier", NGlobal::VarFloatHandler, &AABB_HALF_SIZE_X_MULTIPLIER, 7.0f, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"aabb_half_size_y_multiplier", NGlobal::VarFloatHandler, &AABB_HALF_SIZE_Y_MULTIPLIER, 3.5f, STORAGE_NONE );
 REGISTER_VAR_EX( "max_diff_between_shifts", NGlobal::VarFloatHandler, &MAX_DIFF_BETWEEN_SHIFTS, 100.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "max_diff_between_units", NGlobal::VarFloatHandler, &MAX_DIFF_BETWEEN_UNITS, 200000.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "forward_shift", NGlobal::VarFloatHandler, &FORWARD_SHIFT, 256.0f, STORAGE_NONE );
-REGISTER_VAR_EX( "min_distance_for_formation", NGlobal::VarFloatHandler, &MIN_DISTANCE_FOR_FORMATION, 2560.0f, STORAGE_NONE );
+REGISTER_VAR_EX(
+		"min_distance_for_formation", NGlobal::VarFloatHandler, &MIN_DISTANCE_FOR_FORMATION, 2560.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "column_size", NGlobal::VarIntHandler, &COLUMN_SIZE, 5, STORAGE_NONE );
 REGISTER_VAR_EX( "segment_period_check", NGlobal::VarIntHandler, &SEGMENT_PERIOD_CHECK, 20, STORAGE_NONE );
 REGISTER_VAR_EX( "tiles_for_path_direction", NGlobal::VarIntHandler, &TILES_FOR_PATH_DIRECTION, 48, STORAGE_NONE );

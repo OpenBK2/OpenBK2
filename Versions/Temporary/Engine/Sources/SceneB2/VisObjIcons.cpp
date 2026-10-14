@@ -79,11 +79,16 @@ void CVisObjIconInfo::Recalc()
 
 inline bool CVisObjIconInfo::NeedUpdate()
 {
-	 return bUpdate || pCamera->WasUpdated();
+	return bUpdate || pCamera->WasUpdated();
 }
 
-inline void AddSingleIcon( CVisObjIconInfo *pIconInfo, const float x1, const float y1, const float x2, const float y2,
-													const CTRect<float> &rcRect, NGScene::SVertex &vert )
+inline void AddSingleIcon( CVisObjIconInfo *pIconInfo,
+                           const float x1,
+                           const float y1,
+                           const float x2,
+                           const float y2,
+                           const CTRect<float> &rcRect,
+                           NGScene::SVertex &vert )
 {
 	const CVec3 &vPos = pIconInfo->vCenter;
 	std::vector<NGScene::SVertex> &vertices = pIconInfo->data.vertices;
@@ -127,9 +132,9 @@ void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIcons
 	float fElemOffset = -fIconHalfWidth;
 
 	NGScene::SVertex vert;
-	CalcCompactVector( &(vert.texU), CVec3( 1, 0, 0 ) );
-	CalcCompactVector( &(vert.texV), CVec3( 0, 1, 0 ) );
-	CalcCompactVector( &(vert.normal), CVec3( 0, 0, 1 ) );
+	CalcCompactVector( &( vert.texU ), CVec3( 1, 0, 0 ) );
+	CalcCompactVector( &( vert.texV ), CVec3( 0, 1, 0 ) );
+	CalcCompactVector( &( vert.normal ), CVec3( 0, 0, 1 ) );
 
 	iconHolder.pPatch->vCenter.Set( vPos.x, vPos.y, vPos.z + fIconHalfWidth );
 
@@ -144,38 +149,59 @@ void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIcons
 			{
 				switch ( it->eType )
 				{
-				case NDb::SIconsSet::SIconType::ICONTYPE_HPBAR:
-				{
-					// border
-					AddSingleIcon( iconHolder.pPatch, -fIconHalfWidth, -fIconHalfWidth, -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
-						-fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ), pIconSet->icons[i].rcRect, vert );
-					AddSingleIcon( iconHolder.pPatch, -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ), -fIconHalfWidth,
-						fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ), -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
-						pIconSet->icons[i + 1].rcRect, vert );
-					AddSingleIcon( iconHolder.pPatch, fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ), -fIconHalfWidth,
-						fIconHalfWidth, -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
-						pIconSet->icons[i + 2].rcRect, vert );
-					// color
-					nInd = 4;
-					if ( it->fValue > 0.33333333f )
+					case NDb::SIconsSet::SIconType::ICONTYPE_HPBAR:
 					{
-						nInd = ( it->fValue > 0.66666666f ) ? 3 : 5;
+						// border
+						AddSingleIcon( iconHolder.pPatch,
+						               -fIconHalfWidth,
+						               -fIconHalfWidth,
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
+						               pIconSet->icons[i].rcRect,
+						               vert );
+						AddSingleIcon( iconHolder.pPatch,
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
+						               -fIconHalfWidth,
+						               fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
+						               pIconSet->icons[i + 1].rcRect,
+						               vert );
+						AddSingleIcon( iconHolder.pPatch,
+						               fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
+						               -fIconHalfWidth,
+						               fIconHalfWidth,
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_WIDTH * 2.0f ),
+						               pIconSet->icons[i + 2].rcRect,
+						               vert );
+						// color
+						nInd = 4;
+						if ( it->fValue > 0.33333333f )
+						{
+							nInd = ( it->fValue > 0.66666666f ) ? 3 : 5;
+						}
+						const float fHPBarLength =
+								fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ) * it->fValue * 2.0f;
+						AddSingleIcon( iconHolder.pPatch,
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ),
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ),
+						               -fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ) + fHPBarLength,
+						               -fIconHalfWidth * ( 1.0f - ( DEF_ICON_HPBAR_WIDTH - DEF_ICON_HPBAR_BORDER_WIDTH ) * 2.0f ),
+						               pIconSet->icons[i + nInd].rcRect,
+						               vert );
 					}
-					const float fHPBarLength = fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ) * it->fValue * 2.0f;
-					AddSingleIcon( iconHolder.pPatch,
-						-fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ),
-						-fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ),
-						-fIconHalfWidth * ( 1.0f - DEF_ICON_HPBAR_BORDER_WIDTH * 2.0f ) + fHPBarLength,
-						-fIconHalfWidth * ( 1.0f - ( DEF_ICON_HPBAR_WIDTH - DEF_ICON_HPBAR_BORDER_WIDTH ) * 2.0f ),
-						pIconSet->icons[i + nInd].rcRect, vert );
-				 }
-				 break;
-
-//	 			case NDb::SIconsSet::SIconType::ICONTYPE_BROKENTRUCK:
-	 				default:
-						AddSingleIcon( iconHolder.pPatch, fElemOffset, -fElemWidth * 2, fElemOffset + fElemWidth, -fElemWidth, pIconSet->icons[i].rcRect, vert );
-						fElemOffset += fElemWidth * ( 1.0f + DEF_ICON_ELEM_WIDTH_BETWEEN );
 					break;
+
+						//	 			case NDb::SIconsSet::SIconType::ICONTYPE_BROKENTRUCK:
+					default:
+						AddSingleIcon( iconHolder.pPatch,
+						               fElemOffset,
+						               -fElemWidth * 2,
+						               fElemOffset + fElemWidth,
+						               -fElemWidth,
+						               pIconSet->icons[i].rcRect,
+						               vert );
+						fElemOffset += fElemWidth * ( 1.0f + DEF_ICON_ELEM_WIDTH_BETWEEN );
+						break;
 				}
 				break;
 			}
@@ -184,14 +210,19 @@ void SVisObjIcons::CreateIcons( NGScene::IGameView *pGameView, const NDb::SIcons
 
 	SBound bound;
 	bound.BoxInit( CVec3( vPos.x - fIconHalfWidth, vPos.y - fIconHalfWidth, vPos.z ),
-		CVec3( vPos.x + fIconHalfWidth, vPos.y + fIconHalfWidth, vPos.z + fWidth2 ) );
+	               CVec3( vPos.x + fIconHalfWidth, vPos.y + fIconHalfWidth, vPos.z + fWidth2 ) );
 
 	if ( pBound == 0 )
 		pBound = new CCSBound();
 	pBound->Set( bound );
 
 	NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
-	iconHolder.pHolder = pGameView->CreateDynamicMesh( pGameView->MakeMeshInfo( iconHolder.pPatch, pIconSet->pMaterialZCheck ), 0, pBound, NGScene::MakeLargeHintBound(), room );
+	iconHolder.pHolder =
+			pGameView->CreateDynamicMesh( pGameView->MakeMeshInfo( iconHolder.pPatch, pIconSet->pMaterialZCheck ),
+	                                  0,
+	                                  pBound,
+	                                  NGScene::MakeLargeHintBound(),
+	                                  room );
 
 	iconHolder.pPatch->ForceUpdate();
 }
@@ -201,17 +232,23 @@ void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 	if ( iconHolder.pPatch == 0 )
 		iconHolder.pPatch = new CVisObjIconInfo( Camera() );
 
-	const CVec3 vIconPos( vPos.x, vPos.y, vPos.z + fObjHeight + fIconAddHeight + fIconHalfWidth/* * ( 1.0f + DEF_ICON_ADD_HEIGHT_SCALE )*/ );
+	const CVec3 vIconPos( vPos.x,
+	                      vPos.y,
+	                      vPos.z + fObjHeight + fIconAddHeight +
+	                          fIconHalfWidth /* * ( 1.0f + DEF_ICON_ADD_HEIGHT_SCALE )*/ );
 	const CVec3 vCurDiffer = vIconPos - iconHolder.pPatch->vCenter;
 
-	for ( std::vector<NGScene::SVertex>::iterator it = iconHolder.pPatch->data.vertices.begin(); it != iconHolder.pPatch->data.vertices.end(); ++it )
+	for ( std::vector<NGScene::SVertex>::iterator it = iconHolder.pPatch->data.vertices.begin();
+	      it != iconHolder.pPatch->data.vertices.end();
+	      ++it )
 		it->pos += vCurDiffer;
 
 	iconHolder.pPatch->vCenter = vIconPos;
 
 	SBound bound;
-	bound.BoxInit( CVec3( vIconPos.x - fIconHalfWidth, vIconPos.y - fIconHalfWidth, vIconPos.z ),
-		CVec3( vIconPos.x + fIconHalfWidth, vIconPos.y + fIconHalfWidth, vIconPos.z + fIconHalfWidth * 2.0f ) );
+	bound.BoxInit(
+			CVec3( vIconPos.x - fIconHalfWidth, vIconPos.y - fIconHalfWidth, vIconPos.z ),
+			CVec3( vIconPos.x + fIconHalfWidth, vIconPos.y + fIconHalfWidth, vIconPos.z + fIconHalfWidth * 2.0f ) );
 	if ( pBound == 0 )
 		pBound = new CCSBound();
 	pBound->Set( bound );
@@ -221,7 +258,7 @@ void SVisObjIcons::MoveIcons( const CVec3 &vPos, const float fObjHeight )
 
 inline void GetVisObjIconsBase( CVec3 *pvPos, const SModelVisObjDesc *pVOD )
 {
-	NI_ASSERT( pVOD->pModel, fmt::format( "No model for VisObj {}", pVOD->GetID()) );
+	NI_ASSERT( pVOD->pModel, fmt::format( "No model for VisObj {}", pVOD->GetID() ) );
 	if ( pVOD->pModel )
 	{
 		pVOD->GetPlacement().forward.RotateHVector( pvPos, pVOD->pModel->pGeometry->vCenter );
@@ -239,7 +276,8 @@ void CScene::SetIcon( const SSceneObjIconInfo &iconInfo )
 		return;
 	}
 
-	if ( !( data[eScene]->pVisObjIconsManager ) && ( data[eScene]->pSceneConsts ) && ( data[eScene]->pSceneConsts->pVisObjIconsSet ) )
+	if ( !( data[eScene]->pVisObjIconsManager ) && ( data[eScene]->pSceneConsts ) &&
+	     ( data[eScene]->pSceneConsts->pVisObjIconsSet ) )
 	{
 		data[eScene]->pVisObjIconsManager = new CVisObjIconsManager;
 		data[eScene]->pVisObjIconsManager->Init( data[eScene]->pSceneConsts->pVisObjIconsSet );
@@ -253,7 +291,7 @@ void CScene::SetIcon( const SSceneObjIconInfo &iconInfo )
 	if ( pos == data[eScene]->visObjects.end() ) // such object is not existed
 		return;
 
-	if ( const SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second ) )
+	if ( const SModelVisObjDesc *pVOD = dynamic_cast_ptr<SModelVisObjDesc *>( pos->second ) )
 	{
 		CVec3 vPos;
 		GetVisObjIconsBase( &vPos, pVOD );

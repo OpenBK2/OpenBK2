@@ -18,15 +18,19 @@ IManipulator *CManipulatorManager::CreateObectSetManipulator( const SObjectSet &
 		IResourceManager *pResourceManager = Singleton<IResourceManager>();
 		if ( rObjectSet.objectNameSet.size() == 1 )
 		{
-			return pResourceManager->CreateObjectManipulator( rObjectSet.szObjectTypeName, rObjectSet.objectNameSet.begin()->first );
+			return pResourceManager->CreateObjectManipulator( rObjectSet.szObjectTypeName,
+			                                                  rObjectSet.objectNameSet.begin()->first );
 		}
 		else
 		{
 			if ( CMultiManipulator *pMultiManipulator = new CMultiManipulator() )
 			{
-				for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin(); itObjectName != rObjectSet.objectNameSet.end(); ++itObjectName )
+				for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin();
+				      itObjectName != rObjectSet.objectNameSet.end();
+				      ++itObjectName )
 				{
-					CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( rObjectSet.szObjectTypeName, itObjectName->first );
+					CPtr<IManipulator> pObjectManipulator =
+							pResourceManager->CreateObjectManipulator( rObjectSet.szObjectTypeName, itObjectName->first );
 					if ( pObjectManipulator != 0 )
 					{
 						pMultiManipulator->InsertManipulator( itObjectName->first, pObjectManipulator, false, false );
@@ -39,10 +43,9 @@ IManipulator *CManipulatorManager::CreateObectSetManipulator( const SObjectSet &
 	return 0;
 }
 
-
 bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipulator,
-																							IManipulator *pSourceManipulator,
-																							bool bEqual )
+                                              IManipulator *pSourceManipulator,
+                                              bool bEqual )
 {
 	NI_ASSERT( pDestinationManipulator != 0, "CManipulatorManager::CloneDBManipulator(): pDestinationManipulator == 0" );
 	NI_ASSERT( pSourceManipulator != 0, "CManipulatorManager::CloneDBManipulator(): pSourceManipulator == 0" );
@@ -59,7 +62,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 		while ( !pSourceManipulatorIterator->IsEnd() )
 		{
 			pSourceManipulatorIterator->GetName( &szName );
-			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pSourceManipulatorIterator->GetDesc() ) )
+			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc *>( pSourceManipulatorIterator->GetDesc() ) )
 			{
 				if ( pDesc->bArray && ( szName[szName.size() - 1] != ARRAY_NODE_END_CHAR ) )
 				{
@@ -94,13 +97,15 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	std::unordered_map<std::string, uint32_t> destinationFields;
 	if ( !bEqual )
 	{
-		CPtr<IManipulatorIterator> pDestinationManipulatorIterator = pDestinationManipulator->Iterate( true, ECT_CACHE_LOCAL );
+		CPtr<IManipulatorIterator> pDestinationManipulatorIterator =
+				pDestinationManipulator->Iterate( true, ECT_CACHE_LOCAL );
 		while ( !pDestinationManipulatorIterator->IsEnd() )
 		{
 			pDestinationManipulatorIterator->GetName( &szName );
 			if ( szName != "uid" )
 			{
-				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pDestinationManipulatorIterator->GetDesc() ) )
+				if ( const SPropertyDesc *pDesc =
+				         dynamic_cast<const SPropertyDesc *>( pDestinationManipulatorIterator->GetDesc() ) )
 				{
 					if ( ( !pDesc->bArray || ( szName[szName.size() - 1] == ARRAY_NODE_END_CHAR ) ) && ( !pDesc->bStruct ) )
 					{
@@ -122,7 +127,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 			pSourceManipulatorIterator->GetName( &szName );
 			if ( szName != "uid" )
 			{
-				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pSourceManipulatorIterator->GetDesc() ) )
+				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc *>( pSourceManipulatorIterator->GetDesc() ) )
 				{
 					if ( ( !pDesc->bArray || ( szName[szName.size() - 1] == ARRAY_NODE_END_CHAR ) ) && ( !pDesc->bStruct ) )
 					{
@@ -133,7 +138,6 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 							CVariant value;
 							pSourceManipulator->GetValue( szName, &value );
 							pDestinationManipulator->SetValue( szName, value );
-
 						}
 					}
 				}
@@ -144,19 +148,19 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	return true;
 }
 
-
 bool CManipulatorManager::GetParamsFromReference( const std::string &rszRefValueName,
-																									const IManipulator *pSourceManipulator,
-																									std::string *pszRefObjectTypeName,
-																									std::string *pszRefObjectName,
-																									const SPropertyDesc **ppRefDesc )
+                                                  const IManipulator *pSourceManipulator,
+                                                  std::string *pszRefObjectTypeName,
+                                                  std::string *pszRefObjectName,
+                                                  const SPropertyDesc **ppRefDesc )
 {
 	NI_ASSERT( pSourceManipulator != 0, "CManipulatorManager::GetParamsFromReference(): GetManipulatorFromRef == 0" );
 	if ( pSourceManipulator == 0 )
 	{
 		return false;
 	}
-	if ( const SPropertyDesc *pRefDesc = dynamic_cast<const SPropertyDesc*>( pSourceManipulator->GetDesc( rszRefValueName ) ) )
+	if ( const SPropertyDesc *pRefDesc =
+	         dynamic_cast<const SPropertyDesc *>( pSourceManipulator->GetDesc( rszRefValueName ) ) )
 	{
 		EPCIEType nType = typePCIEMnemonics.Get( pRefDesc, rszRefValueName );
 		if ( typePCIEMnemonics.IsRef( nType ) )
@@ -164,15 +168,15 @@ bool CManipulatorManager::GetParamsFromReference( const std::string &rszRefValue
 			CVariant refValue;
 			if ( pSourceManipulator->GetValue( rszRefValueName, &refValue ) )
 			{
-				if ( !IsDBIDEmpty(refValue) )
+				if ( !IsDBIDEmpty( refValue ) )
 				{
 					std::string szRefObjectTypeName;
 					std::string szRefObjectName;
 					CStringManager::GetTypeAndNameFromRefValue( &szRefObjectTypeName,
-																											&szRefObjectName,
-																											refValue.GetStr(),
-																											TYPE_SEPARATOR_CHAR,
-																											pRefDesc->refTypes.begin()->first );
+					                                            &szRefObjectName,
+					                                            refValue.GetStr(),
+					                                            TYPE_SEPARATOR_CHAR,
+					                                            pRefDesc->refTypes.begin()->first );
 					if ( pszRefObjectTypeName != 0 )
 					{
 						( *pszRefObjectTypeName ) = szRefObjectTypeName;
@@ -193,21 +197,22 @@ bool CManipulatorManager::GetParamsFromReference( const std::string &rszRefValue
 	return false;
 }
 
-
-IManipulator* CManipulatorManager::CreateManipulatorFromReference( const std::string &rszRefValueName,
-																																	 const IManipulator *pSourceManipulator,
-																																	 std::string *pszRefObjectTypeName,
-																																	 std::string *pszRefObjectName,
-																																	 const SPropertyDesc **ppRefDesc )
+IManipulator *CManipulatorManager::CreateManipulatorFromReference( const std::string &rszRefValueName,
+                                                                   const IManipulator *pSourceManipulator,
+                                                                   std::string *pszRefObjectTypeName,
+                                                                   std::string *pszRefObjectName,
+                                                                   const SPropertyDesc **ppRefDesc )
 {
-	NI_ASSERT( pSourceManipulator != 0, "CManipulatorManager::CreateManipulatorFromReference(): GetManipulatorFromRef == 0" );
+	NI_ASSERT( pSourceManipulator != 0,
+	           "CManipulatorManager::CreateManipulatorFromReference(): GetManipulatorFromRef == 0" );
 	if ( pSourceManipulator == 0 )
 	{
 		return nullptr;
 	}
 	std::string szRefObjectTypeName;
 	std::string szRefObjectName;
-	if ( GetParamsFromReference( rszRefValueName, pSourceManipulator, &szRefObjectTypeName, &szRefObjectName, ppRefDesc ) )
+	if ( GetParamsFromReference(
+					 rszRefValueName, pSourceManipulator, &szRefObjectTypeName, &szRefObjectName, ppRefDesc ) )
 	{
 		if ( pszRefObjectTypeName != 0 )
 		{
@@ -222,13 +227,12 @@ IManipulator* CManipulatorManager::CreateManipulatorFromReference( const std::st
 	return 0;
 }
 
-
 bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator> *pResultManipulator,
-																															IManipulator *pManipulator,
-																															const std::string &szTableName,
-																															const std::string &szFieldName,
-																															const std::string &szReferenceName,
-																															std::string *pszResultName )
+                                                              IManipulator *pManipulator,
+                                                              const std::string &szTableName,
+                                                              const std::string &szFieldName,
+                                                              const std::string &szReferenceName,
+                                                              std::string *pszResultName )
 {
 	std::string sManipulatorName, sManipulatorCurrentName;
 	std::string sExt;
@@ -240,48 +244,55 @@ bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator>
 		sManipulatorName += "-" + szReferenceName + sExt;
 	}
 
-	if ( *pResultManipulator = CManipulatorManager::CreateManipulatorFromReference( szFieldName, pManipulator, 0, pszResultName, 0 ) )
+	if ( *pResultManipulator =
+	         CManipulatorManager::CreateManipulatorFromReference( szFieldName, pManipulator, 0, pszResultName, 0 ) )
 	{
-		if((*pResultManipulator)->GetName(-1, &sManipulatorCurrentName) && (sManipulatorCurrentName == sManipulatorName))
-  			return true;
+		if ( ( *pResultManipulator )->GetName( -1, &sManipulatorCurrentName ) &&
+		     ( sManipulatorCurrentName == sManipulatorName ) )
+			return true;
 	}
 
-	if ( CPtr< IManipulator > pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szTableName ) )
+	if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szTableName ) )
 	{
-		if ( !pFolderManipulator->InsertNode( sManipulatorName, NODE_ADD_INDEX ) ) return false;
+		if ( !pFolderManipulator->InsertNode( sManipulatorName, NODE_ADD_INDEX ) )
+			return false;
 
 		if ( CManipulatorManager::SetValue( sManipulatorName, pManipulator, szFieldName ) )
 		{
 			*pResultManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szTableName, sManipulatorName );
-			if ( pszResultName ) *pszResultName = sManipulatorName;
+			if ( pszResultName )
+				*pszResultName = sManipulatorName;
 			return true;
 		}
 	}
 	return false;
 }
 
-
 bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList,
-																					const IManipulator* pSourceManipulator,
-																					const unsigned nFlags,
-																					const bool bEnumHidden,
-																					const ECacheType eCacheType )
+                                          const IManipulator *pSourceManipulator,
+                                          const unsigned nFlags,
+                                          const bool bEnumHidden,
+                                          const ECacheType eCacheType )
 {
-  NI_ASSERT( pReferenceInfoList != 0, "EnumReferences() pReferenceInfoList == 0" );
-  NI_ASSERT( pSourceManipulator != 0, "EnumReferences() pSourceManipulator == 0" );
+	NI_ASSERT( pReferenceInfoList != 0, "EnumReferences() pReferenceInfoList == 0" );
+	NI_ASSERT( pSourceManipulator != 0, "EnumReferences() pSourceManipulator == 0" );
 	//
 	std::string szRefValue;
 	std::unordered_map<std::string, unsigned> propertyMap;
 	if ( nFlags & REFINFO_MAKE_UNIQUE_LIST )
 	{
-		for ( CReferenceInfoList::const_iterator itReferenceInfo = pReferenceInfoList->begin(); itReferenceInfo != pReferenceInfoList->end(); ++itReferenceInfo )
+		for ( CReferenceInfoList::const_iterator itReferenceInfo = pReferenceInfoList->begin();
+		      itReferenceInfo != pReferenceInfoList->end();
+		      ++itReferenceInfo )
 		{
-			CStringManager::GetRefValueFromTypeAndName( &szRefValue, itReferenceInfo->szObjectTypeName, itReferenceInfo->szObjectName, TYPE_SEPARATOR_CHAR );
+			CStringManager::GetRefValueFromTypeAndName(
+					&szRefValue, itReferenceInfo->szObjectTypeName, itReferenceInfo->szObjectName, TYPE_SEPARATOR_CHAR );
 			propertyMap[szRefValue] = 0;
 		}
 	}
 	//
-	if ( const CPtr<IManipulatorIterator> pManipulatorIterator = const_cast<IManipulator*>( pSourceManipulator )->Iterate( bEnumHidden, eCacheType ) )
+	if ( const CPtr<IManipulatorIterator> pManipulatorIterator =
+	         const_cast<IManipulator *>( pSourceManipulator )->Iterate( bEnumHidden, eCacheType ) )
 	{
 		std::string szName;
 		while ( !pManipulatorIterator->IsEnd() )
@@ -294,15 +305,22 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 			const SPropertyDesc *pRefDesc = 0;
 			//
 			if ( GetParamsFromReference( szName,
-																	 pSourceManipulator,
-																	 ( nFlags & ( REFINFO_MAKE_UNIQUE_LIST | REFINFO_OBJECT_TYPE_NAME | REFINFO_CHECK_EMPTY | REFINFO_CHECK_VALID ) ) ? &szObjectTypeName : 0,
-																	 ( nFlags & ( REFINFO_MAKE_UNIQUE_LIST | REFINFO_OBJECT_NAME | REFINFO_CHECK_EMPTY | REFINFO_CHECK_VALID ) ) ? &szObjectName : 0,
-																	 ( nFlags & REFINFO_CHECK_VALID ) ? &pRefDesc : 0 ) )
+			                             pSourceManipulator,
+			                             ( nFlags & ( REFINFO_MAKE_UNIQUE_LIST | REFINFO_OBJECT_TYPE_NAME |
+			                                          REFINFO_CHECK_EMPTY | REFINFO_CHECK_VALID ) )
+			                                 ? &szObjectTypeName
+			                                 : 0,
+			                             ( nFlags & ( REFINFO_MAKE_UNIQUE_LIST | REFINFO_OBJECT_NAME | REFINFO_CHECK_EMPTY |
+			                                          REFINFO_CHECK_VALID ) )
+			                                 ? &szObjectName
+			                                 : 0,
+			                             ( nFlags & REFINFO_CHECK_VALID ) ? &pRefDesc : 0 ) )
 			{
 				bool bInsert = true;
 				if ( nFlags & REFINFO_MAKE_UNIQUE_LIST )
 				{
-					CStringManager::GetRefValueFromTypeAndName( &szRefValue, szObjectTypeName, szObjectName, TYPE_SEPARATOR_CHAR );
+					CStringManager::GetRefValueFromTypeAndName(
+							&szRefValue, szObjectTypeName, szObjectName, TYPE_SEPARATOR_CHAR );
 					bInsert = ( propertyMap.find( szRefValue ) != propertyMap.end() );
 					if ( bInsert )
 					{
@@ -311,7 +329,8 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 				}
 				if ( bInsert )
 				{
-					CReferenceInfoList::iterator posReferenceInfo = pReferenceInfoList->insert( pReferenceInfoList->end(), SReferenceInfo() );
+					CReferenceInfoList::iterator posReferenceInfo =
+							pReferenceInfoList->insert( pReferenceInfoList->end(), SReferenceInfo() );
 					posReferenceInfo->nFlags = nFlags;
 					if ( posReferenceInfo->nFlags & REFINFO_PROPERTY_NAME )
 					{
@@ -347,8 +366,9 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 	return true;
 }
 
-
-bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManipulator, const std::string &rszArrayName )
+bool CManipulatorManager::EnsureArraySize( const int nSize,
+                                           IManipulator *pManipulator,
+                                           const std::string &rszArrayName )
 {
 	int nExistingCount = 0;
 	bool bResult = GetValue( &nExistingCount, pManipulator, rszArrayName );
@@ -379,7 +399,6 @@ bool CManipulatorManager::EnsureArraySize( const int nSize, IManipulator *pManip
 	return bResult;
 }
 
-
 bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, const std::string &rszName )
 {
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::Remove2DArray(): pManipulator == 0" );
@@ -394,7 +413,13 @@ bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, cons
 	{
 		for ( int nXIndex = 0; nXIndex < nExistingXCount; ++nXIndex )
 		{
-			const std::string szArrayName = fmt::format( "{}{:c}{:c}{}{:c}{:c}data", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+			const std::string szArrayName = fmt::format( "{}{:c}{:c}{}{:c}{:c}data",
+			                                             sz2DArrayName.c_str(),
+			                                             LEVEL_SEPARATOR_CHAR,
+			                                             ARRAY_NODE_START_CHAR,
+			                                             nXIndex,
+			                                             ARRAY_NODE_END_CHAR,
+			                                             LEVEL_SEPARATOR_CHAR );
 			bResult = pManipulator->RemoveNode( szArrayName );
 			if ( !bResult )
 			{
@@ -406,8 +431,7 @@ bool CManipulatorManager::Remove2DArray( struct IManipulator *pManipulator, cons
 	return bResult;
 }
 
-
-void CManipulatorManager::Trace( const std::string &rszPrefix, IManipulator* pManipulator )
+void CManipulatorManager::Trace( const std::string &rszPrefix, IManipulator *pManipulator )
 {
 	NI_ASSERT( pManipulator != 0, "CManipulatorManager::Trace(): pManipulator == 0" );
 	if ( pManipulator == 0 )
@@ -419,7 +443,7 @@ void CManipulatorManager::Trace( const std::string &rszPrefix, IManipulator* pMa
 		bool bFound = false;
 		const int nPrefixSize = rszPrefix.size();
 		while ( !pManipulatorIterator->IsEnd() )
- 		{
+		{
 			std::string szName;
 			pManipulatorIterator->GetName( &szName );
 			if ( !rszPrefix.empty() )

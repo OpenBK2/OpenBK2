@@ -58,7 +58,10 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec
 	return PerformGroupAction( &command, bPlaceInQueue );
 }
 
-bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec2 &vPos, int nObjectID, bool bPlaceInQueue )
+bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand,
+                                       const CVec2 &vPos,
+                                       int nObjectID,
+                                       bool bPlaceInQueue )
 {
 	if ( !IsInsideAIMap( vPos ) )
 		return false;
@@ -69,7 +72,10 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec
 	return PerformGroupAction( &command, bPlaceInQueue );
 }
 
-bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec2 &vPos, float fParam, bool bPlaceInQueue )
+bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand,
+                                       const CVec2 &vPos,
+                                       float fParam,
+                                       bool bPlaceInQueue )
 {
 	if ( !IsInsideAIMap( vPos ) )
 		return false;
@@ -99,17 +105,17 @@ bool CWorldClient::ActionMove( const CVec2 &vPos, const CMapObj *pMO, bool bForc
 	{
 		if ( pMO )
 		{
-			switch( pMO->GetTypeID() )
+			switch ( pMO->GetTypeID() )
 			{
-			case NDb::SMechUnitRPGStats::typeID:
-			case NDb::SInfantryRPGStats::typeID:
-				return PerformGroupAction( ACTION_COMMAND_FOLLOW, vPos, pMO->GetID(), GetPlaceInQueue() );
+				case NDb::SMechUnitRPGStats::typeID:
+				case NDb::SInfantryRPGStats::typeID:
+					return PerformGroupAction( ACTION_COMMAND_FOLLOW, vPos, pMO->GetID(), GetPlaceInQueue() );
 			}
 		}
 	}
 	bool bResult = PerformGroupAction( ACTION_COMMAND_MOVE_TO, vPos, GetPlaceInQueue() );
-//	if ( bResult )
-//		PlaceMapCommandAck( CVec3( vPos.x, vPos.y, Singleton<IAILogic>()->GetZ( vPos ) ) );
+	//	if ( bResult )
+	//		PlaceMapCommandAck( CVec3( vPos.x, vPos.y, Singleton<IAILogic>()->GetZ( vPos ) ) );
 	return bResult;
 }
 
@@ -124,26 +130,26 @@ bool CWorldClient::ActionAttack( const CVec2 &vPos, const CMapObj *pMO, bool bFo
 	if ( !pMO )
 	{
 		bool bResult = PerformGroupAction( ACTION_COMMAND_SWARM_TO, vPos, GetPlaceInQueue() );
-//		if ( bResult )
-//			PlaceMapCommandAck( CVec3( vPos.x, vPos.y, Singleton<IAILogic>()->GetZ( vPos ) ) );
-//		if ( PerformGroupAction( ACTION_COMMAND_ART_BOMBARDMENT, vPos, GetPlaceInQueue() ) )
-//			bResult = true;
+		//		if ( bResult )
+		//			PlaceMapCommandAck( CVec3( vPos.x, vPos.y, Singleton<IAILogic>()->GetZ( vPos ) ) );
+		//		if ( PerformGroupAction( ACTION_COMMAND_ART_BOMBARDMENT, vPos, GetPlaceInQueue() ) )
+		//			bResult = true;
 		return bResult;
 	}
 	else
 	{
 		if ( bForced || pMO->GetDiplomacy() == EDI_ENEMY )
 		{
-			switch( pMO->GetTypeID() )
+			switch ( pMO->GetTypeID() )
 			{
-			case NDb::SMechUnitRPGStats::typeID:
-			case NDb::SInfantryRPGStats::typeID:
-				return PerformGroupAction( ACTION_COMMAND_ATTACK_UNIT, vPos, pMO->GetID(), GetPlaceInQueue() );
-			case NDb::SBuildingRPGStats::typeID:
-			case NDb::SObjectRPGStats::typeID:
-			case NDb::SBridgeRPGStats::typeID:
-			case NDb::SFenceRPGStats::typeID:
-				return PerformGroupAction( ACTION_COMMAND_ATTACK_OBJECT, vPos, pMO->GetID(), GetPlaceInQueue() );
+				case NDb::SMechUnitRPGStats::typeID:
+				case NDb::SInfantryRPGStats::typeID:
+					return PerformGroupAction( ACTION_COMMAND_ATTACK_UNIT, vPos, pMO->GetID(), GetPlaceInQueue() );
+				case NDb::SBuildingRPGStats::typeID:
+				case NDb::SObjectRPGStats::typeID:
+				case NDb::SBridgeRPGStats::typeID:
+				case NDb::SFenceRPGStats::typeID:
+					return PerformGroupAction( ACTION_COMMAND_ATTACK_OBJECT, vPos, pMO->GetID(), GetPlaceInQueue() );
 			}
 		}
 	}
@@ -172,7 +178,8 @@ bool CWorldClient::ActionAmbush( const CVec2 &vPos, const CMapObj *pMO, bool bFo
 
 bool CWorldClient::ActionFollow( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	if ( pMO && ( ( pMO->GetTypeID() == NDb::SMechUnitRPGStats::typeID ) || ( pMO->GetTypeID() == NDb::SInfantryRPGStats::typeID ) ) )
+	if ( pMO && ( ( pMO->GetTypeID() == NDb::SMechUnitRPGStats::typeID ) ||
+	              ( pMO->GetTypeID() == NDb::SInfantryRPGStats::typeID ) ) )
 		return PerformGroupAction( ACTION_COMMAND_FOLLOW, vPos, pMO->GetID(), GetPlaceInQueue() );
 	return false;
 }
@@ -195,15 +202,17 @@ bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 		case NDb::SMechUnitRPGStats::typeID:
 		{
 			bool bResult = PerformGroupAction( ACTION_COMMAND_LOAD, pMO->GetID(), GetPlaceInQueue() );
-			bResult = bResult || PerformGroupAction( ACTION_COMMAND_MECH_ENTER, pMO->GetID(), GetPlaceInQueue() ); // attempt to load rest of selection (mech units)
+			bResult = bResult || PerformGroupAction( ACTION_COMMAND_MECH_ENTER,
+			                                         pMO->GetID(),
+			                                         GetPlaceInQueue() ); // attempt to load rest of selection (mech units)
 			return bResult;
 		}
 		case NDb::SInfantryRPGStats::typeID:
 			if ( pSelector->GetSelectionState() == ssBuilding )
 			{
-				std::vector< CMOSelectable* >selection;
+				std::vector<CMOSelectable *> selection;
 				pSelector->GetSelection( &selection );
-				const int nBuildingID = (*(selection.begin()))->GetID();
+				const int nBuildingID = ( *( selection.begin() ) )->GetID();
 
 				std::vector<int> squad;
 				const IMOUnit *pUnit = dynamic_cast<const IMOUnit *>( pMO );
@@ -221,7 +230,6 @@ bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 			}
 			else
 			{
-
 			}
 		default:
 			return false;
@@ -236,7 +244,9 @@ bool CWorldClient::ActionMechBoard( const CVec2 &vPos, const CMapObj *pMO, bool 
 	if ( pMO->GetTypeID() == NDb::SMechUnitRPGStats::typeID )
 	{
 		bool bResult = PerformGroupAction( ACTION_COMMAND_MECH_ENTER, pMO->GetID(), GetPlaceInQueue() );
-		bResult = bResult || PerformGroupAction( ACTION_COMMAND_LOAD, pMO->GetID(), GetPlaceInQueue() ); // attempt to load rest of selection (infantry)
+		bResult = bResult || PerformGroupAction( ACTION_COMMAND_LOAD,
+		                                         pMO->GetID(),
+		                                         GetPlaceInQueue() ); // attempt to load rest of selection (infantry)
 		return bResult;
 	}
 
@@ -247,13 +257,13 @@ bool CWorldClient::ActionLeave( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 {
 	if ( pSelector->GetSelectionState() == ssBuilding )
 	{
-		std::vector< CMOSelectable* >selection;
+		std::vector<CMOSelectable *> selection;
 		pSelector->GetSelection( &selection );
 
-		for ( std::vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
+		for ( std::vector<CMOSelectable *>::iterator it = selection.begin(); it != selection.end(); ++it )
 		{
 			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
-			std::vector<CMOSelectable*> passengers;
+			std::vector<CMOSelectable *> passengers;
 			pContainer->GetPassangers( &passengers );
 			std::vector<int> units;
 			units.resize( passengers.size() );
@@ -281,13 +291,13 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 {
 	if ( pSelector->GetSelectionState() == ssBuilding )
 	{
-		std::vector< CMOSelectable* >selection;
+		std::vector<CMOSelectable *> selection;
 		pSelector->GetSelection( &selection );
-		for ( std::vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
+		for ( std::vector<CMOSelectable *>::iterator it = selection.begin(); it != selection.end(); ++it )
 		{
 			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
 
-			std::vector<CMOSelectable*> passangers;
+			std::vector<CMOSelectable *> passangers;
 			pContainer->GetPassangers( &passangers );
 			if ( nIndex < 0 || nIndex >= passangers.size() )
 				return false;
@@ -308,27 +318,27 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 	}
 	else
 	{
-//		return PerformGroupAction( ACTION_COMMAND_UNLOAD, CVec2( 300.0f, 300.0f ) ,(float)ALP_POSITION_INVALID, GetPlaceInQueue() );
+		//		return PerformGroupAction( ACTION_COMMAND_UNLOAD, CVec2( 300.0f, 300.0f ) ,(float)ALP_POSITION_INVALID, GetPlaceInQueue() );
 
-		std::vector< CMOSelectable* >selection;
+		std::vector<CMOSelectable *> selection;
 		pSelector->GetSelection( &selection );
 
 		// Iterate thourgh all selected units and apply the unload command
-		for ( std::vector< CMOSelectable* >::iterator it = selection.begin(); it != selection.end(); ++it )
+		for ( std::vector<CMOSelectable *>::iterator it = selection.begin(); it != selection.end(); ++it )
 		{
 			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
 
-			std::vector<CMOSelectable*> passangers;
+			std::vector<CMOSelectable *> passangers;
 			pContainer->GetPassangers( &passangers );
 			if ( nIndex < 0 || nIndex >= passangers.size() )
 				return false;
 
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
-			 std::vector<int> group;
-			 group.push_back( pContainer->GetID() );
+			std::vector<int> group;
+			group.push_back( pContainer->GetID() );
 
-			 const int groupID = pCommandsSender->CommandRegisterGroup( group );
+			const int groupID = pCommandsSender->CommandRegisterGroup( group );
 
 			SAIUnitCmd command( ACTION_COMMAND_UNLOAD );
 			command.nObjectID = nUnitIndex;
@@ -370,7 +380,7 @@ bool CWorldClient::ActionHookArtillery( const CVec2 &vPos, const CMapObj *pMO, b
 
 bool CWorldClient::ActionDeployArtillery( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	return PerformGroupAction( ACTION_COMMAND_DEPLOY_ARTILLERY, vPos, bForced ? 0.0f : 1.0f , GetPlaceInQueue() );
+	return PerformGroupAction( ACTION_COMMAND_DEPLOY_ARTILLERY, vPos, bForced ? 0.0f : 1.0f, GetPlaceInQueue() );
 }
 
 bool CWorldClient::ActionEntrenchSelf( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
@@ -383,7 +393,7 @@ bool CWorldClient::ActionPlaceMines( const CVec2 &vPos, const CMapObj *pMO, bool
 	CSegment marker;
 
 	SAIUnitCmd cmd( ACTION_COMMAND_PLACEMINE, vPos );
-	cmd.nNumber = 1;								//Need visualisation
+	cmd.nNumber = 1; //Need visualisation
 	PerformGroupAction( &cmd, true );
 	Singleton<IAILogic>()->RequestBuildPreview( ACTION_COMMAND_PLACEMINE, VNULL2, VNULL2, true );
 	eBuildObjectState = EBS_NONE;
@@ -402,7 +412,7 @@ bool CWorldClient::ActionBuildEntrenchment( const CVec2 &vPos, const CMapObj *pM
 	if ( IsFirstCommandPointDefined() )
 	{
 		SAIUnitCmd cmd( ACTION_COMMAND_ENTRENCH_BEGIN, GetFirstCommandPoint() );
-		cmd.nNumber = 1;								//Need visualisation
+		cmd.nNumber = 1; //Need visualisation
 		PerformGroupAction( &cmd, false );
 		cmd.nCmdType = ACTION_COMMAND_ENTRENCH_END;
 		cmd.vPos = vPos;
@@ -431,7 +441,7 @@ bool CWorldClient::ActionBuildFence( const CVec2 &vPos, const CMapObj *pMO, bool
 	if ( IsFirstCommandPointDefined() )
 	{
 		SAIUnitCmd cmd( ACTION_COMMAND_BUILD_FENCE_BEGIN, GetFirstCommandPoint() );
-		cmd.nNumber = 1;								//Need visualisation
+		cmd.nNumber = 1; //Need visualisation
 		PerformGroupAction( &cmd, false );
 		cmd.nCmdType = ACTION_COMMAND_BUILD_FENCE_END;
 		cmd.vPos = vPos;
@@ -492,27 +502,32 @@ bool CWorldClient::ActionResupply( const CVec2 &vPos, const CMapObj *pMO, bool b
 
 bool CWorldClient::ActionChangeFormation0( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	return PerformGroupAction( ACTION_COMMAND_PARADE, float(NDb::SSquadRPGStats::SFormation::DEFAULT), GetPlaceInQueue() );
+	return PerformGroupAction(
+			ACTION_COMMAND_PARADE, float( NDb::SSquadRPGStats::SFormation::DEFAULT ), GetPlaceInQueue() );
 }
 
 bool CWorldClient::ActionChangeFormation1( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	return PerformGroupAction( ACTION_COMMAND_PARADE, float(NDb::SSquadRPGStats::SFormation::MOVEMENT), GetPlaceInQueue() );
+	return PerformGroupAction(
+			ACTION_COMMAND_PARADE, float( NDb::SSquadRPGStats::SFormation::MOVEMENT ), GetPlaceInQueue() );
 }
 
 bool CWorldClient::ActionChangeFormation2( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	return PerformGroupAction( ACTION_COMMAND_PARADE, float(NDb::SSquadRPGStats::SFormation::DEFENSIVE), GetPlaceInQueue() );
+	return PerformGroupAction(
+			ACTION_COMMAND_PARADE, float( NDb::SSquadRPGStats::SFormation::DEFENSIVE ), GetPlaceInQueue() );
 }
 
 bool CWorldClient::ActionChangeFormation3( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	return PerformGroupAction( ACTION_COMMAND_PARADE, float(NDb::SSquadRPGStats::SFormation::OFFENSIVE), GetPlaceInQueue() );
+	return PerformGroupAction(
+			ACTION_COMMAND_PARADE, float( NDb::SSquadRPGStats::SFormation::OFFENSIVE ), GetPlaceInQueue() );
 }
 
 bool CWorldClient::ActionChangeFormation4( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	return PerformGroupAction( ACTION_COMMAND_PARADE, float(NDb::SSquadRPGStats::SFormation::SNEAK), GetPlaceInQueue() );
+	return PerformGroupAction(
+			ACTION_COMMAND_PARADE, float( NDb::SSquadRPGStats::SFormation::SNEAK ), GetPlaceInQueue() );
 }
 
 bool CWorldClient::ActionChangeShellDamage( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
@@ -533,8 +548,8 @@ bool CWorldClient::ActionChangeShellSmoke( const CVec2 &vPos, const CMapObj *pMO
 bool CWorldClient::ActionStop( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
 	bool bRes = PerformGroupAction( ACTION_COMMAND_STOP, GetPlaceInQueue() );
-//	// set Hold Ground mode then unit stopped by user
-//	PerformGroupAction( ACTION_COMMAND_STAND_GROUND, true );
+	//	// set Hold Ground mode then unit stopped by user
+	//	PerformGroupAction( ACTION_COMMAND_STAND_GROUND, true );
 	return bRes;
 }
 
@@ -557,7 +572,7 @@ bool CWorldClient::ActionUseThrow( const CVec2 &vPos, const CMapObj *pMO, bool b
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() )
+		switch ( pMO->GetTypeID() )
 		{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -598,7 +613,7 @@ bool CWorldClient::ActionUseLandMine( const CVec2 &vPos, const CMapObj *pMO, boo
 
 bool CWorldClient::ActionUseBlastingCharge( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-/*	if ( pMO )
+	/*	if ( pMO )
 	{
 		switch( pMO->GetTypeID() )
 		{
@@ -688,10 +703,10 @@ bool CWorldClient::ActionSupportFire( const CVec2 &vPos, const CMapObj *pMO, boo
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() )
+		switch ( pMO->GetTypeID() )
 		{
-		case NDb::SMechUnitRPGStats::typeID:
-		case NDb::SInfantryRPGStats::typeID:
+			case NDb::SMechUnitRPGStats::typeID:
+			case NDb::SInfantryRPGStats::typeID:
 			{
 				SAIUnitCmd command( ACTION_COMMAND_SUPPORT_FIRE );
 				command.nNumber = (int)EASS_READY_TO_ON;
@@ -699,8 +714,8 @@ bool CWorldClient::ActionSupportFire( const CVec2 &vPos, const CMapObj *pMO, boo
 				command.fNumber = (float)ATGP_ATACK_UNIT;
 				return PerformGroupAction( &command, GetPlaceInQueue() );
 			}
-		default:
-			return false;
+			default:
+				return false;
 		}
 	}
 	else
@@ -718,21 +733,20 @@ bool CWorldClient::ActionSpyMode( const CVec2 &vPos, const CMapObj *pMO, bool bF
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() )
+		switch ( pMO->GetTypeID() )
 		{
-		case NDb::SInfantryRPGStats::typeID:
+			case NDb::SInfantryRPGStats::typeID:
 			{
 				SAIUnitCmd command( ACTION_COMMAND_SPY_MODE );
 				command.nObjectID = pMO->GetID();
 				//command.pTarget = pMO->GetStats();
 				return PerformGroupAction( &command, GetPlaceInQueue() );
 			}
-		default:
-			return false;
+			default:
+				return false;
 		}
-
 	}
-	else if ( vPos == VNULL2 )			// Ability off
+	else if ( vPos == VNULL2 ) // Ability off
 	{
 		SAIUnitCmd command( ACTION_COMMAND_SPY_MODE );
 		command.fNumber = NDb::PARAM_ABILITY_OFF;
@@ -745,11 +759,11 @@ bool CWorldClient::ActionUseTrackTargeting( const CVec2 &vPos, const CMapObj *pM
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() )
+		switch ( pMO->GetTypeID() )
 		{
-			case NDb::SMechUnitRPGStats::typeID:			// Can use TT only on MechUnits
+			case NDb::SMechUnitRPGStats::typeID: // Can use TT only on MechUnits
 			{
-				const int nPassClass = checked_cast<const NDb::SMechUnitRPGStats*>(pMO->GetStats())->nAIPassabilityClass;
+				const int nPassClass = checked_cast<const NDb::SMechUnitRPGStats *>( pMO->GetStats() )->nAIPassabilityClass;
 				if ( nPassClass & EAC_TRACK )
 				{
 					SAIUnitCmd command( ACTION_COMMAND_TRACK_TARGETING );
@@ -824,7 +838,6 @@ bool CWorldClient::ActionRapidFire( const CVec2 &vPos, const CMapObj *pMO, bool 
 {
 	return PerformGroupAction( ACTION_COMMAND_RAPID_FIRE_MODE, (float)eCurrentAbilityParam, GetPlaceInQueue() );
 }
-
 
 bool CWorldClient::ActionCounterFire( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {

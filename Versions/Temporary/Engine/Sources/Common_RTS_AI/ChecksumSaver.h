@@ -4,12 +4,11 @@
 
 #include <zconf.h>
 
-
 struct ICheckSumLog;
-class CCheckSumSaver : 	public IBinSaver
+class CCheckSumSaver : public IBinSaver
 {
 	OBJECT_NOCOPY_METHODS( CCheckSumSaver );
-	typedef std::list<CPtr<CObjectBase> > CAddOrder;
+	typedef std::list<CPtr<CObjectBase>> CAddOrder;
 	CAddOrder addOrder;
 
 	typedef std::unordered_map<CPtr<CObjectBase>, bool, SPtrHash> CAddedObjects;
@@ -35,12 +34,17 @@ class CCheckSumSaver : 	public IBinSaver
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject );
 
-	virtual CObjectBase* LoadObject() { NI_ASSERT( false,  "wrong call" ); return 0; }
+	virtual CObjectBase *LoadObject()
+	{
+		NI_ASSERT( false, "wrong call" );
+		return 0;
+	}
 
 	virtual int CountChunks( const chunk_id idChunk ) { return 0; }
+
 public:
 	CCheckSumSaver();
-	CCheckSumSaver( uLong *pCheckSum, struct ICheckSumLog * pLog, const NTimer::STime segmentTime );
+	CCheckSumSaver( uLong *pCheckSum, struct ICheckSumLog *pLog, const NTimer::STime segmentTime );
 	~CCheckSumSaver();
 
 	virtual bool IsReading() { return false; }

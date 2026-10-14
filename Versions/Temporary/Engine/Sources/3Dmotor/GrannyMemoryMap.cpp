@@ -12,19 +12,10 @@ struct SMemoryInfo
 	granny_int32x nAlignment;
 	granny_int32x nSize;
 
-	SMemoryInfo() :
-		pszFile(0),
-		nLine(0),
-		nAlignment(0),
-		nSize(0)
-	{
-	}
+	SMemoryInfo() : pszFile( 0 ), nLine( 0 ), nAlignment( 0 ), nSize( 0 ) {}
 
-	SMemoryInfo( char const *_pszFile, granny_int32x _nLine, granny_int32x _nAlignment, granny_int32x _nSize ) :
-		pszFile(_pszFile),
-		nLine(_nLine),
-		nAlignment(_nAlignment),
-		nSize(_nSize)
+	SMemoryInfo( char const *_pszFile, granny_int32x _nLine, granny_int32x _nAlignment, granny_int32x _nSize )
+			: pszFile( _pszFile ), nLine( _nLine ), nAlignment( _nAlignment ), nSize( _nSize )
 	{
 	}
 };
@@ -37,31 +28,36 @@ struct SGrannyMemoryRequestComparer
 	}
 };
 
-typedef std::unordered_map<void *, SMemoryInfo > TGrannyMemoryMap;
+typedef std::unordered_map<void *, SMemoryInfo> TGrannyMemoryMap;
 
 static granny_allocate_callback *AllocateCallback;
 static granny_deallocate_callback *DeallocateCallback;
 static TGrannyMemoryMap *pGrannyMemoryMap; // do not initialize!
 
-static GRANNY_CALLBACK(void *) GrannyReplacementAlloc( char const *pszFile, granny_int32x nLine, granny_uintaddrx nAlignment, granny_uintaddrx nSize, granny_int32x nAllocationIntent )
+static GRANNY_CALLBACK( void * ) GrannyReplacementAlloc( char const *pszFile,
+                                                         granny_int32x nLine,
+                                                         granny_uintaddrx nAlignment,
+                                                         granny_uintaddrx nSize,
+                                                         granny_int32x nAllocationIntent )
 {
 	if ( pGrannyMemoryMap == 0 )
-		pGrannyMemoryMap = new std::unordered_map<void *, SMemoryInfo >;
+		pGrannyMemoryMap = new std::unordered_map<void *, SMemoryInfo>;
 
-	void *pMemory = (*AllocateCallback)(pszFile,nLine,nAlignment,nSize,nAllocationIntent);
-	pGrannyMemoryMap->insert( std::pair <void *, SMemoryInfo>( pMemory, SMemoryInfo(pszFile,nLine,nAlignment,nSize) ) );
+	void *pMemory = ( *AllocateCallback )( pszFile, nLine, nAlignment, nSize, nAllocationIntent );
+	pGrannyMemoryMap->insert(
+			std::pair<void *, SMemoryInfo>( pMemory, SMemoryInfo( pszFile, nLine, nAlignment, nSize ) ) );
 	return pMemory;
 }
 
-static GRANNY_CALLBACK(void) GrannyReplacementDealloc( char const *pszFile, granny_int32x nLine, void *pMemory )
+static GRANNY_CALLBACK( void ) GrannyReplacementDealloc( char const *pszFile, granny_int32x nLine, void *pMemory )
 {
-	pGrannyMemoryMap->erase(pMemory);
-	(*DeallocateCallback)(pszFile,nLine,pMemory);
+	pGrannyMemoryMap->erase( pMemory );
+	( *DeallocateCallback )( pszFile, nLine, pMemory );
 }
 
 void InitializeGrannyMemoryMap()
 {
-	GrannyGetAllocator(&AllocateCallback, &DeallocateCallback);
+	GrannyGetAllocator( &AllocateCallback, &DeallocateCallback );
 	GrannySetAllocator( GrannyReplacementAlloc, GrannyReplacementDealloc );
 }
 
@@ -81,14 +77,14 @@ void DumpGrannyMemory()
 		const SMemoryInfo &info = it->second;
 		sprintf( szBuf, "%s\t%d", info.pszFile, info.nLine );
 
-		TMemoryRequestMap::iterator itRequest = MemoryRequestMap.find(szBuf);
+		TMemoryRequestMap::iterator itRequest = MemoryRequestMap.find( szBuf );
 		if ( itRequest == MemoryRequestMap.end() )
 			MemoryRequestMap.insert( std::pair<std::string, int>( szBuf, 0 ) );
 		else
 			itRequest->second += info.nSize;
-    }
+	}
 
-	std::vector< std::pair< std::string, int > > MemoryRequestArray;
+	std::vector<std::pair<std::string, int>> MemoryRequestArray;
 	for ( TMemoryRequestMap::iterator it = MemoryRequestMap.begin(); it != MemoryRequestMap.end(); ++it )
 		MemoryRequestArray.push_back( std::pair<std::string, int>( it->first.data(), it->second ) );
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "3Dmotor_export.h"
 
-
 #include "Misc/2Darray.h"
 #include "aiInterval.h"
 #include "3DLib/Transform.h"
@@ -12,9 +11,9 @@ namespace NAI
 {
 
 const float F_INF = 1e30f;
-const int N_F_INF = 0x7149f2ca;//1e30f//*(const int*)&F_INF;
+const int N_F_INF = 0x7149f2ca; //1e30f//*(const int*)&F_INF;
 struct SConvexHull;
-class _3DMOTOR_EXPORT CFastRenderer: public CRasterizer<CFastRenderer>
+class _3DMOTOR_EXPORT CFastRenderer : public CRasterizer<CFastRenderer>
 {
 public:
 	struct SResult
@@ -31,7 +30,7 @@ public:
 		SResult *pNext;
 	};
 
-	CArray2D<SResult*> resGrid;
+	CArray2D<SResult *> resGrid;
 
 	int nTraceFrame;
 	CArray2D<int> gridFrames;
@@ -73,22 +72,22 @@ private:
 
 	void ClipVertical( int *pnY )
 	{
-		(*pnY) = (std::max)( *pnY, region.y1 );
-		(*pnY) = (std::min)( *pnY, region.y2-1 );
+		( *pnY ) = (std::max)( *pnY, region.y1 );
+		( *pnY ) = (std::min)( *pnY, region.y2 - 1 );
 	}
 
 	void ClipVertical( int *pnSY, int *pnFY2, int *pnFY )
 	{
-		(*pnSY) = (std::max)( *pnSY, region.y1 );
-		(*pnFY2) = (std::min)( *pnFY2, region.y2 );
-		(*pnFY) = (std::min)( *pnFY, region.y2 );
+		( *pnSY ) = (std::max)( *pnSY, region.y1 );
+		( *pnFY2 ) = (std::min)( *pnFY2, region.y2 );
+		( *pnFY ) = (std::min)( *pnFY, region.y2 );
 	}
 	void ClipHorizontal( int *pnSX, int *pnFX )
 	{
-		(*pnSX) = (std::max)( *pnSX, region.x1 );
-		(*pnFX) = (std::min)( *pnFX, region.x2 );
+		( *pnSX ) = (std::max)( *pnSX, region.x1 );
+		( *pnFX ) = (std::min)( *pnFX, region.x2 );
 	}
-	SResult* AddResult()
+	SResult *AddResult()
 	{
 		SResult *pRes = res.Alloc();
 		pRes->fDist[0] = F_INF;
@@ -104,7 +103,7 @@ private:
 		SResult **p = pRow + nLeft, **pFinal = pRow + nRight;
 		float *pDistMul = &distMult[y][0] + ( nLeft - region.x1 );
 		int *pFrames = &gridFrames[y][0] - region.x1 + nLeft;
-		for (; p < pFinal; ++p, fZ += fDZ, ++pDistMul, ++pFrames )
+		for ( ; p < pFinal; ++p, fZ += fDZ, ++pDistMul, ++pFrames )
 		{
 			if ( *pFrames == nTraceFrame )
 				continue;
@@ -124,7 +123,6 @@ private:
 			pNode->pObject = pCurrentObject;
 			pNode->fDist[0] = fDist;
 			pNode->pNext = 0;
-
 
 			if ( pResult == 0 )
 			{
@@ -154,7 +152,11 @@ private:
 	void CalcDistMul();
 	void SetSource( const SSourceInfo *_pSrc, int _nUserID );
 	void ConvertResults( bool bTerrain );
-	int operator&( CStructureSaver &f ) { ASSERT(0); return 0; }
+	int operator&( CStructureSaver &f )
+	{
+		ASSERT( 0 );
+		return 0;
+	}
 
 	friend class CRasterizer<CFastRenderer>;
 };

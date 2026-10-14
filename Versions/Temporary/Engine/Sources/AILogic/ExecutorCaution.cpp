@@ -6,8 +6,8 @@
 
 #include <cstdint>
 
-CExecutorCaution::CExecutorCaution( CAIUnit *_pUnit	) :
-CExecutorUnitCombatBonus ( NDb::ABILITY_CAUTION, _pUnit, TID_CAUTION )
+CExecutorCaution::CExecutorCaution( CAIUnit *_pUnit )
+		: CExecutorUnitCombatBonus( NDb::ABILITY_CAUTION, _pUnit, TID_CAUTION )
 {
 }
 
@@ -39,11 +39,12 @@ bool CExecutorCaution::NotifyEvent( const CExecutorEvent &event )
 	return CExecutorUnitCombatBonus::NotifyEvent( event );
 }
 
-CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCaution::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
+CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCaution::OnModeChange( const uint16_t oldModeFlags,
+                                                                                 const uint16_t newModeFlags )
 {
 	if ( GetAutocast() && GetState() == EASS_READY_TO_ON )
 	{
-		if ( !( oldModeFlags & EUM_FIGHTING ) && ( newModeFlags & EUM_FIGHTING ) )		//Started fighting
+		if ( !( oldModeFlags & EUM_FIGHTING ) && ( newModeFlags & EUM_FIGHTING ) ) //Started fighting
 			return EACR_FORCE_ACTIVATE;
 	}
 

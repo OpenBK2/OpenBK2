@@ -4,17 +4,15 @@
 
 #include <fmt/format.h>
 
-REGISTER_SAVELOAD_CLASS( UI, 0x11075B86, CWindowListCtrl)
+REGISTER_SAVELOAD_CLASS( UI, 0x11075B86, CWindowListCtrl )
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B85, CWindowListItem )
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B84, CWindowListHeader )
 
-
 //	CWindowListHeader
-
 
 int CWindowListHeader::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 4, &sorters );
 	saver.Add( 5, &nSelectedColumn );
 	saver.Add( 6, &bResizable );
@@ -38,9 +36,9 @@ void CWindowListHeader::AfterLoad()
 
 void CWindowListHeader::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowListHeader *pDesc( checked_cast<const NDb::SWindowListHeader*>( _pDesc ) );
+	const NDb::SWindowListHeader *pDesc( checked_cast<const NDb::SWindowListHeader *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
-	pShared = checked_cast_ptr<const NDb::SWindowListHeaderShared*>( pDesc->pShared );
+	pShared = checked_cast_ptr<const NDb::SWindowListHeaderShared *>( pDesc->pShared );
 
 	CWindow::InitByDesc( pDesc );
 
@@ -63,7 +61,7 @@ void CWindowListHeader::MakeInterior()
 		// CRAP
 		const NDb::SWindow *pSample = pShared->subHeaderSamples[i];
 		NI_ASSERT( pSample, "Window not found" );
-		IWindow *pChild = static_cast<IWindow*>( CUIFactory::MakeWindow( pSample ) );
+		IWindow *pChild = static_cast<IWindow *>( CUIFactory::MakeWindow( pSample ) );
 		pChild->GetPlacement( 0, 0, &columnSizes[i], 0 );
 		subitems[i] = pChild;
 		AddChild( pChild, false );
@@ -123,7 +121,7 @@ void CWindowListHeader::AdjustColums()
 		}
 		else if ( nNext > nW )
 			columnSizes[i] -= nNext - nW;
-		else if ( i == columnSizes.size() -1 ) // last column takes all avalable space
+		else if ( i == columnSizes.size() - 1 ) // last column takes all avalable space
 		{
 			columnSizes[i] = nW - nXSoFar;
 		}
@@ -141,10 +139,7 @@ void CWindowListHeader::AdjustColums()
 bool CWindowListHeader::OnButtonDblClk( const CVec2 &vPos, const int nButton )
 {
 	const bool bRes = CWindow::OnButtonDblClk( vPos, nButton );
-	if ( (MSTATE_BUTTON1 & nButton) &&
-				IsInside( vPos ) &&
-				bResizable &&
-				pHeaderNotify )
+	if ( ( MSTATE_BUTTON1 & nButton ) && IsInside( vPos ) && bResizable && pHeaderNotify )
 	{
 		const int nColumn = GetResizeColumnIndex( vPos ).first;
 		if ( -1 != nColumn )
@@ -188,7 +183,7 @@ bool CWindowListHeader::OnMouseMove( const CVec2 &vPos, const int nButton )
 	return false;
 }
 
-std::pair<int,bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos ) const
+std::pair<int, bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos ) const
 {
 	CTRect<float> rc;
 	FillWindowRect( &rc );
@@ -198,15 +193,15 @@ std::pair<int,bool> CWindowListHeader::GetResizeColumnIndex( const CVec2 &vPos )
 	for ( int i = 0; i < columnSizes.size() - 1; ++i )
 	{
 		nXSoFar += columnSizes[i];
-		const int nNextX = nXSoFar + columnSizes[i+1];
-		if ( abs(nXSoFar - nX ) <= CInterfaceConsts::LIST_CONTROL_HEADER_RESIZE_OFFSET() )
+		const int nNextX = nXSoFar + columnSizes[i + 1];
+		if ( abs( nXSoFar - nX ) <= CInterfaceConsts::LIST_CONTROL_HEADER_RESIZE_OFFSET() )
 		{
-			if ( nXSoFar < nX && nNextX < nX && i+1 < columnSizes.size() ) // next column is very narrow or 0
-				return std::pair<int,bool>( i+1, true );
-			return std::pair<int,bool>( i, false );
+			if ( nXSoFar < nX && nNextX < nX && i + 1 < columnSizes.size() ) // next column is very narrow or 0
+				return std::pair<int, bool>( i + 1, true );
+			return std::pair<int, bool>( i, false );
 		}
 	}
-	return std::pair<int,bool>( -1, false );
+	return std::pair<int, bool>( -1, false );
 }
 
 void CWindowListHeader::UpdateSortButton()
@@ -218,7 +213,7 @@ void CWindowListHeader::UpdateSortButton()
 
 	if ( -1 != nSelectedColumn )
 	{
-		CWindow *pSelectedHeader = dynamic_cast<CWindow*>( subitems[nSelectedColumn].GetPtr() );
+		CWindow *pSelectedHeader = dynamic_cast<CWindow *>( subitems[nSelectedColumn].GetPtr() );
 
 		if ( pSelectedHeader )
 		{
@@ -250,7 +245,7 @@ void CWindowListHeader::Resort( const int nColumn, const bool bAscending )
 
 bool CWindowListHeader::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
-	if ( (nButton & MSTATE_BUTTON1) && bResizable && IsInside( vPos ) )
+	if ( ( nButton & MSTATE_BUTTON1 ) && bResizable && IsInside( vPos ) )
 	{
 		nResizingIndex = GetResizeColumnIndex( vPos ).first;
 		if ( -1 != nResizingIndex )
@@ -264,7 +259,7 @@ void CWindowListHeader::Init()
 {
 	for ( int i = 0; i < subitems.size(); ++i )
 	{
-		IButton *pItem = dynamic_cast<IButton*>( subitems[i].GetPtr() );
+		IButton *pItem = dynamic_cast<IButton *>( subitems[i].GetPtr() );
 		pItem->SetNotifySink( this );
 	}
 	UpdateSortButton();
@@ -303,27 +298,25 @@ void CWindowListHeader::SetColumnSize( const int nColumn, const int nWidth )
 
 bool CWindowListHeader::OnButtonUp( const CVec2 &vPos, const int nButton )
 {
-	if ( (MSTATE_BUTTON1 & nButton) && -1 != nResizingIndex )
+	if ( ( MSTATE_BUTTON1 & nButton ) && -1 != nResizingIndex )
 		nResizingIndex = -1;
 	return CWindow::OnButtonUp( vPos, nButton );
 }
 
-
 //	CWindowListItem
-
 
 void CWindowListItem::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowListItem *pDesc( checked_cast<const NDb::SWindowListItem*>( _pDesc ) );
+	const NDb::SWindowListItem *pDesc( checked_cast<const NDb::SWindowListItem *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
-	pShared = checked_cast_ptr<const NDb::SWindowListItemShared*>( pDesc->pShared );
+	pShared = checked_cast_ptr<const NDb::SWindowListItemShared *>( pDesc->pShared );
 
 	CWindow::InitByDesc( pDesc );
 }
 
 int CWindowListItem::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
 	saver.Add( 2, &pInstance );
 	saver.Add( 3, &pShared );
 	saver.Add( 4, &subitems );
@@ -339,7 +332,7 @@ void CWindowListItem::MakeInterior( const int nColumns )
 	for ( int i = 0; i < subitems.size(); ++i )
 	{
 		const NDb::SWindow *pSubItemDesc = pShared->subItemSamples[i];
-		CWindow *pSubItem = checked_cast<CWindow*>( CUIFactory::MakeWindow( pSubItemDesc ) );
+		CWindow *pSubItem = checked_cast<CWindow *>( CUIFactory::MakeWindow( pSubItemDesc ) );
 		subitems[i] = pSubItem;
 		AddChild( pSubItem, nColumns > 0 );
 		pSubItem->ShowWindow( true );
@@ -365,13 +358,11 @@ IWindow *CWindowListItem::GetSubItem( const int nSubItem )
 	return subitems[nSubItem];
 }
 
-
 //	CWindowListCtrl
-
 
 int CWindowListCtrl::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindowScrollableContainerBase*>( this ) );
+	saver.Add( 1, static_cast<CWindowScrollableContainerBase *>( this ) );
 	saver.Add( 2, &pHeader );
 
 	saver.Add( 6, &items );
@@ -403,14 +394,14 @@ void CWindowListCtrl::SetFocus( const bool bFocus )
 
 void CWindowListCtrl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
-	const NDb::SWindowListCtrl *pDesc( checked_cast<const NDb::SWindowListCtrl*>( _pDesc ) );
+	const NDb::SWindowListCtrl *pDesc( checked_cast<const NDb::SWindowListCtrl *>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 	pShared = checked_cast_ptr<const NDb::SWindowListSharedData *>( pDesc->pShared );
 
 	CWindowScrollableContainerBase::InitByDesc( pDesc );
 
 	// optional field
-	pHeader = dynamic_cast<CWindowListHeader*>( CUIFactory::MakeWindow( pShared->pListHeader ) );
+	pHeader = dynamic_cast<CWindowListHeader *>( CUIFactory::MakeWindow( pShared->pListHeader ) );
 	AddChild( pHeader, false );
 }
 
@@ -431,9 +422,9 @@ void CWindowListCtrl::Init()
 	items.clear();
 }
 
-IListControlItem* CWindowListCtrl::AddItemInternal()
+IListControlItem *CWindowListCtrl::AddItemInternal()
 {
-	CWindowListItem *pItem = checked_cast<CWindowListItem*>( CUIFactory::MakeWindow( pShared->pListItem ) );
+	CWindowListItem *pItem = checked_cast<CWindowListItem *>( CUIFactory::MakeWindow( pShared->pListItem ) );
 	pItem->ShowWindow( true );
 	PushBack( pItem, bSelectable );
 	items.push_back( pItem );
@@ -449,15 +440,15 @@ IListControlItem* CWindowListCtrl::AddItemInternal()
 	return pItem;
 }
 
-IListControlItem* CWindowListCtrl::AddItem()
+IListControlItem *CWindowListCtrl::AddItem()
 {
 	return AddItemInternal();
 }
 
-IListControlItem* CWindowListCtrl::AddItem( CObjectBase *pData )
+IListControlItem *CWindowListCtrl::AddItem( CObjectBase *pData )
 {
 	IListControlItem *pItem = AddItemInternal();
-	pItem->SetUserData( pData);
+	pItem->SetUserData( pData );
 	if ( pViewer )
 		pViewer->MakeInterior( pItem, pData );
 	return pItem;
@@ -467,7 +458,7 @@ void CWindowListCtrl::RemoveItem( IListControlItem *pItem )
 {
 	if ( pItem )
 	{
-		IWindow *pItemWnd = dynamic_cast<IWindow*>( pItem );
+		IWindow *pItemWnd = dynamic_cast<IWindow *>( pItem );
 		items.remove( pItemWnd );
 		Remove( pItemWnd );
 	}
@@ -481,7 +472,7 @@ void CWindowListCtrl::ColumnsResized( const std::vector<int> &sizes )
 		NI_ASSERT( pItem && pItem->IsRefValid(), "item deleted, but not trough list control" );
 		if ( pItem )
 		{
-			CWindowListItem *pI = dynamic_cast<CWindowListItem*>( pItem );
+			CWindowListItem *pI = dynamic_cast<CWindowListItem *>( pItem );
 			pI->SetColumnSizes( sizes );
 		}
 	}
@@ -513,10 +504,10 @@ void CWindowListCtrl::SetOptimalWidth( const int nColumn )
 	int nMaxOptimalWidth = 0;
 	for ( CItems::const_iterator it = items.begin(); it != items.end(); ++it )
 	{
-		IListControlItem *pI = dynamic_cast_ptr<IListControlItem*>( *it );
-		CWindow *pSubItem = dynamic_cast<CWindow*>( pI->GetSubItem( nColumn ) );
+		IListControlItem *pI = dynamic_cast_ptr<IListControlItem *>( *it );
+		CWindow *pSubItem = dynamic_cast<CWindow *>( pI->GetSubItem( nColumn ) );
 
-		nMaxOptimalWidth = (std::max)( pSubItem->GetOptimalWidth(), nMaxOptimalWidth  );
+		nMaxOptimalWidth = (std::max)( pSubItem->GetOptimalWidth(), nMaxOptimalWidth );
 	}
 	pHeader->SetColumnSize( nColumn, nMaxOptimalWidth );
 }
@@ -548,9 +539,9 @@ int CWindowListCtrl::GetItemCount() const
 	return items.size();
 }
 
-IListControlItem* CWindowListCtrl::GetSelectedListItem() const
+IListControlItem *CWindowListCtrl::GetSelectedListItem() const
 {
-	return dynamic_cast<IListControlItem*>( CWindowScrollableContainerBase::GetSelectedItem() );
+	return dynamic_cast<IListControlItem *>( CWindowScrollableContainerBase::GetSelectedItem() );
 }
 
 void CWindowListCtrl::SelectItem( CObjectBase *pData )
@@ -560,7 +551,7 @@ void CWindowListCtrl::SelectItem( CObjectBase *pData )
 	{
 		for ( CItems::iterator it = items.begin(); it != items.end(); ++it )
 		{
-			IListControlItem *pWnd = dynamic_cast_ptr<IListControlItem*>( *it );
+			IListControlItem *pWnd = dynamic_cast_ptr<IListControlItem *>( *it );
 			if ( pWnd && pWnd->GetUserData() == pData )
 			{
 				pElement = pWnd;
@@ -583,7 +574,7 @@ int CWindowListCtrl::GetRowHeight() const
 		if ( const NDb::SWindowListItem *pItem = pShared->pListItem )
 		{
 			CParam<CVec2> size = pItem->placement.size;
-			if ( const NDb::SWindowShared *pItemShared = dynamic_cast_ptr<const NDb::SWindowShared*>( pItem->pShared ) )
+			if ( const NDb::SWindowShared *pItemShared = dynamic_cast_ptr<const NDb::SWindowShared *>( pItem->pShared ) )
 				size.Merge( pItemShared->placement.size.Get() );
 			nHeight += size.Get().y;
 		}

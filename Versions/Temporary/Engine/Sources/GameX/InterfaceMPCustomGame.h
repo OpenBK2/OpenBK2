@@ -3,9 +3,7 @@
 
 #include "InterfaceMPBase.h"
 
-
-class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
-	public IProgrammedReactionsAndChecks
+class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPCustomGame );
 
@@ -13,18 +11,32 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 	struct SMPGameInfo
 	{
 		ZDATA
-		int					nServerID;
-		std::string			szSessionName;
-		std::string			szMapName;
-		int					nPlayers;
-		int					nPlayersMax;
-		int					nPing;
-		bool				bPwdReq;
-		int					nSizeX;
-		int					nSizeY;
-		int					nGameType;
-		int					nTechLevel;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nServerID); f.Add(3,&szSessionName); f.Add(4,&szMapName); f.Add(5,&nPlayers); f.Add(6,&nPlayersMax); f.Add(7,&nPing); f.Add(8,&bPwdReq); f.Add(9,&nSizeX); f.Add(10,&nSizeY); f.Add(11,&nGameType); f.Add(12,&nTechLevel); return 0; }
+		int nServerID;
+		std::string szSessionName;
+		std::string szMapName;
+		int nPlayers;
+		int nPlayersMax;
+		int nPing;
+		bool bPwdReq;
+		int nSizeX;
+		int nSizeY;
+		int nGameType;
+		int nTechLevel;
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nServerID );
+			f.Add( 3, &szSessionName );
+			f.Add( 4, &szMapName );
+			f.Add( 5, &nPlayers );
+			f.Add( 6, &nPlayersMax );
+			f.Add( 7, &nPing );
+			f.Add( 8, &bPwdReq );
+			f.Add( 9, &nSizeX );
+			f.Add( 10, &nSizeY );
+			f.Add( 11, &nGameType );
+			f.Add( 12, &nTechLevel );
+			return 0;
+		}
 	};
 	//--------------
 	class CCustomGameListData : public CObjectBase
@@ -33,15 +45,19 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 	public:
 		ZDATA
 		SMPGameInfo info;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&info); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &info );
+			return 0;
+		}
 
 		CCustomGameListData() {}
-		CCustomGameListData( SMPGameInfo &_info ) : info ( _info ) { };
+		CCustomGameListData( SMPGameInfo &_info ) : info( _info ) {};
 	};
 	//--------------
 	class CItemCustomGameListViewer : public IDataViewer
 	{
-		OBJECT_NOCOPY_METHODS(CItemCustomGameListViewer)
+		OBJECT_NOCOPY_METHODS( CItemCustomGameListViewer )
 	public:
 		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	};
@@ -52,7 +68,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 		int nPlayers;
 		int nGameType;
 		int nTechLevel;
-		SFilterData() : nMapSize(0), nPlayers(0), nGameType(0), nTechLevel(0) {}
+		SFilterData() : nMapSize( 0 ), nPlayers( 0 ), nGameType( 0 ), nTechLevel( 0 ) {}
 	};
 
 	struct SGameEntry
@@ -60,7 +76,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 		CPtr<IListControlItem> pItem;
 		SMPGameInfo info;
 	};
-	typedef std::unordered_map<int/*serverID*/, SGameEntry > CMPGameListItems;
+	typedef std::unordered_map<int /*serverID*/, SGameEntry> CMPGameListItems;
 
 	CPtr<IWindow> pMain;
 	CMPGameListItems items;
@@ -78,6 +94,7 @@ class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 	std::wstring wszPassword;
 	CPtr<IWindow> pGettingListPopup;
 	CPtr<IButton> pRefresh;
+
 private:
 	void RegisterObservers();
 
@@ -107,6 +124,7 @@ private:
 	//}
 protected:
 	~CInterfaceMPCustomGame();
+
 public:
 	CInterfaceMPCustomGame();
 
@@ -128,6 +146,7 @@ class CICMPCustomGame : public CInterfaceCommandBase<CInterfaceMPCustomGame>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

@@ -15,7 +15,7 @@ namespace
 {
 // Mixed scripts must survive together, regardless of the active CRT code page.
 const std::wstring sample = L"ASCII \u010d\u0107\u017e\u0161\u0111\u00df\u00a4\u00d7\u00f7 "
-	L"\u041f\u0440\u0438\u0432\u0435\u0442 \u0402\u0452\u0408\u0458";
+														L"\u041f\u0440\u0438\u0432\u0435\u0442 \u0402\u0452\u0408\u0458";
 
 void SetPlacement( NDb::SWindowPlacement *placement )
 {
@@ -53,6 +53,7 @@ class UnicodeEditLine : public testing::Test
 	CObj<NVFS::IVFS> oldVFS;
 	CObj<NDb::SFont> font;
 	CObj<NDb::STexture> texture;
+
 protected:
 	CObj<CWindow> screen;
 	CObj<CWindow> window;
@@ -101,7 +102,8 @@ protected:
 
 	void MakeEdit( NDb::ETextEntryType entryType = NDb::ETET_ALL )
 	{
-		CPtr<NDb::SWindowEditLineShared> shared = MakeObject<NDb::SWindowEditLineShared>( NDb::SWindowEditLineShared::typeID );
+		CPtr<NDb::SWindowEditLineShared> shared =
+				MakeObject<NDb::SWindowEditLineShared>( NDb::SWindowEditLineShared::typeID );
 		CPtr<NDb::SWindowEditLine> desc = MakeObject<NDb::SWindowEditLine>( NDb::SWindowEditLine::typeID );
 		desc->nClassTypeID = 0x11075B83;
 		desc->pShared = shared;
@@ -113,7 +115,7 @@ protected:
 		screen->AddChild( window, false );
 		window->Reposition( CTRect<float>( 0, 0, 1024, 768 ) );
 		window->SetFocus( true );
-		edit = dynamic_cast<IEditLine*>( window.GetPtr() );
+		edit = dynamic_cast<IEditLine *>( window.GetPtr() );
 		ASSERT_NE( edit, nullptr );
 	}
 

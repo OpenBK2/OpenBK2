@@ -4,10 +4,9 @@
 #include "Misc/2Darray.h"
 #include "System/Dg.h"
 
-
-class CBitmap :  public CPtrFuncBase< NGfx::CTexture >
+class CBitmap : public CPtrFuncBase<NGfx::CTexture>
 {
-	OBJECT_BASIC_METHODS(CBitmap);
+	OBJECT_BASIC_METHODS( CBitmap );
 	CArray2D<NGfx::SPixel8888> points;
 	int nWidth, nHeight;
 	bool bNeedUpdate;
@@ -29,13 +28,13 @@ public:
 
 class CBitmapWindow : public CObjectBase
 {
-	OBJECT_BASIC_METHODS(CBitmapWindow);
-	CObj< CBitmap > pBitmap;
+	OBJECT_BASIC_METHODS( CBitmapWindow );
+	CObj<CBitmap> pBitmap;
 	CVec2 vPos;
 	CVec2 vSize;
 
 public:
-	virtual void Visit( struct IUIVisitor * pVisitor );
+	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual int operator&( struct IBinSaver &saver );
 
 	const CVec2 GetPos() const { return vPos; }
@@ -46,5 +45,4 @@ public:
 	void PutPixel( const CVec2 &vPos, const NGfx::SPixel8888 &color );
 	const NGfx::SPixel8888 GetPixel( const CVec2 &vPos ) const;
 	void Fill( const NGfx::SPixel8888 &color );
-
 };

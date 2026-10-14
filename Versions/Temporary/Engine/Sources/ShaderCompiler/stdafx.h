@@ -17,15 +17,17 @@
 
 #include "port/debugging.h"
 
-#pragma warning( disable: 4267 4018 )
+#pragma warning( disable : 4267 4018 )
 
 #undef ASSERT
 #ifdef _DEBUG
-#  define ASSERT( a ) if ( !(a) ) breakpoint();
+#define ASSERT( a ) \
+	if ( !( a ) )     \
+		breakpoint();
 #else
-#  define ASSERT( a ) ((void)0)
+#define ASSERT( a ) ( (void)0 )
 #endif
-#define NI_ASSERT(a,b) ASSERT( (a) && (b) )
+#define NI_ASSERT( a, b ) ASSERT( ( a ) && ( b ) )
 
 #include <cstring>
 
@@ -46,7 +48,10 @@ using std::string;
 using std::vector;
 using std::list;
 
-inline std::ostream &operator<<( std::ostream &a, const string &sz ) { return a << sz.c_str(); }
+inline std::ostream &operator<<( std::ostream &a, const string &sz )
+{
+	return a << sz.c_str();
+}
 //inline std::ostream &operator<<( std::ostream &a, const char *psz ) { return a << psz; }
 
 using std::cout;

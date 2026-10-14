@@ -15,8 +15,10 @@ IMAGE_EXPORT EXTERNVAR const uint32_t GRAY_LIGHTER_COLOR;
 EXTERNVAR const uint32_t GRAY_DARKER_COLOR;
 EXTERNVAR const uint32_t BASE_EMBOSS_COLOR;
 
-
-void GetImageParams( uint32_t *pdwMinColor, uint32_t *pdwMaxColor, uint32_t *pdwAverageColor, const CArray2D<uint32_t> &rImage );
+void GetImageParams( uint32_t *pdwMinColor,
+                     uint32_t *pdwMaxColor,
+                     uint32_t *pdwAverageColor,
+                     const CArray2D<uint32_t> &rImage );
 void Invert( CArray2D<uint32_t> *pImage );
 IMAGE_EXPORT void FullColor( CArray2D<uint32_t> *pImage, float fRatio );
 void GammaCorrection( CArray2D<uint32_t> *pImage, float fBrightness, float fContrast, float fGamma ); // [-1...1]
@@ -25,28 +27,48 @@ void ApplyFilter( CArray2D<uint32_t> *pImage, const CArray2D<int> &rFilter, uint
 IMAGE_EXPORT void MarkEdge( CArray2D<uint32_t> *pImage, uint32_t dwEdgeColor, bool bOutside, uint32_t dwMinAlpha );
 void EraseEdge( CArray2D<uint32_t> *pImage, uint32_t dwMinAlpha );
 //
-void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const CArray2D<int> &rFilter, uint32_t dwMinAlpha );
-IMAGE_EXPORT void Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool bEqualize, uint32_t dwMinAlpha );
+void Emboss( CArray2D<uint32_t> *pImage,
+             const CTPoint<int> &rShiftPoint,
+             const CArray2D<int> &rFilter,
+             uint32_t dwMinAlpha );
+IMAGE_EXPORT void
+Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool bEqualize, uint32_t dwMinAlpha );
 //
-IMAGE_EXPORT void FastAddImageByAlpha( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwMinAlpha );
-void FastAddImageByColor( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwColor, bool bInclude );
+IMAGE_EXPORT void
+FastAddImageByAlpha( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwMinAlpha );
+void FastAddImageByColor( CArray2D<uint32_t> *pDestImage,
+                          const CArray2D<uint32_t> &rSourceImage,
+                          uint32_t dwColor,
+                          bool bInclude );
 //
-IMAGE_EXPORT void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, uint32_t dwShadowColor, uint32_t dwNonShadowColor, uint32_t dwMinAlpha );
-IMAGE_EXPORT void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, int nFilterSize, uint32_t dwMinAlpha );
+IMAGE_EXPORT void GetShadow( CArray2D<uint32_t> *pDestImage,
+                             const CArray2D<uint32_t> &rSourceImage,
+                             const CTPoint<int> &rShiftPoint,
+                             uint32_t dwShadowColor,
+                             uint32_t dwNonShadowColor,
+                             uint32_t dwMinAlpha );
+IMAGE_EXPORT void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage,
+                                  const CArray2D<uint32_t> &rSourceImage,
+                                  const CTPoint<int> &rShiftPoint,
+                                  int nFilterSize,
+                                  uint32_t dwMinAlpha );
 //
-void DrawLine( CArray2D<uint32_t> *pImage, const struct SVector &vStart, const struct SVector &vEnd, const struct SColor &color );
+void DrawLine( CArray2D<uint32_t> *pImage,
+               const struct SVector &vStart,
+               const struct SVector &vEnd,
+               const struct SColor &color );
 //
 
-template<class TFunctuinal, class TWBCFunctional>
-void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFunctuinal *pFunctional, TWBCFunctional  *pWBCFunctional )
+template <class TFunctuinal, class TWBCFunctional>
+void ApplyFunctional( const CTPoint<int> &rSize,
+                      const CTPoint<int> &rCheck,
+                      TFunctuinal *pFunctional,
+                      TWBCFunctional *pWBCFunctional )
 {
 	NI_ASSERT( pFunctional != 0, "Wrong parameter: pFunctional == 0" );
 	NI_ASSERT( pWBCFunctional != 0, "Wrong parameter: pWBCFunctional == 0" );
 	//
-	const CTRect<int> indices( rCheck.x,
-														 rCheck.y,
-														 rSize.x - rCheck.x,
-														 rSize.y - rCheck.y );
+	const CTRect<int> indices( rCheck.x, rCheck.y, rSize.x - rCheck.x, rSize.y - rCheck.y );
 	//середина
 	//********
 	//********
@@ -105,7 +127,6 @@ void ApplyFunctional( const CTPoint<int> &rSize, const CTPoint<int> &rCheck, TFu
 	}
 }
 
-
 //функционал применяющий данный паттерн к указанной точке картинки
 struct SApplyFilterFunctional
 {
@@ -116,21 +137,20 @@ struct SApplyFilterFunctional
 	CTPoint<int> filterHalfSize;
 
 	SApplyFilterFunctional( CArray2D<uint32_t> *_pDestImage,
-													const CArray2D<uint32_t> *_pSourceImage,
-													const CArray2D<int> *_pFilter,
-													int _nDivider )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
+	                        const CArray2D<uint32_t> *_pSourceImage,
+	                        const CArray2D<int> *_pFilter,
+	                        int _nDivider )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( pFilter != 0, "Wrong parameter: pFilter == 0" );
 		NI_ASSERT( nDivider != 0, "Wrong parameter: nDivider == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
-		NI_ASSERT( ( ( pFilter->GetSizeX() & 0x1 ) != 0 ) &&
-							 ( ( pFilter->GetSizeY() & 0x1 ) != 0 ),
-							"Filter must have odd sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
+		NI_ASSERT( ( ( pFilter->GetSizeX() & 0x1 ) != 0 ) && ( ( pFilter->GetSizeY() & 0x1 ) != 0 ),
+		           "Filter must have odd sizes." );
 		filterHalfSize.x = pFilter->GetSizeX() / 2;
 		filterHalfSize.y = pFilter->GetSizeY() / 2;
 	}
@@ -138,19 +158,17 @@ struct SApplyFilterFunctional
 	void operator()( int nXIndex, int nYIndex )
 	{
 		CTRect<int> localIndices( nXIndex - filterHalfSize.x,
-															nYIndex - filterHalfSize.y,
-															nXIndex + filterHalfSize.x,
-															nYIndex + filterHalfSize.y );
+		                          nYIndex - filterHalfSize.y,
+		                          nXIndex + filterHalfSize.x,
+		                          nYIndex + filterHalfSize.y );
 		uint32_t dwRed = 0;
 		uint32_t dwGreen = 0;
 		uint32_t dwBlue = 0;
-		for ( int nFilterYIndex = 0, nLocalYIndex = localIndices.miny;
-					nLocalYIndex <= localIndices.maxy;
-					++nFilterYIndex, ++nLocalYIndex )
+		for ( int nFilterYIndex = 0, nLocalYIndex = localIndices.miny; nLocalYIndex <= localIndices.maxy;
+		      ++nFilterYIndex, ++nLocalYIndex )
 		{
-			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx;
-						nLocalXIndex <= localIndices.maxx;
-						++nFilterXIndex, ++nLocalXIndex )
+			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx; nLocalXIndex <= localIndices.maxx;
+			      ++nFilterXIndex, ++nLocalXIndex )
 			{
 				int nValue = ( *pFilter )[nFilterYIndex][nFilterXIndex];
 				const uint32_t dwColor = ( *pSourceImage )[nLocalYIndex][nLocalXIndex];
@@ -163,12 +181,11 @@ struct SApplyFilterFunctional
 		dwGreen = Clamp<int>( dwGreen / nDivider, 0, 0xFF );
 		dwBlue = Clamp<int>( dwBlue / nDivider, 0, 0xFF );
 		//
-		uint32_t dwDestColor = MakeARGBColor<uint32_t>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ),
-																							dwRed, dwGreen, dwBlue );
+		uint32_t dwDestColor =
+				MakeARGBColor<uint32_t>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ), dwRed, dwGreen, dwBlue );
 		( *pDestImage )[nYIndex][nXIndex] = dwDestColor;
 	}
 };
-
 
 //функционал применяющий данный паттерн к указанной точке картинки, с проверкой диапазонов
 // WBC = with bounds check
@@ -182,21 +199,20 @@ struct SWBCApplyFilterFunctional
 	CTPoint<int> filterHalfSize;
 
 	SWBCApplyFilterFunctional( CArray2D<uint32_t> *_pDestImage,
-														 const CArray2D<uint32_t> *_pSourceImage,
-														 const CArray2D<int> *_pFilter,
-														 int _nDivider )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
+	                           const CArray2D<uint32_t> *_pSourceImage,
+	                           const CArray2D<int> *_pFilter,
+	                           int _nDivider )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), pFilter( _pFilter ), nDivider( _nDivider )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( pFilter != 0, "Wrong parameter: pFilter == 0" );
 		NI_ASSERT( nDivider != 0, "Wrong parameter: nDivider == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
-		NI_ASSERT( ( ( pFilter->GetSizeX() & 0x1 ) != 0 ) &&
-							 ( ( pFilter->GetSizeY() & 0x1 ) != 0 ),
-							"Filter must have odd sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
+		NI_ASSERT( ( ( pFilter->GetSizeX() & 0x1 ) != 0 ) && ( ( pFilter->GetSizeY() & 0x1 ) != 0 ),
+		           "Filter must have odd sizes." );
 		size.x = pSourceImage->GetSizeX();
 		size.y = pSourceImage->GetSizeY();
 		filterHalfSize.x = pFilter->GetSizeX() / 2;
@@ -206,19 +222,17 @@ struct SWBCApplyFilterFunctional
 	void operator()( int nXIndex, int nYIndex )
 	{
 		CTRect<int> localIndices( nXIndex - filterHalfSize.x,
-															nYIndex - filterHalfSize.y,
-															nXIndex + filterHalfSize.x,
-															nYIndex + filterHalfSize.y );
+		                          nYIndex - filterHalfSize.y,
+		                          nXIndex + filterHalfSize.x,
+		                          nYIndex + filterHalfSize.y );
 		uint32_t dwRed = 0;
 		uint32_t dwGreen = 0;
 		uint32_t dwBlue = 0;
-		for ( int nFilterYIndex = 0, nLocalYIndex = localIndices.miny;
-					nLocalYIndex <= localIndices.maxy;
-					++nFilterYIndex, ++nLocalYIndex )
+		for ( int nFilterYIndex = 0, nLocalYIndex = localIndices.miny; nLocalYIndex <= localIndices.maxy;
+		      ++nFilterYIndex, ++nLocalYIndex )
 		{
-			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx;
-						nLocalXIndex <= localIndices.maxx;
-						++nFilterXIndex, ++nLocalXIndex )
+			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx; nLocalXIndex <= localIndices.maxx;
+			      ++nFilterXIndex, ++nLocalXIndex )
 			{
 				//
 				const int nXPos = Clamp<int>( nLocalXIndex, 0, size.x - 1 );
@@ -235,12 +249,11 @@ struct SWBCApplyFilterFunctional
 		dwGreen = Clamp<int>( dwGreen / nDivider, 0, 0xFF );
 		dwBlue = Clamp<int>( dwBlue / nDivider, 0, 0xFF );
 		//
-		uint32_t dwDestColor = MakeARGBColor<uint32_t>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ),
-																							dwRed, dwGreen, dwBlue );
+		uint32_t dwDestColor =
+				MakeARGBColor<uint32_t>( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ), dwRed, dwGreen, dwBlue );
 		( *pDestImage )[nYIndex][nXIndex] = dwDestColor;
 	}
 };
-
 
 //функционал помечающий край картинки
 struct SMarkOutsideEdgeFunctional
@@ -251,16 +264,16 @@ struct SMarkOutsideEdgeFunctional
 	uint32_t dwMinAlpha;
 
 	SMarkOutsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
-															const CArray2D<uint32_t> *_pSourceImage,
-															uint32_t _dwEdgeColor,
-															uint32_t _dwMinAlpha )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+	                            const CArray2D<uint32_t> *_pSourceImage,
+	                            uint32_t _dwEdgeColor,
+	                            uint32_t _dwMinAlpha )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
@@ -282,7 +295,6 @@ struct SMarkOutsideEdgeFunctional
 	}
 };
 
-
 //функционал помечающий край картинки, с проверкой диапазонов
 // WBC = with bounds check
 struct SWBCMarkOutsideEdgeFunctional
@@ -294,16 +306,16 @@ struct SWBCMarkOutsideEdgeFunctional
 	CTPoint<int> size;
 
 	SWBCMarkOutsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
-																 const CArray2D<uint32_t> *_pSourceImage,
-																 uint32_t _dwEdgeColor,
-																 uint32_t _dwMinAlpha )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+	                               const CArray2D<uint32_t> *_pSourceImage,
+	                               uint32_t _dwEdgeColor,
+	                               uint32_t _dwMinAlpha )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
 		size.x = pSourceImage->GetSizeX();
 		size.y = pSourceImage->GetSizeY();
 	}
@@ -316,10 +328,8 @@ struct SWBCMarkOutsideEdgeFunctional
 			{
 				for ( int nLocalXIndex = ( nXIndex - 1 ); nLocalXIndex <= ( nXIndex + 1 ); ++nLocalXIndex )
 				{
-					if ( ( nLocalXIndex >= 0 ) &&
-							 ( nLocalYIndex >= 0 ) &&
-							 ( nLocalXIndex < size.x ) &&
-							 ( nLocalYIndex < size.y ) )
+					if ( ( nLocalXIndex >= 0 ) && ( nLocalYIndex >= 0 ) && ( nLocalXIndex < size.x ) &&
+					     ( nLocalYIndex < size.y ) )
 					{
 						if ( GetAlphaFromARGBColor( ( *pSourceImage )[nLocalYIndex][nLocalXIndex] ) >= dwMinAlpha )
 						{
@@ -333,7 +343,6 @@ struct SWBCMarkOutsideEdgeFunctional
 	}
 };
 
-
 //функционал помечающий край картинки
 struct SMarkInsideEdgeFunctional
 {
@@ -343,16 +352,16 @@ struct SMarkInsideEdgeFunctional
 	uint32_t dwMinAlpha;
 
 	SMarkInsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
-														 const CArray2D<uint32_t> *_pSourceImage,
-														 uint32_t _dwEdgeColor,
-														 uint32_t _dwMinAlpha )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+	                           const CArray2D<uint32_t> *_pSourceImage,
+	                           uint32_t _dwEdgeColor,
+	                           uint32_t _dwMinAlpha )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
@@ -374,7 +383,6 @@ struct SMarkInsideEdgeFunctional
 	}
 };
 
-
 //функционал помечающий край картинки, с проверкой диапазонов
 // WBC = with bounds check
 struct SWBCMarkInsideEdgeFunctional
@@ -386,16 +394,16 @@ struct SWBCMarkInsideEdgeFunctional
 	CTPoint<int> size;
 
 	SWBCMarkInsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
-																const CArray2D<uint32_t> *_pSourceImage,
-																uint32_t _dwEdgeColor,
-																uint32_t _dwMinAlpha )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
+	                              const CArray2D<uint32_t> *_pSourceImage,
+	                              uint32_t _dwEdgeColor,
+	                              uint32_t _dwMinAlpha )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage ), dwEdgeColor( _dwEdgeColor ), dwMinAlpha( _dwMinAlpha )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
 		size.x = pSourceImage->GetSizeX();
 		size.y = pSourceImage->GetSizeY();
 	}
@@ -408,10 +416,8 @@ struct SWBCMarkInsideEdgeFunctional
 			{
 				for ( int nLocalXIndex = ( nXIndex - 1 ); nLocalXIndex <= ( nXIndex + 1 ); ++nLocalXIndex )
 				{
-					if ( ( nLocalXIndex >= 0 ) &&
-							 ( nLocalYIndex >= 0 ) &&
-							 ( nLocalXIndex < size.x ) &&
-							 ( nLocalYIndex < size.y ) )
+					if ( ( nLocalXIndex >= 0 ) && ( nLocalYIndex >= 0 ) && ( nLocalXIndex < size.x ) &&
+					     ( nLocalYIndex < size.y ) )
 					{
 						if ( GetAlphaFromARGBColor( ( *pSourceImage )[nLocalYIndex][nLocalXIndex] ) < dwMinAlpha )
 						{
@@ -425,7 +431,6 @@ struct SWBCMarkInsideEdgeFunctional
 	}
 };
 
-
 //функционал помечающий край картинки
 struct SEraseEdgeFunctional
 {
@@ -433,13 +438,13 @@ struct SEraseEdgeFunctional
 	const CArray2D<uint32_t> *pSourceImage;
 
 	SEraseEdgeFunctional( CArray2D<uint32_t> *_pDestImage, const CArray2D<uint32_t> *_pSourceImage )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
@@ -462,7 +467,6 @@ struct SEraseEdgeFunctional
 	}
 };
 
-
 //функционал помечающий край картинки, с проверкой диапазонов
 // WBC = with bounds check
 struct SWBCEraseEdgeFunctional
@@ -472,13 +476,13 @@ struct SWBCEraseEdgeFunctional
 	CTPoint<int> size;
 
 	SWBCEraseEdgeFunctional( CArray2D<uint32_t> *_pDestImage, const CArray2D<uint32_t> *_pSourceImage )
-		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
+			: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
 	{
 		NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 		NI_ASSERT( pSourceImage != 0, "Wrong parameter: pSourceImage == 0" );
 		NI_ASSERT( ( pDestImage->GetSizeX() == pSourceImage->GetSizeX() ) &&
-							 ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
-							"Destination and source images must have same sizes." );
+		               ( pDestImage->GetSizeY() == pSourceImage->GetSizeY() ),
+		           "Destination and source images must have same sizes." );
 		size.x = pSourceImage->GetSizeX();
 		size.y = pSourceImage->GetSizeY();
 	}
@@ -491,10 +495,8 @@ struct SWBCEraseEdgeFunctional
 			{
 				for ( int nLocalXIndex = ( nXIndex - 1 ); nLocalXIndex <= ( nXIndex + 1 ); ++nLocalXIndex )
 				{
-					if ( ( nLocalXIndex >= 0 ) &&
-							 ( nLocalYIndex >= 0 ) &&
-							 ( nLocalXIndex < size.x ) &&
-							 ( nLocalYIndex < size.y ) )
+					if ( ( nLocalXIndex >= 0 ) && ( nLocalYIndex >= 0 ) && ( nLocalXIndex < size.x ) &&
+					     ( nLocalYIndex < size.y ) )
 					{
 						if ( ( *pSourceImage )[nLocalYIndex][nLocalXIndex] == 0 )
 						{

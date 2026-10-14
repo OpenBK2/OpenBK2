@@ -31,17 +31,17 @@ _3DMOTOR_EXPORT EXTERNVAR int nTextureUseMip;
 
 namespace
 {
-	CDBPtr<NDb::SUnitBaseRPGStats> pRunUnit;
+CDBPtr<NDb::SUnitBaseRPGStats> pRunUnit;
 }
 
 // CInterfaceEncyclopedia::CDataViewer
 
 void CInterfaceEncyclopedia::CDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *_pData ) const
 {
-	const CUnitData *pData = dynamic_cast<const CUnitData*>( _pData );
+	const CUnitData *pData = dynamic_cast<const CUnitData *>( _pData );
 	if ( pData )
 	{
-		if ( IListControlItem *pItem = dynamic_cast<IListControlItem*>( pWindow ) )
+		if ( IListControlItem *pItem = dynamic_cast<IListControlItem *>( pWindow ) )
 		{
 			IWindow *pIconWnd = GetChildChecked<IWindow>( pItem, "Icon", true );
 			IWindow *pIconShadowWnd = GetChildChecked<IWindow>( pItem, "IconShadow", true );
@@ -87,10 +87,10 @@ bool CInterfaceEncyclopedia::SDataSorter::operator()( const CUnitData *pData1, c
 
 	std::wstring wszName1;
 	std::wstring wszName2;
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pData1->pStats->,LocalizedName) )
-		wszName1 = GET_TEXT_PRE(pData1->pStats->,LocalizedName);
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pData2->pStats->,LocalizedName) )
-		wszName2 = GET_TEXT_PRE(pData2->pStats->,LocalizedName);
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pData1->pStats->, LocalizedName ) )
+		wszName1 = GET_TEXT_PRE( pData1->pStats->, LocalizedName );
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pData2->pStats->, LocalizedName ) )
+		wszName2 = GET_TEXT_PRE( pData2->pStats->, LocalizedName );
 
 	std::transform( wszName1.begin(), wszName1.end(), wszName1.begin(), towlower );
 	std::transform( wszName2.begin(), wszName2.end(), wszName2.begin(), towlower );
@@ -102,8 +102,7 @@ bool CInterfaceEncyclopedia::SDataSorter::operator()( const CUnitData *pData1, c
 
 // CInterfaceEncyclopedia
 
-CInterfaceEncyclopedia::CInterfaceEncyclopedia() :
-	CInterfaceScreenBase( "Encyclopedia", "encyclopedia" )
+CInterfaceEncyclopedia::CInterfaceEncyclopedia() : CInterfaceScreenBase( "Encyclopedia", "encyclopedia" )
 {
 	AddObserver( "menu_back", &CInterfaceEncyclopedia::MsgBack );
 	AddObserver( "StepBackward", &CInterfaceEncyclopedia::MsgStepBackward );
@@ -131,7 +130,7 @@ bool CInterfaceEncyclopedia::Init()
 
 	MakeInterior();
 
-//	pScreen->Enable( false );
+	//	pScreen->Enable( false );
 
 	nLoading = 2;
 
@@ -143,7 +142,7 @@ void CInterfaceEncyclopedia::EffectStart( bool bEnter )
 	bEffectEnter = bEnter;
 	bEffectBorder = false;
 
-//	pScreen->Enable( false );
+	//	pScreen->Enable( false );
 
 	CPtr<SWindowContextB2Move> pContext = new SWindowContextB2Move();
 	pContext->bGoOut = !bEnter;
@@ -184,7 +183,7 @@ void CInterfaceEncyclopedia::EffectBorderFinish()
 {
 	if ( bEffectEnter )
 	{
-//		pScreen->Enable( true );
+		//		pScreen->Enable( true );
 
 		for ( std::vector<SFilterCache>::iterator it = filterCache.begin(); it != filterCache.end(); ++it )
 		{
@@ -209,7 +208,7 @@ void CInterfaceEncyclopedia::MakeInterior()
 	p3DCtrl = GetChildChecked<IWindow3DControl>( pMain, "3DControl", true );
 	pStepBackward = GetChildChecked<IButton>( pMain, "StepBackward", true );
 	pStepForward = GetChildChecked<IButton>( pMain, "StepForward", true );
-	IListControl* pUnitListCont = GetChildChecked<IListControl>( pMain, "UnitListContainer", true );
+	IListControl *pUnitListCont = GetChildChecked<IListControl>( pMain, "UnitListContainer", true );
 
 	filterCountries.resize( EFC_COUNT );
 	filterCountries[EFC_ALL].szBtnName = "CountryAllBtn";
@@ -228,12 +227,12 @@ void CInterfaceEncyclopedia::MakeInterior()
 	filterUnitTypes[EFUT_TRANSPORT].szBtnName = "UnitTypesTransportBtn";
 	filterUnitTypes[EFUT_MISC].szBtnName = "UnitTypesMiscBtn";
 
-	for ( std::vector< SFilterBtn >::iterator it = filterCountries.begin(); it != filterCountries.end(); ++it )
+	for ( std::vector<SFilterBtn>::iterator it = filterCountries.begin(); it != filterCountries.end(); ++it )
 	{
 		SFilterBtn &filter = *it;
 		filter.pBtn = GetChildChecked<IButton>( pMain, filter.szBtnName, true );
 	}
-	for ( std::vector< SFilterBtn >::iterator it = filterUnitTypes.begin(); it != filterUnitTypes.end(); ++it )
+	for ( std::vector<SFilterBtn>::iterator it = filterUnitTypes.begin(); it != filterUnitTypes.end(); ++it )
 	{
 		SFilterBtn &filter = *it;
 		filter.pBtn = GetChildChecked<IButton>( pMain, filter.szBtnName, true );
@@ -290,7 +289,7 @@ int CInterfaceEncyclopedia::Check( const std::string &szCheckName ) const
 
 void CInterfaceEncyclopedia::MsgBack( const SGameMessage &msg )
 {
-//	EffectBorderStart( false );
+	//	EffectBorderStart( false );
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	if ( !pRunUnit )
@@ -329,7 +328,7 @@ void CInterfaceEncyclopedia::MsgUnitSelectionChanged( const SGameMessage &msg )
 	{
 		if ( IListControlItem *pItem = cache.pUnitListCont->GetSelectedListItem() )
 		{
-			AddSelectedUnit( dynamic_cast<CUnitData*>( pItem->GetUserData() ), eSelCountry, eSelUnitType );
+			AddSelectedUnit( dynamic_cast<CUnitData *>( pItem->GetUserData() ), eSelCountry, eSelUnitType );
 			UpdateSelectedUnitInfo();
 		}
 	}
@@ -402,7 +401,7 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 		{
 			SFilterCache &cache = filterCache[nCountry * EFUT_COUNT + nUnitType];
 			if ( pSample )
-				cache.pUnitListCont = dynamic_cast<IListControl*>( AddWindowCopy( pSample->GetParentWindow(), pSample ) );
+				cache.pUnitListCont = dynamic_cast<IListControl *>( AddWindowCopy( pSample->GetParentWindow(), pSample ) );
 			if ( !cache.pUnitListCont )
 				continue;
 
@@ -487,14 +486,15 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 					CUnitData *pData = GetUnitData( pStats );
 					if ( pData )
 					{
-						if ( CHECK_TEXT_NOT_EMPTY_PRE(pStats->,LocalizedName) )
-							pData->wszBriefDesc = GET_TEXT_PRE(pStats->,LocalizedName);
+						if ( CHECK_TEXT_NOT_EMPTY_PRE( pStats->, LocalizedName ) )
+							pData->wszBriefDesc = GET_TEXT_PRE( pStats->, LocalizedName );
 						cache.filteredUnits.push_back( pData );
 					}
 				}
 			}
 			sort( cache.filteredUnits.begin(), cache.filteredUnits.end(), SDataSorter() );
-			for ( std::vector< CPtr<CUnitData> >::iterator it = cache.filteredUnits.begin(); it != cache.filteredUnits.end(); ++it )
+			for ( std::vector<CPtr<CUnitData>>::iterator it = cache.filteredUnits.begin(); it != cache.filteredUnits.end();
+			      ++it )
 			{
 				CUnitData *pData = *it;
 				IListControlItem *pItem = cache.pUnitListCont->AddItem( pData );
@@ -524,14 +524,14 @@ void CInterfaceEncyclopedia::UpdateFilters()
 	{
 		SFilterBtn &filter = filterCountries[i];
 		if ( filter.pBtn )
-			filter.pBtn->SetState( (i == eSelCountry) ? 1 : 0 );
+			filter.pBtn->SetState( ( i == eSelCountry ) ? 1 : 0 );
 	}
 
 	for ( int i = 0; i < filterUnitTypes.size(); ++i )
 	{
 		SFilterBtn &filter = filterUnitTypes[i];
 		if ( filter.pBtn )
-			filter.pBtn->SetState( (i == eSelUnitType) ? 1 : 0 );
+			filter.pBtn->SetState( ( i == eSelUnitType ) ? 1 : 0 );
 	}
 
 	for ( int nCountry = 0; nCountry < EFC_COUNT; ++nCountry )
@@ -542,7 +542,7 @@ void CInterfaceEncyclopedia::UpdateFilters()
 
 			if ( cache.pUnitListCont )
 			{
-				bool bShow = (nCountry == eSelCountry && nUnitType == eSelUnitType);
+				bool bShow = ( nCountry == eSelCountry && nUnitType == eSelUnitType );
 				cache.pUnitListCont->ShowWindow( bShow );
 				if ( bShow )
 					cache.pUnitListCont->Update();
@@ -564,15 +564,15 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 		const NDb::SUnitBaseRPGStats *pStats = unit.pData->pStats;
 		if ( pUnitDescView )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pStats->,FullDescription) )
-				pUnitDescView->SetText( pUnitDescView->GetDBText() + GET_TEXT_PRE(pStats->,FullDescription) );
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pStats->, FullDescription ) )
+				pUnitDescView->SetText( pUnitDescView->GetDBText() + GET_TEXT_PRE( pStats->, FullDescription ) );
 			else
 				pUnitDescView->SetText( L"" );
 		}
 		if ( pUnitNameView )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pStats->,LocalizedName) )
-				pUnitNameView->SetText( pUnitNameView->GetDBText() + GET_TEXT_PRE(pStats->,LocalizedName) );
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pStats->, LocalizedName ) )
+				pUnitNameView->SetText( pUnitNameView->GetDBText() + GET_TEXT_PRE( pStats->, LocalizedName ) );
 			else
 				pUnitNameView->SetText( L"" );
 		}
@@ -590,7 +590,7 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 			IWindow3DControl::SObject object;
 			object.nID = 0;
 			object.pModel = GetModel( pStats->pvisualObject, NDb::SEASON_SUMMER );
-			NI_ASSERT( object.pModel, fmt::format( "No model for object: \"{}\"", NDb::GetResName(pStats) ) );
+			NI_ASSERT( object.pModel, fmt::format( "No model for object: \"{}\"", NDb::GetResName( pStats ) ) );
 			object.vPos = param.vPos;
 			object.vSize = param.vSize;
 			objects.push_back( object );
@@ -652,12 +652,13 @@ void CInterfaceEncyclopedia::UpdateListCtrlSelection()
 	}
 }
 
-CInterfaceEncyclopedia::CUnitData* CInterfaceEncyclopedia::GetUnitData( const NDb::SUnitBaseRPGStats *pStats )
+CInterfaceEncyclopedia::CUnitData *CInterfaceEncyclopedia::GetUnitData( const NDb::SUnitBaseRPGStats *pStats )
 {
 	if ( !pStats )
 		return 0;
 
-	std::unordered_map< CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash >::iterator it = knownUnits.find( pStats );
+	std::unordered_map<CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash>::iterator it =
+			knownUnits.find( pStats );
 	if ( it != knownUnits.end() )
 	{
 		return it->second;
@@ -698,8 +699,8 @@ bool CInterfaceEncyclopedia::StepLocal( bool bAppActive )
 
 // CInterfaceEncyclopediaWait
 
-CInterfaceEncyclopediaWait::CInterfaceEncyclopediaWait() :
-	CInterfaceScreenBase( "EncyclopediaWait", "encyclopedia_wait" )
+CInterfaceEncyclopediaWait::CInterfaceEncyclopediaWait()
+		: CInterfaceScreenBase( "EncyclopediaWait", "encyclopedia_wait" )
 {
 }
 
@@ -748,33 +749,25 @@ int CInterfaceEncyclopediaWait::Check( const std::string &szCheckName ) const
 
 // CICEncyclopedia
 
-void CICEncyclopedia::PreCreate()
-{
-}
+void CICEncyclopedia::PreCreate() {}
 
 void CICEncyclopedia::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICEncyclopedia::Configure( const char *pszConfig )
-{
-}
+void CICEncyclopedia::Configure( const char *pszConfig ) {}
 
 // CICEncyclopediaWait
 
-void CICEncyclopediaWait::PreCreate()
-{
-}
+void CICEncyclopediaWait::PreCreate() {}
 
 void CICEncyclopediaWait::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICEncyclopediaWait::Configure( const char *pszConfig )
-{
-}
+void CICEncyclopediaWait::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17189481, CInterfaceEncyclopedia )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ENCYCLOPEDIA, CICEncyclopedia )

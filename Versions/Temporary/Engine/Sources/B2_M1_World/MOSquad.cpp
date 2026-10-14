@@ -10,12 +10,12 @@
 namespace
 {
 
-typedef std::unordered_map< NDb::EDesignSquadType, SIconsSetInfo, SEnumHash > CIconsSet;
+typedef std::unordered_map<NDb::EDesignSquadType, SIconsSetInfo, SEnumHash> CIconsSet;
 static bool bIsInitializedByDB = false;
 CIconsSet iconsSets;
 SIconsSetInfo iconsSetDefault;
 
-const SIconsSetInfo& GetDBIconsSet( NDb::EDesignSquadType eType )
+const SIconsSetInfo &GetDBIconsSet( NDb::EDesignSquadType eType )
 {
 	if ( !bIsInitializedByDB )
 	{
@@ -48,7 +48,7 @@ CMOSquad::CMOSquad()
 {
 }
 
-CMOSquad::~CMOSquad(void)
+CMOSquad::~CMOSquad( void )
 {
 	while ( !units.empty() )
 	{
@@ -61,13 +61,13 @@ CMOSquad::~CMOSquad(void)
 void CMOSquad::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
 	if ( !units.empty() )
-		(*units.begin())->SendAcknowledgement( pAckManager, eAck );
+		( *units.begin() )->SendAcknowledgement( pAckManager, eAck );
 }
 
 bool CMOSquad::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update )
 {
 	bool bCumulativeRet = false;
-	for( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
+	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
 	{
 		IMOUnit *pUnit = *it;
 		const bool bRet = pUnit->AIUpdateSpecialAbility( update );
@@ -76,7 +76,11 @@ bool CMOSquad::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &upd
 	return bCumulativeRet;
 }
 
-bool CMOSquad::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
+bool CMOSquad::Create( const int nUniqueID,
+                       const SAIBasicUpdate *_pUpdate,
+                       NDb::ESeason eSeason,
+                       const NDb::EDayNight eDayTime,
+                       bool bInEditor )
 {
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
 
@@ -147,7 +151,7 @@ bool CMOSquad::IsInSquad( struct IMOUnit *pUnit )
 	return false;
 }
 
-void CMOSquad::GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const
+void CMOSquad::GetPassangers( std::vector<CMOSelectable *> *pBuffer ) const
 {
 	NI_ASSERT( pBuffer, "Wrong pointer" );
 	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
@@ -172,12 +176,11 @@ void CMOSquad::GetActions( CUserActions *pActions, EActionsType eActions ) const
 	}
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
 	{
-		const NDb::SSquadRPGStats* pSt = checked_cast<const NDb::SSquadRPGStats*>(GetStats());
+		const NDb::SSquadRPGStats *pSt = checked_cast<const NDb::SSquadRPGStats *>( GetStats() );
 		if ( pSt->formations.empty() )
 			pActions->RemoveAction( NDb::USER_ACTION_FORMATION );
 		else
 		{
-
 		}
 	}
 }
@@ -187,7 +190,7 @@ void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 	if ( !GetStats() )
 		return;
 
-	const NDb::SSquadRPGStats* pSt = checked_cast<const NDb::SSquadRPGStats*>(GetStats());
+	const NDb::SSquadRPGStats *pSt = checked_cast<const NDb::SSquadRPGStats *>( GetStats() );
 
 	for ( int i = 0; i < pSt->members.size(); ++i )
 	{
@@ -199,7 +202,7 @@ void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 		*pActions |= pMemberActions->availUserActions;
 		for ( int i = 0; i < pMemberActions->specialAbilities.size(); ++i )
 		{
-			const NDb::SUnitSpecialAblityDesc *pDesc = pMemberActions->specialAbilities[ i ];
+			const NDb::SUnitSpecialAblityDesc *pDesc = pMemberActions->specialAbilities[i];
 			if ( !pDesc )
 				continue;
 			pActions->SetAction( GetActionByAbility( pDesc->eName ) );
@@ -229,23 +232,25 @@ void CMOSquad::GetDisabledActions( CUserActions *pActions, EActionsType eActions
 		pActions->SetAction( NDb::USER_ACTION_FORMATION_1 );
 		pActions->SetAction( NDb::USER_ACTION_FORMATION_2 );
 		pActions->SetAction( NDb::USER_ACTION_FORMATION_3 );
-		const NDb::SSquadRPGStats* pSt = checked_cast<const NDb::SSquadRPGStats*>(GetStats());
-		for (std::vector< NDb::SSquadRPGStats::SFormation >::const_iterator it = pSt->formations.begin(); it != pSt->formations.end(); ++it )
+		const NDb::SSquadRPGStats *pSt = checked_cast<const NDb::SSquadRPGStats *>( GetStats() );
+		for ( std::vector<NDb::SSquadRPGStats::SFormation>::const_iterator it = pSt->formations.begin();
+		      it != pSt->formations.end();
+		      ++it )
 		{
 			switch ( it->etype )
 			{
-			case NDb::SSquadRPGStats::SFormation::OFFENSIVE:
-				pActions->RemoveAction( NDb::USER_ACTION_FORMATION_3 );
-				break;
-			case NDb::SSquadRPGStats::SFormation::DEFAULT:
-				pActions->RemoveAction( NDb::USER_ACTION_FORMATION_0 );
-				break;
-			case NDb::SSquadRPGStats::SFormation::DEFENSIVE:
-				pActions->RemoveAction( NDb::USER_ACTION_FORMATION_2 );
-				break;
-			case NDb::SSquadRPGStats::SFormation::MOVEMENT:
-				pActions->RemoveAction( NDb::USER_ACTION_FORMATION_1 );
-				break;
+				case NDb::SSquadRPGStats::SFormation::OFFENSIVE:
+					pActions->RemoveAction( NDb::USER_ACTION_FORMATION_3 );
+					break;
+				case NDb::SSquadRPGStats::SFormation::DEFAULT:
+					pActions->RemoveAction( NDb::USER_ACTION_FORMATION_0 );
+					break;
+				case NDb::SSquadRPGStats::SFormation::DEFENSIVE:
+					pActions->RemoveAction( NDb::USER_ACTION_FORMATION_2 );
+					break;
+				case NDb::SSquadRPGStats::SFormation::MOVEMENT:
+					pActions->RemoveAction( NDb::USER_ACTION_FORMATION_1 );
+					break;
 			}
 		}
 	}
@@ -261,9 +266,9 @@ void CMOSquad::Select( bool bSelect )
 	CMOSelectable::Select( bSelect );
 
 	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
-  {
-    (*it)->Select( bSelect );
-  }
+	{
+		( *it )->Select( bSelect );
+	}
 }
 
 void CMOSquad::SetSelectionGroup( int nSelectionGroup )
@@ -271,20 +276,22 @@ void CMOSquad::SetSelectionGroup( int nSelectionGroup )
 	CMOSelectable::SetSelectionGroup( nSelectionGroup );
 
 	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
-  {
-    (*it)->SetSelectionGroup( nSelectionGroup );
-  }
+	{
+		( *it )->SetSelectionGroup( nSelectionGroup );
+	}
 }
 
-void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene,
-	IClientAckManager *pAckManager )
+void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
+                                  struct ISoundScene *pSoundScene,
+                                  IClientAckManager *pAckManager )
 {
-	CPtr<IMOContainer> pTransport = units.empty() ? 0 : checked_cast_ptr<CMOUnitInfantry*>( units.front() )->GetTransport();
+	CPtr<IMOContainer> pTransport =
+			units.empty() ? 0 : checked_cast_ptr<CMOUnitInfantry *>( units.front() )->GetTransport();
 
-	std::vector< CPtr<IMOUnit> > toDissapear;
+	std::vector<CPtr<IMOUnit>> toDissapear;
 	toDissapear.resize( units.size() );
 	copy( units.begin(), units.end(), toDissapear.begin() );
-	for ( std::vector< CPtr<IMOUnit> >::const_iterator it = toDissapear.begin(); it != toDissapear.end(); ++it )
+	for ( std::vector<CPtr<IMOUnit>>::const_iterator it = toDissapear.begin(); it != toDissapear.end(); ++it )
 	{
 		IMOUnit *pUnit = *it;
 		pUnit->AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
@@ -311,7 +318,7 @@ bool CMOSquad::AIUpdateAction( bool bEnable, EActionCommand eAction )
 {
 	NI_ASSERT( eAction == ACTION_COMMAND_CATCH_ARTILLERY, "Unknown update" );
 
-//	bCanCatchArtillery = bEnable;
+	//	bCanCatchArtillery = bEnable;
 
 	return true;
 }
@@ -321,7 +328,7 @@ void CMOSquad::GetAbilityInfo( CAbilityInfo &squadAbilities ) const
 	squadAbilities.clear();
 
 	//Collect ability info
-	for( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
+	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
 	{
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
@@ -335,7 +342,7 @@ void CMOSquad::GetAbilityInfo( CAbilityInfo &squadAbilities ) const
 
 int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 {
-	for( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
+	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
 	{
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
@@ -348,10 +355,10 @@ int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 	return -1;
 }
 
-const NDb::SUnitSpecialAblityDesc* CMOSquad::GetAbilityDesc( NDb::EUserAction eAction ) const
+const NDb::SUnitSpecialAblityDesc *CMOSquad::GetAbilityDesc( NDb::EUserAction eAction ) const
 {
 	// A squad exposes the descriptor belonging to the first living unit with this ability.
-	for( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
+	for ( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
 	{
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
@@ -363,7 +370,6 @@ const NDb::SUnitSpecialAblityDesc* CMOSquad::GetAbilityDesc( NDb::EUserAction eA
 	}
 	return 0;
 }
-
 
 bool CMOSquad::Load( struct IMOUnit *pUnit, const bool bEnter )
 {
@@ -395,7 +401,7 @@ bool CMOSquad::Load( struct IMOUnit *pUnit, const bool bEnter )
 float CMOSquad::GetVisualHPFraction() const
 {
 	float fFraction = 0.0f;
-	if ( const NDb::SSquadRPGStats *pSquadStats = checked_cast<const NDb::SSquadRPGStats*>( GetStats() ) )
+	if ( const NDb::SSquadRPGStats *pSquadStats = checked_cast<const NDb::SSquadRPGStats *>( GetStats() ) )
 	{
 		if ( !pSquadStats->members.empty() )
 		{
@@ -408,7 +414,7 @@ float CMOSquad::GetVisualHPFraction() const
 float CMOSquad::GetVisualHPFractionSmooth() const
 {
 	float fFraction = 0.0f;
-	if ( const NDb::SSquadRPGStats *pSquadStats = checked_cast<const NDb::SSquadRPGStats*>( GetStats() ) )
+	if ( const NDb::SSquadRPGStats *pSquadStats = checked_cast<const NDb::SSquadRPGStats *>( GetStats() ) )
 	{
 		if ( !pSquadStats->members.empty() )
 		{
@@ -458,9 +464,7 @@ void CMOSquad::UpdateSquadIcons()
 		pContainer->UpdateIcons();
 }
 
-void CMOSquad::InitByDB()
-{
-}
+void CMOSquad::InitByDB() {}
 
 void CMOSquad::UpdateServedGunCrew( const bool bClearCrew )
 {

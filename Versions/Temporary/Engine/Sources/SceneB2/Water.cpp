@@ -26,12 +26,12 @@
 #define DEF_COASTES_NUM 2
 
 #define DEF_WATER_TEX_TILES_PER_TEX 2
-#define DEF_WATER_TEX_TILE_COEFF (1.0f / DEF_WATER_TEX_TILES_PER_TEX)
+#define DEF_WATER_TEX_TILE_COEFF ( 1.0f / DEF_WATER_TEX_TILES_PER_TEX )
 #define DEF_WATER_TEX_TILE_COEFF2 0.1f
 
 #define DEF_WATER_TEX_ANIM_NUM 4
-#define DEF_WATER_TEX_COORD_OFFSET (1.0f / DEF_WATER_TEX_ANIM_NUM)
-#define DEF_WATER_TEX_COORD_OFFSET2 (1.0f / DEF_WATER_TEX_ANIM_NUM - DEF_TEX_ERROR * 2.0f)
+#define DEF_WATER_TEX_COORD_OFFSET ( 1.0f / DEF_WATER_TEX_ANIM_NUM )
+#define DEF_WATER_TEX_COORD_OFFSET2 ( 1.0f / DEF_WATER_TEX_ANIM_NUM - DEF_TEX_ERROR * 2.0f )
 
 #define DEF_WAVES_NUM 10
 #define DEF_WAVES_AMPLITUDE 1.4f
@@ -51,11 +51,11 @@
 #define DEF_WAVE_MAX_AMPL 1.5f
 #define DEF_WAVE_MIN_AMPL 0.0f
 
-#define DEF_FOAM_DY ( /*0.0075f*/0.08f * DEF_NEW_TIME * 12.0f )
+#define DEF_FOAM_DY ( /*0.0075f*/ 0.08f * DEF_NEW_TIME * 12.0f )
 #define DEF_FOAM_SCALE 0.2f
 //#define DEF_FOAM_BACK_DIST 0.6f
 #define DEF_FOAM_BACK_DIST 0.5f
-#define DEF_FOAM_BACK_DIST2 ( 1.0f - ( 1.0f - DEF_FOAM_BACK_DIST ) * ( 1.0f - DEF_FOAM_BACK_DIST ))
+#define DEF_FOAM_BACK_DIST2 ( 1.0f - ( 1.0f - DEF_FOAM_BACK_DIST ) * ( 1.0f - DEF_FOAM_BACK_DIST ) )
 #define DEF_INV_ONE_MINUS_FOAM_BACK_DIST2 ( 1.0f / ( 1.0f - DEF_FOAM_BACK_DIST2 ) )
 
 #define DEF_MESH2_TILES_PER_TEX 2
@@ -81,17 +81,19 @@
 
 #define DEF_FOAM_SPEED_QUAD 0.1f
 #define DEF_FOAM_SPEED_QUAD_X 0.31622776f
-#define DEF_FOAM_SPEED_QUAD_SCALE (1.0f / DEF_FOAM_SPEED_QUAD)
+#define DEF_FOAM_SPEED_QUAD_SCALE ( 1.0f / DEF_FOAM_SPEED_QUAD )
 
 //static int nLastRandSeed = 0;
 
 // normal.w - transparency
 // texU.rgb - dwColor (texU.w is occupied by fog)
 // texV.rgb - cScndTex (texV.w is occupied by fog)
-static BOOST_FORCEINLINE void SetupColors( NGScene::SVertex *pRes, const uint32_t dwColor, const unsigned char cScndTex,
-																			 const unsigned char cTransparency )
+static BOOST_FORCEINLINE void SetupColors( NGScene::SVertex *pRes,
+                                           const uint32_t dwColor,
+                                           const unsigned char cScndTex,
+                                           const unsigned char cTransparency )
 {
-	CalcCompactVector( &pRes->normal, CVec3(0, 0, 1) );
+	CalcCompactVector( &pRes->normal, CVec3( 0, 0, 1 ) );
 	pRes->normal.w = cTransparency;
 	pRes->texU.dw = dwColor;
 	int nSndTex = cScndTex;
@@ -101,7 +103,7 @@ static BOOST_FORCEINLINE void SetupColors( NGScene::SVertex *pRes, const uint32_
 }
 
 CWaterPatch::CWaterPatch( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer, CCSBound *_pBound )
-: pDesc( _pDesc ), pTimer( _pTimer ), pBound( _pBound )
+		: pDesc( _pDesc ), pTimer( _pTimer ), pBound( _pBound )
 {
 	fBaseHeight = 0.5f;
 
@@ -116,9 +118,18 @@ CWaterPatch::CWaterPatch( const NDb::SWater *_pDesc, CFuncBase<STime> *_pTimer, 
 
 void CWaterPatch::Create( NGScene::IGameView *pGView )
 {
-	NGScene::SFullRoomInfo room( NGScene::SRoomInfo(NGScene::LF_SKIP_LIGHTING, -100), 0, 0 );
-	layerWater.pHolder = pGView->CreateDynamicMesh( pGView->MakeMeshInfo(layerWater.pPatch, pDesc->pWaterSet->water.pMaterial), 0, pBound, NGScene::MakeLargeHintBound(), room );
-	layerSurf.pHolder = pGView->CreateDynamicMesh( pGView->MakeMeshInfo(layerSurf.pPatch, pDesc->pWaterSet->pSurf), 0, pBound, NGScene::MakeLargeHintBound(), room );
+	NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
+	layerWater.pHolder =
+			pGView->CreateDynamicMesh( pGView->MakeMeshInfo( layerWater.pPatch, pDesc->pWaterSet->water.pMaterial ),
+	                               0,
+	                               pBound,
+	                               NGScene::MakeLargeHintBound(),
+	                               room );
+	layerSurf.pHolder = pGView->CreateDynamicMesh( pGView->MakeMeshInfo( layerSurf.pPatch, pDesc->pWaterSet->pSurf ),
+	                                               0,
+	                                               pBound,
+	                                               NGScene::MakeLargeHintBound(),
+	                                               room );
 }
 
 //static vector<CVec3> lastPositions( 128 );
@@ -132,8 +143,9 @@ int CWaterPatch::Process( const long nTime )
 		{
 			grid[nCount].pos.z = fBaseHeight;
 			for ( int k = 0; k < waves.size(); ++k )
-				grid[nCount].pos.z += waves[k].fAmplitude * waterSurf[g][i].amplitude[k] *
-													GetWaveProfile( GetFracPart(waterSurf[g][i].phase[k] + fCurTime * waves[k].fInvPeriod) );
+				grid[nCount].pos.z +=
+						waves[k].fAmplitude * waterSurf[g][i].amplitude[k] *
+						GetWaveProfile( GetFracPart( waterSurf[g][i].phase[k] + fCurTime * waves[k].fInvPeriod ) );
 			++nCount;
 		}
 	}
@@ -158,58 +170,67 @@ int CWaterPatch::Process( const long nTime )
 	const float fTexOffsY2 = 0.25f * nTexOffsY2 + DEF_TEX_ERROR;
 
 	nCount = 0;
-	for ( int g = 0; g < (waterSurf.GetSizeY() - 1); ++g )
+	for ( int g = 0; g < ( waterSurf.GetSizeY() - 1 ); ++g )
 	{
-		for ( int i = 0; i < (waterSurf.GetSizeX() - 1); ++i )
+		for ( int i = 0; i < ( waterSurf.GetSizeX() - 1 ); ++i )
 		{
 			const unsigned int nGridInd = g * waterSurf.GetSizeX() + i;
 			{
 				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount];
 				const CVec3 &vNode = grid[nGridInd].pos;
 				curWaterVert.pos.Set(
-					vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i].fOffsX + vWaterOffset.x,
-					vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i].fOffsY + vWaterOffset.y,
-					vNode.z );
+						vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i].fOffsX + vWaterOffset.x,
+						vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i].fOffsY + vWaterOffset.y,
+						vNode.z );
 				curWaterVert.tex.Set( fTexX * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX,
-															fTexY * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY );
+				                      fTexY * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY );
 				objDataWater.secondTex[nCount].Set( fTexX2 * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX2,
-																						fTexY2 * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY2 );
+				                                    fTexY2 * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY2 );
 			}
 			{
 				const unsigned int nCurGridInd = nGridInd + 1;
-				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount+1];
+				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount + 1];
 				const CVec3 &vNode = grid[nCurGridInd].pos;
-				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i+1].fOffsX + vWaterOffset.x,
-															vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i+1].fOffsY + vWaterOffset.y,
-															vNode.z );
-				curWaterVert.tex.Set( (fTexX + DEF_WATER_TEX_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX,
-															 fTexY * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY);
-				objDataWater.secondTex[nCount+1].Set( (fTexX2 + DEF_MESH2_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX2,
-																							 fTexY2 * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY2 );
+				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+				                          waterHorDeform[g][i + 1].fOffsX + vWaterOffset.x,
+				                      vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+				                          waterHorDeform[g][i + 1].fOffsY + vWaterOffset.y,
+				                      vNode.z );
+				curWaterVert.tex.Set( ( fTexX + DEF_WATER_TEX_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX,
+				                      fTexY * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY );
+				objDataWater.secondTex[nCount + 1].Set( ( fTexX2 + DEF_MESH2_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 +
+				                                            fTexOffsX2,
+				                                        fTexY2 * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY2 );
 			}
 			{
 				const unsigned int nCurGridInd = nGridInd + 1 + waterSurf.GetSizeX();
-				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount+2];
+				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount + 2];
 				const CVec3 &vNode = grid[nCurGridInd].pos;
-				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g+1][i+1].fOffsX + vWaterOffset.x,
-															vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g+1][i+1].fOffsY + vWaterOffset.y,
-															vNode.z );
-				curWaterVert.tex.Set( (fTexX + DEF_WATER_TEX_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX,
-															(fTexY + DEF_WATER_TEX_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY );
-				objDataWater.secondTex[nCount+2].Set( (fTexX2 + DEF_MESH2_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX2,
-																							(fTexY2 + DEF_MESH2_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY2 );
+				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+				                          waterHorDeform[g + 1][i + 1].fOffsX + vWaterOffset.x,
+				                      vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+				                          waterHorDeform[g + 1][i + 1].fOffsY + vWaterOffset.y,
+				                      vNode.z );
+				curWaterVert.tex.Set( ( fTexX + DEF_WATER_TEX_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX,
+				                      ( fTexY + DEF_WATER_TEX_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY );
+				objDataWater.secondTex[nCount + 2].Set(
+						( fTexX2 + DEF_MESH2_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX2,
+						( fTexY2 + DEF_MESH2_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY2 );
 			}
 			{
 				const unsigned int nCurGridInd = nGridInd + waterSurf.GetSizeX();
-				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount+3];
+				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount + 3];
 				const CVec3 &vNode = grid[nCurGridInd].pos;
-				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g+1][i].fOffsX + vWaterOffset.x,
-															vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g+1][i].fOffsY + vWaterOffset.y,
-															vNode.z );
-				curWaterVert.tex.Set(	fTexX * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX,
-															(fTexY + DEF_WATER_TEX_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY );
-				objDataWater.secondTex[nCount+3].Set(	fTexX2 * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX2,
-																							(fTexY2 + DEF_MESH2_TILE_COEFF) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY2 );
+				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+				                          waterHorDeform[g + 1][i].fOffsX + vWaterOffset.x,
+				                      vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+				                          waterHorDeform[g + 1][i].fOffsY + vWaterOffset.y,
+				                      vNode.z );
+				curWaterVert.tex.Set( fTexX * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX,
+				                      ( fTexY + DEF_WATER_TEX_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsY );
+				objDataWater.secondTex[nCount + 3].Set( fTexX2 * DEF_WATER_TEX_COORD_OFFSET2 + fTexOffsX2,
+				                                        ( fTexY2 + DEF_MESH2_TILE_COEFF ) * DEF_WATER_TEX_COORD_OFFSET2 +
+				                                            fTexOffsY2 );
 			}
 			++nTexX;
 			if ( nTexX >= DEF_WATER_TEX_TILES_PER_TEX )
@@ -293,42 +314,49 @@ int CWaterPatch::Process( const long nTime )
 	nCount = 0;
 	for ( int g = 0; g < nCoastLen; ++g )
 	{
-		for ( int i = 0; i < (waterSurf.GetSizeX() - 1); ++i )
+		for ( int i = 0; i < ( waterSurf.GetSizeX() - 1 ); ++i )
 		{
 			const unsigned int nGridInd = g * waterSurf.GetSizeX() + i;
 			{
 				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount];
 				const CVec3 &vNode = grid[nGridInd].pos;
-				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i].fOffsX + vWaterOffset.x,
-															vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i].fOffsY + vWaterOffset.y,
-															vNode.z );
+				curWaterVert.pos.Set(
+						vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i].fOffsX + vWaterOffset.x,
+						vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i].fOffsY + vWaterOffset.y,
+						vNode.z );
 				SetupColors( &curWaterVert, grid[nGridInd].color & 0xffffff, grid[nGridInd].color >> 24, 0xff );
 			}
 			{
 				const unsigned int nCurGridInd = nGridInd + 1;
-				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount+1];
+				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount + 1];
 				const CVec3 &vNode = grid[nCurGridInd].pos;
-				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i+1].fOffsX + vWaterOffset.x,
-															vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i+1].fOffsY + vWaterOffset.y,
-															vNode.z );
+				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+				                          waterHorDeform[g][i + 1].fOffsX + vWaterOffset.x,
+				                      vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+				                          waterHorDeform[g][i + 1].fOffsY + vWaterOffset.y,
+				                      vNode.z );
 				SetupColors( &curWaterVert, grid[nGridInd].color & 0xffffff, grid[nGridInd].color >> 24, 0xff );
 			}
 			{
 				const unsigned int nCurGridInd = nGridInd + 1 + waterSurf.GetSizeX();
-				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount+2];
+				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount + 2];
 				const CVec3 &vNode = grid[nCurGridInd].pos;
-				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g+1][i+1].fOffsX + vWaterOffset.x,
-															vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g+1][i+1].fOffsY + vWaterOffset.y,
-															vNode.z );
+				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+				                          waterHorDeform[g + 1][i + 1].fOffsX + vWaterOffset.x,
+				                      vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+				                          waterHorDeform[g + 1][i + 1].fOffsY + vWaterOffset.y,
+				                      vNode.z );
 				SetupColors( &curWaterVert, grid[nGridInd].color & 0xffffff, grid[nGridInd].color >> 24, 0xff );
 			}
 			{
 				const unsigned int nCurGridInd = nGridInd + waterSurf.GetSizeX();
-				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount+3];
+				NGScene::SVertex &curWaterVert = objDataWater.verts[nCount + 3];
 				const CVec3 &vNode = grid[nCurGridInd].pos;
-				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g+1][i].fOffsX + vWaterOffset.x,
-															vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g+1][i].fOffsY + vWaterOffset.y,
-															vNode.z );
+				curWaterVert.pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+				                          waterHorDeform[g + 1][i].fOffsX + vWaterOffset.x,
+				                      vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+				                          waterHorDeform[g + 1][i].fOffsY + vWaterOffset.y,
+				                      vNode.z );
 				SetupColors( &curWaterVert, grid[nGridInd].color & 0xffffff, grid[nGridInd].color >> 24, 0xff );
 			}
 			nCount += 4;
@@ -352,7 +380,7 @@ int CWaterPatch::Process( const long nTime )
 				const float fFoamDy = ( fDy - nDy + nTale ) * 0.5f;
 				//foamParams[k][i].fFoamDy += DEF_FOAM_DY;
 				const float t = DEF_FOAM_SPEED_QUAD_X - fFoamDy * DEF_FOAM_SPEED_QUAD_X;
-				foamParams[k][i].fFoamY = 1.0f - /*NMath::Sqrt( t * t * t )*/t * t * DEF_FOAM_SPEED_QUAD_SCALE;
+				foamParams[k][i].fFoamY = 1.0f - /*NMath::Sqrt( t * t * t )*/ t * t * DEF_FOAM_SPEED_QUAD_SCALE;
 				/*if ( foamParams[k][i].fFoamDy >= ( 1.0f - EPS_VALUE ))
 				{
 					foamParams[k][i].bIsFoamMoveForward = !foamParams[k][i].bIsFoamMoveForward;
@@ -360,14 +388,15 @@ int CWaterPatch::Process( const long nTime )
 				}*/
 				foamParams[k][i].fFoamTexCoeff = fInvCoastLen / ( 0.01f + foamParams[k][i].fFoamY * 0.99f );
 				foamParams[k][i].fFoamTexOffs = 0.0f;
-				foamParams[k][i].nFoamColor = /*( (uint32_t)*/Clamp( int(foamParams[k][i].fFoamY * 255.0f), 0, 255 )/* << 24 )*/;
+				foamParams[k][i].nFoamColor =
+						/*( (uint32_t)*/ Clamp( int( foamParams[k][i].fFoamY * 255.0f ), 0, 255 ) /* << 24 )*/;
 			}
 			else
 			{
 				const float fFoamDy = 1.0f - ( fDy - (float)nDy ) * 0.5f;
 				//foamParams[k][i].fFoamDy -= DEF_FOAM_DY;
 				const float t = DEF_FOAM_SPEED_QUAD_X - fFoamDy * DEF_FOAM_SPEED_QUAD_X;
-				foamParams[k][i].fFoamY = 1.0f - /*NMath::Sqrt( t * t * t )*/t * t * DEF_FOAM_SPEED_QUAD_SCALE;
+				foamParams[k][i].fFoamY = 1.0f - /*NMath::Sqrt( t * t * t )*/ t * t * DEF_FOAM_SPEED_QUAD_SCALE;
 				//foamParams[k][i].fFoamY = fFoamDy;
 				/*if ( foamParams[k][i].fFoamDy <= ( DEF_FOAM_BACK_DIST + EPS_VALUE ))
 				{
@@ -377,7 +406,10 @@ int CWaterPatch::Process( const long nTime )
 				}*/
 				foamParams[k][i].fFoamTexCoeff = 1.0f * fInvCoastLen;
 				foamParams[k][i].fFoamTexOffs = Clamp( 1.0f - foamParams[k][i].fFoamY, 0.0f, 1.0f );
-				foamParams[k][i].nFoamColor = /*( (uint32_t)*/Clamp( int(( foamParams[k][i].fFoamY - DEF_FOAM_BACK_DIST2 ) * DEF_INV_ONE_MINUS_FOAM_BACK_DIST2 * 255.0f), 0, 255 )/* << 24 )*/;
+				foamParams[k][i].nFoamColor = /*( (uint32_t)*/ Clamp(
+						int( ( foamParams[k][i].fFoamY - DEF_FOAM_BACK_DIST2 ) * DEF_INV_ONE_MINUS_FOAM_BACK_DIST2 * 255.0f ),
+						0,
+						255 ) /* << 24 )*/;
 			}
 		}
 	}
@@ -395,50 +427,79 @@ int CWaterPatch::Process( const long nTime )
 
 				{
 					const CVec3 &vNode = grid[nGridInd].pos;
-					objDataSurf.verts[nCount].pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
-																						 vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
-																						 vNode.z );
-					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/0xffffffff;
+					objDataSurf.verts[nCount].pos.Set(
+							vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+									waterHorDeform[g][i].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
+							vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+									waterHorDeform[g][i].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
+							vNode.z );
+					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/ 0xffffffff;
 					objDataSurf.verts[nCount].normal.w = foamParams[k][nCurFoam].nFoamColor;
-					objDataSurf.verts[nCount++].tex.Set( fCurTu, Clamp(foamParams[k][nCurFoam].fFoamTexOffs + (float)( nCoastLen - 1 - g ) * foamParams[k][nCurFoam].fFoamTexCoeff,
-																														 0.0f, 15.0f) );
+					objDataSurf.verts[nCount++].tex.Set(
+							fCurTu,
+							Clamp( foamParams[k][nCurFoam].fFoamTexOffs +
+					               (float)( nCoastLen - 1 - g ) * foamParams[k][nCurFoam].fFoamTexCoeff,
+					           0.0f,
+					           15.0f ) );
 				}
 				{
 					const unsigned int nNextGridInd = nGridInd + 1;
 					const CVec3 &vNode = grid[nNextGridInd].pos;
 					objDataSurf.verts[nCount].pos.Set(
-						vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i+1].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
-						vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g][i+1].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
-						vNode.z );
-					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/0xffffffff;
+							vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+									waterHorDeform[g][i + 1].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
+							vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+									waterHorDeform[g][i + 1].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
+							vNode.z );
+					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/ 0xffffffff;
 					objDataSurf.verts[nCount].normal.w = foamParams[k][nCurFoam].nFoamColor;
-					objDataSurf.verts[nCount++].tex.Set( fCurTu + DEF_FOAM_SCALE, Clamp(foamParams[k][nCurFoam].fFoamTexOffs + (float)(nCoastLen - 1 - g) * foamParams[k][nCurFoam].fFoamTexCoeff, 0.0f, 15.0f) );
+					objDataSurf.verts[nCount++].tex.Set(
+							fCurTu + DEF_FOAM_SCALE,
+							Clamp( foamParams[k][nCurFoam].fFoamTexOffs +
+					               (float)( nCoastLen - 1 - g ) * foamParams[k][nCurFoam].fFoamTexCoeff,
+					           0.0f,
+					           15.0f ) );
 				}
 				{
 					const unsigned int nNextGridInd = nGridInd + 1 + waterSurf.GetSizeX();
 					const CVec3 &vNode = grid[nNextGridInd].pos;
-					objDataSurf.verts[nCount].pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g+1][i+1].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
-																						 vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g+1][i+1].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
-																						 vNode.z );
-					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/0xffffffff;
+					objDataSurf.verts[nCount].pos.Set(
+							vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+									waterHorDeform[g + 1][i + 1].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
+							vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+									waterHorDeform[g + 1][i + 1].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
+							vNode.z );
+					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/ 0xffffffff;
 					objDataSurf.verts[nCount].normal.w = foamParams[k][nCurFoam].nFoamColor;
-					objDataSurf.verts[nCount++].tex.Set( fCurTu + DEF_FOAM_SCALE, Clamp(foamParams[k][nCurFoam].fFoamTexOffs + (float)(nCoastLen - 2 - g) * foamParams[k][nCurFoam].fFoamTexCoeff, 0.0f, 15.0f) );
+					objDataSurf.verts[nCount++].tex.Set(
+							fCurTu + DEF_FOAM_SCALE,
+							Clamp( foamParams[k][nCurFoam].fFoamTexOffs +
+					               (float)( nCoastLen - 2 - g ) * foamParams[k][nCurFoam].fFoamTexCoeff,
+					           0.0f,
+					           15.0f ) );
 				}
 				{
 					const unsigned int nNextGridInd = nGridInd + waterSurf.GetSizeX();
 					const CVec3 &vNode = grid[nNextGridInd].pos;
 					objDataSurf.verts[nCount].pos.Set(
-						vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g+1][i].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
-						vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos + waterHorDeform[g+1][i].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
-						vNode.z );
-					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/0xffffffff;
+							vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin +
+									waterHorDeform[g + 1][i].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
+							vNode.x * fWaterRotationSin + vNode.y * fWaterRotationCos +
+									waterHorDeform[g + 1][i].fOffsY * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.y,
+							vNode.z );
+					objDataSurf.verts[nCount].texU.dw = /*foamParams[k][nCurFoam].nFoamColor*/ 0xffffffff;
 					objDataSurf.verts[nCount].normal.w = foamParams[k][nCurFoam].nFoamColor;
-					objDataSurf.verts[nCount++].tex.Set( fCurTu, Clamp(foamParams[k][nCurFoam].fFoamTexOffs + (float)(nCoastLen - 2 - g) * foamParams[k][nCurFoam].fFoamTexCoeff, 0.0f, 15.0f) );
+					objDataSurf.verts[nCount++].tex.Set(
+							fCurTu,
+							Clamp( foamParams[k][nCurFoam].fFoamTexOffs +
+					               (float)( nCoastLen - 2 - g ) * foamParams[k][nCurFoam].fFoamTexCoeff,
+					           0.0f,
+					           15.0f ) );
 				}
 			}
 
 			fCurTu += DEF_FOAM_SCALE;
-			if ( fCurTu >= (1.0f - EPS_VALUE) )
+			if ( fCurTu >= ( 1.0f - EPS_VALUE ) )
 			{
 				fCurTu = 0.0f;
 				++nCurFoam;
@@ -455,13 +516,14 @@ int CWaterPatch::Process( const long nTime )
 	{
 		for ( int i = 0; i < waterSurf.GetSizeX(); ++i )
 		{
-			vNorm.Set(0, 0, 0);
+			vNorm.Set( 0, 0, 0 );
 			nNormsCount = 0;
 			if ( g > 0 )
 			{
 				if ( i > 0 )
 				{
-					const CVec3 n( ( grid[nCount-1].pos - grid[nCount].pos ) ^ ( grid[nCount-waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
+					const CVec3 n( ( grid[nCount - 1].pos - grid[nCount].pos ) ^
+					               ( grid[nCount - waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vNorm, n );
 					if ( vNorm.z < 0.0f )
 						vNorm = -vNorm;
@@ -469,7 +531,8 @@ int CWaterPatch::Process( const long nTime )
 				}
 				if ( i < ( waterSurf.GetSizeX() - 1 ) )
 				{
-					const CVec3 n( ( grid[nCount+1].pos - grid[nCount].pos ) ^ ( grid[nCount-waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
+					const CVec3 n( ( grid[nCount + 1].pos - grid[nCount].pos ) ^
+					               ( grid[nCount - waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vCurNorm, n );
 					if ( vCurNorm.z < 0.0f )
 						vCurNorm = -vCurNorm;
@@ -481,7 +544,8 @@ int CWaterPatch::Process( const long nTime )
 			{
 				if ( i > 0 )
 				{
-					const CVec3 n( ( grid[nCount-1].pos - grid[nCount].pos ) ^ ( grid[nCount+waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
+					const CVec3 n( ( grid[nCount - 1].pos - grid[nCount].pos ) ^
+					               ( grid[nCount + waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vCurNorm, n );
 					if ( vCurNorm.z < 0.0f )
 						vCurNorm = -vCurNorm;
@@ -490,7 +554,8 @@ int CWaterPatch::Process( const long nTime )
 				}
 				if ( i < ( waterSurf.GetSizeX() - 1 ) )
 				{
-					const CVec3 n( (grid[nCount+1].pos - grid[nCount].pos) ^ (grid[nCount+waterSurf.GetSizeX()].pos - grid[nCount].pos) );
+					const CVec3 n( ( grid[nCount + 1].pos - grid[nCount].pos ) ^
+					               ( grid[nCount + waterSurf.GetSizeX()].pos - grid[nCount].pos ) );
 					NMath::NormalizeFast( &vCurNorm, n );
 					if ( vCurNorm.z < 0.0f )
 						vCurNorm = -vCurNorm;
@@ -502,10 +567,10 @@ int CWaterPatch::Process( const long nTime )
 			vNorm *= invCoeffs[nNormsCount];
 
 			CVec3 vSunDir;
-			const float fHor = sin( ToRadian(pDesc->pLight->fPitch) );
-			vSunDir.z = -cos( ToRadian(pDesc->pLight->fPitch) );
-			vSunDir.x = fHor * cos( ToRadian(pDesc->pLight->fYaw) );
-			vSunDir.y = fHor * sin( ToRadian(pDesc->pLight->fYaw) );
+			const float fHor = sin( ToRadian( pDesc->pLight->fPitch ) );
+			vSunDir.z = -cos( ToRadian( pDesc->pLight->fPitch ) );
+			vSunDir.x = fHor * cos( ToRadian( pDesc->pLight->fYaw ) );
+			vSunDir.y = fHor * sin( ToRadian( pDesc->pLight->fYaw ) );
 			vSunDir = -vSunDir;
 
 			const CVec3 &vSunDirAmbient = pDesc->pLight->vAmbientColor;
@@ -518,25 +583,31 @@ int CWaterPatch::Process( const long nTime )
 			const float fCos = Clamp( vNorm.x * vSunDir.x + vNorm.y * vSunDir.y + vNorm.z * vSunDir.z, -1.0f, 1.0f );
 			if ( fCos >= 0.0f ) // direct lighting
 			{
-				const CVec3 vCol( (vSunDirAmbient.x * (1.0f - fCos) + vSunDirDiffuse.x * fCos) * fScaling,
-													(vSunDirAmbient.y * (1.0f - fCos) + vSunDirDiffuse.y * fCos) * fScaling,
-													(vSunDirAmbient.z * (1.0f - fCos) + vSunDirDiffuse.z * fCos) * fScaling );
-				const CVec4 &vNoise = noise[g & (noise.GetSizeY() - 1)][i & (noise.GetSizeX() - 1)];
-				const unsigned int cr = Clamp( int(vCol.x * (vNoise.x * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff)), 0, 255 );
-				const unsigned int cg = Clamp( int(vCol.y * (vNoise.y * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff)), 0, 255 );
-				const unsigned int cb = Clamp( int(vCol.z * (vNoise.z * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff)), 0, 255 );
+				const CVec3 vCol( ( vSunDirAmbient.x * ( 1.0f - fCos ) + vSunDirDiffuse.x * fCos ) * fScaling,
+				                  ( vSunDirAmbient.y * ( 1.0f - fCos ) + vSunDirDiffuse.y * fCos ) * fScaling,
+				                  ( vSunDirAmbient.z * ( 1.0f - fCos ) + vSunDirDiffuse.z * fCos ) * fScaling );
+				const CVec4 &vNoise = noise[g & ( noise.GetSizeY() - 1 )][i & ( noise.GetSizeX() - 1 )];
+				const unsigned int cr =
+						Clamp( int( vCol.x * ( vNoise.x * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
+				const unsigned int cg =
+						Clamp( int( vCol.y * ( vNoise.y * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
+				const unsigned int cb =
+						Clamp( int( vCol.z * ( vNoise.z * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
 				const unsigned long nResCol = (unsigned long)cr * 65536 + cg * 256 + cb;
 				grid[nCount].color = ( grid[nCount].color & 0xff000000 ) | nResCol;
 			}
 			else // undirect lighting
 			{
-				const CVec3 vCol( (vSunUnDirAmbient.x + vSunUnDirDiffuse.x * (1.0f + fCos)) * fScaling,
-													(vSunUnDirAmbient.y + vSunUnDirDiffuse.y * (1.0f + fCos)) * fScaling,
-													(vSunUnDirAmbient.z + vSunUnDirDiffuse.z * (1.0f + fCos)) * fScaling );
+				const CVec3 vCol( ( vSunUnDirAmbient.x + vSunUnDirDiffuse.x * ( 1.0f + fCos ) ) * fScaling,
+				                  ( vSunUnDirAmbient.y + vSunUnDirDiffuse.y * ( 1.0f + fCos ) ) * fScaling,
+				                  ( vSunUnDirAmbient.z + vSunUnDirDiffuse.z * ( 1.0f + fCos ) ) * fScaling );
 				const CVec4 &vNoise = noise[g & ( noise.GetSizeY() - 1 )][i & ( noise.GetSizeX() - 1 )];
-				const unsigned int cr = Clamp( int( vCol.x * ( vNoise.x * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
-				const unsigned int cg = Clamp( int( vCol.y * ( vNoise.y * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
-				const unsigned int cb = Clamp( int( vCol.z * ( vNoise.z * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
+				const unsigned int cr =
+						Clamp( int( vCol.x * ( vNoise.x * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
+				const unsigned int cg =
+						Clamp( int( vCol.y * ( vNoise.y * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
+				const unsigned int cb =
+						Clamp( int( vCol.z * ( vNoise.z * pDesc->fDepthNoiseCoeff + 1.0f - pDesc->fDepthNoiseCoeff ) ), 0, 255 );
 				const unsigned long nResCol = (unsigned long)cr * 65536 + cg * 256 + cb;
 				grid[nCount].color = ( grid[nCount].color & 0xff000000 ) | nResCol;
 			}
@@ -551,45 +622,58 @@ int CWaterPatch::Process( const long nTime )
 
 	const float fMesh2VarInv = 1.0f / ( fMaxHeight - fMinHeight );
 	nCount = 0;
-	for ( int g = 0; g < (waterSurf.GetSizeY() - 1); ++g )
+	for ( int g = 0; g < ( waterSurf.GetSizeY() - 1 ); ++g )
 	{
-		for ( int i = 0; i < (waterSurf.GetSizeX() - 1); ++i )
+		for ( int i = 0; i < ( waterSurf.GetSizeX() - 1 ); ++i )
 		{
 			const unsigned int nGridInd = g * waterSurf.GetSizeX() + i;
 
 			{
 				const float fAlp2 = (float)( grid[nGridInd].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
-				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				uint32_t dwGridColor = grid[ nGridInd ].color;
-				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
+				const float fCoeff =
+						fabs2( Clamp( ( grid[nGridInd].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
+				const unsigned long nAlp = (unsigned long)( fCoeff ) * 16777216;
+				uint32_t dwGridColor = grid[nGridInd].color;
+				SetupColors(
+						&objDataWater.verts[nCount], dwGridColor & 0xffffff, ( dwGridColor & nAlp ) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}
 
 			{
-				const float fAlp2 = (float)( grid[nGridInd+1].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
-				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				uint32_t dwGridColor = grid[ nGridInd + 1 ].color;
-				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
+				const float fAlp2 = (float)( grid[nGridInd + 1].color >> 24 ) * DEF_INV_255;
+				const float fCoeff =
+						fabs2( Clamp( ( grid[nGridInd + 1].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
+				const unsigned long nAlp = (unsigned long)( fCoeff ) * 16777216;
+				uint32_t dwGridColor = grid[nGridInd + 1].color;
+				SetupColors(
+						&objDataWater.verts[nCount], dwGridColor & 0xffffff, ( dwGridColor & nAlp ) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}
 
 			{
-				const float fAlp2 = (float)( grid[nGridInd+1+waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+1+waterSurf.GetSizeX()].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
-				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				uint32_t dwGridColor = grid[ nGridInd + 1 + waterSurf.GetSizeX() ].color;
-				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
+				const float fAlp2 = (float)( grid[nGridInd + 1 + waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
+				const float fCoeff =
+						fabs2( Clamp( ( grid[nGridInd + 1 + waterSurf.GetSizeX()].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2,
+				                  0.0f,
+				                  1.0f ) ) *
+						255.0f;
+				const unsigned long nAlp = (unsigned long)( fCoeff ) * 16777216;
+				uint32_t dwGridColor = grid[nGridInd + 1 + waterSurf.GetSizeX()].color;
+				SetupColors(
+						&objDataWater.verts[nCount], dwGridColor & 0xffffff, ( dwGridColor & nAlp ) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}
 
 			{
-				const float fAlp2 = (float)( grid[nGridInd+waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
-				const float fCoeff = fabs2( Clamp( ( grid[nGridInd+waterSurf.GetSizeX()].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) * 255.0f;
-				const unsigned long nAlp = (unsigned long)(fCoeff) * 16777216;
-				uint32_t dwGridColor = grid[ nGridInd + waterSurf.GetSizeX() ].color;
-				SetupColors( &objDataWater.verts[nCount], dwGridColor & 0xffffff, (dwGridColor & nAlp) >> 24, dwGridColor >> 24 );
+				const float fAlp2 = (float)( grid[nGridInd + waterSurf.GetSizeX()].color >> 24 ) * DEF_INV_255;
+				const float fCoeff =
+						fabs2( Clamp(
+								( grid[nGridInd + waterSurf.GetSizeX()].pos.z - fMinHeight ) * fMesh2VarInv * fAlp2, 0.0f, 1.0f ) ) *
+						255.0f;
+				const unsigned long nAlp = (unsigned long)( fCoeff ) * 16777216;
+				uint32_t dwGridColor = grid[nGridInd + waterSurf.GetSizeX()].color;
+				SetupColors(
+						&objDataWater.verts[nCount], dwGridColor & 0xffffff, ( dwGridColor & nAlp ) >> 24, dwGridColor >> 24 );
 				++nCount;
 			}
 		}
@@ -603,8 +687,8 @@ int CWaterPatch::Process( const long nTime )
 			long nAng = (long)( waterHorDeform[g][i].fAngOffs + waterHorDeform[g][i].fDAng * nTime ) % 360;
 			float fAng = nAng * FP_PI / 180.0f;
 			float fRad = fmod( waterHorDeform[g][i].fRadOffs + waterHorDeform[g][i].fDRad * nTime,
-				(( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) * 2.0f ));
-			if ( fRad >= ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ))
+			                   ( ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) * 2.0f ) );
+			if ( fRad >= ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) )
 				fRad = 2.0f * ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) - fRad;
 			fRad += DEF_WATER_HOR_DEFORM_MIN_RAD;
 			waterHorDeform[g][i].fOffsX = cos( fAng ) * fRad;
@@ -622,7 +706,7 @@ inline float CWaterPatch::GetPhase( const int x, const int y, const int curw )
 
 inline float CWaterPatch::GetTanHyperbolic( const float z )
 {
-	return ( exp( z ) - exp( -z )) / ( exp( z ) + exp( -z ));
+	return ( exp( z ) - exp( -z ) ) / ( exp( z ) + exp( -z ) );
 }
 
 inline float CWaterPatch::GetFracPart( const float z )
@@ -636,7 +720,8 @@ inline float CWaterPatch::GetWaveProfile( const float z )
 	return 24.0f * t * t * t * t * t * t;
 }
 
-int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVec2 &dsize, const CVec2 &org, const float _fRotAngle )
+int CWaterPatch::Init(
+		const int nSX, const int nSY, const int nCoast, const CVec2 &dsize, const CVec2 &org, const float _fRotAngle )
 {
 	unsigned long nCount = 0;
 
@@ -694,10 +779,10 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 	const float fInterpCoeff = 1.0f / ( nCoastLen - nAlphaSmooth - 1 );
 	for ( int g = nCoastLen - 1; g >= 0; --g )
 	{
-		const float fCoeff = g <= nAlphaSmooth ?
-			0.5f - ( 1.0f - (float)g * fInvAlphaSmooth ) * ( 1.0f - (float)g * fInvAlphaSmooth ) * 0.5f :
-			(float)( g - nAlphaSmooth ) * fInterpCoeff * 0.5f + 0.5f;
-		const unsigned long alpha = ( (unsigned long)Clamp( int(fCoeff * 255.0f), 0, 255 ) * 16777216 ) | 0x00ffffff;
+		const float fCoeff =
+				g <= nAlphaSmooth ? 0.5f - ( 1.0f - (float)g * fInvAlphaSmooth ) * ( 1.0f - (float)g * fInvAlphaSmooth ) * 0.5f
+													: (float)( g - nAlphaSmooth ) * fInterpCoeff * 0.5f + 0.5f;
+		const unsigned long alpha = ( (unsigned long)Clamp( int( fCoeff * 255.0f ), 0, 255 ) * 16777216 ) | 0x00ffffff;
 		nCount = g * waterSurf.GetSizeX();
 		for ( int i = 0; i < waterSurf.GetSizeX(); ++i )
 		{
@@ -711,15 +796,16 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 		if ( k == 0 )
 			waves[k].fPhaseOffset = 0.0f;
 		else
-			waves[k].fPhaseOffset = waves[k - 1].fPhaseOffset + GetPhase( 0, 0, k ) * ( 0.5f + NWin32Random::Random( 0.0f, 1.0f ) * 0.5f );
+			waves[k].fPhaseOffset =
+					waves[k - 1].fPhaseOffset + GetPhase( 0, 0, k ) * ( 0.5f + NWin32Random::Random( 0.0f, 1.0f ) * 0.5f );
 
-		if (( k % 2 ) == 0 )
+		if ( ( k % 2 ) == 0 )
 		{
 			fCurOffset = 0.0f;
 			bIsCurWave = true;
 			fCurWaveStart = -NWin32Random::Random( 0.0f, 1.0f ) * DEF_WAVE_LEN * 0.0f + DEF_WAVE_LEN * 0.0f;
 			fCurWaveLen = fCurWaveStart + DEF_WAVE_LEN * ( 1.0f - DEF_WAVE_LEN_VARIATION ) +
-				NWin32Random::Random( 0.0f, 1.0f ) * DEF_WAVE_LEN * DEF_WAVE_LEN_VARIATION;
+			              NWin32Random::Random( 0.0f, 1.0f ) * DEF_WAVE_LEN * DEF_WAVE_LEN_VARIATION;
 		}
 		else // create non-wave
 		{
@@ -727,7 +813,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 			bIsCurWave = false;
 			fCurWaveStart = -NWin32Random::Random( 0.0f, 1.0f ) * DEF_NOWAVE_LEN * 0.0f + DEF_NOWAVE_LEN * 0.0f;
 			fCurWaveLen = fCurWaveStart + DEF_NOWAVE_LEN * ( 1.0f - DEF_NOWAVE_LEN_VARIATION ) +
-				NWin32Random::Random( 0.0f, 1.0f ) * DEF_NOWAVE_LEN * DEF_NOWAVE_LEN_VARIATION;
+			              NWin32Random::Random( 0.0f, 1.0f ) * DEF_NOWAVE_LEN * DEF_NOWAVE_LEN_VARIATION;
 		}
 
 		ProcessWaveDistribution( k );
@@ -743,9 +829,9 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 		{
 			if ( k > 0 )
 			{
-				if ( foamParams[k-1][l].fFoamDy < 2.0f )
+				if ( foamParams[k - 1][l].fFoamDy < 2.0f )
 				{
-					foamParams[k][l].fFoamDy = foamParams[k-1][l].fFoamDy * 0.5f + 2.0f/*NWin32Random::Random( 2.0f, 2.9f )*/;
+					foamParams[k][l].fFoamDy = foamParams[k - 1][l].fFoamDy * 0.5f + 2.0f /*NWin32Random::Random( 2.0f, 2.9f )*/;
 					//foamParams[k][l].fFoamY = 1.0f - ( 1.0f - foamParams[k][l].fFoamDy ) * ( 1.0f - foamParams[k][l].fFoamDy );
 					foamParams[k][l].fFoamTexOffs = 0.0f;
 					foamParams[k][l].fFoamTexCoeff = 0.0f;
@@ -753,7 +839,8 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 				else
 				{
 					//foamParams[k][l].fFoamDy = DEF_FOAM_BACK_DIST2 + NWin32Random::Random( 1.0f, 2.0f ) * ( 1.0f - DEF_FOAM_BACK_DIST2 );
-					foamParams[k][l].fFoamDy = ( foamParams[k-1][l].fFoamDy - 2.0f ) * 2.0f/*NWin32Random::Random( 0.0f, 2.0f )*/;
+					foamParams[k][l].fFoamDy =
+							( foamParams[k - 1][l].fFoamDy - 2.0f ) * 2.0f /*NWin32Random::Random( 0.0f, 2.0f )*/;
 					//foamParams[k][l].fFoamY = 1.0f - ( 1.0f - foamParams[k][l].fFoamDy ) * ( 1.0f - foamParams[k][l].fFoamDy );
 					foamParams[k][l].fFoamTexOffs = 0.0f;
 					foamParams[k][l].fFoamTexCoeff = 0.0f;
@@ -779,18 +866,21 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 		//	nLastRandSeed = NWin32Random::GetSeed();
 		for ( int i = 0; i < waterSurf.GetSizeX(); ++i )
 		{
-			waterHorDeform[g][i].fAngOffs = NWin32Random::Random( 0.0f, 1.0f ) * ( DEF_WATER_HOR_DEFORM_MIN_DANG + DEF_WATER_HOR_DEFORM_VAR_DANG );
-			waterHorDeform[g][i].fDAng = NWin32Random::Random( 0.0f, 1.0f ) * DEF_WATER_HOR_DEFORM_VAR_DANG + DEF_WATER_HOR_DEFORM_MIN_DANG;
-			if (( NWin32Random::Random( 0.0f, 1.0f ) ) >= 0.5f )
+			waterHorDeform[g][i].fAngOffs =
+					NWin32Random::Random( 0.0f, 1.0f ) * ( DEF_WATER_HOR_DEFORM_MIN_DANG + DEF_WATER_HOR_DEFORM_VAR_DANG );
+			waterHorDeform[g][i].fDAng =
+					NWin32Random::Random( 0.0f, 1.0f ) * DEF_WATER_HOR_DEFORM_VAR_DANG + DEF_WATER_HOR_DEFORM_MIN_DANG;
+			if ( ( NWin32Random::Random( 0.0f, 1.0f ) ) >= 0.5f )
 				waterHorDeform[g][i].fDAng = -waterHorDeform[g][i].fDAng;
 			float fAng = 0.0f;
 
 			waterHorDeform[g][i].fRadOffs = NWin32Random::Random( 0.0f, 1.0f ) * DEF_WATER_HOR_DEFORM_MAX_RAD;
-			waterHorDeform[g][i].fDRad = DEF_WATER_HOR_DEFORM_DRAD * 0.1f + NWin32Random::Random( 0.0f, 1.0f ) * DEF_WATER_HOR_DEFORM_DRAD;
+			waterHorDeform[g][i].fDRad =
+					DEF_WATER_HOR_DEFORM_DRAD * 0.1f + NWin32Random::Random( 0.0f, 1.0f ) * DEF_WATER_HOR_DEFORM_DRAD;
 
 			float fRad = fmod( waterHorDeform[g][i].fRadOffs,
-				(( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) * 2.0f ));
-			if ( fRad >= ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ))
+			                   ( ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) * 2.0f ) );
+			if ( fRad >= ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) )
 				fRad = 2.0f * ( DEF_WATER_HOR_DEFORM_MAX_RAD - DEF_WATER_HOR_DEFORM_MIN_RAD ) - fRad;
 			fRad += DEF_WATER_HOR_DEFORM_MIN_RAD;
 
@@ -838,7 +928,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 				}
 				{
 					NGScene::SVertex &curWaterVert = objDataWater.verts[nCount];
-					const SGridType &curNode = grid[nGridInd+1];
+					const SGridType &curNode = grid[nGridInd + 1];
 					curWaterVert.pos = curNode.pos;
 					SetupColors( &curWaterVert, curNode.color & 0xffffff, curNode.color >> 24, curNode.color >> 24 );
 					curWaterVert.tex.Set( 0, 0 );
@@ -847,7 +937,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 				}
 				{
 					NGScene::SVertex &curWaterVert = objDataWater.verts[nCount];
-					const SGridType &curNode = grid[nGridInd+1+waterSurf.GetSizeX()];
+					const SGridType &curNode = grid[nGridInd + 1 + waterSurf.GetSizeX()];
 					curWaterVert.pos = curNode.pos;
 					SetupColors( &curWaterVert, curNode.color & 0xffffff, curNode.color >> 24, curNode.color >> 24 );
 					curWaterVert.tex.Set( 0, 0 );
@@ -856,7 +946,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 				}
 				{
 					NGScene::SVertex &curWaterVert = objDataWater.verts[nCount];
-					const SGridType &curNode = grid[nGridInd+waterSurf.GetSizeX()];
+					const SGridType &curNode = grid[nGridInd + waterSurf.GetSizeX()];
 					curWaterVert.pos = curNode.pos;
 					SetupColors( &curWaterVert, curNode.color & 0xffffff, curNode.color >> 24, curNode.color >> 24 );
 					curWaterVert.tex.Set( 0, 0 );
@@ -889,7 +979,8 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 					{
 						const unsigned int nNextGridInd = nGridInd + 1;
 						NGScene::SVertex &curSurfVert = objDataSurf.verts[nCount];
-						curSurfVert.pos.Set( grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
+						curSurfVert.pos.Set(
+								grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
 						SetupColors( &curSurfVert, 0xffffff, 0xff, 0xff );
 						curSurfVert.tex.Set( 0, 0 );
 						++nCount;
@@ -897,7 +988,8 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 					{
 						const unsigned int nNextGridInd = nGridInd + 1 + waterSurf.GetSizeX();
 						NGScene::SVertex &curSurfVert = objDataSurf.verts[nCount];
-						curSurfVert.pos.Set( grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
+						curSurfVert.pos.Set(
+								grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
 						SetupColors( &curSurfVert, 0xffffff, 0xff, 0xff );
 						curSurfVert.tex.Set( 0, 0 );
 						++nCount;
@@ -905,7 +997,8 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 					{
 						const unsigned int nNextGridInd = nGridInd + waterSurf.GetSizeX();
 						NGScene::SVertex &curSurfVert = objDataSurf.verts[nCount];
-						curSurfVert.pos.Set( grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
+						curSurfVert.pos.Set(
+								grid[nNextGridInd].pos.x, grid[nNextGridInd].pos.y, grid[nNextGridInd].pos.z + DEF_HEIGHT_BIAS );
 						SetupColors( &curSurfVert, 0xffffff, 0xff, 0xff );
 						curSurfVert.tex.Set( 0, 0 );
 						++nCount;
@@ -940,7 +1033,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 
 	// load noise
 	CFileStream noiseStream( NVFS::GetMainVFS(), pDesc->pDepthNoise->szFileName );
-	NI_ASSERT( noiseStream.IsOk(), fmt::format("Can't load {}", pDesc->pDepthNoise->szFileName) );
+	NI_ASSERT( noiseStream.IsOk(), fmt::format( "Can't load {}", pDesc->pDepthNoise->szFileName ) );
 	NImage::LoadTGAImage( noise, &noiseStream );
 
 	return true;
@@ -954,7 +1047,10 @@ void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 		float fAmpl;
 		if ( bIsCurWave )
 		{
-			fAmpl = Clamp( static_cast<float>(fabs((fCurWaveStart + fCurWaveLen) - fCurOffset * 2.0f) / (fCurWaveLen - fCurWaveStart)), 0.0f, 1.0f );
+			fAmpl = Clamp( static_cast<float>( fabs( ( fCurWaveStart + fCurWaveLen ) - fCurOffset * 2.0f ) /
+			                                   ( fCurWaveLen - fCurWaveStart ) ),
+			               0.0f,
+			               1.0f );
 			fAmpl = 1.0f - fAmpl * fAmpl;
 			fAmpl = DEF_WAVE_MIN_AMPL + fAmpl * DEF_WAVE_MAX_AMPL;
 		}
@@ -969,7 +1065,7 @@ void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 		for ( int p = 0; p < nStages; ++p )
 		{
 			const float fCoeff = (float)p / ( nStages - 1 );
-			fDefPhase += sin( (float)i * (0.3f + 0.9f * fCoeff) ) * ( 0.01f + 0.04f * fCoeff );
+			fDefPhase += sin( (float)i * ( 0.3f + 0.9f * fCoeff ) ) * ( 0.01f + 0.04f * fCoeff );
 		}
 
 		float fPhase = fDefPhase * DEF_WAVES_SCALE_FACTOR;
@@ -988,12 +1084,12 @@ void CWaterPatch::ProcessWaveDistribution( const int nWaveNum )
 			if ( bIsCurWave ) // create wave
 			{
 				fCurWaveLen = fCurWaveStart + DEF_WAVE_LEN * ( 1.0f - DEF_WAVE_LEN_VARIATION ) +
-					NWin32Random::Random( 0.0f, 1.0f ) * DEF_WAVE_LEN * DEF_WAVE_LEN_VARIATION;
+				              NWin32Random::Random( 0.0f, 1.0f ) * DEF_WAVE_LEN * DEF_WAVE_LEN_VARIATION;
 			}
 			else // create non-wave
 			{
 				fCurWaveLen = fCurWaveStart + DEF_NOWAVE_LEN * ( 1.0f - DEF_NOWAVE_LEN_VARIATION ) +
-					NWin32Random::Random( 0.0f, 1.0f ) * DEF_NOWAVE_LEN * DEF_NOWAVE_LEN_VARIATION;
+				              NWin32Random::Random( 0.0f, 1.0f ) * DEF_NOWAVE_LEN * DEF_NOWAVE_LEN_VARIATION;
 			}
 		}
 	}
@@ -1018,11 +1114,10 @@ void CWater::Create( NGScene::IGameView *pGView, const int nPatchesX, const int 
 
 	float fAngle = -FP_PI * 0.5f;
 
-
 	CVec2 vOffs( (float)( nPatchesX * DEF_PATCH_SIZE - nCoastLen ) * DEF_TILE_SIZE,
-							 (float)( nPatchesY * DEF_PATCH_SIZE ) * DEF_TILE_SIZE );
+	             (float)( nPatchesY * DEF_PATCH_SIZE ) * DEF_TILE_SIZE );
 
-	if ( (nPatchesX == 5) && (nPatchesY == 5) ) // for second playable only
+	if ( ( nPatchesX == 5 ) && ( nPatchesY == 5 ) ) // for second playable only
 	{
 		fAngle = -FP_PI;
 		vOffs.x = (float)( nPatchesX * DEF_PATCH_SIZE ) * DEF_TILE_SIZE;
@@ -1071,21 +1166,29 @@ void CWater::Create( NGScene::IGameView *pGView, const int nPatchesX, const int 
 
 	// calculate boundary
 	const CVec2 v2( 0.0f, (float)nWaterWidth * DEF_TILE_SIZE );
-	const CVec2 v3( (nPatchesX * DEF_PATCH_SIZE + 1) * DEF_TILE_SIZE, (float)nWaterWidth * DEF_TILE_SIZE );
-	const CVec2 v4( (nPatchesX * DEF_PATCH_SIZE + 1) * DEF_TILE_SIZE, 0.0f );
+	const CVec2 v3( ( nPatchesX * DEF_PATCH_SIZE + 1 ) * DEF_TILE_SIZE, (float)nWaterWidth * DEF_TILE_SIZE );
+	const CVec2 v4( ( nPatchesX * DEF_PATCH_SIZE + 1 ) * DEF_TILE_SIZE, 0.0f );
 
 	const CVec2 v2Rot( v2.x * fAngleCos - v2.y * fAngleSin + vOffs.x, v2.x * fAngleSin + v2.y * fAngleCos + vOffs.y );
 	const CVec2 v3Rot( v3.x * fAngleCos - v3.y * fAngleSin + vOffs.x, v3.x * fAngleSin + v3.y * fAngleCos + vOffs.y );
 	const CVec2 v4Rot( v4.x * fAngleCos - v4.y * fAngleSin + vOffs.x, v4.x * fAngleSin + v4.y * fAngleCos + vOffs.y );
 
 	SBound bound;
-	bound.BoxInit( CVec3((std::min)((std::min)(vOffs.x, v2Rot.x), (std::min)(v3Rot.x, v4Rot.x)), (std::min)((std::min)(vOffs.y, v2Rot.y), (std::min)(v3Rot.y, v4Rot.y)), fMinPossibleHeight),
-								 CVec3((std::max)((std::max)(vOffs.x, v2Rot.x), (std::max)(v3Rot.x, v4Rot.x)), (std::max)((std::max)(vOffs.y, v2Rot.y), (std::max)(v3Rot.y, v4Rot.y)), fMaxPossibleHeight) );
+	bound.BoxInit( CVec3( (std::min)( (std::min)( vOffs.x, v2Rot.x ), (std::min)( v3Rot.x, v4Rot.x ) ),
+	                      (std::min)( (std::min)( vOffs.y, v2Rot.y ), (std::min)( v3Rot.y, v4Rot.y ) ),
+	                      fMinPossibleHeight ),
+	               CVec3( (std::max)( (std::max)( vOffs.x, v2Rot.x ), (std::max)( v3Rot.x, v4Rot.x ) ),
+	                      (std::max)( (std::max)( vOffs.y, v2Rot.y ), (std::max)( v3Rot.y, v4Rot.y ) ),
+	                      fMaxPossibleHeight ) );
 	CCSBound *pBound = new CCSBound();
 	pBound->Set( bound );
-	patches.push_back( new CWaterPatch(pDesc, pTimer, pBound) );
-	patches.back()->Init( (nPatchesX * DEF_PATCH_SIZE + 1), nWaterWidth, nCoastLen,
-												CVec2(DEF_WATER_TILE_SIZE, DEF_WATER_TILE_SIZE), vOffs, fAngle );
+	patches.push_back( new CWaterPatch( pDesc, pTimer, pBound ) );
+	patches.back()->Init( ( nPatchesX * DEF_PATCH_SIZE + 1 ),
+	                      nWaterWidth,
+	                      nCoastLen,
+	                      CVec2( DEF_WATER_TILE_SIZE, DEF_WATER_TILE_SIZE ),
+	                      vOffs,
+	                      fAngle );
 	patches.back()->Create( pGView );
 }
 

@@ -20,9 +20,8 @@
 #define LAN_TEST_ENABLED
 #endif
 
-
 #ifdef LAN_TEST_ENABLED
-	#include "port/process.h"
+#include "port/process.h"
 #endif
 
 //
@@ -44,8 +43,9 @@
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19243C00, CLANTester )
 
-CLANTester::CLANTester() : bIsServer( NGlobal::GetVar( "LANTEST.Server", 0 ) == 1 ), bAcceptSent( false ),
-	nMySlot( -1 ), bStarted( false ), nPlayersToWait( NGlobal::GetVar( "LANTEST.Players", 2 ) - 1 )
+CLANTester::CLANTester()
+		: bIsServer( NGlobal::GetVar( "LANTEST.Server", 0 ) == 1 ), bAcceptSent( false ), nMySlot( -1 ), bStarted( false ),
+			nPlayersToWait( NGlobal::GetVar( "LANTEST.Players", 2 ) - 1 )
 {
 }
 
@@ -89,7 +89,7 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 		{
 			for ( int i = 1; i < nMySlot; ++i ) // Потому что слот 0 - это создатель игры. Он всегда готов:)
 			{
-				std::unordered_map<int,bool>::iterator it = gameClientsReady.find( i );
+				std::unordered_map<int, bool>::iterator it = gameClientsReady.find( i );
 				if ( it == gameClientsReady.end() || !it->second )
 					return;
 			}
@@ -109,7 +109,7 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 		}
 		else
 		{
-			for ( std::unordered_map<int,bool>::iterator it = gameClientsReady.begin(); it != gameClientsReady.end(); ++it )
+			for ( std::unordered_map<int, bool>::iterator it = gameClientsReady.begin(); it != gameClientsReady.end(); ++it )
 			{
 				if ( !it->second )
 					return;
@@ -118,7 +118,6 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 			bAcceptSent = true;
 		}
 	}
-
 }
 
 void CLANTester::ClientRemoved( const int nClientID )
@@ -145,7 +144,7 @@ void CLANTester::CreateGame()
 	pMPManager->AddUIMessage( pCreateMsg );
 }
 
-void CLANTester::RunShellCommand( const std::wstring &wszCommand  )
+void CLANTester::RunShellCommand( const std::wstring &wszCommand )
 {
 #ifdef LAN_TEST_ENABLED
 	const std::string szCommand = NStr::ToMBCS( wszCommand );
@@ -185,7 +184,7 @@ void StartLanTest( const std::string &szID, const std::vector<std::wstring> &par
 	}
 }
 
-START_REGISTER(AutomaticLanTest)
+START_REGISTER( AutomaticLanTest )
 REGISTER_CMD( "lan_test", StartLanTest );
 FINISH_REGISTER
 

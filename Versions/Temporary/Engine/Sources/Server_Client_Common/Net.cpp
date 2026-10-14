@@ -15,9 +15,8 @@ BASIC_REGISTER_CLASS( SERVER_CLIENT_COMMON, CNet );
 float CNet::fTimeOut = 60;
 
 CNet::CNet( const int _nApplicationID, const int _nServerPort, const int _nTimeOut )
-: nApplicationID( _nApplicationID ), nServerPort( _nServerPort ), bDebugNetPaused( false ), nTimeOut( _nTimeOut )
+		: nApplicationID( _nApplicationID ), nServerPort( _nServerPort ), bDebugNetPaused( false ), nTimeOut( _nTimeOut )
 {
-
 }
 
 bool CNet::InitAsServer()
@@ -100,7 +99,7 @@ const int CNet::GetRejectReason() const
 	return pNetDriver->GetRejectReason();
 }
 
-CNetPacket* CNet::ReceivePacket()
+CNetPacket *CNet::ReceivePacket()
 {
 	if ( !bDebugNetPaused )
 	{
@@ -114,8 +113,8 @@ CNetPacket* CNet::ReceivePacket()
 			{
 				switch ( eMsgID )
 				{
-				case NNet::IDriver::DIRECT:
-				case NNet::IDriver::BROADCAST:
+					case NNet::IDriver::DIRECT:
+					case NNet::IDriver::BROADCAST:
 					{
 						memStream.Seek( 0 );
 						{
@@ -125,30 +124,31 @@ CNetPacket* CNet::ReceivePacket()
 						pNetPacket = UnzipPacketIfNecessary( pNetPacket );
 						break;
 					}
-				case NNet::IDriver::NEW_CLIENT:
-					pNetPacket = new CNetNewClient();
+					case NNet::IDriver::NEW_CLIENT:
+						pNetPacket = new CNetNewClient();
 
-					break;
-				case NNet::IDriver::REMOVE_CLIENT:
-					pNetPacket = new CNetRemoveClient();
+						break;
+					case NNet::IDriver::REMOVE_CLIENT:
+						pNetPacket = new CNetRemoveClient();
 
-					break;
-				case NNet::IDriver::KICKED:
-					pNetPacket = new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_KICKED );
+						break;
+					case NNet::IDriver::KICKED:
+						pNetPacket = new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_KICKED );
 
-					break;
-				case NNet::IDriver::SERVER_DEAD:
-					pNetPacket = new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_CONNECTION_LOST );
+						break;
+					case NNet::IDriver::SERVER_DEAD:
+						pNetPacket =
+								new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, CConnectServerPacket::ERR_CONNECTION_LOST );
 
-					break;
-				default:
-					break;
+						break;
+					default:
+						break;
 				}
 			}
 			if ( pNetPacket )
 			{
 				pNetPacket->nClientID = nClientID;
-        return pNetPacket.Extract();
+				return pNetPacket.Extract();
 			}
 		}
 	}
@@ -172,7 +172,7 @@ void CNet::SendZipped( const int nClientID, const CMemoryStream &memStream )
 		pNetDriver->SendDirect( nClientID, memStream );
 }
 
-CNetPacket* CNet::UnzipPacketIfNecessary( CNetPacket *pPacket )
+CNetPacket *CNet::UnzipPacketIfNecessary( CNetPacket *pPacket )
 {
 	CDynamicCast<CZipPacket> pZipPacket = pPacket;
 	if ( pZipPacket )
@@ -238,7 +238,7 @@ void CNet::DebugTogglePause( bool bPause )
 
 	if ( !bDebugNetPaused )
 	{
-		for ( std::list< CPtr<CNetPacket> >::iterator iter = pausePackets.begin(); iter != pausePackets.end(); ++iter )
+		for ( std::list<CPtr<CNetPacket>>::iterator iter = pausePackets.begin(); iter != pausePackets.end(); ++iter )
 			SendPacket( *iter );
 
 		pausePackets.clear();

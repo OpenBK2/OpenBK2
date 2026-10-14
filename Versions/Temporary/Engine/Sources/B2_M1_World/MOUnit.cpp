@@ -19,7 +19,10 @@
 
 static float s_fPointerOffset = 3.0f;
 
-bool CMOUnit::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+bool CMOUnit::CreateSceneObject( const int nUniqueID,
+                                 const SAINewUnitUpdate *pUpdate,
+                                 NDb::ESeason eSeason,
+                                 bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
 
@@ -58,16 +61,23 @@ void CMOUnit::GetStatus( SObjectStatus *pStatus ) const
 		pStatus->pArmorPattern = GetStatsLocal()->pArmorPattern;
 }
 
-bool CMOUnit::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
+bool CMOUnit::Create( const int nUniqueID,
+                      const SAIBasicUpdate *_pUpdate,
+                      NDb::ESeason eSeason,
+                      const NDb::EDayNight eDayTime,
+                      bool bInEditor )
 {
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
-	SetStats( checked_cast_ptr<const NDb::SUnitBaseRPGStats*>( pUpdate->info.pStats ) );
+	SetStats( checked_cast_ptr<const NDb::SUnitBaseRPGStats *>( pUpdate->info.pStats ) );
 	if ( GetStatsLocal()->GetActions() )
 	{
-		for ( std::vector< CDBPtr< NDb::SUnitSpecialAblityDesc > >::const_iterator it = GetStatsLocal()->GetActions()->specialAbilities.begin(); it != GetStatsLocal()->GetActions()->specialAbilities.end(); ++it )
+		for ( std::vector<CDBPtr<NDb::SUnitSpecialAblityDesc>>::const_iterator it =
+		          GetStatsLocal()->GetActions()->specialAbilities.begin();
+		      it != GetStatsLocal()->GetActions()->specialAbilities.end();
+		      ++it )
 		{
-			if ( (*it) != 0 )
-				abilityMap[(*it)->eName] = SAbilityInfo( EASS_READY_TO_ON, 0.0f );
+			if ( ( *it ) != 0 )
+				abilityMap[( *it )->eName] = SAbilityInfo( EASS_READY_TO_ON, 0.0f );
 		}
 
 		// Add Entrench button info
@@ -82,13 +92,13 @@ bool CMOUnit::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 	if ( bCreated )
 	{
 		SetVisible( false, eSeason, ( eDayTime == NDb::DAY_NIGHT ) ); // чтобы изначально не было видно под warfog'ом.
-//		Scene()->ShowObject( nUniqueID, IsVisible() );
+																																	//		Scene()->ShowObject( nUniqueID, IsVisible() );
 	}
 
 	nMaxAmmo = 0;
-	if ( NDb::IsInfantry( checked_cast<const NDb::SUnitBaseRPGStats*>(GetStats())->etype ) )
+	if ( NDb::IsInfantry( checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() )->etype ) )
 	{
-		const NDb::SInfantryRPGStats *pS = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
+		const NDb::SInfantryRPGStats *pS = checked_cast<const NDb::SInfantryRPGStats *>( GetStats() );
 		if ( pS )
 		{
 			for ( int j = 0; j < pS->GetGunsSize( GetID(), 0 ); ++j )
@@ -97,7 +107,7 @@ bool CMOUnit::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 	}
 	else
 	{
-		const NDb::SMechUnitRPGStats *pS = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
+		const NDb::SMechUnitRPGStats *pS = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
 		if ( pS )
 		{
 			for ( int i = 0; i < pS->GetPlatformsSize( GetID() ); ++i )
@@ -122,7 +132,7 @@ void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 		*pActions |= GetStatsLocal()->GetActions()->availUserActions;
 		for ( int i = 0; i < GetStatsLocal()->GetActions()->specialAbilities.size(); ++i )
 		{
-			const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[ i ];
+			const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[i];
 			if ( !pDesc )
 				continue;
 			if ( i <= nLevel )
@@ -138,7 +148,7 @@ void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 		*pActions |= GetStatsLocal()->GetActions()->availUserExposures;
 		pActions->SetAction( NDb::USER_ACTION_EXACT_SHOT );
 		pActions->SetAction( NDb::USER_ACTION_SUPPORT_FIRE );
-		if ( !checked_cast<const NDb::SUnitBaseRPGStats*>(GetStats())->IsAviation() )
+		if ( !checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() )->IsAviation() )
 			pActions->SetAction( NDb::USER_ACTION_DROP_BOMB );
 	}
 }
@@ -151,7 +161,7 @@ void CMOUnit::GetPossibleActions( CUserActions *pActions ) const
 	*pActions |= GetStatsLocal()->GetActions()->availUserActions;
 	for ( int i = 0; i < GetStatsLocal()->GetActions()->specialAbilities.size(); ++i )
 	{
-		const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[ i ];
+		const NDb::SUnitSpecialAblityDesc *pDesc = GetStatsLocal()->GetActions()->specialAbilities[i];
 		if ( !pDesc )
 			continue;
 		pActions->SetAction( GetActionByAbility( pDesc->eName ) );
@@ -160,18 +170,18 @@ void CMOUnit::GetPossibleActions( CUserActions *pActions ) const
 		pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
 }
 
-void CMOUnit::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const
-{
-}
+void CMOUnit::GetDisabledActions( CUserActions *pActions, EActionsType eActions ) const {}
 
-IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+IClientUpdatableProcess *
+CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
 	// Ammo
 	nSupply = stats.nSupply;
 
 	ammos.clear();
 	int nNewCurAmmo = 0;
-	for ( std::vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end(); ++it )
+	for ( std::vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end();
+	      ++it )
 	{
 		const SAINotifyRPGStats::SWeaponAmmo &updateAmmo = *it;
 		nNewCurAmmo += updateAmmo.nAmmo;
@@ -195,7 +205,12 @@ IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &sta
 	if ( pAckManager && nNewCurAmmo < nMaxAmmo / 3 && nCurAmmo >= nMaxAmmo / 3 )
 	{
 		if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
-			pAckManager->AddAcknowledgement( this, NDb::ACK_LOW_AMMO, checked_cast<const NDb::SUnitBaseRPGStats*>(GetStats())->ChooseAcknowledgement( NDb::ACK_LOW_AMMO, 0 ), 0, 0 );
+			pAckManager->AddAcknowledgement(
+					this,
+					NDb::ACK_LOW_AMMO,
+					checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() )->ChooseAcknowledgement( NDb::ACK_LOW_AMMO, 0 ),
+					0,
+					0 );
 	}
 
 	nCurAmmo = nNewCurAmmo;
@@ -208,14 +223,15 @@ IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &sta
 #define MIN_DIFFERENCE 0.1f
 bool CMOUnit::AIUpdateSpecialAbility( const struct SAISpecialAbilityUpdate &update )
 {
-	NDb::EUnitSpecialAbility eAbility = static_cast<NDb::EUnitSpecialAbility>(update.info.nAbilityType);
-  CAbilityInfo::iterator pos = abilityMap.find( eAbility );
+	NDb::EUnitSpecialAbility eAbility = static_cast<NDb::EUnitSpecialAbility>( update.info.nAbilityType );
+	CAbilityInfo::iterator pos = abilityMap.find( eAbility );
 	if ( pos == abilityMap.end() )
 		return false;
 	SAbilityInfo &info = pos->second;
 
 	bool bResult = true;
-	if ( fabs( info.fParam = update.info.fCurValue ) < MIN_DIFFERENCE && info.abilityState.dwStateValue == update.info.state.dwStateValue )
+	if ( fabs( info.fParam = update.info.fCurValue ) < MIN_DIFFERENCE &&
+	     info.abilityState.dwStateValue == update.info.state.dwStateValue )
 		bResult = false;
 	else
 		info.fParam = update.info.fCurValue;
@@ -239,7 +255,7 @@ int CMOUnit::GetAbilityTier( NDb::EUserAction eAction ) const
 	return -1;
 }
 
-const NDb::SUnitSpecialAblityDesc* CMOUnit::GetAbilityDesc( NDb::EUserAction eAction ) const
+const NDb::SUnitSpecialAblityDesc *CMOUnit::GetAbilityDesc( NDb::EUserAction eAction ) const
 {
 	if ( GetStatsLocal() && GetStatsLocal()->GetActions() )
 	{
@@ -252,7 +268,6 @@ const NDb::SUnitSpecialAblityDesc* CMOUnit::GetAbilityDesc( NDb::EUserAction eAc
 	}
 	return 0;
 }
-
 
 void CMOUnit::GetAbilityInfo( CAbilityInfo &abilityList ) const
 {
@@ -344,13 +359,16 @@ bool CMOUnit::NeedShowInterrior() const
 	return false;
 }
 
-void CMOUnit::AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet )
+void CMOUnit::AIUpdateAcknowledgement( const NDb::EUnitAckType eAck,
+                                       struct IClientAckManager *pAckManager,
+                                       const int nSet )
 {
-	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
+	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() );
 	pAckManager->AddAcknowledgement( this, eAck, pStats->ChooseAcknowledgement( eAck, nSet ), nSet, 0 );
 }
 
-void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, struct IClientAckManager *pAckManager )
+void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack,
+                                            struct IClientAckManager *pAckManager )
 {
 	if ( ack.bPresent )
 		pAckManager->RegisterAsBored( NDb::EUnitAckType( ack.nAck ), this );
@@ -360,24 +378,30 @@ void CMOUnit::AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement
 
 void CMOUnit::SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck )
 {
-	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
+	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() );
 	pAckManager->AddAcknowledgement( this, eAck, pStats->ChooseAcknowledgement( eAck, 0 ), 0, 0 );
 }
 
-void CMOUnit::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMOUnit::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate,
+                                const NDb::ESeason eSeason,
+                                const bool bIsNight,
+                                ISoundScene *pSoundScene,
+                                IClientAckManager *pAckManager )
 {
-	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() );
+	const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats *>( GetStats() );
 	if ( pUpdate->bVisibleWhenDie )
 	{
 		pAckManager->UnitDead( this, pSoundScene );
-		pAckManager->AddDeathAcknowledgement( GetCenter(),  pStats->ChooseAcknowledgement( NDb::ACK_UNIT_DIED, 0 ), 0 );
+		pAckManager->AddDeathAcknowledgement( GetCenter(), pStats->ChooseAcknowledgement( NDb::ACK_UNIT_DIED, 0 ), 0 );
 	}
 	Scene()->ClearMarkers( ESMT_SHOOT_AREA, GetID() );
 	DisableIcons( true );
 	SetDeathState();
 }
 
-void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
+void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
+                                 struct ISoundScene *pSoundScene,
+                                 IClientAckManager *pAckManager )
 {
 	if ( pUpdate->bShowEffects )
 		pAckManager->UnitDead( this, pSoundScene );
@@ -387,7 +411,8 @@ void CMOUnit::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct IS
 
 void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 {
-	if ( pUpdate->nUpdateTime - nOldAreasTime < 1000 && !AreasChanged( pUpdate->info ) && !Singleton<IGameTimer>()->HasPause( 0 ) )
+	if ( pUpdate->nUpdateTime - nOldAreasTime < 1000 && !AreasChanged( pUpdate->info ) &&
+	     !Singleton<IGameTimer>()->HasPause( 0 ) )
 		return;
 	nOldAreasTime = pUpdate->nUpdateTime;
 	CopyAreas( pUpdate->info );
@@ -402,8 +427,8 @@ void CMOUnit::AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate )
 			CVec3 vColor( ( dwColor & 0x00ff0000 ) >> 16, ( dwColor & 0x0000ff00 ) >> 8, dwColor & 0x000000ff );
 			vColor = vColor / 256.0f;
 			CVec2 vCenter( area.vCenter3D.x, area.vCenter3D.y );
-			const float fStartAngle = AI2VisRad(area.wStartAngle) + FP_PI * 0.5;
-			const float fEndAngle = AI2VisRad(area.wFinishAngle) + FP_PI * 0.5;
+			const float fStartAngle = AI2VisRad( area.wStartAngle ) + FP_PI * 0.5;
+			const float fEndAngle = AI2VisRad( area.wFinishAngle ) + FP_PI * 0.5;
 			Scene()->AddShootArea( GetID(), fStartAngle, fEndAngle, area.fMinR, area.fMaxR, vColor, vCenter );
 		}
 	}
@@ -449,7 +474,7 @@ void CMOUnit::AIUpdateModifyEntranceState( bool _bOpen )
 void CMOUnit::SetUnitLevel( int _nLevel, bool _bShowUnitRank )
 {
 	nLevel = _nLevel;
-	bShowUnitRank = true;//_bShowUnitRank;
+	bShowUnitRank = true; //_bShowUnitRank;
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "debug_unit_levels", 0 ) != 0 )
 		nLevel = 3;
@@ -464,26 +489,28 @@ void CMOUnit::SetNewAbility( bool _bNewAbility )
 struct SChooseAttachedToDamaged : public CMOUnit::IChooseAttached
 {
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToDamaged );
+
 public:
 	// Keep a defined fallback without changing constructor-selected damage levels.
 	const int nDamageLevel = 0;
 
-	SChooseAttachedToDamaged() : nDamageLevel( 0 ) { }
-	SChooseAttachedToDamaged( const int _nDamageLevel ) : nDamageLevel( _nDamageLevel ) { }
+	SChooseAttachedToDamaged() : nDamageLevel( 0 ) {}
+	SChooseAttachedToDamaged( const int _nDamageLevel ) : nDamageLevel( _nDamageLevel ) {}
 
-	virtual const NDb::SVisObj* Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
+	virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
 	{
 		const std::vector<NDb::SAttachedModelVisObj::SSDamageLevel> &damageLevels = pAttachedVisObj->damageLevels;
-		return damageLevels.size() > nDamageLevel && damageLevels[nDamageLevel].pVisObj ?
-					 damageLevels[nDamageLevel].pVisObj : 0;
+		return damageLevels.size() > nDamageLevel && damageLevels[nDamageLevel].pVisObj ? damageLevels[nDamageLevel].pVisObj
+		                                                                                : 0;
 	}
 };
 
 struct SChooseAttachedToAnimable : public CMOUnit::IChooseAttached
 {
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToAnimable );
+
 public:
-	virtual const NDb::SVisObj* Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
+	virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
 	{
 		return pAttachedVisObj->pAnimableModel;
 	}
@@ -492,14 +519,15 @@ public:
 struct SChooseAttachedToTransportable : public CMOUnit::IChooseAttached
 {
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToTransportable );
+
 public:
-	virtual const NDb::SVisObj* Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
+	virtual const NDb::SVisObj *Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
 	{
 		return pAttachedVisObj->pTransportableModel;
 	}
 };
 
-const NDb::SVisObj* CMOUnit::SChooseAttachedByDefault::Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
+const NDb::SVisObj *CMOUnit::SChooseAttachedByDefault::Choose( const NDb::SAttachedModelVisObj *pAttachedVisObj )
 {
 	return pAttachedVisObj->pvisualObject;
 }
@@ -532,17 +560,22 @@ void CMOUnit::ChangeModelToTransportable( const NDb::SModel *pNewModel, const ND
 	InitAttached( eSeason, pChooseFunc );
 }
 
-void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc,
-														const NDb::ESeason eSeason, const std::string &szLocator, const ESceneSubObjType eType, const int nNumber )
+void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj,
+                           IChooseAttached *pChooseFunc,
+                           const NDb::ESeason eSeason,
+                           const std::string &szLocator,
+                           const ESceneSubObjType eType,
+                           const int nNumber )
 {
 	if ( pAttachedObj )
 	{
 		const NDb::SVisObj *pNewAttachObj = pChooseFunc ? pChooseFunc->Choose( pAttachedObj ) : 0;
-//		if ( pNewAttachObj == 0 )
-//			pNewAttachObj = pAttachedObj->pvisualObject;
+		//		if ( pNewAttachObj == 0 )
+		//			pNewAttachObj = pAttachedObj->pvisualObject;
 
 		if ( pNewAttachObj )
-			Scene()->AttachSubModel( GetID(), eType, szLocator, GetModel( pNewAttachObj, eSeason ), ESAT_NO_REPLACE, nNumber, true, true );
+			Scene()->AttachSubModel(
+					GetID(), eType, szLocator, GetModel( pNewAttachObj, eSeason ), ESAT_NO_REPLACE, nNumber, true, true );
 	}
 }
 
@@ -557,7 +590,7 @@ void CMOUnit::SetPointer( const NDb::SModel *pModel )
 	{
 		CVec3 vPointerOffset( 0.0f, 0.0f, s_fPointerOffset );
 		Scene()->AttachSubModel( GetID(), ESSOT_EXTERN, pModel, ESAT_REPLACE_ON_TYPE, 0, true, vPointerOffset );
-		IAttachedObject* pAttached = Scene()->GetAttached( GetID(), ESSOT_EXTERN, 0 );
+		IAttachedObject *pAttached = Scene()->GetAttached( GetID(), ESSOT_EXTERN, 0 );
 		if ( pAttached )
 		{
 			pAttached->ReCreate( Scene()->GetGView(), Scene()->GetGameTimer() );
@@ -570,7 +603,7 @@ void CMOUnit::SetPointer( const NDb::SModel *pModel )
 				{
 					for ( int i = 0; i < pModel->pSkeleton->animations.size(); ++i )
 					{
-						const NDb::SAnimB2 *pAnim = checked_cast_ptr<const NDb::SAnimB2*>( pModel->pSkeleton->animations[i] );
+						const NDb::SAnimB2 *pAnim = checked_cast_ptr<const NDb::SAnimB2 *>( pModel->pSkeleton->animations[i] );
 						if ( pAnim->eType == NDb::ANIMATION_IDLE )
 						{
 							AddAnimation( pAnim, Singleton<IGameTimer>()->GetGameTime(), pAnimator, pAnim->bLooped );
@@ -596,10 +629,10 @@ void CMOUnit::ClearPointer()
 
 int CMOUnit::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, checked_cast<IMOUnit*>(this) );
+	saver.Add( 1, checked_cast<IMOUnit *>( this ) );
 	//saver.Add( 2, &ammos[0] );
 	//saver.Add( 3, &ammos[1] );
-	saver.Add( 6, &abilityMap);
+	saver.Add( 6, &abilityMap );
 	saver.Add( 7, &oldAreas );
 	saver.Add( 8, &nOldAreasTime );
 	saver.Add( 9, &bOpen );

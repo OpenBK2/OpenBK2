@@ -3,6 +3,6 @@
 
 namespace NGlobalObjects
 {
-	void Clear();
-	void Serialize( int idChunk, IBinSaver &saver );
+void Clear();
+void Serialize( int idChunk, IBinSaver &saver );
 };

@@ -8,7 +8,7 @@ struct SObjectStatus;
 class CMapObj;
 namespace NDb
 {
-	struct SAnimB2;
+struct SAnimB2;
 };
 
 class CMissionUnitFullInfo : public CObjectBase
@@ -27,13 +27,24 @@ class CMissionUnitFullInfo : public CObjectBase
 		ZDATA
 		CPtr<IWindow> pItem;
 		ZSKIP //CPtr<ITextView> pName;
-		CPtr<ITextView> pDamage;
+				CPtr<ITextView>
+						pDamage;
 		CPtr<ITextView> pPenetration;
 		CPtr<ITextView> pAmmo;
 		CPtr<ITextView> pCount;
 		CPtr<IButton> pIconBtn;
 		CPtr<IWindow> pIcon;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pItem); f.Add(4,&pDamage); f.Add(5,&pPenetration); f.Add(6,&pAmmo); f.Add(7,&pCount); f.Add(8,&pIconBtn); f.Add(9,&pIcon); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pItem );
+			f.Add( 4, &pDamage );
+			f.Add( 5, &pPenetration );
+			f.Add( 6, &pAmmo );
+			f.Add( 7, &pCount );
+			f.Add( 8, &pIconBtn );
+			f.Add( 9, &pIcon );
+			return 0;
+		}
 	};
 
 	struct SMember
@@ -42,12 +53,15 @@ class CMissionUnitFullInfo : public CObjectBase
 		CDBPtr<NDb::SHPObjectRPGStats> pStats;
 		CPtr<CMapObj> pMO;
 		int nPassengerCount;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pStats); f.Add(3,&pMO); f.Add(4,&nPassengerCount); return 0; }
-
-		bool operator==( const SMember &member ) const
+		ZEND int operator&( IBinSaver &f )
 		{
-			return pStats == member.pStats && pMO == member.pMO;
+			f.Add( 2, &pStats );
+			f.Add( 3, &pMO );
+			f.Add( 4, &nPassengerCount );
+			return 0;
 		}
+
+		bool operator==( const SMember &member ) const { return pStats == member.pStats && pMO == member.pMO; }
 	};
 
 	struct SViewMember
@@ -55,7 +69,12 @@ class CMissionUnitFullInfo : public CObjectBase
 		ZDATA
 		CPtr<IButton> pBtn;
 		CPtr<IWindow> pIconWnd;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBtn); f.Add(3,&pIconWnd); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pBtn );
+			f.Add( 3, &pIconWnd );
+			return 0;
+		}
 	};
 
 	struct SHP
@@ -63,29 +82,36 @@ class CMissionUnitFullInfo : public CObjectBase
 		ZDATA
 		float fFraction;
 		int nHP;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&fFraction); f.Add(3,&nHP); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &fFraction );
+			f.Add( 3, &nHP );
+			return 0;
+		}
 	};
 
 	ZDATA
 	CPtr<ITextView> pName;
 
-	ZSKIP //CPtr<IWindow> pArmorMask;
-	ZSKIP //CPtr<ITextView> pArmorFront;
-	ZSKIP //CPtr<ITextView> pArmorBack;
-	ZSKIP //CPtr<ITextView> pArmorSide;
-	ZSKIP //CPtr<ITextView> pArmorTop;
-	ZSKIP //CPtr<IWindow> pHPUnit;
-	ZSKIP //CPtr<IWindow> pHPSquad;
-	ZSKIP //CPtr<IWindow> pHPView;
+	ZSKIP                             //CPtr<IWindow> pArmorMask;
+			ZSKIP                         //CPtr<ITextView> pArmorFront;
+					ZSKIP                     //CPtr<ITextView> pArmorBack;
+							ZSKIP                 //CPtr<ITextView> pArmorSide;
+									ZSKIP             //CPtr<ITextView> pArmorTop;
+											ZSKIP         //CPtr<IWindow> pHPUnit;
+													ZSKIP     //CPtr<IWindow> pHPSquad;
+															ZSKIP //CPtr<IWindow> pHPView;
 
-	std::vector<SWeaponItem> weaponItems;
-	ZSKIP //SSupplyItem supplyCalls;
-	ZSKIP //SSupplyItem supplyCount;
-	ZSKIP //SSupplyItem supplyTime;
+																	std::vector<SWeaponItem>
+																			weaponItems;
+	ZSKIP         //SSupplyItem supplyCalls;
+			ZSKIP     //SSupplyItem supplyCount;
+					ZSKIP //SSupplyItem supplyTime;
 
-	ZSKIP //vector< CPtr<IWindow> > memberButtons;
+							ZSKIP //vector< CPtr<IWindow> > memberButtons;
 
-	std::vector<int> armors;
+									std::vector<int>
+											armors;
 	std::vector<NUnitFullInfo::SWeapon> weapons;
 
 	EType eType;
@@ -124,9 +150,11 @@ class CMissionUnitFullInfo : public CObjectBase
 	std::vector<SMember> members;
 	std::vector<SViewMember> viewMembers;
 	ZSKIP //vector<SHP> hps;
-	CPtr<ITextView> pHPView;
+			CPtr<ITextView>
+					pHPView;
 	ZSKIP //CPtr<IMultiTextureProgressBar> pHPBarUnit;
-	CPtr<ITextView> pSuppliesCountInfinite;
+			CPtr<ITextView>
+					pSuppliesCountInfinite;
 	CPtr<IWindow> pHitbarPanel;
 
 	std::vector<SHP> hps;
@@ -139,7 +167,57 @@ class CMissionUnitFullInfo : public CObjectBase
 
 	std::wstring wszTooltipMemberInTransport;
 	std::wstring wszTooltipMemberInBuilding;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pName); f.Add(11,&weaponItems); f.Add(16,&armors); f.Add(17,&weapons); f.Add(18,&eType); f.Add(19,&pWeaponsWnd); f.Add(20,&pSuppliesWnd); f.Add(21,&pMembersWnd); f.Add(22,&pFlagWnd); f.Add(23,&p3DCtrl); f.Add(24,&pWeaponFullName); f.Add(25,&pWeaponFullDamage); f.Add(26,&pWeaponFullPenetration); f.Add(27,&pWeaponFullAmmo); f.Add(28,&objects); f.Add(29,&eSeason); f.Add(30,&pBaseStats); f.Add(31,&pBaseMO); f.Add(32,&pSelStats); f.Add(33,&pSelMO); f.Add(34,&nSelWeapon); f.Add(35,&nSelMember); f.Add(36,&nCurSupplies); f.Add(37,&nMaxSupplies); f.Add(38,&pKeyObjectTexture); f.Add(39,&pArmorsWnd); f.Add(40,&pArmorFrontView); f.Add(41,&pArmorSide1View); f.Add(42,&pArmorSide2View); f.Add(43,&pArmorBackView); f.Add(44,&pArmorTopView); f.Add(45,&pSuppliesCountView); f.Add(46,&wszLocalizedName); f.Add(47,&members); f.Add(48,&viewMembers); f.Add(50,&pHPView); f.Add(52,&pSuppliesCountInfinite); f.Add(53,&pHitbarPanel); f.Add(54,&hps); f.Add(55,&pFuelPanel); f.Add(56,&pFuelBar); f.Add(57,&fFuel); f.Add(58,&pHPBarUnit); f.Add(59,&nPlayer); f.Add(60,&wszTooltipMemberInTransport); f.Add(61,&wszTooltipMemberInBuilding); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pName );
+		f.Add( 11, &weaponItems );
+		f.Add( 16, &armors );
+		f.Add( 17, &weapons );
+		f.Add( 18, &eType );
+		f.Add( 19, &pWeaponsWnd );
+		f.Add( 20, &pSuppliesWnd );
+		f.Add( 21, &pMembersWnd );
+		f.Add( 22, &pFlagWnd );
+		f.Add( 23, &p3DCtrl );
+		f.Add( 24, &pWeaponFullName );
+		f.Add( 25, &pWeaponFullDamage );
+		f.Add( 26, &pWeaponFullPenetration );
+		f.Add( 27, &pWeaponFullAmmo );
+		f.Add( 28, &objects );
+		f.Add( 29, &eSeason );
+		f.Add( 30, &pBaseStats );
+		f.Add( 31, &pBaseMO );
+		f.Add( 32, &pSelStats );
+		f.Add( 33, &pSelMO );
+		f.Add( 34, &nSelWeapon );
+		f.Add( 35, &nSelMember );
+		f.Add( 36, &nCurSupplies );
+		f.Add( 37, &nMaxSupplies );
+		f.Add( 38, &pKeyObjectTexture );
+		f.Add( 39, &pArmorsWnd );
+		f.Add( 40, &pArmorFrontView );
+		f.Add( 41, &pArmorSide1View );
+		f.Add( 42, &pArmorSide2View );
+		f.Add( 43, &pArmorBackView );
+		f.Add( 44, &pArmorTopView );
+		f.Add( 45, &pSuppliesCountView );
+		f.Add( 46, &wszLocalizedName );
+		f.Add( 47, &members );
+		f.Add( 48, &viewMembers );
+		f.Add( 50, &pHPView );
+		f.Add( 52, &pSuppliesCountInfinite );
+		f.Add( 53, &pHitbarPanel );
+		f.Add( 54, &hps );
+		f.Add( 55, &pFuelPanel );
+		f.Add( 56, &pFuelBar );
+		f.Add( 57, &fFuel );
+		f.Add( 58, &pHPBarUnit );
+		f.Add( 59, &nPlayer );
+		f.Add( 60, &wszTooltipMemberInTransport );
+		f.Add( 61, &wszTooltipMemberInBuilding );
+		return 0;
+	}
+
 private:
 	void InitPrivate( IWindow *pInfo, IWindow *pAppearance, EType eType );
 
@@ -179,6 +257,7 @@ private:
 	void SetBaseID3D( int nID );
 
 	void SetMemberTooltip( IWindow *pWnd );
+
 public:
 	CMissionUnitFullInfo();
 	~CMissionUnitFullInfo();

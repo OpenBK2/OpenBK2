@@ -12,8 +12,8 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C3, CTankPitPath );
 //*												CTankPitPath															*
 //*******************************************************************
 
-CTankPitPath::CTankPitPath ( CBasePathUnit *_pUnit, const class CVec2 &vStartPoint, const class CVec2 &vEndPoint )
-: vCurPoint( vStartPoint ), vEndPoint( vEndPoint ), fSpeedLen( 0.0f ), pUnit( _pUnit )
+CTankPitPath::CTankPitPath( CBasePathUnit *_pUnit, const class CVec2 &vStartPoint, const class CVec2 &vEndPoint )
+		: vCurPoint( vStartPoint ), vEndPoint( vEndPoint ), fSpeedLen( 0.0f ), pUnit( _pUnit )
 {
 }
 
@@ -29,13 +29,13 @@ void CTankPitPath::Segment( const NTimer::STime timeDiff )
 	else if ( pUnit )
 	{
 		fSpeedLen = pUnit->GetMaxSpeedHere();
-		float fPassedLenght = fSpeedLen*timeDiff;
+		float fPassedLenght = fSpeedLen * timeDiff;
 		CVec2 vDir = vEndPoint - vCurPoint;
 		float fDistToGo = fabs( vDir );
-		if ( fDistToGo >= fPassedLenght )// еще нужно идти
+		if ( fDistToGo >= fPassedLenght ) // еще нужно идти
 		{
 			Normalize( &vDir );
-			vDir *= fPassedLenght ;
+			vDir *= fPassedLenght;
 			vCurPoint += vDir;
 		}
 		else

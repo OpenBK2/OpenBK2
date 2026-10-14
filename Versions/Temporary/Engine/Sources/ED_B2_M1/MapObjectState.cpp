@@ -24,8 +24,7 @@
 
 #include <zconf.h>
 
-const uint32_t CMapObjectState::SELECTION_LINE_COLOR	= 0xFF00FF00;
-
+const uint32_t CMapObjectState::SELECTION_LINE_COLOR = 0xFF00FF00;
 
 void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, unsigned nButtonType )
 {
@@ -37,34 +36,44 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 			if ( NWxKey::IsDown( VK_MENU ) )
 			{
 				pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 				pParentState->MoveSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, false, true, false );
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 				pParentState->GetObjectInfoCollector()->SetSelectionType( NMapInfoEditor::SObjectSelection::ST_CENTER );
 			}
 			else if ( ( nFlags & MK_CONTROL ) > 0 )
 			{
 				pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 				pParentState->RotateSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, true, true, false );
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 				pParentState->GetObjectInfoCollector()->SetSelectionType( NMapInfoEditor::SObjectSelection::ST_DIRECTION );
 			}
 			else
 			{
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
-				if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_CENTER ) ||
-						 ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+				       NMapInfoEditor::SObjectSelection::ST_CENTER ) ||
+				     ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+				       NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
 				{
 					pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
 				}
 			}
-			if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_CENTER ) ||
-					 ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
+			if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+			       NMapInfoEditor::SObjectSelection::ST_CENTER ) ||
+			     ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+			       NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
 			{
 				pParentState->SetActiveInputState( CMapObjectState::IS_EDIT, true, false );
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,	ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
+				Singleton<ICommandHandlerContainer>()->HandleCommand(
+						CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
 				return;
 			}
 		}
@@ -91,7 +100,8 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 				{
 					pParentState->GetObjectInfoCollector()->CreateSelection( selectedObjectSceneIDList );
 				}
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 				pParentState->GetObjectInfoCollector()->SetSelectionType( NMapInfoEditor::SObjectSelection::ST_CENTER );
 				pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
 				pParentState->SetActiveInputState( CMapObjectState::IS_EDIT, true, false );
@@ -104,7 +114,8 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 				}
 				else
 				{
-					pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+					pParentState->GetObjectInfoCollector()->PickSelection(
+							pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 					pParentState->GetObjectInfoCollector()->SetSelectionType( NMapInfoEditor::SObjectSelection::ST_CENTER );
 					pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
 					pParentState->SetActiveInputState( CMapObjectState::IS_EDIT, true, false );
@@ -135,10 +146,10 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 			pParentState->nSelectedSceneID = INVALID_NODE_ID;
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,	ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
 	}
 }
-
 
 void CMapObjectSelectState::OnMouseButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint, unsigned nButtonType )
 {
@@ -156,9 +167,9 @@ void CMapObjectSelectState::OnMouseButtonUp( unsigned nFlags, const CTPoint<int>
 	pParentState->nSelectedSceneID = INVALID_NODE_ID;
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,	ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
 }
-
 
 void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 {
@@ -168,14 +179,13 @@ void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 		{
 			if ( bShiftPressed )
 			{
-				pParentState->GetObjectInfoCollector()->InsertToSelection( pParentState->selector.vTerrainPos0,
-																											 pParentState->selector.vTerrainPos1,
-																											 false );
+				pParentState->GetObjectInfoCollector()->InsertToSelection(
+						pParentState->selector.vTerrainPos0, pParentState->selector.vTerrainPos1, false );
 			}
 			else
 			{
 				pParentState->GetObjectInfoCollector()->CreateSelection( pParentState->selector.vTerrainPos0,
-																										 pParentState->selector.vTerrainPos1 );
+				                                                         pParentState->selector.vTerrainPos1 );
 			}
 		}
 		else
@@ -184,8 +194,8 @@ void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 			{
 				std::list<int> sceneIDList;
 				pScene->PickObjects( sceneIDList,
-														 CVec2( pParentState->selector.frameRect.minx, pParentState->selector.frameRect.miny ),
-														 CVec2( pParentState->selector.frameRect.maxx, pParentState->selector.frameRect.maxy ) );
+				                     CVec2( pParentState->selector.frameRect.minx, pParentState->selector.frameRect.miny ),
+				                     CVec2( pParentState->selector.frameRect.maxx, pParentState->selector.frameRect.maxy ) );
 				pParentState->GetObjectInfoCollector()->Pick( &sceneIDList, pParentState->selector.frameRect );
 				if ( bShiftPressed )
 				{
@@ -199,7 +209,6 @@ void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 		}
 	}
 }
-
 
 void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -220,7 +229,8 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 				UpdateSelectionBySelector( ( nFlags & MK_SHIFT ) > 0 );
 				//
 				//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,	ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
+				Singleton<ICommandHandlerContainer>()->HandleCommand(
+						CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
 			}
 		}
 		else
@@ -236,26 +246,26 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 		if ( sceneIDList.size() > 1 )
 		{
 			strStatusBarMessage = NResources::GetString( IDS_STATUS_STRING_OBJECTS );
-			Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.c_str(), sceneIDList.size() ) );
+			Singleton<IMainFrameContainer>()->Get()->SetStatusBarText(
+					1, fmt::sprintf( strStatusBarMessage.c_str(), sceneIDList.size() ) );
 		}
 		else if ( sceneIDList.size() > 0 )
 		{
 			strStatusBarMessage = NResources::GetString( IDS_STATUS_STRING_OBJECT );
-			if ( const NDb::SMapObjectInfo *pMapOnjectInfo = pParentState->GetObjectInfoCollector()->GetObjectStatusBarParams( *( sceneIDList.begin() ) ) )
+			if ( const NDb::SMapObjectInfo *pMapOnjectInfo =
+			         pParentState->GetObjectInfoCollector()->GetObjectStatusBarParams( *( sceneIDList.begin() ) ) )
 			{
 				CDBID dbid;
 				if ( pMapOnjectInfo->pObject )
 				{
 					dbid = pMapOnjectInfo->pObject->GetDBID();
 				}
-				Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.c_str(),
-																																							pMapOnjectInfo->nScriptID,
-																																							dbid.ToString().c_str() ) );
+				Singleton<IMainFrameContainer>()->Get()->SetStatusBarText(
+						1, fmt::sprintf( strStatusBarMessage.c_str(), pMapOnjectInfo->nScriptID, dbid.ToString().c_str() ) );
 			}
 		}
 	}
 }
-
 
 void CMapObjectSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -267,7 +277,6 @@ void CMapObjectSelectState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &
 	}
 }
 
-
 void CMapObjectSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -277,7 +286,6 @@ void CMapObjectSelectState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rM
 		OnMouseButtonUp( nFlags, rMousePoint, MK_LBUTTON );
 	}
 }
-
 
 void CMapObjectSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -289,7 +297,6 @@ void CMapObjectSelectState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &
 	}
 }
 
-
 void CMapObjectSelectState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -300,7 +307,6 @@ void CMapObjectSelectState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rM
 	}
 }
 
-
 void CMapObjectSelectState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -308,16 +314,19 @@ void CMapObjectSelectState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &
 		pParentState->pStoreInputState->OnMButtonDown( nFlags, rMousePoint );
 		//
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+						 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+		     ( !objectSet.objectNameSet.empty() ) )
 		{
 			NCursor::Set( NCursor::SHAPE_ARROW );
-			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
-			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
+			ICommandHandlerContainer *pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
+			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,
+			                                         ID_MIMO_SWITCH_MULTI_STATE,
+			                                         reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 		}
 	}
 }
-
 
 void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -336,14 +345,16 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
 			{
 				pParentState->SetSelectionHeightsToZero( true );
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 			}
 		}
 		else if ( nChar == VK_RETURN )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
 			{
-				pParentState->GetObjectInfoCollector()->ShowSelectionPropertyManipulator( pParentState->GetMapInfoEditor()->GetViewManipulator(), pParentState->GetMapInfoEditor()->GetObjectSet() );
+				pParentState->GetObjectInfoCollector()->ShowSelectionPropertyManipulator(
+						pParentState->GetMapInfoEditor()->GetViewManipulator(), pParentState->GetMapInfoEditor()->GetObjectSet() );
 			}
 		}
 		else if ( nChar == VK_DELETE )
@@ -387,7 +398,6 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 	}
 }
 
-
 void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->nSelectedSceneID != INVALID_NODE_ID )
@@ -399,7 +409,8 @@ void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<i
 			pParentState->GetObjectInfoCollector()->Pick( &sceneIDList, rMousePoint );
 			if ( !sceneIDList.empty() )
 			{
-				const unsigned nNewSelectedObjectSceneID = pParentState->GetNextSceneID( pParentState->nSelectedSceneID, &sceneIDList );
+				const unsigned nNewSelectedObjectSceneID =
+						pParentState->GetNextSceneID( pParentState->nSelectedSceneID, &sceneIDList );
 				if ( nNewSelectedObjectSceneID != pParentState->nSelectedSceneID )
 				{
 					// удаляем старый объект
@@ -409,15 +420,18 @@ void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<i
 						selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 						pParentState->GetObjectInfoCollector()->RemoveFromSelection( selectedObjectSceneIDList );
 						// записываем его положение в базу:
-						const unsigned nMapObjectInfoID = pParentState->GetObjectInfoCollector()->Pick( pParentState->nSelectedSceneID );
+						const unsigned nMapObjectInfoID =
+								pParentState->GetObjectInfoCollector()->Pick( pParentState->nSelectedSceneID );
 						if ( nMapObjectInfoID != INVALID_NODE_ID )
 						{
-							if ( CPtr<CObjectBaseController> pObjectController = pParentState->GetMapInfoEditor()->CreateController() )
+							if ( CPtr<CObjectBaseController> pObjectController =
+							         pParentState->GetMapInfoEditor()->CreateController() )
 							{
-								if ( pParentState->GetObjectInfoCollector()->UpdateDB( nMapObjectInfoID,
-																													 true,
-																													 pObjectController,
-																													 pParentState->GetMapInfoEditor()->GetViewManipulator() ) )
+								if ( pParentState->GetObjectInfoCollector()->UpdateDB(
+												 nMapObjectInfoID,
+												 true,
+												 pObjectController,
+												 pParentState->GetMapInfoEditor()->GetViewManipulator() ) )
 								{
 									pObjectController->Redo( false, true, pParentState->GetMapInfoEditor() );
 									Singleton<IControllerContainer>()->Add( pObjectController );
@@ -433,16 +447,17 @@ void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<i
 						pParentState->GetObjectInfoCollector()->InsertToSelection( selectedObjectSceneIDList, false );
 					}
 					//
-					pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+					pParentState->GetObjectInfoCollector()->PickSelection(
+							pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 					pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
 					Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-					Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,	ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
+					Singleton<ICommandHandlerContainer>()->HandleCommand(
+							CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
 				}
 			}
 		}
 	}
 }
-
 
 void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> &rMousePoint, bool bSave )
 {
@@ -450,12 +465,14 @@ void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> 
 	{
 		if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
 		{
-			if (	(pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_OUT) ||
-						(pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_CENTER) )
+			if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_OUT ) ||
+			     ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+			       NMapInfoEditor::SObjectSelection::ST_CENTER ) )
 			{
 				pParentState->MoveSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, false, false, bSave );
 			}
-			else if ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION )
+			else if ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+			          NMapInfoEditor::SObjectSelection::ST_DIRECTION )
 			{
 				pParentState->RotateSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, false, false, bSave );
 			}
@@ -470,7 +487,8 @@ void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> 
 					if ( !sceneIDList.empty() )
 					{
 						int nLinkToSceneID = INVALID_NODE_ID;
-						for ( std::list<int>::const_iterator itDceneID = sceneIDList.begin(); itDceneID != sceneIDList.end(); ++itDceneID )
+						for ( std::list<int>::const_iterator itDceneID = sceneIDList.begin(); itDceneID != sceneIDList.end();
+						      ++itDceneID )
 						{
 							if ( !pParentState->GetObjectInfoCollector()->IsInSelection( *itDceneID ) )
 							{
@@ -479,7 +497,7 @@ void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> 
 							}
 						}
 						if ( ( nLinkToSceneID != INVALID_NODE_ID ) &&
-									pParentState->GetObjectInfoCollector()->CheckSelectionLinkCapability( nLinkToSceneID ) )
+						     pParentState->GetObjectInfoCollector()->CheckSelectionLinkCapability( nLinkToSceneID ) )
 						{
 							if ( bSave )
 							{
@@ -504,16 +522,19 @@ void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> 
 	{
 		// поднимаем опускаем
 		if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_OUT ) ||
-				 ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_CENTER )  ||
-				 ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
+		     ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+		       NMapInfoEditor::SObjectSelection::ST_CENTER ) ||
+		     ( pParentState->GetObjectInfoCollector()->GetSelectionType() ==
+		       NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
 		{
 			CVec3 vTerrainPos = pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].vTerrainPos;
-			vTerrainPos.z = ( pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].point.y - pParentState->pStoreInputState->lastEventInfo.point.y ) / NMapInfoEditor::HEIGHT_DELIMITER;
+			vTerrainPos.z = ( pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].point.y -
+			                  pParentState->pStoreInputState->lastEventInfo.point.y ) /
+			                NMapInfoEditor::HEIGHT_DELIMITER;
 			pParentState->MoveSelection( vTerrainPos, false, false, bSave );
 		}
 	}
 }
-
 
 void CMapObjectEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -528,7 +549,6 @@ void CMapObjectEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMou
 	}
 }
 
-
 void CMapObjectEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -541,7 +561,6 @@ void CMapObjectEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		}
 	}
 }
-
 
 void CMapObjectEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -562,7 +581,6 @@ void CMapObjectEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMou
 	}
 }
 
-
 void CMapObjectEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -575,7 +593,6 @@ void CMapObjectEditState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		}
 	}
 }
-
 
 void CMapObjectEditState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -595,7 +612,6 @@ void CMapObjectEditState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMou
 	}
 }
 
-
 void CMapObjectEditState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -603,16 +619,19 @@ void CMapObjectEditState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		pParentState->pStoreInputState->OnMButtonDown( nFlags, rMousePoint );
 		//
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+						 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+		     ( !objectSet.objectNameSet.empty() ) )
 		{
 			NCursor::Set( NCursor::SHAPE_ARROW );
-			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
-			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
+			ICommandHandlerContainer *pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
+			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,
+			                                         ID_MIMO_SWITCH_MULTI_STATE,
+			                                         reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 		}
 	}
 }
-
 
 void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -640,16 +659,19 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
 			{
 				// для правильной работы поднимания / опускания юнитов.
-				pParentState->pStoreInputState->OnRButtonDown( pParentState->pStoreInputState->lastEventInfo.nFlags, pParentState->pStoreInputState->lastEventInfo.point );
+				pParentState->pStoreInputState->OnRButtonDown( pParentState->pStoreInputState->lastEventInfo.nFlags,
+				                                               pParentState->pStoreInputState->lastEventInfo.point );
 				pParentState->SetSelectionHeightsToZero( false );
-				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
+				pParentState->GetObjectInfoCollector()->PickSelection(
+						pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 			}
 		}
 		else if ( nChar == VK_RETURN )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
 			{
-				pParentState->GetObjectInfoCollector()->ShowSelectionPropertyManipulator( pParentState->GetMapInfoEditor()->GetViewManipulator(), pParentState->GetMapInfoEditor()->GetObjectSet() );
+				pParentState->GetObjectInfoCollector()->ShowSelectionPropertyManipulator(
+						pParentState->GetMapInfoEditor()->GetViewManipulator(), pParentState->GetMapInfoEditor()->GetObjectSet() );
 			}
 		}
 		else if ( nChar == VK_DELETE )
@@ -693,8 +715,7 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 	}
 }
 
-
-void CMapObjectAddState::OnSetFocus( IWidget* pNewWnd )
+void CMapObjectAddState::OnSetFocus( IWidget *pNewWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -709,8 +730,7 @@ void CMapObjectAddState::OnSetFocus( IWidget* pNewWnd )
 	}
 }
 
-
-void CMapObjectAddState::OnKillFocus( IWidget* pOldWnd )
+void CMapObjectAddState::OnKillFocus( IWidget *pOldWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -724,7 +744,6 @@ void CMapObjectAddState::OnKillFocus( IWidget* pOldWnd )
 		}
 	}
 }
-
 
 void CMapObjectAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -742,7 +761,6 @@ void CMapObjectAddState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMous
 	}
 }
 
-
 void CMapObjectAddState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -758,7 +776,6 @@ void CMapObjectAddState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 		}
 	}
 }
-
 
 void CMapObjectAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -776,7 +793,6 @@ void CMapObjectAddState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMous
 	}
 }
 
-
 void CMapObjectAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -792,7 +808,6 @@ void CMapObjectAddState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 		}
 	}
 }
-
 
 void CMapObjectAddState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -810,7 +825,6 @@ void CMapObjectAddState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 	}
 }
 
-
 void CMapObjectAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -826,7 +840,6 @@ void CMapObjectAddState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMous
 		}
 	}
 }
-
 
 void CMapObjectAddState::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -844,7 +857,6 @@ void CMapObjectAddState::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 	}
 }
 
-
 void CMapObjectAddState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -860,7 +872,6 @@ void CMapObjectAddState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 		}
 	}
 }
-
 
 void CMapObjectAddState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -878,7 +889,6 @@ void CMapObjectAddState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMous
 	}
 }
 
-
 void CMapObjectAddState::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( pParentState->CanEdit() )
@@ -894,7 +904,6 @@ void CMapObjectAddState::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 		}
 	}
 }
-
 
 void CMapObjectAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -933,7 +942,6 @@ void CMapObjectAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 	}
 }
 
-
 void CMapObjectAddState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
 	if ( pParentState->CanEdit() )
@@ -960,7 +968,6 @@ void CMapObjectAddState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFl
 	}
 }
 
-
 void CMapObjectPasteState::Enter()
 {
 	if ( pParentState->CanEdit() )
@@ -972,17 +979,16 @@ void CMapObjectPasteState::Enter()
 			objectEditInfo.bFitToGrid = pParentState->GetMapInfoEditor()->editorSettings.bFitToGrid;
 			//
 			pParentState->GetObjectInfoCollector()->ShowClipboard( &objectEditInfo,
-																														 pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
-																														 false,
-																														 false,
-																														 false,
-																														 pScene,
-																														 pParentState->GetMapInfoEditor()->GetViewManipulator() );
+			                                                       pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+			                                                       false,
+			                                                       false,
+			                                                       false,
+			                                                       pScene,
+			                                                       pParentState->GetMapInfoEditor()->GetViewManipulator() );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 	}
 }
-
 
 void CMapObjectPasteState::Leave()
 {
@@ -990,12 +996,12 @@ void CMapObjectPasteState::Leave()
 	{
 		if ( IEditorScene *pScene = EditorScene() )
 		{
-			pParentState->GetObjectInfoCollector()->HideClipboard( pScene, pParentState->GetMapInfoEditor()->GetViewManipulator() );
+			pParentState->GetObjectInfoCollector()->HideClipboard( pScene,
+			                                                       pParentState->GetMapInfoEditor()->GetViewManipulator() );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 	}
 }
-
 
 void CMapObjectPasteState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -1009,17 +1015,16 @@ void CMapObjectPasteState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMo
 			objectEditInfo.bFitToGrid = pParentState->GetMapInfoEditor()->editorSettings.bFitToGrid;
 			//
 			pParentState->GetObjectInfoCollector()->MoveClipboard( &objectEditInfo,
-																														 pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
-																														 false,
-																														 false,
-																														 false,
-																														 pScene,
-																														 pParentState->GetMapInfoEditor()->GetViewManipulator() );
+			                                                       pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+			                                                       false,
+			                                                       false,
+			                                                       false,
+			                                                       pScene,
+			                                                       pParentState->GetMapInfoEditor()->GetViewManipulator() );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 	}
 }
-
 
 void CMapObjectPasteState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -1034,12 +1039,18 @@ void CMapObjectPasteState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMo
 			objectEditInfo.bRotateTo90Degree = pParentState->GetMapInfoEditor()->editorSettings.bRotateTo90Degree;
 			objectEditInfo.bFitToGrid = pParentState->GetMapInfoEditor()->editorSettings.bFitToGrid;
 			//
-			if ( pParentState->GetObjectInfoCollector()->PasteClipboard( &objectEditInfo,
-																																	 pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
-																																	 false, false, false,
-																																	 true, pScene,
-																																	 true, pObjectController,pParentState->GetMapInfoEditor()->GetViewManipulator() ) )
-		 {
+			if ( pParentState->GetObjectInfoCollector()->PasteClipboard(
+							 &objectEditInfo,
+							 pParentState->pStoreInputState->lastEventInfo.vTerrainPos,
+							 false,
+							 false,
+							 false,
+							 true,
+							 pScene,
+							 true,
+							 pObjectController,
+							 pParentState->GetMapInfoEditor()->GetViewManipulator() ) )
+			{
 				pObjectController->Redo( false, true, pParentState->GetMapInfoEditor() );
 				Singleton<IControllerContainer>()->Add( pObjectController );
 			}
@@ -1047,7 +1058,6 @@ void CMapObjectPasteState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMo
 		pParentState->SetActiveInputState( CMapObjectState::IS_SELECT, true, false );
 	}
 }
-
 
 void CMapObjectPasteState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -1057,7 +1067,6 @@ void CMapObjectPasteState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMo
 		pParentState->SetActiveInputState( CMapObjectState::IS_SELECT, true, false );
 	}
 }
-
 
 void CMapObjectPasteState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
@@ -1071,7 +1080,6 @@ void CMapObjectPasteState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned
 		}
 	}
 }
-
 
 int CMapObjectState::GetNextSceneID( int nSceneID, std::list<int> *pSceneIDList )
 {
@@ -1095,7 +1103,6 @@ int CMapObjectState::GetNextSceneID( int nSceneID, std::list<int> *pSceneIDList 
 	return nSceneID;
 }
 
-
 void CMapObjectState::ClearSelection()
 {
 	nSelectedSceneID = INVALID_NODE_ID;
@@ -1103,25 +1110,21 @@ void CMapObjectState::ClearSelection()
 	GetMapInfoEditor()->objectInfoCollector.ClearSelection();
 }
 
-
-NMapInfoEditor::SObjectInfoCollector* CMapObjectState::GetObjectInfoCollector()
+NMapInfoEditor::SObjectInfoCollector *CMapObjectState::GetObjectInfoCollector()
 {
 	return &( pParentState->pMapInfoEditor->objectInfoCollector );
 }
 
-
-CMapInfoEditor* CMapObjectState::GetMapInfoEditor()
+CMapInfoEditor *CMapObjectState::GetMapInfoEditor()
 {
 	return pParentState->pMapInfoEditor;
 }
 
-
-void CMapObjectState::OnSetFocus( IWidget* pNewWnd )
+void CMapObjectState::OnSetFocus( IWidget *pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
-
 
 void CMapObjectState::Enter()
 {
@@ -1138,9 +1141,10 @@ void CMapObjectState::Enter()
 	//
 	if ( pParentState )
 	{
-		pStoreInputState->SetSizes( CTPoint<int>( pParentState->pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
-																							pParentState->pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
-																true );
+		pStoreInputState->SetSizes(
+				CTPoint<int>( pParentState->pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
+		                  pParentState->pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
+				true );
 	}
 	//
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_MAPOBJECT_STATE, this );
@@ -1150,7 +1154,6 @@ void CMapObjectState::Enter()
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-
 
 void CMapObjectState::Leave()
 {
@@ -1176,12 +1179,12 @@ void CMapObjectState::Leave()
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, "" );
 }
 
-
 void CMapObjectState::Draw( IPaintContext *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
-		if ( ( GetActiveInputStateIndex() == IS_SELECT ) || ( GetActiveInputStateIndex() == IS_EDIT ) || ( GetActiveInputStateIndex() == IS_PASTE ) )
+		if ( ( GetActiveInputStateIndex() == IS_SELECT ) || ( GetActiveInputStateIndex() == IS_EDIT ) ||
+		     ( GetActiveInputStateIndex() == IS_PASTE ) )
 		{
 			if ( selector.IsValid() )
 			{
@@ -1220,7 +1223,6 @@ void CMapObjectState::Draw( IPaintContext *pPaintDC )
 	}
 }
 
-
 void CMapObjectState::PostDraw( IPaintContext *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -1232,23 +1234,21 @@ void CMapObjectState::PostDraw( IPaintContext *pPaintDC )
 				// нарисовать рамку
 				// Normalised by hand, as CRect::NormalizeRect did before: a frame
 				// rect built from a drag can have its corners either way round.
-				const CTRect<int> selectorRect(
-					(std::min)( selector.frameRect.minx, selector.frameRect.maxx ),
-					(std::min)( selector.frameRect.miny, selector.frameRect.maxy ),
-					(std::max)( selector.frameRect.minx, selector.frameRect.maxx ),
-					(std::max)( selector.frameRect.miny, selector.frameRect.maxy ) );
+				const CTRect<int> selectorRect( (std::min)( selector.frameRect.minx, selector.frameRect.maxx ),
+				                                (std::min)( selector.frameRect.miny, selector.frameRect.maxy ),
+				                                (std::max)( selector.frameRect.minx, selector.frameRect.maxx ),
+				                                (std::max)( selector.frameRect.miny, selector.frameRect.maxy ) );
 				pPaintDC->FrameRect( selectorRect, GetBGRColorFromARGBColor( SELECTION_LINE_COLOR ) );
 			}
 		}
 	}
 }
 
-
 bool CMapObjectState::CanEdit()
 {
-	return ( ( GetObjectInfoCollector() != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) && GetParentState()->GetEditParameters() );
+	return ( ( GetObjectInfoCollector() != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) &&
+	         GetParentState()->GetEditParameters() );
 }
-
 
 void CMapObjectState::SetSelectionHeightsToZero( bool bSave )
 {
@@ -1263,9 +1263,16 @@ void CMapObjectState::SetSelectionHeightsToZero( bool bSave )
 		{
 			pObjectController = GetMapInfoEditor()->CreateController();
 		}
-		GetObjectInfoCollector()->MoveSelection( &objectEditInfo, VNULL3, false, false, true,
-																						 true, pScene,
-																						 bSave, pObjectController, GetMapInfoEditor()->GetViewManipulator() );
+		GetObjectInfoCollector()->MoveSelection( &objectEditInfo,
+		                                         VNULL3,
+		                                         false,
+		                                         false,
+		                                         true,
+		                                         true,
+		                                         pScene,
+		                                         bSave,
+		                                         pObjectController,
+		                                         GetMapInfoEditor()->GetViewManipulator() );
 		if ( bSave && pObjectController )
 		{
 			pObjectController->Redo( false, true, GetMapInfoEditor() );
@@ -1275,12 +1282,12 @@ void CMapObjectState::SetSelectionHeightsToZero( bool bSave )
 	}
 }
 
-
 void CMapObjectState::InsertSelectionLink( unsigned nLinkToSceneID )
 {
 	if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 	{
-		GetObjectInfoCollector()->InsertSelectionLink( nLinkToSceneID, pObjectController, GetMapInfoEditor()->GetViewManipulator() );
+		GetObjectInfoCollector()->InsertSelectionLink(
+				nLinkToSceneID, pObjectController, GetMapInfoEditor()->GetViewManipulator() );
 		pObjectController->Redo( false, true, GetMapInfoEditor() );
 		Singleton<IControllerContainer>()->Add( pObjectController );
 	}
@@ -1290,20 +1297,17 @@ void CMapObjectState::RemoveSelectionLinkTo()
 {
 	if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 	{
-		GetObjectInfoCollector()->RemoveSelectionLinkTo( pObjectController,
-																										 GetMapInfoEditor()->GetViewManipulator() );
+		GetObjectInfoCollector()->RemoveSelectionLinkTo( pObjectController, GetMapInfoEditor()->GetViewManipulator() );
 		pObjectController->Redo( false, true, GetMapInfoEditor() );
 		Singleton<IControllerContainer>()->Add( pObjectController );
 	}
 }
 
-
 void CMapObjectState::RemoveSelectionLinks()
 {
 	if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 	{
-		GetObjectInfoCollector()->RemoveSelectionLinks( pObjectController,
-																										GetMapInfoEditor()->GetViewManipulator() );
+		GetObjectInfoCollector()->RemoveSelectionLinks( pObjectController, GetMapInfoEditor()->GetViewManipulator() );
 		pObjectController->Redo( false, true, GetMapInfoEditor() );
 		Singleton<IControllerContainer>()->Add( pObjectController );
 	}
@@ -1318,20 +1322,19 @@ void CMapObjectState::RemoveSelection()
 		{
 			if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 			{
-				GetObjectInfoCollector()->RemoveSelection( pScene,
-																									 pObjectController,
-																									 GetMapInfoEditor()->GetViewManipulator() );
+				GetObjectInfoCollector()->RemoveSelection(
+						pScene, pObjectController, GetMapInfoEditor()->GetViewManipulator() );
 				pObjectController->Redo( false, true, GetMapInfoEditor() );
 				Singleton<IControllerContainer>()->Add( pObjectController );
 			}
 			ClearSelection();
 		}
 	}
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_STATE, ID_UNIT_START_CMD_REFRESH_WINDOW, 0 );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_UNIT_START_CMD_STATE, ID_UNIT_START_CMD_REFRESH_WINDOW, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-
 
 void CMapObjectState::MoveSelection( const CVec3 &rvPosition, bool bExactPosition, bool bIgnoreDifference, bool bSave )
 {
@@ -1347,9 +1350,16 @@ void CMapObjectState::MoveSelection( const CVec3 &rvPosition, bool bExactPositio
 			pObjectController = GetMapInfoEditor()->CreateController();
 		}
 
-		GetObjectInfoCollector()->MoveSelection( &objectEditInfo, rvPosition, bExactPosition, bIgnoreDifference, false,
-																						 true, pScene,
-																						 bSave, pObjectController, GetMapInfoEditor()->GetViewManipulator() );
+		GetObjectInfoCollector()->MoveSelection( &objectEditInfo,
+		                                         rvPosition,
+		                                         bExactPosition,
+		                                         bIgnoreDifference,
+		                                         false,
+		                                         true,
+		                                         pScene,
+		                                         bSave,
+		                                         pObjectController,
+		                                         GetMapInfoEditor()->GetViewManipulator() );
 		if ( bSave && pObjectController )
 		{
 			pObjectController->Redo( false, true, GetMapInfoEditor() );
@@ -1359,8 +1369,10 @@ void CMapObjectState::MoveSelection( const CVec3 &rvPosition, bool bExactPositio
 	}
 }
 
-
-void CMapObjectState::RotateSelection( const CVec3 &rvPosition, bool bExactDirection, bool bIgnoreDifference, bool bSave )
+void CMapObjectState::RotateSelection( const CVec3 &rvPosition,
+                                       bool bExactDirection,
+                                       bool bIgnoreDifference,
+                                       bool bSave )
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
@@ -1378,19 +1390,25 @@ void CMapObjectState::RotateSelection( const CVec3 &rvPosition, bool bExactDirec
 		{
 			fSelectionDirection += FP_2PI;
 		}
-		GetObjectInfoCollector()->RotateSelection( &objectEditInfo, fSelectionDirection, bExactDirection, bIgnoreDifference,
-																							 true, pScene,
-																							 bSave, pObjectController, GetMapInfoEditor()->GetViewManipulator() );
+		GetObjectInfoCollector()->RotateSelection( &objectEditInfo,
+		                                           fSelectionDirection,
+		                                           bExactDirection,
+		                                           bIgnoreDifference,
+		                                           true,
+		                                           pScene,
+		                                           bSave,
+		                                           pObjectController,
+		                                           GetMapInfoEditor()->GetViewManipulator() );
 		if ( bSave && pObjectController )
 		{
 			pObjectController->Redo( false, true, GetMapInfoEditor() );
 			Singleton<IControllerContainer>()->Add( pObjectController );
 		}
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE,	ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_UPDATE_EDIT_PARAMETERS, MIMOSEP_DIRECTION );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
 }
-
 
 void CMapObjectState::SwitchToAddState()
 {
@@ -1399,10 +1417,9 @@ void CMapObjectState::SwitchToAddState()
 	InsertObjectEnter();
 }
 
-
 bool CMapObjectState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MIMO_SWITCH_ADD_STATE:
 		{
@@ -1434,7 +1451,8 @@ bool CMapObjectState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			if ( !GetObjectInfoCollector()->IsSelectionEmpty() )
 			{
-				GetObjectInfoCollector()->ShowSelectionPropertyManipulator( GetMapInfoEditor()->GetViewManipulator(), GetMapInfoEditor()->GetObjectSet() );
+				GetObjectInfoCollector()->ShowSelectionPropertyManipulator( GetMapInfoEditor()->GetViewManipulator(),
+				                                                            GetMapInfoEditor()->GetObjectSet() );
 			}
 			return true;
 		}
@@ -1444,13 +1462,12 @@ bool CMapObjectState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CMapObjectState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CMapObjectState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapObjectState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID )
+	switch ( nCommandID )
 	{
 		case ID_MIMO_SWITCH_ADD_STATE:
 		{

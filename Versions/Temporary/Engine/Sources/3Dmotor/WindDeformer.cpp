@@ -18,19 +18,30 @@ class CWindDeformer : public CPtrFuncBase<CObjectInfo>
 	OBJECT_BASIC_METHODS( CWindDeformer )
 	//
 	ZDATA
-	CDGPtr<CPtrFuncBase<CObjectInfo> > pGeom;
+	CDGPtr<CPtrFuncBase<CObjectInfo>> pGeom;
 	SFBTransform place;
-	CDGPtr<CFuncBase<SFBTransform> > pPlace;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGeom); f.Add(3,&place); f.Add(4,&pPlace); return 0; }
+	CDGPtr<CFuncBase<SFBTransform>> pPlace;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pGeom );
+		f.Add( 3, &place );
+		f.Add( 4, &pPlace );
+		return 0;
+	}
+
 protected:
 	CWindDeformer() {}
 	bool NeedUpdate() { return pGeom.Refresh(); }
 	void Recalc();
+
 public:
-	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, const SFBTransform &_place ) :
-		pGeom(_pGeom), place(_place) {}
-	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, CFuncBase<SFBTransform> *_pPlace ) :
-		pGeom(_pGeom), pPlace(_pPlace) { Identity( &(place.forward) ); Identity( &(place.backward) ); }
+	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, const SFBTransform &_place ) : pGeom( _pGeom ), place( _place ) {}
+	CWindDeformer( CPtrFuncBase<CObjectInfo> *_pGeom, CFuncBase<SFBTransform> *_pPlace )
+			: pGeom( _pGeom ), pPlace( _pPlace )
+	{
+		Identity( &( place.forward ) );
+		Identity( &( place.backward ) );
+	}
 	CPtrFuncBase<CObjectInfo> *GetOriginalGeometry() const { return pGeom; }
 };
 
@@ -55,25 +66,24 @@ void CWindDeformer::Recalc()
 	float x12 = curPlace.forward._24;
 	float x13 = curPlace.forward._34;
 
-	float r = (rand()%RAND_MAX)/(float)RAND_MAX;
+	float r = ( rand() % RAND_MAX ) / (float)RAND_MAX;
 
-	angle = (x11 + x12 + r * 3.0f ) * 0.2f;
+	angle = ( x11 + x12 + r * 3.0f ) * 0.2f;
 
 	int s = (std::min)( v.size(), posInds.size() );
 
-	for( int j=0; j < s; ++j)
+	for ( int j = 0; j < s; ++j )
 	{
-		x =cos(angle + (c[  posInds[j] ].x + c[  posInds[j] ].y) * 0.2f );
-		y =sin(angle + (c[  posInds[j] ].x + c[  posInds[j] ].y) * 0.2f );
+		x = cos( angle + ( c[posInds[j]].x + c[posInds[j]].y ) * 0.2f );
+		y = sin( angle + ( c[posInds[j]].x + c[posInds[j]].y ) * 0.2f );
 
-		float factor = c[  posInds[j] ].z * 0.01f;
+		float factor = c[posInds[j]].z * 0.01f;
 		v[j].texLM.nU = x * NGfx::N_VEC_FULL_TEX_SIZE * factor;
 		v[j].texLM.nV = y * NGfx::N_VEC_FULL_TEX_SIZE * factor;
 	}
 }
 
-CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeom,
-	const SFBTransform &place )
+CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeom, const SFBTransform &place )
 {
 	if ( pGeom )
 		return new CWindDeformer( pGeom, place );

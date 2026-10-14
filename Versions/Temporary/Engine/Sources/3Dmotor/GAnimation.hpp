@@ -6,11 +6,10 @@
 #include "GChannelAnimator.h"
 #include "System/time.hpp"
 
-
 namespace NDb
 {
-	struct SSkeleton;
-	struct SAnimBase;
+struct SSkeleton;
+struct SAnimBase;
 }
 
 namespace NAnimation
@@ -22,10 +21,14 @@ struct SAnimHandle
 	CDBPtr<NDb::SAnimBase> pAnimFile;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nAnimNumber = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimFile); f.Add(3,&nAnimNumber); return 0; }
-	SAnimHandle() : nAnimNumber(-1) {}
-	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) :
-		pAnimFile( pAnim ), nAnimNumber( _nAnimNumber ) {}
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pAnimFile );
+		f.Add( 3, &nAnimNumber );
+		return 0;
+	}
+	SAnimHandle() : nAnimNumber( -1 ) {}
+	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) : pAnimFile( pAnim ), nAnimNumber( _nAnimNumber ) {}
 };
 
 struct IAnimMutator : public CObjectBase
@@ -36,19 +39,26 @@ struct IAnimMutator : public CObjectBase
 
 struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnimator
 {
-	typedef int SAnimID; // Warning! SAnimID may become invalid after any recalc! Never remember SAnimID anywhere for long time
+	typedef int
+			SAnimID; // Warning! SAnimID may become invalid after any recalc! Never remember SAnimID anywhere for long time
 
 	// animation control:
-	virtual SAnimID AddAnimation( STime tStartTime, const SAnimHandle &h,
-		bool bLoop, float fSpeed = 1.0f, float fWeight = 1.0f, STime tEndTime = -1 ) = 0;
+	virtual SAnimID AddAnimation( STime tStartTime,
+	                              const SAnimHandle &h,
+	                              bool bLoop,
+	                              float fSpeed = 1.0f,
+	                              float fWeight = 1.0f,
+	                              STime tEndTime = -1 ) = 0;
 
 	virtual void ClearAllAnimations() = 0;
 	virtual void FadeIn( const STime &tDuration, SAnimID whatFadeIn ) = 0;
 	virtual void FadeOut( const STime &tDuration, SAnimID whatFadeOut ) = 0;
 	virtual void FadeOutAllAnimations( const STime &tDuration ) = 0;
-	virtual void SetSpeedFactorForAllAnimations( const STime &tCurrent, float fSpeed ) = 0; // warning, doesn't affect mutators!
+	virtual void SetSpeedFactorForAllAnimations( const STime &tCurrent,
+	                                             float fSpeed ) = 0; // warning, doesn't affect mutators!
 	virtual float GetDuration( const SAnimID animID ) = 0;
-	virtual unsigned int GetMarkTimes( std::vector<float> *pResult, const SAnimID animID, const std::string &szMarkName ) = 0;
+	virtual unsigned int
+	GetMarkTimes( std::vector<float> *pResult, const SAnimID animID, const std::string &szMarkName ) = 0;
 	virtual unsigned int EnumMarks( std::vector<std::string> *pResult, const SAnimID animID ) = 0;
 	virtual void SetSpeedFactor( const SAnimID animID, float fSpeed ) = 0; // warning, doesn't affect mutators!
 	virtual void SetLocalTime( const SAnimID animID, const STime tTime ) = 0;
@@ -75,18 +85,19 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 		const CQuat finalRot;
 		const CVec3 finalPos;
 		SDesiredBoneMove( const STime &_tDuration = 0, const CQuat &_finalRot = QNULL, const CVec3 &_finalPos = VNULL3 )
-			: tDuration(_tDuration), finalRot(_finalRot), finalPos(_finalPos) {}
+				: tDuration( _tDuration ), finalRot( _finalRot ), finalPos( _finalPos )
+		{
+		}
 	};
-	virtual void SetBoneMutator( const char *pszBoneName, const STime &tStart,
-		const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
-	virtual void SetBoneMutator( const int nBoneIndex, const STime &tStart,
-		const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
+	virtual void
+	SetBoneMutator( const char *pszBoneName, const STime &tStart, const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
+	virtual void
+	SetBoneMutator( const int nBoneIndex, const STime &tStart, const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
 	virtual void SetSpecialMutator( IAnimMutator *pMutator ) = 0;
 
-	virtual CFuncBase<SFBTransform>* CreateTransform( const std::string &szBoneName ) = 0;
-	virtual CFuncBase<SFBTransform>* CreateTransform( int nBoneIndex ) = 0;
+	virtual CFuncBase<SFBTransform> *CreateTransform( const std::string &szBoneName ) = 0;
+	virtual CFuncBase<SFBTransform> *CreateTransform( int nBoneIndex ) = 0;
 };
 
-_3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator(
-	const SSkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
+_3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator( const SSkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
 } // namespace

@@ -8,12 +8,13 @@ namespace NGScene
 
 // CDecal
 
-CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMaterial ) : pOwner(_pOwner), pTarget(_pTarget), pMaterial(_pMaterial)
+CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMaterial )
+		: pOwner( _pOwner ), pTarget( _pTarget ), pMaterial( _pMaterial )
 {
 	// create target geometry
 	if ( !pTarget->parts.empty() )
 	{
-		std::vector<CPtr<ISomePart> > &parts = pTarget->parts;
+		std::vector<CPtr<ISomePart>> &parts = pTarget->parts;
 		for ( int k = 0; k < parts.size(); ++k )
 		{
 			ISomePart *pPart = parts[k];
@@ -25,7 +26,7 @@ CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMa
 			bool bAddToTargets = true;
 			if ( pPart->HasLoadedObjectInfo() )
 			{
-				CDGPtr<CPtrFuncBase<CObjectInfo> > pSource( pPart->GetObjectInfoNode() );
+				CDGPtr<CPtrFuncBase<CObjectInfo>> pSource( pPart->GetObjectInfoNode() );
 				pSource.Refresh();
 				if ( pSource->GetValue() )
 				{
@@ -45,20 +46,20 @@ CDecal::CDecal( CDecalsManager *_pOwner, CDecalTarget *_pTarget, IMaterial *_pMa
 
 CDecal::~CDecal()
 {
-	if ( IsValid(pOwner) )
+	if ( IsValid( pOwner ) )
 		pOwner->Unregister( this, pTarget );
 }
 
-template<class T>
+template <class T>
 static void WalkVector( std::vector<T> *pRes )
 {
 	int nRes = 0;
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
-		if ( IsValid( (*pRes)[k] ) )
+		if ( IsValid( ( *pRes )[k] ) )
 		{
 			if ( nRes != k )
-				(*pRes)[ nRes++ ] = (*pRes)[k];
+				( *pRes )[nRes++] = ( *pRes )[k];
 			else
 				++nRes;
 		}
@@ -99,31 +100,32 @@ void CDecalsManager::OnCreate( ISomePart *pNew )
 	if ( i != decalsPerUser.end() )
 	{
 		// add decal on each CDecal
-		std::vector<CPtr<CDecal> > &decals = i->second;
+		std::vector<CPtr<CDecal>> &decals = i->second;
 		for ( int k = 0; k < decals.size(); ++k )
 		{
-			ASSERT( IsValid(decals[k]) );
-			if ( IsValid(decals[k]) )
+			ASSERT( IsValid( decals[k] ) );
+			if ( IsValid( decals[k] ) )
 				decals[k]->OnCreate( pScene, pNew, srcPos );
 		}
 	}
 }
 
-CDecalTarget* CDecalsManager::CreateDecalTarget( const std::vector<CObjectBase*> &_targets, const SDecalMappingInfo &_info )
+CDecalTarget *CDecalsManager::CreateDecalTarget( const std::vector<CObjectBase *> &_targets,
+                                                 const SDecalMappingInfo &_info )
 {
 	CDecalTarget *pRes = new CDecalTarget( _info );
 	CObjectBaseSet targets;
 	for ( int k = 0; k < _targets.size(); ++k )
-		targets[ _targets[k] ] = 1;
+		targets[_targets[k]] = 1;
 	pScene->GetPartsList( _info, targets, &pRes->parts );
 	return pRes;
 }
 
-CDecal* CDecalsManager::CreateDecal( CDecalTarget *pTarget, IMaterial *pMaterial )
+CDecal *CDecalsManager::CreateDecal( CDecalTarget *pTarget, IMaterial *pMaterial )
 {
-	if ( !IsValid(pTarget) )
+	if ( !IsValid( pTarget ) )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		return 0;
 	}
 	return new CDecal( this, pTarget, pMaterial );
@@ -136,7 +138,7 @@ void CDecalsManager::Register( CDecal *pDecal, CDecalTarget *pTarget )
 	for ( int k = 0; k < targetParts.size(); ++k )
 	{
 		bool bFound = false;
-		std::vector<CPtr<CDecal> > &decals = decalsPerUser[ targetParts[k] ];
+		std::vector<CPtr<CDecal>> &decals = decalsPerUser[targetParts[k]];
 		for ( int i = 0; i < decals.size(); ++i )
 		{
 			if ( decals[i] == pDecal )
@@ -159,12 +161,12 @@ void CDecalsManager::Unregister( CDecal *pDecal, CDecalTarget *pTarget )
 		CPerUserHash::iterator i = decalsPerUser.find( targetParts[k] );
 		if ( i == decalsPerUser.end() )
 			continue;
-		std::vector<CPtr<CDecal> > &d = i->second;
+		std::vector<CPtr<CDecal>> &d = i->second;
 		int nRes = 0;
 		for ( int m = 0; m < d.size(); ++m )
 		{
 			if ( d[m] != pDecal )
-				d[ nRes++ ] = d[m];
+				d[nRes++] = d[m];
 		}
 		if ( nRes == 0 )
 			decalsPerUser.erase( i );
@@ -177,13 +179,13 @@ void CDecalsManager::Walk()
 {
 	for ( CPerUserHash::iterator i = decalsPerUser.begin(); i != decalsPerUser.end(); ++i )
 	{
-		std::vector<CPtr<CDecal> > &r = i->second;
+		std::vector<CPtr<CDecal>> &r = i->second;
 		for ( int k = 0; k < r.size(); ++k )
 		{
-			if ( IsValid(r[k]) )
+			if ( IsValid( r[k] ) )
 				r[k]->Walk();
 			else
-				ASSERT(0);
+				ASSERT( 0 );
 		}
 	}
 }

@@ -8,12 +8,12 @@
 
 namespace NGScene
 {
-	class I2DGameView;
+class I2DGameView;
 }
 
 namespace NDb
 {
-	struct SUIGameConsts;
+struct SUIGameConsts;
 }
 
 class CVirtualScreenController : public IVirtualScreenController
@@ -22,10 +22,7 @@ class CVirtualScreenController : public IVirtualScreenController
 public:
 	CVirtualScreenController();
 
-	int operator&( IBinSaver &saver )
-	{
-		return 0;
-	}
+	int operator&( IBinSaver &saver ) { return 0; }
 	//{ IVirtualScreenController
 	void GetResolution( int *nSizeX, int *nSizeY );
 	void SetResolution( int nSizeX, int nSizeY );
@@ -45,17 +42,18 @@ class UI_EXPORT CUIFactory : public IUIInitialization
 {
 	OBJECT_BASIC_METHODS( CUIFactory )
 	CObj<CVirtualScreenController> pVirtualScreenController;
-	typedef std::unordered_map< std::wstring, CObj<IMLHandler> > CCustomMLHandlersMap;
+	typedef std::unordered_map<std::wstring, CObj<IMLHandler>> CCustomMLHandlersMap;
 	CCustomMLHandlersMap customMLHandlers;
-	static IScreen * pScreenDuringLoad;
+	static IScreen *pScreenDuringLoad;
 
 	static NInput::CGMORegContainer registeredMessages;
 
 private:
 	void RegisterMLHandlersInternal( struct IML *pML );
+
 public:
 	static void SetScreenDuringLoad( IScreen *_pScreen ) { pScreenDuringLoad = _pScreen; }
-	static IScreen * GetScreenDuringLoad() { return pScreenDuringLoad; }
+	static IScreen *GetScreenDuringLoad() { return pScreenDuringLoad; }
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &NUIFactory::pConsts );
@@ -67,23 +65,27 @@ public:
 	//{ IUIInitialization
 	void SetUIConsts( const struct NDb::SUIGameConsts *_pConsts ) { NUIFactory::pConsts = _pConsts; }
 	void SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler );
-	IWindow * CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc );
-	IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
-																	const NDb::SUIGameConsts *pConsts,
-																	struct IProgrammedReactionsAndChecks *pReactionsAndChecks,
-																	NGScene::I2DGameView * p2DView,
-																	NGScene::IGameView *pGView, NGScene::IGameView *pInterface3DView );
-	IVirtualScreenController * GetVirtualScreenController() { return pVirtualScreenController; }
-	virtual void Set2DGameView( NGScene::I2DGameView* pView );
+	IWindow *CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc );
+	IWindow *CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
+	                               const NDb::SUIGameConsts *pConsts,
+	                               struct IProgrammedReactionsAndChecks *pReactionsAndChecks,
+	                               NGScene::I2DGameView *p2DView,
+	                               NGScene::IGameView *pGView,
+	                               NGScene::IGameView *pInterface3DView );
+	IVirtualScreenController *GetVirtualScreenController() { return pVirtualScreenController; }
+	virtual void Set2DGameView( NGScene::I2DGameView *pView );
 	// }
 
-	static const NDb::SUIGameConsts * GetConsts() { return NUIFactory::pConsts; }
+	static const NDb::SUIGameConsts *GetConsts() { return NUIFactory::pConsts; }
 
-	static class CWindow * MakeWindow( const struct NDb::SUIDesc *pDesc );
-	static struct IWindowPart * MakeWindowPart( const struct NDb::SUIDesc *pDesc );
+	static class CWindow *MakeWindow( const struct NDb::SUIDesc *pDesc );
+	static struct IWindowPart *MakeWindowPart( const struct NDb::SUIDesc *pDesc );
 	static struct IMessageReactionB2 *MakeReaction( const struct NDb::SUIDesc *pDesc );
 	static struct IMessageCheck *MakeCheck( const struct NDb::SUIDesc *pDesc );
-	static struct IUIEffector *MakeEffect( const NDb::SUIStateBase *pCmd, struct IScreen *pScreen, struct SWindowContext *pContext, const std::string &szAnimateWindow  );
+	static struct IUIEffector *MakeEffect( const NDb::SUIStateBase *pCmd,
+	                                       struct IScreen *pScreen,
+	                                       struct SWindowContext *pContext,
+	                                       const std::string &szAnimateWindow );
 	//static NGScene::I2DGameView * Get2DGameView();
 
 	static void RegisterMLHandlers( struct IML *pML );

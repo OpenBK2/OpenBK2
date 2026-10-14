@@ -32,35 +32,40 @@ uint32_t SGameConsts::RecalculateMPDataVersionChecksum() const
 	uint32_t ret = 123321;
 
 	// game.exe version
-	auto gameVersionStr = WideToUTF8(NGlobal::GetVar("code_version_number", "0.0.0.0").GetString());
+	auto gameVersionStr = WideToUTF8( NGlobal::GetVar( "code_version_number", "0.0.0.0" ).GetString() );
 	int v1 = 0, v2 = 0, v3 = 0, v4 = 0;
-	sscanf(gameVersionStr.c_str(), "%d.%d.%d.%d", &v1, &v2, &v3, &v4);
-	ret = CalculateChecksum(ret, v1 * v1 + v1 + 1, v2 * v2 + v2 + 2, v3 * v3 + v3 + 3, v4 * v4 + v4 + 4);
+	sscanf( gameVersionStr.c_str(), "%d.%d.%d.%d", &v1, &v2, &v3, &v4 );
+	ret = CalculateChecksum( ret, v1 * v1 + v1 + 1, v2 * v2 + v2 + 2, v3 * v3 + v3 + 3, v4 * v4 + v4 + 4 );
 
 	// AI Consts checksum
 	uint32_t ai_chksum = pAI->CalcCheckSum();
-	ret = CalculateChecksum(ret, ai_chksum);
+	ret = CalculateChecksum( ret, ai_chksum );
 
 	// Net Consts checksum, port param discluded
-	ret = CalculateChecksum(ret, pNet->nMaxLatency, pNet->nTimeToStartLagByNoSegmentData, pNet->nTimeToAllowDropByLag, pNet->nTimeOutTime, pNet->nTimeBWTimeOuts);
+	ret = CalculateChecksum( ret,
+	                         pNet->nMaxLatency,
+	                         pNet->nTimeToStartLagByNoSegmentData,
+	                         pNet->nTimeToAllowDropByLag,
+	                         pNet->nTimeOutTime,
+	                         pNet->nTimeBWTimeOuts );
 
 	// MP Consts checksum
 	uint32_t mp_chksum = pMultiplayer->CalcCheckSum();
-	ret = CalculateChecksum(ret, mp_chksum);
+	ret = CalculateChecksum( ret, mp_chksum );
 
 	// loaded mod folder path checksum
 	NMOD::SMOD modDesc;
 	NMOD::GetAttachedMOD( &modDesc );
 
-	const char* loadedMod = modDesc.szRelativePath.c_str();
+	const char *loadedMod = modDesc.szRelativePath.c_str();
 	std::filesystem::path relPath = loadedMod;
 	auto mod_folder_name = relPath.string();
-	if (!mod_folder_name.empty())
+	if ( !mod_folder_name.empty() )
 	{
 		int gummy = 0x123456AF;
-		for (size_t i = 0; i < mod_folder_name.size(); i++)
+		for ( size_t i = 0; i < mod_folder_name.size(); i++ )
 			gummy += mod_folder_name[i] * gummy + i * gummy + 0xFED321;
-		ret = CalculateChecksum(ret, gummy);
+		ret = CalculateChecksum( ret, gummy );
 	}
 
 	nMPDataVersionChecksum = ret;
@@ -68,7 +73,7 @@ uint32_t SGameConsts::RecalculateMPDataVersionChecksum() const
 	return nMPDataVersionChecksum;
 }
 
-uint32_t SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const
+uint32_t SGameConsts::GetMPDataVersionChecksumWithMap( CDBPtr<NDb::SMultiplayerMap> map ) const
 {
 	const uint32_t base = GetMPDataVersionChecksum();
 	// Join-condition checks can repeat while peers connect. Hash this map once

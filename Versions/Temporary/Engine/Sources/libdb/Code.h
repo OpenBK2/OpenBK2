@@ -11,7 +11,6 @@ namespace NTypeDef
 }
 }
 
-
 namespace NCodeGen
 {
 
@@ -29,7 +28,9 @@ struct ICode : public CXmlResource
 		std::string szModule;
 
 		SCodeStreams( std::string *pszHFile, std::string *pszCPPFile, std::string *pszHEOFFile, std::string *pszCPPEOFFile )
-			: h( pszHFile ), cpp( pszCPPFile ), hEOF( pszHEOFFile ), cppEOF( pszCPPEOFFile ) { }
+				: h( pszHFile ), cpp( pszCPPFile ), hEOF( pszHEOFFile ), cppEOF( pszCPPEOFFile )
+		{
+		}
 
 		// The module as its export macros spell it, STATS_B2_M1 in
 		// STATS_B2_M1_EXPORT: in capitals, with a leading underscore when it starts
@@ -50,7 +51,10 @@ struct ICode : public CXmlResource
 		}
 	};
 
-	virtual void GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName ) = 0;
+	virtual void GenerateCode( SCodeStreams *pCode,
+	                           const std::string &szTabs,
+	                           NDb::NTypeDef::STypeDef *pParentType,
+	                           const std::string &szQualifiedName ) = 0;
 };
 
 }

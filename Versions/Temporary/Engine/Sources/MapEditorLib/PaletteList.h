@@ -23,8 +23,8 @@ class CPaletteList
 
 public:
 	// Takes pPalette, which may be null, and hands it back.
-	template<class TPalette>
-	TPalette* Add( TPalette *pPalette )
+	template <class TPalette>
+	TPalette *Add( TPalette *pPalette )
 	{
 		if ( pPalette != nullptr )
 		{
@@ -33,8 +33,5 @@ public:
 		return pPalette;
 	}
 
-	void Clear()
-	{
-		palettes.clear();
-	}
+	void Clear() { palettes.clear(); }
 };

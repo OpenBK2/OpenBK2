@@ -13,16 +13,9 @@
 #include "MapEditorLib/CommonEditorMethods.h"
 #include "3Dmotor/DBScene.h"
 
-CTextureState::CTextureState( CTextureEditor *_pEditor )
-: pEditor( _pEditor )
-{
-}
+CTextureState::CTextureState( CTextureEditor *_pEditor ) : pEditor( _pEditor ) {}
 
-
-CTextureState::~CTextureState()
-{
-}
-
+CTextureState::~CTextureState() {}
 
 void CTextureState::Enter()
 {
@@ -36,7 +29,7 @@ void CTextureState::Enter()
 	const int y = 0;
 	const int w = pTexture->nWidth;
 	const int h = pTexture->nHeight;
-	CUIWindow * pWindow = CreateUIWindow( x, y, w, h, 0xffffffff, pTexture );
+	CUIWindow *pWindow = CreateUIWindow( x, y, w, h, 0xffffffff, pTexture );
 	Singleton<IUIScene>()->AddWindow( pWindow );
 
 	// setup UI
@@ -44,12 +37,11 @@ void CTextureState::Enter()
 	//Singleton<IUIInitialization>()->SetResolution( 1024, 768 );
 
 	// create run mode interface
-	CTextureInterface * pInterface = new CTextureInterface();
+	CTextureInterface *pInterface = new CTextureInterface();
 	NMainLoop::Command( new CTexturelIC( pInterface ) );
 
 	CDefaultInputState::Enter();
 }
-
 
 void CTextureState::Leave()
 {

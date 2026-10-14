@@ -13,7 +13,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 struct SEntry
 {
@@ -26,7 +27,12 @@ std::vector<SEntry> ReadCorpus( const std::string &szPath )
 {
 	std::ifstream file( szPath, std::ios::binary );
 	std::vector<SEntry> entries;
-	enum { OUTSIDE, SOURCE, EXPECT } state = OUTSIDE;
+	enum
+	{
+		OUTSIDE,
+		SOURCE,
+		EXPECT
+	} state = OUTSIDE;
 	std::string szLine;
 	while ( std::getline( file, szLine ) )
 	{
@@ -102,8 +108,8 @@ TEST( ShaderAsm, MatchesD3DXOnEveryGameShader )
 			++n;
 		}
 		ADD_FAILURE() << e.szName << ": differs at token " << n << " of " << e.expected.size() << ", got "
-			<< ( n < tokens.size() ? Hex( tokens[n] ) : "end" ) << ", D3DX has "
-			<< ( n < e.expected.size() ? Hex( e.expected[n] ) : "end" );
+									<< ( n < tokens.size() ? Hex( tokens[n] ) : "end" ) << ", D3DX has "
+									<< ( n < e.expected.size() ? Hex( e.expected[n] ) : "end" );
 	}
 	EXPECT_EQ( nMatched, (int)entries.size() );
 }

@@ -12,7 +12,7 @@ namespace NNet
 // CLoginSupport
 /////////////////////////////////////////////////////////////////////////////////////
 CLoginSupport::CLoginSupport( APPLICATION_ID _applicationID )
-	: applicationID(_applicationID), state(INACTIVE), nClientIDTrack(0), nSelfClientID(0)
+		: applicationID( _applicationID ), state( INACTIVE ), nClientIDTrack( 0 ), nSelfClientID( 0 )
 {
 	NHPTimer::STime time;
 	NHPTimer::GetTime( &time );
@@ -23,13 +23,13 @@ void CLoginSupport::WriteLogin( CBitStream *pBits, const CNodeAddressSet &localA
 {
 	fLoginInterval *= 2;
 	fLoginTimeLeft = fLoginInterval;
-	(*pBits).Write( applicationID );
-	(*pBits).Write( nLoginAttempt );
-	(*pBits).Write( localAddr );
+	( *pBits ).Write( applicationID );
+	( *pBits ).Write( nLoginAttempt );
+	( *pBits ).Write( localAddr );
 	//pkt << nRate;
 	short nSize = pwd.GetSize();
-	(*pBits).Write( nSize );
-	(*pBits).Write( pwd.GetBuffer(), nSize );
+	( *pBits ).Write( nSize );
+	( *pBits ).Write( pwd.GetBuffer(), nSize );
 }
 /////////////////////////////////////////////////////////////////////////////////////
 bool CLoginSupport::ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SLoginInfo *pRes )
@@ -50,7 +50,7 @@ bool CLoginSupport::ProcessLogin( const CNodeAddress &addr, CBitStream &bits, SL
 	return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-CLoginSupport::SAcceptedLogin& CLoginSupport::GetAcceptedLogin( const CNodeAddress &addr, const SLoginInfo &info )
+CLoginSupport::SAcceptedLogin &CLoginSupport::GetAcceptedLogin( const CNodeAddress &addr, const SLoginInfo &info )
 {
 	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); ++i )
 	{
@@ -68,15 +68,18 @@ CLoginSupport::SAcceptedLogin& CLoginSupport::GetAcceptedLogin( const CNodeAddre
 	return a;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void CLoginSupport::AcceptLogin( const CNodeAddress &addr, CBitStream *pBits,
-	const SLoginInfo &info, int *pnClientID, const CNodeAddressSet &localAddr )
+void CLoginSupport::AcceptLogin( const CNodeAddress &addr,
+                                 CBitStream *pBits,
+                                 const SLoginInfo &info,
+                                 int *pnClientID,
+                                 const CNodeAddressSet &localAddr )
 {
 	SAcceptedLogin &a = GetAcceptedLogin( addr, info );
-	(*pBits).Write( info.nLoginAttempt );
-	(*pBits).Write( a.nClientID );
+	( *pBits ).Write( info.nLoginAttempt );
+	( *pBits ).Write( a.nClientID );
 	*pnClientID = a.nClientID;
-	(*pBits).Write( localAddr );
-	(*pBits).Write( uniqueServerID );
+	( *pBits ).Write( localAddr );
+	( *pBits ).Write( uniqueServerID );
 
 	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
 	{
@@ -91,8 +94,8 @@ void CLoginSupport::AcceptLogin( const CNodeAddress &addr, CBitStream *pBits,
 /////////////////////////////////////////////////////////////////////////////////////
 void CLoginSupport::RejectLogin( const CNodeAddress &addr, CBitStream *pBits, const SLoginInfo &info, int nReason )
 {
-	(*pBits).Write( info.nLoginAttempt );
-	(*pBits).Write( nReason );
+	( *pBits ).Write( info.nLoginAttempt );
+	( *pBits ).Write( nReason );
 
 	for ( std::list<SAcceptedLogin>::iterator i = acceptedList.begin(); i != acceptedList.end(); )
 	{

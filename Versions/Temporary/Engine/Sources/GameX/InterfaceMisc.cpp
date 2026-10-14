@@ -50,8 +50,7 @@ bool CInterfaceMessageBox::CReactions::Execute( const std::string &szSender, con
 
 // CInterfaceMessageBox
 
-CInterfaceMessageBox::CInterfaceMessageBox() :
-	CInterfaceScreenBase( "MessageBoxScreen", "message_box_screen" )
+CInterfaceMessageBox::CInterfaceMessageBox() : CInterfaceScreenBase( "MessageBoxScreen", "message_box_screen" )
 {
 	AddObserver( "message_box_ok", &CInterfaceMessageBox::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceMessageBox::MsgCancel );
@@ -96,7 +95,7 @@ void CInterfaceMessageBox::SetParams( const std::string &szName, const std::wstr
 	pTextWindow->GetPlacement( 0, 0, &sizeTextWindow.x, &sizeTextWindow.y );
 
 	IWindow *pTextViewWindow = pScreen->GetVisibleChild( "MessageBoxTextView", true );
-	ITextView *pTextView = dynamic_cast<ITextView*>( pTextViewWindow );
+	ITextView *pTextView = dynamic_cast<ITextView *>( pTextViewWindow );
 	NI_ASSERT( pTextView, "Text view window 'MessageBoxTextView' for message box not found" );
 
 	// переразмерим диалог
@@ -109,8 +108,8 @@ void CInterfaceMessageBox::SetParams( const std::string &szName, const std::wstr
 	CTPoint<int> posWindow;
 	CTPoint<int> sizeWindow;
 	pWindow->GetPlacement( &posWindow.x, &posWindow.y, &sizeWindow.x, &sizeWindow.y );
-	pWindow->SetPlacement( posWindow.x - nDeltaX / 2, posWindow.y - nDeltaY / 2,
-		sizeWindow.x + nDeltaX, sizeWindow.y + nDeltaY, EWPF_ALL );
+	pWindow->SetPlacement(
+			posWindow.x - nDeltaX / 2, posWindow.y - nDeltaY / 2, sizeWindow.x + nDeltaX, sizeWindow.y + nDeltaY, EWPF_ALL );
 }
 
 void CInterfaceMessageBox::OnGetFocus( bool bFocus )
@@ -148,7 +147,7 @@ void CInterfaceMessageBox::ResizeTextView( ITextView *pTextView, const std::wstr
 	pTextView->SetText( pTextView->GetDBText() + szText );
 	pTextView->SetWidth( nMinX );
 	const CTPoint<int> &size = pTextView->GetSize();
-	int nNiceX = (std::max)( (std::max)( nMinX, size.x), (int)sqrtf( size.x * size.y * TEXT_VIEW_NICE_X2Y ) );
+	int nNiceX = (std::max)( (std::max)( nMinX, size.x ), (int)sqrtf( size.x * size.y * TEXT_VIEW_NICE_X2Y ) );
 	pTextView->SetWidth( nNiceX );
 	const CTPoint<int> &size2 = pTextView->GetSize();
 	if ( size2.x < nNiceX )
@@ -165,9 +164,7 @@ bool CInterfaceMessageBox::StepLocal( bool bAppActive )
 
 // CICMessageBox
 
-void CICMessageBox::PreCreate()
-{
-}
+void CICMessageBox::PreCreate() {}
 
 void CICMessageBox::PostCreate( IInterface *pInterface )
 {
@@ -183,13 +180,13 @@ void CICMessageBox::Configure( const char *pszConfig )
 	while ( *pCurrPos != '0' )
 	{
 		const char *p = strchr( pCurrPos, ':' );
-		NI_ASSERT( p , fmt::format( "incorrect string format: {}", pszConfig ) );
+		NI_ASSERT( p, fmt::format( "incorrect string format: {}", pszConfig ) );
 		std::string s( pCurrPos, p - pCurrPos );
 		if ( s == "type" )
 		{
 			const char *p2 = strchr( p + 1, ';' );
-			NI_ASSERT( p2 , fmt::format( "incorrect string format: {}", pszConfig ) );
-			szMainWindowName = std::string( p + 1, p2 - (p + 1) );
+			NI_ASSERT( p2, fmt::format( "incorrect string format: {}", pszConfig ) );
+			szMainWindowName = std::string( p + 1, p2 - ( p + 1 ) );
 			pCurrPos = p2 + 1;
 		}
 		else if ( s == "text" )
@@ -233,7 +230,7 @@ void CICRemoveInterfacesUpTo::Exec()
 {
 	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetTopInterface() )
 	{
-		CInterfaceScreenBase * pInterface = dynamic_cast<CInterfaceScreenBase*>( pI );
+		CInterfaceScreenBase *pInterface = dynamic_cast<CInterfaceScreenBase *>( pI );
 		if ( pInterface )
 		{
 			if ( pInterface->GetInterfaceType() == szInterfaceID )

@@ -9,9 +9,9 @@ extern CEventUpdater updater;
 
 extern NTimer::STime curTime;
 
-CExecutorUnitBonus::CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID ) :
-CExecutorUnitBase ( eTID, /*SConsts::AI_SEGMENT_DURATION **/ NRandom::Random( 1, 10 ), eAbility ), pUnit( _pUnit ), timeLastUpdate( curTime ),
-bBonusApplied( false ), eStatus( EUS_UNDEFINED )
+CExecutorUnitBonus::CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_pUnit, EExecutorTypeID eTID )
+		: CExecutorUnitBase( eTID, /*SConsts::AI_SEGMENT_DURATION **/ NRandom::Random( 1, 10 ), eAbility ), pUnit( _pUnit ),
+			timeLastUpdate( curTime ), bBonusApplied( false ), eStatus( EUS_UNDEFINED )
 {
 	RecordRandomCall();
 	//Init bonus pointer
@@ -19,13 +19,23 @@ bBonusApplied( false ), eStatus( EUS_UNDEFINED )
 	if ( GetAbilityDesc() )
 		pModifier = GetAbilityDesc()->pStatsBonus;
 
-	switch( eAbility )
+	switch ( eAbility )
 	{
-	case NDb::ABILITY_CRITICAL_TARGETING:	eStatus = EUS_CRITICAL_TARGET; break;
-	case NDb::ABILITY_SMOKE_SHOTS: eStatus = EUS_SMOKE_SHOT; break;
-	case NDb::ABILITY_SPY_MODE: eStatus = EUS_SPY_MODE; break;
-	case NDb::ABILITY_AMBUSH: eStatus = EUS_AMBUSH; break;
-	case NDb::ABILITY_CAMOFLAGE_MODE: eStatus = EUS_CAMOUFLAGE; break;
+		case NDb::ABILITY_CRITICAL_TARGETING:
+			eStatus = EUS_CRITICAL_TARGET;
+			break;
+		case NDb::ABILITY_SMOKE_SHOTS:
+			eStatus = EUS_SMOKE_SHOT;
+			break;
+		case NDb::ABILITY_SPY_MODE:
+			eStatus = EUS_SPY_MODE;
+			break;
+		case NDb::ABILITY_AMBUSH:
+			eStatus = EUS_AMBUSH;
+			break;
+		case NDb::ABILITY_CAMOFLAGE_MODE:
+			eStatus = EUS_CAMOUFLAGE;
+			break;
 	}
 }
 
@@ -66,14 +76,14 @@ float CExecutorUnitBonus::OnAbilityActive()
 	{
 		const int nTimeNeeded = pSA->nWorkTime;
 		if ( nTimeNeeded == 0 )
-			return 0.0f;					//Does not expire
+			return 0.0f; //Does not expire
 
 		if ( nTimePassed >= nTimeNeeded )
 		{
 			return 1.0f;
 		}
 		else
-			return float(nTimePassed) / float(nTimeNeeded);
+			return float( nTimePassed ) / float( nTimeNeeded );
 	}
 
 	return 0.0f;
@@ -81,7 +91,7 @@ float CExecutorUnitBonus::OnAbilityActive()
 
 float CExecutorUnitBonus::OnAbilityOff()
 {
-	return 0.0f;		//Wait for recharge timer
+	return 0.0f; //Wait for recharge timer
 }
 
 void CExecutorUnitBonus::SwitchingOffEnd()
@@ -97,9 +107,7 @@ void CExecutorUnitBonus::SwitchingOffEnd()
 	}
 }
 
-void CExecutorUnitBonus::SwitchingOffStart()
-{
-}
+void CExecutorUnitBonus::SwitchingOffStart() {}
 
 void CExecutorUnitBonus::SwitchOnEnd()
 {
@@ -115,9 +123,7 @@ void CExecutorUnitBonus::SwitchOnEnd()
 	timeLastUpdate = curTime;
 }
 
-void CExecutorUnitBonus::SwitchOnStart( const class CAICommand *pCommand )
-{
-}
+void CExecutorUnitBonus::SwitchOnStart( const class CAICommand *pCommand ) {}
 
 void CExecutorUnitBonus::ForceActivate()
 {

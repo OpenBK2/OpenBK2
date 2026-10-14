@@ -2,7 +2,6 @@
 #include "FeedbackSystem.h"
 #include "NewUpdater.h"
 
-
 typedef det_map<EFeedBack, NTimer::STime, SEnumHash> TFeedBackTimes;
 static TFeedBackTimes feedBackTimes;
 static const NTimer::STime feedBackDefaultTime = 20000;
@@ -40,7 +39,8 @@ void CFeedBackSystem::AddFeedback( int nID, const CVec2 &vCenter, EFeedBack eFee
 	AddFeedBackInternal( nID, vCenter, eFeedBack, false, nParam );
 }
 
-void CFeedBackSystem::AddFeedBackInternal( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, bool bForget, int nParam )
+void CFeedBackSystem::AddFeedBackInternal(
+		int nID, const CVec2 &vCenter, EFeedBack eFeedBack, bool bForget, int nParam )
 {
 	// check if feedback is already exists, then add current to that feedback
 	// otherwise add to new and make pObj to the center of the feedback cell
@@ -72,11 +72,8 @@ struct SEqualTo
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nID = {};
-	SEqualTo( int _nID ) : nID( _nID ) {  }
-	bool operator()( CIDAndParam _nTry ) const
-	{
-		return nID == _nTry.first;
-	}
+	SEqualTo( int _nID ) : nID( _nID ) {}
+	bool operator()( CIDAndParam _nTry ) const { return nID == _nTry.first; }
 };
 
 void CFeedBackSystem::RemoveFeedback( int nID, EFeedBack eFeedBack )
@@ -94,7 +91,8 @@ void CFeedBackSystem::RemoveFeedback( int nID, EFeedBack eFeedBack )
 		if ( !cell.objectIDs.empty() )
 		{
 			// search in cell, remove all
-			cell.objectIDs.erase( remove_if( cell.objectIDs.begin(), cell.objectIDs.end(), SEqualTo( nID )), cell.objectIDs.end() );
+			cell.objectIDs.erase( remove_if( cell.objectIDs.begin(), cell.objectIDs.end(), SEqualTo( nID ) ),
+			                      cell.objectIDs.end() );
 			if ( cell.objectIDs.empty() )
 			{
 				updater.AddUpdate( EFB_REMOVE_FEEDBACK, it->nClientID, 0 );
@@ -122,7 +120,7 @@ void CFeedBackSystem::Segment()
 	for ( CFeedbacks::iterator it = feedbacks.begin(); it != feedbacks.end(); ++it )
 	{
 		CCells &cells = it->second;
-		for ( CCells::iterator cellsIt = cells.begin(); cellsIt != cells.end();  )
+		for ( CCells::iterator cellsIt = cells.begin(); cellsIt != cells.end(); )
 		{
 			// check if update not sent yet
 			// generate client ID

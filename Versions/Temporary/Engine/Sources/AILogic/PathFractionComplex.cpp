@@ -7,10 +7,7 @@
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11097A80, CPathFractionComplex )
 
-
-
 //	SPrevManuverParams
-
 
 SPrevPathParams::SPrevPathParams( struct IPlane *pPlane )
 {
@@ -30,7 +27,6 @@ SPrevPathParams::SPrevPathParams( struct IPlane *pPlane )
 	else
 		pPlane->GetManuver()->GetManuverParams( this );
 }
-
 
 //	CPathFractionComplexBase
 
@@ -67,9 +63,9 @@ CCurFraction CPathFractionComplexBase::GetCur( const float fDist ) const
 
 void CPathFractionComplexBase::AfterSubstitute()
 {
-	for( CSubstitutes::iterator it = substitute.begin(); it != substitute.end(); )
+	for ( CSubstitutes::iterator it = substitute.begin(); it != substitute.end(); )
 	{
-		if ( (*it)->GetLength() == 0 )
+		if ( ( *it )->GetLength() == 0 )
 			it = substitute.erase( it );
 		else
 			++it;
@@ -81,7 +77,7 @@ float CPathFractionComplexBase::GetLength() const
 	float fDistSoFar = 0;
 	for ( CSubstitutes::const_iterator it = substitute.begin(); it < substitute.end(); ++it )
 	{
-		fDistSoFar += (*it) ? (*it)->GetLength() : 0.0f ;
+		fDistSoFar += ( *it ) ? ( *it )->GetLength() : 0.0f;
 	}
 	return fDistSoFar;
 }

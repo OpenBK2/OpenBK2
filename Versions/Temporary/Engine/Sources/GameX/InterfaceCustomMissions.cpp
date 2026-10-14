@@ -21,7 +21,11 @@ class CDifficultyData : public CObjectBase
 public:
 	ZDATA
 	std::wstring wszText;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &wszText );
+		return 0;
+	}
 
 	CDifficultyData() {}
 	CDifficultyData( const std::wstring &_wszText ) { wszText = _wszText; }
@@ -29,7 +33,7 @@ public:
 
 class CDifficultyTextViewer : public IDataViewer
 {
-	OBJECT_NOCOPY_METHODS(CDifficultyTextViewer)
+	OBJECT_NOCOPY_METHODS( CDifficultyTextViewer )
 public:
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 };
@@ -59,10 +63,7 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 
 // CInterfaceCustomMissions
 
-CInterfaceCustomMissions::CInterfaceCustomMissions() :
-	CInterfaceScreenBase( "CustomMissions", "custom_missions" )
-{
-}
+CInterfaceCustomMissions::CInterfaceCustomMissions() : CInterfaceScreenBase( "CustomMissions", "custom_missions" ) {}
 
 bool CInterfaceCustomMissions::Init()
 {
@@ -159,10 +160,10 @@ void CInterfaceCustomMissions::AddMission( const NDb::SMapInfo *pMapInfo )
 		}
 	}
 
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedName) )
-		mission.wszName = GET_TEXT_PRE(pMapInfo->,LocalizedName);
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedDescription) )
-		mission.wszDesc = GET_TEXT_PRE(pMapInfo->,LocalizedDescription);
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+		mission.wszName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedDescription ) )
+		mission.wszDesc = GET_TEXT_PRE( pMapInfo->, LocalizedDescription );
 
 	mission.wszSize = InterfaceState()->GetMapSizeName( pMapInfo );
 	mission.wszSeason = InterfaceState()->GetSeasonName( pMapInfo->eSeason );
@@ -190,7 +191,7 @@ bool CInterfaceCustomMissions::StepLocal( bool bAppActive )
 	return CInterfaceScreenBase::StepLocal( bAppActive );
 }
 
-const CInterfaceCustomMissions::SMission* CInterfaceCustomMissions::FindSelected() const
+const CInterfaceCustomMissions::SMission *CInterfaceCustomMissions::FindSelected() const
 {
 	IWindow *pSelectedWnd = 0;
 	if ( pMissionsListCont )
@@ -273,8 +274,8 @@ void CInterfaceCustomMissions::MissionStart( const NDb::SMapInfo *pMapInfo )
 
 	Singleton<IScenarioTracker>()->CustomMissionStart( pMapInfo, nDifficulty, false );
 
-//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-//	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapInfo->GetDBID().ToString().c_str() ) );
+	//	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+	//	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapInfo->GetDBID().ToString().c_str() ) );
 	NMainLoop::Command( ML_COMMAND_MISSION_BRIEFING, "" );
 }
 
@@ -346,18 +347,20 @@ void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool 
 		return;
 	}
 
-	const std::vector< CDBPtr< NDb::SDifficultyLevel > > &difficultyLevels = pMission->pMapInfo->customDifficultyLevels;
+	const std::vector<CDBPtr<NDb::SDifficultyLevel>> &difficultyLevels = pMission->pMapInfo->customDifficultyLevels;
 
-	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty :
-		(std::max)( 0, (std::min)( CUSTOM_MISSION_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
+	const int nNewDifficulty =
+			( nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() )
+					? nOldDifficulty
+					: (std::max)( 0, (std::min)( CUSTOM_MISSION_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
 
 	pDifficultyComboBox->ShowWindow( true );
 
 	for ( int i = 0; i < difficultyLevels.size(); ++i )
 	{
 		const NDb::SDifficultyLevel *pDifficultyLevel = difficultyLevels[i];
-		if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE(pDifficultyLevel->,LocalizedName) )
-			pDifficultyComboBox->AddItem( new CDifficultyData( GET_TEXT_PRE(pDifficultyLevel->,LocalizedName) ) );
+		if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE( pDifficultyLevel->, LocalizedName ) )
+			pDifficultyComboBox->AddItem( new CDifficultyData( GET_TEXT_PRE( pDifficultyLevel->, LocalizedName ) ) );
 		else
 			pDifficultyComboBox->AddItem( new CDifficultyData( L"******" ) );
 	}
@@ -365,21 +368,17 @@ void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool 
 	pDifficultyComboBox->Select( nNewDifficulty );
 }
 
-#if !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
+#if !defined( _SINGLE_DEMO ) || defined( _MP_DEMO )
 // CICCustomMissions
 
-void CICCustomMissions::PreCreate()
-{
-}
+void CICCustomMissions::PreCreate() {}
 
 void CICCustomMissions::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICCustomMissions::Configure( const char *pszConfig )
-{
-}
+void CICCustomMissions::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1716B381, CInterfaceCustomMissions )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CUSTOM_MISSIONS, CICCustomMissions )

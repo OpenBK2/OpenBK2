@@ -11,7 +11,7 @@
 #define DEF_PRECIPICE_SAMPLES_PER_PATCH 4
 //
 #define DEF_PRECIPICE_SAMP_HEIGHT 1.0f
-#define DEF_PRECIPICE_INV_SAMP_HEIGHT (1.0f / DEF_PRECIPICE_SAMP_HEIGHT)
+#define DEF_PRECIPICE_INV_SAMP_HEIGHT ( 1.0f / DEF_PRECIPICE_SAMP_HEIGHT )
 #define DEF_PRECIPICE_DEPTH 0.15f
 #define DEF_PRECIPICE_DEPTH_RAND 0.6f
 #define DEF_PRECIPICE_RANDX 0.25f
@@ -20,7 +20,7 @@
 #define DEF_PRECIPICE_SMOOTH_RAD ( DEF_TILE_SIZE * 5.0f )
 #define DEF_PRECIPICE_SMOOTH_RAD2 ( DEF_PRECIPICE_SMOOTH_RAD * DEF_PRECIPICE_SMOOTH_RAD )
 #define DEF_PRECIPICE_SMOOTH_RAD2_INV ( 1.0f / DEF_PRECIPICE_SMOOTH_RAD2 )
-#define DEF_STAYED_ON_TERRAIN_ERROR DEF_RIVER_DEPTH/*DEF_TILE_SIZE*/
+#define DEF_STAYED_ON_TERRAIN_ERROR DEF_RIVER_DEPTH /*DEF_TILE_SIZE*/
 //
 #define DEF_MIN_PRECIPICE_HEIGHT 0.025f
 
@@ -32,8 +32,10 @@ struct STriangleEx
 CVec3 CTerraGen::GetSmoothPrecipiceNorm( const CVec2 &vPos )
 {
 	float fWeight = 0.0f;
-	CVec3 vNorm(0, 0, 0);
-	for ( std::vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin(); it != terrainInfo.precNodes.end(); ++it )
+	CVec3 vNorm( 0, 0, 0 );
+	for ( std::vector<STerrainInfo::SPrecipiceNode>::const_iterator it = terrainInfo.precNodes.begin();
+	      it != terrainInfo.precNodes.end();
+	      ++it )
 	{
 		if ( it->nCount > 0 )
 		{
@@ -46,11 +48,11 @@ CVec3 CTerraGen::GetSmoothPrecipiceNorm( const CVec2 &vPos )
 			}
 		}
 	}
-	NI_ASSERT( fWeight > (1.0f - DEF_EPS), "Precipice smooth error" );
+	NI_ASSERT( fWeight > ( 1.0f - DEF_EPS ), "Precipice smooth error" );
 	vNorm /= fWeight;
 	const float fNormDist = fabs2( vNorm );
 	//if ( ( fabs( fNormDist - 1.0f ) > DEF_EPS ) && ( fNormDist > DEF_EPS ) )
-	if ( fNormDist > (1.0f + DEF_EPS) )
+	if ( fNormDist > ( 1.0f + DEF_EPS ) )
 	{
 		const float d = 1.0f / NMath::Sqrt( fNormDist );
 		vNorm.x *= d;
@@ -69,10 +71,10 @@ inline void AddUniquePrecipiceVertex( STerrainInfo::SPrecipiceNode *pNode, const
 	{
 		if ( fabs( pNode->verts[nInd].z - fHeight ) < DEF_EPS )
 		{
-			if	( ( nInd == 0 ) || ( nInd == ( pNode->verts.size() - 1 ) ) )
+			if ( ( nInd == 0 ) || ( nInd == ( pNode->verts.size() - 1 ) ) )
 				return;
 			if ( ( fabs( pNode->verts[nInd].x - pNode->vPos.x ) < DEF_EPS ) &&
-					 ( fabs( pNode->verts[nInd].y - pNode->vPos.y ) < DEF_EPS ) )
+			     ( fabs( pNode->verts[nInd].y - pNode->vPos.y ) < DEF_EPS ) )
 				return;
 		}
 	}
@@ -121,20 +123,27 @@ void CTerraGen::CreateVerticesInPrecipiceNode( STerrainInfo::SPrecipiceNode *pNo
 	pNode->verts.resize( 0 );
 
 	const float fPrecipiceDepth = ( pNode->nCount > 0 ) ? ( pNode->fDepth / pNode->nCount ) : DEF_PRECIPICE_DEPTH;
-	const float fPrecipiceDepthRand = ( pNode->nCount > 0 ) ? ( pNode->fDepthRand / pNode->nCount ) : DEF_PRECIPICE_DEPTH_RAND;
+	const float fPrecipiceDepthRand =
+			( pNode->nCount > 0 ) ? ( pNode->fDepthRand / pNode->nCount ) : DEF_PRECIPICE_DEPTH_RAND;
 	const float fPrecipiceRandX = ( pNode->nCount > 0 ) ? ( pNode->fRandX / pNode->nCount ) : DEF_PRECIPICE_RANDX;
 	const float fPrecipiceRandY = ( pNode->nCount > 0 ) ? ( pNode->fRandY / pNode->nCount ) : DEF_PRECIPICE_RANDY;
 
 	for ( int g = nVertsNum - 1; g >= 0; --g )
 	{
-		vPos.Set( pNode->vPos.x, pNode->vPos.y, pNode->fMinHeight + ( pNode->fMaxHeight - pNode->fMinHeight) * fInvVertsNum * g );
+		vPos.Set( pNode->vPos.x,
+		          pNode->vPos.y,
+		          pNode->fMinHeight + ( pNode->fMaxHeight - pNode->fMinHeight ) * fInvVertsNum * g );
 		if ( g < ( nVertsNum - 1 ) )
 		{
-			const float fDepth = ( 1.0f - fabs2( (float)( g - fVertsHalfNum ) * fInvVertsHalfNum ) ) * fPrecipiceDepth * nVertsNum;
+			const float fDepth =
+					( 1.0f - fabs2( (float)( g - fVertsHalfNum ) * fInvVertsHalfNum ) ) * fPrecipiceDepth * nVertsNum;
 			const float fDampingCoeff = ( nVertsNum - 1 - g ) * fInvVertsNum;
-			fDepthRand += NWin32Random::Random( 0.0f, fDampingCoeff * fPrecipiceDepthRand ) * ( 1.0f - (float)g * nVertsNumCoeff );
+			fDepthRand +=
+					NWin32Random::Random( 0.0f, fDampingCoeff * fPrecipiceDepthRand ) * ( 1.0f - (float)g * nVertsNumCoeff );
 			fRandX += NWin32Random::Random( -fPrecipiceRandX, fPrecipiceRandX );
-			fRandY = ( fRandY + NWin32Random::Random( -fPrecipiceRandY, fPrecipiceRandY ) * ( 1.0f - fabs2( (float)( g - fVertsHalfNum ) * fInvVertsHalfNum ) ) ) * 0.5f;
+			fRandY = ( fRandY + NWin32Random::Random( -fPrecipiceRandY, fPrecipiceRandY ) *
+			                        ( 1.0f - fabs2( (float)( g - fVertsHalfNum ) * fInvVertsHalfNum ) ) ) *
+			         0.5f;
 			vPos.x += -vNorm.x * ( fDepth - fDepthRand - fRandX ) - vNorm.y * fRandY;
 			vPos.y += -vNorm.y * ( fDepth - fDepthRand - fRandX ) + vNorm.x * fRandY;
 		}
@@ -145,7 +154,8 @@ void CTerraGen::CreateVerticesInPrecipiceNode( STerrainInfo::SPrecipiceNode *pNo
 
 	// create intermidiate vertices
 	const float fCoeff = (float)( nVertsNum - 1 ) / ( pNode->fMaxHeight - pNode->fMinHeight );
-	for ( std::list<int>::const_iterator itUsePrecID = pNode->precs.begin(); itUsePrecID != pNode->precs.end(); ++itUsePrecID )
+	for ( std::list<int>::const_iterator itUsePrecID = pNode->precs.begin(); itUsePrecID != pNode->precs.end();
+	      ++itUsePrecID )
 	{
 		const STerrainInfo::SPrecipice *pPrec = FindPrecipice( *itUsePrecID );
 		if ( !pPrec )
@@ -165,7 +175,9 @@ void CTerraGen::CheckPrecipiceIntersectionWithRivers( STerrainInfo::SPrecipice *
 {
 	for ( int i = 0; i < pPrec->nodes.size(); ++i )
 	{
-		if ( IsPointInsideRivers( CVec3( terrainInfo.precNodes[pPrec->nodes[i]].vPos.x, terrainInfo.precNodes[pPrec->nodes[i]].vPos.y, 0 ), pPrec->nExcludeRiverID ) )
+		if ( IsPointInsideRivers(
+						 CVec3( terrainInfo.precNodes[pPrec->nodes[i]].vPos.x, terrainInfo.precNodes[pPrec->nodes[i]].vPos.y, 0 ),
+						 pPrec->nExcludeRiverID ) )
 			pPrec->visibles[i] = 0;
 	}
 }
@@ -176,8 +188,8 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	int nPrevVertsNum, nCurVertsNum, nPrevVertsOffset;
 	STriangleEx trg;
 	NGScene::SVertex vert;
-	CalcCompactVector( &(vert.texU), V3_AXIS_X );
-	CalcCompactVector( &(vert.texV), V3_AXIS_Y );
+	CalcCompactVector( &( vert.texU ), V3_AXIS_X );
+	CalcCompactVector( &( vert.texV ), V3_AXIS_Y );
 
 	int nFind1, nFind2;
 	float fTexX;
@@ -204,7 +216,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 
 	fTexX = 0.0f;
 
-	static std::vector<STerrainInfo::SVSOPoint> peakPoints(256);
+	static std::vector<STerrainInfo::SVSOPoint> peakPoints( 256 );
 	peakPoints.resize( 0 );
 	STerrainInfo::SPeak peak;
 	//peak.nID = ( pCurPrec->nExcludeRiverID >= 0 ) ? ( pCurPrec->nID | 0xf0000 ) : pCurPrec->nID;
@@ -229,22 +241,25 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 
 			//( ( i > 0 ) && ( i < ( pCurPrec->nodes.size() - 1 ) ) &&
 			//if ( ( fabs( pCurPrec->maxHeights[i] - pCurPrec->minHeights[i] ) <= DEF_MIN_PRECIPICE_HEIGHT ) &&
-			if ( (pCurPrec->maxHeights[i] <= (pCurPrec->minHeights[i] + DEF_MIN_PRECIPICE_HEIGHT)) &&
-			//{
-/*if (*/ //( ( i == 0 ) || ( fabs( pCurPrec->maxHeights[i - 1] - pCurPrec->minHeights[i - 1] ) <= DEF_MIN_PRECIPICE_HEIGHT ) ) &&
-				 //( ( i == ( pCurPrec->nodes.size() - 1 ) ) || ( fabs( pCurPrec->maxHeights[i + 1] - pCurPrec->minHeights[i + 1] ) <= DEF_MIN_PRECIPICE_HEIGHT ) ) )
-				 ((i == 0) || (pCurPrec->maxHeights[i - 1] <= (pCurPrec->minHeights[i - 1] + DEF_MIN_PRECIPICE_HEIGHT))) &&
-				 ((i == (pCurPrec->nodes.size() - 1)) || (pCurPrec->maxHeights[i + 1] <= (pCurPrec->minHeights[i + 1] + DEF_MIN_PRECIPICE_HEIGHT))) )
-				{
-					if ( peakPoints.size() >= 2 )
-						peak.points.push_back( peakPoints );
-					peakPoints.resize( 0 );
-					nPrevVertsNum = nCurVertsNum;
-					nPrevVertsOffset = nVertsOffsetBeforeAdded;
-					nodeVertsNum[i] = nCurVertsNum;
-					nPrevFind1 = nPrevFind2 = -1;
-					continue;
-				}
+			if (
+					( pCurPrec->maxHeights[i] <= ( pCurPrec->minHeights[i] + DEF_MIN_PRECIPICE_HEIGHT ) ) &&
+					//{
+					/*if (*/ //( ( i == 0 ) || ( fabs( pCurPrec->maxHeights[i - 1] - pCurPrec->minHeights[i - 1] ) <= DEF_MIN_PRECIPICE_HEIGHT ) ) &&
+					//( ( i == ( pCurPrec->nodes.size() - 1 ) ) || ( fabs( pCurPrec->maxHeights[i + 1] - pCurPrec->minHeights[i + 1] ) <= DEF_MIN_PRECIPICE_HEIGHT ) ) )
+					( ( i == 0 ) ||
+			      ( pCurPrec->maxHeights[i - 1] <= ( pCurPrec->minHeights[i - 1] + DEF_MIN_PRECIPICE_HEIGHT ) ) ) &&
+					( ( i == ( pCurPrec->nodes.size() - 1 ) ) ||
+			      ( pCurPrec->maxHeights[i + 1] <= ( pCurPrec->minHeights[i + 1] + DEF_MIN_PRECIPICE_HEIGHT ) ) ) )
+			{
+				if ( peakPoints.size() >= 2 )
+					peak.points.push_back( peakPoints );
+				peakPoints.resize( 0 );
+				nPrevVertsNum = nCurVertsNum;
+				nPrevVertsOffset = nVertsOffsetBeforeAdded;
+				nodeVertsNum[i] = nCurVertsNum;
+				nPrevFind1 = nPrevFind2 = -1;
+				continue;
+			}
 			//}
 
 			//if ( i > 0 )
@@ -257,16 +272,17 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			const float fMinH = pCurPrec->minHeights[i];
 			const float fMaxH = pCurPrec->maxHeights[i];
 
-			NI_ASSERT( (fMinH >= node.fMinHeight) && (fMaxH <= node.fMaxHeight), "Error was occured during precipice collection" );
+			NI_ASSERT( ( fMinH >= node.fMinHeight ) && ( fMaxH <= node.fMaxHeight ),
+			           "Error was occured during precipice collection" );
 			//NI_ASSERT( fabs( node.fMaxHeight - node.fMinHeight ) > DEF_EPS, "Precipice node is singular" );
 			NI_ASSERT( node.verts.size() >= 2, "Precipice node's vertices data is not ready" );
 
 			// fill vertices
-			CalcCompactVector( &(vert.normal), node.vNorm );
+			CalcCompactVector( &( vert.normal ), node.vNorm );
 			vert.tex.Set( 0, 0 );
 
 			nFind1 = 0;
-			while ( node.verts[nFind1].z > (fMaxH + DEF_EPS) )
+			while ( node.verts[nFind1].z > ( fMaxH + DEF_EPS ) )
 			{
 				++nFind1;
 				if ( nFind1 >= node.verts.size() )
@@ -276,11 +292,11 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 				}
 			}
 
-			NI_ASSERT( (node.verts[nFind1].z - fMaxH) < DEF_EPS, "Node verts structure was not filled correctly" );
+			NI_ASSERT( ( node.verts[nFind1].z - fMaxH ) < DEF_EPS, "Node verts structure was not filled correctly" );
 
 			nFind2 = nFind1;
 
-			while ( node.verts[nFind2].z > (fMinH + DEF_EPS) )
+			while ( node.verts[nFind2].z > ( fMinH + DEF_EPS ) )
 			{
 				++nFind2;
 				if ( nFind2 >= node.verts.size() )
@@ -290,7 +306,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 				}
 			}
 
-			NI_ASSERT( (node.verts[nFind2].z - fMinH) < DEF_EPS, "Node verts structure was not filled correctly" );
+			NI_ASSERT( ( node.verts[nFind2].z - fMinH ) < DEF_EPS, "Node verts structure was not filled correctly" );
 
 			/*if ( ( i > 0 ) && ( nPrevFind2 >= 0 ) )
 			{
@@ -321,17 +337,18 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 				point.vPos = vPos;
 				point.vNorm = node.vNorm;
 				const float fBottomHeight = GetLowerHeight( point );
-#else	// old code
-				const float fBottomHeight = GetTerraHeight( vPos.x, vPos.y ) + GetMaxCragHeight( CVec2(vPos.x, vPos.y), pCurPrec->nID );
+#else // old code
+				const float fBottomHeight =
+						GetTerraHeight( vPos.x, vPos.y ) + GetMaxCragHeight( CVec2( vPos.x, vPos.y ), pCurPrec->nID );
 #endif
 
 				///if ( (fBottomHeight < node.verts[nFind2 - 1].z) && (fabs(fBottomHeight - vPos.z) < DEF_STAYED_ON_TERRAIN_ERROR) )
-				if ( fabs(fBottomHeight - vPos.z) < DEF_STAYED_ON_TERRAIN_ERROR )
+				if ( fabs( fBottomHeight - vPos.z ) < DEF_STAYED_ON_TERRAIN_ERROR )
 
 					vPos.z = fBottomHeight;
 			}
 
-			if ( (nPrevVertsNum > 0) && (nCurVertsNum > 0) )
+			if ( ( nPrevVertsNum > 0 ) && ( nCurVertsNum > 0 ) )
 			{
 				float fDist = 0.0f;
 				const int nMaxVertsNum = (std::max)( nPrevVertsNum, nCurVertsNum );
@@ -342,7 +359,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 					const int nInd1 = fCoeff1 * g;
 					const int nInd2 = fCoeff2 * g;
 					//fDist = max( fDist, fabs( vertices[nPrevVertsOffset + nInd1].pos - vertices[nVertsOffsetBeforeAdded + nInd2].pos ) );
-					fDist = (std::max)( fDist, fabs(GetVec2(vertices[nPrevVertsOffset + nInd1].pos) - GetVec2(vertices[nVertsOffsetBeforeAdded + nInd2].pos)) );
+					fDist = (std::max)( fDist,
+					                    fabs( GetVec2( vertices[nPrevVertsOffset + nInd1].pos ) -
+					                          GetVec2( vertices[nVertsOffsetBeforeAdded + nInd2].pos ) ) );
 				}
 				fTexX += fDist * fTexScaleX;
 			}
@@ -358,7 +377,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			}
 
 			// fill triangles
-			if ( (nPrevVertsNum > 0) && (nCurVertsNum > 0) && (pCurPrec->nodes[i] != pCurPrec->nodes[i - 1]) )
+			if ( ( nPrevVertsNum > 0 ) && ( nCurVertsNum > 0 ) && ( pCurPrec->nodes[i] != pCurPrec->nodes[i - 1] ) )
 			{
 				const int nMaxVertsNum = (std::max)( nPrevVertsNum, nCurVertsNum );
 				const float fCoeff1 = nPrevVertsNum > nCurVertsNum ? 1.0f : (float)nPrevVertsNum / nCurVertsNum;
@@ -388,7 +407,8 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 				}
 			}
 
-			if ( (nPrevVertsNum == 0) || (nCurVertsNum == 0) || (pCurPrec->nodes[i] == pCurPrec->nodes[i - 1]) || (fMaxH <= (fMinH + DEF_MIN_PRECIPICE_HEIGHT)) )
+			if ( ( nPrevVertsNum == 0 ) || ( nCurVertsNum == 0 ) || ( pCurPrec->nodes[i] == pCurPrec->nodes[i - 1] ) ||
+			     ( fMaxH <= ( fMinH + DEF_MIN_PRECIPICE_HEIGHT ) ) )
 			{
 				if ( peakPoints.size() >= 2 )
 					peak.points.push_back( peakPoints );
@@ -403,7 +423,8 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			}*/
 			if ( nCurVertsNum > 0 )
 			{
-				std::vector<STerrainInfo::SVSOPoint>::iterator itPeak = peakPoints.insert( peakPoints.end(), STerrainInfo::SVSOPoint() );
+				std::vector<STerrainInfo::SVSOPoint>::iterator itPeak =
+						peakPoints.insert( peakPoints.end(), STerrainInfo::SVSOPoint() );
 				//itPeak->vPos.Set( node.vPos.x, node.vPos.y, node.verts[nFind1].z );
 				itPeak->vPos = node.verts[nFind1];
 				itPeak->vNorm = node.nCount > 0 ? ( node.vNorm / node.nCount ) : node.vNorm;
@@ -450,7 +471,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	{
 		peak.vBBMin.Set( FP_MAX_VALUE, FP_MAX_VALUE );
 		peak.vBBMax.Set( -FP_MAX_VALUE, -FP_MAX_VALUE );
-		for ( std::vector< std::vector<STerrainInfo::SVSOPoint> >::const_iterator itArr = peak.points.begin(); itArr != peak.points.end(); ++itArr )
+		for ( std::vector<std::vector<STerrainInfo::SVSOPoint>>::const_iterator itArr = peak.points.begin();
+		      itArr != peak.points.end();
+		      ++itArr )
 		{
 			for ( std::vector<STerrainInfo::SVSOPoint>::const_iterator it = itArr->begin(); it != itArr->end(); ++it )
 			{
@@ -459,9 +482,10 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 				peak.vBBMax.Maximize( vPos );
 			}
 		}
-		if ( !(pCurPrec->bHasNotPeak) )
+		if ( !( pCurPrec->bHasNotPeak ) )
 		{
-			std::list<STerrainInfo::SPeak>::const_iterator itAddPeak = terrainInfo.peaks.insert( terrainInfo.peaks.end(), peak );
+			std::list<STerrainInfo::SPeak>::const_iterator itAddPeak =
+					terrainInfo.peaks.insert( terrainInfo.peaks.end(), peak );
 			AddPeak( *itAddPeak );
 		}
 		peak.points.resize( 0 );
@@ -470,7 +494,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 	// create smooth normals
 	std::vector<CVec3> precipiceNorms( vertices.size() );
 	std::vector<int> precipiceNormsCounts( vertices.size() );
-	fill( precipiceNorms.begin(), precipiceNorms.end(), CVec3(0, 0, 0) );
+	fill( precipiceNorms.begin(), precipiceNorms.end(), CVec3( 0, 0, 0 ) );
 	fill( precipiceNormsCounts.begin(), precipiceNormsCounts.end(), 0 );
 	CVec3 vNorm;
 	for ( std::vector<STriangleEx>::const_iterator itTrg = triangles.begin(); itTrg != triangles.end(); ++itTrg )
@@ -489,20 +513,20 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 		if ( precipiceNormsCounts[k] > 0 )
 		{
 			vNorm = precipiceNorms[k] / precipiceNormsCounts[k];
-			if ( fabs2(vNorm) > DEF_EPS )
+			if ( fabs2( vNorm ) > DEF_EPS )
 			{
-				if ( fabs(fabs2(vNorm) - 1.0f) > DEF_EPS )
+				if ( fabs( fabs2( vNorm ) - 1.0f ) > DEF_EPS )
 					Normalize( &vNorm );
-				CalcCompactVector( &(vertices[k].normal), vNorm );
-				UpdateAlphaByPosition( &(vertices[k]) );
+				CalcCompactVector( &( vertices[k].normal ), vNorm );
+				UpdateAlphaByPosition( &( vertices[k] ) );
 			}
 		}
 	}
 
 	// break data for patches
-	const int nPatchesNum = ( pCurPrec->nodes.size() % DEF_PRECIPICE_SAMPLES_PER_PATCH ) ?
-													( pCurPrec->nodes.size() / DEF_PRECIPICE_SAMPLES_PER_PATCH + 1 ) :
-													( pCurPrec->nodes.size() / DEF_PRECIPICE_SAMPLES_PER_PATCH );
+	const int nPatchesNum = ( pCurPrec->nodes.size() % DEF_PRECIPICE_SAMPLES_PER_PATCH )
+	                            ? ( pCurPrec->nodes.size() / DEF_PRECIPICE_SAMPLES_PER_PATCH + 1 )
+	                            : ( pCurPrec->nodes.size() / DEF_PRECIPICE_SAMPLES_PER_PATCH );
 	gfxInfo.patches.resize( nPatchesNum );
 	for ( int i = 0; i < nPatchesNum; ++i )
 	{
@@ -531,8 +555,9 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 			for ( int k = 0; k < nodeTrgsNum[g]; ++k )
 			{
 				const STriangleEx &trg = triangles[nTrgsOffs++];
-				NI_ASSERT( (trg.i1 >= nVertsOffs) && (trg.i2 >= nVertsOffs) && (trg.i3 >= nVertsOffs), "Wrong triangle" );
-				gfxInfo.patches[i].triangles.push_back( STriangle( trg.i1 - nVertsOffs, trg.i2 - nVertsOffs, trg.i3 - nVertsOffs ) );
+				NI_ASSERT( ( trg.i1 >= nVertsOffs ) && ( trg.i2 >= nVertsOffs ) && ( trg.i3 >= nVertsOffs ), "Wrong triangle" );
+				gfxInfo.patches[i].triangles.push_back(
+						STriangle( trg.i1 - nVertsOffs, trg.i2 - nVertsOffs, trg.i3 - nVertsOffs ) );
 			}
 		}
 		nVertsOffs = nLastOffs;
@@ -551,14 +576,16 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 	nodesHash.resize( terrainInfo.precNodes.size() );
 	fill( nodesHash.begin(), nodesHash.end(), 0 );
 
-	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
+	for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin();
+	      itPrec != terrainInfo.precipices.end();
+	      ++itPrec )
 	{
 		if ( itPrec->nID == nID )
 		{
 			for ( int i = 0; i < itPrec->nodes.size(); ++i )
 			{
 				const int nNodeInd = itPrec->nodes[i];
-				if ( !(nodesHash[nNodeInd]) )
+				if ( !( nodesHash[nNodeInd] ) )
 				{
 					STerrainInfo::SPrecipiceNode &node = terrainInfo.precNodes[nNodeInd];
 					node.vNorm -= itPrec->norms[i];
@@ -583,7 +610,9 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 	}
 
 	// remove gfx info
-	for ( std::list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin(); it != terrainGfxInfo.precipices.end(); ++it )
+	for ( std::list<SPrecipiceGFXInfo>::iterator it = terrainGfxInfo.precipices.begin();
+	      it != terrainGfxInfo.precipices.end();
+	      ++it )
 	{
 		if ( it->nID == nID )
 		{
@@ -604,7 +633,9 @@ void CTerraGen::RemovePrecipiceFromCollector( const int nID, const bool bFast )
 	if ( !bFast )
 	{
 		// remove from intersectors
-		for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin(); itPrec != terrainInfo.precipices.end(); ++itPrec )
+		for ( std::list<STerrainInfo::SPrecipice>::iterator itPrec = terrainInfo.precipices.begin();
+		      itPrec != terrainInfo.precipices.end();
+		      ++itPrec )
 		{
 			std::vector<int>::iterator itFind = find( itPrec->intersectors.begin(), itPrec->intersectors.end(), nID );
 			if ( itFind != itPrec->intersectors.end() )

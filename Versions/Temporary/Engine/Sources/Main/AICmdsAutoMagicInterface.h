@@ -2,7 +2,6 @@
 
 #include "Main_export.h"
 
-
 struct IAICmdsAutoMagic : public CObjectBase
 {
 	MAIN_EXPORT virtual IBinSaver *MakeCommandSerializer( CMemoryStream *pStream, ESaverMode mode );

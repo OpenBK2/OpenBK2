@@ -8,16 +8,17 @@
 #include "ExporterContainer.h"
 
 bool CExporterContainer::StartExport( const std::string &rszExportTypeName,
-																			const std::string &rszObjectTypeName,
-																			bool bExport,
-																			bool bForce,
-																			bool bStartTools )
+                                      const std::string &rszObjectTypeName,
+                                      bool bExport,
+                                      bool bForce,
+                                      bool bStartTools )
 {
 	if ( IExporter *pExporter = GetExporter( rszExportTypeName ) )
 	{
 		if ( bStartTools )
 		{
-			for ( CExportToolList::iterator itExportTool = exportToolList.begin(); itExportTool != exportToolList.end(); ++itExportTool )
+			for ( CExportToolList::iterator itExportTool = exportToolList.begin(); itExportTool != exportToolList.end();
+			      ++itExportTool )
 			{
 				( *itExportTool )->StartExportTool();
 			}
@@ -63,12 +64,11 @@ bool CExporterContainer::StartExport( const std::string &rszExportTypeName,
 	return false;
 }
 
-
 void CExporterContainer::FinishExport( const std::string &rszExportTypeName,
-																			 const std::string &rszObjectTypeName,
-																			 bool bExport,
-																			 bool bForce,
-																			 bool bFinishTools )
+                                       const std::string &rszObjectTypeName,
+                                       bool bExport,
+                                       bool bForce,
+                                       bool bFinishTools )
 {
 	if ( IExporter *pExporter = GetExporter( rszExportTypeName ) )
 	{
@@ -102,7 +102,8 @@ void CExporterContainer::FinishExport( const std::string &rszExportTypeName,
 		//
 		if ( bFinishTools )
 		{
-			for ( CExportToolList::iterator itExportTool = exportToolList.begin(); itExportTool != exportToolList.end(); ++itExportTool )
+			for ( CExportToolList::iterator itExportTool = exportToolList.begin(); itExportTool != exportToolList.end();
+			      ++itExportTool )
 			{
 				( *itExportTool )->FinishExportTool();
 			}
@@ -110,13 +111,12 @@ void CExporterContainer::FinishExport( const std::string &rszExportTypeName,
 	}
 }
 
-
-EXPORT_RESULT	CExporterContainer::ExportObject( const std::string &rszExportTypeName,
-																								IManipulator* pManipulator,
-																								const std::string &rszObjectTypeName,
-																								const std::string &rszObjectName,
-																								bool bExport,
-																								bool bForce )
+EXPORT_RESULT CExporterContainer::ExportObject( const std::string &rszExportTypeName,
+                                                IManipulator *pManipulator,
+                                                const std::string &rszObjectTypeName,
+                                                const std::string &rszObjectName,
+                                                bool bExport,
+                                                bool bForce )
 {
 	if ( IExporter *pExporter = GetExporter( rszExportTypeName ) )
 	{
@@ -164,21 +164,19 @@ EXPORT_RESULT	CExporterContainer::ExportObject( const std::string &rszExportType
 	return ER_FAIL;
 }
 
-
 bool CExporterContainer::CanExportObject( const std::string &rszObjectTypeName )
 {
 	return NExporterFactory::CanCreateExporter( rszObjectTypeName );
 }
 
-
-IExporter* CExporterContainer::GetExporter( const std::string &rszObjectTypeName )
+IExporter *CExporterContainer::GetExporter( const std::string &rszObjectTypeName )
 {
 	if ( !CanExportObject( rszObjectTypeName ) )
 	{
 		return 0;
 	}
 	CExporterMap::iterator posExporter = exporterMap.find( rszObjectTypeName );
-	if( posExporter == exporterMap.end() )
+	if ( posExporter == exporterMap.end() )
 	{
 		exporterMap[rszObjectTypeName] = NExporterFactory::CreateExporter( rszObjectTypeName );
 		posExporter = exporterMap.find( rszObjectTypeName );
@@ -186,13 +184,11 @@ IExporter* CExporterContainer::GetExporter( const std::string &rszObjectTypeName
 	return posExporter->second;
 }
 
-
 void CExporterContainer::Create( const std::string &rszObjectTypeName )
 {
 	IExporter *pExporter = GetExporter( rszObjectTypeName );
 	NI_ASSERT( pExporter != 0, "CExporterContainer::Create() pExporter == 0" );
 }
-
 
 void CExporterContainer::Destroy( const std::string &rszObjectTypeName )
 {
@@ -203,13 +199,11 @@ void CExporterContainer::Destroy( const std::string &rszObjectTypeName )
 	}
 }
 
-
 void CExporterContainer::RegisterExportTool( IExportTool *pExportTool )
 {
 	UnRegisterExportTool( pExportTool );
 	exportToolList.push_back( pExportTool );
 }
-
 
 void CExporterContainer::UnRegisterExportTool( IExportTool *pExportTool )
 {
@@ -221,81 +215,77 @@ void CExporterContainer::UnRegisterExportTool( IExportTool *pExportTool )
 	}
 }
 
-
-bool CExporterContainer::StartExport( const std::string &rszObjectTypeName, bool bForce, bool bStartTools, bool bExportReferences )
+bool CExporterContainer::StartExport( const std::string &rszObjectTypeName,
+                                      bool bForce,
+                                      bool bStartTools,
+                                      bool bExportReferences )
 {
 	return StartExport( bExportReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
-											rszObjectTypeName,
-											true,
-											bForce,
-											bStartTools );
+	                    rszObjectTypeName,
+	                    true,
+	                    bForce,
+	                    bStartTools );
 }
 
-
-void CExporterContainer::FinishExport( const std::string &rszObjectTypeName, bool bForce, bool bFinishTools, bool bExportReferences )
+void CExporterContainer::FinishExport( const std::string &rszObjectTypeName,
+                                       bool bForce,
+                                       bool bFinishTools,
+                                       bool bExportReferences )
 {
 	FinishExport( bExportReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
-								rszObjectTypeName,
-								true,
-								bForce,
-								bFinishTools );
+	              rszObjectTypeName,
+	              true,
+	              bForce,
+	              bFinishTools );
 }
 
-
-EXPORT_RESULT	CExporterContainer::ExportObject( IManipulator* pManipulator,
-																								const std::string &rszObjectTypeName,
-																								const std::string &rszObjectName,
-																								bool bForce,
-																								bool bExportReferences )
+EXPORT_RESULT CExporterContainer::ExportObject( IManipulator *pManipulator,
+                                                const std::string &rszObjectTypeName,
+                                                const std::string &rszObjectName,
+                                                bool bForce,
+                                                bool bExportReferences )
 {
 	return ExportObject( bExportReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
-											 pManipulator,
-											 rszObjectTypeName,
-											 rszObjectName,
-											 true,
-											 bForce );
+	                     pManipulator,
+	                     rszObjectTypeName,
+	                     rszObjectName,
+	                     true,
+	                     bForce );
 }
-
 
 bool CExporterContainer::StartCheck( const std::string &rszObjectTypeName, bool bStartTools, bool bCheckReferences )
 {
-	return StartExport( bCheckReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
-											rszObjectTypeName,
-											false,
-											false,
-											bStartTools );
+	return StartExport(
+			bCheckReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName, rszObjectTypeName, false, false, bStartTools );
 }
-
 
 void CExporterContainer::FinishCheck( const std::string &rszObjectTypeName, bool bFinishTools, bool bCheckReferences )
 {
 	FinishExport( bCheckReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
-								rszObjectTypeName,
-								false,
-								false,
-								bFinishTools );
+	              rszObjectTypeName,
+	              false,
+	              false,
+	              bFinishTools );
 }
 
-
-EXPORT_RESULT CExporterContainer::CheckObject( IManipulator* pManipulator,
-																							 const std::string &rszObjectTypeName,
-																							 const std::string &rszObjectName,
-																							 bool bCheckReferences )
+EXPORT_RESULT CExporterContainer::CheckObject( IManipulator *pManipulator,
+                                               const std::string &rszObjectTypeName,
+                                               const std::string &rszObjectName,
+                                               bool bCheckReferences )
 {
 	return ExportObject( bCheckReferences ? DEFAULT_EXPORTER_LABEL_TXT : rszObjectTypeName,
-											 pManipulator,
-											 rszObjectTypeName,
-											 rszObjectName,
-											 false,
-											 false );
+	                     pManipulator,
+	                     rszObjectTypeName,
+	                     rszObjectName,
+	                     false,
+	                     false );
 }
-
 
 EXPORT_RESULT CExporterContainer::GetExportResult( const std::string &rszObjectRefName )
 {
 	if ( IExporter *pExporter = GetExporter( DEFAULT_EXPORTER_LABEL_TXT ) )
 	{
-		if ( CExporterBase *pExporterBase = checked_cast<CExporterBase*>( pExporter ) )
+		if ( CExporterBase *pExporterBase = checked_cast<CExporterBase *>( pExporter ) )
 		{
 			return pExporterBase->GetExportObjectResult( rszObjectRefName );
 		}
@@ -303,20 +293,20 @@ EXPORT_RESULT CExporterContainer::GetExportResult( const std::string &rszObjectR
 	return ER_UNKNOWN;
 }
 
-
-EXPORT_RESULT CExporterContainer::GetExportResult( const std::string &rszObjectTypeName, const std::string &rszObjectName )
+EXPORT_RESULT CExporterContainer::GetExportResult( const std::string &rszObjectTypeName,
+                                                   const std::string &rszObjectName )
 {
 	if ( IExporter *pExporter = GetExporter( DEFAULT_EXPORTER_LABEL_TXT ) )
 	{
-		if ( CExporterBase *pExporterBase = checked_cast<CExporterBase*>( pExporter ) )
+		if ( CExporterBase *pExporterBase = checked_cast<CExporterBase *>( pExporter ) )
 		{
 			std::string szObjectRefName;
-			CStringManager::GetRefValueFromTypeAndName( &szObjectRefName, rszObjectTypeName, rszObjectName, TYPE_SEPARATOR_CHAR );
+			CStringManager::GetRefValueFromTypeAndName(
+					&szObjectRefName, rszObjectTypeName, rszObjectName, TYPE_SEPARATOR_CHAR );
 			return pExporterBase->GetExportObjectResult( szObjectRefName );
 		}
 	}
 	return ER_UNKNOWN;
 }
-
 
 // basement storage

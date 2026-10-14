@@ -6,14 +6,15 @@
 
 namespace NDb
 {
-	struct SCampaign;
-	struct SChapter;
-	struct SMapInfo;
+struct SCampaign;
+struct SChapter;
+struct SMapInfo;
 }
 
 class CInterfaceSaveLoadMenu : public CInterfaceScreenBase
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceSaveLoadMenu );
+
 public:
 	class CReactions : public IProgrammedReactionsAndChecks
 	{
@@ -22,12 +23,20 @@ public:
 		ZDATA
 		CPtr<IWindow> pScreen;
 		CPtr<CInterfaceSaveLoadMenu> pInterface;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pScreen); f.Add(3,&pInterface); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pScreen );
+			f.Add( 3, &pInterface );
+			return 0;
+		}
+
 	public:
-		CReactions() { }
-		CReactions( IWindow *_pScreen, CInterfaceSaveLoadMenu *_pInterface ) :
-			pScreen( _pScreen ), pInterface( _pInterface ) { }
-		~CReactions()	{ }
+		CReactions() {}
+		CReactions( IWindow *_pScreen, CInterfaceSaveLoadMenu *_pInterface )
+				: pScreen( _pScreen ), pInterface( _pInterface )
+		{
+		}
+		~CReactions() {}
 
 		bool Execute( const std::string &szSender, const std::string &szReaction );
 		int Check( const std::string &szCheckName ) const;
@@ -66,16 +75,16 @@ private:
 		bool operator()( const NSaveLoad::SSavegameEntry &save1, const NSaveLoad::SSavegameEntry &save2 );
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CObj<CReactions> pReactions;
 
 	EConfirmAction eConfirmAction;
-	std::string				szPath;
-	NSaveLoad::CSaveList			saves;
+	std::string szPath;
+	NSaveLoad::CSaveList saves;
 
-	CObj<CBackgroundMutableTexture>	pScreenShotTexture;
+	CObj<CBackgroundMutableTexture> pScreenShotTexture;
 
-	int						nSelected;
+	int nSelected;
 	CPtr<IWindow> pMain;
 	CPtr<IWindow> pLoad;
 	CPtr<IWindow> pSave;
@@ -116,9 +125,55 @@ private:
 
 	NSaveLoad::SSaveInfo startSaveInfo;
 	bool bLoadMode;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pReactions); f.Add(3,&eConfirmAction); f.Add(4,&szPath); f.Add(5,&saves); f.Add(6,&pScreenShotTexture); f.Add(7,&nSelected); f.Add(8,&pMain); f.Add(9,&pLoad); f.Add(10,&pSave); f.Add(11,&pPicture); f.Add(12,&pEditLine); f.Add(13,&pListTemplate); f.Add(14,&pListItemTemplate); f.Add(15,&pSaveList); f.Add(16,&pHeaderSaveView); f.Add(17,&pHeaderLoadView); f.Add(18,&pDescPanel); f.Add(19,&pDescCampaignView); f.Add(20,&pDescChapterView); f.Add(21,&pDescMissionView); f.Add(22,&pDescMissionBriefingCont); f.Add(23,&pDescMissionBriefingView); f.Add(24,&pDescCustomPanel); f.Add(25,&pDescCustomMissionView); f.Add(26,&pDescCustomMissionBriefingCont); f.Add(27,&pDescCustomMissionBriefingView); f.Add(28,&pDescChapterPanel); f.Add(29,&pDescChapterCampaignView); f.Add(30,&pDescChapterChapterView); f.Add(31,&pDescChapterBriefingCont); f.Add(32,&pDescChapterBriefingView); f.Add(33,&bConfirmLoadQuestion); f.Add(34,&nLastID); f.Add(35,&pChapterTexture); f.Add(36,&pChapterTextureBorder); f.Add(37,&pDeleteBtn); f.Add(38,&pListPanel); f.Add(39,&ePrevInterface); f.Add(40,&startSaveInfo); f.Add(41,&bLoadMode); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pReactions );
+		f.Add( 3, &eConfirmAction );
+		f.Add( 4, &szPath );
+		f.Add( 5, &saves );
+		f.Add( 6, &pScreenShotTexture );
+		f.Add( 7, &nSelected );
+		f.Add( 8, &pMain );
+		f.Add( 9, &pLoad );
+		f.Add( 10, &pSave );
+		f.Add( 11, &pPicture );
+		f.Add( 12, &pEditLine );
+		f.Add( 13, &pListTemplate );
+		f.Add( 14, &pListItemTemplate );
+		f.Add( 15, &pSaveList );
+		f.Add( 16, &pHeaderSaveView );
+		f.Add( 17, &pHeaderLoadView );
+		f.Add( 18, &pDescPanel );
+		f.Add( 19, &pDescCampaignView );
+		f.Add( 20, &pDescChapterView );
+		f.Add( 21, &pDescMissionView );
+		f.Add( 22, &pDescMissionBriefingCont );
+		f.Add( 23, &pDescMissionBriefingView );
+		f.Add( 24, &pDescCustomPanel );
+		f.Add( 25, &pDescCustomMissionView );
+		f.Add( 26, &pDescCustomMissionBriefingCont );
+		f.Add( 27, &pDescCustomMissionBriefingView );
+		f.Add( 28, &pDescChapterPanel );
+		f.Add( 29, &pDescChapterCampaignView );
+		f.Add( 30, &pDescChapterChapterView );
+		f.Add( 31, &pDescChapterBriefingCont );
+		f.Add( 32, &pDescChapterBriefingView );
+		f.Add( 33, &bConfirmLoadQuestion );
+		f.Add( 34, &nLastID );
+		f.Add( 35, &pChapterTexture );
+		f.Add( 36, &pChapterTextureBorder );
+		f.Add( 37, &pDeleteBtn );
+		f.Add( 38, &pListPanel );
+		f.Add( 39, &ePrevInterface );
+		f.Add( 40, &startSaveInfo );
+		f.Add( 41, &bLoadMode );
+		return 0;
+	}
+
 private:
 	void Load();
+
 protected:
 	void MsgBack( const SGameMessage &msg );
 	void MsgDelete( const SGameMessage &msg );
@@ -142,6 +197,7 @@ protected:
 	void MakeInterior();
 
 	~CInterfaceSaveLoadMenu();
+
 public:
 	CInterfaceSaveLoadMenu();
 
@@ -161,12 +217,18 @@ class CICInterfaceSaveLoad : public CInterfaceCommandBase<CInterfaceSaveLoadMenu
 {
 	OBJECT_BASIC_METHODS( CICInterfaceSaveLoad );
 
-	ZDATA_(CInterfaceCommandBase<CInterfaceSaveLoadMenu>)
+	ZDATA_( CInterfaceCommandBase<CInterfaceSaveLoadMenu> )
 	std::string szMode;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceSaveLoadMenu>*)this); f.Add(2,&szMode); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceCommandBase<CInterfaceSaveLoadMenu> *)this );
+		f.Add( 2, &szMode );
+		return 0;
+	}
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

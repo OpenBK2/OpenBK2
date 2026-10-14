@@ -6,14 +6,12 @@
 
 // CInterfaceMissionMovieBorder
 
-CInterfaceMissionMovieBorder::CInterfaceMissionMovieBorder() :
-	CInterfaceScreenBase( "MissionMovieBorder", "no_section" )
+CInterfaceMissionMovieBorder::CInterfaceMissionMovieBorder()
+		: CInterfaceScreenBase( "MissionMovieBorder", "no_section" )
 {
 }
 
-CInterfaceMissionMovieBorder::~CInterfaceMissionMovieBorder()
-{
-}
+CInterfaceMissionMovieBorder::~CInterfaceMissionMovieBorder() {}
 
 bool CInterfaceMissionMovieBorder::Init()
 {
@@ -33,13 +31,9 @@ void CInterfaceMissionMovieBorder::RegisterObservers()
 	AddObserver( "quickload", &CInterfaceMissionMovieBorder::MsgQuickLoad );
 }
 
-void CInterfaceMissionMovieBorder::MsgQuickSave( const SGameMessage &msg )
-{
-}
+void CInterfaceMissionMovieBorder::MsgQuickSave( const SGameMessage &msg ) {}
 
-void CInterfaceMissionMovieBorder::MsgQuickLoad( const SGameMessage &msg )
-{
-}
+void CInterfaceMissionMovieBorder::MsgQuickLoad( const SGameMessage &msg ) {}
 
 void CInterfaceMissionMovieBorder::OnGetFocus( bool bFocus )
 {
@@ -81,22 +75,16 @@ void CInterfaceMissionMovieBorder::AfterLoad()
 
 // CICMissionMovieBorder
 
-CICMissionMovieBorder::CICMissionMovieBorder()
-{
-}
+CICMissionMovieBorder::CICMissionMovieBorder() {}
 
-void CICMissionMovieBorder::PreCreate()
-{
-}
+void CICMissionMovieBorder::PreCreate() {}
 
 void CICMissionMovieBorder::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMissionMovieBorder::Configure( const char *pszConfig )
-{
-}
+void CICMissionMovieBorder::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17149C80, CInterfaceMissionMovieBorder );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BORDER, CICMissionMovieBorder );

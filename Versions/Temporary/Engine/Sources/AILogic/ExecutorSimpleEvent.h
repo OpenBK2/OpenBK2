@@ -4,7 +4,7 @@
 class CExecutorSimpleEvent : public CExecutorEvent
 {
 public:
-	CExecutorSimpleEvent( const SExecutorEventParam &param ) : CExecutorEvent( param ) {  }
+	CExecutorSimpleEvent( const SExecutorEventParam &param ) : CExecutorEvent( param ) {}
 
-	CExecutorSimpleEvent() { }
+	CExecutorSimpleEvent() {}
 };

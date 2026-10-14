@@ -15,14 +15,9 @@ struct CFocusMemory::SImpl
 	wxWindowRef previous;
 };
 
-
-CFocusMemory::CFocusMemory() : pImpl( new SImpl )
-{
-}
-
+CFocusMemory::CFocusMemory() : pImpl( new SImpl ) {}
 
 CFocusMemory::~CFocusMemory() = default;
-
 
 void CFocusMemory::Remember()
 {
@@ -30,7 +25,6 @@ void CFocusMemory::Remember()
 	// answered: null when the focus is in another one.
 	pImpl->previous = wxWindow::FindFocus();
 }
-
 
 void CFocusMemory::Restore()
 {

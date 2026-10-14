@@ -9,9 +9,7 @@
 #include "Terrain.h"
 #include "AIMap.h"
 
-
-#define MARKERS_COLORS_COUNT	3
-
+#define MARKERS_COLORS_COUNT 3
 
 class COMMON_RTS_AI_EXPORT CPassMarkersDraw : public CObjectBase
 {
@@ -45,6 +43,8 @@ public:
 	void UpdatePassMarkers();
 	void ToggleDrawPassMarkers();
 	void ToggleDrawPassMarkers1();
-	void SetPassMarkers( const NDebugInfo::EColor color, const EAIClasses aiClass, const EFreeTileInfo freeClass, const int nBoundTileRadius );
-
+	void SetPassMarkers( const NDebugInfo::EColor color,
+	                     const EAIClasses aiClass,
+	                     const EFreeTileInfo freeClass,
+	                     const int nBoundTileRadius );
 };

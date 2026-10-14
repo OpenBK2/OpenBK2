@@ -48,7 +48,7 @@ enum EStencilMode
 	//STENCIL_TESTWRITE,
 	STENCIL_TEST,
 	STENCIL_TESTNE_WRITE,
-	STENCIL_TEST_CLEAR, // will write anyway
+	STENCIL_TEST_CLEAR,   // will write anyway
 	STENCIL_TESTNE_CLEAR, // will write anyway
 	STENCIL_WRITE,
 	//STENCIL_TEST,
@@ -76,13 +76,13 @@ enum ECullMode
 };
 enum EColorWriteMask
 {
-	COLORWRITE_NONE  = 0,
-	COLORWRITE_RED   = 1,
+	COLORWRITE_NONE = 0,
+	COLORWRITE_RED = 1,
 	COLORWRITE_GREEN = 2,
-	COLORWRITE_BLUE  = 4,
+	COLORWRITE_BLUE = 4,
 	COLORWRITE_ALPHA = 8,
 	COLORWRITE_COLOR = 7,
-	COLORWRITE_ALL   = 15
+	COLORWRITE_ALL = 15
 };
 enum EWireframe
 {
@@ -119,7 +119,10 @@ struct SStencilMode
 	int nVal, nMask;
 
 	SStencilMode() {}
-	SStencilMode( EStencilMode _mode, int _nVal = 0, int _nMask = 0xffffffff ): mode(_mode), nVal(_nVal), nMask(_nMask) {}
+	SStencilMode( EStencilMode _mode, int _nVal = 0, int _nMask = 0xffffffff )
+			: mode( _mode ), nVal( _nVal ), nMask( _nMask )
+	{
+	}
 	bool operator==( const SStencilMode &m ) const { return mode == m.mode && nVal == m.nVal && nMask == m.nMask; }
 };
 struct SFogParams
@@ -128,9 +131,15 @@ struct SFogParams
 	float fMinDist, fMaxDist;
 	float fMinZDis, fMaxZDis;
 
-	SFogParams() : vColor(0,0,0), fMinDist(0), fMaxDist(1e20f), fMinZDis( -10000 ), fMaxZDis( -100001 ) {}
-	SFogParams( const CVec3 &_vColor, float _fMinDist, float _fMaxDist, float _fMinZDis, float _fMaxZDis ) : vColor(_vColor), fMinDist(_fMinDist), fMaxDist(_fMaxDist), fMinZDis(_fMinZDis),  fMaxZDis(_fMaxZDis) {}
-	bool operator==( const SFogParams &m ) const { return vColor == m.vColor && fMinDist == m.fMinDist && fMaxDist == m.fMaxDist; }
+	SFogParams() : vColor( 0, 0, 0 ), fMinDist( 0 ), fMaxDist( 1e20f ), fMinZDis( -10000 ), fMaxZDis( -100001 ) {}
+	SFogParams( const CVec3 &_vColor, float _fMinDist, float _fMaxDist, float _fMinZDis, float _fMaxZDis )
+			: vColor( _vColor ), fMinDist( _fMinDist ), fMaxDist( _fMaxDist ), fMinZDis( _fMinZDis ), fMaxZDis( _fMaxZDis )
+	{
+	}
+	bool operator==( const SFogParams &m ) const
+	{
+		return vColor == m.vColor && fMinDist == m.fMinDist && fMaxDist == m.fMaxDist;
+	}
 };
 
 enum ETnLVS
@@ -184,25 +193,26 @@ class _3DMOTOR_EXPORT CRenderContext
 	int nVertexShader;
 	void *pOutstandingStream; // 0 if no geometry is in fly
 
-
-
-
 	void ApplyRenderTarget() const;
 	void StartStream( CGeometry *pGeom );
 	void CheckStream( CGeometry *pGeom );
+
 public:
 	CRenderContext();
 	~CRenderContext();
 	void SetTransform( const SFBTransform &_transform );
 	void SetAlphaCombine( EAlphaCombineMode mode );
 	void SetStencil( const SStencilMode &m );
-	void SetStencil( EStencilMode m, int nVal = 0, int nMask = 0xffffffff ) { SetStencil( SStencilMode( m, nVal, nMask ) ); }
+	void SetStencil( EStencilMode m, int nVal = 0, int nMask = 0xffffffff )
+	{
+		SetStencil( SStencilMode( m, nVal, nMask ) );
+	}
 	void SetDepth( EDepthMode mode );
 	void SetCulling( ECullMode mode );
 	void SetColorWrite( EColorWriteMask mode );
 	void SetFogParams( const SFogParams &mode );
 	void SetFog( EFogMode mode );
-	const SFogParams & GetFogParams( ) const { return fogParams;}
+	const SFogParams &GetFogParams() const { return fogParams; }
 	const EFogMode GetFogMode() const { return fog; }
 
 	//
@@ -221,7 +231,6 @@ public:
 	void SetPixelShader( const SPShader &pShader );
 	void SetVertexShader( const SVShader &pShader );
 
-
 	void SetVertexShader( ETnLVS shader );
 	void SetVSConst( int nReg, const CVec4 *pData, int nSize ) const;
 	void SetVSConst( int nReg, const CVec3 &a ) const;
@@ -235,14 +244,26 @@ public:
 	void SetTexture( int nStage, CTexture *pTex, EFilterMode filter );
 	void SetTexture( int nStage, CCubeTexture *pTex );
 	void Use() const;
-	template<class T>
-		void SetEffect( T *p ) { Use(); p->Use( this ); }
+	template <class T>
+	void SetEffect( T *p )
+	{
+		Use();
+		p->Use( this );
+	}
 	//
-	const SFBTransform& GetTransform() const { return transform; }
+	const SFBTransform &GetTransform() const { return transform; }
 	//
 	void DrawPrimitive( CGeometry *pGeom, CTriList *pTris, int nStartVertex, int nVertices );
-	void DrawPrimitive( CGeometry *pGeom, CTriList *pTris ) { AddPrimitive( pGeom, pTris ); Flush(); }
-	void DrawPrimitive( CGeometry *pGeom, const STriangleList &tris ) { AddPrimitive( pGeom, tris ); Flush(); }
+	void DrawPrimitive( CGeometry *pGeom, CTriList *pTris )
+	{
+		AddPrimitive( pGeom, pTris );
+		Flush();
+	}
+	void DrawPrimitive( CGeometry *pGeom, const STriangleList &tris )
+	{
+		AddPrimitive( pGeom, tris );
+		Flush();
+	}
 	//void DrawPrimitive( CGeometry *pGeom, const vector<STriangle> &tris ) { AddPrimitive( pGeom, tris ); Flush(); }
 	void AddPrimitive( CGeometry *pGeom, CTriList *pTris );
 	//void AddPrimitive( CGeometry *pGeom, const vector<STriangle> &tris );
@@ -252,11 +273,11 @@ public:
 	void AddLineStrip( CGeometry *pGeom, const unsigned short *pIndices, int nLines );
 };
 
-CTexture* GetRegisterTexture( int nRegister );
-CTexture* GetDepthRegisterTexture();
+CTexture *GetRegisterTexture( int nRegister );
+CTexture *GetDepthRegisterTexture();
 bool CopyScreenToRegister( int nRegister );
 void CopyScreenToTexture( CTexture *pTex );
-IQuery* CreateOcclusionQuery();
+IQuery *CreateOcclusionQuery();
 void SetWireframe( EWireframe wire );
 void GetRegisterSize( CTRect<float> *pRes );
 bool IsNVidiaNP2Bug();

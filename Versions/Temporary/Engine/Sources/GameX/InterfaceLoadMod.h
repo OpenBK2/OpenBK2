@@ -15,10 +15,19 @@ class CInterfaceLoadMod : public CInterfaceScreenBase, public IProgrammedReactio
 		std::wstring wszName;
 		std::wstring wszDesc;
 		NFile::CFilePath szFullFolderPath;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pNameView); f.Add(4,&pCheckedWnd); f.Add(5,&wszName); f.Add(6,&wszDesc); f.Add(7,&szFullFolderPath); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &pNameView );
+			f.Add( 4, &pCheckedWnd );
+			f.Add( 5, &wszName );
+			f.Add( 6, &wszDesc );
+			f.Add( 7, &szFullFolderPath );
+			return 0;
+		}
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pTopPanel;
 	CPtr<IWindow> pBottomPanel;
@@ -37,11 +46,33 @@ class CInterfaceLoadMod : public CInterfaceScreenBase, public IProgrammedReactio
 	std::wstring wszModDefaultDesc;
 	CPtr<IWindow> pPrevCheckedWnd;
 	int nInitialMod;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pTopPanel); f.Add(4,&pBottomPanel); f.Add(5,&pModsListPanel); f.Add(6,&pModDescPanel); f.Add(7,&pModsListCont); f.Add(8,&pModsListItemTemplate); f.Add(9,&pModDescCont); f.Add(10,&pModDescView); f.Add(11,&pModNameView); f.Add(12,&pDefaultBtn); f.Add(13,&pAcceptBtn); f.Add(14,&mods); f.Add(15,&wszModDefaultName); f.Add(16,&wszModDefaultDesc); f.Add(17,&pPrevCheckedWnd); f.Add(18,&nInitialMod); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMainWnd );
+		f.Add( 3, &pTopPanel );
+		f.Add( 4, &pBottomPanel );
+		f.Add( 5, &pModsListPanel );
+		f.Add( 6, &pModDescPanel );
+		f.Add( 7, &pModsListCont );
+		f.Add( 8, &pModsListItemTemplate );
+		f.Add( 9, &pModDescCont );
+		f.Add( 10, &pModDescView );
+		f.Add( 11, &pModNameView );
+		f.Add( 12, &pDefaultBtn );
+		f.Add( 13, &pAcceptBtn );
+		f.Add( 14, &mods );
+		f.Add( 15, &wszModDefaultName );
+		f.Add( 16, &wszModDefaultDesc );
+		f.Add( 17, &pPrevCheckedWnd );
+		f.Add( 18, &nInitialMod );
+		return 0;
+	}
+
 private:
 	void MakeInterior();
 	void AddMod( const std::wstring &wszName, const std::wstring &wszDesc, const NFile::CFilePath &szFullFolderPath );
-	const SMod* FindSelected() const;
+	const SMod *FindSelected() const;
 
 	bool OnBack();
 	bool OnDefault();
@@ -52,6 +83,7 @@ private:
 	void SelectMod( const SMod *pMod );
 	void UpdateSelection();
 	bool IsChanged() const;
+
 public:
 	CInterfaceLoadMod();
 
@@ -72,6 +104,7 @@ class CICLoadMod : public CInterfaceCommandBase<CInterfaceLoadMod>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

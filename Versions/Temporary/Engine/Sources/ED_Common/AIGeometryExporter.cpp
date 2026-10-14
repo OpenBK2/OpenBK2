@@ -13,18 +13,17 @@
 
 REGISTER_EXPORTER_IN_DLL( AIGeometry, CAIGeometryExporter )
 
-
 const char *CAIGeometryExporter::GetAddPath() const
 {
 	return "bin\\aigeometries\\";
 }
 
 bool CAIGeometryExporter::FormScript( std::string *pScriptText,
-																			const std::string &szTypeName,
-																			const std::string &szObjName,
-																			const std::string &szDstPath,
-																			const std::string &szSrcPath,
-																 	    IManipulator *pManipulator )
+                                      const std::string &szTypeName,
+                                      const std::string &szObjName,
+                                      const std::string &szDstPath,
+                                      const std::string &szSrcPath,
+                                      IManipulator *pManipulator )
 {
 	std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() )
@@ -36,9 +35,9 @@ bool CAIGeometryExporter::FormScript( std::string *pScriptText,
 	if ( szSettingsFileName.empty() )
 	{
 		ILogger *pLogger = NLog::GetLogger();
-		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", szTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "Granny exporter settings file is not specified\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "Check ConstUserData.xml in \"MayaExport\" section\n" ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tExport type: {}\n", szTypeName.c_str() ) );
 		return false;
 	}
 	//
@@ -53,18 +52,21 @@ bool CAIGeometryExporter::FormScript( std::string *pScriptText,
 		szRootJoint.clear();
 
 	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
-		szObjName.c_str(), szDstPath.c_str(), szSrcPath.c_str(),
-		szRootMesh.c_str(), szRootJoint.c_str(),
-		szSettingsFileName.c_str() );
+	                             szObjName.c_str(),
+	                             szDstPath.c_str(),
+	                             szSrcPath.c_str(),
+	                             szRootMesh.c_str(),
+	                             szRootJoint.c_str(),
+	                             szSettingsFileName.c_str() );
 	*pScriptText += ";\n";
 	//
 	return true;
 }
 
 bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObjName,
-																									  const std::string &szSrcScenePath,
-																										const std::string &szDstFileName,
-																										IManipulator *pManipulator )
+                                                    const std::string &szSrcScenePath,
+                                                    const std::string &szDstFileName,
+                                                    IManipulator *pManipulator )
 {
 	try
 	{
@@ -85,17 +87,17 @@ bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObj
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Error while retrieving AABB from AI geometry\n" );
-		pLogger->Log( LT_ERROR, fmt::format("\tObject name: {}\n", szGeomObjName.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tFile name: {}\n", szDstFileName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tObject name: {}\n", szGeomObjName.c_str() ) );
+		pLogger->Log( LT_ERROR, fmt::format( "\tFile name: {}\n", szDstFileName.c_str() ) );
 	}
 	return false;
 }
 
 EXPORT_RESULT CAIGeometryExporter::CustomCheck( const std::string &szTypeName,
-																								const std::string &szObjName,
-																								const std::string &szSrcScenePath,
-																								const std::string &szDestinationPath,
-																								IManipulator *pManipulator )
+                                                const std::string &szObjName,
+                                                const std::string &szSrcScenePath,
+                                                const std::string &szDestinationPath,
+                                                IManipulator *pManipulator )
 {
 	CGrannyFileInfoGuard fileInfo( szDestinationPath );
 	for ( int nMeshIndex = 0; nMeshIndex < fileInfo->MeshCount; ++nMeshIndex )
@@ -112,8 +114,8 @@ EXPORT_RESULT CAIGeometryExporter::CustomCheck( const std::string &szTypeName,
 			ILogger *pLogger = NLog::GetLogger();
 			std::string szSrcScenePath;
 			pLogger->Log( LT_ERROR, "AI Geometry is not closed\n" );
-			pLogger->Log( LT_ERROR, fmt::format("\tObject name: {}\n", szObjName.c_str()) );
-			pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSrcScenePath.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format( "\tObject name: {}\n", szObjName.c_str() ) );
+			pLogger->Log( LT_ERROR, fmt::format( "\tSource file: {}\n", szSrcScenePath.c_str() ) );
 			return ER_FAIL;
 		}
 	}

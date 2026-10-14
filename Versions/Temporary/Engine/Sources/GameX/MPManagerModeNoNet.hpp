@@ -16,6 +16,7 @@ class CMPManagerModeNoNet : public CMPManagerMode
 	virtual void OnSetMySlotNumber() {}
 	virtual void OnGameSpecificInfo() {}
 	virtual void KickPlayerFromSlot( const int nSlot ) {}
+
 public:
 	virtual const ENetMode GetMode() const { return ENM_NONE; }
 	virtual void SetLanTester( class CLANTester *_pLANTester ) { NI_ASSERT( 0, "Wrong call" ) }

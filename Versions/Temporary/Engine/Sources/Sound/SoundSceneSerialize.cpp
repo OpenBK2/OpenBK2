@@ -4,7 +4,7 @@
 #include "SubstSound.h"
 #include "SoundCell.h"
 
-int CSoundScene2D::operator&( IBinSaver &saver  )
+int CSoundScene2D::operator&( IBinSaver &saver )
 {
 	if ( saver.IsReading() )
 	{
@@ -19,7 +19,7 @@ int CSoundScene2D::operator&( IBinSaver &saver  )
 	saver.Add( 10, &soundIDs );
 	// а теперь самое сложное - звуки
 	saver.Add( 12, &interfaceSounds );
-	saver.Add( 13, &soundCellsInBounds  );
+	saver.Add( 13, &soundCellsInBounds );
 	// saver.Add( 14, &streamingSounds );
 	saver.Add( 15, &terrainSounds );
 
@@ -42,14 +42,14 @@ int CSoundScene2D::operator&( IBinSaver &saver  )
 	return 0;
 }
 
-int CMapSounds::CMapSoundCell::SMapSounds::operator&( IBinSaver &saver  )
+int CMapSounds::CMapSoundCell::SMapSounds::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &instanceIDs ); // это не сериализовать
 	saver.Add( 3, &nCount );
 	return 0;
 }
 
-int CMapSounds::operator&( IBinSaver &saver  )
+int CMapSounds::operator&( IBinSaver &saver )
 {
 	saver.Add( 4, &soundIDs );
 	saver.Add( 16, &mapCells );
@@ -69,20 +69,18 @@ int CMapSounds::CMapSoundCell::operator&( IBinSaver &saver )
 	saver.Add( 4, &timeNextRun );
 	saver.Add( 5, &cellLoopedSounds );
 	return 0;
-
 }
 
-int CSubstSound::operator&( IBinSaver &saver  )
+int CSubstSound::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &pSFX );
 	saver.Add( 3, &pSample );
 	return 0;
 }
 
-
-int CSound::operator&( IBinSaver &saver  )
+int CSound::operator&( IBinSaver &saver )
 {
-	saver.Add( 2, &wID );														//
+	saver.Add( 2, &wID ); //
 	saver.Add( 3, &timeBegin );
 	saver.Add( 4, &timeToPlay );
 	saver.Add( 5, &timeBeginDim );
@@ -105,7 +103,7 @@ int CSound::operator&( IBinSaver &saver  )
 	return 0;
 }
 
-int CSoundCell::operator&( IBinSaver &saver  )
+int CSoundCell::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &nRadius );
 	saver.Add( 4, &sounds );
@@ -113,18 +111,18 @@ int CSoundCell::operator&( IBinSaver &saver  )
 	return 0;
 }
 
-int CTerrainSounds::operator&( IBinSaver &saver  )
+int CTerrainSounds::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &terrainSounds );
 	saver.Add( 2, &vListener );
 	saver.Add( 3, &pTerrain );
-	saver.Add( 4, &lastUpdateTime	);
+	saver.Add( 4, &lastUpdateTime );
 	saver.Add( 6, &bMuteAll );
 	saver.Add( 7, &pSFX );
 	return 0;
 }
 
-int CTerrainSounds::CTerrainSound::operator&( IBinSaver &saver  )
+int CTerrainSounds::CTerrainSound::operator&( IBinSaver &saver )
 {
 
 	saver.Add( 1, &timeRestart );
@@ -140,7 +138,7 @@ int CTerrainSounds::CTerrainSound::operator&( IBinSaver &saver  )
 	return 0;
 }
 
-int CTerrainSounds::CTerrainSound::SSoundInfo::operator&( IBinSaver &saver  )
+int CTerrainSounds::CTerrainSound::SSoundInfo::operator&( IBinSaver &saver )
 {
 
 	saver.Add( 1, &pSound );
@@ -149,7 +147,7 @@ int CTerrainSounds::CTerrainSound::SSoundInfo::operator&( IBinSaver &saver  )
 	return 0;
 }
 
-int CCellsConglomerateContainer::operator&( IBinSaver &saver  )
+int CCellsConglomerateContainer::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &conglomeratesHeight );
 	saver.Add( 2, &nMaxRank );

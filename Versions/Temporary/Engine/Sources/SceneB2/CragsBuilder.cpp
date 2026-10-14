@@ -29,9 +29,9 @@ static void MakeLeftSided( std::vector<STerrainInfo::SVSOPoint> *pDstArr, const 
 void CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance )
 {
 	int nSeed = -1;
-	if ( AddCrag(pInstance, GetVSOSeed(pInstance)) )
+	if ( AddCrag( pInstance, GetVSOSeed( pInstance ) ) )
 	{
-		CragManipulator( FindCragInfo(pInstance->nVSOID), false );
+		CragManipulator( FindCragInfo( pInstance->nVSOID ), false );
 		if ( pAIObserver )
 			PutCragToAI( pInstance );
 	}
@@ -42,7 +42,8 @@ bool CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance, const int nRandSeed
 	NI_VERIFY( pInstance, "CTerraGen::AddCrag - Invalid crag instance", return false )
 
 	// if such crag was already built then skip building
-	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end();
+	      ++it )
 	{
 		if ( it->nID == pInstance->nVSOID )
 			return false;
@@ -66,20 +67,25 @@ bool CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance, const int nRandSeed
 	{
 		newCragInfo.sampPoints.resize( 0 );
 
-		for ( std::vector<NDb::SVSOPoint>::const_iterator itSampPoint = pInstance->points.begin(); itSampPoint != pInstance->points.end(); ++itSampPoint )
+		for ( std::vector<NDb::SVSOPoint>::const_iterator itSampPoint = pInstance->points.begin();
+		      itSampPoint != pInstance->points.end();
+		      ++itSampPoint )
 		{
-			newCragInfo.sampPoints.push_back( STerrainInfo::SVSOPoint(*itSampPoint) );
+			newCragInfo.sampPoints.push_back( STerrainInfo::SVSOPoint( *itSampPoint ) );
 		}
 	}
 
 	// add some random to crag's border
-	for ( std::vector<STerrainInfo::SVSOPoint>::iterator it = newCragInfo.sampPoints.begin(); it != newCragInfo.sampPoints.end(); ++it )
+	for ( std::vector<STerrainInfo::SVSOPoint>::iterator it = newCragInfo.sampPoints.begin();
+	      it != newCragInfo.sampPoints.end();
+	      ++it )
 	{
-		const float fDist = NWin32Random::Random( -newCragInfo.pDesc->fBorderRand * 0.5f, newCragInfo.pDesc->fBorderRand * 0.5f );
-		AI2Vis( &(it->vPos.x) );
-		AI2Vis( &(it->vPos.y) );
-		AI2Vis( &(it->vPos.z) );
-		AI2Vis( &(it->fWidth) );
+		const float fDist =
+				NWin32Random::Random( -newCragInfo.pDesc->fBorderRand * 0.5f, newCragInfo.pDesc->fBorderRand * 0.5f );
+		AI2Vis( &( it->vPos.x ) );
+		AI2Vis( &( it->vPos.y ) );
+		AI2Vis( &( it->vPos.z ) );
+		AI2Vis( &( it->fWidth ) );
 		it->vPos.x += it->vNorm.x * fDist;
 		it->vPos.y += it->vNorm.y * fDist;
 	}
@@ -92,9 +98,8 @@ bool CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance, const int nRandSeed
 	std::vector<STerrainInfo::SVSOPoint>::const_iterator it = newCragInfo.sampPoints.begin();
 	while ( it != newCragInfo.sampPoints.end() )
 	{
-		const CVec2 vPos( it->vPos.x - it->vNorm.x * DEF_CRAG_HOLE_WIDTH,
-											it->vPos.y - it->vNorm.y * DEF_CRAG_HOLE_WIDTH );
-		newCragInfo.ridge.push_back( CVec3fEx(vPos.x, vPos.y, it->vPos.z, 0) );
+		const CVec2 vPos( it->vPos.x - it->vNorm.x * DEF_CRAG_HOLE_WIDTH, it->vPos.y - it->vNorm.y * DEF_CRAG_HOLE_WIDTH );
+		newCragInfo.ridge.push_back( CVec3fEx( vPos.x, vPos.y, it->vPos.z, 0 ) );
 		newCragInfo.vBBMin.Minimize( vPos );
 		newCragInfo.vBBMax.Maximize( vPos );
 		++it;
@@ -103,35 +108,42 @@ bool CTerraGen::AddCrag( const NDb::SVSOInstance *pInstance, const int nRandSeed
 	do
 	{
 		--it;
-		const CVec2 vPos( it->vPos.x - it->vNorm.x * (DEF_CRAG_HOLE_WIDTH + it->fWidth),
-											it->vPos.y - it->vNorm.y * (DEF_CRAG_HOLE_WIDTH + it->fWidth) );
-		newCragInfo.ridge.push_back( CVec3fEx(vPos.x, vPos.y, it->vPos.z, 0) );
+		const CVec2 vPos( it->vPos.x - it->vNorm.x * ( DEF_CRAG_HOLE_WIDTH + it->fWidth ),
+		                  it->vPos.y - it->vNorm.y * ( DEF_CRAG_HOLE_WIDTH + it->fWidth ) );
+		newCragInfo.ridge.push_back( CVec3fEx( vPos.x, vPos.y, it->vPos.z, 0 ) );
 		newCragInfo.vBBMin.Minimize( vPos );
 		newCragInfo.vBBMax.Maximize( vPos );
-	} while( it != newCragInfo.sampPoints.begin() );
+	} while ( it != newCragInfo.sampPoints.begin() );
 
 	newCragInfo.vBBMin.x -= DEF_CRAG_HOLE_WIDTH;
 	newCragInfo.vBBMin.y -= DEF_CRAG_HOLE_WIDTH;
 	newCragInfo.vBBMax.x += DEF_CRAG_HOLE_WIDTH;
 	newCragInfo.vBBMax.y += DEF_CRAG_HOLE_WIDTH;
 
-	newCragInfo.vRidgeMin.Set( Clamp(int(newCragInfo.vBBMin.x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1),
-														 Clamp(int(newCragInfo.vBBMin.y * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1) );
-	newCragInfo.vRidgeMax.Set( Clamp(int(newCragInfo.vBBMax.x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1),
-														 Clamp(int(newCragInfo.vBBMax.y * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1) );
+	newCragInfo.vRidgeMin.Set(
+			Clamp( int( newCragInfo.vBBMin.x * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 ),
+			Clamp( int( newCragInfo.vBBMin.y * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 ) );
+	newCragInfo.vRidgeMax.Set(
+			Clamp( int( newCragInfo.vBBMax.x * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 ),
+			Clamp( int( newCragInfo.vBBMax.y * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 ) );
 
 	terrainInfo.crags.push_back( newCragInfo );
 
 	return true;
 }
 
-void CTerraGen::CragsPushPointLR( std::vector<CVec3fEx> *pLeft, std::vector<CVec3fEx> *pRight, const STerrainInfo::SVSOPoint &point, CVec3 *pVMin, CVec3 *pVMax, const int nID )
+void CTerraGen::CragsPushPointLR( std::vector<CVec3fEx> *pLeft,
+                                  std::vector<CVec3fEx> *pRight,
+                                  const STerrainInfo::SVSOPoint &point,
+                                  CVec3 *pVMin,
+                                  CVec3 *pVMax,
+                                  const int nID )
 {
 	const CVec3 v1 = point.vPos - point.vNorm * DEF_CRAG_HOLE_WIDTH;
 	const CVec3 v2 = point.vPos + point.vNorm * DEF_CRAG_HOLE_WIDTH;
 
-	pLeft->push_back( CVec3fEx(v1.x, v1.y, GetTerraHeight(v1.x, v1.y), 0) );
-	pRight->push_back( CVec3fEx(v2.x, v2.y, GetTerraHeight(v2.x, v2.y), 1) );
+	pLeft->push_back( CVec3fEx( v1.x, v1.y, GetTerraHeight( v1.x, v1.y ), 0 ) );
+	pRight->push_back( CVec3fEx( v2.x, v2.y, GetTerraHeight( v2.x, v2.y ), 1 ) );
 
 	pVMin->Minimize( v1 );
 	pVMin->Minimize( v2 );
@@ -141,22 +153,27 @@ void CTerraGen::CragsPushPointLR( std::vector<CVec3fEx> *pLeft, std::vector<CVec
 
 #define DEF_EXACT_EPS 0.001f
 
-void CTerraGen::CragsPushExactPoint( std::vector<STerrainInfo::SVSOPoint> *pArray, const STerrainInfo::SVSOPoint &p1, const STerrainInfo::SVSOPoint &p2,
-																const float t1, const float t2, const int nExcludeID, const bool bStart )
+void CTerraGen::CragsPushExactPoint( std::vector<STerrainInfo::SVSOPoint> *pArray,
+                                     const STerrainInfo::SVSOPoint &p1,
+                                     const STerrainInfo::SVSOPoint &p2,
+                                     const float t1,
+                                     const float t2,
+                                     const int nExcludeID,
+                                     const bool bStart )
 {
 	const float t = ( t1 + t2 ) * 0.5f;
-	const CVec3 vPos = p1.vPos + (p2.vPos - p1.vPos) * t;
+	const CVec3 vPos = p1.vPos + ( p2.vPos - p1.vPos ) * t;
 
 #ifdef VERSION_DEV_M1
-	const CVec3 vPosUp = vPos - p1.vPos + (p2.vPos - p1.vPos) * t * 3.0f;
-	const float fMaxHeight1 = GetMaxCragHeight( CVec2(vPos.x, vPos.y), nExcludeID );
-	const float fMaxHeight2 = 0;// GetTerraHeight( vPos.x, vPos.y );
+	const CVec3 vPosUp = vPos - p1.vPos + ( p2.vPos - p1.vPos ) * t * 3.0f;
+	const float fMaxHeight1 = GetMaxCragHeight( CVec2( vPos.x, vPos.y ), nExcludeID );
+	const float fMaxHeight2 = 0; // GetTerraHeight( vPos.x, vPos.y );
 	const float fMaxHeight = (std::max)( fMaxHeight1, fMaxHeight2 );
 #else // old code
-	const float fMaxHeight = GetMaxCragHeight( CVec2(vPos.x, vPos.y), nExcludeID );
+	const float fMaxHeight = GetMaxCragHeight( CVec2( vPos.x, vPos.y ), nExcludeID );
 #endif
 
-	if ( ((t2 - t1) < DEF_EXACT_EPS) || (fabs(vPos.z - fMaxHeight) < DEF_EXACT_EPS) )
+	if ( ( ( t2 - t1 ) < DEF_EXACT_EPS ) || ( fabs( vPos.z - fMaxHeight ) < DEF_EXACT_EPS ) )
 	{
 		NDb::SVSOPoint p;
 		p.vPos = vPos;
@@ -208,9 +225,11 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 	std::vector<STerrainInfo::SVSOPoint>::const_iterator endVSOPoint = pCrag->sampPoints.end();
 	--endVSOPoint;
 	int nHoleIndex = 0;
-	for ( std::vector<STerrainInfo::SVSOPoint>::const_iterator itVSOPoint = pCrag->sampPoints.begin(); itVSOPoint != pCrag->sampPoints.end(); ++itVSOPoint, ++nHoleIndex )
+	for ( std::vector<STerrainInfo::SVSOPoint>::const_iterator itVSOPoint = pCrag->sampPoints.begin();
+	      itVSOPoint != pCrag->sampPoints.end();
+	      ++itVSOPoint, ++nHoleIndex )
 	{
-		const STerrainInfo::SVSOPoint &point = (*itVSOPoint);
+		const STerrainInfo::SVSOPoint &point = ( *itVSOPoint );
 
 		CVec3 vLowerPos = point.vPos;
 		vLowerPos.z = GetLowerHeight( point );
@@ -218,7 +237,7 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 		CVec3 vUpperPos = point.vPos - point.vNorm * DEF_CRAG_HOLE_WIDTH;
 		vUpperPos.z = GetUpperHeight( point );
 
-		if ( (itVSOPoint == pCrag->sampPoints.begin()) || (itVSOPoint == endVSOPoint) )
+		if ( ( itVSOPoint == pCrag->sampPoints.begin() ) || ( itVSOPoint == endVSOPoint ) )
 		{
 			vLowerPos.z = GetTerraHeight( vUpperPos.x, vUpperPos.y );
 			vUpperPos.z = vLowerPos.z + DEF_CRAG_HEIGHT_ERROR;
@@ -235,21 +254,21 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 		pCrag->precNorms.push_back( point.vNorm );
 	}
 
-	const int nTileX1 = Clamp( int(vMin.x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY1 = Clamp( int(vMin.y * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
-	const int nTileX2 = Clamp( int(vMax.x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-	const int nTileY2 = Clamp( int(vMax.y * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX1 = Clamp( int( vMin.x * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY1 = Clamp( int( vMin.y * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
+	const int nTileX2 = Clamp( int( vMax.x * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+	const int nTileY2 = Clamp( int( vMax.y * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
 
 	for ( int i = 0; i < pCrag->precVerts.size() - 1; ++i )
 	{
 		std::vector<CVec3fEx> hole( 4 );
 
 		CVec3 v1( pCrag->precVerts[i] - pCrag->precNorms[i] * DEF_CRAG_HOLE_WIDTH );
-		CVec3 v2( pCrag->precVerts[i+1] - pCrag->precNorms[i+1] * DEF_CRAG_HOLE_WIDTH );
+		CVec3 v2( pCrag->precVerts[i + 1] - pCrag->precNorms[i + 1] * DEF_CRAG_HOLE_WIDTH );
 		hole[0] = CVec3fEx( pCrag->precVerts[i], 0 );
 		hole[1] = CVec3fEx( v1.x, v1.y, pCrag->precHeights[i], 0 );
-		hole[2] = CVec3fEx( v2.x, v2.y, pCrag->precHeights[i+1], 0 );
-		hole[3] = CVec3fEx( pCrag->precVerts[i+1], 0 );
+		hole[2] = CVec3fEx( v2.x, v2.y, pCrag->precHeights[i + 1], 0 );
+		hole[3] = CVec3fEx( pCrag->precVerts[i + 1], 0 );
 
 		MakeHole( hole, nTileX1, nTileY1, nTileX2, nTileY2 );
 	}
@@ -258,9 +277,11 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 	foot.points.push_back( pCrag->sampPoints );
 
 	std::vector<CVec3>::const_iterator itPrecVert = pCrag->precVerts.begin();
-	for ( std::vector<STerrainInfo::SVSOPoint>::iterator itPoint = foot.points.back().begin(); itPoint != foot.points.back().end(); ++itPoint, ++itPrecVert )
+	for ( std::vector<STerrainInfo::SVSOPoint>::iterator itPoint = foot.points.back().begin();
+	      itPoint != foot.points.back().end();
+	      ++itPoint, ++itPrecVert )
 	{
-		itPoint->vPos = (*itPrecVert) + itPoint->vNorm * DEF_CRAG_HOLE_WIDTH * 4.0f;
+		itPoint->vPos = ( *itPrecVert ) + itPoint->vNorm * DEF_CRAG_HOLE_WIDTH * 4.0f;
 		itPoint->fRadius += NWin32Random::Random( 0.0f, pCrag->pDesc->fDepth ) * 4.0f;
 	}
 
@@ -270,7 +291,7 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 	terrainInfo.foots.push_back( foot );
 	needAddFoots.push_back( foot.nID );
 
-#else	// B2
+#else // B2
 
 	if ( pCrag->sampPoints.size() < 2 )
 		return;
@@ -300,7 +321,8 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 		vMin.Set( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE );
 		vMax.Set( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
 
-		while ( (itPoint != pCrag->sampPoints.end()) && (itPoint->vPos.z < GetMaxCragHeight(CVec2(itPoint->vPos.x, itPoint->vPos.y), pCrag->nID)) )
+		while ( ( itPoint != pCrag->sampPoints.end() ) &&
+		        ( itPoint->vPos.z < GetMaxCragHeight( CVec2( itPoint->vPos.x, itPoint->vPos.y ), pCrag->nID ) ) )
 		{
 			++itPoint;
 			++itPointPrev;
@@ -309,10 +331,13 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 			break;
 		CragsPushExactPoint( &precPoints, *itPointPrev, *itPoint, 0.0f, 1.0f, pCrag->nID, true );
 		CragsPushPointLR( &samplesL, &samplesR, precPoints.back(), &vMin, &vMax, pCrag->nID );
-		while ( (itPoint != pCrag->sampPoints.end()) && (itPoint->vPos.z >= (fMaxCragHeight = GetMaxCragHeight(CVec2(itPoint->vPos.x, itPoint->vPos.y), pCrag->nID))) )
+		while ( ( itPoint != pCrag->sampPoints.end() ) &&
+		        ( itPoint->vPos.z >=
+		          ( fMaxCragHeight = GetMaxCragHeight( CVec2( itPoint->vPos.x, itPoint->vPos.y ), pCrag->nID ) ) ) )
 		{
 			precPoints.push_back( *itPoint );
-			precPoints.back().fRadius = itPoint->vPos.z /*- GetTerraHeight( itPoint->vPos.x, itPoint->vPos.y )*/ - fMaxCragHeight;
+			precPoints.back().fRadius =
+					itPoint->vPos.z /*- GetTerraHeight( itPoint->vPos.x, itPoint->vPos.y )*/ - fMaxCragHeight;
 			CragsPushPointLR( &samplesL, &samplesR, *itPoint, &vMin, &vMax, pCrag->nID );
 
 			++itPointPrev;
@@ -328,17 +353,18 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 		if ( samplesL.size() >= 2 )
 		{
 			std::vector<CVec3fEx>::const_iterator it = samplesR.end();
-			do {
+			do
+			{
 				--it;
 				samplesL.push_back( *it );
-			} while( it != samplesR.begin() );
+			} while ( it != samplesR.begin() );
 
 			if ( vMinTile.x == -1 )
 			{
-				const int nTileX1 = Clamp( int(vMin.x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-				const int nTileY1 = Clamp( int(vMin.y * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
-				const int nTileX2 = Clamp( int(vMax.x * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeX() - 1 );
-				const int nTileY2 = Clamp( int(vMax.y * DEF_INV_TILE_SIZE), 0, terrainInfo.tiles.GetSizeY() - 1 );
+				const int nTileX1 = Clamp( int( vMin.x * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+				const int nTileY1 = Clamp( int( vMin.y * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
+				const int nTileX2 = Clamp( int( vMax.x * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeX() - 1 );
+				const int nTileY2 = Clamp( int( vMax.y * DEF_INV_TILE_SIZE ), 0, terrainInfo.tiles.GetSizeY() - 1 );
 				MakeHole( samplesL, nTileX1, nTileY1, nTileX2, nTileY2 );
 			}
 			else
@@ -354,14 +380,16 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 	pCrag->precHeights.resize( 0 );
 	pCrag->precNorms.resize( 0 );
 
-	for ( std::vector<STerrainInfo::SVSOPoint>::const_iterator it = pCrag->sampPoints.begin(); it != pCrag->sampPoints.end(); ++it )
+	for ( std::vector<STerrainInfo::SVSOPoint>::const_iterator it = pCrag->sampPoints.begin();
+	      it != pCrag->sampPoints.end();
+	      ++it )
 	{
 		const CVec3 vPos = it->vPos - it->vNorm * DEF_CRAG_HOLE_WIDTH;
 		const float fTerraHeight = GetTerraHeight( vPos.x, vPos.y );
-		const float fMaxCragH = GetMaxCragHeight( CVec2(vPos.x, vPos.y), pCrag->nID );
-		pCrag->precVerts.push_back( CVec3(vPos.x, vPos.y, fTerraHeight + (fMaxCragH < vPos.z ? fMaxCragH : vPos.z)) );
+		const float fMaxCragH = GetMaxCragHeight( CVec2( vPos.x, vPos.y ), pCrag->nID );
+		pCrag->precVerts.push_back( CVec3( vPos.x, vPos.y, fTerraHeight + ( fMaxCragH < vPos.z ? fMaxCragH : vPos.z ) ) );
 		pCrag->precHeights.push_back( fTerraHeight + vPos.z );
-		if ( pCrag->precHeights.back() < (pCrag->precVerts.back().z + DEF_CRAG_HEIGHT_ERROR) )
+		if ( pCrag->precHeights.back() < ( pCrag->precVerts.back().z + DEF_CRAG_HEIGHT_ERROR ) )
 			pCrag->precVerts.back().z -= DEF_CRAG_HEIGHT_ERROR;
 		pCrag->precNorms.push_back( it->vNorm );
 	}
@@ -371,13 +399,12 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 	terrainInfo.foots.push_back( foot );
 	needAddFoots.push_back( foot.nID );
 #endif
-
 }
 
 void CTerraGen::PutAllCragsOnTerrain()
 {
 	for ( std::list<STerrainInfo::SCrag>::iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
-		PutCragOnTerrain( &(*it), CVec2i(-1, -1), CVec2i(-1, -1) );
+		PutCragOnTerrain( &( *it ), CVec2i( -1, -1 ), CVec2i( -1, -1 ) );
 
 	//	statistcis
 	const bool bShowDebugInfo_IntersectionsCount = false;
@@ -386,22 +413,26 @@ void CTerraGen::PutAllCragsOnTerrain()
 		int nIntersectionsCount = 0;
 		int nCragsCount = terrainInfo.crags.size();
 
-		for ( std::list<STerrainInfo::SCrag>::const_iterator itCrag1 = terrainInfo.crags.begin(); itCrag1 != terrainInfo.crags.end(); ++itCrag1 )
+		for ( std::list<STerrainInfo::SCrag>::const_iterator itCrag1 = terrainInfo.crags.begin();
+		      itCrag1 != terrainInfo.crags.end();
+		      ++itCrag1 )
 		{
-			const STerrainInfo::SCrag &crag1 = (*itCrag1);
+			const STerrainInfo::SCrag &crag1 = ( *itCrag1 );
 			std::vector<CVec3dEx> poly1( crag1.precVerts.size() );
 			poly1.resize( 0 );
 
-			for ( std::vector<CVec3>::const_iterator itPoint1 = crag1.precVerts.begin(); itPoint1 != crag1.precVerts.end(); ++itPoint1 )
+			for ( std::vector<CVec3>::const_iterator itPoint1 = crag1.precVerts.begin(); itPoint1 != crag1.precVerts.end();
+			      ++itPoint1 )
 			{
-				poly1.push_back( CVec3dEx(*itPoint1, 0) );
+				poly1.push_back( CVec3dEx( *itPoint1, 0 ) );
 			}
 
 			std::list<STerrainInfo::SCrag>::const_iterator itCrag1ex = itCrag1;
 			++itCrag1ex;
-			for ( std::list<STerrainInfo::SCrag>::const_iterator itCrag2 = itCrag1ex; itCrag2 != terrainInfo.crags.end(); ++itCrag2 )
+			for ( std::list<STerrainInfo::SCrag>::const_iterator itCrag2 = itCrag1ex; itCrag2 != terrainInfo.crags.end();
+			      ++itCrag2 )
 			{
-				const STerrainInfo::SCrag &crag2 = (*itCrag2);
+				const STerrainInfo::SCrag &crag2 = ( *itCrag2 );
 
 				std::vector<CVec3>::const_iterator itPoint = crag2.precVerts.begin();
 				std::vector<CVec3>::const_iterator itPointPrev = itPoint;
@@ -409,7 +440,7 @@ void CTerraGen::PutAllCragsOnTerrain()
 
 				while ( itPoint != crag2.precVerts.end() )
 				{
-					if ( IsIntersect(poly1, CVec3dEx(*itPointPrev, 0), CVec3dEx(*itPoint, 0)) )
+					if ( IsIntersect( poly1, CVec3dEx( *itPointPrev, 0 ), CVec3dEx( *itPoint, 0 ) ) )
 					{
 						++nIntersectionsCount;
 					}
@@ -426,7 +457,7 @@ void CTerraGen::PutAllCragsOnTerrain()
 
 static bool IsGridPoint( const CVec3fEx &vPoint )
 {
-	return ( fabs(sqr(fmodf(vPoint.x, DEF_TILE_SIZE)) + sqr(fmodf(vPoint.y, DEF_TILE_SIZE))) < DEF_EPS2 );
+	return ( fabs( sqr( fmodf( vPoint.x, DEF_TILE_SIZE ) ) + sqr( fmodf( vPoint.y, DEF_TILE_SIZE ) ) ) < DEF_EPS2 );
 }
 
 static CVec2i GetGridPoint( const CVec3fEx &vPoint )
@@ -448,14 +479,15 @@ void CTerraGen::UpdateHeightsAfterCrags( const int nTileX1, const int nTileY1, c
 			STerrainInfo::STile &curTile = terrainInfo.tiles[g][i];
 			//
 			int nCount = 0;
-			for ( std::vector<CVec3fEx>::iterator it = curTile.vertices.begin(); it != curTile.vertices.end(); ++it, ++nCount )
+			for ( std::vector<CVec3fEx>::iterator it = curTile.vertices.begin(); it != curTile.vertices.end();
+			      ++it, ++nCount )
 			{
 				it->z = GetTerraHeight( it->x, it->y );
 				float fHeight = 0.0f;
 				const CVec2 v( it->x, it->y );
 				GetMaxCragHeightEx( v, &fHeight );
 				//terrainInfo.heights[g][i] += fHeight;
-				curTile.addHeights[nCount] = fHeight;// + GetMaxRiverHeight( v );
+				curTile.addHeights[nCount] = fHeight; // + GetMaxRiverHeight( v );
 			}
 		}
 	}
@@ -466,10 +498,10 @@ void CTerraGen::UpdateHeightsAfterCrags( const int nTileX1, const int nTileY1, c
 		{
 			const CVec2 vTile( (float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE );
 			float fMaxCragH = 0;
-			GetMaxCragHeightEx( vTile, &(terrainInfo.addHeights[g][i]) );
+			GetMaxCragHeightEx( vTile, &( terrainInfo.addHeights[g][i] ) );
 			//terrainInfo.addHeights[g][i] += GetMaxRiverHeight( vTile );
 			//terrainInfo.riverHeights[g][i] = GetMaxRiverHeight( vTile );
-			terrainAIInfo.heights[g][i] = Vis2AI( GetFullTerraHeight(i, g) );
+			terrainAIInfo.heights[g][i] = Vis2AI( GetFullTerraHeight( i, g ) );
 		}
 	}
 }
@@ -478,24 +510,22 @@ void CTerraGen::UpdateHeightsAfterCrags( const int nTileX1, const int nTileY1, c
 
 struct SRidgeProfile
 {
-	float operator()( const float x ) const
-	{
-		return 1.0f - x * x;
-	}
+	float operator()( const float x ) const { return 1.0f - x * x; }
 };
 
 float CTerraGen::GetMaxCragHeight( const CVec2 &v, const int nExcludeID ) const
 {
 	float fMaxHeight = 0.0f;
-	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end();
+	      ++it )
 	{
 		if ( it->nID != nExcludeID )
 		{
-			if ( IsInsideBB(v, it->vBBMin, it->vBBMax) )
+			if ( IsInsideBB( v, it->vBBMin, it->vBBMax ) )
 			{
 				SRidgeProfile ridgeProfile;
 				float fHeight;
-				if ( GetIncRidgeHeight(v, it->ridge, &fHeight, ridgeProfile) )
+				if ( GetIncRidgeHeight( v, it->ridge, &fHeight, ridgeProfile ) )
 					fMaxHeight = (std::max)( fMaxHeight, fHeight );
 			}
 		}
@@ -508,13 +538,14 @@ float CTerraGen::GetMaxCragHeight2( const CVec2 &v, const int nExcludeID1, const
 {
 	float fMaxHeight = 0.0f, fHeight;
 	SRidgeProfile ridgeProfile;
-	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end();
+	      ++it )
 	{
-		if ( (it->nID != nExcludeID1) && (it->nID != nExcludeID2) )
+		if ( ( it->nID != nExcludeID1 ) && ( it->nID != nExcludeID2 ) )
 		{
-			if ( IsInsideBB(v, it->vBBMin, it->vBBMax) )
+			if ( IsInsideBB( v, it->vBBMin, it->vBBMax ) )
 			{
-				if ( GetIncRidgeHeight(v, it->ridge, &fHeight, ridgeProfile) )
+				if ( GetIncRidgeHeight( v, it->ridge, &fHeight, ridgeProfile ) )
 					fMaxHeight = (std::max)( fMaxHeight, fHeight );
 			}
 		}
@@ -525,20 +556,21 @@ float CTerraGen::GetMaxCragHeight2( const CVec2 &v, const int nExcludeID1, const
 
 bool CTerraGen::GetMaxCragHeightEx( const CVec2 &v, float *pHeight ) const
 {
-	(*pHeight) = 0.0f;
+	( *pHeight ) = 0.0f;
 
 	if ( terrainInfo.crags.empty() )
 		return false;
 	float fH;
 	bool bResult = false;
 	SRidgeProfile ridgeProfile;
-	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end();
+	      ++it )
 	{
-		if ( IsInsideBB(v, it->vBBMin, it->vBBMax) )
+		if ( IsInsideBB( v, it->vBBMin, it->vBBMax ) )
 		{
-			if ( GetIncRidgeHeight(v, it->ridge, &fH, ridgeProfile) )
+			if ( GetIncRidgeHeight( v, it->ridge, &fH, ridgeProfile ) )
 			{
-				(*pHeight) = (std::max)( (*pHeight), fH );
+				( *pHeight ) = (std::max)( ( *pHeight ), fH );
 				bResult = true;
 			}
 		}
@@ -582,21 +614,23 @@ void CTerraGen::RemoveCrag( const int nVSOID )
 {
 	// if such crag is not exists, than skip it removing
 	std::list<STerrainInfo::SCrag>::const_iterator itCrag = terrainInfo.crags.begin();
-	for ( std::list<STerrainInfo::SCrag>::const_iterator itCrag = terrainInfo.crags.begin(); itCrag != terrainInfo.crags.end(); ++itCrag )
+	for ( std::list<STerrainInfo::SCrag>::const_iterator itCrag = terrainInfo.crags.begin();
+	      itCrag != terrainInfo.crags.end();
+	      ++itCrag )
 	{
 		if ( itCrag->nID == nVSOID )
 		{
-			CragManipulator( &(*itCrag), true );
+			CragManipulator( &( *itCrag ), true );
 			return;
 		}
 	}
-	NI_ASSERT( false, fmt::format("Removed crag is not exists: {}", nVSOID) );
+	NI_ASSERT( false, fmt::format( "Removed crag is not exists: {}", nVSOID ) );
 }
 
 void CTerraGen::UpdateCrag( const int nVSOID )
 {
 	RemoveCrag( nVSOID );
-	AddCrag( FindCrag(nVSOID) );
+	AddCrag( FindCrag( nVSOID ) );
 }
 
 void CTerraGen::RemoveCragInfo( const int nVSOID )
@@ -609,7 +643,7 @@ void CTerraGen::RemoveCragInfo( const int nVSOID )
 			return;
 		}
 	}
-	NI_ASSERT( false, fmt::format("Couldn't find info for crag with ID={}", nVSOID) );
+	NI_ASSERT( false, fmt::format( "Couldn't find info for crag with ID={}", nVSOID ) );
 }
 
 void CTerraGen::AddAllCrags()
@@ -617,26 +651,26 @@ void CTerraGen::AddAllCrags()
 	NI_ASSERT( pDesc, "Terrain is not loaded" );
 	//RemoveAllCrags();
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->crags.begin(); it != pDesc->crags.end(); ++it )
-		AddCrag( &(*it), GetVSOSeed(&*it) );
+		AddCrag( &( *it ), GetVSOSeed( &*it ) );
 }
 
-const NDb::SVSOInstance* CTerraGen::FindCrag( int nID ) const
+const NDb::SVSOInstance *CTerraGen::FindCrag( int nID ) const
 {
 	for ( std::vector<NDb::SVSOInstance>::const_iterator it = pDesc->crags.begin(); it != pDesc->crags.end(); ++it )
 	{
 		if ( it->nVSOID == nID )
-			return static_cast<const NDb::SVSOInstance *>( &(*it) );
+			return static_cast<const NDb::SVSOInstance *>( &( *it ) );
 	}
 	//NI_ASSERT( false, StrFmt("Couldn't find crag's instance: ID=%d", nID) );
 	return 0;
 }
 
-STerrainInfo::SCrag* CTerraGen::FindCragInfo( int nID )
+STerrainInfo::SCrag *CTerraGen::FindCragInfo( int nID )
 {
 	for ( std::list<STerrainInfo::SCrag>::iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
 	{
 		if ( it->nID == nID )
-			return ( &(*it) );
+			return ( &( *it ) );
 	}
 	//NI_ASSERT( false, StrFmt("Couldn't find crag's info: ID=%d", nID) );
 	return 0;
@@ -646,7 +680,8 @@ bool CTerraGen::GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId )
 {
 	pVerts->clear();
 	//
-	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end(); ++it )
+	for ( std::list<STerrainInfo::SCrag>::const_iterator it = terrainInfo.crags.begin(); it != terrainInfo.crags.end();
+	      ++it )
 	{
 		if ( it->nID == nVSOId )
 		{

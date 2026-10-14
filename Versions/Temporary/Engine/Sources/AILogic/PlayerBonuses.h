@@ -3,6 +3,6 @@
 
 namespace NDb
 {
-	struct SBonusData;
-	struct SReinforcement;
+struct SBonusData;
+struct SReinforcement;
 }

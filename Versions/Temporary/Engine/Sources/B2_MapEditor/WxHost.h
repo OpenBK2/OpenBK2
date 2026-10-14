@@ -21,6 +21,6 @@ class CEditorApp;
 
 namespace NWxHost
 {
-	// The one editor application object, which main.cpp makes.
-	CEditorApp& GetEditorApp();
+// The one editor application object, which main.cpp makes.
+CEditorApp &GetEditorApp();
 }

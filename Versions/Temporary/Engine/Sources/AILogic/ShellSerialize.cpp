@@ -23,11 +23,11 @@ int CFlameThrowerExpl::operator&( IBinSaver &saver )
 
 int CVisShell::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CShell*>(this) );
+	saver.Add( 1, static_cast<CShell *>( this ) );
 	saver.Add( 2, &pTraj );
 	saver.Add( 3, &center );
 	saver.Add( 4, &speed );
-	saver.Add( 5, static_cast<CLinkObject*>(this) );
+	saver.Add( 5, static_cast<CLinkObject *>( this ) );
 
 	if ( !saver.IsChecksum() )
 		saver.Add( 6, &bVisible );

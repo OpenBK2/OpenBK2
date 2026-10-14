@@ -20,16 +20,24 @@ protected:
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 
 	//CBuildDataBuilder
-	const std::string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
+	const std::string &GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
 	bool InternalInsertObject( std::string *pszObjectTypeName,
-														 std::string *pszUniqueObjectName,
-														 bool bFromMainMenu,
-														 bool *pbCanChangeObjectName,
-														 bool *pbNeedExport,
-														 bool *pbNeedEdit,
-														 IManipulator *pBuildDataManipulator );
+	                           std::string *pszUniqueObjectName,
+	                           bool bFromMainMenu,
+	                           bool *pbCanChangeObjectName,
+	                           bool *pbNeedExport,
+	                           bool *pbNeedEdit,
+	                           IManipulator *pBuildDataManipulator );
 
 private:
-	bool CreateVisualState( const std::string &rszUniqueObjectName, IManipulator *pBuildDataManipulator, IManipulator * pMSBManipulator, int index );
-	bool CreateButtonState( const std::string &rszUniqueObjectName, IManipulator *pBuildDataManipulator, IManipulator * pMSBManipulator, int index, const char * szSuffixName, bool bNormalState );
+	bool CreateVisualState( const std::string &rszUniqueObjectName,
+	                        IManipulator *pBuildDataManipulator,
+	                        IManipulator *pMSBManipulator,
+	                        int index );
+	bool CreateButtonState( const std::string &rszUniqueObjectName,
+	                        IManipulator *pBuildDataManipulator,
+	                        IManipulator *pMSBManipulator,
+	                        int index,
+	                        const char *szSuffixName,
+	                        bool bNormalState );
 };

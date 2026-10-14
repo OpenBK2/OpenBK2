@@ -12,7 +12,7 @@
 #define DEF_SMOOTH_DIST ( DEF_TILE_SIZE * 7.0f )
 #define DEF_SMOOTH_SLEEKNESS ( DEF_TILE_SIZE * FP_SQRT_2 / DEF_SMOOTH_DIST )
 #define DEF_SMOOTH_SLEEKNESS_COEFF ( 1.0f / ( 1.0f - DEF_SMOOTH_SLEEKNESS ) )
-#define DEF_SEA_OUTSIDE_MAP	0.1f
+#define DEF_SEA_OUTSIDE_MAP 0.1f
 
 inline void AI2VisTiles( CVec2i *pRes, const CVec3 &vPos )
 {
@@ -20,20 +20,18 @@ inline void AI2VisTiles( CVec2i *pRes, const CVec3 &vPos )
 	pRes->y = vPos.y * AI_TO_VIS * DEF_INV_TILE_SIZE;
 }
 
-
 inline void AI2VisTiles( CVec2i *pRes, const CVec2 &vPos )
 {
 	pRes->x = vPos.x * AI_TO_VIS * DEF_INV_TILE_SIZE;
 	pRes->y = vPos.y * AI_TO_VIS * DEF_INV_TILE_SIZE;
 }
 
-
 struct SWaterSmoothProfile
 {
 	float operator()( const float x ) const
 	{
 		//return x < DEF_SMOOTH_SLEEKNESS ? 1.0f :
-			//( 0.5f - NMath::Sin( ( x - DEF_SMOOTH_SLEEKNESS ) * DEF_SMOOTH_SLEEKNESS_COEFF * FP_PI - FP_PI2 ) * 0.5f );
+		//( 0.5f - NMath::Sin( ( x - DEF_SMOOTH_SLEEKNESS ) * DEF_SMOOTH_SLEEKNESS_COEFF * FP_PI - FP_PI2 ) * 0.5f );
 		if ( x < DEF_SMOOTH_SLEEKNESS )
 			return 0.0f;
 		const float tx = ( x - DEF_SMOOTH_SLEEKNESS ) * DEF_SMOOTH_SLEEKNESS_COEFF;
@@ -41,13 +39,12 @@ struct SWaterSmoothProfile
 	}
 };
 
-
 inline int GetWaterFillIndex( std::vector<NWaterStuff::SWaterParams> *pWaterParams, const NDb::SWater &water )
 {
 	int nInd = -1;
 	for ( int i = 0; i < pWaterParams->size(); ++i )
 	{
-		if ( (*pWaterParams)[i] == water )
+		if ( ( *pWaterParams )[i] == water )
 		{
 			nInd = i;
 			break;
@@ -56,14 +53,14 @@ inline int GetWaterFillIndex( std::vector<NWaterStuff::SWaterParams> *pWaterPara
 
 	if ( nInd == -1 )
 	{
-		std::vector<NWaterStuff::SWaterParams>::iterator it = pWaterParams->insert( pWaterParams->end(), NWaterStuff::SWaterParams() );
+		std::vector<NWaterStuff::SWaterParams>::iterator it =
+				pWaterParams->insert( pWaterParams->end(), NWaterStuff::SWaterParams() );
 		*it = water;
 		nInd = pWaterParams->size() - 1;
 	}
 
 	return nInd + 1;
 }
-
 
 //static void FillSeaArea( CArray2D<float> *pHeights, const vector<NDb::SVSOPoint> &samples, const CVec3 &_vMidPoint, CArray2D<uint8_t> *pMask )
 //{
@@ -109,9 +106,11 @@ inline int GetWaterFillIndex( std::vector<NWaterStuff::SWaterParams> *pWaterPara
 //	}
 //}
 
-
-static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, CArray2D<uint8_t> *pMask, const uint8_t cFillMask,
-													 const std::vector<NDb::SVSOPoint> &samples )
+static void FillWaterArea( CArray2D<float> *pHeights,
+                           const float fFillHeight,
+                           CArray2D<uint8_t> *pMask,
+                           const uint8_t cFillMask,
+                           const std::vector<NDb::SVSOPoint> &samples )
 {
 	if ( samples.size() < 2 )
 		return;
@@ -120,8 +119,8 @@ static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, C
 	CVec2i vMin( INT_MAX, INT_MAX ), vMax( INT_MIN, INT_MIN );
 	for ( int i = 0; i < samples.size(); ++i )
 	{
-		const CVec3 &vPos = samples[i].vPos/* + samples[i].vNorm * samples[i].fWidth*/;
-		boundPoints[i].Set( AI2Vis(vPos.x), AI2Vis(vPos.y), 0.0f, 1 );
+		const CVec3 &vPos = samples[i].vPos /* + samples[i].vNorm * samples[i].fWidth*/;
+		boundPoints[i].Set( AI2Vis( vPos.x ), AI2Vis( vPos.y ), 0.0f, 1 );
 		const int x = Float2Int( boundPoints[i].x * DEF_INV_TILE_SIZE );
 		const int y = Float2Int( boundPoints[i].y * DEF_INV_TILE_SIZE );
 		vMin.x = (std::min)( vMin.x, x );
@@ -143,7 +142,7 @@ static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, C
 	{
 		for ( int i = vMin.x; i <= vMax.x; ++i )
 		{
-			if ( IsInside(boundPoints, CVec3dEx((float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE, 0, 1)) )
+			if ( IsInside( boundPoints, CVec3dEx( (float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE, 0, 1 ) ) )
 				fillMap[g - vMin.y][i - vMin.x] = 1;
 		}
 	}
@@ -156,13 +155,12 @@ static void FillWaterArea( CArray2D<float> *pHeights, const float fFillHeight, C
 			{
 				const int ox = i + vMin.x;
 				const int oy = g + vMin.y;
-				(*pMask)[oy][ox] = cFillMask;
-				(*pHeights)[oy][ox] = fFillHeight;
+				( *pMask )[oy][ox] = cFillMask;
+				( *pHeights )[oy][ox] = fFillHeight;
 			}
 		}
 	}
 }
-
 
 static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vector<NDb::SVSOPoint> &samples )
 {
@@ -180,14 +178,16 @@ static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vect
 		const CVec2 vNextPos( vPos.x - it->vNorm.x * DEF_SMOOTH_DIST, vPos.y - it->vNorm.y * DEF_SMOOTH_DIST );
 		ridge[nInd].Set( vPos.x, vPos.y, 1.0f, 0 );
 		ridge[ridge.size() - 1 - nInd].Set( vNextPos.x, vNextPos.y, 1.0f, 0 );
-		vMin.Minimize( vPos ); vMin.Minimize( vNextPos );
-		vMax.Maximize( vPos ); vMax.Maximize( vNextPos );
+		vMin.Minimize( vPos );
+		vMin.Minimize( vNextPos );
+		vMax.Maximize( vPos );
+		vMax.Maximize( vNextPos );
 	}
 
-	vMin.x = Clamp( int(vMin.x * DEF_INV_TILE_SIZE), 0, pHeights->GetSizeX() - 1 );
-	vMin.y = Clamp( int(vMin.y * DEF_INV_TILE_SIZE), 0, pHeights->GetSizeY() - 1 );
-	vMax.x = Clamp( int(vMax.x * DEF_INV_TILE_SIZE) + 1, 0, pHeights->GetSizeX() - 1 );
-	vMax.y = Clamp( int(vMax.y * DEF_INV_TILE_SIZE) + 1, 0, pHeights->GetSizeY() - 1 );
+	vMin.x = Clamp( int( vMin.x * DEF_INV_TILE_SIZE ), 0, pHeights->GetSizeX() - 1 );
+	vMin.y = Clamp( int( vMin.y * DEF_INV_TILE_SIZE ), 0, pHeights->GetSizeY() - 1 );
+	vMax.x = Clamp( int( vMax.x * DEF_INV_TILE_SIZE ) + 1, 0, pHeights->GetSizeX() - 1 );
+	vMax.y = Clamp( int( vMax.y * DEF_INV_TILE_SIZE ) + 1, 0, pHeights->GetSizeY() - 1 );
 
 	float fIncHeight;
 
@@ -197,9 +197,10 @@ static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vect
 	{
 		for ( int i = vMin.x; i <= vMax.x; ++i )
 		{
-			if ( GetIncRidgeHeight(CVec2((float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE), ridge, &fIncHeight, waterSmoothProfile) )
+			if ( GetIncRidgeHeight(
+							 CVec2( (float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE ), ridge, &fIncHeight, waterSmoothProfile ) )
 			{
-				float &fCurHeight = (*pHeights)[g][i];
+				float &fCurHeight = ( *pHeights )[g][i];
 				if ( fCurHeight < 0 )
 					fCurHeight = fIncHeight;
 				else
@@ -209,27 +210,23 @@ static void SmoothHeightsFromSamples( CArray2D<float> *pHeights, const std::vect
 	}
 }
 
-
 #define AREA_HASH_ELEMS_NUM 12
 #define AREA_BOTTOM_LEFT 0
 #define AREA_BOTTOM_RIGHT 1
 #define AREA_TOP_RIGHT 2
 #define AREA_TOP_LEFT 3
-const int defAreaHash[AREA_HASH_ELEMS_NUM][5] =
-{
-	{ 17, AREA_BOTTOM_RIGHT, -1, -1, -1 },
-	{ 10, AREA_BOTTOM_LEFT, AREA_TOP_LEFT, AREA_TOP_RIGHT, -1 },
-	{ 26, AREA_TOP_RIGHT, -1, -1, -1 },
-	{ 19, AREA_BOTTOM_RIGHT, AREA_BOTTOM_LEFT, AREA_TOP_LEFT, -1 },
-	{ 35, AREA_TOP_LEFT, -1, -1, -1 },
-	{ 28, AREA_TOP_RIGHT, AREA_BOTTOM_RIGHT, AREA_BOTTOM_LEFT, -1 },
-	{ 12, AREA_BOTTOM_LEFT, -1, -1, -1 },
-	{ 33, AREA_TOP_LEFT, AREA_TOP_RIGHT, AREA_BOTTOM_RIGHT, -1 },
-	{ 25, AREA_TOP_RIGHT, AREA_BOTTOM_RIGHT, -1, -1 },
-	{ 11, AREA_BOTTOM_LEFT, AREA_TOP_LEFT, -1, -1 },
-	{ 20, AREA_BOTTOM_RIGHT, AREA_BOTTOM_LEFT, -1, -1 },
-	{ 34, AREA_TOP_LEFT, AREA_TOP_RIGHT, -1, -1 }
-};
+const int defAreaHash[AREA_HASH_ELEMS_NUM][5] = { { 17, AREA_BOTTOM_RIGHT, -1, -1, -1 },
+                                                  { 10, AREA_BOTTOM_LEFT, AREA_TOP_LEFT, AREA_TOP_RIGHT, -1 },
+                                                  { 26, AREA_TOP_RIGHT, -1, -1, -1 },
+                                                  { 19, AREA_BOTTOM_RIGHT, AREA_BOTTOM_LEFT, AREA_TOP_LEFT, -1 },
+                                                  { 35, AREA_TOP_LEFT, -1, -1, -1 },
+                                                  { 28, AREA_TOP_RIGHT, AREA_BOTTOM_RIGHT, AREA_BOTTOM_LEFT, -1 },
+                                                  { 12, AREA_BOTTOM_LEFT, -1, -1, -1 },
+                                                  { 33, AREA_TOP_LEFT, AREA_TOP_RIGHT, AREA_BOTTOM_RIGHT, -1 },
+                                                  { 25, AREA_TOP_RIGHT, AREA_BOTTOM_RIGHT, -1, -1 },
+                                                  { 11, AREA_BOTTOM_LEFT, AREA_TOP_LEFT, -1, -1 },
+                                                  { 20, AREA_BOTTOM_RIGHT, AREA_BOTTOM_LEFT, -1, -1 },
+                                                  { 34, AREA_TOP_LEFT, AREA_TOP_RIGHT, -1, -1 } };
 
 #define AREA_BOTTOM_SIDE 1
 #define AREA_RIGHT_SIDE 2
@@ -237,7 +234,7 @@ const int defAreaHash[AREA_HASH_ELEMS_NUM][5] =
 #define AREA_LEFT_SIDE 4
 #define AREA_NONE_SIDE 7
 
-typedef std::unordered_map<int, std::vector<int> > CAreaCornersHash;
+typedef std::unordered_map<int, std::vector<int>> CAreaCornersHash;
 static CAreaCornersHash areaCornersHash;
 
 static void InitCornersHash()
@@ -254,50 +251,48 @@ static void InitCornersHash()
 	}
 }
 
-
 static int GetPointIndOnRect( const NDb::SVSOPoint &p, const CVec2 &p1, const CVec2 &p2 )
 {
-	if ( fabs(p1.y - p.vPos.y) < DEF_EPS )
+	if ( fabs( p1.y - p.vPos.y ) < DEF_EPS )
 		return AREA_BOTTOM_SIDE;
-	if ( fabs( p2.x - p.vPos.x) < DEF_EPS )
+	if ( fabs( p2.x - p.vPos.x ) < DEF_EPS )
 		return AREA_RIGHT_SIDE;
-	if ( fabs(p2.y - p.vPos.y) < DEF_EPS )
+	if ( fabs( p2.y - p.vPos.y ) < DEF_EPS )
 		return AREA_TOP_SIDE;
-	if ( fabs(p1.x - p.vPos.x) < DEF_EPS )
+	if ( fabs( p1.x - p.vPos.x ) < DEF_EPS )
 		return AREA_LEFT_SIDE;
 	return AREA_NONE_SIDE;
 }
-
 
 inline void GetCornerFromInd( NDb::SVSOPoint *pPoint, const int nInd, const CVec2 &p1, const CVec2 &p2 )
 {
 	switch ( nInd )
 	{
-	case AREA_BOTTOM_LEFT:
-		pPoint->vPos.Set( p1.x, p1.y, 0 );
-		pPoint->vNorm.Set( FP_SQRT_2 / 2, FP_SQRT_2 / 2, 0 );
-		break;
-	case AREA_BOTTOM_RIGHT:
-		pPoint->vPos.Set( p2.x, p1.y, 0 );
-		pPoint->vNorm.Set( -FP_SQRT_2 / 2, FP_SQRT_2 / 2, 0 );
-		break;
-	case AREA_TOP_RIGHT:
-		pPoint->vPos.Set( p2.x, p2.y, 0 );
-		pPoint->vNorm.Set( -FP_SQRT_2 / 2, -FP_SQRT_2 / 2, 0 );
-		break;
-	case AREA_TOP_LEFT:
-		pPoint->vPos.Set( p1.x, p2.y, 0 );
-		pPoint->vNorm.Set( FP_SQRT_2 / 2, -FP_SQRT_2 / 2, 0 );
-		break;
-	default:
-		NI_ASSERT( false, "Error in corner hash" );
-		pPoint->vPos.Set( p1.x, p1.y, 0 );
-		pPoint->vNorm.Set( FP_SQRT_2 / 2, FP_SQRT_2 / 2, 0 );
+		case AREA_BOTTOM_LEFT:
+			pPoint->vPos.Set( p1.x, p1.y, 0 );
+			pPoint->vNorm.Set( FP_SQRT_2 / 2, FP_SQRT_2 / 2, 0 );
+			break;
+		case AREA_BOTTOM_RIGHT:
+			pPoint->vPos.Set( p2.x, p1.y, 0 );
+			pPoint->vNorm.Set( -FP_SQRT_2 / 2, FP_SQRT_2 / 2, 0 );
+			break;
+		case AREA_TOP_RIGHT:
+			pPoint->vPos.Set( p2.x, p2.y, 0 );
+			pPoint->vNorm.Set( -FP_SQRT_2 / 2, -FP_SQRT_2 / 2, 0 );
+			break;
+		case AREA_TOP_LEFT:
+			pPoint->vPos.Set( p1.x, p2.y, 0 );
+			pPoint->vNorm.Set( FP_SQRT_2 / 2, -FP_SQRT_2 / 2, 0 );
+			break;
+		default:
+			NI_ASSERT( false, "Error in corner hash" );
+			pPoint->vPos.Set( p1.x, p1.y, 0 );
+			pPoint->vNorm.Set( FP_SQRT_2 / 2, FP_SQRT_2 / 2, 0 );
 	}
 }
 
-
-bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, const NDb::SVSOPoint &vso2, const CVec2 &p1, const CVec2 &p2 )
+bool GetIntersectWithArea(
+		NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, const NDb::SVSOPoint &vso2, const CVec2 &p1, const CVec2 &p2 )
 {
 	const CVec3 &po1 = vso1.vPos;
 	const CVec3 &po2 = vso2.vPos;
@@ -306,13 +301,13 @@ bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, c
 
 	// check bottom side
 	d = po2.y - po1.y;
-	if ( fabs(d) > EPS_VALUE )
+	if ( fabs( d ) > EPS_VALUE )
 	{
 		t = ( p1.y - po1.y ) / d;
-		if ( (t > -EPS_VALUE) && (t < (1.0f + EPS_VALUE)) )
+		if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )
 		{
 			pPoint->vPos.x = po1.x + ( po2.x - po1.x ) * t;
-			if ( (pPoint->vPos.x > (p1.x - EPS_VALUE)) && (pPoint->vPos.x < (p2.x + EPS_VALUE)) )
+			if ( ( pPoint->vPos.x > ( p1.x - EPS_VALUE ) ) && ( pPoint->vPos.x < ( p2.x + EPS_VALUE ) ) )
 			{
 				pPoint->vPos.y = p1.y;
 				bFlag = true;
@@ -324,13 +319,13 @@ bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, c
 	{
 		// check top side
 		d = po2.y - po1.y;
-		if ( fabs(d) > EPS_VALUE )
+		if ( fabs( d ) > EPS_VALUE )
 		{
 			t = ( p2.y - po1.y ) / d;
-			if ( (t > -EPS_VALUE) && (t < (1.0f + EPS_VALUE)) )
+			if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )
 			{
 				pPoint->vPos.x = po1.x + ( po2.x - po1.x ) * t;
-				if ( (pPoint->vPos.x > (p1.x - EPS_VALUE)) && (pPoint->vPos.x < (p2.x + EPS_VALUE)) )
+				if ( ( pPoint->vPos.x > ( p1.x - EPS_VALUE ) ) && ( pPoint->vPos.x < ( p2.x + EPS_VALUE ) ) )
 				{
 					pPoint->vPos.y = p2.y;
 					bFlag = true;
@@ -343,13 +338,13 @@ bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, c
 	{
 		// check left side
 		d = po2.x - po1.x;
-		if ( fabs(d) > EPS_VALUE )
+		if ( fabs( d ) > EPS_VALUE )
 		{
 			t = ( p1.x - po1.x ) / d;
-			if ( (t > -EPS_VALUE) && (t < (1.0f + EPS_VALUE)) )
+			if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )
 			{
 				pPoint->vPos.y = po1.y + ( po2.y - po1.y ) * t;
-				if ( (pPoint->vPos.y > (p1.y - EPS_VALUE)) && (pPoint->vPos.y < (p2.y + EPS_VALUE)) )
+				if ( ( pPoint->vPos.y > ( p1.y - EPS_VALUE ) ) && ( pPoint->vPos.y < ( p2.y + EPS_VALUE ) ) )
 				{
 					pPoint->vPos.x = p1.x;
 					bFlag = true;
@@ -362,13 +357,13 @@ bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, c
 	{
 		// check right side
 		d = po2.x - po1.x;
-		if ( fabs(d) > EPS_VALUE )
+		if ( fabs( d ) > EPS_VALUE )
 		{
 			t = ( p2.x - po1.x ) / d;
-			if ( (t > -EPS_VALUE) && (t < (1.0f + EPS_VALUE)) )
+			if ( ( t > -EPS_VALUE ) && ( t < ( 1.0f + EPS_VALUE ) ) )
 			{
 				pPoint->vPos.y = po1.y + ( po2.y - po1.y ) * t;
-				if ( ( pPoint->vPos.y > (p1.y - EPS_VALUE)) && (pPoint->vPos.y < (p2.y + EPS_VALUE)) )
+				if ( ( pPoint->vPos.y > ( p1.y - EPS_VALUE ) ) && ( pPoint->vPos.y < ( p2.y + EPS_VALUE ) ) )
 				{
 					pPoint->vPos.x = p2.x;
 					bFlag = true;
@@ -380,14 +375,16 @@ bool GetIntersectWithArea( NDb::SVSOPoint *pPoint, const NDb::SVSOPoint &vso1, c
 	if ( bFlag )
 	{
 		pPoint->vNorm = vso1.vNorm + ( vso2.vNorm - vso1.vNorm ) * t;
-		Normalize( &(pPoint->vNorm) );
+		Normalize( &( pPoint->vNorm ) );
 	}
 
 	return bFlag;
 }
 
-
-static void GetSeaAreas( std::vector< std::vector<NDb::SVSOPoint> > *pRes, const std::vector<NDb::SVSOPoint> &samples, const CVec2 &p1, const CVec2 &p2 )
+static void GetSeaAreas( std::vector<std::vector<NDb::SVSOPoint>> *pRes,
+                         const std::vector<NDb::SVSOPoint> &samples,
+                         const CVec2 &p1,
+                         const CVec2 &p2 )
 {
 	if ( samples.size() < 2 )
 		return;
@@ -395,24 +392,26 @@ static void GetSeaAreas( std::vector< std::vector<NDb::SVSOPoint> > *pRes, const
 	if ( areaCornersHash.empty() )
 		InitCornersHash();
 
-	std::vector<std::vector<NDb::SVSOPoint> > &res = *pRes;
+	std::vector<std::vector<NDb::SVSOPoint>> &res = *pRes;
 	std::vector<NDb::SVSOPoint> addPoints( 128 );
 
 	NDb::SVSOPoint p;
 	std::vector<NDb::SVSOPoint>::const_iterator it1 = samples.begin();
-	std::vector<NDb::SVSOPoint>::const_iterator it2 = samples.begin(); ++it2;
+	std::vector<NDb::SVSOPoint>::const_iterator it2 = samples.begin();
+	++it2;
 	for ( ; it1 != samples.end() && it2 != samples.end(); ++it1, ++it2 )
 	{
 		if ( GetIntersectWithArea( &p, *it1, *it2, p1, p2 ) )
 		{
 			addPoints.resize( 0 );
 			addPoints.push_back( p );
-			++it1; ++it2;
+			++it1;
+			++it2;
 
 			for ( ; it2 != samples.end(); ++it1, ++it2 )
 			{
 				addPoints.push_back( *it1 );
-				if ( GetIntersectWithArea(&p, *it1, *it2, p1, p2) )
+				if ( GetIntersectWithArea( &p, *it1, *it2, p1, p2 ) )
 					break;
 			}
 			if ( it2 != samples.end() )
@@ -423,7 +422,7 @@ static void GetSeaAreas( std::vector< std::vector<NDb::SVSOPoint> > *pRes, const
 				const int nInd1 = GetPointIndOnRect( addPoints[0], p1, p2 );
 				const int nInd2 = GetPointIndOnRect( addPoints.back(), p1, p2 );
 
-				CAreaCornersHash::const_iterator itFind = areaCornersHash.find( (nInd2 << 3) | nInd1 );
+				CAreaCornersHash::const_iterator itFind = areaCornersHash.find( ( nInd2 << 3 ) | nInd1 );
 				if ( itFind != areaCornersHash.end() )
 				{
 					const std::vector<int> &cornersArr = itFind->second;
@@ -440,7 +439,6 @@ static void GetSeaAreas( std::vector< std::vector<NDb::SVSOPoint> > *pRes, const
 	}
 }
 
-
 static void ClampArrayLower( CArray2D<float> *pArray, float fValidLowerValue )
 {
 	// clamp to over or equal to zero
@@ -448,13 +446,12 @@ static void ClampArrayLower( CArray2D<float> *pArray, float fValidLowerValue )
 	{
 		for ( int i = 0; i < pArray->GetSizeX(); ++i )
 		{
-			float &fVal = (*pArray)[g][i];
+			float &fVal = ( *pArray )[g][i];
 			if ( fVal < fValidLowerValue )
 				fVal = fValidLowerValue;
 		}
 	}
 }
-
 
 static void SetMinOfTwoArrays( CArray2D<float> *pDst, const CArray2D<float> &src )
 {
@@ -462,12 +459,11 @@ static void SetMinOfTwoArrays( CArray2D<float> *pDst, const CArray2D<float> &src
 	{
 		for ( int i = 0; i < pDst->GetSizeX(); ++i )
 		{
-			float &fVal = (*pDst)[g][i];
+			float &fVal = ( *pDst )[g][i];
 			fVal = (std::min)( fVal, src[g][i] );
 		}
 	}
 }
-
 
 void CTerraGen::ReCreateAllWaterZones()
 {
@@ -490,15 +486,17 @@ void CTerraGen::ReCreateAllWaterZones()
 	{
 		const NDb::SCoastDesc *pCoastDesc = static_cast<const NDb::SCoastDesc *>( pDesc->coast.pDescriptor.GetPtr() );
 		waterParams.push_back( NWaterStuff::SWaterParams() );
-		waterParams.back() = *(pCoastDesc->pWater);
+		waterParams.back() = *( pCoastDesc->pWater );
 		//vector<NWaterStuff::SWaterParams>::iterator it = waterParams.insert( waterParams.end(), NWaterStuff::SWaterParams() );
 		//*it = *( pCoastDesc->pWater );
 		//FillSeaArea( pDesc->coast.points, pDesc->vCoastMidPoint, terrainInfo.seaMask, terrainInfo.waterHeightCoeffs );
-		std::vector<std::vector<NDb::SVSOPoint> > seaAreas;
-		GetSeaAreas( &seaAreas, pDesc->coast.points,
-								 CVec2(Vis2AI(-DEF_SEA_OUTSIDE_MAP), Vis2AI(-DEF_SEA_OUTSIDE_MAP)),
-								 CVec2(Vis2AI((float)(terrainInfo.heights.GetSizeX() - 1) * DEF_TILE_SIZE + DEF_SEA_OUTSIDE_MAP),
-											 Vis2AI((float)(terrainInfo.heights.GetSizeY() - 1) * DEF_TILE_SIZE + DEF_SEA_OUTSIDE_MAP)) );
+		std::vector<std::vector<NDb::SVSOPoint>> seaAreas;
+		GetSeaAreas(
+				&seaAreas,
+				pDesc->coast.points,
+				CVec2( Vis2AI( -DEF_SEA_OUTSIDE_MAP ), Vis2AI( -DEF_SEA_OUTSIDE_MAP ) ),
+				CVec2( Vis2AI( (float)( terrainInfo.heights.GetSizeX() - 1 ) * DEF_TILE_SIZE + DEF_SEA_OUTSIDE_MAP ),
+		           Vis2AI( (float)( terrainInfo.heights.GetSizeY() - 1 ) * DEF_TILE_SIZE + DEF_SEA_OUTSIDE_MAP ) ) );
 		for ( int i = 0; i < seaAreas.size(); ++i )
 		{
 			FillWaterArea( &terrainInfo.waterHeightCoeffs, -1.0f, &terrainInfo.seaMask, 1, seaAreas[i] );
@@ -528,7 +526,7 @@ void CTerraGen::ReCreateAllWaterZones()
 	{
 		const NDb::SVSOInstance &lake = pDesc->lakes[*it];
 		const NDb::SLakeDesc *pLakeDesc = static_cast<const NDb::SLakeDesc *>( lake.pDescriptor.GetPtr() );
-		const int nFillInd = GetWaterFillIndex( &waterParams, *(pLakeDesc->pWaterParams) );
+		const int nFillInd = GetWaterFillIndex( &waterParams, *( pLakeDesc->pWaterParams ) );
 		newHeights.FillEvery( 1.0f );
 
 		FillWaterArea( &newHeights, -1.0f, &terrainInfo.seaMask, nFillInd, lake.points );
@@ -542,7 +540,7 @@ void CTerraGen::ReCreateAllWaterZones()
 	{
 		const NDb::SVSOInstance &island = pDesc->lakes[*it];
 		const NDb::SLakeDesc *pLakeDesc = static_cast<const NDb::SLakeDesc *>( island.pDescriptor.GetPtr() );
-		const int nFillInd = GetWaterFillIndex( &waterParams, *(pLakeDesc->pWaterParams) );
+		const int nFillInd = GetWaterFillIndex( &waterParams, *( pLakeDesc->pWaterParams ) );
 
 		FillWaterArea( &terrainInfo.waterHeightCoeffs, 1.0f, &terrainInfo.seaMask, 0, island.points );
 	}
@@ -552,10 +550,9 @@ void CTerraGen::ReCreateAllWaterZones()
 	{
 		for ( int i = 0; i < terrainInfo.tiles.GetSizeX(); ++i )
 		{
-			if ( (terrainInfo.waterHeightCoeffs[g][i] < 1.0f) ||
-					 (terrainInfo.waterHeightCoeffs[g][i + 1] < 1.0f) ||
-					 (terrainInfo.waterHeightCoeffs[g + 1][i] < 1.0f) ||
-					 (terrainInfo.waterHeightCoeffs[g + 1][i + 1] < 1.0f) )
+			if ( ( terrainInfo.waterHeightCoeffs[g][i] < 1.0f ) || ( terrainInfo.waterHeightCoeffs[g][i + 1] < 1.0f ) ||
+			     ( terrainInfo.waterHeightCoeffs[g + 1][i] < 1.0f ) ||
+			     ( terrainInfo.waterHeightCoeffs[g + 1][i + 1] < 1.0f ) )
 			{
 				STerrainInfo::STile &tile = terrainInfo.tiles[g][i];
 				for ( std::vector<CVec3fEx>::iterator it = tile.vertices.begin(); it != tile.vertices.end(); ++it )
@@ -569,7 +566,7 @@ void CTerraGen::ReCreateAllWaterZones()
 	{
 		for ( int i = 0; i < terrainInfo.waterHeightCoeffs.GetSizeX(); ++i )
 		{
-			if ( terrainInfo.waterHeightCoeffs[g][i] > (1.0f - EPS_VALUE) )
+			if ( terrainInfo.waterHeightCoeffs[g][i] > ( 1.0f - EPS_VALUE ) )
 				terrainInfo.waterAddHeights[g][i] = 0.0f;
 		}
 	}
@@ -581,15 +578,15 @@ void CTerraGen::ReCreateAllWaterZones()
 		{
 			if ( coastMask[g][i] )
 			{
-				if ( GetFullTerraHeight((float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE) > FP_EPSILON )
+				if ( GetFullTerraHeight( (float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE ) > FP_EPSILON )
 				{
-					if ( ((i - 1) >= 0) && ((i + 1) < terrainInfo.heights.GetSizeX()) &&
-							 ((g - 1) >= 0) && ((g + 1) < terrainInfo.heights.GetSizeY()) )
+					if ( ( ( i - 1 ) >= 0 ) && ( ( i + 1 ) < terrainInfo.heights.GetSizeX() ) && ( ( g - 1 ) >= 0 ) &&
+					     ( ( g + 1 ) < terrainInfo.heights.GetSizeY() ) )
 					{
-						if ( (GetFullTerraHeight((float)(i-1) * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE) > FP_EPSILON) &&
-								 (GetFullTerraHeight((float)(i+1) * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE) > FP_EPSILON) &&
-								 (GetFullTerraHeight((float)i * DEF_TILE_SIZE, (float)(g-1) * DEF_TILE_SIZE) > FP_EPSILON) &&
-								 (GetFullTerraHeight((float)i * DEF_TILE_SIZE, (float)(g+1) * DEF_TILE_SIZE) > FP_EPSILON) )
+						if ( ( GetFullTerraHeight( (float)( i - 1 ) * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE ) > FP_EPSILON ) &&
+						     ( GetFullTerraHeight( (float)( i + 1 ) * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE ) > FP_EPSILON ) &&
+						     ( GetFullTerraHeight( (float)i * DEF_TILE_SIZE, (float)( g - 1 ) * DEF_TILE_SIZE ) > FP_EPSILON ) &&
+						     ( GetFullTerraHeight( (float)i * DEF_TILE_SIZE, (float)( g + 1 ) * DEF_TILE_SIZE ) > FP_EPSILON ) )
 						{
 							terrainInfo.seaMask[g][i] = 0;
 						}
@@ -600,7 +597,6 @@ void CTerraGen::ReCreateAllWaterZones()
 	}
 }
 
-
 void CTerraGen::UpdateWater()
 {
 	CArray2D<uint8_t> prevMask = terrainInfo.seaMask;
@@ -609,17 +605,17 @@ void CTerraGen::UpdateWater()
 	//ReCreateAllWaterZones();
 	InitWater();
 
-	if ( (prevMask.GetSizeX() == terrainInfo.seaMask.GetSizeX()) &&
-			 (prevMask.GetSizeY() == terrainInfo.seaMask.GetSizeY()) &&
-			 (prevWaterHeights.GetSizeX() == terrainInfo.waterHeightCoeffs.GetSizeX()) &&
-			 (prevWaterHeights.GetSizeY() == terrainInfo.waterHeightCoeffs.GetSizeY()) )
+	if ( ( prevMask.GetSizeX() == terrainInfo.seaMask.GetSizeX() ) &&
+	     ( prevMask.GetSizeY() == terrainInfo.seaMask.GetSizeY() ) &&
+	     ( prevWaterHeights.GetSizeX() == terrainInfo.waterHeightCoeffs.GetSizeX() ) &&
+	     ( prevWaterHeights.GetSizeY() == terrainInfo.waterHeightCoeffs.GetSizeY() ) )
 	{
 		for ( int g = 0; g < prevMask.GetSizeY(); ++g )
 		{
 			for ( int i = 0; i < prevMask.GetSizeX(); ++i )
 			{
-				if ( (prevMask[g][i] != terrainInfo.seaMask[g][i]) ||
-						 (prevWaterHeights[g][i] != terrainInfo.waterHeightCoeffs[g][i]) )
+				if ( ( prevMask[g][i] != terrainInfo.seaMask[g][i] ) ||
+				     ( prevWaterHeights[g][i] != terrainInfo.waterHeightCoeffs[g][i] ) )
 				{
 					vBBMin.x = (std::min)( vBBMin.x, i );
 					vBBMin.y = (std::min)( vBBMin.y, g );
@@ -640,7 +636,7 @@ void CTerraGen::UpdateWater()
 		vBBMax.Set( terrainInfo.tiles.GetSizeX() - 1, terrainInfo.tiles.GetSizeY() - 1 );
 	}
 
-	if ( (vBBMin.x <= vBBMax.x) && (vBBMin.y <= vBBMax.y) )
+	if ( ( vBBMin.x <= vBBMax.x ) && ( vBBMin.y <= vBBMax.y ) )
 	{
 		UpdateVectorAreaInfo( vBBMin.x, vBBMin.y, vBBMax.x, vBBMax.y, TERRAIN_UPDATE_ALL );
 	}
@@ -649,7 +645,6 @@ void CTerraGen::UpdateWater()
 	if ( IScene *pScene = Scene() )
 		pScene->UpdateGrid( vBBMin.x, vBBMin.y, vBBMax.x, vBBMax.y );
 }
-
 
 void CTerraGen::InitWater()
 {
@@ -692,11 +687,13 @@ void CTerraGen::InitWater()
 		if ( waterBorders[i].pSurfMaterial )
 		{
 			lastSurf.resize( 0 );
-			for ( std::vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin(); it != waterBorders[i].points.end(); ++it )
+			for ( std::vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin();
+			      it != waterBorders[i].points.end();
+			      ++it )
 			{
 				vPos = it->vPos;
 				AI2Vis( &vPos );
-				if ( !IsPointInsideRivers(vPos, -1) )
+				if ( !IsPointInsideRivers( vPos, -1 ) )
 					lastSurf.push_back( *it );
 				else
 				{
@@ -717,13 +714,13 @@ void CTerraGen::InitWater()
 			}
 		}
 	}
-	surfController.Init( fAngle, CVec2i(terrainInfo.tiles.GetSizeX(), terrainInfo.tiles.GetSizeY()), surfBorders, pGScene );
+	surfController.Init(
+			fAngle, CVec2i( terrainInfo.tiles.GetSizeX(), terrainInfo.tiles.GetSizeY() ), surfBorders, pGScene );
 
 	TIME_STAT_FINISH( CTerraGen__InitWater )
 }
 
-
-void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
+void CTerraGen::InitRainyWater( CDBPtr<NDb::SWater> pWater )
 {
 	if ( !pWater )
 	{
@@ -779,11 +776,13 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 		if ( waterBorders[i].pSurfMaterial )
 		{
 			lastSurf.resize( 0 );
-			for ( std::vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin(); it != waterBorders[i].points.end(); ++it )
+			for ( std::vector<NDb::SVSOPoint>::const_iterator it = waterBorders[i].points.begin();
+			      it != waterBorders[i].points.end();
+			      ++it )
 			{
 				vPos = it->vPos;
 				AI2Vis( &vPos );
-				if ( !IsPointInsideRivers(vPos, -1) )
+				if ( !IsPointInsideRivers( vPos, -1 ) )
 					lastSurf.push_back( *it );
 				else
 				{
@@ -804,7 +803,8 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 			}
 		}
 	}
-	surfController.Init( fAngle, CVec2i(terrainInfo.tiles.GetSizeX(), terrainInfo.tiles.GetSizeY()), surfBorders, pGScene );
+	surfController.Init(
+			fAngle, CVec2i( terrainInfo.tiles.GetSizeX(), terrainInfo.tiles.GetSizeY() ), surfBorders, pGScene );
 
 	TIME_STAT_FINISH( CTerraGen__InitRainyWater )
 }

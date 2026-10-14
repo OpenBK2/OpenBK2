@@ -7,11 +7,13 @@
 extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
-CExecutorUnitBase::CExecutorUnitBase( const EExecutorTypeID _eTypeID, const int _nNextTime, const EUnitSpecialAbility _eAbility )
-: timeLastUpdate( curTime ), timeDisableGroup( curTime ), eAbility( _eAbility ), state( EASS_READY_TO_ON ), stateBeforeDisable( EASS_DISABLE ),
-	CExecutor( _eTypeID, _nNextTime ), fSpeedCoeff (1.0f), pAbilityDesc(0), fOldProgress( -1.0f )
+CExecutorUnitBase::CExecutorUnitBase( const EExecutorTypeID _eTypeID,
+                                      const int _nNextTime,
+                                      const EUnitSpecialAbility _eAbility )
+		: timeLastUpdate( curTime ), timeDisableGroup( curTime ), eAbility( _eAbility ), state( EASS_READY_TO_ON ),
+			stateBeforeDisable( EASS_DISABLE ), CExecutor( _eTypeID, _nNextTime ), fSpeedCoeff( 1.0f ), pAbilityDesc( 0 ),
+			fOldProgress( -1.0f )
 {
-
 }
 
 int CExecutorUnitBase::Segment()
@@ -43,7 +45,7 @@ void CExecutorUnitBase::UpdateProgress( const SAbilitySwitchState _state, const 
 	if ( !bNearlySameProgress )
 		fOldProgress = fParam;
 
-	if ( !bNearlySameProgress && 0 != memcmp( &lastSent, &pUpdate->info, sizeof(lastSent) ) )
+	if ( !bNearlySameProgress && 0 != memcmp( &lastSent, &pUpdate->info, sizeof( lastSent ) ) )
 	{
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, GetUnit(), -1 );
 		lastSent = pUpdate->info;
@@ -54,14 +56,14 @@ void CExecutorUnitBase::UpdateProgress( const SAbilitySwitchState _state, const 
 void CExecutorUnitBase::SetAutocast( const bool _bAutocast )
 {
 	state.bAutocast = _bAutocast;
-	UpdateProgress( state , 0 );
+	UpdateProgress( state, 0 );
 }
 
 bool CExecutorUnitBase::UpdateAbilityState()
 {
-	switch( state.eState )
+	switch ( state.eState )
 	{
-	case EASS_ACTIVE:
+		case EASS_ACTIVE:
 		{
 			const float fProgress = OnAbilityActive();
 			if ( 1.0f == fProgress )
@@ -76,7 +78,7 @@ bool CExecutorUnitBase::UpdateAbilityState()
 				UpdateProgress( state, fProgress );
 		}
 		break;
-	case EASS_DISABLE:
+		case EASS_DISABLE:
 		{
 			const int nTimePassed = curTime - timeLastUpdate;
 			const int nTimeNeeded = timeDisableGroup;
@@ -90,11 +92,11 @@ bool CExecutorUnitBase::UpdateAbilityState()
 				return true;
 			}
 			else
-				UpdateProgress( state, float(nTimePassed) / float(nTimeNeeded) );
+				UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
 		}
 
 		break;
-	case EASS_OFF:
+		case EASS_OFF:
 		{
 			const float fProgress = OnAbilityOff();
 			if ( 1.0f == fProgress )
@@ -106,7 +108,7 @@ bool CExecutorUnitBase::UpdateAbilityState()
 			else
 			{
 				const int nTimePassed = curTime - timeLastUpdate;
-				if ( const NDb::SUnitSpecialAblityDesc *pSA = GetUnit()->GetUnitAbilityDesc(eAbility) )
+				if ( const NDb::SUnitSpecialAblityDesc *pSA = GetUnit()->GetUnitAbilityDesc( eAbility ) )
 				{
 					const int nTimeNeeded = pSA->nRefreshTime;
 					if ( nTimePassed >= nTimeNeeded )
@@ -116,13 +118,13 @@ bool CExecutorUnitBase::UpdateAbilityState()
 						return true;
 					}
 					else
-						UpdateProgress( state, float(nTimePassed) / float(nTimeNeeded) );
+						UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
 				}
 			}
 		}
 
 		break;
-	case EASS_SWITCHING_ON:
+		case EASS_SWITCHING_ON:
 		{
 			const int nTimePassed = curTime - timeLastUpdate;
 			if ( const NDb::SUnitSpecialAblityDesc *pSA = GetAbilityDesc() )
@@ -136,12 +138,12 @@ bool CExecutorUnitBase::UpdateAbilityState()
 					return true;
 				}
 				else
-					UpdateProgress( state, float(nTimePassed) / float(nTimeNeeded) );
+					UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
 			}
 		}
 
 		break;
-	case EASS_SWITCHING_OFF:
+		case EASS_SWITCHING_OFF:
 		{
 			const int nTimePassed = curTime - timeLastUpdate;
 			if ( const NDb::SUnitSpecialAblityDesc *pSA = GetAbilityDesc() )
@@ -156,19 +158,21 @@ bool CExecutorUnitBase::UpdateAbilityState()
 					return true;
 				}
 				else
-					UpdateProgress( state, float(nTimePassed) / float(nTimeNeeded) );
+					UpdateProgress( state, float( nTimePassed ) / float( nTimeNeeded ) );
 			}
 		}
 
 		break;
-	case EASS_READY_TO_ON:
-		UpdateProgress( state, 0 );
-		break;
+		case EASS_READY_TO_ON:
+			UpdateProgress( state, 0 );
+			break;
 	}
 	return false;
 }
 
-void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer, const std::vector<EExecutorEventID> &events, const SExecutorEventParam &_par )
+void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer,
+                                          const std::vector<EExecutorEventID> &events,
+                                          const SExecutorEventParam &_par )
 {
 	SExecutorEventParam par( _par );
 	for ( int i = 0; i < events.size(); ++i )
@@ -178,7 +182,9 @@ void CExecutorUnitBase::RegisterOnEvents( IExecutorContainer *pContainer, const 
 	}
 }
 
-void CExecutorUnitBase::RegisterOnUnitEvents( IExecutorContainer *pContainer, const std::vector<EExecutorEventID> &unitEvents, const int nUnitID )
+void CExecutorUnitBase::RegisterOnUnitEvents( IExecutorContainer *pContainer,
+                                              const std::vector<EExecutorEventID> &unitEvents,
+                                              const int nUnitID )
 {
 	SExecutorEventParam par;
 	par.nUnitID = nUnitID;
@@ -195,17 +201,17 @@ void CExecutorUnitBase::Disable()
 
 bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 {
-	switch( event.GetParam().eEventID )
+	switch ( event.GetParam().eEventID )
 	{
-	case EID_ABILITY_ACTIVATE_AUTOCAST:
-		SetAutocast( true );
+		case EID_ABILITY_ACTIVATE_AUTOCAST:
+			SetAutocast( true );
 
-		return true;
-	case EID_ABILITY_DEACTIVATE_AUTOCAST:
-		SetAutocast( false );
+			return true;
+		case EID_ABILITY_DEACTIVATE_AUTOCAST:
+			SetAutocast( false );
 
-		return true;
-	case EID_ABILITY_DEACTIVATE:
+			return true;
+		case EID_ABILITY_DEACTIVATE:
 		{
 			// this ablity finished
 			SwitchingOffStart();
@@ -214,29 +220,30 @@ bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 			fOldProgress = -1.0f;
 		}
 
-		return true;
-	case EID_ABILITY_DISABLE:
-		Disable();
-		fOldProgress = -1.0f;
-
-		break;
-	case EID_ABILITY_ENABLE:
-		state = stateBeforeDisable;
-
-		break;
-	case EID_NEW_COMMAND_RECIEVED:
-		if ( state.eState == EASS_SWITCHING_ON )
-		{
-			state.eState = EASS_OFF;
+			return true;
+		case EID_ABILITY_DISABLE:
+			Disable();
 			fOldProgress = -1.0f;
-			timeLastUpdate = curTime;
-			SwitchingOffEnd();
-		}
 
-		break;
-	case EID_ABILITY_ACTIVATE:
+			break;
+		case EID_ABILITY_ENABLE:
+			state = stateBeforeDisable;
+
+			break;
+		case EID_NEW_COMMAND_RECIEVED:
+			if ( state.eState == EASS_SWITCHING_ON )
+			{
+				state.eState = EASS_OFF;
+				fOldProgress = -1.0f;
+				timeLastUpdate = curTime;
+				SwitchingOffEnd();
+			}
+
+			break;
+		case EID_ABILITY_ACTIVATE:
 		{
-			const CExecutorEventSpecialAbilityActivate *pEv( static_cast<const CExecutorEventSpecialAbilityActivate *>( &event ) );
+			const CExecutorEventSpecialAbilityActivate *pEv(
+					static_cast<const CExecutorEventSpecialAbilityActivate *>( &event ) );
 			if ( state.eState == EASS_DISABLE )
 			{
 				if ( ActivateDuringDisable() )
@@ -249,13 +256,14 @@ bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 			else if ( eAbility == pEv->GetAbility() ) // this ablity started
 			{
 				if ( state.eState == EASS_READY_TO_ON )
-				{								//If not already active, start switching on
+				{ //If not already active, start switching on
 					state.eState = EASS_SWITCHING_ON;
-					SwitchOnStart( static_cast<const CExecutorEventSpecialAbilityActivate*>( &event )->GetCommand() );
+					SwitchOnStart( static_cast<const CExecutorEventSpecialAbilityActivate *>( &event )->GetCommand() );
 					timeLastUpdate = curTime;
 				}
 			}
-			else if ( GetAbilityDesc() && GetAbilityDesc()->eGroupID == pEv->GetDesc()->eGroupID ) // ability from this group started
+			else if ( GetAbilityDesc() &&
+			          GetAbilityDesc()->eGroupID == pEv->GetDesc()->eGroupID ) // ability from this group started
 			{
 				if ( EASS_DISABLE != state.eState )
 					stateBeforeDisable = state;
@@ -264,12 +272,12 @@ bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 				timeDisableGroup = pEv->GetDesc()->nDisableGroupTime;
 			}
 		}
-		return true;
+			return true;
 	}
 	return false;
 }
 
-void CExecutorUnitBase::ForceRecharge( )
+void CExecutorUnitBase::ForceRecharge()
 {
 	state.eState = EASS_OFF;
 	fOldProgress = -1.0f;
@@ -277,7 +285,7 @@ void CExecutorUnitBase::ForceRecharge( )
 	UpdateProgress( state, 0 );
 }
 
-void CExecutorUnitBase::ForceActivate( )
+void CExecutorUnitBase::ForceActivate()
 {
 	if ( state.eState == EASS_DISABLE )
 	{
@@ -288,19 +296,21 @@ void CExecutorUnitBase::ForceActivate( )
 			state.eState = EASS_SWITCHING_ON;
 		}
 	}
-	else if ( state.eState == EASS_READY_TO_ON ) {
+	else if ( state.eState == EASS_READY_TO_ON )
+	{
 		SwitchOnStart( 0 );
 		timeLastUpdate = curTime;
 		state.eState = EASS_SWITCHING_ON;
 	}
-	else if ( state.eState == EASS_SWITCHING_OFF ) {
+	else if ( state.eState == EASS_SWITCHING_OFF )
+	{
 		timeLastUpdate = curTime;
 		state.eState = EASS_ACTIVE;
 	}
 	fOldProgress = -1.0f;
 }
 
-void CExecutorUnitBase::ForceDeactivate( )
+void CExecutorUnitBase::ForceDeactivate()
 {
 	fOldProgress = -1.0f;
 	if ( state.eState == EASS_ACTIVE )

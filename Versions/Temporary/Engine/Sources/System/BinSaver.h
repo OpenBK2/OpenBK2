@@ -10,40 +10,52 @@
 
 #include "port/cdecl.h"
 
-#define REGISTER_SAVELOAD_CLASS( module, N, name )  \
-	BASIC_REGISTER_CLASS( module, name ) \
-	static struct name##Register##N { \
-		name##Register##N() { REGISTER_CLASS( N, name )	}	\
+#define REGISTER_SAVELOAD_CLASS( module, N, name )    \
+	BASIC_REGISTER_CLASS( module, name )                \
+	static struct name##Register##N                     \
+	{                                                   \
+		name##Register##N() { REGISTER_CLASS( N, name ) } \
 	} init##name##N;
-#define REGISTER_SAVELOAD_TEMPL_CLASS( module, N, name, className )  \
-	BASIC_REGISTER_CLASS( module, name ) \
-	static struct className##Register##N { \
-		className##Register##N() { REGISTER_TEMPL_CLASS( N, name, className ) }	\
+#define REGISTER_SAVELOAD_TEMPL_CLASS( module, N, name, className )         \
+	BASIC_REGISTER_CLASS( module, name )                                      \
+	static struct className##Register##N                                      \
+	{                                                                         \
+		className##Register##N() { REGISTER_TEMPL_CLASS( N, name, className ) } \
 	} init##className##N;
-#define REGISTER_SAVELOAD_CLASS_NM( module, N, name, nmspace )  \
-	BASIC_REGISTER_CLASS( module, nmspace::name ) \
-	static struct name##Register##N { \
-		name##Register##N() { REGISTER_CLASS_NM( N, name, nmspace )	}	\
+#define REGISTER_SAVELOAD_CLASS_NM( module, N, name, nmspace )    \
+	BASIC_REGISTER_CLASS( module, nmspace::name )                   \
+	static struct name##Register##N                                 \
+	{                                                               \
+		name##Register##N() { REGISTER_CLASS_NM( N, name, nmspace ) } \
 	} init##name##N;
-#define START_REGISTER(a) void StartRegisterHook##a() {} static struct a##Init { a##Init () {
-#define FINISH_REGISTER } } init;
+#define START_REGISTER( a )      \
+	void StartRegisterHook##a() {} \
+	static struct a##Init          \
+	{                              \
+		a##Init()                    \
+		{
+#define FINISH_REGISTER \
+	}                     \
+	}                     \
+	init;
 
-#define ZDATA_(a)
+#define ZDATA_( a )
 #define ZDATA
-#define ZPARENT(a)
+#define ZPARENT( a )
 #define ZEND
 #define ZSKIP
 #define ZONSERIALIZE
 
 //#define CHECK_VALID_SERIALIZED_POINTERS
 
-template <class T> class CArray2D;
+template <class T>
+class CArray2D;
 
 enum ESaverMode
 {
 	// always reads/writes pointers as 32-bit (4 bytes)
-	SAVER_MODE_READ		= 1,
-	SAVER_MODE_WRITE	= 2,
+	SAVER_MODE_READ = 1,
+	SAVER_MODE_WRITE = 2,
 	SAVER_MODE_WRITE_COMPRESSED = 3,
 	// on x64, reads/writes pointers as 64-bit (8 bytes)
 	SAVER_MODE_READ_64 = 4,
@@ -65,33 +77,64 @@ public:
 	typedef unsigned char chunk_id;
 	typedef std::string stdString;
 	typedef std::wstring stdWString;
+
 private:
-	char PORT_CDECL TestDataPath(...) { return 0; }
-	int PORT_CDECL TestDataPath( stdString* ) { return 0; }
-	int PORT_CDECL TestDataPath( stdWString* ) { return 0; }
-	int PORT_CDECL TestDataPath( CMemoryStream* ) { return 0; }
-	template<class T1>
-		int PORT_CDECL TestDataPath( CArray2D<T1>* ) { return 0; }
-	template<class T1>
-		int PORT_CDECL TestDataPath( std::vector<T1>* ) { return 0; }
-	template<class T1>
-		int PORT_CDECL TestDataPath( std::list<T1>* ) { return 0; }
-	template<class T1, class T2, class T3>
-		int PORT_CDECL TestDataPath( std::unordered_map<T1,T2,T3>* ) { return 0; }
-	template<class T1, class T2>
-		int PORT_CDECL TestDataPath( std::unordered_set<T1,T2>* ) { return 0; }
-	template<class T1, class T2, class T3, class T4>
-		int PORT_CDECL TestDataPath( det_map<T1,T2,T3,T4>* ) { return 0; }
-	template<class T1, class T2, class T3>
-		int PORT_CDECL TestDataPath( det_set<T1,T2,T3>* ) { return 0; }
-	template<class T1, class T2, class T3>
-		int PORT_CDECL TestDataPath(std::priority_queue<T1, T2, T3>*) { return 0; }
-	template<class T1, class T2>
-		int PORT_CDECL TestDataPath( std::set<T1,T2>* ) { return 0; }
-	template<class T1, class T2>
-		int PORT_CDECL TestDataPath( std::pair<T1,T2>* ) { return 0; }
+	char PORT_CDECL TestDataPath( ... ) { return 0; }
+	int PORT_CDECL TestDataPath( stdString * ) { return 0; }
+	int PORT_CDECL TestDataPath( stdWString * ) { return 0; }
+	int PORT_CDECL TestDataPath( CMemoryStream * ) { return 0; }
+	template <class T1>
+	int PORT_CDECL TestDataPath( CArray2D<T1> * )
+	{
+		return 0;
+	}
+	template <class T1>
+	int PORT_CDECL TestDataPath( std::vector<T1> * )
+	{
+		return 0;
+	}
+	template <class T1>
+	int PORT_CDECL TestDataPath( std::list<T1> * )
+	{
+		return 0;
+	}
+	template <class T1, class T2, class T3>
+	int PORT_CDECL TestDataPath( std::unordered_map<T1, T2, T3> * )
+	{
+		return 0;
+	}
+	template <class T1, class T2>
+	int PORT_CDECL TestDataPath( std::unordered_set<T1, T2> * )
+	{
+		return 0;
+	}
+	template <class T1, class T2, class T3, class T4>
+	int PORT_CDECL TestDataPath( det_map<T1, T2, T3, T4> * )
+	{
+		return 0;
+	}
+	template <class T1, class T2, class T3>
+	int PORT_CDECL TestDataPath( det_set<T1, T2, T3> * )
+	{
+		return 0;
+	}
+	template <class T1, class T2, class T3>
+	int PORT_CDECL TestDataPath( std::priority_queue<T1, T2, T3> * )
+	{
+		return 0;
+	}
+	template <class T1, class T2>
+	int PORT_CDECL TestDataPath( std::set<T1, T2> * )
+	{
+		return 0;
+	}
+	template <class T1, class T2>
+	int PORT_CDECL TestDataPath( std::pair<T1, T2> * )
+	{
+		return 0;
+	}
 	//
-	template<class T>
+	template <class T>
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, ... )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
@@ -99,14 +142,15 @@ private:
 		p->T::operator&( *this );
 		FinishChunk();
 	}
-	template<class T>
+	template <class T>
 	void PORT_CDECL CallObjectSerialize( const chunk_id idChunk, int nChunkNumber, T *p, SInt2Type<1> *pp )
 	{
-		DataChunk( idChunk, p, sizeof(T), nChunkNumber );
+		DataChunk( idChunk, p, sizeof( T ), nChunkNumber );
 	}
 	//
 	// vector
-	template <class T> void DoVector( std::vector<T> &data )
+	template <class T>
+	void DoVector( std::vector<T> &data )
 	{
 		int i, nSize;
 		if ( IsReading() )
@@ -126,7 +170,8 @@ private:
 		for ( i = 0; i < nSize; i++ )
 			Add( 1, &data[i], i + 1 );
 	}
-	template <class T> void DoDataVector( std::vector<T> &data )
+	template <class T>
+	void DoDataVector( std::vector<T> &data )
 	{
 		int nSize = data.size();
 		Add( 1, &nSize );
@@ -136,11 +181,11 @@ private:
 			data.resize( nSize );
 		}
 		if ( nSize > 0 )
-			DataChunk( 2, &data[0], sizeof(T) * nSize, 1 );
+			DataChunk( 2, &data[0], sizeof( T ) * nSize, 1 );
 	}
 	// hash_map
-	template <class T1,class T2,class T3>
-		void DoHashMap( std::unordered_map<T1,T2,T3> &data )
+	template <class T1, class T2, class T3>
+	void DoHashMap( std::unordered_map<T1, T2, T3> &data )
 	{
 		if ( IsReading() )
 		{
@@ -161,7 +206,7 @@ private:
 			for ( i = 0; i < nSize; ++i )
 				Add( 1, &indices[i], i + 1 );
 			for ( i = 0; i < nSize; ++i )
-				Add( 2, &data[ indices[i] ], i + 1 );
+				Add( 2, &data[indices[i]], i + 1 );
 		}
 		else
 		{
@@ -172,37 +217,37 @@ private:
 			std::vector<T1> indices;
 			indices.resize( nSize );
 			int i = 1;
-			for ( typename std::unordered_map<T1,T2,T3>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
-				indices[ nSize - i ] = pos->first;
+			for ( typename std::unordered_map<T1, T2, T3>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
+				indices[nSize - i] = pos->first;
 			for ( i = 0; i < nSize; ++i )
 				Add( 1, &indices[i], i + 1 );
 			for ( i = 0; i < nSize; ++i )
-				Add( 2, &data[ indices[i] ], i + 1 );
+				Add( 2, &data[indices[i]], i + 1 );
 		}
 	}
 
 	template <class T1, class T2>
-		void DoHashSet( std::unordered_set<T1, T2> &data )
+	void DoHashSet( std::unordered_set<T1, T2> &data )
 	{
-		if (IsReading())
+		if ( IsReading() )
 		{
 			std::vector<T1> vectorData;
-			Add(1, &vectorData);
+			Add( 1, &vectorData );
 
 			data.clear();
-			data.insert(vectorData.begin(), vectorData.end());
+			data.insert( vectorData.begin(), vectorData.end() );
 		}
 		else
 		{
-			std::vector<T1> vectorData(data.begin(), data.end());
-			Add(1, &vectorData);
+			std::vector<T1> vectorData( data.begin(), data.end() );
+			Add( 1, &vectorData );
 		}
 	}
 
 	// Deterministic containers use the same chunk layout as unordered containers,
 	// but save and restore their remembered insertion order.
 	template <class T1, class T2, class T3, class T4>
-		void DoDetMap( det_map<T1, T2, T3, T4> &data )
+	void DoDetMap( det_map<T1, T2, T3, T4> &data )
 	{
 		if ( IsReading() )
 		{
@@ -226,7 +271,7 @@ private:
 			for ( i = 0; i < nSize; ++i )
 				Add( 1, &indices[i], i + 1 );
 			for ( i = 0; i < nSize; ++i )
-				Add( 2, &data[ indices[i] ], i + 1 );
+				Add( 2, &data[indices[i]], i + 1 );
 		}
 		else
 		{
@@ -257,7 +302,7 @@ private:
 	}
 
 	template <class T1, class T2, class T3>
-		void DoDetSet( det_set<T1, T2, T3> &data )
+	void DoDetSet( det_set<T1, T2, T3> &data )
 	{
 		if ( IsReading() )
 		{
@@ -278,22 +323,23 @@ private:
 	}
 
 	template <class T, class Container, class Compare>
-	struct PriorityQueueAccessor : public std::priority_queue<T, Container, Compare> {
+	struct PriorityQueueAccessor : public std::priority_queue<T, Container, Compare>
+	{
 		using Base = std::priority_queue<T, Container, Compare>;
 		using Base::c;
 		using Base::comp;
 	};
 
 	template <class T1, class T2, class T3>
-		void DoPriorityQueue( std::priority_queue<T1, T2, T3> &data )
+	void DoPriorityQueue( std::priority_queue<T1, T2, T3> &data )
 	{
-		auto& c = static_cast<PriorityQueueAccessor<T1, T2, T3>&>(data).c;
+		auto &c = static_cast<PriorityQueueAccessor<T1, T2, T3> &>( data ).c;
 
-		Add(1, &c);
+		Add( 1, &c );
 	}
 
-	template <class T1,class T2>
-		void DoSet( std::set<T1,T2> &data )
+	template <class T1, class T2>
+	void DoSet( std::set<T1, T2> &data )
 	{
 		if ( IsReading() )
 		{
@@ -309,7 +355,8 @@ private:
 			Add( 1, &vectorData );
 		}
 	}
-	template<class T> void Do2DArray( CArray2D<T> &a )
+	template <class T>
+	void Do2DArray( CArray2D<T> &a )
 	{
 		int nXSize = a.GetSizeX(), nYSize = a.GetSizeY();
 		Add( 1, &nXSize );
@@ -317,9 +364,10 @@ private:
 		if ( IsReading() )
 			a.SetSizes( nXSize, nYSize );
 		for ( int i = 0; i < nXSize * nYSize; i++ )
-			Add( 3, &a[i/nXSize][i%nXSize], i + 1 );
+			Add( 3, &a[i / nXSize][i % nXSize], i + 1 );
 	}
-	template<class T> void Do2DArrayData( CArray2D<T> &a )
+	template <class T>
+	void Do2DArrayData( CArray2D<T> &a )
 	{
 		int nXSize = a.GetSizeX(), nYSize = a.GetSizeY();
 		Add( 1, &nXSize );
@@ -327,7 +375,7 @@ private:
 		if ( IsReading() )
 			a.SetSizes( nXSize, nYSize );
 		if ( nXSize * nYSize > 0 )
-			DataChunk( 3, &a[0][0], sizeof(T) * nXSize * nYSize, 1 );
+			DataChunk( 3, &a[0][0], sizeof( T ) * nXSize * nYSize, 1 );
 	}
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) = 0;
 	virtual void FinishChunk() = 0;
@@ -338,18 +386,22 @@ private:
 	virtual void DataChunkString( std::wstring &data ) = 0;
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject ) = 0;
-	virtual CObjectBase* LoadObject() = 0;
+	virtual CObjectBase *LoadObject() = 0;
+
 public:
 	virtual bool IsReading() = 0;
 	virtual bool IsChecksum() { return false; }
 	virtual int GetVersion() const = 0;
 	//
-	void AddRawData( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber = 1 ) { DataChunk( idChunk, pData, nSize, nChunkNumber ); }
-	//
-	template<class T>
-		void Add( const chunk_id idChunk, T *p, int nChunkNumber = 1 )
+	void AddRawData( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber = 1 )
 	{
-		const int N_HAS_SERIALIZE_TEST = sizeof( (*p)&(*this) );
+		DataChunk( idChunk, pData, nSize, nChunkNumber );
+	}
+	//
+	template <class T>
+	void Add( const chunk_id idChunk, T *p, int nChunkNumber = 1 )
+	{
+		const int N_HAS_SERIALIZE_TEST = sizeof( ( *p ) & ( *this ) );
 		SInt2Type<N_HAS_SERIALIZE_TEST> separator;
 		CallObjectSerialize( idChunk, nChunkNumber, p, &separator );
 	}
@@ -384,55 +436,55 @@ public:
 		FinishChunk();
 		FinishChunk();
 	}
-	template<class T1>
-		void Add( const chunk_id idChunk, std::vector<T1> *pVec, int nChunkNumber = 1 )
+	template <class T1>
+	void Add( const chunk_id idChunk, std::vector<T1> *pVec, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
-		if ( sizeof( TestDataPath( &(*pVec)[0] ) ) == 1 && sizeof( (*pVec)[0]&(*this) ) == 1 )
+		if ( sizeof( TestDataPath( &( *pVec )[0] ) ) == 1 && sizeof( ( *pVec )[0] & ( *this ) ) == 1 )
 			DoDataVector( *pVec );
 		else
 			DoVector( *pVec );
 		FinishChunk();
 	}
-	template<class T1, class T2, class T3>
-		void Add( const chunk_id idChunk, std::unordered_map<T1,T2,T3> *pHash, int nChunkNumber = 1 )
+	template <class T1, class T2, class T3>
+	void Add( const chunk_id idChunk, std::unordered_map<T1, T2, T3> *pHash, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoHashMap( *pHash );
 		FinishChunk();
 	}
-	template<class T1, class T2>
-		void Add( const chunk_id idChunk, std::unordered_set<T1,T2> *pHash, int nChunkNumber = 1 )
+	template <class T1, class T2>
+	void Add( const chunk_id idChunk, std::unordered_set<T1, T2> *pHash, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoHashSet( *pHash );
 		FinishChunk();
 	}
-	template<class T1, class T2, class T3, class T4>
-		void Add( const chunk_id idChunk, det_map<T1,T2,T3,T4> *pMap, int nChunkNumber = 1 )
+	template <class T1, class T2, class T3, class T4>
+	void Add( const chunk_id idChunk, det_map<T1, T2, T3, T4> *pMap, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoDetMap( *pMap );
 		FinishChunk();
 	}
-	template<class T1, class T2, class T3>
-		void Add( const chunk_id idChunk, det_set<T1,T2,T3> *pSet, int nChunkNumber = 1 )
+	template <class T1, class T2, class T3>
+	void Add( const chunk_id idChunk, det_set<T1, T2, T3> *pSet, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoDetSet( *pSet );
 		FinishChunk();
 	}
-	template<class T1, class T2, class T3>
-	void Add(const chunk_id idChunk, std::priority_queue<T1, T2, T3>* pQueue, int nChunkNumber = 1)
+	template <class T1, class T2, class T3>
+	void Add( const chunk_id idChunk, std::priority_queue<T1, T2, T3> *pQueue, int nChunkNumber = 1 )
 	{
-		if (!StartChunk(idChunk, nChunkNumber))
+		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
-		DoPriorityQueue(*pQueue);
+		DoPriorityQueue( *pQueue );
 		FinishChunk();
 	}
 #if 0
@@ -445,27 +497,27 @@ public:
 		FinishChunk();
 	}
 #endif
-	template<class T1, class T2>
-		void Add( const chunk_id idChunk, std::set<T1,T2> *pSet, int nChunkNumber = 1 )
+	template <class T1, class T2>
+	void Add( const chunk_id idChunk, std::set<T1, T2> *pSet, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		DoSet( *pSet );
 		FinishChunk();
 	}
-	template<class T1>
-		void Add( const chunk_id idChunk, CArray2D<T1> *pArr, int nChunkNumber = 1 )
+	template <class T1>
+	void Add( const chunk_id idChunk, CArray2D<T1> *pArr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
-		if ( sizeof( TestDataPath( &(*pArr)[0][0] ) ) == 1 && sizeof( (*pArr)[0][0]&(*this) ) == 1 )
+		if ( sizeof( TestDataPath( &( *pArr )[0][0] ) ) == 1 && sizeof( ( *pArr )[0][0] & ( *this ) ) == 1 )
 			Do2DArrayData( *pArr );
 		else
 			Do2DArray( *pArr );
 		FinishChunk();
 	}
-	template<class T1>
-		void Add( const chunk_id idChunk, std::list<T1> *pList, int nChunkNumber = 1 )
+	template <class T1>
+	void Add( const chunk_id idChunk, std::list<T1> *pList, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
@@ -487,13 +539,13 @@ public:
 		}
 		int i = 1;
 		for ( typename std::list<T1>::iterator k = data.begin(); k != data.end(); ++k, ++i )
-			Add( 1, &(*k), i );
+			Add( 1, &( *k ), i );
 		FinishChunk();
 	}
 	template <class T1, class T2>
-		void Add( const chunk_id idChunk, std::pair<T1, T2> *pData, int nChunkNumber = 1 )
+	void Add( const chunk_id idChunk, std::pair<T1, T2> *pData, int nChunkNumber = 1 )
 	{
-		if ( !StartChunk(idChunk, nChunkNumber) )
+		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
 		Add( 1, &( pData->first ) );
 		Add( 2, &( pData->second ) );
@@ -503,24 +555,25 @@ public:
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
-		(*pObject) & (*this);
+		( *pObject ) & ( *this );
 		FinishChunk();
 	}
 	//
 	template <class T1, class T2>
-		void DoPtr( CPtrBase<T1,T2> *pData )
+	void DoPtr( CPtrBase<T1, T2> *pData )
 	{
 #ifdef CHECK_VALID_SERIALIZED_POINTERS
 		if ( !IsReading() )
 		{
-			ASSERT( !pData->GetPtr() || IsValid(*pData) );
+			ASSERT( !pData->GetPtr() || IsValid( *pData ) );
 		}
 #endif
 		if ( IsReading() )
-			pData->Set( CastToUserObject( LoadObject(), (T1*)0 ) );
+			pData->Set( CastToUserObject( LoadObject(), (T1 *)0 ) );
 		else
 			StoreObject( pData->GetBarePtr() );
 	}
+
 private:
 	// Compile time error detection
 	template <class T1, class T2, class T3>
@@ -529,23 +582,26 @@ private:
 		ASSERT( 0 && "Hash table iterator can't be serialized" );
 	}
 	template <class T>
-		void Add( const chunk_id idChunk, T **pData, int nChunkNumber = 1 )
+	void Add( const chunk_id idChunk, T **pData, int nChunkNumber = 1 )
 	{
 		ASSERT( 0 && "Pointer or vector iterator can't be serialized" );
 	}
 
-	template<class T1, class T2>//, class _Traits>
-		void Add( const chunk_id idChunk, typename std::list<T1, T2>::iterator *pData, int nChunkNumber = 1 )
+	template <class T1, class T2> //, class _Traits>
+	void Add( const chunk_id idChunk, typename std::list<T1, T2>::iterator *pData, int nChunkNumber = 1 )
 	{
 		ASSERT( 0 && "List iterator can't be serialized" );
 	}
 };
 
 template <class T>
-inline char operator&( T &c, IBinSaver &ss ) { return 0; }
+inline char operator&( T &c, IBinSaver &ss )
+{
+	return 0;
+}
 // realisation of forward declared serialisation operator
-template< class TUserObj, class TRef>
-int CPtrBase<TUserObj,TRef>::operator&( IBinSaver &f )
+template <class TUserObj, class TRef>
+int CPtrBase<TUserObj, TRef>::operator&( IBinSaver &f )
 {
 	f.DoPtr( this );
 	return 0;
@@ -559,7 +615,7 @@ struct SBinSaverExternalObject
 	CObjectBase *pObj = nullptr;
 
 	SBinSaverExternalObject() {}
-	SBinSaverExternalObject( int _nID, CObjectBase *_pObj ) : nID(_nID), pObj(_pObj) {}
+	SBinSaverExternalObject( int _nID, CObjectBase *_pObj ) : nID( _nID ), pObj( _pObj ) {}
 };
 
 // objects checker in debug mode
@@ -569,8 +625,11 @@ struct IDebugSaveCheckObj : public CObjectBase
 };
 
 class CFileStream;
-SYSTEM_EXPORT IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext );
-SYSTEM_EXPORT IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream, const std::vector<SBinSaverExternalObject> &external, std::vector< CPtr<IDebugSaveCheckObj> > &objToCheck );
+SYSTEM_EXPORT IBinSaver *
+CreateBinSaver( CDataStream *pStream, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext );
+SYSTEM_EXPORT IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream,
+                                                     const std::vector<SBinSaverExternalObject> &external,
+                                                     std::vector<CPtr<IDebugSaveCheckObj>> &objToCheck );
 
 inline IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode )
 {

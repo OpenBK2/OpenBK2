@@ -2,7 +2,7 @@
 
 namespace NGfx
 {
-	class CRenderContext;
+class CRenderContext;
 }
 namespace NGScene
 {

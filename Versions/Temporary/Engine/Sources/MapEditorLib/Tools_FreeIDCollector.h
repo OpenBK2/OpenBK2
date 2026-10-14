@@ -40,8 +40,8 @@ class MAPEDITORLIB_EXPORT CFreeIDCollector
 	inline unsigned GetNextID( const unsigned nID ) { return ( nID + 1 ); }
 	inline unsigned GetPreviousID( const unsigned nID ) { return ( nID - 1 ); }
 	bool FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedIDNode, const unsigned nID );
-public:
 
+public:
 	inline void Clear() { lockedIDNodeList.clear(); }
 	inline bool IsIDLocked( const unsigned nID ) { return FindLockedIDNode( 0, nID ); }
 	unsigned LockID();
@@ -51,7 +51,9 @@ public:
 	void Trace() const
 	{
 		DebugTrace( "free ID collector, begin" );
-		for ( CLockedIDNodeList::const_iterator itLockedIDNode = lockedIDNodeList.begin(); itLockedIDNode != lockedIDNodeList.end(); ++itLockedIDNode )
+		for ( CLockedIDNodeList::const_iterator itLockedIDNode = lockedIDNodeList.begin();
+		      itLockedIDNode != lockedIDNodeList.end();
+		      ++itLockedIDNode )
 		{
 			DebugTrace( "[%d...%d]", itLockedIDNode->nFirstID, itLockedIDNode->nLastID );
 		}

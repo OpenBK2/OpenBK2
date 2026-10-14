@@ -5,7 +5,6 @@
 
 const char SConfigFile::DIVIDERS[] = " \t";
 
-
 void SConfigFile::SConfigEntry::Load( const std::string &rszLine )
 {
 	szLine = rszLine;
@@ -16,8 +15,7 @@ void SConfigFile::SConfigEntry::Load( const std::string &rszLine )
 	//
 	if ( !rszLine.empty() )
 	{
-	  if ( ( szLine.substr( 0, 1 ).compare( ";" ) != 0 ) &&
-				 ( szLine.substr( 0, 2 ).compare( "//" ) != 0 ) )
+		if ( ( szLine.substr( 0, 1 ).compare( ";" ) != 0 ) && ( szLine.substr( 0, 2 ).compare( "//" ) != 0 ) )
 		{
 			std::string szLocalLine = szLine;
 			NStr::TrimBoth( szLocalLine, DIVIDERS );
@@ -37,16 +35,15 @@ void SConfigFile::SConfigEntry::Load( const std::string &rszLine )
 	}
 }
 
-
 int SConfigFile::Load( const std::string &rszFileName )
 {
 	Clear();
 	//
-  std::string szBuffer;
+	std::string szBuffer;
 	CFileStream stream( rszFileName, CFileStream::WIN_READ_ONLY );
-  const int nSize = stream.GetSize();
-  szBuffer.resize( nSize );
-  stream.Read( &( szBuffer[0] ), nSize );
+	const int nSize = stream.GetSize();
+	szBuffer.resize( nSize );
+	stream.Read( &( szBuffer[0] ), nSize );
 	//
 	std::vector<std::string> lineList;
 	NStr::SplitString( szBuffer.c_str(), &lineList, '\n' );
@@ -58,19 +55,19 @@ int SConfigFile::Load( const std::string &rszFileName )
 	return lineList.size();
 }
 
-
 void SConfigFile::Save( const std::string &rszFileName )
 {
-  std::string szBuffer;
-	for ( CConfigEntryList::const_iterator itConfigEntry = configEntryList.begin(); itConfigEntry != configEntryList.end(); ++itConfigEntry )
+	std::string szBuffer;
+	for ( CConfigEntryList::const_iterator itConfigEntry = configEntryList.begin();
+	      itConfigEntry != configEntryList.end();
+	      ++itConfigEntry )
 	{
 		szBuffer += itConfigEntry->szLine + "\r\n";
 	}
 	//
 	CFileStream stream( rszFileName, CFileStream::WIN_CREATE );
-  stream.Write( &( szBuffer[0] ), szBuffer.size() );
+	stream.Write( &( szBuffer[0] ), szBuffer.size() );
 }
-
 
 bool SConfigFile::GetParams( CParamsList *pParamsList, const std::string &rszKeyword, bool bIgnoreCase )
 {
@@ -81,7 +78,9 @@ bool SConfigFile::GetParams( CParamsList *pParamsList, const std::string &rszKey
 	}
 	//
 	bool bFound = false;
-	for ( CConfigEntryList::const_iterator itConfigEntry = configEntryList.begin(); itConfigEntry != configEntryList.end(); ++itConfigEntry )
+	for ( CConfigEntryList::const_iterator itConfigEntry = configEntryList.begin();
+	      itConfigEntry != configEntryList.end();
+	      ++itConfigEntry )
 	{
 		std::string szConfigEntryKeyword = itConfigEntry->szKeyword;
 		if ( bIgnoreCase )
@@ -104,13 +103,11 @@ bool SConfigFile::GetParams( CParamsList *pParamsList, const std::string &rszKey
 	return bFound;
 }
 
-
 void SConfigFile::AddLine( const std::string &rszLine )
 {
 	CConfigEntryList::iterator itConfigEntry = configEntryList.emplace( configEntryList.end() );
 	itConfigEntry->Load( rszLine );
 }
-
 
 void SConfigFile::AddKeyword( const std::string &rszKeyword, const std::string &rszParams )
 {
@@ -119,7 +116,6 @@ void SConfigFile::AddKeyword( const std::string &rszKeyword, const std::string &
 	itConfigEntry->szKeyword = rszKeyword;
 	itConfigEntry->szParams = rszParams;
 }
-
 
 int SConfigFile::RemoveKeyword( const std::string &rszKeyword, bool bIgnoreCase )
 {
@@ -149,6 +145,5 @@ int SConfigFile::RemoveKeyword( const std::string &rszKeyword, bool bIgnoreCase 
 	}
 	return nErasedCount;
 }
-
 
 // basement storage

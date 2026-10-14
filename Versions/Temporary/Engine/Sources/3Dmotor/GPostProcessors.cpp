@@ -15,7 +15,7 @@ static void DoRender( NGfx::CRenderContext *pRC, const std::vector<IPostProcess:
 		SRenderGeometryInfo &info = *obj.pInfo;
 		info.pVertices.Refresh();
 		info.pTriLists[TLT_GEOM].Refresh();
-		pRC->AddPrimitive( info.pVertices->GetValue(), info.pTriLists[TLT_GEOM]->GetValue()[ obj.nIdx ] );
+		pRC->AddPrimitive( info.pVertices->GetValue(), info.pTriLists[TLT_GEOM]->GetValue()[obj.nIdx] );
 	}
 	pRC->Flush();
 }
@@ -64,7 +64,7 @@ void CPostColorer::Render( SPostProcessData *pDst, const std::vector<SObject> &r
 {
 	pColor.Refresh();
 	const CVec4 &vColor = pColor->GetValue();
-	std::vector<IPostProcess::SObject> &dst = pDst->postColorer[ vColor ];
+	std::vector<IPostProcess::SObject> &dst = pDst->postColorer[vColor];
 	dst.insert( dst.end(), render.begin(), render.end() );
 }
 
@@ -74,7 +74,7 @@ void COccludedColorer::Render( SPostProcessData *pDst, const std::vector<SObject
 {
 	pColor.Refresh();
 	const CVec4 &vColor = pColor->GetValue();
-	std::vector<IPostProcess::SObject> &dst = pDst->occluded[ vColor ];
+	std::vector<IPostProcess::SObject> &dst = pDst->occluded[vColor];
 	dst.insert( dst.end(), render.begin(), render.end() );
 }
 

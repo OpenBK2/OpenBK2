@@ -22,12 +22,12 @@ void CEditorScene::RemoveScreen( struct IWindow *pScreen )
 	Scene()->RemoveScreen( pScreen );
 }
 
-NGScene::I2DGameView* CEditorScene::GetG2DView()
+NGScene::I2DGameView *CEditorScene::GetG2DView()
 {
 	return Scene()->GetG2DView();
 }
 
-NGScene::IGameView* CEditorScene::GetGView()
+NGScene::IGameView *CEditorScene::GetGView()
 {
 	return Scene()->GetGView();
 }
@@ -37,7 +37,7 @@ CVec2 CEditorScene::GetScreenRect()
 	return Scene()->GetScreenRect();
 }
 
-class CCSTime* CEditorScene::GetGameTimer()
+class CCSTime *CEditorScene::GetGameTimer()
 {
 	return Scene()->GetGameTimer();
 }
@@ -52,18 +52,30 @@ void CEditorScene::ClearMarkers( ESceneMarkerType eType, int nID )
 	Scene()->ClearMarkers( eType, nID );
 }
 
-void CEditorScene::AddShootArea( int nID, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, const CVec3 &vColor, const CVec2 &vCenter )
+void CEditorScene::AddShootArea( int nID,
+                                 float fStartAngle,
+                                 float fEndAngle,
+                                 float fMinRadius,
+                                 float fMaxRadius,
+                                 const CVec3 &vColor,
+                                 const CVec2 &vCenter )
 {
 	Scene()->AddShootArea( nID, fStartAngle, fEndAngle, fMinRadius, fMaxRadius, vColor, vCenter );
 }
 
 void CEditorScene::SwitchScene( const EScene eScene )
 {
-	Scene()->SwitchScene ( eScene );
+	Scene()->SwitchScene( eScene );
 }
 
-int CEditorScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot,
-											const CVec3 &vScale, ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bHasReflection )
+int CEditorScene::AddObject( const int nID,
+                             const NDb::SModel *pModel,
+                             const CVec3 &vPos,
+                             const CQuat &qRot,
+                             const CVec3 &vScale,
+                             ESceneObjAnimMode eAnimMode,
+                             NGScene::IGameView::SMeshInfo *pMeshInfo,
+                             const bool bHasReflection )
 {
 	return Scene()->AddObject( nID, pModel, vPos, qRot, vScale, eAnimMode, pMeshInfo, 0, bHasReflection );
 }
@@ -88,7 +100,8 @@ void CEditorScene::SetFadedObjects( const std::list<int> &objects, float fFade )
 	Scene()->SetFadedObjects( objects, fFade );
 }
 
-int CEditorScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot )
+int CEditorScene::AddEffect(
+		const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot )
 {
 	return Scene()->AddEffect( nID, pEffect, timeStart, vPos, qRot );
 }
@@ -98,7 +111,11 @@ int CEditorScene::AddPolyline( const int nID, const std::vector<CVec3> &points, 
 	return Scene()->AddPolyline( nID, points, vColor, bDepthCheck );
 }
 
-int CEditorScene::AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck )
+int CEditorScene::AddIndexedPolyline( const int nID,
+                                      const std::vector<CVec3> &points,
+                                      const std::vector<uint16_t> &indices,
+                                      const CVec4 &vColor,
+                                      bool bDepthCheck )
 {
 	return Scene()->AddIndexedPolyline( nID, points, indices, vColor, bDepthCheck );
 }
@@ -120,10 +137,10 @@ bool CEditorScene::ToggleAIGeometryMode()
 
 bool CEditorScene::IsShowOn( ESceneShow eShow )
 {
-	return Scene()->IsShowOn( eShow  );
+	return Scene()->IsShowOn( eShow );
 }
 
-ITerraManager* CEditorScene::GetTerraManager()
+ITerraManager *CEditorScene::GetTerraManager()
 {
 	return Scene()->GetTerraManager();
 }
@@ -203,7 +220,7 @@ bool CEditorScene::DoesTerraManagerExist() const
 	return Scene()->DoesTerraManagerExist();
 }
 
-NAnimation::ISkeletonAnimator* CEditorScene::GetAnimator( const int nID )
+NAnimation::ISkeletonAnimator *CEditorScene::GetAnimator( const int nID )
 {
 	return Scene()->GetAnimator( nID );
 }
@@ -218,11 +235,9 @@ void CEditorScene::SetWarFog( const CArray2D<unsigned char> &fog, float fScale )
 	Scene()->SetWarFog( fog, fScale );
 }
 
-
 void CEditorScene::SetWarFogBlend( const float fBlend )
 {
 	Scene()->SetWarFogBlend( fBlend );
 }
-
 
 REGISTER_SAVELOAD_CLASS( ED_B2, 0x301CBC80, CEditorScene );

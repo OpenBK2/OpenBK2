@@ -3,7 +3,6 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-
 #include "System_export.h"
 
 //*******************************************************************
@@ -12,13 +11,17 @@
 
 class SYSTEM_EXPORT CFreeIds
 {
-	enum { NUM_OF_ELEMENTS = 200 };
+	enum
+	{
+		NUM_OF_ELEMENTS = 200
+	};
 
 	typedef det_map<int, bool> CGivenIDMap;
 	CGivenIDMap givenIDs;
 
 	std::vector<int> nexts;
 	int firstEl = 0;
+
 public:
 	CFreeIds( const int nElements = NUM_OF_ELEMENTS ) { Init( nElements ); }
 
@@ -35,5 +38,4 @@ public:
 		saver.Add( 3, &firstEl );
 		return 0;
 	}
-
 };

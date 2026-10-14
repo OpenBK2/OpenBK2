@@ -5,10 +5,10 @@
 
 namespace NDb
 {
-	struct SMedal;
-	struct SReinforcement;
-	struct SPlayerRank;
-	struct SMapPlayerInfo;
+struct SMedal;
+struct SReinforcement;
+struct SPlayerRank;
+struct SMapPlayerInfo;
 }
 struct SChapterReinfUpgrade;
 struct SChapterReinfComposition;
@@ -17,8 +17,8 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceSingleStatistic );
 
-//	class CData;
-//	class CDataViewer;
+	//	class CData;
+	//	class CDataViewer;
 
 	struct SPlayer
 	{
@@ -30,7 +30,17 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 		CPtr<ITextView> pKilledView;
 		CPtr<ITextView> pReinfView;
 		bool bHasStatistics;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pNameView); f.Add(5,&pLostView); f.Add(6,&pKilledView); f.Add(7,&pReinfView); f.Add(8,&bHasStatistics); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &pIconWnd );
+			f.Add( 4, &pNameView );
+			f.Add( 5, &pLostView );
+			f.Add( 6, &pKilledView );
+			f.Add( 7, &pReinfView );
+			f.Add( 8, &bHasStatistics );
+			return 0;
+		}
 	};
 	struct SReinf
 	{
@@ -39,33 +49,45 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 		CPtr<IWindow> pIconWnd;
 		CPtr<ITextView> pNameView;
 		ZSKIP //CPtr<ITextView> pBaseUnitNameView;
-		CDBPtr<NDb::SReinforcement> pReinf;
+				CDBPtr<NDb::SReinforcement>
+						pReinf;
 		CPtr<IButton> pBtn;
 		std::string szButtonName;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pNameView); f.Add(6,&pReinf); f.Add(7,&pBtn); f.Add(8,&szButtonName); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &pIconWnd );
+			f.Add( 4, &pNameView );
+			f.Add( 6, &pReinf );
+			f.Add( 7, &pBtn );
+			f.Add( 8, &szButtonName );
+			return 0;
+		}
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMain;
-	ZSKIP //CPtr<IButton> pNextBtn;
-	ZSKIP //CPtr<IButton> pSaveReplayBtn;
-	ZSKIP //CPtr<ITextView> pMissionExpView;
-	ZSKIP //CPtr<ITextView> pCampaignExpView;
-	ZSKIP //CPtr<IProgressBar> pMissionProgressBar;
-	ZSKIP //CPtr<IProgressBar> pCampaignProgressBar;
-	ZSKIP //CPtr<ITextView> pMissionTimeView;
-	ZSKIP //CPtr<ITextView> pCampaignTimeView;
-	ZSKIP //vector<SNewReinf> newReinfs;
-	ZSKIP //CObj<CDataViewer> pDataViewer;
-	ZSKIP //CPtr<IListControl> pPlayersList;
-	ZSKIP //CPtr<ITextView> pCustomPlayerView;
-	ZSKIP //CPtr<IWindow> pNewRankDlg;
-	ZSKIP //CPtr<ITextView> pNewRankView;
-	ZSKIP //CPtr<IWindow> pMedalDialogBgr;
-	std::list< CDBPtr<NDb::SMedal> > pendingMedals;
+	ZSKIP                                                         //CPtr<IButton> pNextBtn;
+			ZSKIP                                                     //CPtr<IButton> pSaveReplayBtn;
+					ZSKIP                                                 //CPtr<ITextView> pMissionExpView;
+							ZSKIP                                             //CPtr<ITextView> pCampaignExpView;
+									ZSKIP                                         //CPtr<IProgressBar> pMissionProgressBar;
+											ZSKIP                                     //CPtr<IProgressBar> pCampaignProgressBar;
+													ZSKIP                                 //CPtr<ITextView> pMissionTimeView;
+															ZSKIP                             //CPtr<ITextView> pCampaignTimeView;
+																	ZSKIP                         //vector<SNewReinf> newReinfs;
+																			ZSKIP                     //CObj<CDataViewer> pDataViewer;
+																					ZSKIP                 //CPtr<IListControl> pPlayersList;
+																							ZSKIP             //CPtr<ITextView> pCustomPlayerView;
+																									ZSKIP         //CPtr<IWindow> pNewRankDlg;
+																											ZSKIP     //CPtr<ITextView> pNewRankView;
+																													ZSKIP //CPtr<IWindow> pMedalDialogBgr;
+																															std::list<CDBPtr<NDb::SMedal>>
+																																	pendingMedals;
 	ZSKIP //NTimer::STime timeShowNextMedal;
 
-	CPtr<IWindow> pInfoPanel;
+			CPtr<IWindow>
+					pInfoPanel;
 	CPtr<IWindow> pRewardPanel;
 	CPtr<ITextView> pMissionSuccessLabel;
 	CPtr<ITextView> pMissionFailedLabel;
@@ -96,14 +118,15 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	CObj<SChapterReinfUpgrade> pChapterReinfUpgrade;
 	ZSKIP //CObj<SChapterReinfComposition> pChapterReinfComposition;
 
-	CDBPtr<NDb::SPlayerRank> pNewPlayerRank;
-	std::list< CDBPtr<NDb::SMedal> > medals;
+			CDBPtr<NDb::SPlayerRank>
+					pNewPlayerRank;
+	std::list<CDBPtr<NDb::SMedal>> medals;
 
 	bool bPopup;
 	CPtr<IWindow> pPopupBgWnd;
-	ZSKIP //float fCareerProgressWidth;
-	ZSKIP //float fRankProgressWidth;
-	NUIElementsHelper::SExpProgressCareer expProgressCareer;
+	ZSKIP     //float fCareerProgressWidth;
+			ZSKIP //float fRankProgressWidth;
+					NUIElementsHelper::SExpProgressCareer expProgressCareer;
 	NUIElementsHelper::SExpProgressRank expProgressRank;
 
 	CPtr<IProgressBar> pNewCareerProgress;
@@ -113,13 +136,64 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	CPtr<IButton> pExitToChapterBtn;
 	CPtr<IButton> pLoadBtn;
 	ZSKIP //CPtr<IButton> pExitToWindowsBtn;
-	CPtr<IWindow> pBottomPanel;
+			CPtr<IWindow>
+					pBottomPanel;
 	CPtr<IButton> pNextBtn;
 	CPtr<IWindow> pBlackBgWnd;
 	CPtr<ITextView> pCareerExpNAView;
 	CPtr<ITextView> pMissionExpNAView;
 	CPtr<ITextView> pNewReinfLabel;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(18,&pendingMedals); f.Add(20,&pInfoPanel); f.Add(21,&pRewardPanel); f.Add(22,&pMissionSuccessLabel); f.Add(23,&pMissionFailedLabel); f.Add(24,&pCareerProgress); f.Add(25,&pRankProgress); f.Add(26,&pExpView); f.Add(27,&pMissionTimeView); f.Add(28,&pCampaignTimeView); f.Add(29,&players); f.Add(30,&reinfs); f.Add(31,&wszTime1); f.Add(32,&wszTime2); f.Add(33,&wszTime3); f.Add(34,&pNewRankDlg); f.Add(35,&pNewRankPanel); f.Add(36,&pNewRankIconWnd); f.Add(37,&pNewRankView); f.Add(38,&pNewMedalDlg); f.Add(39,&pNewMedalPanel); f.Add(40,&pMedalNameView); f.Add(41,&pMedalIconWnd); f.Add(42,&pMedalDescCont); f.Add(43,&pMedalDescView); f.Add(44,&pChapterReinfDescWnd); f.Add(45,&pChapterReinfUpgrade); f.Add(47,&pNewPlayerRank); f.Add(48,&medals); f.Add(49,&bPopup); f.Add(50,&pPopupBgWnd); f.Add(53,&expProgressCareer); f.Add(54,&expProgressRank); f.Add(55,&pNewCareerProgress); f.Add(56,&pNewRankProgress); f.Add(57,&pRestartBtn); f.Add(58,&pExitToMainMenuBtn); f.Add(59,&pExitToChapterBtn); f.Add(60,&pLoadBtn); f.Add(62,&pBottomPanel); f.Add(63,&pNextBtn); f.Add(64,&pBlackBgWnd); f.Add(65,&pCareerExpNAView); f.Add(66,&pMissionExpNAView); f.Add(67,&pNewReinfLabel); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMain );
+		f.Add( 18, &pendingMedals );
+		f.Add( 20, &pInfoPanel );
+		f.Add( 21, &pRewardPanel );
+		f.Add( 22, &pMissionSuccessLabel );
+		f.Add( 23, &pMissionFailedLabel );
+		f.Add( 24, &pCareerProgress );
+		f.Add( 25, &pRankProgress );
+		f.Add( 26, &pExpView );
+		f.Add( 27, &pMissionTimeView );
+		f.Add( 28, &pCampaignTimeView );
+		f.Add( 29, &players );
+		f.Add( 30, &reinfs );
+		f.Add( 31, &wszTime1 );
+		f.Add( 32, &wszTime2 );
+		f.Add( 33, &wszTime3 );
+		f.Add( 34, &pNewRankDlg );
+		f.Add( 35, &pNewRankPanel );
+		f.Add( 36, &pNewRankIconWnd );
+		f.Add( 37, &pNewRankView );
+		f.Add( 38, &pNewMedalDlg );
+		f.Add( 39, &pNewMedalPanel );
+		f.Add( 40, &pMedalNameView );
+		f.Add( 41, &pMedalIconWnd );
+		f.Add( 42, &pMedalDescCont );
+		f.Add( 43, &pMedalDescView );
+		f.Add( 44, &pChapterReinfDescWnd );
+		f.Add( 45, &pChapterReinfUpgrade );
+		f.Add( 47, &pNewPlayerRank );
+		f.Add( 48, &medals );
+		f.Add( 49, &bPopup );
+		f.Add( 50, &pPopupBgWnd );
+		f.Add( 53, &expProgressCareer );
+		f.Add( 54, &expProgressRank );
+		f.Add( 55, &pNewCareerProgress );
+		f.Add( 56, &pNewRankProgress );
+		f.Add( 57, &pRestartBtn );
+		f.Add( 58, &pExitToMainMenuBtn );
+		f.Add( 59, &pExitToChapterBtn );
+		f.Add( 60, &pLoadBtn );
+		f.Add( 62, &pBottomPanel );
+		f.Add( 63, &pNextBtn );
+		f.Add( 64, &pBlackBgWnd );
+		f.Add( 65, &pCareerExpNAView );
+		f.Add( 66, &pMissionExpNAView );
+		f.Add( 67, &pNewReinfLabel );
+		return 0;
+	}
 
 	NTimer::STime timePrevPopup; // don't serialize
 private:
@@ -175,6 +249,7 @@ class CICSingleStatistic : public CInterfaceCommandBase<CInterfaceSingleStatisti
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

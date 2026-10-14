@@ -32,7 +32,7 @@
 
 #include <fmt/format.h>
 
-const char* NIVAL_NET_IP = "localhost";
+const char *NIVAL_NET_IP = "localhost";
 const int NIVAL_NET_PORT = 4200;
 
 #define HEARTBEAT_PERIOD 5000
@@ -41,28 +41,40 @@ static std::wstring s_wszStoredLogin = L"";
 static std::wstring s_wszStoredPassword = L"";
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x192444C0, CMPManagerModeNivalNet );
-START_REGISTER(NivalNetGVars)
+START_REGISTER( NivalNetGVars )
 // This GVar is here to force it to be saved in user.cfg
 // Do not remove, please
 REGISTER_VAR_EX( "Multiplayer.NivalNet.StoredLogin", NGlobal::VarWStrHandler, &s_wszStoredLogin, L"", STORAGE_USER );
-REGISTER_VAR_EX( "Multiplayer.NivalNet.StoredPassword", NGlobal::VarWStrHandler, &s_wszStoredPassword, L"", STORAGE_USER );
+REGISTER_VAR_EX(
+		"Multiplayer.NivalNet.StoredPassword", NGlobal::VarWStrHandler, &s_wszStoredPassword, L"", STORAGE_USER );
 FINISH_REGISTER
 
-CMPManagerModeNivalNet::CMPManagerModeNivalNet() :
-nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false ), timeNextGameHeartbeat( 0 )
+CMPManagerModeNivalNet::CMPManagerModeNivalNet()
+		: nMyClientID( -1 ), eState( EGS_LOGGING_IN ), bLadderGame( false ), timeNextGameHeartbeat( 0 )
 {
 	// Messages
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_LOGIN_NIVAL_NET, SMPUILoginNivalNetMessage, &CMPManagerModeNivalNet::OnLoginNivalNetMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REGISTER_NIVAL_NET, SMPUIRegisterMessage, &CMPManagerModeNivalNet::OnRegisterNivalNetMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_LOGIN_NIVAL_NET, SMPUILoginNivalNetMessage, &CMPManagerModeNivalNet::OnLoginNivalNetMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_REGISTER_NIVAL_NET, SMPUIRegisterMessage, &CMPManagerModeNivalNet::OnRegisterNivalNetMessage );
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CMPManagerModeNivalNet::OnChatMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_CUSTOM_GAME, SMPUIMessage, &CMPManagerModeNivalNet::OnCustomGameMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_LADDER_GAME, SMPUILadderGameMessage, &CMPManagerModeNivalNet::OnSetupLadderGameMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_NIVAL_NET_CANCEL_LADDER, SMPUIMessage, &CMPManagerModeNivalNet::OnCancelLadderMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_BACK_FROM_GAME_LIST, SMPUIMessage, &CMPManagerModeNivalNet::OnBackFromGameListMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_JOIN_CHAT_CHANNEL, SMPUIJoinChannelMessage, &CMPManagerModeNivalNet::OnJoinChatChannelMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REQUEST_CHAT_CHANNELS, SMPUIMessage, &CMPManagerModeNivalNet::OnRequestChatChannelsMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_REQUEST_INFO, SMPUILadderInfoRequestMessage, &CMPManagerModeNivalNet::OnLadderInfoRequestMessage );
-	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHANGE_FRIEND_IGNORE, SMPUIChangeFriendIgnoreStatusMessage, &CMPManagerModeNivalNet::OnChangeFriendIgnoreStatusMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_NIVAL_NET_CUSTOM_GAME, SMPUIMessage, &CMPManagerModeNivalNet::OnCustomGameMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_NIVAL_NET_LADDER_GAME, SMPUILadderGameMessage, &CMPManagerModeNivalNet::OnSetupLadderGameMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_NIVAL_NET_CANCEL_LADDER, SMPUIMessage, &CMPManagerModeNivalNet::OnCancelLadderMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_BACK_FROM_GAME_LIST, SMPUIMessage, &CMPManagerModeNivalNet::OnBackFromGameListMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_JOIN_CHAT_CHANNEL, SMPUIJoinChannelMessage, &CMPManagerModeNivalNet::OnJoinChatChannelMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_REQUEST_CHAT_CHANNELS, SMPUIMessage, &CMPManagerModeNivalNet::OnRequestChatChannelsMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER(
+			EMUI_REQUEST_INFO, SMPUILadderInfoRequestMessage, &CMPManagerModeNivalNet::OnLadderInfoRequestMessage );
+	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHANGE_FRIEND_IGNORE,
+	                               SMPUIChangeFriendIgnoreStatusMessage,
+	                               &CMPManagerModeNivalNet::OnChangeFriendIgnoreStatusMessage );
 
 	// Packets
 	REGISTER_PACKET_PROCESSOR( &CMPManagerModeNivalNet::OnLobbyGamesPacket );
@@ -147,13 +159,13 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 	if ( !gameDesc.pMPMap )
 		szDebugOut += "no_Map ";
 
-	 if ( gameDesc.nPlayers < 0 )
-	 {
+	if ( gameDesc.nPlayers < 0 )
+	{
 		DebugTrace( "Client has not MP map of the game room" );
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
 		OnLeaveGame();
 		return;
-	 }
+	}
 
 	if ( nGameID != -1 && nOwnSlot != -1 && gameDesc.pMPMap )
 	{
@@ -192,11 +204,13 @@ void CMPManagerModeNivalNet::OnLeaveGame()
 
 bool CMPManagerModeNivalNet::ShouldSendHeartbeatNow()
 {
-	return ( ( IsGameRunning() || IsInGameRoom() || eState == EGS_LADDER_WAIT_CLIENTS )
-		&& nGameID >= 0 && ( Singleton<IGameTimer>()->GetAbsTime() > timeNextGameHeartbeat ) );
+	return ( ( IsGameRunning() || IsInGameRoom() || eState == EGS_LADDER_WAIT_CLIENTS ) && nGameID >= 0 &&
+	         ( Singleton<IGameTimer>()->GetAbsTime() > timeNextGameHeartbeat ) );
 }
 
-void CMPManagerModeNivalNet::RefreshServerGameKeepalive( bool bUpdateGameInfo, const char *szReason, int nRemovedClientID )
+void CMPManagerModeNivalNet::RefreshServerGameKeepalive( bool bUpdateGameInfo,
+                                                         const char *szReason,
+                                                         int nRemovedClientID )
 {
 	if ( nGameID < 0 )
 		return;
@@ -204,11 +218,12 @@ void CMPManagerModeNivalNet::RefreshServerGameKeepalive( bool bUpdateGameInfo, c
 	timeNextGameHeartbeat = Singleton<IGameTimer>()->GetAbsTime() + HEARTBEAT_PERIOD;
 	pClient->SendPacket( new CGameHeartBeatPacket( 0, nGameID ) );
 	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"TX",
-		"CGameHeartBeatPacket",
-		GetOwnClientID(),
-		fmt::format( "game_id={} reason={} update_info={}", nGameID, szReason ? szReason : "", bUpdateGameInfo ? 1 : 0 ) );
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"TX",
+			"CGameHeartBeatPacket",
+			GetOwnClientID(),
+			fmt::format(
+					"game_id={} reason={} update_info={}", nGameID, szReason ? szReason : "", bUpdateGameInfo ? 1 : 0 ) );
 
 	if ( bUpdateGameInfo && gameDesc.pMPMap )
 	{
@@ -223,15 +238,17 @@ void CMPManagerModeNivalNet::RefreshServerGameKeepalive( bool bUpdateGameInfo, c
 		}
 		pClient->SendPacket( new CUpdateGameInfo( 0, *pGameInfo ) );
 		NGameX::MatchPacketTrace_Log(
-			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			"TX",
-			"CUpdateGameInfo",
-			GetOwnClientID(),
-			fmt::format( "game_id={} players={} reason={}", nGameID, pGameInfo->nPlayers, szReason ? szReason : "" ) );
+				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+				"TX",
+				"CUpdateGameInfo",
+				GetOwnClientID(),
+				fmt::format( "game_id={} players={} reason={}", nGameID, pGameInfo->nPlayers, szReason ? szReason : "" ) );
 	}
 }
 
-void CMPManagerModeNivalNet::OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID )
+void CMPManagerModeNivalNet::OnGameControlHostChanged( int nOldHostClientID,
+                                                       int nNewHostClientID,
+                                                       int nRemovedClientID )
 {
 	if ( !IsGameRunning() )
 		return;
@@ -284,7 +301,7 @@ void CMPManagerModeNivalNet::StartGame()
 	CPtr<CChatAFKPacket> pAFKPkt = new CChatAFKPacket( 0 );
 	pClient->SendPacket( pAFKPkt );
 
-	if ( bLadderGame )		// Here we do not know the number of players, count them
+	if ( bLadderGame ) // Here we do not know the number of players, count them
 	{
 		int nClientsConnected = 0;
 		for ( int i = 0; i < slots.size(); ++i )
@@ -312,10 +329,12 @@ void CMPManagerModeNivalNet::BroadcastGameControlPacket( CNetPacket *pPacket )
 		if ( !IsPlayerPresent( i ) || nRecipient <= 0 || nRecipient == GetOwnClientID() )
 			continue;
 		NGameX::MatchPacketTrace_Log(
-			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			"TX", "GameControlViaServer", GetOwnClientID(),
-			fmt::format( "game_id={} to_slot={} to_client={} packet_type={}",
-				nGameID, i, nRecipient, pPacket->GetTypeName() ) );
+				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+				"TX",
+				"GameControlViaServer",
+				GetOwnClientID(),
+				fmt::format(
+						"game_id={} to_slot={} to_client={} packet_type={}", nGameID, i, nRecipient, pPacket->GetTypeName() ) );
 		pClient->SendPacket( new CDirectPacketToClient( 0, nRecipient, pPacket ) );
 	}
 }
@@ -377,11 +396,11 @@ void CMPManagerModeNivalNet::KickPlayerFromSlot( const int nSlot )
 	{
 		CPtr<CGameKickClient> pKickPkt = new CGameKickClient( 0, nGameID, slots[nSlot].nClientID );
 		NGameX::MatchPacketTrace_Log(
-			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			"TX",
-			"CGameKickClient",
-			GetOwnClientID(),
-			fmt::format( "slot={} kicked_client={} game_id={}", nSlot, slots[nSlot].nClientID, nGameID ) );
+				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+				"TX",
+				"CGameKickClient",
+				GetOwnClientID(),
+				fmt::format( "slot={} kicked_client={} game_id={}", nSlot, slots[nSlot].nClientID, nGameID ) );
 		pClient->SendPacket( pKickPkt );
 	}
 }
@@ -410,7 +429,7 @@ void CMPManagerModeNivalNet::SendGameStatistics()
 	{
 		SMPSlot &slot = slots[i];
 		if ( i < nOwnSlot && slot.nTeam == nWinTeam )
-			return;			// I am not the first winner
+			return; // I am not the first winner
 
 		if ( !( dwInitialPlayers & ( 1UL << i ) ) )
 			continue;
@@ -421,8 +440,10 @@ void CMPManagerModeNivalNet::SendGameStatistics()
 		pPkt->races[slot.nClientID] = slot.nCountry;
 		pPkt->unitsKilled[slot.nClientID] = pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_UNITS_KILLED );
 		pPkt->unitsLost[slot.nClientID] = pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_UNITS_LOST );
-		pPkt->playerUnitEff[slot.nClientID] = pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_TACTICAL_EFFICIENCY );
-		pPkt->playerKeyPointEff[slot.nClientID] = pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_STRATEGIC_EFFICIENCY );
+		pPkt->playerUnitEff[slot.nClientID] =
+				pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_TACTICAL_EFFICIENCY );
+		pPkt->playerKeyPointEff[slot.nClientID] =
+				pScenarioTracker->GetStatistics( i, IScenarioTracker::ESK_STRATEGIC_EFFICIENCY );
 		std::vector<int> reinfCallsByType;
 		pScenarioTracker->GetReinforcementCallsInfo( i, &reinfCallsByType );
 		pPkt->reinfUsed[slot.nClientID] = reinfCallsByType;
@@ -480,7 +501,8 @@ int CMPManagerModeNivalNet::DetermineLadderCountry( const int nInitial, const ND
 	return 0;
 }
 
-void CMPManagerModeNivalNet::SendLadderGameAftermath( const SLadderStatistics &oldStats, const SLadderStatistics &newStats )
+void CMPManagerModeNivalNet::SendLadderGameAftermath( const SLadderStatistics &oldStats,
+                                                      const SLadderStatistics &newStats )
 {
 	SMPUIGameAftemathMessage *pMsg = new SMPUIGameAftemathMessage( true );
 	pMsg->nLevel = newStats.nLevel;
@@ -549,11 +571,9 @@ void CMPManagerModeNivalNet::OnSurrender()
 	pClient->SendPacket( new CLadderSurrenderPacket( 0, nGameID ) );
 }
 
-
 //
 //   Messages
 //
-
 
 bool CMPManagerModeNivalNet::OnLoginNivalNetMessage( SMPUILoginNivalNetMessage *pMsg )
 {
@@ -600,11 +620,12 @@ bool CMPManagerModeNivalNet::OnCustomGameMessage( SMPUIMessage *pMsg )
 
 bool CMPManagerModeNivalNet::OnBackFromGameListMessage( SMPUIMessage *pMsg )
 {
-	NI_ASSERT( eState == EGS_CUSTOM_GAME || eState == EGS_LOBBY, "PRG: NivalNet: Wrong state to receive BackFromGameList" );
+	NI_ASSERT( eState == EGS_CUSTOM_GAME || eState == EGS_LOBBY,
+	           "PRG: NivalNet: Wrong state to receive BackFromGameList" );
 	eState = EGS_LOBBY;
 	pClient->SendPacket( new CLeaveLobbyPacket( 0 ) );
 	InitLobby();
-	return false;		// so that MPManager handles it as well
+	return false; // so that MPManager handles it as well
 }
 
 bool CMPManagerModeNivalNet::OnRegisterNivalNetMessage( SMPUIRegisterMessage *pMsg )
@@ -617,8 +638,8 @@ bool CMPManagerModeNivalNet::OnRegisterNivalNetMessage( SMPUIRegisterMessage *pM
 	}
 	szMPName = NStr::ToMBCS( pMsg->wszName );
 	NGlobal::SetVar( "Multiplayer.PlayerName", szMPName );
-	CRegisterPacket *pRegisterPkt = new CRegisterPacket( 0, szMPName, NStr::ToMBCS( pMsg->wszPassword ),
-		NStr::ToMBCS( pMsg->wszCDKey ), NStr::ToMBCS( pMsg->wszEmail ) );
+	CRegisterPacket *pRegisterPkt = new CRegisterPacket(
+			0, szMPName, NStr::ToMBCS( pMsg->wszPassword ), NStr::ToMBCS( pMsg->wszCDKey ), NStr::ToMBCS( pMsg->wszEmail ) );
 	pClient->SendPacket( pRegisterPkt );
 	nMyClientID = -1;
 	eState = EGS_LOGGING_IN;
@@ -672,9 +693,11 @@ bool CMPManagerModeNivalNet::OnSetupLadderGameMessage( SMPUILadderGameMessage *p
 	{
 		uCheckSum += NGameX::GetGameRoot()->multiplayerMaps[i]->CalcCheckSum();
 	}
-	CPtr<CLadderInfoPacket> pLadderPkt = new CLadderInfoPacket( 0, nLadderSide, bHistoricity, pMsg->nTeamSize, pMsg->techLevels, pMsg->maps, uCheckSum );
+	CPtr<CLadderInfoPacket> pLadderPkt =
+			new CLadderInfoPacket( 0, nLadderSide, bHistoricity, pMsg->nTeamSize, pMsg->techLevels, pMsg->maps, uCheckSum );
 	pClient->SendPacket( pLadderPkt );
-	SMPUILadderStatusChangeMessage *pStatusMsg = new SMPUILadderStatusChangeMessage( SMPUILadderStatusChangeMessage::ELS_SEARCH_STARTED );
+	SMPUILadderStatusChangeMessage *pStatusMsg =
+			new SMPUILadderStatusChangeMessage( SMPUILadderStatusChangeMessage::ELS_SEARCH_STARTED );
 	PushMessage( pStatusMsg );
 
 	if ( !bGotMyLadderStats )
@@ -686,11 +709,9 @@ bool CMPManagerModeNivalNet::OnSetupLadderGameMessage( SMPUILadderGameMessage *p
 	return true;
 }
 
-
 //
 //   Packets
 //
-
 
 bool CMPManagerModeNivalNet::OnConnectServerPacket( class CConnectServerPacket *pPacket )
 {
@@ -713,51 +734,51 @@ bool CMPManagerModeNivalNet::OnConnectServerPacket( class CConnectServerPacket *
 		pClient = new CEmptyServerClient;
 		switch ( pPacket->eRejectReason )
 		{
-		case CConnectServerPacket::ERR_CANT_RESOLVE_ADDRESS:
-			pMsg->szTextTag = "CONNECT_ERR_CANT_RESOLVE_ADDRESS";
-			break;
-		case CConnectServerPacket::ERR_CONNECTION_LOST:
-			pMsg->szTextTag = "CONNECT_ERR_CONNECTION_LOST";
-			break;
-		case CConnectServerPacket::ERR_BAD_NICK:
-			pMsg->szTextTag = "CONNECT_ERR_BAD_NICK";
-			break;
-		case CConnectServerPacket::ERR_WRONG_CD_KEY:
-			pMsg->szTextTag = "CONNECT_ERR_WRONG_CD_KEY";
-			break;
-		case CConnectServerPacket::ERR_ALREADY_REGISTERED:
-			pMsg->szTextTag = "CONNECT_ERR_ALREADY_REGISTERED";
-			break;
-		case CConnectServerPacket::ERR_ALREADY_ONLINE:
-			pMsg->szTextTag = "CONNECT_ERR_ALREADY_ONLINE";
-			break;
-		case CConnectServerPacket::ERR_NOT_REGISTERED:
-			pMsg->szTextTag = "CONNECT_ERR_NOT_REGISTERED";
-			break;
-		case CConnectServerPacket::ERR_BANNED_NICK:
-			pMsg->szTextTag = "CONNECT_ERR_BANNED_NICK";
-			break;
-		case CConnectServerPacket::ERR_BANNED_CDKEY:
-			pMsg->szTextTag = "CONNECT_ERR_BANNED_CDKEY";
-			break;
-		case CConnectServerPacket::ERR_WRONG_PASSWORD:
-			pMsg->szTextTag = "CONNECT_ERR_WRONG_PASSWORD";
-			break;
-		case CConnectServerPacket::ERR_KICKED:
-			pMsg->szTextTag = "CONNECT_ERR_KICKED";
-			break;
-		case CConnectServerPacket::ERR_LOGIN_TIMEOUT:
-			pMsg->szTextTag = "CONNECT_ERR_LOGIN_TIMEOUT";
-			break;
-		case CConnectServerPacket::ERR_WRONG_NET_VERSION:
-			pMsg->szTextTag = "CONNECT_ERR_WRONG_NET_VERSION";
-			break;
-		case CConnectServerPacket::ERR_CRITICAL_BUSY:
-			pMsg->szTextTag = "CONNECT_ERR_CRITICAL_BUSY";
-			break;
-		default:
-			pMsg->szTextTag = "CONNECT_ERR_UNKNOWN";
-			break;
+			case CConnectServerPacket::ERR_CANT_RESOLVE_ADDRESS:
+				pMsg->szTextTag = "CONNECT_ERR_CANT_RESOLVE_ADDRESS";
+				break;
+			case CConnectServerPacket::ERR_CONNECTION_LOST:
+				pMsg->szTextTag = "CONNECT_ERR_CONNECTION_LOST";
+				break;
+			case CConnectServerPacket::ERR_BAD_NICK:
+				pMsg->szTextTag = "CONNECT_ERR_BAD_NICK";
+				break;
+			case CConnectServerPacket::ERR_WRONG_CD_KEY:
+				pMsg->szTextTag = "CONNECT_ERR_WRONG_CD_KEY";
+				break;
+			case CConnectServerPacket::ERR_ALREADY_REGISTERED:
+				pMsg->szTextTag = "CONNECT_ERR_ALREADY_REGISTERED";
+				break;
+			case CConnectServerPacket::ERR_ALREADY_ONLINE:
+				pMsg->szTextTag = "CONNECT_ERR_ALREADY_ONLINE";
+				break;
+			case CConnectServerPacket::ERR_NOT_REGISTERED:
+				pMsg->szTextTag = "CONNECT_ERR_NOT_REGISTERED";
+				break;
+			case CConnectServerPacket::ERR_BANNED_NICK:
+				pMsg->szTextTag = "CONNECT_ERR_BANNED_NICK";
+				break;
+			case CConnectServerPacket::ERR_BANNED_CDKEY:
+				pMsg->szTextTag = "CONNECT_ERR_BANNED_CDKEY";
+				break;
+			case CConnectServerPacket::ERR_WRONG_PASSWORD:
+				pMsg->szTextTag = "CONNECT_ERR_WRONG_PASSWORD";
+				break;
+			case CConnectServerPacket::ERR_KICKED:
+				pMsg->szTextTag = "CONNECT_ERR_KICKED";
+				break;
+			case CConnectServerPacket::ERR_LOGIN_TIMEOUT:
+				pMsg->szTextTag = "CONNECT_ERR_LOGIN_TIMEOUT";
+				break;
+			case CConnectServerPacket::ERR_WRONG_NET_VERSION:
+				pMsg->szTextTag = "CONNECT_ERR_WRONG_NET_VERSION";
+				break;
+			case CConnectServerPacket::ERR_CRITICAL_BUSY:
+				pMsg->szTextTag = "CONNECT_ERR_CRITICAL_BUSY";
+				break;
+			default:
+				pMsg->szTextTag = "CONNECT_ERR_UNKNOWN";
+				break;
 		}
 	}
 	PushMessage( pMsg );
@@ -781,7 +802,7 @@ bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 	{
 		// Add all games as deleted
 		for ( CNetGameList::iterator it = games.begin(); it != games.end(); ++it )
-			pGamesMsg->gamesRemoved.push_back( (*it).nGameID );
+			pGamesMsg->gamesRemoved.push_back( ( *it ).nGameID );
 
 		games.clear();
 	}
@@ -796,7 +817,7 @@ bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 
 		SNetGameInfo newGame;
 		ExtractGameInfo( &newGame, game );
-		AddGameInfoForUI( &(pGamesMsg->gamesAddChange), newGame );
+		AddGameInfoForUI( &( pGamesMsg->gamesAddChange ), newGame );
 		games.push_back( newGame );
 	}
 
@@ -821,7 +842,7 @@ bool CMPManagerModeNivalNet::OnLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 			}
 			SNetGameInfo &ownGame = *itGame;
 			ExtractGameInfo( &ownGame, game );
-			AddGameInfoForUI( &(pGamesMsg->gamesAddChange), ownGame );
+			AddGameInfoForUI( &( pGamesMsg->gamesAddChange ), ownGame );
 		}
 		// Process deletes
 		for ( std::list<int>::iterator it = pPacket->removed.begin(); it != pPacket->removed.end(); ++it )
@@ -931,17 +952,17 @@ bool CMPManagerModeNivalNet::OnEnterLobbyPacket( class CEnterLobbyPacket *pPacke
 bool CMPManagerModeNivalNet::OnGameClientWasKicked( class CGameClientWasKicked *pPacket )
 {
 	//DebugTrace( "+++ ClientWasKicked packet for client %d", pPacket->nKicked );
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CGameClientWasKicked",
-		pPacket->nClientID,
-		fmt::format( "kicked={} in_room={}", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "RX",
+	                              "CGameClientWasKicked",
+	                              pPacket->nClientID,
+	                              fmt::format( "kicked={} in_room={}", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
 	if ( IsInGameRoom() )
 	{
 		if ( nMyClientID == pPacket->nKicked )
 		{
-			NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+			NGameX::MatchPacketTrace_SetFinalState(
+					GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
 			NGameX::MatchPacketTrace_Flush( "kicked" );
 			PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_KICKED ) );
 			OnLeaveGame();
@@ -970,7 +991,7 @@ bool CMPManagerModeNivalNet::OnGameClientWasKicked( class CGameClientWasKicked *
 
 bool CMPManagerModeNivalNet::OnNetRemoveClientPacket( class CNetRemoveClient *pPacket )
 {
-	if ( pPacket->nClientID == 0 )			// Disconnected from Server
+	if ( pPacket->nClientID == 0 ) // Disconnected from Server
 	{
 		OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NIVAL_NET_SERVER_DISCONNECT" ) );
 	}
@@ -981,12 +1002,11 @@ bool CMPManagerModeNivalNet::OnNetRemoveClientPacket( class CNetRemoveClient *pP
 
 bool CMPManagerModeNivalNet::OnGameClientDeadPacket( class CGameClientDead *pPacket )
 {
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CGameClientDead",
-		pPacket->nClientID,
-		fmt::format( "dead_client={}", pPacket->nDeadClient ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "RX",
+	                              "CGameClientDead",
+	                              pPacket->nClientID,
+	                              fmt::format( "dead_client={}", pPacket->nDeadClient ) );
 	RemoveClient( pPacket->nDeadClient, false );
 	return true;
 }
@@ -1011,7 +1031,9 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	//DebugTrace( "+++ LadderInvite packet" );
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	NI_VERIFY( pGameRoot, "Could not get GameRoot", return true );
-	NI_VERIFY( pPacket->nMapID < pGameRoot->multiplayerMaps.size(), "NNet Ladder Invite: Map Index exceeds bounds", return true );
+	NI_VERIFY( pPacket->nMapID < pGameRoot->multiplayerMaps.size(),
+	           "NNet Ladder Invite: Map Index exceeds bounds",
+	           return true );
 	// Matchmaking bypasses OnJoinGameMessage, but is also a new MP attempt.
 	NGameX::GetGameConsts()->RecalculateMPDataVersionChecksum();
 	nGameID = pPacket->nGameID;
@@ -1025,7 +1047,12 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	gameDesc.bUnitExp = true;
 	gameDesc.nCaptureTime = 30;
 
-	DebugTrace( "+++ LadderInvite: game %d, teams %d-%d, map %d, TL %d", nGameID, nTeam1Size, nTeam2Size, pPacket->nMapID, pPacket->nTechLevel );
+	DebugTrace( "+++ LadderInvite: game %d, teams %d-%d, map %d, TL %d",
+	            nGameID,
+	            nTeam1Size,
+	            nTeam2Size,
+	            pPacket->nMapID,
+	            pPacket->nTechLevel );
 	std::string szDebugLadder = "+++ Ladder Teams: ";
 
 	bGameRoomInit = false;
@@ -1090,7 +1117,8 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	CPtr<CConnectGamePacket> pConnectPkt = new CConnectGamePacket( 0, nGameID, "" );
 	pClient->SendPacket( pConnectPkt );
 
-	SMPUILadderStatusChangeMessage *pStatusMsg = new SMPUILadderStatusChangeMessage( SMPUILadderStatusChangeMessage::ELS_GAME_FOUND );
+	SMPUILadderStatusChangeMessage *pStatusMsg =
+			new SMPUILadderStatusChangeMessage( SMPUILadderStatusChangeMessage::ELS_GAME_FOUND );
 	PushMessage( pStatusMsg );
 
 	return true;
@@ -1127,8 +1155,7 @@ bool CMPManagerModeNivalNet::OnSystemBroadcastPacket( class CSystemBroadcastPack
 
 	std::wstring wszMsg = InterfaceState()->GetTextEntry( "NIVAL_NET_BROADCAST_HEADER" );
 	wszMsg += L"<br>" + pPacket->wszText;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszMsg ).c_str() );
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszMsg ).c_str() );
 	return true;
 }
 
@@ -1136,7 +1163,7 @@ bool CMPManagerModeNivalNet::OnLadderInvalidStatisticsPacket( class CLadderInval
 {
 	if ( bAwaitingLadderStatsChange )
 	{
-		PushMessage( 	new SMPUIGameAftemathMessage( false ) );
+		PushMessage( new SMPUIGameAftemathMessage( false ) );
 		bAwaitingLadderStatsChange = false;
 	}
 	return true;

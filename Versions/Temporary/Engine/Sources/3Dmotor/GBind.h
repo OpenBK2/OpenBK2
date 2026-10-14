@@ -6,17 +6,23 @@ namespace NGScene
 
 class CBind : public CFuncBase<SSkeletonMatrices>
 {
-	OBJECT_NOCOPY_METHODS(CBind);
+	OBJECT_NOCOPY_METHODS( CBind );
 
 	ZDATA
-	CDGPtr< CFuncBase<NAnimation::SSkeletonPose> > pAnimation;
+	CDGPtr<CFuncBase<NAnimation::SSkeletonPose>> pAnimation;
 	NAnimation::SSkeletonHandle skeletonH;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimation); f.Add(3,&skeletonH); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pAnimation );
+		f.Add( 3, &skeletonH );
+		return 0;
+	}
 
 protected:
 	virtual bool NeedUpdate() { return pAnimation.Refresh(); }
 	virtual void Recalc();
 	~CBind();
+
 public:
 	CBind() {}
 	CBind( CFuncBase<NAnimation::SSkeletonPose> *_pAnimation, const NAnimation::SSkeletonHandle &_skeletonH );
@@ -25,17 +31,28 @@ public:
 
 class CAnimatedBound : public CFuncBase<SBound>
 {
-	OBJECT_NOCOPY_METHODS(CAnimatedBound);
+	OBJECT_NOCOPY_METHODS( CAnimatedBound );
 	ZDATA
 	SBound bv;
-	CDGPtr< CFuncBase<NAnimation::SSkeletonPose> > pAnimation;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bv); f.Add(3,&pAnimation); return 0; }
+	CDGPtr<CFuncBase<NAnimation::SSkeletonPose>> pAnimation;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &bv );
+		f.Add( 3, &pAnimation );
+		return 0;
+	}
 	SSphere prevValue;
+
 protected:
 	virtual bool NeedUpdate();
 	virtual void Recalc();
+
 public:
-	CAnimatedBound() { Zero( value ); Zero( prevValue ); }
+	CAnimatedBound()
+	{
+		Zero( value );
+		Zero( prevValue );
+	}
 	CAnimatedBound( const SBound &_bv, CFuncBase<NAnimation::SSkeletonPose> *_pAnimation );
 };
 

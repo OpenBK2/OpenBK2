@@ -4,8 +4,8 @@
 
 #include "AILogic_export.h"
 
-CExecutorLinkedGrenades::CExecutorLinkedGrenades( CAIUnit *_pUnit	) :
-CExecutorUnitBonus ( NDb::ABILITY_LINKED_GRENADES, _pUnit, TID_LINKED_GRENADES )
+CExecutorLinkedGrenades::CExecutorLinkedGrenades( CAIUnit *_pUnit )
+		: CExecutorUnitBonus( NDb::ABILITY_LINKED_GRENADES, _pUnit, TID_LINKED_GRENADES )
 {
 }
 
@@ -28,7 +28,7 @@ void CExecutorLinkedGrenades::SwitchOnEnd()
 
 int CExecutorLinkedGrenades::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CExecutorUnitBonus*>( this ) );
+	saver.Add( 1, static_cast<CExecutorUnitBonus *>( this ) );
 
 	return 0;
 }

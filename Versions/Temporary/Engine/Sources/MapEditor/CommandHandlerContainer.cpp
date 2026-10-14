@@ -7,7 +7,8 @@
 
 void CCommandHandlerContainer::Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID )
 {
-	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID = commandHandlerIDToCommandIDMap.find( nType );
+	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID =
+			commandHandlerIDToCommandIDMap.find( nType );
 	if ( posCommandHandlerIDToCommandID == commandHandlerIDToCommandIDMap.end() )
 	{
 		commandHandlerIDToCommandIDMap[nType] = SCommandRange();
@@ -29,15 +30,19 @@ void CCommandHandlerContainer::Register( unsigned nType, unsigned nFirstCommandI
 	}
 }
 
-
 void CCommandHandlerContainer::UnRegister( unsigned nType )
 {
-	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID = commandHandlerIDToCommandIDMap.find( nType );
+	CCommandHandlerIDToCommandIDMap::iterator posCommandHandlerIDToCommandID =
+			commandHandlerIDToCommandIDMap.find( nType );
 	if ( posCommandHandlerIDToCommandID != commandHandlerIDToCommandIDMap.end() )
 	{
-		for ( SCommandRange::CCommandIDSet::const_iterator itCommandID = posCommandHandlerIDToCommandID->second.commandIDSet.begin(); itCommandID != posCommandHandlerIDToCommandID->second.commandIDSet.end(); ++itCommandID )
+		for ( SCommandRange::CCommandIDSet::const_iterator itCommandID =
+		          posCommandHandlerIDToCommandID->second.commandIDSet.begin();
+		      itCommandID != posCommandHandlerIDToCommandID->second.commandIDSet.end();
+		      ++itCommandID )
 		{
-			CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( itCommandID->first );
+			CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID =
+					commandIDToCommandHandlerIDMap.find( itCommandID->first );
 			if ( posCommandIDToCommandHandlerID != commandIDToCommandHandlerIDMap.end() )
 			{
 				commandIDToCommandHandlerIDMap.erase( posCommandIDToCommandHandlerID );
@@ -46,7 +51,6 @@ void CCommandHandlerContainer::UnRegister( unsigned nType )
 		commandHandlerIDToCommandIDMap.erase( posCommandHandlerIDToCommandID );
 	}
 }
-
 
 void CCommandHandlerContainer::Set( unsigned nType, ICommandHandler *pCommandHandler )
 {
@@ -60,7 +64,6 @@ void CCommandHandlerContainer::Set( unsigned nType, ICommandHandler *pCommandHan
 	}
 }
 
-
 void CCommandHandlerContainer::Remove( unsigned nType, ICommandHandler *pCommandHandler )
 {
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
@@ -73,7 +76,6 @@ void CCommandHandlerContainer::Remove( unsigned nType, ICommandHandler *pCommand
 	}
 }
 
-
 void CCommandHandlerContainer::Remove( unsigned nType )
 {
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
@@ -83,8 +85,7 @@ void CCommandHandlerContainer::Remove( unsigned nType )
 	}
 }
 
-
-ICommandHandler* CCommandHandlerContainer::Get( unsigned nType )
+ICommandHandler *CCommandHandlerContainer::Get( unsigned nType )
 {
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
 	if ( posCommandHandler != commandHandlerMap.end() )
@@ -94,10 +95,9 @@ ICommandHandler* CCommandHandlerContainer::Get( unsigned nType )
 	return 0;
 }
 
-
 bool CCommandHandlerContainer::HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData )
 {
-//	DebugTrace ( "CCommandHandlerContainer::HandleCommand ... nType = %d", nType );
+	//	DebugTrace ( "CCommandHandlerContainer::HandleCommand ... nType = %d", nType );
 	ICommandHandler *pCommandHandler = Get( nType );
 	if ( pCommandHandler )
 	{
@@ -109,7 +109,6 @@ bool CCommandHandlerContainer::HandleCommand( unsigned nType, unsigned nCommandI
 	}
 }
 
-
 bool CCommandHandlerContainer::UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	ICommandHandler *pCommandHandler = Get( nType );
@@ -120,10 +119,10 @@ bool CCommandHandlerContainer::UpdateCommand( unsigned nType, unsigned nCommandI
 	return false;
 }
 
-
 bool CCommandHandlerContainer::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
+	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID =
+			commandIDToCommandHandlerIDMap.find( nCommandID );
 	if ( posCommandIDToCommandHandlerID != commandIDToCommandHandlerIDMap.end() )
 	{
 		return HandleCommand( posCommandIDToCommandHandlerID->second, nCommandID, dwData );
@@ -131,10 +130,10 @@ bool CCommandHandlerContainer::HandleCommand( unsigned nCommandID, uintptr_t dwD
 	return false;
 }
 
-
 bool CCommandHandlerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
-	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
+	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID =
+			commandIDToCommandHandlerIDMap.find( nCommandID );
 	if ( posCommandIDToCommandHandlerID != commandIDToCommandHandlerIDMap.end() )
 	{
 		return UpdateCommand( posCommandIDToCommandHandlerID->second, nCommandID, pbEnable, pbCheck );

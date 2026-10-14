@@ -8,7 +8,6 @@
 
 CRegisterEditorsSemiAutoMagic g_RegisterEditorsSemiAutoMagic;
 
-
 int CRegisterEditorsSemiAutoMagic::SUIEditor::operator&( IXmlSaver &xs )
 {
 	xs.Add( "Instance", &szInstance );
@@ -22,9 +21,7 @@ int CRegisterEditorsSemiAutoMagic::operator&( IXmlSaver &xs )
 
 // CRegisterEditorsSemiAutoMagic
 
-CRegisterEditorsSemiAutoMagic::CRegisterEditorsSemiAutoMagic()
-{
-}
+CRegisterEditorsSemiAutoMagic::CRegisterEditorsSemiAutoMagic() {}
 
 CRegisterEditorsSemiAutoMagic::~CRegisterEditorsSemiAutoMagic()
 {
@@ -38,8 +35,8 @@ CRegisterEditorsSemiAutoMagic::~CRegisterEditorsSemiAutoMagic()
 
 void CRegisterEditorsSemiAutoMagic::Load()
 {
-	LoadXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml",
-		GetLabel(), *this );
+	LoadXMLResource(
+			Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml", GetLabel(), *this );
 
 	// UI
 	for ( std::vector<SUIEditor>::const_iterator it = uiEditors.begin(); it != uiEditors.end(); ++it )
@@ -58,11 +55,11 @@ void CRegisterEditorsSemiAutoMagic::Save()
 	uiEditors.push_back( SUIEditor( "WindowScreen" ) );
 	uiEditors.push_back( SUIEditor( "WindowSimple" ) );
 
-	SaveXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml",
-		GetLabel(), *this );
+	SaveXMLResource(
+			Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml", GetLabel(), *this );
 }
 
-const char* CRegisterEditorsSemiAutoMagic::GetXMLPath() const
+const char *CRegisterEditorsSemiAutoMagic::GetXMLPath() const
 {
 	// A path under the start folder, not a database name: JoinPath, or off
 	// Windows the file is written to one name with a backslash in it.
@@ -70,7 +67,7 @@ const char* CRegisterEditorsSemiAutoMagic::GetXMLPath() const
 	return szPath.c_str();
 }
 
-const char* CRegisterEditorsSemiAutoMagic::GetLabel() const
+const char *CRegisterEditorsSemiAutoMagic::GetLabel() const
 {
 	return "Editors";
 }

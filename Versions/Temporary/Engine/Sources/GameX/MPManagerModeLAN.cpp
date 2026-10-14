@@ -37,31 +37,38 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 0x19243482, CMPManagerModeLAN );
 class CLANPasswordPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CLANPasswordPacket );
+
 public:
 	ZDATA
 	std::string szPassword;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szPassword); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &szPassword );
+		return 0;
+	}
 
-	CLANPasswordPacket() { }
-	CLANPasswordPacket( const int nClientID, const std::string &_szPassword ) : CNetPacket( nClientID ), szPassword( _szPassword ) { }
+	CLANPasswordPacket() {}
+	CLANPasswordPacket( const int nClientID, const std::string &_szPassword )
+			: CNetPacket( nClientID ), szPassword( _szPassword )
+	{
+	}
 };
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256440, CLANPasswordPacket );
 
 class CRequestLANPasswordPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CRequestLANPasswordPacket );
+
 public:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
 
-	CRequestLANPasswordPacket() { }
-	CRequestLANPasswordPacket( const int nClientID ) : CNetPacket( nClientID ) { }
+	CRequestLANPasswordPacket() {}
+	CRequestLANPasswordPacket( const int nClientID ) : CNetPacket( nClientID ) {}
 };
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256441, CRequestLANPasswordPacket );
 
-
-CMPManagerModeLAN::CMPManagerModeLAN() :
-wGameUniqueID(0), eCurrentState( EGS_NOT_IN_GAME )
+CMPManagerModeLAN::CMPManagerModeLAN() : wGameUniqueID( 0 ), eCurrentState( EGS_NOT_IN_GAME )
 {
 	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC );
 	if ( !pLANClient )
@@ -98,7 +105,7 @@ bool CMPManagerModeLAN::Segment()
 				nAsyncTime = GetLongTickCount();
 				NGlobal::SetVar( "MP_async", 1 );
 			}
-			else if( NGlobal::GetVar( "MP_async", 0 ) == 1 && GetLongTickCount() > nAsyncTime + ASYNC_EXIT_TIMEOUT )
+			else if ( NGlobal::GetVar( "MP_async", 0 ) == 1 && GetLongTickCount() > nAsyncTime + ASYNC_EXIT_TIMEOUT )
 			{
 				pLanTester->AsyncDetected();
 			}
@@ -118,7 +125,7 @@ void CMPManagerModeLAN::UpdateGameList()
 	NNet::CNodeAddress gameNode;
 	bool bWrongVersion;
 	float fPing;
-	int nGame = 0;				// counts games for GetGameInfo()
+	int nGame = 0; // counts games for GetGameInfo()
 	SMPUIGameListMessage *pGamesMsg = new SMPUIGameListMessage;
 
 	while ( pLANClient->GetGameInfo( nGame++, &gameNode, &bWrongVersion, &fPing, &gameInfo ) )
@@ -127,7 +134,7 @@ void CMPManagerModeLAN::UpdateGameList()
 		while ( iter != games.end() && !gameNode.SameIP( iter->lanNode ) )
 			++iter;
 
-		if ( iter == games.end() )			// new server
+		if ( iter == games.end() ) // new server
 		{
 			SNetGameInfo &game = games.emplace_back();
 
@@ -136,11 +143,11 @@ void CMPManagerModeLAN::UpdateGameList()
 			game.lanNode = gameNode;
 			game.lastSeen = curTime;
 			ExtractGameInfo( &game, &gameInfo );
-			AddGameInfoForUI( &(pGamesMsg->gamesAddChange), game );
+			AddGameInfoForUI( &( pGamesMsg->gamesAddChange ), game );
 			if ( pLanTester )
 				pLanTester->NewGameFound( game.nGameID, game.szSessionName );
 		}
-		else														// old server information refresh
+		else // old server information refresh
 		{
 			// information was refreshed
 			SNetGameInfo &game = *iter;
@@ -148,7 +155,7 @@ void CMPManagerModeLAN::UpdateGameList()
 			game.fPing = fPing * 1000;
 			game.lastSeen = curTime;
 			ExtractGameInfo( &game, &gameInfo );
-			AddGameInfoForUI( &(pGamesMsg->gamesAddChange), game );
+			AddGameInfoForUI( &( pGamesMsg->gamesAddChange ), game );
 		}
 	}
 
@@ -167,11 +174,9 @@ void CMPManagerModeLAN::UpdateGameList()
 	PushMessage( pGamesMsg );
 }
 
-
 //
 //   Messages
 //
-
 
 bool CMPManagerModeLAN::OnChatMessage( SMPUIChatMessage *pMsg )
 {
@@ -194,11 +199,9 @@ bool CMPManagerModeLAN::OnChatMessage( SMPUIChatMessage *pMsg )
 	return true;
 }
 
-
 //
 //   Packets
 //
-
 
 bool CMPManagerModeLAN::OnNetNewClient( class CNetNewClient *pPacket )
 {
@@ -248,15 +251,15 @@ bool CMPManagerModeLAN::OnConnectGameFailed( class CConnectGameFailed *pPacket )
 bool CMPManagerModeLAN::OnGameClientWasKicked( class CGameClientWasKicked *pPacket )
 {
 	//DebugTrace( "+++ ClientWasKicked packet from client %d", pPacket->nClientID );
-	NGameX::MatchPacketTrace_Log(
-		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-		"RX",
-		"CGameClientWasKicked",
-		pPacket->nClientID,
-		fmt::format( "kicked={} in_room={}", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
+	NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+	                              "RX",
+	                              "CGameClientWasKicked",
+	                              pPacket->nClientID,
+	                              fmt::format( "kicked={} in_room={}", pPacket->nKicked, IsInGameRoom() ? 1 : 0 ) );
 	if ( IsInGameRoom() )
 	{
-		NGameX::MatchPacketTrace_SetFinalState( GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
+		NGameX::MatchPacketTrace_SetFinalState(
+				GetPresentMask(), dwLaggers, IsValid( pTransceiver ) ? pTransceiver->GetPlayerMask() : 0 );
 		NGameX::MatchPacketTrace_Flush( "kicked" );
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_KICKED ) );
 		OnLeaveGame();
@@ -298,7 +301,8 @@ bool CMPManagerModeLAN::OnLANPassword( class CLANPasswordPacket *pPacket )
 			}
 			else
 			{
-				CConnectGameFailed *pFailPkt = new CConnectGameFailed( pPacket->nClientID, CConnectGameFailed::ER_WRONG_PASSWORD );
+				CConnectGameFailed *pFailPkt =
+						new CConnectGameFailed( pPacket->nClientID, CConnectGameFailed::ER_WRONG_PASSWORD );
 				pClient->SendPacket( pFailPkt );
 			}
 			pendingClients.erase( it );
@@ -315,8 +319,6 @@ void CMPManagerModeLAN::OnSetMySlotNumber()
 
 	eCurrentState = EGS_CLIENT;
 }
-
-
 
 void CMPManagerModeLAN::TryToCreateGame()
 {
@@ -425,7 +427,7 @@ void CMPManagerModeLAN::OnGameSpecificInfo()
 	// Check if this client has the map or not? - only when the player got his slot first
 	if ( gameDesc.nPlayers < 0 )
 	{
-		PushMessage(new SMPUIGameRoomInitMessage(SMPUIGameRoomInitMessage::ERR_CHECKSUM));
+		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CHECKSUM ) );
 		OnLeaveGame();
 		return;
 	}
@@ -447,12 +449,11 @@ void CMPManagerModeLAN::KickPlayerFromSlot( const int nSlot )
 	if ( IsInGameRoom() && IsGameHost() )
 	{
 		CPtr<CGameClientWasKicked> pKickPkt = new CGameClientWasKicked( slots[nSlot].nClientID, slots[nSlot].nClientID );
-		NGameX::MatchPacketTrace_Log(
-			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			"TX",
-			"CGameClientWasKicked",
-			GetOwnClientID(),
-			fmt::format( "slot={} kicked_client={}", nSlot, slots[nSlot].nClientID ) );
+		NGameX::MatchPacketTrace_Log( IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+		                              "TX",
+		                              "CGameClientWasKicked",
+		                              GetOwnClientID(),
+		                              fmt::format( "slot={} kicked_client={}", nSlot, slots[nSlot].nClientID ) );
 		pLANClient->SendPacket( pKickPkt );
 
 		//pLANClient->Kick( slots[nSlot].nClientID );

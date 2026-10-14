@@ -46,8 +46,7 @@ bool CInterfaceEscMenu::CReactions::Execute( const std::string &szSender, const 
 
 // CInterfaceEscMenu
 
-CInterfaceEscMenu::CInterfaceEscMenu() :
-	CInterfaceScreenBase( "MissionEscMenu", "esc_menu" ), bClosed( false )
+CInterfaceEscMenu::CInterfaceEscMenu() : CInterfaceScreenBase( "MissionEscMenu", "esc_menu" ), bClosed( false )
 {
 	AddObserver( "try_exit_main_menu", &CInterfaceEscMenu::MsgTryExitMainMenu );
 	AddObserver( "try_exit_windows", &CInterfaceEscMenu::MsgTryExitWindows );
@@ -61,9 +60,7 @@ CInterfaceEscMenu::CInterfaceEscMenu() :
 	AddObserver( "menu_help_button", &CInterfaceEscMenu::MsgHelpButton );
 }
 
-CInterfaceEscMenu::~CInterfaceEscMenu()
-{
-}
+CInterfaceEscMenu::~CInterfaceEscMenu() {}
 
 int CInterfaceEscMenu::CReactions::Check( const std::string &szCheckName ) const
 {
@@ -87,20 +84,21 @@ bool CInterfaceEscMenu::Init()
 	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
-	IWindow *pScreenWnd = dynamic_cast_ptr<IWindow*>( pScreen );
+	IWindow *pScreenWnd = dynamic_cast_ptr<IWindow *>( pScreen );
 	if ( !pScreenWnd )
 		return false;
 
 	IWindow *pWinnedMenu = GetChildChecked<IWindow>( pScreenWnd, "WinnedMenu", true );
 
-	IWindow * pEsc = 0;
+	IWindow *pEsc = 0;
 	if ( NGlobal::GetVar( "History.Playing", 0 ) )
 	{
 		pEsc = GetChildChecked<IWindow>( pScreenWnd, "ReplayEscapeMenu", true );
 	}
 	else
 	{
-		if ( Singleton<IScenarioTracker>() && Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+		if ( Singleton<IScenarioTracker>() &&
+		     Singleton<IScenarioTracker>()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
 			pEsc = GetChildChecked<IWindow>( pScreenWnd, "MultiplayerEscapeMenu", true );
 		else
 			pEsc = GetChildChecked<IWindow>( pScreenWnd, "EscapeMenu", true );
@@ -108,10 +106,11 @@ bool CInterfaceEscMenu::Init()
 	if ( pEsc )
 		pEsc->ShowWindow( true );
 
-	if ( !Singleton<IScenarioTracker>() || Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+	if ( !Singleton<IScenarioTracker>() ||
+	     Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 	{
 		bool bWinned = !Singleton<IScenarioTracker>()->IsMissionActive() && Singleton<IScenarioTracker>()->IsMissionWon();
-		IWindow * pWinMissionButton = GetChildChecked<IWindow>( pScreenWnd , "WinMissionButton", true );
+		IWindow *pWinMissionButton = GetChildChecked<IWindow>( pScreenWnd, "WinMissionButton", true );
 		pWinMissionButton->Enable( bWinned );
 		if ( !bWinned )
 			NInput::PostEvent( "esc_menu_init", 0, 0 );
@@ -137,25 +136,25 @@ bool CInterfaceEscMenu::Init()
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
 	{
-//		IButton *pSaveBtn = GetChildChecked<IButton>( pEscMenu, "SaveMission", true );
-//		IButton *pLoadBtn = GetChildChecked<IButton>( pEscMenu, "LoadBtn", true );
-//		IButton *pOptionsBtn = GetChildChecked<IButton>( pEscMenu, "OptionsBtn", true );
+		//		IButton *pSaveBtn = GetChildChecked<IButton>( pEscMenu, "SaveMission", true );
+		//		IButton *pLoadBtn = GetChildChecked<IButton>( pEscMenu, "LoadBtn", true );
+		//		IButton *pOptionsBtn = GetChildChecked<IButton>( pEscMenu, "OptionsBtn", true );
 
-//		IButton *pExitBtn = GetChildChecked<IButton>( pEndMissionSubMenu, "ExitBtn", true );
+		//		IButton *pExitBtn = GetChildChecked<IButton>( pEndMissionSubMenu, "ExitBtn", true );
 
 		IButton *pMPOptionsBtn = GetChildChecked<IButton>( pMPEscMenu, "OptionsBtn", true );
 
 		IButton *pMPExitBtn = GetChildChecked<IButton>( pMPEndMissionSubMenu, "ExitBtn", true );
 
-//		if ( pSaveBtn )
-//			pSaveBtn->Enable( false );
-//		if ( pLoadBtn )
-//			pLoadBtn->Enable( false );
-//		if ( pOptionsBtn )
-//			pOptionsBtn->Enable( false );
+		//		if ( pSaveBtn )
+		//			pSaveBtn->Enable( false );
+		//		if ( pLoadBtn )
+		//			pLoadBtn->Enable( false );
+		//		if ( pOptionsBtn )
+		//			pOptionsBtn->Enable( false );
 
-//		if ( pExitBtn )
-//			pExitBtn->Enable( false );
+		//		if ( pExitBtn )
+		//			pExitBtn->Enable( false );
 
 		if ( pMPOptionsBtn )
 			pMPOptionsBtn->Enable( false );
@@ -182,10 +181,10 @@ void CInterfaceEscMenu::OnGetFocus( bool bFocus )
 
 void CInterfaceEscMenu::MsgMultiplayerEndMission( const SGameMessage &msg )
 {
-	IWindow * pMEnd = GetChildChecked<IWindow>( pScreen, "MultiplayerEndMissionMenu", true );
+	IWindow *pMEnd = GetChildChecked<IWindow>( pScreen, "MultiplayerEndMissionMenu", true );
 	if ( pMEnd )
 		pMEnd->ShowWindow( true );
-	IWindow * pMEsc = GetChildChecked<IWindow>( pScreen, "MultiplayerEscapeMenu", true );
+	IWindow *pMEsc = GetChildChecked<IWindow>( pScreen, "MultiplayerEscapeMenu", true );
 	if ( pMEsc )
 		pMEsc->ShowWindow( false );
 }
@@ -201,18 +200,21 @@ void CInterfaceEscMenu::MsgTryExitMainMenu( const SGameMessage &msg )
 
 	bool bCustomMission = Singleton<IScenarioTracker>()->IsCustomMission();
 	IScenarioTracker::EGameType eType = Singleton<IScenarioTracker>()->GetGameType();
-	std::wstring wszMsg = InterfaceState()->GetTextEntry( eType != IScenarioTracker::EGT_SINGLE ?
-		"T_MP_ESCAPE_MENU_SURRENDER" : (!bCustomMission ? "T_ESCAPE_MENU_EXIT_CHAPTER_MAP_QUESTION" :
-		"T_ESCAPE_MENU_EXIT_MAIN_MENU_QUESTION") );
+	std::wstring wszMsg = InterfaceState()->GetTextEntry(
+			eType != IScenarioTracker::EGT_SINGLE
+					? "T_MP_ESCAPE_MENU_SURRENDER"
+					: ( !bCustomMission ? "T_ESCAPE_MENU_EXIT_CHAPTER_MAP_QUESTION" : "T_ESCAPE_MENU_EXIT_MAIN_MENU_QUESTION" ) );
 
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
 	{
-		wszMsg = InterfaceState()->GetTextEntry( eType != IScenarioTracker::EGT_SINGLE ?
-			"T_MP_ESCAPE_MENU_SURRENDER" : "T_ESCAPE_MENU_EXIT_MAIN_MENU_QUESTION" );
+		wszMsg = InterfaceState()->GetTextEntry( eType != IScenarioTracker::EGT_SINGLE
+		                                             ? "T_MP_ESCAPE_MENU_SURRENDER"
+		                                             : "T_ESCAPE_MENU_EXIT_MAIN_MENU_QUESTION" );
 	}
 
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", wszMsg ).c_str() );
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+	                    CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", wszMsg ).c_str() );
 }
 
 void CInterfaceEscMenu::MsgTryExitWindows( const SGameMessage &msg )
@@ -222,9 +224,11 @@ void CInterfaceEscMenu::MsgTryExitWindows( const SGameMessage &msg )
 
 	eMode = EMODE_EXIT_WINDOWS;
 
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-			InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) ).c_str() );
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                     InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) )
+					.c_str() );
 }
 
 void CInterfaceEscMenu::MsgGoMainMenu( const SGameMessage &msg )
@@ -277,9 +281,11 @@ bool CInterfaceEscMenu::OnRestartMission( const std::string &szSender )
 {
 	eMode = EMODE_RESTART_MISSION;
 
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-			InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_RESTART_MISSION_QUESTION" ) ).c_str() );
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                     InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_RESTART_MISSION_QUESTION" ) )
+					.c_str() );
 
 	return true;
 }
@@ -345,8 +351,9 @@ bool CInterfaceEscMenu::OnFinishReplay()
 	eMode = EMODE_FINISH_REPLAY;
 
 	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-		GetScreen()->GetTextEntry( "T_FINISH_REPLAY_QUESTION" ) ).c_str() );
+	                    CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                                     GetScreen()->GetTextEntry( "T_FINISH_REPLAY_QUESTION" ) )
+	                        .c_str() );
 
 	return true;
 }
@@ -443,18 +450,14 @@ bool CInterfaceEscMenu::StepLocal( bool bAppActive )
 
 // CICEscMenu
 
-void CICEscMenu::PreCreate()
-{
-}
+void CICEscMenu::PreCreate() {}
 
 void CICEscMenu::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICEscMenu::Configure( const char *pszConfig )
-{
-}
+void CICEscMenu::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x170B6B80, CInterfaceEscMenu )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_ESC_MENU, CICEscMenu )

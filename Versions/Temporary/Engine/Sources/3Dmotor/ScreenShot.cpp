@@ -8,10 +8,7 @@ namespace NGScene
 
 // CScreenshotTexture
 
-CScreenshotTexture::CScreenshotTexture():
-	eMode( COLOR ), vCoeff( 1, 1, 1, 1 )
-{
-}
+CScreenshotTexture::CScreenshotTexture() : eMode( COLOR ), vCoeff( 1, 1, 1, 1 ) {}
 
 void CScreenshotTexture::Get( CArray2D<NGfx::SPixel8888> *pScreenShot )
 {

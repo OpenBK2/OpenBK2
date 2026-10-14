@@ -11,7 +11,7 @@ bool ToAIUnits( bool bInEditor )
 	//Vis2AI( &vPos );
 	//
 	CQuat quat = CQuat( -FP_PI2, V3_AXIS_X );
-	quat *= CQuat( ToRadian(fDirection), V3_AXIS_Z );
+	quat *= CQuat( ToRadian( fDirection ), V3_AXIS_Z );
 	matDirection.Set( quat );
 	//
 	wDirection = uint16_t( fDirection * 65536.0f / 360.0f );
@@ -31,4 +31,7 @@ bool ToAIUnits( bool bInEditor )
 	return true;
 }
 
-virtual const CVec3 GetShootPointPos() const { return vPos; }
+virtual const CVec3 GetShootPointPos() const
+{
+	return vPos;
+}

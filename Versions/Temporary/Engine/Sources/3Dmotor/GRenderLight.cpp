@@ -10,16 +10,22 @@ namespace NGScene
 
 // CDirectionalLight
 
-CDirectionalLight::CDirectionalLight( CFuncBase<CVec3> *_pColor, CFuncBase<CVec3> *_pGlossColor,
-	const CVec3 &_vLightDir, const CVec3 &_vShadowsLightDir,
-	float _fMaxHeight,
-	CFuncBase<CVec3> *_pAmbient,
-	CFuncBase<CVec3> *_pShadeColor, CFuncBase<CVec3> *_pIncidentShadeColor,
-	CPtrFuncBase<NGfx::CTexture> *_pClouds, CFuncBase<SHMatrix> *_pCloudsProjection,
-	float _fShadowsMaxDetailLength, const CVec3 &_vDymanicLightsModification )
-: pColor(_pColor), pGlossColor(_pGlossColor), pAmbient(_pAmbient), vDepth( 0, 0, 1 / _fMaxHeight, 0 ),
-	fMaxHeight(_fMaxHeight), pShadeColor(_pShadeColor), pIncidentShadeColor(_pIncidentShadeColor), nVersionID(0), fSmoothedSceneHeight(0),
-	pClouds(_pClouds), pCloudsProjection(_pCloudsProjection), fShadowsMaxDetailLength(_fShadowsMaxDetailLength), vDymanicLightsModification(_vDymanicLightsModification)
+CDirectionalLight::CDirectionalLight( CFuncBase<CVec3> *_pColor,
+                                      CFuncBase<CVec3> *_pGlossColor,
+                                      const CVec3 &_vLightDir,
+                                      const CVec3 &_vShadowsLightDir,
+                                      float _fMaxHeight,
+                                      CFuncBase<CVec3> *_pAmbient,
+                                      CFuncBase<CVec3> *_pShadeColor,
+                                      CFuncBase<CVec3> *_pIncidentShadeColor,
+                                      CPtrFuncBase<NGfx::CTexture> *_pClouds,
+                                      CFuncBase<SHMatrix> *_pCloudsProjection,
+                                      float _fShadowsMaxDetailLength,
+                                      const CVec3 &_vDymanicLightsModification )
+		: pColor( _pColor ), pGlossColor( _pGlossColor ), pAmbient( _pAmbient ), vDepth( 0, 0, 1 / _fMaxHeight, 0 ),
+			fMaxHeight( _fMaxHeight ), pShadeColor( _pShadeColor ), pIncidentShadeColor( _pIncidentShadeColor ),
+			nVersionID( 0 ), fSmoothedSceneHeight( 0 ), pClouds( _pClouds ), pCloudsProjection( _pCloudsProjection ),
+			fShadowsMaxDetailLength( _fShadowsMaxDetailLength ), vDymanicLightsModification( _vDymanicLightsModification )
 {
 	vLightDir = _vLightDir;
 	vShadowsLightDir = _vShadowsLightDir;
@@ -43,13 +49,17 @@ bool CDirectionalLight::NeedUpdate()
 
 void CDirectionalLight::AddToState( SPerVertexLightState *pRes )
 {
-//	float fTestBrightness = 0.25f;//
-//	pRes->SetDirectional(
-//		CVec3(0,0,0), CVec3(0,fTestBrightness,0), CVec3(0,0,fTestBrightness), CVec3(fTestBrightness,0,0),
-//		-vLightDir, nDirectionalLightID );
-	pRes->SetDirectional(
-		pAmbient->GetValue(), pColor->GetValue(), pShadeColor->GetValue(), pIncidentShadeColor->GetValue(),
-		-vLightDir, nDirectionalLightID, vDymanicLightsModification );
+	//	float fTestBrightness = 0.25f;//
+	//	pRes->SetDirectional(
+	//		CVec3(0,0,0), CVec3(0,fTestBrightness,0), CVec3(0,0,fTestBrightness), CVec3(fTestBrightness,0,0),
+	//		-vLightDir, nDirectionalLightID );
+	pRes->SetDirectional( pAmbient->GetValue(),
+	                      pColor->GetValue(),
+	                      pShadeColor->GetValue(),
+	                      pIncidentShadeColor->GetValue(),
+	                      -vLightDir,
+	                      nDirectionalLightID,
+	                      vDymanicLightsModification );
 }
 
 void CDirectionalLight::PrepareLightInfo( SLightInfo *pLightInfo )
@@ -62,7 +72,7 @@ void CDirectionalLight::PrepareLightInfo( SLightInfo *pLightInfo )
 	lightInfo.vAmbientColor = pAmbient->GetValue();
 	lightInfo.vShadeColor = pShadeColor->GetValue();
 	lightInfo.vIncidentShadeColor = pIncidentShadeColor->GetValue();
-	lightInfo.vLightPos = CVec4(-vLightDir, 0);
+	lightInfo.vLightPos = CVec4( -vLightDir, 0 );
 }
 
 float CDirectionalLight::GetSmoothedSceneHeight( float f )
@@ -95,12 +105,10 @@ void CDirectionalLight::CalcCloudProjection( SHMatrix *pRes )
 
 // CPointLight
 
-CPointLight::CPointLight() : nThisPointLightID( ++nPointLightID )
-{
-}
+CPointLight::CPointLight() : nThisPointLightID( ++nPointLightID ) {}
 
 CPointLight::CPointLight( const CVec3 &_vColor, const CVec3 &_ptCenter, float _fRadius )
-	: vColor(_vColor), vCenter( _ptCenter), fRadius(_fRadius), nThisPointLightID( ++nPointLightID )
+		: vColor( _vColor ), vCenter( _ptCenter ), fRadius( _fRadius ), nThisPointLightID( ++nPointLightID )
 {
 	sTransform.MakeParallel( 2 * _fRadius, 2 * _fRadius, -_fRadius, _fRadius );
 	SHMatrix cameraPos;
@@ -149,7 +157,7 @@ static bool s_bDynamicLights = true;
 bool CLightStateNode::NeedUpdate()
 {
 	bool bRes = false;
-	if ( IsValid(pDirectionalLight) )
+	if ( IsValid( pDirectionalLight ) )
 		bRes |= pDirectionalLight.Refresh();
 	bRes |= EraseInvalidRefs( &lights );
 	bRes |= !value.dynamicPointLights.empty();
@@ -181,12 +189,12 @@ void CLightStateNode::Recalc()
 {
 	bSmthHasChanged = false;
 	value.ResetStaticLights();
-	if ( IsValid(pDirectionalLight) )
+	if ( IsValid( pDirectionalLight ) )
 		pDirectionalLight->AddToState( &value );
-	for ( std::vector< CPtr<ILight> >::iterator k = lights.begin(); k != lights.end(); ++k )
+	for ( std::vector<CPtr<ILight>>::iterator k = lights.begin(); k != lights.end(); ++k )
 	{
 		ILight *pLight = *k;
-//		if ( pLight->CheckCulling( pClipTS ) )
+		//		if ( pLight->CheckCulling( pClipTS ) )
 		pLight->AddToState( &value );
 	}
 	value.SortPointLights();
@@ -225,7 +233,7 @@ void CLightStateNode::SetClipTS( const CTransformStack &_ts )
 	tsClip = _ts;
 }
 
-START_REGISTER(GRenderLight)
+START_REGISTER( GRenderLight )
 REGISTER_VAR_EX( "gfx_dynamic_lights", NGlobal::VarBoolHandler, &s_bDynamicLights, true, STORAGE_USER )
 FINISH_REGISTER
 

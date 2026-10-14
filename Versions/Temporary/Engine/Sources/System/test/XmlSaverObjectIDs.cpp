@@ -35,11 +35,13 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 class CXmlNode : public CXmlResource
 {
 	OBJECT_NOCOPY_METHODS( CXmlNode );
+
 public:
 	int nValue = 0;
 	CPtr<CXmlNode> pFirst;
@@ -61,7 +63,8 @@ public:
 #define XMLSAVERTEST_EXPORT
 REGISTER_SAVELOAD_CLASS( XMLSAVERTEST, 0x7E57AB02, CXmlNode )
 
-namespace {
+namespace
+{
 
 // Every graph saved stays alive for the rest of the run, so that the next one
 // cannot be allocated where it was and an address-writing saver could not

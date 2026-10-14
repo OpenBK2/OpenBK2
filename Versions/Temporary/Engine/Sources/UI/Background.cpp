@@ -8,23 +8,18 @@
 
 uint32_t FadeColor( uint32_t dwColor, float fFade )
 {
-	return uint32_t( (dwColor & 0xFF ) * fFade ) |
-		uint32_t( (dwColor >> 8 & 0xFF ) * fFade ) << 8 |
-		uint32_t( (dwColor >> 16 & 0xFF ) * fFade ) << 16 |
-		uint32_t( (dwColor >> 24 & 0xFF ) * fFade ) << 24;
-//	return (dwColor & 0x00FFFFFF) |
-//		uint32_t( (dwColor >> 24 & 0xFF ) * fFade ) << 24; // вариант с изменением только альфы смотрится хуже
+	return uint32_t( ( dwColor & 0xFF ) * fFade ) | uint32_t( ( dwColor >> 8 & 0xFF ) * fFade ) << 8 |
+	       uint32_t( ( dwColor >> 16 & 0xFF ) * fFade ) << 16 | uint32_t( ( dwColor >> 24 & 0xFF ) * fFade ) << 24;
+	//	return (dwColor & 0x00FFFFFF) |
+	//		uint32_t( (dwColor >> 24 & 0xFF ) * fFade ) << 24; // вариант с изменением только альфы смотрится хуже
 }
 
-BASIC_REGISTER_CLASS(UI, IWindowPart)
+BASIC_REGISTER_CLASS( UI, IWindowPart )
 using namespace NGScene;
 
 //CBackground
 
-CBackground::CBackground() :
-	fFadeValue( 1.0f )
-{
-}
+CBackground::CBackground() : fFadeValue( 1.0f ) {}
 
 void CBackground::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {

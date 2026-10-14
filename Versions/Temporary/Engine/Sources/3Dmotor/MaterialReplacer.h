@@ -2,7 +2,7 @@
 
 namespace NDb
 {
-	struct SMaterial;
+struct SMaterial;
 }
 
 namespace NGScene

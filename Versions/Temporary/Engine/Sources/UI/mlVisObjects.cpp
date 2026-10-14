@@ -19,7 +19,11 @@ struct SFontInfo
 	CVec2 scale;
 	CPtr<CFontFormatInfo> pInfo;
 	CPtr<NGScene::CFontInfo> pFont;
-	int operator&( CStructureSaver &f ) { ASSERT( 0 ); return 0; }
+	int operator&( CStructureSaver &f )
+	{
+		ASSERT( 0 );
+		return 0;
+	}
 };
 
 static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontInfo *pFontInfo )
@@ -44,7 +48,7 @@ static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontIn
 	search.nSize = (std::max)( search.nSize, nMinSize );
 
 	CPtr<NGScene::CFontInfo> pFont = NGScene::GetTextLocaleInfo()->GetFont( search );
-	CDGPtr< CPtrFuncBase<CFontFormatInfo> > pInfo( pFont->GetFormatInfo() );
+	CDGPtr<CPtrFuncBase<CFontFormatInfo>> pInfo( pFont->GetFormatInfo() );
 	pInfo.Refresh();
 	pFontInfo->pFont = pFont;
 	pFontInfo->pInfo = pInfo->GetValue();
@@ -52,15 +56,17 @@ static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontIn
 	// Runtime glyphs already contain both screen scales. Resizing their
 	// enlarged accent cells back to the requested line height shrinks the text.
 	const bool bRasterized = pFont->IsRasterized();
-	pFontInfo->scale.x = bRasterized ? 1.0f : (float)( search.nWidth > 0 ? search.nWidth : search.nSize ) / pFontInfo->pInfo->GetLineSpace();
+	pFontInfo->scale.x =
+			bRasterized ? 1.0f
+									: (float)( search.nWidth > 0 ? search.nWidth : search.nSize ) / pFontInfo->pInfo->GetLineSpace();
 	pFontInfo->scale.y = bRasterized ? 1.0f : (float)search.nSize / pFontInfo->pInfo->GetLineSpace();
 }
 
 // CTextObject
 
-class CTextObject: public IVisReflowObject
+class CTextObject : public IVisReflowObject
 {
-	OBJECT_BASIC_METHODS(CTextObject)
+	OBJECT_BASIC_METHODS( CTextObject )
 private:
 	ZDATA
 	int nStrSize;
@@ -73,8 +79,20 @@ private:
 	std::list<float> edges;
 	CRectLayout normalRects;
 	CRectLayout outlineRects;
-	CObj<CPtrFuncBase<NGfx::CTexture> > pTexture;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nStrSize); f.Add(3,&nStrStart); f.Add(4,&pStream); f.Add(5,&size); f.Add(6,&position); f.Add(7,&edges); f.Add(8,&normalRects); f.Add(9,&outlineRects); f.Add(10,&pTexture); return 0; }
+	CObj<CPtrFuncBase<NGfx::CTexture>> pTexture;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nStrSize );
+		f.Add( 3, &nStrStart );
+		f.Add( 4, &pStream );
+		f.Add( 5, &size );
+		f.Add( 6, &position );
+		f.Add( 7, &edges );
+		f.Add( 8, &normalRects );
+		f.Add( 9, &outlineRects );
+		f.Add( 10, &pTexture );
+		return 0;
+	}
 
 public:
 	CTextObject() {}
@@ -82,17 +100,17 @@ public:
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float>& GetPosition() const { return position; }
+	const CTPoint<float> &GetPosition() const { return position; }
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<float>& GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const { return size; }
 };
 
-CTextObject::CTextObject( CMLStream *_pStream, int _nStart, int _nSize ):
-	pStream(_pStream), nStrStart(_nStart), nStrSize(_nSize)
+CTextObject::CTextObject( CMLStream *_pStream, int _nStart, int _nSize )
+		: pStream( _pStream ), nStrStart( _nStart ), nStrSize( _nSize )
 {
 	size = CTPoint<float>( 20, 20 );
 }
@@ -132,7 +150,7 @@ void CTextObject::Update( IReflowState *pState )
 
 		normalRects.AddRect( fX, 0, fCX, fCY, charRect, state.color );
 
- 		if ( state.nOutlineBorder )
+		if ( state.nOutlineBorder )
 		{
 			outlineRects.AddRect( fX, +fSY, fCX, fCY, charRect, state.outlineColor );
 			outlineRects.AddRect( fX, -fSY, fCX, fCY, charRect, state.outlineColor );
@@ -155,7 +173,9 @@ void CTextObject::Update( IReflowState *pState )
 	size.x = fX;
 }
 
-void CTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &_position, const CTRect<float> &window )
+void CTextObject::Render( NGScene::ILayoutFakeView *pView,
+                          const CTPoint<float> &_position,
+                          const CTRect<float> &window )
 {
 	CTPoint<float> pos = _position + position;
 
@@ -165,7 +185,9 @@ void CTextObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> 
 	pView->CreateDynamicRects( pTexture, normalRects, pos, window );
 }
 
-void CTextObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
+void CTextObject::Render( std::list<CTRect<float>> *pRender,
+                          const CTPoint<float> &_position,
+                          const CTRect<float> &window )
 {
 	CTPoint<float> pos = _position + position;
 
@@ -177,13 +199,16 @@ void CTextObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<floa
 	}
 }
 
-IVisReflowObject* CreateTextObject( CMLStream *pStream, int nStart, int nSize ) { return new CTextObject( pStream, nStart, nSize ); }
+IVisReflowObject *CreateTextObject( CMLStream *pStream, int nStart, int nSize )
+{
+	return new CTextObject( pStream, nStart, nSize );
+}
 
 // CImageObject
 
-class CImageObject: public IVisReflowObject
+class CImageObject : public IVisReflowObject
 {
-	OBJECT_BASIC_METHODS(CImageObject)
+	OBJECT_BASIC_METHODS( CImageObject )
 private:
 	ZDATA
 	int nBorder;
@@ -193,7 +218,16 @@ private:
 	////
 	CRectLayout rects;
 	CDBPtr<NDb::STexture> pTexture;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nBorder); f.Add(3,&imageSize); f.Add(4,&size); f.Add(5,&position); f.Add(6,&rects); f.Add(7,&pTexture); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nBorder );
+		f.Add( 3, &imageSize );
+		f.Add( 4, &size );
+		f.Add( 5, &position );
+		f.Add( 6, &rects );
+		f.Add( 7, &pTexture );
+		return 0;
+	}
 
 public:
 	CImageObject() {}
@@ -201,17 +235,17 @@ public:
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float>& GetPosition() const { return position; }
+	const CTPoint<float> &GetPosition() const { return position; }
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window );
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window );
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window );
 
-	const CTPoint<float>& GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const { return size; }
 };
 
-CImageObject::CImageObject( NDb::STexture *_pTexture, const CTPoint<int> &_size, int _nBorder ):
-	pTexture(_pTexture), imageSize(_size), nBorder(_nBorder)
+CImageObject::CImageObject( NDb::STexture *_pTexture, const CTPoint<int> &_size, int _nBorder )
+		: pTexture( _pTexture ), imageSize( _size ), nBorder( _nBorder )
 {
 }
 
@@ -236,50 +270,59 @@ void CImageObject::Update( IReflowState *pState )
 	texRect.x2 = pTexture->nWidth;
 	texRect.y1 = pTexture->nHeight;
 	texRect.y2 = 0;
-	rects.AddRect(  borderScreenSize.x,  borderScreenSize.y, imageScreenSize.x, imageScreenSize.y, texRect );
+	rects.AddRect( borderScreenSize.x, borderScreenSize.y, imageScreenSize.x, imageScreenSize.y, texRect );
 }
 
-void CImageObject::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &_position, const CTRect<float> &window )
+void CImageObject::Render( NGScene::ILayoutFakeView *pView,
+                           const CTPoint<float> &_position,
+                           const CTRect<float> &window )
 {
 	pView->CreateDynamicRects( pTexture, rects, _position + position, window );
 }
 
-void CImageObject::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &_position, const CTRect<float> &window )
+void CImageObject::Render( std::list<CTRect<float>> *pRender,
+                           const CTPoint<float> &_position,
+                           const CTRect<float> &window )
 {
 	pRender->push_back( CTRect<float>( _position.x, _position.y, size.x + _position.x, size.y + _position.y ) );
 }
 
-IVisReflowObject* CreateImageObject( NDb::STexture *pTexture, const CTPoint<int> &size, int nBorder ) { return new CImageObject( pTexture, size, nBorder ); }
+IVisReflowObject *CreateImageObject( NDb::STexture *pTexture, const CTPoint<int> &size, int nBorder )
+{
+	return new CImageObject( pTexture, size, nBorder );
+}
 
 // CTabObject
 
-class CTabObject: public IVisReflowObject
+class CTabObject : public IVisReflowObject
 {
-	OBJECT_BASIC_METHODS(CTabObject)
+	OBJECT_BASIC_METHODS( CTabObject )
 private:
 	ZDATA
 	CTPoint<float> size;
 	CTPoint<float> position;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&size); f.Add(3,&position); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &size );
+		f.Add( 3, &position );
+		return 0;
+	}
 
 public:
 	CTabObject();
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float>& GetPosition() const { return position; }
+	const CTPoint<float> &GetPosition() const { return position; }
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
 
-	const CTPoint<float>& GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const { return size; }
 };
 
-CTabObject::CTabObject():
-	size( 0, 0 )
-{
-}
+CTabObject::CTabObject() : size( 0, 0 ) {}
 
 void CTabObject::Update( IReflowState *pState )
 {
@@ -289,24 +332,33 @@ void CTabObject::Update( IReflowState *pState )
 	GetFontFormatInfo( state.font, state.nMinFontSize, &fontInfo );
 
 	float fSize = N_TAB_SIZE * fontInfo.pInfo->GetAveCharWidth() * fontInfo.scale.x;
-//	int nPart = sInfo.fLineWidth / fSize;
-//	size.x = ( nPart + 1 ) * fSize - sInfo.fLineWidth;
-//	sSize.y = sInfo.fLastLineHeight;
+	//	int nPart = sInfo.fLineWidth / fSize;
+	//	size.x = ( nPart + 1 ) * fSize - sInfo.fLineWidth;
+	//	sSize.y = sInfo.fLastLineHeight;
 }
 
-IVisReflowObject* CreateTabObject() { return new CTabObject(); }
+IVisReflowObject *CreateTabObject()
+{
+	return new CTabObject();
+}
 
 // CSpringObject
 
-class CSpringObject: public IVisReflowObject
+class CSpringObject : public IVisReflowObject
 {
-	OBJECT_BASIC_METHODS(CSpringObject)
+	OBJECT_BASIC_METHODS( CSpringObject )
 private:
 	ZDATA
 	int nSize;
 	CTPoint<float> size;
 	CTPoint<float> position;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSize); f.Add(3,&size); f.Add(4,&position); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSize );
+		f.Add( 3, &size );
+		f.Add( 4, &position );
+		return 0;
+	}
 
 public:
 	CSpringObject() {}
@@ -314,20 +366,17 @@ public:
 
 	void Update( IReflowState *pState );
 
-	const CTPoint<float>& GetPosition() const { return position; }
+	const CTPoint<float> &GetPosition() const { return position; }
 	void SetPosition( const CTPoint<float> &_position ) { position = _position; }
 
 	void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &position, const CTRect<float> &window ) {}
-	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
+	void Render( std::list<CTRect<float>> *pRender, const CTPoint<float> &position, const CTRect<float> &window ) {}
 
 	bool IsSpace() const { return true; }
-	const CTPoint<float>& GetSize() const { return size; }
+	const CTPoint<float> &GetSize() const { return size; }
 };
 
-CSpringObject::CSpringObject( int _nSize ):
-	nSize(_nSize), size( 0, 0 )
-{
-}
+CSpringObject::CSpringObject( int _nSize ) : nSize( _nSize ), size( 0, 0 ) {}
 
 void CSpringObject::Update( IReflowState *pState )
 {
@@ -340,7 +389,10 @@ void CSpringObject::Update( IReflowState *pState )
 	size.y = fontInfo.pInfo->GetHeight() * fontInfo.scale.y;
 }
 
-IVisReflowObject* CreateSpringObject( int nSize ) { return new CSpringObject( nSize ); }
+IVisReflowObject *CreateSpringObject( int nSize )
+{
+	return new CSpringObject( nSize );
+}
 
 } // NAMESPACE
 

@@ -1,7 +1,6 @@
 
 #pragma once
 
-
 #include "UI_export.h"
 
 // debug vars

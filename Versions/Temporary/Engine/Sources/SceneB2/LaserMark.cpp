@@ -15,8 +15,10 @@ void CLaserMarkTrace::Recalc()
 	data.verts.resize( 8 );
 	data.geometry.resize( 4 );
 
-	const float fTimeDiff = ( pTimer->GetValue() - timeStart )/1000.0f;
-	const float fLaserSize = LASER_MARK_HALF_THIKNESS * ( 1.0f - fabs( 2.0f*fmod( fTimeDiff, LASER_MARK_PULSAR_TIME )/LASER_MARK_PULSAR_TIME - 1.0f ) );
+	const float fTimeDiff = ( pTimer->GetValue() - timeStart ) / 1000.0f;
+	const float fLaserSize =
+			LASER_MARK_HALF_THIKNESS *
+			( 1.0f - fabs( 2.0f * fmod( fTimeDiff, LASER_MARK_PULSAR_TIME ) / LASER_MARK_PULSAR_TIME - 1.0f ) );
 
 	data.verts[0].pos = vStart - vNorm * fLaserSize;
 	data.verts[1].pos = vEnd - vNorm * fLaserSize;
@@ -40,10 +42,9 @@ void CLaserMarkTrace::Recalc()
 	data.verts[7].tex = CVec2( 1.0f, 1.0f );
 
 	NGfx::SCompactVector vCompactNormal;
-	NGfx::CalcCompactVector( &vCompactNormal, CVec3(0, 0, 1) );
+	NGfx::CalcCompactVector( &vCompactNormal, CVec3( 0, 0, 1 ) );
 	for ( std::vector<NGScene::SVertex>::iterator it = data.verts.begin(); it != data.verts.end(); ++it )
 		it->normal = vCompactNormal;
-
 
 	data.geometry[0].i1 = 0;
 	data.geometry[0].i2 = 1;

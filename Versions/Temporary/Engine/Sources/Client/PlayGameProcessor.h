@@ -19,10 +19,10 @@ class CPlayGameProcessor : public CPacketProcessor
 	CPtr<CNet> pNet;
 	CPtr<CNet> pAcceptGamersNet;
 
-	typedef std::unordered_map<int, CPtr<IConnection> > TConnections;
+	typedef std::unordered_map<int, CPtr<IConnection>> TConnections;
 	TConnections connections;
 
-	typedef std::unordered_map< int, CPtr<CConnectionEffort> > TConnectionEfforts;
+	typedef std::unordered_map<int, CPtr<CConnectionEffort>> TConnectionEfforts;
 	TConnectionEfforts connectionEfforts;
 
 	int nMyServerID;
@@ -39,9 +39,11 @@ class CPlayGameProcessor : public CPacketProcessor
 		CPtr<CNetPacket> pPacket;
 		uint32_t dwStartTime;
 
-		SWaitingPacket() : dwStartTime( 0 ) { }
+		SWaitingPacket() : dwStartTime( 0 ) {}
 		SWaitingPacket( CNetPacket *_pPacket, const uint32_t _dwStartTime )
-			: pPacket( _pPacket ), dwStartTime( _dwStartTime ) { }
+				: pPacket( _pPacket ), dwStartTime( _dwStartTime )
+		{
+		}
 	};
 	std::list<SWaitingPacket> waitingPackets;
 
@@ -58,9 +60,11 @@ class CPlayGameProcessor : public CPacketProcessor
 	void ProcessEfforts();
 	void Clear();
 	bool CreateConnectionEffort( CConnectionEffort *pEffort );
+
 public:
-	CPlayGameProcessor() { }
-	CPlayGameProcessor( CNet *pNet, const char* pszServerIP, const int nNetGameVersion, const int nServerPort, const int nTimeOut );
+	CPlayGameProcessor() {}
+	CPlayGameProcessor(
+			CNet *pNet, const char *pszServerIP, const int nNetGameVersion, const int nServerPort, const int nTimeOut );
 
 	virtual bool Segment();
 	void SendGamePacket( CNetPacket *pPacket, bool bBroadcast );

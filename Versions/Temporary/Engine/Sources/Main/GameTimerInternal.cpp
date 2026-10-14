@@ -8,8 +8,7 @@
 namespace NGameTimer
 {
 
-CGameTimer::CGameTimer()
-: nSegmentDuration( 50 ), nGameTimerSpeed( 0 ), nSegmentsCounter( 0 ), timeSegment( 0 )
+CGameTimer::CGameTimer() : nSegmentDuration( 50 ), nGameTimerSpeed( 0 ), nSegmentsCounter( 0 ), timeSegment( 0 )
 {
 	CreateDGTimers();
 }
@@ -67,17 +66,17 @@ void CGameTimer::Reset( const NTimer::STime &time )
 	SetupDGTimers();
 }
 
-const NTimer::STime& CGameTimer::GetGameTime() const
+const NTimer::STime &CGameTimer::GetGameTime() const
 {
 	return timerGame.GetTime();
 }
 
-const NTimer::STime& CGameTimer::GetAbsTime() const
+const NTimer::STime &CGameTimer::GetAbsTime() const
 {
 	return timerAbs.GetTime();
 }
 
-const NTimer::STime& CGameTimer::GetSegmentTime() const
+const NTimer::STime &CGameTimer::GetSegmentTime() const
 {
 	return timeSegment;
 }
@@ -118,7 +117,7 @@ void CGameTimer::ProcessPause( const bool bPause, const int nType )
 			if ( *it == nType )
 				return;
 			// check for interval
-			if ( (*it > nType) && (nPrevPauseType < nType) )
+			if ( ( *it > nType ) && ( nPrevPauseType < nType ) )
 			{
 				pauseTypes.insert( it, nType );
 				return;
@@ -165,8 +164,8 @@ bool CGameTimer::HasPause( const int nType ) const
 
 int CGameTimer::SetSpeed( const int nSpeed )
 {
-//	const int nMaxSpeed = +10;//+GetGlobalVar( "maxspeed", 10 );
-//	const int nMinSpeed = -10;//-GetGlobalVar( "minspeed", 10 );
+	//	const int nMaxSpeed = +10;//+GetGlobalVar( "maxspeed", 10 );
+	//	const int nMinSpeed = -10;//-GetGlobalVar( "minspeed", 10 );
 	nGameTimerSpeed = Clamp( nSpeed, GetMinSpeed(), GetMaxSpeed() );
 	const float fCoeff = NTimer::GetCoeffFromSpeed( nGameTimerSpeed );
 	timerGame.SetScale( fCoeff );
@@ -241,7 +240,7 @@ IGameTimer *CreateGameTimer( const int nSegmentDuration )
 	return new NGameTimer::CGameTimer( nSegmentDuration );
 }
 
-START_REGISTER(GameTimerCommands)
+START_REGISTER( GameTimerCommands )
 REGISTER_CMD( "game_speed", NGameTimer::SetGameSpeed )
 REGISTER_CMD( "pause_game", NGameTimer::PauseGame );
 FINISH_REGISTER

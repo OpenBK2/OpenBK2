@@ -9,9 +9,10 @@
 void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo )
 {
 	NI_ASSERT( ( rInputStateEventInfo.nEventType >= 0 ) && ( rInputStateEventInfo.nEventType < ISE_COUNT ),
-							fmt::format( "CMapInfoStoreInputState::OnInputStateEvent(): Invalid rInputStateEventInfo.nEventType: {} [0, {})\n",
-											static_cast<int>( rInputStateEventInfo.nEventType ),
-											static_cast<int>( ISE_COUNT ) ) );
+	           fmt::format(
+								 "CMapInfoStoreInputState::OnInputStateEvent(): Invalid rInputStateEventInfo.nEventType: {} [0, {})\n",
+								 static_cast<int>( rInputStateEventInfo.nEventType ),
+								 static_cast<int>( ISE_COUNT ) ) );
 	//
 	eventInfoList[rInputStateEventInfo.nEventType] = rInputStateEventInfo;
 	if ( rInputStateEventInfo.nType == IST_MOUSE )
@@ -56,7 +57,12 @@ void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rIn
 		lastEventInfo.isValid = true;
 	}
 	eventInfoList[rInputStateEventInfo.nEventType].isValid = true;
-	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 2, fmt::format( "({:g}, {:g}), [{}, {}]", lastEventInfo.vTerrainPos.x, lastEventInfo.vTerrainPos.y, lastEventInfo.visTilePos.x, lastEventInfo.visTilePos.y ) );
+	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 2,
+	                                                           fmt::format( "({:g}, {:g}), [{}, {}]",
+	                                                                        lastEventInfo.vTerrainPos.x,
+	                                                                        lastEventInfo.vTerrainPos.y,
+	                                                                        lastEventInfo.visTilePos.x,
+	                                                                        lastEventInfo.visTilePos.y ) );
 }
 
 // basement storage

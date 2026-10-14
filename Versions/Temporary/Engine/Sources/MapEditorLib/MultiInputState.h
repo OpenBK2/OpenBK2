@@ -6,7 +6,7 @@
 
 class MAPEDITORLIB_EXPORT CMultiInputState : public IInputState
 {
-	typedef std::vector<IInputState*> CInputStateList;
+	typedef std::vector<IInputState *> CInputStateList;
 	CInputStateList inputStateList;
 	int nActiveInputState;
 
@@ -18,26 +18,26 @@ public:
 	virtual void Draw( IPaintContext *pPaintDC );
 	virtual void PostDraw( IPaintContext *pPaintDC );
 	//
-	virtual void OnSetFocus				( IWidget* pNewWnd );
-	virtual void OnKillFocus			( IWidget* pOldWnd );
+	virtual void OnSetFocus( IWidget *pNewWnd );
+	virtual void OnKillFocus( IWidget *pOldWnd );
 	//
-	virtual void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual bool OnMouseWheel			( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint );
+	virtual void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual bool OnMouseWheel( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint );
 	//
-	virtual void OnLButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnLButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	virtual void OnRButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnRButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnRButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	virtual void OnMButtonDown		( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnMButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
-	virtual void OnMButtonDblClk	( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnMButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
+	virtual void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
-	virtual void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	virtual void OnKeyUp					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	virtual void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	virtual void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	///
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint );
 
@@ -84,8 +84,8 @@ public:
 		return nOldInputState;
 	}
 	//
-	template<class TINPUTSTATE>
-	int AddInputState( TINPUTSTATE* pDummyInputState )
+	template <class TINPUTSTATE>
+	int AddInputState( TINPUTSTATE *pDummyInputState )
 	{
 		TINPUTSTATE *pNewInputState = pDummyInputState;
 		if ( !pNewInputState )
@@ -118,12 +118,9 @@ public:
 		return nActiveInputState;
 	}
 	//
-	int GetActiveInputStateIndex()
-	{
-		return nActiveInputState;
-	}
+	int GetActiveInputStateIndex() { return nActiveInputState; }
 	//
-	IInputState* GetActiveInputState()
+	IInputState *GetActiveInputState()
 	{
 		if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
 			return inputStateList[nActiveInputState];
@@ -131,7 +128,7 @@ public:
 			return 0;
 	}
 	//
-	IInputState* GetInputState( int nInputStateIndex )
+	IInputState *GetInputState( int nInputStateIndex )
 	{
 		if ( ( nInputStateIndex >= 0 ) && ( nInputStateIndex < inputStateList.size() ) )
 			return inputStateList[nInputStateIndex];

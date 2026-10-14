@@ -2,8 +2,8 @@
 
 namespace NDb
 {
-	enum EPlanesAttitude : int;
-	struct SManuverDescriptor;
+enum EPlanesAttitude : int;
+struct SManuverDescriptor;
 };
 
 class CManuverStateDesc
@@ -20,8 +20,8 @@ class CManuverStateDesc
 
 	NDb::EPlanesAttitude att = {};
 
-	template<class TParam>
-		bool IsParamSuitable( const float fVal, const CDBPtr<TParam> pRange ) const
+	template <class TParam>
+	bool IsParamSuitable( const float fVal, const CDBPtr<TParam> pRange ) const
 	{
 		if ( pRange && ( pRange->fMin > fVal || pRange->fMax < fVal ) )
 			return false;
@@ -29,8 +29,7 @@ class CManuverStateDesc
 	}
 
 public:
-
-	CManuverStateDesc() {  }
+	CManuverStateDesc() {}
 	/*enum EPlanesAttitude*/ const int GetAtt() const { return att; }
 
 	// fill parameters according plane's & enemy's state

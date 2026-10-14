@@ -6,7 +6,7 @@
 
 namespace NLang
 {
-	class CTypeNode;
+class CTypeNode;
 }
 
 namespace NCodeGen
@@ -16,11 +16,15 @@ class CForwardDefinition : public ICode
 {
 	OBJECT_NOCOPY_METHODS( CForwardDefinition )
 	CPtr<NDb::NTypeDef::STypeDef> pType;
+
 public:
-	CForwardDefinition() { }
+	CForwardDefinition() {}
 	CForwardDefinition( NLang::CTypeNode *pTypeNode, const CNodes2TypeDefs &nodes2TypeDefs );
 
-	virtual void GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName );
+	virtual void GenerateCode( SCodeStreams *pCode,
+	                           const std::string &szTabs,
+	                           NDb::NTypeDef::STypeDef *pParentType,
+	                           const std::string &szQualifiedName );
 
 	int operator&( IXmlSaver &saver )
 	{

@@ -23,11 +23,14 @@ static const char BRIDGE_FOLDER[] = "bin\\Bridges\\";
 
 REGISTER_EXPORTER_IN_DLL( BridgeRPGStats, CBridgeRPGStatsExporter )
 
-
-void CBridgeRPGStatsExporter::GetTempAIGeometryName( std::string *pszAIGeometryName, const std::string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry )
+void CBridgeRPGStatsExporter::GetTempAIGeometryName( std::string *pszAIGeometryName,
+                                                     const std::string &rszVisObjectName,
+                                                     const CDBID &rDBID,
+                                                     EAIGeometry eAIGeometry )
 {
 	NI_ASSERT( pszAIGeometryName != 0, "CBridgeRPGStatsExporter::GetTempAIGeometryName() pszAIGeometryName == 0" );
-	const std::string szKey = fmt::format( "{}{}\\{}", rszVisObjectName.c_str(), AI_GEOMETRY_PREFIX[eAIGeometry], rDBID.ToString().c_str() );
+	const std::string szKey =
+			fmt::format( "{}{}\\{}", rszVisObjectName.c_str(), AI_GEOMETRY_PREFIX[eAIGeometry], rDBID.ToString().c_str() );
 	CTempNamesMap::const_iterator pos = tempNamesMap.find( szKey );
 	if ( pos != tempNamesMap.end() )
 		*pszAIGeometryName = pos->second;
@@ -39,8 +42,8 @@ void CBridgeRPGStatsExporter::GetTempAIGeometryName( std::string *pszAIGeometryN
 	}
 }
 
-
-void CBridgeRPGStatsExporter::GetVisObjectNameList( std::list<std::string> *pVisOblectNameList, IManipulator *pManipulator )
+void CBridgeRPGStatsExporter::GetVisObjectNameList( std::list<std::string> *pVisOblectNameList,
+                                                    IManipulator *pManipulator )
 {
 	NI_ASSERT( pVisOblectNameList != 0, "CBridgeRPGStatsExporter::GetVisObjectNameList() pVisOblectNameList == 0" );
 	NI_ASSERT( pManipulator != 0, "CBridgeRPGStatsExporter::GetVisObjectNameList() pManipulator == 0" );
@@ -60,8 +63,9 @@ void CBridgeRPGStatsExporter::GetVisObjectNameList( std::list<std::string> *pVis
 	}
 }
 
-
-void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, const CVec2 &rvDestination, const CVec2 &rvSource )
+void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination,
+                                            const CVec2 &rvDestination,
+                                            const CVec2 &rvSource )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
 	if ( rvDestination == rvSource )
@@ -69,7 +73,9 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, con
 		return;
 	}
 	CVec2 vDifference = ( rvSource - rvDestination );
-	NI_ASSERT( ( vDifference.x > 0.0f ) || ( vDifference.y > 0.0f ), fmt::format( "CBridgeRPGStatsExporter:EnlargeArray() wrong sign: ({:g},{:g})", vDifference.x, vDifference.y ) );
+	NI_ASSERT(
+			( vDifference.x > 0.0f ) || ( vDifference.y > 0.0f ),
+			fmt::format( "CBridgeRPGStatsExporter:EnlargeArray() wrong sign: ({:g},{:g})", vDifference.x, vDifference.y ) );
 	CTPoint<int> difference( 0.5f + ( vDifference.x / AI_TILE_SIZE ), 0.5f + ( vDifference.y / AI_TILE_SIZE ) );
 	if ( ( difference.x == 0 ) && ( difference.y == 0 ) )
 	{
@@ -88,8 +94,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, con
 	}
 }
 
-
-void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, const CTPoint<int>  &rSourceSize )
+void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, const CTPoint<int> &rSourceSize )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
@@ -112,7 +117,6 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, con
 		}
 	}
 }
-
 
 void CBridgeRPGStatsExporter::EnlargeXSide( CArray2D<uint8_t> *pDestination, CVec2 *pOrigin, int nAITileCount )
 {
@@ -144,8 +148,10 @@ void CBridgeRPGStatsExporter::EnlargeXSide( CArray2D<uint8_t> *pDestination, CVe
 	pOrigin->x += ( AI_TILE_SIZE * nAITileCount );
 }
 
-
-void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<uint8_t> *pDestination, CVec2 *pOrigin, bool bMakeStep, int nAITileCount )
+void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<uint8_t> *pDestination,
+                                            CVec2 *pOrigin,
+                                            bool bMakeStep,
+                                            int nAITileCount )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::EnlargeArray() pDestination == 0" );
 	NI_ASSERT( pOrigin != 0, "CBridgeRPGStatsExporter::EnlargeArray() pOrigin == 0" );
@@ -182,20 +188,26 @@ void CBridgeRPGStatsExporter::EnlargeYSide( CArray2D<uint8_t> *pDestination, CVe
 	pOrigin->y = pDestination->GetSizeY() * AI_TILE_SIZE / 2.0f;
 }
 
-
-void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<uint8_t> *pDestination, const CArray2D<uint8_t> &rSource, LOCK_TYPE lockType )
+void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<uint8_t> *pDestination,
+                                            const CArray2D<uint8_t> &rSource,
+                                            LOCK_TYPE lockType )
 {
 	NI_ASSERT( pDestination != 0, "CBridgeRPGStatsExporter::SetArrayInfo() pDestination == 0" );
 	CTPoint<int> size( pDestination->GetSizeX(), pDestination->GetSizeY() );
 	CTPoint<int> sourceSize( rSource.GetSizeX(), rSource.GetSizeY() );
-	NI_ASSERT( size == sourceSize, fmt::format( "CBridgeRPGStatsExporter::SetArrayInfo() wrong size: dest:({},{}), source({},{}) ", size.x, size.y, sourceSize.x, sourceSize.y ) );
+	NI_ASSERT( size == sourceSize,
+	           fmt::format( "CBridgeRPGStatsExporter::SetArrayInfo() wrong size: dest:({},{}), source({},{}) ",
+	                        size.x,
+	                        size.y,
+	                        sourceSize.x,
+	                        sourceSize.y ) );
 	for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
 	{
 		for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 		{
 			if ( rSource[nYIndex][nXIndex] > 0 )
 			{
-				switch( lockType )
+				switch ( lockType )
 				{
 					case LOCK_TILE:
 						( *pDestination )[nYIndex][nXIndex] &= 0xF0;
@@ -217,22 +229,25 @@ void CBridgeRPGStatsExporter::SetArrayInfo( CArray2D<uint8_t> *pDestination, con
 	}
 }
 
-
 void CBridgeRPGStatsExporter::FinishExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	CStaticObjectRPGStatsExporter::FinishExport( rszObjectTypeName, bForce );
 	//
 }
 
-
-void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, const std::string &rszObjectName, const CDBID &rDBID )
+void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator,
+                                                    const std::string &rszObjectName,
+                                                    const CDBID &rDBID )
 {
 	std::list<std::string> visualObjectNameList;
 	GetVisObjectNameList( &visualObjectNameList, pManipulator );
-	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin();
+	      itVisualObject != visualObjectNameList.end();
+	      ++itVisualObject )
 	{
 		// Получаем манипулятор на VisObject
-		CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( ( *itVisualObject ) + ".VisualObjects.[0]", pManipulator, 0, 0, 0 );
+		CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference(
+				( *itVisualObject ) + ".VisualObjects.[0]", pManipulator, 0, 0, 0 );
 		if ( !pVisObjectManipulator )
 		{
 			return;
@@ -246,7 +261,8 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 		// Получаем Геометрию, чтобы определить имя файла со сценой
 		std::string szSorceValue;
 		{
-			if ( CPtr<IManipulator> pGeometryManipulator = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelManipulator, 0, 0, 0 ) )
+			if ( CPtr<IManipulator> pGeometryManipulator =
+			         CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelManipulator, 0, 0, 0 ) )
 			{
 				CManipulatorManager::GetValue( &szSorceValue, pGeometryManipulator, "SrcName" );
 			}
@@ -273,39 +289,48 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 		NStr::ReplaceAllChars( &szCenterDestination, '\\', '/' );
 		std::string szBorderDestination = szTempBorderAIGeometryName;
 		NStr::ReplaceAllChars( &szBorderDestination, '\\', '/' );
-		std::string szBridgeFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
+		std::string szBridgeFolder =
+				Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
 		NFile::CreatePath( szBridgeFolder.c_str() );
 
 		// main AI geometry
 		std::string szScriptText = fmt::sprintf( szScriptTemplate.c_str(),
-			szObjectName.c_str(), szMAIDestination.c_str(), szSource.c_str(),
-			AI_GEOMETRY_PREFIX[AIG_MAI], "",
-			szSettingsFileName.c_str() );
+		                                         szObjectName.c_str(),
+		                                         szMAIDestination.c_str(),
+		                                         szSource.c_str(),
+		                                         AI_GEOMETRY_PREFIX[AIG_MAI],
+		                                         "",
+		                                         szSettingsFileName.c_str() );
 		szScriptText += ";\n";
 		ExecuteMayaScript( szScriptText );
 		// center part
 		szScriptText = fmt::sprintf( szScriptTemplate.c_str(),
-			szObjectName.c_str(), szCenterDestination.c_str(), szSource.c_str(),
-			AI_GEOMETRY_PREFIX[AIG_CENTER], "",
-			szSettingsFileName.c_str() );
+		                             szObjectName.c_str(),
+		                             szCenterDestination.c_str(),
+		                             szSource.c_str(),
+		                             AI_GEOMETRY_PREFIX[AIG_CENTER],
+		                             "",
+		                             szSettingsFileName.c_str() );
 		szScriptText += ";\n";
 		ExecuteMayaScript( szScriptText );
 		// borders
 		szScriptText = fmt::sprintf( szScriptTemplate.c_str(),
-			szObjectName.c_str(), szBorderDestination.c_str(), szSource.c_str(),
-			AI_GEOMETRY_PREFIX[AIG_BORDER], "",
-			szSettingsFileName.c_str() );
+		                             szObjectName.c_str(),
+		                             szBorderDestination.c_str(),
+		                             szSource.c_str(),
+		                             AI_GEOMETRY_PREFIX[AIG_BORDER],
+		                             "",
+		                             szSettingsFileName.c_str() );
 		szScriptText += ";\n";
 		ExecuteMayaScript( szScriptText );
-
 	}
 }
 
-EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																										 const std::string &rszObjectTypeName,
-																										 const std::string &rszObjectName,
-																										 bool bForce,
-																										 EXPORT_TYPE exportType )
+EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator *pManipulator,
+                                                     const std::string &rszObjectTypeName,
+                                                     const std::string &rszObjectName,
+                                                     bool bForce,
+                                                     EXPORT_TYPE exportType )
 {
 	CDBID objectDBID = CDBID( rszObjectName );
 	CStaticObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
@@ -319,7 +344,8 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	// Формируем тело скрипта
-	const std::string szBridgeFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
+	const std::string szBridgeFolder =
+			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + BRIDGE_FOLDER;
 	//const std::string szGeometryFolder = pUserData->szExportDestinationFolder + GEOMETRY_FOLDER;
 	bool bResult = true;
 	//
@@ -328,11 +354,13 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	float fHeight = 0.0f;
 	bool bHeightCalculated = false;
 	//
-	std::list<CArray2D<uint8_t> > passabilityArrayList;
+	std::list<CArray2D<uint8_t>> passabilityArrayList;
 	std::list<CVec2> passabilityOriginList;
 	std::list<CVec2> sizeList;
 	//
-	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin();
+	      itVisualObject != visualObjectNameList.end();
+	      ++itVisualObject )
 	{
 		std::string szTempMAIGeometryName;
 		std::string szTempCenterAIGeometryName;
@@ -356,16 +384,18 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		CVec2 vBridgePassabilityOrigin = VNULL2;
 		CVec2 vCenterPassabilityOrigin = VNULL2;
 		CVec2 vBorderPassabilityOrigin = VNULL2;
-		bResult = bResult && CreateObjectPassability( szMAIDestination, &bridgePassabilityArray, &vBridgePassabilityOrigin );
-		bResult = bResult && CreateObjectPassability( szCenterDestination, &centerPassabilityArray, &vCenterPassabilityOrigin );
-		bResult = bResult && CreateObjectPassability( szBorderDestination, &borderPassabilityArray, &vBorderPassabilityOrigin );
+		bResult =
+				bResult && CreateObjectPassability( szMAIDestination, &bridgePassabilityArray, &vBridgePassabilityOrigin );
+		bResult =
+				bResult && CreateObjectPassability( szCenterDestination, &centerPassabilityArray, &vCenterPassabilityOrigin );
+		bResult =
+				bResult && CreateObjectPassability( szBorderDestination, &borderPassabilityArray, &vBorderPassabilityOrigin );
 		//Trace2DByteArray( bridgePassabilityArray, fmt::format( " ({:g},{:g})", vBridgePassabilityOrigin.x, vBridgePassabilityOrigin.y ) );
 		//Trace2DByteArray( centerPassabilityArray, fmt::format( " ({:g},{:g})", vCenterPassabilityOrigin.x, vCenterPassabilityOrigin.y ) );
 		//Trace2DByteArray( borderPassabilityArray, fmt::format( " ({:g},{:g})", vBorderPassabilityOrigin.x, vBorderPassabilityOrigin.y ) );
-		if ( bResult &&
-			( ( bridgePassabilityArray.GetSizeX() > 0 ) && ( bridgePassabilityArray.GetSizeY() > 0 ) ) &&
-			( ( centerPassabilityArray.GetSizeX() > 0 ) && ( centerPassabilityArray.GetSizeY() > 0 ) ) &&
-			( ( borderPassabilityArray.GetSizeX() > 0 ) && ( borderPassabilityArray.GetSizeY() > 0 ) ) )
+		if ( bResult && ( ( bridgePassabilityArray.GetSizeX() > 0 ) && ( bridgePassabilityArray.GetSizeY() > 0 ) ) &&
+		     ( ( centerPassabilityArray.GetSizeX() > 0 ) && ( centerPassabilityArray.GetSizeY() > 0 ) ) &&
+		     ( ( borderPassabilityArray.GetSizeX() > 0 ) && ( borderPassabilityArray.GetSizeY() > 0 ) ) )
 		{
 			// Центрируем origin
 			try
@@ -379,11 +409,11 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 				GrannyFreeFile( pFile );
 				Vis2AI( &vMin );
 				Vis2AI( &vMax );
-				NormalizePassabilityOrigin( &vBridgePassabilityOrigin,
-					CTPoint<int>( bridgePassabilityArray.GetSizeX(),
-					bridgePassabilityArray.GetSizeY() ),
-					vMin,
-					vMax );
+				NormalizePassabilityOrigin(
+						&vBridgePassabilityOrigin,
+						CTPoint<int>( bridgePassabilityArray.GetSizeX(), bridgePassabilityArray.GetSizeY() ),
+						vMin,
+						vMax );
 			}
 			catch ( ... )
 			{
@@ -398,11 +428,11 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 				GetGrannyMeshBoundingBox( &vMin, &vMax, pInfo );
 				Vis2AI( &vMin );
 				Vis2AI( &vMax );
-				NormalizePassabilityOrigin( &vCenterPassabilityOrigin,
-					CTPoint<int>( centerPassabilityArray.GetSizeX(),
-					centerPassabilityArray.GetSizeY() ),
-					vMin,
-					vMax );
+				NormalizePassabilityOrigin(
+						&vCenterPassabilityOrigin,
+						CTPoint<int>( centerPassabilityArray.GetSizeX(), centerPassabilityArray.GetSizeY() ),
+						vMin,
+						vMax );
 				if ( !bHeightCalculated )
 				{
 					fHeight = vMax.z;
@@ -422,11 +452,11 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 				GetGrannyMeshBoundingBox( &vMin, &vMax, pInfo );
 				Vis2AI( &vMin );
 				Vis2AI( &vMax );
-				NormalizePassabilityOrigin( &vBorderPassabilityOrigin,
-					CTPoint<int>( borderPassabilityArray.GetSizeX(),
-					borderPassabilityArray.GetSizeY() ),
-					vMin,
-					vMax );
+				NormalizePassabilityOrigin(
+						&vBorderPassabilityOrigin,
+						CTPoint<int>( borderPassabilityArray.GetSizeX(), borderPassabilityArray.GetSizeY() ),
+						vMin,
+						vMax );
 				vSize = CVec2( vMax.x - vMin.x, vMax.y - vMin.y );
 			}
 			catch ( ... )
@@ -510,7 +540,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	{
 		int nMaxYSize = 0;
 		{
-			std::list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
+			std::list<CArray2D<uint8_t>>::const_iterator itPassabilityArray = passabilityArrayList.begin();
 			for ( ; itPassabilityArray != passabilityArrayList.end(); )
 			{
 				if ( nMaxYSize < itPassabilityArray->GetSizeY() )
@@ -521,16 +551,16 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 			}
 		}
 		{
-			std::list<CArray2D<uint8_t> >::iterator itPassabilityArray = passabilityArrayList.begin();
+			std::list<CArray2D<uint8_t>>::iterator itPassabilityArray = passabilityArrayList.begin();
 			std::list<CVec2>::iterator itPassabilityOrigin = passabilityOriginList.begin();
 			for ( ; itPassabilityArray != passabilityArrayList.end(); )
 			{
 				if ( nMaxYSize > itPassabilityArray->GetSizeY() )
 				{
 					EnlargeYSide( &( *itPassabilityArray ),
-						&( *itPassabilityOrigin ),
-						( itPassabilityArray->GetSizeY() & 0x01 ) != ( nMaxYSize & 0x01 ),
-						( ( nMaxYSize - itPassabilityArray->GetSizeY() ) & ( 0xFFFFFFFF - 0x01 ) ) / 2 );
+					              &( *itPassabilityOrigin ),
+					              ( itPassabilityArray->GetSizeY() & 0x01 ) != ( nMaxYSize & 0x01 ),
+					              ( ( nMaxYSize - itPassabilityArray->GetSizeY() ) & ( 0xFFFFFFFF - 0x01 ) ) / 2 );
 				}
 				++itPassabilityArray;
 				++itPassabilityOrigin;
@@ -539,20 +569,25 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	}
 	// Прописываем данные
 	{
-		std::list<CArray2D<uint8_t> >::const_iterator itPassabilityArray = passabilityArrayList.begin();
+		std::list<CArray2D<uint8_t>>::const_iterator itPassabilityArray = passabilityArrayList.begin();
 		std::list<CVec2>::const_iterator itPassabilityOrigin = passabilityOriginList.begin();
 		std::list<CVec2>::const_iterator itSize = sizeList.begin();
 		//
-		for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+		for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin();
+		      itVisualObject != visualObjectNameList.end();
+		      ++itVisualObject )
 		{
 			// Удаляем старый массив
 			bResult = bResult && CManipulatorManager::Remove2DArray( pManipulator, ( *itVisualObject ) + ".Passability" );
 			// Добавляем новую информацию
-			bResult = bResult && CManipulatorManager::Set2DArray( *itPassabilityArray,	pManipulator, ( *itVisualObject ) + ".Passability" );
-			bResult = bResult && CManipulatorManager::SetVec2(		*itPassabilityOrigin,	pManipulator, ( *itVisualObject ) + ".Origin" );
-			bResult = bResult && CManipulatorManager::SetVec2(		*itSize,							pManipulator, ( *itVisualObject ) + ".Size" );
+			bResult = bResult && CManipulatorManager::Set2DArray(
+															 *itPassabilityArray, pManipulator, ( *itVisualObject ) + ".Passability" );
+			bResult = bResult &&
+			          CManipulatorManager::SetVec2( *itPassabilityOrigin, pManipulator, ( *itVisualObject ) + ".Origin" );
+			bResult = bResult && CManipulatorManager::SetVec2( *itSize, pManipulator, ( *itVisualObject ) + ".Size" );
 			//
-			Trace2DByteArray( *itPassabilityArray, fmt::format( " ({:g},{:g})", itPassabilityOrigin->x, itPassabilityOrigin->y ) );
+			Trace2DByteArray( *itPassabilityArray,
+			                  fmt::format( " ({:g},{:g})", itPassabilityOrigin->x, itPassabilityOrigin->y ) );
 			//
 			++itPassabilityArray;
 			++itPassabilityOrigin;
@@ -564,7 +599,9 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		}
 	}
 	// Удаляем созданные временные файлы
-	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin(); itVisualObject != visualObjectNameList.end(); ++itVisualObject )
+	for ( std::list<std::string>::const_iterator itVisualObject = visualObjectNameList.begin();
+	      itVisualObject != visualObjectNameList.end();
+	      ++itVisualObject )
 	{
 		std::string szTempMAIGeometryName;
 		std::string szTempCenterAIGeometryName;

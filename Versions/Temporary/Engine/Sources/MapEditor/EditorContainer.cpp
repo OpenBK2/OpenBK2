@@ -17,7 +17,7 @@
 std::string CEditorContainer::GetBaseObjectType( const std::string &rszExtendObjectTypeName )
 {
 	CExtendTypeMap::iterator posExtendType = extendTypeMap.find( rszExtendObjectTypeName );
-	if( posExtendType != extendTypeMap.end() )
+	if ( posExtendType != extendTypeMap.end() )
 	{
 		return posExtendType->second;
 	}
@@ -27,30 +27,27 @@ std::string CEditorContainer::GetBaseObjectType( const std::string &rszExtendObj
 	}
 }
 
-
 bool CEditorContainer::CanCreate( const std::string &rszObjectTypeName )
 {
 	return NEditorFactory::CanCreateEditor( GetBaseObjectType( rszObjectTypeName ) );
 }
 
-
 void CEditorContainer::Create( const std::string &rszObjectTypeName )
 {
 	const std::string szBaseObjectTypeName = GetBaseObjectType( rszObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
-	if( posEditor == editorMap.end() )
+	if ( posEditor == editorMap.end() )
 	{
 		DebugTrace( "NEditorFactory: Create Editor: <%s>", rszObjectTypeName.c_str() );
 		editorMap[szBaseObjectTypeName] = NEditorFactory::CreateEditor( szBaseObjectTypeName );
 	}
 }
 
-
-void CEditorContainer::AddExtendObjectType( const std::string &rszBaseObjectTypeName, const std::string &rszExtendObjectTypeName )
+void CEditorContainer::AddExtendObjectType( const std::string &rszBaseObjectTypeName,
+                                            const std::string &rszExtendObjectTypeName )
 {
 	extendTypeMap[rszExtendObjectTypeName] = rszBaseObjectTypeName;
 }
-
 
 void CEditorContainer::Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame )
 {
@@ -70,8 +67,9 @@ void CEditorContainer::Destroy( const std::string &rszObjectTypeName, bool bDest
 	}
 }
 
-
-void CEditorContainer::DestroyActiveEditor( const std::string &rszNewEditorTypeName, const std::string &rszNewChildFrameTypeName, bool bDestroyChildFrame )
+void CEditorContainer::DestroyActiveEditor( const std::string &rszNewEditorTypeName,
+                                            const std::string &rszNewChildFrameTypeName,
+                                            bool bDestroyChildFrame )
 {
 	if ( !szActiveTypeName.empty() )
 	{
@@ -109,7 +107,8 @@ void CEditorContainer::DestroyActiveEditor( const std::string &rszNewEditorTypeN
 					szActiveTypeName.clear();
 				}
 				// удаляем Child Frame
-				if ( !rszNewChildFrameTypeName.empty() && Singleton<IChildFrameContainer>()->IsActive( rszNewChildFrameTypeName ) )
+				if ( !rszNewChildFrameTypeName.empty() &&
+				     Singleton<IChildFrameContainer>()->IsActive( rszNewChildFrameTypeName ) )
 				{
 					Singleton<IChildFrameContainer>()->Leave();
 				}
@@ -122,8 +121,9 @@ void CEditorContainer::DestroyActiveEditor( const std::string &rszNewEditorTypeN
 	}
 }
 
-
-void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObjectSet &rObjectSet, const std::string &rszNewChildFrameTypeName )
+void CEditorContainer::CreateNewEditor( IManipulator *_pManipulator,
+                                        const SObjectSet &rObjectSet,
+                                        const std::string &rszNewChildFrameTypeName )
 {
 	if ( !CanCreate( rObjectSet.szObjectTypeName ) )
 	{
@@ -187,8 +187,7 @@ void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObje
 	}
 }
 
-
-IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet &rObjectSet )
+IEditor *CEditorContainer::Create( IManipulator *_pManipulator, const SObjectSet &rObjectSet )
 {
 	NProgress::Create( true );
 	if ( !rObjectSet.objectNameSet.empty() )
@@ -207,7 +206,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 	// Создаем заранее новый редактор чтобы опросить тип ChildFrame
 	const std::string szBaseObjectTypeName = GetBaseObjectType( rObjectSet.szObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
-	if( posEditor == editorMap.end() )
+	if ( posEditor == editorMap.end() )
 	{
 		DebugTrace( "NEditorFactory: Create Editor: <%s>", rObjectSet.szObjectTypeName.c_str() );
 		editorMap[szBaseObjectTypeName] = NEditorFactory::CreateEditor( szBaseObjectTypeName );
@@ -238,7 +237,6 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 	return 0;
 }
 
-
 void CEditorContainer::DestroyActiveEditor( bool bDestroyChildFrame )
 {
 	NProgress::Create( true );
@@ -250,7 +248,6 @@ void CEditorContainer::DestroyActiveEditor( bool bDestroyChildFrame )
 	NProgress::SetPosition( 1 );
 	NProgress::Destroy();
 }
-
 
 void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 {
@@ -309,8 +306,7 @@ void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 	NProgress::Destroy();
 }
 
-
-IEditor* CEditorContainer::GetActiveEditor()
+IEditor *CEditorContainer::GetActiveEditor()
 {
 	if ( !szActiveTypeName.empty() )
 	{
@@ -324,8 +320,7 @@ IEditor* CEditorContainer::GetActiveEditor()
 	return 0;
 }
 
-
-IInputState* CEditorContainer::GetActiveInputState()
+IInputState *CEditorContainer::GetActiveInputState()
 {
 	if ( !szActiveTypeName.empty() )
 	{
@@ -342,7 +337,6 @@ IInputState* CEditorContainer::GetActiveInputState()
 	return 0;
 }
 
-
 void CEditorContainer::CreateControls()
 {
 	for ( CEditorMap::iterator itEditor = editorMap.begin(); itEditor != editorMap.end(); ++itEditor )
@@ -350,7 +344,6 @@ void CEditorContainer::CreateControls()
 		itEditor->second->CreateControls();
 	}
 }
-
 
 void CEditorContainer::PostCreateControls()
 {
@@ -360,16 +353,14 @@ void CEditorContainer::PostCreateControls()
 	}
 }
 
-
 void CEditorContainer::ResetGUI()
 {
-    IEditor *pActive = GetActiveEditor();
-    // Inactive editors retain default visibility for their next activation,
-    // while their controls stay hidden in the current editor.
-    for ( auto &entry : editorMap )
-        entry.second->ResetGUI( entry.second == pActive );
+	IEditor *pActive = GetActiveEditor();
+	// Inactive editors retain default visibility for their next activation,
+	// while their controls stay hidden in the current editor.
+	for ( auto &entry : editorMap )
+		entry.second->ResetGUI( entry.second == pActive );
 }
-
 
 void CEditorContainer::PreDestroyControls()
 {
@@ -379,7 +370,6 @@ void CEditorContainer::PreDestroyControls()
 	}
 }
 
-
 void CEditorContainer::DestroyControls()
 {
 	for ( CEditorMap::iterator itEditor = editorMap.begin(); itEditor != editorMap.end(); ++itEditor )
@@ -387,7 +377,6 @@ void CEditorContainer::DestroyControls()
 		itEditor->second->DestroyControls();
 	}
 }
-
 
 void CEditorContainer::Save( bool bSaveChanges )
 {
@@ -404,7 +393,6 @@ void CEditorContainer::Save( bool bSaveChanges )
 		}
 	}
 }
-
 
 bool CEditorContainer::IsModified()
 {

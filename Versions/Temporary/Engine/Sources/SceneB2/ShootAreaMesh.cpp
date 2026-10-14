@@ -27,10 +27,7 @@ void AppendToVector( std::vector<STriangle> &dst, const std::vector<STriangle> &
 
 struct SRadianHeightFunctor : public SLinearHeightFunctor
 {
-	float GetHeight( float x )
-	{
-		return 4.0f * ( x + sqrt( 1.0f - x ) - 1.0f );
-	}
+	float GetHeight( float x ) { return 4.0f * ( x + sqrt( 1.0f - x ) - 1.0f ); }
 	float GetGrid( float t )
 	{
 		if ( t < 0.5f )
@@ -41,10 +38,7 @@ struct SRadianHeightFunctor : public SLinearHeightFunctor
 
 struct SCircleHeightFunctor : public SLinearHeightFunctor
 {
-	float GetHeight( float x )
-	{
-		return 1.0f - sqr( 1.0f - sqrt( 1.0f - 4.0f * sqr( x - 0.5f ) ) );
-	}
+	float GetHeight( float x ) { return 1.0f - sqr( 1.0f - sqrt( 1.0f - 4.0f * sqr( x - 0.5f ) ) ); }
 	float GetGrid( float t )
 	{
 		if ( t < 0.5f )
@@ -61,7 +55,10 @@ void CShootAreaMesh::FillGrid( std::vector<float> &grid, int nNumPoints, SLinear
 		grid[i] = func.GetGrid( i * fStep );
 }
 
-void CShootAreaMesh::LinearTransform( std::vector<float> &output, const std::vector<float> &input, float fMin, float fMax )
+void CShootAreaMesh::LinearTransform( std::vector<float> &output,
+                                      const std::vector<float> &input,
+                                      float fMin,
+                                      float fMax )
 {
 	output.resize( input.size() );
 	for ( int i = 0; i < input.size(); ++i )
@@ -106,13 +103,27 @@ CVec2 CShootAreaMesh::GetCenter()
 	return CVec2( vCenter.x, vCenter.y );
 }
 
-CShootAreaMesh::CShootAreaMesh( CFuncBase<SFBTransform> *_pTransform, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) :
-	pTransform( _pTransform ), fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth(_fWidth)
+CShootAreaMesh::CShootAreaMesh( CFuncBase<SFBTransform> *_pTransform,
+                                float _fStartAngle,
+                                float _fEndAngle,
+                                float _fMinRadius,
+                                float _fMaxRadius,
+                                CTerrainManager *_pTerraManager,
+                                float _fWidth )
+		: pTransform( _pTransform ), fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ),
+			fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth( _fWidth )
 {
 }
 
-CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) :
-	fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth(_fWidth)
+CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter,
+                                float _fStartAngle,
+                                float _fEndAngle,
+                                float _fMinRadius,
+                                float _fMaxRadius,
+                                CTerrainManager *_pTerraManager,
+                                float _fWidth )
+		: fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ),
+			pTerraManager( _pTerraManager ), fWidth( _fWidth )
 {
 	SFBTransform transform;
 	transform.forward.Set( CVec3( vCenter.x, vCenter.y, 0 ), QNULL );
@@ -172,8 +183,10 @@ void CShootAreaMesh::BuildLine( std::vector<NGScene::SVertex> &verts, std::vecto
 		const float fCurrLength = fMinRadius + fStep * i;
 		NGScene::SVertex &vert1 = verts[i * 2];
 		NGScene::SVertex &vert2 = verts[i * 2 + 1];
-		vert1.pos.Set( fRadiantX * fCurrLength - vOrtDir.x + vCenter.x, fRadiantY * fCurrLength - vOrtDir.y + vCenter.y, 0 );
-		vert2.pos.Set( fRadiantX * fCurrLength + vOrtDir.x + vCenter.x, fRadiantY * fCurrLength + vOrtDir.y + vCenter.y, 0 );
+		vert1.pos.Set(
+				fRadiantX * fCurrLength - vOrtDir.x + vCenter.x, fRadiantY * fCurrLength - vOrtDir.y + vCenter.y, 0 );
+		vert2.pos.Set(
+				fRadiantX * fCurrLength + vOrtDir.x + vCenter.x, fRadiantY * fCurrLength + vOrtDir.y + vCenter.y, 0 );
 		vert1.pos.z = pTerraManager->GetRealTerraHeight( vert1.pos.x, vert1.pos.y ) + 1.0f;
 		vert2.pos.z = pTerraManager->GetRealTerraHeight( vert2.pos.x, vert2.pos.y ) + 1.0f;
 
@@ -199,9 +212,9 @@ void CShootAreaMesh::BuildLine( std::vector<NGScene::SVertex> &verts, std::vecto
 void CShootAreaMesh::FillVertexData( NGScene::SVertex &vertex )
 {
 	vertex.tex.Set( 0, 0 );
-	CalcCompactVector( &(vertex.normal), CVec3(0, 0, 1) );
-	CalcCompactVector( &(vertex.texU), CVec3(0, 0, 0) );
-	CalcCompactVector( &(vertex.texV), CVec3(0, 0, 0) );
+	CalcCompactVector( &( vertex.normal ), CVec3( 0, 0, 1 ) );
+	CalcCompactVector( &( vertex.texU ), CVec3( 0, 0, 0 ) );
+	CalcCompactVector( &( vertex.texV ), CVec3( 0, 0, 0 ) );
 }
 
 void CShootAreaMesh::BuildSector( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris )
@@ -237,9 +250,9 @@ void CShootAreaMesh::BuildSector( std::vector<NGScene::SVertex> &verts, std::vec
 			pTransform->GetValue().backward.RotateHVector( &vert.pos, vert.pos );
 
 			vert.tex.Set( 0, 0 );
-			CalcCompactVector( &(vert.normal), CVec3(0, 0, 1) );
-			CalcCompactVector( &(vert.texU), CVec3(0, 0, 0) );
-			CalcCompactVector( &(vert.texV), CVec3(0, 0, 0) );
+			CalcCompactVector( &( vert.normal ), CVec3( 0, 0, 1 ) );
+			CalcCompactVector( &( vert.texU ), CVec3( 0, 0, 0 ) );
+			CalcCompactVector( &( vert.texV ), CVec3( 0, 0, 0 ) );
 		}
 	}
 

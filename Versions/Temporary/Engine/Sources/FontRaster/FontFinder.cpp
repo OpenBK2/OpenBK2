@@ -16,68 +16,91 @@ namespace NFontRaster
 namespace
 {
 
-std::string ToLower( std::string sz )
-{
-	std::transform( sz.begin(), sz.end(), sz.begin(), []( unsigned char c ) { return static_cast<char>( std::tolower( c ) ); } );
-	return sz;
-}
-
-bool IsFontFile( const std::filesystem::path &path )
-{
-	const std::string szExtension = ToLower( path.extension().string() );
-	return szExtension == ".ttf" || szExtension == ".otf" || szExtension == ".ttc" || szExtension == ".otc";
-}
-
-// A named instance carries its weight only in its name ("Bold", "SemiBold"),
-// since the OS/2 table is the default instance's. The usual names, longest
-// first so that "semibold" is not read as "bold".
-int WeightFromStyleName( const std::string &szStyle, int nDefault )
-{
-	static const struct { const char *pszName; int nWeight; } WEIGHTS[] =
+	std::string ToLower( std::string sz )
 	{
-		{ "extralight", 200 }, { "ultralight", 200 }, { "extrabold", 800 }, { "ultrabold", 800 },
-		{ "semibold", 600 }, { "demibold", 600 }, { "thin", 100 }, { "light", 300 }, { "medium", 500 },
-		{ "bold", 700 }, { "black", 900 }, { "heavy", 900 }, { "regular", 400 }, { "normal", 400 }, { "book", 400 },
-	};
-	const std::string szLower = ToLower( szStyle );
-	for ( const auto &weight : WEIGHTS )
+		std::transform(
+				sz.begin(), sz.end(), sz.begin(), []( unsigned char c ) { return static_cast<char>( std::tolower( c ) ); } );
+		return sz;
+	}
+
+	bool IsFontFile( const std::filesystem::path &path )
 	{
-		if ( szLower.find( weight.pszName ) != std::string::npos )
+		const std::string szExtension = ToLower( path.extension().string() );
+		return szExtension == ".ttf" || szExtension == ".otf" || szExtension == ".ttc" || szExtension == ".otc";
+	}
+
+	// A named instance carries its weight only in its name ("Bold", "SemiBold"),
+	// since the OS/2 table is the default instance's. The usual names, longest
+	// first so that "semibold" is not read as "bold".
+	int WeightFromStyleName( const std::string &szStyle, int nDefault )
+	{
+		static const struct
 		{
-			return weight.nWeight;
+			const char *pszName;
+			int nWeight;
+		} WEIGHTS[] = {
+			{ "extralight", 200 },
+			{ "ultralight", 200 },
+			{ "extrabold", 800 },
+			{ "ultrabold", 800 },
+			{ "semibold", 600 },
+			{ "demibold", 600 },
+			{ "thin", 100 },
+			{ "light", 300 },
+			{ "medium", 500 },
+			{ "bold", 700 },
+			{ "black", 900 },
+			{ "heavy", 900 },
+			{ "regular", 400 },
+			{ "normal", 400 },
+			{ "book", 400 },
+		};
+		const std::string szLower = ToLower( szStyle );
+		for ( const auto &weight : WEIGHTS )
+		{
+			if ( szLower.find( weight.pszName ) != std::string::npos )
+			{
+				return weight.nWeight;
+			}
 		}
+		return nDefault;
 	}
-	return nDefault;
-}
 
-// Describes the face at nFaceIndex in a font FreeType opens through args, a
-// file or bytes in memory, or returns false if FreeType cannot open it. szFile
-// is only recorded in the result.
-bool DescribeFace( const FT_Library pLibrary, const FT_Open_Args &args, const std::string &szFile, const int nFaceIndex,
-	SFontMatch *pFace, int *pnNamedInstances, int *pnFaces )
-{
-	FT_Face pOpened = nullptr;
-	if ( FT_Open_Face( pLibrary, &args, nFaceIndex, &pOpened ) != 0 )
+	// Describes the face at nFaceIndex in a font FreeType opens through args, a
+	// file or bytes in memory, or returns false if FreeType cannot open it. szFile
+	// is only recorded in the result.
+	bool DescribeFace( const FT_Library pLibrary,
+	                   const FT_Open_Args &args,
+	                   const std::string &szFile,
+	                   const int nFaceIndex,
+	                   SFontMatch *pFace,
+	                   int *pnNamedInstances,
+	                   int *pnFaces )
 	{
-		return false;
+		FT_Face pOpened = nullptr;
+		if ( FT_Open_Face( pLibrary, &args, nFaceIndex, &pOpened ) != 0 )
+		{
+			return false;
+		}
+		pFace->szFile = szFile;
+		pFace->nFaceIndex = nFaceIndex;
+		pFace->szFamily = pOpened->family_name != nullptr ? pOpened->family_name : "";
+		pFace->szStyle = pOpened->style_name != nullptr ? pOpened->style_name : "";
+		const TT_OS2 *pOS2 = static_cast<const TT_OS2 *>( FT_Get_Sfnt_Table( pOpened, FT_SFNT_OS2 ) );
+		const int nTableWeight = ( pOS2 != nullptr && pOS2->version != 0xFFFF && pOS2->usWeightClass != 0 )
+		                             ? pOS2->usWeightClass
+		                             : ( ( pOpened->style_flags & FT_STYLE_FLAG_BOLD ) != 0 ? 700 : 400 );
+		pFace->nWeight = ( nFaceIndex >> 16 ) != 0 ? WeightFromStyleName( pFace->szStyle, nTableWeight ) : nTableWeight;
+		pFace->nWidthClass =
+				( pOS2 != nullptr && pOS2->version != 0xFFFF && pOS2->usWidthClass != 0 ) ? pOS2->usWidthClass : 5;
+		pFace->bItalic = ( pOpened->style_flags & FT_STYLE_FLAG_ITALIC ) != 0 ||
+		                 ToLower( pFace->szStyle ).find( "italic" ) != std::string::npos ||
+		                 ToLower( pFace->szStyle ).find( "oblique" ) != std::string::npos;
+		*pnNamedInstances = static_cast<int>( pOpened->style_flags >> 16 );
+		*pnFaces = static_cast<int>( pOpened->num_faces );
+		FT_Done_Face( pOpened );
+		return true;
 	}
-	pFace->szFile = szFile;
-	pFace->nFaceIndex = nFaceIndex;
-	pFace->szFamily = pOpened->family_name != nullptr ? pOpened->family_name : "";
-	pFace->szStyle = pOpened->style_name != nullptr ? pOpened->style_name : "";
-	const TT_OS2 *pOS2 = static_cast<const TT_OS2*>( FT_Get_Sfnt_Table( pOpened, FT_SFNT_OS2 ) );
-	const int nTableWeight = ( pOS2 != nullptr && pOS2->version != 0xFFFF && pOS2->usWeightClass != 0 ) ? pOS2->usWeightClass :
-		( ( pOpened->style_flags & FT_STYLE_FLAG_BOLD ) != 0 ? 700 : 400 );
-	pFace->nWeight = ( nFaceIndex >> 16 ) != 0 ? WeightFromStyleName( pFace->szStyle, nTableWeight ) : nTableWeight;
-	pFace->nWidthClass = ( pOS2 != nullptr && pOS2->version != 0xFFFF && pOS2->usWidthClass != 0 ) ? pOS2->usWidthClass : 5;
-	pFace->bItalic = ( pOpened->style_flags & FT_STYLE_FLAG_ITALIC ) != 0 ||
-		ToLower( pFace->szStyle ).find( "italic" ) != std::string::npos ||
-		ToLower( pFace->szStyle ).find( "oblique" ) != std::string::npos;
-	*pnNamedInstances = static_cast<int>( pOpened->style_flags >> 16 );
-	*pnFaces = static_cast<int>( pOpened->num_faces );
-	FT_Done_Face( pOpened );
-	return true;
-}
 
 }
 
@@ -123,7 +146,8 @@ CFontCatalog::CFontCatalog( const std::vector<std::string> &directories )
 		// error codes rather than exceptions throughout: an unreadable
 		// subdirectory is skipped, not fatal
 		std::error_code error;
-		std::filesystem::recursive_directory_iterator it( szDirectory, std::filesystem::directory_options::skip_permission_denied, error );
+		std::filesystem::recursive_directory_iterator it(
+				szDirectory, std::filesystem::directory_options::skip_permission_denied, error );
 		for ( ; !error && it != std::filesystem::recursive_directory_iterator(); it.increment( error ) )
 		{
 			std::error_code fileError;
@@ -144,7 +168,7 @@ CFontCatalog::CFontCatalog( const std::vector<std::string> &directories )
 	{
 		FT_Open_Args args = {};
 		args.flags = FT_OPEN_PATHNAME;
-		args.pathname = const_cast<FT_String*>( szFile.c_str() );
+		args.pathname = const_cast<FT_String *>( szFile.c_str() );
 		SFontMatch first;
 		int nInstances = 0, nFaces = 0;
 		if ( !DescribeFace( pLibrary, args, szFile, 0, &first, &nInstances, &nFaces ) )
@@ -164,7 +188,8 @@ CFontCatalog::CFontCatalog( const std::vector<std::string> &directories )
 			{
 				SFontMatch instance;
 				int nIgnoredInstances = 0, nIgnoredFaces = 0;
-				if ( DescribeFace( pLibrary, args, szFile, ( nInstance << 16 ) | nFace, &instance, &nIgnoredInstances, &nIgnoredFaces ) )
+				if ( DescribeFace(
+								 pLibrary, args, szFile, ( nInstance << 16 ) | nFace, &instance, &nIgnoredInstances, &nIgnoredFaces ) )
 				{
 					faces.push_back( instance );
 				}
@@ -189,7 +214,7 @@ bool CFontCatalog::Find( const std::string &szFamily, int nWeight, bool bItalic,
 		// outweighs them, and a slant mismatch outweighs the width classes'
 		// whole range
 		const int nScore = ( candidate.bItalic != bItalic ? 100000 : 0 ) + std::abs( candidate.nWidthClass - 5 ) * 1000 +
-			std::abs( candidate.nWeight - nWeight );
+		                   std::abs( candidate.nWeight - nWeight );
 		if ( !bFound || nScore < nBestScore )
 		{
 			*pMatch = candidate;
@@ -200,8 +225,11 @@ bool CFontCatalog::Find( const std::string &szFamily, int nWeight, bool bItalic,
 	return bFound;
 }
 
-bool FindFont( const std::string &szFamily, int nWeight, bool bItalic, const std::vector<std::string> &directories,
-	SFontMatch *pMatch )
+bool FindFont( const std::string &szFamily,
+               int nWeight,
+               bool bItalic,
+               const std::vector<std::string> &directories,
+               SFontMatch *pMatch )
 {
 	return CFontCatalog( directories ).Find( szFamily, nWeight, bItalic, pMatch );
 }
@@ -235,13 +263,18 @@ int SelectFace( const std::vector<uint8_t> &data, int nWeight, bool bItalic )
 			{
 				SFontMatch candidate = face;
 				int nIgnoredInstances = 0, nIgnoredFaces = 0;
-				if ( nInstance != 0 && !DescribeFace( pLibrary, args, std::string(), ( nInstance << 16 ) | nFace, &candidate,
-					&nIgnoredInstances, &nIgnoredFaces ) )
+				if ( nInstance != 0 && !DescribeFace( pLibrary,
+				                                      args,
+				                                      std::string(),
+				                                      ( nInstance << 16 ) | nFace,
+				                                      &candidate,
+				                                      &nIgnoredInstances,
+				                                      &nIgnoredFaces ) )
 				{
 					continue;
 				}
-				const int nScore = ( candidate.bItalic != bItalic ? 100000 : 0 ) + std::abs( candidate.nWidthClass - 5 ) * 1000 +
-					std::abs( candidate.nWeight - nWeight );
+				const int nScore = ( candidate.bItalic != bItalic ? 100000 : 0 ) +
+				                   std::abs( candidate.nWidthClass - 5 ) * 1000 + std::abs( candidate.nWeight - nWeight );
 				if ( nBestScore < 0 || nScore < nBestScore )
 				{
 					nBestIndex = candidate.nFaceIndex;

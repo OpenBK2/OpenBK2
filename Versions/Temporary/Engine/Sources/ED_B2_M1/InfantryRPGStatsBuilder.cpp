@@ -11,18 +11,19 @@
 
 REGISTER_BUILDER_IN_DLL( InfantryRPGStats, CInfantryRPGStatsBuilder )
 
-
 const std::string CInfantryRPGStatsBuilder::BUILD_DATA_TYPE_NAME = "InfantryRPGStatsBuilder";
 
-
-bool CInfantryRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
+bool CInfantryRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
+                                                 std::string *pszDescription,
+                                                 IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CInfantryRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CInfantryRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
 	pszDescription->clear();
 	// Считываем данные
 	std::string szVisualObject;
-	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
+	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) ||
+	     szVisualObject.empty() )
 	{
 		( *pszDescription ) = "<VisualObject> must be filled.";
 		return false;
@@ -44,7 +45,9 @@ bool CInfantryRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 		{
 			if ( pBuildDataView )
 			{
-				CPtr<CObjectBaseController> pObjectController = dynamic_cast<CDefaultView*>(pBuildDataView)->CDefaultView::CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) );
+				CPtr<CObjectBaseController> pObjectController =
+						dynamic_cast<CDefaultView *>( pBuildDataView )
+								->CDefaultView::CreateController<CObjectController>( static_cast<CObjectController *>( 0 ) );
 				if ( pObjectController->AddChangeOperation( "Source", posInfantryDBType->second, pBuildDataManipulator ) )
 				{
 					pObjectController->Redo( false, true, 0 );
@@ -61,18 +64,18 @@ bool CInfantryRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 	return true;
 }
 
-
 bool CInfantryRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeName,
-																										 std::string *pszUniqueObjectName,
-																										 bool bFromMainMenu,
-																										 bool *pbCanChangeObjectName,
-																										 bool *pbNeedExport,
-																										 bool *pbNeedEdit,
-																										 IManipulator *pBuildDataManipulator )
+                                                     std::string *pszUniqueObjectName,
+                                                     bool bFromMainMenu,
+                                                     bool *pbCanChangeObjectName,
+                                                     bool *pbNeedExport,
+                                                     bool *pbNeedEdit,
+                                                     IManipulator *pBuildDataManipulator )
 {
 	NI_ASSERT( pszObjectTypeName != 0, "CInfantryRPGStatsBuilder::InternalInsertObject() pszObjectTypeName == 0" );
 	NI_ASSERT( pszUniqueObjectName != 0, "CInfantryRPGStatsBuilder::InternalInsertObject() pszUniqueObjectName == 0" );
-	NI_ASSERT( pBuildDataManipulator != 0, "CInfantryRPGStatsBuilder::InternalInsertObject() pBuildDataManipulator == 0" );
+	NI_ASSERT( pBuildDataManipulator != 0,
+	           "CInfantryRPGStatsBuilder::InternalInsertObject() pBuildDataManipulator == 0" );
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	//
@@ -92,14 +95,18 @@ bool CInfantryRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 	bool bResult = pFolderCallback->InsertObject( *pszObjectTypeName, *pszUniqueObjectName );
 	if ( bResult )
 	{
-		CPtr<IManipulator> pInfantryRPGStatsManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
-		NI_ASSERT( pInfantryRPGStatsManipulator != 0, "CInfantryRPGStatsBuilder::InternalInsertObject() pInfantryRPGStatsManipulator == 0" );
+		CPtr<IManipulator> pInfantryRPGStatsManipulator =
+				pResourceManager->CreateObjectManipulator( *pszObjectTypeName, *pszUniqueObjectName );
+		NI_ASSERT( pInfantryRPGStatsManipulator != 0,
+		           "CInfantryRPGStatsBuilder::InternalInsertObject() pInfantryRPGStatsManipulator == 0" );
 		if ( !szSource.empty() )
 		{
-			CPtr<IManipulator> pSourceInfantryRPGStatsManipulator = pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szSource );
+			CPtr<IManipulator> pSourceInfantryRPGStatsManipulator =
+					pResourceManager->CreateObjectManipulator( *pszObjectTypeName, szSource );
 			if ( pSourceInfantryRPGStatsManipulator )
 			{
-				CManipulatorManager::CloneDBManipulator( pInfantryRPGStatsManipulator, pSourceInfantryRPGStatsManipulator, true );
+				CManipulatorManager::CloneDBManipulator(
+						pInfantryRPGStatsManipulator, pSourceInfantryRPGStatsManipulator, true );
 			}
 		}
 		// Проставляем основные параметры

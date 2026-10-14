@@ -11,21 +11,17 @@
 
 REGISTER_EXPORTER_IN_DLL( AnimLight, CLightExporter )
 
-
-CLightExporter::CLightExporter() : bNeedExport( false )
-{
-}
-
+CLightExporter::CLightExporter() : bNeedExport( false ) {}
 
 bool CLightExporter::StartExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	bNeedExport = false;
 	MEStartScript( &szScriptText, false );
 	//
-	szScriptText += fmt::format( "loadPlugin \"{}\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginFileName).c_str() );
+	szScriptText +=
+			fmt::format( "loadPlugin \"{}\";\r\n", GetOption( &SUserData::SMayaExportData::szOldPluginFileName ).c_str() );
 	return true;
 }
-
 
 void CLightExporter::FinishExport( const std::string &rszObjectTypeName, bool bForce )
 {
@@ -33,12 +29,11 @@ void CLightExporter::FinishExport( const std::string &rszObjectTypeName, bool bF
 	MERunScript( szScriptText, rszObjectTypeName, bNeedExport, false );
 }
 
-
-EXPORT_RESULT CLightExporter::ExportObject( IManipulator* pManipulator,
-																						const std::string &rszObjectTypeName,
-																						const std::string &rszObjectName,
-																						bool bForce,
-																						EXPORT_TYPE exportType )
+EXPORT_RESULT CLightExporter::ExportObject( IManipulator *pManipulator,
+                                            const std::string &rszObjectTypeName,
+                                            const std::string &rszObjectName,
+                                            bool bForce,
+                                            EXPORT_TYPE exportType )
 {
 	NI_ASSERT( pManipulator != 0, "CLightExporter::ExportObject() pManipulator == 0 )" );
 	if ( ( exportType != ET_BEFORE_REF ) && ( exportType != ET_NO_REF ) )
@@ -51,8 +46,9 @@ EXPORT_RESULT CLightExporter::ExportObject( IManipulator* pManipulator,
 	// Формируем тело скрипта
 	std::string szSorceValue;
 	CManipulatorManager::GetValue( &szSorceValue, pManipulator, "SrcName" );
-	const std::string szSource				= pUserData->constUserData.szExportSourceFolder + szSorceValue;
-	const std::string szLightsFolder	= Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Lights\\";
+	const std::string szSource = pUserData->constUserData.szExportSourceFolder + szSorceValue;
+	const std::string szLightsFolder =
+			Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Lights\\";
 	const std::string szDestination = BuildDestFilePath( pManipulator, szLightsFolder );
 	// check for source and destination times if not forced mode
 	if ( CheckFilesUpdated( szSource, szDestination, bForce ) )
@@ -70,7 +66,9 @@ EXPORT_RESULT CLightExporter::ExportObject( IManipulator* pManipulator,
 	szScriptText += fmt::format( "file -o -f \"{}\";\r\n", szSource.c_str() );
 	szScriptText += fmt::format( "select -cl;\r\n" );
 	szScriptText += fmt::format( "select \"{}\";\r\n", szSelectNode.c_str() );
-	szScriptText += fmt::format( "file -es -f -typ \"{}\" -op \"light=1;\" \"{}\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginName).c_str(), szDestination.c_str() );
+	szScriptText += fmt::format( "file -es -f -typ \"{}\" -op \"light=1;\" \"{}\";\r\n",
+	                             GetOption( &SUserData::SMayaExportData::szOldPluginName ).c_str(),
+	                             szDestination.c_str() );
 	//
 	bNeedExport = true;
 	return ER_SUCCESS;

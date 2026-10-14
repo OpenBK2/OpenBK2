@@ -2,7 +2,7 @@
 
 namespace NDb
 {
-	struct SModel;
+struct SModel;
 }
 
 namespace NGScene

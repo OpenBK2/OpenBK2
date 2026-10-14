@@ -16,16 +16,27 @@ class CWindowFrameSequence : public CWindow, public IWindowFrameSequence
 {
 	OBJECT_NOCOPY_METHODS( CWindowFrameSequence );
 
-	ZDATA_(CWindow)
+	ZDATA_( CWindow )
 	CPtr<NDb::SWindowFrameSequence> pInstance;
 	CDBPtr<NDb::SWindowFrameSequenceShared> pShared;
 	int nFrame;
 	bool bRun;
 	int nTime;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pInstance); f.Add(3,&pShared); f.Add(4,&nFrame); f.Add(5,&bRun); f.Add(6,&nTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CWindow *)this );
+		f.Add( 2, &pInstance );
+		f.Add( 3, &pShared );
+		f.Add( 4, &nFrame );
+		f.Add( 5, &bRun );
+		f.Add( 6, &nTime );
+		return 0;
+	}
 	NTimer::STime timeStart;
+
 protected:
-	NDb::SWindow* GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance() { return pInstance; }
+
 public:
 	CWindowFrameSequence();
 	~CWindowFrameSequence();

@@ -8,7 +8,9 @@
 
 #define TIME_COEFF 1
 
-void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames )
+void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator,
+                              const CVec3 &_vPos3,
+                              const std::vector<std::string> &leafNames )
 {
 	vPos.x = _vPos3.x;
 	vPos.y = _vPos3.y;
@@ -47,7 +49,7 @@ void CTreeWindMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 	Scene()->GetWindController()->GetDirCoeff( &fCX, &fCY );
 
 	//CQuat qRot( fMagnitude * fCoeffSin2 * fMaxTurn, fCoeffSin, fCoeffCos, 0.0f, true );		// "Random" direction wave
-	CQuat qRot( fMagnitude * ( 2 + fCoeffSin2 ) * fMaxTurn * 0.5f, fCX, fCY, 0.0f, true );				// Wind direction wave
+	CQuat qRot( fMagnitude * ( 2 + fCoeffSin2 ) * fMaxTurn * 0.5f, fCX, fCY, 0.0f, true ); // Wind direction wave
 	CQuat qInverseRot( qRot );
 	qInverseRot.UnitInverse();
 	CQuat qRndRot( fMagnitude * fCoeffSinRnd * fMaxTurn * 0.3f, fCoeffCos, fCoeffSin, 2.0f, true );
@@ -65,7 +67,10 @@ void CTreeWindMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 
 void CTreeWindMutator::TransformRootBone( NAnimation::SBoneTransform *pTransform, const CQuat &qRot )
 {
-	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
+	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0],
+	                               pTransform->Orientation[1],
+	                               pTransform->Orientation[2],
+	                               pTransform->Orientation[3] ) );
 	qBoneOrientation *= qRot;
 	const CVec4 &vBoneOrientation = qBoneOrientation.GetInternalVector();
 	pTransform->Orientation[0] = vBoneOrientation.x;
@@ -86,7 +91,10 @@ void CTreeWindMutator::TransformLeafBone( NAnimation::SBoneTransform *pTransform
 {
 	if ( !pTransform )
 		return;
-	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0], pTransform->Orientation[1], pTransform->Orientation[2], pTransform->Orientation[3] ) );
+	CQuat qBoneOrientation( CVec4( pTransform->Orientation[0],
+	                               pTransform->Orientation[1],
+	                               pTransform->Orientation[2],
+	                               pTransform->Orientation[3] ) );
 	qBoneOrientation *= qRot;
 	const CVec4 &vBoneOrientation = qBoneOrientation.GetInternalVector();
 	pTransform->Orientation[0] = vBoneOrientation.x;
@@ -122,4 +130,4 @@ int CTreeWindMutator::operator&( IBinSaver &saver )
 	return 0;
 }
 
-REGISTER_SAVELOAD_CLASS( SCENEB2, 0x19132B40, CTreeWindMutator)
+REGISTER_SAVELOAD_CLASS( SCENEB2, 0x19132B40, CTreeWindMutator )

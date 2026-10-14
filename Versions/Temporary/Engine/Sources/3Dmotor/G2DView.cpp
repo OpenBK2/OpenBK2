@@ -12,31 +12,48 @@ namespace NGScene
 {
 
 // share objects
-CBasicShare<SIntResKey, CFileFont> shareFonts(106);
+CBasicShare<SIntResKey, CFileFont> shareFonts( 106 );
 extern CBasicShare<STextureKey, CFileTexture, STextureKeyHash> shareTextures;
 
-class C2DGameView: public I2DGameView
+class C2DGameView : public I2DGameView
 {
-	OBJECT_BASIC_METHODS(C2DGameView);
+	OBJECT_BASIC_METHODS( C2DGameView );
+
 private:
 	ZDATA
 	CObj<I2DScene> pScene;
 	CObj<CTextLocaleInfo> pLocale;
 	CVec2 vWindowSize;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pScene); f.Add(3,&pLocale); f.Add( 4, &vWindowSize ); return 0; }
+	ZEND int operator&( CStructureSaver &f )
+	{
+		f.Add( 2, &pScene );
+		f.Add( 3, &pLocale );
+		f.Add( 4, &vWindowSize );
+		return 0;
+	}
 
 public:
 	C2DGameView();
 
-	void CreateDynamicRects( const NDb::STexture *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
-	void CreateDynamicRects( const NDb::STexture *pTexture, const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4,
-		const CTRect<float> &rectTexture );
-	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
-	void CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow );
-	CObjectBase* CreateTexture( const NGScene::STextureKey &key );
+	void CreateDynamicRects( const NDb::STexture *pTexture,
+	                         const CRectLayout &sLayout,
+	                         const CTPoint<float> &sPosition,
+	                         const CTRect<float> &sWindow );
+	void CreateDynamicRects( const NDb::STexture *pTexture,
+	                         const CVec2 *pPos4,
+	                         const NGfx::SPixel8888 *pColors4,
+	                         const CTRect<float> &rectTexture );
+	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
+	                         const CRectLayout &sLayout,
+	                         const CTPoint<float> &sPosition,
+	                         const CTRect<float> &sWindow );
+	void CreateDynamicClearRects( const CRectLayout &sLayout,
+	                              const CTPoint<float> &sPosition,
+	                              const CTRect<float> &sClipWindow );
+	CObjectBase *CreateTexture( const NGScene::STextureKey &key );
 
 	CVec2 GetViewportSize() { return NGfx::GetScreenRect(); }
-	CTextLocaleInfo* GetLocaleInfo() const { return pLocale; }
+	CTextLocaleInfo *GetLocaleInfo() const { return pLocale; }
 
 	void StartNewFrame( NGfx::CTexture *pTarget );
 	void StartNewFrame( EAlphaMode2D _AlphaMode2D );
@@ -50,38 +67,48 @@ C2DGameView::C2DGameView()
 {
 	pScene = Make2DScene();
 	///
-	pLocale = GetTextLocaleInfo();//new CTextLocaleInfo;
+	pLocale = GetTextLocaleInfo(); //new CTextLocaleInfo;
 	pLocale->Setup( NGfx::GetScreenRect() );
 }
 
-CObjectBase* C2DGameView::CreateTexture( const NGScene::STextureKey &key )
+CObjectBase *C2DGameView::CreateTexture( const NGScene::STextureKey &key )
 {
 	return shareTextures.Get( key );
 }
 
-void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
+                                      const CRectLayout &sLayout,
+                                      const CTPoint<float> &sPosition,
+                                      const CTRect<float> &sWindow )
 {
-	if ( !pTexture )//CObjectBase *pRes = pScene->Create
+	if ( !pTexture ) //CObjectBase *pRes = pScene->Create
 		pScene->CreateDynamicRects( 0, sLayout, sPosition, sWindow );
 	else
 		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), sLayout, sPosition, sWindow );
 }
 
 void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
-	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
+                                      const CVec2 *pPos4,
+                                      const NGfx::SPixel8888 *pColors4,
+                                      const CTRect<float> &rectTexture )
 {
-	if ( !pTexture )//CObjectBase *pRes = pScene->Create
+	if ( !pTexture ) //CObjectBase *pRes = pScene->Create
 		pScene->CreateDynamicRects( 0, pPos4, pColors4, rectTexture );
 	else
 		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), pPos4, pColors4, rectTexture );
 }
 
-void C2DGameView::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
+void C2DGameView::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
+                                      const CRectLayout &sLayout,
+                                      const CTPoint<float> &sPosition,
+                                      const CTRect<float> &sWindow )
 {
 	pScene->CreateDynamicRects( pTexture, sLayout, sPosition, sWindow );
 }
 
-void C2DGameView::CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow )
+void C2DGameView::CreateDynamicClearRects( const CRectLayout &sLayout,
+                                           const CTPoint<float> &sPosition,
+                                           const CTRect<float> &sClipWindow )
 {
 	pScene->CreateDynamicClearRects( sLayout, sPosition, sClipWindow );
 }
@@ -110,7 +137,7 @@ void C2DGameView::Flush()
 
 // Create 2D View
 
-I2DGameView* CreateNew2DView()
+I2DGameView *CreateNew2DView()
 {
 	return new C2DGameView;
 }

@@ -18,15 +18,16 @@ class CWinVFS : public IVFS
 	{
 		uint32_t dwCheckTime;
 		bool bChecked;
+
 	public:
-		CFileEntry( const uint32_t _dwCheckTime ) : dwCheckTime( _dwCheckTime ), bChecked( false ) {  }
+		CFileEntry( const uint32_t _dwCheckTime ) : dwCheckTime( _dwCheckTime ), bChecked( false ) {}
 		virtual ~CFileEntry() {}
 		//
 		void SetChecked() { bChecked = true; }
 		bool IsChecked() const { return bChecked; }
 		//
 		uint32_t GetCheckTime() const { return dwCheckTime; }
-		virtual CDataStream* OpenStream( const std::string &szPathName ) = 0;
+		virtual CDataStream *OpenStream( const std::string &szPathName ) = 0;
 		virtual bool GetStats( SFileStats *pStats, const std::string &szPathName ) const = 0;
 	};
 	//
@@ -42,34 +43,39 @@ class CWinVFS : public IVFS
 		// It used to be left out on the grounds that the hash map held it already.
 		// That was true while the only lookup that could succeed was an exact one.
 		const NFile::CFilePath szRealPath;
+
 	public:
 		CWinFileEntry( const uint32_t _dwCheckTime, const std::string &_szBasePath, const NFile::CFilePath &_szRealPath )
-			: CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ), szRealPath( _szRealPath ) {  }
-		CDataStream* OpenStream( const std::string &szPathName );
+				: CFileEntry( _dwCheckTime ), szBasePath( _szBasePath ), szRealPath( _szRealPath )
+		{
+		}
+		CDataStream *OpenStream( const std::string &szPathName );
 		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const;
 	};
 
 	class CZipFileEntry : public CFileEntry
 	{
-		CZipFile &zipfile;							// zipfile structure
-		const int nIndex;											// this file index in the zipfile
+		CZipFile &zipfile; // zipfile structure
+		const int nIndex;  // this file index in the zipfile
 	public:
 		CZipFileEntry( const uint32_t _dwCheckTime, CZipFile &_zipfile, const int _nIndex )
-			: CFileEntry( _dwCheckTime ), zipfile( _zipfile ), nIndex( _nIndex ) {}
-			CDataStream* OpenStream( const std::string &szPathName ) { return zipfile.OpenFile( nIndex ); }
-			bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
-			{
-				if ( pStats == 0 )
-					return false;
-				pStats->nSize = zipfile.GetFileLen( nIndex );
-				pStats->mtime = zipfile.GetModDateTime( nIndex );
-				// Which archive supplied the file. Several .pak files can carry the
-				// same path and the entry with the newest timestamp wins, so this is
-				// the only way to tell whether a patch actually overrode anything.
-				// The string lives as long as the archive, which is as long as the VFS.
-				pStats->pszName = zipfile.GetArchiveName().c_str();
-				return true;
-			}
+				: CFileEntry( _dwCheckTime ), zipfile( _zipfile ), nIndex( _nIndex )
+		{
+		}
+		CDataStream *OpenStream( const std::string &szPathName ) { return zipfile.OpenFile( nIndex ); }
+		bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
+		{
+			if ( pStats == 0 )
+				return false;
+			pStats->nSize = zipfile.GetFileLen( nIndex );
+			pStats->mtime = zipfile.GetModDateTime( nIndex );
+			// Which archive supplied the file. Several .pak files can carry the
+			// same path and the entry with the newest timestamp wins, so this is
+			// the only way to tell whether a patch actually overrode anything.
+			// The string lives as long as the archive, which is as long as the VFS.
+			pStats->pszName = zipfile.GetArchiveName().c_str();
+			return true;
+		}
 	};
 	//
 	//! functional for adding/registering win files to storage
@@ -77,8 +83,9 @@ class CWinVFS : public IVFS
 	{
 		const std::string &szBasePath;
 		CWinVFS *pVFS;
+
 	public:
-		CWinFileAdder( const std::string &_szBasePath, CWinVFS *_pVFS ) : szBasePath(_szBasePath), pVFS(_pVFS) {}
+		CWinFileAdder( const std::string &_szBasePath, CWinVFS *_pVFS ) : szBasePath( _szBasePath ), pVFS( _pVFS ) {}
 		//
 		void operator()( NFile::CFileIterator &it ) const
 		{
@@ -104,9 +111,9 @@ class CWinVFS : public IVFS
 			}
 		}
 	};
-	typedef std::list<CObj<CZipFile> > CZipFilesList;
+	typedef std::list<CObj<CZipFile>> CZipFilesList;
 	CZipFilesList zipFiles;
-	typedef std::unordered_map<NFile::CFilePath, CFileEntry*> CStreamEntriesMap;
+	typedef std::unordered_map<NFile::CFilePath, CFileEntry *> CStreamEntriesMap;
 	CStreamEntriesMap streamEntriesMap;
 	NFile::CFilePath szBasePath;
 	bool bAllWinFilesChecked;
@@ -116,12 +123,13 @@ class CWinVFS : public IVFS
 	// only for relative path!
 	CFileEntry *UpdateFileEntry( const NFile::CFilePath &szPath );
 	//
-	CWinVFS() { }
+	CWinVFS() {}
+
 public:
 	CWinVFS( const std::string &szBasePath );
 	~CWinVFS();
 	//
-	CDataStream* OpenFile( const std::string &szPath );
+	CDataStream *OpenFile( const std::string &szPath );
 	bool DoesFileExist( const std::string &szPath );
 	bool GetFileStats( SFileStats *pStats, const std::string &szPath );
 	void GetAllFileNames( std::vector<std::string> *pFileNames, const std::string &rszFolder );
@@ -135,12 +143,13 @@ class CWinFileCreator : public IFileCreator
 
 	std::string szBasePath;
 
-	CWinFileCreator() { }
+	CWinFileCreator() {}
+
 public:
 	CWinFileCreator( const std::string &szBasePath );
 	std::string GetFullPath( const std::string &szPath ) const;
 
-	CDataStream* CreateFile( const std::string &szPath );
+	CDataStream *CreateFile( const std::string &szPath );
 	bool RemoveFile( const std::string &szPath );
 };
 

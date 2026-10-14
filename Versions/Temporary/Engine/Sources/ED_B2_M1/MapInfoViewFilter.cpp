@@ -10,9 +10,9 @@
 
 namespace NMapInfoViewFilter
 {
-	// Moved out of CMapInfoViewFilterDlg::Apply unchanged.
-	void Apply()
-	{
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_EDITOR, ID_VIEW_APPLY_MI_FILTER, 0 );
-	}
+// Moved out of CMapInfoViewFilterDlg::Apply unchanged.
+void Apply()
+{
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_EDITOR, ID_VIEW_APPLY_MI_FILTER, 0 );
+}
 }

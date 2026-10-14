@@ -1,6 +1,6 @@
 
 
-const SSoundStats * GetRandomSound() const
+const SSoundStats *GetRandomSound() const
 {
 	const float fRand = 1.0f * rand() / RAND_MAX;
 	float fSum = 0;

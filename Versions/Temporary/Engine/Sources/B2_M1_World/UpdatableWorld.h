@@ -14,8 +14,8 @@ class CAllAnimationsPlayer;
 class CLaserMarkTrace;
 struct ICommonB2M1AI;
 typedef det_map<int, NDb::SReinforcementPosition> CReinforcementPositions;
-typedef std::list<CDBPtr<NDb::SReinforcement> > CEnabledReinforcements;
-typedef det_map<int, CPtr<CMapObj> > CKeyBuildings;
+typedef std::list<CDBPtr<NDb::SReinforcement>> CEnabledReinforcements;
+typedef det_map<int, CPtr<CMapObj>> CKeyBuildings;
 
 class CCombatMusic
 {
@@ -30,7 +30,14 @@ class CCombatMusic
 	NTimer::STime timeLastCombatNotify = 0;
 	ECombatMusicState eState{};
 	NTimer::STime combatPlayWONotify = 0;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&timeLastCombatNotify); f.Add(3,&eState); f.Add(4,&combatPlayWONotify); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &timeLastCombatNotify );
+		f.Add( 3, &eState );
+		f.Add( 4, &combatPlayWONotify );
+		return 0;
+	}
+
 public:
 	CCombatMusic();
 	void Update( bool bCombat );
@@ -40,23 +47,25 @@ class B2_M1_WORLD_EXPORT CUpdatableWorld : public virtual CObjectBase, public IU
 {
 	typedef std::unordered_map<int, ObjectFactoryNewFunc> CNewFuncsMap;
 	CNewFuncsMap newFuncs;
-	typedef std::unordered_map<int, CObj<CMapObj> > CMapObjMap;
+	typedef std::unordered_map<int, CObj<CMapObj>> CMapObjMap;
 	CMapObjMap objects;
 	NDb::ESeason eSeason{};
-	NDb::EDayNight eDayTime{};					// needed to determine if headlights are on
+	NDb::EDayNight eDayTime{}; // needed to determine if headlights are on
 
 	NTimer::STime currTime = 0;
 
 	// every segment update functions
-	typedef void (CUpdatableWorld::*EVERY_SEGMENT_UPDATE)();
+	typedef void ( CUpdatableWorld::*EVERY_SEGMENT_UPDATE )();
 	typedef std::vector<EVERY_SEGMENT_UPDATE> CEverySegment;
 	CEverySegment everySegment;
 
 	// updates by type
-	typedef void (CUpdatableWorld::*UPDATE_TYPE)( const SAIBasicUpdate *pUpdate );
+	typedef void ( CUpdatableWorld::*UPDATE_TYPE )( const SAIBasicUpdate *pUpdate );
 	typedef std::unordered_map<int, UPDATE_TYPE> CUpdateType;
+
 public:
 	CUpdateType updateType;
+
 private:
 	// Temporary vis objects for building (IDs)
 	typedef std::vector<int> CTempMapObjList;
@@ -78,19 +87,20 @@ private:
 	CReinforcementPositions reinforcementPositions;
 	CEnabledReinforcements enabledReinforcements;
 	bool bReinfEnabled = false;
-	NTimer::STime reinfTimeRecycleStart = 0; // момент времени, с которого ждать разрешения на следующий вызов подкреплений
+	NTimer::STime reinfTimeRecycleStart =
+			0;                                 // момент времени, с которого ждать разрешения на следующий вызов подкреплений
 	NTimer::STime reinfTimeRecycleEnd = 0; // промежуток времени, через который будут разрешены подкрепления
 	float fReinfRecycleProgress = 0.0f;
 	int nReinfCallsLeft = 0;
 	CKeyBuildings keyBuildings;
 	CCombatMusic combatMusic;
 
-	std::unordered_map<int, CObj<CLaserMarkTrace> > laserMarks;
-	std::unordered_map<int, CObj<CObjectBase> > laserMarksMeshes;
+	std::unordered_map<int, CObj<CLaserMarkTrace>> laserMarks;
+	std::unordered_map<int, CObj<CObjectBase>> laserMarksMeshes;
 
 #ifndef _FINALRELEASE
-	std::vector<CObj<CPtrFuncBase<NGScene::CObjectInfo> > > badObjects;
-	std::vector<CObj<CObjectBase> > badObjectsMeshes;
+	std::vector<CObj<CPtrFuncBase<NGScene::CObjectInfo>>> badObjects;
+	std::vector<CObj<CObjectBase>> badObjectsMeshes;
 #endif
 private:
 	void InitPrivate();
@@ -108,93 +118,93 @@ private:
 	// UPDATE_TYPE
 	void AIUpdateAreas( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateDeadPlane( const SAIBasicUpdate * _pUpdate );
+	void UpdateDeadPlane( const SAIBasicUpdate *_pUpdate );
 	void UpdateNewUnits( const SAIBasicUpdate *_pUpdate );
 	void UpdateNewBridgeSpan( const SAIBasicUpdate *_pUpdate );
 	void UpdatePlacement( const SAIBasicUpdate *_pUpdate );
 	void UpdateRPGChanged( const SAIBasicUpdate *_pUpdate );
 	void UpdateSelection( const SAIBasicUpdate *_pUpdate );
 	void UpdateSideChanged( const SAIBasicUpdate *_pUpdate );
-	void UpdateNewFormation( const SAIBasicUpdate * _pUpdate );
-	void UpdateEntranceState( const SAIBasicUpdate * _pUpdate );
-	void UpdateDeadProjectile( const SAIBasicUpdate * _pUpdate );
-	void UpdateTurretTurn( const SAIBasicUpdate * _pUpdate );
-	void UpdateMechShoot( const SAIBasicUpdate * _pUpdate );
-	void UpdateInfantryShoot( const SAIBasicUpdate * _pUpdate );
-	void UpdateDiplomacy( const SAIBasicUpdate * _pUpdate );
-	void UpdateChageDBID( const SAIBasicUpdate * _pUpdate );
+	void UpdateNewFormation( const SAIBasicUpdate *_pUpdate );
+	void UpdateEntranceState( const SAIBasicUpdate *_pUpdate );
+	void UpdateDeadProjectile( const SAIBasicUpdate *_pUpdate );
+	void UpdateTurretTurn( const SAIBasicUpdate *_pUpdate );
+	void UpdateMechShoot( const SAIBasicUpdate *_pUpdate );
+	void UpdateInfantryShoot( const SAIBasicUpdate *_pUpdate );
+	void UpdateDiplomacy( const SAIBasicUpdate *_pUpdate );
+	void UpdateChageDBID( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateShootBuilding( const SAIBasicUpdate * _pUpdate );
-	void UpdateThrowbuilding( const SAIBasicUpdate * _pUpdate );
-	void UpdateHit( const SAIBasicUpdate * _pUpdate );
-	void UpdateDeleteObject( const SAIBasicUpdate * _pUpdate );
-	void UpdateSilentDeath( const SAIBasicUpdate * _pUpdate );
-	void UpdateDissapearObj( const SAIBasicUpdate * _pUpdate );
-	void UpdateRevealArtillery( const SAIBasicUpdate * _pUpdate );
-	void UpdateSetCamouflage( const SAIBasicUpdate * _pUpdate );
-	void UpdateRemoveCamouflage( const SAIBasicUpdate * _pUpdate );
-	void UpdateSetAmbush( const SAIBasicUpdate * _pUpdate );
-	void UpdateRemoveAmbush( const SAIBasicUpdate * _pUpdate );
-	void UpdateBreakTrack( const SAIBasicUpdate * _pUpdate );
-	void UpdateRepairTrack( const SAIBasicUpdate * _pUpdate );
-	void UpdateRepairStateBegin( const SAIBasicUpdate * _pUpdate );
-	void UpdateRepairStateEnd( const SAIBasicUpdate * _pUpdate );
-	void UpdateResuplyStateBegin( const SAIBasicUpdate * _pUpdate );
-	void UpdateResuplyStateEnd( const SAIBasicUpdate * _pUpdate );
-	void UpdateChangeVisibility( const SAIBasicUpdate * _pUpdate );
-	void UpdateStateChanged( const SAIBasicUpdate * _pUpdate );
-	void UpdateServedArtillery( const SAIBasicUpdate * _pUpdate );
+	void UpdateShootBuilding( const SAIBasicUpdate *_pUpdate );
+	void UpdateThrowbuilding( const SAIBasicUpdate *_pUpdate );
+	void UpdateHit( const SAIBasicUpdate *_pUpdate );
+	void UpdateDeleteObject( const SAIBasicUpdate *_pUpdate );
+	void UpdateSilentDeath( const SAIBasicUpdate *_pUpdate );
+	void UpdateDissapearObj( const SAIBasicUpdate *_pUpdate );
+	void UpdateRevealArtillery( const SAIBasicUpdate *_pUpdate );
+	void UpdateSetCamouflage( const SAIBasicUpdate *_pUpdate );
+	void UpdateRemoveCamouflage( const SAIBasicUpdate *_pUpdate );
+	void UpdateSetAmbush( const SAIBasicUpdate *_pUpdate );
+	void UpdateRemoveAmbush( const SAIBasicUpdate *_pUpdate );
+	void UpdateBreakTrack( const SAIBasicUpdate *_pUpdate );
+	void UpdateRepairTrack( const SAIBasicUpdate *_pUpdate );
+	void UpdateRepairStateBegin( const SAIBasicUpdate *_pUpdate );
+	void UpdateRepairStateEnd( const SAIBasicUpdate *_pUpdate );
+	void UpdateResuplyStateBegin( const SAIBasicUpdate *_pUpdate );
+	void UpdateResuplyStateEnd( const SAIBasicUpdate *_pUpdate );
+	void UpdateChangeVisibility( const SAIBasicUpdate *_pUpdate );
+	void UpdateStateChanged( const SAIBasicUpdate *_pUpdate );
+	void UpdateServedArtillery( const SAIBasicUpdate *_pUpdate );
 	//void UpdateSelectChecked( const SAIBasicUpdate * _pUpdate );
-	void UpdateSelectionGroup( const SAIBasicUpdate * _pUpdate );
-	void UpdateNotifyFeedback( const SAIBasicUpdate * _pUpdate );
+	void UpdateSelectionGroup( const SAIBasicUpdate *_pUpdate );
+	void UpdateNotifyFeedback( const SAIBasicUpdate *_pUpdate );
 	void UpdateShootAreas( const SAIBasicUpdate *_pUpdate );
 	void UpdateRangeAreas( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateSpecialAbility( const SAIBasicUpdate * _pUpdate );
+	void UpdateSpecialAbility( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateTreeBroken( const SAIBasicUpdate * _pUpdate );
+	void UpdateTreeBroken( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateDeadUnit( const SAIBasicUpdate * _pUpdate );
-	void UpdatePreDisappear( const SAIBasicUpdate * _pUpdate );
+	void UpdateDeadUnit( const SAIBasicUpdate *_pUpdate );
+	void UpdatePreDisappear( const SAIBasicUpdate *_pUpdate );
 	void UpdateNewEntrenchment( const SAIBasicUpdate *_pUpdate );
 	void UpdateAnimationChanged( const SAIBasicUpdate *_pUpdate );
 
 	void UpdateModifyEntranceState( const SAIBasicUpdate *pUpdate );
 	// helper functions
-	void UpdateSelectable( const SAIBasicUpdate * _pUpdate );
+	void UpdateSelectable( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateDelayedShoot( const SAIBasicUpdate * _pUpdate );
-	void UpdateStop( const SAIBasicUpdate * _pUpdate );
-	void UpdateMove( const SAIBasicUpdate * _pUpdate );
-	void UpdateIdleTrench( const SAIBasicUpdate * _pUpdate );
+	void UpdateDelayedShoot( const SAIBasicUpdate *_pUpdate );
+	void UpdateStop( const SAIBasicUpdate *_pUpdate );
+	void UpdateMove( const SAIBasicUpdate *_pUpdate );
+	void UpdateIdleTrench( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateReinfTypeAvail( const SAIBasicUpdate * _pUpdate );
-	void UpdateReinfRecycle( const SAIBasicUpdate * _pUpdate );
-	void UpdateReinforcmentPoint( const SAIBasicUpdate * _pUpdate );
+	void UpdateReinfTypeAvail( const SAIBasicUpdate *_pUpdate );
+	void UpdateReinfRecycle( const SAIBasicUpdate *_pUpdate );
+	void UpdateReinforcmentPoint( const SAIBasicUpdate *_pUpdate );
 	void SendUpdateReinfPoints( int nFactoryID );
 	//
-	void UpdateAction( const SAIBasicUpdate * _pUpdate );
-	void UpdateObjectsUnderConstruction( const SAIBasicUpdate * _pUpdate );
+	void UpdateAction( const SAIBasicUpdate *_pUpdate );
+	void UpdateObjectsUnderConstruction( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateKeyBuildingCaptured( const SAIBasicUpdate * _pUpdate );
-	void UpdateKeyBuildingLost( const SAIBasicUpdate * _pUpdate );
-	void UpdateNewKeyBuilding( const SAIBasicUpdate * _pUpdate );
-	void UpdateKeyBuildingCaptureProgress( const SAIBasicUpdate * _pUpdate );
+	void UpdateKeyBuildingCaptured( const SAIBasicUpdate *_pUpdate );
+	void UpdateKeyBuildingLost( const SAIBasicUpdate *_pUpdate );
+	void UpdateNewKeyBuilding( const SAIBasicUpdate *_pUpdate );
+	void UpdateKeyBuildingCaptureProgress( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateSwitchLightFX( const SAIBasicUpdate * _pUpdate );
+	void UpdateSwitchLightFX( const SAIBasicUpdate *_pUpdate );
 	//
-	void UpdateStartFinishParadrop( const SAIBasicUpdate * _pUpdate );
+	void UpdateStartFinishParadrop( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateDamage( const SAIBasicUpdate * _pUpdate );
+	void UpdateDamage( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateScriptCameraRun( const SAIBasicUpdate * _pUpdate );
-	void UpdateScriptCameraReset( const SAIBasicUpdate * _pUpdate );
+	void UpdateScriptCameraRun( const SAIBasicUpdate *_pUpdate );
+	void UpdateScriptCameraReset( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateScriptCameraStartMovie( const SAIBasicUpdate * _pUpdate );
-	void UpdateScriptCameraStopMovie( const SAIBasicUpdate * _pUpdate );
+	void UpdateScriptCameraStartMovie( const SAIBasicUpdate *_pUpdate );
+	void UpdateScriptCameraStopMovie( const SAIBasicUpdate *_pUpdate );
 
-	void UpdateWeatherChanged( const SAIBasicUpdate * _pUpdate );
-	void UpdatePlaneReturns( const SAIBasicUpdate * _pUpdate );
+	void UpdateWeatherChanged( const SAIBasicUpdate *_pUpdate );
+	void UpdatePlaneReturns( const SAIBasicUpdate *_pUpdate );
 
 	void UpdateParentOfAtomObj( const SAIBasicUpdate *pUpdate );
 
@@ -209,6 +219,7 @@ private:
 	void UpdateSuperWeaponControl( const SAIBasicUpdate *_pUpdate );
 	void UpdateSuperWeaponRecycle( const SAIBasicUpdate *_pUpdate );
 	void UpdateDiveBomberDive( const SAIBasicUpdate *_pUpdate );
+
 protected:
 	void AddMapObj( int nID, CMapObj *pMO );
 	void RemoveMapObj( int nID, bool bGlobalRemove );
@@ -220,7 +231,7 @@ protected:
 	const NDb::EDayNight GetDayTime() const { return eDayTime; }
 	//
 	virtual void PlayerObjectiveChanged( const int nObjective, const enum EMissionObjectiveState eState ) = 0;
-	IVisualNotifications* GetNotifications() const { return pNotifications; }
+	IVisualNotifications *GetNotifications() const { return pNotifications; }
 
 	virtual void OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpdate ) {}
 	virtual void OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pMO ) {}
@@ -239,14 +250,19 @@ protected:
 	CUpdatableWorld();
 	CUpdatableWorld( IVisualNotifications *pNotifications, ICommonB2M1AI *pAI );
 	~CUpdatableWorld();
+
 public:
 	bool bEditor = false;
-	void SetSeason( const NDb::ESeason _eSeason, const NDb::EDayNight _eDayTime ) { eSeason = _eSeason; eDayTime = _eDayTime; }
+	void SetSeason( const NDb::ESeason _eSeason, const NDb::EDayNight _eDayTime )
+	{
+		eSeason = _eSeason;
+		eDayTime = _eDayTime;
+	}
 	void AfterLoad();
 
 	virtual void Update();
 	//
-	CMapObj* GetMapObj( int nID ) const
+	CMapObj *GetMapObj( int nID ) const
 	{
 		CMapObjMap::const_iterator pos = objects.find( nID );
 		return pos == objects.end() ? 0 : pos->second;
@@ -276,7 +292,7 @@ public:
 	virtual void ProcessUpdate( const struct SAIBreakWindowUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SAINewProjectileUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SAIDeadProjectileUpdate *pUpdate );
-//	virtual void ProcessUpdate( const struct SAINewProjectileM1 *pUpdate );
+	//	virtual void ProcessUpdate( const struct SAINewProjectileM1 *pUpdate );
 	virtual void ProcessUpdate( const struct SExplodeProjectileUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SScriptCameraRunUpdate *pUpdate ) {};
 	virtual void ProcessUpdate( const struct SScriptCameraResetUpdate *pUpdate ) {};
@@ -290,14 +306,14 @@ public:
 	virtual void ProcessUpdate( const struct SWinLoseUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SStartStopSequenceUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SMSChangePlaylistUpdate *pUpdate );
-//	virtual void ProcessUpdate( const struct SMSPlayVoiceUpdate *pUpdate );
+	//	virtual void ProcessUpdate( const struct SMSPlayVoiceUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SMSSetVolumeUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SMSPauseMusicUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SMoneyChangedUpdate *pUpdate );
 	virtual void ProcessUpdate( const struct SObjectiveChanged *pUpdate );
 	virtual void ProcessUpdate( const struct SEnableAirStrike *pUpdate );
-	virtual void ProcessUpdate( const struct SMemCameraPos *pUpdate ) { }
-	virtual void ProcessUpdate( const struct SSetCameraToMemPos *pUpdate ) { }
+	virtual void ProcessUpdate( const struct SMemCameraPos *pUpdate ) {}
+	virtual void ProcessUpdate( const struct SSetCameraToMemPos *pUpdate ) {}
 	virtual void ProcessUpdate( const struct SChatClear *pUpdate );
 
 	void RegisterProcess( IClientUpdatableProcess *pProcess );
@@ -305,13 +321,13 @@ public:
 	void PerformUpdate( CObjectBase *pRawUpdate );
 
 	// reinforcements
-	const CEnabledReinforcements& GetEnabledReinfs() const { return enabledReinforcements; }
-	const CReinforcementPositions& GetReinfPositions() const { return reinforcementPositions; }
+	const CEnabledReinforcements &GetEnabledReinfs() const { return enabledReinforcements; }
+	const CReinforcementPositions &GetReinfPositions() const { return reinforcementPositions; }
 	bool IsReinfEnabled() const { return bReinfEnabled; }
 	const float GetReinfRecycleProgress() const { return fReinfRecycleProgress; }
 	NTimer::STime GetReinfRecycleEnd() const { return reinfTimeRecycleEnd; }
 	int GetReinfCallsLeft() const { return nReinfCallsLeft; }
-	const CKeyBuildings& GetKeyBuildings() const { return keyBuildings; }
+	const CKeyBuildings &GetKeyBuildings() const { return keyBuildings; }
 
 	// script cameras
 	virtual void GetCameraByName( NCamera::CCameraPlacement *pCamera, const std::string &rszName ) const {}
@@ -319,6 +335,6 @@ public:
 	virtual bool GetMoviesData( NDb::SScriptMovies *pMoviesData ) const { return false; }
 
 	void GetObjects( std::list<int> *pObjects ) const;
-	void GetObjects( std::vector<IB2MapObj*> *pObjects ) const;
-	void GetObjects( std::vector<CMapObj*> *pObjects ) const;
+	void GetObjects( std::vector<IB2MapObj *> *pObjects ) const;
+	void GetObjects( std::vector<CMapObj *> *pObjects ) const;
 };

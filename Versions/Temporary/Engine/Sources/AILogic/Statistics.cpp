@@ -12,9 +12,7 @@ extern CEventUpdater updater;
 extern CDiplomacy theDipl;
 CStatistics theStatistics;
 
-void CStatistics::Init()
-{
-}
+void CStatistics::Init() {}
 
 int CStatistics::GetUnitLevel( const NDb::EReinforcementType eType, const int nPlayer ) const
 {
@@ -41,11 +39,15 @@ float CStatistics::GetValue( const int nValue, const int nPlayer ) const
 void CStatistics::UnitCaptured( const int nPlayer )
 {
 	//if ( pScenarioTracker )
-		//pScenarioTracker->GetPlayer( nPlayer )->GetMissionStats()->AddValue( STMT_ENEMY_MACHINERY_CAPTURED, 1.0f );
+	//pScenarioTracker->GetPlayer( nPlayer )->GetMissionStats()->AddValue( STMT_ENEMY_MACHINERY_CAPTURED, 1.0f );
 }
 
-void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, const float fTotalAIPrice,
-															const EReinforcementType eKillerType, const EReinforcementType eDeadType, const bool bInfantry )
+void CStatistics::UnitKilled( const int nPlayer,
+                              const int nKilledUnitsPlayer,
+                              const float fTotalAIPrice,
+                              const EReinforcementType eKillerType,
+                              const EReinforcementType eDeadType,
+                              const bool bInfantry )
 {
 	if ( !GetScenarioTracker() )
 		return;
@@ -75,9 +77,9 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 		CDBPtr<NDb::SUnitStatsModifier> pOldBonus, pNewBonus;
 		const int nNewLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eKillerType );
 		const int nNewLeaderLevel = pScenarioTracker->GetLeaderLevel( nPlayer, eKillerType );
-		const int nOldAbilityLevel = ( nOldLeaderLevel < 0 ) ? 0 : (std::min) ( nOldLevel, nOldLeaderLevel );
+		const int nOldAbilityLevel = ( nOldLeaderLevel < 0 ) ? 0 : (std::min)( nOldLevel, nOldLeaderLevel );
 		// Issue bonus
-		const NDb::SAIGameConsts *pConsts = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GetAIConsts();
+		const NDb::SAIGameConsts *pConsts = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetAIConsts();
 		for ( int i = 0; i < pConsts->common.expLevels.size(); ++i )
 		{
 			const NDb::SAIExpLevel *pLevels = pConsts->common.expLevels[i];
@@ -96,19 +98,21 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 
 				for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
 				{
-					CAIUnit *pUnit = dynamic_cast<CAIUnit*>( *iter );
+					CAIUnit *pUnit = dynamic_cast<CAIUnit *>( *iter );
 					if ( pUnit && pUnit->GetPlayer() == nPlayer && pUnit->GetReinforcementType() == eKillerType )
 					{
-						if ( nOldLevel != nNewLevel )				// Only if the own level changed. Don't bother if only leader's level changed
+						if ( nOldLevel != nNewLevel ) // Only if the own level changed. Don't bother if only leader's level changed
 						{
 							if ( pOldBonus )
 								pUnit->ApplyStatsModifier( pOldBonus, false );
 							if ( pNewBonus )
 								pUnit->ApplyStatsModifier( pNewBonus, true );
 						}
-						if ( nOldLeaderLevel != nNewLeaderLevel )				// Only if the leader's level changed. Don't bother if only own level changed
+						if ( nOldLeaderLevel !=
+						     nNewLeaderLevel ) // Only if the leader's level changed. Don't bother if only own level changed
 						{
-							const NDb::SUnitStatsModifier *pNewLeaderBonus = pScenarioTracker->GetLeaderModifier( nPlayer, eKillerType );
+							const NDb::SUnitStatsModifier *pNewLeaderBonus =
+									pScenarioTracker->GetLeaderModifier( nPlayer, eKillerType );
 							pUnit->ApplyStatsModifier( pOldLeaderBonus, false );
 							pUnit->ApplyStatsModifier( pNewLeaderBonus, true );
 						}
@@ -122,12 +126,12 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 
 		// Send update if levelled up
 		if ( pScenarioTracker->GetLeaderLevel( nPlayer, eKillerType ) != -1 && ( nPlayer == 0 || theDipl.IsNetGame() ) &&
-					nOldLeaderLevel != nNewLeaderLevel )
+		     nOldLeaderLevel != nNewLeaderLevel )
 		{
 			CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 			for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
-				if ( (*iter)->GetPlayer() == nPlayer && (*iter)->GetReinforcementType() == eKillerType )
-					pParam->unitIDs.push_back( (*iter)->GetUniqueID() );
+				if ( ( *iter )->GetPlayer() == nPlayer && ( *iter )->GetReinforcementType() == eKillerType )
+					pParam->unitIDs.push_back( ( *iter )->GetUniqueID() );
 
 			if ( nPlayer == theDipl.GetMyNumber() )
 				updater.AddUpdate( EFB_COMMANDER_LEVELUP, eKillerType, pParam );
@@ -156,10 +160,10 @@ const int CStatistics::GetAbilityLevel( const int nPlayer, const NDb::EReinforce
 	if ( !pScenarioTracker )
 		return 0;
 
-  const int nXPLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eType );
+	const int nXPLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eType );
 	const int nLeaderLevel = pScenarioTracker->GetLeaderLevel( nPlayer, eType );
 
-	return ( nLeaderLevel < 0 ) ? 0 : (std::min) ( nXPLevel, nLeaderLevel );
+	return ( nLeaderLevel < 0 ) ? 0 : (std::min)( nXPLevel, nLeaderLevel );
 }
 
 void CStatistics::ObjectDestroyed( const int nPlayer )
@@ -223,7 +227,7 @@ void CStatistics::UnitDead( CCommonUnit *pUnit )
 
 void CStatistics::IncreasePlayerExperience( const int nPlayer, const NDb::EReinforcementType eType, const float fPrice )
 {
-/*	IMissionStatistics * pStats = GetMissionStats( nPlayer );
+	/*	IMissionStatistics * pStats = GetMissionStats( nPlayer );
 	if ( pStats )
 	{
 		pStats->AddXP( eType, fPrice );
@@ -264,6 +268,6 @@ void CStatistics::SetCapturedFlags( const int nParty, const int nFlags )
 int CStatistics::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &bEnablePlayerExp );
-//SKIP	saver.Add( 4, &playerMisisons );
+	//SKIP	saver.Add( 4, &playerMisisons );
 	return 0;
 }

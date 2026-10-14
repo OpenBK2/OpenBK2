@@ -9,14 +9,14 @@
 
 int CWindowScrollableContainerBase::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, static_cast<CWindow*>( this ) );
-  saver.Add( 2, &pSelected );
+	saver.Add( 1, static_cast<CWindow *>( this ) );
+	saver.Add( 2, &pSelected );
 	saver.Add( 3, &pShared );
 	saver.Add( 4, &elementIDs );
-	saver.Add( 5, &nPosSize );															// total size of elements
+	saver.Add( 5, &nPosSize ); // total size of elements
 	saver.Add( 6, &pScrollBar );
-	saver.Add( 7, &pBorder );  // for clipping
-	saver.Add( 8, &pContainer );  // contains elements
+	saver.Add( 7, &pBorder );    // for clipping
+	saver.Add( 8, &pContainer ); // contains elements
 	saver.Add( 9, &elements );
 	saver.Add( 10, &pSelection );
 	saver.Add( 11, &pPreSelection );
@@ -47,29 +47,30 @@ void CWindowScrollableContainerBase::InitByDesc( const struct NDb::SUIDesc *_pDe
 {
 	CWindow::InitByDesc( _pDesc );
 
-	const NDb::SWindowScrollableContainerBase *pDesc = checked_cast<const NDb::SWindowScrollableContainerBase*>( _pDesc );
-  pShared = checked_cast_ptr<const NDb::SWindowScrollableContainerBaseShared *>( pDesc->pShared );
+	const NDb::SWindowScrollableContainerBase *pDesc =
+			checked_cast<const NDb::SWindowScrollableContainerBase *>( _pDesc );
+	pShared = checked_cast_ptr<const NDb::SWindowScrollableContainerBaseShared *>( pDesc->pShared );
 
 	// optional field
-	pScrollBar = checked_cast<CWindowScrollBar*>( CUIFactory::MakeWindow( pShared->pScrollBar ) );
+	pScrollBar = checked_cast<CWindowScrollBar *>( CUIFactory::MakeWindow( pShared->pScrollBar ) );
 	AddChild( pScrollBar, false );
 
 	// required field
-	pBorder = dynamic_cast<CWindowSimple*>( CUIFactory::MakeWindow( pShared->pBorder ) );
+	pBorder = dynamic_cast<CWindowSimple *>( CUIFactory::MakeWindow( pShared->pBorder ) );
 	AddChild( pBorder, false );
 	NI_ASSERT( pBorder, "Border not found" );
 	if ( pBorder )
 		pBorder->SetScrollViewport();
 
 	// optional field
-	pSelection = checked_cast<CWindow*>( CUIFactory::MakeWindow( pShared->pSelection ) );
-	pPreSelection = checked_cast<CWindow*>( CUIFactory::MakeWindow( pShared->pPreSelection ) );
+	pSelection = checked_cast<CWindow *>( CUIFactory::MakeWindow( pShared->pSelection ) );
+	pPreSelection = checked_cast<CWindow *>( CUIFactory::MakeWindow( pShared->pPreSelection ) );
 
-	pContainer = dynamic_cast<CWindowSimple*>( CUIFactory::MakeWindow( pShared->pBorder ) );
+	pContainer = dynamic_cast<CWindowSimple *>( CUIFactory::MakeWindow( pShared->pBorder ) );
 	NI_ASSERT( pContainer, "Can't create container" );
 	if ( pContainer )
 	{
-		pContainer->SetName( "" ); // служебные элементы не должны быть именованы
+		pContainer->SetName( "" );                 // служебные элементы не должны быть именованы
 		while ( pContainer->GetNumChildren() > 0 ) // клонированных детей у служебного элемента быть не должно
 		{
 			pContainer->RemoveChild( pContainer->GetChild( 0 ) );
@@ -101,18 +102,18 @@ void CWindowScrollableContainerBase::Reposition( const CTRect<float> &parentRect
 
 	if ( pSelection )
 	{
-		pSelection->SetName("");
+		pSelection->SetName( "" );
 		NI_VERIFY( pSelection->IsTransparent(),
-			"Error: Selection mask should be transparent, Setting Priority to -1",
-			pSelection->SetPriority( -1 ) );
+		           "Error: Selection mask should be transparent, Setting Priority to -1",
+		           pSelection->SetPriority( -1 ) );
 		pContainer->AddChild( pSelection, true );
 	}
 	if ( pPreSelection )
 	{
-		pPreSelection->SetName("");
+		pPreSelection->SetName( "" );
 		NI_VERIFY( pPreSelection->IsTransparent(),
-			"Error: PreSelection mask should be transparent, Setting Priority to -1",
-			pPreSelection->SetPriority( -1 ) );
+		           "Error: PreSelection mask should be transparent, Setting Priority to -1",
+		           pPreSelection->SetPriority( -1 ) );
 		pContainer->AddChild( pPreSelection, true );
 	}
 
@@ -127,17 +128,18 @@ CWindowScrollableContainerBase::CElements::iterator CWindowScrollableContainerBa
 	CElements::iterator after = elements.begin();
 	for ( ; after != elements.end(); ++after )
 	{
-		if ( after->szName == dynamic_cast<CWindow*>(pElement)->GetName() )
+		if ( after->szName == dynamic_cast<CWindow *>( pElement )->GetName() )
 			break;
 	}
 	return after;
 }
 
-CWindowScrollableContainerBase::CElements::iterator CWindowScrollableContainerBase::GetBefore( CWindowScrollableContainerBase::CElements::iterator after )
+CWindowScrollableContainerBase::CElements::iterator
+CWindowScrollableContainerBase::GetBefore( CWindowScrollableContainerBase::CElements::iterator after )
 {
 	CElements::iterator before = after;
 	if ( before != elements.end() )
-		++before;																// list insert before position, so we need ++after
+		++before; // list insert before position, so we need ++after
 	return before;
 }
 
@@ -145,9 +147,12 @@ void CWindowScrollableContainerBase::InsertAfter( IWindow *pElement, IWindow *pI
 {
 	CElements::iterator after = GetAfter( pElement );
 	CElements::iterator before = GetBefore( after );
-	CWindow * pNegativeSelection = pShared->pNegativeSelection ? checked_cast<CWindowScrollBar*>( CUIFactory::MakeWindow( pShared->pNegativeSelection ) ) : 0;
-	AddElement( dynamic_cast<CWindow*>( pInsert ), bSelectable, 0, pNegativeSelection );
-	elements.insert( before, SElement(  dynamic_cast<CWindow*>(pInsert), bSelectable, 0, pNegativeSelection ) );
+	CWindow *pNegativeSelection =
+			pShared->pNegativeSelection
+					? checked_cast<CWindowScrollBar *>( CUIFactory::MakeWindow( pShared->pNegativeSelection ) )
+					: 0;
+	AddElement( dynamic_cast<CWindow *>( pInsert ), bSelectable, 0, pNegativeSelection );
+	elements.insert( before, SElement( dynamic_cast<CWindow *>( pInsert ), bSelectable, 0, pNegativeSelection ) );
 }
 
 void CWindowScrollableContainerBase::RemoveItems()
@@ -162,14 +167,14 @@ void CWindowScrollableContainerBase::RemoveItems()
 	Update();
 }
 
-void CWindowScrollableContainerBase::Remove( IWindow * pRemove )
+void CWindowScrollableContainerBase::Remove( IWindow *pRemove )
 {
 	for ( CElements::iterator el = elements.begin(); el != elements.end(); )
 	{
-		if ( el->szName == dynamic_cast<CWindow*>(pRemove)->GetName() )
+		if ( el->szName == dynamic_cast<CWindow *>( pRemove )->GetName() )
 		{
 			elements.erase( el );
-			RemoveElement( dynamic_cast<CWindow*>( pRemove ) );
+			RemoveElement( dynamic_cast<CWindow *>( pRemove ) );
 			break;
 		}
 		++el;
@@ -202,11 +207,11 @@ void CWindowScrollableContainerBase::UpdateItemCoordinates( CWindowScrollableCon
 	int nPosSoFar = _from->nPos;
 
 	CElements::iterator from = _from;
-	while( from != elements.end() )
+	while ( from != elements.end() )
 	{
 		int nSizeY, nSizeX;
-		CWindow *pChild = dynamic_cast<CWindow*>(pContainer->GetChild( from->szName, false ));
-		CWindow *pNegativeSelection = dynamic_cast<CWindow*>(pContainer->GetChild( from->szNegativeSelection, false ));
+		CWindow *pChild = dynamic_cast<CWindow *>( pContainer->GetChild( from->szName, false ) );
+		CWindow *pNegativeSelection = dynamic_cast<CWindow *>( pContainer->GetChild( from->szNegativeSelection, false ) );
 		pChild->GetPlacement( 0, 0, &nSizeX, &nSizeY );
 		if ( IsHorisontal() )
 		{
@@ -222,7 +227,7 @@ void CWindowScrollableContainerBase::UpdateItemCoordinates( CWindowScrollableCon
 		++from;
 		if ( pNegativeSelection )
 		{
-			UpdateSelectionPosition( pNegativeSelection, pChild);
+			UpdateSelectionPosition( pNegativeSelection, pChild );
 			pNegativeSelection->ShowWindow( pChild != pSelected );
 		}
 
@@ -239,7 +244,7 @@ void CWindowScrollableContainerBase::RemoveElement( CWindow *pElement )
 	CWindowScrollableContainerBase::CElements::iterator pos = GetAfter( pElement );
 
 	const int nID = NStr::ToInt( pElement->GetName() );
-	NI_ASSERT( nID != 0, fmt::format("not native element \"{}\"", pElement->GetName() ));
+	NI_ASSERT( nID != 0, fmt::format( "not native element \"{}\"", pElement->GetName() ) );
 	elementIDs.Return( nID );
 	pContainer->RemoveChild( pElement );
 	Update();
@@ -253,7 +258,7 @@ void CWindowScrollableContainerBase::RemoveElement( CWindow *pElement )
 		// find next and select
 		if ( pos != elements.end() )
 		{
-			IWindow * pNewSel = pContainer->GetChild( pos->szName, true );
+			IWindow *pNewSel = pContainer->GetChild( pos->szName, true );
 			if ( pNewSel )
 				Select( pNewSel );
 		}
@@ -277,7 +282,7 @@ void CWindowScrollableContainerBase::UpdateSelectionPosition( IWindow *_pSelecti
 	else
 	{
 		int nY, nX, nW, nH;
-		dynamic_cast<CWindow*>( _pSelected )->GetPlacement( &nX, &nY, 0, &nH );
+		dynamic_cast<CWindow *>( _pSelected )->GetPlacement( &nX, &nY, 0, &nH );
 		pContainer->GetPlacement( 0, 0, &nW, 0 );
 		_pSelection->SetPlacement( nX, nY, nW, nH, EWPF_ALL );
 		_pSelection->ShowWindow( true );
@@ -287,7 +292,7 @@ void CWindowScrollableContainerBase::UpdateSelectionPosition( IWindow *_pSelecti
 void CWindowScrollableContainerBase::EnsureElementVisible( IWindow *pElement )
 {
 	int nX, nY;
-	CWindow *pEl = dynamic_cast<CWindow*>( pElement );
+	CWindow *pEl = dynamic_cast<CWindow *>( pElement );
 
 	pEl->GetPlacement( &nX, &nY, 0, 0 );
 	if ( pScrollBar )
@@ -299,9 +304,12 @@ void CWindowScrollableContainerBase::EnsureElementVisible( IWindow *pElement )
 	}
 }
 
-void CWindowScrollableContainerBase::AddElement( CWindow *pElement, const bool _bSelectable, const int _nPosSize, CWindow *pNegativeSelection )
+void CWindowScrollableContainerBase::AddElement( CWindow *pElement,
+                                                 const bool _bSelectable,
+                                                 const int _nPosSize,
+                                                 CWindow *pNegativeSelection )
 {
-	pElement->SetName( std::to_string(elementIDs.Get()) );
+	pElement->SetName( std::to_string( elementIDs.Get() ) );
 	pContainer->AddChild( pElement, false );
 	pElement->SetClickNotify( this );
 	pElement->ShowWindow( true );
@@ -316,13 +324,16 @@ void CWindowScrollableContainerBase::AddElement( CWindow *pElement, const bool _
 
 void CWindowScrollableContainerBase::PushBack( IWindow *_pElement, const bool bSelectable )
 {
-	CWindow *pElement = dynamic_cast<CWindow*>( _pElement );
+	CWindow *pElement = dynamic_cast<CWindow *>( _pElement );
 
 	nPosSize += elements.empty() ? 0 : pShared->nInterval;
 
-	CWindow * pNegativeSelection = pShared->pNegativeSelection ? checked_cast<CWindowScrollBar*>( CUIFactory::MakeWindow( pShared->pNegativeSelection ) ) : 0;
+	CWindow *pNegativeSelection =
+			pShared->pNegativeSelection
+					? checked_cast<CWindowScrollBar *>( CUIFactory::MakeWindow( pShared->pNegativeSelection ) )
+					: 0;
 	AddElement( pElement, bSelectable, nPosSize, pNegativeSelection );
-	elements.push_back( SElement(pElement, bSelectable, nPosSize, pNegativeSelection) );
+	elements.push_back( SElement( pElement, bSelectable, nPosSize, pNegativeSelection ) );
 
 	int nElementH, nElementW;
 
@@ -360,7 +371,6 @@ void CWindowScrollableContainerBase::UpdateScrollBar()
 		pContainer->SetPlacement( 0, 0, nPosSize, 0, EWPF_SIZE_X );
 		if ( pScrollBar )
 			pScrollBar->SetRange( 0, nPosSize, nBorderW );
-
 	}
 	else
 	{
@@ -400,28 +410,28 @@ void CWindowScrollableContainerBase::Init()
 	elements.clear();
 	CWindow::Init();
 	for ( CElements::iterator it = elements.begin(); it != elements.end(); ++it )
-		(dynamic_cast<CWindow*>(pContainer->GetChild( it->szName, false )))->SetClickNotify( this );
+		( dynamic_cast<CWindow *>( pContainer->GetChild( it->szName, false ) ) )->SetClickNotify( this );
 	UpdateSelectionPosition( pPreSelection, pPreSelected );
 	UpdateSelectionPosition( pSelection, pSelected );
 }
 
-CWindow* CWindowScrollableContainerBase::GetElement( const std::string &szName )
+CWindow *CWindowScrollableContainerBase::GetElement( const std::string &szName )
 {
-	return dynamic_cast<CWindow*>(pContainer->GetChild( szName, false ));
+	return dynamic_cast<CWindow *>( pContainer->GetChild( szName, false ) );
 }
 
 void CWindowScrollableContainerBase::SelectWithSelection( IWindow *pElement, IWindow *_pSelection )
 {
 	if ( !_pSelection )
 		return;
-	if ( !pElement )			//0 as parameter, unselect
+	if ( !pElement ) //0 as parameter, unselect
 	{
 		UpdateSelectionPosition( _pSelection, pElement );
 		return;
 	}
 	for ( CElements::iterator it = elements.begin(); it != elements.end(); ++it )
 	{
-		if ( it->szName == dynamic_cast<CWindow*>( pElement )->GetName() )
+		if ( it->szName == dynamic_cast<CWindow *>( pElement )->GetName() )
 		{
 			if ( it->bSelectable )
 				UpdateSelectionPosition( _pSelection, pElement );
@@ -447,7 +457,7 @@ void CWindowScrollableContainerBase::Select( IWindow *pElement )
 			{
 				if ( pSelected->GetName() == it->szName )
 				{
-					IWindow * pNS = pContainer->GetChild( it->szNegativeSelection, false );
+					IWindow *pNS = pContainer->GetChild( it->szNegativeSelection, false );
 					if ( pNS )
 					{
 						pNS->ShowWindow( true );
@@ -463,7 +473,7 @@ void CWindowScrollableContainerBase::Select( IWindow *pElement )
 			{
 				if ( pElement->GetName() == it->szName )
 				{
-					IWindow * pNS = pContainer->GetChild( it->szNegativeSelection, false );
+					IWindow *pNS = pContainer->GetChild( it->szNegativeSelection, false );
 					if ( pNS )
 						pNS->ShowWindow( false );
 					break;
@@ -480,24 +490,25 @@ void CWindowScrollableContainerBase::Select( IWindow *pElement )
 
 void CWindowScrollableContainerBase::DoubleClicked( struct IWindow *pWho, int nButton )
 {
-	GetScreen()->RunAnimationSequienceForward( checked_cast<NDb::SWindowScrollableContainerBase*>(GetInstance())->onDoubleClick, this );
+	GetScreen()->RunAnimationSequienceForward(
+			checked_cast<NDb::SWindowScrollableContainerBase *>( GetInstance() )->onDoubleClick, this );
 }
 
 void CWindowScrollableContainerBase::Clicked( struct IWindow *pWho, int nButton )
 {
-	if ( (MSTATE_BUTTON1 & nButton) )
+	if ( ( MSTATE_BUTTON1 & nButton ) )
 		Select( pWho );
 }
 
-IWindow * CWindowScrollableContainerBase::GetItem( const std::string &szName )
+IWindow *CWindowScrollableContainerBase::GetItem( const std::string &szName )
 {
 	return pContainer->GetChild( szName, false );
 }
 
 int CWindowScrollableContainerBase::GetItemNumber( IWindow *pElement )
 {
-	CWindow *pWnd = dynamic_cast<CWindow*>( pElement );
-	if( pWnd->GetParent() == pContainer )
+	CWindow *pWnd = dynamic_cast<CWindow *>( pElement );
+	if ( pWnd->GetParent() == pContainer )
 		return NStr::ToInt( pWnd->GetName() ) - 1;
 	return -1;
 }
@@ -535,7 +546,7 @@ void CWindowScrollableContainerBase::ResetScroller()
 void CWindowScrollableContainerBase::SetDiscreteScroll( int nVisibleSlots )
 {
 	if ( pScrollBar )
-		pScrollBar->SetNSpecialPositions( nVisibleSlots == -1 ? 0 : elements.size() - (nVisibleSlots - 1) );
+		pScrollBar->SetNSpecialPositions( nVisibleSlots == -1 ? 0 : elements.size() - ( nVisibleSlots - 1 ) );
 
 	UpdateScrollBar();
 }

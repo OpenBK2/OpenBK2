@@ -13,30 +13,39 @@ namespace NAnimation
 //
 class CProgrammableChannel : public CFuncBase<float>
 {
-	OBJECT_NOCOPY_METHODS(CProgrammableChannel);
+	OBJECT_NOCOPY_METHODS( CProgrammableChannel );
 
 private:
 	struct SSegment
 	{
 		ZDATA
-			STime tStartTime;
+		STime tStartTime;
 		STime tEndTime;
 		float fValue;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&tStartTime); f.Add(3,&tEndTime); f.Add(4,&fValue); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &tStartTime );
+			f.Add( 3, &tEndTime );
+			f.Add( 4, &fValue );
+			return 0;
+		}
 	};
 	ZDATA
-		CDGPtr< CFuncBase<STime> > pTime;
+	CDGPtr<CFuncBase<STime>> pTime;
 	std::vector<SSegment> segments;
 	float fDefaultValue;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTime); f.Add(3,&segments); f.Add(4,&fDefaultValue); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pTime );
+		f.Add( 3, &segments );
+		f.Add( 4, &fDefaultValue );
+		return 0;
+	}
 
 protected:
-	CProgrammableChannel() : CFuncBase<float>(0.f), fDefaultValue(0.f) {}
+	CProgrammableChannel() : CFuncBase<float>( 0.f ), fDefaultValue( 0.f ) {}
 
-	virtual bool NeedUpdate()
-	{
-		return IsValid(pTime) && pTime.Refresh();
-	}
+	virtual bool NeedUpdate() { return IsValid( pTime ) && pTime.Refresh(); }
 	virtual void Recalc()
 	{
 		STime time = pTime->GetValue();
@@ -54,9 +63,9 @@ protected:
 
 public:
 	CProgrammableChannel( CFuncBase<STime> *_pTime, float _fDefaultValue = 0.f )
-		: CFuncBase<float>(_fDefaultValue), pTime(_pTime), fDefaultValue(_fDefaultValue)
+			: CFuncBase<float>( _fDefaultValue ), pTime( _pTime ), fDefaultValue( _fDefaultValue )
 	{
-		ASSERT(IsValid(pTime));
+		ASSERT( IsValid( pTime ) );
 	}
 
 	void SetDefaultValue( float fValue )
@@ -74,9 +83,6 @@ public:
 		Updated();
 	}
 
-	bool HasSegments()
-	{
-		return !segments.empty();
-	}
+	bool HasSegments() { return !segments.empty(); }
 };
 }

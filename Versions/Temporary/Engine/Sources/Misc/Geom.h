@@ -22,44 +22,124 @@
 class MISC_EXPORT CVec2
 {
 public:
-  union
-  {
-    struct { float x, y; };
-    struct { float u, v; };             // for texture coord
+	union
+	{
+		struct
+		{
+			float x, y;
+		};
+		struct
+		{
+			float u, v;
+		}; // for texture coord
 		float m[2];
-  };
-public:
-  // Initialize one union storage arm; the overlapping aliases stay plain fields.
-  CVec2() : m{} {  }
-  CVec2( const float _x, const float _y ) : x( _x ), y( _y ) {  }
-  // setup
-  void Set( const float _x, const float _y ) { x = _x; y = _y; }
-  // indexed access
-  float& operator[]( int i ) { return m[i]; };
-  const float& operator[]( int i ) const { return m[i]; }
-  // comparison
-	bool operator==( const CVec2 &v ) const { return ( (v.x == x) && (v.y == y) ); }
-	bool operator!=( const CVec2 &v ) const { return ( (v.x != x) || (v.y != y) ); }
-  // internal data non-math modification
-  void Maximize( const CVec2 &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); }
-  void Minimize( const CVec2 &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); }
-  //
-  void Negate( const CVec2 &v ) { x = -v.x; y = -v.y; } // this = -v
-  void Negate() { x = -x; y = -y; }     // this = -this
-  void Add( const CVec2 &v1, const CVec2 &v2 ) { x = v1.x + v2.x; y = v1.y + v2.y; } // this = v1 + v2
-  void Sub( const CVec2 &v1, const CVec2 &v2 ) { x = v1.x - v2.x; y = v1.y - v2.y; } // this = v1 - v2
-  void Displace( const CVec2 &v1, const CVec2 &v2, const float t ) { x = v1.x + t*v2.x; y = v1.y + t*v2.y; } //  this = v1 + t*v2
-  void Displace( const CVec2 &v, const float t ) { x += t*v.x; y += t*v.y; } //  this += t*v;
-	void Lerp( const float t, const CVec2 &v1, const CVec2 &v2 ) { x = t*v2.x + (1 - t)*v1.x; y = t*v2.y + (1 - t)*v1.y; } //this = (1 - t)*v1 + t*v2
-  void Interpolate( const CVec2 &v1, const CVec2 &v2, const float t ) { Lerp(t, v1, v2); }
-	CVec2& CProduct( const CVec2& v ) {  const float oldX = x; x = oldX * v.x - y * v.y; y = oldX * v.y + y * v.x; return *this; }
+	};
 
-  // mathematical operations
-	CVec2& operator^=( const CVec2& v ) {  const float oldX = x; x = oldX * v.x - y * v.y; y = oldX * v.y + y * v.x; return *this; }
-  CVec2& operator+=( const CVec2 &v ) { x += v.x; y += v.y; return *this; }
-  CVec2& operator-=( const CVec2 &v ) { x -= v.x; y -= v.y; return *this; }
-  CVec2& operator*=( const float d ) { x *= d; y *= d; return *this; }
-  CVec2& operator/=( const float d ) { float d1 = 1.0f / d; x *= d1; y *= d1; return *this; }
+public:
+	// Initialize one union storage arm; the overlapping aliases stay plain fields.
+	CVec2() : m{} {}
+	CVec2( const float _x, const float _y ) : x( _x ), y( _y ) {}
+	// setup
+	void Set( const float _x, const float _y )
+	{
+		x = _x;
+		y = _y;
+	}
+	// indexed access
+	float &operator[]( int i ) { return m[i]; };
+	const float &operator[]( int i ) const { return m[i]; }
+	// comparison
+	bool operator==( const CVec2 &v ) const { return ( ( v.x == x ) && ( v.y == y ) ); }
+	bool operator!=( const CVec2 &v ) const { return ( ( v.x != x ) || ( v.y != y ) ); }
+	// internal data non-math modification
+	void Maximize( const CVec2 &v )
+	{
+		x = (std::max)( x, v.x );
+		y = (std::max)( y, v.y );
+	}
+	void Minimize( const CVec2 &v )
+	{
+		x = (std::min)( x, v.x );
+		y = (std::min)( y, v.y );
+	}
+	//
+	void Negate( const CVec2 &v )
+	{
+		x = -v.x;
+		y = -v.y;
+	} // this = -v
+	void Negate()
+	{
+		x = -x;
+		y = -y;
+	} // this = -this
+	void Add( const CVec2 &v1, const CVec2 &v2 )
+	{
+		x = v1.x + v2.x;
+		y = v1.y + v2.y;
+	} // this = v1 + v2
+	void Sub( const CVec2 &v1, const CVec2 &v2 )
+	{
+		x = v1.x - v2.x;
+		y = v1.y - v2.y;
+	} // this = v1 - v2
+	void Displace( const CVec2 &v1, const CVec2 &v2, const float t )
+	{
+		x = v1.x + t * v2.x;
+		y = v1.y + t * v2.y;
+	} //  this = v1 + t*v2
+	void Displace( const CVec2 &v, const float t )
+	{
+		x += t * v.x;
+		y += t * v.y;
+	} //  this += t*v;
+	void Lerp( const float t, const CVec2 &v1, const CVec2 &v2 )
+	{
+		x = t * v2.x + ( 1 - t ) * v1.x;
+		y = t * v2.y + ( 1 - t ) * v1.y;
+	} //this = (1 - t)*v1 + t*v2
+	void Interpolate( const CVec2 &v1, const CVec2 &v2, const float t ) { Lerp( t, v1, v2 ); }
+	CVec2 &CProduct( const CVec2 &v )
+	{
+		const float oldX = x;
+		x = oldX * v.x - y * v.y;
+		y = oldX * v.y + y * v.x;
+		return *this;
+	}
+
+	// mathematical operations
+	CVec2 &operator^=( const CVec2 &v )
+	{
+		const float oldX = x;
+		x = oldX * v.x - y * v.y;
+		y = oldX * v.y + y * v.x;
+		return *this;
+	}
+	CVec2 &operator+=( const CVec2 &v )
+	{
+		x += v.x;
+		y += v.y;
+		return *this;
+	}
+	CVec2 &operator-=( const CVec2 &v )
+	{
+		x -= v.x;
+		y -= v.y;
+		return *this;
+	}
+	CVec2 &operator*=( const float d )
+	{
+		x *= d;
+		y *= d;
+		return *this;
+	}
+	CVec2 &operator/=( const float d )
+	{
+		float d1 = 1.0f / d;
+		x *= d1;
+		y *= d1;
+		return *this;
+	}
 };
 const CVec2 VNULL2 = CVec2( 0, 0 );
 const CVec2 V2_AXIS_X = CVec2( 1, 0 );
@@ -67,65 +147,191 @@ const CVec2 V2_AXIS_Y = CVec2( 0, 1 );
 
 inline const float Cross( const CVec2 &a, const CVec2 &b )
 {
-	return a.x*b.y - a.y*b.x;
+	return a.x * b.y - a.y * b.x;
 }
 
-inline const CVec2 operator-( const CVec2 &a) { return CVec2(-a.x, -a.y); }
-inline const CVec2 operator+( const CVec2 &a, const CVec2 &b ) { return CVec2( a.x + b.x, a.y + b.y ); }
-inline const CVec2 operator-( const CVec2 &a, const CVec2 &b ) { return CVec2( a.x - b.x, a.y - b.y ); }
-inline float operator*( const CVec2 &a, const CVec2 &b ) { return ( a.x*b.x + a.y*b.y ); }
-inline const CVec2 operator*( const CVec2 &a, const float b ) { return CVec2( a.x*b, a.y*b ); }
-inline const CVec2 operator*( const float a, const CVec2 &b ) { return CVec2( b.x*a, b.y*a ); }
-inline const CVec2 operator/( const CVec2 &a, const float b ) { float b1 = 1.0f/b; return CVec2( a.x*b1, a.y*b1 ); }
-inline float fabs2( const CVec2 &a ) { return fabs2( a.x, a.y ); }
-inline float fabs( const CVec2 &a ) { return fabs( a.x, a.y ); }
-inline bool Normalize( CVec2 *pVec ) { return Normalize(pVec->x, pVec->y); }
-inline const CVec2 operator^( const CVec2 &a, const CVec2 &b ) { CVec2 vRes( a ); vRes ^= b; return vRes; }
-inline const CVec2 CProduct( const CVec2 &a, const CVec2 &b ) { CVec2 vRes( a ); vRes.CProduct( b ); return vRes; }
+inline const CVec2 operator-( const CVec2 &a )
+{
+	return CVec2( -a.x, -a.y );
+}
+inline const CVec2 operator+( const CVec2 &a, const CVec2 &b )
+{
+	return CVec2( a.x + b.x, a.y + b.y );
+}
+inline const CVec2 operator-( const CVec2 &a, const CVec2 &b )
+{
+	return CVec2( a.x - b.x, a.y - b.y );
+}
+inline float operator*( const CVec2 &a, const CVec2 &b )
+{
+	return ( a.x * b.x + a.y * b.y );
+}
+inline const CVec2 operator*( const CVec2 &a, const float b )
+{
+	return CVec2( a.x * b, a.y * b );
+}
+inline const CVec2 operator*( const float a, const CVec2 &b )
+{
+	return CVec2( b.x * a, b.y * a );
+}
+inline const CVec2 operator/( const CVec2 &a, const float b )
+{
+	float b1 = 1.0f / b;
+	return CVec2( a.x * b1, a.y * b1 );
+}
+inline float fabs2( const CVec2 &a )
+{
+	return fabs2( a.x, a.y );
+}
+inline float fabs( const CVec2 &a )
+{
+	return fabs( a.x, a.y );
+}
+inline bool Normalize( CVec2 *pVec )
+{
+	return Normalize( pVec->x, pVec->y );
+}
+inline const CVec2 operator^( const CVec2 &a, const CVec2 &b )
+{
+	CVec2 vRes( a );
+	vRes ^= b;
+	return vRes;
+}
+inline const CVec2 CProduct( const CVec2 &a, const CVec2 &b )
+{
+	CVec2 vRes( a );
+	vRes.CProduct( b );
+	return vRes;
+}
 
 // 3D vector
 class CVec3
 {
 public:
-  union
-  {
-    struct { float x, y, z; };
-    struct { float r, g, b; };          // for color components
-    struct { float u, v, q; };          // for texture coord
+	union
+	{
+		struct
+		{
+			float x, y, z;
+		};
+		struct
+		{
+			float r, g, b;
+		}; // for color components
+		struct
+		{
+			float u, v, q;
+		}; // for texture coord
 		float m[3];
-  };
+	};
+
 public:
-  CVec3() : m{} {  }
-  CVec3( const float _x, const float _y, const float _z ) : x( _x ), y( _y ), z( _z ) {  }
-  //CVec3( const float _x, const float _y, const float _z = 0.0f ) : x( _x ), y( _y ), z( _z ) {  }
-  CVec3( const CVec2 &v2, const float _z ) : x( v2.x ), y( v2.y ), z( _z ) {  }
-  // cross-vector assignment
-  //CVec3& operator=( const CVec2 &v ) { x = v.x; y = v.y; z = 0.0f; return *this; }
-  // setup
-  void Set( const float _x, const float _y, const float _z ) { x = _x; y = _y; z = _z; }
-  // indexed access
-  float& operator[]( int i ) { return m[i]; };
-  const float& operator[]( int i ) const { return m[i]; }
-  // comparison
-	bool operator==( const CVec3 &v ) const { return ( (v.x == x) && (v.y == y) && (v.z == z) ); }
-	bool operator!=( const CVec3 &v ) const { return ( (v.x != x) || (v.y != y) || (v.z != z) ); }
-  // internal data non-math modification
-  void Maximize( const CVec3 &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); z = (std::max)( z, v.z ); }
-  void Minimize( const CVec3 &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); z = (std::min)( z, v.z ); }
-  //
-  void Negate( const CVec3 &v ) { x = -v.x; y = -v.y; z = -v.z; } // this = -v
-  void Negate() { x = -x; y = -y; z = -z; }     // this = -this
-  void Add( const CVec3 &v1, const CVec3 &v2 ) { x = v1.x + v2.x; y = v1.y + v2.y; z = v1.z + v2.z; } // this = v1 + v2
-  void Sub( const CVec3 &v1, const CVec3 &v2 ) { x = v1.x - v2.x; y = v1.y - v2.y; z = v1.z - v2.z; } // this = v1 - v2
-  void Displace( const CVec3 &v1, const CVec3 &v2, const float t ) { x = v1.x + t*v2.x; y = v1.y + t*v2.y; z = v1.z + t*v2.z; } //  this = v1 + t*v2
-  void Displace( const CVec3 &v, const float t ) { x += t*v.x; y += t*v.y; z += t*v.z; } //  this += t*v;
-  void Lerp( const float t, const CVec3 &v1, const CVec3 &v2 ) { x = t*v2.x + (1 - t)*v1.x; y = t*v2.y + (1 - t)*v1.y; z = t*v2.z + (1 - t)*v1.z; } //this = (1 - t)*v1 + t*v2
-  void Interpolate( const CVec3 &v1, const CVec3 &v2, const float t ) { Lerp(t, v1, v2); }
-  // mathematical operations
-  CVec3& operator+=( const CVec3 &v ) { x += v.x; y += v.y; z += v.z; return *this; }
-  CVec3& operator-=( const CVec3 &v ) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-  CVec3& operator*=( const float d ) { x *= d; y *= d; z *= d; return *this; }
-  CVec3& operator/=( const float d ) { float d1 = 1.0f / d; x *= d1; y *= d1; z *= d1; return *this; }
+	CVec3() : m{} {}
+	CVec3( const float _x, const float _y, const float _z ) : x( _x ), y( _y ), z( _z ) {}
+	//CVec3( const float _x, const float _y, const float _z = 0.0f ) : x( _x ), y( _y ), z( _z ) {  }
+	CVec3( const CVec2 &v2, const float _z ) : x( v2.x ), y( v2.y ), z( _z ) {}
+	// cross-vector assignment
+	//CVec3& operator=( const CVec2 &v ) { x = v.x; y = v.y; z = 0.0f; return *this; }
+	// setup
+	void Set( const float _x, const float _y, const float _z )
+	{
+		x = _x;
+		y = _y;
+		z = _z;
+	}
+	// indexed access
+	float &operator[]( int i ) { return m[i]; };
+	const float &operator[]( int i ) const { return m[i]; }
+	// comparison
+	bool operator==( const CVec3 &v ) const { return ( ( v.x == x ) && ( v.y == y ) && ( v.z == z ) ); }
+	bool operator!=( const CVec3 &v ) const { return ( ( v.x != x ) || ( v.y != y ) || ( v.z != z ) ); }
+	// internal data non-math modification
+	void Maximize( const CVec3 &v )
+	{
+		x = (std::max)( x, v.x );
+		y = (std::max)( y, v.y );
+		z = (std::max)( z, v.z );
+	}
+	void Minimize( const CVec3 &v )
+	{
+		x = (std::min)( x, v.x );
+		y = (std::min)( y, v.y );
+		z = (std::min)( z, v.z );
+	}
+	//
+	void Negate( const CVec3 &v )
+	{
+		x = -v.x;
+		y = -v.y;
+		z = -v.z;
+	} // this = -v
+	void Negate()
+	{
+		x = -x;
+		y = -y;
+		z = -z;
+	} // this = -this
+	void Add( const CVec3 &v1, const CVec3 &v2 )
+	{
+		x = v1.x + v2.x;
+		y = v1.y + v2.y;
+		z = v1.z + v2.z;
+	} // this = v1 + v2
+	void Sub( const CVec3 &v1, const CVec3 &v2 )
+	{
+		x = v1.x - v2.x;
+		y = v1.y - v2.y;
+		z = v1.z - v2.z;
+	} // this = v1 - v2
+	void Displace( const CVec3 &v1, const CVec3 &v2, const float t )
+	{
+		x = v1.x + t * v2.x;
+		y = v1.y + t * v2.y;
+		z = v1.z + t * v2.z;
+	} //  this = v1 + t*v2
+	void Displace( const CVec3 &v, const float t )
+	{
+		x += t * v.x;
+		y += t * v.y;
+		z += t * v.z;
+	} //  this += t*v;
+	void Lerp( const float t, const CVec3 &v1, const CVec3 &v2 )
+	{
+		x = t * v2.x + ( 1 - t ) * v1.x;
+		y = t * v2.y + ( 1 - t ) * v1.y;
+		z = t * v2.z + ( 1 - t ) * v1.z;
+	} //this = (1 - t)*v1 + t*v2
+	void Interpolate( const CVec3 &v1, const CVec3 &v2, const float t ) { Lerp( t, v1, v2 ); }
+	// mathematical operations
+	CVec3 &operator+=( const CVec3 &v )
+	{
+		x += v.x;
+		y += v.y;
+		z += v.z;
+		return *this;
+	}
+	CVec3 &operator-=( const CVec3 &v )
+	{
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+		return *this;
+	}
+	CVec3 &operator*=( const float d )
+	{
+		x *= d;
+		y *= d;
+		z *= d;
+		return *this;
+	}
+	CVec3 &operator/=( const float d )
+	{
+		float d1 = 1.0f / d;
+		x *= d1;
+		y *= d1;
+		z *= d1;
+		return *this;
+	}
 };
 
 const CVec3 VNULL3 = CVec3( 0, 0, 0 );
@@ -135,69 +341,226 @@ const CVec3 V3_AXIS_Z = CVec3( 0, 0, 1 );
 
 struct SVec3Hash
 {
-	int operator()( const CVec3 &a ) const { const int *p = (const int*)&a; return p[0] ^ p[1] ^ p[2]; }
+	int operator()( const CVec3 &a ) const
+	{
+		const int *p = (const int *)&a;
+		return p[0] ^ p[1] ^ p[2];
+	}
 };
 
-inline const CVec3 operator-( const CVec3 &a) { return CVec3(-a.x, -a.y, -a.z); }
-inline const CVec3 operator+( const CVec3 &a, const CVec3 &b ) { return CVec3( a.x + b.x, a.y + b.y, a.z + b.z ); }
-inline const CVec3 operator-( const CVec3 &a, const CVec3 &b ) { return CVec3( a.x - b.x, a.y - b.y, a.z - b.z ); }
-inline float operator*( const CVec3 &a, const CVec3 &b ) { return ( a.x*b.x + a.y*b.y + a.z*b.z ); }
-inline const CVec3 operator*( const CVec3 &a, const float b ) { return CVec3( a.x*b, a.y*b, a.z*b ); }
-inline const CVec3 operator*( const float a, const CVec3 &b ) { return CVec3( b.x*a, b.y*a, b.z*a ); }
-inline const CVec3 operator/( const CVec3 &a, const float b ) { float b1 = 1.0f/b; return CVec3( a.x*b1, a.y*b1, a.z*b1 ); }
-inline const CVec3 operator^( const CVec3 &a, const CVec3 &b ) { return CVec3( a.y*b.z - b.y*a.z, a.z*b.x - b.z*a.x, a.x*b.y - b.x*a.y ); }
-inline float fabs2( const CVec3 &a ) { return fabs2( a.x, a.y, a.z ); }
-inline float fabs( const CVec3 &a ) { return fabs( a.x, a.y, a.z ); }
-inline bool Normalize( CVec3 *pVec ) { return Normalize(pVec->x, pVec->y, pVec->z); }
+inline const CVec3 operator-( const CVec3 &a )
+{
+	return CVec3( -a.x, -a.y, -a.z );
+}
+inline const CVec3 operator+( const CVec3 &a, const CVec3 &b )
+{
+	return CVec3( a.x + b.x, a.y + b.y, a.z + b.z );
+}
+inline const CVec3 operator-( const CVec3 &a, const CVec3 &b )
+{
+	return CVec3( a.x - b.x, a.y - b.y, a.z - b.z );
+}
+inline float operator*( const CVec3 &a, const CVec3 &b )
+{
+	return ( a.x * b.x + a.y * b.y + a.z * b.z );
+}
+inline const CVec3 operator*( const CVec3 &a, const float b )
+{
+	return CVec3( a.x * b, a.y * b, a.z * b );
+}
+inline const CVec3 operator*( const float a, const CVec3 &b )
+{
+	return CVec3( b.x * a, b.y * a, b.z * a );
+}
+inline const CVec3 operator/( const CVec3 &a, const float b )
+{
+	float b1 = 1.0f / b;
+	return CVec3( a.x * b1, a.y * b1, a.z * b1 );
+}
+inline const CVec3 operator^( const CVec3 &a, const CVec3 &b )
+{
+	return CVec3( a.y * b.z - b.y * a.z, a.z * b.x - b.z * a.x, a.x * b.y - b.x * a.y );
+}
+inline float fabs2( const CVec3 &a )
+{
+	return fabs2( a.x, a.y, a.z );
+}
+inline float fabs( const CVec3 &a )
+{
+	return fabs( a.x, a.y, a.z );
+}
+inline bool Normalize( CVec3 *pVec )
+{
+	return Normalize( pVec->x, pVec->y, pVec->z );
+}
 
-inline uint8_t floatToByte( const float fNumber ) { return uint8_t( fNumber * 127.0f ); }
-inline float byteToFloat( const uint8_t cNumber ) { return float( char( cNumber ) ) / 127.0f; }
-inline uint32_t Vec3ToDWORD( const CVec3 &v ) { return uint32_t( floatToByte( v.x ) ) | ( uint32_t( floatToByte( v.y ) ) << 8 ) | ( uint32_t( floatToByte( v.z ) ) << 16 ); }
-inline const CVec3 DWORDToVec3( uint32_t dwVector ) { return CVec3( byteToFloat( dwVector & 0xff ), byteToFloat( (dwVector >> 8) & 0xff ), byteToFloat( (dwVector >> 16) & 0xff ) ); }
+inline uint8_t floatToByte( const float fNumber )
+{
+	return uint8_t( fNumber * 127.0f );
+}
+inline float byteToFloat( const uint8_t cNumber )
+{
+	return float( char( cNumber ) ) / 127.0f;
+}
+inline uint32_t Vec3ToDWORD( const CVec3 &v )
+{
+	return uint32_t( floatToByte( v.x ) ) | ( uint32_t( floatToByte( v.y ) ) << 8 ) |
+	       ( uint32_t( floatToByte( v.z ) ) << 16 );
+}
+inline const CVec3 DWORDToVec3( uint32_t dwVector )
+{
+	return CVec3( byteToFloat( dwVector & 0xff ),
+	              byteToFloat( ( dwVector >> 8 ) & 0xff ),
+	              byteToFloat( ( dwVector >> 16 ) & 0xff ) );
+}
 
 // 4D vector
 class MISC_EXPORT CVec4
 {
 public:
-  union
-  {
-    struct { float x, y, z, w; };
-    struct { float r, g, b, a; };				// for color components
-    struct { float u, v, q; };				// for texture coord, the 4th float is w / a / m[3]
+	union
+	{
+		struct
+		{
+			float x, y, z, w;
+		};
+		struct
+		{
+			float r, g, b, a;
+		}; // for color components
+		struct
+		{
+			float u, v, q;
+		}; // for texture coord, the 4th float is w / a / m[3]
 		float m[4];
-  };
+	};
+
 public:
-  CVec4() : m{} {  }
-  CVec4( const float _x, const float _y, const float _z, const float _w ) : x( _x ), y( _y ), z( _z ), w( _w ) {  }
-  //CVec4( const float _x, const float _y, const float _z = 0.0f, const float _w = 0.0f ) : x( _x ), y( _y ), z( _z ), w( _w ) {  }
-  CVec4( const CVec2 &v2, const float _z, const float _w ) : x( v2.x ), y( v2.y ), z( _z ), w( _w ) {  }
-  CVec4( const CVec3 &v3, const float _w ) : x( v3.x ), y( v3.y ), z( v3.z ), w( _w ) {  }
-  // setup
-  void Set( const float _x, const float _y, const float _z, const float _w ) { x = _x; y = _y; z = _z; w = _w; }
-	void Set( const CVec3 &v, const float _w ) { x = v.x, y = v.y; z = v.z; w = _w; }
-  // indexed access
-  float& operator[]( int i ) { return m[i]; };
-  const float& operator[]( int i ) const { return m[i]; }
-  // comparison
-	bool operator==( const CVec4 &v ) const { return ( (v.x == x) && (v.y == y) && (v.z == z) && (v.w == w) ); }
-	bool operator!=( const CVec4 &v ) const { return ( (v.x != x) || (v.y != y) || (v.z != z) || (v.w != w) ); }
-  // internal data non-math modification
-  void Maximize( const CVec4 &v ) { x = (std::max)( x, v.x ); y = (std::max)( y, v.y ); z = (std::max)( z, v.z ); w = (std::max)( w, v.w ); }
-  void Minimize( const CVec4 &v ) { x = (std::min)( x, v.x ); y = (std::min)( y, v.y ); z = (std::min)( z, v.z ); w = (std::min)( w, v.w ); }
-  //
-  void Negate( const CVec4 &v ) { x = -v.x; y = -v.y; z = -v.z; w = -v.w; } // this = -v
-  void Negate() { x = -x; y = -y; z = -z; w = -w; }     // this = -this
-  void Add( const CVec4 &v1, const CVec4 &v2 ) { x = v1.x + v2.x; y = v1.y + v2.y; z = v1.z + v2.z; w = v1.w + v2.w; } // this = v1 + v2
-  void Sub( const CVec4 &v1, const CVec4 &v2 ) { x = v1.x - v2.x; y = v1.y - v2.y; z = v1.z - v2.z; w = v1.w - v2.w; } // this = v1 - v2
-  void Displace( const CVec4 &v1, const CVec4 &v2, const float t ) { x = v1.x + t*v2.x; y = v1.y + t*v2.y; z = v1.z + t*v2.z; w = v1.w + t*v2.w; } //  this = v1 + t*v2
-  void Displace( const CVec4 &v, const float t ) { x += t*v.x; y += t*v.y; z += t*v.z; w += t*v.w; } //  this += t*v;
-  void Lerp( const float t, const CVec4 &v1, const CVec4 &v2 ) { x = t*v2.x + (1 - t)*v1.x; y = t*v2.y + (1 - t)*v1.y; z = t*v2.z + (1 - t)*v1.z; w = t*v2.w + (1 - t)*v1.w; } //this = (1 - t)*v1 + t*v2
-  void Interpolate( const CVec4 &v1, const CVec4 &v2, const float t ) { Lerp(t, v1, v2); }
-  // mathematical operations
-  CVec4& operator+=( const CVec4 &v ) { x += v.x; y += v.y; z += v.z; w += v.w; return *this; }
-  CVec4& operator-=( const CVec4 &v ) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; return *this; }
-  CVec4& operator*=( const float d ) { x *= d; y *= d; z *= d; w *= d; return *this; }
-  CVec4& operator/=( const float d ) { float d1 = 1.0f / d; x *= d1; y *= d1; z *= d1; w *= d1; return *this; }
+	CVec4() : m{} {}
+	CVec4( const float _x, const float _y, const float _z, const float _w ) : x( _x ), y( _y ), z( _z ), w( _w ) {}
+	//CVec4( const float _x, const float _y, const float _z = 0.0f, const float _w = 0.0f ) : x( _x ), y( _y ), z( _z ), w( _w ) {  }
+	CVec4( const CVec2 &v2, const float _z, const float _w ) : x( v2.x ), y( v2.y ), z( _z ), w( _w ) {}
+	CVec4( const CVec3 &v3, const float _w ) : x( v3.x ), y( v3.y ), z( v3.z ), w( _w ) {}
+	// setup
+	void Set( const float _x, const float _y, const float _z, const float _w )
+	{
+		x = _x;
+		y = _y;
+		z = _z;
+		w = _w;
+	}
+	void Set( const CVec3 &v, const float _w )
+	{
+		x = v.x, y = v.y;
+		z = v.z;
+		w = _w;
+	}
+	// indexed access
+	float &operator[]( int i ) { return m[i]; };
+	const float &operator[]( int i ) const { return m[i]; }
+	// comparison
+	bool operator==( const CVec4 &v ) const { return ( ( v.x == x ) && ( v.y == y ) && ( v.z == z ) && ( v.w == w ) ); }
+	bool operator!=( const CVec4 &v ) const { return ( ( v.x != x ) || ( v.y != y ) || ( v.z != z ) || ( v.w != w ) ); }
+	// internal data non-math modification
+	void Maximize( const CVec4 &v )
+	{
+		x = (std::max)( x, v.x );
+		y = (std::max)( y, v.y );
+		z = (std::max)( z, v.z );
+		w = (std::max)( w, v.w );
+	}
+	void Minimize( const CVec4 &v )
+	{
+		x = (std::min)( x, v.x );
+		y = (std::min)( y, v.y );
+		z = (std::min)( z, v.z );
+		w = (std::min)( w, v.w );
+	}
+	//
+	void Negate( const CVec4 &v )
+	{
+		x = -v.x;
+		y = -v.y;
+		z = -v.z;
+		w = -v.w;
+	} // this = -v
+	void Negate()
+	{
+		x = -x;
+		y = -y;
+		z = -z;
+		w = -w;
+	} // this = -this
+	void Add( const CVec4 &v1, const CVec4 &v2 )
+	{
+		x = v1.x + v2.x;
+		y = v1.y + v2.y;
+		z = v1.z + v2.z;
+		w = v1.w + v2.w;
+	} // this = v1 + v2
+	void Sub( const CVec4 &v1, const CVec4 &v2 )
+	{
+		x = v1.x - v2.x;
+		y = v1.y - v2.y;
+		z = v1.z - v2.z;
+		w = v1.w - v2.w;
+	} // this = v1 - v2
+	void Displace( const CVec4 &v1, const CVec4 &v2, const float t )
+	{
+		x = v1.x + t * v2.x;
+		y = v1.y + t * v2.y;
+		z = v1.z + t * v2.z;
+		w = v1.w + t * v2.w;
+	} //  this = v1 + t*v2
+	void Displace( const CVec4 &v, const float t )
+	{
+		x += t * v.x;
+		y += t * v.y;
+		z += t * v.z;
+		w += t * v.w;
+	} //  this += t*v;
+	void Lerp( const float t, const CVec4 &v1, const CVec4 &v2 )
+	{
+		x = t * v2.x + ( 1 - t ) * v1.x;
+		y = t * v2.y + ( 1 - t ) * v1.y;
+		z = t * v2.z + ( 1 - t ) * v1.z;
+		w = t * v2.w + ( 1 - t ) * v1.w;
+	} //this = (1 - t)*v1 + t*v2
+	void Interpolate( const CVec4 &v1, const CVec4 &v2, const float t ) { Lerp( t, v1, v2 ); }
+	// mathematical operations
+	CVec4 &operator+=( const CVec4 &v )
+	{
+		x += v.x;
+		y += v.y;
+		z += v.z;
+		w += v.w;
+		return *this;
+	}
+	CVec4 &operator-=( const CVec4 &v )
+	{
+		x -= v.x;
+		y -= v.y;
+		z -= v.z;
+		w -= v.w;
+		return *this;
+	}
+	CVec4 &operator*=( const float d )
+	{
+		x *= d;
+		y *= d;
+		z *= d;
+		w *= d;
+		return *this;
+	}
+	CVec4 &operator/=( const float d )
+	{
+		float d1 = 1.0f / d;
+		x *= d1;
+		y *= d1;
+		z *= d1;
+		w *= d1;
+		return *this;
+	}
 };
 const CVec4 VNULL4 = CVec4( 0, 0, 0, 0 );
 const CVec4 V4_AXIS_X = CVec4( 1, 0, 0, 0 );
@@ -205,30 +568,77 @@ const CVec4 V4_AXIS_Y = CVec4( 0, 1, 0, 0 );
 const CVec4 V4_AXIS_Z = CVec4( 0, 0, 1, 0 );
 const CVec4 V4_AXIS_W = CVec4( 0, 0, 0, 1 );
 
-inline const CVec4 operator-( const CVec4 &a) { return CVec4(-a.x, -a.y, -a.z, -a.w); }
-inline const CVec4 operator+( const CVec4 &a, const CVec4 &b ) { return CVec4( a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w ); }
-inline const CVec4 operator-( const CVec4 &a, const CVec4 &b ) { return CVec4( a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w ); }
-inline float operator*( const CVec4 &a, const CVec4 &b ) { return ( a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w ); }
-inline const CVec4 operator*( const CVec4 &a, const float b ) { return CVec4( a.x*b, a.y*b, a.z*b, a.w*b ); }
-inline const CVec4 operator*( const float a, const CVec4 &b ) { return CVec4( b.x*a, b.y*a, b.z*a, b.w*a ); }
-inline const CVec4 operator/( const CVec4 &a, const float b ) { float b1 = 1.0f/b; return CVec4( a.x*b1, a.y*b1, a.z*b1, a.w*b1 ); }
-inline float fabs2( const CVec4 &a ) { return fabs2( a.x, a.y, a.z, a.w ); }
-inline float fabs( const CVec4 &a ) { return fabs( a.x, a.y, a.z, a.w ); }
-inline bool Normalize( CVec4 *pVec ) { return Normalize(pVec->x, pVec->y, pVec->z, pVec->w); }
+inline const CVec4 operator-( const CVec4 &a )
+{
+	return CVec4( -a.x, -a.y, -a.z, -a.w );
+}
+inline const CVec4 operator+( const CVec4 &a, const CVec4 &b )
+{
+	return CVec4( a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w );
+}
+inline const CVec4 operator-( const CVec4 &a, const CVec4 &b )
+{
+	return CVec4( a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w );
+}
+inline float operator*( const CVec4 &a, const CVec4 &b )
+{
+	return ( a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w );
+}
+inline const CVec4 operator*( const CVec4 &a, const float b )
+{
+	return CVec4( a.x * b, a.y * b, a.z * b, a.w * b );
+}
+inline const CVec4 operator*( const float a, const CVec4 &b )
+{
+	return CVec4( b.x * a, b.y * a, b.z * a, b.w * a );
+}
+inline const CVec4 operator/( const CVec4 &a, const float b )
+{
+	float b1 = 1.0f / b;
+	return CVec4( a.x * b1, a.y * b1, a.z * b1, a.w * b1 );
+}
+inline float fabs2( const CVec4 &a )
+{
+	return fabs2( a.x, a.y, a.z, a.w );
+}
+inline float fabs( const CVec4 &a )
+{
+	return fabs( a.x, a.y, a.z, a.w );
+}
+inline bool Normalize( CVec4 *pVec )
+{
+	return Normalize( pVec->x, pVec->y, pVec->z, pVec->w );
+}
 
 class CVecPolar
 {
 public:
 	float fLat = 0.0f, fLong = 0.0f;
 
-	CVecPolar() { }
-	CVecPolar( const float _fLat, const float _fLong ) : fLat( _fLat ), fLong( _fLong ) { }
+	CVecPolar() {}
+	CVecPolar( const float _fLat, const float _fLong ) : fLat( _fLat ), fLong( _fLong ) {}
 
-	CVecPolar& operator+=( const CVecPolar &v ) { fLat += v.fLat; fLong += v.fLong; return *this; }
-	CVecPolar& operator-=( const CVecPolar &v ) { fLat -= v.fLat; fLong -= v.fLong; return *this; }
+	CVecPolar &operator+=( const CVecPolar &v )
+	{
+		fLat += v.fLat;
+		fLong += v.fLong;
+		return *this;
+	}
+	CVecPolar &operator-=( const CVecPolar &v )
+	{
+		fLat -= v.fLat;
+		fLong -= v.fLong;
+		return *this;
+	}
 };
-inline const CVecPolar operator+( const CVecPolar &v1, const CVecPolar &v2 ) { return CVecPolar( v1.fLat + v2.fLat, v1.fLong + v2.fLong ); }
-inline const CVecPolar operator-( const CVecPolar &v1, const CVecPolar &v2 ) { return CVecPolar( v1.fLat - v2.fLat, v1.fLong - v2.fLong ); }
+inline const CVecPolar operator+( const CVecPolar &v1, const CVecPolar &v2 )
+{
+	return CVecPolar( v1.fLat + v2.fLat, v1.fLong + v2.fLong );
+}
+inline const CVecPolar operator-( const CVecPolar &v1, const CVecPolar &v2 )
+{
+	return CVecPolar( v1.fLat - v2.fLat, v1.fLong - v2.fLong );
+}
 const CVecPolar VNULLPOLAR = CVecPolar( 0.0f, 0.0f );
 
 // ************************************************************************************************************************ //
@@ -243,25 +653,33 @@ struct SVector
 {
 	int x = 0, y = 0;
 	//
-	SVector() {  }
-	SVector( const int _x, const int _y ) : x( _x ), y( _y ) {  }
-	SVector( const SVector &vec ) : x( vec.x ), y( vec.y ) {  }
-	SVector( const CVec2 &vec ) : x( vec.x ), y( vec.y ) {  }
+	SVector() {}
+	SVector( const int _x, const int _y ) : x( _x ), y( _y ) {}
+	SVector( const SVector &vec ) : x( vec.x ), y( vec.y ) {}
+	SVector( const CVec2 &vec ) : x( vec.x ), y( vec.y ) {}
 
 	const CVec2 ToCVec2() const { return CVec2( x, y ); }
 	const CVec2 Norm() const
 	{
-		if ( float revR = sqrt( float(x*x + y*y) ) )
+		if ( float revR = sqrt( float( x * x + y * y ) ) )
 		{
 			revR = 1 / revR;
-			return CVec2( float(x)*revR, float(y)*revR );
+			return CVec2( float( x ) * revR, float( y ) * revR );
 		}
 		else
 			return VNULL2;
 	}
 	//
-	void TurnLeft()	 { std::swap( x, y ); x = -x; }
-	void TurnRight() { std::swap( x, y ); y = -y; }
+	void TurnLeft()
+	{
+		std::swap( x, y );
+		x = -x;
+	}
+	void TurnRight()
+	{
+		std::swap( x, y );
+		y = -y;
+	}
 
 	void TurnLeftUntilAxis()
 	{
@@ -286,7 +704,7 @@ struct SVector
 
 		if ( signX != 0 && signX * signY >= 0 )
 		{
-			if ( abs(x) > abs(y) )
+			if ( abs( x ) > abs( y ) )
 				x = signX;
 			else
 				x = 0;
@@ -294,7 +712,7 @@ struct SVector
 		}
 		else
 		{
-			if ( abs(y) > abs(x) )
+			if ( abs( y ) > abs( x ) )
 				y = signY;
 			else
 				y = 0;
@@ -340,7 +758,7 @@ struct SVector
 
 		if ( signX != 0 && signX * signY <= 0 )
 		{
-			if ( abs(x) > abs(y) )
+			if ( abs( x ) > abs( y ) )
 				x = signX;
 			else
 				x = 0;
@@ -348,7 +766,7 @@ struct SVector
 		}
 		else
 		{
-			if ( abs(y) > abs(x) )
+			if ( abs( y ) > abs( x ) )
 				y = signY;
 			else
 				y = 0;
@@ -371,15 +789,36 @@ struct SVector
 	}
 
 	const bool operator!=( const SVector &vec ) const { return x != vec.x || y != vec.y; }
-	const bool operator==( const SVector &vec )	const { return x == vec.x && y == vec.y; }
-	const SVector operator-( const SVector &vec ) const { return SVector( x-vec.x, y-vec.y ); }
-	const SVector operator+( const SVector &vec ) const { return SVector( x+vec.x, y+vec.y ); }
-	SVector& operator+=( const SVector &vec ) { x += vec.x; y += vec.y; return *this; }
-	SVector& operator-=( const SVector &vec ) { x -= vec.x; y -= vec.y; return *this; }
-	const int operator*( const SVector &vec ) const { return x*vec.x + y*vec.y; }
-	SVector& operator*=( const int n ) { x *= n; y *= n; return *this; }
+	const bool operator==( const SVector &vec ) const { return x == vec.x && y == vec.y; }
+	const SVector operator-( const SVector &vec ) const { return SVector( x - vec.x, y - vec.y ); }
+	const SVector operator+( const SVector &vec ) const { return SVector( x + vec.x, y + vec.y ); }
+	SVector &operator+=( const SVector &vec )
+	{
+		x += vec.x;
+		y += vec.y;
+		return *this;
+	}
+	SVector &operator-=( const SVector &vec )
+	{
+		x -= vec.x;
+		y -= vec.y;
+		return *this;
+	}
+	const int operator*( const SVector &vec ) const { return x * vec.x + y * vec.y; }
+	SVector &operator*=( const int n )
+	{
+		x *= n;
+		y *= n;
+		return *this;
+	}
 	// деление нацело
-	SVector& operator/=( const int n ) { const float coeff = 1.0f / float(n); x *= coeff; y *= coeff; return *this; }
+	SVector &operator/=( const int n )
+	{
+		const float coeff = 1.0f / float( n );
+		x *= coeff;
+		y *= coeff;
+		return *this;
+	}
 };
 
 inline const int fabs2( const SVector &vect )
@@ -395,19 +834,23 @@ class CLine2
 		bool bNormalized;
 		int dummy = 0;
 	};
+
 public:
 	float a = 0.0f, b = 0.0f, c = 0.0f;
-//
-	CLine2() { }
-	CLine2( const float _a, const float _b, const float _c ) : a( _a ), b( _b ), c( _c ), dummy( 0 ) { }
-	CLine2( const CVec2 &p1, const CVec2 &p2 ) : a( p2.y - p1.y ), b( p1.x - p2.x ), c( p2.x*p1.y - p1.x*p2.y ), dummy( 0 ) {  }
+	//
+	CLine2() {}
+	CLine2( const float _a, const float _b, const float _c ) : a( _a ), b( _b ), c( _c ), dummy( 0 ) {}
+	CLine2( const CVec2 &p1, const CVec2 &p2 )
+			: a( p2.y - p1.y ), b( p1.x - p2.x ), c( p2.x * p1.y - p1.x * p2.y ), dummy( 0 )
+	{
+	}
 
 	// расстояние до точки со знаком
 	float DistToPoint( const CVec2 &point );
 	// проекция точки на прямую
 	void ProjectPoint( const CVec2 &point, CVec2 *result );
 	// знак - в какой полуплоскости отн. прямой лежит точка
-	const int GetSign( const CVec2 &point ) const { return boost::math::sign( a * point.x + b * point.y + c); }
+	const int GetSign( const CVec2 &point ) const { return boost::math::sign( a * point.x + b * point.y + c ); }
 
 	// нормализация линии
 	void Normalize()
@@ -432,11 +875,12 @@ public:
 	CVec2 dir;
 	//}
 	//
-	CSegment() { }
-	CSegment( const CVec2 &_p1, const CVec2 &_p2 )
-		: p1( _p1 ), p2( _p2 ), dir( p2 - p1 ) {  }
+	CSegment() {}
+	CSegment( const CVec2 &_p1, const CVec2 &_p2 ) : p1( _p1 ), p2( _p2 ), dir( p2 - p1 ) {}
 	CSegment( const float x1, const float y1, const float x2, const float y2 )
-		: p1( x1, y1 ), p2( x2, y2 ), dir( p2 - p1 ) { }
+			: p1( x1, y1 ), p2( x2, y2 ), dir( p2 - p1 )
+	{
+	}
 	// расстояние от точки до отрезка
 	const float GetDistToPoint( const CVec2 &point ) const;
 	// дать точку на отрезке, ближайшую к заданной
@@ -449,11 +893,10 @@ public:
 	CVec2 center;
 	float r = 0.0f;
 	//
-	CCircle() { }
-	CCircle( const CVec2 &_center, const float _r )
-		: center( _center ), r( _r ) {  }
+	CCircle() {}
+	CCircle( const CVec2 &_center, const float _r ) : center( _center ), r( _r ) {}
 	//
-	const CVec2& GetCenter() const { return center; }
+	const CVec2 &GetCenter() const { return center; }
 	bool IsIntersected( const CCircle &circle ) const
 	{
 		const float fDist = fabs( circle.center - center );
@@ -487,29 +930,33 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 struct SPlane
 {
 public:
-  // storage is the normal and the distance, not the CVec4: almost every caller
-  // reads or writes n and d, so they stay plain members and stay assignable.
-  // the CVec4 form is needed in only a few places, so that is the computed one.
-  CVec3 n;
-  float d = 0.0f;
-  CVec4 vec4() const noexcept { return CVec4( n.x, n.y, n.z, d ); }
-  SPlane() {  }
-  SPlane( const CVec3 &vNormale, const float fDist ) : n( vNormale ), d( fDist ) {  }
-  SPlane( const CVec4 &v ) : n( v.x, v.y, v.z ), d( v.w ) {  }
-	SPlane( const SPlane &plane ) : n( plane.n ), d( plane.d ) {  }
-  // setup functions
-  bool Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2, bool bNormalize );
-  void Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 );
-  void Set( const CVec3 &vNormale, const float fDist ) { n = vNormale; d = fDist; }
-  // recalc 'd' coeff for a plane with the point 'pt'
-  void RecalcDist( const CVec3 &pt ) { d = -( n * pt ); }
+	// storage is the normal and the distance, not the CVec4: almost every caller
+	// reads or writes n and d, so they stay plain members and stay assignable.
+	// the CVec4 form is needed in only a few places, so that is the computed one.
+	CVec3 n;
+	float d = 0.0f;
+	CVec4 vec4() const noexcept { return CVec4( n.x, n.y, n.z, d ); }
+	SPlane() {}
+	SPlane( const CVec3 &vNormale, const float fDist ) : n( vNormale ), d( fDist ) {}
+	SPlane( const CVec4 &v ) : n( v.x, v.y, v.z ), d( v.w ) {}
+	SPlane( const SPlane &plane ) : n( plane.n ), d( plane.d ) {}
+	// setup functions
+	bool Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2, bool bNormalize );
+	void Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 );
+	void Set( const CVec3 &vNormale, const float fDist )
+	{
+		n = vNormale;
+		d = fDist;
+	}
+	// recalc 'd' coeff for a plane with the point 'pt'
+	void RecalcDist( const CVec3 &pt ) { d = -( n * pt ); }
 	// distance functions
-	float GetDistanceToPoint( const CVec3 &pt ) const { return ( n*pt + d ); }
-	bool IsPointOnPlane( const CVec3 &pt ) const { return n*pt == -d; }
-	bool IsPointOverPlane( const CVec3 &pt ) const { return n*pt > -d; }
-	bool IsPointUnderPlane( const CVec3 &pt ) const { return n*pt < -d; }
-  // протестировать, не лежит ли точка под плоскостью. вернуть 0x80000000 если это так или 0 в противном случае
-  uint32_t CheckPointUnderPlane( const CVec3 &pt ) const;
+	float GetDistanceToPoint( const CVec3 &pt ) const { return ( n * pt + d ); }
+	bool IsPointOnPlane( const CVec3 &pt ) const { return n * pt == -d; }
+	bool IsPointOverPlane( const CVec3 &pt ) const { return n * pt > -d; }
+	bool IsPointUnderPlane( const CVec3 &pt ) const { return n * pt < -d; }
+	// протестировать, не лежит ли точка под плоскостью. вернуть 0x80000000 если это так или 0 в противном случае
+	uint32_t CheckPointUnderPlane( const CVec3 &pt ) const;
 };
 
 // ************************************************************************************************************************ //
@@ -525,7 +972,7 @@ public:
 
 struct SHMatrix
 {
-public :
+public:
 	union
 	{
 		float m[4][4];
@@ -544,31 +991,67 @@ public :
 			float wx, wy, wz, ww;
 		};
 	};
-	void SetX(const CVec4 & v) noexcept { xx = v.x; xy = v.y; xz = v.z; xw = v.w; }
-	void SetY(const CVec4 & v) noexcept { yx = v.x, yy = v.y; yz = v.z; yw = v.w; }
-	void SetZ(const CVec4 & v) noexcept { zx = v.x; zy = v.y; zz = v.z; zw = v.w; }
-	void SetW(const CVec4 & v) noexcept { wx = v.x; wy = v.y; wz = v.z; ww = v.w; }
+	void SetX( const CVec4 &v ) noexcept
+	{
+		xx = v.x;
+		xy = v.y;
+		xz = v.z;
+		xw = v.w;
+	}
+	void SetY( const CVec4 &v ) noexcept
+	{
+		yx = v.x, yy = v.y;
+		yz = v.z;
+		yw = v.w;
+	}
+	void SetZ( const CVec4 &v ) noexcept
+	{
+		zx = v.x;
+		zy = v.y;
+		zz = v.z;
+		zw = v.w;
+	}
+	void SetW( const CVec4 &v ) noexcept
+	{
+		wx = v.x;
+		wy = v.y;
+		wz = v.z;
+		ww = v.w;
+	}
 
-	CVec4 x() const noexcept { return CVec4{xx, xy, xz, xw}; }
-	CVec4 y() const noexcept { return CVec4{yx, yy, yz, yw}; }
-	CVec4 z() const noexcept { return CVec4{zx, zy, zz, zw}; }
-	CVec4 w() const noexcept { return CVec4{wx, wy, wz, ww}; }
+	CVec4 x() const noexcept { return CVec4{ xx, xy, xz, xw }; }
+	CVec4 y() const noexcept { return CVec4{ yx, yy, yz, yw }; }
+	CVec4 z() const noexcept { return CVec4{ zx, zy, zz, zw }; }
+	CVec4 w() const noexcept { return CVec4{ wx, wy, wz, ww }; }
 
-	CVec3 x3() const noexcept { return CVec3{xx, xy, xz}; }
-	CVec3 y3() const noexcept { return CVec3{yx, yy, yz}; }
-	CVec3 z3() const noexcept { return CVec3{zx, zy, zz}; }
-	CVec3 w3() const noexcept { return CVec3{wx, wy, wz}; }
-public :
+	CVec3 x3() const noexcept { return CVec3{ xx, xy, xz }; }
+	CVec3 y3() const noexcept { return CVec3{ yx, yy, yz }; }
+	CVec3 z3() const noexcept { return CVec3{ zx, zy, zz }; }
+	CVec3 w3() const noexcept { return CVec3{ wx, wy, wz }; }
+
+public:
 	// Zero storage is the default; callers requesting identity still use Identity.
-	SHMatrix() : m{} {  }
-	SHMatrix( float __11, float __12, float __13, float __14,
-		        float __21, float __22, float __23, float __24,
-		        float __31, float __32, float __33, float __34,
-						float __41, float __42, float __43, float __44 )
-						: _11(__11), _12(__12), _13(__13), _14(__14),
-						  _21(__21), _22(__22), _23(__23), _24(__24),
-		          _31(__31), _32(__32), _33(__33), _34(__34),
-							_41(__41), _42(__42), _43(__43), _44(__44) {  }
+	SHMatrix() : m{} {}
+	SHMatrix( float __11,
+	          float __12,
+	          float __13,
+	          float __14,
+	          float __21,
+	          float __22,
+	          float __23,
+	          float __24,
+	          float __31,
+	          float __32,
+	          float __33,
+	          float __34,
+	          float __41,
+	          float __42,
+	          float __43,
+	          float __44 )
+			: _11( __11 ), _12( __12 ), _13( __13 ), _14( __14 ), _21( __21 ), _22( __22 ), _23( __23 ), _24( __24 ),
+				_31( __31 ), _32( __32 ), _33( __33 ), _34( __34 ), _41( __41 ), _42( __42 ), _43( __43 ), _44( __44 )
+	{
+	}
 	//SHMatrix( float _m[4][4] ) { memcpy( &(m[0][0]), &(_m[0][0]), 16*sizeof(float) ); }
 	//SHMatrix( float *_m ) { memcpy( &(m[0][0]), &(_m[0]), 16*sizeof(float) ); }
 	SHMatrix( const class CQuat &quat ) { Set( quat ); }
@@ -576,19 +1059,31 @@ public :
 	//
 	void Set( const class CQuat &quat );
 	void Set( const CVec3 &vPos, const class CQuat &quat );
-	void Set( float __11, float __12, float __13, float __14,
-		        float __21, float __22, float __23, float __24,
-		        float __31, float __32, float __33, float __34,
-		        float __41, float __42, float __43, float __44 );
+	void Set( float __11,
+	          float __12,
+	          float __13,
+	          float __14,
+	          float __21,
+	          float __22,
+	          float __23,
+	          float __24,
+	          float __31,
+	          float __32,
+	          float __33,
+	          float __34,
+	          float __41,
+	          float __42,
+	          float __43,
+	          float __44 );
 	// axis access
-	CVec3 GetXAxis3() const { return CVec3(xx, xy, xz); }
-	CVec3 GetYAxis3() const { return CVec3(yx, yy, yz); }
-	CVec3 GetZAxis3() const { return CVec3(zx, zy, zz); }
+	CVec3 GetXAxis3() const { return CVec3( xx, xy, xz ); }
+	CVec3 GetYAxis3() const { return CVec3( yx, yy, yz ); }
+	CVec3 GetZAxis3() const { return CVec3( zx, zy, zz ); }
 	const CVec3 GetTrans3() const { return CVec3( _14, _24, _34 ); }
 	const CVec4 GetTrans4() const { return CVec4( _14, _24, _34, _44 ); }
 	// matrix-vector multiplication
-	void Transform( CVec3 *pRes, const CVec3 &v ) const { RotateVector(pRes, v); }
-	void TransformHomogeneous( CVec3 *pRes, const CVec3 &v ) const { RotateHVector(pRes, v); }
+	void Transform( CVec3 *pRes, const CVec3 &v ) const { RotateVector( pRes, v ); }
+	void TransformHomogeneous( CVec3 *pRes, const CVec3 &v ) const { RotateHVector( pRes, v ); }
 	void RotateVector( CVec3 *pRes, const CVec3 &v ) const;
 	void RotateHVector( CVec3 *pRes, const CVec3 &v ) const;
 	void RotateHVector( CVec4 *pRes, const CVec3 &v ) const;
@@ -599,8 +1094,14 @@ public :
 	bool HomogeneousInverse( const SHMatrix &m );
 	const CVec3 GetTranslation() const { return CVec3( _14, _24, _34 ); }
 };
-inline bool operator==( const SHMatrix &a, const SHMatrix &b ) { return memcmp( &a, &b, sizeof(a) ) == 0; }
-inline bool operator!=( const SHMatrix &a, const SHMatrix &b ) { return !(a == b); }
+inline bool operator==( const SHMatrix &a, const SHMatrix &b )
+{
+	return memcmp( &a, &b, sizeof( a ) ) == 0;
+}
+inline bool operator!=( const SHMatrix &a, const SHMatrix &b )
+{
+	return !( a == b );
+}
 
 // прямое и обратное преобразование вместе
 struct SFBTransform
@@ -621,18 +1122,19 @@ class CQuat
 	CVec4 vec4;
 	// for use in the internal functions
 	// to avoid ambiguity with angle-axis constructor
-  CQuat( float fX, float fY, float fZ, float fW, int, int ) : vec4( fX , fY , fZ , fW ) {  }
+	CQuat( float fX, float fY, float fZ, float fW, int, int ) : vec4( fX, fY, fZ, fW ) {}
+
 public:
-  CQuat( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis = false );
-  CQuat( float fAngle, const CVec3 &vAxis, const bool bNormalizeAxis = false );
+	CQuat( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis = false );
+	CQuat( float fAngle, const CVec3 &vAxis, const bool bNormalizeAxis = false );
 	CQuat( const CVec4 &quat ) { vec4 = quat; }
-  CQuat() {  }
-  // composition
+	CQuat() {}
+	// composition
 	void FromAngleAxis( float fAngle, const CVec3 &vAxis, const bool bNormalizeAxis = false );
 	void FromAngleAxis( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis = false );
 	void FromEulerMatrix( const SHMatrix &m );
-  void FromEulerAngles( float yaw, float pitch, float roll );
-	void FromComponents( float _x, float _y, float _z, float _w ) { vec4 = CVec4{_x, _y, _z, _w}; }
+	void FromEulerAngles( float yaw, float pitch, float roll );
+	void FromComponents( float _x, float _y, float _z, float _w ) { vec4 = CVec4{ _x, _y, _z, _w }; }
 	void FromComponents( const CVec4 &_vec4 ) { vec4 = _vec4; }
 	// decomposition
 	void DecompAngleAxis( float *pfAngle, CVec3 *pvAxis ) const;
@@ -640,54 +1142,104 @@ public:
 	void DecompEulerMatrix( SHMatrix *pMatrix ) const;
 	MISC_EXPORT void DecompEulerAngles( float *pfYaw, float *pfPitch, float *pfRoll );
 	void DecompReversedEulerMatrix( SHMatrix *pMatrix ) const;
-  // internal data non-math modification
-  bool Normalize() { return ::Normalize(vec4.x, vec4.y, vec4.z, vec4.w); }
-  void Maximize( const CQuat &v ) { vec4.x = (std::max)( vec4.x, v.vec4.x ); vec4.y = (std::max)( vec4.y, v.vec4.y ); vec4.z = (std::max)( vec4.z, v.vec4.z ); vec4.w = (std::max)( vec4.w, v.vec4.w ); }
-  void Minimize( const CQuat &v ) { vec4.x = (std::min)( vec4.x, v.vec4.x ); vec4.y = (std::min)( vec4.y, v.vec4.y ); vec4.z = (std::min)( vec4.z, v.vec4.z ); vec4.w = (std::min)( vec4.w, v.vec4.w ); }
-  //
-  void Negate( const CQuat &q ) { vec4.x = -q.vec4.x; vec4.y = -q.vec4.y; vec4.z = -q.vec4.z; vec4.w = -q.vec4.w; } // this = -v
-  void Negate() { vec4.x = -vec4.x; vec4.y = -vec4.y; vec4.z = -vec4.z; vec4.w = -vec4.w; }     // this = -this
+	// internal data non-math modification
+	bool Normalize() { return ::Normalize( vec4.x, vec4.y, vec4.z, vec4.w ); }
+	void Maximize( const CQuat &v )
+	{
+		vec4.x = (std::max)( vec4.x, v.vec4.x );
+		vec4.y = (std::max)( vec4.y, v.vec4.y );
+		vec4.z = (std::max)( vec4.z, v.vec4.z );
+		vec4.w = (std::max)( vec4.w, v.vec4.w );
+	}
+	void Minimize( const CQuat &v )
+	{
+		vec4.x = (std::min)( vec4.x, v.vec4.x );
+		vec4.y = (std::min)( vec4.y, v.vec4.y );
+		vec4.z = (std::min)( vec4.z, v.vec4.z );
+		vec4.w = (std::min)( vec4.w, v.vec4.w );
+	}
+	//
+	void Negate( const CQuat &q )
+	{
+		vec4.x = -q.vec4.x;
+		vec4.y = -q.vec4.y;
+		vec4.z = -q.vec4.z;
+		vec4.w = -q.vec4.w;
+	} // this = -v
+	void Negate()
+	{
+		vec4.x = -vec4.x;
+		vec4.y = -vec4.y;
+		vec4.z = -vec4.z;
+		vec4.w = -vec4.w;
+	} // this = -this
 	bool Inverse( const CQuat &q );
 	bool Inverse();
-	void UnitInverse( const CQuat &q ) { vec4.x = -q.vec4.x; vec4.y = -q.vec4.y; vec4.z = -q.vec4.z; vec4.w = q.vec4.w; }
-	void UnitInverse() { vec4.x = -vec4.x; vec4.y = -vec4.y; vec4.z = -vec4.z; }
-  void UnitInverseX() { vec4.x = -vec4.x; }
-  void UnitInverseY() { vec4.y = -vec4.y; }
-  void UnitInverseZ() { vec4.z = -vec4.z; }
-  //
-  void Deriv( const CQuat &q, const CVec3 &v );
-  // some neccessary operators
-  friend const CQuat operator*( const CQuat &a, const CQuat &b );
-  friend const CQuat operator/( const CQuat &a, const CQuat &b );
-  CQuat& operator*=( const CQuat &quat );
-	CQuat& operator/=( const CQuat &quat );
-	const CQuat operator+( const CQuat &q ) const { return CQuat( vec4.x + q.vec4.x, vec4.y + q.vec4.y, vec4.z + q.vec4.z, vec4.w + q.vec4.w, 0, 0 ); }
-	const CQuat operator-() const { return CQuat( -vec4.x, -vec4.y, -vec4.z, -vec4.w, 0, 0 ); }        // unary minus
-	float Dot( const CQuat &quat ) const { return vec4.x * quat.vec4.x + vec4.y * quat.vec4.y + vec4.z * quat.vec4.z + vec4.w * quat.vec4.w; }
+	void UnitInverse( const CQuat &q )
+	{
+		vec4.x = -q.vec4.x;
+		vec4.y = -q.vec4.y;
+		vec4.z = -q.vec4.z;
+		vec4.w = q.vec4.w;
+	}
+	void UnitInverse()
+	{
+		vec4.x = -vec4.x;
+		vec4.y = -vec4.y;
+		vec4.z = -vec4.z;
+	}
+	void UnitInverseX() { vec4.x = -vec4.x; }
+	void UnitInverseY() { vec4.y = -vec4.y; }
+	void UnitInverseZ() { vec4.z = -vec4.z; }
 	//
-	void MinimizeRotationAngle() { if ( vec4.w < 0 ) { vec4.x = -vec4.x; vec4.y = -vec4.y; vec4.z = -vec4.z; vec4.w = -vec4.w; } }
+	void Deriv( const CQuat &q, const CVec3 &v );
+	// some neccessary operators
+	friend const CQuat operator*( const CQuat &a, const CQuat &b );
+	friend const CQuat operator/( const CQuat &a, const CQuat &b );
+	CQuat &operator*=( const CQuat &quat );
+	CQuat &operator/=( const CQuat &quat );
+	const CQuat operator+( const CQuat &q ) const
+	{
+		return CQuat( vec4.x + q.vec4.x, vec4.y + q.vec4.y, vec4.z + q.vec4.z, vec4.w + q.vec4.w, 0, 0 );
+	}
+	const CQuat operator-() const { return CQuat( -vec4.x, -vec4.y, -vec4.z, -vec4.w, 0, 0 ); } // unary minus
+	float Dot( const CQuat &quat ) const
+	{
+		return vec4.x * quat.vec4.x + vec4.y * quat.vec4.y + vec4.z * quat.vec4.z + vec4.w * quat.vec4.w;
+	}
+	//
+	void MinimizeRotationAngle()
+	{
+		if ( vec4.w < 0 )
+		{
+			vec4.x = -vec4.x;
+			vec4.y = -vec4.y;
+			vec4.z = -vec4.z;
+			vec4.w = -vec4.w;
+		}
+	}
 	// mathematical functions
-  const CQuat Exp() const;
-  const CQuat Log() const;
+	const CQuat Exp() const;
+	const CQuat Log() const;
 	// interpolation
-  // Spherical Linear intERPolation from 'p' to 'q' with coeff 'factor'
+	// Spherical Linear intERPolation from 'p' to 'q' with coeff 'factor'
 	void Slerp( const float factor, const CQuat &p, const CQuat &q );
-  void Interpolate( const CQuat &p, const CQuat &q, const float t ) { Slerp(t, p, q); }
+	void Interpolate( const CQuat &p, const CQuat &q, const float t ) { Slerp( t, p, q ); }
 	// rotate vector via quaternion itself
-  const CVec3 Rotate( const CVec3 &r ) const;
-  void Rotate( CVec3 *pRes, const CVec3 &vec ) const;
+	const CVec3 Rotate( const CVec3 &r ) const;
+	void Rotate( CVec3 *pRes, const CVec3 &vec ) const;
 	// rotate vectors 'X = (1, 0, 0)', 'Y = (0, 1, 0)' and 'Z = (0, 0, 1)' via quaternion
-  const CVec3 GetXAxis() const;
-  const CVec3 GetYAxis() const;
-  const CVec3 GetZAxis() const;
-  void GetXAxis( CVec3 *pResult ) const;
-  void GetYAxis( CVec3 *pResult ) const;
-  void GetZAxis( CVec3 *pResult ) const;
-  //
-  friend float fabs2( const CQuat &q ) { return fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w ); }
-  friend float fabs( const CQuat &q ) { return static_cast<float>( sqrt( fabs2(q) ) ); }
+	const CVec3 GetXAxis() const;
+	const CVec3 GetYAxis() const;
+	const CVec3 GetZAxis() const;
+	void GetXAxis( CVec3 *pResult ) const;
+	void GetYAxis( CVec3 *pResult ) const;
+	void GetZAxis( CVec3 *pResult ) const;
+	//
+	friend float fabs2( const CQuat &q ) { return fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w ); }
+	friend float fabs( const CQuat &q ) { return static_cast<float>( sqrt( fabs2( q ) ) ); }
 
-  const CVec4& GetInternalVector() const { return vec4; }
+	const CVec4 &GetInternalVector() const { return vec4; }
 };
 const CQuat QNULL = CQuat( 0, 1, 0, 0 );
 
@@ -706,43 +1258,101 @@ public:
 	typedef CTPoint<TYPE> TPoint;
 	union
 	{
-		struct { TYPE x, y; };
-		struct { TYPE u, v; };
-		struct { TYPE s, t; };
-		struct { TYPE a, b; };
-		struct { TYPE min, max; };
+		struct
+		{
+			TYPE x, y;
+		};
+		struct
+		{
+			TYPE u, v;
+		};
+		struct
+		{
+			TYPE s, t;
+		};
+		struct
+		{
+			TYPE a, b;
+		};
+		struct
+		{
+			TYPE min, max;
+		};
 	};
 	//
 	// Constructor initialization avoids nontrivial fields in anonymous structs.
-	CTPoint() : x{}, y{} {  }
-	CTPoint( TYPE _x, TYPE _y ) : x( _x ), y( _y ) {  }
-	CTPoint( const TPoint &pt ) : x( pt.x ), y( pt.y ) {  }
+	CTPoint() : x{}, y{} {}
+	CTPoint( TYPE _x, TYPE _y ) : x( _x ), y( _y ) {}
+	CTPoint( const TPoint &pt ) : x( pt.x ), y( pt.y ) {}
 	//
-	bool operator==( const TPoint &v ) const { return ( (v.x == x) && (v.y == y) ); }
-	bool operator!=( const TPoint &v ) const { return ( (v.x != x) || (v.y != y) ); }
-  // mathematical operations
-  TPoint& operator+=( const TPoint &v ) { x += v.x; y += v.y; return *this; }
-  TPoint& operator-=( const TPoint &v ) { x -= v.x; y -= v.y; return *this; }
-  TPoint& operator*=( const TYPE d ) { x *= d; y *= d; return *this; }
+	bool operator==( const TPoint &v ) const { return ( ( v.x == x ) && ( v.y == y ) ); }
+	bool operator!=( const TPoint &v ) const { return ( ( v.x != x ) || ( v.y != y ) ); }
+	// mathematical operations
+	TPoint &operator+=( const TPoint &v )
+	{
+		x += v.x;
+		y += v.y;
+		return *this;
+	}
+	TPoint &operator-=( const TPoint &v )
+	{
+		x -= v.x;
+		y -= v.y;
+		return *this;
+	}
+	TPoint &operator*=( const TYPE d )
+	{
+		x *= d;
+		y *= d;
+		return *this;
+	}
 	//
-	void Set( const TYPE _x, const TYPE _y ) { x = _x; y = _y; }
+	void Set( const TYPE _x, const TYPE _y )
+	{
+		x = _x;
+		y = _y;
+	}
 };
-template<class T>
-inline float fabs( const CTPoint<T> &pt ) { return fabs( pt.x, pt.y ); }
-template<class T>
-inline float fabs2( const CTPoint<T> &pt ) { return fabs2( pt.x, pt.y ); }
-template<class T>
-inline const CTPoint<T> operator-( const CTPoint<T> &a) { return CTPoint<T>(-a.x, -a.y); }
-template<class T>
-inline const CTPoint<T> operator+( const CTPoint<T> &a, const CTPoint<T> &b ) { return CTPoint<T>( a.x + b.x, a.y + b.y ); }
-template<class T>
-inline const CTPoint<T> operator-( const CTPoint<T> &a, const CTPoint<T> &b ) { return CTPoint<T>( a.x - b.x, a.y - b.y ); }
-template<class T>
-inline const CTPoint<T> operator*( const CTPoint<T> &a, const float b ) { return CTPoint<T>( a.x*b, a.y*b ); }
-template<class T>
-inline const CTPoint<T> operator*( const T a, const CTPoint<T> &b ) { return CTPoint<T>( b.x*a, b.y*a ); }
-template<class T>
-inline const CTPoint<T> operator*( const CTPoint<T> &b, const T a ) { return CTPoint<T>( b.x*a, b.y*a ); }
+template <class T>
+inline float fabs( const CTPoint<T> &pt )
+{
+	return fabs( pt.x, pt.y );
+}
+template <class T>
+inline float fabs2( const CTPoint<T> &pt )
+{
+	return fabs2( pt.x, pt.y );
+}
+template <class T>
+inline const CTPoint<T> operator-( const CTPoint<T> &a )
+{
+	return CTPoint<T>( -a.x, -a.y );
+}
+template <class T>
+inline const CTPoint<T> operator+( const CTPoint<T> &a, const CTPoint<T> &b )
+{
+	return CTPoint<T>( a.x + b.x, a.y + b.y );
+}
+template <class T>
+inline const CTPoint<T> operator-( const CTPoint<T> &a, const CTPoint<T> &b )
+{
+	return CTPoint<T>( a.x - b.x, a.y - b.y );
+}
+template <class T>
+inline const CTPoint<T> operator*( const CTPoint<T> &a, const float b )
+{
+	return CTPoint<T>( a.x * b, a.y * b );
+}
+template <class T>
+inline const CTPoint<T> operator*( const T a, const CTPoint<T> &b )
+{
+	return CTPoint<T>( b.x * a, b.y * a );
+}
+template <class T>
+inline const CTPoint<T> operator*( const CTPoint<T> &b, const T a )
+{
+	return CTPoint<T>( b.x * a, b.y * a );
+}
 
 // ************************************************************************************************************************ //
 // **
@@ -758,41 +1368,94 @@ class CTRect
 public:
 	typedef CTRect<TYPE> TRect;
 	typedef CTPoint<TYPE> TPoint;
-	union                                 // left (minimal) x
+	union // left (minimal) x
 	{
-		struct { TYPE left, top, right, bottom; };
-		struct { TYPE x1, y1, x2, y2; };
-		struct { TYPE minx, miny, maxx, maxy; };
+		struct
+		{
+			TYPE left, top, right, bottom;
+		};
+		struct
+		{
+			TYPE x1, y1, x2, y2;
+		};
+		struct
+		{
+			TYPE minx, miny, maxx, maxy;
+		};
 	};
 	//
-	CTRect() : minx{}, miny{}, maxx{}, maxy{} {  }
+	CTRect() : minx{}, miny{}, maxx{}, maxy{} {}
 	CTRect( const TYPE _minx, const TYPE _miny, const TYPE _maxx, const TYPE _maxy )
-		: minx( _minx ), miny( _miny ), maxx( _maxx ), maxy( _maxy ) {  }
-	CTRect( const TPoint &vLT, const TPoint &vRB )
-		: minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {  }
-	CTRect( const CVec2 &vLT, const CVec2 &vRB )
-		: minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {  }
+			: minx( _minx ), miny( _miny ), maxx( _maxx ), maxy( _maxy )
+	{
+	}
+	CTRect( const TPoint &vLT, const TPoint &vRB ) : minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {}
+	CTRect( const CVec2 &vLT, const CVec2 &vRB ) : minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {}
 	template <class T1>
-		CTRect( const CTRect<T1> &rect )
-			: x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 ) {  }
-	CTRect( const TRect &rect )
-		: x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 ) {  }
+	CTRect( const CTRect<T1> &rect ) : x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 )
+	{
+	}
+	CTRect( const TRect &rect ) : x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 ) {}
 	// assignment
 	template <class T1>
-		const TRect& operator=( const CTRect<T1> &rect ) { x1 = rect.x1; y1 = rect.y1; x2 = rect.x2; y2 = rect.y2; return *this; }
-	const TRect& operator=( const TRect &rect ) { x1 = rect.x1; y1 = rect.y1; x2 = rect.x2; y2 = rect.y2; return *this; }
-	void Set( const TYPE _x1, const TYPE _y1, const TYPE _x2, const TYPE _y2 ) { x1 = _x1; y1 = _y1; x2 = _x2; y2 = _y2; }
-	void Set( const CVec2 &vLT, const CVec2 &vRB ) { minx = vLT.x; miny = vLT.y; maxx = vRB.x; maxy = vRB.y; }
-	void Set( const TPoint &vLT, const TPoint &vRB ) { minx = vLT.x; miny = vLT.y; maxx = vRB.x; maxy = vRB.y; }
-	void Set( const TRect &rect ) { x1 = rect.x1; y1 = rect.y1; x2 = rect.x2; y2 = rect.y2; }
+	const TRect &operator=( const CTRect<T1> &rect )
+	{
+		x1 = rect.x1;
+		y1 = rect.y1;
+		x2 = rect.x2;
+		y2 = rect.y2;
+		return *this;
+	}
+	const TRect &operator=( const TRect &rect )
+	{
+		x1 = rect.x1;
+		y1 = rect.y1;
+		x2 = rect.x2;
+		y2 = rect.y2;
+		return *this;
+	}
+	void Set( const TYPE _x1, const TYPE _y1, const TYPE _x2, const TYPE _y2 )
+	{
+		x1 = _x1;
+		y1 = _y1;
+		x2 = _x2;
+		y2 = _y2;
+	}
+	void Set( const CVec2 &vLT, const CVec2 &vRB )
+	{
+		minx = vLT.x;
+		miny = vLT.y;
+		maxx = vRB.x;
+		maxy = vRB.y;
+	}
+	void Set( const TPoint &vLT, const TPoint &vRB )
+	{
+		minx = vLT.x;
+		miny = vLT.y;
+		maxx = vRB.x;
+		maxy = vRB.y;
+	}
+	void Set( const TRect &rect )
+	{
+		x1 = rect.x1;
+		y1 = rect.y1;
+		x2 = rect.x2;
+		y2 = rect.y2;
+	}
 	void SetEmpty() { minx = miny = maxx = maxy = 0; }
-	void SetRect( const TYPE _x1, const TYPE _y1, const TYPE _x2, const TYPE _y2 ) { Set(_x1, _y1, _x2, _y2); }
-	void SetRect( const CVec2 &vLT, const CVec2 &vRB ) { Set(vLT, vRB); }
-	void SetRect( const TPoint &vLT, const TPoint &vRB ) { Set(vLT, vRB); }
-	void SetRect( const TRect &rect ) { Set(rect); }
+	void SetRect( const TYPE _x1, const TYPE _y1, const TYPE _x2, const TYPE _y2 ) { Set( _x1, _y1, _x2, _y2 ); }
+	void SetRect( const CVec2 &vLT, const CVec2 &vRB ) { Set( vLT, vRB ); }
+	void SetRect( const TPoint &vLT, const TPoint &vRB ) { Set( vLT, vRB ); }
+	void SetRect( const TRect &rect ) { Set( rect ); }
 	void SetRectEmpty() { SetEmpty(); }
 	// operators
-	void operator*=( float fScale ) { x1 *= fScale; y1 *= fScale; x2 *= fScale; y2 *= fScale; }
+	void operator*=( float fScale )
+	{
+		x1 *= fScale;
+		y1 *= fScale;
+		x2 *= fScale;
+		y2 *= fScale;
+	}
 	// sizes access
 	const TYPE Width() const { return ( maxx - minx ); }
 	const TYPE Height() const { return ( maxy - miny ); }
@@ -805,22 +1468,50 @@ public:
 	const TPoint GetRightTop() const { return TPoint( maxx, miny ); }
 	const TPoint GetLeftBottom() const { return TPoint( minx, maxy ); }
 	const TPoint GetRightBottom() const { return TPoint( maxx, maxy ); }
-	const TPoint GetCenter() const { return TPoint( (minx + maxx) / TYPE(2), (miny + maxy) / TYPE(2) ); }
+	const TPoint GetCenter() const { return TPoint( ( minx + maxx ) / TYPE( 2 ), ( miny + maxy ) / TYPE( 2 ) ); }
 	// checks
-	bool operator==( const TRect &rc ) { return (x1 == rc.x1) && (y1 == rc.y1) && (x2 == rc.x2) && (y2 == rc.y2); }
-	bool operator!=( const TRect &rc ) { return (x1 != rc.x1) || (y1 != rc.y1) || (x2 != rc.x2) || (y2 != rc.y2); }
-	bool IsEmpty() const { return ( (minx >= maxx) || (miny >= maxy) ); }
-	bool IsInside( const CVec2 &pt ) const { return (pt.x >= minx) && (pt.x <= maxx) && (pt.y >= miny) && (pt.y <= maxy); }
-	bool IsInside( const TPoint &pt ) const { return (pt.x >= minx) && (pt.x <= maxx) && (pt.y >= miny) && (pt.y <= maxy); }
-	bool IsInside( const TYPE &x, const TYPE &y ) const { return (x >= minx) && (x <= maxx) && (y >= miny) && (y <= maxy); }
-	bool IsInside( const TRect &rect ) const { return (rect.minx >= minx) && (rect.maxx <= maxx) && (rect.miny >= miny) && (rect.maxy <= maxy); }
-	bool IsIntersect( const TRect &rc ) const { return ( (std::max)(minx, rc.minx) < (std::min)(maxx, rc.maxx) ) && ( (std::max)(miny, rc.miny) < (std::min)(maxy, rc.maxy) ); }
-	bool IsIntersectEdges( const TRect &rc ) const { return ( (std::max)(minx, rc.minx) <= (std::min)(maxx, rc.maxx) ) && ( (std::max)(miny, rc.miny) <= (std::min)(maxy, rc.maxy) ); }
+	bool operator==( const TRect &rc )
+	{
+		return ( x1 == rc.x1 ) && ( y1 == rc.y1 ) && ( x2 == rc.x2 ) && ( y2 == rc.y2 );
+	}
+	bool operator!=( const TRect &rc )
+	{
+		return ( x1 != rc.x1 ) || ( y1 != rc.y1 ) || ( x2 != rc.x2 ) || ( y2 != rc.y2 );
+	}
+	bool IsEmpty() const { return ( ( minx >= maxx ) || ( miny >= maxy ) ); }
+	bool IsInside( const CVec2 &pt ) const
+	{
+		return ( pt.x >= minx ) && ( pt.x <= maxx ) && ( pt.y >= miny ) && ( pt.y <= maxy );
+	}
+	bool IsInside( const TPoint &pt ) const
+	{
+		return ( pt.x >= minx ) && ( pt.x <= maxx ) && ( pt.y >= miny ) && ( pt.y <= maxy );
+	}
+	bool IsInside( const TYPE &x, const TYPE &y ) const
+	{
+		return ( x >= minx ) && ( x <= maxx ) && ( y >= miny ) && ( y <= maxy );
+	}
+	bool IsInside( const TRect &rect ) const
+	{
+		return ( rect.minx >= minx ) && ( rect.maxx <= maxx ) && ( rect.miny >= miny ) && ( rect.maxy <= maxy );
+	}
+	bool IsIntersect( const TRect &rc ) const
+	{
+		return ( (std::max)( minx, rc.minx ) < (std::min)( maxx, rc.maxx ) ) &&
+		       ( (std::max)( miny, rc.miny ) < (std::min)( maxy, rc.maxy ) );
+	}
+	bool IsIntersectEdges( const TRect &rc ) const
+	{
+		return ( (std::max)( minx, rc.minx ) <= (std::min)( maxx, rc.maxx ) ) &&
+		       ( (std::max)( miny, rc.miny ) <= (std::min)( maxy, rc.maxy ) );
+	}
 	// intersection, union, etc
 	void Intersect( const TRect &rect )
 	{
-		minx = (std::max)( minx, rect.minx ); maxx = (std::min)( maxx, rect.maxx );
-		miny = (std::max)( miny, rect.miny ); maxy = (std::min)( maxy, rect.maxy );
+		minx = (std::max)( minx, rect.minx );
+		maxx = (std::min)( maxx, rect.maxx );
+		miny = (std::max)( miny, rect.miny );
+		maxy = (std::min)( maxy, rect.maxy );
 	}
 	TRect &Union( const TRect &rect )
 	{
@@ -828,25 +1519,54 @@ public:
 			*this = rect;
 		else if ( !rect.IsEmpty() )
 		{
-			minx = (std::min)( minx, rect.minx ); maxx = (std::max)( maxx, rect.maxx );
-			miny = (std::min)( miny, rect.miny ); maxy = (std::max)( maxy, rect.maxy );
+			minx = (std::min)( minx, rect.minx );
+			maxx = (std::max)( maxx, rect.maxx );
+			miny = (std::min)( miny, rect.miny );
+			maxy = (std::max)( maxy, rect.maxy );
 		}
 		return *this;
 	}
 	// inflation / deflation
-	void Inflate( const TYPE halfX, const TYPE halfY ) { x1 -= halfX; y1 -= halfY; x2 += halfX; y2 += halfY; }
-	void Deflate( const TYPE halfX, const TYPE halfY ) { x1 += halfX; y1 += halfY; x2 -= halfX; y2 -= halfY; }
+	void Inflate( const TYPE halfX, const TYPE halfY )
+	{
+		x1 -= halfX;
+		y1 -= halfY;
+		x2 += halfX;
+		y2 += halfY;
+	}
+	void Deflate( const TYPE halfX, const TYPE halfY )
+	{
+		x1 += halfX;
+		y1 += halfY;
+		x2 -= halfX;
+		y2 -= halfY;
+	}
 	// moving
 	// move to point
-	void MoveTo( const TYPE x, const TYPE y ) { x2 += x - x1; y2 += y - y1; x1 = x; y1 = y; }
-	void MoveTo( const TPoint &pt ) { MoveTo(pt.x, pt.y); }
-	void MoveTo( const CVec2 &pt ) { MoveTo(pt.x, pt.y); }
+	void MoveTo( const TYPE x, const TYPE y )
+	{
+		x2 += x - x1;
+		y2 += y - y1;
+		x1 = x;
+		y1 = y;
+	}
+	void MoveTo( const TPoint &pt ) { MoveTo( pt.x, pt.y ); }
+	void MoveTo( const CVec2 &pt ) { MoveTo( pt.x, pt.y ); }
 	// move to dist
-	void Move( const TYPE dx, const TYPE dy ) { x1 += dx; y1 += dy; x2 += dx; y2 += dy; }
-	void Move( const TPoint &pt ) { Move(pt.x, pt.y); }
-	void Move( const CVec2 &pt ) { Move(pt.x, pt.y); }
+	void Move( const TYPE dx, const TYPE dy )
+	{
+		x1 += dx;
+		y1 += dy;
+		x2 += dx;
+		y2 += dy;
+	}
+	void Move( const TPoint &pt ) { Move( pt.x, pt.y ); }
+	void Move( const CVec2 &pt ) { Move( pt.x, pt.y ); }
 	// normalization
-	void Normalize() { Set( (std::min)( minx, maxx ), (std::min)( miny, maxy ), (std::max)( minx, maxx ), (std::max)( miny, maxy ) ); }
+	void Normalize()
+	{
+		Set( (std::min)( minx, maxx ), (std::min)( miny, maxy ), (std::max)( minx, maxx ), (std::max)( miny, maxy ) );
+	}
 };
 
 // triangle
@@ -855,9 +1575,14 @@ struct STriangle
 	uint16_t i1 = 0, i2 = 0, i3 = 0;
 	//
 	STriangle() {}
-	STriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ): i1(_i1), i2(_i2), i3(_i3) {}
-  //
-  void Set( const uint16_t _i1, const uint16_t _i2, const uint16_t _i3 ) { i1 = _i1; i2 = _i2; i3 = _i3; }
+	STriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ) : i1( _i1 ), i2( _i2 ), i3( _i3 ) {}
+	//
+	void Set( const uint16_t _i1, const uint16_t _i2, const uint16_t _i3 )
+	{
+		i1 = _i1;
+		i2 = _i2;
+		i3 = _i3;
+	}
 };
 // ориентированная ( против часовой - положительна ) площадь треугольника, помноженная на два
 inline float TriangleAAA( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3 )
@@ -870,8 +1595,8 @@ class CRay
 public:
 	CVec3 ptOrigin, ptDir;
 	//
-	CRay(){}
-	CRay(const CVec3 &_ptOrigin, const CVec3 &_ptDir) : ptOrigin(_ptOrigin), ptDir(_ptDir) {}
+	CRay() {}
+	CRay( const CVec3 &_ptOrigin, const CVec3 &_ptDir ) : ptOrigin( _ptOrigin ), ptDir( _ptDir ) {}
 	CVec3 Get( float fT ) const { return ptOrigin + ptDir * fT; }
 };
 
@@ -881,7 +1606,7 @@ struct SSphere
 	float fRadius = 0.0f;
 
 	SSphere() {}
-	SSphere( const CVec3 &_ptCenter, float _fRadius ): ptCenter(_ptCenter), fRadius(_fRadius) {}
+	SSphere( const CVec3 &_ptCenter, float _fRadius ) : ptCenter( _ptCenter ), fRadius( _fRadius ) {}
 };
 
 struct SMassSphere
@@ -891,8 +1616,10 @@ struct SMassSphere
 	float fMass = 0.0f;
 
 	SMassSphere() {}
-	SMassSphere( const CVec3 &_ptCenter, float _fRadius, float _fMass ):
-		ptCenter(_ptCenter), fRadius(_fRadius), fMass(_fMass) {}
+	SMassSphere( const CVec3 &_ptCenter, float _fRadius, float _fMass )
+			: ptCenter( _ptCenter ), fRadius( _fRadius ), fMass( _fMass )
+	{
+	}
 };
 
 struct SBound
@@ -920,7 +1647,9 @@ struct SBound
 	}
 	void Extend( float fAxisHalfSize )
 	{
-		ptHalfBox.x += fAxisHalfSize; ptHalfBox.y += fAxisHalfSize; ptHalfBox.z += fAxisHalfSize;
+		ptHalfBox.x += fAxisHalfSize;
+		ptHalfBox.y += fAxisHalfSize;
+		ptHalfBox.z += fAxisHalfSize;
 		s.fRadius = fabs( ptHalfBox );
 	}
 	bool IsInside( const CVec3 &v )
@@ -935,12 +1664,10 @@ struct SBound
 inline bool DoesIntersect( const SBound &a, const SBound &b )
 {
 	CVec3 ptDif = a.s.ptCenter - b.s.ptCenter;
-	if ( fabs2(ptDif) > fabs2( a.s.fRadius + b.s.fRadius ) )
+	if ( fabs2( ptDif ) > fabs2( a.s.fRadius + b.s.fRadius ) )
 		return false;
-	if (
-		fabs(ptDif.x) > a.ptHalfBox.x + b.ptHalfBox.x ||
-		fabs(ptDif.y) > a.ptHalfBox.y + b.ptHalfBox.y ||
-		fabs(ptDif.z) > a.ptHalfBox.z + b.ptHalfBox.z )
+	if ( fabs( ptDif.x ) > a.ptHalfBox.x + b.ptHalfBox.x || fabs( ptDif.y ) > a.ptHalfBox.y + b.ptHalfBox.y ||
+	     fabs( ptDif.z ) > a.ptHalfBox.z + b.ptHalfBox.z )
 		return false;
 	return true;
 }
@@ -957,21 +1684,21 @@ inline bool DoesIntersect( const SBound &a, const SBound &b )
 
 inline bool SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2, bool bNormalize )
 {
-  CVec3 v1( pt1.x - pt0.x, pt1.y - pt0.y, pt1.z - pt0.z ), v2( pt2.x - pt0.x, pt2.y - pt0.y, pt2.z - pt0.z );
-  if ( bNormalize && ( !Normalize(&v1) || !Normalize(&v2) ) )
-    return false;
+	CVec3 v1( pt1.x - pt0.x, pt1.y - pt0.y, pt1.z - pt0.z ), v2( pt2.x - pt0.x, pt2.y - pt0.y, pt2.z - pt0.z );
+	if ( bNormalize && ( !Normalize( &v1 ) || !Normalize( &v2 ) ) )
+		return false;
 	// calc normale
 	n = v1 ^ v2;
-  if ( bNormalize && !Normalize(&n) )
-    return false;
+	if ( bNormalize && !Normalize( &n ) )
+		return false;
 	// calc distance coeff
 	d = -( pt0 * n );
-  //
-  return true;
+	//
+	return true;
 }
 inline void SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 )
 {
-  CVec3 v1( pt1.x - pt0.x, pt1.y - pt0.y, pt1.z - pt0.z ), v2( pt2.x - pt0.x, pt2.y - pt0.y, pt2.z - pt0.z );
+	CVec3 v1( pt1.x - pt0.x, pt1.y - pt0.y, pt1.z - pt0.z ), v2( pt2.x - pt0.x, pt2.y - pt0.y, pt2.z - pt0.z );
 	// calc normale
 	n = v1 ^ v2;
 	// calc distance coeff
@@ -982,8 +1709,8 @@ inline void SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 )
 // вернуть 0x80000000 если это так или 0 в противном случае
 inline uint32_t SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
 {
-  float fDist = n*pt + d;
-  return ( FP_BITS(fDist) & 0x80000000 );
+	float fDist = n * pt + d;
+	return ( FP_BITS( fDist ) & 0x80000000 );
 }
 
 // ************************************************************************************************************************ //
@@ -996,7 +1723,7 @@ inline uint32_t SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
 
 inline void Identity( SHMatrix *pRes )
 {
-	memset(pRes, 0, 16 * sizeof(uint32_t));
+	memset( pRes, 0, 16 * sizeof( uint32_t ) );
 
 	pRes->_11 = pRes->_22 = pRes->_33 = pRes->_44 = 1.0f;
 }
@@ -1004,10 +1731,8 @@ inline void Identity( SHMatrix *pRes )
 // allow &m == p
 inline void Transpose( SHMatrix *p, const SHMatrix &m )
 {
-	p->Set( m._11, m._21, m._31, m._41,
-		m._12, m._22, m._32, m._42,
-		m._13, m._23, m._33, m._43,
-		m._14, m._24, m._34, m._44 );
+	p->Set(
+			m._11, m._21, m._31, m._41, m._12, m._22, m._32, m._42, m._13, m._23, m._33, m._43, m._14, m._24, m._34, m._44 );
 }
 #pragma optimize( "", on )
 inline void SHMatrix::Set( const CQuat &quat )
@@ -1023,72 +1748,98 @@ inline void SHMatrix::Set( const CVec3 &vPos, const CQuat &quat )
 	// decomp quaternion to 3x3 minor
 	quat.DecompEulerMatrix( this );
 	// write position to last column
-	_14 = vPos.x; _24 = vPos.y; _34 = vPos.z;
+	_14 = vPos.x;
+	_24 = vPos.y;
+	_34 = vPos.z;
 	// reset other components to default
 	_41 = _42 = _43 = 0;
 	_44 = 1;
 }
-inline void SHMatrix::Set( float __11, float __12, float __13, float __14,
-                           float __21, float __22, float __23, float __24,
-                           float __31, float __32, float __33, float __34,
-                           float __41, float __42, float __43, float __44 )
+inline void SHMatrix::Set( float __11,
+                           float __12,
+                           float __13,
+                           float __14,
+                           float __21,
+                           float __22,
+                           float __23,
+                           float __24,
+                           float __31,
+                           float __32,
+                           float __33,
+                           float __34,
+                           float __41,
+                           float __42,
+                           float __43,
+                           float __44 )
 {
-	_11 = __11; _12 = __12; _13 = __13; _14 = __14;
-	_21 = __21; _22 = __22; _23 = __23; _24 = __24;
-	_31 = __31; _32 = __32; _33 = __33; _34 = __34;
-	_41 = __41; _42 = __42; _43 = __43; _44 = __44;
+	_11 = __11;
+	_12 = __12;
+	_13 = __13;
+	_14 = __14;
+	_21 = __21;
+	_22 = __22;
+	_23 = __23;
+	_24 = __24;
+	_31 = __31;
+	_32 = __32;
+	_33 = __33;
+	_34 = __34;
+	_41 = __41;
+	_42 = __42;
+	_43 = __43;
+	_44 = __44;
 }
 
 inline void Multiply( SHMatrix *p, const SHMatrix &a, const SHMatrix &b )
 {
-	p->_11 = a._11*b._11 + a._12*b._21 + a._13*b._31 + a._14*b._41;
-	p->_12 = a._11*b._12 + a._12*b._22 + a._13*b._32 + a._14*b._42;
-	p->_13 = a._11*b._13 + a._12*b._23 + a._13*b._33 + a._14*b._43;
-	p->_14 = a._11*b._14 + a._12*b._24 + a._13*b._34 + a._14*b._44;
+	p->_11 = a._11 * b._11 + a._12 * b._21 + a._13 * b._31 + a._14 * b._41;
+	p->_12 = a._11 * b._12 + a._12 * b._22 + a._13 * b._32 + a._14 * b._42;
+	p->_13 = a._11 * b._13 + a._12 * b._23 + a._13 * b._33 + a._14 * b._43;
+	p->_14 = a._11 * b._14 + a._12 * b._24 + a._13 * b._34 + a._14 * b._44;
 
-	p->_21 = a._21*b._11 + a._22*b._21 + a._23*b._31 + a._24*b._41;
-	p->_22 = a._21*b._12 + a._22*b._22 + a._23*b._32 + a._24*b._42;
-	p->_23 = a._21*b._13 + a._22*b._23 + a._23*b._33 + a._24*b._43;
-	p->_24 = a._21*b._14 + a._22*b._24 + a._23*b._34 + a._24*b._44;
+	p->_21 = a._21 * b._11 + a._22 * b._21 + a._23 * b._31 + a._24 * b._41;
+	p->_22 = a._21 * b._12 + a._22 * b._22 + a._23 * b._32 + a._24 * b._42;
+	p->_23 = a._21 * b._13 + a._22 * b._23 + a._23 * b._33 + a._24 * b._43;
+	p->_24 = a._21 * b._14 + a._22 * b._24 + a._23 * b._34 + a._24 * b._44;
 
-	p->_31 = a._31*b._11 + a._32*b._21 + a._33*b._31 + a._34*b._41;
-	p->_32 = a._31*b._12 + a._32*b._22 + a._33*b._32 + a._34*b._42;
-	p->_33 = a._31*b._13 + a._32*b._23 + a._33*b._33 + a._34*b._43;
-	p->_34 = a._31*b._14 + a._32*b._24 + a._33*b._34 + a._34*b._44;
+	p->_31 = a._31 * b._11 + a._32 * b._21 + a._33 * b._31 + a._34 * b._41;
+	p->_32 = a._31 * b._12 + a._32 * b._22 + a._33 * b._32 + a._34 * b._42;
+	p->_33 = a._31 * b._13 + a._32 * b._23 + a._33 * b._33 + a._34 * b._43;
+	p->_34 = a._31 * b._14 + a._32 * b._24 + a._33 * b._34 + a._34 * b._44;
 
-	p->_41 = a._41*b._11 + a._42*b._21 + a._43*b._31 + a._44*b._41;
-	p->_42 = a._41*b._12 + a._42*b._22 + a._43*b._32 + a._44*b._42;
-	p->_43 = a._41*b._13 + a._42*b._23 + a._43*b._33 + a._44*b._43;
-	p->_44 = a._41*b._14 + a._42*b._24 + a._43*b._34 + a._44*b._44;
+	p->_41 = a._41 * b._11 + a._42 * b._21 + a._43 * b._31 + a._44 * b._41;
+	p->_42 = a._41 * b._12 + a._42 * b._22 + a._43 * b._32 + a._44 * b._42;
+	p->_43 = a._41 * b._13 + a._42 * b._23 + a._43 * b._33 + a._44 * b._43;
+	p->_44 = a._41 * b._14 + a._42 * b._24 + a._43 * b._34 + a._44 * b._44;
 }
 inline void MultiplyScale( SHMatrix *p, const SHMatrix &a, const float fX, const float fY, const float fZ )
 {
-	p->_11 = a._11*fX;
-	p->_12 = a._12*fY;
-	p->_13 = a._13*fZ;
+	p->_11 = a._11 * fX;
+	p->_12 = a._12 * fY;
+	p->_13 = a._13 * fZ;
 	p->_14 = a._14;
 
-	p->_21 = a._21*fX;
-	p->_22 = a._22*fY;
-	p->_23 = a._23*fZ;
+	p->_21 = a._21 * fX;
+	p->_22 = a._22 * fY;
+	p->_23 = a._23 * fZ;
 	p->_24 = a._24;
 
-	p->_31 = a._31*fX;
-	p->_32 = a._32*fY;
-	p->_33 = a._33*fZ;
+	p->_31 = a._31 * fX;
+	p->_32 = a._32 * fY;
+	p->_33 = a._33 * fZ;
 	p->_34 = a._34;
 
-	p->_41 = a._41*fX;
-	p->_42 = a._42*fY;
-	p->_43 = a._43*fZ;
+	p->_41 = a._41 * fX;
+	p->_42 = a._42 * fY;
+	p->_43 = a._43 * fZ;
 	p->_44 = a._44;
 }
 
 inline const SHMatrix operator*( const SHMatrix &a, const SHMatrix &b )
 {
-  SHMatrix ret;
-  Multiply( &ret, a, b );
-  return ret;
+	SHMatrix ret;
+	Multiply( &ret, a, b );
+	return ret;
 }
 inline SFBTransform operator*( const SFBTransform &a, const SFBTransform &b )
 {
@@ -1101,80 +1852,81 @@ inline SFBTransform operator*( const SFBTransform &a, const SFBTransform &b )
 #pragma optimize( "aw", off )
 inline void SHMatrix::RotateVector( CVec3 *pResult, const CVec3 &pt ) const
 {
-	const float x = _11*pt.x + _12*pt.y + _13*pt.z;
-	const float y = _21*pt.x + _22*pt.y + _23*pt.z;
-	const float z = _31*pt.x + _32*pt.y + _33*pt.z;
+	const float x = _11 * pt.x + _12 * pt.y + _13 * pt.z;
+	const float y = _21 * pt.x + _22 * pt.y + _23 * pt.z;
+	const float z = _31 * pt.x + _32 * pt.y + _33 * pt.z;
 	pResult->Set( x, y, z );
 }
 inline void SHMatrix::RotateVectorTransposed( CVec3 *pResult, const CVec3 &pt ) const
 {
 	const float x = pt.x, y = pt.y, z = pt.z;
-	pResult->x = _11*x + _21*y + _31*z;
-	pResult->y = _12*x + _22*y + _32*z;
-	pResult->z = _13*x + _23*y + _33*z;
+	pResult->x = _11 * x + _21 * y + _31 * z;
+	pResult->y = _12 * x + _22 * y + _32 * z;
+	pResult->z = _13 * x + _23 * y + _33 * z;
 }
 inline void SHMatrix::RotateHDirection( CVec4 *pResult, const CVec3 &pt ) const
 {
 	const float x = pt.x, y = pt.y, z = pt.z;
-	pResult->x = _11*x + _12*y + _13*z;
-	pResult->y = _21*x + _22*y + _23*z;
-	pResult->z = _31*x + _32*y + _33*z;
-	pResult->w = _41*x + _42*y + _43*z;
+	pResult->x = _11 * x + _12 * y + _13 * z;
+	pResult->y = _21 * x + _22 * y + _23 * z;
+	pResult->z = _31 * x + _32 * y + _33 * z;
+	pResult->w = _41 * x + _42 * y + _43 * z;
 }
 inline void SHMatrix::RotateHVector( CVec3 *pResult, const CVec3 &pt ) const
 {
-	const float x = _11*pt.x + _12*pt.y + _13*pt.z + _14;
-	const float y = _21*pt.x + _22*pt.y + _23*pt.z + _24;
-	const float z = _31*pt.x + _32*pt.y + _33*pt.z + _34;
+	const float x = _11 * pt.x + _12 * pt.y + _13 * pt.z + _14;
+	const float y = _21 * pt.x + _22 * pt.y + _23 * pt.z + _24;
+	const float z = _31 * pt.x + _32 * pt.y + _33 * pt.z + _34;
 	pResult->Set( x, y, z );
 }
 inline void SHMatrix::RotateHVector( CVec4 *pResult, const CVec3 &pt ) const
 {
-	const float x = _11*pt.x + _12*pt.y + _13*pt.z + _14;
-	const float y = _21*pt.x + _22*pt.y + _23*pt.z + _24;
-	const float z = _31*pt.x + _32*pt.y + _33*pt.z + _34;
-	const float w = _41*pt.x + _42*pt.y + _43*pt.z + _44;
+	const float x = _11 * pt.x + _12 * pt.y + _13 * pt.z + _14;
+	const float y = _21 * pt.x + _22 * pt.y + _23 * pt.z + _24;
+	const float z = _31 * pt.x + _32 * pt.y + _33 * pt.z + _34;
+	const float w = _41 * pt.x + _42 * pt.y + _43 * pt.z + _44;
 	pResult->Set( x, y, z, w );
 }
 inline void SHMatrix::RotateHVector( CVec4 *pResult, const CVec4 &pt ) const
 {
-	const float x = _11*pt.x + _12*pt.y + _13*pt.z + _14*pt.w;
-	const float y = _21*pt.x + _22*pt.y + _23*pt.z + _24*pt.w;
-	const float z = _31*pt.x + _32*pt.y + _33*pt.z + _34*pt.w;
-	const float w = _41*pt.x + _42*pt.y + _43*pt.z + _44*pt.w;
+	const float x = _11 * pt.x + _12 * pt.y + _13 * pt.z + _14 * pt.w;
+	const float y = _21 * pt.x + _22 * pt.y + _23 * pt.z + _24 * pt.w;
+	const float z = _31 * pt.x + _32 * pt.y + _33 * pt.z + _34 * pt.w;
+	const float w = _41 * pt.x + _42 * pt.y + _43 * pt.z + _44 * pt.w;
 	pResult->Set( x, y, z, w );
 }
 
 inline void SHMatrix::RotateHVectorTransposed( CVec4 *pResult, const CVec4 &pt ) const
 {
-	const float x = _11*pt.x + _21*pt.y + _31*pt.z + _41*pt.w;
-	const float y = _12*pt.x + _22*pt.y + _32*pt.z + _42*pt.w;
-	const float z = _13*pt.x + _23*pt.y + _33*pt.z + _43*pt.w;
-	const float w = _14*pt.x + _24*pt.y + _34*pt.z + _44*pt.w;
+	const float x = _11 * pt.x + _21 * pt.y + _31 * pt.z + _41 * pt.w;
+	const float y = _12 * pt.x + _22 * pt.y + _32 * pt.z + _42 * pt.w;
+	const float z = _13 * pt.x + _23 * pt.y + _33 * pt.z + _43 * pt.w;
+	const float w = _14 * pt.x + _24 * pt.y + _34 * pt.z + _44 * pt.w;
 	pResult->Set( x, y, z, w );
 }
 
 inline bool SHMatrix::HomogeneousInverse( const SHMatrix &m )
 {
-	float det =	m._11*(m._22*m._33 - m._23*m._32) + m._21*(m._13*m._32 - m._12*m._33) + m._31*(m._12*m._23 - m._13*m._22);
+	float det = m._11 * ( m._22 * m._33 - m._23 * m._32 ) + m._21 * ( m._13 * m._32 - m._12 * m._33 ) +
+	            m._31 * ( m._12 * m._23 - m._13 * m._22 );
 	if ( det == 0 )
-		return false;                       // singular matrix found !
-	det = 1.0f/det;
+		return false; // singular matrix found !
+	det = 1.0f / det;
 	// calculate reverse rotation
-	_11 = ( m._22*m._33 - m._23*m._32 ) * det;
-	_12 = ( m._13*m._32 - m._12*m._33 ) * det;
-	_13 = ( m._12*m._23 - m._13*m._22 ) * det;
-	_14 = -( m._14*_11 + m._24*_12 + m._34*_13 );
+	_11 = ( m._22 * m._33 - m._23 * m._32 ) * det;
+	_12 = ( m._13 * m._32 - m._12 * m._33 ) * det;
+	_13 = ( m._12 * m._23 - m._13 * m._22 ) * det;
+	_14 = -( m._14 * _11 + m._24 * _12 + m._34 * _13 );
 	//
-	_21 = ( m._23*m._31 - m._21*m._33 ) * det;
-	_22 = ( m._11*m._33 - m._13*m._31 ) * det;
-	_23 = ( m._13*m._21 - m._11*m._23 ) * det;
-	_24 = -( m._14*_21 + m._24*_22 + m._34*_23 );
+	_21 = ( m._23 * m._31 - m._21 * m._33 ) * det;
+	_22 = ( m._11 * m._33 - m._13 * m._31 ) * det;
+	_23 = ( m._13 * m._21 - m._11 * m._23 ) * det;
+	_24 = -( m._14 * _21 + m._24 * _22 + m._34 * _23 );
 	//
-	_31 = ( m._21*m._32 - m._22*m._31 ) * det;
-	_32 = ( m._12*m._31 - m._11*m._32 ) * det;
-	_33 = ( m._11*m._22 - m._12*m._21 ) * det;
-	_34 = -( m._14*_31 + m._24*_32 + m._34*_33 );
+	_31 = ( m._21 * m._32 - m._22 * m._31 ) * det;
+	_32 = ( m._12 * m._31 - m._11 * m._32 ) * det;
+	_33 = ( m._11 * m._22 - m._12 * m._21 ) * det;
+	_34 = -( m._14 * _31 + m._24 * _32 + m._34 * _33 );
 	//
 	_41 = _42 = _43 = 0.0f;
 	_44 = 1.0f;
@@ -1204,74 +1956,96 @@ inline bool Invert( SHMatrix *pRes, const SHMatrix &m )
 	const float m1224 = m._12 * m._24 - m._22 * m._14;
 	const float m1223 = m._12 * m._23 - m._22 * m._13;
 	// Adjoint Matrix
-	pRes->_11 =  m._22 * m3344 - m._32 * m2344 + m._42 * m2334;
+	pRes->_11 = m._22 * m3344 - m._32 * m2344 + m._42 * m2334;
 	pRes->_21 = -m._21 * m3344 + m._31 * m2344 - m._41 * m2334;
-	pRes->_31 =  m._21 * m3244 - m._31 * m2244 + m._41 * m2234;
+	pRes->_31 = m._21 * m3244 - m._31 * m2244 + m._41 * m2234;
 	pRes->_41 = -m._21 * m3243 + m._31 * m2243 - m._41 * m2233;
 
 	pRes->_12 = -m._12 * m3344 + m._32 * m1344 - m._42 * m1334;
-	pRes->_22 =  m._11 * m3344 - m._31 * m1344 + m._41 * m1334;
+	pRes->_22 = m._11 * m3344 - m._31 * m1344 + m._41 * m1334;
 	pRes->_32 = -m._11 * m3244 + m._31 * m1244 - m._41 * m1234;
-	pRes->_42 =  m._11 * m3243 - m._31 * m1243 + m._41 * m1233;
+	pRes->_42 = m._11 * m3243 - m._31 * m1243 + m._41 * m1233;
 
-	pRes->_13 =  m._12 * m2344 - m._22 * m1344 + m._42 * m1324;
+	pRes->_13 = m._12 * m2344 - m._22 * m1344 + m._42 * m1324;
 	pRes->_23 = -m._11 * m2344 + m._21 * m1344 - m._41 * m1324;
-	pRes->_33 =  m._11 * m2244 - m._21 * m1244 + m._41 * m1224;
+	pRes->_33 = m._11 * m2244 - m._21 * m1244 + m._41 * m1224;
 	pRes->_43 = -m._11 * m2243 + m._21 * m1243 - m._41 * m1223;
 
 	pRes->_14 = -m._12 * m2334 + m._22 * m1334 - m._32 * m1324;
-	pRes->_24 =  m._11 * m2334 - m._21 * m1334 + m._31 * m1324;
+	pRes->_24 = m._11 * m2334 - m._21 * m1334 + m._31 * m1324;
 	pRes->_34 = -m._11 * m2234 + m._21 * m1234 - m._31 * m1224;
-	pRes->_44 =  m._11 * m2233 - m._21 * m1233 + m._31 * m1223;
+	pRes->_44 = m._11 * m2233 - m._21 * m1233 + m._31 * m1223;
 	// Division by determinant
-	float fDet = m._11*pRes->_11 + m._21*pRes->_12 + m._31*pRes->_13 + m._41*pRes->_14;
+	float fDet = m._11 * pRes->_11 + m._21 * pRes->_12 + m._31 * pRes->_13 + m._41 * pRes->_14;
 	if ( fDet == 0 )
-		return false;												// singular matrix found !
+		return false; // singular matrix found !
 	fDet = 1.0f / fDet;
-	pRes->_11 *= fDet;	pRes->_21 *= fDet;	pRes->_31 *= fDet;	pRes->_41 *= fDet;
-	pRes->_12 *= fDet;	pRes->_22 *= fDet;	pRes->_32 *= fDet;	pRes->_42 *= fDet;
-	pRes->_13 *= fDet;	pRes->_23 *= fDet;	pRes->_33 *= fDet;	pRes->_43 *= fDet;
-	pRes->_14 *= fDet;	pRes->_24 *= fDet;	pRes->_34 *= fDet;	pRes->_44 *= fDet;
+	pRes->_11 *= fDet;
+	pRes->_21 *= fDet;
+	pRes->_31 *= fDet;
+	pRes->_41 *= fDet;
+	pRes->_12 *= fDet;
+	pRes->_22 *= fDet;
+	pRes->_32 *= fDet;
+	pRes->_42 *= fDet;
+	pRes->_13 *= fDet;
+	pRes->_23 *= fDet;
+	pRes->_33 *= fDet;
+	pRes->_43 *= fDet;
+	pRes->_14 *= fDet;
+	pRes->_24 *= fDet;
+	pRes->_34 *= fDet;
+	pRes->_44 *= fDet;
 
 	return true;
 }
 
 // determinant
-inline float Det( float _11 ) { return _11; }
-inline float Det( float _11, float _12, float _21, float _22 ) { return _11*_22 - _12*_21; }
-
-inline float Det( float _11, float _12, float _13,
-	                float _21, float _22, float _23,
-	                float _31, float _32, float _33 )
+inline float Det( float _11 )
 {
-	return _11*( _22*_33 - _32*_23 ) -
-		     _21*( _12*_33 - _32*_13 ) +
-		     _31*( _12*_23 - _22*_13 );
+	return _11;
+}
+inline float Det( float _11, float _12, float _21, float _22 )
+{
+	return _11 * _22 - _12 * _21;
 }
 
-inline float Det( float _11, float _12, float _13, float _14,
-	                float _21, float _22, float _23, float _24,
-	                float _31, float _32, float _33, float _34,
-	                float _41, float _42, float _43, float _44 )
+inline float Det( float _11, float _12, float _13, float _21, float _22, float _23, float _31, float _32, float _33 )
 {
-	const float M3344 = _33*_44 - _43*_34;
-	const float M2344 = _23*_44 - _43*_24;
-	const float M2334 = _23*_34 - _33*_24;
-	const float M1344 = _13*_44 - _43*_14;
-	const float M1334 = _13*_34 - _33*_14;
-	const float M1324 = _13*_24 - _23*_14;
+	return _11 * ( _22 * _33 - _32 * _23 ) - _21 * ( _12 * _33 - _32 * _13 ) + _31 * ( _12 * _23 - _22 * _13 );
+}
 
-	return _11 * ( _22*M3344 - _32*M2344 + _42*M2334 ) -
-		     _21 * ( _12*M3344 - _32*M1344 + _42*M1334 ) +
-		     _31 * ( _12*M2344 - _22*M1344 + _42*M1324 ) -
-		     _41 * ( _12*M2334 - _22*M1334 + _32*M1324 );
+inline float Det( float _11,
+                  float _12,
+                  float _13,
+                  float _14,
+                  float _21,
+                  float _22,
+                  float _23,
+                  float _24,
+                  float _31,
+                  float _32,
+                  float _33,
+                  float _34,
+                  float _41,
+                  float _42,
+                  float _43,
+                  float _44 )
+{
+	const float M3344 = _33 * _44 - _43 * _34;
+	const float M2344 = _23 * _44 - _43 * _24;
+	const float M2334 = _23 * _34 - _33 * _24;
+	const float M1344 = _13 * _44 - _43 * _14;
+	const float M1334 = _13 * _34 - _33 * _14;
+	const float M1324 = _13 * _24 - _23 * _14;
+
+	return _11 * ( _22 * M3344 - _32 * M2344 + _42 * M2334 ) - _21 * ( _12 * M3344 - _32 * M1344 + _42 * M1334 ) +
+	       _31 * ( _12 * M2344 - _22 * M1344 + _42 * M1324 ) - _41 * ( _12 * M2334 - _22 * M1334 + _32 * M1324 );
 }
 inline float Det( const SHMatrix &m )
 {
-	return Det( m._11, m._12, m._13, m._14,
-		          m._21, m._22, m._23, m._24,
-							m._31, m._32, m._33, m._34,
-							m._41, m._42, m._43, m._44 );
+	return Det(
+			m._11, m._12, m._13, m._14, m._21, m._22, m._23, m._24, m._31, m._32, m._33, m._34, m._41, m._42, m._43, m._44 );
 }
 
 // ************************************************************************************************************************ //
@@ -1282,7 +2056,7 @@ inline float Det( const SHMatrix &m )
 // **
 // ************************************************************************************************************************ //
 
-const float FP_QUAT_EPSILON = 1e-04f;  // cutoff for sin(angle) near zero
+const float FP_QUAT_EPSILON = 1e-04f; // cutoff for sin(angle) near zero
 
 // create quaternion from rotation axis and angle
 inline void CQuat::FromAngleAxis( float fAngle, const CVec3 &vAxis, const bool bNormalizeAxis )
@@ -1290,74 +2064,73 @@ inline void CQuat::FromAngleAxis( float fAngle, const CVec3 &vAxis, const bool b
 	NI_ASSERT( bNormalizeAxis || fabs( fabs( vAxis ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
 
 	fAngle *= 0.5f;
-  const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( vAxis ) : sin( fAngle );
-  vec4.x = vAxis.x * fSinAlpha;
-  vec4.y = vAxis.y * fSinAlpha;
-  vec4.z = vAxis.z * fSinAlpha;
-  vec4.w = cos( fAngle );
+	const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( vAxis ) : sin( fAngle );
+	vec4.x = vAxis.x * fSinAlpha;
+	vec4.y = vAxis.y * fSinAlpha;
+	vec4.z = vAxis.z * fSinAlpha;
+	vec4.w = cos( fAngle );
 }
 inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis )
 {
-  NI_ASSERT( bNormalizeAxis || fabs( fabs( fAxisX, fAxisY, fAxisZ ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
+	NI_ASSERT( bNormalizeAxis || fabs( fabs( fAxisX, fAxisY, fAxisZ ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
 
 	fAngle *= 0.5f;
-  const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : sin( fAngle );
-  vec4.x = fAxisX * fSinAlpha;
-  vec4.y = fAxisY * fSinAlpha;
-  vec4.z = fAxisZ * fSinAlpha;
-  vec4.w = cos( fAngle );
+	const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : sin( fAngle );
+	vec4.x = fAxisX * fSinAlpha;
+	vec4.y = fAxisY * fSinAlpha;
+	vec4.z = fAxisZ * fSinAlpha;
+	vec4.w = cos( fAngle );
 }
 
 // create quaternion from Euler matrix
 inline void CQuat::FromEulerMatrix( const SHMatrix &m )
 {
-  // first compute squared magnitudes of quaternion components - at least one
-  // will be greater than 0 since quaternion is unit magnitude
-  float qs2 = 0.25f * (m.xx + m.yy + m.zz + 1);
-  float qx2 = qs2 - 0.5f * (m.yy + m.zz);
-  float qy2 = qs2 - 0.5f * (m.zz + m.xx);
-  float qz2 = qs2 - 0.5f * (m.xx + m.yy);
-  // find maximum magnitude component
-  int n = (qs2 > qx2 ) ?
-                        ((qs2 > qy2) ? ((qs2 > qz2) ? 0 : 3) : ((qy2 > qz2) ? 2 : 3)) :
-                        ((qx2 > qy2) ? ((qx2 > qz2) ? 1 : 3) : ((qy2 > qz2) ? 2 : 3));
-  // compute signed quaternion components using numerically stable method
-  float tmp;
-  switch ( n )
-  {
-    case 0:
-      vec4.w = static_cast<float>( sqrt( qs2 ) );
-      tmp = 0.25f / vec4.w;
-      vec4.x = ( m.zy - m.yz ) * tmp;
-      vec4.y = ( m.xz - m.zx ) * tmp;
-      vec4.z = ( m.yx - m.xy ) * tmp;
-      break;
-    case 1:
-      vec4.x = static_cast<float>( sqrt( qx2 ) );
-      tmp = 0.25f / vec4.x;
-      vec4.w = ( m.zy - m.yz ) * tmp;
-      vec4.y = ( m.xy + m.yx ) * tmp;
-      vec4.z = ( m.xz + m.zx ) * tmp;
-      break;
-    case 2:
-      vec4.y = static_cast<float>( sqrt( qy2 ) );
-      tmp = 0.25f / vec4.y;
-      vec4.w = ( m.xz - m.zx ) * tmp;
-      vec4.z = ( m.yz + m.zy ) * tmp;
-      vec4.x = ( m.yx + m.xy ) * tmp;
-      break;
-    case 3:
-      vec4.z = static_cast<float>( sqrt( qz2 ) );
-      tmp = 0.25f / vec4.z;
-      vec4.w = ( m.yx - m.xy ) * tmp;
-      vec4.x = ( m.zx + m.xz ) * tmp;
-      vec4.y = ( m.zy + m.yz ) * tmp;
-      break;
-  }
-  // for consistency, force positive scalar component [ (s; v) = (-s; -v) ]
-  MinimizeRotationAngle();
-  // normalize
-  ::Normalize( vec4.x, vec4.y, vec4.z, vec4.w );
+	// first compute squared magnitudes of quaternion components - at least one
+	// will be greater than 0 since quaternion is unit magnitude
+	float qs2 = 0.25f * ( m.xx + m.yy + m.zz + 1 );
+	float qx2 = qs2 - 0.5f * ( m.yy + m.zz );
+	float qy2 = qs2 - 0.5f * ( m.zz + m.xx );
+	float qz2 = qs2 - 0.5f * ( m.xx + m.yy );
+	// find maximum magnitude component
+	int n = ( qs2 > qx2 ) ? ( ( qs2 > qy2 ) ? ( ( qs2 > qz2 ) ? 0 : 3 ) : ( ( qy2 > qz2 ) ? 2 : 3 ) )
+	                      : ( ( qx2 > qy2 ) ? ( ( qx2 > qz2 ) ? 1 : 3 ) : ( ( qy2 > qz2 ) ? 2 : 3 ) );
+	// compute signed quaternion components using numerically stable method
+	float tmp;
+	switch ( n )
+	{
+		case 0:
+			vec4.w = static_cast<float>( sqrt( qs2 ) );
+			tmp = 0.25f / vec4.w;
+			vec4.x = ( m.zy - m.yz ) * tmp;
+			vec4.y = ( m.xz - m.zx ) * tmp;
+			vec4.z = ( m.yx - m.xy ) * tmp;
+			break;
+		case 1:
+			vec4.x = static_cast<float>( sqrt( qx2 ) );
+			tmp = 0.25f / vec4.x;
+			vec4.w = ( m.zy - m.yz ) * tmp;
+			vec4.y = ( m.xy + m.yx ) * tmp;
+			vec4.z = ( m.xz + m.zx ) * tmp;
+			break;
+		case 2:
+			vec4.y = static_cast<float>( sqrt( qy2 ) );
+			tmp = 0.25f / vec4.y;
+			vec4.w = ( m.xz - m.zx ) * tmp;
+			vec4.z = ( m.yz + m.zy ) * tmp;
+			vec4.x = ( m.yx + m.xy ) * tmp;
+			break;
+		case 3:
+			vec4.z = static_cast<float>( sqrt( qz2 ) );
+			tmp = 0.25f / vec4.z;
+			vec4.w = ( m.yx - m.xy ) * tmp;
+			vec4.x = ( m.zx + m.xz ) * tmp;
+			vec4.y = ( m.zy + m.yz ) * tmp;
+			break;
+	}
+	// for consistency, force positive scalar component [ (s; v) = (-s; -v) ]
+	MinimizeRotationAngle();
+	// normalize
+	::Normalize( vec4.x, vec4.y, vec4.z, vec4.w );
 }
 
 //  converts 3 euler angles (in radians) to a quaternion
@@ -1366,21 +2139,21 @@ inline void CQuat::FromEulerMatrix( const SHMatrix &m )
 //            p' = roll( pitch( yaw(p) ) )
 inline void CQuat::FromEulerAngles( float yaw, float pitch, float roll )
 {
-  const float fHalfYaw = yaw * 0.5f;
-  const float fHalfPitch = pitch * 0.5f;
-  const float fHalfRoll = roll * 0.5f;
+	const float fHalfYaw = yaw * 0.5f;
+	const float fHalfPitch = pitch * 0.5f;
+	const float fHalfRoll = roll * 0.5f;
 
-  const float fCosYaw = cos( fHalfYaw );
-  const float fSinYaw = sin( fHalfYaw );
-  const float fCosPitch = cos( fHalfPitch );
-  const float fSinPitch = sin( fHalfPitch );
-  const float fCosRoll = cos( fHalfRoll );
-  const float fSinRoll = sin( fHalfRoll );
+	const float fCosYaw = cos( fHalfYaw );
+	const float fSinYaw = sin( fHalfYaw );
+	const float fCosPitch = cos( fHalfPitch );
+	const float fSinPitch = sin( fHalfPitch );
+	const float fCosRoll = cos( fHalfRoll );
+	const float fSinRoll = sin( fHalfRoll );
 
-  vec4.x = fSinRoll*fCosPitch*fCosYaw - fCosRoll*fSinPitch*fSinYaw;
-  vec4.y = fCosRoll*fSinPitch*fCosYaw + fSinRoll*fCosPitch*fSinYaw;
-  vec4.z = fCosRoll*fCosPitch*fSinYaw - fSinRoll*fSinPitch*fCosYaw;
-  vec4.w = fCosRoll*fCosPitch*fCosYaw + fSinRoll*fSinPitch*fSinYaw;
+	vec4.x = fSinRoll * fCosPitch * fCosYaw - fCosRoll * fSinPitch * fSinYaw;
+	vec4.y = fCosRoll * fSinPitch * fCosYaw + fSinRoll * fCosPitch * fSinYaw;
+	vec4.z = fCosRoll * fCosPitch * fSinYaw - fSinRoll * fSinPitch * fCosYaw;
+	vec4.w = fCosRoll * fCosPitch * fCosYaw + fSinRoll * fSinPitch * fSinYaw;
 }
 
 inline CQuat::CQuat( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis )
@@ -1395,60 +2168,68 @@ inline CQuat::CQuat( float fAngle, const CVec3 &vAxis, const bool bNormalizeAxis
 
 inline void CQuat::Deriv( const CQuat &q, const CVec3 &v )
 {
-  vec4.x = 0.5f * (  q.vec4.w * v.x - q.vec4.z * v.y + q.vec4.y * v.z );
-  vec4.y = 0.5f * (  q.vec4.z * v.x + q.vec4.w * v.y - q.vec4.x * v.z );
-  vec4.z = 0.5f * ( -q.vec4.y * v.x + q.vec4.x * v.y + q.vec4.w * v.z );
-  vec4.w = 0.5f * ( -q.vec4.x * v.x - q.vec4.y * v.y - q.vec4.z * v.z );
+	vec4.x = 0.5f * ( q.vec4.w * v.x - q.vec4.z * v.y + q.vec4.y * v.z );
+	vec4.y = 0.5f * ( q.vec4.z * v.x + q.vec4.w * v.y - q.vec4.x * v.z );
+	vec4.z = 0.5f * ( -q.vec4.y * v.x + q.vec4.x * v.y + q.vec4.w * v.z );
+	vec4.w = 0.5f * ( -q.vec4.x * v.x - q.vec4.y * v.y - q.vec4.z * v.z );
 }
 
 // rotations
 inline const CVec3 CQuat::GetXAxis() const
 {
-	return CVec3( vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.x * vec4.x, (vec4.z * vec4.w + vec4.x * vec4.y) * 2.0f, (-vec4.y * vec4.w + vec4.x * vec4.z) * 2.0f );
+	return CVec3( vec4.w * vec4.w - ( vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z ) + 2.0f * vec4.x * vec4.x,
+	              ( vec4.z * vec4.w + vec4.x * vec4.y ) * 2.0f,
+	              ( -vec4.y * vec4.w + vec4.x * vec4.z ) * 2.0f );
 }
 inline const CVec3 CQuat::GetYAxis() const
 {
-	return CVec3( (-vec4.z * vec4.w + vec4.y * vec4.x) * 2.0f, vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.y * vec4.y, (vec4.x * vec4.w + vec4.y * vec4.z) * 2.0f );
+	return CVec3( ( -vec4.z * vec4.w + vec4.y * vec4.x ) * 2.0f,
+	              vec4.w * vec4.w - ( vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z ) + 2.0f * vec4.y * vec4.y,
+	              ( vec4.x * vec4.w + vec4.y * vec4.z ) * 2.0f );
 }
 inline const CVec3 CQuat::GetZAxis() const
 {
-	return CVec3( (vec4.y * vec4.w + vec4.z * vec4.x) * 2.0f, (-vec4.x * vec4.w + vec4.z * vec4.y) * 2.0f, vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.z * vec4.z );
+	return CVec3( ( vec4.y * vec4.w + vec4.z * vec4.x ) * 2.0f,
+	              ( -vec4.x * vec4.w + vec4.z * vec4.y ) * 2.0f,
+	              vec4.w * vec4.w - ( vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z ) + 2.0f * vec4.z * vec4.z );
 }
 inline void CQuat::GetXAxis( CVec3 *pRes ) const
 {
-	pRes->x = vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.x * vec4.x;
-	pRes->y = (vec4.z * vec4.w + vec4.x * vec4.y) * 2.0f;
-	pRes->z = (-vec4.y * vec4.w + vec4.x * vec4.z) * 2.0f;
+	pRes->x = vec4.w * vec4.w - ( vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z ) + 2.0f * vec4.x * vec4.x;
+	pRes->y = ( vec4.z * vec4.w + vec4.x * vec4.y ) * 2.0f;
+	pRes->z = ( -vec4.y * vec4.w + vec4.x * vec4.z ) * 2.0f;
 }
 inline void CQuat::GetYAxis( CVec3 *pRes ) const
 {
-	pRes->x = (-vec4.z * vec4.w + vec4.y * vec4.x) * 2.0f;
-	pRes->y = vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.y * vec4.y;
-	pRes->z = (vec4.x * vec4.w + vec4.y * vec4.z) * 2.0f;
+	pRes->x = ( -vec4.z * vec4.w + vec4.y * vec4.x ) * 2.0f;
+	pRes->y = vec4.w * vec4.w - ( vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z ) + 2.0f * vec4.y * vec4.y;
+	pRes->z = ( vec4.x * vec4.w + vec4.y * vec4.z ) * 2.0f;
 }
 inline void CQuat::GetZAxis( CVec3 *pRes ) const
 {
-	pRes->x = (vec4.y * vec4.w + vec4.z * vec4.x) * 2.0f;
-	pRes->y = (-vec4.x * vec4.w + vec4.z * vec4.y) * 2.0f;
-	pRes->z = vec4.w * vec4.w - (vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z) + 2.0f * vec4.z * vec4.z;
+	pRes->x = ( vec4.y * vec4.w + vec4.z * vec4.x ) * 2.0f;
+	pRes->y = ( -vec4.x * vec4.w + vec4.z * vec4.y ) * 2.0f;
+	pRes->z = vec4.w * vec4.w - ( vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z ) + 2.0f * vec4.z * vec4.z;
 }
 inline const CVec3 CQuat::Rotate( const CVec3 &r ) const
 {
 	const CVec3 L( vec4.x, vec4.y, vec4.z );
-	return ( r * (vec4.w * vec4.w - L * L) + (2.0f * vec4.w) * (L ^ r) + (2.0f * (L * r)) * L );
+	return ( r * ( vec4.w * vec4.w - L * L ) + ( 2.0f * vec4.w ) * ( L ^ r ) + ( 2.0f * ( L * r ) ) * L );
 }
 inline void CQuat::Rotate( CVec3 *pRes, const CVec3 &vec ) const
 {
 	const CVec3 L( vec4.x, vec4.y, vec4.z );
-	*pRes = ( vec * (vec4.w * vec4.w - L * L) + (2.0f * vec4.w) * (L ^ vec) + (2.0f * (L * vec)) * L );
+	*pRes = ( vec * ( vec4.w * vec4.w - L * L ) + ( 2.0f * vec4.w ) * ( L ^ vec ) + ( 2.0f * ( L * vec ) ) * L );
 }
 
 inline const CQuat operator*( const CQuat &a, const CQuat &b )
 {
-	return CQuat( a.vec4.w * b.vec4.x + b.vec4.w * a.vec4.x + (a.vec4.y * b.vec4.z - a.vec4.z * b.vec4.y),
-                a.vec4.w * b.vec4.y + b.vec4.w * a.vec4.y + (a.vec4.z * b.vec4.x - a.vec4.x * b.vec4.z),
-                a.vec4.w * b.vec4.z + b.vec4.w * a.vec4.z + (a.vec4.x * b.vec4.y - a.vec4.y * b.vec4.x),
-                a.vec4.w * b.vec4.w - (a.vec4.x * b.vec4.x + a.vec4.y * b.vec4.y + a.vec4.z * b.vec4.z), 0, 0 );
+	return CQuat( a.vec4.w * b.vec4.x + b.vec4.w * a.vec4.x + ( a.vec4.y * b.vec4.z - a.vec4.z * b.vec4.y ),
+	              a.vec4.w * b.vec4.y + b.vec4.w * a.vec4.y + ( a.vec4.z * b.vec4.x - a.vec4.x * b.vec4.z ),
+	              a.vec4.w * b.vec4.z + b.vec4.w * a.vec4.z + ( a.vec4.x * b.vec4.y - a.vec4.y * b.vec4.x ),
+	              a.vec4.w * b.vec4.w - ( a.vec4.x * b.vec4.x + a.vec4.y * b.vec4.y + a.vec4.z * b.vec4.z ),
+	              0,
+	              0 );
 }
 
 // divide quaternion 'A' on quaternion 'B'
@@ -1462,60 +2243,63 @@ inline const CQuat operator/( const CQuat &a, const CQuat &b )
 }
 
 // quaternion's multiplication with assignment (this = a*this)
-inline CQuat& CQuat::operator*=( const CQuat &a )
+inline CQuat &CQuat::operator*=( const CQuat &a )
 {
-  float xtmp = a.vec4.w * vec4.x + vec4.w * a.vec4.x + (a.vec4.y * vec4.z - a.vec4.z * vec4.y);
-  float ytmp = a.vec4.w * vec4.y + vec4.w * a.vec4.y + (a.vec4.z * vec4.x - a.vec4.x * vec4.z);
-  float ztmp = a.vec4.w * vec4.z + vec4.w * a.vec4.z + (a.vec4.x * vec4.y - a.vec4.y * vec4.x);
-  float wtmp = a.vec4.w * vec4.w - ( a.vec4.x * vec4.x + a.vec4.y * vec4.y + a.vec4.z * vec4.z );
-  vec4.x = xtmp; vec4.y = ytmp; vec4.z = ztmp; vec4.w = wtmp;
+	float xtmp = a.vec4.w * vec4.x + vec4.w * a.vec4.x + ( a.vec4.y * vec4.z - a.vec4.z * vec4.y );
+	float ytmp = a.vec4.w * vec4.y + vec4.w * a.vec4.y + ( a.vec4.z * vec4.x - a.vec4.x * vec4.z );
+	float ztmp = a.vec4.w * vec4.z + vec4.w * a.vec4.z + ( a.vec4.x * vec4.y - a.vec4.y * vec4.x );
+	float wtmp = a.vec4.w * vec4.w - ( a.vec4.x * vec4.x + a.vec4.y * vec4.y + a.vec4.z * vec4.z );
+	vec4.x = xtmp;
+	vec4.y = ytmp;
+	vec4.z = ztmp;
+	vec4.w = wtmp;
 
-  return *this;
+	return *this;
 }
 
 // divide 'this' quaternion on the 'q'
 // stage 1: reverse axis for 'q' ( q1 = reversed 'q' )
 // stage 2: 'this' = 'q1' * 'this'
-inline CQuat& CQuat::operator/=( const CQuat &q )
+inline CQuat &CQuat::operator/=( const CQuat &q )
 {
 	CQuat q1;
 	q1.UnitInverse( q );
-	(*this) *= q1;
-  return *this;
+	( *this ) *= q1;
+	return *this;
 }
 
 // inverse quaternion
 inline bool CQuat::Inverse( const CQuat &q )
 {
-  float norm = fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w );
-  if ( norm > FP_EPSILON2 )
-  {
-    norm = 1.0f / static_cast<float>( sqrt( norm ) );
-    vec4.x = -q.vec4.x * norm;
-    vec4.y = -q.vec4.y * norm;
-    vec4.z = -q.vec4.z * norm;
-    vec4.w =  q.vec4.w * norm;
-    return true;
-  }
-  else
-    return false;
+	float norm = fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w );
+	if ( norm > FP_EPSILON2 )
+	{
+		norm = 1.0f / static_cast<float>( sqrt( norm ) );
+		vec4.x = -q.vec4.x * norm;
+		vec4.y = -q.vec4.y * norm;
+		vec4.z = -q.vec4.z * norm;
+		vec4.w = q.vec4.w * norm;
+		return true;
+	}
+	else
+		return false;
 }
 
 // inverse quaternion
 inline bool CQuat::Inverse()
 {
-  float norm = fabs2( vec4.x, vec4.y, vec4.z, vec4.w );
-  if ( norm > FP_EPSILON2 )
-  {
-    norm = 1.0f / static_cast<float>( sqrt( norm ) );
-    vec4.x *= -norm;
-    vec4.y *= -norm;
-    vec4.z *= -norm;
-    vec4.w *=  norm;
-    return true;
-  }
-  else
-    return false;
+	float norm = fabs2( vec4.x, vec4.y, vec4.z, vec4.w );
+	if ( norm > FP_EPSILON2 )
+	{
+		norm = 1.0f / static_cast<float>( sqrt( norm ) );
+		vec4.x *= -norm;
+		vec4.y *= -norm;
+		vec4.z *= -norm;
+		vec4.w *= norm;
+		return true;
+	}
+	else
+		return false;
 }
 
 // decomposing quaternion to axis and angle
@@ -1523,185 +2307,185 @@ inline void CQuat::DecompAngleAxis( float *pfAngle, CVec3 *pvAxis ) const
 {
 	// The quaternion representing the rotation is
 	//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
-  float len = fabs2( vec4.x, vec4.y, vec4.z );
-  if ( len > 1e-8f )
-  {
-    *pfAngle = 2.0f * acos( vec4.w );
-    len = 1.0f / float( sqrt(len) );
-    pvAxis->x = vec4.x * len;
-    pvAxis->y = vec4.y * len;
-    pvAxis->z = vec4.z * len;
-  }
-  else
-  {
-    // angle is 0 (mod 2*pi), so any axis will do
-    *pfAngle = 0.0f;
-    pvAxis->x = 1.0f;
-    pvAxis->y = 0.0f;
-    pvAxis->z = 0.0f;
-  }
+	float len = fabs2( vec4.x, vec4.y, vec4.z );
+	if ( len > 1e-8f )
+	{
+		*pfAngle = 2.0f * acos( vec4.w );
+		len = 1.0f / float( sqrt( len ) );
+		pvAxis->x = vec4.x * len;
+		pvAxis->y = vec4.y * len;
+		pvAxis->z = vec4.z * len;
+	}
+	else
+	{
+		// angle is 0 (mod 2*pi), so any axis will do
+		*pfAngle = 0.0f;
+		pvAxis->x = 1.0f;
+		pvAxis->y = 0.0f;
+		pvAxis->z = 0.0f;
+	}
 }
 inline void CQuat::DecompAngleAxis( float *pfAngle, float *pfAxisX, float *pfAxisY, float *pfAxisZ ) const
 {
 	// The quaternion representing the rotation is
 	//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
-  float len = vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z;
-  if ( len > 1e-8f )
-  {
-    *pfAngle = 2.0f * acos( vec4.w );
-    len = 1.0f / float( sqrt(len) );
-    *pfAxisX = vec4.x * len;
-    *pfAxisY = vec4.y * len;
-    *pfAxisZ = vec4.z * len;
-  }
-  else
-  {
-    // angle is 0 (mod 2*pi), so any axis will do
-    *pfAngle = 0.0f;
-    *pfAxisX = 1.0f;
-    *pfAxisY = 0.0f;
-    *pfAxisZ = 0.0f;
-  }
+	float len = vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z;
+	if ( len > 1e-8f )
+	{
+		*pfAngle = 2.0f * acos( vec4.w );
+		len = 1.0f / float( sqrt( len ) );
+		*pfAxisX = vec4.x * len;
+		*pfAxisY = vec4.y * len;
+		*pfAxisZ = vec4.z * len;
+	}
+	else
+	{
+		// angle is 0 (mod 2*pi), so any axis will do
+		*pfAngle = 0.0f;
+		*pfAxisX = 1.0f;
+		*pfAxisY = 0.0f;
+		*pfAxisZ = 0.0f;
+	}
 }
 
 // decompose quaternion to Euler matrix
 inline void CQuat::DecompEulerMatrix( SHMatrix *pRes ) const
 {
-  const float tx  = vec4.x + vec4.x;
-  const float ty  = vec4.y + vec4.y;
-  const float tz  = vec4.z + vec4.z;
-  const float twx = tx * vec4.w;
-  const float twy = ty * vec4.w;
-  const float twz = tz * vec4.w;
-  const float txx = tx * vec4.x;
-  const float txy = ty * vec4.x;
-  const float txz = tz * vec4.x;
-  const float tyy = ty * vec4.y;
-  const float tyz = tz * vec4.y;
-  const float tzz = tz * vec4.z;
+	const float tx = vec4.x + vec4.x;
+	const float ty = vec4.y + vec4.y;
+	const float tz = vec4.z + vec4.z;
+	const float twx = tx * vec4.w;
+	const float twy = ty * vec4.w;
+	const float twz = tz * vec4.w;
+	const float txx = tx * vec4.x;
+	const float txy = ty * vec4.x;
+	const float txz = tz * vec4.x;
+	const float tyy = ty * vec4.y;
+	const float tyz = tz * vec4.y;
+	const float tzz = tz * vec4.z;
 
-	pRes->_11 = 1.0f - (tyy + tzz);
+	pRes->_11 = 1.0f - ( tyy + tzz );
 	pRes->_12 = txy - twz;
 	pRes->_13 = txz + twy;
 
 	pRes->_21 = txy + twz;
-	pRes->_22 = 1.0f - (txx + tzz);
+	pRes->_22 = 1.0f - ( txx + tzz );
 	pRes->_23 = tyz - twx;
 
 	pRes->_31 = txz - twy;
 	pRes->_32 = tyz + twx;
-	pRes->_33 = 1.0f - (txx + tyy);
+	pRes->_33 = 1.0f - ( txx + tyy );
 }
 
 // decompose quaternion to reversed Euler matrix (reverse transform)
 inline void CQuat::DecompReversedEulerMatrix( SHMatrix *pRes ) const
 {
-  const float tx  = -( vec4.x + vec4.x );
-  const float ty  = -( vec4.y + vec4.y );
-  const float tz  = -( vec4.z + vec4.z );
-  const float twx =  tx * vec4.w;
-  const float twy =  ty * vec4.w;
-  const float twz =  tz * vec4.w;
-  const float txx = -tx * vec4.x;
-  const float txy = -ty * vec4.x;
-  const float txz = -tz * vec4.x;
-  const float tyy = -ty * vec4.y;
-  const float tyz = -tz * vec4.y;
-  const float tzz = -tz * vec4.z;
+	const float tx = -( vec4.x + vec4.x );
+	const float ty = -( vec4.y + vec4.y );
+	const float tz = -( vec4.z + vec4.z );
+	const float twx = tx * vec4.w;
+	const float twy = ty * vec4.w;
+	const float twz = tz * vec4.w;
+	const float txx = -tx * vec4.x;
+	const float txy = -ty * vec4.x;
+	const float txz = -tz * vec4.x;
+	const float tyy = -ty * vec4.y;
+	const float tyz = -tz * vec4.y;
+	const float tzz = -tz * vec4.z;
 
-	pRes->_11 = 1.0f - (tyy + tzz);
+	pRes->_11 = 1.0f - ( tyy + tzz );
 	pRes->_12 = txy - twz;
 	pRes->_13 = txz + twy;
 
 	pRes->_21 = txy + twz;
-	pRes->_22 = 1.0f - (txx + tzz);
+	pRes->_22 = 1.0f - ( txx + tzz );
 	pRes->_23 = tyz - twx;
 
 	pRes->_31 = txz - twy;
 	pRes->_32 = tyz + twx;
-	pRes->_33 = 1.0f - (txx + tyy);
+	pRes->_33 = 1.0f - ( txx + tyy );
 }
 
 // calculate exponent of the quaternion
 inline const CQuat CQuat::Exp() const
 {
-  // If q = A*(x*i+y*j+z*k) where (x,y,z) is unit length, then
-  // exp(q) = cos(A)+sin(A)*(x*i+y*j+z*k).  If sin(A) is near zero,
-  // use exp(q) = cos(A)+A*(x*i+y*j+z*k) since A/sin(A) has limit 1.
-  const double angle = fabs( vec4.x, vec4.y, vec4.z );
-  const double sn = sin( angle );
-  CQuat result;
+	// If q = A*(x*i+y*j+z*k) where (x,y,z) is unit length, then
+	// exp(q) = cos(A)+sin(A)*(x*i+y*j+z*k).  If sin(A) is near zero,
+	// use exp(q) = cos(A)+A*(x*i+y*j+z*k) since A/sin(A) has limit 1.
+	const double angle = fabs( vec4.x, vec4.y, vec4.z );
+	const double sn = sin( angle );
+	CQuat result;
 
-  result.vec4.w = float( cos(angle) );
+	result.vec4.w = float( cos( angle ) );
 
-  if ( fabs(sn) >= FP_QUAT_EPSILON )
-  {
-    const float coeff = float( sn / angle );
-    result.vec4.x = coeff * vec4.x;
-    result.vec4.y = coeff * vec4.y;
-    result.vec4.z = coeff * vec4.z;
-  }
-  else
-  {
-    result.vec4.x = vec4.x;
-    result.vec4.y = vec4.y;
-    result.vec4.z = vec4.z;
-  }
+	if ( fabs( sn ) >= FP_QUAT_EPSILON )
+	{
+		const float coeff = float( sn / angle );
+		result.vec4.x = coeff * vec4.x;
+		result.vec4.y = coeff * vec4.y;
+		result.vec4.z = coeff * vec4.z;
+	}
+	else
+	{
+		result.vec4.x = vec4.x;
+		result.vec4.y = vec4.y;
+		result.vec4.z = vec4.z;
+	}
 
-  return result;
+	return result;
 }
 
 // calculates natural logarithm of the quaternion
 inline const CQuat CQuat::Log() const
 {
-  // If q = cos(A) + sin(A)*(x*i + y*j + z*k) where (x,y,z) is unit length, then
-  // log(q) = A*(x*i + y*j + z*k).  If sin(A) is near zero, use log(q) =
-  // sin(A)*(x*i + y*j + z*k) since sin(A)/A has limit 1.
-  if ( fabs(vec4.w) < 1.0f )
-  {
-    const double angle = acos( vec4.w );
-    const double sn = sin( angle );
-    if ( fabs(sn) >= FP_QUAT_EPSILON )
-    {
-      const float coeff = float( angle / sn );
-      return CQuat( coeff * vec4.x, coeff * vec4.y, coeff * vec4.z, 0, 0, 0 );
-    }
-  }
+	// If q = cos(A) + sin(A)*(x*i + y*j + z*k) where (x,y,z) is unit length, then
+	// log(q) = A*(x*i + y*j + z*k).  If sin(A) is near zero, use log(q) =
+	// sin(A)*(x*i + y*j + z*k) since sin(A)/A has limit 1.
+	if ( fabs( vec4.w ) < 1.0f )
+	{
+		const double angle = acos( vec4.w );
+		const double sn = sin( angle );
+		if ( fabs( sn ) >= FP_QUAT_EPSILON )
+		{
+			const float coeff = float( angle / sn );
+			return CQuat( coeff * vec4.x, coeff * vec4.y, coeff * vec4.z, 0, 0, 0 );
+		}
+	}
 
-  return CQuat( vec4.x, vec4.y, vec4.z, 0, 0, 0 );
+	return CQuat( vec4.x, vec4.y, vec4.z, 0, 0, 0 );
 }
 
 // Spherical Linear intERPolation between two quaternions (SLERP) (from 'p' to 'q' with coeff 'factor')
 inline void CQuat::Slerp( const float factor, const CQuat &p, const CQuat &q )
 {
 	float scale0, scale1;
-  CQuat q1( q );
+	CQuat q1( q );
 	// use the dot product to get the cosine of the angle between the quaternions
 	float cosom = p.vec4.x * q.vec4.x + p.vec4.y * q.vec4.y + p.vec4.z * q.vec4.z + p.vec4.w * q.vec4.w;
-  // adjust signs (if necessary)
-  if ( cosom < 0.0 )
+	// adjust signs (if necessary)
+	if ( cosom < 0.0 )
 	{
 		cosom = -cosom;
 		q1.Negate( q );
-  }
-  // calculate coefficients
-  if ( (1.0 - cosom) > FP_QUAT_EPSILON )  // standard case (slerp)
+	}
+	// calculate coefficients
+	if ( ( 1.0 - cosom ) > FP_QUAT_EPSILON ) // standard case (slerp)
 	{
-    const float omega = acos( cosom );
-    const float sinom = static_cast<float>( 1.0/sin( omega ) );
-    scale0 = float( sin((1.0 - factor) * omega) * sinom );
-    scale1 = float( sin(factor * omega) * sinom );
-  }
-	else                                  // "p" and "q" quaternions are very close. so we can do a linear interpolation
+		const float omega = acos( cosom );
+		const float sinom = static_cast<float>( 1.0 / sin( omega ) );
+		scale0 = float( sin( ( 1.0 - factor ) * omega ) * sinom );
+		scale1 = float( sin( factor * omega ) * sinom );
+	}
+	else // "p" and "q" quaternions are very close. so we can do a linear interpolation
 	{
-    scale0 = 1.0f - factor;
-    scale1 = factor;
-  }
-  // calculate final values
-  vec4.x = scale0 * p.vec4.x + scale1 * q1.vec4.x;
-  vec4.y = scale0 * p.vec4.y + scale1 * q1.vec4.y;
-  vec4.z = scale0 * p.vec4.z + scale1 * q1.vec4.z;
-  vec4.w = scale0 * p.vec4.w + scale1 * q1.vec4.w;
+		scale0 = 1.0f - factor;
+		scale1 = factor;
+	}
+	// calculate final values
+	vec4.x = scale0 * p.vec4.x + scale1 * q1.vec4.x;
+	vec4.y = scale0 * p.vec4.y + scale1 * q1.vec4.y;
+	vec4.z = scale0 * p.vec4.z + scale1 * q1.vec4.z;
+	vec4.w = scale0 * p.vec4.w + scale1 * q1.vec4.w;
 }
 
 // ************************************************************************************************************************ //
@@ -1785,7 +2569,7 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 	const int nSign1 = boost::math::sign( TriangleArea2( p, p1, p2 ) );
 	const int nSign2 = boost::math::sign( TriangleArea2( p, p2, p3 ) );
 	const int nSign3 = boost::math::sign( TriangleArea2( p, p3, p1 ) );
-	const int nSign	 = boost::math::sign( TriangleArea2( p1, p2, p3 ) );
+	const int nSign = boost::math::sign( TriangleArea2( p1, p2, p3 ) );
 
 	if ( nSign != 0 )
 		return nSign * nSign1 >= 0 && nSign * nSign2 >= 0 && nSign * nSign3 >= 0;
@@ -1794,8 +2578,7 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 	{
 		if ( nSign1 == 0 && nSign2 == 0 && nSign3 == 0 )
 		{
-			return CSegment( p1, p2 ).GetDistToPoint( p ) < 1e-6 ||
-						 CSegment( p1, p3 ).GetDistToPoint( p ) < 1e-6;
+			return CSegment( p1, p2 ).GetDistToPoint( p ) < 1e-6 || CSegment( p1, p3 ).GetDistToPoint( p ) < 1e-6;
 		}
 		else
 			return false;
@@ -1870,13 +2653,13 @@ MISC_EXPORT bool IsInTheMinAngle( const uint16_t dir, const uint16_t dir1, const
 inline bool IsAlmostZero( const CVec2 &vec )
 {
 	const static float eps = 0.0001f;
-	return ( fabs( vec.x ) < eps  && fabs( vec.y ) < eps );
+	return ( fabs( vec.x ) < eps && fabs( vec.y ) < eps );
 }
 
 inline bool IsAlmostZero( const float x, const float y )
 {
 	const static float eps = 0.0001f;
-	return ( fabs( x ) < eps  && fabs( y ) < eps );
+	return ( fabs( x ) < eps && fabs( y ) < eps );
 }
 
 //*******************************************************************
@@ -1885,12 +2668,12 @@ inline bool IsAlmostZero( const float x, const float y )
 
 enum ESide
 {
-	SIDE_FRONT		= 0,
-	SIDE_LEFT		  = 1,
-	SIDE_BACK		  = 2,
-	SIDE_RIGHT		= 3,
-	SIDE_TOP			= 4,
-	SIDE_BOTTOM	  = 5,
+	SIDE_FRONT = 0,
+	SIDE_LEFT = 1,
+	SIDE_BACK = 2,
+	SIDE_RIGHT = 3,
+	SIDE_TOP = 4,
+	SIDE_BOTTOM = 5,
 };
 
 struct MISC_EXPORT SRect
@@ -1898,25 +2681,32 @@ struct MISC_EXPORT SRect
 	CVec2 v[4];
 	// v[] elements are real subobjects, so these can hand out references and a
 	// corner stays assignable the way the old v1..v4 members were
-	CVec2 &       v1()       noexcept { return v[0]; }
-	CVec2 &       v2()       noexcept { return v[1]; }
-	CVec2 &       v3()       noexcept { return v[2]; }
-	CVec2 &       v4()       noexcept { return v[3]; }
-	const CVec2 & v1() const noexcept { return v[0]; }
-	const CVec2 & v2() const noexcept { return v[1]; }
-	const CVec2 & v3() const noexcept { return v[2]; }
-	const CVec2 & v4() const noexcept { return v[3]; }
+	CVec2 &v1() noexcept { return v[0]; }
+	CVec2 &v2() noexcept { return v[1]; }
+	CVec2 &v3() noexcept { return v[2]; }
+	CVec2 &v4() noexcept { return v[3]; }
+	const CVec2 &v1() const noexcept { return v[0]; }
+	const CVec2 &v2() const noexcept { return v[1]; }
+	const CVec2 &v3() const noexcept { return v[2]; }
+	const CVec2 &v4() const noexcept { return v[3]; }
 	CVec2 dir, dirPerp, center;
 	float lengthAhead = 0.0f, lengthBack = 0.0f, width = 0.0f;
 
-	bool IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, const CVec2 &dir, const float min, const float max ) const;
+	bool IsIntersectProject( const CVec2 &v1,
+	                         const CVec2 &v2,
+	                         const CVec2 &v3,
+	                         const CVec2 &v4,
+	                         const CVec2 &dir,
+	                         const float min,
+	                         const float max ) const;
 
 	//public:
 	void InitRect( const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4 );
 	// задаётся половина реальной длины и ширины (как бы радиусы)
 	void InitRect( const CVec2 &center, const CVec2 &dir, const float length, const float width );
 	// задаются длины вперёд и назад, половина ширины
-	void InitRect( const CVec2 &center, const CVec2 &dir, const float lengthAhead, const float lengthBack, const float width );
+	void
+	InitRect( const CVec2 &center, const CVec2 &dir, const float lengthAhead, const float lengthBack, const float width );
 
 	bool IsIntersected( const SRect &rect ) const;
 	bool IsIntersected( const CSegment &segment ) const;
@@ -1932,8 +2722,7 @@ struct MISC_EXPORT SRect
 
 	void Compress( const float fFactor );
 
-	SRect() : lengthAhead(0), lengthBack(0), width(0) {
-	}
+	SRect() : lengthAhead( 0 ), lengthBack( 0 ), width( 0 ) {}
 };
 
 MISC_EXPORT const float fabs( const SRect rect1, const SRect rect2 );
@@ -1941,11 +2730,12 @@ MISC_EXPORT const float fabs( const SRect rect1, const SRect rect2 );
 MISC_EXPORT const uint16_t GetVisibleAngle( const CVec2 &point, const SRect rect );
 // точка пересечения луча из точки vPoint по направлению vDir (можно не нормировать) с прямоугольником rect
 // возвращает false, если не пересекается
-MISC_EXPORT const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect );
+MISC_EXPORT const bool
+GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const CVec2 &vDir, const SRect &rect );
 // вернуть нормализованное значение вектора
 inline const CVec2 Norm( const CVec2 &v )
 {
-	return ( v == VNULL2 ) ? VNULL2 : v/fabs(v);
+	return ( v == VNULL2 ) ? VNULL2 : v / fabs( v );
 }
 // получить углы, необходимые для поворота этой нормали относительно осей X (phi) и Y (theta)
 // для совпадения её с осью Z
@@ -1956,32 +2746,32 @@ inline void GetAngles( const CVec3 &vNormal, float *pfPhi, float *pfTheta )
 	{
 		const float fLen2 = fabs2( vNormal.y, vNormal.z );
 		*pfPhi = fLen2 < 1e-8f ? 0 : vNormal.z / sqrt( fLen2 );
-		*pfPhi = -boost::math::sign( vNormal.y ) * acos( Clamp(*pfPhi, -1.0f, 1.0f) );
+		*pfPhi = -boost::math::sign( vNormal.y ) * acos( Clamp( *pfPhi, -1.0f, 1.0f ) );
 	}
 	// theta - поворот в плоскости ZX относительно оси Y
 	// cos( theta ) = Z*N(y=0) = Nz / fabs( Nx, Nz )
 	{
 		const float fLen2 = fabs2( vNormal.x, vNormal.z );
 		*pfTheta = fLen2 < 1e-8f ? 0 : vNormal.z / sqrt( fLen2 );
-		*pfTheta = boost::math::sign( vNormal.x ) * acos( Clamp(*pfTheta, -1.0f, 1.0f) );
+		*pfTheta = boost::math::sign( vNormal.x ) * acos( Clamp( *pfTheta, -1.0f, 1.0f ) );
 	}
 }
 
 inline void MakeOrientation( CQuat *pQuat, const CVec3 &vNormal )
 {
-	float fPhi, fTheta;										// theta and phi angles
+	float fPhi, fTheta; // theta and phi angles
 	GetAngles( vNormal, &fPhi, &fTheta );
 
 	CQuat q1( fPhi, V3_AXIS_X );
 	CQuat q2( fTheta, V3_AXIS_Y );
 	q1.MinimizeRotationAngle();
 	q2.MinimizeRotationAngle();
-	(*pQuat) *=  q1 * q2;
+	( *pQuat ) *= q1 * q2;
 }
 
 inline int mDistance( const SVector &vec1, const SVector &vec2 )
 {
-	return (std::max)( abs( vec1.x-vec2.x ), abs( vec1.y-vec2.y ) );
+	return (std::max)( abs( vec1.x - vec2.x ), abs( vec1.y - vec2.y ) );
 }
 
 #pragma pack( pop )

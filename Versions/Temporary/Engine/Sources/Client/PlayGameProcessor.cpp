@@ -20,8 +20,10 @@
 static const uint32_t dwWaitingPacketTimeout = 300000;
 const int CONNECTION_TIMEOUT = 20;
 
-CPlayGameProcessor::CPlayGameProcessor( CNet *_pNet, const char* pszServerIP, const int _nNetGameVersion, const int _nServerPort, const int _nTimeOut )
-: pNet( _pNet ), nNetGameVersion( _nNetGameVersion), szServerIP( pszServerIP ), nServerPort( _nServerPort ), nTimeOut( _nTimeOut )
+CPlayGameProcessor::CPlayGameProcessor(
+		CNet *_pNet, const char *pszServerIP, const int _nNetGameVersion, const int _nServerPort, const int _nTimeOut )
+		: pNet( _pNet ), nNetGameVersion( _nNetGameVersion ), szServerIP( pszServerIP ), nServerPort( _nServerPort ),
+			nTimeOut( _nTimeOut )
 {
 	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessCreateGame );
 	REGISTER_PACKET_PROCESSOR( &CPlayGameProcessor::ProcessConnectGame );
@@ -76,7 +78,7 @@ bool CPlayGameProcessor::ProcessConnectGame( CConnectGamePacket *pPacket )
 
 bool CPlayGameProcessor::ProcessAnswerConnectGame( CAnswerConnectGame *pPacket )
 {
-/*	if ( pPacket->clients.empty() )
+	/*	if ( pPacket->clients.empty() )
 	{
 		CPtr<CNetPacket> pPacket = new CConnectGameFailed();
 		PushPacket( pPacket );
@@ -90,7 +92,7 @@ bool CPlayGameProcessor::ProcessAnswerConnectGame( CAnswerConnectGame *pPacket )
 		CPtr<CConnectionEffort> pEffort = NEffortsFactory::CreateFirstClientEffort( nMyServerID, *iter, pNet, nTimeOut );
 		CreateConnectionEffort( pEffort );
 	}
-//	}
+	//	}
 
 	return true;
 }
@@ -105,8 +107,8 @@ bool CPlayGameProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket )
 
 bool CPlayGameProcessor::ProcessClientWantToConnect( CClientWantToConnect *pPacket )
 {
-	CPtr<CConnectionEffort> pEffort =
-		NEffortsFactory::CreateFirstServerEffort( nMyServerID, pPacket->nWantedClient, pPacket->szIP, pPacket->nPort, pNet, pAcceptGamersNet );
+	CPtr<CConnectionEffort> pEffort = NEffortsFactory::CreateFirstServerEffort(
+			nMyServerID, pPacket->nWantedClient, pPacket->szIP, pPacket->nPort, pNet, pAcceptGamersNet );
 	CreateConnectionEffort( pEffort );
 
 	return true;
@@ -125,9 +127,9 @@ void CPlayGameProcessor::ProcessConnectServerProcessor()
 	{
 		pConnectServerProcessor->Segment();
 		CPtr<CNetPacket> pPacket = 0;
-		while ( pConnectServerProcessor && (pPacket = pConnectServerProcessor->GetPacket()) )
+		while ( pConnectServerProcessor && ( pPacket = pConnectServerProcessor->GetPacket() ) )
 		{
-			if ( CConnectServerPacket* pConnectPacket = dynamic_cast_ptr<CConnectServerPacket*>( pPacket ) )
+			if ( CConnectServerPacket *pConnectPacket = dynamic_cast_ptr<CConnectServerPacket *>( pPacket ) )
 				ProcessConnectServerPacket( pConnectPacket );
 		}
 	}
@@ -184,7 +186,7 @@ void CPlayGameProcessor::DrainConnectionPackets( IConnection *pConnection )
 
 void CPlayGameProcessor::ProcessEfforts()
 {
-	std::list< CPtr<CConnectionEffort> > success, failed;
+	std::list<CPtr<CConnectionEffort>> success, failed;
 
 	for ( TConnectionEfforts::iterator iter = connectionEfforts.begin(); iter != connectionEfforts.end(); ++iter )
 	{
@@ -198,16 +200,16 @@ void CPlayGameProcessor::ProcessEfforts()
 			failed.push_back( pEffort );
 	}
 
-	for ( std::list< CPtr<CConnectionEffort> >::iterator iter = success.begin(); iter != success.end(); ++iter )
+	for ( std::list<CPtr<CConnectionEffort>>::iterator iter = success.begin(); iter != success.end(); ++iter )
 	{
 		CPtr<CConnectionEffort> pEffort = *iter;
 		const int nClientServerID = pEffort->GetClientServerID();
 		connectionEfforts.erase( nClientServerID );
 
-    connections[nClientServerID] = pEffort->CreateConnection();
+		connections[nClientServerID] = pEffort->CreateConnection();
 	}
 
-	for ( std::list< CPtr<CConnectionEffort> >::iterator iter = failed.begin(); iter != failed.end(); ++iter )
+	for ( std::list<CPtr<CConnectionEffort>>::iterator iter = failed.begin(); iter != failed.end(); ++iter )
 	{
 		CPtr<CConnectionEffort> pEffort = *iter;
 		connectionEfforts.erase( pEffort->GetClientServerID() );
@@ -285,7 +287,7 @@ void CPlayGameProcessor::ProcessConnectServerPacket( CConnectServerPacket *pPack
 	{
 		CPtr<CNetPacket> pNewGameConnectPacket = new CNewGameConnectingClient( 0, nMyServerID, 0 );
 		pAcceptGamersNet->SendPacket( pNewGameConnectPacket );
-		GetNetLogger()->Log( "client", fmt::format("send acceptgamers net {}", GetPacketInfo( pPacket )) );
+		GetNetLogger()->Log( "client", fmt::format( "send acceptgamers net {}", GetPacketInfo( pPacket ) ) );
 
 		pConnectServerProcessor = 0;
 	}
@@ -301,7 +303,7 @@ bool CPlayGameProcessor::ProcessGameConnectingClientAccepted( CGameConnectingCli
 	pNet->SendPacket( pConnectGamePacket );
 
 	pAcceptGamersNet = 0;
-	pLinksManager->BanAddress( *(serverAddress.GetSockAddr()) );
+	pLinksManager->BanAddress( *( serverAddress.GetSockAddr() ) );
 	pAcceptGamersNet = new CNet( nNetGameVersion, nServerPort, 60 );
 	pAcceptGamersNet->InitAsServer( pLinksManager );
 	pAcceptGamersNet->StartGame();

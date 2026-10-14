@@ -4,12 +4,13 @@
 
 namespace NDb
 {
-	struct SMapInfo;
+struct SMapInfo;
 }
 
 class CInterfaceSelectTutorial : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceSelectTutorial );
+
 private:
 	struct SMapInfo
 	{
@@ -19,10 +20,18 @@ private:
 		CPtr<IWindow> pWnd;
 		CPtr<ITextView> pNameView;
 		CPtr<ITextView> pDifficultyView;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMapInfo); f.Add(3,&wszDifficulty); f.Add(4,&pWnd); f.Add(5,&pNameView); f.Add(6,&pDifficultyView); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pMapInfo );
+			f.Add( 3, &wszDifficulty );
+			f.Add( 4, &pWnd );
+			f.Add( 5, &pNameView );
+			f.Add( 6, &pDifficultyView );
+			return 0;
+		}
 	};
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CPtr<IWindow> pMainWnd;
 	CPtr<IButton> pPlayBtn;
 	CPtr<IWindow> pMissionsPanel;
@@ -37,7 +46,26 @@ private:
 	CPtr<ITextView> pMissionDescView;
 	std::vector<SMapInfo> maps;
 	CPtr<IWindow> pMissionDescItemBlock;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMainWnd); f.Add(3,&pPlayBtn); f.Add(4,&pMissionsPanel); f.Add(5,&pMinimapPanel); f.Add(6,&pMissionDescPanel); f.Add(7,&pMissionsCont); f.Add(8,&pMissionsItemWnd); f.Add(9,&pMinimap); f.Add(10,&pMissionNameView); f.Add(11,&pMissionSeasonView); f.Add(12,&pMissionDescCont); f.Add(13,&pMissionDescView); f.Add(14,&maps); f.Add(15,&pMissionDescItemBlock); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pMainWnd );
+		f.Add( 3, &pPlayBtn );
+		f.Add( 4, &pMissionsPanel );
+		f.Add( 5, &pMinimapPanel );
+		f.Add( 6, &pMissionDescPanel );
+		f.Add( 7, &pMissionsCont );
+		f.Add( 8, &pMissionsItemWnd );
+		f.Add( 9, &pMinimap );
+		f.Add( 10, &pMissionNameView );
+		f.Add( 11, &pMissionSeasonView );
+		f.Add( 12, &pMissionDescCont );
+		f.Add( 13, &pMissionDescView );
+		f.Add( 14, &maps );
+		f.Add( 15, &pMissionDescItemBlock );
+		return 0;
+	}
+
 private:
 	void MakeInterior();
 
@@ -46,6 +74,7 @@ private:
 	bool OnSelect();
 
 	void Select( int nIndex );
+
 public:
 	CInterfaceSelectTutorial();
 
@@ -66,6 +95,7 @@ class CICSelectTutorial : public CInterfaceCommandBase<CInterfaceSelectTutorial>
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

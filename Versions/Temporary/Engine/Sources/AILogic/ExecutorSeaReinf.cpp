@@ -11,7 +11,10 @@
 
 extern CGroupLogic theGroupLogic;
 
-static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, const int nWidth = 1, const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
+static void DisplayDebugCross( const CVec2 &vPos,
+                               const float fSize = 5.0f,
+                               const int nWidth = 1,
+                               const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
 {
 	CSegment segm;
 	segm.p1 = vPos + CVec2( fSize, 0 );
@@ -25,14 +28,18 @@ static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, cons
 	DebugInfoManager()->CreateSegment( NDebugInfo::OBJECT_ID_GENERATE, segm, nWidth, eColor );
 }
 
-CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIUnit*> *pTransports, const NDb::SReinforcement *_pReinf, const CVec2 &_vStart, const CVec2 &_vUnload, const CVec2 &_vTarget ) :
-CExecutor(TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION/SConsts::AI_SEGMENT_DURATION),
-vStart( _vStart ), vTarget( _vTarget )
+CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIUnit *> *pTransports,
+                                                                  const NDb::SReinforcement *_pReinf,
+                                                                  const CVec2 &_vStart,
+                                                                  const CVec2 &_vUnload,
+                                                                  const CVec2 &_vTarget )
+		: CExecutor( TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION / SConsts::AI_SEGMENT_DURATION ),
+			vStart( _vStart ), vTarget( _vTarget )
 {
 	// Assign transports
 	transports.resize( pTransports->size() );
 	int i = 0;
-	for ( std::list<CAIUnit*>::iterator it = pTransports->begin(); it != pTransports->end(); ++it, ++i )
+	for ( std::list<CAIUnit *>::iterator it = pTransports->begin(); it != pTransports->end(); ++it, ++i )
 	{
 		transports[i].pUnit = *it;
 		transports[i].eState = ETS_FULL;
@@ -46,9 +53,8 @@ vStart( _vStart ), vTarget( _vTarget )
 	while ( 1 )
 	{
 		SVector vTile = GetAIMap()->GetTile( vCurPoint + vStep );
-		if ( !GetAIMap()->IsPointInside( vCurPoint ) ||
-			!GetAIMap()->IsTileInside( vTile ) ||
-			( GetTerrain()->GetTileLockInfo( vTile ) & EAC_WATER ) != 0 )
+		if ( !GetAIMap()->IsPointInside( vCurPoint ) || !GetAIMap()->IsTileInside( vTile ) ||
+		     ( GetTerrain()->GetTileLockInfo( vTile ) & EAC_WATER ) != 0 )
 			break;
 
 		vCurPoint += vStep;
@@ -57,9 +63,9 @@ vStart( _vStart ), vTarget( _vTarget )
 
 	// Give commands
 	std::vector<int> ids;
-	for ( std::list<CAIUnit*>::iterator it = pTransports->begin(); it != pTransports->end(); ++it )
+	for ( std::list<CAIUnit *>::iterator it = pTransports->begin(); it != pTransports->end(); ++it )
 	{
-		ids.push_back( (*it)->GetUniqueId() );
+		ids.push_back( ( *it )->GetUniqueId() );
 	}
 	const int nGroup = theGroupLogic.GenerateGroupNumber();
 	theGroupLogic.RegisterGroup( ids, nGroup );
@@ -81,7 +87,7 @@ int CExecutorTransportReinforcement::Segment()
 		if ( transports[i].eState == ETS_LEFT )
 			continue;
 
-		if ( !transports[i].pUnit->IsAlive() )			// Check if the transport is dead
+		if ( !transports[i].pUnit->IsAlive() ) // Check if the transport is dead
 		{
 			transports[i].eState = ETS_LEFT;
 			continue;
@@ -91,13 +97,13 @@ int CExecutorTransportReinforcement::Segment()
 		{
 			switch ( transports[i].eState )
 			{
-			case ETS_FULL:
+				case ETS_FULL:
 				{
 					transports[i].eState = ETS_UNLOADING;
 					bFinish = false;
 				}
 				break;
-			case ETS_UNLOADING:
+				case ETS_UNLOADING:
 				{
 					if ( transports[i].pUnit->GetState()->GetName() != EUSN_LAND )
 					{
@@ -108,7 +114,7 @@ int CExecutorTransportReinforcement::Segment()
 					bFinish = false;
 				}
 				break;
-			case ETS_EMPTY:
+				case ETS_EMPTY:
 				{
 					// Remove transport from map
 					transports[i].pUnit->Stop();

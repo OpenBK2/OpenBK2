@@ -31,31 +31,30 @@
 // removed, so this is the only one.
 namespace NProgressView
 {
-	class IView
-	{
-	public:
-		virtual ~IView() {}
+class IView
+{
+public:
+	virtual ~IView() {}
 
-		// Creates the window, hidden, owned by pParent. It shows itself half a
-		// second later if it is still up.
-		virtual bool Create( IWidget *pParent ) = 0;
-		virtual bool IsCreated() const = 0;
-		// What CMainFrame::CreateProgressDialog does when the window is already
-		// there: show it again and repaint.
-		virtual void Show() = 0;
-		virtual void Destroy() = 0;
+	// Creates the window, hidden, owned by pParent. It shows itself half a
+	// second later if it is still up.
+	virtual bool Create( IWidget *pParent ) = 0;
+	virtual bool IsCreated() const = 0;
+	// What CMainFrame::CreateProgressDialog does when the window is already
+	// there: show it again and repaint.
+	virtual void Show() = 0;
+	virtual void Destroy() = 0;
 
-		virtual void SetTitle( const std::string &rszTitle ) = 0;
-		virtual void SetMessage( const std::string &rszMessage ) = 0;
-		virtual void SetRange( int nStart, int nFinish ) = 0;
-		virtual void SetPosition( int nPosition ) = 0;
-		// One step on, back to the start when it runs off the end: the editor
-		// uses this where it has no count to report.
-		virtual void IteratePosition() = 0;
-	};
+	virtual void SetTitle( const std::string &rszTitle ) = 0;
+	virtual void SetMessage( const std::string &rszMessage ) = 0;
+	virtual void SetRange( int nStart, int nFinish ) = 0;
+	virtual void SetPosition( int nPosition ) = 0;
+	// One step on, back to the start when it runs off the end: the editor
+	// uses this where it has no count to report.
+	virtual void IteratePosition() = 0;
+};
 
-
-	// The frame's progress view. The caller owns the result and destroys it with
-	// delete.
-	IView* Create();
+// The frame's progress view. The caller owns the result and destroys it with
+// delete.
+IView *Create();
 }

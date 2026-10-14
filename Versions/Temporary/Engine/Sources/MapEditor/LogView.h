@@ -38,31 +38,28 @@ struct ILogView
 	virtual bool IsEmpty() const = 0;
 };
 
-
 namespace NLogView
 {
-	// Native text colour for normal output, with green/red severity colours
-	// adjusted for the current theme. Components are RGB, not Win32 COLORREF.
-	struct SLogColour
-	{
-		unsigned char nRed;
-		unsigned char nGreen;
-		unsigned char nBlue;
-	};
+// Native text colour for normal output, with green/red severity colours
+// adjusted for the current theme. Components are RGB, not Win32 COLORREF.
+struct SLogColour
+{
+	unsigned char nRed;
+	unsigned char nGreen;
+	unsigned char nBlue;
+};
 
-	SLogColour GetColour( ELogOutputType eLogOutputType );
+SLogColour GetColour( ELogOutputType eLogOutputType );
 }
-
-
 
 class wxWindow;
 
 namespace NLogView
 {
-	// The wx contents made straight inside a wx window, for a wx frame's pane
-	// rather than inside an MFC one, and already created with
-	// pSelectionHandler. *ppWindow is what to put in the pane's layout, which
-	// then does what SetBounds does for an MFC pane. Owned by the caller; null
-	// on failure.
-	ILogView* CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandler, wxWindow **ppWindow );
+// The wx contents made straight inside a wx window, for a wx frame's pane
+// rather than inside an MFC one, and already created with
+// pSelectionHandler. *ppWindow is what to put in the pane's layout, which
+// then does what SetBounds does for an MFC pane. Owned by the caller; null
+// on failure.
+ILogView *CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandler, wxWindow **ppWindow );
 }

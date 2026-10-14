@@ -8,25 +8,30 @@ class CWarFogTracer
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	CGlobalWarFog *pWarFog = {};
+
 protected:
 	const bool IsTileInside( const SVector &vTile ) const { return pWarFog->IsTileInside( vTile ); }
 	const int GetStaticObjectAtTile( const SVector &vTile ) { return pWarFog->GetStaticObjectAtTile( vTile ); }
 
 	const int GetHeight( const SVector &vTile ) const { return pWarFog->GetHeight( vTile ); }
 	const int GetUnitHeight() const { return pWarFog->GetUnitHeight(); }
+
 public:
 	CWarFogTracer( CGlobalWarFog *_pWarFog ) : pWarFog( _pWarFog ) {}
 };
 
-template<class TVisitor>
+template <class TVisitor>
 class CWarFogTracerInternal : public CWarFogTracer
 {
 	TVisitor visitor;
 
 public:
-	CWarFogTracerInternal( CGlobalWarFog *pWarFog, const TVisitor &_visitor ) : CWarFogTracer( pWarFog ), visitor( _visitor ) {}
+	CWarFogTracerInternal( CGlobalWarFog *pWarFog, const TVisitor &_visitor )
+			: CWarFogTracer( pWarFog ), visitor( _visitor )
+	{
+	}
 
-/*
+	/*
 	const bool TraceRay( const SVector &vOrigin, const SVector &vOffset )
 	{
 		CBres bres;
@@ -67,11 +72,11 @@ public:
 	}
 */
 
-// TraceRay with integers
+	// TraceRay with integers
 	const bool TraceRay( const SVector &vOrigin, const SVector &vOffset )
 	{
 		CBres bres;
-		bres.InitPoint( SVector( 0, 0 ) , vOffset );
+		bres.InitPoint( SVector( 0, 0 ), vOffset );
 		bres.MakePointStep();
 		const int nUnitHeight = GetUnitHeight();
 		int nLength0 = 1;
@@ -127,20 +132,20 @@ public:
 				else
 					visitor( checkPoint, nObjectTileID > -1 && nObjectTileID == GetStaticObjectAtTile( tile ) );
 			}
-		} while( bres.GetDirection() != vOffset );
+		} while ( bres.GetDirection() != vOffset );
 		return visitor.GetReturnValue();
 	}
 
 	void TraceOctuple( const SVector &vOrigin, const SVector &vOffset )
 	{
 		TraceRay( vOrigin, vOffset );
-		TraceRay( vOrigin, SVector( -vOffset.x,  vOffset.y ) );
-		TraceRay( vOrigin, SVector(  vOffset.x, -vOffset.y ) );
+		TraceRay( vOrigin, SVector( -vOffset.x, vOffset.y ) );
+		TraceRay( vOrigin, SVector( vOffset.x, -vOffset.y ) );
 		TraceRay( vOrigin, SVector( -vOffset.x, -vOffset.y ) );
 
-		TraceRay( vOrigin, SVector(  vOffset.y,  vOffset.x ) );
-		TraceRay( vOrigin, SVector( -vOffset.y,  vOffset.x ) );
-		TraceRay( vOrigin, SVector(  vOffset.y, -vOffset.x ) );
+		TraceRay( vOrigin, SVector( vOffset.y, vOffset.x ) );
+		TraceRay( vOrigin, SVector( -vOffset.y, vOffset.x ) );
+		TraceRay( vOrigin, SVector( vOffset.y, -vOffset.x ) );
 		TraceRay( vOrigin, SVector( -vOffset.y, -vOffset.x ) );
 	}
 
@@ -148,17 +153,17 @@ public:
 	{
 		int x = 0;
 		int y = nRadius;
-		int d = 3 - 2*nRadius;
+		int d = 3 - 2 * nRadius;
 		while ( x <= y )
 		{
 			TraceOctuple( vOrigin, SVector( x, y ) );
 			if ( d < 0 )
 			{
-				d += 4*x + 6;
+				d += 4 * x + 6;
 			}
 			else
 			{
-				d += 4*( x-y ) + 10;
+				d += 4 * ( x - y ) + 10;
 				y--;
 				TraceOctuple( vOrigin, SVector( x, y ) );
 			}

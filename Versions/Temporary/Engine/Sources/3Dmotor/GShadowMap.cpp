@@ -23,17 +23,17 @@ struct SEdge
 {
 	CVec4 vStart, vEnd;
 	SEdge() {}
-	SEdge( const CVec4 &_s, const CVec4 &_e ) : vStart(_s), vEnd(_e) {}
+	SEdge( const CVec4 &_s, const CVec4 &_e ) : vStart( _s ), vEnd( _e ) {}
 };
 
 static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &_b, float fb )
 {
-	CVec4 a(_a), b(_b);
+	CVec4 a( _a ), b( _b );
 	float aw = a.w, bw = b.w;
 	if ( aw == bw )
 	{
-		float f1 = 1 / (fb - fa);
-		*p = a * (fb*f1) - b * (fa*f1);
+		float f1 = 1 / ( fb - fa );
+		*p = a * ( fb * f1 ) - b * ( fa * f1 );
 		return;
 	}
 	if ( aw == 0 )
@@ -43,7 +43,7 @@ static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &
 			*p = a;
 			return;
 		}
-		*p = b - (fb / fa) * a;
+		*p = b - ( fb / fa ) * a;
 		return;
 	}
 	if ( bw == 0 )
@@ -53,13 +53,21 @@ static void CalcIntersection( CVec4 *p, const CVec4 &_a, float fa, const CVec4 &
 			*p = b;
 			return;
 		}
-		*p = a - (fa / fb) * b;
+		*p = a - ( fa / fb ) * b;
 		return;
 	}
-	a.x *= bw; a.y *= bw; a.z *= bw; a.w *= bw; fa *= bw;
-	b.x *= aw; b.y *= aw; b.z *= aw; b.w *= aw; fb *= aw;
-	float f1 = 1 / (fb - fa);
-	*p = a * (fb*f1) - b * (fa*f1);
+	a.x *= bw;
+	a.y *= bw;
+	a.z *= bw;
+	a.w *= bw;
+	fa *= bw;
+	b.x *= aw;
+	b.y *= aw;
+	b.z *= aw;
+	b.w *= aw;
+	fb *= aw;
+	float f1 = 1 / ( fb - fa );
+	*p = a * ( fb * f1 ) - b * ( fa * f1 );
 	Normalize( p );
 }
 
@@ -70,7 +78,7 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 	// rather than rebuilding it for every vertex below
 	const CVec4 planeVec4 = p.vec4();
 	std::vector<SEdge> edges;
-	pRes->facets.resize(0);
+	pRes->facets.resize( 0 );
 	for ( int k = 0; k < src.facets.size(); ++k )
 	{
 		SPolygon d;
@@ -86,8 +94,8 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 		bool bWasIntersected = false;
 		for ( int i = 0; i < s.vertices.size(); iPrev = i, fPrevSide = fSide, ++i )
 		{
-			const CVec4 &vPrev = s.vertices[ iPrev ];
-			const CVec4 &v = s.vertices[ i ];
+			const CVec4 &vPrev = s.vertices[iPrev];
+			const CVec4 &v = s.vertices[i];
 			fSide = planeVec4 * v;
 			if ( fPrevSide < 0 )
 			{
@@ -165,7 +173,7 @@ static void SetPlane( SPolygon *pRes, const CVec4 &a, const CVec4 &b, const CVec
 	float fDist = a.x * vNormal.x + a.y * vNormal.y + a.z * vNormal.z;
 	if ( a.w < 0 )
 		fDist = -fDist;
-	pRes->vPlane.Set( vNormal * fabs(a.w), fDist );
+	pRes->vPlane.Set( vNormal * fabs( a.w ), fDist );
 	Normalize( &pRes->vPlane );
 }
 
@@ -190,7 +198,6 @@ static SPolygon GetQuad( const CVec4 &a, const CVec4 &b, const CVec4 &c, const C
 	return r;
 }
 
-
 struct SHashedHedron
 {
 	std::vector<CVec4> pts;
@@ -198,7 +205,7 @@ struct SHashedHedron
 	{
 		int nStart, nEnd;
 		SEdge() {}
-		SEdge( int _s, int _e ) : nStart(_s), nEnd(_e) {}
+		SEdge( int _s, int _e ) : nStart( _s ), nEnd( _e ) {}
 	};
 	struct SPolygon
 	{
@@ -228,7 +235,7 @@ static int AddEdge( SHashedHedron *pRes, int nStart, int nEnd )
 		if ( e.nStart == nStart && e.nEnd == nEnd )
 			return k;
 		if ( e.nStart == nEnd && e.nEnd == nStart )
-			return k|0x80000000;
+			return k | 0x80000000;
 	}
 	pRes->edges.push_back( SHashedHedron::SEdge( nStart, nEnd ) );
 	return pRes->edges.size() - 1;
@@ -242,7 +249,7 @@ static void Assign( SHashedHedron *pRes, const SPolyhedron &src )
 		const SPolygon &p = src.facets[k];
 		SHashedHedron::SPolygon &d = pRes->polys[k];
 		d.vPlane = p.vPlane;
-		int nPrev = AddPoint( pRes, p.vertices[ p.vertices.size() - 1 ] ), nTek;
+		int nPrev = AddPoint( pRes, p.vertices[p.vertices.size() - 1] ), nTek;
 		for ( int i = 0; i < p.vertices.size(); nPrev = nTek, ++i )
 		{
 			nTek = AddPoint( pRes, p.vertices[i] );
@@ -261,7 +268,7 @@ static bool IsClosed( const SHashedHedron &src )
 		{
 			int nEdge = src.polys[k].edges[i];
 			if ( nEdge & 0x80000000 )
-				--count[ nEdge&0x7fffffff ];
+				--count[nEdge & 0x7fffffff];
 			else
 				++count[nEdge];
 		}
@@ -284,9 +291,9 @@ static void Assign( SPolyhedron *pRes, const SHashedHedron &src )
 		{
 			int nEdge = s.edges[i];
 			if ( nEdge & 0x80000000 )
-				d.vertices.push_back( src.pts[ src.edges[ nEdge&0x7fffffff ].nEnd ] );
+				d.vertices.push_back( src.pts[src.edges[nEdge & 0x7fffffff].nEnd] );
 			else
-				d.vertices.push_back( src.pts[ src.edges[ nEdge ].nStart ] );
+				d.vertices.push_back( src.pts[src.edges[nEdge].nStart] );
 		}
 	}
 }
@@ -295,7 +302,8 @@ static void Assign( SPolyhedron *pRes, const SHashedHedron &src )
 namespace NGScene
 {
 
-static void MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeometry::SPolyhedron &src, const CVec3 &ptDir )
+static void
+MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeometry::SPolyhedron &src, const CVec3 &ptDir )
 {
 	NGeometry::SHashedHedron h;
 	NGeometry::Assign( &h, src );
@@ -305,7 +313,7 @@ static void MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeomet
 	for ( int k = 0; k < h.polys.size(); ++k )
 	{
 		const CVec4 vPlane = h.polys[k].vPlane;
-		up[k] = vPlane * CVec4(ptDir,0) < 0;
+		up[k] = vPlane * CVec4( ptDir, 0 ) < 0;
 	}
 
 	std::vector<int> rPolys( h.edges.size(), 0 ), lPolys( h.edges.size(), 0 );
@@ -315,20 +323,20 @@ static void MakeShadowOccludersHull( NGeometry::SPolyhedron *pRes, const NGeomet
 		for ( int i = 0; i < p.edges.size(); ++i )
 		{
 			if ( p.edges[i] & 0x80000000 )
-				lPolys[ p.edges[i] & 0x7fffffff ] = k;
+				lPolys[p.edges[i] & 0x7fffffff] = k;
 			else
-				rPolys[ p.edges[i] ] = k;
+				rPolys[p.edges[i]] = k;
 		}
 	}
 
 	CVec4 vInf( -ptDir, 0 );
 	for ( int k = 0; k < h.edges.size(); ++k )
 	{
-		CVec4 vStart = h.pts[ h.edges[k].nStart ];
-		CVec4 vEnd = h.pts[ h.edges[k].nEnd ];
-		if ( up[ rPolys[k] ] != up[ lPolys[k] ] )
+		CVec4 vStart = h.pts[h.edges[k].nStart];
+		CVec4 vEnd = h.pts[h.edges[k].nEnd];
+		if ( up[rPolys[k]] != up[lPolys[k]] )
 		{
-			if ( up[ rPolys[k] ] )
+			if ( up[rPolys[k]] )
 				pRes->facets.push_back( NGeometry::GetTriangle( vStart, vEnd, vInf ) );
 			else
 				pRes->facets.push_back( NGeometry::GetTriangle( vEnd, vStart, vInf ) );
@@ -356,15 +364,18 @@ static CVec3 Discr( const CVec3 &v, float fStep )
 	return vRes;
 }
 
-static float Dot4( const CVec4 &a, const CVec4 &b ) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
+static float Dot4( const CVec4 &a, const CVec4 &b )
+{
+	return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
 
 static float SetBits( float f, int nBits, int nBitVal )
 {
 	int nMask = ( 1 << nBits ) - 1;
 	int nVal = nBitVal ? nMask : 0;
-	int nRes = *(int*)&f;
+	int nRes = *(int *)&f;
 	nRes = ( nRes & ~nMask ) | nVal;
-	return *(float*)&nRes;
+	return *(float *)&nRes;
 }
 
 static float CalcNLP( float f )
@@ -381,7 +392,7 @@ static void SolveNLP( float fMin, float fMax, float *pfA, float *pfB )
 	float fMult = ( 1 - fShiftStep ) / ( b - a );
 	fMult = SetBits( fMult, 20, 0 );
 	*pfA = fMult;
-	float fShift = Discr( - *pfA * a + fShiftStep / 2, fShiftStep );
+	float fShift = Discr( -*pfA * a + fShiftStep / 2, fShiftStep );
 	*pfB = fShift;
 }
 
@@ -414,14 +425,14 @@ struct SAreaCalcInfo
 {
 	std::vector<CVec3> points;
 	CVec3 vXBase, vYBase, vCamera;
-	float fCW;//, fMinimalScale;
+	float fCW; //, fMinimalScale;
 };
 static float CalcArea( float fRot, const SAreaCalcInfo &info, CVec4 *pX, CVec4 *pY )
 {
 	float fSin = sin( ToRadian( fRot ) ), fCos = cos( ToRadian( fRot ) );
 
 	CVec3 vX, vY;
-	vX =  fCos * info.vXBase + fSin * info.vYBase;
+	vX = fCos * info.vXBase + fSin * info.vYBase;
 	vY = -fSin * info.vXBase + fCos * info.vYBase;
 
 	CVec4 &vTestX = *pX, &vTestY = *pY;
@@ -439,9 +450,15 @@ static float CalcArea( float fRot, const SAreaCalcInfo &info, CVec4 *pX, CVec4 *
 	return CalcRange( info.points, vTestX ) * CalcRange( info.points, vTestY );
 }
 
-void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, float fMinimalSize,
-	const CTransformStack &ts, const CVec3 &vLightDir, float fMaxHeight, const SBound &_sceneBound,
-	float fSceneHeight, SShadowMatrixAlign *pOldAlign )
+void MakeShadowMatrix( SNLProjectionInfo *pRes,
+                       CTransformStack *pShadowGeomTS,
+                       float fMinimalSize,
+                       const CTransformStack &ts,
+                       const CVec3 &vLightDir,
+                       float fMaxHeight,
+                       const SBound &_sceneBound,
+                       float fSceneHeight,
+                       SShadowMatrixAlign *pOldAlign )
 {
 	extern bool bNewShadows;
 
@@ -451,28 +468,27 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 		return;
 	}
 	CVec4 vC, v00, v01, v10, v11, vC1, vN00, vN01, vN11, vN10;
-	ts.Get().backward.RotateHVector( &vC, CVec4(0,0,1,0) );
-	ts.Get().backward.RotateHVector( &vN00, CVec4(-1,-1,0,1) );
-	ts.Get().backward.RotateHVector( &vN01, CVec4(-1, 1,0,1) );
-	ts.Get().backward.RotateHVector( &vN11, CVec4( 1, 1,0,1) );
-	ts.Get().backward.RotateHVector( &vN10, CVec4( 1,-1,0,1) );
-	ts.Get().backward.RotateHVector( &v00, CVec4(-1,-1,1,1) );
-	ts.Get().backward.RotateHVector( &v01, CVec4(-1, 1,1,1) );
-	ts.Get().backward.RotateHVector( &v11, CVec4( 1, 1,1,1) );
-	ts.Get().backward.RotateHVector( &v10, CVec4( 1,-1,1,1) );
-	ts.Get().backward.RotateHVector( &vC1, CVec4( 0, 0,1,1) );
-
+	ts.Get().backward.RotateHVector( &vC, CVec4( 0, 0, 1, 0 ) );
+	ts.Get().backward.RotateHVector( &vN00, CVec4( -1, -1, 0, 1 ) );
+	ts.Get().backward.RotateHVector( &vN01, CVec4( -1, 1, 0, 1 ) );
+	ts.Get().backward.RotateHVector( &vN11, CVec4( 1, 1, 0, 1 ) );
+	ts.Get().backward.RotateHVector( &vN10, CVec4( 1, -1, 0, 1 ) );
+	ts.Get().backward.RotateHVector( &v00, CVec4( -1, -1, 1, 1 ) );
+	ts.Get().backward.RotateHVector( &v01, CVec4( -1, 1, 1, 1 ) );
+	ts.Get().backward.RotateHVector( &v11, CVec4( 1, 1, 1, 1 ) );
+	ts.Get().backward.RotateHVector( &v10, CVec4( 1, -1, 1, 1 ) );
+	ts.Get().backward.RotateHVector( &vC1, CVec4( 0, 0, 1, 1 ) );
 
 	CVec4 pl1, pl2;
 	float val;
 
-	ts.Get().forward.RotateHVectorTransposed( &pl1, CVec4( 0, 0,1, 0) );
-	ts.Get().forward.RotateHVectorTransposed( &pl2, CVec4( 0, 0,1,-1) );
+	ts.Get().forward.RotateHVectorTransposed( &pl1, CVec4( 0, 0, 1, 0 ) );
+	ts.Get().forward.RotateHVectorTransposed( &pl2, CVec4( 0, 0, 1, -1 ) );
 
-	val = 1.0f / sqrtf ( pl1.x * pl1.x + pl1.y * pl1.y + pl1.z * pl1.z );
+	val = 1.0f / sqrtf( pl1.x * pl1.x + pl1.y * pl1.y + pl1.z * pl1.z );
 	pl1 *= val;
 
-	val = 1.0f / sqrtf ( pl2.x * pl2.x + pl2.y * pl2.y + pl2.z * pl2.z );
+	val = 1.0f / sqrtf( pl2.x * pl2.x + pl2.y * pl2.y + pl2.z * pl2.z );
 	pl2 *= val;
 
 	// occluderHedron - potential shadow casters bound
@@ -495,20 +511,20 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 		CVec3 vSceneMax = sceneBound.s.ptCenter + sceneBound.ptHalfBox;
 		vSceneMin = Discr( vSceneMin, 0.5 );
 		vSceneMax = Discr( vSceneMax, 0.5 );
-		NGeometry::Split( &hedron, SPlane( CVec3(0,0, 1), -(std::max)( -0.5f, vSceneMin.z ) ) );
-		NGeometry::Split( &hedron, SPlane( CVec3( 1,0,0), -vSceneMin.x ) );
-		NGeometry::Split( &hedron, SPlane( CVec3(-1,0,0), vSceneMax.x ) );
-		NGeometry::Split( &hedron, SPlane( CVec3(0, 1,0), -vSceneMin.y ) );
-		NGeometry::Split( &hedron, SPlane( CVec3(0,-1,0), vSceneMax.y ) );
+		NGeometry::Split( &hedron, SPlane( CVec3( 0, 0, 1 ), -(std::max)( -0.5f, vSceneMin.z ) ) );
+		NGeometry::Split( &hedron, SPlane( CVec3( 1, 0, 0 ), -vSceneMin.x ) );
+		NGeometry::Split( &hedron, SPlane( CVec3( -1, 0, 0 ), vSceneMax.x ) );
+		NGeometry::Split( &hedron, SPlane( CVec3( 0, 1, 0 ), -vSceneMin.y ) );
+		NGeometry::Split( &hedron, SPlane( CVec3( 0, -1, 0 ), vSceneMax.y ) );
 
-		if( bNewShadows )
+		if ( bNewShadows )
 		{
 			pl1.w -= 100;
 			NGeometry::Split( &hedron, -pl1 );
 		}
 		projHedron = hedron;
-		NGeometry::Split( &hedron, SPlane( CVec3(0,0,-1), Clamp( vSceneMax.z, 0.5f, fMaxHeight * 1.05f ) ) );
-		NGeometry::Split( &projHedron, SPlane( CVec3(0,0,-1), Clamp( fSceneHeight, 0.5f, fMaxHeight * 1.05f ) ) );
+		NGeometry::Split( &hedron, SPlane( CVec3( 0, 0, -1 ), Clamp( vSceneMax.z, 0.5f, fMaxHeight * 1.05f ) ) );
+		NGeometry::Split( &projHedron, SPlane( CVec3( 0, 0, -1 ), Clamp( fSceneHeight, 0.5f, fMaxHeight * 1.05f ) ) );
 
 		MakeShadowOccludersHull( &occluderHedron, hedron, vLightDir );
 	}
@@ -531,20 +547,20 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	float fMaxX = -1e38f;
 	float fMaxY = -1e38f;
 
-	CVec3 xDir = vLightDir ^ CVec3(1,0,0);
+	CVec3 xDir = vLightDir ^ CVec3( 1, 0, 0 );
 	Normalize( &xDir );
 
-	CVec3 yDir = vLightDir ^ CVec3(0,1,0);
+	CVec3 yDir = vLightDir ^ CVec3( 0, 1, 0 );
 	Normalize( &yDir );
 
-	std::unordered_map<CVec3,bool, SVec3Hash> pointHash;
+	std::unordered_map<CVec3, bool, SVec3Hash> pointHash;
 	for ( int k = 0; k < projHedron.facets.size(); ++k )
 	{
 		const NGeometry::SPolygon &p = projHedron.facets[k];
 		for ( int i = 0; i < p.vertices.size(); ++i )
 		{
 			CVec3 vPos = Unhomogen( p.vertices[i] );
-			fMinW	= (std::min)( fMinW, Dot4( mCamera.w(), CVec4(vPos,1) ) );
+			fMinW = (std::min)( fMinW, Dot4( mCamera.w(), CVec4( vPos, 1 ) ) );
 
 			float fX = xDir * vPos;
 			float fY = yDir * vPos;
@@ -558,7 +574,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 			vMin.Minimize( vPos );
 			vMax.Maximize( vPos );
 
-			pointHash[ vPos ];
+			pointHash[vPos];
 		}
 	}
 
@@ -576,27 +592,22 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	static CVec4 svDirX;
 	static CVec4 svDirY;
 
-	bool bFirstCase =
-	( ( ofMaxX - ofMinX ) > dX * 1.3f ) || ( ( ofMaxY - ofMinY ) > dY * 1.3f );
+	bool bFirstCase = ( ( ofMaxX - ofMinX ) > dX * 1.3f ) || ( ( ofMaxY - ofMinY ) > dY * 1.3f );
 
-	bool bSecondCase =
-		!( ofMinX < fMinX &&
-		ofMinY < fMinY &&
-		ofMaxX > fMaxX &&
-		ofMaxY > fMaxY );
+	bool bSecondCase = !( ofMinX < fMinX && ofMinY < fMinY && ofMaxX > fMaxX && ofMaxY > fMaxY );
 
 	pRes->bNeedUpdate = false;
-	if( bFirstCase || bSecondCase || cnt > 0)
+	if ( bFirstCase || bSecondCase || cnt > 0 )
 	{
-		ofMinX =  fMinX - dX * 0.1f;
-		ofMaxX =  fMaxX + dX * 0.1f;
+		ofMinX = fMinX - dX * 0.1f;
+		ofMaxX = fMaxX + dX * 0.1f;
 
-		ofMinY =  fMinY - dY * 0.1f;
-		ofMaxY =  fMaxY + dY * 0.1f;
+		ofMinY = fMinY - dY * 0.1f;
+		ofMaxY = fMaxY + dY * 0.1f;
 
 		pRes->bNeedUpdate = true;
-		svDirX = CVec4 ( xDir / (ofMaxX - ofMinX), -ofMinX / (ofMaxX - ofMinX) );
-		svDirY = CVec4 ( yDir / (ofMaxY - ofMinY), -ofMinY / (ofMaxY - ofMinY) );
+		svDirX = CVec4( xDir / ( ofMaxX - ofMinX ), -ofMinX / ( ofMaxX - ofMinX ) );
+		svDirY = CVec4( yDir / ( ofMaxY - ofMinY ), -ofMinY / ( ofMaxY - ofMinY ) );
 
 		cnt--;
 	}
@@ -605,19 +616,19 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	pRes->fMaxY = ofMaxY;
 	pRes->fMinX = ofMinX;
 	pRes->fMinY = ofMinY;
-	pRes->lvShift = CVec4 ( 1, 1, 0, 0 );
+	pRes->lvShift = CVec4( 1, 1, 0, 0 );
 
 	pRes->vDirX = svDirX;
 	pRes->vDirY = svDirY;
 
 	SAreaCalcInfo areaInfo;
-	for ( std::unordered_map<CVec3,bool, SVec3Hash>::iterator i = pointHash.begin(); i != pointHash.end(); ++i )
+	for ( std::unordered_map<CVec3, bool, SVec3Hash>::iterator i = pointHash.begin(); i != pointHash.end(); ++i )
 		areaInfo.points.push_back( i->first );
 
 	// base orientation
-	areaInfo.vXBase = vLightDir ^ CVec3(1,0,0);
-	if ( fabs2(areaInfo.vXBase) < 0.1f )
-		areaInfo.vXBase = vLightDir ^ CVec3(0,1,0);
+	areaInfo.vXBase = vLightDir ^ CVec3( 1, 0, 0 );
+	if ( fabs2( areaInfo.vXBase ) < 0.1f )
+		areaInfo.vXBase = vLightDir ^ CVec3( 0, 1, 0 );
 	Normalize( &areaInfo.vXBase );
 	areaInfo.vYBase = -areaInfo.vXBase ^ vLightDir;
 	Normalize( &areaInfo.vYBase );
@@ -630,7 +641,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	float fProjectionScale = 1 / fMinimalSize; // 0.5// 1 // 0.2
 	if ( areaInfo.fCW == 0 )
 		fProjectionScale = 1e-5f; // practically linear projection
-	fProjectionScale = (std::max)( 1e-5f ,fProjectionScale );
+	fProjectionScale = (std::max)( 1e-5f, fProjectionScale );
 
 	// select u, v orientation
 	if ( areaInfo.fCW != 0 )
@@ -676,27 +687,22 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	// initialize shadow geom bound, Identity projection is used
 	pShadowGeomTS->Make();
 
-
-
-	if( bNewShadows && pRes->bNeedUpdate )
+	if ( bNewShadows && pRes->bNeedUpdate )
 	{
-		pShadowGeomTS->AddClipPlane(pRes->vDirX);
+		pShadowGeomTS->AddClipPlane( pRes->vDirX );
 
-		pShadowGeomTS->AddClipPlane
-			(
-			CVec4( -pRes->vDirX.x, -pRes->vDirX.y, -pRes->vDirX.z, 1.0f - pRes->vDirX.w )
-			);
+		pShadowGeomTS->AddClipPlane( CVec4( -pRes->vDirX.x, -pRes->vDirX.y, -pRes->vDirX.z, 1.0f - pRes->vDirX.w ) );
 
-		pShadowGeomTS->AddClipPlane(pRes->vDirY);
+		pShadowGeomTS->AddClipPlane( pRes->vDirY );
 	}
 	else
-	for ( int k = 0; k < occluderHedron.facets.size(); ++k )
-	{
-		const CVec4 &vPlane = occluderHedron.facets[k].vPlane;
-		CVec3 v( vPlane.x, vPlane.y, vPlane.z );
-		float f = fabs( v );
-		pShadowGeomTS->AddClipPlane( CVec4( -vPlane.x / f, -vPlane.y / f, -vPlane.z / f, vPlane.w / f ) );
-	}
+		for ( int k = 0; k < occluderHedron.facets.size(); ++k )
+		{
+			const CVec4 &vPlane = occluderHedron.facets[k].vPlane;
+			CVec3 v( vPlane.x, vPlane.y, vPlane.z );
+			float f = fabs( v );
+			pShadowGeomTS->AddClipPlane( CVec4( -vPlane.x / f, -vPlane.y / f, -vPlane.z / f, vPlane.w / f ) );
+		}
 }
 
 //void MakeSceneGeometryBound( SBound *pRes, const CTransformStack &ts, float fMaxHeight )

@@ -16,20 +16,22 @@
 
 namespace
 {
-	wxWeakRef<wxWindow> pCursorTarget;
+wxWeakRef<wxWindow> pCursorTarget;
 
-	// res/uparrow.cur, as scripts/port/mkcursor.py emits it. Embedded rather
-	// than registered in a module's binary resource table because it belongs to
-	// this boundary and to nothing else, and because the table lives in
-	// ED_B2_M1 and MapEditor while this is below both.
-	//
-	// It is a placeholder, drawn rather than taken from anywhere: Win32 ships
-	// IDC_UPARROW but offers no way to carry it off, wx has no stock cursor for
-	// it, and neither wx's ten .cur files nor the game's own thirty-six include
-	// one. Regenerate with:
-	//
-	//   python scripts/port/mkcursor.py <...>/MapEditorLib/res/uparrow.cur \
-	//       --carray UP_ARROW_CUR
+// res/uparrow.cur, as scripts/port/mkcursor.py emits it. Embedded rather
+// than registered in a module's binary resource table because it belongs to
+// this boundary and to nothing else, and because the table lives in
+// ED_B2_M1 and MapEditor while this is below both.
+//
+// It is a placeholder, drawn rather than taken from anywhere: Win32 ships
+// IDC_UPARROW but offers no way to carry it off, wx has no stock cursor for
+// it, and neither wx's ten .cur files nor the game's own thirty-six include
+// one. Regenerate with:
+//
+//   python scripts/port/mkcursor.py <...>/MapEditorLib/res/uparrow.cur \
+//       --carray UP_ARROW_CUR
+// Laid out as a table on purpose: res/uparrow.cur as bytes, twelve to a row
+// clang-format off
 	const unsigned char UP_ARROW_CUR[] =
 	{
 		0x00, 0x00, 0x02, 0x00, 0x01, 0x00, 0x20, 0x20, 0x00, 0x00, 0x10, 0x00,
@@ -61,92 +63,88 @@ namespace
 		0x0f, 0xff, 0xff, 0xf8, 0x0f, 0xff, 0xff, 0xfc, 0x1f, 0xff, 0xff, 0xfe,
 		0x3f, 0xff,
 	};
+// clang-format on
 
-
-	// wxCURHandler is not among the handlers wxInitAllImageHandlers adds by
-	// default in every build, and adding one twice is an error, so ask first.
-	// The same shape as NWxResourceImages::EnsureIconHandlers.
-	void EnsureCursorHandler()
+// wxCURHandler is not among the handlers wxInitAllImageHandlers adds by
+// default in every build, and adding one twice is an error, so ask first.
+// The same shape as NWxResourceImages::EnsureIconHandlers.
+void EnsureCursorHandler()
+{
+	static const bool bAdded = []()
 	{
-		static const bool bAdded = []()
+		if ( wxImage::FindHandler( wxBITMAP_TYPE_CUR ) == nullptr )
 		{
-			if ( wxImage::FindHandler( wxBITMAP_TYPE_CUR ) == nullptr )
-			{
-				wxImage::AddHandler( new wxCURHandler );
-			}
-			return true;
-		}();
-		( void )bAdded;
-	}
-
-
-	// Built once and kept: a cursor is cheap but not free, and these are set
-	// from mouse-move handlers.
-	const wxCursor& UpArrow()
-	{
-		static const wxCursor cursor = []()
-		{
-			EnsureCursorHandler();
-			wxMemoryInputStream stream( UP_ARROW_CUR, sizeof( UP_ARROW_CUR ) );
-			wxLogNull noLog;
-			wxImage image;
-			if ( !image.LoadFile( stream, wxBITMAP_TYPE_CUR ) )
-			{
-				// Better a plain arrow than no cursor at all -- but say so. A
-				// silent fallback here would look exactly like the editor working,
-				// which is how the context menu that ::LoadMenu had stopped
-				// returning went unnoticed for a fortnight.
-				DebugTrace( "NCursor: the embedded up-arrow cursor did not decode; "
-										"falling back to the plain arrow" );
-				return wxCursor( wxCURSOR_ARROW );
-			}
-			// LoadFile fills the hotspot options from the .cur's own header and
-			// wxCursor( wxImage ) reads them, on MSW and on GTK alike.
-			return wxCursor( image );
-		}();
-		return cursor;
-	}
+			wxImage::AddHandler( new wxCURHandler );
+		}
+		return true;
+	}();
+	(void)bAdded;
 }
 
+// Built once and kept: a cursor is cheap but not free, and these are set
+// from mouse-move handlers.
+const wxCursor &UpArrow()
+{
+	static const wxCursor cursor = []()
+	{
+		EnsureCursorHandler();
+		wxMemoryInputStream stream( UP_ARROW_CUR, sizeof( UP_ARROW_CUR ) );
+		wxLogNull noLog;
+		wxImage image;
+		if ( !image.LoadFile( stream, wxBITMAP_TYPE_CUR ) )
+		{
+			// Better a plain arrow than no cursor at all -- but say so. A
+			// silent fallback here would look exactly like the editor working,
+			// which is how the context menu that ::LoadMenu had stopped
+			// returning went unnoticed for a fortnight.
+			DebugTrace( "NCursor: the embedded up-arrow cursor did not decode; "
+			            "falling back to the plain arrow" );
+			return wxCursor( wxCURSOR_ARROW );
+		}
+		// LoadFile fills the hotspot options from the .cur's own header and
+		// wxCursor( wxImage ) reads them, on MSW and on GTK alike.
+		return wxCursor( image );
+	}();
+	return cursor;
+}
+}
 
 namespace NCursor
 {
-	void SetTarget( IWidget *pWidget )
+void SetTarget( IWidget *pWidget )
+{
+	pCursorTarget = ToWxWindow( pWidget );
+	Set( SHAPE_ARROW );
+}
+
+void Set( EShape eShape )
+{
+	// Keep tool feedback inside the viewport, including when Enter/Leave
+	// changes the cursor while the mouse is over a menu or docking sash.
+	if ( !pCursorTarget )
 	{
-		pCursorTarget = ToWxWindow( pWidget );
-		Set( SHAPE_ARROW );
+		return;
 	}
-
-
-	void Set( EShape eShape )
+	switch ( eShape )
 	{
-		// Keep tool feedback inside the viewport, including when Enter/Leave
-		// changes the cursor while the mouse is over a menu or docking sash.
-		if ( !pCursorTarget )
-		{
+		case SHAPE_UP_ARROW:
+			pCursorTarget->SetCursor( UpArrow() );
 			return;
-		}
-		switch ( eShape )
-		{
-			case SHAPE_UP_ARROW:
-				pCursorTarget->SetCursor( UpArrow() );
-				return;
-			case SHAPE_NO_ENTRY:
-				pCursorTarget->SetCursor( wxCursor( wxCURSOR_NO_ENTRY ) );
-				return;
-			case SHAPE_ARROW:
-				break;
-		}
-		pCursorTarget->SetCursor( wxCursor( wxCURSOR_ARROW ) );
+		case SHAPE_NO_ENTRY:
+			pCursorTarget->SetCursor( wxCursor( wxCURSOR_NO_ENTRY ) );
+			return;
+		case SHAPE_ARROW:
+			break;
 	}
+	pCursorTarget->SetCursor( wxCursor( wxCURSOR_ARROW ) );
+}
 
-
-	CTPoint<int> GetPosition()
-	{
-		// The two-argument form: wx/utils.h declares only that one, not the
-		// wxPoint-returning overload wxWindow has.
-		int nX = 0, nY = 0;
-		::wxGetMousePosition( &nX, &nY );
-		return CTPoint<int>( nX, nY );
-	}
+CTPoint<int> GetPosition()
+{
+	// The two-argument form: wx/utils.h declares only that one, not the
+	// wxPoint-returning overload wxWindow has.
+	int nX = 0, nY = 0;
+	::wxGetMousePosition( &nX, &nY );
+	return CTPoint<int>( nX, nY );
+}
 }

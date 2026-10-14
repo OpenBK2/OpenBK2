@@ -16,9 +16,9 @@ class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 		float fAmp1, fAmp2;
 		float fPhaze1, fPhaze2;
 		//
-#if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
+#if !defined( _FINALRELEASE ) && !defined( _BETARELEASE )
 		// for uninitialized hunt
-		SJoggingParams2() : fPeriod1( 0 ), fPeriod2 ( 0 ), fAmp1( 0 ), fAmp2( 0 ), fPhaze1 ( 0 ), fPhaze2( 0 ) {}
+		SJoggingParams2() : fPeriod1( 0 ), fPeriod2( 0 ), fAmp1( 0 ), fAmp2( 0 ), fPhaze1( 0 ), fPhaze2( 0 ) {}
 #endif
 		float GetValue( const NTimer::STime nDeltaTime ) const;
 	};
@@ -30,7 +30,7 @@ class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 	NTimer::STime nStopTime;
 	bool bStopped;
 
-	int	nBasisBoneIndex;
+	int nBasisBoneIndex;
 	std::vector<int> propellerBoneIndices;
 	std::vector<CVec3> propellerSpeedsRad;
 	NTimer::STime nPropellerStartTime;
@@ -38,12 +38,15 @@ class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 	bool NeedUpdate();
 
 public:
-	CMechUnitJoggingMutator() : nStartTime( 0 ), nStopTime( 0 ), bStopped( true ), nBasisBoneIndex( -1 ),
-		nPropellerStartTime( 0 ) {}
+	CMechUnitJoggingMutator()
+			: nStartTime( 0 ), nStopTime( 0 ), bStopped( true ), nBasisBoneIndex( -1 ), nPropellerStartTime( 0 )
+	{
+	}
 
 	void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY );
-	void SetupPropellers( ISkeletonAnimator *pAnimator, const std::vector<std::string> &propellerObjects,
-							 const std::vector<CVec3> &propellerSpeedsRad );
+	void SetupPropellers( ISkeletonAnimator *pAnimator,
+	                      const std::vector<std::string> &propellerObjects,
+	                      const std::vector<CVec3> &propellerSpeedsRad );
 	void Play();
 	void Stop();
 

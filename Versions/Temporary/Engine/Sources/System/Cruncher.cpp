@@ -20,23 +20,53 @@ struct SNetCompressorInit
 			nBits = 0;
 			nLeng = i + 1;
 			if ( nLeng <= 1 )
-			{ nBits = 0; nBitsNum = 1; }
+			{
+				nBits = 0;
+				nBitsNum = 1;
+			}
 			else if ( nLeng <= 2 )
-			{ nBits = 1; nBitsNum = 3; }
+			{
+				nBits = 1;
+				nBitsNum = 3;
+			}
 			else if ( nLeng <= 3 )
-			{ nBits = 3; nBitsNum = 5; }
+			{
+				nBits = 3;
+				nBitsNum = 5;
+			}
 			else if ( nLeng <= 4 )
-			{ nBits = 5; nBitsNum = 3; }
+			{
+				nBits = 5;
+				nBitsNum = 3;
+			}
 			else if ( nLeng <= 5 )
-			{ nBits = 7; nBitsNum = 5; }
+			{
+				nBits = 7;
+				nBitsNum = 5;
+			}
 			else if ( nLeng <= 6 )
-			{ nBits = 15; nBitsNum = 5; }
+			{
+				nBits = 15;
+				nBitsNum = 5;
+			}
 			else if ( nLeng <= 10 )
-			{ nBits = 11; nBitsNum = 4 + 2; nBits += (nLeng - 7) << 4;}
+			{
+				nBits = 11;
+				nBitsNum = 4 + 2;
+				nBits += ( nLeng - 7 ) << 4;
+			}
 			else if ( nLeng <= 18 )
-			{ nBits = 19; nBitsNum = 5 + 3; nBits += (nLeng - 11) << 5;}
+			{
+				nBits = 19;
+				nBitsNum = 5 + 3;
+				nBits += ( nLeng - 11 ) << 5;
+			}
 			else if ( nLeng <= 34 )
-			{ nBits = 31; nBitsNum = 6 + 4; nBits += (nLeng - 19) << 6;}
+			{
+				nBits = 31;
+				nBitsNum = 6 + 4;
+				nBits += ( nLeng - 19 ) << 6;
+			}
 			/*else if ( nLeng <= 34+64 )
 			else if ( nLeng <= 34+64+128 )*/
 		}
@@ -48,15 +78,35 @@ struct SNetCompressorInit
 			int &nBitsNum = CNetCompressor::nShiftBitsNum[i];
 			nBits = 0;
 			if ( nShift < 2 )
-			{ nBits = 28; nBitsNum = 5 + 1; nBits += (nShift - 0) << 5; }
+			{
+				nBits = 28;
+				nBitsNum = 5 + 1;
+				nBits += ( nShift - 0 ) << 5;
+			}
 			else if ( nShift < 6 )
-			{ nBits = 8;  nBitsNum = 4 + 2; nBits += (nShift - 2) << 4; }
+			{
+				nBits = 8;
+				nBitsNum = 4 + 2;
+				nBits += ( nShift - 2 ) << 4;
+			}
 			else if ( nShift < 10 )
-			{ nBits = 4;  nBitsNum = 4 + 2; nBits += (nShift - 6) << 4; }
+			{
+				nBits = 4;
+				nBitsNum = 4 + 2;
+				nBits += ( nShift - 6 ) << 4;
+			}
 			else if ( nShift < 18 )
-			{ nBits = 0;  nBitsNum = 4 + 3; nBits += (nShift - 10) << 4; }
+			{
+				nBits = 0;
+				nBitsNum = 4 + 3;
+				nBits += ( nShift - 10 ) << 4;
+			}
 			else if ( nShift < 34 )
-			{ nBits = 12; nBitsNum = 5 + 4; nBits += (nShift - 18) << 5; }
+			{
+				nBits = 12;
+				nBitsNum = 5 + 4;
+				nBits += ( nShift - 18 ) << 5;
+			}
 		}
 	}
 };
@@ -64,13 +114,15 @@ static SNetCompressorInit sNetCompressorInit;
 
 CNetCompressor::CNetCompressor()
 {
-	cPrevLetter = 0; nBlockStart = -1;
+	cPrevLetter = 0;
+	nBlockStart = -1;
 	nCurrent = 0;
 	nNext[0] = N_COMPRESS_HISTORY;
-	memset( nHashTable, 0, sizeof(nHashTable) );
-	cBuffer[0] = 0; cBuffer[N_COMPRESS_HISTORY] = 0;
+	memset( nHashTable, 0, sizeof( nHashTable ) );
+	cBuffer[0] = 0;
+	cBuffer[N_COMPRESS_HISTORY] = 0;
 	cBuffer[N_COMPRESS_HISTORY - 1] = 0;
-	cBuffer[2*N_COMPRESS_HISTORY - 1] = 0;
+	cBuffer[2 * N_COMPRESS_HISTORY - 1] = 0;
 
 	/*memset( nBlocks, 0, sizeof( nBlocks ) );
 	memset( nLengths, 0, sizeof( nLengths ) );
@@ -85,48 +137,48 @@ void CNetCompressor::EmitBlock( int nStart )
 	nBlockStart = -1;
 
 	if ( nBlockLength <= 34 )
-		data.WriteBits( nLengthBits[ nBlockLength - 1 ], nLengthBitsNum[ nBlockLength - 1 ] );
+		data.WriteBits( nLengthBits[nBlockLength - 1], nLengthBitsNum[nBlockLength - 1] );
 	else
 	{
-		if ( nBlockLength <= 34+64 )
+		if ( nBlockLength <= 34 + 64 )
 		{
 			data.WriteBits( 23, 5 );
-			data.WriteBits( (nBlockLength - 35), 6 );
+			data.WriteBits( ( nBlockLength - 35 ), 6 );
 		}
-		else if ( nBlockLength <= 34+64+128 )
+		else if ( nBlockLength <= 34 + 64 + 128 )
 		{
 			data.WriteBits( 63, 6 );
-			data.WriteBits( (nBlockLength - 99), 7 );
+			data.WriteBits( ( nBlockLength - 99 ), 7 );
 		}
 		else
-			ASSERT(0);
+			ASSERT( 0 );
 	}
 	if ( nShift < 34 )
-		data.WriteBits( nShiftBits[ nShift ], nShiftBitsNum[ nShift ] );
+		data.WriteBits( nShiftBits[nShift], nShiftBitsNum[nShift] );
 	else
 	{
 		if ( nShift < 34 + 64 )
 		{
 			data.WriteBits( 2, 3 );
-			data.WriteBits( (nShift - 34), 6 );
+			data.WriteBits( ( nShift - 34 ), 6 );
 		}
 		else if ( nShift < 34 + 64 + 256 )
 		{
 			data.WriteBits( 6, 3 );
-			data.WriteBits( (nShift - (34 + 64) ), 8 );
+			data.WriteBits( ( nShift - ( 34 + 64 ) ), 8 );
 		}
 		else if ( nShift < 34 + 64 + 256 + 1024 )
 		{
 			data.WriteBits( 3, 2 );
-			data.WriteBits( (nShift - (34 + 64 + 256) ), 10 );
+			data.WriteBits( ( nShift - ( 34 + 64 + 256 ) ), 10 );
 		}
 		else if ( nShift < 34 + 64 + 256 + 1024 + 4096 )
 		{
 			data.WriteBits( 1, 2 );
-			data.WriteBits( (nShift - (34 + 64 + 256 + 1024) ), 12 );
+			data.WriteBits( ( nShift - ( 34 + 64 + 256 + 1024 ) ), 12 );
 		}
 	}
-/*
+	/*
 	// statistics
 	if ( nBlockLength <= 2 )
 		{ nBlocks[1]++; nCSize += 3; }
@@ -174,7 +226,7 @@ void CNetCompressor::EmitChar()
 {
 	//cout << "Char = " << cPrevLetter << endl;
 	nBlockStart = -1;
-	data.WriteBit(0);
+	data.WriteBit( 0 );
 	data.Write( &cPrevLetter, 1 );
 	//nBlocks[0]++; nCSize += 1 + 8;
 }
@@ -190,12 +242,12 @@ void CNetCompressor::FinishPack()
 void CNetCompressor::StartPack( unsigned char c )
 {
 	// fill hash table
-	nNext[ nCurrent ] = N_COMPRESS_HISTORY;//nCurrent;
+	nNext[nCurrent] = N_COMPRESS_HISTORY; //nCurrent;
 	// advance nCurrent
 	nCurrent = ( nCurrent + 1 ) & ( N_COMPRESS_HISTORY - 1 );
 	// write down new code
-	cBuffer[ nCurrent ] = c;
-	cBuffer[ nCurrent + N_COMPRESS_HISTORY ] = c;
+	cBuffer[nCurrent] = c;
+	cBuffer[nCurrent + N_COMPRESS_HISTORY] = c;
 	cPrevLetter = c;
 }
 
@@ -203,12 +255,12 @@ void CNetCompressor::StorePack( CDataStream &src, CDataStream &appendTo )
 {
 	CBitLocker srcData;
 
-	src.Seek(0);
+	src.Seek( 0 );
 	int nSize = src.GetSize();
 	srcData.LockRead( src, nSize );
 	const void *pData = srcData.GetCurrentPtr();
 
-	const unsigned char *pszData = (const unsigned char*) pData;
+	const unsigned char *pszData = (const unsigned char *)pData;
 	const unsigned char *pszDataFinish = pszData + nSize;
 	data.LockWrite( appendTo, nSize * 9 / 8 + 10 );
 	data.Write( &nSize, 4 );
@@ -219,7 +271,7 @@ void CNetCompressor::StorePack( CDataStream &src, CDataStream &appendTo )
 	}
 	for ( ; pszData < pszDataFinish; pszData++ )
 	{
-		data.WriteBit(0);
+		data.WriteBit( 0 );
 		data.Write( pszData, 1 );
 	}
 	data.Free();
@@ -238,12 +290,12 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 	const unsigned char *pszDataFinish;
 	CBitLocker srcData;
 
-	src.Seek(0);
+	src.Seek( 0 );
 	nSize = src.GetSize();
 	srcData.LockRead( src, nSize );
 	pData = srcData.GetCurrentPtr();
 
-	pszData = (const unsigned char*) pData;
+	pszData = (const unsigned char *)pData;
 	pszDataFinish = pszData + nSize;
 	data.LockWrite( appendTo, nSize * 9 / 8 + 10 );
 	data.Write( &nSize, 4 );
@@ -260,79 +312,77 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 		nHash = cPrevLetter;
 		nHash = ( nHash << 2 ) ^ nC;
 		// fill hash table
-		nDif = ( nCurrent - nHashTable[ nHash ] ) & (N_COMPRESS_HISTORY-1);
-		nHashTable[ nHash ] = nCurrent;
+		nDif = ( nCurrent - nHashTable[nHash] ) & ( N_COMPRESS_HISTORY - 1 );
+		nHashTable[nHash] = nCurrent;
 		nDif += N_COMPRESS_HISTORY * ( nDif == 0 );
-		nNext[ nCurrent ] = nDif;//nHashTable[ nHash ];
+		nNext[nCurrent] = nDif; //nHashTable[ nHash ];
 		// advance nCurrent
 		nPrevious = nCurrent;
 		nCurrent = ( nCurrent + 1 ) & ( N_COMPRESS_HISTORY - 1 );
 		// write down new code
 		c = nC;
-		cBuffer[ nCurrent ] = c;
-		cBuffer[ nCurrent + N_COMPRESS_HISTORY ] = c;
+		cBuffer[nCurrent] = c;
+		cBuffer[nCurrent + N_COMPRESS_HISTORY] = c;
 		// если в рассмотрении находится какая-либо серия
 		if ( nBlockStart < 0 )
 		{
 			short nCmpWith;
 			int nShift, nNextCandidate;
 			// попытаемся положить начало новой серии
-			nCmpWith = *((short*)( pszData - 1 ));
+			nCmpWith = *( (short *)( pszData - 1 ) );
 			nBlockStart = nPrevious;
 			// lets try candidates
 			nShift = nDif;
 			while ( nShift < N_COMPRESS_HISTORY - N_COMPRESS_MAX_BLOCK - 1 )
 			{
-				nNextCandidate = ( nBlockStart - nShift ) & (N_COMPRESS_HISTORY-1);
-				if ( *((short*)(cBuffer + nNextCandidate)) == nCmpWith )
+				nNextCandidate = ( nBlockStart - nShift ) & ( N_COMPRESS_HISTORY - 1 );
+				if ( *( (short *)( cBuffer + nNextCandidate ) ) == nCmpWith )
 				{
 					nBlockStart = nNextCandidate;
 					nBlockLength = 2;
 					goto Done2;
 				}
-				nShift += nNext[ nNextCandidate ];
+				nShift += nNext[nNextCandidate];
 			}
 			EmitChar();
-	Done2:
-			;
+		Done2:;
 		}
 		else
 		{
 			if ( nBlockLength < N_COMPRESS_MAX_BLOCK )
 			{
-				if ( cBuffer[ nBlockLength + nBlockStart ] == c )
+				if ( cBuffer[nBlockLength + nBlockStart] == c )
 					nBlockLength++;
 				else
 				{
 					int nRelStart, nShift, nShift1;
 					nRelStart = nCurrent - nBlockLength;
-					nShift = ( nRelStart - nBlockStart ) & (N_COMPRESS_HISTORY-1);
-					nShift += nNext[ nBlockStart ];
+					nShift = ( nRelStart - nBlockStart ) & ( N_COMPRESS_HISTORY - 1 );
+					nShift += nNext[nBlockStart];
 
 					nShift1 = nDif;
-					pCompareSrc = cBuffer + ( nRelStart & (N_COMPRESS_HISTORY - 1));
+					pCompareSrc = cBuffer + ( nRelStart & ( N_COMPRESS_HISTORY - 1 ) );
 					while ( nShift < N_COMPRESS_HISTORY - N_COMPRESS_MAX_BLOCK - 1 )
 					{
 						while ( nShift > nShift1 )
-							nShift1 += nNext[ ( nPrevious - nShift1 ) & (N_COMPRESS_HISTORY-1) ];
+							nShift1 += nNext[( nPrevious - nShift1 ) & ( N_COMPRESS_HISTORY - 1 )];
 						if ( nShift < nShift1 )
-							nShift += nNext[ ( nRelStart - nShift ) & (N_COMPRESS_HISTORY-1) ];
+							nShift += nNext[( nRelStart - nShift ) & ( N_COMPRESS_HISTORY - 1 )];
 						else
 						{
-							int nNextCandidate = ( nRelStart - nShift ) & (N_COMPRESS_HISTORY-1);
+							int nNextCandidate = ( nRelStart - nShift ) & ( N_COMPRESS_HISTORY - 1 );
 							if ( memcmp( cBuffer + nNextCandidate, pCompareSrc, nBlockLength + 1 ) == 0 )
 							{
 								nBlockStart = nNextCandidate;
 								nBlockLength++;
 								goto Done;
 							}
-							nShift += nNext[ nNextCandidate ];
-							nShift1 += nNext[ ( nPrevious - nShift1 ) & (N_COMPRESS_HISTORY-1) ];
+							nShift += nNext[nNextCandidate];
+							nShift1 += nNext[( nPrevious - nShift1 ) & ( N_COMPRESS_HISTORY - 1 )];
 						}
 					}
 					EmitBlock( nBlockStart );
-			Done:
-					;
+				Done:;
 				}
 			}
 			else
@@ -343,8 +393,11 @@ void CNetCompressor::Pack( CDataStream &src, CDataStream &appendTo )
 	data.Free();
 }
 
-template<class T>
-T __Min( const T &a, const T &b ) { return a < b ? a : b; }
+template <class T>
+T __Min( const T &a, const T &b )
+{
+	return a < b ? a : b;
+}
 //
 void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 {
@@ -353,7 +406,7 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 	int nDataLeft;
 	load.Read( &nDataLeft, 4 );
 	data.LockWrite( appendTo, nDataLeft );
-	for(; nDataLeft > 0;)
+	for ( ; nDataLeft > 0; )
 	{
 		if ( load.ReadBit() )
 		{
@@ -367,9 +420,9 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 						if ( load.ReadBit() )
 						{
 							if ( load.ReadBit() )
-								nBlockLength = 99 + load.ReadBits(7); // <=34+64+128
+								nBlockLength = 99 + load.ReadBits( 7 ); // <=34+64+128
 							else
-								nBlockLength = 19 + load.ReadBits(4); // <=34
+								nBlockLength = 19 + load.ReadBits( 4 ); // <=34
 						}
 						else
 							nBlockLength = 6;
@@ -377,7 +430,7 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 					else
 					{
 						if ( load.ReadBit() )
-							nBlockLength = 35 + load.ReadBits(6); // <=34+64
+							nBlockLength = 35 + load.ReadBits( 6 ); // <=34+64
 						else
 							nBlockLength = 5;
 					}
@@ -385,11 +438,11 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 				else
 				{
 					if ( load.ReadBit() )
-						nBlockLength = 7 + load.ReadBits(2); // <=10
+						nBlockLength = 7 + load.ReadBits( 2 ); // <=10
 					else
 					{
 						if ( load.ReadBit() )
-							nBlockLength = 11 + load.ReadBits(3); // <=18
+							nBlockLength = 11 + load.ReadBits( 3 ); // <=18
 						else
 							nBlockLength = 3;
 					}
@@ -406,18 +459,18 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 			if ( load.ReadBit() )
 			{
 				if ( load.ReadBit() )
-					nShift = 34 + 64 + 256 + load.ReadBits(10);
+					nShift = 34 + 64 + 256 + load.ReadBits( 10 );
 				else
-					nShift = 34 + 64 + 256 + 1024 + load.ReadBits(12);
+					nShift = 34 + 64 + 256 + 1024 + load.ReadBits( 12 );
 			}
 			else
 			{
 				if ( load.ReadBit() )
 				{
 					if ( load.ReadBit() )
-						nShift = 34 + 64 + load.ReadBits(8);
+						nShift = 34 + 64 + load.ReadBits( 8 );
 					else
-						nShift = 34 + load.ReadBits(6);
+						nShift = 34 + load.ReadBits( 6 );
 				}
 				else
 				{
@@ -426,19 +479,19 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 						if ( load.ReadBit() )
 						{
 							if ( load.ReadBit() )
-								nShift = 0 + load.ReadBits(1); // <2
+								nShift = 0 + load.ReadBits( 1 ); // <2
 							else
-								nShift = 18 + load.ReadBits(4); // <34
+								nShift = 18 + load.ReadBits( 4 ); // <34
 						}
 						else
-							nShift = 6 + load.ReadBits(2); // <10
+							nShift = 6 + load.ReadBits( 2 ); // <10
 					}
 					else
 					{
 						if ( load.ReadBit() )
-							nShift = 2 + load.ReadBits(2); // <6
+							nShift = 2 + load.ReadBits( 2 ); // <6
 						else
-							nShift = 10 + load.ReadBits(3); // <18
+							nShift = 10 + load.ReadBits( 3 ); // <18
 					}
 				}
 			}
@@ -450,7 +503,7 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 				int nPos = ( nCurrent - nShift - 1 ) & ( N_COMPRESS_HISTORY - 1 );
 				char c = cBuffer[nPos];
 				data.Write( &c, 1 );
-				cBuffer[ nCurrent ] = c;
+				cBuffer[nCurrent] = c;
 				nCurrent = ( nCurrent + 1 ) & ( N_COMPRESS_HISTORY - 1 );
 			}
 			nDataLeft -= nBlockLength;
@@ -461,7 +514,7 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 			load.Read( &c, 1 );
 			data.Write( &c, 1 );
 			nDataLeft--;
-			cBuffer[ nCurrent ] = c;
+			cBuffer[nCurrent] = c;
 			nCurrent = ( nCurrent + 1 ) & ( N_COMPRESS_HISTORY - 1 );
 		}
 	}

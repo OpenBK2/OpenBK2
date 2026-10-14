@@ -40,11 +40,12 @@
 
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();
 
-static int s_nInterruptTimeout = 5000;		// No segments for this time before timeout is called
+static int s_nInterruptTimeout = 5000; // No segments for this time before timeout is called
 
 class CAISegmentFinishedPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CAISegmentFinishedPacket );
+
 public:
 	typedef unsigned long ulong;
 	ZDATA
@@ -52,7 +53,13 @@ public:
 	int nSegment = {};
 	ulong ulCheckSum = {};
 	std::list<CMPTransceiver::SRawCommand> aiCommands;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSegment); f.Add(3,&ulCheckSum); f.Add(4,&aiCommands); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &nSegment );
+		f.Add( 3, &ulCheckSum );
+		f.Add( 4, &aiCommands );
+		return 0;
+	}
 
 	CAISegmentFinishedPacket() : CNetPacket( 0 ) {}
 };
@@ -60,6 +67,7 @@ public:
 class CTransciverCommonPacket : public CNetPacket
 {
 	OBJECT_NOCOPY_METHODS( CTransciverCommonPacket );
+
 public:
 	enum EType
 	{
@@ -67,8 +75,12 @@ public:
 	};
 
 	ZDATA
-		EType eType = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); return 0; }
+	EType eType = {};
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &eType );
+		return 0;
+	}
 
 	CTransciverCommonPacket() {}
 	CTransciverCommonPacket( EType _eType ) : CNetPacket( 0 ), eType( _eType ) {}
@@ -119,13 +131,15 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 	wMask &= ~( 1UL << nPlayer );
 	wWaitMask &= ~( 1UL << nPlayer );
 	NGameX::MatchPacketTrace_RecordDropApplied( nPlayer, nCommonSegment );
-	NGameX::MatchPacketTrace_Log(
-		nCommonSegment,
-		"STATE",
-		"PlayerRemoved",
-		players[nPlayer].nClientID,
-		fmt::format( "slot={} pre_active_mask={:08X} post_active_mask={:08X} wait_mask={:08X}",
-			nPlayer, ulMaskBefore, wMask, wWaitMask ) );
+	NGameX::MatchPacketTrace_Log( nCommonSegment,
+	                              "STATE",
+	                              "PlayerRemoved",
+	                              players[nPlayer].nClientID,
+	                              fmt::format( "slot={} pre_active_mask={:08X} post_active_mask={:08X} wait_mask={:08X}",
+	                                           nPlayer,
+	                                           ulMaskBefore,
+	                                           wMask,
+	                                           wWaitMask ) );
 	Singleton<IScenarioTracker>()->RemovePlayer( nPlayer );
 	NInput::PostEvent( "mission_remove_player", nPlayer, 0 );
 }
@@ -147,13 +161,16 @@ void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
 	if ( nCurrent < 0 || nSimulationRemovalSegment < nCurrent )
 		playerRemovalSegments[nPlayer] = nSimulationRemovalSegment;
 	NGameX::MatchPacketTrace_RecordDropScheduled( nPlayer, playerRemovalSegments[nPlayer] );
-	NGameX::MatchPacketTrace_Log(
-		nCommonSegment,
-		"DECISION",
-		"SchedulePlayerRemoval",
-		players[nPlayer].nClientID,
-		fmt::format( "slot={} requested_seg={} sim_remove_seg={} queued_seg={} prev_seg={}",
-			nPlayer, nSegment, nSimulationRemovalSegment, playerRemovalSegments[nPlayer], nCurrent ) );
+	NGameX::MatchPacketTrace_Log( nCommonSegment,
+	                              "DECISION",
+	                              "SchedulePlayerRemoval",
+	                              players[nPlayer].nClientID,
+	                              fmt::format( "slot={} requested_seg={} sim_remove_seg={} queued_seg={} prev_seg={}",
+	                                           nPlayer,
+	                                           nSegment,
+	                                           nSimulationRemovalSegment,
+	                                           playerRemovalSegments[nPlayer],
+	                                           nCurrent ) );
 
 	// Late packet fallback: apply immediately if this segment has already passed locally.
 	if ( playerRemovalSegments[nPlayer] >= 0 && playerRemovalSegments[nPlayer] <= nCommonSegment )
@@ -170,7 +187,7 @@ void CMPTransceiver::DoSegments()
 		CheckRunGame();
 		return;
 	}
-	pTimer->BeginSegments();			//???this line does nothing.
+	pTimer->BeginSegments(); //???this line does nothing.
 
 	if ( bIsGameEnded )
 		return;
@@ -241,12 +258,11 @@ void CMPTransceiver::ApplyScheduledPlayerRemovals()
 		const int nSegment = playerRemovalSegments[i];
 		if ( nSegment >= 0 && nSegment <= nCommonSegment )
 		{
-			NGameX::MatchPacketTrace_Log(
-				nCommonSegment,
-				"STATE",
-				"ApplyScheduledPlayerRemovals",
-				players[i].nClientID,
-				fmt::format( "slot={} target_seg={} apply_seg={}", i, nSegment, nCommonSegment ) );
+			NGameX::MatchPacketTrace_Log( nCommonSegment,
+			                              "STATE",
+			                              "ApplyScheduledPlayerRemovals",
+			                              players[i].nClientID,
+			                              fmt::format( "slot={} target_seg={} apply_seg={}", i, nSegment, nCommonSegment ) );
 			PlayerRemoved( i );
 			playerRemovalSegments[i] = -1;
 		}
@@ -259,7 +275,7 @@ void CMPTransceiver::ExecuteCommands( int nFromSegment )
 	bool bHasCommands = false;
 	for ( int i = 0; i < cmds.GetSizeX(); ++i )
 	{
-		if ( IsPlayerPresent( i ) )			// Only for existing players
+		if ( IsPlayerPresent( i ) ) // Only for existing players
 		{
 			//DebugTrace( "+++ Execute Plr %d, %d cmds", i,  cmds[nFromSegment][i].size() );
 			for ( CAILogicCommandsList::iterator it = cmds[nFromSegment][i].begin(); it != cmds[nFromSegment][i].end(); ++it )
@@ -306,7 +322,7 @@ void CMPTransceiver::FinalizeSegmentPack()
 {
 	unsigned long ulCheckSum = pCmdsHistory->GetLastChecksum();
 #ifdef CHECKSUM_LIST_DEBUG
-	myHistoryHashes.push_back(ulCheckSum);
+	myHistoryHashes.push_back( ulCheckSum );
 #endif
 	SetSegmentFinished( nMyLogicID, nSegment, ulCheckSum );
 	CAISegmentFinishedPacket *pPacket = new CAISegmentFinishedPacket();
@@ -314,7 +330,7 @@ void CMPTransceiver::FinalizeSegmentPack()
 	pPacket->ulCheckSum = ulCheckSum;
 	const int nSegmentToExecute = GetSegmentToExecute( nCommonSegment );
 
-	for ( std::list< CPtr<IAILogicCommandB2> >::iterator it = aiCommandsToSend.begin(); it != aiCommandsToSend.end(); ++it )
+	for ( std::list<CPtr<IAILogicCommandB2>>::iterator it = aiCommandsToSend.begin(); it != aiCommandsToSend.end(); ++it )
 	{
 		CPtr<IAILogicCommandB2> pCommand = *it;
 		cmds[nSegmentToExecute][nMyLogicID].push_back( pCommand );
@@ -323,17 +339,19 @@ void CMPTransceiver::FinalizeSegmentPack()
 		aiCommand.nTypeID = pCmdsSerializer->GetCommandID( pCommand );
 		{
 			aiCommand.cmd.Seek( 0 );
-			CObj<IBinSaver> pSaver = CreateBinSaver( &(aiCommand.cmd), SAVER_MODE_WRITE );
+			CObj<IBinSaver> pSaver = CreateBinSaver( &( aiCommand.cmd ), SAVER_MODE_WRITE );
 			pSaver->AddPolymorphicBase( 1, pCommand );
 		}
 	}
 	//DebugTrace( "+++ send SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nMyLogicID, nSegment, nCommonSegment, ulCheckSum, pPacket->aiCommands.size() );
-	NGameX::MatchPacketTrace_Log(
-		nCommonSegment,
-		"TX",
-		"CAISegmentFinishedPacket",
-		players[nMyLogicID].nClientID,
-		fmt::format( "segment={} checksum={} cmd_count={}", pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
+	NGameX::MatchPacketTrace_Log( nCommonSegment,
+	                              "TX",
+	                              "CAISegmentFinishedPacket",
+	                              players[nMyLogicID].nClientID,
+	                              fmt::format( "segment={} checksum={} cmd_count={}",
+	                                           pPacket->nSegment,
+	                                           pPacket->ulCheckSum,
+	                                           int( pPacket->aiCommands.size() ) ) );
 	aiCommandsToSend.clear();
 	pClient->SendGamePacket( pPacket, true );
 }
@@ -362,19 +380,25 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	// Otherwise an old packet can reset another peer's receipt or execute twice.
 	if ( pPacket->nSegment < 0 || pPacket->nSegment <= player.nLastReceivedSegment )
 	{
-		NGameX::MatchPacketTrace_Log( nCommonSegment, "RX", "AISegmentFinishedIgnored", pPacket->nClientID,
-			fmt::format( "slot={} segment={} last_received={}",
-				nPlayer, pPacket->nSegment, player.nLastReceivedSegment ) );
+		NGameX::MatchPacketTrace_Log(
+				nCommonSegment,
+				"RX",
+				"AISegmentFinishedIgnored",
+				pPacket->nClientID,
+				fmt::format( "slot={} segment={} last_received={}", nPlayer, pPacket->nSegment, player.nLastReceivedSegment ) );
 		return true;
 	}
 	// StartMission must not discard packets already received during loading.
 	player.nLastReceivedSegment = pPacket->nSegment;
-	NGameX::MatchPacketTrace_Log(
-		nCommonSegment,
-		"RX",
-		"CAISegmentFinishedPacket",
-		pPacket->nClientID,
-		fmt::format( "from_slot={} segment={} checksum={} cmd_count={}", nPlayer, pPacket->nSegment, pPacket->ulCheckSum, int( pPacket->aiCommands.size() ) ) );
+	NGameX::MatchPacketTrace_Log( nCommonSegment,
+	                              "RX",
+	                              "CAISegmentFinishedPacket",
+	                              pPacket->nClientID,
+	                              fmt::format( "from_slot={} segment={} checksum={} cmd_count={}",
+	                                           nPlayer,
+	                                           pPacket->nSegment,
+	                                           pPacket->ulCheckSum,
+	                                           int( pPacket->aiCommands.size() ) ) );
 	int nPlayerSegment = pPacket->nSegment % pConsts->nMaxLatency;
 	//DebugTrace( "+++ receive SEG_PACK Plr %d, seg %d(%d), CS %u, %d cmds", nPlayer, nPlayerSegment, pPacket->nSegment, pPacket->ulCheckSum, pPacket->aiCommands.size() );
 	if ( IsPlayerWaitedFor( nPlayer ) )
@@ -384,11 +408,11 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	{
 		SRawCommand &rawCommand = *it;
 		CObjectBase *pObj = pCmdsSerializer->MakeCommand( rawCommand.nTypeID );
-		CPtr<IAILogicCommandB2> pCommand = dynamic_cast<IAILogicCommandB2*>( pObj );
+		CPtr<IAILogicCommandB2> pCommand = dynamic_cast<IAILogicCommandB2 *>( pObj );
 		NI_VERIFY( pCommand, "Wrong command type id", return true );
 		{
 			rawCommand.cmd.Seek( 0 );
-			CObj<IBinSaver> pSaver = CreateBinSaver( &(rawCommand.cmd), SAVER_MODE_READ );
+			CObj<IBinSaver> pSaver = CreateBinSaver( &( rawCommand.cmd ), SAVER_MODE_READ );
 			pSaver->AddPolymorphicBase( 1, pCommand );
 		}
 		if ( IsPlayerPresent( nPlayer ) )
@@ -404,14 +428,14 @@ bool CMPTransceiver::OnTransciverCommonPacket( class CTransciverCommonPacket *pP
 {
 	int nPlayer = GetPlayerByClient( pPacket->nClientID );
 
-	if (nPlayer < 0)
+	if ( nPlayer < 0 )
 		return false;
 
 	switch ( pPacket->eType )
 	{
-	case CTransciverCommonPacket::ET_LOADED:
-    players[nPlayer].bLoaded = true;
-		return true;
+		case CTransciverCommonPacket::ET_LOADED:
+			players[nPlayer].bLoaded = true;
+			return true;
 	};
 
 	return false;
@@ -447,12 +471,16 @@ void CMPTransceiver::StopWaitingForPlayer( int nPlayer, int nDropSegment )
 	const unsigned long ulWaitMaskBefore = wWaitMask;
 	wWaitMask &= ~( 1UL << nPlayer );
 	NGameX::MatchPacketTrace_Log(
-		nCommonSegment,
-		"STATE",
-		"PlayerStoppedWaiting",
-		players[nPlayer].nClientID,
-		fmt::format( "slot={} drop_seg={} pre_wait_mask={:08X} post_wait_mask={:08X} active_mask={:08X}",
-			nPlayer, nDropSegment, ulWaitMaskBefore, wWaitMask, wMask ) );
+			nCommonSegment,
+			"STATE",
+			"PlayerStoppedWaiting",
+			players[nPlayer].nClientID,
+			fmt::format( "slot={} drop_seg={} pre_wait_mask={:08X} post_wait_mask={:08X} active_mask={:08X}",
+	                 nPlayer,
+	                 nDropSegment,
+	                 ulWaitMaskBefore,
+	                 wWaitMask,
+	                 wMask ) );
 }
 
 bool CMPTransceiver::IsGameRunning() const
@@ -460,12 +488,12 @@ bool CMPTransceiver::IsGameRunning() const
 	return bIsGameRunning;
 }
 
-ICheckSumLog* CMPTransceiver::GetCheckSumLogger()
+ICheckSumLog *CMPTransceiver::GetCheckSumLogger()
 {
 	return pCmdsHistory;
 }
 
-const NDb::SMapInfo* CMPTransceiver::GetMap() const
+const NDb::SMapInfo *CMPTransceiver::GetMap() const
 {
 	return pMapInfo;
 }
@@ -479,7 +507,7 @@ void CMPTransceiver::CheckRunGame()
 	{
 		players[nMyLogicID].bLoaded = true;
 		pClient->SendGamePacket( new CTransciverCommonPacket( CTransciverCommonPacket::ET_LOADED ), true );
-		bWaiting = false;	// So that the following call works
+		bWaiting = false; // So that the following call works
 		return;
 	}
 
@@ -515,15 +543,20 @@ void CMPTransceiver::EndGame()
 	bIsGameEnded = true;
 	CommandTimeOut( false );
 	SetLagState( 0, false );
-	NGameX::MatchPacketTrace_Log( nCommonSegment, "STATE", "TransceiverEndGame",
-		players[nMyLogicID].nClientID, fmt::format( "final_segment={}", nFinalSegment ) );
+	NGameX::MatchPacketTrace_Log( nCommonSegment,
+	                              "STATE",
+	                              "TransceiverEndGame",
+	                              players[nMyLogicID].nClientID,
+	                              fmt::format( "final_segment={}", nFinalSegment ) );
 }
 
 void CMPTransceiver::LeaveOutOfSync()
 {
-//	WriteToPipe( PIPE_CHAT, StrFmt( "You were kicked because you were out of sync" ) );
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, "You were kicked because you were out of sync" );
-	NGameX::MatchPacketTrace_Log( nCommonSegment, "STATE", "LeaveOutOfSync", players[nMyLogicID].nClientID, "async_detected=1" );
+	//	WriteToPipe( PIPE_CHAT, StrFmt( "You were kicked because you were out of sync" ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW,
+	                                         "You were kicked because you were out of sync" );
+	NGameX::MatchPacketTrace_Log(
+			nCommonSegment, "STATE", "LeaveOutOfSync", players[nMyLogicID].nClientID, "async_detected=1" );
 	NGameX::MatchPacketTrace_SetFinalState( 0, 0, wWaitMask );
 	NGameX::MatchPacketTrace_Flush( "async" );
 	Singleton<IScenarioTracker>()->MissionCancel();
@@ -532,10 +565,10 @@ void CMPTransceiver::LeaveOutOfSync()
 
 const bool CMPTransceiver::IsGamePacket( const CNetPacket *pPacket )
 {
-	const CAISegmentFinishedPacket *pSegmentPacket = dynamic_cast<const CAISegmentFinishedPacket*>( pPacket );
+	const CAISegmentFinishedPacket *pSegmentPacket = dynamic_cast<const CAISegmentFinishedPacket *>( pPacket );
 	if ( pSegmentPacket )
 		return true;
-	const CTransciverCommonPacket *pInfoPacket = dynamic_cast<const CTransciverCommonPacket*>( pPacket );
+	const CTransciverCommonPacket *pInfoPacket = dynamic_cast<const CTransciverCommonPacket *>( pPacket );
 	if ( pInfoPacket )
 		return true;
 	return false;
@@ -568,8 +601,8 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 		player.nClientID = client.nClientID;
 		player.nTeam = client.nTeam;
 		player.nLastReceivedSegment = -1;
-		wMask |= (1UL << client.nPlayer);
-		wWaitMask |= (1UL << client.nPlayer);
+		wMask |= ( 1UL << client.nPlayer );
+		wWaitMask |= ( 1UL << client.nPlayer );
 		DebugTrace( "+++ MPT: %d - plr %d, CID %d, team %d", i, client.nPlayer, client.nClientID, client.nTeam );
 	}
 	nMyLogicID = nMySlot;
@@ -599,7 +632,7 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 	if ( bOn )
 	{
 		const auto message = fmt::format( "WAIT({}/{})", segmFinished[nSegment], wWaitMask );
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str());
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 4, message.c_str() );
 		NTimer::STime curTime = pTimer->GetAbsTime();
 		if ( timeStartWaiting == 0 )
 			timeStartWaiting = curTime;
@@ -617,56 +650,61 @@ void CMPTransceiver::SetLagState( int nSegment, bool bOn )
 	}
 }
 
-void CMPTransceiver::ReportLags( uint32_t dwLaggers,	bool bInitial )
+void CMPTransceiver::ReportLags( uint32_t dwLaggers, bool bInitial )
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILagMessage( dwLaggers, bInitial ) );
 }
 
-void CMPTransceiver::ReportAsnycToFile(int segment)
+void CMPTransceiver::ReportAsnycToFile( int segment )
 {
-	FILE* fl = fopen("last_async.txt", "w");
+	FILE *fl = fopen( "last_async.txt", "w" );
 
-	if (!fl)
+	if ( !fl )
 		return;
 
-	fprintf(fl, "Segment: %d\n", segment);
-	fprintf(fl, "PlayerID,\tPlayerClientID,\tPlayerNick,\tPlayerTeam,\tLastChecksum\n");
+	fprintf( fl, "Segment: %d\n", segment );
+	fprintf( fl, "PlayerID,\tPlayerClientID,\tPlayerNick,\tPlayerTeam,\tLastChecksum\n" );
 
 	auto scenario = Singleton<IScenarioTracker>();
 
 	std::string checksumsTxt = "";
-	for (int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex)
+	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
 	{
-		if (!IsPlayerWaitedFor(nPlayerIndex))
+		if ( !IsPlayerWaitedFor( nPlayerIndex ) )
 			continue;
 
-		const auto& playerInfos = scenario->GetMultiplayerInfo()->players;
-		if (nPlayerIndex >= playerInfos.size())
+		const auto &playerInfos = scenario->GetMultiplayerInfo()->players;
+		if ( nPlayerIndex >= playerInfos.size() )
 			continue;
 
-		std::string playerName = WideToUTF8(playerInfos[nPlayerIndex].wszName);
-		checksumsTxt += fmt::format("{},\t\t{},\t\t{},\t\t{},\t\t{}\n", nPlayerIndex, players[nPlayerIndex].nClientID, playerName.c_str(), players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
+		std::string playerName = WideToUTF8( playerInfos[nPlayerIndex].wszName );
+		checksumsTxt += fmt::format( "{},\t\t{},\t\t{},\t\t{},\t\t{}\n",
+		                             nPlayerIndex,
+		                             players[nPlayerIndex].nClientID,
+		                             playerName.c_str(),
+		                             players[nPlayerIndex].nTeam,
+		                             checkSums[nPlayerIndex][segment] );
 	}
-	fprintf(fl, "%s", checksumsTxt.c_str());
-	fclose(fl);
+	fprintf( fl, "%s", checksumsTxt.c_str() );
+	fclose( fl );
 
 	pAI->WriteDetailedChecksumInfo( "last_async_detailed_debug.txt" );
-	pCmdsHistory->WriteCommandsHistoryToFile("last_async_cmds.txt");
+	pCmdsHistory->WriteCommandsHistoryToFile( "last_async_cmds.txt" );
 
-	#ifdef CHECKSUM_LIST_DEBUG
-	FILE* fd = fopen("last_async_debug.txt", "w");
+#ifdef CHECKSUM_LIST_DEBUG
+	FILE *fd = fopen( "last_async_debug.txt", "w" );
 
-	if (!fd)
+	if ( !fd )
 		return;
 
-	fprintf(fd, "seg,\thash\n");
-	for (int i = 0; i < myHistoryHashes.size(); i++)
+	fprintf( fd, "seg,\thash\n" );
+	for ( int i = 0; i < myHistoryHashes.size(); i++ )
 	{
-		fprintf(fd, "%d,\t%d\n", i, myHistoryHashes[i]);
+		fprintf( fd, "%d,\t%d\n", i, myHistoryHashes[i] );
 	}
 
-	fclose(fd);
-	#endif
+	fclose( fd );
+#endif
 }
 
 bool CMPTransceiver::IsAsyncDetected( int nSegment )
@@ -693,12 +731,17 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 			NSaveLoad::SSaveInfo info;
 			std::string szFilename = fmt::format( "async_{:1d}_{:03d}", nMyLogicID, nSegment );
 			NMainLoop::Command( CreateICSave( szFilename ) );
-			info.Write( NSaveLoad::GetSavePath() + szFilename + NSaveLoad::INFO_FILE_EXTENSION, NStr::ToUnicode( szCheckSums ), false, false, false );
+			info.Write( NSaveLoad::GetSavePath() + szFilename + NSaveLoad::INFO_FILE_EXTENSION,
+			            NStr::ToUnicode( szCheckSums ),
+			            false,
+			            false,
+			            false );
 			NGlobal::SetVar( "save_on_async", 0 );
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", L"ASYNC<br>Save created" ).c_str() );
+			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+			                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", L"ASYNC<br>Save created" ).c_str() );
 			//pAI->DumpAfterAssinc();
 
-			ReportAsnycToFile(nSegment);
+			ReportAsnycToFile( nSegment );
 		}
 
 		if ( NGlobal::GetVar( "pause_on_async", 0 ) != 0 )
@@ -723,14 +766,17 @@ int CMPTransceiver::ScheduleGameEnd( const int _nSegment )
 	// announcement must never extend the wait beyond a peer's earlier finish.
 	if ( nFinalSegment < 0 || nRequestedFinalSegment < nFinalSegment )
 		nFinalSegment = nRequestedFinalSegment;
-	NGameX::MatchPacketTrace_Log( nCommonSegment, "DECISION", "ScheduleGameEnd",
-		players[nMyLogicID].nClientID,
-		fmt::format( "requested_segment={} final_segment={}", nFinishOnSegment, nFinalSegment ) );
+	NGameX::MatchPacketTrace_Log(
+			nCommonSegment,
+			"DECISION",
+			"ScheduleGameEnd",
+			players[nMyLogicID].nClientID,
+			fmt::format( "requested_segment={} final_segment={}", nFinishOnSegment, nFinalSegment ) );
 
 	return nFinalSegment - nLatency;
 }
 
-CMPTransceiver* CreateMPTransceiver( IServerClient *pClient, const SB2StartGameParams &params, int nMySlot )
+CMPTransceiver *CreateMPTransceiver( IServerClient *pClient, const SB2StartGameParams &params, int nMySlot )
 {
 	CMPTransceiver *pTransceiver = new CMPTransceiver();
 	pTransceiver->Init( pClient, params, nMySlot );
@@ -740,6 +786,6 @@ CMPTransceiver* CreateMPTransceiver( IServerClient *pClient, const SB2StartGameP
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1713C440, CMPTransceiver );
 
-START_REGISTER(MPTransceiver)
+START_REGISTER( MPTransceiver )
 REGISTER_VAR_EX( "multiplayer_pause_timeout", NGlobal::VarIntHandler, &s_nInterruptTimeout, 5000, STORAGE_NONE );
 FINISH_REGISTER

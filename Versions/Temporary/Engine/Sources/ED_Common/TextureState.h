@@ -4,7 +4,7 @@
 
 class CTextureState : public CDefaultInputState, public CObjectBase
 {
-	OBJECT_NOCOPY_METHODS(CTextureState)
+	OBJECT_NOCOPY_METHODS( CTextureState )
 public:
 	//Life-cycle
 	CTextureState() {}
@@ -17,7 +17,6 @@ public:
 
 	// methods
 protected:
-
 	// members
 protected:
 	class CTextureEditor *pEditor;

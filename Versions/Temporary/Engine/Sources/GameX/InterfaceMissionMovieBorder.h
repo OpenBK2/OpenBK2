@@ -3,14 +3,16 @@
 
 #include "InterfaceScreenBase.h"
 
-class CInterfaceMissionMovieBorder : public CInterfaceScreenBase,
-	public IProgrammedReactionsAndChecks
+class CInterfaceMissionMovieBorder : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMissionMovieBorder );
+
 private:
 	void RegisterObservers();
+
 protected:
 	~CInterfaceMissionMovieBorder();
+
 public:
 	CInterfaceMissionMovieBorder();
 
@@ -34,11 +36,16 @@ class CICMissionMovieBorder : public CInterfaceCommandBase<CInterfaceMissionMovi
 {
 	OBJECT_BASIC_METHODS( CICMissionMovieBorder );
 
-	ZDATA_(CInterfaceCommandBase<CInterfaceMissionMovieBorder>)
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceMissionMovieBorder>*)this); return 0; }
+	ZDATA_( CInterfaceCommandBase<CInterfaceMissionMovieBorder> )
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceCommandBase<CInterfaceMissionMovieBorder> *)this );
+		return 0;
+	}
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	CICMissionMovieBorder();
 

@@ -4,7 +4,6 @@
 #include "AIUnit.h"
 //#include "..\Common_RTS_AI\CollisionInternal.h"
 
-
 extern NTimer::STime curTime;
 
 //*******************************************************************
@@ -23,12 +22,12 @@ bool CFreezeSegments::Check()
 
 const NTimer::STime CFreezeSegments::ProcessSegment()
 {
-//	MPLog( "%d, freeze %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
+	//	MPLog( "%d, freeze %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
 	pUnit->FreezeSegment();
-//	MPLog( "%d, freeze %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
+	//	MPLog( "%d, freeze %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
 
-
-	RecordRandomCall(); return curTime + NRandom::Random( 500, 1500 );
+	RecordRandomCall();
+	return curTime + NRandom::Random( 500, 1500 );
 }
 
 //*******************************************************************
@@ -50,9 +49,9 @@ bool CStateSegments::Check()
 
 const NTimer::STime CStateSegments::ProcessSegment()
 {
-//	MPLog( "%d, state %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
+	//	MPLog( "%d, state %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
 	pUnit->Segment();
-//	MPLog( "%d, state %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
+	//	MPLog( "%d, state %d, (%g,%g,%g), %d", curTime, pUnit->GetUniqueId(), pUnit->GetCenter().x, pUnit->GetCenter().y, pUnit->GetZ(), pUnit->GetDirection() );
 	return pUnit->GetNextSegmTime();
 }
 
@@ -136,11 +135,12 @@ void CStayTimeSegments::ProcessSegment()
 {
 	if ( ( pUnit->IsAlive() || pUnit->GetStats()->IsTrain() ) && !pUnit->IsIdle() && !pUnit->GetStats()->IsAviation() )
 	{
-//		CPathUnit *pPathUnit = pUnit->GetPathUnit();
+		//		CPathUnit *pPathUnit = pUnit->GetPathUnit();
 		const NTimer::STime collStayTime = pUnit->GetCollStayTime();
 		if ( collStayTime != 0 )
 		{
-			const float fProb = ( 3000.0f + NRandom::Random( 0.0f, 800.0f ) ) / float( collStayTime ); RecordRandomCall();
+			const float fProb = ( 3000.0f + NRandom::Random( 0.0f, 800.0f ) ) / float( collStayTime );
+			RecordRandomCall();
 			RecordRandomCall();
 			if ( NRandom::Random( 0.0f, 1.0f ) > fProb )
 			{

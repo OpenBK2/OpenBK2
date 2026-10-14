@@ -6,17 +6,14 @@
 
 namespace NScript
 {
-Script * GetScript();
+Script *GetScript();
 
 class CScriptWrapper : public IScriptWrapper
 {
 	Script script;
-	OBJECT_NOCOPY_METHODS(CScriptWrapper);
+	OBJECT_NOCOPY_METHODS( CScriptWrapper );
 	//{ implement common files loading here.
-	int RunCommonFiles()
-	{
-		return true;
-	}
+	int RunCommonFiles() { return true; }
 	//}
 	Script *GetScript() { return &script; }
 
@@ -34,7 +31,7 @@ public:
 		return 0;
 	}
 
-	friend Script * GetScript();
+	friend Script *GetScript();
 };
 
 } // namespace

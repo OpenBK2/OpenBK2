@@ -8,20 +8,18 @@ union ULuaParams;
 namespace NScript
 {
 
-#define DECLARE_SCRIPT_COMMAND( Name )											\
-int lua##Name( lua_State* pState );
-#define BEGIN_SCRIPT_COMMAND( Name, Params )								\
-int lua##Name( lua_State* pState )																			\
-{																																				\
-	ASSERT( pState != 0 );																								\
-	if ( pState == 0 )																										\
-		return 0;																														\
-	Script *pScript;																											\
-	std::vector<SLuaParams> luaParams;																					\
-	if ( !luaPrepareData( pState, #Name, Params, &pScript, &luaParams ) )	\
-		return 0;
+#define DECLARE_SCRIPT_COMMAND( Name ) int lua##Name( lua_State *pState );
+#define BEGIN_SCRIPT_COMMAND( Name, Params )                              \
+	int lua##Name( lua_State *pState )                                      \
+	{                                                                       \
+		ASSERT( pState != 0 );                                                \
+		if ( pState == 0 )                                                    \
+			return 0;                                                           \
+		Script *pScript;                                                      \
+		std::vector<SLuaParams> luaParams;                                    \
+		if ( !luaPrepareData( pState, #Name, Params, &pScript, &luaParams ) ) \
+			return 0;
 #define END_SCRIPT_COMMAND }
-
 
 DECLARE_SCRIPT_COMMAND( Out );
 DECLARE_SCRIPT_COMMAND( Random );

@@ -4,11 +4,11 @@
 
 namespace NDb
 {
-	struct SRoadDesc;
-	struct SCragDesc;
-	struct SRiverDesc;
-	struct STerrainSpotDesc;
-	struct SMaterial;
+struct SRoadDesc;
+struct SCragDesc;
+struct SRiverDesc;
+struct STerrainSpotDesc;
+struct SMaterial;
 };
 
 struct SPrecipiceGFXInfo
@@ -17,9 +17,14 @@ struct SPrecipiceGFXInfo
 	CDBPtr<NDb::SMaterial> pMaterial;
 	int nID;
 	//
-	bool operator == ( const SPrecipiceGFXInfo &v ) const { return nID == v.nID; }
+	bool operator==( const SPrecipiceGFXInfo &v ) const { return nID == v.nID; }
 	//
-	void Clear() { patches.clear(); pMaterial = 0; nID = 0; }
+	void Clear()
+	{
+		patches.clear();
+		pMaterial = 0;
+		nID = 0;
+	}
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &patches );
@@ -31,17 +36,19 @@ struct SPrecipiceGFXInfo
 
 struct SRoadGFXInfo
 {
-	enum ERoadPart{ CENTER, LEFT_BORDER, RIGHT_BORDER };
+	enum ERoadPart
+	{
+		CENTER,
+		LEFT_BORDER,
+		RIGHT_BORDER
+	};
 	//
 	std::vector<NMeshData::SMeshData> patches;
 	CDBPtr<NDb::SRoadDesc> pDesc;
 	int nID;
 	ERoadPart ePart;
 	//
-	bool operator == ( const SRoadGFXInfo &v ) const
-	{
-		return nID == v.nID;
-	}
+	bool operator==( const SRoadGFXInfo &v ) const { return nID == v.nID; }
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -59,7 +66,7 @@ struct SCragGFXInfo
 	CDBPtr<NDb::SCragDesc> pDesc;
 	int nID;
 	//
-	bool operator == ( const SCragGFXInfo &v ) const { return nID == v.nID; }
+	bool operator==( const SCragGFXInfo &v ) const { return nID == v.nID; }
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -72,12 +79,12 @@ struct SCragGFXInfo
 
 struct SPeakGFXInfo
 {
-	std::vector<std::vector<NMeshData::SMeshDataTex2> > patches;
+	std::vector<std::vector<NMeshData::SMeshDataTex2>> patches;
 	int nID;
 	//
-	bool operator == ( const SPeakGFXInfo &v ) const { return nID == v.nID; }
+	bool operator==( const SPeakGFXInfo &v ) const { return nID == v.nID; }
 	//
-	int operator &( IBinSaver &saver )
+	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &patches );
 		saver.Add( 2, &nID );
@@ -91,7 +98,7 @@ struct SFootGFXInfo
 	CDBPtr<NDb::SMaterial> pMaterial;
 	int nID;
 	//
-	int operator &( IBinSaver &saver )
+	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &patches );
 		saver.Add( 2, &pMaterial );
@@ -108,7 +115,7 @@ struct SRiverGFXInfo
 	int nID;
 	std::vector<NMeshData::SMeshData> water2Patches;
 	//
-	bool operator == ( const SRiverGFXInfo &v )const { return nID == v.nID; }
+	bool operator==( const SRiverGFXInfo &v ) const { return nID == v.nID; }
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -127,7 +134,7 @@ struct STerraSpotGFXInfo
 	CDBPtr<NDb::STerrainSpotDesc> pDesc;
 	int nID;
 	//
-	bool operator == ( const STerraSpotGFXInfo &v ) const { return nID == v.nID; }
+	bool operator==( const STerraSpotGFXInfo &v ) const { return nID == v.nID; }
 	//
 	int operator&( IBinSaver &saver )
 	{
@@ -140,8 +147,8 @@ struct STerraSpotGFXInfo
 
 struct STerrainGfxInfo
 {
-	std::vector<std::vector<NMeshData::SMeshData> > terraPatches;
-	std::vector<std::vector<NMeshData::SMeshData> > terraBorders;
+	std::vector<std::vector<NMeshData::SMeshData>> terraPatches;
+	std::vector<std::vector<NMeshData::SMeshData>> terraBorders;
 
 	std::list<SRoadGFXInfo> roads;
 	std::list<SRiverGFXInfo> rivers;
@@ -150,8 +157,5 @@ struct STerrainGfxInfo
 	std::list<SPeakGFXInfo> peaks;
 	std::list<SFootGFXInfo> foots;
 	//
-	int operator&( IBinSaver &saver )
-	{
-		return 0;
-	}
+	int operator&( IBinSaver &saver ) { return 0; }
 };

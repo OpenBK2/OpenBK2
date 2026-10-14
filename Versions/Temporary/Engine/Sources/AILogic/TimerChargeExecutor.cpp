@@ -9,8 +9,7 @@ extern NTimer::STime curTime;
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x12086B40, CTimerChargeExecutor )
 
 CTimerChargeExecutor::CTimerChargeExecutor( CMineStaticObject *_pObj, int nOffset )
-: pCharge( _pObj ), nTimeToExplode( curTime + nOffset ),
-	CExecutor( TID_TIMED_CHARGE, 1 )
+		: pCharge( _pObj ), nTimeToExplode( curTime + nOffset ), CExecutor( TID_TIMED_CHARGE, 1 )
 {
 }
 
@@ -22,7 +21,7 @@ int CTimerChargeExecutor::Segment()
 	if ( nDiff > 1000 )
 		return 1000 / SAIConsts::AI_SEGMENT_DURATION;
 	if ( nDiff > 0 )
-		return nDiff / SAIConsts::AI_SEGMENT_DURATION ;
+		return nDiff / SAIConsts::AI_SEGMENT_DURATION;
 	pCharge->Die( 1.0f );
 	return -1;
 }

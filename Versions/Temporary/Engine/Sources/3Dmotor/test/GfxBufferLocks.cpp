@@ -30,7 +30,11 @@ public:
 		*ppData = data;
 		return result;
 	}
-	HRESULT Unlock() { ++unlockCalls; return D3D_OK; }
+	HRESULT Unlock()
+	{
+		++unlockCalls;
+		return D3D_OK;
+	}
 };
 
 class CTestVertexBuffer : public NGfx::CRBase<CTestD3DBuffer>

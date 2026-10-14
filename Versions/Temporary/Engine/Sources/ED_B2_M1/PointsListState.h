@@ -26,7 +26,7 @@ class CPointsListState : public CDefaultInputState, public ICommandHandler
 
 protected:
 	CPtr<IClientUpdatableProcess> pProcess;
-	CBuildingEditor* pBuildingEditor;
+	CBuildingEditor *pBuildingEditor;
 	CSceneDrawTool drawTool;
 
 	// IInputState interface
@@ -49,64 +49,58 @@ protected:
 	void SetPointMarkers();
 
 public:
-	CPointsListState()
-	{
-		NI_ASSERT( 0, "CPointsListState()" );
-	}
-	CPointsListState( unsigned nCHID, unsigned nInstanceID, CBuildingEditor* _pBuildingEditor );
+	CPointsListState() { NI_ASSERT( 0, "CPointsListState()" ); }
+	CPointsListState( unsigned nCHID, unsigned nInstanceID, CBuildingEditor *_pBuildingEditor );
 	virtual ~CPointsListState();
 
 	virtual void Draw( IPaintContext *pPaintDC ) {}
 	virtual std::string GetPointsArrayFieldName() = 0;
 	virtual std::string GetPositionFieldName() { return "Pos"; }
 	virtual std::string GetDirectionFieldName() { return "Direction"; }
-	virtual void GetMaskFields(std::vector<std::string> *pMaskFields ) = 0;
+	virtual void GetMaskFields( std::vector<std::string> *pMaskFields ) = 0;
 	virtual bool IsOriginInUse() { return false; }
 	virtual EDirMeasure GetDirMeasure() { return DIR_IN_AIGRAD; }
 	virtual void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex ) {}
 };
 
-class CSmokePointsState  : public CPointsListState
+class CSmokePointsState : public CPointsListState
 {
 public:
-	CSmokePointsState()
+	CSmokePointsState() { NI_ASSERT( 0, "CSmokePointsState()" ); }
+	CSmokePointsState( CBuildingEditor *_pBuildingEditor )
+			: CPointsListState( CHID_BUILDING_SMOKE_POINTS_STATE, 0, _pBuildingEditor )
 	{
-		NI_ASSERT( 0, "CSmokePointsState()" );
 	}
-	CSmokePointsState( CBuildingEditor* _pBuildingEditor )
-		:	CPointsListState( CHID_BUILDING_SMOKE_POINTS_STATE, 0, _pBuildingEditor ) {}
 	virtual ~CSmokePointsState() {}
 
 	virtual std::string GetPointsArrayFieldName() { return "smokePoints"; }
-	virtual void GetMaskFields(std::vector<std::string> *pMaskFields );
+	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
 	virtual bool IsOriginInUse() { return true; }
 };
 
 class CSlotPointsState : public CPointsListState
 {
 public:
-	CSlotPointsState ()
+	CSlotPointsState() { NI_ASSERT( 0, "CSlotPointsState()" ); }
+	CSlotPointsState( CBuildingEditor *_pBuildingEditor )
+			: CPointsListState( CHID_BUILDING_SLOT_POINTS_STATE, 1, _pBuildingEditor )
 	{
-		NI_ASSERT( 0, "CSlotPointsState()" );
 	}
-	CSlotPointsState( CBuildingEditor* _pBuildingEditor )
-		:	CPointsListState( CHID_BUILDING_SLOT_POINTS_STATE, 1, _pBuildingEditor ) {}
 	virtual ~CSlotPointsState() {}
 
 	virtual std::string GetPointsArrayFieldName() { return "slots"; }
-	virtual void GetMaskFields(std::vector<std::string> *pMaskFields );
+	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
 	virtual EDirMeasure GetDirMeasure() { return DIR_IN_DEGREES; }
 };
 
 class CEntrancePointsState : public CPointsListState
 {
 public:
-	CEntrancePointsState()
+	CEntrancePointsState() { NI_ASSERT( 0, "CEntrancePointsState()" ); }
+	CEntrancePointsState( CBuildingEditor *_pBuildingEditor )
+			: CPointsListState( CHID_BUILDING_ENTRANCE_POINTS_STATE, 2, _pBuildingEditor )
 	{
-		NI_ASSERT( 0, "CEntrancePointsState()" );
 	}
-	CEntrancePointsState( CBuildingEditor* _pBuildingEditor )
-		:	CPointsListState( CHID_BUILDING_ENTRANCE_POINTS_STATE, 2, _pBuildingEditor ) {}
 	virtual ~CEntrancePointsState() {}
 
 	virtual std::string GetPointsArrayFieldName() { return "entrances"; }
@@ -119,12 +113,11 @@ class CSurfacePointsState : public CPointsListState
 	std::vector<NDb::SHPObjectRPGStats::SModelSurfacePoint> surfPoints;
 
 public:
-	CSurfacePointsState()
+	CSurfacePointsState() { NI_ASSERT( 0, "CSurfacePointsState()" ); }
+	CSurfacePointsState( CBuildingEditor *_pBuildingEditor )
+			: CPointsListState( CHID_BUILDING_SURFACE_POINTS_STATE, 3, _pBuildingEditor )
 	{
-		NI_ASSERT( 0, "CSurfacePointsState()" );
 	}
-	CSurfacePointsState( CBuildingEditor* _pBuildingEditor )
-		:	CPointsListState( CHID_BUILDING_SURFACE_POINTS_STATE, 3, _pBuildingEditor )	{}
 	//
 	virtual ~CSurfacePointsState() {}
 
@@ -138,12 +131,11 @@ public:
 class CDamageLevelsState : public CPointsListState
 {
 public:
-	CDamageLevelsState()
+	CDamageLevelsState() { NI_ASSERT( 0, "CDamageLevelsState()" ); }
+	CDamageLevelsState( CBuildingEditor *_pBuildingEditor )
+			: CPointsListState( CHID_DAMAGE_LEVELS_STATE, 4, _pBuildingEditor )
 	{
-		NI_ASSERT( 0, "CDamageLevelsState()" );
 	}
-	CDamageLevelsState( CBuildingEditor* _pBuildingEditor )
-		:	CPointsListState( CHID_DAMAGE_LEVELS_STATE, 4, _pBuildingEditor )	{}
 	//
 	virtual ~CDamageLevelsState() {}
 

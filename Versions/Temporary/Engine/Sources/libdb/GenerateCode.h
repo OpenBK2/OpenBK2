@@ -4,8 +4,8 @@
 
 namespace NCodeGen
 {
-	class CCodeStructure;
+class CCodeStructure;
 
-	// exported for dbcodegen, which writes the generated sources with it
-	LIBDB_EXPORT void GenerateCode( CCodeStructure *pCodeStructure, const std::string &szRootDir );
+// exported for dbcodegen, which writes the generated sources with it
+LIBDB_EXPORT void GenerateCode( CCodeStructure *pCodeStructure, const std::string &szRootDir );
 }

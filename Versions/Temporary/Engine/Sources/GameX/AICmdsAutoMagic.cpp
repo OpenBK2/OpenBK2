@@ -19,7 +19,7 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CB2GroupCommand ) ) );
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CUnitCommand ) ) );
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CControlSumCheckCommand ) ) );
-	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CControlSumHistoryCommand ) ) );		// Test?
+	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CControlSumHistoryCommand ) ) ); // Test?
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CDropPlayerCommand ) ) );
 
 	NI_ASSERT( byte2msg.size() < 256, fmt::format( "Too many net messages ({})", byte2msg.size() ) );
@@ -31,14 +31,15 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 int CAICmdsAutomagic::GetCommandID( CObjectBase *p )
 {
 	int nTypeID = NObjectFactory::GetObjectTypeID( typeid( *p ) );
-	NI_ASSERT( msg2byte.find( nTypeID ) != msg2byte.end(), fmt::format( "AI command {} not found", typeid(*p).name() ) );
-	return msg2byte[ nTypeID ];
+	NI_ASSERT( msg2byte.find( nTypeID ) != msg2byte.end(),
+	           fmt::format( "AI command {} not found", typeid( *p ).name() ) );
+	return msg2byte[nTypeID];
 }
 
 CObjectBase *CAICmdsAutomagic::MakeCommand( int nID )
 {
 	NI_ASSERT( nID >= 0 && nID < msg2byte.size(), fmt::format( "Net message with byte code {} not found", nID ) );
-	return NObjectFactory::MakeObject( byte2msg[ nID ] );
+	return NObjectFactory::MakeObject( byte2msg[nID] );
 }
 
 IAICmdsAutoMagic *CreateAICmdsAutoMagic()

@@ -14,12 +14,28 @@ class CTextureRoundSegmentVisitor
 	float fStartAngle;
 	float fFinishAngle;
 	std::vector<NGfx::SPixel8888> colors;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTexture); f.Add(3,&rect); f.Add(4,&fStartAngle); f.Add(5,&fFinishAngle); f.Add(6,&colors); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pTexture );
+		f.Add( 3, &rect );
+		f.Add( 4, &fStartAngle );
+		f.Add( 5, &fFinishAngle );
+		f.Add( 6, &colors );
+		return 0;
+	}
+
 private:
-	void DrawTriangle( struct IUIVisitor *pVisitor, const CVec2 &v1, const CVec2 &v2, const CVec2 &v3,
-		const CVec2 &vTex1, const CVec2 &vTex2, const CVec2 &vTex3 );
+	void DrawTriangle( struct IUIVisitor *pVisitor,
+	                   const CVec2 &v1,
+	                   const CVec2 &v2,
+	                   const CVec2 &v3,
+	                   const CVec2 &vTex1,
+	                   const CVec2 &vTex2,
+	                   const CVec2 &vTex3 );
 	bool ClampAngles( float *pStart, float *pFinish, float fMin, float fMax );
+
 public:
 	CTextureRoundSegmentVisitor();
 

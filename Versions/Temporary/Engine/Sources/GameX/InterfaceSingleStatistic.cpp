@@ -21,14 +21,13 @@
 const int PAUSE_BETWEEN_MEDALS = 200;
 const float UNFADE_TIME = 1.0f;
 
-const wchar_t* DYNAMIC_TAG_PLAYER_NAME = L"player_name";
-const wchar_t* DYNAMIC_TAG_PLAYER_RANK = L"player_rank";
+const wchar_t *DYNAMIC_TAG_PLAYER_NAME = L"player_name";
+const wchar_t *DYNAMIC_TAG_PLAYER_RANK = L"player_rank";
 
 // CInterfaceSingleStatistic
 
-CInterfaceSingleStatistic::CInterfaceSingleStatistic() :
-	CInterfaceScreenBase( "SingleStatistics2", "single_statistic" ),
-	timePrevPopup( 0 )
+CInterfaceSingleStatistic::CInterfaceSingleStatistic()
+		: CInterfaceScreenBase( "SingleStatistics2", "single_statistic" ), timePrevPopup( 0 )
 {
 	AddObserver( "message_box_ok", &CInterfaceSingleStatistic::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceSingleStatistic::MsgCancel );
@@ -100,7 +99,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 
 	if ( pInfoPanel )
 	{
-		for ( int i = 1; ; ++i )
+		for ( int i = 1;; ++i )
 		{
 			IWindow *pWnd = pInfoPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
@@ -122,7 +121,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 
 	if ( pRewardPanel )
 	{
-		for ( int i = 1; ; ++i )
+		for ( int i = 1;; ++i )
 		{
 			IWindow *pWnd = pRewardPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
@@ -156,7 +155,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 	pExitToMainMenuBtn = GetChildChecked<IButton>( pBottomPanel, "ExitToMainMenuBtn", true );
 	pExitToChapterBtn = GetChildChecked<IButton>( pBottomPanel, "ExitToChapterBtn", true );
 	pLoadBtn = GetChildChecked<IButton>( pBottomPanel, "LoadBtn", true );
-//	pExitToWindowsBtn = GetChildChecked<IButton>( pBottomPanel, "ExitToWindowsBtn", true );
+	//	pExitToWindowsBtn = GetChildChecked<IButton>( pBottomPanel, "ExitToWindowsBtn", true );
 	pNextBtn = GetChildChecked<IButton>( pBottomPanel, "NextBtn", true );
 
 	wszTime1 = GetScreen()->GetTextEntry( "T_TIME_1" );
@@ -180,8 +179,8 @@ void CInterfaceSingleStatistic::MakeInterior()
 		pExitToChapterBtn->ShowWindow( !bMissionWon && !bCustomMission );
 	if ( pLoadBtn )
 		pLoadBtn->ShowWindow( !bMissionWon );
-//	if ( pExitToWindowsBtn )
-//		pExitToWindowsBtn->ShowWindow( false );
+	//	if ( pExitToWindowsBtn )
+	//		pExitToWindowsBtn->ShowWindow( false );
 
 	pCareerExpNAView = GetChildChecked<ITextView>( pInfoPanel, "CareerExpNAView", true );
 	pMissionExpNAView = GetChildChecked<ITextView>( pInfoPanel, "MissionExpNAView", true );
@@ -261,9 +260,10 @@ void CInterfaceSingleStatistic::MakeCampaignStatistics()
 
 	ExpProgressStep();
 
-	std::wstring wszRankHP = NStr::ToUnicode( fmt::format( "{}/{}",
-		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
-		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
+	std::wstring wszRankHP =
+			NStr::ToUnicode( fmt::format( "{}/{}",
+	                                  (int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
+	                                  (int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pExpView )
 		pExpView->SetText( pExpView->GetDBText() + wszRankHP );
 
@@ -328,27 +328,27 @@ void CInterfaceSingleStatistic::MakePlayerStatistics( bool bChapter )
 
 		int nUnitsLost = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_LOST );
 		if ( player.pLostView )
-			player.pLostView->SetText( player.pLostView->GetDBText() +
-				NStr::ToUnicode( std::to_string(  nUnitsLost ) ) );
+			player.pLostView->SetText( player.pLostView->GetDBText() + NStr::ToUnicode( std::to_string( nUnitsLost ) ) );
 
 		int nUnitsKilled = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_KILLED );
 		if ( player.pKilledView )
 			player.pKilledView->SetText( player.pKilledView->GetDBText() +
-				NStr::ToUnicode( std::to_string(  nUnitsKilled ) ) );
+			                             NStr::ToUnicode( std::to_string( nUnitsKilled ) ) );
 
 		int nReinfCalled = pST->GetStatistics( i, IScenarioTracker::ESK_REINFORCEMENTS_CALLED );
 		if ( player.pReinfView )
-			player.pReinfView->SetText( player.pReinfView->GetDBText() +
-				NStr::ToUnicode( std::to_string(  nReinfCalled ) ) );
+			player.pReinfView->SetText( player.pReinfView->GetDBText() + NStr::ToUnicode( std::to_string( nReinfCalled ) ) );
 	}
 }
 
-void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb::SMapPlayerInfo &dbPlayer,
-	bool bPlayer, bool bChapter )
+void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player,
+                                                const NDb::SMapPlayerInfo &dbPlayer,
+                                                bool bPlayer,
+                                                bool bChapter )
 {
 	std::wstring wszPlayerName;
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(dbPlayer.,LocalizedPlayerName) )
-		wszPlayerName = GET_TEXT_PRE(dbPlayer.,LocalizedPlayerName);
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( dbPlayer., LocalizedPlayerName ) )
+		wszPlayerName = GET_TEXT_PRE( dbPlayer., LocalizedPlayerName );
 	if ( bPlayer && wszPlayerName.empty() )
 	{
 		// GetString, not the conversion operator: assigning a CValue to an existing
@@ -365,8 +365,8 @@ void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb
 		const NDb::SPlayerRank *pRank = pST->GetPlayerRank();
 		if ( pRank )
 		{
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pRank->,RankName) )
-				wszPlayerRank = GET_TEXT_PRE(pRank->,RankName);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pRank->, RankName ) )
+				wszPlayerRank = GET_TEXT_PRE( pRank->, RankName );
 		}
 		if ( !wszPlayerRank.empty() )
 		{
@@ -376,7 +376,7 @@ void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb
 	}
 	if ( !wszRankTag.empty() )
 	{
-		std::vector< std::pair<std::wstring, std::wstring> > params;
+		std::vector<std::pair<std::wstring, std::wstring>> params;
 		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_PLAYER_NAME, wszPlayerName ) );
 		params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_PLAYER_RANK, wszPlayerRank ) );
 		SetDynamicTextView( player.pNameView, params );
@@ -439,8 +439,8 @@ void CInterfaceSingleStatistic::MakeReinf()
 			else
 				wszTooltip = GetScreen()->GetTextEntry( "TOOLTIP_PREFIX_NEW_REINF" );
 
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pReinf->,Tooltip) )
-				wszTooltip += GET_TEXT_PRE(pReinf->,Tooltip);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, Tooltip ) )
+				wszTooltip += GET_TEXT_PRE( pReinf->, Tooltip );
 			reinf.pBtn->SetTooltip( wszTooltip );
 		}
 
@@ -452,8 +452,8 @@ void CInterfaceSingleStatistic::MakeReinf()
 			else
 				wszName = GetScreen()->GetTextEntry( "T_PREFIX_NEW_REINF" );
 
-			if ( CHECK_TEXT_NOT_EMPTY_PRE(pReinf->,LocalizedName) )
-				wszName += GET_TEXT_PRE(pReinf->,LocalizedName);
+			if ( CHECK_TEXT_NOT_EMPTY_PRE( pReinf->, LocalizedName ) )
+				wszName += GET_TEXT_PRE( pReinf->, LocalizedName );
 
 			if ( reinf.pNameView )
 				reinf.pNameView->SetText( reinf.pNameView->GetDBText() + wszName );
@@ -622,9 +622,11 @@ bool CInterfaceSingleStatistic::OnLoad()
 
 bool CInterfaceSingleStatistic::OnExitToWindows()
 {
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
-		InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) ).c_str() );
+	NMainLoop::Command(
+			ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
+	                                     InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) )
+					.c_str() );
 
 	return true;
 }
@@ -634,9 +636,7 @@ void CInterfaceSingleStatistic::MsgOk( const SGameMessage &msg )
 	NInput::PostEvent( "exit", 0, 0 );
 }
 
-void CInterfaceSingleStatistic::MsgCancel( const SGameMessage &msg )
-{
-}
+void CInterfaceSingleStatistic::MsgCancel( const SGameMessage &msg ) {}
 
 void CInterfaceSingleStatistic::MsgTryExitWindows( const SGameMessage &msg )
 {
@@ -705,7 +705,9 @@ bool CInterfaceSingleStatistic::OnChapterReinfUnitBtn( const std::string &szSend
 
 void CInterfaceSingleStatistic::NextMenu()
 {
-	NI_VERIFY( Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE, "Wrong game type (single only allowed)", return );
+	NI_VERIFY( Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE,
+	           "Wrong game type (single only allowed)",
+	           return );
 
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bDemo )
@@ -724,7 +726,7 @@ void CInterfaceSingleStatistic::NextMenu()
 	const NDb::SMapInfo *pMission = Singleton<IScenarioTracker>()->GetCurrentMission();
 	if ( Singleton<IScenarioTracker>()->IsCustomMission() )
 	{
-//		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+		//		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 
@@ -737,7 +739,7 @@ void CInterfaceSingleStatistic::NextMenu()
 	}
 	else
 	{
-//		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+		//		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 		NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
@@ -746,16 +748,16 @@ void CInterfaceSingleStatistic::NextMenu()
 
 std::wstring CInterfaceSingleStatistic::GetFormattedTime( int nTime ) const
 {
-	std::wstring wszTime = NStr::ToUnicode( std::to_string(  nTime % 60 ) ) + wszTime3;
+	std::wstring wszTime = NStr::ToUnicode( std::to_string( nTime % 60 ) ) + wszTime3;
 	nTime /= 60;
 	if ( nTime > 0 )
 	{
-		wszTime = NStr::ToUnicode( std::to_string(  nTime % 60 ) ) + wszTime2 + wszTime;
+		wszTime = NStr::ToUnicode( std::to_string( nTime % 60 ) ) + wszTime2 + wszTime;
 		nTime /= 60;
 	}
 	if ( nTime > 0 )
 	{
-		wszTime = NStr::ToUnicode( std::to_string(  nTime % 60 ) ) + wszTime1 + wszTime;
+		wszTime = NStr::ToUnicode( std::to_string( nTime % 60 ) ) + wszTime1 + wszTime;
 	}
 
 	return wszTime;
@@ -815,8 +817,8 @@ void CInterfaceSingleStatistic::ShowNewRank( const NDb::SPlayerRank *pRank )
 		pNewRankIconWnd->SetTexture( pRank ? pRank->pStrap : 0 );
 
 	std::wstring wszRank;
-	if ( pRank && CHECK_TEXT_NOT_EMPTY_PRE(pRank->,RankName) )
-		wszRank = GET_TEXT_PRE(pRank->,RankName);
+	if ( pRank && CHECK_TEXT_NOT_EMPTY_PRE( pRank->, RankName ) )
+		wszRank = GET_TEXT_PRE( pRank->, RankName );
 	if ( pNewRankView )
 		pNewRankView->SetText( pNewRankView->GetDBText() + wszRank );
 }
@@ -830,14 +832,14 @@ void CInterfaceSingleStatistic::ShowMedal( const NDb::SMedal *pMedal )
 		pMedalIconWnd->SetTexture( pMedal ? pMedal->pPictureTexture : 0 );
 
 	std::wstring wszName;
-	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedName) )
-		wszName = GET_TEXT_PRE(pMedal->,LocalizedName);
+	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedName ) )
+		wszName = GET_TEXT_PRE( pMedal->, LocalizedName );
 	if ( pMedalNameView )
 		pMedalNameView->SetText( pMedalNameView->GetDBText() + wszName );
 
 	std::wstring wszDesc;
-	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedDesc) )
-		wszDesc = GET_TEXT_PRE(pMedal->,LocalizedDesc);
+	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE( pMedal->, LocalizedDesc ) )
+		wszDesc = GET_TEXT_PRE( pMedal->, LocalizedDesc );
 	if ( pMedalDescView )
 		pMedalDescView->SetText( pMedalDescView->GetDBText() + wszDesc );
 	if ( pMedalDescCont )
@@ -867,22 +869,19 @@ void CInterfaceSingleStatistic::ExpProgressStep()
 
 // CICSingleStatistic
 
-void CICSingleStatistic::PreCreate()
-{
-}
+void CICSingleStatistic::PreCreate() {}
 
 void CICSingleStatistic::PostCreate( IInterface *pInterface )
 {
 #ifndef _FINALRELEASE
 	// sanity check
-	NI_ASSERT( NMainLoop::GetTopInterface() == 0, "Programmers: no interfaces are allowed under the CInterfaceSingleStatistic" );
+	NI_ASSERT( NMainLoop::GetTopInterface() == 0,
+	           "Programmers: no interfaces are allowed under the CInterfaceSingleStatistic" );
 #endif
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICSingleStatistic::Configure( const char *pszConfig )
-{
-}
+void CICSingleStatistic::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17194B40, CInterfaceSingleStatistic )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SINGLE_STATISTIC, CICSingleStatistic )

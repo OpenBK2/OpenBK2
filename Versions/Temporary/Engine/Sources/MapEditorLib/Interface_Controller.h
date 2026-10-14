@@ -1,8 +1,7 @@
 #pragma once
 
-
-typedef std::unordered_map<CDBID, int> CObjectNameSet;	// важно наличие
-typedef std::list<CDBID> CObjectNameList;					// важна последовательность
+typedef std::unordered_map<CDBID, int> CObjectNameSet; // важно наличие
+typedef std::list<CDBID> CObjectNameList;              // важна последовательность
 
 struct SObjectSet
 {
@@ -15,7 +14,6 @@ struct SObjectSet
 		objectNameSet.clear();
 	}
 };
-
 
 //
 struct SSelectionSet
@@ -49,13 +47,15 @@ struct IController : public CObjectBase
 	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) const = 0;
 };
 
-
 // Управляющий операциями Undo
 // Складывает из в буфера и умеет из перекладывать
 typedef std::list<std::string> CDescriptionList;
 struct IControllerContainer : public CObjectBase
 {
-	enum { tidTypeID = 0x1408A3C2 };
+	enum
+	{
+		tidTypeID = 0x1408A3C2
+	};
 	//
 	// Добавить операцию
 	virtual void Add( IController *pOperation ) = 0;

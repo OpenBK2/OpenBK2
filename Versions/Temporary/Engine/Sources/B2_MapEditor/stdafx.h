@@ -3,7 +3,6 @@
 //			are changed infrequently
 //
 
-
 #pragma once
 // No MFC: nothing in the editor links it, so the __AFX__ branch that
 // included afxwin.h and friends is gone.
@@ -16,7 +15,6 @@
 // none of the functions: those calls get real replacements instead.
 #include <windows.h>
 
-
 #pragma component( mintypeinfo, on )
 // System/System.h names std::type_info.
 #include <typeinfo>
@@ -28,10 +26,10 @@
 //
 #include "Misc/Asserts.h"
 //
-#pragma warning( disable: 4018 4355 4800 4244 4267 )
-#pragma warning( disable: 4127 4100 4201 4512 4389 )
+#pragma warning( disable : 4018 4355 4800 4244 4267 )
+#pragma warning( disable : 4127 4100 4201 4512 4389 )
 #ifdef NIVAL_DLL
-#pragma warning( disable: 4273)
+#pragma warning( disable : 4273 )
 #endif
 
 #include <list>
@@ -44,7 +42,7 @@
 
 namespace NTimer
 {
-	typedef uint32_t STime;
+typedef uint32_t STime;
 }
 //
 #include "System/System.h"

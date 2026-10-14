@@ -15,12 +15,7 @@ struct SCameraPositionWindowData
 	int nPlayerCount;
 	bool bAllParams;
 	//
-	SCameraPositionWindowData() :
-		nPlayerIndex( -1 ),
-		nPlayerCount( 0 ),
-		bAllParams( false )
-	{
-	}
+	SCameraPositionWindowData() : nPlayerIndex( -1 ), nPlayerCount( 0 ), bAllParams( false ) {}
 	//
 	void Clear()
 	{
@@ -29,7 +24,6 @@ struct SCameraPositionWindowData
 		bAllParams = false;
 	}
 };
-
 
 // CMapInfoState drives this palette with the two window commands every palette
 // takes, so the dispatch is CPaletteCommands' and only the reading and writing

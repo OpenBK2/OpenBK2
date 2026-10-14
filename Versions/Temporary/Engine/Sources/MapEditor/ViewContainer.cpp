@@ -12,7 +12,6 @@ void CViewContainer::Add( IView *pView, const std::string &rszObjectTypeName, co
 	}
 }
 
-
 void CViewContainer::Remove( IView *pView, const std::string &rszObjectTypeName, const CDBID &rObjectDBID )
 {
 	NI_ASSERT( pView != 0, "CViewContainer::Remove, pView == 0" );
@@ -30,8 +29,9 @@ void CViewContainer::Remove( IView *pView, const std::string &rszObjectTypeName,
 	}
 }
 
-
-bool CViewContainer::GetViewSet( CViewSet *pViewSet, const std::string &rszObjectTypeName, const CDBID &rObjectDBID ) const
+bool CViewContainer::GetViewSet( CViewSet *pViewSet,
+                                 const std::string &rszObjectTypeName,
+                                 const CDBID &rObjectDBID ) const
 {
 	if ( !rszObjectTypeName.empty() )
 	{
@@ -52,30 +52,31 @@ bool CViewContainer::GetViewSet( CViewSet *pViewSet, const std::string &rszObjec
 	return false;
 }
 
-
 void CViewContainer::Add( IView *pView, const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.szObjectTypeName.empty() )
 	{
-		for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin(); itObjectName != rObjectSet.objectNameSet.end(); ++itObjectName )
+		for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin();
+		      itObjectName != rObjectSet.objectNameSet.end();
+		      ++itObjectName )
 		{
 			Add( pView, rObjectSet.szObjectTypeName, itObjectName->first );
 		}
 	}
 }
 
-
 void CViewContainer::Remove( IView *pView, const SObjectSet &rObjectSet )
 {
 	if ( !rObjectSet.szObjectTypeName.empty() )
 	{
-		for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin(); itObjectName != rObjectSet.objectNameSet.end(); ++itObjectName )
+		for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin();
+		      itObjectName != rObjectSet.objectNameSet.end();
+		      ++itObjectName )
 		{
 			Remove( pView, rObjectSet.szObjectTypeName, itObjectName->first );
 		}
 	}
 }
-
 
 bool CViewContainer::GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const
 {
@@ -87,7 +88,9 @@ bool CViewContainer::GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSe
 			pViewSet->clear();
 		}
 		//
-		for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin(); itObjectName != rObjectSet.objectNameSet.end(); ++itObjectName )
+		for ( CObjectNameSet::const_iterator itObjectName = rObjectSet.objectNameSet.begin();
+		      itObjectName != rObjectSet.objectNameSet.end();
+		      ++itObjectName )
 		{
 			if ( GetViewSet( pViewSet, rObjectSet.szObjectTypeName, itObjectName->first ) )
 			{

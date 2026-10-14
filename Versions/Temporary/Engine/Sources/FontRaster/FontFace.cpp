@@ -16,121 +16,124 @@ namespace NFontRaster
 namespace
 {
 
-std::string DescribeError( const char *pszWhat, const FT_Error nError )
-{
-	return std::string( pszWhat ) + " failed with FreeType error " + std::to_string( nError );
-}
+	std::string DescribeError( const char *pszWhat, const FT_Error nError )
+	{
+		return std::string( pszWhat ) + " failed with FreeType error " + std::to_string( nError );
+	}
 
-// The design metrics GDI builds TEXTMETRIC from, in font units
-struct SDesignMetrics
-{
-	int nUnitsPerEm = 0;
-	int nWinAscent = 0;
-	int nWinDescent = 0;
-	int nExternalLeading = 0;
-	int nAveCharWidth = 0;
-	int nMaxAdvance = 0;
-};
+	// The design metrics GDI builds TEXTMETRIC from, in font units
+	struct SDesignMetrics
+	{
+		int nUnitsPerEm = 0;
+		int nWinAscent = 0;
+		int nWinDescent = 0;
+		int nExternalLeading = 0;
+		int nAveCharWidth = 0;
+		int nMaxAdvance = 0;
+	};
 
-bool ReadDesignMetrics( const FT_Face pFace, SDesignMetrics *pMetrics, std::string *pszError )
-{
-	const TT_HoriHeader *pHhea = static_cast<const TT_HoriHeader*>( FT_Get_Sfnt_Table( pFace, FT_SFNT_HHEA ) );
-	if ( pHhea == nullptr || pFace->units_per_EM == 0 )
+	bool ReadDesignMetrics( const FT_Face pFace, SDesignMetrics *pMetrics, std::string *pszError )
 	{
-		*pszError = "the font has no hhea table, so it is not TrueType or OpenType";
-		return false;
-	}
-	const TT_OS2 *pOS2 = static_cast<const TT_OS2*>( FT_Get_Sfnt_Table( pFace, FT_SFNT_OS2 ) );
-	pMetrics->nUnitsPerEm = pFace->units_per_EM;
-	// GDI sizes a TrueType font by usWinAscent + usWinDescent, the extent the
-	// font promises no glyph exceeds, rather than by the typographic or hhea
-	// values. Without an OS/2 table, which only very old Mac fonts lack, hhea is
-	// the nearest thing.
-	if ( pOS2 != nullptr && pOS2->version != 0xFFFF )
-	{
-		pMetrics->nWinAscent = pOS2->usWinAscent;
-		pMetrics->nWinDescent = pOS2->usWinDescent;
-		pMetrics->nAveCharWidth = pOS2->xAvgCharWidth;
-	}
-	else
-	{
-		pMetrics->nWinAscent = pHhea->Ascender;
-		pMetrics->nWinDescent = -pHhea->Descender;
-	}
-	// GDI's tmExternalLeading: the hhea line gap, less whatever part of it the
-	// win extent already covers beyond the hhea extent. Arial comes out at one
-	// pixel at 28, the same as GDI reports.
-	const int nWinExtent = pMetrics->nWinAscent + pMetrics->nWinDescent;
-	const int nHheaExtent = pHhea->Ascender - pHhea->Descender;
-	pMetrics->nExternalLeading = std::max( 0, pHhea->Line_Gap - ( nWinExtent - nHheaExtent ) );
-	pMetrics->nMaxAdvance = pHhea->advance_Width_Max;
-	if ( nWinExtent <= 0 )
-	{
-		*pszError = "the font reports no vertical extent";
-		return false;
-	}
-	return true;
-}
-
-// CELL_INK's extent: the highest and lowest point of any of codePoints'
-// outlines, in font units. Replaces the win ascent and descent, and zeroes the
-// external leading, which is defined against the win extent and means nothing
-// once the cell no longer is. A code point with no glyph adds nothing, since
-// what it gets is .notdef, which fits any font's own metrics.
-bool MeasureInk( const FT_Face pFace, const std::vector<uint32_t> &codePoints, SDesignMetrics *pMetrics, std::string *pszError )
-{
-	FT_Pos nTop = 0, nBottom = 0;
-	for ( const uint32_t nCodePoint : codePoints )
-	{
-		const FT_UInt nGlyphIndex = FT_Get_Char_Index( pFace, nCodePoint );
-		if ( nGlyphIndex == 0 )
+		const TT_HoriHeader *pHhea = static_cast<const TT_HoriHeader *>( FT_Get_Sfnt_Table( pFace, FT_SFNT_HHEA ) );
+		if ( pHhea == nullptr || pFace->units_per_EM == 0 )
 		{
-			continue;
-		}
-		const FT_Error nError = FT_Load_Glyph( pFace, nGlyphIndex, FT_LOAD_NO_SCALE );
-		if ( nError != 0 )
-		{
-			*pszError = DescribeError( "FT_Load_Glyph( FT_LOAD_NO_SCALE )", nError );
+			*pszError = "the font has no hhea table, so it is not TrueType or OpenType";
 			return false;
 		}
-		if ( pFace->glyph->format != FT_GLYPH_FORMAT_OUTLINE || pFace->glyph->outline.n_points == 0 )
+		const TT_OS2 *pOS2 = static_cast<const TT_OS2 *>( FT_Get_Sfnt_Table( pFace, FT_SFNT_OS2 ) );
+		pMetrics->nUnitsPerEm = pFace->units_per_EM;
+		// GDI sizes a TrueType font by usWinAscent + usWinDescent, the extent the
+		// font promises no glyph exceeds, rather than by the typographic or hhea
+		// values. Without an OS/2 table, which only very old Mac fonts lack, hhea is
+		// the nearest thing.
+		if ( pOS2 != nullptr && pOS2->version != 0xFFFF )
 		{
-			continue;
+			pMetrics->nWinAscent = pOS2->usWinAscent;
+			pMetrics->nWinDescent = pOS2->usWinDescent;
+			pMetrics->nAveCharWidth = pOS2->xAvgCharWidth;
 		}
-		FT_BBox box;
-		FT_Outline_Get_CBox( &pFace->glyph->outline, &box );
-		nTop = std::max( nTop, box.yMax );
-		nBottom = std::min( nBottom, box.yMin );
+		else
+		{
+			pMetrics->nWinAscent = pHhea->Ascender;
+			pMetrics->nWinDescent = -pHhea->Descender;
+		}
+		// GDI's tmExternalLeading: the hhea line gap, less whatever part of it the
+		// win extent already covers beyond the hhea extent. Arial comes out at one
+		// pixel at 28, the same as GDI reports.
+		const int nWinExtent = pMetrics->nWinAscent + pMetrics->nWinDescent;
+		const int nHheaExtent = pHhea->Ascender - pHhea->Descender;
+		pMetrics->nExternalLeading = std::max( 0, pHhea->Line_Gap - ( nWinExtent - nHheaExtent ) );
+		pMetrics->nMaxAdvance = pHhea->advance_Width_Max;
+		if ( nWinExtent <= 0 )
+		{
+			*pszError = "the font reports no vertical extent";
+			return false;
+		}
+		return true;
 	}
-	if ( nTop - nBottom <= 0 )
-	{
-		*pszError = "none of the characters has any ink to size the cell by";
-		return false;
-	}
-	pMetrics->nWinAscent = static_cast<int>( nTop );
-	pMetrics->nWinDescent = static_cast<int>( -nBottom );
-	pMetrics->nExternalLeading = 0;
-	return true;
-}
 
-FT_Int32 LoadFlags( const SOptions &options )
-{
-	if ( !options.bAntialias )
+	// CELL_INK's extent: the highest and lowest point of any of codePoints'
+	// outlines, in font units. Replaces the win ascent and descent, and zeroes the
+	// external leading, which is defined against the win extent and means nothing
+	// once the cell no longer is. A code point with no glyph adds nothing, since
+	// what it gets is .notdef, which fits any font's own metrics.
+	bool MeasureInk( const FT_Face pFace,
+	                 const std::vector<uint32_t> &codePoints,
+	                 SDesignMetrics *pMetrics,
+	                 std::string *pszError )
 	{
-		// one bit per pixel wants the hinting made for it
-		return FT_LOAD_TARGET_MONO;
+		FT_Pos nTop = 0, nBottom = 0;
+		for ( const uint32_t nCodePoint : codePoints )
+		{
+			const FT_UInt nGlyphIndex = FT_Get_Char_Index( pFace, nCodePoint );
+			if ( nGlyphIndex == 0 )
+			{
+				continue;
+			}
+			const FT_Error nError = FT_Load_Glyph( pFace, nGlyphIndex, FT_LOAD_NO_SCALE );
+			if ( nError != 0 )
+			{
+				*pszError = DescribeError( "FT_Load_Glyph( FT_LOAD_NO_SCALE )", nError );
+				return false;
+			}
+			if ( pFace->glyph->format != FT_GLYPH_FORMAT_OUTLINE || pFace->glyph->outline.n_points == 0 )
+			{
+				continue;
+			}
+			FT_BBox box;
+			FT_Outline_Get_CBox( &pFace->glyph->outline, &box );
+			nTop = std::max( nTop, box.yMax );
+			nBottom = std::min( nBottom, box.yMin );
+		}
+		if ( nTop - nBottom <= 0 )
+		{
+			*pszError = "none of the characters has any ink to size the cell by";
+			return false;
+		}
+		pMetrics->nWinAscent = static_cast<int>( nTop );
+		pMetrics->nWinDescent = static_cast<int>( -nBottom );
+		pMetrics->nExternalLeading = 0;
+		return true;
 	}
-	switch ( options.eHinting )
+
+	FT_Int32 LoadFlags( const SOptions &options )
 	{
-	case HINTING_NONE:
-		return FT_LOAD_NO_HINTING;
-	case HINTING_NORMAL:
-		return FT_LOAD_TARGET_NORMAL;
-	case HINTING_LIGHT:
-	default:
-		return FT_LOAD_TARGET_LIGHT;
+		if ( !options.bAntialias )
+		{
+			// one bit per pixel wants the hinting made for it
+			return FT_LOAD_TARGET_MONO;
+		}
+		switch ( options.eHinting )
+		{
+			case HINTING_NONE:
+				return FT_LOAD_NO_HINTING;
+			case HINTING_NORMAL:
+				return FT_LOAD_TARGET_NORMAL;
+			case HINTING_LIGHT:
+			default:
+				return FT_LOAD_TARGET_LIGHT;
+		}
 	}
-}
 
 }
 
@@ -217,7 +220,8 @@ std::unique_ptr<CFace> CFace::OpenFile( const std::string &szFile, int nFaceInde
 	return pFace;
 }
 
-std::unique_ptr<CFace> CFace::OpenMemory( std::shared_ptr<const std::vector<uint8_t>> data, int nFaceIndex, std::string *pszError )
+std::unique_ptr<CFace>
+CFace::OpenMemory( std::shared_ptr<const std::vector<uint8_t>> data, int nFaceIndex, std::string *pszError )
 {
 	if ( data == nullptr || data->empty() )
 	{
@@ -232,8 +236,11 @@ std::unique_ptr<CFace> CFace::OpenMemory( std::shared_ptr<const std::vector<uint
 		return nullptr;
 	}
 	pFace->pImpl->data = std::move( data );
-	nError = FT_New_Memory_Face( pFace->pImpl->pLibrary, pFace->pImpl->data->data(),
-		static_cast<FT_Long>( pFace->pImpl->data->size() ), nFaceIndex, &pFace->pImpl->pFace );
+	nError = FT_New_Memory_Face( pFace->pImpl->pLibrary,
+	                             pFace->pImpl->data->data(),
+	                             static_cast<FT_Long>( pFace->pImpl->data->size() ),
+	                             nFaceIndex,
+	                             &pFace->pImpl->pFace );
 	if ( nError != 0 )
 	{
 		*pszError = DescribeError( "FT_New_Memory_Face", nError );
@@ -294,12 +301,15 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 	// little as fits it, and only when the rendered ink is taller than the cell
 	// itself is the em shrunk to match and the sizing set rendered again.
 	std::vector<SGlyphBitmap> sizing;
-	for ( int nAttempt = 0; ; ++nAttempt )
+	for ( int nAttempt = 0;; ++nAttempt )
 	{
 		const double fPixelsPerEm = fPixelsPerUnit * design.nUnitsPerEm;
-		const FT_Error nError = FT_Set_Char_Size( impl.pFace,
-			static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * fWidthScale * 64.0 ) ),
-			static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * 64.0 ) ), 72, 72 );
+		const FT_Error nError =
+				FT_Set_Char_Size( impl.pFace,
+		                      static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * fWidthScale * 64.0 ) ),
+		                      static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * 64.0 ) ),
+		                      72,
+		                      72 );
 		if ( nError != 0 )
 		{
 			*pszError = DescribeError( "FT_Set_Char_Size", nError );
@@ -419,9 +429,9 @@ bool CFace::RenderGlyph( uint32_t nCodePoint, SGlyphBitmap *pGlyph, std::string 
 	// unhinted ones are rounded, and the linear advance is used for them because
 	// it is the unrounded design value rather than one FreeType has already
 	// adjusted.
-	const int nAdvance = impl.options.eHinting == HINTING_NONE && impl.options.bAntialias ?
-		static_cast<int>( std::lround( pSlot->linearHoriAdvance / 65536.0 ) ) :
-		static_cast<int>( std::lround( pSlot->advance.x / 64.0 ) );
+	const int nAdvance = impl.options.eHinting == HINTING_NONE && impl.options.bAntialias
+	                         ? static_cast<int>( std::lround( pSlot->linearHoriAdvance / 65536.0 ) )
+	                         : static_cast<int>( std::lround( pSlot->advance.x / 64.0 ) );
 	const FT_Bitmap &bitmap = pSlot->bitmap;
 	if ( bitmap.width == 0 || bitmap.rows == 0 )
 	{
@@ -439,9 +449,8 @@ bool CFace::RenderGlyph( uint32_t nCodePoint, SGlyphBitmap *pGlyph, std::string 
 	const int nPitch = bitmap.pitch;
 	for ( int y = 0; y < pGlyph->nRows; ++y )
 	{
-		const unsigned char *pRow = nPitch >= 0 ?
-			bitmap.buffer + static_cast<ptrdiff_t>( y ) * nPitch :
-			bitmap.buffer + static_cast<ptrdiff_t>( pGlyph->nRows - 1 - y ) * -nPitch;
+		const unsigned char *pRow = nPitch >= 0 ? bitmap.buffer + static_cast<ptrdiff_t>( y ) * nPitch
+		                                        : bitmap.buffer + static_cast<ptrdiff_t>( pGlyph->nRows - 1 - y ) * -nPitch;
 		uint8_t *pDst = &pGlyph->coverage[static_cast<size_t>( y ) * pGlyph->nB];
 		for ( int x = 0; x < pGlyph->nB; ++x )
 		{
@@ -480,7 +489,8 @@ int CFace::GetKerning( uint32_t nLeft, uint32_t nRight ) const
 		{
 			return 0;
 		}
-		const int nUnits = pImpl->pGpos->GetAdjustment( static_cast<uint16_t>( nLeftIndex ), static_cast<uint16_t>( nRightIndex ) );
+		const int nUnits =
+				pImpl->pGpos->GetAdjustment( static_cast<uint16_t>( nLeftIndex ), static_cast<uint16_t>( nRightIndex ) );
 		const FT_Pos nScaled = FT_MulFix( nUnits, pImpl->pFace->size->metrics.x_scale );
 		return static_cast<int>( std::lround( nScaled / 64.0 ) );
 	}

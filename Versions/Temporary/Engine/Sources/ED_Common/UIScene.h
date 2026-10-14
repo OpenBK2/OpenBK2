@@ -1,16 +1,17 @@
 #pragma once
 
-
-
 namespace NGScene
 {
-	class I2DGameView;
+class I2DGameView;
 };
 struct IWindow;
 
 struct IUIScene : public CObjectBase
 {
-	enum { tidTypeID = 0x160B8D80 };
+	enum
+	{
+		tidTypeID = 0x160B8D80
+	};
 	virtual void Create() = 0;
 	virtual void Clear() = 0;
 	virtual void AddWindow( IWindow *pWindow ) = 0;

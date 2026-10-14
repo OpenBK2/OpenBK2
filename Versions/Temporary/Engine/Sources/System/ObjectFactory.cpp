@@ -7,8 +7,13 @@ namespace NObjectFactory
 // class factory
 static CClassFactory<CObjectBase> *pSSClasses = 0;
 
-struct SBasicChunkInit {
-	~SBasicChunkInit() { if ( pSSClasses ) delete pSSClasses; }
+struct SBasicChunkInit
+{
+	~SBasicChunkInit()
+	{
+		if ( pSSClasses )
+			delete pSSClasses;
+	}
 } init;
 
 void StartRegister()
@@ -20,7 +25,7 @@ void StartRegister()
 // создать объект по его typeID
 CObjectBase *MakeObject( int nTypeID )
 {
-//	NI_ASSERT( pSSClasses->IsRegistered( nTypeID ), StrFmt("Unregistered object of type 0x%x - no new-function", nTypeID) );
+	//	NI_ASSERT( pSSClasses->IsRegistered( nTypeID ), StrFmt("Unregistered object of type 0x%x - no new-function", nTypeID) );
 	return pSSClasses->CreateObject( nTypeID );
 }
 

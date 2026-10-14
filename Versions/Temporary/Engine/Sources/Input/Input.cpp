@@ -38,10 +38,10 @@ static const int MOUSE_WHEEL_GRANULARITY = 120;
 static const int JOYSTICK_BUTTON_COUNT = 32;
 const uint32_t TIME_DIFF_DBL_CLK = 500;
 // DDSSOOOO
-#define INPUT_KEYID( vID, vOFFS )								( ( ( vID & 0xFF ) << 24 ) | ( vOFFS ) )
-#define INPUT_KEYIDEX( vID, vOFFS, vSPECIAL )		( ( ( vID & 0xFF ) << 24 ) | ( ( vSPECIAL & 0xFF ) << 16 ) | ( vOFFS ) )
-#define INPUT_GETACTIONOFFS( vKeyID )						( ( vKeyID ) & 0xFFFF )
-#define INPUT_GETACTIONDEVICEID( vKeyID )				( ( vKeyID ) >> 24 )
+#define INPUT_KEYID( vID, vOFFS ) ( ( ( vID & 0xFF ) << 24 ) | ( vOFFS ) )
+#define INPUT_KEYIDEX( vID, vOFFS, vSPECIAL ) ( ( ( vID & 0xFF ) << 24 ) | ( ( vSPECIAL & 0xFF ) << 16 ) | ( vOFFS ) )
+#define INPUT_GETACTIONOFFS( vKeyID ) ( ( vKeyID ) & 0xFFFF )
+#define INPUT_GETACTIONDEVICEID( vKeyID ) ( ( vKeyID ) >> 24 )
 
 namespace NInput
 {
@@ -57,168 +57,166 @@ struct SKeyInfo
 	int nDevAction;
 	EControlType cType;
 };
-const SKeyInfo kiKeyInfoList [] =
-{
-////// KEYBOARD //////
-	{ "ESC",								DI8DEVTYPE_KEYBOARD,	DIK_ESCAPE			, CT_KEY		},
-	{ "1",									DI8DEVTYPE_KEYBOARD,	DIK_1						, CT_KEY		},
-	{ "2",									DI8DEVTYPE_KEYBOARD,	DIK_2						, CT_KEY		},
-	{ "3",									DI8DEVTYPE_KEYBOARD,	DIK_3						, CT_KEY		},
-	{ "4",									DI8DEVTYPE_KEYBOARD,	DIK_4						, CT_KEY		},
-	{ "5",									DI8DEVTYPE_KEYBOARD,	DIK_5						, CT_KEY		},
-	{ "6",									DI8DEVTYPE_KEYBOARD,	DIK_6						, CT_KEY		},
-	{ "7",									DI8DEVTYPE_KEYBOARD,	DIK_7						, CT_KEY		},
-	{ "8",									DI8DEVTYPE_KEYBOARD,	DIK_8						, CT_KEY		},
-	{ "9",									DI8DEVTYPE_KEYBOARD,	DIK_9						, CT_KEY		},
-	{ "0",									DI8DEVTYPE_KEYBOARD,	DIK_0						, CT_KEY		},
-	{ "-",									DI8DEVTYPE_KEYBOARD,	DIK_MINUS				, CT_KEY		},
-	{ "=",									DI8DEVTYPE_KEYBOARD,	DIK_EQUALS			, CT_KEY		},
-	{ "BACKSPACE",					DI8DEVTYPE_KEYBOARD,	DIK_BACK				, CT_KEY		},
-	{ "TAB",								DI8DEVTYPE_KEYBOARD,	DIK_TAB					, CT_KEY		},
-	{ "Q",									DI8DEVTYPE_KEYBOARD,	DIK_Q						, CT_KEY		},
-	{ "W",									DI8DEVTYPE_KEYBOARD,	DIK_W						, CT_KEY		},
-	{ "E",									DI8DEVTYPE_KEYBOARD,	DIK_E						, CT_KEY		},
-	{ "R",									DI8DEVTYPE_KEYBOARD,	DIK_R						, CT_KEY		},
-	{ "T",									DI8DEVTYPE_KEYBOARD,	DIK_T						, CT_KEY		},
-	{ "Y",									DI8DEVTYPE_KEYBOARD,	DIK_Y						, CT_KEY		},
-	{ "U",									DI8DEVTYPE_KEYBOARD,	DIK_U						, CT_KEY		},
-	{ "I",									DI8DEVTYPE_KEYBOARD,	DIK_I						, CT_KEY		},
-	{ "O",									DI8DEVTYPE_KEYBOARD,	DIK_O						, CT_KEY		},
-	{ "P",									DI8DEVTYPE_KEYBOARD,	DIK_P						, CT_KEY		},
-	{ "[",									DI8DEVTYPE_KEYBOARD,	DIK_LBRACKET		, CT_KEY		},
-	{ "]",									DI8DEVTYPE_KEYBOARD,	DIK_RBRACKET		, CT_KEY		},
-	{ "ENTER",							DI8DEVTYPE_KEYBOARD,	DIK_RETURN			, CT_KEY		},
-	{ "LCTRL",							DI8DEVTYPE_KEYBOARD,	DIK_LCONTROL		, CT_KEY		},
-	{ "A",									DI8DEVTYPE_KEYBOARD,	DIK_A						, CT_KEY		},
-	{ "S",									DI8DEVTYPE_KEYBOARD,	DIK_S						, CT_KEY		},
-	{ "D",									DI8DEVTYPE_KEYBOARD,	DIK_D						, CT_KEY		},
-	{ "F",									DI8DEVTYPE_KEYBOARD,	DIK_F						, CT_KEY		},
-	{ "G",									DI8DEVTYPE_KEYBOARD,	DIK_G						, CT_KEY		},
-	{ "H",									DI8DEVTYPE_KEYBOARD,	DIK_H						, CT_KEY		},
-	{ "J",									DI8DEVTYPE_KEYBOARD,	DIK_J						, CT_KEY		},
-	{ "K",									DI8DEVTYPE_KEYBOARD,	DIK_K						, CT_KEY		},
-	{ "L",									DI8DEVTYPE_KEYBOARD,	DIK_L						, CT_KEY		},
-	{ ";",									DI8DEVTYPE_KEYBOARD,	DIK_SEMICOLON		, CT_KEY		},
-	{ "'",									DI8DEVTYPE_KEYBOARD,	DIK_APOSTROPHE	, CT_KEY		},
-	{ "`",									DI8DEVTYPE_KEYBOARD,	DIK_GRAVE       , CT_KEY		},
-	{ "LSHIFT",							DI8DEVTYPE_KEYBOARD,	DIK_LSHIFT      , CT_KEY		},
-	{ "\\",									DI8DEVTYPE_KEYBOARD,	DIK_BACKSLASH   , CT_KEY		},
-	{ "Z",									DI8DEVTYPE_KEYBOARD,	DIK_Z           , CT_KEY		},
-	{ "X",									DI8DEVTYPE_KEYBOARD,	DIK_X           , CT_KEY		},
-	{ "C",									DI8DEVTYPE_KEYBOARD,	DIK_C           , CT_KEY		},
-	{ "V",									DI8DEVTYPE_KEYBOARD,	DIK_V           , CT_KEY		},
-	{ "B",									DI8DEVTYPE_KEYBOARD,	DIK_B           , CT_KEY		},
-	{ "N",									DI8DEVTYPE_KEYBOARD,	DIK_N           , CT_KEY		},
-	{ "M",									DI8DEVTYPE_KEYBOARD,	DIK_M           , CT_KEY		},
-	{ ",",									DI8DEVTYPE_KEYBOARD,	DIK_COMMA       , CT_KEY		},
-	{ ".",									DI8DEVTYPE_KEYBOARD,	DIK_PERIOD      , CT_KEY		},
-	{ "/",									DI8DEVTYPE_KEYBOARD,	DIK_SLASH       , CT_KEY		},
-	{ "RSHIFT",							DI8DEVTYPE_KEYBOARD,	DIK_RSHIFT      , CT_KEY		},
-	{ "NUM_MULTIPLY",				DI8DEVTYPE_KEYBOARD,	DIK_MULTIPLY    , CT_KEY		},
-	{ "LALT",								DI8DEVTYPE_KEYBOARD,	DIK_LMENU       , CT_KEY		},
-	{ "SPACE",							DI8DEVTYPE_KEYBOARD,	DIK_SPACE       , CT_KEY		},
-	{ "CAPITAL",						DI8DEVTYPE_KEYBOARD,	DIK_CAPITAL     , CT_KEY		},
-	{ "F1",									DI8DEVTYPE_KEYBOARD,	DIK_F1          , CT_KEY		},
-	{ "F2",									DI8DEVTYPE_KEYBOARD,	DIK_F2          , CT_KEY		},
-	{ "F3",									DI8DEVTYPE_KEYBOARD,	DIK_F3          , CT_KEY		},
-	{ "F4",									DI8DEVTYPE_KEYBOARD,	DIK_F4          , CT_KEY		},
-	{ "F5",									DI8DEVTYPE_KEYBOARD,	DIK_F5          , CT_KEY		},
-	{ "F6",									DI8DEVTYPE_KEYBOARD,	DIK_F6          , CT_KEY		},
-	{ "F7",									DI8DEVTYPE_KEYBOARD,	DIK_F7          , CT_KEY		},
-	{ "F8",									DI8DEVTYPE_KEYBOARD,	DIK_F8          , CT_KEY		},
-	{ "F9",									DI8DEVTYPE_KEYBOARD,	DIK_F9          , CT_KEY		},
-	{ "F10",								DI8DEVTYPE_KEYBOARD,	DIK_F10         , CT_KEY		},
-	{ "NUM",								DI8DEVTYPE_KEYBOARD,	DIK_NUMLOCK     , CT_KEY		},
-	{ "SCROLL",							DI8DEVTYPE_KEYBOARD,	DIK_SCROLL      , CT_KEY		},
-	{ "NUM_7",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD7     , CT_KEY		},
-	{ "NUM_8",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD8     , CT_KEY		},
-	{ "NUM_9",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD9     , CT_KEY		},
-	{ "NUM_MINUS",					DI8DEVTYPE_KEYBOARD,	DIK_SUBTRACT    , CT_KEY		},
-	{ "NUM_4",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD4     , CT_KEY		},
-	{ "NUM_5",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD5     , CT_KEY		},
-	{ "NUM_6",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD6     , CT_KEY		},
-	{ "NUM_PLUS",						DI8DEVTYPE_KEYBOARD,	DIK_ADD         , CT_KEY		},
-	{ "NUM_1",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD1     , CT_KEY		},
-	{ "NUM_2",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD2     , CT_KEY		},
-	{ "NUM_3",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD3     , CT_KEY		},
-	{ "NUM_0",							DI8DEVTYPE_KEYBOARD,	DIK_NUMPAD0     , CT_KEY		},
-	{ "NUM_PERIOD",					DI8DEVTYPE_KEYBOARD,	DIK_DECIMAL     , CT_KEY		},
-	{ "OEM_102",						DI8DEVTYPE_KEYBOARD,	DIK_OEM_102     , CT_KEY		},
-	{ "F11",								DI8DEVTYPE_KEYBOARD,	DIK_F11         , CT_KEY		},
-	{ "F12",								DI8DEVTYPE_KEYBOARD,	DIK_F12         , CT_KEY		},
-	{ "F13",								DI8DEVTYPE_KEYBOARD,	DIK_F13         , CT_KEY		},
-	{ "F14",								DI8DEVTYPE_KEYBOARD,	DIK_F14         , CT_KEY		},
-	{ "F15",								DI8DEVTYPE_KEYBOARD,	DIK_F15         , CT_KEY		},
-	{ "KANA",								DI8DEVTYPE_KEYBOARD,	DIK_KANA        , CT_KEY		},
-	{ "ABNT_C1",						DI8DEVTYPE_KEYBOARD,	DIK_ABNT_C1     , CT_KEY		},
-	{ "CONVERT",						DI8DEVTYPE_KEYBOARD,	DIK_CONVERT     , CT_KEY		},
-	{ "NOCONVERT",					DI8DEVTYPE_KEYBOARD,	DIK_NOCONVERT   , CT_KEY		},
-	{ "YEN",								DI8DEVTYPE_KEYBOARD,	DIK_YEN         , CT_KEY		},
-	{ "ABNT_C2",						DI8DEVTYPE_KEYBOARD,	DIK_ABNT_C2     , CT_KEY		},
-	{ "NUM_EQUALS",					DI8DEVTYPE_KEYBOARD,	DIK_NUMPADEQUALS, CT_KEY		},
-	{ "PREV_TRACK",					DI8DEVTYPE_KEYBOARD,	DIK_PREVTRACK   , CT_KEY		},
-	{ "AT",									DI8DEVTYPE_KEYBOARD,	DIK_AT          , CT_KEY		},
-	{ "COLON",							DI8DEVTYPE_KEYBOARD,	DIK_COLON       , CT_KEY		},
-	{ "UNDERLINE",					DI8DEVTYPE_KEYBOARD,	DIK_UNDERLINE   , CT_KEY		},
-	{ "KANJI",							DI8DEVTYPE_KEYBOARD,	DIK_KANJI       , CT_KEY		},
-	{ "STOP",								DI8DEVTYPE_KEYBOARD,	DIK_STOP        , CT_KEY		},
-	{ "AX",									DI8DEVTYPE_KEYBOARD,	DIK_AX          , CT_KEY		},
-	{ "UNLABELED",					DI8DEVTYPE_KEYBOARD,	DIK_UNLABELED   , CT_KEY		},
-	{ "NEXT_TRACK",					DI8DEVTYPE_KEYBOARD,	DIK_NEXTTRACK   , CT_KEY		},
-	{ "NUM_ENTER",					DI8DEVTYPE_KEYBOARD,	DIK_NUMPADENTER , CT_KEY		},
-	{ "RCTRL",							DI8DEVTYPE_KEYBOARD,	DIK_RCONTROL    , CT_KEY		},
-	{ "MUTE",								DI8DEVTYPE_KEYBOARD,	DIK_MUTE        , CT_KEY		},
-	{ "CALCULATOR",					DI8DEVTYPE_KEYBOARD,	DIK_CALCULATOR  , CT_KEY		},
-	{ "PLAY",								DI8DEVTYPE_KEYBOARD,	DIK_PLAYPAUSE   , CT_KEY		},
-	{ "MEDIA_STOP",					DI8DEVTYPE_KEYBOARD,	DIK_MEDIASTOP   , CT_KEY		},
-	{ "VOL_DOWN",						DI8DEVTYPE_KEYBOARD,	DIK_VOLUMEDOWN  , CT_KEY		},
-	{ "VOL_UP",							DI8DEVTYPE_KEYBOARD,	DIK_VOLUMEUP    , CT_KEY		},
-	{ "WEB_HOME",						DI8DEVTYPE_KEYBOARD,	DIK_WEBHOME     , CT_KEY		},
-	{ "NUM_COMMA",					DI8DEVTYPE_KEYBOARD,	DIK_NUMPADCOMMA , CT_KEY		},
-	{ "NUM_DIVIDE",					DI8DEVTYPE_KEYBOARD,	DIK_DIVIDE      , CT_KEY		},
-	{ "SYSRQ",							DI8DEVTYPE_KEYBOARD,	DIK_SYSRQ       , CT_KEY		},
-	{ "RALT",								DI8DEVTYPE_KEYBOARD,	DIK_RMENU       , CT_KEY		},
-	{ "PAUSE",							DI8DEVTYPE_KEYBOARD,	DIK_PAUSE       , CT_KEY		},
-	{ "HOME",								DI8DEVTYPE_KEYBOARD,	DIK_HOME        , CT_KEY		},
-	{ "UP",									DI8DEVTYPE_KEYBOARD,	DIK_UP          , CT_KEY		},
-	{ "PG_UP",							DI8DEVTYPE_KEYBOARD,	DIK_PRIOR       , CT_KEY		},
-	{ "LEFT",								DI8DEVTYPE_KEYBOARD,	DIK_LEFT        , CT_KEY		},
-	{ "RIGHT",							DI8DEVTYPE_KEYBOARD,	DIK_RIGHT       , CT_KEY		},
-	{ "END",								DI8DEVTYPE_KEYBOARD,	DIK_END         , CT_KEY		},
-	{ "DOWN",								DI8DEVTYPE_KEYBOARD,	DIK_DOWN        , CT_KEY		},
-	{ "PG_DOWN",						DI8DEVTYPE_KEYBOARD,	DIK_NEXT        , CT_KEY		},
-	{ "INSERT",							DI8DEVTYPE_KEYBOARD,	DIK_INSERT      , CT_KEY		},
-	{ "DELETE",							DI8DEVTYPE_KEYBOARD,	DIK_DELETE      , CT_KEY		},
-	{ "LWIN",								DI8DEVTYPE_KEYBOARD,	DIK_LWIN        , CT_KEY		},
-	{ "RWIN",								DI8DEVTYPE_KEYBOARD,	DIK_RWIN        , CT_KEY		},
-	{ "APP_MENU",						DI8DEVTYPE_KEYBOARD,	DIK_APPS        , CT_KEY		},
-	{ "POWER",							DI8DEVTYPE_KEYBOARD,	DIK_POWER       , CT_KEY		},
-	{ "SLEEP",							DI8DEVTYPE_KEYBOARD,	DIK_SLEEP       , CT_KEY		},
-	{ "WAKE",								DI8DEVTYPE_KEYBOARD,	DIK_WAKE        , CT_KEY		},
-	{ "WEB_SEARCH",					DI8DEVTYPE_KEYBOARD,	DIK_WEBSEARCH   , CT_KEY		},
-	{ "WEB_FAVOR",					DI8DEVTYPE_KEYBOARD,	DIK_WEBFAVORITES, CT_KEY		},
-	{ "WEB_REFRESH",				DI8DEVTYPE_KEYBOARD,	DIK_WEBREFRESH  , CT_KEY		},
-	{ "WEB_STOP",						DI8DEVTYPE_KEYBOARD,	DIK_WEBSTOP     , CT_KEY		},
-	{ "WEB_FORWARD",				DI8DEVTYPE_KEYBOARD,	DIK_WEBFORWARD  , CT_KEY		},
-	{ "WEB_BACK",						DI8DEVTYPE_KEYBOARD,	DIK_WEBBACK     , CT_KEY		},
-	{ "MYCOMPUTER",					DI8DEVTYPE_KEYBOARD,	DIK_MYCOMPUTER  , CT_KEY		},
-	{ "MAIL",								DI8DEVTYPE_KEYBOARD,	DIK_MAIL        , CT_KEY		},
-	{ "MEDIA_SELECT",				DI8DEVTYPE_KEYBOARD,	DIK_MEDIASELECT , CT_KEY		},
-////// MOUSE //////
-	{ "MOUSE_AXIS_X",				DI8DEVTYPE_MOUSE,			DIMOFS_X				, CT_AXIS		},
-	{ "MOUSE_AXIS_Y",				DI8DEVTYPE_MOUSE,			DIMOFS_Y				, CT_AXIS		},
-	{ "MOUSE_AXIS_Z",				DI8DEVTYPE_MOUSE,			DIMOFS_Z				, CT_AXIS		},
-	{ "MOUSE_BUTTON0",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON0	, CT_KEY		},
-	{ "MOUSE_BUTTON1",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON1	, CT_KEY		},
-	{ "MOUSE_BUTTON2",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON2	, CT_KEY		},
-	{ "MOUSE_BUTTON3",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON3	, CT_KEY		},
-	{ "MOUSE_BUTTON4",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON4	, CT_KEY		},
-	{ "MOUSE_BUTTON5",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON5	, CT_KEY		},
-	{ "MOUSE_BUTTON6",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON6	, CT_KEY		},
-	{ "MOUSE_BUTTON7",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON7	, CT_KEY		},
+const SKeyInfo kiKeyInfoList[] = {
+	////// KEYBOARD //////
+	{ "ESC", DI8DEVTYPE_KEYBOARD, DIK_ESCAPE, CT_KEY },
+	{ "1", DI8DEVTYPE_KEYBOARD, DIK_1, CT_KEY },
+	{ "2", DI8DEVTYPE_KEYBOARD, DIK_2, CT_KEY },
+	{ "3", DI8DEVTYPE_KEYBOARD, DIK_3, CT_KEY },
+	{ "4", DI8DEVTYPE_KEYBOARD, DIK_4, CT_KEY },
+	{ "5", DI8DEVTYPE_KEYBOARD, DIK_5, CT_KEY },
+	{ "6", DI8DEVTYPE_KEYBOARD, DIK_6, CT_KEY },
+	{ "7", DI8DEVTYPE_KEYBOARD, DIK_7, CT_KEY },
+	{ "8", DI8DEVTYPE_KEYBOARD, DIK_8, CT_KEY },
+	{ "9", DI8DEVTYPE_KEYBOARD, DIK_9, CT_KEY },
+	{ "0", DI8DEVTYPE_KEYBOARD, DIK_0, CT_KEY },
+	{ "-", DI8DEVTYPE_KEYBOARD, DIK_MINUS, CT_KEY },
+	{ "=", DI8DEVTYPE_KEYBOARD, DIK_EQUALS, CT_KEY },
+	{ "BACKSPACE", DI8DEVTYPE_KEYBOARD, DIK_BACK, CT_KEY },
+	{ "TAB", DI8DEVTYPE_KEYBOARD, DIK_TAB, CT_KEY },
+	{ "Q", DI8DEVTYPE_KEYBOARD, DIK_Q, CT_KEY },
+	{ "W", DI8DEVTYPE_KEYBOARD, DIK_W, CT_KEY },
+	{ "E", DI8DEVTYPE_KEYBOARD, DIK_E, CT_KEY },
+	{ "R", DI8DEVTYPE_KEYBOARD, DIK_R, CT_KEY },
+	{ "T", DI8DEVTYPE_KEYBOARD, DIK_T, CT_KEY },
+	{ "Y", DI8DEVTYPE_KEYBOARD, DIK_Y, CT_KEY },
+	{ "U", DI8DEVTYPE_KEYBOARD, DIK_U, CT_KEY },
+	{ "I", DI8DEVTYPE_KEYBOARD, DIK_I, CT_KEY },
+	{ "O", DI8DEVTYPE_KEYBOARD, DIK_O, CT_KEY },
+	{ "P", DI8DEVTYPE_KEYBOARD, DIK_P, CT_KEY },
+	{ "[", DI8DEVTYPE_KEYBOARD, DIK_LBRACKET, CT_KEY },
+	{ "]", DI8DEVTYPE_KEYBOARD, DIK_RBRACKET, CT_KEY },
+	{ "ENTER", DI8DEVTYPE_KEYBOARD, DIK_RETURN, CT_KEY },
+	{ "LCTRL", DI8DEVTYPE_KEYBOARD, DIK_LCONTROL, CT_KEY },
+	{ "A", DI8DEVTYPE_KEYBOARD, DIK_A, CT_KEY },
+	{ "S", DI8DEVTYPE_KEYBOARD, DIK_S, CT_KEY },
+	{ "D", DI8DEVTYPE_KEYBOARD, DIK_D, CT_KEY },
+	{ "F", DI8DEVTYPE_KEYBOARD, DIK_F, CT_KEY },
+	{ "G", DI8DEVTYPE_KEYBOARD, DIK_G, CT_KEY },
+	{ "H", DI8DEVTYPE_KEYBOARD, DIK_H, CT_KEY },
+	{ "J", DI8DEVTYPE_KEYBOARD, DIK_J, CT_KEY },
+	{ "K", DI8DEVTYPE_KEYBOARD, DIK_K, CT_KEY },
+	{ "L", DI8DEVTYPE_KEYBOARD, DIK_L, CT_KEY },
+	{ ";", DI8DEVTYPE_KEYBOARD, DIK_SEMICOLON, CT_KEY },
+	{ "'", DI8DEVTYPE_KEYBOARD, DIK_APOSTROPHE, CT_KEY },
+	{ "`", DI8DEVTYPE_KEYBOARD, DIK_GRAVE, CT_KEY },
+	{ "LSHIFT", DI8DEVTYPE_KEYBOARD, DIK_LSHIFT, CT_KEY },
+	{ "\\", DI8DEVTYPE_KEYBOARD, DIK_BACKSLASH, CT_KEY },
+	{ "Z", DI8DEVTYPE_KEYBOARD, DIK_Z, CT_KEY },
+	{ "X", DI8DEVTYPE_KEYBOARD, DIK_X, CT_KEY },
+	{ "C", DI8DEVTYPE_KEYBOARD, DIK_C, CT_KEY },
+	{ "V", DI8DEVTYPE_KEYBOARD, DIK_V, CT_KEY },
+	{ "B", DI8DEVTYPE_KEYBOARD, DIK_B, CT_KEY },
+	{ "N", DI8DEVTYPE_KEYBOARD, DIK_N, CT_KEY },
+	{ "M", DI8DEVTYPE_KEYBOARD, DIK_M, CT_KEY },
+	{ ",", DI8DEVTYPE_KEYBOARD, DIK_COMMA, CT_KEY },
+	{ ".", DI8DEVTYPE_KEYBOARD, DIK_PERIOD, CT_KEY },
+	{ "/", DI8DEVTYPE_KEYBOARD, DIK_SLASH, CT_KEY },
+	{ "RSHIFT", DI8DEVTYPE_KEYBOARD, DIK_RSHIFT, CT_KEY },
+	{ "NUM_MULTIPLY", DI8DEVTYPE_KEYBOARD, DIK_MULTIPLY, CT_KEY },
+	{ "LALT", DI8DEVTYPE_KEYBOARD, DIK_LMENU, CT_KEY },
+	{ "SPACE", DI8DEVTYPE_KEYBOARD, DIK_SPACE, CT_KEY },
+	{ "CAPITAL", DI8DEVTYPE_KEYBOARD, DIK_CAPITAL, CT_KEY },
+	{ "F1", DI8DEVTYPE_KEYBOARD, DIK_F1, CT_KEY },
+	{ "F2", DI8DEVTYPE_KEYBOARD, DIK_F2, CT_KEY },
+	{ "F3", DI8DEVTYPE_KEYBOARD, DIK_F3, CT_KEY },
+	{ "F4", DI8DEVTYPE_KEYBOARD, DIK_F4, CT_KEY },
+	{ "F5", DI8DEVTYPE_KEYBOARD, DIK_F5, CT_KEY },
+	{ "F6", DI8DEVTYPE_KEYBOARD, DIK_F6, CT_KEY },
+	{ "F7", DI8DEVTYPE_KEYBOARD, DIK_F7, CT_KEY },
+	{ "F8", DI8DEVTYPE_KEYBOARD, DIK_F8, CT_KEY },
+	{ "F9", DI8DEVTYPE_KEYBOARD, DIK_F9, CT_KEY },
+	{ "F10", DI8DEVTYPE_KEYBOARD, DIK_F10, CT_KEY },
+	{ "NUM", DI8DEVTYPE_KEYBOARD, DIK_NUMLOCK, CT_KEY },
+	{ "SCROLL", DI8DEVTYPE_KEYBOARD, DIK_SCROLL, CT_KEY },
+	{ "NUM_7", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD7, CT_KEY },
+	{ "NUM_8", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD8, CT_KEY },
+	{ "NUM_9", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD9, CT_KEY },
+	{ "NUM_MINUS", DI8DEVTYPE_KEYBOARD, DIK_SUBTRACT, CT_KEY },
+	{ "NUM_4", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD4, CT_KEY },
+	{ "NUM_5", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD5, CT_KEY },
+	{ "NUM_6", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD6, CT_KEY },
+	{ "NUM_PLUS", DI8DEVTYPE_KEYBOARD, DIK_ADD, CT_KEY },
+	{ "NUM_1", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD1, CT_KEY },
+	{ "NUM_2", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD2, CT_KEY },
+	{ "NUM_3", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD3, CT_KEY },
+	{ "NUM_0", DI8DEVTYPE_KEYBOARD, DIK_NUMPAD0, CT_KEY },
+	{ "NUM_PERIOD", DI8DEVTYPE_KEYBOARD, DIK_DECIMAL, CT_KEY },
+	{ "OEM_102", DI8DEVTYPE_KEYBOARD, DIK_OEM_102, CT_KEY },
+	{ "F11", DI8DEVTYPE_KEYBOARD, DIK_F11, CT_KEY },
+	{ "F12", DI8DEVTYPE_KEYBOARD, DIK_F12, CT_KEY },
+	{ "F13", DI8DEVTYPE_KEYBOARD, DIK_F13, CT_KEY },
+	{ "F14", DI8DEVTYPE_KEYBOARD, DIK_F14, CT_KEY },
+	{ "F15", DI8DEVTYPE_KEYBOARD, DIK_F15, CT_KEY },
+	{ "KANA", DI8DEVTYPE_KEYBOARD, DIK_KANA, CT_KEY },
+	{ "ABNT_C1", DI8DEVTYPE_KEYBOARD, DIK_ABNT_C1, CT_KEY },
+	{ "CONVERT", DI8DEVTYPE_KEYBOARD, DIK_CONVERT, CT_KEY },
+	{ "NOCONVERT", DI8DEVTYPE_KEYBOARD, DIK_NOCONVERT, CT_KEY },
+	{ "YEN", DI8DEVTYPE_KEYBOARD, DIK_YEN, CT_KEY },
+	{ "ABNT_C2", DI8DEVTYPE_KEYBOARD, DIK_ABNT_C2, CT_KEY },
+	{ "NUM_EQUALS", DI8DEVTYPE_KEYBOARD, DIK_NUMPADEQUALS, CT_KEY },
+	{ "PREV_TRACK", DI8DEVTYPE_KEYBOARD, DIK_PREVTRACK, CT_KEY },
+	{ "AT", DI8DEVTYPE_KEYBOARD, DIK_AT, CT_KEY },
+	{ "COLON", DI8DEVTYPE_KEYBOARD, DIK_COLON, CT_KEY },
+	{ "UNDERLINE", DI8DEVTYPE_KEYBOARD, DIK_UNDERLINE, CT_KEY },
+	{ "KANJI", DI8DEVTYPE_KEYBOARD, DIK_KANJI, CT_KEY },
+	{ "STOP", DI8DEVTYPE_KEYBOARD, DIK_STOP, CT_KEY },
+	{ "AX", DI8DEVTYPE_KEYBOARD, DIK_AX, CT_KEY },
+	{ "UNLABELED", DI8DEVTYPE_KEYBOARD, DIK_UNLABELED, CT_KEY },
+	{ "NEXT_TRACK", DI8DEVTYPE_KEYBOARD, DIK_NEXTTRACK, CT_KEY },
+	{ "NUM_ENTER", DI8DEVTYPE_KEYBOARD, DIK_NUMPADENTER, CT_KEY },
+	{ "RCTRL", DI8DEVTYPE_KEYBOARD, DIK_RCONTROL, CT_KEY },
+	{ "MUTE", DI8DEVTYPE_KEYBOARD, DIK_MUTE, CT_KEY },
+	{ "CALCULATOR", DI8DEVTYPE_KEYBOARD, DIK_CALCULATOR, CT_KEY },
+	{ "PLAY", DI8DEVTYPE_KEYBOARD, DIK_PLAYPAUSE, CT_KEY },
+	{ "MEDIA_STOP", DI8DEVTYPE_KEYBOARD, DIK_MEDIASTOP, CT_KEY },
+	{ "VOL_DOWN", DI8DEVTYPE_KEYBOARD, DIK_VOLUMEDOWN, CT_KEY },
+	{ "VOL_UP", DI8DEVTYPE_KEYBOARD, DIK_VOLUMEUP, CT_KEY },
+	{ "WEB_HOME", DI8DEVTYPE_KEYBOARD, DIK_WEBHOME, CT_KEY },
+	{ "NUM_COMMA", DI8DEVTYPE_KEYBOARD, DIK_NUMPADCOMMA, CT_KEY },
+	{ "NUM_DIVIDE", DI8DEVTYPE_KEYBOARD, DIK_DIVIDE, CT_KEY },
+	{ "SYSRQ", DI8DEVTYPE_KEYBOARD, DIK_SYSRQ, CT_KEY },
+	{ "RALT", DI8DEVTYPE_KEYBOARD, DIK_RMENU, CT_KEY },
+	{ "PAUSE", DI8DEVTYPE_KEYBOARD, DIK_PAUSE, CT_KEY },
+	{ "HOME", DI8DEVTYPE_KEYBOARD, DIK_HOME, CT_KEY },
+	{ "UP", DI8DEVTYPE_KEYBOARD, DIK_UP, CT_KEY },
+	{ "PG_UP", DI8DEVTYPE_KEYBOARD, DIK_PRIOR, CT_KEY },
+	{ "LEFT", DI8DEVTYPE_KEYBOARD, DIK_LEFT, CT_KEY },
+	{ "RIGHT", DI8DEVTYPE_KEYBOARD, DIK_RIGHT, CT_KEY },
+	{ "END", DI8DEVTYPE_KEYBOARD, DIK_END, CT_KEY },
+	{ "DOWN", DI8DEVTYPE_KEYBOARD, DIK_DOWN, CT_KEY },
+	{ "PG_DOWN", DI8DEVTYPE_KEYBOARD, DIK_NEXT, CT_KEY },
+	{ "INSERT", DI8DEVTYPE_KEYBOARD, DIK_INSERT, CT_KEY },
+	{ "DELETE", DI8DEVTYPE_KEYBOARD, DIK_DELETE, CT_KEY },
+	{ "LWIN", DI8DEVTYPE_KEYBOARD, DIK_LWIN, CT_KEY },
+	{ "RWIN", DI8DEVTYPE_KEYBOARD, DIK_RWIN, CT_KEY },
+	{ "APP_MENU", DI8DEVTYPE_KEYBOARD, DIK_APPS, CT_KEY },
+	{ "POWER", DI8DEVTYPE_KEYBOARD, DIK_POWER, CT_KEY },
+	{ "SLEEP", DI8DEVTYPE_KEYBOARD, DIK_SLEEP, CT_KEY },
+	{ "WAKE", DI8DEVTYPE_KEYBOARD, DIK_WAKE, CT_KEY },
+	{ "WEB_SEARCH", DI8DEVTYPE_KEYBOARD, DIK_WEBSEARCH, CT_KEY },
+	{ "WEB_FAVOR", DI8DEVTYPE_KEYBOARD, DIK_WEBFAVORITES, CT_KEY },
+	{ "WEB_REFRESH", DI8DEVTYPE_KEYBOARD, DIK_WEBREFRESH, CT_KEY },
+	{ "WEB_STOP", DI8DEVTYPE_KEYBOARD, DIK_WEBSTOP, CT_KEY },
+	{ "WEB_FORWARD", DI8DEVTYPE_KEYBOARD, DIK_WEBFORWARD, CT_KEY },
+	{ "WEB_BACK", DI8DEVTYPE_KEYBOARD, DIK_WEBBACK, CT_KEY },
+	{ "MYCOMPUTER", DI8DEVTYPE_KEYBOARD, DIK_MYCOMPUTER, CT_KEY },
+	{ "MAIL", DI8DEVTYPE_KEYBOARD, DIK_MAIL, CT_KEY },
+	{ "MEDIA_SELECT", DI8DEVTYPE_KEYBOARD, DIK_MEDIASELECT, CT_KEY },
+	////// MOUSE //////
+	{ "MOUSE_AXIS_X", DI8DEVTYPE_MOUSE, DIMOFS_X, CT_AXIS },
+	{ "MOUSE_AXIS_Y", DI8DEVTYPE_MOUSE, DIMOFS_Y, CT_AXIS },
+	{ "MOUSE_AXIS_Z", DI8DEVTYPE_MOUSE, DIMOFS_Z, CT_AXIS },
+	{ "MOUSE_BUTTON0", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON0, CT_KEY },
+	{ "MOUSE_BUTTON1", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON1, CT_KEY },
+	{ "MOUSE_BUTTON2", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON2, CT_KEY },
+	{ "MOUSE_BUTTON3", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON3, CT_KEY },
+	{ "MOUSE_BUTTON4", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON4, CT_KEY },
+	{ "MOUSE_BUTTON5", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON5, CT_KEY },
+	{ "MOUSE_BUTTON6", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON6, CT_KEY },
+	{ "MOUSE_BUTTON7", DI8DEVTYPE_MOUSE, DIMOFS_BUTTON7, CT_KEY },
 
-	{ "",								0 }
-};
+	{ "", 0 } };
 const int DIK_DBLCLK_MODIFIER = 0x4000;
 
 struct SKey
@@ -230,8 +228,16 @@ struct SKey
 	EControlType eType;
 	uint32_t dwLastPressed;
 
-	SKey(): ePOVAxis( PA_UNKNOWN ), nAction( 0 ), nDevType( 0 ), dwLastValue( 0xBAD ), eType( CT_UNKNOWN ), dwLastPressed(0) {}
-	SKey( int _nAction, int _nDevType, EControlType _eType, EPOVAxis _ePOVAxis = PA_UNKNOWN ): dwLastValue( 0xBAD ), nAction( _nAction ), nDevType( _nDevType ), eType( _eType ), ePOVAxis( _ePOVAxis ), dwLastPressed(0)  {}
+	SKey()
+			: ePOVAxis( PA_UNKNOWN ), nAction( 0 ), nDevType( 0 ), dwLastValue( 0xBAD ), eType( CT_UNKNOWN ),
+				dwLastPressed( 0 )
+	{
+	}
+	SKey( int _nAction, int _nDevType, EControlType _eType, EPOVAxis _ePOVAxis = PA_UNKNOWN )
+			: dwLastValue( 0xBAD ), nAction( _nAction ), nDevType( _nDevType ), eType( _eType ), ePOVAxis( _ePOVAxis ),
+				dwLastPressed( 0 )
+	{
+	}
 };
 struct SInputEvent
 {
@@ -255,9 +261,9 @@ struct SInputDevice
 #endif
 	//
 #if BOOST_OS_WINDOWS
-	SInputDevice(): bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pdiDevice( 0 ) {  }
+	SInputDevice() : bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pdiDevice( 0 ) {}
 #else
-	SInputDevice(): bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pJoystick( 0 ), joystickID( 0 ) {  }
+	SInputDevice() : bPoll( false ), bNeedResync( false ), dwDevType( 0 ), pJoystick( 0 ), joystickID( 0 ) {}
 #endif
 };
 #if BOOST_OS_WINDOWS
@@ -268,19 +274,19 @@ struct SInputDeviceEnum
 	std::string szName;
 	std::vector<DIOBJECTDATAFORMAT> vectorObjects;
 
-	SInputDeviceEnum(): nID( 0 ), nNumControls( 0 ), szName( "" ) {}
+	SInputDeviceEnum() : nID( 0 ), nNumControls( 0 ), szName( "" ) {}
 };
 #endif
 struct SInputDataFormat
 {
-	int32_t  lX;
-	int32_t  lY;
-	int32_t  lZ;
-	int32_t  lRX;
-	int32_t  lRY;
-	int32_t  lRZ;
-	int32_t  lPOV;
-	uint8_t  bButton[32];
+	int32_t lX;
+	int32_t lY;
+	int32_t lZ;
+	int32_t lRX;
+	int32_t lRY;
+	int32_t lRZ;
+	int32_t lPOV;
+	uint8_t bButton[32];
 };
 
 typedef std::vector<SInputEvent> CEventList;
@@ -345,8 +351,8 @@ static std::string ReadControlLocalName( int nAction );
 #if BOOST_OS_WINDOWS
 static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize );
 static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice );
-static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, PVOID pContext );
-static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lpdidObject, PVOID pContext );
+static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE *pdidInstance, PVOID pContext );
+static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE *lpdidObject, PVOID pContext );
 #endif
 
 //
@@ -409,34 +415,35 @@ static bool OpenDevices( int nSampleBufferSize )
 	HRESULT hRes;
 	NWin32Helper::com_ptr<IDirectInputDevice8> pdiTempDevice;
 
-	hRes = DirectInput8Create( GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)pdiInput.GetAddr(), 0 );
-	if( FAILED(hRes) )
+	hRes = DirectInput8Create(
+			GetModuleHandle( 0 ), DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)pdiInput.GetAddr(), 0 );
+	if ( FAILED( hRes ) )
 		return false;
 
 	hRes = pdiInput->CreateDevice( GUID_SysMouse, pdiTempDevice.GetAddr(), 0 );
 	if ( SUCCEEDED( hRes ) )
 	{
 		hRes = pdiTempDevice->SetDataFormat( &c_dfDIMouse2 );
-		if( FAILED(hRes) )
+		if ( FAILED( hRes ) )
 			return false;
 
 		DIPROPDWORD sProp;
-		sProp.diph.dwSize       = sizeof(DIPROPDWORD);
-		sProp.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-		sProp.diph.dwObj        = 0;
-		sProp.diph.dwHow        = DIPH_DEVICE;
-		sProp.dwData            = DIPROPAXISMODE_ABS;
+		sProp.diph.dwSize = sizeof( DIPROPDWORD );
+		sProp.diph.dwHeaderSize = sizeof( DIPROPHEADER );
+		sProp.diph.dwObj = 0;
+		sProp.diph.dwHow = DIPH_DEVICE;
+		sProp.dwData = DIPROPAXISMODE_ABS;
 		hRes = pdiTempDevice->SetProperty( DIPROP_AXISMODE, &sProp.diph );
-		if( FAILED(hRes) )
+		if ( FAILED( hRes ) )
 			return false;
 
-		sProp.diph.dwSize       = sizeof(DIPROPDWORD);
-		sProp.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-		sProp.diph.dwObj        = 0;
-		sProp.diph.dwHow        = DIPH_DEVICE;
-		sProp.dwData            = nSampleBufferSize > 0 ? nSampleBufferSize : SAMPLE_BUFFER_SIZE;
+		sProp.diph.dwSize = sizeof( DIPROPDWORD );
+		sProp.diph.dwHeaderSize = sizeof( DIPROPHEADER );
+		sProp.diph.dwObj = 0;
+		sProp.diph.dwHow = DIPH_DEVICE;
+		sProp.dwData = nSampleBufferSize > 0 ? nSampleBufferSize : SAMPLE_BUFFER_SIZE;
 		hRes = pdiTempDevice->SetProperty( DIPROP_BUFFERSIZE, &sProp.diph );
-		if( FAILED(hRes) )
+		if ( FAILED( hRes ) )
 			return false;
 
 		AddDeviceInfo( pdiTempDevice, c_dfDIMouse2.dwDataSize );
@@ -450,13 +457,13 @@ static bool OpenDevices( int nSampleBufferSize )
 			return false;
 
 		DIPROPDWORD sProp;
-		sProp.diph.dwSize       = sizeof(DIPROPDWORD);
-		sProp.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-		sProp.diph.dwObj        = 0;
-		sProp.diph.dwHow        = DIPH_DEVICE;
-		sProp.dwData            = SAMPLE_BUFFER_SIZE;
+		sProp.diph.dwSize = sizeof( DIPROPDWORD );
+		sProp.diph.dwHeaderSize = sizeof( DIPROPHEADER );
+		sProp.diph.dwObj = 0;
+		sProp.diph.dwHow = DIPH_DEVICE;
+		sProp.dwData = SAMPLE_BUFFER_SIZE;
 		hRes = pdiTempDevice->SetProperty( DIPROP_BUFFERSIZE, &sProp.diph );
-		if( FAILED(hRes) )
+		if ( FAILED( hRes ) )
 			return false;
 
 		AddDeviceInfo( pdiTempDevice, c_dfDIKeyboard.dwDataSize );
@@ -481,7 +488,8 @@ static bool SetCoopLevel()
 	{
 		HRESULT hRes;
 
-		if ( ( is_debugger_present() && ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != DI8DEVTYPE_MOUSE ) ) || bNonExclusiveMode )
+		if ( ( is_debugger_present() && ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != DI8DEVTYPE_MOUSE ) ) ||
+		     bNonExclusiveMode )
 			hRes = iTempDevice->pdiDevice->SetCooperativeLevel( hWindow, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND );
 		else
 		{
@@ -492,7 +500,7 @@ static bool SetCoopLevel()
 				hRes = iTempDevice->pdiDevice->SetCooperativeLevel( hWindow, DISCL_EXCLUSIVE | DISCL_FOREGROUND );
 		}
 
-		if( FAILED( hRes ) )
+		if ( FAILED( hRes ) )
 			return false;
 	}
 
@@ -549,8 +557,8 @@ static float ReadControlGranularity( const SKey &sKey )
 		diProp.diph.dwHeaderSize = sizeof( DIPROPHEADER );
 		diProp.diph.dwHow = DIPH_BYOFFSET;
 		diProp.diph.dwObj = INPUT_GETACTIONOFFS( sKey.nAction );
-		HRESULT hRes = iTempDevice->pdiDevice->GetProperty( DIPROP_GRANULARITY, (DIPROPHEADER*)&diProp );
-		if ( SUCCEEDED(hRes) )
+		HRESULT hRes = iTempDevice->pdiDevice->GetProperty( DIPROP_GRANULARITY, (DIPROPHEADER *)&diProp );
+		if ( SUCCEEDED( hRes ) )
 			return (float)diProp.dwData;
 	}
 
@@ -566,10 +574,10 @@ static std::string ReadControlLocalName( int nAction )
 		if ( GET_DIDEVICE_TYPE( iTempDevice->dwDevType ) != sKey.nDevType )
 			continue;
 		DIDEVICEOBJECTINSTANCE objInstance;
-		memset( &objInstance, 0, sizeof(objInstance) );
+		memset( &objInstance, 0, sizeof( objInstance ) );
 		objInstance.dwSize = sizeof( objInstance );
-		HRESULT hRes = iTempDevice->pdiDevice->GetObjectInfo( &objInstance, INPUT_GETACTIONOFFS(nAction), DIPH_BYOFFSET );
-		return SUCCEEDED(hRes) ? objInstance.tszName : "";
+		HRESULT hRes = iTempDevice->pdiDevice->GetObjectInfo( &objInstance, INPUT_GETACTIONOFFS( nAction ), DIPH_BYOFFSET );
+		return SUCCEEDED( hRes ) ? objInstance.tszName : "";
 	}
 	return "";
 }
@@ -629,12 +637,12 @@ void PumpMessages( bool bFocus )
 		{
 			for ( int nTemp = 0; nTemp < dwElements; ++nTemp )
 			{
-				const DIDEVICEOBJECTDATA &did = didObjects[ nTemp ];
+				const DIDEVICEOBJECTDATA &did = didObjects[nTemp];
 				if ( actionIDs.find( INPUT_KEYID( iTempDevice->nID, did.dwOfs ) ) != actionIDs.end() )
 				{
-					SKey &sKey = actionIDs[ INPUT_KEYID( iTempDevice->nID, did.dwOfs ) ];
+					SKey &sKey = actionIDs[INPUT_KEYID( iTempDevice->nID, did.dwOfs )];
 					SInputEvent &sEvent = events[nNumEvents++];
-					FillEventInfo( sEvent, sKey, didObjects[ nTemp ] );
+					FillEventInfo( sEvent, sKey, didObjects[nTemp] );
 					sEvent.sMessage.bState = true;
 
 					if ( sKey.eType == CT_KEY )
@@ -645,9 +653,9 @@ void PumpMessages( bool bFocus )
 
 							if ( sEvent.sMessage.tTime - sKey.dwLastPressed < TIME_DIFF_DBL_CLK )
 							{
-								SKey &sDblClkKey = actionIDs[ INPUT_KEYID( iTempDevice->nID, did.dwOfs | DIK_DBLCLK_MODIFIER ) ];
+								SKey &sDblClkKey = actionIDs[INPUT_KEYID( iTempDevice->nID, did.dwOfs | DIK_DBLCLK_MODIFIER )];
 								SInputEvent &sDblClkEvent = events[nNumEvents++];
-								FillEventInfo( sDblClkEvent, sDblClkKey, didObjects[ nTemp ] );
+								FillEventInfo( sDblClkEvent, sDblClkKey, didObjects[nTemp] );
 								sDblClkEvent.sMessage.bState = true;
 								sKey.dwLastPressed = 0;
 							}
@@ -658,11 +666,11 @@ void PumpMessages( bool bFocus )
 						{
 							sEvent.sMessage.bState = false;
 
-							SKey &sDblClkKey = actionIDs[ INPUT_KEYID( iTempDevice->nID, did.dwOfs | DIK_DBLCLK_MODIFIER ) ];
+							SKey &sDblClkKey = actionIDs[INPUT_KEYID( iTempDevice->nID, did.dwOfs | DIK_DBLCLK_MODIFIER )];
 							if ( sDblClkKey.dwLastValue != did.dwData )
 							{
 								SInputEvent &sDblClkEvent = events[nNumEvents++];
-								FillEventInfo( sDblClkEvent, sDblClkKey, didObjects[ nTemp ] );
+								FillEventInfo( sDblClkEvent, sDblClkKey, didObjects[nTemp] );
 								sDblClkEvent.sMessage.bState = false;
 							}
 						}
@@ -698,25 +706,23 @@ void PumpMessages( bool bFocus )
 
 			if ( iTempEvent->sMessage.cType == CT_POV )
 			{
-				const SKey &sKeyX = actionIDs[ INPUT_KEYIDEX( INPUT_GETACTIONDEVICEID( iTempEvent->sMessage.nAction ), INPUT_GETACTIONOFFS( iTempEvent->sMessage.nAction ), 1 ) ];
-				SMessage sMessageX(
-					sKeyX.nAction, sKeyX.ePOVAxis, sKeyX.eType,
-					0,
-					true,
-					iTempEvent->sMessage.tTime );
-				if ( iTempEvent->sMessage.nParam != - 1 )
-					sMessageX.nParam = cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+				const SKey &sKeyX = actionIDs[INPUT_KEYIDEX( INPUT_GETACTIONDEVICEID( iTempEvent->sMessage.nAction ),
+				                                             INPUT_GETACTIONOFFS( iTempEvent->sMessage.nAction ),
+				                                             1 )];
+				SMessage sMessageX( sKeyX.nAction, sKeyX.ePOVAxis, sKeyX.eType, 0, true, iTempEvent->sMessage.tTime );
+				if ( iTempEvent->sMessage.nParam != -1 )
+					sMessageX.nParam =
+							cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
 
 				messages.push_back( sMessageX );
 
-				const SKey &sKeyY = actionIDs[ INPUT_KEYIDEX( INPUT_GETACTIONDEVICEID( iTempEvent->sMessage.nAction ), INPUT_GETACTIONOFFS( iTempEvent->sMessage.nAction ), 2 ) ];
-				SMessage sMessageY(
-					sKeyY.nAction, sKeyY.ePOVAxis, sKeyY.eType,
-					0,
-					true,
-					iTempEvent->sMessage.tTime );
-				if ( iTempEvent->sMessage.nParam != - 1 )
-					sMessageY.nParam = sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
+				const SKey &sKeyY = actionIDs[INPUT_KEYIDEX( INPUT_GETACTIONDEVICEID( iTempEvent->sMessage.nAction ),
+				                                             INPUT_GETACTIONOFFS( iTempEvent->sMessage.nAction ),
+				                                             2 )];
+				SMessage sMessageY( sKeyY.nAction, sKeyY.ePOVAxis, sKeyY.eType, 0, true, iTempEvent->sMessage.tTime );
+				if ( iTempEvent->sMessage.nParam != -1 )
+					sMessageY.nParam =
+							sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
 				messages.push_back( sMessageY );
 			}
 		}
@@ -732,7 +738,6 @@ void PumpMessages( bool bFocus )
 		ResyncDevice( *iTempDevice );
 	}
 }
-
 
 static void ResyncDevice( const SInputDevice &sDevice )
 {
@@ -754,9 +759,9 @@ static void ResyncDevice( const SInputDevice &sDevice )
 				uint8_t *pData = &( sBuffer[INPUT_GETACTIONOFFS( sKey.nAction )] );
 
 				if ( sKey.eType == CT_KEY )
-					dwData = *(uint8_t*)pData;
+					dwData = *(uint8_t *)pData;
 				else
-					dwData = *(uint32_t*)pData;
+					dwData = *(uint32_t *)pData;
 			}
 
 			if ( sKey.dwLastValue == dwData )
@@ -771,12 +776,12 @@ static void ResyncDevice( const SInputDevice &sDevice )
 					bState = false;
 			}
 			messages.insert( messages.end(),
-				SMessage(
-					sKey.nAction, sKey.ePOVAxis, sKey.eType,
-					(int)dwData - (int)sKey.dwLastValue,
-					bState,
-					GetCurrentTimeMilliseconds() )
-			);
+			                 SMessage( sKey.nAction,
+			                           sKey.ePOVAxis,
+			                           sKey.eType,
+			                           (int)dwData - (int)sKey.dwLastValue,
+			                           bState,
+			                           GetCurrentTimeMilliseconds() ) );
 
 			sKey.dwLastValue = dwData;
 		}
@@ -805,7 +810,7 @@ bool IsDInputDiscardableKey( const SMessage &mMsg )
 
 	if ( actionIDs.find( mMsg.nAction ) == actionIDs.end() )
 		return false;
-	const SKey &key = actionIDs[ mMsg.nAction ];
+	const SKey &key = actionIDs[mMsg.nAction];
 	if ( key.nDevType != DI8DEVTYPE_KEYBOARD )
 		return false;
 	///const string szName = idNames[ key.nAction ];
@@ -837,7 +842,7 @@ void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity )
 
 	const SKey &sKey = actionIDs[nAction];
 	*pcType = sKey.eType;
-	switch( sKey.eType )
+	switch ( sKey.eType )
 	{
 		case CT_KEY:
 			*pfGranularity = 1.0f;
@@ -860,7 +865,6 @@ std::string GetControlLocalName( int nAction )
 
 	return ReadControlLocalName( nAction );
 }
-
 
 //
 //	Internal functions
@@ -929,7 +933,7 @@ static void PumpDeviceEvents()
 
 static void ReleaseKeyboardState()
 {
-	DebugTrace("Release keyboard state");
+	DebugTrace( "Release keyboard state" );
 	const uint32_t dwTime = GetCurrentTimeMilliseconds();
 	for ( std::unordered_map<uint32_t, SKey>::iterator iTemp = actionIDs.begin(); iTemp != actionIDs.end(); ++iTemp )
 	{
@@ -939,13 +943,7 @@ static void ReleaseKeyboardState()
 
 		if ( sKey.dwLastValue & 0x80 )
 		{
-			messages.push_back(
-				SMessage(
-					sKey.nAction, sKey.ePOVAxis, sKey.eType,
-					-(int)sKey.dwLastValue,
-					false,
-					dwTime )
-			);
+			messages.push_back( SMessage( sKey.nAction, sKey.ePOVAxis, sKey.eType, -(int)sKey.dwLastValue, false, dwTime ) );
 		}
 
 		sKey.dwLastValue = 0;
@@ -1013,54 +1011,56 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	siDevice.bPoll = false;
 	siDevice.szName = didInstance.tszProductName;
 	siDevice.dwDevType = didInstance.dwDevType;
-	siDevice.dwFormatSize = sizeof(SInputDataFormat);
+	siDevice.dwFormatSize = sizeof( SInputDataFormat );
 	siDevice.pdiDevice = pdiDevice;
-	if ( ( didCaps.dwFlags & DIDC_POLLEDDATAFORMAT ) || ( didCaps.dwFlags & DIDC_POLLEDDEVICE  ) )
+	if ( ( didCaps.dwFlags & DIDC_POLLEDDATAFORMAT ) || ( didCaps.dwFlags & DIDC_POLLEDDEVICE ) )
 		siDevice.bPoll = true;
 
-	DebugTrace("INPUT: polled device: %s\n", siDevice.bPoll ? "yes" : "no" );
+	DebugTrace( "INPUT: polled device: %s\n", siDevice.bPoll ? "yes" : "no" );
 
 	SInputDeviceEnum sDeviceEnum;
 	sDeviceEnum.nID = siDevice.nID;
 	sDeviceEnum.szName = MakeDeviceEnumName( GET_DIDEVICE_TYPE( didInstance.dwDevType ) );
 
 	hRes = pdiDevice->EnumObjects( EnumDeviceObjectsCallback, &sDeviceEnum, DIDFT_ALL );
-	if ( FAILED(hRes) )
+	if ( FAILED( hRes ) )
 		return;
 
 	DIDATAFORMAT diDataFormat;
-	diDataFormat.dwSize			= sizeof(DIDATAFORMAT);
-	diDataFormat.dwObjSize	= sizeof(DIOBJECTDATAFORMAT);
-	diDataFormat.dwDataSize	= siDevice.dwFormatSize;
-	diDataFormat.dwFlags		= DIDF_ABSAXIS;
-	diDataFormat.dwNumObjs	= sDeviceEnum.nNumControls;
-	diDataFormat.rgodf			= &( sDeviceEnum.vectorObjects[0] );
+	diDataFormat.dwSize = sizeof( DIDATAFORMAT );
+	diDataFormat.dwObjSize = sizeof( DIOBJECTDATAFORMAT );
+	diDataFormat.dwDataSize = siDevice.dwFormatSize;
+	diDataFormat.dwFlags = DIDF_ABSAXIS;
+	diDataFormat.dwNumObjs = sDeviceEnum.nNumControls;
+	diDataFormat.rgodf = &( sDeviceEnum.vectorObjects[0] );
 	hRes = pdiDevice->SetDataFormat( &diDataFormat );
-	if( FAILED(hRes) )
+	if ( FAILED( hRes ) )
 		return;
 
 	DIPROPDWORD dipdw;
-	dipdw.diph.dwSize       = sizeof(DIPROPDWORD);
-	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-	dipdw.diph.dwObj        = 0;
-	dipdw.diph.dwHow        = DIPH_DEVICE;
-	dipdw.dwData            = SAMPLE_BUFFER_SIZE;
+	dipdw.diph.dwSize = sizeof( DIPROPDWORD );
+	dipdw.diph.dwHeaderSize = sizeof( DIPROPHEADER );
+	dipdw.diph.dwObj = 0;
+	dipdw.diph.dwHow = DIPH_DEVICE;
+	dipdw.dwData = SAMPLE_BUFFER_SIZE;
 	hRes = pdiDevice->SetProperty( DIPROP_BUFFERSIZE, &dipdw.diph );
-	if( FAILED(hRes) )
+	if ( FAILED( hRes ) )
 		return;
 
-	for ( std::vector<DIOBJECTDATAFORMAT>::iterator iTemp = sDeviceEnum.vectorObjects.begin(); iTemp != sDeviceEnum.vectorObjects.end(); iTemp++ )
+	for ( std::vector<DIOBJECTDATAFORMAT>::iterator iTemp = sDeviceEnum.vectorObjects.begin();
+	      iTemp != sDeviceEnum.vectorObjects.end();
+	      iTemp++ )
 	{
 		if ( ( iTemp->dwType & DIDFT_AXIS ) == 0 )
 			continue;
 
 		DIPROPRANGE dipRange;
-		dipRange.diph.dwSize       = sizeof(DIPROPRANGE);
-		dipRange.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-		dipRange.diph.dwHow        = DIPH_BYID;
-		dipRange.diph.dwObj        = iTemp->dwType;
-		dipRange.lMin              = -AXIS_RANGE_VALUE;
-		dipRange.lMax              = AXIS_RANGE_VALUE;
+		dipRange.diph.dwSize = sizeof( DIPROPRANGE );
+		dipRange.diph.dwHeaderSize = sizeof( DIPROPHEADER );
+		dipRange.diph.dwHow = DIPH_BYID;
+		dipRange.diph.dwObj = iTemp->dwType;
+		dipRange.lMin = -AXIS_RANGE_VALUE;
+		dipRange.lMax = AXIS_RANGE_VALUE;
 
 		pdiDevice->SetProperty( DIPROP_RANGE, &dipRange.diph );
 	}
@@ -1076,13 +1076,13 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 static void AddDeviceKey( int nDeviceID, int nDevType, int nDevAction, EControlType cType, const char *pszName )
 {
 	int nAction = INPUT_KEYID( nDeviceID, nDevAction );
-	SKey &sActionKey = actionIDs[ nAction ];
+	SKey &sActionKey = actionIDs[nAction];
 
 	sActionKey.eType = cType;
 	sActionKey.nAction = nAction;
 	sActionKey.nDevType = nDevType;
-	nameIDs[ pszName ] = nAction;
-	idNames[ nAction ] = pszName;
+	nameIDs[pszName] = nAction;
+	idNames[nAction] = pszName;
 }
 
 // Имя устройства, под которым будут перечислены его контролы
@@ -1093,16 +1093,16 @@ static void AddDeviceKey( int nDeviceID, int nDevType, int nDevAction, EControlT
 // not attach.
 static std::string MakeDeviceEnumName( int nDevType )
 {
-	switch( nDevType )
+	switch ( nDevType )
 	{
-	case DI8DEVTYPE_GAMEPAD:
-		return fmt::format( "GAMEPAD{}", nCounter[0]++ );
-	case DI8DEVTYPE_DRIVING:
-		return fmt::format( "DRIVING{}", nCounter[1]++ );
-	case DI8DEVTYPE_JOYSTICK:
-		return fmt::format( "JOYSTICK{}", nCounter[2]++ );
-	default:
-		return fmt::format( "GAMECTRL{}", nCounter[3]++ );
+		case DI8DEVTYPE_GAMEPAD:
+			return fmt::format( "GAMEPAD{}", nCounter[0]++ );
+		case DI8DEVTYPE_DRIVING:
+			return fmt::format( "DRIVING{}", nCounter[1]++ );
+		case DI8DEVTYPE_JOYSTICK:
+			return fmt::format( "JOYSTICK{}", nCounter[2]++ );
+		default:
+			return fmt::format( "GAMECTRL{}", nCounter[3]++ );
 	}
 }
 
@@ -1118,10 +1118,10 @@ static void AddDeviceControl( int nDeviceID, int nDevType, int nOfs, EControlTyp
 	sKey.nDevType = nDevType;
 
 	nameIDs[szName] = sKey.nAction;
-	idNames[ sKey.nAction ] = szName;
-	actionIDs[ sKey.nAction ] = sKey;
+	idNames[sKey.nAction] = szName;
+	actionIDs[sKey.nAction] = sKey;
 
-	DebugTrace("INPUT:\tNew control found! Add new control %s\n", szName.c_str() );
+	DebugTrace( "INPUT:\tNew control found! Add new control %s\n", szName.c_str() );
 
 	if ( eType != CT_POV )
 		return;
@@ -1129,34 +1129,34 @@ static void AddDeviceControl( int nDeviceID, int nDevType, int nOfs, EControlTyp
 	sKey.nAction = INPUT_KEYIDEX( nDeviceID, nOfs, 1 );
 	sKey.ePOVAxis = PA_X;
 	nameIDs[szName + "_X"] = sKey.nAction;
-	idNames[ sKey.nAction ] = szName + "_X";
-	actionIDs[ sKey.nAction ] = sKey;
+	idNames[sKey.nAction] = szName + "_X";
+	actionIDs[sKey.nAction] = sKey;
 
-	DebugTrace("INPUT:\tNew control found! Add new control %s\n", ( szName + "_X" ).c_str() );
+	DebugTrace( "INPUT:\tNew control found! Add new control %s\n", ( szName + "_X" ).c_str() );
 
 	sKey.nAction = INPUT_KEYIDEX( nDeviceID, nOfs, 2 );
 	sKey.ePOVAxis = PA_Y;
 	nameIDs[szName + "_Y"] = sKey.nAction;
-	idNames[ sKey.nAction ] = szName + "_Y";
-	actionIDs[ sKey.nAction ] = sKey;
+	idNames[sKey.nAction] = szName + "_Y";
+	actionIDs[sKey.nAction] = sKey;
 
-	DebugTrace("INPUT:\tNew control found! Add new control %s\n", ( szName + "_Y" ).c_str() );
+	DebugTrace( "INPUT:\tNew control found! Add new control %s\n", ( szName + "_Y" ).c_str() );
 }
 
 static void AddDeviceKeys( int nID, int nDevType )
 {
 	int nTemp = 0;
-	while( kiKeyInfoList[nTemp].nDevType != 0 )
+	while ( kiKeyInfoList[nTemp].nDevType != 0 )
 	{
-		const SKeyInfo &key = kiKeyInfoList[ nTemp ];
+		const SKeyInfo &key = kiKeyInfoList[nTemp];
 		if ( key.nDevType == nDevType )
 		{
-			AddDeviceKey( nID, nDevType, key.nDevAction,  key.cType, key.pszName );
+			AddDeviceKey( nID, nDevType, key.nDevAction, key.cType, key.pszName );
 			// add dbl clk event
 			if ( key.cType == CT_KEY )
 			{
 				std::string szName = std::string( key.pszName ) + "_DBLCLK";
-				AddDeviceKey( nID, nDevType, key.nDevAction | DIK_DBLCLK_MODIFIER,  key.cType, szName.c_str() );
+				AddDeviceKey( nID, nDevType, key.nDevAction | DIK_DBLCLK_MODIFIER, key.cType, szName.c_str() );
 			}
 		}
 		nTemp++;
@@ -1165,25 +1165,25 @@ static void AddDeviceKeys( int nID, int nDevType )
 
 #if BOOST_OS_WINDOWS
 
-static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, PVOID pContext )
+static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE *pdidInstance, PVOID pContext )
 {
 	HRESULT hRes;
 	NWin32Helper::com_ptr<IDirectInputDevice8> pdiTempDevice;
 
 	hRes = pdiInput->CreateDevice( pdidInstance->guidInstance, pdiTempDevice.GetAddr(), NULL );
-	if( FAILED( hRes ) )
+	if ( FAILED( hRes ) )
 		return DIENUM_CONTINUE;
 
-	DebugTrace("INPUT: New device found! Add new device %s\n", pdidInstance->tszProductName );
+	DebugTrace( "INPUT: New device found! Add new device %s\n", pdidInstance->tszProductName );
 
 	AddDeviceEnum( pdiTempDevice );
 
 	return DIENUM_CONTINUE;
 }
 
-static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lpdidObject, PVOID pContext )
+static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE *lpdidObject, PVOID pContext )
 {
-	SInputDeviceEnum *psDeviceEnum = static_cast<SInputDeviceEnum*>(pContext);
+	SInputDeviceEnum *psDeviceEnum = static_cast<SInputDeviceEnum *>( pContext );
 	ASSERT( psDeviceEnum != 0 );
 
 	std::string szControlName;
@@ -1262,10 +1262,10 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 		szControlName += fmt::format( "_BUTTON{}", DIDFT_GETINSTANCE( lpdidObject->dwType ) );
 		diObjectFormat.pguid = &GUID_Button;
 
-		if( DIDFT_GETINSTANCE( lpdidObject->dwType ) > 32 )
+		if ( DIDFT_GETINSTANCE( lpdidObject->dwType ) > 32 )
 			return DIENUM_CONTINUE;
 
-		diObjectFormat.dwOfs = FIELD_OFFSET( SInputDataFormat, bButton[ DIDFT_GETINSTANCE( lpdidObject->dwType ) ] );
+		diObjectFormat.dwOfs = FIELD_OFFSET( SInputDataFormat, bButton[DIDFT_GETINSTANCE( lpdidObject->dwType )] );
 	}
 	else if ( lpdidObject->guidType == GUID_Key )
 	{
@@ -1291,7 +1291,8 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 	psDeviceEnum->nNumControls++;
 	psDeviceEnum->vectorObjects.push_back( diObjectFormat );
 
-	AddDeviceControl( psDeviceEnum->nID, GET_DIDEVICE_TYPE( diObjectFormat.dwType ), diObjectFormat.dwOfs, eType, szControlName );
+	AddDeviceControl(
+			psDeviceEnum->nID, GET_DIDEVICE_TYPE( diObjectFormat.dwType ), diObjectFormat.dwOfs, eType, szControlName );
 
 	return DIENUM_CONTINUE;
 }
@@ -1329,345 +1330,372 @@ static BOOL CALLBACK EnumDeviceObjectsCallback( const DIDEVICEOBJECTINSTANCE* lp
 namespace
 {
 
-//! One buffered event, tagged with the device that produced it.
-struct SWatchedEvent
-{
-	int nDeviceID;
-	DIDEVICEOBJECTDATA did;
-};
-
-std::mutex watchMutex;
-std::vector<SWatchedEvent> watchedEvents;
-uint32_t dwWatchSequence = 0;
-bool bWatchOverflow = false;
-
-// GTK keeps X11 keyboard focus on the editor's top-level window. SDL wraps
-// its child viewport, so its keyboard state/focus cannot describe that view.
-SDL_Window *pHostedWindow = nullptr;
-bool bHostedFocus = false;
-bool hostedKeys[SDL_SCANCODE_COUNT] = {};
-SDL_MouseButtonFlags hostedButtons = 0;
-
-// The mouse axes as DIPROPAXISMODE_ABS reported them: running totals rather than
-// deltas, because FillEventInfo takes the difference between an event's value
-// and the last one it saw. The wheel is one of them, which is why it has to be
-// accumulated as well rather than passed straight through.
-int32_t nMouseState[3] = { 0, 0, 0 };
-
-int nKeyboardDeviceID = -1;
-int nMouseDeviceID = -1;
-
-//! An SDL event timestamp on the clock GetCurrentTimeMilliseconds returns.
-//!
-//! SDL counts nanoseconds from its own initialisation and the engine counts
-//! milliseconds from an unspecified steady_clock epoch, so the two cannot be
-//! compared. Converting through the event's age rather than through the epochs
-//! keeps the spacing between two events in a frame, which is what the
-//! accumulators integrate over.
-uint32_t EventTimeMilliseconds( uint64_t nTimestampNs )
-{
-	const uint64_t nNowNs = SDL_GetTicksNS();
-	const uint64_t nAgeNs = nNowNs > nTimestampNs ? nNowNs - nTimestampNs : 0;
-	return GetCurrentTimeMilliseconds() - (uint32_t)( nAgeNs / 1000000 );
-}
-
-//! A stick axis on the range AddDeviceEnum asks DirectInput for.
-//!
-//! Not cosmetic. POWER_MIN_LIMIT in Input/BindInternal.h is an absolute
-//! threshold on the accumulated power, and every bindconfigure coefficient a cfg
-//! sets is calibrated against this range, so reporting SDL's own would move both
-//! by a factor of three.
-int32_t ScaleJoystickAxis( int16_t nValue )
-{
-	return ( (int32_t)nValue * AXIS_RANGE_VALUE ) / 32767;
-}
-
-//! A hat position as a POV angle in hundredths of a degree, clockwise from up,
-//! which is how DirectInput reports one. 0xFFFFFFFF is centred.
-uint32_t HatToPov( uint8_t nHat )
-{
-	switch ( nHat )
+	//! One buffered event, tagged with the device that produced it.
+	struct SWatchedEvent
 	{
-	case SDL_HAT_UP: return 0;
-	case SDL_HAT_RIGHTUP: return 4500;
-	case SDL_HAT_RIGHT: return 9000;
-	case SDL_HAT_RIGHTDOWN: return 13500;
-	case SDL_HAT_DOWN: return 18000;
-	case SDL_HAT_LEFTDOWN: return 22500;
-	case SDL_HAT_LEFT: return 27000;
-	case SDL_HAT_LEFTUP: return 31500;
-	default: return 0xFFFFFFFF;
+		int nDeviceID;
+		DIDEVICEOBJECTDATA did;
+	};
+
+	std::mutex watchMutex;
+	std::vector<SWatchedEvent> watchedEvents;
+	uint32_t dwWatchSequence = 0;
+	bool bWatchOverflow = false;
+
+	// GTK keeps X11 keyboard focus on the editor's top-level window. SDL wraps
+	// its child viewport, so its keyboard state/focus cannot describe that view.
+	SDL_Window *pHostedWindow = nullptr;
+	bool bHostedFocus = false;
+	bool hostedKeys[SDL_SCANCODE_COUNT] = {};
+	SDL_MouseButtonFlags hostedButtons = 0;
+
+	// The mouse axes as DIPROPAXISMODE_ABS reported them: running totals rather than
+	// deltas, because FillEventInfo takes the difference between an event's value
+	// and the last one it saw. The wheel is one of them, which is why it has to be
+	// accumulated as well rather than passed straight through.
+	int32_t nMouseState[3] = { 0, 0, 0 };
+
+	int nKeyboardDeviceID = -1;
+	int nMouseDeviceID = -1;
+
+	//! An SDL event timestamp on the clock GetCurrentTimeMilliseconds returns.
+	//!
+	//! SDL counts nanoseconds from its own initialisation and the engine counts
+	//! milliseconds from an unspecified steady_clock epoch, so the two cannot be
+	//! compared. Converting through the event's age rather than through the epochs
+	//! keeps the spacing between two events in a frame, which is what the
+	//! accumulators integrate over.
+	uint32_t EventTimeMilliseconds( uint64_t nTimestampNs )
+	{
+		const uint64_t nNowNs = SDL_GetTicksNS();
+		const uint64_t nAgeNs = nNowNs > nTimestampNs ? nNowNs - nTimestampNs : 0;
+		return GetCurrentTimeMilliseconds() - (uint32_t)( nAgeNs / 1000000 );
 	}
-}
 
-//! The control offset of a stick axis within SInputDataFormat, or -1 for an axis
-//! past the six that format names. DirectInput gave those to sliders, which
-//! EnumDeviceObjectsCallback declines to register, so they are dropped here too.
-int JoystickAxisOffset( int nAxis )
-{
-	switch ( nAxis )
+	//! A stick axis on the range AddDeviceEnum asks DirectInput for.
+	//!
+	//! Not cosmetic. POWER_MIN_LIMIT in Input/BindInternal.h is an absolute
+	//! threshold on the accumulated power, and every bindconfigure coefficient a cfg
+	//! sets is calibrated against this range, so reporting SDL's own would move both
+	//! by a factor of three.
+	int32_t ScaleJoystickAxis( int16_t nValue )
 	{
-	case 0: return (int)offsetof( SInputDataFormat, lX );
-	case 1: return (int)offsetof( SInputDataFormat, lY );
-	case 2: return (int)offsetof( SInputDataFormat, lZ );
-	case 3: return (int)offsetof( SInputDataFormat, lRX );
-	case 4: return (int)offsetof( SInputDataFormat, lRY );
-	case 5: return (int)offsetof( SInputDataFormat, lRZ );
-	default: return -1;
+		return ( (int32_t)nValue * AXIS_RANGE_VALUE ) / 32767;
 	}
-}
 
-//! The device type DirectInput would have reported, which decides the name
-//! prefix a cfg binds: GAMEPAD0, DRIVING0, JOYSTICK0 or GAMECTRL0.
-int JoystickDeviceType( SDL_JoystickType eType )
-{
-	switch ( eType )
+	//! A hat position as a POV angle in hundredths of a degree, clockwise from up,
+	//! which is how DirectInput reports one. 0xFFFFFFFF is centred.
+	uint32_t HatToPov( uint8_t nHat )
 	{
-	case SDL_JOYSTICK_TYPE_GAMEPAD: return DI8DEVTYPE_GAMEPAD;
-	case SDL_JOYSTICK_TYPE_WHEEL: return DI8DEVTYPE_DRIVING;
-	case SDL_JOYSTICK_TYPE_ARCADE_STICK:
-	case SDL_JOYSTICK_TYPE_FLIGHT_STICK: return DI8DEVTYPE_JOYSTICK;
-	default: return DI8DEVTYPE_DEVICE;
-	}
-}
-
-//! The device an SDL joystick event came from, or null once it has been removed.
-SInputDevice *FindJoystick( SDL_JoystickID id )
-{
-	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
-	{
-		if ( iTempDevice->pJoystick != 0 && iTempDevice->joystickID == id )
+		switch ( nHat )
 		{
-			return &( *iTempDevice );
+			case SDL_HAT_UP:
+				return 0;
+			case SDL_HAT_RIGHTUP:
+				return 4500;
+			case SDL_HAT_RIGHT:
+				return 9000;
+			case SDL_HAT_RIGHTDOWN:
+				return 13500;
+			case SDL_HAT_DOWN:
+				return 18000;
+			case SDL_HAT_LEFTDOWN:
+				return 22500;
+			case SDL_HAT_LEFT:
+				return 27000;
+			case SDL_HAT_LEFTUP:
+				return 31500;
+			default:
+				return 0xFFFFFFFF;
 		}
 	}
-	return 0;
-}
 
-//! Buffer one transition. Called with watchMutex held.
-void PushEvent( int nDeviceID, uint32_t dwOfs, uint32_t dwData, uint64_t nTimestampNs )
-{
-	if ( nDeviceID < 0 )
+	//! The control offset of a stick axis within SInputDataFormat, or -1 for an axis
+	//! past the six that format names. DirectInput gave those to sliders, which
+	//! EnumDeviceObjectsCallback declines to register, so they are dropped here too.
+	int JoystickAxisOffset( int nAxis )
 	{
-		return;
-	}
-	// The same bound DIPROP_BUFFERSIZE puts on a DirectInput device, and the
-	// same consequence when it is reached: the transition is lost and every
-	// device is resynced from its current state, rather than the buffer growing
-	// without limit. ReadDeviceData below is what acts on the flag.
-	if ( watchedEvents.size() >= (size_t)SAMPLE_BUFFER_SIZE * devices.size() )
-	{
-		bWatchOverflow = true;
-		return;
-	}
-
-	SWatchedEvent sEvent;
-	sEvent.nDeviceID = nDeviceID;
-	sEvent.did.dwOfs = dwOfs;
-	sEvent.did.dwData = dwData;
-	sEvent.did.dwTimeStamp = EventTimeMilliseconds( nTimestampNs );
-	// One counter across every device, because PumpMessages sorts the events of
-	// all of them together and a per-device counter would interleave wrongly.
-	sEvent.did.dwSequence = dwWatchSequence++;
-	watchedEvents.push_back( sEvent );
-}
-
-// Both SDL and the embedded toolkit feed the same device buffer. The caller
-// holds watchMutex; each input source supplies a transition only once.
-bool BufferDeviceEvent( const SDL_Event *pEvent )
-{
-	switch ( pEvent->type )
-	{
-	case SDL_EVENT_KEY_DOWN:
-	case SDL_EVENT_KEY_UP:
-	{
-		// Auto repeat is the window system's, not the keyboard's. A DirectInput
-		// device reports one transition down and one up however long a key is
-		// held, and the bindings are written against that: a repeat here would
-		// re-fire every event bind for as long as the key was down.
-		if ( pEvent->key.repeat )
+		switch ( nAxis )
 		{
-			break;
+			case 0:
+				return (int)offsetof( SInputDataFormat, lX );
+			case 1:
+				return (int)offsetof( SInputDataFormat, lY );
+			case 2:
+				return (int)offsetof( SInputDataFormat, lZ );
+			case 3:
+				return (int)offsetof( SInputDataFormat, lRX );
+			case 4:
+				return (int)offsetof( SInputDataFormat, lRY );
+			case 5:
+				return (int)offsetof( SInputDataFormat, lRZ );
+			default:
+				return -1;
 		}
-		const int nKey = SdlScancodeToDirectInputKey( pEvent->key.scancode );
-		if ( nKey != 0 )
-		{
-			PushEvent( nKeyboardDeviceID, nKey, pEvent->key.down ? 0x80 : 0, pEvent->key.timestamp );
-		}
-		break;
 	}
 
-	case SDL_EVENT_MOUSE_MOTION:
-		if ( pEvent->motion.xrel != 0.0f )
-		{
-			nMouseState[0] += (int32_t)pEvent->motion.xrel;
-			PushEvent( nMouseDeviceID, DIMOFS_X, (uint32_t)nMouseState[0], pEvent->motion.timestamp );
-		}
-		if ( pEvent->motion.yrel != 0.0f )
-		{
-			nMouseState[1] += (int32_t)pEvent->motion.yrel;
-			PushEvent( nMouseDeviceID, DIMOFS_Y, (uint32_t)nMouseState[1], pEvent->motion.timestamp );
-		}
-		break;
-
-	case SDL_EVENT_MOUSE_BUTTON_DOWN:
-	case SDL_EVENT_MOUSE_BUTTON_UP:
+	//! The device type DirectInput would have reported, which decides the name
+	//! prefix a cfg binds: GAMEPAD0, DRIVING0, JOYSTICK0 or GAMECTRL0.
+	int JoystickDeviceType( SDL_JoystickType eType )
 	{
-		// The button's own count is ignored: the double click a bind can name is
-		// synthesized in PumpMessages from TIME_DIFF_DBL_CLK, so that a cfg
-		// written against the Windows build means the same thing here.
-		const int nOfs = SdlMouseButtonToOffset( pEvent->button.button );
-		if ( nOfs >= 0 )
+		switch ( eType )
 		{
-			// The event type is the edge SDL delivered. Deriving the state from it
-			// keeps a DOWN and an UP from ever taking the same path even if a backend
-			// leaves the redundant payload field in an unexpected state.
-			const bool bPressed = pEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN;
-			PushEvent( nMouseDeviceID, nOfs, bPressed ? 0x80 : 0, pEvent->button.timestamp );
+			case SDL_JOYSTICK_TYPE_GAMEPAD:
+				return DI8DEVTYPE_GAMEPAD;
+			case SDL_JOYSTICK_TYPE_WHEEL:
+				return DI8DEVTYPE_DRIVING;
+			case SDL_JOYSTICK_TYPE_ARCADE_STICK:
+			case SDL_JOYSTICK_TYPE_FLIGHT_STICK:
+				return DI8DEVTYPE_JOYSTICK;
+			default:
+				return DI8DEVTYPE_DEVICE;
 		}
-		break;
 	}
 
-	case SDL_EVENT_MOUSE_WHEEL:
+	//! The device an SDL joystick event came from, or null once it has been removed.
+	SInputDevice *FindJoystick( SDL_JoystickID id )
 	{
-		// SDL counts notches and DirectInput counts a notch as WHEEL_DELTA, which
-		// is what ReadControlGranularity reports and what every bindconfigure of
-		// MOUSE_AXIS_Z is scaled against.
-		float fDelta = pEvent->wheel.y;
-		if ( pEvent->wheel.direction == SDL_MOUSEWHEEL_FLIPPED )
+		for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 		{
-			fDelta = -fDelta;
+			if ( iTempDevice->pJoystick != 0 && iTempDevice->joystickID == id )
+			{
+				return &( *iTempDevice );
+			}
 		}
-		if ( fDelta != 0.0f )
+		return 0;
+	}
+
+	//! Buffer one transition. Called with watchMutex held.
+	void PushEvent( int nDeviceID, uint32_t dwOfs, uint32_t dwData, uint64_t nTimestampNs )
+	{
+		if ( nDeviceID < 0 )
 		{
-			nMouseState[2] += (int32_t)( fDelta * MOUSE_WHEEL_GRANULARITY );
-			PushEvent( nMouseDeviceID, DIMOFS_Z, (uint32_t)nMouseState[2], pEvent->wheel.timestamp );
+			return;
 		}
-		break;
-	}
-
-	case SDL_EVENT_JOYSTICK_AXIS_MOTION:
-	{
-		const SInputDevice *pDevice = FindJoystick( pEvent->jaxis.which );
-		const int nOfs = JoystickAxisOffset( pEvent->jaxis.axis );
-		if ( pDevice != 0 && nOfs >= 0 )
+		// The same bound DIPROP_BUFFERSIZE puts on a DirectInput device, and the
+		// same consequence when it is reached: the transition is lost and every
+		// device is resynced from its current state, rather than the buffer growing
+		// without limit. ReadDeviceData below is what acts on the flag.
+		if ( watchedEvents.size() >= (size_t)SAMPLE_BUFFER_SIZE * devices.size() )
 		{
-			PushEvent( pDevice->nID, nOfs, (uint32_t)ScaleJoystickAxis( pEvent->jaxis.value ), pEvent->jaxis.timestamp );
+			bWatchOverflow = true;
+			return;
 		}
-		break;
+
+		SWatchedEvent sEvent;
+		sEvent.nDeviceID = nDeviceID;
+		sEvent.did.dwOfs = dwOfs;
+		sEvent.did.dwData = dwData;
+		sEvent.did.dwTimeStamp = EventTimeMilliseconds( nTimestampNs );
+		// One counter across every device, because PumpMessages sorts the events of
+		// all of them together and a per-device counter would interleave wrongly.
+		sEvent.did.dwSequence = dwWatchSequence++;
+		watchedEvents.push_back( sEvent );
 	}
 
-	case SDL_EVENT_JOYSTICK_HAT_MOTION:
+	// Both SDL and the embedded toolkit feed the same device buffer. The caller
+	// holds watchMutex; each input source supplies a transition only once.
+	bool BufferDeviceEvent( const SDL_Event *pEvent )
 	{
-		// SInputDataFormat has room for one POV, so a second hat is not reported.
-		const SInputDevice *pDevice = FindJoystick( pEvent->jhat.which );
-		if ( pDevice != 0 && pEvent->jhat.hat == 0 )
+		switch ( pEvent->type )
 		{
-			PushEvent( pDevice->nID, (uint32_t)offsetof( SInputDataFormat, lPOV ), HatToPov( pEvent->jhat.value ),
-			           pEvent->jhat.timestamp );
+			case SDL_EVENT_KEY_DOWN:
+			case SDL_EVENT_KEY_UP:
+			{
+				// Auto repeat is the window system's, not the keyboard's. A DirectInput
+				// device reports one transition down and one up however long a key is
+				// held, and the bindings are written against that: a repeat here would
+				// re-fire every event bind for as long as the key was down.
+				if ( pEvent->key.repeat )
+				{
+					break;
+				}
+				const int nKey = SdlScancodeToDirectInputKey( pEvent->key.scancode );
+				if ( nKey != 0 )
+				{
+					PushEvent( nKeyboardDeviceID, nKey, pEvent->key.down ? 0x80 : 0, pEvent->key.timestamp );
+				}
+				break;
+			}
+
+			case SDL_EVENT_MOUSE_MOTION:
+				if ( pEvent->motion.xrel != 0.0f )
+				{
+					nMouseState[0] += (int32_t)pEvent->motion.xrel;
+					PushEvent( nMouseDeviceID, DIMOFS_X, (uint32_t)nMouseState[0], pEvent->motion.timestamp );
+				}
+				if ( pEvent->motion.yrel != 0.0f )
+				{
+					nMouseState[1] += (int32_t)pEvent->motion.yrel;
+					PushEvent( nMouseDeviceID, DIMOFS_Y, (uint32_t)nMouseState[1], pEvent->motion.timestamp );
+				}
+				break;
+
+			case SDL_EVENT_MOUSE_BUTTON_DOWN:
+			case SDL_EVENT_MOUSE_BUTTON_UP:
+			{
+				// The button's own count is ignored: the double click a bind can name is
+				// synthesized in PumpMessages from TIME_DIFF_DBL_CLK, so that a cfg
+				// written against the Windows build means the same thing here.
+				const int nOfs = SdlMouseButtonToOffset( pEvent->button.button );
+				if ( nOfs >= 0 )
+				{
+					// The event type is the edge SDL delivered. Deriving the state from it
+					// keeps a DOWN and an UP from ever taking the same path even if a backend
+					// leaves the redundant payload field in an unexpected state.
+					const bool bPressed = pEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+					PushEvent( nMouseDeviceID, nOfs, bPressed ? 0x80 : 0, pEvent->button.timestamp );
+				}
+				break;
+			}
+
+			case SDL_EVENT_MOUSE_WHEEL:
+			{
+				// SDL counts notches and DirectInput counts a notch as WHEEL_DELTA, which
+				// is what ReadControlGranularity reports and what every bindconfigure of
+				// MOUSE_AXIS_Z is scaled against.
+				float fDelta = pEvent->wheel.y;
+				if ( pEvent->wheel.direction == SDL_MOUSEWHEEL_FLIPPED )
+				{
+					fDelta = -fDelta;
+				}
+				if ( fDelta != 0.0f )
+				{
+					nMouseState[2] += (int32_t)( fDelta * MOUSE_WHEEL_GRANULARITY );
+					PushEvent( nMouseDeviceID, DIMOFS_Z, (uint32_t)nMouseState[2], pEvent->wheel.timestamp );
+				}
+				break;
+			}
+
+			case SDL_EVENT_JOYSTICK_AXIS_MOTION:
+			{
+				const SInputDevice *pDevice = FindJoystick( pEvent->jaxis.which );
+				const int nOfs = JoystickAxisOffset( pEvent->jaxis.axis );
+				if ( pDevice != 0 && nOfs >= 0 )
+				{
+					PushEvent( pDevice->nID, nOfs, (uint32_t)ScaleJoystickAxis( pEvent->jaxis.value ), pEvent->jaxis.timestamp );
+				}
+				break;
+			}
+
+			case SDL_EVENT_JOYSTICK_HAT_MOTION:
+			{
+				// SInputDataFormat has room for one POV, so a second hat is not reported.
+				const SInputDevice *pDevice = FindJoystick( pEvent->jhat.which );
+				if ( pDevice != 0 && pEvent->jhat.hat == 0 )
+				{
+					PushEvent( pDevice->nID,
+					           (uint32_t)offsetof( SInputDataFormat, lPOV ),
+					           HatToPov( pEvent->jhat.value ),
+					           pEvent->jhat.timestamp );
+				}
+				break;
+			}
+
+			case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
+			case SDL_EVENT_JOYSTICK_BUTTON_UP:
+			{
+				const SInputDevice *pDevice = FindJoystick( pEvent->jbutton.which );
+				if ( pDevice != 0 && pEvent->jbutton.button < JOYSTICK_BUTTON_COUNT )
+				{
+					PushEvent( pDevice->nID,
+					           (uint32_t)( offsetof( SInputDataFormat, bButton ) + pEvent->jbutton.button ),
+					           pEvent->jbutton.down ? 0x80 : 0,
+					           pEvent->jbutton.timestamp );
+				}
+				break;
+			}
+
+			default:
+				break;
 		}
-		break;
+
+		// The watch is an observer. Returning true leaves the event on the queue for
+		// System/WinFrame to poll, which is where the window and the UI's keys come
+		// from; filtering it out here would take those with it.
+		return true;
 	}
 
-	case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
-	case SDL_EVENT_JOYSTICK_BUTTON_UP:
+	bool SDLCALL EventWatch( void *, SDL_Event *pEvent )
 	{
-		const SInputDevice *pDevice = FindJoystick( pEvent->jbutton.which );
-		if ( pDevice != 0 && pEvent->jbutton.button < JOYSTICK_BUTTON_COUNT )
+		std::lock_guard<std::mutex> lock( watchMutex );
+		if ( pHostedWindow != nullptr && hWindow == pHostedWindow )
 		{
-			PushEvent( pDevice->nID, (uint32_t)( offsetof( SInputDataFormat, bButton ) + pEvent->jbutton.button ),
-			           pEvent->jbutton.down ? 0x80 : 0, pEvent->jbutton.timestamp );
+			// GTK's pointer grab during a drag prevents SDL receiving motion at all.
+			// Use the host for the entire keyboard/mouse sequence, including clicks.
+			if ( !bHostedFocus || pEvent->type == SDL_EVENT_KEY_DOWN || pEvent->type == SDL_EVENT_KEY_UP ||
+			     ( pEvent->type >= SDL_EVENT_MOUSE_MOTION && pEvent->type <= SDL_EVENT_MOUSE_WHEEL ) )
+				return true;
 		}
-		break;
+		return BufferDeviceEvent( pEvent );
 	}
 
-	default:
-		break;
-	}
-
-	// The watch is an observer. Returning true leaves the event on the queue for
-	// System/WinFrame to poll, which is where the window and the UI's keys come
-	// from; filtering it out here would take those with it.
-	return true;
-}
-
-bool SDLCALL EventWatch( void *, SDL_Event *pEvent )
-{
-	std::lock_guard<std::mutex> lock( watchMutex );
-	if ( pHostedWindow != nullptr && hWindow == pHostedWindow )
+	//! Register the keyboard and the mouse, which SDL reports without a handle.
+	void AddSystemDevice( int nDevType, uint32_t dwFormatSize, const char *pszName, int *pnDeviceID )
 	{
-		// GTK's pointer grab during a drag prevents SDL receiving motion at all.
-		// Use the host for the entire keyboard/mouse sequence, including clicks.
-		if ( !bHostedFocus || pEvent->type == SDL_EVENT_KEY_DOWN || pEvent->type == SDL_EVENT_KEY_UP ||
-			( pEvent->type >= SDL_EVENT_MOUSE_MOTION && pEvent->type <= SDL_EVENT_MOUSE_WHEEL ) )
-			return true;
+		SInputDevice siDevice;
+		siDevice.nID = devices.size();
+		siDevice.szName = pszName;
+		siDevice.dwDevType = nDevType;
+		siDevice.dwFormatSize = dwFormatSize;
+
+		AddDeviceKeys( siDevice.nID, nDevType );
+
+		*pnDeviceID = siDevice.nID;
+		devices.push_back( siDevice );
 	}
-	return BufferDeviceEvent( pEvent );
-}
 
-//! Register the keyboard and the mouse, which SDL reports without a handle.
-void AddSystemDevice( int nDevType, uint32_t dwFormatSize, const char *pszName, int *pnDeviceID )
-{
-	SInputDevice siDevice;
-	siDevice.nID = devices.size();
-	siDevice.szName = pszName;
-	siDevice.dwDevType = nDevType;
-	siDevice.dwFormatSize = dwFormatSize;
-
-	AddDeviceKeys( siDevice.nID, nDevType );
-
-	*pnDeviceID = siDevice.nID;
-	devices.push_back( siDevice );
-}
-
-//! Register one stick, and synthesize a control name for each of its axes, hats
-//! and buttons the way EnumDeviceObjectsCallback does on Windows.
-void AddJoystickDevice( SDL_Joystick *pJoystick )
-{
-	SInputDevice siDevice;
-	siDevice.nID = devices.size();
-	const char *pszJoystickName = SDL_GetJoystickName( pJoystick );
-	siDevice.szName = pszJoystickName != 0 ? pszJoystickName : "";
-	siDevice.dwDevType = JoystickDeviceType( SDL_GetJoystickType( pJoystick ) );
-	siDevice.dwFormatSize = sizeof( SInputDataFormat );
-	siDevice.pJoystick = pJoystick;
-	siDevice.joystickID = SDL_GetJoystickID( pJoystick );
-
-	const int nDevType = GET_DIDEVICE_TYPE( siDevice.dwDevType );
-	const std::string szDeviceName = MakeDeviceEnumName( nDevType );
-
-	DebugTrace( "INPUT: New device found! Add new device %s as %s\n", siDevice.szName.c_str(), szDeviceName.c_str() );
-
-	// The axis suffixes are DirectInput's object names, in its own order, because
-	// that is what a cfg binds. SDL numbers a stick's axes rather than naming
-	// them, and on every device that reports six the numbering is the same one.
-	static const char *pszAxisSuffix[] = { "_AXIS_X", "_AXIS_Y", "_AXIS_Z", "_AXIS_RX", "_AXIS_RY", "_AXIS_RZ" };
-	const int nAxes = SDL_GetNumJoystickAxes( pJoystick );
-	for ( int nAxis = 0; nAxis < nAxes; ++nAxis )
+	//! Register one stick, and synthesize a control name for each of its axes, hats
+	//! and buttons the way EnumDeviceObjectsCallback does on Windows.
+	void AddJoystickDevice( SDL_Joystick *pJoystick )
 	{
-		const int nOfs = JoystickAxisOffset( nAxis );
-		if ( nOfs < 0 )
+		SInputDevice siDevice;
+		siDevice.nID = devices.size();
+		const char *pszJoystickName = SDL_GetJoystickName( pJoystick );
+		siDevice.szName = pszJoystickName != 0 ? pszJoystickName : "";
+		siDevice.dwDevType = JoystickDeviceType( SDL_GetJoystickType( pJoystick ) );
+		siDevice.dwFormatSize = sizeof( SInputDataFormat );
+		siDevice.pJoystick = pJoystick;
+		siDevice.joystickID = SDL_GetJoystickID( pJoystick );
+
+		const int nDevType = GET_DIDEVICE_TYPE( siDevice.dwDevType );
+		const std::string szDeviceName = MakeDeviceEnumName( nDevType );
+
+		DebugTrace( "INPUT: New device found! Add new device %s as %s\n", siDevice.szName.c_str(), szDeviceName.c_str() );
+
+		// The axis suffixes are DirectInput's object names, in its own order, because
+		// that is what a cfg binds. SDL numbers a stick's axes rather than naming
+		// them, and on every device that reports six the numbering is the same one.
+		static const char *pszAxisSuffix[] = { "_AXIS_X", "_AXIS_Y", "_AXIS_Z", "_AXIS_RX", "_AXIS_RY", "_AXIS_RZ" };
+		const int nAxes = SDL_GetNumJoystickAxes( pJoystick );
+		for ( int nAxis = 0; nAxis < nAxes; ++nAxis )
 		{
-			continue;
+			const int nOfs = JoystickAxisOffset( nAxis );
+			if ( nOfs < 0 )
+			{
+				continue;
+			}
+			AddDeviceControl( siDevice.nID, nDevType, nOfs, CT_LIMAXIS, szDeviceName + pszAxisSuffix[nAxis] );
 		}
-		AddDeviceControl( siDevice.nID, nDevType, nOfs, CT_LIMAXIS, szDeviceName + pszAxisSuffix[nAxis] );
-	}
 
-	if ( SDL_GetNumJoystickHats( pJoystick ) > 0 )
-	{
-		AddDeviceControl( siDevice.nID, nDevType, (int)offsetof( SInputDataFormat, lPOV ), CT_POV,
-		                  szDeviceName + "_POV" );
-	}
+		if ( SDL_GetNumJoystickHats( pJoystick ) > 0 )
+		{
+			AddDeviceControl(
+					siDevice.nID, nDevType, (int)offsetof( SInputDataFormat, lPOV ), CT_POV, szDeviceName + "_POV" );
+		}
 
-	const int nButtons = SDL_GetNumJoystickButtons( pJoystick );
-	for ( int nButton = 0; nButton < nButtons && nButton < JOYSTICK_BUTTON_COUNT; ++nButton )
-	{
-		AddDeviceControl( siDevice.nID, nDevType, (int)( offsetof( SInputDataFormat, bButton ) + nButton ), CT_KEY,
-		                  szDeviceName + fmt::format( "_BUTTON{}", nButton ) );
-	}
+		const int nButtons = SDL_GetNumJoystickButtons( pJoystick );
+		for ( int nButton = 0; nButton < nButtons && nButton < JOYSTICK_BUTTON_COUNT; ++nButton )
+		{
+			AddDeviceControl( siDevice.nID,
+			                  nDevType,
+			                  (int)( offsetof( SInputDataFormat, bButton ) + nButton ),
+			                  CT_KEY,
+			                  szDeviceName + fmt::format( "_BUTTON{}", nButton ) );
+		}
 
-	devices.push_back( siDevice );
-}
+		devices.push_back( siDevice );
+	}
 
 }
 
@@ -1848,7 +1876,8 @@ static bool ReadDeviceData( SInputDevice &sDevice, DIDEVICEOBJECTDATA *pObjects,
 	unsigned long dwCount = 0;
 	std::vector<SWatchedEvent> rest;
 	rest.reserve( watchedEvents.size() );
-	for ( std::vector<SWatchedEvent>::const_iterator iTempEvent = watchedEvents.begin(); iTempEvent != watchedEvents.end();
+	for ( std::vector<SWatchedEvent>::const_iterator iTempEvent = watchedEvents.begin();
+	      iTempEvent != watchedEvents.end();
 	      ++iTempEvent )
 	{
 		if ( iTempEvent->nDeviceID == sDevice.nID && dwCount < dwMax )
@@ -1873,89 +1902,89 @@ static void ReadDeviceState( const SInputDevice &sDevice, std::vector<uint8_t> *
 
 	switch ( GET_DIDEVICE_TYPE( sDevice.dwDevType ) )
 	{
-	case DI8DEVTYPE_KEYBOARD:
-	{
-		// Read live rather than from anything this file kept, because the point
-		// of a resync is to find out what changed while events were not arriving.
-		int nKeys = 0;
-		const bool *pKeys = SDL_GetKeyboardState( &nKeys );
-		if ( hWindow == pHostedWindow && pHostedWindow != nullptr )
+		case DI8DEVTYPE_KEYBOARD:
 		{
-			pKeys = hostedKeys;
-			nKeys = SDL_SCANCODE_COUNT;
-		}
-		if ( pKeys == 0 )
-		{
+			// Read live rather than from anything this file kept, because the point
+			// of a resync is to find out what changed while events were not arriving.
+			int nKeys = 0;
+			const bool *pKeys = SDL_GetKeyboardState( &nKeys );
+			if ( hWindow == pHostedWindow && pHostedWindow != nullptr )
+			{
+				pKeys = hostedKeys;
+				nKeys = SDL_SCANCODE_COUNT;
+			}
+			if ( pKeys == 0 )
+			{
+				break;
+			}
+			for ( int i = 0; i < DIRECT_INPUT_KEY_COUNT; ++i )
+			{
+				const SDL_Scancode scancode = directInputKeys[i].scancode;
+				if ( (int)scancode < nKeys && pKeys[scancode] )
+				{
+					pData[directInputKeys[i].nKey] = 0x80;
+				}
+			}
 			break;
 		}
-		for ( int i = 0; i < DIRECT_INPUT_KEY_COUNT; ++i )
-		{
-			const SDL_Scancode scancode = directInputKeys[i].scancode;
-			if ( (int)scancode < nKeys && pKeys[scancode] )
-			{
-				pData[directInputKeys[i].nKey] = 0x80;
-			}
-		}
-		break;
-	}
 
-	case DI8DEVTYPE_MOUSE:
-	{
-		// The axes come from the running totals rather than from the pointer's
-		// position, so that regaining focus does not read as one enormous move.
+		case DI8DEVTYPE_MOUSE:
 		{
-			std::lock_guard<std::mutex> lock( watchMutex );
-			memcpy( pData + DIMOFS_X, &nMouseState[0], sizeof( int32_t ) );
-			memcpy( pData + DIMOFS_Y, &nMouseState[1], sizeof( int32_t ) );
-			memcpy( pData + DIMOFS_Z, &nMouseState[2], sizeof( int32_t ) );
-		}
-		// SDL_GetMouseState answers for the five buttons it has a mask for, which
-		// is where SdlMouseButtonToOffset stops being able to ask.
-		const SDL_MouseButtonFlags dwButtons = pHostedWindow != nullptr && hWindow == pHostedWindow ?
-			hostedButtons : SDL_GetMouseState( 0, 0 );
-		for ( int nButton = SDL_BUTTON_LEFT; nButton <= SDL_BUTTON_X2; ++nButton )
-		{
-			const int nOfs = SdlMouseButtonToOffset( nButton );
-			if ( nOfs >= 0 && ( dwButtons & SDL_BUTTON_MASK( nButton ) ) != 0 )
+			// The axes come from the running totals rather than from the pointer's
+			// position, so that regaining focus does not read as one enormous move.
 			{
-				pData[nOfs] = 0x80;
+				std::lock_guard<std::mutex> lock( watchMutex );
+				memcpy( pData + DIMOFS_X, &nMouseState[0], sizeof( int32_t ) );
+				memcpy( pData + DIMOFS_Y, &nMouseState[1], sizeof( int32_t ) );
+				memcpy( pData + DIMOFS_Z, &nMouseState[2], sizeof( int32_t ) );
 			}
-		}
-		break;
-	}
-
-	default:
-	{
-		if ( sDevice.pJoystick == 0 )
-		{
+			// SDL_GetMouseState answers for the five buttons it has a mask for, which
+			// is where SdlMouseButtonToOffset stops being able to ask.
+			const SDL_MouseButtonFlags dwButtons =
+					pHostedWindow != nullptr && hWindow == pHostedWindow ? hostedButtons : SDL_GetMouseState( 0, 0 );
+			for ( int nButton = SDL_BUTTON_LEFT; nButton <= SDL_BUTTON_X2; ++nButton )
+			{
+				const int nOfs = SdlMouseButtonToOffset( nButton );
+				if ( nOfs >= 0 && ( dwButtons & SDL_BUTTON_MASK( nButton ) ) != 0 )
+				{
+					pData[nOfs] = 0x80;
+				}
+			}
 			break;
 		}
-		const int nAxes = SDL_GetNumJoystickAxes( sDevice.pJoystick );
-		for ( int nAxis = 0; nAxis < nAxes; ++nAxis )
+
+		default:
 		{
-			const int nOfs = JoystickAxisOffset( nAxis );
-			if ( nOfs < 0 )
+			if ( sDevice.pJoystick == 0 )
 			{
-				continue;
+				break;
 			}
-			const int32_t nValue = ScaleJoystickAxis( SDL_GetJoystickAxis( sDevice.pJoystick, nAxis ) );
-			memcpy( pData + nOfs, &nValue, sizeof( nValue ) );
-		}
-		if ( SDL_GetNumJoystickHats( sDevice.pJoystick ) > 0 )
-		{
-			const uint32_t dwPov = HatToPov( SDL_GetJoystickHat( sDevice.pJoystick, 0 ) );
-			memcpy( pData + offsetof( SInputDataFormat, lPOV ), &dwPov, sizeof( dwPov ) );
-		}
-		const int nButtons = SDL_GetNumJoystickButtons( sDevice.pJoystick );
-		for ( int nButton = 0; nButton < nButtons && nButton < JOYSTICK_BUTTON_COUNT; ++nButton )
-		{
-			if ( SDL_GetJoystickButton( sDevice.pJoystick, nButton ) )
+			const int nAxes = SDL_GetNumJoystickAxes( sDevice.pJoystick );
+			for ( int nAxis = 0; nAxis < nAxes; ++nAxis )
 			{
-				pData[offsetof( SInputDataFormat, bButton ) + nButton] = 0x80;
+				const int nOfs = JoystickAxisOffset( nAxis );
+				if ( nOfs < 0 )
+				{
+					continue;
+				}
+				const int32_t nValue = ScaleJoystickAxis( SDL_GetJoystickAxis( sDevice.pJoystick, nAxis ) );
+				memcpy( pData + nOfs, &nValue, sizeof( nValue ) );
 			}
+			if ( SDL_GetNumJoystickHats( sDevice.pJoystick ) > 0 )
+			{
+				const uint32_t dwPov = HatToPov( SDL_GetJoystickHat( sDevice.pJoystick, 0 ) );
+				memcpy( pData + offsetof( SInputDataFormat, lPOV ), &dwPov, sizeof( dwPov ) );
+			}
+			const int nButtons = SDL_GetNumJoystickButtons( sDevice.pJoystick );
+			for ( int nButton = 0; nButton < nButtons && nButton < JOYSTICK_BUTTON_COUNT; ++nButton )
+			{
+				if ( SDL_GetJoystickButton( sDevice.pJoystick, nButton ) )
+				{
+					pData[offsetof( SInputDataFormat, bButton ) + nButton] = 0x80;
+				}
+			}
+			break;
 		}
-		break;
-	}
 	}
 }
 
@@ -1979,7 +2008,8 @@ static std::string ReadControlLocalName( int nAction )
 	// naming a key reads correctly on a keyboard that is not a US one.
 	if ( sKey.nDevType == DI8DEVTYPE_KEYBOARD )
 	{
-		const SDL_Scancode scancode = DirectInputKeyToSdlScancode( INPUT_GETACTIONOFFS( sKey.nAction ) & ~DIK_DBLCLK_MODIFIER );
+		const SDL_Scancode scancode =
+				DirectInputKeyToSdlScancode( INPUT_GETACTIONOFFS( sKey.nAction ) & ~DIK_DBLCLK_MODIFIER );
 		if ( scancode == SDL_SCANCODE_UNKNOWN )
 		{
 			return "";
@@ -1996,8 +2026,12 @@ static std::string ReadControlLocalName( int nAction )
 
 #endif // !BOOST_OS_WINDOWS
 
-
-bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType )
+bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg,
+                     std::string *pszGameMessage,
+                     int *pnParam1,
+                     int *pnParam2,
+                     int *pnCount,
+                     NInput::EControlType *peControlType )
 {
 	NI_ASSERT( pszGameMessage != 0, "Wrong Parameter: pszGameMessage == 0" );
 	NI_ASSERT( pnParam1 != 0, "Wrong Parameter: pnParam1 == 0" );
@@ -2025,40 +2059,40 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszG
 	}
 	switch ( rWindowMsg.msg )
 	{
-	case NWinFrame::SWindowsMsg::MOUSE_MOVE:
-		( *pszGameMessage ) = "win_mouse_move";
-		*peControlType = NInput::CT_WINDOWS;
-		break;
-	case NWinFrame::SWindowsMsg::RB_DBLCLK:
-		( *pszGameMessage ) = "win_right_button_dblclk";
-		*peControlType = NInput::CT_WINDOWS;
-		break;
-	case NWinFrame::SWindowsMsg::LB_DBLCLK:
-		( *pszGameMessage ) = "win_left_button_dblclk";
-		*peControlType = NInput::CT_WINDOWS;
-		break;
-	case NWinFrame::SWindowsMsg::RB_DOWN:
-		( *pszGameMessage ) = "win_right_button_down";
-		*peControlType = NInput::CT_WINDOWS;
-		break;
-	case NWinFrame::SWindowsMsg::LB_DOWN:
-		( *pszGameMessage ) = "win_left_button_down";
-		*peControlType = NInput::CT_WINDOWS;
-		break;
-	case NWinFrame::SWindowsMsg::RB_UP:
-		( *pszGameMessage ) = "win_right_button_up";
-		*peControlType = NInput::CT_WINDOWS;
-		break;
-	case NWinFrame::SWindowsMsg::LB_UP:
-		( *pszGameMessage ) = "win_left_button_up";
-		*peControlType = NInput::CT_WINDOWS;
-		break;
-	case NWinFrame::SWindowsMsg::CLOSE:
-		( *pszGameMessage ) = "try_exit_windows";
-		*peControlType = NInput::CT_UNKNOWN;
-		break;
-	default:
-		return false;
+		case NWinFrame::SWindowsMsg::MOUSE_MOVE:
+			( *pszGameMessage ) = "win_mouse_move";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
+		case NWinFrame::SWindowsMsg::RB_DBLCLK:
+			( *pszGameMessage ) = "win_right_button_dblclk";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
+		case NWinFrame::SWindowsMsg::LB_DBLCLK:
+			( *pszGameMessage ) = "win_left_button_dblclk";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
+		case NWinFrame::SWindowsMsg::RB_DOWN:
+			( *pszGameMessage ) = "win_right_button_down";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
+		case NWinFrame::SWindowsMsg::LB_DOWN:
+			( *pszGameMessage ) = "win_left_button_down";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
+		case NWinFrame::SWindowsMsg::RB_UP:
+			( *pszGameMessage ) = "win_right_button_up";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
+		case NWinFrame::SWindowsMsg::LB_UP:
+			( *pszGameMessage ) = "win_left_button_up";
+			*peControlType = NInput::CT_WINDOWS;
+			break;
+		case NWinFrame::SWindowsMsg::CLOSE:
+			( *pszGameMessage ) = "try_exit_windows";
+			*peControlType = NInput::CT_UNKNOWN;
+			break;
+		default:
+			return false;
 	}
 	( *pnParam1 ) = PackCoords( CVec2( rWindowMsg.x, rWindowMsg.y ) );
 	( *pnParam2 ) = rWindowMsg.dwFlags;

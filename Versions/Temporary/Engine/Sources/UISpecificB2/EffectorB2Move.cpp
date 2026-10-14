@@ -16,13 +16,16 @@
 
 #include <zconf.h>
 
-void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const std::string &szAnimatedWindow )
+void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd,
+                                 struct IScreen *pScreen,
+                                 SWindowContext *_pContext,
+                                 const std::string &szAnimatedWindow )
 {
-	const NDb::SUISB2Move *pCmd( checked_cast<const NDb::SUISB2Move*>( _pCmd ) );
+	const NDb::SUISB2Move *pCmd( checked_cast<const NDb::SUISB2Move *>( _pCmd ) );
 	NI_VERIFY( pCmd, "no command", return );
-	SWindowContextB2Move *pContext = dynamic_cast<SWindowContextB2Move*>( _pContext );
+	SWindowContextB2Move *pContext = dynamic_cast<SWindowContextB2Move *>( _pContext );
 
-	pElement = dynamic_cast<IWindow*>( pScreen->GetElement( pCmd->szElementToMove, true ) );
+	pElement = dynamic_cast<IWindow *>( pScreen->GetElement( pCmd->szElementToMove, true ) );
 	NI_ASSERT( pElement != 0, fmt::format( "no element \"{}\"", pCmd->szElementToMove.c_str() ) );
 	if ( !pElement )
 	{
@@ -33,8 +36,8 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	if ( pCmd->bBorder )
 		eState = ES_BORDER_IN;
 	else
-		eState = (pContext && pContext->bGoOut) ? ES_GO_OUT : ES_GO_IN;
-	bGoOut = (eState == ES_GO_OUT);
+		eState = ( pContext && pContext->bGoOut ) ? ES_GO_OUT : ES_GO_IN;
+	bGoOut = ( eState == ES_GO_OUT );
 
 	bForward = true;
 
@@ -42,19 +45,19 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	CVec2 vAccelCoeff = pCmd->vAccelCoeff;
 	if ( eState == ES_GO_IN )
 	{
-		vAccelCoeff.x = (vAccelCoeff.x <= FP_EPSILON) ? 0.0f : 1.0f / vAccelCoeff.x;
-		vAccelCoeff.y = (vAccelCoeff.y <= FP_EPSILON) ? 0.0f : 1.0f / vAccelCoeff.y;
+		vAccelCoeff.x = ( vAccelCoeff.x <= FP_EPSILON ) ? 0.0f : 1.0f / vAccelCoeff.x;
+		vAccelCoeff.y = ( vAccelCoeff.y <= FP_EPSILON ) ? 0.0f : 1.0f / vAccelCoeff.y;
 	}
 	fMoveTime = pCmd->fMoveTime;
 
 	vMoveOffset2 = pCmd->vOffsetBounce;
 	CVec2 vAccelCoeffBounceIn = pCmd->vAccelCoeffBounce;
-	CVec2 vAccelCoeffBounceOut(
-		(vAccelCoeffBounceIn.x <= FP_EPSILON) ? 0.0f : 1.0f / vAccelCoeffBounceIn.x,
-		(vAccelCoeffBounceIn.y <= FP_EPSILON) ? 0.0f : 1.0f / vAccelCoeffBounceIn.y );
+	CVec2 vAccelCoeffBounceOut( ( vAccelCoeffBounceIn.x <= FP_EPSILON ) ? 0.0f : 1.0f / vAccelCoeffBounceIn.x,
+	                            ( vAccelCoeffBounceIn.y <= FP_EPSILON ) ? 0.0f : 1.0f / vAccelCoeffBounceIn.y );
 	fMoveTime2 = pCmd->fMoveTimeBounce;
 
-	fWaitTime = (std::max)( 0.0f, (std::max)( pCmd->fMaxMoveTime, (pContext ? pContext->fMaxMoveTime : 0.0f) ) - fMoveTime );
+	fWaitTime =
+			(std::max)( 0.0f, (std::max)( pCmd->fMaxMoveTime, ( pContext ? pContext->fMaxMoveTime : 0.0f ) ) - fMoveTime );
 
 	int x, y, w, h;
 	pElement->GetPlacement( &x, &y, &w, &h );
@@ -92,7 +95,8 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	fElapsedTime = 0;
 }
 
-void CEffectorB2Move::CalcSpeedAccel( CVec2 *pSpeed, CVec2 *pAccel, const CVec2 &vMoveOffset, const CVec2 &vAccelCoeff, float fTime ) const
+void CEffectorB2Move::CalcSpeedAccel(
+		CVec2 *pSpeed, CVec2 *pAccel, const CVec2 &vMoveOffset, const CVec2 &vAccelCoeff, float fTime ) const
 {
 	if ( fTime < FP_EPSILON )
 	{
@@ -104,11 +108,11 @@ void CEffectorB2Move::CalcSpeedAccel( CVec2 *pSpeed, CVec2 *pAccel, const CVec2 
 	}
 	else
 	{
-		pSpeed->x = 2.0f * vMoveOffset.x / ((vAccelCoeff.x + 1.0f) * fTime);
-		pSpeed->y = 2.0f * vMoveOffset.y / ((vAccelCoeff.y + 1.0f) * fTime);
+		pSpeed->x = 2.0f * vMoveOffset.x / ( ( vAccelCoeff.x + 1.0f ) * fTime );
+		pSpeed->y = 2.0f * vMoveOffset.y / ( ( vAccelCoeff.y + 1.0f ) * fTime );
 
-		pAccel->x = pSpeed->x * (vAccelCoeff.x - 1.0f) / fTime;
-		pAccel->y = pSpeed->y * (vAccelCoeff.y - 1.0f) / fTime;
+		pAccel->x = pSpeed->x * ( vAccelCoeff.x - 1.0f ) / fTime;
+		pAccel->y = pSpeed->y * ( vAccelCoeff.y - 1.0f ) / fTime;
 	}
 }
 
@@ -119,7 +123,7 @@ void CEffectorB2Move::Reverse()
 
 CVec2 CEffectorB2Move::GetDelta( const CVec2 &vSpeed, const CVec2 &vAccel, float fTime ) const
 {
-	return vSpeed * fTime + vAccel * (fTime * fTime * 0.5f);
+	return vSpeed * fTime + vAccel * ( fTime * fTime * 0.5f );
 }
 
 const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
@@ -199,7 +203,7 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 			}
 			else
 			{
-				vCurrPos = vBouncePos - GetDelta( vSpeedBounceIn, vAccelBounceIn, fElapsedTime - (fMoveTime + fMoveTime2) );
+				vCurrPos = vBouncePos - GetDelta( vSpeedBounceIn, vAccelBounceIn, fElapsedTime - ( fMoveTime + fMoveTime2 ) );
 				fEffectTime = fElapsedTime;
 			}
 			break;
@@ -261,5 +265,5 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 	return fEffectTime - fFormerElapsedTime;
 }
 
-REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171B2B80, SWindowContextB2Move)
-REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171B1C42, CEffectorB2Move)
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x171B2B80, SWindowContextB2Move )
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x171B1C42, CEffectorB2Move )

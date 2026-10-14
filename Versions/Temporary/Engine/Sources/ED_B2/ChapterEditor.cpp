@@ -12,10 +12,7 @@ REGISTER_EDITOR_IN_DLL( Chapter, CChapterEditor )
 
 // CChapterEditor
 
-CChapterEditor::CChapterEditor() :
-	pChapterState( 0 )
-{
-}
+CChapterEditor::CChapterEditor() : pChapterState( 0 ) {}
 
 CChapterEditor::~CChapterEditor()
 {
@@ -48,15 +45,14 @@ void CChapterEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-IManipulator* CChapterEditor::CreateChapterManipulator()
+IManipulator *CChapterEditor::CreateChapterManipulator()
 {
-	IManipulator* pChapterManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
-		GetObjectSet().szObjectTypeName,
-		GetObjectSet().objectNameSet.begin()->first );
+	IManipulator *pChapterManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+			GetObjectSet().szObjectTypeName, GetObjectSet().objectNameSet.begin()->first );
 	return pChapterManipulator;
 }
 
-void CChapterEditor::Redo( IController* pController )
+void CChapterEditor::Redo( IController *pController )
 {
 	if ( pChapterState )
 	{

@@ -8,11 +8,18 @@ class CExecutorSoldierEntrench : public CExecutorUnitBase
 {
 	OBJECT_NOCOPY_METHODS( CExecutorSoldierEntrench )
 
-	ZDATA_(CExecutorUnitBase)
+	ZDATA_( CExecutorUnitBase )
 	CPtr<CAIUnit> pUnit;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	float					fEntrenchTimeCoeff = {};					//Used for Mobile Fortress ability
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorUnitBase*)this); f.Add(2,&pUnit); f.Add(3,&fEntrenchTimeCoeff); return 0; }
+	float fEntrenchTimeCoeff = {}; //Used for Mobile Fortress ability
+public:
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CExecutorUnitBase *)this );
+		f.Add( 2, &pUnit );
+		f.Add( 3, &fEntrenchTimeCoeff );
+		return 0;
+	}
 	// if 0 then ability must be switched off
 	float OnAbilityActive();
 
@@ -30,9 +37,10 @@ class CExecutorSoldierEntrench : public CExecutorUnitBase
 
 	const bool IsEntrenchAllowed() const;
 	const bool IsValidInternal() const;
+
 public:
 	CExecutorSoldierEntrench( CAIUnit *_pUnit );
-	CExecutorSoldierEntrench() : fEntrenchTimeCoeff( 1.0f ) { }
+	CExecutorSoldierEntrench() : fEntrenchTimeCoeff( 1.0f ) {}
 	~CExecutorSoldierEntrench();
 
 	int Segment();

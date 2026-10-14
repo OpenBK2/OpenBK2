@@ -8,13 +8,11 @@
 namespace NMusicSystem
 {
 
-
 //	CFade
 
-
 CFade::CFade( const NDb::SFade *_pFade, EMusicSystemVolume _eVolumeType, CTrack *_pTrackToEnd )
-: pFade( _pFade ), eVolumeType( _eVolumeType ), fStartVolume( -1 ),
-eState( EFS_NOT_STARTED ), pTrackToEnd( _pTrackToEnd ), timeFaded( 0 )
+		: pFade( _pFade ), eVolumeType( _eVolumeType ), fStartVolume( -1 ), eState( EFS_NOT_STARTED ),
+			pTrackToEnd( _pTrackToEnd ), timeFaded( 0 )
 {
 }
 
@@ -30,14 +28,13 @@ void CFade::SetCurrentVolume()
 		const float fTime = timeFaded;
 
 		Singleton<IMusicSystem>()->SetVolume( eVolumeType,
-			0.01f * Clamp( fStartVolume + fCoef * fTime, (std::min)( fStartVolume, pFade->fFinalVolume ),
-			(std::max)( fStartVolume, pFade->fFinalVolume ) ) );
+		                                      0.01f * Clamp( fStartVolume + fCoef * fTime,
+		                                                     (std::min)( fStartVolume, pFade->fFinalVolume ),
+		                                                     (std::max)( fStartVolume, pFade->fFinalVolume ) ) );
 	}
 }
 
-void CFade::Stop()
-{
-}
+void CFade::Stop() {}
 
 void CFade::Play()
 {
@@ -52,9 +49,9 @@ void CFade::OnResetTimer()
 void CFade::Segment()
 {
 	const NTimer::STime curTime = GetAbsTime();
-	switch( eState )
+	switch ( eState )
 	{
-	case EFS_NOT_STARTED:
+		case EFS_NOT_STARTED:
 		{
 			timeLastCall = GetAbsTime();
 
@@ -71,14 +68,14 @@ void CFade::Segment()
 			{
 				fStartVolume = 100.0f * Singleton<IMusicSystem>()->GetVolume( eVolumeType );
 				eState = EFS_STARTED;
-				if ( pFade->bPause && pFade->fFinalVolume != 0.0f  )
+				if ( pFade->bPause && pFade->fFinalVolume != 0.0f )
 					Singleton<IMusicSystem>()->PauseMusic( eVolumeType, false );
 				SetCurrentVolume();
 			}
 		}
 
 		break;
-	case EFS_STARTED:
+		case EFS_STARTED:
 		{
 			const NTimer::STime curTime = GetAbsTime();
 			timeFaded += curTime - timeLastCall;
@@ -94,9 +91,9 @@ void CFade::Segment()
 		}
 
 		break;
-	case EFS_FINISHED:
+		case EFS_FINISHED:
 
-		break;
+			break;
 	}
 }
 
@@ -105,19 +102,18 @@ bool CFade::IsFinished() const
 	return EFS_FINISHED == eState;
 }
 
-
 //CFades
-
 
 void CFades::Update()
 {
 	// fades
 	for ( CFades::iterator it = begin(); it != end(); )
 	{
-		if ( (*it)->IsFinished() )
+		if ( ( *it )->IsFinished() )
 			it = erase( it );
-		else {
-			(*it)->Segment();
+		else
+		{
+			( *it )->Segment();
 			++it;
 		}
 	}

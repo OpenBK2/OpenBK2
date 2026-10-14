@@ -14,7 +14,10 @@ void CGrannyFileInfo::InitMe()
 		pData = 0;
 }
 
-static CBasicShare< NGScene::SResKey<NGScene::SGrannyFileLoaderInfo>, NGScene::CGrannyMemFileLoader, NGScene::SGrannyFileLoaderInfoHash> shareAnimGrannyFiles(105);
+static CBasicShare<NGScene::SResKey<NGScene::SGrannyFileLoaderInfo>,
+                   NGScene::CGrannyMemFileLoader,
+                   NGScene::SGrannyFileLoaderInfoHash>
+		shareAnimGrannyFiles( 105 );
 
 void CGrannyBaseStuffLoader::TrueSetKey( const NGScene::SResKey<NGScene::SGrannyFileLoaderInfo> &key )
 {

@@ -5,13 +5,13 @@
 
 namespace NDb
 {
-	struct SChapter;
-	struct SMapInfo;
-	struct SReinforcement;
-	struct SMechUnitRPGStats;
-	struct SSquadRPGStats;
-	struct SEnemyEntry;
-	struct SChapterBonus;
+struct SChapter;
+struct SMapInfo;
+struct SReinforcement;
+struct SMechUnitRPGStats;
+struct SSquadRPGStats;
+struct SEnemyEntry;
+struct SChapterBonus;
 }
 struct SChapterReinfUpgrade;
 struct SChapterReinfComposition;
@@ -19,22 +19,25 @@ struct SChapterReinfComposition;
 class CInterfaceChapterMapMenu : public CInterfaceScreenBase
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceChapterMapMenu );
+
 public:
 	struct SChapterDesc;
 	struct SMissionDesc;
+
 public:
 	class CReactions : public IProgrammedReactionsAndChecks
 	{
-		OBJECT_NOCOPY_METHODS(CReactions);
+		OBJECT_NOCOPY_METHODS( CReactions );
 		CPtr<IWindow> pScreen;
 		CPtr<CInterfaceChapterMapMenu> pInterface;
+
 	public:
-		CReactions() {  }
-		~CReactions()
+		CReactions() {}
+		~CReactions() {}
+		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface )
+				: pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
-		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface ) :
-			pScreen( _pScreen ), pInterface( _pInterface ) {   }
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 
@@ -45,14 +48,26 @@ public:
 			return 0;
 		}
 	};
+
 private:
-	enum EMissionState { EMS_DISABLED, EMS_ENABLED, EMS_COMPLETED, EMS_RECOMMENDED };
+	enum EMissionState
+	{
+		EMS_DISABLED,
+		EMS_ENABLED,
+		EMS_COMPLETED,
+		EMS_RECOMMENDED
+	};
 	struct SReward
 	{
 		ZDATA
 		CPtr<IButton> pBtn;
 		CPtr<IWindow> pBonusWnd;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBtn); f.Add(3,&pBonusWnd); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pBtn );
+			f.Add( 3, &pBonusWnd );
+			return 0;
+		}
 	};
 	struct STarget
 	{
@@ -60,9 +75,9 @@ private:
 		CDBPtr<NDb::SMapInfo> pDBInfo;
 		EMissionState eState;
 		int nCalls;
-		int nX;									// Place on chapter map
+		int nX; // Place on chapter map
 		int nY;
-		float fValue0;					// Values for automatic frontline
+		float fValue0; // Values for automatic frontline
 		float fValue1;
 		CPtr<IWindowFrameSequence> pFlame;
 		CPtr<IWindow> pCompleted;
@@ -70,14 +85,35 @@ private:
 		int nRecommendedX;
 		int nRecommendedY;
 		CPtr<IButton> pWindow;
-		std::vector< CDBPtr<NDb::SChapterBonus> > rewardDescs;
+		std::vector<CDBPtr<NDb::SChapterBonus>> rewardDescs;
 		std::vector<SReward> rewards;
 		CPtr<IWindow> pBonusIcon;
-		int nPriority;					// Recommended order of missions
+		int nPriority; // Recommended order of missions
 		CVec2 vEndOffset;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pDBInfo); f.Add(3,&eState); f.Add(4,&nCalls); f.Add(5,&nX); f.Add(6,&nY); f.Add(7,&fValue0); f.Add(8,&fValue1); f.Add(9,&pFlame); f.Add(10,&pCompleted); f.Add(11,&pRecommended); f.Add(12,&nRecommendedX); f.Add(13,&nRecommendedY); f.Add(14,&pWindow); f.Add(15,&rewardDescs); f.Add(16,&rewards); f.Add(17,&pBonusIcon); f.Add(18,&nPriority); f.Add(19,&vEndOffset); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pDBInfo );
+			f.Add( 3, &eState );
+			f.Add( 4, &nCalls );
+			f.Add( 5, &nX );
+			f.Add( 6, &nY );
+			f.Add( 7, &fValue0 );
+			f.Add( 8, &fValue1 );
+			f.Add( 9, &pFlame );
+			f.Add( 10, &pCompleted );
+			f.Add( 11, &pRecommended );
+			f.Add( 12, &nRecommendedX );
+			f.Add( 13, &nRecommendedY );
+			f.Add( 14, &pWindow );
+			f.Add( 15, &rewardDescs );
+			f.Add( 16, &rewards );
+			f.Add( 17, &pBonusIcon );
+			f.Add( 18, &nPriority );
+			f.Add( 19, &vEndOffset );
+			return 0;
+		}
 	};
-	typedef std::vector< STarget > CTargets;
+	typedef std::vector<STarget> CTargets;
 
 	// Simpler reinf button (for mission bonuses and enemy forces)
 	struct SReinfButtonDesc
@@ -90,9 +126,19 @@ private:
 		CDBPtr<NDb::SSquadRPGStats> pSquad;
 		int nQuantity;
 		CPtr<IWindow> pBonusWnd;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pButton); f.Add(3,&pIcon); f.Add(4,&pReinforcement); f.Add(5,&pMechUnit); f.Add(6,&pSquad); f.Add(7,&nQuantity); f.Add(8,&pBonusWnd); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pButton );
+			f.Add( 3, &pIcon );
+			f.Add( 4, &pReinforcement );
+			f.Add( 5, &pMechUnit );
+			f.Add( 6, &pSquad );
+			f.Add( 7, &nQuantity );
+			f.Add( 8, &pBonusWnd );
+			return 0;
+		}
 	};
-	typedef std::vector< SReinfButtonDesc > CReinfButtonList;
+	typedef std::vector<SReinfButtonDesc> CReinfButtonList;
 
 	// More complex reinf button (for active army)
 	struct SReinfRemapItem : public SReinfButtonDesc
@@ -102,9 +148,17 @@ private:
 		CDBPtr<NDb::STexture> pDisabledTexture;
 		std::wstring wszDefaultTooltip;
 		CPtr<IWindow> pUnknownWnd;
-		ZEND int operator&( IBinSaver &f ) { f.Add(1,( SReinfButtonDesc *)this); f.Add(2,&pDefaultTexture); f.Add(3,&pDisabledTexture); f.Add(4,&wszDefaultTooltip); f.Add(5,&pUnknownWnd); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 1, (SReinfButtonDesc *)this );
+			f.Add( 2, &pDefaultTexture );
+			f.Add( 3, &pDisabledTexture );
+			f.Add( 4, &wszDefaultTooltip );
+			f.Add( 5, &pUnknownWnd );
+			return 0;
+		}
 	};
-	typedef std::vector< SReinfRemapItem > CReinfRemap;
+	typedef std::vector<SReinfRemapItem> CReinfRemap;
 
 	enum EUIState
 	{
@@ -134,15 +188,15 @@ private:
 
 	enum EExitDestination
 	{
-		EED_ENTER,				// this one plays on screen start
-		EED_RE_ENTER,				// this one plays when we return from Army Manager, SaveLoad, etc
+		EED_ENTER,    // this one plays on screen start
+		EED_RE_ENTER, // this one plays when we return from Army Manager, SaveLoad, etc
 		EED_BACK,
 		EED_ARMY_MANAGER,
 		EED_SAVE,
 		EED_PLAYER_INFO,
 	};
 
-	int nDelay;											// Pass several StepLocal()-s to let it do the autosave
+	int nDelay; // Pass several StepLocal()-s to let it do the autosave
 	// ReinfDesc {	- Don't need to be saved
 	CReinfButtonList reinfDescReinfs;
 	CReinfButtonList reinfDescUnits;
@@ -150,7 +204,7 @@ private:
 	EReinfDescWindowState eReinfDescState;
 	SReinfButtonDesc reinfDescSingleItem;
 	CPtr<IWindow> pReinfDescReinfArea;
-	std::vector< CDBPtr<NDb::SReinforcement> > oldReinfs;
+	std::vector<CDBPtr<NDb::SReinforcement>> oldReinfs;
 	int nSelectedReinf;
 	int nButtonStep;
 	int nFirstButtonPosX;
@@ -161,7 +215,7 @@ private:
 	EExitDestination eExitDir;
 	bool bNeedToRunAnimation;
 
-	ZDATA_(CInterfaceScreenBase)
+	ZDATA_( CInterfaceScreenBase )
 	CObj<CReactions> pReactions;
 	CTargets targets;
 
@@ -198,7 +252,7 @@ private:
 	CPtr<IWindow> pChapterMapBgr;
 	int nFrontLineAnim;
 	CDBPtr<NDb::SMapInfo> pDetailsMap;
-	CVec2 vDetailsCoeff;			// Coefficient for DetailsMap->Screen translation
+	CVec2 vDetailsCoeff; // Coefficient for DetailsMap->Screen translation
 
 	CReinfButtonList bonusButtons;
 	CPtr<IWindow> pFinalBonus;
@@ -221,7 +275,7 @@ private:
 	int nCallsLeft;
 
 	ZSKIP //bool bNeedReinfReport;
-	int nEffectCounter;
+			int nEffectCounter;
 
 	CPtr<IWindow> pChapterMapLeft;
 	CPtr<IWindow> pChapterMapRight;
@@ -251,8 +305,80 @@ private:
 	int nRecommendedTarget;
 	bool bInitialDialogVisible;
 	bool bRequestAutoSave;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pReactions); f.Add(3,&targets); f.Add(4,&pMain); f.Add(5,&pChapterMap); f.Add(6,&pChapterMapTarget); f.Add(7,&pChapterMapTargetBig); f.Add(8,&pArmyManager); f.Add(9,&bArmyManagerInitialEnable); f.Add(10,&pPlay); f.Add(11,&pMissionName); f.Add(12,&pReinfGrid); f.Add(13,&pMissionEnabledLight); f.Add(14,&reinfButtons); f.Add(15,&wszReinfNotEnabledPrefix); f.Add(16,&wszReinfDisabledPrefix); f.Add(17,&wszReinfAvailablePrefix); f.Add(18,&eUIState); f.Add(20,&timeStartEffect); f.Add(21,&eUIEffectState); f.Add(22,&rcInitialMapBounds); f.Add(23,&pMapPanel); f.Add(24,&pFrontlines); f.Add(25,&pChapterMapBgr); f.Add(26,&nFrontLineAnim); f.Add(27,&pDetailsMap); f.Add(28,&vDetailsCoeff); f.Add(29,&bonusButtons); f.Add(30,&pFinalBonus); f.Add(31,&pReinfDesc); f.Add(32,&pReinfDesc1Unit); f.Add(33,&pReinfDesc1Reinf); f.Add(34,&pReinfDescMultiReinf); f.Add(35,&pReinfDescUpgrade); f.Add(36,&pReinfRoller1); f.Add(37,&pReinfRoller2); f.Add(38,&pReinfRoller3); f.Add(39,&pMissionReinfRoller1); f.Add(40,&pMissionReinfRoller2); f.Add(41,&nCurrentMissionReinfs); f.Add(42,&pChapter); f.Add(43,&nCallsLeft); f.Add(45,&nEffectCounter); f.Add(46,&pChapterMapLeft); f.Add(47,&pChapterMapRight); f.Add(48,&nChapterMapLeftX); f.Add(49,&nChapterMapLeftY); f.Add(50,&nChapterMapRightX); f.Add(51,&nChapterMapRightY); f.Add(52,&pReinfGridUpgradableTemplate); f.Add(53,&vReinfGridUpgradableTemplateDelta); f.Add(54,&pBonusGrid); f.Add(55,&pBonusGridBonusTemplate); f.Add(56,&vBonusGridBonusTemplateDelta); f.Add(57,&pHelper); f.Add(58,&nUpgradeMissionSelected); f.Add(59,&nUpgradeRewardSelected); f.Add(60,&pMapToStart); f.Add(61,&pReinfUpgrade); f.Add(62,&pReinfComposition); f.Add(63,&pChapterDescDlg); f.Add(64,&pMissionDescDlg); f.Add(65,&nSelectedMission); f.Add(66,&pMissionDescBtn); f.Add(67,&nRecommendedTarget); f.Add(68,&bInitialDialogVisible); f.Add(69,&bRequestAutoSave); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceScreenBase *)this );
+		f.Add( 2, &pReactions );
+		f.Add( 3, &targets );
+		f.Add( 4, &pMain );
+		f.Add( 5, &pChapterMap );
+		f.Add( 6, &pChapterMapTarget );
+		f.Add( 7, &pChapterMapTargetBig );
+		f.Add( 8, &pArmyManager );
+		f.Add( 9, &bArmyManagerInitialEnable );
+		f.Add( 10, &pPlay );
+		f.Add( 11, &pMissionName );
+		f.Add( 12, &pReinfGrid );
+		f.Add( 13, &pMissionEnabledLight );
+		f.Add( 14, &reinfButtons );
+		f.Add( 15, &wszReinfNotEnabledPrefix );
+		f.Add( 16, &wszReinfDisabledPrefix );
+		f.Add( 17, &wszReinfAvailablePrefix );
+		f.Add( 18, &eUIState );
+		f.Add( 20, &timeStartEffect );
+		f.Add( 21, &eUIEffectState );
+		f.Add( 22, &rcInitialMapBounds );
+		f.Add( 23, &pMapPanel );
+		f.Add( 24, &pFrontlines );
+		f.Add( 25, &pChapterMapBgr );
+		f.Add( 26, &nFrontLineAnim );
+		f.Add( 27, &pDetailsMap );
+		f.Add( 28, &vDetailsCoeff );
+		f.Add( 29, &bonusButtons );
+		f.Add( 30, &pFinalBonus );
+		f.Add( 31, &pReinfDesc );
+		f.Add( 32, &pReinfDesc1Unit );
+		f.Add( 33, &pReinfDesc1Reinf );
+		f.Add( 34, &pReinfDescMultiReinf );
+		f.Add( 35, &pReinfDescUpgrade );
+		f.Add( 36, &pReinfRoller1 );
+		f.Add( 37, &pReinfRoller2 );
+		f.Add( 38, &pReinfRoller3 );
+		f.Add( 39, &pMissionReinfRoller1 );
+		f.Add( 40, &pMissionReinfRoller2 );
+		f.Add( 41, &nCurrentMissionReinfs );
+		f.Add( 42, &pChapter );
+		f.Add( 43, &nCallsLeft );
+		f.Add( 45, &nEffectCounter );
+		f.Add( 46, &pChapterMapLeft );
+		f.Add( 47, &pChapterMapRight );
+		f.Add( 48, &nChapterMapLeftX );
+		f.Add( 49, &nChapterMapLeftY );
+		f.Add( 50, &nChapterMapRightX );
+		f.Add( 51, &nChapterMapRightY );
+		f.Add( 52, &pReinfGridUpgradableTemplate );
+		f.Add( 53, &vReinfGridUpgradableTemplateDelta );
+		f.Add( 54, &pBonusGrid );
+		f.Add( 55, &pBonusGridBonusTemplate );
+		f.Add( 56, &vBonusGridBonusTemplateDelta );
+		f.Add( 57, &pHelper );
+		f.Add( 58, &nUpgradeMissionSelected );
+		f.Add( 59, &nUpgradeRewardSelected );
+		f.Add( 60, &pMapToStart );
+		f.Add( 61, &pReinfUpgrade );
+		f.Add( 62, &pReinfComposition );
+		f.Add( 63, &pChapterDescDlg );
+		f.Add( 64, &pMissionDescDlg );
+		f.Add( 65, &nSelectedMission );
+		f.Add( 66, &pMissionDescBtn );
+		f.Add( 67, &nRecommendedTarget );
+		f.Add( 68, &bInitialDialogVisible );
+		f.Add( 69, &bRequestAutoSave );
+		return 0;
+	}
+
 private:
 	void PlayMissionStartEffect();
 	void PlayMissionStartMission();
@@ -268,6 +394,7 @@ private:
 	bool OnShowMissionDesc( const std::string &szSender );
 
 	void HideDialogs();
+
 protected:
 	void MsgBack( const SGameMessage &msg );
 	void MsgMessageBoxOk( const SGameMessage &msg );
@@ -276,7 +403,7 @@ protected:
 	void MsgContinuePlay( const SGameMessage &msg );
 	void MsgReenter( const SGameMessage &msg );
 	void MsgCompleteSelectedMission( const SGameMessage &msg ); // For Testers
-	void MsgCompleteChapter( const SGameMessage &msg ); // For Testers
+	void MsgCompleteChapter( const SGameMessage &msg );         // For Testers
 
 	bool OnArmyManager();
 	bool OnPlayerStats();
@@ -289,10 +416,11 @@ protected:
 	bool OnFixBonus( const std::string &szSender );
 
 	// ReinfDesc{
-	void ShowReinfDesc( const NDb::SReinforcement *pReinf );			// Display one reinf
-	void ShowReinfDesc( const NDb::SMechUnitRPGStats *pMech, const NDb::SSquadRPGStats *pSquad );				// Display one enemy
-	void ShowReinfDesc( const NDb::SReinforcement *pReinf, const NDb::SReinforcement *pReinfUpg );			// Display one reinf upgrade
-	void OnReinfDescItem( const std::string &szSender );		// Reinforcement or unit selected
+	void ShowReinfDesc( const NDb::SReinforcement *pReinf );                                      // Display one reinf
+	void ShowReinfDesc( const NDb::SMechUnitRPGStats *pMech, const NDb::SSquadRPGStats *pSquad ); // Display one enemy
+	void ShowReinfDesc( const NDb::SReinforcement *pReinf,
+	                    const NDb::SReinforcement *pReinfUpg ); // Display one reinf upgrade
+	void OnReinfDescItem( const std::string &szSender );        // Reinforcement or unit selected
 	void OnReinfDescOK();
 	void OnReinfDescEncyclopedia();
 	IWindow *GetCurrentReinfDescPopup();
@@ -337,6 +465,7 @@ protected:
 	void ProceedInitialDialogs();
 
 	~CInterfaceChapterMapMenu();
+
 public:
 	CInterfaceChapterMapMenu();
 
@@ -353,13 +482,14 @@ public:
 	//}
 };
 
-#if !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
+#if !defined( _SINGLE_DEMO ) || defined( _MP_DEMO )
 class CICChapterMapMenu : public CInterfaceCommandBase<CInterfaceChapterMapMenu>
 {
 	OBJECT_BASIC_METHODS( CICChapterMapMenu );
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

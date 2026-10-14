@@ -12,11 +12,20 @@ class CForegroundTextString : public IWindowPart
 	CPtr<NDb::SForegroundTextString> pInstance;
 	CObj<IML> pGfxText;
 	CPtr<IWindow> pFontScaleWindow;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszCustomText); f.Add(3,&rcParent); f.Add(4,&pInstance); f.Add(5,&pGfxText); f.Add(6,&pFontScaleWindow); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &wszCustomText );
+		f.Add( 3, &rcParent );
+		f.Add( 4, &pInstance );
+		f.Add( 5, &pGfxText );
+		f.Add( 6, &pFontScaleWindow );
+		return 0;
+	}
+
 private:
 	void InitText();
-public:
 
+public:
 	CForegroundTextString() {}
 
 	virtual void Init();
@@ -24,9 +33,9 @@ public:
 	void SetText( const std::wstring &_szText );
 	int GetOptimalWidth() const;
 	const std::wstring &GetText() const;
-	const std::wstring& GetDBInstanceText() const;
-	const std::wstring& GetDBFormatText() const;
-	const NDb::SWindowPlacement* GetPlacement() const;
+	const std::wstring &GetDBInstanceText() const;
+	const std::wstring &GetDBFormatText() const;
+	const NDb::SWindowPlacement *GetPlacement() const;
 
 	//IWindowPart{
 	virtual void Visit( struct IUIVisitor *pVisitor );
@@ -50,9 +59,21 @@ class CPlacedText : public CObjectBase
 	CPtr<IWindow> pFontScaleWindow;
 	CVec2 vScreenRect;
 	float fFadeValue;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); f.Add(3,&placement); f.Add(4,&rcParent); f.Add(5,&pGfxText); f.Add(6,&vScreenRect); f.Add(7,&fFadeValue); f.Add(8,&pFontScaleWindow); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &wszText );
+		f.Add( 3, &placement );
+		f.Add( 4, &rcParent );
+		f.Add( 5, &pGfxText );
+		f.Add( 6, &vScreenRect );
+		f.Add( 7, &fFadeValue );
+		f.Add( 8, &pFontScaleWindow );
+		return 0;
+	}
+
 private:
 	void InitGfxText();
+
 public:
 	CPlacedText();
 
@@ -61,7 +82,7 @@ public:
 
 	void Visit( struct IUIVisitor *pVisitor );
 
-	const std::wstring& GetText() const { return wszText; }
+	const std::wstring &GetText() const { return wszText; }
 	void SetText( const std::wstring &wszText );
 
 	int GetOptimalWidth() const;

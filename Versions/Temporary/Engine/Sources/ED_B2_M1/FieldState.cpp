@@ -35,21 +35,26 @@ void CFieldState::UpdateEditParameters( unsigned nFlags )
 		{
 			std::string szMapTerraSetTypeName;
 			std::string szMapTerraSetName;
-			CManipulatorManager::GetParamsFromReference( "TerraSet", pMapInfoEditor->GetViewManipulator(), &szMapTerraSetTypeName, &szMapTerraSetName, 0 );
+			CManipulatorManager::GetParamsFromReference(
+					"TerraSet", pMapInfoEditor->GetViewManipulator(), &szMapTerraSetTypeName, &szMapTerraSetName, 0 );
 			//
 			pEditParameters->fieldList.clear();
-			if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( FIELD_TYPE_NAME ) )
+			if ( CPtr<IManipulator> pFolderManipulator =
+			         Singleton<IResourceManager>()->CreateFolderManipulator( FIELD_TYPE_NAME ) )
 			{
-				for ( CPtr<IManipulatorIterator> it = pFolderManipulator->Iterate( false, ECT_NO_CACHE ); !it->IsEnd(); it->Next() )
+				for ( CPtr<IManipulatorIterator> it = pFolderManipulator->Iterate( false, ECT_NO_CACHE ); !it->IsEnd();
+				      it->Next() )
 				{
 					std::string szName;
 					if ( it->GetName( &szName ) && ( !szName.empty() ) && ( szName[szName.size() - 1] != PATH_SEPARATOR_CHAR ) )
 					{
-						if ( CPtr<IManipulator> pFieldManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( FIELD_TYPE_NAME, szName ) )
+						if ( CPtr<IManipulator> pFieldManipulator =
+						         Singleton<IResourceManager>()->CreateObjectManipulator( FIELD_TYPE_NAME, szName ) )
 						{
 							std::string szTerraSetTypeName;
 							std::string szTerraSetName;
-							CManipulatorManager::GetParamsFromReference( "TerraSet", pFieldManipulator, &szTerraSetTypeName, &szTerraSetName, 0 );
+							CManipulatorManager::GetParamsFromReference(
+									"TerraSet", pFieldManipulator, &szTerraSetTypeName, &szTerraSetName, 0 );
 							//
 							if ( ( szMapTerraSetTypeName == szTerraSetTypeName ) && ( szMapTerraSetName == szTerraSetName ) )
 							{
@@ -63,7 +68,6 @@ void CFieldState::UpdateEditParameters( unsigned nFlags )
 	}
 }
 
-
 void CFieldState::Enter()
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
@@ -73,7 +77,6 @@ void CFieldState::Enter()
 	//
 	CPolygonState::Enter();
 }
-
 
 void CFieldState::Leave()
 {
@@ -86,12 +89,11 @@ void CFieldState::Leave()
 	}
 }
 
-
 bool CFieldState::CanEdit()
 {
-	return ( ( pMapInfoEditor->pMapInfo != 0 ) && ( pMapInfoEditor->GetViewManipulator() != 0 ) && GetEditParameters() != 0 );
+	return ( ( pMapInfoEditor->pMapInfo != 0 ) && ( pMapInfoEditor->GetViewManipulator() != 0 ) &&
+	         GetEditParameters() != 0 );
 }
-
 
 void CFieldState::GetBounds( int *pnMinCount, int *pnMaxCount )
 {
@@ -100,7 +102,6 @@ void CFieldState::GetBounds( int *pnMinCount, int *pnMaxCount )
 	( *pnMinCount ) = 3;
 	( *pnMaxCount ) = INVALID_NODE_ID;
 }
-
 
 CPolygonState::EMoveType CFieldState::GetMoveType()
 {
@@ -123,19 +124,18 @@ bool CFieldState::PrepareControlPoints( CControlPointList *pControlPointList )
 		if ( pEditParameters->bRandomize )
 		{
 			RandomizeEdges<CControlPointList, CVec3>( ( *pControlPointList ),
-																								10,
-																								pEditParameters->fWidth,
-																								CTPoint<float>( 0.0f, pEditParameters->fDisturbance ),
-																								pControlPointList,
-																								pEditParameters->fMinLength * ( AI_TILE_SIZE * 2.0f ),
-																								( 16.0f * 32.0f ) * ( AI_TILE_SIZE * 2.0f ),
-																								true );
+			                                          10,
+			                                          pEditParameters->fWidth,
+			                                          CTPoint<float>( 0.0f, pEditParameters->fDisturbance ),
+			                                          pControlPointList,
+			                                          pEditParameters->fMinLength * ( AI_TILE_SIZE * 2.0f ),
+			                                          ( 16.0f * 32.0f ) * ( AI_TILE_SIZE * 2.0f ),
+			                                          true );
 			UniquePolygon<CControlPointList, CVec3>( pControlPointList, ( AI_TILE_SIZE * 2.0f ) );
 		}
 	}
 	return true;
 }
-
 
 void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 {
@@ -144,7 +144,8 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 		// считываем бинарные данные
 		if ( SEditParameters *pEditParameters = GetEditParameters() )
 		{
-			if ( ( pEditParameters->nFieldIndex >= 0 ) && ( pEditParameters->nFieldIndex < pEditParameters->fieldList.size() ) )
+			if ( ( pEditParameters->nFieldIndex >= 0 ) &&
+			     ( pEditParameters->nFieldIndex < pEditParameters->fieldList.size() ) )
 			{
 				const std::string szFieldName = pEditParameters->fieldList[pEditParameters->nFieldIndex];
 				if ( const NDb::SField *pField = NDb::Get<NDb::SField>( CDBID( szFieldName ) ) )
@@ -155,29 +156,31 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 						std::string strPM = NResources::GetString( IDS_PM_PLACE_FIELD );
 						NProgress::SetMessage( fmt::sprintf( strPM.c_str(), szFieldName.c_str() ) );
 						NProgress::SetRange( 0, 6 );
-						NProgress::IteratePosition();	// 1
+						NProgress::IteratePosition(); // 1
 						//
 						CFieldDistanceMap visDistances;
 						CFieldDistanceMap aiDistances;
 						CFieldPolygon polygon;
-						for ( CControlPointList::const_iterator itControlPoint = controlPointList.begin(); itControlPoint != controlPointList.end(); ++itControlPoint )
+						for ( CControlPointList::const_iterator itControlPoint = controlPointList.begin();
+						      itControlPoint != controlPointList.end();
+						      ++itControlPoint )
 						{
 							polygon.push_back( CVec2( itControlPoint->x, itControlPoint->y ) );
 						}
-						NProgress::IteratePosition();	// 2
+						NProgress::IteratePosition(); // 2
 						// заполняем землю
 						if ( pEditParameters->bFillTerrain )
 						{
 							CArray2D<uint8_t> tile2DArray;
 							CTPoint<int> startTile;
 							FillTileSet( &tile2DArray,
-													&startTile,
-													*pField,
-													polygon,
-													CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
-																				pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
-													AI_TILE_SIZE * 2.0f,
-													&visDistances );
+							             &startTile,
+							             *pField,
+							             polygon,
+							             CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
+							                           pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
+							             AI_TILE_SIZE * 2.0f,
+							             &visDistances );
 							//Trace2DByteArray( tile2DArray, "CFieldState::UpdatePolygon()" );
 							CVec3 vDiffPos = VNULL3;
 							CArray2D<uint8_t> diff;
@@ -187,9 +190,9 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 								{
 									pTerraManager->GetTileTypeUpdateDifferences( &( vDiffPos.x ), &( vDiffPos.y ), &diff );
 									pTerraManager->UpdateTileAreaType( startTile.x * AI_TILE_SIZE * 2.0f,
-																										startTile.y * AI_TILE_SIZE * 2.0f,
-																										tile2DArray,
-																										NTerraBrush::TERRA_BRUSH_OVERRIDE );
+									                                   startTile.y * AI_TILE_SIZE * 2.0f,
+									                                   tile2DArray,
+									                                   NTerraBrush::TERRA_BRUSH_OVERRIDE );
 									pTerraManager->GetTileTypeUpdateDifferences( &( vDiffPos.x ), &( vDiffPos.y ), &diff );
 								}
 							}
@@ -198,18 +201,18 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 								pMapInfoController->AddChangeTileOperation( diff, vDiffPos );
 							}
 						}
-						NProgress::IteratePosition();	// 3
+						NProgress::IteratePosition(); // 3
 						// заполняем высоты
 						if ( pEditParameters->bFillHeights )
 						{
 							SHeightPattern heightPattern;
 							FillProfilePattern( &heightPattern,
-																	*pField,
-																	polygon,
-																	CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
-																								pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
-																	AI_TILE_SIZE * 2.0f,
-																	&visDistances );
+							                    *pField,
+							                    polygon,
+							                    CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
+							                                  pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
+							                    AI_TILE_SIZE * 2.0f,
+							                    &visDistances );
 							//Trace2DFloatArray( heightPattern.heights, "CFieldState::UpdatePolygon()" );
 							CTPoint<int> diffPos = CTPoint<int>( 0, 0 );
 							CArray2D<float> diff;
@@ -219,10 +222,10 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 								{
 									pTerraManager->GetTerraGeometryUpdateDifferences( &( diffPos.x ), &( diffPos.y ), &diff );
 									pTerraManager->ModifyTerraGeometryByBrush( heightPattern.pos.x,
-																														heightPattern.pos.y,
-																														false,
-																														heightPattern.heights,
-																														NTerraBrush::TERRA_BRUSH_OVERRIDE );
+									                                           heightPattern.pos.y,
+									                                           false,
+									                                           heightPattern.heights,
+									                                           NTerraBrush::TERRA_BRUSH_OVERRIDE );
 									pTerraManager->GetTerraGeometryUpdateDifferences( &( diffPos.x ), &( diffPos.y ), &diff );
 								}
 							}
@@ -231,28 +234,28 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 								pMapInfoController->AddChangeHeightOperation( diff, diffPos );
 							}
 						}
-						NProgress::IteratePosition();	// 4
+						NProgress::IteratePosition(); // 4
 						// заполняем объекты
 						if ( pEditParameters->bFillObjects )
 						{
 							CArray2D<uint8_t> aiTileMap;
 							aiTileMap.SetSizes( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH * 2,
-																	pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH * 2 );
+							                    pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH * 2 );
 							aiTileMap.FillZero();
 							FillObjectSet( pMapInfoEditor,
-														pMapInfoController,
-														*pField,
-														polygon,
-														CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH * 2,
-																					pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH * 2 ),
-														AI_TILE_SIZE,
-														&aiDistances,
-														&aiTileMap );
+							               pMapInfoController,
+							               *pField,
+							               polygon,
+							               CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH * 2,
+							                             pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH * 2 ),
+							               AI_TILE_SIZE,
+							               &aiDistances,
+							               &aiTileMap );
 						}
-						NProgress::IteratePosition();	// 5
+						NProgress::IteratePosition(); // 5
 						pMapInfoController->Redo( false, true, pMapInfoEditor );
 						Singleton<IControllerContainer>()->Add( pMapInfoController );
-						NProgress::IteratePosition();	// 6
+						NProgress::IteratePosition(); // 6
 						//
 						pMapInfoEditor->SetModified( true );
 						Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -264,12 +267,11 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 	}
 }
 
-
 bool CFieldState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{
-		switch( nCommandID )
+		switch ( nCommandID )
 		{
 			case ID_GET_EDIT_PARAMETERS:
 			{
@@ -306,7 +308,6 @@ bool CFieldState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return true;
 }
 
-
 bool CFieldState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CFieldState::UpdateCommand(), pbEnable == 0" );
@@ -314,7 +315,7 @@ bool CFieldState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 	//
 	if ( !CPolygonState::UpdateCommand( nCommandID, pbEnable, pbCheck ) )
 	{
-		switch( nCommandID )
+		switch ( nCommandID )
 		{
 			case ID_GET_EDIT_PARAMETERS:
 			case ID_SET_EDIT_PARAMETERS:
@@ -330,10 +331,11 @@ bool CFieldState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 	return true;
 }
 
-
-void CFieldState::CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTileSetWeightVectorList, const NDb::SField &rField )
+void CFieldState::CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTileSetWeightVectorList,
+                                                 const NDb::SField &rField )
 {
-	NI_ASSERT( pTileSetWeightVectorList != 0, "CreateTileSetWeightVectorList(), invalid parameter: pTileSetWeightVectorList == 0" );
+	NI_ASSERT( pTileSetWeightVectorList != 0,
+	           "CreateTileSetWeightVectorList(), invalid parameter: pTileSetWeightVectorList == 0" );
 	if ( !rField.tileShells.empty() )
 	{
 		pTileSetWeightVectorList->resize( rField.tileShells.size() );
@@ -341,7 +343,9 @@ void CFieldState::CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTile
 		{
 			for ( int nTileIndex = 0; nTileIndex < rField.tileShells[nShellIndex].tiles.size(); ++nTileIndex )
 			{
-				( *pTileSetWeightVectorList )[nShellIndex].push_back( rField.tileShells[nShellIndex].tiles[nTileIndex].nValue, rField.tileShells[nShellIndex].tiles[nTileIndex].nWeight );
+				( *pTileSetWeightVectorList )[nShellIndex].push_back(
+						rField.tileShells[nShellIndex].tiles[nTileIndex].nValue,
+						rField.tileShells[nShellIndex].tiles[nTileIndex].nWeight );
 			}
 		}
 	}
@@ -351,10 +355,11 @@ void CFieldState::CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTile
 	}
 }
 
-
-void CFieldState::CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *pObjectSetWeightVectorList, const NDb::SField &rField )
+void CFieldState::CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *pObjectSetWeightVectorList,
+                                                   const NDb::SField &rField )
 {
-	NI_ASSERT( pObjectSetWeightVectorList != 0, "CreateObjectSetWeightVectorList(), invalid parameter: pObjectSetWeightVectorList == 0" );
+	NI_ASSERT( pObjectSetWeightVectorList != 0,
+	           "CreateObjectSetWeightVectorList(), invalid parameter: pObjectSetWeightVectorList == 0" );
 	if ( !rField.objectShells.empty() )
 	{
 		pObjectSetWeightVectorList->resize( rField.objectShells.size() );
@@ -362,7 +367,9 @@ void CFieldState::CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *p
 		{
 			for ( int nObjectIndex = 0; nObjectIndex < rField.objectShells[nShellIndex].objects.size(); ++nObjectIndex )
 			{
-				( *pObjectSetWeightVectorList )[nShellIndex].push_back( rField.objectShells[nShellIndex].objects[nObjectIndex].pValue, rField.objectShells[nShellIndex].objects[nObjectIndex].nWeight );
+				( *pObjectSetWeightVectorList )[nShellIndex].push_back(
+						rField.objectShells[nShellIndex].objects[nObjectIndex].pValue,
+						rField.objectShells[nShellIndex].objects[nObjectIndex].nWeight );
 			}
 		}
 	}
@@ -372,12 +379,12 @@ void CFieldState::CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *p
 	}
 }
 
-
 //сервисная функция, определяет точки вхождения в полигон для слоя сетки
 //возвращает количество элементов в pXPosList
 //лист предствавляет из себя набор пар, - начало и конец отрезков входящих в полигон
 //концы отрезков включаются в полигон, для включения точек
-int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rPolygon, const CTPoint<int> &rXBounds, CXPosList *pXPosList )
+int CFieldState::GetPolygonLine(
+		int nYPos, float fSide, const CFieldPolygon &rPolygon, const CTPoint<int> &rXBounds, CXPosList *pXPosList )
 {
 	NI_ASSERT( pXPosList != 0, "GetPolygonLine(), invalid parameter: pXPosList == 0" );
 	pXPosList->clear();
@@ -405,7 +412,7 @@ int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rP
 	while ( currentPointIterator0 != rPolygon.end() )
 	{
 		if ( ( ( currentPointIterator1->y <= fY ) && ( fY < currentPointIterator0->y ) ) ||
-				 ( ( currentPointIterator0->y <= fY ) && ( fY < currentPointIterator1->y ) ) )
+		     ( ( currentPointIterator0->y <= fY ) && ( fY < currentPointIterator1->y ) ) )
 		{
 			if ( currentPointIterator0->x == currentPointIterator1->x )
 			{
@@ -413,7 +420,8 @@ int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rP
 			}
 			else
 			{
-				const float fA = ( currentPointIterator0->y - currentPointIterator1->y ) / ( currentPointIterator0->x - currentPointIterator1->x );
+				const float fA = ( currentPointIterator0->y - currentPointIterator1->y ) /
+				                 ( currentPointIterator0->x - currentPointIterator1->x );
 				const float fB = currentPointIterator0->y - ( fA * currentPointIterator0->x );
 				const float fX = ( fY - fB ) / fA;
 				pXPosList->push_back( fX / fSide );
@@ -472,20 +480,19 @@ int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rP
 		{
 			CXPosList::iterator itXPos = pXPosList->end();
 			--itXPos;
-			 ( *itXPos ) = rXBounds.max - 1;
+			( *itXPos ) = rXBounds.max - 1;
 		}
 	}
 	return pXPosList->size();
 }
 
-
 bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
-															 CTPoint<int> *pStartTile,
-															 const NDb::SField &rField,
-															 const CFieldPolygon &rPolygon,
-															 const CTPoint<int> terrainSize,
-															 float fTileSize,
-															 CFieldDistanceMap *pDistances )
+                               CTPoint<int> *pStartTile,
+                               const NDb::SField &rField,
+                               const CFieldPolygon &rPolygon,
+                               const CTPoint<int> terrainSize,
+                               float fTileSize,
+                               CFieldDistanceMap *pDistances )
 {
 	NI_ASSERT( pTile2DArray != 0, "FillTileSet(): Invalid parameter pTile2DArray == 0" );
 	NI_ASSERT( pStartTile != 0, "FillTileSet(): Invalid parameter pStartTile == 0" );
@@ -498,9 +505,9 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 	CTRect<int> boundingRect( 0, 0, terrainSize.x, terrainSize.y );
 	CTRect<float> boundingBox = GetPolygonBoundingBox( rPolygon );
 	CTRect<int> indices( ( boundingBox.minx + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
+	                     ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
+	                     ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
+	                     ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
 	//проверяем
 	if ( ValidateRect( boundingRect, &indices ) < 0 )
 	{
@@ -547,16 +554,16 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 						}
 						else
 						{
-							const CVec2	vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
-																			 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
+							const CVec2 vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
+							                         ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 							fDistance = PolygonDistance( rPolygon, vTileCenter, true );
 							( *pDistances )[tile] = fDistance;
 						}
 					}
 					else
 					{
-						const CVec2	vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
-																		 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
+						const CVec2 vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
+						                         ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 						fDistance = PolygonDistance( rPolygon, vTileCenter, true );
 					}
 
@@ -572,7 +579,8 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 							{
 								if ( !tileSetWeightVectorList[nShellIndex].empty() )
 								{
-									( *pTile2DArray )[nYIndex - pStartTile->y][nXIndex - pStartTile->x] = tileSetWeightVectorList[nShellIndex].GetRandom( false );
+									( *pTile2DArray )[nYIndex - pStartTile->y][nXIndex - pStartTile->x] =
+											tileSetWeightVectorList[nShellIndex].GetRandom( false );
 								}
 								break;
 							}
@@ -593,14 +601,11 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 	return true;
 }
 
-
-
 struct SAddFunctional
 {
 	SHeightPattern *pHeightPattern;
 	//
-	SAddFunctional( SHeightPattern *_pHeightPattern )
-		: pHeightPattern( _pHeightPattern )
+	SAddFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -612,13 +617,11 @@ struct SAddFunctional
 	}
 };
 
-
 struct SSubstractFunctional
 {
 	SHeightPattern *pHeightPattern;
 	//
-	SSubstractFunctional( SHeightPattern *_pHeightPattern )
-		: pHeightPattern( _pHeightPattern )
+	SSubstractFunctional( SHeightPattern *_pHeightPattern ) : pHeightPattern( _pHeightPattern )
 	{
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
 	}
@@ -630,13 +633,12 @@ struct SSubstractFunctional
 	}
 };
 
-
-bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
-																			const NDb::SField &rField,
-																			const CFieldPolygon &rPolygon,
-																			const CTPoint<int> terrainSize,
-																			float fTileSize,
-																			CFieldDistanceMap *pDistances )
+bool CFieldState::FillProfilePattern( SHeightPattern *pHeightPattern,
+                                      const NDb::SField &rField,
+                                      const CFieldPolygon &rPolygon,
+                                      const CTPoint<int> terrainSize,
+                                      float fTileSize,
+                                      CFieldDistanceMap *pDistances )
 {
 	NI_ASSERT( pHeightPattern != 0, "FillProfilePattern(): Invalid parameter pHeightPattern == 0" );
 	// приводим в порядок входные данные
@@ -679,7 +681,8 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 		patternSize.x = patternSize.y;
 		patternSize.y = nBackup;
 	}
-	if ( !Singleton<IUserDataContainer>()->Get()->NormalizePath( &( szProfileFileName ), true, true, true, SUserData::NPT_EXPORT_DESTINATION, 0 ) )
+	if ( !Singleton<IUserDataContainer>()->Get()->NormalizePath(
+					 &( szProfileFileName ), true, true, true, SUserData::NPT_EXPORT_DESTINATION, 0 ) )
 	{
 		return true;
 	}
@@ -687,9 +690,9 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	CTRect<int> boundingRect( 0, 0, terrainSize.x, terrainSize.y );
 	CTRect<float> boundingBox = GetPolygonBoundingBox( rPolygon );
 	CTRect<int> indices( ( boundingBox.minx + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
+	                     ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
+	                     ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
+	                     ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
 	//проверяем
 	if ( ValidateRect( boundingRect, &indices ) < 0 )
 	{
@@ -750,16 +753,16 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 						}
 						else
 						{
-							const CVec2	vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
-																			 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
+							const CVec2 vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
+							                         ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 							fDistance = PolygonDistance( rPolygon, vTileCenter, true );
 							( *pDistances )[tile] = fDistance;
 						}
 					}
 					else
 					{
-						const CVec2	vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
-																		 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
+						const CVec2 vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
+						                         ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 						fDistance = PolygonDistance( rPolygon, vTileCenter, true );
 					}
 
@@ -774,7 +777,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 						if ( int( fDistance ) >= ( rHeightPattern.heights.GetSizeX() / 2 ) )
 						{
 							CTPoint<int> cornerTile( nXIndex - pHeightPattern->pos.x - rHeightPattern.heights.GetSizeX() / 2,
-																			 nYIndex - pHeightPattern->pos.y - rHeightPattern.heights.GetSizeY() / 2 );
+							                         nYIndex - pHeightPattern->pos.y - rHeightPattern.heights.GetSizeY() / 2 );
 							rHeightPattern.pos = cornerTile;
 							if ( NWin32Random::Random( 0.0f, 1.0f ) < fPositiveRatio )
 							{
@@ -801,28 +804,25 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	return true;
 }
 
-
-template<class Type, class PointType>
+template <class Type, class PointType>
 struct ModifyTilesFunctional
 {
 	PointType bValue;
 	Type *pLockArray;
 
-	ModifyTilesFunctional( PointType _bValue, Type *_pLockArray )
-		: bValue ( _bValue ), pLockArray( _pLockArray )
+	ModifyTilesFunctional( PointType _bValue, Type *_pLockArray ) : bValue( _bValue ), pLockArray( _pLockArray )
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
 
 	bool operator()( int nXIndex, int nYIndex )
 	{
-		(*pLockArray)[nYIndex][nXIndex] = bValue;
+		( *pLockArray )[nYIndex][nXIndex] = bValue;
 		return true;
 	}
 };
 
-
-template<class Type, class PointType>
+template <class Type, class PointType>
 struct CheckTilesFunctional
 {
 	PointType bValue;
@@ -830,21 +830,20 @@ struct CheckTilesFunctional
 	bool isPresent;
 
 	CheckTilesFunctional( PointType _bValue, const Type *_pLockArray )
-		: bValue ( _bValue ), pLockArray( _pLockArray ), isPresent( false )
+			: bValue( _bValue ), pLockArray( _pLockArray ), isPresent( false )
 	{
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
 
 	bool operator()( int nXIndex, int nYIndex )
 	{
-		if ( (*pLockArray)[nYIndex][nXIndex] == bValue )
+		if ( ( *pLockArray )[nYIndex][nXIndex] == bValue )
 		{
 			isPresent = true;
 		}
 		return ( !isPresent );
 	}
 };
-
 
 /**
 template<class TYPE>
@@ -914,15 +913,14 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//гра
 }
 /**/
 
-
 bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
-																 CObjectBaseController *pObjectController,
-																 const NDb::SField &rField,
-																 const CFieldPolygon &rPolygon,
-																 const CTPoint<int> terrainSize,
-																 float fTileSize,
-																 CFieldDistanceMap *pDistances,
-																 CArray2D<uint8_t> *pTileMap )
+                                 CObjectBaseController *pObjectController,
+                                 const NDb::SField &rField,
+                                 const CFieldPolygon &rPolygon,
+                                 const CTPoint<int> terrainSize,
+                                 float fTileSize,
+                                 CFieldDistanceMap *pDistances,
+                                 CArray2D<uint8_t> *pTileMap )
 {
 	NI_ASSERT( pMapInfoEditor != 0, "FillObjectSet(): Invalid parameter pMapInfoEditor == 0" );
 	//
@@ -932,13 +930,12 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 	}
 	if ( pTileMap )
 	{
-		NI_ASSERT( ( pTileMap->GetSizeX() >= terrainSize.x ) &&
-							 ( pTileMap->GetSizeY() >= terrainSize.y ),
-							 fmt::format( "FillObjectSet(): TileMap.size: [{}. {}], terrainSize: [{}, {}]",
-											 pTileMap->GetSizeX(),
-											 pTileMap->GetSizeY(),
-											 terrainSize.x,
-											 terrainSize.y ) );
+		NI_ASSERT( ( pTileMap->GetSizeX() >= terrainSize.x ) && ( pTileMap->GetSizeY() >= terrainSize.y ),
+		           fmt::format( "FillObjectSet(): TileMap.size: [{}. {}], terrainSize: [{}, {}]",
+		                        pTileMap->GetSizeX(),
+		                        pTileMap->GetSizeY(),
+		                        terrainSize.x,
+		                        terrainSize.y ) );
 	}
 	//
 	ModifyTilesFunctional<CArray2D<uint8_t>, uint8_t> tileMapModifyTiles( 1, pTileMap );
@@ -947,9 +944,9 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 	CTRect<int> boundingRect( 0, 0, terrainSize.x, terrainSize.y );
 	CTRect<float> boundingBox = GetPolygonBoundingBox( rPolygon );
 	CTRect<int> indices( ( boundingBox.minx + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
-											 ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
+	                     ( boundingBox.miny + ( fTileSize / 2.0f ) ) / fTileSize,
+	                     ( boundingBox.maxx + ( fTileSize / 2.0f ) ) / fTileSize,
+	                     ( boundingBox.maxy + ( fTileSize / 2.0f ) ) / fTileSize );
 	//проверяем
 	if ( ValidateRect( boundingRect, &indices ) < 0 )
 	{
@@ -980,8 +977,8 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 			{
 				for ( int nXIndex = ( *startXPosIterator ); nXIndex <= ( *finishXPosIterator ); ++nXIndex )
 				{
-					const CVec2	vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
-																		( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
+					const CVec2 vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
+					                         ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 
 					float fDistance = 0.0f;
 					if ( pDistances )
@@ -1013,16 +1010,19 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 							fWidth += rField.objectShells[nShellIndex].fWidth;
 							if ( fWidth > fDistance )
 							{
-								if ( ( rField.objectShells[nShellIndex].nBetweenDistance > 0 ) && ( !rField.objectShells[nShellIndex].objects.empty() ) )
+								if ( ( rField.objectShells[nShellIndex].nBetweenDistance > 0 ) &&
+								     ( !rField.objectShells[nShellIndex].objects.empty() ) )
 								{
 									const float fAdditionalRatio = 1.0f / fabs2( rField.objectShells[nShellIndex].nBetweenDistance );
-									if ( NWin32Random::Random( 0.0f, 1.0f ) <= ( rField.objectShells[nShellIndex].fRatio * fAdditionalRatio ) )
+									if ( NWin32Random::Random( 0.0f, 1.0f ) <=
+									     ( rField.objectShells[nShellIndex].fRatio * fAdditionalRatio ) )
 									{
-										if ( CDBPtr<NDb::SHPObjectRPGStats> pHPObjectRPGStats = objectSetWeightVectorList[nShellIndex].GetRandom( false ) )
+										if ( CDBPtr<NDb::SHPObjectRPGStats> pHPObjectRPGStats =
+										         objectSetWeightVectorList[nShellIndex].GetRandom( false ) )
 										{
 											const CVec3 vPosition( ( nXIndex * fTileSize ) + NWin32Random::Random( 0.0f, fTileSize ),
-																						( nYIndex * fTileSize ) + NWin32Random::Random( 0.0f, fTileSize ),
-																						0.0f );
+											                       ( nYIndex * fTileSize ) + NWin32Random::Random( 0.0f, fTileSize ),
+											                       0.0f );
 											const float fDirection = NWin32Random::Random( 0.0f, FP_2PI );
 											/**
 											if ( pTileMap )
@@ -1048,7 +1048,9 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 											objectCreateInfo.bRotateTo90Degree = pMapInfoEditor->editorSettings.bRotateTo90Degree;
 											objectCreateInfo.bFitToGrid = pMapInfoEditor->editorSettings.bFitToGrid;
 											unsigned nSimpleObjectInfoID = INVALID_NODE_ID;
-											if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = pMapInfoEditor->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSimpleObjectInfo*>( 0 ), &nSimpleObjectInfoID ) )
+											if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo =
+											         pMapInfoEditor->objectInfoCollector.Insert(
+																	 static_cast<NMapInfoEditor::SSimpleObjectInfo *>( 0 ), &nSimpleObjectInfoID ) )
 											{
 												pSimpleObjectInfo->Create( &objectCreateInfo, pScene, pObjectController, pManipulator );
 											}
@@ -1073,12 +1075,10 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 	return true;
 }
 
-
-CFieldState::SEditParameters* CFieldState::GetEditParameters()
+CFieldState::SEditParameters *CFieldState::GetEditParameters()
 {
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epFieldState ) : 0 );
 }
-
 
 int CFieldState::SEditParameters::operator&( IXmlSaver &xs )
 {

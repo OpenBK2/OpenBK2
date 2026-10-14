@@ -17,9 +17,18 @@ static int nShadowsQuality = SQ_SIMPLE;
 static bool bFrameTransition = true;
 static bool b16bitShadows = false, bIsUsing16bitShadows = false;
 
-int GetDepthTexResolution() { return nDepthTexResolution; }
-int GetShadowsQuality() { return nShadowsQuality; }
-bool IsUsing16bitShadows() { return bIsUsing16bitShadows; }
+int GetDepthTexResolution()
+{
+	return nDepthTexResolution;
+}
+int GetShadowsQuality()
+{
+	return nShadowsQuality;
+}
+bool IsUsing16bitShadows()
+{
+	return bIsUsing16bitShadows;
+}
 bool CanCalcLM()
 {
 	if ( !bCanCalcLM )
@@ -64,7 +73,9 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	if ( nModeY == -1 )
 	{
 		const NGfx::SSystemInfo &systemInfo = NGfx::GetSystemInfo();
-		float aspect = systemInfo.nDesktopHeight ? static_cast<float>(systemInfo.nDesktopWidth) / static_cast<float>(systemInfo.nDesktopHeight) : 4.0f / 3.0f;
+		float aspect = systemInfo.nDesktopHeight ? static_cast<float>( systemInfo.nDesktopWidth ) /
+		                                               static_cast<float>( systemInfo.nDesktopHeight )
+		                                         : 4.0f / 3.0f;
 		nModeY = static_cast<int>( nModeX / aspect );
 	}
 
@@ -102,10 +113,8 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 		if ( IsUsing16bitShadows() )
 			rtInfo.AddTex( nDepthTexResolution, "DepthMap16", NGfx::SPixel565::ID );
 
-		rtInfo.AddTex( 512, "WaterReflection"  );
+		rtInfo.AddTex( 512, "WaterReflection" );
 		rtInfo.AddTex( nDepthTexResolution, "DepthCopy" );
-
-
 	}
 	if ( bCanCalcLM && hl >= NGfx::HL_R300 )
 	{
@@ -132,8 +141,15 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 	bool bRes = NGfx::SetMode( NGfx::SVideoMode( nModeX, nModeY, nBPP, fullScreen ), gfxRTInfo );
 	// Qualified: this file sits outside NGfx and used to reach D3DASSERT by argument
 	// dependent lookup on the EFS argument, which is now an int.
-	NGfx::D3DASSERT( bRes ? S_OK : E_FAIL, "NGfx::SetMode failed with X: %d Y: %d BPP: %d FULLSCREEN: %d (REG %d, F-REG %d TGTS %d)",
-		nModeX, nModeY, nBPP, fmt::underlying( fullScreen ), gfxRTInfo.nRegisters, gfxRTInfo.nFloatRegisters, gfxRTInfo.targets.size() );
+	NGfx::D3DASSERT( bRes ? S_OK : E_FAIL,
+	                 "NGfx::SetMode failed with X: %d Y: %d BPP: %d FULLSCREEN: %d (REG %d, F-REG %d TGTS %d)",
+	                 nModeX,
+	                 nModeY,
+	                 nBPP,
+	                 fmt::underlying( fullScreen ),
+	                 gfxRTInfo.nRegisters,
+	                 gfxRTInfo.nFloatRegisters,
+	                 gfxRTInfo.targets.size() );
 
 	if ( !bRes )
 	{
@@ -199,23 +215,23 @@ void CommandGfxRecreate( const std::string &szID, const std::vector<std::wstring
 	SetModeFromConfig( true, lastUserRTInfo );
 }
 
-START_REGISTER(GInit)
-	REGISTER_CMD( "gfx_update", CommandGfxUpdate )
-	REGISTER_CMD( "gfx_recreate", CommandGfxRecreate )
-	REGISTER_VAR( "gfx_resolution", 0, "1024x768", STORAGE_USER )
-	REGISTER_VAR( "gfx_fullscreen", 0, 0, STORAGE_USER )
+START_REGISTER( GInit )
+REGISTER_CMD( "gfx_update", CommandGfxUpdate )
+REGISTER_CMD( "gfx_recreate", CommandGfxRecreate )
+REGISTER_VAR( "gfx_resolution", 0, "1024x768", STORAGE_USER )
+REGISTER_VAR( "gfx_fullscreen", 0, 0, STORAGE_USER )
 //	REGISTER_VAR( "gfx_refreshlimit", 0, 1000, true )
-	REGISTER_VAR( "gfx_depth_tex_resolution", 0, 512, STORAGE_USER )
+REGISTER_VAR( "gfx_depth_tex_resolution", 0, 512, STORAGE_USER )
 //	REGISTER_VAR( "gfx_cl_sky_textures", 0, 0, true )
 //	REGISTER_VAR( "gfx_cl_cube_resolution", 0, 16, true )
 //	REGISTER_VAR( "gfx_cl", 0, 1, true )
 //	REGISTER_VAR( "gfx_fastest", 0, 0, true )
 //	REGISTER_VAR( "gfx_cl_use_precise_shadows", 0, 1, true )
-	REGISTER_VAR_EX( "gfx_16bit_mode", NGlobal::VarBoolHandler, &bUse16BitMode, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_lm_calc", NGlobal::VarBoolHandler, &bCanCalcLM, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_shadows_quality", NGlobal::VarIntHandler, &nShadowsQuality, SQ_SIMPLE, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_frame_transition", NGlobal::VarBoolHandler, &bFrameTransition, 1, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_16bit_shadows", NGlobal::VarBoolHandler, &b16bitShadows, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_16bit_mode", NGlobal::VarBoolHandler, &bUse16BitMode, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_lm_calc", NGlobal::VarBoolHandler, &bCanCalcLM, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_shadows_quality", NGlobal::VarIntHandler, &nShadowsQuality, SQ_SIMPLE, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_frame_transition", NGlobal::VarBoolHandler, &bFrameTransition, 1, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_16bit_shadows", NGlobal::VarBoolHandler, &b16bitShadows, 0, STORAGE_USER )
 FINISH_REGISTER
 
 }

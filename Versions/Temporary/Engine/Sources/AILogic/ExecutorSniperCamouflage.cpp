@@ -11,13 +11,12 @@ extern CEventUpdater updater;
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11082300, CExecutorSniperCamouflage )
 
-
 CExecutorSniperCamouflage::CExecutorSniperCamouflage( CAIUnit *_pUnit, bool _bAdvanced )
-	: CExecutor(TID_SNIPER_CAMOUFLAGE, 1000/SConsts::AI_SEGMENT_DURATION),
-	pUnit( _pUnit ), nEnemysAround( 0 ), bWasSomeAction( false ), fCamoflage( 0.0f ),
-	eState( EASS_OFF ), timeLastUpdate( 0 ), timeDisableGroup( 0 ), eStateBeforeDisable( EASS_OFF ), bMoving( false ),
-	bAdvanced( _bAdvanced ), nBeginActionTime( curTime ), nLastActionTime( curTime ), bInAction( false ), bStartCounting( false ),
-	eAbilityType( _bAdvanced ? NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE : NDb::ABILITY_CAMOFLAGE_MODE )
+		: CExecutor( TID_SNIPER_CAMOUFLAGE, 1000 / SConsts::AI_SEGMENT_DURATION ), pUnit( _pUnit ), nEnemysAround( 0 ),
+			bWasSomeAction( false ), fCamoflage( 0.0f ), eState( EASS_OFF ), timeLastUpdate( 0 ), timeDisableGroup( 0 ),
+			eStateBeforeDisable( EASS_OFF ), bMoving( false ), bAdvanced( _bAdvanced ), nBeginActionTime( curTime ),
+			nLastActionTime( curTime ), bInAction( false ), bStartCounting( false ),
+			eAbilityType( _bAdvanced ? NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE : NDb::ABILITY_CAMOFLAGE_MODE )
 {
 }
 
@@ -36,9 +35,11 @@ int CExecutorSniperCamouflage::Segment()
 		// calc enemies around
 		nEnemysAround = 0;
 		const CVec2 vPos( pUnit->GetCenterPlain() );
-		for ( CUnitsIter<0,2> it( pUnit->GetParty(), EDI_ENEMY, vPos, SConsts::SPY_GLASS_RADIUS ); !it.IsFinished(); it.Iterate() )
+		for ( CUnitsIter<0, 2> it( pUnit->GetParty(), EDI_ENEMY, vPos, SConsts::SPY_GLASS_RADIUS ); !it.IsFinished();
+		      it.Iterate() )
 		{
-			if ( (*it)->IsRefValid() && (*it)->IsAlive() && (*it)->GetSightRadius() > fabs( vPos - (*it)->GetCenterPlain() ) )
+			if ( ( *it )->IsRefValid() && ( *it )->IsAlive() &&
+			     ( *it )->GetSightRadius() > fabs( vPos - ( *it )->GetCenterPlain() ) )
 				++nEnemysAround;
 		}
 
@@ -59,9 +60,10 @@ int CExecutorSniperCamouflage::Segment()
 
 			if ( eState == EASS_ACTIVE )
 			{
-				for ( CUnitsIter<0,2> it( pUnit->GetParty(), EDI_ENEMY, vPos, 5 * SConsts::TILE_SIZE ); !it.IsFinished(); it.Iterate() )
+				for ( CUnitsIter<0, 2> it( pUnit->GetParty(), EDI_ENEMY, vPos, 5 * SConsts::TILE_SIZE ); !it.IsFinished();
+				      it.Iterate() )
 				{
-					if ( (*it)->IsRefValid() && (*it)->IsAlive() )
+					if ( ( *it )->IsRefValid() && ( *it )->IsAlive() )
 					{
 						fCamoflage = 0.0f;
 						return UpdateCamoflage( eAbilityType );
@@ -74,11 +76,15 @@ int CExecutorSniperCamouflage::Segment()
 		{
 			if ( bMoving )
 			{
-				fCamoflage = (std::max)( 0.0f, fCamoflage - nEnemysAround * SConsts::AI_SEGMENT_DURATION * SConsts::SCamouflage::SNEAK_DECREASE_PER_SECOND_MOVE / 1000 );
+				fCamoflage = (std::max)( 0.0f,
+				                         fCamoflage - nEnemysAround * SConsts::AI_SEGMENT_DURATION *
+				                                          SConsts::SCamouflage::SNEAK_DECREASE_PER_SECOND_MOVE / 1000 );
 			}
 			else if ( !bWasSomeAction && !bMoving )
 			{
-				fCamoflage = (std::min)( 1.0f, fCamoflage + SConsts::AI_SEGMENT_DURATION * SConsts::SCamouflage::SNEAK_ADDITION_PER_TIME / 1000 );
+				fCamoflage = (std::min)( 1.0f,
+				                         fCamoflage + SConsts::AI_SEGMENT_DURATION *
+				                                          SConsts::SCamouflage::SNEAK_ADDITION_PER_TIME / 1000 );
 			}
 		}
 		bWasSomeAction = false;
@@ -97,7 +103,7 @@ void CExecutorSniperCamouflage::UpdateState( const enum EAbilitySwitchState eSta
 	pUpdate->info.fCurValue = fParam;
 	pUpdate->info.nObjUniqueID = pUnit->GetUniqueId();
 
-	if ( 0 != memcmp( &lastSent, &pUpdate->info, sizeof(lastSent) ) )
+	if ( 0 != memcmp( &lastSent, &pUpdate->info, sizeof( lastSent ) ) )
 	{
 		updater.AddUpdate( pUpdate, ACTION_NOTIFY_SPECIAL_ABLITY, pUnit, -1 );
 		lastSent = pUpdate->info;
@@ -119,29 +125,29 @@ void CExecutorSniperCamouflage::CamoUnit()
 
 int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbility )
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EASS_ACTIVE:
-		UpdateState( EASS_ACTIVE, fCamoflage );
-		if ( 0.0f == fCamoflage )
-		{
-			UnCamoUnit();
-			eState = EASS_SWITCHING_OFF;
-		}
+		case EASS_ACTIVE:
+			UpdateState( EASS_ACTIVE, fCamoflage );
+			if ( 0.0f == fCamoflage )
+			{
+				UnCamoUnit();
+				eState = EASS_SWITCHING_OFF;
+			}
 
-		break;
-	case EASS_DISABLE:
+			break;
+		case EASS_DISABLE:
 		{
 			const int nTimePassed = curTime - timeLastUpdate;
 			const int nTimeNeeded = timeDisableGroup;
 			if ( nTimePassed >= nTimeNeeded )
 				eState = eStateBeforeDisable;
 			else
-				UpdateState( EASS_DISABLE, float(nTimePassed) / float(nTimeNeeded) );
+				UpdateState( EASS_DISABLE, float( nTimePassed ) / float( nTimeNeeded ) );
 		}
 
 		break;
-	case EASS_OFF:
+		case EASS_OFF:
 		{
 			if ( 1.0f == fCamoflage )
 			{
@@ -155,7 +161,7 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 		}
 
 		break;
-	case EASS_SWITCHING_ON:
+		case EASS_SWITCHING_ON:
 		{
 			const int nTimePassed = curTime - timeLastUpdate;
 			if ( const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( eAbility ) )
@@ -168,12 +174,12 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 					fCamoflage = 1.0f;
 				}
 				else
-					UpdateState( EASS_SWITCHING_ON, float(nTimePassed) / float(nTimeNeeded) );
+					UpdateState( EASS_SWITCHING_ON, float( nTimePassed ) / float( nTimeNeeded ) );
 			}
 		}
 
 		break;
-	case EASS_SWITCHING_OFF:
+		case EASS_SWITCHING_OFF:
 		{
 			const int nTimePassed = curTime - timeLastUpdate;
 			if ( const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( eAbility ) )
@@ -186,16 +192,16 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 					fCamoflage = 0.0f;
 				}
 				else
-					UpdateState( EASS_SWITCHING_OFF, float(nTimePassed) / float(nTimeNeeded) );
+					UpdateState( EASS_SWITCHING_OFF, float( nTimePassed ) / float( nTimeNeeded ) );
 			}
 		}
 
 		break;
-	case EASS_READY_TO_ON:
-		//CRAP{ executor must sleep now
-		//CRAP}
+		case EASS_READY_TO_ON:
+			//CRAP{ executor must sleep now
+			//CRAP}
 
-		break;
+			break;
 	}
 	return GetNextTime();
 }
@@ -237,36 +243,36 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 	// Fire, movement and command events contain only their event parameters.
 	// Inspect an ability payload only in the branches that receive one.
 	const EExecutorEventID eCurID = event.GetParam().eEventID;
-	switch( eCurID )
+	switch ( eCurID )
 	{
-	case EID_FIRE_CAMOFLATED:
-		bWasSomeAction = true;
-		if ( !bAdvanced || bStartCounting )
-			fCamoflage = (std::max)( 0.0f, fCamoflage - nEnemysAround * SConsts::SCamouflage::SNEAK_DECREASE_PER_SHOT );
+		case EID_FIRE_CAMOFLATED:
+			bWasSomeAction = true;
+			if ( !bAdvanced || bStartCounting )
+				fCamoflage = (std::max)( 0.0f, fCamoflage - nEnemysAround * SConsts::SCamouflage::SNEAK_DECREASE_PER_SHOT );
 
-		return true;
-	case EID_START_IDLE:
-		// mark as if unit is camoflating
-		bMoving = false;
+			return true;
+		case EID_START_IDLE:
+			// mark as if unit is camoflating
+			bMoving = false;
 
-		break;
-	case EID_START_MOVE:
-		bMoving = true;
+			break;
+		case EID_START_MOVE:
+			bMoving = true;
 
-		return true;
-	case EID_ABILITY_DEACTIVATE:
-		if ( static_cast<const CExecutorEventSpecialAbility &>( event ).GetAbility() != eAbilityType )
-			return false;
-		[[fallthrough]];
-	case EID_NEW_COMMAND_RECIEVED:
-		if ( EID_NEW_COMMAND_RECIEVED == eCurID && eState != EASS_SWITCHING_ON )
-			return false;
-		timeLastUpdate = curTime;
-		UnCamoUnit();
-		eState = EASS_SWITCHING_OFF;
+			return true;
+		case EID_ABILITY_DEACTIVATE:
+			if ( static_cast<const CExecutorEventSpecialAbility &>( event ).GetAbility() != eAbilityType )
+				return false;
+			[[fallthrough]];
+		case EID_NEW_COMMAND_RECIEVED:
+			if ( EID_NEW_COMMAND_RECIEVED == eCurID && eState != EASS_SWITCHING_ON )
+				return false;
+			timeLastUpdate = curTime;
+			UnCamoUnit();
+			eState = EASS_SWITCHING_OFF;
 
-		return true;
-	case EID_ABILITY_ACTIVATE:
+			return true;
+		case EID_ABILITY_ACTIVATE:
 		{
 			const CExecutorEventSpecialAbility &abilityEvent = static_cast<const CExecutorEventSpecialAbility &>( event );
 			if ( abilityEvent.GetAbility() != eAbilityType )
@@ -274,7 +280,7 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 			timeLastUpdate = curTime;
 			eState = EASS_SWITCHING_ON;
 		}
-		return true;
+			return true;
 	}
 	return false;
 }

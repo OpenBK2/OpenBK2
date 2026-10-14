@@ -2,13 +2,12 @@
 
 #include "Client_export.h"
 
-
 #include "ServerClientInterface.h"
 #include "Net/NetDriver.h"
 
 namespace NNet
 {
-	class CNodeAddress;
+class CNodeAddress;
 }
 
 class CLIENT_EXPORT CLANClient : public IServerClient
@@ -17,23 +16,24 @@ class CLIENT_EXPORT CLANClient : public IServerClient
 
 	std::list<int> clients;
 	CObj<NNet::IDriver> pNetDriver;
-	std::list< CPtr<class CNetPacket> > packets;
+	std::list<CPtr<class CNetPacket>> packets;
 	bool bTryingConnect;
 
 public:
-	CLANClient() : bTryingConnect( false ) { }
+	CLANClient() : bTryingConnect( false ) {}
 	~CLANClient();
 
 	static CLANClient *Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut );
 
-	class CNetPacket* GetPacket();
+	class CNetPacket *GetPacket();
 	void SendPacket( class CNetPacket *pPacket );
 	void SendGamePacket( class CNetPacket *pPacket, bool bBroadcast );
 
 	virtual void Segment();
 
 	// Access to NetDriver
-	bool GetGameInfo( int nIdx, NNet::CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, NNet::IDriver::SGameInfo *pGameInfo );
+	bool GetGameInfo(
+			int nIdx, NNet::CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, NNet::IDriver::SGameInfo *pGameInfo );
 	void ConnectGame( const NNet::CNodeAddress &addr );
 	void Kick( int nClient );
 	void StartGame();

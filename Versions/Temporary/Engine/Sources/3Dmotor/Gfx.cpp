@@ -26,14 +26,13 @@
 namespace NGfx
 {
 
-
 struct SVideoModeInfo
 {
 	D3DDISPLAYMODE mode;
 	SVideoMode info;
 
 	SVideoModeInfo() {}
-	SVideoModeInfo( D3DDISPLAYMODE &_m, SVideoMode &_info ) : mode(_m), info(_info) {}
+	SVideoModeInfo( D3DDISPLAYMODE &_m, SVideoMode &_info ) : mode( _m ), info( _info ) {}
 };
 
 NWin32Helper::com_ptr<IDirect3D9> pD3D;
@@ -132,19 +131,22 @@ static HRESULT PresentWindow()
 	hr = pDevice->ColorFill( pDestination, 0, D3DCOLOR_XRGB( 0, 0, 0 ) );
 	if ( FAILED( hr ) )
 		return hr;
-	const auto viewport = NWinFrame::SWindowViewport::Fit(
-		pp.BackBufferWidth, pp.BackBufferHeight, nPresentWidth, nPresentHeight );
+	const auto viewport =
+			NWinFrame::SWindowViewport::Fit( pp.BackBufferWidth, pp.BackBufferHeight, nPresentWidth, nPresentHeight );
 	const RECT dest = { viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height };
 	const DWORD linearCaps = D3DPTFILTERCAPS_MINFLINEAR | D3DPTFILTERCAPS_MAGFLINEAR;
-	const D3DTEXTUREFILTERTYPE filter = ( devCaps.StretchRectFilterCaps & linearCaps ) == linearCaps
-		? D3DTEXF_LINEAR : D3DTEXF_NONE;
+	const D3DTEXTUREFILTERTYPE filter =
+			( devCaps.StretchRectFilterCaps & linearCaps ) == linearCaps ? D3DTEXF_LINEAR : D3DTEXF_NONE;
 	hr = pDevice->StretchRect( pSource, 0, pDestination, &dest, filter );
 	if ( FAILED( hr ) )
 		return hr;
 	return pWindowSwapChain->Present( 0, 0, hWnd, 0, 0 );
 }
 
-HWND GetHWND() { return hWnd; }
+HWND GetHWND()
+{
+	return hWnd;
+}
 
 // forward declarations
 static D3DFORMAT GetZBufferFormat( D3DFORMAT rTarget );
@@ -179,8 +181,14 @@ static HRESULT InitDXObjects()
 			return hr;
 		if ( pp.MultiSampleType != D3DMULTISAMPLE_NONE )
 		{
-			hr = pDevice->CreateRenderTarget( pp.BackBufferWidth, pp.BackBufferHeight,
-				pp.BackBufferFormat, D3DMULTISAMPLE_NONE, 0, FALSE, pResolvedScreen.GetAddr(), 0 );
+			hr = pDevice->CreateRenderTarget( pp.BackBufferWidth,
+			                                  pp.BackBufferHeight,
+			                                  pp.BackBufferFormat,
+			                                  D3DMULTISAMPLE_NONE,
+			                                  0,
+			                                  FALSE,
+			                                  pResolvedScreen.GetAddr(),
+			                                  0 );
 			if ( FAILED( hr ) )
 				return hr;
 		}
@@ -191,17 +199,33 @@ int GetDeviceCreationID()
 {
 	return nDeviceCreationID;
 }
-const SSystemInfo& GetSystemInfo() { return systemInfo; }
-bool CanOverwriteStatic() { return bStaticNooverwrite & !bIsDebugRuntime & bHardwareVP; }
-bool Is16BitMode() { return b16BitMode; }
-bool IsDXTSupported() { return bDXTSupported; }
-bool Is8888FormatSupported() { return b8888Supported; }
-bool Is16BitTextures() { return b16BitTextures; }
-
-
+const SSystemInfo &GetSystemInfo()
+{
+	return systemInfo;
+}
+bool CanOverwriteStatic()
+{
+	return bStaticNooverwrite & !bIsDebugRuntime & bHardwareVP;
+}
+bool Is16BitMode()
+{
+	return b16BitMode;
+}
+bool IsDXTSupported()
+{
+	return bDXTSupported;
+}
+bool Is8888FormatSupported()
+{
+	return b8888Supported;
+}
+bool Is16BitTextures()
+{
+	return b16BitTextures;
+}
 
 static bool bDeviceCreated = false;
-const _D3DDEVTYPE DEVICE_TYPE = D3DDEVTYPE_HAL;//D3DDEVTYPE_REF;//
+const _D3DDEVTYPE DEVICE_TYPE = D3DDEVTYPE_HAL; //D3DDEVTYPE_REF;//
 
 const int GetAdapterToUse()
 {
@@ -214,58 +238,58 @@ static HRESULT CreateDevice( NWin32Helper::com_ptr<IDirect3DDevice9> *pRes, D3DP
 	*pRes = 0;
 	hr = -1;
 	bool bUseHWVP = !bUseSWVP;
-	if ( !bTnLDevice && (devCaps.VertexShaderVersion & 0xFFFF) == 0 )
+	if ( !bTnLDevice && ( devCaps.VertexShaderVersion & 0xFFFF ) == 0 )
 		bUseHWVP = false;
 	if ( ( devCaps.DevCaps & D3DDEVCAPS_PUREDEVICE ) == 0 )
 		bUseHWVP = false;
 	//
 	if ( bUseHWVP )
 	{
-	    // Peter Popov - NVPerfHUD profiling
-			// Set default settings
-		  D3DDEVTYPE deviceType = DEVICE_TYPE;
+		// Peter Popov - NVPerfHUD profiling
+		// Set default settings
+		D3DDEVTYPE deviceType = DEVICE_TYPE;
 
-			if ( NGlobal::GetVar( "gfx_nvperfhud_enable", 0 ) != 0 )
+		if ( NGlobal::GetVar( "gfx_nvperfhud_enable", 0 ) != 0 )
+		{
+			for ( int nAdapter = 0; nAdapter < pD3D->GetAdapterCount(); ++nAdapter )
 			{
-				for ( int nAdapter = 0; nAdapter < pD3D->GetAdapterCount(); ++nAdapter )
+				D3DADAPTER_IDENTIFIER9 identifier;
+				HRESULT hRes = pD3D->GetAdapterIdentifier( nAdapter, 0, &identifier );
+				if ( SUCCEEDED( hRes ) && strcmp( identifier.Description, "NVIDIA NVPerfHUD" ) == 0 )
 				{
-					D3DADAPTER_IDENTIFIER9 identifier;
-					HRESULT hRes = pD3D->GetAdapterIdentifier( nAdapter, 0, &identifier );
-					if ( SUCCEEDED(hRes) && strcmp(identifier.Description, "NVIDIA NVPerfHUD") == 0 )
-					{
-						nAdapterToUse = nAdapter;
-						deviceType = D3DDEVTYPE_REF;
-						csSystem << "NVperfHUD found" << endl;
-						break;
-					}
+					nAdapterToUse = nAdapter;
+					deviceType = D3DDEVTYPE_REF;
+					csSystem << "NVperfHUD found" << endl;
+					break;
 				}
 			}
+		}
 
 		bHardwareVP = true;
-		hr = pD3D->CreateDevice(
-			GetAdapterToUse(),
-			deviceType,
-			hWnd,
-#if defined(_DEBUG) && !defined(FAST_DEBUG)
-			D3DCREATE_HARDWARE_VERTEXPROCESSING,
+		hr = pD3D->CreateDevice( GetAdapterToUse(),
+		                         deviceType,
+		                         hWnd,
+#if defined( _DEBUG ) && !defined( FAST_DEBUG )
+		                         D3DCREATE_HARDWARE_VERTEXPROCESSING,
 #else
-			D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE,
+		                         D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE,
 #endif
-			pPP,
-			pRes->GetAddr() );
-		D3DASSERT( hr, "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d", fmt::underlying( DEVICE_TYPE ), D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE );
+		                         pPP,
+		                         pRes->GetAddr() );
+		D3DASSERT( hr,
+		           "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d",
+		           fmt::underlying( DEVICE_TYPE ),
+		           D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE );
 	}
 	if ( FAILED( hr ) )
 	{
 		bHardwareVP = false;
 		hr = pD3D->CreateDevice(
-			GetAdapterToUse(),
-			DEVICE_TYPE,
-			hWnd,
-			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-			pPP,
-			pRes->GetAddr() );
-		D3DASSERT( hr, "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d", fmt::underlying( DEVICE_TYPE ), D3DCREATE_SOFTWARE_VERTEXPROCESSING );
+				GetAdapterToUse(), DEVICE_TYPE, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, pPP, pRes->GetAddr() );
+		D3DASSERT( hr,
+		           "CreateDevice DEVICE_TYPE: %d VERTEXPROCESSING: %d",
+		           fmt::underlying( DEVICE_TYPE ),
+		           D3DCREATE_SOFTWARE_VERTEXPROCESSING );
 	}
 	return hr;
 }
@@ -292,10 +316,10 @@ static HRESULT ResetDevice()
 		Zero( vcache );
 		IDirect3DQuery9 *pQ;
 		HRESULT hr = pDevice->CreateQuery( D3DQUERYTYPE_VCACHE, &pQ );
-		if ( SUCCEEDED(hr) )
+		if ( SUCCEEDED( hr ) )
 		{
 			pQ->Issue( D3DISSUE_BEGIN );
-			while ( pQ->GetData( &vcache, sizeof(vcache), D3DGETDATA_FLUSH ) != S_OK )
+			while ( pQ->GetData( &vcache, sizeof( vcache ), D3DGETDATA_FLUSH ) != S_OK )
 				std::this_thread::yield();
 			pQ->Release();
 			if ( vcache.Pattern == 0x48434143 )
@@ -309,19 +333,15 @@ static HRESULT ResetDevice()
 	}
 	else
 #if !BOOST_OS_WINDOWS
-	// The editor's SDL window wraps a GTK child. wx owns its layout and has
-	// already sized it before the back buffer is reset. Moving it to the game
-	// window's origin here makes the viewport flash at (0, 0) until GTK lays
-	// it out again; leave its geometry and visibility to the toolkit.
-	if ( ( SDL_GetWindowFlags( AsSdlWindow( hWnd ) ) & SDL_WINDOW_EXTERNAL ) == 0 )
+		// The editor's SDL window wraps a GTK child. wx owns its layout and has
+		// already sized it before the back buffer is reset. Moving it to the game
+		// window's origin here makes the viewport flash at (0, 0) until GTK lays
+		// it out again; leave its geometry and visibility to the toolkit.
+		if ( ( SDL_GetWindowFlags( AsSdlWindow( hWnd ) ) & SDL_WINDOW_EXTERNAL ) == 0 )
 #endif
-	{
-		SetWindowPos(
-			hWnd,
-			HWND_NOTOPMOST,
-			nWinXPos, 0, pp.BackBufferWidth, pp.BackBufferHeight,
-			SWP_SHOWWINDOW );
-	}
+		{
+			SetWindowPos( hWnd, HWND_NOTOPMOST, nWinXPos, 0, pp.BackBufferWidth, pp.BackBufferHeight, SWP_SHOWWINDOW );
+		}
 	if ( NWinFrame::IsGameWindow( hWnd ) )
 		NWinFrame::SetRenderSize( pp.BackBufferWidth, pp.BackBufferHeight );
 	if ( hr == D3D_OK )
@@ -344,36 +364,53 @@ static void DeviceFinalRelease()
 	bDeviceCreated = false;
 }
 
-
-
 // Utility functions
 
 int GetBpp( D3DFORMAT format )
 {
 	switch ( format )
 	{
-		case D3DFMT_R8G8B8:   return 24;
-    case D3DFMT_A8R8G8B8: return 32;
-    case D3DFMT_X8R8G8B8: return 32;
-    case D3DFMT_R5G6B5:   return 16;
-    case D3DFMT_X1R5G5B5: return 16;
-    case D3DFMT_A1R5G5B5: return 16;
-    case D3DFMT_A4R4G4B4: return 16;
-    case D3DFMT_R3G3B2:   return 8;
-    case D3DFMT_A8:       return 8;
-    case D3DFMT_A8R3G3B2: return 16;
-    case D3DFMT_X4R4G4B4: return 16;
+		case D3DFMT_R8G8B8:
+			return 24;
+		case D3DFMT_A8R8G8B8:
+			return 32;
+		case D3DFMT_X8R8G8B8:
+			return 32;
+		case D3DFMT_R5G6B5:
+			return 16;
+		case D3DFMT_X1R5G5B5:
+			return 16;
+		case D3DFMT_A1R5G5B5:
+			return 16;
+		case D3DFMT_A4R4G4B4:
+			return 16;
+		case D3DFMT_R3G3B2:
+			return 8;
+		case D3DFMT_A8:
+			return 8;
+		case D3DFMT_A8R3G3B2:
+			return 16;
+		case D3DFMT_X4R4G4B4:
+			return 16;
 
-    case D3DFMT_A8P8:     return 16;
-    case D3DFMT_P8:       return 8;
+		case D3DFMT_A8P8:
+			return 16;
+		case D3DFMT_P8:
+			return 8;
 
-    case D3DFMT_L8:       return 8;
-    case D3DFMT_A8L8:     return 16;
-    case D3DFMT_A4L4:     return 8;
+		case D3DFMT_L8:
+			return 8;
+		case D3DFMT_A8L8:
+			return 16;
+		case D3DFMT_A4L4:
+			return 8;
 
-    case D3DFMT_V8U8:     return 16;
-    case D3DFMT_L6V5U5:   return 16;
-    case D3DFMT_X8L8V8U8: return 32;
+		case D3DFMT_V8U8:
+			return 16;
+		case D3DFMT_L6V5U5:
+			return 16;
+		case D3DFMT_X8L8V8U8:
+			return 32;
 	}
 	return 0;
 }
@@ -382,48 +419,38 @@ static int GetZBpp( D3DFORMAT format )
 {
 	switch ( format )
 	{
-		case D3DFMT_D16_LOCKABLE: return 16;
-    case D3DFMT_D32:          return 32;
-    case D3DFMT_D15S1:        return 16;
-    case D3DFMT_D24S8:        return 32;
-    case D3DFMT_D16:          return 16;
-    case D3DFMT_D24X8:        return 32;
-    case D3DFMT_D24X4S4:      return 32;
+		case D3DFMT_D16_LOCKABLE:
+			return 16;
+		case D3DFMT_D32:
+			return 32;
+		case D3DFMT_D15S1:
+			return 16;
+		case D3DFMT_D24S8:
+			return 32;
+		case D3DFMT_D16:
+			return 16;
+		case D3DFMT_D24X8:
+			return 32;
+		case D3DFMT_D24X4S4:
+			return 32;
 	}
 	return 0;
 }
-
-
 
 // DX initialisation/finalisation
 
 static bool TestZBufferFormat( D3DFORMAT screen, D3DFORMAT rTarget, D3DFORMAT zBuf )
 {
 	if ( D3D_OK != pD3D->CheckDeviceFormat(
-		GetAdapterToUse(),
-		DEVICE_TYPE,
-		screen,
-		D3DUSAGE_DEPTHSTENCIL,
-		D3DRTYPE_SURFACE,
-		zBuf ) )
+										 GetAdapterToUse(), DEVICE_TYPE, screen, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, zBuf ) )
 		return false;
-	return D3D_OK == pD3D->CheckDepthStencilMatch(
-		GetAdapterToUse(),
-		DEVICE_TYPE,
-		screen,
-		rTarget,
-		zBuf );
+	return D3D_OK == pD3D->CheckDepthStencilMatch( GetAdapterToUse(), DEVICE_TYPE, screen, rTarget, zBuf );
 }
 
 static bool TestRTargetFormat( D3DFORMAT screen, D3DFORMAT rTarget )
 {
 	if ( D3D_OK != pD3D->CheckDeviceFormat(
-		GetAdapterToUse(),
-		DEVICE_TYPE,
-		screen,
-		D3DUSAGE_RENDERTARGET,
-		D3DRTYPE_TEXTURE,
-		rTarget ) )
+										 GetAdapterToUse(), DEVICE_TYPE, screen, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, rTarget ) )
 		return false;
 	return true;
 }
@@ -443,7 +470,7 @@ static D3DFORMAT GetZBufferFormat( D3DFORMAT screen, D3DFORMAT rTarget )
 	}
 	if ( TestZBufferFormat( screen, rTarget, D3DFMT_D16 ) )
 		return D3DFMT_D16;
-	ASSERT(0);
+	ASSERT( 0 );
 	return D3DFMT_UNKNOWN;
 }
 
@@ -457,10 +484,10 @@ static void GetBackBufferSize()
 {
 	if ( IsBorderlessGame() )
 		return; // Desktop resizing must not overwrite the chosen game resolution.
-  RECT windowPos;
-  GetClientRect( pp.hDeviceWindow, &windowPos );
-  pp.BackBufferWidth = windowPos.right;
-  pp.BackBufferHeight = windowPos.bottom;
+	RECT windowPos;
+	GetClientRect( pp.hDeviceWindow, &windowPos );
+	pp.BackBufferWidth = windowPos.right;
+	pp.BackBufferHeight = windowPos.bottom;
 }
 
 void CheckBackBufferSize()
@@ -487,11 +514,18 @@ static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 	if ( nFSAA > 0 && nMaxFSAA > 0 )
 	{
 		DWORD nFront, nDepth;
-		if (
-			SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE,
-				pRes->BackBufferFormat, pRes->Windowed, D3DMULTISAMPLE_NONMASKABLE, &nFront ) ) &&
-			SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE,
-				pRes->AutoDepthStencilFormat, pRes->Windowed, D3DMULTISAMPLE_NONMASKABLE, &nDepth ) ) )
+		if ( SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(),
+		                                                  DEVICE_TYPE,
+		                                                  pRes->BackBufferFormat,
+		                                                  pRes->Windowed,
+		                                                  D3DMULTISAMPLE_NONMASKABLE,
+		                                                  &nFront ) ) &&
+		     SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(),
+		                                                  DEVICE_TYPE,
+		                                                  pRes->AutoDepthStencilFormat,
+		                                                  pRes->Windowed,
+		                                                  D3DMULTISAMPLE_NONMASKABLE,
+		                                                  &nDepth ) ) )
 		{
 			pRes->MultiSampleType = D3DMULTISAMPLE_NONMASKABLE;
 			pRes->MultiSampleQuality = (std::min)( (std::min)( nFront, nDepth ), nFSAA );
@@ -506,7 +540,7 @@ bool Is16BitDesktop()
 	HRESULT hr;
 	D3DDISPLAYMODE desktop;
 	hr = pD3D->GetAdapterDisplayMode( GetAdapterToUse(), &desktop );
-	if ( FAILED(hr) )
+	if ( FAILED( hr ) )
 		return false;
 	return GetBpp( desktop.Format ) == 16;
 }
@@ -515,11 +549,11 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 {
 	HRESULT hr;
 	D3DPRESENT_PARAMETERS &pp = *pRes;
-	memset( &pp, 0, sizeof(pp) );
+	memset( &pp, 0, sizeof( pp ) );
 	// Get the current desktop display mode of the current adapters
 	D3DDISPLAYMODE desktop;
-  hr = pD3D->GetAdapterDisplayMode( GetAdapterToUse(), &desktop );
-	if ( FAILED(hr) )
+	hr = pD3D->GetAdapterDisplayMode( GetAdapterToUse(), &desktop );
+	if ( FAILED( hr ) )
 		return false;
 
 	pp.MultiSampleType = D3DMULTISAMPLE_NONE;
@@ -537,7 +571,8 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 		// search for suitable mode
 		for ( int i = 0; i < videoModes.size(); ++i )
 		{
-			if ( videoModes[i].info.nXSize == m.nXSize && videoModes[i].info.nYSize == m.nYSize && videoModes[i].info.nBpp == m.nBpp )
+			if ( videoModes[i].info.nXSize == m.nXSize && videoModes[i].info.nYSize == m.nYSize &&
+			     videoModes[i].info.nBpp == m.nBpp )
 			{
 				bFound = true;
 				best = videoModes[i].mode;
@@ -554,7 +589,7 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 
 		pp.hDeviceWindow = hWnd;
 		pp.Windowed = FALSE;
-		pp.EnableAutoDepthStencil =	TRUE;
+		pp.EnableAutoDepthStencil = TRUE;
 		pp.AutoDepthStencilFormat = GetZBufferFormat( pp.BackBufferFormat, pp.BackBufferFormat );
 		//pp.EnableAutoDepthStencil =	FALSE;
 
@@ -565,17 +600,17 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 	//
 	// Windowed mode
 	// ensure that our back buffer bit depth is the same as that of
-  // windowed display depth to work in windowed mode
-  if ( GetBpp( desktop.Format ) != m.nBpp )
+	// windowed display depth to work in windowed mode
+	if ( GetBpp( desktop.Format ) != m.nBpp )
 		return false;
 	pp.BackBufferWidth = m.nXSize;
 	pp.BackBufferHeight = m.nYSize;
-	pp.BackBufferFormat = desktop.Format;//D3DFMT_UNKNOWN;//D3DFMT_X8R8G8B8;// D3DFMT_UNKNOWN;//D3DFMT_UNKNOWN_D24S8;
+	pp.BackBufferFormat = desktop.Format; //D3DFMT_UNKNOWN;//D3DFMT_X8R8G8B8;// D3DFMT_UNKNOWN;//D3DFMT_UNKNOWN_D24S8;
 	pp.BackBufferCount = 1;
 
 	pp.hDeviceWindow = hWnd;
 	pp.Windowed = TRUE;
-	pp.EnableAutoDepthStencil =	TRUE;
+	pp.EnableAutoDepthStencil = TRUE;
 	pp.AutoDepthStencilFormat = GetZBufferFormat( pp.BackBufferFormat, pp.BackBufferFormat );
 	//pp.EnableAutoDepthStencil =	FALSE;
 	FillFSAA( &pp );
@@ -621,7 +656,8 @@ static void SelectDeviceType()
 {
 	int nForceTnLDevice = Float2Int( NGlobal::GetVar( "gfx_tnl_mode", 0 ).GetFloat() );
 	bTnLDevice = true;
-	if ( nForceTnLDevice == 1 || (devCaps.VertexShaderVersion & 0xFFFF) == 0 || (devCaps.PixelShaderVersion & 0xFFFF) == 0 )
+	if ( nForceTnLDevice == 1 || ( devCaps.VertexShaderVersion & 0xFFFF ) == 0 ||
+	     ( devCaps.PixelShaderVersion & 0xFFFF ) == 0 )
 		bTnLDevice = true;
 	else
 		bTnLDevice = false;
@@ -675,15 +711,15 @@ static bool CheckDeviceCaps()
 	}
 	if ( bForbidPS )
 		devCaps.PixelShaderVersion = 0;
-	if ( (devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0101 )
+	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0101 )
 		bHardwarePixelShaders = true;
-	if ( (devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0104 )
+	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0104 )
 		bHardwarePixelShaders14 = true;
-	if ( (devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0200 )
+	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0200 )
 		bHardwarePixelShaders20 = true;
-	if ( (devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0201 )
+	if ( ( devCaps.PixelShaderVersion & 0xFFFF ) >= 0x0201 )
 		bHardwarePixelShaders20a = true;
-	if ( (devCaps.TextureCaps & D3DPTEXTURECAPS_MIPCUBEMAP ) == 0 )
+	if ( ( devCaps.TextureCaps & D3DPTEXTURECAPS_MIPCUBEMAP ) == 0 )
 		bNoCubeMapMipLevels = true;
 
 	// determine device class
@@ -718,8 +754,8 @@ static bool CheckDeviceCaps()
 	pTestDevice->CreateVertexBuffer( 1024, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, pTestBuffer.GetAddr(), 0 );
 	void *pTest;
 	hr = pTestBuffer->Lock( 0, 1024, &pTest, D3DLOCK_NOOVERWRITE );
-	bIsDebugRuntime = FAILED(hr);
-	if ( SUCCEEDED(hr) )
+	bIsDebugRuntime = FAILED( hr );
+	if ( SUCCEEDED( hr ) )
 		pTestBuffer->Unlock();
 
 	systemInfo.nDesktopWidth = desktop.Width;
@@ -738,27 +774,32 @@ static bool CheckDeviceCaps()
 
 	// check textures support
 	bool bRequiredTextureFormatsAreSupported =
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_R5G6B5 ) ) &&
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A1R5G5B5 ) ) &&
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A4R4G4B4 ) );
+			SUCCEEDED( pD3D->CheckDeviceFormat(
+					GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_R5G6B5 ) ) &&
+			SUCCEEDED( pD3D->CheckDeviceFormat(
+					GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A1R5G5B5 ) ) &&
+			SUCCEEDED( pD3D->CheckDeviceFormat(
+					GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A4R4G4B4 ) );
 	if ( !bRequiredTextureFormatsAreSupported )
 		return false;
-	bDXTSupported =
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1 ) ) &&
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT2 ) ) &&
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3 ) ) &&
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT4 ) ) &&
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5 ) );
-	b8888Supported =
-		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) );
+	bDXTSupported = SUCCEEDED( pD3D->CheckDeviceFormat(
+											GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1 ) ) &&
+	                SUCCEEDED( pD3D->CheckDeviceFormat(
+											GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT2 ) ) &&
+	                SUCCEEDED( pD3D->CheckDeviceFormat(
+											GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3 ) ) &&
+	                SUCCEEDED( pD3D->CheckDeviceFormat(
+											GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT4 ) ) &&
+	                SUCCEEDED( pD3D->CheckDeviceFormat(
+											GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5 ) );
+	b8888Supported = SUCCEEDED(
+			pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) );
 
 	DWORD nFrontFSAA, nDepthFSAA;
-	if (
-		SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_X8R8G8B8,
-			FALSE, D3DMULTISAMPLE_NONMASKABLE, &nFrontFSAA ) ) &&
-		SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_D24S8,
-			FALSE, D3DMULTISAMPLE_NONMASKABLE, &nDepthFSAA ) )
-		)
+	if ( SUCCEEDED( pD3D->CheckDeviceMultiSampleType(
+					 GetAdapterToUse(), DEVICE_TYPE, D3DFMT_X8R8G8B8, FALSE, D3DMULTISAMPLE_NONMASKABLE, &nFrontFSAA ) ) &&
+	     SUCCEEDED( pD3D->CheckDeviceMultiSampleType(
+					 GetAdapterToUse(), DEVICE_TYPE, D3DFMT_D24S8, FALSE, D3DMULTISAMPLE_NONMASKABLE, &nDepthFSAA ) ) )
 		nMaxFSAA = (std::min)( nFrontFSAA, nDepthFSAA );
 
 	return true;
@@ -849,10 +890,10 @@ static void CorrectGamma( CArray2D<SPixel8888> *pRes )
 	{
 		for ( int x = 0; x < pRes->GetSizeX(); ++x )
 		{
-			SPixel8888 &c = (*pRes)[y][x];
-			c.r = nGammaCorrectionR[ c.r ];
-			c.g = nGammaCorrectionG[ c.g ];
-			c.b = nGammaCorrectionB[ c.b ];
+			SPixel8888 &c = ( *pRes )[y][x];
+			c.r = nGammaCorrectionR[c.r];
+			c.g = nGammaCorrectionG[c.g];
+			c.b = nGammaCorrectionB[c.b];
 		}
 	}
 }
@@ -874,9 +915,10 @@ void MakeScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 		return;
 	}
 	D3DDISPLAYMODE desktop;
-  hr = pD3D->GetAdapterDisplayMode( GetAdapterToUse(), &desktop );
+	hr = pD3D->GetAdapterDisplayMode( GetAdapterToUse(), &desktop );
 	ASSERT( D3D_OK == hr );
-	hr = pDevice->CreateOffscreenPlainSurface( desktop.Width, desktop.Height, D3DFMT_A8R8G8B8, D3DPOOL_SCRATCH, pSurface.GetAddr(), 0 );
+	hr = pDevice->CreateOffscreenPlainSurface(
+			desktop.Width, desktop.Height, D3DFMT_A8R8G8B8, D3DPOOL_SCRATCH, pSurface.GetAddr(), 0 );
 	ASSERT( D3D_OK == hr );
 	hr = pDevice->GetFrontBufferData( 0, pSurface );
 	ASSERT( D3D_OK == hr );
@@ -884,10 +926,10 @@ void MakeScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 	hr = pSurface->LockRect( &lr, 0, D3DLOCK_READONLY );
 	ASSERT( D3D_OK == hr );
 	pRes->SetSizes( pp.BackBufferWidth, pp.BackBufferHeight );
-	const char *pSrc = (const char*) lr.pBits;
+	const char *pSrc = (const char *)lr.pBits;
 	for ( int y = 0; y < pRes->GetSizeY(); ++y )
 	{
-		memcpy( &((*pRes)[y][0]), pSrc, 4 * pRes->GetSizeX() );
+		memcpy( &( ( *pRes )[y][0] ), pSrc, 4 * pRes->GetSizeX() );
 		pSrc += lr.Pitch;
 	}
 	if ( bCorrectGamma )
@@ -908,7 +950,8 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 		pRes->SetSizes( 1, 1 );
 		return;
 	}
-	hr = pDevice->CreateOffscreenPlainSurface( pp.BackBufferWidth, pp.BackBufferHeight, pp.BackBufferFormat, D3DPOOL_SYSTEMMEM, pSurface.GetAddr(), 0 );
+	hr = pDevice->CreateOffscreenPlainSurface(
+			pp.BackBufferWidth, pp.BackBufferHeight, pp.BackBufferFormat, D3DPOOL_SYSTEMMEM, pSurface.GetAddr(), 0 );
 	if ( FAILED( hr ) )
 		return;
 	hr = pDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, pBackBuffer.GetAddr() );
@@ -932,7 +975,7 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 	if ( FAILED( hr ) )
 		return;
 	pRes->SetSizes( pp.BackBufferWidth, pp.BackBufferHeight );
-	const char *pSrc = (const char*) lr.pBits;
+	const char *pSrc = (const char *)lr.pBits;
 	for ( int y = 0; y < pRes->GetSizeY(); ++y )
 	{
 		if ( GetBpp( pp.BackBufferFormat ) == 16 )
@@ -945,13 +988,13 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 				const unsigned r = ( pixel >> ( b565 ? 11 : 10 ) ) & 31;
 				const unsigned g = ( pixel >> 5 ) & ( b565 ? 63 : 31 );
 				const unsigned b = pixel & 31;
-				(*pRes)[y][x] = SPixel8888( ( r << 3 ) | ( r >> 2 ),
-					b565 ? ( g << 2 ) | ( g >> 4 ) : ( g << 3 ) | ( g >> 2 ),
-					( b << 3 ) | ( b >> 2 ) );
+				( *pRes )[y][x] = SPixel8888( ( r << 3 ) | ( r >> 2 ),
+				                              b565 ? ( g << 2 ) | ( g >> 4 ) : ( g << 3 ) | ( g >> 2 ),
+				                              ( b << 3 ) | ( b >> 2 ) );
 			}
 		}
 		else
-			memcpy( &((*pRes)[y][0]), pSrc, 4 * pRes->GetSizeX() );
+			memcpy( &( ( *pRes )[y][0] ), pSrc, 4 * pRes->GetSizeX() );
 		pSrc += lr.Pitch;
 	}
 	hr = pSurface->UnlockRect();
@@ -964,7 +1007,7 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 bool bOutputFPS = false;
 static float fTotalFrameTime = 0;
 int nTotalFrames = 0;
-const int N_SLOW_FPS_TYPE = 31;//1023;//
+const int N_SLOW_FPS_TYPE = 31; //1023;//
 NHPTimer::STime timeFrameStart;
 
 static int nPrevTexLOD = 0;
@@ -986,7 +1029,7 @@ void Flip()
 	{
 		static int nSlowOutCounter;
 		fTotalFrameTime += fFrameTime;
-		if ( (nTotalFrames&N_SLOW_FPS_TYPE) == 0 )
+		if ( ( nTotalFrames & N_SLOW_FPS_TYPE ) == 0 )
 		{
 			float fFPS = N_SLOW_FPS_TYPE / fTotalFrameTime;
 			DebugTrace( "FPS = %f", fFPS );
@@ -1025,7 +1068,7 @@ void Flip()
 	}
 	else
 		++nLastTexCheckFrame;
-  //
+	//
 	hr = pDevice->BeginScene();
 	ASSERT( D3D_OK == hr );
 	renderStats.Clear();
@@ -1059,7 +1102,7 @@ void SetGamma( bool bGamma )
 			uint16_t wRes = Float2Int( f * 65535 );
 			if ( !gammaRamp.empty() )
 			{
-				const NGfx::SPixel8888 &c = gammaRamp[ wRes >> 8 ];
+				const NGfx::SPixel8888 &c = gammaRamp[wRes >> 8];
 				gamma.red[k] = c.r << 8;
 				gamma.green[k] = c.g << 8;
 				gamma.blue[k] = c.b << 8;
@@ -1099,7 +1142,7 @@ void SetGamma( bool bGamma )
 		{
 			// for some reason gamma returned by GetGammaRamp is in different range then it is expected in SetGammaRamp
 			int nShift = 0;
-			while ( (nMax<<nShift) < 32768 )
+			while ( ( nMax << nShift ) < 32768 )
 				++nShift;
 			for ( int k = 0; k < 256; ++k )
 			{
@@ -1148,7 +1191,7 @@ bool Init3D( HWND _hWnd )
 	hWnd = _hWnd;
 	if ( !InitD3D() )
 	{
-		ASSERT(0);
+		ASSERT( 0 );
 		return false;
 	}
 	return true;
@@ -1175,26 +1218,25 @@ void D3DAssertFailed( HRESULT hRes, fmt::string_view fmtStr, fmt::printf_args ar
 
 // Commands/Vars
 
+START_REGISTER( Gfx )
+// need restart to change
+REGISTER_VAR( "gfx_tnl_mode", 0, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_nopixelshaders", NGlobal::VarBoolHandler, &bForbidPS, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_swvertexprocess", NGlobal::VarBoolHandler, &bForceSWVP, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_fix_nv_np2_hack", NGlobal::VarBoolHandler, &bNVHackNP2Cfg, 0, STORAGE_USER )
+////
+REGISTER_VAR_EX( "gfx_gamma", NGlobal::VarFloatHandler, &fGamma, 1.0f, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_validate", NGlobal::VarBoolHandler, &bDoValidateDevice, 0, STORAGE_NONE )
+REGISTER_VAR_EX( "gfx_anisotropic_filter", NGlobal::VarIntHandler, &nUseAnisotropy, 1, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_fix_ban_np2", NGlobal::VarBoolHandler, &bBanNP2, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_static_nooverwrite", NGlobal::VarBoolHandler, &bStaticNooverwrite, 1, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_notexture", NGlobal::VarBoolHandler, &bNoTexture, 0, STORAGE_NONE )
+REGISTER_VAR_EX( "gfx_16bit_textures", NGlobal::VarBoolHandler, &b16BitTextures, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_fsaa", NGlobal::VarIntHandler, &nFSAA, 0, STORAGE_USER )
+REGISTER_VAR_EX( "gfx_vsync", NGlobal::VarBoolHandler, &bVSync, 0, STORAGE_USER )
 
-START_REGISTER(Gfx)
-	// need restart to change
-	REGISTER_VAR( "gfx_tnl_mode", 0, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_nopixelshaders", NGlobal::VarBoolHandler, &bForbidPS, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_swvertexprocess", NGlobal::VarBoolHandler, &bForceSWVP, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_fix_nv_np2_hack", NGlobal::VarBoolHandler, &bNVHackNP2Cfg, 0, STORAGE_USER )
-	////
-	REGISTER_VAR_EX( "gfx_gamma", NGlobal::VarFloatHandler, &fGamma, 1.0f, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_validate", NGlobal::VarBoolHandler, &bDoValidateDevice, 0, STORAGE_NONE )
-	REGISTER_VAR_EX( "gfx_anisotropic_filter", NGlobal::VarIntHandler, &nUseAnisotropy, 1, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_fix_ban_np2", NGlobal::VarBoolHandler, &bBanNP2, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_static_nooverwrite", NGlobal::VarBoolHandler, &bStaticNooverwrite, 1, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_notexture", NGlobal::VarBoolHandler, &bNoTexture, 0, STORAGE_NONE )
-	REGISTER_VAR_EX( "gfx_16bit_textures", NGlobal::VarBoolHandler, &b16BitTextures, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_fsaa", NGlobal::VarIntHandler, &nFSAA, 0, STORAGE_USER )
-	REGISTER_VAR_EX( "gfx_vsync", NGlobal::VarBoolHandler, &bVSync, 0, STORAGE_USER )
-
-	REGISTER_VAR_EX( "special_win_x_pos", NGlobal::VarIntHandler, &nWinXPos, 0, STORAGE_USER );
-	REGISTER_VAR_EX( "adapter_to_use", NGlobal::VarIntHandler, &nAdapterToUse, D3DADAPTER_DEFAULT, STORAGE_USER );
+REGISTER_VAR_EX( "special_win_x_pos", NGlobal::VarIntHandler, &nWinXPos, 0, STORAGE_USER );
+REGISTER_VAR_EX( "adapter_to_use", NGlobal::VarIntHandler, &nAdapterToUse, D3DADAPTER_DEFAULT, STORAGE_USER );
 FINISH_REGISTER
 
 }

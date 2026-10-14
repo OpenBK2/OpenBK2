@@ -28,11 +28,11 @@ const std::string &GetCollideTypeName( const NCollision::ECollideType eType )
 {
 	if ( eType & NCollision::ECT_FIRST )
 		szTempString = "ECT_FIRST";
-	else if( eType & NCollision::ECT_SECOND )
+	else if ( eType & NCollision::ECT_SECOND )
 		szTempString = "ECT_SECOND";
 	else
 		szTempString = "ECT";
-  if ( eType & NCollision::ECT_WAIT )
+	if ( eType & NCollision::ECT_WAIT )
 		szTempString += "_WAIT";
 	else if ( eType & NCollision::ECT_GIVEPLACE )
 		szTempString += "_GIVEPLACE";
@@ -41,7 +41,7 @@ const std::string &GetCollideTypeName( const NCollision::ECollideType eType )
 	else
 		szTempString += "_NONE";
 
-  return szTempString;
+	return szTempString;
 }
 
 enum EIntersectionType
@@ -55,27 +55,28 @@ enum EIntersectionType
 	EIT_INTERSECTED_PARALLEL, // returns center of segment vPoint1 - vPoint2
 };
 
-const EIntersectionType FindIntersection( CVec2 *pvResult, const CVec2 &vPoint1, const CVec2 &vDir1, const CVec2 &vPoint2, const CVec2 &vDir2 )
+const EIntersectionType
+FindIntersection( CVec2 *pvResult, const CVec2 &vPoint1, const CVec2 &vDir1, const CVec2 &vPoint2, const CVec2 &vDir2 )
 {
 	const float dx = vPoint1.x - vPoint2.x;
 	const float dy = vPoint1.y - vPoint2.y;
-	const float d = vDir1.x*vDir2.y - vDir2.x*vDir1.y;
+	const float d = vDir1.x * vDir2.y - vDir2.x * vDir1.y;
 	if ( fabs( d ) < FP_EPSILON )
 	{
-		if ( fabs( dx/vDir2.x - dy/vDir2.y ) < FP_EPSILON )
+		if ( fabs( dx / vDir2.x - dy / vDir2.y ) < FP_EPSILON )
 		{
 			if ( pvResult )
-				*pvResult = ( vPoint1 + vPoint2 )/2.0f;
+				*pvResult = ( vPoint1 + vPoint2 ) / 2.0f;
 			return EIT_INTERSECTED_PARALLEL;
 		}
 		if ( pvResult )
 			*pvResult = VNULL2;
 		return EIT_PARALLEL;
 	}
-	const float a = ( -dx*vDir2.y + dy*vDir2.x )/d;
-	const float b = ( fabs( vDir2.x ) < FP_EPSILON ) ? ( dy + a*vDir1.y )/vDir2.y : ( dx + a*vDir1.x )/vDir2.x;
+	const float a = ( -dx * vDir2.y + dy * vDir2.x ) / d;
+	const float b = ( fabs( vDir2.x ) < FP_EPSILON ) ? ( dy + a * vDir1.y ) / vDir2.y : ( dx + a * vDir1.x ) / vDir2.x;
 	if ( pvResult )
-		*pvResult = vPoint1 + a*vDir1;
+		*pvResult = vPoint1 + a * vDir1;
 	if ( a < 0 && b < 0 )
 		return EIT_OUTSIDE_BOTH;
 	else if ( a < 0 )
@@ -94,7 +95,7 @@ inline float GetAngleCos( const CVec2 &vDir1, const CVec2 &vDir2 )
 	CVec2 vDir2Norm( vDir2 );
 	if ( !Normalize( &vDir2Norm ) )
 		return 0.0f;
-	return vDir1*vDir2Norm;
+	return vDir1 * vDir2Norm;
 }
 
 inline const CVec2 GetAABBHalfSize( const CBasePathUnit *pUnit )
@@ -109,7 +110,11 @@ inline const SRect GetUnitRect( const CBasePathUnit *pUnit, const float fAhead )
 {
 	const CVec2 vAABBHalfSize( GetAABBHalfSize( pUnit ) );
 	SRect unitRect;
-	unitRect.InitRect( pUnit->GetCenterPlain(), pUnit->GetDirectionVector(), vAABBHalfSize.y * fAhead, vAABBHalfSize.y, vAABBHalfSize.x * 0.8f );
+	unitRect.InitRect( pUnit->GetCenterPlain(),
+	                   pUnit->GetDirectionVector(),
+	                   vAABBHalfSize.y * fAhead,
+	                   vAABBHalfSize.y,
+	                   vAABBHalfSize.x * 0.8f );
 	return unitRect;
 }
 
@@ -118,7 +123,8 @@ inline const SRect GetSpeedRect( const CBasePathUnit *pUnit, const float fAhead 
 {
 	const CVec2 vAABBHalfSize( GetAABBHalfSize( pUnit ) );
 	SRect unitRect;
-	unitRect.InitRect( pUnit->GetCenterPlain(), pUnit->GetMoveDirection(), vAABBHalfSize.y + fAhead, 0.0f, vAABBHalfSize.x * 0.8f );
+	unitRect.InitRect(
+			pUnit->GetCenterPlain(), pUnit->GetMoveDirection(), vAABBHalfSize.y + fAhead, 0.0f, vAABBHalfSize.x * 0.8f );
 	return unitRect;
 }
 
@@ -128,7 +134,7 @@ struct SCheckRect : public SIterateUnitsCallback
 	// Defensive defaults preserve explicit constructor values below.
 	int nSkipID = 0;
 	SCheckRect() : nSkipID( -1 ) { unitRect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 ); }
-	SCheckRect( const SRect &_unitRect, const int _nSkipID ) : nSkipID( _nSkipID ),  unitRect( _unitRect ) {}
+	SCheckRect( const SRect &_unitRect, const int _nSkipID ) : nSkipID( _nSkipID ), unitRect( _unitRect ) {}
 	bool Iterate( CBasePathUnit *pCand ) const
 	{
 		if ( pCand->GetUniqueID() == nSkipID )
@@ -144,13 +150,19 @@ const bool CheckRect( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const CVec2 
 	const float fDistance = fabs( vFinishPoint - pUnit->GetCenterPlain() );
 	if ( fDistance < FP_EPSILON )
 		return true;
-	const CVec2 vDirection = ( vFinishPoint - pUnit->GetCenterPlain() )/fDistance;
+	const CVec2 vDirection = ( vFinishPoint - pUnit->GetCenterPlain() ) / fDistance;
 	SRect unitRect;
-	unitRect.InitRect( pUnit->GetCenterPlain(), vDirection, vAABBHalfSize.y + fDistance, vAABBHalfSize.y, vAABBHalfSize.x );
-	return pUnit->IterateUnits( pUnit->GetCenterPlain(), fDistance, true, SCheckRect( unitRect, pPusher->GetUniqueID() ) );
+	unitRect.InitRect(
+			pUnit->GetCenterPlain(), vDirection, vAABBHalfSize.y + fDistance, vAABBHalfSize.y, vAABBHalfSize.x );
+	return pUnit->IterateUnits(
+			pUnit->GetCenterPlain(), fDistance, true, SCheckRect( unitRect, pPusher->GetUniqueID() ) );
 }
 
-const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const SRect &unitRect, const CBasePathUnit *pCand, const SRect &candRect, float *pfDistance )
+const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit,
+                                               const SRect &unitRect,
+                                               const CBasePathUnit *pCand,
+                                               const SRect &candRect,
+                                               float *pfDistance )
 {
 	const float fUnitSpeed = ( pCand->IsInfantry() ) ? pUnit->GetMaxPossibleSpeed() : pUnit->GetSpeed();
 	const float fMaxSpeed = (std::max)( fUnitSpeed * unitRect.lengthAhead, pCand->GetSpeed() * candRect.lengthAhead );
@@ -181,7 +193,7 @@ const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const
 		if ( pCand->IsInfantry() )
 			return NCollision::ECT_SECOND_HARD;
 		const CVec2 vDiff21( pCand->GetCenterPlain() - pUnit->GetCenterPlain() );
-		if ( pUnit->GetMoveDirection()*vDiff21 > -pCand->GetMoveDirection()*vDiff21 )
+		if ( pUnit->GetMoveDirection() * vDiff21 > -pCand->GetMoveDirection() * vDiff21 )
 			return NCollision::ECT_FIRST_HARD;
 		else
 			return NCollision::ECT_SECOND_HARD;
@@ -214,12 +226,12 @@ const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const
 		else if ( bUnitFullSpeedRectCand && bCandFullSpeedRectUnit )
 		{
 			*pfDistance = (std::min)( fabs( unitFullSpeedRect, candRect ), fabs( candFullSpeedRect, unitRect ) );
-			if ( Cross( unitRect.dir,pCand->GetCenterPlain() - pUnit->GetCenterPlain() ) > 0.0f && !pCand->IsInfantry() )
+			if ( Cross( unitRect.dir, pCand->GetCenterPlain() - pUnit->GetCenterPlain() ) > 0.0f && !pCand->IsInfantry() )
 				return NCollision::ECT_FIRST_GIVEPLACE;
 			else
 				return NCollision::ECT_SECOND_GIVEPLACE;
 		}
-		return  NCollision::ECT_NONE;
+		return NCollision::ECT_NONE;
 	}
 }
 
@@ -232,14 +244,15 @@ struct SFindCandidates : public SIterateUnitsCallback
 
 	SFindCandidates() : pUnit( 0 ), pCollisionsCollector( 0 ) {}
 	SFindCandidates( CBasePathUnit *_pUnit, ICollisionsCollector *_pCollisionsCollector )
-		: pUnit( _pUnit ), pCollisionsCollector( _pCollisionsCollector )
+			: pUnit( _pUnit ), pCollisionsCollector( _pCollisionsCollector )
 	{
 		unitRect = GetUnitRect( pUnit, 1.0f );
 	}
 
 	bool Iterate( CBasePathUnit *pCand ) const
 	{
-		if ( !pCand->IsLockingTiles() && pCand->GetCollidingType( pUnit ) != ECT_NONE && ( pCand->IsInfantry() || pCand->GetUniqueID() > pUnit->GetUniqueID() ) )
+		if ( !pCand->IsLockingTiles() && pCand->GetCollidingType( pUnit ) != ECT_NONE &&
+		     ( pCand->IsInfantry() || pCand->GetUniqueID() > pUnit->GetUniqueID() ) )
 		{
 			const SRect candRect( GetUnitRect( pCand, 1.0f ) );
 
@@ -285,7 +298,8 @@ void CCollisionBase::FindCandidates( ICollisionsCollector *pCollisionsCollector 
 	if ( CanFindCandidates() )
 	{
 		const SRect rect( GetUnitRect( pUnit, 1.0f ) );
-		pUnit->IterateUnits( pUnit->GetCenterPlain(), 3.5f * rect.lengthAhead, false, SFindCandidates( pUnit, pCollisionsCollector ) );
+		pUnit->IterateUnits(
+				pUnit->GetCenterPlain(), 3.5f * rect.lengthAhead, false, SFindCandidates( pUnit, pCollisionsCollector ) );
 	}
 }
 
@@ -304,7 +318,11 @@ const bool CFreeCollision::IsSolved() const
 
 // CGivingPlace
 
-void CGivingPlaceCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const CVec2 &vFinishPoint, const int nTileSize )
+void CGivingPlaceCollision::Init( CBasePathUnit *pUnit,
+                                  CBasePathUnit *pPushUnit,
+                                  const int nPriority,
+                                  const CVec2 &vFinishPoint,
+                                  const int nTileSize )
 {
 	CPtr<CStandartDirPath> pPath = new CStandartDirPath( pUnit->GetCenterPlain(), vFinishPoint, nTileSize );
 	SetPath( pPath );
@@ -319,13 +337,17 @@ const bool CGivingPlaceCollision::IsSolved() const
 
 // CWaitingCollision
 
-void CWaitingCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const float fDistance )
+void CWaitingCollision::Init( CBasePathUnit *pUnit,
+                              CBasePathUnit *pPushUnit,
+                              const int nPriority,
+                              const float fDistance )
 {
 	bIsSolved = false;
 	CCollisionBase::Init( pUnit, pPushUnit, nPriority );
 	pUnit->NotifyAboutClosestThreat( pPushUnit, fDistance );
 	pUnit->UpdateCollisionStayTime( pPushUnit->GetStayTime() );
-	timeToWait = NRandom::Random( 2000, 5000 ); RecordRandomCall();
+	timeToWait = NRandom::Random( 2000, 5000 );
+	RecordRandomCall();
 }
 
 void CWaitingCollision::Segment( const NTimer::STime timeDiff )
@@ -334,8 +356,9 @@ void CWaitingCollision::Segment( const NTimer::STime timeDiff )
 		timeToWait = 0;
 	else
 		timeToWait -= timeDiff;
-	const SRect unitSpeedRect( GetUnitRect( GetUnit(), (std::max)( SPEED_TIME * GetUnit()->GetSpeed(), MIN_SPEED_LENGTH ) ) );
-	const SRect pusherRect(GetUnitRect( GetPushUnit(), 1.0f ) );
+	const SRect unitSpeedRect(
+			GetUnitRect( GetUnit(), (std::max)( SPEED_TIME * GetUnit()->GetSpeed(), MIN_SPEED_LENGTH ) ) );
+	const SRect pusherRect( GetUnitRect( GetPushUnit(), 1.0f ) );
 	bIsSolved = !unitSpeedRect.IsIntersected( pusherRect ) || timeToWait == 0;
 }
 
@@ -344,7 +367,8 @@ void CWaitingCollision::Segment( const NTimer::STime timeDiff )
 void CStopCollision::Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority )
 {
 	CCollisionBase::Init( pUnit, pPushUnit, nPriority );
-	timeLeft = NRandom::Random( 1000, 3000 ); RecordRandomCall();
+	timeLeft = NRandom::Random( 1000, 3000 );
+	RecordRandomCall();
 	pUnit->ForceLockTiles();
 }
 
@@ -359,7 +383,7 @@ struct SSortCollisions
 {
 	CPtr<CCollisionsCollector> pCollector;
 	SSortCollisions() : pCollector( 0 ) {}
-	SSortCollisions( CCollisionsCollector *_pCollector ) : pCollector ( _pCollector ) {}
+	SSortCollisions( CCollisionsCollector *_pCollector ) : pCollector( _pCollector ) {}
 	const bool operator()( const int nIndex1, const int nIndex2 )
 	{
 		CCollisionsCollector::TCollisions::const_iterator pos1 = pCollector->collisions.find( nIndex1 );
@@ -378,7 +402,8 @@ struct SSortCollisions
 	}
 };
 
-const bool CCollisionsCollector::SPushersSort::operator()( const SPusherInfo &pusher1, const SPusherInfo &pusher2 ) const
+const bool CCollisionsCollector::SPushersSort::operator()( const SPusherInfo &pusher1,
+                                                           const SPusherInfo &pusher2 ) const
 {
 	if ( ( pusher1.eCollideType & NCollision::ECT_TYPE_MASK ) == ( pusher2.eCollideType & NCollision::ECT_TYPE_MASK ) )
 	{
@@ -391,18 +416,24 @@ const bool CCollisionsCollector::SPushersSort::operator()( const SPusherInfo &pu
 
 // CCollsionsCollector
 
-void CCollisionsCollector::AddCollision( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const float fDistance, const NCollision::ECollideType eCollideType )
+void CCollisionsCollector::AddCollision( CBasePathUnit *pUnit,
+                                         CBasePathUnit *pPusher,
+                                         const float fDistance,
+                                         const NCollision::ECollideType eCollideType )
 {
 	TCollisions::iterator pos = collisions.find( pUnit->GetUniqueID() );
 	if ( pos == collisions.end() )
-		collisions[pUnit->GetUniqueID()] = SCollision( pUnit, pPusher, fDistance, (NCollision::ECollideType)( eCollideType & NCollision::ECT_TYPE_MASK ) );
+		collisions[pUnit->GetUniqueID()] =
+				SCollision( pUnit, pPusher, fDistance, (NCollision::ECollideType)( eCollideType & NCollision::ECT_TYPE_MASK ) );
 	else
 		pos->second.AddPusher( pPusher, fDistance, (NCollision::ECollideType)( eCollideType & NCollision::ECT_TYPE_MASK ) );
 }
 
-const bool CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePathUnit *pUnit2, const int nTileSize ) const
+const bool
+CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePathUnit *pUnit2, const int nTileSize ) const
 {
-	if ( pUnit1->GetCollision()->GetName() == NCollision::ECN_GIVE_PLACE || pUnit2->GetCollision()->GetName() == NCollision::ECN_GIVE_PLACE )
+	if ( pUnit1->GetCollision()->GetName() == NCollision::ECN_GIVE_PLACE ||
+	     pUnit2->GetCollision()->GetName() == NCollision::ECN_GIVE_PLACE )
 		return true;
 
 	if ( pUnit1->IsInfantry() || pUnit2->IsInfantry() )
@@ -412,9 +443,13 @@ const bool CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePat
 		return false;
 
 	CVec2 vCenter;
-	const EIntersectionType eIntersection = FindIntersection( &vCenter, pUnit1->GetCenterPlain(), pUnit1->GetMoveDirection(), pUnit2->GetCenterPlain(), pUnit2->GetMoveDirection() );
+	const EIntersectionType eIntersection = FindIntersection( &vCenter,
+	                                                          pUnit1->GetCenterPlain(),
+	                                                          pUnit1->GetMoveDirection(),
+	                                                          pUnit2->GetCenterPlain(),
+	                                                          pUnit2->GetMoveDirection() );
 	if ( eIntersection != EIT_INTERSECTED /* && eIntersection != EIT_PARALLEL */ )
-		vCenter = ( pUnit1->GetCenterPlain() + pUnit2->GetCenterPlain() )/2.0f;
+		vCenter = ( pUnit1->GetCenterPlain() + pUnit2->GetCenterPlain() ) / 2.0f;
 
 	CVec2 vDir( pUnit1->GetMoveDirection() + pUnit2->GetMoveDirection() );
 	if ( !Normalize( &vDir ) )
@@ -427,12 +462,17 @@ const bool CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePat
 		vDir.y = -f;
 	}
 	float fDist = 0.5f * PASS_ONE_ANOTHER_BOUND * ( pUnit1->GetAABBHalfSize().x + pUnit2->GetAABBHalfSize().x );
-	const CVec2 vPoint1 = ( vCenter + fDist * vDir ) * ( 1 + PASS_ONE_ANOTHER_COEFF ) - pUnit1->GetCenterPlain() * PASS_ONE_ANOTHER_COEFF;
-	const CVec2 vPoint2 = ( vCenter - fDist * vDir ) * ( 1 + PASS_ONE_ANOTHER_COEFF ) - pUnit2->GetCenterPlain() * PASS_ONE_ANOTHER_COEFF;
+	const CVec2 vPoint1 =
+			( vCenter + fDist * vDir ) * ( 1 + PASS_ONE_ANOTHER_COEFF ) - pUnit1->GetCenterPlain() * PASS_ONE_ANOTHER_COEFF;
+	const CVec2 vPoint2 =
+			( vCenter - fDist * vDir ) * ( 1 + PASS_ONE_ANOTHER_COEFF ) - pUnit2->GetCenterPlain() * PASS_ONE_ANOTHER_COEFF;
 
-	const float fDiffAngle1 = GetAngleCos( pUnit1->GetMoveDirection(), vPoint1 - pUnit1->GetCenterPlain() ) - GetAngleCos( pUnit1->GetMoveDirection(), vPoint2 - pUnit1->GetCenterPlain() );
-	const float fDiffAngle2 = GetAngleCos( pUnit2->GetMoveDirection(), vPoint1 - pUnit2->GetCenterPlain() ) - GetAngleCos( pUnit2->GetMoveDirection(), vPoint2 - pUnit2->GetCenterPlain() );
-	if ( fabs( fDiffAngle1 ) > fabs( fDiffAngle2 ) && fDiffAngle1 > 0 || fabs( fDiffAngle1 ) < fabs( fDiffAngle2 ) && fDiffAngle2 < 0 )
+	const float fDiffAngle1 = GetAngleCos( pUnit1->GetMoveDirection(), vPoint1 - pUnit1->GetCenterPlain() ) -
+	                          GetAngleCos( pUnit1->GetMoveDirection(), vPoint2 - pUnit1->GetCenterPlain() );
+	const float fDiffAngle2 = GetAngleCos( pUnit2->GetMoveDirection(), vPoint1 - pUnit2->GetCenterPlain() ) -
+	                          GetAngleCos( pUnit2->GetMoveDirection(), vPoint2 - pUnit2->GetCenterPlain() );
+	if ( fabs( fDiffAngle1 ) > fabs( fDiffAngle2 ) && fDiffAngle1 > 0 ||
+	     fabs( fDiffAngle1 ) < fabs( fDiffAngle2 ) && fDiffAngle2 < 0 )
 	{
 		CPtr<CGivingPlaceCollision> pCollision1 = new CGivingPlaceCollision();
 		pCollision1->Init( pUnit1, pUnit2, -1, vPoint1, nTileSize );
@@ -450,7 +490,9 @@ const bool CCollisionsCollector::PassOneAnother( CBasePathUnit *pUnit1, CBasePat
 	return true;
 }
 
-const bool CCollisionsCollector::NotifyAboutClosestThreat( CBasePathUnit *pUnit, CBasePathUnit *pPusher, const float fDistance ) const
+const bool CCollisionsCollector::NotifyAboutClosestThreat( CBasePathUnit *pUnit,
+                                                           CBasePathUnit *pPusher,
+                                                           const float fDistance ) const
 {
 	if ( pPusher->GetCollision()->GetPushUnit() != pUnit && !pUnit->IsInfantry() )
 	{
@@ -461,7 +503,8 @@ const bool CCollisionsCollector::NotifyAboutClosestThreat( CBasePathUnit *pUnit,
 	return false;
 }
 
-const bool CCollisionsCollector::FindWayForInfantry( CBasePathUnit *pInfantry, CBasePathUnit *pPusher, CAIMap *pAIMap ) const
+const bool
+CCollisionsCollector::FindWayForInfantry( CBasePathUnit *pInfantry, CBasePathUnit *pPusher, CAIMap *pAIMap ) const
 {
 	if ( !pInfantry->IsInfantry() )
 		return false;
@@ -475,10 +518,20 @@ const bool CCollisionsCollector::FindWayForInfantry( CBasePathUnit *pInfantry, C
 	const CVec2 vInfantryCenter( pInfantry->GetCenterPlain() );
 	const int nBoundTileRadius( pInfantry->GetBoundTileRadius() );
 	const EAIClasses aiClass( pInfantry->GetAIPassabilityClass() );
-	const CVec2 vPoint1 = pAIMap->GetTerrain()->GetValidPoint( nBoundTileRadius, vInfantryCenter, vInfantryCenter + 1.25f * vPusherPerpDir * vAABBHalfSize.x, aiClass, false, pAIMap );
-	const CVec2 vPoint2 = pAIMap->GetTerrain()->GetValidPoint( nBoundTileRadius, vInfantryCenter, vInfantryCenter - 1.25f * vPusherPerpDir * vAABBHalfSize.x, aiClass, false, pAIMap );
+	const CVec2 vPoint1 = pAIMap->GetTerrain()->GetValidPoint( nBoundTileRadius,
+	                                                           vInfantryCenter,
+	                                                           vInfantryCenter + 1.25f * vPusherPerpDir * vAABBHalfSize.x,
+	                                                           aiClass,
+	                                                           false,
+	                                                           pAIMap );
+	const CVec2 vPoint2 = pAIMap->GetTerrain()->GetValidPoint( nBoundTileRadius,
+	                                                           vInfantryCenter,
+	                                                           vInfantryCenter - 1.25f * vPusherPerpDir * vAABBHalfSize.x,
+	                                                           aiClass,
+	                                                           false,
+	                                                           pAIMap );
 	const CLine2 vCenterLine( pPusher->GetCenterPlain(), pPusher->GetCenterPlain() + vPusherMoveDir );
-	const float fDist =  vCenterLine.a * vInfantryCenter.x + vCenterLine.b * vInfantryCenter.y + vCenterLine.c;
+	const float fDist = vCenterLine.a * vInfantryCenter.x + vCenterLine.b * vInfantryCenter.y + vCenterLine.c;
 	const float fDist21 = fabs2( vPoint1 - vInfantryCenter );
 	const float fDist22 = fabs2( vPoint2 - vInfantryCenter );
 	const float fDiff2 = fDist21 - fDist22;
@@ -507,33 +560,34 @@ void CCollisionsCollector::HandOutCollisions( CAIMap *pAIMap )
 		if ( pos != collisions.end() )
 		{
 			CBasePathUnit *pUnit = pos->second.pUnit->GetUnit();
-			std::vector<SPusherInfo> &pushers =  pos->second.pushers;
+			std::vector<SPusherInfo> &pushers = pos->second.pushers;
 			std::sort( pushers.begin(), pushers.end(), SPushersSort() );
 			if ( pUnit->IsInfantry() )
 				FindWayForInfantry( pUnit, pushers[0].pUnit->GetUnit(), pAIMap );
 			else
 			{
-				for ( std::vector<SPusherInfo>::const_iterator itPusher = pushers.begin(); itPusher != pushers.end(); ++ itPusher )
+				for ( std::vector<SPusherInfo>::const_iterator itPusher = pushers.begin(); itPusher != pushers.end();
+				      ++itPusher )
 				{
 					CBasePathUnit *pPusher = itPusher->pUnit->GetUnit();
 					const NCollision::ECollideType eCollideType = itPusher->eCollideType;
 					const float fDistance = itPusher->fDistance;
 					switch ( eCollideType )
 					{
-					case NCollision::ECT_WAIT:
-						NotifyAboutClosestThreat( pUnit, pPusher, fDistance );
-						break;
-					case NCollision::ECT_GIVEPLACE:
-						if ( !PassOneAnother( pUnit, pPusher, pAIMap->GetTileSize() ) )
+						case NCollision::ECT_WAIT:
 							NotifyAboutClosestThreat( pUnit, pPusher, fDistance );
-						break;
-					case NCollision::ECT_HARD:
-						if ( pPusher->GetCollision()->GetPushUnit() != pUnit )
-						{
-							CPtr<CWaitingCollision> pCollision = new CWaitingCollision();
-							pCollision->Init( pUnit, pPusher, -1, fDistance );
-						}
-						break;
+							break;
+						case NCollision::ECT_GIVEPLACE:
+							if ( !PassOneAnother( pUnit, pPusher, pAIMap->GetTileSize() ) )
+								NotifyAboutClosestThreat( pUnit, pPusher, fDistance );
+							break;
+						case NCollision::ECT_HARD:
+							if ( pPusher->GetCollision()->GetPushUnit() != pUnit )
+							{
+								CPtr<CWaitingCollision> pCollision = new CWaitingCollision();
+								pCollision->Init( pUnit, pPusher, -1, fDistance );
+							}
+							break;
 					}
 				}
 			}
@@ -551,7 +605,10 @@ ICollisionsCollector *CreateCollisionsCollector()
 	return new CCollisionsCollector();
 }
 
-ICollision *CreateCollision( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const NCollision::ECollisionName eName )
+ICollision *CreateCollision( CBasePathUnit *pUnit,
+                             CBasePathUnit *pPushUnit,
+                             const int nPriority,
+                             const NCollision::ECollisionName eName )
 {
 	CPtr<ICollision> pCollision = MakeObject<ICollision>( (int)eName );
 	if ( IsValid( pCollision ) )

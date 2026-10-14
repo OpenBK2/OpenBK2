@@ -35,7 +35,6 @@
 // lying and there is one place to annotate if clang-tidy's
 // cppcoreguidelines-owning-memory is ever turned on.
 
-
 #include <wx/wx.h>
 #include <wx/weakref.h>
 
@@ -43,25 +42,25 @@
 
 namespace NWx
 {
-	// A window owned by its parent. The returned pointer is borrowed: valid
-	// until the parent is destroyed, and unaffected by being put in a sizer.
-	//
-	//   wxButton *const pButton = NWx::Child<wxButton>( pPanel, wxID_ANY, "Go" );
-	template <typename TWindow, typename... TArgs>
-	TWindow* Child( TArgs&&... rArgs )
-	{
-		return new TWindow( std::forward<TArgs>( rArgs )... );
-	}
+// A window owned by its parent. The returned pointer is borrowed: valid
+// until the parent is destroyed, and unaffected by being put in a sizer.
+//
+//   wxButton *const pButton = NWx::Child<wxButton>( pPanel, wxID_ANY, "Go" );
+template <typename TWindow, typename... TArgs>
+TWindow *Child( TArgs &&...rArgs )
+{
+	return new TWindow( std::forward<TArgs>( rArgs )... );
+}
 
-	// A top-level window, owned by wx. A weak reference is the only honest
-	// handle to one: wx destroys it when it is closed, and this goes null when
-	// that happens, which is something the host can actually test rather than
-	// assume.
-	//
-	//   wxWeakRef<CMyFrame> pFrame = NWx::TopLevel<CMyFrame>( args );
-	template <typename TWindow, typename... TArgs>
-	wxWeakRef<TWindow> TopLevel( TArgs&&... rArgs )
-	{
-		return new TWindow( std::forward<TArgs>( rArgs )... );
-	}
+// A top-level window, owned by wx. A weak reference is the only honest
+// handle to one: wx destroys it when it is closed, and this goes null when
+// that happens, which is something the host can actually test rather than
+// assume.
+//
+//   wxWeakRef<CMyFrame> pFrame = NWx::TopLevel<CMyFrame>( args );
+template <typename TWindow, typename... TArgs>
+wxWeakRef<TWindow> TopLevel( TArgs &&...rArgs )
+{
+	return new TWindow( std::forward<TArgs>( rArgs )... );
+}
 }

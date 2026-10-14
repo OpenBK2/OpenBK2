@@ -25,7 +25,8 @@
 
 #include <gtest/gtest.h>
 
-namespace {
+namespace
+{
 
 unsigned char ByteAt( size_t nOffset )
 {
@@ -34,8 +35,7 @@ unsigned char ByteAt( size_t nOffset )
 
 std::filesystem::path TempFile( const char *pszName )
 {
-	const std::filesystem::path dir =
-		std::filesystem::temp_directory_path() / "bk2_mappedfragment_test";
+	const std::filesystem::path dir = std::filesystem::temp_directory_path() / "bk2_mappedfragment_test";
 	std::error_code ec;
 	std::filesystem::create_directories( dir, ec );
 	return dir / pszName;
@@ -75,22 +75,18 @@ TEST( MappedFragment, WindowsAtManyOffsetsReadTheRightBytes )
 	ASSERT_EQ( static_cast<size_t>( file.GetFileSize() ), nFileSize );
 	file.MapFile( static_cast<int>( nFileSize ), false );
 
-	const size_t offsets[] = { 0, 1, 17, 4095, 4096, 4097, 65535, 65536, 65537,
-	                           131072, 131073, 200000, nFileSize - 1 };
+	const size_t offsets[] = { 0, 1, 17, 4095, 4096, 4097, 65535, 65536, 65537, 131072, 131073, 200000, nFileSize - 1 };
 	for ( const size_t nOffset : offsets )
 	{
-		for ( const size_t nWanted : { size_t( 1 ), size_t( 100 ), size_t( 5000 ),
-		                               size_t( 70000 ) } )
+		for ( const size_t nWanted : { size_t( 1 ), size_t( 100 ), size_t( 5000 ), size_t( 70000 ) } )
 		{
 			if ( nOffset + nWanted > nFileSize )
 			{
 				continue;
 			}
-			SCOPED_TRACE( "offset " + std::to_string( nOffset ) +
-			              ", length " + std::to_string( nWanted ) );
+			SCOPED_TRACE( "offset " + std::to_string( nOffset ) + ", length " + std::to_string( nWanted ) );
 
-			CMemoryMappedFileFragment frag( &file, static_cast<int>( nOffset ),
-			                                static_cast<int>( nWanted ) );
+			CMemoryMappedFileFragment frag( &file, static_cast<int>( nOffset ), static_cast<int>( nWanted ) );
 			ASSERT_TRUE( frag.IsOk() );
 			ASSERT_EQ( static_cast<size_t>( frag.GetSize() ), nWanted );
 
@@ -101,7 +97,7 @@ TEST( MappedFragment, WindowsAtManyOffsetsReadTheRightBytes )
 				if ( p[i] != ByteAt( nOffset + i ) )
 				{
 					FAIL() << "byte " << i << " of the window came from file offset "
-					       << "somewhere other than " << ( nOffset + i );
+								 << "somewhere other than " << ( nOffset + i );
 				}
 			}
 		}
@@ -124,7 +120,7 @@ TEST( MappedFragment, OverlappingWindowsCoexist )
 
 	CMemoryMappedFileFragment a( &file, 0, 1024 );
 	CMemoryMappedFileFragment b( &file, 70000, 1024 );
-	CMemoryMappedFileFragment c( &file, 70500, 1024 );	// overlaps b
+	CMemoryMappedFileFragment c( &file, 70500, 1024 ); // overlaps b
 
 	ASSERT_TRUE( a.IsOk() && b.IsOk() && c.IsOk() );
 	for ( size_t i = 0; i < 1024; ++i )
@@ -149,12 +145,10 @@ TEST( MappedFragment, OpeningForWritingKeepsTheContents )
 	{
 		CMMFile file( path.string().c_str(), STREAM_ACCESS_READ_WRITE );
 		ASSERT_TRUE( file.IsOk() );
-		EXPECT_EQ( static_cast<size_t>( file.GetFileSize() ), nFileSize )
-			<< "opening for writing truncated the file";
+		EXPECT_EQ( static_cast<size_t>( file.GetFileSize() ), nFileSize ) << "opening for writing truncated the file";
 	}
 
-	EXPECT_EQ( std::filesystem::file_size( path ), nFileSize )
-		<< "the file was still there after the handle closed";
+	EXPECT_EQ( std::filesystem::file_size( path ), nFileSize ) << "the file was still there after the handle closed";
 }
 
 // The same thing through the stream, which is how the VFS reaches it: a
@@ -167,8 +161,7 @@ TEST( MappedFragment, ReadWriteStreamSeesExistingContents )
 
 	CMemoryMappedFile f( path.string().c_str(), STREAM_ACCESS_READ_WRITE );
 	ASSERT_TRUE( f.IsOk() );
-	ASSERT_EQ( static_cast<size_t>( f.GetSize() ), nFileSize )
-		<< "the stream reports no contents, so the open truncated";
+	ASSERT_EQ( static_cast<size_t>( f.GetSize() ), nFileSize ) << "the stream reports no contents, so the open truncated";
 
 	const unsigned char *p = f.GetBuffer();
 	ASSERT_NE( p, nullptr );
@@ -206,11 +199,10 @@ TEST( MappedFragment, UnmappedFileIsReadDirectly )
 	const size_t offsets[] = { 0, 1, 4097, 65536, 70000, nFileSize - 1 };
 	for ( const size_t nOffset : offsets )
 	{
-		const size_t nWanted = ( std::min )( size_t( 4096 ), nFileSize - nOffset );
+		const size_t nWanted = (std::min)( size_t( 4096 ), nFileSize - nOffset );
 		SCOPED_TRACE( "offset " + std::to_string( nOffset ) );
 
-		CMemoryMappedFileFragment frag( &file, static_cast<int>( nOffset ),
-		                                static_cast<int>( nWanted ) );
+		CMemoryMappedFileFragment frag( &file, static_cast<int>( nOffset ), static_cast<int>( nWanted ) );
 		ASSERT_TRUE( frag.IsOk() );
 		ASSERT_EQ( static_cast<size_t>( frag.GetSize() ), nWanted );
 

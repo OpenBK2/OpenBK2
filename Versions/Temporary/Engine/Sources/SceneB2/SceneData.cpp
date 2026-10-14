@@ -14,11 +14,12 @@
 
 namespace NImage
 {
-	template <> void __fill_tga_header<NGfx::SPixel8888>( STGAFileHeader *pHdr )
-	{
-		pHdr->cImageType = TGAIT_TRUE_COLOR;
-		pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
-	}
+template <>
+void __fill_tga_header<NGfx::SPixel8888>( STGAFileHeader *pHdr )
+{
+	pHdr->cImageType = TGAIT_TRUE_COLOR;
+	pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
+}
 };
 
 void TakeScreenShotMsg( const SGameMessage &msg )
@@ -31,10 +32,13 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 
 	std::tm systime = {};
 	GetLocalTime( &systime, std::time( 0 ) );
-	const std::string szFileName =
-		fmt::format( "screenshots\\shot-{:04d}.{:02d}.{:02d}-{:02d}.{:02d}.{:02d}.tga",
-		systime.tm_year + 1900, systime.tm_mon + 1, systime.tm_mday,
-		systime.tm_hour, systime.tm_min, systime.tm_sec );
+	const std::string szFileName = fmt::format( "screenshots\\shot-{:04d}.{:02d}.{:02d}-{:02d}.{:02d}.{:02d}.tga",
+	                                            systime.tm_year + 1900,
+	                                            systime.tm_mon + 1,
+	                                            systime.tm_mday,
+	                                            systime.tm_hour,
+	                                            systime.tm_min,
+	                                            systime.tm_sec );
 
 	CFileStream stream( NVFS::GetMainFileCreator(), szFileName );
 	NImage::SaveAsTGA( data, &stream );
@@ -42,8 +46,7 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 
 // SSceneData::SScreenData
 
-SSceneData::SScreenData::SScreenData( IWindow *_pScreen ) :
-	pScreen( _pScreen )
+SSceneData::SScreenData::SScreenData( IWindow *_pScreen ) : pScreen( _pScreen )
 {
 	p3DView = NGScene::CreateNewView();
 	p3DView->WaitForLoad( true );
@@ -57,9 +60,7 @@ void SSceneData::SScreenData::SetSceneConsts( const NDb::SSceneConsts *pSceneCon
 
 // SSceneData
 
-SSceneData::SSceneData() :
-	bIsInternal( false ),
-	nFreeSelectionID( 0 )
+SSceneData::SSceneData() : bIsInternal( false ), nFreeSelectionID( 0 )
 {
 	eAIGeomMode = EAI_GEOM_NONE;
 	timeStatLastShow = 0;
@@ -93,7 +94,7 @@ void SSceneData::Init()
 	//
 	markers.resize( _ESMT_ENUM_COUNTER );
 
-	pWindController = new CWindController( GameTimer(), 0, 0 );	//CRAP need to take parameters from MapInfo
+	pWindController = new CWindController( GameTimer(), 0, 0 ); //CRAP need to take parameters from MapInfo
 
 	pAbsTimer->Set( GameTimer()->GetAbsTime() );
 	pGameTimer->Set( GameTimer()->GetGameTime() );
@@ -101,7 +102,7 @@ void SSceneData::Init()
 	pWeather = 0;
 }
 
-SVisObjSelectionHandler* SSceneData::GetNewSelection()
+SVisObjSelectionHandler *SSceneData::GetNewSelection()
 {
 	CPtr<SVisObjSelectionHandler> pHandler = new SVisObjSelectionHandler();
 	selectionHandlers[nFreeSelectionID] = pHandler;

@@ -6,13 +6,16 @@
 namespace NGScene
 {
 
-CObjectFader::CObjectFader( CObjectBase *_pObj, CFuncBase<float> *_pFader, std::vector<CPtr<CFuncBase<float> > > *_pTranspChannels ) : pObj(_pObj), pFader(_pFader)
+CObjectFader::CObjectFader( CObjectBase *_pObj,
+                            CFuncBase<float> *_pFader,
+                            std::vector<CPtr<CFuncBase<float>>> *_pTranspChannels )
+		: pObj( _pObj ), pFader( _pFader )
 {
 	if ( _pTranspChannels )
 	{
 		transpChannels.reserve( _pTranspChannels->size() );
 		for ( int k = 0; k < _pTranspChannels->size(); ++k )
-			transpChannels.push_back( (*_pTranspChannels)[k].GetPtr() );
+			transpChannels.push_back( ( *_pTranspChannels )[k].GetPtr() );
 	}
 }
 
@@ -27,7 +30,7 @@ bool CObjectFader::Update( void *p )
 		{
 			for ( int k = 0; k < pNode->parts.size(); ++k )
 			{
-				if ( k < transpChannels.size() && IsValid(transpChannels[k]) )
+				if ( k < transpChannels.size() && IsValid( transpChannels[k] ) )
 				{
 					transpChannels[k].Refresh();
 					SetPartFade( pNode->parts[k], fFadeVal * transpChannels[k]->GetValue() );
@@ -38,7 +41,7 @@ bool CObjectFader::Update( void *p )
 			return true;
 		}
 	}
-  return false;
+	return false;
 }
 
 }

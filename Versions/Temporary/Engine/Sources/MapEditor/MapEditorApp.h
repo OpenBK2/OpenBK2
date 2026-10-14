@@ -5,11 +5,10 @@
 #include <string>
 #include <vector>
 
-
 namespace NVFS
 {
-	struct IVFS;
-	struct IFileCreator;
+struct IVFS;
+struct IFileCreator;
 }
 
 struct IEditorModule;
@@ -38,14 +37,16 @@ class MAPEDITOR_EXPORT CEditorApp
 	bool ParseCommandLine( const std::string &rszFileToOpen, bool bResetProfile );
 
 	void RegisterEditors();
+
 protected:
 	void SetMapFileName( const std::string &szMapFileName );
+
 public:
 	CEditorApp();
 	virtual ~CEditorApp();
 
 	// The one application object, or null before it is made.
-	static CEditorApp* Get() { return pInstance; }
+	static CEditorApp *Get() { return pInstance; }
 
 	// What InitInstance did. rArgs is the command line already split and
 	// unquoted, without the program's name: what wx hands its wxApp. It was the
@@ -59,7 +60,7 @@ public:
 
 	virtual void LoadMapEditorModule( const std::string &szModuleName ) = 0;
 	virtual void UnloadMapEditorModule() = 0;
-	virtual const std::vector<IEditorModule*>& GetEditorModules() = 0;
+	virtual const std::vector<IEditorModule *> &GetEditorModules() = 0;
 	virtual bool GameXInitialize() = 0;
 	virtual void GameXPostStorageInitialize() = 0;
 	virtual void CreateMenus( struct IMainFrame *pMainFrame ) const = 0;

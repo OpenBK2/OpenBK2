@@ -1,17 +1,20 @@
 #include "stdafx.h"
 #include "EffectorDirectRunReaction.h"
 
-REGISTER_SAVELOAD_CLASS(UI, 0x210C5AC0, CEffectorDirectRunReaction)
+REGISTER_SAVELOAD_CLASS( UI, 0x210C5AC0, CEffectorDirectRunReaction )
 
 bool CEffectorDirectRunReaction::IsFinished() const
 {
 	return bFinished;
 }
 
-void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &_szAnimatedWindow )
+void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd,
+                                            struct IScreen *pScreen,
+                                            SWindowContext *pContext,
+                                            const std::string &_szAnimatedWindow )
 {
 	szAnimatedWindow = _szAnimatedWindow;
-	const NDb::SUISDirectRunReaction *pCmd( checked_cast<const NDb::SUISDirectRunReaction*>( _pCmd ) );
+	const NDb::SUISDirectRunReaction *pCmd( checked_cast<const NDb::SUISDirectRunReaction *>( _pCmd ) );
 	pReactionForward = pCmd->pReactionForward;
 	pReactionBackward = pCmd->pReactionBackward;
 	bFinished = false;

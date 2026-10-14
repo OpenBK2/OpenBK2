@@ -8,19 +8,19 @@ enum EMissionObjectiveState : int;
 class CInterfaceMissionObjectives : public CInterfaceScreenBase
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMissionObjectives );
+
 public:
 	class CReactions : public IProgrammedReactionsAndChecks
 	{
-		OBJECT_NOCOPY_METHODS(CReactions);
+		OBJECT_NOCOPY_METHODS( CReactions );
 		CPtr<IWindow> pScreen;
 		CPtr<CInterfaceMissionObjectives> pInterface;
+
 	public:
-		CReactions() {  }
-		~CReactions()
-		{
-		}
-		CReactions( IWindow *_pScreen, CInterfaceMissionObjectives *_pInterface ) :
-			pScreen( _pScreen ), pInterface( _pInterface )
+		CReactions() {}
+		~CReactions() {}
+		CReactions( IWindow *_pScreen, CInterfaceMissionObjectives *_pInterface )
+				: pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
@@ -33,6 +33,7 @@ public:
 			return 0;
 		}
 	};
+
 private:
 	struct SObjective
 	{
@@ -47,7 +48,20 @@ private:
 		std::wstring wszDescBrief;
 		std::wstring wszDescFull;
 		int nButtonIndex;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&nID); f.Add(4,&pButton); f.Add(5,&bAutoSelect); f.Add(6,&pText); f.Add(7,&pStatus); f.Add(8,&wszHeader); f.Add(9,&wszDescBrief); f.Add(10,&wszDescFull); f.Add(11,&nButtonIndex); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pWnd );
+			f.Add( 3, &nID );
+			f.Add( 4, &pButton );
+			f.Add( 5, &bAutoSelect );
+			f.Add( 6, &pText );
+			f.Add( 7, &pStatus );
+			f.Add( 8, &wszHeader );
+			f.Add( 9, &wszDescBrief );
+			f.Add( 10, &wszDescFull );
+			f.Add( 11, &nButtonIndex );
+			return 0;
+		}
 
 		SObjective() : nID( -1 ), nButtonIndex( 0 ) {}
 	};
@@ -80,6 +94,7 @@ private:
 	float fMainInitialHeight;
 	float fListInitialHeight;
 	float fItemHeight;
+
 protected:
 	void MsgBack( const SGameMessage &msg );
 	void MsgSetModality( const SGameMessage &msg );
@@ -90,6 +105,7 @@ protected:
 	void UpdateObjectives( int nSelected );
 	int GetButtonIndex( enum EMissionObjectiveState eState );
 	~CInterfaceMissionObjectives();
+
 public:
 	CInterfaceMissionObjectives();
 
@@ -108,12 +124,18 @@ class CICMissionObjectives : public CInterfaceCommandBase<CInterfaceMissionObjec
 {
 	OBJECT_BASIC_METHODS( CICMissionObjectives );
 
-	ZDATA_(CInterfaceCommandBase<CInterfaceMissionObjectives>)
+	ZDATA_( CInterfaceCommandBase<CInterfaceMissionObjectives> )
 	int nID;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceMissionObjectives>*)this); f.Add(2,&nID); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CInterfaceCommandBase<CInterfaceMissionObjectives> *)this );
+		f.Add( 2, &nID );
+		return 0;
+	}
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );
+
 public:
 	void Configure( const char *pszConfig );
 };

@@ -23,10 +23,11 @@ void CRndRunUpToEnemy::Init( CAIUnit *_pOwner, CAIUnit *_pEnemy, bool bCanMove )
 	vLastOwnerPos = _pOwner->GetCenterPlain();
 	checkTime = 0;
 
-	if ( _pOwner->GetStats()->IsInfantry() && _pOwner->GetStats()->etype != RPG_TYPE_SNIPER && _pOwner->GetBehaviourMoving() != SBehaviour::EMHoldPos )
+	if ( _pOwner->GetStats()->IsInfantry() && _pOwner->GetStats()->etype != RPG_TYPE_SNIPER &&
+	     _pOwner->GetBehaviourMoving() != SBehaviour::EMHoldPos )
 	{
 		bCheck = true;
-		pOwner = checked_cast<CSoldier*>( _pOwner );
+		pOwner = checked_cast<CSoldier *>( _pOwner );
 	}
 	else
 	{
@@ -44,7 +45,8 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 	const CVec2 vDirToEnemy = pEnemy->GetCenterPlain() - pOwner->GetCenterPlain();
 	const uint16_t wDirToEnemy = GetDirectionByVector( vDirToEnemy );
 
-	const uint16_t wRandomAngle = NRandom::Random( 0, 65536 / 5 ); RecordRandomCall();
+	const uint16_t wRandomAngle = NRandom::Random( 0, 65536 / 5 );
+	RecordRandomCall();
 	uint16_t wResultDir;
 	RecordRandomCall();
 	if ( NRandom::Random( 0.0f, 1.0f ) < 0.5f )
@@ -57,12 +59,14 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 	RecordRandomCall();
 	if ( NRandom::Random( 0.0f, 1.0f ) < 0.7f )
 	{
-		fRandomDist = NRandom::Random( float( 0.4f * SConsts::TILE_SIZE ), float( 2.0f * SConsts::TILE_SIZE ) ); RecordRandomCall();
+		fRandomDist = NRandom::Random( float( 0.4f * SConsts::TILE_SIZE ), float( 2.0f * SConsts::TILE_SIZE ) );
+		RecordRandomCall();
 		bForceStaying = false;
 	}
 	else
 	{
-		fRandomDist = NRandom::Random( float( 2.0f * SConsts::TILE_SIZE ), float( 4.0f * SConsts::TILE_SIZE ) ); RecordRandomCall();
+		fRandomDist = NRandom::Random( float( 2.0f * SConsts::TILE_SIZE ), float( 4.0f * SConsts::TILE_SIZE ) );
+		RecordRandomCall();
 		bForceStaying = true;
 	}
 
@@ -71,9 +75,8 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 	if ( CPtr<IStaticPath> pStaticPath = CreateStaticPathToPoint( vPointToRunUp, VNULL2, pOwner, true, GetAIMap() ) )
 	{
 		// путь не слишком длинный и конечная точка не слишком далека от нужной нам
-		if ( ( bForceStaying && pStaticPath->GetLength() <= 5 ||
- 				   !bForceStaying && pStaticPath->GetLength() <= 3 ) &&
-				 fabs2( pStaticPath->GetFinishPoint() - vPointToRunUp ) < sqr( 3.0f * SConsts::TILE_SIZE / 4.0f ) )
+		if ( ( bForceStaying && pStaticPath->GetLength() <= 5 || !bForceStaying && pStaticPath->GetLength() <= 3 ) &&
+		     fabs2( pStaticPath->GetFinishPoint() - vPointToRunUp ) < sqr( 3.0f * SConsts::TILE_SIZE / 4.0f ) )
 		{
 			bRunningToEnemy = true;
 
@@ -99,23 +102,23 @@ void CRndRunUpToEnemy::Segment()
 {
 	if ( bForceStaying )
 		return;
-	if (
-			 bCheck &&
-		   pOwner->IsFree() && IsValidObj( pEnemy ) &&
-			 ( bRunningToEnemy || fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) >= sqr(0.7f) * sqr(pOwner->GetGun( 0 )->GetFireRange( 0 )) )
-		 )
+	if ( bCheck && pOwner->IsFree() && IsValidObj( pEnemy ) &&
+	     ( bRunningToEnemy || fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) >=
+	                              sqr( 0.7f ) * sqr( pOwner->GetGun( 0 )->GetFireRange( 0 ) ) ) )
 	{
 		if ( !bRunningToEnemy )
 		{
 			if ( curTime >= checkTime )
 			{
-				if ( pOwner->IsIdle() && vLastOwnerPos == pOwner->GetCenterPlain() && ((NRandom::Random( 0.0f, 1.0f ) <= 0.7f) & RecordRandomCall()) )
+				if ( pOwner->IsIdle() && vLastOwnerPos == pOwner->GetCenterPlain() &&
+				     ( ( NRandom::Random( 0.0f, 1.0f ) <= 0.7f ) & RecordRandomCall() ) )
 					SendOwnerToRandomRun();
 
 				if ( !bRunningToEnemy )
 				{
 					vLastOwnerPos = pOwner->GetCenterPlain();
-					checkTime = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
+					checkTime = curTime + NRandom::Random( 2000, 5000 );
+					RecordRandomCall();
 				}
 			}
 		}
@@ -123,7 +126,8 @@ void CRndRunUpToEnemy::Segment()
 		{
 			bRunningToEnemy = false;
 			vLastOwnerPos = pOwner->GetCenterPlain();
-			checkTime = curTime + NRandom::Random( 2000, 5000 ); RecordRandomCall();
+			checkTime = curTime + NRandom::Random( 2000, 5000 );
+			RecordRandomCall();
 
 			if ( bForceStaying )
 			{

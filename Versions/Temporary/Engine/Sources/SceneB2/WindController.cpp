@@ -11,7 +11,7 @@ float CWindController::CoeffFunc( int nParam )
 	const int nPoint4 = 1000;
 
 	float fRes = 0.0f;
-	float fParam = nParam / fWindIntensity * 0.5f;		// Multiplied by speed
+	float fParam = nParam / fWindIntensity * 0.5f; // Multiplied by speed
 
 	if ( fParam < nPoint1 )
 		fRes = 0.0f;
@@ -26,8 +26,8 @@ float CWindController::CoeffFunc( int nParam )
 	return fRes;
 }
 
-CWindController::CWindController( IGameTimer *_pTimer, const float _fWindDirection, const float _fWindIntensity ) :
-pTimer( _pTimer )
+CWindController::CWindController( IGameTimer *_pTimer, const float _fWindDirection, const float _fWindIntensity )
+		: pTimer( _pTimer )
 {
 
 	SetWindParams( _fWindDirection, _fWindIntensity );
@@ -50,11 +50,11 @@ void CWindController::SetWindParams( const float _fWindDirection, const float _f
 
 float CWindController::GetWindCoeff( const CVec2 &vPos )
 {
-	if ( fWindIntensity == 0.0f )				//No intensity = no wind
+	if ( fWindIntensity == 0.0f ) //No intensity = no wind
 		return 0.0f;
 
-	int nWindCoord = int ( ( vPos.y * fCoeffY + vPos.x * fCoeffX ) + pTimer->GetGameTime() * fSpeedCoeff ) % nCycleLength;
-	int nWindWaveCoord = int ( NMath::Sin( ( vPos.x * fCoeffY - vPos.y * fCoeffX ) * 0.01f ) * 300 );
+	int nWindCoord = int( ( vPos.y * fCoeffY + vPos.x * fCoeffX ) + pTimer->GetGameTime() * fSpeedCoeff ) % nCycleLength;
+	int nWindWaveCoord = int( NMath::Sin( ( vPos.x * fCoeffY - vPos.y * fCoeffX ) * 0.01f ) * 300 );
 
 	return CoeffFunc( nWindCoord + nWindWaveCoord );
 }

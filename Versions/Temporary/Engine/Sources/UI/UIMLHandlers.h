@@ -51,21 +51,23 @@ inline NGfx::SPixel8888 StringToColor( const std::wstring &wsColor, float fFade 
 	return sColor;
 }
 
-#define DECALRE_SIMPLE_HANDLER( Name, Var, Value) \
-class Name: public IMLHandler											\
-{																									\
-	OBJECT_BASIC_METHODS( Name );										\
-private:																					\
-	ZDATA																						\
-	ZEND int operator&( IBinSaver &f ) { return 0; }\
-public:																						\
-void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )	\
-	{																								\
-		SState sState = pLayout->GetState();					\
-		sState.Var = Value;														\
-		pLayout->SetState( sState );									\
-	}																								\
-};
+#define DECALRE_SIMPLE_HANDLER( Name, Var, Value )                                         \
+	class Name : public IMLHandler                                                           \
+	{                                                                                        \
+		OBJECT_BASIC_METHODS( Name );                                                          \
+                                                                                           \
+	private:                                                                                 \
+		ZDATA                                                                                  \
+		ZEND int operator&( IBinSaver &f ) { return 0; }                                       \
+                                                                                           \
+	public:                                                                                  \
+		void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet ) \
+		{                                                                                      \
+			SState sState = pLayout->GetState();                                                 \
+			sState.Var = Value;                                                                  \
+			pLayout->SetState( sState );                                                         \
+		}                                                                                      \
+	};
 
 DECALRE_SIMPLE_HANDLER( CLEFTHandler, eHAlign, SState::HORALIGN_LEFT )
 DECALRE_SIMPLE_HANDLER( CRIGHTHandler, eHAlign, SState::HORALIGN_RIGHT )
@@ -80,9 +82,10 @@ DECALRE_SIMPLE_HANDLER( CBOTTOMHandler, eVAlign, SState::VERTALIGN_BOTTOM )
 
 // CBRHandler
 
-class CBRHandler: public IMLHandler
+class CBRHandler : public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CBRHandler );
+
 private:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
@@ -96,27 +99,36 @@ public:
 
 // CCOLORHandler
 
-struct SFadeValue: public CObjectBase
+struct SFadeValue : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( SFadeValue )
-		ZDATA
+	ZDATA
 public:
 	float fFadeValue;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fFadeValue); return 0; }
-	SFadeValue(): fFadeValue( 1.0f ){}
-	SFadeValue( float _fFadeValue ): fFadeValue( _fFadeValue ){}
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &fFadeValue );
+		return 0;
+	}
+	SFadeValue() : fFadeValue( 1.0f ) {}
+	SFadeValue( float _fFadeValue ) : fFadeValue( _fFadeValue ) {}
 };
-class CCOLORHandler: public IMLHandler
+class CCOLORHandler : public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CCOLORHandler );
+
 private:
 	ZDATA
 	CPtr<SFadeValue> sFadeValue;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&sFadeValue); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &sFadeValue );
+		return 0;
+	}
 
 public:
-	CCOLORHandler(){}
-	CCOLORHandler( SFadeValue *pFadeValue ):sFadeValue( pFadeValue ){}
+	CCOLORHandler() {}
+	CCOLORHandler( SFadeValue *pFadeValue ) : sFadeValue( pFadeValue ) {}
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		if ( paramsSet.size() != 3 )
@@ -130,9 +142,10 @@ public:
 
 // CTABHandler
 
-class CTABHandler: public IMLHandler
+class CTABHandler : public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CTABHandler );
+
 private:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
@@ -146,9 +159,10 @@ public:
 
 // CFONTHandler
 
-class CFONTHandler: public IMLHandler
+class CFONTHandler : public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CFONTHandler );
+
 private:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
@@ -163,7 +177,7 @@ public:
 			sState.nOutlineBorder = 0;
 
 			int nTemp = 1;
-			while( nTemp < paramsSet.size() )
+			while ( nTemp < paramsSet.size() )
 			{
 				if ( nTemp + 2 >= paramsSet.size() )
 					break;
@@ -172,7 +186,7 @@ public:
 
 				const std::wstring &wsID = paramsSet[nTemp];
 				const std::wstring &wsParam = paramsSet[nTemp + 2];
-				if ( wsID.compare( L"size" ) == 0  )
+				if ( wsID.compare( L"size" ) == 0 )
 				{
 					wchar_t wsString[128];
 					int nParams = swscanf( wsParam.c_str(), L"%d%2s", &sState.sFont.nSize, wsString );
@@ -187,15 +201,14 @@ public:
 					}
 					else
 						sState.sFont.nSize |= FONT_SIZE_POINTS;
-
 				}
-				else if ( wsID.compare( L"face" ) == 0  )
+				else if ( wsID.compare( L"face" ) == 0 )
 					sState.sFont.szName = WideToUTF8( wsParam );
-				else if ( wsID.compare( L"outlinesize" ) == 0  )
+				else if ( wsID.compare( L"outlinesize" ) == 0 )
 					sState.nOutlineBorder = NStr::ToIntDec( wsParam );
-				else if ( wsID.compare( L"outlinecolor" ) == 0  )
+				else if ( wsID.compare( L"outlinecolor" ) == 0 )
 					sState.sOutlineColor = StringToColor( wsParam );
-				else if ( wsID.compare( L"forcefontsize" ) == 0  )
+				else if ( wsID.compare( L"forcefontsize" ) == 0 )
 					sState.bForceFontSize = true;
 
 				nTemp += 3;
@@ -207,9 +220,10 @@ public:
 
 // CIMAGEHandler
 
-class CIMAGEHandler: public IMLHandler
+class CIMAGEHandler : public IMLHandler
 {
 	OBJECT_BASIC_METHODS( CIMAGEHandler );
+
 private:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
@@ -225,7 +239,7 @@ public:
 		if ( paramsSet.size() > 1 )
 		{
 			int nTemp = 1;
-			while( nTemp < paramsSet.size() )
+			while ( nTemp < paramsSet.size() )
 			{
 				if ( nTemp + 2 >= paramsSet.size() )
 					break;
@@ -234,20 +248,20 @@ public:
 
 				const std::wstring &wsID = paramsSet[nTemp];
 				const std::wstring &wsParam = paramsSet[nTemp + 2];
-				if ( wsID.compare( L"align" ) == 0  )
+				if ( wsID.compare( L"align" ) == 0 )
 				{
 					if ( wsParam.compare( L"left" ) == 0 )
 						eAlign = SState::HORALIGN_WRAP_LEFT;
 					else if ( wsParam.compare( L"right" ) == 0 )
 						eAlign = SState::HORALIGN_WRAP_RIGHT;
 				}
-//				else if ( wsID.compare( L"id" ) == 0  )
-//					pTexture = NDb::STexture::Get( _wtol( wsParam.c_str() ) );
-				else if ( wsID.compare( L"width" ) == 0  )
+				//				else if ( wsID.compare( L"id" ) == 0  )
+				//					pTexture = NDb::STexture::Get( _wtol( wsParam.c_str() ) );
+				else if ( wsID.compare( L"width" ) == 0 )
 					nWidth = NStr::ToIntDec( wsParam );
-				else if ( wsID.compare( L"height" ) == 0  )
+				else if ( wsID.compare( L"height" ) == 0 )
 					nHeight = NStr::ToIntDec( wsParam );
-				else if ( wsID.compare( L"border" ) == 0  )
+				else if ( wsID.compare( L"border" ) == 0 )
 					nBorder = NStr::ToIntDec( wsParam );
 
 				nTemp += 3;
@@ -261,9 +275,10 @@ public:
 
 // CMINFONTSIZEHandler
 
-class CMINFONTSIZEHandler: public IMLHandler
+class CMINFONTSIZEHandler : public IMLHandler
 {
-	OBJECT_BASIC_METHODS(CMINFONTSIZEHandler);
+	OBJECT_BASIC_METHODS( CMINFONTSIZEHandler );
+
 private:
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
@@ -278,7 +293,7 @@ public:
 			sState.nOutlineBorder = 0;
 
 			int nTemp = 1;
-			while( nTemp < paramsSet.size() )
+			while ( nTemp < paramsSet.size() )
 			{
 				if ( nTemp + 2 >= paramsSet.size() )
 					break;
@@ -287,7 +302,7 @@ public:
 
 				const std::wstring &wsID = paramsSet[nTemp];
 				const std::wstring &wsParam = paramsSet[nTemp + 2];
-				if ( wsID.compare( L"size" ) == 0  )
+				if ( wsID.compare( L"size" ) == 0 )
 					sState.nMinFontSize = NStr::ToIntDec( wsParam );
 
 				nTemp += 3;
@@ -299,17 +314,22 @@ public:
 
 // CStateStack
 
-class CStateStack: public IMLHandler
+class CStateStack : public IMLHandler
 {
-	OBJECT_BASIC_METHODS(CStateStack);
+	OBJECT_BASIC_METHODS( CStateStack );
+
 private:
 	ZDATA
 	bool bSave;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bSave); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &bSave );
+		return 0;
+	}
 
 public:
 	CStateStack() {}
-	CStateStack( bool _bSave ): bSave( _bSave ) {}
+	CStateStack( bool _bSave ) : bSave( _bSave ) {}
 	void Exec( IML *pIML, IMLLayout *pLayout, const std::vector<std::wstring> &paramsSet )
 	{
 		if ( bSave )

@@ -11,7 +11,7 @@
 
 extern CStaticObjects theStatObjs;
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 class CStObjIter
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -25,12 +25,14 @@ class CStObjIter
 	void IterateToNextCell();
 
 	CStObjIter( const CStObjIter &iter );
-	CStObjIter& operator=( const CStObjIter &iter );
+	CStObjIter &operator=( const CStObjIter &iter );
+
 protected:
-	CStaticObjects::StaticObjectsAreaMap& GetAreaMap();
+	CStaticObjects::StaticObjectsAreaMap &GetAreaMap();
 	int GetCellSize() const;
+
 public:
-	CStObjIter() : x( 0 ), y( 0 ), downX( 0 ), downY( 0 ), upX( 0 ), upY( 0 ) { }
+	CStObjIter() : x( 0 ), y( 0 ), downX( 0 ), downY( 0 ), upX( 0 ), upY( 0 ) {}
 	CStObjIter( const int downX, const int upX, const int downY, const int upY );
 	~CStObjIter() { theStatObjs.SetIterCreated( false ); }
 
@@ -43,24 +45,26 @@ public:
 	}
 	void Init( const int _downX, const int _upX, const int _downY, const int _upY );
 
-	class CExistingObject* operator*();
+	class CExistingObject *operator*();
 };
 
 // очень медленный!
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 class CStObjGlobalIter : public CStObjIter<bOnlyContainers>
 {
 	CStObjGlobalIter( const CStObjGlobalIter &iter );
-	CStObjGlobalIter& operator=( const CStObjGlobalIter &iter );
+	CStObjGlobalIter &operator=( const CStObjGlobalIter &iter );
+
 public:
 	CStObjGlobalIter();
 };
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 class CStObjCircleIter : public CStObjIter<bOnlyContainers>
 {
 	CStObjCircleIter( const CStObjCircleIter &iter );
-	CStObjCircleIter& operator=( const CStObjCircleIter &iter );
+	CStObjCircleIter &operator=( const CStObjCircleIter &iter );
+
 public:
 	CStObjCircleIter( const CVec2 &vCenter, const float fR );
 };
@@ -77,14 +81,15 @@ class CMinesIter : protected CStObjCircleIter<false>
 	const bool bAllMines = {};
 
 	void IterateToNextMine();
+
 public:
 	// итерировать по минам, невидимым nParty
 	CMinesIter( const CVec2 &vCenter, float fR, const int nParty, const bool bAllMines = false );
 	void Iterate();
 	bool IsFinished() const;
-	void Reset() ;
-	class CMineStaticObject* operator->();
-	class CMineStaticObject* operator*();
+	void Reset();
+	class CMineStaticObject *operator->();
+	class CMineStaticObject *operator*();
 };
 
 //
@@ -95,31 +100,31 @@ public:
 //*											CStObjIter																	*
 //*******************************************************************
 
-template<bool bOnlyContainers>
-inline CStaticObjects::StaticObjectsAreaMap& CStObjIter<bOnlyContainers>::GetAreaMap()
+template <bool bOnlyContainers>
+inline CStaticObjects::StaticObjectsAreaMap &CStObjIter<bOnlyContainers>::GetAreaMap()
 {
 	return theStatObjs.GetAreaMap();
 }
 
-template<>
-inline CStaticObjects::StaticObjectsAreaMap& CStObjIter<true>::GetAreaMap()
+template <>
+inline CStaticObjects::StaticObjectsAreaMap &CStObjIter<true>::GetAreaMap()
 {
 	return theStatObjs.GetContainersAreaMap();
 }
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 inline int CStObjIter<bOnlyContainers>::GetCellSize() const
 {
 	return SConsts::STATIC_OBJ_CELL;
 }
 
-template<>
+template <>
 inline int CStObjIter<true>::GetCellSize() const
 {
 	return SConsts::STATIC_CONTAINER_OBJ_CELL;
 }
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 CStObjIter<bOnlyContainers>::CStObjIter( const int downX, const int upX, const int downY, const int upY )
 {
 	Init( downX, upX, downY, upY );
@@ -127,22 +132,23 @@ CStObjIter<bOnlyContainers>::CStObjIter( const int downX, const int upX, const i
 
 extern NTimer::STime curTime;
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 void CStObjIter<bOnlyContainers>::Init( const int _downX, const int _upX, const int _downY, const int _upY )
 {
 	downX = Clamp( _downX, 0, GetAreaMap().GetSizeX() - 1 );
 	upX = Clamp( _upX, 0, GetAreaMap().GetSizeX() - 1 );
-  downY = Clamp( _downY, 0, GetAreaMap().GetSizeY() - 1 );
+	downY = Clamp( _downY, 0, GetAreaMap().GetSizeY() - 1 );
 	upY = Clamp( _upY, 0, GetAreaMap().GetSizeY() - 1 );
 
-#if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
+#if !defined( _FINALRELEASE ) && !defined( _BETARELEASE )
 	NI_ASSERT( !theStatObjs.IsIterCreated(), "Can't create two iterators concurrently" );
 	theStatObjs.SetIterCreated( true );
 #endif // #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
 
 	CExistingObject::UpdateGlobalMark();
 
-	y = downY; x = downX;
+	y = downY;
+	x = downX;
 	if ( GetAreaMap().GetSizeX() > 0 && GetAreaMap().GetSizeY() > 0 && !GetAreaMap()[y][x].empty() )
 		iter = GetAreaMap()[y][x].begin();
 	else
@@ -151,11 +157,11 @@ void CStObjIter<bOnlyContainers>::Init( const int _downX, const int _upX, const 
 	static int nUpdate = 0;
 	if ( !IsFinished() )
 	{
-		(*iter)->SetGlobalUpdated();
+		( *iter )->SetGlobalUpdated();
 	}
 }
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 void CStObjIter<bOnlyContainers>::IterateToNextCell()
 {
 	do
@@ -167,7 +173,7 @@ void CStObjIter<bOnlyContainers>::IterateToNextCell()
 		iter = GetAreaMap()[y][x].begin();
 }
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 void CStObjIter<bOnlyContainers>::NextXY()
 {
 	if ( ++x > upX )
@@ -177,29 +183,29 @@ void CStObjIter<bOnlyContainers>::NextXY()
 	}
 }
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 bool CStObjIter<bOnlyContainers>::IsFinished() const
 {
 	return y > upY;
 }
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 void CStObjIter<bOnlyContainers>::Iterate()
 {
 	do
 	{
 		if ( ++iter == GetAreaMap()[y][x].end() )
 			IterateToNextCell();
-	} while ( !IsFinished() && (*iter)->IsGlobalUpdated() );
+	} while ( !IsFinished() && ( *iter )->IsGlobalUpdated() );
 
 	if ( !IsFinished() )
 	{
-		(*iter)->SetGlobalUpdated();
+		( *iter )->SetGlobalUpdated();
 	}
 }
 
-template<bool bOnlyContainers>
-CExistingObject* CStObjIter<bOnlyContainers>::operator*()
+template <bool bOnlyContainers>
+CExistingObject *CStObjIter<bOnlyContainers>::operator*()
 {
 	NI_ASSERT( !IsFinished(), "Can't perform operator *" );
 	return *iter;
@@ -209,9 +215,9 @@ CExistingObject* CStObjIter<bOnlyContainers>::operator*()
 //*											CStObjGlobalIter														*
 //*******************************************************************
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 CStObjGlobalIter<bOnlyContainers>::CStObjGlobalIter()
-: CStObjIter<bOnlyContainers>( 0, this->GetAreaMap().GetSizeX() - 1, 0, this->GetAreaMap().GetSizeY() - 1 )
+		: CStObjIter<bOnlyContainers>( 0, this->GetAreaMap().GetSizeX() - 1, 0, this->GetAreaMap().GetSizeY() - 1 )
 {
 }
 
@@ -219,13 +225,13 @@ CStObjGlobalIter<bOnlyContainers>::CStObjGlobalIter()
 //*											CStObjCircleIter														*
 //*******************************************************************
 
-template<bool bOnlyContainers>
+template <bool bOnlyContainers>
 CStObjCircleIter<bOnlyContainers>::CStObjCircleIter( const CVec2 &vCenter, const float fR )
 {
 	const int nBigCellSize = SConsts::TILE_SIZE * this->GetCellSize();
 
-	const int nMinX = (std::max)( 0, int( (vCenter.x - fR) / nBigCellSize ) );
-	const int nMaxX = (std::min)( this->GetAreaMap().GetSizeX() - 1, int( (vCenter.x + fR) / nBigCellSize ) );
+	const int nMinX = (std::max)( 0, int( ( vCenter.x - fR ) / nBigCellSize ) );
+	const int nMaxX = (std::min)( this->GetAreaMap().GetSizeX() - 1, int( ( vCenter.x + fR ) / nBigCellSize ) );
 	const int nMinY = (std::max)( 0, int( ( vCenter.y - fR ) / nBigCellSize ) );
 	const int nMaxY = (std::min)( this->GetAreaMap().GetSizeY() - 1, int( ( vCenter.y + fR ) / nBigCellSize ) );
 

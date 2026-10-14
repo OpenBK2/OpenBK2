@@ -18,7 +18,9 @@ static const std::string CutRootDir( const std::string &szFileName, const std::s
 	return szFileName.substr( szRootDir.size(), szFileName.size() );
 }
 
-static const std::string GetIncludeRefName( const std::vector<std::string> &splittedFileDirs, const std::string &szRootDir, const std::string &szFullIncludeName )
+static const std::string GetIncludeRefName( const std::vector<std::string> &splittedFileDirs,
+                                            const std::string &szRootDir,
+                                            const std::string &szFullIncludeName )
 {
 	const std::string szIncludeName = CutRootDir( szFullIncludeName, szRootDir );
 	std::vector<std::string> inclDirs;
@@ -47,7 +49,10 @@ static const std::string GetIncludeRefName( const std::vector<std::string> &spli
 	return "";
 }
 
-CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
+CFile::CFile( NLang::CFileNode *pFileNode,
+              const CNodes2TypeDefs &nodes2TypeDefs,
+              const std::string &szRootDir,
+              NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	// The output path, and the includes of other generated headers below, come
 	// from the files' paths on disk rather than their lowercased names, so the
@@ -74,13 +79,14 @@ CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs
 
 	// Ignoring case, the order they had when they were all lowercase and the
 	// order the tree's DB headers list them in.
-	includes.sort( []( const std::string &a, const std::string &b )
-	{
-		std::string szA( a ), szB( b );
-		NStr::ToLowerASCII( &szA );
-		NStr::ToLowerASCII( &szB );
-		return szA < szB;
-	} );
+	includes.sort(
+			[]( const std::string &a, const std::string &b )
+			{
+				std::string szA( a ), szB( b );
+				NStr::ToLowerASCII( &szA );
+				NStr::ToLowerASCII( &szB );
+				return szA < szB;
+			} );
 
 	hExternalIncludes = pFileNode->GetHExternalIncludes();
 	cppExternalIncludes = pFileNode->GetCPPExternalIncludes();
@@ -91,7 +97,7 @@ CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs
 void CFile::GenerateCode( const std::string &szRootDir )
 {
 	const std::string szFullHFileName = szRootDir + szName + ".h";
-	CFileStream hStream( szFullHFileName, CFileStream::WIN_CREATE);
+	CFileStream hStream( szFullHFileName, CFileStream::WIN_CREATE );
 	const std::string szFullCppFileName = szRootDir + szName + ".cpp";
 	CFileStream cppStream( szFullCppFileName, CFileStream::WIN_CREATE );
 
@@ -117,7 +123,7 @@ void CFile::GenerateCode( const std::string &szRootDir )
 		code.h << "namespace NDb" << endl;
 		code.h << "{" << endl;
 		pNamespace->GenerateCode( &code, "", 0, "NDb" );
-		code.h  << "}" << endl;
+		code.h << "}" << endl;
 
 		code.cpp << "}" << endl;
 
@@ -125,13 +131,14 @@ void CFile::GenerateCode( const std::string &szRootDir )
 		// or enum marked [export] in the header, and in the .cpp by the
 		// registration macros, which expand to it.
 		const std::string szExportHeader = code.szModule + "_export.h";
-		const bool bHUsesExport = !code.szModule.empty() &&
-			( szHFile.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos ||
-			  szEOF.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos );
-		const bool bCppUsesExport = !code.szModule.empty() && szCPPEOF.find( "REGISTER_DATABASE_CLASS(" ) != std::string::npos;
+		const bool bHUsesExport =
+				!code.szModule.empty() && ( szHFile.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos ||
+		                                szEOF.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos );
+		const bool bCppUsesExport =
+				!code.szModule.empty() && szCPPEOF.find( "REGISTER_DATABASE_CLASS(" ) != std::string::npos;
 		// GUID fields: the uuid type in the header, AddUuidChunk in the .cpp
 		const bool bHUsesUuid = szHFile.find( "boost::uuids::uuid" ) != std::string::npos ||
-			szEOF.find( "boost::uuids::uuid" ) != std::string::npos;
+		                        szEOF.find( "boost::uuids::uuid" ) != std::string::npos;
 		const bool bCppUsesUuid = szCPPFile.find( "AddUuidChunk(" ) != std::string::npos;
 
 		// The include blocks, laid out as the tree's DB sources lay them out:
@@ -181,7 +188,8 @@ void CFile::GenerateCode( const std::string &szRootDir )
 		{
 			cpp << "#include " << qcomma << "System/UuidChunk.h" << qcomma << endl;
 		}
-		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end(); ++iter )
+		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end();
+		      ++iter )
 			cpp << "#include " << qcomma << *iter << qcomma << endl;
 		cpp << endl;
 		if ( bCppUsesExport )

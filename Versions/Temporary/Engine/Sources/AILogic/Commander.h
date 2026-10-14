@@ -9,12 +9,18 @@ class CCommonUnit;
 // ****
 class CCommander : public ICommander
 {
-	public: int operator&( IBinSaver &saver ); private:;
+public:
+	int operator&( IBinSaver &saver );
+
+private:
+	;
 	//
 	struct STaskSortPresicate
 	{
 		bool operator()( const IGeneralTask *pT1, const IGeneralTask *pT2 ) const
-		{	return pT1->GetSeverity() > pT2->GetSeverity(); }
+		{
+			return pT1->GetSeverity() > pT2->GetSeverity();
+		}
 	};
 	//
 	struct STaskBadSituationPredicate
@@ -36,11 +42,12 @@ class CCommander : public ICommander
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		IWorkerEnumerator *pEn = {};
 		EForceType eType = {};
-		SCalcRatingPredicate( IWorkerEnumerator *_pEn, EForceType _eType ) : pEn( _pEn ), eType( _eType ) {  }
-		void operator()( std::pair<float, CPtr<CCommonUnit> > &value )
-			{ value.first = pEn->EvaluateWorkerRating( value.second, eType ); }
-		bool operator()( const std::pair<float, CPtr<CCommonUnit> > &v1,
-										 const std::pair<float, CPtr<CCommonUnit> > &v2 )
+		SCalcRatingPredicate( IWorkerEnumerator *_pEn, EForceType _eType ) : pEn( _pEn ), eType( _eType ) {}
+		void operator()( std::pair<float, CPtr<CCommonUnit>> &value )
+		{
+			value.first = pEn->EvaluateWorkerRating( value.second, eType );
+		}
+		bool operator()( const std::pair<float, CPtr<CCommonUnit>> &v1, const std::pair<float, CPtr<CCommonUnit>> &v2 )
 		{
 			return v1.first < v2.first;
 		}
@@ -72,19 +79,19 @@ class CCommander : public ICommander
 	{
 		CPtr<ICommander> pManager;
 		void operator()( IGeneralTask *pT ) { pT->ReleaseWorker( pManager, 0 ); }
-		STakeWorkersPredicate( struct ICommander *pManager ) : pManager( pManager ) {  }
+		STakeWorkersPredicate( struct ICommander *pManager ) : pManager( pManager ) {}
 	};
-protected:
 
-	typedef std::vector< CObj<IGeneralTask> > Tasks;
-	Tasks tasks;			// all tasks of this colonel.
+protected:
+	typedef std::vector<CObj<IGeneralTask>> Tasks;
+	Tasks tasks; // all tasks of this colonel.
 	float fMeanSeverity = {};
 
 	void EnumWorkersInternal( const enum EForceType eType, IWorkerEnumerator *pEn, CommonUnits *pUnits );
+
 public:
 	CCommander();
-	virtual float GetMeanSeverity() const ;
+	virtual float GetMeanSeverity() const;
 	virtual void Segment();
-
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

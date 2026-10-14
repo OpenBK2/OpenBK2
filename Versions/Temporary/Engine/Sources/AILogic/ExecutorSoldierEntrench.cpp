@@ -8,19 +8,22 @@
 extern CGroupLogic theGroupLogic;
 
 CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
-: pUnit( _pUnit ), fEntrenchTimeCoeff( 1.0f ),
-	CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF, (1000 + NRandom::Random(1000))/SConsts::AI_SEGMENT_DURATION,
-	NDb::ABILITY_ENTRENCH_SELF )
+		: pUnit( _pUnit ), fEntrenchTimeCoeff( 1.0f ),
+			CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF,
+                         ( 1000 + NRandom::Random( 1000 ) ) / SConsts::AI_SEGMENT_DURATION,
+                         NDb::ABILITY_ENTRENCH_SELF )
 {
 	RecordRandomCall();
 	// The legacy coefficient is still serialized, even though the base handles speed.
-	for ( int i = 0; i < (std::min<int>) ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
+	for ( int i = 0;
+	      i < (std::min<int>)( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() );
+	      ++i )
 	{
 		const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;
 		if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS )
 		{
 			const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetStats()->GetActions()->specialAbilities[i];
-			NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found");
+			NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found" );
 			if ( pSA )
 				SetSpeedCoeff( pSA->fParameter );
 			break;
@@ -28,9 +31,7 @@ CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
 	}
 }
 
-CExecutorSoldierEntrench::~CExecutorSoldierEntrench()
-{
-}
+CExecutorSoldierEntrench::~CExecutorSoldierEntrench() {}
 
 float CExecutorSoldierEntrench::OnAbilityActive()
 {
@@ -61,31 +62,27 @@ float CExecutorSoldierEntrench::OnAbilityOff()
 	return 0.0f;
 }
 
-void CExecutorSoldierEntrench::SwitchingOffEnd()
-{
-}
+void CExecutorSoldierEntrench::SwitchingOffEnd() {}
 
 void CExecutorSoldierEntrench::SwitchingOffStart()
 {
-	theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_MOVE_LEAVE_SELF_ENTRENCH), pUnit );
+	theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 }
 
-void CExecutorSoldierEntrench::SwitchOnEnd()
-{
-}
+void CExecutorSoldierEntrench::SwitchOnEnd() {}
 
 bool CExecutorSoldierEntrench::ActivateDuringDisable()
 {
-	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_SELF_ENTRENCH), pUnit, false );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_SELF_ENTRENCH ), pUnit, false );
 	return true;
 }
 
 void CExecutorSoldierEntrench::SwitchOnStart( const class CAICommand *pCommand )
 {
-	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_SELF_ENTRENCH), pUnit, false );
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_SELF_ENTRENCH ), pUnit, false );
 }
 
-CCommonUnit * CExecutorSoldierEntrench::GetUnit()
+CCommonUnit *CExecutorSoldierEntrench::GetUnit()
 {
 	return pUnit;
 }
@@ -109,8 +106,8 @@ bool CExecutorSoldierEntrench::NotifyEvent( const CExecutorEvent &event )
 		return false;
 
 	// Commands and the internal enable/disable notifications have no ability payload.
-	if ( event.GetParam().eEventID == EID_NEW_COMMAND_RECIEVED ||
-		event.GetParam().eEventID == EID_ABILITY_ENABLE || event.GetParam().eEventID == EID_ABILITY_DISABLE )
+	if ( event.GetParam().eEventID == EID_NEW_COMMAND_RECIEVED || event.GetParam().eEventID == EID_ABILITY_ENABLE ||
+	     event.GetParam().eEventID == EID_ABILITY_DISABLE )
 		return CExecutorUnitBase::NotifyEvent( event );
 	if ( event.GetParam().eEventID == EID_ABILITY_ACTIVATE || event.GetParam().eEventID == EID_ABILITY_DEACTIVATE )
 	{

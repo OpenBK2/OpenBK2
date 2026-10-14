@@ -20,7 +20,6 @@ namespace
 	const char *const COLUMN_PROBABILITY = "Probability";
 	const char *const COLUMN_SUBSET = "SUBSET Code";
 
-
 	// One CSV record, which is not one line: a quoted field may contain the
 	// separator and may contain newlines.
 	//
@@ -95,7 +94,6 @@ namespace
 		}
 	}
 
-
 	// Comma or semicolon, whichever the header row uses more of. Excel writes
 	// the system list separator, so this is not knowable in advance.
 	char GuessSeparator( const std::string &rszHeaderLine )
@@ -103,12 +101,17 @@ namespace
 		size_t nCommas = 0, nSemicolons = 0;
 		for ( const char c : rszHeaderLine )
 		{
-			if ( c == ',' ) { ++nCommas; }
-			else if ( c == ';' ) { ++nSemicolons; }
+			if ( c == ',' )
+			{
+				++nCommas;
+			}
+			else if ( c == ';' )
+			{
+				++nSemicolons;
+			}
 		}
 		return ( nSemicolons > nCommas ) ? ';' : ',';
 	}
-
 
 	int FindColumn( const std::vector<std::string> &rHeader, const char *pszName )
 	{
@@ -122,15 +125,12 @@ namespace
 		return -1;
 	}
 
-
-	const std::string& Field( const std::vector<std::string> &rFields, int nColumn )
+	const std::string &Field( const std::vector<std::string> &rFields, int nColumn )
 	{
 		static const std::string szEmpty;
-		return ( ( nColumn >= 0 ) && ( nColumn < static_cast<int>( rFields.size() ) ) )
-						 ? rFields[nColumn] : szEmpty;
+		return ( ( nColumn >= 0 ) && ( nColumn < static_cast<int>( rFields.size() ) ) ) ? rFields[nColumn] : szEmpty;
 	}
 }
-
 
 bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName )
 {
@@ -155,9 +155,8 @@ bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName 
 	{
 		char bom[3] = {};
 		file.read( bom, 3 );
-		if ( ( static_cast<unsigned char>( bom[0] ) != 0xEF ) ||
-				 ( static_cast<unsigned char>( bom[1] ) != 0xBB ) ||
-				 ( static_cast<unsigned char>( bom[2] ) != 0xBF ) )
+		if ( ( static_cast<unsigned char>( bom[0] ) != 0xEF ) || ( static_cast<unsigned char>( bom[1] ) != 0xBB ) ||
+		     ( static_cast<unsigned char>( bom[2] ) != 0xBF ) )
 		{
 			file.clear();
 			file.seekg( 0 );
@@ -176,15 +175,13 @@ bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName 
 	const int nFile = FindColumn( header, COLUMN_FILE );
 	const int nProbability = FindColumn( header, COLUMN_PROBABILITY );
 	const int nSubset = FindColumn( header, COLUMN_SUBSET );
-	if ( ( nSituation < 0 ) || ( nRecord < 0 ) || ( nFile < 0 ) ||
-			 ( nProbability < 0 ) || ( nSubset < 0 ) )
+	if ( ( nSituation < 0 ) || ( nRecord < 0 ) || ( nFile < 0 ) || ( nProbability < 0 ) || ( nSubset < 0 ) )
 	{
 		// Naming the columns it wanted beats "could not read the file": the
 		// usual cause is a sheet exported with the wrong header row.
-		NMessage::Error( std::string( "The acks table has no header row naming all of:\n  " ) +
-										 COLUMN_SITUATION + "\n  " + COLUMN_RECORD + "\n  " + COLUMN_FILE +
-										 "\n  " + COLUMN_PROBABILITY + "\n  " + COLUMN_SUBSET +
-										 "\n\n" + szFileName );
+		NMessage::Error( std::string( "The acks table has no header row naming all of:\n  " ) + COLUMN_SITUATION + "\n  " +
+		                 COLUMN_RECORD + "\n  " + COLUMN_FILE + "\n  " + COLUMN_PROBABILITY + "\n  " + COLUMN_SUBSET +
+		                 "\n\n" + szFileName );
 		return false;
 	}
 
@@ -199,8 +196,7 @@ bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName 
 		// A row with nothing in it is the end of the sheet's content rather than
 		// an entry; the ODBC reader never saw these because the driver stopped
 		// at the used range.
-		if ( entry.szRecordCode.empty() && entry.szFileName.empty() &&
-				 entry.szSituationCode.empty() )
+		if ( entry.szRecordCode.empty() && entry.szFileName.empty() && entry.szSituationCode.empty() )
 		{
 			continue;
 		}

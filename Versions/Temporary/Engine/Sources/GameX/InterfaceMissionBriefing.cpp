@@ -16,8 +16,7 @@ const float TEXTURE_POINT_Y = 7.0f;
 
 // CInterfaceMissionBriefing
 
-CInterfaceMissionBriefing::CInterfaceMissionBriefing() :
-	CInterfaceScreenBase( "MissionBriefing", "mission_briefing" )
+CInterfaceMissionBriefing::CInterfaceMissionBriefing() : CInterfaceScreenBase( "MissionBriefing", "mission_briefing" )
 {
 }
 
@@ -50,8 +49,8 @@ void CInterfaceMissionBriefing::MakeInterior()
 	if ( pMapInfo )
 	{
 		std::wstring wszName;
-		if ( CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedName) )
-			wszName = GET_TEXT_PRE(pMapInfo->,LocalizedName);
+		if ( CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedName ) )
+			wszName = GET_TEXT_PRE( pMapInfo->, LocalizedName );
 		if ( wszName.empty() )
 		{
 			if ( IScreen *pScreen = GetScreen() )
@@ -67,8 +66,8 @@ void CInterfaceMissionBriefing::MakeInterior()
 	if ( pMapInfo )
 	{
 		std::wstring wszMissionDesc;
-		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LoadingDescription) )
-			wszMissionDesc = GET_TEXT_PRE(pMapInfo->,LoadingDescription);
+		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LoadingDescription ) )
+			wszMissionDesc = GET_TEXT_PRE( pMapInfo->, LoadingDescription );
 		if ( pMissionDescView )
 			pMissionDescView->SetText( pMissionDescView->GetDBText() + wszMissionDesc );
 	}
@@ -84,8 +83,8 @@ void CInterfaceMissionBriefing::MakeInterior()
 	if ( pMapInfo )
 	{
 		std::wstring wszDesc;
-		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE(pMapInfo->,LocalizedDescription) )
-			wszDesc = GET_TEXT_PRE(pMapInfo->,LocalizedDescription);
+		if ( pMapInfo && CHECK_TEXT_NOT_EMPTY_PRE( pMapInfo->, LocalizedDescription ) )
+			wszDesc = GET_TEXT_PRE( pMapInfo->, LocalizedDescription );
 		if ( pObjectivesView )
 			pObjectivesView->SetText( pObjectivesView->GetDBText() + wszDesc );
 	}
@@ -154,18 +153,14 @@ void CInterfaceMissionBriefing::MissionStart()
 
 // CICMissionBriefing
 
-void CICMissionBriefing::PreCreate()
-{
-}
+void CICMissionBriefing::PreCreate() {}
 
 void CICMissionBriefing::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICMissionBriefing::Configure( const char *pszConfig )
-{
-}
+void CICMissionBriefing::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17264481, CInterfaceMissionBriefing )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BRIEFING, CICMissionBriefing )

@@ -6,7 +6,9 @@
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
-bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
+bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName,
+                                 const std::string &rszDestination,
+                                 const std::string &rszSource )
 {
 	// call default implementation of copying (copy object itself)
 	if ( !CBuilderBase::CopyObject( rszObjectTypeName, rszDestination, rszSource ) )
@@ -19,7 +21,7 @@ bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName, const std
 	bool bResult = true;
 
 	CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( rszObjectTypeName, rszDestination );
-	bResult = bResult && (pManipulator != 0);
+	bResult = bResult && ( pManipulator != 0 );
 
 	int nChildren = 0;
 	bResult = bResult && CManipulatorManager::GetValue( &nChildren, pManipulator, "Children" );
@@ -28,31 +30,35 @@ bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName, const std
 	for ( int i = 0; i < nChildren && bResult; ++i )
 	{
 		std::string szSrcChildRefName;
-		bResult = bResult && CManipulatorManager::GetValue( &szSrcChildRefName, pManipulator, fmt::format( "Children.[{}]", i) );
+		bResult =
+				bResult && CManipulatorManager::GetValue( &szSrcChildRefName, pManipulator, fmt::format( "Children.[{}]", i ) );
 		// avoid empty refs
 		if ( bResult && !szSrcChildRefName.empty() )
 		{
 			std::string szChildTypeName, szSrcChildName;
-			CStringManager::GetTypeAndNameFromRefValue( &szChildTypeName,	&szSrcChildName, szSrcChildRefName, TYPE_SEPARATOR_CHAR, std::string() );
+			CStringManager::GetTypeAndNameFromRefValue(
+					&szChildTypeName, &szSrcChildName, szSrcChildRefName, TYPE_SEPARATOR_CHAR, std::string() );
 
 			const int npos = szSrcChildName.rfind( PATH_SEPARATOR_CHAR );
-			const std::string szChildShortName = ( npos == std::string::npos ) ? szSrcChildName : szSrcChildName.substr( npos+1 );
+			const std::string szChildShortName =
+					( npos == std::string::npos ) ? szSrcChildName : szSrcChildName.substr( npos + 1 );
 
 			// copy child
 			const std::string szDstChildName = rszDestination + PATH_SEPARATOR_CHAR + szChildShortName;
-			bResult = bResult && Singleton<IBuilderContainer>()->CopyObject( szChildTypeName, szDstChildName, szSrcChildName );
+			bResult =
+					bResult && Singleton<IBuilderContainer>()->CopyObject( szChildTypeName, szDstChildName, szSrcChildName );
 			if ( bResult )
 			{
 				std::string szChildRefName;
-				CStringManager::GetRefValueFromTypeAndName( &szChildRefName, szChildTypeName, szDstChildName, TYPE_SEPARATOR_CHAR );
-				bResult = bResult && pManipulator->SetValue( fmt::format( "Children.[{}]", i), szChildRefName );
+				CStringManager::GetRefValueFromTypeAndName(
+						&szChildRefName, szChildTypeName, szDstChildName, TYPE_SEPARATOR_CHAR );
+				bResult = bResult && pManipulator->SetValue( fmt::format( "Children.[{}]", i ), szChildRefName );
 			}
 		}
 	}
 	NI_ASSERT( bResult, "CBaseUIBuilder::CopyObject() bResult == false" );
 	return bResult;
 }
-
 
 bool CBaseUIBuilder::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
@@ -63,7 +69,7 @@ bool CBaseUIBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 	bool bResult = true;
 
 	CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( rszObjectTypeName, rszObjectName );
-	bResult = bResult && (pManipulator != 0);
+	bResult = bResult && ( pManipulator != 0 );
 
 	int nChildren = 0;
 	bResult = bResult && CManipulatorManager::GetValue( &nChildren, pManipulator, "Children" );
@@ -74,7 +80,8 @@ bool CBaseUIBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 	for ( int i = 0; i < nChildren && bResult; ++i )
 	{
 		std::string szChildRefName;
-		bResult = bResult && CManipulatorManager::GetValue( &szChildRefName, pManipulator, fmt::format( "Children.[{}]", i) );
+		bResult =
+				bResult && CManipulatorManager::GetValue( &szChildRefName, pManipulator, fmt::format( "Children.[{}]", i ) );
 		children.push_back( szChildRefName );
 	}
 
@@ -88,13 +95,13 @@ bool CBaseUIBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 		if ( !it->empty() )
 		{
 			std::string szChildTypeName, szChildName;
-			CStringManager::GetTypeAndNameFromRefValue( &szChildTypeName,	&szChildName, *it, TYPE_SEPARATOR_CHAR, std::string() );
+			CStringManager::GetTypeAndNameFromRefValue(
+					&szChildTypeName, &szChildName, *it, TYPE_SEPARATOR_CHAR, std::string() );
 			bResult = bResult && Singleton<IBuilderContainer>()->RemoveObject( szChildTypeName, szChildName );
 		}
 	}
 	NI_ASSERT( bResult, "Cannot remove UI-object with all its children" );
 	return bResult;
 }
-
 
 // basement storage

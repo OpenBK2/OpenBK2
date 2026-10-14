@@ -12,15 +12,14 @@
 
 #include <cstdint>
 
-const int nNetTimeout = 60;				// As in SNetDriverConsts default constructor.
+const int nNetTimeout = 60; // As in SNetDriverConsts default constructor.
 //const int nNetTimeout = 300;
 
-const int N_PACKET_SIZE = 32768;	// Must be equal with buffer size from Net/NetStream.h
+const int N_PACKET_SIZE = 32768; // Must be equal with buffer size from Net/NetStream.h
 //const int N_PACKET_SIZE = 128000;	// Must be equal with buffer size from Net/NetStream.h
 
-
 CMultiplayerInternal::CMultiplayerInternal( const NDb::SNetGameConsts *_pConsts, IAICmdsAutoMagic *pCmds )
-	: pConsts(_pConsts), pCmdsSerialize(pCmds)
+		: pConsts( _pConsts ), pCmdsSerialize( pCmds )
 {
 }
 
@@ -33,7 +32,7 @@ void CMultiplayerInternal::CreateAsHost()
 {
 	pNetDriver = NNet::CreateNetDriver( NNet::SNetDriverConsts( nNetTimeout ) );
 	CPtr<NNet::ILinksManager> pLinksManager = NNet::CreateServerLinksManager( GetPort() );
-	pNetDriver->Init( NGlobal::GetVar("NetGameVersion", 1), GetPort(), false, pLinksManager );
+	pNetDriver->Init( NGlobal::GetVar( "NetGameVersion", 1 ), GetPort(), false, pLinksManager );
 
 	pNetDriver->StartGame();
 	pNetDriver->StartNewPlayerAccept();
@@ -43,16 +42,14 @@ bool CMultiplayerInternal::CreateAsClient( const char *pszIPAddress )
 {
 	pNetDriver = NNet::CreateNetDriver( NNet::SNetDriverConsts( nNetTimeout ) );
 	CPtr<NNet::ILinksManager> pLinksManager = NNet::CreateClientLinksManager();
-	pNetDriver->Init( NGlobal::GetVar("NetGameVersion", 1), GetPort(), true, pLinksManager );
+	pNetDriver->Init( NGlobal::GetVar( "NetGameVersion", 1 ), GetPort(), true, pLinksManager );
 
 	NNet::CNodeAddress address;
 	if ( address.SetInetName( pszIPAddress, GetPort() ) )
 	{
 		pNetDriver->ConnectGame( address, CMemoryStream() );
 
-		Singleton<IConsoleBuffer>()->WriteASCII(
-			CONSOLE_STREAM_CONSOLE, "request for connect is sent", 0xffffff00, true
-		);
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "request for connect is sent", 0xffffff00, true );
 
 		return true;
 	}
@@ -63,7 +60,7 @@ void CMultiplayerInternal::SendAICommand( CObjectBase *pCommand )
 {
 	CPtr<CObjectBase> pHold = pCommand;
 	{
-		pktOutgoing << uint8_t(NGM_AI_CMD);
+		pktOutgoing << uint8_t( NGM_AI_CMD );
 		// add command to packet
 		int nID = pCmdsSerialize->GetCommandID( pCommand );
 		pktOutgoing.Write( &nID, pCmdsSerialize->GetIDSize() );
@@ -80,7 +77,7 @@ void CMultiplayerInternal::SendDirect( int nPlayer, CObjectBase *pCommand )
 	CPtr<CObjectBase> pHold = pCommand;
 	CMemoryStream pkt;
 	{
-		pkt << uint8_t(NGM_AI_CMD);
+		pkt << uint8_t( NGM_AI_CMD );
 		// add command to packet
 		int nID = pCmdsSerialize->GetCommandID( pCommand );
 		pkt.Write( &nID, pCmdsSerialize->GetIDSize() );
@@ -95,7 +92,7 @@ void CMultiplayerInternal::SendDirect( int nPlayer, CObjectBase *pCommand )
 
 void CMultiplayerInternal::FinishSegment()
 {
-	pktOutgoing << uint8_t(NGM_ID_SEGMENT);
+	pktOutgoing << uint8_t( NGM_ID_SEGMENT );
 	pNetDriver->SendBroadcast( pktOutgoing );
 	pktOutgoing.SetSizeDiscard( 0 );
 }
@@ -109,15 +106,15 @@ CMultiplayerInternal::EConnectionState CMultiplayerInternal::GetState()
 {
 	switch ( pNetDriver->GetState() )
 	{
-	case NNet::IDriver::INACTIVE:
-		return INACTIVE;
-	case NNet::IDriver::ACTIVE:
-		return ACTIVE;
-	case NNet::IDriver::CONNECTING:
-		return CONNECTING;
-	default:
-		ASSERT(0);
-		break;
+		case NNet::IDriver::INACTIVE:
+			return INACTIVE;
+		case NNet::IDriver::ACTIVE:
+			return ACTIVE;
+		case NNet::IDriver::CONNECTING:
+			return CONNECTING;
+		default:
+			ASSERT( 0 );
+			break;
 	}
 	return INACTIVE;
 }
@@ -127,7 +124,7 @@ float CMultiplayerInternal::GetPing( int nPlayer )
 	return pNetDriver->GetPing( nPlayer );
 }
 
-CMultiplayerCommand* CMultiplayerInternal::GetCommand()
+CMultiplayerCommand *CMultiplayerInternal::GetCommand()
 {
 	if ( !CheckConnection() )
 		return 0;
@@ -143,23 +140,21 @@ CMultiplayerCommand* CMultiplayerInternal::GetCommand()
 		CMultiplayerCommand *pCommand = 0;
 		switch ( eMsgID )
 		{
-		case NNet::IDriver::DIRECT:
-		case NNet::IDriver::BROADCAST:
-			nIncomingPktClientID = nClientID;
-			pktIncoming = pkt;
-			pktIncoming.Seek(0);
-			return GetCommand();
+			case NNet::IDriver::DIRECT:
+			case NNet::IDriver::BROADCAST:
+				nIncomingPktClientID = nClientID;
+				pktIncoming = pkt;
+				pktIncoming.Seek( 0 );
+				return GetCommand();
 
-		case NNet::IDriver::NEW_CLIENT:
-			pCommand = new CMultiplayerCommand( CMultiplayerCommand::EMC_PLAYER_ADDED, nClientID, -1, 0 );
-			Singleton<IConsoleBuffer>()->WriteASCII(
-				CONSOLE_STREAM_CONSOLE, "new client", 0xffffff00, true
-				);
-			break;
+			case NNet::IDriver::NEW_CLIENT:
+				pCommand = new CMultiplayerCommand( CMultiplayerCommand::EMC_PLAYER_ADDED, nClientID, -1, 0 );
+				Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "new client", 0xffffff00, true );
+				break;
 
-		case NNet::IDriver::REMOVE_CLIENT:
-			pCommand = new CMultiplayerCommand( CMultiplayerCommand::EMC_PLAYER_REMOVED, nClientID, -1, 0 );
-			break;
+			case NNet::IDriver::REMOVE_CLIENT:
+				pCommand = new CMultiplayerCommand( CMultiplayerCommand::EMC_PLAYER_REMOVED, nClientID, -1, 0 );
+				break;
 		}
 		return pCommand;
 	}
@@ -171,18 +166,18 @@ bool CMultiplayerInternal::CheckConnection()
 	return GetState() != INACTIVE;
 }
 
-CMultiplayerCommand* CMultiplayerInternal::ProcessPacket( const int nClientID, CMemoryStream *pPkt )
+CMultiplayerCommand *CMultiplayerInternal::ProcessPacket( const int nClientID, CMemoryStream *pPkt )
 {
 	CMemoryStream &pkt = *pPkt;
 	uint8_t msgID = 0;
 	if ( pkt.GetPosition() < pkt.GetSize() )
 	{
-		pkt.Read( &msgID, sizeof(msgID) );
+		pkt.Read( &msgID, sizeof( msgID ) );
 		switch ( msgID )
 		{
-		case NGM_ID_SEGMENT:
-			return new CMultiplayerCommand( CMultiplayerCommand::EMC_SEGMENT_FINISHED, nClientID, 0, 0 );
-		case NGM_AI_CMD:
+			case NGM_ID_SEGMENT:
+				return new CMultiplayerCommand( CMultiplayerCommand::EMC_SEGMENT_FINISHED, nClientID, 0, 0 );
+			case NGM_AI_CMD:
 			{
 				int nID = 0;
 				pkt.Read( &nID, pCmdsSerialize->GetIDSize() );
@@ -193,23 +188,23 @@ CMultiplayerCommand* CMultiplayerInternal::ProcessPacket( const int nClientID, C
 				}
 				return new CMultiplayerCommand( CMultiplayerCommand::EMC_AI_COMMAND, nClientID, -1, pAICmd );
 			}
-		default:
-			ASSERT( 0 && "wrong network packet format" );
-			pkt.Seek( pkt.GetSize() );
-			break;
+			default:
+				ASSERT( 0 && "wrong network packet format" );
+				pkt.Seek( pkt.GetSize() );
+				break;
 		}
 	}
 	return 0;
-// new unregistered player, kick him
-//	else
-//		pInGameNetDriver->Kick( nClientID );
+	// new unregistered player, kick him
+	//	else
+	//		pInGameNetDriver->Kick( nClientID );
 }
 
 void CMultiplayerInternal::SendRecv()
 {
 	pNetDriver->Step();
-//	else
-//		NI_ASSERT( false, "Can't establish connection!" );
+	//	else
+	//		NI_ASSERT( false, "Can't establish connection!" );
 }
 
 IMultiplayer *CreateMultiplayerHost( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts )
@@ -218,7 +213,8 @@ IMultiplayer *CreateMultiplayerHost( IAICmdsAutoMagic *pCmds, const NDb::SNetGam
 	pRes->CreateAsHost();
 	return pRes;
 }
-IMultiplayer *CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts, const char *pszIPAddress )
+IMultiplayer *
+CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetGameConsts *pConsts, const char *pszIPAddress )
 {
 	CPtr<CMultiplayerInternal> pRes = new CMultiplayerInternal( pConsts, pCmds );
 	if ( pRes->CreateAsClient( pszIPAddress ) )

@@ -14,20 +14,32 @@ class CMineStaticObject : public CGivenPassabilityStObject
 
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bIfRegisteredInCWorld = {};
-	ZDATA_(CGivenPassabilityStObject)
+	ZDATA_( CGivenPassabilityStObject )
 	CDBPtr<SMineRPGStats> pStats;
-	int	player = {};
+	int player = {};
 
 	uint32_t mVisibleStatus = {};
 	NTimer::STime nextSegmTime = {};
 
 	bool bIfWillBeDeleted = {}; // кто-то из солдат направляется к этой мине
 	ZONSERIALIZE
-	ZSKIP		//bool bIfRegisteredInCWorld; // мина видима
+	ZSKIP //bool bIfRegisteredInCWorld; // мина видима
 
-	bool bAlive = {};
+			bool bAlive = {};
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,&pStats); f.Add(3,&player); f.Add(4,&mVisibleStatus); f.Add(5,&nextSegmTime); f.Add(6,&bIfWillBeDeleted); OnSerialize( f ); f.Add(8,&bAlive); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CGivenPassabilityStObject *)this );
+		f.Add( 2, &pStats );
+		f.Add( 3, &player );
+		f.Add( 4, &mVisibleStatus );
+		f.Add( 5, &nextSegmTime );
+		f.Add( 6, &bIfWillBeDeleted );
+		OnSerialize( f );
+		f.Add( 8, &bAlive );
+		return 0;
+	}
 	//
 	void Detonate();
 
@@ -38,12 +50,14 @@ public:
 		if ( !f.IsChecksum() )
 			f.Add( 7, &bIfRegisteredInCWorld );
 	}
+
 public:
 	CMineStaticObject();
-	CMineStaticObject( const SMineRPGStats *_pStats, const CVec3 &center,  const float fHP, const int nFrameIndex, int player );
+	CMineStaticObject(
+			const SMineRPGStats *_pStats, const CVec3 &center, const float fHP, const int nFrameIndex, int player );
 	virtual void Init();
 
-	virtual const SHPObjectRPGStats* GetStats() const { return pStats; }
+	virtual const SHPObjectRPGStats *GetStats() const { return pStats; }
 
 	virtual void Segment();
 	virtual const NTimer::STime GetNextSegmentTime() const { return nextSegmTime; }
@@ -53,7 +67,8 @@ public:
 
 	// сдетонировать, если при наезде данного юнита мина взрывается; true - если сдетонировала
 	bool CheckToDetonate( class CAIUnit *pUnit );
-	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
+	virtual void
+	TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual void Die( const float fDamage );
 	virtual EStaticObjType GetObjectType() const { return ESOT_MINE; }
 
@@ -61,7 +76,7 @@ public:
 	void SetVisible( int nParty, bool bVis = true );
 
 	// для удаления инженерами
-	bool IsBeingDisarmed() const {return bIfWillBeDeleted; }
+	bool IsBeingDisarmed() const { return bIfWillBeDeleted; }
 	void SetBeingDisarmed( bool bStartDisarm );
 
 	// зависит от клиента
@@ -71,7 +86,7 @@ public:
 
 	virtual bool IsContainer() const { return false; }
 	virtual const int GetNDefenders() const { return 0; }
-	virtual class CSoldier* GetUnit( const int n ) const { return 0; }
+	virtual class CSoldier *GetUnit( const int n ) const { return 0; }
 
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;

@@ -12,24 +12,21 @@
 
 namespace NGScene
 {
-	static CBasicShare<CDBPtr<NDb::STexture>, CSWTexture, SDBPtrHash > shareSWTextures(112);
-CSWTexture* GetSWTex( const NDb::STexture *pTex )
+static CBasicShare<CDBPtr<NDb::STexture>, CSWTexture, SDBPtrHash> shareSWTextures( 112 );
+CSWTexture *GetSWTex( const NDb::STexture *pTex )
 {
 	return shareSWTextures.Get( pTex );
 }
 
 // Structures
 
-template<class T, class TElement>
-class CSomeRender: public CArrayRasterizer<T, TElement>
+template <class T, class TElement>
+class CSomeRender : public CArrayRasterizer<T, TElement>
 {
 public:
-	CSomeRender(): fScale(1) {}
+	CSomeRender() : fScale( 1 ) {}
 	bool DoRenderBackface() const { return true; }
-	void SetMaskMapping( const CVec4 &_ptDU, const CVec4 &_ptDV )
-	{
-		maskMapping.SetGradient( _ptDU, _ptDV );
-	}
+	void SetMaskMapping( const CVec4 &_ptDU, const CVec4 &_ptDV ) { maskMapping.SetGradient( _ptDU, _ptDV ); }
 	void SetTexture( CSWTextureData &tex )
 	{
 		pTexture = &tex;
@@ -39,6 +36,7 @@ public:
 	void SetScale( float _fScale ) { fScale = _fScale; }
 	float GetScale() const { return fScale; }
 	void SetColor( const NGfx::SPixel8888 &_color ) { multColor = _color; }
+
 protected:
 	STextureMapping maskMapping;
 	CSWTextureData *pTexture;
@@ -47,7 +45,7 @@ protected:
 	NGfx::SPixel8888 multColor;
 };
 
-template<class T>
+template <class T>
 struct STextureIterator
 {
 	unsigned int nU, nDU, nV, nDV, nVShift;
@@ -55,13 +53,19 @@ struct STextureIterator
 	int nMip;
 	const T *pMip;
 
-	void Init( float fU, float fV, float fDU, float fDV, const std::vector< CArray2D<T> > &tex )
+	void Init( float fU, float fV, float fDU, float fDV, const std::vector<CArray2D<T>> &tex )
 	{
 		int nXSize = tex[0].GetSizeX(), nYSize = tex[0].GetSizeY();
 		nMip = 0;
-		while ( ( fabs(fDU) > 1.9 || fabs(fDV) > 1.9 ) && nMip < tex.size() - 1 )
+		while ( ( fabs( fDU ) > 1.9 || fabs( fDV ) > 1.9 ) && nMip < tex.size() - 1 )
 		{
-			fDU /= 2; fDV /= 2; fU /= 2; fV /= 2; nMip++; nXSize /= 2; nYSize /= 2;
+			fDU /= 2;
+			fDV /= 2;
+			fU /= 2;
+			fV /= 2;
+			nMip++;
+			nXSize /= 2;
+			nYSize /= 2;
 		}
 		nU = Float2Int( fU * 0x10000 );
 		nV = Float2Int( fV * 0x10000 );
@@ -70,31 +74,31 @@ struct STextureIterator
 		int nXBits = GetMSB( nXSize );
 		nVShift = 16 - nXBits;
 		nUMask = nXSize - 1;
-		nVMask = (nYSize - 1 ) << nXBits;
+		nVMask = ( nYSize - 1 ) << nXBits;
 		pMip = &tex[nMip][0][0];
 	}
 
-	BOOST_FORCEINLINE const T& Fetch()
+	BOOST_FORCEINLINE const T &Fetch()
 	{
-		const T &r = pMip[((nV>>nVShift)&nVMask) + ((nU>>16)&nUMask) ];
+		const T &r = pMip[( ( nV >> nVShift ) & nVMask ) + ( ( nU >> 16 ) & nUMask )];
 		nU += nDU;
 		nV += nDV;
 		return r;
 	}
 
 	// slow variant for special rare case
-	template<class TT>
-	BOOST_FORCEINLINE const TT& Fetch( const std::vector< CArray2D<TT> > &tex )
+	template <class TT>
+	BOOST_FORCEINLINE const TT &Fetch( const std::vector<CArray2D<TT>> &tex )
 	{
 		const TT *pData = &tex[nMip][0][0];
-		const TT &r = pData[((nV>>nVShift)&nVMask) + ((nU>>16)&nUMask) ];
+		const TT &r = pData[( ( nV >> nVShift ) & nVMask ) + ( ( nU >> 16 ) & nUMask )];
 		nU += nDU;
 		nV += nDV;
 		return r;
 	}
 };
 class CTrueColorRender;
-class CTrueColorRender: public CSomeRender<CTrueColorRender, NGfx::SPixel8888>
+class CTrueColorRender : public CSomeRender<CTrueColorRender, NGfx::SPixel8888>
 {
 public:
 private:
@@ -115,10 +119,10 @@ private:
 				NGfx::SPixel8888 &dst = *pDst;
 				uint32_t invA = 256 - src.a;
 
-				dst.r = src.r + ((dst.r * invA) >> 8);
-				dst.g = src.g + ((dst.g * invA) >> 8);
-				dst.b = src.b + ((dst.b * invA) >> 8);
-				dst.a = src.a + ((dst.a * invA) >> 8);
+				dst.r = src.r + ( ( dst.r * invA ) >> 8 );
+				dst.g = src.g + ( ( dst.g * invA ) >> 8 );
+				dst.b = src.b + ( ( dst.b * invA ) >> 8 );
+				dst.a = src.a + ( ( dst.a * invA ) >> 8 );
 			}
 		}
 		else
@@ -128,10 +132,10 @@ private:
 				for ( ; pDst < pFinish; ++pDst )
 				{
 					auto src = tex.Fetch();
-					pDst->r = (src.r * multColor.r) / 255;
-					pDst->g = (src.g * multColor.g) / 255;
-					pDst->b = (src.b * multColor.b) / 255;
-					pDst->a = (src.a * multColor.a) / 255;
+					pDst->r = ( src.r * multColor.r ) / 255;
+					pDst->g = ( src.g * multColor.g ) / 255;
+					pDst->b = ( src.b * multColor.b ) / 255;
+					pDst->a = ( src.a * multColor.a ) / 255;
 				}
 			}
 			else
@@ -181,7 +185,7 @@ private:
 };
 
 class CFogRender;
-class CFogRender: public CSomeRender<CFogRender, int>
+class CFogRender : public CSomeRender<CFogRender, int>
 {
 private:
 	void RasterSpan( int nY, int nLeft, int nRight, float fZ, float fDZ, int nBackface )
@@ -195,7 +199,7 @@ private:
 		for ( int x = nLeft; x < nRight; ++x )
 		{
 			const NGfx::SPixel8888 &color = tex.Fetch();
-			res[nY][x] = (std::min)( res[nY][x] , (int)( 0xFF - color.r ) );// ( ( res[nY][x] * color.r ) >> 8 );
+			res[nY][x] = (std::min)( res[nY][x], (int)( 0xFF - color.r ) ); // ( ( res[nY][x] * color.r ) >> 8 );
 		}
 	}
 	friend class CRasterizer<CFogRender>;
@@ -203,7 +207,7 @@ private:
 
 // SW Rects
 
-class ISWRects: public CObjectBase
+class ISWRects : public CObjectBase
 {
 public:
 	virtual void Draw( CTrueColorRender *pRes ) = 0;
@@ -221,17 +225,22 @@ static void FillTextureRect( CVec3 *vTextureRect, const CTRect<float> &r )
 	vTextureRect[3] = CVec3( r.x2, r.y1, 0 );
 }
 
-class CSWRects: public ISWRects
+class CSWRects : public ISWRects
 {
-	OBJECT_BASIC_METHODS(CSWRects);
+	OBJECT_BASIC_METHODS( CSWRects );
 	ZDATA
-	CDGPtr<CPtrFuncBase<CSWTextureData> > pTexture;
+	CDGPtr<CPtrFuncBase<CSWTextureData>> pTexture;
 	CRectLayout layout;
 	//float fGain;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTexture); f.Add(3,&layout); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pTexture );
+		f.Add( 3, &layout );
+		return 0;
+	}
 
-	template<class T, class TElement>
-		void DrawRect( CSomeRender<T, TElement> *pRes )
+	template <class T, class TElement>
+	void DrawRect( CSomeRender<T, TElement> *pRes )
 	{
 		CSWTextureData *pTextureData;
 		pTexture.Refresh();
@@ -261,10 +270,13 @@ class CSWRects: public ISWRects
 			pRes->RasterNoClip( vGeom[0], vGeom[2], vGeom[3] );
 		}
 	}
+
 public:
 	CSWRects() {}
 	CSWRects( const CRectLayout &_layout, CPtrFuncBase<CSWTextureData> *_pTexture )
-		: layout(_layout), pTexture(_pTexture) {}
+			: layout( _layout ), pTexture( _pTexture )
+	{
+	}
 	void Draw( CTrueColorRender *pRes ) { DrawRect( pRes ); }
 	void Draw( CBumpRender *pRes ) { DrawRect( pRes ); }
 	void Draw( CFogRender *pRes ) { DrawRect( pRes ); }
@@ -272,17 +284,24 @@ public:
 
 // CSWSpot
 
-class CSWSpot: public ISWRects
+class CSWSpot : public ISWRects
 {
-	OBJECT_BASIC_METHODS(CSWSpot);
+	OBJECT_BASIC_METHODS( CSWSpot );
 	ZDATA
-	CDGPtr<CPtrFuncBase<CSWTextureData> > pTexture;
+	CDGPtr<CPtrFuncBase<CSWTextureData>> pTexture;
 	float fAngle;
 	CVec2 ptPos, ptSize;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTexture); f.Add(3,&fAngle); f.Add(4,&ptPos); f.Add(5,&ptSize); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pTexture );
+		f.Add( 3, &fAngle );
+		f.Add( 4, &ptPos );
+		f.Add( 5, &ptSize );
+		return 0;
+	}
 
-	template<class T, class TElement>
-		void DrawSpot( CSomeRender<T, TElement> *pRes )
+	template <class T, class TElement>
+	void DrawSpot( CSomeRender<T, TElement> *pRes )
 	{
 		CSWTextureData *pTextureData;
 		pTexture.Refresh();
@@ -290,8 +309,8 @@ class CSWSpot: public ISWRects
 
 		CVec3 vGeom[4];
 		float fCos = cos( fAngle ), fSin = sin( fAngle );
-		CVec3 ptRight(  ptSize.x * fCos, ptSize.x * fSin, 0 );
-		CVec3 ptUp   ( -ptSize.y * fSin, ptSize.y * fCos, 0 );
+		CVec3 ptRight( ptSize.x * fCos, ptSize.x * fSin, 0 );
+		CVec3 ptUp( -ptSize.y * fSin, ptSize.y * fCos, 0 );
 		CVec3 ptCenter( ptPos, 0 );
 		vGeom[0] = ptCenter;
 		vGeom[1] = ptCenter + ptUp;
@@ -308,16 +327,18 @@ class CSWSpot: public ISWRects
 		CalcGradient( gm, &ptDV, 0, nTexYSize, nTexYSize );
 		pRes->SetTextureMapping( ptDU, ptDV );
 		pRes->SetTexture( *pTextureData );
-		pRes->SetColor( NGfx::SPixel8888(0xff,0xff,0xff,0xff) );
+		pRes->SetColor( NGfx::SPixel8888( 0xff, 0xff, 0xff, 0xff ) );
 		pRes->SetMask();
 		pRes->RasterNoClip( vGeom[0], vGeom[1], vGeom[2] );
 		pRes->RasterNoClip( vGeom[0], vGeom[2], vGeom[3] );
 	}
+
 public:
 	CSWSpot() {}
-	CSWSpot( const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle,
-		CPtrFuncBase<CSWTextureData> *_pTexture )
-		: ptPos(_ptPos), ptSize(_ptSize), fAngle(_fAngle), pTexture(_pTexture) {}
+	CSWSpot( const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle, CPtrFuncBase<CSWTextureData> *_pTexture )
+			: ptPos( _ptPos ), ptSize( _ptSize ), fAngle( _fAngle ), pTexture( _pTexture )
+	{
+	}
 	void Draw( CTrueColorRender *pRes ) { DrawSpot( pRes ); }
 	void Draw( CBumpRender *pRes ) { DrawSpot( pRes ); }
 	void Draw( CFogRender *pRes ) { DrawSpot( pRes ); }
@@ -325,14 +346,24 @@ public:
 
 class C2DPostFilter : public ISWRects
 {
-	OBJECT_NOCOPY_METHODS(C2DPostFilter);
+	OBJECT_NOCOPY_METHODS( C2DPostFilter );
 	ZDATA
-	CDGPtr<CPtrFuncBase<CSWTextureData> > pMask;
+	CDGPtr<CPtrFuncBase<CSWTextureData>> pMask;
 	int nCenterX, nCenterY;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMask); f.Add(3,&nCenterX); f.Add(4,&nCenterY); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pMask );
+		f.Add( 3, &nCenterX );
+		f.Add( 4, &nCenterY );
+		return 0;
+	}
 	C2DPostFilter() {}
-	C2DPostFilter( CPtrFuncBase<CSWTextureData> *_pMask, int _nCenterX, int _nCenterY ) : pMask(_pMask), nCenterX(_nCenterX), nCenterY(_nCenterY) {}
+	C2DPostFilter( CPtrFuncBase<CSWTextureData> *_pMask, int _nCenterX, int _nCenterY )
+			: pMask( _pMask ), nCenterX( _nCenterX ), nCenterY( _nCenterY )
+	{
+	}
 	void Draw( CTrueColorRender *pRes )
 	{
 		CSWTextureData *pTextureData;
@@ -345,7 +376,7 @@ public:
 		if ( mask.GetSizeX() == 0 || mask.GetSizeY() == 0 )
 			return;
 
-		CVec4 vMaskCenter = NGfx::GetCVec4Color( mask[ mask.GetSizeY() / 2 ][ mask.GetSizeX() / 2 ].dwColor );
+		CVec4 vMaskCenter = NGfx::GetCVec4Color( mask[mask.GetSizeY() / 2][mask.GetSizeX() / 2].dwColor );
 
 		CArray2D<NGfx::SPixel8888> &res = pRes->res;
 		int nXSize = res.GetSizeX(), nYSize = res.GetSizeY();
@@ -357,18 +388,17 @@ public:
 			for ( int x = 0; x < nXSize; ++x )
 			{
 				if ( res[y][x].a == 0 )
-          priorities[y][x] = 0;
+					priorities[y][x] = 0;
 				else
 				{
 					priorities[y][x] = N_FILLED;
 					if ( res[y][x].a != 255 )
 					{
 						CVec4 vIcon = NGfx::GetCVec4Color( res[y][x].dwColor );
-						CVec4 vRes(
-							vIcon.x + ( 1 - vIcon.w ) * vMaskCenter.x,
-							vIcon.y + ( 1 - vIcon.w ) * vMaskCenter.y,
-							vIcon.z + ( 1 - vIcon.w ) * vMaskCenter.z,
-							vIcon.w + vMaskCenter.w - vIcon.w * vMaskCenter.w );
+						CVec4 vRes( vIcon.x + ( 1 - vIcon.w ) * vMaskCenter.x,
+						            vIcon.y + ( 1 - vIcon.w ) * vMaskCenter.y,
+						            vIcon.z + ( 1 - vIcon.w ) * vMaskCenter.z,
+						            vIcon.w + vMaskCenter.w - vIcon.w * vMaskCenter.w );
 						res[y][x] = NGfx::Get8888Color( vRes );
 					}
 				}
@@ -389,29 +419,34 @@ public:
 							if ( nResX < 0 || nResX >= nXSize || nResY < 0 || nResY >= nYSize )
 								continue;
 							int nPriority = N_FILLED - 1 - ( square( dx - nCenterX ) + square( dy - nCenterY ) );
-							if ( nPriority <= priorities[ nResY ][ nResX ] )
+							if ( nPriority <= priorities[nResY][nResX] )
 								continue;
-							priorities[ nResY ][ nResX ] = nPriority;
-							res[ nResY ][ nResX ] = mask[dy][dx];
+							priorities[nResY][nResX] = nPriority;
+							res[nResY][nResX] = mask[dy][dx];
 						}
 					}
 				}
 			}
 		}
 	}
-	void Draw( CBumpRender *pRes ) { ASSERT(0); }
-	void Draw( CFogRender *pRes ) { ASSERT(0); }
+	void Draw( CBumpRender *pRes ) { ASSERT( 0 ); }
+	void Draw( CFogRender *pRes ) { ASSERT( 0 ); }
 };
 
 class CGrayingFilter : public ISWRects
 {
-	OBJECT_NOCOPY_METHODS(CGrayingFilter);
+	OBJECT_NOCOPY_METHODS( CGrayingFilter );
 	ZDATA
 	CVec4 vConvolution;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vConvolution); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &vConvolution );
+		return 0;
+	}
 	CGrayingFilter() {}
-	CGrayingFilter( const CVec4 &_vConv ) : vConvolution(_vConv) {}
+	CGrayingFilter( const CVec4 &_vConv ) : vConvolution( _vConv ) {}
 	void Draw( CTrueColorRender *pRes )
 	{
 		CArray2D<NGfx::SPixel8888> &res = pRes->res;
@@ -421,57 +456,67 @@ public:
 			for ( int x = 0; x < nXSize; ++x )
 			{
 				CVec4 vSrc = NGfx::GetCVec4Color( res[y][x].dwColor );
-				float fAlpha = vSrc.x * vConvolution.x + vSrc.y * vConvolution.y + vSrc.z * vConvolution.z + vSrc.w * vConvolution.w;
+				float fAlpha =
+						vSrc.x * vConvolution.x + vSrc.y * vConvolution.y + vSrc.z * vConvolution.z + vSrc.w * vConvolution.w;
 				CVec4 vRes( fAlpha, fAlpha, fAlpha, vSrc.a );
 				res[y][x] = NGfx::Get8888Color( vRes );
 			}
 		}
 	}
-	void Draw( CBumpRender *pRes ) { ASSERT(0); }
-	void Draw( CFogRender *pRes ) { ASSERT(0); }
+	void Draw( CBumpRender *pRes ) { ASSERT( 0 ); }
+	void Draw( CFogRender *pRes ) { ASSERT( 0 ); }
 };
 
 // Software 2D Scene
 
-class CSW2DScene: public ISW2DScene
+class CSW2DScene : public ISW2DScene
 {
-	OBJECT_BASIC_METHODS(CSW2DScene);
+	OBJECT_BASIC_METHODS( CSW2DScene );
+
 private:
 	ZDATA
-	std::vector< CPtr<ISWRects> > rects;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&rects); return 0; }
+	std::vector<CPtr<ISWRects>> rects;
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &rects );
+		return 0;
+	}
 
-	template<class T, class TSet>
+	template <class T, class TSet>
 	void DrawSet( T *pRes, TSet *pSet )
 	{
 		for ( typename TSet::iterator iTemp = pSet->begin(); iTemp != pSet->end(); )
 		{
 			if ( IsValid( *iTemp ) )
 			{
-				(*iTemp)->Draw( pRes );
+				( *iTemp )->Draw( pRes );
 				++iTemp;
 			}
 			else
 				iTemp = pSet->erase( iTemp );
 		}
 	}
-	template<class T>
-		void InitScene( T *pRes, NGfx::CTexture *pTarget, const CTPoint<int> &vViewport )
+	template <class T>
+	void InitScene( T *pRes, NGfx::CTexture *pTarget, const CTPoint<int> &vViewport )
 	{
 		CDynamicCast<NGfx::I2DBuffer> p2DBuffer( pTarget );
 		float fScale = 1;
 		int nXSize = vViewport.x, nYSize = vViewport.y;
 		while ( nXSize > p2DBuffer->GetSizeX() )
 		{
-			nXSize /= 2; nYSize /= 2; fScale *= 0.5f;
+			nXSize /= 2;
+			nYSize /= 2;
+			fScale *= 0.5f;
 		}
 		CTRect<int> dstRegion( 0, 0, nXSize, nYSize );
 		pRes->SetRegion( dstRegion );
 		pRes->SetScale( fScale );
 	}
+
 public:
-	CObjectBase* CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout );
-	CObjectBase* CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture, const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle );
+	CObjectBase *CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout );
+	CObjectBase *
+	CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture, const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle );
 	void AddPostFilter( CPtrFuncBase<CSWTextureData> *pTexture, int _nCenterX, int _nCenterY );
 	void AddGrayingFilter( const CVec4 &vConvolution );
 	void Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, bool bClear );
@@ -481,14 +526,14 @@ public:
 
 // Create scene
 
-ISW2DScene* Make2DSWScene()
+ISW2DScene *Make2DSWScene()
 {
 	return new CSW2DScene;
 }
 
 // CSW2DScene
 
-CObjectBase* CSW2DScene::CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout )
+CObjectBase *CSW2DScene::CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, const CRectLayout &layout )
 {
 	if ( !pTexture )
 		return 0;
@@ -497,8 +542,10 @@ CObjectBase* CSW2DScene::CreateRects( CPtrFuncBase<CSWTextureData> *pTexture, co
 	return pRes;
 }
 
-CObjectBase* CSW2DScene::CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture,
-	const CVec2 &_ptPos, const CVec2 &_ptSize, float _fAngle )
+CObjectBase *CSW2DScene::CreateSpot( CPtrFuncBase<CSWTextureData> *pTexture,
+                                     const CVec2 &_ptPos,
+                                     const CVec2 &_ptSize,
+                                     float _fAngle )
 {
 	if ( !pTexture )
 		return 0;
@@ -529,14 +576,14 @@ static void CalcMip( CArray2D<NGfx::SPixel8888> *pRes )
 	{
 		for ( int x = 0; x < nXSize; ++x )
 		{
-			const NGfx::SPixel8888 &s = src[y*2][x*2];
-			const NGfx::SPixel8888 &s1 = src[y*2+1][x*2];
-			const NGfx::SPixel8888 &s2 = src[y*2][x*2+1];
-			const NGfx::SPixel8888 &s3 = src[y*2+1][x*2+1];
-			(*pRes)[y][x] = NGfx::SPixel8888(
-				(int(s.r) + s1.r + s2.r + s3.r)>>2,
-				(int(s.g) + s1.g + s2.g + s3.g)>>2,
-				(int(s.b) + s1.b + s2.b + s3.b)>>2, 0 );
+			const NGfx::SPixel8888 &s = src[y * 2][x * 2];
+			const NGfx::SPixel8888 &s1 = src[y * 2 + 1][x * 2];
+			const NGfx::SPixel8888 &s2 = src[y * 2][x * 2 + 1];
+			const NGfx::SPixel8888 &s3 = src[y * 2 + 1][x * 2 + 1];
+			( *pRes )[y][x] = NGfx::SPixel8888( ( int( s.r ) + s1.r + s2.r + s3.r ) >> 2,
+			                                    ( int( s.g ) + s1.g + s2.g + s3.g ) >> 2,
+			                                    ( int( s.b ) + s1.b + s2.b + s3.b ) >> 2,
+			                                    0 );
 		}
 	}
 }
@@ -568,12 +615,13 @@ void CSW2DScene::Draw( NGfx::CTexture *pTarget, const CTPoint<int> &vViewport, b
 			int nSizeX = lock.GetSizeX();
 			for ( int y = 0; y < nSizeY; ++y )
 			{
-				NGfx::SPixel8888* srcRow = &r.res[y][0];
-				NGfx::SPixel4444* dstRow = &lock[y][0];
+				NGfx::SPixel8888 *srcRow = &r.res[y][0];
+				NGfx::SPixel4444 *dstRow = &lock[y][0];
 
-				for (int x = 0; x < nSizeX; ++x) {
-					const auto& src = srcRow[x];
-					auto& dst = dstRow[x];
+				for ( int x = 0; x < nSizeX; ++x )
+				{
+					const auto &src = srcRow[x];
+					auto &dst = dstRow[x];
 
 					dst.r = src.r >> 4;
 					dst.g = src.g >> 4;
@@ -594,13 +642,13 @@ void CSW2DScene::DrawFog( CArray2D<int> *pFogMap, const CTPoint<int> &vViewport 
 	CTRect<int> dstRegion( 0, 0, pFogMap->GetSizeX(), pFogMap->GetSizeY() );
 	r.SetRegion( dstRegion );
 	r.SetScale( fScale );
-	r.res = (*pFogMap);
+	r.res = ( *pFogMap );
 	DrawSet( &r, &rects );
 
 	for ( int y = 0; y < pFogMap->GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < pFogMap->GetSizeX(); ++x )
-			(*pFogMap)[y][x] = r.res[y][x];
+			( *pFogMap )[y][x] = r.res[y][x];
 	}
 }
 
@@ -614,8 +662,10 @@ static void CalcMip( CArray2D<SBumpPixel> *pRes )
 	{
 		for ( int x = 0; x < nXSize; ++x )
 		{
-			(*pRes)[y][x].fDU = 0.25f * ( src[y*2][x*2].fDU + src[y*2+1][x*2].fDU + src[y*2][x*2+1].fDU + src[y*2+1][x*2+1].fDU );
-			(*pRes)[y][x].fDV = 0.25f * ( src[y*2][x*2].fDV + src[y*2+1][x*2].fDV + src[y*2][x*2+1].fDV + src[y*2+1][x*2+1].fDV );
+			( *pRes )[y][x].fDU = 0.25f * ( src[y * 2][x * 2].fDU + src[y * 2 + 1][x * 2].fDU + src[y * 2][x * 2 + 1].fDU +
+			                                src[y * 2 + 1][x * 2 + 1].fDU );
+			( *pRes )[y][x].fDV = 0.25f * ( src[y * 2][x * 2].fDV + src[y * 2 + 1][x * 2].fDV + src[y * 2][x * 2 + 1].fDV +
+			                                src[y * 2 + 1][x * 2 + 1].fDV );
 		}
 	}
 }
@@ -633,10 +683,10 @@ static void CalcNormals( const CArray2D<SBumpPixel> &m, NGfx::CTexture *pTarget,
 			{
 				CVec3 vNormal( m[y][x].fDU, m[y][x].fDV, 1 );
 				Normalize( &vNormal );
-				lock[y][x] = NGfx::SPixel8888(
-					Float2Int( vNormal.x * 127 + 128 ),
-					Float2Int( vNormal.y * 127 + 128 ),
-					Float2Int( vNormal.z * 127 + 128 ), 255 );
+				lock[y][x] = NGfx::SPixel8888( Float2Int( vNormal.x * 127 + 128 ),
+				                               Float2Int( vNormal.y * 127 + 128 ),
+				                               Float2Int( vNormal.z * 127 + 128 ),
+				                               255 );
 			}
 		}
 	}
@@ -650,10 +700,9 @@ static void CalcNormals( const CArray2D<SBumpPixel> &m, NGfx::CTexture *pTarget,
 			{
 				CVec3 vNormal( m[y][x].fDU, m[y][x].fDV, 1 );
 				Normalize( &vNormal );
-				lock[y][x] = NGfx::SPixel565(
-					Float2Int( vNormal.x * 127 + 128 ) >> 3,
-					Float2Int( vNormal.y * 127 + 128 ) >> 2,
-					Float2Int( vNormal.z * 127 + 128 ) >> 3 );
+				lock[y][x] = NGfx::SPixel565( Float2Int( vNormal.x * 127 + 128 ) >> 3,
+				                              Float2Int( vNormal.y * 127 + 128 ) >> 2,
+				                              Float2Int( vNormal.z * 127 + 128 ) >> 3 );
 			}
 		}
 	}

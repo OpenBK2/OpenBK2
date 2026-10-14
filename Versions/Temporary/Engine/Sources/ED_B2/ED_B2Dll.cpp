@@ -81,10 +81,16 @@ void CEditorModuleB2::ModulePostCreateMainFrame()
 
 static CEditorModuleB2 theEDB2Module;
 
-ED_B2_EXPORT IEditorModule* GetEditorModule2()
+ED_B2_EXPORT IEditorModule *GetEditorModule2()
 {
 	return &theEDB2Module;
 }
 
-ED_B2_EXPORT IEditorModule* GetEditorModule3() { return 0; }
-ED_B2_EXPORT IEditorModule* GetEditorModule4() { return 0; }
+ED_B2_EXPORT IEditorModule *GetEditorModule3()
+{
+	return 0;
+}
+ED_B2_EXPORT IEditorModule *GetEditorModule4()
+{
+	return 0;
+}

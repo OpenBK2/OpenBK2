@@ -23,7 +23,10 @@ extern CGroupLogic theGroupLogic;
 extern CGraveyard theGraveyard;
 extern CEventUpdater updater;
 
-static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, const int nWidth = 1, const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
+static void DisplayDebugCross( const CVec2 &vPos,
+                               const float fSize = 5.0f,
+                               const int nWidth = 1,
+                               const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
 {
 	CSegment segm;
 	segm.p1 = vPos + CVec2( fSize, 0 );
@@ -41,7 +44,7 @@ static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, cons
 
 CPtr<CTrainCarStatesFactory> CTrainCarStatesFactory::pFactory = 0;
 
-IStatesFactory* CTrainCarStatesFactory::Instance()
+IStatesFactory *CTrainCarStatesFactory::Instance()
 {
 	if ( pFactory == 0 )
 		pFactory = new CTrainCarStatesFactory();
@@ -52,65 +55,54 @@ IStatesFactory* CTrainCarStatesFactory::Instance()
 bool CTrainCarStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return
-		(
-		cmdType == ACTION_COMMAND_TRAIN_ATTACK_UNIT				||
-		cmdType == ACTION_COMMAND_TRAIN_ATTACK_OBJECT			||
-		cmdType == ACTION_COMMAND_TRAIN_MOVE							||
-		cmdType == ACTION_COMMAND_TRAIN_STOP							||
-		cmdType == ACTION_COMMAND_TRAIN_UNLOAD_NOW				||
-		cmdType == ACTION_COMMAND_ATTACK_UNIT							||
-		cmdType == ACTION_COMMAND_ATTACK_OBJECT						||
-		cmdType == ACTION_COMMAND_MOVE_TO									||
-		cmdType == ACTION_COMMAND_STOP										||
-		cmdType == ACTION_COMMAND_STOP_THIS_ACTION				||
-		cmdType == ACTION_COMMAND_SWARM_TO								||
-		cmdType == ACTION_COMMAND_PATROL									||
-		cmdType == ACTION_COMMAND_UNLOAD									||
-		cmdType == ACTION_COMMAND_WAIT										||
-		cmdType == ACTION_COMMAND_ART_BOMBARDMENT			||
-		cmdType == ACTION_COMMAND_FIRE_ROCKETS				||
-		cmdType == ACTION_COMMAND_USE_FLAMETHROWER
-		);
+	return ( cmdType == ACTION_COMMAND_TRAIN_ATTACK_UNIT || cmdType == ACTION_COMMAND_TRAIN_ATTACK_OBJECT ||
+	         cmdType == ACTION_COMMAND_TRAIN_MOVE || cmdType == ACTION_COMMAND_TRAIN_STOP ||
+	         cmdType == ACTION_COMMAND_TRAIN_UNLOAD_NOW || cmdType == ACTION_COMMAND_ATTACK_UNIT ||
+	         cmdType == ACTION_COMMAND_ATTACK_OBJECT || cmdType == ACTION_COMMAND_MOVE_TO ||
+	         cmdType == ACTION_COMMAND_STOP || cmdType == ACTION_COMMAND_STOP_THIS_ACTION ||
+	         cmdType == ACTION_COMMAND_SWARM_TO || cmdType == ACTION_COMMAND_PATROL || cmdType == ACTION_COMMAND_UNLOAD ||
+	         cmdType == ACTION_COMMAND_WAIT || cmdType == ACTION_COMMAND_ART_BOMBARDMENT ||
+	         cmdType == ACTION_COMMAND_FIRE_ROCKETS || cmdType == ACTION_COMMAND_USE_FLAMETHROWER );
 }
 
-IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand )
+IUnitState *CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CTrainCar*>( pObj ) != 0, "Wrong unit type (not Train Car)" );
-	CTrainCar *pUnit = checked_cast<CTrainCar*>( pObj );
+	NI_ASSERT( dynamic_cast<CTrainCar *>( pObj ) != 0, "Wrong unit type (not Train Car)" );
+	CTrainCar *pUnit = checked_cast<CTrainCar *>( pObj );
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	IUnitState* pResult = 0;
+	IUnitState *pResult = 0;
 
 	switch ( cmd.nCmdType )
 	{
-	case ACTION_COMMAND_TRAIN_STOP:
-		pUnit->Stop();
-		pResult = CTrainRestState::Instance( pUnit );
-		break;
-	case ACTION_COMMAND_TRAIN_MOVE:
-		pResult = CTrainCarMoveToState::Instance( pUnit );
-		break;
-	case ACTION_COMMAND_TRAIN_UNLOAD_NOW:
-		pResult = 0;
-		break;
-	case ACTION_COMMAND_TRAIN_ATTACK_UNIT:
+		case ACTION_COMMAND_TRAIN_STOP:
+			pUnit->Stop();
+			pResult = CTrainRestState::Instance( pUnit );
+			break;
+		case ACTION_COMMAND_TRAIN_MOVE:
+			pResult = CTrainCarMoveToState::Instance( pUnit );
+			break;
+		case ACTION_COMMAND_TRAIN_UNLOAD_NOW:
+			pResult = 0;
+			break;
+		case ACTION_COMMAND_TRAIN_ATTACK_UNIT:
 		{
 			CONVERT_OBJECT( CAIUnit, pTarget, GetObjectByCmd( cmd ), "Wrong unit to attack" );
 
 			pResult = CTrainCarAttackUnitState::Instance( pUnit, pTarget );
 		}
 		break;
-	case ACTION_COMMAND_TRAIN_ATTACK_OBJECT:
+		case ACTION_COMMAND_TRAIN_ATTACK_OBJECT:
 		{
 			CONVERT_OBJECT( CStaticObject, pTarget, GetObjectByCmd( cmd ), "Wrong object to attack" );
 
 			pResult = CTrainCarAttackObjectState::Instance( pUnit, pTarget );
 		}
 		break;
-	case ACTION_COMMAND_ATTACK_UNIT:
+		case ACTION_COMMAND_ATTACK_UNIT:
 		{
-			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f && pUnit->GetLocomotive()->IsAlive() )
+			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f &&
+			     pUnit->GetLocomotive()->IsAlive() )
 			{
 				theGroupLogic.UnitCommand( cmd, pUnit->GetLocomotive(), false );
 				pResult = pUnit->GetState();
@@ -133,9 +125,10 @@ IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class 
 			}
 		}
 		break;
-	case ACTION_COMMAND_ATTACK_OBJECT:
+		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
-			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f && pUnit->GetLocomotive()->IsAlive() )
+			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f &&
+			     pUnit->GetLocomotive()->IsAlive() )
 			{
 				theGroupLogic.UnitCommand( cmd, pUnit->GetLocomotive(), false );
 				pResult = pUnit->GetState();
@@ -158,30 +151,32 @@ IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class 
 			}
 		}
 		break;
-	case ACTION_COMMAND_ART_BOMBARDMENT:
-	case ACTION_COMMAND_FIRE_ROCKETS:
-		if ( pUnit->GetFirstArtilleryGun() != 0 )
-		{
-			if ( pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
+		case ACTION_COMMAND_ART_BOMBARDMENT:
+		case ACTION_COMMAND_FIRE_ROCKETS:
+			if ( pUnit->GetFirstArtilleryGun() != 0 )
 			{
-				// Use one burst for the finite ability; preserve Suppress' existing count semantics.
-				const int nBurstCount = cmd.nCmdType == ACTION_COMMAND_FIRE_ROCKETS ? 1 : int( cmd.fNumber );
-				pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
+				if ( pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
+				{
+					// Use one burst for the finite ability; preserve Suppress' existing count semantics.
+					const int nBurstCount = cmd.nCmdType == ACTION_COMMAND_FIRE_ROCKETS ? 1 : int( cmd.fNumber );
+					pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, nBurstCount );
+				}
+				else
+					pUnit->SendAcknowledgement(
+							pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
 			}
-			else
-				pUnit->SendAcknowledgement( pCommand, pUnit->GetFirstArtilleryGun()->GetRejectReason(), !pCommand->IsFromAI() );
-		}
 
-		break;
-	case ACTION_COMMAND_USE_FLAMETHROWER:
-		// Train weapons use the same deterministic flame-only point-burst path as ground units.
-		pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
+			break;
+		case ACTION_COMMAND_USE_FLAMETHROWER:
+			// Train weapons use the same deterministic flame-only point-burst path as ground units.
+			pResult = CArtilleryBombardmentState::Instance( pUnit, cmd.vPos, 1, true );
 
-		break;
-	default:
+			break;
+		default:
 		{
 			// Pass command on to the locomotive
-			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f && pUnit->GetLocomotive()->IsAlive() )
+			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f &&
+			     pUnit->GetLocomotive()->IsAlive() )
 			{
 				theGroupLogic.UnitCommand( cmd, pUnit->GetLocomotive(), false );
 				pResult = pUnit->GetState();
@@ -191,18 +186,22 @@ IUnitState* CTrainCarStatesFactory::ProduceState( class CQueueUnit *pObj, class 
 	return pResult;
 }
 
-IUnitState* CTrainCarStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
+IUnitState *CTrainCarStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CTrainCar*>( pUnit ) != 0, "Wrong unit type" );
-	CTrainCar * pLoc = checked_cast<CTrainCar*>( pUnit );
+	NI_ASSERT( dynamic_cast<CTrainCar *>( pUnit ) != 0, "Wrong unit type" );
+	CTrainCar *pLoc = checked_cast<CTrainCar *>( pUnit );
 	return CMechUnitRestState::Instance( pLoc, pLoc->GetCenterPlain(), pLoc->GetDirection(), false, -1 );
 }
 
-
 //	CTrainCar
 
-
-void CTrainCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector )
+void CTrainCar::Init( const CVec2 &center,
+                      const int z,
+                      const SUnitBaseRPGStats *pStats,
+                      const float fHP,
+                      const uint16_t dir,
+                      const uint8_t player,
+                      ICollisionsCollector *pCollisionsCollector )
 {
 	CMilitaryCar::Init( center, z, pStats, fHP, dir, player, pCollisionsCollector );
 
@@ -233,7 +232,8 @@ void CTrainCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 	fFrontLink = 1;
 	fBackLink = 1;
 	const NDb::SMechUnitRPGStats *pMechStats = static_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
-	NI_ASSERT( pMechStats, fmt::format( "Not MechUnit stats in unit \"{}\" (train car)", NDb::GetResName(GetStats()) ) );
+	NI_ASSERT( pMechStats,
+	           fmt::format( "Not MechUnit stats in unit \"{}\" (train car)", NDb::GetResName( GetStats() ) ) );
 	if ( pMechStats )
 	{
 		fFrontOffset = fabs( pMechStats->vFrontWheel.y );
@@ -242,20 +242,20 @@ void CTrainCar::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 		fBackLink = fabs( pMechStats->vTowPoint.y );
 	}
 
-	if ( nTrack != -1 )					// Snap car to track, if any
+	if ( nTrack != -1 ) // Snap car to track, if any
 	{
 		const SRailRoadSystem::SRRInstance &track = theRailRoadSystem.segments[nTrack];
 
 		vOwnPos = track.points[nPoint].vPos;
 		vOwnPos.z = GetHeights()->GetZ( vOwnPos );
-		if( !nPoint )
+		if ( !nPoint )
 			++nPoint;
 
 		vOwnPos = track.points[nPoint].vPos - track.points[nPoint - 1].vPos;
 
 		uint16_t wOwnDir = dir;
-		uint16_t wDir1 = GetDirectionByVector( CVec2( -vOwnPos.x, -vOwnPos.y ) );			// To point 0
-		uint16_t wDir2 = GetDirectionByVector( CVec2( vOwnPos.x, vOwnPos.y ) );				// To end point
+		uint16_t wDir1 = GetDirectionByVector( CVec2( -vOwnPos.x, -vOwnPos.y ) ); // To point 0
+		uint16_t wDir2 = GetDirectionByVector( CVec2( vOwnPos.x, vOwnPos.y ) );   // To end point
 
 		fTrackPos = ( nPoint - 1 ) * track.fPointLength;
 		fTrackLimit = track.GetTrackLength();
@@ -335,7 +335,10 @@ void CTrainCar::SetToTrackPos( float fPos )
 	SetCenter( vPos );
 }
 
-void CTrainCar::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit )
+void CTrainCar::TakeDamage( const float fDamage,
+                            const SWeaponRPGStats::SShell *pShell,
+                            const int nPlayerOfShoot,
+                            CAIUnit *pShotUnit )
 {
 	CMilitaryCar::TakeDamage( fDamage, pShell, nPlayerOfShoot, pShotUnit );
 }
@@ -352,9 +355,9 @@ void CTrainCar::Die( const bool fromExplosion, const float fDamage )
 
 void CTrainCar::LinkToCar( CMilitaryCar *pLinkTo )
 {
-	CTrainCar *pLinkToCar = dynamic_cast<CTrainCar*>( pLinkTo );
+	CTrainCar *pLinkToCar = dynamic_cast<CTrainCar *>( pLinkTo );
 
-	if ( pLinkToCar )					// It is another car
+	if ( pLinkToCar ) // It is another car
 	{
 		pLinkToCar->pLinkBack = this;
 		pLinkFront = pLinkToCar;
@@ -364,7 +367,7 @@ void CTrainCar::LinkToCar( CMilitaryCar *pLinkTo )
 	}
 	else
 	{
-		CTrainLocomotive *pLinkToLocomotive = dynamic_cast<CTrainLocomotive*>( pLinkTo );
+		CTrainLocomotive *pLinkToLocomotive = dynamic_cast<CTrainLocomotive *>( pLinkTo );
 
 		if ( pLinkToLocomotive )
 			LinkToLocomotive( pLinkToLocomotive );
@@ -408,12 +411,12 @@ const ECollidingType CTrainCar::GetCollidingType( CBasePathUnit *pUnit ) const
 {
 	if ( CTrainCar *pTrainCar = dynamic_cast<CTrainCar *>( pUnit ) )
 	{
-		if ( pTrainCar->GetLocomotive() == GetLocomotive() )	// it's from this train: ignore
+		if ( pTrainCar->GetLocomotive() == GetLocomotive() ) // it's from this train: ignore
 			return ECT_NONE;
 	}
 	else if ( CTrainLocomotive *pLocoCar = dynamic_cast<CTrainLocomotive *>( pUnit ) )
 	{
-		if ( pLocoCar == GetLocomotive() )	// or it's loco from this train: ignore
+		if ( pLocoCar == GetLocomotive() ) // or it's loco from this train: ignore
 			return ECT_NONE;
 	}
 	return ECT_ALL;
@@ -423,15 +426,14 @@ const ECollidingType CTrainCar::GetCollidingType( CBasePathUnit *pUnit ) const
 
 bool CTrainCarPath::Init( CBasePathUnit *_pUnit, CLocomotivePath *pOwnerPath )
 {
-	pUnit = dynamic_cast<CTrainCar*>( _pUnit );
+	pUnit = dynamic_cast<CTrainCar *>( _pUnit );
 	pOwner = pOwnerPath;
 
 	if ( pUnit )
 	{
 		pUnit->SendAlongSmoothPath( this );
 
-		pUnit->SetGoForward( !pUnit->IsBackwards() && !CanGoBackward() ||
-			pUnit->IsBackwards() && CanGoBackward() );
+		pUnit->SetGoForward( !pUnit->IsBackwards() && !CanGoBackward() || pUnit->IsBackwards() && CanGoBackward() );
 	}
 
 	return ( pUnit != 0 );
@@ -439,18 +441,18 @@ bool CTrainCarPath::Init( CBasePathUnit *_pUnit, CLocomotivePath *pOwnerPath )
 
 //	CTrainCarMoveToState
 
-IUnitState* CTrainCarMoveToState::Instance( CAIUnit *_pUnit )
+IUnitState *CTrainCarMoveToState::Instance( CAIUnit *_pUnit )
 {
-	NI_ASSERT( dynamic_cast<CTrainCar*>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
-	CTrainCar *pUnit = checked_cast<CTrainCar*>( _pUnit );
+	NI_ASSERT( dynamic_cast<CTrainCar *>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
+	CTrainCar *pUnit = checked_cast<CTrainCar *>( _pUnit );
 	if ( pUnit )
 		return new CTrainCarMoveToState( pUnit );
 	else
 		return 0;
 }
 
-CTrainCarMoveToState::CTrainCarMoveToState( CTrainCar *_pUnit ) :
-CFreeFireManager( _pUnit ), pUnit( _pUnit ), bWaiting( true ), pPath( 0 )
+CTrainCarMoveToState::CTrainCarMoveToState( CTrainCar *_pUnit )
+		: CFreeFireManager( _pUnit ), pUnit( _pUnit ), bWaiting( true ), pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
@@ -460,7 +462,7 @@ void CTrainCarMoveToState::Segment()
 {
 	if ( bWaiting )
 	{
-		CLocomotiveMoveState *pOwnerState = dynamic_cast<CLocomotiveMoveState*>( pUnit->GetLocomotive()->GetState() );
+		CLocomotiveMoveState *pOwnerState = dynamic_cast<CLocomotiveMoveState *>( pUnit->GetLocomotive()->GetState() );
 
 		if ( pOwnerState && pOwnerState->GetPath() )
 		{
@@ -494,18 +496,18 @@ ETryStateInterruptResult CTrainCarMoveToState::TryInterruptState( class CAIComma
 
 //	CTrainCarAttackUnitState
 
-IUnitState* CTrainCarAttackUnitState::Instance( CAIUnit *_pUnit, CAIUnit *_pTarget )
+IUnitState *CTrainCarAttackUnitState::Instance( CAIUnit *_pUnit, CAIUnit *_pTarget )
 {
-	NI_ASSERT( dynamic_cast<CTrainCar*>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
-	CTrainCar *pUnit = checked_cast<CTrainCar*>( _pUnit );
+	NI_ASSERT( dynamic_cast<CTrainCar *>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
+	CTrainCar *pUnit = checked_cast<CTrainCar *>( _pUnit );
 	if ( pUnit )
 		return new CTrainCarAttackUnitState( pUnit, _pTarget );
 	else
 		return 0;
 }
 
-CTrainCarAttackUnitState::CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget ) :
-pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
+CTrainCarAttackUnitState::CTrainCarAttackUnitState( CTrainCar *_pUnit, CAIUnit *_pTarget )
+		: pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
@@ -513,13 +515,15 @@ pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 
 void CTrainCarAttackUnitState::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EAS_STARTING:
+		case EAS_STARTING:
 		{
-			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f && pUnit->GetLocomotive()->IsAlive() )
+			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f &&
+			     pUnit->GetLocomotive()->IsAlive() )
 			{
-				CLocomotiveAttackUnitState *pOwnerState = dynamic_cast<CLocomotiveAttackUnitState*>( pUnit->GetLocomotive()->GetState() );
+				CLocomotiveAttackUnitState *pOwnerState =
+						dynamic_cast<CLocomotiveAttackUnitState *>( pUnit->GetLocomotive()->GetState() );
 
 				if ( pOwnerState )
 				{
@@ -528,8 +532,7 @@ void CTrainCarAttackUnitState::Segment()
 			}
 			else
 			{
-				if ( !pTarget->IsAlive() ||
-					!pTarget->IsVisible( pUnit->GetParty() ) )
+				if ( !pTarget->IsAlive() || !pTarget->IsVisible( pUnit->GetParty() ) )
 				{
 					TryInterruptState( 0 );
 					break;
@@ -539,9 +542,10 @@ void CTrainCarAttackUnitState::Segment()
 			}
 		}
 		break;
-	case EAS_WAITING:
+		case EAS_WAITING:
 		{
-			CLocomotiveAttackUnitState *pOwnerState = dynamic_cast<CLocomotiveAttackUnitState*>( pUnit->GetLocomotive()->GetState() );
+			CLocomotiveAttackUnitState *pOwnerState =
+					dynamic_cast<CLocomotiveAttackUnitState *>( pUnit->GetLocomotive()->GetState() );
 
 			if ( pOwnerState && pOwnerState->GetPath() )
 			{
@@ -553,9 +557,10 @@ void CTrainCarAttackUnitState::Segment()
 			}
 		}
 		break;
-	case EAS_FOLLOWING:
+		case EAS_FOLLOWING:
 		{
-			CLocomotiveAttackUnitState *pOwnerState = dynamic_cast<CLocomotiveAttackUnitState*>( pUnit->GetLocomotive()->GetState() );
+			CLocomotiveAttackUnitState *pOwnerState =
+					dynamic_cast<CLocomotiveAttackUnitState *>( pUnit->GetLocomotive()->GetState() );
 
 			if ( !pOwnerState || !pOwnerState->GetPath() || pOwnerState->GetPath()->IsFinished() )
 			{
@@ -564,7 +569,7 @@ void CTrainCarAttackUnitState::Segment()
 			}
 		}
 		break;
-	case EAS_FIRING:
+		case EAS_FIRING:
 		{
 			if ( !TryFiring() )
 			{
@@ -587,10 +592,8 @@ const bool CTrainCarAttackUnitState::TryFiring()
 	{
 		CBasicGun *pGun = pUnit->GetGun( i );
 
-		if ( pGun->CanShootWOGunTurn( pTarget, 1 ) &&
-			!pGun->IsRelaxing() &&
-			!pGun->IsBursting() &&
-			pTarget->IsVisible( pUnit->GetParty() ) )
+		if ( pGun->CanShootWOGunTurn( pTarget, 1 ) && !pGun->IsRelaxing() && !pGun->IsBursting() &&
+		     pTarget->IsVisible( pUnit->GetParty() ) )
 		{
 			pGun->StartEnemyBurst( pTarget, true );
 			bResult = true;
@@ -616,18 +619,18 @@ ETryStateInterruptResult CTrainCarAttackUnitState::TryInterruptState( class CAIC
 
 //	CTrainCarAttackObjectState
 
-IUnitState* CTrainCarAttackObjectState::Instance( CAIUnit *_pUnit, CStaticObject *_pTarget )
+IUnitState *CTrainCarAttackObjectState::Instance( CAIUnit *_pUnit, CStaticObject *_pTarget )
 {
-	NI_ASSERT( dynamic_cast<CTrainCar*>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
-	CTrainCar *pUnit = checked_cast<CTrainCar*>( _pUnit );
+	NI_ASSERT( dynamic_cast<CTrainCar *>( _pUnit ) != 0, "Wrong unit type (not Train Car)" );
+	CTrainCar *pUnit = checked_cast<CTrainCar *>( _pUnit );
 	if ( pUnit )
 		return new CTrainCarAttackObjectState( pUnit, _pTarget );
 	else
 		return 0;
 }
 
-CTrainCarAttackObjectState::CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget ) :
-pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
+CTrainCarAttackObjectState::CTrainCarAttackObjectState( CTrainCar *_pUnit, CStaticObject *_pTarget )
+		: pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 {
 	//pUnit->UnlockTiles();
 	//pUnit->FixUnlocking();
@@ -635,13 +638,15 @@ pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 
 void CTrainCarAttackObjectState::Segment()
 {
-	switch( eState )
+	switch ( eState )
 	{
-	case EAS_STARTING:
+		case EAS_STARTING:
 		{
-			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f && pUnit->GetLocomotive()->IsAlive() )
+			if ( pUnit->GetLocomotive() && pUnit->GetLocomotive()->GetHitPoints() > 0.0f &&
+			     pUnit->GetLocomotive()->IsAlive() )
 			{
-				CLocomotiveAttackObjState *pOwnerState = dynamic_cast<CLocomotiveAttackObjState*>( pUnit->GetLocomotive()->GetState() );
+				CLocomotiveAttackObjState *pOwnerState =
+						dynamic_cast<CLocomotiveAttackObjState *>( pUnit->GetLocomotive()->GetState() );
 
 				if ( pOwnerState )
 				{
@@ -650,8 +655,7 @@ void CTrainCarAttackObjectState::Segment()
 			}
 			else
 			{
-				if ( !pTarget->IsAlive() ||
-					!pTarget->IsVisible( pUnit->GetParty() ) )
+				if ( !pTarget->IsAlive() || !pTarget->IsVisible( pUnit->GetParty() ) )
 				{
 					TryInterruptState( 0 );
 					break;
@@ -661,9 +665,10 @@ void CTrainCarAttackObjectState::Segment()
 			}
 		}
 		break;
-	case EAS_WAITING:
+		case EAS_WAITING:
 		{
-			CLocomotiveAttackObjState *pOwnerState = dynamic_cast<CLocomotiveAttackObjState*>( pUnit->GetLocomotive()->GetState() );
+			CLocomotiveAttackObjState *pOwnerState =
+					dynamic_cast<CLocomotiveAttackObjState *>( pUnit->GetLocomotive()->GetState() );
 
 			if ( pOwnerState && pOwnerState->GetPath() )
 			{
@@ -675,9 +680,10 @@ void CTrainCarAttackObjectState::Segment()
 			}
 		}
 		break;
-	case EAS_FOLLOWING:
+		case EAS_FOLLOWING:
 		{
-			CLocomotiveAttackObjState *pOwnerState = dynamic_cast<CLocomotiveAttackObjState*>( pUnit->GetLocomotive()->GetState() );
+			CLocomotiveAttackObjState *pOwnerState =
+					dynamic_cast<CLocomotiveAttackObjState *>( pUnit->GetLocomotive()->GetState() );
 
 			if ( !pOwnerState || !pOwnerState->GetPath() || pOwnerState->GetPath()->IsFinished() )
 			{
@@ -686,7 +692,7 @@ void CTrainCarAttackObjectState::Segment()
 			}
 		}
 		break;
-	case EAS_FIRING:
+		case EAS_FIRING:
 		{
 			if ( !TryFiring() )
 			{
@@ -709,10 +715,8 @@ const bool CTrainCarAttackObjectState::TryFiring()
 	{
 		CBasicGun *pGun = pUnit->GetGun( i );
 
-		if ( pGun->CanShootToObjectWOMove( pTarget ) &&
-			!pGun->IsRelaxing() &&
-			!pGun->IsBursting() &&
-			pTarget->IsVisible( pUnit->GetParty() ) )
+		if ( pGun->CanShootToObjectWOMove( pTarget ) && !pGun->IsRelaxing() && !pGun->IsBursting() &&
+		     pTarget->IsVisible( pUnit->GetParty() ) )
 		{
 			pGun->StartPointBurst( GetTargetCenter(), true );
 			bResult = true;

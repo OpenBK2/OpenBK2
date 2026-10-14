@@ -6,7 +6,6 @@
 #include "Misc/StrProc.h"
 #include "Misc/Win32Helper.h"
 
-
 // ************************************************************************************************************************ //
 // **
 // ** aliases
@@ -20,7 +19,7 @@ static CAliasMap s_AliasMap;
 
 bool AddAlias( const std::string &szAliasName, const std::wstring &wszCommand )
 {
-	if ( s_AliasMap.find(szAliasName) != s_AliasMap.end() )
+	if ( s_AliasMap.find( szAliasName ) != s_AliasMap.end() )
 		return false;
 	s_AliasMap[szAliasName] = wszCommand;
 	return true;
@@ -35,27 +34,25 @@ std::wstring GetAlias( const std::string &szAliasName )
 }
 
 // TODO{ move it to strproc - after alpha version
-template <class TChar, class TBrackets = NStr::SBracketsTest<TChar> >
+template <class TChar, class TBrackets = NStr::SBracketsTest<TChar>>
 class CBracketMulticharSeparator
 {
-	std::vector<TChar> stc;										// close brackets stack
+	std::vector<TChar> stc; // close brackets stack
 	//
-	bool IsSeparator( const TChar tChar ) const
-	{
-		return tChar == ' ' || tChar == '\t' || tChar == '\r';
-	}
+	bool IsSeparator( const TChar tChar ) const { return tChar == ' ' || tChar == '\t' || tChar == '\r'; }
+
 public:
-	CBracketMulticharSeparator( const TChar separator ) { stc.reserve(32); }
+	CBracketMulticharSeparator( const TChar separator ) { stc.reserve( 32 ); }
 	//
 	bool operator()( const TChar chr )
 	{
 		if ( stc.empty() )
 		{
-			if ( TBrackets::IsOpen(chr) )
-				stc.push_back( TBrackets::GetClose(chr) );
+			if ( TBrackets::IsOpen( chr ) )
+				stc.push_back( TBrackets::GetClose( chr ) );
 			else
 			{
-				if ( IsSeparator(chr) )
+				if ( IsSeparator( chr ) )
 					return true;
 			}
 		}
@@ -67,12 +64,14 @@ public:
 };
 static void SplitStringWithMultipleBrackets( const std::wstring &szString, std::vector<std::wstring> &szVector )
 {
-	for ( NStr::CStringIterator<wchar_t, const std::basic_string<wchar_t>&, CBracketMulticharSeparator<wchar_t, NStr::SQuoteTest<wchar_t> > > it(szString, ' '); !it.IsEnd(); it.Next() )
+	for ( NStr::CStringIterator<wchar_t,
+	                            const std::basic_string<wchar_t> &,
+	                            CBracketMulticharSeparator<wchar_t, NStr::SQuoteTest<wchar_t>>> it( szString, ' ' );
+	      !it.IsEnd();
+	      it.Next() )
 		szVector.push_back( it.Get() );
 }
 // TODO}
-
-
 
 namespace NGlobal
 {
@@ -84,14 +83,20 @@ struct SRecord
 	VarHandler pVarHandler;
 	int nUniqueID;
 
-	SRecord(): pContext( 0 ), pCmdHandler( 0 ), pVarHandler( 0 ), nUniqueID(-1) {}
-	SRecord( void *_pCmdContext, CmdHandler _pCmd, int _nID ) : pContext(_pCmdContext), pCmdHandler(_pCmd), pVarHandler(0), nUniqueID(_nID) {}
-	SRecord( void *_pVarContext, VarHandler _pCmd, int _nID ) : pContext(_pVarContext), pCmdHandler(0), pVarHandler(_pCmd), nUniqueID(_nID) {}
+	SRecord() : pContext( 0 ), pCmdHandler( 0 ), pVarHandler( 0 ), nUniqueID( -1 ) {}
+	SRecord( void *_pCmdContext, CmdHandler _pCmd, int _nID )
+			: pContext( _pCmdContext ), pCmdHandler( _pCmd ), pVarHandler( 0 ), nUniqueID( _nID )
+	{
+	}
+	SRecord( void *_pVarContext, VarHandler _pCmd, int _nID )
+			: pContext( _pVarContext ), pCmdHandler( 0 ), pVarHandler( _pCmd ), nUniqueID( _nID )
+	{
+	}
 };
 struct SRecordCheck
 {
 	int n;
-	SRecordCheck( int _n ) : n(_n) {}
+	SRecordCheck( int _n ) : n( _n ) {}
 	bool operator()( const SRecord &r ) const { return r.nUniqueID == n; }
 };
 struct SCommandInfo
@@ -100,13 +105,13 @@ struct SCommandInfo
 	EStorageClass storage;
 	CValue sValue, sDefaultValue;
 	bool bIsRegistered;
-	SCommandInfo() : storage(STORAGE_NONE), bIsRegistered(false) {}
+	SCommandInfo() : storage( STORAGE_NONE ), bIsRegistered( false ) {}
 };
 typedef std::unordered_map<std::string, SCommandInfo> TRecordsMap;
 
 class CRecordsMap : public CObjectBase
 {
-	OBJECT_NOCOPY_METHODS(CRecordsMap)
+	OBJECT_NOCOPY_METHODS( CRecordsMap )
 public:
 	TRecordsMap recordsMap;
 	CPtr<CRecordsMap> pHold;
@@ -115,9 +120,15 @@ static CRecordsMap *pRecordsMap;
 static int bIsExiting;
 struct SKillRecordsMap
 {
-	~SKillRecordsMap() { if ( pRecordsMap ) pRecordsMap->pHold = 0; pRecordsMap = 0; bIsExiting = true; }
+	~SKillRecordsMap()
+	{
+		if ( pRecordsMap )
+			pRecordsMap->pHold = 0;
+		pRecordsMap = 0;
+		bIsExiting = true;
+	}
 } killRecordsMap;
-static CRecordsMap* GetRecordsMap()
+static CRecordsMap *GetRecordsMap()
 {
 	if ( bIsExiting )
 		return new CRecordsMap;
@@ -143,7 +154,8 @@ int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext )
 	return nUniqueVarID;
 }
 
-int RegisterVar( const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage )
+int RegisterVar(
+		const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -170,7 +182,7 @@ void UnregisterCmd( const std::string &szID, int nID )
 		return;
 
 	SCommandInfo &info = iTemp->second;
-	info.data.erase( remove_if( info.data.begin(), info.data.end(), SRecordCheck(nID) ), info.data.end() );
+	info.data.erase( remove_if( info.data.begin(), info.data.end(), SRecordCheck( nID ) ), info.data.end() );
 }
 
 void UnregisterVar( const std::string &szID, int nID )
@@ -198,12 +210,12 @@ void GetIDList( std::vector<std::string> *pList )
 	int nCount = 0;
 	for ( TRecordsMap::const_iterator iTemp = recordsMap.begin(); iTemp != recordsMap.end(); iTemp++ )
 	{
-		(*pList)[nCount] = iTemp->first;
+		( *pList )[nCount] = iTemp->first;
 		nCount++;
 	}
 }
 
-void GetVarsByClass( std::vector< std::pair<std::string, CValue> > *pList, EStorageClass eStorageClass )
+void GetVarsByClass( std::vector<std::pair<std::string, CValue>> *pList, EStorageClass eStorageClass )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -213,7 +225,7 @@ void GetVarsByClass( std::vector< std::pair<std::string, CValue> > *pList, EStor
 	for ( TRecordsMap::const_iterator it = recordsMap.begin(); it != recordsMap.end(); ++it )
 	{
 		if ( it->second.storage == eStorageClass )
-			pList->push_back( std::pair<std::string, CValue>(it->first, it->second.sValue) );
+			pList->push_back( std::pair<std::string, CValue>( it->first, it->second.sValue ) );
 	}
 }
 
@@ -239,11 +251,12 @@ void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass stora
 	if ( i == recordsMap.end() )
 	{
 		storage = (std::max)( storage, eNewVarStorageClass );
-		recordsMap[ szVar ];
+		recordsMap[szVar];
 		i = recordsMap.find( szVar );
 	}
 	else
-		NI_ASSERT( storage == STORAGE_DONT_CARE || storage == i->second.storage, "different storage classes has been specified for this var" );
+		NI_ASSERT( storage == STORAGE_DONT_CARE || storage == i->second.storage,
+		           "different storage classes has been specified for this var" );
 	SCommandInfo &info = i->second;
 	info.storage = (std::max)( info.storage, storage );
 	const std::vector<SRecord> &records = info.data;
@@ -262,14 +275,14 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 	TRecordsMap &recordsMap = pHold->recordsMap;
 
 	std::vector<std::wstring> wordsSet;
-//	SplitString( wsCommandStr, &wordsSet );
+	//	SplitString( wsCommandStr, &wordsSet );
 	SplitStringWithMultipleBrackets( wsCommandStr, wordsSet );
 	// remove empty strings
 	for ( std::vector<std::wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); )
 	{
 		if ( it->empty() )
 			it = wordsSet.erase( it );
-		else if ( it->compare(0, 2, L"//") == 0 )
+		else if ( it->compare( 0, 2, L"//" ) == 0 )
 		{
 			wordsSet.erase( it, wordsSet.end() );
 			break;
@@ -310,7 +323,7 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 	// remove unnecessary quotes
 	for ( std::vector<std::wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); ++it )
 	{
-		if ( it->size() > 2 && (*it)[0] == L'\"' && (*it)[it->size() - 1] == L'\"' )
+		if ( it->size() > 2 && ( *it )[0] == L'\"' && ( *it )[it->size() - 1] == L'\"' )
 			*it = it->substr( 1, it->size() - 2 );
 	}
 	//
@@ -331,21 +344,20 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 {
 	eNewVarStorageClass = _newVarStorage;
-  std::string szBuffer;
+	std::string szBuffer;
 
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
-  const int nSize = stream.GetSize();
+	const int nSize = stream.GetSize();
 	if ( nSize == 0 )
 	{
 		// Said nothing at all until now, which is how a whole startup chain of
 		// unreadable paths stayed invisible: this returns before the "Executing"
 		// line below, so a config that could not be opened left no trace.
-		csSystem << CC_ORANGE << "config not read: " << szFileName.c_str()
-		         << " (missing, empty, or unreadable)" << endl;
+		csSystem << CC_ORANGE << "config not read: " << szFileName.c_str() << " (missing, empty, or unreadable)" << endl;
 		return;
 	}
-  szBuffer.resize( nSize );
-  stream.Read( &(szBuffer[0]), nSize );
+	szBuffer.resize( nSize );
+	stream.Read( &( szBuffer[0] ), nSize );
 
 	csSystem << "Executing " << szFileName << endl;
 
@@ -358,19 +370,19 @@ void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 	NWin32Helper::CPrecisionControl precisionControl( NWin32Helper::CPrecisionControl::PCM_LOW );
 	for ( std::vector<std::string>::const_iterator iTemp = cmdsSet.begin(); iTemp != cmdsSet.end(); ++iTemp )
 	{
-	  if ( iTemp->empty() )
-	    continue;
+		if ( iTemp->empty() )
+			continue;
 
-	  std::string szCmd( *iTemp );
-	  NStr::TrimBoth( szCmd, "\n\r" );
-	  if ( szCmd.substr( 0, 1 ).compare( ";" ) == 0 )
-	    continue;
-	  if ( szCmd.substr( 0, 2 ).compare( "//" ) == 0 )
-	    continue;
+		std::string szCmd( *iTemp );
+		NStr::TrimBoth( szCmd, "\n\r" );
+		if ( szCmd.substr( 0, 1 ).compare( ";" ) == 0 )
+			continue;
+		if ( szCmd.substr( 0, 2 ).compare( "//" ) == 0 )
+			continue;
 		//
 		std::wstring wszCmd;
 		NStr::ToUnicode( &wszCmd, szCmd );
-	  ProcessCommand( wszCmd );
+		ProcessCommand( wszCmd );
 	}
 	eNewVarStorageClass = STORAGE_DONT_CARE;
 }
@@ -382,10 +394,7 @@ struct SSaveRecord
 };
 struct SSaveRecordSort
 {
-	bool operator()( const SSaveRecord &s1, const SSaveRecord &s2 ) const
-	{
-		return s1.szName < s2.szName;
-	}
+	bool operator()( const SSaveRecord &s1, const SSaveRecord &s2 ) const { return s1.szName < s2.szName; }
 };
 static void SaveConfig( const std::string &szFileName, EStorageClass storage )
 {
@@ -420,7 +429,7 @@ static void SaveConfig( const std::string &szFileName, EStorageClass storage )
 	for ( std::vector<SSaveRecord>::iterator iTemp = tempSet.begin(); iTemp != tempSet.end(); iTemp++ )
 	{
 		// put global var with spaces in quotes before save
-		if ( iTemp->szValue.find(' ') != std::string::npos )
+		if ( iTemp->szValue.find( ' ' ) != std::string::npos )
 			iTemp->szValue = '\"' + iTemp->szValue + '\"';
 		fprintf( pFile, "setvar %s = %s\n", iTemp->szName.c_str(), iTemp->szValue.c_str() );
 	}
@@ -465,7 +474,7 @@ static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *p
 	for ( i = 0; i < szCmd.size(); ++i )
 	{
 		wchar_t c = szCmd[i];
-		if ( NStr::SBracketsTest<wchar_t>::IsOpen(c) )
+		if ( NStr::SBracketsTest<wchar_t>::IsOpen( c ) )
 			stackBrackets.push_back( NStr::SBracketsTest<wchar_t>::GetClose( c ) );
 		else if ( stackBrackets.empty() )
 		{
@@ -573,7 +582,7 @@ static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &
 
 }
 
-START_REGISTER(Commands)
+START_REGISTER( Commands )
 REGISTER_CMD( "help", NGlobal::CmdPrintHelp )
 REGISTER_CMD( "exec", NGlobal::CmdLoadConfig )
 REGISTER_CMD( "setvar", NGlobal::CmdSetVar )

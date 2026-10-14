@@ -7,10 +7,13 @@
 
 #include <fmt/format.h>
 
-bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor )
+bool CMOBridge::CreateSceneObject( const int nUniqueID,
+                                   const SAINewUnitUpdate *pUpdate,
+                                   NDb::ESeason eSeason,
+                                   bool bInEditor )
 {
 	const float fNewHP = pUpdate->info.fHitPoints / GetStats()->fMaxHP;
-	pStats = checked_cast<const NDb::SBridgeRPGStats*>( GetStats() );
+	pStats = checked_cast<const NDb::SBridgeRPGStats *>( GetStats() );
 	nFrameIndex = pUpdate->info.nFrameIndex;
 	nRandomSpan = -1;
 	int nDamagedState = 0;
@@ -31,7 +34,7 @@ bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 	// Check if there are any non-death animations
 	for ( int i = 0; i < pModel->animations.size(); ++i )
 	{
-		const NDb::SAnimB2 *pAnim = checked_cast_ptr< const NDb::SAnimB2 * >( pModel->animations[ i ] );
+		const NDb::SAnimB2 *pAnim = checked_cast_ptr<const NDb::SAnimB2 *>( pModel->animations[i] );
 		if ( pAnim && pAnim->eType != NDb::ANIMATION_DEATH )
 		{
 			bAnimated = true;
@@ -39,16 +42,26 @@ bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 		}
 	}
 
-	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1),
-		                  bAnimated ? OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC : OBJ_ANIM_MODE_FORCE_NON_ANIMATED, 0, 0 );
+	Scene()->AddObject( nUniqueID,
+	                    pModel,
+	                    vPos,
+	                    qRot,
+	                    CVec3( 1, 1, 1 ),
+	                    bAnimated ? OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC : OBJ_ANIM_MODE_FORCE_NON_ANIMATED,
+	                    0,
+	                    0 );
 	SetModel( pModel );
 
-  return true;
+	return true;
 }
 
-bool CMOBridge::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor )
+bool CMOBridge::Create( const int nUniqueID,
+                        const SAIBasicUpdate *_pUpdate,
+                        NDb::ESeason eSeason,
+                        const NDb::EDayNight eDayTime,
+                        bool bInEditor )
 {
-	if ( CMapObj::Create(nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor) )
+	if ( CMapObj::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor ) )
 	{
 		bDestroyed = GetHP() <= 0.0f;
 		if ( bDestroyed )
@@ -65,7 +78,7 @@ void CMOBridge::GetStatus( SObjectStatus *pStatus ) const
 	CMapObj::GetStatus( pStatus );
 }
 
-const NDb::SBridgeRPGStats::SElementRPGStats& CMOBridge::GetElement() const
+const NDb::SBridgeRPGStats::SElementRPGStats &CMOBridge::GetElement() const
 {
 	return nFrameIndex == 0 ? pStats->end : pStats->center;
 }
@@ -87,10 +100,11 @@ int CMOBridge::GetDamagedState( float fHP ) const
 	return nResult;
 }
 
-const NDb::SVisObj* CMOBridge::GetVisObjForHP( float fHP, int *pnDamagedState )
+const NDb::SVisObj *CMOBridge::GetVisObjForHP( float fHP, int *pnDamagedState )
 {
 	*pnDamagedState = GetDamagedState( fHP );
-	const std::vector< CDBPtr<NDb::SVisObj> > &objects = *pnDamagedState == -1 ? GetElement().visualObjects : GetElement().damageStates[*pnDamagedState].visObjects;
+	const std::vector<CDBPtr<NDb::SVisObj>> &objects =
+			*pnDamagedState == -1 ? GetElement().visualObjects : GetElement().damageStates[*pnDamagedState].visObjects;
 	if ( nRandomSpan == -1 )
 	{
 		if ( objects.size() == 1 )
@@ -122,11 +136,11 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 	NI_ASSERT( pSkeleton, fmt::format( "No Skeleton for destroyed Bridge state (object {})", GetID() ) );
 	if ( !pSkeleton )
 		return;
-	std::vector< const NDb::SAnimB2* > deathAnims;
+	std::vector<const NDb::SAnimB2 *> deathAnims;
 	deathAnims.reserve( pSkeleton->animations.size() );
 	for ( int i = 0; i < pSkeleton->animations.size(); ++i )
 	{
-		CDBPtr<NDb::SAnimB2> pAnim = checked_cast<const NDb::SAnimB2*>( pSkeleton->animations[i].GetPtr() );
+		CDBPtr<NDb::SAnimB2> pAnim = checked_cast<const NDb::SAnimB2 *>( pSkeleton->animations[i].GetPtr() );
 		if ( pAnim->eType == NDb::ANIMATION_DEATH )
 			deathAnims.push_back( pAnim );
 	}
@@ -138,7 +152,9 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 	}
 }
 
-IClientUpdatableProcess* CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
+IClientUpdatableProcess *CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &stats,
+                                                      struct IClientAckManager *pAckManager,
+                                                      NDb::ESeason eSeason )
 {
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	const bool bAlive = fNewHP > 0;
@@ -224,7 +240,8 @@ void CMOBridge::GetDisabledActions( CUserActions *pActions, EActionsType eAction
 	}
 }
 
-NDb::EUserAction CMOBridge::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
+NDb::EUserAction
+CMOBridge::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
 		return NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
@@ -247,7 +264,7 @@ void CMOBridge::FinalizeDeath( NDb::ESeason eSeason )
 
 int CMOBridge::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, checked_cast<CMapObj*>(this) );
+	saver.Add( 1, checked_cast<CMapObj *>( this ) );
 	saver.Add( 2, &pStats );
 	saver.Add( 3, &nFrameIndex );
 	saver.Add( 4, &nRandomSpan );

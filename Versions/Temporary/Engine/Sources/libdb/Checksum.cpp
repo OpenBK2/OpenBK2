@@ -11,14 +11,14 @@ namespace NDb
 {
 namespace
 {
-struct SCheckSumTraversal
-{
-	unsigned int nDepth = 0;
-	std::vector<uint32_t *> caches;
-};
+	struct SCheckSumTraversal
+	{
+		unsigned int nDepth = 0;
+		std::vector<uint32_t *> caches;
+	};
 
-// One traversal across all DLLs, with no dependence on earlier checksum calls.
-thread_local SCheckSumTraversal traversal;
+	// One traversal across all DLLs, with no dependence on earlier checksum calls.
+	thread_local SCheckSumTraversal traversal;
 }
 
 CCheckSumScope::CCheckSumScope( uint32_t &cache )
@@ -43,7 +43,7 @@ CCheckSumScope::~CCheckSumScope()
 
 uint32_t GetDefaultCheckSum()
 {
-	return adler32(0L, Z_NULL, 0);
+	return adler32( 0L, Z_NULL, 0 );
 }
 
 uint32_t CalcCheckSum( const uint32_t dwLastCheckSum, const uint8_t *pBuf, const int nLen )

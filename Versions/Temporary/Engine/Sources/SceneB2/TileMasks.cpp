@@ -17,32 +17,44 @@ static int nDiffTileX1 = -1, nDiffTileY1 = -1, nDiffTileX2 = -1, nDiffTileY2 = -
 static int s_nTerrainBlurRaduis = 1;
 static int s_nTerrainBlurThreshHold = 0;
 
-static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &srcMask, const int nX1, const int nY1,
-													const int nX2, const int nY2, const SInt2Type<0> &sep )
+static void BlurTileMask( CArray2D<uint8_t> *pDstMask,
+                          const CArray2D<uint8_t> &srcMask,
+                          const int nX1,
+                          const int nY1,
+                          const int nX2,
+                          const int nY2,
+                          const SInt2Type<0> &sep )
 {
 	// smooth mask
 	for ( int g = 0; g < ( srcMask.GetSizeY() - 1 ); ++g )
 	{
 		for ( int i = 0; i < ( srcMask.GetSizeX() - 1 ); ++i )
 		{
-			(*pDstMask)[g][i] = ( (int)srcMask[g][i] + srcMask[g][i + 1] + srcMask[g + 1][i + 1] + srcMask[g + 1][i] ) >> 2;
+			( *pDstMask )[g][i] = ( (int)srcMask[g][i] + srcMask[g][i + 1] + srcMask[g + 1][i + 1] + srcMask[g + 1][i] ) >> 2;
 		}
 	}
 
 	const int nLastColumn = srcMask.GetSizeX() - 1;
 	for ( int g = 0; g < ( srcMask.GetSizeY() - 1 ); ++g )
-		(*pDstMask)[g][nLastColumn] = ( (int)srcMask[g][nLastColumn] + srcMask[g + 1][nLastColumn] ) >> 1;
+		( *pDstMask )[g][nLastColumn] = ( (int)srcMask[g][nLastColumn] + srcMask[g + 1][nLastColumn] ) >> 1;
 
 	const int nLastRow = srcMask.GetSizeY() - 1;
 	for ( int i = 0; i < ( srcMask.GetSizeX() - 1 ); ++i )
-		(*pDstMask)[nLastRow][i] = ( (int)srcMask[nLastRow][i] + srcMask[nLastRow][i + 1] ) >> 1;
+		( *pDstMask )[nLastRow][i] = ( (int)srcMask[nLastRow][i] + srcMask[nLastRow][i + 1] ) >> 1;
 
-	(*pDstMask)[nLastRow][nLastColumn] = srcMask[nLastRow][nLastColumn];
+	( *pDstMask )[nLastRow][nLastColumn] = srcMask[nLastRow][nLastColumn];
 }
 
-static void BlurSingleElement( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &srcMask, const CArray2D<int> &filter,
-															 const int nFilterHalfSize, const int nStartFilterX, const int nStartFilterY,
-															 const int nEndFilterX, const int nEndFilterY, const int x, const int y )
+static void BlurSingleElement( CArray2D<uint8_t> *pDstMask,
+                               const CArray2D<uint8_t> &srcMask,
+                               const CArray2D<int> &filter,
+                               const int nFilterHalfSize,
+                               const int nStartFilterX,
+                               const int nStartFilterY,
+                               const int nEndFilterX,
+                               const int nEndFilterY,
+                               const int x,
+                               const int y )
 {
 	int nVal = 0, nCount = 0;
 	for ( int gg = nStartFilterY; gg < nEndFilterY; ++gg )
@@ -58,26 +70,38 @@ static void BlurSingleElement( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8
 		nCount = 0;
 		nVal = 0;
 	}
-	(*pDstMask)[y][x] = nVal / nCount;
+	( *pDstMask )[y][x] = nVal / nCount;
 }
 
-static void BlurLastColumn( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &srcMask, const CArray2D<int> &filter,
-														const int nFilterHalfSize, const int nStartFilterX, const int nEndFilterX,
-														const int x, const int nY1, const int nY2 )
+static void BlurLastColumn( CArray2D<uint8_t> *pDstMask,
+                            const CArray2D<uint8_t> &srcMask,
+                            const CArray2D<int> &filter,
+                            const int nFilterHalfSize,
+                            const int nStartFilterX,
+                            const int nEndFilterX,
+                            const int x,
+                            const int nY1,
+                            const int nY2 )
 {
 	for ( int g = nY1; g <= nY2; ++g )
 	{
 		const int nStartFilterY = ( g >= nFilterHalfSize ) ? 0 : ( nFilterHalfSize - g );
-		const int nEndFilterY = ( g < ( srcMask.GetSizeY() - nFilterHalfSize ) ) ? filter.GetSizeY() :
-		( 2 * nFilterHalfSize - ( srcMask.GetSizeY() - g ) );
-		BlurSingleElement( pDstMask, srcMask, filter, nFilterHalfSize, nStartFilterX, nStartFilterY, nEndFilterX, nEndFilterY, x, g );
+		const int nEndFilterY = ( g < ( srcMask.GetSizeY() - nFilterHalfSize ) )
+		                            ? filter.GetSizeY()
+		                            : ( 2 * nFilterHalfSize - ( srcMask.GetSizeY() - g ) );
+		BlurSingleElement(
+				pDstMask, srcMask, filter, nFilterHalfSize, nStartFilterX, nStartFilterY, nEndFilterX, nEndFilterY, x, g );
 	}
 }
 
-static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &srcMask, const int nX1, const int nY1,
-													const int nX2, const int nY2, const SInt2Type<1> &sep )
+static void BlurTileMask( CArray2D<uint8_t> *pDstMask,
+                          const CArray2D<uint8_t> &srcMask,
+                          const int nX1,
+                          const int nY1,
+                          const int nX2,
+                          const int nY2,
+                          const SInt2Type<1> &sep )
 {
-
 
 	//filter[0][0] = 1; filter[0][1] = 4;	filter[0][2] = 7;	filter[0][3] = 4;	filter[0][4] = 1;
 	//filter[1][0] = 4; filter[1][1] = 16; filter[1][2] = 26; filter[1][3] = 16; filter[1][4] = 4;
@@ -89,23 +113,49 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 	CArray2D<int> filter;
 	int nScale;
 
-	if ( s_nTerrainBlurRaduis == 2)
+	if ( s_nTerrainBlurRaduis == 2 )
 	{
 		filter.SetSizes( 5, 5 );
-		filter[0][0] = 0; filter[0][1] = 1; filter[0][2] = 2;	filter[0][3] = 1; filter[0][4] = 0;
-		filter[1][0] = 1; filter[1][1] = 4; filter[1][2] = 8;	filter[1][3] = 4; filter[1][4] = 1;
-		filter[2][0] = 2; filter[2][1] = 8; filter[2][2] = 16; filter[2][3] = 8; filter[2][4] = 2;
-		filter[3][0] = 1; filter[3][1] = 4; filter[3][2] = 8;	filter[3][3] = 4; filter[3][4] = 1;
-		filter[4][0] = 0; filter[4][1] = 1; filter[4][2] = 2;	filter[4][3] = 1; filter[4][4] = 0;
+		filter[0][0] = 0;
+		filter[0][1] = 1;
+		filter[0][2] = 2;
+		filter[0][3] = 1;
+		filter[0][4] = 0;
+		filter[1][0] = 1;
+		filter[1][1] = 4;
+		filter[1][2] = 8;
+		filter[1][3] = 4;
+		filter[1][4] = 1;
+		filter[2][0] = 2;
+		filter[2][1] = 8;
+		filter[2][2] = 16;
+		filter[2][3] = 8;
+		filter[2][4] = 2;
+		filter[3][0] = 1;
+		filter[3][1] = 4;
+		filter[3][2] = 8;
+		filter[3][3] = 4;
+		filter[3][4] = 1;
+		filter[4][0] = 0;
+		filter[4][1] = 1;
+		filter[4][2] = 2;
+		filter[4][3] = 1;
+		filter[4][4] = 0;
 		nScale = 80;
 	}
 	else
 	{
 		// s_nTerrainBlurRaduis = 1
 		filter.SetSizes( 3, 3 );
-		filter[0][0] = 1; filter[0][1] = 2; filter[0][2] = 1;
-		filter[1][0] = 2; filter[1][1] = 4; filter[1][2] = 2;
-		filter[2][0] = 1; filter[2][1] = 2; filter[2][2] = 1;
+		filter[0][0] = 1;
+		filter[0][1] = 2;
+		filter[0][2] = 1;
+		filter[1][0] = 2;
+		filter[1][1] = 4;
+		filter[1][2] = 2;
+		filter[2][0] = 1;
+		filter[2][1] = 2;
+		filter[2][2] = 1;
 		nScale = 16;
 	}
 
@@ -133,7 +183,7 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 					nVal += filter[gg][ii] * srcMask[g - nFilterHalfSize + gg][i - nFilterHalfSize + ii];
 				}
 			}
-			(*pDstMask)[g][i] = nVal / nScale;
+			( *pDstMask )[g][i] = nVal / nScale;
 		}
 	}
 
@@ -168,7 +218,8 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 			for ( int g = nRowY1; g <= nRowY2; ++g )
 			{
 				const int nStartFilterY = nFilterHalfSize - g;
-				BlurSingleElement( pDstMask, srcMask, filter, nFilterHalfSize, 0, nStartFilterY, filter.GetSizeX(), filter.GetSizeY(), i, g );
+				BlurSingleElement(
+						pDstMask, srcMask, filter, nFilterHalfSize, 0, nStartFilterY, filter.GetSizeX(), filter.GetSizeY(), i, g );
 			}
 		}
 		{
@@ -248,7 +299,8 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 //	}
 //}
 
-void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, const int nY2, const bool bNeedGeomUpdate )
+void CTerraGen::UpdateTileMasks(
+		const int nX1, const int nY1, const int nX2, const int nY2, const bool bNeedGeomUpdate )
 {
 	static CArray2D<uint8_t> tempTileMask;
 	tempTileMask.SetSizes( terrainInfo.tileTerraMap.GetSizeX(), terrainInfo.tileTerraMap.GetSizeY() );
@@ -307,7 +359,7 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 				{
 					if ( curMask[g][i] < s_nTerrainBlurThreshHold )
 					{
-						for ( int kk = k-1; kk >= 0; --kk )
+						for ( int kk = k - 1; kk >= 0; --kk )
 						{
 							if ( tileTerraMasks[kk][g][i] > 0 )
 							{
@@ -321,7 +373,6 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 		}
 	}
 
-
 	if ( bNeedGeomUpdate )
 	{
 		const int nPatchX1 = (std::min)( nBlurX1 >> DEF_PATCH_SIZE_BITS, pDesc->nNumPatchesX - 1 );
@@ -333,11 +384,13 @@ void CTerraGen::UpdateTileMasks( const int nX1, const int nY1, const int nX2, co
 	}
 }
 
-void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArray2D<uint8_t> &mask,
-																		const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
+void CTerraGen::UpdateTileAreaType( const float fXo,
+                                    const float fYo,
+                                    const CArray2D<uint8_t> &mask,
+                                    const NTerraBrush::ETerraBrushUpdate terraBrushUpdate )
 {
 	if ( ( terrainInfo.tileTerraMap.GetSizeX() != tileTerraMapDiffs.GetSizeX() ) ||
-			 ( terrainInfo.tileTerraMap.GetSizeY() != tileTerraMapDiffs.GetSizeY() ) )
+	     ( terrainInfo.tileTerraMap.GetSizeY() != tileTerraMapDiffs.GetSizeY() ) )
 	{
 		tileTerraMapDiffs.SetSizes( terrainInfo.tileTerraMap.GetSizeX(), terrainInfo.tileTerraMap.GetSizeY() );
 		tileTerraMapDiffs.FillZero();
@@ -417,10 +470,18 @@ void CTerraGen::UpdateTileAreaType( const float fXo, const float fYo, const CArr
 	vTexModMax.x = (std::min)( vTexModMax.x, terrainInfo.tiles.GetSizeX() - 1 );
 	vTexModMax.y = (std::min)( vTexModMax.y, terrainInfo.tiles.GetSizeY() - 1 );
 
-	const int nPatchX1 = Clamp( ( (std::min)( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HX * 2, 0, pDesc->nNumPatchesX - 1 );
-	const int nPatchY1 = Clamp( ( (std::min)( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HY * 2, 0, pDesc->nNumPatchesY - 1 );
-	const int nPatchX2 = Clamp( ( (std::max)( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HX * 2, 0, pDesc->nNumPatchesX - 1 );
-	const int nPatchY2 = Clamp( ( (std::max)( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HY * 2, 0, pDesc->nNumPatchesY - 1 );
+	const int nPatchX1 = Clamp( ( (std::min)( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HX * 2,
+	                            0,
+	                            pDesc->nNumPatchesX - 1 );
+	const int nPatchY1 = Clamp( ( (std::min)( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) - DEF_TILES_BLUR_FILTER_HY * 2,
+	                            0,
+	                            pDesc->nNumPatchesY - 1 );
+	const int nPatchX2 = Clamp( ( (std::max)( nTileX1, nTileX2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HX * 2,
+	                            0,
+	                            pDesc->nNumPatchesX - 1 );
+	const int nPatchY2 = Clamp( ( (std::max)( nTileY1, nTileY2 ) >> DEF_PATCH_SIZE_BITS ) + DEF_TILES_BLUR_FILTER_HY * 2,
+	                            0,
+	                            pDesc->nNumPatchesY - 1 );
 
 	for ( int g = nPatchY1; g <= nPatchY2; ++g )
 	{
@@ -514,7 +575,7 @@ void CTerraGen::GetTileTypeUpdateDifferences( float *pOffsX, float *pOffsY, CArr
 			{
 				for ( int i = 0; i < pDiffs->GetSizeX(); ++i )
 				{
-					(*pDiffs)[g][i] = tileTerraMapDiffs[g + nDiffTileY1][i + nDiffTileX1];
+					( *pDiffs )[g][i] = tileTerraMapDiffs[g + nDiffTileY1][i + nDiffTileX1];
 					tileTerraMapDiffs[g + nDiffTileY1][i + nDiffTileX1] = 0;
 				}
 			}
@@ -543,12 +604,13 @@ void CTerraGen::FinalizeTexModifying()
 	}
 }
 
-void CTerraGen::GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
+void CTerraGen::GetAreaTileTypes(
+		CArray2D<uint8_t> *pAreaTypes, const int nX1, const int nY1, const int nX2, const int nY2 )
 {
-	const int nTileX1 = (std::max)( (std::min)(nX1, nX2), 0 );
-	const int nTileY1 = (std::max)( (std::min)(nY1, nY2), 0 );
-	const int nTileX2 = (std::min)( (std::max)(nX1, nX2), terrainInfo.tileTerraMap.GetSizeX() - 1 );
-	const int nTileY2 = (std::min)( (std::max)(nY1, nY2), terrainInfo.tileTerraMap.GetSizeY() - 1 );
+	const int nTileX1 = (std::max)( (std::min)( nX1, nX2 ), 0 );
+	const int nTileY1 = (std::max)( (std::min)( nY1, nY2 ), 0 );
+	const int nTileX2 = (std::min)( (std::max)( nX1, nX2 ), terrainInfo.tileTerraMap.GetSizeX() - 1 );
+	const int nTileY2 = (std::min)( (std::max)( nY1, nY2 ), terrainInfo.tileTerraMap.GetSizeY() - 1 );
 	if ( ( nTileX1 <= nTileX2 ) && ( nTileY1 <= nTileY2 ) )
 	{
 		pAreaTypes->SetSizes( nTileX2 - nTileX1 + 1, nTileY2 - nTileY1 + 1 );
@@ -556,7 +618,7 @@ void CTerraGen::GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, 
 		{
 			for ( int i = 0; i < pAreaTypes->GetSizeX(); ++i )
 			{
-				(*pAreaTypes)[g][i] = terrainInfo.tileTerraMap[g + nTileY1][i + nTileX1];
+				( *pAreaTypes )[g][i] = terrainInfo.tileTerraMap[g + nTileY1][i + nTileX1];
 			}
 		}
 	}
@@ -567,6 +629,6 @@ void CTerraGen::GetAreaTileTypes( CArray2D<uint8_t> *pAreaTypes, const int nX1, 
 }
 
 START_REGISTER( TerrainBluring )
-	REGISTER_VAR_EX( "terrain_blur_radius", NGlobal::VarIntHandler, &s_nTerrainBlurRaduis, 1, STORAGE_USER );
-	REGISTER_VAR_EX( "terrain_blur_treshhold", NGlobal::VarIntHandler, &s_nTerrainBlurThreshHold, 0, STORAGE_USER );
+REGISTER_VAR_EX( "terrain_blur_radius", NGlobal::VarIntHandler, &s_nTerrainBlurRaduis, 1, STORAGE_USER );
+REGISTER_VAR_EX( "terrain_blur_treshhold", NGlobal::VarIntHandler, &s_nTerrainBlurThreshHold, 0, STORAGE_USER );
 FINISH_REGISTER

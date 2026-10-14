@@ -8,35 +8,35 @@
 
 namespace NLang
 {
-	class CFileNode;
-	class CLangNode;
-	class CVariable;
-	class CAttributeNode;
-	class CTerminalTypesDescriptor;
+class CFileNode;
+class CLangNode;
+class CVariable;
+class CAttributeNode;
+class CTerminalTypesDescriptor;
 }
 
 namespace NCompileCLike
 {
 
-class CVisitor: public NLang::IVisitor
+class CVisitor : public NLang::IVisitor
 {
 	OBJECT_NOCOPY_METHODS( CVisitor );
 
-	std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes;
+	std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes;
 
 	CPtr<NDb::NTypeDef::STypeDef> pCreatedType;
 	CVariant attr;
 	NDb::NTypeDef::STypeStructBase::SField field;
 	NDb::NTypeDef::STypeEnum::SEnumEntry enumEntry;
 	CObj<NDb::NTypeDef::SAttributes> pFromFieldTypeDefAttr;
-	std::list< CPtr<NDb::NTypeDef::STypeStructBase> > namespaces;
+	std::list<CPtr<NDb::NTypeDef::STypeStructBase>> namespaces;
 
 	CNodes2TypeDefs nodes2TypeDefs;
 	CPtr<NDb::NTypeDef::CTerminalTypesDescriptor> pTermTypesDesc;
 	CClasses2Refs classes2Refs;
 	bool bFailed;
 
-	template<typename TIter>
+	template <typename TIter>
 	void FillAttributes( NDb::NTypeDef::SAttributes *pAttr, TIter begin, TIter end )
 	{
 		for ( TIter current = begin; current != end; ++current )
@@ -51,9 +51,11 @@ class CVisitor: public NLang::IVisitor
 	void VisitVariable( NLang::CVariable *pVariable, const bool bArray );
 	void NamespaceNodeVisited( NLang::CLangNode *pNode, NDb::NTypeDef::STypeStructBase *pUpperType );
 	void ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pStruct );
+
 public:
-	CVisitor() : pTypes( 0 ), bFailed( false ) { }
-	CVisitor( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+	CVisitor() : pTypes( 0 ), bFailed( false ) {}
+	CVisitor( std::vector<CObj<NDb::NTypeDef::STypeDef>> *pTypes,
+	          NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 
 	virtual void Visit( NLang::CBaseTypeNode *pBaseTypeNode );
 	virtual void Visit( NLang::CComplexTypeNode *pComplexTypeNode );
@@ -66,7 +68,7 @@ public:
 	virtual void Visit( NLang::CAttributeDefNode *pAttrDefNode );
 	virtual void Visit( NLang::CNamespace *pNM );
 
-	const CNodes2TypeDefs& GetNodes2TypeDefs() const { return nodes2TypeDefs; }
+	const CNodes2TypeDefs &GetNodes2TypeDefs() const { return nodes2TypeDefs; }
 
 	bool IsFailed() const { return bFailed; }
 };

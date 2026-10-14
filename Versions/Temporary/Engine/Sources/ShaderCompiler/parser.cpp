@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "parser.h"
 
-char* GetNextLine( char *p, int *pnLines )
+char *GetNextLine( char *p, int *pnLines )
 {
 	while ( p[0] != 0 && p[0] != 10 && p[0] != 13 )
 		++p;
@@ -26,46 +26,46 @@ void ParseLine( vector<SLexem> *pRes, const char *p, const char *pFinish )
 	{
 		switch ( p[0] )
 		{
-		case '/':
-			if ( p[1] == '/' )
-			{
+			case '/':
+				if ( p[1] == '/' )
+				{
+					if ( pStart != p )
+						pRes->push_back( SLexem( pStart, p ) );
+					return;
+				}
+				break;
+			case 9:
+			case 10:
+			case 13:
+			case ' ':
+			case ',':
+			case '(':
+			case ')':
 				if ( pStart != p )
 					pRes->push_back( SLexem( pStart, p ) );
-				return;
-			}
-			break;
-		case 9:
-		case 10:
-		case 13:
-		case ' ':
-		case ',':
-		case '(':
-		case ')':
-			if ( pStart != p )
-				pRes->push_back( SLexem( pStart, p ) );
-			pStart = p + 1;
-			break;
-		case 'c':
-		case 'C':
-			// Special case: c[a0.x + Number] is the one lexem
-			if ( p < pFinish-1 && p[1] == '[' )
-			{
-				string szTestLexem;
-				szTestLexem.reserve( pFinish - p + 1 );
-				while ( p < pFinish && *p != ']' && *p != 0x0d)
+				pStart = p + 1;
+				break;
+			case 'c':
+			case 'C':
+				// Special case: c[a0.x + Number] is the one lexem
+				if ( p < pFinish - 1 && p[1] == '[' )
 				{
-					if ( *p != ' ' )
+					string szTestLexem;
+					szTestLexem.reserve( pFinish - p + 1 );
+					while ( p < pFinish && *p != ']' && *p != 0x0d )
+					{
+						if ( *p != ' ' )
+							szTestLexem += *p;
+
+						++p;
+					}
+					if ( p < pFinish && *p == ']' )
 						szTestLexem += *p;
 
-					++p;
+					pRes->push_back( SLexem( szTestLexem ) );
+					pStart = p + 1;
 				}
-				if ( p < pFinish && *p == ']' )
-					szTestLexem += *p;
-
-				pRes->push_back( SLexem(szTestLexem) );
-				pStart = p + 1;
-			}
-			break;
+				break;
 		}
 	}
 }
@@ -131,12 +131,12 @@ string Filter( char *pszSrc )
 	return szRes;
 }
 
-
 void SplitString( const char *pszData, vector<string> *pRes )
 {
 	pRes->clear();
-	const char *pszStart = pszData;;
-	for(;;)
+	const char *pszStart = pszData;
+	;
+	for ( ;; )
 	{
 		while ( pszStart[0] != 0 && isspace( pszStart[0] ) )
 			++pszStart;

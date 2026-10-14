@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct SConfigFile
 {
 	static const char DIVIDERS[];
@@ -13,12 +12,12 @@ struct SConfigFile
 		//
 		SConfigEntry() {}
 		SConfigEntry( const SConfigEntry &rConfigEntry )
-			: szLine( rConfigEntry.szLine ),
-				szKeyword( rConfigEntry.szKeyword ),
-				szParams( rConfigEntry.szParams ) {}
-		SConfigEntry& operator=( const SConfigEntry &rConfigEntry )
+				: szLine( rConfigEntry.szLine ), szKeyword( rConfigEntry.szKeyword ), szParams( rConfigEntry.szParams )
 		{
-			if( &rConfigEntry != this )
+		}
+		SConfigEntry &operator=( const SConfigEntry &rConfigEntry )
+		{
+			if ( &rConfigEntry != this )
 			{
 				szLine = rConfigEntry.szLine;
 				szKeyword = rConfigEntry.szKeyword;

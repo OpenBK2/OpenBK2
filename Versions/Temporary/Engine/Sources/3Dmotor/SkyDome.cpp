@@ -10,11 +10,13 @@ class CSkyDomeTransferer : public CFuncBase<SFBTransform>
 	OBJECT_BASIC_METHODS( CSkyDomeTransferer )
 	//
 	bool bUpdate;
+
 protected:
 	bool NeedUpdate() { return bUpdate; }
 	void Recalc() { bUpdate = false; }
+
 public:
-	CSkyDomeTransferer() : bUpdate(false)
+	CSkyDomeTransferer() : bUpdate( false )
 	{
 		Identity( &value.forward );
 		Identity( &value.backward );
@@ -37,9 +39,16 @@ class CSkyDome : public ISkyDome
 	ZDATA
 	CObj<CSkyDomeTransferer> pTransferer;
 	CObj<CObjectBase> pSkyDomeMesh;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTransferer); f.Add(3,&pSkyDomeMesh); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pTransferer );
+		f.Add( 3, &pSkyDomeMesh );
+		return 0;
+	}
+
 protected:
 	CSkyDome() {}
+
 public:
 	CSkyDome( NGScene::IGameView *pView, const NDb::SModel *pModel )
 	{
@@ -49,10 +58,7 @@ public:
 		pSkyDomeMesh = pView->CreateMesh( meshInfo, pTransferer.GetPtr(), 0, 0 );
 	}
 	//
-	virtual void SetCameraPos( const CVec3 &vCamPos )
-	{
-		pTransferer->SetCameraPos( vCamPos );
-	}
+	virtual void SetCameraPos( const CVec3 &vCamPos ) { pTransferer->SetCameraPos( vCamPos ); }
 };
 
 ISkyDome *CreateSkyDome( NGScene::IGameView *pView, const NDb::SModel *pModel )

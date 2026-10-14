@@ -20,31 +20,39 @@ inline float GetObjTerraProfile( const float x )
 
 void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const CVec2 &_p3, const CVec2 &_p4 )
 {
-	const CVec2 p1( AI2Vis(_p1.x), AI2Vis(_p1.y) );
-	const CVec2 p2( AI2Vis(_p2.x), AI2Vis(_p2.y) );
-	const CVec2 p3( AI2Vis(_p3.x), AI2Vis(_p3.y) );
-	const CVec2 p4( AI2Vis(_p4.x), AI2Vis(_p4.y) );
+	const CVec2 p1( AI2Vis( _p1.x ), AI2Vis( _p1.y ) );
+	const CVec2 p2( AI2Vis( _p2.x ), AI2Vis( _p2.y ) );
+	const CVec2 p3( AI2Vis( _p3.x ), AI2Vis( _p3.y ) );
+	const CVec2 p4( AI2Vis( _p4.x ), AI2Vis( _p4.y ) );
 
-	const CVec2i v1( int(p1.x * DEF_INV_TILE_SIZE), int(p1.y * DEF_INV_TILE_SIZE) );
-	const CVec2i v2( int(p2.x * DEF_INV_TILE_SIZE), int(p2.y * DEF_INV_TILE_SIZE) );
-	const CVec2i v3( int(p3.x * DEF_INV_TILE_SIZE), int(p3.y * DEF_INV_TILE_SIZE) );
-	const CVec2i v4( int(p4.x * DEF_INV_TILE_SIZE), int(p4.y * DEF_INV_TILE_SIZE) );
+	const CVec2i v1( int( p1.x * DEF_INV_TILE_SIZE ), int( p1.y * DEF_INV_TILE_SIZE ) );
+	const CVec2i v2( int( p2.x * DEF_INV_TILE_SIZE ), int( p2.y * DEF_INV_TILE_SIZE ) );
+	const CVec2i v3( int( p3.x * DEF_INV_TILE_SIZE ), int( p3.y * DEF_INV_TILE_SIZE ) );
+	const CVec2i v4( int( p4.x * DEF_INV_TILE_SIZE ), int( p4.y * DEF_INV_TILE_SIZE ) );
 
 	const CVec2 vt1( (float)v1.x * DEF_TILE_SIZE, (float)v1.y * DEF_TILE_SIZE );
 	const CVec2 vt2( (float)v2.x * DEF_TILE_SIZE, (float)v2.y * DEF_TILE_SIZE );
 	const CVec2 vt3( (float)v3.x * DEF_TILE_SIZE, (float)v3.y * DEF_TILE_SIZE );
 	const CVec2 vt4( (float)v4.x * DEF_TILE_SIZE, (float)v4.y * DEF_TILE_SIZE );
 
-	const CVec2i vMin( (std::min)((std::min)( v1.x, v2.x), (std::min)(v3.x, v4.x)) - DEF_EXPAND_TILES_NUM_EXT,
-										 (std::min)((std::min)( v1.y, v2.y), (std::min)(v3.y, v4.y)) - DEF_EXPAND_TILES_NUM_EXT );
-	const CVec2i vMax( (std::max)((std::max)( v1.x, v2.x), (std::max)(v3.x, v4.x)) + DEF_EXPAND_TILES_NUM_EXT,
-										 (std::max)((std::max)( v1.y, v2.y), (std::max)(v3.y, v4.y)) + DEF_EXPAND_TILES_NUM_EXT );
+	const CVec2i vMin( (std::min)( (std::min)( v1.x, v2.x ), (std::min)( v3.x, v4.x ) ) - DEF_EXPAND_TILES_NUM_EXT,
+	                   (std::min)( (std::min)( v1.y, v2.y ), (std::min)( v3.y, v4.y ) ) - DEF_EXPAND_TILES_NUM_EXT );
+	const CVec2i vMax( (std::max)( (std::max)( v1.x, v2.x ), (std::max)( v3.x, v4.x ) ) + DEF_EXPAND_TILES_NUM_EXT,
+	                   (std::max)( (std::max)( v1.y, v2.y ), (std::max)( v3.y, v4.y ) ) + DEF_EXPAND_TILES_NUM_EXT );
 
 	CArray2D<uint8_t> objMask( vMax.x - vMin.x + 1, vMax.y - vMin.y + 1 );
 	objMask.FillZero();
 
-	DrawRect( &objMask, v1.x - vMin.x, v1.y - vMin.y, v2.x - vMin.x, v2.y - vMin.y, v3.x - vMin.x, v3.y - vMin.y,
-		v4.x - vMin.x, v4.y - vMin.y, 1 );
+	DrawRect( &objMask,
+	          v1.x - vMin.x,
+	          v1.y - vMin.y,
+	          v2.x - vMin.x,
+	          v2.y - vMin.y,
+	          v3.x - vMin.x,
+	          v3.y - vMin.y,
+	          v4.x - vMin.x,
+	          v4.y - vMin.y,
+	          1 );
 
 	WiseFill( &objMask, 1 );
 
@@ -52,10 +60,12 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 
 	const int nFirstX = vMin.x >= 0 ? 0 : -vMin.x;
 	const int nFirstY = vMin.y >= 0 ? 0 : -vMin.y;
-	const int nLastX = ( vMin.x + objMask.GetSizeX() ) <= terrainInfo.heights.GetSizeX() ? objMask.GetSizeX() :
-										 ( terrainInfo.heights.GetSizeX() - vMin.x );
-	const int nLastY = ( vMin.y + objMask.GetSizeY() ) <= terrainInfo.heights.GetSizeY() ? objMask.GetSizeY() :
-										 ( terrainInfo.heights.GetSizeY() - vMin.y );
+	const int nLastX = ( vMin.x + objMask.GetSizeX() ) <= terrainInfo.heights.GetSizeX()
+	                       ? objMask.GetSizeX()
+	                       : ( terrainInfo.heights.GetSizeX() - vMin.x );
+	const int nLastY = ( vMin.y + objMask.GetSizeY() ) <= terrainInfo.heights.GetSizeY()
+	                       ? objMask.GetSizeY()
+	                       : ( terrainInfo.heights.GetSizeY() - vMin.y );
 
 	float fMinHeight = FP_MAX_VALUE;
 	bool bFlag = false;
@@ -93,24 +103,26 @@ void CTerraGen::ApplyObjectTerraForm( const CVec2 &_p1, const CVec2 &_p2, const 
 				{
 					const float fX = (float)nIndX * DEF_TILE_SIZE;
 					const float fY = (float)nIndY * DEF_TILE_SIZE;
-					const float fDist1 = GetDistToSegment( CVec2(fX, fY), vt1, vt2 );
-					const float fDist2 = GetDistToSegment( CVec2(fX, fY), vt2, vt3 );
-					const float fDist3 = GetDistToSegment( CVec2(fX, fY), vt3, vt4 );
-					const float fDist4 = GetDistToSegment( CVec2(fX, fY), vt4, vt1 );
+					const float fDist1 = GetDistToSegment( CVec2( fX, fY ), vt1, vt2 );
+					const float fDist2 = GetDistToSegment( CVec2( fX, fY ), vt2, vt3 );
+					const float fDist3 = GetDistToSegment( CVec2( fX, fY ), vt3, vt4 );
+					const float fDist4 = GetDistToSegment( CVec2( fX, fY ), vt4, vt1 );
 
-					const float fDist = sqrt( (std::min)((std::min)(fDist1, fDist2), (std::min)(fDist3, fDist4)) );
-					const float fCoeff = GetObjTerraProfile( Clamp((fDist - DEF_CONST_DIST) * DEF_INV_INTERPOLATE_DIST, 0.0f, 1.0f) );
-					terrainInfo.heights[nIndY][nIndX] = terrainInfo.heights[nIndY][nIndX] * fCoeff + fMinHeight * ( 1.0f - fCoeff );
+					const float fDist = sqrt( (std::min)( (std::min)( fDist1, fDist2 ), (std::min)( fDist3, fDist4 ) ) );
+					const float fCoeff =
+							GetObjTerraProfile( Clamp( ( fDist - DEF_CONST_DIST ) * DEF_INV_INTERPOLATE_DIST, 0.0f, 1.0f ) );
+					terrainInfo.heights[nIndY][nIndX] =
+							terrainInfo.heights[nIndY][nIndX] * fCoeff + fMinHeight * ( 1.0f - fCoeff );
 					terrainAIInfo.heights[nIndY][nIndX] = Vis2AIFast( terrainInfo.heights[nIndY][nIndX] );
 				}
 			}
 		}
 	}
 
-	const CVec2i vMinTile( Clamp(nFirstX + vMin.x - 1, 0, terrainInfo.tiles.GetSizeX() - 1),
-												 Clamp(nFirstY + vMin.y - 1, 0, terrainInfo.tiles.GetSizeY() - 1) );
-	const CVec2i vMaxTile( Clamp(nLastX + vMin.x + 1, 0, terrainInfo.tiles.GetSizeX() - 1),
-												 Clamp(nLastY + vMin.y + 1, 0, terrainInfo.tiles.GetSizeY() - 1) );
+	const CVec2i vMinTile( Clamp( nFirstX + vMin.x - 1, 0, terrainInfo.tiles.GetSizeX() - 1 ),
+	                       Clamp( nFirstY + vMin.y - 1, 0, terrainInfo.tiles.GetSizeY() - 1 ) );
+	const CVec2i vMaxTile( Clamp( nLastX + vMin.x + 1, 0, terrainInfo.tiles.GetSizeX() - 1 ),
+	                       Clamp( nLastY + vMin.y + 1, 0, terrainInfo.tiles.GetSizeY() - 1 ) );
 
 	UpdateVectorAreaInfo( vMinTile.x, vMinTile.y, vMaxTile.x, vMaxTile.y, TERRAIN_UPDATE_ALL );
 }

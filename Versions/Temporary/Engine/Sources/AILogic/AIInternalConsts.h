@@ -8,13 +8,14 @@
 
 namespace NDb
 {
-	enum EDesignUnitType : int;
-	struct SUnitTypePriority;
+enum EDesignUnitType : int;
+struct SUnitTypePriority;
 }
 struct SConsts : public SAIConsts
 {
 private:
 	static void LoadRevealInfo();
+
 public:
 	// plane path
 	static float PLANE_SPLINE_STEP;
@@ -23,9 +24,10 @@ public:
 
 	struct SCamouflage
 	{
-		static const float SNEAK_ADDITION_PER_TIME;			// addition to camouflage when idle
-		static const float SNEAK_DECREASE_PER_SHOT;			// when shot - decrease camouflage
-		static const float SNEAK_DECREASE_PER_SECOND_MOVE;	// when camoflated unit moves, it's camoflage decresed with this rate
+		static const float SNEAK_ADDITION_PER_TIME; // addition to camouflage when idle
+		static const float SNEAK_DECREASE_PER_SHOT; // when shot - decrease camouflage
+		static const float
+				SNEAK_DECREASE_PER_SECOND_MOVE; // when camoflated unit moves, it's camoflage decresed with this rate
 		static const int SNEAK_ADVANCED_TIMEOUT;
 		static const int SNEAK_ADVANCED_RESET_TIMEOUT;
 	};
@@ -55,7 +57,7 @@ public:
 
 	// size of "neighbours scan" cell
 	static const int CELL_COEFF;
-	static const int CELL_SIZE;			// must be divisible by TILE_SIZE
+	static const int CELL_SIZE; // must be divisible by TILE_SIZE
 
 	static const int BIG_CELL_COEFF;
 	static const int BIG_CELL_SIZE;
@@ -184,22 +186,22 @@ public:
 	static float GOOD_ATTACK_RPOBABILITY;
 
 	//for fighter
-	static int FIGHTER_PATROL_TIME;//after that time fighter will cancel patrolling
-	static float FIGHTER_VERTICAL_SPEED_UP;		// скорость набора высоты
-	static float FIGHTER_VERTICAL_SPEED_DOWN;		// скорость сброса высоты
+	static int FIGHTER_PATROL_TIME;           //after that time fighter will cancel patrolling
+	static float FIGHTER_VERTICAL_SPEED_UP;   // скорость набора высоты
+	static float FIGHTER_VERTICAL_SPEED_DOWN; // скорость сброса высоты
 
 	//for paratrooper
 	static float PARATROOPER_FALL_SPEED;
-	static int PARADROP_SPRED ; //для поиска свободного тайла, на который выпрыгнуть.
+	static int PARADROP_SPRED; //для поиска свободного тайла, на который выпрыгнуть.
 
 	//радиус в котором инженеры ищут юниты, которые будут обеспечены патронами из грузовичка
 	static int RESUPPLY_RADIUS;
 	// для морали
 	static int RESUPPLY_RADIUS_MORALE;
 
-	static int TIME_QUANT;		//time of quant repear operation
-	static float RU_PER_QUANT;	// resurs units flow per quant (used in all engineers operations)
-	static float ENGINEER_RU_CARRY_WEIGHT;						// при загрузке грузовичка инженеры носят столько RU
+	static int TIME_QUANT;                 //time of quant repear operation
+	static float RU_PER_QUANT;             // resurs units flow per quant (used in all engineers operations)
+	static float ENGINEER_RU_CARRY_WEIGHT; // при загрузке грузовичка инженеры носят столько RU
 	static int COMPLEX_OBSTACLE_ANTITANK_PERIOD;
 
 	// радиус обзора бинокля
@@ -224,7 +226,7 @@ public:
 	// емкость грузовика в RU
 	static float TRANSPORT_RU_CAPACITY;
 	// дистанция на которую дожен подъехать грузовик к складу
-	static float TRANSPORT_LOAD_RU_DISTANCE ;
+	static float TRANSPORT_LOAD_RU_DISTANCE;
 	// максимальная длина пути (от склада, в тайлах), по которой происходит снабжение
 	static int RESUPPLY_MAX_PATH;
 
@@ -272,7 +274,7 @@ public:
 	static float TRAJECTORY_BOMB_G;
 
 	// радиус выхода из пикирования на цель
-	static float PLANE_DIVE_FINISH_DISTANCE_SQR	;
+	static float PLANE_DIVE_FINISH_DISTANCE_SQR;
 
 	static float SNIPER_CAMOUFLAGE_DECREASE_PER_SHOOT;
 	static float SNIPER_CAMOUFLAGE_INCREASE;
@@ -380,7 +382,6 @@ public:
 	static int DIVE_BEFORE_EXPLODE_TIME;
 	static int DIVE_AFTER_EXPLODE_TIME;
 
-
 	static int WEATHER_TIME;
 	static int WEATHER_TIME_RANDOM;
 	static int WEATHER_TURN_PERIOD;
@@ -401,12 +402,12 @@ public:
 	static float MAX_DISTANCE_TO_THROW_GRENADE;
 
 	// target resolution constants
-	static float TR_GUNPLANE_ALPHA_ATTACK_1;//1.0f;
-	static float TR_GUNPLANE_ALPHA_ATTACK_2;//0.3f;
-	static float TR_GUNPLANE_ALPHA_GO;//0.005f;
-	static float TR_GUNPLANE_ALPHA_KILL;//1.0f;
-	static float TR_GUNPLANE_ALPHA_PRICE;//1.0f;
-	static float TR_GUNPLANE_LIMIT_TIME; //1000
+	static float TR_GUNPLANE_ALPHA_ATTACK_1; //1.0f;
+	static float TR_GUNPLANE_ALPHA_ATTACK_2; //0.3f;
+	static float TR_GUNPLANE_ALPHA_GO;       //0.005f;
+	static float TR_GUNPLANE_ALPHA_KILL;     //1.0f;
+	static float TR_GUNPLANE_ALPHA_PRICE;    //1.0f;
+	static float TR_GUNPLANE_LIMIT_TIME;     //1000
 	static float TR_DISTANCE_TO_CENTER_FACTOR;
 
 	static float MAX_FIRE_RANGE_TO_SHOOT_BY_LINE;
@@ -416,7 +417,7 @@ public:
 	static float HP_PERCENT_TO_ESCAPE_FROM_BUILDING;
 
 	static float REINFORCEMENT_GROUP_DISTANCE;
-	static float REPAIR_COST_ADJUST ;
+	static float REPAIR_COST_ADJUST;
 
 	static int TIME_TO_ALLOW_KILL_CRUSHED_OBJ;
 	//static float TILE_HEIGHT_DIFF_TO_LOCK;
@@ -435,7 +436,10 @@ public:
 		// время, через которое раскрытие сбрасывается без обстрела
 		int nTimeOfReveal = {};
 
-		SRevealInfo() : fRevealByQuery( 0.0f ), fRevealByMovingOff( 0.0f ), fForgetRevealDistance( 0.0f ), nTimeOfReveal( 0 ) { }
+		SRevealInfo()
+				: fRevealByQuery( 0.0f ), fRevealByMovingOff( 0.0f ), fForgetRevealDistance( 0.0f ), nTimeOfReveal( 0 )
+		{
+		}
 	};
 	static det_map<int, SRevealInfo> REVEAL_INFO;
 
@@ -445,14 +449,14 @@ public:
 	//
 	static void Load();
 	//
-	static det_map< NDb::EDesignUnitType, int, SEnumHash > PRIORITIES;
+	static det_map<NDb::EDesignUnitType, int, SEnumHash> PRIORITIES;
 	static const int GetUnitPriority( const NDb::EDesignUnitType &unitType )
 	{
-		det_map< NDb::EDesignUnitType, int, SEnumHash >::const_iterator pos = PRIORITIES.find( unitType );
+		det_map<NDb::EDesignUnitType, int, SEnumHash>::const_iterator pos = PRIORITIES.find( unitType );
 		if ( pos == PRIORITIES.end() )
 			return 0;
 		else
 			return pos->second;
 	}
-  static void InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorities );
+	static void InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorities );
 };

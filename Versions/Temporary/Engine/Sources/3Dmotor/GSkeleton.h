@@ -7,7 +7,7 @@ struct granny_skeleton;
 
 namespace NDb
 {
-	struct SSkeleton;
+struct SSkeleton;
 }
 
 namespace NGScene
@@ -36,13 +36,12 @@ struct SBoneTransform
 	float Orientation[4] = {};
 	float ScaleShear[3][3] = {};
 
-	SBoneTransform() :
-		Flags( HAS_POSITION | HAS_ORIENTATION | HAS_SCALE_SHEAR )
+	SBoneTransform() : Flags( HAS_POSITION | HAS_ORIENTATION | HAS_SCALE_SHEAR )
 	{
 		Position[0] = Position[1] = Position[2] = 0.0f;
 		Orientation[0] = Orientation[1] = Orientation[2] = 0.0f;
 		Orientation[3] = 1.0f;
-		memset( ScaleShear, 0, sizeof(ScaleShear) );
+		memset( ScaleShear, 0, sizeof( ScaleShear ) );
 		ScaleShear[0][0] = ScaleShear[1][1] = ScaleShear[2][2] = 1.0f;
 	}
 };
@@ -57,17 +56,17 @@ struct SSkeletonPose
 
 	SSkeletonPose()
 	{
-		memset( poseGlobal, 0, sizeof(poseGlobal) );
+		memset( poseGlobal, 0, sizeof( poseGlobal ) );
 		poseGlobal[0] = poseGlobal[5] = poseGlobal[10] = poseGlobal[15] = 1.0f;
 	}
 
 	SBoneTransform *GetBone( int nBone )
 	{
-		return nBone >= 0 && nBone < static_cast<int>(localPose.size()) ? &localPose[nBone] : 0;
+		return nBone >= 0 && nBone < static_cast<int>( localPose.size() ) ? &localPose[nBone] : 0;
 	}
 	const SBoneTransform *GetBone( int nBone ) const
 	{
-		return nBone >= 0 && nBone < static_cast<int>(localPose.size()) ? &localPose[nBone] : 0;
+		return nBone >= 0 && nBone < static_cast<int>( localPose.size() ) ? &localPose[nBone] : 0;
 	}
 };
 
@@ -76,10 +75,18 @@ struct SSkeletonHandle
 	ZDATA
 	CDBPtr<NDb::SSkeleton> pSkeleton;
 	int nModelInFile = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSkeleton); f.Add(3,&nModelInFile); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pSkeleton );
+		f.Add( 3, &nModelInFile );
+		return 0;
+	}
 
-	SSkeletonHandle() : nModelInFile(0) {}
-	SSkeletonHandle( const NDb::SSkeleton *_pSkeleton, int _nModelInFile ) : pSkeleton(_pSkeleton), nModelInFile(_nModelInFile) {}
+	SSkeletonHandle() : nModelInFile( 0 ) {}
+	SSkeletonHandle( const NDb::SSkeleton *_pSkeleton, int _nModelInFile )
+			: pSkeleton( _pSkeleton ), nModelInFile( _nModelInFile )
+	{
+	}
 };
 
 // Source compatibility for modules and old save data written before the

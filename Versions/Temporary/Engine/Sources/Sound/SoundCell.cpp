@@ -11,10 +11,7 @@ REGISTER_SAVELOAD_CLASS( SOUND, 0x110793C2, CSoundCell );
 //*															CSoundCell::*
 //*******************************************************************
 
-CSoundCell::CSoundCell()
-: nRadius( 0 ), timeLastCombatHear( 0 )
-{
-}
+CSoundCell::CSoundCell() : nRadius( 0 ), timeLastCombatHear( 0 ) {}
 
 void CSoundCell::SetLastHearCombat( const NTimer::STime hearTime )
 {
@@ -29,10 +26,8 @@ void CSoundCell::Clear()
 
 bool CSoundCell::IsSoundHearable( const CSound *pSound, const int nRadius ) const
 {
-	return !pSound->IsMarkedFinished() &&
-		pSound->GetRadiusMax() > nRadius &&
-		( pSound->GetCombatType() == NDb::PEACEFULL ? !IsCombat() : true ) ;
-
+	return !pSound->IsMarkedFinished() && pSound->GetRadiusMax() > nRadius &&
+	       ( pSound->GetCombatType() == NDb::PEACEFULL ? !IsCombat() : true );
 }
 
 bool CSoundCell::IsCombat() const
@@ -45,8 +40,8 @@ void CSoundCell::RecountForDelete()
 	nRadius = 0;
 	for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{
-		NI_ASSERT( 0 != (*it)->GetRadiusMax(), " 0 max radius" );
-		nRadius = (std::max)( nRadius, (*it)->GetRadiusMax() );
+		NI_ASSERT( 0 != ( *it )->GetRadiusMax(), " 0 max radius" );
+		nRadius = (std::max)( nRadius, ( *it )->GetRadiusMax() );
 	}
 }
 
@@ -55,16 +50,15 @@ void CSoundCell::AddSound( class CSound *pSound )
 	NI_ASSERT( 0 != pSound->GetRadiusMax(), " 0 max radius" );
 	sounds.push_back( pSound );
 	nRadius = (std::max)( nRadius, pSound->GetRadiusMax() );
-
 }
 
-void CSoundCell::RemoveSound( const uint16_t wID, ISFX * pSFX )
+void CSoundCell::RemoveSound( const uint16_t wID, ISFX *pSFX )
 {
-	for ( CSounds::iterator it = sounds.begin(); it != sounds.end();  )
+	for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); )
 	{
-		if ( (*it)->GetID() == wID )
+		if ( ( *it )->GetID() == wID )
 		{
-			CSound * s = *it;
+			CSound *s = *it;
 			if ( pSFX && !s->IsSubstituted() )
 				pSFX->StopSample( s->GetSound() );
 			it = sounds.erase( it );
@@ -76,32 +70,32 @@ void CSoundCell::RemoveSound( const uint16_t wID, ISFX * pSFX )
 	NI_ASSERT( false, "not present" );
 }
 
-const CSound * CSoundCell::GetSound( const uint16_t wID ) const
+const CSound *CSoundCell::GetSound( const uint16_t wID ) const
 {
 	for ( CSounds::const_iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{
-		if ( (*it)->GetID() == wID )
-			return (*it);
+		if ( ( *it )->GetID() == wID )
+			return ( *it );
 	}
 	return 0;
 }
 
-CSound * CSoundCell::GetSound( const uint16_t wID )
+CSound *CSoundCell::GetSound( const uint16_t wID )
 {
 	for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )
 	{
-		if ( (*it)->GetID() == wID )
-			return (*it);
+		if ( ( *it )->GetID() == wID )
+			return ( *it );
 	}
 	return 0;
 }
 
-void CSoundCell::Update( ISFX * pSFX )
+void CSoundCell::Update( ISFX *pSFX )
 {
 	bool bSomeSoundErased = false;
 	for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); )
 	{
-		CPtr<CSound> sound = (*it);
+		CPtr<CSound> sound = ( *it );
 
 		if ( 0.0f == sound->GetVolume( CSoundScene2D::GetCurTime(), 0.0f ) )
 		{
@@ -116,7 +110,7 @@ void CSoundCell::Update( ISFX * pSFX )
 
 		if ( !sound->IsMarkedFinished() && !sound->IsLooped() )
 		{
-			if( sound->IsTimeToFinish() )
+			if ( sound->IsTimeToFinish() )
 			{
 				if ( 0 == sound->GetID() ) // этим звуком управляет движок
 				{

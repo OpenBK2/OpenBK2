@@ -14,7 +14,10 @@ static bool s_bShowGroupMarker = false;
 const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit ) const
 {
 	CUnitsMap::const_iterator posUnit = units.find( pUnit->GetUniqueID() );
-	NI_ASSERT( posUnit != units.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [not in list]", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
+	NI_ASSERT( posUnit != units.end(),
+	           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [not in list]",
+	                        pUnit->GetUniqueID(),
+	                        GetUnit()->GetUniqueID() ) );
 	if ( posUnit == units.end() )
 		return VNULL2;
 	const int nPriority = posUnit->second.nPriority;
@@ -24,24 +27,33 @@ const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit 
 		return VNULL2;
 
 	CPriorityCells::const_iterator posCell = geometries[GetCurrentGeometry()].geometry.find( nPriority );
-	NI_ASSERT( posCell != geometries[GetCurrentGeometry()].geometry.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
+	NI_ASSERT( posCell != geometries[GetCurrentGeometry()].geometry.end(),
+	           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]",
+	                        pUnit->GetUniqueID(),
+	                        GetUnit()->GetUniqueID() ) );
 	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() )
 		return VNULL2;
 
-  return posCell->second[nCell].vUnitShift;
+	return posCell->second[nCell].vUnitShift;
 }
 
 const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *pUnit ) const
 {
 	CUnitsMap::const_iterator posUnit = units.find( pUnit->GetUniqueID() );
-	NI_ASSERT( posUnit != units.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [not in list]", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
+	NI_ASSERT( posUnit != units.end(),
+	           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [not in list]",
+	                        pUnit->GetUniqueID(),
+	                        GetUnit()->GetUniqueID() ) );
 	if ( posUnit == units.end() )
 		return 0;
 	const int nPriority = posUnit->second.nPriority;
 	const int nCell = posUnit->second.nCell;
 
 	CPriorityCells::const_iterator posCell = geometries[GetCurrentGeometry()].geometry.find( nPriority );
-	NI_ASSERT( posCell != geometries[GetCurrentGeometry()].geometry.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
+	NI_ASSERT( posCell != geometries[GetCurrentGeometry()].geometry.end(),
+	           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]",
+	                        pUnit->GetUniqueID(),
+	                        GetUnit()->GetUniqueID() ) );
 	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() )
 		return 0;
 
@@ -57,11 +69,13 @@ bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 
 	//! юнит уже в формации
 	CUnitsMap::const_iterator pos = units.find( pUnit->GetUniqueID() );
-	NI_ASSERT( pos == units.end(), fmt::format( "Unit (ID: {}) already in formation (ID: {})", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
+	NI_ASSERT(
+			pos == units.end(),
+			fmt::format( "Unit (ID: {}) already in formation (ID: {})", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
 	if ( pos != units.end() )
 		return false;
 
-	units[ pUnit->GetUniqueID() ] = SUnitInfo( pUnit, nPriority );
+	units[pUnit->GetUniqueID()] = SUnitInfo( pUnit, nPriority );
 	nUnitsCount++;
 
 	RecalcCells();
@@ -71,7 +85,9 @@ bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 bool CGroupSmoothPath::DeleteUnit( CBasePathUnit *pUnit )
 {
 	CUnitsMap::iterator pos = units.find( pUnit->GetUniqueID() );
-	NI_ASSERT( pos != units.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {})", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
+	NI_ASSERT(
+			pos != units.end(),
+			fmt::format( "Unit (ID: {}) not found in formation (ID: {})", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
 	if ( pos == units.end() )
 		return false;
 	units.erase( pos );
@@ -107,13 +123,16 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 		const int nPriority = itStart->nPriority;
 		std::vector<SUnitInfo>::iterator itEnd = itStart;
 		int nCount = 0;
-		for ( ; ( itEnd != unitsList.end() && itEnd->nPriority == nPriority ); ++itEnd, ++nCount );
+		for ( ; ( itEnd != unitsList.end() && itEnd->nPriority == nPriority ); ++itEnd, ++nCount )
+			;
 
 		CPriorityCells::iterator pos = geometries[GetCurrentGeometry()].geometry.find( nPriority );
-    NI_ASSERT( pos != geometries[GetCurrentGeometry()].geometry.end(), fmt::format( "Priority group ({}) not found in cells", nPriority ) );
+		NI_ASSERT( pos != geometries[GetCurrentGeometry()].geometry.end(),
+		           fmt::format( "Priority group ({}) not found in cells", nPriority ) );
 		if ( pos != geometries[GetCurrentGeometry()].geometry.end() )
 		{
-			NI_ASSERT( nCount <= pos->second.size(), fmt::format( "Too much units with priority {} ({} > {})", nPriority, nCount, pos->second.size() ) );
+			NI_ASSERT( nCount <= pos->second.size(),
+			           fmt::format( "Too much units with priority {} ({} > {})", nPriority, nCount, pos->second.size() ) );
 			if ( nCount <= pos->second.size() )
 			{
 				const int nSize = (std::min<int>)( nCount, pos->second.size() );
@@ -125,9 +144,9 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 					{
 						for ( int j = 0; j < nSize; ++j )
 						{
-//							const CVec2 vDestUnitShift = vDirection ^ pos->second[j].vUnitShift;
-//							const CVec2 vCellFinishPoint = vPosition + vDestUnitShift;
-							const CVec2 vCellFinishPoint(vPosition + ( vDirection ^ pos->second[j].vUnitShift ) );
+							//							const CVec2 vDestUnitShift = vDirection ^ pos->second[j].vUnitShift;
+							//							const CVec2 vCellFinishPoint = vPosition + vDestUnitShift;
+							const CVec2 vCellFinishPoint( vPosition + ( vDirection ^ pos->second[j].vUnitShift ) );
 							distMatrix[j][i] = fabs2( vCellFinishPoint - it->pUnit->GetCenterPlain() );
 						}
 						i++;
@@ -181,7 +200,7 @@ void CGroupSmoothPath::AddGeometry( const std::vector<SGeometryCellInfo> &cells 
 			newCells.push_back( SCellInfo( cells[i].vCellPosition ) );
 			fMaxProjection = (std::max)( newCells.back().fUnitProjShift, fMaxProjection );
 			fRadius = (std::max)( fabs( vDir1 ^ newCells.back().vUnitShift ), fRadius );
-			priorityCells[ cells[i].nPriority ] = newCells;
+			priorityCells[cells[i].nPriority] = newCells;
 		}
 		else
 		{
@@ -214,7 +233,10 @@ void CGroupSmoothPath::AlignGeometriesToCenter()
 		for ( CUnitsMap::iterator it = units.begin(); it != units.end(); ++it )
 		{
 			CPriorityCells::iterator posCell = geometries[i].geometry.find( it->second.nPriority );
-			NI_ASSERT( posCell != geometries[i].geometry.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]", it->second.pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
+			NI_ASSERT( posCell != geometries[i].geometry.end(),
+			           fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]",
+			                        it->second.pUnit->GetUniqueID(),
+			                        GetUnit()->GetUniqueID() ) );
 			if ( posCell != geometries[i].geometry.end() )
 			{
 				const CVec2 vShift = -1.0f * vNewCenter + ( vDir1 ^ posCell->second[it->second.nCell].vUnitShift );
@@ -236,7 +258,7 @@ void CGroupSmoothPath::AlignGeometriesToCenter()
 void CGroupSmoothPath::Segment( const NTimer::STime timeDiff )
 {
 	if ( fMaxPathShift > 0.0f )
-		fSpeedCoeff = (std::min)( 4.0f, (std::max)( 1.0f, fMaxPathShift/GetAIMap()->GetTileSize() ) );
+		fSpeedCoeff = (std::min)( 4.0f, (std::max)( 1.0f, fMaxPathShift / GetAIMap()->GetTileSize() ) );
 
 	CVec2 vOldDirection = GetDirection();
 	CStandartSmoothPathBasis::Segment( timeDiff );
@@ -244,20 +266,27 @@ void CGroupSmoothPath::Segment( const NTimer::STime timeDiff )
 #ifndef _FINALRELEASE
 	if ( s_bShowGroupMarker )
 	{
-		DebugInfoManager()->CreateCircle( GetUnit()->GetUniqueID(), CCircle( GetUnit()->GetCenterPlain(), 24 ), NDebugInfo::RED );
+		DebugInfoManager()->CreateCircle(
+				GetUnit()->GetUniqueID(), CCircle( GetUnit()->GetCenterPlain(), 24 ), NDebugInfo::RED );
 		for ( CUnitsMap::iterator it = units.begin(); it != units.end(); ++it )
-			DebugInfoManager()->CreateCircle( it->second.pUnit->GetUniqueID(), CCircle( GetValidUnitCenter( it->second.pUnit ), 8 ), NDebugInfo::GREEN );
+			DebugInfoManager()->CreateCircle(
+					it->second.pUnit->GetUniqueID(), CCircle( GetValidUnitCenter( it->second.pUnit ), 8 ), NDebugInfo::GREEN );
 	}
 #endif
 
 	const float fSpeedHere = GetUnit()->GetMaxSpeedHere();
-	GetUnit()->SetSpeed( fSpeedHere/fSpeedCoeff );
+	GetUnit()->SetSpeed( fSpeedHere / fSpeedCoeff );
 	fMaxPathShift = -1.0f;
 }
 
 const CVec2 CGroupSmoothPath::GetValidUnitCenter( const CBasePathUnit *pUnit ) const
 {
-	return GetAIMap()->GetTerrain()->GetValidPoint( pUnit->GetBoundTileRadius(), GetCenter(), GetUnitCenter( pUnit ), pUnit->GetAIPassabilityClass(), false, GetAIMap() );
+	return GetAIMap()->GetTerrain()->GetValidPoint( pUnit->GetBoundTileRadius(),
+	                                                GetCenter(),
+	                                                GetUnitCenter( pUnit ),
+	                                                pUnit->GetAIPassabilityClass(),
+	                                                false,
+	                                                GetAIMap() );
 }
 
 bool CGroupSmoothPath::Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )

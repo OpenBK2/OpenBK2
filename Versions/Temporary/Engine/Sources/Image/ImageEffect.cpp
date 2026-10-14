@@ -10,14 +10,16 @@
 namespace NImage
 {
 
-const uint32_t BLACK_COLOR					= MakeARGBColor<uint32_t>( 0xFF, 0x00, 0x00, 0x00 );
-const uint32_t WHITE_COLOR					= MakeARGBColor<uint32_t>( 0xFF, 0xFF, 0xFF, 0xFF );
-const uint32_t GRAY_LIGHTER_COLOR	= MakeARGBColor<uint32_t>( 0xFF, 0x80, 0x80, 0x80 );
-const uint32_t GRAY_DARKER_COLOR		= MakeARGBColor<uint32_t>( 0xFF, 0x7F, 0x7F, 0x7F );
-const uint32_t BASE_EMBOSS_COLOR		= MakeARGBColor<uint32_t>( 0xFF, 0x7F, 0x7F, 0x7F );
+const uint32_t BLACK_COLOR = MakeARGBColor<uint32_t>( 0xFF, 0x00, 0x00, 0x00 );
+const uint32_t WHITE_COLOR = MakeARGBColor<uint32_t>( 0xFF, 0xFF, 0xFF, 0xFF );
+const uint32_t GRAY_LIGHTER_COLOR = MakeARGBColor<uint32_t>( 0xFF, 0x80, 0x80, 0x80 );
+const uint32_t GRAY_DARKER_COLOR = MakeARGBColor<uint32_t>( 0xFF, 0x7F, 0x7F, 0x7F );
+const uint32_t BASE_EMBOSS_COLOR = MakeARGBColor<uint32_t>( 0xFF, 0x7F, 0x7F, 0x7F );
 
-
-void GetImageParams( uint32_t *pdwMinColor, uint32_t *pdwMaxColor, uint32_t *pdwAverageColor, const CArray2D<uint32_t> &rImage )
+void GetImageParams( uint32_t *pdwMinColor,
+                     uint32_t *pdwMaxColor,
+                     uint32_t *pdwAverageColor,
+                     const CArray2D<uint32_t> &rImage )
 {
 	CTPoint<int> size( rImage.GetSizeX(), rImage.GetSizeY() );
 	uint32_t dwDivider = size.x * size.y;
@@ -121,7 +123,6 @@ void GetImageParams( uint32_t *pdwMinColor, uint32_t *pdwMaxColor, uint32_t *pdw
 	}
 }
 
-
 void Invert( CArray2D<uint32_t> *pImage )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -146,16 +147,14 @@ void Invert( CArray2D<uint32_t> *pImage )
 	}
 }
 
-
 inline uint32_t GetGammaCorrection( uint32_t dwVal, float fBrightness, float fPower, float fA, float fB )
 {
-  const float fVal = float( dwVal ) / 255.0f;
-  const float fGammaValue = pow( fVal, fPower );
-  const float fContrastValue = Clamp( fA * fGammaValue + fB, 0.0f, 1.0f );
-  const float fResult = Clamp( fContrastValue + fBrightness, 0.0f, 1.0f );
+	const float fVal = float( dwVal ) / 255.0f;
+	const float fGammaValue = pow( fVal, fPower );
+	const float fContrastValue = Clamp( fA * fGammaValue + fB, 0.0f, 1.0f );
+	const float fResult = Clamp( fContrastValue + fBrightness, 0.0f, 1.0f );
 	return Clamp<uint32_t>( fResult * 255.0f + 0.5f, 0, 0xFF );
 }
-
 
 void GammaCorrection( CArray2D<uint32_t> *pImage, float fBrightness, float fContrast, float fGamma )
 {
@@ -167,33 +166,33 @@ void GammaCorrection( CArray2D<uint32_t> *pImage, float fBrightness, float fCont
 	}
 	//
 	const CTPoint<int> size( pImage->GetSizeX(), pImage->GetSizeY() );
-  // build ramp from the brightness, contrast and gamma values
-  // y = a*x + b
-  fBrightness = Clamp( fBrightness, -1.0f, 1.0f ) * 0.5f; // to avoid complete dark and complete white values
-  fContrast = Clamp( fContrast, -1.0f, 1.0f ) * 0.5f;
-  fGamma = Clamp( fGamma, -1.0f, 1.0f ) * 0.5f;
-  // calculate equation params for Y = A*X + B
-  // contrast: a*x + b
-  // если contrast < 0, то a = 1/a (наклон <45 градусов)
-  float fA = 1.0f + 4.0f * fabs( fContrast );
-  if ( fContrast < 0 )
+	// build ramp from the brightness, contrast and gamma values
+	// y = a*x + b
+	fBrightness = Clamp( fBrightness, -1.0f, 1.0f ) * 0.5f; // to avoid complete dark and complete white values
+	fContrast = Clamp( fContrast, -1.0f, 1.0f ) * 0.5f;
+	fGamma = Clamp( fGamma, -1.0f, 1.0f ) * 0.5f;
+	// calculate equation params for Y = A*X + B
+	// contrast: a*x + b
+	// если contrast < 0, то a = 1/a (наклон <45 градусов)
+	float fA = 1.0f + 4.0f * fabs( fContrast );
+	if ( fContrast < 0 )
 	{
 		fA = 1.0f / fA;
 	}
-  float fB = 0.5f * ( 1.0f - fA );
-  // gamma: x^power
-  float fPower = 1.0f;
-  {
-    if ( fGamma > 0 )
+	float fB = 0.5f * ( 1.0f - fA );
+	// gamma: x^power
+	float fPower = 1.0f;
+	{
+		if ( fGamma > 0 )
 		{
 			fPower = 1.0f / ( 5.0f * fGamma + 1 );
 		}
-    else if ( fGamma < 0 )
+		else if ( fGamma < 0 )
 		{
 			fPower = 1.0f / ( 0.5f * fGamma + 1 );
 		}
-  }
-  // brightness: x + b
+	}
+	// brightness: x + b
 	uint32_t dwColor = 0;
 	uint32_t dwA = 0;
 	uint32_t dwR = 0;
@@ -212,7 +211,6 @@ void GammaCorrection( CArray2D<uint32_t> *pImage, float fBrightness, float fCont
 		}
 	}
 }
-
 
 void FullColor( CArray2D<uint32_t> *pImage, float fRatio )
 {
@@ -247,9 +245,24 @@ void FullColor( CArray2D<uint32_t> *pImage, float fRatio )
 		{
 			dwColor = ( *pImage )[nYIndex][nXIndex];
 			dwA = GetAlphaFromARGBColor( dwColor );
-			dwR = Clamp<uint32_t>( 255.f * ( ( ( ( 1.0f * ( GetRedFromARGBColor( dwColor ) - dwMinR ) / dwRedDivider ) - 0.5f ) * fRatio ) + 0.5f ) + 0.5f, 0, 0xFF );
-			dwG = Clamp<uint32_t>( 255.f * ( ( ( ( 1.0f * ( GetGreenFromARGBColor( dwColor ) - dwMinR ) / dwRedDivider ) - 0.5f ) * fRatio ) + 0.5f ) + 0.5f, 0, 0xFF );
-			dwB = Clamp<uint32_t>( 255.f * ( ( ( ( 1.0f * ( GetBlueFromARGBColor( dwColor ) - dwMinR ) / dwRedDivider ) - 0.5f ) * fRatio ) + 0.5f ) + 0.5f, 0, 0xFF );
+			dwR = Clamp<uint32_t>(
+					255.f * ( ( ( ( 1.0f * ( GetRedFromARGBColor( dwColor ) - dwMinR ) / dwRedDivider ) - 0.5f ) * fRatio ) +
+			              0.5f ) +
+							0.5f,
+					0,
+					0xFF );
+			dwG = Clamp<uint32_t>(
+					255.f * ( ( ( ( 1.0f * ( GetGreenFromARGBColor( dwColor ) - dwMinR ) / dwRedDivider ) - 0.5f ) * fRatio ) +
+			              0.5f ) +
+							0.5f,
+					0,
+					0xFF );
+			dwB = Clamp<uint32_t>(
+					255.f * ( ( ( ( 1.0f * ( GetBlueFromARGBColor( dwColor ) - dwMinR ) / dwRedDivider ) - 0.5f ) * fRatio ) +
+			              0.5f ) +
+							0.5f,
+					0,
+					0xFF );
 			( *pImage )[nYIndex][nXIndex] = MakeARGBColor<uint32_t>( dwA, dwR, dwG, dwB );
 		}
 	}
@@ -258,9 +271,8 @@ void FullColor( CArray2D<uint32_t> *pImage, float fRatio )
 void ApplyFilter( CArray2D<uint32_t> *pImage, const CArray2D<int> &rFilter, uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
-	NI_ASSERT( ( ( rFilter.GetSizeX() & 0x1 ) != 0 ) &&
-						 ( ( rFilter.GetSizeY() & 0x1 ) != 0 ),
-						 "Filter must have odd sizes." );
+	NI_ASSERT( ( ( rFilter.GetSizeX() & 0x1 ) != 0 ) && ( ( rFilter.GetSizeY() & 0x1 ) != 0 ),
+	           "Filter must have odd sizes." );
 	//
 	const CTPoint<int> size( pImage->GetSizeX(), pImage->GetSizeY() );
 	const CTPoint<int> filterSize( rFilter.GetSizeX(), rFilter.GetSizeY() );
@@ -270,9 +282,9 @@ void ApplyFilter( CArray2D<uint32_t> *pImage, const CArray2D<int> &rFilter, uint
 	destImage.FillZero();
 	//
 	int nDivider = 0;
-	for ( int nYIndex = 0; nYIndex < filterSize.y; ++ nYIndex )
+	for ( int nYIndex = 0; nYIndex < filterSize.y; ++nYIndex )
 	{
-		for ( int nXIndex = 0; nXIndex < filterSize.x; ++ nXIndex )
+		for ( int nXIndex = 0; nXIndex < filterSize.x; ++nXIndex )
 		{
 			nDivider += rFilter[nYIndex][nXIndex];
 		}
@@ -283,7 +295,6 @@ void ApplyFilter( CArray2D<uint32_t> *pImage, const CArray2D<int> &rFilter, uint
 	ApplyFunctional( size, check, &filterFunctional, &wbcFilterFunctional );
 	( *pImage ) = destImage;
 }
-
 
 void MarkEdge( CArray2D<uint32_t> *pImage, uint32_t dwEdgeColor, bool bOutside, uint32_t dwMinAlpha )
 {
@@ -310,7 +321,6 @@ void MarkEdge( CArray2D<uint32_t> *pImage, uint32_t dwEdgeColor, bool bOutside, 
 	FastAddImageByColor( pImage, edgeImage, dwEdgeColor, true );
 }
 
-
 void EraseEdge( CArray2D<uint32_t> *pImage, uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
@@ -327,13 +337,14 @@ void EraseEdge( CArray2D<uint32_t> *pImage, uint32_t dwMinAlpha )
 	( *pImage ) = edgeImage;
 }
 
-
-void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const CArray2D<int> &rFilter, uint32_t dwMinAlpha )
+void Emboss( CArray2D<uint32_t> *pImage,
+             const CTPoint<int> &rShiftPoint,
+             const CArray2D<int> &rFilter,
+             uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
-	NI_ASSERT( ( ( rFilter.GetSizeX() & 0x1 ) != 0 ) &&
-						 ( ( rFilter.GetSizeY() & 0x1 ) != 0 ),
-						 "Filter must have odd sizes." );
+	NI_ASSERT( ( ( rFilter.GetSizeX() & 0x1 ) != 0 ) && ( ( rFilter.GetSizeY() & 0x1 ) != 0 ),
+	           "Filter must have odd sizes." );
 	//
 	const CTPoint<int> size( pImage->GetSizeX(), pImage->GetSizeY() );
 	//
@@ -344,7 +355,8 @@ void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const 
 	{
 		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
 		{
-			heightImage[nYIndex][nXIndex] = ( GetAlphaFromARGBColor( ( *pImage )[nYIndex][nXIndex] ) >= dwMinAlpha ) ? WHITE_COLOR : BLACK_COLOR;
+			heightImage[nYIndex][nXIndex] =
+					( GetAlphaFromARGBColor( ( *pImage )[nYIndex][nXIndex] ) >= dwMinAlpha ) ? WHITE_COLOR : BLACK_COLOR;
 		}
 	}
 	//
@@ -357,10 +369,8 @@ void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const 
 			const uint32_t dwImageColor = ( *pImage )[nYIndex][nXIndex];
 			const uint32_t dwHeightColor = heightImage[nYIndex][nXIndex];
 			uint32_t dwShiftHeigthColor = 0;
-			if ( ( nXIndex < -( rShiftPoint.x ) ) ||
-					 ( nYIndex < -( rShiftPoint.y ) ) ||
-					 ( nXIndex >= ( size.x - rShiftPoint.x ) ) ||
-					 ( nYIndex >= ( size.y - rShiftPoint.y ) ) )
+			if ( ( nXIndex < -( rShiftPoint.x ) ) || ( nYIndex < -( rShiftPoint.y ) ) ||
+			     ( nXIndex >= ( size.x - rShiftPoint.x ) ) || ( nYIndex >= ( size.y - rShiftPoint.y ) ) )
 			{
 				dwShiftHeigthColor = heightImage[nYIndex][nXIndex];
 			}
@@ -369,22 +379,34 @@ void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const 
 				dwShiftHeigthColor = heightImage[nYIndex + rShiftPoint.y][nXIndex + rShiftPoint.x];
 			}
 			//
-			const uint32_t dwRed = Clamp<uint32_t>( GetRedFromARGBColor( dwImageColor ) * ( ( GetRedFromARGBColor( dwHeightColor ) / 2 ) + ( 0xFF - ( GetRedFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) / 0xFF, 0, 0xFF );
-			const uint32_t dwGreen = Clamp<uint32_t>( GetGreenFromARGBColor( dwImageColor ) * ( ( GetGreenFromARGBColor( dwHeightColor ) / 2 ) + ( 0xFF - ( GetGreenFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) / 0xFF, 0, 0xFF );
-			const uint32_t dwBlue = Clamp<uint32_t>( GetBlueFromARGBColor( dwImageColor ) * ( ( GetBlueFromARGBColor( dwHeightColor ) / 2 ) + ( 0xFF - ( GetBlueFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) / 0xFF, 0, 0xFF );
+			const uint32_t dwRed = Clamp<uint32_t>( GetRedFromARGBColor( dwImageColor ) *
+			                                            ( ( GetRedFromARGBColor( dwHeightColor ) / 2 ) +
+			                                              ( 0xFF - ( GetRedFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) /
+			                                            0xFF,
+			                                        0,
+			                                        0xFF );
+			const uint32_t dwGreen = Clamp<uint32_t>( GetGreenFromARGBColor( dwImageColor ) *
+			                                              ( ( GetGreenFromARGBColor( dwHeightColor ) / 2 ) +
+			                                                ( 0xFF - ( GetGreenFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) /
+			                                              0xFF,
+			                                          0,
+			                                          0xFF );
+			const uint32_t dwBlue = Clamp<uint32_t>( GetBlueFromARGBColor( dwImageColor ) *
+			                                             ( ( GetBlueFromARGBColor( dwHeightColor ) / 2 ) +
+			                                               ( 0xFF - ( GetBlueFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) /
+			                                             0xFF,
+			                                         0,
+			                                         0xFF );
 			//
 			UpdateColorARGBColor( &( ( *pImage )[nYIndex][nXIndex] ), dwRed, dwGreen, dwBlue );
 		}
 	}
 }
 
-
 void Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool bEqualize, uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pImage != 0, "Wrong parameter: pImage == 0" );
-	NI_ASSERT( ( rNoise.GetSizeX() > 0 ) &&
-						 ( rNoise.GetSizeY() > 0 ),
-						 "Noise must have non zero sizes." );
+	NI_ASSERT( ( rNoise.GetSizeX() > 0 ) && ( rNoise.GetSizeY() > 0 ), "Noise must have non zero sizes." );
 	//
 	const CTPoint<int> size( pImage->GetSizeX(), pImage->GetSizeY() );
 	const CTPoint<int> noiseSize( rNoise.GetSizeX(), rNoise.GetSizeY() );
@@ -419,9 +441,12 @@ void Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool b
 				const uint32_t dwColor = ( *pImage )[nYIndex][nXIndex];
 				const uint32_t dwNoiseColor = rNoise[nYIndex % noiseSize.y][nXIndex % noiseSize.x];
 				//
-				const uint32_t dwRed = Clamp<uint32_t>( GetRedFromARGBColor( dwNoiseColor ) * GetRedFromARGBColor( dwColor ) / dwRedDivider + 0.5f, 0, 0xFF );
-				const uint32_t dwGreen = Clamp<uint32_t>( GetGreenFromARGBColor( dwNoiseColor ) * GetGreenFromARGBColor( dwColor ) / dwGreenDivider + 0.5f, 0, 0xFF );
-				const uint32_t dwBlue = Clamp<uint32_t>( GetBlueFromARGBColor( dwNoiseColor ) * GetBlueFromARGBColor( dwColor ) / dwBlueDivider + 0.5f, 0, 0xFF );
+				const uint32_t dwRed = Clamp<uint32_t>(
+						GetRedFromARGBColor( dwNoiseColor ) * GetRedFromARGBColor( dwColor ) / dwRedDivider + 0.5f, 0, 0xFF );
+				const uint32_t dwGreen = Clamp<uint32_t>(
+						GetGreenFromARGBColor( dwNoiseColor ) * GetGreenFromARGBColor( dwColor ) / dwGreenDivider + 0.5f, 0, 0xFF );
+				const uint32_t dwBlue = Clamp<uint32_t>(
+						GetBlueFromARGBColor( dwNoiseColor ) * GetBlueFromARGBColor( dwColor ) / dwBlueDivider + 0.5f, 0, 0xFF );
 				//
 				UpdateColorARGBColor( &( ( *pImage )[nYIndex][nXIndex] ), dwRed, dwGreen, dwBlue );
 			}
@@ -429,13 +454,12 @@ void Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool b
 	}
 }
 
-
 void FastAddImageByAlpha( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	NI_ASSERT( ( pDestImage->GetSizeX() == rSourceImage.GetSizeX() ) &&
-						 ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
-						 "Destination and source images must have same sizes." );
+	               ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
+	           "Destination and source images must have same sizes." );
 	//
 	const CTPoint<int> size( rSourceImage.GetSizeX(), rSourceImage.GetSizeY() );
 	//
@@ -451,13 +475,15 @@ void FastAddImageByAlpha( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_
 	}
 }
 
-
-void FastAddImageByColor( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwColor, bool bInclude )
+void FastAddImageByColor( CArray2D<uint32_t> *pDestImage,
+                          const CArray2D<uint32_t> &rSourceImage,
+                          uint32_t dwColor,
+                          bool bInclude )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	NI_ASSERT( ( pDestImage->GetSizeX() == rSourceImage.GetSizeX() ) &&
-						 ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
-						 "Destination and source images must have same sizes." );
+	               ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
+	           "Destination and source images must have same sizes." );
 	//
 	const CTPoint<int> size( rSourceImage.GetSizeX(), rSourceImage.GetSizeY() );
 	//
@@ -483,13 +509,17 @@ void FastAddImageByColor( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_
 	}
 }
 
-
-void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, uint32_t dwShadowColor, uint32_t dwNonShadowColor, uint32_t dwMinAlpha )
+void GetShadow( CArray2D<uint32_t> *pDestImage,
+                const CArray2D<uint32_t> &rSourceImage,
+                const CTPoint<int> &rShiftPoint,
+                uint32_t dwShadowColor,
+                uint32_t dwNonShadowColor,
+                uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	NI_ASSERT( ( pDestImage->GetSizeX() == rSourceImage.GetSizeX() ) &&
-						 ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
-						 "Destination and source images must have same sizes." );
+	               ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
+	           "Destination and source images must have same sizes." );
 	//
 	const CTPoint<int> size( rSourceImage.GetSizeX(), rSourceImage.GetSizeY() );
 	//
@@ -509,10 +539,7 @@ void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourc
 			if ( GetAlphaFromARGBColor( rSourceImage[nYIndex][nXIndex] ) >= dwMinAlpha )
 			{
 				CTPoint<int> shiftPoint( nXIndex + rShiftPoint.x, nYIndex + rShiftPoint.y );
-				if ( ( shiftPoint.x >= 0 ) &&
-						 ( shiftPoint.y >= 0 ) &&
-						 ( shiftPoint.x < size.x ) &&
-						 ( shiftPoint.y < size.y ) )
+				if ( ( shiftPoint.x >= 0 ) && ( shiftPoint.y >= 0 ) && ( shiftPoint.x < size.x ) && ( shiftPoint.y < size.y ) )
 				{
 					if ( GetAlphaFromARGBColor( rSourceImage[shiftPoint.y][shiftPoint.x] ) < dwMinAlpha )
 					{
@@ -524,13 +551,16 @@ void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourc
 	}
 }
 
-
-void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, int nFilterSize, uint32_t dwMinAlpha )
+void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage,
+                     const CArray2D<uint32_t> &rSourceImage,
+                     const CTPoint<int> &rShiftPoint,
+                     int nFilterSize,
+                     uint32_t dwMinAlpha )
 {
 	NI_ASSERT( pDestImage != 0, "Wrong parameter: pDestImage == 0" );
 	NI_ASSERT( ( pDestImage->GetSizeX() == rSourceImage.GetSizeX() ) &&
-						 ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
-						 "Destination and source images must have same sizes." );
+	               ( pDestImage->GetSizeY() == rSourceImage.GetSizeY() ),
+	           "Destination and source images must have same sizes." );
 	//
 	const CTPoint<int> size( rSourceImage.GetSizeX(), rSourceImage.GetSizeY() );
 	//
@@ -558,7 +588,8 @@ void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &r
 	{
 		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
 		{
-			heightImage[nYIndex][nXIndex] = ( GetAlphaFromARGBColor( rSourceImage[nYIndex][nXIndex] ) < dwMinAlpha ) ? WHITE_COLOR : BLACK_COLOR;
+			heightImage[nYIndex][nXIndex] =
+					( GetAlphaFromARGBColor( rSourceImage[nYIndex][nXIndex] ) < dwMinAlpha ) ? WHITE_COLOR : BLACK_COLOR;
 		}
 	}
 	//
@@ -581,9 +612,21 @@ void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &r
 				dwBackShiftHeigthColor = heightImage[nYPos][nXPos];
 			}
 			//
-			const uint32_t dwRed = Clamp<uint32_t>( ( ( GetRedFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) + ( 0xFF - ( GetRedFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) / 2, 0, 0xFF );
-			const uint32_t dwGreen = Clamp<uint32_t>( ( ( GetGreenFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) + ( 0xFF - ( GetGreenFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) / 2, 0, 0xFF );
-			const uint32_t dwBlue = Clamp<uint32_t>( ( ( GetBlueFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) + ( 0xFF - ( GetBlueFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) / 2, 0, 0xFF );
+			const uint32_t dwRed = Clamp<uint32_t>( ( ( GetRedFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) +
+			                                          ( 0xFF - ( GetRedFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) /
+			                                            2,
+			                                        0,
+			                                        0xFF );
+			const uint32_t dwGreen = Clamp<uint32_t>( ( ( GetGreenFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) +
+			                                            ( 0xFF - ( GetGreenFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) /
+			                                              2,
+			                                          0,
+			                                          0xFF );
+			const uint32_t dwBlue = Clamp<uint32_t>( ( ( GetBlueFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) +
+			                                           ( 0xFF - ( GetBlueFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) /
+			                                             2,
+			                                         0,
+			                                         0xFF );
 			//
 			( *pDestImage )[nYIndex][nXIndex] = MakeARGBColor<uint32_t>( 0xFF, dwRed, dwGreen, dwBlue );
 		}
@@ -599,7 +642,7 @@ void DrawLine( CArray2D<uint32_t> *pImage, const SVector &vStart, const SVector 
 	bres.InitPoint( v1, v2 );
 	while ( bres.GetDirection() != v2 )
 	{
-		(*pImage)[bres.GetDirection().y][bres.GetDirection().x] = (uint32_t)color;
+		( *pImage )[bres.GetDirection().y][bres.GetDirection().x] = (uint32_t)color;
 		bres.MakePointStep();
 	}
 }

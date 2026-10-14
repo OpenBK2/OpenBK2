@@ -24,7 +24,7 @@ static struct SCreateRootFile
 	SCreateRootFile() { pRootFile = new CFileNode( "", true ); }
 } createRootFile;
 
-CFileNode* GetRootFile()
+CFileNode *GetRootFile()
 {
 	return pRootFile;
 }
@@ -47,7 +47,7 @@ void CFileNode::SetFullName( const std::string &_szFullName )
 void CFileNode::AddInclude( std::string szFileName )
 {
 	NStr::ToLowerASCII( &szFileName );
-//	NFile::NormalizePath( &szFileName );
+	//	NFile::NormalizePath( &szFileName );
 	if ( includes.find( szFileName ) == includes.end() )
 	{
 		includes[szFileName] = new CFileNode( szFileName, false );
@@ -83,12 +83,12 @@ void CFileNode::AddCPPExternal( const std::string &szIncludeName )
 	cppExternalIncludes.push_back( szResult );
 }
 
-CFileNode* CFileNode::GetInclude( const std::string &szFileName )
+CFileNode *CFileNode::GetInclude( const std::string &szFileName )
 {
 	return includes.find( szFileName ) == includes.end() ? 0 : includes[szFileName];
 }
 
-CNamespace* CFileNode::GetNamespace() const
+CNamespace *CFileNode::GetNamespace() const
 {
 	VERIFY( !namespaces.empty(), "No namespaces found", return 0 );
 	return namespaces.front();
@@ -131,7 +131,8 @@ void CFileNode::Parse()
 			AddInclude( pBase );
 	}
 
-	for ( std::unordered_map< std::string, CObj<CFileNode> >::iterator iter = includes.begin(); iter != includes.end(); ++iter )
+	for ( std::unordered_map<std::string, CObj<CFileNode>>::iterator iter = includes.begin(); iter != includes.end();
+	      ++iter )
 	{
 		CFileNode *pFileNode = iter->second;
 		bool bParse = !IsRootFile() || !pFileNode->IsIncludedInOtherFile();
@@ -145,7 +146,8 @@ void CFileNode::Parse()
 
 	if ( IsRootFile() )
 	{
-		for ( std::unordered_map< std::string, CObj<CFileNode> >::iterator iter = includes.begin(); iter != includes.end(); ++iter )
+		for ( std::unordered_map<std::string, CObj<CFileNode>>::iterator iter = includes.begin(); iter != includes.end();
+		      ++iter )
 		{
 			CFileNode *pNode = iter->second;
 			VERIFY_NOLINE( pNode->IsParsed(), fmt::format( "cyclic include of file {}", iter->first ), return );
@@ -155,12 +157,18 @@ void CFileNode::Parse()
 	{
 		OpenNewNamespace( 0 );
 		// by the path on disk; OpenFile lowercases it back into GetName() as the key
-		VERIFY_NOLINE( NLang::OpenFile( GetPathOnDisk() ), fmt::format( "file {} not found", GetPathOnDisk() ), { eParseState = EPS_PARSED; return; } );
+		VERIFY_NOLINE( NLang::OpenFile( GetPathOnDisk() ), fmt::format( "file {} not found", GetPathOnDisk() ), {
+			eParseState = EPS_PARSED;
+			return;
+		} );
 
 		nyyLineNumber = 1;
 		yyparse();
 
-		VERIFY_NOLINE( namespaces.size() == 2, "not all namespaces closed", { eParseState = EPS_PARSED; return; } );
+		VERIFY_NOLINE( namespaces.size() == 2, "not all namespaces closed", {
+			eParseState = EPS_PARSED;
+			return;
+		} );
 		namespaces.back()->MergeFiles( namespaces.front(), GetName() );
 		namespaces.back()->SetDefsListFrom( namespaces.front() );
 		CloseNamespace( false );
@@ -173,7 +181,7 @@ void CFileNode::Parse()
 //*													Parsing                                 *
 //*******************************************************************
 
-CFileNode* GetCurFileNode()
+CFileNode *GetCurFileNode()
 {
 	const std::string &szCurFile = GetParsingFileName();
 	return GetRootFile()->GetInclude( szCurFile );
@@ -192,9 +200,9 @@ void AddInclude( const std::string &szFileName )
 	NStr::ReplaceAllChars( &szCurFileName, '\\', '/' );
 	NStr::ReplaceAllChars( &szPartialName, '\\', '/' );
 
-	if ( szCurFileName[szCurFileName.size()-1] == '/' )
+	if ( szCurFileName[szCurFileName.size() - 1] == '/' )
 		szCurFileName.pop_back();
-	if ( !szPartialName.empty() && szPartialName[szPartialName.size()-1] == '/' )
+	if ( !szPartialName.empty() && szPartialName[szPartialName.size() - 1] == '/' )
 		szPartialName.pop_back();
 
 	std::vector<std::string> szFullPath;
@@ -209,7 +217,7 @@ void AddInclude( const std::string &szFileName )
 	int nCurFull = 0;
 	for ( int i = 0; i < szPartialPath.size(); ++i )
 	{
-		if ( szPartialPath[i] == ".."  )
+		if ( szPartialPath[i] == ".." )
 		{
 			VERIFY( !szFullPath.empty(), fmt::format( "wrong include {}", szFileName ), return );
 			szFullPath.pop_back();
@@ -246,10 +254,9 @@ void AddCPPExternal( const std::string &szIncludeName )
 	GetCurFileNode()->AddCPPExternal( szIncludeName );
 }
 
-
-CAttributeDefNode* CFileNode::FindAttrDef( const std::string &szAttrDefName )
+CAttributeDefNode *CFileNode::FindAttrDef( const std::string &szAttrDefName )
 {
-	for ( std::list< CObj<CNamespace> >::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
+	for ( std::list<CObj<CNamespace>>::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
 	{
 		CNamespace *pNM = *iter;
 		if ( CAttributeDefNode *pAttrDef = pNM->FindInsideAttrDef( szAttrDefName ) )
@@ -269,13 +276,13 @@ void CFileNode::AddDef( CLangNode *pNode )
 	namespaces.front()->AddInsideDef( pNode );
 }
 
-CLangNode* CFileNode::FindDef( const std::string &szTypeName, bool bOnlyTopNamespace )
+CLangNode *CFileNode::FindDef( const std::string &szTypeName, bool bOnlyTopNamespace )
 {
 	if ( bOnlyTopNamespace )
 		return namespaces.front()->FindInsideDef( szTypeName );
 	else
 	{
-		for ( std::list< CObj<CNamespace> >::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
+		for ( std::list<CObj<CNamespace>>::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
 		{
 			CNamespace *pNM = *iter;
 			CLangNode *pDef = pNM->FindInsideDef( szTypeName );
@@ -287,13 +294,13 @@ CLangNode* CFileNode::FindDef( const std::string &szTypeName, bool bOnlyTopNames
 	return 0;
 }
 
-CTypeNode* CFileNode::FindForward( const std::string &szTypeName, bool bOnlyTopNamespace )
+CTypeNode *CFileNode::FindForward( const std::string &szTypeName, bool bOnlyTopNamespace )
 {
 	if ( bOnlyTopNamespace )
 		return namespaces.front()->FindForward( szTypeName );
 	else
 	{
-		for ( std::list< CObj<CNamespace> >::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
+		for ( std::list<CObj<CNamespace>>::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
 		{
 			CNamespace *pNM = *iter;
 			CTypeNode *pForward = pNM->FindForward( szTypeName );
@@ -305,13 +312,13 @@ CTypeNode* CFileNode::FindForward( const std::string &szTypeName, bool bOnlyTopN
 	return 0;
 }
 
-CEnumEntryNode* CFileNode::FindEnumEntry( const std::string &szEntyrName, bool bOnlyTopNamespace )
+CEnumEntryNode *CFileNode::FindEnumEntry( const std::string &szEntyrName, bool bOnlyTopNamespace )
 {
 	if ( bOnlyTopNamespace )
 		return namespaces.front()->FindEnumEntry( szEntyrName );
 	else
 	{
-		for ( std::list< CObj<CNamespace> >::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
+		for ( std::list<CObj<CNamespace>>::iterator iter = namespaces.begin(); iter != namespaces.end(); ++iter )
 		{
 			CNamespace *pNM = *iter;
 			CEnumEntryNode *pEntry = pNM->FindEnumEntry( szEntyrName );

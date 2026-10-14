@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct ICheckSumLog : virtual public CObjectBase
 {
 	// return false when checksum differs with loaded one

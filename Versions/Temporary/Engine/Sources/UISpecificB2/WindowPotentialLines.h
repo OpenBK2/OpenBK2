@@ -18,16 +18,18 @@
 
 #include <zconf.h>
 
-class CWindowChapterMapLayer :  public CPtrFuncBase< NGfx::CTexture >
+class CWindowChapterMapLayer : public CPtrFuncBase<NGfx::CTexture>
 {
-	OBJECT_BASIC_METHODS(CWindowChapterMapLayer);
+	OBJECT_BASIC_METHODS( CWindowChapterMapLayer );
 
 	CArray2D<NGfx::SPixel8888> points;
 	int nWidth, nHeight;
 	bool bNeedUpdate;
 	int nLastUpdateTime;
+
 protected:
-	bool NeedUpdate() {
+	bool NeedUpdate()
+	{
 		int nTime = Singleton<IGameTimer>()->GetAbsTime();
 		if ( bNeedUpdate /*&& ( nTime - nLastUpdateTime - 100 ) > 0*/ )
 		{
@@ -40,7 +42,7 @@ protected:
 	void Recalc();
 
 public:
-	CWindowChapterMapLayer() : nLastUpdateTime( 0 ), bNeedUpdate( false ) { };
+	CWindowChapterMapLayer() : nLastUpdateTime( 0 ), bNeedUpdate( false ) {};
 	void SetSize( const int nWidth, const int nHeight );
 	int GetWidth() const { return nWidth; }
 	int GetHeight() const { return nHeight; }
@@ -49,7 +51,11 @@ public:
 	uint8_t GetPixelAlpha( const int x, const int y );
 	const NGfx::SPixel8888 GetPixel( const int x, const int y );
 	void SetNeedUpdate() { bNeedUpdate = true; }
-	void SetNeedUpdateNow() { bNeedUpdate = true; nLastUpdateTime = 0; }
+	void SetNeedUpdateNow()
+	{
+		bNeedUpdate = true;
+		nLastUpdateTime = 0;
+	}
 	void Clear();
 
 	int operator&( IBinSaver &saver );
@@ -65,9 +71,13 @@ class CDrawMapPixelFunctional
 	int nMaskWidth, nMaskHeight;
 
 	void DrawOctoCircle( int nX0, int nY0, float fR );
+
 public:
-	CDrawMapPixelFunctional( CWindowChapterMapLayer *_pMapLayer, NGfx::SPixel8888 _color, CArray2D1Bit *_pMask, int _nLineWidth = 0 )	// Negative DashLen gives solid wide line
-		: pMapLayer( _pMapLayer ), color( _color ), nLineWidth( _nLineWidth ), pMask( _pMask )
+	CDrawMapPixelFunctional( CWindowChapterMapLayer *_pMapLayer,
+	                         NGfx::SPixel8888 _color,
+	                         CArray2D1Bit *_pMask,
+	                         int _nLineWidth = 0 ) // Negative DashLen gives solid wide line
+			: pMapLayer( _pMapLayer ), color( _color ), nLineWidth( _nLineWidth ), pMask( _pMask )
 	{
 		nWidth = pMapLayer->GetWidth();
 		nHeight = pMapLayer->GetHeight();
@@ -87,7 +97,7 @@ public:
 	{
 		if ( x >= 0 && y >= 0 && x < nWidth - 1 && y < nHeight - 1 )
 		{
-			if ( nMaskWidth > 0 || nMaskHeight > 0 )		// Ignore empty mask
+			if ( nMaskWidth > 0 || nMaskHeight > 0 ) // Ignore empty mask
 			{
 				if ( x >= nMaskWidth || y >= nMaskHeight || pMask->GetData( x, y ) )
 					return;
@@ -101,14 +111,20 @@ public:
 	}
 };
 
-class CWindowPotentialLines: public CWindow, public IPotentialLines
+class CWindowPotentialLines : public CWindow, public IPotentialLines
 {
 	OBJECT_BASIC_METHODS( CWindowPotentialLines );
 
-	enum EIntersectionType {
-		EIT_SEA, EIT_NONE,
-		EIT_CORNER_NE, EIT_CORNER_SE, EIT_CORNER_SW, EIT_CORNER_NW,
-		EIT_LINE_V, EIT_LINE_H,
+	enum EIntersectionType
+	{
+		EIT_SEA,
+		EIT_NONE,
+		EIT_CORNER_NE,
+		EIT_CORNER_SE,
+		EIT_CORNER_SW,
+		EIT_CORNER_NW,
+		EIT_LINE_V,
+		EIT_LINE_H,
 		EIT_CROSS
 	};
 
@@ -117,7 +133,12 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 		ZDATA
 		float fValue;
 		EIntersectionType eType;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&fValue); f.Add(3,&eType); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &fValue );
+			f.Add( 3, &eType );
+			return 0;
+		}
 	};
 	typedef CArray2D<SPointDesc> CPointsArray;
 
@@ -129,7 +150,15 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 		float fValue;
 		int nEndOffsetX;
 		int nEndOffsetY;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nX); f.Add(3,&nY); f.Add(4,&fValue); f.Add(5,&nEndOffsetX); f.Add(6,&nEndOffsetY); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &nX );
+			f.Add( 3, &nY );
+			f.Add( 4, &fValue );
+			f.Add( 5, &nEndOffsetX );
+			f.Add( 6, &nEndOffsetY );
+			return 0;
+		}
 	};
 	typedef std::list<SNodeDesc> CNodeList;
 
@@ -140,7 +169,14 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 		float fWidth;
 		uint32_t dwColour;
 		CDBPtr<NDb::STexture> pTexture;
-		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pts); f.Add(3,&fWidth); f.Add(4,&dwColour); f.Add(5,&pTexture); return 0; }
+		ZEND int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pts );
+			f.Add( 3, &fWidth );
+			f.Add( 4, &dwColour );
+			f.Add( 5, &pTexture );
+			return 0;
+		}
 	};
 	typedef std::list<SArrowDesc> CArrowList;
 
@@ -152,7 +188,7 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 	CArray2D1Bit seaMask;
 	CArrowList arrows;
 
-	ZDATA_(CWindow)
+	ZDATA_( CWindow )
 	CPtr<NDb::SWindowPotentialLines> pInstance;
 	CDBPtr<NDb::SWindowPotentialLinesShared> pShared;
 
@@ -161,7 +197,7 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 	bool bLayerInit;
 	bool bDrawDashes;
 
-	uint32_t colourBorder1;		// our colour
+	uint32_t colourBorder1; // our colour
 	uint32_t colourBorder2;
 	CVec2 vTextureSize;
 
@@ -171,12 +207,36 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 
 	ZONSERIALIZE
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pInstance); f.Add(3,&pShared); f.Add(4,&nodes); f.Add(5,&bValid); f.Add(6,&bLayerInit); f.Add(7,&bDrawDashes); f.Add(8,&colourBorder1); f.Add(9,&colourBorder2); f.Add(10,&vTextureSize); f.Add(11,&vMainStrike); f.Add(12,&szMaskFile); f.Add(13,&szDiffColourMapFile); OnSerialize( f ); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 1, (CWindow *)this );
+		f.Add( 2, &pInstance );
+		f.Add( 3, &pShared );
+		f.Add( 4, &nodes );
+		f.Add( 5, &bValid );
+		f.Add( 6, &bLayerInit );
+		f.Add( 7, &bDrawDashes );
+		f.Add( 8, &colourBorder1 );
+		f.Add( 9, &colourBorder2 );
+		f.Add( 10, &vTextureSize );
+		f.Add( 11, &vMainStrike );
+		f.Add( 12, &szMaskFile );
+		f.Add( 13, &szDiffColourMapFile );
+		OnSerialize( f );
+		return 0;
+	}
+
 protected:
-	NDb::SWindow* GetInstance() { return pInstance; }
+	NDb::SWindow *GetInstance() { return pInstance; }
 
 private:
-	enum ENeighbourSide { ENS_UP, ENS_RIGHT, ENS_DOWN, ENS_LEFT };
+	enum ENeighbourSide
+	{
+		ENS_UP,
+		ENS_RIGHT,
+		ENS_DOWN,
+		ENS_LEFT
+	};
 
 	void Recalculate();
 	const float GetValue( int nX, int nY ) const;
@@ -186,6 +246,7 @@ private:
 	float GetSquaredDistanceToSegment( const SNodeDesc &node, int nX, int nY ) const;
 
 	void OnSerialize( IBinSaver &f );
+
 public:
 	CWindowPotentialLines();
 
@@ -194,13 +255,20 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	//}
 
-	void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const uint32_t _dwBorderColour1, const uint32_t _dwBorderColour2 );
+	void SetParams( const std::string &szMask,
+	                const std::string &szDiffColourMap,
+	                const CVec2 &_vMainStrike,
+	                const uint32_t _dwBorderColour1,
+	                const uint32_t _dwBorderColour2 );
 
 	// Nodes management
 	void ClearNodes();
-	void SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue );		// If such node exists, it is altered
+	void SetNode( int nX, int nY, int nEndOffsetX, int nEndOffsetY, float fValue ); // If such node exists, it is altered
 
 	// Arrows management
 	void ClearArrows() { arrows.clear(); }
-	void AddArrow( const std::vector<CVec2> &arrowTraj, float fArrowWidth, const NDb::STexture *pArrowTexture, uint32_t dwArrowColour );
+	void AddArrow( const std::vector<CVec2> &arrowTraj,
+	               float fArrowWidth,
+	               const NDb::STexture *pArrowTexture,
+	               uint32_t dwArrowColour );
 };

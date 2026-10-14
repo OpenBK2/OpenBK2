@@ -22,7 +22,11 @@ class CDifficultyData : public CObjectBase
 public:
 	ZDATA
 	std::wstring wszText;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &wszText );
+		return 0;
+	}
 
 	CDifficultyData() {}
 	CDifficultyData( const std::wstring &_wszText ) { wszText = _wszText; }
@@ -30,7 +34,7 @@ public:
 
 class CDifficultyTextViewer : public IDataViewer
 {
-	OBJECT_NOCOPY_METHODS(CDifficultyTextViewer)
+	OBJECT_NOCOPY_METHODS( CDifficultyTextViewer )
 public:
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 };
@@ -60,10 +64,7 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 
 // CInterfaceCustomCampaign
 
-CInterfaceCustomCampaign::CInterfaceCustomCampaign() :
-	CInterfaceScreenBase( "CustomCampaign", "custom_campaign" )
-{
-}
+CInterfaceCustomCampaign::CInterfaceCustomCampaign() : CInterfaceScreenBase( "CustomCampaign", "custom_campaign" ) {}
 
 bool CInterfaceCustomCampaign::Init()
 {
@@ -141,10 +142,10 @@ void CInterfaceCustomCampaign::AddCampaign( const NDb::SCampaign *pCampaignDB )
 
 	const NDb::STexture *pFlag = pCampaignDB->pTextureMenuIcon;
 
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pCampaignDB->,LocalizedName) )
-		campaign.wszName = GET_TEXT_PRE(pCampaignDB->,LocalizedName);
-	if ( CHECK_TEXT_NOT_EMPTY_PRE(pCampaignDB->,LocalizedDesc) )
-		campaign.wszDesc = GET_TEXT_PRE(pCampaignDB->,LocalizedDesc);
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pCampaignDB->, LocalizedName ) )
+		campaign.wszName = GET_TEXT_PRE( pCampaignDB->, LocalizedName );
+	if ( CHECK_TEXT_NOT_EMPTY_PRE( pCampaignDB->, LocalizedDesc ) )
+		campaign.wszDesc = GET_TEXT_PRE( pCampaignDB->, LocalizedDesc );
 
 	if ( campaign.pFlagWnd )
 		campaign.pFlagWnd->SetTexture( pFlag );
@@ -159,7 +160,7 @@ void CInterfaceCustomCampaign::AddCampaign( const NDb::SCampaign *pCampaignDB )
 	campaigns.push_back( campaign );
 }
 
-const CInterfaceCustomCampaign::SCampaign* CInterfaceCustomCampaign::FindSelected() const
+const CInterfaceCustomCampaign::SCampaign *CInterfaceCustomCampaign::FindSelected() const
 {
 	IWindow *pSelectedWnd = 0;
 	if ( pCampaignsListCont )
@@ -237,7 +238,7 @@ void CInterfaceCustomCampaign::CampaignStart( const NDb::SCampaign *pCampaignDB 
 	int nDifficulty = 0;
 	if ( pDifficultyComboBox )
 		nDifficulty = pDifficultyComboBox->GetSelectedIndex();
-#if !defined(_SINGLE_DEMO) && !defined(_MP_DEMO)
+#if !defined( _SINGLE_DEMO ) && !defined( _MP_DEMO )
 	StartCampaign( pCampaignDB, nDifficulty, true );
 #endif // !defined(_SINGLE_DEMO) && !defined(_MP_DEMO)
 }
@@ -288,18 +289,20 @@ void CInterfaceCustomCampaign::UpdateDifficulty( const SCampaign *pCampaign, boo
 		return;
 	}
 
-	const std::vector< CDBPtr< NDb::SDifficultyLevel > > &difficultyLevels = pCampaign->pCampaignDB->difficultyLevels;
+	const std::vector<CDBPtr<NDb::SDifficultyLevel>> &difficultyLevels = pCampaign->pCampaignDB->difficultyLevels;
 
-	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty :
-		(std::max)( 0, (std::min)( CUSTOM_CAMPAIGN_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
+	const int nNewDifficulty =
+			( nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() )
+					? nOldDifficulty
+					: (std::max)( 0, (std::min)( CUSTOM_CAMPAIGN_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
 
 	pDifficultyComboBox->ShowWindow( true );
 
 	for ( int i = 0; i < difficultyLevels.size(); ++i )
 	{
 		const NDb::SDifficultyLevel *pDifficultyLevel = difficultyLevels[i];
-		if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE(pDifficultyLevel->,LocalizedName) )
-			pDifficultyComboBox->AddItem( new CDifficultyData( GET_TEXT_PRE(pDifficultyLevel->,LocalizedName) ) );
+		if ( pDifficultyLevel && CHECK_TEXT_NOT_EMPTY_PRE( pDifficultyLevel->, LocalizedName ) )
+			pDifficultyComboBox->AddItem( new CDifficultyData( GET_TEXT_PRE( pDifficultyLevel->, LocalizedName ) ) );
 		else
 			pDifficultyComboBox->AddItem( new CDifficultyData( L"******" ) );
 	}
@@ -317,18 +320,14 @@ bool CInterfaceCustomCampaign::StepLocal( bool bAppActive )
 
 // CICCustomCampaign
 
-void CICCustomCampaign::PreCreate()
-{
-}
+void CICCustomCampaign::PreCreate() {}
 
 void CICCustomCampaign::PostCreate( IInterface *pInterface )
 {
 	NMainLoop::PushInterface( pInterface );
 }
 
-void CICCustomCampaign::Configure( const char *pszConfig )
-{
-}
+void CICCustomCampaign::Configure( const char *pszConfig ) {}
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17263381, CInterfaceCustomCampaign )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CUSTOM_CAMPAIGN, CICCustomCampaign )

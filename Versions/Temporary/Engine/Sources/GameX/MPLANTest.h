@@ -6,22 +6,24 @@ class CLANTester : public CObjectBase
 	ZDATA
 	ZONSERIALIZE
 public:
-	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); return 0; }
-private:
-	void OnSerialize( IBinSaver &f )
+	ZEND int operator&( IBinSaver &f )
 	{
-		NI_ASSERT( false, "CLANTester should not be serialized!" )
+		OnSerialize( f );
+		return 0;
 	}
+
+private:
+	void OnSerialize( IBinSaver &f ) { NI_ASSERT( false, "CLANTester should not be serialized!" ) }
 
 	bool bIsServer;
 	CPtr<struct IMPToUIManager> pMPManager;
 	int nMySlot;
-	std::unordered_map<int,bool> gameClientsReady;
+	std::unordered_map<int, bool> gameClientsReady;
 	bool bStarted;
 	int nPlayersToWait;
 	bool bAcceptSent;
 	void CreateGame();
-	void RunShellCommand( const std::wstring& wszCommand );
+	void RunShellCommand( const std::wstring &wszCommand );
 
 public:
 	CLANTester();

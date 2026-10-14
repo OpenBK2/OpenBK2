@@ -27,18 +27,22 @@ bool CSpotState::CanAddSpot()
 {
 	bool bResult = false;
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+					 CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) &&
+	     ( !objectSet.objectNameSet.empty() ) )
 	{
-		bResult = ( objectSet.szObjectTypeName == "TerrainSpotDesc" ) &&
-							( !objectSet.objectNameSet.empty() );
+		bResult = ( objectSet.szObjectTypeName == "TerrainSpotDesc" ) && ( !objectSet.objectNameSet.empty() );
 		if ( bResult )
 		{
 			bResult = false;
-			if ( CPtr<IManipulator> pTerrainSpotDescManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
+			if ( CPtr<IManipulator> pTerrainSpotDescManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+							 objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
 			{
-				if ( CPtr<IManipulator> pMaterialManipulator = CManipulatorManager::CreateManipulatorFromReference( "Material", pTerrainSpotDescManipulator, 0, 0, 0 ) )
+				if ( CPtr<IManipulator> pMaterialManipulator = CManipulatorManager::CreateManipulatorFromReference(
+								 "Material", pTerrainSpotDescManipulator, 0, 0, 0 ) )
 				{
-					if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialManipulator, 0, 0, 0 ) )
+					if ( CPtr<IManipulator> pTextureManipulator =
+					         CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialManipulator, 0, 0, 0 ) )
 					{
 						bResult = true;
 					}
@@ -47,19 +51,21 @@ bool CSpotState::CanAddSpot()
 		}
 		if ( !bResult )
 		{
-			NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Spot have no material: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString() ) );
+			NLog::GetLogger()->Log( LT_ERROR,
+			                        fmt::format( "Spot have no material: {}{:c}{}\n",
+			                                     objectSet.szObjectTypeName.c_str(),
+			                                     TYPE_SEPARATOR_CHAR,
+			                                     objectSet.objectNameSet.begin()->first.ToString() ) );
 		}
 	}
 	return bResult;
 }
-
 
 bool CSpotState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	return false;
 }
-
 
 bool CSpotState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -80,7 +86,8 @@ bool CSpotState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPo
 		}
 		//
 		SObjectSet objectSet;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
 		if ( !objectSet.objectNameSet.empty() )
 		{
 			const float fDirection = ( pEditParameters->fDirection * FP_PI ) / 180.0f;
@@ -100,7 +107,8 @@ bool CSpotState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPo
 			unsigned nSpotInfoID = INVALID_NODE_ID;
 			if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 			{
-				if ( NMapInfoEditor::SSpotInfo *pSpotInfo = GetMapInfoEditor()->objectInfoCollector.Insert( static_cast<NMapInfoEditor::SSpotInfo*>( 0 ), &nSpotInfoID ) )
+				if ( NMapInfoEditor::SSpotInfo *pSpotInfo = GetMapInfoEditor()->objectInfoCollector.Insert(
+								 static_cast<NMapInfoEditor::SSpotInfo *>( 0 ), &nSpotInfoID ) )
 				{
 					if ( pSpotInfo->Create( &spotCreateInfo, pScene, pObjectController, pManipulator ) )
 					{
@@ -127,12 +135,10 @@ bool CSpotState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPo
 	return false;
 }
 
-
 bool CSpotState::InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos )
 {
 	return true;
 }
-
 
 bool CSpotState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos )
 {
@@ -149,13 +155,17 @@ bool CSpotState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVe
 	return false;
 }
 
-
-void CSpotState::ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstance, const CVec3 &rvPosition, float fDirection )
+void CSpotState::ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstance,
+                                   const CVec3 &rvPosition,
+                                   float fDirection )
 {
 	pTerrainSpotInstance->points.resize( 4 );
-	const float fScaleCoeff = ( pTerrainSpotInstance->pDescriptor->fScaleCoeff > 0.0f ) ? pTerrainSpotInstance->pDescriptor->fScaleCoeff : 1.0f;
-	const CVec2 vSpotSize( pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nWidth * pTerrainSpotInstance->pDescriptor->fUsedTexSizeX * 2.0f / fScaleCoeff,
-												 pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nHeight * pTerrainSpotInstance->pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff );
+	const float fScaleCoeff =
+			( pTerrainSpotInstance->pDescriptor->fScaleCoeff > 0.0f ) ? pTerrainSpotInstance->pDescriptor->fScaleCoeff : 1.0f;
+	const CVec2 vSpotSize( pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nWidth *
+	                           pTerrainSpotInstance->pDescriptor->fUsedTexSizeX * 2.0f / fScaleCoeff,
+	                       pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nHeight *
+	                           pTerrainSpotInstance->pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff );
 	// Заполняем геометрическую информацию:
 	pTerrainSpotInstance->points[0] = CVec2( 0.0f, 0.0f );
 	pTerrainSpotInstance->points[1] = CVec2( vSpotSize.x, 0.0f );
@@ -166,8 +176,8 @@ void CSpotState::ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstan
 	RotatePoints( &( pTerrainSpotInstance->points ), fDirection, CVec2( rvPosition.x, rvPosition.y ) );
 }
 
-
-void CSpotState::CreateSpotPointsList( std::list<CVec3> *pPointList, const NDb::STerrainSpotInstance &rTerrainSpotInstance )
+void CSpotState::CreateSpotPointsList( std::list<CVec3> *pPointList,
+                                       const NDb::STerrainSpotInstance &rTerrainSpotInstance )
 {
 	if ( pPointList )
 	{
@@ -176,14 +186,14 @@ void CSpotState::CreateSpotPointsList( std::list<CVec3> *pPointList, const NDb::
 			pPointList->clear();
 			for ( int nPointIndex = 0; nPointIndex < rTerrainSpotInstance.points.size(); ++nPointIndex )
 			{
-				CVec3 vPoint = CVec3( rTerrainSpotInstance.points[nPointIndex].x, rTerrainSpotInstance.points[nPointIndex].y, 0.0f );
+				CVec3 vPoint =
+						CVec3( rTerrainSpotInstance.points[nPointIndex].x, rTerrainSpotInstance.points[nPointIndex].y, 0.0f );
 				vPoint.z = GetTerrainHeight( vPoint.x, vPoint.y );
 				pPointList->push_back( vPoint );
 			}
 		}
 	}
 }
-
 
 void CSpotState::InsertObjectEnter()
 {
@@ -218,12 +228,13 @@ void CSpotState::InsertObjectEnter()
 		ClearData();
 		//
 		SObjectSet objectSet;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand(
+				CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
 		if ( !objectSet.objectNameSet.empty() )
 		{
-			const NDb::STerrainSpotDesc *pTerrainSpotDesc = dynamic_cast<const NDb::STerrainSpotDesc*>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
-			if ( ( pTerrainSpotDesc->pMaterial != 0 ) &&
-					( pTerrainSpotDesc->pMaterial->pTexture != 0 ) )
+			const NDb::STerrainSpotDesc *pTerrainSpotDesc =
+					dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
+			if ( ( pTerrainSpotDesc->pMaterial != 0 ) && ( pTerrainSpotDesc->pMaterial->pTexture != 0 ) )
 			{
 				//NDb::SMapInfo* pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 				//
@@ -240,12 +251,10 @@ void CSpotState::InsertObjectEnter()
 	}
 }
 
-
 void CSpotState::InsertObjectLeave()
 {
 	ClearData();
 }
-
 
 void CSpotState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
@@ -260,9 +269,13 @@ void CSpotState::InsertObjectDraw( IPaintContext *pPaintDC )
 			if ( terrainSpotInstance.nSpotID != INVALID_NODE_ID )
 			{
 				terrainSpotInstance.points.resize( 4 );
-				const float fScaleCoeff = ( terrainSpotInstance.pDescriptor->fScaleCoeff > 0.0f ) ? terrainSpotInstance.pDescriptor->fScaleCoeff : 1.0f;
-				const CVec2 vSpotSize( terrainSpotInstance.pDescriptor->pMaterial->pTexture->nWidth * terrainSpotInstance.pDescriptor->fUsedTexSizeX * 2.0f / fScaleCoeff,
-																terrainSpotInstance.pDescriptor->pMaterial->pTexture->nHeight * terrainSpotInstance.pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff );
+				const float fScaleCoeff = ( terrainSpotInstance.pDescriptor->fScaleCoeff > 0.0f )
+				                              ? terrainSpotInstance.pDescriptor->fScaleCoeff
+				                              : 1.0f;
+				const CVec2 vSpotSize( terrainSpotInstance.pDescriptor->pMaterial->pTexture->nWidth *
+				                           terrainSpotInstance.pDescriptor->fUsedTexSizeX * 2.0f / fScaleCoeff,
+				                       terrainSpotInstance.pDescriptor->pMaterial->pTexture->nHeight *
+				                           terrainSpotInstance.pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff );
 				//
 				ModifySpotSquare( &terrainSpotInstance, vPosition, fDirection );
 				std::list<CVec3> pointList;

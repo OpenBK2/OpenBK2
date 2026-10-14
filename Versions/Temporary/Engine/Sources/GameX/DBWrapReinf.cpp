@@ -4,7 +4,7 @@
 namespace NDBWrap
 {
 
-const std::wstring& GetReinfXPLevelName( int nLevel )
+const std::wstring &GetReinfXPLevelName( int nLevel )
 {
 	switch ( nLevel )
 	{

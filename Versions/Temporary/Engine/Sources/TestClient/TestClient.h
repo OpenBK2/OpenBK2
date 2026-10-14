@@ -14,19 +14,19 @@ class CTestClient : virtual public CObjectBase
 
 	CPtr<CCommands> pCommands;
 
-	typedef void (CTestClient::*PROCESS_CMD_FUNC)( const SCommand &cmd );
+	typedef void ( CTestClient::*PROCESS_CMD_FUNC )( const SCommand &cmd );
 	std::unordered_map<int, PROCESS_CMD_FUNC> processCmdsFuncs;
 
 	CPtr<class CServerClient> pServerClient;
 	CPtr<class CTestClientProcessor> pTestClientProcessor;
 	CObj<CPinger> pPinger;
 
-	std::list< CPtr<class CNetPacket> > consoleCommandPackets;
+	std::list<CPtr<class CNetPacket>> consoleCommandPackets;
 
 	int nNetVersion, nPort;
 	std::string szIP;
 
-	std::vector< CObj<IMultiTester> > testers;
+	std::vector<CObj<IMultiTester>> testers;
 	int nTestersNameShift;
 	uint32_t dwLastTesterCreationTime;
 	//
@@ -72,8 +72,9 @@ class CTestClient : virtual public CObjectBase
 	void CommandForgotPassword( const SCommand &cmd );
 	void CommandPing( const SCommand &cmd );
 	void CommandMultiTestServer( const SCommand &cmd );
+
 public:
-	CTestClient() { }
+	CTestClient() {}
 	CTestClient( CCommands *pCommands, const std::string &szCfgFile );
 
 	void Segment();

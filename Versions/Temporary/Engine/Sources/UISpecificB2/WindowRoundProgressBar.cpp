@@ -11,13 +11,11 @@
 
 // CWindowRoundProgressBar
 
-CWindowRoundProgressBar::CWindowRoundProgressBar() : fPosition (0), fStartAngle(-1), fFinishAngle(-1)
-{
-}
+CWindowRoundProgressBar::CWindowRoundProgressBar() : fPosition( 0 ), fStartAngle( -1 ), fFinishAngle( -1 ) {}
 
 void CWindowRoundProgressBar::Visit( struct IUIVisitor *pVisitor )
 {
-/*	CTRect<float> rc;
+	/*	CTRect<float> rc;
 	FillWindowRect( &rc );
 	VirtualToScreen( rc, &rc );
 	CClipStore s( pVisitor, rc );*/
@@ -32,8 +30,8 @@ void CWindowRoundProgressBar::Visit( struct IUIVisitor *pVisitor )
 
 void CWindowRoundProgressBar::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
-	pInstance = checked_cast<const NDb::SWindowRoundProgressBar*>( pDesc )->Duplicate();
-	pShared = checked_cast_ptr<const NDb::SWindowRoundProgressBarShared*>( pInstance->pShared );
+	pInstance = checked_cast<const NDb::SWindowRoundProgressBar *>( pDesc )->Duplicate();
+	pShared = checked_cast_ptr<const NDb::SWindowRoundProgressBarShared *>( pInstance->pShared );
 	if ( pShared )
 	{
 		roundVisitor.SetTexture( pShared->pTexture );
@@ -50,7 +48,7 @@ void CWindowRoundProgressBar::SetAngles( float _fStartAngle, float _fFinishAngle
 {
 	// CRAP - should fix CTextureRoundSegmentVisitor
 
-	float fTotalDiff = 0.0f;			// Total change in values; if too small - ignore
+	float fTotalDiff = 0.0f; // Total change in values; if too small - ignore
 	fTotalDiff += fabs( fStartAngle - _fStartAngle );
 	fTotalDiff += fabs( fFinishAngle - _fFinishAngle );
 
@@ -67,7 +65,7 @@ void CWindowRoundProgressBar::SetAngles( float _fStartAngle, float _fFinishAngle
 	float fStartAngle = _fStartAngle;
 	if ( fStartAngle > fFinishAngle )
 		fStartAngle -= FP_2PI;
-	float fAngle = (fStartAngle + fFinishAngle) * 0.5f;
+	float fAngle = ( fStartAngle + fFinishAngle ) * 0.5f;
 	roundVisitor.SetAngles( fStartAngle, fAngle );
 	roundVisitor2.SetAngles( fAngle, fFinishAngle );
 }
@@ -83,4 +81,4 @@ float CWindowRoundProgressBar::GetPosition() const
 	return fPosition;
 }
 
-REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171713C2, CWindowRoundProgressBar)
+REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x171713C2, CWindowRoundProgressBar )

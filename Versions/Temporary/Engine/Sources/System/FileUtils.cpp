@@ -26,7 +26,6 @@
 namespace NFile
 {
 
-
 // ************************************************************************************************************************ //
 // **
 // ** class CFileIterator functions
@@ -82,7 +81,8 @@ static bool MatchesMask( const std::string &szName, const std::string &szMask )
 
 void CFileIterator::Open( const std::string &szFullMask )
 {
-	const size_t nPos = szFullMask.find_last_of( "/" "\\" );
+	const size_t nPos = szFullMask.find_last_of( "/"
+	                                             "\\" );
 	const std::string szDir = ( nPos == std::string::npos ) ? std::string() : szFullMask.substr( 0, nPos + 1 );
 	szMask = ( nPos == std::string::npos ) ? szFullMask : szFullMask.substr( nPos + 1 );
 
@@ -91,9 +91,9 @@ void CFileIterator::Open( const std::string &szFullMask )
 	// exist, and that case has to end as an empty iteration rather than an error.
 	std::error_code ec;
 	const std::filesystem::path dir =
-		std::filesystem::absolute( szDir.empty() ? std::filesystem::path( "." ) : std::filesystem::path( szDir ), ec )
-			.lexically_normal()
-			.make_preferred();
+			std::filesystem::absolute( szDir.empty() ? std::filesystem::path( "." ) : std::filesystem::path( szDir ), ec )
+					.lexically_normal()
+					.make_preferred();
 	if ( ec )
 		return;
 	it = std::filesystem::directory_iterator( dir, ec );
@@ -120,7 +120,7 @@ void CFileIterator::SkipToMatch()
 	}
 }
 
-const CFileIterator& CFileIterator::Next()
+const CFileIterator &CFileIterator::Next()
 {
 	if ( IsEnd() )
 		return *this;
@@ -153,16 +153,16 @@ static void RemoveOne( const std::string &szName )
 static void MakeWritable( const std::string &szName )
 {
 	std::error_code ec;
-	std::filesystem::permissions( szName, std::filesystem::perms::owner_write,
-		std::filesystem::perm_options::add, ec );
+	std::filesystem::permissions( szName, std::filesystem::perms::owner_write, std::filesystem::perm_options::add, ec );
 }
 
 class CDeleteFiles
 {
 	bool bDeleteRO;
 	bool bDeleteDir;
+
 public:
-	CDeleteFiles( bool _bDeleteRO, bool _bDeleteDir ) : bDeleteRO( _bDeleteRO ), bDeleteDir( _bDeleteDir ) {  }
+	CDeleteFiles( bool _bDeleteRO, bool _bDeleteDir ) : bDeleteRO( _bDeleteRO ), bDeleteDir( _bDeleteDir ) {}
 	//
 	void operator()( const CFileIterator &it )
 	{
@@ -183,12 +183,12 @@ public:
 
 void DeleteFiles( const char *pszStartDir, const char *pszMask, bool bRecursive )
 {
-	EnumerateFiles( pszStartDir, pszMask, CDeleteFiles(true, false), bRecursive );
+	EnumerateFiles( pszStartDir, pszMask, CDeleteFiles( true, false ), bRecursive );
 }
 
 void DeleteDirectory( const std::string &szDir )
 {
-	EnumerateFiles( szDir, "*.*", CDeleteFiles(true, true), true );
+	EnumerateFiles( szDir, "*.*", CDeleteFiles( true, true ), true );
 	RemoveOne( szDir );
 }
 
@@ -196,9 +196,9 @@ void DeleteDirectory( const std::string &szDir )
 // caller that ever asked for directories.
 class CDirFileEnum
 {
-	std::list<std::string> *pNames;			// store names here
+	std::list<std::string> *pNames; // store names here
 public:
-	CDirFileEnum( std::list<std::string> *_pNames ) : pNames( _pNames ) {  }
+	CDirFileEnum( std::list<std::string> *_pNames ) : pNames( _pNames ) {}
 	void operator()( const CFileIterator &it )
 	{
 		if ( !it.IsDirectory() )
@@ -207,7 +207,7 @@ public:
 };
 void GetDirectoryFiles( const char *pszDirName, const char *pszMask, std::list<std::string> *pNames, bool bRecurse )
 {
-	EnumerateFiles( pszDirName, pszMask, CDirFileEnum(pNames), bRecurse );
+	EnumerateFiles( pszDirName, pszMask, CDirFileEnum( pNames ), bRecurse );
 }
 
 bool DoesFileExist( const std::string &szFileName )
@@ -264,7 +264,8 @@ bool DoesFolderExist( const std::string &szFolderName )
 bool IsValidFileName( const std::string &szFileName )
 {
 	// only the name is checked, any directory part in front of it is not
-	const std::string::size_type nSlash = szFileName.find_last_of( "/" "\\" );
+	const std::string::size_type nSlash = szFileName.find_last_of( "/"
+	                                                               "\\" );
 	const std::string::size_type nStart = ( nSlash == std::string::npos ) ? 0 : nSlash + 1;
 	static const char szValidCharSet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-_0123456789 ";
 	// _strspnp answered with a pointer to the first character outside the set, and
@@ -272,12 +273,30 @@ bool IsValidFileName( const std::string &szFileName )
 	return szFileName.find_first_not_of( szValidCharSet, nStart ) == std::string::npos;
 }
 
-static const char *pszWrongNames[] = {
-	"con", "prn", "aux", "clock$", "nul",
-	"com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9",
-	"lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9",
-	0
-};
+static const char *pszWrongNames[] = { "con",
+                                       "prn",
+                                       "aux",
+                                       "clock$",
+                                       "nul",
+                                       "com1",
+                                       "com2",
+                                       "com3",
+                                       "com4",
+                                       "com5",
+                                       "com6",
+                                       "com7",
+                                       "com8",
+                                       "com9",
+                                       "lpt1",
+                                       "lpt2",
+                                       "lpt3",
+                                       "lpt4",
+                                       "lpt5",
+                                       "lpt6",
+                                       "lpt7",
+                                       "lpt8",
+                                       "lpt9",
+                                       0 };
 
 // Whether the game will accept this as a name to create, which is deliberately
 // stricter than any single platform requires. Linux would take almost all of
@@ -293,8 +312,9 @@ bool IsValidDirName( const std::string &_szName )
 	NStr::ToLower( &szName );
 	for ( int i = 0; i < szName.size(); ++i )
 	{
-		int c = (unsigned char) szName[i];
-		if ( c < 33 || c == '<' || c == '>' || c == ':' || c == '"' || c == '/' || c == '\\' || c == '|' || c == '*' || c == '?' )
+		int c = (unsigned char)szName[i];
+		if ( c < 33 || c == '<' || c == '>' || c == ':' || c == '"' || c == '/' || c == '\\' || c == '|' || c == '*' ||
+		     c == '?' )
 			return false;
 	}
 	for ( const char **p = pszWrongNames; *p; ++p )
@@ -305,15 +325,14 @@ bool IsValidDirName( const std::string &_szName )
 	return true;
 }
 
-bool CopyFile( const std::string &szSrcName, const std::string &szDstName,
-							 std::error_code *pError )
+bool CopyFile( const std::string &szSrcName, const std::string &szDstName, std::error_code *pError )
 {
 	CreatePath( GetFilePath( szDstName ) );
 	// overwrite_existing because ::CopyFile was called with bFailIfExists false, so
 	// an existing destination was always replaced rather than reported.
 	std::error_code ec;
-	const bool bCopied = std::filesystem::copy_file( szSrcName, szDstName,
-		std::filesystem::copy_options::overwrite_existing, ec );
+	const bool bCopied =
+			std::filesystem::copy_file( szSrcName, szDstName, std::filesystem::copy_options::overwrite_existing, ec );
 	if ( pError != 0 )
 	{
 		( *pError ) = ec;
@@ -326,8 +345,7 @@ bool CopyFile( const std::string &szSrcName, const std::string &szDstName )
 	return CopyFile( szSrcName, szDstName, 0 );
 }
 
-bool RenameFile( const std::string &szSrcName, const std::string &szDstName,
-								 std::error_code *pError )
+bool RenameFile( const std::string &szSrcName, const std::string &szDstName, std::error_code *pError )
 {
 	CreatePath( GetFilePath( szDstName ) );
 	std::error_code ec;
@@ -344,8 +362,8 @@ bool RenameFile( const std::string &szSrcName, const std::string &szDstName,
 	// for MOVEFILE_COPY_ALLOWED and did the copy itself. The source is only
 	// removed once the copy has succeeded.
 	std::error_code copyError;
-	if ( !std::filesystem::copy_file( szSrcName, szDstName,
-			std::filesystem::copy_options::overwrite_existing, copyError ) )
+	if ( !std::filesystem::copy_file(
+					 szSrcName, szDstName, std::filesystem::copy_options::overwrite_existing, copyError ) )
 	{
 		// The copy's reason, not the rename's: the rename failing is what sent us
 		// down here and says only that the two paths are on different volumes.
@@ -380,8 +398,7 @@ bool RenameFile( const std::string &szSrcName, const std::string &szDstName )
 static std::string MakeFullPathName( const std::string &szPath )
 {
 	std::error_code ec;
-	const std::filesystem::path full =
-		std::filesystem::absolute( szPath, ec ).lexically_normal().make_preferred();
+	const std::filesystem::path full = std::filesystem::absolute( szPath, ec ).lexically_normal().make_preferred();
 	return ec ? szPath : full.string();
 }
 
@@ -412,70 +429,73 @@ bool ResolveDataPathCase( std::string *, const std::string &, const std::string 
 namespace
 {
 
-// One directory's names, folded to what a case insensitive lookup compares, so a
-// path that has to be searched for costs one scan per directory rather than one
-// per component per lookup.
-//
-// writeTime is what says the listing is still current. A directory's modification
-// time changes exactly when an entry is added or removed, which is the only thing
-// that can invalidate this, so re-reading it is a stat rather than a rescan.
-struct SFoldedDir
-{
-	std::filesystem::file_time_type writeTime;
-	// folded name -> the name as it is spelled on disk
-	std::map<std::string, std::string> names;
-};
-
-std::mutex g_FoldedDirsMutex;
-std::map<std::string, SFoldedDir> g_FoldedDirs;
-
-std::string FoldName( const std::string &szName )
-{
-	std::string szRes;
-	NStr::ToLowerASCII( &szRes, szName );
-	return szRes;
-}
-
-// The listing for one directory, read once and then reused until the directory
-// changes. Null when the directory cannot be read at all, which a caller treats
-// the same way as a name that is not in it.
-const SFoldedDir *GetFoldedDir( const std::string &szDirName, bool bRefresh = false )
-{
-	// An empty base directory means the path is relative to the working directory,
-	// which is what a config path that starts with a name rather than a separator
-	// is. Naming it lets the same code scan it.
-	const std::string szDir = szDirName.empty() ? std::string( "." ) : szDirName;
-	std::error_code ec;
-	const std::filesystem::file_time_type writeTime = std::filesystem::last_write_time( szDir, ec );
-	if ( ec )
+	// One directory's names, folded to what a case insensitive lookup compares, so a
+	// path that has to be searched for costs one scan per directory rather than one
+	// per component per lookup.
+	//
+	// writeTime is what says the listing is still current. A directory's modification
+	// time changes exactly when an entry is added or removed, which is the only thing
+	// that can invalidate this, so re-reading it is a stat rather than a rescan.
+	struct SFoldedDir
 	{
-		return 0;
+		std::filesystem::file_time_type writeTime;
+		// folded name -> the name as it is spelled on disk
+		std::map<std::string, std::string> names;
+	};
+
+	std::mutex g_FoldedDirsMutex;
+	std::map<std::string, SFoldedDir> g_FoldedDirs;
+
+	std::string FoldName( const std::string &szName )
+	{
+		std::string szRes;
+		NStr::ToLowerASCII( &szRes, szName );
+		return szRes;
 	}
-	std::map<std::string, SFoldedDir>::iterator pos = g_FoldedDirs.find( szDir );
-	if ( !bRefresh && pos != g_FoldedDirs.end() && pos->second.writeTime == writeTime )
+
+	// The listing for one directory, read once and then reused until the directory
+	// changes. Null when the directory cannot be read at all, which a caller treats
+	// the same way as a name that is not in it.
+	const SFoldedDir *GetFoldedDir( const std::string &szDirName, bool bRefresh = false )
 	{
-		return &pos->second;
-	}
-	SFoldedDir dir;
-	dir.writeTime = writeTime;
-	for ( std::filesystem::directory_iterator it( szDir, ec ), end; !ec && it != end; it.increment( ec ) )
-	{
-		const std::string szName = it->path().filename().string();
-		// Smallest wins, rather than whichever the directory listed first, so the
-		// choice does not depend on the order the filesystem happens to return.
-		const std::pair<std::map<std::string, std::string>::iterator, bool> ins =
-			dir.names.emplace( FoldName( szName ), szName );
-		if ( !ins.second && szName < ins.first->second )
+		// An empty base directory means the path is relative to the working directory,
+		// which is what a config path that starts with a name rather than a separator
+		// is. Naming it lets the same code scan it.
+		const std::string szDir = szDirName.empty() ? std::string( "." ) : szDirName;
+		std::error_code ec;
+		const std::filesystem::file_time_type writeTime = std::filesystem::last_write_time( szDir, ec );
+		if ( ec )
 		{
-			ins.first->second = szName;
+			return 0;
 		}
+		std::map<std::string, SFoldedDir>::iterator pos = g_FoldedDirs.find( szDir );
+		if ( !bRefresh && pos != g_FoldedDirs.end() && pos->second.writeTime == writeTime )
+		{
+			return &pos->second;
+		}
+		SFoldedDir dir;
+		dir.writeTime = writeTime;
+		for ( std::filesystem::directory_iterator it( szDir, ec ), end; !ec && it != end; it.increment( ec ) )
+		{
+			const std::string szName = it->path().filename().string();
+			// Smallest wins, rather than whichever the directory listed first, so the
+			// choice does not depend on the order the filesystem happens to return.
+			const std::pair<std::map<std::string, std::string>::iterator, bool> ins =
+					dir.names.emplace( FoldName( szName ), szName );
+			if ( !ins.second && szName < ins.first->second )
+			{
+				ins.first->second = szName;
+			}
+		}
+		return &( g_FoldedDirs[szDir] = dir );
 	}
-	return &( g_FoldedDirs[szDir] = dir );
-}
 
 }
 
-bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath, bool bAllowMissing )
+bool ResolveDataPathCase( std::string *pRes,
+                          const std::string &szBaseDir,
+                          const std::string &szRelPath,
+                          bool bAllowMissing )
 {
 	std::lock_guard csLock( g_FoldedDirsMutex );
 	// szReal is the part resolved so far, relative to szBaseDir; szDir is the same
@@ -557,7 +577,7 @@ std::string GetTempPath()
 std::string GetTempFileName()
 {
 	const auto guid = boost::uuids::random_generator()();
-	return GetTempPath() + boost::uuids::to_string(guid);
+	return GetTempPath() + boost::uuids::to_string( guid );
 }
 
 std::string GetExecutablePath()
@@ -571,8 +591,7 @@ std::string GetExecutablePath()
 	std::vector<char> buffer( MAX_PATH );
 	for ( ;; )
 	{
-		const DWORD nLength = ::GetModuleFileNameA( 0, buffer.data(),
-																								static_cast<DWORD>( buffer.size() ) );
+		const DWORD nLength = ::GetModuleFileNameA( 0, buffer.data(), static_cast<DWORD>( buffer.size() ) );
 		if ( nLength == 0 )
 		{
 			return std::string();

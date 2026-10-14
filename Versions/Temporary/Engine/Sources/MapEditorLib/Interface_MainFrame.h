@@ -7,39 +7,36 @@
 
 enum ELogOutputType
 {
-	LT_NORMAL			= 0,
-	LT_IMPORTANT	= 1,
-	LT_ERROR			= 2
+	LT_NORMAL = 0,
+	LT_IMPORTANT = 1,
+	LT_ERROR = 2
 };
 
-
-#define SWT_MOD				0x00000001
-#define SWT_TYPE			0x00000002
-#define SWT_OBJECT		0x00000004
-#define SWT_PARAMS		0x00000008
-#define SWT_MODIFIED	0x00000010
-#define SWT_ALL				0xFFffFFff
-
+#define SWT_MOD 0x00000001
+#define SWT_TYPE 0x00000002
+#define SWT_OBJECT 0x00000004
+#define SWT_PARAMS 0x00000008
+#define SWT_MODIFIED 0x00000010
+#define SWT_ALL 0xFFffFFff
 
 // The values IMainFrame's bar calls take, which were MFC's own constants and
 // keep MFC's numbers: toolbar ids end up in saved layouts, and the code that
 // passes these still compiled against MFC while it was being moved off it.
 namespace NMainFrameBar
 {
-	// A toolbar's button list: the break between groups (ID_SEPARATOR).
-	constexpr unsigned SEPARATOR = 0;
-	// The first toolbar id (AFX_IDW_TOOLBAR); the frame's own are counted
-	// from it.
-	constexpr unsigned FIRST_TOOLBAR_ID = 0xE800;
-	// Where a bar or pane docks (AFX_IDW_DOCKBAR_*).
-	constexpr unsigned DOCK_TOP = 0xE81B;
-	constexpr unsigned DOCK_LEFT = 0xE81C;
-	constexpr unsigned DOCK_RIGHT = 0xE81D;
-	constexpr unsigned DOCK_BOTTOM = 0xE81E;
-	// Which sides a bar may dock to (CBRS_ALIGN_ANY): all of them.
-	constexpr unsigned ALIGN_ANY = 0xF000;
+// A toolbar's button list: the break between groups (ID_SEPARATOR).
+constexpr unsigned SEPARATOR = 0;
+// The first toolbar id (AFX_IDW_TOOLBAR); the frame's own are counted
+// from it.
+constexpr unsigned FIRST_TOOLBAR_ID = 0xE800;
+// Where a bar or pane docks (AFX_IDW_DOCKBAR_*).
+constexpr unsigned DOCK_TOP = 0xE81B;
+constexpr unsigned DOCK_LEFT = 0xE81C;
+constexpr unsigned DOCK_RIGHT = 0xE81D;
+constexpr unsigned DOCK_BOTTOM = 0xE81E;
+// Which sides a bar may dock to (CBRS_ALIGN_ANY): all of them.
+constexpr unsigned ALIGN_ANY = 0xF000;
 }
-
 
 struct SSWTParams
 {
@@ -55,13 +52,11 @@ struct SSWTParams
 	SSWTParams() : dwFlags( SWT_ALL ), bModified( false ), bFillMODFromBase( true ) {}
 };
 
-
 struct ILogger
 {
 	virtual void Log( ELogOutputType eLogOutputType, const std::string &szText ) = 0;
 	virtual void ClearLog() = 0;
 };
-
 
 struct IMainFrame : public ILogger
 {
@@ -69,34 +64,34 @@ struct IMainFrame : public ILogger
 	// The bottom-left corner of button nButtonID: the one under rMousePoint, or,
 	// when none with that id is under it, the one in the first visible toolbar.
 	virtual bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
-																							unsigned nButtonID,
-																							CTPoint<int> *pLeftBottomPos ) = 0;
+	                                            unsigned nButtonID,
+	                                            CTPoint<int> *pLeftBottomPos ) = 0;
 	// Работа с ChildFrame
-	virtual IFrameWindow* CreateChildFrame( unsigned nResource ) = 0;
-	virtual bool SetChildFrameWindowContents( IFrameWindow* pChildWindow, IWidget *pContents ) = 0;
+	virtual IFrameWindow *CreateChildFrame( unsigned nResource ) = 0;
+	virtual bool SetChildFrameWindowContents( IFrameWindow *pChildWindow, IWidget *pContents ) = 0;
 	// Работа с Docking Window
-	virtual IDockPanel* CreateControlBar( unsigned *pnID,
-																						const std::string &rszTitle,
-																						const unsigned nStyle,
-																						const unsigned nPlace,
-																						const float fRate,
-																						const int nWidth ) = 0;
-	virtual bool SetControlBarWindowContents( IDockPanel* pDockPanel, IWidget *pContents ) = 0;
+	virtual IDockPanel *CreateControlBar( unsigned *pnID,
+	                                      const std::string &rszTitle,
+	                                      const unsigned nStyle,
+	                                      const unsigned nPlace,
+	                                      const float fRate,
+	                                      const int nWidth ) = 0;
+	virtual bool SetControlBarWindowContents( IDockPanel *pDockPanel, IWidget *pContents ) = 0;
 	// Работа с Menu Bar ( 1 - 20 )
 	virtual bool AddMenuResources( std::vector<unsigned> &rMenuIDList ) = 0;
 	virtual void ShowMenu( const unsigned nResourceID ) = 0;
 	// Работа с Tool Bar
 	virtual bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID ) = 0;
 	virtual void CreateToolBar( unsigned *pnID,
-														const std::string &rszTitle,
-															const unsigned nButtonCount,
-															const unsigned* pButtonIDMap,
-															const uint32_t dwAlignment,
-															const unsigned nStyle,
-															const bool bDocked,
-															const bool bVisible,
-															const bool bMainToolBar ) = 0;
-	virtual IToolBar* GetToolBar( unsigned nID ) = 0;
+	                            const std::string &rszTitle,
+	                            const unsigned nButtonCount,
+	                            const unsigned *pButtonIDMap,
+	                            const uint32_t dwAlignment,
+	                            const unsigned nStyle,
+	                            const bool bDocked,
+	                            const bool bVisible,
+	                            const bool bMainToolBar ) = 0;
+	virtual IToolBar *GetToolBar( unsigned nID ) = 0;
 	// Работа с Элементами оформления
 	virtual void SetStatusBarText( int nPaneIndex, const std::string &szText ) = 0;
 	virtual void SetWindowTitle( const SSWTParams &rSWTParams ) = 0;
@@ -119,8 +114,13 @@ struct IMainFrame : public ILogger
 	// Работа с DB
 	virtual void SaveObjectStorage( int nGDBBrowserID ) = 0;
 	virtual void RestoreObjectStorage() = 0;
-	virtual bool BrowseLink( std::string *pszResult, const std::string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit ) = 0;
-	virtual bool BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty ) = 0;
+	virtual bool BrowseLink( std::string *pszResult,
+	                         const std::string &rszInitialValue,
+	                         const SPropertyDesc *pPropertyDesc,
+	                         bool bMultiRef,
+	                         bool bEnableEdit ) = 0;
+	virtual bool
+	BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty ) = 0;
 	//
 	virtual void CreateProgressDialog() = 0;
 	virtual void DestroyProgressDialog() = 0;
@@ -132,21 +132,22 @@ struct IMainFrame : public ILogger
 	virtual void IterateProgressDialogPosition() = 0;
 };
 
-
 struct IMainFrameContainer : public CObjectBase
 {
-	enum { tidTypeID = 0x140943C1 };
+	enum
+	{
+		tidTypeID = 0x140943C1
+	};
 	// Registration, called by the front-end as it creates its main frame.
 	// Both pointers are the same object; they are passed separately so that
 	// this interface needs no concrete type to cross-cast between them.
-	virtual void Set( IMainFrame* _pMainFrame, IWidget* _pMainWindow ) = 0;
+	virtual void Set( IMainFrame *_pMainFrame, IWidget *_pMainWindow ) = 0;
 	// получить указатель на стандартный инерфейс IManFrame
-	virtual IMainFrame* Get() = 0;
+	virtual IMainFrame *Get() = 0;
 	// получить указательна на главный фрейм приложения ( используется в экстренных случаях )
 	// The main window, for parenting dialogs, message boxes and popup menus.
-	virtual IWidget* GetMainWindow() = 0;
+	virtual IWidget *GetMainWindow() = 0;
 };
-
 
 /**
 	virtual bool CreateToolbar() = 0;

@@ -98,7 +98,7 @@ int CVec3Convert::operator&( CStructureSaver &f )
 
 void CSinus::Recalc()
 {
-	value = fpAdd + fpMn * sin( float( pTime->GetValue() / 1000 ) * fpFreq * FP_2PI);
+	value = fpAdd + fpMn * sin( float( pTime->GetValue() / 1000 ) * fpFreq * FP_2PI );
 }
 
 int CSinus::operator&( CStructureSaver &f )

@@ -84,25 +84,20 @@ void CICPlayMovie::PostCreate( IInterface *pInterface )
 // ************************************************************************************************************************ //
 
 CPlayMovieInterface::CPlayMovieInterface()
-: CInterfaceScreenBase( "InterMission", "play_movies" ),
-	bProlog( false ),
-	bFadeIn( false ),
-	bFadeOut( false ),
-	fFadeIn( 0.0f )
+		: CInterfaceScreenBase( "InterMission", "play_movies" ), bProlog( false ), bFadeIn( false ), bFadeOut( false ),
+			fFadeIn( 0.0f )
 {
 	AddObserver( "movie_skip_sequence", &CPlayMovieInterface::MsgSkipSequence );
 	AddObserver( "movie_skip_movie", &CPlayMovieInterface::MsgSkipMovie );
 }
 
-CPlayMovieInterface::~CPlayMovieInterface()
-{
-}
+CPlayMovieInterface::~CPlayMovieInterface() {}
 
 void CPlayMovieInterface::LoadMovieSequence( const std::string &_szFileName )
 {
 	szFileName = _szFileName;
 
-	if ( NGlobal::GetVar("novideo", 0) != 0 )
+	if ( NGlobal::GetVar( "novideo", 0 ) != 0 )
 	{
 		return;
 	}
@@ -233,7 +228,7 @@ bool CPlayMovieInterface::StepLocal( bool bAppActive )
 	}
 
 	if ( !pPlayerControl || !pPlayerControl->IsPlaying() )
-		StartNextInterface();								// exit this screen...
+		StartNextInterface(); // exit this screen...
 	return bResult;
 }
 
@@ -270,7 +265,7 @@ void PlayMovieSequence( const std::string &szID, const std::vector<std::wstring>
 	NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szSeqName.c_str() );
 }
 
-START_REGISTER(PlayMovieCommands)
+START_REGISTER( PlayMovieCommands )
 REGISTER_CMD( "movie_sequence", PlayMovieSequence );
 FINISH_REGISTER
 

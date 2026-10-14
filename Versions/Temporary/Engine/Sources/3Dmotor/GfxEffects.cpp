@@ -68,7 +68,7 @@ void SEffTransparentParticles::Use( CRenderContext *p )
 	p->SetTexture( 0, NGfx::GetTransparentTextureCache(), FILTER_BEST );
 	p->SetVertexShader( vsG3Particles );
 
-	if( !bSimpleParticles )
+	if ( !bSimpleParticles )
 	{
 		p->SetPixelShader( psG3Particles );
 		p->SetTexture( 1, pLight, FILTER_LINEAR );

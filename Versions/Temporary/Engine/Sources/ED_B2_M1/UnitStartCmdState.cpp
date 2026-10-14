@@ -22,7 +22,6 @@ SStartCommand::SStartCommand()
 	Init();
 }
 
-
 void SStartCommand::Init()
 {
 	nCmdType = -1;
@@ -31,7 +30,6 @@ void SStartCommand::Init()
 	vTgtPos = VNULL2;
 	nData = 0;
 }
-
 
 bool SStartCommand::LoadFromDB( IManipulator *pManipulator, int nIndex )
 {
@@ -50,15 +48,15 @@ bool SStartCommand::LoadFromDB( IManipulator *pManipulator, int nIndex )
 		return false;
 	//
 	std::string szDBAunitLinkIDs = szDBA + ".unitLinkIDs";
-	if ( !CManipulatorManager::GetArray<std::vector<int>,int>( &unitLinkIDs, pManipulator, szDBAunitLinkIDs ) )
+	if ( !CManipulatorManager::GetArray<std::vector<int>, int>( &unitLinkIDs, pManipulator, szDBAunitLinkIDs ) )
 		return false;
 	//
-	std::string 	szDBATgtLinkID = szDBA + ".LinkID";
+	std::string szDBATgtLinkID = szDBA + ".LinkID";
 	if ( !CManipulatorManager::GetValue( &nTgtLinkID, pManipulator, szDBATgtLinkID ) )
 		return false;
 	//
 	std::string szDBATgtPos = szDBA + ".Pos";
-	if ( !CManipulatorManager::GetVec2<CVec2,float>( &vTgtPos, pManipulator, szDBATgtPos ) )
+	if ( !CManipulatorManager::GetVec2<CVec2, float>( &vTgtPos, pManipulator, szDBATgtPos ) )
 		return false;
 	//
 	std::string szDBAData = szDBA + ".Number";
@@ -67,7 +65,6 @@ bool SStartCommand::LoadFromDB( IManipulator *pManipulator, int nIndex )
 
 	return true;
 }
-
 
 bool SStartCommand::UpdateDB( IManipulator *pManipulator, int nIndex )
 {
@@ -87,7 +84,7 @@ bool SStartCommand::UpdateDB( IManipulator *pManipulator, int nIndex )
 	if ( !CManipulatorManager::SetArray( unitLinkIDs, pManipulator, szDBAunitLinkIDs ) )
 		return false;
 	//
-	std::string 	szDBATgtLinkID = szDBA + ".LinkID";
+	std::string szDBATgtLinkID = szDBA + ".LinkID";
 	if ( !CManipulatorManager::SetValue( nTgtLinkID, pManipulator, szDBATgtLinkID ) )
 		return false;
 	//
@@ -102,7 +99,6 @@ bool SStartCommand::UpdateDB( IManipulator *pManipulator, int nIndex )
 	return true;
 }
 
-
 //
 //
 //	UNIT START COMMANDS LIST
@@ -114,12 +110,10 @@ SStartCommandList::SStartCommandList()
 	Init();
 }
 
-
 void SStartCommandList::Init()
 {
 	commands.clear();
 }
-
 
 bool SStartCommandList::UpdateDB( IManipulator *pManipulator )
 {
@@ -140,7 +134,6 @@ bool SStartCommandList::UpdateDB( IManipulator *pManipulator )
 
 	return true;
 }
-
 
 bool SStartCommandList::LoadFromDB( IManipulator *pManipulator )
 {
@@ -166,7 +159,6 @@ bool SStartCommandList::LoadFromDB( IManipulator *pManipulator )
 
 	return true;
 }
-
 
 void SStartCommandList::RemoveCommands( const std::vector<int> &rIndices )
 {
@@ -195,24 +187,22 @@ void SStartCommandList::RemoveCommands( const std::vector<int> &rIndices )
 	}
 }
 
-
 //
 //
 //		UNIT START COMMANDS STATE
 //
 //
 
-CUnitStartCmdState::CUnitStartCmdState( CMapInfoEditor* _pMapInfoEditor ) :
-	pMapInfoEditor( _pMapInfoEditor ),
-	// ResetStateData below reads it, and it is a plain pointer now rather than a
-	// CPtr that nulls itself.
-	pEdUnitStartCmd( 0 )
+CUnitStartCmdState::CUnitStartCmdState( CMapInfoEditor *_pMapInfoEditor )
+		: pMapInfoEditor( _pMapInfoEditor ),
+			// ResetStateData below reads it, and it is a plain pointer now rather than a
+			// CPtr that nulls itself.
+			pEdUnitStartCmd( 0 )
 {
 	NI_ASSERT( GetMapInfoEditor() != 0, "CUnitStartCmdState(): Invalid parameter: pMapInfoEditor == 0" );
 	//
 	ResetStateData();
 }
-
 
 CUnitStartCmdState::~CUnitStartCmdState()
 {
@@ -220,14 +210,12 @@ CUnitStartCmdState::~CUnitStartCmdState()
 	pEdUnitStartCmd = 0;
 }
 
-
-NMapInfoEditor::SObjectInfoCollector* CUnitStartCmdState::GetObjectInfoCollector()
+NMapInfoEditor::SObjectInfoCollector *CUnitStartCmdState::GetObjectInfoCollector()
 {
 	return &( pMapInfoEditor->objectInfoCollector );
 }
 
-
-CMapInfoEditor* CUnitStartCmdState::GetMapInfoEditor()
+CMapInfoEditor *CUnitStartCmdState::GetMapInfoEditor()
 {
 	return pMapInfoEditor;
 }
@@ -244,7 +232,7 @@ void CUnitStartCmdState::Enter()
 	{
 		for ( int i = 0; i < tmp.size(); ++i )
 		{
-			 commandTypesMnemonic[tmp[i].nValue] = tmp[i];
+			commandTypesMnemonic[tmp[i].nValue] = tmp[i];
 		}
 	}
 	//
@@ -269,7 +257,6 @@ void CUnitStartCmdState::Enter()
 	}
 }
 
-
 void CUnitStartCmdState::Leave()
 {
 	CMapObjectState::Leave();
@@ -277,10 +264,9 @@ void CUnitStartCmdState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_UNIT_START_CMD_STATE );
 }
 
-
 bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	if ( CMapObjectState::HandleCommand(nCommandID, dwData) )
+	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
 		return true;
 
 	switch ( nCommandID )
@@ -288,9 +274,8 @@ bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_UNIT_START_CMD_WINDOW_UI_EVENT:
 		{
 			SUnitStartCmdWindowData data;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW,
-																																ID_WINDOW_GET_DIALOG_DATA,
-																																reinterpret_cast<uintptr_t>(&data)) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+							 CHID_UNIT_START_CMD_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &data ) ) )
 			{
 				switch ( data.eLastAction )
 				{
@@ -330,7 +315,6 @@ bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	return false;
 }
 
-
 bool CUnitStartCmdState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 {
 	NI_ASSERT( pbEnable != 0, "CUnitStartCmdState::UpdateCommand(), pbEnable == 0" );
@@ -343,20 +327,19 @@ bool CUnitStartCmdState::UpdateCommand( unsigned nCommandID, bool *pbEnable, boo
 	{
 		case ID_UNIT_START_CMD_WINDOW_UI_EVENT:
 		{
-			(*pbEnable) = true;
-			(*pbCheck) = false;
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
 			return true;
 		}
 		case ID_UNIT_START_CMD_REFRESH_WINDOW:
 		{
-			(*pbEnable) = true;
-			(*pbCheck) = false;
+			( *pbEnable ) = true;
+			( *pbCheck ) = false;
 			return true;
 		}
 	}
 	return false;
 }
-
 
 void CUnitStartCmdState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
@@ -372,7 +355,8 @@ void CUnitStartCmdState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMous
 			}
 			else
 			{
-				CObjectSelectionPartMap::iterator itObjectSelectionPart = GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.begin();
+				CObjectSelectionPartMap::iterator itObjectSelectionPart =
+						GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.begin();
 				if ( SObjectInfo *pObjectInfo = GetObjectInfoCollector()->GetObjectInfo( itObjectSelectionPart->first ) )
 				{
 					vCurrTargetPos = VNULL3;
@@ -404,7 +388,6 @@ void CUnitStartCmdState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMous
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CUnitStartCmdState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bEdCmdVisible )
@@ -419,7 +402,8 @@ void CUnitStartCmdState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 			}
 			else
 			{
-				CObjectSelectionPartMap::iterator itObjectSelectionPart = GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.begin();
+				CObjectSelectionPartMap::iterator itObjectSelectionPart =
+						GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.begin();
 				if ( SObjectInfo *pObjectInfo = GetObjectInfoCollector()->GetObjectInfo( itObjectSelectionPart->first ) )
 				{
 					vCurrTargetPos = VNULL3;
@@ -447,7 +431,6 @@ void CUnitStartCmdState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CUnitStartCmdState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	if ( bEdCmdVisible )
@@ -462,7 +445,8 @@ void CUnitStartCmdState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMous
 			}
 			else
 			{
-				CObjectSelectionPartMap::iterator itObjectSelectionPart = GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.begin();
+				CObjectSelectionPartMap::iterator itObjectSelectionPart =
+						GetObjectInfoCollector()->objectSelection.objectSelectionPartMap.begin();
 				if ( SObjectInfo *pObjectInfo = GetObjectInfoCollector()->GetObjectInfo( itObjectSelectionPart->first ) )
 				{
 					vCurrTargetPos = VNULL3;
@@ -490,14 +474,12 @@ void CUnitStartCmdState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMous
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CUnitStartCmdState::Draw( IPaintContext *pDC )
 {
 	CMapObjectState::Draw( pDC );
 	DrawCommandMarkers();
 	sceneDrawTool.Draw();
 }
-
 
 void CUnitStartCmdState::OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EEvent eEvent )
 {
@@ -520,7 +502,6 @@ void CUnitStartCmdState::OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EEvent 
 	}
 }
 
-
 void CUnitStartCmdState::UsrEvtAddCmd( const SUnitStartCmdWindowData &data )
 {
 	if ( bEdCmdVisible )
@@ -540,7 +521,6 @@ void CUnitStartCmdState::UsrEvtAddCmd( const SUnitStartCmdWindowData &data )
 	pEdUnitStartCmd->Show( true );
 }
 
-
 void CUnitStartCmdState::UsrEvtDelCmd( const SUnitStartCmdWindowData &data )
 {
 	if ( bEdCmdVisible )
@@ -558,7 +538,6 @@ void CUnitStartCmdState::UsrEvtDelCmd( const SUnitStartCmdWindowData &data )
 		RefreshDockingWindow( &data.selectedCommands );
 	}
 }
-
 
 void CUnitStartCmdState::UsrEvtEditCmd( const SUnitStartCmdWindowData &data )
 {
@@ -603,7 +582,6 @@ void CUnitStartCmdState::UsrEvtEditCmd( const SUnitStartCmdWindowData &data )
 	pEdUnitStartCmd->Show( true );
 }
 
-
 void CUnitStartCmdState::UsrEvtMoveCmd( EMoveDir eDir, const SUnitStartCmdWindowData &data )
 {
 	if ( bEdCmdVisible )
@@ -624,7 +602,7 @@ void CUnitStartCmdState::UsrEvtMoveCmd( EMoveDir eDir, const SUnitStartCmdWindow
 				int nOldIndex = ordCmdIDs[i];
 				if ( nOldIndex <= 0 )
 					continue;
-				std::swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex-1] );
+				std::swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex - 1] );
 				newSelectedIdx.push_back( nOldIndex - 1 );
 			}
 			break;
@@ -633,15 +611,15 @@ void CUnitStartCmdState::UsrEvtMoveCmd( EMoveDir eDir, const SUnitStartCmdWindow
 		case MV_DOWN:
 		{
 			sort( ordCmdIDs.begin(), ordCmdIDs.end() );
-			if ( ordCmdIDs.empty() || (ordCmdIDs.back() >= (commandsList.commands.size()-1)) )
+			if ( ordCmdIDs.empty() || ( ordCmdIDs.back() >= ( commandsList.commands.size() - 1 ) ) )
 				return;
 
-			for ( int i = ordCmdIDs.size()-1; i >= 0; --i )
+			for ( int i = ordCmdIDs.size() - 1; i >= 0; --i )
 			{
 				int nOldIndex = ordCmdIDs[i];
 				if ( nOldIndex >= commandsList.commands.size() )
 					continue;
-				std::swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex+1] );
+				std::swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex + 1] );
 				newSelectedIdx.push_back( nOldIndex + 1 );
 			}
 			break;
@@ -651,7 +629,6 @@ void CUnitStartCmdState::UsrEvtMoveCmd( EMoveDir eDir, const SUnitStartCmdWindow
 	commandsList.UpdateDB( GetMapInfoEditor()->GetViewManipulator() );
 	RefreshDockingWindow( &newSelectedIdx );
 }
-
 
 void CUnitStartCmdState::UsrEvtSelChange( const SUnitStartCmdWindowData &data )
 {
@@ -689,7 +666,6 @@ void CUnitStartCmdState::UsrEvtSelChange( const SUnitStartCmdWindowData &data )
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-
 void CUnitStartCmdState::GetSelectedUnitIDs( std::vector<CMapObjID> *pIDs )
 {
 	if ( !pIDs )
@@ -698,15 +674,16 @@ void CUnitStartCmdState::GetSelectedUnitIDs( std::vector<CMapObjID> *pIDs )
 	pIDs->clear();
 	//
 	CObjectSelectionPartMap &objectSelectionPartMap = GetObjectInfoCollector()->objectSelection.objectSelectionPartMap;
-	for ( CObjectSelectionPartMap::const_iterator itSel = objectSelectionPartMap.begin(); itSel != objectSelectionPartMap.end(); ++itSel )
+	for ( CObjectSelectionPartMap::const_iterator itSel = objectSelectionPartMap.begin();
+	      itSel != objectSelectionPartMap.end();
+	      ++itSel )
 	{
-		if ( SObjectInfo *pObjectInfo = GetObjectInfoCollector()->GetObjectInfo(itSel->first) )
+		if ( SObjectInfo *pObjectInfo = GetObjectInfoCollector()->GetObjectInfo( itSel->first ) )
 		{
 			pIDs->push_back( pObjectInfo->nObjectInfoID );
 		}
 	}
 }
-
 
 void CUnitStartCmdState::ResetStateData()
 {
@@ -724,7 +701,6 @@ void CUnitStartCmdState::ResetStateData()
 	}
 	bEdCmdVisible = false;
 }
-
 
 void CUnitStartCmdState::EdCmdOK()
 {
@@ -790,12 +766,10 @@ void CUnitStartCmdState::EdCmdOK()
 	RefreshDockingWindow( 0 );
 }
 
-
 void CUnitStartCmdState::EdCmdCancel()
 {
 	bEdCmdVisible = false;
 }
-
 
 void CUnitStartCmdState::EdCmdClear()
 {
@@ -804,7 +778,6 @@ void CUnitStartCmdState::EdCmdClear()
 	pEdUnitStartCmd->UpdateTarget( "" );
 	UpdateCmdMarkers();
 }
-
 
 void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelection )
 {
@@ -834,13 +807,13 @@ void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelectio
 			}
 		}
 
-		if ( commandTypesMnemonic.find(cmd.nCmdType) != commandTypesMnemonic.end() )
+		if ( commandTypesMnemonic.find( cmd.nCmdType ) != commandTypesMnemonic.end() )
 		{
 			wcmd.szType = commandTypesMnemonic[cmd.nCmdType].szName;
 		}
 		else
 		{
-			wcmd.szType = RCSTR("<UNKNOWN>");
+			wcmd.szType = RCSTR( "<UNKNOWN>" );
 		}
 
 		data.commands.push_back( wcmd );
@@ -848,14 +821,12 @@ void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelectio
 
 	if ( pSelection )
 	{
-		data.selectedCommands = (*pSelection);
+		data.selectedCommands = ( *pSelection );
 	}
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW,
-																												ID_WINDOW_SET_DIALOG_DATA,
-																												reinterpret_cast<uintptr_t>(&data) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_UNIT_START_CMD_WINDOW, ID_WINDOW_SET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &data ) );
 }
-
 
 void CUnitStartCmdState::DrawCommandMarker( const SCmdMarker &rMarker )
 {
@@ -909,7 +880,6 @@ void CUnitStartCmdState::DrawCommandMarker( const SCmdMarker &rMarker )
 	}
 }
 
-
 void CUnitStartCmdState::DrawCommandMarkers()
 {
 	if ( bEdCmdVisible )
@@ -924,7 +894,6 @@ void CUnitStartCmdState::DrawCommandMarkers()
 		}
 	}
 }
-
 
 bool CUnitStartCmdState::GetLinkIDs( std::vector<int> *pLinkIDs )
 {
@@ -946,7 +915,8 @@ bool CUnitStartCmdState::GetLinkIDs( std::vector<int> *pLinkIDs )
 			//
 			// по элементам объекта
 			for ( SObjectInfo::CMapInfoElementMap::iterator itElem = pMO->mapInfoElementMap.begin();
-				itElem != pMO->mapInfoElementMap.end(); ++itElem )
+			      itElem != pMO->mapInfoElementMap.end();
+			      ++itElem )
 			{
 				SObjectInfo::SMapInfoElement *pElem = &itElem->second;
 				if ( itElem->first != INVALID_NODE_ID )
@@ -959,7 +929,6 @@ bool CUnitStartCmdState::GetLinkIDs( std::vector<int> *pLinkIDs )
 	return true;
 }
 
-
 std::string CUnitStartCmdState::GetMapObjectName( SObjectInfo *pMO )
 {
 	if ( !pMO )
@@ -967,7 +936,8 @@ std::string CUnitStartCmdState::GetMapObjectName( SObjectInfo *pMO )
 
 	std::string szResult;
 	for ( SObjectInfo::CMapInfoElementMap::iterator itElem = pMO->mapInfoElementMap.begin();
-		itElem != pMO->mapInfoElementMap.end(); ++itElem )
+	      itElem != pMO->mapInfoElementMap.end();
+	      ++itElem )
 	{
 		SObjectInfo::SMapInfoElement *pElem = &itElem->second;
 		const unsigned nPlayer = pElem->nPlayer;
@@ -978,9 +948,8 @@ std::string CUnitStartCmdState::GetMapObjectName( SObjectInfo *pMO )
 	return szResult;
 }
 
-
 // returns type of command being edited currently
-const SUnitCommandTypeInfo* CUnitStartCmdState::GetCurrentCommandType()
+const SUnitCommandTypeInfo *CUnitStartCmdState::GetCurrentCommandType()
 {
 	if ( !bEdCmdVisible )
 		return 0;
@@ -996,7 +965,6 @@ const SUnitCommandTypeInfo* CUnitStartCmdState::GetCurrentCommandType()
 	return 0;
 }
 
-
 bool CUnitStartCmdState::GetMapObjectElementIDs( int nObjectID, std::vector<int> *pRes )
 {
 	if ( !pRes )
@@ -1007,7 +975,8 @@ bool CUnitStartCmdState::GetMapObjectElementIDs( int nObjectID, std::vector<int>
 	if ( pObjectInfo )
 	{
 		for ( SObjectInfo::CMapInfoElementMap::iterator itElem = pObjectInfo->mapInfoElementMap.begin();
-			itElem != pObjectInfo->mapInfoElementMap.end(); ++itElem )
+		      itElem != pObjectInfo->mapInfoElementMap.end();
+		      ++itElem )
 		{
 			pRes->push_back( itElem->first );
 		}
@@ -1015,7 +984,6 @@ bool CUnitStartCmdState::GetMapObjectElementIDs( int nObjectID, std::vector<int>
 	}
 	return false;
 }
-
 
 void CUnitStartCmdState::FilterCommandsyBySelection()
 {
@@ -1043,16 +1011,20 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 			int nCmdIndex = 0;
 			for ( std::vector<int>::const_iterator itElem = elemIndices.begin(); itElem < elemIndices.end(); ++itElem )
 			{
-				const int nLinkID = (*itElem);
+				const int nLinkID = ( *itElem );
 				//
-				for ( std::vector<SStartCommand>::const_iterator itCmd = commandsList.commands.begin(); itCmd < commandsList.commands.end(); ++itCmd )
+				for ( std::vector<SStartCommand>::const_iterator itCmd = commandsList.commands.begin();
+				      itCmd < commandsList.commands.end();
+				      ++itCmd )
 				{
 					if ( usedCommands[nCmdIndex] )
 						continue;
 
-					for ( std::vector<int>::const_iterator itLinkId = itCmd->unitLinkIDs.begin(); itLinkId < itCmd->unitLinkIDs.end(); ++itLinkId )
+					for ( std::vector<int>::const_iterator itLinkId = itCmd->unitLinkIDs.begin();
+					      itLinkId < itCmd->unitLinkIDs.end();
+					      ++itLinkId )
 					{
-						if ( (*itLinkId) == nLinkID )
+						if ( ( *itLinkId ) == nLinkID )
 						{
 							usedCommands[nCmdIndex] = 1;
 
@@ -1077,7 +1049,7 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 							if ( commandTypesMnemonic.find( itCmd->nCmdType ) != commandTypesMnemonic.end() )
 								wcmd.szType = commandTypesMnemonic[itCmd->nCmdType].szName;
 							else
-								wcmd.szType = RCSTR("<UNKNOWN>");
+								wcmd.szType = RCSTR( "<UNKNOWN>" );
 
 							data.commands.push_back( wcmd );
 
@@ -1090,11 +1062,9 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 		}
 	}
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW,
-																												ID_WINDOW_SET_DIALOG_DATA,
-																												reinterpret_cast<uintptr_t>(&data) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand(
+			CHID_UNIT_START_CMD_WINDOW, ID_WINDOW_SET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &data ) );
 }
-
 
 void CUnitStartCmdState::UpdateCmdMarkers()
 {
@@ -1125,16 +1095,15 @@ void CUnitStartCmdState::UpdateCmdMarkers()
 	}
 	else
 	{
-			currentCmdMarker.vTargetPos = vCurrTargetPos;
-			currentCmdMarker.bTargetSelected = false;
-			currentCmdMarker.bTargetIsUnit = false;
+		currentCmdMarker.vTargetPos = vCurrTargetPos;
+		currentCmdMarker.bTargetSelected = false;
+		currentCmdMarker.bTargetIsUnit = false;
 	}
 	///////
 
 	SUnitStartCmdWindowData data;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW,
-																														ID_WINDOW_GET_DIALOG_DATA,
-																														reinterpret_cast<uintptr_t>(&data)) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(
+					 CHID_UNIT_START_CMD_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>( &data ) ) )
 	{
 		for ( int i = 0; i < data.selectedCommands.size(); ++i )
 		{
@@ -1176,7 +1145,6 @@ void CUnitStartCmdState::UpdateCmdMarkers()
 		}
 	}
 }
-
 
 void CUnitStartCmdState::ClearCmdMarkers()
 {

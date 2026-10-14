@@ -12,14 +12,14 @@ enum ESceneMode : int
 enum EScene : int
 {
 	SCENE_MISSION = 0,
-	SCENE_2D,							// loading screens etc.
+	SCENE_2D, // loading screens etc.
 	ES_UNKNOWN = 3
 };
 
 enum
 {
-	OBJECT_ID_GENERATE	= -1,
-	OBJECT_ID_FORGET		= 0,
+	OBJECT_ID_GENERATE = -1,
+	OBJECT_ID_FORGET = 0,
 };
 
 enum ESceneShow : int

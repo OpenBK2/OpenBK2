@@ -12,21 +12,23 @@ namespace NDb
 namespace
 {
 
-//! What separates a database object reference from a plain file path.
-//!
-//! BindProcessorSaveLoad's SaveRefToNode writes every object reference as
-//! `<relative path>#xpointer(/<class name>)` and appends that fragment
-//! unconditionally, while a file path field is written with no fragment at all.
-//! So the fragment is what distinguishes "this points at another database
-//! object" from "this points at a .tga on disk", and only the first kind is
-//! wanted here. The C# watcher this replaces drew the line in the same place.
-const char szXPointer[] = "#xpointer";
-const char szHRefAttribute[] = "href=\"";
+	//! What separates a database object reference from a plain file path.
+	//!
+	//! BindProcessorSaveLoad's SaveRefToNode writes every object reference as
+	//! `<relative path>#xpointer(/<class name>)` and appends that fragment
+	//! unconditionally, while a file path field is written with no fragment at all.
+	//! So the fragment is what distinguishes "this points at another database
+	//! object" from "this points at a .tga on disk", and only the first kind is
+	//! wanted here. The C# watcher this replaces drew the line in the same place.
+	const char szXPointer[] = "#xpointer";
+	const char szHRefAttribute[] = "href=\"";
 
 } // namespace
 
 void CollectObjectReferences( std::vector<std::string> *pRes,
-	const char *pBegin, const char *pEnd, const std::string &szOwnFileName )
+                              const char *pBegin,
+                              const char *pEnd,
+                              const std::string &szOwnFileName )
 {
 	pRes->clear();
 	if ( pBegin == 0 || pEnd <= pBegin )
@@ -38,8 +40,8 @@ void CollectObjectReferences( std::vector<std::string> *pRes,
 	// stray `href="` inside a comment would be counted; these files are machine
 	// written and the worst a false positive does is mark one more object as
 	// changed than had to be.
-	const size_t nAttrLen = sizeof(szHRefAttribute) - 1;
-	for ( const char *p = pBegin; ; )
+	const size_t nAttrLen = sizeof( szHRefAttribute ) - 1;
+	for ( const char *p = pBegin;; )
 	{
 		const char *pFound = std::search( p, pEnd, szHRefAttribute, szHRefAttribute + nAttrLen );
 		if ( pFound == pEnd )

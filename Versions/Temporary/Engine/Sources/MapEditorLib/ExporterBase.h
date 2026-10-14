@@ -30,26 +30,27 @@ class MAPEDITORLIB_EXPORT CExporterBase : public IExporter
 	// Список незаполненных ссылок
 	CInvalidLinkList invalidLinkList;
 	//
-	bool GetObjectTypeNameSet( IManipulator* pManipulator,
-														 const std::string &rszObjectTypeName,
-														 const std::string &rszObjectName,
-														 CObjectTypeNameList *pObjectTypeNameList,
-														 CExportObjectTypeNameMap *pExportObjectTypeNameMap,
-														 CExportObjectNameMap *pExportObjectNameMap,
-														 CInvalidLinkList* pInvalidLinkList );
+	bool GetObjectTypeNameSet( IManipulator *pManipulator,
+	                           const std::string &rszObjectTypeName,
+	                           const std::string &rszObjectName,
+	                           CObjectTypeNameList *pObjectTypeNameList,
+	                           CExportObjectTypeNameMap *pExportObjectTypeNameMap,
+	                           CExportObjectNameMap *pExportObjectNameMap,
+	                           CInvalidLinkList *pInvalidLinkList );
 	//
 	void InnerStartExport( const CObjectTypeNameList &rNewObjectTypeNameList, bool bExport, bool bForce );
 	void InnerFinishExport( bool bExport, bool bForce );
-	EXPORT_RESULT InnerExportObject( IManipulator* pManipulator,
-																	 const std::string &rszObjectTypeName,
-																	 const std::string &rszObjectName,
-																	 bool bExport,
-																	 bool bForce );
-	EXPORT_RESULT HierarchyExportObject( IManipulator* pManipulator,
-																			 const std::string &rszObjectTypeName,
-																			 const std::string &rszObjectName,
-																			 bool bExport,
-																			 bool bForce );
+	EXPORT_RESULT InnerExportObject( IManipulator *pManipulator,
+	                                 const std::string &rszObjectTypeName,
+	                                 const std::string &rszObjectName,
+	                                 bool bExport,
+	                                 bool bForce );
+	EXPORT_RESULT HierarchyExportObject( IManipulator *pManipulator,
+	                                     const std::string &rszObjectTypeName,
+	                                     const std::string &rszObjectName,
+	                                     bool bExport,
+	                                     bool bForce );
+
 public:
 	EXPORT_RESULT GetStartExportResult( const std::string &rszObjectTypeName );
 	void SetStartExportResult( const std::string &rszObjectTypeName, EXPORT_RESULT eResult );
@@ -59,17 +60,17 @@ public:
 	//
 	bool StartExport( const std::string &rszObjectTypeName, bool bForce );
 	void FinishExport( const std::string &rszObjectTypeName, bool bForce );
-	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const std::string &rszObjectTypeName,
-															const std::string &rszObjectName,
-															bool bForce,
-															EXPORT_TYPE exportType );
+	EXPORT_RESULT ExportObject( IManipulator *pManipulator,
+	                            const std::string &rszObjectTypeName,
+	                            const std::string &rszObjectName,
+	                            bool bForce,
+	                            EXPORT_TYPE exportType );
 	//
 	bool StartCheck( const std::string &rszObjectTypeName, bool bExport );
 	void FinishCheck( const std::string &rszObjectTypeName, bool bExport );
-	EXPORT_RESULT CheckObject( IManipulator* pManipulator,
-														 const std::string &rszObjectTypeName,
-														 const std::string &rszObjectName,
-														 bool bExport,
-														 EXPORT_TYPE exportType );
+	EXPORT_RESULT CheckObject( IManipulator *pManipulator,
+	                           const std::string &rszObjectTypeName,
+	                           const std::string &rszObjectName,
+	                           bool bExport,
+	                           EXPORT_TYPE exportType );
 };

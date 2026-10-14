@@ -13,12 +13,17 @@ class SYSTEM_EXPORT CTimeCounter
 	STime prevTime = 0;
 	ZDATA
 	CObj<CCTime> pTime;
+
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTime); return 0; }
+	ZEND int operator&( IBinSaver &f )
+	{
+		f.Add( 2, &pTime );
+		return 0;
+	}
 	CTimeCounter();
 	void SetCurrent( STime t );
 	void ResetTiming();
 	void Advance( float fMult, STime currentTime );
-	CCTime* GetTime() const { return pTime; }
+	CCTime *GetTime() const { return pTime; }
 	int GetDeltaT( float fMult, STime currentTime );
 };

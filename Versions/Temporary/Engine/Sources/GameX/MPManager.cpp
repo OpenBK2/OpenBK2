@@ -31,9 +31,7 @@ CMPManager::CMPManager()
 	pCurrentNetMode = new CMPManagerModeNoNet;
 }
 
-CMPManager::~CMPManager()
-{
-}
+CMPManager::~CMPManager() {}
 
 void CMPManager::AddUIMessage( SMPUIMessage *_pMsg )
 {
@@ -52,12 +50,12 @@ void CMPManager::AddUIMessage( EMPUIMessageType eMessageType )
 	AddUIMessage( new SMPUISimpleMessage( eMessageType ) );
 }
 
-SMPUIMessage* CMPManager::GetUIMessage()
+SMPUIMessage *CMPManager::GetUIMessage()
 {
 	return GetMessage();
 }
 
-SMPUIMessage* CMPManager::PeekUIMessage()
+SMPUIMessage *CMPManager::PeekUIMessage()
 {
 	return PeekMessage();
 }

@@ -51,7 +51,7 @@ void CDataStream::ReadOverflow( void *pDest, int nSize )
 	{
 		int nLeft = data.pFileEnd - data.pCurrent;
 		Read( pDest, nLeft );
-		Read( ((char*)pDest ) + nLeft, nSize - nLeft );
+		Read( ( (char *)pDest ) + nLeft, nSize - nLeft );
 	}
 	else
 	{
@@ -65,7 +65,7 @@ void CDataStream::ReadString( std::string &res, int nMaxSize )
 	int nSize = 0;
 	Read( &nSize, 1 );
 	if ( nSize & 1 )
-		Read( ((char*)&nSize) + 1, 3 );
+		Read( ( (char *)&nSize ) + 1, 3 );
 	nSize >>= 1;
 	if ( ( nMaxSize > 0 && nSize > nMaxSize ) )
 	{
@@ -80,7 +80,7 @@ void CDataStream::ReadString( std::string &res, int nMaxSize )
 		SetBroken();
 		return;
 	}
-	res.assign( (const char*)data.pCurrent, nSize );
+	res.assign( (const char *)data.pCurrent, nSize );
 	data.pCurrent += nSize;
 }
 
@@ -105,12 +105,12 @@ void CDataStream::ReadTo( CDataStream *pDst, unsigned int nSize )
 	pDst->SetSize( 0 );
 	pDst->SetSize( nSize );
 	Read( pDst->GetBufferForWrite(), nSize );
-	pDst->Seek(0);
+	pDst->Seek( 0 );
 }
 
 void CDataStream::WriteFrom( CDataStream &src )
 {
-	src.Seek(0);
+	src.Seek( 0 );
 	int nSize = src.GetSize();
 	Write( src.GetBuffer(), nSize );
 }
@@ -125,7 +125,7 @@ void CDataStream::WriteFrom( CDataStream &src )
 
 void CMemoryStream::AllocBuf( int nOldFileSize, int nSize )
 {
-	unsigned char *pBuf = new unsigned char[ nSize ];
+	unsigned char *pBuf = new unsigned char[nSize];
 	int nTransfer = (std::min)( nSize, nOldFileSize );
 	unsigned char *pPrevBuffer = GetBufferPtr();
 	if ( nTransfer != 0 && pBuf != 0 )
@@ -147,7 +147,7 @@ CMemoryStream::CMemoryStream( const CMemoryStream &src ) : CDataStream( 0 )
 	CopyMemoryStream( src );
 }
 
-CMemoryStream& CMemoryStream::operator=( const CMemoryStream &src )
+CMemoryStream &CMemoryStream::operator=( const CMemoryStream &src )
 {
 	delete[] GetBufferPtr();
 	CopyMemoryStream( src );
@@ -157,14 +157,14 @@ CMemoryStream& CMemoryStream::operator=( const CMemoryStream &src )
 void CMemoryStream::SetSizeDiscard( int nSize )
 {
 	delete[] GetBufferPtr();
-	unsigned char *pBuf = new unsigned char[ nSize ];
+	unsigned char *pBuf = new unsigned char[nSize];
 	SetBuffer( pBuf, nSize, 0, nSize, F_CanRW );
 }
 
 void CMemoryStream::CopyMemoryStream( const CMemoryStream &src )
 {
 	int nBufSize = src.GetBufferSize();
-	SetBuffer( new unsigned char[ nBufSize ], nBufSize, src.GetPosition(), src.GetSize(), src.GetFlags() );
+	SetBuffer( new unsigned char[nBufSize], nBufSize, src.GetPosition(), src.GetSize(), src.GetFlags() );
 	memcpy( GetBufferPtr(), src.GetBufferPtr(), nBufSize );
 }
 
@@ -182,7 +182,7 @@ void CMappedStream::AllocBufImpl( int nBufSize, int nPos, int nSize )
 	ASSERT( nBufSize >= nSize );
 	unsigned char *pBuf = 0;
 	if ( nBufSize != 0 )
-		pBuf = (unsigned char *) MapFile( nBufSize );
+		pBuf = (unsigned char *)MapFile( nBufSize );
 	if ( pBuf == 0 && nBufSize != 0 )
 		SetBuffer( 0, 0, 0, 0, GetFlags() | F_Broken );
 	else
@@ -262,15 +262,14 @@ void TraceFileOpen( const char *pszHow, const std::string &szFileName, const boo
 	}
 	else
 	{
-		csSystem << CC_ORANGE << "file: FAILED  " << pszHow << " " << szFileName.c_str()
-		         << " (" << ( pszWhy != 0 ? pszWhy : "no reason given" ) << ")" << endl;
+		csSystem << CC_ORANGE << "file: FAILED  " << pszHow << " " << szFileName.c_str() << " ("
+						 << ( pszWhy != 0 ? pszWhy : "no reason given" ) << ")" << endl;
 	}
 }
 
 }
 
-CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName )
-: CDataStream( F_Broken )
+CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName ) : CDataStream( F_Broken )
 {
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_READ_ONLY should've been used", szFileName.c_str() ) );
 	pStream = pVFS->OpenFile( szFileName );
@@ -279,8 +278,7 @@ CFileStream::CFileStream( NVFS::IVFS *pVFS, const std::string &szFileName )
 	TraceFileOpen( "vfs", szFileName, pStream != 0, "no such entry in the VFS" );
 }
 
-CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName )
-: CDataStream( F_Broken )
+CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &szFileName ) : CDataStream( F_Broken )
 {
 	//	NI_ASSERT( szFileName.find( ":" ) == string::npos, StrFmt( "\":\" found in file name %s passed to VFS! WIN_CREATE should've been used", szFileName.c_str() ) );
 	pStream = pFileCreator->CreateFile( szFileName );
@@ -289,8 +287,7 @@ CFileStream::CFileStream( NVFS::IFileCreator *pFileCreator, const std::string &s
 	TraceFileOpen( "create", szFileName, pStream != 0, "the file creator refused it" );
 }
 
-CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode )
-: CDataStream( F_Broken )
+CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode ) : CDataStream( F_Broken )
 {
 	// Captured before anything else can overwrite it, since the checks below and
 	// the tracing itself both make calls of their own.
@@ -305,7 +302,7 @@ CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode
 	}
 	else
 	{
-		NFile::CreatePath( NFile::GetFilePath(szFileName) );
+		NFile::CreatePath( NFile::GetFilePath( szFileName ) );
 		pStream = new CMemoryMappedFile( szFileName.c_str(), STREAM_ACCESS_READ_WRITE );
 		bOk = pStream->CanWrite();
 		if ( bOk )
@@ -316,8 +313,7 @@ CFileStream::CFileStream( const std::string &szFileName, const EWinMode eWinMode
 	const int nErrno = errno;
 
 	SyncWith( *pStream );
-	TraceFileOpen( eWinMode == WIN_READ_ONLY ? "read" : "create",
-	               szFileName, bOk, nErrno != 0 ? strerror( nErrno ) : 0 );
+	TraceFileOpen( eWinMode == WIN_READ_ONLY ? "read" : "create", szFileName, bOk, nErrno != 0 ? strerror( nErrno ) : 0 );
 }
 
 CFileStream::~CFileStream()
