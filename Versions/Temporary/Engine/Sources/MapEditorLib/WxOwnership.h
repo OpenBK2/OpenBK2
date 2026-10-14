@@ -35,6 +35,7 @@
 // lying and there is one place to annotate if clang-tidy's
 // cppcoreguidelines-owning-memory is ever turned on.
 
+#include <memory> // std::unique_ptr
 #include <utility>
 
 #include <wx/weakref.h>

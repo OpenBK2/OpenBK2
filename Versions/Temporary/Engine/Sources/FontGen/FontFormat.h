@@ -3,6 +3,7 @@
 #include "System/det_map.h"
 
 #include <cstdint>
+#include <map> // std::map
 
 #include <fmt/format.h>
 

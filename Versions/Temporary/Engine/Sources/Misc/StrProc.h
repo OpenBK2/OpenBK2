@@ -7,6 +7,7 @@
 #include "Misc_export.h"
 
 #include <algorithm>
+#include <sstream> // std::stringstream, used by ToHex
 
 #include <boost/config.hpp>
 

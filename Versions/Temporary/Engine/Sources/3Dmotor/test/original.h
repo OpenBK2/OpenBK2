@@ -1,29 +1,48 @@
 #pragma once
 
+// Not formatted, and it cannot be.
+//
+// These are the 2005 implementations the ported SIMD routines are checked
+// against, kept as they were written, which is the only reason they are worth
+// comparing against at all.
+//
+// They also contain MSVC's one-instruction __asm form, where the instruction
+// runs to the end of the line, so the newline after it is part of the syntax.
+// A formatter does not know that: it read
+//
+//     __asm movq mm7, mTransp
+//     if ( bMultiplyOnTransparency )
+//
+// as one statement followed by another it could join, produced
+//
+//     __asm movq mm7, mTransp if ( bMultiplyOnTransparency )
+//
+// and the assembler then tried to parse the condition as an operand. That is a
+// change in meaning that no amount of token comparison catches, because the
+// tokens are identical and only the line break mattered.
+// clang-format off
+
 #include "3Dmotor/GLightPerVertex.h"
 // MMXTransformVector*Impl below use SMMXFixups, fixups, Assign and the lookup
 // tables from here. That only ever worked because every includer happened to pull
 // in GLightPerVertex.cpp first.
-#include "3DLib/GGeometry.h"
 #include "3Dmotor/GSSETransform.h"
+#include "3DLib/GGeometry.h"
 
 #include <cstdint>
 
-namespace original
-{
-static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &mult )
-{
-	if ( mult.empty() )
-	{
-		return;
-	}
-	uint32_t *pDst = &( *pRes )[0], *pDstEnd = pDst + pRes->size();
-	const uint32_t *pSrc = &mult[0];
-	for ( ; pDst < pDstEnd; ++pDst, ++pSrc )
-	{
-		uint32_t dwB = *pSrc;
-		__asm
-		{
+namespace original {
+    static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &mult )
+    {
+        if ( mult.empty() )
+            return;
+        uint32_t *pDst = &(*pRes)[0], *pDstEnd = pDst + pRes->size();
+        const uint32_t *pSrc = &mult[0];
+        for ( ; pDst < pDstEnd; ++pDst, ++pSrc )
+        {
+            uint32_t dwB = *pSrc;
+            __asm
+            {
                 mov esi, pDst
                 pxor mm7, mm7
                 movd mm0, [esi]
@@ -34,55 +53,52 @@ static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint
                 psrlw mm0, 8
                 packuswb mm0, mm0
                 movd [esi], mm0
-		}
-	}
-	__asm emms
-}
+            }
+        }
+        __asm emms
+    }
 
-static void ConvertColor( NGfx::SMMXWord *p, const CVec3 &v )
-{
-	p->nZ = Float2Int( v.z * 0x4000 );
-	p->nY = Float2Int( v.y * 0x4000 );
-	p->nX = Float2Int( v.x * 0x4000 );
-	p->nW = 0;
-}
+	static void ConvertColor( NGfx::SMMXWord *p, const CVec3 &v )
+    {
+	    p->nZ = Float2Int( v.z * 0x4000 );
+	    p->nY = Float2Int( v.y * 0x4000 );
+	    p->nX = Float2Int( v.x * 0x4000 );
+	    p->nW = 0;
+    }
 
-static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b )
-{
-	return CVec3( a.x * b.x, a.y * b.y, a.z * b.z );
-}
+	static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b ) {
+	    return CVec3( a.x * b.x, a.y * b.y, a.z * b.z );
+    }
 
-static void CalcDirectionalLighting( const std::vector<uint16_t> &posIndices,
-                                     const std::vector<NGfx::SCompactVector> &_normals,
-                                     const NGScene::SPerVertexLightState &ls,
-                                     bool bTranslucent,
-                                     const CVec3 &vTranslucentColor,
-                                     std::vector<uint32_t> *pResColors,
-                                     std::vector<uint32_t> *pResShadow )
-{
-	pResColors->resize( posIndices.size() );
-	pResShadow->resize( posIndices.size() );
-	uint32_t dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
-	const void *pDirData = &ls.ambient;
-	const NGfx::SMMXWord *pTranslucentShade = &ls.shadeColor;
-	if ( bTranslucent )
+    static void CalcDirectionalLighting(
+	const std::vector<uint16_t> &posIndices,
+	const std::vector<NGfx::SCompactVector> &_normals,
+	const NGScene::SPerVertexLightState &ls, bool bTranslucent, const CVec3 &vTranslucentColor,
+	std::vector<uint32_t> *pResColors, std::vector<uint32_t> *pResShadow )
 	{
-		NGfx::SMMXWord transHolder;
-		ConvertColor( &transHolder, MulPerComp( ls.vLightColor, vTranslucentColor ) );
-		pTranslucentShade = &transHolder;
-	}
-	for ( int k = 0; k < posIndices.size(); ++k )
-	{
-		uint32_t dwNormal = _normals[k].dw;
-		if ( dwNormal != dwPrevNormal )
+		pResColors->resize( posIndices.size() );
+		pResShadow->resize( posIndices.size() );
+		uint32_t dwColor = 0, dwShadowColor = 0, dwPrevNormal = 0;
+		const void *pDirData = &ls.ambient;
+		const NGfx::SMMXWord *pTranslucentShade = &ls.shadeColor;
+		if ( bTranslucent )
 		{
-			__asm
+			NGfx::SMMXWord transHolder;
+			ConvertColor( &transHolder, MulPerComp( ls.vLightColor, vTranslucentColor ) );
+			pTranslucentShade = &transHolder;
+		}
+		for ( int k = 0; k < posIndices.size(); ++k )
+		{
+			uint32_t dwNormal = _normals[k].dw;
+			if ( dwNormal != dwPrevNormal )
 			{
+				__asm
+				{
 					mov esi, pDirData
 					movd mm7, dwNormal
 					punpcklbw mm7, mm7
-					psubw mm7, [esi+5*8] //shift
-					pmaddwd mm7, [esi+4*8] //dirLight
+					psubw mm7, [esi+5*8]//shift
+					pmaddwd mm7, [esi+4*8]//dirLight
 					movq mm6, mm7
 					psrlq mm6, 32
 					paddd mm7, mm6
@@ -95,12 +111,12 @@ static void CalcDirectionalLighting( const std::vector<uint16_t> &posIndices,
 					pand mm7, mm6
 					pandn mm6, mm5 // mm6 = f, range [0, 0x4000]
 					pcmpeqw mm0, mm0
-					pxor mm7, mm0 // mm7 - -f
-					movq mm0, [esi] //ambient // vRes
-					movq mm1, mm0 // vResShadow
-					movq mm2, [esi + 1*8] //lightColor
-					movq mm3, [esi + 2*8] //incidentShadowColor
-					movq mm4, [esi + 3*8] //shadeColor
+					pxor mm7, mm0  // mm7 - -f
+					movq mm0, [esi]//ambient // vRes
+					movq mm1, mm0     // vResShadow
+					movq mm2, [esi + 1*8]//lightColor
+					movq mm3, [esi + 2*8]//incidentShadowColor
+					movq mm4, [esi + 3*8]//shadeColor
 					mov esi, pTranslucentShade
 					movq mm5, [esi]
 					pmulhw mm2, mm6
@@ -117,51 +133,49 @@ static void CalcDirectionalLighting( const std::vector<uint16_t> &posIndices,
 					packuswb mm1, mm1
 					movd dwColor, mm0
 					movd dwShadowColor, mm1
+				}
 			}
+			(*pResColors)[k] = dwColor;
+			(*pResShadow)[k] = dwShadowColor;
+			dwPrevNormal = dwNormal;
 		}
-		( *pResColors )[k] = dwColor;
-		( *pResShadow )[k] = dwShadowColor;
-		dwPrevNormal = dwNormal;
+	    __asm emms
 	}
-	__asm emms
-}
 
-static void MMXTransformVectorImpl( NGfx::SCompactVector *pRes,
-                                    const NGfx::SCompactVector *pSrc,
-                                    const SMMXFixups *pFixups,
-                                    const NGfx::SCompactTransformer *pTrans )
-{
-	_asm
+    static void MMXTransformVectorImpl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
+	    const NGfx::SCompactTransformer* pTrans)
 	{
+	    _asm
+	    {
 	        mov esi, pSrc // esi = pSrc
 	        mov ecx, [esi] // ecx = *pSrc
 	        mov edi, ecx // edi = *pSrc
 	        and edi, 0xffffff // edi = *pSrc & 0xFFFFFF (clear w?)
 	        and ecx, 0xff000000 // ecx = *pSrc & 0xFF000000 (keep W only)
-	        movd mm7, edi // mm7 = *pSrc & 0xFFFFFF
+	        movd mm7, edi       // mm7 = *pSrc & 0xFFFFFF
 	        mov esi, pTrans // esi = pTrans
 	        mov edi, pFixups // edi = pFixups (normalFixup)
-	        pxor mm0, mm0 // mm0 = 0
+	        pxor mm0, mm0    // mm0 = 0
 	        punpcklbw mm0, mm7 // unpacked vector
 	        psubw mm0, [edi] // mm0 -= normalFixup
 
-	        movq mm1, mm0 // z y x // mm1 = mm1 * mm0
+	        movq mm1, mm0    // z y x // mm1 = mm1 * mm0
 	        pmulhw mm1, [esi]
 	        movq mm2, mm0
 	        movq mm3, mm0
 	        psllq mm2, 16
 	        psrlq mm3, 32
-	        paddw mm2, mm3 // x z y
+	        paddw mm2, mm3   // x z y
 	        pmulhw mm2, [esi + 8]
 	        movq mm3, mm0
 	        movq mm4, mm0
 	        paddsw mm1, mm2
 	        psllq mm3, 32
 	        psrlq mm4, 16
-	        paddw mm3, mm4 // y x z
+	        paddw mm3, mm4   // y x z
 	        pmulhw mm3, [esi + 16]
 	        paddsw mm1, mm3 // packed result
-		   // normalize
+	        // normalize
 	        psllw mm1, 3
 	        movq mm2, mm1
 	        pmaddwd mm2, mm2
@@ -177,7 +191,7 @@ static void MMXTransformVectorImpl( NGfx::SCompactVector *pRes,
 	        punpckldq mm2, mm2
 	        pmulhw mm1, mm2
 	        psllw mm1, 5
-	 // pack and output result
+	        // pack and output result
 	        paddw mm1, [edi + 8]
 	        psrlw mm1, 8
 	        packuswb mm1, mm1
@@ -186,27 +200,23 @@ static void MMXTransformVectorImpl( NGfx::SCompactVector *pRes,
 	        mov esi, pRes
 	        mov[esi], ecx
 	        emms
+	    }
 	}
-}
 
-static void MMXTransformVector( NGfx::SCompactVector &res, const NGfx::SCompactVector &src, const SHMatrix &transform )
-{
+	static void MMXTransformVector(NGfx::SCompactVector & res, const NGfx::SCompactVector& src,
+		const SHMatrix & transform) {
 
-	NGfx::SCompactTransformer compact_transform;
-	Assign( &compact_transform, transform );
-	MMXTransformVectorImpl( &res, &src, &fixups, &compact_transform );
-}
+        NGfx::SCompactTransformer compact_transform;
+        Assign(&compact_transform, transform);
+        MMXTransformVectorImpl(&res, &src, &fixups, &compact_transform);
+    }
 
-static void MMXTransformVector2Impl( NGfx::SCompactVector *pRes,
-                                     const NGfx::SCompactVector *pSrc,
-                                     const SMMXFixups *pFixups,
-                                     const NGfx::SCompactTransformer *pTrans,
-                                     uint8_t w1,
-                                     const NGfx::SCompactTransformer *pTrans2,
-                                     uint8_t w2 )
-{
-	_asm
+	static void MMXTransformVector2Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
+	    const NGfx::SCompactTransformer* pTrans, uint8_t w1,
+	    const NGfx::SCompactTransformer* pTrans2, uint8_t w2)
 	{
+	    _asm
+	    {
 	        mov esi, pSrc
 	        mov ecx, [esi]
 	        mov edi, ecx
@@ -220,7 +230,7 @@ static void MMXTransformVector2Impl( NGfx::SCompactVector *pRes,
 	        punpcklbw mm0, mm7 // unpacked vector
 	        psubw mm0, [edi]
 
-	        movq mm1, mm0 // z y x
+	        movq mm1, mm0    // z y x
 	        movq mm5, mm1
 	        pmulhw mm1, [esi]
 	        pmulhw mm5, [ebx]
@@ -228,7 +238,7 @@ static void MMXTransformVector2Impl( NGfx::SCompactVector *pRes,
 	        movq mm3, mm0
 	        psllq mm2, 16
 	        psrlq mm3, 32
-	        paddw mm2, mm3 // x z y
+	        paddw mm2, mm3   // x z y
 	        movq mm6, mm2
 	        pmulhw mm2, [esi + 8]
 	        pmulhw mm6, [ebx + 8]
@@ -238,7 +248,7 @@ static void MMXTransformVector2Impl( NGfx::SCompactVector *pRes,
 	        paddsw mm5, mm6
 	        psllq mm3, 32
 	        psrlq mm4, 16
-	        paddw mm3, mm4 // y x z
+	        paddw mm3, mm4   // y x z
 	        movq mm6, mm3
 	        pmulhw mm3, [esi + 16]
 	        pmulhw mm6, [ebx + 16]
@@ -251,7 +261,7 @@ static void MMXTransformVector2Impl( NGfx::SCompactVector *pRes,
 	        pmulhw mm1, qword ptr[esi * 8 + mmxWeights]
 	        pmulhw mm5, qword ptr[ebx * 8 + mmxWeights]
 	        paddsw mm1, mm5
-		   // normalize
+	        // normalize
 	        psllw mm1, 3
 	        movq mm2, mm1
 	        pmaddwd mm2, mm2
@@ -267,7 +277,7 @@ static void MMXTransformVector2Impl( NGfx::SCompactVector *pRes,
 	        punpckldq mm2, mm2
 	        pmulhw mm1, mm2
 	        psllw mm1, 5
-		   // pack and output result
+	        // pack and output result
 	        paddw mm1, [edi + 8]
 	        psrlw mm1, 8
 	        packuswb mm1, mm1
@@ -276,35 +286,26 @@ static void MMXTransformVector2Impl( NGfx::SCompactVector *pRes,
 	        mov esi, pRes
 	        mov[esi], ecx
 	        emms
+	    }
 	}
-}
 
-static void MMXTransformVector2( NGfx::SCompactVector &res,
-                                 const NGfx::SCompactVector &src,
-                                 const SHMatrix &transform1,
-                                 uint8_t weight1,
-                                 const SHMatrix &transform2,
-                                 uint8_t weight2 )
-{
+	static void MMXTransformVector2(NGfx::SCompactVector & res, const NGfx::SCompactVector & src,
+		const SHMatrix & transform1, uint8_t weight1,
+		const SHMatrix & transform2, uint8_t weight2) {
 
-	NGfx::SCompactTransformer compact_transform1, compact_transform2;
-	Assign( &compact_transform1, transform1 );
-	Assign( &compact_transform2, transform2 );
-	MMXTransformVector2Impl( &res, &src, &fixups, &compact_transform1, weight1, &compact_transform2, weight2 );
-}
+        NGfx::SCompactTransformer compact_transform1, compact_transform2;
+        Assign(&compact_transform1, transform1);
+        Assign(&compact_transform2, transform2);
+        MMXTransformVector2Impl(&res, &src, &fixups, &compact_transform1, weight1, &compact_transform2, weight2);
+    }
 
-static void MMXTransformVector3Impl( NGfx::SCompactVector *pRes,
-                                     const NGfx::SCompactVector *pSrc,
-                                     const SMMXFixups *pFixups,
-                                     const NGfx::SCompactTransformer *pTrans,
-                                     uint8_t w1,
-                                     const NGfx::SCompactTransformer *pTrans2,
-                                     uint8_t w2,
-                                     const NGfx::SCompactTransformer *pTrans3,
-                                     uint8_t w3 )
-{
-	_asm
+	static void MMXTransformVector3Impl(NGfx::SCompactVector* pRes, const NGfx::SCompactVector* pSrc, const SMMXFixups* pFixups,
+	const NGfx::SCompactTransformer* pTrans, uint8_t w1,
+	const NGfx::SCompactTransformer* pTrans2, uint8_t w2,
+	const NGfx::SCompactTransformer* pTrans3, uint8_t w3)
 	{
+	    _asm
+	    {
 	        mov esi, pSrc
 	        mov ecx, [esi]
 	        mov edi, ecx
@@ -319,7 +320,7 @@ static void MMXTransformVector3Impl( NGfx::SCompactVector *pRes,
 	        punpcklbw mm0, mm7 // unpacked vector
 	        psubw mm0, [edi]
 
-	        movq mm1, mm0 // z y x
+	        movq mm1, mm0    // z y x
 	        movq mm5, mm1
 	        movq mm7, mm1
 	        pmulhw mm1, [esi]
@@ -329,7 +330,7 @@ static void MMXTransformVector3Impl( NGfx::SCompactVector *pRes,
 	        movq mm3, mm0
 	        psllq mm2, 16
 	        psrlq mm3, 32
-	        paddw mm2, mm3 // x z y
+	        paddw mm2, mm3   // x z y
 	        movq mm6, mm2
 	        movq mm3, mm2
 	        pmulhw mm2, [esi + 8]
@@ -342,7 +343,7 @@ static void MMXTransformVector3Impl( NGfx::SCompactVector *pRes,
 	        paddsw mm5, mm6
 	        psllq mm3, 32
 	        psrlq mm4, 16
-	        paddw mm3, mm4 // y x z
+	        paddw mm3, mm4   // y x z
 	        movq mm6, mm3
 	        movq mm4, mm3
 	        pmulhw mm3, [esi + 16]
@@ -362,7 +363,7 @@ static void MMXTransformVector3Impl( NGfx::SCompactVector *pRes,
 	        pmulhw mm7, qword ptr[edx * 8 + mmxWeights]
 	        paddsw mm1, mm5
 	        paddsw mm1, mm7
-		   // normalize
+	        // normalize
 	        psllw mm1, 3
 	        movq mm2, mm1
 	        pmaddwd mm2, mm2
@@ -378,7 +379,7 @@ static void MMXTransformVector3Impl( NGfx::SCompactVector *pRes,
 	        punpckldq mm2, mm2
 	        pmulhw mm1, mm2
 	        psllw mm1, 5
-		   // pack and output result
+	        // pack and output result
 	        paddw mm1, [edi + 8]
 	        psrlw mm1, 8
 	        packuswb mm1, mm1
@@ -387,97 +388,79 @@ static void MMXTransformVector3Impl( NGfx::SCompactVector *pRes,
 	        mov esi, pRes
 	        mov[esi], ecx
 	        emms
-	}
-}
-
-static void MMXTransformVector3( NGfx::SCompactVector &res,
-                                 const NGfx::SCompactVector &src,
-                                 const SHMatrix &transform1,
-                                 uint8_t weight1,
-                                 const SHMatrix &transform2,
-                                 uint8_t weight2,
-                                 const SHMatrix &transform3,
-                                 uint8_t weight3 )
-{
-
-	NGfx::SCompactTransformer compact_transform1, compact_transform2, compact_transform3;
-	Assign( &compact_transform1, transform1 );
-	Assign( &compact_transform2, transform2 );
-	Assign( &compact_transform3, transform3 );
-	MMXTransformVector3Impl(
-			&res, &src, &fixups, &compact_transform1, weight1, &compact_transform2, weight2, &compact_transform3, weight3 );
-}
-
-static void SampleWarFogInt( const std::vector<int> &intCoords,
-                             const CArray2D<unsigned char> &fog,
-                             std::vector<unsigned char> *_pRes,
-                             int nVertices )
-{
-	ASSERT( fog.GetSizeX() == fog.GetSizeY() );
-	ASSERT( GetNextPow2( fog.GetSizeX() - 1 ) + 1 == fog.GetSizeX() );
-	__m64 zero;
-	zero = _m_from_int( 0 );
-	unsigned char *pRes = &( *_pRes )[0];
-	int nMask = fog.GetSizeX() - 2;
-	for ( const int *pTmp = &intCoords[0], *pTmpEnd = pTmp + nVertices * 2; pTmp < pTmpEnd; pTmp += 2, ++pRes )
-	{
-		int nY = pTmp[1];
-		int nYU = ( nY >> 14 ) & nMask;
-		int nYfi = nY & 0x3fff;
-		__m64 nYf = _m_from_int( ( 0x4000 - nYfi ) | ( nYfi << 16 ) );
-		int nX = pTmp[0];
-		int nXL = ( nX >> 14 ) & nMask;
-		int nXfi = nX & 0x3fff;
-		__m64 nXf = _m_from_int( ( 0x4000 - nXfi ) | ( nXfi << 16 ) );
-		const unsigned char *pUp = ( &fog[nYU][0] ) + nXL;
-		const unsigned char *pDown = pUp + nMask + 2;
-
-		__m64 nData = _mm_unpacklo_pi32( _m_punpcklbw( _m_from_int( *(unsigned short *)pUp ), zero ),
-		                                 _m_punpcklbw( _m_from_int( *(unsigned short *)pDown ), zero ) );
-		nXf = _mm_unpacklo_pi32( nXf, nXf );
-		nData = _m_pmaddwd( nData, nXf );
-		nData = _m_psradi( nData, 14 );
-		nData = _mm_packs_pi32( nData, zero );
-		nData = _m_pmaddwd( nData, nYf );
-		*pRes = _m_to_int( nData ) >> 14;
-	}
-	__asm emms;
-}
-
-static void SampleWarFog( const std::vector<CVec3> &srcPos,
-                          float fScale,
-                          std::vector<unsigned char> *_pRes1,
-                          const CArray2D<unsigned char> &fog1,
-                          std::vector<unsigned char> *_pRes2,
-                          const CArray2D<unsigned char> &fog2 )
-{
-	if ( srcPos.empty() )
-	{
-		return;
-	}
-	int nVertices = srcPos.size();
-	if ( _pRes1->size() < nVertices )
-	{
-		_pRes1->resize( nVertices );
-	}
-	if ( _pRes2 && _pRes2->size() < nVertices )
-	{
-		_pRes2->resize( nVertices );
+	    }
 	}
 
-	static std::vector<int> tmp;
-	if ( tmp.size() < nVertices * 2 )
-	{
-		tmp.resize( nVertices * 2 );
-	}
+	static void MMXTransformVector3(NGfx::SCompactVector & res, const NGfx::SCompactVector & src,
+		const SHMatrix & transform1, uint8_t weight1,
+		const SHMatrix & transform2, uint8_t weight2,
+		const SHMatrix & transform3, uint8_t weight3) {
 
-	// calc integer x & y
-	{
-		float fpScale = fScale * 0x4000;
-		const CVec3 *pSrc = &srcPos[0], *pEnd = pSrc + nVertices;
-		int *pTmp = &tmp[0];
-		__asm
+        NGfx::SCompactTransformer compact_transform1, compact_transform2, compact_transform3;
+        Assign(&compact_transform1, transform1);
+        Assign(&compact_transform2, transform2);
+        Assign(&compact_transform3, transform3);
+        MMXTransformVector3Impl(&res, &src, &fixups, &compact_transform1, weight1, &compact_transform2, weight2, &compact_transform3, weight3);
+    }
+
+	static void SampleWarFogInt( const std::vector<int> &intCoords, const CArray2D<unsigned char> &fog, std::vector<unsigned char> *_pRes, int nVertices )
+    {
+		ASSERT( fog.GetSizeX() == fog.GetSizeY() );
+		ASSERT( GetNextPow2( fog.GetSizeX() - 1 ) + 1 == fog.GetSizeX() );
+		__m64 zero;
+		zero = _m_from_int( 0 );
+		unsigned char *pRes = &(*_pRes)[0];
+		int nMask = fog.GetSizeX() - 2;
+		for ( const int *pTmp = &intCoords[0], *pTmpEnd = pTmp + nVertices * 2; pTmp < pTmpEnd; pTmp += 2, ++pRes )
 		{
+		    int nY = pTmp[1];
+		    int nYU = ( nY >> 14 ) & nMask;
+		    int nYfi = nY & 0x3fff;
+		    __m64 nYf = _m_from_int( ( 0x4000 - nYfi ) | (nYfi << 16) );
+		    int nX = pTmp[0];
+		    int nXL = ( nX >> 14 ) & nMask;
+		    int nXfi = nX & 0x3fff;
+		    __m64 nXf = _m_from_int( ( 0x4000 - nXfi ) | (nXfi << 16)  );
+		    const unsigned char *pUp = (&fog[nYU][0]) + nXL;
+		    const unsigned char *pDown = pUp + nMask + 2;
+
+		    __m64 nData = _mm_unpacklo_pi32(
+				_m_punpcklbw( _m_from_int( *(unsigned short*)pUp ), zero ),
+				_m_punpcklbw( _m_from_int( *(unsigned short*)pDown ), zero )
+				);
+		    nXf = _mm_unpacklo_pi32( nXf, nXf );
+		    nData = _m_pmaddwd( nData, nXf );
+		    nData = _m_psradi( nData, 14 );
+		    nData = _mm_packs_pi32( nData, zero );
+		    nData = _m_pmaddwd( nData, nYf );
+		    *pRes = _m_to_int( nData ) >> 14;
+		}
+        __asm emms;
+    }
+
+
+	static void SampleWarFog( const std::vector<CVec3> &srcPos, float fScale, std::vector<unsigned char> *_pRes1, const CArray2D<unsigned char> &fog1,
+		std::vector<unsigned char> *_pRes2, const CArray2D<unsigned char> &fog2 )
+    {
+		if ( srcPos.empty() )
+		    return;
+		int nVertices = srcPos.size();
+		if ( _pRes1->size() < nVertices )
+		    _pRes1->resize( nVertices );
+		if ( _pRes2 && _pRes2->size() < nVertices )
+		    _pRes2->resize( nVertices );
+
+		static std::vector<int> tmp;
+		if ( tmp.size() < nVertices * 2 )
+		    tmp.resize( nVertices * 2 );
+
+		// calc integer x & y
+		{
+		    float fpScale = fScale * 0x4000;
+		    const CVec3 *pSrc = &srcPos[0], *pEnd = pSrc + nVertices;
+		    int *pTmp = &tmp[0];
+		    __asm
+			{
 				mov esi, pSrc
 				mov edi, pTmp
 				mov eax, pEnd
@@ -492,42 +475,39 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos,
 				add edi, 8
 				cmp esi, eax
 				jnz lp
+			}
 		}
-	}
 
-	SampleWarFogInt( tmp, fog1, _pRes1, nVertices );
-	if ( _pRes2 )
-	{
-		SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
-	}
-	_m_empty();
-}
+		SampleWarFogInt( tmp, fog1, _pRes1, nVertices );
+		if ( _pRes2 )
+		    SampleWarFogInt( tmp, fog2, _pRes2, nVertices );
+		_m_empty();
+		}
 
-static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
-                                  const std::vector<NGfx::SMMXWord> &attenuation,
-                                  const std::vector<uint16_t> &posIndices,
-                                  const std::vector<NGfx::SCompactVector> &_normals,
-                                  const CVec3 &_vColor )
-{
-	NGfx::SMMXWord shift{}, lightColor{}, shift1{};
-	shift.nX = shift.nY = shift.nZ = (short)0x8000;
-	shift1.nX = shift1.nZ = 1 << 12;
-	shift1.nY = shift1.nW = 0;
-	lightColor.nX = Float2Int( _vColor.x * 32767 );
-	lightColor.nY = Float2Int( _vColor.y * 32767 );
-	lightColor.nZ = Float2Int( _vColor.z * 32767 );
-	__asm
+
+	static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
+		const std::vector<NGfx::SMMXWord> &attenuation, const std::vector<uint16_t> &posIndices,
+		const std::vector<NGfx::SCompactVector> &_normals,
+		const CVec3 &_vColor )
 	{
+		NGfx::SMMXWord shift{}, lightColor{}, shift1{};
+	    shift.nX = shift.nY = shift.nZ = (short)0x8000;
+	    shift1.nX = shift1.nZ = 1 << 12; shift1.nY = shift1.nW = 0;
+	    lightColor.nX = Float2Int( _vColor.x * 32767 );
+	    lightColor.nY = Float2Int( _vColor.y * 32767 );
+	    lightColor.nZ = Float2Int( _vColor.z * 32767 );
+	    __asm
+		{
 			movq mm7, lightColor
 			movq mm5, shift1
-	}
-	for ( int k = 0; k < posIndices.size(); ++k )
-	{
-		uint32_t dwNormal = _normals[k].dw;
-		const NGfx::SMMXWord *pAtt = &attenuation[posIndices[k]];
-		NGfx::SMMXWord *pResColor = &( *pRes )[k];
-		__asm
-		{
+		}
+	    for ( int k = 0; k < posIndices.size(); ++k )
+	    {
+            uint32_t dwNormal = _normals[k].dw;
+            const NGfx::SMMXWord *pAtt = &attenuation[ posIndices[k] ];
+            NGfx::SMMXWord *pResColor = &(*pRes)[k];
+            __asm
+			{
 				mov esi, pResColor
 				mov edi, pAtt
 				movq mm6, [esi]
@@ -560,40 +540,36 @@ static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 				packssdw mm2, mm3
 				paddsw mm2, mm6
 				movq [esi], mm2
-		}
+			}
+	    }
+	    __asm emms
 	}
-	__asm emms
-}
 
-static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
-                                  const NGfx::SMMXWord &attenuation,
-                                  const NGScene::SUVInfo *pSrc,
-                                  int _nSize,
-                                  const CVec3 &_vColor )
-{
-	NGfx::SMMXWord shift{}, lightColor{}, shift1{};
-	shift.nX = shift.nY = shift.nZ = (short)0x8000;
-	shift1.nX = shift1.nZ = 1 << 12;
-	shift1.nY = shift1.nW = 0;
-	lightColor.nX = Float2Int( _vColor.x * 32767 );
-	lightColor.nY = Float2Int( _vColor.y * 32767 );
-	lightColor.nZ = Float2Int( _vColor.z * 32767 );
-	__asm
-			{
+	static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
+	const NGfx::SMMXWord &attenuation, const NGScene::SUVInfo *pSrc, int _nSize, const CVec3 &_vColor )
+	{
+	    NGfx::SMMXWord shift{}, lightColor{}, shift1{};
+	    shift.nX = shift.nY = shift.nZ = (short)0x8000;
+	    shift1.nX = shift1.nZ = 1 << 12; shift1.nY = shift1.nW = 0;
+	    lightColor.nX = Float2Int( _vColor.x * 32767 );
+	    lightColor.nY = Float2Int( _vColor.y * 32767 );
+	    lightColor.nZ = Float2Int( _vColor.z * 32767 );
+	    __asm
+		{
 			movq mm7, lightColor
 			movq mm5, shift1
-	    }
-	uint32_t dwPrevNormal = 0;
-	__declspec( align( 8 ) ) NGfx::SMMXWord prevColor;
-	const NGfx::SMMXWord *pAtt = &attenuation;
-	for ( int k = 0; k < _nSize; ++k )
-	{
-		uint32_t dwNormal = pSrc[k].normal.dw;
-		NGfx::SMMXWord *pResColor = &( *pRes )[k];
-		if ( dwNormal != dwPrevNormal )
-		{
-			__asm
-					{
+		}
+	    uint32_t dwPrevNormal = 0;
+	    __declspec(align(8)) NGfx::SMMXWord prevColor;
+	    const NGfx::SMMXWord *pAtt = &attenuation;
+	    for ( int k = 0; k < _nSize; ++k )
+	    {
+            uint32_t dwNormal = pSrc[k].normal.dw;
+            NGfx::SMMXWord *pResColor = &(*pRes)[k];
+            if ( dwNormal != dwPrevNormal )
+            {
+                __asm
+				{
 					mov esi, pResColor
 					mov edi, pAtt
 					movq mm6, [esi]
@@ -627,48 +603,47 @@ static void CalcPointLightColors( std::vector<NGfx::SMMXWord> *pRes,
 					movq prevColor, mm2
 					paddsw mm2, mm6
 					movq [esi], mm2
-			    }
-			dwPrevNormal = dwNormal;
-		}
-		else
-		{
-			__asm
-			{
+				}
+                dwPrevNormal = dwNormal;
+            }
+            else
+            {
+               __asm
+				{
 					mov esi, pResColor
 					movq mm0, [esi]
 					paddsw mm0, prevColor
 					movq [esi], mm0
-			}
-		}
+                }
+            }
+	    }
+	    __asm emms
 	}
-	__asm emms
-}
 
-static void
-AddColors( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &src, const std::vector<NGfx::SMMXWord> &add )
-{
-	ASSERT( pRes->size() >= add.size() );
-	ASSERT( src.size() >= add.size() );
-	int nSize = add.size();
-	uint32_t *pResPtr = &( *pRes )[0];
-	const uint32_t *pSrcPtr = &src[0];
-	const NGfx::SMMXWord *pAdd = &add[0];
-	__asm
-			{
+	static void AddColors( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &src, const std::vector<NGfx::SMMXWord> &add )
+    {
+		ASSERT( pRes->size() >= add.size() );
+		ASSERT( src.size() >= add.size() );
+		int nSize = add.size();
+		uint32_t *pResPtr = &(*pRes)[0];
+		const uint32_t *pSrcPtr = &src[0];
+		const NGfx::SMMXWord *pAdd = &add[0];
+		__asm
+		{
 			pxor mm7, mm7
 			pcmpeqw mm6, mm6
 			psllw mm6, 15
 			psrlw mm6, 1
-	    }
-	for ( uint32_t *pResEnd = pResPtr + nSize; pResPtr < pResEnd; ++pResPtr, ++pSrcPtr, ++pAdd )
-	{
-		uint32_t dwColor = *pSrcPtr; //(*pRes)[k];
-		//NGfx::SMMXWord addColor = add[k];
-		//addColor.nX = Clamp( Float2Int( add[k].x * 32767 ), 0, 32767 );
-		//addColor.nY = Clamp( Float2Int( add[k].y * 32767 ), 0, 32767 );
-		//addColor.nZ = Clamp( Float2Int( add[k].z * 32767 ), 0, 32767 );
-		__asm
-				{
+		}
+		for ( uint32_t *pResEnd = pResPtr + nSize; pResPtr < pResEnd; ++pResPtr, ++pSrcPtr, ++pAdd )
+		{
+			uint32_t dwColor = *pSrcPtr;//(*pRes)[k];
+			//NGfx::SMMXWord addColor = add[k];
+			//addColor.nX = Clamp( Float2Int( add[k].x * 32767 ), 0, 32767 );
+			//addColor.nY = Clamp( Float2Int( add[k].y * 32767 ), 0, 32767 );
+			//addColor.nZ = Clamp( Float2Int( add[k].z * 32767 ), 0, 32767 );
+			__asm
+			{
 				mov esi, pAdd
 				movd mm0, dwColor
 				punpcklbw mm0, mm0
@@ -680,9 +655,9 @@ AddColors( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &src, const 
 				pmulhw mm0, mm1
 				pmullw mm2, mm1
 				psllw mm0, 1
-				paddsw mm0, [esi] //addColor
+				paddsw mm0, [esi]//addColor
 				psrlw mm0, 1
-								// combine low part into lookup index if higher part is zero
+				// combine low part into lookup index if higher part is zero
 				psrlw mm2, 2
 				por mm2, mm6
 				movq mm3, mm0
@@ -690,7 +665,7 @@ AddColors( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &src, const 
 				pand mm2, mm3
 				pandn mm3, mm0
 				por mm3, mm2
-								// calc cubic root from result
+				// calc cubic root from result
 				movd ebx, mm3
 				psrlq mm3, 32
 				mov esi, ebx
@@ -707,57 +682,49 @@ AddColors( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &src, const 
 				shl ecx, 16
 				or eax, ecx
 				mov dwColor, eax
-								//emms
-				}
-		//uint32_t dwTest = NGfx::GetDWORDColor( GetOutputColor(
-		//	GetLinearColor( NGfx::GetCVec4Color( (*pRes)[k] ) ) +
-		//	CVec4( add[k], 0 )
-		//	) );
-		*pResPtr = dwColor;
+				//emms
+			}
+			//uint32_t dwTest = NGfx::GetDWORDColor( GetOutputColor(
+			//	GetLinearColor( NGfx::GetCVec4Color( (*pRes)[k] ) ) +
+			//	CVec4( add[k], 0 )
+			//	) );
+			*pResPtr = dwColor;
+		}
+		__asm emms
 	}
-	__asm emms
-}
 
-static void ScaleColors( std::vector<uint32_t> *pRes,
-                         const uint32_t *_pSrc,
-                         int nSrcStride,
-                         unsigned char *pScale,
-                         int nScaleMask,
-                         const std::vector<uint16_t> &posIndices,
-                         const std::vector<NGfx::SCompactVector> &transp,
-                         bool bMultiplyOnTransparency )
-{
-	int nSize = posIndices.size();
-	if ( pRes->size() < nSize )
+	static void ScaleColors( std::vector<uint32_t> *pRes, const uint32_t *_pSrc, int nSrcStride,
+		unsigned char *pScale, int nScaleMask, const std::vector<uint16_t> &posIndices, const std::vector<NGfx::SCompactVector> &transp,
+		bool bMultiplyOnTransparency )
 	{
-		pRes->resize( nSize );
-	}
-	uint32_t *p = &( *pRes )[0], *pEnd = p + nSize;
-	const uint32_t *pSrc = _pSrc;
-	ASSERT( sizeof( uint32_t ) == sizeof( transp[0] ) );
-	const NGfx::SCompactVector *pTransp = &transp[0];
-	const uint16_t *pPosIndices = &posIndices[0];
-	NGfx::SMMXWord mTransp;
-	mTransp.nX = mTransp.nY = mTransp.nZ = 0;
-	mTransp.nW = 0x1ff;
-	__asm movq mm7, mTransp if ( bMultiplyOnTransparency )
-	{
-		mTransp.nX = mTransp.nY = mTransp.nZ = 0;
-		mTransp.nW = 0;
-	}
-	else
-	{
-		mTransp.nX = mTransp.nY = mTransp.nZ = 0x7fff;
-		mTransp.nW = 0;
-	}
-	__asm movq mm6, mTransp for ( ; p < pEnd; ++p, pSrc += nSrcStride / 4, ++pPosIndices, ++pTransp )
-	{
-		int nScaleIndex = ( *pPosIndices ) & nScaleMask;
-		int n = ( (int)( pScale[nScaleIndex] ) ) << 2;
-		int nScale = pTransp->w << 7;
-		//ASSERT( ((*pSrc) & 0xff000000 ) == 0 );
-		__asm
+	    int nSize = posIndices.size();
+	    if ( pRes->size() < nSize )
+            pRes->resize( nSize );
+	    uint32_t *p = &(*pRes)[0], *pEnd = p + nSize;
+	    const uint32_t *pSrc = _pSrc;
+	    ASSERT( sizeof(uint32_t) == sizeof(transp[0]) );
+	    const NGfx::SCompactVector *pTransp = &transp[0];
+	    const uint16_t *pPosIndices = &posIndices[0];
+	    NGfx::SMMXWord mTransp;
+	    mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0x1ff;
+	    __asm movq mm7, mTransp
+		if ( bMultiplyOnTransparency )
 		{
+			mTransp.nX = mTransp.nY = mTransp.nZ = 0; mTransp.nW = 0;
+		}
+		else
+		{
+			mTransp.nX = mTransp.nY = mTransp.nZ = 0x7fff; mTransp.nW = 0;
+		}
+	    __asm movq mm6, mTransp
+		for ( ; p < pEnd; ++p, pSrc += nSrcStride / 4, ++pPosIndices, ++pTransp )
+		{
+			int nScaleIndex = (*pPosIndices) & nScaleMask;
+			int n = ((int) (pScale[ nScaleIndex ]) ) << 2;
+			int nScale = pTransp->w << 7;
+			//ASSERT( ((*pSrc) & 0xff000000 ) == 0 );
+			__asm
+			{
 				mov esi, pSrc
 				movd mm0, [esi]
 				movd mm1, n
@@ -775,9 +742,9 @@ static void ScaleColors( std::vector<uint32_t> *pRes,
 				pmulhw mm0, mm2
 				packuswb mm0, mm0
 				movd [esi], mm0
+			}
 		}
+	    __asm emms
 	}
-	__asm emms
-}
 
-} // namespace original
+}
