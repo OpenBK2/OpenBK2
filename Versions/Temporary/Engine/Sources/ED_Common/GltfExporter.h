@@ -1,8 +1,9 @@
 #pragma once
-#include "ED_Common_export.h"
 #include "3Dmotor/GltfFormat.h"
-#include "Tools_Granny.h"
 #include "Misc/ModelTriangle.h"
+#include "Tools_Granny.h"
+
+#include "ED_Common_export.h"
 
 struct IManipulator;
 

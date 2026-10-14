@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "ImageProcessor.h"
-
 #include "ImageBMP.h"
-#include "ImageTGA.h"
 #include "ImageDDS.h"
+#include "ImageProcessor.h"
+#include "ImageTGA.h"
 
 #include <cstdint>
 

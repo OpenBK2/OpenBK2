@@ -1,14 +1,14 @@
 #pragma once
 
-#include "MapInfoEditorData_Consts.h"
-#include "MapInfoEditorData_Clipboard.h"
-#include "MapInfoEditorData_Selection.h"
-#include "MapInfoEditorData_ObjectInfo.h"
-#include "MapEditorLib/Tools_IndexCollector.h"
 #include "MapEditorLib/Tools_FreeIDCollector.h"
+#include "MapEditorLib/Tools_IndexCollector.h"
+#include "MapInfoEditorData_Clipboard.h"
+#include "MapInfoEditorData_Consts.h"
+#include "MapInfoEditorData_ObjectInfo.h"
+#include "MapInfoEditorData_Selection.h"
 // InsertHashSetElement, which the selection templates below call.
-#include "MapEditorLib/Tools_HashSet.h"
 #include "EditorUpdatableWorld.h"
+#include "MapEditorLib/Tools_HashSet.h"
 
 class CMapInfoEditor;
 

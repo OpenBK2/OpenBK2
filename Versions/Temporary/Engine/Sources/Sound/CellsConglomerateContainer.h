@@ -1,7 +1,7 @@
 
 #pragma once
-#include "Misc/2Darray.h"
 #include "IntPair.h"
+#include "Misc/2Darray.h"
 
 typedef std::list<SIntThree /*hearable cell coordinate*/> CHearableCells;
 typedef CArray2D<CHearableCells> CConglomerate;

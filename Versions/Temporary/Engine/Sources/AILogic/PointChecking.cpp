@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "PointChecking.h"
-#include "GlobalWarFog.h"
 #include "AIGeometry.h"
+#include "GlobalWarFog.h"
+#include "PointChecking.h"
 #include "StaticObject.h"
 
 #include <cstdint>

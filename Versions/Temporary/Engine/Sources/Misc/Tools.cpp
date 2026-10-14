@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Tools.h"
 
 #include "port/stdcall.h"
+#include "Tools.h"
 
 #include <cstdio>
 #include <string>

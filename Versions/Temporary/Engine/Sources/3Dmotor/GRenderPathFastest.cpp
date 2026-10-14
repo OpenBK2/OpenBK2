@@ -1,20 +1,18 @@
 #include "stdafx.h"
-#include "GRenderPathFastest.h"
+
 #include "GfxUtils.h"
+#include "GInit.h"
+#include "GRenderClouds.h"
 #include "GRenderFactor.h"
 #include "GRenderLight.h"
-#include "GScene.h"
-#include "GRTShare.h"
+#include "GRenderPathFastest.h"
 #include "GRenderUtils.h"
-#include "System/Commands.h"
+#include "GRTShare.h"
+#include "GScene.h"
 #include "GTransparent.h"
-#include "GRenderClouds.h"
-#include "GInit.h"
-#include "GfxUtils.h"
-
 #include "Image/ImageTGA.h"
-
 #include "port/time.h"
+#include "System/Commands.h"
 
 #include <cstdint>
 

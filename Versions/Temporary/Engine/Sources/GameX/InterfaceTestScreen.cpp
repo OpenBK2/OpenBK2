@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "UI/CommandParam.h"
-#include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "InterfaceTestScreen.h"
+
 #include "GameXClassIDs.h"
+#include "InterfaceTestScreen.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
 #include "SceneB2/Cursor.h"
 #include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 #include "UI/SceneClassIDs.h"
-#include "Misc/StrProc.h"
 
 #include "GameX_export.h"
 

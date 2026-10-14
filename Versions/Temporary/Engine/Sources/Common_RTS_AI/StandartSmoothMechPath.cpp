@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
+#include "BasePathUnit.h"
 #include "Misc/Bresenham.h"
 #include "StandartSmoothMechPath.h"
-#include "Terrain.h"
 #include "System/RandomGen.h"
-#include "BasePathUnit.h"
+#include "Terrain.h"
 
 #include <cstdint>
 

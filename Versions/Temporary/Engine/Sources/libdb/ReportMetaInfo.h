@@ -1,9 +1,9 @@
 #pragma once
 
-#include "libdb_export.h"
-
-#include "Type.h"
 #include "ArrayOperations.h"
+#include "Type.h"
+
+#include "libdb_export.h"
 
 #include <cstdint>
 

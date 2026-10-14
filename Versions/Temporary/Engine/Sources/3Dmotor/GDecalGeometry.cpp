@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "GDecalGeometry.h"
+
 #include "3DLib/Transform.h"
 #include "GCombiner.h"
+#include "GDecalGeometry.h"
 
 #include <cstdint>
 

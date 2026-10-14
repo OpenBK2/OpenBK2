@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
+#include "AIGeneralTypes.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/DBMapInfo.h"
-#include "AIGeneralTypes.h"
 
 #include <zconf.h>
 

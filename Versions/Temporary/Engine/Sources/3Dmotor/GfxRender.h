@@ -3,7 +3,6 @@
 
 //
 #include "GPixelFormat.h"
-
 #include "pciids/gpus.h"
 
 #include <cstdint>

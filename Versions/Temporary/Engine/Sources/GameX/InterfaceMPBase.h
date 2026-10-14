@@ -2,8 +2,8 @@
 #pragma once
 
 #include "InterfaceScreenBase.h"
-#include "MultiplayerCommandProcessor.h"
 #include "MultiplayerCommandManager.h"
+#include "MultiplayerCommandProcessor.h"
 
 class CInterfaceMPScreenBase : public CInterfaceScreenBase, public CMPUIMessageTranslator
 {

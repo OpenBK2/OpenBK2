@@ -2,13 +2,13 @@
 
 #include "System/GResource.h"
 
+#include "3Dmotor_export.h"
+
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <cstddef>
 
 #include <boost/config.hpp>
-
-#include "3Dmotor_export.h"
 
 namespace NGScene
 {

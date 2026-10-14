@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "3Dmotor/G2DView.h"
-#include "IconOutline.h"
-#include "3Dmotor/2DSceneSW.h"
-#include "3Dmotor/SWTexture.h"
-#include "3Dmotor/DBScene.h"
 
-#include "UIML.h"
-#include "3Dmotor/GTexture.h"
-#include "System/BasicShare.h"
+#include "3Dmotor/2DSceneSW.h"
+#include "3Dmotor/DBScene.h"
+#include "3Dmotor/G2DView.h"
 #include "3Dmotor/GRects.h"
+#include "3Dmotor/GTexture.h"
+#include "3Dmotor/SWTexture.h"
+#include "IconOutline.h"
+#include "System/BasicShare.h"
+#include "UIML.h"
 
 #include "3Dmotor_export.h"
 

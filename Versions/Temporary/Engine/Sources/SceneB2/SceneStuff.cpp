@@ -1,21 +1,20 @@
 #include "stdafx.h"
 
+#include "3Dmotor/G2DView.h"
+#include "3Dmotor/Gfx.h"
+#include "AttachedObj.h"
+#include "B2_M1_Terrain/TracksManager.h"
+#include "Camera.h"
+#include "DBSceneConsts.h"
+#include "Main/GameTimer.h"
+#include "SceneHoldQueue.h"
+#include "SceneInternal.h"
+#include "Stats_B2_M1/TerraAIObserver.h"
+#include "System/BinaryResources.h"
+#include "TerrainManager.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "3Dmotor/Gfx.h"
-#include "3Dmotor/G2DView.h"
-#include "Main/GameTimer.h"
 #include "UI/UI.h"
-#include "System/BinaryResources.h"
-#include "DBSceneConsts.h"
-#include "TerrainManager.h"
-#include "Camera.h"
-#include "B2_M1_Terrain/TracksManager.h"
-#include "SceneHoldQueue.h"
-#include "AttachedObj.h"
-#include "Stats_B2_M1/TerraAIObserver.h"
-
-#include "SceneInternal.h"
 
 #include <cstdint>
 

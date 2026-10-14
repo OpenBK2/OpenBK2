@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
+#include "4dCalcs.h"
 #include "GParticleInfo.h"
 #include "GPointLightGlow.h"
 #include "GScene.h"
 #include "RandomGen.h"
-#include "4dCalcs.h"
 
 namespace NGScene
 {

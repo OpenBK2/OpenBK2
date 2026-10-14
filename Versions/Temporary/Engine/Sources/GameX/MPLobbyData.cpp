@@ -1,13 +1,14 @@
 #include "stdafx.h"
+
+#include "GameRoomData.h"
+#include "Input/GameMessage.h"
+#include "InterfaceMPLobby.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Input/GameMessage.h"
 #include "UI/UI.h"
-#include "Misc/2Darray.h"
 #include "UI/UIFactory.h"
-#include "GameRoomData.h"
-#include "Misc/StrProc.h"
-#include "InterfaceMPLobby.h"
 
 #include <zconf.h>
 

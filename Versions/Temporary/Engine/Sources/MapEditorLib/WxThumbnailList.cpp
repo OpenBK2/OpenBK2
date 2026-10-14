@@ -1,9 +1,9 @@
 #include "WxThumbnailList.h"
 
 #ifdef __WXGTK__
+#include <gtk/gtk.h>
 #include <wx/imaglist.h>
 #include <wx/utils.h>
-#include <gtk/gtk.h>
 
 struct CWxThumbnailList::SImpl
 {

@@ -1,13 +1,13 @@
 #pragma once
 
+#include "DBUISpecificB2.h"
+#include "Input/GameMessage.h"
+#include "Misc/2Darray.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Input/GameMessage.h"
 #include "UI/UIFactory.h"
-#include "Misc/2Darray.h"
 #include "UI/Window.h"
-#include "DBUISpecificB2.h"
 #include "UISpecificB2.h"
 
 #include <zconf.h>

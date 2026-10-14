@@ -1,30 +1,29 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-#include <fmt/format.h>
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/Interface_MOD.h"
-#include "Misc/2Darray.h"
-#include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
 
-#include "AckTableReader.h"
 #include "AckSetBuilder.h"
-#include "MapEditorLib/BuilderFactory.h"
-#include "MapEditorLib/Interface_Exporter.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "System/FileUtils.h"
-#include "Misc/StrProc.h"
-#include "libdb/ResourceManager.h"
-#include "Stats_B2_M1/AckTypes.h"
-
+#include "AckTableReader.h"
+#include "CommandHandlerDefines.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "ResourceDefines.h"
+#include "Stats_B2_M1/AckTypes.h"
+#include "System/FileUtils.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 #define ACK_SET_TYPE_NAME "AckSetRPGStats"

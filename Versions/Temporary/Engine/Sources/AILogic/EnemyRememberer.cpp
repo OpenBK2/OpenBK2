@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "EnemyRememberer.h"
 #include "CommonUnit.h"
+#include "EnemyRememberer.h"
 
 #include "AILogic_export.h"
 

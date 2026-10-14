@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
 
 #include "EditorTestInterface.h"
-#include "SceneB2/Camera.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "SceneB2/Camera.h"
 
 CEditorInterfaceBase::CEditorInterfaceBase()
 {

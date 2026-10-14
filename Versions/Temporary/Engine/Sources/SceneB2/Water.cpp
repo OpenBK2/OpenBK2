@@ -1,19 +1,18 @@
 #include "stdafx.h"
 
-#include "Water.h"
 #include "B2_M1_Terrain/DBPreLight.h"
 #include "B2_M1_Terrain/DBWater.h"
 #include "Image/Targa.h"
-#include "System/FastMath.h"
 #include "Misc/Win32Random.h"
-#include "TerrainInfo.h"
 #include "Scene.h"
+#include "System/FastMath.h"
 #include "System/VFSOperations.h"
+#include "TerrainInfo.h"
+#include "Water.h"
 
 #include <cstdint>
 
 #include <boost/config.hpp>
-
 #include <fmt/format.h>
 
 #define DEF_INV_255 ( 1.0f / 255.0f )

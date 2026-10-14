@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "3Dmotor/RectLayout.h"
-#include "3Dmotor/G2DView.h"
-#include "3Dmotor/Locale.h"
-#include "3Dmotor/GLocale.h"
 
+#include "3Dmotor/G2DView.h"
+#include "3Dmotor/GLocale.h"
+#include "3Dmotor/Locale.h"
+#include "3Dmotor/RectLayout.h"
 #include "mlReflow.h"
 
 #include <algorithm>

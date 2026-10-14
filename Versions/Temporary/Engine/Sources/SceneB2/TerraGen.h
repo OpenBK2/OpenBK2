@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneB2_export.h"
 #include "Misc/ModelTriangle.h"
-
 #include "VersionInfo.h"
+
+#include "SceneB2_export.h"
 
 #include <cstdint>
 

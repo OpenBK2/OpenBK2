@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 
+#include "ExporterMethods.h"
 #include "GeometryExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
-#include "ExporterMethods.h"
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 REGISTER_EXPORTER_IN_DLL( Geometry, CGeometryExporter )
 

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "3DLib_export.h"
-
-#include "GGeometry.h"
 #include "Bound.h"
+#include "GGeometry.h"
+
+#include "3DLib_export.h"
 //#include "..\Misc\StrProc.h"
 //#include "..\System\Commands.h"
 #include "GGeometryUtil.h"

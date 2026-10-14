@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "LoadImage.h"
-#include "NoiseManager.h"
 #include "Misc/StrProc.h"
+#include "NoiseManager.h"
 #include "System/VFSOperations.h"
 
 #include <fmt/format.h>

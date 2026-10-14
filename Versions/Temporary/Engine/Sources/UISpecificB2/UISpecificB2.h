@@ -1,15 +1,15 @@
 #pragma once
 
-#include "UISpecificB2_export.h"
-
+#include "3Dmotor/Gfx.h"
+#include "Misc/Progress.h"
+#include "Stats_B2_M1/AITypes.h"
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBNotifications.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "3Dmotor/Gfx.h"
-#include "Stats_B2_M1/DBNotifications.h"
-#include "Stats_B2_M1/AITypes.h"
-#include "Stats_B2_M1/DBAnimB2.h"
-#include "Misc/Progress.h"
+
+#include "UISpecificB2_export.h"
 
 #include <cstdint>
 

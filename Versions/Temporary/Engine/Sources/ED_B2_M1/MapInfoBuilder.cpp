@@ -1,27 +1,28 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "MapInfoBuilder.h"
-#include "MapEditorLib/BuilderFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/Interface_Exporter.h"
-#include "libdb/ResourceManager.h"
-#include "Misc/StrProc.h"
-#include "System/FilePath.h"
-#include "System/FileUtils.h"
-#include "Image/Targa.h"
-#include "EditorOptions.h"
 #include "BuilderMethods.h"
 #include "EditorMethods.h"
-#include "Stats_B2_M1/DBMapInfo.h"
-#include "SceneB2/TerraGen.h"
+#include "EditorOptions.h"
 #include "EditorScene.h"
-#include "System/VFSOperations.h"
+#include "Image/Targa.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "MapInfoBuilder.h"
+#include "Misc/StrProc.h"
+#include "SceneB2/TerraGen.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "System/VFSOperations.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 REGISTER_BUILDER_IN_DLL( MapInfo, CMapInfoBuilder )
 

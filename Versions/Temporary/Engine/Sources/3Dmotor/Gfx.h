@@ -3,13 +3,12 @@
 // HWND, HRESULT and S_OK below. Included by 23 translation units across five
 // modules, which reached these types through their stdafx on Windows and had
 // nothing to reach off it. Not d3d9.h: see the note on D3DASSERT.
-#include <windows.h>
+#include "GPixelFormat.h"
 
 #include "3Dmotor_export.h"
 
-#include "GPixelFormat.h"
-
 #include <fmt/printf.h>
+#include <windows.h>
 
 namespace NGfx
 {

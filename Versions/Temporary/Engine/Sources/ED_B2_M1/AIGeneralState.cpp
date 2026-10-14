@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/ResourceDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
 #include "AIGeneralTypes.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "Misc/2Darray.h"
 #include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
+
+#include <fmt/format.h>
 // The two dialogs this state opens, behind their boundary: which toolkit draws
 // them is NAIGenMobileDialog's and NAIGenParcelDialog's business.
 #include "AIGeneralDialogs.h"

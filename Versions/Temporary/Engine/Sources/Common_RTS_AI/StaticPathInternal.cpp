@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "StaticPathInternal.h"
-#include "CommonPathFinder.h"
-
 #include "Common_RTS_AI/AIMap.h"
+#include "CommonPathFinder.h"
+#include "StaticPathInternal.h"
 
 #include <limits>
 

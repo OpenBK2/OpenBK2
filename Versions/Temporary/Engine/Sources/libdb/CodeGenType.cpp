@@ -4,10 +4,10 @@
 #include "CodeGenNamespace.h"
 #include "CodeGenType.h"
 #include "Hungarian.h"
+#include "Parser/LangNodesDefinitions.h"
 #include "StrStream.h"
 #include "TerminalTypesDesc.h"
 #include "TypeDef.h"
-#include "Parser/LangNodesDefinitions.h"
 
 #include "libdb_export.h"
 

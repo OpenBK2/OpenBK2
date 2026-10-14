@@ -1,10 +1,10 @@
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/GLightPerVertexKernels.h"
+#include "original.h"
+#include "random.h"
 
 #include <gtest/gtest.h>
-
-#include "random.h"
-#include "original.h"
 
 bool bIsSSEPresent;
 unsigned char nCubicRoot[32768];

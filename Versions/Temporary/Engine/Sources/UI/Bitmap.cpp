@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "Bitmap.h"
+
 #include "3Dmotor/RectLayout.h"
+#include "Bitmap.h"
 #include "UIVisitor.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x170A6B80, CBitmap );

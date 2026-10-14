@@ -14,24 +14,25 @@
 */
 
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "Misc/2Darray.h"
+
 #include "3Dmotor/DBScene.h"
-#include "libdb/ResourceManager.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "ExporterMethods.h"
 #include "BuildingRPGStatsExporter.h"
 #include "ED_Common/GltfExporter.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include "System/FilePath.h"
-#include <set>
-#include "Misc/StrProc.h"
-#include "MapEditorLib/StringManager.h"
+#include "ExporterMethods.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/StringManager.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "System/FilePath.h"
 
 #include <cstdint>
+#include <set>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 REGISTER_EXPORTER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsExporter )

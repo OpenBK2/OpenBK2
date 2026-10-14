@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Server_Client_Common_export.h"
-
-#include "NetPacket.h"
 #include "ChatPackets.h"
+#include "NetPacket.h"
+
+#include "Server_Client_Common_export.h"
 
 #include <fmt/format.h>
 

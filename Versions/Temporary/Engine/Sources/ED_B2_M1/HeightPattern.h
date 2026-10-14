@@ -2,9 +2,10 @@
 
 #include "Misc/2Darray.h"
 // ValidateRect and IsValidPoint, which ApplyHeightPattern calls.
-#include "Misc/PlaneGeometry.h"
-#include <fmt/format.h>
 #include "MapEditorLib/Tools_Gradient.h"
+#include "Misc/PlaneGeometry.h"
+
+#include <fmt/format.h>
 
 struct SHeightPattern
 {

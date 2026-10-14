@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "DBReferenceScan.h"
-
 #include "System/FilePath.h"
 
 #include <cstring>

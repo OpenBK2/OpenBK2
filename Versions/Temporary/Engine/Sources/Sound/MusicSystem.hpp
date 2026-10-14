@@ -1,8 +1,7 @@
 #pragma once
-#include "MusicSystem.h"
-
-#include "vendor/fmod/api/inc/fmod.h"
 #include "Fade.h"
+#include "MusicSystem.h"
+#include "vendor/fmod/api/inc/fmod.h"
 
 namespace NDb
 {

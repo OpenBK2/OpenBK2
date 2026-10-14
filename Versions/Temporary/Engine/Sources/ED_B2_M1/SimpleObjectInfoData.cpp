@@ -1,15 +1,15 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
-#include "MapEditorLib/MultiManipulator.h"
-#include "SimpleObjectInfoData.h"
 
+#include "MapEditorLib/MultiManipulator.h"
+#include "Misc/2Darray.h"
+#include "SceneB2/Scene.h"
+#include "SimpleObjectInfoData.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/M1UnitType.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 namespace NMapInfoEditor

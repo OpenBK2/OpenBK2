@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
 #include "EnterName.h"
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/button.h>
 #include <wx/sizer.h>

@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "InterfaceMissionMovieBorder.h"
+
 #include "GameXClassIDs.h"
+#include "InterfaceMissionMovieBorder.h"
 
 #include "GameX_export.h"
 

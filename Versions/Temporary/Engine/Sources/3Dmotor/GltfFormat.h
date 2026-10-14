@@ -1,16 +1,17 @@
 #pragma once
 
 #include "GSkeleton.h"
-#include "3Dmotor_export.h"
 #include "System/FilePath.h"
 
-#include <fastgltf/types.hpp>
+#include "3Dmotor_export.h"
 
 #include <memory>
 #include <mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include <fastgltf/types.hpp>
 
 namespace NDb
 {

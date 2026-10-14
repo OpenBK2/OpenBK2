@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "FileRead.h"
 #include "FileNode.h"
+#include "FileRead.h"
 #include "Misc/StrProc.h"
 
 // lang.l; see the comment there

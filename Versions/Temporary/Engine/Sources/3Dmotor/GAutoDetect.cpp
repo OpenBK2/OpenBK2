@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "port/meminfo.h"
-#include "Gfx.h"
-#include "GfxRender.h"
-#include "GfxBuffers.h"
-#include "GAutoDetect.h"
-#include "Misc/HPTimer.h"
 #include "3Dmotor/GfxBenchmark.h"
-
+#include "GAutoDetect.h"
+#include "Gfx.h"
+#include "GfxBuffers.h"
+#include "GfxRender.h"
+#include "Misc/HPTimer.h"
 #include "pciids/detect.h"
+#include "port/meminfo.h"
 
 #include <fmt/format.h>
 

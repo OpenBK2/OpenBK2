@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "GenTerrain.h"
 #include "B2_M1_Terrain/TracksManager.h"
+#include "GenTerrain.h"
 
 #define DEF_VERTICES_NUM_ALLOC 8
 #define DEF_TRIANGLES_NUM_ALLOC 6

@@ -28,29 +28,28 @@
 
 // The prelude the database headers and the generated TestType.h expect, in the
 // order TestDB/stdafx.h has it.
-#include "Misc/Asserts.h"
-#include "System/System.h"
-#include "Misc/Tools.h"
-#include "System/Basic.h"
-#include "Misc/Geom.h"
-#include "System/Streams.h"
-#include "System/BinSaver.h"
-#include "System/XmlSaver.h"
-#include "System/DB.h"
-#include "System/VFSOperations.h"
-#include "System/WinVFS.h"
-#include "libdb/Db.h"
 #include "libdb/Checksum.h"
+#include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "libdb/ObjManIterator.h"
 #include "libdb/TypeDef.h"
+#include "Misc/Asserts.h"
+#include "Misc/Geom.h"
+#include "Misc/Tools.h"
+#include "System/Basic.h"
+#include "System/BinSaver.h"
+#include "System/DB.h"
+#include "System/Streams.h"
+#include "System/System.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
+#include "System/XmlSaver.h"
 #include "TestDB/TestDB.h"
 #include "TestDB/TestType.h"
 
 #include <boost/uuid/string_generator.hpp>
 #include <fmt/format.h>
-
 #include <gtest/gtest.h>
 
 namespace

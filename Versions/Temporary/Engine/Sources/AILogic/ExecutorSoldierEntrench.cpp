@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "ExecutorSoldierEntrench.h"
 #include "GroupLogic.h"
 #include "Soldier.h"

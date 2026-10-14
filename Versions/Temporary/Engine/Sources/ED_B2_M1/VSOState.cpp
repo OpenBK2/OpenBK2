@@ -1,20 +1,19 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
 
-#include "MapEditorLib/ResourceDefines.h"
+#include "EditorMethods.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/Interface_MainFrame.h"
-#include "SceneB2/Scene.h"
-#include "ResourceDefines.h"
-
-#include "EditorMethods.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MapInfoEditor.h"
+#include "port/mousekeys.h"
+#include "port/vkcodes.h"
+#include "ResourceDefines.h"
+#include "SceneB2/Scene.h"
 #include "VSOMultiState.h"
 #include "VSOState.h"
-#include "port/vkcodes.h"
-#include "port/mousekeys.h"
 
 #include <cstdint>
 

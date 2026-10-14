@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "ImageTGA.h"
-
 #include "Targa.h"
 
 #include <cstdint>

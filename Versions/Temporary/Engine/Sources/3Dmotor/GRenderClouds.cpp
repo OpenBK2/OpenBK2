@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "GRenderClouds.h"
-#include "GfxRender.h"
+
 #include "GfxBuffers.h"
+#include "GfxRender.h"
 #include "GfxShaders.h"
+#include "GRenderClouds.h"
 #include "GRenderCore.h"
 
 //#include "GRenderFactor.h"

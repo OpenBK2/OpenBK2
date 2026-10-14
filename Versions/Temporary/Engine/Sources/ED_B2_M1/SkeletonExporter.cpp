@@ -1,27 +1,27 @@
 #include "stdafx.h"
-#include "System/FileUtils.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 
-#include "SkeletonExporter.h"
-#include "ED_Common/GltfExporter.h"
 #include "3Dmotor/GltfAnimation.h"
+#include "AnimationMnemonics.h"
+#include "ED_Common/GltfExporter.h"
+#include "ED_Common/TempAttributesTool.h"
+#include "ExporterMethods.h"
 #include "libdb/ObjMan.h"
-#include "System/VFSOperations.h"
-#include <limits>
-#include <set>
-#include "MapEditorLib/ExporterFactory.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "ED_Common/TempAttributesTool.h"
-
-#include "ExporterMethods.h"
-#include "AnimationMnemonics.h"
 #include "Misc/StrProc.h"
+#include "SkeletonExporter.h"
+#include "System/FileUtils.h"
+#include "System/VFSOperations.h"
 
 #include <cstdint>
+#include <limits>
+#include <set>
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 REGISTER_EXPORTER_IN_DLL( Skeleton, CSkeletonExporter )
 

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Variant.h"
 #include "TypeDef.h"
-
-#include <fmt/format.h>
+#include "Variant.h"
 
 #include <boost/uuid/uuid.hpp>
+#include <fmt/format.h>
 
 namespace NDb
 {

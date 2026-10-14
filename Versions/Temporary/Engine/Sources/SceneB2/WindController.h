@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneB2_export.h"
-
-#include "System/Time.h"
 #include "Main/GameTimer.h"
+#include "System/Time.h"
+
+#include "SceneB2_export.h"
 
 //
 //		Creates waves of wind activity according to wind direction

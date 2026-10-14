@@ -10,17 +10,17 @@
 
 // wx first, and X11 after it: wx's headers do not expect X11's macros to
 // already be defined, and X11 does not mind wx.
-#include <wx/window.h>
 #include <wx/toplevel.h>
+#include <wx/window.h>
 
 #if BOOST_OS_WINDOWS
 #include <windows.h>
 #else
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-
-#include <SDL3/SDL.h>
 #include "Input/HostedInput.h"
+
+#include <gdk/gdkx.h>
+#include <gtk/gtk.h>
+#include <SDL3/SDL.h>
 #endif
 
 #if BOOST_OS_WINDOWS

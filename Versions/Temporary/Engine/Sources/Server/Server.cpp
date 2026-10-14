@@ -1,24 +1,22 @@
 #include "stdafx.h"
+
+#include "Chat.h"
 #include "clients.h"
 #include "ControlLobby.h"
+#include "Database.h"
 #include "InternalPackets.h"
-#include "Server.h"
-#include "Chat.h"
-#include "Server_Client_Common/CommonPackets.h"
-
 #include "libdb/Logger.h"
 #include "Misc/StrProc.h"
+#include "Misc/Time64.h"
+#include "Server.h"
 #include "Server_Client_Common/Commands.h"
+#include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/LobbiesIDs.h"
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/NetLogger.h"
-#include "Misc/Time64.h"
+#include "Statistics.h"
 #include "System/XmlSaver.h"
 #include "Terminal.h"
-
-#include "Statistics.h"
-
-#include "Database.h"
 
 #include <fmt/format.h>
 

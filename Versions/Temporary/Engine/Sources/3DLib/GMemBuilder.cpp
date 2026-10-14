@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "MemObject.h"
-#include "GMemFormat.h"
+
 #include "GMemBuilder.h"
+#include "GMemFormat.h"
+#include "MemObject.h"
 
 namespace NGScene
 {

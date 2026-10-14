@@ -1,34 +1,33 @@
 #include "stdafx.h"
+
+#include "DBMPConsts.h"
+#include "GameXClassIDs.h"
+#include "GetConsts.h"
+#include "Input/GameMessage.h"
+#include "InterfaceMisc.h"
+#include "InterfaceMPGameRoom.h"
+#include "InterfaceState.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "Misc/Win32Random.h"
+#include "MultiplayerCommandManager.h"
+#include "port/time.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "System/Commands.h"
+#include "System/Text.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Input/GameMessage.h"
-#include "UI/UI.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "UI/UIFactory.h"
-#include "InterfaceMPGameRoom.h"
-#include "GameXClassIDs.h"
 #include "UI/SceneClassIDs.h"
-#include "SceneB2/Scene.h"
-#include "InterfaceState.h"
-#include "Misc/StrProc.h"
+#include "UI/UI.h"
+#include "UI/UIFactory.h"
 #include "UISpecificB2/DBUISpecificB2.h"
-#include "MultiplayerCommandManager.h"
-#include "GetConsts.h"
-#include "DBMPConsts.h"
-#include "System/Commands.h"
-#include "Misc/Win32Random.h"
-#include "System/Text.h"
-#include "InterfaceMisc.h"
-
-#include "port/time.h"
 
 #include "GameX_export.h"
 
 #include <cstdint>
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 static bool s_bMPAllowStartGame;

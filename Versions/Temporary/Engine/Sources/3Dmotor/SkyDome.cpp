@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "GView.h"
 #include "SkyDome.h"
 

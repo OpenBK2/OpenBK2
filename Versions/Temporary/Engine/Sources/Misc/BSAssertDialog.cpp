@@ -1,11 +1,12 @@
 #include "stdafx.h"
 
+#include "BSDialogFunctions.h"
+#include "BSUtil.h"
+#include "MemoryLib/SymAccess.h"
+#include "resource.h"
+
 #include <charconv>
 #include <limits>
-#include "resource.h"
-#include "MemoryLib/SymAccess.h"
-#include "BSUtil.h"
-#include "BSDialogFunctions.h"
 
 #if BOOST_OS_WINDOWS
 #include <CommCtrl.h>

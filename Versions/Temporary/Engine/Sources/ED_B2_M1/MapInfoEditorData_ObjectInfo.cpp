@@ -1,13 +1,14 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
+#include "MapEditorLib/Interface_Logger.h"
 #include "MapInfoEditorData_ObjectInfo.h"
 #include "MapInfoEditorData_ObjectInfoCollector.h"
-#include "MapEditorLib/Interface_Logger.h"
 #include "Misc/PlaneGeometry.h"
 #include "Stats_B2_M1/AnimationType.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 namespace NMapInfoEditor
 {

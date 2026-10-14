@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "UISpecificB2.h"
+
+#include "3Dmotor/DBScene.h"
+#include "Components.h"
+#include "System/Dg.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "System/Dg.h"
-#include "Components.h"
 #include "UI/UIVisitor.h"
-#include "3Dmotor/DBScene.h"
+#include "UISpecificB2.h"
 
 #include <cstdint>
 

@@ -1,12 +1,10 @@
 #include "stdafx.h"
 
 #include "BinaryResources.h"
+#include "Misc/StrProc.h"
+#include "VFSOperations.h"
 
 #include <boost/uuid/uuid_io.hpp>
-
-#include "VFSOperations.h"
-#include "Misc/StrProc.h"
-
 #include <fmt/format.h>
 
 namespace NBinResources

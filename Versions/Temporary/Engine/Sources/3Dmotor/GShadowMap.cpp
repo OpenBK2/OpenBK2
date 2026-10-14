@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "GShadowMap.h"
+
 #include "3DLib/Transform.h"
 #include "4dCalcs.h"
+#include "GShadowMap.h"
 
 #include <algorithm>
 

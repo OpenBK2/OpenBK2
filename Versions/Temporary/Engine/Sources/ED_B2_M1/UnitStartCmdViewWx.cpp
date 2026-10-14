@@ -1,15 +1,13 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-
-#include "UnitStartCmdView.h"
 
 #include "CommandHandlerDefines.h"
+#include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxOwnership.h"
 #include "ResourceDefines.h"
 #include "StringResources.h"
 #include "UnitStartCmdData.h"
-
-#include "MapEditorLib/WxHostWindow.h"
-#include "MapEditorLib/WxOwnership.h"
+#include "UnitStartCmdView.h"
 
 #include <wx/button.h>
 #include <wx/listctrl.h>

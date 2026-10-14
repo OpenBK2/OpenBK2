@@ -1,7 +1,7 @@
 #pragma once
 
-#include "vendor/fmod/api/inc/fmod.h"
 #include "Fade.h"
+#include "vendor/fmod/api/inc/fmod.h"
 
 namespace NDb
 {

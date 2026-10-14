@@ -1,8 +1,8 @@
 #pragma once
 
-#include "MapEditorLib/EditorBase.h"
-#include "MapEditorLib/DefaultView.h"
 #include "EffectState.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/EditorBase.h"
 
 class CEffectEditor : public CEditorBase, public CDefaultView
 {

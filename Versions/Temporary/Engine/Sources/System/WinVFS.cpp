@@ -1,28 +1,28 @@
 #include "stdafx.h"
+
 #include "FilePath.h"
 #include "FileTime.h"
 #include "FileUtils.h"
+#include "Misc/StrProc.h"
+#include "Misc/Win32Helper.h"
+#include "port/time.h"
 #include "VFSOperations.h"
 #include "WinVFS.h"
 #include "WinVFS.hpp"
 #include "ZipArchieve.h"
-#include "Misc/StrProc.h"
-#include "Misc/Win32Helper.h"
-
-#include "port/time.h"
 
 #include <atomic>
+#include <cerrno>
 #include <cstdint>
 #include <ctime>
 #include <filesystem>
+#include <fstream>
 #include <mutex>
 #include <system_error>
-#include <fstream>
-#include <cerrno>
-#include <boost/uuid/random_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 static std::mutex g_WinVFSCriticalSection;
 

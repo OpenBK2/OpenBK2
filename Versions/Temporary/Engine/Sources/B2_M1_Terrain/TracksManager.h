@@ -2,10 +2,10 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "B2_M1_Terrain_export.h"
-
 #include "3Dmotor/GView.h"
 #include "PatchHolder.h"
+
+#include "B2_M1_Terrain_export.h"
 
 class CTracksManager;
 class CCSBound;

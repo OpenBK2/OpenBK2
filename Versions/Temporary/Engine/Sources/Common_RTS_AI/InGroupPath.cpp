@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "InGroupPath.h"
-#include "StandartPath2.h"
-#include "PathFinder.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
-#include "System/RandomGen.h"
+#include "InGroupPath.h"
+#include "PathFinder.h"
+#include "StandartPath2.h"
 #include "StaticPathInternal.h"
+#include "System/RandomGen.h"
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x310CBCC2, CInGroupPathMemento );
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x310CBCC3, CInGroupPath )

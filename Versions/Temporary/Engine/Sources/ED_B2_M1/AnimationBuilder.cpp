@@ -1,28 +1,28 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "Misc/2Darray.h"
-#include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
 
-#include "ExporterMethods.h"
 #include "AnimationBuilder.h"
-#include "WeaponMnemonics.h"
 #include "AnimationMnemonics.h"
+#include "CommandHandlerDefines.h"
+#include "ExporterMethods.h"
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "ResourceDefines.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-#include "Misc/StrProc.h"
-#include "libdb/ResourceManager.h"
+#include "WeaponMnemonics.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 REGISTER_BUILDER_IN_DLL( AnimB2, CAnimationBuilder )

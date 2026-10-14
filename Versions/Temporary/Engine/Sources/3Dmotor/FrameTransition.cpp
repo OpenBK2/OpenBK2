@@ -1,12 +1,12 @@
 #include "stdafx.h"
+
+#include "FrameTransition.h"
 #include "Gfx.h"
 #include "GfxUtils.h"
 #include "GRTShare.h"
-#include "FrameTransition.h"
-#include "System/Commands.h"
 #include "Misc/Win32Random.h"
-
 #include "port/time.h"
+#include "System/Commands.h"
 
 namespace NGScene
 {

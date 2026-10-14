@@ -1,22 +1,19 @@
 #include "stdafx.h"
 
 #include "AIMap.h"
-#include "GroupMover.h"
-#include "CommonUnit.h"
-
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/StaticPath.h"
 #include "Common_RTS_AI/StaticPathInternal.h"
 #include "Common_RTS_AI/Terrain.h"
-
+#include "CommonUnit.h"
 #include "DebugTools/DebugInfoManager.h"
-
-#include "Stats_B2_M1/AIUnitCmd.h"
+#include "GroupMover.h"
 #include "Stats_B2_M1/ActionCommand.h"
-
+#include "Stats_B2_M1/AIUnitCmd.h"
 #include "System/RandomGen.h"
 
 #include "AILogic_export.h"
+
 #include <map>
 
 extern NTimer::STime curTime;

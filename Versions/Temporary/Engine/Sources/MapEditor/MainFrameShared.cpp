@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include <fmt/printf.h>
-#include "MapEditorLib/BusyCursor.h"
-#include "MapEditorLib/MessageBoxes.h"
 
-#include <fmt/format.h>
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Progress.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "MapEditorLib/ResourceDefines.h"
-#include "ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "PC_Constants.h"
-
+#include "ResourceDefines.h"
 #include "System/FileUtils.h"
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
 #if BOOST_OS_WINDOWS
 // ::HtmlHelp, for the .chm that does not exist. See ShowHelpContents.
 //
@@ -22,28 +22,27 @@
 #include <HtmlHelp.h>
 #endif
 
-#include "libdb/ResourceManager.h"
-#include "MainFrameShared.h"
 #include "AboutView.h"
-#include "MapEditorLib/Interface_Editor.h"
-#include "Misc/StrProc.h"
-#include "MapEditorLib/StringManager.h"
 #include "DBLinkView.h"
 #include "FileDialogs.h"
+#include "libdb/Db.h"
+#include "libdb/EditorDb.h"
+#include "libdb/ResourceManager.h"
+#include "libdb/TypeDef.h"
+#include "Main/MainLoop.h"
+#include "Main/MODs.h"
+#include "MainFrameShared.h"
 #include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/Interface_Editor.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/Tools_Resources.h"
-#include "Main/MODs.h"
-#include "Main/MainLoop.h"
-
-#include "libdb/Db.h"
+#include "Misc/StrProc.h"
+#include "System/VFS.h"
+#include "XdbValidation.h"
 
 #include <filesystem>
-#include "XdbValidation.h"
-#include "libdb/EditorDb.h"
-#include "libdb/TypeDef.h"
-#include "MapEditorLib/Interface_MOD.h"
-#include "System/VFS.h"
 
 // Moved out of MainFrame.cpp unchanged but for two things: a message box or a
 // dialog is owned by MainFrameWnd() where CMainFrame passed itself, which is the

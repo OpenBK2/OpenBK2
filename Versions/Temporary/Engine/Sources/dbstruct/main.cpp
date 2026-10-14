@@ -2,18 +2,16 @@
 
 #include "libdb/EditorDb.h"
 #include "libdb/TypeDef.h"
-#include "System/VFSOperations.h"
-#include "System/WinVFS.h"
+#include "port/cdecl.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-
-#include "port/cdecl.h"
-
-#include <fmt/printf.h>
-
-#include <boost/program_options.hpp>
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
 
 #include <iostream>
+
+#include <boost/program_options.hpp>
+#include <fmt/printf.h>
 
 namespace po = boost::program_options;
 

@@ -1,8 +1,8 @@
 #pragma once
+#include "3DLib/Transform.h"
+#include "GCombiner.h"
 #include "GScene.h"
 #include "OcTree.h"
-#include "GCombiner.h"
-#include "3DLib/Transform.h"
 
 namespace NGScene
 {

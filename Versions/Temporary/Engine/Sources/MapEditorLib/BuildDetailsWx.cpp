@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "BuildDetails.h"
-
 #include "Interface_Logger.h"
 #include "Interface_MainFrame.h"
 #include "Interface_UserData.h"
@@ -15,11 +14,11 @@
 // windows.h, so it sits beside wx without trouble.
 #include "vendor/granny/include/granny.h"
 
+#include <wx/app.h>
 #include <wx/platinfo.h>
 #include <wx/string.h>
 #include <wx/utils.h>
 #include <wx/version.h>
-#include <wx/app.h>
 #include <wx/window.h>
 
 // See BuildDetails.h for why this is one function and not two lists.

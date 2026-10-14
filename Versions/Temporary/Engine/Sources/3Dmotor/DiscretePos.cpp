@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "DiscretePos.h"
+
 #include "3DLib/Transform.h"
+#include "DiscretePos.h"
 
 #include "3Dmotor_export.h"
 

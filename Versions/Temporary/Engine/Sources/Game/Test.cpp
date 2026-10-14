@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
+#include "Misc/StrProc.h"
 #include "Script/Script.h"
 #include "System/Commands.h"
 #include "System/MetaProg.h"
-#include "Misc/StrProc.h"
 
 // ************************************************************************************************************************ //
 // **

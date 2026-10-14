@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include "Turret.h"
-#include "NewUpdater.h"
+#include "AIGeometry.h"
 #include "AIUnit.h"
 #include "Building.h"
-#include "Guns.h"
 #include "Diplomacy.h"
-#include "AIGeometry.h"
+#include "Guns.h"
+#include "NewUpdater.h"
+#include "Turret.h"
 
 #include "AILogic_export.h"
 

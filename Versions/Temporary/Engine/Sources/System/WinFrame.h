@@ -4,13 +4,13 @@
 
 // HWND, HINSTANCE and LPCSTR below. On Windows every stdafx.h has already
 // pulled this in before anything reaches here; off Windows it is DXVK Native.
-#include <windows.h>
-
 #include "Misc/HPTimer.h"
 #include "WinCursor.h"
 
 #include <cstdint>
 #include <string>
+
+#include <windows.h>
 
 //
 namespace NWinFrame

@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "LadderLobby.h"
+
 #include "clients.h"
-#include "System/RandomGen.h"
+#include "LadderLobby.h"
 #include "Misc/Time64.h"
-#include "Statistics.h"
 #include "Server_Client_Common/GamePackets.h"
+#include "Statistics.h"
+#include "System/RandomGen.h"
 
 #include <fmt/format.h>
 //#define LADDER_TEST

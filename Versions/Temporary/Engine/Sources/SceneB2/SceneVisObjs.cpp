@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
 #include "3DLib/Transform.h"
-#include "3Dmotor/GMaterial.hpp"
 #include "3Dmotor/GfxBuffers.h"
+#include "3Dmotor/GMaterial.hpp"
 #include "Main/GameTimer.h"
-#include "Stats_B2_M1/DBAnimB2.h"
-#include "VisObjDesc.h"
-#include "TerrainManager.h"
 #include "SceneInternal.h"
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "TerrainManager.h"
+#include "VisObjDesc.h"
 
 #include <cstdint>
 

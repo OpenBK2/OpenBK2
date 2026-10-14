@@ -1,9 +1,7 @@
 #pragma once
 
-#include <boost/predef.h>
-
-#include <cstdio>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
@@ -11,6 +9,7 @@
 #include <memory>
 #include <string>
 
+#include <boost/predef.h>
 #include <client/crash_report_database.h>
 #include <client/crashpad_client.h>
 #include <client/settings.h>

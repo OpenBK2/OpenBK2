@@ -7,14 +7,14 @@
 // font's default instance and 1000 units per em. Glyph indices are used
 // directly, so the test does not depend on the character map.
 
+#include "FontFace.h"
+#include "GposKerning.h"
+
 #include <cstdint>
 #include <fstream>
 #include <iterator>
 #include <string>
 #include <vector>
-
-#include "FontFace.h"
-#include "GposKerning.h"
 
 #include <gtest/gtest.h>
 

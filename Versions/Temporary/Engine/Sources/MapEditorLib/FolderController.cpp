@@ -1,10 +1,8 @@
 #include "stdafx.h"
 
 #include "FolderController.h"
-
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
-
 #include "port/time.h"
 
 #include <cstdint>

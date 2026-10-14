@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "MenuDropDownView.h"
-
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
+#include "MenuDropDownView.h"
 
 // What choosing an entry in the undo and redo drop-down does, which the list
 // (MenuDropDownViewWx.cpp) calls.

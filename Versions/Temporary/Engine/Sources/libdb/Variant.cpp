@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Variant.h"
 #include "Misc/StrProc.h"
 #include "System/XmlSaver.h"
+#include "Variant.h"
 
 #include <fmt/format.h>
 

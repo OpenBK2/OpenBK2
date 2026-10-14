@@ -1,41 +1,39 @@
 #include "stdafx.h"
 
-#include "MPTransceiver.h"
-#include "Misc/Win32Helper.h"
-#include "Client/ServerClientInterface.h"
-#include "Server_Client_Common/GamePackets.h"
 #include "AILogic/B2AI.h"
-#include "Main/DBNetConsts.h"
+#include "Client/ServerClientInterface.h"
 #include "CommonCommands.h"
-#include <float.h>
-#include "Main/AICmdsAutoMagicInterface.h"
-#include "Main/CommandsHistory.hpp"
-#include "ScenarioTracker.h"
-#include "SaveLoadHelper.h"
-#include "InterfaceMissionInternal.h"
-#include "DBGameRoot.h"
 #include "DBConsts.h"
-#include "InterfaceState.h"
+#include "DBGameRoot.h"
 #include "GameXClassIDs.h"
-#include "MultiplayerCommandManager.h"
-#include "Misc/StrProc.h"
-#include "port/unicode.h"
-#include "Main/MainLoop.h"
-#include "Main/MainLoopCommands.h"
-#include "System/GlobalVars.h"
-#include "System/Commands.h"
 #include "GetConsts.h"
 #include "InterfaceMisc.h"
+#include "InterfaceMissionInternal.h"
+#include "InterfaceState.h"
+#include "Main/AICmdsAutoMagicInterface.h"
+#include "Main/CommandsHistory.hpp"
+#include "Main/DBNetConsts.h"
+#include "Main/MainLoop.h"
+#include "Main/MainLoopCommands.h"
+#include "Misc/StrProc.h"
+#include "Misc/Win32Helper.h"
 #include "MPPacketTraceLog.h"
-
-#include "SceneB2/Scene.h"
-
+#include "MPTransceiver.h"
+#include "MultiplayerCommandManager.h"
 #include "port/time.h"
+#include "port/unicode.h"
+#include "SaveLoadHelper.h"
+#include "ScenarioTracker.h"
+#include "SceneB2/Scene.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "System/Commands.h"
+#include "System/GlobalVars.h"
 
 #include "GameX_export.h"
 
 #include <cstdint>
 
+#include <float.h>
 #include <fmt/format.h>
 
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();

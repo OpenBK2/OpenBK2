@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "PlanePath.h"
 #include "Aviation.h"
+#include "PlanePath.h"
 #include "PlanesFormation.h"
 
 #include "AILogic_export.h"

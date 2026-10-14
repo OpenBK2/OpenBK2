@@ -1,10 +1,9 @@
 #include "stdafx.h"
-#include "Logger.h"
 
+#include "Logger.h"
 #include "port/unicode.h"
 
 #include <boost/predef.h>
-
 #include <fmt/format.h>
 #include <fmt/xchar.h>
 

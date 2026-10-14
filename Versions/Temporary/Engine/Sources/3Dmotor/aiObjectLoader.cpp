@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "aiObjectLoader.h"
+
 #include "3DLib/MemObject.h"
+#include "aiObjectLoader.h"
 #include "System/BasicShare.h"
 //#include "GFileSkin.h"
 //#include "PrecalcSpheres.h"
 #include "AIGeometryFormat.h"
+#include "DBScene.h"
 #include "GAnimFormat.h"
 #include "GltfFormat.h"
 #include "vendor/granny/include/granny.h"
-#include "DBScene.h"
 
 #include <fastgltf/tools.hpp>
 

@@ -1,28 +1,21 @@
 #include "stdafx.h"
 
-#include "ModelEditor.h"
-#include "EditorScene.h"
-#include "TargetMesh.h"
-
-#include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/Interface_Exporter.h"
-#include "MapEditorLib/ManipulatorManager.h"
-
-#include "libdb/ObjMan.h"
-#include "libdb/EditorDb.h"
-
-#include "libdb/ResourceManager.h"
-
-#include "3Dmotor/GRTShare.h"
 #include "3Dmotor/FrameTransition.h"
 #include "3Dmotor/GfxBuffers.h"
-
+#include "3Dmotor/GRTShare.h"
+#include "EditorScene.h"
 #include "Image/ImageTGA.h"
-
-#include "Stats_B2_M1/RPGStats.h"
-#include "Stats_B2_M1/DBVisObj.h"
-
+#include "libdb/EditorDb.h"
+#include "libdb/ObjMan.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "ModelEditor.h"
 #include "SceneB2/Camera.h"
+#include "Stats_B2_M1/DBVisObj.h"
+#include "Stats_B2_M1/RPGStats.h"
+#include "TargetMesh.h"
 
 #include <cstdint>
 

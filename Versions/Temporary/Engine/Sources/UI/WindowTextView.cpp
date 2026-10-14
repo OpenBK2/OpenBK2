@@ -2,12 +2,12 @@
 //
 
 #include "stdafx.h"
-#include "WindowTextView.h"
-#include "UIVisitor.h"
-#include "System/Text.h"
 
-#include "UIML.h"
 #include "3Dmotor/GLocale.h"
+#include "System/Text.h"
+#include "UIML.h"
+#include "UIVisitor.h"
+#include "WindowTextView.h"
 
 #include <cmath>
 #include <cstdint>

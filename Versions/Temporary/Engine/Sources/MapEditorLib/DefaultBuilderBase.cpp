@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "DefaultBuilderBase.h"
-#include "MapEditorLib/ManipulatorManager.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/StringManager.h"
 
 bool CDefaultBuilderBase::InsertObject( std::string *pszObjectTypeName,

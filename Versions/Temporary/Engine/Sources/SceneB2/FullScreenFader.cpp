@@ -2,9 +2,8 @@
 
 #include "3Dmotor/Gfx.h"
 #include "3Dmotor/GfxUtils.h"
-#include "System/Dg.h"
-
 #include "FullScreenFader.h"
+#include "System/Dg.h"
 
 #include "SceneB2_export.h"
 

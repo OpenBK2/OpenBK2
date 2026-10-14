@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/InteractiveMaya.h"
+#include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/TextMapSettings.h"
 
 #include "ED_Common_export.h"

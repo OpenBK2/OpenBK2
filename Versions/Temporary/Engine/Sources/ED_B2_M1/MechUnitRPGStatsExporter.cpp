@@ -94,20 +94,22 @@
 
 */
 #include "stdafx.h"
-#include <fmt/format.h>
+
+#include "AnimationMnemonics.h"
+#include "ED_Common/GltfExporter.h"
+#include "ED_Common/TempAttributesTool.h"
+#include "ExporterMethods.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/MessageBoxes.h"
-#include "AnimationMnemonics.h"
-#include "ExporterMethods.h"
 #include "MechUnitRPGStatsExporter.h"
-#include "ED_Common/GltfExporter.h"
-#include <unordered_set>
 #include "System/FastMath.h"
-#include "ED_Common/TempAttributesTool.h"
 
 #include <cstdint>
+#include <unordered_set>
+
+#include <fmt/format.h>
 
 //DEBUG{
 //DEBUG}

@@ -1,10 +1,11 @@
 #include "stdafx.h"
+
+#include "Formation.h"
+#include "GeneralAirForce.h"
 #include "GeneralInternal.h"
 #include "PlayerReinforcement.h"
 #include "Reinforcement.h"
-#include "Formation.h"
 #include "Soldier.h"
-#include "GeneralAirForce.h"
 
 #include <fmt/format.h>
 

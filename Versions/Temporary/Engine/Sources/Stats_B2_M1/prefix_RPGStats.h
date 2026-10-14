@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Stats_B2_M1_export.h"
-
 #include "Misc/2Darray.h"
-#include "Vis2AI.h"
 #include "System/RandomGen.h"
+#include "Vis2AI.h"
+
+#include "Stats_B2_M1_export.h"
 
 #include <zconf.h>
 

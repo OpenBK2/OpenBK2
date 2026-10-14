@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
 #include "HPTimer.h"
 
+#include <chrono>
 #include <cstdint>
 #include <thread>
-#include <chrono>
 
 #include <boost/predef.h>
 

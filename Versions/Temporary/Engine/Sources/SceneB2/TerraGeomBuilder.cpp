@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include <limits.h>
 #include "GenTerrain.h"
 #include "Misc/HPTimer.h"
-
 #include "port/time.h"
 
 #include <cstdint>
+
+#include <limits.h>
 
 void CTerraGen::GenerateTerrain()
 {

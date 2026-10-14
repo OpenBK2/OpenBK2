@@ -1,19 +1,17 @@
 #include "stdafx.h"
 
-#include "port/unicode.h"
 #include "BinChunkSaver.h"
 #include "Cruncher.h"
-
 #include "port/debugging.h"
+#include "port/unicode.h"
+
+#include "System_export.h"
 
 #include <algorithm>
 #include <cstdint>
 
-#include <zlib.h>
-
 #include <fmt/format.h>
-
-#include "System_export.h"
+#include <zlib.h>
 
 SYSTEM_EXPORT int N_SAVELOAD_VERSION = 4;
 

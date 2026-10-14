@@ -1,26 +1,23 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-
-#include "ReinfPointsView.h"
 
 #include "CommandHandlerDefines.h"
+#include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxOwnership.h"
 #include "ReinfPointsData.h"
+#include "ReinfPointsView.h"
 #include "ResourceDefines.h"
 #include "StringResources.h"
 
-#include "MapEditorLib/WxHostWindow.h"
-#include "MapEditorLib/WxOwnership.h"
+#include <string>
 
 #include <fmt/format.h>
-
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-
-#include <string>
 
 // The reinforcement points palette, in wx. The fourth palette, and the biggest
 // so far: three columns, a player combo, four buttons and a separator, with

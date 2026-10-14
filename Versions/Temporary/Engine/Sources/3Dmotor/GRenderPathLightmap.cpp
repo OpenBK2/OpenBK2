@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GRenderPathLightmap.h"
+
 #include "GRenderExecute.h"
+#include "GRenderPathLightmap.h"
 
 namespace NGScene
 {

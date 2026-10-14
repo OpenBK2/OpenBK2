@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "MOUnitInfantry.h"
-#include "Sound/SoundScene.h"
-#include "Stats_B2_M1/DBAnimB2.h"
 #include "3Dmotor/GAnimation.hpp"
-#include "ParatrooperAnimation.h"
 #include "Main/GameTimer.h"
 #include "Misc/Win32Random.h"
 #include "MOProjectile.h"
-
+#include "MOUnitInfantry.h"
+#include "ParatrooperAnimation.h"
+#include "Sound/SoundScene.h"
+#include "Stats_B2_M1/DBAnimB2.h"
 #include "System/Commands.h"
 #include "System/Text.h"
 

@@ -2,8 +2,9 @@
 //
 
 #include "stdafx.h"
-#include "Script/Script.h"
+
 #include "MessageReactions.h"
+#include "Script/Script.h"
 #include "System/VFSOperations.h"
 
 //CRAP{ FOR TEST

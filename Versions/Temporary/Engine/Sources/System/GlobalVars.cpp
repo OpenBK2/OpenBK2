@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "GlobalVars.h"
 #include "FilePath.h"
 #include "FileUtils.h"
+#include "GlobalVars.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Helper.h"
 

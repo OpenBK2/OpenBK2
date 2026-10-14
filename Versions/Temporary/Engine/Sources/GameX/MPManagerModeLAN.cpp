@@ -1,29 +1,27 @@
 #include "stdafx.h"
 
-#include <fmt/format.h>
-
-#include "MPManagerModeLAN.hpp"
-
+#include "DBConsts.h"
+#include "DBMPConsts.h"
+#include "GetConsts.h"
+#include "InterfaceState.h"
 #include "Misc/StrProc.h"
+#include "Misc/Time64.h"
+#include "MPLANTest.h"
+#include "MPManagerModeLAN.hpp"
+#include "MPPacketTraceLog.h"
 #include "MPTransceiver.h"
 #include "Server_Client_Common/ChatPackets.h"
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Stats_B2_M1/DBMapInfo.h"
-#include "DBMPConsts.h"
-#include "GetConsts.h"
-#include "InterfaceState.h"
-#include "System/Text.h"
 #include "System/Commands.h"
-#include "DBConsts.h"
-#include "MPPacketTraceLog.h"
-
-#include "Misc/Time64.h"
-#include "MPLANTest.h"
+#include "System/Text.h"
 
 #include "GameX_export.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 #define SERVER_DEAD_TIMEOUT 5000
 #define LAN_PORT 4201

@@ -1,25 +1,23 @@
 #include "stdafx.h"
 
-#include "PropertyValues.h"
-#include "PC_Constants.h"
-
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/ObjectBaseController.h"
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/StringManager.h"
 #include "Misc/StrProc.h"
-
-#include <fmt/format.h>
-
-#include <boost/uuid/string_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include "PC_Constants.h"
+#include "PropertyValues.h"
 
 #include <algorithm>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <list>
+
+#include <boost/uuid/string_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <fmt/format.h>
 
 // The property value rules, moved here from the MFC item editors with their
 // bodies unchanged: see PropertyValues.h.

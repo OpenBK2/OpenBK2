@@ -1,10 +1,10 @@
 #pragma once
 
+#include "Misc/StrProc.h"
 #include "Nodes2TypeDefs.h"
+#include "System/XmlSaver.h"
 #include "Type.h"
 #include "Variant.h"
-#include "Misc/StrProc.h"
-#include "System/XmlSaver.h"
 
 #include <map>
 

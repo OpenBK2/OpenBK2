@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "System/det_map.h"
+
+#include <cstdint>
 
 #include <fmt/format.h>
 

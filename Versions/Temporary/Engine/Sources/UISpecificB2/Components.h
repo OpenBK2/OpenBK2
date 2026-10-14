@@ -1,8 +1,8 @@
 #pragma once
 
+#include "3Dmotor/GPixelFormat.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "3Dmotor/GPixelFormat.h"
 
 #include <cstdint>
 

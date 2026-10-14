@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
 #include "Database.h"
+#include "DBObserver.h"
 #include "EditorDb.h"
 #include "HeaderXmlSaxVisitor.h"
-#include "StructMetaInfo.h"
-#include "ReportMetaInfo.h"
-#include "DBObserver.h"
 #include "Index.h"
 #include "Misc/StrProc.h"
-#include "System/VFS.h"
+#include "ReportMetaInfo.h"
+#include "StructMetaInfo.h"
 #include "System/FilePath.h"
+#include "System/VFS.h"
 
 BASIC_REGISTER_CLASS( LIBDB, NDb::IDbObserver );
 

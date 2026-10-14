@@ -1,7 +1,7 @@
 #pragma once
-#include "System/Dg.h"
-#include "DiscretePos.h"
 #include "3DLib/GGeometry.h"
+#include "DiscretePos.h"
+#include "System/Dg.h"
 
 namespace NGScene
 {

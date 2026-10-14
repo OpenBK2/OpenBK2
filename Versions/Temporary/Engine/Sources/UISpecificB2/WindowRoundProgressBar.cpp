@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "UI/CommandParam.h"
-#include "UI/DBUserInterface.h"
-#include "UI/UI.h"
+
 #include "Input/GameMessage.h"
 #include "Misc/2Darray.h"
 #include "System/Dg.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
+#include "UI/UI.h"
 #include "WindowRoundProgressBar.h"
 
 #include <zconf.h>

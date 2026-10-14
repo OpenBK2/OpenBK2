@@ -1,8 +1,9 @@
 #pragma once
 
-#include "MapObjectState.h"
-#include <fmt/format.h>
 #include "B2_M1_Terrain/DBTerrainSpot.h"
+#include "MapObjectState.h"
+
+#include <fmt/format.h>
 
 class CSpotState : public CMapObjectState
 {

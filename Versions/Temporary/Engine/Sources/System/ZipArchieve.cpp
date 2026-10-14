@@ -4,10 +4,9 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 #include <zlib.h>
-
-#include <fmt/format.h>
 
 // ************************************************************************************************************************ //
 // **

@@ -1,19 +1,16 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-
-#include "AIGeneralView.h"
 
 #include "AIGeneralData.h"
 #include "AIGeneralTypes.h"
+#include "AIGeneralView.h"
 #include "CommandHandlerDefines.h"
+#include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxOwnership.h"
 #include "ResourceDefines.h"
 #include "StringResources.h"
 
-#include "MapEditorLib/WxHostWindow.h"
-#include "MapEditorLib/WxOwnership.h"
-
 #include <fmt/format.h>
-
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/listctrl.h>

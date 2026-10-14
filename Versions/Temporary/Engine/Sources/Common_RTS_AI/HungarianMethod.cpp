@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "HungarianMethod.h"
 
 bool CHungarianMethod::Init( const CArray2D<float> &_matrix )

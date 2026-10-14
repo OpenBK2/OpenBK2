@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "TankPitPath.h"
 #include "Common_RTS_AI/BasePathUnit.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "TankPitPath.h"
 
 #include "AILogic_export.h"
 

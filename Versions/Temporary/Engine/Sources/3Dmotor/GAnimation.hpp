@@ -1,10 +1,10 @@
 #pragma once
 
-#include "3Dmotor_export.h"
-
-#include "GSkeleton.h"
 #include "GChannelAnimator.h"
+#include "GSkeleton.h"
 #include "System/time.hpp"
+
+#include "3Dmotor_export.h"
 
 namespace NDb
 {

@@ -1,11 +1,10 @@
 #include "stdafx.h"
 
 #include "BitFieldView.h"
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/button.h>
 #include <wx/checklst.h>

@@ -1,7 +1,8 @@
 #include "stdafx.h"
 
-#include "Turret.h"
 #include "SerializeOwner.h"
+#include "Turret.h"
+
 #include <cstddef>
 #include <cstring>
 

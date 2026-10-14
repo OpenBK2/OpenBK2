@@ -3,15 +3,13 @@
 
 #include "stdafx.h"
 
+#include "DBUIConsts.h"
 #include "port/virtualkey.h"
+#include "System/Commands.h"
+#include "UIML.h"
+#include "UIVisitor.h"
 #include "WindowConsole.h"
 #include "WindowEditLine.h"
-
-#include "UIVisitor.h"
-
-#include "UIML.h"
-#include "DBUIConsts.h"
-#include "System/Commands.h"
 
 #include <cstdint>
 

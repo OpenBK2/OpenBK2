@@ -1,55 +1,51 @@
 #include "stdafx.h"
-#include "System/FileUtils.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/ResourceDefines.h"
+#include "EditorMethods.h"
+#include "EditorScene.h"
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ObjectController.h"
-#include "SimpleObjectInfoData.h"
-#include "UI/CommandParam.h"
-#include "MapInfoEditor.h"
-
-#include "MapInfoEditor.h"
-#include "MapInfoBuilder.h"
 #include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ObjectController.h"
+#include "MapEditorLib/PaletteList.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/Tools_HashSet.h"
-#include "libdb/ResourceManager.h"
-
-#include "EditorScene.h"
-
+#include "MapInfoBuilder.h"
+#include "MapInfoEditor.h"
+#include "SimpleObjectInfoData.h"
+#include "System/FileUtils.h"
+#include "UI/CommandParam.h"
 #include "UISpecificB2/DBUISpecificB2.h"
 
-#include "MapEditorLib/PaletteList.h"
-#include "EditorMethods.h"
+#include <fmt/format.h>
 
 // Docking Windows
-#include "ScriptAreaView.h"
 #include "CameraPositionView.h"
-#include "UnitStartCmdView.h"
-#include "MapObjectView.h"
-#include "VSOView.h"
 #include "FieldView.h"
 #include "HeightViewV3.h"
+#include "MapObjectView.h"
+#include "ScriptAreaView.h"
+#include "UnitStartCmdView.h"
+#include "VSOView.h"
 // Was reached through HeightWindowV3.h, which this no longer includes: the
 // palette is behind NHeightViewV3 now and the editor still loads its own
 // strings and menus out of this module's resources.
+#include "AIGeneralView.h"
 #include "ReinfPointsView.h"
 #include "ScriptCameraView.h"
-#include "AIGeneralView.h"
 
 //#include "MoviesEditorWindow.h"
 
+#include "libdb/EditorDb.h"
+#include "Main/MODs.h"
 #include "MapInfoViewFilter.h"
+#include "port/process.h"
 
 #include <cstdint>
 #include <filesystem>
-#include "port/process.h"
-#include "Main/MODs.h"
-#include "libdb/EditorDb.h"
 
 //#include "../GameX/DBGameRoot.h"
 //#include "../GameX/DBConsts.h"
@@ -57,6 +53,7 @@
 //#include "../AILogic/CreateAI.h"
 
 #include "Stats_B2_M1/TerraAIObserver.h"
+
 #include "ED_B2_M1_export.h"
 
 REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ResourceDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
+#include "ResourceDefines.h"
 
 #include <cstdint>
 

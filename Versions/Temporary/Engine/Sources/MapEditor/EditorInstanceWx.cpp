@@ -1,17 +1,16 @@
 #include "stdafx.h"
 
 #include "EditorInstance.h"
-
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/WxWidget.h"
+
+#include <memory>
 
 #include <wx/ipc.h>
 #include <wx/log.h>
 #include <wx/snglinst.h>
 #include <wx/string.h>
 #include <wx/toplevel.h>
-
-#include <memory>
 
 namespace
 {

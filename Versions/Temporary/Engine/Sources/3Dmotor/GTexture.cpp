@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include "3Dmotor_export.h"
-
+#include "DBScene.h"
 #include "GfxBuffers.h"
 #include "GTexture.h"
-#include "System/Commands.h"
-#include "DBScene.h"
 #include "Image/DDS.h"
+#include "System/Commands.h"
+
+#include "3Dmotor_export.h"
 
 NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 {

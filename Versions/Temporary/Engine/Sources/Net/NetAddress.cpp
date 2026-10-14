@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "NetAddress.h"
 
 namespace NNet

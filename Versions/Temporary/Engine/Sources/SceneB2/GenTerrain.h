@@ -1,16 +1,16 @@
 #pragma once
 
+#include "DynamicDebrisManager.h"
+#include "ExplosionsManager.h"
+#include "Misc/HPTimer.h"
 #include "NoiseManager.h"
+#include "Stats_B2_M1/Vis2AI.h"
+#include "SurfController.h"
 #include "TerraGen.h"
 #include "TerrainAIInfo.h"
-#include "TerrainInfo.h"
 #include "TerrainGfxInfo.h"
-#include "ExplosionsManager.h"
+#include "TerrainInfo.h"
 #include "WaterController.h"
-#include "SurfController.h"
-#include "DynamicDebrisManager.h"
-#include "Misc/HPTimer.h"
-#include "Stats_B2_M1/Vis2AI.h"
 
 #include <cstdint>
 

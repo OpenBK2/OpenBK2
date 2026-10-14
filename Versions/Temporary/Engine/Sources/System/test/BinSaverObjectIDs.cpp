@@ -10,6 +10,14 @@
 
 // The standard headers the engine's stdafx.h prelude would supply, which
 // BinSaver.h relies on without including
+#include "Misc/Asserts.h"
+#include "Misc/Tools.h"
+#include "System/Basic.h"
+#include "System/BinSaver.h"
+#include "System/det_map.h"
+#include "System/Streams.h"
+#include "System/System.h"
+
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -21,14 +29,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
-#include "Misc/Asserts.h"
-#include "Misc/Tools.h"
-#include "System/System.h"
-#include "System/Basic.h"
-#include "System/Streams.h"
-#include "System/BinSaver.h"
-#include "System/det_map.h"
 
 #include <gtest/gtest.h>
 

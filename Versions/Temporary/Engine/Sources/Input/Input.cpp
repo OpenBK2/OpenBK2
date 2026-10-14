@@ -1,31 +1,28 @@
 #include "stdafx.h"
 
-#include "Input/Input.h"
 #include "Input/GameMessage.h"
-
-#include <cstring>
+#include "Input/Input.h"
 #include "Misc/StrProc.h"
-
 #include "port/debugging.h"
 #include "port/dinput.h"
 #include "port/time.h"
 
 #include <cstdint>
+#include <cstring>
 
 #include <fmt/format.h>
 
 #if BOOST_OS_WINDOWS
 #include "Misc/Win32Helper.h"
 #else
-#include "System/SdlVideo.h"
 #include "HostedInput.h"
-
 #include "port/window.h"
-
-#include <SDL3/SDL.h>
+#include "System/SdlVideo.h"
 
 #include <cstddef>
 #include <mutex>
+
+#include <SDL3/SDL.h>
 #endif
 
 static const int POV_RANGE_VALUE = 1000;

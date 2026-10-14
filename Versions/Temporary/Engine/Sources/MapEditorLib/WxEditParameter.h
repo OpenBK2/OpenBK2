@@ -21,11 +21,11 @@
 // Header-only and guarded, like the other Wx*.h here; see WxWidget.h for why
 // these stay out of MapEditorLib's own translation units.
 
-#include <wx/choice.h>
-
 #include <cstdint>
 #include <string>
 #include <vector>
+
+#include <wx/choice.h>
 
 namespace NWxEditParameter
 {

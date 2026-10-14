@@ -1,15 +1,17 @@
 #include "GrannyGltfTexture.h"
-#include <squish/squish.h>
-#include <wx/image.h>
-#include <wx/file.h>
-#include <wx/imagpng.h>
-#include <wx/imagtga.h>
-#include <wx/mstream.h>
+
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <memory>
 #include <stdexcept>
+
+#include <squish/squish.h>
+#include <wx/file.h>
+#include <wx/image.h>
+#include <wx/imagpng.h>
+#include <wx/imagtga.h>
+#include <wx/mstream.h>
 
 namespace NGrannyGltf
 {

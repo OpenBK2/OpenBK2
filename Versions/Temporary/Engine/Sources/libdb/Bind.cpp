@@ -2,9 +2,9 @@
 
 #include "Bind.h"
 #include "BindArray.h"
-#include "System/LightXML.h"
 #include "Database.h"
 #include "EditorDb.h"
+#include "System/LightXML.h"
 
 #include <cstdint>
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "StoreInputState.h"
 
 void CStoreInputState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint )

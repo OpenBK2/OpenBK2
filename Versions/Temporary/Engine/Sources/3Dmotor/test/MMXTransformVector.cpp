@@ -1,6 +1,7 @@
 #include "3Dmotor/stdafx.h"
-#include "3Dmotor/GSSEtransform.h"
+
 #include "3Dmotor/GSSEtransform.cpp"
+#include "3Dmotor/GSSEtransform.h"
 
 #include <gtest/gtest.h>
 

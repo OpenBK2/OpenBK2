@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Parser_export.h"
-
 #include "NodesList.h"
+
+#include "Parser_export.h"
 
 namespace NLang
 {

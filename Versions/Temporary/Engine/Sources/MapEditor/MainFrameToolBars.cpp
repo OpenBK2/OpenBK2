@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "MainFrameToolBars.h"
-#include "ResourceDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "ResourceDefines.h"
 
 // CMainFrame's toolbar tables, unchanged but for the namespace: see
 // MainFrameToolBars.h.

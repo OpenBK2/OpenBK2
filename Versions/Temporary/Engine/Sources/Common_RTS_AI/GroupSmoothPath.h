@@ -2,10 +2,10 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "Common_RTS_AI_export.h"
-
 #include "BasePathUnit.h"
 #include "StandartSmoothPath.h"
+
+#include "Common_RTS_AI_export.h"
 
 #include <map>
 

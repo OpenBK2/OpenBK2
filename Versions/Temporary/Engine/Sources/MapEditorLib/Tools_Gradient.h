@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "MapEditorLib_export.h"
+
+#include <cstdint>
 
 struct MAPEDITORLIB_EXPORT SGradient
 {

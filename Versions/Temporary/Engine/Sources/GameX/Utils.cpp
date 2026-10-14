@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "SceneB2/Camera.h"
 #include "Stats_B2_M1/Vis2AI.h"
 

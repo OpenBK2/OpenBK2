@@ -1,6 +1,6 @@
 #pragma once
-#include "GfxInternal.h"
 #include "Gfx.h"
+#include "GfxInternal.h"
 
 #include <cstdint>
 #include <stdexcept>

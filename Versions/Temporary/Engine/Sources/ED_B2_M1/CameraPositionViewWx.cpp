@@ -1,21 +1,19 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
 
 #include "CameraPositionView.h"
-
 #include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
-
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "ResourceDefines.h"
+
+#include <string>
 
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-
-#include <string>
 
 // The start-camera-positions palette, in wx: the first piece of ED_B2_M1 to
 // move, and the first thing that is neither a modal dialog nor a docking pane.

@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "System/FilePath.h"
-#include "MODs.h"
+#include "libdb/Db.h"
 #include "Main/MainLoop.h"
+#include "Misc/StrProc.h"
+#include "MODs.h"
+#include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/Text.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
-#include "System/Text.h"
-#include "Misc/StrProc.h"
-#include "libdb/Db.h"
 
 #include <filesystem>
 

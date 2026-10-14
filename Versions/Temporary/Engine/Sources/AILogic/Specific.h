@@ -1,12 +1,12 @@
-#include "Common_RTS_AI/AIObjectBase.h"
 #include "Common_RTS_AI/AIAngle.h"
+#include "Common_RTS_AI/AIObjectBase.h"
 #define CStructureSaver IBinSaver
-#include "ValidObjectCheck.h"
 #include "AICellsTiles.h"
-#include "AITiles.h"
 #include "AIMap.h"
+#include "AITiles.h"
 #include "AITimer.h"
 #include "Common_RTS_AI/ChecksumSaver.h"
+#include "ValidObjectCheck.h"
 using namespace NDb;
 
 #ifndef _FINALRELEASE

@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 
-#include "TempAttributesTool.h"
-
-#include "vendor/granny/include/granny.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/CommonExporterMethods.h"
-#include "MapEditorLib/TextMapSettings.h"
+#include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/TextMapSettings.h"
+#include "Misc/StrProc.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-#include "Misc/StrProc.h"
+#include "TempAttributesTool.h"
+#include "vendor/granny/include/granny.h"
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 namespace NMEGeomAttribs
 {

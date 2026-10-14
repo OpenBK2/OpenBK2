@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Reinforcement.h"
-#include "Misc/2Darray.h"
 #include "DBAIConsts.h"
+#include "Misc/2Darray.h"
+#include "Reinforcement.h"
 #include "Stats_B2_M1/UnitTypes.h"
 
 #include <fmt/format.h>

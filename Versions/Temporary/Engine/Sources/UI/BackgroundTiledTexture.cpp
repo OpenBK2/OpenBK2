@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
 #include "BackgroundTiledTexture.h"
-#include "UIVisitor.h"
 #include "UIComponents.h"
+#include "UIVisitor.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B42, CBackgroundTiledTexture )
 

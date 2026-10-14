@@ -1,7 +1,7 @@
 #include "stdafx.h"
 //
-#include "scriptPtr.h"
 #include "scriptCommon.h"
+#include "scriptPtr.h"
 
 //
 namespace NScript

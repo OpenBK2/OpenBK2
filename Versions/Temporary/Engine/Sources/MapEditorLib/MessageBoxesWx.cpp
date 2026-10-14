@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "MessageBoxes.h"
-
 #include "Interface_MainFrame.h"
 #include "Interface_UserData.h"
+#include "MessageBoxes.h"
 #include "WxWidget.h"
 
 // The only translation unit in MapEditorLib that sees a wx header, and the

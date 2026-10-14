@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "GfxBenchmark.h"
-#include "GfxRender.h"
-#include "GfxBuffers.h"
+
 #include "3DLib/Transform.h"
-#include "GfxShaders.h"
 #include "Gfx.h"
-#include "Misc/HPTimer.h"
+#include "GfxBenchmark.h"
+#include "GfxBuffers.h"
 #include "GfxInternal.h"
+#include "GfxRender.h"
+#include "GfxShaders.h"
+#include "Misc/HPTimer.h"
 //#include <D3D9.h>
 //#include "..\Misc\Win32Helper.h"
 

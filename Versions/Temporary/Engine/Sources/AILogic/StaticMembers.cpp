@@ -1,18 +1,18 @@
 #include "stdafx.h"
 
-#include "StaticMembers.h"
-#include "Commands.h"
-#include "InBuildingStates.h"
-#include "InTransportStates.h"
-#include "InEntrenchmentStates.h"
-#include "PlaneStates.h"
-#include "TankStates.h"
-#include "TransportStates.h"
-#include "FormationStates.h"
 #include "ArtilleryStates.h"
 #include "ArtRocketStates.h"
+#include "Commands.h"
+#include "FormationStates.h"
 #include "HelicopterStates.h"
+#include "InBuildingStates.h"
+#include "InEntrenchmentStates.h"
+#include "InTransportStates.h"
+#include "PlaneStates.h"
 #include "Soldier.h"
+#include "StaticMembers.h"
+#include "TankStates.h"
+#include "TransportStates.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CStaticMembers::operator&( IBinSaver &saver )

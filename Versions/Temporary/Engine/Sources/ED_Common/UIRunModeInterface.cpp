@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
+#include "Input/GameMessage.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Input/GameMessage.h"
 #include "UI/UIFactory.h"
 #include "UIRunModeInterface.h"
 #include "UIScene.h"

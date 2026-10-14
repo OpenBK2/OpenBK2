@@ -1,27 +1,28 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
+
+#include "EditorMethods.h"
+#include "FieldState.h"
 #include "Image/Targa.h"
-#include "SceneB2/Scene.h"
+#include "libdb/EditorDb.h"
 #include "libdb/ResourceManager.h"
-#include "SimpleObjectInfoData.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
-#include "ResourceDefines.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "MapEditorLib/Interface_Progress.h"
-#include "libdb/EditorDb.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MapInfoEditor.h"
-#include "FieldState.h"
-#include "EditorMethods.h"
+#include "Misc/2Darray.h"
+#include "ResourceDefines.h"
+#include "SceneB2/Scene.h"
+#include "SimpleObjectInfoData.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "System/VFSOperations.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
+#include <fmt/printf.h>
 #include <zconf.h>
 
 const char CFieldState::FIELD_TYPE_NAME[] = "Field";

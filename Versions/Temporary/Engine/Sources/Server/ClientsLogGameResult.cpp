@@ -1,14 +1,14 @@
 #include "stdafx.h"
+
 #include "clients.h"
-#include "LadderLobby.h"
 #include "Database.h"
+#include "HashMapConvertor.h"
+#include "LadderLobby.h"
 #include "Misc/StrProc.h"
 #include "Statistics.h"
-#include "HashMapConvertor.h"
-
-#include <zlib.h>
 
 #include <fmt/format.h>
+#include <zlib.h>
 
 #define CHECK_TABLE_STRUCTURE
 #ifndef _FINALRELEASE

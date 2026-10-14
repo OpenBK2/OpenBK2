@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
+#include "NetAcks.h"
 #include "port/time.h"
 
 #include <cmath>
-
-#include "NetAcks.h"
 //#define LOG
 #ifdef LOG
 #include <iostream>

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "TileDataExtractor.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "TileDataExtractor.h"
 
 #include <cstdint>
 

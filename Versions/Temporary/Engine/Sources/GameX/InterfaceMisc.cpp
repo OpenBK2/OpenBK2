@@ -1,19 +1,19 @@
 #include "stdafx.h"
+
+#include "GameXClassIDs.h"
+#include "InterfaceMisc.h"
+#include "InterfaceState.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "InterfaceMisc.h"
-#include "GameXClassIDs.h"
 #include "UI/SceneClassIDs.h"
-#include "SceneB2/Scene.h"
-#include "Misc/StrProc.h"
-#include "InterfaceState.h"
 
 #include "GameX_export.h"
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 // Интерфейс MessageBox

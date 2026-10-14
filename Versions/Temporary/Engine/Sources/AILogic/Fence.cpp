@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-#include "System/FastMath.h"
-#include "System/Time.h"
+#include "Cheats.h"
+#include "Diplomacy.h"
 #include "Fence.h"
 #include "NewUpdater.h"
-#include "Diplomacy.h"
-#include "TimeCounter.h"
 #include "StaticObjectsIters.h"
-#include "Cheats.h"
+#include "System/FastMath.h"
+#include "System/Time.h"
+#include "TimeCounter.h"
 
 #include "AILogic_export.h"
 

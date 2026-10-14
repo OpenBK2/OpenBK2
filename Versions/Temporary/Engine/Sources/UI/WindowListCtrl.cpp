@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "WindowListCtrl.h"
+
 #include "InterfaceConsts.h"
+#include "WindowListCtrl.h"
 
 #include <fmt/format.h>
 

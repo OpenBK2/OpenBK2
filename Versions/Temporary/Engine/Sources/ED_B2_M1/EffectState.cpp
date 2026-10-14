@@ -1,23 +1,20 @@
 #include "stdafx.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
 
-#include "EditorScene.h"
-#include "SceneB2/Camera.h"
 #include "3Dmotor/DBScene.h"
-#include "Main/GameTimer.h"
-
+#include "EditorScene.h"
+#include "EffectEditor.h"
 #include "EffectInterface.h"
 #include "EffectState.h"
-#include "EffectEditor.h"
-
-#include "Tools_SceneGeometry.h"
+#include "Main/GameTimer.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "Misc/2Darray.h"
+#include "SceneB2/Camera.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/Vis2AI.h"
-
 #include "System/GResource.h"
+#include "Tools_SceneGeometry.h"
 
 #include <cstdint>
 

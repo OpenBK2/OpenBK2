@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "ProfileManagerMenu.h"
-#include "InterfaceMisc.h"
+
 #include "GameXClassIDs.h"
+#include "InterfaceMisc.h"
 #include "InterfaceState.h"
 #include "Main/Profiles.h"
 #include "Misc/StrProc.h"
+#include "ProfileManagerMenu.h"
 
 #include "GameX_export.h"
 

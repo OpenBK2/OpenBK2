@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "aiRender.h"
+
 #include "aiObject.h"
+#include "aiRender.h"
 
 namespace NAI
 {

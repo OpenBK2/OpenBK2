@@ -1,10 +1,10 @@
 #include "stdafx.h"
+
 #include "BSAssertDialog.h"
 #include "BSExceptionDialog.h"
-#include "MemoryLib/SymAccess.h"
-#include "BSUtil.h"
 #include "BSUInit.h"
-
+#include "BSUtil.h"
+#include "MemoryLib/SymAccess.h"
 #include "port/stdcall.h"
 
 #include <cinttypes>

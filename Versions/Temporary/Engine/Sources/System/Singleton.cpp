@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "ConsoleBufferInternal.h"
 #include "Misc/HashFuncs.h"
 

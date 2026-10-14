@@ -1,7 +1,8 @@
 #include "MapEditorLib/stdafx.h"
+
 #include "MapEditorLib/Tools_Resources.h"
-#include "System/Text.h"
 #include "port/unicode.h"
+#include "System/Text.h"
 
 #include <gtest/gtest.h>
 

@@ -37,22 +37,22 @@
 // Neither 2Darray.h nor GPixelFormat.h is self-contained: the first names
 // IBinSaver and the second Float2Int and CVec4, and both expect a stdafx to
 // have supplied them. This is that prelude, in the order Image/stdafx.h uses.
-#include "Misc/Asserts.h"
-#include "System/System.h"
-#include "Misc/Tools.h"
-#include "System/Basic.h"
-#include "Misc/Geom.h"
-#include "System/Streams.h"
-#include "System/BinSaver.h"
-#include "Misc/2Darray.h"
+#include "3Dmotor/GPixelFormat.h"
 #include "Image/DDS.h"
+#include "Image/GUnpackDXT.h"
 #include "Image/Image.h"
 #include "Image/ImageDDS.h"
-#include "Image/GUnpackDXT.h"
-#include <squish/squish.h>
-#include "3Dmotor/GPixelFormat.h"
+#include "Misc/2Darray.h"
+#include "Misc/Asserts.h"
+#include "Misc/Geom.h"
+#include "Misc/Tools.h"
+#include "System/Basic.h"
+#include "System/BinSaver.h"
+#include "System/Streams.h"
+#include "System/System.h"
 
 #include <gtest/gtest.h>
+#include <squish/squish.h>
 
 namespace
 {

@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
 #include "GDecal.h"
-#include "GSceneUtils.h"
 #include "GSceneInternal.h"
+#include "GSceneUtils.h"
 
 namespace NGScene
 {

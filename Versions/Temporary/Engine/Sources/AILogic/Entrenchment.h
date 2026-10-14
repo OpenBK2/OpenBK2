@@ -1,8 +1,8 @@
 #pragma once
 
+#include "RotatingFireplacesObject.h"
 #include "StaticObject.h"
 #include "StormableObject.h"
-#include "RotatingFireplacesObject.h"
 
 #include <cstdint>
 

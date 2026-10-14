@@ -1,13 +1,14 @@
 #include "stdafx.h"
-#include "InterfaceMissionObjectives.h"
-#include "GameXClassIDs.h"
-#include "UI/SceneClassIDs.h"
-#include "SceneB2/Scene.h"
-#include "Misc/StrProc.h"
-#include "InterfaceState.h"
-#include "ScenarioTracker.h"
+
 #include "B2_M1_World/MissionObjectiveStates.h"
+#include "GameXClassIDs.h"
+#include "InterfaceMissionObjectives.h"
+#include "InterfaceState.h"
+#include "Misc/StrProc.h"
+#include "ScenarioTracker.h"
+#include "SceneB2/Scene.h"
 #include "System/Text.h"
+#include "UI/SceneClassIDs.h"
 
 #include "GameX_export.h"
 

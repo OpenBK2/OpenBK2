@@ -1,6 +1,6 @@
 #pragma once
-#include "RectLayout.h"
 #include "GLocale.h"
+#include "RectLayout.h"
 
 class CFontFormatInfo;
 

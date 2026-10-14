@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
+#include "DBSceneConsts.h"
 #include "DebugTools/DebugInfoManagerInternal.h"
 #include "Misc/HashFuncs.h"
 #include "SceneInternal.h"
-#include "DBSceneConsts.h"
 
 #include <cstdint>
 

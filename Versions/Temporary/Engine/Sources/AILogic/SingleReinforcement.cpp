@@ -1,25 +1,23 @@
 #include "stdafx.h"
 
-#include "port/wordpack.h"
-
-#include "SingleReinforcement.h"
-#include "NewUpdater.h"
-#include "General.h"
-#include "AILogicInternal.h"
-#include "UnitCreation.h"
 #include "AIGeometry.h"
+#include "AILogicInternal.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/Terrain.h"
 #include "Diplomacy.h"
 #include "ExecutorContainer.h"
 #include "ExecutorSeaReinf.h"
+#include "FeedbackSystem.h"
 #include "Formation.h"
+#include "General.h"
+#include "NewUpdater.h"
+#include "port/wordpack.h"
+#include "Reinforcement.h"
+#include "SingleReinforcement.h"
 #include "Soldier.h"
+#include "UnitCreation.h"
 #include "Units.h"
 #include "UnitsIterators2.h"
-#include "Reinforcement.h"
-
-#include "Common_RTS_AI/AIMap.h"
-#include "Common_RTS_AI/Terrain.h"
-#include "FeedbackSystem.h"
 
 #include <cstdint>
 

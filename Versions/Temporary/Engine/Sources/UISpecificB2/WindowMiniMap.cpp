@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "WindowMiniMap.h"
 #include "3Dmotor/RectLayout.h"
+#include "Main/GameTimer.h"
 #include "Misc/Bresenham.h"
 #include "Misc/GeomMisc.h"
+#include "Misc/PlaneGeometry.h"
+#include "System/Commands.h"
 #include "System/FastMath.h"
 #include "UI/UIVisitor.h"
-#include "Misc/PlaneGeometry.h"
-#include "Main/GameTimer.h"
-#include "System/Commands.h"
+#include "WindowMiniMap.h"
 
 #include <cstdint>
 

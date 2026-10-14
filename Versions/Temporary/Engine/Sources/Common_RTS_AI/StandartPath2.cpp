@@ -3,11 +3,10 @@
 #include "AIMap.h"
 #include "BasePathUnit.h"
 #include "CommonPathFinder.h"
+#include "Misc/Bresenham.h"
 #include "StandartPath2.h"
 #include "StaticPathInternal.h"
 #include "Terrain.h"
-
-#include "Misc/Bresenham.h"
 
 //максимальное количество точек, на которое будет смотреться вперед (в функции PeekPoint)
 static const int MAX_LOOK_FORWARD_POINTS = 7;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "UnitTypes.h"
+
 #include "RPGStats.h"
+#include "UnitTypes.h"
 
 #include <fmt/format.h>
 

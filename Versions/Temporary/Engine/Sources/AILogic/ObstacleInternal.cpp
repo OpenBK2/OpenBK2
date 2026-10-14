@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "ObstacleInternal.h"
 #include "CommonUnit.h"
-#include "StaticObject.h"
 #include "GroupLogic.h"
+#include "ObstacleInternal.h"
+#include "StaticObject.h"
 
 #include "AILogic_export.h"
 

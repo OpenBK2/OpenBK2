@@ -2,8 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "EffectorMoveTo.h"
 
+#include "EffectorMoveTo.h"
 #include "Window.h"
 
 #include <fmt/format.h>

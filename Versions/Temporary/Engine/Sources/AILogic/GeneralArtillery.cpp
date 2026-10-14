@@ -1,19 +1,17 @@
 #include "stdafx.h"
 
-#include "port/wordpack.h"
-
-#include "GeneralArtillery.h"
-#include "UnitStates.h"
-#include "Guns.h"
-#include "GroupLogic.h"
-
-#include "NewUpdater.h"
 #include "Artillery.h"
-#include "GeneralConsts.h"
 #include "Diplomacy.h"
+#include "GeneralArtillery.h"
+#include "GeneralConsts.h"
+#include "GeneralInternal.h"
+#include "GroupLogic.h"
+#include "Guns.h"
+#include "NewUpdater.h"
+#include "port/wordpack.h"
 #include "Shell.h"
 #include "Technics.h"
-#include "GeneralInternal.h"
+#include "UnitStates.h"
 
 #include "AILogic_export.h"
 

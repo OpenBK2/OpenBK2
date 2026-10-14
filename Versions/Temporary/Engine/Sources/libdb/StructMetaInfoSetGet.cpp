@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "StructMetaInfo.h"
-#include "BindArray.h"
+
 #include "Bind.h"
+#include "BindArray.h"
 #include "EditorDb.h"
+#include "StructMetaInfo.h"
 
 #include <cstdint>
 

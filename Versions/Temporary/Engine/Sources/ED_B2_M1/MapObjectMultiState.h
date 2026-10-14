@@ -1,15 +1,15 @@
 #pragma once
 
+#include "BridgeState.h"
 #include "CommandHandlerDefines.h"
-#include <fmt/format.h>
-
+#include "EntrenchmentState.h"
+#include "FenceState.h"
 #include "PaletteCommands.h"
 #include "SpotState.h"
-#include "BridgeState.h"
-#include "FenceState.h"
-#include "EntrenchmentState.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 //Mapinfo object state edit parameters
 #define MIMOSEP_PLAYER_COUNT 0x00000001

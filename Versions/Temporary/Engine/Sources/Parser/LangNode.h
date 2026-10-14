@@ -1,9 +1,10 @@
 #pragma once
 
-#include <cstdint>
+#include "System/Basic.h" // CObjectBase, the base of CLangNode
 
 #include "Parser_export.h"
-#include "System/Basic.h" // CObjectBase, the base of CLangNode
+
+#include <cstdint>
 #include <string>
 
 namespace NLang

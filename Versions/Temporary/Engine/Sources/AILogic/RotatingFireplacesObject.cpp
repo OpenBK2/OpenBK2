@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "Guns.h"
 #include "RotatingFireplacesObject.h"
 #include "Soldier.h"
-#include "Guns.h"
 
 #include <fmt/format.h>
 

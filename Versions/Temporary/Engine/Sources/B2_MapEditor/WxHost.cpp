@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "WxHost.h"
-
 #include "MapEditor/MapEditorApp.h"
+#include "WxHost.h"
 
 #include <wx/app.h>
 

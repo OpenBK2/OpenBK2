@@ -1,9 +1,11 @@
 #pragma once
 
 #include "DefaultController.h"
-#include <fmt/format.h>
 #include "ManipulatorManager.h"
+
 #include "MapEditorLib_export.h"
+
+#include <fmt/format.h>
 
 // TYPE_INSERT:
 // szName					- имя массива

@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
 #include "MapSounds.h"
-#include "SoundSceneInternal.h"
 #include "SoundSceneConsts.h"
+#include "SoundSceneInternal.h"
 
 #include <cstdint>
 

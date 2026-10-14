@@ -1,24 +1,24 @@
 #include "stdafx.h"
+
+#include "DBMPConsts.h"
+#include "GameRoomData.h"
+#include "GameXClassIDs.h"
+#include "GetConsts.h"
+#include "InterfaceMisc.h"
+#include "InterfaceMPCustomGame.h"
+#include "InterfaceState.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "System/Text.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "InterfaceMPCustomGame.h"
-#include "GameXClassIDs.h"
-#include "InterfaceState.h"
-#include "InterfaceMisc.h"
-#include "Misc/StrProc.h"
-#include "UISpecificB2/DBUISpecificB2.h"
-#include "GameRoomData.h"
-#include "System/Text.h"
-#include "DBMPConsts.h"
-#include "GetConsts.h"
 #include "UI/ListControlSorters.h"
+#include "UISpecificB2/DBUISpecificB2.h"
 
 #include "GameX_export.h"
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 const int nMAX_PLAYERS = 8;

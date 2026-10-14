@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Manuver.h"
-#include "IPlane.h"
-#include "PlanePreferences.h"
-
 #include "Common_RTS_AI/BasePathUnit.h"
+#include "IPlane.h"
+#include "Manuver.h"
+#include "PlanePreferences.h"
 
 #include <cstdint>
 

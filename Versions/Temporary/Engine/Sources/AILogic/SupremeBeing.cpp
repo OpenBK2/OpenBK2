@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "GeneralInternal.h"
 #include "AIUnit.h"
-#include "Diplomacy.h"
 #include "AIUnitInfoForGeneral.h"
+#include "Diplomacy.h"
+#include "GeneralInternal.h"
 #include "Scripts.h"
 
 CSupremeBeing theSupremeBeing;

@@ -1,9 +1,9 @@
 #include "NativeDockHint.h"
 
 #ifdef __WXGTK3__
+#include <gtk/gtk.h>
 #include <wx/settings.h>
 #include <wx/window.h>
-#include <gtk/gtk.h>
 
 struct CNativeDockHint::SImpl
 {

@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
+#include "Main/GameTimer.h"
 #include "MOUnitHelicopter.h"
 #include "UpdatableProcess.h"
-
-#include "Main/GameTimer.h"
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x31197AC0, CMOUnitHelicopter );
 

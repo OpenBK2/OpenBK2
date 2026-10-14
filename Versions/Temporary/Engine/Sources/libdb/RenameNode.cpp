@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "libdb/EditorDb.h"
-
 #include "System/FilePath.h"
 #include "System/VFSOperations.h"
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Gfx.h"
 #include "GfxBuffers.h"
 #include "ScreenShot.h"

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "GText.h"
 #include "Misc/StrProc.h"
 

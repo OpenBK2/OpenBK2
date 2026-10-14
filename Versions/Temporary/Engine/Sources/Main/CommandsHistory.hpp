@@ -1,9 +1,10 @@
 #pragma once
 
-#include "System/CheckSumLog.h"
-#include "System/Basic.h"
 #include "GameX/AILogicCommandInternal.h"
 #include "Stats_B2_M1/ActionCommand.h"
+#include "System/Basic.h"
+#include "System/CheckSumLog.h"
+
 #include <unordered_map>
 
 namespace NDb

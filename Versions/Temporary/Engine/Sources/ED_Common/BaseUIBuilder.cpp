@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "BaseUIBuilder.h"
 #include "libdb/ResourceManager.h"
-#include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/StringManager.h"
+
+#include <fmt/format.h>
 
 bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName,
                                  const std::string &rszDestination,

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "ExecutorBurningFuel.h"
 #include "Shell.h"
 

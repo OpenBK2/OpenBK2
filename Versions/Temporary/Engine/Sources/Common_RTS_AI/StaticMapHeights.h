@@ -2,10 +2,10 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "Common_RTS_AI_export.h"
-
-#include "Misc/Spline.h"
 #include "Misc/2Darray.h"
+#include "Misc/Spline.h"
+
+#include "Common_RTS_AI_export.h"
 
 #include <cstdint>
 

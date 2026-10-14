@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "MPManager.h"
-#include "MPManagerModeNoNet.hpp"
-#include "MPManagerModeLAN.hpp"
-#include "MPManagerModeNivalNet.hpp"
 #include "GameXClassIDs.h"
 #include "Main/MainLoop.h"
+#include "MPManager.h"
+#include "MPManagerModeLAN.hpp"
+#include "MPManagerModeNivalNet.hpp"
+#include "MPManagerModeNoNet.hpp"
 
 #include "GameX_export.h"
 

@@ -6,6 +6,13 @@
 
 // The standard headers the engine's stdafx.h prelude would supply, which
 // Streams.h and XMLSAXParser.h rely on without including
+#include "Misc/Asserts.h"
+#include "Misc/Tools.h"
+#include "System/Basic.h"
+#include "System/Streams.h"
+#include "System/System.h"
+#include "System/XMLSAXParser.h"
+
 #include <cstdint>
 #include <cstring>
 #include <list>
@@ -14,13 +21,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
-#include "Misc/Asserts.h"
-#include "Misc/Tools.h"
-#include "System/System.h"
-#include "System/Basic.h"
-#include "System/Streams.h"
-#include "System/XMLSAXParser.h"
 
 #include <gtest/gtest.h>
 

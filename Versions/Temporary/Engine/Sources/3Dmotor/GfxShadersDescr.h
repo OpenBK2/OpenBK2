@@ -1,7 +1,7 @@
 #pragma once
-#include <d3d9.h>
-
 #include <cstdint>
+
+#include <d3d9.h>
 
 // should be global variable
 struct SVShader

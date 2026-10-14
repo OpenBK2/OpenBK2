@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "ScriptAreaView.h"
-
 #include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
-
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "ResourceDefines.h"
+#include "ScriptAreaView.h"
+
+#include <vector>
 
 #include <wx/button.h>
 #include <wx/listctrl.h>
@@ -16,8 +16,6 @@
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-
-#include <vector>
 
 // The script area palette, in wx: the tenth, and the first that needs no
 // command dispatch of its own at all.

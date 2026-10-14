@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "System/BasicShare.h"
-#include "System/BinaryResources.h"
-#include "GAnimFormat.h"
-#include "vendor/granny/include/granny.h"
+
+#include "DBScene.h"
 #include "GAnimation.h"
+#include "GAnimFormat.h"
 #include "GAnimUtils.h"
 #include "GltfAnimation.h"
-#include "DBScene.h"
+#include "System/BasicShare.h"
+#include "System/BinaryResources.h"
+#include "vendor/granny/include/granny.h"
 
 #include <fmt/format.h>
 

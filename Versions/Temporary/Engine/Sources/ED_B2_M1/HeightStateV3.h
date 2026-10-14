@@ -1,15 +1,16 @@
 #pragma once
 
 #include "CommandHandlerDefines.h"
-#include <fmt/format.h>
-#include "PaletteCommands.h"
-#include "MapEditorLib/MultiInputState.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
-#include "MapInfoStoreInputState.h"
 #include "HeightPattern.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/MultiInputState.h"
+#include "MapInfoStoreInputState.h"
+#include "PaletteCommands.h"
 #include "Tools_SceneDraw.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 //Mapinfo terrain height state v3 edit parameters
 #define MITHV3EP_BRUSH 0x00000001

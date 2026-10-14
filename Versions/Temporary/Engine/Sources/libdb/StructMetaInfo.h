@@ -1,8 +1,8 @@
 #pragma once
 
-#include "TypeDef.h"
-#include "OwnValue.h"
 #include "ArrayOperations.h"
+#include "OwnValue.h"
+#include "TypeDef.h"
 
 #include <cstdint>
 

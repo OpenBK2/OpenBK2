@@ -1,12 +1,12 @@
 #include "stdafx.h"
+
 #include "AsyncTrace.h"
-
 #include "GlobalVars.h"
-
-#include <fmt/format.h>
 
 #include <cstdio>
 #include <mutex>
+
+#include <fmt/format.h>
 
 namespace NAsyncTrace
 {

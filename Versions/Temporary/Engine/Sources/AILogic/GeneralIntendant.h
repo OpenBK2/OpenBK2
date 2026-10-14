@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Commander.h"
-#include "General.h"
 #include "EnemyRememberer.h"
+#include "General.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
 #include <cstdint>

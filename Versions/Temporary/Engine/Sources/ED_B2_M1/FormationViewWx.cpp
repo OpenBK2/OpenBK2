@@ -1,17 +1,15 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-
-#include "FormationView.h"
 
 #include "CommandHandlerDefines.h"
 #include "DialogData.h"
 #include "FormationMnemonics.h"
+#include "FormationView.h"
+#include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxOwnership.h"
 #include "PaletteCommands.h"
 #include "ResourceDefines.h"
 #include "StringResources.h"
-
-#include "MapEditorLib/WxHostWindow.h"
-#include "MapEditorLib/WxOwnership.h"
 
 #include <wx/checkbox.h>
 #include <wx/listctrl.h>

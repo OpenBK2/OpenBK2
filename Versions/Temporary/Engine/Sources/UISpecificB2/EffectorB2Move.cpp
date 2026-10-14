@@ -1,19 +1,19 @@
 #include "stdafx.h"
+
+#include "DBUISpecificB2.h"
+#include "EffectorB2Move.h"
+#include "Input/GameMessage.h"
+#include "Misc/2Darray.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Input/GameMessage.h"
 #include "UI/UIFactory.h"
-#include "Misc/2Darray.h"
-#include "EffectorB2Move.h"
-#include "DBUISpecificB2.h"
 
 #include "UISpecificB2_export.h"
 
 #include <algorithm>
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd,

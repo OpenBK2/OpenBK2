@@ -1,14 +1,14 @@
 #include "stdafx.h"
+
+#include "ExecutorContainer.h"
 #include "ExecutorRestoreTransparencyQueue.h"
 #include "StaticObject.h"
-#include "ExecutorContainer.h"
 #include "StaticObjectsIters.h"
-
 #include "System/AsyncTrace.h"
 
-#include <fmt/format.h>
-
 #include "AILogic_export.h"
+
+#include <fmt/format.h>
 
 EXTERNVAR CExecutorContainer theExecutorContainer;
 

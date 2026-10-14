@@ -1,18 +1,17 @@
-#include <libdb_export.h>
-
 #include "stdafx.h"
+
 #include "Database.h"
 #include "Index.h"
 #include "libdb/TypeDef.h"
+#include "Misc/Win32Helper.h"
+#include "port/time.h"
 #include "System/VFS.h"
 #include "System/XMLReader.h"
-#include "Misc/Win32Helper.h"
-
-#include "port/time.h"
 
 #include <cstdint>
 
 #include <fmt/format.h>
+#include <libdb_export.h>
 
 namespace NDb
 {

@@ -2,10 +2,11 @@
 //
 
 #include "stdafx.h"
-#include "WindowMSButton.h"
+
 #include "ButtonGroup.h"
 #include "ForegroundTextString.h"
 #include "System/Text.h"
+#include "WindowMSButton.h"
 
 #include <fmt/format.h>
 

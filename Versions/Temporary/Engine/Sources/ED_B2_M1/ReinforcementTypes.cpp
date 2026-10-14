@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
 #include "Misc/2Darray.h"
-#include "Stats_B2_M1/RPGStats.h"
 #include "ReinforcementTypes.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 #include <zconf.h>
 

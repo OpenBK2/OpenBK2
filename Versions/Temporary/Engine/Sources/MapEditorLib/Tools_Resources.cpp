@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Tools_Resources.h"
 #include "Misc/StrProc.h"
-#include "System/VFS.h"
+#include "port/process.h"
+#include "port/unicode.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-#include "System/WinVFS.h"
+#include "System/VFS.h"
 #include "System/VFSOperations.h"
-
-#include "port/unicode.h"
+#include "System/WinVFS.h"
+#include "Tools_Resources.h"
 
 #include <cstdint>
-#include "port/process.h"
+
+#include <fmt/format.h>
 
 namespace
 {

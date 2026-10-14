@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "3Dmotor/Gfx.h"
 #include "3DLib/Transform.h"
+#include "3Dmotor/Gfx.h"
 #include "Camera.h"
-#include "VisObjDesc.h"
 #include "SceneInternal.h"
+#include "VisObjDesc.h"
 
 void CScene::PickTerrain( CVec3 *pvPos, const CVec2 &vScreenPos )
 {

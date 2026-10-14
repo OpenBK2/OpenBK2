@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Stats_B2_M1_export.h"
-
 #include "AIUpdates.h"
+
+#include "Stats_B2_M1_export.h"
 
 enum EUnitStatus : unsigned int
 {

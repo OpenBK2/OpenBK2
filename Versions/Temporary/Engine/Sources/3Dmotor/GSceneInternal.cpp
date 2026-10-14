@@ -1,36 +1,38 @@
 #include "stdafx.h"
 
-#include <thread>
+#include "4dCalcs.h"
+#include "GDecalGeometry.h"
 #include "Gfx.h"
 #include "GfxEffects.h"
-#include "LoadingCounter.h"
-#include "GSceneUtils.h"
-#include "GSceneInternal.h"
-#include "GMaterial.hpp"
-#include "GRenderLight.h"
-#include "Misc/HPTimer.h"
-#include "SuperCollider.h" // for TraceStatic(...)
-#include "GDecalGeometry.h"
-#include "GShadowVolume.h"
-#include "GRenderPathFastest.h"
-#include "GRenderPathOverdraw.h"
-#include "GRenderPathTnl.h"
-#include "GRenderPathLightmap.h"
-#include "GRTShare.h"
 #include "GLightmapCalc.h"
-#include "GRenderUtils.h"
-#include "4dCalcs.h"
+#include "GMaterial.hpp"
 #include "GPartParticles.h"
 #include "GPostProcessors.h"
+#include "GRenderLight.h"
+#include "GRenderPathFastest.h"
+#include "GRenderPathLightmap.h"
+#include "GRenderPathOverdraw.h"
 #include "GRenderPathPolycount.h"
+#include "GRenderPathTnl.h"
+#include "GRenderUtils.h"
+#include "GRTShare.h"
+#include "GSceneInternal.h"
+#include "GSceneUtils.h"
+#include "GShadowVolume.h"
+#include "LoadingCounter.h"
+#include "Misc/HPTimer.h"
+#include "SuperCollider.h" // for TraceStatic(...)
+
+#include <thread>
 // Gfx textures, CRenderContext and the 2D effects; this came in through
 // GPostEffects.h until the post effects were removed.
 #include "GfxUtils.h"
 #include "System/Commands.h"
-#include <algorithm>
-#include <d3d9.h>
 
+#include <algorithm>
 #include <cstdint>
+
+#include <d3d9.h>
 
 const int N_SKIP_IGNORED_TEST = -1;
 

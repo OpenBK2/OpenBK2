@@ -1,17 +1,15 @@
 #include "stdafx.h"
 
-#include "ReinfPointsDialogs.h"
-
-#include <fmt/format.h>
-
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 #include "ReinforcementTypes.h"
+#include "ReinfPointsDialogs.h"
 #include "StringResources.h"
 
+#include <fmt/format.h>
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/listctrl.h>

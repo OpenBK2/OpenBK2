@@ -1,6 +1,6 @@
 #pragma once
-#include "TableManipulator.h"
 #include "System/FileUtils.h"
+#include "TableManipulator.h"
 
 class CFolderManipulatorWrapper : public IManipulator
 {

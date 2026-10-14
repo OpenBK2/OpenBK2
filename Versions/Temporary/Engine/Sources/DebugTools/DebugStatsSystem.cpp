@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
+#include "DebugStatsSystem.h"
+#include "Misc/StrProc.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Misc/StrProc.h"
-#include "DebugStatsSystem.h"
 
 #include <cstdint>
 

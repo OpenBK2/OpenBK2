@@ -20,9 +20,8 @@
 #if BOOST_OS_WINDOWS
 #include <windows.h>
 #else
-#include <windows.h>
-
 #include <SDL3/SDL.h>
+#include <windows.h>
 #endif
 
 #if !BOOST_OS_WINDOWS

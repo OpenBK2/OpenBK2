@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "Window.h"
 #include "UIComponents.h"
+#include "Window.h"
 
 class CWindowListItem;
 class CWindowMSButton;

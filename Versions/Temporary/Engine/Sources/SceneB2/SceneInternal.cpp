@@ -1,50 +1,45 @@
 #include "stdafx.h"
 
-#include "port/time.h"
-
-#include <thread>
-#include <chrono>
-
-#include "UI/CommandParam.h"
-#include "UI/DBUserInterface.h"
+#include "3DLib/GMemBuilder.h"
+#include "3DLib/MemObject.h"
+#include "3DLib/Transform.h"
+#include "3Dmotor/aiMap.h"
 #include "3Dmotor/Gfx.h"
+#include "3Dmotor/GfxBuffers.h"
 #include "3Dmotor/GInit.h"
+#include "3Dmotor/GObjectInfo.h"
 #include "3Dmotor/GRTInfo.h"
 #include "3Dmotor/GRTShare.h"
 #include "3Dmotor/GSceneUtils.h"
-#include "3Dmotor/aiMap.h"
-
-#include "3Dmotor/GfxBuffers.h"
-#include "3Dmotor/GObjectInfo.h"
-
-#include "3DLib/Transform.h"
-#include "UI/UI.h"
-#include "Main/GameTimer.h"
-#include "System/Commands.h"
-#include "Image/Targa.h"
-#include "SceneUIVisitor.h"
 #include "B2_M1_Terrain/TracksManager.h"
-#include "DBSceneConsts.h"
-#include "Cursor.h"
 #include "Camera.h"
-#include "StatSystem.h"
-#include "VisObjDesc.h"
-#include "SceneInternal.h"
-#include "TerrainManager.h"
-#include "ShotTrace.h"
-#include "VisObjIconsManager.h"
-#include "SceneHoldQueue.h"
 #include "CameraMapIterator.h"
-#include "FullScreenFader.h"
-#include "3DLib/MemObject.h"
-#include "3DLib/GMemBuilder.h"
 #include "Common_RTS_AI/TerraAIObserver.h"
+#include "Cursor.h"
+#include "DBSceneConsts.h"
+#include "FullScreenFader.h"
+#include "Image/Targa.h"
+#include "Main/GameTimer.h"
 #include "Misc/StrProc.h"
-#include "System/VFSOperations.h"
-
+#include "port/time.h"
+#include "SceneHoldQueue.h"
+#include "SceneInternal.h"
+#include "SceneUIVisitor.h"
+#include "ShotTrace.h"
 #include "Sound/MusicSystem.h"
+#include "StatSystem.h"
+#include "System/Commands.h"
+#include "System/VFSOperations.h"
+#include "TerrainManager.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
+#include "UI/UI.h"
+#include "VisObjDesc.h"
+#include "VisObjIconsManager.h"
 
+#include <chrono>
 #include <cstdint>
+#include <thread>
 
 #include <fmt/format.h>
 

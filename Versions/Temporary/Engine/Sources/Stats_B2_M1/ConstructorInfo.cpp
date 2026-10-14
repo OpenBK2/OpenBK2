@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "DBConstructorProfile.h"
 #include "ConstructorInfo.h"
+#include "DBConstructorProfile.h"
 
 #include <algorithm>
 

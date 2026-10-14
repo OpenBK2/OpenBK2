@@ -1,4 +1,5 @@
 #include "UI/stdafx.h"
+
 #include "UI/Window.h"
 
 #include <gtest/gtest.h>

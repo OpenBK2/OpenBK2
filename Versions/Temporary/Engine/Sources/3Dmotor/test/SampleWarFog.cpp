@@ -1,9 +1,8 @@
 #include "3Dmotor/GLightPerVertex.cpp"
+#include "original.h"
+#include "random.h"
 
 #include <gtest/gtest.h>
-
-#include "random.h"
-#include "original.h"
 
 bool bIsSSEPresent;
 unsigned char nCubicRoot[32768];

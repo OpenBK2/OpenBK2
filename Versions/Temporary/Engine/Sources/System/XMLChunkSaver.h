@@ -1,7 +1,7 @@
 #pragma once
 
-#include "LightXML.h"
 #include "DB.h"
+#include "LightXML.h"
 #include "Misc/HashFuncs.h"
 #include "XmlSaver.h"
 

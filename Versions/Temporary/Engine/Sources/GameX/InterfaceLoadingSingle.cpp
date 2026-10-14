@@ -1,21 +1,22 @@
 #include "stdafx.h"
 
-#include <thread>
-#include <chrono>
-#include "InterfaceLoadingSingle.h"
-#include "GameXClassIDs.h"
-#include "UI/SceneClassIDs.h"
-#include "SceneB2/Scene.h"
-#include "InterfaceState.h"
-#include "3Dmotor/GRTShare.h"
-#include "SceneB2/Cursor.h"
-#include "SceneB2/SceneUIVisitor.h"
-#include "SaveLoadHelper.h"
 #include "3Dmotor/FrameTransition.h"
+#include "3Dmotor/GRTShare.h"
+#include "GameXClassIDs.h"
+#include "InterfaceLoadingSingle.h"
+#include "InterfaceState.h"
+#include "SaveLoadHelper.h"
+#include "SceneB2/Cursor.h"
+#include "SceneB2/Scene.h"
+#include "SceneB2/SceneUIVisitor.h"
 #include "System/Commands.h"
+#include "UI/SceneClassIDs.h"
 #include "UISpecificB2/EffectorB2Move.h"
 
 #include "GameX_export.h"
+
+#include <chrono>
+#include <thread>
 
 const float MIN_PROGRESS_DELTA = 0.001f;
 

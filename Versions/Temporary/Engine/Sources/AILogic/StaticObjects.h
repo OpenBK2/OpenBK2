@@ -3,9 +3,9 @@
 #include "Common_RTS_AI/Terrain.h"
 #include "Misc/AreaMap.h"
 
-#include <float.h>
-
 #include <cstdint>
+
+#include <float.h>
 
 class CExistingObject;
 class CStaticObject;

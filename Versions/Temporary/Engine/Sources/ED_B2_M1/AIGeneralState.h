@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AIGeneralData.h"
-
 #include "MapInfoEditor.h"
 
 #include <cstdint>

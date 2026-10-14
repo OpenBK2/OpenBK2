@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Parser_export.h"
-
 #include "LangNode.h"
 #include "NodesList.h"
 #include "Visitor.h"
+
+#include "Parser_export.h"
 
 namespace NLang
 {

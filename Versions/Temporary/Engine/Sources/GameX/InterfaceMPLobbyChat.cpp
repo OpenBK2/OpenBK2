@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
+#include "ChatControl.h"
+#include "GameRoomData.h"
 #include "InterfaceMPLobby.h"
+#include "InterfaceState.h"
+#include "Misc/StrProc.h"
 #include "MPLobbyData.h"
 #include "MultiplayerCommandManager.h"
-#include "ChatControl.h"
-#include "Misc/StrProc.h"
-#include "GameRoomData.h"
-#include "InterfaceState.h"
 
 // Chat-related methods for MP Lobby
 

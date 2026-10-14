@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "CommandsSender.h"
-#include "AILogicCommandInternal.h"
 #include "AILogic/B2AI.h"
-#include "Transceiver.h"
+#include "AILogicCommandInternal.h"
+#include "CommandsSender.h"
 #include "Main/MainLoop.h"
 #include "ScenarioTracker.h"
+#include "Transceiver.h"
 
 #include "GameX_export.h"
 

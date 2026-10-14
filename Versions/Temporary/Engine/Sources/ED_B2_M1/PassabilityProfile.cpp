@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 
-#include "libdb/Manipulator.h"
 #include "ED_Common/GltfExporter.h"
+#include "libdb/Manipulator.h"
 #include "SceneB2/TerraTools.h"
 #include "Stats_B2_M1/DBPassProfile.h"
 #include "Stats_B2_M1/Vis2AI.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 //#define _DEBUG_GENERATION
 

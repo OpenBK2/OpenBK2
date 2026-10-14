@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-
-#include "SquadExporter.h"
 
 #include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "SquadExporter.h"
+
+#include <fmt/format.h>
 
 REGISTER_EXPORTER_IN_DLL( SquadRPGStats, CSquadExporter )
 

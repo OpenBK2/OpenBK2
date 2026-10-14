@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Misc/2Darray.h"
-#include <fmt/format.h>
-#include "Stats_B2_M1/RPGStats.h"
-#include "MapEditorLib/CommonExporterMethods.h"
 #include "ED_Common/Tools_Granny.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "Misc/2Darray.h"
+#include "Stats_B2_M1/RPGStats.h"
+
+#include <fmt/format.h>
 // NDB_DEFAULT_SEASON and typeSeasonMnemonics, which the season templates below use.
 #include "ED_B2_M1/SeasonMnemonics.h"
 // CManipulatorManager, which the same templates read values through.

@@ -1,8 +1,9 @@
 #include "libdb/ArrayOperations.h"
 
-#include <gtest/gtest.h>
 #include <memory>
 #include <string>
+
+#include <gtest/gtest.h>
 
 namespace
 {

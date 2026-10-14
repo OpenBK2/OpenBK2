@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GRenderCore.h"
 #include "GLightPerVertex.h"
+#include "GRenderCore.h"
 
 namespace NGfx
 {

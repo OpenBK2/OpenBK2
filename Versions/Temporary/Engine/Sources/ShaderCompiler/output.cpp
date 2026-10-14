@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "output.h"
+
 #include "Data.h"
+#include "output.h"
 #include "parser.h"
 
 #include <cstdint>

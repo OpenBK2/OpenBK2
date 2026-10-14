@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GRenderPathPolycount.h"
+
 #include "GRenderExecute.h"
+#include "GRenderPathPolycount.h"
 
 namespace NGScene
 {

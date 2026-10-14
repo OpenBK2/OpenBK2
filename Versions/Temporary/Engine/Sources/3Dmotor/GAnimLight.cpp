@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GAnimLight.h"
+
 #include "DBScene.h"
+#include "GAnimLight.h"
 #include "GScene.h"
 
 namespace NGScene

@@ -1,10 +1,10 @@
 #include "stdafx.h"
+
+#include "BSDialogFunctions.h"
 #include "BSExceptionDialog.h"
 #include "MemoryLib/SymAccess.h"
-#include "BSDialogFunctions.h"
-#include "resource.h"
-
 #include "port/cdecl.h"
+#include "resource.h"
 
 namespace NBSU
 {

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "AICmdsAutoMagicInterface.h"
 #include "System/ChunklessSaver.h"
 

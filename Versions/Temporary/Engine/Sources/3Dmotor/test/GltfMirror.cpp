@@ -1,14 +1,16 @@
 // Exercise the real file loader and animator without game data or a graphics device.
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/DBScene.h"
 #include "3Dmotor/GAnimation.hpp"
 #include "3Dmotor/GltfFormat.h"
 #include "System/VFSOperations.h"
 
+#include <map>
+
 #include <fastgltf/core.hpp>
 #include <fastgltf/tools.hpp>
 #include <gtest/gtest.h>
-#include <map>
 
 namespace
 {

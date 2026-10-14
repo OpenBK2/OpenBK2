@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "Locale.h"
+
 #include "GLocale.h"
+#include "Locale.h"
 
 namespace NGScene
 {

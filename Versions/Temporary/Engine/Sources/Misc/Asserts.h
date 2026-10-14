@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Misc_export.h"
-
 #include "port/debugging.h"
 #include "port/stdcall.h"
+
+#include "Misc_export.h"
 
 #include <string>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "AIUpdates.h"
 #include "ActionNotify.h"
+#include "AIUpdates.h"
 
 namespace NDb
 {

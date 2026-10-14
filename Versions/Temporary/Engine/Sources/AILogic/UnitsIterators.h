@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Units.h"
 #include "Diplomacy.h"
+#include "Units.h"
 
 #include <cstdint>
 

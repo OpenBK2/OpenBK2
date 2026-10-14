@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "StatusUpdates.h"
-
 #include "System/Commands.h"
 
 REGISTER_SAVELOAD_CLASS( STATS_B2_M1, 0x31247300, SUnitStatusUpdate );

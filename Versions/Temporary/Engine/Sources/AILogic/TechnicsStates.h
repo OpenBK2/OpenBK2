@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UnitStates.h"
 #include "Common_RTS_AI/Terrain.h"
 #include "StatusUpdatesHelper.h"
+#include "UnitStates.h"
 
 #include <cstdint>
 

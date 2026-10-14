@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "EffectorButtonState.h"
 #include "WindowMSButton.h"
 

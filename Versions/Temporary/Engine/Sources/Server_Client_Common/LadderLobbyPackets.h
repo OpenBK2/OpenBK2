@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NetPacket.h"
 #include "LadderStatistics.h"
+#include "NetPacket.h"
 #include "System/XmlSaver.h"
 
 class CLadderInfoPacket : public CNetPacket

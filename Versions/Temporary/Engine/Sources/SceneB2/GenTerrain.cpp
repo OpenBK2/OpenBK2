@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "B2_M1_Terrain/DBPreLight.h"
 #include "3Dmotor/DBScene.h"
+#include "B2_M1_Terrain/DBPreLight.h"
+#include "GenTerrain.h"
 #include "Stats_B2_M1/TerraAIObserver.h"
 #include "TerraConverters.h"
-#include "GenTerrain.h"
 
 #include <cstdint>
 

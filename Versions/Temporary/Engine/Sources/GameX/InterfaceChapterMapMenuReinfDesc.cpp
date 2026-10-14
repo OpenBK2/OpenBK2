@@ -1,19 +1,19 @@
 #include "stdafx.h"
+
+#include "GameXClassIDs.h"
+#include "InterfaceChapterMapMenu.h"
+#include "InterfaceEncyclopedia.h"
+#include "InterfaceMisc.h"
+#include "InterfaceState.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "ScenarioTracker.h"
+#include "System/Text.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "InterfaceChapterMapMenu.h"
-#include "InterfaceState.h"
 #include "UISpecificB2/DBUISpecificB2.h"
-#include "Misc/StrProc.h"
-#include "GameXClassIDs.h"
-#include "InterfaceMisc.h"
-#include "ScenarioTracker.h"
-#include "InterfaceEncyclopedia.h"
-#include "System/Text.h"
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 // CInterfaceChapterMapMenu -- ReinfDesc window

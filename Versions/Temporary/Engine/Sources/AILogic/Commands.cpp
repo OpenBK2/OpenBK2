@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Commands.h"
-#include "CommonUnit.h"
 #include "Common_RTS_AI/PathFinder.h"
+#include "CommonUnit.h"
 #include "GroupMover.h"
 
 #include "AILogic_export.h"

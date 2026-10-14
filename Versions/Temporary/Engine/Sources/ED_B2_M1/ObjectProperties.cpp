@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "ObjectProperties.h"
-
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/Interface_View.h"
 #include "MapEditorLib/MultiManipulator.h"
-#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "ObjectProperties.h"
 
 #include <cstdint>
 #include <string>

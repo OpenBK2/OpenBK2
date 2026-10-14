@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "Fade.h"
 
-#include "MusicSystem.hpp"
 #include "DBMusicSystem.h"
+#include "Fade.h"
+#include "MusicSystem.hpp"
 #include "Track.h"
 
 namespace NMusicSystem

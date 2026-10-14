@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "BasicSceneExporter.h"
 #include "GltfExporter.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_MOD.h"
-
 #include "MapEditorLib/CommonExporterMethods.h"
-#include "System/FileUtils.h"
-#include "System/FilePath.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "Misc/StrProc.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+
+#include <fmt/format.h>
 
 //#include "../System/BinaryResources.h"
 

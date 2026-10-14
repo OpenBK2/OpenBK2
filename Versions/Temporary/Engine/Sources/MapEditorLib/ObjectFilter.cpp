@@ -1,8 +1,10 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "ObjectFilter.h"
+
 #include "Misc/StrProc.h"
+#include "ObjectFilter.h"
 #include "System/XmlSaver.h"
+
+#include <fmt/format.h>
 
 static void NormalizeFileName( std::string *pFileName )
 {

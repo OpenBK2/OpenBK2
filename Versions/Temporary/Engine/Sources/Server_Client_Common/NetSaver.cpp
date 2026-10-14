@@ -1,11 +1,10 @@
 #include "stdafx.h"
 
-#include "System_export.h"
-
 #include "NetPacket.h"
 #include "NetSaver.h"
 
 #include "Server_Client_Common_export.h"
+#include "System_export.h"
 
 //*******************************************************************
 //*                     CUnknownPacket                              *

@@ -1,26 +1,26 @@
 #include "stdafx.h"
 
-#include "Misc/2Darray.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
 #include "CommandHandlerDefines.h"
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "StringResources.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/PaletteList.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "Misc/2Darray.h"
 #include "SceneB2/Camera.h"
+#include "StringResources.h"
 // Explicitly, where it used to arrive through FormationWindow.h: this file
 // uses ID_SQUAD_EDITOR_DW and three more of its own ids, and the boundary
 // header in front of the palette has no business carrying them.
-#include "ResourceDefines.h"
-#include "FormationView.h"
 #include "EditorMethods.h"
+#include "FormationView.h"
+#include "ResourceDefines.h"
 #include "SquadEditor.h"
-#include "Tools_SceneGeometry.h"
-#include "Stats_B2_M1/SceneModes.h"
 #include "Stats_B2_M1/AnimModes.h"
+#include "Stats_B2_M1/SceneModes.h"
+#include "Tools_SceneGeometry.h"
 
 #include <cstdint>
 

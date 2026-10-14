@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Server_Client_Common/GameInfo.h"
 #include "Server_Client_Common/CustomLobbyClientInfo.h"
+#include "Server_Client_Common/GameInfo.h"
 #include "Server_Client_Common/PacketProcessor.h"
 
 #include <cstdint>

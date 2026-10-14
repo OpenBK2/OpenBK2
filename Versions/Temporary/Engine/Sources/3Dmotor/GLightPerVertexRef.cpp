@@ -6,6 +6,7 @@
 // be fast, only to be obviously the same arithmetic as the original.
 
 #include "stdafx.h"
+
 #include "GLightPerVertexKernels.h"
 #include "MMXhelpers.h"
 

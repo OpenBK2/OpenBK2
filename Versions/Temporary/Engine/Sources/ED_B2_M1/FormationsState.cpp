@@ -1,24 +1,24 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 #include "EditorScene.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/MaskManipulator.h"
-#include "Tools_SceneGeometry.h"
 #include "ExporterMethods.h"
 #include "FormationMnemonics.h"
-#include "SquadEditor.h"
 #include "FormationsState.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MaskManipulator.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "Misc/2Darray.h"
 #include "port/mousekeys.h"
+#include "ResourceDefines.h"
+#include "SquadEditor.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "Tools_SceneGeometry.h"
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 static bool SetOrderPosition( IManipulator *pSquadManip,

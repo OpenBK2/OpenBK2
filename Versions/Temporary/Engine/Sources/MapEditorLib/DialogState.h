@@ -1,7 +1,8 @@
 #pragma once
 
-#include "MapEditorLib_export.h"
 #include "Misc/Geom.h"
+
+#include "MapEditorLib_export.h"
 
 #include <string>
 #include <vector>

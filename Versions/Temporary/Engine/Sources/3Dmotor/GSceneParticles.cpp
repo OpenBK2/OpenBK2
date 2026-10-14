@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GSceneParticles.h"
+
 #include "GfxUtils.h"
+#include "GSceneParticles.h"
 
 namespace NGScene
 {

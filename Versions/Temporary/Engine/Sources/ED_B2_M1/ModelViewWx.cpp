@@ -1,20 +1,20 @@
 #include "stdafx.h"
 
-#include "ModelView.h"
-
 #include "CommandHandlerDefines.h"
-#include <fmt/format.h>
-
-#include "ModelState.h"
-#include "ResourceDefines.h"
-
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxColourDialog.h"
 #include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "ModelState.h"
+#include "ModelView.h"
+#include "ResourceDefines.h"
 
+#include <cstdio>
+#include <string>
+
+#include <fmt/format.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -25,9 +25,6 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>
-
-#include <cstdio>
-#include <string>
 
 // The model palette, in wx: the twelfth palette, the last of the five that
 // speak edit parameters, and the first that is not a tab.

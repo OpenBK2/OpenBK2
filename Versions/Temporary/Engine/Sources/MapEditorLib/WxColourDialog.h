@@ -40,9 +40,9 @@
 #include "Interface_UserData.h"
 #include "WxWidget.h"
 
-#include <wx/colordlg.h>
-
 #include <cstdint>
+
+#include <wx/colordlg.h>
 
 namespace NWxColourDialog
 {

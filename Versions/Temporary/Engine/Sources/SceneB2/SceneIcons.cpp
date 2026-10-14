@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "DBSceneConsts.h"
 #include "Camera.h"
+#include "DBSceneConsts.h"
 #include "SceneInternal.h"
 
 #include <fmt/format.h>

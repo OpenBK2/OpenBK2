@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "StandartDirectPath.h"
 
 void CStandartDirectPath::Init( const std::vector<SVector> &_tiles, const int nTileSize )

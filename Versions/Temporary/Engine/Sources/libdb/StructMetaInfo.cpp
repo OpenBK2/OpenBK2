@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "StructMetaInfo.h"
-#include "Variant.h"
 #include "BindArray.h"
 #include "ReportMetaInfo.h"
+#include "StructMetaInfo.h"
+#include "Variant.h"
 
 #include <cstdint>
 

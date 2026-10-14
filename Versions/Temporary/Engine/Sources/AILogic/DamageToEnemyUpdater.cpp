@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
+#include "AIUnit.h"
+#include "DamageToEnemyUpdater.h"
+#include "Guns.h"
+
 #include <cmath>
+#include <cstdint>
 
 #include <float.h>
-#include "AIUnit.h"
-#include "Guns.h"
-#include "DamageToEnemyUpdater.h"
-
-#include <cstdint>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*******************************************************************

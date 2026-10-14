@@ -1,17 +1,15 @@
 #include "stdafx.h"
 
 #include "Cheats.h"
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "Diplomacy.h"
 #include "GlobalWarFog.h"
 #include "Graveyard.h"
 #include "NewUpdater.h"
-
 #include "Spiral.hpp"
 #include "Tracer.hpp"
 #include "Visibility.hpp"
-
-#include "Common_RTS_AI/AIMap.h"
-#include "Common_RTS_AI/StaticMapHeights.h"
 //#include "../Image/Image.h"
 //#include "../Image/ImageTGA.h"
 #include "Main/GameTimer.h"

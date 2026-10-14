@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Server_Client_Common/CommonClientState.h"
 #include "ChatPackets.h"
+#include "Server_Client_Common/CommonClientState.h"
 
 #include <cstdint>
 

@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "WorldClient.h"
+#include "AILogic/B2AI.h"
+#include "CommandsSender.h"
+#include "Common_RTS_AI/AIClasses.h"
 #include "GameXClassIDs.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
-
-#include "CommandsSender.h"
-#include "AILogic/B2AI.h"
-#include "Common_RTS_AI/AIClasses.h"
+#include "WorldClient.h"
 
 // ************************************************************************************************************************ //
 // **

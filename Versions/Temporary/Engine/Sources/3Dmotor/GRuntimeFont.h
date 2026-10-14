@@ -16,9 +16,9 @@
 // they were added, and rebuilding from those puts every glyph back where it
 // was, since placement depends on nothing else.
 
-#include "GLocale.h"
 #include "FontFormat.h"
 #include "GfxBuffers.h"
+#include "GLocale.h"
 #include "System/Dg.h"
 
 #include <cstdint>

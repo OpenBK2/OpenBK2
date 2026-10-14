@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 #include "Camera.h"
+#include "DBSceneConsts.h"
 #include "SceneInternal.h"
 #include "VisObjDesc.h"
-#include "VisObjIconsManager.h"
-#include "DBSceneConsts.h"
 #include "VisObjIcons.h"
+#include "VisObjIconsManager.h"
 
 #include <fmt/format.h>
 

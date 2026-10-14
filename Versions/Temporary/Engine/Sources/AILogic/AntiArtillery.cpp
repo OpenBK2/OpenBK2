@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
+#include "AIUnit.h"
 #include "AntiArtillery.h"
+#include "AntiArtilleryManager.h"
+#include "Cheats.h"
+#include "FeedbackSystem.h"
 #include "NewUpdater.h"
 #include "Randomize.h"
 #include "UnitsIterators2.h"
-#include "AntiArtilleryManager.h"
-#include "AIUnit.h"
-#include "Cheats.h"
-#include "FeedbackSystem.h"
 
 #include "AILogic_export.h"
 

@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
 #include "ArtilleryStates.h"
-#include "Trains.h"
 #include "Commands.h"
-#include "CommonStates.h"
-#include "GroupLogic.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "CommonStates.h"
 #include "DebugTools/DebugInfoManager.h"
-#include "Guns.h"
 #include "Graveyard.h"
+#include "GroupLogic.h"
+#include "Guns.h"
 #include "NewUpdater.h"
+#include "Trains.h"
 
 #include "AILogic_export.h"
 

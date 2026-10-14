@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "GLMLightState.h"
-#include "RandomGen.h"
-#include "GScene.h"
+
 #include "GLightPerVertex.h"
+#include "GLMLightState.h"
+#include "GScene.h"
+#include "RandomGen.h"
 
 // radius / F_POINT_LIGHT_FALLOFF - nominal brightness distance
 const float F_POINT_LIGHT_FALLOFF = 8;

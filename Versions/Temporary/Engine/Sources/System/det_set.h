@@ -1,11 +1,11 @@
 #pragma once
 
-#include <list>
-#include <unordered_map>
-#include <initializer_list>
-#include <utility>
 #include <cstddef>
 #include <functional>
+#include <initializer_list>
+#include <list>
+#include <unordered_map>
+#include <utility>
 
 template <class T, class Hash = std::hash<T>, class KeyEqual = std::equal_to<T>>
 class det_set

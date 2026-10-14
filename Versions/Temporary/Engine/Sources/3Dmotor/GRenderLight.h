@@ -1,7 +1,7 @@
 #pragma once
 #include "3DLib/Transform.h"
-#include "GRenderExecute.h"
 #include "GLightPerVertex.h"
+#include "GRenderExecute.h"
 
 namespace NGScene
 {

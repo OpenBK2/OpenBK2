@@ -1,13 +1,14 @@
 #pragma once
 
-#include "System/BinaryResources.h"
-#include <fmt/format.h>
 #include "libdb/Manipulator.h"
-
-#include <cstdint>
-#include <boost/uuid/uuid_io.hpp>
+#include "System/BinaryResources.h"
 
 #include "MapEditorLib_export.h"
+
+#include <cstdint>
+
+#include <boost/uuid/uuid_io.hpp>
+#include <fmt/format.h>
 
 //
 #define REFINFO_MAKE_UNIQUE_LIST 0x00000001

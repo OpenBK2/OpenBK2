@@ -1,26 +1,27 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <fstream>
-#include <boost/uuid/uuid_io.hpp>
-#include "Interface_CommandHandler.h"
-#include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
 
+#include "CommandHandlerDefines.h"
 #include "CommonExporterMethods.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/InteractiveMaya.h"
-#include "System/FileUtils.h"
-#include "Misc/HPTimer.h"
-#include "Misc/StrProc.h"
 #include "Image/DDS.h"
 #include "Image/Targa.h"
+#include "Interface_CommandHandler.h"
+#include "MapEditorLib/InteractiveMaya.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/HPTimer.h"
+#include "Misc/StrProc.h"
+#include "port/process.h"
+#include "ResourceDefines.h"
+#include "System/FileUtils.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
 #include <chrono>
 #include <cstdint>
+#include <fstream>
 #include <thread>
-#include "port/process.h"
+
+#include <boost/uuid/uuid_io.hpp>
+#include <fmt/format.h>
 
 std::string GetGrannyExportSettingsFileName( const std::string &szTypeName )
 {

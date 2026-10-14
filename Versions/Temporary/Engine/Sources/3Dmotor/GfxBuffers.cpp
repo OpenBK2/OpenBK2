@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include <d3d9.h>
-#include "GfxBuffers.h"
-#include "Cache.h"
-#include "System/Commands.h"
-#include "Misc/2Darray.h"
-#include "GfxBuffersInternal.h"
 
+#include "Cache.h"
+#include "GfxBuffers.h"
+#include "GfxBuffersInternal.h"
+#include "Misc/2Darray.h"
 #include "port/debugging.h"
+#include "System/Commands.h"
 
 #include <algorithm>
 #include <cstdint>
 
 #include <boost/config.hpp>
+#include <d3d9.h>
 
 const int N_SYSMEM_TEXTURES = 2;
 const int N_SYSMEM_TEXTURE_SIZE = 1024;

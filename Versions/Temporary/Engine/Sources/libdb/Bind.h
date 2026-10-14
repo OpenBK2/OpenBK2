@@ -1,11 +1,11 @@
 #pragma once
 
-#include "StructMetaInfo.h"
-#include "OwnValue.h"
-#include "Variant.h"
-#include "ObjMan.h"
 #include "BindProcessor.h"
+#include "ObjMan.h"
 #include "ObjManIterator.h"
+#include "OwnValue.h"
+#include "StructMetaInfo.h"
+#include "Variant.h"
 
 #include <map>
 

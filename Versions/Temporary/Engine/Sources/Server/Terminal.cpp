@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "Terminal.h"
 #include "Server_Client_Common/Commands.h"
+#include "Terminal.h"
 
 #include <chrono>
-#include <cstdint>
-
 #include <cstdarg>
+#include <cstdint>
 #include <mutex>
 #include <thread>
 

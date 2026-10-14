@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "HeightPattern.h"
+
+#include <fmt/format.h>
 
 bool SHeightPattern::CreateByGradient( float fValue, int nGridLines, const SGradient &rGradient )
 {

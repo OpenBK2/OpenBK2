@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "System/FastMath.h"
+
 #include "AIGeometry.h"
+#include "System/FastMath.h"
 
 #include <cstdint>
 

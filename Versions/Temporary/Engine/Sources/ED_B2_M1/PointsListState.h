@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Misc/2Darray.h"
+#include "BuildingEditor.h"
 #include "CommandHandlerDefines.h"
+#include "DialogData.h"
 #include "MapEditorLib/DefaultInputState.h"
 #include "MapEditorLib/MaskManipulator.h"
-#include "Tools_SceneDraw.h"
-#include "DialogData.h"
 #include "MarkerSet.h"
-#include "BuildingEditor.h"
+#include "Misc/2Darray.h"
+#include "Tools_SceneDraw.h"
 
 #include <cstdint>
 

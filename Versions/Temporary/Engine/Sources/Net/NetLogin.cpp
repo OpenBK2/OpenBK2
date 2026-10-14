@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "NetLogin.h"
-#include "Misc/HPTimer.h"
 
+#include "Misc/HPTimer.h"
+#include "NetLogin.h"
 #include "port/time.h"
 
 const float F_KEEP_ACCEPTED_TIME = 2000;

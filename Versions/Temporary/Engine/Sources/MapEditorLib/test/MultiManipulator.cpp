@@ -1,4 +1,5 @@
 #include "MapEditorLib/stdafx.h"
+
 #include "MapEditorLib/MultiManipulator.h"
 
 #include <gtest/gtest.h>

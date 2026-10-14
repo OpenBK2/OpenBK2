@@ -1,9 +1,9 @@
-#include <gtest/gtest.h>
-
 #include "3Dmotor/stdafx.h"
-#include "3Dmotor/GLightPerVertex.cpp"
 
+#include "3Dmotor/GLightPerVertex.cpp"
 #include "random.h"
+
+#include <gtest/gtest.h>
 // The MMX reference now lives in original/CalcDirectionalLighting.asm rather than
 // an __asm block, so this test builds and runs on x64 as well as x86.
 #include "original/CalcDirectionalLighting.h"

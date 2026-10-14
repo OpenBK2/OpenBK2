@@ -13,15 +13,15 @@
 // through LoadImage, GetObject and GetDIBits that used to be here is gone with
 // the last of the Win32 in this header.
 
+#include <vector>
+
 #include <wx/bitmap.h>
 #include <wx/cursor.h>
 #include <wx/iconbndl.h>
-#include <wx/image.h>
 #include <wx/imagbmp.h>
+#include <wx/image.h>
 #include <wx/log.h>
 #include <wx/mstream.h>
-
-#include <vector>
 
 namespace NWxResourceImages
 {

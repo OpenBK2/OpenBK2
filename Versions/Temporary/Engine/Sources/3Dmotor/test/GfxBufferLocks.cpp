@@ -1,5 +1,6 @@
 // Exercise real buffer-lock bookkeeping with a fake D3D buffer; no GPU is needed.
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/GfxBuffersInternal.h"
 
 #include <gtest/gtest.h>

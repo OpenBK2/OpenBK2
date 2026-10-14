@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
+#include "StaticMapHeights.h"
 
 #include <cstdint>
 

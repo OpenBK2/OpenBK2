@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "GenTerrain.h"
 #include "Scene.h"
 #include "Terrain.h"
-#include "GenTerrain.h"
 
 #include <fmt/format.h>
 

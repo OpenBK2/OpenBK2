@@ -1,27 +1,25 @@
 #include "stdafx.h"
 
-#include <cstdlib>
-
-#include <thread>
+#include "D3DError.h"
+#include "Gfx.h"
+#include "GfxBuffers.h"
+#include "GfxInternal.h"
+#include "Misc/2Darray.h"
+#include "Misc/HPTimer.h"
+#include "port/debugging.h"
+#include "port/window.h"
+#include "System/Commands.h"
+#include "System/WindowViewport.h"
+#include "System/WinFrame.h"
 
 #include "3DLib_export.h"
 
-#include <d3d9.h>
-#include "Misc/2Darray.h"
-#include "System/Commands.h"
-#include "System/WinFrame.h"
-#include "System/WindowViewport.h"
-#include "Gfx.h"
-#include "GfxInternal.h"
-#include "D3DError.h"
-#include "port/window.h"
-#include "Misc/HPTimer.h"
-#include "GfxBuffers.h"
-
-#include "port/debugging.h"
-
 #include <cstdint>
+#include <cstdlib>
 #include <string>
+#include <thread>
+
+#include <d3d9.h>
 
 namespace NGfx
 {

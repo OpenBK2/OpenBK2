@@ -7,12 +7,11 @@
 // 31 / 15 / 7 for the 32 / 16 / 8-bit overloads).
 
 #include "Misc/Tools.h"
-
 #include "random.h"
 
-#include <gtest/gtest.h>
-
 #include <climits>
+
+#include <gtest/gtest.h>
 
 // The implementations as they stood before the boost::core rewrite, copied
 // verbatim so the comparison is against real old behaviour rather than a

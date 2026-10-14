@@ -4,6 +4,6 @@
 
 #if BOOST_OS_WINDOWS
 #include <commctrl.h>
-#include <tchar.h>
 #include <objidl.h>
+#include <tchar.h>
 #endif

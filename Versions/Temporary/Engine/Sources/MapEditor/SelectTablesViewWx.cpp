@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "SelectTablesView.h"
-
 #include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+#include "SelectTablesView.h"
 
 #include <wx/checklst.h>
 #include <wx/sizer.h>

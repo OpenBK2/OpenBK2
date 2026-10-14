@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "InterfaceHelp.h"
+
 #include "GameXClassIDs.h"
+#include "InterfaceHelp.h"
 #include "InterfaceState.h"
-#include "System/Text.h"
 #include "SceneB2/Cursor.h"
+#include "System/Text.h"
 
 #include "GameX_export.h"
 

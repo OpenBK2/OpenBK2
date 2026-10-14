@@ -1,30 +1,30 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "SeasonMnemonics.h"
 #include "MapEditorLib/PaletteList.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "Misc/2Darray.h"
 #include "PointListView.h"
+#include "SeasonMnemonics.h"
+
+#include <fmt/format.h>
 // This module's ids and strings; they came in through PointListDialog.h,
 // which this no longer includes.
-#include "ResourceDefines.h"
-#include "PointsListState.h"
-#include "MapEditorLib/EditorFactory.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "libdb/ResourceManager.h"
-#include "EditorScene.h"
-#include "Main/GameTimer.h"
+#include "BuildingEditor.h"
+#include "BuildingState.h"
 #include "EditorMethods.h"
 #include "EditorOptions.h"
+#include "EditorScene.h"
 #include "ExporterMethods.h"
+#include "libdb/ResourceManager.h"
+#include "Main/GameTimer.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/EditorFactory.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "PointsListState.h"
+#include "ResourceDefines.h"
 #include "SceneB2/Camera.h"
-
-#include "BuildingState.h"
-#include "BuildingEditor.h"
 
 #include <cstdint>
 

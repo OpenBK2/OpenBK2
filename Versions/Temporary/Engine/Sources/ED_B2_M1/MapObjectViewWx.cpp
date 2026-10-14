@@ -1,27 +1,24 @@
 #include "stdafx.h"
 
-#include "MapObjectView.h"
-
 #include "CommandHandlerDefines.h"
-#include <fmt/format.h>
-
-#include "MapObjectMultiState.h"
-#include "ObjectProperties.h"
-#include "ResourceDefines.h"
-
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
-#include "MapEditorLib/WxImageList.h"
-#include "MapEditorLib/WxThumbnailList.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxImageList.h"
 #include "MapEditorLib/WxOwnership.h"
-#include "libdb/ResourceManager.h"
+#include "MapEditorLib/WxThumbnailList.h"
+#include "MapObjectMultiState.h"
+#include "MapObjectView.h"
+#include "ObjectProperties.h"
+#include "ResourceDefines.h"
 
+#include <fmt/format.h>
 #include <wx/choice.h>
 #include <wx/listctrl.h>
 
@@ -29,6 +26,11 @@
 // ListView_SetIconSpacing, which wxListCtrl has no equivalent for.
 #include <commctrl.h>
 #endif
+#include <cstdio>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
 #include <wx/menu.h>
 #include <wx/radiobut.h>
 #include <wx/scrolwin.h>
@@ -38,11 +40,6 @@
 #include <wx/textctrl.h>
 #include <wx/utils.h>
 #include <wx/wupdlock.h>
-
-#include <cstdio>
-#include <string>
-#include <unordered_map>
-#include <vector>
 
 // The map object palette, in wx: the eighth palette, and the first that is
 // something other than a view onto its state.

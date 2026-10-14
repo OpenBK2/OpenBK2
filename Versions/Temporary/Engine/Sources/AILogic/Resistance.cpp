@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "Resistance.h"
-#include "GeneralConsts.h"
-#include "AIUnitInfoForGeneral.h"
 #include "AIUnit.h"
+#include "AIUnitInfoForGeneral.h"
+#include "GeneralConsts.h"
+#include "Resistance.h"
 #include "UnitCreation.h"
 
 extern CUnitCreation theUnitCreation;

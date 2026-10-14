@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Tools_SceneGeometry.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "MapInfoStoreInputState.h"
 #include "Stats_B2_M1/Vis2AI.h"
-#include "MapEditorLib/Interface_MainFrame.h"
+#include "Tools_SceneGeometry.h"
+
+#include <fmt/format.h>
 
 void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo )
 {

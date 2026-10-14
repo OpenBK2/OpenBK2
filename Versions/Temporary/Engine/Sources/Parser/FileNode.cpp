@@ -4,9 +4,9 @@
 #include "FileNode.h"
 #include "FileRead.h"
 #include "LangNodesDefinitions.h"
+#include "Misc/StrProc.h"
 #include "ParseOperations.h"
 #include "System/FilePath.h"
-#include "Misc/StrProc.h"
 
 #include <fmt/format.h>
 

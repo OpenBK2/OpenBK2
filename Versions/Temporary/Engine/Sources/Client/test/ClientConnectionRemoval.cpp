@@ -1,4 +1,5 @@
 #include "Client/stdafx.h"
+
 #include "Client/ConnectionInternal.h"
 #include "Client/PlayGameProcessor.h"
 #include "GameX/MultiplayerNetPackets.h"

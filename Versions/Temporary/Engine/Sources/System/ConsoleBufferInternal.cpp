@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Commands.h"
 #include "ConsoleBufferInternal.h"
 #include "Misc/StrProc.h"

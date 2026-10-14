@@ -1,17 +1,17 @@
 #include "stdafx.h"
 
-#include "B2_M1_Terrain/DBPreLight.h"
-#include "3Dmotor/GMaterial.hpp"
-#include "3Dmotor/GMaterial.h"
 #include "3Dmotor/GfxRender.h"
-#include "Misc/Win32Random.h"
-#include "System/FastMath.h"
-#include "Image/Targa.h"
+#include "3Dmotor/GMaterial.h"
+#include "3Dmotor/GMaterial.hpp"
+#include "B2_M1_Terrain/DBPreLight.h"
 #include "GenTerrain.h"
-#include "TerraHeight.h"
+#include "Image/Targa.h"
+#include "Misc/Win32Random.h"
 #include "Scene.h"
-#include "WaterController.h"
+#include "System/FastMath.h"
 #include "System/VFSOperations.h"
+#include "TerraHeight.h"
+#include "WaterController.h"
 
 #include <algorithm>
 #include <cstdint>

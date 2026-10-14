@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Scripts.h"
 #include "B2AI.h"
 #include "Common_RTS_AI/Terrain.h"
+#include "Scripts.h"
 #include "System/det_map.h"
 
 #include <cstdint>

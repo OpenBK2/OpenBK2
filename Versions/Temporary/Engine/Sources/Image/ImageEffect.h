@@ -1,11 +1,11 @@
 #pragma once
 
 #include "ImageColor.h"
-
-#include <cstdint>
+#include "Misc/2Darray.h" // CArray2D
 
 #include "Image_export.h"
-#include "Misc/2Darray.h" // CArray2D
+
+#include <cstdint>
 
 namespace NImage
 {

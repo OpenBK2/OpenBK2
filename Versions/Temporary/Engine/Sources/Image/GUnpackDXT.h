@@ -1,9 +1,10 @@
 #pragma once
 
+#include "Misc/2Darray.h" // CArray2D
+
 #include "Image_export.h"
 
 #include <cstdint>
-#include "Misc/2Darray.h" // CArray2D
 
 namespace NImage
 {

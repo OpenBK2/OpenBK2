@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "BinaryResources.h"
 #include "GlobalVars.h"
 #include "GResource.h"

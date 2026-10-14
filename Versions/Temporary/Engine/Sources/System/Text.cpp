@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "port/unicode.h"
-
-#include "Text.h"
 #include "FilePath.h"
+#include "port/unicode.h"
+#include "Text.h"
 #include "VFSOperations.h"
 
 #include <cstdint>

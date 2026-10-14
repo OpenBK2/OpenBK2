@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "3Dmotor_export.h"
+
+#include <cstdint>
 
 namespace NAI
 {

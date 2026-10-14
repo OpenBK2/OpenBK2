@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 
-#include "StringManager.h"
-#include "Misc/StrProc.h"
-#include "libdb/EditorDb.h"
 #include "Interface_Controller.h"
 #include "Interface_UserData.h"
+#include "libdb/EditorDb.h"
 #include "libdb/ResourceManager.h"
+#include "Misc/StrProc.h"
+#include "StringManager.h"
 #include "Tools_HashSet.h"
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 void CStringManager::CreateRecentListName( std::string *pszName, const SObjectSet &rObjectSet, bool bMainObject )
 {

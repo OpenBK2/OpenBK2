@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "BitStreams.h"
 
 // Laid out as a table on purpose: one row per byte width, each column one bit wider than the last

@@ -2,17 +2,17 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include <queue>
-
-#include "System_export.h"
 #include "det_map.h"
 #include "det_set.h"
-
 #include "port/cdecl.h"
 #include "System/Basic.h"   // CObjectBase and CPtrBase
 #include "System/Streams.h" // CDataStream and CMemoryStream
 #include "System/System.h"  // SInt2Type
+
+#include "System_export.h"
+
 #include <map>
+#include <queue>
 #include <set>
 #include <string>
 #include <unordered_map>

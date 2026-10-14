@@ -3,9 +3,10 @@
 #include "Interface_UserData.h"
 // ILogger and NLog::GetLogger, which ForEachObject below uses.
 #include "Interface_Logger.h"
-#include <fmt/format.h>
 
 #include "MapEditorLib_export.h"
+
+#include <fmt/format.h>
 
 template <class CArray2DType>
 void Trace2DByteArray( const CArray2DType &rArray, const std::string &rszAdditionalMessage )

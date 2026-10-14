@@ -1,8 +1,7 @@
 #pragma once
 
-#include "MapEditorLib/MultiInputState.h"
-
 #include "BuildingEditor.h"
+#include "MapEditorLib/MultiInputState.h"
 
 #include <cstdint>
 

@@ -1,27 +1,26 @@
 #include "stdafx.h"
+
+#include "CustomMissions.h"
+#include "DBGameRoot.h"
+#include "DBMPConsts.h"
+#include "GameRoomData.h"
+#include "GameXClassIDs.h"
+#include "GetConsts.h"
+#include "InterfaceMPCreateCustomGame.h"
+#include "InterfaceState.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "System/Text.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "InterfaceMPCreateCustomGame.h"
-#include "GameXClassIDs.h"
 #include "UI/SceneClassIDs.h"
-#include "SceneB2/Scene.h"
-#include "InterfaceState.h"
-#include "Misc/StrProc.h"
-
-#include "DBGameRoot.h"
 #include "UISpecificB2/DBUISpecificB2.h"
-#include "GameRoomData.h"
-#include "DBMPConsts.h"
-#include "GetConsts.h"
-#include "System/Text.h"
-#include "CustomMissions.h"
 
 #include "GameX_export.h"
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 // CInterfaceMPCreateCustomGame

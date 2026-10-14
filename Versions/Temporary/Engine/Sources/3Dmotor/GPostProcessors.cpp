@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "GPostProcessors.h"
+
+#include "Gfx.h"
 #include "GfxEffects.h"
 #include "GfxRender.h"
+#include "GPostProcessors.h"
 #include "GRenderCore.h"
-#include "Gfx.h"
 
 namespace NGScene
 {

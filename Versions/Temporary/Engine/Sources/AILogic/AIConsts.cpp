@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "System/Commands.h"
+
+#include "DBAIConsts.h"
 #include "ManuverInternal.h"
 #include "Stats_B2_M1/RPGStatsAutomagic.h"
+#include "System/Commands.h"
 #include "System/det_map.h"
-#include "DBAIConsts.h"
 
 #include <cstdint>
 

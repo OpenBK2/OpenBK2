@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "CommandRegistratorForScript.h"
 #include "Scripts.h"
 

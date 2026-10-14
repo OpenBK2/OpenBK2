@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "GrannyMemoryMap.hpp"
 
+#include "GrannyMemoryMap.hpp"
 #include "vendor/granny/include/granny.h"
 
 #include <algorithm>

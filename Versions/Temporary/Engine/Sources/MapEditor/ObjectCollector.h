@@ -1,11 +1,10 @@
 #pragma once
 
-#include "MapEditorLib/WxImageList.h"
-
-#include "Misc/HashFuncs.h"
-#include "Misc/StrProc.h"
 #include "libdb/Manipulator.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
+#include "MapEditorLib/WxImageList.h"
+#include "Misc/HashFuncs.h"
+#include "Misc/StrProc.h"
 
 class CObjectFilterCollector : public IObjectFilterCollector
 {

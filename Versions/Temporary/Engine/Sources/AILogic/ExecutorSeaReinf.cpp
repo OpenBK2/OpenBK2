@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "ExecutorSeaReinf.h"
-#include "GroupLogic.h"
+#include "B2AI.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "DebugTools/DebugInfoManager.h"
+#include "ExecutorSeaReinf.h"
+#include "GroupLogic.h"
 #include "UnitStates.h"
-#include "B2AI.h"
 
 #include "AILogic_export.h"
 

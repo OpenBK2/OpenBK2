@@ -2,12 +2,12 @@
 
 #include "Cheats.h"
 #include "Diplomacy.h"
-#include "System/Commands.h"
 #include "Misc/StrProc.h"
-
-#include <zlib.h>
+#include "System/Commands.h"
 
 #include <cstdint>
+
+#include <zlib.h>
 
 SCheats theCheats;
 extern CDiplomacy theDipl;

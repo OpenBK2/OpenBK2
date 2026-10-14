@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Main/CommandsHistory.hpp"
-#include "System/Commands.h"
 #include "MPInterfaceData.h"
+#include "System/Commands.h"
 
 #include <cstdint>
 

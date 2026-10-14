@@ -1,17 +1,18 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/BuilderFactory.h"
-#include "MapEditorLib/StringManager.h"
-#include "MapEditorLib/Interface_UserData.h"
-#include "libdb/ResourceManager.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "libdb/Db.h"
-#include "BuilderContainer.h"
 #include "BuildDataView.h"
-#include "NewObjectView.h"
+#include "BuilderContainer.h"
+#include "libdb/Db.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/BuilderFactory.h"
 #include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
 #include "Misc/StrProc.h"
+#include "NewObjectView.h"
+
+#include <fmt/format.h>
 
 bool CBuilderContainer::CanBuildObject( const std::string &rszObjectTypeName )
 {

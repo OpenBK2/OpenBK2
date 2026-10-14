@@ -1,10 +1,8 @@
 #include "stdafx.h"
 
-#include "CommonCommands.h"
-
-#include "Input/Bind.h"
-
 #include "AILogic/B2AI.h"
+#include "CommonCommands.h"
+#include "Input/Bind.h"
 #include "Misc/2Darray.h"
 
 #include "GameX_export.h"

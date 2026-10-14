@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
+#include "Misc/StrProc.h"
 #include "vendor/granny/include/granny.h"
 #include "WingScaleMutator.h"
-
-#include "Misc/StrProc.h"
 
 #include "SceneB2_export.h"
 

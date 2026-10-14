@@ -1,26 +1,25 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
+
 #include "3Dmotor/DBScene.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
-#include "libdb/ResourceManager.h"
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "ResourceDefines.h"
-
-#include "MapEditorLib/Interface_Logger.h"
-
-#include "MapObjectMultiState.h"
-#include "SpotState.h"
-#include "Misc/Win32Random.h"
 #include "EditorMethods.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapInfoEditor.h"
+#include "MapObjectMultiState.h"
+#include "Misc/2Darray.h"
+#include "Misc/Win32Random.h"
 #include "port/vkcodes.h"
+#include "ResourceDefines.h"
+#include "SceneB2/Scene.h"
+#include "SpotState.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 bool CSpotState::CanAddSpot()

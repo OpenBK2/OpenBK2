@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "TerrainManager.h"
 #include "Stats_B2_M1/TerraAIObserver.h"
 #include "System/BinaryResources.h"
 #include "System/VFSOperations.h"
+#include "TerrainManager.h"
 
 #include <cstdint>
 

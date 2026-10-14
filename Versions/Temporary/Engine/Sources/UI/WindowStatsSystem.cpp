@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "WindowStatsSystem.h"
-#include "UIVisitor.h"
 
 #include "UIML.h"
+#include "UIVisitor.h"
+#include "WindowStatsSystem.h"
 
 #include <cstdint>
 

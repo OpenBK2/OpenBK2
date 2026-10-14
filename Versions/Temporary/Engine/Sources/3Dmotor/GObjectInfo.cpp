@@ -1,17 +1,16 @@
 #include "stdafx.h"
-#include "System/BasicShare.h"
-#include "GObjectInfo.h"
+
+#include "DBScene.h"
 #include "GltfFormat.h"
-
-#include <boost/uuid/uuid_io.hpp>
-
-#include "vendor/granny/include/granny.h"
+#include "GObjectInfo.h"
 #include "GSkeleton.h"
+#include "System/BasicShare.h"
 #include "System/BinaryResources.h"
 #include "System/GResource.h"
 #include "System/VFSOperations.h"
-#include "DBScene.h"
+#include "vendor/granny/include/granny.h"
 
+#include <boost/uuid/uuid_io.hpp>
 #include <fastgltf/tools.hpp>
 
 //#include "../Misc/HPTimer.h" // test for perfomance

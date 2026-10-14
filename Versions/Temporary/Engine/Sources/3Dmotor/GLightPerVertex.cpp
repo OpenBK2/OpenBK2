@@ -1,16 +1,17 @@
 #include "stdafx.h"
-#include "GLightPerVertex.h"
+
 #include "3DLib/GGeometry.h"
 #include "GfxBuffers.h"
+#include "GLightPerVertex.h"
 //#include "..\Misc\HPTimer.h"
-#include <mmintrin.h>
-#include "GSSEtransform.h"
 #include "3DLib/Bound.h"
-
 #include "GLightPerVertexKernels.h"
+#include "GSSEtransform.h"
 
 #include <algorithm>
 #include <cstdint>
+
+#include <mmintrin.h>
 
 template <class T>
 inline bool operator==( const CArray2D<T> &a, const CArray2D<T> &b )

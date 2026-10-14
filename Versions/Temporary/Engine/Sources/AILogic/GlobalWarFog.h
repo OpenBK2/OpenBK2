@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UpdateUnitContainer.h"
 #include "Misc/BitData.h"
+#include "UpdateUnitContainer.h"
 
 #include <cstdint>
 

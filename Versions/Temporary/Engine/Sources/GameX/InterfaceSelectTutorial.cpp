@@ -1,13 +1,14 @@
 #include "stdafx.h"
-#include "InterfaceSelectTutorial.h"
-#include "GameXClassIDs.h"
-#include "UISpecificB2/UISpecificB2.h"
+
 #include "DBGameRoot.h"
-#include "System/Text.h"
+#include "GameXClassIDs.h"
 #include "GetConsts.h"
-#include "Stats_B2_M1/DBMapInfo.h"
+#include "InterfaceSelectTutorial.h"
 #include "InterfaceState.h"
 #include "ScenarioTracker.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "System/Text.h"
+#include "UISpecificB2/UISpecificB2.h"
 
 #include "GameX_export.h"
 

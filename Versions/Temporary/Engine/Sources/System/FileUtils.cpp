@@ -1,18 +1,18 @@
 #include "stdafx.h"
 
-#include "FileUtils.h"
 #include "FilePath.h"
+#include "FileUtils.h"
 #include "Misc/StrProc.h"
 
 #if BOOST_OS_WINDOWS
-#include <objbase.h>
 #include <direct.h>
+#include <objbase.h>
 #include <tchar.h>
 #endif
 
 #include <algorithm>
-#include <cstdlib>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <map>
 #include <mutex>

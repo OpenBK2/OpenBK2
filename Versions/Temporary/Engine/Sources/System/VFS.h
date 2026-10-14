@@ -2,9 +2,9 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "System_export.h"
-
 #include "FileTime.h"
+
+#include "System_export.h"
 
 #include <cstdint>
 

@@ -1,15 +1,15 @@
 #pragma once
 
+#include "ED_B2_M1/MapInfoEditorData_Consts.h" // CSceneIDList
 #include "Misc/2Darray.h"
-#include <fmt/format.h>
-#include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
 #include "SimpleObjectState.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
-#include "ED_B2_M1/MapInfoEditorData_Consts.h" // CSceneIDList
 
 //
 //

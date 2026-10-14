@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "GameRootExporter.h"
-
 #include "ExporterMethods.h"
+#include "GameRootExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "XMLExport.h"

@@ -2,8 +2,8 @@
 
 #include "Misc/2Darray.h"
 // SetGetEditParameters and the two command ids the templates below pass it.
-#include "MapEditorLib/CommonEditorMethods.h"
 #include "ED_B2_M1/ResourceDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 
 #include <cstdint>
 

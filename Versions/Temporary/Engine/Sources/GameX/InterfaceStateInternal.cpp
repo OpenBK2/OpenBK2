@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "InterfaceStateInternal.h"
-#include "DBGameRoot.h"
-#include "ScenarioTracker.h"
-#include "Misc/StrProc.h"
-#include "GameX/GameXClassIDs.h"
+
 #include "3Dmotor/ScreenShot.h"
-#include "UISpecificB2/DBUISpecificB2.h"
-#include "UI/UIML.h"
+#include "DBGameRoot.h"
+#include "GameX/GameXClassIDs.h"
 #include "GetConsts.h"
 #include "InterfaceScreenBase.h"
-#include "System/Text.h"
+#include "InterfaceStateInternal.h"
+#include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
+#include "port/time.h"
+#include "ScenarioTracker.h"
+#include "System/Text.h"
+#include "UI/UIML.h"
+#include "UISpecificB2/DBUISpecificB2.h"
 
 #include "GameX_export.h"
-
-#include "port/time.h"
 
 #include <cstdint>
 

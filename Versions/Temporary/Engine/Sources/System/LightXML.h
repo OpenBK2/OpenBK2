@@ -1,8 +1,8 @@
 #pragma once
 
-#include "System_export.h"
-
 #include "LightXMLUtils.h"
+
+#include "System_export.h"
 
 #include <cstdint>
 

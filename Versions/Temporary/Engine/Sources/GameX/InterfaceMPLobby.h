@@ -1,9 +1,9 @@
 #pragma once
 
-#include "InterfaceMPBase.h"
-#include "UI/UIComponents.h"
 #include "ChatControl.h"
+#include "InterfaceMPBase.h"
 #include "MPLobbyData.h"
+#include "UI/UIComponents.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CInterfaceMPLobby : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks

@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "BasicExporter.h"
 #include "MapEditorLib/CommonExporterMethods.h"
+
+#include <fmt/format.h>
 
 void CBasicExporter::Log( ELogOutputType eLogOutputType, const std::string &szText ) const
 {

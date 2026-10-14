@@ -1,8 +1,9 @@
 #pragma once
 
-#include <cstdint>
 #include "Misc/Geom.h"  // CVec3
 #include "Misc/Tools.h" // Clamp and Float2Int
+
+#include <cstdint>
 
 namespace NGfx
 {

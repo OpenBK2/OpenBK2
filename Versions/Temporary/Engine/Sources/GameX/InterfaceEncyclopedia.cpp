@@ -1,28 +1,26 @@
 #include "stdafx.h"
 
-#include "3Dmotor_export.h"
-
+#include "B2_M1_World/MapObj.h"
+#include "DBGameRoot.h"
+#include "GameXClassIDs.h"
+#include "Input/GameMessage.h"
+#include "InterfaceEncyclopedia.h"
+#include "InterfaceState.h"
+#include "Misc/2Darray.h"
+#include "System/Text.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Input/GameMessage.h"
 #include "UI/UI.h"
-#include "Misc/2Darray.h"
 #include "UI/UIFactory.h"
-#include "InterfaceEncyclopedia.h"
-#include "GameXClassIDs.h"
-#include "B2_M1_World/MapObj.h"
-#include "InterfaceState.h"
-#include "DBGameRoot.h"
 #include "UISpecificB2/EffectorB2Move.h"
-#include "System/Text.h"
 
+#include "3Dmotor_export.h"
 #include "GameX_export.h"
-
-#include <zconf.h>
 
 #include <algorithm>
 
 #include <fmt/format.h>
+#include <zconf.h>
 
 namespace NGScene
 {

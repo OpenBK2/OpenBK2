@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "MiniMapView.h"
-
 #include "Image/Image.h"
+#include "MiniMapView.h"
 #include "SceneB2/Camera.h"
 #include "SceneB2/Scene.h"
 #include "SceneB2/TerraGen.h"

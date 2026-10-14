@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "vendor/granny/include/granny.h"
-#include "GAnimFormat.h"
-#include "System/BasicShare.h"
-#include "GSkeleton.h"
+
 #include "DBScene.h"
+#include "GAnimFormat.h"
+#include "GSkeleton.h"
+#include "System/BasicShare.h"
+#include "vendor/granny/include/granny.h"
 
 namespace NAnimation
 {

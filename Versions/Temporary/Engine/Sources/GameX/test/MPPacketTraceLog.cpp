@@ -1,13 +1,13 @@
 #include "GameX/MPPacketTraceLog.h"
 
-#include <gtest/gtest.h>
-
 #include <chrono>
 #include <filesystem>
 #include <fstream>
 #include <iterator>
 #include <string>
 #include <thread>
+
+#include <gtest/gtest.h>
 
 namespace
 {

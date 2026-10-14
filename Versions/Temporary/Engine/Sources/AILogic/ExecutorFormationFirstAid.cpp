@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "ExecutorFormationFirstAid.h"
-#include "GroupLogic.h"
-#include "Formation.h"
 #include "Commands.h"
+#include "ExecutorFormationFirstAid.h"
+#include "Formation.h"
 #include "FormationStates.h"
+#include "GroupLogic.h"
 
 #include "AILogic_export.h"
 

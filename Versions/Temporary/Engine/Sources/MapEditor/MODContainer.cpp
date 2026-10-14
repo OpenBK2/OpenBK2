@@ -1,17 +1,18 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include <fmt/printf.h>
 
-#include "MODContainer.h"
 #include "CreateModView.h"
-#include "OpenModView.h"
-#include "ResourceDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "Main/MODs.h"
 #include "libdb/Db.h"
+#include "Main/MODs.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_Progress.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "MODContainer.h"
+#include "OpenModView.h"
+#include "ResourceDefines.h"
+
+#include <fmt/printf.h>
 
 bool CMODContainer::CanNewMOD()
 {

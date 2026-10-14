@@ -1,29 +1,29 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/2Darray.h"
-#include "TextureExporter.h"
+#include "3Dmotor/GPixelFormat.h"
+#include "3Dmotor/GView.h"
+#include "Image/DDS.h"
+#include "Image/Image.h"
+#include "Image/ImageDDS.h"
+#include "Image/ImagePSD.h"
+#include "Image/ImageTGA.h"
+#include "Image/Targa.h"
+#include "MapEditorLib/CommonExporterMethods.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/CommonExporterMethods.h"
-#include "System/FileUtils.h"
+#include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
-#include "Image/DDS.h"
-#include "Image/Targa.h"
-#include "Image/Image.h"
-#include "Image/ImageDDS.h"
-#include "Image/ImageTGA.h"
-#include "Image/ImagePSD.h"
-#include "3Dmotor/GPixelFormat.h"
-#include "3Dmotor/GView.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
+#include "TextureExporter.h"
 
 #include <cstdint>
 #include <filesystem>
+
+#include <fmt/format.h>
 
 // The renderer's device used to be declared here and handed to the DDS writer.
 // Compression is a CPU pass over the pixels now, so this file names no Direct3D

@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/StrProc.h"
-#include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
-#include "ObjectRPGStatsExporter.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_MOD.h"
-#include "ExporterMethods.h"
 #include "ED_Common/GltfExporter.h"
+#include "ExporterMethods.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "ObjectRPGStatsExporter.h"
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 REGISTER_EXPORTER_IN_DLL( ObjectRPGStats, CObjectRPGStatsExporter )

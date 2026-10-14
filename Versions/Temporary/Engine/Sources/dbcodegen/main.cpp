@@ -1,16 +1,16 @@
 #include "stdafx.h"
+
 #include "codegen.h"
 #include "Misc/StrProc.h"
-#include "System/FileUtils.h"
-#include "System/FilePath.h"
-
 #include "port/cdecl.h"
-
-#include <boost/program_options.hpp>
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+
+#include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
 

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
+#include "Client/ServerClient.h"
+#include "Misc/Time64.h"
 #include "Pinger.h"
 #include "Server_Client_Common/CommonPackets.h"
-#include "Misc/Time64.h"
-#include "Client/ServerClient.h"
 #include "Server_Client_Common/LoginPackets.h"
 
 #include <filesystem>

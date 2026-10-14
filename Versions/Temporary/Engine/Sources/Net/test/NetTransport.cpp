@@ -1,9 +1,11 @@
 #include "Net/stdafx.h"
+
 #include "Net/NetA4.h"
 
-#include <gtest/gtest.h>
 #include <deque>
 #include <map>
+
+#include <gtest/gtest.h>
 
 namespace NNet
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "GroupLogic.h"
 #include "AIUnit.h"
+#include "GroupLogic.h"
 
 int CGroupLogic::operator&( IBinSaver &saver )
 {

@@ -1,22 +1,20 @@
 #include "stdafx.h"
 
-#include <thread>
-#include <chrono>
-
+#include "Misc/StrProc.h"
+#include "Misc/Win32Helper.h"
+#include "Sound/DBSoundDesc.h"
+#include "Sound2D.h"
+#include "SoundEngine.h"
+#include "System/BasicShare.h"
+#include "System/Commands.h"
+#include "System/VFSOperations.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "SoundEngine.h"
-
-#include "Misc/Win32Helper.h"
-#include "Sound2D.h"
-#include "Misc/StrProc.h"
 #include "UI/UI.h"
-#include "System/Commands.h"
-#include "System/BasicShare.h"
-#include "Sound/DBSoundDesc.h"
-#include "System/VFSOperations.h"
 
+#include <chrono>
 #include <mutex>
+#include <thread>
 
 #include <fmt/format.h>
 

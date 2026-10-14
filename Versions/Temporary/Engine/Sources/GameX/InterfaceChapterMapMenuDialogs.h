@@ -1,8 +1,8 @@
 #pragma once
 
 #include "InterfaceChapterMapMenu.h"
-#include "UnitFullInfoHelper.h"
 #include "UISpecificB2/UISpecificB2.h"
+#include "UnitFullInfoHelper.h"
 
 namespace NDb
 {

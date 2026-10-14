@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-#include "Weather.h"
-#include "Diplomacy.h"
-#include "UnitCreation.h"
-#include "NewUpdater.h"
-#include "UnitsIterators.h"
 #include "Aviation.h"
+#include "Diplomacy.h"
+#include "NewUpdater.h"
 #include "Stats_B2_M1/AIUpdates.h"
 #include "Stats_B2_M1/DBMapInfo.h"
+#include "UnitCreation.h"
+#include "UnitsIterators.h"
+#include "Weather.h"
 
 extern CEventUpdater updater;
 CWeather theWeather;

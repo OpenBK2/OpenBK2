@@ -21,14 +21,14 @@
 
 #include "Interface_Widget.h"
 
+#include <string>
+#include <vector>
+
 #include <wx/brush.h>
 #include <wx/dc.h>
 #include <wx/font.h>
 #include <wx/pen.h>
 #include <wx/window.h>
-
-#include <string>
-#include <vector>
 
 class CWxPaintContext : public IPaintContext
 {

@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
-#include "PropertyPaneView.h"
-#include "PC_Constants.h"
-#include "PropertyValues.h"
-
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ObjectController.h"
 #include "MapEditorLib/PCIEMnemonics.h"
+#include "PC_Constants.h"
+#include "PropertyPaneView.h"
+#include "PropertyValues.h"
 #include "System/FileUtils.h"
 
 #include <cstdio>

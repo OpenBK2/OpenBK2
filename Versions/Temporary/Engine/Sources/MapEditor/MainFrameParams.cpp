@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "MainFrameParams.h"
-
 #include "AppProfile.h"
-#include "ResourceDefines.h"
+#include "MainFrameParams.h"
 #include "MapEditorLib/Resources.h"
-
-#include <fmt/printf.h>
+#include "ResourceDefines.h"
 
 #include <cstdio>
+
+#include <fmt/printf.h>
 
 SMainFrameParams::SMainFrameParams()
 	: bMaximized( false )

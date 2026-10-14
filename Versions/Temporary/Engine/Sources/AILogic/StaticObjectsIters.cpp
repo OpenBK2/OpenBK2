@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "StaticObjectsIters.h"
 #include "Mine.h"
+#include "StaticObjectsIters.h"
 
 //*******************************************************************
 //*												CMinesIter																*

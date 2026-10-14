@@ -1,22 +1,23 @@
 #include "stdafx.h"
 
-#include "UnitsSegments.h"
-#include "System/Time.h"
-#include "GroupLogic.h"
-#include "Commands.h"
-#include "Soldier.h"
-#include "UnitsIterators.h"
-#include "NewUpdater.h"
-#include "UnitStates.h"
-#include "Formation.h"
-#include "Shell.h"
-#include <cfenv>
-#include "ScanLimiter.h"
-#include "Building.h"
-#include "GridCreation.h"
-#include "B2AI.h"
-#include "System/FastMath.h"
 #include "Artillery.h"
+#include "B2AI.h"
+#include "Building.h"
+#include "Commands.h"
+#include "Formation.h"
+#include "GridCreation.h"
+#include "GroupLogic.h"
+#include "NewUpdater.h"
+#include "ScanLimiter.h"
+#include "Shell.h"
+#include "Soldier.h"
+#include "System/FastMath.h"
+#include "System/Time.h"
+#include "UnitsIterators.h"
+#include "UnitsSegments.h"
+#include "UnitStates.h"
+
+#include <cfenv>
 
 //#include "..\Common_RTS_AI\CollisionInternal.h"
 
@@ -24,14 +25,13 @@
 #include "TimeCounter.h"
 // for debug
 //#include "..\Scene\Statistics.h"
-#include "ExecutorContainer.h"
 #include "CommandRegistratorForScript.h"
+#include "ExecutorContainer.h"
 #include "GroupMover.h"
 
 #include <cstdint>
 
 #include <fmt/format.h>
-
 #include <zlib.h>
 
 EXTERNVAR CExecutorContainer theExecutorContainer;

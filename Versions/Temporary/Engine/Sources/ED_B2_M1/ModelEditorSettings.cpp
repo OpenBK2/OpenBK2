@@ -1,8 +1,8 @@
 
 #include "stdafx.h"
-#include "ModelEditorSettings.h"
 
 #include "libdb/Manipulator.h"
+#include "ModelEditorSettings.h"
 #include "Stats_B2_M1/Vis2AI.h"
 #include "System/XmlSaver.h"
 

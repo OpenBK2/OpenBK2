@@ -2,18 +2,18 @@
 //
 
 #include "stdafx.h"
+
+#include "3Dmotor/DBScene.h"
 #include "BackgroundSimpleTexture.h"
 #include "ForegroundTextString.h"
-#include "Tools.h"
-#include "UIScreen.h"
-#include "Window.h"
-#include "UIInternal.h"
-#include "Window.h"
-#include "WindowTooltip.h"
 #include "Misc/PlaneGeometry.h"
 #include "System/Commands.h"
 #include "System/Text.h"
-#include "3Dmotor/DBScene.h"
+#include "Tools.h"
+#include "UIInternal.h"
+#include "UIScreen.h"
+#include "Window.h"
+#include "WindowTooltip.h"
 
 #include <cstdint>
 

@@ -1,11 +1,11 @@
 #pragma once
 
+#include "AILogic/StaticObjectRotation.h" // CSmoothRotatedArray2D
 #include "Common_RTS_AI/Terrain.h"
 #include "StaticObjectRotation.h"
+#include "Stats_B2_M1/RPGStats.h" // SHPObjectRPGStats::SByteArray2
 
 #include <cstdint>
-#include "AILogic/StaticObjectRotation.h" // CSmoothRotatedArray2D
-#include "Stats_B2_M1/RPGStats.h"         // SHPObjectRPGStats::SByteArray2
 
 namespace NLock
 {

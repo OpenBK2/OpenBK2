@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
+#include "Input/Bind.h"
 #include "MOSquad.h"
 #include "MOUnitInfantry.h"
 #include "MOUnitMechanical.h"
-#include "Input/Bind.h"
-#include "Stats_B2_M1/IClientGameConsts.h"
 #include "Stats_B2_M1/ActionsRemap.h"
+#include "Stats_B2_M1/IClientGameConsts.h"
 
 namespace
 {

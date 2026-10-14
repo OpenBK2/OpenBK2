@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "RenderNode.h"
+
 #include "GScene.h"
 #include "ObjectFader.h"
+#include "RenderNode.h"
 
 namespace NGScene
 {

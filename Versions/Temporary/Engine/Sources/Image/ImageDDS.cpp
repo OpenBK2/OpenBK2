@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "ImageDDS.h"
-
-#include "ImageInternal.h"
 #include "DDS.h"
 #include "GUnpackDXT.h"
+#include "ImageDDS.h"
+#include "ImageInternal.h"
 
 #include <cstdint>
 

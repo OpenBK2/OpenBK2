@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "SymAccess.h"
 
 #if BOOST_OS_WINDOWS

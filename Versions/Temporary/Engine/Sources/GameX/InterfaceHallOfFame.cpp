@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "InterfaceStateInternal.h"
-#include "InterfaceHallOfFame.h"
-#include "GameXClassIDs.h"
-#include "UI/SceneClassIDs.h"
 #include "DBGameRoot.h"
+#include "GameXClassIDs.h"
+#include "InterfaceHallOfFame.h"
+#include "InterfaceStateInternal.h"
 #include "Misc/StrProc.h"
+#include "UI/SceneClassIDs.h"
 
 #include "GameX_export.h"
 

@@ -1,16 +1,16 @@
 #pragma once
 
-#include "UI/CommandParam.h"
-#include "UI/DBUserInterface.h"
+#include "MapEditorLib/DefaultInputState.h"
+#include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
-#include "MapEditorLib/DefaultView.h"
-#include "MapEditorLib/DefaultInputState.h"
 #include "MapEditorLib/ObjectController.h"
-
-#include <cstdint>
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
 
 #include "ED_Common_export.h"
+
+#include <cstdint>
 
 struct SEditorState
 {

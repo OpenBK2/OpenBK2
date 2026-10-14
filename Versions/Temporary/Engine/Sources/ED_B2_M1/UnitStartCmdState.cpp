@@ -1,15 +1,16 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "UnitStartCmdState.h"
 #include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "port/mousekeys.h"
+#include "UnitStartCmdState.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 //
 //

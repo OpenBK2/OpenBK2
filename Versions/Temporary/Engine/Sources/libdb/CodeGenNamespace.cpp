@@ -4,8 +4,8 @@
 #include "CodeGenForward.h"
 #include "CodeGenNamespace.h"
 #include "CodeGenType.h"
-#include "StrStream.h"
 #include "Parser/LangNodesDefinitions.h"
+#include "StrStream.h"
 
 #include "libdb_export.h"
 

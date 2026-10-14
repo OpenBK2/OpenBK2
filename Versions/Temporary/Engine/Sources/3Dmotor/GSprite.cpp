@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "GScene.h"
-#include "GParticleInfo.h"
-#include "4dCalcs.h"
 
+#include "4dCalcs.h"
+#include "GParticleInfo.h"
+#include "GScene.h"
 #include "GSprite.h"
 
 namespace NGScene

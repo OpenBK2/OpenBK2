@@ -2,21 +2,21 @@
 
 extern "C"
 {
-#include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
 #include <libavutil/opt.h>
-#include <libswscale/swscale.h>
 #include <libswresample/swresample.h>
+#include <libswscale/swscale.h>
 }
+
+#include <chrono>
+#include <memory> // std::unique_ptr
+#include <optional>
+#include <vector>
 
 #include <SDL3/SDL.h>
 #include <SDL3_mixer/SDL_mixer.h>
-
-#include <chrono>
-#include <optional>
-#include <vector>
-#include <memory> // std::unique_ptr
 
 namespace ffmpeg::utils
 {

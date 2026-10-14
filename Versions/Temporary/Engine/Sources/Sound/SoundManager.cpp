@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "SoundManager.h"
 #include "DBSoundDesc.h"
 #include "Sound2D.h"
+#include "SoundManager.h"
 
 //CBasicShare<int, CSound2D> shareSound2D(120);
 

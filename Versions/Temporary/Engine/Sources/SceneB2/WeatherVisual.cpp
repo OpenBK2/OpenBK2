@@ -1,20 +1,19 @@
 #include "stdafx.h"
 
 #include "3DLib/GGeometry.h"
-#include "WeatherVisual.h"
-#include "Scene.h"
-#include "TerraGen.h"
-#include "Misc/Win32Random.h"
-#include "System/FastMath.h"
-#include "System/Commands.h"
-#include "Sound/SoundScene.h"
-#include "System/DB.h"
-#include "3Dmotor/Gfx.h"
 #include "3Dmotor/GAnimLight.h"
+#include "3Dmotor/Gfx.h"
 #include "3Dmotor/GScene.h"
 #include "3Dmotor/GSceneUtils.h"
-
 #include "FullScreenFader.h"
+#include "Misc/Win32Random.h"
+#include "Scene.h"
+#include "Sound/SoundScene.h"
+#include "System/Commands.h"
+#include "System/DB.h"
+#include "System/FastMath.h"
+#include "TerraGen.h"
+#include "WeatherVisual.h"
 
 #include <cstdint>
 

@@ -2,10 +2,9 @@
 
 #include "3Dmotor/aiMap.h"
 #include "3Dmotor/aiRender.h"
-
-#include "Input/GameMessage.h"
-#include "B2_M1_Terrain/PatchHolder.h"
 #include "AIDebugInfo.h"
+#include "B2_M1_Terrain/PatchHolder.h"
+#include "Input/GameMessage.h"
 #include "WeatherVisual.h"
 
 enum ESoundSceneMode : int;

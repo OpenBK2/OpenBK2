@@ -1,11 +1,13 @@
 #include "../GrannyGltf.h"
-#include <fastgltf/tools.hpp>
-#include <gtest/gtest.h>
-#include <cstring>
+
 #include <cmath>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <memory>
+
+#include <fastgltf/tools.hpp>
+#include <gtest/gtest.h>
 
 namespace
 {

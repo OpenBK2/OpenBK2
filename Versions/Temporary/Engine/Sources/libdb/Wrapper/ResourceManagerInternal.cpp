@@ -1,18 +1,16 @@
 #include "stdafx.h"
 
-#include <time.h>
-
+#include "EditorDb.h"
+#include "FolderManipulator.h"
 #include "Misc/HPTimer.h"
 #include "Misc/StrProc.h"
-#include "System/FileUtils.h"
-#include "System/FilePath.h"
-
-#include "EditorDb.h"
-
-#include "ResourceManagerInternal.h"
-#include "TableManipulator.h"
-#include "FolderManipulator.h"
 #include "ObjectManipulator.h"
+#include "ResourceManagerInternal.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "TableManipulator.h"
+
+#include <time.h>
 
 using namespace NDb::NTypeDef;
 

@@ -1,28 +1,28 @@
 #include "stdafx.h"
-#include <fmt/format.h>
+
 #include <boost/uuid/uuid_io.hpp>
+#include <fmt/format.h>
 
 //#include "../misc/strproc.h"
 //#include "../misc/2darray.h"
 //#include "../stats_b2_m1/iconsset.h"
 #include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
-
-#include "MapInfoExporter.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "libdb/ResourceManager.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/Tools_IndexCollector.h"
-#include "EditorScene.h"
-#include "SceneB2/TerraGen.h"
-#include "System/FileUtils.h"
 #include "EditorMethods.h"
-#include "Misc/HPTimer.h"
-#include "Stats_B2_M1/DBMapInfo.h"
-#include "Misc/StrProc.h"
-#include "MapEditorLib/Interface_MOD.h"
+#include "EditorScene.h"
 #include "ExporterMethods.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/Tools_IndexCollector.h"
+#include "MapInfoExporter.h"
+#include "Misc/HPTimer.h"
+#include "Misc/StrProc.h"
+#include "ResourceDefines.h"
+#include "SceneB2/TerraGen.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "System/FileUtils.h"
 
 #include <cstdint>
 

@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
+#include "CustomMissions.h"
+#include "libdb/Db.h"
 #include "System/FilePath.h"
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
-#include "libdb/Db.h"
-#include "CustomMissions.h"
 
 namespace NCustom
 {

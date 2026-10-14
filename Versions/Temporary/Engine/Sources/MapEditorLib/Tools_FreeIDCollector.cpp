@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Tools_FreeIDCollector.h"
 
 #include "libdb/Manipulator.h"
+#include "Tools_FreeIDCollector.h"
 
 bool CFreeIDCollector::FindLockedIDNode( CLockedIDNodeList::iterator *pItLockedIDNode, const unsigned nID )
 {

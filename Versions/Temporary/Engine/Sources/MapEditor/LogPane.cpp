@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
+#include "LogPane.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "ResourceDefines.h"
-
-#include "LogPane.h"
 
 // Moved from DW_Log.cpp unchanged, but that a missing view no longer crashes a
 // log call: the buffer is kept either way.

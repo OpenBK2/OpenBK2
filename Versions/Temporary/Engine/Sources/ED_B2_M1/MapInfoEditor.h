@@ -1,24 +1,22 @@
 #pragma once
 
-#include "MapInfoEditorSettings.h"
-#include "MapEditorLib/EditorBase.h"
-#include "MapEditorLib/DefaultView.h"
-
-#include "MapInfoController.h"
-#include "MapInfoState.h"
 #include "HeightContainer.h"
-#include "SpotInfoData.h"
-
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/PaletteList.h"
-#include "ShortcutBarView.h"
-#include <memory>
+#include "MapInfoController.h"
+#include "MapInfoEditorSettings.h"
+#include "MapInfoState.h"
 #include "MiniMapView.h"
 #include "MoviesEditorView.h"
-
-#include <cstdint>
+#include "ShortcutBarView.h"
+#include "SpotInfoData.h"
 
 #include "ED_B2_M1_export.h"
+
+#include <cstdint>
+#include <memory>
 
 #define TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT 11
 #define TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT 2

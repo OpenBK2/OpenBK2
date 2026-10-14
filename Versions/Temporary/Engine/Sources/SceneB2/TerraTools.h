@@ -1,11 +1,11 @@
 #pragma once
 
-#include "vendor/granny/include/granny.h"
 #include "Misc/2Darray.h"
-
-#include <cstdint>
+#include "vendor/granny/include/granny.h"
 
 #include "SceneB2_export.h"
+
+#include <cstdint>
 
 void GetVertices( granny_mesh *pMesh, std::vector<CVec3> *pRes, CVec3 *vMin, CVec3 *vMax );
 void GetTriangles( granny_mesh *pMesh, std::vector<STriangle> *pRes );

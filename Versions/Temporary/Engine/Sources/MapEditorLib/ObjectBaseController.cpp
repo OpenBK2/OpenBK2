@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "PCIEMnemonics.h"
-#include "ObjectBaseController.h"
-#include "MultiManipulator.h"
-
-#include "libdb/ResourceManager.h"
 #include "libdb/ObjMan.h"
 #include "libdb/ObjManIterator.h"
+#include "libdb/ResourceManager.h"
 #include "Misc/HPTimer.h"
+#include "MultiManipulator.h"
+#include "ObjectBaseController.h"
+#include "PCIEMnemonics.h"
+
+#include <fmt/format.h>
 
 void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNodeName, IManipulator *pObjectManipulator )
 {

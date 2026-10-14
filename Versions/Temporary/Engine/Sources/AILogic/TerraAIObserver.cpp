@@ -1,15 +1,13 @@
 #include "stdafx.h"
 
-#include "port/wordpack.h"
-
-#include "StaticObjects.h"
-#include "UnitsIterators.h"
-#include "NewUpdater.h"
 #include "AIUnit.h"
 #include "GlobalWarFog.h"
+#include "NewUpdater.h"
+#include "port/wordpack.h"
 #include "RailRoads.h"
-
+#include "StaticObjects.h"
 #include "TerraAIObserver.h"
+#include "UnitsIterators.h"
 
 #include "AILogic_export.h"
 

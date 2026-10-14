@@ -1,9 +1,10 @@
 #pragma once
 
-#include <cstdint>
+#include "System/Streams.h" // CDataStream
 
 #include "Image_export.h"
-#include "System/Streams.h" // CDataStream
+
+#include <cstdint>
 
 template <class T>
 class CArray2D;

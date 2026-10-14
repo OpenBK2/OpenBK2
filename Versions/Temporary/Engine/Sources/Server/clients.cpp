@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "clients.h"
-#include "Server_Client_Common/NetLogger.h"
-#include "LadderLobby.h"
-#include "Database.h"
-#include "Misc/StrProc.h"
 
-#include <algorithm>
-#include "Statistics.h"
+#include "clients.h"
+#include "Database.h"
 #include "HashMapConvertor.h"
+#include "LadderLobby.h"
 #include "LadderStats.h"
+#include "Misc/StrProc.h"
 #include "Misc/Time64.h"
+#include "Server_Client_Common/NetLogger.h"
+#include "Statistics.h"
 #include "System/RandomGen.h"
 
-#include <zlib.h>
+#include <algorithm>
 
 #include <fmt/format.h>
+#include <zlib.h>
 
 int NUMBER_OF_RACES_IN_LADDER = 4;
 int MAX_NUMBER_OF_REINFORCEMENTS = 30;

@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "port/time.h"
-
 #include "3Dmotor/Gfx.h"
-#include "Image/Targa.h"
-#include "System/VFSOperations.h"
-#include "WindController.h"
-#include "SceneInternal.h"
 #include "DBSceneConsts.h"
+#include "Image/Targa.h"
+#include "port/time.h"
+#include "SceneInternal.h"
+#include "System/VFSOperations.h"
 #include "VisObjSelection.h"
+#include "WindController.h"
 
 #include <fmt/format.h>
 

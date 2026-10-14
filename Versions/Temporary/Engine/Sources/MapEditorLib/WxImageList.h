@@ -23,12 +23,12 @@
 #include "Interface_Widget.h"
 #include "Misc/2Darray.h"
 
+#include <cstdint>
+
 #include <wx/bitmap.h>
 #include <wx/colour.h>
 #include <wx/image.h>
 #include <wx/imaglist.h>
-
-#include <cstdint>
 
 namespace NWxImageList
 {

@@ -8,11 +8,11 @@
 // Inputs go through a volatile so the compiler cannot fold the conversion at
 // compile time under the default mode, which would hide the rounding mode tests.
 
+#include "Misc/Tools.h"
+
 #include <cfenv>
 #include <cstdint>
 #include <limits>
-
-#include "Misc/Tools.h"
 
 #include <gtest/gtest.h>
 

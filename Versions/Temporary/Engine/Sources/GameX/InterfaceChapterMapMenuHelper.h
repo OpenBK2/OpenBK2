@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "GameX_export.h"
+
+#include <cstdint>
 
 struct IWindow;
 

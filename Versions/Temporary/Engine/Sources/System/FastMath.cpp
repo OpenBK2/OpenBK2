@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "FastMath.h"
 
 namespace NMath

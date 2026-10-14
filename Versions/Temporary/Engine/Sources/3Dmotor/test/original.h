@@ -4,8 +4,8 @@
 // MMXTransformVector*Impl below use SMMXFixups, fixups, Assign and the lookup
 // tables from here. That only ever worked because every includer happened to pull
 // in GLightPerVertex.cpp first.
-#include "3Dmotor/GSSETransform.h"
 #include "3DLib/GGeometry.h"
+#include "3Dmotor/GSSETransform.h"
 
 #include <cstdint>
 

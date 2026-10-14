@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "MenuDropDownView.h"
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+#include "MenuDropDownView.h"
 
 #include <wx/listbox.h>
 #include <wx/sizer.h>

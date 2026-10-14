@@ -2,10 +2,11 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
+#include "Misc/Asserts.h" // ASSERT
+
 #include "System_export.h"
 
 #include <cstdint>
-#include "Misc/Asserts.h" // ASSERT
 
 // single thread version
 // базовые классы для системы подсчета ссылок на объекты с целью упрощения memory management

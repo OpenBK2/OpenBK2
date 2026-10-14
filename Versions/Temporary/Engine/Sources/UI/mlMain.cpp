@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "3Dmotor/RectLayout.h"
+
 #include "3Dmotor/G2DView.h"
-#include "3Dmotor/Locale.h"
 #include "3Dmotor/GLocale.h"
+#include "3Dmotor/Locale.h"
+#include "3Dmotor/RectLayout.h"
 //
-#include "mlMain.h"
-#include "mlReflow.h"
-#include "mlObjects.h"
-#include "mlVisObjects.h"
 #include "mlHandlers.h"
+#include "mlMain.h"
+#include "mlObjects.h"
+#include "mlReflow.h"
+#include "mlVisObjects.h"
 
 namespace NML
 {

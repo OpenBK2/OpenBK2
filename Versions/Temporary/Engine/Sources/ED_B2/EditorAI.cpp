@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "TerraAIObserver.h"
 #include "EditorAI.h"
+#include "TerraAIObserver.h"
 
 ITerraAIObserver *CEditorAI::CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY )
 {

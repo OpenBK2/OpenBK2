@@ -1,27 +1,27 @@
 #include "stdafx.h"
+
+#include "Input/GameMessage.h"
+#include "libdb/EditorDb.h"
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/BusyCursor.h"
-#include <fmt/format.h>
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "port/mousekeys.h"
+#include "port/vkcodes.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Input/GameMessage.h"
 #include "UI/UIFactory.h"
 #include "UIScene.h"
-
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/StringManager.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "libdb/ResourceManager.h"
-#include "libdb/EditorDb.h"
-
 #include "WindowSimpleSharedEditor.h"
 #include "WindowSimpleSharedState.h"
-#include "port/vkcodes.h"
-#include "port/mousekeys.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 namespace
 {

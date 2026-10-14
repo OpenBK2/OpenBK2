@@ -1,10 +1,9 @@
 #include "stdafx.h"
-#include "ChecksumSaver.h"
 
 #include "Checksums.h"
-#include "System/CheckSumLog.h"
-
+#include "ChecksumSaver.h"
 #include "port/debugging.h"
+#include "System/CheckSumLog.h"
 
 #include <cstdint>
 

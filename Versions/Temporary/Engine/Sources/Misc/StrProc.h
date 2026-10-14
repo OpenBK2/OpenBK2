@@ -1,14 +1,14 @@
 #pragma once
 
 // Defensive member defaults; explicit constructor values still take precedence.
-#include "Misc_export.h"
-
+#include "Misc/Asserts.h" // NI_VERIFY
 #include "port/unicode.h"
+
+#include "Misc_export.h"
 
 #include <algorithm>
 
 #include <boost/config.hpp>
-#include "Misc/Asserts.h" // NI_VERIFY
 
 namespace NStr
 {

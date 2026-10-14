@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "GPixelFormat.h"
 
+#include "GPixelFormat.h"
 #include "port/cpuid.h"
 
 namespace

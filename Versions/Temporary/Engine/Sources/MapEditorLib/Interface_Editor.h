@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Interface_View.h"
 #include "Interface_InputState.h"
+#include "Interface_View.h"
 
 // в cpp файле написать макрос: REGISTER_EDITOR_IN_...( typeName, className )
 

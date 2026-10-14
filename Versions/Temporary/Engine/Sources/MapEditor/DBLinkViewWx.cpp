@@ -1,10 +1,20 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
 
-#include "DBLinkView.h"
-
-#include "ObjectBrowserView.h"
 #include "ControllerContainer.h"
+#include "DBLinkView.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/Interface_View.h"
+#include "MapEditorLib/PCIEMnemonics.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/WxOwnerDialog.h"
+#include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
+#include "MapEditorLib/WxWidget.h"
+#include "ObjectBrowserView.h"
 #include "PC_BaseDialog.h"
 #include "PC_Constants.h"
 #include "PropertyPaneView.h"
@@ -12,28 +22,15 @@
 #include "Tree_GDBBrowserBase_Constants.h"
 #include "WMDefines.h"
 
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/DefaultView.h"
-#include "MapEditorLib/Interface_View.h"
-#include "MapEditorLib/PCIEMnemonics.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/WxWidget.h"
-#include "MapEditorLib/WxOwnership.h"
-#include "MapEditorLib/WxPlacement.h"
-#include "MapEditorLib/WxOwnerDialog.h"
-#include "libdb/ResourceManager.h"
+#include <memory>
 
 #include <fmt/format.h>
 #include <fmt/printf.h>
-
 #include <wx/button.h>
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/stc/stc.h>
-
-#include <memory>
 
 // The link picker in wx: IDD_PC_DB_LINK's controls around the wx database
 // browser's contents, made with trees that pick rather than open, and the wx

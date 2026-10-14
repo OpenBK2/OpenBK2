@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Input/GameMessage.h"
-#include "System/Time.h"
 #include "InterfaceCommandDeclare.h"
+#include "System/Time.h"
 
 #include <cstdint>
 

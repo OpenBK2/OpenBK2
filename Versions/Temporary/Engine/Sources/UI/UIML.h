@@ -1,9 +1,9 @@
 #pragma once
 
-#include "UI_export.h"
-
-#include "3Dmotor/GPixelFormat.h"
 #include "3Dmotor/GLocale.h"
+#include "3Dmotor/GPixelFormat.h"
+
+#include "UI_export.h"
 
 struct IML;
 struct IMLObject;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Main_export.h"
-
 #include "MainLoop.h"
+
+#include "Main_export.h"
 
 MAIN_EXPORT IInterfaceCommand *CreateICExitGame();
 IInterfaceCommand *CreateICLoad( const std::string &szName );

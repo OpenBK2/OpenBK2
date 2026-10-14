@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
+#include "Common_RTS_AI/StandartSmoothMechPath.h"
 #include "PresizePath.h"
 #include "TankPitPath.h"
 #include "Technics.h"
-#include "Common_RTS_AI/StandartSmoothMechPath.h"
 
 #include "AILogic_export.h"
 

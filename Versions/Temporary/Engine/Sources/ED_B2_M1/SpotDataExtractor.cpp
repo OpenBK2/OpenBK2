@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "SpotDataExtractor.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "SpotDataExtractor.h"
 
 #include <cstdint>
 

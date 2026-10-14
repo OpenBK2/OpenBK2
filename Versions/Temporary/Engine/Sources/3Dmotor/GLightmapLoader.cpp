@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "GLightmapLoader.h"
 
 #include "3Dmotor_export.h"

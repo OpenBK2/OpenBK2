@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "BalanceTest.h"
 
-#include "UnitsIterators.h"
 #include "AIUnit.h"
-#include "GroupLogic.h"
+#include "B2AI.h"
+#include "BalanceTest.h"
 #include "Cheats.h"
+#include "GroupLogic.h"
 #include "Main/GameTimer.h"
+#include "Misc/StrProc.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "System/Text.h"
 #include "System/Time.h"
-#include "Stats_B2_M1/DBMapInfo.h"
-#include "Misc/StrProc.h"
-#include "B2AI.h"
+#include "UnitsIterators.h"
 
 #include <cstdint>
 

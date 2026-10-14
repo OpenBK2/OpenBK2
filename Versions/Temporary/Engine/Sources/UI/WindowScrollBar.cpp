@@ -2,10 +2,11 @@
 //
 
 #include "stdafx.h"
+
+#include "InterfaceConsts.h"
+#include "WindowMSButton.h"
 #include "WindowScrollBar.h"
 #include "WindowSlider.h"
-#include "WindowMSButton.h"
-#include "InterfaceConsts.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B89, CWindowScrollBar )
 

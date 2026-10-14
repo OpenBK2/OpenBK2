@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "DBMinimap.h"
 #include "MinimapMnemonics.h"
 

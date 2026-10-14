@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "RegisterEditors.h"
 
-#include "UserDataContainer.h"
-#include "System/FilePath.h"
-#include "MapEditorLib/EditorFactory.h"
 #include "ED_Common/WindowSimpleSharedEditor.h"
+#include "MapEditorLib/EditorFactory.h"
+#include "RegisterEditors.h"
+#include "System/FilePath.h"
+#include "UserDataContainer.h"
 
 CRegisterEditorsSemiAutoMagic g_RegisterEditorsSemiAutoMagic;
 

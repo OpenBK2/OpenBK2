@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "MapEditorLib_export.h"
+
+#include <cstdint>
 
 //! Route an SEditParameters pointer to a window through the command handler.
 //!

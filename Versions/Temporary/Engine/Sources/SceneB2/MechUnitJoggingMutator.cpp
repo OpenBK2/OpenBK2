@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "vendor/granny/include/granny.h"
-#include "MechUnitJoggingMutator.h"
 #include "Main/GameTimer.h"
+#include "MechUnitJoggingMutator.h"
 #include "System/Commands.h"
+#include "vendor/granny/include/granny.h"
 
 #include "SceneB2_export.h"
 

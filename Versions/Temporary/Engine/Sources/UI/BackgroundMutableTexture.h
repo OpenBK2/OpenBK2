@@ -1,11 +1,11 @@
 #pragma once
 
-#include "UI_export.h"
-
+#include "3Dmotor/GfxBuffers.h"
 #include "Background.h"
 #include "Misc/2Darray.h"
-#include "3Dmotor/GfxBuffers.h"
 #include "System/Dg.h"
+
+#include "UI_export.h"
 
 // Can be modified during runtime
 // used to display pictures (i.e. screenshots)

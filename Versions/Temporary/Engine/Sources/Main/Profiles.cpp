@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
+#include "MainLoop.h"
+#include "Misc/StrProc.h"
 #include "port/unicode.h"
 #include "Profiles.h"
-#include "Misc/StrProc.h"
-#include "MainLoop.h"
-#include "System/FileUtils.h"
 #include "System/FilePath.h"
+#include "System/FileUtils.h"
 
 #if BOOST_OS_WINDOWS
 #include <objbase.h>

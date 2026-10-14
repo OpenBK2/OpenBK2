@@ -1,17 +1,16 @@
 #include "stdafx.h"
 
-#include "ShootEstimatorInternal.h"
-#include "Turret.h"
-#include "Diplomacy.h"
-#include "Units.h"
-#include "ScanLimiter.h"
-#include "Soldier.h"
-#include "Building.h"
-#include "Guns.h"
 #include "Artillery.h"
+#include "Building.h"
+#include "Diplomacy.h"
 #include "General.h"
-
+#include "Guns.h"
+#include "ScanLimiter.h"
+#include "ShootEstimatorInternal.h"
+#include "Soldier.h"
+#include "Turret.h"
 #include "UnitCreation.h"
+#include "Units.h"
 extern CUnitCreation theUnitCreation;
 // for profiling
 #include "TimeCounter.h"

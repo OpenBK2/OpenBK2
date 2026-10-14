@@ -4,9 +4,9 @@
 
 #include "System_export.h"
 
-#include <boost/config.hpp>
-
 #include <cstdint>
+
+#include <boost/config.hpp>
 
 struct IRandomSeed : public CObjectBase
 {

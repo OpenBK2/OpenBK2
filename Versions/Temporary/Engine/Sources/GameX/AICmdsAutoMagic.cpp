@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "AICmdsAutoMagic.h"
-#include "CommonCommands.h"
 #include "AILogicCommandInternal.h"
+#include "CommonCommands.h"
 
 #include "GameX_export.h"
 

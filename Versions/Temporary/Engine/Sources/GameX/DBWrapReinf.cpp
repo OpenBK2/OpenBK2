@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "InterfaceState.h"
 
 namespace NDBWrap

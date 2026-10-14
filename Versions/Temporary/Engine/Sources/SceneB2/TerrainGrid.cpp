@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "TerrainManager.h"
 #include "SceneInternal.h"
+#include "TerrainManager.h"
 
 #include <cstdint>
 

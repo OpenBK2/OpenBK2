@@ -9,16 +9,17 @@
 // GCombiner.cpp notes these are "often very small in size.. (less than 128 elements)",
 // so 128 is the realistic case and 1024 shows the asymptote.
 
-#include <benchmark/benchmark.h>
-
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/GLightPerVertexKernels.h"
-#include "3Dmotor/GSSEtransform.h"
 #include "3Dmotor/GSSEtransform.cpp"
+#include "3Dmotor/GSSEtransform.h"
 #include "3Dmotor/test/random.h"
 
 #include <cstdint>
 #include <vector>
+
+#include <benchmark/benchmark.h>
 
 namespace
 {

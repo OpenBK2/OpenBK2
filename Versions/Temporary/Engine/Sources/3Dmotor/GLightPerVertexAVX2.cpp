@@ -13,11 +13,12 @@
 // touch std::vector or CArray2D.
 
 #include "stdafx.h"
+
 #include "GLightPerVertexKernels.h"
 
-#include <immintrin.h>
-
 #include <cstdint>
+
+#include <immintrin.h>
 
 namespace NGScene
 {

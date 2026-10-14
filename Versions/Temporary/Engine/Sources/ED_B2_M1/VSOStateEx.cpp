@@ -1,19 +1,18 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
-
-#include "MapInfoEditor.h"
-#include "VSOStateEx.h"
 
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapInfoEditor.h"
+#include "Misc/2Darray.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/TerraAIObserver.h"
+#include "VSOStateEx.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 bool CVSOStateEx::CanEdit()

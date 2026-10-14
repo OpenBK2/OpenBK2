@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "StormableObject.h"
+#include "Cheats.h"
 #include "Diplomacy.h"
 #include "Guns.h"
 #include "Randomize.h"
 #include "Soldier.h"
-#include "Cheats.h"
+#include "StormableObject.h"
 
 extern CDiplomacy theDipl;
 extern NTimer::STime curTime;

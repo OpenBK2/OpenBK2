@@ -5,8 +5,8 @@
 //
 
 #include "AIUnit.h"
-#include "UnitStates.h"
 #include "StatesFactory.h"
+#include "UnitStates.h"
 
 #include <cstdint>
 

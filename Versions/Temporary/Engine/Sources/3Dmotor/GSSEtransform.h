@@ -2,13 +2,12 @@
 
 #include "GPixelFormat.h"
 #include "MMXhelpers.h"
+#include "System/Arch.h"
 
 #include <cstdint>
 #include <optional>
 
 #include <glm/glm.hpp>
-
-#include "System/Arch.h"
 
 #if HAS_SSE2
 #include <emmintrin.h>

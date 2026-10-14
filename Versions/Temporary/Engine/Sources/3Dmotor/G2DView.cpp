@@ -1,12 +1,13 @@
 #include "stdafx.h"
+
+#include "2DScene.h"
+#include "DBScene.h"
+#include "G2DView.h"
 #include "GFont.h"
 #include "GLocale.h"
-#include "Locale.h"
 #include "GTexture.h"
+#include "Locale.h"
 #include "System/BasicShare.h"
-#include "DBScene.h"
-#include "2DScene.h"
-#include "G2DView.h"
 
 namespace NGScene
 {

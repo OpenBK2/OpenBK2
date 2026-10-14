@@ -1,7 +1,7 @@
 #pragma once
 
-#include "port/socket.h"
 #include "NetAcks.h"
+#include "port/socket.h"
 
 /////////////////////////////////////////////////////////////////////////////////////
 namespace NNet

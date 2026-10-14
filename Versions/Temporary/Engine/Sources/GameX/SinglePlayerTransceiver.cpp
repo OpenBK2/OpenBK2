@@ -1,16 +1,13 @@
 #include "stdafx.h"
 
-#include "SinglePlayerTransceiver.h"
-
 #include "AILogic/AILogicCommand.h"
 #include "AILogic/B2AI.h"
 #include "Input/Bind.h"
-#include "ScenarioTracker.h"
-
-#include "SceneB2/Scene.h"
-
 #include "port/time.h"
 #include "port/unicode.h"
+#include "ScenarioTracker.h"
+#include "SceneB2/Scene.h"
+#include "SinglePlayerTransceiver.h"
 
 #include "GameX_export.h"
 

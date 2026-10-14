@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "BindProcessor.h"
-#include "BindArray.h"
+
 #include "Bind.h"
+#include "BindArray.h"
+#include "BindProcessor.h"
 
 #include <cstdint>
 

@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
+#include "3Dmotor/GfxBuffers.h"
 #include "GLMGeometry.h"
 #include "RectPacker.h"
-#include "3Dmotor/GfxBuffers.h"
 
 #include <cstdint>
 

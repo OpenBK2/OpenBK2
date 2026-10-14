@@ -7,18 +7,18 @@
 // non-commercial and commercial purposes.
 
 #include "stdafx.h"
+
 #include "Script.h"
 
 #if BOOST_OS_WINDOWS
 #include <windows.h>
 #endif
 
-#include <cstdio>
-#include <cstring>
-
+#include "lstate.h"
 #include "Misc/StrProc.h"
 
-#include "lstate.h"
+#include <cstdio>
+#include <cstring>
 
 namespace NScript
 {

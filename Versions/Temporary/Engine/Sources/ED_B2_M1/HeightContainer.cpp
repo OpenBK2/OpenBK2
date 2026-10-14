@@ -1,11 +1,13 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "HeightContainer.h"
-#include "Misc/Bresenham.h"
-#include "Image/Targa.h"
+
 #include "B2_M1_Terrain/DBVSO.h"
+#include "HeightContainer.h"
+#include "Image/Targa.h"
+#include "Misc/Bresenham.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 int CHeightContainer::STACK_SIZE = sizeof( uint32_t ) * 8;
 int CHeightContainer::TRACE_IMAGE_TILE_SIZE = 64;

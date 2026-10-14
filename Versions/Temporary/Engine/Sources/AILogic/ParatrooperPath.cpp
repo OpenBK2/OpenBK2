@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "ParatrooperPath.h"
+#include "AIUnit.h"
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
-#include "AIUnit.h"
+#include "ParatrooperPath.h"
 
 #include "AILogic_export.h"
 

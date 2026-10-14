@@ -1,9 +1,9 @@
 #pragma once
 
-#include "PaletteCommands.h"
-#include "MapEditorLib/PaletteList.h"
-#include "Stats_B2_M1/DBMapInfo.h"
 #include "libdb/Manipulator.h"
+#include "MapEditorLib/PaletteList.h"
+#include "PaletteCommands.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 #include <string>
 #include <vector>

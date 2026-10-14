@@ -1,11 +1,12 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "CommonEditorMethods.h"
 
-#include "libdb/Manipulator.h"
+#include "CommonEditorMethods.h"
 #include "Interface_CommandHandler.h"
+#include "libdb/Manipulator.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 bool SetGetEditParameters( uintptr_t pEditParameters, unsigned nCommandHandlerType, int nCmdID )
 {

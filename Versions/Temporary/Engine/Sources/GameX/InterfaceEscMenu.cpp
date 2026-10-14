@@ -1,12 +1,13 @@
 #include "stdafx.h"
+
+#include "3Dmotor/ScreenShot.h"
+#include "GameXClassIDs.h"
 #include "InterfaceEscMenu.h"
 #include "InterfaceMisc.h"
-#include "GameXClassIDs.h"
 #include "InterfaceState.h"
-#include "3Dmotor/ScreenShot.h"
-#include "ScenarioTracker.h"
 #include "MultiplayerCommandManager.h"
 #include "SaveLoadHelper.h"
+#include "ScenarioTracker.h"
 
 #include "GameX_export.h"
 

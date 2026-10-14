@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Soldier.h"
 #include "Artillery.h"
 #include "SerializeOwner.h"
+#include "Soldier.h"
 
 int CAIUnit::operator&( IBinSaver &saver )
 {

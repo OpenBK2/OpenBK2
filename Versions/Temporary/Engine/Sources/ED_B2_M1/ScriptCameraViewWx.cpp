@@ -1,18 +1,18 @@
 #include "stdafx.h"
 
-#include "ScriptCameraView.h"
-
 #include "CommandHandlerDefines.h"
-#include <fmt/format.h>
-
-#include "ResourceDefines.h"
-
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "ResourceDefines.h"
+#include "ScriptCameraView.h"
 #include "System/GlobalVars.h"
 
+#include <cstdio>
+#include <string>
+
+#include <fmt/format.h>
 #include <wx/button.h>
 #include <wx/listctrl.h>
 #include <wx/scrolwin.h>
@@ -21,9 +21,6 @@
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 #include <wx/utils.h>
-
-#include <cstdio>
-#include <string>
 
 // The script camera palette, in wx: the eleventh, and the last of the palettes
 // that live in the map info editor's shortcut bar.

@@ -1,24 +1,23 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/2Darray.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "SeasonMnemonics.h"
-#include "MapEditorLib/PaletteList.h"
-#include "DialogData.h"
-#include "PointListView.h"
-#include "ResourceDefines.h"
-#include "MapEditorLib/Interface_UserData.h"
 #include "BuildingInterface.h"
-#include "PointsListState.h"
-#include "MapEditorLib/CommonEditorMethods.h"
-
 #include "BuildingState.h"
+#include "DialogData.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/PaletteList.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "Misc/2Darray.h"
+#include "PointListView.h"
+#include "PointsListState.h"
 #include "port/wordpack.h"
+#include "ResourceDefines.h"
+#include "SeasonMnemonics.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 //

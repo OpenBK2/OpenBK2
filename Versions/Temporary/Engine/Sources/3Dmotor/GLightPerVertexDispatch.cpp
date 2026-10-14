@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "GLightPerVertexKernels.h"
 
+#include "GLightPerVertexKernels.h"
 #include "port/cpuid.h"
 
 namespace NGScene

@@ -1,8 +1,8 @@
 #pragma once
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#include "vendor/fmod/api/inc/fmod.h"
-#include "SFX.h"
 #include "Misc/HashFuncs.h"
+#include "SFX.h"
+#include "vendor/fmod/api/inc/fmod.h"
 
 //DEBUG{
 #ifndef _FINALRELEASE

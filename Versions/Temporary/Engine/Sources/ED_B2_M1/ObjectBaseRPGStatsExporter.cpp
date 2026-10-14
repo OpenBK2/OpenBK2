@@ -1,25 +1,24 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/StrProc.h"
-#include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
-#include "ObjectBaseRPGStatsExporter.h"
+#include "ED_Common/GltfExporter.h"
+#include "ExporterMethods.h"
 #include "libdb/ResourceManager.h"
-#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/StringManager.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "ObjectBaseRPGStatsExporter.h"
+#include "SeasonMnemonics.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-#include "MapEditorLib/Interface_MOD.h"
-
-#include "ExporterMethods.h"
-#include "ED_Common/GltfExporter.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <map>
-#include "SeasonMnemonics.h"
 
 #include <cstdint>
+#include <map>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 namespace NDb

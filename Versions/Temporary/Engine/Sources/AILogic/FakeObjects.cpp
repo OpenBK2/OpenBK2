@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include "ObjectProfile.h"
-#include "System/Time.h"
 #include "AIUnit.h"
 #include "AllowFakeObjToCrushExecutor.h"
 #include "Diplomacy.h"
@@ -9,7 +7,9 @@
 #include "FakeObjects.h"
 #include "KillCorpseExecutor.h"
 #include "NewUpdater.h"
+#include "ObjectProfile.h"
 #include "StaticObjects.h"
+#include "System/Time.h"
 
 #include "AILogic_export.h"
 

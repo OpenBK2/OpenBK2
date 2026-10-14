@@ -1,6 +1,6 @@
 #pragma once
-#include "aiObject.h"
 #include "aiInterval.h"
+#include "aiObject.h"
 
 namespace NAI
 {

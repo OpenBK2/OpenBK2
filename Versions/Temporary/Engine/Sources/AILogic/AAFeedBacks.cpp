@@ -4,9 +4,9 @@
 CAAFeedBacks theAAFeedBacks;
 
 #include "AIUnit.h"
-#include "NewUpdater.h"
 #include "Diplomacy.h"
 #include "FeedbackSystem.h"
+#include "NewUpdater.h"
 
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;

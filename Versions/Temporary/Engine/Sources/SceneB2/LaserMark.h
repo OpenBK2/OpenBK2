@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SceneB2_export.h"
-
 #include "3DLib/GGeometry.h"
 #include "System/Dg.h"
+
+#include "SceneB2_export.h"
 
 class SCENEB2_EXPORT CLaserMarkTrace : public CPtrFuncBase<NGScene::CObjectInfo>
 {

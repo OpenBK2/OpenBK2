@@ -3,9 +3,9 @@
 
 #pragma once
 
-#include "UI_export.h"
-
 #include "Window.h"
+
+#include "UI_export.h"
 
 #include <cstdint>
 

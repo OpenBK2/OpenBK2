@@ -11,6 +11,16 @@
 
 // The standard headers the engine's stdafx.h prelude would supply, which
 // XmlSaver.h relies on without including
+#include "Misc/Asserts.h"
+#include "Misc/Geom.h"
+#include "Misc/Tools.h"
+#include "System/Basic.h"
+#include "System/BinSaver.h"
+#include "System/Streams.h"
+#include "System/System.h"
+#include "System/XmlResource.h"
+#include "System/XmlSaver.h"
+
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -22,16 +32,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
-#include "Misc/Asserts.h"
-#include "Misc/Tools.h"
-#include "System/System.h"
-#include "System/Basic.h"
-#include "Misc/Geom.h"
-#include "System/Streams.h"
-#include "System/BinSaver.h"
-#include "System/XmlResource.h"
-#include "System/XmlSaver.h"
 
 #include <gtest/gtest.h>
 

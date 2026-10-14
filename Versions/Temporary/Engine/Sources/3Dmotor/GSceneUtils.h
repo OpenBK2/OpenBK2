@@ -1,7 +1,7 @@
 #pragma once
+#include "GSkeleton.h"
 #include "RectLayout.h"
 #include "System/time.hpp"
-#include "GSkeleton.h"
 
 namespace NGScene
 {

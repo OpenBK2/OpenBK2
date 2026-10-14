@@ -1,7 +1,7 @@
 #include "stdafx.h"
 //
-#include "scriptPtr.h"
 #include "scriptCommon.h"
+#include "scriptPtr.h"
 
 #define REG_FUNCTION( Name ) { #Name, lua##Name }
 

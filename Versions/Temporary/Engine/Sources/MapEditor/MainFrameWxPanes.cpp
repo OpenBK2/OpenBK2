@@ -1,21 +1,19 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
 
 #include "MainFrameWxPanes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxResourceImages.h"
 #include "NativeDockHint.h"
+#include "ResourceDefines.h"
 
 #include <set>
 #include <tuple>
 #include <vector>
 
 #include <fmt/printf.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/WxOwnership.h"
-#include "MapEditorLib/WxResourceImages.h"
-#include "ResourceDefines.h"
-
 #include <wx/icon.h>
-
 #include <wx/settings.h>
 #include <wx/sizer.h>
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "StaticDebrisSetBuilder.h"
 #include "libdb/ResourceManager.h"
+#include "StaticDebrisSetBuilder.h"
 
 //REGISTER_BUILDER_IN_DLL( StaticDebrisSet, CStaticDebrisSetBuilder )
 

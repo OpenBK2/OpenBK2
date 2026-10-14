@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "GridCreation.h"
 #include "AIUnit.h"
+#include "GridCreation.h"
 #include "GroupLogic.h"
-
 #include "Misc/Checker.h"
 
 #include <algorithm>

@@ -1,8 +1,8 @@
 #pragma once
 
+#include "GfxBuffers.h"
 #include "GParticleInfo.h"
 #include "GRenderCore.h"
-#include "GfxBuffers.h"
 
 #include <cstdint>
 

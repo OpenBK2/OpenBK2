@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
 #include "3DLib/GGeometry.h"
 #include "DBScene.h"
+#include "GfxBuffers.h"
 #include "GRenderModes.h"
 #include "WindDeformer.h"
-#include "GfxBuffers.h"
 
 #include <algorithm>
 #include <cstdint>

@@ -1,17 +1,17 @@
 #include "stdafx.h"
+
+#include "GameXClassIDs.h"
+#include "InterfaceMPWaitPlayers.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "MultiplayerCommandManager.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "InterfaceMPWaitPlayers.h"
-#include "GameXClassIDs.h"
-#include "MultiplayerCommandManager.h"
-#include "Misc/StrProc.h"
 
 #include "GameX_export.h"
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 // CInterfaceMPWaitPlayers

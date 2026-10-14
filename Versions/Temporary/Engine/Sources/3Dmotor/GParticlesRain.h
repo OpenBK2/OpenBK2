@@ -1,6 +1,6 @@
 #pragma once
-#include "System/time.hpp"
 #include "GParticleInfo.h"
+#include "System/time.hpp"
 
 namespace NGScene
 {

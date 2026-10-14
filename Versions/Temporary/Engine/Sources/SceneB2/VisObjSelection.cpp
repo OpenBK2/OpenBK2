@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
 #include "3DLib/Transform.h"
+#include "3Dmotor/Fader.h"
+#include "DBSceneConsts.h"
 #include "SceneInternal.h"
 #include "TerrainManager.h"
-#include "DBSceneConsts.h"
 #include "VisObjDesc.h"
 #include "VisObjSelection.h"
-#include "3Dmotor/Fader.h"
 
 const float DEFAULT_SELECTION_SIZE = 1.5f;
 

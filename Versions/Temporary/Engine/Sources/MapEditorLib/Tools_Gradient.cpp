@@ -1,11 +1,12 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
+#include "Image/ImageColor.h"
 #include "Misc/2Darray.h"
 #include "Tools_Gradient.h"
-#include "Image/ImageColor.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 void SGradient::UpdateHeightRanges()
 {

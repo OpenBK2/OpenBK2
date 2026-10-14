@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "VisObjDesc.h"
-#include "SceneInternal.h"
 #include "SceneHoldQueue.h"
+#include "SceneInternal.h"
+#include "VisObjDesc.h"
 
 #include <fmt/format.h>
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "Interface_View.h"
 #include "DefaultController.h"
+#include "Interface_View.h"
 
 bool CDefaultController::Undo( bool bUpdateManipulator, bool bUpdateViews, IView *pViewToExlude )
 {

@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "InterfaceMPBase.h"
-#include "GameRoomData.h"
 #include "ChatControl.h"
+#include "GameRoomData.h"
+#include "InterfaceMPBase.h"
 
 class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {

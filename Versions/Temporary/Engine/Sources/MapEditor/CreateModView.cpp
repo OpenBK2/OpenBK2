@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "CreateModView.h"
-
 #include "Main/MODs.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/StringManager.h"

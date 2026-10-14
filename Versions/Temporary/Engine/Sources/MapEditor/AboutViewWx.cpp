@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
 #include "AboutView.h"
-
 #include "MapEditorLib/BuildDetails.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/WxImage.h"
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/button.h>
 #include <wx/clipbrd.h>

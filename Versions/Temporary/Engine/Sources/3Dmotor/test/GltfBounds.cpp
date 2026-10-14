@@ -1,11 +1,12 @@
 // Stored geometry bounds must survive loading even when a model has different
 // bounds. This exercises the DLL's real XML and binary serializers without a GPU.
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/DBScene.h"
 #include "3Dmotor/GltfFormat.h"
-#include "System/XmlSaver.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
+#include "System/XmlSaver.h"
 
 #include <gtest/gtest.h>
 

@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "scriptPtr.h"
+
+#include "Misc/StrProc.h"
+#include "Script/lstate.h"
 #include "scriptCallLUA.h"
 #include "scriptCommon.h"
-#include "Script/lstate.h"
+#include "scriptPtr.h"
 #include "System/RandomGen.h"
-#include "Misc/StrProc.h"
 
 #include <cinttypes>
-
 #include <cstdarg>
 
 //

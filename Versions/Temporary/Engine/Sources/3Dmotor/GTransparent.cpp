@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "GRenderModes.h"
-#include "GTransparent.h"
-#include "3DLib/Transform.h"
-#include "GfxUtils.h"
-#include "GSceneParticles.h"
-#include "GfxEffects.h"
-#include "RadixSort.h"
-#include "GCombiner.h"
+
 #include "3DLib/GGeometry.h"
+#include "3DLib/Transform.h"
+#include "GCombiner.h"
+#include "GfxEffects.h"
+#include "GfxUtils.h"
 #include "GRenderExecute.h"
+#include "GRenderModes.h"
+#include "GSceneParticles.h"
+#include "GTransparent.h"
+#include "RadixSort.h"
 
 #include <algorithm>
 #include <cstdint>

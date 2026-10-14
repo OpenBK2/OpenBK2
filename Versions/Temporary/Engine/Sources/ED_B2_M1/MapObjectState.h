@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Misc/2Darray.h"
-#include <fmt/format.h>
-#include "Stats_B2_M1/IconsSet.h"
+#include "EditorScene.h"
 #include "libdb/Manipulator.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/MultiInputState.h"
 #include "MapInfoStoreInputState.h"
+#include "Misc/2Darray.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "Tools_SceneDraw.h"
-#include "EditorScene.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 namespace NMapInfoEditor

@@ -2,9 +2,9 @@
 
 #include "Logger.h"
 
-#include <fmt/format.h>
-
 #include "libdb_export.h"
+
+#include <fmt/format.h>
 
 LIBDB_EXPORT CLogger theLogger;
 

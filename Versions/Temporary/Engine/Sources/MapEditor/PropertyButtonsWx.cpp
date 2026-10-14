@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "PropertyButtons.h"
-
 #include "MapEditorLib/WxColourDialog.h"
+#include "PropertyButtons.h"
 
 namespace NPropertyButton
 {

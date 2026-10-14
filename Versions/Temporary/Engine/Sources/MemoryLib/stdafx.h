@@ -11,6 +11,12 @@
 #endif
 
 // normal stdafx.h
+// The order of these includes is load-bearing and is not sorted. These are
+// hub headers that do not all include what they use: Streams.h declares
+// CMemoryStream, which BinSaver.h names without including it, so swapping
+// the two stops the module compiling. Until the headers carry their own
+// dependencies, this list stays in the order somebody worked out.
+// clang-format off
 #include <boost/predef.h>
 
 #if BOOST_OS_WINDOWS
@@ -22,6 +28,7 @@
 
 #include "port/debugging.h"
 #include "port/messagebox.h"
+// clang-format on
 
 #ifdef _DEBUG
 #ifdef FAST_DEBUG

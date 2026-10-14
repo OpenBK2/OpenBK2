@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "DebugTools/DebugInfoManager.h"
 #include "MOEntrenchment.h"
 #include "SceneB2/TerraGen.h"
-#include "DebugTools/DebugInfoManager.h"
 
 #include <cstdint>
 

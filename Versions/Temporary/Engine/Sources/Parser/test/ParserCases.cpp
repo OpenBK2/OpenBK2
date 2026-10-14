@@ -29,10 +29,10 @@
 // LangNode.h names CObjectBase without including it, expecting Parser's
 // stdafx.h to have got there first. This is the part of that prelude it needs.
 #include "Misc/Asserts.h"
-#include "System/System.h"
 #include "Misc/Tools.h"
-#include "System/Basic.h"
 #include "Parser/LangNode.h"
+#include "System/Basic.h"
+#include "System/System.h"
 
 #include <gtest/gtest.h>
 

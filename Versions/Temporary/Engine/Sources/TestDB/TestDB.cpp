@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "TestDB.h"
 
 namespace NTestDB

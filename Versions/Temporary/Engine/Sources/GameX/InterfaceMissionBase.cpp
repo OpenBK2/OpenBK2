@@ -1,22 +1,19 @@
 #include "stdafx.h"
 
+#include "AILogic/B2AI.h"
+#include "GetConsts.h"
+#include "InterfaceMissionBase.h"
+#include "Misc/2Darray.h"
+#include "port/time.h"
+#include "ScenarioTracker.h"
+#include "Sound/MusicSystem.h"
+#include "Sound/SoundScene.h"
+#include "Stats_B2_M1/DBCameraConsts.h"
+#include "Stats_B2_M1/DBClientConsts.h"
+#include "Transceiver.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/DBClientConsts.h"
-#include "Stats_B2_M1/DBCameraConsts.h"
-#include "InterfaceMissionBase.h"
 #include "WorldClient.h"
-
-#include "AILogic/B2AI.h"
-#include "Transceiver.h"
-
-#include "Sound/SoundScene.h"
-#include "Sound/MusicSystem.h"
-#include "GetConsts.h"
-#include "ScenarioTracker.h"
-
-#include "port/time.h"
 
 #include "GameX_export.h"
 

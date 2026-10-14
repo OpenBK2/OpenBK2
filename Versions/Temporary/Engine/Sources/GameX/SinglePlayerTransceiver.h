@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Transceiver.h"
 #include "Main/CommandsHistory.hpp"
+#include "Transceiver.h"
 
 struct ICommandsHistory;
 struct IAILogic;

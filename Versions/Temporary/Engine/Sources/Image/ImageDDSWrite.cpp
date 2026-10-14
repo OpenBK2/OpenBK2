@@ -1,24 +1,20 @@
 #include "stdafx.h"
 
-#include "ImageDDS.h"
-
+#include "3Dmotor/GPixelFormat.h"
 #include "DDS.h"
-#include "ImageInternal.h"  // SPixelConvertInfo
 #include "ImageConvertor.h" // Convert, between packed ARGB and CVec4
-#include "ImageMip.h"       // GenerateMipLevel, GenerateNormals
+#include "ImageDDS.h"
+#include "ImageInternal.h" // SPixelConvertInfo
+#include "ImageMip.h"      // GenerateMipLevel, GenerateNormals
 #include "ImageScale.h"
-
 #include "System/FilePath.h"
 #include "System/Streams.h"
-
-#include "3Dmotor/GPixelFormat.h"
-
-#include <squish/squish.h>
 
 #include <cstdint>
 #include <vector>
 
 #include <fmt/format.h>
+#include <squish/squish.h>
 
 using namespace NGfx;
 

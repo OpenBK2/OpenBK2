@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "ExecutorUnitCombatBonus.h"
-#include "UnitStates.h"
 #include "Guns.h"
+#include "UnitStates.h"
 
 #include <cstdint>
 

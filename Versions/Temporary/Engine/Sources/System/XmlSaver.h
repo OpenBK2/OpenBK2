@@ -1,20 +1,19 @@
 #pragma once
 
-#include "System_export.h"
-
 #include "BinSaver.h"
+
+#include "System_export.h"
 // NDb::GetObject, which AddInternal for CDBPtr calls. Every engine TU had it
 // through its stdafx.h; GCC resolves the name when it parses the template, so
 // a TU without that prelude (XmlSaverObjectIDs_test) failed to compile there.
 #include "DB.h"
-#include "XmlResource.h"
-
+#include "Misc/Geom.h" // CVec2, CVec3, CVec4, CQuat, CTPoint, CTRect
 #include "port/cdecl.h"
+#include "XmlResource.h"
 
 #include <map>
 
 #include <boost/uuid/uuid.hpp>
-#include "Misc/Geom.h" // CVec2, CVec3, CVec4, CQuat, CTPoint, CTRect
 
 template <class T>
 class CArray2D;

@@ -1,17 +1,18 @@
 #include "ED_B2_M1/stdafx.h"
-#include "MapEditorLib/BuilderFactory.h"
-#include "MapEditorLib/Interface_Builder.h"
-#include "MapEditorLib/Interface_MOD.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditor/CommandHandlerContainer.h"
-#include "MapEditor/FolderCallback.h"
-#include "MapEditor/ViewContainer.h"
-#include "Stats_B2_M1/ActionCommand.h"
-#include "Stats_B2_M1/ActionsRemap.h"
+
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditor/CommandHandlerContainer.h"
+#include "MapEditor/FolderCallback.h"
+#include "MapEditor/ViewContainer.h"
+#include "MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/Interface_Builder.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Stats_B2_M1/ActionCommand.h"
+#include "Stats_B2_M1/ActionsRemap.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
@@ -20,6 +21,7 @@
 #include <filesystem>
 #include <fstream>
 #include <utility>
+
 #include <gtest/gtest.h>
 
 namespace

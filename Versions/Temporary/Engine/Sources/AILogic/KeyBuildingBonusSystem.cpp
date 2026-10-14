@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "KeyBuildingBonusSystem.h"
+
 #include "Diplomacy.h"
-#include "PlayerReinforcement.h"
-#include "NewUpdater.h"
+#include "KeyBuildingBonusSystem.h"
 #include "LinkObject.h"
+#include "NewUpdater.h"
+#include "PlayerReinforcement.h"
 #include "ScenarioTracker.h"
 
 #include <fmt/format.h>

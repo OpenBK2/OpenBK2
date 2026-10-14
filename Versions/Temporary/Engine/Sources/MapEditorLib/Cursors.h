@@ -1,8 +1,8 @@
 #pragma once
 
-#include "MapEditorLib_export.h"
-
 #include "Misc/Geom.h"
+
+#include "MapEditorLib_export.h"
 
 // The mouse cursor's shape, for the editor states that change it while they
 // work.

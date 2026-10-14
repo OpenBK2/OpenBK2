@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "Fader.h"
+
 #include "3DLib/ExpFader.h"
+#include "Fader.h"
 
 namespace NGScene
 {

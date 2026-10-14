@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Stats_B2_M1_export.h"
-
 #include "RPGStats.h"
+
+#include "Stats_B2_M1_export.h"
 
 STATS_B2_M1_EXPORT NDb::EUnitSpecialAbility GetAbilityByCommand( EActionCommand actionCommand );
 STATS_B2_M1_EXPORT EActionCommand GetCommandByAbility( NDb::EUnitSpecialAbility specialAbility );

@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "GParticleInfo.h"
-#include "GParticleFormat.h"
+
 #include "GfxBuffers.h"
 #include "GParticleFilter.h"
+#include "GParticleFormat.h"
+#include "GParticleInfo.h"
 
 #include <cstdint>
 

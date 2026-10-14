@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "PathFractionArc3D.h"
+
 #include "DebugTools/DebugInfoManager.h"
+#include "PathFractionArc3D.h"
 
 #include "AILogic_export.h"
 

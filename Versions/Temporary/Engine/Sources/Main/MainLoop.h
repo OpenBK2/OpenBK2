@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Main_export.h"
 #include "Misc/Progress.h" // IProgressHook, which Serialize() below takes
+
+#include "Main_export.h"
 
 // ************************************************************************************************************************ //
 // **

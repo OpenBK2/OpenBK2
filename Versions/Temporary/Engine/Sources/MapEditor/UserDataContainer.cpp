@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "ResourceDefines.h"
 
-#include "UserDataContainer.h"
 #include "Main/MainLoop.h"
-#include "System/FilePath.h"
 #include "Misc/StrProc.h"
+#include "ResourceDefines.h"
+#include "System/FilePath.h"
+#include "UserDataContainer.h"
 
 #define START_FOLDER_TOKEN "%START%\\"
 

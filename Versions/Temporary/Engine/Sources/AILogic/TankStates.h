@@ -1,10 +1,10 @@
 #pragma once
 
-#include "StatesFactory.h"
-#include "UnitStates.h"
 #include "AIUnit.h"
+#include "StatesFactory.h"
 #include "Stats_B2_M1/StatusUpdates.h"
 #include "StatusUpdatesHelper.h"
+#include "UnitStates.h"
 
 class CTankStatesFactory : public IStatesFactory
 {

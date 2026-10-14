@@ -1,27 +1,26 @@
 #include "stdafx.h"
-#include "MapEditorLib/Cursors.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <fmt/printf.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "SceneB2/Scene.h"
-#include "MapObjectState.h"
-#include "ResourceDefines.h"
 
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Cursors.h"
 #include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "MapEditorLib/WxKeyState.h"
+#include "MapInfoEditor.h"
 #include "MapObjectMultiState.h"
 #include "MapObjectState.h"
-#include "MapInfoEditor.h"
-#include "port/vkcodes.h"
+#include "Misc/2Darray.h"
 #include "port/mousekeys.h"
-#include "MapEditorLib/WxKeyState.h"
+#include "port/vkcodes.h"
+#include "ResourceDefines.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 
+#include <fmt/printf.h>
 #include <zconf.h>
 
 const uint32_t CMapObjectState::SELECTION_LINE_COLOR = 0xFF00FF00;

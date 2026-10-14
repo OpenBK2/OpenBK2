@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "Stats_B2_M1/Actions.h"
-#include "MountedGun.h"
-#include "Turret.h"
 #include "Building.h"
+#include "MountedGun.h"
+#include "Stats_B2_M1/Actions.h"
+#include "Turret.h"
 
 #include "AILogic_export.h"
 

@@ -1,8 +1,8 @@
 #pragma once
-#include "System/Dg.h"
-#include "Misc/2Darray.h"
-#include "GPixelFormat.h"
 #include "GLightmapLoader.h"
+#include "GPixelFormat.h"
+#include "Misc/2Darray.h"
+#include "System/Dg.h"
 
 namespace NGfx
 {

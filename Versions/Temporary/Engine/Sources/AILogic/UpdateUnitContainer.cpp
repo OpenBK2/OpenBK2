@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "UpdateUnitContainer.h"
 
 void CUpdateUnitContainer::Init( const float fMaxRadius )

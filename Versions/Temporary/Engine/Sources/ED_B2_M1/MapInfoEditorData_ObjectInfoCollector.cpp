@@ -1,15 +1,16 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-#include <fmt/format.h>
-#include "ResourceDefines.h"
-#include "CommandHandlerDefines.h"
 
-#include "MapInfoEditorData_ObjectInfoCollector.h"
-#include "MapInfoEditor.h"
-#include "MapEditorLib/Tools_HashSet.h"
+#include "CommandHandlerDefines.h"
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "MapInfoEditor.h"
+#include "MapInfoEditorData_ObjectInfoCollector.h"
+#include "ResourceDefines.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 namespace NMapInfoEditor
 {

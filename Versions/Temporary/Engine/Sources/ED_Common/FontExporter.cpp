@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "FontExporter.h"
-
-#include "MapEditorLib/ExporterFactory.h"
 #include "libdb/ResourceManager.h"
-#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/CommonExporterMethods.h"
+#include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
 #include "Misc/StrProc.h"
+#include "port/process.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-#include "MapEditorLib/CommonExporterMethods.h"
 
 #include <cstdint>
-#include "port/process.h"
+
+#include <fmt/format.h>
 
 REGISTER_EXPORTER_IN_DLL( Font, CFontExporter )
 

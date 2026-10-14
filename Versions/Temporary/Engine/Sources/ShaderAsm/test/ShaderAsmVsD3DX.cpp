@@ -20,8 +20,7 @@
 // installed, which includes the CI runners: the SDK there is only its headers
 // and libraries.
 
-#include <windows.h>
-#include <d3dx9.h>
+#include "ShaderAsm.h"
 
 #include <cstdint>
 #include <cstdio>
@@ -29,9 +28,9 @@
 #include <string>
 #include <vector>
 
-#include "ShaderAsm.h"
-
+#include <d3dx9.h>
 #include <gtest/gtest.h>
+#include <windows.h>
 
 namespace
 {

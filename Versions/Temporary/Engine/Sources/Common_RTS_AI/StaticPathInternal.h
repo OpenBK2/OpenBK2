@@ -2,8 +2,8 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "StaticPath.h"
 #include "DebugTools/DebugInfoManager.h"
+#include "StaticPath.h"
 
 class CAIMap;
 

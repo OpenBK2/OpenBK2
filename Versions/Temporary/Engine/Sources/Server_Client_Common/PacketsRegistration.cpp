@@ -2,8 +2,8 @@
 
 #include "CommonPackets.h"
 #include "CustomLobbyPackets.h"
-#include "LadderLobbyPackets.h"
 #include "GamePackets.h"
+#include "LadderLobbyPackets.h"
 #include "LoginPackets.h"
 #include "ZipPacket.h"
 

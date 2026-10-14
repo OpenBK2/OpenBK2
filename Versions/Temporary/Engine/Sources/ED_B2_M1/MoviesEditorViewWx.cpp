@@ -1,28 +1,26 @@
 #include "stdafx.h"
+
+#include "CommandHandlerDefines.h"
 #include "MapEditorLib/BusyCursor.h"
-#include "MapEditorLib/WxResourceImages.h"
-
-#include "MoviesEditorView.h"
-
-#include <fmt/format.h>
-
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/ResourceDefines.h"
-#include "ResourceDefines.h"
 #include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxResourceImages.h"
 #include "MovieDialogs.h"
 #include "MoviesEditorData.h"
+#include "MoviesEditorView.h"
+#include "ResourceDefines.h"
 #include "SceneB2/CameraScriptMutators.h"
-#include "CommandHandlerDefines.h"
 #include "TimeSliderData.h"
 
+#include <fmt/format.h>
 #include <wx/bmpbuttn.h>
-#include <wx/combobox.h>
 #include <wx/choice.h>
+#include <wx/combobox.h>
 #include <wx/dcbuffer.h>
 #include <wx/menu.h>
 #include <wx/panel.h>
@@ -30,8 +28,8 @@
 #include <wx/slider.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/timer.h>
 #include <wx/tglbtn.h>
+#include <wx/timer.h>
 
 // The script movies editor in wx: the timeline, the transport, and the mouse
 // editing over the timeline.

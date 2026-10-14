@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "AnimUnitMech.h"
 #include "AIUnit.h"
+#include "AnimUnitMech.h"
 #include "NewUpdater.h"
 
 #include "AILogic_export.h"

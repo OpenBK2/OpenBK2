@@ -1,17 +1,16 @@
 #include "stdafx.h"
 
-#include "InternalPackets.h"
-#include "TestClientProcessor.h"
 #include "Client/ServerClient.h"
+#include "InternalPackets.h"
 #include "Misc/StrProc.h"
+#include "port/time.h"
+#include "Server_Client_Common/ChatPackets.h"
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/CustomLobbyPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/LadderLobbyPackets.h"
 #include "Server_Client_Common/LoginPackets.h"
-#include "Server_Client_Common/ChatPackets.h"
-
-#include "port/time.h"
+#include "TestClientProcessor.h"
 
 #include <cstdint>
 

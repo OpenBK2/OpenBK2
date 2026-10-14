@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Window.h"
 #include "GBinkPlayer.h"
 #include "System/Dg.h"
+#include "Window.h"
 
 #include <cstdint>
 

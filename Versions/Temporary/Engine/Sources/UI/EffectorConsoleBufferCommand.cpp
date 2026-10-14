@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "EffectorConsoleBufferCommand.h"
 
 #include <fmt/format.h>

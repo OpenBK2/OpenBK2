@@ -1,8 +1,8 @@
 #pragma once
 
+#include "MapEditorLib/BuildDataBuilder.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "Stats_B2_M1/Season.h"
-#include "MapEditorLib/BuildDataBuilder.h"
 
 #include <cstdint>
 

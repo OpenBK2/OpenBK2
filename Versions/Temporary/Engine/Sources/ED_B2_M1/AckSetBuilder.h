@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/BuildDataBuilder.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>
 

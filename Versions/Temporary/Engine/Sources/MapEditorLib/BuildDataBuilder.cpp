@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "BuildDataBuilder.h"
-
 #include "Interface_UserData.h"
 #include "libdb/ResourceManager.h"
 #include "Tools_HashSet.h"

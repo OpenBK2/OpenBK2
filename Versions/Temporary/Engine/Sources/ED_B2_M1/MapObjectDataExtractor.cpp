@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "MapObjectDataExtractor.h"
 #include "MapEditorLib/ManipulatorManager.h"
-#include "System/Text.h"
+#include "MapObjectDataExtractor.h"
 #include "Misc/StrProc.h"
+#include "System/Text.h"
 
 #include <cstdint>
 

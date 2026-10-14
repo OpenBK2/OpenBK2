@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GMesh.h"
+
 #include "3DLib/Bound.h"
+#include "GMesh.h"
 
 #include "3Dmotor_export.h"
 

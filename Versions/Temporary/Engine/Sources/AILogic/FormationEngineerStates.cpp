@@ -1,38 +1,37 @@
 #include "stdafx.h"
 
-#include <float.h>
-
-#include "FormationStates.h"
-#include "Formation.h"
-#include "Commands.h"
-#include "Guns.h"
-#include "GroupLogic.h"
-#include "NewUpdater.h"
-#include "Technics.h"
+#include "Artillery.h"
+#include "ArtilleryPaths.h"
+#include "Bridge.h"
 #include "BridgeCreation.h"
 #include "Building.h"
-#include "Artillery.h"
-#include "Turret.h"
-#include "Soldier.h"
-#include "PathFinder.h"
-#include "UnitsIterators2.h"
-#include "UnitCreation.h"
-#include "ArtilleryPaths.h"
-#include "ObstacleInternal.h"
-#include "Bridge.h"
-#include "General.h"
-#include "Statistics.h"
-#include "Common_RTS_AI/StaticMapHeights.h"
+#include "Commands.h"
 #include "Common_RTS_AI/PathFinder.h"
 #include "Common_RTS_AI/StandartDirPath.h"
-#include "FeedbackSystem.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "EntrenchmentCreation.h"
+#include "FeedbackSystem.h"
+#include "Formation.h"
+#include "FormationStates.h"
+#include "General.h"
+#include "GroupLogic.h"
+#include "Guns.h"
+#include "NewUpdater.h"
+#include "ObstacleInternal.h"
+#include "PathFinder.h"
+#include "Soldier.h"
+#include "Statistics.h"
+#include "Technics.h"
+#include "Turret.h"
+#include "UnitCreation.h"
+#include "UnitsIterators2.h"
 
 #include "AILogic_export.h"
 
 #include <algorithm>
 #include <cstdint>
 
+#include <float.h>
 #include <fmt/format.h>
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D474, CFormationRepairUnitState );

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "AllAnimationsPlayer.h"
-#include "MapObj.h"
 #include "Main/GameTimer.h"
+#include "MapObj.h"
 
 CAllAnimationsPlayer::CAllAnimationsPlayer( const std::unordered_map<int, CObj<CMapObj>> &_objects )
 	: objects( _objects )

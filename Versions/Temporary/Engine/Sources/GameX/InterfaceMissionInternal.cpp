@@ -1,66 +1,57 @@
 #include "stdafx.h"
 
-#include <thread>
-#include <chrono>
+#include "AICmdsAutoMagic.h"
+#include "AILogic/B2AI.h"
+#include "GameXClassIDs.h"
+#include "InterfaceMisc.h"
+#include "InterfaceMissionInternal.h"
+#include "InterfaceState.h"
+#include "Misc/StrProc.h"
+#include "ScenarioTracker.h"
+#include "Stats_B2_M1/ActionsRemap.h"
+#include "Stats_B2_M1/DBCameraConsts.h"
+#include "Stats_B2_M1/DBClientConsts.h"
+#include "Stats_B2_M1/RPGStatsAutomagic.h"
+#include "Transceiver.h"
+#include "UI/UI.h"
+#include "WorldClient.h"
 
 #include "MemoryLib_export.h"
 
-#include "UI/UI.h"
-#include "Misc/StrProc.h"
-#include "Stats_B2_M1/RPGStatsAutomagic.h"
-#include "Stats_B2_M1/DBClientConsts.h"
-#include "InterfaceMissionInternal.h"
-#include "InterfaceMisc.h"
-
-#include "WorldClient.h"
-#include "GameXClassIDs.h"
-#include "Stats_B2_M1/ActionsRemap.h"
-#include "ScenarioTracker.h"
-#include "Stats_B2_M1/DBCameraConsts.h"
-#include "AICmdsAutoMagic.h"
-#include "InterfaceState.h"
-
-#include "AILogic/B2AI.h"
-#include "Transceiver.h"
+#include <chrono>
+#include <thread>
 // CCommandsHistory, for save_replay: the cast to it needs the complete type,
 // and SaveReplay is on the concrete class rather than on ICommandsHistory.
-#include "CommandsHistory.h"
-#include "SceneB2/Cursor.h"
-#include "Sound/SoundScene.h"
-#include "Sound/MusicSystem.h"
-#include "System/Commands.h"
-#include "UI/SceneClassIDs.h"
-#include "UISpecificB2/DBUISpecificB2.h"
-#include "UI/Window.h"
-
-#include "SceneB2/WindController.h"
-#include "SceneB2/FullScreenFader.h"
-
-#include "Main/MainLoopCommands.h"
+#include "3Dmotor/FrameTransition.h"
 #include "3Dmotor/LoadingCounter.h"
+#include "B2_M1_World/ClientAckManager.h"
+#include "CommandsHistory.h"
+#include "DBGameRoot.h"
+#include "DBMPConsts.h"
+#include "GetConsts.h"
+#include "InterfaceMPLoading.h"
 #include "InterfaceNotifications.h"
-#include "MultiplayerCommandManager.h"
+#include "libdb/Db.h"
+#include "Main/MainLoopCommands.h"
+#include "Misc/Win32Random.h"
 #include "MissionReinforcements.h"
 #include "MissionUnitFullInfo.h"
-#include "SceneB2/StatSystem.h"
-#include "SaveLoadHelper.h"
-#include "System/FileUtils.h"
-#include "InterfaceMPLoading.h"
-#include "GetConsts.h"
-#include "DBMPConsts.h"
-
-#include "3Dmotor/FrameTransition.h"
-#include "libdb/Db.h"
-#include "System/Text.h"
-#include "SuperWeapon.hpp"
-#include "GetConsts.h"
-#include "DBGameRoot.h"
-#include "Misc/Win32Random.h"
-#include "System/Text.h"
-
-#include "B2_M1_World/ClientAckManager.h"
-
+#include "MultiplayerCommandManager.h"
 #include "port/time.h"
+#include "SaveLoadHelper.h"
+#include "SceneB2/Cursor.h"
+#include "SceneB2/FullScreenFader.h"
+#include "SceneB2/StatSystem.h"
+#include "SceneB2/WindController.h"
+#include "Sound/MusicSystem.h"
+#include "Sound/SoundScene.h"
+#include "SuperWeapon.hpp"
+#include "System/Commands.h"
+#include "System/FileUtils.h"
+#include "System/Text.h"
+#include "UI/SceneClassIDs.h"
+#include "UI/Window.h"
+#include "UISpecificB2/DBUISpecificB2.h"
 
 #include "GameX_export.h"
 
@@ -5038,10 +5029,10 @@ void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &pa
 	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
 }
 #ifndef _FINALRELEASE
-#include "System/CheckSumLog.h"
-#include "GameX/SaveLoadHelper.h"
 #include "Common_RTS_AI/Checksums.h"
+#include "GameX/SaveLoadHelper.h"
 #include "Main/Profiles.h"
+#include "System/CheckSumLog.h"
 
 #include <zlib.h>
 

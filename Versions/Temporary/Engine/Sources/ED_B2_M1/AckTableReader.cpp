@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "AckTableReader.h"
 
+#include "AckTableReader.h"
 #include "MapEditorLib/MessageBoxes.h"
 #include "Misc/StrProc.h"
 

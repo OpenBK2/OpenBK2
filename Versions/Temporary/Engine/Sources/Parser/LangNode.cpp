@@ -2,8 +2,8 @@
 
 #include "ErrorsAndMessages.h"
 #include "LangNode.h"
-#include "StringNumbers.h"
 #include "Misc/StrProc.h"
+#include "StringNumbers.h"
 
 #include <fmt/format.h>
 

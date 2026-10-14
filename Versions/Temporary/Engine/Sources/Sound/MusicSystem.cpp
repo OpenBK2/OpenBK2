@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "MusicSystem.hpp"
-#include "DBMusicSystem.h"
 
+#include "DBMusicSystem.h"
+#include "MusicSystem.hpp"
 #include "PlayList.h"
-#include "Track.h"
 #include "System/Commands.h"
 #include "System/VFSOperations.h"
+#include "Track.h"
 
 float s_fMusicVolume;
 

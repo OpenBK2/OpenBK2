@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "GRenderFactor.h"
+
 #include "GfxBuffers.h"
 #include "GfxEffects.h"
+#include "GRenderFactor.h"
 #include "Misc/2Darray.h"
 
 namespace NGScene

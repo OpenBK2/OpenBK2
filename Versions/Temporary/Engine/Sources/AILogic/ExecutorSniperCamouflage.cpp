@@ -1,8 +1,9 @@
 #include "stdafx.h"
+
 #include "ExecutorSniperCamouflage.h"
+#include "NewUpdater.h"
 #include "Soldier.h"
 #include "UnitsIterators2.h"
-#include "NewUpdater.h"
 
 #include "AILogic_export.h"
 

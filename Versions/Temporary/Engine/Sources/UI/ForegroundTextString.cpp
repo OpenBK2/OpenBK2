@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "ForegroundTextString.h"
 
-#include "UIVisitor.h"
-#include "UIML.h"
-#include "Tools.h"
+#include "ForegroundTextString.h"
 #include "System/Text.h"
+#include "Tools.h"
+#include "UIML.h"
+#include "UIVisitor.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B43, CForegroundTextString )
 REGISTER_SAVELOAD_CLASS( UI, 0x1715A340, CPlacedText )

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "ExecutorStaticObjectSegment.h"
 #include "StaticObject.h"
 

@@ -1,10 +1,11 @@
 #include "stdafx.h"
+
 #include "InterfaceChapterMapMenuDialogs.h"
-#include "Stats_B2_M1/RPGStats.h"
+#include "InterfaceState.h"
 #include "Misc/StrProc.h"
 #include "ScenarioTracker.h"
 #include "Stats_B2_M1/DBMapInfo.h"
-#include "InterfaceState.h"
+#include "Stats_B2_M1/RPGStats.h"
 #include "System/Text.h"
 
 #include "GameX_export.h"

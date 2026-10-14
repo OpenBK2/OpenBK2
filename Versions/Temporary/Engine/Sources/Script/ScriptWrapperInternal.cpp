@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "ScriptWrapperInternal.h"
 #include "System/VFSOperations.h"
 

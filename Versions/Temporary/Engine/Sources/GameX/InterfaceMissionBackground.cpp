@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "InterfaceMissionBackground.h"
-#include "GameXClassIDs.h"
-#include "InterfaceState.h"
-#include "DBGameRoot.h"
-#include "Transceiver.h"
+
 #include "AILogic/B2AI.h"
-#include "Sound/SFX.h"
+#include "DBGameRoot.h"
+#include "GameXClassIDs.h"
+#include "InterfaceMissionBackground.h"
+#include "InterfaceState.h"
+#include "Misc/StrProc.h"
 #include "ScenarioTracker.h"
 #include "SceneB2/Camera.h"
-#include "Misc/StrProc.h"
+#include "Sound/SFX.h"
+#include "Transceiver.h"
 
 #include "GameX_export.h"
 

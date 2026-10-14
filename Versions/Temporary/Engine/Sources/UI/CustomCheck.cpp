@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+
 #include "CustomCheck.h"
 #include "Script/ScriptWrapper.h"
 

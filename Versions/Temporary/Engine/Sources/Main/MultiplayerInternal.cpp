@@ -1,16 +1,15 @@
 #include "stdafx.h"
 
-#include "Net/NetAddress.h"
-#include "MultiplayerInternal.h"
-#include "NetMessages.h"
-#include "DBNetConsts.h"
-
-#include "Net/NetDriver.h"
 #include "AICmdsAutoMagicInterface.h"
-
-#include <float.h>
+#include "DBNetConsts.h"
+#include "MultiplayerInternal.h"
+#include "Net/NetAddress.h"
+#include "Net/NetDriver.h"
+#include "NetMessages.h"
 
 #include <cstdint>
+
+#include <float.h>
 
 const int nNetTimeout = 60; // As in SNetDriverConsts default constructor.
 //const int nNetTimeout = 300;

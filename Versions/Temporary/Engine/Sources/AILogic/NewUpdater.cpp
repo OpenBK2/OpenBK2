@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
+#include "3Dmotor/DBScene.h"
+#include "Artillery.h"
+#include "Cheats.h"
 #include "Diplomacy.h"
 #include "Formation.h"
-#include "NewUpdater.h"
-#include "Cheats.h"
-#include "Stats_B2_M1/AnimationFromAction.h"
-#include "3Dmotor/DBScene.h"
 #include "GroupLogic.h"
-#include "Artillery.h"
+#include "NewUpdater.h"
 #include "Soldier.h"
+#include "Stats_B2_M1/AnimationFromAction.h"
 
 #include "AILogic_export.h"
 

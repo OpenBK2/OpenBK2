@@ -1,9 +1,9 @@
 #pragma once
 // GPixelFormat.h and GLightPerVertex.h both use CVec3/CVec4 without including
 // Geom.h themselves, so pull it in first and keep this header self-sufficient.
-#include "Misc/Geom.h"
-#include "GPixelFormat.h"
 #include "GLightPerVertex.h"
+#include "GPixelFormat.h"
+#include "Misc/Geom.h"
 
 #include <cstdint>
 

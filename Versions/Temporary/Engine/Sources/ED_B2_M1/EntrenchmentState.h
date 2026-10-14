@@ -1,10 +1,11 @@
 #pragma once
 
-#include "SimpleObjectState.h"
-#include <fmt/format.h>
 #include "EntrenchmentInfoData.h"
+#include "SimpleObjectState.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 //
 //

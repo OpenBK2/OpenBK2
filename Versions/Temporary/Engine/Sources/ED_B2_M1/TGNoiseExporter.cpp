@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-
-#include "TGNoiseExporter.h"
 
 #include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
 #include "System/FileUtils.h"
+#include "TGNoiseExporter.h"
+
+#include <fmt/format.h>
 
 REGISTER_EXPORTER_IN_DLL( TGNoise, CTGNoiseExporter )
 

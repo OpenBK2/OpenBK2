@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "Mine.h"
-#include "StaticObjects.h"
-#include "Shell.h"
-#include "NewUpdater.h"
-#include "UnitsIterators2.h"
 #include "AIUnit.h"
 #include "Cheats.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "FeedbackSystem.h"
+#include "Mine.h"
+#include "NewUpdater.h"
+#include "Shell.h"
+#include "StaticObjects.h"
+#include "UnitsIterators2.h"
 
 #include "AILogic_export.h"
 

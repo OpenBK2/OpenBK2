@@ -1,15 +1,15 @@
 #include "stdafx.h"
 
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
 #include "DeadHouseAnimations.h"
+#include "Misc/2Darray.h"
 #include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include "B2_M1_World_export.h"
 
-#include <zconf.h>
-
 #include <algorithm>
+
+#include <zconf.h>
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x3116C300, CDeadHouseAnimations );
 

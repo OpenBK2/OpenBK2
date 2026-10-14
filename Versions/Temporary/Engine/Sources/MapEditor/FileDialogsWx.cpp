@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "FileDialogs.h"
-
 #include "MapEditorLib/WxWidget.h"
 
 #include <wx/dirdlg.h>

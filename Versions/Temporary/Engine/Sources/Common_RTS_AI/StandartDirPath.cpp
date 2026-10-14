@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "StandartDirPath.h"
-
 #include "Misc/Bresenham.h"
+#include "StandartDirPath.h"
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x31114C82, CStandartDirPath );
 

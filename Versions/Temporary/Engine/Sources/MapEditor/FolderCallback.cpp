@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "libdb/ResourceManager.h"
+#include "FolderCallback.h"
 #include "libdb/Db.h"
-#include "MapEditorLib/Tools_HashSet.h"
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/FolderController.h"
 #include "MapEditorLib/Interface_Logger.h"
-#include "FolderCallback.h"
+#include "MapEditorLib/Tools_HashSet.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 void CFolderCallback::UndoChanges()
 {

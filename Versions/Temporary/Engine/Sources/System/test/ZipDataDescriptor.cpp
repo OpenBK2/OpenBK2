@@ -12,6 +12,14 @@
 
 // The standard headers the engine's stdafx.h prelude would supply, which the
 // object model's headers rely on without including
+#include "Misc/Asserts.h"
+#include "Misc/Tools.h"
+#include "System/Basic.h"
+#include "System/Streams.h"
+#include "System/System.h"
+#include "System/VFS.h"
+#include "System/WinVFS.h"
+
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -27,17 +35,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include <zlib.h>
-
-#include "Misc/Asserts.h"
-#include "Misc/Tools.h"
-#include "System/System.h"
-#include "System/Basic.h"
-#include "System/Streams.h"
-#include "System/VFS.h"
-#include "System/WinVFS.h"
-
 #include <gtest/gtest.h>
+#include <zlib.h>
 
 namespace
 {

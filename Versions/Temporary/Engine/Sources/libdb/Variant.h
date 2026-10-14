@@ -1,10 +1,10 @@
 #pragma once
 
+#include "libdb_export.h"
+
 #include <cstdint>
 
 #include <boost/uuid/uuid.hpp>
-
-#include "libdb_export.h"
 
 //#include "DBIDDef.h"
 

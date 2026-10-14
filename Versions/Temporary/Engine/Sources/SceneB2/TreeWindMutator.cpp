@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
+#include "Scene.h"
+#include "System/FastMath.h"
 #include "System/Time.h"
 #include "TreeWindMutator.h"
 #include "WindController.h"
-#include "System/FastMath.h"
-#include "Scene.h"
 
 #define TIME_COEFF 1
 

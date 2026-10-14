@@ -2,9 +2,10 @@
 //
 
 #include "stdafx.h"
-#include "WindowMessageHandle.h"
-#include "Window.h"
+
 #include "UIInternal.h"
+#include "Window.h"
+#include "WindowMessageHandle.h"
 //#include "..\Input\Input.h"
 
 // CWindow message handlers

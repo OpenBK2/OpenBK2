@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "RailRoads.h"
 
 SRailRoadSystem theRailRoadSystem;

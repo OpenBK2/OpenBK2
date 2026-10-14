@@ -2,19 +2,18 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "B2_M1_World_export.h"
-
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/ActionCommand.h"
-#include "Stats_B2_M1/SpecialAbilities.h"
-#include "Stats_B2_M1/IconsSet.h"
 #include "B2MapObj.h"
+#include "Misc/2Darray.h"
+#include "Misc/HashFuncs.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/ActionCommand.h"
+#include "Stats_B2_M1/AIUpdates.h"
 #include "Stats_B2_M1/DBVisObj.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "Stats_B2_M1/SpecialAbilities.h"
 #include "UpdatableProcess.h"
 
-#include "SceneB2/Scene.h"
-#include "Stats_B2_M1/AIUpdates.h"
-#include "Misc/HashFuncs.h"
+#include "B2_M1_World_export.h"
 
 #include <cstdint>
 

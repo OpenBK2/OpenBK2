@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 #include "Image_export.h"
+
+#include <cstdint>
 
 namespace NImage
 {

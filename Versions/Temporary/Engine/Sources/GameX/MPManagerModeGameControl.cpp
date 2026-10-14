@@ -1,30 +1,28 @@
 #include "stdafx.h"
 
-#include "MPManagerMode.h"
-#include "InterfaceState.h"
-#include "MPTransceiver.h"
-#include "ScenarioTracker.h"
-#include "Misc/StrProc.h"
 #include "AILogic/B2AI.h"
-#include "Input/Bind.h"
 #include "Client/ServerClientInterface.h"
+#include "CommandsHistory.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
-#include "MultiplayerNetPackets.h"
-#include "MPPacketTraceLog.h"
-#include "SceneB2/Scene.h"
+#include "Input/Bind.h"
+#include "InterfaceState.h"
+#include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
-#include "CommandsHistory.h"
+#include "MPManagerMode.h"
+#include "MPPacketTraceLog.h"
+#include "MPTransceiver.h"
+#include "MultiplayerNetPackets.h"
+#include "port/time.h"
+#include "ScenarioTracker.h"
+#include "SceneB2/Scene.h"
 #include "System/Text.h"
 
-#include <iostream>
 #include <chrono>
-#include <iomanip>
-#include <sstream>
-
-#include "port/time.h"
-
 #include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
 #include <fmt/format.h>
 

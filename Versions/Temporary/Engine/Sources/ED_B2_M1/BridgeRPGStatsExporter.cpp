@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 
-#include "Misc/StrProc.h"
-#include "Misc/2Darray.h"
-#include "libdb/ResourceManager.h"
 #include "BridgeRPGStatsExporter.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
+#include <fmt/printf.h>
 #include <zconf.h>
 
 static const char *AI_GEOMETRY_PREFIX[] = { "mAI", "center", "border" };

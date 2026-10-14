@@ -1,11 +1,10 @@
 #include "stdafx.h"
 
 #include "CreateModView.h"
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>

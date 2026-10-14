@@ -1,48 +1,41 @@
 #include "stdafx.h"
 
-#include <thread>
-#include <chrono>
+#include "GameX/GetConsts.h"
 
 #include "GameX_export.h"
-#include "GameX/GetConsts.h"
+
+#include <chrono>
+#include <thread>
 
 #if USE_MIMALLOC
 // Non-Windows executable-level overrides. Windows links a separate override
 // object into each participating module without redirecting the process CRT.
 #include <mimalloc-new-delete.h>
 #endif
-#include "resource.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-
-#include "Misc/StrProc.h"
-#include "System/FileUtils.h"
-
-#include "Input/Input.h"
-#include "SceneB2/Scene.h"
-#include "SceneB2/Cursor.h"
-#include "System/GResource.h"
-
-#include "Sound/SFX.h"
 #include "3Dmotor/Gfx.h"
-
-#include "Main/Profiles.h"
-#include "WinFrame2Input.h"
-#include "Main/MainLoopCommands.h"
 #include "AILogic/CreateAI.h"
-#include "VersionInfo.h"
+#include "Input/Input.h"
 #include "libdb/Db.h"
-
-#include "System/FilePath.h"
-#include "System/Commands.h"
-
-#include "System/VFSOperations.h"
-
-#include "System/SplashScreen.h"
-#include "port/messagebox.h"
+#include "Main/MainLoopCommands.h"
 #include "Main/MODs.h"
-
+#include "Main/Profiles.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
 #include "port/debugging.h"
+#include "port/messagebox.h"
+#include "resource.h"
+#include "SceneB2/Cursor.h"
+#include "SceneB2/Scene.h"
+#include "Sound/SFX.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "System/Commands.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "System/GResource.h"
+#include "System/SplashScreen.h"
+#include "System/VFSOperations.h"
+#include "VersionInfo.h"
+#include "WinFrame2Input.h"
 
 #include <exception>
 #include <typeinfo>
@@ -62,7 +55,6 @@
 #include "port/crashpad.h"
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 //

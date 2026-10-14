@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include "Statistics.h"
-#include "ScenarioTracker.h"
-#include "NewUpdater.h"
 #include "AILogicInternal.h"
-#include "UnitsIterators.h"
 #include "AIUnit.h"
 #include "DBAIConsts.h"
+#include "NewUpdater.h"
+#include "ScenarioTracker.h"
+#include "Statistics.h"
+#include "UnitsIterators.h"
 
 extern CEventUpdater updater;
 extern CDiplomacy theDipl;

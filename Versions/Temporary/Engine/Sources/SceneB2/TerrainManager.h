@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Terrain.h"
 #include "GenTerrain.h"
+#include "Terrain.h"
 
 #include <cstdint>
 

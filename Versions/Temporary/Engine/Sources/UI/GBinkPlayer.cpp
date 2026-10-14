@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include <thread>
-
 #include "3Dmotor/GfxBuffers.h"
+#include "ffmpeg_facade.h"
 #include "GBinkPlayer.h"
 #include "System/VFSOperations.h"
-#include "ffmpeg_facade.h"
 
 #include <chrono>
 #include <iostream>
+#include <thread>
 
 namespace NGScene
 {

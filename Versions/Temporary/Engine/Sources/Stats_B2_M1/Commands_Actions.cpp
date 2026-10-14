@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Commands_Actions.h"
 #include "libdb/ReportMetaInfo.h"
 

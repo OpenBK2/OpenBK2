@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "Pathfinders.h"
 #include "CommonPathFinder.h"
+#include "Pathfinders.h"
 
 void RegisterPathfinderSingleton()
 {

@@ -1,11 +1,10 @@
 #include "stdafx.h"
 
 #include "FilePath.h"
+#include "Misc/StrProc.h"
 
 #include <filesystem>
 #include <system_error>
-
-#include "Misc/StrProc.h"
 
 #include <boost/config.hpp>
 

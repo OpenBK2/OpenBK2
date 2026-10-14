@@ -1,25 +1,23 @@
 #include "stdafx.h"
 
-#include "InterfaceScreenBase.h"
-
 #include "AILogic/B2AI.h"
+#include "GameXClassIDs.h"
+#include "GetConsts.h"
+#include "InterfaceScreenBase.h"
+#include "InterfaceState.h"
 #include "Misc/StrProc.h"
-#include "Sound/SoundScene.h"
-#include "Sound/MusicSystem.h"
+#include "MultiplayerCommandManager.h"
+#include "ScenarioTracker.h"
 #include "SceneB2/Camera.h"
 #include "SceneB2/Cursor.h"
 #include "SceneB2/Scene.h"
-#include "UI/WindowTextView.h"
-
-#include "UI/SceneClassIDs.h"
-#include "InterfaceState.h"
-#include "GameXClassIDs.h"
-#include "ScenarioTracker.h"
+#include "Sound/MusicSystem.h"
 #include "Sound/SFX.h"
-#include "GetConsts.h"
+#include "Sound/SoundScene.h"
 #include "System/Text.h"
+#include "UI/SceneClassIDs.h"
 #include "UI/UI.h"
-#include "MultiplayerCommandManager.h"
+#include "UI/WindowTextView.h"
 
 #include <algorithm>
 

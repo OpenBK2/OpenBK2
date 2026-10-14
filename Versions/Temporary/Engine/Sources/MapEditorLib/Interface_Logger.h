@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Interface_MainFrame.h"
+
 #include "MapEditorLib_export.h"
 
 namespace NLog

@@ -1,32 +1,31 @@
 #include "stdafx.h"
 
-#include "Misc/Bresenham.h"
-#include "System/Time.h"
-#include <float.h>
-#include "Common_RTS_AI/PathFinder.h"
-#include "TransportStates.h"
-#include "SoldierStates.h"
-#include "ArtilleryStates.h"
-#include "Technics.h"
-#include "GroupLogic.h"
-#include "Commands.h"
-#include "UnitCreation.h"
-#include "NewUpdater.h"
-#include "Building.h"
-#include "Formation.h"
-#include "Soldier.h"
 #include "Artillery.h"
-#include "FormationStates.h"
-#include "TechnicsStates.h"
-#include "PresizePath.h"
-#include "Turret.h"
-#include "Bridge.h"
-#include "Randomize.h"
 #include "ArtilleryBulletStorage.h"
-#include "PathFinder.h"
+#include "ArtilleryStates.h"
+#include "Bridge.h"
+#include "Building.h"
+#include "Commands.h"
+#include "Common_RTS_AI/PathFinder.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 #include "DebugTools/DebugInfoManager.h"
 #include "FeedbackSystem.h"
+#include "Formation.h"
+#include "FormationStates.h"
+#include "GroupLogic.h"
+#include "Misc/Bresenham.h"
+#include "NewUpdater.h"
+#include "PathFinder.h"
+#include "PresizePath.h"
+#include "Randomize.h"
+#include "Soldier.h"
+#include "SoldierStates.h"
+#include "System/Time.h"
+#include "Technics.h"
+#include "TechnicsStates.h"
+#include "TransportStates.h"
+#include "Turret.h"
+#include "UnitCreation.h"
 #include "UnitsIterators2.h"
 
 #include "AILogic_export.h"
@@ -34,6 +33,7 @@
 #include <cstdint>
 #include <map>
 
+#include <float.h>
 #include <fmt/format.h>
 
 //REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4D9, CTransportResupplyHumanResourcesState );

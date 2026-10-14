@@ -1,6 +1,7 @@
 // Exercise the same geometry-map APIs used by click selection and the 64 x 64
 // box-selection grid, with in-memory hulls so no game data or GPU is required.
 #include "3Dmotor/stdafx.h"
+
 #include "3DLib/Bound.h"
 #include "3DLib/MemObject.h"
 #include "3Dmotor/aiMap.h"

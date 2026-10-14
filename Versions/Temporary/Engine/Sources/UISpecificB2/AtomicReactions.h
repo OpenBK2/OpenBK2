@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UI/IMessageReaction.h"
 #include "DBUISpecificB2.h"
+#include "UI/IMessageReaction.h"
 
 #include <cstdint>
 

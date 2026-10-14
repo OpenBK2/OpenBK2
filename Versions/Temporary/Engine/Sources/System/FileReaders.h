@@ -6,11 +6,11 @@
 // CMappedStream, so this header does not stand on its own without it
 #include "Streams.h"
 
-#include <boost/interprocess/file_mapping.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-
 #include <cstdint>
 #include <string>
+
+#include <boost/interprocess/file_mapping.hpp>
+#include <boost/interprocess/mapped_region.hpp>
 
 enum EStreamAccess
 {

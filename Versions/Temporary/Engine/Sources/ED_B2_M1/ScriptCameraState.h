@@ -1,8 +1,8 @@
 #pragma once
 
 #include "MapInfoEditor.h"
-#include "ScriptCameraEditorData.h"
 #include "MoviesEditorData.h"
+#include "ScriptCameraEditorData.h"
 
 #include <cstdint>
 

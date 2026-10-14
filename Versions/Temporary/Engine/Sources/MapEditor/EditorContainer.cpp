@@ -1,18 +1,18 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include <fmt/printf.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
 
-#include "System/Dg.h"
-#include "System/GResource.h"
+#include "ControllerContainer.h"
+#include "EditorContainer.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_Progress.h"
-#include "ControllerContainer.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "System/Dg.h"
+#include "System/GResource.h"
 
-#include "MapEditorLib/EditorFactory.h"
-#include "EditorContainer.h"
+#include <fmt/printf.h>
 
 std::string CEditorContainer::GetBaseObjectType( const std::string &rszExtendObjectTypeName )
 {

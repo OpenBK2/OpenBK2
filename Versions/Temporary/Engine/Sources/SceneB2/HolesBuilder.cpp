@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "GenTerrain.h"
 #include "Misc/Win32Helper.h"
 #include "System/Commands.h"
-#include "GenTerrain.h"
 
 bool g_bDontUpdateRoads = false;
 static bool s_bMakeHolesForEntrenchment = true;

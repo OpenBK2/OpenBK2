@@ -1,41 +1,34 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/ResourceDefines.h"
+#include "AIGeneralState.h"
+#include "CameraPositionState.h"
+#include "EditorScene.h"
+#include "FieldState.h"
+#include "HeightStateV3.h"
+#include "libdb/EditorDb.h"
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
-#include "SceneB2/Scene.h"
-#include "MapEditorLib/ObjectController.h"
-#include "SimpleObjectInfoData.h"
-
-#include "MapEditorLib/PaletteList.h"
-
-#include "MapInfoInterface.h"
-#include "MapInfoState.h"
-
-#include "EditorScene.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_Progress.h"
+#include "MapEditorLib/ObjectController.h"
+#include "MapEditorLib/PaletteList.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/StringManager.h"
-#include "libdb/EditorDb.h"
-
-#include "ScriptAreaState.h"
-#include "CameraPositionState.h"
-#include "UnitStartCmdState.h"
-#include "AIGeneralState.h"
+#include "MapInfoInterface.h"
+#include "MapInfoState.h"
+#include "MapObjectMultiState.h"
+#include "port/wordpack.h"
 #include "ReinfPointsState.h"
+#include "SceneB2/Scene.h"
+#include "ScriptAreaState.h"
 #include "ScriptCameraState.h"
 #include "ScriptPathPointsState.h"
-
-#include "MapObjectMultiState.h"
-
-#include "HeightStateV3.h"
-#include "FieldState.h"
-
+#include "SimpleObjectInfoData.h"
+#include "UnitStartCmdState.h"
 #include "VSOMultiState.h"
 
-#include "libdb/ResourceManager.h"
-#include "port/wordpack.h"
+#include <fmt/format.h>
 
 const unsigned CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] = {
 	IDS_IS_TERRAIN_LABEL,

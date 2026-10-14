@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-#include "3Dmotor/DBScene.h"
-#include "AttachedObj.h"
-#include "VisObjDesc.h"
-#include "3Dmotor/aiVisitor.h"
-#include "3Dmotor/GScene.h"
 #include "3DLib/Transform.h"
+#include "3Dmotor/aiVisitor.h"
+#include "3Dmotor/DBScene.h"
+#include "3Dmotor/GScene.h"
+#include "AttachedObj.h"
 #include "Main/GameTimer.h"
 #include "System/Commands.h"
+#include "VisObjDesc.h"
 #include "VisObjIconsManager.h"
 
 #include <cstdint>

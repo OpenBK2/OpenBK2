@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "AntiArtilleryManager.h"
 #include "AntiArtillery.h"
+#include "AntiArtilleryManager.h"
 #include "Diplomacy.h"
 
 extern CDiplomacy theDipl;

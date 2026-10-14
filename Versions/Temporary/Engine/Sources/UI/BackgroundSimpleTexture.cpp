@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "BackgroundSimpleTexture.h"
-#include "UIVisitor.h"
-#include "Tools.h"
+
 #include "3Dmotor/DBScene.h"
 #include "3Dmotor/RectLayout.h"
+#include "BackgroundSimpleTexture.h"
+#include "Tools.h"
 #include "UIComponents.h"
+#include "UIVisitor.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B41, CBackgroundSimpleTexture )
 

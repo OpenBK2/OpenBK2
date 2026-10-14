@@ -1,13 +1,13 @@
-#include <gtest/gtest.h>
-
 #include "3Dmotor/stdafx.h"
-#include "3Dmotor/GLightPerVertex.cpp"
-// GSSEtransform is one filling nCubicRoot array
-#include "3Dmotor/GSSEtransform.h"
-#include "3Dmotor/GSSEtransform.cpp"
 
-#include "random.h"
+#include "3Dmotor/GLightPerVertex.cpp"
+
+#include <gtest/gtest.h>
+// GSSEtransform is one filling nCubicRoot array
+#include "3Dmotor/GSSEtransform.cpp"
+#include "3Dmotor/GSSEtransform.h"
 #include "original.h"
+#include "random.h"
 
 #include <cstdint>
 

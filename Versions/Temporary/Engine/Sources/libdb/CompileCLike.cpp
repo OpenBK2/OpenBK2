@@ -2,9 +2,9 @@
 
 #include "CompileCLike.h"
 #include "CompileCLikeVisitor.h"
+#include "Parser/ErrorsAndMessages.h"
 #include "TerminalTypesDesc.h"
 #include "TypeDef.h"
-#include "Parser/ErrorsAndMessages.h"
 
 #include <fmt/format.h>
 

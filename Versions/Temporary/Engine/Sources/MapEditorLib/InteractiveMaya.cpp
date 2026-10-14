@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include <algorithm>
+
+#include <fmt/format.h>
 
 //#include "../MapEditorLib/Interface_Logger.h"
 #include "InteractiveMaya.h"

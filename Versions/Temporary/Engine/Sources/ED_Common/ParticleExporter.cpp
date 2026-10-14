@@ -1,22 +1,21 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <boost/uuid/uuid.hpp>
 
-#include "ParticleExporter.h"
+#include "3Dmotor/GParticleFormat.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommonExporterMethods.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/ManipulatorManager.h"
-#include "libdb/ResourceManager.h"
-
-#include "MapEditorLib/CommonExporterMethods.h"
+#include "Misc/StrProc.h"
+#include "ParticleExporter.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-#include "Misc/StrProc.h"
-
-#include "3Dmotor/GParticleFormat.h"
 
 #include <thread>
+
+#include <boost/uuid/uuid.hpp>
+#include <fmt/format.h>
 
 REGISTER_EXPORTER_IN_DLL( Particle, CParticleExporter )
 //

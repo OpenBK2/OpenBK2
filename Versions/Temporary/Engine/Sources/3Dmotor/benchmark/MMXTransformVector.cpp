@@ -1,8 +1,9 @@
-#include <benchmark/benchmark.h>
-
 #include "3Dmotor/stdafx.h"
-#include "3Dmotor/GSSEtransform.h"
+
 #include "3Dmotor/GSSEtransform.cpp"
+#include "3Dmotor/GSSEtransform.h"
+
+#include <benchmark/benchmark.h>
 // Same MASM references the test uses, so the benchmark is no longer x86 only.
 #include "3Dmotor/test/original/MMXTransformVector.h"
 #include "3Dmotor/test/random.h"

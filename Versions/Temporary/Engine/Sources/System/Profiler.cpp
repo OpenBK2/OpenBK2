@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "Profiler.h"
-
 #include "port/time.h"
+#include "Profiler.h"
 
 #include <algorithm>
 #include <cstdint>

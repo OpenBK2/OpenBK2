@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "VolumeContainer.h"
 
 namespace NCollider

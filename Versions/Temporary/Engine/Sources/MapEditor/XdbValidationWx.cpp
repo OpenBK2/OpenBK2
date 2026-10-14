@@ -2,11 +2,11 @@
 
 #include "XdbValidation.h"
 
+#include <cstring>
+
 #include <fmt/format.h>
 #include <wx/mstream.h>
 #include <wx/xml/xml.h>
-
-#include <cstring>
 
 // The XDB check in wx: wxXmlDocument, and under it expat, which reads the whole
 // document and stops at the first thing that makes it malformed. It replaces

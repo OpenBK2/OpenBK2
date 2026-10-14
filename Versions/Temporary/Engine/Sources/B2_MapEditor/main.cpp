@@ -1,23 +1,23 @@
 #include "stdafx.h"
+
 #include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 
-#include "ED_B2_M1_export.h"
 #include "ED_B2_export.h"
+#include "ED_B2_M1_export.h"
 #include "GameX_export.h"
 
 //
-#include "MapEditor/MapEditorApp.h"
-#include "MapEditorLib/MapEditorModule.h"
-#include "MapEditorLib/Interface_MainFrame.h"
-
 #include "ED_B2_M1/MapInfoEditor.h"
 #include "ED_B2_M1/ModelEditor.h"
-#include "VFSDbObserver.h"
 #include "libdb/EditorDb.h"
+#include "MapEditor/MapEditorApp.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/MapEditorModule.h"
 #include "port/crashpad.h"
+#include "VFSDbObserver.h"
 #include "WxHost.h"
 
 #include <zconf.h>

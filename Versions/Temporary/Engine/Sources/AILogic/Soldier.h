@@ -1,8 +1,8 @@
 #pragma once
 
 #include "AIUnit.h"
-#include "StaticObjectSlotInfo.h"
 #include "Mine.h"
+#include "StaticObjectSlotInfo.h"
 
 #include <cstdint>
 

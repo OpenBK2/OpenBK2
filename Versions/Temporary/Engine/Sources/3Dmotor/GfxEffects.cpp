@@ -1,10 +1,12 @@
 #include "stdafx.h"
-#include <d3d9.h>
+
+#include "GfxBuffers.h"
 #include "GfxEffects.h"
 #include "GfxRender.h"
 #include "GfxShaders.h"
-#include "GfxBuffers.h"
 #include "System/Commands.h"
+
+#include <d3d9.h>
 
 namespace NGfx
 {

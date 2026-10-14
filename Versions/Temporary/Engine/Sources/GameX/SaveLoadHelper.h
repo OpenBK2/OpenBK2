@@ -1,11 +1,11 @@
 #pragma once
 
+#include "CommandsHistory.h"
+#include "port/time.h"
+#include "UI/BackgroundMutableTexture.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "UI/BackgroundMutableTexture.h"
-#include "CommandsHistory.h"
-#include "port/time.h"
 
 namespace NDb
 {

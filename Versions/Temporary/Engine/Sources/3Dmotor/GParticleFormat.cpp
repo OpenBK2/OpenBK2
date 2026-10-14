@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "GParticleFormat.h"
 
+#include "GParticleFormat.h"
 #include "GPixelFormat.h"
 
 #include "3Dmotor_export.h"

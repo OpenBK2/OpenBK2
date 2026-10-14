@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "WindowSelection.h"
 
 REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x110BD481, CWindowSelection );

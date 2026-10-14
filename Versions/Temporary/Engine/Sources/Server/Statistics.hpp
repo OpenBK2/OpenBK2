@@ -1,6 +1,6 @@
 #pragma once
-#include "Statistics.h"
 #include "Misc/Time64.h"
+#include "Statistics.h"
 
 #include <fmt/format.h>
 

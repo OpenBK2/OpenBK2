@@ -1,7 +1,7 @@
 #pragma once
 
-#include "StaticObject.h"
 #include "Misc/Heap.h"
+#include "StaticObject.h"
 #include "StormableObject.h"
 
 #include <cstdint>

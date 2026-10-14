@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "WinFrame2Input.h"
+
 #include "Input/GameMessage.h"
+#include "WinFrame2Input.h"
 
 /**
 void CWinToInputMessageConverter::ParseChars()

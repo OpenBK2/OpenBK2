@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "InterfaceCustomMissions.h"
-#include "GameXClassIDs.h"
-#include "InterfaceState.h"
-#include "DBGameRoot.h"
-#include "ScenarioTracker.h"
-#include "Misc/StrProc.h"
-#include "System/Text.h"
+
 #include "CustomMissions.h"
+#include "DBGameRoot.h"
+#include "GameXClassIDs.h"
+#include "InterfaceCustomMissions.h"
+#include "InterfaceState.h"
+#include "Misc/StrProc.h"
+#include "ScenarioTracker.h"
+#include "System/Text.h"
 
 #include "GameX_export.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "StatesFactory.h"
 #include "CommonStates.h"
+#include "StatesFactory.h"
 #include "Stats_B2_M1/ActionNotify.h"
 #include "StatusUpdatesHelper.h"
 

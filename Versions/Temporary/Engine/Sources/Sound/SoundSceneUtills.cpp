@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "SoundSceneUtills.h"
+
 #include "Sound.h"
+#include "SoundSceneUtills.h"
 
 size_t SIntThreeHash::operator()( const struct SIntThree &v ) const
 {

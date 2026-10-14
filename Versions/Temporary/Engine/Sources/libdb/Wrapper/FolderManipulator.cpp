@@ -1,12 +1,13 @@
 #include "stdafx.h"
 
-#include "FolderManipulator.h"
-#include "ObjMan.h"
-#include "EditorDb.h"
 #include "Bind.h"
 #include "Database.h"
-#include "System/FilePath.h"
+#include "EditorDb.h"
+#include "FolderManipulator.h"
 #include "Misc/HPTimer.h"
+#include "ObjMan.h"
+#include "System/FilePath.h"
+
 #include <filesystem>
 
 static bool IsFolderName( const std::string &szName )

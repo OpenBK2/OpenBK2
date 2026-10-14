@@ -9,8 +9,8 @@
 #include <chrono>
 #include <csignal>
 #include <cstdio>
-#include <string>
 #include <filesystem>
+#include <string>
 #include <thread>
 
 // Entry point for the dedicated lobby server.

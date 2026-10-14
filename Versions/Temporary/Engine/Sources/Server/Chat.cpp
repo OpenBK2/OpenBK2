@@ -1,8 +1,9 @@
 #include "stdafx.h"
+
 #include "Chat.h"
 #include "clients.h"
-#include "Server_Client_Common/CommonPackets.h"
 #include "Misc/Time64.h"
+#include "Server_Client_Common/CommonPackets.h"
 #include "System/XmlSaver.h"
 
 #include <cstdint>

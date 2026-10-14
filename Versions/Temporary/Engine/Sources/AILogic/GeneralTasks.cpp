@@ -1,20 +1,19 @@
 #include "stdafx.h"
 
-#include "GeneralTasks.h"
-
+#include "B2AI.h"
+#include "DebugTools/DebugInfoManager.h"
+#include "Formation.h"
+#include "GeneralConsts.h"
 #include "GeneralHelper.h"
 #include "GeneralInternal.h"
-#include "Formation.h"
+#include "GeneralTasks.h"
 #include "GroupLogic.h"
 #include "Soldier.h"
-#include "GeneralConsts.h"
 #include "StaticObjects.h"
 #include "TempBuffer.h"
-#include "UnitsIterators2.h"
 #include "UnitCreation.h"
-#include "DebugTools/DebugInfoManager.h"
+#include "UnitsIterators2.h"
 #include "UnitStates.h"
-#include "B2AI.h"
 
 #include "AILogic_export.h"
 

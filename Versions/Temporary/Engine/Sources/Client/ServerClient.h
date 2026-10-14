@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Client_export.h"
-
 #include "ServerClientInterface.h"
+
+#include "Client_export.h"
 
 class CLIENT_EXPORT CServerClient : public IServerClient
 {

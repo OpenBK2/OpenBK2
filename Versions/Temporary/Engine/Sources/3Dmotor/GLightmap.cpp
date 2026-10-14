@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "GLightmap.h"
-#include "GfxBuffers.h"
+
 #include "3DLib/GLMGeometry.h"
 #include "Cache.h"
-#include "System/Commands.h"
-#include "System/BinaryResources.h"
-#include "System/GResource.h"
-#include "3DLib/GLMGeometry.h"
+#include "GfxBuffers.h"
+#include "GLightmap.h"
 #include "GObjectInfo.h"
 #include "GView.h"
+#include "System/BinaryResources.h"
+#include "System/Commands.h"
+#include "System/GResource.h"
 #include "System/VFSOperations.h"
 
 namespace NGScene

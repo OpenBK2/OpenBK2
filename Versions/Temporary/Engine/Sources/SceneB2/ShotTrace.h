@@ -1,8 +1,8 @@
 #pragma once
 
 #include "3Dmotor/GView.h"
-#include "Stats_B2_M1/RPGStats.h"
 #include "Camera.h"
+#include "Stats_B2_M1/RPGStats.h"
 
 class CShotTraceObj : public CPtrFuncBase<NGScene::CObjectInfo>
 {

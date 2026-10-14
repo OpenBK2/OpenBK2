@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "GLocale.h"
+
+#include "DBScene.h"
 #include "GFont.h"
+#include "GLocale.h"
+#include "GRuntimeFont.h"
 #include "GTexture.h"
 #include "System/BasicShare.h"
-#include "DBScene.h"
-#include "GRuntimeFont.h"
 
 #include <algorithm>
 #include <cmath>

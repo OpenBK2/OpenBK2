@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "ImageScale.h"
 #include "System/FastMath.h"
 

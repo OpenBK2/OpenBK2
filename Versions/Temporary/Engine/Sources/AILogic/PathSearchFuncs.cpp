@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "PathFinder.h"
-#include "Soldier.h"
 #include "PointChecking.h"
+#include "Soldier.h"
 
 #include "AILogic_export.h"
 

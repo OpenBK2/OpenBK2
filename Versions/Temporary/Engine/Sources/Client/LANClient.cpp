@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 #include "LANClient.h"
+#include "Net/NetAddress.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/NetPacket.h"
 #include "Server_Client_Common/NetSaver.h"
-#include "Server_Client_Common/GamePackets.h"
-#include "Server_Client_Common/CommonPackets.h"
-#include "Net/NetAddress.h"
 
 #include <fmt/format.h>
 

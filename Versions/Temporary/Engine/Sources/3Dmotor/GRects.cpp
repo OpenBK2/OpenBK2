@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GRects.h"
+
 #include "GfxUtils.h"
+#include "GRects.h"
 
 namespace NGScene
 {

@@ -3,11 +3,11 @@
 // include_GameConsts.h, which the generator has no way to write itself.
 #pragma once
 
+#include "AILogic/DBAIConsts.h"
 #include "AILogic/SimpleChecksumCalc.h"
 #include "DBMPConsts.h"
 #include "Main/DBNetConsts.h"
 #include "Main/MODs.h"
-#include "AILogic/DBAIConsts.h"
 #include "port/unicode.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 

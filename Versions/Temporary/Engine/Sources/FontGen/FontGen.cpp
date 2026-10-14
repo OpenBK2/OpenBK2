@@ -1,16 +1,16 @@
 #include "stdafx.h"
+
+#include "CodePages.h"
+#include "FontFinder.h"
 #include "FontFormat.h"
+#include "FontRaster.h"
 #include "Image/Targa.h"
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
-#include <algorithm>
-#include "System/FileUtils.h"
-#include "CodePages.h"
-#include "FontFinder.h"
-#include "FontRaster.h"
-
 #include "port/cdecl.h"
+#include "System/FileUtils.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>

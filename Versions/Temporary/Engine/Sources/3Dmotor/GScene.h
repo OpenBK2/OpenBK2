@@ -1,11 +1,11 @@
 #pragma once
 
-#include "3Dmotor_export.h"
-
-#include "System/Dg.h"
 #include "3DLib/GGeometry.h"
 #include "GRenderModes.h"
+#include "System/Dg.h"
 #include "System/time.hpp"
+
+#include "3Dmotor_export.h"
 
 class CTransformStack;
 class CRectLayout;

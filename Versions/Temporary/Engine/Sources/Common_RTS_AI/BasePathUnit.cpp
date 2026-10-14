@@ -1,19 +1,17 @@
 #include "stdafx.h"
 
 #include "BasePathUnit.h"
-#include "CommonPathFinder.h"
 #include "Collision.h"
+#include "Common_RTS_AI/StaticMapHeights.h"
+#include "CommonPathFinder.h"
 #include "PathFinder.h"
+#include "PointChecking.h"
 #include "StandartPath2.h"
 #include "StandartSmoothMechPath.h"
 #include "StaticPathInternal.h"
-
-#include "Common_RTS_AI/StaticMapHeights.h"
 #include "System/RandomGen.h"
+
 #include <cfenv>
-
-#include "PointChecking.h"
-
 #include <cstdint>
 
 BASIC_REGISTER_CLASS( COMMON_RTS_AI, IPointChecking );

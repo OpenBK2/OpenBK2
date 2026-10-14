@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "GRenderFactor.h"
-#include "GRenderExecute.h"
-#include "GfxRender.h"
+
 #include "3DLib/Transform.h"
+#include "GfxRender.h"
 #include "GfxShaders.h"
+#include "GRenderExecute.h"
+#include "GRenderFactor.h"
 
 #include <algorithm>
 

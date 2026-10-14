@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "PathFractionComposite.h"
-#include "IPlane.h"
+
 #include "DebugTools/DebugInfoManager.h"
+#include "IPlane.h"
+#include "PathFractionComposite.h"
 
 #include "AILogic_export.h"
 

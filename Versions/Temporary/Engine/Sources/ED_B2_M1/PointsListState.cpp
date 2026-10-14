@@ -1,23 +1,22 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
+#include "DialogData.h"
+#include "libdb/ResourceManager.h"
+#include "Main/GameTimer.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
 #include "Misc/PlaneGeometry.h"
-#include "SceneB2/VisObjDesc.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "SeasonMnemonics.h"
-#include "DialogData.h"
 #include "PointListView.h"
-#include "ResourceDefines.h"
-#include "libdb/ResourceManager.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "Main/GameTimer.h"
-
 #include "PointsListState.h"
+#include "ResourceDefines.h"
+#include "SceneB2/VisObjDesc.h"
+#include "SeasonMnemonics.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 //

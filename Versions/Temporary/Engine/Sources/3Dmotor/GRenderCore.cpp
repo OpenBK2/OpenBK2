@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GRenderCore.h"
+
 #include "3DLib/Transform.h"
+#include "GRenderCore.h"
 
 inline bool DoesIntersect( const SSphere &a, const SSphere &b )
 {

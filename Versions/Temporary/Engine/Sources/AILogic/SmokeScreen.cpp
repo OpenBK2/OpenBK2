@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
+#include "Common_RTS_AI/AIMap.h"
+#include "GlobalWarFog.h"
 #include "Misc/Bresenham.h"
 #include "SmokeScreen.h"
 #include "StaticObjectsIters.h"
-#include "Common_RTS_AI/AIMap.h"
-#include "GlobalWarFog.h"
 
 #include "AILogic_export.h"
 

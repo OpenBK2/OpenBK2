@@ -1,14 +1,15 @@
 #include "stdafx.h"
+
+#include "3Dmotor/RectLayout.h"
+#include "BackgroundFrameSequence.h"
+#include "Main/GameTimer.h"
+#include "Misc/2Darray.h"
+#include "Misc/Win32Random.h"
+#include "System/Time.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "System/Time.h"
-#include "BackgroundFrameSequence.h"
-#include "UI/UIVisitor.h"
-#include "3Dmotor/RectLayout.h"
 #include "UI/UIComponents.h"
-#include "Main/GameTimer.h"
-#include "Misc/Win32Random.h"
+#include "UI/UIVisitor.h"
 
 #include "UISpecificB2_export.h"
 

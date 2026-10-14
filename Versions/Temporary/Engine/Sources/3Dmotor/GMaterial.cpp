@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "GMaterial.hpp"
-#include "GMaterial.h"
-#include "GfxRender.h"
-#include "GRenderFactor.h"
-#include "GfxShaders.h"
-#include "GfxBuffers.h"
-#include "GRenderExecute.h"
-#include "GRenderModes.h"
-#include "GInit.h"
-#include "System/Commands.h"
 
+#include "GfxBuffers.h"
+#include "GfxRender.h"
+#include "GfxShaders.h"
+#include "GInit.h"
+#include "GMaterial.h"
+#include "GMaterial.hpp"
+#include "GRenderExecute.h"
+#include "GRenderFactor.h"
+#include "GRenderModes.h"
 #include "port/time.h"
+#include "System/Commands.h"
 
 //bool bSimpleLightmaps = false;
 static bool s_bShadowOnTrees = true;

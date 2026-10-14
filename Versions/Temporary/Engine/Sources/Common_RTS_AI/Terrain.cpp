@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "Misc/Bresenham.h"
-#include "Terrain.h"
 #include "Common_RTS_AI/AIMap.h"
+#include "DebugTools/DebugInfoManager.h"
 #include "Image/Image.h"
 #include "Image/ImageTGA.h"
-#include "DebugTools/DebugInfoManager.h"
 #include "Misc/Bresenham.h"
+#include "Terrain.h"
 
 #include <algorithm>
 #include <cstdint>

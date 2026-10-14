@@ -1,18 +1,19 @@
 #include "stdafx.h"
-#include <d3d9.h>
-#include "GfxRender.h"
-#include "GfxInternal.h"
-#include "GfxBuffers.h"
+
 #include "Gfx.h"
+#include "GfxBuffers.h"
+#include "GfxInternal.h"
+#include "GfxRender.h"
 #include "GfxShaders.h"
 #include "GfxShadersDescr.h"
+#include "pciids/cards.h"
+#include "pciids/gpus.h"
+#include "pciids/vendors.h"
 #include "System/Commands.h"
 
-#include "pciids/vendors.h"
-#include "pciids/gpus.h"
-#include "pciids/cards.h"
-
 #include <cstdint>
+
+#include <d3d9.h>
 
 namespace NGfx
 {

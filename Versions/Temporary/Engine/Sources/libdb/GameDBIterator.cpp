@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "ResourceManager.h"
+
 #include "Db.h"
+#include "ResourceManager.h"
 
 namespace NDb
 {

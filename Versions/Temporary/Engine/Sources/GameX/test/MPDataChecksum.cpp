@@ -1,19 +1,20 @@
 #include "../stdafx.h"
 
+#include "AILogic/DBAIConsts.h"
 #include "GameX/DBConsts.h"
 #include "GameX/DBMPConsts.h"
 #include "GameX/GetConsts.h"
-#include "AILogic/DBAIConsts.h"
+#include "libdb/Db.h"
+#include "libdb/EditorDb.h"
+#include "libdb/ObjMan.h"
 #include "Main/DBNetConsts.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
-#include "libdb/Db.h"
-#include "libdb/EditorDb.h"
-#include "libdb/ObjMan.h"
 
 #include <chrono>
 #include <filesystem>
+
 #include <gtest/gtest.h>
 
 namespace

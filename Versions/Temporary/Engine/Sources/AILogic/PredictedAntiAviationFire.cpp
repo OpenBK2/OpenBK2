@@ -1,12 +1,12 @@
 #include "stdafx.h"
+
+#include "AAFeedBacks.h"
+#include "Aviation.h"
+#include "Diplomacy.h"
+#include "Guns.h"
+#include "Manuver.h"
 #include "PredictedAntiAviationFire.h"
 #include "SerializeOwner.h"
-
-#include "Aviation.h"
-#include "Guns.h"
-#include "Diplomacy.h"
-#include "AAFeedBacks.h"
-#include "Manuver.h"
 
 extern CDiplomacy theDipl;
 extern NTimer::STime curTime;

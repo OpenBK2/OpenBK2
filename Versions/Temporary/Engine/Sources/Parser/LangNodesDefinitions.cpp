@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
+#include "ErrorsAndMessages.h"
 #include "LangNodesDefinitions.h"
+#include "Misc/StrProc.h"
 #include "ParseOperations.h"
 #include "StringNumbers.h"
-#include "ErrorsAndMessages.h"
-#include "Misc/StrProc.h"
 
 #include "Parser_export.h"
 

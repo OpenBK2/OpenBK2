@@ -1,8 +1,9 @@
 #include "stdafx.h"
+
 #include "GRTShare.h"
 //#include "GfxUtils.h"
-#include "GfxBuffers.h"
 #include "Gfx.h"
+#include "GfxBuffers.h"
 //#include "RectLayout.h"
 //#include "GRects.h"
 //#include "..\3Dlib\Transform.h"

@@ -1,16 +1,17 @@
 #include "stdafx.h"
+
+#include "3Dmotor/GAnimation.hpp"
+#include "3Dmotor/RectLayout.h"
+#include "Input/GameMessage.h"
+#include "Main/GameTimer.h"
+#include "Misc/2Darray.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Input/GameMessage.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "3Dmotor/RectLayout.h"
-#include "Window3DControl.h"
-#include "SceneB2/Scene.h"
 #include "UI/UIVisitor.h"
-#include "3Dmotor/GAnimation.hpp"
-#include "Main/GameTimer.h"
+#include "Window3DControl.h"
 
 #include <zconf.h>
 

@@ -1,15 +1,14 @@
 #include "stdafx.h"
 
-#include "GltfAnimation.h"
-
 #include "DBScene.h"
 #include "GAnimUtils.h"
-
-#include <fastgltf/tools.hpp>
+#include "GltfAnimation.h"
 
 #include <algorithm>
 #include <cmath>
 #include <unordered_set>
+
+#include <fastgltf/tools.hpp>
 
 namespace NAnimation
 {

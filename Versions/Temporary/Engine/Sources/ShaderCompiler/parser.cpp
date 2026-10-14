@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "parser.h"
 
 char *GetNextLine( char *p, int *pnLines )

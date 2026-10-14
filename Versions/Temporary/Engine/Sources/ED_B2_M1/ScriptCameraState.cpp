@@ -1,24 +1,23 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <fmt/format.h>
-
-#include "SceneB2/Scene.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "EditorOptions.h"
-#include "MapEditorLib/Interface_MainFrame.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "SceneB2/CameraScriptMutators.h"
 
 #include "DrawToolsDC.h"
-
-#include "ScriptCameraState.h"
+#include "EditorOptions.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MovieDialogs.h"
+#include "SceneB2/CameraScriptMutators.h"
+#include "SceneB2/Scene.h"
+#include "ScriptCameraState.h"
+
+#include <fmt/format.h>
 // DEF_SEL_RAD, which used to arrive through MapInfoEditor.h's include of the
 // movies editor window and now has a header of its own.
-#include "TimeSliderData.h"
 #include "port/vkcodes.h"
+#include "TimeSliderData.h"
 
 #include <cstdint>
 

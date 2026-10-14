@@ -7,9 +7,10 @@
 // memcpy and strlen, used inline below. The engine reached them through its
 // precompiled header, so this only showed up in the unit tests, which include
 // this header on its own and got "memcpy was not declared in this scope".
+#include "Misc/Asserts.h" // ASSERT
+
 #include <cstring>
 #include <system_error>
-#include "Misc/Asserts.h" // ASSERT
 
 namespace NVFS
 {

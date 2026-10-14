@@ -1,12 +1,12 @@
 #pragma once
 
-#include "StringResources.h"
-#include "UnitDesignTypes.h"
-#include "HeightStateV3.h"
 #include "FieldState.h"
+#include "HeightStateV3.h"
 #include "MapObjectMultiState.h"
-#include "VSOMultiState.h"
+#include "StringResources.h"
 #include "System/XmlSaver.h"
+#include "UnitDesignTypes.h"
+#include "VSOMultiState.h"
 
 class CMapInfoEditorSettings
 {

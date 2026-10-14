@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "PlanesFormation.h"
-#include "ManuverBuilder.h"
 
+#include "ManuverBuilder.h"
 #include "NewUpdater.h"
+#include "PlanesFormation.h"
 
 extern CEventUpdater updater;
 extern CManuverBuilder theManuverBuilder;

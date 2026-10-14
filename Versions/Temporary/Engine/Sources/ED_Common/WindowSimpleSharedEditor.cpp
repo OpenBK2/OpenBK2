@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-#include "MapEditorLib/EditorFactory.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/Interface_UserData.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/EditorFactory.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/Tools_HashSet.h"
 //#include "EditorMethods.h"
+#include "UIRunModeState.h"
 #include "WindowSimpleSharedEditor.h"
 #include "WindowSimpleSharedState.h"
-#include "UIRunModeState.h"
 //#include "UIScene.h"
 
 REGISTER_EDITOR_IN_DLL( WindowSimpleShared, CWindowSimpleSharedEditor )

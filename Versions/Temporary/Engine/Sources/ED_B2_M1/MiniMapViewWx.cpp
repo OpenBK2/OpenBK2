@@ -1,16 +1,14 @@
 #include "stdafx.h"
 
-#include "MiniMapView.h"
-
 #include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
-
 #include "Input/GameMessage.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MiniMapView.h"
+#include "ResourceDefines.h"
 
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>

@@ -1,12 +1,13 @@
 #include "stdafx.h"
+
 #include "ChapterEditor.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ResourceDefines.h"
 
 REGISTER_EDITOR_IN_DLL( Chapter, CChapterEditor )
 

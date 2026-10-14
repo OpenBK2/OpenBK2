@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
+#include "Common_RTS_AI/AIMap.h"
+#include "Common_RTS_AI/Terrain.h"
 #include "CommonPathFinder.h"
 #include "ImportedStruct.h"
+#include "Misc/Bresenham.h"
 #include "PointChecking.h"
 #include "StaticPathInternal.h"
-#include "Common_RTS_AI/Terrain.h"
-#include "Common_RTS_AI/AIMap.h"
-#include "Misc/Bresenham.h"
 #include "System/Commands.h"
 
 #include <fmt/format.h>

@@ -1,32 +1,31 @@
 #include "stdafx.h"
 
-#include "port/wordpack.h"
-
-#include <float.h>
-
-#include "PathFinder.h"
-#include "TransportStates.h"
-#include "UnitsIterators2.h"
-#include "Technics.h"
-#include "GroupLogic.h"
-#include "UnitCreation.h"
-#include "NewUpdater.h"
-#include "Building.h"
-#include "Formation.h"
-#include "Soldier.h"
-#include "Artillery.h"
-#include "FormationStates.h"
-#include "EntrenchmentCreation.h"
-#include "ComplexObstacleCreation.h"
-#include "BridgeCreation.h"
-#include "Bridge.h"
-#include "StaticObjectsIters.h"
-#include "Common_RTS_AI/PathFinder.h"
 #include "AIGeometry.h"
-#include "FeedbackSystem.h"
+#include "Artillery.h"
+#include "Bridge.h"
+#include "BridgeCreation.h"
+#include "Building.h"
+#include "Common_RTS_AI/PathFinder.h"
+#include "ComplexObstacleCreation.h"
 #include "DebugTools/DebugInfoManager.h"
+#include "EntrenchmentCreation.h"
+#include "FeedbackSystem.h"
+#include "Formation.h"
+#include "FormationStates.h"
+#include "GroupLogic.h"
+#include "NewUpdater.h"
+#include "PathFinder.h"
+#include "port/wordpack.h"
+#include "Soldier.h"
+#include "StaticObjectsIters.h"
+#include "Technics.h"
+#include "TransportStates.h"
+#include "UnitCreation.h"
+#include "UnitsIterators2.h"
 
 #include "AILogic_export.h"
+
+#include <float.h>
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D470, CTransportRepairState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D471, CTransportResupplyState );

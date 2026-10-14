@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include "System/Dg.h"
+
+#include <cstdint>
 
 namespace NGfx
 {

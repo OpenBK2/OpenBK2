@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "MapInfoEditorSettings.h"
 
 CMapInfoEditorSettings::CMapInfoEditorSettings()

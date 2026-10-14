@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "CombatEstimator.h"
 #include "AIUnit.h"
+#include "CombatEstimator.h"
 
 CCombatEstimator theCombatEstimator;
 extern NTimer::STime curTime;

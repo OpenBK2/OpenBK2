@@ -1,16 +1,17 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-#include <fmt/format.h>
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
+
+#include "EntrenchmentInfoData.h"
 #include "libdb/ResourceManager.h"
 #include "Main/GameTimer.h"
-#include "EntrenchmentInfoData.h"
-#include <float.h>
+#include "MapEditorLib/BusyCursor.h"
+#include "Misc/2Darray.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 
+#include <float.h>
+#include <fmt/format.h>
 #include <zconf.h>
 
 namespace NMapInfoEditor

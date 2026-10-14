@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "port/unicode.h"
-
+#include "CodeGenMisc.h"
 #include "CompileCLikeVisitor.h"
 #include "Hungarian.h"
-#include "TypeDefType.h"
-#include "CodeGenMisc.h"
 #include "Parser/ErrorsAndMessages.h"
-#include "Parser/LangNodesDefinitions.h"
 #include "Parser/FileNode.h"
+#include "Parser/LangNodesDefinitions.h"
+#include "port/unicode.h"
+#include "TypeDefType.h"
 
 #include <cstdint>
 #include <memory>

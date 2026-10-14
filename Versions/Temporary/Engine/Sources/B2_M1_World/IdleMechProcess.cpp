@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
 #include "IdleMechProcess.h"
-#include "SceneB2/Scene.h"
+#include "Misc/2Darray.h"
 #include "Misc/Win32Random.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include "B2_M1_World_export.h"
 

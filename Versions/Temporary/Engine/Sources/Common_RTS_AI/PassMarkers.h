@@ -2,12 +2,12 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "Common_RTS_AI_export.h"
-
-#include "DebugTools/DebugInfoManager.h"
 #include "AIClasses.h"
-#include "Terrain.h"
 #include "AIMap.h"
+#include "DebugTools/DebugInfoManager.h"
+#include "Terrain.h"
+
+#include "Common_RTS_AI_export.h"
 
 #define MARKERS_COLORS_COUNT 3
 

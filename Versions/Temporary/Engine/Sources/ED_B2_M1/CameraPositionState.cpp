@@ -1,21 +1,20 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
+#include "CameraPositionData.h"
+#include "CameraPositionState.h"
+#include "CommandHandlerDefines.h"
+#include "DrawToolsDC.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapInfoEditor.h"
-#include "DrawToolsDC.h"
-#include "Tools_SceneDraw.h"
 #include "SceneB2/Camera.h"
-
-#include "CameraPositionState.h"
-#include "CameraPositionData.h"
+#include "Tools_SceneDraw.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMapInfoMan, int nPlayerIndex )
 {

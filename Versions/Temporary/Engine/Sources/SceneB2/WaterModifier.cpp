@@ -1,12 +1,13 @@
 #include "stdafx.h"
 
-#include <limits.h>
-#include "TerraTools.h"
 #include "GenTerrain.h"
-#include "TerraHeight.h"
 #include "Scene.h"
+#include "TerraHeight.h"
+#include "TerraTools.h"
 
 #include <cstdint>
+
+#include <limits.h>
 
 #define DEF_HEIGHTS_SMOOTH_RADIUS 3
 #define DEF_SMOOTH_DIST ( DEF_TILE_SIZE * 7.0f )

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 //#include "Commands.h"
 #include "LogStream.h"
-
 #include "port/unicode.h"
 
 // xchar.h is what makes fmt::format( L"..." ) available, so a number

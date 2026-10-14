@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Tools_SceneDraw.h"
-#include <fmt/format.h>
-#include "MapEditorLib/MultiInputState.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
-#include "MapInfoStoreInputState.h"
 #include "libdb/Manipulator.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/MultiInputState.h"
+#include "MapInfoStoreInputState.h"
+#include "Tools_SceneDraw.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 class CPolygonSelectState : public CDefaultInputState
 {

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "Misc/StrProc.h"
 #include "ConfigFile.h"
+#include "Misc/StrProc.h"
 
 const char SConfigFile::DIVIDERS[] = " \t";
 

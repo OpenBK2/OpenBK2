@@ -1,8 +1,9 @@
 #include "stdafx.h"
+
 #include "Sound.h"
-#include "SubstSound.h"
 #include "SoundSceneConsts.h"
 #include "SoundSceneInternal.h"
+#include "SubstSound.h"
 
 REGISTER_SAVELOAD_CLASS( SOUND, 0x110793C1, CSound );
 

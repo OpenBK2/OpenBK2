@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "AILogicCommandInternal.h"
-
 #include "AILogic/B2AI.h"
+#include "AILogicCommandInternal.h"
 
 #include "GameX_export.h"
 

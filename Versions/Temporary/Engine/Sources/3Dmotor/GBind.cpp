@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GBind.h"
+
 #include "3DLib/Transform.h"
+#include "GBind.h"
 
 #include "3Dmotor_export.h"
 

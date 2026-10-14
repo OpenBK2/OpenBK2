@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
+#include "Artillery.h"
+#include "Commands.h"
 #include "QueueUnit.h"
 #include "StatesFactory.h"
-#include "UnitStates.h"
-#include "Commands.h"
-
-#include "Artillery.h"
 #include "Stats_B2_M1/ActionsRemap.h"
+#include "UnitStates.h"
 
 #include <cstdint>
 

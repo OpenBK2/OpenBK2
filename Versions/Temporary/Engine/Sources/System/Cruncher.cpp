@@ -1,6 +1,7 @@
 // Cruncher.cpp : Defines the entry point for the console application.
 //
 #include "stdafx.h"
+
 #include "Cruncher.h"
 
 int CNetCompressor::nLengthBits[34], CNetCompressor::nLengthBitsNum[34];

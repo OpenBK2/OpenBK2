@@ -1,13 +1,13 @@
 #pragma once
 #define CStructureSaver IBinSaver
 
-#include "Main/GameTimer.h"
-#include "Sound/DBSound.h"
 #include "DBUserInterface.h"
-#include "Misc/StrProc.h"
-#include "UIFactory.h"
-#include "SceneClassIDs.h"
 #include "Input/GameMessage.h"
+#include "Main/GameTimer.h"
+#include "Misc/StrProc.h"
+#include "SceneClassIDs.h"
+#include "Sound/DBSound.h"
+#include "UIFactory.h"
 
 #include <algorithm>
 

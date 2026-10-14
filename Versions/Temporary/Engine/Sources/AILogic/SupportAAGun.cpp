@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "SupportAAGun.h"
-#include "UnitsIterators.h"
+
 #include "Aviation.h"
 #include "ShootEstimatorInternal.h"
+#include "SupportAAGun.h"
+#include "UnitsIterators.h"
 
 #include "AILogic_export.h"
 

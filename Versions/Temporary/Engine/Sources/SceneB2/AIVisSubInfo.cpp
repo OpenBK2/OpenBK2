@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "ShootAreaMesh.h"
 #include "LineMesh.h"
 #include "SceneInternal.h"
+#include "ShootAreaMesh.h"
 #include "VisObjDesc.h"
 
 /*

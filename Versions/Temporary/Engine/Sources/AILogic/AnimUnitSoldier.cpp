@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "AnimUnitSoldier.h"
-#include "Soldier.h"
-#include "NewUpdater.h"
-#include "Stats_B2_M1/AnimationType.h"
 #include "Formation.h"
+#include "NewUpdater.h"
+#include "Soldier.h"
+#include "Stats_B2_M1/AnimationType.h"
 #include "UnitStates.h"
 
 #include "AILogic_export.h"

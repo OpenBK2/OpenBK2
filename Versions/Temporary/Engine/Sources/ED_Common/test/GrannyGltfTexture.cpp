@@ -1,13 +1,15 @@
 #include "../GrannyGltfTexture.h"
-#include <wx/image.h>
-#include <wx/imagpng.h>
-#include <wx/imagtga.h>
-#include <wx/mstream.h>
-#include <gtest/gtest.h>
+
 #include <chrono>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+
+#include <gtest/gtest.h>
+#include <wx/image.h>
+#include <wx/imagpng.h>
+#include <wx/imagtga.h>
+#include <wx/mstream.h>
 
 TEST( GrannyGltfTexture, Dxt1PreviewPreservesColorAndPunchThroughAlpha )
 {

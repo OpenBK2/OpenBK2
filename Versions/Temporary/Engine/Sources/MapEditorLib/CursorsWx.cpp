@@ -7,8 +7,8 @@
 // for the same reason MessageBoxesWx.cpp is: nothing below reaches the game
 // database, so losing windows.h's A/W macros costs nothing here.
 #include <wx/cursor.h>
-#include <wx/image.h>
 #include <wx/imagbmp.h>
+#include <wx/image.h>
 #include <wx/log.h>
 #include <wx/mstream.h>
 #include <wx/utils.h>

@@ -3,8 +3,8 @@
 #include "EditorMethods.h"
 #include "MapInfoEditor.h"
 #include "SimpleObjectState.h"
-#include "UnitStartCmdDialog.h"
 #include "UnitStartCmdData.h"
+#include "UnitStartCmdDialog.h"
 
 #include <cstdint>
 

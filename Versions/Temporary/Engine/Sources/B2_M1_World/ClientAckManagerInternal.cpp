@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
-#include "Stats_B2_M1/DBClientConsts.h"
-#include "DebugAckHelper.hpp"
-#include "MapObj.h"
 #include "ClientAckManagerInternal.h"
-
+#include "DebugAckHelper.hpp"
 #include "Main/GameTimer.h"
-#include "Sound/SoundScene.h"
+#include "MapObj.h"
 #include "Misc/StrProc.h"
+#include "Sound/SoundScene.h"
+#include "Stats_B2_M1/DBClientConsts.h"
 #include "System/Commands.h"
 
 #include <fmt/format.h>

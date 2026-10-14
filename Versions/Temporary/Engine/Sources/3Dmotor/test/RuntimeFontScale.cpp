@@ -1,5 +1,6 @@
 // Exercise the public NGlobal setting and real atlas cache without a GPU.
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/DBScene.h"
 #include "3Dmotor/GLocale.h"
 #include "System/VFSOperations.h"
@@ -7,6 +8,7 @@
 
 #include <fstream>
 #include <limits>
+
 #include <gtest/gtest.h>
 
 namespace

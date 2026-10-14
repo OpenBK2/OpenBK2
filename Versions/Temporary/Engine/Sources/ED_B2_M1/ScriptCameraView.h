@@ -1,8 +1,8 @@
 #pragma once
 
+#include "MapEditorLib/PaletteList.h"
 #include "PaletteCommands.h"
 #include "ScriptCameraEditorData.h"
-#include "MapEditorLib/PaletteList.h"
 
 // The palette's half of the exchange with CScriptCameraState, whichever toolkit
 // draws it. The data type was already in a header of its own,

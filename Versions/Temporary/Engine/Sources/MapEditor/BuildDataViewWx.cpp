@@ -1,24 +1,22 @@
 #include "stdafx.h"
 
 #include "BuildDataView.h"
-
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/WxOwnerDialog.h"
+#include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
+#include "MapEditorLib/WxWidget.h"
 #include "NewObjectView.h"
 #include "PC_BaseDialog.h"
 #include "PropertyPaneView.h"
 
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/DefaultView.h"
-#include "MapEditorLib/WxWidget.h"
-#include "MapEditorLib/WxOwnership.h"
-#include "MapEditorLib/WxPlacement.h"
-#include "MapEditorLib/WxOwnerDialog.h"
+#include <memory>
 
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-
-#include <memory>
 
 // The build data dialog in wx: IDD_PC_BD's controls around the wx property
 // grid the Selection Properties pane uses, NPropertyPane::CreateGridWx.

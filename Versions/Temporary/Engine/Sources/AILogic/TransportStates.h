@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "UnitStates.h"
-#include "StatusUpdatesHelper.h"
 #include "StatesFactory.h"
 #include "Stats_B2_M1/RPGStats.h"
 #include "Stats_B2_M1/StatusUpdates.h"
+#include "StatusUpdatesHelper.h"
+#include "UnitStates.h"
 
 class CFormation;
 class CAIUnit;

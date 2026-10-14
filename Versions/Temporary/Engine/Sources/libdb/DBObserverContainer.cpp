@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "DBObserverContainer.h"
+
 #include "DBObserver.h"
+#include "DBObserverContainer.h"
 
 namespace NDb
 {

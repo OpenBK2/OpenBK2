@@ -1,8 +1,7 @@
 #include "stdafx.h"
 
-#include "Misc/Win32Random.h"
 #include "GenTerrain.h"
-
+#include "Misc/Win32Random.h"
 #include "System/Commands.h"
 
 #define DEF_EXPLOSION_HEIGHT_BASE 0.125f

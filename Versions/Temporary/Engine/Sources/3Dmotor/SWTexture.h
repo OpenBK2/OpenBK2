@@ -1,7 +1,7 @@
 #pragma once
-#include "System/GResource.h"
 #include "GPixelFormat.h"
 #include "Misc/2Darray.h"
+#include "System/GResource.h"
 
 namespace NGfx
 {

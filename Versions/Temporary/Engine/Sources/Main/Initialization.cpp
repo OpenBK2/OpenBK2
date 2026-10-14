@@ -8,12 +8,11 @@
 //#include "..\ui\dbuserinterface.h"
 
 #if BOOST_OS_WINDOWS
-#include <wtypes.h>
 #include <winbase.h>
+#include <wtypes.h>
 #endif
 
 #include "Main/MainLoop.h"
-
 #include "UI/UI.h"
 
 namespace NMain

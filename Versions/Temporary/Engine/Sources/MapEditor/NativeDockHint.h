@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+
 #include <wx/gdicmn.h>
 
 class wxWindow;

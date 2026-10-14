@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "BridgeCreation.h"
+
 #include "Bridge.h"
-#include "CommonUnit.h"
+#include "BridgeCreation.h"
 #include "Common_RTS_AI/PathFinder.h"
+#include "CommonUnit.h"
 
 #include "AILogic_export.h"
 

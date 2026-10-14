@@ -1,14 +1,15 @@
 #include "stdafx.h"
 
-#include "FieldView.h"
-
 #include "CommandHandlerDefines.h"
 #include "FieldState.h"
-#include "ResourceDefines.h"
-
+#include "FieldView.h"
 #include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "ResourceDefines.h"
+
+#include <string>
+#include <vector>
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -17,9 +18,6 @@
 #include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-
-#include <string>
-#include <vector>
 
 // The field palette, in wx: the sixth palette, and the first of the five that
 // speak edit parameters rather than a dialog struct.

@@ -1,15 +1,16 @@
 #include "stdafx.h"
 
-#include "UI/CommandParam.h"
-#include "UI/DBUserInterface.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "MapEditorLib/MapEditorModule.h"
 #include "EditorAI.h"
 #include "EditorScene.h"
+#include "MapEditorLib/MapEditorModule.h"
+#include "Misc/2Darray.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "UI/CommandParam.h"
+#include "UI/DBUserInterface.h"
+
+#include "ED_B2_export.h"
 
 #include <zconf.h>
-#include "ED_B2_export.h"
 
 class CEditorModuleB2 : public IEditorModule
 {

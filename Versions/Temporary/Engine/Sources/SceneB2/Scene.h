@@ -1,13 +1,13 @@
 #pragma once
 
-#include "SceneB2_export.h"
-
-#include "Stats_B2_M1/DBMapInfo.h"
 #include "3Dmotor/GView.h"
+#include "SceneTypes.h"
+#include "Stats_B2_M1/AnimModes.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/SceneModes.h"
-#include "Stats_B2_M1/AnimModes.h"
-#include "SceneTypes.h"
+
+#include "SceneB2_export.h"
 
 #include <cstdint>
 

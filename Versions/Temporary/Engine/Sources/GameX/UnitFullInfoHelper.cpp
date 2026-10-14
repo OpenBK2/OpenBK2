@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "UnitFullInfoHelper.h"
-#include "Stats_B2_M1/RPGStats.h"
+
 #include "Stats_B2_M1/AnimationType.h"
 #include "Stats_B2_M1/DBAnimB2.h"
 #include "Stats_B2_M1/DBVisObj.h"
+#include "Stats_B2_M1/RPGStats.h"
 #include "System/Text.h"
+#include "UnitFullInfoHelper.h"
 
 #include <algorithm>
 

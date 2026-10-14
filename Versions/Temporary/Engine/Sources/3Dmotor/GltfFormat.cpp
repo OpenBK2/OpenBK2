@@ -1,18 +1,17 @@
 #include "stdafx.h"
 
 #include "GltfFormat.h"
-
 #include "System/DB.h"
 #include "System/Streams.h"
 #include "System/VFSOperations.h"
-
-#include <fastgltf/core.hpp>
-#include <fastgltf/tools.hpp>
 
 #include <deque>
 #include <filesystem>
 #include <mutex>
 #include <unordered_set>
+
+#include <fastgltf/core.hpp>
+#include <fastgltf/tools.hpp>
 
 namespace NGltf
 {

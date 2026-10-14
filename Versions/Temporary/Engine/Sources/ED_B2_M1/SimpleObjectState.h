@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MapObjectState.h"
+
 #include <fmt/format.h>
 
 class CSimpleObjectState : public CMapObjectState

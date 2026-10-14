@@ -1,11 +1,11 @@
 #include "../det_map.h"
 #include "../det_set.h"
 
-#include <gtest/gtest.h>
-
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <gtest/gtest.h>
 
 namespace
 {

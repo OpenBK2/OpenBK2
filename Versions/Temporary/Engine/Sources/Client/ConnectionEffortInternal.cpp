@@ -4,13 +4,12 @@
 #include "ConnectionInternal.h"
 #include "ConnectServerProcessor.h"
 #include "LinksManager.h"
+#include "port/time.h"
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/Net.h"
 
 #include "Client_export.h"
-
-#include "port/time.h"
 
 BASIC_REGISTER_CLASS( CLIENT, CSimpleClientEffort );
 BASIC_REGISTER_CLASS( CLIENT, CSimpleServerEffort );

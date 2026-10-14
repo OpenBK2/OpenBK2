@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include <boost/uuid/uuid_io.hpp>
 
-#include "Misc/StrProc.h"
-#include "XMLExport.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/PCIEMnemonics.h"
-#include "System/FilePath.h"
-
+#include "Misc/StrProc.h"
 #include "port/unicode.h"
+#include "System/FilePath.h"
+#include "XMLExport.h"
 
 #include <cstdint>
+
+#include <boost/uuid/uuid_io.hpp>
+#include <fmt/format.h>
 
 #define NUM_SYSTEM_CHUNKS 1
 

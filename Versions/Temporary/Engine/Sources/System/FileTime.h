@@ -1,9 +1,9 @@
 #pragma once
 
+#include "port/time.h"
+
 #include <cstdint>
 #include <ctime>
-
-#include "port/time.h"
 
 struct SWin32Time
 {

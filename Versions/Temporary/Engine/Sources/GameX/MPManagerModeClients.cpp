@@ -1,18 +1,17 @@
 #include "stdafx.h"
 
-#include <fmt/format.h>
-
-#include "MPManagerMode.h"
-#include "Server_Client_Common/GamePackets.h"
 #include "Client/ServerClientInterface.h"
-#include "MultiplayerNetPackets.h"
-#include "MPTransceiver.h"
-#include "ScenarioTracker.h"
-#include "MPPacketTraceLog.h"
-
 #include "MPLANTest.h"
+#include "MPManagerMode.h"
+#include "MPPacketTraceLog.h"
+#include "MPTransceiver.h"
+#include "MultiplayerNetPackets.h"
+#include "ScenarioTracker.h"
+#include "Server_Client_Common/GamePackets.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 // CMPManagerMode - client management
 

@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "Pause.h"
 
-#include "MusicSystem.hpp"
 #include "DBMusicSystem.h"
 #include "Misc/Win32Random.h"
+#include "MusicSystem.hpp"
+#include "Pause.h"
 
 namespace NMusicSystem
 {

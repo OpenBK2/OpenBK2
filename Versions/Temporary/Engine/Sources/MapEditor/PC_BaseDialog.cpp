@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "MapEditorLib/ResourceDefines.h"
 
+#include "MapEditorLib/ResourceDefines.h"
 #include "PC_BaseDialog.h"
 
 #include <cstdint>

@@ -1,14 +1,15 @@
 #pragma once
 
-#include "ED_B2_M1_export.h"
-#include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/EditorBase.h"
+
+#include "ED_B2_M1_export.h"
 // ModelView.h rather than ModelWindow.h: which toolkit draws the palette is
 // NModelView's business. ModelState.h was reached through ModelWindow.h and is
 // needed here in its own right, for GetInputState.
-#include "ModelView.h"
-#include "ModelState.h"
 #include "ModelEditorSettings.h"
+#include "ModelState.h"
+#include "ModelView.h"
 
 #include <cstdint>
 #include <memory>

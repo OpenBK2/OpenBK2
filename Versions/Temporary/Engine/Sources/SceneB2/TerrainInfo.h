@@ -1,8 +1,8 @@
 #pragma once
 
+#include "B2_M1_Terrain/TerrUtils.h"
 #include "Misc/2Darray.h"
 #include "Misc/BitData.h"
-#include "B2_M1_Terrain/TerrUtils.h"
 
 #include <cstdint>
 

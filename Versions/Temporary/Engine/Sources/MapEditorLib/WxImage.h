@@ -17,16 +17,16 @@
 
 #include "System/WinImageFormats.h"
 
-#include <wx/bmpbndl.h>
-#include <wx/bitmap.h>
-#include <wx/filename.h>
-#include <wx/image.h>
-#include <wx/stdpaths.h>
-
 #include <cstdint>
 #include <fstream>
 #include <iterator>
 #include <vector>
+
+#include <wx/bitmap.h>
+#include <wx/bmpbndl.h>
+#include <wx/filename.h>
+#include <wx/image.h>
+#include <wx/stdpaths.h>
 
 namespace NWxImage
 {

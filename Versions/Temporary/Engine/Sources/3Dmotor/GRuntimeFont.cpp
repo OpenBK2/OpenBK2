@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "GRuntimeFont.h"
-#include "DBScene.h"
-#include "GFont.h"
-#include "System/BasicShare.h"
-#include "Image/Image.h"
-#include "Image/ImageDDS.h"
-#include "Misc/StrProc.h"
-#include "Misc/2Darray.h"
-#include "System/VFSOperations.h"
 
 #include "CodePages.h"
+#include "DBScene.h"
 #include "FontFace.h"
 #include "FontFinder.h"
+#include "GFont.h"
+#include "GRuntimeFont.h"
+#include "Image/Image.h"
+#include "Image/ImageDDS.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "System/BasicShare.h"
+#include "System/VFSOperations.h"
 
 #include <algorithm>
 #include <cmath>

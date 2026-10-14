@@ -1,32 +1,33 @@
 #include "stdafx.h"
 
-#include "GroupMoveExecutor.h"
-#include "System/Time.h"
-#include "CommonStates.h"
+#include "AckManager.h"
+#include "Artillery.h"
 #include "Building.h"
-#include "Entrenchment.h"
-#include "GroupLogic.h"
+#include "Commands.h"
+#include "Common_RTS_AI/PathFinder.h"
+#include "CommonStates.h"
 #include "Diplomacy.h"
-#include "Soldier.h"
+#include "Entrenchment.h"
+#include "ExecutorContainer.h"
+#include "Formation.h"
+#include "GroupLogic.h"
+#include "GroupMoveExecutor.h"
 #include "Guns.h"
 #include "HitsStore.h"
-#include "Turret.h"
-#include "Commands.h"
 #include "NewUpdater.h"
-#include "Formation.h"
-#include "AckManager.h"
-#include "Probability.h"
-#include "Common_RTS_AI/PathFinder.h"
 #include "PathFinder.h"
-#include "Technics.h"
-#include <float.h>
-#include "Artillery.h"
-#include "ExecutorContainer.h"
+#include "Probability.h"
+#include "Soldier.h"
 #include "System/Commands.h"
+#include "System/Time.h"
+#include "Technics.h"
+#include "Turret.h"
 
 #include "AILogic_export.h"
 
 #include <cstdint>
+
+#include <float.h>
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4DE, CMechAttackUnitState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4CF, CFollowState );

@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "LongObjectCreation.h"
-#include "UnitsIterators2.h"
 #include "AIUnit.h"
-#include "UnitStates.h"
+#include "LongObjectCreation.h"
 #include "System/FastMath.h"
+#include "UnitsIterators2.h"
+#include "UnitStates.h"
 
 #include "AILogic_export.h"
 

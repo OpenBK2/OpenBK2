@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "PlanePath.h"
-#include "TankPitPath.h"
-#include "PresizePath.h"
 #include "ArtilleryPaths.h"
-#include "SerializeOwner.h"
 #include "Common_RTS_AI/BasePathUnit.h"
+#include "PlanePath.h"
+#include "PresizePath.h"
+#include "SerializeOwner.h"
+#include "TankPitPath.h"
 
 int CPlaneInFormationSmoothPath::operator&( IBinSaver &saver )
 {

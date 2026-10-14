@@ -35,10 +35,10 @@
 // lying and there is one place to annotate if clang-tidy's
 // cppcoreguidelines-owning-memory is ever turned on.
 
-#include <wx/wx.h>
-#include <wx/weakref.h>
-
 #include <utility>
+
+#include <wx/weakref.h>
+#include <wx/wx.h>
 
 namespace NWx
 {

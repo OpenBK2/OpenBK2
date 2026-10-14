@@ -1,27 +1,24 @@
 #include "stdafx.h"
 
-#include "VSOView.h"
-
 #include "CommandHandlerDefines.h"
-#include <fmt/format.h>
-
-#include "ObjectProperties.h"
-#include "ResourceDefines.h"
-#include "VSOMultiState.h"
-
+#include "libdb/ResourceManager.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
-#include "MapEditorLib/WxImageList.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxImageList.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "ObjectProperties.h"
+#include "ResourceDefines.h"
 #include "Stats_B2_M1/Vis2AI.h"
-#include "libdb/ResourceManager.h"
+#include "VSOMultiState.h"
+#include "VSOView.h"
 
+#include <fmt/format.h>
 #include <wx/choice.h>
 #include <wx/listctrl.h>
 
@@ -29,6 +26,10 @@
 // ListView_SetIconSpacing, which wxListCtrl has no equivalent for.
 #include <commctrl.h>
 #endif
+#include <cstdio>
+#include <string>
+#include <unordered_map>
+
 #include <wx/menu.h>
 #include <wx/radiobut.h>
 #include <wx/scrolwin.h>
@@ -37,10 +38,6 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/utils.h>
-
-#include <cstdio>
-#include <string>
-#include <unordered_map>
 
 // The VSO palette, in wx: the ninth, and very nearly the map object palette
 // again -- a filter combo, an object list the collector fills, the same

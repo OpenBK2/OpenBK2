@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SFX.h"
 #include "DBSound.h"
+#include "SFX.h"
 
 enum ESoundMixType : int;
 class CSubstSound;

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "InTransportStates.h"
 #include "Commands.h"
+#include "InTransportStates.h"
 #include "Soldier.h"
 #include "Technics.h"
 

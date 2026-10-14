@@ -1,8 +1,8 @@
 #pragma once
 
-#include "3Dmotor_export.h"
-
 #include "GRenderCore.h"
+
+#include "3Dmotor_export.h"
 
 namespace NGScene
 {

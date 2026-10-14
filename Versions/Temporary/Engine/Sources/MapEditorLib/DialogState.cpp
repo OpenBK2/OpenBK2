@@ -1,11 +1,9 @@
 #include "stdafx.h"
 
 #include "DialogState.h"
-
 #include "Interface_UserData.h"
-#include "Tools_Resources.h"
-
 #include "System/FilePath.h"
+#include "Tools_Resources.h"
 
 // Where every dialog keeps its placement and parameters. Was defined in
 // ResizeDialog.h, with CResizeDialog, the MFC dialog base that first wrote

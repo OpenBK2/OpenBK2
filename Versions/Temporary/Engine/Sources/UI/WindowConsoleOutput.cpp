@@ -1,9 +1,8 @@
 #include "stdafx.h"
-#include "WindowConsoleOutput.h"
-
-#include "UIVisitor.h"
 
 #include "UIML.h"
+#include "UIVisitor.h"
+#include "WindowConsoleOutput.h"
 
 #include <cstdint>
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "TextureEditor.h"
 
 #include "MapEditorLib/EditorFactory.h"
+#include "TextureEditor.h"
 
 REGISTER_EDITOR_IN_DLL( Texture, CTextureEditor )
 

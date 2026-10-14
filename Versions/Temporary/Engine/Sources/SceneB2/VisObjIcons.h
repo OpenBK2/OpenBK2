@@ -1,8 +1,8 @@
 #pragma once
 
 #include "3Dmotor/GView.h"
-#include "Stats_B2_M1/IconsSet.h"
 #include "B2_M1_Terrain/PatchHolder.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 

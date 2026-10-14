@@ -1,11 +1,12 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/StringManager.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/DefaultExporter.h"
-#include "MapEditorLib/Interface_Logger.h"
 #include "ExporterContainer.h"
+#include "MapEditorLib/DefaultExporter.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/StringManager.h"
+
+#include <fmt/format.h>
 
 bool CExporterContainer::StartExport( const std::string &rszExportTypeName,
                                       const std::string &rszObjectTypeName,

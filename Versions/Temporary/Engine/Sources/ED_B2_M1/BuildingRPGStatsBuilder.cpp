@@ -5,8 +5,8 @@
 //
 #include "libdb/ResourceManager.h"
 //
-#include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ObjectController.h"
 
 REGISTER_BUILDER_IN_DLL( BuildingRPGStats, CBuildingRPGStatsBuilder )

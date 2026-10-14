@@ -3,12 +3,11 @@
 #include "AIMap.h"
 #include "BasePathUnit.h"
 #include "CollisionInternal2.h"
-#include "StandartDirPath.h"
-#include "Terrain.h"
-
 #include "DebugTools/DebugInfoManager.h"
 #include "Misc/Geom.h"
+#include "StandartDirPath.h"
 #include "System/RandomGen.h"
+#include "Terrain.h"
 
 #include <algorithm>
 

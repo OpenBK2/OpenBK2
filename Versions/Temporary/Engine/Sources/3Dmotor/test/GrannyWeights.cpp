@@ -1,5 +1,6 @@
 // Exercise the engine's real Granny conversion with compact in-memory vertices.
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/GObjectInfo.h"
 #include "vendor/granny/include/granny.h"
 

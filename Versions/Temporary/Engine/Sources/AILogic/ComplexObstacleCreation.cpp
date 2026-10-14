@@ -1,10 +1,11 @@
 #include "stdafx.h"
+
+#include "Common_RTS_AI/AIMap.h"
 #include "ComplexObstacleCreation.h"
 #include "FenceCreation.h"
-#include "Stats_B2_M1/AIUpdates.h"
-#include "Common_RTS_AI/AIMap.h"
-#include "UnitCreation.h"
 #include "StaticObjects.h"
+#include "Stats_B2_M1/AIUpdates.h"
+#include "UnitCreation.h"
 
 #include "AILogic_export.h"
 

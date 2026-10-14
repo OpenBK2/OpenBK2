@@ -1,6 +1,7 @@
 
-#include <float.h>
 #include "Win32Helper.h"
+
+#include <float.h>
 
 #pragma once
 

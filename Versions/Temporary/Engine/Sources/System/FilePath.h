@@ -2,9 +2,9 @@
 
 #include "System_export.h"
 
-#include <boost/config.hpp>
-
 #include <string>
+
+#include <boost/config.hpp>
 
 namespace NFile
 {

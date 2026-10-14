@@ -1,13 +1,12 @@
 #include "stdafx.h"
+
+#include "MapEditorLib/Interface_FolderCallback.h"
 #include "MapEditorLib/Resources.h"
-
-#include <fmt/printf.h>
-
+#include "Misc/StrProc.h"
 #include "NewObjectView.h"
 #include "ResourceDefines.h"
 
-#include "MapEditorLib/Interface_FolderCallback.h"
-#include "Misc/StrProc.h"
+#include <fmt/printf.h>
 
 // "Create New <type> Object": the two rules that are not about controls, and
 // the title, which the dialog (NewObjectViewWx.cpp) uses.

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "LogSaver.h"
-#include "NetPacket.h"
 #include "Misc/StrProc.h"
+#include "NetPacket.h"
 
 #include <cstdint>
 

@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
 #include "AtomicReactions.h"
-
 #include "Input/Bind.h"
 
-#include <cstdint>
-
 #include "UISpecificB2_export.h"
+
+#include <cstdint>
 
 //		CARSetForcedAction
 

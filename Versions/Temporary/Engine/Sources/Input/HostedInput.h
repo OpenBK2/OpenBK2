@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Input_export.h"
+
 #include <SDL3/SDL.h>
 
 namespace NInput

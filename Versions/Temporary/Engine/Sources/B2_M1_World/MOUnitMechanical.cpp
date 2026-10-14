@@ -1,23 +1,22 @@
 #include "stdafx.h"
 
-#include "Stats_B2_M1/DBAnimB2.h"
-#include "Stats_B2_M1/DBAttachedModelVisObj.h"
-#include "IdleMechProcess.h"
-#include "MOProjectile.h"
-#include "MOUnitMechanical.h"
 #include "B2_M1_Terrain/fmtVSO.h"
-
+#include "Common_RTS_AI/AIClasses.h"
+#include "IdleMechProcess.h"
 #include "Input/Bind.h"
 #include "Main/GameTimer.h"
 #include "Misc/Win32Random.h"
+#include "MOProjectile.h"
+#include "MOUnitMechanical.h"
 #include "SceneB2/AttachedObj.h"
 #include "SceneB2/Camera.h"
 #include "Sound/SoundScene.h"
 #include "Stats_B2_M1/AdditionalActions.h"
-#include "Stats_B2_M1/IClientGameConsts.h"
 #include "Stats_B2_M1/AnimModelGet.h"
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBAttachedModelVisObj.h"
+#include "Stats_B2_M1/IClientGameConsts.h"
 #include "System/Text.h"
-#include "Common_RTS_AI/AIClasses.h"
 
 #include <cstdint>
 

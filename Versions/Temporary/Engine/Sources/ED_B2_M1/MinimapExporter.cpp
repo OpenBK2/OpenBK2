@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-
-#include "MinimapExporter.h"
 
 #include "ExporterMethods.h"
 #include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "System/FileUtils.h"
 #include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MinimapExporter.h"
+#include "System/FileUtils.h"
+
+#include <fmt/format.h>
 
 REGISTER_EXPORTER_IN_DLL( Minimap, CMinimapExporter )
 

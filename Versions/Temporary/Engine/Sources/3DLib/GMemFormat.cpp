@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GMemFormat.h"
+
 #include "GGeometry.h"
+#include "GMemFormat.h"
 
 #include "3DLib_export.h"
 

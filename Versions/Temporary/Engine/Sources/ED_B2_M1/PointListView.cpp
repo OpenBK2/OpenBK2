@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "PointListView.h"
 #include "CommandHandlerDefines.h"
 #include "DialogData.h"
-#include "ResourceDefines.h"
-
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "PointListView.h"
+#include "ResourceDefines.h"
 
 #include <algorithm>
 #include <vector>
+
+#include <fmt/format.h>
 
 // The dispatch in front of the building editor's point lists
 // (PointListViewWx.cpp), which used to live inside CPointListDialog.

@@ -3,9 +3,9 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include <boost/predef.h>
-
 #include <cfenv>
+
+#include <boost/predef.h>
 // _control87 and the _PC_ constants, for the x87 precision field only
 #include <cfloat>
 

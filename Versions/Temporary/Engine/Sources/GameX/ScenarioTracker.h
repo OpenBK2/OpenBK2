@@ -1,8 +1,7 @@
 #pragma once
 
-#include "GameX/DBScenario.h"
-
 #include "AILogic/ScenarioTracker.h"
+#include "GameX/DBScenario.h"
 
 #include <cstdint>
 

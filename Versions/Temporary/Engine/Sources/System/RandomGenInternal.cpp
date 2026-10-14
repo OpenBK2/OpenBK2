@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
-#include "RandomGenInternal.h"
 #include "Commands.h"
+#include "RandomGenInternal.h"
 #include "XmlSaver.h"
 
 #include <cstdint>
 #include <random>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <fmt/format.h>
 

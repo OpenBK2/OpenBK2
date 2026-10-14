@@ -2,8 +2,8 @@
 #pragma once
 
 #include "GeneralInternalInterfaces.h"
-#include "Stats_B2_M1/DBMapInfo.h"
 #include "Resistance.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 // ****
 // защита патча.

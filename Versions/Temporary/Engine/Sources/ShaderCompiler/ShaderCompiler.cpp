@@ -1,8 +1,8 @@
 #include "stdafx.h"
 //#include "Optimizer.h"
-#include "parser.h"
 #include "Data.h"
 #include "output.h"
+#include "parser.h"
 #include "ShaderAsm.h"
 
 #if SHADERCOMPILER_WITH_D3DX

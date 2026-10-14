@@ -1,8 +1,8 @@
 #pragma once
 
+#include "EditorScene.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
-#include "EditorScene.h"
 
 #include <zconf.h>
 

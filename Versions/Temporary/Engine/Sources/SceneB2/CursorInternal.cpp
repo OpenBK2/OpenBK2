@@ -2,8 +2,8 @@
 
 #include "CursorInternal.h"
 #include "System/VFSOperations.h"
-#include "System/WinFrame.h"
 #include "System/WinCursor.h"
+#include "System/WinFrame.h"
 
 #include <fmt/format.h>
 

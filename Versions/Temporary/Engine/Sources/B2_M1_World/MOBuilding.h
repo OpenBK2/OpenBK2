@@ -4,9 +4,9 @@
 
 #include "MapObj.h"
 
-#include <cstdint>
-
 #include "B2_M1_World_export.h"
+
+#include <cstdint>
 
 class B2_M1_WORLD_EXPORT CMOBuilding : public IMOContainer
 {

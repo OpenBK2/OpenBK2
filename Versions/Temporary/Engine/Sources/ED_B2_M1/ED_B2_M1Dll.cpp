@@ -3,21 +3,21 @@
 #include "ED_B2_M1_export.h"
 
 //
+#include "ED_Common/TempAttributesTool.h"
+#include "ED_Common/UIScene.h"
 #include "MapEditorLib/BuildDetails.h"
-#include "MapEditorLib/Interface_Editor.h"
+#include "MapEditorLib/InteractiveMayaExportTool.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
+#include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/MapEditorModule.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/InteractiveMayaExportTool.h"
-#include "ED_Common/UIScene.h"
-#include "ED_Common/TempAttributesTool.h"
-#include "System/FilePath.h"
-#include <fmt/format.h>
-
 #include "MapObjectDataExtractor.h"
 #include "SpotDataExtractor.h"
+#include "System/FilePath.h"
 #include "TileDataExtractor.h"
 #include "VSODataExtractor.h"
+
+#include <fmt/format.h>
 
 namespace
 {

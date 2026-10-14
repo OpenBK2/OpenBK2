@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "AckManager.h"
 #include "AIUnit.h"
 #include "Diplomacy.h"

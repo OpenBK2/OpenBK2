@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-#include "GlobalObjects.h"
-#include "StaticMembers.h"
 #include "AILogicInternal.h"
-#include "Reinforcement.h"
+#include "GlobalObjects.h"
 #include "Misc/Progress.h"
+#include "Reinforcement.h"
 #include "ScenarioTracker.h"
+#include "StaticMembers.h"
 
 extern NTimer::STime curTime;
 

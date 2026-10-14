@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include <thread>
-#include "SWTexture.h"
 #include "DBScene.h"
 #include "Image/DDS.h"
 #include "Image/GUnpackDXT.h"
+#include "SWTexture.h"
 
 #include <cstdint>
+#include <thread>
 
 NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr );
 

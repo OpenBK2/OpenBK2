@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "BindProcessor.h"
-#include "BindArray.h"
+
 #include "Bind.h"
+#include "BindArray.h"
+#include "BindProcessor.h"
 #include "EditorDb.h"
+#include "System/FilePath.h"
 #include "System/LightXML.h"
 #include "System/XMLReader.h"
 #include "System/XmlUtils.h"
-#include "System/FilePath.h"
 
 #include <fmt/format.h>
 

@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
 #include "LogView.h"
-
-#include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/WxOwnership.h"
 
-#include <wx/textctrl.h>
 #include <wx/settings.h>
+#include <wx/textctrl.h>
 
 // The Log Window's contents, drawn by wx: a read-only text control that is
 // appended to, cleared, copied from and selected, in the log's three colours

@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "InterfaceMPBase.h"
-#include "GameXClassIDs.h"
 
+#include "GameXClassIDs.h"
 #include "InterfaceMisc.h"
+#include "InterfaceMPBase.h"
 
 // CInterfaceMPScreenBase
 

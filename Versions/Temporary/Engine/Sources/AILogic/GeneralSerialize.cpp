@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
+#include "GeneralConsts.h"
+#include "GeneralIntendant.h"
 #include "GeneralInternal.h"
 #include "SerializeOwner.h"
-#include "GeneralIntendant.h"
-#include "GeneralConsts.h"
 
 int CSupremeBeing::operator&( IBinSaver &saver )
 {

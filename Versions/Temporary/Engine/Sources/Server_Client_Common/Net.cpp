@@ -1,11 +1,10 @@
 #include "stdafx.h"
 
-#include "Net/NetAddress.h"
 #include "CommonPackets.h"
 #include "Net.h"
-#include "NetSaver.h"
+#include "Net/NetAddress.h"
 #include "Net/NetDriver.h"
-
+#include "NetSaver.h"
 #include "ZipPacket.h"
 
 const int MIN_PACKET_SIZE_TO_ZIP = 50;

@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include <thread>
-#include <chrono>
-
 #include "Misc/Win32Helper.h"
-#include "System/Time.h"
 #include "NetA4.h"
+#include "System/Time.h"
 
+#include <chrono>
 #include <cstdint>
 #include <mutex>
+#include <thread>
 
 // for testing
 

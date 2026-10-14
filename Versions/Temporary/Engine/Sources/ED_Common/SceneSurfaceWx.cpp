@@ -1,16 +1,18 @@
 #include "stdafx.h"
 
-#include "SceneSurface.h"
+#include "ChildFrameWndBase.h"
 #include "MapEditorLib/Cursors.h"
-
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPaintContext.h"
-#include "ChildFrameWndBase.h"
 #include "NativeViewport.h"
+#include "SceneSurface.h"
 // MK_ flags for the input states' nFlags, and VK_ codes for their nChar.
 #include "port/mousekeys.h"
 #include "port/vkcodes.h"
+
+#include <algorithm>
+#include <functional>
 
 #include <wx/dcclient.h>
 #include <wx/event.h>
@@ -18,9 +20,6 @@
 #include <wx/timer.h>
 #include <wx/toplevel.h>
 #include <wx/window.h>
-
-#include <algorithm>
-#include <functional>
 
 // The viewport's window in wx: a wxWindow the renderer draws in, inside a
 // CWxHostWindow made as the document window's AFX_IDW_PANE_FIRST, as the MFC

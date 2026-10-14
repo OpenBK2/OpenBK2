@@ -2,9 +2,9 @@
 
 #include "Database.h"
 
-#include <mysql.h>
-
 #include <vector>
+
+#include <mysql.h>
 
 // The MariaDB and MySQL backend for IDatabase.
 //

@@ -2,9 +2,9 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "3DLib_export.h"
-
 #include "3Dmotor/GPixelFormat.h"
+
+#include "3DLib_export.h"
 
 #include <cstdint>
 

@@ -1,5 +1,5 @@
-#include "FontRaster.h"
 #include "FontFace.h"
+#include "FontRaster.h"
 
 #include <algorithm>
 

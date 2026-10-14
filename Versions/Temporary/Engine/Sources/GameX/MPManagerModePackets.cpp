@@ -1,24 +1,23 @@
 #include "stdafx.h"
 
-#include <fmt/format.h>
-
-#include "MPManagerMode.h"
-#include "MultiplayerNetPackets.h"
-#include "Server_Client_Common/GamePackets.h"
-#include "Server_Client_Common/ChatPackets.h"
-#include "Server_Client_Common/CommonPackets.h"
 #include "Client/ServerClientInterface.h"
-#include "Misc/StrProc.h"
-#include "Misc/StringConversions.h"
-#include "port/unicode.h"
-#include "MPTransceiver.h"
-#include "ScenarioTracker.h"
 #include "DBMPConsts.h"
 #include "InterfaceState.h"
-#include "System/WinFrame.h"
-#include "MPPacketTraceLog.h"
-
+#include "Misc/StringConversions.h"
+#include "Misc/StrProc.h"
 #include "MPLANTest.h"
+#include "MPManagerMode.h"
+#include "MPPacketTraceLog.h"
+#include "MPTransceiver.h"
+#include "MultiplayerNetPackets.h"
+#include "port/unicode.h"
+#include "ScenarioTracker.h"
+#include "Server_Client_Common/ChatPackets.h"
+#include "Server_Client_Common/CommonPackets.h"
+#include "Server_Client_Common/GamePackets.h"
+#include "System/WinFrame.h"
+
+#include <fmt/format.h>
 
 // CMPManagerMode - packet handling methods
 

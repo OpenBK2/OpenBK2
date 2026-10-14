@@ -2,17 +2,16 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "System_export.h"
-
 #include "AsyncTrace.h"
 #include "Dg.h"
-
-#include <boost/uuid/uuid.hpp>
-
 #include "UuidChunk.h"
+
+#include "System_export.h"
 
 #include <atomic>
 #include <thread>
+
+#include <boost/uuid/uuid.hpp>
 
 namespace NGScene
 {

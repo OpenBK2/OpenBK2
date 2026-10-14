@@ -1,10 +1,11 @@
 #include "stdafx.h"
 
-#include "MapInfoViewFilter.h"
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+#include "MapInfoViewFilter.h"
+
+#include <string>
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -12,8 +13,6 @@
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
-
-#include <string>
 
 // View -> Filter, in wx: IDD_DLG_MAPINFO_VIEW_FILTER, "MapInfo View Filter".
 //

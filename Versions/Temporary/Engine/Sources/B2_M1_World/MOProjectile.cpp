@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
-#include "MOProjectile.h"
 #include "Main/GameTimer.h"
+#include "Misc/2Darray.h"
+#include "MOProjectile.h"
 #include "Sound/DBSound.h"
 #include "System/Commands.h"
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 int g_nProjectileFallSoundMaxTime = 2000;

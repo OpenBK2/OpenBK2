@@ -1,7 +1,7 @@
 #pragma once
 
-#include "System/DB.h"
 #include "DBObserverContainer.h"
+#include "System/DB.h"
 
 #define INDEX_FILE_NAME "index.bin"
 #define TYPES_FILE_NAME "types.xml"

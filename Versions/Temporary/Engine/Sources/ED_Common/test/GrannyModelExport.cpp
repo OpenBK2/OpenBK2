@@ -1,18 +1,21 @@
 #include "3Dmotor/stdafx.h"
+
 #include "../GrannyModelExport.h"
 #include "3Dmotor/DBScene.h"
+#include "libdb/Db.h"
 #include "Stats_B2_M1/ActionCommand.h"
 #include "Stats_B2_M1/ActionsRemap.h"
-#include "libdb/Db.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
-#include <fastgltf/core.hpp>
-#include <simdjson.h>
+
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
-#include <cstdlib>
 #include <set>
+
+#include <fastgltf/core.hpp>
 #include <gtest/gtest.h>
+#include <simdjson.h>
 
 TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChangingResources )
 {

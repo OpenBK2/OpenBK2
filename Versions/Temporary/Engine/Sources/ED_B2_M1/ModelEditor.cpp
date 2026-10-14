@@ -1,27 +1,23 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
+
 #include "CommandHandlerDefines.h"
-
-#include "Misc/HPTimer.h"
-
-#include "MapEditorLib/EditorFactory.h"
-
-#include "ModelEditor.h"
-
 #include "EditorScene.h"
-#include "SceneB2/Camera.h"
-
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "Misc/2Darray.h"
+#include "Misc/HPTimer.h"
+#include "ModelEditor.h"
+#include "SceneB2/Camera.h"
+#include "Stats_B2_M1/IconsSet.h"
+
+#include "ED_B2_M1_export.h"
 
 #include <cstdint>
 
 #include <zconf.h>
-
-#include "ED_B2_M1_export.h"
 
 REGISTER_EDITOR_IN_DLL( Model, CModelEditor )
 

@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
 #include "CameraMayaMouseMutator.h"
-#include "System/Commands.h"
-
 #include "port/time.h"
+#include "System/Commands.h"
 
 #include <cstdint>
 

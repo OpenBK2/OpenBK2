@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "MemObject.h"
-#include "Bound.h"
-#include "Transform.h"
-#include "PolyUtils.h"
 
-#include <cstdint>
+#include "Bound.h"
+#include "MemObject.h"
+#include "PolyUtils.h"
+#include "Transform.h"
 
 #include "3DLib_export.h"
+
+#include <cstdint>
 
 struct SMemBuilderVertex
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Script_export.h"
-
 #include "RegFunction.h"
+
+#include "Script_export.h"
 
 struct IScriptWrapper : public CObjectBase
 {

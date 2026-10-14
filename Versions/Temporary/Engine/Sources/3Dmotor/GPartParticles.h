@@ -1,6 +1,6 @@
 #pragma once
-#include "GTransparent.h"
 #include "GScene.h"
+#include "GTransparent.h"
 
 namespace NGScene
 {

@@ -21,19 +21,19 @@
 
 #include "GDBBrowserPane.h"
 #include "LogPane.h"
-#include "PropertyPaneView.h"
 #include "MapEditorLib/Interface_Widget.h"
 #include "MapEditorLib/WxWidget.h"
+#include "PropertyPaneView.h"
+
+#include <map>
+#include <memory>
+#include <string>
 
 #include <wx/aui/auibar.h>
 #include <wx/aui/framemanager.h>
 #include <wx/bitmap.h>
 #include <wx/panel.h>
 #include <wx/weakref.h>
-
-#include <map>
-#include <memory>
-#include <string>
 
 class CNativeDockHint;
 

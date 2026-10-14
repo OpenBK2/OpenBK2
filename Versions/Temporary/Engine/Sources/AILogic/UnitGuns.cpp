@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
-#include "Soldier.h"
 #include "GunsInternal.h"
-#include "UnitGuns.h"
-#include "Turret.h"
 #include "PathFinder.h"
+#include "Soldier.h"
+#include "Turret.h"
+#include "UnitGuns.h"
 #include "Weather.h"
 
 #include "AILogic_export.h"

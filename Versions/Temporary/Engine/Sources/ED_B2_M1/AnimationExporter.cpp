@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "System/FileUtils.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 
 #include "AnimationExporter.h"
 #include "ED_Common/GltfExporter.h"
+#include "ExporterMethods.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "System/FileUtils.h"
 
-#include "ExporterMethods.h"
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 REGISTER_EXPORTER_IN_DLL( AnimB2, CAnimationExporter )
 

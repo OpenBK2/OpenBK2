@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
+#include "Common_RTS_AI/StaticMapHeights.h"
 #include "ManuverInternal.h"
 #include "PathFractionArcLine3D.h"
-#include "PathFractionComposite.h"
 #include "PathFractionArcLineArc.h"
 #include "PathFractionArcLineArc3D.h"
+#include "PathFractionComposite.h"
 #include "PlanesFormation.h"
-#include "Common_RTS_AI/StaticMapHeights.h"
-#include "System/FastMath.h"
-#include "System/RandomGen.h"
 #include "Stats_B2_M1/DBPlaneManuvers.h"
 #include "System/Commands.h"
+#include "System/FastMath.h"
+#include "System/RandomGen.h"
 
 #include "AILogic_export.h"
 

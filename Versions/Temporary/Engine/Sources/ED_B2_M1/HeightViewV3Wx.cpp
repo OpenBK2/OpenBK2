@@ -1,18 +1,16 @@
 #include "stdafx.h"
 
-#include "HeightViewV3.h"
-
 #include "CommandHandlerDefines.h"
 #include "HeightStateV3.h"
-#include "ResourceDefines.h"
-
+#include "HeightViewV3.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/WxResourceImages.h"
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
-#include "MapEditorLib/WxImageList.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxImageList.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxResourceImages.h"
+#include "ResourceDefines.h"
 
 #include <wx/bitmap.h>
 #include <wx/checkbox.h>
@@ -23,6 +21,9 @@
 // ListView_SetIconSpacing, which wxListCtrl has no equivalent for.
 #include <commctrl.h>
 #endif
+#include <string>
+#include <vector>
+
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
@@ -30,9 +31,6 @@
 #include <wx/tglbtn.h>
 #include <wx/timer.h>
 #include <wx/utils.h>
-
-#include <string>
-#include <vector>
 
 // The terrain height palette, in wx: the seventh palette, and the first with
 // anything in it beyond plain controls.

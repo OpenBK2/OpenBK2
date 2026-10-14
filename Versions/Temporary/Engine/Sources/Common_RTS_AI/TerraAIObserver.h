@@ -2,15 +2,15 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "Common_RTS_AI_export.h"
-
-#include "Stats_B2_M1/TerraAIObserver.h"
-#include "B2_M1_Terrain/fmtVSO.h"
-#include "B2_M1_Terrain/DBVSO.h"
-#include "StaticMapHeights.h"
 #include "AIMap.h"
-#include "Terrain.h"
+#include "B2_M1_Terrain/DBVSO.h"
+#include "B2_M1_Terrain/fmtVSO.h"
 #include "PassMarkers.h"
+#include "StaticMapHeights.h"
+#include "Stats_B2_M1/TerraAIObserver.h"
+#include "Terrain.h"
+
+#include "Common_RTS_AI_export.h"
 
 #include <cstdint>
 

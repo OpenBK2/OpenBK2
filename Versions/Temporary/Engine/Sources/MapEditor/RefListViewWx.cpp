@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
-#include "RefListView.h"
-
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+#include "RefListView.h"
 
 #include <wx/button.h>
 #include <wx/listctrl.h>

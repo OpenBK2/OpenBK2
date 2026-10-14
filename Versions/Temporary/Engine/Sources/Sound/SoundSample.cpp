@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "SoundSample.h"
 #include "DBSoundDesc.h"
+#include "SoundSample.h"
 #include "System/VFSOperations.h"
 
 #include "Sound_export.h"

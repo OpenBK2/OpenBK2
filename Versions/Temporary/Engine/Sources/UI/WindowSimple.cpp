@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "WindowSimple.h"
+
 #include "UIVisitor.h"
+#include "WindowSimple.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x110772C1, CWindowSimple )
 

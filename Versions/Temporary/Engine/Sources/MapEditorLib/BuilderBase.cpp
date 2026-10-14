@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "DefaultBuilder.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_UserData.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/ManipulatorManager.h"
 
 bool CBuilderBase::InsertObject( std::string *pszObjectTypeName,
                                  std::string *pszUniqueObjectName,

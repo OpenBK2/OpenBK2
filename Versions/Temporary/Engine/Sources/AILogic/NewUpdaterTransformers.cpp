@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "NewUpdater.h"
 #include "Diplomacy.h"
 #include "Entrenchment.h"
 #include "Formation.h"
 #include "Graveyard.h"
+#include "NewUpdater.h"
 #include "Soldier.h"
-
 #include "Stats_B2_M1/StatusUpdates.h"
 #include "Stats_B2_M1/SuperWeaponUpdates.h"
 

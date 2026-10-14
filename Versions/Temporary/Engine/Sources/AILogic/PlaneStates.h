@@ -1,8 +1,8 @@
 #pragma once
 
+#include "DamageToEnemyUpdater.h"
 #include "StatesFactory.h"
 #include "UnitStates.h"
-#include "DamageToEnemyUpdater.h"
 
 #include <cstdint>
 

@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "ExecutorAttackGroup.h"
 
-#include "GroupLogic.h"
 #include "CommonUnit.h"
+#include "ExecutorAttackGroup.h"
 #include "ExecutorAttackGroupEvent.h"
+#include "GroupLogic.h"
 #include "UnitStates.h"
 
 extern CGroupLogic theGroupLogic;

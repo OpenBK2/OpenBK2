@@ -2,14 +2,14 @@
 // has. GfxShaders.corpus holds each one's assembly text and the tokens D3DX
 // made of it; see the comment at its top for how it was produced.
 
+#include "ShaderAsm.h"
+
 #include <cstdint>
 #include <cstdio>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include "ShaderAsm.h"
 
 #include <gtest/gtest.h>
 

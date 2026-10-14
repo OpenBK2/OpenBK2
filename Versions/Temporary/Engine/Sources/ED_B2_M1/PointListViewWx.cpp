@@ -1,25 +1,22 @@
 #include "stdafx.h"
 
-#include "PointListView.h"
-
-#include <fmt/format.h>
-
 #include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
-#include "SeasonMnemonics.h"
-
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "PointListView.h"
+#include "ResourceDefines.h"
+#include "SeasonMnemonics.h"
 
+#include <cstdint>
+
+#include <fmt/format.h>
 #include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/utils.h>
-
-#include <cstdint>
 
 // One of the building editor's point lists, in wx: IDD_TAB_BLD_POINTS, five
 // times over. Two check boxes, a season and the list of points.

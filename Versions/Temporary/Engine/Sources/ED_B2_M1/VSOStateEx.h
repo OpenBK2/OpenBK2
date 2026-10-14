@@ -1,8 +1,8 @@
 #pragma once
 
-#include "VSOState.h"
 #include "MapInfoController.h"
 #include "MapInfoEditorData.h"
+#include "VSOState.h"
 
 class CVSOStateEx : public CVSOState
 {

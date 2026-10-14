@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "Misc/Bresenham.h"
-#include "CLockWithUnlockPossibilities.h"
 #include "AIUnit.h"
+#include "CLockWithUnlockPossibilities.h"
+#include "Misc/Bresenham.h"
 #include "UnitsIterators2.h"
 
 #include <cstdint>

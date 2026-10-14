@@ -4,8 +4,10 @@
 
 #ifdef __WXGTK__
 #include "MapEditorLib_export.h"
-#include <wx/nativewin.h>
+
 #include <memory>
+
+#include <wx/nativewin.h>
 
 // wxGTK's generic icon list flows into columns and Arrange() is a no-op.
 // Use GTK's native wrapping icon view, keeping the palette's list events/data

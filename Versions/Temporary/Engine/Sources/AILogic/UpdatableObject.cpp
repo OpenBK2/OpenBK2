@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "UpdatableObject.h"
-#include "Diplomacy.h"
 #include "Cheats.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "Diplomacy.h"
+#include "UpdatableObject.h"
 
 #include "AILogic_export.h"
 

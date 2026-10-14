@@ -1,24 +1,23 @@
 #include "stdafx.h"
-#include "MapEditorLib/ResourceDefines.h"
+
+#include "EditorMethods.h"
+#include "EditorScene.h"
+#include "HeightStateV3.h"
+#include "Image/Targa.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapInfoEditor.h"
 #include "Misc/2Darray.h"
-#include "Image/Targa.h"
+#include "Misc/Win32Helper.h"
+#include "port/mousekeys.h"
+#include "port/vkcodes.h"
+#include "ResourceDefines.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "System/FilePath.h"
 #include "System/Time.h"
-#include "ResourceDefines.h"
-
-#include "MapEditorLib/Interface_UserData.h"
-#include "EditorMethods.h"
-#include "HeightStateV3.h"
-#include "MapInfoEditor.h"
-
-#include "EditorScene.h"
-#include "Misc/Win32Helper.h"
 #include "System/VFSOperations.h"
-#include "port/vkcodes.h"
-#include "port/mousekeys.h"
 
 #include <cstdint>
 

@@ -1,11 +1,12 @@
 #include "stdafx.h"
-#include "InterfacePlayerStats.h"
+
 #include "GameXClassIDs.h"
+#include "InterfacePlayerStats.h"
+#include "InterfaceState.h"
 #include "Main/Profiles.h"
 #include "Misc/StrProc.h"
 #include "ScenarioTracker.h"
 #include "System/Text.h"
-#include "InterfaceState.h"
 
 #include "GameX_export.h"
 

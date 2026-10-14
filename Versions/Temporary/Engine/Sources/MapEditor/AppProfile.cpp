@@ -1,11 +1,10 @@
 #include "stdafx.h"
 
 #include "AppProfile.h"
-
-#include "ResourceDefines.h"
+#include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/Interface_UserData.h"
+#include "ResourceDefines.h"
 
 #include <wx/config.h>
 

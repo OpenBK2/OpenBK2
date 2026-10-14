@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
+#include "AIUnit.h"
 #include "ExecutorTransportHealInfantry.h"
 #include "UnitsIterators2.h"
-#include "AIUnit.h"
 
 #include "AILogic_export.h"
 

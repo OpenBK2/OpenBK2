@@ -5,8 +5,8 @@
 // not depend on the resource type, so their declarations have to be visible
 // here. MSVC looked them up only on instantiation, by which point every caller
 // happened to have included both; GCC looks them up at the definition.
-#include "System/XmlSaver.h"
 #include "MapEditorLib/StringManager.h"
+#include "System/XmlSaver.h"
 
 #include "MapEditorLib_export.h"
 

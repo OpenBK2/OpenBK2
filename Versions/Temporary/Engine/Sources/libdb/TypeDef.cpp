@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include "TypeDef.h"
+
 #include "Misc/StrProc.h"
+#include "TypeDef.h"
 
 #include "libdb_export.h"
 
 #include <cstdint>
-#include <boost/uuid/string_generator.hpp>
-#include <boost/uuid/random_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
 
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/string_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <fmt/format.h>
 
 int CRAPTooSmartCompiler_DBTools_TypeDef()

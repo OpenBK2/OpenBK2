@@ -2,9 +2,9 @@
 
 #include "AIDebugInfo.h"
 #include "DebugTools/DebugInfoManager.h"
-#include "System/FastMath.h"
-#include "System/det_map.h"
 #include "Stats_B2_M1/DBPassProfile.h"
+#include "System/det_map.h"
+#include "System/FastMath.h"
 
 #include <cstdint>
 

@@ -1,10 +1,10 @@
 #pragma once
 
+#include "ED_B2_M1/Tools_SceneDraw.h" // CSceneDrawTool
 #include "MapEditorLib/DefaultInputState.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>
-#include "ED_B2_M1/Tools_SceneDraw.h" // CSceneDrawTool
 
 struct SCameraPos
 {

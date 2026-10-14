@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Common_RTS_AI/AIMap.h"
 #include "Diplomacy.h"
 #include "Units.h"
-#include "Common_RTS_AI/AIMap.h"
 
 #include <cstdint>
 

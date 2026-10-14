@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "InteractiveProcess.h"
 
@@ -9,10 +8,13 @@
 #include <cstring>
 #include <thread>
 
+#include <fmt/format.h>
+
 #if BOOST_OS_WINDOWS
 #include <windows.h>
 #else
 #include <cerrno>
+
 #include <fcntl.h>
 #include <poll.h>
 #include <signal.h>

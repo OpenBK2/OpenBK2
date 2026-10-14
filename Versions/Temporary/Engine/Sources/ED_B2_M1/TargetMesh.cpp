@@ -1,15 +1,12 @@
 #include "stdafx.h"
 
-#include "TargetMesh.h"
-#include "EditorScene.h"
-
 #include "3DLib/GGeometry.h"
 #include "3DLib/Transform.h"
-
-#include "3Dmotor/GView.h"
 #include "3Dmotor/Gfx.h"
-
+#include "3Dmotor/GView.h"
+#include "EditorScene.h"
 #include "SceneB2/Camera.h"
+#include "TargetMesh.h"
 
 namespace NTargetMesh
 {

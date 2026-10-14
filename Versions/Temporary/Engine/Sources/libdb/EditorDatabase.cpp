@@ -1,27 +1,25 @@
 #include "stdafx.h"
 
-#include "port/unicode.h"
-
-#include "Db.h"
-#include "StructMetaInfo.h"
 #include "Bind.h"
 #include "Database.h"
+#include "Db.h"
+#include "port/unicode.h"
+#include "StructMetaInfo.h"
 // For the LIBDB_EXPORT declaration of GetLastSaveError, defined below. Without it
 // the definition is not dllexport and MapEditor fails to link on Windows.
+#include "DBReferenceScan.h"
 #include "EditorDb.h"
 #include "Index.h"
+#include "Logger.h"
 #include "ReportMetaInfo.h"
 #include "System/LightXML.h"
-#include "System/XMLReader.h"
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
 #include "System/XMLReader.h"
-#include "Logger.h"
-#include "DBReferenceScan.h"
-
-#include <fmt/format.h>
 
 #include "libdb_export.h"
+
+#include <fmt/format.h>
 
 EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 

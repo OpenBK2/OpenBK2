@@ -1,7 +1,7 @@
 #include "stdafx.h"
+
 #include "ExecutorContainer.h"
 #include "ExecutorSimpleEvent.h"
-
 #include "System/AsyncTrace.h"
 
 #include "AILogic_export.h"

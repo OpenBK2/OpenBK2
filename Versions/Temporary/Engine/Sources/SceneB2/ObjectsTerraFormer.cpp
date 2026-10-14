@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "TerraTools.h"
-#include "System/FastMath.h"
 #include "GenTerrain.h"
+#include "System/FastMath.h"
+#include "TerraTools.h"
 
 #include <cstdint>
 

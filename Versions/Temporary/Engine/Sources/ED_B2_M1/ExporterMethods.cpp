@@ -1,31 +1,29 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "Image/Targa.h"
-#include "ExporterMethods.h"
 #include "ED_Common/GltfExporter.h"
-#include "SeasonMnemonics.h"
+#include "ED_Common/TempAttributesTool.h"
+#include "ExporterMethods.h"
+#include "Image/Targa.h"
+#include "libdb/EditorDb.h"
+#include "libdb/ObjMan.h"
 #include "libdb/ResourceManager.h"
-#include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/Interface_MOD.h"
-#include "System/FileUtils.h"
-#include "System/FilePath.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
-#include "ED_Common/TempAttributesTool.h"
-
 #include "SceneB2/TerraGen.h"
 #include "SceneB2/VisObjDesc.h"
-
+#include "SeasonMnemonics.h"
+#include "Stats_B2_M1/IconsSet.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
 #include "System/VFSOperations.h"
-#include "libdb/ObjMan.h"
-#include "libdb/EditorDb.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 IManipulator *CreateModelManipulatorFromVisObj( IManipulator *pVisObjectManipulator, std::string *pModelName )

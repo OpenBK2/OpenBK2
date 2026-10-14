@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "PlayList.h"
 
 #include "DBMusicSystem.h"
-#include "MusicSystem.hpp"
 #include "Misc/Win32Random.h"
-#include "Track.h"
+#include "MusicSystem.hpp"
 #include "Pause.h"
+#include "PlayList.h"
+#include "Track.h"
 
 namespace NMusicSystem
 {

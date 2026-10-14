@@ -1,9 +1,7 @@
 #pragma once
-#include "UIML.h"
-
 #include "Misc/StrProc.h"
-
 #include "port/unicode.h"
+#include "UIML.h"
 
 inline NGfx::SPixel8888 StringToColor( const std::wstring &wsColor, float fFade = 1.0f )
 {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MPManagerMode.h"
 #include "Client/LANClient.h"
+#include "MPManagerMode.h"
 
 #include <cstdint>
 

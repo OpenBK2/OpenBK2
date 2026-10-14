@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "GParts.h"
-#include "GDecal.h"
+
 #include "DecalFader.h"
+#include "GDecal.h"
+#include "GParts.h"
 
 namespace NGScene
 {

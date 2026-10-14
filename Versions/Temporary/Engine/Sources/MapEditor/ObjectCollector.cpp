@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include <fmt/format.h>
-#include "ResourceDefines.h"
 
-#include "ObjectCollector.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/Interface_Logger.h"
-#include "Misc/HPTimer.h"
-#include "Misc/2Darray.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/Tools_Image.h"
 #include "MapEditorLib/WxImageList.h"
 #include "MapEditorLib/WxResourceImages.h"
-
+#include "Misc/2Darray.h"
+#include "Misc/HPTimer.h"
+#include "ObjectCollector.h"
 #include "port/unicode.h"
+#include "ResourceDefines.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 int CObjectFilterCollector::SObjectFilter::SPart::operator&( IXmlSaver &saver )
 {

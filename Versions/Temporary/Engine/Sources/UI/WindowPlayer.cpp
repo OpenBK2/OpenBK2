@@ -1,9 +1,10 @@
 #include "stdafx.h"
+
 #include "3Dmotor/RectLayout.h"
-#include "UIVisitor.h"
-#include "WindowPlayer.h"
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"
+#include "UIVisitor.h"
+#include "WindowPlayer.h"
 
 #include <cstdint>
 

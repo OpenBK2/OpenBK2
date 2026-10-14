@@ -1,59 +1,35 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
 
-#include "ObjectBrowserView.h"
 #include "ED_Common/GrannyModelExport.h"
-
-#include "ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/DefaultView.h"
-#include "MapEditorLib/FolderController.h"
-#include "MapEditorLib/Interface_Editor.h"
-#include "MapEditorLib/Interface_MainFrame.h"
-#include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/WxHostWindow.h"
-#include "MapEditorLib/WxOwnership.h"
-#include "Misc/StrProc.h"
 #include "libdb/Db.h"
 #include "libdb/Manipulator.h"
 #include "libdb/ResourceManager.h"
-#include "RefListView.h"
-#include "SearchObjectView.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/FolderController.h"
 #include "MapEditorLib/Interface_Builder.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Interface_FolderCallback.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxColourDialog.h"
+#include "MapEditorLib/WxHostWindow.h"
+#include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxResourceImages.h"
+#include "Misc/StrProc.h"
+#include "ObjectBrowserView.h"
+#include "RefListView.h"
+#include "ResourceDefines.h"
+#include "SearchObjectView.h"
 #include "System/GlobalVars.h"
-
-#include <fmt/format.h>
-#include <fmt/printf.h>
-
-#include <wx/choice.h>
-#include <wx/checkbox.h>
-#include <wx/dialog.h>
-#include <wx/clipbrd.h>
-#include <wx/dataobj.h>
-#include <wx/dnd.h>
-#include <wx/headerctrl.h>
-#include <wx/filedlg.h>
-#include <wx/filename.h>
-#include <wx/imaglist.h>
-#include <wx/menu.h>
-#include <wx/msgdlg.h>
-#include <wx/panel.h>
-#include <wx/utils.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/time.h>
-#include <wx/timer.h>
-#include <wx/treectrl.h>
 
 #include <cstdint>
 #include <cstring>
@@ -64,6 +40,28 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
+#include <wx/checkbox.h>
+#include <wx/choice.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
+#include <wx/dialog.h>
+#include <wx/dnd.h>
+#include <wx/filedlg.h>
+#include <wx/filename.h>
+#include <wx/headerctrl.h>
+#include <wx/imaglist.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
+#include <wx/panel.h>
+#include <wx/sizer.h>
+#include <wx/textctrl.h>
+#include <wx/time.h>
+#include <wx/timer.h>
+#include <wx/treectrl.h>
+#include <wx/utils.h>
 
 // The database browser's contents in wx, first slice: a table list over a
 // wxTreeCtrl per table, browsed and not yet edited.

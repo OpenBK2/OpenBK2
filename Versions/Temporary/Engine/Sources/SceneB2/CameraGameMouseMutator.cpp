@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
 #include "CameraGameMouseMutator.h"
-#include "System/Commands.h"
-#include "Scene.h"
-
 #include "port/time.h"
+#include "Scene.h"
+#include "System/Commands.h"
 
 #include <cstdint>
 

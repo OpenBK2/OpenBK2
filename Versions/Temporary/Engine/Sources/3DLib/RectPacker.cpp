@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "RectPacker.h"
 
 #include <algorithm>

@@ -1,20 +1,20 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "Misc/GeomMisc.h"
-#include "Image/Targa.h"
-#include "Image/ImageTGA.h"
 #include "Image/ImageEffect.h"
+#include "Image/ImageTGA.h"
+#include "Image/Targa.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MinimapImage.h"
-#include "VSOManager.h"
+#include "Misc/2Darray.h"
+#include "Misc/GeomMisc.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "System/VFSOperations.h"
+#include "VSOManager.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zlib.h>
 
 namespace NMinimapImage

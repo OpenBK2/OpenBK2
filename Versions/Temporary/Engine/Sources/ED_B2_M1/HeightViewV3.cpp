@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
 #include "HeightViewV3.h"
-#include "ObjectProperties.h"
-
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/Tools_HashSet.h"
+#include "ObjectProperties.h"
 
 // The part of the terrain height palette (HeightViewV3Wx.cpp) that is not
 // drawing.

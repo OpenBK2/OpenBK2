@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MapEditorLib/Interface_Widget.h"
 #include "Main/MODs.h"
+#include "MapEditorLib/Interface_Widget.h"
 
 // The Open MOD dialog, behind a boundary that names no toolkit.
 //

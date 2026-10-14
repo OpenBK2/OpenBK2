@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
+#include "DebugTools/DebugInfoManager.h"
 #include "GroupSmoothPath.h"
 #include "HungarianMethod.h"
 #include "System/Commands.h"
-#include "DebugTools/DebugInfoManager.h"
 
 #include <algorithm>
 

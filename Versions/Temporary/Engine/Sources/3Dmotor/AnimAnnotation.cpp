@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
 #include "AnimAnnotation.h"
-#include "System/BasicShare.h"
-#include "GAnimFormat.h"
-#include "GAnimation.hpp"
-#include "vendor/granny/include/granny.h"
 #include "DBScene.h"
+#include "GAnimation.hpp"
+#include "GAnimFormat.h"
+#include "System/BasicShare.h"
+#include "vendor/granny/include/granny.h"
 
 namespace NAnimation
 {

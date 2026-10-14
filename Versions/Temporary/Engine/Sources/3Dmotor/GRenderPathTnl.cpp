@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
+#include "GRenderLight.h"
 #include "GRenderModes.h"
 #include "GRenderPathTnl.h"
-#include "GRenderLight.h"
 #include "GTransparent.h"
 
 namespace NGScene

@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "Misc/Win32Random.h"
 #include "GenTerrain.h"
+#include "Misc/Win32Random.h"
+#include "port/time.h"
+#include "Scene.h"
 #include "TerraHeight.h"
 #include "VSOConsts.h"
-#include "Scene.h"
-
-#include "port/time.h"
 
 #include <algorithm>
 #include <cstdint>

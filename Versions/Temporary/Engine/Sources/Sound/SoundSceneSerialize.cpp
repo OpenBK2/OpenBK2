@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "SoundCell.h"
 #include "SoundSceneInternal.h"
 #include "SubstSound.h"
-#include "SoundCell.h"
 
 int CSoundScene2D::operator&( IBinSaver &saver )
 {

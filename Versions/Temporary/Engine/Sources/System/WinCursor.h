@@ -2,9 +2,9 @@
 
 #include "System_export.h"
 
-#include <boost/predef.h>
-
 #include <string>
+
+#include <boost/predef.h>
 
 #if BOOST_OS_WINDOWS
 #include <windows.h>

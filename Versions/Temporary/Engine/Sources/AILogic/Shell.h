@@ -3,6 +3,7 @@
 #include "LinkObject.h"
 #include "Stats_B2_M1/Actions.h"
 #include "Stats_B2_M1/RPGStats.h"
+
 #include "AILogic_export.h"
 
 #include <cstdint>

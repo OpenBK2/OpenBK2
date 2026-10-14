@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "InBuildingStates.h"
-#include "Commands.h"
-#include "Soldier.h"
 #include "Building.h"
-#include "NewUpdater.h"
-#include "Guns.h"
-#include "GroupLogic.h"
+#include "Commands.h"
 #include "Diplomacy.h"
 #include "FeedbackSystem.h"
+#include "GroupLogic.h"
+#include "Guns.h"
+#include "InBuildingStates.h"
+#include "NewUpdater.h"
+#include "Soldier.h"
 
 #include "AILogic_export.h"
 

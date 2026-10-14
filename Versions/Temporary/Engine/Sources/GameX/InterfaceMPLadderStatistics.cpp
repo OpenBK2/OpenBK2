@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "InterfaceMPLadderStatistics.h"
-#include "InterfaceMPBase.h"
-#include "GameXClassIDs.h"
-#include "MultiplayerCommandManager.h"
-#include "Misc/StrProc.h"
 #include "DBMPConsts.h"
-#include "GetConsts.h"
-#include "System/Text.h"
 #include "DBScenario.h"
+#include "GameXClassIDs.h"
+#include "GetConsts.h"
+#include "InterfaceMPBase.h"
+#include "InterfaceMPLadderStatistics.h"
+#include "Misc/StrProc.h"
+#include "MultiplayerCommandManager.h"
+#include "System/Text.h"
 
 #include "GameX_export.h"
 

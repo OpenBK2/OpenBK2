@@ -3,13 +3,12 @@
 #include "libdb/Db.h"
 #include "Misc/HPTimer.h"
 #include "Misc/StrProc.h"
-#include "System/FileUtils.h"
+#include "port/cdecl.h"
 #include "System/FilePath.h"
+#include "System/FileUtils.h"
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
-
-#include "port/cdecl.h"
 
 // SaveChanges and RegisterResourceFile used to be declared here by hand, which
 // dropped the LIBDB_EXPORT off both and left the linker to find them by name.

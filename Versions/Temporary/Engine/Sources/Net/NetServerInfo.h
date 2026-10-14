@@ -1,8 +1,8 @@
 #pragma once
 
 #include "NetDriver.h"
-#include "NetServerInfo.h"
 #include "NetLowest.h"
+#include "NetServerInfo.h"
 
 namespace NNet
 {

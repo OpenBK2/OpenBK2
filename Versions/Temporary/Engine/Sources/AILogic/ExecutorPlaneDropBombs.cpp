@@ -1,11 +1,12 @@
 
 #include "stdafx.h"
+
 #include "Aviation.h"
-#include "Guns.h"
-#include "GroupLogic.h"
 #include "Commands.h"
-#include "ExecutorPlaneDropBombs.h"
 #include "Diplomacy.h"
+#include "ExecutorPlaneDropBombs.h"
+#include "GroupLogic.h"
+#include "Guns.h"
 
 #include "AILogic_export.h"
 

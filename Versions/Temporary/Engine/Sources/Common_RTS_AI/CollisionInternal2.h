@@ -5,8 +5,8 @@
 #include "BasePathUnit.h"
 #include "Collision.h"
 
-#include <queue>
 #include <map>
+#include <queue>
 
 struct IPath;
 

@@ -1,17 +1,14 @@
 #include "stdafx.h"
 
 #include "FilePath.h"
+#include "Misc/StrProc.h"
+#include "port/unicode.h"
 #include "XMLChunkSaver.h"
-
 #include "XMLReader.h"
 #include "XmlUtils.h"
-#include "Misc/StrProc.h"
 
-#include "port/unicode.h"
-
-#include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
-
+#include <boost/uuid/uuid_io.hpp>
 #include <fmt/format.h>
 
 typedef IXmlSaver::chunk_id chunk_id;

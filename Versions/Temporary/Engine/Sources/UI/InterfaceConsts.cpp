@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+
 #include "InterfaceConsts.h"
 
 // Construction/Destruction

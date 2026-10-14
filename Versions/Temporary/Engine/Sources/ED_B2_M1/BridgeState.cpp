@@ -1,26 +1,25 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-#include <fmt/format.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
-#include "Main/GameTimer.h"
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "ResourceDefines.h"
 
-#include "MapObjectMultiState.h"
 #include "BridgeState.h"
-#include "MapInfoEditor.h"
-
-#include "libdb/ResourceManager.h"
 #include "EditorMethods.h"
-#include "SeasonMnemonics.h"
+#include "libdb/ResourceManager.h"
+#include "Main/GameTimer.h"
+#include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapInfoEditor.h"
+#include "MapObjectMultiState.h"
+#include "Misc/2Darray.h"
 #include "port/vkcodes.h"
+#include "ResourceDefines.h"
+#include "SceneB2/Scene.h"
+#include "SeasonMnemonics.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 const int CBridgeState::START_TERMINATOR_INDEX = 0;

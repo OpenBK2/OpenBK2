@@ -1,12 +1,12 @@
 
 #pragma once
-#include "Misc/2Darray.h"
-#include <fmt/format.h>
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
 #include "BridgeInfoData.h"
 #include "MapObjectState.h"
+#include "Misc/2Darray.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 class CBridgeState : public CMapObjectState

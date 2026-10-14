@@ -1,8 +1,9 @@
 #pragma once
 
+#include "Db.h"
+
 #include "libdb_export.h"
 
-#include "Db.h"
 #include <cstdint>
 
 namespace NDb

@@ -1,14 +1,16 @@
 #include "UI/stdafx.h"
-#include "UI/Window.h"
+
 #include "3Dmotor/DBScene.h"
-#include "3Dmotor/Locale.h"
 #include "3Dmotor/GLocale.h"
+#include "3Dmotor/Locale.h"
+#include "port/virtualkey.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
-#include "port/virtualkey.h"
+#include "UI/Window.h"
 
 #include <clocale>
 #include <fstream>
+
 #include <gtest/gtest.h>
 
 namespace

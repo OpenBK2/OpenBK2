@@ -1,18 +1,17 @@
 #include "stdafx.h"
 
-#include "TextEditorView.h"
 #include "LuaKeywords.h"
-#include "System/FilePath.h"
-#include "System/FileUtils.h"
-#include "ScriptDictionary.hpp"
-
 #include "MapEditorLib/Interface_UserData.h"
 #include "Script/Script.h"
+#include "ScriptDictionary.hpp"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
+#include "TextEditorView.h"
 
 #include <algorithm>
 #include <cctype>
-#include <fstream>
 #include <filesystem>
+#include <fstream>
 
 // The part of the script editor that is not drawing: the syntax check, the
 // keywords and the styles, which the editors (TextEditorViewWx.cpp) use.

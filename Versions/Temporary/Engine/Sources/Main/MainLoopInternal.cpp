@@ -1,35 +1,31 @@
 #include "stdafx.h"
-#include <typeinfo>
-#include <cstdlib>
-
-#include <filesystem>
-#include <system_error>
-
-#include <thread>
-#include <chrono>
-
-#include <boost/predef.h>
 
 #include "libdb_export.h"
 
+#include <chrono>
+#include <cstdlib>
+#include <filesystem>
+#include <system_error>
+#include <thread>
+#include <typeinfo>
+
+#include <boost/predef.h>
+
 #if BOOST_OS_WINDOWS
-#include <wtypes.h>
 #include <winbase.h>
+#include <wtypes.h>
 #endif
 
+#include "Input/GameMessage.h"
+#include "libdb/Db.h"
+#include "MainLoopCommands.h"
 #include "MainLoopInternal.h"
-
 #include "Misc/StrProc.h"
+#include "port/time.h"
+#include "System/BasicShare.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-
-#include "Input/GameMessage.h"
-#include "System/BasicShare.h"
-#include "MainLoopCommands.h"
 #include "System/GResource.h"
-#include "libdb/Db.h"
-
-#include "port/time.h"
 
 #include <fmt/format.h>
 

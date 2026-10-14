@@ -1,19 +1,17 @@
 #include "stdafx.h"
 
-#include <thread>
+#include "GCombiner.h"
 #include "GfxBuffers.h"
 #include "GfxRender.h"
 #include "GScene.h"
-#include "GCombiner.h"
-#include "RadixSort.h"
 #include "GSSEtransform.h"
 #include "Misc/HashFuncs.h"
+#include "RadixSort.h"
 
 #include <cstdint>
+#include <thread>
 
 #include <boost/sort/spreadsort/integer_sort.hpp>
-
-#include <cstdint>
 
 typedef NGfx::SGeomVecFull SGfxVertex;
 typedef NGfx::SGeomVecT2C1 STnLVertex;

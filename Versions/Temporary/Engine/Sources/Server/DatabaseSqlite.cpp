@@ -2,10 +2,10 @@
 
 #include "Database.h"
 
-#include <sqlite3.h>
-
 #include <string>
 #include <vector>
+
+#include <sqlite3.h>
 
 // The embedded backend for IDatabase.
 //

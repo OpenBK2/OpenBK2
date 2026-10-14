@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "Misc/Bresenham.h"
-#include "EntrenchmentCreation.h"
-#include "UnitsIterators2.h"
 #include "AIUnit.h"
-#include "UnitStates.h"
-#include "UnitCreation.h"
+#include "Entrenchment.h"
+#include "EntrenchmentCreation.h"
+#include "Misc/Bresenham.h"
 #include "StaticObjectsIters.h"
 #include "Stats_B2_M1/AIUpdates.h"
-#include "Entrenchment.h"
+#include "UnitCreation.h"
+#include "UnitsIterators2.h"
+#include "UnitStates.h"
 
 #include "AILogic_export.h"
 

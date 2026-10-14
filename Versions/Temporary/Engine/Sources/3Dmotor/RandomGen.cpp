@@ -1,11 +1,10 @@
 #include "stdafx.h"
-#include "RandomGen.h"
-
-#include <random>
 
 #include "port/time.h"
+#include "RandomGen.h"
 
 #include <cstdint>
+#include <random>
 
 SRandomSeed::SRandomSeed()
 	: nSeed( GetCurrentTimeMilliseconds() )

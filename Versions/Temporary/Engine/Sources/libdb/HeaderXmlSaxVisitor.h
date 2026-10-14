@@ -1,7 +1,7 @@
 #pragma once
-#include "System/XMLSAXParser.h"
 #include "Misc/StrProc.h"
 #include "ObjectHeader.h"
+#include "System/XMLSAXParser.h"
 
 namespace NDb
 {

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "ExecutorTrackTargetting.h"
+#include "GroupLogic.h"
 #include "NewUpdater.h"
 #include "Technics.h"
-#include "GroupLogic.h"
 #include "UnitsIterators2.h"
 
 #include "AILogic_export.h"

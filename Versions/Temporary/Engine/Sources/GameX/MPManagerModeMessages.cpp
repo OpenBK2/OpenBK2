@@ -1,26 +1,26 @@
 #include "stdafx.h"
 
-#include <fmt/format.h>
-
-#include "MPManagerMode.h"
-#include "Server_Client_Common/ChatPackets.h"
 #include "Client/ServerClientInterface.h"
-#include "MultiplayerNetPackets.h"
-#include "MPTransceiver.h"
-#include "Main/MainLoop.h"
-#include "Main/MainLoopCommands.h"
-#include "GameXClassIDs.h"
+#include "DBConsts.h"
 #include "DBMPConsts.h"
+#include "GameXClassIDs.h"
 #include "GetConsts.h"
 #include "InterfaceState.h"
-#include "Misc/StrProc.h"
-#include "ScenarioTracker.h"
+#include "Main/MainLoop.h"
+#include "Main/MainLoopCommands.h"
 #include "Misc/StringConversions.h"
-#include "port/unicode.h"
-#include "DBConsts.h"
+#include "Misc/StrProc.h"
+#include "MPManagerMode.h"
 #include "MPPacketTraceLog.h"
+#include "MPTransceiver.h"
+#include "MultiplayerNetPackets.h"
+#include "port/unicode.h"
+#include "ScenarioTracker.h"
+#include "Server_Client_Common/ChatPackets.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 // CMPManagerMode - UI->MP message handlers
 

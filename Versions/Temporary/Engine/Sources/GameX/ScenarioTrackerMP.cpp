@@ -1,23 +1,22 @@
 #include "stdafx.h"
 
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/DBMapInfo.h"
-#include "UI/CommandParam.h"
-#include "ScenarioTracker.hpp"
+#include "AILogic/B2AI.h"
+#include "AILogic/DBAIConsts.h"
 #include "B2_M1_World/MissionObjectiveStates.h"
 #include "GetConsts.h"
 #include "InterfaceState.h"
-#include "UISpecificB2/DBUISpecificB2.h"
-#include "AILogic/DBAIConsts.h"
+#include "Misc/2Darray.h"
+#include "ScenarioTracker.hpp"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/RPGStats.h"
-#include "AILogic/B2AI.h"
+#include "UI/CommandParam.h"
+#include "UISpecificB2/DBUISpecificB2.h"
 
 #include "GameX_export.h"
 
 #include <algorithm>
 
 #include <fmt/format.h>
-
 #include <zconf.h>
 
 extern int N_MAX_XP_LEVEL; // [0..]  defined in ScenarioTracker.cpp

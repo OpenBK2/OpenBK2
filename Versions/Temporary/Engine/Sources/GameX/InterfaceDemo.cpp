@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "InterfaceDemo.h"
+
 #include "GameXClassIDs.h"
+#include "Image/Targa.h"
+#include "InterfaceDemo.h"
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"
-#include "Image/Targa.h"
 #include "UI/BackgroundMutableTexture.h"
 
 #include "GameX_export.h"

@@ -1,16 +1,17 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "ModelExporter.h"
 #include "ED_Common/GltfExporter.h"
-#include "ExporterMethods.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_MOD.h"
 #include "ED_Common/TempAttributesTool.h"
+#include "ExporterMethods.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
 #include "Misc/StrProc.h"
+#include "ModelExporter.h"
 #include "System/FilePath.h"
+
+#include <fmt/format.h>
 
 namespace NModelExporter
 {

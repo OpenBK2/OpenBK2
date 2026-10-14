@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "WindowTooltip.h"
+
 #include "System/Text.h"
+#include "WindowTooltip.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B8D, CWindowTooltip )
 

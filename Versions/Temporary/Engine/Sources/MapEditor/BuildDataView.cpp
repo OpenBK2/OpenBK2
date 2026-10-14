@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "BuildDataView.h"
-
 #include "MapEditorLib/Interface_View.h"
 
 // The build data dialog's rule for OK, which the dialog (BuildDataViewWx.cpp)

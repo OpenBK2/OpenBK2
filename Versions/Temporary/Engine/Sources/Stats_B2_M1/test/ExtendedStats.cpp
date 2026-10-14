@@ -1,15 +1,17 @@
 #include "../stdafx.h"
+
 #include "../RPGStats.h"
 #include "AILogic/AIClassesID.h"
-#include "System/VFSOperations.h"
-#include "System/WinVFS.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
 
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+
 #include <gtest/gtest.h>
 
 class CHelicopter;

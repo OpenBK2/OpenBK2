@@ -1,5 +1,4 @@
 #include "3Dmotor/MMXhelpers.h"
-
 #include "random.h"
 // The reference used to be test/mmx.h, which is inline __asm and so x86 only.
 // original/MMXPrimitives.h is the same reference in SSE2 intrinsics: still real

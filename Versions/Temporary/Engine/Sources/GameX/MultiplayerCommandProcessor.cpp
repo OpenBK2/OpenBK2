@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "MultiplayerCommandProcessor.h"
+
 #include "MultiplayerCommandManager.h"
+#include "MultiplayerCommandProcessor.h"
 
 // CMPUIMessageTranslator
 

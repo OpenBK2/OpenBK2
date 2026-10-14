@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Stats_B2_M1/IconsSet.h"
 #include "3Dmotor/RectLayout.h"
 #include "SceneTypes.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 

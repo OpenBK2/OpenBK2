@@ -1,23 +1,21 @@
 #include "stdafx.h"
 
-#include "UnitStartCmdDialog.h"
-
-#include <fmt/format.h>
-
 #include "EditorMethods.h"
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 #include "StringResources.h"
+#include "UnitStartCmdDialog.h"
 
+#include <cstdlib>
+
+#include <fmt/format.h>
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-
-#include <cstdlib>
 
 // The unit start command editor in wx, and the first modeless window to move.
 //

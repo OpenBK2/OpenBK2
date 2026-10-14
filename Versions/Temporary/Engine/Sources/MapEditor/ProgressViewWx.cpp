@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "ProgressView.h"
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+#include "ProgressView.h"
 
 #include <wx/gauge.h>
 #include <wx/sizer.h>

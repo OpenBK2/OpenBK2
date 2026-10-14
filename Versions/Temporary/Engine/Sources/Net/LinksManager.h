@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Net_export.h"
-
 #include "NetAddress.h"
 #include "NetDriver.h"
+
+#include "Net_export.h"
 
 namespace NNet
 {

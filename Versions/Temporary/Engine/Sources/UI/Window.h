@@ -2,12 +2,12 @@
 // Window.h: interface for the CWindow class.
 //
 
-#include "UI_export.h"
-
-#include "WindowMessageHandle.h"
 #include "Misc/HashFuncs.h"
 #include "Misc/Heap.h"
 #include "UI/UIFactory.h"
+#include "WindowMessageHandle.h"
+
+#include "UI_export.h"
 
 #include <cstdint>
 

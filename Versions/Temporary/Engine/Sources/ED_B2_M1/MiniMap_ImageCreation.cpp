@@ -1,18 +1,19 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "Misc/StrProc.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
-#include "libdb/ResourceManager.h"
 
-#include "MapInfoEditor.h"
-#include "EditorOptions.h"
 #include "EditorMethods.h"
+#include "EditorOptions.h"
+#include "libdb/ResourceManager.h"
+#include "MapInfoEditor.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
+
+#include <fmt/format.h>
 
 //#include "../Input/Input.h"
-#include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_UserData.h"
 #include "SeasonMnemonics.h"
 
 //#include "MiniMap_Addons.h"
@@ -20,8 +21,8 @@
 #include "Image/Targa.h"
 #include "MinimapImage.h"
 #include "SeasonMnemonics.h"
-#include "System/VFSOperations.h"
 #include "System/FilePath.h"
+#include "System/VFSOperations.h"
 
 #include <zconf.h>
 

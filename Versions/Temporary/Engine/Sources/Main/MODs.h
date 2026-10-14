@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Main_export.h"
-
 #include "System/FilePath.h"
+
+#include "Main_export.h"
 
 #define MOD_MODE_GAME "game"
 #define MOD_MODE_EDITOR "editor"

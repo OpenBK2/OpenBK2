@@ -1,5 +1,7 @@
 #include "MapEditorLib/stdafx.h"
+
 #include "MapEditorLib/WxImageList.h"
+
 #include <gtest/gtest.h>
 
 TEST( ThumbnailAlpha, PreservesTransparentGreyAndOpaqueBlack )

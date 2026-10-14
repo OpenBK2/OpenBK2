@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "BuilderMethods.h"
-
 #include "MapEditorLib/ManipulatorManager.h"
+
+#include <fmt/format.h>
 
 bool CheckStringValue( std::string *pszDescription, const std::string &szValueName, IManipulator *pBuilderMan )
 {

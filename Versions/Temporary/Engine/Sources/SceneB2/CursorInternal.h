@@ -1,8 +1,7 @@
 #pragma once
 
-#include "System/WinCursor.h"
-
 #include "Cursor.h"
+#include "System/WinCursor.h"
 
 #include <chrono>
 

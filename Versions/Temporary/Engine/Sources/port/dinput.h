@@ -34,9 +34,9 @@
 #include <dinput.h>
 #else
 
-#include <SDL3/SDL.h>
-
 #include <cstdint>
+
+#include <SDL3/SDL.h>
 
 // Device types, as GET_DIDEVICE_TYPE yields them. The values are DirectInput's
 // own; nothing outside this process sees them, but there is no reason to differ.

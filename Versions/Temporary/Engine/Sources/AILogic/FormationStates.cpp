@@ -1,41 +1,39 @@
 #include "stdafx.h"
 
-#include <float.h>
-
-#include "FormationStates.h"
-#include "Formation.h"
-#include "Commands.h"
-#include "GroupLogic.h"
-#include "Entrenchment.h"
-#include "NewUpdater.h"
-#include "Technics.h"
-#include "TransportStates.h"
-#include "EntrenchmentCreation.h"
-#include "Building.h"
 #include "Artillery.h"
-#include "Turret.h"
-#include "Soldier.h"
-#include "PathFinder.h"
-#include "UnitCreation.h"
-#include "FormationStates.h"
-#include "SoldierStates.h"
-#include "Bridge.h"
-#include "Randomize.h"
 #include "ArtilleryBulletStorage.h"
-#include "UnitGuns.h"
 #include "ArtilleryPaths.h"
-#include "TimerChargeExecutor.h"
-#include "Statistics.h"
-#include "UnitsIterators2.h"
+#include "Bridge.h"
+#include "Building.h"
+#include "Commands.h"
 #include "Common_RTS_AI/PathFinder.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "Entrenchment.h"
+#include "EntrenchmentCreation.h"
 #include "ExecutorContainer.h"
+#include "Formation.h"
+#include "FormationStates.h"
+#include "GroupLogic.h"
+#include "NewUpdater.h"
+#include "PathFinder.h"
+#include "Randomize.h"
+#include "Soldier.h"
+#include "SoldierStates.h"
+#include "Statistics.h"
 #include "Stats_B2_M1/AnimationFromAction.h"
+#include "Technics.h"
+#include "TimerChargeExecutor.h"
+#include "TransportStates.h"
+#include "Turret.h"
+#include "UnitCreation.h"
+#include "UnitGuns.h"
+#include "UnitsIterators2.h"
 
 #include "AILogic_export.h"
 
 #include <cstdint>
 
+#include <float.h>
 #include <fmt/format.h>
 
 extern CStatistics theStatistics;

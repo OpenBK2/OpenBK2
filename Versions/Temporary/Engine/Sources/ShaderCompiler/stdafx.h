@@ -5,6 +5,12 @@
 
 #pragma once
 
+// The order of these includes is load-bearing and is not sorted. These are
+// hub headers that do not all include what they use: Streams.h declares
+// CMemoryStream, which BinSaver.h names without including it, so swapping
+// the two stops the module compiling. Until the headers carry their own
+// dependencies, this list stays in the order somebody worked out.
+// clang-format off
 #include <boost/predef.h>
 
 #if BOOST_OS_WINDOWS
@@ -40,6 +46,7 @@
 
 #include <iostream>
 #include <fstream>
+// clang-format on
 
 // The sources were written against an STL that put these in the global
 // namespace. Using-declarations rather than `using namespace std`, because the

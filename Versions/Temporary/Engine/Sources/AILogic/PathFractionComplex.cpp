@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "PathFractionComplex.h"
+
 #include "IPlane.h"
 #include "Manuver.h"
+#include "PathFractionComplex.h"
 
 #include "AILogic_export.h"
 

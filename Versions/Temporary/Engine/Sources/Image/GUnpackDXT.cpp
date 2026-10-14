@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "GUnpackDXT.h"
 
 #include <cstdint>

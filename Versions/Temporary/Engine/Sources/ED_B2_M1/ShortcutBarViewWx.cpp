@@ -1,22 +1,21 @@
 #include "stdafx.h"
 
-#include "ShortcutBarView.h"
-
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/PaletteList.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxWidget.h"
 #include "port/wordpack.h"
+#include "ShortcutBarView.h"
+
+#include <cstdint>
+#include <memory>
+#include <vector>
 
 #include <wx/notebook.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
 #include <wx/tglbtn.h>
-
-#include <cstdint>
-#include <memory>
-#include <vector>
 
 // The shortcut bar in wx: a column with a button per bar, the open bar's button
 // pressed and its tabs, a notebook, filling the space under it, the buttons of

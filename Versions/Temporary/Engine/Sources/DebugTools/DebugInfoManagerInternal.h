@@ -1,8 +1,8 @@
 #pragma once
 
-#include "DebugTools_export.h"
-
 #include "DebugInfoManager.h"
+
+#include "DebugTools_export.h"
 
 namespace NDebugInfo
 {

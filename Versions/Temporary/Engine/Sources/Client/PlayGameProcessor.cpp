@@ -4,12 +4,11 @@
 #include "ConnectionEffort.h"
 #include "ConnectServerProcessor.h"
 #include "PlayGameProcessor.h"
+#include "port/time.h"
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/NetLogger.h"
-
-#include "port/time.h"
 
 #include "Client_export.h"
 

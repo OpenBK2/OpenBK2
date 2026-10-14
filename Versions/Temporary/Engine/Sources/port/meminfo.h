@@ -1,8 +1,8 @@
 #pragma once
 
-#include <boost/predef.h>
-
 #include <cstdint>
+
+#include <boost/predef.h>
 
 // How much physical memory the machine has.
 //

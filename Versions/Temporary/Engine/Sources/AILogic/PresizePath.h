@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common_RTS_AI/Path.h"
+
 #include "AILogic_export.h"
 
 #include <cstdint>

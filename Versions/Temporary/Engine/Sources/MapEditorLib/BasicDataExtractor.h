@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Interface_ObjectCollector.h"
+
 #include "MapEditorLib_export.h"
 struct IManipulator;
 

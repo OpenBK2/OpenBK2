@@ -2,12 +2,11 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "B2_M1_World_export.h"
-
 #include "MapObj.h"
 #include "Notifications.h"
-
 #include "SceneB2/CameraInternal.h"
+
+#include "B2_M1_World_export.h"
 
 enum EMissionObjectiveState : int;
 class CAllAnimationsPlayer;

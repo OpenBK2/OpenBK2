@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "NetLowest.h"
 
 namespace NNet

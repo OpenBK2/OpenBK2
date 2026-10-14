@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "AIMap.h"
+#include "Misc/Bresenham.h"
 #include "StaticMapHeights.h"
 #include "Terrain.h"
-#include "Misc/Bresenham.h"
 
 #include <cstdint>
 

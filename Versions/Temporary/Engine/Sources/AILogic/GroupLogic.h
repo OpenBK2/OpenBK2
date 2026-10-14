@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Stats_B2_M1/AIUnitCmd.h"
 #include "SegmentedObjects.h"
-
+#include "Stats_B2_M1/AIUnitCmd.h"
 #include "System/FreeIDs.h"
 
 #include <cstdint>

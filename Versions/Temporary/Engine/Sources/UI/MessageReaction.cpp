@@ -2,8 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "MessageReaction.h"
 
+#include "MessageReaction.h"
 #include "UIInternal.h"
 
 //#include "..\Input\Input.h"

@@ -1,15 +1,7 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-
-#include "PropertyPaneView.h"
-
-#include "PC_BaseDialog.h"
-#include "PropertyButtons.h"
-#include "ResourceDefines.h"
 
 #include "Image/ImageColor.h"
 #include "libdb/EditorDb.h"
-
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/DialogState.h"
@@ -17,10 +9,19 @@
 #include "MapEditorLib/ObjectController.h"
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxResourceImages.h"
+#include "PC_BaseDialog.h"
+#include "PropertyButtons.h"
+#include "PropertyPaneView.h"
+#include "ResourceDefines.h"
+
+#include <algorithm>
+#include <functional>
+#include <vector>
 
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
@@ -36,10 +37,6 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-
-#include <algorithm>
-#include <functional>
-#include <vector>
 
 // Selection Properties in wx: a wxPropertyGrid, first slice -- the tree as the
 // MFC one shows it, without editing.

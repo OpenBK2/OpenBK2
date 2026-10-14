@@ -2,8 +2,8 @@
 
 #include "Misc/Win32Random.h"
 #include "Scene.h"
-#include "TerrainInfo.h"
 #include "SurfController.h"
+#include "TerrainInfo.h"
 
 #define DEF_SURF_BASE_LENGTH ( DEF_TILE_SIZE )
 #define DEF_SURF_LENGTH ( DEF_TILE_SIZE * 4.0f )

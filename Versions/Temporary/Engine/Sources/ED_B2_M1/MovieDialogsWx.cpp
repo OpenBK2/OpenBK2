@@ -1,22 +1,20 @@
 #include "stdafx.h"
 
-#include "MovieDialogs.h"
-
-#include <fmt/format.h>
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+#include "MovieDialogs.h"
 
+#include <cstdio>
+
+#include <fmt/format.h>
 #include <wx/button.h>
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-
-#include <cstdio>
 
 // The script movie editor's two dialogs, in wx. Neither template has
 // WS_THICKFRAME, so neither is resizable; each is fitted to its contents.

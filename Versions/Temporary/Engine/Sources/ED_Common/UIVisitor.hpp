@@ -1,12 +1,12 @@
 #pragma once
 
+#include "3Dmotor/G2DView.h"
 #include "3Dmotor/RectLayout.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "3Dmotor/G2DView.h"
-#include "UI/UIVisitor.h"
-#include "UI/UIML.h"
 #include "UI/UI.h"
+#include "UI/UIML.h"
+#include "UI/UIVisitor.h"
 
 class CUIVisitor : public IUIVisitor
 {

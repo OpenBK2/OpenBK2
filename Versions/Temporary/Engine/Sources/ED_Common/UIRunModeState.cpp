@@ -1,15 +1,14 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
 
-#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
-
-#include "WindowSimpleSharedEditor.h"
-#include "UIRunModeState.h"
-#include "UIRunModeInterface.h"
-#include "UIScene.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "port/vkcodes.h"
+#include "UIRunModeInterface.h"
+#include "UIRunModeState.h"
+#include "UIScene.h"
+#include "WindowSimpleSharedEditor.h"
 
 CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor,
                                   const std::string &rszTypeName,

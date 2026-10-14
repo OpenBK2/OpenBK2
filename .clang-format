@@ -132,7 +132,32 @@ NamespaceIndentation: Inner
 # name types an earlier include has to have declared, so sorting them breaks the
 # build rather than the layout. Using declarations are left in their order for
 # the same reason: a formatter reordering declarations is not a layout change.
-SortIncludes: Never
+# Sorted, in the order this tree already used: the prelude first, then project
+# headers, then the generated export header, then the standard library, then
+# everything else. Before this the order was a convention nobody could check,
+# and the headers it depended on have been made to carry their own
+# dependencies so that the order no longer decides whether the build works.
+#
+# Each stdafx.h fences its own list with clang-format off: those are hub
+# headers whose order is still load-bearing.
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+# Nothing counts as "the main header". That rule would hoist Shell.h above
+# stdafx.h in Shell.cpp, and the prelude has to come first.
+IncludeIsMainRegex: '$^'
+IncludeIsMainSourceRegex: '$^'
+IncludeCategories:
+  - Regex: '^"[^"]*[Ss]td[Aa]fx\.h"$'
+    Priority: 1
+  - Regex: '_export\.h"$'
+    Priority: 3
+  - Regex: '^"'
+    Priority: 2
+  - Regex: '^<[a-z0-9_]+>$'
+    Priority: 4
+  - Regex: '.*'
+    Priority: 5
+
 SortUsingDeclarations: Never
 
 # A message that does not fit the column limit stays one string. Splitting it

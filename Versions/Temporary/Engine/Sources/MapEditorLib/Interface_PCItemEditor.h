@@ -1,7 +1,7 @@
 #pragma once
 
-#include "libdb/Manipulator.h"
 #include "Interface_Controller.h"
+#include "libdb/Manipulator.h"
 
 // Property-kind enum for the property control. Shared: MapEditorLib,
 // MapEditor and ED_B2_M1 all switch on it.

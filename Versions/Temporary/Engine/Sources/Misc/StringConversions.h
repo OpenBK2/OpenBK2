@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
 #include <cstdint>
 #include <iomanip>
 #include <sstream>
+#include <string>
 
 // utf8_to_wstring and wstring_to_utf8 used to live here, built on
 // std::wstring_convert and std::codecvt_utf8. Both were deprecated in C++17 and

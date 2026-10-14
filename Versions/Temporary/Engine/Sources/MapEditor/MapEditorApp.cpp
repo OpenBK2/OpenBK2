@@ -13,54 +13,50 @@
 #if BOOST_OS_WINDOWS
 #include <objbase.h>
 #endif
-#include "MapEditorLib/Resources.h"
-#include "System/FilePath.h"
-#include <fmt/format.h>
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-
-#include "libdb/ResourceManager.h"
 #include "libdb/Logger.h"
-#include "Misc/StrProc.h"
-#include "Misc/HPTimer.h"
-#include "System/FileUtils.h"
+#include "libdb/ResourceManager.h"
 #include "Main/MainLoop.h"
 #include "Main/MODs.h"
-
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "Misc/HPTimer.h"
+#include "Misc/StrProc.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
 #include "System/SplashScreen.h"
 
 #include "libdb_export.h"
 
+#include <fmt/format.h>
+
 // Singletons
-#include "UserDataContainer.h"
-#include "MainFrameContainer.h"
-#include "CommandHandlerContainer.h"
-#include "ObjectCollector.h"
-#include "ControllerContainer.h"
-#include "ViewContainer.h"
-#include "ChildFrameContainer.h"
-#include "EditorContainer.h"
+#include "AppProfile.h"
 #include "BuilderContainer.h"
+#include "ChildFrameContainer.h"
+#include "CommandHandlerContainer.h"
+#include "ControllerContainer.h"
+#include "EditorContainer.h"
+#include "EditorInstance.h"
 #include "ExporterContainer.h"
 #include "FolderCallback.h"
-#include "MODContainer.h"
-
-#include "MapEditorLib/MapEditorModule.h"
-
-#include "MapEditorApp.h"
-#include "AppProfile.h"
-#include "MainFrameWx.h"
-#include "MainFrameShared.h"
-#include "EditorInstance.h"
 #include "libdb/EditorDb.h"
-
-#include "System/VFSOperations.h"
-#include "System/WinVFS.h"
+#include "MainFrameContainer.h"
+#include "MainFrameShared.h"
+#include "MainFrameWx.h"
+#include "MapEditorApp.h"
+#include "MapEditorLib/MapEditorModule.h"
 #include "MapEditorLib/MessageBoxes.h"
-#include <filesystem>
-
+#include "MODContainer.h"
+#include "ObjectCollector.h"
 #include "port/debugging.h"
 #include "port/process.h"
+#include "System/VFSOperations.h"
+#include "System/WinVFS.h"
+#include "UserDataContainer.h"
+#include "ViewContainer.h"
+
+#include <filesystem>
 
 EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 

@@ -1,14 +1,13 @@
 #include "stdafx.h"
-#include "WinFrame.h"
+
 #include "Commands.h"
-#include "WindowViewport.h"
-#include "port/window.h"
 #include "port/unicode.h"
+#include "port/virtualkey.h"
+#include "port/window.h"
+#include "WindowViewport.h"
+#include "WinFrame.h"
 
 #include <cmath>
-
-#include "port/virtualkey.h"
-
 #include <cstdint>
 #include <mutex>
 
@@ -20,11 +19,11 @@
 #include "SdlVideo.h"
 #include "WinImageFormats.h"
 
-#include <SDL3/SDL.h>
-
 #include <fstream>
 #include <iterator>
 #include <vector>
+
+#include <SDL3/SDL.h>
 #endif
 
 using namespace NWinFrame;

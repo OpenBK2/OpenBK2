@@ -1,15 +1,15 @@
 #include "stdafx.h"
-#include "ScriptPathPointsState.h"
-#include "CommandHandlerDefines.h"
 
+#include "CommandHandlerDefines.h"
 #include "MapEditorLib/Clipboard.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/ResourceDefines.h"
+#include "port/vkcodes.h"
 #include "ResourceDefines.h"
 #include "SceneB2/Camera.h"
-#include "port/vkcodes.h"
+#include "ScriptPathPointsState.h"
 
 #include <fmt/format.h>
 

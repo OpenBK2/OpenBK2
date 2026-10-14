@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
 #include "BitFieldView.h"
-
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"
 
-#include <fmt/format.h>
-
 #include <cstring>
+
+#include <fmt/format.h>
 
 // The reading and writing of the bits, which the dialog (BitFieldViewWx.cpp)
 // calls.

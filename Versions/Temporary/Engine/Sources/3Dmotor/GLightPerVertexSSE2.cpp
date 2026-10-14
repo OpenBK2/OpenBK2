@@ -7,12 +7,13 @@
 // whether the CPU can actually run it.
 
 #include "stdafx.h"
-#include "GLightPerVertexKernels.h"
 
-#include <emmintrin.h>
+#include "GLightPerVertexKernels.h"
 
 #include <algorithm>
 #include <cstdint>
+
+#include <emmintrin.h>
 
 namespace NGScene
 {

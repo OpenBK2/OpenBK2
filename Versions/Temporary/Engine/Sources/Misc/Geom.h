@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Misc_export.h"
-
 #include "Tools.h"
 
+#include "Misc_export.h"
+
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
-#include <algorithm>
 
 #pragma pack( push, 4 )
 

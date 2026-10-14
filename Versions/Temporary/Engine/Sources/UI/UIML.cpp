@@ -1,14 +1,14 @@
 #include "stdafx.h"
-#include "3Dmotor/RectLayout.h"
-#include "3Dmotor/G2DView.h"
+
 #include "3Dmotor/DBScene.h"
+#include "3Dmotor/G2DView.h"
 #include "3Dmotor/Locale.h"
+#include "3Dmotor/RectLayout.h"
 // FontPointsToPixels
 #include "3Dmotor/GLocale.h"
-
+#include "System/Commands.h"
 #include "UIML.h"
 #include "UIMLHandlers.h"
-#include "System/Commands.h"
 
 #include <algorithm>
 #include <cmath>

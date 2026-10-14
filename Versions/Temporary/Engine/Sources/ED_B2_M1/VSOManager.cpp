@@ -1,14 +1,15 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "Misc/Win32Random.h"
+
+#include "B2_M1_Terrain/DBVSO.h"
 #include "Misc/2Darray.h"
+#include "Misc/Spline.h"
+#include "Misc/Win32Random.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "VSOManager.h"
-#include "Misc/Spline.h"
-#include "B2_M1_Terrain/DBVSO.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 // static consts

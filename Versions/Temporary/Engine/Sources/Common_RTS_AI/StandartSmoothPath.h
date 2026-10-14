@@ -2,10 +2,10 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "Common_RTS_AI_export.h"
-
 #include "Path.h"
 #include "Tools.h"
+
+#include "Common_RTS_AI_export.h"
 
 #define STANDART_SMOOTH_SOLDIER_PATH 0x311133C0
 

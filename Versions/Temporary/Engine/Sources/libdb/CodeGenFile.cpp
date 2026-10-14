@@ -2,10 +2,10 @@
 
 #include "CodeGenFile.h"
 #include "CodeGenNamespace.h"
-#include "StrStream.h"
-#include "System/FilePath.h"
 #include "Misc/StrProc.h"
 #include "Parser/FileNode.h"
+#include "StrStream.h"
+#include "System/FilePath.h"
 #include "System/XmlSaver.h"
 
 #include "libdb_export.h"

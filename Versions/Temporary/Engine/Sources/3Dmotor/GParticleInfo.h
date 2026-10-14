@@ -1,7 +1,7 @@
 #pragma once
 
-#include "System/Dg.h"
 #include "GPixelFormat.h"
+#include "System/Dg.h"
 
 #include <cstdint>
 

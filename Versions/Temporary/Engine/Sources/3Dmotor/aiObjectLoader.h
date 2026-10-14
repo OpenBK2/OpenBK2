@@ -1,8 +1,8 @@
 #pragma once
-#include "GFileSkin.h"
-#include "System/GResource.h"
 #include "aiObject.h"
+#include "GFileSkin.h"
 #include "GSkeleton.h"
+#include "System/GResource.h"
 
 class CMemObject;
 

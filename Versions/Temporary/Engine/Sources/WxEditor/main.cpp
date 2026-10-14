@@ -20,15 +20,15 @@
 // what MFC does in the real editor. Starting it through wxEntry here keeps the
 // skeleton the same shape as the thing it is a rehearsal for.
 
-#include <wx/wx.h>
-#include <wx/utils.h>
-#include <wx/platinfo.h>
-#include <wx/versioninfo.h>
-#include <wx/init.h>
-
 #include <cstdio>
 #include <cstring>
 #include <string>
+
+#include <wx/init.h>
+#include <wx/platinfo.h>
+#include <wx/utils.h>
+#include <wx/versioninfo.h>
+#include <wx/wx.h>
 
 // The boundary this port has to keep straight, in one place.
 //

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Cache.h"
 
 #include <climits>

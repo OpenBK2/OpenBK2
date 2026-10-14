@@ -13,17 +13,18 @@
 // vertices per iteration and AVX2 four, and the tail is where indexing mistakes live.
 
 #include "3Dmotor/stdafx.h"
+
 #include "3Dmotor/GLightPerVertexKernels.h"
 #include "3Dmotor/GSSEtransform.h"
 // Brings the initialised nCubicRoot that AddColors indexes. A zeroed stand-in would
 // make every AddColors result zero and the comparison vacuous.
 #include "3Dmotor/GSSEtransform.cpp"
 
-#include <gtest/gtest.h>
-
 #include <cstdint>
 #include <random>
 #include <vector>
+
+#include <gtest/gtest.h>
 
 namespace
 {

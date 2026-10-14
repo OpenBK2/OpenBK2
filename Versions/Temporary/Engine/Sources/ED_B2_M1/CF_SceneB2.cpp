@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-#include "MapEditorLib/ChildFrameFactory.h"
 #include "CF_SceneB2.h"
 #include "CFC_SceneB2.h"
+#include "MapEditorLib/ChildFrameFactory.h"
 
 REGISTER_CHILD_FRAME_IN_DLL( __CHILD_FRAME_DX_SCENE_LABEL__, CCFSceneB2 )
 

@@ -1,43 +1,39 @@
 #include "stdafx.h"
 
-#include "port/wordpack.h"
-
-#include <cmath>
-
-#include "Stats_B2_M1/DBClientConsts.h"
-#include "B2_M1_World/MapObj.h"
 #include "3DLib/Transform.h"
-#include "Misc/StrProc.h"
-#include "WorldClient.h"
-#include "Stats_B2_M1/AIUnitCmd.h"
-
-#include "SceneB2/Cursor.h"
-#include "Sound/SoundScene.h"
-#include "Stats_B2_M1/ActionsRemap.h"
 #include "AILogic/AIDebugInfo.h"
 #include "AILogic/B2AI.h"
-#include "Misc/Win32Random.h"
-#include "SceneB2/TerraGen.h"
-#include "UISpecificB2/WindowMiniMap.h"
-#include "B2_M1_World/MOEntrenchment.h"
-#include "Stats_B2_M1/DBCameraConsts.h"
-#include "CommandsSender.h"
-#include "ScenarioTracker.h"
-#include "InterfaceState.h"
-#include "System/BinaryResources.h"
-#include "GetConsts.h"
-#include "GameXClassIDs.h"
 #include "AILogic/FeedbackSystem.h"
+#include "B2_M1_World/MapObj.h"
 #include "B2_M1_World/MissionObjectiveStates.h"
 #include "B2_M1_World/MOBridge.h"
-#include "Utils.h"
-
+#include "B2_M1_World/MOEntrenchment.h"
+#include "CommandsSender.h"
 #include "DebugTools/DebugInfoManager.h"
-#include "SuperWeapon.h"
+#include "GameXClassIDs.h"
+#include "GetConsts.h"
+#include "InterfaceState.h"
+#include "Misc/StrProc.h"
+#include "Misc/Win32Random.h"
+#include "port/wordpack.h"
+#include "ScenarioTracker.h"
+#include "SceneB2/Cursor.h"
+#include "SceneB2/TerraGen.h"
+#include "Sound/SoundScene.h"
+#include "Stats_B2_M1/ActionsRemap.h"
+#include "Stats_B2_M1/AIUnitCmd.h"
+#include "Stats_B2_M1/DBCameraConsts.h"
+#include "Stats_B2_M1/DBClientConsts.h"
 #include "Stats_B2_M1/SuperWeaponUpdates.h"
+#include "SuperWeapon.h"
+#include "System/BinaryResources.h"
+#include "UISpecificB2/WindowMiniMap.h"
+#include "Utils.h"
+#include "WorldClient.h"
 
 #include "GameX_export.h"
 
+#include <cmath>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -3551,11 +3547,11 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 0x10078340, CWorldClient );
 //
 //
 
+#include "Common_RTS_AI/AIClasses.h"
+#include "Common_RTS_AI/TerraAIObserver.h"
+#include "Common_RTS_AI/Terrain.h"
 #include "DebugTools/DebugInfoManagerInternal.h"
 #include "Misc/StrProc.h"
-#include "Common_RTS_AI/AIClasses.h"
-#include "Common_RTS_AI/Terrain.h"
-#include "Common_RTS_AI/TerraAIObserver.h"
 #include "System/Commands.h"
 #ifndef _FINALRELEASE
 

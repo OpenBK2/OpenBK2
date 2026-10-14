@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "Common_RTS_AI/AIMap.h"
 #include "PathFinder.h"
 #include "StandartDirPath.h"
-#include "Common_RTS_AI/AIMap.h"
 
 IStaticPath *CreateStaticPathToPoint(
 		const CVec2 &_finishPoint, const CVec2 &vShift, CBasePathUnit *pUnit, const bool bCanGoOutOfRadius, CAIMap *pAIMap )

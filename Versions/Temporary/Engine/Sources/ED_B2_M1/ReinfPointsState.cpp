@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/Interface_MainFrame.h"
 #include "DrawToolsDC.h"
-
-#include "ReinfPointsState.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
+#include "port/vkcodes.h"
 #include "ReinfPointsData.h"
 #include "ReinfPointsDialogs.h"
-#include "port/vkcodes.h"
+#include "ReinfPointsState.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 //
 //

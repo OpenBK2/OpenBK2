@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
 #include "codegen.h"
+#include "libdb/CodeGenFile.h"
 #include "libdb/CodeStructure.h"
 #include "libdb/CompileCLike.h"
 #include "libdb/GenerateCode.h"
-#include "libdb/CodeGenFile.h"
 #include "libdb/GenerateCodeStructure.h"
 #include "libdb/TerminalTypesDesc.h"
+#include "Misc/StrProc.h"
 #include "Parser/FileNode.h"
 #include "Parser/LangNode.h"
 #include "System/FileUtils.h"
-#include "Misc/StrProc.h"
 
 #include <cstdint>
 

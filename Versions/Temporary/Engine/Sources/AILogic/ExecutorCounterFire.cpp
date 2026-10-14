@@ -1,14 +1,14 @@
 #include "stdafx.h"
 
-#include "ExecutorCounterFire.h"
-#include "NewUpdater.h"
-#include "GroupLogic.h"
-#include "Artillery.h"
 #include "AntiArtillery.h"
 #include "AntiArtilleryManager.h"
-#include "UnitStates.h"
+#include "Artillery.h"
+#include "ExecutorCounterFire.h"
+#include "GroupLogic.h"
 #include "Guns.h"
+#include "NewUpdater.h"
 #include "Stats_B2_M1/StatusUpdates.h"
+#include "UnitStates.h"
 
 #include "AILogic_export.h"
 

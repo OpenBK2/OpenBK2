@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "Misc/StrProc.h"
-#include "EditorMethods.h"
-
-#include "EditorOptions.h"
-#include "libdb/ResourceManager.h"
-#include "EditorScene.h"
-#include "SceneB2/Camera.h"
-#include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/Interface_EditorAI.h"
-#include "SceneB2/TerraGen.h"
-#include "System/FileUtils.h"
-#include "System/BinaryResources.h"
-#include "Stats_B2_M1/DBMapInfo.h"
 #include "B2_M1_Terrain/DBTerrain.h"
+#include "EditorMethods.h"
+#include "EditorOptions.h"
+#include "EditorScene.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/Interface_EditorAI.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "Misc/StrProc.h"
+#include "SceneB2/Camera.h"
+#include "SceneB2/TerraGen.h"
+#include "Stats_B2_M1/DBMapInfo.h"
+#include "System/BinaryResources.h"
+#include "System/FileUtils.h"
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
-#include "MapEditorLib/Interface_MOD.h"
+
+#include <fmt/format.h>
 
 //#include "../Stats_B2_M1/TerraAIObserver.h"
 //#include "../SceneB2/TerraGen.h"

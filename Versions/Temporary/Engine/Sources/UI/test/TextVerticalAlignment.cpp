@@ -1,20 +1,22 @@
 #include "UI/stdafx.h"
-#include "UI/WindowTextView.h"
-#include "UI/UIVisitor.h"
-#include "UI/UIML.h"
+
 #include "3Dmotor/DBScene.h"
 #include "3Dmotor/Locale.h"
+#include "CodePages.h"
+#include "FontFace.h"
 #include "Image/Image.h"
 #include "Image/ImageDDS.h"
 #include "Misc/2Darray.h"
+#include "System/Text.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
-#include "System/Text.h"
-#include "FontFace.h"
-#include "CodePages.h"
+#include "UI/UIML.h"
+#include "UI/UIVisitor.h"
+#include "UI/WindowTextView.h"
+
+#include <fstream>
 
 #include <boost/uuid/string_generator.hpp>
-#include <fstream>
 #include <gtest/gtest.h>
 
 namespace

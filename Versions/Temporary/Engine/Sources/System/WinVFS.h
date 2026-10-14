@@ -1,8 +1,8 @@
 #pragma once
 
-#include "System_export.h"
-
 #include "VFS.h"
+
+#include "System_export.h"
 
 namespace NVFS
 {

@@ -4,8 +4,8 @@
 #include "Misc/2Darray.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "WorldClient.h"
 #include "UI/UI.h"
+#include "WorldClient.h"
 
 #include <zconf.h>
 

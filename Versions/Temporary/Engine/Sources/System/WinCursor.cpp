@@ -8,10 +8,10 @@
 #include "WinImageFormats.h"
 
 #if !BOOST_OS_WINDOWS
-#include <SDL3/SDL.h>
-
 #include <cstdint>
 #include <vector>
+
+#include <SDL3/SDL.h>
 #endif
 
 namespace NWinCursor

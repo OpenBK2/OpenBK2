@@ -2,8 +2,8 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
-#include "UpdatableProcess.h"
 #include "Stats_B2_M1/RPGStats.h"
+#include "UpdatableProcess.h"
 
 class CIdleMechProcess : public IClientUpdatableProcess
 {

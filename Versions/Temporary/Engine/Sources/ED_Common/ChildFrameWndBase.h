@@ -3,9 +3,9 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Widget.h"
 
-#include <cstdint>
-
 #include "ED_Common_export.h"
+
+#include <cstdint>
 
 struct ISceneSurface;
 

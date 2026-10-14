@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "SearchObjectView.h"
-
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+#include "SearchObjectView.h"
 
 #include <wx/sizer.h>
 #include <wx/stattext.h>

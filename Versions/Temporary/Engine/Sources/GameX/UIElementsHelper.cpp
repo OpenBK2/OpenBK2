@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "UIElementsHelper.h"
-#include "UI/UI.h"
+
 #include "DBScenario.h"
 #include "ScenarioTracker.h"
+#include "UI/UI.h"
+#include "UIElementsHelper.h"
 
 namespace NUIElementsHelper
 {

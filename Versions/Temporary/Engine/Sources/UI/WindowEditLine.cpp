@@ -11,12 +11,11 @@
 #include <SDL3/SDL.h>
 #endif
 #include "3Dmotor/RectLayout.h"
-#include "WindowEditLine.h"
-
-#include "UIVisitor.h"
 #include "InterfaceConsts.h"
 #include "UIML.h"
 #include "UIScreen.h"
+#include "UIVisitor.h"
+#include "WindowEditLine.h"
 
 REGISTER_SAVELOAD_CLASS( UI, 0x11075B83, CWindowEditLine )
 

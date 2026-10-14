@@ -1,16 +1,16 @@
 #pragma once
 
-#include <boost/predef.h>
-
 #include <string>
 #include <vector>
 
-#if BOOST_OS_WINDOWS
-#include <windows.h>
+#include <boost/predef.h>
 
+#if BOOST_OS_WINDOWS
 #include <shellapi.h>
+#include <windows.h>
 #else
 #include <cerrno>
+
 #include <spawn.h>
 #include <sys/wait.h>
 

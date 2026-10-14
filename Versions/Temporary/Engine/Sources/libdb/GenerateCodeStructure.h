@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Nodes2TypeDefs.h"
+
 #include "libdb_export.h"
 
 namespace NLang

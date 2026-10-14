@@ -1,7 +1,8 @@
 #pragma once
 
-#include "System_export.h"
 #include "Misc/Asserts.h" // checked_cast
+
+#include "System_export.h"
 
 template <int N>
 struct SInt2Type

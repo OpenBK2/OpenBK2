@@ -1,12 +1,11 @@
 #pragma once
 
-#include "UnitStates.h"
 #include "Behaviour.h"
+#include "DamageToEnemyUpdater.h"
 #include "FreeFireManager.h"
 #include "RndRunUpToEnemy.h"
-#include "DamageToEnemyUpdater.h"
-
 #include "StatusUpdatesHelper.h"
+#include "UnitStates.h"
 
 #include <cstdint>
 

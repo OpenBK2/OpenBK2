@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
 #include "EditorScene.h"
 #include "MarkerSet.h"
+#include "Misc/2Darray.h"
+#include "Stats_B2_M1/IconsSet.h"
 #include "Stats_B2_M1/Vis2AI.h"
 
 #include <cstdint>

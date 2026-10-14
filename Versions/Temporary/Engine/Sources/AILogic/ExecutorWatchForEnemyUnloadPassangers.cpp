@@ -1,14 +1,16 @@
 #include "stdafx.h"
+
+#include "Artillery.h"
 #include "ExecutorWatchForEnemyUnloadPassangers.h"
+#include "Formation.h"
 #include "GroupLogic.h"
+#include "Soldier.h"
 #include "Technics.h"
 #include "UnitsIterators2.h"
-#include "Soldier.h"
-#include "Formation.h"
-#include "Artillery.h"
 #include "UnitStates.h"
 
 #include "AILogic_export.h"
+
 #include <map>
 
 extern CGroupLogic theGroupLogic;

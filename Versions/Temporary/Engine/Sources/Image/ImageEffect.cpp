@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "ImageEffect.h"
 
 #include "Image.h"
-#include "Misc/Geom.h"
+#include "ImageEffect.h"
 #include "Misc/Bresenham.h"
+#include "Misc/Geom.h"
 
 #include <cstdint>
 

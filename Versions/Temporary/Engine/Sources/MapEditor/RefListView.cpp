@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "RefListView.h"
-
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/StringManager.h"
+#include "RefListView.h"
 
 #include <unordered_map>
 

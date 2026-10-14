@@ -1,25 +1,24 @@
 #include "stdafx.h"
 
-#include "TextEditorView.h"
 #include "LuaKeywords.h"
-
 #include "MapEditorLib/SimulatedKey.h"
-#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 #include "port/vkcodes.h"
-
-#include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/sizer.h>
-#include <wx/settings.h>
-#include <wx/stattext.h>
-#include <wx/stc/stc.h>
-#include <wx/textctrl.h>
+#include "TextEditorView.h"
 
 #include <cctype>
 #include <cmath>
+
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/settings.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/stc/stc.h>
+#include <wx/textctrl.h>
 
 // The text editors in wx, on wxStyledTextCtrl.
 //

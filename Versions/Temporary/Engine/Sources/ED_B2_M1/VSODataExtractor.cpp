@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "VSODataExtractor.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "VSODataExtractor.h"
 
 #include <cstdint>
 

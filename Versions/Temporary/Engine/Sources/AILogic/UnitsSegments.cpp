@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "UnitsSegments.h"
 #include "AIUnit.h"
+#include "UnitsSegments.h"
 //#include "..\Common_RTS_AI\CollisionInternal.h"
 
 extern NTimer::STime curTime;

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "aiTrace.h"
 
 namespace NAI

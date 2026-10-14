@@ -1,19 +1,18 @@
 #include "stdafx.h"
 
-#include "ClientAckManager.h"
-#include "Stats_B2_M1/DBAnimB2.h"
-#include "MOUnit.h"
-#include "Stats_B2_M1/DBAttachedModelVisObj.h"
 #include "3Dmotor/GAnimation.hpp"
+#include "ClientAckManager.h"
 #include "Input/Bind.h"
+#include "Main/GameTimer.h"
+#include "MOUnit.h"
+#include "MOUnitInfantry.h"
+#include "SceneB2/AttachedObj.h"
+#include "Stats_B2_M1/AbilityActions.h"
 #include "Stats_B2_M1/ActionsRemap.h"
 #include "Stats_B2_M1/AIAckTypes.h"
-#include "Main/GameTimer.h"
-#include "Stats_B2_M1/AbilityActions.h"
-#include "SceneB2/AttachedObj.h"
-
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBAttachedModelVisObj.h"
 #include "System/Commands.h"
-#include "MOUnitInfantry.h"
 
 #include <cstdint>
 

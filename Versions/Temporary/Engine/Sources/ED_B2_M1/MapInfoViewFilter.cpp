@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "MapInfoViewFilter.h"
 #include "CommandHandlerDefines.h"
-
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/ResourceDefines.h"
+#include "MapInfoViewFilter.h"
 
 // View -> Filter's Apply, which the dialog (MapInfoViewFilterWx.cpp) calls.
 

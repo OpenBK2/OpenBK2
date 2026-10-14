@@ -1,9 +1,13 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/WxResourceImages.h"
 
+#include "AppProfile.h"
+#include "EditorInstance.h"
+#include "MainFrameParams.h"
+#include "MainFrameShared.h"
+#include "MainFrameToolBars.h"
 #include "MainFrameWx.h"
-
+#include "MainFrameWxPanes.h"
+#include "MapEditorApp.h"
 #include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
@@ -11,26 +15,25 @@
 #include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/MapEditorModule.h"
 #include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/WxOwnership.h"
-
-#include "MainFrameToolBars.h"
-#include "MainFrameParams.h"
-#include "MainFrameShared.h"
-#include "MainFrameWxPanes.h"
-#include "MapEditorApp.h"
-#include "AppProfile.h"
-#include "EditorInstance.h"
-#include "ResourceDefines.h"
+#include "MapEditorLib/WxResourceImages.h"
 #include "port/vkcodes.h"
+#include "ResourceDefines.h"
 
 #include <fmt/printf.h>
-
 #include <wx/accel.h>
 #include <wx/aui/auibar.h>
 #if defined( __WXMSW__ )
 // wxAuiMSWToolBarArt, which is wx's own header but a wxMSW-only one.
 #include <wx/aui/barartmsw.h>
 #endif
+#include <climits>
+#include <list>
+#include <map>
+#include <memory>
+#include <vector>
+
 #include <wx/aui/framemanager.h>
 #include <wx/choicdlg.h>
 #include <wx/dcclient.h>
@@ -44,12 +47,6 @@
 #include <wx/textdlg.h>
 #include <wx/weakref.h>
 #include <wx/xml/xml.h>
-
-#include <climits>
-#include <list>
-#include <map>
-#include <memory>
-#include <vector>
 
 // The main frame, in wx: the frame itself, its menus, status bar, title,
 // command routing, placement and close, its docking panes in wxAUI -- its own

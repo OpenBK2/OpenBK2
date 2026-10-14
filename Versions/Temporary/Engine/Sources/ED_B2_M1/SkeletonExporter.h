@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ED_Common/BasicSceneExporter.h"
+
 #include "ED_B2_M1_export.h"
 
 class CSkeletonExporter : public CBasicSceneExporter

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "libdb/Manipulator.h"
 #include "B2_M1_Terrain/DBVSO.h"
-#include "Stats_B2_M1/DBMapInfo.h"
-#include "MapInfoController.h"
 #include "CoastState.h"
+#include "libdb/Manipulator.h"
+#include "MapInfoController.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 #include <cstdint>
 

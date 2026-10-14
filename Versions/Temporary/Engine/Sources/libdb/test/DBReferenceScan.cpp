@@ -26,14 +26,14 @@
 // FilePath.h names std::list and IBinSaver without including either, expecting
 // a stdafx to have got there first. This is that prelude, in the order
 // libdb/stdafx.h uses it.
+#include "libdb/DBReferenceScan.h"
 #include "Misc/Asserts.h"
-#include "System/System.h"
 #include "Misc/Tools.h"
 #include "System/Basic.h"
-#include "System/Streams.h"
 #include "System/BinSaver.h"
 #include "System/FilePath.h"
-#include "libdb/DBReferenceScan.h"
+#include "System/Streams.h"
+#include "System/System.h"
 
 #include <gtest/gtest.h>
 

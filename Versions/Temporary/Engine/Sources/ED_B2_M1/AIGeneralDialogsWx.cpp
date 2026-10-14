@@ -1,24 +1,21 @@
 #include "stdafx.h"
 
 #include "AIGeneralDialogs.h"
+#include "AIGeneralTypes.h"
+#include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
+#include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
+
+#include <cstdio>
+#include <string>
 
 #include <fmt/format.h>
-
-#include "AIGeneralTypes.h"
-
-#include "MapEditorLib/WxWidget.h"
-#include "MapEditorLib/WxPlacement.h"
-#include "MapEditorLib/WxOwnership.h"
-#include "MapEditorLib/WxToolDialog.h"
-
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-
-#include <cstdio>
-#include <string>
 
 // The AI general palette's two dialogs, in wx: the first modal dialogs out of
 // ED_B2_M1 rather than MapEditor, and deliberately plain.

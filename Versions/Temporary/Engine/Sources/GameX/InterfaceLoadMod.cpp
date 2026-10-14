@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "InterfaceLoadMod.h"
-#include "GameXClassIDs.h"
-#include "InterfaceState.h"
+
 #include "DBGameRoot.h"
-#include "ScenarioTracker.h"
-#include "Misc/StrProc.h"
-#include "System/Text.h"
+#include "GameXClassIDs.h"
+#include "InterfaceLoadMod.h"
+#include "InterfaceState.h"
 #include "Main/MODs.h"
+#include "Misc/StrProc.h"
+#include "ScenarioTracker.h"
+#include "System/Text.h"
 
 #include "GameX_export.h"
 

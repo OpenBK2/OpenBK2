@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
-#include "UI/CommandParam.h"
-#include "MapEditorLib/ResourceDefines.h"
+
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "UI/CommandParam.h"
 
 //#include "EditorMethods.h"
+#include "3Dmotor/DBScene.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 #include "TextureEditor.h"
 #include "TextureInterface.h"
 #include "UIScene.h"
 #include "UIWindow.h"
-
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "3Dmotor/DBScene.h"
 
 CTextureState::CTextureState( CTextureEditor *_pEditor )
 	: pEditor( _pEditor )

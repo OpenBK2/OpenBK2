@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "Image/Targa.h"
 #include "LoadImage.h"
 #include "Misc/2Darray.h"
-#include "Image/Targa.h"
 
 #include <cstdint>
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Server_Client_Common_export.h"
-
 #include "CommandsInterface.h"
+
+#include "Server_Client_Common_export.h"
 
 enum EServerClientCommands
 {

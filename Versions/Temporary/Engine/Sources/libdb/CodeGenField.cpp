@@ -3,8 +3,8 @@
 #include "CodeGenField.h"
 #include "CodeGenMisc.h"
 #include "Hungarian.h"
-#include "StrStream.h"
 #include "Parser/LangNodesDefinitions.h"
+#include "StrStream.h"
 
 #include "libdb_export.h"
 

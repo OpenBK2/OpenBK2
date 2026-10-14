@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "Misc/StrProc.h"
-#include "MissionUnitFullInfo.h"
-#include "InterfaceMissionInternal.h"
-#include "ScenarioTracker.h"
+
 #include "B2_M1_World/MOBuilding.h"
 #include "B2_M1_World/MOUnitMechanical.h"
+#include "InterfaceMissionInternal.h"
+#include "Misc/StrProc.h"
+#include "MissionUnitFullInfo.h"
+#include "ScenarioTracker.h"
 #include "System/Text.h"
 
 #include "GameX_export.h"

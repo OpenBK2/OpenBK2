@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "TestClient.h"
-
 #include "Misc/StrProc.h"
 #include "Server_Client_Common/Commands.h"
+#include "TestClient.h"
 
 #include <atomic>
 #include <chrono>

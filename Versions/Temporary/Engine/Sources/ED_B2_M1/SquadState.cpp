@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "ResourceDefines.h"
-#include "Misc/2Darray.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
 #include "CommandHandlerDefines.h"
-#include "SceneB2/Camera.h"
+#include "FormationsState.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/PaletteList.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "Misc/2Darray.h"
+#include "port/wordpack.h"
+#include "ResourceDefines.h"
+#include "SceneB2/Camera.h"
+#include "SquadEditor.h"
 #include "SquadInterface.h"
 #include "SquadState.h"
-#include "SquadEditor.h"
-#include "FormationsState.h"
-#include "port/wordpack.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 const char *GetDesiredMapSeason()

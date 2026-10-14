@@ -1,7 +1,8 @@
 #include "stdafx.h"
+
+#include "FormationMnemonics.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/RPGStats.h"
-#include "FormationMnemonics.h"
 
 #include <zconf.h>
 

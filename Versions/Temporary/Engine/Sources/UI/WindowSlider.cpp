@@ -2,9 +2,10 @@
 //
 
 #include "stdafx.h"
-#include "WindowSlider.h"
-#include "WindowMSButton.h"
+
 #include "InterfaceConsts.h"
+#include "WindowMSButton.h"
+#include "WindowSlider.h"
 
 #include <fmt/format.h>
 

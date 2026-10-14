@@ -1,31 +1,31 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "Misc/2Darray.h"
-#include "CommandHandlerDefines.h"
-#include "ResourceDefines.h"
 
-#include "VisObjBuilder.h"
+#include "CommandHandlerDefines.h"
 #include "ED_Common/GltfExporter.h"
 #include "ED_Common/GltfImport.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include "System/FilePath.h"
-#include "SeasonMnemonics.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/BuilderFactory.h"
-#include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/StringManager.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "libdb/ResourceManager.h"
 #include "libdb/Db.h"
 #include "libdb/ObjMan.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/BuilderFactory.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/Tools_HashSet.h"
+#include "Misc/2Darray.h"
+#include "ResourceDefines.h"
+#include "SeasonMnemonics.h"
+#include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
-#include "MapEditorLib/Interface_Logger.h"
+#include "VisObjBuilder.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 namespace

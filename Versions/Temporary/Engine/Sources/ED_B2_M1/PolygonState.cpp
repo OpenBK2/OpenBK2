@@ -1,14 +1,13 @@
 #include "stdafx.h"
 
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "Misc/2Darray.h"
 #include "Misc/PlaneGeometry.h"
-
-#include "MapEditorLib/Interface_CommandHandler.h"
 #include "PolygonState.h"
-#include "port/vkcodes.h"
 #include "port/mousekeys.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

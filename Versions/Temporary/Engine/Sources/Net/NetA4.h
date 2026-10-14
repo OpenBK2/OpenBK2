@@ -1,11 +1,10 @@
 #pragma once
 
-#include "NetStream.h"
-#include "NetServerInfo.h"
+#include "Misc/HPTimer.h"
 #include "NetLogin.h"
 #include "NetPeer2Peer.h"
-
-#include "Misc/HPTimer.h"
+#include "NetServerInfo.h"
+#include "NetStream.h"
 
 #include <atomic>
 #include <future>

@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "Tooltips.h"
-#include "WindowTooltip.h"
-#include "UIScreen.h"
+
 #include "DBUIConsts.h"
+#include "Tooltips.h"
+#include "UIScreen.h"
+#include "WindowTooltip.h"
 
 CTooltips::CTooltips()
 	: vLastMousePos( -1, -1 )

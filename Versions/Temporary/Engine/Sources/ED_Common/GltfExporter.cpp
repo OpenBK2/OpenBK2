@@ -1,21 +1,24 @@
 #include "stdafx.h"
+
+#include "3Dmotor/GltfAnimation.h"
 #include "GltfExporter.h"
 #include "GltfImport.h"
-#include "3Dmotor/GltfAnimation.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_MOD.h"
-#include "MapEditorLib/Interface_Logger.h"
-#include "MapEditorLib/MessageBoxes.h"
 #include "libdb/ObjMan.h"
-#include "System/VFSOperations.h"
-#include "System/FileUtils.h"
+#include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "Misc/StrProc.h"
-#include <fastgltf/core.hpp>
-#include <fastgltf/tools.hpp>
-#include <simdjson.h>
+#include "System/FileUtils.h"
+#include "System/VFSOperations.h"
+
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
+
+#include <fastgltf/core.hpp>
+#include <fastgltf/tools.hpp>
+#include <simdjson.h>
 
 namespace NEditorGltf
 {

@@ -1,16 +1,16 @@
 #pragma once
 
+#include "CoastState.h"
 #include "CommandHandlerDefines.h"
-#include <fmt/format.h>
-
-#include "PaletteCommands.h"
-#include "RoadState.h"
-#include "RiverState.h"
 #include "CragState.h"
 #include "LakeState.h"
-#include "CoastState.h"
+#include "PaletteCommands.h"
+#include "RiverState.h"
+#include "RoadState.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 //Mapinfo object state edit parameters
 #define MIVSOSEP_POINT_NUMBER 0x00000001

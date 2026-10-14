@@ -1,10 +1,9 @@
 #include "stdafx.h"
 
-#include "Diplomacy.h"
 #include "DifficultyLevel.h"
-
-#include "ScenarioTracker.h"
+#include "Diplomacy.h"
 #include "Misc/2Darray.h"
+#include "ScenarioTracker.h"
 
 CDiplomacy theDipl;
 

@@ -1,38 +1,37 @@
 #include "stdafx.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MessageBoxes.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "ResourceDefines.h"
-#include "PC_Constants.h"
-#include "DBLinkView.h"
-#include "FileDialogs.h"
 
-#include "PropertyButtons.h"
-#include "ED_Common/GltfImport.h"
 #include "BitFieldView.h"
-#include "PropertyValues.h"
-#include "TextEditorView.h"
-
+#include "DBLinkView.h"
+#include "ED_Common/GltfImport.h"
+#include "FileDialogs.h"
 #include "Image/ImageColor.h"
-#include "Misc/StrProc.h"
-#include "System/FileUtils.h"
-#include "System/Text.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "MapEditorLib/PCIEMnemonics.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/StringManager.h"
-
+#include "Misc/StrProc.h"
+#include "PC_Constants.h"
 #include "port/unicode.h"
+#include "PropertyButtons.h"
+#include "PropertyValues.h"
+#include "ResourceDefines.h"
+#include "System/FileUtils.h"
+#include "System/Text.h"
+#include "TextEditorView.h"
 
 #include <cstring>
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 // What the buttons beside a property's value do, moved here from the MFC item
 // editors' OnBrowse, OnNew and OnEdit with their behaviour kept. Where the

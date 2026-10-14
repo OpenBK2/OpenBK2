@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "SmokeTrailEffect.h"
+
 #include "3Dmotor/GAnimation.hpp"
 #include "MapObj.h"
+#include "SmokeTrailEffect.h"
 
 CSmokeTrailEffect::CSmokeTrailEffect( const SHMatrix &_mLocalPos,
                                       float _fInterval,

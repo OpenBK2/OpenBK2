@@ -1,17 +1,16 @@
 #include "stdafx.h"
 
-#include "Helicopter.h"
-#include "HelicopterStates.h"
 #include "AIClassesID.h"
 #include "AIGeometry.h"
-#include "GroupLogic.h"
-#include "Guns.h"
-#include "NewUpdater.h"
-#include "UnitsIterators2.h"
-
 #include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "GroupLogic.h"
+#include "Guns.h"
+#include "Helicopter.h"
+#include "HelicopterStates.h"
+#include "NewUpdater.h"
 #include "System/FastMath.h"
+#include "UnitsIterators2.h"
 
 #include "AILogic_export.h"
 

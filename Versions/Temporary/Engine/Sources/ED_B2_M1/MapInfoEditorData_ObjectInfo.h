@@ -1,11 +1,11 @@
 #pragma once
 
-#include "MapInfoEditorData_Consts.h"
-#include "MapEditorLib/MultiManipulator.h"
-#include "MapEditorLib/MaskManipulator.h"
-#include "MapEditorLib/ObjectController.h"
-#include "Tools_SceneDraw.h"
 #include "EditorScene.h"
+#include "MapEditorLib/MaskManipulator.h"
+#include "MapEditorLib/MultiManipulator.h"
+#include "MapEditorLib/ObjectController.h"
+#include "MapInfoEditorData_Consts.h"
+#include "Tools_SceneDraw.h"
 
 #include <cstdint>
 

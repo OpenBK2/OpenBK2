@@ -1,16 +1,18 @@
 #include "stdafx.h"
-#include "Misc/StrProc.h"
-#include <float.h>
+
+#include "3Dmotor/DBScene.h"
+#include "3Dmotor/GltfFormat.h"
 #include "ED_Common/Tools_Granny.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "MapEditorLib/Interface_MOD.h"
+#include "Misc/StrProc.h"
 #include "Stats_B2_M1/Vis2AI.h"
-#include "System/RandomGen.h"
 #include "System/BinaryResources.h"
-#include "3Dmotor/DBScene.h"
+#include "System/RandomGen.h"
 #include "TraceModel.h"
-#include "3Dmotor/GltfFormat.h"
+
 #include <fastgltf/tools.hpp>
+#include <float.h>
 
 //
 // http://www.acm.org/jgt/papers/MollerTrumbore97/code.html

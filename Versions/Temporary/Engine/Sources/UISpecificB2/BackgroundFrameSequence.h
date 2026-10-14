@@ -1,10 +1,10 @@
 #pragma once
+#include "DBUISpecificB2.h"
+#include "Misc/2Darray.h"
+#include "UI/Background.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Misc/2Darray.h"
-#include "UI/Background.h"
-#include "DBUISpecificB2.h"
 
 #include <zconf.h>
 

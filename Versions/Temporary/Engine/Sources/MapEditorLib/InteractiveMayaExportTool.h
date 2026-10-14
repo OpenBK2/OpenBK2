@@ -2,8 +2,8 @@
 #define __INTERACTIVE_MAYA_EXPORT_TOOL
 #pragma once
 
-#include "Interface_Exporter.h"
 #include "InteractiveMaya.h"
+#include "Interface_Exporter.h"
 
 class CInteractiveMayaExportTool : public IExportTool
 {

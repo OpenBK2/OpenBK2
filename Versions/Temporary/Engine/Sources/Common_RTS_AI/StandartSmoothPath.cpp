@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "StandartSmoothPath.h"
 #include "BasePathUnit.h"
-
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "StandartSmoothPath.h"
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, STANDART_SMOOTH_SOLDIER_PATH, CStandartSmoothPath );
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x311133C1, CStandartSmoothPathMemento );

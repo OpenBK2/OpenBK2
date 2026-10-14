@@ -1,10 +1,11 @@
 #include "stdafx.h"
+
 #include "Misc/2Darray.h"
+#include "MouseTranslator.h"
+#include "SceneB2/Camera.h"
+#include "Selector.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
-#include "MouseTranslator.h"
-#include "Selector.h"
-#include "SceneB2/Camera.h"
 #include "UI/UI.h"
 
 #include "GameX_export.h"

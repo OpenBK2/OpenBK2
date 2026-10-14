@@ -1,18 +1,18 @@
 #pragma once
 
+#include "3Dmotor/GfxBuffers.h"
+#include "DBUISpecificB2.h"
+#include "Input/GameMessage.h"
+#include "Main/GameTimer.h"
+#include "Misc/2Darray.h"
+#include "Misc/BitData.h"
+#include "System/Dg.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
-#include "Input/GameMessage.h"
 #include "UI/UIFactory.h"
-#include "Misc/2Darray.h"
 #include "UI/Window.h"
-#include "DBUISpecificB2.h"
-#include "3Dmotor/GfxBuffers.h"
-#include "System/Dg.h"
-#include "Main/GameTimer.h"
 #include "UISpecificB2.h"
-#include "Misc/BitData.h"
 
 #include <cstdint>
 

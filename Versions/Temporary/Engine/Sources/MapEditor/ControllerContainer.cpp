@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "MapEditorLib/Cursors.h"
-#include "MapEditorLib/Resources.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
 
+#include "ControllerContainer.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Cursors.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_Progress.h"
-#include "ControllerContainer.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Resources.h"
 #include "MenuDropDownView.h"
 
 #include <cstdint>

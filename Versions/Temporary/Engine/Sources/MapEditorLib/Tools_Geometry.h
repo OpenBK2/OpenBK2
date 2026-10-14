@@ -2,9 +2,9 @@
 
 #include "Misc/PlaneGeometry.h"
 
-#include <cstdint>
-
 #include "MapEditorLib_export.h"
+
+#include <cstdint>
 
 EXTERNVAR MAPEDITORLIB_EXPORT const float MINIMAL_POINT_DISTANCE; //2.0f
 

@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "ManuverStateDesc.h"
+
 #include "IPlane.h"
-#include "PlanePreferences.h"
 #include "ManuverInternal.h"
+#include "ManuverStateDesc.h"
+#include "PlanePreferences.h"
 #include "Stats_B2_M1/DBPlaneManuvers.h"
 
 //	CManuverStateDesc

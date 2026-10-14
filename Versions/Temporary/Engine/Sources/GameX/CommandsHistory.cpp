@@ -1,25 +1,24 @@
 #include "stdafx.h"
 
+#include "AILogic/AILogicCommand.h"
 #include "CommandsHistory.h"
 #include "Transceiver.h"
-
-#include "AILogic/AILogicCommand.h"
 // IAILogic, for the checksum dump written when a playback diverges. Transceiver.h
 // only forward declares it.
 #include "AILogic/B2AI.h"
-#include "Misc/StrProc.h"
 #include "Main/Profiles.h"
+#include "Misc/StrProc.h"
 // CreateICExitGame, for ending a verification run once the replay is played out.
-#include "Main/MainLoopCommands.h"
-#include "GameX/ScenarioTracker.h"
 #include "GameX/InterfaceState.h"
+#include "GameX/ScenarioTracker.h"
+#include "GameXClassIDs.h"
+#include "Input/Bind.h"
+#include "InterfaceMisc.h"
+#include "Main/MainLoopCommands.h"
+#include "MultiplayerCommandManager.h"
+#include "SaveLoadHelper.h"
 #include "System/BuildStamp.h"
 #include "System/GlobalVars.h"
-#include "MultiplayerCommandManager.h"
-#include "Input/Bind.h"
-#include "SaveLoadHelper.h"
-#include "GameXClassIDs.h"
-#include "InterfaceMisc.h"
 
 #include "GameX_export.h"
 

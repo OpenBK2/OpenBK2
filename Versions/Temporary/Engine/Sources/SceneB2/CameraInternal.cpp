@@ -1,18 +1,19 @@
 #include "stdafx.h"
 
+#include "3Dmotor/Gfx.h"
+#include "CameraGameMouseMutator.h"
+#include "CameraInternal.h"
+#include "CameraMayaMouseMutator.h"
+#include "CameraScriptMutators.h"
+#include "Cursor.h"
+#include "Main/GameTimer.h"
+#include "Misc/StrProc.h"
+#include "Scene.h"
+#include "System/Commands.h"
+
 #include <cmath>
 
 #include <float.h>
-#include "CameraInternal.h"
-#include "Misc/StrProc.h"
-#include "System/Commands.h"
-#include "Cursor.h"
-#include "3Dmotor/Gfx.h"
-#include "CameraGameMouseMutator.h"
-#include "CameraMayaMouseMutator.h"
-#include "CameraScriptMutators.h"
-#include "Main/GameTimer.h"
-#include "Scene.h"
 
 BASIC_REGISTER_CLASS( SCENEB2, ICamera );
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1006D300, CCamera )

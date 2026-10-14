@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "GParticles.h"
+
+#include "DBScene.h"
 #include "GParticleFormat.h"
 #include "GParticleInfo.h"
-#include "DBScene.h"
+#include "GParticles.h"
 
 namespace NGScene
 {

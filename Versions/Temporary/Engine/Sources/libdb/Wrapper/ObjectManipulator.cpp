@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "ObjectManipulator.h"
-#include "Misc/HashFuncs.h"
 #include "Bind.h"
 #include "EditorDb.h"
+#include "Misc/HashFuncs.h"
+#include "ObjectManipulator.h"
 
 using namespace NDb::NTypeDef;
 

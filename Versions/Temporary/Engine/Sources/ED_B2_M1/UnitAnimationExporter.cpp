@@ -1,15 +1,16 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "UnitAnimationExporter.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "libdb/ResourceManager.h"
-#include "ExporterMethods.h"
-#include "MapEditorLib/ManipulatorManager.h"
 #include "AnimationMnemonics.h"
+#include "ExporterMethods.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "UnitAnimationExporter.h"
 #include "WeaponMnemonics.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 REGISTER_EXPORTER_IN_DLL( InfantryRPGStats, CInfantryExporter )
 

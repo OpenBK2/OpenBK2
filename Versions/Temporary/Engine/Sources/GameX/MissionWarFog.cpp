@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
 #include "MissionWarFog.h"
+#include "Stats_B2_M1/IconsSet.h"
 //#include "..\SceneB2\PerlinNoise.h"
 
 #include <cstdint>

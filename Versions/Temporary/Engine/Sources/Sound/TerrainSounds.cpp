@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "TerrainSounds.h"
+
+#include "SoundManager.h"
 #include "SoundSceneConsts.h"
 #include "SoundSceneInternal.h"
-#include "SoundManager.h"
+#include "TerrainSounds.h"
 
 //*******************************************************************
 //*															CTerrainSound*

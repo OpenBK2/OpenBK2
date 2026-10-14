@@ -2,11 +2,12 @@
 
 // Editor-only conversion core. Keeping database and window code out of this
 // interface lets the exported skin and animation be checked without a renderer.
-#include <gr2/granny.h>
-#include <fastgltf/core.hpp>
 #include <map>
 #include <string>
 #include <vector>
+
+#include <fastgltf/core.hpp>
+#include <gr2/granny.h>
 
 namespace NGrannyGltf
 {

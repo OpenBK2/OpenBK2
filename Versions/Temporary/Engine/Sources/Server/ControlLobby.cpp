@@ -7,9 +7,8 @@
 #include "Server_Client_Common/LoginPackets.h"
 #include "Server_Client_Common/Net.h"
 #include "Server_Client_Common/PrimeNumbers.h"
-#include "System/XmlSaver.h"
-
 #include "Statistics.h"
+#include "System/XmlSaver.h"
 
 #include <cstdint>
 #include <utility>

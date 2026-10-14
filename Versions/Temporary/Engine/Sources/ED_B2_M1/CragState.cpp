@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
-#include "Stats_B2_M1/IconsSet.h"
-#include "SceneB2/Scene.h"
-#include "ResourceDefines.h"
 
-#include "MapInfoEditor.h"
 #include "CragState.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapInfoEditor.h"
+#include "Misc/2Darray.h"
+#include "ResourceDefines.h"
+#include "SceneB2/Scene.h"
+#include "Stats_B2_M1/IconsSet.h"
 
 #include <cstdint>
 

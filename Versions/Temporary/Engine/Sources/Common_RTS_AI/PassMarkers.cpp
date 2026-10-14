@@ -1,9 +1,8 @@
 #include "stdafx.h"
 
-#include "System/Commands.h"
 #include "Misc/StrProc.h"
-
 #include "PassMarkers.h"
+#include "System/Commands.h"
 
 #include <cstdint>
 

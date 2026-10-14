@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "CClientGameConsts.h"
 #include "GetConsts.h"
 

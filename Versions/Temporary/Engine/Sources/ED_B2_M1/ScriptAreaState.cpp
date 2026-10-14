@@ -1,17 +1,18 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "SceneB2/Scene.h"
-#include "MapEditorLib/Interface_MainFrame.h"
 #include "DrawToolsDC.h"
 #include "EnterName.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/MessageBoxes.h"
-#include "ScriptAreaState.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "port/mousekeys.h"
+#include "SceneB2/Scene.h"
+#include "ScriptAreaState.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 void CScriptAreaState::Clear()
 {

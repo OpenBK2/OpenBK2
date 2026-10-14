@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "StructMetaInfo.h"
+
 #include "ReportMetaInfo.h"
+#include "StructMetaInfo.h"
 #include "System/XmlSaver.h"
 
 namespace NDb

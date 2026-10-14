@@ -1,20 +1,21 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 
 #include "BasicDataExtractor.h"
-#include "libdb/ResourceManager.h"
-#include "Interface_UserData.h"
-#include "Tools_Image.h"
-#include "Misc/2Darray.h"
 #include "Image/Image.h"
 #include "Image/ImageDDS.h"
 #include "Image/ImageScale.h"
+#include "Interface_UserData.h"
+#include "libdb/ResourceManager.h"
+#include "Misc/2Darray.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
+#include "Tools_Image.h"
 #include "Tools_Resources.h"
 
 #include <cstdint>
+
+#include <fmt/format.h>
 
 bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
                                                 CArray2D<uint32_t> *pNormalImage,

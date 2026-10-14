@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "GParts.h"
+
 #include "GPartParticles.h"
+#include "GParts.h"
 
 namespace NGScene
 {

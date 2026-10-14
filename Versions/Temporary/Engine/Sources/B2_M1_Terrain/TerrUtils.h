@@ -2,12 +2,12 @@
 
 // Defensive member defaults; explicit constructor values still take precedence.
 
+#include "DBVSO.h"
+
 #include "B2_M1_Terrain_export.h"
 
 #include <cmath>
 #include <cstdint>
-
-#include "DBVSO.h"
 
 #define DEF_EPS 0.0001f
 #define DEF_EPS2 ( DEF_EPS * DEF_EPS )

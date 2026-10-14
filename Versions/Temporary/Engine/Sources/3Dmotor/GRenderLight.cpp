@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "GScene.h"
-#include "GRenderLight.h"
 
+#include "GRenderLight.h"
+#include "GScene.h"
 #include "System/Commands.h"
 
 static int nDirectionalLightID, nPointLightID;

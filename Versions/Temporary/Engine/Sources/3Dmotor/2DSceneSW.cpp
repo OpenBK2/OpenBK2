@@ -1,12 +1,13 @@
 #include "stdafx.h"
-#include "GfxBuffers.h"
+
 #include "2DSceneSW.h"
-#include "SWTexture.h"
-#include "Render.h"
-#include "System/BasicShare.h"
 #include "DBScene.h"
-#include "RectLayout.h"
+#include "GfxBuffers.h"
 #include "GTexture.h"
+#include "RectLayout.h"
+#include "Render.h"
+#include "SWTexture.h"
+#include "System/BasicShare.h"
 
 #include <boost/config.hpp>
 

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "ExecutorContainer.h"
-#include "KillCorpseExecutor.h"
 #include "FakeObjects.h"
+#include "KillCorpseExecutor.h"
 
 #include "AILogic_export.h"
 

@@ -1,31 +1,29 @@
 #include "stdafx.h"
-#include "MapEditorLib/BusyCursor.h"
-#include <fmt/format.h>
-#include "MapEditorLib/ResourceDefines.h"
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "Misc/2Darray.h"
+
 #include "3Dmotor/DBScene.h"
-#include "SceneB2/VisObjDesc.h"
-#include "Stats_B2_M1/AnimationType.h"
+#include "EditorMethods.h"
 #include "libdb/ResourceManager.h"
 #include "Main/GameTimer.h"
-#include "SimpleObjectInfoData.h"
+#include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/CommonEditorMethods.h"
-#include "SimpleObjectState.h"
-#include "ResourceDefines.h"
-
 #include "MapEditorLib/Interface_Logger.h"
-
-#include "MapObjectMultiState.h"
-#include "SimpleObjectState.h"
-#include "Misc/Win32Random.h"
-#include "EditorMethods.h"
-#include "SeasonMnemonics.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "MapInfoEditor.h"
+#include "MapObjectMultiState.h"
+#include "Misc/2Darray.h"
+#include "Misc/Win32Random.h"
 #include "port/vkcodes.h"
+#include "ResourceDefines.h"
+#include "SceneB2/VisObjDesc.h"
+#include "SeasonMnemonics.h"
+#include "SimpleObjectInfoData.h"
+#include "SimpleObjectState.h"
+#include "Stats_B2_M1/AnimationType.h"
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zconf.h>
 
 void CSimpleObjectState::ClearData()

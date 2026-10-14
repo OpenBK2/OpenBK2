@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "CampaignExporter.h"
-
 #include "ExporterMethods.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"

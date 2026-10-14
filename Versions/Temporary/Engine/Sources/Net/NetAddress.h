@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Net_export.h"
-
 #include "port/socket.h"
+
+#include "Net_export.h"
 
 namespace NNet
 {

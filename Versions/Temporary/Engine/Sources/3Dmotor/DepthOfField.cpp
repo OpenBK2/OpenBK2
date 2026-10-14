@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "GfxUtils.h"
+
+#include "DepthOfField.h"
 #include "GfxShaders.h"
+#include "GfxUtils.h"
 #include "GRenderExecute.h"
 #include "GRenderFactor.h"
-#include "DepthOfField.h"
 
 namespace NGScene
 {

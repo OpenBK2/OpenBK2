@@ -1,16 +1,15 @@
 #include "stdafx.h"
-#include "Misc/2Darray.h"
-#include "Misc/StrProc.h"
+
 #include "3Dmotor/DBScene.h"
-#include "vendor/granny/include/granny.h"
-
-#include "libdb/ResourceManager.h"
-#include "MapEditorLib/ExporterFactory.h"
-#include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/Interface_MOD.h"
-
 #include "ExporterMethods.h"
 #include "FenceRPGStatsExporter.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/ExporterFactory.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/2Darray.h"
+#include "Misc/StrProc.h"
+#include "vendor/granny/include/granny.h"
 
 #include <cstdint>
 

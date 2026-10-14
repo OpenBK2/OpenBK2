@@ -1,9 +1,9 @@
 #pragma once
 
-#include <boost/uuid/uuid.hpp>
-
 #include <algorithm>
 #include <cstdint>
+
+#include <boost/uuid/uuid.hpp>
 
 struct IBinSaver;
 

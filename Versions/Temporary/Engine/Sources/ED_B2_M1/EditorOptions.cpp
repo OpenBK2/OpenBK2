@@ -1,11 +1,12 @@
 #include "stdafx.h"
-#include <fmt/format.h>
-#include "EditorOptions.h"
 
-#include "MapEditorLib/Interface_UserData.h"
-#include "Misc/StrProc.h"
+#include "EditorOptions.h"
 #include "libdb/ResourceManager.h"
+#include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "Misc/StrProc.h"
+
+#include <fmt/format.h>
 
 namespace NEditorOptions
 {

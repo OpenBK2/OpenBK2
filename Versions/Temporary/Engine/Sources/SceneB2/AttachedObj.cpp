@@ -1,13 +1,12 @@
 #include "stdafx.h"
 
-#include "DBSceneConsts.h"
-#include "AttachedObj.hpp"
-#include "SceneHoldQueue.h"
 #include "3Dmotor/aiVisitor.h"
 #include "3Dmotor/GScene.h"
-
-#include "Sound/SoundScene.h"
+#include "AttachedObj.hpp"
+#include "DBSceneConsts.h"
+#include "SceneHoldQueue.h"
 #include "Sound/DBSound.h"
+#include "Sound/SoundScene.h"
 
 BASIC_REGISTER_CLASS( SCENEB2, IAttachedObject );
 

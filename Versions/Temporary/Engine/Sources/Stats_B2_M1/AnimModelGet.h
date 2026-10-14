@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Stats_B2_M1/DBVisObj.h"
-#include "Stats_B2_M1/DBAnimB2.h"
 #include "Misc/Asserts.h"
+#include "Stats_B2_M1/DBAnimB2.h"
+#include "Stats_B2_M1/DBVisObj.h"
 
 #include <vector>
 

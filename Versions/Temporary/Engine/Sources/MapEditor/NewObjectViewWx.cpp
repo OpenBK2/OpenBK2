@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
-#include "NewObjectView.h"
-
-#include "Misc/StrProc.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 #include "MapEditorLib/WxWidget.h"
+#include "Misc/StrProc.h"
+#include "NewObjectView.h"
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>

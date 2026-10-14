@@ -1,9 +1,8 @@
 #pragma once
 
-#include "ObjectBrowserView.h"
 #include "libdb/Manipulator.h"
-
 #include "MapEditorLib/Interface_UserData.h" //CTableSet
+#include "ObjectBrowserView.h"
 
 #include <cstdint>
 #include <list>

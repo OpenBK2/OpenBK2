@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "UI/CommandParam.h"
+
+#include "ED_Common/UIVisitor.hpp"
+#include "EditorScene.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
+#include "UI/CommandParam.h"
 #include "UIScene.hpp"
-#include "ED_Common/UIVisitor.hpp"
-
-#include "EditorScene.h"
 
 #include <zconf.h>
 
