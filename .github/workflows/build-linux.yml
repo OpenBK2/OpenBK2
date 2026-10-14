@@ -5,12 +5,30 @@ name: Build (Linux)
 # to cut, and the install rules still expect game data that is not checked out
 # here.
 #
-# BUILD_EDITOR=ON, so the one job covers everything. The editor configuration is
-# a superset of the game one -- the engine libraries and Game are built either
-# way -- and the editor is what the Linux port is for, so building it without
-# the editor would leave the part most likely to regress unwatched. The cost is
-# wxWidgets, which is built from source and dominates the job until its cache is
-# warm.
+# Two jobs, split by compiler rather than by configuration:
+#
+#   build         GCC, BUILD_EDITOR=ON. The whole tree and all 55 tests.
+#   build-clang   clang, BUILD_EDITOR=OFF. The engine, Game and 46 tests.
+#
+# The GCC job is the complete one. The editor configuration is a superset of the
+# game one -- the engine libraries and Game are built either way -- and the
+# editor is what the Linux port is for, so building it without the editor would
+# leave the part most likely to regress unwatched. The cost is wxWidgets, which
+# is built from source and dominates the job until its cache is warm.
+#
+# clang is a second opinion, not a second platform, and it has earned its place:
+# it rejects constructs GCC accepts (a member template body is checked where it
+# is written, not where it is instantiated) and it optimises on undefined
+# behaviour GCC leaves alone, which is how a strict aliasing violation that
+# decoded every DXT block to near-black was found. No warning on either compiler
+# reports that one at any level, so only building it catches it. It therefore
+# runs the tests too, which is where that defect actually showed up.
+#
+# It does not build the editor, which is what keeps it cheap: wxWidgets is built
+# from source per compiler, so BUILD_EDITOR=ON here would mean a second wx cache
+# and a second cold wx build. The nine tests that only exist with the editor
+# (GrannyGltf, SkeletonExporter, VisObjBuilder, LuaKeywords and the rest) stay
+# GCC-only.
 
 on:
   push:
@@ -120,3 +138,98 @@ jobs:
         with:
           name: tests-linux
           path: tests-linux.xml
+
+  build-clang:
+    runs-on: ubuntu-24.04
+
+    env:
+      # No WX_ROOT: this job does not build the editor, so wxWidgets never
+      # enters the configuration. The DXVK cache is shared with the job above,
+      # because setup-linux-build keys it on the DXVK commit and DXVK is built
+      # by meson with its own compiler choice, not by this tree's.
+      DXVK_ROOT: ${{ github.workspace }}/.dxvk
+
+    steps:
+      # Same paths as the GCC job. The fixtures are what the tests read, and the
+      # tests are the point of this job, so trimming the list here would only
+      # make them skip themselves.
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          filter: blob:none
+          sparse-checkout: |
+            .github
+            cmake
+            third_party
+            Versions/Temporary/Engine/Sources
+            Versions/Current/Data/Fonts
+            Versions/Current/Data/bin/fonts
+            Versions/Current/Data/Consts/Game/Tags
+            Versions/Current/Data/Citations
+            OBK2_Examples/GLB_format_usage
+
+      # Its own ccache, since a job saves only what it used and these two share
+      # no objects at all.
+      - name: Setup build environment
+        uses: ./.github/actions/setup-linux-build
+        with:
+          dxvk-root: ${{ env.DXVK_ROOT }}
+          ccache-key: linux-clang
+          ccache-max-size: 2G
+
+      # From Ubuntu's own repositories, not apt.llvm.org: the diagnostics that
+      # matter here are not new. clang 19 rejects the same constructs and
+      # miscompiles the same aliasing violation as clang 22 does, so a current
+      # release buys nothing a packaged one does not already give, and costs a
+      # third-party apt source on every run.
+      #
+      # Pinned to a version rather than installing bare "clang", so that a
+      # refresh of the runner image cannot quietly change which compiler is
+      # gating the tree. Bump it deliberately. apt-get update already ran in the
+      # step above, so this needs only the install.
+      #
+      # The version goes to the log because a build log that does not say what
+      # built it cannot be compared against a later one.
+      - name: Install clang
+        run: |
+          sudo apt-get install -y --no-install-recommends clang-18
+          clang++-18 --version
+
+      # The preset names plain clang/clang++, which is right on a developer's
+      # machine and wrong here, where the point is the pin above. Cache
+      # variables from a preset are overridable on the command line, so this
+      # keeps one definition of everything else in CMakePresets.json.
+      #
+      # base-linux-clang stays on libstdc++ deliberately -- libc++ would change
+      # unordered container iteration order, which is an ASYNC risk in
+      # simulation code -- so this is a second front end over the same standard
+      # library, and a divergence between the two jobs is a real defect rather
+      # than two libraries disagreeing.
+      - name: Configure with preset
+        run: >
+          cmake --preset Linux-x64-Clang-Release
+          -DBUILD_EDITOR=OFF
+          -DCMAKE_C_COMPILER=clang-18
+          -DCMAKE_CXX_COMPILER=clang++-18
+
+      - name: Build with preset
+        run: cmake --build --preset Linux-x64-Clang-Release --parallel
+
+      - name: Build tests
+        run: cmake --build out/build/Linux-x64-Clang-Release --parallel --target unittests -- -k 0
+
+      # 46 of the 55, the nine editor-only ones being absent from this
+      # configuration rather than skipped.
+      - name: Run tests
+        run: >
+          ctest --test-dir out/build/Linux-x64-Clang-Release
+          -L obk2-test --output-on-failure
+          --output-junit ${{ github.workspace }}/tests-linux-clang.xml
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tests-linux-clang
+          path: tests-linux-clang.xml
