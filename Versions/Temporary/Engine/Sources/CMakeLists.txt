@@ -114,12 +114,6 @@ if(BUILD_EDITOR)
     add_subdirectory("B2_MapEditor")
 endif()
 
-# The wxWidgets skeleton, which is a build-and-link rehearsal rather than
-# part of the editor. Built with the editor.
-if(BUILD_EDITOR)
-    add_subdirectory("WxEditor")
-endif()
-
 # Every module is added by now, so the .cll files they list can be gathered
 # into the list dbcodegen reads with --file-list, written beside dbcodegen.
 # See cmake/dbcodegen.cmake, which also defines regenerate-db, the target that

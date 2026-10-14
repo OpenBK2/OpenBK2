@@ -50,7 +50,6 @@ EDITOR_MODULES = [
 	"ED_RTS",
 	"MapEditor",
 	"MapEditorLib",
-	"WxEditor",
 ]
 
 SOURCES = "Versions/Temporary/Engine/Sources"
