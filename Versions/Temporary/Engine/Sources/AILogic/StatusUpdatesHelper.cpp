@@ -54,10 +54,18 @@ void CStatusUpdatesHelper::SetStatus( const EUnitStatus _eStatus )
 	{
 		__eStatus = _eStatus;
 	}
-	else if ( __eStatus != __eStatus )
+	// Already announced, so a change has to close the old status before opening
+	// the new one. Both of these named __eStatus where they mean _eStatus, one
+	// leading underscore apart, which left the condition comparing the member
+	// against itself and this whole branch unreachable.
+	//
+	// __pUnit needs no IsValid here, unlike InitStatus and the destructor:
+	// reaching this means InitStatus already checked it, and every caller is
+	// inside a state belonging to that same unit.
+	else if ( __eStatus != _eStatus )
 	{
 		updater.AddUpdate( CreateStatusUpdate( __eStatus, false, 0.0f ), ACTION_NOTIFY_UPDATE_STATUS, __pUnit, -1 );
-		__eStatus = __eStatus;
+		__eStatus = _eStatus;
 		updater.AddUpdate( CreateStatusUpdate( __eStatus, true, __fRadius ), ACTION_NOTIFY_UPDATE_STATUS, __pUnit, -1 );
 	}
 }
