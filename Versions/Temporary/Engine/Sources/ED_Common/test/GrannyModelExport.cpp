@@ -98,7 +98,7 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 							static_cast<std::vector<std::string> *>( user )->emplace_back( name );
 						}
 					} );
-			auto asset = parser.loadGltfBinary( data.get(), output.parent_path(), fastgltf::Options::LoadGLBBuffers );
+			auto asset = parser.loadGltfBinary( data.get(), output.parent_path() );
 			ASSERT_TRUE( asset );
 			EXPECT_EQ( fastgltf::validate( asset.get() ), fastgltf::Error::None );
 			ASSERT_FALSE( asset->textures.empty() );

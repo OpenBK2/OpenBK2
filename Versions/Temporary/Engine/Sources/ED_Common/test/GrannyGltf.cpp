@@ -107,7 +107,7 @@ fastgltf::Asset RoundTrip( NGrannyGltf::SDocument *doc )
 		throw std::runtime_error( "Invalid GLB bytes" );
 	}
 	fastgltf::Parser parser( fastgltf::Extensions::MSFT_texture_dds );
-	auto asset = parser.loadGltfBinary( data.get(), {}, fastgltf::Options::LoadGLBBuffers );
+	auto asset = parser.loadGltfBinary( data.get(), {} );
 	if ( !asset )
 	{
 		throw std::runtime_error( "Cannot parse exported GLB" );
