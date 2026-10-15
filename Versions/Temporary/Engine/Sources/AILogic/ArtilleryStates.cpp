@@ -1662,7 +1662,10 @@ void CArtilleryAttackState::FinishState()
 
 	damageToEnemyUpdater.UnsetDamageFromEnemy( pEnemy );
 	pArtillery->SetCommandFinished();
-	if ( eState = EAS_ROTATING )
+	// Only while still turning: the EUS_ROTATE false closes the true sent when
+	// EAS_ROTATING was entered, and the other place that closes it is the turn
+	// completing in Segment. Finishing from any other state has no true to close.
+	if ( eState == EAS_ROTATING )
 	{
 		updater.AddUpdate( CreateStatusUpdate( EUS_ROTATE, false ), ACTION_NOTIFY_UPDATE_STATUS, pArtillery, -1 );
 	}
