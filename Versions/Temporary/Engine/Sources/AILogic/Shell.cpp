@@ -28,6 +28,7 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
 #include <zlib.h>
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E3, CHitInfo );
@@ -56,10 +57,9 @@ extern SCheats theCheats;
 
 namespace NAsyncExplosionDebug
 {
-enum
-{
-	AREA_DAMAGE_TRACE_SIZE = 256
-};
+// A count rather than an enumeration, and typed as such: fmt declines to format
+// a bare enum, where printf took one through the integral promotions.
+constexpr int AREA_DAMAGE_TRACE_SIZE = 256;
 
 struct SAreaDamageContext
 {
@@ -281,7 +281,7 @@ void DumpAreaDamageTrace( FILE *f )
 		return;
 	}
 
-	fprintf( f, "Area damage trace (last %d records):\n", AREA_DAMAGE_TRACE_SIZE );
+	fmt::print( f, "Area damage trace (last {} records):\n", AREA_DAMAGE_TRACE_SIZE );
 	for ( int i = 0; i < AREA_DAMAGE_TRACE_SIZE; ++i )
 	{
 		const int nIndex = ( s_nextAreaDamageRecord + i ) % AREA_DAMAGE_TRACE_SIZE;
@@ -291,9 +291,19 @@ void DumpAreaDamageTrace( FILE *f )
 			continue;
 		}
 
-		fprintf(
+		// fmt rather than fprintf, because this line carries thirty four
+		// arguments and the two for the generator state were spelled %I64u,
+		// which is Microsoft's. glibc reads that as the %I flag followed by a
+		// width of 64, so on this platform it printed the wrong thing and took
+		// four bytes off the argument list where eight were waiting. fmt checks
+		// the arguments against the string when it compiles instead.
+		//
+		// {:f} and {:d} are deliberate: plain {} would print floats to their
+		// shortest round trip and bools as true and false, and this dump gets
+		// diffed between machines to find an ASYNC.
+		fmt::print(
 				f,
-				"\t#%u time=%d stage=%s shooterUID=%d shooterPlayer=%d shell=%d traj=%d expl=(%f,%f,%f) radius=(%f,%f) targetUID=%d targetPlayer=%d targetParty=%d target=(%f,%f,%f) raw=%d sorted=%d dup=%d counts=(%d,%d) armorDir=%d dist2=%f zDiff=%f pre=%d cover=%d saved=%d circle=%d armor=%d damage=%d rng=%I64u->%I64u\n",
+				"\t#{} time={} stage={} shooterUID={} shooterPlayer={} shell={} traj={} expl=({:f},{:f},{:f}) radius=({:f},{:f}) targetUID={} targetPlayer={} targetParty={} target=({:f},{:f},{:f}) raw={} sorted={} dup={} counts=({},{}) armorDir={} dist2={:f} zDiff={:f} pre={:d} cover={:d} saved={:d} circle={:d} armor={:d} damage={:d} rng={}->{}\n",
 				record.nSeq,
 				(int)record.nTime,
 				record.szStage,
@@ -329,7 +339,7 @@ void DumpAreaDamageTrace( FILE *f )
 				record.nRngBefore,
 				record.nRngAfter );
 	}
-	fprintf( f, "\n" );
+	fmt::print( f, "\n" );
 }
 } // namespace NAsyncExplosionDebug
 
