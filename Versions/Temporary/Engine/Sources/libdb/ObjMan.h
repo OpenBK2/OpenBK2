@@ -151,30 +151,6 @@ inline bool IObjMan::SetValue<std::basic_string, wchar_t>( const std::string &sz
 }
 
 template <>
-inline bool IObjMan::GetValue<std::string>( const std::string &szName, std::string *pValue )
-{
-	CVariant value;
-	if ( GetValue( szName, &value ) == false )
-	{
-		return false;
-	}
-	*pValue = value.GetStr();
-	return true;
-}
-
-template <>
-inline bool IObjMan::GetValue<std::wstring>( const std::string &szName, std::wstring *pValue )
-{
-	CVariant value;
-	if ( GetValue( szName, &value ) == false )
-	{
-		return false;
-	}
-	*pValue = value.GetWStr();
-	return true;
-}
-
-template <>
 inline bool IObjMan::GetValue<boost::uuids::uuid>( const std::string &szName, boost::uuids::uuid *pValue )
 {
 	CVariant value;
