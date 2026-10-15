@@ -29,11 +29,17 @@ class CPool
 		return 0;
 	}
 
-	BOOST_NOINLINE void AllocNewBlock()
+	// Returns the block's first element, already taken. pCurrent was set to
+	// &data[-1] here so that Alloc's ++pCurrent would land on data[0], but a
+	// pointer before the start of an array is undefined however carefully it is
+	// left alone afterwards. Handing out data[0] from here keeps pCurrent on the
+	// element last given out, which is what SIterator reads it as.
+	BOOST_NOINLINE T *AllocNewBlock()
 	{
 		SBlock *pBlock = &data.emplace_back();
-		pCurrent = &pBlock->data[-1];
+		pCurrent = pBlock->data;
 		pLast = &pBlock->data[N_BLOCK_SIZE - 1];
+		return pCurrent;
 	}
 
 public:
@@ -62,7 +68,7 @@ public:
 			if ( !pPool->data.empty() )
 			{
 				--i;
-				pBlockStart = &i->data[-1];
+				pBlockStart = i->data;
 			}
 			else
 			{
@@ -71,22 +77,26 @@ public:
 			p = pPool->pCurrent;
 		}
 
+		// pBlockStart is the first element of the block p is in, so the test has
+		// to come before the step: stepping first and comparing against
+		// &data[-1], as this did, forms a pointer before the array.
 		void operator--()
 		{
 			ASSERT( pPool );
-			--p;
-			if ( p == pBlockStart )
+			if ( p != pBlockStart )
 			{
-				if ( i == pPool->data.begin() )
-				{
-					p = 0;
-					pBlockStart = 0;
-					return;
-				}
-				--i;
-				p = &i->data[N_BLOCK_SIZE - 1];
-				pBlockStart = &i->data[-1];
+				--p;
+				return;
 			}
+			if ( i == pPool->data.begin() )
+			{
+				p = 0;
+				pBlockStart = 0;
+				return;
+			}
+			--i;
+			p = &i->data[N_BLOCK_SIZE - 1];
+			pBlockStart = i->data;
 		}
 
 		bool operator==( const SIterator &a ) const
@@ -110,7 +120,7 @@ public:
 	{
 		if ( pCurrent == pLast )
 		{
-			AllocNewBlock();
+			return AllocNewBlock();
 		}
 		return ++pCurrent;
 	}
