@@ -1,5 +1,3 @@
-#if !defined( __INTERACTIVE_MAYA_EXPORT_TOOL__ )
-#define __INTERACTIVE_MAYA_EXPORT_TOOL
 #pragma once
 
 #include "InteractiveMaya.h"
@@ -21,5 +19,3 @@ public:
 		}
 	}
 };
-
-#endif //#define __INTERACTIVE_MAYA_EXPORT_TOOL
