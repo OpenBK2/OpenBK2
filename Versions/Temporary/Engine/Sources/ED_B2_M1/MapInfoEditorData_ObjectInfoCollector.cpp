@@ -104,7 +104,7 @@ void SObjectInfoCollector::SetMapInfoEditor( const CMapInfoEditor *_pMapInfoEdit
 	//
 	eSeason = pMapInfoEditor->pMapInfo->eSeason;
 	eDayNight = pMapInfoEditor->pMapInfo->eDayTime;
-	if ( pEditorUpdatableWorld = new CEditorUpdatableWorld() )
+	if ( ( pEditorUpdatableWorld = new CEditorUpdatableWorld() ) )
 	{
 		pEditorUpdatableWorld->SetSeason( eSeason, eDayNight );
 	}
@@ -968,7 +968,7 @@ void SObjectInfoCollector::ShowSelectionPropertyManipulator( IManipulator *pMani
 	bool bCreateTree = true;
 
 	CPtr<IManipulator> packupManipulator = pPropertyManipulator;
-	if ( pPropertyManipulator = new CMultiManipulator() )
+	if ( ( pPropertyManipulator = new CMultiManipulator() ) )
 	{
 		//
 		for ( CObjectSelectionPartMap::const_iterator itObjectSelectionPart =

@@ -324,7 +324,7 @@ void CMapInfoState::Enter2()
 				//pMapInfoEditor->ClearMapInfoData();
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 				//
-				if ( pMapInfoEditor->pMapInfo = NDb::Get<NDb::SMapInfo>( dbID ) )
+				if ( ( pMapInfoEditor->pMapInfo = NDb::Get<NDb::SMapInfo>( dbID ) ) )
 				{
 					nLakesCount += pMapInfoEditor->pMapInfo->lakes.size();
 					if ( pMapInfoEditor->pMapInfo->coast.points.size() > 1 )
@@ -397,8 +397,8 @@ void CMapInfoState::Enter()
 	//
 	DebugTrace( "CMapInfoState::Enter(): set dialogs: %g", NHPTimer::GetTimePassed( &time ) );
 	//
-	if ( pMapInfoEditor->pMapInfo =
-	         NDb::Get<NDb::SMapInfo>( pMapInfoEditor->GetObjectSet().objectNameSet.begin()->first ) )
+	if ( ( pMapInfoEditor->pMapInfo =
+	           NDb::Get<NDb::SMapInfo>( pMapInfoEditor->GetObjectSet().objectNameSet.begin()->first ) ) )
 	{
 		NProgress::IteratePosition(); // 4
 		DebugTrace( "CMapInfoState::Enter(): load NDb::MapInfo: %g", NHPTimer::GetTimePassed( &time ) );

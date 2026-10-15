@@ -154,8 +154,8 @@ void CMapInfoEditor::CreateControls()
 	//const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	//const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 	unsigned nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
-	if ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
-					 &nID, "MiniMap", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.2f, 265 ) )
+	if ( ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+						 &nID, "MiniMap", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.2f, 265 ) ) )
 	{
 		// Whichever toolkit draws the contents; the pane is the frame's either way.
 		pMiniMapView = NMiniMapView::Create();
@@ -170,8 +170,8 @@ void CMapInfoEditor::CreateControls()
 
 	nID = ID_MAPINFO_EDITOR_SHORTCUT_DW;
 	// создаем shortcut docking window
-	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
-					 &nID, "ShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.8f, 265 ) )
+	if ( ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+						 &nID, "ShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.8f, 265 ) ) )
 	{
 		nID = ID_MAPINFO_EDITOR_SHORTCUT_PANE_0;
 		pShortcutBarView.reset( NShortcutBar::Create() );
@@ -252,8 +252,8 @@ void CMapInfoEditor::CreateControls()
 	//const bool bShowMoviesEditor = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMoviesEditor", 0, ";: ,|\t", true );
 	//if ( bShowMoviesEditor )
 	nID = ID_MOVIES_EDITOR_DW;
-	if ( pwndMoviesEditor = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
-					 &nID, "MoviesEditor", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_BOTTOM, 0.5f, 200 ) )
+	if ( ( pwndMoviesEditor = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+						 &nID, "MoviesEditor", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_BOTTOM, 0.5f, 200 ) ) )
 	{
 		// Whichever toolkit draws the contents; the pane is the frame's either way.
 		pMoviesEditorView = NMoviesEditorView::Create();

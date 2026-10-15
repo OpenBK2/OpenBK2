@@ -245,8 +245,8 @@ bool CManipulatorManager::ForceCreateManipulatorForReference( CPtr<IManipulator>
 		sManipulatorName += "-" + szReferenceName + sExt;
 	}
 
-	if ( *pResultManipulator =
-	         CManipulatorManager::CreateManipulatorFromReference( szFieldName, pManipulator, 0, pszResultName, 0 ) )
+	if ( ( *pResultManipulator =
+	           CManipulatorManager::CreateManipulatorFromReference( szFieldName, pManipulator, 0, pszResultName, 0 ) ) )
 	{
 		if ( ( *pResultManipulator )->GetName( -1, &sManipulatorCurrentName ) &&
 		     ( sManipulatorCurrentName == sManipulatorName ) )

@@ -39,7 +39,7 @@ bool CPinger::Segment()
 		pServerClient->Segment();
 
 		CPtr<CNetPacket> pPacket;
-		while ( pPacket = pServerClient->GetPacket() )
+		while ( ( pPacket = pServerClient->GetPacket() ) )
 		{
 			ProcessPacket( pPacket );
 		}

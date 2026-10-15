@@ -97,8 +97,8 @@ void CBuildingEditor::ResetGUI( bool bActive )
 void CBuildingEditor::CreateControls()
 {
 	unsigned nID = ID_BUILDING_EDITOR_DW;
-	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
-					 &nID, "BuildingEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) )
+	if ( ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+						 &nID, "BuildingEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) ) )
 	{
 		nID = ID_BUILDING_EDITOR_SHORTCUT_PANE_0;
 		pShortcutBarView.reset( NShortcutBar::Create() );

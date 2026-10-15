@@ -635,13 +635,13 @@ void CTerraGen::UpdateAllNeededPrecipices()
 	STerrainInfo::SPrecipice *pPrec;
 	for ( std::vector<int>::const_iterator it = updatedPrecipices.begin(); it != updatedPrecipices.end(); ++it )
 	{
-		if ( pPrec = FindPrecipice( *it ) )
+		if ( ( pPrec = FindPrecipice( *it ) ) )
 		{
 			CreatePrecipiceMesh( pPrec, true );
 		}
 		if ( *it > 0xffff )
 		{
-			if ( pPrec = FindPrecipice( 0x20000 | ( ( *it ) & 0xffff ) ) )
+			if ( ( pPrec = FindPrecipice( 0x20000 | ( ( *it ) & 0xffff ) ) ) )
 			{
 				CreatePrecipiceMesh( pPrec, true );
 			}

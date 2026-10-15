@@ -168,7 +168,7 @@ std::string CLogger::GetLoggerFullName() const
 {
 	std::string szName = GetLoggerLocalName();
 	const CLogger *pParent = this;
-	while ( pParent = pParent->GetParent() )
+	while ( ( pParent = pParent->GetParent() ) )
 	{
 		szName = pParent->GetLoggerLocalName() + "." + szName;
 	}

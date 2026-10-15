@@ -42,7 +42,7 @@ bool CChildFrameBase::Create()
 	//
 	if ( IMainFrame *pMainFrame = Singleton<IMainFrameContainer>()->Get() )
 	{
-		if ( pwndChildFrame = pMainFrame->CreateChildFrame( IDR_CHILD_FRAME_0 ) )
+		if ( ( pwndChildFrame = pMainFrame->CreateChildFrame( IDR_CHILD_FRAME_0 ) ) )
 		{
 			pwndChildFrame->Show( false );
 			// Which toolkit draws the viewport's window is NSceneSurface's

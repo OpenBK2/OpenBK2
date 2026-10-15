@@ -935,7 +935,7 @@ CWindow *CWindow::GetDeepChild( const std::string &_szName )
 		// find deeper child
 		for ( int i = drawOrder.Size() - 1; i >= 0; --i )
 		{
-			if ( pRet = drawOrder[i]->GetDeepChild( _szName ) )
+			if ( ( pRet = drawOrder[i]->GetDeepChild( _szName ) ) )
 			{
 				return pRet;
 			}

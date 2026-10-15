@@ -635,7 +635,7 @@ void CMechUnitSupportFireState::CheckArea()
 	}
 
 	// враг найден
-	if ( pEnemy = pUnit->GetBestShootEstimatedUnit() )
+	if ( ( pEnemy = pUnit->GetBestShootEstimatedUnit() ) )
 	{
 		eState = ESFS_SHOOT_UNIT;
 		pGun->StartEnemyBurst( pEnemy, true );

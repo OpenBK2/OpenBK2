@@ -172,8 +172,8 @@ void CSquadEditor::ResetGUI( bool bActive )
 void CSquadEditor::CreateControls()
 {
 	unsigned nID = ID_SQUAD_EDITOR_DW;
-	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
-					 &nID, "SquadEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) )
+	if ( ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+						 &nID, "SquadEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) ) )
 	{
 		nID = ID_SQUAD_EDITOR_SHORTCUT_PANE_0;
 		pShortcutBarView.reset( NShortcutBar::Create() );

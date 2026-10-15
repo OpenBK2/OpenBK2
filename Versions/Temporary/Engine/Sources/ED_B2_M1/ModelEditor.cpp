@@ -86,8 +86,8 @@ void CModelEditor::CreateControls()
 	// создаем minimap docking window
 	unsigned nID = ID_MODEL_EDITOR_DW;
 	std::string strPaneLabel = NResources::GetString( IDS_MODEL_TOOL_WINDOW_NAME );
-	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
-					 &nID, strPaneLabel.c_str(), NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 265 ) )
+	if ( ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar(
+						 &nID, strPaneLabel.c_str(), NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 265 ) ) )
 	{
 		// Which toolkit draws the palette is NModelView's business. The pane is
 		// shown whether or not it could be created, as it always was.

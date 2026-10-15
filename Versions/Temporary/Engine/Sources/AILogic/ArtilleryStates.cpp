@@ -1170,7 +1170,7 @@ void CArtilleryRangeAreaState::CheckArea()
 	}
 
 	// враг найден
-	if ( pEnemy = pUnit->GetBestShootEstimatedUnit() )
+	if ( ( pEnemy = pUnit->GetBestShootEstimatedUnit() ) )
 	{
 		eState = ERAS_SHOOT_UNIT;
 		pGun->StartEnemyBurst( pEnemy, true );

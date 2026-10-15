@@ -200,7 +200,7 @@ void CServerClient::Segment()
 		const bool bSegment = pProcessor->Segment();
 
 		CPtr<CNetPacket> pPacket;
-		while ( pPacket = pProcessor->GetPacket() )
+		while ( ( pPacket = pProcessor->GetPacket() ) )
 		{
 			PushPacket( pPacket );
 		}
