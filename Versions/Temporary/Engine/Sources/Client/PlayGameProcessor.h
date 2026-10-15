@@ -65,7 +65,11 @@ class CPlayGameProcessor : public CPacketProcessor
 	void DrainConnectionPackets( IConnection *pConnection );
 	void ProcessEfforts();
 	void Clear();
-	bool CreateConnectionEffort( CConnectionEffort *pEffort );
+	// The id is passed in rather than read back out of pEffort: this is called
+	// with a null effort on purpose, to report that the connection attempt
+	// chain for that client has ended, and the removal path needs the id that
+	// the now absent effort cannot supply.
+	bool CreateConnectionEffort( CConnectionEffort *pEffort, const int nClientServerID );
 
 public:
 	CPlayGameProcessor() {}

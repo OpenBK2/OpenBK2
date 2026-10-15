@@ -92,7 +92,7 @@ bool CPlayGameProcessor::ProcessAnswerConnectGame( CAnswerConnectGame *pPacket )
 	for ( std::list<int>::iterator iter = pPacket->clients.begin(); iter != pPacket->clients.end(); ++iter )
 	{
 		CPtr<CConnectionEffort> pEffort = NEffortsFactory::CreateFirstClientEffort( nMyServerID, *iter, pNet, nTimeOut );
-		CreateConnectionEffort( pEffort );
+		CreateConnectionEffort( pEffort, *iter );
 	}
 	//	}
 
@@ -111,7 +111,7 @@ bool CPlayGameProcessor::ProcessClientWantToConnect( CClientWantToConnect *pPack
 {
 	CPtr<CConnectionEffort> pEffort = NEffortsFactory::CreateFirstServerEffort(
 			nMyServerID, pPacket->nWantedClient, pPacket->szIP, pPacket->nPort, pNet, pAcceptGamersNet );
-	CreateConnectionEffort( pEffort );
+	CreateConnectionEffort( pEffort, pPacket->nWantedClient );
 
 	return true;
 }
@@ -230,10 +230,14 @@ void CPlayGameProcessor::ProcessEfforts()
 	for ( std::list<CPtr<CConnectionEffort>>::iterator iter = failed.begin(); iter != failed.end(); ++iter )
 	{
 		CPtr<CConnectionEffort> pEffort = *iter;
-		connectionEfforts.erase( pEffort->GetClientServerID() );
+		// Taken before the next effort is made, because it is the id this
+		// failed effort was for and CreateConnectionEffort needs it to report
+		// the client as removed when there is no next effort to try.
+		const int nClientServerID = pEffort->GetClientServerID();
+		connectionEfforts.erase( nClientServerID );
 
 		CPtr<CConnectionEffort> pNextEffort = pEffort->CreateNextEffort( nOurGameID );
-		CreateConnectionEffort( pNextEffort );
+		CreateConnectionEffort( pNextEffort, nClientServerID );
 	}
 }
 
@@ -277,10 +281,12 @@ bool CPlayGameProcessor::Segment()
 	return true;
 }
 
-bool CPlayGameProcessor::CreateConnectionEffort( CConnectionEffort *pEffort )
+bool CPlayGameProcessor::CreateConnectionEffort( CConnectionEffort *pEffort, const int nClientServerID )
 {
 	if ( pEffort != 0 )
 	{
+		// Still read off the effort rather than from the argument, so this
+		// branch keeps registering exactly the id it always did.
 		connectionEfforts[pEffort->GetClientServerID()] = pEffort;
 
 		std::list<SWaitingPacket>::iterator iter = waitingPackets.begin();
@@ -302,7 +308,12 @@ bool CPlayGameProcessor::CreateConnectionEffort( CConnectionEffort *pEffort )
 	}
 	else
 	{
-		const int nClientServerID = pEffort->GetClientServerID();
+		// pEffort is null in this branch, which the test above has just
+		// established, so the id cannot come from it. It used to be read
+		// through the null pointer: GCC proved that and -Wnonnull reported it.
+		// Whatever the dereference happened to return is what was announced as
+		// removed and erased from both maps, so the wrong client could be
+		// dropped. The caller's id is the right one.
 		PushPacket( new CGameClientRemoved( nClientServerID ) );
 		connectionEfforts.erase( nClientServerID );
 		connections.erase( nClientServerID );
