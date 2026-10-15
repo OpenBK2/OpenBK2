@@ -125,7 +125,10 @@ void CInterfaceMissionBackground::OnSerialize( IBinSaver &saver )
 bool CInterfaceMissionBackground::StepLocal( bool bAppActive )
 {
 	bool bNeedToDraw = true;
-	for ( IInterfaceBase *pInterface = NMainLoop::GetTopInterface(); pInterface != this, pInterface;
+	// && and not a comma: with a comma the first operand is evaluated and
+	// dropped, so the walk did not stop on reaching this interface and went on
+	// to inspect the ones below it as well.
+	for ( IInterfaceBase *pInterface = NMainLoop::GetTopInterface(); pInterface != this && pInterface;
 	      pInterface = NMainLoop::GetPrevInterface( pInterface ) )
 	{
 		CDynamicCast<CInterfaceScreenBase> pScreenBaseInterface = pInterface;
