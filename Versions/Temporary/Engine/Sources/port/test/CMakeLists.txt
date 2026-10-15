@@ -23,7 +23,7 @@ if(NOT Python3_FOUND)
     return()
 endif()
 find_package(Threads REQUIRED)
-add_executable(crashpad_integration_probe EXCLUDE_FROM_ALL CrashpadProbe.cpp)
+bk2_add_executable(crashpad_integration_probe NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL CrashpadProbe.cpp)
 target_include_directories(crashpad_integration_probe PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../.." ${CRASHPAD_TEST_BOOST_INCLUDE})
 target_link_libraries(crashpad_integration_probe PRIVATE crashpad_client Threads::Threads)

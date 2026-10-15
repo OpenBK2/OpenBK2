@@ -40,7 +40,7 @@ else()
         PROPERTIES COMPILE_OPTIONS "-mavx2")
 endif()
 
-add_executable(LightingKernels_benchmark EXCLUDE_FROM_ALL
+bk2_add_executable(LightingKernels_benchmark NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL
     LightingKernels.cpp ${LIGHTING_KERNEL_SOURCES})
 target_link_libraries(LightingKernels_benchmark PRIVATE benchmark::benchmark 3Dmotor Misc)
 set_target_properties(LightingKernels_benchmark PROPERTIES

@@ -14,8 +14,6 @@ set(SOURCES
     TestDB.cpp
     TestType.cpp
 )
-add_library(TestDB SHARED EXCLUDE_FROM_ALL ${SOURCES})
-add_stdafx_pch(TestDB)
-add_export_header(TestDB)
+bk2_add_library(TestDB SHARED NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL ${SOURCES})
 target_link_libraries(TestDB PRIVATE libdb MemoryLib Misc System fmt::fmt-header-only)
 target_compile_definitions(TestDB PRIVATE TESTDB_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")

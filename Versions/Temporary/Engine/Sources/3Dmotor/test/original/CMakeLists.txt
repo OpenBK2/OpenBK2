@@ -11,7 +11,7 @@ endif()
 # An OBJECT library, not STATIC: with ASM_MASM as the only language in the target
 # CMake picks an ar-style archive rule and hands lib.exe an "cr" argument, which
 # fails as LNK1181. Object libraries have no archive step at all.
-add_library(OriginalMMX OBJECT EXCLUDE_FROM_ALL
+bk2_add_library(OriginalMMX OBJECT EXCLUDE_FROM_ALL
     CalcDirectionalLighting${ASM_SUFFIX}.asm
     MMXTransformVector${ASM_SUFFIX}.asm
     MMXTransformVectorWeighted${ASM_SUFFIX}.asm)
@@ -27,7 +27,7 @@ target_include_directories(OriginalMMX PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # It links no googletest and stays a single small executable, so it is cheap enough to
 # rerun on every change to a .asm file.
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
-    add_executable(OriginalMMXSentinel EXCLUDE_FROM_ALL
+    bk2_add_executable(OriginalMMXSentinel NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL
         sentinel/Sentinel.cpp
         sentinel/InlineRef.cpp
         sentinel/LegacyTransformRef.cpp
@@ -43,7 +43,7 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     # A measurement, not a check: reports how far the shipping MMXTransformVector
     # implementations sit from the original MMX and whether an integer emulation
     # closes the gap. Same x86-only constraint, same reason.
-    add_executable(MMXTransformVectorDivergence EXCLUDE_FROM_ALL
+    bk2_add_executable(MMXTransformVectorDivergence NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL
         divergence/Divergence.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/../../GSSEtransform.cpp)
     target_link_libraries(MMXTransformVectorDivergence PRIVATE Misc glm::glm-header-only)
