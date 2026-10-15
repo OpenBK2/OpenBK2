@@ -268,6 +268,8 @@ void CWindowSimpleSharedEditor::Undo( IController *pController )
 						//DebugTrace( "Undo: TYPE_CHANGE %s[%d] %s", szTypeName.c_str(), nID, szName.c_str() );
 					}
 					break;
+					default:
+						break;
 				}
 			}
 		}
@@ -316,6 +318,8 @@ void CWindowSimpleSharedEditor::Redo( IController *pController )
 						//DebugTrace( "Redo: TYPE_CHANGE %s[%d] %s", szTypeName.c_str(), nID, szName.c_str() );
 					}
 					break;
+					default:
+						break;
 				}
 			}
 		}

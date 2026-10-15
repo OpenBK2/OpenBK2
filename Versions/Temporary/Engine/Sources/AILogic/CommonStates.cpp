@@ -716,6 +716,8 @@ void CMechAttackUnitState::Segment()
 						AnalyzeMovingToSidePosition();
 
 						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -1872,6 +1874,8 @@ void CCommonSwarmState::Segment()
 			}
 			pUnit->AnalyzeTargetScan( 0, false, true );
 
+			break;
+		default:
 			break;
 	}
 }

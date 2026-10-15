@@ -1349,6 +1349,8 @@ const bool CFormation::CanCatchArtillery( const CArtillery *pArtillery ) const
 		case NDb::RPG_TYPE_ART_HEAVY_MG:
 			dwType = EAT_HEAVY_MG;
 			break;
+		default:
+			break;
 	}
 
 	return ( dwType & dwCatchArtFlag ) != 0;

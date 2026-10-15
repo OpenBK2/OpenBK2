@@ -301,6 +301,8 @@ bool CExecutorUnitBase::NotifyEvent( const CExecutorEvent &event )
 			}
 		}
 			return true;
+		default:
+			break;
 	}
 	return false;
 }

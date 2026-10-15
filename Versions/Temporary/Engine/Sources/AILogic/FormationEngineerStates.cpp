@@ -584,6 +584,8 @@ void CFormationRepairUnitState::Segment()
 			}
 
 			break;
+		default:
+			break;
 	}
 }
 
@@ -878,6 +880,8 @@ void CFormationResupplyUnitState::Segment()
 			}
 
 			break;
+		default:
+			break;
 	}
 }
 
@@ -1119,6 +1123,8 @@ void CFormationLoadRuState::Segment()
 					Interrupt();
 				}
 			}
+			break;
+		default:
 			break;
 	}
 }

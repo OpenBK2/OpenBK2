@@ -109,6 +109,8 @@ bool CExecutorAttackGroup::NotifyEvent( const CExecutorEvent &event )
 			eState = EAGS_END;
 
 			return true;
+		default:
+			break;
 	}
 	return false;
 }

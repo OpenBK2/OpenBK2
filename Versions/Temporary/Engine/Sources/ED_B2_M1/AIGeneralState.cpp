@@ -36,6 +36,8 @@ static uint32_t CalcColor( NDb::EParcelType eType )
 			return PARCEL_COLOR_REINFORCE;
 			break;
 		}
+		default:
+			break;
 	}
 	//
 	return PARCEL_COLOR_UNKNOWN;
@@ -247,6 +249,8 @@ bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData
 						EditParcel();
 						break;
 					}
+					default:
+						break;
 				}
 				RefreshWindowData();
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );

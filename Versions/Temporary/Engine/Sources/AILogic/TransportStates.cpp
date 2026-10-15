@@ -1199,6 +1199,8 @@ void CTransportHookArtilleryState::Segment()
 				}
 
 				break;
+			default:
+				break;
 		}
 	}
 }

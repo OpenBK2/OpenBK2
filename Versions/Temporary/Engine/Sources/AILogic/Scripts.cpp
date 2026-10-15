@@ -4794,6 +4794,8 @@ int CScripts::SCRunTime( struct lua_State *pState )
 				updater.AddUpdate( pUpdate, ACTION_NOTIFY_SCAMERA_RUN, 0, 0 );
 			}
 			break;
+			default:
+				break;
 		}
 	}
 	else
@@ -4867,6 +4869,8 @@ int CScripts::SCRunSpeed( struct lua_State *pState )
 				updater.AddUpdate( pUpdate, ACTION_NOTIFY_SCAMERA_RUN, 0, 0 );
 			}
 			break;
+			default:
+				break;
 		}
 	}
 	else

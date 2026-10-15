@@ -1350,6 +1350,8 @@ bool CInterfaceArmyScreen::StepLocal( bool bAppActive )
 						UpdateSelectedLeaderVisualInfo();
 						break;
 					}
+					default:
+						break;
 				}
 			}
 		}

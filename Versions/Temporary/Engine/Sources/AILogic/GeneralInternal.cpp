@@ -92,6 +92,8 @@ void CGeneral::CancelRequest( int nRequestID, enum EForceType eType )
 			}
 		}
 		break;
+		default:
+			break;
 	}
 }
 
@@ -113,6 +115,8 @@ int /*request ID*/ CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enu
 			return nID;
 		}
 		break;
+		default:
+			break;
 	}
 	return 0;
 }
@@ -731,6 +735,8 @@ void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 				tasks.push_back( pTask );
 			}
 			break;
+			default:
+				break;
 		}
 	}
 	/*

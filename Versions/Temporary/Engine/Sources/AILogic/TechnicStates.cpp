@@ -640,6 +640,8 @@ void CMechUnitInsideMechUnitState::Segment()
 				RecordRandomCall();
 			}
 			break;
+		default:
+			break;
 	}
 	if ( pPath )
 	{

@@ -351,6 +351,8 @@ void CTransportLoadRuState::Segment()
 			}
 
 			break;
+		default:
+			break;
 	}
 }
 

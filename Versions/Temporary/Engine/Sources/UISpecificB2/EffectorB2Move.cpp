@@ -258,6 +258,8 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 			}
 			break;
 		}
+		default:
+			break;
 	};
 
 	//pElement->SetPlacement( vCurrPos.x, vCurrPos.y, vCurrSize.x, vCurrSize.y, EWPF_ALL );

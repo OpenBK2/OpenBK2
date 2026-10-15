@@ -120,6 +120,8 @@ namespace NMetaInfo
 				case NTypeDef::TYPE_TYPE_ARRAY:
 					data.pArray = new NBind::CBindArray();
 					break;
+				default:
+					break;
 			}
 		}
 		//
@@ -162,6 +164,8 @@ namespace NMetaInfo
 					// extra values here, including those in nested arrays.
 					data.pArray->ClearOwnValues( *this, pThis );
 					delete data.pArray;
+					break;
+				default:
 					break;
 			}
 			memset( &data, 0, sizeof( data ) );

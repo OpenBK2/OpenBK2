@@ -363,6 +363,8 @@ bool CReinfPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 						RefreshReinfPointsWindow();
 						return true;
 					}
+					default:
+						break;
 				}
 			}
 			return false;

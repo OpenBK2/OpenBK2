@@ -287,6 +287,8 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 			UpdateState();
 		}
 			return true;
+		default:
+			break;
 	}
 	return false;
 }

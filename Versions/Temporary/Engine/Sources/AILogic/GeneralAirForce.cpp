@@ -332,6 +332,8 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const std::list<CVec2> &vP
 		case FT_AIR_GUNPLANE:
 			cmd.nCmdType = ACTION_COMMAND_SWARM_TO;
 			break;
+		default:
+			break;
 	}
 
 	std::vector<int> ids;

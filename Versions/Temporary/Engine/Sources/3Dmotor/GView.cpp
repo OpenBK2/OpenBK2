@@ -1688,6 +1688,8 @@ static ERenderPath GetRenderPath( ESceneRenderMode rm, bool bForceFastest )
 			return RP_SHOWLIGHTMAP;
 		case SRM_SHOWPOLYCOUNT:
 			return RP_SHOWPOLYCOUNT;
+		default:
+			break;
 	}
 	ASSERT( 0 );
 	return RP_GF3_FAST;

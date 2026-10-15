@@ -114,6 +114,8 @@ void CPlayList::Segment()
 					eState = EPSS_IN;
 
 					break;
+				default:
+					break;
 			}
 			pPlaylistFade = 0;
 		}

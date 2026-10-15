@@ -92,6 +92,8 @@ inline int D3DFormat2PixelID( D3DFORMAT format )
 			return CF_R32F;
 		case D3DFMT_A32B32G32R32F:
 			return CF_A32R32G32B32;
+		default:
+			break;
 	}
 	ASSERT( 0 );
 	return -1;
@@ -127,6 +129,8 @@ inline int D3DFormat2PixelBitSize( D3DFORMAT format )
 			return 8;
 		case D3DFMT_R32F:
 			return 32;
+		default:
+			break;
 	}
 	ASSERT( 0 );
 	return -1;

@@ -160,6 +160,8 @@ CMultiplayerCommand *CMultiplayerInternal::GetCommand()
 			case NNet::IDriver::REMOVE_CLIENT:
 				pCommand = new CMultiplayerCommand( CMultiplayerCommand::EMC_PLAYER_REMOVED, nClientID, -1, 0 );
 				break;
+			default:
+				break;
 		}
 		return pCommand;
 	}

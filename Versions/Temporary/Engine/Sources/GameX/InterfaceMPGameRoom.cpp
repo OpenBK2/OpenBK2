@@ -532,6 +532,8 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 			case SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED:
 				szReasonCode = "DISCONNECT_CONNECT_FAIL";
 				break;
+			default:
+				break;
 		}
 		std::wstring wszReason = GetScreen()->GetTextEntry( szReasonCode );
 		if ( wszReason.length() > 0 )

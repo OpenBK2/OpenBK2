@@ -144,6 +144,8 @@ public:
 					}
 				}
 				break;
+			default:
+				break;
 		}
 	}
 

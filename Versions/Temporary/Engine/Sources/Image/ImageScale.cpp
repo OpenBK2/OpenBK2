@@ -306,6 +306,8 @@ void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImag
 		case IMAGE_SCALE_METHOD_MITCHELL:
 			pfnFilterFunc = Mitchell_filter, filterwidth = Mitchell_support;
 			break;
+		default:
+			break;
 	}
 	// create intermediate image to hold horizontal zoom
 	CArray2D<uint32_t> imgTemp( dst.GetSizeX(), src.GetSizeY() );

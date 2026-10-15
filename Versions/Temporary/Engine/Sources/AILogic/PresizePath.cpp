@@ -140,6 +140,8 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 			}
 
 			break;
+		default:
+			break;
 	}
 	//	return CVec3( pUnit->GetCenter(), 0 );
 }

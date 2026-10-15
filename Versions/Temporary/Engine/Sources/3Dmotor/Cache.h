@@ -748,6 +748,8 @@ public:
 								 nXSize - 1, nYSize - 1, nShiftX + ( 1 << ( nYSize - 1 ) ), nShiftY + ( 1 << ( nYSize - 1 ) ) ),
 				     NONE );
 				break;
+			default:
+				break;
 		}
 	}
 

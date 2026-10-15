@@ -1119,6 +1119,8 @@ void CFormationEnterBuildingState::Segment()
 				}
 
 				break;
+			default:
+				break;
 		}
 	}
 }
@@ -1348,6 +1350,8 @@ void CFormationEnterEntrenchmentState::Segment()
 			}
 		}*/
 
+			break;
+		default:
 			break;
 	}
 }
@@ -2254,6 +2258,8 @@ void CFormationEnterTransportState::Segment()
 					pTransport->Unlock();
 				}
 
+				break;
+			default:
 				break;
 		}
 	}
@@ -4343,6 +4349,8 @@ void CFormationFirstAidState::Segment()
 						healingPairs[i].pDoctor->SetDirectionVec( vDir );
 					}
 
+					break;
+				default:
 					break;
 			}
 		}

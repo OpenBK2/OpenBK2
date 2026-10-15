@@ -627,6 +627,8 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 			case NDb::ANIMATION_IDLE:
 				pUnitIdleAnim = pAnim;
 				break;
+			default:
+				break;
 		}
 	}
 	// change animation for parachute
@@ -646,6 +648,8 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 
 			case NDb::ANIMATION_IDLE:
 				pParachuteIdleAnim = pAnim;
+				break;
+			default:
 				break;
 		}
 	}

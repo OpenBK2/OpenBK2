@@ -59,6 +59,8 @@ int CExecutorUnitCombatBonus::Segment()
 		case EACR_FORCE_RECHARGE:
 			ForceRecharge();
 			break;
+		default:
+			break;
 	}
 
 	return CExecutorUnitBonus::Segment();

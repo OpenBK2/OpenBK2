@@ -226,6 +226,8 @@ bool CVisualNotifications::Notify( EVisualNotification eType, int nID, const CVe
 
 		case EVNT_UNITS_GIVEN:
 			return OnUnitsGiven( nID, vPos );
+		default:
+			break;
 	};
 	return false;
 }
@@ -236,6 +238,8 @@ bool CVisualNotifications::Notify( EVisualNotification eType, CMapObj *pMO )
 	{
 		case EVNT_KEY_OBJECT_STATE:
 			return OnKeyObjectState( pMO );
+		default:
+			break;
 	};
 
 	return false;
@@ -1273,6 +1277,8 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 			*pErase = false;
 			break;
 		}
+		default:
+			break;
 	}
 }
 
@@ -1349,6 +1355,8 @@ void CVisualNotifications::AddEvent( const SEventParams &params )
 			}
 			break;
 		}
+		default:
+			break;
 	}
 
 	CreateEventItemView( pEvent );
@@ -1424,6 +1432,8 @@ void CVisualNotifications::OnEvent( const SEventParams &params )
 			ObjectiveMove( params.nID );
 			return;
 		}
+		default:
+			break;
 	}
 
 	AddEvent( params );

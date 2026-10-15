@@ -439,6 +439,8 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 				dwFlags |= EWPF_SIZE_X;
 				break;
 			}
+			default:
+				break;
 		}
 		pOptionControl->SetPlacement( nWidthLeft + ITEM_DELTA_X + ITEM_DELTA_X, ITEM_DELTA_Y, nWidthRight, 0, dwFlags );
 		//

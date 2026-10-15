@@ -336,6 +336,8 @@ IUnitState *CPlaneStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComman
 			NI_ASSERT( false, "Command to die in the queue" );
 
 			break;
+		default:
+			break;
 	}
 
 	return pResult;
@@ -1056,6 +1058,8 @@ void CPlaneBombState::Segment()
 		}
 
 		break;
+		default:
+			break;
 	}
 
 	bHaveBombs = IsBombsPresent();
@@ -2098,6 +2102,8 @@ void CPlaneShturmovikPatrolState::Segment()
 				OnFindEnemy();
 			}
 
+			break;
+		default:
 			break;
 	}
 

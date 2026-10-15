@@ -2065,6 +2065,8 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 			GameTimer()->SetSpeed( 0 );
 			NGlobal::SetVar( "Sound.SFXVolume", fFormerVolume );
 			break;
+		default:
+			break;
 	}
 
 	float fStepAbsTime = 0.0f;
@@ -4413,6 +4415,8 @@ void CDrawProgress::OnTotalCount( ECounter eCounter, int nTotalCount )
 			}
 		}
 		break;
+		default:
+			break;
 	};
 }
 
@@ -4428,6 +4432,8 @@ void CDrawProgress::OnCount( ECounter eCounter, int nCount )
 			}
 		}
 		break;
+		default:
+			break;
 	};
 }
 

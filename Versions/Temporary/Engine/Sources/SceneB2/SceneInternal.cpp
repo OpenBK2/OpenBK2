@@ -394,6 +394,8 @@ bool CScene::ToggleShow( ESceneShow eShow )
 			ToggleShowPassability();
 			break;
 		}
+		default:
+			break;
 	}
 
 	return data[eScene]->showModes[eShow];
@@ -426,6 +428,8 @@ bool CScene::IsShowOn( ESceneShow eShow )
 			return data[eScene]->bEnableStatistics;
 		}
 		break;
+		default:
+			break;
 	}
 	return false;
 }

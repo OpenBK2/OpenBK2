@@ -238,6 +238,8 @@ void CWeatherVisual::Recalc()
 
 			break;
 		}
+		default:
+			break;
 	}
 
 	if ( pLightningAnimator )

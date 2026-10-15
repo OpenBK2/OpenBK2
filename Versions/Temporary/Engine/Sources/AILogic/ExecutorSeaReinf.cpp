@@ -127,6 +127,8 @@ int CExecutorTransportReinforcement::Segment()
 					transports[i].eState = ETS_LEFT;
 				}
 				break;
+				default:
+					break;
 			}
 		}
 		else

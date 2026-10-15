@@ -136,6 +136,8 @@ public:
 			case STG_AFTER_LOAD_DONE:
 				WriteToPipe( PIPE_CHAT, "Load done.", 0xffff0000 );
 				break;
+			default:
+				break;
 		}
 	}
 #endif //_FINALRELEASE

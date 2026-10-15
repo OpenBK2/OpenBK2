@@ -1638,6 +1638,8 @@ void CAILogic::UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const
 				updater.AddUpdate( EFB_PLACE_MARKER, MAKELONG( pCommand->vPos.x, pCommand->vPos.y ) );
 			}
 			break;
+		default:
+			break;
 	}
 }
 

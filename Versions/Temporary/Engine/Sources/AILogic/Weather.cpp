@@ -156,5 +156,7 @@ void CWeather::Segment()
 				timeNextCheck = curTime + GetNextTimeRandom();
 			}
 			break;
+		default:
+			break;
 	}
 }

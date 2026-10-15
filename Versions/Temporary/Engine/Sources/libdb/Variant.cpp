@@ -544,6 +544,8 @@ int CVariant::operator&( IBinSaver &saver )
 			}
 			saver.Add( 2, m_pmvar );
 			break;
+		default:
+			break;
 	}
 
 	return 0;

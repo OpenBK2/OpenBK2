@@ -59,6 +59,8 @@ const char *ConvertEditorType2String( EEditorType eEditorType )
 			return "string_new_ref";
 		case EDITOR_TYPE_STRING_NEW_MULTI_REF:
 			return "string_new_multi_ref";
+		default:
+			break;
 	}
 	return "";
 }

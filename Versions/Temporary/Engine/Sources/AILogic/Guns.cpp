@@ -1721,6 +1721,8 @@ IBallisticTraj *CBasicGun::CreateTraj( const CVec3 &vTarget ) const
 		case IGunsFactory::PLANE_GUN:
 			NI_ASSERT( false, "wrong call " );
 			break;
+		default:
+			break;
 	}
 
 	return 0;
@@ -1857,6 +1859,8 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 			}
 
 			break;
+			default:
+				break;
 		}
 	} // end for( multiple shots )
 

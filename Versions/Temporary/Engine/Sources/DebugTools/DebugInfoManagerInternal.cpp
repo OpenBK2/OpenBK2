@@ -71,6 +71,8 @@ const CVec4 CDebugInfoManager::Color2CVec4( const NDebugInfo::EColor eColor ) co
 		case NDebugInfo::RED:
 			vColor = CVec4( 255, 0, 0, 255 );
 			break;
+		default:
+			break;
 	}
 	return vColor;
 }

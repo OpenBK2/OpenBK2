@@ -1076,6 +1076,8 @@ void CWorldClient::OnChangeForcedAction( NDb::EUserAction eOldForcedAction )
 				pAI->RequestBuildPreview( ACTION_COMMAND_PLACEMINE, VNULL2, VNULL2, true );
 			}
 			break;
+			default:
+				break;
 		}
 	}
 }
@@ -2796,6 +2798,8 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 
 			break;
 		}
+		default:
+			break;
 	}
 }
 

@@ -984,6 +984,8 @@ const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd )
 		case ACTION_COMMAND_FORM_FORMATION:
 			nType = -1;
 			break;
+		default:
+			break;
 	}
 
 	CVec2 vResult( -1.0f, -1.0f );

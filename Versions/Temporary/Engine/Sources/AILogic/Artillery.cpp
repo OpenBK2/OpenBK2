@@ -797,6 +797,8 @@ void CArtillery::InstallBack( bool bAlreadyDone )
 		case ACTION_NOTIFY_UNINSTALL_MOVE:
 			InstallAction( ACTION_NOTIFY_INSTALL_MOVE, bAlreadyDone );
 			break;
+		default:
+			break;
 	}
 }
 

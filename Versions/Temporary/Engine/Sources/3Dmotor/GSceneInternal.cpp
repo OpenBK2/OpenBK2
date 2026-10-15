@@ -1829,6 +1829,8 @@ CObjectBase *CGScene::CreateStaticDecal( ISomePart *pTarget,
 			return CreateGeometry( pDecal, pMaterial, fg );
 		case TT_SIMPLE:
 			return CreateGeometry( pDecal, pMaterial, pTarget->GetSimplePos(), fg );
+		default:
+			break;
 	}
 	return 0;
 }
@@ -2213,6 +2215,8 @@ void CGScene::Draw( CTransformStack *pTS,
 			break;
 		case RP_GF3_FAST:
 			rlReq = (ERLRequest)( ( (int)rlReq ) | RN_LIT_PARTICLES );
+			break;
+		default:
 			break;
 	}
 

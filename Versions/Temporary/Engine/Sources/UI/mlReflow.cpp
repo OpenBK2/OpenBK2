@@ -231,6 +231,8 @@ void CReflowState::Finalize()
 				fSpaceMul = fSpaceSize > 1.0f ? fTotalWidth / fSpaceSize : 1.0f;
 				break;
 			}
+			default:
+				break;
 		}
 
 		for ( TVisObjects::iterator iObject = line.line.begin(); iObject != line.line.end(); ++iObject )

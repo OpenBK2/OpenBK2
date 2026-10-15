@@ -169,6 +169,8 @@ void CPredictedAntiAviationFire::Segment()
 			}
 
 			break;
+		default:
+			break;
 	}
 }
 

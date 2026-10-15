@@ -140,6 +140,8 @@ IUnitState *CHelicopterStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand
 		case ACTION_COMMAND_DIE:
 			NI_ASSERT( false, "Command to die in the queue" );
 			return 0;
+		default:
+			break;
 	}
 
 	NI_ASSERT( false, "Wrong helicopter command" );

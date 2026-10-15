@@ -705,6 +705,8 @@ void CCollisionsCollector::HandOutCollisions( CAIMap *pAIMap )
 								pCollision->Init( pUnit, pPusher, -1, fDistance );
 							}
 							break;
+						default:
+							break;
 					}
 				}
 			}

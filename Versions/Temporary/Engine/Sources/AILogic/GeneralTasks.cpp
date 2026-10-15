@@ -383,6 +383,8 @@ bool CGeneralTaskToDefendPatch::EnumWorker( class CCommonUnit *pUnit, const enum
 				break;
 			}
 			break;
+		default:
+			break;
 	}
 	return false;
 }
@@ -420,6 +422,8 @@ bool CGeneralTaskToDefendPatch::EvaluateWorker( CCommonUnit *pUnit, const enum E
 				}
 			}
 			return false;
+		default:
+			break;
 	}
 	return false;
 }

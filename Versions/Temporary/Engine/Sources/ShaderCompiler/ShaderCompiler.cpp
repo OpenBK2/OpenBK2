@@ -280,6 +280,8 @@ public:
 					cur.cmds.push_back( cmd );
 				}
 				break;
+			default:
+				break;
 		}
 	}
 };
@@ -725,6 +727,8 @@ static void ParseFile( char *pszFile )
 				AddRS( &tss, pszParse );
 				break;
 			case PS_PROC:
+				break;
+			default:
 				break;
 		}
 	}

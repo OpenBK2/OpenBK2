@@ -368,6 +368,8 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 					case ST_RIGHT_ARC:
 						fAngle -= fArcDeltaAngle;
 						break;
+					default:
+						break;
 				}
 			}
 			break;
@@ -383,6 +385,8 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 						break;
 					case ST_LEFT_ARC:
 						fAngle += 2.0f * fArcDeltaAngle;
+						break;
+					default:
 						break;
 				}
 			}
@@ -400,9 +404,13 @@ float CEntrenchmentDesignTool::GetSegDir( int nSegIndex )
 					case ST_RIGHT_ARC:
 						fAngle -= 2.0f * fArcDeltaAngle;
 						break;
+					default:
+						break;
 				}
 			}
 			break;
+			default:
+				break;
 		}
 
 		ePrevSegType = eSegType;
@@ -656,6 +664,8 @@ void CEntrenchmentDesignTool::GetSegmentsInfo(
 				sg.eSegType = NDb::EST_ARC;
 				sg.fDirAngle += FP_PI; // ST_RIGHT_ARC и ST_LEFT_ARC - одна модель но развернутая на 180 град.
 				break;
+			default:
+				break;
 		}
 		pEntrenchmentElementsInfo->push_back( sg );
 	}
@@ -696,6 +706,8 @@ void CEntrenchmentDesignTool::SetSegAABBSize( NDb::EEntrenchSegmType eSegType, c
 		case NDb::EST_TERMINATOR:
 			segAABBSizes[ST_TERMINATOR] = v;
 			break;
+		default:
+			break;
 	}
 }
 
@@ -712,6 +724,8 @@ void CEntrenchmentDesignTool::SetSegAABBCenter( NDb::EEntrenchSegmType eSegType,
 			break;
 		case NDb::EST_TERMINATOR:
 			segAABBCentr[ST_TERMINATOR] = v;
+			break;
+		default:
 			break;
 	}
 }

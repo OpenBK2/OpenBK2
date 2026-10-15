@@ -41,6 +41,8 @@ CExecutorUnitBonus::CExecutorUnitBonus( EUnitSpecialAbility eAbility, CAIUnit *_
 		case NDb::ABILITY_CAMOFLAGE_MODE:
 			eStatus = EUS_CAMOUFLAGE;
 			break;
+		default:
+			break;
 	}
 }
 

@@ -42,6 +42,8 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 			{
 				nNewLevel = 5;
 			}
+		default:
+			break;
 	}
 
 	for ( int nLevel = 0; nLevel < updateLists.size(); ++nLevel )

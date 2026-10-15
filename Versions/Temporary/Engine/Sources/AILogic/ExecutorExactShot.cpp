@@ -106,6 +106,8 @@ bool CExecutorExactShot::NotifyEvent( const CExecutorEvent &event )
 			SetAutocast( false );
 
 			return true;
+		default:
+			break;
 	}
 	return false;
 }

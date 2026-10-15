@@ -230,6 +230,8 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 			//CRAP}
 
 			break;
+		default:
+			break;
 	}
 	return GetNextTime();
 }
@@ -319,6 +321,8 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 			eState = EASS_SWITCHING_ON;
 		}
 			return true;
+		default:
+			break;
 	}
 	return false;
 }

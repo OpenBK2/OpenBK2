@@ -50,6 +50,8 @@ void CMouseTranslatorB1::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDi
 				bUpdateDir = false;
 			}
 			break;
+		default:
+			break;
 	}
 }
 
@@ -103,6 +105,8 @@ void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 			RaiseEvent( "end_selection", nSelectAction );
 			break;
 		}
+		default:
+			break;
 	}
 }
 
@@ -188,6 +192,8 @@ void CMouseTranslatorB2Base::OnMouseMove( const CVec2 &vPos, const bool bMouseMo
 		case AS_MOVE:
 			NInput::PostEvent( "update_direction", PackCoords( vPos ), IsDownSamePos( vPos ) || IsDownSameTime() );
 			break;
+		default:
+			break;
 	}
 }
 
@@ -235,6 +241,8 @@ void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 			Camera()->SwitchManualScrolling( "mouse_translator", true );
 			break;
 		}
+		default:
+			break;
 	}
 }
 
@@ -494,6 +502,8 @@ void CMouseTranslator::CancelAction()
 			break;
 		case AS_MOVE:
 			RaiseEvent( "cancel_direction" );
+			break;
+		default:
 			break;
 	}
 	eActionState = AS_NONE;

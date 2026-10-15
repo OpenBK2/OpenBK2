@@ -277,6 +277,8 @@ void CMOSquad::GetDisabledActions( CUserActions *pActions, EActionsType eActions
 				case NDb::SSquadRPGStats::SFormation::MOVEMENT:
 					pActions->RemoveAction( NDb::USER_ACTION_FORMATION_1 );
 					break;
+				default:
+					break;
 			}
 		}
 	}

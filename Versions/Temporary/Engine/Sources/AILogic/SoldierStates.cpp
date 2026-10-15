@@ -1471,6 +1471,8 @@ void CSoldierEnterEntrenchmentState::Segment()
 			}
 
 			break;
+		default:
+			break;
 	}
 }
 
@@ -1986,6 +1988,8 @@ void CSoldierEnterTransportNowState::Segment()
 					eState = EETS_FINISHED;
 				}
 
+				break;
+			default:
 				break;
 		}
 	}

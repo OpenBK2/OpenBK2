@@ -253,6 +253,8 @@ struct SVSOCollector
 				return &cragList;
 			case CMapInfoController::SVSOUndoData::VSO_LAKE:
 				return &lakeList;
+			default:
+				break;
 		}
 		return 0;
 	}

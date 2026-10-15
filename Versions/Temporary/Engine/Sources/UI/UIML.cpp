@@ -974,6 +974,8 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 			fSpace = float( fTotalWidth - pInfo->fLineWidth ) / ( pInfo->line.size() > 1 ? pInfo->line.size() - 1 : 1 );
 			break;
 		}
+		default:
+			break;
 	}
 
 	for ( std::list<CPtr<IMLObject>>::iterator iTemp = pInfo->line.begin(); iTemp != pInfo->line.end(); iTemp++ )

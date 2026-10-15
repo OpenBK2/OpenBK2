@@ -203,6 +203,8 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 						RefreshDialogData( false );
 						break;
 					}
+					default:
+						break;
 				}
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 				return true;
@@ -413,6 +415,8 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 						//RefreshScriptCameraMarkers();
 						break;
 					}
+					default:
+						break;
 				}
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 			}

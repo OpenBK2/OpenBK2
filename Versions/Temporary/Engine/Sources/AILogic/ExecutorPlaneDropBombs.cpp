@@ -80,6 +80,8 @@ bool CExecutorPlaneDropBombsObject::NotifyEvent( const CExecutorEvent &event )
 			checked_cast_ptr<CAviation *>( pUnit )->SetBombAutocast( true );
 			SetAutocast( true );
 			return true;
+		default:
+			break;
 	}
 
 	if ( pEv->GetAbility() == GetAbility() )

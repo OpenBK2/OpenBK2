@@ -351,6 +351,8 @@ void CSoundScene2D::SetSoundSceneMode( const enum ESoundSceneMode _eSoundSceneMo
 				break;
 			case ESSM_INTERMISSION_INTERFACE:
 				break;
+			default:
+				break;
 		}
 	}
 }

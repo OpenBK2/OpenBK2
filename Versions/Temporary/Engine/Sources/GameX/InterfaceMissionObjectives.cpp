@@ -426,6 +426,8 @@ int CInterfaceMissionObjectives::GetButtonIndex( enum EMissionObjectiveState eSt
 			return 1;
 		case EMOS_FAILED:
 			return 2;
+		default:
+			break;
 	};
 	return 0;
 }

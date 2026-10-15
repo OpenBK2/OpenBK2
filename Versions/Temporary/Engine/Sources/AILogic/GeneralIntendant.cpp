@@ -104,6 +104,8 @@ void CGeneralTaskToDefendStorage::AskForWorker( ICommander *pManager, const floa
 					pManager->EnumWorkers( FT_TRUCK_REPAIR_BUILDING, this );
 				}
 				break;
+			default:
+				break;
 		}
 	}
 }
@@ -146,6 +148,8 @@ float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit *pUnit, con
 		}
 
 		break;
+		default:
+			break;
 	}
 	//
 	return 0;
@@ -157,6 +161,8 @@ bool CGeneralTaskToDefendStorage::EvaluateWorker( CCommonUnit *pUnit, const enum
 	{
 		case FT_TRUCK_REPAIR_BUILDING:
 			return pUnit->CanCommandBeExecutedByStats( ACTION_COMMAND_REPEAR_OBJECT );
+			break;
+		default:
 			break;
 	}
 	//

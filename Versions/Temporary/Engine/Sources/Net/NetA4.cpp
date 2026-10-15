@@ -267,6 +267,8 @@ CNetDriver::~CNetDriver()
 			CSendPacket p( login.GetLoginTarget(), LOGOUT, -1, pLinks );
 		}
 		break;
+		default:
+			break;
 	}
 }
 

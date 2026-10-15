@@ -459,6 +459,8 @@ int GetBpp( D3DFORMAT format )
 			return 16;
 		case D3DFMT_X8L8V8U8:
 			return 32;
+		default:
+			break;
 	}
 	return 0;
 }
@@ -481,6 +483,8 @@ static int GetZBpp( D3DFORMAT format )
 			return 32;
 		case D3DFMT_D24X4S4:
 			return 32;
+		default:
+			break;
 	}
 	return 0;
 }

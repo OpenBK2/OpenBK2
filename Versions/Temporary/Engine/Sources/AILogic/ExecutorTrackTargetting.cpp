@@ -139,6 +139,8 @@ bool CExecutorTrackTargetting::NotifyEvent( const CExecutorEvent &event )
 			pUnit->SetTrackTargeting( false );
 
 			return true;
+		default:
+			break;
 	}
 	return false;
 }

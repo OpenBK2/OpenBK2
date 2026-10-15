@@ -661,6 +661,8 @@ int CGroupMoveExecutor::Segment()
 		case ES_MOVE_TO_DESTINATION:
 			PeriodicalCheckForMove();
 			break;
+		default:
+			break;
 	}
 
 	return SEGMENT_PERIOD_CHECK;
@@ -694,6 +696,8 @@ bool CGroupMoveExecutor::NotifyEvent( const CExecutorEvent &_event )
 					DeleteUnitFromList( event->GetUnitID() );
 					FinishState( event->GetUnitID() );
 				}
+				break;
+			default:
 				break;
 		}
 	}

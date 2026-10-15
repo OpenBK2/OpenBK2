@@ -1921,6 +1921,8 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 				}
 			}
 			break;
+		default:
+			break;
 	}
 }
 

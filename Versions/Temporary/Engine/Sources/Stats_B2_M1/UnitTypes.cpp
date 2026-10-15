@@ -129,6 +129,8 @@ enum EUnitRPGType ReMapRPGType( enum EDBUnitRPGType eType )
 			return RPG_TYPE_AVIA_STRAT_BOMBER;
 		case DB_RPG_TYPE_AVIA_HELICOPTER:
 			return RPG_TYPE_AVIA_HELICOPTER;
+		default:
+			break;
 	}
 	NI_ASSERT( false, fmt::format( "wrong type {}", int( eType ) ) );
 	return RPG_TYPE_INFANTRY;
@@ -156,6 +158,8 @@ const EUnitRPGClass GetRPGClass( const EUnitRPGType eType )
 			return RPG_CLASS_TANK;
 		case RPG_TYPE_SNIPER:
 			return RPG_CLASS_SNIPER;
+		default:
+			break;
 	}
 	return RPG_CLASS_UNKNOWN;
 }
