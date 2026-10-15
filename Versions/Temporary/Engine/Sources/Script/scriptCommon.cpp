@@ -293,7 +293,9 @@ void luaMakeCallParamsVector( char *szParams, va_list *pL, std::vector<CObj<CLUA
 				pParams->push_back( new CLUACallParam( va_arg( *pL, int ) ) );
 				break;
 			case 'f':
-				pParams->push_back( new CLUACallParam( va_arg( *pL, float ) ) );
+				// Varargs promote float to double, so double is the type that arrives and
+				// the only one va_arg may name; reading it as float is undefined.
+				pParams->push_back( new CLUACallParam( static_cast<float>( va_arg( *pL, double ) ) ) );
 				break;
 			case 's':
 				pParams->push_back( new CLUACallParam( std::string( va_arg( *pL, char * ) ) ) );
