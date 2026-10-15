@@ -60,7 +60,7 @@ CSquadState::CSquadState( CSquadEditor *_pSquadEditor )
 
 bool CSquadState::IsMultiInputState( int nStateIndex )
 {
-	if ( ( nStateIndex == IS_FORMATION ) )
+	if ( nStateIndex == IS_FORMATION )
 	{
 		return true;
 	}

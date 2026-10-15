@@ -240,9 +240,14 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 			}
 			else if ( pUnit->GetTurret( 0 )->IsFinished() )
 			{
+				// The & is deliberate and stays: RecordRandomCall has to run whatever
+				// the comparison came out as, since it is what records that the
+				// NRandom::Random call on its left consumed a number. && would skip
+				// it and the RNG record would no longer line up between clients. The
+				// parentheses only say which operand & takes, since < binds tighter.
 				if ( ( theHitsStore.WasHit( pUnit->GetCenterPlain(), 2 * SConsts::RADIUS_OF_HIT_NOTIFY, CHitsStore::EHT_ANY ) ||
 				       lastTimeOfRotate != NTimer::STime( -1 ) &&
-				           ( curTime - lastTimeOfRotate < 10000 + NRandom::Random( 0, 1000 ) & RecordRandomCall() ) ) )
+				           ( ( curTime - lastTimeOfRotate < 10000 + NRandom::Random( 0, 1000 ) ) & RecordRandomCall() ) ) )
 				{
 					// если танк с перебитой гусеницей или зенитка
 					if ( pUnit->GetTurret( 0 )->GetHorTurnConstraint() != 0 &&

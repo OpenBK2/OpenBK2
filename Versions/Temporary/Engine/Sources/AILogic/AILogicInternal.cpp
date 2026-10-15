@@ -1250,7 +1250,12 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 
 	//	ConstructorInfo() = Singleton<CConstructorInfo>();
 
-	if ( !GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+	// Was "!GetGameType() == EGT_SINGLE", which applies the not to the call and
+	// compares the resulting bool to the enumerator. It gave the right answer
+	// only because EGT_SINGLE is the first enumerator and so zero: "!x == 0" is
+	// true exactly when x is non-zero. Spelling it as the inequality it meant
+	// keeps that answer without depending on the enumerator's value.
+	if ( GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
 	{
 		CPtr<IRandomSeed> pSeed = NRandom::CreateRandomSeedCopy();
 		pSeed->InitByZeroSeed();
