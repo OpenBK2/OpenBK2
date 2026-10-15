@@ -541,7 +541,7 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 							eUnitType = EFUT_ALL;
 							break;
 					}
-					if ( (EFilterUnitTypes)( nUnitType ) != EFC_ALL && (EFilterUnitTypes)( nUnitType ) != eUnitType )
+					if ( (EFilterUnitTypes)( nUnitType ) != EFUT_ALL && (EFilterUnitTypes)( nUnitType ) != eUnitType )
 					{
 						continue;
 					}

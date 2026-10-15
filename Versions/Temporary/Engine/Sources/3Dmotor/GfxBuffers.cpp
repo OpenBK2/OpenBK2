@@ -117,7 +117,7 @@ public:
 		root.nShift = 0;
 		pCache->AddRoot( root );
 		frames.emplace_front();
-		if ( usage == DYNAMIC )
+		if ( usage == TBU_DYNAMIC )
 		{
 			//bFlushBufferOnNewFrame = true;
 			//dwLockFlags = D3DLOCK_NOOVERWRITE;
