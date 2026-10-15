@@ -212,7 +212,20 @@ bool CWindowComboBox::IsModalList() const
 
 void CWindowComboBox::ShowList( bool bShow )
 {
-	if ( !pList && pList->IsVisible() != bShow )
+	// Was `!pList && pList->IsVisible() != bShow`, which can only be true when
+	// pList is null and then dereferences it. For a live list the && short
+	// circuits and the test is simply false, so this early return has never
+	// once been taken, and for a null list it was undefined behaviour; GCC
+	// proved the null this and -Wnonnull reported it.
+	//
+	// Only the null is guarded here. The second half cannot be restored with
+	// any confidence: every path below dereferences pList unconditionally, so
+	// the guard has to mean "no list, nothing to do", and read as an
+	// already-in-the-wanted-state shortcut the comparison is the wrong way
+	// round anyway. Adding one would skip ShowWindow, AddChild and SetFocus in
+	// a case where they run today, which is a behaviour change rather than a
+	// fix.
+	if ( !pList )
 	{
 		return;
 	}
