@@ -123,7 +123,7 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 	NI_ASSERT( nCounter >= 0, "wrong counter" );
 	if ( timeLastBored == 0 )
 	{
-		timeLastBored = curTime + int( timeInterval * ( 1.0f + 1.0f * rand() / RAND_MAX ) );
+		timeLastBored = curTime + int( timeInterval * ( 1.0f + 1.0f * rand() / static_cast<float>( RAND_MAX ) ) );
 	}
 
 	if ( nCounter == 0 || timeLastBored > curTime )
@@ -156,7 +156,7 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 				bSayAck = false;
 			}
 
-			timeLastBored = curTime + int( timeInterval * ( 1.0f + 1.0f * rand() / RAND_MAX ) );
+			timeLastBored = curTime + int( timeInterval * ( 1.0f + 1.0f * rand() / static_cast<float>( RAND_MAX ) ) );
 		}
 		return bSayAck;
 	}

@@ -2,7 +2,7 @@
 
 const SSoundStats *GetRandomSound() const
 {
-	const float fRand = 1.0f * rand() / RAND_MAX;
+	const float fRand = 1.0f * rand() / static_cast<float>( RAND_MAX );
 	float fSum = 0;
 	for ( int i = 0; i < sounds.size(); ++i )
 	{

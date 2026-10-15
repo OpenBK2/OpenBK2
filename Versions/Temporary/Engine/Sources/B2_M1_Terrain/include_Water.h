@@ -6,6 +6,6 @@ void PostLoad( bool bInEditor ) override
 	for ( std::vector<SWaterWaveType>::iterator it = waves.begin(); it != waves.end(); ++it )
 	{
 		it->PostLoad( bInEditor );
-		fPhaseOffset += DEF_WAVES_PHASE_OFFSET_VAR * ( 0.5f + (float)rand() / RAND_MAX * 0.5f );
+		fPhaseOffset += DEF_WAVES_PHASE_OFFSET_VAR * ( 0.5f + (float)rand() / static_cast<float>( RAND_MAX ) * 0.5f );
 	}
 }

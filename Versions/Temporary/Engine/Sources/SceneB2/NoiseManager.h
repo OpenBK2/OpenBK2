@@ -14,8 +14,8 @@ class CNoiseAccessor
 
 	CNoiseAccessor( const CArray2D<uint8_t> &_noise )
 		: noise( _noise )
-		, nXOffset( (float)rand() / RAND_MAX * _noise.GetSizeX() )
-		, nYOffset( (float)rand() / RAND_MAX * _noise.GetSizeY() )
+		, nXOffset( (float)rand() / static_cast<float>( RAND_MAX ) * _noise.GetSizeX() )
+		, nYOffset( (float)rand() / static_cast<float>( RAND_MAX ) * _noise.GetSizeY() )
 	{
 	}
 
