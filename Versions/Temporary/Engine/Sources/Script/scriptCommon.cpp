@@ -282,10 +282,10 @@ bool luaGetBool( const Script::Object &o )
 	}
 }
 
-void luaMakeCallParamsVector( char *szParams, va_list *pL, std::vector<CObj<CLUACallParam>> *pParams )
+void luaMakeCallParamsVector( const char *szParams, va_list *pL, std::vector<CObj<CLUACallParam>> *pParams )
 {
 	pParams->clear();
-	for ( char *pCh = szParams; *pCh != (char)0; ++pCh )
+	for ( const char *pCh = szParams; *pCh != (char)0; ++pCh )
 	{
 		switch ( *pCh )
 		{
@@ -390,7 +390,7 @@ void luaCallFunction( const std::string &szName, const std::vector<CObj<CLUACall
 	ASSERT( pState->pCT->top == stackTop ); // stack corrupted or current thread was changed
 }
 
-void luaCallFunction( const std::string &szName, char *szParams, ... )
+void luaCallFunction( const std::string &szName, const char *szParams, ... )
 {
 	std::vector<CObj<CLUACallParam>> params;
 	va_list l;

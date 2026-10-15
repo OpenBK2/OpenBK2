@@ -36,7 +36,7 @@ static int Script_LOG( lua_State *state )
 	return 0;
 }
 
-char *pErrToString[] = {
+const char *pErrToString[] = {
 	"OK",
 	"Error while running the chunk",
 	"Error opening the file",

@@ -67,9 +67,9 @@ public:
 	}
 };
 
-void luaCallFunction( const std::string &szName, char *szParams, ... );
+void luaCallFunction( const std::string &szName, const char *szParams, ... );
 void luaCallFunction( const std::string &szName, const std::vector<CObj<CLUACallParam>> &params );
-void luaMakeCallParamsVector( char *szParams, va_list *pL, std::vector<CObj<CLUACallParam>> *pParams );
+void luaMakeCallParamsVector( const char *szParams, va_list *pL, std::vector<CObj<CLUACallParam>> *pParams );
 void luaCreateCPtrVar( const std::string &szVarName, CObjectBase *pObj );
 
 } // namespace NScript
