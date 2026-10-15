@@ -156,7 +156,9 @@ namespace NMetaInfo
 					break;
 
 				case NTypeDef::TYPE_TYPE_BINARY:
-					delete[] data.pBLOB;
+					// pBLOB is a void * allocated as uint8_t[] above, and delete[] needs
+					// the type back to know what it is freeing.
+					delete[] static_cast<uint8_t *>( data.pBLOB );
 					break;
 
 				case NTypeDef::TYPE_TYPE_ARRAY:
