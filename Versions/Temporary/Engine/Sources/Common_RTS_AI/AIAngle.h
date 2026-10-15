@@ -27,11 +27,6 @@ struct COMMON_RTS_AI_EXPORT SAIAngle
 		wAngle = _wAngle;
 	}
 
-	operator SAIAngle() const
-	{
-		return wAngle;
-	}
-
 	operator int() const
 	{
 		return wAngle;
