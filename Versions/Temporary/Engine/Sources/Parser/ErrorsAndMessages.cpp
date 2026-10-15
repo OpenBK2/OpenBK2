@@ -6,7 +6,7 @@
 
 #include <fmt/format.h>
 
-void yyerror( char *s, ... );
+void yyerror( const char *s, ... );
 void yyerror_no_line( char *s, ... );
 extern int nyyLineNumber;
 extern bool bNoTrace;
@@ -28,7 +28,7 @@ void ShowWarningNoLine( const std::string &szWarning )
 void ShowError( const std::string &szError )
 {
 	bNoTrace = true;
-	yyerror( const_cast<char *>( szError.c_str() ) );
+	yyerror( szError.c_str() );
 	bNoTrace = false;
 
 	std::string szErr = fmt::format( "{}({}) error: {}", NLang::GetParsingFileName(), nyyLineNumber, szError.c_str() );

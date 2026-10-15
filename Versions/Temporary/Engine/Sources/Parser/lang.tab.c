@@ -56,7 +56,7 @@ extern bool byySuccess;
 extern bool bInTestMode;
 extern bool bNoTrace;
 
-void yyerror ( char *s, ... )  /* Called by yyparse on error */
+void yyerror ( const char *s, ... )  /* Called by yyparse on error */
 {
 	if ( !bInTestMode )
 	{

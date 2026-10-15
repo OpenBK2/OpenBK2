@@ -552,7 +552,7 @@ int nyyLineNumber = 1;
 //#define YY_ALWAYS_INTERACTIVE 1
 #define YY_NEVER_INTERACTIVE 1
 int yyReadData( char *pBuf, int nMaxSize );
-void yyerror( char *s, ... );
+void yyerror( const char *s, ... );
 
 #define YY_INPUT(buf,result,max_size) { (result) = yyReadData( (buf), (max_size) ); }
 
