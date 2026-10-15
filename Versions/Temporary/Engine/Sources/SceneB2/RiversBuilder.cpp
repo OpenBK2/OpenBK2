@@ -594,7 +594,6 @@ void CTerraGen::CreateRiverGfx( STerrainInfo::SRiver *pRiver,
 			                    0.0f );
 			const float fMaxTexX = 1; //Clamp( fCurWidth * (1.0f + DEF_WATER_EXPAND) * DEF_WATER_TEXTURE_SCALE, 0.0f, 15.0f );
 			const float fMinTexX = 0; //-fMaxTexX;
-			pRiver->pDesc->waterLayers[0].fTilingStep;
 			fWaterTexY +=
 					pRiver->pDesc->waterLayers[0]
 							.fTilingStep; //fPrevDist / ( fCurWidth * (1.0f + DEF_WATER_EXPAND) * 2.0f * DEF_WATER_TEXTURE_SCALE );
