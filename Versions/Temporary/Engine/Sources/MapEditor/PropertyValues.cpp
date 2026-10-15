@@ -245,10 +245,10 @@ bool BuildIntChoices( const SPropertyDesc *pDesc, std::vector<std::string> *pCho
 		nStep = 1;
 	}
 	//
-	int nLeftPos = szNumbers.find_first_of( PCSP_NUMBERS, 0 );
+	std::string::size_type nLeftPos = szNumbers.find_first_of( PCSP_NUMBERS, 0 );
 	while ( nLeftPos != std::string::npos )
 	{
-		const int nRightPos = szNumbers.find_first_of( PCSP_SOFT_DIVIDERS, nLeftPos + 1 );
+		const std::string::size_type nRightPos = szNumbers.find_first_of( PCSP_SOFT_DIVIDERS, nLeftPos + 1 );
 		const std::string szNumberList = szNumbers.substr( nLeftPos, nRightPos - nLeftPos );
 		const int nRangePos = szNumberList.find_first_of( PCSP_RANGE_DIVIDERS );
 		if ( nRangePos == std::string::npos )
@@ -340,10 +340,10 @@ bool BuildFloatChoices( const SPropertyDesc *pDesc, std::vector<std::string> *pC
 		nPrecision = PCSV_DEFAULT_RECISION;
 	}
 	//
-	int nLeftPos = szNumbers.find_first_of( PCSP_NUMBERS, 0 );
+	std::string::size_type nLeftPos = szNumbers.find_first_of( PCSP_NUMBERS, 0 );
 	while ( nLeftPos != std::string::npos )
 	{
-		const int nRightPos = szNumbers.find_first_of( PCSP_SOFT_DIVIDERS, nLeftPos + 1 );
+		const std::string::size_type nRightPos = szNumbers.find_first_of( PCSP_SOFT_DIVIDERS, nLeftPos + 1 );
 		const std::string szNumberList = szNumbers.substr( nLeftPos, nRightPos - nLeftPos );
 		const int nRangePos = szNumberList.find_first_of( PCSP_RANGE_DIVIDERS );
 		if ( nRangePos == std::string::npos )
