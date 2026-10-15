@@ -20,9 +20,9 @@ public:
 	bool OpenMOD() override;
 	void CloseMOD() override;
 	//
-	/**
+	/*
 	bool IsValidFolder( const std::string &rszFolder );
 	bool IsValidPath( const std::string &rszPath );
-	/**/
+	*/
 	std::string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType ) override;
 };

@@ -26,7 +26,7 @@ namespace NScript
 	SLUAError luaLastError;
 }
 
-/**
+/*
 // space to handle stack overflow errors
 #define EXTRA_STACK	(2*LUA_MINSTACK)
 
@@ -36,7 +36,7 @@ void luaD_init (lua_State *L, int stacksize) {
 	L->pCT->stacksize = stacksize;
 	L->pCT->Cbase = L->pCT->top = L->pCT->stack;
 }
-/**/
+*/
 
 
 void luaD_checkstack (lua_State *L, int n)
@@ -227,7 +227,7 @@ void luaD_call( lua_State *L, StkId func, int nResults )
 /*
 ** Execute a protected call.
 */
-/**
+/*
 struct CallS {  // data to `f_call'
 	StkId func;
 	int nresults;
@@ -249,7 +249,7 @@ int lua_call (lua_State *L, int nargs, int nresults) {
 		L->pCT->top = func;  // remove parameters from the stack
 	return status;
 }
-/**/
+*/
 
 
 /*

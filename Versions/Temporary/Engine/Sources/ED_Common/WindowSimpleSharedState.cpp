@@ -893,7 +893,7 @@ void CWindowSimpleSharedState::UndoChange( const std::string &szTypeName,
                                            const std::string &szName,
                                            const CVariant &oldValue )
 {
-	/**
+	/*
 	if ( std::string::npos != szName.find( "Placement.Position.First." ) )
 	{
 		CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
@@ -912,14 +912,14 @@ void CWindowSimpleSharedState::UndoChange( const std::string &szTypeName,
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 	}
-	/**/
+	*/
 }
 
 void CWindowSimpleSharedState::UndoInsert( const std::string &szTypeName,
                                            const CDBID &rDBID,
                                            const std::string &szName )
 {
-	/**
+	/*
 	if ( std::string::npos != szName.find( "Children" ) )
 	{
 		CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
@@ -932,14 +932,14 @@ void CWindowSimpleSharedState::UndoInsert( const std::string &szTypeName,
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 	}
-	/**/
+	*/
 }
 
 void CWindowSimpleSharedState::UndoRemove( const std::string &szTypeName,
                                            const CDBID &rDBID,
                                            const std::string &szName )
 {
-	/**
+	/*
 	if ( std::string::npos != szName.find( "Children" ) )
 	{
 		CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
@@ -949,5 +949,5 @@ void CWindowSimpleSharedState::UndoRemove( const std::string &szTypeName,
 
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
-	/**/
+	*/
 }

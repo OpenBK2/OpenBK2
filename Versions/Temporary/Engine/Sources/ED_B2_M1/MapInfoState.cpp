@@ -806,7 +806,7 @@ void CMapInfoState::CancelSelection() {}
 
 // basement storage
 
-/**
+/*
 namespace NTest
 {
 	class CBase
@@ -837,8 +837,8 @@ namespace NTest
 		}
 	}
 };
-/**/
-/**
+*/
+/*
 				CVec3 vPos = pMapInfo->objects[nObjectIndex].vPos;
 				vPos.z += GetTerrainHeight( vPos.x, vPos.y );
 				CQuat qRot = CQuat( AI2VisRad( pMapInfo->objects[nObjectIndex].nDir ), V3_AXIS_Z );
@@ -890,8 +890,8 @@ namespace NTest
 				//
 				pMapInfoEditor->sceneToMap_ObjectIDMap[nSceneObjectID] = nObjectID;
 				pMapInfoEditor->mapToScene_ObjectIDMap[nObjectID] = nSceneObjectID;
-				/**/
-/**
+				*/
+/*
 	int nID = 0;
 	bool bLockID = true;
 	CFreeIDCollector freeIDCollector;
@@ -973,8 +973,8 @@ namespace NTest
 	bLockID = freeIDCollector.LockID( nID );
 	DebugTrace( "LockID( %d ): %d", nID, bLockID );
 	freeIDCollector.Trace();
-/**/
-/**
+*/
+/*
 			std::string szRPGStatsTypeName;
 			std::string szRPGStatsName;
 			unsigned nObjectRPGStatsTypeID = INVALID_NODE_ID;
@@ -985,20 +985,20 @@ namespace NTest
 				NI_ASSERT( 0, fmt::format( "Empty object {}", nObjectIndex ) );
 				continue;
 			}
-			/**/
-/**
+			*/
+/*
 			CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pMapInfoManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0, 0, 0 );
 			if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 			{
 				NI_ASSERT( 0, fmt::format( "Empty object {}", nObjectIndex ) );
 				continue;
 			}
-			/**/
-/**
+			*/
+/*
 			else if ( nObjectRPGStatsTypeID == NDb::SEntrenchmentRPGStats::typeID )
 			{
 			}
 			else if ( nObjectRPGStatsTypeID == NDb::SBridgeRPGStats::typeID )
 			{
 			}
-			/**/
+			*/

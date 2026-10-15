@@ -89,10 +89,10 @@ void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInf
 	// get map and camera anchor from options
 	std::string szMapName = NEditorOptions::GetBgMap( szDesiredSeason );
 	NStr::ToLower( &szMapName );
-	/**
+	/*
 		if ( szMapName == szMapInfoNameLoaded )
 			return;
-		/**/
+		*/
 	CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( szDesiredSeason );
 	if ( vCameraAnchor == VNULL3 )
 	{

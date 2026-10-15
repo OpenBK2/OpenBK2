@@ -1,7 +1,7 @@
 #pragma once
 #include "MapEditorLib_export.h"
 
-/**
+/*
 template<class TID>
 class CFreeIDCollector
 {
@@ -23,7 +23,7 @@ public:
 	virtual void GetNextID( TID *pNextID, const TID &rID ) = 0;
 	virtual void GetFirstID( TID *pFirstID ) = 0;
 };
-/**/
+*/
 
 class MAPEDITORLIB_EXPORT CFreeIDCollector
 {

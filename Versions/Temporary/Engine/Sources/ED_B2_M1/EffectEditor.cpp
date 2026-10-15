@@ -38,7 +38,7 @@ void CEffectEditor::Create()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 	// check, do we have desired MapInfo object
 	const std::string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );
-	/**
+	/*
 	unsigned nMapID = -1;
 	if ( CPtr<IManipulator> pFolderMan = Singleton<IResourceManager>()->CreateFolderManipulator( "MapInfo" ) )
 	{
@@ -46,7 +46,7 @@ void CEffectEditor::Create()
 		nMapID = pFolderMan->GetID( szMapName );
 	}
 	//
-	/**/
+	*/
 	if ( const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( CDBID( szMapName ) ) )
 	{
 		pScene->SetLight( pMapInfo->pLight );

@@ -856,7 +856,7 @@ struct CheckTilesFunctional
 	}
 };
 
-/**
+/*
 template<class TYPE>
 bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//границы применимости функционалов
 																		 const SMapObjectInfo *pMapObjectInfo,				//казатель на массив обьектов
@@ -922,7 +922,7 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//гра
 	}
 	return true;
 }
-/**/
+*/
 
 bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
                                  CObjectBaseController *pObjectController,
@@ -1035,7 +1035,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 											                       ( nYIndex * fTileSize ) + NWin32Random::Random( 0.0f, fTileSize ),
 											                       0.0f );
 											const float fDirection = NWin32Random::Random( 0.0f, FP_2PI );
-											/**
+											/*
 											if ( pTileMap )
 											{
 												tileMapCheckTiles.isPresent = false;
@@ -1046,7 +1046,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 													bAddObject = true;
 												}
 											}
-											/**/
+											*/
 											//добавляем объект
 											NMapInfoEditor::SObjectCreateInfo objectCreateInfo;
 											objectCreateInfo.vPosition = vPosition;

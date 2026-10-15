@@ -89,12 +89,12 @@ void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap,
 				}
 			}
 		}
-		/**
+		/*
 		for ( IManipulator::CNameMap::const_iterator posName = pNameMap->begin(); posName != pNameMap->end(); ++posName )
 		{
 			DebugTrace( "GetNameListToUpdate: <%s>", posName->first.c_str() );
 		}
-		/**/
+		*/
 	}
 }
 

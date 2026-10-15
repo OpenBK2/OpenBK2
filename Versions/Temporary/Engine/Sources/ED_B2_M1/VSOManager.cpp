@@ -1184,7 +1184,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0,
 	UniquePolygon<std::list<CVec2>, CVec2>( pPointsSequence, MINIMAL_POINT_DISTANCE );
 	return true;
 
-	/**
+	/*
 	std::list<CVec2>::const_iterator itCurrentPath0 = currentPath0.begin();
 	std::list<CVec2>::const_iterator itCurrentPath1 = currentPath0.begin();
 	++itCurrentPath1;
@@ -1312,7 +1312,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0,
 	pPointsSequence->insert( pPointsSequence->end(), currentPath0.begin(), currentPath0.end() );
 	//UniquePolygon<std::list<CVec2>, CVec2>( pPointsSequence, RMGC_MINIMAL_VIS_POINT_DISTANCE );
 	return true;
-	/**/
+	*/
 }
 
 //первый VSO продолжается на 2 controlPoints, край уводится в 0
@@ -1850,7 +1850,7 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 
 // basement storage
 
-/**
+/*
 
 bool CVSOManager::UpdateZ( NDb::SVSOInstance *pVSO )
 {
@@ -1867,4 +1867,4 @@ bool CVSOManager::UpdateZ( NDb::SVSOInstance *pVSO )
 	}
 	return bResult;
 }
-/**/
+*/

@@ -46,7 +46,7 @@ bool CBuilderBase::RemoveObject( const std::string &rszObjectTypeName, const std
 	return pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, false );
 }
 
-/**
+/*
 
 bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string &szObjectName )
 {
@@ -68,6 +68,6 @@ bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string 
 	}
 	return false;
 }
-/**/
+*/
 
 // basement storage

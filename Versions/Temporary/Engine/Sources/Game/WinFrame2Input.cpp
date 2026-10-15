@@ -3,7 +3,7 @@
 #include "Input/GameMessage.h"
 #include "WinFrame2Input.h"
 
-/**
+/*
 void CWinToInputMessageConverter::ParseChars()
 {
 	if ( szCharBuffer.empty() )
@@ -14,7 +14,7 @@ void CWinToInputMessageConverter::ParseChars()
 		NInput::PostEvent( "win_char", szRes[k], 0 );//AddWinMessage( NInput::CT_WIN_CHAR, szRes[k] );
 	szCharBuffer = "";
 }
-/**/
+*/
 
 void CWinToInputMessageConverter::Do()
 {
@@ -42,7 +42,7 @@ void CWinToInputMessageConverter::Do()
 			}
 		}
 	}
-	/**
+	/*
 	NWinFrame::SWindowsMsg wMsg;
 	while ( NWinFrame::GetMessage( &wMsg ) )
 	{
@@ -115,5 +115,5 @@ void CWinToInputMessageConverter::Do()
 		//Singleton<IInput>()->AcceptWindowsInput( uMsg, wParam, lParam );
 	}
 	ParseChars();
-/**/
+*/
 }

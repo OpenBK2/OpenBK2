@@ -213,7 +213,7 @@ void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vec
 	{
 		ASSERT( 0 );
 	}
-	/**
+	/*
 	// Commented this out to still copy the whole set of vertices
 	// relying on further optimization phase which must optimize redundant ones out.
 	//
@@ -252,7 +252,7 @@ void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vec
 			NGfx::CalcCompactVector( &dst.texV, vLoad );
 		}
 	}
-/**/
+*/
 
 	pVerts->resize( pMesh->PrimaryVertexData->VertexCount );
 	char *pUntypedVertices = (char *)( pMesh->PrimaryVertexData->Vertices );
@@ -385,7 +385,7 @@ const char *ConvertWeightsFromGrannyEx( const granny_skeleton *pSkeleton,
 			}
 			index2bone[k] = nBone;
 		}
-		/**
+		/*
 		// Commented this out to still copy the whole set of weights
 		// relying on further optimization phase which must optimize redundant ones out.
 		//
@@ -415,7 +415,7 @@ const char *ConvertWeightsFromGrannyEx( const granny_skeleton *pSkeleton,
 		wData.fWeights[2] = nWeightsCount > 1 ? weights[2] / 255.0f : 0.0f;
 		wData.fWeights[3] = nWeightsCount > 2 ? weights[3] / 255.0f : 0.0f;
 		}
-		/**/
+		*/
 		/**/
 		for ( int k = 0; k < pMesh->PrimaryVertexData->VertexCount; ++k )
 		{

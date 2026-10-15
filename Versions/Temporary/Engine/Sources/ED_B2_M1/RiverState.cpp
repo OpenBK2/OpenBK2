@@ -20,7 +20,7 @@
 const std::string CRiverState::VSO_NAME = "Rivers";
 const std::string CRiverState::VSO_TYPE_NAME = "RiverDesc";
 
-/**
+/*
 bool CRiverState::CanInsertVSO()
 {
 	if ( CanEdit() )
@@ -54,7 +54,7 @@ bool CRiverState::CanInsertVSO()
 	}
 	return false;
 }
-/**/
+*/
 
 NMapInfoEditor::CVSOInstanceList *CRiverState::GetVSOList()
 {

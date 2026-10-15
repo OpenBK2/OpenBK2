@@ -254,29 +254,29 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList,
 			if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyReal32Member )
 			{
 				std::string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
-				/**
+				/*
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
-				/**/
+				*/
 				NStr::ToLowerASCII( &szName );
 				const float fValue = *(float *)( ( (uint8_t *)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object ) + nOffset );
 				posBone->attributeMap[szName] = fValue;
 				nOffset += 4;
-				/**
+				/*
 				DebugTrace( "Read attribute: <%s:%g>", szName.c_str(), fValue );
-				/**/
+				*/
 			}
 			else if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyInt32Member )
 			{
 				std::string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
-				/**
+				/*
 				DebugTrace( "Reading attribute: <%s>", szName.c_str() );
-				/**/
+				*/
 				NStr::ToLowerASCII( &szName );
 				const float fValue = *(int *)( ( (uint8_t *)pInfo->Skeletons[0]->Bones[i].ExtendedData.Object ) + nOffset );
 				posBone->attributeMap[szName] = fValue;
-				/**
+				/*
 				DebugTrace( "Read Attribute: <%s:%g>", szName.c_str(), fValue );
-				/**/
+				*/
 				nOffset += 4;
 			}
 			else if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyStringMember )

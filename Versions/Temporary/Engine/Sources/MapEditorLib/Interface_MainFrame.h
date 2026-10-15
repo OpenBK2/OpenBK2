@@ -156,7 +156,7 @@ struct IMainFrameContainer : public CObjectBase
 	virtual IWidget *GetMainWindow() = 0;
 };
 
-/**
+/*
 	virtual bool CreateToolbar() = 0;
 	virtual void DestroyToolbar() = 0;
 	//
@@ -168,4 +168,4 @@ struct IMainFrameContainer : public CObjectBase
 	//
 	virtual bool CreateMenu() = 0;
 	virtual void DestoryMenu() = 0;
-/**/
+*/

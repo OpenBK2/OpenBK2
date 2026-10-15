@@ -123,7 +123,7 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 		}
 		else
 		{
-			/**
+			/*
 			pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 			if ( ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_CENTER ) ||
 					 ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION ) )
@@ -131,7 +131,7 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 				pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
 				pParentState->SetActiveInputState( CMapObjectState::IS_EDIT, true, false );
 			}
-			/**/
+			*/
 			pParentState->GetObjectInfoCollector()->ResetPickSelection();
 			//
 			pParentState->selector.bTerrainSelector = ( nButtonType == MK_RBUTTON );
@@ -377,7 +377,7 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 				pParentState->RemoveSelectionLinks();
 			}
 		}
-		/**
+		/*
 		else if ( nChar == VK_INSERT )
 		{
 			SObjectSet objectSet;
@@ -389,7 +389,7 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 			}
 		}
-		/**/
+		*/
 		else if ( nChar == 'Q' )
 		{
 			pParentState->GetObjectInfoCollector()->Trace();
@@ -694,7 +694,7 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 				pParentState->RemoveSelectionLinks();
 			}
 		}
-		/**
+		/*
 		else if ( nChar == VK_INSERT )
 		{
 			SObjectSet objectSet;
@@ -706,7 +706,7 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 			}
 		}
-		/**/
+		*/
 		else if ( nChar == 'Q' )
 		{
 			pParentState->GetObjectInfoCollector()->Trace();
@@ -910,7 +910,7 @@ void CMapObjectAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 	{
 		//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 		pParentState->pStoreInputState->OnKeyDown( nChar, nRepCnt, nFlags );
-		/**
+		/*
 		if ( nChar == VK_INSERT )
 		{
 			SObjectSet objectSet;
@@ -925,7 +925,7 @@ void CMapObjectAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 				return;
 			}
 		}
-		/**/
+		*/
 		if ( nChar == 'Q' )
 		{
 			pParentState->GetObjectInfoCollector()->Trace();
@@ -945,12 +945,12 @@ void CMapObjectAddState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFl
 {
 	if ( pParentState->CanEdit() )
 	{
-		/**
+		/*
 		if ( nChar == VK_INSERT )
 		{
 			return;
 		}
-		/**/
+		*/
 		if ( nChar == 'Q' )
 		{
 			return;

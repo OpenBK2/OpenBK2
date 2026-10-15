@@ -76,7 +76,7 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
                           const CDBID &rLinkToObjectRPGStatsID,
                           unsigned nLinkToFrameIndex )
 {
-	/**
+	/*
 		case NDb::SBuildingRPGStats::typeID:
 		case NDb::SMechUnitRPGStats::typeID:
 		case NDb::SSquadRPGStats::typeID:
@@ -87,7 +87,7 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
 		case NDb::SInfantryRPGStats::typeID:
 		case NDb::SEntrenchmentRPGStats::typeID:
 		case NDb::SBridgeRPGStats::typeID:
-		/**/
+		*/
 	if ( rszObjectRPGStatsTypeName == "SquadRPGStats" )
 	{
 		if ( rszLinkToObjectRPGStatsTypeName == "BuildingRPGStats" )
@@ -102,7 +102,7 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
 		{
 			return true;
 		}
-		/**
+		/*
 			SquadRPGStats
 			MineRPGStats
 			ObjectRPGStats
@@ -110,7 +110,7 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
 			FenceRPGStats
 			InfantryRPGStats
 			BridgeRPGStats
-			/**/
+			*/
 	}
 	else if ( rszObjectRPGStatsTypeName == "MechUnitRPGStats" )
 	{
@@ -118,7 +118,7 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
 		{
 			return true;
 		}
-		/**
+		/*
 			EntrenchmentRPGStats
 			BuildingRPGStats
 			SquadRPGStats
@@ -128,9 +128,9 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
 			FenceRPGStats
 			InfantryRPGStats
 			BridgeRPGStats
-			/**/
+			*/
 	}
-	/**
+	/*
 		SMineRPGStats
 		SBuildingRPGStats
 		SObjectRPGStats
@@ -139,7 +139,7 @@ bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName,
 		SInfantryRPGStats
 		SEntrenchmentRPGStats
 		SBridgeRPGStats
-		/**/
+		*/
 	return false;
 }
 }; // namespace NMapInfoEditor

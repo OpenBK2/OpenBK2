@@ -16,7 +16,7 @@
 const std::string CCragState::VSO_NAME = "Crags";
 const std::string CCragState::VSO_TYPE_NAME = "CragDesc";
 
-/**
+/*
 bool CCragState::CanInsertVSO()
 {
 	if ( CanEdit() )
@@ -39,7 +39,7 @@ bool CCragState::CanInsertVSO()
 	}
 	return false;
 }
-/**/
+*/
 
 NMapInfoEditor::CVSOInstanceList *CCragState::GetVSOList()
 {

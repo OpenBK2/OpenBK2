@@ -17,9 +17,9 @@ struct IMODContainer : public CObjectBase
 	virtual bool OpenMOD() = 0;
 	virtual void CloseMOD() = 0;
 	//
-	/**
+	/*
 	virtual bool IsValidFolder( const std::string &rszFolder ) = 0;
 	virtual bool IsValidPath( const std::string &rszPath ) = 0;
-	/**/
+	*/
 	virtual std::string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType ) = 0;
 };

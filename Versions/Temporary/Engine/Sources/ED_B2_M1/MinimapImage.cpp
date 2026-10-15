@@ -1266,7 +1266,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 						NImage::Noise( &minimapImage, ( *pShadowLayer ), true, pMinimap->nMinAlpha );
 					}
 				}
-				/**
+				/*
 				{
 					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\step{}.tga", nLayerIndex );
 					CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
@@ -1274,7 +1274,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 					NImage::SaveAsTGA( minimapImage, &imageStream );
 					NImage::FlipY( minimapImage );
 				}
-				/**/
+				*/
 			}
 		}
 		//compress and save image
@@ -1310,14 +1310,14 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 			{
 				if ( ( *itNoisedLayer ) != 0 )
 				{
-					/**
+					/*
 					{
 						const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\noised{}.tga", nIndex );
 						CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 						NImage::FlipY( *( *itNoisedLayer ) );
 						NImage::SaveAsTGA( *( *itNoisedLayer ), &imageStream );
 					}
-					/**/
+					*/
 					delete ( *itNoisedLayer );
 					( *itNoisedLayer ) = 0;
 				}
@@ -1334,14 +1334,14 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 		{
 			if ( ( *itShadowLayer ) != 0 )
 			{
-				/**
+				/*
 				{
 					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\shadow{}.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itShadowLayer ) );
 					NImage::SaveAsTGA( *( *itShadowLayer ), &imageStream );
 				}
-				/**/
+				*/
 				delete ( *itShadowLayer );
 				( *itShadowLayer ) = 0;
 			}
@@ -1357,14 +1357,14 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 		{
 			if ( ( *itAphaEmbossLayer ) != 0 )
 			{
-				/**
+				/*
 				{
 					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\alphaEmboss{}.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itAphaEmbossLayer ) );
 					NImage::SaveAsTGA( *( *itAphaEmbossLayer ), &imageStream );
 				}
-				/**/
+				*/
 				delete ( *itAphaEmbossLayer );
 				( *itAphaEmbossLayer ) = 0;
 			}
@@ -1379,14 +1379,14 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 		{
 			if ( ( *itLayer ) != 0 )
 			{
-				/**
+				/*
 				{
 					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\layer{}.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itLayer ) );
 					NImage::SaveAsTGA( *( *itLayer ), &imageStream );
 				}
-				/**/
+				*/
 				delete ( *itLayer );
 				( *itLayer ) = 0;
 			}
@@ -1400,7 +1400,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 
 // basement storage
 
-/**
+/*
 // rotate image
 CArray2D<uint32_t> minimapRotate( minimapImage.GetSizeX() + minimapImage.GetSizeY() - 1,
 																minimapImage.GetSizeX() + minimapImage.GetSizeY() - 1 );
@@ -1429,4 +1429,4 @@ NImage::Scale( &minimapImage, minimapRotate, NImage::IMAGE_SCALE_METHOD_LANCZOS3
 CFileStream imageStream(  itCreateParameter->szImageFileName, CFileStream::CREATE );
 //NImage::FlipY( minimapImage );
 NImage::SaveAsTGA( minimapImage, &imageStream );
-/**/
+*/

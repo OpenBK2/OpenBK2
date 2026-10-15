@@ -1802,7 +1802,7 @@ struct SCheckTilesFunctional
 	}
 };
 
-/**
+/*
 
 //применение функционалов для поля pLockArray, функционалы перечислены выше
 //некоторые функционалы могут изменять массив
@@ -1877,7 +1877,7 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect, const SMapObjectI
 {
 	return ApplyTilesInObjectsPassability( rRect, &rMapObjectInfo, 1, rApplyFunctional, isIgnoreInvalidIndices );
 }
-/**/
+*/
 
 //применение функционалов для для всех точек сетки входящих в полигон, функционалы перечислены выше
 template <class Type, class TPolygon, class TPoint>

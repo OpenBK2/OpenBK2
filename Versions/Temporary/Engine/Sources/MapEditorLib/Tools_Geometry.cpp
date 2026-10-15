@@ -6,7 +6,7 @@
 
 const float MINIMAL_POINT_DISTANCE = 2.0f;
 
-/**
+/*
 
 uint16_t GetAIDirectionByVector( float x, float y, uint16_t wDefaultDirection )
 {
@@ -45,8 +45,8 @@ uint16_t GetAIDirectionByVector( float x, float y, uint16_t wDefaultDirection )
 		return wDefaultDirection;
 	}
 }
-/**/
-/**
+*/
+/*
 
 void GetVectorByAIDirection( CVec2 *pVec2, uint16_t wDirection, float fRadius )
 {
@@ -76,7 +76,7 @@ void GetVectorByAIDirection( CVec2 *pVec2, uint16_t wDirection, float fRadius )
 		( *pVec2 ) = result;
 	}
 }
-/**/
+*/
 
 float GetDistanceTo3DLine( const CVec3 &rvPoint, const CVec3 &rvOrigin, const CVec3 &rvDirection )
 {

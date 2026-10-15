@@ -33,10 +33,10 @@ bool CRoadState::CanInsertVSO()
 			{
 				if ( const NDb::SRoadDesc *pDescriptor = NDb::Get<NDb::SRoadDesc>( objectSet.objectNameSet.begin()->first ) )
 				{
-					/**
+					/*
 					if ( ( pDescriptor->leftBorder.pMaterial != 0 ) &&
 							 ( pDescriptor->rightBorder.pMaterial != 0 ) )
-					/**/
+					*/
 					{
 						for ( int nMaterialIndex = 0; nMaterialIndex < pDescriptor->center.materials.size(); ++nMaterialIndex )
 						{

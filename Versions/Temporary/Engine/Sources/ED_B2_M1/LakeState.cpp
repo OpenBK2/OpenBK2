@@ -16,7 +16,7 @@
 const std::string CLakeState::VSO_NAME = "Lakes";
 const std::string CLakeState::VSO_TYPE_NAME = "LakeDesc";
 
-/**
+/*
 bool CLakeState::CanInsertVSO()
 {
 	if ( CanEdit() )
@@ -38,7 +38,7 @@ bool CLakeState::CanInsertVSO()
 	}
 	return false;
 }
-/**/
+*/
 
 NMapInfoEditor::CVSOInstanceList *CLakeState::GetVSOList()
 {

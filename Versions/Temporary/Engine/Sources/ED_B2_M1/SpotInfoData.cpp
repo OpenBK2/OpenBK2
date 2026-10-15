@@ -292,13 +292,13 @@ bool SSpotInfo::UpdateScene( IEditorScene *pEditorScene )
 	{
 		MakeAbsoluteSpotSquare();
 		//
-		/**
+		/*
 			NDb::STerrainSpotInstance terrainSpotInstance = pObjectInfoCollector->pMapInfoEditor->pMapInfo->spots[nSpotIndex];
 			NI_ASSERT( terrainSpotInstance.nSpotID == nLinkID, "SSpotInfo::UpdateScene(), itSpot->nSpotID != nLinkID" );
 			terrainSpotInstance.points = spotSquare;
 			pEditorScene->GetTerraManager()->RemoveTerraSpot( terrainSpotInstance.nSpotID );
 			pEditorScene->GetTerraManager()->AddTerraSpot( &terrainSpotInstance );
-			/**/
+			*/
 		NDb::STerrainSpotInstance terrainSpotInstance;
 		terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( rpgStatsDBID ) );
 		terrainSpotInstance.nSpotID = nLinkID;
@@ -406,7 +406,7 @@ void SSpotInfo::CreateSceneObjects( IEditorScene *pEditorScene,
                                     IManipulator *pManipulator,
                                     bool bUpdateParentStructure )
 {
-	/**
+	/*
 		MakeAbsoluteSpotSquare();
 		//
 		int nSpotIndex = pObjectInfoCollector->pMapInfoEditor->pMapInfo->spots.size();
@@ -426,13 +426,13 @@ void SSpotInfo::CreateSceneObjects( IEditorScene *pEditorScene,
 		sceneElement.vAdditionalPosition = vAdditionalPosition;
 		sceneElement.fDirection = 0.0f;
 		sceneElementMap[nSceneID] = sceneElement;
-		/**/
+		*/
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void SSpotInfo::RemoveFromScene( IEditorScene *pEditorScene, bool bUpdateParentStructure )
 {
-	/**
+	/*
 		if ( nLinkID != INVALID_NODE_ID )
 		{
 			pEditorScene->GetTerraManager()->RemoveTerraSpot( nLinkID );
@@ -444,7 +444,7 @@ void SSpotInfo::RemoveFromScene( IEditorScene *pEditorScene, bool bUpdateParentS
 			}
 		}
 		sceneElementMap.clear();
-		/**/
+		*/
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -42,7 +42,7 @@ int CMapInfoEditorSettings::operator&( IXmlSaver &xs )
 	return 0;
 }
 
-/**
+/*
 
 bool CMapInfoEditorSettings::MustOrientToNormale( const std::string &rsObjectTypeName )
 {
@@ -60,6 +60,6 @@ bool CMapInfoEditorSettings::MustRotateTo90Degrees( const std::string &rsObjectT
 {
 	return true;
 }
-/**/
+*/
 
 // basement storage

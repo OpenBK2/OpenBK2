@@ -295,12 +295,12 @@ bool CSimpleObjectState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, c
 	{
 		return true;
 	}
-	/**
+	/*
 	else
 	{
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
-	/**/
+	*/
 	return false;
 }
 
@@ -542,7 +542,7 @@ void CSimpleObjectState::InsertObjectDraw( IPaintContext *pPaintDC )
 
 // basement storage
 
-/**
+/*
 
 void CMapObjectAddState::InsertMapObject()
 {
@@ -594,4 +594,4 @@ void CMapObjectAddState::InsertMapObject()
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
-/**/
+*/

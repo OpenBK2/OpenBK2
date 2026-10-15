@@ -42,13 +42,13 @@ void MakeQuatBySpeedAndNormale( CQuat *pQuat, const CVec3 &vSpeed, const CVec3 &
 	// calculate euler matrix (transform from world to unit coordinate system)
 	SHMatrix m( vM.x, vN.x, vO.x, 0, vM.y, vN.y, vO.y, 0, vM.z, vN.z, vO.z, 0, 0, 0, 0, 1 );
 	/**/
-	/**
+	/*
 	SHMatrix m(
 		vM.x, vM.y, vM.z, 0,
 		vN.x, vN.y, vN.z, 0,
 		vO.x, vO.y, vO.z, 0,
 		0,		0,		0,		1 );
-	/**/
+	*/
 	pQuat->FromEulerMatrix( m );
 	//pQuat->Negate();
 }

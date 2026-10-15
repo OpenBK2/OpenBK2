@@ -145,12 +145,12 @@ bool CSpotState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVe
 	{
 		return true;
 	}
-	/**
+	/*
 	else
 	{
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
-	/**/
+	*/
 	return false;
 }
 
@@ -239,11 +239,11 @@ void CSpotState::InsertObjectEnter()
 				//
 				terrainSpotInstance.pDescriptor = pTerrainSpotDesc;
 				terrainSpotInstance.nSpotID = 0;
-				/**
+				/*
 				std::list<CVec3> pointList;
 				CreateSpotPointsList( &pointList, terrainSpotInstance );
 				ModifySpotSquare( &terrainSpotInstance, vPosition, fDirection );
-				/**/
+				*/
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			}
 		}
@@ -287,10 +287,10 @@ void CSpotState::InsertObjectDraw( IPaintContext *pPaintDC )
 
 // basement storage
 
-/**
+/*
 fPlacementDirection += FP_PI2;
 if ( fPlacementDirection > FP_2PI )
 {
 	fPlacementDirection -= FP_2PI;
 }
-/**/
+*/

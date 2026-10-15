@@ -145,7 +145,7 @@ protected:
 	void UpdateVSOInTerrain( int nVSOID ) override;
 };
 
-/**
+/*
 class CCragState : public CVSOState
 {
 	friend class CMultiInputState;
@@ -210,4 +210,4 @@ protected:
 	int InsertVSO( const std::vector<CVec3> &rControlPointList );
 	void RemoveVSO( int nVSOID );
 };
-/**/
+*/

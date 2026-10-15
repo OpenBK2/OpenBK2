@@ -233,7 +233,7 @@ void CHeightContainer::Mark( const int x, const int y )
 {
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) );
 	GetBits( &markedBitslList, point.x, point.y );
-	/**
+	/*
 	std::string szMessage = fmt::format( "CHeightContainer::Mark( {}, {} ), marked Bits: ", x, y );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
 	{
@@ -244,7 +244,7 @@ void CHeightContainer::Mark( const int x, const int y )
 		AddBitsToString( &szMessage, markedBitslList[nStackIndex] );
 	}
 	DebugTrace( "%s", szMessage.c_str() );
-	/**/
+	*/
 }
 
 bool CHeightContainer::Compare( const int x, const int y )
@@ -274,7 +274,7 @@ void CHeightContainer::InsertPolygon( const std::vector<CVec2> &rBlackPolygon,
 	const int nPlaneIndex = AddPlane( nPolygonID );
 	FillPlane( nPlaneIndex, rBlackPolygon, rRedPolygon );
 	//
-	/**
+	/*
 	if ( bTraceToImage )
 	{
 		CArray2D<uint32_t> traceImage;
@@ -330,7 +330,7 @@ void CHeightContainer::InsertPolygon( const std::vector<CVec2> &rBlackPolygon,
 		NImage::FlipY( traceImage );
 		DebugTrace( "%s created", szFileName.c_str() );
 	}
-	/**/
+	*/
 }
 
 void CHeightContainer::ErasePolygon( int nPolygonID )
@@ -438,7 +438,7 @@ void CHeightContainer::Trace()
 	}
 	DebugTrace( "polygonID2PlaneIndexMap, end" );
 
-	/**
+	/*
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
 	{
 		for ( int nBit = 0; nBit < STACK_SIZE; ++nBit )
@@ -472,7 +472,7 @@ void CHeightContainer::Trace()
 			}
 		}
 	}
-	/**/
+	*/
 	DebugTrace( "CHeightContainer, end" );
 }
 

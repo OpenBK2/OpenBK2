@@ -69,7 +69,7 @@ TContainerIterator FindIndex( TContainer &rList, int nIndex )
 	return rList.end();
 }
 
-/**
+/*
 
 template<class TContainer, class TElement>
 void AddListElement( TContainer *pList, const TElement &rElement )
@@ -97,4 +97,4 @@ bool IsElementExistsInList( const TContainer &rList, const TElement &rElement )
 	return ( find( rList.begin(), rList.end(), rElement ) != rList.end() );
 }
 
-/**/
+*/

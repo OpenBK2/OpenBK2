@@ -89,7 +89,7 @@ const float CStaticMapHeights::GetTileHeight( const int nTileX, const int nTileY
 	return tileHeights[inMapY][inMapX];
 }
 
-/**
+/*
 const float CStaticMapHeights::GetVisHeight( const int nVisTileX, const int nVisTileY ) const
 {
 	const int inMapX = Min( Max( 1, nVisTileX + 1 ), heights.GetSizeX() - 2 );
@@ -98,7 +98,7 @@ const float CStaticMapHeights::GetVisHeight( const int nVisTileX, const int nVis
 	return AI2Vis( heights[inMapY][inMapX] );
 	//return Singleton<IScene>()->GetTerrain()->GetRealTerraHeight( nVisTileX * VIS_TILE_SIZE, nVisTileY * VIS_TILE_SIZE );
 }
-/**/
+*/
 
 void CStaticMapHeights::Init( const int nSizeXInTiles, const int nSizeYInTiles, const int _nTileSize )
 {
@@ -176,11 +176,11 @@ void CStaticMapHeights::UpdateHeights(
 	const int nInitSizeY = initHeights.GetSizeY();
 
 	//heights.SetSizes( nInitSizeX + 2, nInitSizeY + 2 );
-	/**
+	/*
 	DebugTrace( "CStaticMapHeights::UpdateHeights():[%d,%d,%d,%d] in (%dx%d) to [%d,%d,%d,%d] in(%dx%d)",
 							nX1, nY1, nX2 - 1, nY2 - 1, nInitSizeX, nInitSizeY,
 							nX1 + 1, nY1 + 1, nX2, nY2, heights.GetSizeX(), heights.GetSizeY() );
-	/**/
+	*/
 	for ( int i = nY1; i < nY2; ++i )
 	{
 		for ( int j = nX1; j < nX2; ++j )
@@ -191,11 +191,11 @@ void CStaticMapHeights::UpdateHeights(
 
 	if ( nY1 <= 0 )
 	{
-		/**
+		/*
 		DebugTrace( "CStaticMapHeights::UpdateHeights():[%d,%d,%d,%d] in (%dx%d) to [%d,%d,%d,%d] in(%dx%d)",
 								0, nY1, nInitSizeX - 1, 0, nInitSizeX, nInitSizeY,
 								1, 0, nInitSizeX, 0, heights.GetSizeX(), heights.GetSizeY() );
-		/**/
+		*/
 		for ( int j = 0; j < nInitSizeX; ++j )
 		{
 			heights[0][j + 1] = initHeights[0][j];
@@ -204,11 +204,11 @@ void CStaticMapHeights::UpdateHeights(
 
 	if ( nY2 >= nInitSizeY - 1 )
 	{
-		/**
+		/*
 		DebugTrace( "CStaticMapHeights::UpdateHeights():[%d,%d,%d,%d] in (%dx%d) to [%d,%d,%d,%d] in(%dx%d)",
 								0, nInitSizeY - 1, nInitSizeX - 1, nInitSizeY - 1, nInitSizeX, nInitSizeY,
 								1, nInitSizeY + 1, nInitSizeX, nInitSizeY + 1, heights.GetSizeX(), heights.GetSizeY() );
-		/**/
+		*/
 		for ( int j = 0; j < nInitSizeX; ++j )
 		{
 			heights[nInitSizeY + 1][j + 1] = initHeights[nInitSizeY - 1][j];
@@ -216,11 +216,11 @@ void CStaticMapHeights::UpdateHeights(
 	}
 	if ( nX1 <= 0 )
 	{
-		/**
+		/*
 		DebugTrace( "CStaticMapHeights::UpdateHeights():[%d,%d,%d,%d] in (%dx%d) to [%d,%d,%d,%d] in(%dx%d)",
 								0, 0, 0, nInitSizeY - 1, nInitSizeX, nInitSizeY,
 								0, 1, 0, nInitSizeY, heights.GetSizeX(), heights.GetSizeY() );
-		/**/
+		*/
 		for ( int i = 0; i < nInitSizeY; ++i )
 		{
 			heights[i + 1][0] = initHeights[i][0];
@@ -229,11 +229,11 @@ void CStaticMapHeights::UpdateHeights(
 
 	if ( nX2 >= nInitSizeX - 1 )
 	{
-		/**
+		/*
 		DebugTrace( "CStaticMapHeights::UpdateHeights():[%d,%d,%d,%d] in (%dx%d) to [%d,%d,%d,%d] in(%dx%d)",
 								nInitSizeX - 1, 0, nInitSizeX - 1, nInitSizeY - 1, nInitSizeX, nInitSizeY,
 								nInitSizeX + 1, 1, nInitSizeX + 1, nInitSizeY, heights.GetSizeX(), heights.GetSizeY() );
-		/**/
+		*/
 		for ( int i = 0; i < nInitSizeY; ++i )
 		{
 			heights[i + 1][nInitSizeX + 1] = initHeights[i][nInitSizeX - 1];

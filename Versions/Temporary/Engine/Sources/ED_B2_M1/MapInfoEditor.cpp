@@ -2418,7 +2418,7 @@ void CMapInfoEditor::RunGame()
 
 // basement storage
 
-/**
+/*
 		// удаляемые объекты убираем из добавляемых
 		for ( std::unordered_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
@@ -2472,4 +2472,4 @@ void CMapInfoEditor::RunGame()
 		for( std::unordered_map<unsigned,int>::const_iterator itBridgeIndex = removedBridgeMap.begin(); itBridgeIndex != removedBridgeMap.end(); ++itBridgeIndex )
 		{
 		}
-		/**/
+		*/

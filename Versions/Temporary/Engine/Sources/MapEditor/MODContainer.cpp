@@ -149,7 +149,7 @@ void CMODContainer::CloseMOD()
 	}
 }
 
-/**
+/*
 
 bool CMODContainer::IsValidFolder( const std::string &rszFolder )
 {
@@ -170,7 +170,7 @@ bool CMODContainer::IsValidPath( const std::string &rszPath )
 	CStringManager::SplitFileName( &szFolder, 0, 0, rszPath );
 	return IsValidFolder( szFolder );
 }
-/**/
+*/
 
 std::string CMODContainer::GetDataFolder( SUserData::ENormalizePathType eNormalizePathType )
 {

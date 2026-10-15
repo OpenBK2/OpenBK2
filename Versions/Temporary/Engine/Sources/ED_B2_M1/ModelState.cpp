@@ -561,7 +561,7 @@ void CModelState::UpdateAIGeometry( bool bReset )
 	}
 }
 
-/**
+/*
 
 void CModelState::SetTerrain()
 {
@@ -576,7 +576,7 @@ void CModelState::SetTerrain()
 		}
 	}
 }
-/**/
+*/
 
 void CModelState::SetLight()
 {
@@ -1552,7 +1552,7 @@ CObjectBase *CModelState::BuildPlane( const CVec3 &vStart,
 
 // basement storage
 
-/**
+/*
 template<class TPolygon, class TPoint>
 int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, const TPoint &rvEnd, bool bPolygon, std::vector<float> *pIntersectionPointList )
 {
@@ -1601,8 +1601,8 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 	}
 	return nIntersectionPointCount;
 }
-/**/
-/**
+*/
+/*
 	if ( Singleton<IFolderCallback>()->IsUniqueName( "EditorTest", "1\\1" ) )
 	{
 		DebugTrace( "CModelState::OnKeyDown(): 1\\1 unique" );
@@ -1619,8 +1619,8 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 	{
 		DebugTrace( "CModelState::OnKeyDown(): 1\\1\\ exists" );
 	}
-	/**/
-/**
+	*/
+/*
 	std::vector<CVec3> vPointList;
 	CVec3 vBegin( 7.0f, 0.0f, 0.0f );
 	CVec3 vEnd( 7.0f, 16.0f, 0.0f );
@@ -1644,8 +1644,8 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 		const int nIntersectionPointCount = GetIntersectionPointList( vPointList, vBegin, vEnd, true, 0 );
 	}
 	DebugTrace( "CModelState::OnKeyDown(): %g", NHPTimer::GetTimePassed( &time ) );
-/**/
-/**
+*/
+/*
 	{
 		CFreeIDCollector freeIDCollector;
 		DebugTrace( "Empty:" );
@@ -1804,4 +1804,4 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 			nCount *= 10;
 		}
 	}
-/**/
+*/

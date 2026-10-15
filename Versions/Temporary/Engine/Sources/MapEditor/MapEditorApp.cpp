@@ -494,12 +494,12 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	//DebugTrace( "EditorApp() ResetCache(): %g", NHPTimer::GetTimePassed( &time ) );
 	//
 	// И показываем основное окно
-	/**
+	/*
 	if ( szCommandLine.find( "-topmost" ) != std::string::npos )
 	{
 		pMainFrame->ModifyStyleEx( 0, WS_EX_TOPMOST, 0 );
 	}
-	/**/
+	*/
 	NMainFrameWx::Show();
 	if ( !szUnavailableMODFolder.empty() )
 	{

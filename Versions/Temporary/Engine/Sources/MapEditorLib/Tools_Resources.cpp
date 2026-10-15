@@ -211,7 +211,7 @@ bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath )
 	return true;
 }
 
-/**
+/*
 
 bool CheckLatestBINResource( const std::string &rszResourceFileName, const std::string &rszXMLExtention, const std::string &rszBINExtention )
 {
@@ -232,7 +232,7 @@ bool CheckLatestBINResource( const std::string &rszResourceFileName, const std::
 		return true;
 	}
 }
-/**/
+*/
 
 bool SEnumFolderStructureParameter::IsFolderRelative( const std::string &rszFolder,
                                                       const std::string &rszRelativeFolder )

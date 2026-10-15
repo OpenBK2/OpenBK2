@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Interface_Builder.h"
-/**
+/*
 
 struct IReportCollector : public CObjectBase
 {
@@ -10,7 +10,7 @@ struct IReportCollector : public CObjectBase
 		                      const int nObjectID,
 													const std::string &szUserReport ) = 0;
 };
-/**/
+*/
 
 #define DEFAULT_EXPORTER_LABEL __DefaultHierarchicalExporter__
 #define DEFAULT_EXPORTER_LABEL_TXT "__DefaultHierarchicalExporter__"

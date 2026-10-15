@@ -529,7 +529,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 
 // basement storage
 
-/**
+/*
 			// Поднимаем землю под мостом
 			if ( nSelectedMapObjectInfoID != INVALID_NODE_ID )
 			{
@@ -613,4 +613,4 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 			}
 		}
 	}
-/**/
+*/
