@@ -2,6 +2,7 @@
 
 #include "GLightPerVertex.h"
 #include "GRenderCore.h"
+#include "Misc/Asserts.h" // NI_UNREACHABLE
 
 namespace NGfx
 {
@@ -203,19 +204,29 @@ public:
 	void SetObjectInfoNode( CPtrFuncBase<CObjectInfo> * ); // for tests, using of this function is not recommended
 	virtual ETransformType GetTransformType() const = 0;
 
+	// One accessor per transform type, and a part has only the one its type
+	// names: a TT_SIMPLE part a position, a TT_SINGLE_SKIN part an animation.
+	// Every caller switches on GetTransformType before asking, so reaching a
+	// body here means a caller that did not. They cannot be pure virtual
+	// instead, because a concrete part implements only its own subset.
+	//
+	// Each said that by returning *(T *)0. Binding a reference to a
+	// dereferenced null pointer is undefined whether or not the caller reads
+	// what comes back, and clang reports it. NI_UNREACHABLE says the same thing
+	// to the compiler without inventing a value for a question that has none.
 	virtual const SFBTransform &GetSimplePos()
 	{
-		return *(SFBTransform *)0;
+		NI_UNREACHABLE();
 	}
 
 	virtual const std::vector<SHMatrix> &GetAnimation()
 	{
-		return *(std::vector<SHMatrix> *)0;
+		NI_UNREACHABLE();
 	}
 
 	virtual const std::vector<NGfx::SCompactTransformer> &GetMMXAnimation()
 	{
-		return *(std::vector<NGfx::SCompactTransformer> *)0;
+		NI_UNREACHABLE();
 	}
 
 	virtual bool Is2Sided() const
