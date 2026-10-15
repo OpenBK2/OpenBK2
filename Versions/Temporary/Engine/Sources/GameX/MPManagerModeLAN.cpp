@@ -316,7 +316,7 @@ bool CMPManagerModeLAN::OnLANPassword( class CLANPasswordPacket *pPacket )
 
 	for ( std::list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
 	{
-		if ( *it = pPacket->nClientID )
+		if ( *it == pPacket->nClientID )
 		{
 			if ( pPacket->szPassword == szPassword )
 			{
