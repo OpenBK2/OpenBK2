@@ -7,7 +7,20 @@
 
 #include <cstdint>
 
+#include <boost/predef.h>
+
+// An instruction to MSVC's linker, which every other toolchain reports as a
+// pragma it does not know. Kept for the Windows build, where it says not to
+// pull in libc.lib, the old single threaded static runtime.
+//
+// Keyed on the OS and not the compiler, for the reason port/stdcall.h sets out
+// at length: Boost.Predef includes compiler/clang.h before compiler/visualc.h,
+// so under clang-cl BOOST_COMP_MSVC is the emulated variant and reads 0, and a
+// test on it would drop this from a Windows build that wants it. clang-cl
+// accepts the pragma as MSVC does.
+#if BOOST_OS_WINDOWS
 #pragma comment( linker, "/NODEFAULTLIB:libc.lib" )
+#endif
 
 namespace NImage
 {
