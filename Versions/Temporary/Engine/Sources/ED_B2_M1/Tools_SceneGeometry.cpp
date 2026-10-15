@@ -31,7 +31,7 @@ void Get2DPosOnMapHeights( CVec3 *pvPos, const CVec2 &rvScreenPos )
 		Vis2AI( &vFar );
 		if ( !EditorScene()->GetIntersectionWithTerrainForEditor( pvPos, vNear, vFar ) )
 		{
-			( *pvPos ) == VNULL3;
+			( *pvPos ) = VNULL3;
 		}
 		else
 		{
