@@ -47,13 +47,13 @@ namespace NDb
 			nAmmoPerBurst( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SHPObject : public CResource
@@ -76,9 +76,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SUnitBase : public SHPObject
@@ -113,9 +113,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SMechUnit : public SUnitBase
@@ -219,13 +219,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SMapInfo2 : public CResource
@@ -268,13 +268,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 	struct SChecksumGraph;
 
@@ -334,13 +334,13 @@ namespace NDb
 			nCosmetic( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 }
 

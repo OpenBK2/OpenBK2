@@ -183,13 +183,13 @@ namespace NDb
 			bStopCurrentAction( false )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EArmorDirection : int
@@ -254,9 +254,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SComplexEffect : public CResource
@@ -272,13 +272,13 @@ namespace NDb
 
 		SComplexEffect() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SSeasonEffect
@@ -311,13 +311,13 @@ namespace NDb
 
 		SComplexSeasonedEffect() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SAckSetRPGStats : public SCommonRPGStats
@@ -334,13 +334,13 @@ namespace NDb
 			nVoiceNumber( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	enum ESelectionType : int
@@ -556,9 +556,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SBurningFuel : public CResource
@@ -578,13 +578,13 @@ namespace NDb
 			nBurnTime( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SStaticObjectRPGStats : public SHPObjectRPGStats
@@ -614,9 +614,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SCraterSet : public CResource
@@ -668,13 +668,13 @@ namespace NDb
 
 		SCraterSet() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SProjectile : public CResource
@@ -694,13 +694,13 @@ namespace NDb
 			fSmokyExhaustEffectInterval( 2 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SMissleParams : public CResource
@@ -728,13 +728,13 @@ namespace NDb
 			fProximityRadius( 0.0000f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SWeaponRPGStats : public SCommonRPGStats
@@ -885,13 +885,13 @@ namespace NDb
 			fDeltaAngle( 0.0f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SBaseGunRPGStats
@@ -963,13 +963,13 @@ namespace NDb
 
 		SDynamicDebrisSet() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SObjectBaseRPGStats : public SStaticObjectRPGStats
@@ -1080,9 +1080,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct STerraObjSetRPGStats : public SStaticObjectRPGStats
@@ -1128,13 +1128,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SObjectRPGStats : public SObjectBaseRPGStats
@@ -1153,13 +1153,13 @@ namespace NDb
 			bHideForPerformance( false )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EBuildingType : int
@@ -1386,13 +1386,13 @@ namespace NDb
 			fDamageCoeff( 0.0f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SBridgeRPGStats : public SStaticObjectRPGStats
@@ -1620,13 +1620,13 @@ namespace NDb
 			fSightMultiplier( 1 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EEntrenchSegmType : int
@@ -1687,13 +1687,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EFenceDirection : int
@@ -1815,13 +1815,13 @@ namespace NDb
 			fFenceHeight( 100 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EMineType : int
@@ -1856,13 +1856,13 @@ namespace NDb
 			bRangeDetonator( false )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SAnimDesc
@@ -1931,13 +1931,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EDBUnitRPGType : int
@@ -2122,9 +2122,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SArmorPatternPlacement : public CResource
@@ -2139,13 +2139,13 @@ namespace NDb
 
 		SArmorPatternPlacement() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SArmorPattern : public CResource
@@ -2158,13 +2158,13 @@ namespace NDb
 
 		SArmorPattern() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SInfantryRPGStats : public SUnitBaseRPGStats
@@ -2214,13 +2214,13 @@ namespace NDb
 			fArmor( 0.0f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SBoardedMechUnitPosition
@@ -2340,13 +2340,13 @@ namespace NDb
 			fMaxAttackAngleDownRadians( 0.87266463f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SJoggingParams
@@ -2396,13 +2396,13 @@ namespace NDb
 			fVerticalOffsetAngleRad( 0.0000f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SMechUnitRPGStats : public SUnitBaseRPGStats
@@ -2725,13 +2725,13 @@ namespace NDb
 			bDestructableCorpse( true )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SAmphibianStats : public CResource
@@ -2768,13 +2768,13 @@ namespace NDb
 			bRemoveCorpseInWater( true )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EEvent : int
@@ -2906,13 +2906,13 @@ namespace NDb
 			fEntrenchCover( 0.5000f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	enum EReinforcementType : int
@@ -3038,13 +3038,13 @@ namespace NDb
 			eReinforcementType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SReinforcement : public CResource
@@ -3072,13 +3072,13 @@ namespace NDb
 			eType( RT_TANKS )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SPlayerRank : public CResource
@@ -3099,13 +3099,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SReinforcementTypeInfo
@@ -3146,13 +3146,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SAIExpLevel : public CResource
@@ -3194,13 +3194,13 @@ namespace NDb
 			eDBType( RT_MAIN_INFANTRY )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct STATS_B2_M1_EXPORT SUnitStatsModifier : public CResource
@@ -3260,13 +3260,13 @@ namespace NDb
 			__dwCheckSum( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 }
 

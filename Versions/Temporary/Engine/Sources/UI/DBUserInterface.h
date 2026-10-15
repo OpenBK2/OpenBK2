@@ -42,9 +42,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SUICommandBase
@@ -102,9 +102,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct UI_EXPORT SUIStateBase : public SUIDesc
@@ -121,9 +121,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SUISMoveTo : public SUIStateBase
@@ -139,13 +139,13 @@ namespace NDb
 
 		SUISMoveTo() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SUISRunReaction : public SUIStateBase
@@ -160,13 +160,13 @@ namespace NDb
 
 		SUISRunReaction() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SUISSendUIMessage : public SUIStateBase
@@ -183,13 +183,13 @@ namespace NDb
 
 		SUISSendUIMessage() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SUIConsoleCommand : public SUIStateBase
@@ -203,13 +203,13 @@ namespace NDb
 
 		SUIConsoleCommand() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SUISDirectRunReaction : public SUIStateBase
@@ -224,13 +224,13 @@ namespace NDb
 
 		SUISDirectRunReaction() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SUIStateSequence
@@ -270,9 +270,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SBackgroundSimpleScallingTexture : public SBackground
@@ -288,13 +288,13 @@ namespace NDb
 			vSize( VNULL2 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	enum EPositionAllign : int;
 
@@ -313,13 +313,13 @@ namespace NDb
 			eTextureY( EPA_LOW_END )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SSubRect
@@ -363,13 +363,13 @@ namespace NDb
 
 		SBackgroundTiledTexture() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct SWindowBaseShared;
 
@@ -386,9 +386,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct UI_EXPORT SWindowBaseDesc : public SUIDesc
@@ -405,9 +405,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 	struct SBackground;
 	struct SUIDesc;
@@ -499,9 +499,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct UI_EXPORT SWindow : public SWindowBaseDesc
@@ -530,9 +530,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 	struct SForegroundTextStringShared;
 
@@ -549,13 +549,13 @@ namespace NDb
 
 		SForegroundTextStringShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SForegroundTextString : public SUIDesc
@@ -570,13 +570,13 @@ namespace NDb
 
 		SForegroundTextString() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct STextFormat : public SUIDesc
@@ -591,13 +591,13 @@ namespace NDb
 
 		STextFormat() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowSimpleShared : public SWindowShared
@@ -608,13 +608,13 @@ namespace NDb
 
 		SWindowSimpleShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowSimple : public SWindow
@@ -627,13 +627,13 @@ namespace NDb
 
 		SWindowSimple() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SMessageSequence
@@ -685,13 +685,13 @@ namespace NDb
 
 		SCheckRunScript() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SCheckPreprogrammed : public SUIDesc
@@ -705,13 +705,13 @@ namespace NDb
 
 		SCheckPreprogrammed() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SCheckIsWindowEnabled : public SUIDesc
@@ -726,13 +726,13 @@ namespace NDb
 
 		SCheckIsWindowEnabled() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SCheckIsWindowVisible : public SUIDesc
@@ -747,13 +747,13 @@ namespace NDb
 
 		SCheckIsWindowVisible() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SCheckIsTabActive : public SUIDesc
@@ -770,13 +770,13 @@ namespace NDb
 			nTab( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SMessageReactionComplex : public SUIDesc
@@ -793,13 +793,13 @@ namespace NDb
 
 		SMessageReactionComplex() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SARSetGlobalVar : public SUIDesc
@@ -814,13 +814,13 @@ namespace NDb
 
 		SARSetGlobalVar() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SARRemoveGlobalVar : public SUIDesc
@@ -834,13 +834,13 @@ namespace NDb
 
 		SARRemoveGlobalVar() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SARSendUIMessage : public SUIDesc
@@ -858,13 +858,13 @@ namespace NDb
 			nIntParam( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SARSendGameMessage : public SUIDesc
@@ -881,13 +881,13 @@ namespace NDb
 			nIntParam( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SARSwitchTab : public SUIDesc
@@ -904,13 +904,13 @@ namespace NDb
 			nTab( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SReactionSequenceEntry
@@ -997,13 +997,13 @@ namespace NDb
 
 		SWindowScreenShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowScreen : public SWindow
@@ -1022,13 +1022,13 @@ namespace NDb
 			nTooltipContext( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct SBackground;
 
@@ -1048,13 +1048,13 @@ namespace NDb
 			vGlowSize( VNULL2 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowProgressBar : public SWindow
@@ -1070,13 +1070,13 @@ namespace NDb
 			fProgress( 0.0f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SProgressBarTextureInfo
@@ -1128,13 +1128,13 @@ namespace NDb
 
 		SWindowMultiTextureProgressBarShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowMultiTextureProgressBar : public SWindow
@@ -1153,13 +1153,13 @@ namespace NDb
 			fPieceSize( 0.0f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct STextFormat;
 
@@ -1179,13 +1179,13 @@ namespace NDb
 			nRedLineSpace( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowTextView : public SWindow
@@ -1203,13 +1203,13 @@ namespace NDb
 			bResizeOnTextSet( true )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowTooltipShared : public SWindowShared
@@ -1225,13 +1225,13 @@ namespace NDb
 			vHigherBorder( VNULL2 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowTooltip : public SWindow
@@ -1244,13 +1244,13 @@ namespace NDb
 
 		SWindowTooltip() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowPlayerShared : public SWindowShared
@@ -1261,13 +1261,13 @@ namespace NDb
 
 		SWindowPlayerShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowPlayer : public SWindow
@@ -1284,13 +1284,13 @@ namespace NDb
 			bMaintainAspectRatio( true )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	enum ETextEntryType : int;
 
@@ -1325,13 +1325,13 @@ namespace NDb
 			nYOffset( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowEditLine : public SWindow
@@ -1362,13 +1362,13 @@ namespace NDb
 			nTabOrder( -1 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowConsoleOutputShared : public SWindowShared
@@ -1382,13 +1382,13 @@ namespace NDb
 			bAutoDelete( false )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowConsoleOutput : public SWindow
@@ -1401,13 +1401,13 @@ namespace NDb
 
 		SWindowConsoleOutput() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowStatsSystemShared : public SWindowShared
@@ -1418,13 +1418,13 @@ namespace NDb
 
 		SWindowStatsSystemShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowStatsSystem : public SWindow
@@ -1437,13 +1437,13 @@ namespace NDb
 
 		SWindowStatsSystem() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowConsoleShared : public SWindowShared
@@ -1459,13 +1459,13 @@ namespace NDb
 			nColor( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowConsole : public SWindow
@@ -1478,13 +1478,13 @@ namespace NDb
 
 		SWindowConsole() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct SWindowScrollBar;
 	struct SWindow;
@@ -1509,9 +1509,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SWindowScrollableContainerBase : public SWindow
@@ -1529,9 +1529,9 @@ namespace NDb
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const;
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
 	};
 
 	struct SWindowScrollableContainerShared : public SWindowScrollableContainerBaseShared
@@ -1542,13 +1542,13 @@ namespace NDb
 
 		SWindowScrollableContainerShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowScrollableContainer : public SWindowScrollableContainerBase
@@ -1561,13 +1561,13 @@ namespace NDb
 
 		SWindowScrollableContainer() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindow1LvlTreeControlShared : public SWindowScrollableContainerBaseShared
@@ -1580,13 +1580,13 @@ namespace NDb
 
 		SWindow1LvlTreeControlShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindow1LvlTreeControl : public SWindowScrollableContainerBase
@@ -1599,13 +1599,13 @@ namespace NDb
 
 		SWindow1LvlTreeControl() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct SWindowListHeader;
 	struct SWindowListItem;
@@ -1621,13 +1621,13 @@ namespace NDb
 
 		SWindowListHeaderShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowListHeader : public SWindow
@@ -1640,13 +1640,13 @@ namespace NDb
 
 		SWindowListHeader() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowListItemShared : public SWindowShared
@@ -1658,13 +1658,13 @@ namespace NDb
 
 		SWindowListItemShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowListItem : public SWindow
@@ -1677,13 +1677,13 @@ namespace NDb
 
 		SWindowListItem() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowListSharedData : public SWindowScrollableContainerBaseShared
@@ -1696,13 +1696,13 @@ namespace NDb
 
 		SWindowListSharedData() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowListCtrl : public SWindowScrollableContainerBase
@@ -1715,13 +1715,13 @@ namespace NDb
 
 		SWindowListCtrl() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct SWindowScrollableContainerBase;
 
@@ -1736,13 +1736,13 @@ namespace NDb
 
 		SWindowTabControlShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowTabControl : public SWindow
@@ -1775,13 +1775,13 @@ namespace NDb
 
 		SWindowTabControl() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct SWindowListCtrl;
 	struct SWindowMSButton;
@@ -1798,13 +1798,13 @@ namespace NDb
 
 		SWindowComboBoxShared() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowComboBox : public SWindow
@@ -1823,13 +1823,13 @@ namespace NDb
 			nMaxVisibleRows( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	enum EButtonSubstateType : int;
 	struct STextFormat;
@@ -1935,13 +1935,13 @@ namespace NDb
 			eTriggerMode( BCST_ON_RELEASE )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowMSButton : public SWindow
@@ -1965,13 +1965,13 @@ namespace NDb
 			nState( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowSliderShared : public SWindowShared
@@ -1990,13 +1990,13 @@ namespace NDb
 			fMaxLeverSize( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowSlider : public SWindow
@@ -2012,13 +2012,13 @@ namespace NDb
 			nSpecialPositions( 0 )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	struct SWindowSlider;
 
@@ -2036,13 +2036,13 @@ namespace NDb
 			fSpeed( 0.0f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 
 	struct SWindowScrollBar : public SWindow
@@ -2056,13 +2056,13 @@ namespace NDb
 
 		SWindowScrollBar() { }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 	enum EButtonSubstateType : int;
 
@@ -2082,13 +2082,13 @@ namespace NDb
 			fWaitTime( 0.0f )
 		{ }
 		//
-		int GetTypeID() const { return typeID; }
+		int GetTypeID() const override { return typeID; }
 		//
 		void ReportMetaInfo() const;
 		//
-		int operator&( IBinSaver &saver );
-		int operator&( IXmlSaver &saver );
-		uint32_t CalcCheckSum() const { return 0; }
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override { return 0; }
 	};
 }
 

@@ -397,6 +397,35 @@ static bool IsNoCheckSum( NDb::NTypeDef::SAttributes *pAttr )
 	return pAttr && pAttr->attributes.find( "no_checksum" ) != pAttr->attributes.end();
 }
 
+//! Do this type's generated members override anything, and so take override?
+//!
+//! The four that can are operator& for each saver, CalcCheckSum and GetTypeID.
+//! All of them are declared virtual above NDb::CResource: GetTypeID by CResource
+//! itself, operator&( IXmlSaver & ) by CXmlResource, and operator&( IBinSaver & )
+//! and CalcCheckSum by CObjectBase.
+//!
+//! Reaching them is decided by the root of the base chain, because only a class
+//! with no base of its own is given ": public CResource" below. A chain rooted
+//! in a class therefore inherits all four, and one rooted in a struct inherits
+//! nothing: that struct is a plain aggregate whose members are not virtual, and
+//! marking anything under it override would not compile.
+static bool OverridesResourceMembers( NDb::NTypeDef::STypeStructBase *pType )
+{
+	NDb::NTypeDef::STypeStructBase *pRoot = pType;
+	while ( pRoot->pBaseType != 0 )
+	{
+		pRoot = pRoot->pBaseType.GetPtr();
+	}
+	CDynamicCast<NDb::NTypeDef::STypeClass> pRootAsClass = pRoot;
+	return pRootAsClass != 0;
+}
+
+//! " override" or nothing, to append to one of those four declarations.
+static const char *GetOverrideSuffix( NDb::NTypeDef::STypeStructBase *pType )
+{
+	return OverridesResourceMembers( pType ) ? " override" : "";
+}
+
 static bool IsNoCheckSum( NDb::NTypeDef::STypeDef *pType )
 {
 	if ( !pType )
@@ -724,15 +753,16 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode,
 	pCode->h << szTabs << tab << "//" << endl;
 	pCode->h << szTabs << tab << "void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;" << endl;
 	pCode->h << szTabs << tab << "//" << endl;
-	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver );" << endl;
-	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver );" << endl;
+	const char *szOverride = GetOverrideSuffix( pStruct );
+	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver )" << szOverride << ";" << endl;
+	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver )" << szOverride << ";" << endl;
 	if ( !bNoCheckSum )
 	{
-		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const;" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const" << szOverride << ";" << endl;
 	}
 	else
 	{
-		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const { return 0; }" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const" << szOverride << " { return 0; }" << endl;
 	}
 
 	pCode->h << szTabs << "};" << endl;
@@ -795,24 +825,26 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode,
 	pCode->h << endl;
 	GenerateStructBaseConstructor( pCode, pClass, szTabs );
 
+	const char *szOverride = GetOverrideSuffix( pClass );
+
 	if ( bTerminal )
 	{
 		pCode->h << szTabs << tab << "//" << endl;
-		pCode->h << szTabs << tab << "int GetTypeID() const { return typeID; }" << endl;
+		pCode->h << szTabs << tab << "int GetTypeID() const" << szOverride << " { return typeID; }" << endl;
 	}
 
 	pCode->h << szTabs << tab << "//" << endl;
 	pCode->h << szTabs << tab << "void ReportMetaInfo() const;" << endl;
 	pCode->h << szTabs << tab << "//" << endl;
-	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver );" << endl;
-	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver );" << endl;
+	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver )" << szOverride << ";" << endl;
+	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver )" << szOverride << ";" << endl;
 	if ( !bNoCheckSum )
 	{
-		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const;" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const" << szOverride << ";" << endl;
 	}
 	else
 	{
-		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const { return 0; }" << endl;
+		pCode->h << szTabs << tab << "uint32_t CalcCheckSum() const" << szOverride << " { return 0; }" << endl;
 	}
 
 	pCode->h << szTabs << "};" << endl;
