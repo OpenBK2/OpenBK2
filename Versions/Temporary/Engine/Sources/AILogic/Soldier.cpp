@@ -472,7 +472,6 @@ void CSoldier::Init( const CVec2 &center,
 	fOwnSightRadius = -1.0f;
 
 	pStats = checked_cast<const SInfantryRPGStats *>( _pStats );
-	SetRememberedStats( pStats );
 	lastHit = lastCheck = lastMineCheck = curTime;
 	bLying = false;
 	bAllowLieDown = true;

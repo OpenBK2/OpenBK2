@@ -27,8 +27,7 @@ class CSoldier : public CAIUnit
 	EObjectInsideOf eInsideType = {};
 
 	CDBPtr<NDb::SInfantryRPGStats> pStats;
-	CDBPtr<NDb::SInfantryRPGStats> pRememberedStats; // for paratroopers
-																									 // орудийные стволы
+	// орудийные стволы
 	CPtr<CUnitGuns> pGuns;
 
 	SStaticObjectSlotInfo slotInfo;
@@ -69,7 +68,6 @@ public:
 		OnSerialize( f );
 		f.Add( 3, &eInsideType );
 		f.Add( 4, &pStats );
-		f.Add( 5, &pRememberedStats );
 		f.Add( 6, &pGuns );
 		f.Add( 7, &slotInfo );
 		f.Add( 8, &wMinAngle );
@@ -145,11 +143,6 @@ public:
 	           const uint16_t dir,
 	           const uint8_t player,
 	           ICollisionsCollector *pCollisionsCollector ) override;
-
-	void SetRememberedStats( const NDb::SInfantryRPGStats *_pRememberedStats )
-	{
-		pRememberedStats = pRememberedStats;
-	}
 
 	const SUnitBaseRPGStats *GetStats() const override
 	{

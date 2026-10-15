@@ -800,7 +800,6 @@ class CSoldierParaDroppingState : public IUnitState
 	ZDATA
 	ESoldierParaDroppingState eState = {};
 	ESoldierParaDroppingState eStateToSwitch = {};
-	CDBPtr<NDb::SInfantryRPGStats> pRememberedStats;
 
 	NTimer::STime timeToCloseParashute = {}, timeToFallWithParashute = {};
 
@@ -810,7 +809,6 @@ class CSoldierParaDroppingState : public IUnitState
 	{
 		f.Add( 2, &eState );
 		f.Add( 3, &eStateToSwitch );
-		f.Add( 4, &pRememberedStats );
 		f.Add( 5, &timeToCloseParashute );
 		f.Add( 6, &timeToFallWithParashute );
 		f.Add( 7, &pUnit );

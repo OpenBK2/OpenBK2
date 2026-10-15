@@ -2035,8 +2035,6 @@ CSoldierParaDroppingState::CSoldierParaDroppingState( class CSoldier *_pUnit, cl
 	pUnit->AllowLieDown( false );
 	pUnit->SetSmoothPath( new CParatrooperPath( pUnit->GetCenter(), pUnit ) );
 
-	pRememberedStats = checked_cast<const NDb::SInfantryRPGStats *>( pUnit->GetStats() );
-
 	// подменить падающего солдата паращютистом
 	// запустить анимацию открывания парашюта
 	CPtr<SParadropStartFinishUpdate> pUpdate = new SParadropStartFinishUpdate;
@@ -2122,7 +2120,6 @@ ETryStateInterruptResult CSoldierParaDroppingState::TryInterruptState( class CAI
 {
 	if ( !pCommand )
 	{
-		pUnit->SetRememberedStats( pRememberedStats );
 		updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_DBID, pUnit, -1 );
 		eState = ESPDS_WAIT_FOR_END_UPDATES;
 		pUnit->SetCommandFinished();
