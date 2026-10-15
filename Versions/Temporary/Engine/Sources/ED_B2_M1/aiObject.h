@@ -131,6 +131,7 @@ struct SConvexHull
 	int operator&( CStructureSaver &f )
 	{
 		ASSERT( 0 && "This struct could not be serialized!" );
+		return 0;
 	}
 };
 
