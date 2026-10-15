@@ -182,7 +182,7 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 
 void CGeneralAirForce::GiveOrders( const int nPlayer )
 {
-	if ( nCurrentRequest == -1 )
+	if ( nCurrentRequest == FT_NONE )
 	{
 		return;
 	}
