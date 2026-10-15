@@ -83,15 +83,28 @@ static bool AreFilesDifferent( const string &szFileName0, const string &szFileNa
 			char *pBuffer0 = new char[nLength];
 			char *pBuffer1 = new char[nLength];
 
-			fread( pBuffer0, 1, nLength, pFile0 );
-			fread( pBuffer1, 1, nLength, pFile1 );
+			// A short read leaves the tail of both buffers uninitialised, and
+			// the comparison below would then be over whatever was in the
+			// heap: this function decides whether a generated file needs
+			// rewriting, so it could answer "same" for files that differ.
+			// Treat it as a difference instead, which for a generator is the
+			// safe direction.
+			const size_t nRead0 = fread( pBuffer0, 1, nLength, pFile0 );
+			const size_t nRead1 = fread( pBuffer1, 1, nLength, pFile1 );
 
-			for ( int iIndex = 0; iIndex < nLength; iIndex++ )
+			if ( nRead0 != static_cast<size_t>( nLength ) || nRead1 != static_cast<size_t>( nLength ) )
 			{
-				if ( pBuffer0[iIndex] != pBuffer1[iIndex] )
+				bDifferent = true;
+			}
+			else
+			{
+				for ( int iIndex = 0; iIndex < nLength; iIndex++ )
 				{
-					bDifferent = true;
-					break;
+					if ( pBuffer0[iIndex] != pBuffer1[iIndex] )
+					{
+						bDifferent = true;
+						break;
+					}
 				}
 			}
 
