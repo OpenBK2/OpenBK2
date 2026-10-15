@@ -1512,7 +1512,7 @@ void CBuilding::Segment()
 		// обработать alarms
 		if ( bAlarm )
 		{
-			while ( !fire.Size() == fire.GetReserved() && ( !medical.IsEmpty() || !rest.IsEmpty() ) )
+			while ( fire.Size() != fire.GetReserved() && ( !medical.IsEmpty() || !rest.IsEmpty() ) )
 			{
 				SeatSoldierToFireSlot();
 			}
