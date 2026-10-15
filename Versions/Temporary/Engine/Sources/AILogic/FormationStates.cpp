@@ -1011,8 +1011,15 @@ void CFormationEnterBuildingState::Segment()
 	//NI_ASSERT( !pFormation->IsInWaitingState(), "Wrong formation waiting state" );
 
 	// здание разрушено или там не хватит места
-	if ( !IsValidObj( pBuilding ) ||
-	     state != EES_WAITINIG_TO_ENTER && pBuilding->GetPlayer() != -1 && IsNotEnoughSpace() )
+	//
+	// No test of the building's owner here. There was one, "GetPlayer() != -1",
+	// which never excluded anything: GetPlayer returns a uint8_t and answers
+	// GetNeutralPlayer for an empty building, so -1 is not a value it can give.
+	// Nor is such a test wanted, because IsNotEnoughSpace already asks who owns
+	// the building and counts places accordingly, and an empty one reports all
+	// of its places free. Excluding the unowned case would stop a formation
+	// larger than the building being turned away from it.
+	if ( !IsValidObj( pBuilding ) || ( state != EES_WAITINIG_TO_ENTER && IsNotEnoughSpace() ) )
 	{
 		pFormation->SendAcknowledgement( ACK_NEGATIVE );
 		TryInterruptState( 0 );
