@@ -289,14 +289,12 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 		std::vector<std::string> fileNameList;
 		NVFS::GetMainVFS()->GetAllFileNames( &fileNameList, std::string() );
 		std::vector<std::string> stringList;
-		int nCount = 0;
 		for ( std::vector<std::string>::const_iterator itFileName = fileNameList.begin(); itFileName != fileNameList.end();
 		      ++itFileName )
 		{
 			const std::string szFileName = ( *itFileName );
 			if ( !szFileName.empty() )
 			{
-				++nCount;
 				if ( pParameters )
 				{
 					const int nStatsLength = szFileName.size();
@@ -361,7 +359,6 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 				}
 			}
 		}
-		fmt::format( "Count: {}", nCount );
 	}
 }
 
