@@ -28,8 +28,13 @@ class CStObjIter
 	CStObjIter &operator=( const CStObjIter &iter );
 
 protected:
-	CStaticObjects::StaticObjectsAreaMap &GetAreaMap();
-	int GetCellSize() const;
+	// Static because neither depends on an object: GetAreaMap forwards to the
+	// global theStatObjs and GetCellSize returns a constant, each picked by
+	// bOnlyContainers alone. CStObjGlobalIter's constructor needs them before
+	// this base has been constructed, which is only defined if there is no
+	// object involved.
+	static CStaticObjects::StaticObjectsAreaMap &GetAreaMap();
+	static int GetCellSize();
 
 public:
 	CStObjIter()
@@ -128,13 +133,13 @@ inline CStaticObjects::StaticObjectsAreaMap &CStObjIter<true>::GetAreaMap()
 }
 
 template <bool bOnlyContainers>
-inline int CStObjIter<bOnlyContainers>::GetCellSize() const
+inline int CStObjIter<bOnlyContainers>::GetCellSize()
 {
 	return SConsts::STATIC_OBJ_CELL;
 }
 
 template <>
-inline int CStObjIter<true>::GetCellSize() const
+inline int CStObjIter<true>::GetCellSize()
 {
 	return SConsts::STATIC_CONTAINER_OBJ_CELL;
 }
@@ -240,7 +245,10 @@ CExistingObject *CStObjIter<bOnlyContainers>::operator*()
 
 template <bool bOnlyContainers>
 CStObjGlobalIter<bOnlyContainers>::CStObjGlobalIter()
-	: CStObjIter<bOnlyContainers>( 0, this->GetAreaMap().GetSizeX() - 1, 0, this->GetAreaMap().GetSizeY() - 1 )
+	: CStObjIter<bOnlyContainers>( 0,
+                                 CStObjIter<bOnlyContainers>::GetAreaMap().GetSizeX() - 1,
+                                 0,
+                                 CStObjIter<bOnlyContainers>::GetAreaMap().GetSizeY() - 1 )
 {
 }
 
