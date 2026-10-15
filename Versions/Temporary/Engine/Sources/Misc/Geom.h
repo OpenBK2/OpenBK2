@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <type_traits>
 
 #pragma pack( push, 4 )
 
@@ -865,12 +866,11 @@ struct SVector
 	{
 	}
 
-	SVector( const SVector &vec )
-		: x( vec.x )
-		, y( vec.y )
-	{
-	}
-
+	// No copy constructor: the implicit one copies x and y, which is what a
+	// hand-written one did, and declaring it made SVector non-trivially
+	// copyable. The pathfinder moves runs of these with memcpy, which is only
+	// defined for a trivially copyable type, so writing out the copy was what
+	// made those calls undefined. The static_assert below holds it to that.
 	SVector( const CVec2 &vec )
 		: x( vec.x )
 		, y( vec.y )
@@ -1094,6 +1094,12 @@ struct SVector
 		return *this;
 	}
 };
+
+// CommonPathFinder and StandartPath2 move runs of SVector with memcpy, which is
+// defined only for a trivially copyable type. Declaring any of the copy or move
+// operations, or a destructor, would take that away and make those calls
+// undefined without changing anything a reader would notice.
+static_assert( std::is_trivially_copyable<SVector>::value, "SVector is memcpy'd by the pathfinder" );
 
 inline const int fabs2( const SVector &vect )
 {
