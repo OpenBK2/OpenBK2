@@ -852,26 +852,6 @@ int CPlayerReinforcement::GetNEntries( NDb::EReinforcementType eType ) const
 	return 0;
 }
 
-const NDb::SHPObjectRPGStats *CPlayerReinforcement::GetUnitSample( NDb::EReinforcementType eType, int nEntry ) const
-{
-	CInfos::const_iterator pos = reinforcementInfos.find( eType );
-	if ( pos != reinforcementInfos.end() )
-	{
-		if ( nEntry < pos->second->entries.size() )
-		{
-			if ( pos->second->entries[nEntry].pMechUnit )
-			{
-				return pos->second->entries[nEntry].pMechUnit;
-			}
-			if ( pos->second->entries[nEntry].pSquad )
-			{
-				pos->second->entries[nEntry].pSquad;
-			}
-		}
-	}
-	return 0;
-}
-
 const int CPlayerReinforcement::GetUnitAvailability( const NDb::EDBUnitRPGType eUnit,
                                                      const NDb::EReinforcementType eReinf )
 {

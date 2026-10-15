@@ -78,7 +78,6 @@ public:
 	const NDb::SDeployTemplate* GetDeploy( const NDb::EReinforcementType eType );
 	// order
 	void MakeOrder( const int nFactoryID, const NDb::EReinforcementType eType );
-	const NDb::SHPObjectRPGStats * GetUnitSample( const int nFactoryID, const NDb::EReinforcementType eType, const int nEntry );
 	// For AI calling reinfs
 	NTimer::STime GetNextReinfTime();
 	int GetUnitAvailability( const NDb::EDBUnitRPGType eUnit, const NDb::EReinforcementType eReinf );

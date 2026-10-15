@@ -153,7 +153,6 @@ public:
 	bool CanCallNow() const;
 	bool HasReinforcement( NDb::EReinforcementType eType ) const;
 	NTimer::STime GetRecycleTimeLeft() const;
-	const NDb::SHPObjectRPGStats *GetUnitSample( NDb::EReinforcementType eType, int nEntry ) const;
 	int GetNEntries( NDb::EReinforcementType eType ) const;
 	const int GetUnitAvailability( const NDb::EDBUnitRPGType eUnit, const NDb::EReinforcementType eReinf );
 	int GetReinforcementCallsLeft() const;
