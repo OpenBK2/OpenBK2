@@ -4,17 +4,30 @@
 
 #include <fmt/format.h>
 
-#define CHECK_TYPE( TDesiredType, pRawNode, statement )                                                          \
-	{                                                                                                              \
-		CDynamicCast<TDesiredType> pNode = pRawNode ? pRawNode : 0;                                                  \
-		if ( pNode == 0 )                                                                                            \
-		{                                                                                                            \
-			std::string szError = fmt::format( "{} expected, {} recieved\n", #TDesiredType, typeid( *pNode ).name() ); \
-			NErrors::ShowErrorNoLine( szError );                                                                       \
-			{                                                                                                          \
-				statement;                                                                                               \
-			}                                                                                                          \
-		}                                                                                                            \
+// Reports what arrived when a node is not the type the caller needs, and runs
+// statement, which is a return at every call site.
+//
+// The type is read from pRawNode. It used to be read from pNode, inside the
+// branch that runs only when the cast to pNode failed, so pNode was always null
+// there: naming the type dereferenced a null pointer on the one path this macro
+// exists to handle, and had it survived that it would have named the type the
+// cast was looking for rather than the one that came in.
+//
+// pRawNode is a raw pointer at every call site, so typeid names its dynamic
+// type without calling anything. Going through CDynamicCast's operator* instead
+// is what made typeid's operand an expression with side effects.
+#define CHECK_TYPE( TDesiredType, pRawNode, statement )                                             \
+	{                                                                                                 \
+		CDynamicCast<TDesiredType> pNode = pRawNode ? pRawNode : 0;                                     \
+		if ( pNode == 0 )                                                                               \
+		{                                                                                               \
+			const std::string szReceived = pRawNode ? typeid( *pRawNode ).name() : "nothing";             \
+			std::string szError = fmt::format( "{} expected, {} received\n", #TDesiredType, szReceived ); \
+			NErrors::ShowErrorNoLine( szError );                                                          \
+			{                                                                                             \
+				statement;                                                                                  \
+			}                                                                                             \
+		}                                                                                               \
 	}
 
 namespace NErrors
