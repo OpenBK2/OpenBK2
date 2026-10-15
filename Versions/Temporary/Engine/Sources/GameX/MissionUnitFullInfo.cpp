@@ -160,7 +160,7 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 	{
 		nBaseID = BASE_ID_3D_OBJECT;
 	}
-	else if ( eType == BASE_ID_3D_REINF )
+	else if ( eType == ET_REINF )
 	{
 		nBaseID = BASE_ID_3D_REINF;
 	}
