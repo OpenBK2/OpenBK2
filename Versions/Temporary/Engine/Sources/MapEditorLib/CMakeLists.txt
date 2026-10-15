@@ -53,9 +53,7 @@ set(SOURCES
     WxThumbnailList.cpp
     Tools_UniqueList.cpp
 )
-add_library(MapEditorLib SHARED ${SOURCES})
-add_stdafx_pch(MapEditorLib)
-add_export_header(MapEditorLib)
+bk2_add_library(MapEditorLib SHARED ${SOURCES})
 # No mfc: the image lists behind IImageList are Win32 ones
 # (NativeImageList.h), and Tools_Image makes HBITMAPs rather than CBitmaps.
 target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc System fmt::fmt-header-only)
@@ -90,8 +88,6 @@ target_link_libraries(MapEditorLib PRIVATE granny::granny)
 if(DEFINED FASTGLTF_VERSION)
     target_compile_definitions(MapEditorLib PRIVATE FASTGLTF_VERSION_STR="${FASTGLTF_VERSION}")
 endif()
-install(TARGETS MapEditorLib DESTINATION bin)
-add_version_info(MapEditorLib)
 # The build details block carries the revision, for bug reports
 # (BuildDetailsWx.cpp).
 add_git_revision(MapEditorLib)

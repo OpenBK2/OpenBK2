@@ -186,9 +186,7 @@ set(SOURCES
     XMLExport.cpp
     XMLExportB2.cpp
 )
-add_library(ED_B2_M1 SHARED ${SOURCES})
-add_stdafx_pch(ED_B2_M1)
-add_export_header(ED_B2_M1)
+bk2_add_library(ED_B2_M1 SHARED ${SOURCES})
 # No mfc: the acks reader, the last MFC user, went to plain ODBC and then to a
 # CSV of its own reading, which needs nothing but the standard library.
 target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Stats_B2_M1 System UISpecificB2 UI zlib fmt::fmt-header-only granny::granny fastgltf::fastgltf)
@@ -204,8 +202,5 @@ endif()
 # no UNICODE defines.
 target_link_libraries(ED_B2_M1 PRIVATE wx::wx)
 add_dependencies(ED_B2_M1 wxwidgets_external)
-
-install(TARGETS ED_B2_M1 DESTINATION bin)
-add_version_info(ED_B2_M1)
 
 add_subdirectory(test)

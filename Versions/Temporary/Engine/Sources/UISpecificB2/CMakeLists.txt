@@ -15,12 +15,8 @@ set(SOURCES
     WindowRoundProgressBar.cpp
     WindowSelection.cpp
 )
-add_library(UISpecificB2 SHARED ${SOURCES})
-add_stdafx_pch(UISpecificB2)
-add_export_header(UISpecificB2)
+bk2_add_library(UISpecificB2 SHARED ${SOURCES})
 target_link_libraries(UISpecificB2 PRIVATE 3Dmotor Input libdb MemoryLib Misc Sound Stats_B2_M1 System UI zlib fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(UISpecificB2 PRIVATE winapi)
 endif()
-install(TARGETS UISpecificB2 DESTINATION bin)
-add_version_info(UISpecificB2)

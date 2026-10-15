@@ -7,7 +7,7 @@ project(ShaderAsm)
 #
 # Static rather than the SHARED library with an export header that every engine
 # subsystem is: one function, no engine dependencies, and one user.
-add_library(ShaderAsm STATIC
+bk2_add_library(ShaderAsm STATIC
     ShaderAsm.cpp
     ShaderAsm.h
 )

@@ -62,8 +62,7 @@ set(SOURCES
     WindowTooltip.cpp
 )
 
-add_library(UI SHARED ${SOURCES})
-add_stdafx_pch(UI)
+bk2_add_library(UI SHARED ${SOURCES})
 # These four explicitly specialize CastToObjectBaseImpl and friends, through
 # BASIC_REGISTER_CLASS and the REGISTER_*_CLASS macros built on it. UI/Specific.h
 # is part of the prelude and pulls in UIFactory.h and DBUserInterface.h, so the
@@ -77,14 +76,11 @@ set_source_files_properties(
     UIFactory.cpp
     UIML.cpp
     PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
-add_export_header(UI)
 # UI serializes SComplexSoundDesc through CDBPtr, whose RTTI is defined in Sound.
 # Link it here so standalone UI consumers (including tests) resolve that type.
 target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script Sound System zlib ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(UI PRIVATE winapi)
 endif()
-install(TARGETS UI DESTINATION bin)
-add_version_info(UI)
 
 add_subdirectory(test)

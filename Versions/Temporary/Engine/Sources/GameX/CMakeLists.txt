@@ -111,9 +111,7 @@ set(SOURCES
     WorldClient.cpp
     WorldClientActions.cpp
 )
-add_library(GameX SHARED ${SOURCES})
-add_export_header(GameX)
-add_stdafx_pch(GameX)
+bk2_add_library(GameX SHARED ${SOURCES})
 target_link_libraries(GameX PRIVATE
     3DLib
     3Dmotor
@@ -145,6 +143,4 @@ if(WIN32)
 else()
     target_link_libraries(GameX PRIVATE SDL3::SDL3-shared)
 endif()
-install(TARGETS GameX DESTINATION bin)
-add_version_info(GameX)
 add_subdirectory(test)

@@ -16,9 +16,7 @@ set(SOURCES
     TerrUtils.cpp
     TracksManager.cpp
 )
-add_library(B2_M1_Terrain SHARED ${SOURCES})
-add_stdafx_pch(B2_M1_Terrain)
-add_export_header(B2_M1_Terrain)
+bk2_add_library(B2_M1_Terrain SHARED ${SOURCES})
 target_link_libraries(B2_M1_Terrain PRIVATE
     3DLib
     3Dmotor
@@ -32,5 +30,3 @@ target_link_libraries(B2_M1_Terrain PRIVATE
 if(WIN32)
     target_link_libraries(B2_M1_Terrain PRIVATE winapi)
 endif()
-install(TARGETS B2_M1_Terrain DESTINATION bin)
-add_version_info(B2_M1_Terrain)

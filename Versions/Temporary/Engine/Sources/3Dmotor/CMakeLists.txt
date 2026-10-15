@@ -111,9 +111,7 @@ set(SOURCES
     VolumeContainer.cpp
     WindDeformer.cpp
 )
-add_library(3Dmotor SHARED ${SOURCES})
-add_export_header(3Dmotor)
-add_stdafx_pch(3Dmotor)
+bk2_add_library(3Dmotor SHARED ${SOURCES})
 target_link_libraries(3Dmotor PRIVATE
     3DLib
     Image
@@ -144,8 +142,6 @@ else()
     # SDL_Window* under DXVK Native.
     target_link_libraries(3Dmotor PRIVATE dxvk::d3d9 SDL3::SDL3-shared)
 endif()
-install(TARGETS 3Dmotor DESTINATION bin)
-add_version_info(3Dmotor)
 
 # GLightPerVertexAVX2.cpp is the only translation unit allowed to contain AVX2
 # instructions, and it is reached only through avx2LightingKernels after

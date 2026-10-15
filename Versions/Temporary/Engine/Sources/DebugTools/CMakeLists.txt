@@ -4,12 +4,8 @@ set(SOURCES
     DebugStatsSystem.cpp
     stdafx.cpp
 )
-add_library(DebugTools SHARED ${SOURCES})
-add_stdafx_pch(DebugTools)
-add_export_header(DebugTools)
+bk2_add_library(DebugTools SHARED ${SOURCES})
 target_link_libraries(DebugTools PRIVATE MemoryLib Misc System)
 if(WIN32)
     target_link_libraries(DebugTools PRIVATE winapi)
 endif()
-install(TARGETS DebugTools DESTINATION bin)
-add_version_info(DebugTools)

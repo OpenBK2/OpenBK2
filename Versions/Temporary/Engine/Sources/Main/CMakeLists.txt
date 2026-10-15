@@ -13,9 +13,7 @@ set(SOURCES
     Profiles.cpp
     stdafx.cpp
 )
-add_library(Main SHARED ${SOURCES})
-add_stdafx_pch(Main)
-add_export_header(Main)
+bk2_add_library(Main SHARED ${SOURCES})
 target_link_libraries(Main PRIVATE
     Image
     Input
@@ -31,5 +29,3 @@ target_link_libraries(Main PRIVATE
 if(WIN32)
     target_link_libraries(Main PRIVATE winapi)
 endif()
-install(TARGETS Main DESTINATION bin)
-add_version_info(Main)

@@ -59,11 +59,9 @@ set(SOURCES
     ViewContainer.cpp
     XdbValidationWx.cpp
 )
-add_library(MapEditor SHARED ${SOURCES})
-add_stdafx_pch(MapEditor)
+bk2_add_library(MapEditor SHARED ${SOURCES})
 # Native docking hints use GTK directly, without the editor precompiled header.
 set_source_files_properties(NativeDockHint.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
-add_export_header(MapEditor)
 # No mfc: CEditorApp is no longer a CWinApp, and NAppProfile (AppProfile.h)
 # keeps the registry profile CWinApp kept.
 target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Script System fmt::fmt-header-only)
@@ -91,7 +89,6 @@ if(NOT WIN32)
     target_link_libraries(MapEditor PRIVATE PkgConfig::GTK3)
 endif()
 
-install(TARGETS MapEditor DESTINATION bin)
 # The application icon as a file, beside the binary that shows it.
 #
 # The .rc compiles it into the resource section as IDR_MAINFRAME, and that is
@@ -105,7 +102,6 @@ install(TARGETS MapEditor DESTINATION bin)
 # main.ico: that one is game data read through NMainLoop::GetBaseDir(), and an
 # icon belonging to the editor is not.
 install(FILES res/main_frame.ico DESTINATION bin)
-add_version_info(MapEditor)
 # The wx About box shows the revision, for bug reports (AboutViewWx.cpp).
 add_git_revision(MapEditor)
 

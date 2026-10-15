@@ -37,9 +37,7 @@ set(SOURCES
     Wrapper/TableManipulator.cpp
 )
 
-add_library(libdb SHARED ${SOURCES})
-add_stdafx_pch(libdb)
-add_export_header(libdb)
+bk2_add_library(libdb SHARED ${SOURCES})
 target_include_directories(libdb PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(libdb PRIVATE
     MemoryLib
@@ -53,7 +51,5 @@ target_link_libraries(libdb PRIVATE
 if(WIN32)
     target_link_libraries(libdb PRIVATE winapi)
 endif()
-install(TARGETS libdb DESTINATION bin)
-add_version_info(libdb)
 
 add_subdirectory(test)

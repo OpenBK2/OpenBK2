@@ -9,7 +9,7 @@ project(FontRaster)
 # subsystem is: it has one small interface and no engine dependencies, and a
 # static library links into a tool and a DLL alike without an export macro on
 # every declaration.
-add_library(FontRaster STATIC
+bk2_add_library(FontRaster STATIC
     CodePages.cpp
     CodePages.h
     CodePageTables.inc

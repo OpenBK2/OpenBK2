@@ -218,13 +218,9 @@ set(SOURCES
     UpdateUnitContainer.cpp
     Weather.cpp
 )
-add_library(AILogic SHARED ${SOURCES})
-add_export_header(AILogic)
-add_stdafx_pch(AILogic)
+bk2_add_library(AILogic SHARED ${SOURCES})
 target_link_libraries(AILogic PRIVATE B2_M1_Terrain B2_M1_World Common_RTS_AI DebugTools Input libdb MemoryLib Misc Script Stats_B2_M1 System zlib fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(AILogic PRIVATE winapi)
 endif()
-install(TARGETS AILogic DESTINATION bin)
-add_version_info(AILogic)
 add_subdirectory(test)

@@ -26,12 +26,8 @@ set(SOURCES
     Terrain.cpp
     Tools.cpp
 )
-add_library(Common_RTS_AI SHARED ${SOURCES})
-add_stdafx_pch(Common_RTS_AI)
-add_export_header(Common_RTS_AI)
+bk2_add_library(Common_RTS_AI SHARED ${SOURCES})
 target_link_libraries(Common_RTS_AI PRIVATE DebugTools Image libdb MemoryLib Misc System zlib fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(Common_RTS_AI PRIVATE winapi)
 endif()
-install(TARGETS Common_RTS_AI DESTINATION bin)
-add_version_info(Common_RTS_AI)

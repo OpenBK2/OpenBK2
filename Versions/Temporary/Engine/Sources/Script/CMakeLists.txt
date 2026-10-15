@@ -25,12 +25,8 @@ set(SOURCES
     ScriptWrapperInternal.cpp
     stdafx.cpp
 )
-add_library(Script SHARED ${SOURCES})
-add_stdafx_pch(Script)
-add_export_header(Script)
+bk2_add_library(Script SHARED ${SOURCES})
 target_link_libraries(Script PRIVATE MemoryLib Misc System fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(Script PRIVATE winapi)
 endif()
-install(TARGETS Script DESTINATION bin)
-add_version_info(Script)
