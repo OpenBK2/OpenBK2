@@ -102,7 +102,7 @@ const TObject *luaV_gettable (lua_State *L, StkId t) {
 	{
 		int nHash = LObj(L, t)->GetH();
 		tg = L->tables[nHash]->htag;
-		bDefaultTag = ( tg == LUA_TTABLE || luaT_gettm(L, tg, TM_GETTABLE) == NULL );
+		bDefaultTag = ( tg == LUA_TTABLE || luaT_gettm(L, tg, TM_GETTABLE) == STK_NULL );
 	}
   if ( bIsTable && bDefaultTag )
 	{
@@ -142,7 +142,7 @@ void luaV_settable (lua_State *L, StkId t, StkId key) {
   int tg;
   if ( LObj(L, t)->GetType() == LUA_TTABLE &&  /* `t' is a table? */
       ( ( tg = L->GetHash(t)->htag ) == LUA_TTABLE ||  /* with default tag? */
-        luaT_gettm(L, tg, TM_SETTABLE) == NULL) ) /* or no TM? */
+        luaT_gettm(L, tg, TM_SETTABLE) == STK_NULL) ) /* or no TM? */
 		*( L->GetHash(t)->SetObj( LObj(L, key) ) ) = *LObj(L, L->pCT->top-1);  /* do a primitive set */
   else
 	{  /* try a `settable' tag method */
