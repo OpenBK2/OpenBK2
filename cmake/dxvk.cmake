@@ -27,6 +27,11 @@ list(APPEND CMAKE_INSTALL_RPATH ${DXVK_D3D9_LIBRARY_DIRS})
 # come from. Every module that includes 3Dmotor/Gfx.h needs them, and that reaches
 # SceneB2, UISpecificB2, ED_B2_M1 and Game, so the include directory is global the
 # way the Windows SDK is on Windows. Only 3Dmotor links the library.
-include_directories(${DXVK_D3D9_INCLUDE_DIRS})
+#
+# SYSTEM for the same reason the Windows SDK is: these are somebody else's
+# headers and their warnings are not ours to fix. Measured without it, d3d9.h
+# alone accounted for 271 -Wsuggest-override sites and 48 -Wnoexcept sites,
+# against 0 and 0 in our own code. See cmake/system_includes.cmake.
+include_directories(SYSTEM ${DXVK_D3D9_INCLUDE_DIRS})
 
 message(STATUS "using DXVK ${DXVK_D3D9_VERSION} from ${DXVK_D3D9_LIBRARY_DIRS}")

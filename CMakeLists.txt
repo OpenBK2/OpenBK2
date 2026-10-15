@@ -224,7 +224,21 @@ if(BUILD_SERVER)
     include(cmake/sqlite.cmake)
 endif()
 
+# Diagnostics and the target wrappers that apply them. After every dependency
+# above, because marking their headers SYSTEM needs their targets to exist, and
+# before our own subdirectories so bk2_add_library is defined when they call it.
+include(cmake/warnings.cmake)
+include(cmake/bk2_targets.cmake)
+include(cmake/system_includes.cmake)
+bk2_mark_third_party_includes_system()
+
 add_subdirectory("Versions/Temporary/Engine/Sources")
+
+# Every target of ours that was not created through bk2_add_library or
+# bk2_add_executable yet. Those two apply the rule set themselves and mark the
+# target, so this only covers what is left of the migration and cannot double
+# up. See cmake/warnings.cmake.
+bk2_enable_warnings_on_project_targets()
 
 if(WIN32 AND USE_MIMALLOC)
     # Apply after target creation, including tools/tests that exchange objects

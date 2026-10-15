@@ -92,10 +92,17 @@ jobs:
           key: wx-Linux-x64-Release
           restore-keys: wx-Linux-x64-Release-
 
+      # OBK2_WERROR is off by default and on here: the rule set in
+      # cmake/warnings.cmake is measured at zero sites on this tree, so the
+      # only thing it can fail on is a regression. It stays an option rather
+      # than a default because a packager or a developer on a newer compiler
+      # should not get a hard failure out of a diagnostic that did not exist
+      # when this was written. See docs/DiagnosticsRuleSet.md.
       - name: Configure with preset
         run: >
           cmake --preset Linux-x64-Release
           -DBUILD_EDITOR=ON
+          -DOBK2_WERROR=ON
           "-DWX_ROOT=${{ env.WX_ROOT }}"
 
       - name: Build with preset
@@ -216,10 +223,15 @@ jobs:
       # simulation code -- so this is a second front end over the same standard
       # library, and a divergence between the two jobs is a real defect rather
       # than two libraries disagreeing.
+      # The clang rule set is its own list, not GCC's: a flag is listed for the
+      # compiler it was measured on, and the two disagree enough to matter
+      # (-Wextra-semi is 0 sites on GCC and 1123 on clang; clang accepts
+      # -Wredundant-decls and silently does nothing with it, where GCC finds 31).
       - name: Configure with preset
         run: >
           cmake --preset Linux-x64-Clang-Release
           -DBUILD_EDITOR=OFF
+          -DOBK2_WERROR=ON
           -DCMAKE_C_COMPILER=clang-19
           -DCMAKE_CXX_COMPILER=clang++-19
 
