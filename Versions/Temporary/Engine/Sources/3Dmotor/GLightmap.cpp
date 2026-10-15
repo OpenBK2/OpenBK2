@@ -193,7 +193,7 @@ void CLightmapTexture::Recalc()
 		{
 			for ( int x = 0; x < t.GetSizeX(); ++x )
 			{
-				char c = ( ( x + y ) & 1 ) ? 255 : 0;
+				unsigned char c = ( ( x + y ) & 1 ) ? 255 : 0;
 				//char c = tex[y][x].a;
 				t[y][x] = NGfx::SPixel8888( c, c, c, 0xff );
 			}

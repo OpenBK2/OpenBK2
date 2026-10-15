@@ -306,7 +306,7 @@ NGfx::CTexture *GetCheckerTexture()
 	{
 		for ( int y = 0; y < N_SIZE; ++y )
 		{
-			char cRes = ( ( x + y ) & 1 ) ? 255 : 0;
+			unsigned char cRes = ( ( x + y ) & 1 ) ? 255 : 0;
 			lock[y][x] = NGfx::SPixel8888( cRes, cRes, cRes, cRes );
 		}
 	}
