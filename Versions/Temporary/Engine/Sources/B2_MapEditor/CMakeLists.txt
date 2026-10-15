@@ -13,8 +13,7 @@ set(SOURCES
 list(APPEND SOURCES utf8.manifest)
 # The entry point: wx's WinMain and the wxApp that runs the editor.
 list(APPEND SOURCES WxHost.cpp)
-add_executable(B2_MapEditor WIN32 ${SOURCES})
-add_stdafx_pch(B2_MapEditor)
+bk2_add_executable(B2_MapEditor WIN32 ${SOURCES})
 # No mfc, here or in any module the editor loads: wx owns WinMain.
 target_link_libraries(B2_MapEditor PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools ED_B2 ED_B2_M1 ED_Common GameX Image Input libdb Main MapEditorLib MapEditor MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib)
 configure_crashpad(B2_MapEditor)
@@ -72,7 +71,3 @@ else()
     install(DIRECTORY ${WX_LIB_DIR}/ DESTINATION bin FILES_MATCHING PATTERN "libwx_*.so*"
         PATTERN "wx" EXCLUDE PATTERN "cmake" EXCLUDE PATTERN "pkgconfig" EXCLUDE)
 endif()
-
-install(TARGETS B2_MapEditor DESTINATION bin)
-
-add_version_info(B2_MapEditor)

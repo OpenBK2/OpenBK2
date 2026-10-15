@@ -22,8 +22,7 @@ set(SOURCES
     FontFormat.cpp
     stdafx.cpp
 )
-add_executable(FontGen ${SOURCES})
-add_stdafx_pch(FontGen)
+bk2_add_executable(FontGen ${SOURCES})
 
 # REGISTER_SAVELOAD_CLASS( FONTGEN, ... ) in FontFormat.cpp expands through
 # BASIC_REGISTER_CLASS to FONTGEN_EXPORT, which would come from a generated
@@ -40,8 +39,5 @@ endif()
 
 install_runtime_dlls(FontGen)
 
-install(TARGETS FontGen DESTINATION bin)
-
 # -show-version reads REVISION_NUMBER_STR and BUILD_DATE_TIME_STR, which this
 # defines. Without it the tool does not compile.
-add_version_info(FontGen)

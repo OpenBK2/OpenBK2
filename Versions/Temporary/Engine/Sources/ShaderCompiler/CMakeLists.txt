@@ -28,8 +28,7 @@ set(SOURCES
     ShaderCompiler.cpp
     stdafx.cpp
 )
-add_executable(ShaderCompiler ${SOURCES})
-add_stdafx_pch(ShaderCompiler)
+bk2_add_executable(ShaderCompiler NO_VERSION_INFO ${SOURCES})
 
 # Self-contained: none of the engine's libraries, only ShaderAsm and the
 # portability headers under port/, which need Boost.Predef.
@@ -47,8 +46,6 @@ endif()
 # beside it the tool runs straight from the build tree, which is where the
 # regenerate-gfxshaders target below runs it.
 set_target_properties(ShaderCompiler PROPERTIES OBK2_USE_SYSTEM_ALLOCATOR TRUE)
-
-install(TARGETS ShaderCompiler DESTINATION bin)
 
 # Regenerates the committed 3Dmotor/GfxShaders.cpp and GfxShaders.h in the
 # source tree. Never part of ALL: run it by hand after editing GfxShaders.txt,

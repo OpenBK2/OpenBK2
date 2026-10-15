@@ -15,8 +15,7 @@ set(SOURCES
     main.cpp
     stdafx.cpp
 )
-add_executable(dbstruct ${SOURCES})
-add_stdafx_pch(dbstruct)
+bk2_add_executable(dbstruct ${SOURCES})
 
 # Boost::program_options replaced System/CmdLine.h, which the port deleted as
 # unused by the game.
@@ -30,8 +29,5 @@ endif()
 # than from bin/.
 install_runtime_dlls(dbstruct)
 
-install(TARGETS dbstruct DESTINATION bin)
-
 # -show-version reads REVISION_NUMBER_STR and BUILD_DATE_TIME_STR, which this
 # defines. Without it the tool does not compile.
-add_version_info(dbstruct)

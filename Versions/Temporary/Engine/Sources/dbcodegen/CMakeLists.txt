@@ -22,8 +22,7 @@ set(SOURCES
     main.cpp
     stdafx.cpp
 )
-add_executable(dbcodegen ${SOURCES})
-add_stdafx_pch(dbcodegen)
+bk2_add_executable(dbcodegen NO_INSTALL ${SOURCES})
 
 # Boost::program_options replaced System/CmdLine.h, which the port deleted as
 # unused by the game.
@@ -39,4 +38,3 @@ copy_runtime_dlls(dbcodegen)
 
 # -show-version reads REVISION_NUMBER_STR and BUILD_DATE_TIME_STR, which this
 # defines. Without it the tool does not compile.
-add_version_info(dbcodegen)

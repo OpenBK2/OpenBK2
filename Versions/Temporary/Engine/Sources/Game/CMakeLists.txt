@@ -7,8 +7,7 @@ set(SOURCES
     dpi_aware.manifest
     utf8.manifest
 )
-add_executable(Game WIN32 ${SOURCES})
-add_stdafx_pch(Game)
+bk2_add_executable(Game WIN32 ${SOURCES})
 # Windows attaches module-local overrides centrally after all targets exist.
 # Other platforms retain the original executable-level interposition.
 if(USE_MIMALLOC AND NOT WIN32)
@@ -56,7 +55,6 @@ else()
         target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_ADDR2LINE)
     endif()
 endif()
-install(TARGETS Game DESTINATION bin)
 
 # A desktop entry, so the game has a name and a launcher entry rather than being
 # an anonymous binary. It also matters for the window icon: a Wayland compositor
@@ -128,7 +126,6 @@ if(NOT WIN32)
         endforeach()
     ]])
 endif()
-add_version_info(Game)
 if(MSVC AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     target_link_options(Game PRIVATE "/LARGEADDRESSAWARE")
 endif()

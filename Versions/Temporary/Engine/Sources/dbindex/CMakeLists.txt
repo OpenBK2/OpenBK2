@@ -13,8 +13,7 @@ set(SOURCES
     main.cpp
     stdafx.cpp
 )
-add_executable(dbindex ${SOURCES})
-add_stdafx_pch(dbindex)
+bk2_add_executable(dbindex ${SOURCES})
 
 # libdb is what it actually drives; the rest come in through stdafx.h, which
 # pulls System, Misc and the serialization headers the way every project here
@@ -28,8 +27,5 @@ endif()
 # run from the data directory it indexes rather than from bin/.
 install_runtime_dlls(dbindex)
 
-install(TARGETS dbindex DESTINATION bin)
-
 # -show-version reads REVISION_NUMBER_STR and BUILD_DATE_TIME_STR, which this
 # defines. Without it the tool does not compile.
-add_version_info(dbindex)

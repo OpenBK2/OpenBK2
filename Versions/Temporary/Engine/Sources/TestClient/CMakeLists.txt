@@ -34,8 +34,7 @@ set(SOURCES
 
 # No WIN32, for the reason the server's build file gives: the old project chose
 # /SUBSYSTEM:WINDOWS only to have a window for its console.
-add_executable(TestClient ${SOURCES})
-add_stdafx_pch(TestClient)
+bk2_add_executable(TestClient ${SOURCES})
 
 target_link_libraries(TestClient PRIVATE
     Client
@@ -58,6 +57,3 @@ target_compile_definitions(TestClient PRIVATE TESTCLIENT_EXPORT=)
 # The DLLs this loads at run time, beside the executable in the build tree and
 # in the install. See cmake/runtimedlls.cmake.
 install_runtime_dlls(TestClient)
-
-install(TARGETS TestClient DESTINATION bin)
-add_version_info(TestClient)

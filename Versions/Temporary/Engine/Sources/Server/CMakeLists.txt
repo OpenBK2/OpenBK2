@@ -43,8 +43,7 @@ set(SOURCES
 
 # No WIN32: the original was /SUBSYSTEM:WINDOWS because the console was an MFC
 # window. A daemon wants the console subsystem.
-add_executable(Server ${SOURCES})
-add_stdafx_pch(Server)
+bk2_add_executable(Server ${SOURCES})
 
 # Not libdb: Server.cpp includes libdb/Logger.h but never names CLogger, and
 # DebugTrace comes from Misc/Tools.h.
@@ -76,6 +75,3 @@ target_compile_definitions(Server PRIVATE SERVER_EXPORT=)
 # The DLLs this loads at run time, beside the executable in the build tree and
 # in the install. See cmake/runtimedlls.cmake.
 install_runtime_dlls(Server)
-
-install(TARGETS Server DESTINATION bin)
-add_version_info(Server)
