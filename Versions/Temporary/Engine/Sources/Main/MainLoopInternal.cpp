@@ -261,9 +261,16 @@ static bool ProcessInterfaceCmds()
 		{
 			// the type id is an int, and fmt writes one with its top bit set as
 			// -0x...; format its bits
+			//
+			// typeid takes a plain pointer rather than the CObj, which it has to
+			// be lifted out for: anything called inside typeid's operand, CObj's
+			// operator* or its GetPtr, makes that operand an expression with
+			// side effects and is reported as such. IsValid above has already
+			// established the pointer is there.
+			const IInterfaceCommand *pRawCmd = pCmd.GetPtr();
 			csSystem << "icmd: "
 							 << fmt::format( "{:#010x}", static_cast<uint32_t>( NObjectFactory::GetObjectTypeID( pCmd ) ) ).c_str()
-							 << " " << typeid( *pCmd ).name() << endl;
+							 << " " << typeid( *pRawCmd ).name() << endl;
 		}
 		pCmd->Exec();
 	}
