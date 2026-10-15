@@ -32,16 +32,29 @@ public:
 
 	int Peek( void *pBuf, int nBufSize )
 	{
-		int nRes = (std::min)( nBufSize, GetSize() );
-		if ( nReadPtr + nRes > N_SIZE )
+		// Clamped against a negative request as well as against what is in the
+		// buffer. The test that splits the copy was "nReadPtr + nRes > N_SIZE",
+		// and nReadPtr is unsigned, so a negative size was converted and passed
+		// it, leaving the second length negative and its memcpy enormous. The
+		// one caller whose size comes off the wire, CanReadPacket in NetA4.cpp,
+		// rejects a negative one before getting here, and the ASSERT in Write
+		// below checks nothing in this tree, so the bound belongs here.
+		const int nRes = (std::min)( (std::max)( nBufSize, 0 ), GetSize() );
+		// Read is the only thing that moves nReadPtr, and does so modulo
+		// N_SIZE, so it is already in range. Saying it again here is what lets
+		// a compiler see that neither copy leaves szBuffer, which it cannot
+		// work out across calls: GCC reads the subtraction below as possibly
+		// huge and reports both copies as overflowing their destination.
+		const int nRead = static_cast<int>( nReadPtr % N_SIZE );
+		const int nRight = N_SIZE - nRead;
+		if ( nRes > nRight )
 		{
-			int nRight = N_SIZE - nReadPtr;
-			memcpy( pBuf, szBuffer + nReadPtr, nRight );
+			memcpy( pBuf, szBuffer + nRead, nRight );
 			memcpy( ( (char *)pBuf ) + nRight, szBuffer, nRes - nRight );
 		}
 		else
 		{
-			memcpy( pBuf, szBuffer + nReadPtr, nRes );
+			memcpy( pBuf, szBuffer + nRead, nRes );
 		}
 		return nRes;
 	}
@@ -56,19 +69,22 @@ public:
 	int Write( const void *pBuf, int nLength )
 	{
 		ASSERT( GetSize() + nLength < N_SIZE );
-		int nRes = (std::min)( GetBufSize(), nLength );
-
-		if ( nWritePtr + nRes > N_SIZE )
+		// The same two points as Peek. nWritePtr differs from nReadPtr in that
+		// the straight branch leaves it equal to N_SIZE rather than below it,
+		// which the modulo here absorbs as the old wrapping branch did.
+		const int nRes = (std::min)( (std::max)( nLength, 0 ), GetBufSize() );
+		const int nWrite = static_cast<int>( nWritePtr % N_SIZE );
+		const int nRight = N_SIZE - nWrite;
+		if ( nRes > nRight )
 		{
-			int nRight = N_SIZE - nWritePtr;
-			memcpy( szBuffer + nWritePtr, pBuf, nRight );
+			memcpy( szBuffer + nWrite, pBuf, nRight );
 			memcpy( szBuffer, ( (const char *)pBuf ) + nRight, nRes - nRight );
-			nWritePtr = ( nWritePtr + nRes ) % N_SIZE;
+			nWritePtr = ( nWrite + nRes ) % N_SIZE;
 		}
 		else
 		{
-			memcpy( szBuffer + nWritePtr, pBuf, nRes );
-			nWritePtr = nWritePtr + nRes;
+			memcpy( szBuffer + nWrite, pBuf, nRes );
+			nWritePtr = nWrite + nRes;
 		}
 		return nRes;
 	}
