@@ -2078,18 +2078,21 @@ void CWorldClient::CenterSelectionGroupPrivate( const std::vector<CMOSelectable 
 		return;
 	}
 
+	// Anchor on the first unit of the group. This was a loop that accumulated
+	// positions and then broke out of itself on the first pass, with the
+	// "vCenter /= group.size()" that would have turned the sum into a mean left
+	// commented out below it, so the two together already meant "just the first
+	// one"; clang's -Wunreachable-code-loop-increment reported the increment as
+	// unreachable. Spelled out rather than summed so that nobody reads the += as
+	// a half-finished mean and removes the break: without restoring the division
+	// that would make this the sum of every position and throw the camera off
+	// the map. Doing it properly is still the TODO above.
 	CVec3 vCenter( 0.0f, 0.0f, 0.0f );
-	for ( std::vector<CMOSelectable *>::const_iterator it = group.begin(); it != group.end(); ++it )
 	{
-		CMOSelectable *pSO = *it;
-		CVec3 vPos;
 		CQuat qRot;
 		CVec3 vScale;
-		pSO->GetPlacement( &vPos, &qRot, &vScale );
-		vCenter += vPos;
-		break;
+		group.front()->GetPlacement( &vCenter, &qRot, &vScale );
 	}
-	//	vCenter /= group.size();
 
 	vCenter = CorrectPosByCameraAndHeight( vCenter );
 
