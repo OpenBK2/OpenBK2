@@ -326,7 +326,14 @@ static int pushpc (int *stack, int pc, int top, int n) {
 
 
 static Instruction luaG_symbexec (const Proto *pt, int lastpc, int stackpos) {
-  int stack[MAXSTACK];  // stores last instruction that changed a stack entry
+  // Zeroed: the symbolic execution below only writes the slots it walks, and
+  // the return statement reads stack[stackpos] and uses it as an index into
+  // code[]. An entry the walk never reached was therefore an indeterminate
+  // value indexing an array, which GCC reports as an uninitialised read of
+  // stack. Zero names the first instruction, which is the same answer this
+  // function gives for "nothing changed this entry" and is in range by
+  // construction.
+  int stack[MAXSTACK] = { 0 };  // stores last instruction that changed a stack entry
   const Instruction *code = &pt->code[0];
   int top = pt->numparams;
   int pc = 0;
