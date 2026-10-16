@@ -108,6 +108,12 @@ set(OBK2_WARNINGS_GCC
     # untouched RECT. -Wuninitialized turns this on with it anyway; listing it is
     # what makes that visible to a reader.
     -Wmaybe-uninitialized
+    # Cleared 2026-10-16. Was 2, not the 3 the staging list claimed: a dead
+    # IsBinDigit in Misc/StrProc.h that tested a char against '0' and '1' at
+    # once, dropped rather than fixed, and CMOBuilding::Create testing the
+    # main-storage type twice instead of the temporary one, which had kept the
+    # client's idea of a storage out of step with AILogic's.
+    -Wlogical-op
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -164,7 +170,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     -Wimplicit-fallthrough=5        # 31, and silent without -O
     -Wcast-align=strict             # 110, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
-    -Wlogical-op                    # 3, one of them a real defect
     -Wduplicated-branches           # 3
     -Wdate-time                     # 2, reproducible builds; Debian passes it
     -Walloc-zero                    # 2
