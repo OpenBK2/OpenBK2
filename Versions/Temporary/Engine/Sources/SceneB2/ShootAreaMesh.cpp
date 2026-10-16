@@ -27,62 +27,6 @@ void AppendToVector( std::vector<STriangle> &dst, const std::vector<STriangle> &
 	}
 }
 
-struct SRadianHeightFunctor : public SLinearHeightFunctor
-{
-	float GetHeight( float x ) override
-	{
-		return 4.0f * ( x + sqrt( 1.0f - x ) - 1.0f );
-	}
-
-	float GetGrid( float t ) override
-	{
-		if ( t < 0.5f )
-		{
-			return t;
-		}
-		return 1.0f - 2.0f * sqr( 1 - t );
-	}
-};
-
-struct SCircleHeightFunctor : public SLinearHeightFunctor
-{
-	float GetHeight( float x ) override
-	{
-		return 1.0f - sqr( 1.0f - sqrt( 1.0f - 4.0f * sqr( x - 0.5f ) ) );
-	}
-
-	float GetGrid( float t ) override
-	{
-		if ( t < 0.5f )
-		{
-			return 2.0f * t * t;
-		}
-		return 1.0f - 2.0f * sqr( 1 - t );
-	}
-};
-
-void CShootAreaMesh::FillGrid( std::vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func )
-{
-	grid.resize( nNumPoints );
-	const float fStep = 1.0f / ( nNumPoints - 1 );
-	for ( int i = 0; i < nNumPoints; ++i )
-	{
-		grid[i] = func.GetGrid( i * fStep );
-	}
-}
-
-void CShootAreaMesh::LinearTransform( std::vector<float> &output,
-                                      const std::vector<float> &input,
-                                      float fMin,
-                                      float fMax )
-{
-	output.resize( input.size() );
-	for ( int i = 0; i < input.size(); ++i )
-	{
-		output[i] = fMin + input[i] * ( fMax - fMin );
-	}
-}
-
 void CShootAreaMesh::Recalc()
 {
 	if ( pValue == 0 )
@@ -244,64 +188,6 @@ void CShootAreaMesh::FillVertexData( NGScene::SVertex &vertex )
 	CalcCompactVector( &( vertex.normal ), CVec3( 0, 0, 1 ) );
 	CalcCompactVector( &( vertex.texU ), CVec3( 0, 0, 0 ) );
 	CalcCompactVector( &( vertex.texV ), CVec3( 0, 0, 0 ) );
-}
-
-void CShootAreaMesh::BuildSector( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris )
-{
-	const float fHeightCoeff = 10.0f;
-
-	const int nNumRadians = 10;
-	std::vector<float> radians;
-	std::vector<float> transformedRadians;
-	SRadianHeightFunctor radianFunctor;
-	FillGrid( radians, nNumRadians, radianFunctor );
-	LinearTransform( transformedRadians, radians, fStartAngle, fEndAngle );
-	const int nNumCircles = 10;
-	std::vector<float> circles;
-	std::vector<float> transformedCircles;
-	SCircleHeightFunctor circleFunctor;
-	FillGrid( circles, nNumCircles, circleFunctor );
-	LinearTransform( transformedCircles, circles, fMinRadius, fMaxRadius );
-
-	const float nVertex = nNumRadians * nNumCircles;
-	verts.resize( nVertex );
-	for ( int i = 0; i < nNumRadians; ++i )
-	{
-		const float fRadianX = NMath::Cos( transformedRadians[i] );
-		const float fRadianY = NMath::Sin( transformedRadians[i] );
-		const float fRadianHeight = radianFunctor.GetHeight( radians[i] );
-		for ( int j = 0; j < nNumCircles; ++i )
-		{
-			const float fCircle = transformedCircles[j];
-			const float fCircleHeight = circleFunctor.GetHeight( circles[i] );
-			NGScene::SVertex &vert = verts[i * nNumCircles + j];
-			vert.pos.Set( fRadianX, fRadianY, fRadianHeight * fCircleHeight * fHeightCoeff );
-			pTransform->GetValue().backward.RotateHVector( &vert.pos, vert.pos );
-
-			vert.tex.Set( 0, 0 );
-			CalcCompactVector( &( vert.normal ), CVec3( 0, 0, 1 ) );
-			CalcCompactVector( &( vert.texU ), CVec3( 0, 0, 0 ) );
-			CalcCompactVector( &( vert.texV ), CVec3( 0, 0, 0 ) );
-		}
-	}
-
-	const int nTriangles = ( nNumRadians - 1 ) * ( nNumCircles - 1 ) * 2;
-	tris.resize( nTriangles );
-	for ( int i = 0; i < nNumRadians - 1; ++i )
-	{
-		for ( int j = 0; j < nNumCircles - 1; ++j )
-		{
-			int nIndex = ( i * nNumCircles + j ) * 2;
-			STriangle &triangle1 = tris[nIndex];
-			STriangle &triangle2 = tris[nIndex + 1];
-			triangle1.i1 = i * nNumCircles + j;
-			triangle1.i2 = ( i + 1 ) * nNumCircles + j + 1;
-			triangle1.i3 = i * nNumCircles + j + 1;
-			triangle2.i1 = i * nNumCircles + j;
-			triangle2.i2 = ( i + 1 ) * nNumCircles + j;
-			triangle2.i3 = ( i + 1 ) * nNumCircles + j + 1;
-		}
-	}
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101554C0, CShootAreaMesh )

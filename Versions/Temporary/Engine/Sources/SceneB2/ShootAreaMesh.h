@@ -2,12 +2,6 @@
 
 #include "TerrainManager.h"
 
-struct SLinearHeightFunctor
-{
-	virtual float GetHeight( float x ) = 0;
-	virtual float GetGrid( float t ) = 0;
-};
-
 class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	OBJECT_BASIC_METHODS( CShootAreaMesh )
@@ -21,11 +15,8 @@ class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fWidth;
 
 	CVec2 GetCenter();
-	static void FillGrid( std::vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func );
-	static void LinearTransform( std::vector<float> &output, const std::vector<float> &input, float fMin, float fMax );
 	void BuildCircle( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadius );
 	void BuildLine( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadiant );
-	void BuildSector( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris );
 	static void FillVertexData( NGScene::SVertex &vertex );
 
 protected:
