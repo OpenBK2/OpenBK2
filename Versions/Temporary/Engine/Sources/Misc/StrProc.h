@@ -328,11 +328,6 @@ inline double ToDouble( const std::string &szString )
 }
 
 // является ли строка представлением числа
-inline bool IsBinDigit( const char cChar )
-{
-	return ( ( cChar == '0' ) && ( cChar == '1' ) );
-}
-
 inline bool IsOctDigit( const char cChar )
 {
 	return ( ( cChar >= '0' ) && ( cChar <= '7' ) );
