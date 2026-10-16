@@ -454,13 +454,18 @@ IClientUpdatableProcess *CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
                                                         struct IClientAckManager *pAckManager,
                                                         NDb::ESeason eSeason )
 {
+	// The break that stood at the end of this body made the loop run once, so the
+	// running total only ever held the first weapon's ammo; clang's
+	// -Wunreachable-code-loop-increment reported the increment as unreachable.
+	// Create, higher up this file, sums gun.nAmmo over every slot into the same
+	// member with the same zero-and-add-up shape, so a building showed its total
+	// ammo until the first stats update arrived and then dropped to one weapon's.
 	nCurrentAmmo = 0;
 	for ( std::vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end();
 	      ++it )
 	{
 		const SAINotifyRPGStats::SWeaponAmmo &updateAmmo = *it;
 		nCurrentAmmo += updateAmmo.nAmmo;
-		break;
 	}
 
 	fBuildingHP = stats.fHitPoints;
