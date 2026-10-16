@@ -273,6 +273,52 @@ public:
 // placement new, and needs no vptr. Reading after the destructor is deliberate:
 // the destructor can drop references to this object, and those decrements have
 // to be carried over.
+//
+// That read is still undefined behaviour, and the suppression below is a parking
+// space, not a defence. The object's lifetime ended at ~classname(), so the
+// compiler is entitled to do anything at all with those two loads; the menu
+// teardown crash above was one outcome and a wrong refcount, which in a lockstep
+// build means an ASYNC, is another. GCC is the only compiler that reports it: it
+// merges the two adjacent int loads into one 8-byte vector load, which is where
+// "((__vector(2) int*)this)[1] is used uninitialized" comes from. clang does not
+// report it at all, which is not the same as it being safe.
+//
+// The clean fix is to stop ending the lifetime, because CObjectBase is already
+// built for it. operator= deliberately leaves both counts alone and copies only
+// the valid flag, which is exactly the invariant this code rebuilds by hand, and
+// the comment on DestroyContents calls destructor-plus-constructor merely "easy
+// to implement" rather than required. So the whole body wants to collapse to:
+//
+//     void DestroyContents() override { *this = classname(); }
+//
+// no lifetime ends, no placement new, no vptr to read, and the destructor's
+// decrements land on live counts so nothing needs carrying over.
+//
+// Not done here because it is not a one-liner at this scale:
+//   - 897 classes use OBJECT_BASIC_METHODS and 709 use OBJECT_NOCOPY_METHODS.
+//     The nocopy half is not assignable by definition and needs a different
+//     answer, and that is the half the second suppression below sits in.
+//   - MakeCopy proves these classes are copy-constructible, not copy-assignable;
+//     any const or reference member breaks the assignment form.
+//   - It changes the valid flag. The release path sets nObjData |= 0x80000000
+//     before calling here, and the current code restores it because nHoldObjs
+//     carries that bit. CopyValidFlag would instead copy the flag from the fresh
+//     temporary, which is valid, so a dying object would come back marked live.
+// Reviving this needs the refcount tests and a teardown pass, not just a build.
+#if defined( __GNUC__ )
+// _Pragma is standard C++11 ([cpp.pragma.op]) and is the only way to emit a
+// pragma from a macro body; the GCC diagnostic payload is the extension. clang
+// defines __GNUC__ and understands this spelling. MSVC is excluded on purpose:
+// an unrecognised pragma there is C4068 at warning level 1, once per expansion
+// over 1606 classes, and nothing in this tree sets /Zc:preprocessor so _Pragma
+// itself may not be available in the preprocessor mode it builds with.
+#define OBJECT_DEAD_REFCOUNT_READ_PUSH \
+	_Pragma( "GCC diagnostic push" ) _Pragma( "GCC diagnostic ignored \"-Wuninitialized\"" )
+#define OBJECT_DEAD_REFCOUNT_READ_POP _Pragma( "GCC diagnostic pop" )
+#else
+#define OBJECT_DEAD_REFCOUNT_READ_PUSH
+#define OBJECT_DEAD_REFCOUNT_READ_POP
+#endif
 #define OBJECT_BASIC_METHODS( classname )                           \
 public:                                                             \
 	static CObjectBase *New##classname()                              \
@@ -297,7 +343,9 @@ protected:                                                          \
 	{                                                                 \
 		int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; \
 		this->classname::~classname();                                  \
+		OBJECT_DEAD_REFCOUNT_READ_PUSH                                  \
 		int nHoldRefs = *pnRefData, nHoldObjs = *pnObjData;             \
+		OBJECT_DEAD_REFCOUNT_READ_POP                                   \
 		new ( this ) classname();                                       \
 		this->nRefData += nHoldRefs;                                    \
 		this->nObjData += nHoldObjs;                                    \
@@ -321,7 +369,9 @@ protected:                                                          \
 	{                                                                 \
 		int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; \
 		this->classname::~classname();                                  \
+		OBJECT_DEAD_REFCOUNT_READ_PUSH                                  \
 		int nHoldRefs = *pnRefData, nHoldObjs = *pnObjData;             \
+		OBJECT_DEAD_REFCOUNT_READ_POP                                   \
 		new ( this ) classname();                                       \
 		this->nRefData += nHoldRefs;                                    \
 		this->nObjData += nHoldObjs;                                    \

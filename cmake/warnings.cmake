@@ -91,6 +91,21 @@ set(OBK2_WARNINGS_GCC
     -Wstrict-null-sentinel
     -Wconditionally-supported
     -Wstringop-overflow=4       # only fires with -O, see the codegen sweep mode
+    # Cleared 2026-10-16 and promoted out of the strict list. Was 6 sites: four
+    # hand-rolled float puns, now routed through a bit_cast that no longer lies
+    # (Misc/Tools.h), and Lua's luaG_symbexec indexing code[] with an
+    # uninitialised stack slot. The remaining two are the refcount rescue in
+    # System/Basic.h's object macros, suppressed at the two expansion sites with
+    # the reasoning written out there; that is parked UB, not a clean bill.
+    # Only fires with -O, so a syntax-only sweep reports it as zero.
+    -Wuninitialized
+    # -Wuninitialized turns -Wmaybe-uninitialized on with it, which is 19 sites
+    # nobody has read, so gating the definite class alone has to say so out loud.
+    # Same shape as -Wformat dragging in -Wnonnull: a flag's cost includes what
+    # it switches on, and this one broke the first gated build after the promote.
+    # OBK2_WARNINGS_STRICT appends after this list, so the -Wmaybe-uninitialized
+    # in OBK2_WARNINGS_STRICT_GCC still wins when the strict level is on.
+    -Wno-maybe-uninitialized
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -104,6 +119,10 @@ set(OBK2_WARNINGS_CLANG
     -Wformat-type-confusion
     -Wvla
     -Wassign-enum
+    # Cleared 2026-10-16: was 2, both the same uninitialised diplomacy range in
+    # the one CUnitsIter variant that had been missed. GCC has no equivalent at
+    # any level, so this is the only compiler that guards the class.
+    -Wsometimes-uninitialized
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -138,8 +157,7 @@ set(OBK2_WARNINGS_STRICT_GCC
     ${OBK2_WARNINGS_STRICT_COMMON}
     -Wno-reorder
     # Tier 2: tens of sites each, high signal. Counts as of 2026-10-15.
-    -Wuninitialized                 # 6, and the class that caused an ASYNC
-    -Wmaybe-uninitialized           # 20
+    -Wmaybe-uninitialized           # 19
     -Wstrict-aliasing=3             # 12, the class that miscompiled the DXT decoder
     -Wnon-virtual-dtor              # 198
     -Wimplicit-fallthrough=5        # 31, and silent without -O
@@ -165,7 +183,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     # first one found a live defect in simulation code: AILogic/Artillery.cpp
     # advances its loop index twice and skips every second turret.
     -Wfor-loop-analysis             # 3
-    -Wsometimes-uninitialized       # 2
     -Wconditional-uninitialized     # 6
     -Wbitwise-instead-of-logical    # 23, some deliberate; read before fixing
     -Wtautological-overlap-compare  # 1
