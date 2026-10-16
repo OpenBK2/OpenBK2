@@ -182,7 +182,15 @@ bool CMOBuilding::Create( const int nUniqueID,
 	SetStats( pStats );
 	if ( pStats )
 	{
-		bStorage = pStats->etype == NDb::TYPE_MAIN_RU_STORAGE || pStats->etype == NDb::TYPE_MAIN_RU_STORAGE;
+		// The second test was TYPE_MAIN_RU_STORAGE again, so a temporary storage
+		// never set this; GCC's -Wlogical-op reported the duplicated operand.
+		// AILogic defines storage as "etype is MAIN or TEMP, or the bonus system
+		// says so" (StaticObjects.cpp), and the two writers of bStorage are meant
+		// to reproduce that: this line covers the etype half and
+		// AIUpdateKeyObject covers theBonusSystem::IsStorage. With TEMP missing
+		// here the client disagreed with the simulation, which registers
+		// temporary storages and sends transports to them.
+		bStorage = pStats->etype == NDb::TYPE_MAIN_RU_STORAGE || pStats->etype == NDb::TYPE_TEMP_RU_STORAGE;
 	}
 
 	if ( !bInEditor )

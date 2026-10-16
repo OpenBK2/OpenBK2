@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Temporary resource storages can now be filled manually. The "fill resources" order and the infinite-supplies reading in the unit info panel were only offered on main storages, because the client tested the main-storage type twice instead of testing the temporary one. The simulation always counted both, registering temporary storages and routing transports to them, so only the player's ability to order a fill was missing.
+
 - Fixed a desync (ASYNC) in multiplayer and replays when the AI launched free air reconnaissance: the scouting waypoints were shuffled with a per-process random generator, so each client sent its scouts in a different order. They are shuffled again with the shared seeded generator, as before the port, which restores the original AI behavior. Replays recorded before this change that contain AI air scouting will no longer verify.
 
 - Fixed the editor crash when loading or assigning `ExtendedStats`, and failure to create new records: its resource type ID collided with the helicopter simulation type. The regenerated schema and updated binaries must be used together.
