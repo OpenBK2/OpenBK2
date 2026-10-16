@@ -591,7 +591,12 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file,
 			}
 			const fastgltf::Accessor &positionAccessor = file->asset.accessors[position->accessorIndex];
 
-			for ( const fastgltf::math::fvec3 &source :
+			// By value, not by const reference: iterateAccessor's iterator decodes
+			// and returns a vector per step, so the reference bound a temporary and
+			// avoided no copy. Well defined, since that extends the temporary's
+			// lifetime to the end of the iteration, but it reads as though a copy
+			// were being saved. clang's -Wrange-loop-bind-reference asks for this.
+			for ( const fastgltf::math::fvec3 source :
 			      fastgltf::iterateAccessor<fastgltf::math::fvec3>( file->asset, positionAccessor ) )
 			{
 				CVec3 point = ConvertPosition( source );
@@ -911,7 +916,9 @@ bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pR
 	{
 		const fastgltf::Accessor &accessor = file->asset.accessors[*skin.inverseBindMatrices];
 		std::size_t index = 0;
-		for ( const fastgltf::math::fmat4x4 &matrix :
+		// By value for the same reason as the position loop above: the accessor
+		// hands back a decoded matrix each step, so there is no copy to avoid.
+		for ( const fastgltf::math::fmat4x4 matrix :
 		      fastgltf::iterateAccessor<fastgltf::math::fmat4x4>( file->asset, accessor ) )
 		{
 			if ( index >= pResult->inverseBindMatrices.size() )
