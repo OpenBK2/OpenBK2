@@ -2483,15 +2483,20 @@ void CUpdatableWorld::ProcessUpdate( const SClientUpdateSingleUnitUpdate *pUpdat
 
 void CUpdatableWorld::ProcessUpdate( const SChatMessageUpdate *pUpdate )
 {
-	if ( !pUpdate->bAnotherChat )
-	{
-		WriteToPipe( PIPE_CHAT, pUpdate->wszMessage, pUpdate->dwColor );
-	}
-	else
-	{
-		WriteToPipe( PIPE_CHAT, pUpdate->wszMessage, pUpdate->dwColor );
-		// TODO: Здесь нужно реализовать вывод текста в центре экрана
-	}
+	// bAnotherChat asks for the message in the centre of the screen instead of on
+	// the chat line, and that was never written: both arms of the test wrote the
+	// same message to PIPE_CHAT with the same colour, which is what GCC's
+	// -Wduplicated-branches reports. Written once, so behaviour is unchanged and
+	// the test no longer pretends to decide something.
+	//
+	// Nothing in the tree constructs an SChatMessageUpdate either, so no message
+	// reaches here at all today and bAnotherChat has no writer. The struct keeps
+	// its REGISTER_SAVELOAD_CLASS chunk id regardless, because that id is an
+	// on-disk identifier that older saves and replays may contain.
+	//
+	// TODO: Здесь нужно реализовать вывод текста в центре экрана, когда
+	// установлен bAnotherChat
+	WriteToPipe( PIPE_CHAT, pUpdate->wszMessage, pUpdate->dwColor );
 }
 
 void CUpdatableWorld::ProcessUpdate( const SWinLoseUpdate *pUpdate )
