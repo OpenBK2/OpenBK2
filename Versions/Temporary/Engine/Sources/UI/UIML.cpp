@@ -616,7 +616,8 @@ class CMLLayout : public IMLLayout
 private:
 	struct SCmdPair
 	{
-		ECommand eCmd;
+		// Defensive member default; explicit constructor values still take precedence.
+		ECommand eCmd = CMD_NULL;
 		CPtr<IMLObject> pObject;
 
 		SCmdPair() {}

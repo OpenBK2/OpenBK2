@@ -657,8 +657,9 @@ public:
 		YSPLIT
 	};
 
-	int nXSize, nYSize; // log2 of dimension, nXSize >= nYSize
-	int nShiftX, nShiftY;
+	// Defensive member defaults; explicit constructor values still take precedence.
+	int nXSize = 0, nYSize = 0; // log2 of dimension, nXSize >= nYSize
+	int nShiftX = 0, nShiftY = 0;
 
 	int GetHash() const
 	{
@@ -791,8 +792,9 @@ public:
 		NONE
 	};
 
-	int nSize;
-	int nShift;
+	// Defensive member defaults; explicit constructor values still take precedence.
+	int nSize = 0;
+	int nShift = 0;
 
 	int GetHash() const
 	{

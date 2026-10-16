@@ -51,7 +51,11 @@ const int PF_MAX_PARTS_PER_COMBINER = N_BLOCKS_IN_PART_FLAGS * 32;
 
 class CPartFlags
 {
-	int flags[N_BLOCKS_IN_PART_FLAGS];
+	// Zeroed by default, which is what Clear() means. Without it a
+	// default-constructed SRenderPartSet carried indeterminate part masks into
+	// the render walk, which GCC reported as a maybe-uninitialized read of
+	// SRenderPartSet::opaque.
+	int flags[N_BLOCKS_IN_PART_FLAGS] = {};
 
 	void Fill( int n )
 	{

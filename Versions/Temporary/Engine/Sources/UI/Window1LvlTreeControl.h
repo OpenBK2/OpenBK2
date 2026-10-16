@@ -15,7 +15,8 @@ class CWindow1LvlTreeControl : public CWindowScrollableContainerBase, public IBu
 		CObj<CWindowMSButton> pItem;
 		typedef std::list<CObj<IWindow>> CSubItems;
 		CSubItems subitems;
-		bool bCollapsed;
+		// Defensive member default; explicit constructor values still take precedence.
+		bool bCollapsed = false;
 
 		SItem() {}
 

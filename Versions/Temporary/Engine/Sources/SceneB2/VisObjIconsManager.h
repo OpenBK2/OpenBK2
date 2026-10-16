@@ -19,28 +19,30 @@ public:
 	{
 		struct SHPBar
 		{
-			int nOffsetX;
-			int nOffsetY;
-			int fLength;
-			int nColorIndex;
-			float fValue;
-			int nColorIndex2;
-			float fValue2;
+			// Defensive member defaults; explicit constructor values still take precedence.
+			int nOffsetX = 0;
+			int nOffsetY = 0;
+			int fLength = 0;
+			int nColorIndex = 0;
+			float fValue = 0.0f;
+			int nColorIndex2 = 0;
+			float fValue2 = 0.0f;
 		};
 
-		int nID;
-		int nHPBarBaseLength;
+		// Defensive member defaults; explicit constructor values still take precedence.
+		int nID = 0;
+		int nHPBarBaseLength = 0;
 		CVec3 vPos;
-		int nScrOffsetX;
-		int nScrOffsetY;
-		float fDepth;
-		uint32_t nColor;
-		float fAddHeight;
+		int nScrOffsetX = 0;
+		int nScrOffsetY = 0;
+		float fDepth = 0.0f;
+		uint32_t nColor = 0;
+		float fAddHeight = 0.0f;
 		std::vector<int> icons;
 		std::vector<SHPBar> hpBars;
-		int nIconGroup;
-		int nIconLevelup;
-		int nIconDamagedBuilding;
+		int nIconGroup = 0;
+		int nIconLevelup = 0;
+		int nIconDamagedBuilding = 0;
 
 		//
 		SObjIcon() {}

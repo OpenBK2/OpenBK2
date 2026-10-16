@@ -28,7 +28,8 @@ public:
 
 		public:
 			CPtr<ISound> pSound;
-			bool bPeaceful;
+			// Defensive member default; explicit constructor values still take precedence.
+			bool bPeaceful = false;
 
 			SSoundInfo() {}
 

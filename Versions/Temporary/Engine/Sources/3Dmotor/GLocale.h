@@ -27,7 +27,8 @@ namespace NGScene
 struct SFont
 {
 	ZDATA
-	int nSize;
+	// Defensive member default; explicit constructor values still take precedence.
+	int nSize = 0;
 	std::string szName;
 	// Horizontal cell size in screen pixels; zero means the same as nSize.
 	// Runtime fonts rasterise both axes, preserving the original UI proportions.

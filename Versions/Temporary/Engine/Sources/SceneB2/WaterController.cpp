@@ -82,16 +82,19 @@ inline float GetFracPart( const float z )
 
 struct SAnimWaterMaterialKey
 {
-	CPtrFuncBase<NGfx::CTexture> *pTex;
-	CPtrFuncBase<NGfx::CTexture> *pSecondTex;
-	int nPriority;
-	CFuncBase<STime> *pTime;
-	bool bProjectOnTerrain;
-	int nNumFramesX;
-	int nNumFramesY;
-	bool bApplyFog;
-	bool bAddPlaced;
-	bool bDrawHorses;
+	// Defensive member defaults; explicit constructor values still take precedence.
+	// This is a lookup key compared member by member, so an indeterminate field
+	// means reusing the wrong material or missing a cached one at random.
+	CPtrFuncBase<NGfx::CTexture> *pTex = nullptr;
+	CPtrFuncBase<NGfx::CTexture> *pSecondTex = nullptr;
+	int nPriority = 0;
+	CFuncBase<STime> *pTime = nullptr;
+	bool bProjectOnTerrain = false;
+	int nNumFramesX = 0;
+	int nNumFramesY = 0;
+	bool bApplyFog = false;
+	bool bAddPlaced = false;
+	bool bDrawHorses = false;
 
 	SAnimWaterMaterialKey() {}
 
