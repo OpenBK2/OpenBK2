@@ -6,6 +6,7 @@
 #include "port/virtualkey.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
+#include "UI/test/MakeDescription.h"
 #include "UI/Window.h"
 
 #include <clocale>
@@ -74,16 +75,16 @@ protected:
 		}
 
 		// Exercise the real edit control and layout, without a graphics device.
-		font = MakeObject<NDb::SFont>( NDb::SFont::typeID );
+		font = NUITest::MakeDescription<NDb::SFont>();
 		font->szName = "System";
 		font->szFontFile = "Fonts/Files/LiberationSans-Regular.ttf";
-		texture = MakeObject<NDb::STexture>( NDb::STexture::typeID );
+		texture = NUITest::MakeDescription<NDb::STexture>();
 		texture->szDestName = "Fonts/Numeric/Texture.dds";
 		font->pTexture = texture;
 		NGScene::GetTextLocaleInfo()->AddFont( font );
 
-		CPtr<NDb::SWindowScreenShared> shared = MakeObject<NDb::SWindowScreenShared>( NDb::SWindowScreenShared::typeID );
-		CPtr<NDb::SWindowScreen> desc = MakeObject<NDb::SWindowScreen>( NDb::SWindowScreen::typeID );
+		CPtr<NDb::SWindowScreenShared> shared = NUITest::MakeDescription<NDb::SWindowScreenShared>();
+		CPtr<NDb::SWindowScreen> desc = NUITest::MakeDescription<NDb::SWindowScreen>();
 		desc->nClassTypeID = 0x11075B80;
 		desc->pShared = shared;
 		desc->bVisible = true;
@@ -108,9 +109,8 @@ protected:
 
 	void MakeEdit( NDb::ETextEntryType entryType = NDb::ETET_ALL )
 	{
-		CPtr<NDb::SWindowEditLineShared> shared =
-				MakeObject<NDb::SWindowEditLineShared>( NDb::SWindowEditLineShared::typeID );
-		CPtr<NDb::SWindowEditLine> desc = MakeObject<NDb::SWindowEditLine>( NDb::SWindowEditLine::typeID );
+		CPtr<NDb::SWindowEditLineShared> shared = NUITest::MakeDescription<NDb::SWindowEditLineShared>();
+		CPtr<NDb::SWindowEditLine> desc = NUITest::MakeDescription<NDb::SWindowEditLine>();
 		desc->nClassTypeID = 0x11075B83;
 		desc->pShared = shared;
 		desc->bVisible = true;

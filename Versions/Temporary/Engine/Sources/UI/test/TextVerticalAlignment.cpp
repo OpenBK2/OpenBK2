@@ -10,6 +10,7 @@
 #include "System/Text.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
+#include "UI/test/MakeDescription.h"
 #include "UI/UIML.h"
 #include "UI/UIVisitor.h"
 #include "UI/WindowTextView.h"
@@ -73,12 +74,12 @@ protected:
 	void AddHeaderFont()
 	{
 		// The loading advice and menu buttons use Oswald Bold, not numeric.
-		header = MakeObject<NDb::SFont>( NDb::SFont::typeID );
+		header = NUITest::MakeDescription<NDb::SFont>();
 		header->uid = boost::uuids::string_generator()( "a64c37c3-495a-4c69-8602-6117fc6ecc70" );
 		header->szName = "h2";
 		header->szFontFile = "Fonts/Files/Oswald-Variable.ttf";
 		header->nThickness = 700;
-		headerTexture = MakeObject<NDb::STexture>( NDb::STexture::typeID );
+		headerTexture = NUITest::MakeDescription<NDb::STexture>();
 		headerTexture->szDestName = "Fonts/Header2/Texture.dds";
 		header->pTexture = headerTexture;
 		NGScene::GetTextLocaleInfo()->AddFont( header );
@@ -97,11 +98,11 @@ protected:
 		ASSERT_TRUE( std::ifstream( std::string( GAME_DATA_DIR ) + "/Fonts/Files/LiberationSans-Regular.ttf" ) );
 		NSingleton::RegisterSingleton( CreateUIInitialization(), IUIInitialization::tidTypeID );
 		NVFS::SetMainVFS( NVFS::CreateWinVFS( std::string( GAME_DATA_DIR ) + "/" ) );
-		numeric = MakeObject<NDb::SFont>( NDb::SFont::typeID );
+		numeric = NUITest::MakeDescription<NDb::SFont>();
 		numeric->uid = boost::uuids::string_generator()( "da637b05-0923-47ee-b954-c2345dea71dd" );
 		numeric->szName = "numeric";
 		numeric->szFontFile = "Fonts/Files/LiberationSans-Regular.ttf";
-		texture = MakeObject<NDb::STexture>( NDb::STexture::typeID );
+		texture = NUITest::MakeDescription<NDb::STexture>();
 		texture->szDestName = "Fonts/Numeric/Texture.dds";
 		numeric->pTexture = texture;
 		NGScene::GetTextLocaleInfo()->AddFont( numeric );
@@ -147,8 +148,8 @@ protected:
 
 	IScreen *MakeScreen( bool hud )
 	{
-		CPtr<NDb::SWindowScreenShared> shared = MakeObject<NDb::SWindowScreenShared>( NDb::SWindowScreenShared::typeID );
-		CPtr<NDb::SWindowScreen> desc = MakeObject<NDb::SWindowScreen>( NDb::SWindowScreen::typeID );
+		CPtr<NDb::SWindowScreenShared> shared = NUITest::MakeDescription<NDb::SWindowScreenShared>();
+		CPtr<NDb::SWindowScreen> desc = NUITest::MakeDescription<NDb::SWindowScreen>();
 		desc->nClassTypeID = 0x11075B80;
 		desc->pShared = shared;
 		desc->bVisible = true;
@@ -166,9 +167,8 @@ protected:
 	CWindowTextView *
 	MakeLabel( float width, float height, bool resize = false, const NDb::SWindowPlacement *captionPlacement = nullptr )
 	{
-		CPtr<NDb::SWindowTextViewShared> shared =
-				MakeObject<NDb::SWindowTextViewShared>( NDb::SWindowTextViewShared::typeID );
-		CPtr<NDb::SWindowTextView> desc = MakeObject<NDb::SWindowTextView>( NDb::SWindowTextView::typeID );
+		CPtr<NDb::SWindowTextViewShared> shared = NUITest::MakeDescription<NDb::SWindowTextViewShared>();
+		CPtr<NDb::SWindowTextView> desc = NUITest::MakeDescription<NDb::SWindowTextView>();
 		desc->nClassTypeID = 0x11075B8C;
 		desc->pShared = shared;
 		desc->bVisible = true;
@@ -176,10 +176,9 @@ protected:
 		if ( captionPlacement )
 		{
 			CPtr<NDb::SForegroundTextStringShared> captionShared =
-					MakeObject<NDb::SForegroundTextStringShared>( NDb::SForegroundTextStringShared::typeID );
+					NUITest::MakeDescription<NDb::SForegroundTextStringShared>();
 			captionShared->position = *captionPlacement;
-			CPtr<NDb::SForegroundTextString> caption =
-					MakeObject<NDb::SForegroundTextString>( NDb::SForegroundTextString::typeID );
+			CPtr<NDb::SForegroundTextString> caption = NUITest::MakeDescription<NDb::SForegroundTextString>();
 			caption->pShared = captionShared;
 			desc->pTextString = caption;
 		}
@@ -196,8 +195,8 @@ protected:
 
 	CPtr<NDb::SWindowSimple> PanelDescription( float width, float height )
 	{
-		CPtr<NDb::SWindowSimpleShared> shared = MakeObject<NDb::SWindowSimpleShared>( NDb::SWindowSimpleShared::typeID );
-		CPtr<NDb::SWindowSimple> desc = MakeObject<NDb::SWindowSimple>( NDb::SWindowSimple::typeID );
+		CPtr<NDb::SWindowSimpleShared> shared = NUITest::MakeDescription<NDb::SWindowSimpleShared>();
+		CPtr<NDb::SWindowSimple> desc = NUITest::MakeDescription<NDb::SWindowSimple>();
 		desc->nClassTypeID = 0x110772C1;
 		desc->pShared = shared;
 		desc->bVisible = true;
@@ -221,11 +220,10 @@ protected:
 		border->placement.horAllign = NDb::EPA_MARGIN;
 		border->placement.verAllign = NDb::EPA_MARGIN;
 		CPtr<NDb::SWindowScrollableContainerShared> shared =
-				MakeObject<NDb::SWindowScrollableContainerShared>( NDb::SWindowScrollableContainerShared::typeID );
+				NUITest::MakeDescription<NDb::SWindowScrollableContainerShared>();
 		shared->placement = border->placement;
 		shared->pBorder = border;
-		CPtr<NDb::SWindowScrollableContainer> desc =
-				MakeObject<NDb::SWindowScrollableContainer>( NDb::SWindowScrollableContainer::typeID );
+		CPtr<NDb::SWindowScrollableContainer> desc = NUITest::MakeDescription<NDb::SWindowScrollableContainer>();
 		desc->nClassTypeID = 0x170AF301;
 		desc->pShared = shared;
 		desc->bVisible = true;

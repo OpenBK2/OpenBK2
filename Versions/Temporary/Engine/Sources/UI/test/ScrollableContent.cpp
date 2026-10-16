@@ -1,5 +1,6 @@
 #include "UI/stdafx.h"
 
+#include "UI/test/MakeDescription.h"
 #include "UI/Window.h"
 
 #include <gtest/gtest.h>
@@ -18,9 +19,9 @@ void SetPlacement( NDb::SWindowPlacement *placement, float width, float height )
 
 CPtr<NDb::SWindowSimple> SimpleDescription( float width, float height )
 {
-	CPtr<NDb::SWindowSimpleShared> shared = MakeObject<NDb::SWindowSimpleShared>( NDb::SWindowSimpleShared::typeID );
+	CPtr<NDb::SWindowSimpleShared> shared = NUITest::MakeDescription<NDb::SWindowSimpleShared>();
 	SetPlacement( &shared->placement, width, height );
-	CPtr<NDb::SWindowSimple> desc = MakeObject<NDb::SWindowSimple>( NDb::SWindowSimple::typeID );
+	CPtr<NDb::SWindowSimple> desc = NUITest::MakeDescription<NDb::SWindowSimple>();
 	desc->nClassTypeID = 0x110772C1; // CWindowSimple, as in the shipped UI descriptors.
 	desc->pShared = shared;
 	desc->bVisible = true;
@@ -34,11 +35,10 @@ CWindow *MakeScrollWindow( float width, float height )
 	border->placement.horAllign = NDb::EPA_MARGIN;
 	border->placement.verAllign = NDb::EPA_MARGIN;
 	CPtr<NDb::SWindowScrollableContainerShared> shared =
-			MakeObject<NDb::SWindowScrollableContainerShared>( NDb::SWindowScrollableContainerShared::typeID );
+			NUITest::MakeDescription<NDb::SWindowScrollableContainerShared>();
 	SetPlacement( &shared->placement, width, height );
 	shared->pBorder = border;
-	CPtr<NDb::SWindowScrollableContainer> desc =
-			MakeObject<NDb::SWindowScrollableContainer>( NDb::SWindowScrollableContainer::typeID );
+	CPtr<NDb::SWindowScrollableContainer> desc = NUITest::MakeDescription<NDb::SWindowScrollableContainer>();
 	desc->nClassTypeID = 0x170AF301; // CWindowScrollableContainer.
 	desc->pShared = shared;
 	desc->bVisible = true;

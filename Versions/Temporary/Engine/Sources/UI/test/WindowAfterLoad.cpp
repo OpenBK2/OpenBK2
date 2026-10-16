@@ -1,5 +1,6 @@
 #include "UI/stdafx.h"
 
+#include "UI/test/MakeDescription.h"
 #include "UI/Window.h"
 
 #include <gtest/gtest.h>
@@ -119,7 +120,7 @@ public:
 class CAfterLoadChild : public CWindow
 {
 	OBJECT_NOCOPY_METHODS( CAfterLoadChild );
-	CPtr<NDb::SWindowSimple> instance = MakeObject<NDb::SWindowSimple>( NDb::SWindowSimple::typeID );
+	CPtr<NDb::SWindowSimple> instance = NUITest::MakeDescription<NDb::SWindowSimple>();
 
 	NDb::SWindow *GetInstance() override
 	{
@@ -167,7 +168,7 @@ protected:
 
 TEST_F( WindowAfterLoad, EmptySavedStatesStillRestoreChildren )
 {
-	CPtr<NDb::SWindowMSButton> instance = MakeObject<NDb::SWindowMSButton>( NDb::SWindowMSButton::typeID );
+	CPtr<NDb::SWindowMSButton> instance = NUITest::MakeDescription<NDb::SWindowMSButton>();
 	instance->nState = 0;
 	instance->buttonStates.resize( 1 );
 	// A rejected logical/visual state count mismatch leaves exactly this saved
@@ -183,7 +184,7 @@ TEST_F( WindowAfterLoad, EmptySavedStatesStillRestoreChildren )
 
 TEST_F( WindowAfterLoad, ValidSavedSubstateIsRetained )
 {
-	CPtr<NDb::SWindowMSButton> instance = MakeObject<NDb::SWindowMSButton>( NDb::SWindowMSButton::typeID );
+	CPtr<NDb::SWindowMSButton> instance = NUITest::MakeDescription<NDb::SWindowMSButton>();
 	instance->nState = 1;
 	const std::vector<NDb::EButtonSubstateType> saved = { NDb::BST_MOUSE_OVER, NDb::BST_PUSHED_DEEP };
 	CButtonStateSaver reader( true, instance, saved );
