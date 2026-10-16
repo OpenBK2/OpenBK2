@@ -340,34 +340,47 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 		std::vector<CMOSelectable *> selection;
 		pSelector->GetSelection( &selection );
 
-		// Iterate thourgh all selected units and apply the unload command
-		for ( std::vector<CMOSelectable *>::iterator it = selection.begin(); it != selection.end(); ++it )
+		// One container, not the whole selection. This was a loop whose every path
+		// returned, so it always stopped after the first element and clang's
+		// -Wunreachable-code-loop-increment reported the increment as unreachable;
+		// the comment that stood here claimed it applied the command to all
+		// selected units, which it never did and must not.
+		//
+		// nIndex addresses the passengers of one specific container, and both
+		// callers guarantee that. CSelector turns unload mode on only when
+		// objList.size() == 1, which is what gates OnSelectSlot, and the
+		// "unload_unit" event carries an index into CMissionUnitFullInfo's member
+		// list, which MakeMembers builds from the single pBaseMO. Applying that
+		// index to any other selected container would unload an unrelated
+		// passenger.
+		if ( selection.empty() )
 		{
-			IMOContainer *pContainer = checked_cast<IMOContainer *>( *it );
-
-			std::vector<CMOSelectable *> passangers;
-			pContainer->GetPassangers( &passangers );
-			if ( nIndex < 0 || nIndex >= passangers.size() )
-			{
-				return false;
-			}
-
-			const int nUnitIndex = passangers[nIndex]->GetID();
-
-			std::vector<int> group;
-			group.push_back( pContainer->GetID() );
-
-			const int groupID = pCommandsSender->CommandRegisterGroup( group );
-
-			SAIUnitCmd command( ACTION_COMMAND_UNLOAD );
-			command.nObjectID = nUnitIndex;
-			command.fNumber = float( (int)ALP_POSITION_INVALID );
-			command.vPos = CVec2( 300.0f, 300.0f );
-			pCommandsSender->CommandGroupCommand( &command, groupID, GetPlaceInQueue(), ML_COMMAND_SAVE_GAME );
-			pCommandsSender->CommandUnregisterGroup( groupID );
-			return true;
+			return false;
 		}
-		return false;
+
+		IMOContainer *pContainer = checked_cast<IMOContainer *>( selection.front() );
+
+		std::vector<CMOSelectable *> passangers;
+		pContainer->GetPassangers( &passangers );
+		if ( nIndex < 0 || nIndex >= passangers.size() )
+		{
+			return false;
+		}
+
+		const int nUnitIndex = passangers[nIndex]->GetID();
+
+		std::vector<int> group;
+		group.push_back( pContainer->GetID() );
+
+		const int groupID = pCommandsSender->CommandRegisterGroup( group );
+
+		SAIUnitCmd command( ACTION_COMMAND_UNLOAD );
+		command.nObjectID = nUnitIndex;
+		command.fNumber = float( (int)ALP_POSITION_INVALID );
+		command.vPos = CVec2( 300.0f, 300.0f );
+		pCommandsSender->CommandGroupCommand( &command, groupID, GetPlaceInQueue(), ML_COMMAND_SAVE_GAME );
+		pCommandsSender->CommandUnregisterGroup( groupID );
+		return true;
 	}
 }
 
