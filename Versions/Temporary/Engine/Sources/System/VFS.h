@@ -20,8 +20,8 @@ struct SFileStats
 	int nSize = 0;
 	//! права доступа (на чтение (1) или на запись (2))
 	uint32_t dwAccess = 0;
-	//! modification time, packed as in FileTime.h so that a file on disk and
-	//! an entry in an archive can be compared directly
+	//! modification time in the UTC comparison convention documented in FileTime.h,
+	//! shared by loose files and the timezone-less DOS fields in archives
 	SWin32Time mtime;
 };
 
