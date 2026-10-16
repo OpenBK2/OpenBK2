@@ -114,6 +114,14 @@ set(OBK2_WARNINGS_GCC
     # main-storage type twice instead of the temporary one, which had kept the
     # client's idea of a storage out of step with AILogic's.
     -Wlogical-op
+    # Cleared 2026-10-16. Was 3, and none of them was a typo to correct: two in
+    # CFormationEngineer's reload animations where the "a mortar crew passes the
+    # shell sitting" test had the same action on both arms, and one in
+    # CUpdatableWorld's chat handler where the centre-of-screen variant was
+    # never implemented and its TODO still says so. Both collapsed to the single
+    # action with the open question recorded at the site, so behaviour is
+    # unchanged. -Wduplicated-cond is in the default list above already.
+    -Wduplicated-branches
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -194,7 +202,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     -Wimplicit-fallthrough=5        # 31, and silent without -O
     -Wcast-align=strict             # 110, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
-    -Wduplicated-branches           # 3
     -Wdate-time                     # 2, reproducible builds; Debian passes it
     -Walloc-zero                    # 2
     -Warray-bounds=2                # 1
