@@ -189,6 +189,17 @@ uint16_t CMapSounds::AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc *
 	{
 		return 0;
 	}
+	// Everything below assumes a live descriptor: registeredSounds is keyed by
+	// CDBPtr, whose hash tests the pointer against null, and bLooped is read
+	// straight off pStats. GCC used that null test to prove a path and reported
+	// the ToT2 lookup as a definite null dereference. Every caller of
+	// AddSoundToMap already checks the descriptor, so this only states the
+	// contract, and 0 is the same "no sound added" answer the bounds checks above
+	// return.
+	if ( pStats == 0 )
+	{
+		return 0;
+	}
 	// зарегистрировать звук
 	if ( !registeredSounds.IsPresent( pStats ) )
 	{
