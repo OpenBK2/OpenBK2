@@ -137,6 +137,16 @@ set(OBK2_WARNINGS_CLANG
     # over the selection could only ever address one container. GCC has no
     # equivalent, so clang is the only compiler guarding this.
     -Wunreachable-code-loop-increment
+    # Cleared 2026-10-16. Was 3: CArtillery's install check incremented its
+    # turret index twice and so walked only the even ones, which is a real
+    # simulation defect and the only one of the three that was live, plus two
+    # unused functions whose loops tested or incremented the wrong variable and
+    # were deleted rather than repaired.
+    #
+    # Not -Wloop-analysis, the umbrella: that also pulls in
+    # -Wrange-loop-bind-reference, which still has 2 sites in 3Dmotor's glTF
+    # import where a loop variable binds a reference to a fastgltf temporary.
+    -Wfor-loop-analysis
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -194,7 +204,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     # The classes clang finds and GCC has no equivalent for at any level. The
     # first one found a live defect in simulation code: AILogic/Artillery.cpp
     # advances its loop index twice and skips every second turret.
-    -Wfor-loop-analysis             # 3
     -Wconditional-uninitialized     # 6
     -Wbitwise-instead-of-logical    # 23, some deliberate; read before fixing
     -Wtautological-overlap-compare  # 1
