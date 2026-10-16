@@ -131,6 +131,12 @@ set(OBK2_WARNINGS_CLANG
     # the one CUnitsIter variant that had been missed. GCC has no equivalent at
     # any level, so this is the only compiler that guards the class.
     -Wsometimes-uninitialized
+    # Cleared 2026-10-16. Was 3, and each was a different thing: CMOBuilding's
+    # ammo total broke out of its own summation, CWorldClient's camera anchor
+    # accumulated positions it never divided, and ActionLeaveOneSquad's loop
+    # over the selection could only ever address one container. GCC has no
+    # equivalent, so clang is the only compiler guarding this.
+    -Wunreachable-code-loop-increment
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -192,7 +198,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     -Wconditional-uninitialized     # 6
     -Wbitwise-instead-of-logical    # 23, some deliberate; read before fixing
     -Wtautological-overlap-compare  # 1
-    -Wunreachable-code-loop-increment  # 3
     -Wheader-hygiene                # 9, `using namespace` in a header
     -Wenum-enum-conversion          # 9, includes the EFC_/EFUT_ mix-up
     -Wnon-virtual-dtor              # 90
