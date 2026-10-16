@@ -552,8 +552,14 @@ static void GetBackBufferSize()
 	{
 		return; // Desktop resizing must not overwrite the chosen game resolution.
 	}
+	// GetClientRect returns BOOL and leaves the RECT untouched when it fails, so
+	// ignoring it meant sizing the back buffer from an indeterminate rectangle.
+	// GCC reported windowPos.right and .bottom as maybe-uninitialized reads.
 	RECT windowPos;
-	GetClientRect( pp.hDeviceWindow, &windowPos );
+	if ( !GetClientRect( pp.hDeviceWindow, &windowPos ) )
+	{
+		return; // Keep the resolution we already have rather than invent one.
+	}
 	pp.BackBufferWidth = windowPos.right;
 	pp.BackBufferHeight = windowPos.bottom;
 }
@@ -564,8 +570,14 @@ void CheckBackBufferSize()
 	{
 		return; // PresentWindow resizes only the presentation swap chain.
 	}
+	// Same unchecked GetClientRect as in GetBackBufferSize. The zero test below
+	// does not stand in for it: on failure the rectangle is indeterminate, so
+	// that test reads uninitialised memory to decide whether to trust it.
 	RECT windowPos;
-	GetClientRect( pp.hDeviceWindow, &windowPos );
+	if ( !GetClientRect( pp.hDeviceWindow, &windowPos ) )
+	{
+		return;
+	}
 
 	if ( !IsWindowVisible( pp.hDeviceWindow ) )
 	{
