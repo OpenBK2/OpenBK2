@@ -224,6 +224,15 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const std::string &szTypeName )
 
 	CDynamicCast<CTypeDefNode> pTypeDefNode = pRawType;
 	CTypeNode *pRealType = pTypeDefNode ? pTypeDefNode->GetReferencedType( true ) : pType.GetPtr();
+	// GetReferencedType( true ) returns 0 when the typedef chain ends in an
+	// unresolved reference, and the pRealType->IsForward() below sits in the else
+	// branch of a dynamic cast, so a null walked straight into it and GCC
+	// reported IsForward as a definite null dereference. Reject it here, the way
+	// the two checks above reject an unknown name and a wrongly typed one.
+	VERIFY( pRealType != 0,
+	        fmt::format(
+							"unresolved type ({}) of variable, see {}({})", szTypeName, pRawType->GetFile(), pRawType->GetLine() ),
+	        return );
 
 	std::list<CPtr<CVariable>> &varList = pVarListNode->GetNodes();
 	for ( std::list<CPtr<CVariable>>::iterator iter = varList.begin(); iter != varList.end(); ++iter )
