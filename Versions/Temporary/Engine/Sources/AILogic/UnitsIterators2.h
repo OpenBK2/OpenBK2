@@ -361,7 +361,18 @@ public:
 			cMechs = 2;
 		}
 
-		uint8_t cStartDipl, cDiplomacies;
+		// Zero means an empty diplomacy range, which is what InitAll below does
+		// with cDiplomacies == 0, and it matches the same constructor in the
+		// primary template and in CUnitsIter<0, 0>. Without it the chain below
+		// leaves both unset whenever cDiplFilter is none of ANY_PARTY, EDI_FRIEND
+		// or EDI_ENEMY, and clang's -Wsometimes-uninitialized reported both as
+		// read uninitialised. EDiplomacyInfo is a bitmask (AITypes.h), so
+		// EDI_NEUTRAL and combinations such as EDI_ENEMY | EDI_FRIEND are
+		// representable and fall straight through; no caller passes one today,
+		// and this specialisation is not instantiated anywhere at all, so the
+		// read was never reachable. An uninitialised read feeding a simulation
+		// iterator is still the one class that must not be left standing.
+		uint8_t cStartDipl = 0, cDiplomacies = 0;
 		if ( cDiplFilter == ANY_PARTY )
 		{
 			cStartDipl = 0;
