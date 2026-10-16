@@ -633,8 +633,13 @@ void CArtillery::Segment()
 					GetTurret( i )->TurnVer( 16384 * 3 );
 					bCanDoInstallAction = false;
 				}
-
-				++i;
+				// A second "++i" stood here, on top of the one in the loop header,
+				// so this walked only the even-numbered turrets; clang's
+				// -Wfor-loop-analysis reports the index as incremented twice. Odd
+				// turrets were neither waited for nor told to return to their
+				// install angle, so the install action could finish with one still
+				// aimed away. Of the shipped units only BM-8-48 has two turrets,
+				// three platforms, so it is the only one that behaved differently.
 			}
 
 			if ( bCanDoInstallAction || !ShouldSendInstallAction( eCurInstallAction ) )
