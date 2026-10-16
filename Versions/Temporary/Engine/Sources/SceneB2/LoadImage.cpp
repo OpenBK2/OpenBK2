@@ -57,39 +57,6 @@ bool LoadGrayTGAImage( CDataStream *pStream, CArray2D<uint8_t> &data )
 	return true;
 }
 
-bool AppendGrayTGAImageAtBottom( CDataStream *pStream, CArray2D<uint8_t> &data, int nPosY )
-{
-	NI_ASSERT( pStream->IsOk(), "AppendGrayTGAImageAtBottom - Can't load image" );
-	//
-	STGAFileHeader hdr;
-	pStream->Read( &hdr, sizeof( hdr ) );
-	NI_ASSERT( hdr.cImageType == TGAIT_BLACK_WHITE, "Can only load grayscale TGA file" );
-	NI_ASSERT( hdr.imagespec.cPixelDepth == 8, "Can't read non-8 bit gray image" );
-	NI_ASSERT( ( hdr.imagespec.wImageWidth == data.GetSizeX() ) &&
-	               ( ( nPosY + hdr.imagespec.wImageHeight <= data.GetSizeY() ) ),
-	           "Incorrect image size or position" );
-	// skip image ID
-	if ( hdr.cIDLength != 0 )
-	{
-		pStream->Seek( pStream->GetPosition() + hdr.cIDLength );
-	}
-	//
-	const int nRequested = int( hdr.imagespec.wImageWidth ) * int( hdr.imagespec.wImageHeight );
-	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
-	{
-		for ( int i = nPosY + int( hdr.imagespec.wImageHeight ) - 1; nPosY >= 0; --i )
-		{
-			pStream->Read( &( data[i][0] ), hdr.imagespec.wImageWidth * sizeof( uint8_t ) );
-		}
-	}
-	else
-	{
-		pStream->Read( &( data[nPosY][0] ), nRequested );
-	}
-
-	return true;
-}
-
 bool SaveGrayTGAImage( CDataStream *pStream, CArray2D<uint8_t> &data )
 {
 	NI_VERIFY( pStream->IsOk(), "SaveGrayTGAImage - Can't save image", return false )
