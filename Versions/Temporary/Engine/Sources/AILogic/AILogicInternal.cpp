@@ -626,43 +626,50 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 			pProgress->Step();
 		}
 
-		if ( pMapInfo->objects[i].pObject == 0 || pMapInfo->objects[i].link.nLinkID == -1 )
+		const SMapObjectInfo &object = pMapInfo->objects[i];
+		if ( object.pObject == 0 || object.link.nLinkID == -1 )
 		{
 			continue;
 		}
+		// Resolve the record once and use the raw pointer below. Every use of the
+		// CDBPtr re-runs its lazy load and re-reads the member, and because that
+		// path calls out to NDb::GetObject the compiler cannot carry the non-null
+		// fact proved just above across it; GCC's -Wnull-dereference reported both
+		// of the static_casts below as definite null dereferences for exactly that
+		// reason. The record cannot change while a map is being loaded, so one
+		// load and one pointer is also what the code meant.
+		const NDb::SHPObjectRPGStats *const pObject = object.pObject.GetPtr();
 #ifndef _FINALRELEASE
-		if ( pMapInfo->objects[i].pObject->GetTypeID() == NDb::SMechUnitRPGStats::typeID )
+		if ( pObject->GetTypeID() == NDb::SMechUnitRPGStats::typeID )
 		{
-			const NDb::EDBUnitRPGType eUnitRPGType =
-					checked_cast_ptr<const NDb::SUnitBaseRPGStats *>( pMapInfo->objects[i].pObject )->eDBtype;
+			const NDb::EDBUnitRPGType eUnitRPGType = checked_cast<const NDb::SUnitBaseRPGStats *>( pObject )->eDBtype;
 			NI_ASSERT( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER,
 			           fmt::format( "Object {} (MechUnit \"{}\") in the map \"{}\" are treated as Infantry",
 			                        i,
-			                        NDb::GetResName( pMapInfo->objects[i].pObject ),
+			                        NDb::GetResName( pObject ),
 			                        NDb::GetResName( pMapInfo ) ) );
 			if ( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER )
 			{
 				continue;
 			}
-			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
+			if ( !theDipl.IsPlayerExist( object.nPlayer ) )
 			{
 				continue;
 			}
 		}
-		else if ( pMapInfo->objects[i].pObject->GetTypeID() == NDb::SInfantryRPGStats::typeID )
+		else if ( pObject->GetTypeID() == NDb::SInfantryRPGStats::typeID )
 		{
-			const NDb::EDBUnitRPGType eUnitRPGType =
-					checked_cast_ptr<const NDb::SUnitBaseRPGStats *>( pMapInfo->objects[i].pObject )->eDBtype;
+			const NDb::EDBUnitRPGType eUnitRPGType = checked_cast<const NDb::SUnitBaseRPGStats *>( pObject )->eDBtype;
 			NI_ASSERT( eUnitRPGType <= NDb::DB_RPG_TYPE_OFFICER,
 			           fmt::format( "Object {} (Infantry \"{}\") in the map \"{}\" are treated as MechUnit",
 			                        i,
-			                        NDb::GetResName( pMapInfo->objects[i].pObject ),
+			                        NDb::GetResName( pObject ),
 			                        NDb::GetResName( pMapInfo ) ) );
 			if ( eUnitRPGType > NDb::DB_RPG_TYPE_OFFICER )
 			{
 				continue;
 			}
-			if ( !theDipl.IsPlayerExist( pMapInfo->objects[i].nPlayer ) )
+			if ( !theDipl.IsPlayerExist( object.nPlayer ) )
 			{
 				continue;
 			}
@@ -670,28 +677,28 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 #endif
 		// DebugTrace( "mapobj %d", i );
 		// в reinforcement
-		const int nGroup = pMapInfo->reinforcements.GetGroupById( pMapInfo->objects[i].nScriptID );
+		const int nGroup = pMapInfo->reinforcements.GetGroupById( object.nScriptID );
 		if ( nGroup != -1 )
 		{
-			scripts.AddUnitToReinforcGroup( pMapInfo->objects[i], nGroup, 0 /*, 0 */ );
+			scripts.AddUnitToReinforcGroup( object, nGroup, 0 /*, 0 */ );
 		}
 		else
 		{
-			const SUnitBaseRPGStats *pStats = dynamic_cast_ptr<const SUnitBaseRPGStats *>( pMapInfo->objects[i].pObject );
+			const SUnitBaseRPGStats *pStats = dynamic_cast<const SUnitBaseRPGStats *>( pObject );
 
 			if ( !pStats || !pStats->IsTransport() )
 			{
 				const int nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 
-				CObjectBase *pObj = AddObject( nUniqueID, pMapInfo->objects[i], linksInfo, true, 0 );
+				CObjectBase *pObj = AddObject( nUniqueID, object, linksInfo, true, 0 );
 				NI_ASSERT( pObj != 0,
 				           fmt::format( "Failed to add {} object (\"{}\" : \"{}\") to map \"{}\" at ({:g}, {:g})",
 				                        i,
-				                        typeid( *pMapInfo->objects[i].pObject ).name(),
-				                        NDb::GetResName( pMapInfo->objects[i].pObject ),
+				                        typeid( *pObject ).name(),
+				                        NDb::GetResName( pObject ),
 				                        NDb::GetResName( pMapInfo ),
-				                        pMapInfo->objects[i].vPos.x,
-				                        pMapInfo->objects[i].vPos.y ) );
+				                        object.vPos.x,
+				                        object.vPos.y ) );
 			}
 			else
 			{
