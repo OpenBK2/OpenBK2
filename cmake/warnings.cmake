@@ -220,7 +220,23 @@ set(OBK2_WARNINGS_STRICT_CLANG
     # first one found a live defect in simulation code: AILogic/Artillery.cpp
     # advances its loop index twice and skips every second turret.
     -Wconditional-uninitialized     # 6
-    -Wbitwise-instead-of-logical    # 23, some deliberate; read before fixing
+    # -Wbitwise-instead-of-logical is NOT here and is not in the gated list
+    # either, because it cannot reach zero in this tree. Measured 2026-10-16 as
+    # 23 sites in two idioms, both deliberate:
+    #
+    #   15 in 3Dmotor combined CDGPtr::Refresh results with a bitwise |, so that
+    #      every pointer is refreshed rather than short-circuited. Those now go
+    #      through AnyRefreshed in System/Dg.h, which forces the same evaluation
+    #      by passing the results as arguments and says so in its name. One more,
+    #      GParts.cpp, was a bitwise & over four pure queries with nothing to
+    #      force and is now &&.
+    #   8 in AILogic write "( roll < threshold ) & RecordRandomCall()". The
+    #      record must happen whichever way the comparison came out, since it is
+    #      what records that the Random call on its left consumed a number, and
+    #      RecordRandomCall has to stay a macro so __FILE__ and __func__ name the
+    #      call site. There is no spelling of that which this flag accepts, so
+    #      the eight stay and the flag stays out. The reasoning is at the macro
+    #      in System/RandomGen.h.
     -Wtautological-overlap-compare  # 1
     -Wheader-hygiene                # 9, `using namespace` in a header
     -Wenum-enum-conversion          # 9, includes the EFC_/EFUT_ mix-up

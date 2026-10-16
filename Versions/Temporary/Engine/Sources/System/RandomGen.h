@@ -102,4 +102,20 @@ struct SRandomFunc
 const SRandomFunc &RndFunc();
 }; // namespace NRandom
 
+// Records that a simulation random call happened here. RecordCall always returns
+// true, so the value is only useful for forcing the call to happen.
+//
+// That is why AILogic writes "( roll < threshold ) & RecordRandomCall()" with a
+// single &, at eight sites. The record has to be made whichever way the
+// comparison came out, because what it records is that the NRandom::Random on
+// its left consumed a number; && would skip it on a false comparison and the
+// per-client RNG record would stop lining up, which is the one thing this
+// facility exists to check. Since RecordCall returns true the & cannot change
+// the result either.
+//
+// clang's -Wbitwise-instead-of-logical reports all eight and cannot tell them
+// from a mistyped &&, which is why that flag is not in the gated list; see
+// cmake/warnings.cmake. Do not "fix" those sites, and keep the & if you add one.
+// It has to stay a macro so __FILE__, __LINE__ and __func__ name the call site
+// rather than a wrapper.
 #define RecordRandomCall() NRandom::RecordCall( __FILE__, __LINE__, __func__ )
