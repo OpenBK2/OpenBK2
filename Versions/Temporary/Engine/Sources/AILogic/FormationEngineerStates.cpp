@@ -2300,14 +2300,19 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 							{
 								case 0:
 									animation.wDirection = wGunTurretDir;
-									if ( pStats->etype == RPG_TYPE_ART_MORTAR ) // у миномета передают патрон сидя
-									{
-										animation.eAction = ACTION_NOTIFY_USE_DOWN;
-									}
-									else
-									{
-										animation.eAction = ACTION_NOTIFY_USE_DOWN;
-									}
+									// Both arms of the "у миномета передают патрон сидя" test were
+									// ACTION_NOTIFY_USE_DOWN here, so it decided nothing; that is what
+									// GCC's -Wduplicated-branches reports. Collapsed to the single
+									// action, which keeps behaviour exactly as it was.
+									//
+									// Whether the test was meant to decide something is open. The same
+									// conditional appears four more times in this reload sequence and
+									// its non-mortar arm differs every time: ACTION_NOTIFY_IDLE for
+									// crew 2 in this phase, ACTION_NOTIFY_USE_UP for crew 1 and crew 2
+									// in the next. So USE_DOWN for crew 0 is either deliberate or a
+									// slip for USE_UP, and telling those apart needs the animations
+									// rather than the code.
+									animation.eAction = ACTION_NOTIFY_USE_DOWN;
 									break;
 								case 2:
 									animation.wDirection = wGunTurretDir;
@@ -2339,14 +2344,19 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 							{
 								case 0:
 									animation.wDirection = wGunTurretDir;
-									if ( pStats->etype == RPG_TYPE_ART_MORTAR ) // у миномета передают патрон сидя
-									{
-										animation.eAction = ACTION_NOTIFY_USE_DOWN;
-									}
-									else
-									{
-										animation.eAction = ACTION_NOTIFY_USE_DOWN;
-									}
+									// Both arms of the "у миномета передают патрон сидя" test were
+									// ACTION_NOTIFY_USE_DOWN here, so it decided nothing; that is what
+									// GCC's -Wduplicated-branches reports. Collapsed to the single
+									// action, which keeps behaviour exactly as it was.
+									//
+									// Whether the test was meant to decide something is open. The same
+									// conditional appears four more times in this reload sequence and
+									// its non-mortar arm differs every time: ACTION_NOTIFY_IDLE for
+									// crew 2 in this phase, ACTION_NOTIFY_USE_UP for crew 1 and crew 2
+									// in the next. So USE_DOWN for crew 0 is either deliberate or a
+									// slip for USE_UP, and telling those apart needs the animations
+									// rather than the code.
+									animation.eAction = ACTION_NOTIFY_USE_DOWN;
 
 									break;
 								case 2: // заряжаюший
