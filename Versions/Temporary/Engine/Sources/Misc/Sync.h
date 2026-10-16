@@ -328,12 +328,37 @@ private:
 		view[nID].resize( 0 );
 		if ( pObject )
 		{
+			// Resolve the visitor once and refuse to run without one. The visitor
+			// was passed straight to IVisitorBase::StartNewObject, which writes
+			// pStuff and pCurrentObject through it with no check, so a null was a
+			// write through a null this; GCC proved that path and reported it as a
+			// definite null dereference. It matters because this is the
+			// serialization visitor, so save games, replays and network state all
+			// come through here.
+			//
+			// How reachable it is: both live owners, CAIMapVisitor and
+			// CIconAIMapVisitor in SceneB2/SceneInternal.h, pass a real visitor to
+			// the constructor, and a default-constructed instance dies earlier at
+			// pSource->Refresh() in CSyncDst::Sync, since the default constructor
+			// leaves that null too. So a live source with a null visitor means a
+			// stream that restored chunk 2 and not chunk 3, which is a truncated
+			// or corrupt save rather than anything the game does to itself. The
+			// assert keeps saying so in a debug build, and because NI_ASSERT
+			// compiles to nothing here the early return is what actually stops the
+			// write in a release build.
+			TVisitor *const pVisitorOnce = pVisitor;
+			ASSERT( pVisitorOnce );
+			if ( pVisitorOnce == 0 )
+			{
+				return;
+			}
 			SVisitorBaseAccess access;
-			view[nID].resize( 0 );
-			access.StartNewObject( pVisitor, &view[nID], pObject );
-			pObject->Visit( pVisitor.GetPtr() );
+			// The second view[nID].resize( 0 ) that stood here was a duplicate of
+			// the one above with nothing in between, so it is gone.
+			access.StartNewObject( pVisitorOnce, &view[nID], pObject );
+			pObject->Visit( pVisitorOnce );
 			PostVisit( nID, pObject );
-			access.StartNewObject( pVisitor, 0, 0 );
+			access.StartNewObject( pVisitorOnce, 0, 0 );
 		}
 	}
 
