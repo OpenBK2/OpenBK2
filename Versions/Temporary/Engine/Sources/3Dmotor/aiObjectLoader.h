@@ -186,7 +186,7 @@ class CSkinner : public CPtrFuncBase<CGeometryInfo>
 protected:
 	bool NeedUpdate() override
 	{
-		return pAnimation.Refresh() | pSkin.Refresh();
+		return AnyRefreshed( pAnimation.Refresh(), pSkin.Refresh() );
 	}
 
 	void Recalc() override;

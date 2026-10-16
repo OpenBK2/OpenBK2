@@ -36,7 +36,10 @@ protected:
 
 	bool NeedUpdate() override
 	{
-		return pGeom.Refresh() | ( !pPlace || pPlace.Refresh() );
+		// AnyRefreshed, not ||, so pGeom is refreshed even when pPlace reports a
+		// change: see its comment in System/Dg.h. The inner || is a separate
+		// matter and stays, since an absent pPlace must not be refreshed at all.
+		return AnyRefreshed( pGeom.Refresh(), !pPlace || pPlace.Refresh() );
 	}
 
 	void Recalc() override;

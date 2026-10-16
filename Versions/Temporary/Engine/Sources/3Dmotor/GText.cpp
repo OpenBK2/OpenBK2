@@ -181,7 +181,8 @@ protected:
 	bool NeedUpdate() override
 	{
 		// A scale edit changes metrics even when the text and window are unchanged.
-		return pText.Refresh() | pSize.Refresh() | pScreenRect.Refresh() | ( fFontScale != GetRuntimeFontScale() );
+		// AnyRefreshed, not ||, so every Refresh runs: see its comment in System/Dg.h.
+		return AnyRefreshed( pText.Refresh(), pSize.Refresh(), pScreenRect.Refresh(), fFontScale != GetRuntimeFontScale() );
 	}
 
 public:

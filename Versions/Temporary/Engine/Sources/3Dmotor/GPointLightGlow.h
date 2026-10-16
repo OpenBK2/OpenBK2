@@ -19,7 +19,7 @@ class CPointGlowAnimator : public CPtrFuncBase<CParticleEffect>
 protected:
 	bool NeedUpdate() override
 	{
-		return pTime.Refresh() | pPlacement.Refresh();
+		return AnyRefreshed( pTime.Refresh(), pPlacement.Refresh() );
 	}
 
 	void Recalc() override;

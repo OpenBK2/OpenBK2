@@ -94,7 +94,7 @@ class _3DMOTOR_EXPORT CLightAnimator : public CPtrFuncBase<CAnimLight>
 protected:
 	bool NeedUpdate() override
 	{
-		return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh();
+		return AnyRefreshed( pTime.Refresh(), pInfo.Refresh(), pPlacement.Refresh() );
 	}
 
 	void Recalc() override;

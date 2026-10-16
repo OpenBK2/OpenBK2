@@ -14,7 +14,7 @@ class CRainAnimator : public CPtrFuncBase<CParticleEffect>
 protected:
 	bool NeedUpdate() override
 	{
-		return pCamera.Refresh() | pTime.Refresh();
+		return AnyRefreshed( pCamera.Refresh(), pTime.Refresh() );
 	}
 
 	void Recalc() override;

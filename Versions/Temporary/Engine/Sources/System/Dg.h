@@ -313,6 +313,33 @@ public:
 	}
 };
 
+// Refresh every pointer handed in, and say whether any of them changed.
+//
+// Every argument is evaluated before the call, and that is the whole point.
+// CDGPtr::Refresh above recomputes the node for this frame and records the
+// version it saw, so skipping one leaves its node stale and leaves it reporting
+// a change on every later frame. A NeedUpdate that short-circuited with || would
+// do exactly that.
+//
+// The idiom this replaces was a bitwise | over the Refresh results, which does
+// force both sides but which clang's -Wbitwise-instead-of-logical cannot tell
+// apart from a mistyped ||, and which the next reader cannot either. The
+// overloads cover the two, three and four pointer cases this tree has.
+inline bool AnyRefreshed( bool bFirst, bool bSecond )
+{
+	return bFirst || bSecond;
+}
+
+inline bool AnyRefreshed( bool bFirst, bool bSecond, bool bThird )
+{
+	return bFirst || bSecond || bThird;
+}
+
+inline bool AnyRefreshed( bool bFirst, bool bSecond, bool bThird, bool bFourth )
+{
+	return bFirst || bSecond || bThird || bFourth;
+}
+
 template <class T, typename TPtrType>
 inline bool IsValid( const CDGPtr<T, TPtrType> &p )
 {

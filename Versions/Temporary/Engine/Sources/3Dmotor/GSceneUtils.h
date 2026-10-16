@@ -46,7 +46,7 @@ class CMSRNode : public CFuncBase<SFBTransform>
 protected:
 	bool NeedUpdate() override
 	{
-		return pAncestor.Refresh() | pPos.Refresh();
+		return AnyRefreshed( pAncestor.Refresh(), pPos.Refresh() );
 	}
 
 	void Recalc() override;
@@ -79,7 +79,7 @@ class CMNode : public CFuncBase<SFBTransform>
 protected:
 	bool NeedUpdate() override
 	{
-		return pAncestor.Refresh() | pMove.Refresh();
+		return AnyRefreshed( pAncestor.Refresh(), pMove.Refresh() );
 	}
 
 	void Recalc() override;
@@ -125,7 +125,7 @@ class CMSRConvert : public CFuncBase<SFBTransform>
 protected:
 	bool NeedUpdate() override
 	{
-		return pMove.Refresh() | pRotate.Refresh() | pScale.Refresh();
+		return AnyRefreshed( pMove.Refresh(), pRotate.Refresh(), pScale.Refresh() );
 	}
 
 	void Recalc() override;
@@ -175,7 +175,7 @@ class CVec3Convert : public CFuncBase<CVec3>
 protected:
 	bool NeedUpdate() override
 	{
-		return pX.Refresh() | pY.Refresh() | pZ.Refresh();
+		return AnyRefreshed( pX.Refresh(), pY.Refresh(), pZ.Refresh() );
 	}
 
 	void Recalc() override;

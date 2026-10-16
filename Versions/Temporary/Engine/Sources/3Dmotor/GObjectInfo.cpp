@@ -109,7 +109,7 @@ bool CGrannyMeshLoader::NeedUpdate()
 	}
 	if ( pSkeletonFileInfo )
 	{
-		return pGrannyFile.Refresh() | pSkeletonFileInfo.Refresh();
+		return AnyRefreshed( pGrannyFile.Refresh(), pSkeletonFileInfo.Refresh() );
 	}
 	return pGrannyFile.Refresh();
 }

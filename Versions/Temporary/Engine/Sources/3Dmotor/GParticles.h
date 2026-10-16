@@ -27,7 +27,7 @@ class CParticleAnimator : public CPtrFuncBase<CParticleEffect>
 protected:
 	bool NeedUpdate() override
 	{
-		return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh();
+		return AnyRefreshed( pTime.Refresh(), pInfo.Refresh(), pPlacement.Refresh() );
 	}
 
 	void Recalc() override;

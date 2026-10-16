@@ -367,7 +367,7 @@ protected:
 	{
 		if ( pAnimation )
 		{
-			return pAnimation.Refresh() | pCombiner.Refresh();
+			return AnyRefreshed( pAnimation.Refresh(), pCombiner.Refresh() );
 		}
 		return pCombiner.Refresh();
 	}
@@ -454,7 +454,7 @@ protected:
 	{
 		if ( pAnimation )
 		{
-			return pAnimation.Refresh() | pCombiner.Refresh();
+			return AnyRefreshed( pAnimation.Refresh(), pCombiner.Refresh() );
 		}
 		return pCombiner.Refresh();
 	}
