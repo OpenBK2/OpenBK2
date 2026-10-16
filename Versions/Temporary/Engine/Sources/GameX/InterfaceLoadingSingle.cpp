@@ -371,7 +371,22 @@ void CInterfaceLoadingBase::PlayOnEnterTransitEffect()
 
 bool CInterfaceLoadingBase::IsEffectFinished() const
 {
-	return dynamic_cast_ptr<CReactions *>( pReactions )->IsEffectFinished();
+	// pReactions is null before InitInternal has run and again once the destructor
+	// has cleared it, and dynamic_cast_ptr yields null for anything that is not a
+	// CReactions, so this dereference was unguarded on both counts and GCC
+	// reported it as a definite null dereference. In the live flow neither
+	// happens: only CReactions is ever stored here, and the one caller reaches
+	// this through GetScreen(), which exists only after InitInternal.
+	//
+	// Report the effect as finished when there is no reactions object to ask. The
+	// sole caller spins in while ( !IsEffectFinished() ), so true leaves the wait
+	// and false would hang the loading screen forever.
+	CReactions *const pTypedReactions = dynamic_cast_ptr<CReactions *>( pReactions );
+	if ( pTypedReactions == 0 )
+	{
+		return true;
+	}
+	return pTypedReactions->IsEffectFinished();
 }
 
 // CInterfaceLoadingSingle2D
