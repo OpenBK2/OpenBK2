@@ -239,35 +239,50 @@ void CScene::AttachSubModel( const int nTargetID,
 	                      &nBoneIndex,
 	                      bConstantOffset ) )
 	{
-		CDynamicCast<SModelVisObjDesc> pVO = data[eScene]->visObjects[nTargetID];
-		SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
+		// Look the descriptor up without creating one. This was
+		// visObjects[nTargetID], and unordered_map::operator[] inserts a
+		// value-initialised element for a missing key, so an unknown id silently
+		// added a null CObj and the next line dereferenced it. GetObjectBounder,
+		// sixty lines above, is the same lookup written this way.
+		const SSceneData::CVisObjectsMap::iterator posVO = data[eScene]->visObjects.find( nTargetID );
+		CDynamicCast<SModelVisObjDesc> pVO = posVO == data[eScene]->visObjects.end() ? 0 : posVO->second.GetPtr();
+		NI_ASSERT( pVO, fmt::format( "no model VisObject {} to attach a submodel to", nTargetID ) );
+		if ( pVO )
+		{
+			SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
 
-		IAttachedObject *pObject = 0;
-		if ( bForceAnimated || !pSubModel->animations.empty() )
-		{
-			pObject = IAttachedObject::CreateAnimatedObj(
-					pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, GetObjectBounder( nTargetID ) );
-		}
-		else
-		{
-			pObject = IAttachedObject::CreateStaticObj(
-					pSubModel, pTransform, nBoneIndex, GetObjectBounder( nTargetID ), eType == ESSOT_WEAPON );
-		}
-
-		if ( pObject )
-		{
-			SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
-			if ( pos == data[eScene]->visObjects.end() )
+			IAttachedObject *pObject = 0;
+			if ( bForceAnimated || !pSubModel->animations.empty() )
 			{
-				if ( !pos->second->bHidden )
+				pObject = IAttachedObject::CreateAnimatedObj(
+						pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, GetObjectBounder( nTargetID ) );
+			}
+			else
+			{
+				pObject = IAttachedObject::CreateStaticObj(
+						pSubModel, pTransform, nBoneIndex, GetObjectBounder( nTargetID ), eType == ESSOT_WEAPON );
+			}
+
+			if ( pObject )
+			{
+				// Build the scene mesh now, which is what every other Attach
+				// function in this file does. The test here was
+				// "pos == visObjects.end()" around a dereference of pos, so it
+				// could only enter the block when the lookup had failed, and could
+				// never enter it at all because the operator[] above had just
+				// inserted the key; GCC reported the dereference as a definite null
+				// dereference. ReCreate has therefore never run here, and
+				// CMOUnit::SetPointer compensates by calling it by hand right after
+				// this returns. The second lookup is gone with it: pVO is that same
+				// entry, so pVO->bHidden is the test that was meant.
+				if ( !pVO->bHidden )
 				{
 					pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 				}
-			}
 
-			const int nNumber2Attach = nNumber >= 0 ? nNumber : --( pVO->n2Attach[eType] );
-			attaches[nNumber2Attach] = pObject;
-			const int nDebugWantToLookAtAttaches = 10;
+				const int nNumber2Attach = nNumber >= 0 ? nNumber : --( pVO->n2Attach[eType] );
+				attaches[nNumber2Attach] = pObject;
+			}
 		}
 	}
 
@@ -286,35 +301,37 @@ void CScene::AttachSubModel( const int nTargetID,
 	const int nBoneIndex = -1;
 	if ( PrepareToAttach( nTargetID, eType, eMode, Singleton<IGameTimer>()->GetGameTime(), &pTransform, vOffset ) )
 	{
-		CDynamicCast<SModelVisObjDesc> pVO = data[eScene]->visObjects[nTargetID];
-		SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
+		// Same two fixes as the bone-name overload above: a lookup that does not
+		// insert, and the attach itself building the mesh.
+		const SSceneData::CVisObjectsMap::iterator posVO = data[eScene]->visObjects.find( nTargetID );
+		CDynamicCast<SModelVisObjDesc> pVO = posVO == data[eScene]->visObjects.end() ? 0 : posVO->second.GetPtr();
+		NI_ASSERT( pVO, fmt::format( "no model VisObject {} to attach a submodel to", nTargetID ) );
+		if ( pVO )
+		{
+			SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
 
-		IAttachedObject *pObject = 0;
-		if ( bForceAnimated || !pSubModel->animations.empty() )
-		{
-			pObject = IAttachedObject::CreateAnimatedObj(
-					pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, 0 /*GetObjectBounder( nTargetID )*/ );
-		}
-		else
-		{
-			pObject =
-					IAttachedObject::CreateStaticObj( pSubModel, pTransform, nBoneIndex, 0 /*GetObjectBounder( nTargetID )*/ );
-		}
-
-		if ( pObject )
-		{
-			SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
-			if ( pos == data[eScene]->visObjects.end() )
+			IAttachedObject *pObject = 0;
+			if ( bForceAnimated || !pSubModel->animations.empty() )
 			{
-				if ( !pos->second->bHidden )
+				pObject = IAttachedObject::CreateAnimatedObj(
+						pSubModel, pTransform, data[eScene]->pGameTimer, nBoneIndex, 0 /*GetObjectBounder( nTargetID )*/ );
+			}
+			else
+			{
+				pObject =
+						IAttachedObject::CreateStaticObj( pSubModel, pTransform, nBoneIndex, 0 /*GetObjectBounder( nTargetID )*/ );
+			}
+
+			if ( pObject )
+			{
+				if ( !pVO->bHidden )
 				{
 					pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 				}
-			}
 
-			const int nNumber2Attach = nNumber >= 0 ? nNumber : --( pVO->n2Attach[eType] );
-			attaches[nNumber2Attach] = pObject;
-			const int nDebugWantToLookAtAttaches = 10;
+				const int nNumber2Attach = nNumber >= 0 ? nNumber : --( pVO->n2Attach[eType] );
+				attaches[nNumber2Attach] = pObject;
+			}
 		}
 	}
 
