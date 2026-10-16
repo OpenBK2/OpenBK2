@@ -542,7 +542,11 @@ void CVolumeNode::SUpdatableObjects::Update( int nFrame, CVolumeNode *pVolume, S
 bool CVolumeNode::IsEmpty()
 {
 	EraseInvalidRefs( &particles );
-	return staticParts.IsEmpty() & dynamicParts.IsEmpty() & particles.empty() & updatable.IsEmpty();
+	// && rather than &: unlike the Refresh combining elsewhere in this module,
+	// all four of these are pure queries with nothing to force, so there is no
+	// reason not to stop at the first non-empty one. clang's
+	// -Wbitwise-instead-of-logical reported the bitwise and.
+	return staticParts.IsEmpty() && dynamicParts.IsEmpty() && particles.empty() && updatable.IsEmpty();
 }
 
 void SetPartFade( CObjectBase *_p, float fFade )
