@@ -68,10 +68,25 @@
 // ************************************************************************************************************************ //
 
 // побитовое приведение типа
+//
+// This was *reinterpret_cast<const TYPE_OUT *>( &val ), which is a
+// strict-aliasing violation: a read through TYPE_OUT does not alias the TYPE_IN
+// object, so the compiler may assume the store into it never happened. That is
+// not theoretical here. GCC reports exactly that at every site in this tree
+// that punned a float by hand, as "'f' is used uninitialized", and the same
+// class silently miscompiled the DXT decoder under clang at -O2 while GCC
+// happened to produce the right answer.
+//
+// boost::core::bit_cast is the defined spelling, already available through the
+// boost/core/bit.hpp included above. It lowers to __builtin_bit_cast on both
+// compilers here, so this costs nothing, and it static_asserts that the two
+// types are the same size, which the hand-rolled cast did not: Image's
+// FP_NORM_TO_BYTE3 was reading an 8-byte unsigned long out of a 4-byte float
+// under LP64.
 template <class TYPE_OUT, class TYPE_IN>
 inline TYPE_OUT bit_cast( const TYPE_IN &val )
 {
-	return *reinterpret_cast<const TYPE_OUT *>( &val );
+	return boost::core::bit_cast<TYPE_OUT>( val );
 }
 
 // ************************************************************************************************************************ //

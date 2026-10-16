@@ -25,7 +25,10 @@ struct SMemBuilderVertexHash
 	int operator()( const SMemBuilderVertex &v ) const
 	{
 		float f = v.point.x + v.point.y * 123 + v.point.z * 15352331;
-		return *(int *)&f;
+		// bit_cast, not *(int *)&f: the hand-rolled pun let GCC conclude the
+		// store into f had not happened and report it as an uninitialised read,
+		// which would have made this hash return garbage. Same bits, defined.
+		return bit_cast<int>( f );
 	}
 };
 

@@ -433,9 +433,13 @@ static float SetBits( float f, int nBits, int nBitVal )
 {
 	int nMask = ( 1 << nBits ) - 1;
 	int nVal = nBitVal ? nMask : 0;
-	int nRes = *(int *)&f;
+	// Both directions went through hand-rolled puns, and GCC reported the second
+	// one as an uninitialised read of nRes for the usual reason: the float read
+	// does not alias the int store, so it may assume the store never ran and
+	// this function may return anything at all.
+	int nRes = bit_cast<int>( f );
 	nRes = ( nRes & ~nMask ) | nVal;
-	return *(float *)&nRes;
+	return bit_cast<float>( nRes );
 }
 
 static float CalcNLP( float f )

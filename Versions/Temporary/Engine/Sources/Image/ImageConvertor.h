@@ -22,13 +22,20 @@ namespace NImage
 inline unsigned long FP_NORM_TO_BYTE2( float p )
 {
 	float fpTmp = p + 1.0f;
-	return ( ( *(unsigned *)&fpTmp ) >> 15 ) & 0xFF;
+	return ( bit_cast<uint32_t>( fpTmp ) >> 15 ) & 0xFF;
 }
 
 inline unsigned long FP_NORM_TO_BYTE3( float p )
 {
 	float ftmp = p + 12582912.0f;
-	return ( ( *(unsigned long *)&ftmp ) & 0xFF );
+	// This read 8 bytes out of a 4-byte float through *(unsigned long *)&ftmp,
+	// because unsigned long is 64-bit under LP64 and 32-bit on Windows, where
+	// the code was written. The low byte it then masked happened to be inside
+	// the float on a little-endian machine, so the answer came out right while
+	// the read ran off the end of the object. bit_cast makes the width explicit
+	// and static_asserts it, and the pun is defined rather than aliasing UB,
+	// which is what GCC was reporting here as an uninitialised read of ftmp.
+	return bit_cast<uint32_t>( ftmp ) & 0xFF;
 }
 
 inline uint8_t GetA( uint32_t val )
