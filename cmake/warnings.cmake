@@ -137,16 +137,24 @@ set(OBK2_WARNINGS_CLANG
     # over the selection could only ever address one container. GCC has no
     # equivalent, so clang is the only compiler guarding this.
     -Wunreachable-code-loop-increment
-    # Cleared 2026-10-16. Was 3: CArtillery's install check incremented its
-    # turret index twice and so walked only the even ones, which is a real
-    # simulation defect and the only one of the three that was live, plus two
-    # unused functions whose loops tested or incremented the wrong variable and
-    # were deleted rather than repaired.
+    # The umbrella, and all three of its leaves were measured at 0 on
+    # 2026-10-16 rather than inferred, which is the only thing that makes an
+    # umbrella safe to adopt here:
     #
-    # Not -Wloop-analysis, the umbrella: that also pulls in
-    # -Wrange-loop-bind-reference, which still has 2 sites in 3Dmotor's glTF
-    # import where a loop variable binds a reference to a fastgltf temporary.
-    -Wfor-loop-analysis
+    #   -Wfor-loop-analysis           was 3. CArtillery's install check
+    #       incremented its turret index twice and so walked only the even
+    #       ones, a live simulation defect, plus two unused functions whose
+    #       loops tested or incremented the wrong variable and were deleted.
+    #   -Wrange-loop-bind-reference   was 2, both in 3Dmotor's glTF import,
+    #       where a const reference bound the value fastgltf's accessor
+    #       returns per step. Defined behaviour, since that extends the
+    #       temporary's lifetime, but it avoided no copy.
+    #   -Wrange-loop-construct        0, and it has never appeared in a sweep
+    #       of this umbrella, which is how it was measured rather than assumed.
+    #
+    # GCC has no equivalent of any of them at any level, so clang is the only
+    # compiler guarding the class. That is how the artillery defect survived.
+    -Wloop-analysis
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
