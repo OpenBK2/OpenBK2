@@ -99,13 +99,15 @@ set(OBK2_WARNINGS_GCC
     # the reasoning written out there; that is parked UB, not a clean bill.
     # Only fires with -O, so a syntax-only sweep reports it as zero.
     -Wuninitialized
-    # -Wuninitialized turns -Wmaybe-uninitialized on with it, which is 19 sites
-    # nobody has read, so gating the definite class alone has to say so out loud.
-    # Same shape as -Wformat dragging in -Wnonnull: a flag's cost includes what
-    # it switches on, and this one broke the first gated build after the promote.
-    # OBK2_WARNINGS_STRICT appends after this list, so the -Wmaybe-uninitialized
-    # in OBK2_WARNINGS_STRICT_GCC still wins when the strict level is on.
-    -Wno-maybe-uninitialized
+    # Cleared 2026-10-16 in the same pass. Was 19, and all but the four
+    # 3Dmotor/Gfx.cpp ones were the same shape: a struct of raw PODs behind a
+    # "SFoo() {}" default constructor, copied into a container as a temporary, so
+    # default member initialisers fixed the class. SAnimWaterMaterialKey was the
+    # one that mattered, being a lookup key compared member by member. Gfx.cpp
+    # was ignoring GetClientRect's BOOL and sizing the back buffer from the
+    # untouched RECT. -Wuninitialized turns this on with it anyway; listing it is
+    # what makes that visible to a reader.
+    -Wmaybe-uninitialized
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -157,7 +159,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     ${OBK2_WARNINGS_STRICT_COMMON}
     -Wno-reorder
     # Tier 2: tens of sites each, high signal. Counts as of 2026-10-15.
-    -Wmaybe-uninitialized           # 19
     -Wstrict-aliasing=3             # 12, the class that miscompiled the DXT decoder
     -Wnon-virtual-dtor              # 198
     -Wimplicit-fallthrough=5        # 31, and silent without -O
