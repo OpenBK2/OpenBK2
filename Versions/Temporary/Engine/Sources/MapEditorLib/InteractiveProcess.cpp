@@ -368,7 +368,14 @@ int ReadAvailable( TPipe pipe, char *pBuffer, int nBufferSize )
 		// End of file: every write end is shut, so the child is gone.
 		return -1;
 	}
+	// EWOULDBLOCK used to be tested here beside EAGAIN, which glibc defines as
+	// the same value, so the test was the same expression twice. POSIX lets the
+	// two differ, so the second name is tested only where it is a second value.
+#if EWOULDBLOCK != EAGAIN
 	if ( ( errno == EAGAIN ) || ( errno == EWOULDBLOCK ) || ( errno == EINTR ) )
+#else
+	if ( ( errno == EAGAIN ) || ( errno == EINTR ) )
+#endif
 	{
 		return 0;
 	}
