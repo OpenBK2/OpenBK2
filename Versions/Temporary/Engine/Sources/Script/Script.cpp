@@ -20,6 +20,8 @@
 #include <cstdio>
 #include <cstring>
 
+#include <fmt/format.h>
+
 namespace NScript
 {
 CObjectBase *luaGetPtr( const Script::Object &o );
@@ -636,26 +638,25 @@ std::string Script::GetStateAsText()
 			str += GetObjectAsText( key.GetString(), value, 0 );
 		}
 	}
-	char buf[30];
-	int nThreads = m_state->threads.size();
-	sprintf( buf, "Threads number = %zu \n", m_state->threads.size() );
-	str += buf;
+	// These lines used to be sprintf'ed into a shared char[30], which does not
+	// fit either of them: "Threads number = " leaves 13 bytes for a count that
+	// prints up to 20 digits, and the thread line needs 45 in the worst case,
+	// being a pointer and an int around 20 characters of text. Nothing here
+	// needs a buffer at all.
+	str += fmt::format( "Threads number = {} \n", m_state->threads.size() );
 	for ( CThreads::iterator i = m_state->threads.begin(); i != m_state->threads.end(); ++i )
 	{
 		CLuaThread &tred = **i;
-		sprintf( buf, "Thread #%p: stacksize %d", i->GetPtr(), tred.top );
-		str += buf;
+		str += fmt::format( "Thread #{}: stacksize {}", static_cast<const void *>( i->GetPtr() ), tred.top );
 		if ( tred.top > 0 )
 		{
 			str += ", elemtypes:";
 			for ( StkId id = 0; id < tred.top; ++id )
 			{
-				sprintf( buf, " %d", LObj( m_state, id )->GetType() );
-				str += buf;
+				str += fmt::format( " {}", LObj( m_state, id )->GetType() );
 			}
 		}
-		sprintf( buf, "\n" );
-		str += buf;
+		str += "\n";
 	}
 	return str;
 }

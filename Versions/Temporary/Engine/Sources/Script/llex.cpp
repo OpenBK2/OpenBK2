@@ -78,7 +78,9 @@ void luaX_token2str (int token, char *s) {
 
 static void luaX_invalidchar (LexState *ls, int c) {
   char buff[8];
-  sprintf(buff, "0x%02X", c);
+  /* The cast is what keeps this inside buff: %02X of an int prints up to eight
+     digits after the "0x", where the character this reports is one byte. */
+  sprintf(buff, "0x%02X", (unsigned char)c);
   luaX_syntaxerror(ls, "invalid control char", buff);
 }
 
