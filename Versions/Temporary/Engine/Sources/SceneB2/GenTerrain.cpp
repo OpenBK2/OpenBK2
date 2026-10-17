@@ -8,6 +8,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #define DEF_TRGS_RESERVE_COUNT ( DEF_PATCH_SIZE * DEF_PATCH_SIZE * 2 )
 #define DEF_VERTS_RESERVE_COUNT ( ( DEF_PATCH_SIZE + 1 ) * ( DEF_PATCH_SIZE + 1 ) )
 #define DEF_TERRA_OBJS_COUNT 512
@@ -61,6 +63,36 @@ void CTerraGen::Load( const NDb::STerrain *_pDesc, CDataStream *pStream )
 	if ( !LoadTerrainInfo( pStream ) )
 	{
 		// terrain info doesn't exists, generate it
+		GenerateTerrain();
+	}
+	else if ( terrainInfo.nNumPatchesX != pDesc->nNumPatchesX || terrainInfo.nNumPatchesY != pDesc->nNumPatchesY )
+	{
+		// The file is for a different map than the record describes, and nothing
+		// below this expects that: everything sized from pDesc, the texture
+		// modification flags and the per-patch export flags above, is indexed by
+		// patch numbers that come from the file, so a file one patch larger walks
+		// off the end of both. UpdateGfxInfo died on exactly that, reading a
+		// normals entry for a patch the record has no room for.
+		//
+		// A record can name a map file that was never its own: MapFilesPath
+		// survives renaming and copying a record, and the released data has
+		// records pointing at folders holding somebody else's map.
+		//
+		// Generating the terrain the record does describe is what a map with no
+		// file at all gets, so the mission still runs, on flat ground rather than
+		// on the authored heightmap. Said out loud because that difference
+		// matters to anything comparing two machines: a client whose map file is
+		// rejected is not playing the same terrain as one whose file fits.
+		const auto message = fmt::format( "terrain file is for a {}x{} map and the record is {}x{}, generating instead",
+		                                  terrainInfo.nNumPatchesX,
+		                                  terrainInfo.nNumPatchesY,
+		                                  pDesc->nNumPatchesX,
+		                                  pDesc->nNumPatchesY );
+		csSystem << CC_ORANGE << message.c_str() << endl;
+		if ( IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>() )
+		{
+			pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
+		}
 		GenerateTerrain();
 	}
 	else
