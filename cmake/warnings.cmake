@@ -130,6 +130,11 @@ set(OBK2_WARNINGS_GCC
     # which CMake ignores, so adopting it is also the only way it reaches this
     # build.
     -Wdate-time
+    # Cleared 2026-10-17 with GCC's -Wimplicit-fallthrough=5, which is the same
+    # pass; clang reported 39 sites to GCC's 32, the extra ones being cases that
+    # fall into a default that returns. clang has only one level and it has
+    # always required the attribute rather than a comment.
+    -Wimplicit-fallthrough
     # Cleared 2026-10-17, as a pair, because they are the two halves of one
     # question: does a printf-family call fit the buffer it is given.
     # -Wformat-overflow=2 was 2, both real, and one of them a defect the class
@@ -155,6 +160,20 @@ set(OBK2_WARNINGS_GCC
     # =2 as a superset, and the tree is at zero under =2, which is what the
     # gate needs.
     -Warray-bounds=2
+    # Cleared 2026-10-17. Was 22 engine sites and 10 editor ones, and 36 of the
+    # 38 were deliberate and now carry [[fallthrough]]: a swarm command variant
+    # setting a flag and falling into the ordinary one, a state machine
+    # assigning the next state and running it in the same tick, a picking pass
+    # falling into the next one, and cases that fall into a default that breaks.
+    # The two that were not: a fence direction case whose assignment was
+    # overwritten by the case below it, and a soldier animation assertion that
+    # fell into the one contradicting it.
+    #
+    # Level 5 on purpose. Levels 1 to 4 accept a comment like "fall through" as
+    # the marker, and this tree had three such comments in Russian that no
+    # pattern would match; the attribute is checked by the language rather than
+    # by a regex, and clang only ever accepted the attribute.
+    -Wimplicit-fallthrough=5
     # Adopted at level 2 on 2026-10-17, where the staging list had level 3.
     # Level 3 is every type caught by value and that is 1 site, Lua's ldo.cpp
     # catching an int, which is how Lua's error handling is built here and is
@@ -278,7 +297,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     # an engine-only count is not the cost of adopting one of these.
     -Wstrict-aliasing=3             # 7 engine (was 12), 1 editor, and the DXT decoder's class
     -Wnon-virtual-dtor              # 160 engine
-    -Wimplicit-fallthrough=5        # 22 engine and 10 editor; silent without -O
     -Wcast-align=strict             # 104 engine, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 120 engine; plain -Wshadow is 637 on clang and noisy
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
@@ -330,7 +348,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     -Wenum-enum-conversion          # 9, includes the EFC_/EFUT_ mix-up
     -Wnon-virtual-dtor              # 87
     -Wdelete-non-abstract-non-virtual-dtor  # 11, and most of them dbcodegen output
-    -Wimplicit-fallthrough          # 39
     -Wcast-align                    # 56
 )
 
