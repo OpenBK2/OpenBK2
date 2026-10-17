@@ -3,6 +3,7 @@
 #include "Stats_B2_M1/AIUnitCmd.h"
 
 #include <cstdint>
+#include <vector>
 
 struct ITransceiver;
 
@@ -65,6 +66,7 @@ public:
 	virtual int CommandUnitCommand( const SAIUnitCmd *pCommand );
 	// Actor-less command
 	virtual void CommandGeneralCommand( const SAIUnitCmd *pCommand );
+	void CommandTransferUnits( const std::vector<int> &unitIDs, int nTargetPlayer );
 
 	bool LastCommandSkipped() const
 	{

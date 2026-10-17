@@ -98,6 +98,23 @@ void CGroupLogic::DelUnitFromSpecialGroup( CCommonUnit *pUnit )
 	}
 }
 
+void CGroupLogic::DetachTransferredUnit( CCommonUnit *pUnit )
+{
+	// Formations also belong to command groups. Remove the entire donated component before
+	// recursive owner changes, including ambush restoration that could regroup it with the donor.
+	const int nGroup = pUnit->GetNGroup();
+	if ( nGroup > 0 )
+	{
+		DelUnitFromGroup( pUnit );
+		if ( BeginGroup( nGroup ) == EndGroup() )
+		{
+			UnregisterGroup( nGroup );
+		}
+	}
+	DelUnitFromSpecialGroup( pUnit );
+	ambushUnits.erase( pUnit->GetUniqueId() );
+}
+
 void CGroupLogic::DelGroup( const int nGroup )
 {
 	// известить юнитов

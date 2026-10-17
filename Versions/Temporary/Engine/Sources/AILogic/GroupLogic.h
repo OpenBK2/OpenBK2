@@ -129,6 +129,7 @@ public:
 	void DelUnitFromGroup( class CCommonUnit *pUnit );
 	void AddUnitToGroup( class CCommonUnit *pUnit, const int nGroup );
 	void DelUnitFromSpecialGroup( class CCommonUnit *pUnit );
+	void DetachTransferredUnit( CCommonUnit *pUnit );
 
 	void GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup, bool bPlaceInQueue );
 	void UnitCommand( const SAIUnitCmd &command, class CCommonUnit *pGroupUnit, bool bPlaceInQueue );

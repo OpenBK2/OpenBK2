@@ -77,6 +77,8 @@ int CAIUnit::operator&( IBinSaver &saver )
 	saver.Add( 74, &bIsInTankPit );
 	saver.Add( 75, &timeLastAttacked );
 	saver.Add( 76, &bAmphibianWaterModifierApplied );
+	// Donation levels participate in both savegames and the deterministic state checksum.
+	saver.Add( 77, &transferredExperience );
 
 	return 0;
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "AICmdsAutoMagic.h"
 #include "AILogic/B2AI.h"
 #include "Client/ServerClientInterface.h"
 #include "CommonCommands.h"
@@ -35,8 +36,6 @@
 
 #include <float.h>
 #include <fmt/format.h>
-
-IAICmdsAutoMagic *CreateAICmdsAutoMagic();
 
 static int s_nInterruptTimeout = 5000; // No segments for this time before timeout is called
 
@@ -358,10 +357,17 @@ void CMPTransceiver::FinalizeSegmentPack()
 	for ( std::list<CPtr<IAILogicCommandB2>>::iterator it = aiCommandsToSend.begin(); it != aiCommandsToSend.end(); ++it )
 	{
 		CPtr<IAILogicCommandB2> pCommand = *it;
+		const int nCommandID = pCmdsSerializer->GetCommandID( pCommand );
+		if ( nCommandID < 0 )
+		{
+			// A command missing from the MP table must never run only on its originating client.
+			NGameX::MatchPacketTrace_Log( nCommonSegment, "TX", "UnregisteredAICommand", -1, "command rejected" );
+			continue;
+		}
 		cmds[nSegmentToExecute][nMyLogicID].push_back( pCommand );
 		//DebugTrace( "+++ Plr %d cmd to execute on %d", nMyLogicID, nSegmentToExecute );
 		SRawCommand &aiCommand = pPacket->aiCommands.emplace_back();
-		aiCommand.nTypeID = pCmdsSerializer->GetCommandID( pCommand );
+		aiCommand.nTypeID = nCommandID;
 		{
 			aiCommand.cmd.Seek( 0 );
 			CObj<IBinSaver> pSaver = CreateBinSaver( &( aiCommand.cmd ), SAVER_MODE_WRITE );

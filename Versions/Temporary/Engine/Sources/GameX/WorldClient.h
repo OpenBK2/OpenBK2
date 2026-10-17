@@ -597,6 +597,8 @@ public:
 	void OnSelectSpecialGroup( int nIndex );
 
 	void CenterSelectedUnit();
+	bool HasTransferSelection() const;
+	void TransferSelectedUnits( int nTargetPlayer );
 
 	bool IsActiveOwnAvia() const;
 	void GetOwnAvia( std::vector<CMapObj *> *pObjects ) const;

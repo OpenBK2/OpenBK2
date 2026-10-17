@@ -7,6 +7,18 @@
 
 #include <cstdint>
 
+CTransferUnitsCommand::CTransferUnitsCommand( const std::vector<int> &ids, int nSource, int nTarget )
+	: unitIDs( ids )
+	, nSourcePlayer( nSource )
+	, nTargetPlayer( nTarget )
+{
+}
+
+void CTransferUnitsCommand::Execute()
+{
+	Singleton<IAILogic>()->TransferUnits( unitIDs, nSourcePlayer, nTargetPlayer );
+}
+
 // ************************************************************************************************************************ //
 // **
 // ** register group
@@ -88,3 +100,4 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C0, CRegisterGroupCommand )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C1, CUnregisterGroupCommand )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C2, CB2GroupCommand )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C3, CUnitCommand )
+REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C4, CTransferUnitsCommand )

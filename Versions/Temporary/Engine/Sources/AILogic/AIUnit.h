@@ -4,6 +4,7 @@
 #include "Stats_B2_M1/Actions.h"
 #include "Stats_B2_M1/AnimationType.h"
 #include "Stats_B2_M1/RPGStats.h"
+#include "TransferredUnitExperience.h"
 
 #include <cstdint>
 
@@ -73,6 +74,7 @@ class CAIUnit : public CCommonUnit
 	bool bHoldingSector = {};
 	bool bTargetingTrack = {};
 	NDb::EReinforcementType eReinforcementType = {};
+	CTransferredUnitExperience transferredExperience;
 	bool bRestInside = {}; // mech unit inside mech unit
 	SUnitProfile unitProfile;
 	std::list<CPtr<CAIUnit>> targetsCache;
@@ -426,6 +428,19 @@ public:
 
 	// сменить дипломатию с корректным update в units
 	void ChangePlayer( const uint8_t cPlayer ) override;
+	void PrepareTransfer( int nTargetPlayer );
+	void UpdateTransferredExperience();
+
+	CCommonUnit *GetContainingUnit() const
+	{
+		// Buildings and trenches are not transferable, but a passenger must stay with its carrier.
+		return dynamic_cast<CCommonUnit *>( pObjInside );
+	}
+
+	bool HasTransferredExperience() const
+	{
+		return transferredExperience.IsTransferred();
+	}
 
 	// просто поставить другую дипломатию
 	void SetPlayer( const uint8_t cPlayer )

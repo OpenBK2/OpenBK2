@@ -83,6 +83,16 @@ void CStatistics::UnitKilled( const int nPlayer,
 
 	if ( pScenarioTracker->RegisterUnitKill( info ) )
 	{
+		// XP overflow can advance other reinforcement categories too. Donated units track each owner's
+		// category independently and only replace their retained bonuses after a later level increase.
+		for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
+		{
+			CAIUnit *pUnit = *iter;
+			if ( pUnit->GetPlayer() == nPlayer && pUnit->HasTransferredExperience() )
+			{
+				pUnit->UpdateTransferredExperience();
+			}
+		}
 		// Level up
 		CDBPtr<NDb::SUnitStatsModifier> pOldBonus, pNewBonus;
 		const int nNewLevel = pScenarioTracker->GetReinforcementXPLevel( nPlayer, eKillerType );
@@ -115,7 +125,8 @@ void CStatistics::UnitKilled( const int nPlayer,
 				for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
 				{
 					CAIUnit *pUnit = dynamic_cast<CAIUnit *>( *iter );
-					if ( pUnit && pUnit->GetPlayer() == nPlayer && pUnit->GetReinforcementType() == eKillerType )
+					if ( pUnit && pUnit->GetPlayer() == nPlayer && pUnit->GetReinforcementType() == eKillerType &&
+					     !pUnit->HasTransferredExperience() )
 					{
 						if ( nOldLevel != nNewLevel ) // Only if the own level changed. Don't bother if only leader's level changed
 						{
@@ -137,6 +148,7 @@ void CStatistics::UnitKilled( const int nPlayer,
 							pUnit->ApplyStatsModifier( pNewLeaderBonus, true );
 						}
 						pUnit->InitSpecialAbilities( nOldAbilityLevel + 1 );
+						updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, pUnit, -1 );
 					}
 				}
 

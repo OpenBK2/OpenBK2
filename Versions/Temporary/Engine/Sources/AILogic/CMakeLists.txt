@@ -214,6 +214,7 @@ set(SOURCES
     UnitsSerialize.cpp
     UnitStates.cpp
     UnitTorpedo.cpp
+    UnitTransfer.cpp
     UpdatableObject.cpp
     UpdateUnitContainer.cpp
     Weather.cpp

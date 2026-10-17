@@ -3,6 +3,7 @@
 #include "B2_M1_World/CommonB2M1AI.h"
 
 #include <cstdint>
+#include <vector>
 
 namespace NDb
 {
@@ -69,6 +70,7 @@ struct IAILogic : public ICommonB2M1AI
 	virtual void UnregisterGroup( const int nGroup ) = 0;
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) = 0;
 	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer ) = 0;
+	virtual void TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer, int nTargetPlayer ) = 0;
 	virtual const int GenerateGroupNumber() = 0;
 
 	virtual void RequestBuildPreview( const EActionCommand eBuildCommand,

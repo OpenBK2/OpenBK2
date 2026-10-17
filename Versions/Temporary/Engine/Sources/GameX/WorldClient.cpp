@@ -2679,9 +2679,10 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 					unitIcon.fLastTime = NEW_ABILITY_ICON_SHOW_TIME;
 					unitIcons[nID] = unitIcon;
 
-					if ( pLeader )
+					// Multiplayer receives each unit's own rank in its RPG update, including donated units.
+					if ( pLeader && pST->GetGameType() == IScenarioTracker::EGT_SINGLE )
 					{
-						pMOUnit->SetUnitLevel( pLeader->info.nRank, pST->GetGameType() != IScenarioTracker::EGT_SINGLE );
+						pMOUnit->SetUnitLevel( pLeader->info.nRank, false );
 						DoUpdateObjectStats( pMOUnit );
 					}
 
@@ -2795,7 +2796,12 @@ void CWorldClient::OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpda
 
 		case EFB_UNITS_GIVEN:
 		{
-			OnNotifyEvent( pUpdate, NDb::NEVT_UNITS_GIVEN, (ENotifyParams)( ENP_UNITS | ENP_CAMERA_POS ) );
+			const SFeedBackUnitsArray *pUnits = dynamic_cast<SFeedBackUnitsArray *>( pUpdate->info.pParam.GetPtr() );
+			// Transfer feedback carries its recipient in nParam; script-given units retain the default -1.
+			if ( pUnits && ( pUnits->nParam == -1 || pUnits->nParam == Singleton<IScenarioTracker>()->GetLocalPlayer() ) )
+			{
+				OnNotifyEvent( pUpdate, NDb::NEVT_UNITS_GIVEN, (ENotifyParams)( ENP_UNITS | ENP_CAMERA_POS ) );
+			}
 			break;
 		}
 
@@ -3304,6 +3310,43 @@ void CWorldClient::OnSelectSpecialGroup( int nIndex )
 	if ( bRangesShown )
 	{
 		pSelector->SetShowAreas( ACTION_NOTIFY_RANGE_AREA, true );
+	}
+}
+
+bool CWorldClient::HasTransferSelection() const
+{
+	std::vector<CMOSelectable *> selection;
+	pSelector->GetSelection( &selection );
+	const int nPlayer = Singleton<IScenarioTracker>()->GetLocalPlayer();
+	for ( const CMOSelectable *pUnit : selection )
+	{
+		if ( pUnit->GetPlayer() == nPlayer && pUnit->IsAlive() &&
+		     ( dynamic_cast<const IMOUnit *>( pUnit ) || dynamic_cast<const IMOSquad *>( pUnit ) ) )
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void CWorldClient::TransferSelectedUnits( int nTargetPlayer )
+{
+	std::vector<CMOSelectable *> selection;
+	pSelector->GetSelection( &selection );
+	std::vector<int> unitIDs;
+	const int nPlayer = Singleton<IScenarioTracker>()->GetLocalPlayer();
+	for ( const CMOSelectable *pUnit : selection )
+	{
+		if ( pUnit->GetPlayer() == nPlayer && pUnit->IsAlive() &&
+		     ( dynamic_cast<const IMOUnit *>( pUnit ) || dynamic_cast<const IMOSquad *>( pUnit ) ) )
+		{
+			// Keep squad IDs intact; the synchronized command resolves formations and attached cargo.
+			unitIDs.push_back( pUnit->GetID() );
+		}
+	}
+	if ( !unitIDs.empty() )
+	{
+		pCommandsSender->CommandTransferUnits( unitIDs, nTargetPlayer );
 	}
 }
 

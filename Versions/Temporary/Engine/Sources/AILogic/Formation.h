@@ -476,6 +476,12 @@ public:
 	}
 
 	const int GetVirtualUnitSlotInStats( const int nVirtualUnit ) const;
+
+	class CSoldier *GetVirtualUnit( int nIndex ) const
+	{
+		return virtualUnits[nIndex].pSoldier;
+	}
+
 	void AddVirtualUnit( class CSoldier *pSoldier, const int nSlotInStats );
 	void MakeVirtualUnitReal( class CSoldier *pSoldier );
 	void DelVirtualUnit( class CSoldier *pSoldier );
