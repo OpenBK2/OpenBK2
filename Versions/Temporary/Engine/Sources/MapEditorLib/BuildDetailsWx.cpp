@@ -138,6 +138,29 @@ wxWindow *ScaleWindow()
 {
 	return wxTheApp ? wxTheApp->GetTopWindow() : nullptr;
 }
+
+// When this binary was compiled, for the local-build line below. __DATE__ and
+// __TIME__ are the one thing -Wdate-time exists to report, and here they are
+// the point rather than an oversight: CI stamps BUILD_DATE_TIME_STR into the
+// build and a local build has no stamp, so the compile time stands in for it
+// and is deliberately not reproducible.
+//
+// Keeping the suppression to this function is what lets the flag stay on for
+// the rest of the tree; see cmake/warnings.cmake. MSVC is left out of the
+// pragma the way System/Basic.h leaves it out: an unrecognised pragma there is
+// C4068 at warning level 1, and MSVC has no diagnostic of this class to turn
+// off in the first place.
+#if defined( __GNUC__ )
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdate-time"
+#endif
+const char *CompileTime()
+{
+	return __DATE__ " " __TIME__;
+}
+#if defined( __GNUC__ )
+#pragma GCC diagnostic pop
+#endif
 } // namespace
 
 namespace NBuildDetails
@@ -158,7 +181,7 @@ std::string Collect()
 	}
 	else
 	{
-		strDetails << ", local build, compiled " << __DATE__ << " " << __TIME__;
+		strDetails << ", local build, compiled " << CompileTime();
 	}
 	strDetails << "\n";
 	strDetails << "Configuration : " << ConfigurationName() << ", " << ( sizeof( void * ) * 8 ) << "-bit, "
