@@ -1800,10 +1800,14 @@ void CInterfaceMission::UpdateTransferPanel()
 		};
 		// The portrait frame sits slightly lower than the multifunction panel. Follow its top with a small gap.
 		IWindow *pAppearance = pScreen->GetChild( "AppearancePanel", true );
-		const float fButtonBottom = pAppearance ? pAppearance->GetWindowRect().y1 : hud.y1;
-		moveWindow(
-				pTransferBtn, hud.x1 - screen.x1 - 115, fButtonBottom - screen.y1 - pTransferBtn->GetPlacement().Height() - 2 );
-		moveWindow( pTransferPanel, hud.x1 - screen.x1, hud.y1 - screen.y1 - 190 );
+		const float fButtonX = hud.x1 - screen.x1 - 115;
+		const float fButtonBottom = ( pAppearance ? pAppearance->GetWindowRect().y1 : hud.y1 ) - screen.y1 - 2;
+		const CTRect<int> buttonPlacement = pTransferBtn->GetPlacement();
+		moveWindow( pTransferBtn, fButtonX, fButtonBottom - buttonPlacement.Height() );
+		// Keep the panel immediately beside the button, with both lower borders aligned as the HUD moves.
+		moveWindow( pTransferPanel,
+		            fButtonX + buttonPlacement.Width() + 2,
+		            fButtonBottom - pTransferPanel->GetPlacement().Height() );
 		const bool bCanTransfer = pWorld && pWorld->HasTransferSelection();
 		for ( int nPlayer : transferPlayers )
 		{

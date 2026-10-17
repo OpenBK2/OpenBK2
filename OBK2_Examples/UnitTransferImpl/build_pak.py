@@ -196,7 +196,8 @@ def build():
     ))
     button("TransferConfirm", "MissionTransferPlayer", 154, 1, 24, 24, "Confirm", check=True)
     label("TransferName", None, 5, 0, 146, 26, vertical_center=True)
-    label("TransferTitle", "Transfer units", 8, 5, 166, 24)
+    # Lower the title into the middle of the header, leaving space above the player list at y=33.
+    label("TransferTitle", "Transfer units", 8, 9, 166, 20)
 
     xml("Row_WindowSimpleShared", shared("WindowSimple", "/UI/Game/Menu/EscapeMenu/HeaderTable_BackgroundTiledTexture", (
         ("TransferName_WindowTextView", "WindowTextView"),
