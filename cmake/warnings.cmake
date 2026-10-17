@@ -188,6 +188,14 @@ set(OBK2_WARNINGS_CLANG
     # whose upper half was doing all the work.
     -Wtautological-unsigned-zero-compare
     -Wtautological-unsigned-enum-zero-compare
+    # Cleared 2026-10-17. Was 6, and both causes were a value a reader has to
+    # reconstruct: five bool flags in the editor's VisObj builder written only
+    # through a pointer by PrepareResource, and a crag height assigned inside a
+    # loop condition and read in its body. Neither was a live uninitialised
+    # read. This is clang's aggressive variant of -Wmaybe-uninitialized, which
+    # reports a use uninitialised on any path it can see rather than on all of
+    # them, so it is the one that objects to "initialised by a callee".
+    -Wconditional-uninitialized
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
