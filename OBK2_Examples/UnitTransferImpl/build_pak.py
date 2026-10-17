@@ -23,9 +23,6 @@ NATIVE_BACKGROUNDS = {
     "ConfirmNormal": "UI/Game/Mission/NewActions/TemplateNormal_BackgroundSimpleTexture.xdb",
     "ConfirmPushed": "UI/Game/Mission/NewActions/TemplatePressed_BackgroundSimpleTexture.xdb",
     "ConfirmDisabled": "UI/Game/Mission/NewActions/TemplateDisabled_BackgroundSimpleTexture.xdb",
-    "CloseNormal": "UI/Game/Mission/Objectives/ScrollDownNormal_BackgroundSimpleTexture.xdb",
-    "ClosePushed": "UI/Game/Mission/Objectives/ScrollDownPressed_BackgroundSimpleTexture.xdb",
-    "CloseDisabled": "UI/Game/Mission/Objectives/ScrollDownDisabled_BackgroundSimpleTexture.xdb",
 }
 CLASS_IDS = {
     "WindowSimple": 285700801,
@@ -102,7 +99,8 @@ def build():
         )
 
     def text(name, value):
-        entries[str(BASE / (name + ".txt")).replace("\\", "/")] = b"\xff\xfe" + (value + "\n").encode("utf-16-le")
+        # A trailing newline creates another measured text line and offsets vertical centering.
+        entries[str(BASE / (name + ".txt")).replace("\\", "/")] = b"\xff\xfe" + value.encode("utf-16-le")
 
     for name, source in NATIVE_BACKGROUNDS.items():
         background = ET.parse(GAME_DATA / source).getroot()
@@ -124,31 +122,44 @@ def build():
             child(size, "y", 0)
         xml(name + "_Background", background)
 
-    # Scale the native checkmark to its action button, avoiding font-dependent glyphs.
-    background = ET.Element("BackgroundSimpleScallingTexture")
-    child(background, "ClassTypeID", 0)
-    reference(background, "Texture", "/UI/Game/Menu/MultiScreen/IconChecked_Texture.xdb", "Texture")
-    child(background, "Color", -1)
-    child(child(background, "Size"), "x", 0)
-    child(background.find("Size"), "y", 0)
-    xml("Check_Background", background)
+    # Use the native artwork for checkmarks and the toggle's open/closed direction.
+    for name, texture in (
+        ("Check", "/UI/Game/Menu/MultiScreen/IconChecked_Texture"),
+        ("TransferArrowRight", "/UI/Game/Mission/Panels/RightPanel/ToggleReinfRightNormal_Texture"),
+        ("TransferArrowLeft", "/UI/Game/Mission/Panels/RightPanel/ToggleReinfLeftNormal_Texture"),
+    ):
+        background = ET.Element("BackgroundSimpleScallingTexture")
+        child(background, "ClassTypeID", 0)
+        reference(background, "Texture", texture + ".xdb", "Texture")
+        child(background, "Color", -1)
+        child(child(background, "Size"), "x", 0)
+        child(background.find("Size"), "y", 0)
+        xml(name + "_Background", background)
+        if name != "Check":
+            xml(name + "_WindowSimpleShared", shared("WindowSimple", name + "_Background", transparent=True,
+                                                     background_kind="BackgroundSimpleScallingTexture"))
+            icon = window("WindowSimple", name + "_WindowSimpleShared", name, 84, 5, 24, 24)
+            icon.find("Visible").text = "false" if name.endswith("Left") else "true"
+            xml(name + "_WindowSimple", icon)
 
     xml("Text_WindowTextViewShared", shared("WindowTextView", transparent=True))
     xml("Empty_WindowSimpleShared", shared("WindowSimple"))
 
-    def label(name, caption, x, y, width, height, center=False):
-        item = window("WindowTextView", "Text_WindowTextViewShared", name, x, y, width, height)
-        child(item, "ResizeOnTextSet", False)
+    def label(name, caption, x, y, width, height, center=False, vertical_center=False):
+        # Auto-height plus centered placement follows the actual font metrics, including HUD scale changes.
+        item = window("WindowTextView", "Text_WindowTextViewShared", name, x, y, width, height,
+                      vertical="ERA_CENTER" if vertical_center else "EPA_LOW_END")
+        child(item, "ResizeOnTextSet", vertical_center)
         reference(item, "TextFormat", "/UI/Game/Common/Normal" + ("_center" if center else "") + "_TextFormat.xdb", "TextFormat")
         if caption:
             text(name, caption)
             reference(item, "TextFileRef", name + ".txt")
         xml(name + "_WindowTextView", item)
 
-    def button(name, reaction, x, y, width, height, appearance, check=False, caption=None):
-        children = []
+    def button(name, reaction, x, y, width, height, appearance, check=False, caption=None, extra_children=()):
+        children = list(extra_children)
         if caption:
-            label(name + "Label", caption, 2, 6 if height > 30 else 2, width - 4, height - 4, center=True)
+            label(name + "Label", caption, 2, 0, 80, height, center=True, vertical_center=True)
             children.append((name + "Label_WindowTextView", "WindowTextView"))
         desc = shared("WindowMSButton", children=children)
         state = child(child(desc, "VisualStates"), "Item")
@@ -179,10 +190,12 @@ def build():
         child(pair, "Second", True)
         xml(reaction + "_UISRunReaction", desc)
 
-    button("Toggle", "MissionTransferToggle", 0, 0, 110, 34, "Toggle", caption="Transfer >")
-    button("TransferClose", "MissionTransferClose", 196, 4, 24, 24, "Close")
+    button("Toggle", "MissionTransferToggle", 0, 0, 110, 34, "Toggle", caption="Transfer", extra_children=(
+        ("TransferArrowRight_WindowSimple", "WindowSimple"),
+        ("TransferArrowLeft_WindowSimple", "WindowSimple"),
+    ))
     button("TransferConfirm", "MissionTransferPlayer", 154, 1, 24, 24, "Confirm", check=True)
-    label("TransferName", None, 5, 3, 146, 23)
+    label("TransferName", None, 5, 0, 146, 26, vertical_center=True)
     label("TransferTitle", "Transfer units", 8, 5, 166, 24)
 
     xml("Row_WindowSimpleShared", shared("WindowSimple", "/UI/Game/Menu/EscapeMenu/HeaderTable_BackgroundTiledTexture", (
@@ -193,19 +206,31 @@ def build():
 
     # Keep the clipped viewport separate from the scrollbar and its arrows.
     xml("Viewport_WindowSimple", window("WindowSimple", "Empty_WindowSimpleShared", "", 0, 0, 180, 150,
-                                         horizontal="EPA_MARGIN", vertical="EPA_MARGIN", margins=(0, 0, 36, 0)))
-    # The retail arrow and thumb artwork is 32px wide. Reserve its full pickable width.
-    slider = window("WindowSlider", "/UI/Game/Menu/Common/Slider_WindowSliderShared", "", 0, 0, 32, 0,
+                                         horizontal="EPA_MARGIN", vertical="EPA_MARGIN", margins=(0, 0, 18, 0)))
+    # The native artwork is 16px wide even though stock button descriptors reserve 32px.
+    # Keep the middle track visible when the slider hides its thumb for a short list.
+    desc = shared("WindowSlider", "/UI/Game/Menu/EscapeMenu/EscMenu_Slider_BackgroundTiledTexture")
+    child(desc, "Horisontal", False)
+    reference(desc, "Lever", "/UI/Game/Menu/Common/ScrollBar/ScrollSlider_WindowMSButton.xdb", "WindowMSButton")
+    child(desc, "MinLeverSize", 26)
+    child(desc, "MaxLeverSize", 0)
+    xml("Players_WindowSliderShared", desc)
+    slider = window("WindowSlider", "Players_WindowSliderShared", "", 0, 0, 16, 0,
                     vertical="EPA_MARGIN", margins=(0, 32, 0, 32))
     child(slider, "SpecialPositions", 0)
     xml("Players_WindowSlider", slider)
+    for direction, alignment in (("Up", "EPA_LOW_END"), ("Down", "EPA_HIGH_END")):
+        arrow = window("WindowMSButton", "/UI/Game/Menu/Common/ScrollBar/Scroll" + direction + "_WindowMSButtonShared",
+                       "", 0, 0, 16, 32, vertical=alignment)
+        child(child(arrow, "ButtonStates"), "Item")
+        xml("PlayersScroll" + direction + "_WindowMSButton", arrow)
     desc = shared("WindowScrollBar")
     child(desc, "Speed", 200)
-    reference(desc, "ButtonLower", "/UI/Game/Menu/Common/ScrollBar/ScrollUp_WindowMSButton.xdb", "WindowMSButton")
-    reference(desc, "ButtonGreater", "/UI/Game/Menu/Common/ScrollBar/ScrollDown_WindowMSButton.xdb", "WindowMSButton")
+    reference(desc, "ButtonLower", "PlayersScrollUp_WindowMSButton.xdb", "WindowMSButton")
+    reference(desc, "ButtonGreater", "PlayersScrollDown_WindowMSButton.xdb", "WindowMSButton")
     reference(desc, "Slider", "Players_WindowSlider.xdb", "WindowSlider")
     xml("Players_WindowScrollBarShared", desc)
-    scrollbar = window("WindowScrollBar", "Players_WindowScrollBarShared", "", 0, 0, 32, 0,
+    scrollbar = window("WindowScrollBar", "Players_WindowScrollBarShared", "", 0, 0, 16, 0,
                        horizontal="EPA_HIGH_END", vertical="EPA_MARGIN", margins=(0, 0, 0, 0))
     xml("Players_WindowScrollBar", scrollbar)
     desc = shared("WindowScrollableContainer")
@@ -214,14 +239,13 @@ def build():
     reference(desc, "Border", "Viewport_WindowSimple.xdb", "WindowSimple")
     xml("Players_WindowScrollableContainerShared", desc)
     xml("Players_WindowScrollableContainer", window("WindowScrollableContainer", "Players_WindowScrollableContainerShared",
-                                                     "TransferPlayers", 5, 33, 216, 150))
+                                                     "TransferPlayers", 5, 33, 198, 150))
 
     xml("Panel_WindowSimpleShared", shared("WindowSimple", "/UI/Game/Menu/EscapeMenu/EscMenu_Bgr_4_BackgroundTiledTexture", (
         ("TransferTitle_WindowTextView", "WindowTextView"),
-        ("TransferClose_WindowMSButton", "WindowMSButton"),
         ("Players_WindowScrollableContainer", "WindowScrollableContainer"),
     )))
-    xml("Panel_WindowSimple", window("WindowSimple", "Panel_WindowSimpleShared", "UnitTransferPanel", 0, 0, 226, 188))
+    xml("Panel_WindowSimple", window("WindowSimple", "Panel_WindowSimpleShared", "UnitTransferPanel", 0, 0, 208, 188))
 
     # The popover draws above the mission HUD; modal screens retain their own priority.
     for name in ("Toggle_WindowMSButton", "Panel_WindowSimple"):

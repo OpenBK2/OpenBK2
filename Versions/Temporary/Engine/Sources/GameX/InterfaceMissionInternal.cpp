@@ -240,10 +240,6 @@ bool CInterfaceMission::CReactions::Execute( const std::string &szSender,
 	{
 		return pInterface->OnTransferToggle();
 	}
-	if ( szReaction == "MissionTransferClose" )
-	{
-		return pInterface->OnTransferClose();
-	}
 	if ( szReaction == "MissionTransferPlayer" )
 	{
 		return pInterface->OnTransferPlayer( szSender );
@@ -1780,6 +1776,15 @@ void CInterfaceMission::UpdateTransferPanel()
 	}
 	pTransferBtn->ShowWindow( bVisible );
 	pTransferPanel->ShowWindow( bVisible && bTransferPanelOpen );
+	// Keep the optional resource's native direction icons in step with the panel state.
+	if ( IWindow *pArrow = pTransferBtn->GetChild( "TransferArrowRight", true ) )
+	{
+		pArrow->ShowWindow( !bTransferPanelOpen );
+	}
+	if ( IWindow *pArrow = pTransferBtn->GetChild( "TransferArrowLeft", true ) )
+	{
+		pArrow->ShowWindow( bTransferPanelOpen );
+	}
 	if ( bVisible )
 	{
 		// Track the actual HUD rectangle, including resolution changes and its slide animation.
@@ -1793,7 +1798,11 @@ void CInterfaceMission::UpdateTransferPanel()
 				pWnd->SetPlacement( fX, fY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 			}
 		};
-		moveWindow( pTransferBtn, hud.x1 - screen.x1 - 115, hud.y1 - screen.y1 - 36 );
+		// The portrait frame sits slightly lower than the multifunction panel. Follow its top with a small gap.
+		IWindow *pAppearance = pScreen->GetChild( "AppearancePanel", true );
+		const float fButtonBottom = pAppearance ? pAppearance->GetWindowRect().y1 : hud.y1;
+		moveWindow(
+				pTransferBtn, hud.x1 - screen.x1 - 115, fButtonBottom - screen.y1 - pTransferBtn->GetPlacement().Height() - 2 );
 		moveWindow( pTransferPanel, hud.x1 - screen.x1, hud.y1 - screen.y1 - 190 );
 		const bool bCanTransfer = pWorld && pWorld->HasTransferSelection();
 		for ( int nPlayer : transferPlayers )

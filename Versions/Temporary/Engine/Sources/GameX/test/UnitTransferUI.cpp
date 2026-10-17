@@ -58,6 +58,7 @@ TEST_F( UnitTransferUI, ArchiveLoadsDescriptorsAndUnicodeLabelsThroughGameDataba
 	ASSERT_FALSE( files.empty() );
 	for ( const std::string &file : files )
 	{
+		EXPECT_EQ( file.find( "TransferClose" ), std::string::npos );
 		if ( file.size() >= 4 && file.substr( file.size() - 4 ) == ".xdb" )
 		{
 			EXPECT_NE( NDb::GetObject( CDBID( file ) ), nullptr ) << file;
@@ -66,7 +67,7 @@ TEST_F( UnitTransferUI, ArchiveLoadsDescriptorsAndUnicodeLabelsThroughGameDataba
 
 	const auto *pCaption = Load<NDb::SWindowTextView>( "ToggleLabel_WindowTextView" );
 	ASSERT_NE( pCaption, nullptr );
-	EXPECT_EQ( NText::GetText( pCaption->szTextFileRef ), L"Transfer >\n" );
+	EXPECT_EQ( NText::GetText( pCaption->szTextFileRef ), L"Transfer" );
 	// Captions follow the game's regular text palette; player colors are applied at runtime.
 	EXPECT_EQ( pCaption->pTextFormat.GetPtr(),
 	           NDb::Get<NDb::STextFormat>( CDBID( "UI/Game/Common/Normal_center_TextFormat.xdb" ) ) );
@@ -74,12 +75,18 @@ TEST_F( UnitTransferUI, ArchiveLoadsDescriptorsAndUnicodeLabelsThroughGameDataba
 	ASSERT_NE( pPlayerName, nullptr );
 	EXPECT_EQ( pPlayerName->pTextFormat.GetPtr(),
 	           NDb::Get<NDb::STextFormat>( CDBID( "UI/Game/Common/Normal_TextFormat.xdb" ) ) );
+	for ( const auto *pLabel : { pCaption, pPlayerName } )
+	{
+		// Measure one line at the actual HUD font scale, then center that height in its parent.
+		EXPECT_TRUE( pLabel->bResizeOnTextSet );
+		EXPECT_EQ( pLabel->placement.verAllign.Get(), NDb::ERA_CENTER );
+		EXPECT_EQ( pLabel->placement.position.Get().y, 0 );
+	}
 }
 
 TEST_F( UnitTransferUI, ButtonsUseProgrammedReactionsAndScrollableRowsFitTheirViewport )
 {
 	const std::pair<const char *, const char *> buttons[] = { { "Toggle", "MissionTransferToggle" },
-	                                                          { "TransferClose", "MissionTransferClose" },
 	                                                          { "TransferConfirm", "MissionTransferPlayer" } };
 	for ( const auto &button : buttons )
 	{
@@ -108,9 +115,29 @@ TEST_F( UnitTransferUI, ButtonsUseProgrammedReactionsAndScrollableRowsFitTheirVi
 	const auto *pBarShared = dynamic_cast<const NDb::SWindowScrollBarShared *>( pShared->pScrollBar->pShared.GetPtr() );
 	ASSERT_NE( pBarShared, nullptr );
 	ASSERT_NE( pBarShared->pSlider.GetPtr(), nullptr );
+	EXPECT_EQ( pShared->pScrollBar->placement.size.Get().x, 16 );
+	ASSERT_NE( pBarShared->pButtonLower.GetPtr(), nullptr );
+	ASSERT_NE( pBarShared->pButtonGreater.GetPtr(), nullptr );
+	EXPECT_EQ( pBarShared->pButtonLower->placement.size.Get().x, 16 );
+	EXPECT_EQ( pBarShared->pButtonGreater->placement.size.Get().x, 16 );
+	EXPECT_EQ( pBarShared->pSlider->placement.size.Get().x, 16 );
+	const auto *pSliderShared = dynamic_cast<const NDb::SWindowSliderShared *>( pBarShared->pSlider->pShared.GetPtr() );
+	ASSERT_NE( pSliderShared, nullptr );
+	// A background remains visible even when SetRange hides the thumb for a short player list.
+	ASSERT_NE( pSliderShared->pBackground.GetPtr(), nullptr );
+	EXPECT_EQ(
+			pSliderShared->pBackground.GetPtr(),
+			NDb::Get<NDb::SBackground>( CDBID( "UI/Game/Menu/EscapeMenu/EscMenu_Slider_BackgroundTiledTexture.xdb" ) ) );
+	ASSERT_NE( pSliderShared->pBackground->pTexture.GetPtr(), nullptr );
+	EXPECT_TRUE( NVFS::GetMainVFS()->DoesFileExist( pSliderShared->pBackground->pTexture->szDestName ) );
 	EXPECT_LE( pRow->placement.size.Get().x,
 	           pList->placement.size.Get().x - pShared->pBorder->placement.upperMargin.Get().x );
 	EXPECT_GT( pRow->placement.size.Get().y * 6, pList->placement.size.Get().y );
+	const auto *pPanel = Load<NDb::SWindowSimple>( "Panel_WindowSimple" );
+	ASSERT_NE( pPanel, nullptr );
+	EXPECT_EQ( pPanel->placement.size.Get().x, 208 );
+	EXPECT_EQ( pPanel->placement.size.Get().x - pList->placement.position.Get().x - pList->placement.size.Get().x,
+	           pList->placement.position.Get().x );
 
 	const auto *pCheck = Load<NDb::SBackgroundSimpleScallingTexture>( "Check_Background" );
 	ASSERT_NE( pCheck, nullptr );
@@ -127,10 +154,7 @@ TEST_F( UnitTransferUI, ControlsReuseNativeTexturesAndStateColors )
 		{ "ToggleDisabled", "UI/Game/Menu/Common/Button_Forbidden_BackgroundTiledTexture.xdb" },
 		{ "ConfirmNormal", "UI/Game/Mission/NewActions/TemplateNormal_BackgroundSimpleTexture.xdb" },
 		{ "ConfirmPushed", "UI/Game/Mission/NewActions/TemplatePressed_BackgroundSimpleTexture.xdb" },
-		{ "ConfirmDisabled", "UI/Game/Mission/NewActions/TemplateDisabled_BackgroundSimpleTexture.xdb" },
-		{ "CloseNormal", "UI/Game/Mission/Objectives/ScrollDownNormal_BackgroundSimpleTexture.xdb" },
-		{ "ClosePushed", "UI/Game/Mission/Objectives/ScrollDownPressed_BackgroundSimpleTexture.xdb" },
-		{ "CloseDisabled", "UI/Game/Mission/Objectives/ScrollDownDisabled_BackgroundSimpleTexture.xdb" } };
+		{ "ConfirmDisabled", "UI/Game/Mission/NewActions/TemplateDisabled_BackgroundSimpleTexture.xdb" } };
 	for ( const auto &background : backgrounds )
 	{
 		SCOPED_TRACE( background.first );
@@ -144,8 +168,7 @@ TEST_F( UnitTransferUI, ControlsReuseNativeTexturesAndStateColors )
 		EXPECT_TRUE( NVFS::GetMainVFS()->DoesFileExist( pBackground->pTexture->szDestName ) );
 	}
 
-	const std::pair<const char *, const char *> buttons[] = {
-		{ "Toggle", "Toggle" }, { "TransferClose", "Close" }, { "TransferConfirm", "Confirm" } };
+	const std::pair<const char *, const char *> buttons[] = { { "Toggle", "Toggle" }, { "TransferConfirm", "Confirm" } };
 	for ( const auto &button : buttons )
 	{
 		const auto *pShared = Load<NDb::SWindowMSButtonShared>( std::string( button.first ) + "_WindowMSButtonShared" );
@@ -180,5 +203,36 @@ TEST_F( UnitTransferUI, ControlsReuseNativeTexturesAndStateColors )
 	const auto *pCheck = Load<NDb::SBackground>( "Check_Background" );
 	ASSERT_NE( pCheck, nullptr );
 	EXPECT_EQ( pCheck->nColor, -1 );
+}
+
+TEST_F( UnitTransferUI, ToggleDirectionUsesNativeTransparentChildIcons )
+{
+	const auto *pToggle = Load<NDb::SWindowMSButton>( "Toggle_WindowMSButton" );
+	ASSERT_NE( pToggle, nullptr );
+	const auto *pToggleShared = dynamic_cast<const NDb::SWindowMSButtonShared *>( pToggle->pShared.GetPtr() );
+	ASSERT_NE( pToggleShared, nullptr );
+	for ( const std::string direction : { "Right", "Left" } )
+	{
+		const std::string name = "TransferArrow" + direction;
+		const auto *pIcon = Load<NDb::SWindowSimple>( name + "_WindowSimple" );
+		ASSERT_NE( pIcon, nullptr );
+		EXPECT_EQ( pIcon->szName, name );
+		EXPECT_EQ( pIcon->bVisible, direction == "Right" );
+		bool bChildFound = false;
+		for ( const auto &pChild : pToggleShared->children )
+		{
+			bChildFound = bChildFound || pChild.GetPtr() == pIcon;
+		}
+		EXPECT_TRUE( bChildFound );
+		const auto *pShared = dynamic_cast<const NDb::SWindowSimpleShared *>( pIcon->pShared.GetPtr() );
+		ASSERT_NE( pShared, nullptr );
+		EXPECT_TRUE( pShared->flags.bTransparent );
+		ASSERT_NE( pShared->pBackground.GetPtr(), nullptr );
+		const std::string texture = "UI/Game/Mission/Panels/RightPanel/ToggleReinf" + direction + "Normal_Texture.xdb";
+		EXPECT_EQ( pShared->pBackground->pTexture.GetPtr(), NDb::Get<NDb::STexture>( CDBID( texture ) ) );
+		EXPECT_EQ( pShared->pBackground->nColor, -1 );
+		EXPECT_LE( pIcon->placement.position.Get().x + pIcon->placement.size.Get().x, pToggle->placement.size.Get().x );
+		EXPECT_EQ( pIcon->placement.position.Get().y * 2 + pIcon->placement.size.Get().y, pToggle->placement.size.Get().y );
+	}
 }
 } // namespace

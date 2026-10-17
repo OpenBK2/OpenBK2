@@ -35,7 +35,7 @@ CRegisterGroupCommand::CRegisterGroupCommand( const std::vector<int> &vIDs, cons
 
 void CRegisterGroupCommand::Execute()
 {
-	Singleton<IAILogic>()->RegisterGroup( unitsIDs, nID );
+	Singleton<IAILogic>()->RegisterGroup( unitsIDs, nID, true );
 }
 
 // ************************************************************************************************************************ //

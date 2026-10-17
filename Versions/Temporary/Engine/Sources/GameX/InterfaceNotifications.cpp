@@ -1133,7 +1133,8 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 
 	vLastCameraPos = Camera()->GetAnchor();
 
-	if ( pEvent->pDBEvent->bShowByCamera )
+	// The stock UnitsGiven resource disables camera focus, but a donation carries unit IDs and a fallback position.
+	if ( pEvent->pDBEvent->bShowByCamera || pEvent->pDBEvent->eType == NDb::NEVT_UNITS_GIVEN )
 	{
 		CVec2 vNearPos;
 		bool bResult = GetEventPos( &vNearPos, pEvent );
@@ -1478,11 +1479,11 @@ bool CVisualNotifications::GetEventPos( CVec2 *pPos, const SEvent *pEvent ) cons
 				bFound = true;
 			}
 		}
-		CVec3 vPos = CorrectPosByCameraAndHeight( vNearPos );
-		pPos->x = vPos.x;
-		pPos->y = vPos.y;
 		if ( bFound )
 		{
+			const CVec3 vPos = CorrectPosByCameraAndHeight( vNearPos );
+			pPos->x = vPos.x;
+			pPos->y = vPos.y;
 			return true;
 		}
 	}

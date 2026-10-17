@@ -1,5 +1,6 @@
 #include "../stdafx.h"
 
+#include "../PlayerCommandGroup.h"
 #include "../TransferredUnitExperience.h"
 #include "../UnitTransfer.h"
 
@@ -114,6 +115,62 @@ TEST( UnitTransfer, InvalidOrForeignCargoRejectsItsWholeGroupWithoutBlockingInde
 	};
 	EXPECT_EQ( CollectUnitTransfer( { 1, 2, 3, 9 }, inspect ), ( std::vector<int>{ 9 } ) );
 	EXPECT_TRUE( CollectUnitTransfer( {}, inspect ).empty() );
+}
+
+TEST( UnitTransfer, QueuedDonorSelectionCannotReclaimPlanesAfterOwnershipChanges )
+{
+	struct SUnit
+	{
+		int nPlayer;
+		bool bAlive = true;
+		SUnit *pFormation = nullptr;
+
+		bool IsAlive() const
+		{
+			return bAlive;
+		}
+
+		int GetPlayer() const
+		{
+			return nPlayer;
+		}
+
+		bool IsInFormation() const
+		{
+			return pFormation != nullptr;
+		}
+
+		SUnit *GetFormation() const
+		{
+			return pFormation;
+		}
+	};
+
+	// Both clients execute the same queued registrations after transferring planes 10 and 11.
+	// No client-local selectable flag participates in command ownership checks.
+	for ( int nClient = 0; nClient < 2; ++nClient )
+	{
+		std::map<int, SUnit> units{ { 10, { 0 } }, { 11, { 0 } }, { 20, { 0 } }, { 30, { 2 } } };
+		const auto resolve = [&units]( int nID ) -> SUnit *
+		{
+			const auto it = units.find( nID );
+			return it == units.end() ? nullptr : &it->second;
+		};
+		const uint16_t wDonorGroup = ( ( 3 << 4 ) | 0 ) << 1;
+		const uint16_t wRecipientGroup = ( ( 5 << 4 ) | 2 ) << 1;
+		EXPECT_EQ( ResolvePlayerCommandGroup<SUnit>( { 10, 11, 20 }, wDonorGroup, resolve ),
+		           ( std::vector<SUnit *>{ &units.at( 10 ), &units.at( 11 ), &units.at( 20 ) } ) );
+		units.at( 10 ).nPlayer = 2;
+		units.at( 11 ).nPlayer = 2;
+		EXPECT_EQ( ResolvePlayerCommandGroup<SUnit>( { 10, 11, 20 }, wDonorGroup, resolve ),
+		           ( std::vector<SUnit *>{ &units.at( 20 ) } ) );
+		EXPECT_EQ( ResolvePlayerCommandGroup<SUnit>( { 10, 11, 30 }, wRecipientGroup, resolve ),
+		           ( std::vector<SUnit *>{ &units.at( 10 ), &units.at( 11 ), &units.at( 30 ) } ) );
+		units.at( 11 ).bAlive = false;
+		units.at( 30 ).pFormation = &units.at( 20 );
+		EXPECT_EQ( ResolvePlayerCommandGroup<SUnit>( { -1, 10, 11, 30 }, wRecipientGroup, resolve ),
+		           ( std::vector<SUnit *>{ &units.at( 10 ) } ) );
+	}
 }
 
 TEST( TransferredExperience, VeteranWaitsUntilRecipientSurpassesItsRetainedLevel )

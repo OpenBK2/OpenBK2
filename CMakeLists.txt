@@ -214,8 +214,6 @@ include(cmake/freetype.cmake)
 include(cmake/fontpak.cmake)
 # also data: the custom-mission maps that are in Complete and not in the data tree
 include(cmake/testmaps.cmake)
-# The multiplayer transfer HUD is an additive database patch, installed beside the other game data.
-install(FILES "${CMAKE_SOURCE_DIR}/OBK2_Examples/UnitTransferImpl/unit_transfer.pak" DESTINATION Data)
 include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
 # the .cll list dbcodegen compiles, gathered from the modules' SOURCES

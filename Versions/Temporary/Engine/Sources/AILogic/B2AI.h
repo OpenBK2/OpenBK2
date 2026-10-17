@@ -66,7 +66,7 @@ struct IAILogic : public ICommonB2M1AI
 	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
 	virtual struct ITerraAIObserver *CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
 
-	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup ) = 0;
+	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup, bool bPlayerCommand = false ) = 0;
 	virtual void UnregisterGroup( const int nGroup ) = 0;
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) = 0;
 	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer ) = 0;

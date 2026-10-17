@@ -104,6 +104,8 @@ void CAILogic::TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer
 	}
 	if ( !transfers.empty() )
 	{
+		// Detached groups cannot be reused even if a shortcut selects exactly the same unit IDs again.
+		SetNeedNewGroupNumber();
 		// Every simulation emits the same feedback. Only the recipient's presentation layer displays it.
 		CPtr<SFeedBackUnitsArray> pNotice = new SFeedBackUnitsArray;
 		pNotice->unitIDs = transfers;

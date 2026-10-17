@@ -8,6 +8,7 @@
 #include "GridCreation.h"
 #include "GroupLogic.h"
 #include "NewUpdater.h"
+#include "PlayerCommandGroup.h"
 #include "ScanLimiter.h"
 #include "Shell.h"
 #include "Soldier.h"
@@ -228,21 +229,25 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 	}
 }
 
-void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup )
+void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup, bool bPlayerCommand )
 {
-	typedef CObjectBase *LPObjectBase;
-	LPObjectBase *objects = new LPObjectBase[vIDs.size()];
-	// for planes calculate group shift
-
-	CVec2 vPos = VNULL2;
-	int nAvia = 0;
-	for ( int i = 0; i < vIDs.size(); ++i )
+	std::vector<CObjectBase *> objects;
+	if ( bPlayerCommand )
 	{
-		objects[i] = (CObjectBase *)CLinkObject::GetObjectByUniqueIdSafe( vIDs[i] );
+		const auto resolve = []( int nID )
+		{ return dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) ); };
+		const std::vector<CCommonUnit *> playerUnits = ResolvePlayerCommandGroup<CCommonUnit>( vIDs, wGroup, resolve );
+		objects.assign( playerUnits.begin(), playerUnits.end() );
+	}
+	else
+	{
+		for ( int nID : vIDs )
+		{
+			objects.push_back( CLinkObject::GetObjectByUniqueIdSafe( nID ) );
+		}
 	}
 
-	RegisterGroup( objects, vIDs.size(), wGroup );
-	delete[] objects;
+	RegisterGroup( objects.data(), objects.size(), wGroup );
 }
 
 const uint16_t CGroupLogic::GenerateGroupNumber()

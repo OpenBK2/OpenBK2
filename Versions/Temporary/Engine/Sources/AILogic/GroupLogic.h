@@ -122,7 +122,7 @@ public:
 	}
 
 	const uint16_t GenerateGroupNumber();
-	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup );
+	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup, bool bPlayerCommand = false );
 	void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
 	void UnregisterGroup( const uint16_t wGroup );
 

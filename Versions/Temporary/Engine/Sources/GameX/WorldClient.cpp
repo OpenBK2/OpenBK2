@@ -2495,7 +2495,11 @@ void CWorldClient::UpdateSpecialGroups( int nID, CMapObj *pMO )
 {
 	CDynamicCast<CMOSelectable> pSO = pMO;
 
-	if ( pSO && pSO->CanSelect() )
+	// Allied aircraft are still friendly after donation, but only their current owner gets the MP shortcut.
+	const bool bOwnedAircraft = !pSO || !IsAviation( pSO ) ||
+	                            pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
+	                            pSO->GetPlayer() == pScenarioTracker->GetLocalPlayer();
+	if ( pSO && pSO->CanSelect() && bOwnedAircraft )
 	{
 		if ( IsFighter( pSO ) )
 		{
@@ -2911,6 +2915,9 @@ void CWorldClient::OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pM
 void CWorldClient::OnUpdateDiplomacy( CMapObj *pMO, const int nNewPlayer )
 {
 	pMO->SetColorIndex( GetHPBarColorIndex( pMO, nNewPlayer ), true );
+	// Ownership changes invalidate cached command groups even if a shortcut reselects identical IDs.
+	pCommandsSender->ResetGroup();
+	UpdateSpecialGroups( pMO->GetID(), pMO );
 }
 
 void CWorldClient::OnUpdateKeyObjectProgress( CMapObj *pMO, float fProgress, int nPlayer )

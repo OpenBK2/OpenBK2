@@ -161,7 +161,7 @@ public:
 	void TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer, int nTargetPlayer ) override;
 
 	const int GenerateGroupNumber() override;
-	void RegisterGroup( const std::vector<int> &vIDs, const int nGroup ) override;
+	void RegisterGroup( const std::vector<int> &vIDs, const int nGroup, bool bPlayerCommand = false ) override;
 	virtual void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
 	void UnregisterGroup( const int nGroup ) override;
 	void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) override;
