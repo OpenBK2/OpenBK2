@@ -147,7 +147,11 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 	CGrannyBoneAttributesList attribs;
 	if ( GetGeometryAttributes( pGeomMan, &attribs ) )
 	{
-		int nExistingLights;
+		// Zero is the answer when the record has no LightEffects node at all,
+		// which is the case the "add all" branch below exists for:
+		// CManipulatorManager::GetValue leaves its output untouched and returns
+		// false when the lookup fails, and this call ignores the result.
+		int nExistingLights = 0;
 		CManipulatorManager::GetValue( &nExistingLights, pMan, "LightEffects" );
 
 		// 1. Collect all information from granny file
