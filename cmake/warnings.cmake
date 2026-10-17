@@ -135,6 +135,13 @@ set(OBK2_WARNINGS_GCC
     # fall into a default that returns. clang has only one level and it has
     # always required the attribute rather than a comment.
     -Wimplicit-fallthrough
+    # Cleared 2026-10-17 with GCC's -Wnon-virtual-dtor, the same pass. clang
+    # counted 87 sites where GCC counted 160, because it reports the definition
+    # and not every derived class. Its second flag catches the other half of
+    # the class, a destructor actually called on such a type, and those 11
+    # sites were records destroyed inside a std::vector.
+    -Wnon-virtual-dtor
+    -Wdelete-non-abstract-non-virtual-dtor
     # Cleared 2026-10-17, as a pair, because they are the two halves of one
     # question: does a printf-family call fit the buffer it is given.
     # -Wformat-overflow=2 was 2, both real, and one of them a defect the class
@@ -174,6 +181,18 @@ set(OBK2_WARNINGS_GCC
     # pattern would match; the attribute is checked by the language rather than
     # by a regex, and clang only ever accepted the attribute.
     -Wimplicit-fallthrough=5
+    # Cleared 2026-10-17. Was 160 reported sites, which were about 70 classes
+    # seen twice over, once at the definition and once at every class derived
+    # from it: the unit mixins and enumerator interfaces in AILogic, the scene
+    # and UI interfaces, the resource cache and packet processor bases, and
+    # three database records whose destructors live in their hand-written
+    # hatches because RPGStats.h is dbcodegen's output.
+    #
+    # Free in layout terms, which is why it was worth doing in one pass: a
+    # class with a virtual function already carries a vtable pointer, so this
+    # adds a table entry and nothing else. The one class that needed a decision
+    # is NInput::CGMORegContainer, and the reasoning is at the destructor.
+    -Wnon-virtual-dtor
     # Adopted at level 2 on 2026-10-17, where the staging list had level 3.
     # Level 3 is every type caught by value and that is 1 site, Lua's ldo.cpp
     # catching an int, which is how Lua's error handling is built here and is
@@ -296,7 +315,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     # where they were measured at all: CI's GCC job builds BUILD_EDITOR=ON, so
     # an engine-only count is not the cost of adopting one of these.
     -Wstrict-aliasing=3             # 7 engine (was 12), 1 editor, and the DXT decoder's class
-    -Wnon-virtual-dtor              # 160 engine
     -Wcast-align=strict             # 104 engine, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 120 engine; plain -Wshadow is 637 on clang and noisy
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
@@ -346,8 +364,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     # engine ones.
     -Wheader-hygiene                # 9, `using namespace` in a header
     -Wenum-enum-conversion          # 9, includes the EFC_/EFUT_ mix-up
-    -Wnon-virtual-dtor              # 87
-    -Wdelete-non-abstract-non-virtual-dtor  # 11, and most of them dbcodegen output
     -Wcast-align                    # 56
 )
 
