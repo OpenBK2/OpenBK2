@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "3Dmotor/ScreenShot.h"
+#include "CustomMissions.h" // NCustom::VerifyMapPlayable, before a mission starts
 #include "DBGameRoot.h"
 #include "GameX/GameXClassIDs.h"
 #include "GetConsts.h"
@@ -452,6 +453,12 @@ void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign,
 	           return );
 	const NDb::SMapInfo *pMission = pChapter->missionPath[nMissionNumber].pMap;
 	NI_VERIFY( pMission, "Start single mission: mission not found", return );
+	// Before anything is set up, because a map with no terrain file beside it
+	// crashes once the mission is running rather than failing to start.
+	if ( !NCustom::VerifyMapPlayable( pMission ) )
+	{
+		return;
+	}
 
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
 

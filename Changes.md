@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Fixed the crash when starting a map whose terrain file is missing. `MapInfo.xdb` and the `map.b2m` beside it are separate files, and a record without its map file used to load and start, leaving the terrain manager holding a terrain that was never loaded; the map's own crags and entrenchments then dug into it and the game died on the first tile. Starting a mission, from the menus, from the `map` and `mission` console commands or from a campaign, now checks for the file first and reports which one is missing. None of the fourteen missions shipped under `Data/Custom/Missions` has its `map.b2m`, so with the released data they are refused rather than fatal.
+
 - Fixed multi-turret artillery installing while a turret was still aimed away. The check that waits for every turret to return to its travel angle advanced its index twice per pass, so it only ever looked at the even-numbered ones, and the odd ones were neither waited for nor ordered back. Of the shipped units only BM-8-48 has two turrets, so it is the only one whose behavior changes. Replays recorded before this change that contain a BM-8-48 install or uninstall will no longer verify.
 
 - Fixed a building's ammunition reading dropping to a single weapon's worth. The total was summed correctly when the building appeared, but the update that arrives from the simulation stopped after the first weapon, so a building with several gun slots understated its ammunition for the rest of the match.

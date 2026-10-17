@@ -26,6 +26,7 @@
 #include "3Dmotor/LoadingCounter.h"
 #include "B2_M1_World/ClientAckManager.h"
 #include "CommandsHistory.h"
+#include "CustomMissions.h" // NCustom::VerifyMapPlayable, before a mission starts
 #include "DBGameRoot.h"
 #include "DBMPConsts.h"
 #include "GetConsts.h"
@@ -4952,6 +4953,13 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 		{
 			const auto message = fmt::format( "Map ({}) not found", szStrings[0] );
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
+			return;
+		}
+		// A MapInfo record whose map.b2m is absent starts a mission on a terrain
+		// that was never loaded, and the first thing that walks it dies; most of
+		// the records shipped under Custom/Missions are like that.
+		if ( !NCustom::VerifyMapPlayable( pInfo ) )
+		{
 			return;
 		}
 
