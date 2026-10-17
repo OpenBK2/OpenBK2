@@ -27,6 +27,8 @@ class CStormableObject
 	NTimer::STime lastSegment = {};
 
 public:
+	virtual ~CStormableObject() = default;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &attackers );

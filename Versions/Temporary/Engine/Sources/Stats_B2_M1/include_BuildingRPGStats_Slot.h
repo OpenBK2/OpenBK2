@@ -31,6 +31,11 @@ bool ToAIUnits( bool bInEditor )
 	return true;
 }
 
+// Virtual for the same reason as the one in include_BaseGunRPGStats.h, and
+// here for the same reason too: RPGStats.h is dbcodegen's output and this hatch
+// is not.
+virtual ~SSlot() = default;
+
 virtual const CVec3 GetShootPointPos() const
 {
 	return vPos;

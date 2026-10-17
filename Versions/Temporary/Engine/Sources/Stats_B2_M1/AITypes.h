@@ -149,6 +149,7 @@ struct SShootArea
 
 struct SShootAreas
 {
+	virtual ~SShootAreas() = default;
 	// выводить - последовательно, накладывая друг на друга, сначала areas[0], потом areas[1] и т.д.
 	std::list<SShootArea> areas;
 

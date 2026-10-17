@@ -51,6 +51,7 @@ public:
 	// для перебора всех хранилищь
 	struct IEnumStoragesPredicate
 	{
+		virtual ~IEnumStoragesPredicate() = default;
 		// перебирать только подсоединенные хранилища
 		virtual bool OnlyConnected() const = 0;
 		// true - закончить, то, что нужно уже нашлось

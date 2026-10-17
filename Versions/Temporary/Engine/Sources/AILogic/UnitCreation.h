@@ -17,6 +17,7 @@ struct ICollisionsCollector;
 // для унификации создания самолетов
 struct IPlaneCreation
 {
+	virtual ~IPlaneCreation() = default;
 	virtual const CVec2 &GetDestPoint() const = 0;
 	virtual void CalcPositions( const int nMax,
 	                            const CVec2 &vAABBbox,

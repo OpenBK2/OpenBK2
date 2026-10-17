@@ -27,6 +27,8 @@ class CDifficultyLevel
 	std::vector<std::string> partiesNames;
 
 public:
+	virtual ~CDifficultyLevel() = default;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		OnSerialize( f );

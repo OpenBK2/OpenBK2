@@ -44,6 +44,7 @@ enum EForceType
 // через этот интерфейс получают врагов
 struct IEnemyEnumerator
 {
+	virtual ~IEnemyEnumerator() = default;
 	// возращает, нужно ли ещё предлагать врагов
 	virtual bool EnumEnemy( class CAIUnit *pEnemy ) = 0;
 
@@ -57,6 +58,7 @@ struct IEnemyEnumerator
 // через этот - выдают
 struct IEnemyContainer
 {
+	virtual ~IEnemyContainer() = default;
 	virtual void GiveEnemies( IEnemyEnumerator *pEnumerator ) = 0;
 
 	virtual void GiveResistances( IEnemyEnumerator *pEnmumerator ) {}
@@ -71,6 +73,7 @@ struct IEnemyContainer
 // ****
 struct IWorkerEnumerator
 {
+	virtual ~IWorkerEnumerator() = default;
 	// return FALSE if enumerator already has enough workers
 	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) = 0;
 

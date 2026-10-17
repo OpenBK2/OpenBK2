@@ -54,6 +54,8 @@ public:
 
 struct IGunsFactory
 {
+	virtual ~IGunsFactory() = default;
+
 	enum EGunTypes
 	{
 		MOMENT_CML_GUN,

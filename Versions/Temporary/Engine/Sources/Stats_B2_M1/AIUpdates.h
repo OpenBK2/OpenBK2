@@ -17,6 +17,7 @@ struct SVisObj;
 
 struct IUpdatableClient
 {
+	virtual ~IUpdatableClient() = default;
 	virtual void ProcessUpdate( const struct SAIPointLightUpdate *pUpdate ) = 0;
 	virtual void ProcessUpdate( const struct SAIHeadLightUpdate *pUpdate ) = 0;
 	virtual void ProcessUpdate( const struct SAIToggleDayNightWindowsUpdate *pUpdate ) = 0;

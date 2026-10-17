@@ -122,6 +122,7 @@ public:
 // объект, внутри которого могут быть юниты
 struct ILoadableObject
 {
+	virtual ~ILoadableObject() = default;
 	// итерирование по fire slots
 	virtual void StartIterate() = 0;
 	virtual void Iterate() = 0;

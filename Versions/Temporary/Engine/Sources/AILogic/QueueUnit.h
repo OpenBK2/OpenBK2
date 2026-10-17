@@ -41,6 +41,8 @@ class CQueueUnit
 	void PopCmd( const int nID );
 
 public:
+	virtual ~CQueueUnit() = default;
+
 	ZEND int operator&( IBinSaver &f )
 	{
 		f.Add( 2, &pState );

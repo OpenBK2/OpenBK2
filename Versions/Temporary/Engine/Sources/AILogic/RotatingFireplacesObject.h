@@ -46,6 +46,10 @@ public:
 public:
 	CRotatingFireplacesObject() {}
 
+	// Virtual: entrenchments and buildings mix this in, and both are destroyed
+	// through base pointers.
+	virtual ~CRotatingFireplacesObject() = default;
+
 	// вызывается после того, как юнита полностью добавили в объект
 	// nFireplace - номер fireplace в том случае, если солдат добавляется в fireplace
 	void AddUnit( class CSoldier *pSoldier, const int nFireplace );

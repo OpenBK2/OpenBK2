@@ -8,6 +8,8 @@
  */
 struct IPlane
 {
+	virtual ~IPlane() = default;
+
 public:
 	// current speed
 	virtual CVec3 GetSpeedB2() const = 0;

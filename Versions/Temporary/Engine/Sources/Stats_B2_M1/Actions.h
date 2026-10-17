@@ -246,6 +246,7 @@ public:
 // placement update
 struct SAINotifyPlacement : public SSuspendedUpdate
 {
+	virtual ~SAINotifyPlacement() = default;
 	bool bNewFormat = {}; // when true OLD is ignored
 
 	//OLD{

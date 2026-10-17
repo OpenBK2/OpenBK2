@@ -1007,6 +1007,7 @@ public:
 	class CFindUnitPredicate
 	{
 	public:
+		virtual ~CFindUnitPredicate() = default;
 		virtual bool HasUnit() = 0;
 		//returns true if we have to finish the search
 		virtual bool SetUnit( class CAIUnit *pUnit, const float fMissedHP, const float fDist ) = 0;

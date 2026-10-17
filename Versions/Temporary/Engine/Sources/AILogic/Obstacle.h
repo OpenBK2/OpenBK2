@@ -28,6 +28,7 @@ struct IObstacle : public CAIObjectBase
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct IObstacleEnumerator
 {
+	virtual ~IObstacleEnumerator() = default;
 	//true if enough objects enumerated.
 	virtual bool AddObstacle( IObstacle *pObstacle ) = 0;
 };

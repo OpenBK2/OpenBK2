@@ -18,6 +18,7 @@ enum EActionNotify : unsigned int;
 
 struct IEnumerator
 {
+	virtual ~IEnumerator() = default;
 	// return true if enumeration should be finished
 	virtual bool AddUnit( CAIUnit *pUnit ) = 0;
 	virtual void Done() = 0;
@@ -149,6 +150,7 @@ private:
 	//
 	struct ICheckObjects
 	{
+		virtual ~ICheckObjects() = default;
 		virtual bool IsGoodObj( class CExistingObject *pObj ) const = 0;
 	};
 

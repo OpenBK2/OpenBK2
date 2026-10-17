@@ -116,6 +116,10 @@ public:
 	{
 	}
 
+	// Virtual, because the event payloads below are handled through references
+	// to this type and the derived ones own CPtr members to release.
+	virtual ~SExecutorEventParam() = default;
+
 	virtual const class CAICommand *GetCommand() const
 	{
 		return 0;

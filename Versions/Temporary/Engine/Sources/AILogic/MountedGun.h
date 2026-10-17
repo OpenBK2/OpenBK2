@@ -10,6 +10,7 @@ class CMountedTurret;
 class CCommonMountedGun
 {
 public:
+	virtual ~CCommonMountedGun() = default;
 	int operator&( IBinSaver &saver );
 
 private:

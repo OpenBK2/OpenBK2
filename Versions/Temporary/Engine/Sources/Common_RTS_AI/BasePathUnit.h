@@ -46,6 +46,7 @@ class CBasePathUnit;
 //! callback для итерирования по юнитам
 struct SIterateUnitsCallback
 {
+	virtual ~SIterateUnitsCallback() = default;
 	virtual bool Iterate( CBasePathUnit *unit ) const = 0;
 };
 
@@ -196,6 +197,9 @@ protected:
 
 public:
 	CBasePathUnit();
+	// Virtual, because every movable unit derives from this and the collision
+	// and path code holds them by CBasePathUnit pointer.
+	virtual ~CBasePathUnit() = default;
 	void Init( const CVec3 &vCenter,
 	           const uint16_t wDirection,
 	           CAIMap *pAIMap,
