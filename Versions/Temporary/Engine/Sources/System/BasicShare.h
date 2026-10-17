@@ -16,6 +16,8 @@ protected:
 	virtual void CreateHolder( std::list<CObj<CObjectBase>> *pHolder ) = 0;
 
 public:
+	virtual ~CBasicShareBase() = default;
+
 	CBasicShareBase( int _nID )
 		: nID( _nID )
 	{

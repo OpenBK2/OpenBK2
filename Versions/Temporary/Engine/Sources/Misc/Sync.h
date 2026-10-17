@@ -211,6 +211,10 @@ public:
 	}
 
 protected:
+	// Virtual, because COrdinarySyncDst and the scene's own receivers are held
+	// and released through this type.
+	virtual ~CSyncDst() = default;
+
 	CSyncSrc<T> *GetSource() const
 	{
 		return pSource;

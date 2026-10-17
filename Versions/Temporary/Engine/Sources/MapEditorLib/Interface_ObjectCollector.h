@@ -37,6 +37,10 @@ struct IObjectDataExtractor : public CObjectBase
 
 struct IObjectFilter
 {
+	// Virtual: the collector keeps its filters in a vector of a derived type and
+	// hands them out through this interface.
+	virtual ~IObjectFilter() = default;
+
 	typedef std::unordered_map<NFile::CFilePath, int> CObjectNameCollection;
 	typedef std::unordered_map<NFile::CFilePath, CObjectNameCollection> CObjectCollection;
 	//

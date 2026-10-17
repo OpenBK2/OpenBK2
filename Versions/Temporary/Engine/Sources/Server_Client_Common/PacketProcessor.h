@@ -68,6 +68,7 @@ protected:
 	void PushPacket( CNetPacket *pPacket );
 
 public:
+	virtual ~CPacketProcessorBase() = default;
 	virtual bool ProcessPacket( CNetPacket *pPacket );
 	CNetPacket *GetPacket();
 

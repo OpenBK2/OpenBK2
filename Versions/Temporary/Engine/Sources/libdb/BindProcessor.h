@@ -24,6 +24,7 @@ namespace NBind
 
 	struct ILoadableObjMan
 	{
+		virtual ~ILoadableObjMan() = default;
 		virtual bool
 		LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) = 0;
 		virtual bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) = 0;

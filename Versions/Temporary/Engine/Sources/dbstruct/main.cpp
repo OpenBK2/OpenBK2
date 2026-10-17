@@ -75,6 +75,7 @@ enum EDBStructMode
 
 struct ILoadObjectCallback
 {
+	virtual ~ILoadObjectCallback() = default;
 	virtual void ObjectLoaded( NDb::IObjMan *pObjMan, const CDBID &dbid ) = 0;
 };
 
