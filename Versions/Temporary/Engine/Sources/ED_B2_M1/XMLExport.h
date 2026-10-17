@@ -41,6 +41,7 @@ protected:
 	virtual void FinishExport();
 
 public:
+	virtual ~CXmlExporter() = default;
 	virtual bool
 	ExportObject( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName );
 };

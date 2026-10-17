@@ -118,6 +118,7 @@ struct SCreateHeightPatternByValueFunctional
 //функционал создающий паттерн заравнивания
 struct SCreateHeightPatternToLevelFunctional
 {
+	virtual ~SCreateHeightPatternToLevelFunctional() = default;
 	SHeightPattern *pHeightPattern;
 	float fAverageHeight;
 	float fLevelRatio;
@@ -147,6 +148,7 @@ struct SCreateHeightPatternToLevelFunctional
 //функционал создающий паттерн заравнивания, все высоты приводятся к положительным величинам
 struct SCreateHeightPatternToLevelOverZeroFunctional
 {
+	virtual ~SCreateHeightPatternToLevelOverZeroFunctional() = default;
 	SHeightPattern *pHeightPattern;
 	float fAverageHeight;
 	float fLevelRatio;
@@ -190,6 +192,7 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 //функционал создающий паттерн в высотами
 struct SCreateHeightPatternFunctional
 {
+	virtual ~SCreateHeightPatternFunctional() = default;
 	SHeightPattern *pHeightPattern;
 
 	SCreateHeightPatternFunctional( SHeightPattern *_pHeightPattern )
@@ -215,6 +218,7 @@ struct SCreateHeightPatternFunctional
 //функционал определяющий среднее значение высоты
 struct SCalculateAverageHeightFunctional
 {
+	virtual ~SCalculateAverageHeightFunctional() = default;
 	float fTotalHeight;
 	int nPointCount;
 

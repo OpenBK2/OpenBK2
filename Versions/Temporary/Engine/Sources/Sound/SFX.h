@@ -19,6 +19,7 @@ enum ESFXOutputType
 
 struct ISFXVisitor
 {
+	virtual ~ISFXVisitor() = default;
 	virtual int VisitSound2D( class CSFXSound *pSound ) = 0;
 	virtual int VisitSound3D( class CSFXSound *pSound ) = 0;
 };

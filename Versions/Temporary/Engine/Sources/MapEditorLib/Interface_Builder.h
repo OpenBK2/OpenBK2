@@ -67,6 +67,7 @@ typedef std::unordered_map<int, CTableSet> CTableSetMap;
 
 struct IBuildDataCallback
 {
+	virtual ~IBuildDataCallback() = default;
 	// проверить данные на правильность заполнения, если данные не верны вернуть краткое описание ошибки
 	// pszDescription - может быть нулевой
 	virtual bool

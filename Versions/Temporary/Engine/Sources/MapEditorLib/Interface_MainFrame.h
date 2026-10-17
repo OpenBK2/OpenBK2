@@ -60,6 +60,7 @@ struct SSWTParams
 
 struct ILogger
 {
+	virtual ~ILogger() = default;
 	virtual void Log( ELogOutputType eLogOutputType, const std::string &szText ) = 0;
 	virtual void ClearLog() = 0;
 };

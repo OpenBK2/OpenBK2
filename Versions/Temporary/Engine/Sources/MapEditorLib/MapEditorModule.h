@@ -5,12 +5,14 @@ typedef void ( *UnRegisterEditorType )( const std::string &szName );
 
 struct IEditorModuleRegistrator
 {
+	virtual ~IEditorModuleRegistrator() = default;
 	virtual void RegisterTypes( const std::string &szType, RegisterEditorType pfnRegistrator ) const = 0;
 	virtual void UnRegisterTypes( const std::string &szType, UnRegisterEditorType pfnUnRegistrator ) const = 0;
 };
 
 struct IEditorModule
 {
+	virtual ~IEditorModule() = default;
 	virtual void ModuleStartup() = 0;
 	virtual void ModuleShutdown() = 0;
 	virtual void ModuleCreate() = 0;
