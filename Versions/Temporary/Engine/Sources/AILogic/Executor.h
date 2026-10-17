@@ -77,7 +77,11 @@ enum EExecutorEventID
 	EID_SUPER_WEAPON_CONTROL,
 	EID_SUPER_WEAPON_USE,
 
-	_EID_COUNT = 1,
+	// Counts the ids above, like _TID_COUNT does for the type ids. It used to be
+	// pinned to 1, which is EID_ABILITY_DEACTIVATE, so the sentinel named an
+	// event instead of the number of them. Nothing reads it, which is why the
+	// collision never showed up as a bug.
+	_EID_COUNT,
 };
 
 // event. in ideal world events are generated only by executors.
