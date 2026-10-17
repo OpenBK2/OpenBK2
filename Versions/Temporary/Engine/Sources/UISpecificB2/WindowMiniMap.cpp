@@ -899,7 +899,7 @@ void CWindowMiniMap::SetUnits( const std::vector<SMiniMapUnitInfo> &vUnits )
 		{
 			const SMiniMapUnitInfo &unit = vUnits[i];
 			//NI_ASSERT( vUnits[i].player >=0 && vUnits[i].player < playerColors.size(), StrFmt( "MiniMap's color not define for player %d", vUnits[i].player ) );
-			if ( unit.player >= 0 && unit.player < playerColors.size() )
+			if ( unit.player < playerColors.size() )
 			{
 				CVec2 vPos;
 				MapToScreen( CVec2( unit.x, unit.y ), &vPos );

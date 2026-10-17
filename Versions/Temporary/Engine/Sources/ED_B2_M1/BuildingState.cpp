@@ -161,7 +161,7 @@ bool CBuildingState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			unsigned nShortcutIndex = HIWORD( dwData );
 			unsigned nTabIndex = LOWORD( dwData );
-			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) && ( nShortcutIndex >= 0 ) && ( nShortcutIndex < GetCount() ) )
+			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) && ( nShortcutIndex < GetCount() ) )
 			{
 				SetActiveInputState( nShortcutIndex, true, false );
 			}
@@ -169,7 +169,7 @@ bool CBuildingState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				CMultiInputState *pMultiInputState = checked_cast<CMultiInputState *>( GetInputState( nShortcutIndex ) );
 				NI_ASSERT( pMultiInputState != 0, "CBuildingState::HandleCommand(), pMultiInputState == 0" );
-				if ( ( nTabIndex >= 0 ) && ( nTabIndex < pMultiInputState->GetCount() ) )
+				if ( nTabIndex < pMultiInputState->GetCount() )
 				{
 					pMultiInputState->SetActiveInputState( nTabIndex, true, false );
 				}

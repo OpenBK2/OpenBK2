@@ -437,7 +437,7 @@ void CTerraGen::UpdateTileAreaType( const float fXo,
 			const int nIndY = g - nY1;
 			if ( terraBrushUpdate == NTerraBrush::TERRA_BRUSH_OVERRIDE )
 			{
-				if ( ( mask[nIndY][nIndX] < tileTerraMasks.size() ) && ( mask[nIndY][nIndX] >= 0 ) )
+				if ( mask[nIndY][nIndX] < tileTerraMasks.size() )
 				{
 					tileTerraMapDiffs[g][i] += mask[nIndY][nIndX] - terrainInfo.tileTerraMap[g][i];
 					terrainInfo.tileTerraMap[g][i] = mask[nIndY][nIndX];
