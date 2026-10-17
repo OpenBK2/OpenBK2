@@ -109,7 +109,12 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 		case NDb::ANIMATION_UNINSTALL_ROT:
 		case NDb::ANIMATION_INSTALL_PUSH:
 		case NDb::ANIMATION_UNINSTALL_PUSH:
+			// The break is what keeps the specific complaint: these animations are
+			// known and wrong for a soldier, and falling into default reported them
+			// as unknown instead. Neither assertion does anything in a release
+			// build, so this only changes which one a developer sees.
 			NI_ASSERT( false, fmt::format( "Wrong animation for soldier ({})", nAnimation ) );
+			break;
 
 		default:
 			NI_ASSERT( false, fmt::format( "Unknown animation for soldier ({})", nAnimation ) );
