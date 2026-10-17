@@ -477,7 +477,7 @@ void CAIUnit::GetNewUnitInfo( SNewUnitInfo *pNewUnitInfo )
 	pNewUnitInfo->nPlayer = GetPlayer();
 	pNewUnitInfo->eReinfType = GetReinforcementType();
 	// Since this level is used to count abilities, send ability level
-	pNewUnitInfo->nExpLevel = theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() );
+	pNewUnitInfo->nExpLevel = GetAbilityLevel() - 1;
 }
 
 const NDb::SAmphibianStats *CAIUnit::GetAmphibianStats() const
@@ -1096,6 +1096,10 @@ void CAIUnit::GetRPGStats( SAINotifyRPGStats *pStats )
 {
 	pStats->fHitPoints = GetHitPoints();
 	pStats->nObjUniqueID = GetUniqueId();
+	if ( GetScenarioTracker() && GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+	{
+		pStats->nExpLevel = GetAbilityLevel() - 1;
+	}
 
 	pStats->nSupply = 0;
 	for ( int i = 0; i < GetNCommonGuns(); ++i )
@@ -1331,6 +1335,11 @@ void CAIUnit::UpdateUnitsRequestsForResupply()
 void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 {
 	const uint8_t cOldPlayer = GetPlayer();
+	if ( transferredExperience.IsTransferred() )
+	{
+		// Also keep the baseline correct if a script later changes a donated unit's owner.
+		transferredExperience.Transfer( GetXPLevel() - 1, theStatistics.GetXPLevel( cPlayer, GetReinforcementType() ) );
+	}
 	if ( GetParty() != theDipl.GetNParty( cPlayer ) )
 	{
 		theFeedBackSystem.RemovedAllFeedbacks( nUniqueID );
@@ -1397,7 +1406,40 @@ void CAIUnit::ChangePlayer( const uint8_t cPlayer )
 		GetFormation()->ChangePlayer( cPlayer );
 	}
 
-	InitSpecialAbilities();
+	if ( !transferredExperience.IsTransferred() )
+	{
+		// Donated units already have their abilities; reinitializing passive abilities would apply bonuses twice.
+		InitSpecialAbilities();
+	}
+}
+
+void CAIUnit::PrepareTransfer( int nTargetPlayer )
+{
+	transferredExperience.Transfer( GetXPLevel() - 1, theStatistics.GetXPLevel( nTargetPlayer, GetReinforcementType() ) );
+}
+
+void CAIUnit::UpdateTransferredExperience()
+{
+	const int nOldLevel = GetXPLevel() - 1;
+	if ( !transferredExperience.UpdateOwnerLevel( theStatistics.GetXPLevel( GetPlayer(), GetReinforcementType() ) ) )
+	{
+		return;
+	}
+	const int nNewLevel = GetXPLevel() - 1;
+	const NDb::SAIGameConsts *pConsts = Singleton<IAILogic>()->GetAIConsts();
+	for ( const NDb::SAIExpLevel *pLevels : pConsts->common.expLevels )
+	{
+		if ( pLevels && pLevels->eDBType == GetReinforcementType() && !pLevels->levels.empty() )
+		{
+			// Remove this unit's actual old bonus, which may differ from its owner's old level.
+			ApplyStatsModifier( pLevels->levels[(std::min<int>)( nOldLevel, pLevels->levels.size() - 1 )].pStatsBonus,
+			                    false );
+			ApplyStatsModifier( pLevels->levels[(std::min<int>)( nNewLevel, pLevels->levels.size() - 1 )].pStatsBonus, true );
+			break;
+		}
+	}
+	InitSpecialAbilities( nOldLevel + 1 );
+	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 }
 
 float CAIUnit::GetRemissiveCoeff() const
@@ -2911,13 +2953,12 @@ void CAIUnit::UpdateEnableAblitiy( const int nAbility )
 
 const int CAIUnit::GetXPLevel()
 {
-	return 1 + theStatistics.GetXPLevel( GetPlayer(), GetReinforcementType() );
+	return 1 + transferredExperience.GetLevel( theStatistics.GetXPLevel( GetPlayer(), GetReinforcementType() ) );
 }
 
 const int CAIUnit::GetAbilityLevel()
 {
-	//return nAbilityLevel <= 0 ? 1 + theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() ) : nAbilityLevel;
-	return 1 + theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() );
+	return 1 + transferredExperience.GetLevel( theStatistics.GetAbilityLevel( GetPlayer(), GetReinforcementType() ) );
 }
 
 void CAIUnit::InitSpecialAbilities( int nFromLevel )
@@ -3587,7 +3628,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 
 			if ( pLevels->eDBType == eReinforcementType && !bOldRemoved )
 			{
-				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eReinforcementType );
+				int nXPLevel = GetXPLevel() - 1;
 				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
 				{
@@ -3601,7 +3642,7 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 			}
 			else if ( pLevels->eDBType == eType && !bNewApplied )
 			{
-				int nXPLevel = GetScenarioTracker()->GetReinforcementXPLevel( player, eType );
+				int nXPLevel = transferredExperience.GetLevel( GetScenarioTracker()->GetReinforcementXPLevel( player, eType ) );
 				nXPLevel = (std::min<int>)( pLevels->levels.size() - 1, nXPLevel );
 				if ( nXPLevel < 0 )
 				{
@@ -3616,6 +3657,10 @@ void CAIUnit::SetReinforcementType( const NDb::EReinforcementType eType )
 		}
 
 		eReinforcementType = eType;
+		if ( transferredExperience.IsTransferred() )
+		{
+			transferredExperience.Transfer( GetXPLevel() - 1, theStatistics.GetXPLevel( player, eType ) );
+		}
 	}
 }
 

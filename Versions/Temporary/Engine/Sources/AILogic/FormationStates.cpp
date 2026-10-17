@@ -4173,7 +4173,8 @@ CFormationFirstAidState::CFormationFirstAidState( class CFormation *_pFormation,
 	for ( int i = 0; i < pFormation->Size(); ++i )
 	{
 		CSoldier *pSold = ( *pFormation )[i];
-		const int nLevel = theStatistics.GetAbilityLevel( pSold->GetPlayer(), pSold->GetReinforcementType() );
+		// Donated medics retain their own unlocked abilities.
+		const int nLevel = pSold->GetAbilityLevel() - 1;
 		const NDb::SUnitBaseRPGStats *pStats = pSold->GetStats();
 		const int nAbilities = (std::min<int>)( nLevel + 1, pStats->GetActions()->specialAbilities.size() );
 		bool bCanHeal = false;

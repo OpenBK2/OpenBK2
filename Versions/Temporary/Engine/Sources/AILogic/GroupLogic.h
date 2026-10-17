@@ -156,13 +156,14 @@ public:
 	// For a group simulation code makes itself. Never one a player could send, and
 	// the same on every client.
 	const uint16_t GenerateSimulationGroupNumber( const bool bSpecial = false );
-	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup );
+	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup, bool bPlayerCommand = false );
 	void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
 	void UnregisterGroup( const uint16_t wGroup );
 
 	void DelUnitFromGroup( class CCommonUnit *pUnit );
 	void AddUnitToGroup( class CCommonUnit *pUnit, const int nGroup );
 	void DelUnitFromSpecialGroup( class CCommonUnit *pUnit );
+	void DetachTransferredUnit( CCommonUnit *pUnit );
 
 	void GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup, bool bPlaceInQueue );
 	void UnitCommand( const SAIUnitCmd &command, class CCommonUnit *pGroupUnit, bool bPlaceInQueue );

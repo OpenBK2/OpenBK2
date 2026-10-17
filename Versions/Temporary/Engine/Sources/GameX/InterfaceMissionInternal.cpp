@@ -53,6 +53,7 @@
 #include "UI/SceneClassIDs.h"
 #include "UI/Window.h"
 #include "UISpecificB2/DBUISpecificB2.h"
+#include "UISpecificB2/UISpecificB2.h"
 
 #include "GameX_export.h"
 
@@ -235,6 +236,15 @@ bool CInterfaceMission::CReactions::Execute( const std::string &szSender,
                                              const std::string &szReaction,
                                              uint16_t wKeyboardFlags )
 {
+	if ( szReaction == "MissionTransferToggle" )
+	{
+		return pInterface->OnTransferToggle();
+	}
+	if ( szReaction == "MissionTransferPlayer" )
+	{
+		return pInterface->OnTransferPlayer( szSender );
+	}
+
 	if ( szReaction == "FullInfoMember" )
 	{
 		return pInterface->OnClickFullInfoMember( szSender );
@@ -1420,6 +1430,7 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			CTRect<float> rect = pMultifunctionWnd->GetWindowRect();
 			fViewportBottom = rect.y1;
 		}
+		InitTransferPanel();
 
 		IWindow *pRightPanel = GetChildChecked<IWindow>( pScreen, "MissionActionsPanel", true );
 		if ( pRightPanel )
@@ -1632,6 +1643,7 @@ void CInterfaceMission::MultifunctionPanelMinimize()
 		NInput::PostEvent( "mission_reinf_panel_minimize_move", 0, 0 );
 		NInput::PostEvent( "mission_minimap_panel_minimize_move", 0, 0 );
 		bMultifunctionPanelMinimized = true;
+		OnTransferClose();
 		if ( pMinimizeBtn )
 		{
 			pMinimizeBtn->SetState( 1 );
@@ -1650,12 +1662,222 @@ void CInterfaceMission::MultifunctionPanelMaximize()
 		NInput::PostEvent( "mission_reinf_panel_maximize_move", 0, 0 );
 		NInput::PostEvent( "mission_minimap_panel_maximize_move", 0, 0 );
 		bMultifunctionPanelMinimized = false;
+		UpdateTransferPanel();
 		if ( pMinimizeBtn )
 		{
 			pMinimizeBtn->SetState( 0 );
 			pMinimizeBtn->Enable( false );
 		}
 	}
+}
+
+void CInterfaceMission::InitTransferPanel()
+{
+	if ( !pScreen || !pScenarioTracker || pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
+	     NGlobal::GetVar( "History.Playing", 0 ) != 0 )
+	{
+		return;
+	}
+
+	// Separate resources avoid replacing a mod's mission screen or its existing HUD controls.
+	const NDb::SWindowMSButton *pButtonDesc =
+			NDb::Get<NDb::SWindowMSButton>( CDBID( "UI/Game/Mission/UnitTransfer/Toggle_WindowMSButton.xdb" ) );
+	const NDb::SWindowSimple *pPanelDesc =
+			NDb::Get<NDb::SWindowSimple>( CDBID( "UI/Game/Mission/UnitTransfer/Panel_WindowSimple.xdb" ) );
+	if ( !pButtonDesc || !pPanelDesc )
+	{
+		return;
+	}
+	pTransferBtn = dynamic_cast<IButton *>( AddWindowCopy( pScreen, pButtonDesc ) );
+	pTransferPanel = AddWindowCopy( pScreen, pPanelDesc );
+	if ( pTransferPanel )
+	{
+		pTransferPlayers = dynamic_cast<IScrollableContainer *>( pTransferPanel->GetChild( "TransferPlayers", true ) );
+	}
+	bTransferPanelOpen = false;
+	UpdateTransferPanel();
+}
+
+void CInterfaceMission::UpdateTransferPanel()
+{
+	if ( !pTransferBtn || !pTransferPanel || !pTransferPlayers )
+	{
+		return;
+	}
+
+	std::vector<int> players;
+	const int nLocalPlayer = pScenarioTracker->GetLocalPlayer();
+	// Spectator and early initialization states may not have a local player yet.
+	const bool bLocalPlayerValid = nLocalPlayer >= 0 && nLocalPlayer < pScenarioTracker->GetNPlayers();
+	const int nSide = bLocalPlayerValid ? pScenarioTracker->GetPlayerSide( nLocalPlayer ) : -1;
+	const IScenarioTracker::SMultiplayerInfo *pInfo = pScenarioTracker->GetMultiplayerInfo();
+	if ( pInfo && bLocalPlayerValid && pScenarioTracker->GetGameType() != IAIScenarioTracker::EGT_SINGLE &&
+	     pScenarioTracker->IsPlayerPresent( nLocalPlayer ) && nSide >= 0 && nSide < 2 &&
+	     NGlobal::GetVar( "History.Playing", 0 ) == 0 )
+	{
+		for ( const IScenarioTracker::SMultiplayerInfo::SPlayer &player : pInfo->players )
+		{
+			if ( player.nIndex >= 0 && player.nIndex < pScenarioTracker->GetNPlayers() && player.nIndex != nLocalPlayer &&
+			     pScenarioTracker->IsPlayerPresent( player.nIndex ) &&
+			     pScenarioTracker->GetPlayerSide( player.nIndex ) == nSide )
+			{
+				players.push_back( player.nIndex );
+			}
+		}
+	}
+
+	if ( players != transferPlayers )
+	{
+		pTransferPlayers->RemoveItems();
+		transferPlayers = players;
+		const NDb::SWindowSimple *pRowDesc =
+				NDb::Get<NDb::SWindowSimple>( CDBID( "UI/Game/Mission/UnitTransfer/Row_WindowSimple.xdb" ) );
+		if ( pRowDesc )
+		{
+			IWindow *pLastRow = nullptr;
+			for ( int nPlayer : transferPlayers )
+			{
+				IWindow *pRow = AddWindowCopy( pTransferPlayers, pRowDesc );
+				if ( !pRow )
+				{
+					continue;
+				}
+				IWindow *pConfirm = pRow->GetChild( "TransferConfirm", true );
+				ITextView *pName = dynamic_cast<ITextView *>( pRow->GetChild( "TransferName", true ) );
+				if ( pConfirm )
+				{
+					pConfirm->SetName( fmt::format( "TransferPlayer_{}", nPlayer ) );
+				}
+				if ( pName )
+				{
+					pName->SetName( fmt::format( "TransferName_{}", nPlayer ) );
+					for ( const IScenarioTracker::SMultiplayerInfo::SPlayer &player : pInfo->players )
+					{
+						if ( player.nIndex == nPlayer )
+						{
+							const uint32_t dwColor = pScenarioTracker->GetPlayerColor( nPlayer ).dwColor;
+							pName->SetText( pName->GetDBText() + NStr::ToUnicode( fmt::format( "<color={:08X}>", dwColor ) ) +
+							                player.wszName );
+							break;
+						}
+					}
+				}
+				pTransferPlayers->PushBack( pRow, false );
+				pLastRow = pRow;
+			}
+			pTransferPlayers->Update();
+			IWindow *pScrollBar = pTransferPlayers->GetChild( "TransferScrollBar", true );
+			const auto *pPanelDesc = dynamic_cast<const NDb::SWindow *>( pTransferPanel->GetDesc() );
+			const auto *pListDesc = dynamic_cast<const NDb::SWindow *>( pTransferPlayers->GetDesc() );
+			const auto *pListShared =
+					dynamic_cast<const NDb::SWindowScrollableContainerShared *>( pTransferPlayers->GetSharedDesc() );
+			if ( pScrollBar && pPanelDesc && pListDesc && pListShared && pListShared->pBorder )
+			{
+				// Resource sizes are maxima, not the last resized dimensions. Measure the laid-out rows,
+				// preserving the header and bottom border while removing unused height and scrollbar space.
+				const CVec2 vMaxListSize = pListDesc->placement.size.Get();
+				const float fContentHeight = pLastRow ? pLastRow->GetPlacement().y2 : 0;
+				const bool bScroll = fContentHeight > vMaxListSize.y;
+				const float fListHeight = (std::min)( fContentHeight, vMaxListSize.y );
+				const float fListWidth = bScroll ? vMaxListSize.x : pListShared->pBorder->placement.size.Get().x;
+				const CVec2 vPanelSize = pPanelDesc->placement.size.Get() - vMaxListSize + CVec2( fListWidth, fListHeight );
+				// Hide before resizing: a compact list can be shorter than the two scrollbar arrow buttons.
+				pScrollBar->ShowWindow( false );
+				pTransferPlayers->SetPlacement( 0, 0, fListWidth, fListHeight, EWPF_SIZE_X | EWPF_SIZE_Y );
+				pTransferPanel->SetPlacement( 0, 0, vPanelSize.x, vPanelSize.y, EWPF_SIZE_X | EWPF_SIZE_Y );
+				pTransferPlayers->Update();
+				pTransferPlayers->ResetScroller();
+				pScrollBar->ShowWindow( bScroll );
+			}
+		}
+	}
+
+	const bool bVisible = !transferPlayers.empty() && pMultifunctionWnd && pMultifunctionWnd->IsVisible() &&
+	                      !bMultifunctionPanelMinimized && !bMovieMode && !bScriptMoivie &&
+	                      !( chatInput.pPanel && chatInput.pPanel->IsVisible() );
+	if ( !bVisible )
+	{
+		bTransferPanelOpen = false;
+	}
+	pTransferBtn->ShowWindow( bVisible );
+	pTransferPanel->ShowWindow( bVisible && bTransferPanelOpen );
+	// Keep the optional resource's native direction icons in step with the panel state.
+	if ( IWindow *pArrow = pTransferBtn->GetChild( "TransferArrowRight", true ) )
+	{
+		pArrow->ShowWindow( !bTransferPanelOpen );
+	}
+	if ( IWindow *pArrow = pTransferBtn->GetChild( "TransferArrowLeft", true ) )
+	{
+		pArrow->ShowWindow( bTransferPanelOpen );
+	}
+	if ( bVisible )
+	{
+		// Track the actual HUD rectangle, including resolution changes and its slide animation.
+		const CTRect<float> hud = pMultifunctionWnd->GetWindowRect();
+		const CTRect<float> screen = pScreen->GetWindowRect();
+		const auto moveWindow = []( IWindow *pWnd, float fX, float fY )
+		{
+			const CTRect<int> position = pWnd->GetPlacement();
+			if ( position.x1 != fX || position.y1 != fY )
+			{
+				pWnd->SetPlacement( fX, fY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+			}
+		};
+		// The portrait frame sits slightly lower than the multifunction panel. Follow its top with a small gap.
+		IWindow *pAppearance = pScreen->GetChild( "AppearancePanel", true );
+		const float fButtonX = hud.x1 - screen.x1 - 115;
+		const float fButtonBottom = ( pAppearance ? pAppearance->GetWindowRect().y1 : hud.y1 ) - screen.y1 - 2;
+		const CTRect<int> buttonPlacement = pTransferBtn->GetPlacement();
+		moveWindow( pTransferBtn, fButtonX, fButtonBottom - buttonPlacement.Height() );
+		// Keep the panel immediately beside the button, with both lower borders aligned as the HUD moves.
+		moveWindow( pTransferPanel,
+		            fButtonX + buttonPlacement.Width() + 2,
+		            fButtonBottom - pTransferPanel->GetPlacement().Height() );
+		const bool bCanTransfer = pWorld && pWorld->HasTransferSelection();
+		for ( int nPlayer : transferPlayers )
+		{
+			IWindow *pConfirm = pTransferPanel->GetChild( fmt::format( "TransferPlayer_{}", nPlayer ), true );
+			if ( pConfirm )
+			{
+				pConfirm->Enable( bCanTransfer );
+			}
+		}
+	}
+}
+
+bool CInterfaceMission::OnTransferToggle()
+{
+	UpdateTransferPanel();
+	if ( pTransferBtn && pTransferBtn->IsVisible() )
+	{
+		bTransferPanelOpen = !bTransferPanelOpen;
+		UpdateTransferPanel();
+	}
+	return true;
+}
+
+bool CInterfaceMission::OnTransferClose()
+{
+	bTransferPanelOpen = false;
+	UpdateTransferPanel();
+	return true;
+}
+
+bool CInterfaceMission::OnTransferPlayer( const std::string &szSender )
+{
+	UpdateTransferPanel();
+	if ( pWorld && pTransferPanel && pTransferPanel->IsVisible() )
+	{
+		for ( int nPlayer : transferPlayers )
+		{
+			if ( szSender == fmt::format( "TransferPlayer_{}", nPlayer ) )
+			{
+				pWorld->TransferSelectedUnits( nPlayer );
+				break;
+			}
+		}
+	}
+	return true;
 }
 
 void CInterfaceMission::BlinkActionButton( int nButton, bool bOn )
@@ -2084,6 +2306,7 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 		if ( pScenarioTracker && pScenarioTracker->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
 		{
 			UpdateMultiplayerScoreBoard();
+			UpdateTransferPanel();
 		}
 
 		if ( pMiniMap )
@@ -4055,6 +4278,15 @@ void CInterfaceMission::SendChat( const std::wstring &wszText, bool bTeam )
 
 void CInterfaceMission::FastMinimizePanels()
 {
+	bTransferPanelOpen = false;
+	if ( pTransferBtn )
+	{
+		pTransferBtn->ShowWindow( false );
+	}
+	if ( pTransferPanel )
+	{
+		pTransferPanel->ShowWindow( false );
+	}
 	NInput::PostEvent( "mission_multistate_panel_minimize_move_fast", 0, 0 );
 	NInput::PostEvent( "mission_appearance_panel_minimize_move_fast", 0, 0 );
 	NInput::PostEvent( "mission_action_panel_minimize_move_fast", 0, 0 );
@@ -4390,6 +4622,11 @@ int CInterfaceMission::operator&( IBinSaver &saver )
 	saver.Add( 81, &wszTooltipSlotUnit );
 	saver.Add( 82, &chatInput );
 	saver.Add( 83, &pObjectivesBlink );
+	saver.Add( 84, &pTransferBtn );
+	saver.Add( 85, &pTransferPanel );
+	saver.Add( 86, &pTransferPlayers );
+	saver.Add( 87, &transferPlayers );
+	saver.Add( 88, &bTransferPanelOpen );
 
 	return 0;
 }

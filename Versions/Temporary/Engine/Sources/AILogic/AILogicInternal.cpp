@@ -1660,9 +1660,10 @@ const int CAILogic::GenerateGroupNumber()
 	return theGroupLogic.GenerateGroupNumber();
 }
 
-void CAILogic::RegisterGroup( const std::vector<int> &vIDs, const int nGroup )
+void CAILogic::RegisterGroup( const std::vector<int> &vIDs, const int nGroup, bool bPlayerCommand )
 {
-	theGroupLogic.RegisterGroup( vIDs, nGroup );
+	// Revalidate synchronized player selections at execution time; scripts retain their explicit control of units.
+	theGroupLogic.RegisterGroup( vIDs, nGroup, bPlayerCommand && theDipl.IsNetGame() );
 }
 
 void CAILogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup )

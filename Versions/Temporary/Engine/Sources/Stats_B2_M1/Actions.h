@@ -134,6 +134,8 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 					NTimer::STime time = {};
 	std::vector<SWeaponAmmo> ammo;
 	int nSupply = {};
+	// Multiplayer rank belongs to the unit after a donation; -1 keeps the campaign's leader display.
+	int nExpLevel = -1;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -143,6 +145,7 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 		f.Add( 6, &time );
 		f.Add( 7, &ammo );
 		f.Add( 8, &nSupply );
+		f.Add( 9, &nExpLevel );
 		return 0;
 	}
 

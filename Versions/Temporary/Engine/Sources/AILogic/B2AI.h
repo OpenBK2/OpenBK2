@@ -3,6 +3,7 @@
 #include "B2_M1_World/CommonB2M1AI.h"
 
 #include <cstdint>
+#include <vector>
 
 namespace NDb
 {
@@ -65,10 +66,12 @@ struct IAILogic : public ICommonB2M1AI
 	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const = 0;
 	virtual struct ITerraAIObserver *CreateTerraAIObserver( const int nSizeX, const int nSizeY ) = 0;
 
-	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup ) = 0;
+	virtual void RegisterGroup( const std::vector<int> &vIDs, const int nGroup, bool bPlayerCommand = false ) = 0;
 	virtual void UnregisterGroup( const int nGroup ) = 0;
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) = 0;
 	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer ) = 0;
+	virtual void TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer, int nTargetPlayer ) = 0;
+
 	// For the groups the local player's commands register, so for the client only.
 	// Simulation code takes CGroupLogic::GenerateSimulationGroupNumber instead, see
 	// SIMULATION_GROUP_OWNER.
