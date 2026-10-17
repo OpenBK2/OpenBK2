@@ -76,6 +76,13 @@ static std::string szEditorMap;
 static std::string szEditorMod;
 // --replay=, kept here for the same reason.
 static std::string szReplayFile;
+// --mission= and --campaign=, which start a mission straight from the command
+// line so nobody has to edit a config file to do it. Kept here and applied at
+// the same late point as the editor's map for the reason given there: a config
+// is read before the main menu's own line in game.cfg, and that line
+// unregisters the scenario tracker a mission started from a config just made.
+static std::string szStartMission;
+static std::string szStartCampaign;
 // --replay-verify and --setvar. Recorded rather than applied while parsing,
 // because arguments are read long before autoexec.cfg and game.cfg are, and
 // anything set here would be overwritten by them.
@@ -391,10 +398,39 @@ static int RunGame( const std::vector<std::string> &arguments )
 		                         UTF8ToWide( commandLineVars[i].second ) );
 	}
 	// Run the normal mission command only after the game, profile and mod DB
-	// are initialized. Quoting preserves map folders and filenames with spaces.
-	if ( !szEditorMap.empty() )
+	// are initialized, and after game.cfg: its "main_menu" line unregisters the
+	// scenario tracker, so a mission started any earlier is left without one and
+	// used to crash in CICMission::PostCreate. Quoting preserves map folders and
+	// filenames with spaces.
+	//
+	// --editor-map= and --mission= name the same thing - a MapInfo record to
+	// start now - under the editor's name and the documented one, so one branch
+	// serves both and the editor wins if somehow given both.
+	const std::string &szMapToStart = !szEditorMap.empty() ? szEditorMap : szStartMission;
+	if ( !szMapToStart.empty() )
 	{
-		NGlobal::ProcessCommand( L"map \"" + UTF8ToWide( szEditorMap ) + L"\"" );
+		NGlobal::ProcessCommand( L"map \"" + UTF8ToWide( szMapToStart ) + L"\"" );
+	}
+	// The campaign form of the same thing. The fields were validated while
+	// parsing; each is quoted separately because a mission can be named by its
+	// MapInfo record, whose path may contain spaces, and the command splits on
+	// them. Missing fields default to the first chapter, its first mission and
+	// the easiest difficulty, which is what the "mission" command does with
+	// however many arguments it is given.
+	else if ( !szStartCampaign.empty() )
+	{
+		std::vector<std::string> fields;
+		NStr::SplitString( szStartCampaign, &fields, ';' );
+		while ( fields.size() < 4 )
+		{
+			fields.push_back( "0" );
+		}
+		std::wstring command = L"mission";
+		for ( size_t i = 0; i < fields.size(); ++i )
+		{
+			command += L" \"" + UTF8ToWide( fields[i] ) + L"\"";
+		}
+		NGlobal::ProcessCommand( command );
 	}
 	// Same point in startup for the same reason: the replay command reaches
 	// CICMission, which needs the database loaded. The file name is resolved by
@@ -492,6 +528,59 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 				return false;
 			}
 			( bMap ? szEditorMap : szEditorMod ) = value;
+			continue;
+		}
+		// --mission=<MapInfo> starts one map as a single mission, a custom
+		// mission or a campaign's own map alike, and
+		// --campaign=<Campaign>[;chapter[;mission[;difficulty]]] starts one
+		// mission of a campaign with that campaign's state behind it, which is
+		// the difference between the two. Both are the console commands the game
+		// already registers ("map" and "mission"), run at the one point in
+		// startup where starting a mission works; what they add is not having to
+		// write a line into Profiles/game.cfg to get there.
+		//
+		// The semicolon is a separator in the campaign argument and so cannot be
+		// rejected there, but the fields it separates are checked one by one
+		// below. Quotes and line breaks stay out of both: the command is built as
+		// a quoted string, and a value carrying either would end the command and
+		// start another one.
+		const std::string missionPrefix = "--mission=";
+		const std::string campaignPrefix = "--campaign=";
+		const bool bMission = szString.compare( 0, missionPrefix.size(), missionPrefix ) == 0;
+		const bool bCampaign = szString.compare( 0, campaignPrefix.size(), campaignPrefix ) == 0;
+		if ( bMission || bCampaign )
+		{
+			std::string value = szString.substr( bMission ? missionPrefix.size() : campaignPrefix.size() );
+			NStr::TrimBoth( value, '"' );
+			bool bValid = !value.empty() && value.find_first_of( "\"\r\n" ) == std::string::npos;
+			if ( bMission )
+			{
+				bValid = bValid && value.find( ';' ) == std::string::npos;
+			}
+			else
+			{
+				// campaign;chapter;mission;difficulty, at most four fields, none
+				// of them empty. The chapter is an index, the mission an index or
+				// a MapInfo name, the difficulty an index or easy/normal/hard.
+				std::vector<std::string> fields;
+				NStr::SplitString( value, &fields, ';' );
+				bValid = bValid && !fields.empty() && fields.size() <= 4;
+				for ( size_t i = 0; bValid && i < fields.size(); ++i )
+				{
+					bValid = !fields[i].empty();
+				}
+			}
+			if ( !bValid )
+			{
+				MessageBox( 0,
+				            bMission ? "Invalid --mission argument, expected the name of a MapInfo record."
+				                     : "Invalid --campaign argument, expected "
+				                       "<campaign>[;<chapter>[;<mission>[;<difficulty>]]].",
+				            "Start mission",
+				            MB_OK | MB_ICONERROR );
+				return false;
+			}
+			( bMission ? szStartMission : szStartCampaign ) = value;
 			continue;
 		}
 		// Play back a recorded replay without going through the menus, the same

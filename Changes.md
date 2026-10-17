@@ -7,6 +7,8 @@
 
 - The custom mission screen lists only the missions it can actually start, and writes to the log and the console how many records it left out. A record with no `map.b2m` beside it has no map to play, so offering it only led to a refusal. With the data in this repository the list is empty.
 
+- A mission or a campaign can be started from the command line: `Game.exe --mission="Custom/Missions/Razvedka/MapInfo.xdb"` starts one map as a single mission, and `Game.exe --campaign="Scenario/Campaigns/GER/Campaign.xdb;0;0;normal"` starts one mission of a campaign with that campaign's state behind it, where the fields after the record are the chapter, the mission and the difficulty and each may be left off. The console commands they are built from, `map` and `mission`, are unchanged; what is new is that reaching them no longer means editing a file in `Profiles`.
+
 - Fixed multi-turret artillery installing while a turret was still aimed away. The check that waits for every turret to return to its travel angle advanced its index twice per pass, so it only ever looked at the even-numbered ones, and the odd ones were neither waited for nor ordered back. Of the shipped units only BM-8-48 has two turrets, so it is the only one whose behavior changes. Replays recorded before this change that contain a BM-8-48 install or uninstall will no longer verify.
 
 - Fixed a building's ammunition reading dropping to a single weapon's worth. The total was summed correctly when the building appeared, but the update that arrives from the simulation stopped after the first weapon, so a building with several gun slots understated its ammunition for the rest of the match.
