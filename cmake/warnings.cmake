@@ -155,6 +155,13 @@ set(OBK2_WARNINGS_GCC
     # =2 as a superset, and the tree is at zero under =2, which is what the
     # gate needs.
     -Warray-bounds=2
+    # Adopted at level 2 on 2026-10-17, where the staging list had level 3.
+    # Level 3 is every type caught by value and that is 1 site, Lua's ldo.cpp
+    # catching an int, which is how Lua's error handling is built here and is
+    # not a defect. Level 2 is every class type caught by value, which is the
+    # slicing bug the class is about, and it is 0 over the engine and the
+    # editor both. A level that cannot reach zero is a level nobody gates.
+    -Wcatch-value=2
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -272,7 +279,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     -Wcast-align=strict             # 110, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
     -Walloc-zero                    # 2
-    -Wcatch-value=3                 # 1, in vendored Lua
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
     # 141 of them), -Wstrict-overflow (458 and documented as noisy),
     # -Wmismatched-tags (ICEs this compiler).
