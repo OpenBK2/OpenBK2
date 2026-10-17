@@ -143,6 +143,18 @@ set(OBK2_WARNINGS_GCC
     # cannot prove fits, which is the question a fixed buffer actually raises.
     -Wformat-overflow=2
     -Wformat-truncation=2
+    # Cleared 2026-10-17. The staging list had 1 site and it is gone; a codegen
+    # sweep reports zero over the 1035 engine units and the 355 editor ones
+    # alike. This is the one bounds checking a release build of this tree has,
+    # since Misc/Checker.h's CheckFixedRange compiles to nothing, and =2 turns
+    # on the whole class rather than only its provable half.
+    #
+    # The control is honest about what it proves: a subscript past the end of
+    # an array does fire on this compiler, measured, but no snippet written
+    # here provoked a diagnostic that =2 reports and =1 does not. GCC documents
+    # =2 as a superset, and the tree is at zero under =2, which is what the
+    # gate needs.
+    -Warray-bounds=2
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -260,7 +272,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     -Wcast-align=strict             # 110, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
     -Walloc-zero                    # 2
-    -Warray-bounds=2                # 1
     -Wcatch-value=3                 # 1, in vendored Lua
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
     # 141 of them), -Wstrict-overflow (458 and documented as noisy),
