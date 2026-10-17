@@ -293,7 +293,12 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	}
 	// добавляем модель
 	CPtr<IManipulator> model, material, texture, geometry, aiGeometry, skeleton;
-	bool modelCreated, materialCreated, textureCreated, geometryCreated, aiGeometryCreated, skeletonCreated;
+	// "nothing was created" is the right starting value: PrepareResource writes
+	// each flag before it can fail, but it writes it through a pointer, so a
+	// reader of this function, and clang's -Wconditional-uninitialized, has to
+	// take that on trust.
+	bool modelCreated = false, materialCreated = false, textureCreated = false, geometryCreated = false,
+			 aiGeometryCreated = false, skeletonCreated = false;
 	// Check every dependency independently: an existing Material or Geometry
 	// can still refer to a Texture or AIGeometry whose file was deleted.
 	if ( !PrepareResource( MODEL_TYPE_NAME, szModelName, &model, &modelCreated ) ||
