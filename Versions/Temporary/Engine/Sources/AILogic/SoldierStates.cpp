@@ -145,6 +145,11 @@ IUnitState *CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 		pResult = CCommonAmbushState::Instance( pUnit );
 
 		break;*/
+			// SNEAK_OFF goes on to take the idle state below, which reads as
+			// intended for a sniper dropping out of camouflage. The attribute
+			// records what the code does; the commented-out case between the two is
+			// why it is worth saying out loud that nothing here is a missing break.
+			[[fallthrough]];
 		case ACTION_MOVE_IDLE:
 			pResult = CSoldierIdleState::Instance( pUnit );
 
@@ -195,6 +200,7 @@ IUnitState *CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			CONVERT_OBJECT( CAIUnit, pTarget, GetObjectByCmd( cmd ), "Wrong unit to attack" );
@@ -229,6 +235,7 @@ IUnitState *CSoldierStatesFactory::ProduceState( class CQueueUnit *pObj, CAIComm
 		break;
 		case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
 			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong static object to attack" );

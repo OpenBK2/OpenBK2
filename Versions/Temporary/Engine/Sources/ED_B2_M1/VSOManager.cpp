@@ -1556,6 +1556,7 @@ bool CVSOManager::GetVSOSelection( SVSOSelection *pVSOSelection,
 						}
 					}
 				}
+					[[fallthrough]];
 				case SVSOSelection::ST_CENTER:
 				{
 					for ( int nPointIndex = 0; nPointIndex < rVSO.points.size(); ++nPointIndex )
@@ -1577,6 +1578,7 @@ bool CVSOManager::GetVSOSelection( SVSOSelection *pVSOSelection,
 						}
 					}
 				}
+					[[fallthrough]];
 				case SVSOSelection::ST_NORMALE:
 				{
 					for ( int nPointIndex = 0; nPointIndex < rVSO.points.size(); ++nPointIndex )
@@ -1597,6 +1599,7 @@ bool CVSOManager::GetVSOSelection( SVSOSelection *pVSOSelection,
 						}
 					}
 				}
+					[[fallthrough]];
 				case SVSOSelection::ST_OPNORMALE:
 				{
 					for ( int nPointIndex = 0; nPointIndex < rVSO.points.size(); ++nPointIndex )
@@ -1617,6 +1620,7 @@ bool CVSOManager::GetVSOSelection( SVSOSelection *pVSOSelection,
 						}
 					}
 				}
+					[[fallthrough]];
 				default:
 					break;
 			}

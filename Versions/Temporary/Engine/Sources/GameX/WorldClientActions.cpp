@@ -242,6 +242,7 @@ bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 			else
 			{
 			}
+			[[fallthrough]];
 		default:
 			return false;
 	}
@@ -817,6 +818,7 @@ bool CWorldClient::ActionUseTrackTargeting( const CVec2 &vPos, const CMapObj *pM
 					return PerformGroupAction( &command, GetPlaceInQueue() );
 				}
 			}
+				[[fallthrough]];
 			case NDb::SInfantryRPGStats::typeID:
 			case NDb::SBuildingRPGStats::typeID:
 			case NDb::SObjectRPGStats::typeID:
@@ -827,6 +829,7 @@ bool CWorldClient::ActionUseTrackTargeting( const CVec2 &vPos, const CMapObj *pM
 				command.fNumber = (float)ATGP_ATACK_OBJECT;
 				return PerformGroupAction( &command, GetPlaceInQueue() );*/
 			}
+				[[fallthrough]];
 			default:
 				return false;
 		}

@@ -246,6 +246,7 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			if ( GetObjectByCmd( cmd ) && IsValid( GetObjectByCmd( cmd ) ) )
@@ -275,6 +276,7 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		break;
 		case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
 			pUnit->ResetHoldSector();

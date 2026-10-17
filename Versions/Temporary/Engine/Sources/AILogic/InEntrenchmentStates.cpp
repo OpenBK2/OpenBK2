@@ -64,6 +64,7 @@ IUnitState *CInEntrenchmentStatesFactory::ProduceState( class CQueueUnit *pUnit,
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			CONVERT_OBJECT( CAIUnit, pUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );

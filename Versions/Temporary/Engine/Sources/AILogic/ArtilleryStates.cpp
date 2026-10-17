@@ -230,6 +230,7 @@ IUnitState *CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_UNIT:
 			if ( IsValid( GetObjectByCmd( cmd ) ) )
 			{
@@ -283,6 +284,7 @@ IUnitState *CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
 			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong static object to attack" );
@@ -1464,6 +1466,7 @@ void CArtilleryUninstallTransportState::Segment()
 				}
 			}
 			// break убран сознательно
+			[[fallthrough]];
 		case AUTS_INSTALLING:
 			if ( pArtillery->IsInstalled() )
 			{

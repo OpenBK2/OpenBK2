@@ -436,6 +436,7 @@ IUnitState *CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			if ( GetObjectByCmd( cmd ) && IsValid( GetObjectByCmd( cmd ) ) )
@@ -465,6 +466,7 @@ IUnitState *CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 		break;
 		case ACTION_COMMAND_SWARM_ATTACK_OBJECT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
 			CONVERT_OBJECT( CStaticObject, pStaticObj, GetObjectByCmd( cmd ), "Wrong object to attack" );

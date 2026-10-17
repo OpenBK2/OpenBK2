@@ -233,6 +233,7 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 				{
 					case TSIR_YES_IMMIDIATELY:
 						NullSegmTime();
+						[[fallthrough]];
 					case TSIR_YES_WAIT:
 						// почистить очередь
 						DelCmdQueue( GetUniqueIdQU() );

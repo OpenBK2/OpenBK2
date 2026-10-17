@@ -152,6 +152,7 @@ int GetRandomFrameIndexByDamageType( const ETypesOfLife eType ) const
 				RecordRandomCall();
 				return centerSegments.visObjes.size() + NRandom::Random( 0, damagedSegmentsOtherSide.visObjes.size() - 1 );
 			}
+			[[fallthrough]];
 		case ETOL_RIGHT:
 		{
 			RecordRandomCall();

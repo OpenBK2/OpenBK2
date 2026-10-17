@@ -156,7 +156,8 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			//
 		}
-		//
+			//
+			[[fallthrough]];
 		case ID_SCRIPT_CAMERA_WINDOW_UI_EVENT:
 		{
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(

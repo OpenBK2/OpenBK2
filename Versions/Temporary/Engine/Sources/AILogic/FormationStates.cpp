@@ -443,6 +443,7 @@ IUnitState *CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			break;
 		case ACTION_MOVE_SWARM_ATTACK_FORMATION:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_MOVE_ATTACK_FORMATION:
 			NI_ASSERT( dynamic_cast<CFormation *>( GetObjectByCmd( cmd ) ) != 0, "must be formation unit" );
 			pResult = CFormationAttackFormationState::Instance(
@@ -451,6 +452,7 @@ IUnitState *CFormationStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand 
 			break;
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 			bSwarmAttack = true;
+			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_UNIT:
 		{
 			CObjectBase *pObj = GetObjectByCmd( cmd );
@@ -2008,6 +2010,11 @@ void CFormationAttackCommonStatObjState::Segment()
 					TryInterruptState( 0 );
 				}
 
+				// EPM_START runs the moving step in the same tick it enters it,
+				// which is the idiom the plane and artillery states spell out in
+				// their own comments. Note that the arm which failed to build a
+				// path and interrupted the state falls through as well.
+				[[fallthrough]];
 			case EPM_MOVING:
 				if ( IsFormationCloseToEnemy( pObj->GetAttackCenter( pFormation->GetCenterPlain() ), pFormation ) )
 				{

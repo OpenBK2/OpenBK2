@@ -2965,6 +2965,7 @@ void CAIUnit::InitAbility( const NDb::EUnitSpecialAbility nAbility )
 		case NDb::ABILITY_USE_BINOCULAR:
 			UpdateEnableAblitiy( nAbility );
 			// not ability
+			[[fallthrough]];
 		case NDb::ABILITY_NOT_ABILITY:
 			break;
 		case NDb::ABILITY_THROW_GRENADE:

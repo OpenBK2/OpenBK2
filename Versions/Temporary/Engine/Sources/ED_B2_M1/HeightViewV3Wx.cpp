@@ -363,6 +363,7 @@ public:
 				// Nothing selected: falls through to the shared dispatch,
 				// which answers false, exactly as the MFC palette does.
 				// fall through
+				[[fallthrough]];
 			default:
 				return CHeightCommandsV3::HandleCommand( nCommandID, dwData );
 		}

@@ -228,6 +228,11 @@ bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 				pwndTool->Show( !pwndTool->IsVisible() );
 			}
 		}
+			// The command was handled, and this still answers false because the case
+			// falls into default, where the cases beside it answer true. Annotated
+			// rather than given a return: whether the editor's dispatch should stop
+			// here is a question about command routing, not about the fallthrough.
+			[[fallthrough]];
 		default:
 			return false;
 	}

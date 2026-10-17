@@ -717,7 +717,8 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			//
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_EXPORTER, ID_TOOLS_REGEN_GEOMETRY, 0 );
 		}
-		//
+			//
+			[[fallthrough]];
 		case ID_TOOLS_UPDATE_VSO:
 		{
 			if ( IEditorScene *pEditorScene = EditorScene() )

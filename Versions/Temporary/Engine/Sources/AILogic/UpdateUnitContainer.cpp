@@ -29,6 +29,7 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 			break;
 		case UPD_UPDATE_PROPERTIES:
 			nNewLevel = 2;
+			[[fallthrough]];
 		case UPD_UPDATE_POSITION:
 			if ( fDist > f2MaxRadius )
 			{
@@ -42,6 +43,7 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 			{
 				nNewLevel = 5;
 			}
+			[[fallthrough]];
 		default:
 			break;
 	}

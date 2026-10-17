@@ -2571,6 +2571,7 @@ void CPlaneFlyDeadState::Segment()
 			eState = EPDS_WAIT_FINISH_PATH;
 
 			//break; убран сознательно
+			[[fallthrough]];
 		case EPDS_WAIT_FINISH_PATH:
 			if ( deadZone.IsInZone( pPlane->GetCenterPlain() ) )
 			{
@@ -2651,6 +2652,7 @@ void CPlaneSuicideState::Segment()
 		}
 
 			// нет тут break, не нужен
+			[[fallthrough]];
 		case EPSS_FLY:
 		{
 			const CVec3 vPos3( pPlane->GetPosB2() );
