@@ -4940,8 +4940,13 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 			nLocalPlayer = NStr::ToInt( NStr::ToMBCS( paramsSet[1] ) );
 		}
 
-		InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
-		Singleton<IAIScenarioTracker>()->SetLocalPlayer( nLocalPlayer );
+		// Resolved and checked before anything is set up, because every refusal
+		// below has to leave the game as it found it. MakeScenarioTracker
+		// replaces the scenario tracker outright, so a "map" command that is
+		// going to be refused undoes a mission or campaign that was already
+		// being started: the other mission then reached the main loop with an
+		// empty tracker and died in AILogic with no party information for its
+		// second player.
 		const NDb::SMapInfo *pInfo = GetMapInfo( szStrings[0] );
 		if ( !pInfo )
 		{
@@ -4949,6 +4954,9 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
 			return;
 		}
+
+		InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
+		Singleton<IAIScenarioTracker>()->SetLocalPlayer( nLocalPlayer );
 		Singleton<IScenarioTracker>()->Clear();
 		const int nDifficulty = 0;
 		Singleton<IScenarioTracker>()->CustomMissionStart( pInfo, nDifficulty, false );
