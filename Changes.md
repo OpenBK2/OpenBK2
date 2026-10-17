@@ -5,6 +5,8 @@
 
 - A mission that cannot be started now returns to the main menu instead of crashing or quitting. The last step of starting one assumed both a scenario tracker and a loadable map, which is not true for a mission started from `autoexec.cfg`: `game.cfg` is read afterwards and its `main_menu` line takes the scenario tracker away again, leaving nothing for the queued mission to read. The console and the log say which of the two was missing.
 
+- The custom mission screen lists only the missions it can actually start, and writes to the log and the console how many records it left out. A record with no `map.b2m` beside it has no map to play, so offering it only led to a refusal. With the data in this repository the list is empty.
+
 - Fixed multi-turret artillery installing while a turret was still aimed away. The check that waits for every turret to return to its travel angle advanced its index twice per pass, so it only ever looked at the even-numbered ones, and the odd ones were neither waited for nor ordered back. Of the shipped units only BM-8-48 has two turrets, so it is the only one whose behavior changes. Replays recorded before this change that contain a BM-8-48 install or uninstall will no longer verify.
 
 - Fixed a building's ammunition reading dropping to a single weapon's worth. The total was summed correctly when the building appeared, but the update that arrives from the simulation stopped after the first weapon, so a building with several gun slots understated its ammunition for the rest of the match.

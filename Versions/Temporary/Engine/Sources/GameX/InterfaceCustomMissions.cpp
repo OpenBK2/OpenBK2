@@ -11,6 +11,8 @@
 
 #include "GameX_export.h"
 
+#include <fmt/format.h>
+
 const int CUSTOM_MISSION_DEFAULT_DIFFICULTY = 1;
 
 namespace // unnamed
@@ -138,11 +140,30 @@ void CInterfaceCustomMissions::MakeInterior()
 
 	std::vector<CDBID> dbIDs;
 	NCustom::GetCustomMissions( &dbIDs );
+	int nUnplayable = 0;
 	for ( int i = 0; i < dbIDs.size(); ++i )
 	{
 		const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( dbIDs[i] );
 
+		// A record without its map.b2m is not a mission anyone can play, and
+		// offering it only leads to a crash once the empty terrain is walked.
+		// Counted rather than silently dropped: the released data trees carry
+		// these records without the map files, so an empty list here is the
+		// expected outcome and has to be explicable.
+		if ( !NCustom::IsMapPlayable( pMapInfo ) )
+		{
+			++nUnplayable;
+			continue;
+		}
+
 		AddMission( pMapInfo );
+	}
+	if ( nUnplayable > 0 )
+	{
+		const auto message = fmt::format(
+				"custom missions: {} of {} records have no map file and are not listed", nUnplayable, dbIDs.size() );
+		csSystem << CC_ORANGE << message.c_str() << endl;
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );
 	}
 
 	IWindow *pFirstLineWnd = 0;
