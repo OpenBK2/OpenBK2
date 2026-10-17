@@ -130,6 +130,19 @@ set(OBK2_WARNINGS_GCC
     # which CMake ignores, so adopting it is also the only way it reaches this
     # build.
     -Wdate-time
+    # Cleared 2026-10-17, as a pair, because they are the two halves of one
+    # question: does a printf-family call fit the buffer it is given.
+    # -Wformat-overflow=2 was 2, both real, and one of them a defect the class
+    # exists for: Script::GetStateAsText printed a size_t and a pointer through
+    # a char[30] that fits neither. -Wformat-truncation=2 was 1 and it was in
+    # boost, visible only in a tree configured before dependency includes
+    # became -isystem.
+    #
+    # The =2 level on both is deliberate: level 1 reports only what the
+    # compiler can prove overflows or truncates, where level 2 reports what it
+    # cannot prove fits, which is the question a fixed buffer actually raises.
+    -Wformat-overflow=2
+    -Wformat-truncation=2
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -248,8 +261,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
     -Walloc-zero                    # 2
     -Warray-bounds=2                # 1
-    -Wformat-overflow=2             # 2
-    -Wformat-truncation=2           # 1
     -Wcatch-value=3                 # 1, in vendored Lua
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
     # 141 of them), -Wstrict-overflow (458 and documented as noisy),
