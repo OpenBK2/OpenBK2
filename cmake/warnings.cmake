@@ -179,6 +179,15 @@ set(OBK2_WARNINGS_CLANG
     # does not fit in an int. The BMP palette loader and the editor's
     # vec3-to-colour conversion both spell the constant 0xFF000000 now.
     -Wshift-sign-overflow
+    # Cleared 2026-10-17, as a pair: both flags report a comparison against
+    # zero that an unsigned type decides in advance, and the two together were
+    # 11 sites. One was a defect, the editor's window title testing the room
+    # left for a truncation after subtracting it in unsigned arithmetic, where
+    # a negative result wraps instead. One was dead simulation code, the turn
+    # tolerance of 0 that no turn could be within. The other nine were guards
+    # whose upper half was doing all the work.
+    -Wtautological-unsigned-zero-compare
+    -Wtautological-unsigned-enum-zero-compare
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -232,10 +241,11 @@ set(OBK2_WARNINGS_STRICT_GCC
 set(OBK2_WARNINGS_STRICT_CLANG
     ${OBK2_WARNINGS_STRICT_COMMON}
     -Wno-reorder-ctor
-    # The classes clang finds and GCC has no equivalent for at any level. The
-    # first one found a live defect in simulation code: AILogic/Artillery.cpp
-    # advances its loop index twice and skips every second turret.
-    -Wconditional-uninitialized     # 6
+    # What is left of the clang-only classes. The ones that have reached zero
+    # are in OBK2_WARNINGS_CLANG above, each with what it found written next to
+    # it, and one of those found a live simulation defect: AILogic/Artillery.cpp
+    # advanced its loop index twice and so waited for every second turret.
+    #
     # -Wbitwise-instead-of-logical is NOT here and is not in the gated list
     # either, because it cannot reach zero in this tree. Measured 2026-10-16 as
     # 23 sites in two idioms, both deliberate:
@@ -259,8 +269,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     -Wdelete-non-abstract-non-virtual-dtor  # 11
     -Wimplicit-fallthrough          # 39
     -Wcast-align                    # 57
-    -Wtautological-unsigned-zero-compare  # 8
-    -Wtautological-unsigned-enum-zero-compare  # 3
 )
 
 # ---------------------------------------------------------------------------
