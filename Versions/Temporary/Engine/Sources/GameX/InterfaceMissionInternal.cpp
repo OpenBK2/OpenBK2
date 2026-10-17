@@ -4807,13 +4807,44 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 		}
 	}
 
+	// Every way of starting a mission arrives here, which makes this the one
+	// place that can refuse one, and both of these were crashes: the scenario
+	// tracker is a singleton that MakeScenarioTracker unregisters, so a mission
+	// started before game.cfg runs is overtaken by its "main_menu" line and
+	// finds no tracker left; and a map whose terrain file is missing loads an
+	// empty terrain that the first walk of it dereferences.
+	IAIScenarioTracker *pAIScenarioTracker = Singleton<IAIScenarioTracker>();
+	if ( pAIScenarioTracker == 0 || !NCustom::VerifyMapPlayable( pMap ) )
+	{
+		if ( pAIScenarioTracker == 0 )
+		{
+			const char *pszMessage = "mission start reached the main loop with no scenario tracker; a mission started "
+															 "from a config file is undone by game.cfg, use --mission or --campaign instead";
+			csSystem << CC_ORANGE << pszMessage << endl;
+			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, pszMessage );
+		}
+		// Not pushing an interface leaves the stack empty, which the main loop
+		// reads as "nothing left to run" and exits the game. A run that is only
+		// here to play something out has nothing to go back to, so it leaves by
+		// the same door the replay failure above uses; anyone else gets the menu.
+		if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+		{
+			NMainLoop::Command( CreateICExitGame() );
+		}
+		else
+		{
+			NGlobal::ProcessCommand( L"menu" );
+		}
+		return;
+	}
+
 	if ( nPlayerForWarFog < 0 )
 	{
-		nPlayerForWarFog = Singleton<IAIScenarioTracker>()->GetLocalPlayer();
+		nPlayerForWarFog = pAIScenarioTracker->GetLocalPlayer();
 	}
 	else
 	{
-		Singleton<IAIScenarioTracker>()->SetLocalPlayer( nPlayerForWarFog );
+		pAIScenarioTracker->SetLocalPlayer( nPlayerForWarFog );
 	}
 	pTrans->StartMission( pMap, Singleton<IAILogic>() );
 	pInterface->NewMission( pMap, pTrans, Singleton<IScenarioTracker>(), nPlayerForWarFog );
