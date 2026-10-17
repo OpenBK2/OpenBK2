@@ -81,8 +81,7 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 			uint8_t color[4];
 			pStream->Read( color, 4 );
 			// BMP file have reversed (read turned inside out) palette format: BGRA instead of ARGB
-			palette[i] =
-					uint32_t( 255 << 24 ) | ( uint32_t( color[2] ) << 16 ) | ( uint32_t( color[1] ) << 8 ) | uint32_t( color[0] );
+			palette[i] = 0xFF000000 | ( uint32_t( color[2] ) << 16 ) | ( uint32_t( color[1] ) << 8 ) | uint32_t( color[0] );
 		}
 		// seek to image data
 		pStream->Seek( nFileStart + dwOffset );

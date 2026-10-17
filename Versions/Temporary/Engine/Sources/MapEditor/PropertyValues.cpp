@@ -479,7 +479,9 @@ bool GetVec3Color( int *pnColor, IManipulator *pManipulator, const std::string &
 			const int r = Clamp<int>( Clamp<float>( fR, 0.0f, 1.0f ) * 256.0f, 0, 255 );
 			const int g = Clamp<int>( Clamp<float>( fG, 0.0f, 1.0f ) * 256.0f, 0, 255 );
 			const int b = Clamp<int>( Clamp<float>( fB, 0.0f, 1.0f ) * 256.0f, 0, 255 );
-			( *pnColor ) = (int)( ( 255 << 24 ) + ( r << 16 ) + ( g << 8 ) + b );
+			// 0xFF000000 for the opaque alpha, as everything else that builds an
+			// ARGB word here does: 255 << 24 shifts into an int's sign bit.
+			( *pnColor ) = (int)( 0xFF000000 + ( r << 16 ) + ( g << 8 ) + b );
 		}
 		return bResult;
 	}
