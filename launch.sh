@@ -59,6 +59,13 @@ usage()
 	                         prefix's own Data. A name means ~/bk2-NAME; a path
 	                         with a slash is taken as is.
 	      --list-data        list the data trees found, and exit
+	  -m, --mission MAP      start a mission instead of showing the menus, by
+	                         passing --mission= to the game. MAP names a MapInfo
+	                         record, e.g. Custom/Missions/Razvedka/MapInfo.xdb
+	  -c, --campaign SPEC    start one mission of a campaign, by passing
+	                         --campaign= to the game. SPEC is
+	                         <campaign>[;<chapter>[;<mission>[;<difficulty>]]],
+	                         e.g. Scenario/Campaigns/GER/Campaign.xdb;0;0;normal
 	  -r, --replay FILE      play a recorded replay instead of showing the menus,
 	                         by passing --replay= to the game
 	      --verify           play the replay out and exit, reporting through the
@@ -81,6 +88,8 @@ usage()
 	  ./launch.sh                          debug build, repository data
 	  ./launch.sh release
 	  ./launch.sh release --data retail
+	  ./launch.sh release --mission Custom/Missions/Razvedka/MapInfo.xdb
+	  ./launch.sh release --campaign Scenario/Campaigns/GER/Campaign.xdb;0;0
 	  ./launch.sh asan+ubsan --data totalconv
 	  ./launch.sh debug --editor
 	  ./launch.sh asan+ubsan --gdb
@@ -137,6 +146,8 @@ TREE=
 USE_GDB=no
 SHOW_ENV=no
 REPLAY=
+MISSION=
+CAMPAIGN=
 VERIFY=no
 declare -a SETVARS=()
 SOFTWARE_VK=no
@@ -161,6 +172,10 @@ while [ $# -gt 0 ]; do
 		--list-data)  printf 'data trees found:\n'; list_trees; exit 0 ;;
 		-r|--replay)  [ $# -ge 2 ] || die "$1 needs a replay file"
 		              REPLAY="$2"; shift 2 ;;
+		-m|--mission) [ $# -ge 2 ] || die "$1 needs a MapInfo record name"
+		              MISSION="$2"; shift 2 ;;
+		-c|--campaign) [ $# -ge 2 ] || die "$1 needs <campaign>[;<chapter>[;<mission>[;<difficulty>]]]"
+		              CAMPAIGN="$2"; shift 2 ;;
 		--verify)     VERIFY=yes; shift ;;
 		--setvar)     [ $# -ge 2 ] || die "$1 needs NAME=VALUE"
 		              case "$2" in *=*) ;; *) die "--setvar wants NAME=VALUE, got '$2'" ;; esac
@@ -175,6 +190,14 @@ while [ $# -gt 0 ]; do
 done
 
 [ "$VERIFY" = yes ] && [ -z "$REPLAY" ] && die "--verify needs --replay FILE"
+
+# The game takes the first of these it is given and ignores the rest, so say so
+# here rather than leaving the caller to wonder which one ran.
+starters=0
+[ -n "$MISSION" ] && starters=$((starters + 1))
+[ -n "$CAMPAIGN" ] && starters=$((starters + 1))
+[ -n "$REPLAY" ] && starters=$((starters + 1))
+[ "$starters" -gt 1 ] && die "--mission, --campaign and --replay are alternatives; pass one"
 
 PRESET="$(resolve_preset "$CONFIG")" ||
 	die "unknown configuration '$CONFIG'. One of: $CONFIG_NAMES"
@@ -335,6 +358,8 @@ esac
 if [ "$SHOW_ENV" = yes ]; then
 	printf '%s\n' "${ENV_ARGS[@]}"
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
+	[ -n "$MISSION" ] && printf 'args=--mission=%s\n' "$MISSION"
+	[ -n "$CAMPAIGN" ] && printf 'args=--campaign=%s\n' "$CAMPAIGN"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
 	[ "$VERIFY" = yes ] && printf 'args=--replay-verify\n'
 	[ ${#SETVARS[@]} -gt 0 ] && printf 'args=%s\n' "${SETVARS[@]}"
@@ -345,6 +370,8 @@ declare -a CMD=(env "${ENV_ARGS[@]}")
 [ "$USE_GDB" = yes ] && CMD+=(gdb --args)
 CMD+=("./$EXE")
 # Before the caller's own arguments, so an explicit --replay= after -- wins.
+[ -n "$MISSION" ] && CMD+=("--mission=$MISSION")
+[ -n "$CAMPAIGN" ] && CMD+=("--campaign=$CAMPAIGN")
 [ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")
 [ "$VERIFY" = yes ] && CMD+=("--replay-verify")
 [ ${#SETVARS[@]} -gt 0 ] && CMD+=("${SETVARS[@]}")
