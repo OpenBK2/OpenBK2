@@ -71,6 +71,86 @@ copying will take a while - there are **MANY** small files.
 
 the game executable is `bin\Game.exe`. therefore, if game was installed into `C:\Games\bk2`, then `C:\Games\bk2\bin\Game.exe` should be launched.
 
+## straight into a mission or a campaign
+
+the menus are not the only way in. these arguments start the thing named and skip
+everything before it, which is what makes a map worth testing reachable in one line:
+
+```cmd
+Game.exe --mission="Custom/Missions/Razvedka/MapInfo.xdb"
+Game.exe --campaign="Scenario/Campaigns/GER/Campaign.xdb;0;0;normal"
+Game.exe --replay=my_replay
+```
+
+on Linux `./launch.sh` passes the same three through as `--mission`, `--campaign` and
+`--replay`, and takes care of the working directory:
+
+```sh
+./launch.sh release --mission Custom/Missions/Razvedka/MapInfo.xdb
+./launch.sh release --campaign 'Scenario/Campaigns/GER/Campaign.xdb;0;0;normal'
+```
+
+`--mission` names a **MapInfo record**, by the path of its `.xdb` inside `Data`: custom
+missions live under `Custom/Missions/`, and a campaign's own mission records work too, for
+instance `Scenario/Campaigns/GER/Chapter1/GER1.0/MapInfo.xdb`. it starts as a single
+mission, the way the custom mission screen starts one, on the easiest difficulty and with
+no campaign state.
+
+`--campaign` names a **Campaign record**, optionally followed by a chapter, a mission and
+a difficulty, separated by semicolons: `campaign;chapter;mission;difficulty`. the chapter
+is an index from 0; the mission is an index into that chapter's `missionPath` or the name
+of its MapInfo record; the difficulty is `easy`, `normal`, `hard`, `veryeasy` or a number.
+anything left off is 0, so `--campaign="…/Campaign.xdb"` starts the first mission of the
+first chapter on easy. unlike `--mission` this one runs the mission with the campaign
+behind it, so the briefing, the chapter and the rank are all in the state the campaign
+would have put them in.
+
+`--editor-map=` does what `--mission=` does and is what the editor's **Start Mission in
+Game** passes; it stays for that. given more than one of these, the game takes the first
+of `--editor-map`, `--mission`, `--campaign`, `--replay` and ignores the rest.
+
+**the equivalent console commands are `map` and `mission`** (tilde key), and this is where
+the argument grammar comes from:
+
+```
+map "Custom/Missions/Razvedka/MapInfo.xdb"
+mission "Scenario/Campaigns/GER/Campaign.xdb" 0 0 normal
+mission_ger1.0
+```
+
+the third line is one of the aliases `Profiles/alias_*_campaign.cfg` defines for every
+shipped campaign mission, two per mission: `map_ger1.0` for the map on its own and
+`mission_ger1.0` for the same mission inside its campaign. `showbind`-style listing is
+`help`.
+
+**do not put `map` or `mission` in `autoexec.cfg`.** it looks like it should work and it
+cannot: `game.cfg` is read after `autoexec.cfg` and its last line is `main_menu`, which
+unregisters the scenario tracker the mission start just made. the queued mission then
+reaches the main loop with no tracker, which is what the command-line arguments exist to
+avoid - they are applied after both configs. a `mission` line at the very end of
+`game.cfg`, after `main_menu`, is the only config form that is not undone.
+
+## a map record is not a map
+
+`MapInfo.xdb` and the terrain file `map.b2m` beside it are separate things in the data
+tree, and the released trees are full of records whose map file was never shipped: **of
+the fourteen missions under `Versions/Current/Data/Custom/Missions`, not one has a
+`map.b2m` next to its `MapInfo.xdb`**, and the `Maps/CustomMissions/` folders the editor
+writes alongside them hold only minimaps. starting one of those used to crash - the
+terrain manager keeps an unloaded terrain while the map's own crags and entrenchments dig
+into it - so now:
+
+- the custom mission screen lists only records whose map file is there, and writes to the
+  log and the console how many it dropped. with the repository data that list is empty.
+- `map`, `mission`, `--mission=` and `--campaign=` refuse such a map and say which file is
+  missing, instead of starting it.
+
+a mission of your own needs no copying: the editor saves the terrain into the folder its
+record is in (`NEditor::MakeMapPath` is `NDb::GetFolderName`), which is the folder the game
+reads it from. the `Data\Maps\CustomMissions\<name>\` folders are the original 2005 layout,
+still named by each record's `MapFilesPath` field and still used by the editor's exporter;
+the `map.b2m` files that belonged in them were not part of the source release.
+
 # collecting crash reports
 
 The game and editor start `crashpad_handler` from beside their executable. The
