@@ -174,6 +174,11 @@ set(OBK2_WARNINGS_CLANG
     # 2026-10-17, with the positive control (`c == '0' && c == '1'`) still
     # firing, so the zero means clean rather than accepted and ignored.
     -Wtautological-overlap-compare
+    # Cleared 2026-10-17. Was 2, and the same expression both times: an opaque
+    # alpha written as 255 << 24, which is the one term of an ARGB word that
+    # does not fit in an int. The BMP palette loader and the editor's
+    # vec3-to-colour conversion both spell the constant 0xFF000000 now.
+    -Wshift-sign-overflow
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -254,7 +259,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     -Wdelete-non-abstract-non-virtual-dtor  # 11
     -Wimplicit-fallthrough          # 39
     -Wcast-align                    # 57
-    -Wshift-sign-overflow           # 2
     -Wtautological-unsigned-zero-compare  # 8
     -Wtautological-unsigned-enum-zero-compare  # 3
 )
