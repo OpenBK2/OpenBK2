@@ -1734,6 +1734,7 @@ void CInterfaceMission::UpdateTransferPanel()
 				NDb::Get<NDb::SWindowSimple>( CDBID( "UI/Game/Mission/UnitTransfer/Row_WindowSimple.xdb" ) );
 		if ( pRowDesc )
 		{
+			IWindow *pLastRow = nullptr;
 			for ( int nPlayer : transferPlayers )
 			{
 				IWindow *pRow = AddWindowCopy( pTransferPlayers, pRowDesc );
@@ -1762,8 +1763,32 @@ void CInterfaceMission::UpdateTransferPanel()
 					}
 				}
 				pTransferPlayers->PushBack( pRow, false );
+				pLastRow = pRow;
 			}
 			pTransferPlayers->Update();
+			IWindow *pScrollBar = pTransferPlayers->GetChild( "TransferScrollBar", true );
+			const auto *pPanelDesc = dynamic_cast<const NDb::SWindow *>( pTransferPanel->GetDesc() );
+			const auto *pListDesc = dynamic_cast<const NDb::SWindow *>( pTransferPlayers->GetDesc() );
+			const auto *pListShared =
+					dynamic_cast<const NDb::SWindowScrollableContainerShared *>( pTransferPlayers->GetSharedDesc() );
+			if ( pScrollBar && pPanelDesc && pListDesc && pListShared && pListShared->pBorder )
+			{
+				// Resource sizes are maxima, not the last resized dimensions. Measure the laid-out rows,
+				// preserving the header and bottom border while removing unused height and scrollbar space.
+				const CVec2 vMaxListSize = pListDesc->placement.size.Get();
+				const float fContentHeight = pLastRow ? pLastRow->GetPlacement().y2 : 0;
+				const bool bScroll = fContentHeight > vMaxListSize.y;
+				const float fListHeight = (std::min)( fContentHeight, vMaxListSize.y );
+				const float fListWidth = bScroll ? vMaxListSize.x : pListShared->pBorder->placement.size.Get().x;
+				const CVec2 vPanelSize = pPanelDesc->placement.size.Get() - vMaxListSize + CVec2( fListWidth, fListHeight );
+				// Hide before resizing: a compact list can be shorter than the two scrollbar arrow buttons.
+				pScrollBar->ShowWindow( false );
+				pTransferPlayers->SetPlacement( 0, 0, fListWidth, fListHeight, EWPF_SIZE_X | EWPF_SIZE_Y );
+				pTransferPanel->SetPlacement( 0, 0, vPanelSize.x, vPanelSize.y, EWPF_SIZE_X | EWPF_SIZE_Y );
+				pTransferPlayers->Update();
+				pTransferPlayers->ResetScroller();
+				pScrollBar->ShowWindow( bScroll );
+			}
 		}
 	}
 

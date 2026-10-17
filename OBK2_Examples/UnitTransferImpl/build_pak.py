@@ -205,11 +205,11 @@ def build():
     )))
     xml("Row_WindowSimple", window("WindowSimple", "Row_WindowSimpleShared", "TransferRow", 0, 0, 180, 26))
 
-    # Keep the clipped viewport separate from the scrollbar and its arrows.
+    # The viewport keeps the row width when the runtime removes the unused scrollbar gutter.
     xml("Viewport_WindowSimple", window("WindowSimple", "Empty_WindowSimpleShared", "", 0, 0, 180, 150,
-                                         horizontal="EPA_MARGIN", vertical="EPA_MARGIN", margins=(0, 0, 18, 0)))
+                                         vertical="EPA_MARGIN"))
     # The native artwork is 16px wide even though stock button descriptors reserve 32px.
-    # Keep the middle track visible when the slider hides its thumb for a short list.
+    # The whole scrollbar is hidden by the runtime when all teammate rows fit.
     desc = shared("WindowSlider", "/UI/Game/Menu/EscapeMenu/EscMenu_Slider_BackgroundTiledTexture")
     child(desc, "Horisontal", False)
     reference(desc, "Lever", "/UI/Game/Menu/Common/ScrollBar/ScrollSlider_WindowMSButton.xdb", "WindowMSButton")
@@ -231,7 +231,7 @@ def build():
     reference(desc, "ButtonGreater", "PlayersScrollDown_WindowMSButton.xdb", "WindowMSButton")
     reference(desc, "Slider", "Players_WindowSlider.xdb", "WindowSlider")
     xml("Players_WindowScrollBarShared", desc)
-    scrollbar = window("WindowScrollBar", "Players_WindowScrollBarShared", "", 0, 0, 16, 0,
+    scrollbar = window("WindowScrollBar", "Players_WindowScrollBarShared", "TransferScrollBar", 0, 0, 16, 0,
                        horizontal="EPA_HIGH_END", vertical="EPA_MARGIN", margins=(0, 0, 0, 0))
     xml("Players_WindowScrollBar", scrollbar)
     desc = shared("WindowScrollableContainer")
