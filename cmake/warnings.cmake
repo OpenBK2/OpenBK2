@@ -278,10 +278,21 @@ set(OBK2_WARNINGS_STRICT_GCC
     -Wimplicit-fallthrough=5        # 31, and silent without -O
     -Wcast-align=strict             # 110, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
-    -Walloc-zero                    # 2
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
     # 141 of them), -Wstrict-overflow (458 and documented as noisy),
     # -Wmismatched-tags (ICEs this compiler).
+    #
+    # -Walloc-zero was here and is now excluded rather than staged, measured
+    # 2026-10-17. Its 2 sites are both CArray2D<T>::Create doing new T[0] after
+    # a SetSizes( 0, 0 ), reached from the terrain and mip code clearing an
+    # array (warn-locate.py names CTerraGen::GetAreaHeights and
+    # NImage::FinalResolve among the callers). An array-new of zero elements is
+    # well defined in C++ and returns a distinct pointer that delete[] accepts;
+    # the flag is aimed at malloc( 0 ), whose return the C standard leaves to
+    # the implementation. So the warning is right about the size and wrong
+    # about the hazard, and the only way to zero would be to special-case an
+    # empty array in a hub container to satisfy a flag with nothing behind it
+    # here.
 )
 
 set(OBK2_WARNINGS_STRICT_CLANG
