@@ -530,6 +530,7 @@ bool CFenceDesignTool::ProcessMovePoint( const CVec3 &p )
 				break;
 			case 3:
 				fExactDir = FP_PI;
+				break;
 			case -3:
 				fExactDir = -FP_PI;
 				break;
