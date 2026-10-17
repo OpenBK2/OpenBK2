@@ -77,7 +77,7 @@ the menus are not the only way in. these arguments start the thing named and ski
 everything before it, which is what makes a map worth testing reachable in one line:
 
 ```cmd
-Game.exe --mission="Custom/Missions/Razvedka/MapInfo.xdb"
+Game.exe --mission="Custom/Missions/Alternative/MapInfo.xdb"
 Game.exe --campaign="Scenario/Campaigns/GER/Campaign.xdb;0;0;normal"
 Game.exe --replay=my_replay
 ```
@@ -86,7 +86,7 @@ on Linux `./launch.sh` passes the same three through as `--mission`, `--campaign
 `--replay`, and takes care of the working directory:
 
 ```sh
-./launch.sh release --mission Custom/Missions/Razvedka/MapInfo.xdb
+./launch.sh release --mission Custom/Missions/Alternative/MapInfo.xdb
 ./launch.sh release --campaign 'Scenario/Campaigns/GER/Campaign.xdb;0;0;normal'
 ```
 
@@ -113,7 +113,7 @@ of `--editor-map`, `--mission`, `--campaign`, `--replay` and ignores the rest.
 the argument grammar comes from:
 
 ```
-map "Custom/Missions/Razvedka/MapInfo.xdb"
+map "Custom/Missions/Alternative/MapInfo.xdb"
 mission "Scenario/Campaigns/GER/Campaign.xdb" 0 0 normal
 mission_ger1.0
 ```
@@ -132,24 +132,44 @@ avoid - they are applied after both configs. a `mission` line at the very end of
 
 ## a map record is not a map
 
-`MapInfo.xdb` and the terrain file `map.b2m` beside it are separate things in the data
-tree, and the released trees are full of records whose map file was never shipped: **of
-the fourteen missions under `Versions/Current/Data/Custom/Missions`, not one has a
-`map.b2m` next to its `MapInfo.xdb`**, and the `Maps/CustomMissions/` folders the editor
-writes alongside them hold only minimaps. starting one of those used to crash - the
-terrain manager keeps an unloaded terrain while the map's own crags and entrenchments dig
-into it - so now:
+`MapInfo.xdb` and the terrain file `map.b2m` are separate things, and the data tree ships
+only the first half: **of the fourteen missions under
+`Versions/Current/Data/Custom/Missions`, not one has a `map.b2m` next to its
+`MapInfo.xdb`**, and neither do most of the test maps under `Data/Test/TestMaps`. the maps
+themselves are in the repository, under `Complete/`, in the 2005 layout each record still
+names in its `MapFilesPath` field; the game reads the terrain out of the folder the record
+is in (`NDb::GetFolderName`), so nothing there is found. starting one of those used to
+crash, the terrain manager keeping an unloaded terrain while the map's own crags and
+entrenchments dig into it. now:
 
+- **`cmake --install` installs those maps beside their records**, 405 of them and about
+  130 MB, so a build is enough to have missions to play. `-DINSTALL_TEST_MAPS=OFF` turns
+  it off, which is what CI does. `cmake/testmaps.list` is the pairing, generated from the
+  records by `python scripts/gen_testmaps_list.py`, and `--check` says whether it is
+  stale. mind what the destination is on Linux: with `Data` a symlink into the source
+  tree, as the launch instructions above set it up, the maps land in the source tree and
+  show up as untracked files.
 - the custom mission screen lists only records whose map file is there, and writes to the
-  log and the console how many it dropped. with the repository data that list is empty.
-- `map`, `mission`, `--mission=` and `--campaign=` refuse such a map and say which file is
-  missing, instead of starting it.
+  log and the console how many it dropped. after an install that is seven of the twelve
+  records it finds.
+- `map`, `mission`, `--mission=` and `--campaign=` refuse a map with no terrain file and
+  say which file is missing, instead of starting it.
+- a terrain file for a **different** map than the record describes is reported and
+  replaced by generated flat terrain: `terrain file is for a 8x8 map and the record is
+  7x7, generating instead`. a record's `MapFilesPath` survives renaming and copying, so
+  the data does contain such pairs - `Custom/Missions/Razvedka` is one, which is why the
+  generator leaves it out - and before the check they walked off the end of the
+  per-patch arrays and crashed in `UpdateGfxInfo`.
+
+six records cannot be helped from this side: `alx1`, `New_ALX`, `test_alx_1` and
+`vetal_map` name map folders that are not in the repository at all, and `6x6` and `New
+Map` are the other way round, a `map.b2m` in the data tree with no record to start it
+with.
 
 a mission of your own needs no copying: the editor saves the terrain into the folder its
 record is in (`NEditor::MakeMapPath` is `NDb::GetFolderName`), which is the folder the game
-reads it from. the `Data\Maps\CustomMissions\<name>\` folders are the original 2005 layout,
-still named by each record's `MapFilesPath` field and still used by the editor's exporter;
-the `map.b2m` files that belonged in them were not part of the source release.
+reads it from. the `Data\Maps\CustomMissions\<name>\` folders are the original layout,
+still named by each record's `MapFilesPath` and still used by the editor's exporter.
 
 # collecting crash reports
 

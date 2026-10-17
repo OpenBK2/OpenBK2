@@ -212,6 +212,8 @@ include(cmake/squish.cmake)
 include(cmake/freetype.cmake)
 # game data rather than code: the open fonts as a patch archive for Data
 include(cmake/fontpak.cmake)
+# also data: the custom-mission maps that are in Complete and not in the data tree
+include(cmake/testmaps.cmake)
 include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
 # the .cll list dbcodegen compiles, gathered from the modules' SOURCES

@@ -66,8 +66,11 @@ jobs:
           key: wx-${{ matrix.preset }}
           restore-keys: wx-${{ matrix.preset }}-
 
+      # INSTALL_TEST_MAPS off: those maps live under Complete, which the sparse
+      # checkout does not fetch, and an artifact has no use for them. On by
+      # default so that a developer's install has missions to test on.
       - name: Configure with preset
-        run: cmake --preset ${{ matrix.preset }} "-DWX_ROOT=${{ env.WX_ROOT }}"
+        run: cmake --preset ${{ matrix.preset }} "-DWX_ROOT=${{ env.WX_ROOT }}" -DINSTALL_TEST_MAPS=OFF
 
       - name: Build with preset
         run: cmake --build --preset ${{ matrix.preset }} --parallel
