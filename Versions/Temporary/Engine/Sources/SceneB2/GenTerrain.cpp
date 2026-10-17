@@ -221,6 +221,20 @@ void CTerraGen::InitTileMasks()
 void CTerraGen::UpdateArea(
 		const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2, const uint32_t dwUpdateFlags )
 {
+	// Nothing to update on a terrain that was never loaded or generated, and
+	// everything below indexes tiles and heights without asking. CTerraGen is
+	// created with the terrain manager and only sized by Load, so a map whose
+	// map.b2m is missing leaves this object empty: NScene::LoadTerrain returns
+	// false without calling Load at all. The map's own crags and entrenchments
+	// still arrive from the record and dig into it, which was a crash in
+	// UpdateHeightsAfterCrags at tile 0,0 (CArray2D::operator[] on a null row
+	// table). The mission start paths refuse such a map now, so this is the
+	// backstop for whatever else reaches here.
+	if ( terrainInfo.tiles.IsEmpty() )
+	{
+		return;
+	}
+
 	UpdateHeightsAfterCrags( nTileX1, nTileY1, nTileX2, nTileY2 );
 	UpdateNormals( nTileX1, nTileY1, nTileX2, nTileY2 );
 	UpdateAllNeededPrecipices();
