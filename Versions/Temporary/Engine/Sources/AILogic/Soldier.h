@@ -360,6 +360,11 @@ public:
 
 	void SetVirtualFormation( class CFormation *pFormation );
 
+	class CFormation *GetVirtualFormation() const
+	{
+		return pVirtualFormation;
+	}
+
 	void SetWait2FormFlag( bool bNewValue )
 	{
 		bWait2Form = bNewValue;

@@ -206,6 +206,12 @@ void CMOUnit::GetDisabledActions( CUserActions *pActions, EActionsType eActions 
 IClientUpdatableProcess *
 CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
 {
+	if ( stats.nExpLevel >= 0 && nLevel != stats.nExpLevel )
+	{
+		// Use the simulated unit's retained level rather than its new owner's reinforcement level.
+		SetUnitLevel( stats.nExpLevel, bShowUnitRank );
+		UpdateIcons();
+	}
 	// Ammo
 	nSupply = stats.nSupply;
 

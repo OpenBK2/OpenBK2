@@ -50,7 +50,7 @@ jobs:
     steps:
       # Only what the build reads. The full tree is 11 GB and 238k files, almost
       # all of it game data; see build-windows.yml for the reasoning. Note that of
-      # Versions/Current only the font/text fixtures are checked out, so the four
+      # Versions/Current only the font/text/UI fixtures are checked out, so the four
       # DDS tests that read the shipped textures skip themselves rather than fail.
       # Fonts supplies the font files/textures for the tests and obk2_fonts.pak
       # (3 MB). bin/fonts supplies the baked glyph metrics TextVerticalAlignment
@@ -58,6 +58,7 @@ jobs:
       # Tags and Citations supply the heading styles and advice text used by
       # TextVerticalAlignment's clipping regression tests.
       # GLB_format_usage is the example glTF units GltfBounds_test loads (4 MB).
+      # UnitTransferUI reads the example pak plus these stock UI descriptor/texture directories.
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v6
         with:
@@ -72,7 +73,15 @@ jobs:
             Versions/Current/Data/bin/fonts
             Versions/Current/Data/Consts/Game/Tags
             Versions/Current/Data/Citations
+            Versions/Current/Data/UI/Game/Common
+            Versions/Current/Data/UI/Game/Menu/Common
+            Versions/Current/Data/UI/Game/Menu/EscapeMenu
+            Versions/Current/Data/UI/Game/Menu/MultiScreen
+            Versions/Current/Data/UI/Game/Mission/NewActions
+            Versions/Current/Data/UI/Game/Mission/Objectives
+            Versions/Current/Data/UI/Game/Mission/Panels/RightPanel
             OBK2_Examples/GLB_format_usage
+            OBK2_Examples/UnitTransferImpl
 
       - name: Setup build environment
         uses: ./.github/actions/setup-linux-build
@@ -174,7 +183,15 @@ jobs:
             Versions/Current/Data/bin/fonts
             Versions/Current/Data/Consts/Game/Tags
             Versions/Current/Data/Citations
+            Versions/Current/Data/UI/Game/Common
+            Versions/Current/Data/UI/Game/Menu/Common
+            Versions/Current/Data/UI/Game/Menu/EscapeMenu
+            Versions/Current/Data/UI/Game/Menu/MultiScreen
+            Versions/Current/Data/UI/Game/Mission/NewActions
+            Versions/Current/Data/UI/Game/Mission/Objectives
+            Versions/Current/Data/UI/Game/Mission/Panels/RightPanel
             OBK2_Examples/GLB_format_usage
+            OBK2_Examples/UnitTransferImpl
 
       # Its own ccache, since a job saves only what it used and these two share
       # no objects at all.

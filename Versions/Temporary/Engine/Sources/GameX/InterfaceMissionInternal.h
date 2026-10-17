@@ -304,6 +304,12 @@ private:
 	CPtr<IButton> pMinimizeBtn;
 	CPtr<IWindow> pMultifunctionWnd;
 	bool bMultifunctionPanelMinimized = {};
+	// Screen siblings follow the HUD because windows outside their parent cannot receive clicks.
+	CPtr<IButton> pTransferBtn;
+	CPtr<IWindow> pTransferPanel;
+	CPtr<IScrollableContainer> pTransferPlayers;
+	std::vector<int> transferPlayers;
+	bool bTransferPanelOpen = {};
 	CObj<class CMissionUnitFullInfo> pUnitFullInfo;
 	std::vector<CPtr<IButton>> specialSelectBtns;
 
@@ -419,6 +425,11 @@ private:
 	void UpdateActionPanel();
 
 	void UpdateActionButtons();
+	void InitTransferPanel();
+	void UpdateTransferPanel();
+	bool OnTransferToggle();
+	bool OnTransferClose();
+	bool OnTransferPlayer( const std::string &szSender );
 
 	void RegisterActionObservers();
 	bool MsgActionCmd( const SGameMessage &msg, int nAction );

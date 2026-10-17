@@ -5353,6 +5353,9 @@ int CScripts::GiveXPToReinforcement( struct lua_State *pState )
 			{
 				if ( ( *iter )->GetPlayer() == nPlayer && ( *iter )->GetReinforcementType() == eType )
 				{
+					// Script-awarded XP follows the same future-level rule as combat XP for donations.
+					( *iter )->UpdateTransferredExperience();
+					updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, *iter, -1 );
 					pParam->unitIDs.push_back( ( *iter )->GetUniqueID() );
 				}
 			}

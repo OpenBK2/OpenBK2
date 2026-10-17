@@ -21,6 +21,8 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CControlSumCheckCommand ) ) );
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CControlSumHistoryCommand ) ) ); // Test?
 	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CDropPlayerCommand ) ) );
+	// Network type IDs are separate from save/replay registration. Append to preserve existing wire IDs.
+	byte2msg.push_back( NObjectFactory::GetObjectTypeID( typeid( CTransferUnitsCommand ) ) );
 
 	NI_ASSERT( byte2msg.size() < 256, fmt::format( "Too many net messages ({})", byte2msg.size() ) );
 
@@ -32,15 +34,22 @@ CAICmdsAutomagic::CAICmdsAutomagic()
 
 int CAICmdsAutomagic::GetCommandID( CObjectBase *p )
 {
-	int nTypeID = NObjectFactory::GetObjectTypeID( typeid( *p ) );
-	NI_ASSERT( msg2byte.find( nTypeID ) != msg2byte.end(),
-	           fmt::format( "AI command {} not found", typeid( *p ).name() ) );
-	return msg2byte[nTypeID];
+	if ( !p )
+	{
+		return -1;
+	}
+	const int nTypeID = NObjectFactory::GetObjectTypeID( typeid( *p ) );
+	const auto it = msg2byte.find( nTypeID );
+	// Assertions are disabled in release builds. Never turn an unknown command into wire ID zero.
+	return it != msg2byte.end() ? it->second : -1;
 }
 
 CObjectBase *CAICmdsAutomagic::MakeCommand( int nID )
 {
-	NI_ASSERT( nID >= 0 && nID < msg2byte.size(), fmt::format( "Net message with byte code {} not found", nID ) );
+	if ( nID < 0 || nID >= byte2msg.size() )
+	{
+		return nullptr;
+	}
 	return NObjectFactory::MakeObject( byte2msg[nID] );
 }
 

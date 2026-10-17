@@ -2,7 +2,11 @@
 
 #include "Main/AICmdsAutoMagicInterface.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
+#include <unordered_map>
+#include <vector>
 
 class CAICmdsAutomagic : public IAICmdsAutoMagic
 {
@@ -30,4 +34,4 @@ public:
 	}
 };
 
-IAICmdsAutoMagic *CreateAICmdsAutoMagic();
+GAMEX_EXPORT IAICmdsAutoMagic *CreateAICmdsAutoMagic();

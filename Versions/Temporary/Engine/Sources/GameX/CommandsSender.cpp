@@ -142,6 +142,16 @@ void CCommandsSender::CommandGeneralCommand( const SAIUnitCmd *pCommand )
 	}
 }
 
+void CCommandsSender::CommandTransferUnits( const std::vector<int> &unitIDs, int nTargetPlayer )
+{
+	if ( !bHistoryPlaying && !unitIDs.empty() )
+	{
+		// Use the normal synchronized command stream, which also records the transfer in replays.
+		pTransciver->SendCommand(
+				new CTransferUnitsCommand( unitIDs, Singleton<IScenarioTracker>()->GetLocalPlayer(), nTargetPlayer ) );
+	}
+}
+
 void CCommandsSender::SendCommand( IAILogicCommandB2 *pCmd )
 {
 	pTransciver->SendCommand( pCmd );
