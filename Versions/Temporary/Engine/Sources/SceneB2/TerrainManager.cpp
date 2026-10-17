@@ -2,6 +2,7 @@
 
 #include "Stats_B2_M1/TerraAIObserver.h"
 #include "System/BinaryResources.h"
+#include "System/DB.h" // NDb::GetFolderName, for the record-relative terrain file
 #include "System/VFSOperations.h"
 #include "TerrainManager.h"
 
@@ -36,6 +37,29 @@ bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, cons
 	}
 	//
 	return false;
+}
+
+const std::string &GetTerrainFileName()
+{
+	return SZ_TERRA_BIN_FILE_NAME;
+}
+
+bool DoesTerrainFileExist( const std::string &szMapFilePath )
+{
+	// The same name LoadTerrain opens, so the answer cannot drift from what it
+	// will do with the same argument.
+	return NVFS::GetMainVFS()->DoesFileExist( szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME );
+}
+
+bool DoesTerrainFileExist( const NDb::STerrain *pDesc )
+{
+	if ( pDesc == 0 )
+	{
+		return false;
+	}
+	// The folder of the record, which is where the loader looks: CWorldClient
+	// passes NDb::GetFolderName of the map's own DBID.
+	return DoesTerrainFileExist( NDb::GetFolderName( pDesc->GetDBID() ) );
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

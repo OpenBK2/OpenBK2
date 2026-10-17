@@ -735,7 +735,21 @@ void CWorldClient::LoadMap( const NDb::SMapInfo *_pMapInfo )
 	const int nSizeY = pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH;
 	pTerraManager->SetAIObserver( pAI->CreateTerraAIObserver( nSizeX, nSizeY ) );
 	const std::string szMapFilePath = NDb::GetFolderName( pMapInfo->GetDBID() );
-	NScene::LoadTerrain( pTerraManager, pMapInfo, szMapFilePath );
+	// Said nothing when it failed, and a failure here is not recoverable: the
+	// terrain manager keeps an unloaded CTerraGen, so the map's crags and
+	// entrenchments then dig into arrays of no size. The mission start paths
+	// check the same file before they get this far, so reaching this is a bug
+	// or a database edited under a running game; either way name the file.
+	if ( !NScene::LoadTerrain( pTerraManager, pMapInfo, szMapFilePath ) )
+	{
+		const auto message =
+				fmt::format( "map \"{}\" has no {}, the terrain is empty", szMapFilePath, NScene::GetTerrainFileName() );
+		csSystem << CC_ORANGE << message.c_str() << endl;
+		if ( IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>() )
+		{
+			pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
+		}
+	}
 
 	ISoundScene *pSoundScene = Singleton<ISoundScene>();
 	pSoundScene->SetSoundSceneMode( ESSM_INGAME );

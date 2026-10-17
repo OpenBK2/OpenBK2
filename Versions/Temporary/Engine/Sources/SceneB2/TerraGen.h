@@ -241,6 +241,19 @@ SCENEB2_EXPORT void
 CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
 SCENEB2_EXPORT bool
 LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
+// Whether the terrain file LoadTerrain would read is there, asked before a
+// mission starts rather than in the middle of loading one. The heightmap is
+// map.b2m beside the record, and it is not part of the record: a database that
+// has the MapInfo without the file it names loads, lists and starts, and then
+// every walk of the terrain reads an array that was never sized. Here because
+// this is where the name and the layout are known.
+SCENEB2_EXPORT bool DoesTerrainFileExist( const std::string &szMapFilePath );
+SCENEB2_EXPORT bool DoesTerrainFileExist( const NDb::STerrain *pDesc );
+// The file name the two above look for, for messages outside this module. A
+// function rather than the extern string above because a data symbol does not
+// cross a DLL boundary without a dllimport declaration, and that string has
+// never had one.
+SCENEB2_EXPORT const std::string &GetTerrainFileName();
 SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
 SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError );
 }; // namespace NScene
