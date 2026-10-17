@@ -168,6 +168,12 @@ set(OBK2_WARNINGS_CLANG
     # EID_ABILITY_DEACTIVATE. Nothing reads it, so the collision was a trap
     # rather than a defect, and the sentinel now counts. GCC has no equivalent.
     -Wduplicate-enum
+    # Cleared without a pass of its own: the single site was IsBinDigit in
+    # Misc/StrProc.h, which tested a character against '0' and '1' at the same
+    # time, and the -Wlogical-op pass dropped the function. Measured at 0 on
+    # 2026-10-17, with the positive control (`c == '0' && c == '1'`) still
+    # firing, so the zero means clean rather than accepted and ignored.
+    -Wtautological-overlap-compare
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -242,7 +248,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     #      call site. There is no spelling of that which this flag accepts, so
     #      the eight stay and the flag stays out. The reasoning is at the macro
     #      in System/RandomGen.h.
-    -Wtautological-overlap-compare  # 1
     -Wheader-hygiene                # 9, `using namespace` in a header
     -Wenum-enum-conversion          # 9, includes the EFC_/EFUT_ mix-up
     -Wnon-virtual-dtor              # 90
