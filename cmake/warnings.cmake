@@ -272,12 +272,15 @@ set(OBK2_WARNINGS_STRICT_COMMON
 set(OBK2_WARNINGS_STRICT_GCC
     ${OBK2_WARNINGS_STRICT_COMMON}
     -Wno-reorder
-    # Tier 2: tens of sites each, high signal. Counts as of 2026-10-15.
-    -Wstrict-aliasing=3             # 12, the class that miscompiled the DXT decoder
-    -Wnon-virtual-dtor              # 198
-    -Wimplicit-fallthrough=5        # 31, and silent without -O
-    -Wcast-align=strict             # 110, inert on x86 and real on ARM
-    -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
+    # Tier 2: tens of sites each, high signal. Counts re-measured 2026-10-17
+    # over the 1035 engine units, with the editor's 345 counted separately
+    # where they were measured at all: CI's GCC job builds BUILD_EDITOR=ON, so
+    # an engine-only count is not the cost of adopting one of these.
+    -Wstrict-aliasing=3             # 7 engine (was 12), 1 editor, and the DXT decoder's class
+    -Wnon-virtual-dtor              # 160 engine
+    -Wimplicit-fallthrough=5        # 22 engine and 10 editor; silent without -O
+    -Wcast-align=strict             # 104 engine, inert on x86 and real on ARM
+    -Wshadow=compatible-local       # 120 engine; plain -Wshadow is 637 on clang and noisy
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
     # 141 of them), -Wstrict-overflow (458 and documented as noisy),
     # -Wmismatched-tags (ICEs this compiler).
@@ -320,12 +323,15 @@ set(OBK2_WARNINGS_STRICT_CLANG
     #      call site. There is no spelling of that which this flag accepts, so
     #      the eight stay and the flag stays out. The reasoning is at the macro
     #      in System/RandomGen.h.
+    # Counts re-measured 2026-10-17 over all 1389 units, editor included, which
+    # is what a clang sweep here covers; CI's clang job compiles the 1035
+    # engine ones.
     -Wheader-hygiene                # 9, `using namespace` in a header
     -Wenum-enum-conversion          # 9, includes the EFC_/EFUT_ mix-up
-    -Wnon-virtual-dtor              # 90
-    -Wdelete-non-abstract-non-virtual-dtor  # 11
+    -Wnon-virtual-dtor              # 87
+    -Wdelete-non-abstract-non-virtual-dtor  # 11, and most of them dbcodegen output
     -Wimplicit-fallthrough          # 39
-    -Wcast-align                    # 57
+    -Wcast-align                    # 56
 )
 
 # ---------------------------------------------------------------------------
