@@ -84,6 +84,8 @@ struct IFullScreenFader;
 
 struct SObjectFilter
 {
+	virtual ~SObjectFilter() = default;
+
 	virtual bool operator()( int ) const
 	{
 		return false;

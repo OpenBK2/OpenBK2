@@ -26,6 +26,8 @@ struct STextureKey;
 
 struct ILayoutFakeView
 {
+	virtual ~ILayoutFakeView() = default;
+
 public:
 	virtual void CreateDynamicRects( const NDb::STexture *pTexture,
 	                                 const CRectLayout &sLayout,

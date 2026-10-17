@@ -12,6 +12,8 @@ class CMemObject;
 
 struct IAIVisitor : public IVisitorBase
 {
+	virtual ~IAIVisitor() = default;
+
 	struct SPieceMap
 	{
 		int nPieceID, nUserID;

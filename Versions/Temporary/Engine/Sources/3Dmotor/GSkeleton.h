@@ -109,6 +109,7 @@ CPtrFuncBase<CGrannyFileInfo> *GetSkeletonFileInfo( const NDb::SSkeleton *pSkele
 
 struct IGetBone
 {
+	virtual ~IGetBone() = default;
 	virtual int GetBoneIndex( const char *pszName ) = 0;
 	virtual void GetBoneNames( std::vector<std::string> *pBoneNames ) = 0;
 };

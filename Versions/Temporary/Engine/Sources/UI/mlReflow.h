@@ -73,6 +73,7 @@ struct SState
 class IReflowState
 {
 public:
+	virtual ~IReflowState() = default;
 	virtual const SState &GetState() const = 0;
 	virtual void SetState( const SState &state ) = 0;
 

@@ -353,6 +353,14 @@ protected:
 	std::vector<NInput::CGMOReg> eventRegisters;
 
 public:
+	// Virtual, and free: AddRawObserver below is already virtual, so this class
+	// has a vtable pointer either way. A protected destructor would have been
+	// the cheaper statement of "nobody deletes one of these through the mixin",
+	// but CInterfaceScreenBase and the console window hold one as a member as
+	// well as inheriting it, and a member cannot reach a protected destructor.
+	virtual ~CGMORegContainer() = default;
+
+public:
 	// void member function observer registration
 	template <typename TObj, typename TMsg>
 	void AddObserver( const std::string &szMsgName, void ( TObj::*_pfnMemFun )( const TMsg &_msg ) )

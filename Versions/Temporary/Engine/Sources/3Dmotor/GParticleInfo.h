@@ -86,6 +86,7 @@ const float F_PARTICLE_OVER = 1e10f;
 class IParticleOutput
 {
 public:
+	virtual ~IParticleOutput() = default;
 	virtual const SParticleOrientationInfo &GetOrientationInfo() const = 0;
 
 	const CVec3 &GetDepth() const

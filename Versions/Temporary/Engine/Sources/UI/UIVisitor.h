@@ -24,6 +24,7 @@ struct STexture;
 
 struct IUIVisitor
 {
+	virtual ~IUIVisitor() = default;
 	// Layout clips follow ordinary panels. A scrolling viewport starts a new
 	// content space so partially scrolled text does not change font size.
 private:

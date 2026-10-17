@@ -9,6 +9,7 @@ const int INVALID_CHANNEL_ID = ( -1 );
 // arbitrary scalar channel animation support
 struct IChannelAnimator
 {
+	virtual ~IChannelAnimator() = default;
 	virtual int GetChannelCount() = 0;
 	virtual int GetChannelIndex( const std::string &szName ) = 0;
 	virtual float GetChannelValue( int nChannelIndex ) = 0;

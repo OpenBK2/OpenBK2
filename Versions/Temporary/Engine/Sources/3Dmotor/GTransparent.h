@@ -82,6 +82,7 @@ public:
 class IReportParticlesGeometry
 {
 public:
+	virtual ~IReportParticlesGeometry() = default;
 	virtual void AddParticles( IVBCombiner *pVertices,
 	                           CFuncBase<std::vector<NGfx::STriangleList>> *pTrilists,
 	                           int nPart,

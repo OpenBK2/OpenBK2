@@ -246,6 +246,8 @@ struct SPerVertexLightState;
 class IRender
 {
 public:
+	virtual ~IRender() = default;
+
 	enum EDepthType
 	{
 		DT_STATIC,

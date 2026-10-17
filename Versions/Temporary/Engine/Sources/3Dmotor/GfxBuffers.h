@@ -348,7 +348,9 @@ struct STexturePlaceInfo
 struct _3DMOTOR_EXPORT INew2DTexAllocCallback
 {
 	INew2DTexAllocCallback();
-	~INew2DTexAllocCallback();
+	// Virtual: this is an interface, and C2DQuadsRenderer below inherits it to
+	// get a texture-reallocation notification.
+	virtual ~INew2DTexAllocCallback();
 	virtual void NewTextureWasAllocated() = 0;
 };
 

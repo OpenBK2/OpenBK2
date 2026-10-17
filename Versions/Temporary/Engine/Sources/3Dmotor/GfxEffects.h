@@ -29,6 +29,7 @@ inline void GetTexMapFromProjection( SHMatrix *p, int nResolution )
 
 struct SEffect
 {
+	virtual ~SEffect() = default;
 	virtual void Use( CRenderContext *p ) = 0;
 };
 

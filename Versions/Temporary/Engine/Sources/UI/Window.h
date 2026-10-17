@@ -36,6 +36,7 @@ enum EMouseStateB2
 class UI_EXPORT CUIMORegConttainer : public NInput::CGMORegContainer
 {
 public:
+	virtual ~CUIMORegConttainer() = default;
 	void AddRawObserver( const std::string &szMsgName, IGMObserver *pObserver ) override;
 };
 
