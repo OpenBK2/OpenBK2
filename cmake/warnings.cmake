@@ -122,6 +122,14 @@ set(OBK2_WARNINGS_GCC
     # action with the open question recorded at the site, so behaviour is
     # unchanged. -Wduplicated-cond is in the default list above already.
     -Wduplicated-branches
+    # Cleared 2026-10-17. Was 1 site once the editor was measured too, which the
+    # earlier count of 2 had missed by sweeping BUILD_EDITOR=OFF: the editor's
+    # build-details banner stamps __DATE__ and __TIME__ into a local build on
+    # purpose, and that now lives in one function with a suppression of its own
+    # (MapEditorLib/BuildDetailsWx.cpp). Debian passes this flag in CPPFLAGS,
+    # which CMake ignores, so adopting it is also the only way it reaches this
+    # build.
+    -Wdate-time
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -196,6 +204,9 @@ set(OBK2_WARNINGS_CLANG
     # reports a use uninitialised on any path it can see rather than on all of
     # them, so it is the one that objects to "initialised by a callee".
     -Wconditional-uninitialized
+    # Same single site and the same suppression as GCC's entry above; clang
+    # reports this class under the same name, so it is listed for both.
+    -Wdate-time
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -235,7 +246,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     -Wimplicit-fallthrough=5        # 31, and silent without -O
     -Wcast-align=strict             # 110, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 149; plain -Wshadow is 637 on clang and noisy
-    -Wdate-time                     # 2, reproducible builds; Debian passes it
     -Walloc-zero                    # 2
     -Warray-bounds=2                # 1
     -Wformat-overflow=2             # 2
