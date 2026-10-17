@@ -16,7 +16,6 @@
 
 BASIC_REGISTER_CLASS( COMMON_RTS_AI, IPointChecking );
 
-const uint16_t TURN_TOLERANCE = 0;
 NTimer::STime lastTimeDiff = 50;
 
 struct SCheckTurnIterateUnitsCallback : public SIterateUnitsCallback
@@ -312,7 +311,14 @@ const bool CBasePathUnit::MakeTurnToDirection( const uint16_t _wDirection )
 	const uint16_t wAntiClockWise = GetFrontDirection() - wNewFrontDir;
 
 	const uint16_t wMinTurn = (std::min)( wClockWise, wAntiClockWise );
-	if ( wMinTurn < TURN_TOLERANCE )
+	// A "the angle is within the tolerance, snap to it" test used to come first,
+	// comparing wMinTurn against a TURN_TOLERANCE that was 0. An unsigned value
+	// is never below zero, so that branch had never run, and the turn-time test
+	// below subsumes it anyway: a turn of zero needs no time and finishes in
+	// this tick. Dropped rather than given a tolerance, since this is lockstep
+	// simulation and a new tolerance is a behaviour change.
+	const NTimer::STime turnTime = wMinTurn / GetTurnSpeed();
+	if ( turnTime < lastTimeDiff )
 	{
 		SetDirection( _wDirection );
 		bTurning = false;
@@ -320,21 +326,11 @@ const bool CBasePathUnit::MakeTurnToDirection( const uint16_t _wDirection )
 	}
 	else
 	{
-		const NTimer::STime turnTime = wMinTurn / GetTurnSpeed();
-		if ( turnTime < lastTimeDiff )
-		{
-			SetDirection( _wDirection );
-			bTurning = false;
-			return true;
-		}
-		else
-		{
-			const int nTurnMultiply = ( wClockWise < wAntiClockWise ) ? int( lastTimeDiff ) : -int( lastTimeDiff );
-			NI_ASSERT( std::fegetround() == FE_TONEAREST, "something changed processor control word" );
-			SetDirection( GetDirection() + Float2Int( nTurnMultiply * GetTurnSpeed() ) );
-			bTurning = true;
-			return false;
-		}
+		const int nTurnMultiply = ( wClockWise < wAntiClockWise ) ? int( lastTimeDiff ) : -int( lastTimeDiff );
+		NI_ASSERT( std::fegetround() == FE_TONEAREST, "something changed processor control word" );
+		SetDirection( GetDirection() + Float2Int( nTurnMultiply * GetTurnSpeed() ) );
+		bTurning = true;
+		return false;
 	}
 }
 
