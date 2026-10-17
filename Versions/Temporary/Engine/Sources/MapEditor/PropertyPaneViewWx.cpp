@@ -400,8 +400,10 @@ const std::vector<wxBitmap> &Icons( UINT nResourceID )
 wxBitmapBundle TypeIcon( EPCIEType nType )
 {
 	const std::vector<wxBitmap> &rIcons = Icons( IDB_PC_TYPES_IMAGE_LIST );
-	return ( ( nType >= 0 ) && ( static_cast<size_t>( nType ) < rIcons.size() ) ) ? wxBitmapBundle( rIcons[nType] )
-	                                                                              : wxBitmapBundle();
+	// The size comparison is the whole bound: EPCIEType has no negative value,
+	// so its underlying type is unsigned and the dropped "nType >= 0" was
+	// always true.
+	return ( static_cast<size_t>( nType ) < rIcons.size() ) ? wxBitmapBundle( rIcons[nType] ) : wxBitmapBundle();
 }
 
 // The types CPCMainTreeControl::PickTextColors painted the value cell of in

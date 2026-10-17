@@ -673,7 +673,10 @@ void CEntrenchmentDesignTool::GetSegmentsInfo(
 
 CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 {
-	if ( eSegType < 0 || eSegType >= ST_COUNT )
+	// ST_COUNT alone bounds the index: ESegType names no negative value, so its
+	// underlying type is unsigned and a negative int cast into it arrives as a
+	// large one, which the upper test catches. The "< 0" half never could.
+	if ( eSegType >= ST_COUNT )
 	{
 		return VNULL3;
 	}
@@ -684,7 +687,7 @@ CVec3 CEntrenchmentDesignTool::GetSegAABBSize( ESegType eSegType )
 
 CVec2 CEntrenchmentDesignTool::GetSegAABBCenter( ESegType eSegType )
 {
-	if ( eSegType < 0 || eSegType >= ST_COUNT )
+	if ( eSegType >= ST_COUNT )
 	{
 		return VNULL2;
 	}
