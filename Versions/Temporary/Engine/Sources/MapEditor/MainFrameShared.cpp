@@ -56,7 +56,9 @@ bool UpdateTitle( SSWTParams *pCurrent, const SSWTParams &rSWTParams, std::strin
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	SSWTParams &currentSWTParams = *pCurrent;
 	//
-	const int MAX_NAME_SIZE = 133;
+	// std::size_t, because every comparison against it is against a string size
+	// and the truncation below subtracts from it.
+	const std::size_t MAX_NAME_SIZE = 133;
 	//
 	bool bModified = false;
 	if ( rSWTParams.dwFlags & SWT_MOD )
@@ -152,7 +154,12 @@ bool UpdateTitle( SSWTParams *pCurrent, const SSWTParams &rSWTParams, std::strin
 	//
 	if ( ( szTitle.size() + szExtention.size() ) > MAX_NAME_SIZE )
 	{
-		if ( ( MAX_NAME_SIZE - szExtention.size() - 4 ) >= 0 )
+		// The room left for the title, tested before it is subtracted rather
+		// than after: the old guard asked whether MAX_NAME_SIZE minus the
+		// extension minus the ellipsis was >= 0, in unsigned arithmetic where a
+		// negative result wraps to an enormous one. So it was always true, and
+		// substr then clamped to the whole title and left the name over length.
+		if ( ( szExtention.size() + 4 ) <= MAX_NAME_SIZE )
 		{
 			szTitle =
 					szTitle.substr( 0, MAX_NAME_SIZE - szExtention.size() - 4 ) + "..." + szTitle.substr( szTitle.size() - 1 );
