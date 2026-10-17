@@ -163,6 +163,11 @@ set(OBK2_WARNINGS_CLANG
     # GCC has no equivalent of any of them at any level, so clang is the only
     # compiler guarding the class. That is how the artillery defect survived.
     -Wloop-analysis
+    # Cleared 2026-10-17. Was 1: AILogic/Executor.h pinned _EID_COUNT, the
+    # sentinel that counts the executor event ids, to 1, which is
+    # EID_ABILITY_DEACTIVATE. Nothing reads it, so the collision was a trap
+    # rather than a defect, and the sentinel now counts. GCC has no equivalent.
+    -Wduplicate-enum
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -245,7 +250,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     -Wimplicit-fallthrough          # 39
     -Wcast-align                    # 57
     -Wshift-sign-overflow           # 2
-    -Wduplicate-enum                # 1
     -Wtautological-unsigned-zero-compare  # 8
     -Wtautological-unsigned-enum-zero-compare  # 3
 )
