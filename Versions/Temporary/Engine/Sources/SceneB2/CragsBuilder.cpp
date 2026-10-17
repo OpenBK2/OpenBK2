@@ -331,8 +331,6 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 	foot.pFootMaterial = pCrag->pDesc->pFootMaterial;
 	foot.fTexGeomScale = pCrag->pDesc->fRidgeTexGeomScale;
 
-	float fMaxCragHeight;
-
 	while ( 1 )
 	{
 		samplesL.resize( 0 );
@@ -353,10 +351,18 @@ void CTerraGen::PutCragOnTerrain( STerrainInfo::SCrag *pCrag, const CVec2i &vMin
 		}
 		CragsPushExactPoint( &precPoints, *itPointPrev, *itPoint, 0.0f, 1.0f, pCrag->nID, true );
 		CragsPushPointLR( &samplesL, &samplesR, precPoints.back(), &vMin, &vMax, pCrag->nID );
-		while ( ( itPoint != pCrag->sampPoints.end() ) &&
-		        ( itPoint->vPos.z >=
-		          ( fMaxCragHeight = GetMaxCragHeight( CVec2( itPoint->vPos.x, itPoint->vPos.y ), pCrag->nID ) ) ) )
+		// The maximum height used to be computed by an assignment inside this
+		// loop's condition, which the body then read: the value only exists once
+		// the condition's left half has already let us in, so every reader had to
+		// work that out for itself. It is computed in the body now and the
+		// condition only tests.
+		while ( itPoint != pCrag->sampPoints.end() )
 		{
+			const float fMaxCragHeight = GetMaxCragHeight( CVec2( itPoint->vPos.x, itPoint->vPos.y ), pCrag->nID );
+			if ( itPoint->vPos.z < fMaxCragHeight )
+			{
+				break;
+			}
 			precPoints.push_back( *itPoint );
 			precPoints.back().fRadius =
 					itPoint->vPos.z /*- GetTerraHeight( itPoint->vPos.x, itPoint->vPos.y )*/ - fMaxCragHeight;
