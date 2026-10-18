@@ -8,6 +8,8 @@
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
 
+#include <filesystem>
+
 #include <gtest/gtest.h>
 
 namespace
@@ -20,6 +22,14 @@ protected:
 
 	static void SetUpTestSuite()
 	{
+		// Sparse CI checkouts must include both the example archive and its stock UI dependencies.
+		// Fail here with the missing path instead of reporting an empty archive and null DB records.
+		ASSERT_TRUE( std::filesystem::is_regular_file( TRANSFER_UI_PAK ) )
+				<< "Missing transfer UI archive; check the CI sparse checkout: " << TRANSFER_UI_PAK;
+		const auto nativeButton =
+				std::filesystem::path( TRANSFER_UI_GAME_DATA ) / "UI/Game/Menu/Common/Button_BackgroundTiledTexture.xdb";
+		ASSERT_TRUE( std::filesystem::is_regular_file( nativeButton ) )
+				<< "Missing stock transfer UI fixtures; check the CI sparse checkout: " << nativeButton.string();
 		// Force the UI module to load and register its generated resource classes on Windows.
 		NSingleton::RegisterSingleton( CreateUIInitialization(), IUIInitialization::tidTypeID );
 		// Mount the actual ZIP through the game's VFS, with retail dependencies below it.
