@@ -5,17 +5,23 @@ struct IPlayer;
 namespace NUIElementsHelper
 {
 
+// Only Init fills these in, and only the campaign statistics screen calls it:
+// a custom mission has no career or rank progression, so its statistics screen
+// reads bFinal, steps the animation and saves the lot without Init ever having
+// run. Stated here so that path gets "there is nothing to animate" rather than
+// whatever the allocation left, which decided whether the popups waited for an
+// animation that was never set up and what the progress bars were driven with.
 struct SExpProgressCareer
 {
 	ZDATA
-	bool bFinal;
-	float fStart;
-	float fCur;
-	float fTarget;
-	float fStep;
-	float fTotal;
-	float fProgress;
-	float fNewProgress;
+	bool bFinal = true;
+	float fStart = 0.0f;
+	float fCur = 0.0f;
+	float fTarget = 0.0f;
+	float fStep = 0.0f;
+	float fTotal = 0.0f;
+	float fProgress = 0.0f;
+	float fNewProgress = 0.0f;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -41,21 +47,23 @@ struct SExpProgressCareer
 	void Step( bool bWait );
 };
 
+// Same as SExpProgressCareer above: Init is the only thing that fills these,
+// and the custom-mission screen never calls it.
 struct SExpProgressRank
 {
 	ZDATA
-	bool bFinal;
-	float fStart;
-	float fCur;
-	float fTarget;
-	float fStep;
+	bool bFinal = true;
+	float fStart = 0.0f;
+	float fCur = 0.0f;
+	float fTarget = 0.0f;
+	float fStep = 0.0f;
 	std::vector<float> levels;
-	int nNextLevel;
-	float fCurLevelExp;
-	float fTargetLevelExp;
-	float fTargetNextLevelExp;
-	float fProgress;
-	float fNewProgress;
+	int nNextLevel = 0;
+	float fCurLevelExp = 0.0f;
+	float fTargetLevelExp = 0.0f;
+	float fTargetNextLevelExp = 0.0f;
+	float fProgress = 0.0f;
+	float fNewProgress = 0.0f;
 
 	ZEND int operator&( IBinSaver &f )
 	{
