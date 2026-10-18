@@ -81,6 +81,12 @@ usage()
 	                         needs no GPU. Quietens the DXVK log too.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
+	      --valgrind         run under valgrind's memcheck, which reports the
+	                         use of an uninitialised value of any type, not just
+	                         the bool and enum loads UBSan can see. Needs a
+	                         build with -DUSE_MIMALLOC=OFF and must not be a
+	                         sanitizer one; both are checked. VALGRIND_OPTS
+	                         replaces the options, VALGRIND_EXTRA adds to them
 	      --env              print the environment that would be used, and exit
 	  -h, --help             this text
 
@@ -93,6 +99,7 @@ usage()
 	  ./launch.sh asan+ubsan --data totalconv
 	  ./launch.sh debug --editor
 	  ./launch.sh asan+ubsan --gdb
+	  ./launch.sh release --valgrind --data retail
 	  ASAN_OPTIONS=detect_leaks=1 ./launch.sh asan+ubsan
 	USAGE
 }
@@ -144,6 +151,7 @@ CONFIG=debug
 EXE=Game
 TREE=
 USE_GDB=no
+USE_VALGRIND=no
 SHOW_ENV=no
 REPLAY=
 MISSION=
@@ -183,6 +191,7 @@ while [ $# -gt 0 ]; do
 		--software-vk) SOFTWARE_VK=yes; shift ;;
 		-e|--editor)  EXE=B2_MapEditor; shift ;;
 		-g|--gdb)     USE_GDB=yes; shift ;;
+		--valgrind)   USE_VALGRIND=yes; shift ;;
 		--env)        SHOW_ENV=yes; shift ;;
 		--)           shift; break ;;
 		*)            die "unknown option '$1'. ./launch.sh --help" ;;
@@ -190,6 +199,8 @@ while [ $# -gt 0 ]; do
 done
 
 [ "$VERIFY" = yes ] && [ -z "$REPLAY" ] && die "--verify needs --replay FILE"
+[ "$USE_GDB" = yes ] && [ "$USE_VALGRIND" = yes ] &&
+	die "--gdb and --valgrind both want to be the outer process; pass one"
 
 # The game takes the first of these it is given and ignores the rest, so say so
 # here rather than leaving the caller to wonder which one ran.
@@ -355,9 +366,73 @@ case "$PREFIX" in
 		ENV_ARGS+=( "TSAN_OPTIONS=${TSAN_OPTIONS:-${TSAN_SUPP}history_size=4}" ) ;;
 esac
 
+# Valgrind's memcheck answers for every type the question UBSan's bool and enum
+# checks answer for two: was this value ever written? It tracks definedness per
+# bit as the program runs, so it needs no instrumented build and no rebuild of
+# the dependencies the way MemorySanitizer would.
+#
+# --track-origins is the point of using it here. Without it a report says an
+# uninitialised value was used; with it, it also says where that value came
+# from, which for a member nobody assigned is the allocation. It costs about
+# twice as much again on top of memcheck's own 20x or so, and this is already a
+# tool for one question rather than for playing.
+#
+# Leak checking is off by default for the reason the ASan prefix sets
+# detect_leaks=0: the object model frees on refcount and a clean exit is not one
+# of its guarantees, so the shutdown report buries everything found while
+# playing. Pass VALGRIND_EXTRA='--leak-check=full' when leaks are the question.
+#
+# Suppressions come from valgrind.supp beside this script when it exists, the
+# way tsan.supp does. Build one for the prebuilt graphics stack with
+# VALGRIND_EXTRA='--gen-suppressions=all'.
+declare -a VALGRIND_CMD=()
+if [ "$USE_VALGRIND" = yes ]; then
+	command -v valgrind >/dev/null || die "no valgrind on PATH"
+	case "$PREFIX" in
+		*-asan|*-tsan)
+			die "valgrind cannot run a sanitizer build: each replaces the allocator and intercepts the same calls. Run release or debug instead" ;;
+	esac
+	# mimalloc is linked into every executable by default and memcheck cannot
+	# see through it: the pools it mmaps arrive zero filled, so an unwritten
+	# member reads as a defined zero and no heap error or leak is ever
+	# reported. What survives is everything off the heap, which is worth a run
+	# on its own, so this says what is lost rather than refusing.
+	if command -v readelf >/dev/null &&
+	   readelf -d "$PREFIX/bin/$EXE" 2>/dev/null | grep -q mimalloc; then
+		printf '%s: warning: %s links mimalloc, so memcheck will report nothing about the heap\n' "$SELF" "$EXE" >&2
+		printf '%s:          and no leaks. Configure that prefix with -DUSE_MIMALLOC=OFF for those.\n' "$SELF" >&2
+	fi
+	declare -a VALGRIND_SUPP=()
+	[ -f "$SRCDIR/valgrind.supp" ] && VALGRIND_SUPP=( "--suppressions=$SRCDIR/valgrind.supp" )
+	if [ -n "${VALGRIND_OPTS:-}" ]; then
+		read -r -a VALGRIND_CMD <<<"valgrind $VALGRIND_OPTS"
+	else
+		VALGRIND_CMD=(
+			valgrind
+			--tool=memcheck
+			--track-origins=yes
+			--leak-check=no
+			--num-callers=30
+			--error-limit=no
+			# The game is threaded and valgrind serialises threads by default,
+			# which on a frame loop reads as a hang rather than as slowness.
+			--fair-sched=yes
+			"--log-file=$RUNDIR/valgrind-%p.log"
+			"${VALGRIND_SUPP[@]}"
+		)
+	fi
+	if [ -n "${VALGRIND_EXTRA:-}" ]; then
+		declare -a valgrind_extra=()
+		read -r -a valgrind_extra <<<"$VALGRIND_EXTRA"
+		VALGRIND_CMD+=( "${valgrind_extra[@]}" )
+	fi
+	printf '%s: memcheck output goes to %s/valgrind-<pid>.log\n' "$SELF" "$RUNDIR" >&2
+fi
+
 if [ "$SHOW_ENV" = yes ]; then
 	printf '%s\n' "${ENV_ARGS[@]}"
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
+	[ ${#VALGRIND_CMD[@]} -gt 0 ] && printf 'valgrind=%s\n' "${VALGRIND_CMD[*]}"
 	[ -n "$MISSION" ] && printf 'args=--mission=%s\n' "$MISSION"
 	[ -n "$CAMPAIGN" ] && printf 'args=--campaign=%s\n' "$CAMPAIGN"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
@@ -368,6 +443,7 @@ fi
 
 declare -a CMD=(env "${ENV_ARGS[@]}")
 [ "$USE_GDB" = yes ] && CMD+=(gdb --args)
+[ ${#VALGRIND_CMD[@]} -gt 0 ] && CMD+=("${VALGRIND_CMD[@]}")
 CMD+=("./$EXE")
 # Before the caller's own arguments, so an explicit --replay= after -- wins.
 [ -n "$MISSION" ] && CMD+=("--mission=$MISSION")

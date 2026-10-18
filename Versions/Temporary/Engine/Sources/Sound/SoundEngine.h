@@ -91,10 +91,14 @@ class CSoundEngine : public ISFX
 	bool bEnableSFX;       // enable SFXes playing
 	bool bEnableStreaming; // enable streaming playing
 	bool bSoundCardPresent;
-	bool bPaused;          // is all SFX sounds paused?
-	bool bStreamingPaused; // is streaming sound paused
+	bool bPaused; // is all SFX sounds paused?
+	// The two the constructor does not name. Stated here instead, so that the
+	// value does not depend on which of Set3DMode, a loaded save or neither
+	// has run yet: Update reads b3DMode on the first frame after the engine is
+	// created, and operator& writes bStreamingPaused into every save.
+	bool bStreamingPaused = false; // is streaming sound paused
 	//
-	bool b3DMode;
+	bool b3DMode = false;
 	CVec3 vFormerListener;
 	//
 	void ClearChannels();

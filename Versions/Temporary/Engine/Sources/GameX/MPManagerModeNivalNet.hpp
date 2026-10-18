@@ -71,6 +71,14 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	void OnGameSpecificInfo() override;
 	void StartGame() override;
 	void EndGame() override;
+
+	// The lobby, as after a disconnect outside a match: the server is gone and
+	// a fresh login (EGS_LOGGING_IN) is the only way on from here.
+	void OnGameAborted() override
+	{
+		eState = EGS_LOBBY;
+	}
+
 	void KickPlayerFromSlot( const int nSlot ) override;
 	void OnSurrender() override;
 	void BroadcastGameControlPacket( CNetPacket *pPacket ) override;

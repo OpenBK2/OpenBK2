@@ -199,6 +199,17 @@ void CMPTransceiver::SchedulePlayerRemoval( int nPlayer, int nSegment )
 void CMPTransceiver::DoSegments()
 {
 	NWin32Helper::MaskAllFloatingPointExceptions();
+	// pClient is not owned here: the MP manager mode holds the owning CObj and
+	// replaces the client on a network error. Releasing that CObj clears the
+	// client in place (DestroyContents leaves a default-constructed object with
+	// no connection), and the interface teardown that error requests runs only
+	// on a later frame. Until then there is nothing to step or send to.
+	// CheckRunGame and FinalizeSegmentPack, the other users of pClient, are only
+	// reached from here.
+	if ( !IsValid( pClient ) )
+	{
+		return;
+	}
 	pClient->Segment();
 	if ( !IsGameRunning() )
 	{

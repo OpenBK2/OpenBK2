@@ -84,6 +84,12 @@ class CMPManagerModeLAN : public CMPManagerMode
 	void TryToJoinGame( const SNetGameInfo &game ) override;
 	void StartGame() override;
 	void EndGame() override;
+
+	void OnGameAborted() override
+	{
+		eCurrentState = EGS_NOT_IN_GAME;
+	}
+
 	void OnLeaveGame() override;
 	void OnGameRoomClientAdded() override;
 	void OnGameRoomClientRemoved() override;

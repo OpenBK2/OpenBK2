@@ -46,9 +46,20 @@ add_unit_test(MMXhelpers 3Dmotor Misc)
 # kernels take by reference and which the 3Dmotor DLL does not export.
 add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+# "Their own table" only holds if the one in this executable stays in this
+# executable. An ELF image resolves a name once for the whole process, so an
+# exported nCubicRoot here and an exported nCubicRoot in 3Dmotor are one
+# variable, chosen by load order, and AddressSanitizer reports the pair as an
+# ODR violation and aborts the test before it runs. Hidden visibility gives the
+# compiled-in kernels the table beside them and leaves the library its own.
+set_target_properties(LightingKernels_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
 add_unit_test(BitOps Misc)
 # Failed GPU locks must stop before exposing writable pointers to callers.
 add_unit_test(GfxBufferLocks 3Dmotor System Misc gr2)
+# Same reason as LightingKernels_test above: this one defines the
+# bWasLinearBufferLock that the CRBase it instantiates writes, and 3Dmotor
+# defines one too for the CRBase inside it.
+set_target_properties(GfxBufferLocks_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
 # Compact Granny weight arrays must not read absent influences or binding indices.
 add_unit_test(GrannyWeights 3Dmotor 3DLib System Misc gr2)
 if(WIN32)

@@ -4,6 +4,7 @@ import argparse
 import os
 from pathlib import Path
 import shutil
+import signal
 import struct
 import subprocess
 import sys
@@ -48,6 +49,19 @@ def validate_dump(path, mode):
     if os.name == "nt" and mode in expected and code != expected[mode]:
         raise AssertionError(f"Exception code {code:#x}, expected {expected[mode]:#x}")
     return code, len(data)
+
+
+def describe_exit(returncode):
+    # A POSIX child killed by a signal reports -N. Which signal ended it is the
+    # difference between a crash Crashpad's handler saw and re-raised and one
+    # the handler never ran for at all, so a missing dump has to name it. On
+    # Windows the code is the exception code the unhandled filter returned.
+    if returncode < 0:
+        try:
+            return f"killed by {signal.Signals(-returncode).name}"
+        except ValueError:
+            return f"killed by signal {-returncode}"
+    return f"exit {returncode} ({returncode & 0xFFFFFFFF:#x})"
 
 
 def main():
@@ -132,7 +146,15 @@ def main():
         if not dumps:
             time.sleep(0.05)
     if len(dumps) != 1:
-        raise AssertionError(f"Expected one dump in {dump_root}, found {len(dumps)}; evidence: {run}\n{output}")
+        # The child's end and the whole run tree, because this is the failure
+        # that says the least on its own: no dump can mean the handler was never
+        # asked for one, which the signal that ended the child tells apart, or a
+        # dump written somewhere other than the database, which the listing does.
+        left = "\n".join(sorted(str(path.relative_to(run)) for path in run.rglob("*") if path.is_file()))
+        raise AssertionError(
+            f"Expected one dump in {dump_root}, found {len(dumps)}; child {describe_exit(result.returncode)}"
+            f"; evidence: {run}\n{output}\n{left}"
+        )
     if list(cwd.rglob("*.dmp")):
         raise AssertionError("Dump unexpectedly depended on working directory")
     code, size = validate_dump(dumps[0], args.case)

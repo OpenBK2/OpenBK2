@@ -167,6 +167,17 @@ if(MSVC)
   add_definitions("-D_CRT_SECURE_NO_WARNINGS=1")
   add_definitions("-D_CRT_NONSTDC_NO_DEPRECATE=1")
   add_definitions("-D_CRT_NON_CONFORMING_SWPRINTFS=1")
+elseif(UNIX)
+  # Nothing here runs code off the stack, and one object in a fetched dependency
+  # decides otherwise for every binary it reaches: crashpad's
+  # capture_context_linux.S carries no .note.GNU-stack marker, so GNU ld assumes
+  # the worst for the whole link and marks PT_GNU_STACK executable. Whether that
+  # is only a warning or an executable stack depends on the linker's default:
+  # Ubuntu's ld reports it on every CI link of Game, B2_MapEditor and the
+  # Crashpad probe, Debian's is silent. Asking for it explicitly makes the
+  # answer the same everywhere and is what a distribution's hardening flags
+  # would do anyway.
+  add_link_options("-Wl,-z,noexecstack")
 endif()
 
 include(cmake/winapi.cmake)
@@ -186,6 +197,8 @@ include(cmake/unittest.cmake)
 include(cmake/benchmarks.cmake)
 include(cmake/googlebenchmark.cmake)
 include(cmake/boost.cmake)
+# After boost.cmake, since it picks between Boost's stacktrace backend targets.
+include(cmake/stacktrace.cmake)
 if(USE_MIMALLOC)
     include(cmake/mimalloc.cmake)
 endif()
@@ -201,6 +214,8 @@ include(cmake/fmt.cmake)
 include(cmake/spdlog.cmake)
 # After spdlog: libgr2 carries its call trace on it and reuses this tree's copy
 # rather than fetching a second one.
+# symbols.cmake first: granny.cmake and bk2_targets.cmake install PDBs with it.
+include(cmake/symbols.cmake)
 include(cmake/granny.cmake)
 include(cmake/ffmpeg.cmake)
 include(cmake/crashpad.cmake)

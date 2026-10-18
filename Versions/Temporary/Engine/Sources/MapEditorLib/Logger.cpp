@@ -6,62 +6,73 @@
 
 namespace NLog
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CLogger : public ILogger
+// Both classes below are implementations this file never exports, and they have
+// to stay that way: System/Logger.h declares a different NLog::CLogger, and
+// since both are defined inside their class bodies both compile to a weak
+// NLog::CLogger::~CLogger() with the same mangled name. One ELF image resolves
+// that name once for the whole process, so with both libraries loaded the
+// editor's destructor ran on the engine's logEmergency, read its unrelated
+// fields as a std::list and faulted while unloading. Windows kept them apart
+// only because each DLL resolves its own.
+namespace
 {
-	//
-	CLogBufferList logBufferList;
-
-public:
-	//
-	void FlushLogBuffer( ILogger *pLogger )
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	class CLogger : public ILogger
 	{
-		for ( CLogBufferList::const_iterator itLogBuffer = logBufferList.begin(); itLogBuffer != logBufferList.end();
-		      ++itLogBuffer )
+		//
+		CLogBufferList logBufferList;
+
+	public:
+		//
+		void FlushLogBuffer( ILogger *pLogger )
 		{
-			pLogger->Log( itLogBuffer->eLogOutputType, itLogBuffer->szText );
+			for ( CLogBufferList::const_iterator itLogBuffer = logBufferList.begin(); itLogBuffer != logBufferList.end();
+			      ++itLogBuffer )
+			{
+				pLogger->Log( itLogBuffer->eLogOutputType, itLogBuffer->szText );
+			}
+			logBufferList.clear();
 		}
-		logBufferList.clear();
-	}
 
-	// ILogger
-	void Log( ELogOutputType eLogOutputType, const std::string &szText ) override
-	{
-		CLogBufferList::iterator posLogBuffer = logBufferList.insert( logBufferList.end(), SLogBuffer() );
-		posLogBuffer->eLogOutputType = eLogOutputType;
-		posLogBuffer->szText = szText;
-		if ( logBufferList.size() > 1024 )
+		// ILogger
+		void Log( ELogOutputType eLogOutputType, const std::string &szText ) override
 		{
-			logBufferList.pop_front();
+			CLogBufferList::iterator posLogBuffer = logBufferList.insert( logBufferList.end(), SLogBuffer() );
+			posLogBuffer->eLogOutputType = eLogOutputType;
+			posLogBuffer->szText = szText;
+			if ( logBufferList.size() > 1024 )
+			{
+				logBufferList.pop_front();
+			}
 		}
-	}
 
-	void ClearLog() override
+		void ClearLog() override
+		{
+			logBufferList.clear();
+		}
+	};
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	class CDefaultLoggerSink : public ILoggerSink
 	{
-		logBufferList.clear();
-	}
-};
+		OBJECT_NOCOPY_METHODS( CDefaultLoggerSink );
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class CDefaultLoggerSink : public ILoggerSink
-{
-	OBJECT_NOCOPY_METHODS( CDefaultLoggerSink );
+		CLogger logger;
 
-	CLogger logger;
+	public:
+		CDefaultLoggerSink() {}
 
-public:
-	CDefaultLoggerSink() {}
+		ILogger *GetLogger() override
+		{
+			return &logger;
+		}
 
-	ILogger *GetLogger() override
-	{
-		return &logger;
-	}
-
-	void FlushTo( ILoggerSink *pLoggerSink )
-	{
-		logger.FlushLogBuffer( pLoggerSink->GetLogger() );
-	}
-};
+		void FlushTo( ILoggerSink *pLoggerSink )
+		{
+			logger.FlushLogBuffer( pLoggerSink->GetLogger() );
+		}
+	};
+} // namespace
 } // namespace NLog
 
 namespace NLog

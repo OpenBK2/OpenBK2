@@ -15,7 +15,11 @@ function(add_unit_test filename)
     cmake_parse_arguments(ARG "" "" "SOURCES" ${ARGN})
     set(target_name ${filename}_test)
     add_executable(${target_name} EXCLUDE_FROM_ALL ${filename}.cpp ${ARG_SOURCES})
-    target_link_libraries(${target_name} PRIVATE GTest::gtest_main ${ARG_UNPARSED_ARGUMENTS})
+    # TestCrashTrace prints a stack before a crashing test dies, which is the
+    # difference between a job log that says "SEGFAULT" and one that says where.
+    # See TestSupport/CrashTrace.cpp; it is an object library, so its handlers
+    # cannot be dropped from the link for being unreferenced.
+    target_link_libraries(${target_name} PRIVATE GTest::gtest_main TestCrashTrace ${ARG_UNPARSED_ARGUMENTS})
     set_target_properties(${target_name} PROPERTIES FOLDER "unittest")
 
     # Registered with ctest under a label, because the dependencies register around a

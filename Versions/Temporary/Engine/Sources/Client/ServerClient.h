@@ -44,7 +44,13 @@ class CLIENT_EXPORT CServerClient : public IServerClient
 	void GetPacketsFromNet();
 
 public:
-	CServerClient() {}
+	// Also the state DestroyContents leaves behind, so every member is given a
+	// defined value even though this object has no connection.
+	CServerClient()
+		: bDebugPaused( false )
+		, nTimeOut( 0 )
+	{
+	}
 
 	CServerClient( const char *pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int _nTimeOut );
 	~CServerClient() override;

@@ -10,6 +10,8 @@
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 
+#include <memory>
+
 #include <fmt/format.h>
 
 int yyparse( void );
@@ -672,7 +674,13 @@ CLangNode *CreateComplexTypeNode( const std::string &szTypeName, bool bClass )
 {
 	CheckEnumEntryNotExist( szTypeName );
 
-	CLangNode *pResult = new CComplexTypeNode( szTypeName, bClass, false, GetParsingFileName(), nyyLineNumber );
+	// Built before the checks below, because the second of them compares the new
+	// declaration against the one already on file, and owned by this scope until
+	// then: nothing takes a reference to a node until the caller does, so a check
+	// that rejects it has to be the end of it. Every .cll that redefines a type
+	// used to leave one behind.
+	std::unique_ptr<CComplexTypeNode> pResult(
+			new CComplexTypeNode( szTypeName, bClass, false, GetParsingFileName(), nyyLineNumber ) );
 
 	CFileNode *pFile = GetCurFileNode();
 	CLangNode *pTypeNode = pFile->FindDef( szTypeName, true );
@@ -682,23 +690,25 @@ CLangNode *CreateComplexTypeNode( const std::string &szTypeName, bool bClass )
 
 	CTypeNode *pForwardTypeNode = pFile->FindForward( szTypeName, true );
 	VERIFY(
-			pForwardTypeNode == 0 || IsEqualDefs( pForwardTypeNode, pResult ),
+			pForwardTypeNode == 0 || IsEqualDefs( pForwardTypeNode, pResult.get() ),
 			fmt::format(
 					"type {} redifinition, see {}({})", szTypeName, pForwardTypeNode->GetFile(), pForwardTypeNode->GetLine() ),
 			return 0 );
 
-	return pResult;
+	return pResult.release();
 }
 
 CLangNode *CreateForwardComplexType( const std::string &szTypeName, bool bIsClass )
 {
 	CFileNode *pFile = GetCurFileNode();
-	CLangNode *pResult = new CComplexTypeNode( szTypeName, bIsClass, true, GetParsingFileName(), nyyLineNumber );
+	// Owned by this scope until the caller takes it, as in CreateComplexTypeNode.
+	std::unique_ptr<CComplexTypeNode> pResult(
+			new CComplexTypeNode( szTypeName, bIsClass, true, GetParsingFileName(), nyyLineNumber ) );
 
 	CLangNode *pNode = pFile->FindDef( szTypeName, true );
 	if ( pNode )
 	{
-		VERIFY( IsEqualDefs( pNode, pResult ),
+		VERIFY( IsEqualDefs( pNode, pResult.get() ),
 		        fmt::format( "type {} redifinition, see {}({})", szTypeName, pNode->GetFile(), pNode->GetLine() ),
 		        return 0 );
 	}
@@ -707,14 +717,14 @@ CLangNode *CreateForwardComplexType( const std::string &szTypeName, bool bIsClas
 	if ( pNodeForward )
 	{
 		VERIFY(
-				IsEqualDefs( pNodeForward, pResult ),
+				IsEqualDefs( pNodeForward, pResult.get() ),
 				fmt::format( "type {} redifinition, see {}({})", szTypeName, pNodeForward->GetFile(), pNodeForward->GetLine() ),
 				return 0 );
 	}
 
 	CheckEnumEntryNotExist( szTypeName );
 
-	return pResult;
+	return pResult.release();
 }
 
 //*******************************************************************
@@ -747,11 +757,15 @@ CLangNode *CreateTypeDefNode( CLangNode *pRawAttrListNode,
 	if ( pNode )
 	{
 		CDynamicCast<CTypeNode> pTypeNode = pNode;
+		// The message is built only when the check fails, which is exactly when
+		// the cast came out null, so it has to name the declaration through
+		// pNode. Reading it off pTypeNode dereferenced a null pointer, the way
+		// the enum check further down reports its own clash through pNode.
 		VERIFY( pTypeNode != 0,
 		        fmt::format( "{} cannot be overloaded as typedef, \n	{}({}): see declaration of {}",
 		                     szReferencedTypeName,
-		                     pTypeNode->GetFile(),
-		                     pTypeNode->GetLine(),
+		                     pNode->GetFile(),
+		                     pNode->GetLine(),
 		                     szReferencedTypeName ),
 		        return 0 );
 		CDynamicCast<CEnumNode> pEnum = pNode;

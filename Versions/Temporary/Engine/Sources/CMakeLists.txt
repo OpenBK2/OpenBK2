@@ -29,6 +29,10 @@ else()
     add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-fexec-charset=UTF-8>")
 endif()
 
+# Before anything that adds a test directory, since add_unit_test links what
+# this defines.
+add_subdirectory("TestSupport")
+
 add_subdirectory("Misc")
 add_subdirectory("System")
 add_subdirectory("Game")
