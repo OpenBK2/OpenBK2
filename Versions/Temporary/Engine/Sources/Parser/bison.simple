@@ -556,11 +556,19 @@ yyerrlab:   /* here on detecting error */
 	  int size = 0;
 	  char *msg;
 	  int x, count;
+	  /* yycheck ends at YYLAST, and both loops below index it at x + yyn, so
+	     the token count alone is not a bound: for a state whose yyn is large
+	     this skeleton read past the end of the parser tables.  Clamping x the
+	     way later bison skeletons do keeps every read inside yycheck.  */
+	  int xend = (sizeof(yytname) / sizeof(char *));
+
+	  if (YYLAST - yyn + 1 < xend)
+	    xend = YYLAST - yyn + 1;
 
 	  count = 0;
 	  /* Start X at -yyn if nec to avoid negative indexes in yycheck.  */
 	  for (x = (yyn < 0 ? -yyn : 0);
-	       x < (sizeof(yytname) / sizeof(char *)); x++)
+	       x < xend; x++)
 	    if (yycheck[x + yyn] == x)
 	      size += strlen(yytname[x]) + 15, count++;
 	  msg = (char *) malloc(size + 15);
@@ -572,7 +580,7 @@ yyerrlab:   /* here on detecting error */
 		{
 		  count = 0;
 		  for (x = (yyn < 0 ? -yyn : 0);
-		       x < (sizeof(yytname) / sizeof(char *)); x++)
+		       x < xend; x++)
 		    if (yycheck[x + yyn] == x)
 		      {
 			strcat(msg, count == 0 ? ", expecting `" : " or `");
