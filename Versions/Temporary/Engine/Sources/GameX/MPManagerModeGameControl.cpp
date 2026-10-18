@@ -268,6 +268,32 @@ void CMPManagerMode::EndGame()
 	pTransceiver = 0;
 }
 
+// Ends a match whose connection has failed, at once and without telling anyone.
+// The mission keeps calling DoSegments for as long as pTransceiver lives, and the
+// transceiver only holds a non-owning pointer to pClient, so the match has to be
+// released before the caller replaces the client.
+void CMPManagerMode::AbortRunningGame()
+{
+	if ( !IsValid( pTransceiver ) )
+	{
+		return;
+	}
+
+	// A match that already has a result (WinGame, LoseGame, an async) has
+	// reported it to the scenario tracker; one cut off by the network has none.
+	if ( !pTransceiver->IsGameEnded() )
+	{
+		Singleton<IScenarioTracker>()->MissionCancel();
+		pTransceiver->EndGame();
+	}
+
+	// The base part only. The overrides send a leave packet over the connection
+	// that has just failed, and LAN's restarts the driver whose failure is one
+	// of the ways to get here.
+	CMPManagerMode::EndGame();
+	OnGameAborted();
+}
+
 void CMPManagerMode::CheckEndGameConditions()
 {
 	if ( !IsGameRunning() )

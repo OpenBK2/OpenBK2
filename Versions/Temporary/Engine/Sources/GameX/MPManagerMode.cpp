@@ -242,6 +242,11 @@ void CMPManagerMode::ShowWaitWindow( bool bShow )
 
 void CMPManagerMode::OnCriticalNetworkError( const std::wstring &wszMessage )
 {
+	// The commands below only close the mission on a later frame, and until then
+	// it would keep stepping a match whose client is replaced at the end of this
+	// function. End the match now instead.
+	AbortRunningGame();
+
 	NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 	NMainLoop::Command( ML_COMMAND_MISSION_BACKGROUND, "" );
 	NMainLoop::Command( ML_COMMAND_MULTIPLAYER_MENU, "" );
