@@ -747,11 +747,15 @@ CLangNode *CreateTypeDefNode( CLangNode *pRawAttrListNode,
 	if ( pNode )
 	{
 		CDynamicCast<CTypeNode> pTypeNode = pNode;
+		// The message is built only when the check fails, which is exactly when
+		// the cast came out null, so it has to name the declaration through
+		// pNode. Reading it off pTypeNode dereferenced a null pointer, the way
+		// the enum check further down reports its own clash through pNode.
 		VERIFY( pTypeNode != 0,
 		        fmt::format( "{} cannot be overloaded as typedef, \n	{}({}): see declaration of {}",
 		                     szReferencedTypeName,
-		                     pTypeNode->GetFile(),
-		                     pTypeNode->GetLine(),
+		                     pNode->GetFile(),
+		                     pNode->GetLine(),
 		                     szReferencedTypeName ),
 		        return 0 );
 		CDynamicCast<CEnumNode> pEnum = pNode;
