@@ -57,6 +57,9 @@ function(bk2_apply_target_treatments target kind)
         # DESTINATION bin for libraries too, deliberately: the game loads its
         # modules from beside the executable.
         install(TARGETS ${target} DESTINATION bin)
+        # The PDB goes to the separate symbols component (cmake/symbols.cmake),
+        # so crash dumps from this exact build can be symbolised.
+        bk2_install_symbols(${target})
     endif()
 
     if(NOT ARG_NO_VERSION_INFO AND (kind STREQUAL "SHARED" OR kind STREQUAL "EXECUTABLE"))

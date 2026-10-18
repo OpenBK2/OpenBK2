@@ -214,6 +214,8 @@ include(cmake/fmt.cmake)
 include(cmake/spdlog.cmake)
 # After spdlog: libgr2 carries its call trace on it and reuses this tree's copy
 # rather than fetching a second one.
+# symbols.cmake first: granny.cmake and bk2_targets.cmake install PDBs with it.
+include(cmake/symbols.cmake)
 include(cmake/granny.cmake)
 include(cmake/ffmpeg.cmake)
 include(cmake/crashpad.cmake)

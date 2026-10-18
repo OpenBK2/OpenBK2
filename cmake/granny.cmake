@@ -44,5 +44,6 @@ target_link_libraries(granny INTERFACE gr2)
 
 # Beside the executable, under both names, since the engine loads it by name.
 install(TARGETS gr2 RUNTIME DESTINATION bin LIBRARY DESTINATION bin)
+bk2_install_symbols(gr2)
 
 add_library(granny::granny ALIAS granny)

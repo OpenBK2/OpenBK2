@@ -128,6 +128,24 @@ jobs:
           name: ${{ matrix.preset }}-install
           path: ${{ matrix.preset }}.zip
 
+      # The linker PDBs of exactly these binaries, in a zip of their own so the
+      # game download does not grow. A PDB matches its DLL by GUID, so a crash
+      # dump can only be symbolised with the PDBs from the same run; a rebuild of
+      # the same commit does not produce matching ones. The release job attaches
+      # this zip to a tagged release alongside the build.
+      - name: Install symbols
+        run: cmake --install out/build/${{ matrix.preset }} --component symbols --prefix symbols/${{ matrix.preset }}
+
+      - name: Compress symbols
+        run: |
+          7z a ${{ matrix.preset }}-symbols.zip ./symbols/${{ matrix.preset }}
+
+      - name: Upload symbols to workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.preset }}-symbols
+          path: ${{ matrix.preset }}-symbols.zip
+
   release:
     runs-on: ubuntu-latest
     needs: build
