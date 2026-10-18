@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -15,6 +16,12 @@
 #include <client/settings.h>
 #include <util/misc/capture_context.h>
 #include <util/misc/paths.h>
+
+#if !BOOST_OS_WINDOWS
+#include <signal.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#endif
 
 namespace NCrashpadDetail
 {
@@ -36,6 +43,62 @@ inline SState &State()
 	static SState *state = new SState;
 	return *state;
 }
+
+#if !BOOST_OS_WINDOWS
+// Crashpad installs its signal handlers with SA_ONSTACK and gives the thread
+// that installs them an alternate signal stack of SIGSTKSZ, which glibc derives
+// from the CPU's signal frame: 8 KiB where the kernel reports AT_MINSIGSTKSZ as
+// 1776, as it does on an AMD EPYC 7763, and 16 KiB where it reports 3632. The
+// handler's own path needs more than the smaller of those, so on such a machine
+// the crashing thread runs off the bottom of that stack and faults on the guard
+// page below it: the process dies inside the handler and no report is written,
+// while a crash on any other thread, which has no alternate stack and so uses
+// its own, still reports. InitializeSignalStackForThread keeps an alternate
+// stack that is already at least SIGSTKSZ, so installing a larger one here,
+// before the handlers go in, is all it takes.
+//
+// Returns the size in use, for the startup diagnostics: a machine that reports
+// no crash should be able to say what its signal stack was.
+inline std::size_t InstallSignalStack()
+{
+	stack_t current = {};
+	if ( sigaltstack( nullptr, &current ) != 0 )
+	{
+		return 0;
+	}
+	const std::size_t pageSize = static_cast<std::size_t>( sysconf( _SC_PAGESIZE ) );
+	const std::size_t wanted = std::max<std::size_t>( 64 * 1024, 4 * static_cast<std::size_t>( SIGSTKSZ ) );
+	const std::size_t size = ( wanted + pageSize - 1 ) & ~( pageSize - 1 );
+	if ( ( current.ss_flags & SS_DISABLE ) == 0 && current.ss_size >= size )
+	{
+		return current.ss_size;
+	}
+	// A page of PROT_NONE on each side, so that overflowing this one faults the
+	// way Crashpad's own does instead of writing over its neighbours.
+	void *memory = mmap( nullptr, size + 2 * pageSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0 );
+	if ( memory == MAP_FAILED )
+	{
+		return 0;
+	}
+	char *base = static_cast<char *>( memory ) + pageSize;
+	if ( mprotect( base, size, PROT_READ | PROT_WRITE ) != 0 )
+	{
+		munmap( memory, size + 2 * pageSize );
+		return 0;
+	}
+	stack_t stack = {};
+	stack.ss_sp = base;
+	stack.ss_size = size;
+	stack.ss_flags = 0;
+	if ( sigaltstack( &stack, nullptr ) != 0 )
+	{
+		munmap( memory, size + 2 * pageSize );
+		return 0;
+	}
+	// Never unmapped: a crash during static destruction has to land on it too.
+	return size;
+}
+#endif
 
 inline std::filesystem::path UserDatabasePath()
 {
@@ -162,6 +225,12 @@ inline bool InitCrashpad( const char *application = "OpenBK2", const char *build
 		}
 		else
 		{
+			// Before the handlers are installed, since that is when Crashpad
+			// decides whether this thread's alternate signal stack is big enough.
+			std::string signalStack;
+#if !BOOST_OS_WINDOWS
+			signalStack = "; signal stack=" + std::to_string( InstallSignalStack() );
+#endif
 			// All paths are absolute: shortcuts and editor dialogs can use or
 			// change the working directory. No metrics directory is needed.
 			state.ready = state.client.StartHandler( base::FilePath( handler.native() ),
@@ -173,7 +242,8 @@ inline bool InitCrashpad( const char *application = "OpenBK2", const char *build
 			                                         {},
 			                                         true,
 			                                         false );
-			state.status = ( state.ready ? "Crashpad enabled" : "Crashpad disabled: handler startup failed" ) + paths;
+			state.status =
+					( state.ready ? "Crashpad enabled" : "Crashpad disabled: handler startup failed" ) + paths + signalStack;
 #if BOOST_COMP_MSVC
 			if ( state.ready )
 			{
