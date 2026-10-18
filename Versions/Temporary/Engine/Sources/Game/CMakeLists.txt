@@ -24,36 +24,16 @@ else()
 
     # Boost.Stacktrace, for the throw point of an exception that reaches main.
     #
-    # stacktrace_from_exception is the part that matters: it overrides
-    # __cxa_throw and keeps a trace per live exception, so from_current_exception
-    # reports where the throw happened rather than where it was caught. That is
-    # Itanium ABI machinery and has no MSVC counterpart, which is why this is
-    # here rather than beside the Windows link line.
+    # stacktrace_from_exception is the part that matters, and the part that is
+    # only here: it overrides __cxa_throw and keeps a trace per live exception,
+    # so from_current_exception reports where the throw happened rather than
+    # where it was caught. That is Itanium ABI machinery with no MSVC
+    # counterpart, which is why it sits beside the non-Windows link line.
     #
-    # The backend decides how readable the trace is. libbacktrace resolves
-    # function, file and line out of the DWARF in the binary and is the best of
-    # them; addr2line shells out per frame; basic gives symbol names only.
-    #
-    # None of them invent debug information. A build configured as plain Release
-    # has no -g and resolves to library names and offsets, which still says which
-    # library threw but not where. RelWithDebInfo, which is what the Release
-    # presets map to, carries -g.
-    #
-    # libbacktrace is not always reachable, so take it when it is and fall back
-    # to addr2line when it is not. Boost builds stacktrace_backtrace only if its
-    # own configure check compiled <backtrace.h>, and that header is shipped in
-    # GCC's private include directory rather than as a distro package, so the
-    # check succeeds under GCC and fails under clang on the same machine. Asking
-    # for the target unconditionally is a generate-time error there, not a
-    # degraded trace. The link and the define have to name the same backend.
+    # The backend that resolves those frames is chosen in cmake/stacktrace.cmake,
+    # which the tests use too.
     target_link_libraries(Game PRIVATE Boost::stacktrace_from_exception)
-    if(TARGET Boost::stacktrace_backtrace)
-        target_link_libraries(Game PRIVATE Boost::stacktrace_backtrace)
-        target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_BACKTRACE)
-    else()
-        target_link_libraries(Game PRIVATE Boost::stacktrace_addr2line)
-        target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_ADDR2LINE)
-    endif()
+    target_boost_stacktrace(Game PRIVATE)
 endif()
 
 # A desktop entry, so the game has a name and a launcher entry rather than being

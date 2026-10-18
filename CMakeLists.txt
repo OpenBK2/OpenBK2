@@ -186,6 +186,8 @@ include(cmake/unittest.cmake)
 include(cmake/benchmarks.cmake)
 include(cmake/googlebenchmark.cmake)
 include(cmake/boost.cmake)
+# After boost.cmake, since it picks between Boost's stacktrace backend targets.
+include(cmake/stacktrace.cmake)
 if(USE_MIMALLOC)
     include(cmake/mimalloc.cmake)
 endif()
