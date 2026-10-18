@@ -218,6 +218,7 @@ protected:
 	void ScheduleLoseGame();
 	virtual void EndGame();
 	void AbortRunningGame();
+
 	// Called by AbortRunningGame once the match is released: the mode leaves its
 	// "game started" state without the network traffic its EndGame would send.
 	virtual void OnGameAborted() {}
