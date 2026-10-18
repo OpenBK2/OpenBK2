@@ -95,8 +95,11 @@ set(OBK2_WARNINGS_GCC
     # hand-rolled float puns, now routed through a bit_cast that no longer lies
     # (Misc/Tools.h), and Lua's luaG_symbexec indexing code[] with an
     # uninitialised stack slot. The remaining two are the refcount rescue in
-    # System/Basic.h's object macros, suppressed at the two expansion sites with
-    # the reasoning written out there; that is parked UB, not a clean bill.
+    # System/Basic.h's object macros, suppressed at the two expansion sites.
+    # Those two are GCC's lifetime model being coarser than [basic.life]/1 for
+    # the scalar members it clobbers along with the object, not a defect at the
+    # site; the reasoning, the codegen check behind it, and the two designs that
+    # would remove the read altogether are written out there.
     # Only fires with -O, so a syntax-only sweep reports it as zero.
     -Wuninitialized
     # Cleared 2026-10-16 in the same pass. Was 19, and all but the four

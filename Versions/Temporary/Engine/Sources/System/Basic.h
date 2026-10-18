@@ -266,7 +266,8 @@ public:
 // teardown: a virtual thunk to CWindowScreen::DestroyContents faulting at the
 // first read of this->nRefData, with the whole body inlined into the thunk.
 // MSVC survives it, which is why this went twenty years without being noticed,
-// but it has always been undefined.
+// but reading a dead object's vptr has always been undefined, and that half of
+// the problem is what the hoisted pointers fix.
 //
 // The offset of a member within CObjectBase is fixed, so a pointer taken while
 // the object was still alive stays correct across both the destructor and the
@@ -274,27 +275,105 @@ public:
 // the destructor can drop references to this object, and those decrements have
 // to be carried over.
 //
-// That read is still undefined behaviour, and the suppression below is a parking
-// space, not a defence. The object's lifetime ended at ~classname(), so the
-// compiler is entitled to do anything at all with those two loads; the menu
-// teardown crash above was one outcome and a wrong refcount, which in a lockstep
-// build means an ASYNC, is another. GCC is the only compiler that reports it: it
-// merges the two adjacent int loads into one 8-byte vector load, which is where
-// "((__vector(2) int*)this)[1] is used uninitialized" comes from. clang does not
-// report it at all, which is not the same as it being safe.
+// Whether that read is undefined is less clear than it looks, so the
+// suppression below is a judgement call rather than either a defence or a
+// confession. [basic.life]/1 ends an object's lifetime when "the destructor call
+// starts" only for a class type with a non-trivial destructor; otherwise the
+// lifetime runs until the storage is released or reused. nRefData and nObjData
+// are plain ints, a destructor destroys only the members that are of class type,
+// and nothing reuses the storage until the placement new below. On that reading
+// the two int subobjects are still within their lifetime when they are read, the
+// pointers above were taken while they were alive, and this is well defined. The
+// reading that goes the other way is that [basic.life] also forbids using a
+// glvalue that names a member of an object whose lifetime has ended, and
+// *pnRefData does name one. The compilers do not agree either, so treat this as
+// grey rather than as one colour or the other.
 //
-// The clean fix is to stop ending the lifetime, because CObjectBase is already
-// built for it. operator= deliberately leaves both counts alone and copies only
-// the valid flag, which is exactly the invariant this code rebuilds by hand, and
-// the comment on DestroyContents calls destructor-plus-constructor merely "easy
-// to implement" rather than required. So the whole body wants to collapse to:
+// GCC reports it because its lifetime model is coarser than the standard's: it
+// clobbers the whole object at the end of a destructor and does not track that
+// scalar members outlive the class object. It also merges the two adjacent int
+// loads into one 8-byte vector load, which is where the "((__vector(2)
+// int*)this)[1] is used uninitialized" wording comes from. clang does not report
+// it at all, which is not the same as clang promising anything.
+//
+// That clobber is an optimisation input and not only a diagnostic, so the
+// question that actually matters is whether it lets the destructor's decrements
+// be dropped as dead stores. Checked rather than assumed, on the shape that
+// matters (virtual base, destructor decrementing both counts, GCC 14.2 at -O1,
+// -O2 and -O3, 2026-10-18): the decrements are emitted and survive, the virtual
+// base offset is computed from the vptr before the destructor runs, and the
+// carry-over below comes out correct, with the constructor's zero stores and the
+// += folded into a single copy. One compiler version on a reduced case is not a
+// promise about the next one, which is why this paragraph exists: if counts ever
+// come out wrong at teardown, recheck this instead of trusting it.
+//
+// Sampling the counts before the destructor instead, which is the first thing
+// everyone tries, cannot work. The destructor body and the member destructors it
+// runs can both change our own counts: a member dropping its last reference to a
+// texture can put us on a delayed cleanup list, and anything holding a CPtr to
+// us releases it as it dies. The value that has to be carried over is the one
+// that exists once all of that has run, so there is no earlier moment to read.
+//
+// The library has nothing that helps:
+//   - std::destroy_at is specified as p->~T() and std::construct_at as
+//     ::new ( voidify( p ) ) T(). They are these same two operations with
+//     different spellings, not safer ones, and the lifetime question is about
+//     what happens between them. construct_at does hand back a pointer to the
+//     new object, which is worth having for the two += below, but placement new
+//     already returns one.
+//   - std::launder yields a pointer to an object that exists. In the window here
+//     nothing exists at that address, so there is nothing to launder; it is the
+//     tool for the opposite problem, where the object is alive and a pointer's
+//     provenance is stale.
+//   - std::start_lifetime_as would be exactly the tool if the read were
+//     undefined, since it starts an int lifetime over the leftover bytes and
+//     yields their value. It is C++23 (P2590), this tree is C++17, and the
+//     libstdc++ the Linux build uses does not implement it yet.
+//
+// Fixing it properly means getting the counts out of the destructor, and a
+// destructor has no return value and no parameter, so there are exactly two
+// channels for that.
+//
+// A well-known location: arm a slot in DestroyContents, have ~CObjectBase copy
+// its own counts into it while they are indisputably alive, then read the slot
+// after the destructor returns. About twenty lines, and no new property for this
+// subsystem to carry, since Basic.cpp already drives this very path through the
+// file statics bDestroyInProgress, pDestroy and pInvalidate and the header above
+// says "single thread version". It costs one compare per destruction, to reject
+// the nested destructions that run inside our own, and thread_local is the
+// answer if the single-thread assumption ever goes away.
+//
+// Counters outside the object, which is the design this wants: a wrapper owning
+// the counts with the object nested inside it, the object addressing them
+// indirectly, the wrapper outliving it by construction. That is
+// std::shared_ptr's control block, and it is why weak_ptr may inspect a
+// destroyed pointee at all. It would delete the hard part rather than patch it:
+// the only reason to rebuild the object in place is that holders need something
+// valid to point at once the contents are cleared, so if CPtr and CObj pointed
+// at the wrapper, invalidation would become "destroy the object, mark the
+// wrapper dead", the 0x80000000 bit would move into the wrapper, and
+// DestroyContents would leave all 1606 expansions. The price, counted in this
+// tree rather than guessed: 1751 direct "new <macro class>" sites across 982 of
+// these classes, 234 by-value declarations across 51 of them with no wrapper to
+// bind to at all (SAIEntranceUpdate is a stack local in
+// B2_M1_World/UpdatableWorld.cpp), the delete this in ReleaseObj/ReleaseRef
+// having to destroy the wrapper instead so the object has to be able to find it,
+// and MakeCopy having to produce a wrapped copy from somewhere that is not a
+// copy constructor. A prefix block reached through a custom operator new is the
+// same idea and is ruled out outright by the no-overriding-operator-new rule at
+// the top of this file.
+//
+// The cheapest in-place alternative stays what it was: CObjectBase::operator=
+// deliberately leaves both counts alone and copies only the valid flag, which is
+// the invariant this code rebuilds by hand, and the comment on DestroyContents
+// calls destructor-plus-constructor merely "easy to implement" rather than
+// required. So the body wants to collapse to:
 //
 //     void DestroyContents() override { *this = classname(); }
 //
 // no lifetime ends, no placement new, no vptr to read, and the destructor's
-// decrements land on live counts so nothing needs carrying over.
-//
-// Not done here because it is not a one-liner at this scale:
+// decrements land on live counts so nothing needs carrying over. Not done
+// because it is not a one-liner at this scale:
 //   - 897 classes use OBJECT_BASIC_METHODS and 709 use OBJECT_NOCOPY_METHODS.
 //     The nocopy half is not assignable by definition and needs a different
 //     answer, and that is the half the second suppression below sits in.
@@ -312,12 +391,12 @@ public:
 // an unrecognised pragma there is C4068 at warning level 1, once per expansion
 // over 1606 classes, and nothing in this tree sets /Zc:preprocessor so _Pragma
 // itself may not be available in the preprocessor mode it builds with.
-#define OBJECT_DEAD_REFCOUNT_READ_PUSH \
+#define OBJECT_HELD_REFCOUNT_READ_PUSH \
 	_Pragma( "GCC diagnostic push" ) _Pragma( "GCC diagnostic ignored \"-Wuninitialized\"" )
-#define OBJECT_DEAD_REFCOUNT_READ_POP _Pragma( "GCC diagnostic pop" )
+#define OBJECT_HELD_REFCOUNT_READ_POP _Pragma( "GCC diagnostic pop" )
 #else
-#define OBJECT_DEAD_REFCOUNT_READ_PUSH
-#define OBJECT_DEAD_REFCOUNT_READ_POP
+#define OBJECT_HELD_REFCOUNT_READ_PUSH
+#define OBJECT_HELD_REFCOUNT_READ_POP
 #endif
 #define OBJECT_BASIC_METHODS( classname )                           \
 public:                                                             \
@@ -343,9 +422,9 @@ protected:                                                          \
 	{                                                                 \
 		int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; \
 		this->classname::~classname();                                  \
-		OBJECT_DEAD_REFCOUNT_READ_PUSH                                  \
+		OBJECT_HELD_REFCOUNT_READ_PUSH                                  \
 		int nHoldRefs = *pnRefData, nHoldObjs = *pnObjData;             \
-		OBJECT_DEAD_REFCOUNT_READ_POP                                   \
+		OBJECT_HELD_REFCOUNT_READ_POP                                   \
 		new ( this ) classname();                                       \
 		this->nRefData += nHoldRefs;                                    \
 		this->nObjData += nHoldObjs;                                    \
@@ -369,9 +448,9 @@ protected:                                                          \
 	{                                                                 \
 		int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; \
 		this->classname::~classname();                                  \
-		OBJECT_DEAD_REFCOUNT_READ_PUSH                                  \
+		OBJECT_HELD_REFCOUNT_READ_PUSH                                  \
 		int nHoldRefs = *pnRefData, nHoldObjs = *pnObjData;             \
-		OBJECT_DEAD_REFCOUNT_READ_POP                                   \
+		OBJECT_HELD_REFCOUNT_READ_POP                                   \
 		new ( this ) classname();                                       \
 		this->nRefData += nHoldRefs;                                    \
 		this->nObjData += nHoldObjs;                                    \
