@@ -16,8 +16,10 @@ TEST( UnitTransferCommand, MultiplayerTablePreservesOldIDsAndRejectsUnknownComma
 	for ( int i = 0; i < 4; ++i )
 	{
 		CObj<CObjectBase> command = registry->MakeCommand( i );
-		ASSERT_NE( command.GetPtr(), nullptr );
-		EXPECT_EQ( NObjectFactory::GetObjectTypeID( typeid( *command.GetPtr() ) ), existingTypes[i] );
+		// Evaluate the accessor before typeid to avoid Clang's potentially-evaluated-expression diagnostic.
+		const CObjectBase *pCommand = command.GetPtr();
+		ASSERT_NE( pCommand, nullptr );
+		EXPECT_EQ( NObjectFactory::GetObjectTypeID( typeid( *pCommand ) ), existingTypes[i] );
 		EXPECT_EQ( registry->GetCommandID( command ), i );
 	}
 	CObj<SFeedBackUnitsArray> notification = new SFeedBackUnitsArray;
