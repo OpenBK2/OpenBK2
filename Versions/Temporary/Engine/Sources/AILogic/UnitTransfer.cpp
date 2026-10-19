@@ -8,6 +8,7 @@
 #include "ScenarioTracker.h"
 #include "Soldier.h"
 #include "Technics.h"
+#include "UnitStates.h"
 #include "UnitTransfer.h"
 
 extern CGroupLogic theGroupLogic;
@@ -71,7 +72,68 @@ bool InspectTransferUnit( int nID, int nSourcePlayer, std::vector<int> *pRelated
 	}
 	return true;
 }
+
+bool IsTransferSelectionRestricted( const CCommonUnit *pUnit )
+{
+	if ( !pUnit->IsAlive() || pUnit->GetTruck() )
+	{
+		return true;
+	}
+	const CFormation *pFormation = dynamic_cast<const CFormation *>( pUnit );
+	if ( pFormation && pFormation->IsInTransport() )
+	{
+		return true;
+	}
+	if ( IUnitState *pState = pUnit->GetState() )
+	{
+		const EUnitStateNames eState = pState->GetName();
+		if ( eState == EUSN_PARTROOP || eState == EUSN_BEING_TOWED ||
+		     ( eState == EUSN_GUN_CREW_STATE && !( pFormation && pFormation->HasMortar() ) ) )
+		{
+			return true;
+		}
+	}
+	if ( const CAIUnit *pAIUnit = dynamic_cast<const CAIUnit *>( pUnit ) )
+	{
+		if ( pAIUnit->GetContainingUnit() )
+		{
+			return true;
+		}
+		// A formation's state can prohibit selecting its individual soldiers, too.
+		if ( const CFormation *pOwnerFormation = pAIUnit->GetFormation() )
+		{
+			if ( IsTransferSelectionRestricted( pOwnerFormation ) )
+			{
+				return true;
+			}
+		}
+		const SUnitBaseRPGStats *pStats = pAIUnit->GetStats();
+		if ( pStats && pStats->etype == RPG_TYPE_AVIA_BOMBER )
+		{
+			return true;
+		}
+	}
+	if ( const CSoldier *pSoldier = dynamic_cast<const CSoldier *>( pUnit ) )
+	{
+		return pSoldier->IsInBuilding() || pSoldier->IsInTransport();
+	}
+	if ( const CArtillery *pArtillery = dynamic_cast<const CArtillery *>( pUnit ) )
+	{
+		return pArtillery->IsBeingHooked();
+	}
+	return false;
+}
 } // namespace
+
+void RestoreTransferredUnitSelection( CCommonUnit *pUnit )
+{
+	// Never copy IsSelectable() from the donor: that flag differs between clients.
+	// Only suppress selection here; ChangePlayer already applied the recipient's local ownership check.
+	if ( pUnit && IsTransferSelectionRestricted( pUnit ) )
+	{
+		pUnit->SetSelectable( false, true );
+	}
+}
 
 void CAILogic::TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer, int nTargetPlayer )
 {
@@ -101,6 +163,12 @@ void CAILogic::TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer
 		{
 			pUnit->ChangePlayer( nTargetPlayer );
 		}
+	}
+	// ChangePlayer makes every owned unit selectable, including attached crew and passengers.
+	// Run after the entire transfer so a later formation/crew ChangePlayer cannot undo these restrictions.
+	for ( int nID : transfers )
+	{
+		RestoreTransferredUnitSelection( dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) ) );
 	}
 	if ( !transfers.empty() )
 	{

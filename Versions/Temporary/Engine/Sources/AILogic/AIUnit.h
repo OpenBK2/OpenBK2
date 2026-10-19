@@ -6,6 +6,8 @@
 #include "Stats_B2_M1/RPGStats.h"
 #include "TransferredUnitExperience.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 class CAntiArtillery;
@@ -433,6 +435,12 @@ public:
 
 	CCommonUnit *GetContainingUnit() const
 	{
+		// Unloaded soldiers can retain pObjInside until saving. Check their actual inside state,
+		// or the separate mechanical-cargo flag, before following that potentially stale pointer.
+		if ( !bRestInside && IsFree() )
+		{
+			return nullptr;
+		}
 		// Buildings and trenches are not transferable, but a passenger must stay with its carrier.
 		return dynamic_cast<CCommonUnit *>( pObjInside );
 	}
@@ -755,7 +763,7 @@ public:
 
 	void GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const override;
 	bool IsRestInside() const;
-	void SetRestInside( const bool bInside, CAIUnit *pTransport );
+	AILOGIC_EXPORT void SetRestInside( const bool bInside, CAIUnit *pTransport );
 
 	const bool
 	CanShootInMovement() override; // For aviation and ShootInMovement special ability (shoot from priority-0 guns)

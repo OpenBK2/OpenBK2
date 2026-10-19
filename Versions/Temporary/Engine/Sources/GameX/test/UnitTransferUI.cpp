@@ -71,7 +71,7 @@ TEST_F( UnitTransferUI, ArchiveLoadsDescriptorsAndUnicodeLabelsThroughGameDataba
 		EXPECT_EQ( file.find( "TransferClose" ), std::string::npos );
 		if ( file.size() >= 4 && file.substr( file.size() - 4 ) == ".xdb" )
 		{
-			EXPECT_NE( NDb::GetObject( CDBID( file ) ), nullptr ) << file;
+			EXPECT_NE( NDb::GetResource( CDBID( file ) ), nullptr ) << file;
 		}
 	}
 
