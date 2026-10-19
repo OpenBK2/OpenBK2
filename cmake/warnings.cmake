@@ -301,6 +301,23 @@ set(OBK2_WARNINGS_CLANG
     # GCC reports the same class as -Wdeprecated-enum-enum-conversion and it is
     # in the list above, so this one is gated on both compilers.
     -Wenum-enum-conversion
+    # Cleared 2026-10-19. Was 9 `using namespace` directives at the global scope
+    # of a header, and eight of them moved: NLXML out of System/XMLChunkSaver.h
+    # and NDb::NTypeDef out of libdb's TableManipulator.h into the one source
+    # file each that needs them, NAnimation and NMeshData qualified in SceneB2's
+    # mutator and terrain headers, and NMapInfoEditor out of ED_B2_M1's
+    # MapInfoEditor.h with a directive in the eight editor states that were
+    # relying on it. That last move also closes a trap: ED_Common/GltfExporter.h
+    # declares a global SMeshData of its own, which the SceneB2 directive would
+    # have made ambiguous in any unit that saw both.
+    #
+    # The ninth is suppressed at the directive rather than removed, and the
+    # reasoning is written there: AILogic/Specific.h is that project's prelude
+    # and nothing outside AILogic includes it, so the namespace never reaches
+    # another module. Removing it is 1,928 sites over 73 distinct names,
+    # measured across all 213 units rather than extrapolated, which is a
+    # mechanical pass over lockstep simulation code and wants its own session.
+    -Wheader-hygiene
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -386,7 +403,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     # Counts re-measured 2026-10-17 over all 1389 units, editor included, which
     # is what a clang sweep here covers; CI's clang job compiles the 1035
     # engine ones.
-    -Wheader-hygiene                # 9, `using namespace` in a header
     -Wcast-align                    # 56
 )
 
