@@ -374,7 +374,7 @@ void CInterfaceEncyclopedia::MsgStepForward( const SGameMessage &msg )
 
 void CInterfaceEncyclopedia::MsgUnitSelectionChanged( const SGameMessage &msg )
 {
-	SFilterCache &cache = filterCache[eSelCountry * EFUT_COUNT + eSelUnitType];
+	SFilterCache &cache = filterCache[GetFilterCacheIndex( eSelCountry, eSelUnitType )];
 	if ( cache.pUnitListCont )
 	{
 		if ( IListControlItem *pItem = cache.pUnitListCont->GetSelectedListItem() )
@@ -445,14 +445,15 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 {
 	const NDb::SGameRoot *pRoot = InterfaceState()->GetGameRoot();
 
-	filterCache.resize( EFC_COUNT * EFUT_COUNT );
+	filterCache.resize( GetFilterCacheSize() );
 
 	IListControlItem *pItemToSelect = 0;
 	for ( int nCountry = 0; nCountry < EFC_COUNT; ++nCountry )
 	{
 		for ( int nUnitType = 0; nUnitType < EFUT_COUNT; ++nUnitType )
 		{
-			SFilterCache &cache = filterCache[nCountry * EFUT_COUNT + nUnitType];
+			SFilterCache &cache =
+					filterCache[GetFilterCacheIndex( EFilterCountries( nCountry ), EFilterUnitTypes( nUnitType ) )];
 			if ( pSample )
 			{
 				cache.pUnitListCont = dynamic_cast<IListControl *>( AddWindowCopy( pSample->GetParentWindow(), pSample ) );
@@ -572,7 +573,7 @@ void CInterfaceEncyclopedia::UpdateInfo()
 {
 	UpdateFilters();
 
-	SFilterCache &cache = filterCache[eSelCountry * EFUT_COUNT + eSelUnitType];
+	SFilterCache &cache = filterCache[GetFilterCacheIndex( eSelCountry, eSelUnitType )];
 	if ( !cache.filteredUnits.empty() )
 	{
 		AddSelectedUnit( cache.filteredUnits.front(), eSelCountry, eSelUnitType );
@@ -607,7 +608,8 @@ void CInterfaceEncyclopedia::UpdateFilters()
 	{
 		for ( int nUnitType = 0; nUnitType < EFUT_COUNT; ++nUnitType )
 		{
-			SFilterCache &cache = filterCache[nCountry * EFUT_COUNT + nUnitType];
+			SFilterCache &cache =
+					filterCache[GetFilterCacheIndex( EFilterCountries( nCountry ), EFilterUnitTypes( nUnitType ) )];
 
 			if ( cache.pUnitListCont )
 			{
@@ -739,7 +741,7 @@ void CInterfaceEncyclopedia::UpdateListCtrlSelection()
 	{
 		SSelectedUnit &unit = selectedUnits[nSelUnit];
 
-		SFilterCache &cache = filterCache[eSelCountry * EFUT_COUNT + eSelUnitType];
+		SFilterCache &cache = filterCache[GetFilterCacheIndex( eSelCountry, eSelUnitType )];
 		if ( cache.pUnitListCont )
 		{
 			cache.pUnitListCont->SelectItem( unit.pData );
