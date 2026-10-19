@@ -29,6 +29,19 @@ else()
     add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-fexec-charset=UTF-8>")
 endif()
 
+# Hold MSVC to the standard dialect GCC and Clang already enforce: two-phase name
+# lookup, no unqualified lookup into a dependent base, string literals as const
+# arrays, and the rest of what /permissive- implies. Code that leans on MSVC's
+# lenient defaults builds on Windows and then fails, or worse binds a different
+# name, on the other platforms, so this keeps new Windows-only code from
+# reintroducing it. The tree already compiled clean under it when it went in,
+# since the Linux build had forced the same rules on everything but the
+# Windows-only branches. Scoped like /utf-8 above: the engine's own code, not the
+# dependencies, and C++ only, since it is not a C option.
+if(MSVC)
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:/permissive->")
+endif()
+
 # Before anything that adds a test directory, since add_unit_test links what
 # this defines.
 add_subdirectory("TestSupport")
