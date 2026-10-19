@@ -2,8 +2,15 @@
 
 #include "ScenarioTracker.h"
 
+#include "AILogic_export.h"
+
 #include <set>
 #include <vector>
+
+class CCommonUnit;
+
+// Reapply state-based selection restrictions after all recursive ownership changes have finished.
+AILOGIC_EXPORT void RestoreTransferredUnitSelection( CCommonUnit *pUnit );
 
 // Read only synchronized match state. Check slots before looking up sides, including spectator IDs.
 template <class TScenarioTracker>
