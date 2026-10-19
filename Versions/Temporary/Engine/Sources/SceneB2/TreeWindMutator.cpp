@@ -8,7 +8,7 @@
 
 #define TIME_COEFF 1
 
-void CTreeWindMutator::Setup( ISkeletonAnimator *pAnimator,
+void CTreeWindMutator::Setup( NAnimation::ISkeletonAnimator *pAnimator,
                               const CVec3 &_vPos3,
                               const std::vector<std::string> &leafNames )
 {

@@ -4,8 +4,6 @@
 #include "Main/GameTimer.h"
 #include "vendor/granny/include/granny.h"
 
-using namespace NAnimation;
-
 class CTreeFallingMutator : public ITreeFallingMutator
 {
 	OBJECT_BASIC_METHODS( CTreeFallingMutator );
@@ -43,7 +41,7 @@ public:
 	{
 	}
 
-	void Setup( ISkeletonAnimator *pAnimator,
+	void Setup( NAnimation::ISkeletonAnimator *pAnimator,
 	            const CVec2 &vDir,
 	            float _fEndAngle,
 	            const CQuat &qRot,

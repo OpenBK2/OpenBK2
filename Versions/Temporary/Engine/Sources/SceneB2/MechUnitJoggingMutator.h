@@ -4,8 +4,6 @@
 #include "System/FastMath.h"
 #include "vendor/granny/include/granny.h"
 
-using namespace NAnimation;
-
 class CMechUnitJoggingMutator : public IMechUnitJoggingMutator
 {
 	OBJECT_BASIC_METHODS( CMechUnitJoggingMutator )
@@ -56,7 +54,7 @@ public:
 	}
 
 	void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY ) override;
-	void SetupPropellers( ISkeletonAnimator *pAnimator,
+	void SetupPropellers( NAnimation::ISkeletonAnimator *pAnimator,
 	                      const std::vector<std::string> &propellerObjects,
 	                      const std::vector<CVec3> &propellerSpeedsRad ) override;
 	void Play() override;

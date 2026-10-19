@@ -3,8 +3,6 @@
 #include "Manipulator.h"
 #include "TypeDef.h"
 
-using namespace NDb::NTypeDef;
-
 /**
 Класс управляющий финальными типами
 */
@@ -15,19 +13,19 @@ class CTableManipulatorWrapper : public IManipulator
 	friend class CTableManipulatorIteratorWrapper;
 
 	//CPtr<CXSDParser> pXSD;
-	typedef std::unordered_map<std::string, CPtr<STypeClass>> CNamesMap;
+	typedef std::unordered_map<std::string, CPtr<NDb::NTypeDef::STypeClass>> CNamesMap;
 	CNamesMap namesMap;
-	typedef std::unordered_map<int, CPtr<STypeClass>> CIDsMap;
+	typedef std::unordered_map<int, CPtr<NDb::NTypeDef::STypeClass>> CIDsMap;
 	CIDsMap idsMap;
 	// non-inherited
-	const STypeClass *GetType( const std::string &szName ) const;
-	const STypeClass *GetType( int nTypeID ) const;
+	const NDb::NTypeDef::STypeClass *GetType( const std::string &szName ) const;
+	const NDb::NTypeDef::STypeClass *GetType( int nTypeID ) const;
 
 	//
 	CTableManipulatorWrapper() {}
 
 public:
-	CTableManipulatorWrapper( std::vector<STypeClass *> &classes );
+	CTableManipulatorWrapper( std::vector<NDb::NTypeDef::STypeClass *> &classes );
 	// IManipulator
 	IManipulatorIterator *Iterate( bool bShowHidden, ECacheType eCache ) override;
 

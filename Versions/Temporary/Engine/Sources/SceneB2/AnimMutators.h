@@ -2,16 +2,14 @@
 
 #include "3Dmotor/GAnimation.hpp"
 
-using namespace NAnimation;
-
-struct ITreeFallingMutator : public IAnimMutator
+struct ITreeFallingMutator : public NAnimation::IAnimMutator
 {
 	enum
 	{
 		typeID = 0x12094B80
 	};
 
-	virtual void Setup( ISkeletonAnimator *pAnimator,
+	virtual void Setup( NAnimation::ISkeletonAnimator *pAnimator,
 	                    const CVec2 &vDir,
 	                    float _fEndAngle,
 	                    const CQuat &qRot,
@@ -24,7 +22,7 @@ struct ITreeFallingMutator : public IAnimMutator
 	                    NTimer::STime timeStart ) = 0;
 };
 
-struct ITreeWindMutator : public IAnimMutator
+struct ITreeWindMutator : public NAnimation::IAnimMutator
 {
 	enum
 	{
@@ -32,10 +30,10 @@ struct ITreeWindMutator : public IAnimMutator
 	};
 
 	virtual void
-	Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames ) = 0;
+	Setup( NAnimation::ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames ) = 0;
 };
 
-struct IMechUnitJoggingMutator : public IAnimMutator
+struct IMechUnitJoggingMutator : public NAnimation::IAnimMutator
 {
 	enum
 	{
@@ -54,22 +52,23 @@ struct IMechUnitJoggingMutator : public IAnimMutator
 	//
 	virtual void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY ) = 0;
 	// Propeller entries are paired by index; missing entries and unknown model-part names are ignored.
-	virtual void SetupPropellers( ISkeletonAnimator *pAnimator,
+	virtual void SetupPropellers( NAnimation::ISkeletonAnimator *pAnimator,
 	                              const std::vector<std::string> &propellerObjects,
 	                              const std::vector<CVec3> &propellerSpeedsRad ) = 0;
 	virtual void Play() = 0;
 	virtual void Stop() = 0;
 };
 
-struct IWingScaleMutator : public IAnimMutator
+struct IWingScaleMutator : public NAnimation::IAnimMutator
 {
 	enum
 	{
 		typeID = 0x3119AB00
 	};
 
-	virtual bool
-	Setup( ISkeletonAnimator *pAnimator, const std::string &szScaledWingPrefix, const std::string &szStaticWingName ) = 0;
+	virtual bool Setup( NAnimation::ISkeletonAnimator *pAnimator,
+	                    const std::string &szScaledWingPrefix,
+	                    const std::string &szStaticWingName ) = 0;
 	virtual void SetScale( const float fScale ) = 0;
 	virtual void ShowStatic( const bool bShow ) = 0;
 };

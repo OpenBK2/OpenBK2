@@ -22,6 +22,11 @@
 #include <float.h>
 #include <zconf.h>
 
+// The editor's drawing constants and object-info structs live in
+// NMapInfoEditor. This directive used to arrive through MapInfoEditor.h, which
+// handed the namespace to every unit that includes the editor.
+using namespace NMapInfoEditor;
+
 void CFenceState::ClearData()
 {
 	designTool.Clear();

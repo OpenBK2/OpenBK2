@@ -110,7 +110,7 @@ class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::I
 	void ClearCmdMarkers();
 	void UpdateCmdMarkers();
 	//
-	std::string GetMapObjectName( SObjectInfo *pMOI );
+	std::string GetMapObjectName( NMapInfoEditor::SObjectInfo *pMOI );
 	bool GetMapObjectElementIDs( int nObjectID, std::vector<int> *pRes );
 	//
 	const SUnitCommandTypeInfo *GetCurrentCommandType();

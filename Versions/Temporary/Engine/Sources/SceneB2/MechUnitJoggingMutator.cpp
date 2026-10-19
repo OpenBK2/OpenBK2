@@ -63,14 +63,14 @@ void CMechUnitJoggingMutator::Setup( const int _nBasisBoneIndex,
 	nBasisBoneIndex = _nBasisBoneIndex;
 }
 
-void CMechUnitJoggingMutator::SetupPropellers( ISkeletonAnimator *pAnimator,
+void CMechUnitJoggingMutator::SetupPropellers( NAnimation::ISkeletonAnimator *pAnimator,
                                                const std::vector<std::string> &propellerObjects,
                                                const std::vector<CVec3> &speedsRad )
 {
 	propellerBoneIndices.clear();
 	propellerSpeedsRad.clear();
 
-	CDynamicCast<IGetBone> pGetBone = pAnimator;
+	CDynamicCast<NAnimation::IGetBone> pGetBone = pAnimator;
 	if ( !pGetBone )
 	{
 		return;

@@ -22,6 +22,11 @@
 #include <fmt/format.h>
 #include <zconf.h>
 
+// The editor's drawing constants and object-info structs live in
+// NMapInfoEditor. This directive used to arrive through MapInfoEditor.h, which
+// handed the namespace to every unit that includes the editor.
+using namespace NMapInfoEditor;
+
 const int CBridgeState::START_TERMINATOR_INDEX = 0;
 const int CBridgeState::FINISH_TERMINATOR_INDEX = 1;
 const int CBridgeState::TERMINATOR_COUNT = 2;

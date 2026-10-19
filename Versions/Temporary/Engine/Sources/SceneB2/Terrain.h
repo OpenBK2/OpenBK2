@@ -4,8 +4,6 @@
 #include "System/Dg.h"
 #include "TerraGen.h"
 
-using namespace NMeshData;
-
 namespace NGScene
 {
 class IGameView;
@@ -35,7 +33,7 @@ public:
 	}
 };
 
-typedef SPatchHolder<CMeshDataPatch> SPrecipicePatchHolder;
+typedef NMeshData::SPatchHolder<CMeshDataPatch> SPrecipicePatchHolder;
 
 class CPrecipice
 {
@@ -88,7 +86,7 @@ public:
 	}
 };
 
-typedef SPatchHolder<CPeakPatch> SPeakPatchHolder;
+typedef NMeshData::SPatchHolder<CPeakPatch> SPeakPatchHolder;
 
 class CPeak
 {
@@ -125,7 +123,7 @@ public:
 
 // foots
 
-typedef SPatchHolder<CMeshDataPatch> SFootPatchHolder;
+typedef NMeshData::SPatchHolder<CMeshDataPatch> SFootPatchHolder;
 
 class CFoot
 {
@@ -191,7 +189,7 @@ public:
 	}
 };
 
-typedef SPatchHolder<CRiverPatch> SRiverPatchHolder;
+typedef NMeshData::SPatchHolder<CRiverPatch> SRiverPatchHolder;
 
 class CRiver
 {
@@ -232,7 +230,7 @@ public:
 
 // road
 
-typedef SPatchHolder<CMeshDataPatch> SRoadPatchHolder;
+typedef NMeshData::SPatchHolder<CMeshDataPatch> SRoadPatchHolder;
 
 class CRoad
 {
@@ -269,7 +267,7 @@ public:
 
 // terraspot
 
-typedef SPatchHolder<CMeshDataPatch> STerraSpotPatchHolder;
+typedef NMeshData::SPatchHolder<CMeshDataPatch> STerraSpotPatchHolder;
 
 class CTerraSpot
 {
@@ -306,7 +304,7 @@ public:
 
 // terrain
 
-typedef SPatchHolder<CMeshDataPatch> STerrainPatchHolder;
+typedef NMeshData::SPatchHolder<CMeshDataPatch> STerrainPatchHolder;
 
 class CSceneTerrain : public ITerraGfxObserver
 {
