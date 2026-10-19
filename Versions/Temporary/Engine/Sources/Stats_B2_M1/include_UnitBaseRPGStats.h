@@ -7,14 +7,14 @@ int nPrimaryPlatform = 0; // platform with primary gun
 EUnitRPGType etype{};
 std::vector<NDb::EUnitSpecialAbility> abilities;
 
-inline void AddValue( CUserCommands &array, int nBit )
+inline void AddValue( CUserCommands &array, EActionCommand eCommand )
 {
-	array.SetData( nBit );
+	array.SetData( eCommand );
 }
 
-inline void RemValue( CUserCommands &array, int nBit )
+inline void RemValue( CUserCommands &array, EActionCommand eCommand )
 {
-	array.RemoveData( nBit );
+	array.RemoveData( eCommand );
 }
 
 const NDb::SUnitSpecialAblityDesc *GetAbilityDescByCmd( const int nCmdType ) const;
@@ -132,7 +132,7 @@ virtual const float GetTurnRadius() const
 
 //
 void GetUserActions( CUserActions *pActions ) const;
-const bool HasUserAction( const int nAction ) const;
+const bool HasUserAction( const NDb::EUserAction eAction ) const;
 
 //
 const std::vector<SAnimDesc> *GetAnims( const int netype ) const
