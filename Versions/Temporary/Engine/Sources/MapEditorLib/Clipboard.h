@@ -34,8 +34,8 @@
 //
 // Declared without naming a toolkit and implemented once in ClipboardWx.cpp,
 // for the reason MessageBoxes.h gives: an editor state that includes a wx
-// header loses windows.h's A/W macros and stops linking against
-// NDb::GetObjectA. The wx views call wxTheClipboard directly and are welcome
+// header loses windows.h's A/W macros, and its narrow Win32 calls by macro
+// name turn wide. The wx views call wxTheClipboard directly and are welcome
 // to; this is for everything that must not see wx.
 namespace NClipboard
 {

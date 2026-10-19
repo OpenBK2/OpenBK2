@@ -3,7 +3,7 @@
 #include "BinSaver.h"
 
 #include "System_export.h"
-// NDb::GetObject, which AddInternal for CDBPtr calls. Every engine TU had it
+// NDb::GetResource, which AddInternal for CDBPtr calls. Every engine TU had it
 // through its stdafx.h; GCC resolves the name when it parses the template, so
 // a TU without that prelude (XmlSaverObjectIDs_test) failed to compile there.
 #include "DB.h"
@@ -400,7 +400,7 @@ private:
 		{
 			CDBID dbid;
 			DataChunkDBID( &dbid );
-			*pData = CastToDBUserObject( NDb::GetObject( dbid ), (T1 *)0 );
+			*pData = CastToDBUserObject( NDb::GetResource( dbid ), (T1 *)0 );
 		}
 		else
 		{

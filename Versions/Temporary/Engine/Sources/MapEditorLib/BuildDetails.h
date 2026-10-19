@@ -19,8 +19,8 @@
 //
 // Declared without naming a toolkit and implemented in BuildDetailsWx.cpp, for
 // the reason MessageBoxes.h spells out: a translation unit that includes a wx
-// header loses windows.h's A/W macros and stops linking against
-// NDb::GetObjectA.
+// header loses windows.h's A/W macros, and its narrow Win32 calls by macro
+// name turn wide.
 namespace NBuildDetails
 {
 // One "name : value" per line, every line newline-terminated. UTF-8.

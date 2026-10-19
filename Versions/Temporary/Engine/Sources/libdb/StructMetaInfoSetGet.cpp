@@ -72,14 +72,14 @@ namespace NMetaInfo
 				CutTypeNameFromRef( &szNewRefName, value.GetDBID().ToString() );
 				return CDBID( szNewRefName );
 				// CRAP}
-				//		*((CDBPtr<CResource>*)pData) = NDb::GetObject( value.GetDBID() );
+				//		*((CDBPtr<CResource>*)pData) = NDb::GetResource( value.GetDBID() );
 
 			case CVariant::VT_STR:
 				// CRAP{ legacy - remove it ASAP
 				CutTypeNameFromRef( &szNewRefName, value.GetStr() );
 				return CDBID( szNewRefName );
 				// CRAP}
-				//		*((CDBPtr<CResource>*)pData) = NDb::GetObject( CDBID(value.GetStr()) );
+				//		*((CDBPtr<CResource>*)pData) = NDb::GetResource( CDBID(value.GetStr()) );
 				break;
 
 			case CVariant::VT_NULL:
@@ -179,7 +179,7 @@ namespace NMetaInfo
 	{
 		void *pData = pThis + GetBinaryShift();
 		const CDBID dbid = GetDBIDFromValue( value );
-		CResource *pRes = NDb::GetObject( dbid );
+		CResource *pRes = NDb::GetResource( dbid );
 		if ( !dbid.IsEmpty() && pRes == 0 )
 		{
 			return false;

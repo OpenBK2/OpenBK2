@@ -287,7 +287,7 @@ void SEntrenchmentInfo::CreateSceneObjects( IEditorScene *pEditorScene,
 	{
 		const unsigned nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
 		const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats =
-				dynamic_cast<const NDb::SEntrenchmentRPGStats *>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
+				dynamic_cast<const NDb::SEntrenchmentRPGStats *>( NDb::GetResource( itMapInfoElement->second.rpgStatsDBID ) );
 		const NDb::SEntrenchmentRPGStats::SEntrenchSegmentRPGStats *pSeg =
 				GetSegmentInfo( pEntrenchmentRPGStats, itMapInfoElement->second.nFrameIndex );
 		CVec3 vObjectScenePosition = vPosition + itMapInfoElement->second.vPosition;
@@ -361,7 +361,7 @@ bool SEntrenchmentInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 	fDirection = 0.0f;
 	//
 	const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats =
-			dynamic_cast<const NDb::SEntrenchmentRPGStats *>( NDb::GetObject( pObjectCreateInfo->rpgStatsDBID ) );
+			dynamic_cast<const NDb::SEntrenchmentRPGStats *>( NDb::GetResource( pObjectCreateInfo->rpgStatsDBID ) );
 	//
 	const std::list<SEntrenchmentSegInfo> &trenchElementsInfo =
 			static_cast<const SEntrenchmentCreateInfo *>( pObjectCreateInfo )->segmentsInfo;

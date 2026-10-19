@@ -411,7 +411,7 @@ void SObjectInfo::FitToGrid( bool bUpdateSceneElements )
 	      ++itMapInfoElement )
 	{
 		const NDb::SHPObjectRPGStats *pHPObjectRPGStats =
-				dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
+				dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetResource( itMapInfoElement->second.rpgStatsDBID ) );
 		const NDb::SObjectBaseRPGStats *pObjectBaseRPGStats =
 				dynamic_cast<const NDb::SObjectBaseRPGStats *>( pHPObjectRPGStats );
 		if ( ( pObjectBaseRPGStats != 0 ) && ( !pObjectBaseRPGStats->passability.IsEmpty() ) )
@@ -441,7 +441,7 @@ void SObjectInfo::RotateTo90Degree( bool bUpdateSceneElements )
 	      ++itMapInfoElement )
 	{
 		const NDb::SHPObjectRPGStats *pHPObjectRPGStats =
-				dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
+				dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetResource( itMapInfoElement->second.rpgStatsDBID ) );
 		const NDb::SObjectBaseRPGStats *pObjectBaseRPGStats =
 				dynamic_cast<const NDb::SObjectBaseRPGStats *>( pHPObjectRPGStats );
 		if ( ( pObjectBaseRPGStats != 0 ) && ( !pObjectBaseRPGStats->passability.IsEmpty() ) )
@@ -551,7 +551,7 @@ void SObjectInfo::CreateSceneObjects( IEditorScene *pEditorScene,
 	      ++itMapInfoElement )
 	{
 		const NDb::SHPObjectRPGStats *pHPObjectRPGStats =
-				dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
+				dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetResource( itMapInfoElement->second.rpgStatsDBID ) );
 		if ( !pHPObjectRPGStats )
 		{
 			continue;

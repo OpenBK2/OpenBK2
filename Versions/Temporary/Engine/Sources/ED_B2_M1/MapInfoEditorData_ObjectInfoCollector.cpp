@@ -667,8 +667,8 @@ void SObjectInfoCollector::DrawShootAreas( CSceneDrawTool *pEditorSceneDrawTool 
 						CVec3 vColor( ( dwColor & 0x00ff0000 ) >> 16, ( dwColor & 0x0000ff00 ) >> 8, dwColor & 0x000000ff );
 						vColor /= 256.0f;
 						//
-						const NDb::SMechUnitRPGStats *pStats =
-								checked_cast<const NDb::SMechUnitRPGStats *>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
+						const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>(
+								NDb::GetResource( itMapInfoElement->second.rpgStatsDBID ) );
 						const int nID = -1;
 						for ( int nPlatform = 0; nPlatform < pStats->GetPlatformsSize( nID ); ++nPlatform )
 						{
@@ -710,7 +710,7 @@ void SObjectInfoCollector::DrawShootAreas( CSceneDrawTool *pEditorSceneDrawTool 
 						vColor /= 256.0f;
 						//
 						const NDb::SSquadRPGStats *pStats =
-								checked_cast<const NDb::SSquadRPGStats *>( NDb::GetObject( itMapInfoElement->second.rpgStatsDBID ) );
+								checked_cast<const NDb::SSquadRPGStats *>( NDb::GetResource( itMapInfoElement->second.rpgStatsDBID ) );
 						const int nID = -1;
 						{
 							for ( int nMember = 0; nMember < pStats->members.size(); ++nMember )

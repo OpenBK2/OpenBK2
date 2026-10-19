@@ -302,7 +302,7 @@ void CChapterState::LoadChapterMap()
 	const std::string &szTypeName = pChapterEditor->GetObjectSet().szObjectTypeName;
 
 	// get pointer to selected element
-	const NDb::CResource *pSelected = NDb::GetObject( pChapterEditor->GetObjectSet().objectNameSet.begin()->first );
+	const NDb::CResource *pSelected = NDb::GetResource( pChapterEditor->GetObjectSet().objectNameSet.begin()->first );
 	NI_ASSERT( pSelected != 0, "CChapterState::LoadChapterMap: pSelected == 0" );
 
 	pChapter = dynamic_cast<const NDb::SChapter *>( pSelected );

@@ -165,7 +165,7 @@ void CFenceState::RefreshSelectedFenceInfo()
 		selectedFenceInfo.szRPGStatsTypeName = objectSet.szObjectTypeName;
 		selectedFenceInfo.rpgStatsDBID = objectSet.objectNameSet.begin()->first;
 		selectedFenceInfo.pFenceRPGStats =
-				dynamic_cast<const NDb::SFenceRPGStats *>( NDb::GetObject( selectedFenceInfo.rpgStatsDBID ) );
+				dynamic_cast<const NDb::SFenceRPGStats *>( NDb::GetResource( selectedFenceInfo.rpgStatsDBID ) );
 	}
 }
 

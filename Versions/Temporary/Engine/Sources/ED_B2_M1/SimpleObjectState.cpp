@@ -358,7 +358,7 @@ void CSimpleObjectState::InsertObjectEnter()
 			// заполняем сцену и проставляем ссылки в mapInfo
 			CBusyCursor waitCursor;
 			const NDb::SHPObjectRPGStats *pHPObjectRPGStats =
-					dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetObject( rpgStatsDBID ) );
+					dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetResource( rpgStatsDBID ) );
 			if ( !pHPObjectRPGStats )
 			{
 				return;

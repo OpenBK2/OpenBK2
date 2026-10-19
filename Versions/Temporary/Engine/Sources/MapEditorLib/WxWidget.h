@@ -13,7 +13,7 @@
 // where wx belongs. MapEditorLib links wx itself now, but only for the one
 // translation unit behind MessageBoxes.h, and nothing else here includes a wx
 // header -- keeping it that way is what stops windows.h's A/W macros being
-// undefined in a TU that then fails to link against NDb::GetObjectA.
+// undefined in a TU whose narrow Win32 calls then turn wide.
 
 #include "Interface_Widget.h"
 

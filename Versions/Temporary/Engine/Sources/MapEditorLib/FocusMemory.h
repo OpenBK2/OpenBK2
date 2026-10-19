@@ -25,8 +25,8 @@
 //
 // Declared without naming a toolkit and implemented once in FocusMemoryWx.cpp,
 // for the reason MessageBoxes.h gives: a translation unit that includes a wx
-// header loses windows.h's A/W macros and stops linking against
-// NDb::GetObjectA. MainFrameShared.cpp, which is where this is used, names no
+// header loses windows.h's A/W macros, and its narrow Win32 calls by macro
+// name turn wide. MainFrameShared.cpp, which is where this is used, names no
 // toolkit at all on purpose -- both frames share it.
 class MAPEDITORLIB_EXPORT CFocusMemory
 {

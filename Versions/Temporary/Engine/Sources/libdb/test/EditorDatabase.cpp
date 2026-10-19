@@ -283,7 +283,7 @@ TEST_F( CEditorDatabase, StructWritesAreReadByPath )
 	pUnit->jy.vTremble =
 			CVec3( float( value( "Jy.Tremble.x" ) ), float( value( "Jy.Tremble.y" ) ), float( value( "Jy.Tremble.z" ) ) );
 	memcpy( &pUnit->guid, value( "guid" ).GetPtr(), sizeof( pUnit->guid ) );
-	pUnit->pWeapon = static_cast<NDb::SWeapon *>( NDb::GetObject( value( "Weapon" ).GetDBID() ) );
+	pUnit->pWeapon = static_cast<NDb::SWeapon *>( NDb::GetResource( value( "Weapon" ).GetDBID() ) );
 	for ( const SFieldValues &field : fields )
 	{
 		if ( field.bHasCode )

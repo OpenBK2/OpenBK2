@@ -225,7 +225,7 @@ void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 		selectedEntrenchmentInfo.szRPGStatsTypeName = objectSet.szObjectTypeName;
 		selectedEntrenchmentInfo.rpgStatsDBID = objectSet.objectNameSet.begin()->first;
 		selectedEntrenchmentInfo.pEntrenchmentRPGStats =
-				dynamic_cast<const NDb::SEntrenchmentRPGStats *>( NDb::GetObject( selectedEntrenchmentInfo.rpgStatsDBID ) );
+				dynamic_cast<const NDb::SEntrenchmentRPGStats *>( NDb::GetResource( selectedEntrenchmentInfo.rpgStatsDBID ) );
 		if ( selectedEntrenchmentInfo.pEntrenchmentRPGStats == 0 )
 		{
 			return;

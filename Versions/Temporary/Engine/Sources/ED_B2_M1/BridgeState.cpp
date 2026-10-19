@@ -324,7 +324,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		//
 		const NDb::SBridgeRPGStats *pBridgeRPGStats = 0;
 		pBridgeRPGStats =
-				dynamic_cast<const NDb::SBridgeRPGStats *>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
+				dynamic_cast<const NDb::SBridgeRPGStats *>( NDb::GetResource( objectSet.objectNameSet.begin()->first ) );
 		NI_ASSERT( pBridgeRPGStats != 0,
 		           fmt::format( "{} not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) );
 		//

@@ -5,7 +5,7 @@
 #include "XmlResource.h"
 
 #include "System_export.h"
-// For NDb::GetObject below, which libdb defines and exports. Both export
+// For NDb::GetResource below, which libdb defines and exports. Both export
 // headers are generated into one directory that every target already has on
 // its include path, so this costs System no dependency on libdb's build.
 #include "libdb_export.h"
@@ -250,7 +250,7 @@ struct IDBIterator : public CObjectBase
 };
 
 //
-// Same story as GetObject below: defined in libdb, GameDBIterator.cpp. This
+// Same story as GetResource below: defined in libdb, GameDBIterator.cpp. This
 // one never warned only because no libdb header redeclares it.
 LIBDB_EXPORT IDBIterator *CreateDBIterator( int nTypeID );
 // add database resource file
@@ -261,11 +261,14 @@ void FinishAddResources();
 void RemoveAllResources();
 // get specific entry from DB
 //
-// conflict with #define GetObject GetObjectA (Windows SDK). The parentheses
-// do not prevent that: the macro is object-like and parentheses only hold
-// off a function-like one, so in any translation unit that has seen
-// windows.h this really is GetObjectA. Kept because the name it produces is
-// what libdb exports and what every caller already links against.
+// Named GetResource, not GetObject as it was. windows.h has
+// #define GetObject GetObjectA, so the old name meant GetObjectA in a
+// translation unit that had seen windows.h and GetObject in one where a wx
+// header had since undefined the A/W macros (wx/msw/winundef.h). The export
+// was GetObjectA, so a wx translation unit calling it did not link, and under
+// /permissive- one that merely parsed a template calling it after a wx header
+// did not compile. No Windows macro claims this name, so it is the same symbol
+// on every platform and in every translation unit.
 //
 // LIBDB_EXPORT, not SYSTEM_EXPORT: the definition is in libdb
 // (Database.cpp), System has none, and libdb.dll is what exports the
@@ -273,7 +276,7 @@ void RemoveAllResources();
 // about one function's linkage, which is C4273. That the export existed at
 // all was MSVC's fallback for defining a function it had been told was
 // imported, rather than anything either header asked for.
-LIBDB_EXPORT CResource *(GetObject)( const CDBID &dbid );
+LIBDB_EXPORT CResource *GetResource( const CDBID &dbid );
 //
 void SetDBMode( EDBMode eMode );
 
@@ -351,7 +354,7 @@ namespace NDb
 template <class T>
 inline const T *Get( const CDBID &dbid )
 {
-	return CastToDBUserObject( GetObject( dbid ), (const T *)0 );
+	return CastToDBUserObject( GetResource( dbid ), (const T *)0 );
 }
 } // namespace NDb
 
@@ -376,7 +379,7 @@ class CDBPtr
 		{
 			if ( pObj && !CastToDBResource( pObj.GetPtr() )->IsLoaded() )
 			{
-				NDb::GetObject( CastToDBResource( pObj.GetPtr() )->GetDBID() );
+				NDb::GetResource( CastToDBResource( pObj.GetPtr() )->GetDBID() );
 			}
 			bLoaded = true;
 		}
@@ -496,7 +499,7 @@ public:
 				}
 				else
 				{
-					pObj = const_cast<TUserObj *>( CastToDBUserObject( NDb::GetObject( CDBID( szString ) ), (TUserObj *)0 ) );
+					pObj = const_cast<TUserObj *>( CastToDBUserObject( NDb::GetResource( CDBID( szString ) ), (TUserObj *)0 ) );
 				}
 			}
 			else
