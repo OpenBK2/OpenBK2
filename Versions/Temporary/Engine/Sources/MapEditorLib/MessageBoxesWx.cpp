@@ -7,9 +7,9 @@
 
 // The only translation unit in MapEditorLib that sees a wx header, and the
 // reason the declarations in MessageBoxes.h name no toolkit. Including wx here
-// is safe because nothing below reaches the game database: wx undefines
-// windows.h's A/W macros, and a TU that calls NDb::Get<>, dereferences a CDBPtr
-// or names NDb::GetObject after that will not link against NDb::GetObjectA.
+// is safe because nothing below calls Win32 by a macro name: wx undefines
+// windows.h's A/W macros, so after it MessageBox and the like are the wide
+// forms. See MapEditorLib/MainWindow.h for the same trap.
 #include <wx/msgdlg.h>
 #include <wx/string.h>
 

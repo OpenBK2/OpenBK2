@@ -26,11 +26,15 @@ static SUserActionsChecker<int( NDb::USER_ACTION_UNKNOWN )> check_USER_ACTION_UN
 void NDb::SUnitActions::ReMapCommands( CUserCommands &ai, CUserActions &user )
 {
 	user.Clear();
+	// The loop walks every bit of the command mask, so the index is held as an
+	// int and named as a command once per step. This is the translation from
+	// one mask's enumeration to the other's, and the only place that needs to.
 	for ( int i = 0; i != 128; ++i )
 	{
-		if ( ai.GetData( i ) != 0 )
+		const EActionCommand eCommand = EActionCommand( i );
+		if ( ai.GetData( eCommand ) != 0 )
 		{
-			const NDb::EUserAction nUserAction = GetActionByCommand( (EActionCommand)i );
+			const NDb::EUserAction nUserAction = GetActionByCommand( eCommand );
 			if ( nUserAction != NDb::USER_ACTION_UNKNOWN )
 			{
 				user.SetAction( nUserAction );
@@ -63,10 +67,12 @@ void NDb::SUnitActions::ToAIUnits( bool bInEditor )
 		{
 			continue;
 		}
-		const int nData = GetCommandByAbility( specialAbilities[i]->eName );
-		if ( -1 != nData )
+		// GetCommandByAbility answers EActionCommand( -1 ) for an ability no
+		// command stands for, which is why this keeps the sentinel comparison.
+		const EActionCommand eData = GetCommandByAbility( specialAbilities[i]->eName );
+		if ( EActionCommand( -1 ) != eData )
 		{
-			availCommands.SetData( nData );
+			availCommands.SetData( eData );
 		}
 	}
 
@@ -117,9 +123,14 @@ const bool NDb::SUnitBaseRPGStats::HasCommand( const int nCmd ) const
 	}
 	NI_ASSERT( ( nCmd >= 0 && nCmd < pActions->availCommands.GetSize() ) || ( nCmd >= 1000 ),
 	           fmt::format( "Wrong command ( {} )\n", nCmd ) );
-	return nCmd >= 1000
-	           ? true
-	           : ( nCmd < GetActions()->availCommands.GetSize() ? GetActions()->availCommands.GetData( nCmd ) : false );
+	// nCmd arrives as an int because a value of 1000 or more is a script
+	// command rather than an EActionCommand, and those are answered above
+	// without consulting the mask. Below that, and inside the mask's own
+	// bounds, it is a command and is named as one.
+	return nCmd >= 1000 ? true
+	                    : ( nCmd < GetActions()->availCommands.GetSize()
+	                            ? GetActions()->availCommands.GetData( EActionCommand( nCmd ) )
+	                            : false );
 }
 
 void NDb::SUnitBaseRPGStats::GetUserActions( CUserActions *pActions ) const
@@ -127,9 +138,9 @@ void NDb::SUnitBaseRPGStats::GetUserActions( CUserActions *pActions ) const
 	this->pActions->availUserActions.GetActions( pActions );
 }
 
-const bool NDb::SUnitBaseRPGStats::HasUserAction( const int nAction ) const
+const bool NDb::SUnitBaseRPGStats::HasUserAction( const NDb::EUserAction eAction ) const
 {
-	return pActions->availUserActions.HasAction( nAction );
+	return pActions->availUserActions.HasAction( eAction );
 }
 
 const CUserActions *NDb::SUnitBaseRPGStats::GetUserActions( bool bActionsBy ) const

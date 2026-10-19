@@ -1166,5 +1166,18 @@ const bool CArtillery::CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) con
 const bool CArtillery::CanHook() const
 {
 	const NDb::SUnitBaseRPGStats *pStats = GetStats();
-	return ( pStats && pStats->GetUserActions( false )->HasAction( ACTION_COMMAND_TAKE_ARTILLERY ) );
+	if ( !pStats || !pStats->GetActions() )
+	{
+		return false;
+	}
+	// The exposure masks come in two flavours indexed by two different
+	// enumerations, and both take an int, so nothing stopped this from asking
+	// one with the other's constant: it used to read the user-action mask at
+	// ACTION_COMMAND_TAKE_ARTILLERY, which is 31, and bit 31 of that mask is
+	// USER_ACTION_FORMATION_4, which no unit ever carries. So CanHook answered
+	// no for every gun, and a transport ordered to hook without a gun named
+	// found no candidate and dropped the order. The command mask is where this
+	// constant belongs, and CAILogic::LoadUnits already asks the same question
+	// that way.
+	return pStats->GetActions()->availExposures.GetData( ACTION_COMMAND_TAKE_ARTILLERY );
 }

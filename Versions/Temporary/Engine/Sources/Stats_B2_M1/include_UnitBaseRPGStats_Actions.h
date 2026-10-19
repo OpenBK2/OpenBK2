@@ -1,14 +1,14 @@
 
 void ReMapCommands( CUserCommands &ai, CUserActions &user );
 
-inline void AddValue( CUserCommands &array, int nBit )
+inline void AddValue( CUserCommands &array, EActionCommand eCommand )
 {
-	array.SetData( nBit );
+	array.SetData( eCommand );
 }
 
-inline void RemValue( CUserCommands &array, int nBit )
+inline void RemValue( CUserCommands &array, EActionCommand eCommand )
 {
-	array.RemoveData( nBit );
+	array.RemoveData( eCommand );
 }
 
 void ToAIUnits( bool bInEditor );

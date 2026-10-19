@@ -13,8 +13,8 @@
 //
 // Declared without naming a toolkit, and implemented once in CursorsWx.cpp,
 // for the reason MessageBoxes.h gives: a translation unit that includes a wx
-// header loses windows.h's A/W macros and stops linking against
-// NDb::GetObjectA. MapObjectState, which uses all of this, is one of the files
+// header loses windows.h's A/W macros, and its narrow Win32 calls by macro
+// name turn wide. MapObjectState, which uses all of this, is one of the files
 // that must never see one.
 struct IWidget;
 

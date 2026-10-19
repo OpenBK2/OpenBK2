@@ -60,10 +60,9 @@ target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc System fmt
 # ClipboardWx.cpp, CursorsWx.cpp, FocusMemoryWx.cpp and MessageBoxesWx.cpp are
 # the only translation units here that include a wx header, and the declarations
 # they sit behind (Clipboard.h, Cursors.h, FocusMemory.h, MessageBoxes.h) name
-# no toolkit on purpose: a caller
-# that includes wx loses windows.h's A/W macros and stops linking against
-# NDb::GetObjectA. See cmake/wxwidgets.cmake for why there are no UNICODE
-# defines.
+# no toolkit on purpose: a caller that includes wx loses windows.h's A/W macros,
+# and its narrow Win32 calls by macro name turn wide. See cmake/wxwidgets.cmake
+# for why there are no UNICODE defines.
 target_link_libraries(MapEditorLib PRIVATE wx::wx)
 add_dependencies(MapEditorLib wxwidgets_external)
 # The wrapping icon palette uses GtkIconView on Linux; Windows keeps wxListCtrl.

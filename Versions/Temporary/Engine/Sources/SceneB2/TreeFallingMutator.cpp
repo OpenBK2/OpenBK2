@@ -7,7 +7,7 @@
 
 #include <fmt/format.h>
 
-void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator,
+void CTreeFallingMutator::Setup( NAnimation::ISkeletonAnimator *pAnimator,
                                  const CVec2 &vDir,
                                  float _fEndAngle,
                                  const CQuat &qRot,

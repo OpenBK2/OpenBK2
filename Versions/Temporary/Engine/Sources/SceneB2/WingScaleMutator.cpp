@@ -27,7 +27,7 @@ static bool StartsWithNoCase( const std::string &szName, const std::string &szPr
 	return true;
 }
 
-bool CWingScaleMutator::Setup( ISkeletonAnimator *pAnimator,
+bool CWingScaleMutator::Setup( NAnimation::ISkeletonAnimator *pAnimator,
                                const std::string &szScaledWingPrefix,
                                const std::string &szStaticWingName )
 {

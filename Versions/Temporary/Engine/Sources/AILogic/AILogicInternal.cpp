@@ -633,7 +633,7 @@ void CAILogic::LoadUnits( const SMapInfo *pMapInfo, LinkInfo *linksInfo )
 		}
 		// Resolve the record once and use the raw pointer below. Every use of the
 		// CDBPtr re-runs its lazy load and re-reads the member, and because that
-		// path calls out to NDb::GetObject the compiler cannot carry the non-null
+		// path calls out to NDb::GetResource the compiler cannot carry the non-null
 		// fact proved just above across it; GCC's -Wnull-dereference reported both
 		// of the static_casts below as definite null dereferences for exactly that
 		// reason. The record cannot change while a map is being loaded, so one

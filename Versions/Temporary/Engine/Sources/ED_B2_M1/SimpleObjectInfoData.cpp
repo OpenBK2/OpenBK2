@@ -33,7 +33,7 @@ bool SSimpleObjectInfo::KeepZeroHeight()
 		if ( rMapInfoElement.szRPGStatsTypeName == "MechUnitRPGStats" )
 		{
 			if ( const NDb::SMechUnitRPGStats *pMechUnitRPGStats =
-			         dynamic_cast<const NDb::SMechUnitRPGStats *>( NDb::GetObject( rMapInfoElement.rpgStatsDBID ) ) )
+			         dynamic_cast<const NDb::SMechUnitRPGStats *>( NDb::GetResource( rMapInfoElement.rpgStatsDBID ) ) )
 			{
 				if ( ( pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_SCOUT ) ||
 				     ( pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_BOMBER ) ||
@@ -137,7 +137,7 @@ bool SSimpleObjectInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 	NI_ASSERT( pObjectCreateInfo != 0, "SSimpleObjectInfo::Create(), pObjectCreateInfo == 0" );
 	//
 	const NDb::SHPObjectRPGStats *pHPObjectRPGStats =
-			dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetObject( pObjectCreateInfo->rpgStatsDBID ) );
+			dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetResource( pObjectCreateInfo->rpgStatsDBID ) );
 	NI_ASSERT( pHPObjectRPGStats != 0,
 	           fmt::format( "{} not NDb::SHPObjectRPGStats type", pObjectCreateInfo->szRPGStatsTypeName.c_str() ) );
 	if ( pHPObjectRPGStats == 0 )
@@ -266,7 +266,7 @@ bool SSimpleObjectInfo::NeedMakeOrientation( const std::string &rszRPGStatsTypeN
 	if ( rszRPGStatsTypeName == "MechUnitRPGStats" )
 	{
 		if ( const NDb::SMechUnitRPGStats *pMechUnitRPGStats =
-		         dynamic_cast<const NDb::SMechUnitRPGStats *>( NDb::GetObject( rRPGStatsDBID ) ) )
+		         dynamic_cast<const NDb::SMechUnitRPGStats *>( NDb::GetResource( rRPGStatsDBID ) ) )
 		{
 			if ( ( pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_SCOUT ) ||
 			     ( pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_BOMBER ) ||

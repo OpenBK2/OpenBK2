@@ -79,8 +79,8 @@ so they do not churn cherry-pick context.
 | [ ] | `Parser/lang.tab.c` and `lex.yy.c` are committed bison/flex output and the build compiles them directly, so editing `lang.y` or `lang.l` alone does nothing. Measured: bison 3.8.2 and flex 2.6.4 regenerate both cleanly with identical token numbering, but wiring the tools in buys nothing - the grammar has changed twice in twenty years and its consumer `dbcodegen` is not built | [The bison/flex parser](#the-bisonflex-parser-what-it-is-and-why-it-is-not-regenerated) |
 | [ ] | ~122 files include `<zconf.h>` without needing it, inherited from the original. Harmless under `ZLIB_COMPAT`; removing them needs a build per file to prove nothing leans on the transitive include | [zconf.h is not a porting bug](#zconfh-is-not-a-porting-bug) |
 | [ ] | 19 `COLORREF` uses left, all in MFC targets that cannot build off Windows. A `uint32_t` swap is **not** safe there: `COLORREF` is `unsigned long`, `uint32_t` is `unsigned int`, and `MapEditor/SortTreeControl` passes `COLORREF *`. Cosmetic, not a portability blocker | [The Windows SDK's `-A` macros](#the-windows-sdks--a-macros-and-why-parenthesising-does-not-defeat-them) |
-| [ ] | `System/DB.h:155` carries a comment claiming `(GetObject)` avoids the Windows SDK's `#define GetObject GetObjectA`. It does not - these are *object-like* macros, so parentheses change nothing; measured against cl.exe. The comment misinforms and should go either way | [The Windows SDK's `-A` macros](#the-windows-sdks--a-macros-and-why-parenthesising-does-not-defeat-them) |
-| [ ] | `NDb::GetObject` is declared twice with inconsistent dllexport, `System/DB.h:155` with `SYSTEM_EXPORT` and `libdb/Db.h:28` with none, which is the `C4273` in every libdb build. One line | [The Windows SDK's `-A` macros](#the-windows-sdks--a-macros-and-why-parenthesising-does-not-defeat-them) |
+| [x] | ~~`System/DB.h:155` carries a comment claiming `(GetObject)` avoids the Windows SDK's `#define GetObject GetObjectA`~~ done: the comment was corrected, and the function is now `NDb::GetResource`, which no macro renames, so the parentheses are gone too. Originally: It does not - these are *object-like* macros, so parentheses change nothing; measured against cl.exe. The comment misinforms and should go either way | [The Windows SDK's `-A` macros](#the-windows-sdks--a-macros-and-why-parenthesising-does-not-defeat-them) |
+| [x] | ~~`NDb::GetObject` is declared twice with inconsistent dllexport~~ done: both declarations are `LIBDB_EXPORT`, and the function is now `NDb::GetResource`. Originally: `System/DB.h:155` with `SYSTEM_EXPORT` and `libdb/Db.h:28` with none, which is the `C4273` in every libdb build. One line | [The Windows SDK's `-A` macros](#the-windows-sdks--a-macros-and-why-parenthesising-does-not-defeat-them) |
 | [ ] | Only `Game.exe` gets `utf8.manifest`, so only it has a UTF-8 ANSI code page. `B2_MapEditor` and the editor manifests set no `activeCodePage`, leaving them on the legacy page and unable to open non-ASCII paths | [Everything resolves to the `-A` entry points](#everything-resolves-to-the--a-entry-points) |
 | [x] | ~~`libdb/DBWatcherClient.cpp` `#import`s a binary `.tlb`~~ done in "build the XDBWatcher COM client only where #import exists"; stray-byte errors went 1149 to 0. Originally:; GCC reads `#import` as its own deprecated include-once directive and lexes the type library as source, which is 1149 error lines from one file. Investigated: the COM service has never worked on any machine and the TU is dead in `Game.exe`. Fix agreed, not applied - build the TU only `if(MSVC)` | [`#import` of a type library](#import-of-a-type-library-what-xdbwatcherclient-actually-is) |
 | [x] | ~~`libdb/RenameNode.cpp:99` and `:313`~~ done in "check the watcher singleton in RenameNode before calling through it". Originally: called `Singleton<IDBWatcherClient>()->` without the guard the other two call sites use, and `NSingleton::Singleton` returns 0 when unregistered. Editor-only path, so unreachable today, but a real null dereference | [`#import` of a type library](#import-of-a-type-library-what-xdbwatcherclient-actually-is) |
@@ -1495,6 +1495,14 @@ is not a C++ exception, so it unwinds nothing.
 Investigated 2026-08-24 after a `C4273` on `NDb::GetObjectA` surfaced during the
 `RenameNode` work. Nothing changed; none of it blocks the Linux port, because the
 macros do not exist off Windows.
+
+**Resolved 2026-10-19 by the rename below.** `NDb::GetObject` is now
+`NDb::GetResource`, exported under that name on every platform. What forced it was
+`/permissive-`: a wx translation unit (`ED_B2_M1/MapInfoViewFilterWx.cpp`) parsed
+`System/XmlSaver.h` after wx had undefined the macro, so the template there named
+plain `GetObject` where `System/DB.h` had declared `GetObjectA`. MSVC's lenient mode
+never checked the uninstantiated template, so it had only ever been a latent link
+error. The rest of this section is the investigation as it stood.
 
 #### The paren trick does not work on these
 

@@ -134,7 +134,7 @@ bool SBridgeInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 		return false;
 	}
 	const NDb::SBridgeRPGStats *pBridgeRPGStats =
-			dynamic_cast<const NDb::SBridgeRPGStats *>( NDb::GetObject( pBridgeCreateInfo->rpgStatsDBID ) );
+			dynamic_cast<const NDb::SBridgeRPGStats *>( NDb::GetResource( pBridgeCreateInfo->rpgStatsDBID ) );
 	NI_ASSERT( pBridgeRPGStats != 0,
 	           fmt::format( "{} not NDb::SBridgeRPGStats type", pBridgeCreateInfo->szRPGStatsTypeName.c_str() ) );
 	if ( pBridgeRPGStats == 0 )

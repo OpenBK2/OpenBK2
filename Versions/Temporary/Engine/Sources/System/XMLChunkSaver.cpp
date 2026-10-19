@@ -11,6 +11,11 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <fmt/format.h>
 
+// The light XML tree types are used throughout this file. The directive used
+// to sit in XMLChunkSaver.h, where it leaked NLXML into every unit that
+// includes the saver; here it reaches this file alone.
+using namespace NLXML;
+
 typedef IXmlSaver::chunk_id chunk_id;
 static const int START_CHUNK_LEVELS = 50;
 

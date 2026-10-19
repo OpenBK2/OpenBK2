@@ -24,8 +24,6 @@
 EXTERNVAR ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT];
 EXTERNVAR ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT];
 
-using namespace NMapInfoEditor;
-
 class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
 	friend class CVSOState;
@@ -72,8 +70,8 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 
 	CMapInfoEditorSettings editorSettings;
 
-	SObjectInfoCollector objectInfoCollector;
-	SVSOCollector VSOCollector;
+	NMapInfoEditor::SObjectInfoCollector objectInfoCollector;
+	NMapInfoEditor::SVSOCollector VSOCollector;
 	CHeightContainer heightContainer;
 	const NDb::SMapInfo *pMapInfo;
 	bool bSaveFailed = false;

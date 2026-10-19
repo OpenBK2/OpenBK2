@@ -48,12 +48,15 @@ public:
 		pLabel =
 				NWx::Child<wxStaticText>( this, wxID_ANY, wxString(), wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END );
 		pSizer->Add( pLabel, wxSizerFlags().Expand().Border( wxLEFT | wxRIGHT | wxTOP, 8 ) );
+		// The style word is a long, and wxGA_HORIZONTAL is a wxOrientation where
+		// wxBORDER_SIMPLE is a wxBorder, so it is assembled as a long rather
+		// than by combining two unrelated enumerations.
 		pBar = NWx::Child<wxGauge>( this,
 		                            wxID_ANY,
 		                            100,
 		                            wxDefaultPosition,
 		                            wxSize( -1, ConvertDialogToPixels( wxSize( 0, 14 ) ).y ),
-		                            wxGA_HORIZONTAL | wxBORDER_SIMPLE );
+		                            static_cast<long>( wxGA_HORIZONTAL ) | static_cast<long>( wxBORDER_SIMPLE ) );
 		pSizer->Add( pBar, wxSizerFlags().Expand().Border( wxALL, 8 ) );
 		SetSizerAndFit( pSizer );
 		// The template's width, which is what makes room for the long resource

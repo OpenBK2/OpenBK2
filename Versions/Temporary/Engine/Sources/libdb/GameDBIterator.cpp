@@ -39,7 +39,7 @@ public:
 
 	CResource *Get() const override
 	{
-		return IsEnd() ? 0 : NDb::GetObject( *posCurrent );
+		return IsEnd() ? 0 : NDb::GetResource( *posCurrent );
 	}
 
 	void MoveFirst() override

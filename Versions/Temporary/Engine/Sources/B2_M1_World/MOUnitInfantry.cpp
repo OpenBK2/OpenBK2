@@ -332,7 +332,7 @@ void CMOUnitInfantry::GetActionsBy( CUserActions *pActions ) const
 				pActions->SetAction( NDb::USER_ACTION_FORMATION );
 				for ( int i = 0; i < pStats->formations.size(); ++i )
 				{
-					pActions->SetAction( NDb::USER_ACTION_FORMATION_0 + pStats->formations[i].etype );
+					pActions->SetAction( NDb::SSquadRPGStats::GetFormationUserAction( pStats->formations[i].etype ) );
 				}
 			}
 			else

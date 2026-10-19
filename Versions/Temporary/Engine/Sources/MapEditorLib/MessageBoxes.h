@@ -24,11 +24,10 @@
 //
 // Declared without naming a toolkit, and implemented once in MessageBoxesWx.cpp,
 // so that no caller has to include wx. That is not tidiness: a translation unit
-// that includes a wx header loses windows.h's A/W macros, and the tree exports
-// NDb::GetObjectA. Such a TU emits a call to NDb::GetObject and does not link.
-// Three of the callers below reach NDb::Get<> or CDBPtr, whose lazy load calls
-// GetObject from a template in System/DB.h, so the fault would not even be
-// visible at the call site. See MapEditorLib/MainWindow.h for the same trap.
+// that includes a wx header loses windows.h's A/W macros, and every Win32 call
+// it spells by macro name turns wide. The database lookup used to be caught by
+// the same trap, as NDb::GetObject exported as GetObjectA, until it was renamed
+// NDb::GetResource. See MapEditorLib/MainWindow.h.
 namespace NMessage
 {
 // MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2: the question the editor asks

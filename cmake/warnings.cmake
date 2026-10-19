@@ -196,6 +196,13 @@ set(OBK2_WARNINGS_GCC
     # adds a table entry and nothing else. The one class that needed a decision
     # is NInput::CGMORegContainer, and the reasoning is at the destructor.
     -Wnon-virtual-dtor
+    # Cleared 2026-10-19 together with clang's -Wenum-enum-conversion below,
+    # which is the same class under a different name: GCC spells it after the
+    # C++20 deprecation that made this arithmetic ill-formed. Measured 0 over
+    # the 1036 engine units and 0 over the editor's 355, the latter swept on
+    # the editor-ON GCC tree because that is the configuration CI's GCC job
+    # builds.
+    -Wdeprecated-enum-enum-conversion
     # Adopted at level 2 on 2026-10-17, where the staging list had level 3.
     # Level 3 is every type caught by value and that is 1 site, Lua's ldo.cpp
     # catching an int, which is how Lua's error handling is built here and is
@@ -280,6 +287,37 @@ set(OBK2_WARNINGS_CLANG
     # Same single site and the same suppression as GCC's entry above; clang
     # reports this class under the same name, so it is listed for both.
     -Wdate-time
+    # Cleared 2026-10-19. Was 9 sites, in three groups, and the first group was
+    # a defect: a squad's available formation orders were computed as
+    # USER_ACTION_FORMATION_0 + etype, where EUserAction declares those five
+    # actions in the order 0, 3, 2, 1, 4, so a squad with a march formation was
+    # offered the offensive order and the order it sent named a formation the
+    # squad does not have. 21 of the 285 shipped squad records are affected.
+    # The second group was the encyclopedia's filter cache, a country by unit
+    # type grid flattened row by row, which is deliberate and now says so in
+    # one helper instead of four expressions. The third was one wx style word
+    # combining a wxOrientation with a wxBorder.
+    #
+    # GCC reports the same class as -Wdeprecated-enum-enum-conversion and it is
+    # in the list above, so this one is gated on both compilers.
+    -Wenum-enum-conversion
+    # Cleared 2026-10-19. Was 9 `using namespace` directives at the global scope
+    # of a header, and eight of them moved: NLXML out of System/XMLChunkSaver.h
+    # and NDb::NTypeDef out of libdb's TableManipulator.h into the one source
+    # file each that needs them, NAnimation and NMeshData qualified in SceneB2's
+    # mutator and terrain headers, and NMapInfoEditor out of ED_B2_M1's
+    # MapInfoEditor.h with a directive in the eight editor states that were
+    # relying on it. That last move also closes a trap: ED_Common/GltfExporter.h
+    # declares a global SMeshData of its own, which the SceneB2 directive would
+    # have made ambiguous in any unit that saw both.
+    #
+    # The ninth is suppressed at the directive rather than removed, and the
+    # reasoning is written there: AILogic/Specific.h is that project's prelude
+    # and nothing outside AILogic includes it, so the namespace never reaches
+    # another module. Removing it is 1,928 sites over 73 distinct names,
+    # measured across all 213 units rather than extrapolated, which is a
+    # mechanical pass over lockstep simulation code and wants its own session.
+    -Wheader-hygiene
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
@@ -365,8 +403,6 @@ set(OBK2_WARNINGS_STRICT_CLANG
     # Counts re-measured 2026-10-17 over all 1389 units, editor included, which
     # is what a clang sweep here covers; CI's clang job compiles the 1035
     # engine ones.
-    -Wheader-hygiene                # 9, `using namespace` in a header
-    -Wenum-enum-conversion          # 9, includes the EFC_/EFUT_ mix-up
     -Wcast-align                    # 56
 )
 

@@ -13,8 +13,6 @@ class CXmlReader;
 class CXmlNode;
 } // namespace NXml
 
-using namespace NLXML;
-
 class CXMLChunkSaver : public IXmlSaver
 {
 	OBJECT_NOCOPY_METHODS( CXMLChunkSaver );
@@ -25,10 +23,10 @@ class CXMLChunkSaver : public IXmlSaver
 	std::vector<const NXml::CXmlNode *> readChunkLevels;
 	int nCurChunkLevel;
 
-	CXMLDocument document;
+	NLXML::CXMLDocument document;
 	CDataStream *pDstStream;
-	CXMLMultiNode *pCurrNode;
-	typedef std::list<CXMLMultiNode *> CChunksList;
+	NLXML::CXMLMultiNode *pCurrNode;
+	typedef std::list<NLXML::CXMLMultiNode *> CChunksList;
 	CChunksList chunkLevels;
 	bool bReading;
 	std::string szCurrObjectPath;

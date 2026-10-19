@@ -14,8 +14,8 @@ struct SExportFile
 	std::vector<std::byte> bytes;
 };
 
-// Kept outside database translation units: wx undefines Win32's GetObject,
-// which is still part of libdb's compiled Windows interface.
+// Kept outside database translation units: wx undefines windows.h's A/W
+// macros, which turns the Win32 calls those units spell by macro name wide.
 // Stage all files before replacing any; callers put the GLB last.
 void SaveExportFiles( const std::vector<SExportFile> &files );
 void SaveGlb( const std::string &path, const std::vector<std::byte> &bytes );

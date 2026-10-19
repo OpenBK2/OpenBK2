@@ -232,7 +232,7 @@ void CSpotState::InsertObjectEnter()
 		if ( !objectSet.objectNameSet.empty() )
 		{
 			const NDb::STerrainSpotDesc *pTerrainSpotDesc =
-					dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
+					dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetResource( objectSet.objectNameSet.begin()->first ) );
 			if ( ( pTerrainSpotDesc->pMaterial != 0 ) && ( pTerrainSpotDesc->pMaterial->pTexture != 0 ) )
 			{
 				//NDb::SMapInfo* pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );

@@ -26,6 +26,11 @@
 #include <fmt/format.h>
 #include <zconf.h>
 
+// The editor's drawing constants and object-info structs live in
+// NMapInfoEditor. This directive used to arrive through MapInfoEditor.h, which
+// handed the namespace to every unit that includes the editor.
+using namespace NMapInfoEditor;
+
 void CSimpleObjectState::ClearData()
 {
 	if ( IEditorScene *pScene = EditorScene() )
@@ -353,7 +358,7 @@ void CSimpleObjectState::InsertObjectEnter()
 			// заполняем сцену и проставляем ссылки в mapInfo
 			CBusyCursor waitCursor;
 			const NDb::SHPObjectRPGStats *pHPObjectRPGStats =
-					dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetObject( rpgStatsDBID ) );
+					dynamic_cast<const NDb::SHPObjectRPGStats *>( NDb::GetResource( rpgStatsDBID ) );
 			if ( !pHPObjectRPGStats )
 			{
 				return;

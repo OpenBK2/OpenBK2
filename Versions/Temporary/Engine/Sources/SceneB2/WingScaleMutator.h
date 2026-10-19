@@ -30,7 +30,7 @@ public:
 	{
 	}
 
-	bool Setup( ISkeletonAnimator *pAnimator,
+	bool Setup( NAnimation::ISkeletonAnimator *pAnimator,
 	            const std::string &szScaledWingPrefix,
 	            const std::string &szStaticWingName ) override;
 

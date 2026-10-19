@@ -183,7 +183,7 @@ bool SSpotInfo::Create( const SObjectCreateInfo *pObjectCreateInfo,
 			//NI_ASSERT( pMutablMapInfo != 0, "SSpotInfo::Create(), pMutablMapInfo == 0" );
 			//
 			NDb::STerrainSpotInstance terrainSpotInstance;
-			terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( rpgStatsDBID ) );
+			terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetResource( rpgStatsDBID ) );
 			terrainSpotInstance.nSpotID = nLinkID;
 			terrainSpotInstance.points = spotSquare;
 			pEditorScene->GetTerraManager()->AddTerraSpot( &terrainSpotInstance );
@@ -300,7 +300,7 @@ bool SSpotInfo::UpdateScene( IEditorScene *pEditorScene )
 			pEditorScene->GetTerraManager()->AddTerraSpot( &terrainSpotInstance );
 			*/
 		NDb::STerrainSpotInstance terrainSpotInstance;
-		terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( rpgStatsDBID ) );
+		terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetResource( rpgStatsDBID ) );
 		terrainSpotInstance.nSpotID = nLinkID;
 		terrainSpotInstance.points = spotSquare;
 		pEditorScene->GetTerraManager()->RemoveTerraSpot( terrainSpotInstance.nSpotID );
@@ -412,7 +412,7 @@ void SSpotInfo::CreateSceneObjects( IEditorScene *pEditorScene,
 		int nSpotIndex = pObjectInfoCollector->pMapInfoEditor->pMapInfo->spots.size();
 		nLinkID = pObjectInfoCollector->linkIDCollector.LockID();
 		NDb::STerrainSpotInstance terrainSpotInstance;
-		terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc*>( NDb::GetObject( rpgStatsDBID ) );
+		terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc*>( NDb::GetResource( rpgStatsDBID ) );
 		terrainSpotInstance.nSpotID = nLinkID;
 		terrainSpotInstance.points = spotSquare;
 		pEditorScene->GetTerraManager()->AddTerraSpot( &terrainSpotInstance );
@@ -510,7 +510,7 @@ bool SSpotInfo::PasteSelf( CLinkIDMap *pNew2OldLinkIDMap,
 		if ( bResult )
 		{
 			NDb::STerrainSpotInstance terrainSpotInstance;
-			terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( rpgStatsDBID ) );
+			terrainSpotInstance.pDescriptor = dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetResource( rpgStatsDBID ) );
 			terrainSpotInstance.nSpotID = nLinkID;
 			terrainSpotInstance.points = spotSquare;
 			pEditorScene->GetTerraManager()->AddTerraSpot( &terrainSpotInstance );

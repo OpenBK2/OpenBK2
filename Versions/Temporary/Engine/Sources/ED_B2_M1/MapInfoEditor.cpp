@@ -1979,7 +1979,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				//
 				NDb::STerrainSpotInstance terrainSpotInstance;
 				terrainSpotInstance.pDescriptor =
-						dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetObject( CDBID( szRPGStatsName ) ) );
+						dynamic_cast<const NDb::STerrainSpotDesc *>( NDb::GetResource( CDBID( szRPGStatsName ) ) );
 				terrainSpotInstance.nSpotID = posSpotIndexToLinkID->second;
 				terrainSpotInstance.points = spotSquare;
 				//std::vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.insert( pMutablMapInfo->spots.begin() + *itIndex, terrainSpotInfoInstance );
@@ -2350,10 +2350,11 @@ void CMapInfoEditor::RunGame()
 	// workbook pointer; MainFrameWnd() is the MFC front-end's way back to a CWnd.
 	// NMessage, which this file can use after all. It was left as ::MessageBox
 	// when the others were converted because the wrapper was a wx header then,
-	// and this file must never see one: it calls NDb::GetObject, and a
-	// translation unit that loses windows.h's A/W macros stops linking against
-	// NDb::GetObjectA. MessageBoxes.h names no toolkit now, so the objection is
-	// gone with it.
+	// and this file must never see one: it calls into the database, whose lookup
+	// was then NDb::GetObject and exported as GetObjectA, and a translation unit
+	// that lost windows.h's A/W macros stopped linking against it. MessageBoxes.h
+	// names no toolkit now, and the lookup is NDb::GetResource, which no macro
+	// renames, so the objection is gone twice over.
 	const auto ReportError = []( const std::string &message ) { NMessage::Error( message, "Start Mission in Game" ); };
 
 	// Resolve the platform's game executable beside the editor, independent of

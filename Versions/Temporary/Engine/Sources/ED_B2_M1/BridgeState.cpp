@@ -22,6 +22,11 @@
 #include <fmt/format.h>
 #include <zconf.h>
 
+// The editor's drawing constants and object-info structs live in
+// NMapInfoEditor. This directive used to arrive through MapInfoEditor.h, which
+// handed the namespace to every unit that includes the editor.
+using namespace NMapInfoEditor;
+
 const int CBridgeState::START_TERMINATOR_INDEX = 0;
 const int CBridgeState::FINISH_TERMINATOR_INDEX = 1;
 const int CBridgeState::TERMINATOR_COUNT = 2;
@@ -319,7 +324,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		//
 		const NDb::SBridgeRPGStats *pBridgeRPGStats = 0;
 		pBridgeRPGStats =
-				dynamic_cast<const NDb::SBridgeRPGStats *>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
+				dynamic_cast<const NDb::SBridgeRPGStats *>( NDb::GetResource( objectSet.objectNameSet.begin()->first ) );
 		NI_ASSERT( pBridgeRPGStats != 0,
 		           fmt::format( "{} not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) );
 		//

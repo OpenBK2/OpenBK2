@@ -100,7 +100,7 @@ IObjMan *GetManipulator( const CDBID &dbid )
 	return dbid.IsEmpty() ? 0 : s_pMainDatabase->GetManipulator( dbid );
 }
 
-CResource *GetObject( const CDBID &dbid )
+CResource *GetResource( const CDBID &dbid )
 {
 	return dbid.IsEmpty() ? 0 : s_pMainDatabase->GetObject( dbid );
 }

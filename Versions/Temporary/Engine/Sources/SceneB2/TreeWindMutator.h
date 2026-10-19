@@ -3,8 +3,6 @@
 #include "AnimMutators.h"
 #include "vendor/granny/include/granny.h"
 
-using namespace NAnimation;
-
 class CTreeWindMutator : public ITreeWindMutator
 {
 	OBJECT_BASIC_METHODS( CTreeWindMutator );
@@ -21,7 +19,9 @@ class CTreeWindMutator : public ITreeWindMutator
 public:
 	CTreeWindMutator() {}
 
-	void Setup( ISkeletonAnimator *pAnimator, const CVec3 &_vPos3, const std::vector<std::string> &leafNames ) override;
+	void Setup( NAnimation::ISkeletonAnimator *pAnimator,
+	            const CVec3 &_vPos3,
+	            const std::vector<std::string> &leafNames ) override;
 
 	bool NeedUpdate() override;
 	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose ) override;

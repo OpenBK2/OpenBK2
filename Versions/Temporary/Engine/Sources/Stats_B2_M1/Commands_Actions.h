@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ActionCommand.h"
+#include "UserActions.h"
+
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -12,6 +15,18 @@
 // **
 // ************************************************************************************************************************ //
 
+// Both masks below are 128 bits indexed by an enumeration, and they are
+// indexed by two *different* enumerations: this one by EActionCommand and
+// CUserActions by NDb::EUserAction, with SUnitActions::ReMapCommands
+// translating between them. While both took an int, nothing stopped one being
+// asked with the other's constant, and CArtillery::CanHook did exactly that:
+// it read the user-action mask at ACTION_COMMAND_TAKE_ARTILLERY, which is 31,
+// where that mask holds USER_ACTION_FORMATION_4, so it answered no for every
+// gun in the game. Each accessor therefore asks for its own enumeration, which
+// makes that mistake a compile error rather than a silent wrong answer. The
+// few places that genuinely hold the index as an int, a loop over the whole
+// mask and the command id that may also be a script id, convert at the call
+// and say why.
 class CUserCommands
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -28,22 +43,25 @@ public:
 		memset( actions, 0, std::size( actions ) );
 	}
 
-	void RemoveData( const int nBit )
+	void RemoveData( const EActionCommand eCommand )
 	{
+		const int nBit = eCommand;
 		NI_ASSERT( ( nBit >= 0 ) && ( nBit <= 127 ), fmt::format( "Invalid action {} must be in [0..127]", nBit ) );
 		const int nIndex = nBit / 8;
 		actions[nIndex] &= ~( 1UL << ( nBit - nIndex * 8 ) );
 	}
 
-	void SetData( const int nBit )
+	void SetData( const EActionCommand eCommand )
 	{
+		const int nBit = eCommand;
 		NI_ASSERT( ( nBit >= 0 ) && ( nBit <= 127 ), fmt::format( "Invalid action {} must be in [0..127]", nBit ) );
 		const int nIndex = nBit / 8;
 		actions[nIndex] |= ( 1UL << ( nBit - nIndex * 8 ) );
 	}
 
-	const bool GetData( const int nBit ) const
+	const bool GetData( const EActionCommand eCommand ) const
 	{
+		const int nBit = eCommand;
 		NI_ASSERT( ( nBit >= 0 ) && ( nBit <= 127 ), fmt::format( "Invalid action {} must be in [0..127]", nBit ) );
 		const int nIndex = nBit / 8;
 		return actions[nIndex] & ( 1UL << ( nBit - nIndex * 8 ) );
@@ -176,25 +194,29 @@ public:
 		return ( actions[0] | actions[1] | actions[2] | actions[3] ) == 0;
 	}
 
-	//
-	const bool HasAction( const int nAction ) const
+	// Indexed by NDb::EUserAction, not by EActionCommand. See the note above
+	// CUserCommands for what asking the wrong one cost.
+	const bool HasAction( const NDb::EUserAction eAction ) const
 	{
+		const int nAction = eAction;
 		NI_ASSERT( ( nAction >= 0 ) && ( nAction <= 127 ),
 		           fmt::format( "Invalid action {} must be in [0..127]", nAction ) );
 		const int nIndex = nAction / 32;
 		return actions[nIndex] & ( 1UL << ( nAction - nIndex * 32 ) );
 	}
 
-	void SetAction( const int nAction )
+	void SetAction( const NDb::EUserAction eAction )
 	{
+		const int nAction = eAction;
 		NI_ASSERT( ( nAction >= 0 ) && ( nAction <= 127 ),
 		           fmt::format( "Invalid action {} must be in [0..127]", nAction ) );
 		const int nIndex = nAction / 32;
 		actions[nIndex] |= ( 1UL << ( nAction - nIndex * 32 ) );
 	}
 
-	void RemoveAction( const int nAction )
+	void RemoveAction( const NDb::EUserAction eAction )
 	{
+		const int nAction = eAction;
 		NI_ASSERT( ( nAction >= 0 ) && ( nAction <= 127 ),
 		           fmt::format( "Invalid action {} must be in [0..127]", nAction ) );
 		const int nIndex = nAction / 32;

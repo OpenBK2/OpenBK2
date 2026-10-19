@@ -37,6 +37,21 @@ class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedRe
 		EFUT_COUNT,
 	};
 
+	// The filter cache is a grid of country by unit type, flattened row by row.
+	// These two keep the stride in one place and keep the two filter
+	// enumerations out of a single expression: multiplying one enum by an
+	// enumerator of another is what -Wenum-enum-conversion objects to, and the
+	// flattening is deliberate rather than a mix-up.
+	static int GetFilterCacheSize()
+	{
+		return int( EFC_COUNT ) * int( EFUT_COUNT );
+	}
+
+	static int GetFilterCacheIndex( const EFilterCountries eCountry, const EFilterUnitTypes eUnitType )
+	{
+		return int( eCountry ) * int( EFUT_COUNT ) + int( eUnitType );
+	}
+
 	struct SFilterBtn
 	{
 		ZDATA

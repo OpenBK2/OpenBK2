@@ -4,6 +4,12 @@
 
 #include <fmt/format.h>
 
+// The final type records are this file's subject. The directive used to sit in
+// TableManipulator.h, where it leaked NDb::NTypeDef into every unit that
+// includes the manipulator; the two other users of these names already carry
+// their own, as this file now does.
+using namespace NDb::NTypeDef;
+
 CTableManipulatorWrapper::CTableManipulatorWrapper( std::vector<STypeClass *> &classes )
 {
 	for ( int i = 0; i < classes.size(); ++i )
