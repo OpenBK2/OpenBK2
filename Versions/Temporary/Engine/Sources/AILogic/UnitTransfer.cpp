@@ -2,12 +2,15 @@
 
 #include "AILogicInternal.h"
 #include "Artillery.h"
+#include "Commands.h"
 #include "Formation.h"
+#include "FormationStates.h"
 #include "GroupLogic.h"
 #include "NewUpdater.h"
 #include "ScenarioTracker.h"
 #include "Soldier.h"
 #include "Technics.h"
+#include "Trains.h"
 #include "UnitStates.h"
 #include "UnitTransfer.h"
 
@@ -24,6 +27,40 @@ void AddRelatedUnit( CCommonUnit *pUnit, std::vector<int> *pIDs )
 	}
 }
 
+void AddRelatedTrainUnits( CCommonUnit *pUnit, std::vector<int> *pIDs )
+{
+	if ( !dynamic_cast<CTrainLocomotive *>( pUnit ) && !dynamic_cast<CTrainCar *>( pUnit ) )
+	{
+		return;
+	}
+	std::vector<CCommonUnit *> pending{ pUnit };
+	std::set<int> visited;
+	while ( !pending.empty() )
+	{
+		CCommonUnit *pPart = pending.back();
+		pending.pop_back();
+		if ( !pPart || !visited.insert( pPart->GetUniqueID() ).second )
+		{
+			continue;
+		}
+		// Wrecked cars can still connect living parts. Traverse their links, but transfer only living units.
+		AddRelatedUnit( pPart, pIDs );
+		if ( CTrainLocomotive *pLocomotive = dynamic_cast<CTrainLocomotive *>( pPart ) )
+		{
+			for ( const CPtr<CAIUnit> &pCar : pLocomotive->GetCars() )
+			{
+				pending.push_back( pCar );
+			}
+		}
+		if ( CTrainCar *pCar = dynamic_cast<CTrainCar *>( pPart ) )
+		{
+			pending.push_back( pCar->GetLocomotive() );
+			pending.push_back( pCar->GetFrontCar() );
+			pending.push_back( pCar->GetBackCar() );
+		}
+	}
+}
+
 bool InspectTransferUnit( int nID, int nSourcePlayer, std::vector<int> *pRelated )
 {
 	CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) );
@@ -31,6 +68,8 @@ bool InspectTransferUnit( int nID, int nSourcePlayer, std::vector<int> *pRelated
 	{
 		return false;
 	}
+	// Every discovered carriage is inspected normally too, so its passengers join the same ownership group.
+	AddRelatedTrainUnits( pUnit, pRelated );
 	if ( CFormation *pFormation = dynamic_cast<CFormation *>( pUnit ) )
 	{
 		for ( int i = 0; i < pFormation->Size(); ++i )
@@ -86,6 +125,11 @@ bool IsTransferSelectionRestricted( const CCommonUnit *pUnit )
 	}
 	if ( IUnitState *pState = pUnit->GetState() )
 	{
+		// Towing has already reserved this crew, even before its first soldier reaches the truck.
+		if ( dynamic_cast<CFormationEnterTransportByCheatPathState *>( pState ) )
+		{
+			return true;
+		}
 		const EUnitStateNames eState = pState->GetName();
 		if ( eState == EUSN_PARTROOP || eState == EUSN_BEING_TOWED ||
 		     ( eState == EUSN_GUN_CREW_STATE && !( pFormation && pFormation->HasMortar() ) ) )
@@ -125,6 +169,35 @@ bool IsTransferSelectionRestricted( const CCommonUnit *pUnit )
 }
 } // namespace
 
+std::vector<int> CollectTransferableUnits( const std::vector<int> &unitIDs, int nSourcePlayer )
+{
+	std::vector<int> roots;
+	for ( int nID : unitIDs )
+	{
+		CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) );
+		// Recheck simulation-based restrictions, including crew roots, after any pending loading/towing orders.
+		// Related cargo is still allowed: selecting the truck donates the whole truck, gun and crew together.
+		if ( !pUnit || IsTransferSelectionRestricted( pUnit ) )
+		{
+			continue;
+		}
+		const auto isPendingAttachment = []( const CAICommand *pCommand )
+		{
+			return pCommand && ( pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_BEING_TOWED ||
+			                     pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_ENTER_TRANSPORT_CHEAT_PATH );
+		};
+		// Hooking clears its flag before the queued gun/crew states start. That transition is unsafe too.
+		if ( isPendingAttachment( pUnit->GetCurCmd() ) || isPendingAttachment( pUnit->GetNextCommand() ) )
+		{
+			continue;
+		}
+		roots.push_back( nID );
+	}
+	return CollectUnitTransfer( roots,
+	                            [nSourcePlayer]( int nID, std::vector<int> *pRelated )
+	                            { return InspectTransferUnit( nID, nSourcePlayer, pRelated ); } );
+}
+
 void RestoreTransferredUnitSelection( CCommonUnit *pUnit )
 {
 	// Never copy IsSelectable() from the donor: that flag differs between clients.
@@ -142,10 +215,7 @@ void CAILogic::TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer
 	{
 		return;
 	}
-	const std::vector<int> transfers =
-			CollectUnitTransfer( unitIDs,
-	                         [nSourcePlayer]( int nID, std::vector<int> *pRelated )
-	                         { return InspectTransferUnit( nID, nSourcePlayer, pRelated ); } );
+	const std::vector<int> transfers = CollectTransferableUnits( unitIDs, nSourcePlayer );
 	// Snapshot every soldier before ChangePlayer recursively changes formation and artillery crew owners.
 	for ( int nID : transfers )
 	{

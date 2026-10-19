@@ -2,6 +2,8 @@
 
 #include "UpdatableObject.h"
 
+#include "AILogic_export.h"
+
 class CObjectBase *GetObjectByCmd( const struct SAIUnitCmd &cmd );
 
 class CLinkObject : public CUpdatableObj
@@ -41,14 +43,14 @@ public:
 	}
 
 	// запомнит ли объект в unitsID2Object
-	void Mem2UniqueIdObjs();
+	AILOGIC_EXPORT void Mem2UniqueIdObjs();
 
 	const int GetUniqueId() const override
 	{
 		return nUniqueID;
 	}
 
-	static void Clear();
+	AILOGIC_EXPORT static void Clear();
 	static void ClearLinks();
 	static CLinkObject *GetObjectByLink( const int nLink );
 	static void Segment();

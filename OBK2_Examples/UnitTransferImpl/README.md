@@ -6,6 +6,8 @@ The control appears only in a live multiplayer match with teammates. It hides wi
 
 A transferred vehicle takes its passengers and towed gun. Donated units retain their level immediately. Subsequent recipient reinforcement level-ups raise a donated unit only when the new reinforcement level exceeds that unit's level. For example, donated level-3 heavies stay level 3 until the recipient reaches level 4; donated level-2 mediums received by a level-4 player stay level 2.
 
+Selecting any locomotive or carriage transfers the entire connected train and its passengers. A selected gun that starts hooking or towing before the command executes is rejected; donating the towing truck still transfers its gun and crew together. Other independently selected units can still transfer.
+
 ## Install and rebuild
 
 This is an optional example GUI package, installed manually. Copy `unit_transfer.pak` into the game's `Data` directory beside the existing archives to enable these controls. CMake does not install it. Every multiplayer client needs the updated executable and libraries for the synchronized command.
@@ -21,7 +23,7 @@ python OBK2_Examples/UnitTransferImpl/build_pak.py --check
 
 The generator uses fixed ZIP timestamps and UTF-16LE game text. Short text entries are stored uncompressed. `UnitTransferUI_test` loads every packaged descriptor through the game's database and checks native texture files, unchanged state colors, default text formats, action bindings, labels, and scroll geometry.
 
-`UnitTransferCommand_test` checks both replay serialization and the separate multiplayer wire format, including command reconstruction by independent receivers. `UnitTransfer_test` checks side/slot restrictions, attached-unit traversal, retained levels, future level-ups, and save/load. Test targets must be built explicitly; the default game build does not rebuild them.
+`UnitTransferCommand_test` checks both replay serialization and the separate multiplayer wire format, including command reconstruction by independent receivers. `UnitTransfer_test` checks side/slot restrictions, attached-unit traversal, retained levels, future level-ups, and save/load. `UnitTransferAttachments_test` checks real train/passenger attachments and rejects stale gun selections during hooking and towing. Test targets must be built explicitly; the default game build does not rebuild them.
 
 ## Multiplayer checks
 

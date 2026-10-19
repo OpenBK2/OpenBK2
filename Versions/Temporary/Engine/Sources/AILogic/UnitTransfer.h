@@ -9,6 +9,9 @@
 
 class CCommonUnit;
 
+// Resolve the live attachment graph and reject selected guns that have started hooking or towing.
+AILOGIC_EXPORT std::vector<int> CollectTransferableUnits( const std::vector<int> &unitIDs, int nSourcePlayer );
+
 // Reapply state-based selection restrictions after all recursive ownership changes have finished.
 AILOGIC_EXPORT void RestoreTransferredUnitSelection( CCommonUnit *pUnit );
 
