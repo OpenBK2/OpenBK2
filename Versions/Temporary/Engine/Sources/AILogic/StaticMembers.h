@@ -1,11 +1,15 @@
 
 #pragma once
 
+#include "AILogic_export.h"
+
+class IBinSaver;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CStaticMembers
 {
 public:
-	int operator&( IBinSaver &saver );
+	AILOGIC_EXPORT int operator&( IBinSaver &saver );
 
 private:
 	;

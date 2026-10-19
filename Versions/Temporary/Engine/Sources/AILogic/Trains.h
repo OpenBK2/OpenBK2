@@ -4,10 +4,12 @@
 #include "RailRoads.h"
 #include "StatesFactory.h"
 #include "StaticObject.h"
+#include "System/Basic.h"
 #include "Technics.h"
 #include "UnitStates.h"
 
 #include <cstdint>
+#include <list>
 
 //
 //	Trains.h
@@ -179,6 +181,12 @@ public:
 	void Die( const bool fromExplosion, const float fDamage ) override;
 
 	// Locomotive-specific
+	// The complete list includes destroyed cars, so traversing a train never stops at a wreck.
+	const std::list<CPtr<CAIUnit>> &GetCars() const
+	{
+		return cars;
+	}
+
 	void AddCar( CTrainCar *pNewCar );             // Add car to the end of the list
 	void PassCommandToAll( CAICommand *pCommand ); // Pass command to all cars
 	const float GetTrainLength();

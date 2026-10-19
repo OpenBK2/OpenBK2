@@ -4,6 +4,8 @@
 #include "Misc/HashFuncs.h"
 #include "System/det_map.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -71,8 +73,8 @@ public:
 
 	static const int BIG_PATH_SHIFT;
 
-	// starting sizes of vectors
-	static const int AI_START_VECTOR_SIZE;
+	// Starting size shared by the list templates, including callers outside the AILogic DLL.
+	AILOGIC_EXPORT static const int AI_START_VECTOR_SIZE;
 
 	//
 	// максимальное асстояние для того, чтобы юниты были в одной "простой" группе
