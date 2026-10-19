@@ -1,3 +1,33 @@
+// Which action puts a squad into a given formation. It has to be a mapping and
+// not USER_ACTION_FORMATION_0 + etype, which is what this file and the two
+// GetActions callers in B2_M1_World used to compute: the two enumerations do
+// not run in step. EUserAction declares the five formation actions in the order
+// 0, 3, 2, 1, 4 (UserActions.cll), while EFormationMoveType runs DEFAULT,
+// MOVEMENT, DEFENSIVE, OFFENSIVE, SNEAK, so the arithmetic offered the
+// offensive action to a squad that has the movement formation and the movement
+// action to one that has the offensive formation. The names below are what the
+// rest of the game agrees on: CWorldClient::ActionChangeFormation1 commands
+// MOVEMENT, and the UI's movement_ARSetForcedAction record names
+// USER_ACTION_FORMATION_1.
+static EUserAction GetFormationUserAction( const SFormation::EFormationMoveType eFormation )
+{
+	switch ( eFormation )
+	{
+		case SFormation::DEFAULT:
+			return USER_ACTION_FORMATION_0;
+		case SFormation::MOVEMENT:
+			return USER_ACTION_FORMATION_1;
+		case SFormation::DEFENSIVE:
+			return USER_ACTION_FORMATION_2;
+		case SFormation::OFFENSIVE:
+			return USER_ACTION_FORMATION_3;
+		case SFormation::SNEAK:
+			return USER_ACTION_FORMATION_4;
+		default:
+			return USER_ACTION_UNKNOWN;
+	}
+}
+
 void ToAIUnits( bool bInEditor ) override
 {
 	eGameType = SGVOGT_SQUAD;
@@ -46,7 +76,7 @@ void ToAIUnits( bool bInEditor ) override
 		//
 		it->ToAIUnits( bInEditor );
 		// set available user actions
-		availUserActions.SetAction( USER_ACTION_FORMATION_0 + it->etype );
+		availUserActions.SetAction( GetFormationUserAction( it->etype ) );
 	}
 	// each squad can follow and can be followed by
 	availUserActions.SetAction( USER_ACTION_FOLLOW );

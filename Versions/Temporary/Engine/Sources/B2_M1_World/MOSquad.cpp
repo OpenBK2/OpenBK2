@@ -240,7 +240,7 @@ void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 		pActions->SetAction( NDb::USER_ACTION_FORMATION );
 		for ( int i = 0; i < pSt->formations.size(); ++i )
 		{
-			pActions->SetAction( NDb::USER_ACTION_FORMATION_0 + pSt->formations[i].etype );
+			pActions->SetAction( NDb::SSquadRPGStats::GetFormationUserAction( pSt->formations[i].etype ) );
 		}
 	}
 }
