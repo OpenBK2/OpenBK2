@@ -654,7 +654,7 @@ void CICCampaignSelectionMenu::PostCreate( IInterface *pInterface )
 
 void CICCampaignSelectionMenu::Configure( const char *pszConfig ) {}
 
-void CampaignSelectionNothing( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void CampaignSelectionNothing( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	// do nothing
 }
@@ -713,21 +713,19 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 	}
 }
 
-void BackAndChapterMapAutostartMission( const std::string &szID,
-                                        const std::vector<std::wstring> &paramsSet,
-                                        void *pContext )
+void BackAndChapterMapAutostartMission( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NGlobal::ProcessCommand( L"chapter_map_autostart_mission" );
 }
 
-void BackAndChapterMap( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void BackAndChapterMap( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NGlobal::ProcessCommand( L"chapter_map" );
 }
 
-void DemoCampaignSelectionMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void DemoCampaignSelectionMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	const bool bContinue = NGlobal::GetVar( "DEMO_MODE_CONTINUE_MOVIE", 0 ) != 0;
 	if ( bContinue )

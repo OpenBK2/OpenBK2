@@ -72,7 +72,7 @@ void CICTestScreen::Configure( const char *pszConfig )
 	dbid = pszConfig;
 }
 
-void StartTestScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void StartTestScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 #ifndef _FINALRELEASE
 	if ( !paramsSet.empty() )

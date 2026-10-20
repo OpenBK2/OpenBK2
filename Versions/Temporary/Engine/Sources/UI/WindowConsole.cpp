@@ -17,7 +17,7 @@
 
 static int nConsoleSize = 100;
 
-void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{
@@ -36,7 +36,7 @@ void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &
 	}
 }
 
-void ShowDebugInfo( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void ShowDebugInfo( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{

@@ -795,7 +795,7 @@ void CICOptionsMenu::Configure( const char *pszConfig )
 
 static float s_fQuality = -1.0f;
 
-static void CommandQuality( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandQuality( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{
@@ -863,7 +863,7 @@ static void CommandQuality( const std::string &szID, const std::vector<std::wstr
 	NGlobal::SetVar( "gfx_quality", fParam );
 }
 
-static void CommandAutodetect( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandAutodetect( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( NGlobal::GetVar( "game_mode_editor", 0 ) != 0 )
 	{

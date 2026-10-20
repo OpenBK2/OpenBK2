@@ -8,12 +8,11 @@ namespace NGlobal
 
 // Dependent command
 
-CCmd::CCmd( const std::string &_szID, CmdHandler _pHandler, void *_pContext )
+CCmd::CCmd( const std::string &_szID, CmdHandler _pHandler )
 	: szID( _szID )
 	, pHandler( _pHandler )
-	, pContext( _pContext )
 {
-	nID = RegisterCmd( szID, pHandler, pContext );
+	nID = RegisterCmd( szID, pHandler );
 }
 
 CCmd::~CCmd()
@@ -23,7 +22,7 @@ CCmd::~CCmd()
 
 void CCmd::Run( const std::vector<std::wstring> &paramsSet )
 {
-	pHandler( szID, paramsSet, pContext );
+	pHandler( szID, paramsSet );
 }
 
 void VarBoolHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )

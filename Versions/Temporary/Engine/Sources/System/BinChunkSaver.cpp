@@ -814,7 +814,7 @@ IBinSaver *CreateBinSaverWithCheckers( CDataStream *pStream,
 }
 
 #ifdef CALC_SIZE
-static void Size( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void Size( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	int nSize = 0;
 	for ( TObjSizes::iterator iter = objSizes.begin(); iter != objSizes.end(); ++iter )
@@ -825,7 +825,7 @@ static void Size( const std::string &szID, const std::vector<std::wstring> &para
 	DbgTrc( "save_size %d", nSize );
 }
 
-static void ObjSizes( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void ObjSizes( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	for ( TObjSizes::iterator iter = objSizes.begin(); iter != objSizes.end(); ++iter )
 	{

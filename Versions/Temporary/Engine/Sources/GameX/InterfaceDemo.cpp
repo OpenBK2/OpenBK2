@@ -169,12 +169,12 @@ void CICInterfaceDemo::Configure( const char *pszConfig )
 	}
 }
 
-void DemoScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void DemoScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NMainLoop::Command( ML_COMMAND_DEMO_SCREEN, "" );
 }
 
-void DemoScreenFinal( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void DemoScreenFinal( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( !s_bExit )
 	{

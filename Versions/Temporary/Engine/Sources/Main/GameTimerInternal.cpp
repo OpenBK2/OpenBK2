@@ -235,14 +235,14 @@ int CGameTimer::operator&( IBinSaver &saver )
 	return 0;
 }
 
-static void SetGameSpeed( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void SetGameSpeed( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
 	Singleton<IGameTimer>()->SetSpeed( nVal );
 }
 
-static void PauseGame( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void PauseGame( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	int nType = PAUSE_TYPE_USER_PAUSE;
 	if ( !paramsSet.empty() )

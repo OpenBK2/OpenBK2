@@ -369,7 +369,7 @@ void SetFSAAMode( EConfigValue eMode )
 	ApplyCfgValues( fsaaConfig, std::size( fsaaConfig ), eMode );
 }
 
-static void CommandGfxAutodetect( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandGfxAutodetect( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	AutoDetectVideoConfig();
 }

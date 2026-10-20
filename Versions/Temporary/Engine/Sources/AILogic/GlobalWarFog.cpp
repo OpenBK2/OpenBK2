@@ -785,7 +785,7 @@ void CGlobalWarFog::DumpWarFog()
 */
 }
 
-static void DumpWarFog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void DumpWarFog( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	theWarFog.DumpWarFog();
 }

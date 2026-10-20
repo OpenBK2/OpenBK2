@@ -427,7 +427,7 @@ bool StepApp( bool bActive )
 }
 } // namespace NMainLoop
 
-static void CmdLoad( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdLoad( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{
@@ -439,7 +439,7 @@ static void CmdLoad( const std::string &szID, const std::vector<std::wstring> &p
 	}
 }
 
-static void CmdSave( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdSave( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{

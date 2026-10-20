@@ -13,16 +13,17 @@ namespace NGlobal
 // because this header is included after that one and could not have been the
 // place the check is written.
 
-// helper class for temporary command registration
+// helper class for temporary command registration. It has no callers in
+// this tree; the context went with CmdHandler's, so that a command handler
+// has one parameter list wherever it is registered from.
 class CCmd
 {
-	void *pContext = nullptr;
 	std::string szID;
 	CmdHandler pHandler = nullptr;
 	int nID = 0;
 
 public:
-	CCmd( const std::string &szID, CmdHandler pHandler, void *pContext );
+	CCmd( const std::string &szID, CmdHandler pHandler );
 	~CCmd();
 
 	void Run( const std::vector<std::wstring> &paramsSet );

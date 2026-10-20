@@ -784,25 +784,22 @@ static void SetCameraLimits( NCamera::ELimitsType eType, const std::vector<std::
 	Camera()->SetLimits( eType, limits );
 }
 
-static void
-CmdSetCameraPitchLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdSetCameraPitchLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_PITCH, paramsSet );
 }
 
-static void CmdSetCameraYawLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdSetCameraYawLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_YAW, paramsSet );
 }
 
-static void
-CmdSetCameraDistanceLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdSetCameraDistanceLimits( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	SetCameraLimits( NCamera::CAMERA_LIMITS_DISTANCE, paramsSet );
 }
 
-static void
-CmdResetCameraToDefault( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdResetCameraToDefault( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	Camera()->ResetToDefault();
 }

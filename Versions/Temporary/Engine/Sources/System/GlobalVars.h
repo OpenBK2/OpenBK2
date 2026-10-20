@@ -13,7 +13,10 @@
 #include <fmt/format.h>
 
 // func is called on var set or cmd call
-#define REGISTER_CMD( var, func ) NGlobal::RegisterCmd( var, func, 0 );
+// Console commands never carried a context: RegisterCmd hard-coded it to 0
+// and nothing here registers one with a real one, so CmdHandler has no void *
+// parameter rather than a null one. Same reasoning as REGISTER_VAR below.
+#define REGISTER_CMD( var, func ) NGlobal::RegisterCmd( var, func );
 // No context, so no handler that takes one. This used to hand the handler a
 // hard-coded 0 as its void *, which nothing dereferenced only because none of
 // the handlers it is used with looks at the argument. A handler that did would
@@ -159,7 +162,7 @@ public:
 };
 
 typedef void ( *VarHandler )( const std::string &szID, const CValue &sValue, void *pContext );
-typedef void ( *CmdHandler )( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
+typedef void ( *CmdHandler )( const std::string &szID, const std::vector<std::wstring> &paramsSet );
 
 // What REGISTER_VAR takes: a handler for a variable registered without a
 // context, which is either a value only read back through GetVar or a handler
@@ -244,7 +247,7 @@ struct TVarBindingAccepts<
 {
 };
 
-SYSTEM_EXPORT int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext );
+SYSTEM_EXPORT int RegisterCmd( const std::string &szID, CmdHandler pHandler );
 SYSTEM_EXPORT int RegisterVar(
 		const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage );
 // The REGISTER_VAR form. A null handler is allowed and means the variable only

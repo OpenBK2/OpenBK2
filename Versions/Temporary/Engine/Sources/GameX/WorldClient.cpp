@@ -3576,7 +3576,7 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 0x10078340, CWorldClient );
 #include "System/Commands.h"
 #ifndef _FINALRELEASE
 
-static void CommandDumpMaxes( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandDumpMaxes( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 2 )
 	{
@@ -3631,7 +3631,7 @@ static void CommandDumpMaxes( const std::string &szID, const std::vector<std::ws
 	Scene()->GetTerraManager()->GetAIObserver()->DumpMaxes( szParam, (int)aiClass );
 }
 
-static void CommandPassMarker( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandPassMarker( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 2 || paramsSet.size() > 4 )
 	{

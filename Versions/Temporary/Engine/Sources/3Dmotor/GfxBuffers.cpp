@@ -2630,7 +2630,7 @@ void TypeStats( CLinearBuffer<TBuf, TElem> *pLinearBuffer )
 	}
 }
 
-static void ShowCacheStats( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
+static void ShowCacheStats( const std::string &szID, const std::vector<std::wstring> &szParams )
 {
 	for ( CGeometryCacheHash::iterator i = geometries.begin(); i != geometries.end(); ++i )
 	{
@@ -2647,12 +2647,12 @@ static void ShowCacheStats( const std::string &szID, const std::vector<std::wstr
 	}
 }
 
-static void ShowFill2D( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
+static void ShowFill2D( const std::string &szID, const std::vector<std::wstring> &szParams )
 {
 	bFill2d = !bFill2d;
 }
 
-static void ShowFillTransp( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
+static void ShowFillTransp( const std::string &szID, const std::vector<std::wstring> &szParams )
 {
 	bFillTransp = !bFillTransp;
 }

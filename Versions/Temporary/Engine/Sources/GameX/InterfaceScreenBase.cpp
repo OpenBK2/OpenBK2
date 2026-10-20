@@ -612,7 +612,7 @@ int CInterfaceScreenBase::operator&( IBinSaver &saver )
 namespace NInterface
 {
 
-static void CmdStartInterface( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdStartInterface( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{

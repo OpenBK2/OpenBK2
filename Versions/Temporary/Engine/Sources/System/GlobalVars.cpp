@@ -118,8 +118,8 @@ struct SRecord
 	{
 	}
 
-	SRecord( void *_pCmdContext, CmdHandler _pCmd, int _nID )
-		: pContext( _pCmdContext )
+	SRecord( CmdHandler _pCmd, int _nID )
+		: pContext( 0 )
 		, pCmdHandler( _pCmd )
 		, pVarHandler( 0 )
 		, pVarHandlerNoContext( 0 )
@@ -215,18 +215,18 @@ static CRecordsMap *GetRecordsMap()
 	return pRecordsMap;
 }
 
-static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
+static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet );
 static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *pRes );
 
 static int nUniqueVarID = 1;
 
-int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext )
+int RegisterCmd( const std::string &szID, CmdHandler pHandler )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
 
 	SCommandInfo &info = recordsMap[szID];
-	info.data.push_back( SRecord( pContext, pHandler, ++nUniqueVarID ) );
+	info.data.push_back( SRecord( pHandler, ++nUniqueVarID ) );
 	return nUniqueVarID;
 }
 
@@ -452,12 +452,12 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 		{
 			continue;
 		}
-		sRecord.pCmdHandler( szCommandName, wordsSet, sRecord.pContext );
+		sRecord.pCmdHandler( szCommandName, wordsSet );
 		bWasHandled = true;
 	}
 	if ( !bWasHandled )
 	{
-		CmdDefaultHandler( szCommandName, wordsSet, 0 );
+		CmdDefaultHandler( szCommandName, wordsSet );
 	}
 }
 
@@ -645,7 +645,7 @@ static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *p
 	*pRes = params;
 }
 
-static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{
@@ -657,7 +657,7 @@ static void CmdDefaultHandler( const std::string &szID, const std::vector<std::w
 	SetVar( szID, CValue( paramsSet.front() ) );
 }
 
-void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( NGlobal::GetVar( "VVP", 0 ) == 0 )
 	{
@@ -675,7 +675,7 @@ void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &par
 	csSystem << CC_BLUE << "Total:" << (int)varsSet.size() << endl;
 }
 
-static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	for ( int nTemp = 0; nTemp < paramsSet.size(); ++nTemp )
 	{
@@ -695,7 +695,7 @@ static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstri
 	}
 }
 
-static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 3 )
 	{
@@ -716,7 +716,7 @@ static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> 
 	NGlobal::SetVar( NStr::ToMBCS( paramsSet[0] ), NGlobal::CValue( paramsSet[2] ) );
 }
 
-static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 3 )
 	{

@@ -300,7 +300,7 @@ void CPlayMovieInterface::OnGetFocus( bool bFocus )
 	}
 }
 
-void PlayMovieSequence( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void PlayMovieSequence( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{

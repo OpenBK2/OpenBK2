@@ -945,7 +945,7 @@ CDBID GetCampaignDBIDFromName( const std::string &_szName )
 	return CDBID( szName );
 }
 
-void StartSingleMission( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void StartSingleMission( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NI_VERIFY(
 			paramsSet.size() >= 3,

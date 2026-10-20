@@ -92,6 +92,13 @@ static_assert( !std::is_convertible<NGlobal::VarHandlerNoContext, NGlobal::VarHa
 static_assert( std::is_constructible<NGlobal::VarHandlerNoContext, std::nullptr_t>::value,
                "a value-only variable registers with no handler at all" );
 
+// Console commands had the same hole and no context-carrying form worth
+// keeping, since nothing registered one, so CmdHandler simply lost the
+// parameter. This asserts it stays lost: the old shape must not convert.
+typedef void ( *TCmdHandlerWithContext )( const std::string &, const std::vector<std::wstring> &, void * );
+static_assert( !std::is_convertible<TCmdHandlerWithContext, NGlobal::CmdHandler>::value,
+               "a command handler expecting a context must not be registrable, since there is none" );
+
 // The tag maps to the function that writes that type, which is the other half
 // of the binding and is not covered by the TBound checks above.
 TEST( VarHandlerBinding, EachTagResolvesToItsOwnFunction )

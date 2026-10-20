@@ -1698,7 +1698,7 @@ void CICChapterMapMenu::Configure( const char *pszConfig ) {}
 
 #endif // _SINGLE_DEMO
 
-void ChapterMapOutro( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void ChapterMapOutro( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
 
@@ -1706,12 +1706,12 @@ void ChapterMapOutro( const std::string &szID, const std::vector<std::wstring> &
 	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 }
 
-void ChapterMap( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void ChapterMap( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );
 }
 
-void ChapterMapAutostartMission( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void ChapterMapAutostartMission( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( !pST->IsChapterActive() )
@@ -1756,7 +1756,7 @@ void ChapterMapAutostartMission( const std::string &szID, const std::vector<std:
 	}
 }
 
-void ChapterMapAfterIntroMovie( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void ChapterMapAfterIntroMovie( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	// start chapter music
 	const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();

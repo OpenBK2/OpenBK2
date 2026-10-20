@@ -258,12 +258,12 @@ IInterfaceCommand *CreateICFinalExitGame()
 	return new CICFinalExitGame();
 }
 
-static void CmdExit( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdExit( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NMainLoop::Command( CreateICExitGame() );
 }
 
-static void CmdFinalExit( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdFinalExit( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NMainLoop::Command( CreateICFinalExitGame() );
 }

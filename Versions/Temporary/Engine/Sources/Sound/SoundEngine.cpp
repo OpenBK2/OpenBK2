@@ -593,7 +593,7 @@ ISFX *CreateSoundEngine()
 	return new CSoundEngine();
 }
 
-void SoundParams( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void SoundParams( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 3 )
 	{
@@ -605,7 +605,7 @@ void SoundParams( const std::string &szID, const std::vector<std::wstring> &para
 	FSOUND_3D_SetRolloffFactor( NStr::ToFloat( NStr::ToMBCS( paramsSet[2] ) ) );
 }
 
-void SaveSoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void SaveSoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 1 )
 	{
@@ -616,7 +616,7 @@ void SaveSoundLog( const std::string &szID, const std::vector<std::wstring> &par
 #endif
 }
 
-void PlaySoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void PlaySoundLog( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 1 )
 	{
