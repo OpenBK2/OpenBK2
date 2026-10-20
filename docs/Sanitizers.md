@@ -3,9 +3,9 @@
 What each sanitizer build is for, what it will report first, and which runtime
 options it needs.
 
-The configurations are presets in `CMakePresets.json` - `Linux-x64-ASan+UBSan`
-and `Linux-x64-TSan`, which `asan+ubsan` and `tsan` are short for - so the IDE,
-ctest and the scripts all read one definition.
+The configurations are presets in `CMakePresets.json` - `Linux-x64-ASan+UBSan`,
+`Linux-x64-TSan` and `Linux-x64-TySan`, which `asan+ubsan`, `tsan` and `tysan`
+are short for - so the IDE, ctest and the scripts all read one definition.
 
 ```
 ./build.sh asan+ubsan        # configure, build, install to ~/bk2-asan
@@ -18,7 +18,10 @@ ctest and the scripts all read one definition.
 
 ASan and TSan cannot share a binary: both map shadow memory over the whole
 address space and want the same regions. `CMakeLists.txt` refuses the
-combination outright.
+combination outright. TySan has shadow memory of its own and clang's driver
+refuses to pair it with either of them, so it is a third tree for the same
+reason, with the refusal moved to configure time rather than discovered once
+per translation unit.
 
 UBSan is the one that composes. It has no shadow memory and no allocator of its
 own, which is why `asan+ubsan` is a single preset and a single tree rather than
@@ -105,6 +108,95 @@ TSAN_OPTIONS=suppressions=$PWD/tsan.supp:history_size=4
 That file does not exist yet, and TSan errors out if it is named and missing,
 which is why neither the preset nor `launch.sh` references it. Build with
 `--no-editor` to drop the wxWidgets and GTK threads out of the reports as well.
+
+## TySan
+
+TypeSanitizer, `Linux-x64-TySan`, short name `tysan`. The odd one out in three
+ways: it is about the language rather than about memory or threads, it exists
+in clang only, and its preset therefore picks the compiler as well as the flag
+by inheriting `base-linux-clang`.
+
+What it does is record, for every byte, the type it was last written with, and
+report a read or write through an lvalue of an incompatible type. That is the
+strict-aliasing class, the one `docs/Determinism.md` argues can produce an
+ASYNC and the one that silently miscompiled the DXT decoder under clang at
+`-O2` while GCC happened to produce the right answer. **No warning on either
+compiler reports it at any level**, which is the whole argument for the tree:
+`-Wstrict-aliasing=3` says which sites *could* break, and this says which ones
+actually do it as the game runs.
+
+```
+./build.sh  tysan            # configure, build, install to ~/bk2-tysan
+./test.sh   tysan
+./launch.sh tysan
+```
+
+**Its own tree, and clang refuses the alternative.** `-fsanitize=type` cannot
+be combined with `address` or `thread`: the driver rejects the pair outright,
+so there is no build to discover it in. `CMakeLists.txt` says so at configure
+time instead. UBSan composes with it, the way it composes with ASan, and the
+preset leaves that off so a run reports one class at a time.
+
+**The static-only runtime decides how the flag is scoped, and this is the one
+thing to know before editing the wiring.** TySan ships as
+`libclang_rt.tysan-x86_64.a` with no shared object beside it. An instrumented
+translation unit therefore leaves `__tysan_init` and
+`__tysan_instrument_with_shadow_update` undefined in whatever it is linked
+into, and only an executable's link line pulls the archive in and resolves
+them. Our 36 shared libraries allow that, since an undefined symbol in a `.so`
+is a load-time question. **Boost's do not**: `boost_filesystem` links with
+`-Wl,--no-undefined`, so instrumenting it is a hard link error and the build
+stops there, which is exactly what the first build of this tree did.
+
+So the flag is not in the top-level `CMakeLists.txt` with the other three. It
+is in `Versions/Temporary/Engine/Sources/CMakeLists.txt`, scoped the way
+`/utf-8` and `/permissive-` are, which puts it on our own code and nothing
+else: 1,414 translation units, 31 shared libraries and 60 executables carry
+it, and zero `_deps` targets do. That is also the better scope on the merits,
+since the dependencies are `-isystem` here and are not diagnosed, and boost
+and SDL type-pun deliberately. The blind spots it leaves are googletest,
+`third_party/flessd` and `vendor/libgr2`.
+
+`ENABLE_TYSAN` turns `USE_MIMALLOC` off, and for a different reason than ASan
+and TSan do. TySan has no allocator of its own; it interposes `malloc`,
+`calloc`, `realloc` and `free` to *forget* a block's type as it is freed. Let
+mimalloc take those calls and the runtime keeps the dead object's type, so the
+next allocation landing on the same bytes is reported as a violation. The
+failure mode is false reports rather than missing ones.
+
+```
+TYSAN_OPTIONS=print_stacktrace=1
+```
+
+`halt_on_error` stays off, which is its default. A report here is a survey item
+and not a crash, and stopping at the first one means one site per run of a game
+that takes a minute to reach a mission. Two consequences: this is the one
+sanitizer prefix whose **exit status still means what it says**, unlike TSan's
+66, and `./test.sh tysan` will not fail a test on a violation, so read the
+output rather than the status.
+
+**Symbolization has to be arranged.** The runtime looks for a plain
+`llvm-symbolizer` and Debian packages only the versioned names, so an
+unconfigured run prints bare addresses under "invalid path to external
+symbolizer". `./launch.sh tysan` finds the highest `llvm-symbolizer-N` on
+`PATH` and passes `external_symbolizer_path=`; the ctest preset does not, since
+a preset cannot run a search, so export `TYSAN_OPTIONS` yourself when a test
+run needs source lines.
+
+**What to expect, and the one thing that will mislead.** `RelWithDebInfo`, like
+the other two, which is also the optimisation level the aliasing question is
+asked at. The cost is that the optimiser can fold away the very access the
+check would have made: the control used to verify this wiring, a `float`
+written and read back through an `int *`, reports at `-O0` and is silent at
+`-O2` because clang constant-folds it. So **a silent run is not a clean tree**,
+and a site that matters at `-O2` is best confirmed by configuring the same
+preset with `-D CMAKE_BUILD_TYPE=Debug` and comparing. The 7 known
+`-Wstrict-aliasing=3` sites are listed in `DiagnosticsNextSession.md`; the one
+to reach first is `Common_RTS_AI/BasePathUnit.h:215`, in the pathfinder, which
+is simulation code.
+
+CI cannot run this: the clang job pins clang-19, which has no TySan. Local
+tool, clang 22 and up.
 
 ## Running against a prefix
 

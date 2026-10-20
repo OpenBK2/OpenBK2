@@ -16,6 +16,7 @@ resolve_preset()
 		release|rel)                   printf 'Linux-x64-Release'; return 0 ;;
 		asan+ubsan|asan|ubsan|san)     printf 'Linux-x64-ASan+UBSan'; return 0 ;;
 		tsan)                          printf 'Linux-x64-TSan'; return 0 ;;
+		tysan|type)                    printf 'Linux-x64-TySan'; return 0 ;;
 		clang-debug|clang-dbg)         printf 'Linux-x64-Clang-Debug'; return 0 ;;
 		clang-release|clang|clang-rel) printf 'Linux-x64-Clang-Release'; return 0 ;;
 	esac
@@ -41,4 +42,4 @@ resolve_prefix()
 	sed -n 's/^CMAKE_INSTALL_PREFIX:PATH=//p' "$cache" | tail -1
 }
 
-readonly CONFIG_NAMES="debug release asan+ubsan tsan clang-debug clang-release"
+readonly CONFIG_NAMES="debug release asan+ubsan tsan tysan clang-debug clang-release"

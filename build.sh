@@ -38,10 +38,11 @@ usage()
 	  release         Linux-x64-Release          -> ~/bk2
 	  asan+ubsan      Linux-x64-ASan+UBSan       -> ~/bk2-asan
 	  tsan            Linux-x64-TSan             -> ~/bk2-tsan
+	  tysan           Linux-x64-TySan            -> ~/bk2-tysan
 	  clang-debug     Linux-x64-Clang-Debug      -> ~/bk2-clang
 	  clang-release   Linux-x64-Clang-Release    -> ~/bk2-clang
 
-	Shorthand: dbg, rel, asan, ubsan, san, clang. A full preset name works too,
+	Shorthand: dbg, rel, asan, ubsan, san, type, clang. A full preset name works too,
 	so anything cmake --list-presets prints can be passed straight through.
 
 	Build trees are ${sourceDir}/out/build/<preset name>.

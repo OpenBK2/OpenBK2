@@ -61,6 +61,13 @@ option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 # string invites the combinations that build and then report nothing.
 option(ENABLE_TSAN "build with ThreadSanitizer" OFF)
 option(ENABLE_UBSAN "build with UndefinedBehaviorSanitizer" OFF)
+# TypeSanitizer is the one that answers a question about the language rather
+# than about memory or threads: it records the type each byte was last written
+# with and reports a read through an incompatible lvalue, which is the strict
+# aliasing class that silently miscompiled the DXT decoder here and that no
+# warning on either compiler reports at any level. clang only; see
+# docs/Sanitizers.md.
+option(ENABLE_TYSAN "build with TypeSanitizer (clang only)" OFF)
 
 # ASan and TSan both map shadow memory over the whole address space, and they
 # want the same regions, so a binary carrying both aborts as it starts. Said
@@ -69,9 +76,25 @@ if(ENABLE_ASAN AND ENABLE_TSAN)
     message(FATAL_ERROR "ENABLE_ASAN and ENABLE_TSAN cannot both be on: the two runtimes claim the same shadow memory. Configure a separate build directory for each")
 endif()
 
+# TySan has shadow memory of its own and clang's driver refuses to pair it with
+# either of those two outright ("invalid argument '-fsanitize=type' not allowed
+# with '-fsanitize=address'"), so the combination cannot be built at all. Said
+# at configure time rather than once per translation unit. UBSan composes with
+# it, measured, the same way it composes with ASan.
+if(ENABLE_TYSAN AND (ENABLE_ASAN OR ENABLE_TSAN))
+    message(FATAL_ERROR "ENABLE_TYSAN cannot be combined with ENABLE_ASAN or ENABLE_TSAN: clang rejects the flag pair. Configure a separate build directory for each")
+endif()
+
 # MSVC implements only /fsanitize=address.
 if(MSVC AND (ENABLE_TSAN OR ENABLE_UBSAN))
     message(FATAL_ERROR "ENABLE_TSAN and ENABLE_UBSAN need GCC or Clang: MSVC has no thread or undefined-behaviour sanitizer")
+endif()
+
+# TySan exists in clang only. GCC answers "unrecognized argument to
+# '-fsanitize=' option: 'type'", which would otherwise be the first line of
+# 1400 identical failures.
+if(ENABLE_TYSAN AND NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(FATAL_ERROR "ENABLE_TYSAN needs clang: GCC and MSVC have no type sanitizer. Configure with the Linux-x64-TySan preset, which selects the compiler as well as the flag")
 endif()
 
 # AddressSanitizer installs its own allocator to see every allocation and
@@ -80,14 +103,26 @@ endif()
 # that builds and then reports nothing useful. TSan intercepts the allocator
 # too, to know which thread owns a block; UBSan does not and leaves mimalloc
 # alone.
-if((ENABLE_ASAN OR ENABLE_TSAN) AND USE_MIMALLOC)
+#
+# TySan is in the list for a different reason: it has no allocator of its own,
+# but it interposes malloc, calloc, realloc and free to *forget* the type of a
+# block as it is freed and reused. Let mimalloc take those calls and the
+# runtime keeps the dead object's type, so the next allocation to land on the
+# same bytes is reported as a violation. That failure mode is false reports
+# rather than missing ones, which is the worse of the two for a survey.
+if((ENABLE_ASAN OR ENABLE_TSAN OR ENABLE_TYSAN) AND USE_MIMALLOC)
     message(STATUS "sanitizer build: mimalloc switched off, the sanitizer runtime replaces the allocator")
     set(USE_MIMALLOC OFF CACHE BOOL "use mimalloc for project C++ allocations (process override on non-Windows)" FORCE)
 endif()
 
 # -g because a sanitizer report without symbols names an address and nothing
 # else, and no-omit-frame-pointer because the stack it prints is walked rather
-# than read from debug info. True of all three, hence the shared block.
+# than read from debug info.
+#
+# ENABLE_TYSAN is deliberately absent from this block: its flag is added in
+# Versions/Temporary/Engine/Sources/CMakeLists.txt instead, scoped to our own
+# code, because instrumenting a dependency with it does not link. The reasoning
+# is written out there.
 if(ENABLE_ASAN OR ENABLE_TSAN OR ENABLE_UBSAN)
     if(MSVC)
         add_compile_options(/fsanitize=address /Zi)
