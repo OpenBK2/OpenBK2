@@ -69,7 +69,16 @@ static int nDeviceCreationID = 1;
 static SSystemInfo systemInfo;
 static bool bIsDebugRuntime;
 static bool bCanDoFastScreenshot = false;
-static DWORD nFSAA, nMaxFSAA;
+// nFSAA is an int rather than a DWORD because gfx_fsaa is registered with
+// NGlobal::VarIntHandler, which stores an int through the void * context it is
+// given. DWORD is uint32_t under the DXVK headers, so int and DWORD are the
+// signed and unsigned variants of one type here and the write is well defined;
+// on MSVC DWORD is unsigned long, a different type from int, and writing it
+// through an int lvalue is not. The variable is only ever a small count, and
+// as an int a negative value typed into the console now fails the > 0 test in
+// FillFSAA instead of wrapping to a large positive one.
+static int nFSAA;
+static DWORD nMaxFSAA;
 static int nWinXPos = 0;
 static int nAdapterToUse = D3DADAPTER_DEFAULT;
 
@@ -614,7 +623,10 @@ static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 		                                                  &nDepth ) ) )
 		{
 			pRes->MultiSampleType = D3DMULTISAMPLE_NONMASKABLE;
-			pRes->MultiSampleQuality = (std::min)( (std::min)( nFront, nDepth ), nFSAA );
+			// nFSAA is an int now, so say which type the comparison happens in
+			// rather than leaving std::min unable to deduce one. The > 0 test
+			// above has already excluded a negative.
+			pRes->MultiSampleQuality = (std::min)( (std::min)( nFront, nDepth ), static_cast<DWORD>( nFSAA ) );
 			if ( pRes->MultiSampleQuality > 0 )
 			{
 				--pRes->MultiSampleQuality;
