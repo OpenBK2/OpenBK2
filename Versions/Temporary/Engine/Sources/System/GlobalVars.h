@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cwchar>
 #include <system_error>
+#include <type_traits>
 
 #include <fmt/format.h>
 
@@ -151,9 +152,104 @@ public:
 typedef void ( *VarHandler )( const std::string &szID, const CValue &sValue, void *pContext );
 typedef void ( *CmdHandler )( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
 
+// The five standard variable handlers, which store the parsed value through
+// the void * a registration hands them. Which one a variable needs is decided
+// by that variable's type, and nothing used to check the two agreed: eight
+// registrations in this tree had them crossed, three of those live on every
+// start, and the symptom was a variable holding the other type's bit pattern
+// rather than anything that looks like a bug at the call site.
+//
+// So a call site does not name these functions. It names the matching tag
+// object below, which carries the type the function writes, and RegisterVar
+// compares that against the type of the variable before erasing it to void *.
+SYSTEM_EXPORT void VarBoolHandlerFn( const std::string &szID, const CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarIntHandlerFn( const std::string &szID, const CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarFloatHandlerFn( const std::string &szID, const CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarWStrHandlerFn( const std::string &szID, const CValue &sValue, void *pContext );
+SYSTEM_EXPORT void VarStrHandlerFn( const std::string &szID, const CValue &sValue, void *pContext );
+
+// An empty tag whose only content is the type its handler writes.
+template <class T>
+struct TVarBinding
+{
+	typedef T TBound;
+};
+
+// These keep the names the 380 existing call sites already pass, so adopting
+// the check changed none of them.
+inline constexpr TVarBinding<bool> VarBoolHandler{};
+inline constexpr TVarBinding<int> VarIntHandler{};
+inline constexpr TVarBinding<float> VarFloatHandler{};
+inline constexpr TVarBinding<std::wstring> VarWStrHandler{};
+inline constexpr TVarBinding<std::string> VarStrHandler{};
+
+inline VarHandler GetVarHandlerFn( TVarBinding<bool> )
+{
+	return &VarBoolHandlerFn;
+}
+
+inline VarHandler GetVarHandlerFn( TVarBinding<int> )
+{
+	return &VarIntHandlerFn;
+}
+
+inline VarHandler GetVarHandlerFn( TVarBinding<float> )
+{
+	return &VarFloatHandlerFn;
+}
+
+inline VarHandler GetVarHandlerFn( TVarBinding<std::wstring> )
+{
+	return &VarWStrHandlerFn;
+}
+
+inline VarHandler GetVarHandlerFn( TVarBinding<std::string> )
+{
+	return &VarStrHandlerFn;
+}
+
+// Which variable types a binding may be pointed at: its own, and nothing else.
+template <class TBound, class TVar, class = void>
+struct TVarBindingAccepts : std::is_same<TBound, TVar>
+{
+};
+
+// The one widening, and it is the language's rather than a convenience:
+// an object may be accessed through the signed or unsigned variant of its own
+// type, so the int handler may write a uint32_t. Three registrations rely on
+// it, two of them NTimer::STime. It stays narrow on purpose, since same size
+// is not the same thing: DWORD is unsigned long on MSVC, which is a different
+// type from int however many bytes it has, and gfx_fsaa was exactly that case.
+template <class TBound, class TVar>
+struct TVarBindingAccepts<
+		TBound,
+		TVar,
+		typename std::enable_if<std::is_integral<TBound>::value && std::is_integral<TVar>::value &&
+                            !std::is_same<TBound, bool>::value && !std::is_same<TVar, bool>::value>::type>
+	: std::is_same<typename std::make_unsigned<TBound>::type, typename std::make_unsigned<TVar>::type>
+{
+};
+
 SYSTEM_EXPORT int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext );
 SYSTEM_EXPORT int RegisterVar(
 		const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage );
+
+// The overload REGISTER_VAR_EX resolves to. The context is still a TVar * here,
+// one call before it becomes a void *, which is the whole reason the check can
+// exist at all: the type has not been erased yet.
+template <class TBound, class TVar>
+int RegisterVar(
+		const std::string &szID, TVarBinding<TBound> binding, TVar *pContext, const CValue &sValue, EStorageClass storage )
+{
+	static_assert( TVarBindingAccepts<TBound, TVar>::value,
+	               "this console variable is registered with a handler for a different type. The "
+	               "handler stores through the pointer it is given, so the variable would hold the "
+	               "other type's bit pattern instead of the value. Name the handler that matches "
+	               "the variable: VarBoolHandler, VarIntHandler, VarFloatHandler, VarStrHandler or "
+	               "VarWStrHandler." );
+	return RegisterVar( szID, GetVarHandlerFn( binding ), static_cast<void *>( pContext ), sValue, storage );
+}
+
 void UnregisterCmd( const std::string &szID, int nID );
 void UnregisterVar( const std::string &szID, int nID );
 SYSTEM_EXPORT void RemoveVar( const std::string &szID );

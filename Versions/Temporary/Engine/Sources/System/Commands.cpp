@@ -26,7 +26,7 @@ void CCmd::Run( const std::vector<std::wstring> &paramsSet )
 	pHandler( szID, paramsSet, pContext );
 }
 
-void VarBoolHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarBoolHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	bool *pFlag = (bool *)pContext;
 
@@ -37,25 +37,25 @@ void VarBoolHandler( const std::string &szID, const NGlobal::CValue &sValue, voi
 	}
 }
 
-void VarIntHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarIntHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	int *pValue = (int *)pContext;
 	*pValue = Float2Int( sValue.GetFloat() );
 }
 
-void VarFloatHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarFloatHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	float *pValue = (float *)pContext;
 	*pValue = sValue.GetFloat();
 }
 
-void VarWStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarWStrHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	std::wstring *pValue = (std::wstring *)pContext;
 	*pValue = sValue.GetString();
 }
 
-void VarStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarStrHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	std::string *pValue = (std::string *)pContext;
 	*pValue = NStr::ToMBCS( sValue.GetString() );
