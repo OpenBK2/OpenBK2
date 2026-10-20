@@ -2709,7 +2709,7 @@ void ApplyLightmaps( IGScene *_pScene, CObjectBase *pUser, CLightmapsHolder *pLi
 
 // Commands/Vars
 
-static void VarSwitchTexCache( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+static void VarSwitchTexCache( const std::string &szID, const NGlobal::CValue &sValue )
 {
 	bShow2DTextureCache = false;
 	if ( sValue.GetFloat() != 0 )
@@ -2718,7 +2718,7 @@ static void VarSwitchTexCache( const std::string &szID, const NGlobal::CValue &s
 	}
 }
 
-static void VarSwitchTranspCache( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+static void VarSwitchTranspCache( const std::string &szID, const NGlobal::CValue &sValue )
 {
 	bShowTranspTextureCache = false;
 	if ( sValue.GetFloat() != 0 )
@@ -2727,7 +2727,7 @@ static void VarSwitchTranspCache( const std::string &szID, const NGlobal::CValue
 	}
 }
 
-static void VarSwitchTranspLMCache( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+static void VarSwitchTranspLMCache( const std::string &szID, const NGlobal::CValue &sValue )
 {
 	bShowParticleLMCache = false;
 	if ( sValue.GetFloat() != 0 )
@@ -2736,7 +2736,7 @@ static void VarSwitchTranspLMCache( const std::string &szID, const NGlobal::CVal
 	}
 }
 
-static void VarSwitchLinearCache( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+static void VarSwitchLinearCache( const std::string &szID, const NGlobal::CValue &sValue )
 {
 	showLinearCache = SLC_NONE;
 	if ( sValue.GetFloat() != 0 )

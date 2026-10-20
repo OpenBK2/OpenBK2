@@ -77,6 +77,21 @@ static_assert( std::is_same<decltype( NGlobal::VarStrHandler )::TBound, std::str
 static_assert( std::is_same<decltype( NGlobal::VarWStrHandler )::TBound, std::wstring>::value,
                "VarWStrHandler writes a wstring" );
 
+// The other half of the same idea: REGISTER_VAR supplies no context, so it
+// takes a handler that has no context parameter. These two function types must
+// not convert, or a handler expecting a void * could be registered with
+// nothing to give it and would write through a null pointer on the first
+// setvar. The old macro passed a hard-coded 0 and accepted exactly that.
+static_assert( !std::is_convertible<NGlobal::VarHandler, NGlobal::VarHandlerNoContext>::value,
+               "a handler that takes a context must not be registrable without one" );
+static_assert( !std::is_convertible<NGlobal::VarHandlerNoContext, NGlobal::VarHandler>::value,
+               "and a context-free handler must not be called with one" );
+
+// A null is still allowed there, and means the variable only stores its value
+// for GetVar to read. Eight registrations do that.
+static_assert( std::is_constructible<NGlobal::VarHandlerNoContext, std::nullptr_t>::value,
+               "a value-only variable registers with no handler at all" );
+
 // The tag maps to the function that writes that type, which is the other half
 // of the binding and is not covered by the TBound checks above.
 TEST( VarHandlerBinding, EachTagResolvesToItsOwnFunction )

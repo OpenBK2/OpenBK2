@@ -14,7 +14,16 @@
 
 // func is called on var set or cmd call
 #define REGISTER_CMD( var, func ) NGlobal::RegisterCmd( var, func, 0 );
-#define REGISTER_VAR( var, func, defval, save ) NGlobal::RegisterVar( var, func, 0, defval, save );
+// No context, so no handler that takes one. This used to hand the handler a
+// hard-coded 0 as its void *, which nothing dereferenced only because none of
+// the handlers it is used with looks at the argument. A handler that did would
+// have written through a null pointer on the first setvar, and that is both an
+// easy mistake to make while editing (the two macros differ by a suffix) and
+// undefined behaviour the optimiser is entitled to reason from rather than a
+// crash you can rely on. VarHandlerNoContext has no such parameter to pass, so
+// the null does not exist on this path any more and the mistake is a compile
+// error: a handler taking a void * will not convert.
+#define REGISTER_VAR( var, func, defval, save ) NGlobal::RegisterVar( var, func, defval, save );
 #define REGISTER_VAR_EX( var, func, cont, defval, save ) NGlobal::RegisterVar( var, func, cont, defval, save );
 
 enum EStorageClass
@@ -152,6 +161,11 @@ public:
 typedef void ( *VarHandler )( const std::string &szID, const CValue &sValue, void *pContext );
 typedef void ( *CmdHandler )( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
 
+// What REGISTER_VAR takes: a handler for a variable registered without a
+// context, which is either a value only read back through GetVar or a handler
+// that keeps its own state. It has no void * parameter rather than a null one.
+typedef void ( *VarHandlerNoContext )( const std::string &szID, const CValue &sValue );
+
 // The five standard variable handlers, which store the parsed value through
 // the void * a registration hands them. Which one a variable needs is decided
 // by that variable's type, and nothing used to check the two agreed: eight
@@ -233,6 +247,12 @@ struct TVarBindingAccepts<
 SYSTEM_EXPORT int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext );
 SYSTEM_EXPORT int RegisterVar(
 		const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage );
+// The REGISTER_VAR form. A null handler is allowed and means the variable only
+// stores its value for GetVar to read, which is what eight registrations here
+// do; what is not allowed is a handler expecting a context, because there is
+// none to give it.
+SYSTEM_EXPORT int
+RegisterVar( const std::string &szID, VarHandlerNoContext pHandler, const CValue &sValue, EStorageClass storage );
 
 // The overload REGISTER_VAR_EX resolves to. The context is still a TVar * here,
 // one call before it becomes a void *, which is the whole reason the check can

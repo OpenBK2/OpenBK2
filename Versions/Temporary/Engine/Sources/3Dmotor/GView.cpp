@@ -2500,7 +2500,7 @@ IGameView *CreateNewView()
 
 // Commands/Vars
 
-static void VarSetHSR( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+static void VarSetHSR( const std::string &szID, const NGlobal::CValue &sValue )
 {
 	defaultHSRMode = HSR_NONE;
 	if ( sValue.GetFloat() == 1 )
