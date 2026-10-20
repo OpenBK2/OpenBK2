@@ -347,16 +347,31 @@ void CScene::AttachEffect( const int nTargetID,
                            const int nBoneIndex,
                            bool bVertical )
 {
-	CDynamicCast<SModelVisObjDesc> pVO = data[eScene]->visObjects[nTargetID];
-	SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
-
-	IAttachedObject *pObject = IAttachedObject::CreateEffect( pEffect, pTransform, timeStart, nBoneIndex, bVertical );
-	if ( pObject )
+	// Look the descriptor up without creating one, the way AttachSubModel above
+	// and GetObjectBounder both do. This was visObjects[nTargetID], and
+	// unordered_map::operator[] inserts a value-initialised element for a
+	// missing key, so an unknown id added a null CObj to the map and the next
+	// line dereferenced it. There is a second route to the same null that the
+	// find does not close: a target that exists but is a static object rather
+	// than a model fails the CDynamicCast, which is why the result is tested
+	// and not just the lookup.
+	const SSceneData::CVisObjectsMap::iterator posVO = data[eScene]->visObjects.find( nTargetID );
+	CDynamicCast<SModelVisObjDesc> pVO = posVO == data[eScene]->visObjects.end() ? 0 : posVO->second.GetPtr();
+	NI_ASSERT( pVO, fmt::format( "no model VisObject {} to attach an effect to", nTargetID ) );
+	if ( pVO )
 	{
-		pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
-		attaches[--( pVO->n2Attach[eType] )] = pObject;
+		SModelVisObjDesc::TAttachOfOneType &attaches = pVO->attachedObjects[eType];
+
+		IAttachedObject *pObject = IAttachedObject::CreateEffect( pEffect, pTransform, timeStart, nBoneIndex, bVertical );
+		if ( pObject )
+		{
+			pObject->ReCreate( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
+			attaches[--( pVO->n2Attach[eType] )] = pObject;
+		}
 	}
 
+	// Outside the guard: this is what releases pTransform, and it has to run
+	// whether or not there was anything to attach it to.
 	CPtr<CFuncBase<SFBTransform>> pDelTransform = pTransform;
 }
 
@@ -448,7 +463,14 @@ void CScene::AttachLightEffect( const int nTargetID,
 	}
 	else
 	{
-		CDynamicCast<SStaticVisObjDesc> pStaticVO = data[eScene]->visObjects[nTargetID];
+		// The outer pStaticVO, not a second lookup. This used to re-read
+		// visObjects[nTargetID] into a shadowing variable of the same name,
+		// which read like the inserting-operator bug fixed in AttachEffect and
+		// AttachSubModel but could not be one: the find at the top of this
+		// function already succeeded, so the key is present and operator[] had
+		// nothing to insert. Reaching this branch at all means bIsAnimated is
+		// false, which means the outer pStaticVO is not null, so the assert and
+		// the test below are belt and braces rather than a real question.
 		NI_ASSERT( pStaticVO, fmt::format( "VisObject {} is neither animated nor static", nTargetID ) );
 
 		if ( pStaticVO )
