@@ -7,7 +7,7 @@
 
 #include "Misc/Geom.h"
 #include "3Dmotor/GPixelFormat.h"
-#include "3Dmotor/GSSETransform.h"
+#include "3Dmotor/GSSEtransform.h"
 
 #include <cstdint>
 

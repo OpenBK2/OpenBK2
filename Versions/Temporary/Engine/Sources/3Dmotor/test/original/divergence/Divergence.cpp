@@ -20,7 +20,7 @@
 // x86 only: it compares against the inline __asm in test/original.h.
 
 #include "3Dmotor/stdafx.h"
-#include "3Dmotor/GSSETransform.h"
+#include "3Dmotor/GSSEtransform.h"
 
 #include "../../original.h"
 #include "../../random.h"
