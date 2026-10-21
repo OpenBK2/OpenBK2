@@ -11,6 +11,8 @@
 #include <stddef.h>
 
 #include <charconv>
+// uint32_t, for the Instruction type below
+#include <cstdint>
 #include <cstring>
 #include <system_error>
 
@@ -150,8 +152,16 @@ union L_Umaxalign { double d; char *s; long l; };
 ** must be an unsigned with (at least) 4 bytes (see details in lopcodes.h)
 ** For a very small machine, you may change that to 2 bytes (and adjust
 ** the following limits accordingly)
+**
+** Exactly four bytes here, not unsigned long, which is four on Windows and
+** eight on Linux. Three things in this engine depend on the width rather than
+** on the range: Proto::code is a std::vector<Instruction> that IBinSaver
+** writes into save games, lundump checks sizeof(Instruction) against the byte
+** the precompiled chunk's header carries, and SIZE_INSTRUCTION below says 32
+** and every field position is laid out inside that. Four is what the shipped
+** game wrote and what luac's chunks say, so the other builds have to match it.
 */
-typedef unsigned long Instruction;
+typedef uint32_t Instruction;
 
 
 /*
