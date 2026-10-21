@@ -25,9 +25,20 @@ class MISC_EXPORT CVec2
 public:
 	union
 	{
+		// The arm carrying the default member initialisers is the one the
+		// implicit default constructor activates, and at most one variant
+		// member may carry them, so this is how the union states which arm is
+		// alive in a freshly constructed vector. It has to be a struct arm:
+		// [class.mem]/26 permits inspecting the common initial sequence of any
+		// standard-layout struct member of a standard-layout union as long as
+		// one of *those structs* is the active member, which is what makes the
+		// u, v alias below defined behaviour. The array arm is not a struct, so
+		// the permission never extended to it, and the : m{} this replaces made
+		// the array the active member, which put every x and y read in the
+		// undefined case instead.
 		struct
 		{
-			float x, y;
+			float x = 0.0f, y = 0.0f;
 		};
 
 		struct
@@ -39,11 +50,7 @@ public:
 	};
 
 public:
-	// Initialize one union storage arm; the overlapping aliases stay plain fields.
-	CVec2()
-		: m{}
-	{
-	}
+	CVec2() = default;
 
 	CVec2( const float _x, const float _y )
 		: x( _x )
@@ -59,14 +66,34 @@ public:
 	}
 
 	// indexed access
-	float &operator[]( int i )
+	//
+	// Was return m[i], which reads the array arm while a struct arm is the
+	// active one. A switch over the components is defined whichever arm is
+	// alive, and costs nothing: on the one loop in the engine that indexes a
+	// vector by a variable, clang emits fewer instructions for the switch than
+	// for the array, because it hoists the test out of the loop. An index
+	// outside the vector used to read past the member; it now names the last
+	// component.
+	float &operator[]( const int i )
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			default:
+				return y;
+		}
 	}
 
-	const float &operator[]( int i ) const
+	const float &operator[]( const int i ) const
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			default:
+				return y;
+		}
 	}
 
 	// comparison
@@ -268,9 +295,12 @@ class CVec3
 public:
 	union
 	{
+		// Active arm by construction, see the note on CVec2: the initialisers
+		// here are what make the r, g, b and u, v, q aliases defined behaviour
+		// under [class.mem]/26, and what the : m{} this replaces did not.
 		struct
 		{
-			float x, y, z;
+			float x = 0.0f, y = 0.0f, z = 0.0f;
 		};
 
 		struct
@@ -287,10 +317,7 @@ public:
 	};
 
 public:
-	CVec3()
-		: m{}
-	{
-	}
+	CVec3() = default;
 
 	CVec3( const float _x, const float _y, const float _z )
 		: x( _x )
@@ -317,15 +344,31 @@ public:
 		z = _z;
 	}
 
-	// indexed access
-	float &operator[]( int i )
+	// indexed access, see the note on CVec2::operator[]
+	float &operator[]( const int i )
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			default:
+				return z;
+		}
 	}
 
-	const float &operator[]( int i ) const
+	const float &operator[]( const int i ) const
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			default:
+				return z;
+		}
 	}
 
 	// comparison
@@ -543,9 +586,10 @@ class MISC_EXPORT CVec4
 public:
 	union
 	{
+		// Active arm by construction, see the note on CVec2.
 		struct
 		{
-			float x, y, z, w;
+			float x = 0.0f, y = 0.0f, z = 0.0f, w = 0.0f;
 		};
 
 		struct
@@ -562,10 +606,7 @@ public:
 	};
 
 public:
-	CVec4()
-		: m{}
-	{
-	}
+	CVec4() = default;
 
 	CVec4( const float _x, const float _y, const float _z, const float _w )
 		: x( _x )
@@ -608,15 +649,35 @@ public:
 		w = _w;
 	}
 
-	// indexed access
-	float &operator[]( int i )
+	// indexed access, see the note on CVec2::operator[]
+	float &operator[]( const int i )
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			case 2:
+				return z;
+			default:
+				return w;
+		}
 	}
 
-	const float &operator[]( int i ) const
+	const float &operator[]( const int i ) const
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			case 2:
+				return z;
+			default:
+				return w;
+		}
 	}
 
 	// comparison
@@ -1338,12 +1399,17 @@ public:
 	{
 		float m[4][4];
 
+		// Active arm by construction, see the note on CVec2. These names are
+		// the ones the engine uses, 1,077 references against 4 for the array,
+		// and they mirror D3DMATRIX, so this is the arm to keep alive. A name
+		// of the form _11 is reserved only in the global namespace; as a class
+		// member it is ours to use.
 		struct
 		{
-			float _11, _12, _13, _14;
-			float _21, _22, _23, _24;
-			float _31, _32, _33, _34;
-			float _41, _42, _43, _44;
+			float _11 = 0.0f, _12 = 0.0f, _13 = 0.0f, _14 = 0.0f;
+			float _21 = 0.0f, _22 = 0.0f, _23 = 0.0f, _24 = 0.0f;
+			float _31 = 0.0f, _32 = 0.0f, _33 = 0.0f, _34 = 0.0f;
+			float _41 = 0.0f, _42 = 0.0f, _43 = 0.0f, _44 = 0.0f;
 		};
 
 		struct
@@ -1427,11 +1493,10 @@ public:
 	}
 
 public:
-	// Zero storage is the default; callers requesting identity still use Identity.
-	SHMatrix()
-		: m{}
-	{
-	}
+	// Zero storage is the default; callers requesting identity still use
+	// Identity. The zeroing is the arm's default member initialisers now, so
+	// the element names rather than the array are what a fresh matrix holds.
+	SHMatrix() = default;
 
 	SHMatrix( float __11,
 	          float __12,
