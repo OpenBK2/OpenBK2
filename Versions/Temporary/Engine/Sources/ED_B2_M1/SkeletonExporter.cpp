@@ -311,11 +311,12 @@ struct SGltfAnimationMarker
 	float speed = 1.0f;
 };
 
-bool GetFrame( const SGrannyBoneAttributes &attributes, const char *key, int *frame )
+bool GetFrame( const SGrannyBoneAttributes &attributes, const char *key, int *frame, bool allowFractional = false )
 {
 	float value;
 	if ( !attributes.GetAttribute( key, &value ) || !std::isfinite( value ) || value < 0 ||
-	     static_cast<double>( value ) > ( std::numeric_limits<int>::max )() || std::floor( value ) != value )
+	     static_cast<double>( value ) > ( std::numeric_limits<int>::max )() ||
+	     ( !allowFractional && std::floor( value ) != value ) )
 	{
 		return false;
 	}
@@ -389,11 +390,12 @@ bool ImportGltfMarkers( IManipulator *resource, const NGltf::TGltfFilePtr &file,
 			return false;
 		}
 		SGltfAnimationMarker marker;
-		if ( !GetFrame( entry, "starttime", &marker.first ) || !GetFrame( entry, "endtime", &marker.last ) )
+		// Float custom properties truncate to integer frame indices before range validation.
+		if ( !GetFrame( entry, "starttime", &marker.first, true ) || !GetFrame( entry, "endtime", &marker.last, true ) )
 		{
 			NLog::Log(
 					LT_ERROR,
-					"GLTF animation marker '%s' needs integer StartTime and EndTime custom properties. Include custom properties when exporting the GLB/GLTF.\n",
+					"GLTF animation marker '%s' needs numeric StartTime and EndTime custom properties. Include custom properties when exporting the GLB/GLTF.\n",
 					entry.szRealName.c_str() );
 			return false;
 		}
