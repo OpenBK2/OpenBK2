@@ -160,9 +160,13 @@ public:
 // объект, реально находящийся на карте
 class CExistingObject : public CStaticObject
 {
-	typedef unsigned long ulong;
 	ZDATA_( CStaticObject )
-	ulong mark = {};
+	// uint32_t, and it was a local typedef for unsigned long: this is
+	// serialized into a save, and unsigned long is four bytes on Windows
+	// against eight on Linux, so the two wrote different sizes for the same
+	// object. Four is what every existing save holds, and the counter it is
+	// compared against wraps there anyway on the platform the game shipped on.
+	uint32_t mark = {};
 
 	NTimer::STime burningEnd = {};
 	bool bTrampled = {};
@@ -183,7 +187,9 @@ public:
 		return 0;
 	}
 
-	static unsigned long globalMark;
+	// uint32_t for the same reason as mark above; it is serialized too, by
+	// StaticMembers.cpp.
+	static uint32_t globalMark;
 
 	//
 	const int GetRandArmorByDir( const int nArmorDir, const uint16_t wAttackDir );
