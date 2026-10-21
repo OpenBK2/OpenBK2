@@ -344,7 +344,10 @@ void CSoundEngine::Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTim
 		CVec3 vTop( vCameraDir.x * vTop2D.x, vTop2D.y, vCameraDir.y * vTop2D.x );
 		Normalize( &vFwd );
 		Normalize( &vTop );
-		FSOUND_3D_Listener_SetAttributes( vPos.m, vSpeed.m, vFwd.x, vFwd.y, vFwd.z, vTop.x, vTop.y, vTop.z );
+		// Copies rather than CVec3's array arm, see CSound2D::SetPosition.
+		const float fPos[3] = { vPos.x, vPos.y, vPos.z };
+		const float fSpeed[3] = { vSpeed.x, vSpeed.y, vSpeed.z };
+		FSOUND_3D_Listener_SetAttributes( fPos, fSpeed, vFwd.x, vFwd.y, vFwd.z, vTop.x, vTop.y, vTop.z );
 		FSOUND_Update();
 	}
 	//

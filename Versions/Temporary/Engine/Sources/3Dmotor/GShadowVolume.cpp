@@ -793,8 +793,8 @@ void CShadowVolumeBuilder::AddEdge( int n1, int n2 )
 	{
 		for ( int k = 0; k < nSize - 1; ++k )
 		{
-			float fCur = points[k].m[nPlane] - vCenter.m[nPlane];
-			float fNext = points[k + 1].m[nPlane] - vCenter.m[nPlane];
+			float fCur = points[k][nPlane] - vCenter[nPlane];
+			float fNext = points[k + 1][nPlane] - vCenter[nPlane];
 			float fTest = fCur * fNext;
 			if ( fTest < 0 )
 			{
@@ -838,11 +838,11 @@ void CShadowVolumeBuilder::AddBackTriangle( int nPlane, const SPoly &poly )
 	}
 	SPoly pos, neg;
 	const CVec3 *pPrev = &poly.points[poly.GetSize() - 1];
-	float fPrev = pPrev->m[nPlane] - vCenter.m[nPlane];
+	float fPrev = ( *pPrev )[nPlane] - vCenter[nPlane];
 	for ( int k = 0; k < poly.GetSize(); ++k )
 	{
 		const CVec3 *pCur = &poly.points[k];
-		float fCur = pCur->m[nPlane] - vCenter.m[nPlane];
+		float fCur = ( *pCur )[nPlane] - vCenter[nPlane];
 		if ( fCur > 0 )
 		{
 			if ( fPrev < 0 )
