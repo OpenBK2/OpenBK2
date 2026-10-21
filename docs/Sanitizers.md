@@ -194,9 +194,37 @@ written and read back through an `int *`, reports at `-O0` and is silent at
 `-O2` because clang constant-folds it. So **a silent run is not a clean tree**,
 and a site that matters at `-O2` is best confirmed by configuring the same
 preset with `-D CMAKE_BUILD_TYPE=Debug` and comparing. The 7 known
-`-Wstrict-aliasing=3` sites are listed in `DiagnosticsNextSession.md`; the one
-to reach first is `Common_RTS_AI/BasePathUnit.h:219`, in the pathfinder, which
-is simulation code.
+`-Wstrict-aliasing=3` sites are listed in `DiagnosticsNextSession.md`, but note
+that the one that used to head that list,
+`Common_RTS_AI/BasePathUnit.h:219`, is **not reachable by this tool at all**:
+both types in that cast are unions, so every access is char-tagged and TySan is
+silent on it. The comment at the accessor has the probe that settled it instead.
+**That generalises: TySan cannot see a union-to-union pun in either
+direction.** With `Misc/Geom.h` built out of unions, that is most of the
+engine's geometry.
+
+### How to drive it, and the one way that cannot work
+
+A mission start is the way in:
+
+```
+./launch.sh tysan --data retail --mission Custom/Missions/Razvedka/MapInfo.xdb --software-vk
+```
+
+The prefix carries no `Data`, so `--data` is not optional here.
+
+**The replay harness cannot be combined with it.** `--replay NAME --verify`
+would be the obvious non-interactive driver, and it dies inside the sanitizer
+runtime before the first tick: `__tysan_instrument_with_shadow_update` takes a
+SIGSEGV under `fmt`'s buffer append, reached from `ReportReplayLine` in
+`CCommandsHistory::LoadHistory`, i.e. while the replay is being loaded. The same
+replay plays out and verifies 229 of 229 checksums on the GCC release build, so
+this is the tool and not the harness. It is the crash class that already takes
+six of the unit tests down.
+
+Both ways of driving it end in SIGSEGV eventually, so **read the log rather than
+the exit status**, and expect a run to be a sample of the mission rather than
+all of it.
 
 ### The ignorelist, and why the tree needs one to be readable at all
 

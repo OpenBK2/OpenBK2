@@ -51,3 +51,23 @@
 # accepted because the flood hides the other 238 reports completely, among them
 # the pathfinder site this build exists to reach.
 fun:*AddFPData*
+
+# fmt, and this entry is about the tool crashing rather than about noise.
+#
+# Every run of this tree dies inside the sanitizer runtime itself:
+# __tysan_instrument_with_shadow_update takes a SIGSEGV under
+# fmt::detail::buffer<char>::append<char>, twice from unrelated callers (the
+# replay's ReportReplayLine, and NGScene::GetFileResourceUidName during a
+# mission). It is the crash class that already takes six unit tests down, and it
+# is not our code: the same replay plays out and verifies on the GCC build.
+#
+# fmt is built FMT_HEADER_ONLY here, so its code is compiled into our
+# translation units and is instrumented along with them even though the flag is
+# scoped to our sources. Excluding it therefore does not give up anything this
+# build was meant to cover: the dependencies are -isystem and deliberately not
+# diagnosed. It just makes the realised scope match the intended one.
+#
+# A "src:" entry does match a function defined in a header, measured on a
+# control where one of two readers lives in a header and only that one goes
+# quiet.
+src:*/fmt-src/include/fmt/*
