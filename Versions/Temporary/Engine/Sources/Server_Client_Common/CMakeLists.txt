@@ -18,3 +18,5 @@ target_link_libraries(Server_Client_Common PRIVATE MemoryLib Misc Net System zli
 if(WIN32)
     target_link_libraries(Server_Client_Common PRIVATE winapi)
 endif()
+
+add_subdirectory(test)
