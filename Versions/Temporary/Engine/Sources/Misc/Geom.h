@@ -32,10 +32,13 @@ public:
 		// [class.mem]/26 permits inspecting the common initial sequence of any
 		// standard-layout struct member of a standard-layout union as long as
 		// one of *those structs* is the active member, which is what makes the
-		// u, v alias below defined behaviour. The array arm is not a struct, so
-		// the permission never extended to it, and the : m{} this replaces made
-		// the array the active member, which put every x and y read in the
-		// undefined case instead.
+		// u, v alias below defined behaviour.
+		//
+		// There was a float m[2] arm here as well, and it is gone because an
+		// array is not a standard-layout struct: the permission above never
+		// extended to it, so reading it while a named arm is alive was the
+		// undefined case with nothing to fall back on. operator[] is what the
+		// engine wanted it for and no longer needs it.
 		struct
 		{
 			float x = 0.0f, y = 0.0f;
@@ -45,8 +48,6 @@ public:
 		{
 			float u, v;
 		}; // for texture coord
-
-		float m[2];
 	};
 
 public:
@@ -313,7 +314,7 @@ public:
 			float u, v, q;
 		}; // for texture coord
 
-		float m[3];
+		// The float m[3] arm is gone, see the note on CVec2.
 	};
 
 public:
@@ -600,9 +601,9 @@ public:
 		struct
 		{
 			float u, v, q;
-		}; // for texture coord, the 4th float is w / a / m[3]
+		}; // for texture coord, the 4th float is w or a
 
-		float m[4];
+		// The float m[4] arm is gone, see the note on CVec2.
 	};
 
 public:
@@ -1397,13 +1398,11 @@ struct SHMatrix
 public:
 	union
 	{
-		float m[4][4];
-
 		// Active arm by construction, see the note on CVec2. These names are
-		// the ones the engine uses, 1,077 references against 4 for the array,
-		// and they mirror D3DMATRIX, so this is the arm to keep alive. A name
-		// of the form _11 is reserved only in the global namespace; as a class
-		// member it is ours to use.
+		// the ones the engine uses, 1,077 references against 4 for the float
+		// m[4][4] arm that used to sit here, and they mirror D3DMATRIX, so this
+		// is the arm to keep alive. A name of the form _11 is reserved only in
+		// the global namespace; as a class member it is ours to use.
 		struct
 		{
 			float _11 = 0.0f, _12 = 0.0f, _13 = 0.0f, _14 = 0.0f;
@@ -1533,8 +1532,9 @@ public:
 	{
 	}
 
-	//SHMatrix( float _m[4][4] ) { memcpy( &(m[0][0]), &(_m[0][0]), 16*sizeof(float) ); }
-	//SHMatrix( float *_m ) { memcpy( &(m[0][0]), &(_m[0]), 16*sizeof(float) ); }
+	// Two commented-out constructors taking a float[4][4] and a float * stood
+	// here, both copying into the array arm that this commit removed. Removed
+	// with it rather than left to be uncommented into a compile error.
 	SHMatrix( const class CQuat &quat )
 	{
 		Set( quat );
