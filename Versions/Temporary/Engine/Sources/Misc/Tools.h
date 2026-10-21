@@ -54,10 +54,15 @@
 // ************************************************************************************************************************ //
 
 // access float as uint32_t
+//
+// A strict aliasing violation, and the class that silently miscompiled the DXT
+// decoder, but it is used as an lvalue at some of its nine call sites
+// (FastMath, DiscretePos, Geom.h), so replacing it with bit_cast below is a
+// change of its own rather than a deletion.
 #define FP_BITS( fp ) ( *(uint32_t *)( &( fp ) ) )
-#define FP_BITS_CONST( fp ) ( *(const uint32_t *)( &( fp ) ) )
-// floating pt 1.0
-#define FP_ONE_BITS 0x3F800000
+
+// FP_BITS_CONST and FP_ONE_BITS stood here and are gone with the last of the
+// unused bit-twiddling macros in GeomMisc.h: those were their only users.
 
 // ************************************************************************************************************************ //
 // **

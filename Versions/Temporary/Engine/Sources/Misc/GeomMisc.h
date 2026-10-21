@@ -5,54 +5,20 @@
 #include <cstdint>
 
 #pragma pack( push, 4 )
-// clear MSb
-#define FP_ABS_BITS( fp ) ( FP_BITS( fp ) & 0x7FFFFFFF )
-#define FP_ABS_BITS_CONST( fp ) ( FP_BITS_CONST( fp ) & 0x7FFFFFFF )
-// get MSb
-#define FP_SIGN_BIT( fp ) ( FP_BITS( fp ) & 0x80000000 )
-#define FP_SIGN_BIT_CONST( fp ) ( FP_BITS_CONST( fp ) & 0x80000000 )
 
-#define FP_NORM_TO_BYTE( i, p )   \
-	{                               \
-		float _n = ( p ) + 1.0f;      \
-		i = *(int *)&_n;              \
-		if ( i >= 0x40000000 )        \
-			i = 0xFF;                   \
-		else if ( i <= 0x3F800000 )   \
-			i = 0;                      \
-		else                          \
-			i = ( ( i ) >> 15 ) & 0xFF; \
-	}
-// e = exp( p )
-#define FP_EXP( e, p )                            \
-	{                                               \
-		int _i;                                       \
-		e = -1.44269504f * (float)0x00800000 * ( p ); \
-		_i = (int)e + 0x3F800000;                     \
-		e = *(float *)&_i;                            \
-	}
-// r = 1/p
-#define FP_INV( r, p )                         \
-	{                                            \
-		int _i = 2 * FP_ONE_BITS - *(int *)&( p ); \
-		r = *(float *)&_i;                         \
-		r = r * ( 2.0f - ( p ) * r );              \
-	}
-
-//#define MAKELONG(x,y) (int32_t((uint16_t(x)&0xffff)))|(int32_t((uint16_t(y)&0xffff)<<16))
-// C/C++ standard conforming fp-bits retrieving
-inline uint32_t GetFloatBits( float fVal )
-{
-	union
-	{
-		float f;
-		unsigned char c[4];
-	} u;
-
-	u.f = fVal;
-	return ( uint32_t( u.c[3] ) << 24L ) | ( uint32_t( u.c[2] ) << 16L ) | ( uint32_t( u.c[1] ) << 8L ) |
-	       uint32_t( u.c[0] );
-}
+// Eight floating-point bit-twiddling helpers stood here, every one of them
+// unused across the engine and the editor and every one an example of a defect
+// class: seven macros reading a float through *(int *)&, which is the strict
+// aliasing violation that silently miscompiled the DXT decoder, and a
+// GetFloatBits whose comment claimed to be "C/C++ standard conforming" while
+// reading an inactive union member, one byte at a time, to reassemble the value
+// little-endian. Removed rather than fixed, since nothing calls them and
+// leaving them invited the pattern to be copied.
+//
+// Misc/Tools.h's bit_cast, over boost::core::bit_cast and so
+// __builtin_bit_cast, is the defined way to say any of this and costs nothing.
+// Note that FP_BITS lives there too and has nine real users, as an lvalue in
+// some of them, so it is a separate job rather than part of this one.
 
 inline uint32_t PackDWORD( const uint16_t high, const uint16_t low )
 {
