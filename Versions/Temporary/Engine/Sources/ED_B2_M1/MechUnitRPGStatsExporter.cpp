@@ -359,6 +359,12 @@ struct SConstraintInfo
 	CVec3 rotLimitMin;
 	bool bRotConstrMaxEnable[3];
 	CVec3 rotLimitMax;
+
+	// Optional turret properties override the legacy transform limits as complete pairs.
+	bool bHasTurretConstraint;
+	float turretConstraint[2];
+	bool bHasTurretConstraintVertical;
+	float turretConstraintVertical[2];
 };
 
 static void SetGunnersPoints( IManipulator *pManipulator, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
@@ -596,6 +602,15 @@ static void GetConstraintInfoFromFile( std::vector<SConstraintInfo> *pConstraint
 		bone.GetAttribute( "maxrotylimitenable", &inf.bRotConstrMaxEnable[1] );
 		bone.GetAttribute( "maxrotzlimit", &inf.rotLimitMax.z );
 		bone.GetAttribute( "maxrotzlimitenable", &inf.bRotConstrMaxEnable[2] );
+		if ( PatMat( inf.szName.c_str(), "Turret*" ) )
+		{
+			// Both ranges live on the turret, use radians, and need no enable flags.
+			inf.bHasTurretConstraint = bone.GetAttribute( "constraint.min", &inf.turretConstraint[0] ) &&
+			                           bone.GetAttribute( "constraint.max", &inf.turretConstraint[1] );
+			inf.bHasTurretConstraintVertical =
+					bone.GetAttribute( "constraintvertical.min", &inf.turretConstraintVertical[0] ) &&
+					bone.GetAttribute( "constraintvertical.max", &inf.turretConstraintVertical[1] );
+		}
 		pConstraints->push_back( inf );
 	}
 }
@@ -1294,6 +1309,30 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 			{
 				break;
 			}
+		}
+	}
+
+	// Apply the turret aliases after legacy limits, including those on GunCarriage.
+	// An absent or incomplete pair leaves that axis's legacy result unchanged.
+	for ( SPlatformInfo &platform : platformsInfo )
+	{
+		for ( const SConstraintInfo &constraint : constraints )
+		{
+			if ( constraint.szName != platform.szRotatePoint )
+			{
+				continue;
+			}
+			if ( constraint.bHasTurretConstraint )
+			{
+				platform.constraint[0] = constraint.turretConstraint[0];
+				platform.constraint[1] = constraint.turretConstraint[1];
+			}
+			if ( constraint.bHasTurretConstraintVertical )
+			{
+				platform.constraintVertical[0] = constraint.turretConstraintVertical[0];
+				platform.constraintVertical[1] = constraint.turretConstraintVertical[1];
+			}
+			break;
 		}
 	}
 
