@@ -43,6 +43,26 @@ This example allows horizontal rotation from -90 to +90 degrees and vertical rot
 
 Each complete Min/Max pair overrides the corresponding legacy limits during unit export, including vertical limits from `GunCarriage`. An absent or incomplete pair uses the legacy behavior, which produces zero limits when no enabled legacy limits exist. The new properties are only read on objects whose names match `Turret*`; properties on `Basis`, `GunCarriage`, or other objects are ignored. Limits entered only in the map editor are still replaced during export.
 
+## Light effects
+
+Place numeric or boolean custom properties on locators named `LEffect01`, `LEffect02`, etc., and include custom properties when exporting GLB/GLTF. Property names are case insensitive. The locator transform supplies `Pos` and `Rot` automatically.
+
+| Property | Meaning | Default |
+| --- | --- | --- |
+| `FlareSize` | Flare size | `0` (disabled) |
+| `PointLightSize` | Point-light size; legacy alias: `pointlightintensity` | `0` (disabled) |
+| `ConeSize` | Cone width; legacy alias: `conebasisscale` | `0` (disabled) |
+| `conelengthscale` | Cone length | `0` |
+| `OnAtNight` | Enable the effect at night; legacy alias: `atnight` | `true` |
+| `atday` | Enable the effect during daytime | `false` |
+| `flarex`, `flarey`, `flarez` | Flare offset in engine coordinates | `0` |
+| `pointlightx`, `pointlighty`, `pointlightz` | Point-light offset in engine coordinates | `0` |
+| `pointlightr`, `pointlightg`, `pointlightb` | RGB colour, normalized to a database vector whose largest channel is 1; black stays black | White for new entries; existing colour is retained if any channel is missing |
+
+`needflare` and `needcone` are ignored. Set the corresponding size to zero, or omit it, to disable that component. Nighttime selection is independent of size: `OnAtNight` is optional, and an explicit `false` disables the effect at night. Direct property names take precedence over their legacy aliases, including explicit zero and false values.
+
+Export updates entries matched by exact `LocatorName`, appends new locators, and removes entries whose locators are gone. Repeated exports do not duplicate entries. `FlareTexture`, `ConeTexture`, and `AdditionalEffect` remain editor-assigned on surviving entries. Other fields are refreshed from the model and its defaults on every export.
+
 ## Object and building export
 
 `ObjectRPGStats` and `BuildingRPGStats` export from GLB/GLTF only. Set the visual object's Geometry and Skeleton `ModelFileRef` fields, then export the stats resource with references. Existing GR2 assets remain loadable. Object height, surface points, debris masks and passability are generated from the selected GLTF mesh in engine coordinates; these exporters no longer wait for GR2 binaries or invoke Maya.
