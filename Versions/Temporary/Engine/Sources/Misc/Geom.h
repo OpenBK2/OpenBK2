@@ -297,8 +297,8 @@ public:
 	union
 	{
 		// Active arm by construction, see the note on CVec2: the initialisers
-		// here are what make the r, g, b and u, v, q aliases defined behaviour
-		// under [class.mem]/26, and what the : m{} this replaces did not.
+		// here are what make the r, g, b alias defined behaviour under
+		// [class.mem]/26, and what the : m{} this replaces did not.
 		struct
 		{
 			float x = 0.0f, y = 0.0f, z = 0.0f;
@@ -309,12 +309,10 @@ public:
 			float r, g, b;
 		}; // for color components
 
-		struct
-		{
-			float u, v, q;
-		}; // for texture coord
-
-		// The float m[3] arm is gone, see the note on CVec2.
+		// A third arm, u, v, q for texture coordinates, stood here and was
+		// named nowhere in the engine or the editor, measured by marking it
+		// deprecated and compiling every translation unit. Gone with the
+		// float m[3] arm, see the note on CVec2.
 	};
 
 public:
@@ -598,12 +596,9 @@ public:
 			float r, g, b, a;
 		}; // for color components
 
-		struct
-		{
-			float u, v, q;
-		}; // for texture coord, the 4th float is w or a
-
-		// The float m[4] arm is gone, see the note on CVec2.
+		// A third arm, u, v, q for texture coordinates, stood here and was
+		// named nowhere, the same as CVec3's. Gone with the float m[4] arm,
+		// see the note on CVec2.
 	};
 
 public:
@@ -1851,24 +1846,13 @@ public:
 
 	union
 	{
+		// The active arm, see the note on CVec2. Three more arms stood here,
+		// u, v and s, t and a, b, and all three were named nowhere in the
+		// engine or the editor, measured by marking them deprecated and
+		// compiling every translation unit. Only min, max has users.
 		struct
 		{
-			TYPE x, y;
-		};
-
-		struct
-		{
-			TYPE u, v;
-		};
-
-		struct
-		{
-			TYPE s, t;
-		};
-
-		struct
-		{
-			TYPE a, b;
+			TYPE x = {}, y = {};
 		};
 
 		struct
@@ -1877,13 +1861,7 @@ public:
 		};
 	};
 
-	//
-	// Constructor initialization avoids nontrivial fields in anonymous structs.
-	CTPoint()
-		: x{}
-		, y{}
-	{
-	}
+	CTPoint() = default;
 
 	CTPoint( TYPE _x, TYPE _y )
 		: x( _x )
