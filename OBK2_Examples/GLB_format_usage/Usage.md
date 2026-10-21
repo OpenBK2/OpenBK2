@@ -28,6 +28,21 @@ These markers create or update `*_animb2.xdb` resources and link them to the Ske
 
 Export Geometry and AIGeometry after changing the model or `RootMesh`, and save the resulting XDB records before using them in the game. Export writes Geometry's `Center`/`Size` and AIGeometry's `AABBCenter`/`AABBHalfSize`. The game and editor load these stored bounds, just as for GR2; they no longer calculate missing or zero bounds from the model at load time. Re-export older glTF resources that relied on that calculation (exporting the parent with references updates both resources). This keeps AI hull bounds identical across clients.
 
+## Turret limits
+
+For `MechUnitRPGStats`, put these numeric custom properties directly on the `Turret`, `Turret01`, etc. object and include custom properties when exporting GLB/GLTF:
+
+| Property | Example value (radians) |
+| --- | --- |
+| `constraint.Min` | `-1.570796` |
+| `constraint.Max` | `1.570796` |
+| `constraintVertical.Min` | `-0.174533` |
+| `constraintVertical.Max` | `0.523599` |
+
+This example allows horizontal rotation from -90 to +90 degrees and vertical rotation from -10 to +30 degrees. The dots are part of the property names; these are four separate properties. Names are case insensitive. Both vertical and horizontal limits belong on the turret object, with no enable flags required. The vertical properties do not need to be placed on `GunCarriage`.
+
+Each complete Min/Max pair overrides the corresponding legacy limits during unit export, including vertical limits from `GunCarriage`. An absent or incomplete pair uses the legacy behavior, which produces zero limits when no enabled legacy limits exist. The new properties are only read on objects whose names match `Turret*`; properties on `Basis`, `GunCarriage`, or other objects are ignored. Limits entered only in the map editor are still replaced during export.
+
 ## Object and building export
 
 `ObjectRPGStats` and `BuildingRPGStats` export from GLB/GLTF only. Set the visual object's Geometry and Skeleton `ModelFileRef` fields, then export the stats resource with references. Existing GR2 assets remain loadable. Object height, surface points, debris masks and passability are generated from the selected GLTF mesh in engine coordinates; these exporters no longer wait for GR2 binaries or invoke Maya.
