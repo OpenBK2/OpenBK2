@@ -39,7 +39,12 @@ private:
 	struct SBlob
 	{
 		void *m_ptr;
-		size_t m_nSize;
+		// uint32_t and not size_t, because operator& writes this one: size_t is
+		// four bytes in a 32-bit build and eight in a 64-bit one, so the x86
+		// and x64 builds disagreed on the layout of the same blob. Four is what
+		// the 32-bit build wrote. The constructors below still take a size_t,
+		// which is the right type for a length in memory.
+		uint32_t m_nSize;
 		bool m_bDelete;
 
 		SBlob()

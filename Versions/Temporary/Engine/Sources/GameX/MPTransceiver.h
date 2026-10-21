@@ -72,7 +72,9 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	int nSegmentsPackSize = {};
 
 	int nSegment = {}; // номер текущего сегмента
-	long nCommonSegment = {};
+	// Not serialized here, unlike the single player transceiver's copy of the
+	// same counter, but long for the same no reason: see the note there.
+	int32_t nCommonSegment = {};
 	int nMyLogicID = {}; // номер "нашего" игрока
 	bool bCommandsFromHistory = {};
 	std::vector<uint16_t> segmFinished;

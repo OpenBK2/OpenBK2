@@ -9,7 +9,10 @@ class CZipPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CZipPacket )
 	ZDATA
 public:
-	uLongf nUnzippedSize;
+	// uint32_t and not zlib's uLongf, which is unsigned long: four bytes on
+	// Windows and eight on Linux, in a packet both have to agree on. zlib still
+	// gets a uLongf of its own in the .cpp, where its out-parameters need one.
+	uint32_t nUnzippedSize;
 	CMemoryStream buffer;
 
 	ZEND int operator&( IBinSaver &f ) override

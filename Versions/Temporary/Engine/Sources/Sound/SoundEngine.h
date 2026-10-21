@@ -13,7 +13,10 @@ struct SLogEntry
 	std::string szName;
 	bool bLooped;
 	int nStartPos;
-	unsigned long nStartTime;
+	// uint32_t and not unsigned long, which is four bytes on Windows and eight
+	// on Linux: this entry is serialized, so the two wrote different sizes for
+	// the same log.
+	uint32_t nStartTime;
 
 	ZEND int operator&( IBinSaver &f )
 	{

@@ -15,7 +15,13 @@ class CSinglePlayerTransceiver : public ITransceiver
 	CPtr<ICommandsHistory> pCmdsHistory;
 	// общий номер сегмента - для истории команд
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
-	long nCommonSegment = {};
+	//
+	// int32_t and not long: this is serialized, and long is four bytes on
+	// Windows and eight on Linux, so the two wrote different chunk sizes into
+	// the same replay. Four is what every existing recording holds, and every
+	// other use of the counter is already an int, including
+	// GetCurrentCommonSegment's return type.
+	int32_t nCommonSegment = {};
 	bool bCommandsFromHistory = {};
 	CPtr<IAILogic> pAI;
 	int nAdjustedGameSpeed = {};
