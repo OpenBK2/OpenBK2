@@ -54,14 +54,14 @@ CAIObjectBase::CAIObjectBase()
 	___nObj = nObject;
 }*/
 
-static uLong nLocalCheckSum;
+static uint32_t nLocalCheckSum;
 
-IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, ICheckSumLog *pLog, const uint32_t segmentTime )
+IBinSaver *CreateCheckSumSaver( uint32_t *pCheckSum, ICheckSumLog *pLog, const uint32_t segmentTime )
 {
 	return new CCheckSumSaver( pCheckSum, pLog, segmentTime );
 }
 
-CCheckSumSaver::CCheckSumSaver( uLong *_pCheckSum, ICheckSumLog *pLog, const NTimer::STime segmentTime )
+CCheckSumSaver::CCheckSumSaver( uint32_t *_pCheckSum, ICheckSumLog *pLog, const NTimer::STime segmentTime )
 	: checkSumData( _pCheckSum )
 	, checkSumString( _pCheckSum )
 	, checkSumObjects( _pCheckSum )

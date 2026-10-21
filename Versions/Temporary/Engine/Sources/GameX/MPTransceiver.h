@@ -129,7 +129,7 @@ private:
 	bool bWaiting = {};
 	NTimer::STime timeStartWaiting = {};
 
-	CArray2D<unsigned long> checkSums;
+	CArray2D<uint32_t> checkSums;
 	int nGameSpeed = {};
 
 	int nFinalSegment = {};
@@ -143,7 +143,7 @@ private:
 
 	bool IsSegmentPackFinished();
 	bool IsSegmentFinishedByAll( int nSegment );
-	void SetSegmentFinished( int nPlayer, int nSegment, unsigned long ulCheckSum );
+	void SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulCheckSum );
 	void FinalizeSegmentPack();
 	void AdvanceToNextSegment();
 	void ExecuteCommands( int nFromSegment );

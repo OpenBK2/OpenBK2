@@ -359,7 +359,7 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName,
 	return true;
 }
 
-bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
+bool CCommandsHistory::AddChecksumLog( const int nGameTime, const uint32_t ulChecksum, const int nEntry )
 {
 	if ( !bLoadedHistory && nEntry == 0 )
 	{

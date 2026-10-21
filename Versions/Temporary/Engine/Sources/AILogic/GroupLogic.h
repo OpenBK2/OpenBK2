@@ -172,7 +172,7 @@ public:
 	void UnregisterPathSegments( class CAIUnit *pUnit );
 
 	void UnitSetToAmbush( class CCommonUnit *pUnit );
-	void GetCheckSum( unsigned long *ulChecksum );
+	void GetCheckSum( uint32_t *ulChecksum );
 	void UpdateDebugChecksums( FILE *f );
 };
 

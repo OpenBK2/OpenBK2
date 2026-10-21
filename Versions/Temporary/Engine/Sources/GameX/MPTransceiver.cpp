@@ -45,11 +45,12 @@ class CAISegmentFinishedPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CAISegmentFinishedPacket );
 
 public:
-	typedef unsigned long ulong;
 	ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nSegment = {};
-	ulong ulCheckSum = {};
+	// uint32_t, through a local typedef for unsigned long until now: this is
+	// the checksum every client compares, and it is serialized into the packet.
+	uint32_t ulCheckSum = {};
 	std::list<CMPTransceiver::SRawCommand> aiCommands;
 
 	ZEND int operator&( IBinSaver &f ) override
@@ -345,7 +346,7 @@ bool CMPTransceiver::IsSegmentPackFinished()
 	return ( nCommonSegment % nSegmentsPackSize == 0 );
 }
 
-void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, unsigned long ulCheckSum )
+void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulCheckSum )
 {
 	// Repeated receipt of one player's data must never erase other players' bits.
 	// Consumed ring slots are cleared explicitly by DoSegments.
@@ -356,7 +357,7 @@ void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, unsigned lon
 
 void CMPTransceiver::FinalizeSegmentPack()
 {
-	unsigned long ulCheckSum = pCmdsHistory->GetLastChecksum();
+	const uint32_t ulCheckSum = pCmdsHistory->GetLastChecksum();
 #ifdef CHECKSUM_LIST_DEBUG
 	myHistoryHashes.push_back( ulCheckSum );
 #endif
@@ -783,7 +784,7 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 	}
 
 	std::string szCheckSums = fmt::format( "Segment {}: ", nSegment );
-	unsigned long nMyCheckSum = checkSums[nMyLogicID][nSegment];
+	const uint32_t nMyCheckSum = checkSums[nMyLogicID][nSegment];
 	int nOutOfSyncs = 0;
 	for ( int nPlayerIndex = 0; nPlayerIndex < 16; ++nPlayerIndex )
 	{

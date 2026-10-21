@@ -1200,7 +1200,7 @@ void CAILogic::SetProgressHook( IProgressHook *_pProgress )
 
 void CAILogic::LogCheckSum( ICheckSumLog *_pCheckSumLog )
 {
-	uLong tmpCheckSum = adler32( 0L, Z_NULL, 0 );
+	uint32_t tmpCheckSum = adler32( 0L, Z_NULL, 0 );
 	CPtr<IBinSaver> pCheckSumSaver = CreateCheckSumSaver( &tmpCheckSum, _pCheckSumLog, curTime );
 	this->operator&( *pCheckSumSaver );
 }
@@ -1436,7 +1436,7 @@ void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 		return;
 	}
 
-	uLong baseChecksum = 11123;
+	uint32_t baseChecksum = 11123;
 	NRandom::SDebugState randomDebugState;
 	NRandom::GetDebugState( &randomDebugState );
 

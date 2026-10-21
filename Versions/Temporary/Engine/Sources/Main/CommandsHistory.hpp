@@ -25,8 +25,8 @@ struct ICommandsHistory : public ICheckSumLog
 	//virtual bool SaveReplay( const string &szFileName );
 
 	// only remember last checksum
-	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry ) override = 0;
-	virtual const unsigned long GetLastChecksum() const = 0;
+	bool AddChecksumLog( const int nGameTime, const uint32_t ulChecksum, const int nEntry ) override = 0;
+	virtual const uint32_t GetLastChecksum() const = 0;
 	virtual CHistory GetCommandsHistory() const = 0;
 
 	virtual void WriteCommandsHistoryToFile( const std::string &path )

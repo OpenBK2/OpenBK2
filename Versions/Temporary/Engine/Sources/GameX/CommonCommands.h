@@ -10,10 +10,10 @@ class CControlSumCheckCommand : public IAILogicCommandB2
 
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nPlayer = {};
-	unsigned long ulCheckSum = {};
+	uint32_t ulCheckSum = {};
 
 	// не сэйвится!
-	static std::vector<std::list<unsigned long>> checkSums;
+	static std::vector<std::list<uint32_t>> checkSums;
 
 public:
 	static uint16_t wMask;
@@ -21,7 +21,7 @@ public:
 public:
 	CControlSumCheckCommand() {}
 
-	CControlSumCheckCommand( const int _nPlayer, const unsigned long _ulCheckSum )
+	CControlSumCheckCommand( const int _nPlayer, const uint32_t _ulCheckSum )
 		: nPlayer( _nPlayer )
 		, ulCheckSum( _ulCheckSum )
 	{
@@ -48,17 +48,17 @@ class CControlSumHistoryCommand : public IAILogicCommandB2
 
 public:
 	int nPlayer = {};
-	unsigned long ulCheckSum = {};
+	uint32_t ulCheckSum = {};
 	int nSegment = {};
 
 	// не сэйвится!
-	static CArray2D<unsigned long> checkSums;
+	static CArray2D<uint32_t> checkSums;
 	static uint16_t wMask;
 
 public:
 	CControlSumHistoryCommand() {}
 
-	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const unsigned long _ulCheckSum )
+	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const uint32_t _ulCheckSum )
 		: nPlayer( _nPlayer )
 		, nSegment( _nSegment )
 		, ulCheckSum( _ulCheckSum )
@@ -79,7 +79,7 @@ public:
 	static void Init( const uint16_t wMask );
 	static void SetMask( const uint16_t wMask );
 
-	static unsigned long GetValue( const int _nPlayer, const int _nSegment );
+	static uint32_t GetValue( const int _nPlayer, const int _nSegment );
 
 	int operator&( IBinSaver &saver ) override;
 };

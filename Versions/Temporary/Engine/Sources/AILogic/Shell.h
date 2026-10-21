@@ -1184,6 +1184,6 @@ public:
 	void Segment();
 
 	// для тестирования multiplayer
-	void UpdateCheckSum( uLong *pCheckSum );
+	void UpdateCheckSum( uint32_t *pCheckSum );
 	void UpdateDebugChecksums( FILE *f );
 };

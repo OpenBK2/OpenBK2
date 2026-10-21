@@ -1060,7 +1060,7 @@ void CGroupLogic::ProcessGridCommand( const CVec2 &vGridCenter,
 #include "Common_RTS_AI/Checksums.h"
 #include "SimpleChecksumCalc.h"
 
-void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )
+void CGroupLogic::GetCheckSum( uint32_t *ulChecksum )
 {
 	for ( int n = 0; n < NSegmObjs::SEGM_UNITS_SIZE; ++n )
 	{
@@ -1076,7 +1076,7 @@ void CGroupLogic::GetCheckSum( unsigned long *ulChecksum )
 void CGroupLogic::UpdateDebugChecksums( FILE *f )
 {
 	fprintf( f, "GroupSegmentUnits:\n" );
-	uLong baseChecksum = 555111;
+	uint32_t baseChecksum = 555111;
 	for ( int n = 0; n < NSegmObjs::SEGM_UNITS_SIZE; ++n )
 	{
 		for ( int i = segmUnits[1].begin( n ); i != segmUnits[1].end(); i = segmUnits[1].GetNext( i ) )
@@ -1087,10 +1087,10 @@ void CGroupLogic::UpdateDebugChecksums( FILE *f )
 			uint16_t dir = pUnit->GetDirection();
 
 			uint8_t player = pUnit->GetPlayer();
-			uLong checksum = CalculateChecksum( baseChecksum, id, pos.x, pos.y, dir );
+			uint32_t checksum = CalculateChecksum( baseChecksum, id, pos.x, pos.y, dir );
 
 			fprintf( f,
-			         "\tPlayer[%d] SegmUnit[%d]: %lu - { pos (%f, %f), dir: %hu }\n",
+			         "\tPlayer[%d] SegmUnit[%d]: %u - { pos (%f, %f), dir: %hu }\n",
 			         (int)player,
 			         pUnit->GetUniqueID(),
 			         checksum,
