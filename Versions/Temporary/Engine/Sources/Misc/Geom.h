@@ -1165,12 +1165,28 @@ inline const int fabs2( const SVector &vect )
 
 class CLine2
 {
-	// to ensure 4-bytes allingn without crap (multilayer sync fix)
-	union
-	{
-		bool bNormalized;
-		int dummy = 0;
-	};
+	// The flag shared a union arm with an int named dummy whose only job was to
+	// make this head four bytes wide, as the original comment said: "to ensure
+	// 4-bytes allingn without crap (multilayer sync fix)". The int was the
+	// active member, because it carried the initialiser and both constructors
+	// set it as well, so every read of the flag was undefined, and with two
+	// arms of different types there was no common initial sequence to appeal
+	// to the way the vectors above can.
+	//
+	// A plain bool keeps the width regardless: a, b and c are floats and have
+	// to start on a four-byte boundary, so the three bytes the int was standing
+	// in for are padding the compiler must insert anyway. The static_assert
+	// after the class pins it, since the width is what the sync fix was about.
+	bool bNormalized = false;
+
+	// Those three bytes, spelled out and zeroed, which the int arm was doing by
+	// accident. CLine2 has no operator&, so IBinSaver serializes it as
+	// sizeof( CLine2 ) raw bytes, and CBridgeCreation, CEntrenchmentCreation
+	// and CFenceCreation all do f.Add( n, &line ): the padding reaches save
+	// games, replays and the state the multiplayer checksum covers, so leaving
+	// it indeterminate would let two clients disagree on bytes neither of them
+	// reads.
+	char cUnusedPadding[3] = {};
 
 public:
 	float a = 0.0f, b = 0.0f, c = 0.0f;
@@ -1182,7 +1198,6 @@ public:
 		: a( _a )
 		, b( _b )
 		, c( _c )
-		, dummy( 0 )
 	{
 	}
 
@@ -1190,7 +1205,6 @@ public:
 		: a( p2.y - p1.y )
 		, b( p1.x - p2.x )
 		, c( p2.x * p1.y - p1.x * p2.y )
-		, dummy( 0 )
 	{
 	}
 
@@ -1219,6 +1233,9 @@ public:
 		}
 	}
 };
+
+// The width the retired union arm was there to force, see the note inside.
+static_assert( sizeof( CLine2 ) == 4 * sizeof( float ), "CLine2's layout is a sync fix" );
 
 class CSegment
 {
