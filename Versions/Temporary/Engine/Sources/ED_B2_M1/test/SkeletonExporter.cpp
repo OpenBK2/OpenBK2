@@ -266,6 +266,27 @@ TEST_F( SkeletonExporter, ImportsMarkerRangesAndLegacyProperties )
 	EXPECT_EQ( Value<int>( death, "FirstFrame" ), 100 );
 }
 
+TEST_F( SkeletonExporter, TruncatesFractionalMarkerRanges )
+{
+	WriteScene( R"("StartTime":100.9,"EndTime":119.9,"ActionTime":110)" );
+	ASSERT_TRUE( Import() ) << log->messages;
+	CPtr<IManipulator> death = Animation( "Anim_death_01_animb2.xdb" );
+	ASSERT_NE( death, nullptr );
+	EXPECT_EQ( Value<int>( death, "FirstFrame" ), 100 );
+	EXPECT_EQ( Value<int>( death, "LastFrame" ), 119 );
+	EXPECT_EQ( Value<int>( death, "Length" ), 633 );
+	EXPECT_EQ( Value<int>( death, "ActionFrame" ), 10 );
+}
+
+TEST_F( SkeletonExporter, RejectsMarkerRangesCollapsedByTruncation )
+{
+	WriteScene( R"("StartTime":100.1,"EndTime":100.9)" );
+	EXPECT_FALSE( Import() );
+	EXPECT_EQ( Value<int>( skeleton, "Animations" ), 0 );
+	EXPECT_FALSE( NDb::DoesObjectExist( CDBID( "Unit/Anim_death_01_animb2.xdb" ) ) );
+	EXPECT_NE( log->messages.find( "Death01' has an invalid frame range 100..100" ), std::string::npos );
+}
+
 TEST_F( SkeletonExporter, RejectsMissingMetadataWithoutPartialCreation )
 {
 	WriteScene( "" );
