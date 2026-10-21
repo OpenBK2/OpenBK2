@@ -168,12 +168,15 @@ failure mode is false reports rather than missing ones.
 TYSAN_OPTIONS=print_stacktrace=1
 ```
 
-`halt_on_error` stays off, which is its default. A report here is a survey item
-and not a crash, and stopping at the first one means one site per run of a game
-that takes a minute to reach a mission. Two consequences: this is the one
-sanitizer prefix whose **exit status still means what it says**, unlike TSan's
-66, and `./test.sh tysan` will not fail a test on a violation, so read the
-output rather than the status.
+There is no `halt_on_error` to turn off: TySan registers no flags of its own and
+the common set does not carry one, so a report is a survey item and not a crash,
+whatever is asked for. Two consequences: this is the one sanitizer prefix whose
+**exit status still means what it says** (measured: 0 with five violations
+reported, despite `exitcode=1` being listed), unlike TSan's 66, and
+`./test.sh tysan` will not fail a test on a violation, so read the output rather
+than the status. Note also that an unrecognised `TYSAN_OPTIONS` entry is
+accepted **silently**, with no "unrecognized flag" warning, so a typo looks
+exactly like a flag that had no effect.
 
 **Symbolization has to be arranged.** The runtime looks for a plain
 `llvm-symbolizer` and Debian packages only the versioned names, so an
@@ -192,8 +195,53 @@ written and read back through an `int *`, reports at `-O0` and is silent at
 and a site that matters at `-O2` is best confirmed by configuring the same
 preset with `-D CMAKE_BUILD_TYPE=Debug` and comparing. The 7 known
 `-Wstrict-aliasing=3` sites are listed in `DiagnosticsNextSession.md`; the one
-to reach first is `Common_RTS_AI/BasePathUnit.h:215`, in the pathfinder, which
+to reach first is `Common_RTS_AI/BasePathUnit.h:219`, in the pathfinder, which
 is simulation code.
+
+### The ignorelist, and why the tree needs one to be readable at all
+
+`cmake/tysan-ignorelist.txt` holds it, the flag is added beside
+`-fsanitize=type` in `Versions/Temporary/Engine/Sources/CMakeLists.txt`, and the
+file states the measurement behind each entry. There is one entry, and without
+it a run that reaches the main menu writes **1 GB of log, 100,214 of whose
+100,452 reports are one function**: `IXmlSaver::AddFPData`, serializing every
+`CVec3` and `CQuat` in the database.
+
+That one is a modelling artifact, settled from the instrumented IR rather than
+argued: `CVec3` is a union, clang gives a union a *scalar* TBAA node parented on
+`omnipotent char`, and TySan turns that into a descriptor with a single member,
+char at offset 0, so a `float` access at offset 0, 4 or 8 has nothing to match
+against; a non-union struct of three floats carries a member list and matches.
+The bytes get that type from TySan's own module constructor, which types every
+global by its declared type
+(`__tysan_set_shadow_type( @VNULL3, @..._ZTS5CVec3, 12 )`), and the typing
+travels into heap records through the shadow propagation of a struct copy. The
+aliasing question underneath it is answered the other way round: clang tags a
+union member access *may-alias* (`omnipotent char`), so there is no
+non-aliasing assumption for the optimiser to act on, and the probe prints the
+right answer on clang `-O0` through `-O3` and on GCC.
+
+Four things about the mechanism that are worth knowing before adding an entry:
+
+- `fun:` and `src:` work, a `[type]` section header is honoured, and a `type:`
+  entry is **accepted and silently does nothing**.
+- an entry that matches nothing leaves every report in place, which is the
+  negative control that this file is not a blanket off switch.
+- a `fun:` entry holds at `-O2`, and the reason is worth knowing: clang drops
+  the `sanitize_type` attribute from the listed function and the inliner then
+  refuses to inline it into an instrumented caller, so the body stays out of
+  line and unchecked. Measured by disassembling `main` with and without the
+  entry. It also means an entry costs the whole function's coverage, not just
+  the reports you were looking at.
+- editing the file changes no compiler command line, so force a rebuild of the
+  tree afterwards rather than trusting an incremental one.
+
+The reductions that **failed** are kept in
+`.diag-tmp/tysan-control/unions.cpp`, so nobody repeats them: typing the object
+with a whole-object assignment reproduces nothing, because an aggregate copy is
+tagged `tbaa.struct` with char members. A union *member* write is tagged char
+too. Only the declared type of a global, or a copy from one, types bytes as
+`CVec3`.
 
 CI cannot run this: the clang job pins clang-19, which has no TySan. Local
 tool, clang 22 and up.

@@ -64,8 +64,16 @@ endif()
 # directory whose executables need the runtime: Game, the tools and the test
 # binaries under Sources/*/test are all created from here or below. The
 # dependencies' own executables stay uninstrumented and unlinked to it.
+#
+# The ignorelist is part of the flag and not an optional extra: without it one
+# function, IXmlSaver::AddFPData, is 99.8 per cent of a game run's reports and
+# buries the other 238. cmake/tysan-ignorelist.txt carries the measurement and
+# the reasoning for each entry. Editing it does not change any compiler command
+# line, so force a rebuild of this tree after changing it rather than trusting
+# an incremental one.
 if(ENABLE_TYSAN)
     add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-fsanitize=type>" -fno-omit-frame-pointer -g)
+    add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-fsanitize-ignorelist=${CMAKE_SOURCE_DIR}/cmake/tysan-ignorelist.txt>")
     add_link_options(-fsanitize=type)
 endif()
 

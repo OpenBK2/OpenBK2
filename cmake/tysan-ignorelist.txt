@@ -1,0 +1,53 @@
+# TypeSanitizer ignorelist, used by the Linux-x64-TySan tree only
+# (ENABLE_TYSAN, Versions/Temporary/Engine/Sources/CMakeLists.txt).
+#
+# Keep this file as short as the measurements allow. A silent TySan run is not a
+# clean tree even before suppressions, since the optimiser folds some of the
+# accesses away, so every entry here has to be argued rather than assumed, and
+# every entry costs real coverage: clang drops the sanitize_type attribute from
+# a listed function, and the inliner then refuses to inline it into an
+# instrumented caller, so nothing inside it is checked at all.
+#
+# Two facts about the syntax, both measured on .diag-tmp/tysan-control:
+# "fun:" and "src:" entries work and a "[type]" section header is honoured,
+# while a "type:" entry is accepted and silently does nothing. An entry that
+# matches nothing leaves every report in place, which is the negative control
+# that says this file is not a blanket off switch.
+
+[type]
+
+# The vector and quaternion serialization, 100,214 of the 100,452 reports in a
+# game run that reaches the main menu. Not a defect, and the reasoning is the
+# part worth keeping:
+#
+# Misc/Geom.h's CVec2, CVec3, CVec4 and CQuat are unions of anonymous structs.
+# Clang gives a union a *scalar* TBAA node parented on omnipotent char,
+#
+#   !{!"_ZTS5CVec3", !{!"omnipotent char", ..}, i64 0}
+#
+# and TySan turns that into a type descriptor with exactly one member, char at
+# offset 0. There is nothing to descend, so a 4-byte float access at offset 0, 4
+# or 8 inside such an object can never be matched, where a non-union struct of
+# three floats carries a member list and matches fine.
+#
+# The bytes acquire that type without any access being tagged with it: TySan's
+# module constructor types every global by its declared type for its whole size,
+#   call void @__tysan_set_shadow_type( ptr @VNULL3, ptr @..._ZTS5CVec3, i64 12 )
+# and the typing then travels into heap records through the shadow propagation
+# of a struct copy. Meanwhile AddFPData reads and writes through a float * it was
+# handed, with no struct path to say which member of what it came from. So the
+# mismatch is structural and every CVec3 the XML database loader touches reports
+# three times on the way in and three on the way out.
+#
+# The aliasing question itself is answered the other way: clang tags a union
+# member access (omnipotent char, char, 0), i.e. may-alias-anything, so LLVM
+# makes no non-aliasing assumption to act on, and the probe that stores through
+# the union member, overwrites through a float * in another unit and reads the
+# member back prints the overwritten value on clang -O0 through -O3 and on GCC
+# -O2 alike. Nothing is miscompiled here.
+#
+# What this costs: a genuine violation inside the XML loader, a float written
+# over bytes that really do hold something else, is no longer reported. That is
+# accepted because the flood hides the other 238 reports completely, among them
+# the pathfinder site this build exists to reach.
+fun:*AddFPData*
