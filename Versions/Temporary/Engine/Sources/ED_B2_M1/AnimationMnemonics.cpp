@@ -28,6 +28,8 @@ CMayaAnimationMnemonics::CMayaAnimationMnemonics()
 	Insert( NDb::ANIMATION_THROW_TRENCH, "THROW_TRENCH" );
 	Insert( NDb::ANIMATION_THROW_DOWN, "THROW_DOWN" );
 	Insert( NDb::ANIMATION_DEATH, "DEATH" );
+	// Recognize Death_Water01 and other numbered water-death scene markers.
+	Insert( NDb::ANIMATION_DEATH_WATER, "DEATH_WATER" );
 	Insert( NDb::ANIMATION_DEATH_DOWN, "DEATH_DOWN" );
 	Insert( NDb::ANIMATION_DEATH_DIVING, "DEATH_DIVING" );
 	Insert( NDb::ANIMATION_DEATH_FATALITY, "FATALITY" );
@@ -75,6 +77,8 @@ CAnimationMnemonics::CAnimationMnemonics()
 	Insert( NDb::ANIMATION_THROW_TRENCH, "ANIMATION_THROW_TRENCH" );
 	Insert( NDb::ANIMATION_THROW_DOWN, "ANIMATION_THROW_DOWN" );
 	Insert( NDb::ANIMATION_DEATH, "ANIMATION_DEATH" );
+	// Preserve the water-death type when exporting animation resources and unit stats.
+	Insert( NDb::ANIMATION_DEATH_WATER, "ANIMATION_DEATH_WATER" );
 	Insert( NDb::ANIMATION_DEATH_DOWN, "ANIMATION_DEATH_DOWN" );
 	Insert( NDb::ANIMATION_DEATH_DIVING, "ANIMATION_DEATH_DIVING" );
 	Insert( NDb::ANIMATION_DEATH_FATALITY, "ANIMATION_DEATH_FATALITY" );
