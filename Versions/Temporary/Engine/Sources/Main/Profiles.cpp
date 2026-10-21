@@ -231,7 +231,7 @@ std::string GetReplayDir()
 	return NFile::JoinPath( GetCurrentProfileDir(), "Replays" ) + NFile::PATH_SEPARATOR;
 }
 
-static void RemoveProfile( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
+static void RemoveProfile( const std::string &szID, const std::vector<std::wstring> &szParams )
 {
 	if ( szParams.size() == 1 )
 	{
@@ -243,7 +243,7 @@ static void RemoveProfile( const std::string &szID, const std::vector<std::wstri
 	}
 }
 
-static void ChangeProfile( const std::string &szID, const std::vector<std::wstring> &szParams, void *pContext )
+static void ChangeProfile( const std::string &szID, const std::vector<std::wstring> &szParams )
 {
 	if ( szParams.size() == 1 )
 	{

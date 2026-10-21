@@ -788,6 +788,13 @@ IClientUpdatableProcess *CMOBuilding::AIUpdateDamage( int nProjectileID,
 			}
 		}
 	}
+	// Update() drains the vector from the back while the time has passed, so it
+	// needs the soonest animation last. Nothing called Sort(), so the back was
+	// simply whatever slot this loop happened to fill in last: every broken
+	// window stayed in the scene until that one animation ended, then they all
+	// disappeared together. Sorting here, where the vector is complete and
+	// before it is handed over, is the only point at which it can be done.
+	pHolder->Sort();
 	return ( pHolder->IsEmpty() ) ? 0 : pHolder.Extract();
 }
 

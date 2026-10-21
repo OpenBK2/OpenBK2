@@ -13,7 +13,7 @@ SCheats theCheats;
 extern CDiplomacy theDipl;
 bool g_bDontShowWarFog;
 
-void CheatsPassword( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void CheatsPassword( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{

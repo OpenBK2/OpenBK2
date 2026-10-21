@@ -42,6 +42,41 @@ if(MSVC)
     add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:/permissive->")
 endif()
 
+# TypeSanitizer, scoped here rather than at the top level with the other three
+# sanitizers, and for the same reason /utf-8 and /permissive- above are: this
+# covers the engine's own code and not the dependencies.
+#
+# For TySan the scoping is forced rather than preferred. The runtime ships
+# static-only, libclang_rt.tysan-x86_64.a with no shared object beside it, so
+# an instrumented translation unit leaves __tysan_init and
+# __tysan_instrument_with_shadow_update undefined in whatever it is linked
+# into, and only an executable's link line pulls the archive in and resolves
+# them. Our 36 shared libraries allow that, because an undefined symbol in a
+# .so is a load-time question. Boost's do not: boost_filesystem links with
+# -Wl,--no-undefined, so instrumenting it is a hard link error and the build
+# stops there. That is the whole of the measurement behind this block.
+#
+# It is also the better scope on the merits. The dependencies are -isystem
+# here and are not diagnosed, boost and SDL type-pun deliberately, and the
+# question this build answers is about our strict-aliasing sites.
+#
+# add_link_options as well as add_compile_options, because this is the
+# directory whose executables need the runtime: Game, the tools and the test
+# binaries under Sources/*/test are all created from here or below. The
+# dependencies' own executables stay uninstrumented and unlinked to it.
+#
+# The ignorelist is part of the flag and not an optional extra: without it one
+# function, IXmlSaver::AddFPData, is 99.8 per cent of a game run's reports and
+# buries the other 238. cmake/tysan-ignorelist.txt carries the measurement and
+# the reasoning for each entry. Editing it does not change any compiler command
+# line, so force a rebuild of this tree after changing it rather than trusting
+# an incremental one.
+if(ENABLE_TYSAN)
+    add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-fsanitize=type>" -fno-omit-frame-pointer -g)
+    add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-fsanitize-ignorelist=${CMAKE_SOURCE_DIR}/cmake/tysan-ignorelist.txt>")
+    add_link_options(-fsanitize=type)
+endif()
+
 # Before anything that adds a test directory, since add_unit_test links what
 # this defines.
 add_subdirectory("TestSupport")

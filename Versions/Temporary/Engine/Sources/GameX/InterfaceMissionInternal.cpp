@@ -4853,12 +4853,12 @@ void MsgChangeGameSpeed( const SGameMessage &msg, int nAdd )
 	InterfaceState()->WriteToMissionConsole( wszText );
 }
 
-static void CmdQuickLoad( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdQuickLoad( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	DoQuickLoad();
 }
 
-static void CmdLoadGame( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdLoadGame( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 1 )
 	{
@@ -4942,7 +4942,7 @@ void DoQuickLoad()
 	}
 }
 
-void CmdQuickSave( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void CmdQuickSave( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	DoQuickSave();
 }
@@ -5173,7 +5173,7 @@ void CInterfaceMission::SNewActionButton::SetProgress( float fProgress )
 	}
 }
 
-void StartNewMap( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void StartNewMap( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{
@@ -5242,14 +5242,14 @@ void StartNewMap( const std::string &szID, const std::vector<std::wstring> &para
 	NMainLoop::Command( ML_COMMAND_MISSION, szVal.c_str() );
 }
 
-void BalanceTest( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void BalanceTest( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NGlobal::SetVar( "balance_test", NStr::ToInt( NStr::ToMBCS( paramsSet[0] ) ) );
 	if ( paramsSet.size() == 1 )
 	{
 		NGlobal::SetVar( "balance_test_n_iteration", 0 );
 	}
-	StartNewMap( szID, paramsSet, pContext );
+	StartNewMap( szID, paramsSet );
 }
 
 bool CInterfaceMission::SaveReplay( const std::string &szFileName )
@@ -5279,7 +5279,7 @@ bool CInterfaceMission::SaveReplay( const std::string &szFileName )
 // Save the running mission's recorded commands. The mission interface owns the
 // transceiver, so the stack is walked to find it rather than reaching for a
 // global that does not exist.
-void CmdSaveReplay( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void CmdSaveReplay( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>();
 	if ( paramsSet.empty() )
@@ -5302,7 +5302,7 @@ void CmdSaveReplay( const std::string &szID, const std::vector<std::wstring> &pa
 	pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, "save_replay: no mission is running" );
 }
 
-void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{
@@ -5365,7 +5365,7 @@ public:
 	}
 };
 
-void CompareSaves( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void CompareSaves( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 2 )
 	{
@@ -5429,7 +5429,7 @@ void CompareSaves( const std::string &szID, const std::vector<std::wstring> &par
 }
 #endif
 
-void DemoExit( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void DemoExit( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	const std::string szParam = "Movies\\demo_final_outro.xml;final_exit";
 

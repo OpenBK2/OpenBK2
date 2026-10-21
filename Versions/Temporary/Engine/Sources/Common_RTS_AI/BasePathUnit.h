@@ -214,6 +214,30 @@ public:
 
 	//! информация о позиции юнита на плоскости (2D)
 	// hack to increase FPS :)
+	//
+	// GCC's -Wstrict-aliasing=3 flags this cast, and since the pathfinder is
+	// simulation code the question was whether it can produce an ASYNC. It
+	// cannot, measured rather than argued, so leave it alone:
+	//
+	// Both CVec3 and CVec2 are unions of anonymous structs, and clang tags a
+	// union member access with "omnipotent char", i.e. may-alias-anything, so
+	// there is no non-aliasing assumption for the optimiser to act on. Every
+	// real access through either view is a float at offset 0 or 4, which GCC
+	// cannot separate by type either. A probe of the three shapes that could go
+	// wrong - reading the punned CVec2 whole across a write of the whole CVec3,
+	// the same at member level, and the write-then-read order this accessor
+	// actually runs in - answers correctly on clang -O0 to -O3 and g++ -O0 to
+	// -O3, with and without -fno-strict-aliasing, while its positive control,
+	// the textbook int-over-float pun, is folded by both compilers at -O2. So
+	// the probe can see the effect and there is none here.
+	//
+	// TypeSanitizer is silent on it for the same reason, so a run cannot
+	// confirm this and the probe is the evidence: .diag-tmp/tysan-control.
+	//
+	// It is still formally undefined - no CVec2 object lives at those bytes -
+	// and the fix if that ever matters is to return CVec2( vCenter.x,
+	// vCenter.y ) by value, which needs the ~675 call sites checked for ones
+	// that hold or return the reference.
 	const CVec2 &GetCenterPlain() const
 	{
 		return *( reinterpret_cast<const CVec2 *>( &vCenter ) );

@@ -8,12 +8,11 @@ namespace NGlobal
 
 // Dependent command
 
-CCmd::CCmd( const std::string &_szID, CmdHandler _pHandler, void *_pContext )
+CCmd::CCmd( const std::string &_szID, CmdHandler _pHandler )
 	: szID( _szID )
 	, pHandler( _pHandler )
-	, pContext( _pContext )
 {
-	nID = RegisterCmd( szID, pHandler, pContext );
+	nID = RegisterCmd( szID, pHandler );
 }
 
 CCmd::~CCmd()
@@ -23,10 +22,10 @@ CCmd::~CCmd()
 
 void CCmd::Run( const std::vector<std::wstring> &paramsSet )
 {
-	pHandler( szID, paramsSet, pContext );
+	pHandler( szID, paramsSet );
 }
 
-void VarBoolHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarBoolHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	bool *pFlag = (bool *)pContext;
 
@@ -37,25 +36,25 @@ void VarBoolHandler( const std::string &szID, const NGlobal::CValue &sValue, voi
 	}
 }
 
-void VarIntHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarIntHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	int *pValue = (int *)pContext;
 	*pValue = Float2Int( sValue.GetFloat() );
 }
 
-void VarFloatHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarFloatHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	float *pValue = (float *)pContext;
 	*pValue = sValue.GetFloat();
 }
 
-void VarWStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarWStrHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	std::wstring *pValue = (std::wstring *)pContext;
 	*pValue = sValue.GetString();
 }
 
-void VarStrHandler( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
+void VarStrHandlerFn( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	std::string *pValue = (std::string *)pContext;
 	*pValue = NStr::ToMBCS( sValue.GetString() );

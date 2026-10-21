@@ -103,20 +103,26 @@ struct SRecord
 	void *pContext;
 	CmdHandler pCmdHandler;
 	VarHandler pVarHandler;
+	// Set instead of pVarHandler when the variable was registered without a
+	// context. Kept apart rather than stored as a pVarHandler with a null
+	// context, which is the arrangement this replaces.
+	VarHandlerNoContext pVarHandlerNoContext;
 	int nUniqueID;
 
 	SRecord()
 		: pContext( 0 )
 		, pCmdHandler( 0 )
 		, pVarHandler( 0 )
+		, pVarHandlerNoContext( 0 )
 		, nUniqueID( -1 )
 	{
 	}
 
-	SRecord( void *_pCmdContext, CmdHandler _pCmd, int _nID )
-		: pContext( _pCmdContext )
+	SRecord( CmdHandler _pCmd, int _nID )
+		: pContext( 0 )
 		, pCmdHandler( _pCmd )
 		, pVarHandler( 0 )
+		, pVarHandlerNoContext( 0 )
 		, nUniqueID( _nID )
 	{
 	}
@@ -125,6 +131,16 @@ struct SRecord
 		: pContext( _pVarContext )
 		, pCmdHandler( 0 )
 		, pVarHandler( _pCmd )
+		, pVarHandlerNoContext( 0 )
+		, nUniqueID( _nID )
+	{
+	}
+
+	SRecord( VarHandlerNoContext _pVar, int _nID )
+		: pContext( 0 )
+		, pCmdHandler( 0 )
+		, pVarHandler( 0 )
+		, pVarHandlerNoContext( _pVar )
 		, nUniqueID( _nID )
 	{
 	}
@@ -199,23 +215,25 @@ static CRecordsMap *GetRecordsMap()
 	return pRecordsMap;
 }
 
-static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext );
+static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet );
 static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *pRes );
 
 static int nUniqueVarID = 1;
 
-int RegisterCmd( const std::string &szID, CmdHandler pHandler, void *pContext )
+int RegisterCmd( const std::string &szID, CmdHandler pHandler )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
 
 	SCommandInfo &info = recordsMap[szID];
-	info.data.push_back( SRecord( pContext, pHandler, ++nUniqueVarID ) );
+	info.data.push_back( SRecord( pHandler, ++nUniqueVarID ) );
 	return nUniqueVarID;
 }
 
-int RegisterVar(
-		const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage )
+// Shared by the two RegisterVar overloads, which differ only in the record
+// they build: one carries a handler and its context, the other a handler that
+// has no context to carry.
+static int AddVarRecord( const std::string &szID, const SRecord &record, const CValue &sValue, EStorageClass storage )
 {
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
@@ -228,8 +246,19 @@ int RegisterVar(
 	}
 	info.bIsRegistered = true;
 	info.storage = (std::max)( info.storage, storage );
-	info.data.push_back( SRecord( pContext, pHandler, ++nUniqueVarID ) );
-	return nUniqueVarID;
+	info.data.push_back( record );
+	return record.nUniqueID;
+}
+
+int RegisterVar(
+		const std::string &szID, VarHandler pHandler, void *pContext, const CValue &sValue, EStorageClass storage )
+{
+	return AddVarRecord( szID, SRecord( pContext, pHandler, ++nUniqueVarID ), sValue, storage );
+}
+
+int RegisterVar( const std::string &szID, VarHandlerNoContext pHandler, const CValue &sValue, EStorageClass storage )
+{
+	return AddVarRecord( szID, SRecord( pHandler, ++nUniqueVarID ), sValue, storage );
 }
 
 void UnregisterCmd( const std::string &szID, int nID )
@@ -338,6 +367,10 @@ void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass stora
 		{
 			sRecord.pVarHandler( szVar, sValue, sRecord.pContext );
 		}
+		else if ( sRecord.pVarHandlerNoContext )
+		{
+			sRecord.pVarHandlerNoContext( szVar, sValue );
+		}
 	}
 	info.sValue = sValue;
 }
@@ -419,12 +452,12 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 		{
 			continue;
 		}
-		sRecord.pCmdHandler( szCommandName, wordsSet, sRecord.pContext );
+		sRecord.pCmdHandler( szCommandName, wordsSet );
 		bWasHandled = true;
 	}
 	if ( !bWasHandled )
 	{
-		CmdDefaultHandler( szCommandName, wordsSet, 0 );
+		CmdDefaultHandler( szCommandName, wordsSet );
 	}
 }
 
@@ -612,7 +645,7 @@ static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *p
 	*pRes = params;
 }
 
-static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdDefaultHandler( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.empty() )
 	{
@@ -624,7 +657,7 @@ static void CmdDefaultHandler( const std::string &szID, const std::vector<std::w
 	SetVar( szID, CValue( paramsSet.front() ) );
 }
 
-void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( NGlobal::GetVar( "VVP", 0 ) == 0 )
 	{
@@ -642,7 +675,7 @@ void CmdPrintHelp( const std::string &szID, const std::vector<std::wstring> &par
 	csSystem << CC_BLUE << "Total:" << (int)varsSet.size() << endl;
 }
 
-static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	for ( int nTemp = 0; nTemp < paramsSet.size(); ++nTemp )
 	{
@@ -662,7 +695,7 @@ static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstri
 	}
 }
 
-static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 3 )
 	{
@@ -683,7 +716,7 @@ static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> 
 	NGlobal::SetVar( NStr::ToMBCS( paramsSet[0] ), NGlobal::CValue( paramsSet[2] ) );
 }
 
-static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 3 )
 	{

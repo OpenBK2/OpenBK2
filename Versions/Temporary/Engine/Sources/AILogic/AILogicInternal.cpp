@@ -2133,7 +2133,7 @@ static bool ConverWStingToInt( int *pValue, const std::wstring &wszString, const
 	return true;
 }
 
-static void PathfinderTest( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void PathfinderTest( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	const int nMaxX = GetAIMap()->GetSizeX();
 	const int nMaxY = GetAIMap()->GetSizeY();
@@ -2173,7 +2173,7 @@ static void PathfinderTest( const std::string &szID, const std::vector<std::wstr
 	}
 }
 
-static void CommandCheckPath( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandCheckPath( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 7 )
 	{
@@ -2305,7 +2305,7 @@ static void CommandCheckPath( const std::string &szID, const std::vector<std::ws
 			ELM_STATIC, aiClass, "debug_images\\" + szParam + ".tga", realPath, smoothPath, true );
 }
 
-static void DumpWarFogHeights( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void DumpWarFogHeights( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() != 5 )
 	{

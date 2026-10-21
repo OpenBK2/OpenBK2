@@ -357,8 +357,13 @@ REGISTER_VAR_EX( "AI.Artillery.RangedDispersionRadiusBonus",
                  &SConsts::RANDGED_DISPERSION_RADIUS_BONUS,
                  0.5f,
                  STORAGE_NONE );
+// RANGED_AREA_RADIUS is a float, and VarIntHandler writes an int through the
+// void * context, so consts.cfg's "setvar AI.Artillery.RangedAreaRadius = 716"
+// stored the bit pattern of 716 and the radius read back as 1.0e-42. Squared,
+// that is exactly zero, so the zeroing radius and the circle at
+// ArtilleryStates.cpp:1156 and :1337 were both zero on every run.
 REGISTER_VAR_EX(
-		"AI.Artillery.RangedAreaRadius", NGlobal::VarIntHandler, &SConsts::RANGED_AREA_RADIUS, 160, STORAGE_NONE );
+		"AI.Artillery.RangedAreaRadius", NGlobal::VarFloatHandler, &SConsts::RANGED_AREA_RADIUS, 160.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "AI.Artillery.MaxAntiArtilleryRadius",
                  NGlobal::VarFloatHandler,
                  &SConsts::MAX_ANTI_ARTILLERY_RADIUS,
@@ -381,8 +386,12 @@ REGISTER_VAR_EX( "AI.Artillery.RadiusToStartAntiartilleryFire",
                  &SConsts::RADIUS_TO_START_ANTIARTILLERY_FIRE,
                  320.0f,
                  STORAGE_NONE );
+// Same fault, same cause: a float written through VarIntHandler. With the
+// radius reading back as 2.2e-43, AntiArtillery.cpp:123 compared the distance
+// against zero, so a gun that had moved at all forgot where it last heard
+// enemy fire instead of forgetting only past 160.
 REGISTER_VAR_EX(
-		"AI.Artillery.RelocationRadius", NGlobal::VarIntHandler, &SConsts::RELOCATION_RADIUS, 160, STORAGE_NONE );
+		"AI.Artillery.RelocationRadius", NGlobal::VarFloatHandler, &SConsts::RELOCATION_RADIUS, 160.0f, STORAGE_NONE );
 REGISTER_VAR_EX(
 		"AI.Artillery.AudibilityTime", NGlobal::VarIntHandler, &SConsts::AUDIBILITY_TIME, 20000, STORAGE_NONE );
 
@@ -467,8 +476,13 @@ REGISTER_VAR_EX(
 REGISTER_VAR_EX(
 		"AI.Common.AICallForHelpRadius", NGlobal::VarIntHandler, &SConsts::AI_CALL_FOR_HELP_RADIUS, 640, STORAGE_NONE );
 REGISTER_VAR_EX( "AI.Common.TimeToDisappear", NGlobal::VarIntHandler, &SConsts::TIME_TO_DISAPPEAR, 0, STORAGE_NONE );
+// Same fault again. consts.cfg sets this to 960 and the script sets it to 960
+// a second time, both through VarIntHandler, so the float held 1.3e-42 and the
+// test at CommonUnit.cpp:104, "is this point inside my guard radius", was
+// distance squared below zero: false for every point. A resting unit had no
+// guard radius at all.
 REGISTER_VAR_EX(
-		"AI.Common.GuardStateRadius", NGlobal::VarIntHandler, &SConsts::GUARD_STATE_RADIUS, 640, STORAGE_NONE );
+		"AI.Common.GuardStateRadius", NGlobal::VarFloatHandler, &SConsts::GUARD_STATE_RADIUS, 640.0f, STORAGE_NONE );
 REGISTER_VAR_EX( "AI.Common.GoodAttackProbability",
                  NGlobal::VarFloatHandler,
                  &SConsts::GOOD_ATTACK_RPOBABILITY,
@@ -774,10 +788,14 @@ REGISTER_VAR_EX( "AI.TransportAndResupply.MedicalTruckHealRadius",
                  &SConsts::MED_TRUCK_HEAL_RADIUS,
                  1000,
                  STORAGE_NONE );
+// MED_TRUCK_HEAL_PER_UPDATEDURATION is a float (AIInternalConsts.h:351) and
+// had the int handler. Latent rather than live: no shipped config sets this
+// one, so it keeps its initialiser, and only a console setvar or a new config
+// line would have turned the healing rate into a denormal.
 REGISTER_VAR_EX( "AI.TransportAndResupply.MedicalTruckHealPerUpdateDuration",
-                 NGlobal::VarIntHandler,
+                 NGlobal::VarFloatHandler,
                  &SConsts::MED_TRUCK_HEAL_PER_UPDATEDURATION,
-                 1,
+                 1.0f,
                  STORAGE_NONE );
 
 REGISTER_VAR_EX(
@@ -825,8 +843,16 @@ REGISTER_VAR_EX( "AI.Weather.FireRangeCoefficient",
                  &SConsts::BAD_WEATHER_FIRE_RANGE_COEFFICIENT,
                  0.5f,
                  STORAGE_NONE );
+// The mismatch the other way round: TIME_TO_WEATHER_FADE_OFF is an int
+// (AIInternalConsts.h:393) and had the float handler, which stores a float bit
+// pattern, so setting this to 3000 would have read back as about 1.16 billion.
+// The registered default was 0.5f, copied from the float registration above it
+// and meaningless for a count of weather updates; it is now the 5 this
+// variable is actually initialised to at AIConsts.cpp:248. Nothing was writing
+// it, since RegisterVar records the default and never runs the handler, so
+// only getvar and a reset ever saw the old one.
 REGISTER_VAR_EX(
-		"AI.Weather.TimeToFadeOff", NGlobal::VarFloatHandler, &SConsts::TIME_TO_WEATHER_FADE_OFF, 0.5f, STORAGE_NONE );
+		"AI.Weather.TimeToFadeOff", NGlobal::VarIntHandler, &SConsts::TIME_TO_WEATHER_FADE_OFF, 5, STORAGE_NONE );
 
 REGISTER_VAR_EX(
 		"AI.AntiAviationArtillery.AimIterations", NGlobal::VarIntHandler, &SConsts::AA_AIM_ITERATIONS, 3, STORAGE_NONE );
@@ -904,8 +930,12 @@ REGISTER_VAR_EX(
 REGISTER_VAR_EX(
 		"AI.Engineers.RepairCostAdjust", NGlobal::VarFloatHandler, &SConsts::REPAIR_COST_ADJUST, 50.0f, STORAGE_NONE );
 
+// TIME_TO_ALLOW_KILL_CRUSHED_OBJ is an int (AIInternalConsts.h:424) and had
+// the float handler, so setting it would have stored a float bit pattern.
+// Latent: no shipped config names it. The 20000 default already agrees with
+// the initialiser, so only the handler changes.
 REGISTER_VAR_EX( "AI.Common.TimeToAllowKillCrushedObj",
-                 NGlobal::VarFloatHandler,
+                 NGlobal::VarIntHandler,
                  &SConsts::TIME_TO_ALLOW_KILL_CRUSHED_OBJ,
                  20000,
                  STORAGE_NONE );

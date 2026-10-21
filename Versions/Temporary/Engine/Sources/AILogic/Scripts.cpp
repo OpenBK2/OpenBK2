@@ -1873,10 +1873,25 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 					for ( int i = 0; i < objIDs.size(); ++i )
 					{
 						id[0] = objIDs[i];
-						tmpCmd.vPos =
-								command.vPos + NRandom::Random( fDispersion ) * GetVectorByDirection( NRandom::Random( 0, 65535 ) );
+						// Two draws in one expression, whose order C++ leaves unspecified, and the
+						// two compilers this tree builds with genuinely disagree about it. Measured
+						// on the same expression shape: clang calls the magnitude first and GCC the
+						// angle first, at -O0 and -O2 alike. A scenario command would therefore
+						// scatter units differently depending on who built the client, which is a
+						// cross-build ASYNC rather than a style problem.
+						//
+						// So each draw is its own statement. Angle first, which is the order
+						// RandQuadrInCircle in Randomize.h already uses and the one the GCC builds
+						// were taking, so this leaves their stream alone and settles clang's onto it.
+						//
+						// Note NRandom::Random( fDispersion ) picks the unsigned overload, there
+						// being no single-argument float one, so the dispersion is truncated to a
+						// whole number. Preserved exactly as it was; it is not this change's to fix.
+						const uint16_t wDirection = NRandom::Random( 0, 65535 );
 						RecordRandomCall();
+						const float fShift = NRandom::Random( fDispersion );
 						RecordRandomCall();
+						tmpCmd.vPos = command.vPos + fShift * GetVectorByDirection( wDirection );
 						const int nGroup = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GenerateGroupNumber();
 						Singleton<IAILogic>()->RegisterGroup( id, nGroup );
 						Singleton<IAILogic>()->GroupCommand( &tmpCmd, nGroup, bPlaceInQueue );
@@ -1907,10 +1922,13 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 				if ( fDispersion != 0.0f )
 				{
 					SAIUnitCmd tmpCmd( command );
-					tmpCmd.vPos =
-							command.vPos + NRandom::Random( fDispersion ) * GetVectorByDirection( NRandom::Random( 0, 65535 ) );
+					// Same two draws in one expression as above, same fix: angle first, each in
+					// its own statement, so every build consumes them in the same order.
+					const uint16_t wDirection = NRandom::Random( 0, 65535 );
 					RecordRandomCall();
+					const float fShift = NRandom::Random( fDispersion );
 					RecordRandomCall();
+					tmpCmd.vPos = command.vPos + fShift * GetVectorByDirection( wDirection );
 					Singleton<IAILogic>()->GroupCommand( &tmpCmd, nGroup, bPlaceInQueue );
 					Singleton<IAILogic>()->UnregisterGroup( nGroup );
 					Singleton<IAILogic>()->SetNeedNewGroupNumber();

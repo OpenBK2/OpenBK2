@@ -2279,7 +2279,7 @@ const NDb::SUnitStatsModifier *CScenarioTracker::GetPlayerChapterModifier( NDb::
 
 } // namespace NScenarioTracker
 
-static void AddPromotions( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void AddPromotions( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 #ifndef _FINALRELEASE
 	if ( !paramsSet.empty() )

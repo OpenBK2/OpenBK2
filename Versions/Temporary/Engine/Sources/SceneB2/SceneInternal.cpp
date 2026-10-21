@@ -1351,8 +1351,7 @@ bool CScene::ToggleGetSizeFromTarget( bool _bGetSizesFromTarget )
 }
 
 // special script function to position camera for pwl-mapshot
-static void
-CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( !( Scene()->DoesTerraManagerExist() ) )
 	{
@@ -1380,9 +1379,9 @@ CmdSetPWLMapshotCamera( const std::string &szID, const std::vector<std::wstring>
 	Camera()->SetPlacement( fOldDist, fPitch, fYaw );
 }
 
-static void CmdPreparePWL( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CmdPreparePWL( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
-	CmdSetPWLMapshotCamera( "pwlmapshot_set_camera", paramsSet, pContext );
+	CmdSetPWLMapshotCamera( "pwlmapshot_set_camera", paramsSet );
 	WriteToPipe( PIPE_SCRIPT_CMDS, "RemoveAllUnitsTmp()" );
 	NGlobal::ProcessCommand( L"camera_perspective 0" );
 }

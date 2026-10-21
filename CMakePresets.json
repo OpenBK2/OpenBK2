@@ -136,6 +136,17 @@
       }
     },
     {
+      "name": "Linux-x64-TySan",
+      "inherits": "base-linux-clang",
+      "displayName": "Linux / x64 / TySan",
+      "description": "TypeSanitizer, the strict-aliasing one. Inherits the clang base because clang is the only compiler that has it, and must be its own tree: clang's driver refuses -fsanitize=type beside address or thread. RelWithDebInfo like the others, which is also the optimisation level the aliasing question is asked at, at the cost of the violations the optimiser folds away before they execute. See docs/Sanitizers.md.",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/bk2-tysan",
+        "ENABLE_TYSAN": "ON"
+      }
+    },
+    {
       "name": "Linux-x64-Clang-Debug",
       "inherits": "base-linux-clang",
       "displayName": "Linux / x64 / clang / Debug",
@@ -163,6 +174,7 @@
     { "name": "Linux-x64-Release", "configurePreset": "Linux-x64-Release", "nativeToolOptions": ["-k", "0"] },
     { "name": "Linux-x64-ASan+UBSan", "configurePreset": "Linux-x64-ASan+UBSan", "nativeToolOptions": ["-k", "0"] },
     { "name": "Linux-x64-TSan", "configurePreset": "Linux-x64-TSan", "nativeToolOptions": ["-k", "0"] },
+    { "name": "Linux-x64-TySan", "configurePreset": "Linux-x64-TySan", "nativeToolOptions": ["-k", "0"] },
     { "name": "Linux-x64-Clang-Debug", "configurePreset": "Linux-x64-Clang-Debug", "nativeToolOptions": ["-k", "0"] },
     { "name": "Linux-x64-Clang-Release", "configurePreset": "Linux-x64-Clang-Release", "nativeToolOptions": ["-k", "0"] }
   ],
@@ -198,6 +210,15 @@
       "description": "history_size raises the chance the other thread's stack is still recorded, at the cost of memory. Add suppressions=... once that file exists; TSan errors out if it is named and missing.",
       "environment": {
         "TSAN_OPTIONS": "history_size=4"
+      }
+    },
+    {
+      "name": "Linux-x64-TySan",
+      "inherits": "base-test",
+      "configurePreset": "Linux-x64-TySan",
+      "description": "halt_on_error stays off, which is the default: a type-aliasing report is a survey item rather than a crash, and stopping at the first one means one site per run. The exit status therefore stays the program's own, so a test fails on its own assertion and the violations are read out of the log. Frames come out as bare addresses unless llvm-symbolizer is on PATH; Debian packages it under a versioned name only, so export TYSAN_OPTIONS with external_symbolizer_path if this run needs source lines.",
+      "environment": {
+        "TYSAN_OPTIONS": "print_stacktrace=1"
       }
     },
     { "name": "Linux-x64-Clang-Debug", "inherits": "base-test", "configurePreset": "Linux-x64-Clang-Debug" },

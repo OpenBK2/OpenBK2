@@ -79,7 +79,7 @@ void CPahtFractionArcLineArc3D::Init( const CVec3 &x0,
 	}
 }
 
-void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	CVec3 x0( 7073.2544f, 1606.7415f, 1149.9806f );
 	CVec3 x1( 7313.3174f, 3108.7656f, 1150.0000f );

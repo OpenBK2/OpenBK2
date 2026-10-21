@@ -35,7 +35,7 @@ usage()
 	Usage: ./test.sh [config] [options] [-- ctest args]
 
 	Configurations are the same as ./build.sh: debug (default), release,
-	asan+ubsan, tsan, clang-debug, clang-release, or any preset name.
+	asan+ubsan, tsan, tysan, clang-debug, clang-release, or any preset name.
 
 	Options:
 	  -j, --jobs N      parallel jobs, for both the build and the test run
@@ -47,9 +47,11 @@ usage()
 	Anything after -- goes to ctest, so --repeat until-fail:20,
 	--output-junit results.xml and the rest are available unchanged.
 
-	The sanitizer configurations set their own ASAN_OPTIONS, UBSAN_OPTIONS and
-	TSAN_OPTIONS from the test preset; docs/Sanitizers.md says what they mean
-	and what to expect. Export the variable yourself to override one.
+	The sanitizer configurations set their own ASAN_OPTIONS, UBSAN_OPTIONS,
+	TSAN_OPTIONS and TYSAN_OPTIONS from the test preset; docs/Sanitizers.md
+	says what they mean and what to expect. Export the variable yourself to
+	override one. Note that tysan does not fail a test on a report: it prints
+	and carries on, so read the output rather than the exit status.
 
 	Examples:
 	  ./test.sh                            build and run the suite, debug

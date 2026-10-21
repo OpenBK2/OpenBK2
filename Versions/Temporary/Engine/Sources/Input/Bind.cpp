@@ -898,7 +898,7 @@ static void CommandBindInner( const std::string &szID, const std::vector<std::ws
 	}
 }
 
-static void CommandBind( const std::string &szID, const std::vector<std::wstring> &_paramsSet, void *pContext )
+static void CommandBind( const std::string &szID, const std::vector<std::wstring> &_paramsSet )
 {
 	std::vector<std::wstring> paramsSet( _paramsSet );
 	for ( int k = 1; k < paramsSet.size(); ++k )
@@ -906,32 +906,32 @@ static void CommandBind( const std::string &szID, const std::vector<std::wstring
 		if ( paramsSet[k] == std::wstring( L"'CTRL'" ) )
 		{
 			paramsSet[k] = L"'LCTRL'";
-			CommandBind( szID, paramsSet, pContext );
+			CommandBind( szID, paramsSet );
 			paramsSet[k] = L"'RCTRL'";
-			CommandBind( szID, paramsSet, pContext );
+			CommandBind( szID, paramsSet );
 			return;
 		}
 		if ( paramsSet[k] == L"'ALT'" )
 		{
 			paramsSet[k] = L"'LALT'";
-			CommandBind( szID, paramsSet, pContext );
+			CommandBind( szID, paramsSet );
 			paramsSet[k] = L"'RALT'";
-			CommandBind( szID, paramsSet, pContext );
+			CommandBind( szID, paramsSet );
 			return;
 		}
 		if ( paramsSet[k] == L"'SHIFT'" )
 		{
 			paramsSet[k] = L"'LSHIFT'";
-			CommandBind( szID, paramsSet, pContext );
+			CommandBind( szID, paramsSet );
 			paramsSet[k] = L"'RSHIFT'";
-			CommandBind( szID, paramsSet, pContext );
+			CommandBind( szID, paramsSet );
 			return;
 		}
 	}
 	CommandBindInner( szID, paramsSet );
 }
 
-static void CommandUnbind( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandUnbind( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 1 )
 	{
@@ -942,12 +942,12 @@ static void CommandUnbind( const std::string &szID, const std::vector<std::wstri
 	NInput::Unbind( NStr::ToMBCS( paramsSet.front() ) );
 }
 
-static void CommandUnbindAll( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandUnbindAll( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NInput::UnbindAll();
 }
 
-static void CommandBindSection( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandBindSection( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	std::string szSection;
 
@@ -959,7 +959,7 @@ static void CommandBindSection( const std::string &szID, const std::vector<std::
 	NInput::SetSection( szSection, false );
 }
 
-static void CommandBindConfigure( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandBindConfigure( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 2 )
 	{
@@ -970,12 +970,12 @@ static void CommandBindConfigure( const std::string &szID, const std::vector<std
 	NInput::SetControlCoeff( NStr::ToMBCS( paramsSet[0] ), NStr::ToFloat( NStr::ToMBCS( paramsSet[1] ) ) );
 }
 
-static void CommandBindUpdate( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandBindUpdate( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NInput::UpdateBinds();
 }
 
-static void CommandShowBind( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void CommandShowBind( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	if ( paramsSet.size() < 1 )
 	{

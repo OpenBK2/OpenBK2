@@ -25,11 +25,30 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 		}
 	};
 
+	// Descending, so Update() can drain the soonest animation off the back.
+	//
+	// The id breaks ties. Two windows of one building commonly finish on the
+	// same tick, std::sort leaves equal elements in an unspecified order, and
+	// this vector is written to the save through IBinSaver, so without a
+	// tiebreak the same damage could save as different bytes depending on the
+	// standard library. The ids are unique within one holder, which makes this
+	// a total order and the output independent of the algorithm. It is the
+	// convention the eight sorts in Common_RTS_AI and AILogic/Shell.cpp
+	// already follow.
+	//
+	// Not an ASYNC either way: this is a client-side process created from an
+	// AI notification, its only effect is Scene()->RemoveObject, nothing reads
+	// it back into the simulation, and the damage path that fills it picks its
+	// slot with NWin32Random, so its contents are already client-local.
 	struct SSortAnimationsByTime
 	{
 		bool operator()( const SAnimationInfo &anim1, const SAnimationInfo &anim2 ) const
 		{
-			return anim1.nEndTime > anim2.nEndTime;
+			if ( anim1.nEndTime != anim2.nEndTime )
+			{
+				return anim1.nEndTime > anim2.nEndTime;
+			}
+			return anim1.nID > anim2.nID;
 		}
 	};
 

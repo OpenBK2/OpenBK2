@@ -411,7 +411,7 @@ void CICMainMenu::Configure( const char *pszConfig )
 	szConfig = pszConfig;
 }
 
-void StartMainMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void StartMainMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 #ifndef _FINALRELEASE
 	if ( !paramsSet.empty() )
@@ -436,7 +436,7 @@ void StartMainMenu( const std::string &szID, const std::vector<std::wstring> &pa
 	NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 }
 
-void StartMainMenuIntro( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void StartMainMenuIntro( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 #ifndef _FINALRELEASE
 	NGlobal::SetVar( "CRAP.MainMenu.BackgroundMap", "" );

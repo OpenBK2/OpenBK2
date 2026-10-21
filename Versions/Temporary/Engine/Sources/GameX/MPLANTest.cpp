@@ -182,7 +182,7 @@ void CLANTester::AsyncDetected()
 
 #ifdef LAN_TEST_ENABLED
 
-void StartLanTest( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+void StartLanTest( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	CDynamicCast<CMPManager> pMPManager = Singleton<IMPToUIManager>();
 	if ( pMPManager )

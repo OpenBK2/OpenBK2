@@ -230,9 +230,20 @@ REGISTER_VAR_EX( "ft_effect_duration",
                  &N_EFFECT_DURATION,
                  NDefFTVals::N_DEF_FT_EFFECT_DURATION,
                  STORAGE_NONE );
-REGISTER_VAR_EX( "ft_zoom", NGlobal::VarIntHandler, &B_ZOOM, NDefFTVals::B_DEF_FT_ZOOM, STORAGE_NONE );
+// B_ZOOM is a bool, so VarIntHandler wrote four bytes into a one-byte object
+// every time ft_zoom was set. Nothing in the shipped configs sets it, which is
+// why this never showed up, and the three bytes it ran into are padding before
+// the next static in this file, so it did no visible harm here; the layout is
+// the linker's to choose, though, and the handler would have read the wrong
+// byte on a big-endian target. VarBoolHandler is the one that matches.
+REGISTER_VAR_EX( "ft_zoom", NGlobal::VarBoolHandler, &B_ZOOM, NDefFTVals::B_DEF_FT_ZOOM, STORAGE_NONE );
+// F_TRANSITION_LENGTH is a float and had the int handler, so setting
+// ft_transition_length would have stored a bit pattern and the slide distance
+// at lines 61 and 62 would have collapsed to a denormal. Latent, like ft_zoom
+// above: nothing in the shipped configs sets it. The default already says
+// 3.0f, since it comes from the same constant as the initialiser.
 REGISTER_VAR_EX( "ft_transition_length",
-                 NGlobal::VarIntHandler,
+                 NGlobal::VarFloatHandler,
                  &F_TRANSITION_LENGTH,
                  NDefFTVals::F_DEF_FT_TRANSITION_LENGTH,
                  STORAGE_NONE );

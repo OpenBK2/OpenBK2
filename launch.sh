@@ -50,6 +50,7 @@ usage()
 	  debug, release            ~/bk2          (debug is the default)
 	  asan+ubsan                ~/bk2-asan
 	  tsan                      ~/bk2-tsan
+	  tysan                     ~/bk2-tysan
 	  clang-debug, clang-release  ~/bk2-clang
 
 	BK2_PREFIX overrides the lookup entirely.
@@ -126,7 +127,7 @@ has_game_data()
 # A data tree is a directory holding game data. The install prefixes match the
 # same $HOME/bk2-* glob and are not trees, so they are named here; the list
 # mirrors the CMAKE_INSTALL_PREFIX values in CMakePresets.json.
-readonly -a NOT_TREES=(bk2 bk2-asan bk2-tsan bk2-clang)
+readonly -a NOT_TREES=(bk2 bk2-asan bk2-tsan bk2-tysan bk2-clang)
 
 is_install_prefix()
 {
@@ -364,6 +365,25 @@ case "$PREFIX" in
 		TSAN_SUPP=""
 		[ -f "$SRCDIR/tsan.supp" ] && TSAN_SUPP="suppressions=$SRCDIR/tsan.supp:"
 		ENV_ARGS+=( "TSAN_OPTIONS=${TSAN_OPTIONS:-${TSAN_SUPP}history_size=4}" ) ;;
+	*-tysan)
+		# TySan prints a report and carries on, which is what a survey wants:
+		# halt_on_error=1 gives one site per run of a game that takes a minute
+		# to reach a mission. The exit status stays the program's own, so this
+		# prefix is the one sanitizer build whose status still means what it
+		# says.
+		#
+		# The symbolizer has to be named. The runtime looks for a plain
+		# "llvm-symbolizer" and Debian ships versioned names only, so an
+		# unconfigured run prints bare addresses and the warning "invalid path
+		# to external symbolizer". Highest version wins, and sort -V is what
+		# orders llvm-symbolizer-9 below llvm-symbolizer-21.
+		TYSAN_SYM=""
+		if ! command -v llvm-symbolizer >/dev/null; then
+			TYSAN_SYM="$(compgen -c llvm-symbolizer- 2>/dev/null | sort -V -t- -k3 | tail -1)"
+			[ -n "$TYSAN_SYM" ] &&
+				TYSAN_SYM="external_symbolizer_path=$(command -v "$TYSAN_SYM"):"
+		fi
+		ENV_ARGS+=( "TYSAN_OPTIONS=${TYSAN_OPTIONS:-${TYSAN_SYM}print_stacktrace=1}" ) ;;
 esac
 
 # Valgrind's memcheck answers for every type the question UBSan's bool and enum
@@ -389,7 +409,7 @@ declare -a VALGRIND_CMD=()
 if [ "$USE_VALGRIND" = yes ]; then
 	command -v valgrind >/dev/null || die "no valgrind on PATH"
 	case "$PREFIX" in
-		*-asan|*-tsan)
+		*-asan|*-tsan|*-tysan)
 			die "valgrind cannot run a sanitizer build: each replaces the allocator and intercepts the same calls. Run release or debug instead" ;;
 	esac
 	# mimalloc is linked into every executable by default and memcheck cannot

@@ -82,7 +82,7 @@ CProfiler::~CProfiler()
 }
 } // namespace NProfiler
 
-static void Profile( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+static void Profile( const std::string &szID, const std::vector<std::wstring> &paramsSet )
 {
 	NProfiler::DumpStats();
 }

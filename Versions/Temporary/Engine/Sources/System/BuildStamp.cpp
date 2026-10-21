@@ -276,6 +276,16 @@ static std::string ReadBuildConfiguration()
 	szResult += "+ubsan";
 #endif
 
+	// TySan is clang's alone and GCC has nothing to spell, so there is no
+	// __SANITIZE_ macro arm here. clang does answer __has_feature for it,
+	// which is preferred over a definition from CMake for the reason above
+	// this function: it cannot disagree with how this unit was built.
+#if defined( __has_feature )
+#if __has_feature( type_sanitizer )
+	szResult += "+tysan";
+#endif
+#endif
+
 	return szResult;
 }
 
