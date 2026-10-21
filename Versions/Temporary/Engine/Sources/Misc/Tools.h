@@ -8,6 +8,13 @@
 #include "Asserts.h"
 #include "port/stdcall.h"
 
+// CHAR_BIT and the float format limits, for the platform assertions below.
+// <cfloat> rather than <limits>, deliberately: both are macro-only C headers,
+// where <limits> declares members named min and max and would break in any
+// translation unit that saw windows.h first, since NOMINMAX is not set
+// globally here.
+#include <cfloat>
+#include <climits>
 #include <cmath>
 #include <cstdint>
 #include <type_traits>
@@ -15,12 +22,56 @@
 #include <boost/config.hpp>
 #include <boost/core/bit.hpp>
 #include <boost/predef/architecture.h>
+// BOOST_ENDIAN_LITTLE_BYTE, for the platform assertions below
+#include <boost/predef/other/endian.h>
 // cvtss2si, for Float2Int
 #if BOOST_ARCH_X86
 #include <xmmintrin.h>
 #endif
 #include <boost/math/special_functions/sign.hpp>
 #include <fmt/printf.h>
+
+// ************************************************************************************************************************ //
+// **
+// ** what this engine assumes about the machine
+// **
+// ** Here because this header reaches almost every translation unit, so these
+// ** are actually compiled. A header nobody includes asserts nothing.
+// **
+// ************************************************************************************************************************ //
+
+// The standard permits far more than this: int need only hold 16 bits, bool's
+// size is unspecified, nothing guarantees IEEE 754 or two's complement before
+// C++20, and CHAR_BIT may exceed 8. Every target this game ships on is x86 or
+// x64 with MSVC, GCC or clang, where all of the below holds, and the code is
+// built on it in two places that cannot tolerate being wrong quietly:
+//
+//  - Serialization. IBinSaver's scalar path is DataChunk( id, p, sizeof( T ) )
+//    and every saver writes the object's bytes with memcpy, so the width of a
+//    type, the number of bits in a byte and the byte order are all part of the
+//    save, the replay and the network packet. 639 serialized members are a
+//    plain int and 552 are a bool.
+//  - Lockstep. AILogic compares float state between clients by checksumming
+//    its bytes, so the representation is part of the protocol, not just of the
+//    arithmetic.
+//
+// So these say out loud what the formats depend on, and a port to a machine
+// where one of them fails gets a compile error at the place that explains why
+// rather than a desynchronising save. docs/SerializedTypeWidths.md has the
+// measurements, and NBinSaverDetail::TIsWidthVarying in System/BinSaver.h
+// refuses the two types that differ between the platforms we already ship.
+static_assert( CHAR_BIT == 8, "every serialized size is a byte count and every saver memcpy's object bytes" );
+static_assert( sizeof( short ) == 2 && sizeof( int ) == 4 && sizeof( long long ) == 8,
+               "these widths are in the save format; int in 639 serialized members alone" );
+static_assert( sizeof( bool ) == 1, "552 serialized members are a bool" );
+static_assert( sizeof( float ) == 4 && sizeof( double ) == 8, "both are serialized and checksummed by their bytes" );
+// binary32 and binary64, which is to say IEEE 754: radix two, a 24 and 53 bit
+// significand, and the matching exponent ranges.
+static_assert( FLT_RADIX == 2 && FLT_MANT_DIG == 24 && FLT_MAX_EXP == 128 && DBL_MANT_DIG == 53 && DBL_MAX_EXP == 1024,
+               "the lockstep checksum compares float state as bytes, so the representation is part of the protocol" );
+static_assert( -1 == ~0, "two's complement, which only C++20 mandates and which negative values in saves rely on" );
+static_assert( BOOST_ENDIAN_LITTLE_BYTE,
+               "scalars are written by memcpy, so the byte order is the format rather than an implementation detail" );
 
 // square root of the 2 and 3
 #define SQRT_2 1.41421356237309504880
