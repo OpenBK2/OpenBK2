@@ -15,8 +15,10 @@
 #include "UI/UIVisitor.h"
 #include "UI/WindowTextView.h"
 
+#include <algorithm>
 #include <cmath>
 #include <fstream>
+#include <vector>
 
 #include <boost/uuid/string_generator.hpp>
 #include <gtest/gtest.h>
@@ -763,6 +765,86 @@ TEST_F( TextVerticalAlignment, OppositeParagraphEdgesFitWithoutShrinkingEitherLi
 		EXPECT_EQ( visitor.size, preferred->GetSize() );
 		EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, visitor.clip, false ) );
 	}
+}
+
+TEST_F( TextVerticalAlignment, SupportedCharactersKeepTheirScaleAtCaptionAndParagraphEdges )
+{
+	AddBodyFont();
+	AddHeaderFont();
+	// Use the same European code pages as runtime font sizing, including
+	// accents, Cyrillic and Greek, rather than a list of known overhanging letters.
+	std::vector<uint32_t> characters;
+	for ( int charset : { NCodePages::CHARSET_ANSI,
+	                      NCodePages::CHARSET_EASTEUROPE,
+	                      NCodePages::CHARSET_RUSSIAN,
+	                      NCodePages::CHARSET_GREEK,
+	                      NCodePages::CHARSET_TURKISH,
+	                      NCodePages::CHARSET_BALTIC } )
+	{
+		const auto chars = NCodePages::GetPrintableCodePoints( charset );
+		characters.insert( characters.end(), chars.begin(), chars.end() );
+	}
+	std::sort( characters.begin(), characters.end() );
+	characters.erase( std::unique( characters.begin(), characters.end() ), characters.end() );
+
+	const struct
+	{
+		const char *file;
+		const wchar_t *style;
+	} fonts[] = { { "PTSans-Regular.ttf", L"<font face=body size=16>" },
+	              { "Oswald-Variable.ttf", L"<font face=h2 size=20>" },
+	              { "LiberationSans-Regular.ttf", L"<font face=numeric size=14>" } };
+
+	int nCases = 0;
+	for ( const auto &font : fonts )
+	{
+		std::string error;
+		auto face = NFontRaster::CFace::OpenFile( std::string( GAME_DATA_DIR ) + "/Fonts/Files/" + font.file, 0, &error );
+		ASSERT_TRUE( face ) << error;
+		for ( const auto &resolution : menuResolutions )
+		{
+			Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
+			CObj<CWindowTextView> label = MakeLabel( 300, 100 );
+			CObj<CWindowTextView> caption = MakeLabel( 300, 100 );
+			CTRect<float> box;
+			VirtualToScreen( label->GetWindowRect(), &box );
+			for ( uint32_t code : characters )
+			{
+				// Exclude controls, markup delimiters and unsupported glyphs: a
+				// missing-glyph replacement would not test the requested character.
+				if ( ( code >= 0x7f && code < 0xa0 ) || code == '<' || code == '>' || !face->HasGlyph( code ) )
+				{
+					continue;
+				}
+				SCOPED_TRACE( std::string( font.file ) + " " + std::to_string( resolution.x ) + "x" +
+				              std::to_string( resolution.y ) + " codepoint " + std::to_string( code ) );
+				const std::wstring glyph( 1, static_cast<wchar_t>( code ) );
+				const std::wstring word = glyph + L"Agypf" + glyph;
+				const std::wstring paragraph =
+						std::wstring( font.style ) + L"<left>" + word + L"\n<center>" + word + L"\n<right>" + word;
+				label->SetText( paragraph );
+				CObj<IML> preferred = MakeText( paragraph, std::floor( box.Width() ) );
+				TextVisitor visitor;
+				label->Visit( &visitor );
+				ASSERT_EQ( visitor.calls, 1 );
+				EXPECT_EQ( visitor.size, preferred->GetSize() );
+				EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, visitor.clip, false ) );
+				// Also exercise tight measured caption boxes with a lone character.
+				const std::wstring content = std::wstring( font.style ) + glyph;
+				caption->CWindow::SetTextString( content );
+				preferred = MakeText( content, std::floor( box.Width() ) );
+				TextVisitor captionVisitor;
+				caption->Visit( &captionVisitor );
+				ASSERT_EQ( captionVisitor.calls, 1 );
+				EXPECT_EQ( captionVisitor.size, preferred->GetSize() );
+				EXPECT_FALSE(
+						captionVisitor.text->HasVisibleTextOutside( captionVisitor.position, captionVisitor.clip, false ) );
+				++nCases;
+			}
+		}
+	}
+	EXPECT_GT( nCases, 7000 );
+	RecordProperty( "font_character_resolution_cases", nCases );
 }
 
 TEST_F( TextVerticalAlignment, BritishCampaignDescriptionKeepsItsPreferredScaleWhenScrolling )
