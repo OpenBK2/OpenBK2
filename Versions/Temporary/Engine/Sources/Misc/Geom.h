@@ -25,10 +25,11 @@ class MISC_EXPORT CVec2
 public:
 	union
 	{
-		// The arm carrying the default member initialisers is the one the
-		// implicit default constructor activates, and at most one variant
-		// member may carry them, so this is how the union states which arm is
-		// alive in a freshly constructed vector. It has to be a struct arm:
+		// The arm the default constructor's mem-initialisers name is the one a
+		// freshly constructed vector holds. Default member initialisers on the
+		// arm would say the same, but MSVC rejects them on a member of an
+		// anonymous struct (C2926), and a mem-initialiser naming a variant
+		// member activates its arm just as well. It has to be a struct arm:
 		// [class.mem]/26 permits inspecting the common initial sequence of any
 		// standard-layout struct member of a standard-layout union as long as
 		// one of *those structs* is the active member, which is what makes the
@@ -41,7 +42,7 @@ public:
 		// engine wanted it for and no longer needs it.
 		struct
 		{
-			float x = 0.0f, y = 0.0f;
+			float x, y;
 		};
 
 		struct
@@ -51,7 +52,12 @@ public:
 	};
 
 public:
-	CVec2() = default;
+	// activates the x, y arm, see the note on the union
+	CVec2()
+		: x( 0.0f )
+		, y( 0.0f )
+	{
+	}
 
 	CVec2( const float _x, const float _y )
 		: x( _x )
@@ -296,12 +302,12 @@ class CVec3
 public:
 	union
 	{
-		// Active arm by construction, see the note on CVec2: the initialisers
-		// here are what make the r, g, b alias defined behaviour under
-		// [class.mem]/26, and what the : m{} this replaces did not.
+		// Active arm by construction, see the note on CVec2: the default
+		// constructor naming x, y, z is what makes the r, g, b alias defined
+		// behaviour under [class.mem]/26, and what the : m{} it replaces did not.
 		struct
 		{
-			float x = 0.0f, y = 0.0f, z = 0.0f;
+			float x, y, z;
 		};
 
 		struct
@@ -316,7 +322,13 @@ public:
 	};
 
 public:
-	CVec3() = default;
+	// activates the x, y, z arm, see the note on CVec2
+	CVec3()
+		: x( 0.0f )
+		, y( 0.0f )
+		, z( 0.0f )
+	{
+	}
 
 	CVec3( const float _x, const float _y, const float _z )
 		: x( _x )
@@ -588,7 +600,7 @@ public:
 		// Active arm by construction, see the note on CVec2.
 		struct
 		{
-			float x = 0.0f, y = 0.0f, z = 0.0f, w = 0.0f;
+			float x, y, z, w;
 		};
 
 		struct
@@ -602,7 +614,14 @@ public:
 	};
 
 public:
-	CVec4() = default;
+	// activates the x, y, z, w arm, see the note on CVec2
+	CVec4()
+		: x( 0.0f )
+		, y( 0.0f )
+		, z( 0.0f )
+		, w( 0.0f )
+	{
+	}
 
 	CVec4( const float _x, const float _y, const float _z, const float _w )
 		: x( _x )
@@ -1417,10 +1436,10 @@ public:
 		// the global namespace; as a class member it is ours to use.
 		struct
 		{
-			float _11 = 0.0f, _12 = 0.0f, _13 = 0.0f, _14 = 0.0f;
-			float _21 = 0.0f, _22 = 0.0f, _23 = 0.0f, _24 = 0.0f;
-			float _31 = 0.0f, _32 = 0.0f, _33 = 0.0f, _34 = 0.0f;
-			float _41 = 0.0f, _42 = 0.0f, _43 = 0.0f, _44 = 0.0f;
+			float _11, _12, _13, _14;
+			float _21, _22, _23, _24;
+			float _31, _32, _33, _34;
+			float _41, _42, _43, _44;
 		};
 
 		struct
@@ -1505,9 +1524,27 @@ public:
 
 public:
 	// Zero storage is the default; callers requesting identity still use
-	// Identity. The zeroing is the arm's default member initialisers now, so
-	// the element names rather than the array are what a fresh matrix holds.
-	SHMatrix() = default;
+	// Identity. The zeroing names the elements rather than the array, so the
+	// element arm is what a fresh matrix holds, see the note on CVec2.
+	SHMatrix()
+		: _11( 0.0f )
+		, _12( 0.0f )
+		, _13( 0.0f )
+		, _14( 0.0f )
+		, _21( 0.0f )
+		, _22( 0.0f )
+		, _23( 0.0f )
+		, _24( 0.0f )
+		, _31( 0.0f )
+		, _32( 0.0f )
+		, _33( 0.0f )
+		, _34( 0.0f )
+		, _41( 0.0f )
+		, _42( 0.0f )
+		, _43( 0.0f )
+		, _44( 0.0f )
+	{
+	}
 
 	SHMatrix( float __11,
 	          float __12,
@@ -1869,7 +1906,7 @@ public:
 		// compiling every translation unit. Only min, max has users.
 		struct
 		{
-			TYPE x = {}, y = {};
+			TYPE x, y;
 		};
 
 		struct
@@ -1878,7 +1915,12 @@ public:
 		};
 	};
 
-	CTPoint() = default;
+	// activates the x, y arm, see the note on CVec2
+	CTPoint()
+		: x()
+		, y()
+	{
+	}
 
 	CTPoint( TYPE _x, TYPE _y )
 		: x( _x )
