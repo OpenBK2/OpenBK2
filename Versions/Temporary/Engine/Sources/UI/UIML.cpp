@@ -16,6 +16,7 @@
 #include <fmt/format.h>
 
 static const int N_TAB_SIZE = 4;
+static const float F_TEXT_BOUNDS_EPSILON = 0.01f;
 static std::string s_DefaultFontName = "System";
 
 struct SFontInfo
@@ -979,6 +980,7 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 			break;
 	}
 
+	CTRect<float> letters( 0, 0, 0, 0 );
 	for ( std::list<CPtr<IMLObject>>::iterator iTemp = pInfo->line.begin(); iTemp != pInfo->line.end(); iTemp++ )
 	{
 		const CTPoint<float> &sSize = ( *iTemp )->GetSize();
@@ -997,9 +999,33 @@ void CMLLayout::AssembleLine( SReflowInfo *pInfo, bool bEndBlock )
 				break;
 		}
 
+		CTRect<float> ink = ( *iTemp )->GetInkBounds( false );
+		if ( !ink.IsEmpty() )
+		{
+			ink.Move( ( *iTemp )->GetPosition() );
+			letters.Union( ink );
+		}
 		fX += ( *iTemp )->GetSize().x;
 		pInfo->fMaxX = (std::max)( pInfo->fMaxX, fX );
 		fX += fSpace;
+	}
+	if ( !letters.IsEmpty() )
+	{
+		// Wrapped lines can overhang opposite edges. Correct each line within
+		// its available width before the paragraph's combined bounds are tested.
+		const float fMinX = pInfo->sLeft.fValue - letters.x1;
+		const float fMaxX = pInfo->sRight.fValue - letters.x2;
+		if ( fMinX <= fMaxX + F_TEXT_BOUNDS_EPSILON )
+		{
+			const float fOffset = std::clamp( 0.0f, fMinX, (std::max)( fMinX, fMaxX ) );
+			for ( const auto &item : pInfo->line )
+			{
+				CTPoint<float> position = item->GetPosition();
+				position.x += fOffset;
+				item->SetPosition( position );
+			}
+			pInfo->fMaxX = (std::max)( pInfo->fMaxX, letters.x2 + fOffset );
+		}
 	}
 }
 
@@ -1106,6 +1132,8 @@ public:
 
 	bool IsSingleLine() override;
 	CTPoint<float> FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip ) override;
+	CTPoint<float>
+	GetDrawOrigin( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip ) override;
 	bool
 	HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline ) override;
 
@@ -1193,18 +1221,48 @@ const CTPoint<int> &CML::GetSize()
 {
 	UpdateFontScale();
 	const CTPoint<float> &sFPSize = pLayout->GetSize();
-	sSize.x = Float2Int( sFPSize.x + 0.5f );
-	sSize.y = Float2Int( sFPSize.y + 0.5f );
+	const CTRect<float> &ink = pLayout->GetInkBounds( false );
+	// A self-sized caption must have room for overhang at both ends (Jf), not
+	// just its pen advance. Round bounds outward independently of the FPU mode.
+	sSize.x = static_cast<int>( std::ceil( (std::max)( { sFPSize.x, ink.x2, ink.Width() } ) ) );
+	sSize.y = static_cast<int>( std::ceil( sFPSize.y ) );
 	return sSize;
 }
 
-static CTPoint<float> TextOrigin( const CTRect<float> &box, int nHeight, bool bCenter )
+static CTPoint<float>
+TextOrigin( const CTRect<float> &box, int nHeight, bool bCenter, const CTRect<float> &ink, const CTRect<float> *pClip )
 {
 	CTPoint<float> origin = box.GetLeftTop();
 	// Center overflowing single-line cells, matching the existing HUD fields.
 	if ( bCenter && nHeight > box.Height() )
 	{
 		origin.y = std::floor( box.y1 + ( box.Height() - nHeight ) * 0.5f + 0.5f );
+	}
+	CTRect<float> clip = box;
+	if ( pClip )
+	{
+		clip.Intersect( *pClip );
+	}
+	if ( !ink.IsEmpty() && !clip.IsEmpty() )
+	{
+		// Advances and padded font cells are not visible bounds. A negative
+		// bearing (J) or a descender can cross an edge even when the letters fit.
+		// Preserve the requested alignment unless a minimal translation fixes it.
+		// An axis with no fitting position still needs the usual scale fallback.
+		const float fMinX = clip.x1 - ink.x1;
+		const float fMaxX = clip.x2 - ink.x2;
+		// Pixel/virtual round trips can invert an exact fit by a rounding error.
+		// Use the same tolerance as clipping detection and keep clamp bounds ordered.
+		if ( fMinX <= fMaxX + F_TEXT_BOUNDS_EPSILON )
+		{
+			origin.x = std::clamp( origin.x, fMinX, (std::max)( fMinX, fMaxX ) );
+		}
+		const float fMinY = clip.y1 - ink.y1;
+		const float fMaxY = clip.y2 - ink.y2;
+		if ( fMinY <= fMaxY + F_TEXT_BOUNDS_EPSILON )
+		{
+			origin.y = std::clamp( origin.y, fMinY, (std::max)( fMinY, fMaxY ) );
+		}
 	}
 	return origin;
 }
@@ -1218,9 +1276,8 @@ static bool InkOutside( CTRect<float> ink, const CTPoint<float> &position, const
 	ink.Move( position );
 	// Coordinate conversions can differ by a small floating-point rounding
 	// error. Do not confuse that with losing a visible pixel at the boundary.
-	const float epsilon = 0.01f;
-	return ink.x1 < box.x1 - epsilon || ink.y1 < box.y1 - epsilon || ink.x2 > box.x2 + epsilon ||
-	       ink.y2 > box.y2 + epsilon;
+	return ink.x1 < box.x1 - F_TEXT_BOUNDS_EPSILON || ink.y1 < box.y1 - F_TEXT_BOUNDS_EPSILON ||
+	       ink.x2 > box.x2 + F_TEXT_BOUNDS_EPSILON || ink.y2 > box.y2 + F_TEXT_BOUNDS_EPSILON;
 }
 
 bool CML::HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline )
@@ -1233,7 +1290,7 @@ CTPoint<float> CML::FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine,
 {
 	UpdateFontScale();
 	const CTPoint<float> preferredOrigin =
-			TextOrigin( sBox, sPreferredSize.y, bCenterSingleLine && bPreferredSingleLine );
+			TextOrigin( sBox, sPreferredSize.y, bCenterSingleLine && bPreferredSingleLine, sPreferredInk, pClip );
 	// Alignment belongs to the label's box; clipping may be tighter because
 	// an ordinary parent panel also clips its children at draw time.
 	CTRect<float> clip = sBox;
@@ -1251,7 +1308,14 @@ CTPoint<float> CML::FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine,
 	}
 	// The fallback can change both wrapping and line height. Align the final
 	// layout before drawing, rather than keeping the larger font's origin.
-	return TextOrigin( sBox, GetSize().y, bCenterSingleLine && pLayout->IsSingleLine() );
+	return GetDrawOrigin( sBox, bCenterSingleLine, pClip );
+}
+
+CTPoint<float> CML::GetDrawOrigin( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip )
+{
+	UpdateFontScale();
+	return TextOrigin(
+			sBox, GetSize().y, bCenterSingleLine && pLayout->IsSingleLine(), pLayout->GetInkBounds( false ), pClip );
 }
 
 void CML::Generate( int nWidth )
@@ -1398,8 +1462,7 @@ void CML::GenerateLayout()
 	{
 		// Size fallback protects letters, not decorative border overhang.
 		sPreferredInk = pLayout->GetInkBounds( false );
-		sPreferredSize.x = Float2Int( pLayout->GetSize().x + 0.5f );
-		sPreferredSize.y = Float2Int( pLayout->GetSize().y + 0.5f );
+		sPreferredSize = GetSize();
 		bPreferredSingleLine = pLayout->IsSingleLine();
 	}
 }
