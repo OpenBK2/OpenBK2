@@ -586,7 +586,31 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	{
 		return false;
 	}
-	NI_ASSERT( nSize > 0, "Wrong size passed" );
+	// This was NI_ASSERT( nSize > 0 ), which is ( (void)0 ) in this
+	// configuration, so nothing checked it, and both branches below hand nSize
+	// straight to something that cannot survive a bad one: memset converts a
+	// negative size to a huge size_t, and szString.resize( nSize * 2 )
+	// overflows the multiplication first and then asks for the same absurd
+	// amount.
+	//
+	// It is reachable rather than defensive. CVariant's blob serializes its own
+	// length as a uint32_t and hands it to AddRawData, whose parameter is an
+	// int, so a stored length with the high bit set arrives here negative, and
+	// that length comes out of a save file or a database record.
+	//
+	// The chunk has already been started by the time we get here, so refusing
+	// has to close it again or the saver stays a level deep for the rest of the
+	// document. The assertion is kept for its report in a debug build; the
+	// recovery below it is what runs in a release one.
+	if ( nSize <= 0 )
+	{
+		NI_ASSERT( false, "Wrong size passed" );
+		if ( idChunk != 0 )
+		{
+			FinishChunk();
+		}
+		return false;
+	}
 	std::string szString;
 	if ( IsReading() )
 	{
