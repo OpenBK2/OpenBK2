@@ -238,10 +238,24 @@ public:
 	// and the fix if that ever matters is to return CVec2( vCenter.x,
 	// vCenter.y ) by value, which needs the ~675 call sites checked for ones
 	// that hold or return the reference.
+	//
+	// So the diagnostic is suppressed here rather than the cast being changed,
+	// and the suppression is kept to this one accessor so that
+	// -Wstrict-aliasing=3 can stay on for the rest of the tree; see
+	// cmake/warnings.cmake. MSVC is left out of the pragma the way
+	// System/Basic.h and MapEditorLib/BuildDetailsWx.cpp leave it out: an
+	// unrecognised pragma there is C4068 at warning level 1.
+#if defined( __GNUC__ )
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#endif
 	const CVec2 &GetCenterPlain() const
 	{
 		return *( reinterpret_cast<const CVec2 *>( &vCenter ) );
 	}
+#if defined( __GNUC__ )
+#pragma GCC diagnostic pop
+#endif
 
 	CCommonPathFinder *GetPathFinder() const
 	{
