@@ -9,7 +9,7 @@
 // it. The inline originals could name the C++ globals directly because the compiler
 // resolved them; MASM would need the decorated names.
 
-#include "3Dmotor/GSSETransform.h"
+#include "3Dmotor/GSSEtransform.h"
 
 #include <cstddef>
 #include <cstdint>

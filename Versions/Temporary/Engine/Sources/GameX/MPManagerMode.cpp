@@ -291,9 +291,9 @@ void CMPManagerMode::AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNet
 	pList->push_back( newGame );
 }
 
-unsigned long CMPManagerMode::GetCheckSum( const NDb::SMultiplayerMap *pMPMap )
+uint32_t CMPManagerMode::GetCheckSum( const NDb::SMultiplayerMap *pMPMap )
 {
-	unsigned long ulCheckSum = 0;
+	uint32_t ulCheckSum = 0;
 	if ( pMPMap )
 	{
 		ulCheckSum = pMPMap->CalcCheckSum();

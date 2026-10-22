@@ -2,9 +2,32 @@
 
 #include "libdb_export.h"
 
+// This header used to include none of what it uses and only compiled where a
+// prelude had already supplied all of it: CDBID as a complete type, since it
+// is the key of CMultiVariantMap and is new'd below; IBinSaver likewise, the
+// operator& being defined inline here; std::string, std::wstring and
+// std::unordered_map; memcpy and ASSERT. Every unit in the engine arrives via
+// libdb/stdafx.h, which is why it went unnoticed, but a test that includes
+// this header on its own cannot, and ordering the test's includes around it is
+// not a fix because clang-format regroups them back.
+//
+// Neither System/DB.h nor System/BinSaver.h reaches libdb, so naming them here
+// forms no cycle.
+#include "Misc/Asserts.h"
+#include "System/BinSaver.h"
+#include "System/DB.h"
+
 #include <cstdint>
+#include <cstring>
+#include <string>
+#include <unordered_map>
 
 #include <boost/uuid/uuid.hpp>
+
+// Only ever a reference parameter of a declaration here, so the tag is all
+// this needs; it is a struct in System/XmlSaver.h and has to be spelled the
+// same way to keep -Wmismatched-tags quiet.
+struct IXmlSaver;
 
 //#include "DBIDDef.h"
 
@@ -39,7 +62,12 @@ private:
 	struct SBlob
 	{
 		void *m_ptr;
-		size_t m_nSize;
+		// uint32_t and not size_t, because operator& writes this one: size_t is
+		// four bytes in a 32-bit build and eight in a 64-bit one, so the x86
+		// and x64 builds disagreed on the layout of the same blob. Four is what
+		// the 32-bit build wrote. The constructors below still take a size_t,
+		// which is the right type for a length in memory.
+		uint32_t m_nSize;
 		bool m_bDelete;
 
 		SBlob()
@@ -98,6 +126,33 @@ private:
 
 			if ( saver.IsReading() )
 			{
+				// m_nSize arrives straight off the stream and nothing looked at it
+				// before the allocation below, so a damaged or hostile record could
+				// ask for up to four gigabytes; and AddRawData takes its size as an
+				// int, so any length from two gigabytes up reached the saver
+				// negative, which is where it became a memset or a memcpy of an
+				// enormous size_t. This is the only call site in the tree that
+				// passes AddRawData a length that did not come from a sizeof.
+				//
+				// The bound is the one the saver's own interface implies rather
+				// than a number invented here: a blob this code can neither hand
+				// to AddRawData nor have written itself. Past it, the record is not
+				// one we produced, so the blob loads empty and the chunk holding
+				// its bytes is left unread, which the chunked savers allow because
+				// they look a chunk up by id rather than walking the stream.
+				//
+				// INT32_MAX from <cstdint>, which is already included, rather than
+				// std::numeric_limits: <limits> declares members named min and max
+				// and breaks in any unit that saw windows.h first, NOMINMAX not
+				// being set globally here. Misc/Tools.h records the same trap.
+				if ( m_nSize > uint32_t( INT32_MAX ) )
+				{
+					NI_ASSERT( false, "Blob length out of range" );
+					m_nSize = 0;
+					m_ptr = 0;
+					m_bDelete = false;
+					return 0;
+				}
 				m_bDelete = true;
 				m_ptr = new uint8_t[m_nSize];
 			}

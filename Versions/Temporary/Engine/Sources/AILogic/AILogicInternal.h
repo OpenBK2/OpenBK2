@@ -60,7 +60,7 @@ private:
 	// should take the dump again rather than remember that a previous process
 	// already did.
 	bool bAsyncDumpWritten = false;
-	uLong checkSum = {};
+	uint32_t checkSum = {};
 
 	bool bSegment = {};
 	bool bNetGameStarted = {};

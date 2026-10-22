@@ -1267,7 +1267,7 @@ void CShellsStore::Clear()
 	NAsyncExplosionDebug::ResetAreaDamageTrace();
 }
 
-void CShellsStore::UpdateCheckSum( uLong *pCheckSum )
+void CShellsStore::UpdateCheckSum( uint32_t *pCheckSum )
 {
 	using namespace NCheckSums;
 
@@ -1321,10 +1321,10 @@ void CShellsStore::UpdateDebugChecksums( FILE *f )
 		const NTimer::STime explTime = pShell->GetExplTime();
 		const int nOrder = pShell->GetOrder();
 
-		uLong checksum = 12347;
+		uint32_t checksum = 12347;
 		checksum = CalculateChecksum( checksum, vExplCenter.x, vExplCenter.y, vExplCenter.z, explTime, nOrder );
 
-		fprintf( f, "\nExplosion[%d]: %lu\n", nOrder, checksum );
+		fprintf( f, "\nExplosion[%d]: %u\n", nOrder, checksum );
 	}
 	fprintf( f, "\n" );
 
@@ -1338,7 +1338,7 @@ void CShellsStore::UpdateDebugChecksums( FILE *f )
 		const CVec3 vCurCenter = pShell->GetCoordinates();
 		const NTimer::STime explTime = pShell->GetExplTime();
 		const int nOrder = pShell->GetOrder();
-		uLong checksum = 71717;
+		uint32_t checksum = 71717;
 		checksum = CalculateChecksum( checksum,
 		                              vExplCenter.x,
 		                              vExplCenter.y,
@@ -1350,7 +1350,7 @@ void CShellsStore::UpdateDebugChecksums( FILE *f )
 		                              nOrder );
 
 		fprintf( f,
-		         "\tPlayer[%d] Shell[%d] Order[%d]: %lu\n",
+		         "\tPlayer[%d] Shell[%d] Order[%d]: %u\n",
 		         (int)pShell->GetPlayer(),
 		         pShell->GetUniqueId(),
 		         nOrder,

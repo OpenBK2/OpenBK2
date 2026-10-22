@@ -586,15 +586,66 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	{
 		return false;
 	}
-	NI_ASSERT( nSize > 0, "Wrong size passed" );
+	// This was NI_ASSERT( nSize > 0 ), which is ( (void)0 ) in this
+	// configuration, so nothing checked it, and both branches below hand nSize
+	// straight to something that cannot survive a bad one: memset converts a
+	// negative size to a huge size_t, and szString.resize( nSize * 2 )
+	// overflows the multiplication first and then asks for the same absurd
+	// amount.
+	//
+	// It is reachable rather than defensive. CVariant's blob serializes its own
+	// length as a uint32_t and hands it to AddRawData, whose parameter is an
+	// int, so a stored length with the high bit set arrives here negative, and
+	// that length comes out of a save file or a database record.
+	//
+	// The chunk has already been started by the time we get here, so refusing
+	// has to close it again or the saver stays a level deep for the rest of the
+	// document. The assertion is kept for its report in a debug build; the
+	// recovery below it is what runs in a release one.
+	//
+	// Only a negative size is refused, although the assertion this replaced
+	// asked for nSize > 0. Zero is legitimate: an empty binary field in a
+	// record becomes a zero length CVariant blob, and CVariant::operator int
+	// handles GetBlobSize() == 0 as a case of its own. Asserting on it would
+	// fire on valid data in a debug build, and refusing it would stop writing
+	// the empty chunk that such a blob has always produced. Zero falls through
+	// to a resize of nothing and a memset of nothing, which is what it did
+	// before.
+	if ( nSize < 0 )
+	{
+		NI_ASSERT( false, "Negative chunk size" );
+		if ( idChunk != 0 )
+		{
+			FinishChunk();
+		}
+		return false;
+	}
 	std::string szString;
 	if ( IsReading() )
 	{
 		DataChunkString( szString );
+		// The length check here was NI_ASSERT, which is ( (void)0 ) without
+		// _DO_ASSERT_SLOW, so a string longer than the destination was never
+		// caught. StringToBin was not told how big pData is either, so it wrote
+		// as many bytes as the text asked for: the two things that were meant
+		// to bound this both did nothing, and chunks are read out of saves and
+		// profiles. NI_VERIFY does evaluate its condition, and the conversion
+		// is bounded by nSize as well, so neither check rests on the other.
+		//
+		// The bound is "not longer than", not "equal to", and the old
+		// assertion had that wrong as well as dead: a pointer chunk is written
+		// with a hard coded 4 bytes (see Finish, where __ServerPtr carries an
+		// index rather than an address) and read back into a void * slot, so
+		// on x64 nSize is 8 and the text is legitimately 8 characters rather
+		// than 16. Asserting equality would have fired on every pointer chunk
+		// the first time anyone built with assertions on. A short chunk leaves
+		// the rest of pData as the caller left it, which is what the readers
+		// of those chunks already rely on, so that is unchanged here.
+		const bool bTooLong = szString.size() > size_t( nSize ) * 2;
+		NI_VERIFY( !bTooLong, "Bin chunk longer than its destination", szString.clear() );
 		if ( !szString.empty() )
 		{
-			NI_ASSERT( szString.size() == nSize * 2, "Wrong bin chunk size" );
-			NStr::StringToBin( szString.c_str(), pData, 0 );
+			NStr::StringToBin( szString.c_str(), pData, nSize, 0 );
 		}
 		else
 		{

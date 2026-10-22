@@ -72,7 +72,9 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	int nSegmentsPackSize = {};
 
 	int nSegment = {}; // номер текущего сегмента
-	long nCommonSegment = {};
+	// Not serialized here, unlike the single player transceiver's copy of the
+	// same counter, but long for the same no reason: see the note there.
+	int32_t nCommonSegment = {};
 	int nMyLogicID = {}; // номер "нашего" игрока
 	bool bCommandsFromHistory = {};
 	std::vector<uint16_t> segmFinished;
@@ -127,7 +129,7 @@ private:
 	bool bWaiting = {};
 	NTimer::STime timeStartWaiting = {};
 
-	CArray2D<unsigned long> checkSums;
+	CArray2D<uint32_t> checkSums;
 	int nGameSpeed = {};
 
 	int nFinalSegment = {};
@@ -141,7 +143,7 @@ private:
 
 	bool IsSegmentPackFinished();
 	bool IsSegmentFinishedByAll( int nSegment );
-	void SetSegmentFinished( int nPlayer, int nSegment, unsigned long ulCheckSum );
+	void SetSegmentFinished( int nPlayer, int nSegment, uint32_t ulCheckSum );
 	void FinalizeSegmentPack();
 	void AdvanceToNextSegment();
 	void ExecuteCommands( int nFromSegment );

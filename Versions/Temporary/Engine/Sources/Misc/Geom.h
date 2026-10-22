@@ -25,6 +25,21 @@ class MISC_EXPORT CVec2
 public:
 	union
 	{
+		// The arm the default constructor's mem-initialisers name is the one a
+		// freshly constructed vector holds. Default member initialisers on the
+		// arm would say the same, but MSVC rejects them on a member of an
+		// anonymous struct (C2926), and a mem-initialiser naming a variant
+		// member activates its arm just as well. It has to be a struct arm:
+		// [class.mem]/26 permits inspecting the common initial sequence of any
+		// standard-layout struct member of a standard-layout union as long as
+		// one of *those structs* is the active member, which is what makes the
+		// u, v alias below defined behaviour.
+		//
+		// There was a float m[2] arm here as well, and it is gone because an
+		// array is not a standard-layout struct: the permission above never
+		// extended to it, so reading it while a named arm is alive was the
+		// undefined case with nothing to fall back on. operator[] is what the
+		// engine wanted it for and no longer needs it.
 		struct
 		{
 			float x, y;
@@ -34,14 +49,13 @@ public:
 		{
 			float u, v;
 		}; // for texture coord
-
-		float m[2];
 	};
 
 public:
-	// Initialize one union storage arm; the overlapping aliases stay plain fields.
+	// activates the x, y arm, see the note on the union
 	CVec2()
-		: m{}
+		: x( 0.0f )
+		, y( 0.0f )
 	{
 	}
 
@@ -59,14 +73,34 @@ public:
 	}
 
 	// indexed access
-	float &operator[]( int i )
+	//
+	// Was return m[i], which reads the array arm while a struct arm is the
+	// active one. A switch over the components is defined whichever arm is
+	// alive, and costs nothing: on the one loop in the engine that indexes a
+	// vector by a variable, clang emits fewer instructions for the switch than
+	// for the array, because it hoists the test out of the loop. An index
+	// outside the vector used to read past the member; it now names the last
+	// component.
+	float &operator[]( const int i )
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			default:
+				return y;
+		}
 	}
 
-	const float &operator[]( int i ) const
+	const float &operator[]( const int i ) const
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			default:
+				return y;
+		}
 	}
 
 	// comparison
@@ -268,6 +302,9 @@ class CVec3
 public:
 	union
 	{
+		// Active arm by construction, see the note on CVec2: the default
+		// constructor naming x, y, z is what makes the r, g, b alias defined
+		// behaviour under [class.mem]/26, and what the : m{} it replaces did not.
 		struct
 		{
 			float x, y, z;
@@ -278,17 +315,18 @@ public:
 			float r, g, b;
 		}; // for color components
 
-		struct
-		{
-			float u, v, q;
-		}; // for texture coord
-
-		float m[3];
+		// A third arm, u, v, q for texture coordinates, stood here and was
+		// named nowhere in the engine or the editor, measured by marking it
+		// deprecated and compiling every translation unit. Gone with the
+		// float m[3] arm, see the note on CVec2.
 	};
 
 public:
+	// activates the x, y, z arm, see the note on CVec2
 	CVec3()
-		: m{}
+		: x( 0.0f )
+		, y( 0.0f )
+		, z( 0.0f )
 	{
 	}
 
@@ -317,15 +355,31 @@ public:
 		z = _z;
 	}
 
-	// indexed access
-	float &operator[]( int i )
+	// indexed access, see the note on CVec2::operator[]
+	float &operator[]( const int i )
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			default:
+				return z;
+		}
 	}
 
-	const float &operator[]( int i ) const
+	const float &operator[]( const int i ) const
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			default:
+				return z;
+		}
 	}
 
 	// comparison
@@ -543,6 +597,7 @@ class MISC_EXPORT CVec4
 public:
 	union
 	{
+		// Active arm by construction, see the note on CVec2.
 		struct
 		{
 			float x, y, z, w;
@@ -553,17 +608,18 @@ public:
 			float r, g, b, a;
 		}; // for color components
 
-		struct
-		{
-			float u, v, q;
-		}; // for texture coord, the 4th float is w / a / m[3]
-
-		float m[4];
+		// A third arm, u, v, q for texture coordinates, stood here and was
+		// named nowhere, the same as CVec3's. Gone with the float m[4] arm,
+		// see the note on CVec2.
 	};
 
 public:
+	// activates the x, y, z, w arm, see the note on CVec2
 	CVec4()
-		: m{}
+		: x( 0.0f )
+		, y( 0.0f )
+		, z( 0.0f )
+		, w( 0.0f )
 	{
 	}
 
@@ -608,15 +664,35 @@ public:
 		w = _w;
 	}
 
-	// indexed access
-	float &operator[]( int i )
+	// indexed access, see the note on CVec2::operator[]
+	float &operator[]( const int i )
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			case 2:
+				return z;
+			default:
+				return w;
+		}
 	}
 
-	const float &operator[]( int i ) const
+	const float &operator[]( const int i ) const
 	{
-		return m[i];
+		switch ( i )
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			case 2:
+				return z;
+			default:
+				return w;
+		}
 	}
 
 	// comparison
@@ -1108,12 +1184,28 @@ inline const int fabs2( const SVector &vect )
 
 class CLine2
 {
-	// to ensure 4-bytes allingn without crap (multilayer sync fix)
-	union
-	{
-		bool bNormalized;
-		int dummy = 0;
-	};
+	// The flag shared a union arm with an int named dummy whose only job was to
+	// make this head four bytes wide, as the original comment said: "to ensure
+	// 4-bytes allingn without crap (multilayer sync fix)". The int was the
+	// active member, because it carried the initialiser and both constructors
+	// set it as well, so every read of the flag was undefined, and with two
+	// arms of different types there was no common initial sequence to appeal
+	// to the way the vectors above can.
+	//
+	// A plain bool keeps the width regardless: a, b and c are floats and have
+	// to start on a four-byte boundary, so the three bytes the int was standing
+	// in for are padding the compiler must insert anyway. The static_assert
+	// after the class pins it, since the width is what the sync fix was about.
+	bool bNormalized = false;
+
+	// Those three bytes, spelled out and zeroed, which the int arm was doing by
+	// accident. CLine2 has no operator&, so IBinSaver serializes it as
+	// sizeof( CLine2 ) raw bytes, and CBridgeCreation, CEntrenchmentCreation
+	// and CFenceCreation all do f.Add( n, &line ): the padding reaches save
+	// games, replays and the state the multiplayer checksum covers, so leaving
+	// it indeterminate would let two clients disagree on bytes neither of them
+	// reads.
+	char cUnusedPadding[3] = {};
 
 public:
 	float a = 0.0f, b = 0.0f, c = 0.0f;
@@ -1125,7 +1217,6 @@ public:
 		: a( _a )
 		, b( _b )
 		, c( _c )
-		, dummy( 0 )
 	{
 	}
 
@@ -1133,7 +1224,6 @@ public:
 		: a( p2.y - p1.y )
 		, b( p1.x - p2.x )
 		, c( p2.x * p1.y - p1.x * p2.y )
-		, dummy( 0 )
 	{
 	}
 
@@ -1162,6 +1252,9 @@ public:
 		}
 	}
 };
+
+// The width the retired union arm was there to force, see the note inside.
+static_assert( sizeof( CLine2 ) == 4 * sizeof( float ), "CLine2's layout is a sync fix" );
 
 class CSegment
 {
@@ -1336,8 +1429,11 @@ struct SHMatrix
 public:
 	union
 	{
-		float m[4][4];
-
+		// Active arm by construction, see the note on CVec2. These names are
+		// the ones the engine uses, 1,077 references against 4 for the float
+		// m[4][4] arm that used to sit here, and they mirror D3DMATRIX, so this
+		// is the arm to keep alive. A name of the form _11 is reserved only in
+		// the global namespace; as a class member it is ours to use.
 		struct
 		{
 			float _11, _12, _13, _14;
@@ -1427,9 +1523,26 @@ public:
 	}
 
 public:
-	// Zero storage is the default; callers requesting identity still use Identity.
+	// Zero storage is the default; callers requesting identity still use
+	// Identity. The zeroing names the elements rather than the array, so the
+	// element arm is what a fresh matrix holds, see the note on CVec2.
 	SHMatrix()
-		: m{}
+		: _11( 0.0f )
+		, _12( 0.0f )
+		, _13( 0.0f )
+		, _14( 0.0f )
+		, _21( 0.0f )
+		, _22( 0.0f )
+		, _23( 0.0f )
+		, _24( 0.0f )
+		, _31( 0.0f )
+		, _32( 0.0f )
+		, _33( 0.0f )
+		, _34( 0.0f )
+		, _41( 0.0f )
+		, _42( 0.0f )
+		, _43( 0.0f )
+		, _44( 0.0f )
 	{
 	}
 
@@ -1468,8 +1581,9 @@ public:
 	{
 	}
 
-	//SHMatrix( float _m[4][4] ) { memcpy( &(m[0][0]), &(_m[0][0]), 16*sizeof(float) ); }
-	//SHMatrix( float *_m ) { memcpy( &(m[0][0]), &(_m[0]), 16*sizeof(float) ); }
+	// Two commented-out constructors taking a float[4][4] and a float * stood
+	// here, both copying into the array arm that this commit removed. Removed
+	// with it rather than left to be uncommented into a compile error.
 	SHMatrix( const class CQuat &quat )
 	{
 		Set( quat );
@@ -1786,24 +1900,13 @@ public:
 
 	union
 	{
+		// The active arm, see the note on CVec2. Three more arms stood here,
+		// u, v and s, t and a, b, and all three were named nowhere in the
+		// engine or the editor, measured by marking them deprecated and
+		// compiling every translation unit. Only min, max has users.
 		struct
 		{
 			TYPE x, y;
-		};
-
-		struct
-		{
-			TYPE u, v;
-		};
-
-		struct
-		{
-			TYPE s, t;
-		};
-
-		struct
-		{
-			TYPE a, b;
 		};
 
 		struct
@@ -1812,11 +1915,10 @@ public:
 		};
 	};
 
-	//
-	// Constructor initialization avoids nontrivial fields in anonymous structs.
+	// activates the x, y arm, see the note on CVec2
 	CTPoint()
-		: x{}
-		, y{}
+		: x()
+		, y()
 	{
 	}
 
@@ -2471,7 +2573,10 @@ inline void SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 )
 inline uint32_t SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
 {
 	float fDist = n * pt + d;
-	return ( FP_BITS( fDist ) & 0x80000000 );
+	// bit_cast, not FP_BITS: reading fDist through a uint32_t lvalue entitles
+	// the compiler to assume the line above never stored to it. The sign bit is
+	// the same bit either way, so the answer is unchanged.
+	return ( bit_cast<uint32_t>( fDist ) & 0x80000000u );
 }
 
 // ************************************************************************************************************************ //

@@ -50,9 +50,23 @@ lua_Hook lua_setlinehook (lua_State *L, lua_Hook func) {
 
 */
 static TObject* aux_stackedfunction (lua_State *L, int level, TObject *top) {
-  TObject *pCurr;
-  for ( pCurr = (top-1); pCurr >= &L->pCT->stack[0]; --pCurr )
-	{
+  // This was "for ( pCurr = top - 1; pCurr >= &stack[0]; --pCurr )", whose
+  // last iteration decrements past the start of the vector's buffer. Forming
+  // a pointer before the first element is undefined on its own, dereference
+  // or not, so a compiler is entitled to decide the bound test can never fail
+  // and drop it. Neither GCC 14.2 nor clang 22 does that today, checked
+  // against the disassembly, but nothing says the next one will not.
+  //
+  // Decrementing first and comparing the limit before the step keeps every
+  // pointer value inside the buffer and walks the same elements in the same
+  // order. The test stays ">" rather than "!=" so that a top below the base,
+  // which the old condition also declined to walk, still runs no iterations
+  // instead of running away. stack.data() rather than &stack[0] because
+  // indexing an empty vector is undefined before the address is even taken.
+  TObject *const pBegin = L->pCT->stack.data();
+  TObject *pCurr = top;
+  while ( pCurr > pBegin ) {
+    --pCurr;
     if ( is_T_MARK( pCurr->GetType() ) ) {
       if (level == 0)
         return pCurr;

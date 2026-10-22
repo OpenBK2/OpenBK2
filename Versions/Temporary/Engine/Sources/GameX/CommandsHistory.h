@@ -254,7 +254,7 @@ class CCommandsHistory : public ICommandsHistory
 	bool IsFinished( const CSegmentChecksum &_segmentChecksum, const int nGameTime ) const;
 	bool IsSegmentLogDiffer( const int nGameTime,
 	                         const int nEntry,
-	                         const unsigned long ulChecksum,
+	                         const uint32_t ulChecksum,
 	                         const CSegmentChecksum &_segmentChecksum );
 	bool IsEntryQualified( int nEntry ) const;
 	const bool SerializeHistory( const std::string &szFileName, const bool bRead );
@@ -277,7 +277,7 @@ public:
 	void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd ) override;
 	void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver ) override;
 
-	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry ) override;
+	bool AddChecksumLog( const int nGameTime, const uint32_t ulChecksum, const int nEntry ) override;
 	// Compare one playback sample against what the replay recorded for the same
 	// game time. Returns false once a divergence has been reported, which is
 	// what ICheckSumLog uses to mean "differs from the loaded one".
@@ -294,7 +294,7 @@ public:
 		return nCheckSumsMatched;
 	}
 
-	const unsigned long GetLastChecksum() const override
+	const uint32_t GetLastChecksum() const override
 	{
 		return dwLastCheckSum;
 	}

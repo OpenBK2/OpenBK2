@@ -175,7 +175,12 @@ void CSound3D::Update( ISFX *pSFX )
 		//FSOUND_3D_SetMinMaxDistance( GetChannel(), fMin, fMax );
 		const int nVolume = Clamp( int( GetVolume() >= 0.0f ? GetVolume() * 255.0f : 255.0f ), 0, 255 );
 		FSOUND_SetVolume( GetChannel(), nVolume );
-		FSOUND_3D_SetAttributes( GetChannel(), vP.m, vS.m );
+		// FMOD wants three floats. Copies rather than CVec3's array arm, which
+		// is not the member a constructed vector keeps alive, so reading it is
+		// the undefined case.
+		const float fPos[3] = { vP.x, vP.y, vP.z };
+		const float fSpeed[3] = { vS.x, vS.y, vS.z };
+		FSOUND_3D_SetAttributes( GetChannel(), fPos, fSpeed );
 	}
 }
 

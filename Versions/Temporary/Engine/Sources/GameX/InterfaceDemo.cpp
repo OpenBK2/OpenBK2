@@ -114,7 +114,23 @@ bool CInterfaceDemo::LoadImage( const std::string &szFileName )
 	{
 		CArray2D<uint32_t> array;
 		NImage::LoadTGAImage( array, &stream );
-		pPictureTexture->Set( *reinterpret_cast<CArray2D<NGfx::SPixel8888> *>( &array ) );
+		// This handed Set the whole CArray2D<uint32_t> reinterpreted as a
+		// CArray2D<SPixel8888>, which is an aliasing violation: no SPixel8888
+		// object lives in those bytes, and the two are only layout-compatible by
+		// coincidence. Loading into SPixel8888 directly is not available either,
+		// because Image must not see 3Dmotor's pixel types and the TGA loader's
+		// convertors are specialised per output type. So convert, through the
+		// constructor that exists for it. Set copies its argument in any case,
+		// and this runs once per demo picture at load time.
+		CArray2D<NGfx::SPixel8888> picture( array.GetSizeX(), array.GetSizeY() );
+		for ( int y = 0; y < array.GetSizeY(); ++y )
+		{
+			for ( int x = 0; x < array.GetSizeX(); ++x )
+			{
+				picture[y][x] = NGfx::SPixel8888( array[y][x] );
+			}
+		}
+		pPictureTexture->Set( picture );
 	}
 	return bResult;
 }

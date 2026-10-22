@@ -8,6 +8,14 @@
 
 #include <algorithm>
 #include <sstream> // std::stringstream, used by ToHex
+// This header declares and defines functions over std::string and
+// std::vector throughout, and calls strlen in two templates, and included
+// none of the three: it only compiled where a prelude had already reached
+// them. Every unit in the engine does, which is why it went unnoticed until a
+// test included this header first.
+#include <cstring> // strlen
+#include <string>
+#include <vector>
 
 #include <boost/config.hpp>
 
@@ -355,7 +363,13 @@ MISC_EXPORT bool IsHexNumber( const std::string &szString );
 
 // перевод string => bin и обратно
 // NOTE: BinToString() doesn't attach '\0' at the end!!!
-MISC_EXPORT void *StringToBin( const char *pszData, void *pBuffer, int *pnSize );
+//
+// StringToBin takes the size of pBuffer because it cannot be called safely
+// without it: the text is the only other bound, and it comes from a data file.
+// It writes at most nBufferSize bytes, stops on a damaged (odd length) string
+// rather than guessing, and reports through pnSize how many bytes it actually
+// produced, which is how a caller detects either.
+MISC_EXPORT void *StringToBin( const char *pszData, void *pBuffer, int nBufferSize, int *pnSize );
 MISC_EXPORT const char *BinToString( const void *pData, int nSize, char *pszBuffer );
 
 BOOST_FORCEINLINE char HalfByteToHexSymbol( const unsigned char chr )

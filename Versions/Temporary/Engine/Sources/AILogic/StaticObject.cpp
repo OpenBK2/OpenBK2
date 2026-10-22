@@ -113,7 +113,7 @@ bool CStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) const
 
 BASIC_REGISTER_CLASS( AILOGIC, CExistingObject );
 
-unsigned long CExistingObject::globalMark = 0;
+uint32_t CExistingObject::globalMark = 0;
 
 //DEBUG{
 #ifndef _FINALRELEASE

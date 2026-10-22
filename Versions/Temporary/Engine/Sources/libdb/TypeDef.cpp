@@ -119,7 +119,11 @@ namespace NTypeDef
 	{
 		const int nSize = szValue.size() / 2;
 		uint8_t *pData = new uint8_t[nSize];
-		NStr::StringToBin( szValue.c_str(), pData, 0 );
+		// The buffer is sized from the text, so an odd-length string used to
+		// make the conversion write one byte past the end of it. Passing the
+		// size is what stops that; the record is data, so the length is not
+		// ours to trust.
+		NStr::StringToBin( szValue.c_str(), pData, nSize, 0 );
 		*pRes = CVariant( pData, nSize );
 		delete[] pData;
 	}

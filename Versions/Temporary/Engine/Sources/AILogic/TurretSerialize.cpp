@@ -14,8 +14,11 @@ void CTurret::SerializeRotation( IBinSaver &saver, const int nChunk, SRotating &
 	if ( saver.IsReading() )
 	{
 		saver.AddRawData( nChunk, data, sizeof( data ) );
-		rotation.wCurAngle.allign = 0;
-		rotation.wFinalAngle.allign = 0;
+		// Clears both halves, which is what assigning SAIAngle's old int union
+		// arm did here: the field copies below restore only the angle, so the
+		// padding beside it must not carry anything into the checksum.
+		rotation.wCurAngle = SAIAngle();
+		rotation.wFinalAngle = SAIAngle();
 	}
 	const auto field = [&]( auto &value, const size_t offset )
 	{

@@ -20,7 +20,7 @@
 // x86 only: it compares against the inline __asm in test/original.h.
 
 #include "3Dmotor/stdafx.h"
-#include "3Dmotor/GSSETransform.h"
+#include "3Dmotor/GSSEtransform.h"
 
 #include "../../original.h"
 #include "../../random.h"
@@ -235,12 +235,21 @@ int main()
         randomizeMatrix( m1 );
         randomizeMatrix( m2 );
 
+        // Elementwise over the 3x3 part, by element name rather than through
+        // SHMatrix's array arm: the names are the member a constructed matrix
+        // keeps alive, and reading the array while they are active is the
+        // undefined case. Same nine products in the same order, so the sum is
+        // bit for bit what the loop produced.
         double fTrace = 0;
-        for ( int r = 0; r < 3; ++r )
-        {
-            for ( int c = 0; c < 3; ++c )
-                fTrace += (double)m1.m[r][c] * m2.m[r][c];
-        }
+        fTrace += (double)m1._11 * m2._11;
+        fTrace += (double)m1._12 * m2._12;
+        fTrace += (double)m1._13 * m2._13;
+        fTrace += (double)m1._21 * m2._21;
+        fTrace += (double)m1._22 * m2._22;
+        fTrace += (double)m1._23 * m2._23;
+        fTrace += (double)m1._31 * m2._31;
+        fTrace += (double)m1._32 * m2._32;
+        fTrace += (double)m1._33 * m2._33;
         double fCos = ( fTrace - 1.0 ) * 0.5;
         fCos = fCos > 1.0 ? 1.0 : ( fCos < -1.0 ? -1.0 : fCos );
         const double fDeg = acos( fCos ) * 180.0 / 3.14159265358979;

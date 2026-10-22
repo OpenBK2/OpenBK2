@@ -6,6 +6,9 @@
 #include "Server_Client_Common_export.h"
 #include "System_export.h"
 
+// UTF16LEToWide and WideToUTF16LE, for the wide strings packets carry
+#include "port/unicode.h"
+
 //*******************************************************************
 //*                     CUnknownPacket                              *
 //*******************************************************************
@@ -100,17 +103,31 @@ class CNetSaver : public IBinSaver
 		}
 	}
 
+	// Two bytes per character on the wire, which is UTF-16LE and not wchar_t,
+	// the same way CStructureSaver writes it to a file. The two are the same
+	// type on Windows and the conversion is the copy this used to do; off
+	// Windows wchar_t is four bytes, and the old code wrote the first half of
+	// the buffer's bytes and read two bytes into each four-byte character, so
+	// every chat message, system broadcast, server name and map name was
+	// corrupt and no Linux client could talk to a Windows one.
+	//
+	// The count stays a count of UTF-16 code units, which is what a Windows
+	// wstring's size was, so the packet layout is unchanged on both platforms.
 	void DataChunkString( std::wstring &data ) override
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )
 		{
 			pRes->Read( &nSize, 4 );
-			data.resize( nSize );
-
-			if ( nSize != 0 )
+			if ( nSize > 0 )
 			{
-				pRes->Read( &data[0], nSize * 2 );
+				std::string utf16( size_t( nSize ) * 2, '\0' );
+				pRes->Read( &utf16[0], nSize * 2 );
+				data = UTF16LEToWide( utf16.data(), utf16.size() );
+			}
+			else
+			{
+				data.clear();
 			}
 		}
 		else
@@ -119,12 +136,13 @@ class CNetSaver : public IBinSaver
 			{
 				return;
 			}
-			nSize = data.size();
+			const std::string utf16 = WideToUTF16LE( data );
+			nSize = int( utf16.size() / 2 );
 			pRes->Write( &nSize, 4 );
 
-			if ( !data.empty() )
+			if ( nSize != 0 )
 			{
-				pRes->Write( &data[0], nSize * 2 );
+				pRes->Write( utf16.data(), nSize * 2 );
 			}
 		}
 	}

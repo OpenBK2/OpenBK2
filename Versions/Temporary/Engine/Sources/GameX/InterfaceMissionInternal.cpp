@@ -5329,7 +5329,7 @@ void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &pa
 class CSimpleChecksumLog : public ICheckSumLog
 {
 	OBJECT_BASIC_METHODS( CSimpleChecksumLog );
-	std::unordered_map<int, unsigned long> entries1;
+	std::unordered_map<int, uint32_t> entries1;
 	bool bEntries2;
 
 public:
@@ -5343,11 +5343,11 @@ public:
 		bEntries2 = true;
 	}
 
-	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry ) override
+	bool AddChecksumLog( const int nGameTime, const uint32_t ulChecksum, const int nEntry ) override
 	{
 		if ( bEntries2 )
 		{
-			const unsigned long entry = entries1[nEntry];
+			const uint32_t entry = entries1[nEntry];
 			if ( ulChecksum == entry )
 			{
 			}

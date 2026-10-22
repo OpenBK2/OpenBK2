@@ -20,6 +20,7 @@ Few rules:
 - The game database schema and its C++ structs are generated from the .cll files by dbcodegen: change the .cll and regenerate, never the generated DB*.h/.cpp or types.xml. See "adding things to the game database" in Contributing.md
 - Write code in the house style from the first line rather than leaving it to the formatter. It is in `.clang-format` and spelled out under "Code style" below
 - Sources are UTF-8 with LF endings, a newline on the last line, no whitespace at the end of a line, and tabs two columns wide. `.editorconfig` declares it, `.gitattributes` pins the endings and `.pre-commit-config.yaml` enforces it, locally and in CI. Install it once per clone with `pre-commit install`. See "file hygiene" in Contributing.md
+- To self improve as an AI agent, you use `AGENT_LEARNINGS.md` file to write your learned experiences or previous mistakes as an extra memory and guide. For mistakes part, write the mistake you made, patterns to avoid it and better approaches. Before starting new tasks, you can read that file for better results. 
 
 ### Code style
 

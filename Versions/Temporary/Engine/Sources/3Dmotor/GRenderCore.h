@@ -4,6 +4,8 @@
 #include "GPixelFormat.h"
 #include "GShadowMap.h"
 #include "Misc/Pool.h"
+// bit_cast, for the two sort/hash keys below that read a float's bits
+#include "Misc/Tools.h"
 #include "System/Dg.h"
 #include "System/time.hpp"
 
@@ -495,7 +497,10 @@ struct SPerPartVariables
 
 	intptr_t GetSortValue() const
 	{
-		return ( *(int *)&fFade ) ^ nPriority ^ ( (intptr_t)pLM.GetPtr() );
+		// bit_cast, not *(int *)&fFade: a read through int does not alias the
+		// float, so the compiler is entitled to assume fFade was never written.
+		// The value is unchanged, this being the same bits either way.
+		return bit_cast<int>( fFade ) ^ nPriority ^ ( (intptr_t)pLM.GetPtr() );
 	}
 
 	bool operator==( const SPerPartVariables &a ) const
@@ -545,9 +550,23 @@ struct SRenderFragmentHash
 {
 	int operator()( const SRenderFragmentKey &a ) const
 	{
-		ASSERT( sizeof( SRenderFragmentKey ) == sizeof( int ) * 4 );
-		int *p = (int *)&a;
-		return p[0] + p[1] + p[2] + p[3];
+		// This read the key as four ints through a cast of its address, which is
+		// an aliasing violation, and the ASSERT that was meant to keep the cast
+		// honest does not evaluate its argument in this configuration. It
+		// stopped being true when the pointers widened: sizeof(
+		// SRenderFragmentKey ) is 24 on x64, so the four ints spanned pMat,
+		// fFade and nPriority while pLM never entered the hash, and fragments
+		// differing only in their lightmap all landed in one bucket. Nothing
+		// was mis-rendered, operator== being exact, but the bucket was a linear
+		// scan.
+		//
+		// Combining the members by name covers all four on both widths and is
+		// the same value as before on x86. The sum is taken in uint32_t because
+		// a hash is meant to wrap, where signed overflow is undefined.
+		const uint32_t uHash = static_cast<uint32_t>( reinterpret_cast<uintptr_t>( a.pMat ) ) +
+		                       bit_cast<uint32_t>( a.fFade ) + static_cast<uint32_t>( a.nPriority ) +
+		                       static_cast<uint32_t>( reinterpret_cast<uintptr_t>( a.pLM ) );
+		return static_cast<int>( uHash );
 	}
 };
 

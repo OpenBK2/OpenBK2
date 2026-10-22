@@ -280,7 +280,11 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 		trans.forward.RotateHVector( &pos, infoPositions[k] );
 		SSPoint &dst = projPoints[k];
 		GeneratePointPosition( &dst, pos + vShift );
-		int nU = *(int *)&dst.uv.u, nV = *(int *)&dst.uv.v;
+		// The range tests below are on the IEEE bit patterns, 0x3f800000 being
+		// 1.0f and a positive float comparing as a positive int. bit_cast gets
+		// the bits the same way the hand-rolled pun did, without the aliasing
+		// violation of reading a float through an int lvalue.
+		int nU = bit_cast<int>( dst.uv.u ), nV = bit_cast<int>( dst.uv.v );
 		nTest |= ( nU > 0 );
 		nTest |= ( nU < 0x3f800000 ) << 1; // < 1
 		nTest |= ( nV > 0 ) << 2;

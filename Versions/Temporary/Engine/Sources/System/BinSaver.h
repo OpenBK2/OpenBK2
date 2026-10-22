@@ -15,6 +15,7 @@
 #include <queue>
 #include <set>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -88,6 +89,50 @@ enum ESaverMode
 // **
 // **
 // ************************************************************************************************************************ //
+
+namespace NBinSaverDetail
+{
+// Is T a type whose width differs between the platforms this engine ships on?
+//
+// The question is not what the standard permits, which is far more than this:
+// every target here is x86 or x64, little endian, CHAR_BIT 8, int 32 bits and
+// IEEE 754 floats. What actually differs between a Windows build and a Linux
+// one is long, unsigned long and wchar_t, and that is enough to make a save or
+// a packet unreadable, because the scalar path writes sizeof( T ) bytes.
+//
+// bLongDiffers is a parameter rather than a #if inside the body so that both
+// answers can be pinned by a test on one platform, which is the only way to
+// cover the Windows half from here. It defaults to what the current compiler
+// sees:
+//
+//  - On MSVC, long is four bytes and is a distinct type from both int32_t
+//    (int) and int64_t (long long), so refusing it catches exactly the
+//    accidental uses and nothing deliberate.
+//  - On LP64 Linux, long IS int64_t and unsigned long IS uint64_t and size_t.
+//    Refusing them there would reject every deliberate 64-bit member, and no
+//    compile on that platform can tell the spellings apart, so the MSVC build
+//    is what gates this class. That is also why size_t cannot be refused
+//    anywhere: it is an alias of a legitimate fixed-width type on both.
+//
+// wchar_t and long double are distinct types on every target, so those two are
+// refused unconditionally. Wide strings do not go through here; they have their
+// own DataChunkString, which converts to UTF-16LE.
+#if defined( _MSC_VER )
+constexpr bool bLongIsNarrowerThanInt64 = true;
+#else
+constexpr bool bLongIsNarrowerThanInt64 = false;
+#endif
+
+template <class T, bool bLongDiffers = bLongIsNarrowerThanInt64>
+struct TIsWidthVarying
+{
+	typedef typename std::remove_cv<T>::type TPlain;
+
+	static constexpr bool value =
+			std::is_same<TPlain, wchar_t>::value || std::is_same<TPlain, long double>::value ||
+			( bLongDiffers && ( std::is_same<TPlain, long>::value || std::is_same<TPlain, unsigned long>::value ) );
+};
+} // namespace NBinSaverDetail
 
 struct IBinSaver : public CObjectBase
 {
@@ -507,6 +552,15 @@ public:
 	template <class T>
 	void Add( const chunk_id idChunk, T *p, int nChunkNumber = 1 )
 	{
+		// The scalar path below is DataChunk( id, p, sizeof( T ) ), so the width
+		// of T is part of the save, the replay and the packet. A type whose
+		// width differs between the platforms this engine ships on therefore
+		// makes a file one of them cannot read, which is what twelve members in
+		// this tree were quietly doing. See NBinSaverDetail::TIsWidthVarying.
+		static_assert( !NBinSaverDetail::TIsWidthVarying<T>::value,
+		               "this type's width differs between the platforms this engine ships on, so the bytes written "
+		               "here cannot be read back by the other one: declare the member int32_t, uint32_t, int64_t or "
+		               "uint64_t, whichever matches what the shipped build wrote" );
 		const int N_HAS_SERIALIZE_TEST = sizeof( ( *p ) & ( *this ) );
 		SInt2Type<N_HAS_SERIALIZE_TEST> separator;
 		CallObjectSerialize( idChunk, nChunkNumber, p, &separator );

@@ -112,19 +112,26 @@ inline int RotationIDToAngle( int nRotationID )
 inline void SDiscretePos::MoveAndRotate( CVec3 *p ) const
 {
 	ASSERT( p );
+	// The four sign flips below were FP_BITS( p->x ) ^= 0x80000000, which both
+	// reads and writes a float through a uint32_t lvalue and so is a strict
+	// aliasing violation: the compiler is entitled to assume the store never
+	// reached the float. Unary minus is the same operation on the same bits -
+	// checked over both zeros, both infinities, a quiet and a signalling NaN and
+	// the denormals, identical on GCC and clang at -O0 and -O2
+	// (.diag-tmp/negate-probe.cpp) - and it says what the rotation means.
 	switch ( nRotation )
 	{
 		case SDiscretePos::TURN_90:
 			std::swap( p->x, p->y );
-			FP_BITS( p->x ) ^= 0x80000000;
+			p->x = -p->x;
 			break;
 		case SDiscretePos::TURN_180:
-			FP_BITS( p->x ) ^= 0x80000000;
-			FP_BITS( p->y ) ^= 0x80000000;
+			p->x = -p->x;
+			p->y = -p->y;
 			break;
 		case SDiscretePos::TURN_270:
 			std::swap( p->x, p->y );
-			FP_BITS( p->y ) ^= 0x80000000;
+			p->y = -p->y;
 			break;
 		case SDiscretePos::FLIP:
 			break;

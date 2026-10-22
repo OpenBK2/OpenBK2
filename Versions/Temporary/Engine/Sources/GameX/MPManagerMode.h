@@ -106,8 +106,8 @@ protected:
 	std::string szSessionName;
 	std::string szPassword;
 	SB2GameSpecificData gameDesc;
-	unsigned long ulHostCheckSum;
-	unsigned long ulGameCheckSum;
+	uint32_t ulHostCheckSum;
+	uint32_t ulGameCheckSum;
 	std::vector<SMPSlot> slots;
 	int nHostClientID;
 	int nOwnSlot;
@@ -249,7 +249,7 @@ protected:
 
 	void OnCriticalNetworkError( const std::wstring &wszMessage );
 
-	unsigned long GetCheckSum( const NDb::SMultiplayerMap *pMPMap );
+	uint32_t GetCheckSum( const NDb::SMultiplayerMap *pMPMap );
 
 public:
 	CMPManagerMode();
@@ -283,7 +283,7 @@ public:
 
 	CSlotNumberPacket() {}
 
-	CSlotNumberPacket( const int nClientID, const int _nSlot, const unsigned long _ulCheckSum )
+	CSlotNumberPacket( const int nClientID, const int _nSlot, const uint32_t _ulCheckSum )
 		: CNetPacket( nClientID )
 		, nSlot( _nSlot )
 		, ulCheckSum( _ulCheckSum )

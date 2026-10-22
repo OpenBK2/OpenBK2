@@ -1025,8 +1025,11 @@ const CVec3 Multi( const SHMatrix &matrix, const CVec3 &vec )
 {
 	CVec3 vResult;
 
-	vResult.x = matrix.m[0][0] * vec.x + matrix.m[0][1] * vec.y;
-	vResult.y = matrix.m[1][0] * vec.x + matrix.m[1][1] * vec.y;
+	// The element names, not the array arm of SHMatrix's union: the names are
+	// the arm a constructed matrix keeps alive, and reading the array while
+	// they are active is the undefined case. Same four elements, same order.
+	vResult.x = matrix._11 * vec.x + matrix._12 * vec.y;
+	vResult.y = matrix._21 * vec.x + matrix._22 * vec.y;
 	vResult.z = vec.z;
 
 	return vResult;

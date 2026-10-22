@@ -62,7 +62,7 @@ struct SCheckSumBufferStorage
 	}
 
 	// calculate CRC of the buffer
-	const uLong GetCRC() const
+	const uint32_t GetCRC() const
 	{
 		return nCnt > 0 ? crc32( 0, &( buf[0] ), nCnt ) : 0;
 	}
@@ -88,7 +88,7 @@ inline void CopyToBufRaw( SCheckSumBufferStorage *pStorage, const void *pData, c
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline const uLong GetCRC( SCheckSumBufferStorage *pStorage )
+inline const uint32_t GetCRC( SCheckSumBufferStorage *pStorage )
 {
 	return pStorage->GetCRC();
 }
@@ -97,4 +97,4 @@ inline const uLong GetCRC( SCheckSumBufferStorage *pStorage )
 }; // namespace NCheckSums
 
 COMMON_RTS_AI_EXPORT IBinSaver *
-CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog *pLog, const uint32_t segmentTime );
+CreateCheckSumSaver( uint32_t *pCheckSum, struct ICheckSumLog *pLog, const uint32_t segmentTime );

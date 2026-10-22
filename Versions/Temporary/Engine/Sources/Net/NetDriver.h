@@ -81,7 +81,11 @@ struct IDriver : public CObjectBase
 	{
 		ZDATA
 		std::wstring wszServerName;
-		long nHostPort;
+		// int32_t and not long, because this goes into the server browser's
+		// packet and long is four bytes on Windows against eight on Linux. A
+		// port needs sixteen bits; four bytes is what the packet has always
+		// carried.
+		int32_t nHostPort;
 		std::wstring wszMapName;
 		std::string szGameType;
 		int nCurPlayers, nMaxPlayers;

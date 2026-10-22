@@ -1698,7 +1698,10 @@ static void InitTextureStage( int n )
 	pDevice->SetSamplerState( n, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
 
 	float fMipBias = 0; //-1;
-	pDevice->SetSamplerState( n, D3DSAMP_MIPMAPLODBIAS, *(uint32_t *)&fMipBias );
+	// D3DSAMP_MIPMAPLODBIAS takes the float's bits in a DWORD. bit_cast says so
+	// without the aliasing violation that reading fMipBias through a uint32_t
+	// lvalue was; the bits are the same.
+	pDevice->SetSamplerState( n, D3DSAMP_MIPMAPLODBIAS, bit_cast<uint32_t>( fMipBias ) );
 	lastUsedAddressMode[n] = CLAMP;
 	TSFilterMode[n] = FILTER_BEST;
 	pDevice->SetSamplerState( n, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP );

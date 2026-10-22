@@ -19,7 +19,7 @@
 // **
 // ************************************************************************************************************************ //
 
-std::vector<std::list<unsigned long>> CControlSumCheckCommand::checkSums;
+std::vector<std::list<uint32_t>> CControlSumCheckCommand::checkSums;
 uint16_t CControlSumCheckCommand::wMask;
 
 void CControlSumCheckCommand::Execute()
@@ -45,7 +45,7 @@ void CControlSumCheckCommand::Check( const int nOurNumber, IAILogic *pAI )
 	NGlobal::SetVar( "out_of_sync", 0 );
 	while ( !bFinished )
 	{
-		unsigned long checkSum;
+		uint32_t checkSum;
 
 		if ( checkSums[nOurNumber].empty() )
 			return;
@@ -142,7 +142,7 @@ int CControlSumCheckCommand::operator&( IBinSaver &saver )
 // **
 // ************************************************************************************************************************ //
 
-CArray2D<unsigned long> CControlSumHistoryCommand::checkSums;
+CArray2D<uint32_t> CControlSumHistoryCommand::checkSums;
 uint16_t CControlSumHistoryCommand::wMask;
 
 static const int nHistoryLength = 20;
@@ -165,7 +165,7 @@ void CControlSumHistoryCommand::SetMask( const uint16_t _wMask )
 	wMask = _wMask;
 }
 
-unsigned long CControlSumHistoryCommand::GetValue( const int _nPlayer, const int _nSegment )
+uint32_t CControlSumHistoryCommand::GetValue( const int _nPlayer, const int _nSegment )
 {
 	return checkSums[_nPlayer][_nSegment % nHistoryLength];
 }
@@ -177,7 +177,7 @@ void CControlSumHistoryCommand::Check( const int nOurNumber, const int nStartSeg
 	int nOutOfSyncWith = 0; // number of players we are async with
 	std::vector<bool> asyncWith;
 	asyncWith.resize( 16, false );
-	unsigned long checkSum;
+	uint32_t checkSum;
 
 	const int nIndex = nStartSegment % nHistoryLength;
 

@@ -2,6 +2,9 @@
 
 #include "ChunklessSaver.h"
 
+// UTF16LEToWide and WideToUTF16LE, for the wide strings in the stream
+#include "port/unicode.h"
+
 //#define CHECK_CHUNK_ORDER
 #define PARANOID_UNITIALIZED_CHECK
 extern int N_SAVELOAD_VERSION;
@@ -115,17 +118,30 @@ class CChunklessSerializer : public IBinSaver
 		}
 	}
 
+	// Two bytes per character in the stream, which is UTF-16LE and not wchar_t,
+	// the same way CStructureSaver writes it to a file and CNetSaver to the
+	// wire. The two are the same type on Windows and the conversion is the copy
+	// this used to do; off Windows wchar_t is four bytes, so the old code wrote
+	// the first half of the buffer's bytes and read two bytes into each
+	// four-byte character.
+	//
+	// The count stays a count of UTF-16 code units, which is what a Windows
+	// wstring's size was, so the stream layout is unchanged on both platforms.
 	void DataChunkString( std::wstring &data ) override
 	{
 		int nSize;
 		if ( mode == SAVER_MODE_READ )
 		{
 			pRes->Read( &nSize, 4 );
-			data.resize( nSize );
-
-			if ( nSize != 0 )
+			if ( nSize > 0 )
 			{
-				pRes->Read( &data[0], nSize * 2 );
+				std::string utf16( size_t( nSize ) * 2, '\0' );
+				pRes->Read( &utf16[0], nSize * 2 );
+				data = UTF16LEToWide( utf16.data(), utf16.size() );
+			}
+			else
+			{
+				data.clear();
 			}
 		}
 		else
@@ -134,12 +150,13 @@ class CChunklessSerializer : public IBinSaver
 			{
 				return;
 			}
-			nSize = data.size();
+			const std::string utf16 = WideToUTF16LE( data );
+			nSize = int( utf16.size() / 2 );
 			pRes->Write( &nSize, 4 );
 
-			if ( !data.empty() )
+			if ( nSize != 0 )
 			{
-				pRes->Write( &data[0], nSize * 2 );
+				pRes->Write( utf16.data(), nSize * 2 );
 			}
 		}
 	}

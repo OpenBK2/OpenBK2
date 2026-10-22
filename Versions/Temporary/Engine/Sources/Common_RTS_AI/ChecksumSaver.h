@@ -16,9 +16,9 @@ class CCheckSumSaver : public IBinSaver
 	CAddedObjects addedObjects;
 	int nAddedObjects = 0;
 
-	uLong *checkSumData = nullptr;
-	uLong *checkSumString = nullptr;
-	uLong *checkSumObjects = nullptr;
+	uint32_t *checkSumData = nullptr;
+	uint32_t *checkSumString = nullptr;
+	uint32_t *checkSumObjects = nullptr;
 
 	bool bLog = false;
 	bool bDissalowStoreObjects = false;
@@ -52,7 +52,7 @@ class CCheckSumSaver : public IBinSaver
 
 public:
 	CCheckSumSaver();
-	CCheckSumSaver( uLong *pCheckSum, struct ICheckSumLog *pLog, const NTimer::STime segmentTime );
+	CCheckSumSaver( uint32_t *pCheckSum, struct ICheckSumLog *pLog, const NTimer::STime segmentTime );
 	~CCheckSumSaver() override;
 
 	bool IsReading() override
