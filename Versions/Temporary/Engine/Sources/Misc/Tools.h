@@ -104,16 +104,15 @@ static_assert( BOOST_ENDIAN_LITTLE_BYTE,
 // **
 // ************************************************************************************************************************ //
 
-// access float as uint32_t
+// FP_BITS stood here, the last hand-rolled float pun in the tree, and is gone
+// with its nine call sites: SPlane::CheckPointUnderPlane reads the sign bit
+// through bit_cast now, SDiscretePos::MoveAndRotate negates instead of XORing
+// the sign bit, and NMath::Sqrt takes the bits into a uint32_t local once. It
+// was the one -Wstrict-aliasing=3 site left in the engine, and the flag is in
+// the default GCC list because of that; see cmake/warnings.cmake.
 //
-// A strict aliasing violation, and the class that silently miscompiled the DXT
-// decoder, but it is used as an lvalue at some of its nine call sites
-// (FastMath, DiscretePos, Geom.h), so replacing it with bit_cast below is a
-// change of its own rather than a deletion.
-#define FP_BITS( fp ) ( *(uint32_t *)( &( fp ) ) )
-
-// FP_BITS_CONST and FP_ONE_BITS stood here and are gone with the last of the
-// unused bit-twiddling macros in GeomMisc.h: those were their only users.
+// FP_BITS_CONST and FP_ONE_BITS stood here too and went earlier, with the last
+// of the unused bit-twiddling macros in GeomMisc.h: those were their only users.
 
 // ************************************************************************************************************************ //
 // **

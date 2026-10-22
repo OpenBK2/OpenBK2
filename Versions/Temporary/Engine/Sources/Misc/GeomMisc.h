@@ -17,8 +17,9 @@
 //
 // Misc/Tools.h's bit_cast, over boost::core::bit_cast and so
 // __builtin_bit_cast, is the defined way to say any of this and costs nothing.
-// Note that FP_BITS lives there too and has nine real users, as an lvalue in
-// some of them, so it is a separate job rather than part of this one.
+// FP_BITS lived there and was the separate job this note deferred; its nine
+// users are converted and the macro is gone, so no hand-rolled float pun is
+// left in the engine.
 
 inline uint32_t PackDWORD( const uint16_t high, const uint16_t low )
 {

@@ -262,15 +262,27 @@ static struct SFastMathInit
 
 float Sqrt( float n )
 {
-	if ( FP_BITS( n ) == 0 )
+	// This read the argument through *(uint32_t *)&n four times and stored the
+	// result back the same way, a strict aliasing violation in both directions:
+	// a store through a uint32_t lvalue does not alias the float, so nothing
+	// stopped the compiler from returning the untouched argument. Taking the
+	// bits into a local once is the same table lookup on the same value, and the
+	// arithmetic is still unsigned, which is what makes the shift logical and the
+	// subtraction wrap the way the table expects.
+	//
+	// GCC 14.2 happens to compile the original correctly at -O2 here, so this is
+	// not a behaviour change today: the disassembly of this function in
+	// libSystem.so is identical instruction for instruction before and after.
+	// It is the same class that did silently miscompile the DXT decoder.
+	uint32_t uBits = bit_cast<uint32_t>( n );
+	if ( uBits == 0 )
 	{
 		return 0.0f; // check for square root of 0
 	}
 
-	FP_BITS( n ) = gs_FastSqrtTable[( FP_BITS( n ) >> 8 ) & 0xFFFF] |
-	               ( ( ( ( FP_BITS( n ) - 0x3F800000 ) >> 1 ) + 0x3F800000 ) & 0x7F800000 );
+	uBits = gs_FastSqrtTable[( uBits >> 8 ) & 0xFFFF] | ( ( ( ( uBits - 0x3F800000 ) >> 1 ) + 0x3F800000 ) & 0x7F800000 );
 
-	return n;
+	return bit_cast<float>( uBits );
 }
 
 } // namespace NMath

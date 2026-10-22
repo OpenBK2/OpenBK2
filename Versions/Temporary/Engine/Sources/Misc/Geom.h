@@ -2573,7 +2573,10 @@ inline void SPlane::Set( const CVec3 &pt0, const CVec3 &pt1, const CVec3 &pt2 )
 inline uint32_t SPlane::CheckPointUnderPlane( const CVec3 &pt ) const
 {
 	float fDist = n * pt + d;
-	return ( FP_BITS( fDist ) & 0x80000000 );
+	// bit_cast, not FP_BITS: reading fDist through a uint32_t lvalue entitles
+	// the compiler to assume the line above never stored to it. The sign bit is
+	// the same bit either way, so the answer is unchanged.
+	return ( bit_cast<uint32_t>( fDist ) & 0x80000000u );
 }
 
 // ************************************************************************************************************************ //
