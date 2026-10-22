@@ -103,6 +103,33 @@ private:
 
 			if ( saver.IsReading() )
 			{
+				// m_nSize arrives straight off the stream and nothing looked at it
+				// before the allocation below, so a damaged or hostile record could
+				// ask for up to four gigabytes; and AddRawData takes its size as an
+				// int, so any length from two gigabytes up reached the saver
+				// negative, which is where it became a memset or a memcpy of an
+				// enormous size_t. This is the only call site in the tree that
+				// passes AddRawData a length that did not come from a sizeof.
+				//
+				// The bound is the one the saver's own interface implies rather
+				// than a number invented here: a blob this code can neither hand
+				// to AddRawData nor have written itself. Past it, the record is not
+				// one we produced, so the blob loads empty and the chunk holding
+				// its bytes is left unread, which the chunked savers allow because
+				// they look a chunk up by id rather than walking the stream.
+				//
+				// INT32_MAX from <cstdint>, which is already included, rather than
+				// std::numeric_limits: <limits> declares members named min and max
+				// and breaks in any unit that saw windows.h first, NOMINMAX not
+				// being set globally here. Misc/Tools.h records the same trap.
+				if ( m_nSize > uint32_t( INT32_MAX ) )
+				{
+					NI_ASSERT( false, "Blob length out of range" );
+					m_nSize = 0;
+					m_ptr = 0;
+					m_bDelete = false;
+					return 0;
+				}
 				m_bDelete = true;
 				m_ptr = new uint8_t[m_nSize];
 			}
