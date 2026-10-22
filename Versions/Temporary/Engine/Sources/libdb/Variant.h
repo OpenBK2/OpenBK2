@@ -2,9 +2,32 @@
 
 #include "libdb_export.h"
 
+// This header used to include none of what it uses and only compiled where a
+// prelude had already supplied all of it: CDBID as a complete type, since it
+// is the key of CMultiVariantMap and is new'd below; IBinSaver likewise, the
+// operator& being defined inline here; std::string, std::wstring and
+// std::unordered_map; memcpy and ASSERT. Every unit in the engine arrives via
+// libdb/stdafx.h, which is why it went unnoticed, but a test that includes
+// this header on its own cannot, and ordering the test's includes around it is
+// not a fix because clang-format regroups them back.
+//
+// Neither System/DB.h nor System/BinSaver.h reaches libdb, so naming them here
+// forms no cycle.
+#include "Misc/Asserts.h"
+#include "System/BinSaver.h"
+#include "System/DB.h"
+
 #include <cstdint>
+#include <cstring>
+#include <string>
+#include <unordered_map>
 
 #include <boost/uuid/uuid.hpp>
+
+// Only ever a reference parameter of a declaration here, so the tag is all
+// this needs; it is a struct in System/XmlSaver.h and has to be spelled the
+// same way to keep -Wmismatched-tags quiet.
+struct IXmlSaver;
 
 //#include "DBIDDef.h"
 
