@@ -9,6 +9,9 @@
 #include "lobject.h"
 #include "luadebug.h"
 
+// uint32_t, for nGCticks
+#include <cstdint>
+
 
 template<class T>
 class CVectorList
@@ -205,7 +208,10 @@ struct lua_State
 	std::vector<TM> TMtable;  // table for tag methods
 	std::vector<Ref> refArray;  // locked objects
 	int refFree;  // list of free positions in refArray
-	unsigned long nGCticks;  // number of `bytes' currently allocated
+	// Was unsigned long, which is serialized and four bytes on Windows but eight
+	// on Linux; uint32_t is the width the shipped build wrote. Despite the old
+	// comment it is a tick counter, see luaC_checkGC.
+	uint32_t nGCticks;
 	int nGCAvoid;
 	int allowhooks;
 	int nNoWait;
