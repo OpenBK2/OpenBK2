@@ -210,6 +210,39 @@ set(OBK2_WARNINGS_GCC
     # slicing bug the class is about, and it is 0 over the engine and the
     # editor both. A level that cannot reach zero is a level nobody gates.
     -Wcatch-value=2
+    # Cleared 2026-10-22, and this is the class that silently miscompiled the
+    # DXT decoder, so it is the one the staging list was keeping for last. The
+    # census reported 7 engine sites and 1 editor one, which were 15 punned
+    # expressions in eight functions: the decal projector's UV range test, the
+    # render fragment sort value and its hash, the mipmap LOD bias handed to
+    # D3D, the demo loader reinterpreting a whole CArray2D<uint32_t> as a
+    # CArray2D<SPixel8888>, and FP_BITS, which a census collapses to its
+    # definition line in Misc/Tools.h and which had nine users of its own. That
+    # macro is deleted now, so no hand-rolled float pun is left in the engine.
+    #
+    # Two of the fifteen were more than a pun. SRenderFragmentHash read the key
+    # as four ints, and the ASSERT that was meant to keep that honest does not
+    # evaluate its argument in this configuration: sizeof( SRenderFragmentKey )
+    # became 24 when the pointers widened, so pLM never entered the hash on x64
+    # and every fragment differing only in its lightmap landed in one bucket.
+    # And NMath::Sqrt stored its result through a uint32_t lvalue, which nothing
+    # obliged the compiler to let reach the float it returns; GCC 14.2 does
+    # compile that one correctly at -O2 here, checked against the disassembly
+    # rather than assumed, so none of this changed behaviour today.
+    #
+    # One site is suppressed rather than fixed, at the accessor, with the
+    # measurement behind it: Common_RTS_AI/BasePathUnit.h returns a CVec2 view
+    # of a CVec3 centre. That is pathfinder code, so the question was whether it
+    # can produce an ASYNC, and the answer is no - both vectors are unions, so
+    # neither compiler has a non-aliasing assumption to act on, which is also
+    # why TypeSanitizer is silent on it. Returning by value instead means
+    # checking ~675 call sites for ones that hold the reference.
+    #
+    # GCC only, and not by omission. clang rejects -Wstrict-aliasing=3 outright
+    # as an unknown warning option, and plain -Wstrict-aliasing it accepts and
+    # ignores, measured against a positive control that GCC reports. The same
+    # question is answered there by TypeSanitizer; see docs/Sanitizers.md.
+    -Wstrict-aliasing=3
 )
 
 # Shorter than GCC's, and the asymmetry is the point rather than an oversight:
@@ -355,7 +388,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     # over the 1035 engine units, with the editor's 345 counted separately
     # where they were measured at all: CI's GCC job builds BUILD_EDITOR=ON, so
     # an engine-only count is not the cost of adopting one of these.
-    -Wstrict-aliasing=3             # 7 engine (was 12), 1 editor, and the DXT decoder's class
     -Wcast-align=strict             # 104 engine, inert on x86 and real on ARM
     -Wshadow=compatible-local       # 120 engine; plain -Wshadow is 637 on clang and noisy
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
