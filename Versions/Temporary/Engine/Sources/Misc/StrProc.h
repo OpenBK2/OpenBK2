@@ -8,6 +8,14 @@
 
 #include <algorithm>
 #include <sstream> // std::stringstream, used by ToHex
+// This header declares and defines functions over std::string and
+// std::vector throughout, and calls strlen in two templates, and included
+// none of the three: it only compiled where a prelude had already reached
+// them. Every unit in the engine does, which is why it went unnoticed until a
+// test included this header first.
+#include <cstring> // strlen
+#include <string>
+#include <vector>
 
 #include <boost/config.hpp>
 
