@@ -109,7 +109,10 @@ TEST( NetSaverWideStrings, CyrillicIsTwoBytesPerCharacterLittleEndian )
 
 TEST( NetSaverWideStrings, OutsideTheBasicPlaneBecomesASurrogatePair )
 {
-	EXPECT_EQ( Save( L"\x0001D11E" ), Expected( { 0xD834, 0xDD1E } ) );
+	// Spelled \U, a code point, rather than \x, a single code unit:
+	// \x0001D11E does not fit a 16-bit wchar_t and MSVC rejects it (C7744),
+	// while \U0001D11E is the surrogate pair there and one unit elsewhere.
+	EXPECT_EQ( Save( L"\U0001D11E" ), Expected( { 0xD834, 0xDD1E } ) );
 }
 
 TEST( NetSaverWideStrings, EmptyIsACountAndNothingElse )
@@ -123,8 +126,8 @@ TEST( NetSaverWideStrings, RoundTrips )
 		L"",
 		L"AB",
 		L"\x043F\x0440\x0438\x0432\x0435\x0442",
-		L"\x0001D11E",
-		L"mixed \x0414 \x0001D11E end",
+		L"\U0001D11E",
+		L"mixed \x0414 \U0001D11E end",
 	};
 	for ( const std::wstring &wszValue : wszValues )
 	{
@@ -135,7 +138,7 @@ TEST( NetSaverWideStrings, RoundTrips )
 TEST( NetSaverWideStrings, ReadsBytesWrittenByAWindowsPeer )
 {
 	EXPECT_EQ( Load( Expected( { 0x043F, 0x0440, 0x0438 } ) ), std::wstring( L"\x043F\x0440\x0438" ) );
-	EXPECT_EQ( Load( Expected( { 0xD834, 0xDD1E } ) ), std::wstring( L"\x0001D11E" ) );
+	EXPECT_EQ( Load( Expected( { 0xD834, 0xDD1E } ) ), std::wstring( L"\U0001D11E" ) );
 }
 
 } // namespace

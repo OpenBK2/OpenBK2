@@ -107,9 +107,12 @@ TEST( WideStringChunks, CyrillicIsTwoBytesPerCharacterLittleEndian )
 
 TEST( WideStringChunks, OutsideTheBasicPlaneBecomesASurrogatePair )
 {
+	// Spelled \U, a code point, rather than \x, a single code unit:
+	// \x0001D11E does not fit a 16-bit wchar_t and MSVC rejects it (C7744),
+	// while \U0001D11E is the surrogate pair there and one unit elsewhere.
 	// U+1D11E, two UTF-16 code units, so the count is 2 even where one wchar_t
 	// holds the whole code point
-	EXPECT_EQ( Save( L"\x0001D11E" ), Expected( { 0xD834, 0xDD1E } ) );
+	EXPECT_EQ( Save( L"\U0001D11E" ), Expected( { 0xD834, 0xDD1E } ) );
 }
 
 TEST( WideStringChunks, EmptyIsACountAndNothingElse )
@@ -123,8 +126,8 @@ TEST( WideStringChunks, RoundTrips )
 		L"",
 		L"AB",
 		L"\x0414\x0430 \x0442\x0435\x043A\x0441\x0442",
-		L"\x0001D11E",
-		L"mixed \x0414 \x0001D11E end",
+		L"\U0001D11E",
+		L"mixed \x0414 \U0001D11E end",
 	};
 	for ( const std::wstring &wszValue : wszValues )
 	{
@@ -137,7 +140,7 @@ TEST( WideStringChunks, ReadsBytesWrittenByTheWindowsFormat )
 	// What a Windows build wrote: the count, then the code units. Must decode
 	// to the same text here, which is the whole point of the encoding.
 	EXPECT_EQ( Load( Expected( { 0x0414, 0x0430 } ) ), std::wstring( L"\x0414\x0430" ) );
-	EXPECT_EQ( Load( Expected( { 0xD834, 0xDD1E } ) ), std::wstring( L"\x0001D11E" ) );
+	EXPECT_EQ( Load( Expected( { 0xD834, 0xDD1E } ) ), std::wstring( L"\U0001D11E" ) );
 }
 
 } // namespace
