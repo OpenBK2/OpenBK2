@@ -311,14 +311,44 @@ int CStructureSaver::CountShortChunks( SChunkLevel &src, chunk_id dwID )
 
 void CStructureSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber )
 {
+	// Nothing checked nSize, and all three of memcpy, memset and
+	// WriteShortChunk below take it as a size_t: a negative one becomes an
+	// enormous unsigned value. It arrives from a stream rather than from a
+	// sizeof at one call site, CVariant's blob, which serializes its own length
+	// as a uint32_t and passes it to AddRawData, whose parameter is an int.
+	if ( nSize <= 0 )
+	{
+		NI_ASSERT( false, "Wrong size passed" );
+		return;
+	}
 	SChunkLevel &last = chunks.back();
 	if ( IsReading() )
 	{
 		SChunkLevel res;
 		if ( GetShortChunk( last, idChunk, res, nChunkNumber ) )
 		{
+			// ASSERT does not evaluate its argument in this configuration, so
+			// nothing checked that the stored chunk is as long as the member it
+			// is read into, and the copy took nSize bytes regardless. A chunk
+			// shorter than nSize filled the tail of pData with whatever
+			// followed it in the stream, and read past the end of the buffer
+			// outright once nStart + nSize left it: ReadShortChunk bounds
+			// nLength against its parent chunk, which makes nStart + nLength
+			// safe and says nothing at all about nStart + nSize.
+			//
+			// Copying what is there and zeroing the rest leaves a well-formed
+			// save, where the two are equal, identical byte for byte, and makes
+			// a damaged one read the same way every time instead of depending
+			// on the chunk that happens to follow it.
 			ASSERT( res.nLength == nSize );
-			memcpy( pData, data.GetBuffer() + res.nStart, nSize );
+			// Clamped at zero as well, rather than resting on the bound
+			// ReadShortChunk applies to nLength three calls away.
+			const int nAvailable = (std::max)( 0, (std::min)( res.nLength, nSize ) );
+			memcpy( pData, data.GetBuffer() + res.nStart, nAvailable );
+			if ( nAvailable < nSize )
+			{
+				memset( static_cast<unsigned char *>( pData ) + nAvailable, 0, nSize - nAvailable );
+			}
 		}
 		else
 		{
