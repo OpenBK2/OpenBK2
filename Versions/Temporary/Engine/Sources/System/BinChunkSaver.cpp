@@ -316,9 +316,17 @@ void CStructureSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize,
 	// enormous unsigned value. It arrives from a stream rather than from a
 	// sizeof at one call site, CVariant's blob, which serializes its own length
 	// as a uint32_t and passes it to AddRawData, whose parameter is an int.
-	if ( nSize <= 0 )
+	//
+	// Only a negative size is refused. Zero is legitimate: an empty binary
+	// field in a record becomes a zero length CVariant blob, and
+	// CVariant::operator int handles GetBlobSize() == 0 as a case of its own.
+	// Asserting on it would fire on valid data in a debug build, and returning
+	// early would stop writing the empty chunk such a blob has always written,
+	// which is a change to the file rather than to its safety. Zero reaches a
+	// copy of nothing and a WriteShortChunk of nothing, as it did before.
+	if ( nSize < 0 )
 	{
-		NI_ASSERT( false, "Wrong size passed" );
+		NI_ASSERT( false, "Negative chunk size" );
 		return;
 	}
 	SChunkLevel &last = chunks.back();

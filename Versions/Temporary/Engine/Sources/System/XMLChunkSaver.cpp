@@ -602,9 +602,18 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	// has to close it again or the saver stays a level deep for the rest of the
 	// document. The assertion is kept for its report in a debug build; the
 	// recovery below it is what runs in a release one.
-	if ( nSize <= 0 )
+	//
+	// Only a negative size is refused, although the assertion this replaced
+	// asked for nSize > 0. Zero is legitimate: an empty binary field in a
+	// record becomes a zero length CVariant blob, and CVariant::operator int
+	// handles GetBlobSize() == 0 as a case of its own. Asserting on it would
+	// fire on valid data in a debug build, and refusing it would stop writing
+	// the empty chunk that such a blob has always produced. Zero falls through
+	// to a resize of nothing and a memset of nothing, which is what it did
+	// before.
+	if ( nSize < 0 )
 	{
-		NI_ASSERT( false, "Wrong size passed" );
+		NI_ASSERT( false, "Negative chunk size" );
 		if ( idChunk != 0 )
 		{
 			FinishChunk();
