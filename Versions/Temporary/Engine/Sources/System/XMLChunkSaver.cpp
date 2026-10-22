@@ -594,7 +594,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 		if ( !szString.empty() )
 		{
 			NI_ASSERT( szString.size() == nSize * 2, "Wrong bin chunk size" );
-			NStr::StringToBin( szString.c_str(), pData, 0 );
+			NStr::StringToBin( szString.c_str(), pData, nSize, 0 );
 		}
 		else
 		{

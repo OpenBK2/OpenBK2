@@ -362,16 +362,43 @@ const char *BinToString( const void *pData, int nSize, char *pszBuffer )
 	return pszBuffer;
 }
 
-void *StringToBin( const char *pszData, void *pBuffer, int *pnSize )
+void *StringToBin( const char *pszData, void *pBuffer, int nBufferSize, int *pnSize )
 {
-	uint8_t *pData = (uint8_t *)pBuffer;
-	for ( const char *it = pszData; *it != 0; it += 2 )
+	uint8_t *const pData = (uint8_t *)pBuffer;
+	int nWritten = 0;
+	// The old loop was "for ( it = pszData; *it != 0; it += 2 )" with no
+	// knowledge of the buffer, and it overran in two separate ways.
+	//
+	// It stepped two characters at a time while testing only the first of
+	// them, so an odd-length string puts the terminator on a position the test
+	// never looks at: the loop consumed the terminator as a data nibble, then
+	// stepped past it and dereferenced one byte beyond the end of the string,
+	// writing a byte past the end of the output with it. Confirmed under
+	// AddressSanitizer, a one-byte heap read overrun and a one-byte heap write
+	// overrun, on an input as short as three characters.
+	//
+	// And with no output size it could only ever be bounded by the text, so a
+	// string longer than the caller's buffer overran it by as much as the data
+	// asked for. The one caller that tried to guard that used NI_ASSERT, which
+	// is ( (void)0 ) in this configuration, so nothing was checked at all.
+	//
+	// Both bounds are tested now. it[1] is safe to read whenever it[0] is not
+	// the terminator, so no byte past the end of the string is ever touched.
+	for ( const char *it = pszData; it[0] != 0 && nWritten < nBufferSize; it += 2 )
 	{
-		*pData++ = ( HexSymbolToHalfByte( *it ) << 4 ) | HexSymbolToHalfByte( *( it + 1 ) );
+		if ( it[1] == 0 )
+		{
+			// An odd number of characters. Every producer of this text is
+			// BinToString, which always emits two characters per byte, so an
+			// odd length means the data is damaged; stop rather than invent a
+			// nibble. pnSize reports the short count to the caller.
+			break;
+		}
+		pData[nWritten++] = ( HexSymbolToHalfByte( it[0] ) << 4 ) | HexSymbolToHalfByte( it[1] );
 	}
 	if ( pnSize )
 	{
-		*pnSize = int( pData - (uint8_t *)pBuffer );
+		*pnSize = nWritten;
 	}
 	return pBuffer;
 }
