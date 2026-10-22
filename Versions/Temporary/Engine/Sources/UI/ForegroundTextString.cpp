@@ -59,7 +59,9 @@ static void VisitPlacedText( IUIVisitor *pVisitor,
 	// Placement can center/right-align a caption using its measured size.
 	// Recalculate it after fallback so the smaller caption keeps that alignment.
 	box = PlaceText( pText->GetSize(), parent, pPlacement );
-	pVisitor->VisitUIText( pText, box.GetLeftTop(), box );
+	const CTRect<float> finalClip = pVisitor->GetTextClip( box );
+	const CTPoint<float> origin = pText->GetDrawOrigin( box, false, &finalClip );
+	pVisitor->VisitUIText( pText, origin, box );
 }
 
 void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )

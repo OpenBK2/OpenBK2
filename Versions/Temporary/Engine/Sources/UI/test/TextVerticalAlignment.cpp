@@ -15,6 +15,7 @@
 #include "UI/UIVisitor.h"
 #include "UI/WindowTextView.h"
 
+#include <cmath>
 #include <fstream>
 
 #include <boost/uuid/string_generator.hpp>
@@ -22,6 +23,15 @@
 
 namespace
 {
+// Cover the original UI size, smaller displays, widescreens, and high DPI output.
+const CTPoint<int> menuResolutions[] = { CTPoint<int>( 800, 600 ),
+                                         CTPoint<int>( 1024, 768 ),
+                                         CTPoint<int>( 1280, 720 ),
+                                         CTPoint<int>( 1920, 1080 ),
+                                         CTPoint<int>( 2560, 1440 ),
+                                         CTPoint<int>( 3440, 1440 ),
+                                         CTPoint<int>( 3840, 2160 ) };
+
 // Capture the real control's draw origin and clip without requiring a GPU.
 struct TextVisitor : IUIVisitor
 {
@@ -67,6 +77,8 @@ class TextVerticalAlignment : public testing::Test
 	CObj<NDb::STexture> texture;
 	CObj<NDb::SFont> header;
 	CObj<NDb::STexture> headerTexture;
+	CObj<NDb::SFont> body;
+	CObj<NDb::STexture> bodyTexture;
 
 protected:
 	double capRatio = 0;
@@ -83,6 +95,20 @@ protected:
 		headerTexture->szDestName = "Fonts/Header2/Texture.dds";
 		header->pTexture = headerTexture;
 		NGScene::GetTextLocaleInfo()->AddFont( header );
+	}
+
+	void AddBodyFont()
+	{
+		// Campaign descriptions and chat rows use PT Sans rather than the numeric face.
+		body = NUITest::MakeDescription<NDb::SFont>();
+		body->uid = boost::uuids::string_generator()( "0e16e454-c6f2-4be0-a290-bcb0a7d9640c" );
+		body->szName = "body";
+		body->szFontFile = "Fonts/Files/PTSans-Regular.ttf";
+		body->nThickness = 400;
+		bodyTexture = NUITest::MakeDescription<NDb::STexture>();
+		bodyTexture->szDestName = "Fonts/Body/Texture.dds";
+		body->pTexture = bodyTexture;
+		NGScene::GetTextLocaleInfo()->AddFont( body );
 	}
 
 	CObj<IML> MakeText( const std::wstring &content, int width, IWindow *owner = nullptr )
@@ -596,12 +622,199 @@ TEST_F( TextVerticalAlignment, ScrollingViewportDoesNotReduceAutosizedDescriptio
 	}
 }
 
+TEST_F( TextVerticalAlignment, EncyclopediaNamesKeepTheirPreferredScaleAndVisibleDescenders )
+{
+	AddHeaderFont();
+	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" ) + L"<center>";
+	for ( const auto &resolution : menuResolutions )
+	{
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
+		for ( const std::wstring name : { L"Jagdpanther Heavy AT SPG", L"Jagdtiger Heavy AT SPG" } )
+		{
+			SCOPED_TRACE( std::to_string( resolution.x ) + "x" + std::to_string( resolution.y ) + " " +
+			              std::string( name.begin(), name.end() ) );
+			// The shipped encyclopedia title is 497 wide and only 20 high.
+			CObj<CWindowTextView> label = MakeLabel( 497, 20 );
+			label->SetText( style + name );
+			CTRect<float> box;
+			VirtualToScreen( label->GetWindowRect(), &box );
+			CObj<IML> preferred = MakeText( style + name, std::floor( box.Width() ) );
+			TextVisitor visitor;
+			label->Visit( &visitor );
+			ASSERT_EQ( visitor.calls, 1 );
+			EXPECT_EQ( visitor.size, preferred->GetSize() );
+			EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, visitor.clip, false ) );
+		}
+	}
+}
+
+TEST_F( TextVerticalAlignment, ChatNicknameKeepsItsPreferredScaleAndVisibleInitial )
+{
+	AddBodyFont();
+	const std::wstring content = L"<font face=body size=16>"
+															 L"<font size=16pt outlinesize=1 outlinecolor=black forcefontsize=1>Jan4uks753: ";
+	for ( const auto &resolution : menuResolutions )
+	{
+		SCOPED_TRACE( std::to_string( resolution.x ) + "x" + std::to_string( resolution.y ) );
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
+		// Match both the fixed chat row and its child's 20-pixel clip.
+		CObj<CWindow> row = MakePanel( 600, 20 );
+		CObj<CWindowTextView> label = MakeLabel( 600, 20 );
+		label->SetPlacement( 0, 0, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+		row->AddChild( label, true );
+		label->SetText( content );
+		CTRect<float> box;
+		VirtualToScreen( label->GetWindowRect(), &box );
+		CObj<IML> preferred = MakeText( content, std::floor( box.Width() ) );
+		TextVisitor visitor;
+		row->Visit( &visitor );
+		ASSERT_EQ( visitor.calls, 1 );
+		EXPECT_EQ( visitor.size, preferred->GetSize() );
+		EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, visitor.clip, false ) );
+	}
+}
+
+TEST_F( TextVerticalAlignment, EncyclopediaListNamesKeepTheirPreferredScaleAndVisibleInitial )
+{
+	AddBodyFont();
+	const std::wstring style = NText::GetText( "Consts/Game/Tags/body_Text.txt" );
+	ASSERT_FALSE( style.empty() );
+	for ( const auto &resolution : menuResolutions )
+	{
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
+		for ( const std::wstring name : { L"Jagdpanther Heavy AT SPG", L"Jagdtiger Heavy AT SPG" } )
+		{
+			SCOPED_TRACE( std::to_string( resolution.x ) + "x" + std::to_string( resolution.y ) + " " +
+			              std::string( name.begin(), name.end() ) );
+			// List entries use a left-aligned body font in a 350x18 control.
+			CObj<CWindowTextView> label = MakeLabel( 350, 18 );
+			label->SetText( style + name );
+			CTRect<float> box;
+			VirtualToScreen( label->GetWindowRect(), &box );
+			CObj<IML> preferred = MakeText( style + name, std::floor( box.Width() ) );
+			TextVisitor visitor;
+			label->Visit( &visitor );
+			ASSERT_EQ( visitor.calls, 1 );
+			EXPECT_EQ( visitor.size, preferred->GetSize() );
+			EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, visitor.clip, false ) );
+		}
+	}
+}
+
+TEST_F( TextVerticalAlignment, PlacedNicknamesKeepTheirPreferredScaleInsideParentClips )
+{
+	AddBodyFont();
+	for ( const auto &resolution : menuResolutions )
+	{
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
+		for ( const std::wstring name : { L"Jan4uks753", L"J", L"Jf" } )
+		{
+			const std::wstring content = L"<font face=body size=16>" + name;
+			for ( const auto alignment : { NDb::EPA_LOW_END, NDb::ERA_CENTER, NDb::EPA_HIGH_END } )
+			{
+				SCOPED_TRACE( std::to_string( resolution.x ) + "x" + std::to_string( resolution.y ) + " " +
+				              std::string( name.begin(), name.end() ) + " alignment " + std::to_string( alignment ) );
+				NDb::SWindowPlacement placement;
+				placement.position = VNULL2;
+				placement.lowerMargin = VNULL2;
+				placement.upperMargin = VNULL2;
+				placement.horAllign = alignment;
+				placement.verAllign = NDb::ERA_CENTER;
+				// The right-aligned caption also meets an ordinary parent clip.
+				CObj<CWindow> panel = MakePanel( 300, 40 );
+				CObj<CWindowTextView> label = MakeLabel( 300, 40, false, &placement );
+				label->SetPlacement( 0, 0, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+				panel->AddChild( label, true );
+				label->CWindow::SetTextString( content );
+				CTRect<float> box;
+				VirtualToScreen( label->GetWindowRect(), &box );
+				CObj<IML> preferred = MakeText( content, std::floor( box.Width() ) );
+				TextVisitor visitor;
+				panel->Visit( &visitor );
+				ASSERT_EQ( visitor.calls, 1 );
+				EXPECT_EQ( visitor.size, preferred->GetSize() );
+				CTRect<float> actualClip;
+				VirtualToScreen( panel->GetWindowRect(), &actualClip );
+				actualClip.Intersect( visitor.clip );
+				EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, actualClip, false ) );
+			}
+		}
+	}
+}
+
+TEST_F( TextVerticalAlignment, OppositeParagraphEdgesFitWithoutShrinkingEitherLine )
+{
+	AddBodyFont();
+	// J extends before the left line's advance; f can extend beyond the
+	// right-aligned line. Each short line fits, even if their combined ink does not.
+	const std::wstring content = L"<font face=body size=16><left>Jan4uks753\n<right>Jf";
+	for ( const auto &resolution : menuResolutions )
+	{
+		SCOPED_TRACE( std::to_string( resolution.x ) + "x" + std::to_string( resolution.y ) );
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
+		CObj<CWindowTextView> label = MakeLabel( 300, 60 );
+		label->SetText( content );
+		CTRect<float> box;
+		VirtualToScreen( label->GetWindowRect(), &box );
+		CObj<IML> preferred = MakeText( content, std::floor( box.Width() ) );
+		TextVisitor visitor;
+		label->Visit( &visitor );
+		ASSERT_EQ( visitor.calls, 1 );
+		EXPECT_EQ( visitor.size, preferred->GetSize() );
+		EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, visitor.clip, false ) );
+	}
+}
+
+TEST_F( TextVerticalAlignment, BritishCampaignDescriptionKeepsItsPreferredScaleWhenScrolling )
+{
+	AddBodyFont();
+	// The installed campaign description is not present in the older source data.
+	const std::wstring content =
+			L"<font face=body size=16>Victorious in the Great War, Britain emerged as a major world power with a "
+			L"vast colonial empire. As tensions in Europe rose, primarly invoked by the new German Reich, Britain "
+			L"abandoned appeasement and prepared to confront German expansion. When Germany invaded Poland, "
+			L"Britain and France declared war, marking the beginning World War II. Initial phase of the war goes "
+			L"badly for allies as the axis powers gain full control of the mainland Europe, but despite all of "
+			L"that, the fight goes on.";
+	for ( const auto &resolution : menuResolutions )
+	{
+		SCOPED_TRACE( std::to_string( resolution.x ) + "x" + std::to_string( resolution.y ) );
+		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
+		// DescCont's 300x260 rectangle leaves 255x240 after its border margins.
+		CObj<CWindow> scroll = MakeScrollPanel( 255, 240 );
+		// Reposition attaches the scroll container to its border and initializes the viewport.
+		scroll->Reposition( CTRect<float>( 0, 0, 1024, 768 ) );
+		IScrollableContainer *container = dynamic_cast<IScrollableContainer *>( scroll.GetPtr() );
+		ISliderNotify *slider = dynamic_cast<ISliderNotify *>( scroll.GetPtr() );
+		ASSERT_NE( container, nullptr );
+		ASSERT_NE( slider, nullptr );
+		CObj<CWindowTextView> label = MakeLabel( 255, 20, true );
+		label->SetPlacement( 0, 0, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+		label->SetText( content );
+		container->PushBack( label, false );
+		container->Update();
+		CTRect<float> box;
+		VirtualToScreen( label->GetWindowRect(), &box );
+		CObj<IML> preferred = MakeText( content, std::floor( box.Width() ) );
+		for ( const int offset : { 0, 30, 60 } )
+		{
+			SCOPED_TRACE( offset );
+			slider->SliderPosition( offset, nullptr );
+			TextVisitor visitor;
+			scroll->Visit( &visitor );
+			ASSERT_EQ( visitor.calls, 1 );
+			EXPECT_EQ( visitor.size, preferred->GetSize() );
+			EXPECT_FALSE( visitor.text->HasVisibleTextOutside( visitor.position, visitor.clip, false ) );
+		}
+	}
+}
+
 TEST_F( TextVerticalAlignment, LoadingAdviceKeepsItsScaleWhenTheLettersFit )
 {
 	AddHeaderFont();
 	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" );
 	ASSERT_FALSE( style.empty() );
-	for ( auto resolution : { CTPoint<int>( 1024, 768 ), CTPoint<int>( 1920, 1080 ), CTPoint<int>( 2560, 1440 ) } )
+	for ( const auto &resolution : menuResolutions )
 	{
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
 		int fittingAdvice = 0;
@@ -620,14 +833,14 @@ TEST_F( TextVerticalAlignment, LoadingAdviceKeepsItsScaleWhenTheLettersFit )
 			CTRect<float> box;
 			VirtualToScreen( label->GetWindowRect(), &box );
 			// Same font/advance/wrapping, with only the decorative border removed.
-			CObj<IML> letters = MakeText( L"<font face=h2 size=20>" + advice, box.Width() + 0.5f );
+			CObj<IML> letters = MakeText( L"<font face=h2 size=20>" + advice, std::floor( box.Width() ) );
 			if ( letters->HasVisibleTextOutside( box.GetLeftTop(), box ) )
 			{
 				continue;
 			}
 			++fittingAdvice;
 			label->SetText( style + advice );
-			CObj<IML> preferred = MakeText( style + advice, box.Width() + 0.5f );
+			CObj<IML> preferred = MakeText( style + advice, std::floor( box.Width() ) );
 			TextVisitor visitor;
 			label->Visit( &visitor );
 			EXPECT_EQ( visitor.size, preferred->GetSize() );
@@ -641,7 +854,7 @@ TEST_F( TextVerticalAlignment, MenuButtonHeadingsDoNotShrinkForTheirBorder )
 	AddHeaderFont();
 	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" );
 	ASSERT_FALSE( style.empty() );
-	for ( auto resolution : { CTPoint<int>( 1024, 768 ), CTPoint<int>( 1920, 1080 ), CTPoint<int>( 2560, 1440 ) } )
+	for ( const auto &resolution : menuResolutions )
 	{
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
 		for ( const std::wstring caption : { L"Resume", L"Options", L"Save Game", L"Exit To Windows" } )
@@ -662,10 +875,13 @@ TEST_F( TextVerticalAlignment, OutlinedAdviceStillFallsBackWhenLettersAreCutOff 
 	AddHeaderFont();
 	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" );
 	ASSERT_FALSE( style.empty() );
-	const std::wstring advice = NText::GetText( "Citations/02.txt" );
-	ASSERT_FALSE( advice.empty() );
+	const std::wstring quote = NText::GetText( "Citations/08.txt" );
+	ASSERT_FALSE( quote.empty() );
+	// Repeat the three-line quote so enlarged letters cannot fit merely by
+	// moving the text inside the original line boxes, even at small raster sizes.
+	const std::wstring advice = quote + L"\n" + quote;
 	CObj<IScreen> hud = MakeScreen( true );
-	for ( auto resolution : { CTPoint<int>( 1024, 768 ), CTPoint<int>( 1920, 1080 ), CTPoint<int>( 2560, 1440 ) } )
+	for ( const auto &resolution : menuResolutions )
 	{
 		SCOPED_TRACE( resolution.y );
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
@@ -673,11 +889,13 @@ TEST_F( TextVerticalAlignment, OutlinedAdviceStillFallsBackWhenLettersAreCutOff 
 		CObj<IML> original = MakeText( style + advice, width, hud );
 		const auto originalSize = original->GetSize();
 		const CTRect<float> box( 0, 0, width, originalSize.y );
-		CObj<IML> letters = MakeText( L"<font face=h2 size=20>" + advice, width );
-		ASSERT_TRUE( letters->HasVisibleTextOutside( box.GetLeftTop(), box ) );
+		const auto originalOrigin = original->FitToBox( box );
+		ASSERT_FALSE( original->HasVisibleTextOutside( originalOrigin, box, false ) );
 		CObj<IML> outlined = MakeText( style + advice, width );
-		outlined->FitToBox( box );
+		ASSERT_NE( outlined->GetSize(), originalSize );
+		const auto origin = outlined->FitToBox( box );
 		EXPECT_EQ( outlined->GetSize(), originalSize );
+		EXPECT_FALSE( outlined->HasVisibleTextOutside( origin, box, false ) );
 	}
 }
 
@@ -714,7 +932,7 @@ TEST_F( TextVerticalAlignment, LoadingAdviceFitsItsActualParentClipAtEveryResolu
 		}
 	};
 
-	for ( auto resolution : { CTPoint<int>( 1024, 768 ), CTPoint<int>( 1920, 1080 ), CTPoint<int>( 2560, 1440 ) } )
+	for ( const auto &resolution : menuResolutions )
 	{
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
 		// Shipped BottomPanel is 100 high; Citation starts at y=38 and claims

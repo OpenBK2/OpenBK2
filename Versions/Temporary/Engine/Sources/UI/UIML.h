@@ -266,6 +266,10 @@ struct IML : public CObjectBase
 	// overhang alone must not shrink readable text. Returns the new draw origin.
 	virtual CTPoint<float>
 	FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine = false, const CTRect<float> *pClip = nullptr ) = 0;
+	// Reapply alignment and ink fitting after a caption is placed using its final
+	// size. This does not reconsider fallback against the smaller caption's box.
+	virtual CTPoint<float>
+	GetDrawOrigin( const CTRect<float> &sBox, bool bCenterSingleLine = false, const CTRect<float> *pClip = nullptr ) = 0;
 	// Diagnostic includes visible outlines by default; false checks only letters.
 	virtual bool
 	HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline = true ) = 0;

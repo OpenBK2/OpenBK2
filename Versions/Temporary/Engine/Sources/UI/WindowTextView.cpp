@@ -106,14 +106,19 @@ bool CWindowTextView::InitText()
 	// takes the source by const reference and says the same thing.
 	CTRect<float> rc;
 	VirtualToScreen( GetWindowRect(), &rc );
-	pGfxText->Generate( rc.Width() + 0.5f );
+	// The layout takes whole pixels; rounding up would align right-hand lines
+	// beyond the real fractional clip edge at widescreen resolutions.
+	pGfxText->Generate( static_cast<int>( std::floor( rc.Width() ) ) );
 
 	if ( !pInstance->bResizeOnTextSet )
 	{
 		return false;
 	}
 
-	int nHeight = ScreenToVirtualY( pGfxText->GetSize().y ) - ScreenToVirtualY( 0 );
+	// Keep the full pixel height when converting an autosized paragraph back
+	// to virtual units. Truncation can otherwise cut its bottom at scaled resolutions.
+	const CVec2 size = ScreenToVirtual( CVec2( 0, pGfxText->GetSize().y ) ) - ScreenToVirtual( VNULL2 );
+	const int nHeight = static_cast<int>( std::ceil( size.y ) );
 	const bool bRet = ( nHeight != GetWindowRect().Height() );
 	if ( bRet )
 	{
