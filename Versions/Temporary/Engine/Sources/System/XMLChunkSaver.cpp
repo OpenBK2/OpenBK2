@@ -591,9 +591,27 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 	if ( IsReading() )
 	{
 		DataChunkString( szString );
+		// The length check here was NI_ASSERT, which is ( (void)0 ) without
+		// _DO_ASSERT_SLOW, so a string longer than the destination was never
+		// caught. StringToBin was not told how big pData is either, so it wrote
+		// as many bytes as the text asked for: the two things that were meant
+		// to bound this both did nothing, and chunks are read out of saves and
+		// profiles. NI_VERIFY does evaluate its condition, and the conversion
+		// is bounded by nSize as well, so neither check rests on the other.
+		//
+		// The bound is "not longer than", not "equal to", and the old
+		// assertion had that wrong as well as dead: a pointer chunk is written
+		// with a hard coded 4 bytes (see Finish, where __ServerPtr carries an
+		// index rather than an address) and read back into a void * slot, so
+		// on x64 nSize is 8 and the text is legitimately 8 characters rather
+		// than 16. Asserting equality would have fired on every pointer chunk
+		// the first time anyone built with assertions on. A short chunk leaves
+		// the rest of pData as the caller left it, which is what the readers
+		// of those chunks already rely on, so that is unchanged here.
+		const bool bTooLong = szString.size() > size_t( nSize ) * 2;
+		NI_VERIFY( !bTooLong, "Bin chunk longer than its destination", szString.clear() );
 		if ( !szString.empty() )
 		{
-			NI_ASSERT( szString.size() == nSize * 2, "Wrong bin chunk size" );
 			NStr::StringToBin( szString.c_str(), pData, nSize, 0 );
 		}
 		else
