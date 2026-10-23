@@ -411,6 +411,9 @@ void CFormationRepairUnitState::FindUnitToServe( const CVec2 &vCenter,
 
 void CFormationRepairUnitState::Segment()
 {
+	// Rebuild the track target from the actual unit, including for states restored from older saves.
+	pTank = dynamic_cast_ptr<CTank *>( pUnitInQuiestion );
+
 	// реакция на смещение юнита
 	if ( EFRUS_WAIT_FOR_HOME_TRANSPORT != eState )
 	{
@@ -425,9 +428,8 @@ void CFormationRepairUnitState::Segment()
 		}
 		else if ( pUnitInQuiestion->GetHitPoints() == pUnitInQuiestion->GetStats()->fMaxHP )
 		{
-			const EUnitRPGType type = pUnitInQuiestion->GetStats()->etype;
-			// у танков - проверить гусеницу.
-			if ( !::IsArmor( type ) && !::IsSPG( type ) && !static_cast_ptr<CTank *>( pUnitInQuiestion )->IsTrackDamaged() )
+			// Only tanks have tracks; repairable artillery and trains are unrelated classes.
+			if ( !pTank || !pTank->IsTrackDamaged() )
 			{
 				eState = EFRUS_FIND_UNIT_TO_SERVE;
 			}
@@ -464,11 +466,8 @@ void CFormationRepairUnitState::Segment()
 			{
 				pUnitInQuiestion = pred.GetUnit();
 				vPointInQuestion = pUnitInQuiestion->GetCenterPlain();
-				EUnitRPGType type = pUnitInQuiestion->GetStats()->etype;
-				if ( ::IsArmor( type ) || ::IsSPG( type ) || ::IsTrain( type ) )
-				{
-					pTank = static_cast_ptr<CTank *>( pUnitInQuiestion );
-				}
+				// Refresh even for non-tanks, so servicing cannot use a previous target's tracks.
+				pTank = dynamic_cast_ptr<CTank *>( pUnitInQuiestion );
 				eState = EFRUS_START_APPROACH;
 				fRepCost = pUnitInQuiestion->GetStats()->fRepairCost * SConsts::REPAIR_COST_ADJUST;
 				break;

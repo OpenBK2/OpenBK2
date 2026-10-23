@@ -7,8 +7,12 @@ add_unit_test(UnitTransfer System Misc zlib)
 add_unit_test(UnitTransferSelection AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
 # Traverse the real registry and saved train/towing attachment graph.
 add_unit_test(UnitTransferAttachments AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
+add_unit_test(RepairTarget AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(RepairTarget_test PRIVATE
+    REPAIR_TARGET_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(RepairTarget_test PROPERTIES TIMEOUT 60)
 set_tests_properties(TowingPrecision_test PROPERTIES TIMEOUT 60)
 if(WIN32)
-    set_tests_properties(BallisticOffset_test TowingPrecision_test UnitTransferSelection_test UnitTransferAttachments_test PROPERTIES
+    set_tests_properties(BallisticOffset_test TowingPrecision_test UnitTransferSelection_test UnitTransferAttachments_test RepairTarget_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
 endif()
