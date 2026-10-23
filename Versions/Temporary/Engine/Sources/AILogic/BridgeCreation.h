@@ -2,6 +2,8 @@
 
 #include "LongObjectCreation.h"
 
+#include "AILogic_export.h"
+
 class CFullBridge;
 class CBridgeSpan;
 
@@ -48,7 +50,7 @@ public:
 
 	CBridgeCreation( class CFullBridge *pBridge, class CCommonUnit *pUnit, const bool bAllowAIModification );
 
-	static CVec2 SortBridgeSpans( std::vector<CObj<CBridgeSpan>> *spans, class CCommonUnit *pUnit );
+	AILOGIC_EXPORT static CVec2 SortBridgeSpans( std::vector<CObj<CBridgeSpan>> *spans, class CCommonUnit *pUnit );
 
 	//specific
 	const CVec2 &GetStartPoint() const; // куда посылать грузовик

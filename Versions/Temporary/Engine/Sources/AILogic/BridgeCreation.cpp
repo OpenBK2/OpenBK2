@@ -58,12 +58,14 @@ CVec2 CBridgeCreation::SortBridgeSpans( std::vector<CObj<CBridgeSpan>> *spans, c
 	const float fDiff1 = pPath1 ? fabs2( pPath1->GetFinishPoint() - v1 ) : 1000000;
 	const float fDiff2 = pPath2 ? fabs2( pPath2->GetFinishPoint() - v2 ) : 1000000;
 
-	if ( pPath1->GetLength() <= pPath2->GetLength() && fDiff1 < sqr( SConsts::TILE_SIZE * 10 ) )
+	// Either endpoint can have no path. Compare lengths only when both paths exist;
+	// the fallbacks below still accept a reachable endpoint on its own.
+	if ( pPath1 && pPath2 && pPath1->GetLength() <= pPath2->GetLength() && fDiff1 < sqr( SConsts::TILE_SIZE * 10 ) )
 	{
 		// первый span - ближайший.
 		return v1;
 	}
-	else if ( pPath1->GetLength() >= pPath2->GetLength() && fDiff2 < sqr( SConsts::TILE_SIZE * 10 ) )
+	else if ( pPath1 && pPath2 && pPath1->GetLength() >= pPath2->GetLength() && fDiff2 < sqr( SConsts::TILE_SIZE * 10 ) )
 	{
 		// последний span - ближайший.
 		reverse( spans->begin(), spans->end() );
