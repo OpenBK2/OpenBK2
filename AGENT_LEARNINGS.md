@@ -65,3 +65,14 @@ context. Read `git diff` of every touched file before building.
 - Light simulation checksums cover visible unit state and shells, but not every
   AI state, scheduling deadline or RNG state. Equal checksums do not establish
   equal hidden simulation state immediately before a divergence.
+
+## Repair targets and cached typed pointers
+
+- Trains and artillery are not `CTank` subclasses. The repair-state ASYNC came
+  from reading `IsTrackDamaged()` through an invalid cast of an artillery target.
+  Use the actual runtime type for class-specific state, and clear the cached
+  tank pointer whenever a new non-tank target is selected.
+- Serialized caches can preserve a valid pointer to the wrong previous target.
+  Refresh derived target pointers before use as well as on target selection.
+  In regression fixtures, inspect the saved cache as a common base pointer;
+  loading it as `CPtr<CTank>` can hide an invalid train cache by casting it to null.
