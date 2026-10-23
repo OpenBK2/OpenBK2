@@ -437,7 +437,8 @@ setvar count_checksum = 1               # typed in the in-game console, tilde ke
 
 the command line form is applied after the config files and after the defaults that
 `--replay-verify` sets, so it always wins. it takes no spaces around the `=`, where the
-console and the config files want them.
+console and the config files want them. `--setvar=count_checksum=1`, as one argument,
+does the same.
 
 a variable needs no declaration in the code to be settable. most of the ones below are
 read with `NGlobal::GetVar( "name", default )` and nothing else, so a typo in the name is
