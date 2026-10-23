@@ -55,17 +55,17 @@ bool CAckManager::UpdateAcknowledgment( SAIAcknowledgment &pAck )
 
 bool CAckManager::UpdateAcknowledgment( SAIBoredAcknowledgement &pAck )
 {
-	if ( bored.size() == 0 )
+	// UnitDead can leave empty categories ahead of pending notifications.
+	while ( !bored.empty() && bored.begin()->second.empty() )
+	{
+		bored.erase( bored.begin() );
+	}
+	if ( bored.empty() )
 	{
 		return false;
 	}
 
 	CAckTypeBoredPrecence::iterator it = bored.begin();
-	if ( it->second.size() == 0 )
-	{
-		bored.erase( it );
-		return false;
-	}
 	CBoredPresence::iterator it2 = it->second.begin();
 	pAck.bPresent = it2->second.second;
 	pAck.nObjUniqueID = it2->second.first->GetUniqueId(); //	pAck.pObj = it2->second.first;
@@ -74,8 +74,8 @@ bool CAckManager::UpdateAcknowledgment( SAIBoredAcknowledgement &pAck )
 	if ( it->second.size() == 0 )
 	{
 		bored.erase( it );
-		return false;
 	}
+	// The caller must consume this event even when it emptied the category.
 	return true;
 }
 

@@ -1,7 +1,13 @@
 #pragma once
 
 #include "Stats_B2_M1/AIAckTypes.h"
+#include "System/Basic.h"
 #include "System/det_map.h"
+
+#include "AILogic_export.h"
+
+#include <utility>
+#include <vector>
 
 class CAIUnit;
 
@@ -10,7 +16,7 @@ namespace NDb
 enum EUnitAckType : int;
 }
 
-class CAckManager
+class AILOGIC_EXPORT CAckManager
 {
 public:
 	int operator&( IBinSaver &saver );
