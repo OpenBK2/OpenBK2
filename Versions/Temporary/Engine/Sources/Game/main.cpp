@@ -77,6 +77,9 @@ static std::string szEditorMap;
 static std::string szEditorMod;
 // --replay=, kept here for the same reason.
 static std::string szReplayFile;
+// --replay-player=, the player a --replay= is watched as. -1 when not given,
+// which plays it as player 0, the same as the console command with no player.
+static int nReplayPlayer = -1;
 // --mission= and --campaign=, which start a mission straight from the command
 // line so nobody has to edit a config file to do it. Kept here and applied at
 // the same late point as the editor's map for the reason given there: a config
@@ -435,10 +438,16 @@ static int RunGame( const std::vector<std::string> &arguments )
 	}
 	// Same point in startup for the same reason: the replay command reaches
 	// CICMission, which needs the database loaded. The file name is resolved by
-	// ReplayHistory, so this passes it through unchanged.
+	// ReplayHistory, so this passes it through unchanged. The player, when
+	// given, is the command's second argument, as the replay screen passes it.
 	else if ( !szReplayFile.empty() )
 	{
-		NGlobal::ProcessCommand( L"replay \"" + UTF8ToWide( szReplayFile ) + L"\"" );
+		std::wstring command = L"replay \"" + UTF8ToWide( szReplayFile ) + L"\"";
+		if ( nReplayPlayer >= 0 )
+		{
+			command += L" " + std::to_wstring( nReplayPlayer );
+		}
+		NGlobal::ProcessCommand( command );
 	}
 	// start
 	Cursor()->Acquire( true );
@@ -639,6 +648,23 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 			szReplayFile = value;
 			continue;
 		}
+		// --replay-player=<number> watches the --replay= as that player, which is
+		// what the replay screen's team list does. The simulation must play out
+		// the same whoever watches, so playing one replay as each player in turn
+		// is a determinism check of its own. Whether the replay has that player
+		// is only known once it is loaded, and is checked there.
+		const std::string replayPlayerPrefix = "--replay-player=";
+		if ( szString.compare( 0, replayPlayerPrefix.size(), replayPlayerPrefix ) == 0 )
+		{
+			const std::string value = szString.substr( replayPlayerPrefix.size() );
+			if ( value.empty() || value.size() > 2 || value.find_first_not_of( "0123456789" ) != std::string::npos )
+			{
+				MessageBox( 0, "Invalid --replay-player argument, expected a player number.", "Replay", MB_OK | MB_ICONERROR );
+				return false;
+			}
+			nReplayPlayer = NStr::ToInt( value );
+			continue;
+		}
 		// check for '-' at the begining
 		if ( szString == "-show-version" )
 		{
@@ -707,6 +733,12 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		}
 		// no special preferences for parsing - just store this var as integer '1'
 		NGlobal::SetVar( szString, 1 );
+	}
+
+	if ( nReplayPlayer >= 0 && szReplayFile.empty() )
+	{
+		MessageBox( 0, "--replay-player needs --replay= as well.", "Replay", MB_OK | MB_ICONERROR );
+		return false;
 	}
 	return true;
 }
