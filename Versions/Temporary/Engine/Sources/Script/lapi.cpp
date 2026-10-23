@@ -402,7 +402,20 @@ void lua_startThread( lua_State *L, int nArgs )
 	  *LObj(L, L->pCT->top) = *(params+i);
 		api_incr_top( L );
 	}
-	lua_startCall( L, nArgs, 0 );
+	{
+		// A newly started coroutine may sleep even when its creator is a synchronous callback.
+		struct SRestoreWaitContext
+		{
+			int &value;
+			int previous;
+			~SRestoreWaitContext()
+			{
+				value = previous;
+			}
+		} restoreWaitContext{ L->nNoWait, L->nNoWait };
+		L->nNoWait = 0;
+		lua_startCall( L, nArgs, 0 );
+	}
 	lua_setThread( L, pOld );
 	// pop parameters
 	ASSERT( stackOld == L->pCT->top ); // stack corrupted
@@ -476,10 +489,18 @@ void lua_executeThreads( lua_State *L )
 			//
 			lua_setThread( L, pThread );
 			ASSERT( L->pCT == pThread );
+			// StartThread may enter a waiting native function without a Lua CALL frame.
+			// Its retained root function/arguments are already serialized with the thread.
+			if ( !pThread->bErrorInThread && pThread->executedCalls.empty() && pThread->top > 0 &&
+			     LObj( L, 0 )->GetType() == LUA_TFUNCTION )
+			{
+				luaD_startCall( L, 0, 0 );
+			}
 			//
 			luaV_stepExecute( L );
 			//
-			if ( pThread->bErrorInThread || L->pCT->executedCalls.empty() )
+			if ( pThread->bErrorInThread ||
+			     ( pThread->executedCalls.empty() && pThread->thisThreadIsSleeping <= 0 ) )
 			{
 				/*
 				if ( pThread->bErrorInThread )

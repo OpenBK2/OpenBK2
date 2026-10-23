@@ -196,6 +196,9 @@ const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
 static void infoLproto (lua_Debug *ar, Proto *f) {
 #ifdef  LUA_DEBUG
 	ar->source = f->source.c_str();
+#else
+	// Release builds omit source text, but error stack formatting still reads this field.
+	ar->source = "=?";
 #endif
   ar->linedefined = f->lineDefined;
   ar->what = "Lua";

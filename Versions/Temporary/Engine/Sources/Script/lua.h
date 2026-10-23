@@ -55,6 +55,11 @@ typedef struct lua_State lua_State;
 
 typedef int (*lua_CFunction) (lua_State *L);
 
+// A native predicate may retain its call and retry on the next simulation segment.
+// It must leave its arguments unchanged and perform no work that a retry would repeat.
+// The VM keeps the ordinary stack/PC/sleep state, so suspended calls remain saveable.
+constexpr int LUA_RETRY_NEXT_SEGMENT = -2;
+
 /*
 ** types returned by `lua_type'
 */

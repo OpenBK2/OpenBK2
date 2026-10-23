@@ -125,6 +125,10 @@ static StkId callCclosure (lua_State *L, const struct Closure *cl, StkId base)
 		*LObj(L, L->pCT->top++) = cl->upvalues[n];
 	n = (*cl->f.c)(L);  /* do the actual call */
 	L->pCT->Cbase = old_Cbase;  /* restore old C base */
+	if ( n == LUA_RETRY_NEXT_SEGMENT )
+	{
+		return LUA_RETRY_NEXT_SEGMENT;
+	}
 	return L->pCT->top - n;  /* return index of first result */
 }
 
@@ -146,7 +150,7 @@ void luaD_callTM (lua_State *L, int nClosure, int nParams, int nResults)
 ** The number of results is nResults, unless nResults=LUA_MULTRET.
 */
 
-bool luaD_startCall( lua_State *L, StkId func, int nResults )
+ELuaCallResult luaD_startCall( lua_State *L, StkId func, int nResults )
 {
 	//
 	TObject *pO = LObj(L, func);
@@ -158,7 +162,7 @@ bool luaD_startCall( lua_State *L, StkId func, int nResults )
 		{
 			luaG_typeerror( L, pO, "call" );
 			//luaO_verror( L, "attempt to call a nil or non function value" );
-			return false;
+			return LUA_CALL_COMPLETE;
 		}
 		luaD_openstack( L, func );
 		LObj(L, func)->SetCL( nCl );  // tag method is the new function to be called
@@ -174,16 +178,40 @@ bool luaD_startCall( lua_State *L, StkId func, int nResults )
 	ASSERT( L->pCT->Cbase <= L->pCT->top );
 	if ( cl->isC )
 	{
+		const StkId originalTop = L->pCT->top;
 		StkId firstresult = callCclosure( L, cl, func+1 );
+		if ( firstresult == LUA_RETRY_NEXT_SEGMENT )
+		{
+			L->pCT->top = originalTop;
+			if ( L->nNoWait > 0 )
+			{
+				// Tag methods and other synchronous callers cannot advance simulation while waiting.
+				luaO_verror( L, "cannot wait for a simulation segment in a synchronous call" );
+				firstresult = originalTop;
+			}
+			else
+			{
+				if ( L->callhook )
+				{
+					luaD_callHook( L, LObj( L, func ), L->callhook, "return" );
+				}
+				// Restore the function and retain its arguments as ordinary GC-visible stack roots.
+				// The caller rewinds CALL/TAILCALL; a root native thread is retried by the scheduler.
+				LObj( L, func )->SetCL( nCL );
+				L->callInfos.erase( nCallInfo );
+				L->pCT->thisThreadIsSleeping = 1;
+				return LUA_CALL_RETRY;
+			}
+		}
 		// end call just now!
 		ASSERT( L->pCT->Cbase <= L->pCT->top );
 		luaD_endCall( L, func, nResults, firstresult );
-		return false;
+		return LUA_CALL_COMPLETE;
 	}
 	else
 	{
 		luaV_beginExecute( L, nCL, func+1, nResults );
-		return true;
+		return LUA_CALL_STARTED;
 	}
 }
 
@@ -218,7 +246,7 @@ void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstResult )
 void luaD_call( lua_State *L, StkId func, int nResults )
 {
 	++L->nNoWait;
-	if ( luaD_startCall( L, func, nResults ) )
+	if ( luaD_startCall( L, func, nResults ) == LUA_CALL_STARTED )
 		luaV_stepExecute( L );
 	--L->nNoWait;
 }
