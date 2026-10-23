@@ -76,3 +76,19 @@ context. Read `git diff` of every touched file before building.
   Refresh derived target pointers before use as well as on target selection.
   In regression fixtures, inspect the saved cache as a common base pointer;
   loading it as `CPtr<CTank>` can hide an invalid train cache by casting it to null.
+
+## Simulation waits and regression fixtures
+
+- This Lua VM cannot suspend a native predicate by sleeping and returning.
+  Preserve its function, arguments and caller PC until a later simulation segment;
+  handle CALL, TAILCALL and a native StartThread entry separately. Synchronous
+  callbacks must report an error when the condition still requires waiting.
+  Existing stack, PC and sleep serialization can preserve the pending call.
+- Exercise error reporting in Release too. Lua source metadata is omitted there,
+  but stack formatting still needs an initialized source pointer.
+- In DLL-backed factory tests, an inline null cast can be optimized away and fail
+  to load the registering library. Use an actual exported symbol as the link
+  anchor. Inspect each inheritance level's serializer before populating fixture
+  fields; an infantry formation pointer belongs inside its soldier base record.
+- PowerShell does not expand Bash brace or wildcard path operands for `rg`.
+  Search a directory with `-g` filters or pass explicit paths instead.

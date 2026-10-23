@@ -4,6 +4,8 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/det_map.h"
 
+#include "AILogic_export.h"
+
 namespace NDb
 {
 struct SScriptArea;
@@ -36,7 +38,7 @@ typedef det_map<int /*attackGroupID*/, int /*ExecutorID*/> CAttackGroup;
 class CScripts
 {
 public:
-	int operator&( IBinSaver &saver );
+	AILOGIC_EXPORT int operator&( IBinSaver &saver );
 
 private:
 	;
@@ -173,7 +175,7 @@ private:
 	void RunScriptFromFile( const std::string &szScriptFileName );
 
 public:
-	~CScripts();
+	AILOGIC_EXPORT ~CScripts();
 	static void RegisterScriptForSaveLoad();
 
 	int GetScriptID( CUpdatableObj *pObj ) const;
@@ -185,7 +187,7 @@ public:
 	void DelInvalidUnits( const int scriptId );
 
 	void Init( const NDb::SMapInfo *pMapInfo );
-	void Clear();
+	AILOGIC_EXPORT void Clear();
 	void InitAreas( const NDb::SScriptArea scriptAreas[], const int nLen );
 	void Load( const std::string &szScriptFileName, const NDb::SAIGameConsts *pConsts );
 
@@ -492,7 +494,7 @@ public:
 
 	static int GameMesage( struct lua_State *pState );
 	//static int AddChatMessage( struct lua_State *pState );
-	static int WaitForGroupInArea( struct lua_State *pState );
+	AILOGIC_EXPORT static int WaitForGroupInArea( struct lua_State *pState );
 
 	// params: <player no> <reinforcement type number> <amount of xp>; returns: none
 	static int GiveXPToReinforcement( struct lua_State *pState );

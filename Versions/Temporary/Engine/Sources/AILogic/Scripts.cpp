@@ -52,9 +52,7 @@
 #include "Weather.h"
 
 #include <algorithm>
-#include <chrono>
 #include <cstdint>
-#include <thread>
 
 #include <fmt/args.h>
 #include <fmt/core.h>
@@ -4669,70 +4667,57 @@ int CScripts::WaitForGroupInArea( struct lua_State *pState )
 
 	float fR = 0;
 	CVec2 vCenter = VNULL2;
+	SRect areaRect;
+	bool bRectangle = false;
 
-	for ( bool bAllInarea = false; !bAllInarea; )
+	if ( script.GetObject( 3 ).IsNumber() )
 	{
-		std::this_thread::sleep_for( std::chrono::milliseconds( 100 + NRandom::Random( 1000 ) ) );
-		RecordRandomCall(); // CRAP: This is very bad!!!
-		if ( script.GetObject( 3 ).IsNumber() )
+		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "WaitForGroupInArea: 4th parameter isn't Y", script );
+		CHECK_ERROR( script.GetObject( 5 ).IsNumber(), "WaitForGroupInArea: 5th parameter isn't a radius", script );
+		vCenter = CVec2( script.GetObject( 3 ), script.GetObject( 4 ) );
+		fR = script.GetObject( 5 );
+	}
+	else
+	{
+		CHECK_ERROR( script.GetObject( 3 ).IsString(), "WaitForGroupInArea: 3rd parameter isn't an area name", script );
+		const std::string szName = script.GetObject( 3 ).GetString();
+		const auto areaPos = pScripts->areas.find( szName );
+		CHECK_ERROR( areaPos != pScripts->areas.end(),
+		             fmt::format( "WaitForGroupInArea: wrong script area name ({})", szName ),
+		             script );
+		const NDb::SScriptArea &area = areaPos->second;
+		bRectangle = area.eType == EAT_RECTANGLE;
+		if ( bRectangle )
 		{
-			CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "WaitForGroupInArea: 2nd parameter isn't a X", script );
-			CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "WaitForGroupInArea: 3rd parameter isn't a Y", script );
-			CHECK_ERROR( script.GetObject( 5 ).IsNumber(), "WaitForGroupInArea: 4thparameter isn't a R", script );
-			vCenter = CVec2( script.GetObject( 3 ), script.GetObject( 4 ) );
-			fR = script.GetObject( 5 );
+			areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
 		}
-		else if ( !script.GetObject( 3 ).IsNumberOnly() )
+		else
 		{
-			const std::string szName = script.GetObject( 3 ).GetString();
-			CHECK_ERROR( pScripts->areas.find( szName ) != pScripts->areas.end(),
-			             fmt::format( "WaitForGroupInArea: wrong script area name ({})", szName ),
-			             script );
+			vCenter = area.vCenter;
+			fR = area.fR;
+		}
+	}
 
-			const NDb::SScriptArea &area = pScripts->areas[szName];
-
-			CScriptGroups::const_iterator groupPos = groups.find( nScriptGroup );
-			int nUnits = 0;
-			if ( groupPos != groups.end() )
-			{
-				const CScriptGroup &group = groupPos->second;
-				SRect areaRect;
-				if ( area.eType == EAT_RECTANGLE )
-				{
-					areaRect.InitRect( area.vCenter, CVec2( 1, 0 ), fabs( area.vAABBHalfSize.x ), fabs( area.vAABBHalfSize.y ) );
-					for ( CScriptGroup::const_iterator it = group.begin(); it != group.end(); ++it )
-					{
-						CDynamicCast<CCommonUnit> pUnit( *it );
-						if ( pUnit && pUnit->IsAlive() && pUnit->GetPlayer() == nPlayer &&
-						     !pUnit->GetUnitRect().IsIntersected( areaRect ) )
-						{
-							continue;
-						}
-					}
-				}
-				else
-				{
-					vCenter = area.vCenter;
-					fR = area.fR;
-				}
-			}
-		}
-		CScriptGroups::const_iterator groupPos = groups.find( nScriptGroup );
-		const CScriptGroup &group = groupPos->second;
-		bool bFoundNotInArea = false;
-		for ( CScriptGroup::const_iterator it = group.begin(); !bFoundNotInArea && it != group.end(); ++it )
-		{
-			CDynamicCast<CCommonUnit> pUnit( *it );
-			if ( !pUnit->GetUnitRect().IsIntersectCircle( vCenter, fR ) )
-			{
-				bFoundNotInArea = true;
-			}
-		}
-		if ( bFoundNotInArea )
+	const auto groupPos = groups.find( nScriptGroup );
+	if ( groupPos == groups.end() )
+	{
+		// An absent or destroyed group has no surviving members left to wait for.
+		return 0;
+	}
+	for ( const auto &object : groupPos->second )
+	{
+		CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( object.GetPtr() );
+		if ( !IsValidObj( pUnit ) || pUnit->GetPlayer() != nPlayer )
 		{
 			continue;
 		}
-		bAllInarea = true;
+		const bool bInside = bRectangle ? pUnit->GetUnitRect().IsIntersected( areaRect )
+		                                : pUnit->GetUnitRect().IsIntersectCircle( vCenter, fR );
+		if ( !bInside )
+		{
+			// Retry this call after simulation advances; keep the caller suspended and consume no RNG.
+			return LUA_RETRY_NEXT_SEGMENT;
+		}
 	}
 
 	return 0;

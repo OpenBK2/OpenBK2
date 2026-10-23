@@ -400,7 +400,11 @@ void luaV_stepExecute( lua_State *L )
 			case OP_CALL: {
 				int nres = GETARG_B(i);
 				if (nres == MULT_RET) nres = LUA_MULTRET;
-				bool bNewCallAdded = luaD_startCall(L, state.base+GETARG_A(i), nres);
+				const ELuaCallResult result = luaD_startCall( L, state.base + GETARG_A( i ), nres );
+				if ( result == LUA_CALL_RETRY )
+				{
+					--L->pCT->executedCalls.back().currPC;
+				}
 				// state is now invalid reference, because pExecuteCalls could change!
 /*				vector<SLuaVMState> &states = L->pCT->executedCalls;
 				if ( bNewCallAdded )
@@ -419,7 +423,11 @@ void luaV_stepExecute( lua_State *L )
 			}
 			case OP_TAILCALL: {
 				StkId base = state.base; // "state" reference could become invalid after startCall
-				luaD_startCall(L, state.base+GETARG_A(i), LUA_MULTRET);
+				if ( luaD_startCall( L, state.base + GETARG_A( i ), LUA_MULTRET ) == LUA_CALL_RETRY )
+				{
+					--L->pCT->executedCalls.back().currPC;
+					break;
+				}
 				luaV_returnFromExecute( L, base+GETARG_B(i) );
 				break;
 			}
