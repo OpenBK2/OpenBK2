@@ -214,10 +214,17 @@ bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::stri
 int CInterfaceMPGameRoom::SelectionIndexToNationIndex( int nSelectionIndex )
 {
 	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
+	if ( !pMPConsts )
+	{
+		return 0;
+	}
+
 	int nTechLevel = gameDesc.nTechLevel;
 	const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
 
-	if ( !sides[0].techLevels[nTechLevel].bDisabled && nSelectionIndex == 0 )
+	// IsSideAvailable also answers the sides[0] on an empty sides array that this
+	// asked for before. The tech level is the host's, not ours.
+	if ( NGameX::IsSideAvailable( pMPConsts, 0, nTechLevel ) && nSelectionIndex == 0 )
 	{
 		return 0;
 	}
@@ -226,7 +233,7 @@ int CInterfaceMPGameRoom::SelectionIndexToNationIndex( int nSelectionIndex )
 	int nValidIndex = 0;
 	for ( int i = 0; i < sides.size(); i++ )
 	{
-		if ( !sides[i].techLevels[nTechLevel].bDisabled )
+		if ( NGameX::IsSideAvailable( pMPConsts, i, nTechLevel ) )
 		{
 			nValidIndex++;
 		}
@@ -244,13 +251,29 @@ int CInterfaceMPGameRoom::SelectionIndexToNationIndex( int nSelectionIndex )
 int CInterfaceMPGameRoom::NationIndexToSelectionIndex( int nCountryIndex )
 {
 	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
+	if ( !pMPConsts )
+	{
+		return -1;
+	}
+
 	int nTechLevel = gameDesc.nTechLevel;
 	const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
 
-	int nValidIndex = -1;
-	for ( int i = 0; i <= nCountryIndex; i++ )
+	// nCountryIndex is the country in a slot update from the host, and it is the
+	// bound of a loop over the sides array rather than a subscript of it, so an
+	// out of range value walked off the end instead of being rejected. Stop at
+	// the last side: a country the database does not have selects nothing, which
+	// is what the -1 this starts from means to the caller.
+	int nLastSide = nCountryIndex;
+	if ( nLastSide >= int( sides.size() ) )
 	{
-		if ( !sides[i].techLevels[nTechLevel].bDisabled )
+		nLastSide = int( sides.size() ) - 1;
+	}
+
+	int nValidIndex = -1;
+	for ( int i = 0; i <= nLastSide; i++ )
+	{
+		if ( NGameX::IsSideAvailable( pMPConsts, i, nTechLevel ) )
 		{
 			nValidIndex++;
 		}
@@ -424,13 +447,19 @@ void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 		std::vector<int> validIndexes;
 		for ( int i = 0; i < sides.size(); i++ )
 		{
-			if ( !sides[i].techLevels[nTechLevel].bDisabled )
+			if ( NGameX::IsSideAvailable( pMPConsts, i, nTechLevel ) )
 			{
 				validIndexes.push_back( i );
 			}
 		}
 
-		slots[nSlot].info.nCountry = validIndexes[NWin32Random::Random( validIndexes.size() )];
+		// Every side can be unavailable at the tech level the host chose, and now
+		// that the loop above can say so the empty list has to be handled: keep
+		// whatever country the slot already had rather than subscripting nothing.
+		if ( !validIndexes.empty() )
+		{
+			slots[nSlot].info.nCountry = validIndexes[NWin32Random::Random( validIndexes.size() )];
+		}
 	}
 	pMsg->info = slots[nSlot].info;
 	pMsg->nSlot = nSlot;
@@ -559,9 +588,20 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	const int nPlayers = gameDesc.nPlayers;
 
 	// Prepare info for slots (country list, colour list)
-	pTechLevel->SetText( pTechLevel->GetDBText() + GET_TEXT_PRE( pMPConsts->techLevels[gameDesc.nTechLevel]., Name ) );
+	//
+	// Everything read out of gameDesc here arrived in the host's description of
+	// the game a moment ago. This tech level indexes MultiplayerConsts' own list
+	// rather than a side's, so IsSideAvailable does not cover it, and the map
+	// reference is null if it named a record this client does not have.
+	if ( gameDesc.nTechLevel >= 0 && gameDesc.nTechLevel < pMPConsts->techLevels.size() )
+	{
+		pTechLevel->SetText( pTechLevel->GetDBText() + GET_TEXT_PRE( pMPConsts->techLevels[gameDesc.nTechLevel]., Name ) );
+	}
 	pNumPlayers->SetText( pNumPlayers->GetDBText() + NStr::ToUnicode( std::to_string( nPlayers ) ) );
-	pMapName->SetText( pMapName->GetDBText() + GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) );
+	if ( gameDesc.pMPMap )
+	{
+		pMapName->SetText( pMapName->GetDBText() + GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) );
+	}
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + NStr::ToUnicode( fmt::format( "{} min", gameDesc.nTimeLimit ) ) );
 	pCaptureTime->SetText( pCaptureTime->GetDBText() +
 	                       NStr::ToUnicode( fmt::format( "{} sec", gameDesc.nCaptureTime ) ) );
@@ -599,7 +639,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		slot.pCountry->AddItem( pRandomItem );
 		for ( int j = 0; j < pMPConsts->sides.size(); ++j )
 		{
-			if ( pMPConsts->sides[j].pPartyInfo && !pMPConsts->sides[j].techLevels[gameDesc.nTechLevel].bDisabled &&
+			if ( pMPConsts->sides[j].pPartyInfo && NGameX::IsSideAvailable( pMPConsts, j, gameDesc.nTechLevel ) &&
 			     CHECK_TEXT_NOT_EMPTY_PRE( pMPConsts->sides[j]., Name ) )
 			{
 				CPtr<CTextureData> pData =

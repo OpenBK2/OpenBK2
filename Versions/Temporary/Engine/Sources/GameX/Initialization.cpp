@@ -298,4 +298,14 @@ const NDb::SLadderRank *GetLadderRank( const NDb::SMultiplayerConsts *pMPConsts,
 	return &( pSide->ladderRanks[nRank] );
 }
 
+bool IsSideAvailable( const NDb::SMultiplayerConsts *pMPConsts, const int nCountry, const int nTechLevel )
+{
+	const NDb::SMultiplayerSide *pSide = GetMultiplayerSide( pMPConsts, nCountry );
+	if ( !pSide || nTechLevel < 0 || nTechLevel >= pSide->techLevels.size() )
+	{
+		return false;
+	}
+	return !pSide->techLevels[nTechLevel].bDisabled;
+}
+
 }; // namespace NGameX

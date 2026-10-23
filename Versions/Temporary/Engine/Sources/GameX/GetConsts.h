@@ -48,4 +48,14 @@ const NDb::SMultiplayerConsts *GetMPConsts();
 const NDb::SMultiplayerSide *GetMultiplayerSide( const NDb::SMultiplayerConsts *pMPConsts, int nCountry );
 const NDb::SLadderRank *GetLadderRank( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nRank );
 
+// True when nCountry names a side and that side can be played at nTechLevel.
+//
+// The game room asks this of every side each time it builds a country list,
+// with a tech level out of the host's game description. Note that the two tech
+// level arrays an nTechLevel indexes, SMultiplayerConsts::techLevels and a
+// side's own techLevels, are sized independently, so bounding the value once
+// on entry would not make either use safe. A side that does not define the
+// level cannot be played at it, which is what false means here.
+bool IsSideAvailable( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nTechLevel );
+
 } // namespace NGameX
