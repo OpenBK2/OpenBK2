@@ -16,3 +16,10 @@ if(WIN32)
     set_tests_properties(BallisticOffset_test TowingPrecision_test UnitTransferSelection_test UnitTransferAttachments_test RepairTarget_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
 endif()
+
+add_unit_test(BoredAcknowledgments AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
+set_tests_properties(BoredAcknowledgments_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(BoredAcknowledgments_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
