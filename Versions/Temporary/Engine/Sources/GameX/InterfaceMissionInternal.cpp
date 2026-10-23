@@ -4838,6 +4838,32 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 		return;
 	}
 
+	// A replay is watched as one of the players who were in it. The number comes
+	// from the console command or --replay-player as typed, and both the map's
+	// player list and the diplomacy are indexed by it, so a player the map does
+	// not have, or a slot that was empty in the recorded game, is refused here
+	// rather than played as.
+	if ( bReplay && nPlayerForWarFog >= 0 &&
+	     ( nPlayerForWarFog >= static_cast<int>( pMap->players.size() ) ||
+	       !pAIScenarioTracker->IsPlayerPresent( nPlayerForWarFog ) ) )
+	{
+		const auto message = fmt::format( "replay \"{}\" has no player {} to watch as; pick one who was in the game",
+		                                  szReplayFileName,
+		                                  nPlayerForWarFog );
+		fmt::print( "{}\n", message );
+		fflush( stdout );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str(), 0xffffffff, true );
+		if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+		{
+			NMainLoop::Command( CreateICExitGame() );
+		}
+		else
+		{
+			NGlobal::ProcessCommand( L"menu" );
+		}
+		return;
+	}
+
 	if ( nPlayerForWarFog < 0 )
 	{
 		nPlayerForWarFog = pAIScenarioTracker->GetLocalPlayer();

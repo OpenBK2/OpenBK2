@@ -69,6 +69,11 @@ usage()
 	                         e.g. Scenario/Campaigns/GER/Campaign.xdb;0;0;normal
 	  -r, --replay FILE      play a recorded replay instead of showing the menus,
 	                         by passing --replay= to the game
+	      --replay-player N  watch the replay as player N rather than player 0,
+	                         by passing --replay-player= to the game. The
+	                         simulation must play out the same whoever watches,
+	                         so --verify as each player in turn is a check of
+	                         its own. Needs --replay.
 	      --verify           play the replay out and exit, reporting through the
 	                         exit status: 0 if it reached the last recorded
 	                         segment and every recorded checksum matched, 1 for
@@ -155,6 +160,7 @@ USE_GDB=no
 USE_VALGRIND=no
 SHOW_ENV=no
 REPLAY=
+REPLAY_PLAYER=
 MISSION=
 CAMPAIGN=
 VERIFY=no
@@ -185,6 +191,9 @@ while [ $# -gt 0 ]; do
 		              MISSION="$2"; shift 2 ;;
 		-c|--campaign) [ $# -ge 2 ] || die "$1 needs <campaign>[;<chapter>[;<mission>[;<difficulty>]]]"
 		              CAMPAIGN="$2"; shift 2 ;;
+		--replay-player) [ $# -ge 2 ] || die "$1 needs a player number"
+		              case "$2" in ''|*[!0-9]*) die "$1 wants a player number, got '$2'" ;; esac
+		              REPLAY_PLAYER="$2"; shift 2 ;;
 		--verify)     VERIFY=yes; shift ;;
 		--setvar)     [ $# -ge 2 ] || die "$1 needs NAME=VALUE"
 		              case "$2" in *=*) ;; *) die "--setvar wants NAME=VALUE, got '$2'" ;; esac
@@ -200,6 +209,7 @@ while [ $# -gt 0 ]; do
 done
 
 [ "$VERIFY" = yes ] && [ -z "$REPLAY" ] && die "--verify needs --replay FILE"
+[ -n "$REPLAY_PLAYER" ] && [ -z "$REPLAY" ] && die "--replay-player needs --replay FILE"
 [ "$USE_GDB" = yes ] && [ "$USE_VALGRIND" = yes ] &&
 	die "--gdb and --valgrind both want to be the outer process; pass one"
 
@@ -456,6 +466,7 @@ if [ "$SHOW_ENV" = yes ]; then
 	[ -n "$MISSION" ] && printf 'args=--mission=%s\n' "$MISSION"
 	[ -n "$CAMPAIGN" ] && printf 'args=--campaign=%s\n' "$CAMPAIGN"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
+	[ -n "$REPLAY_PLAYER" ] && printf 'args=--replay-player=%s\n' "$REPLAY_PLAYER"
 	[ "$VERIFY" = yes ] && printf 'args=--replay-verify\n'
 	[ ${#SETVARS[@]} -gt 0 ] && printf 'args=%s\n' "${SETVARS[@]}"
 	exit 0
@@ -469,6 +480,7 @@ CMD+=("./$EXE")
 [ -n "$MISSION" ] && CMD+=("--mission=$MISSION")
 [ -n "$CAMPAIGN" ] && CMD+=("--campaign=$CAMPAIGN")
 [ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")
+[ -n "$REPLAY_PLAYER" ] && CMD+=("--replay-player=$REPLAY_PLAYER")
 [ "$VERIFY" = yes ] && CMD+=("--replay-verify")
 [ ${#SETVARS[@]} -gt 0 ] && CMD+=("${SETVARS[@]}")
 CMD+=("$@")

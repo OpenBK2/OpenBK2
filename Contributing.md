@@ -505,6 +505,26 @@ build ids differ between a release build and a sanitizer build of identical sour
 comparing those two is the ordinary case, so the report names the configurations and
 leaves the conclusion to whoever knows which comparison they meant.
 
+### as which player
+
+a replay is played as player 0 unless told otherwise. `--replay-player N` plays it as
+player N, the way picking a team on the replay screen does, and `Game` takes it as
+`--replay-player=N`. the console form is `replay "my_replay" N`.
+
+the simulation must come out the same whoever watches, so verifying one replay as each
+player who was in the game is a check of its own: a divergence that appears for some
+players and not others is simulation code reading which player is local. a number the
+replay has no player for is refused with a message rather than played.
+
+```
+for p in 0 1 2 3; do
+  ./launch.sh release --data fotr --replay my_replay --replay-player $p --verify; echo "$p -> $?"
+done
+```
+
+a replay recorded by a build with a command type this build does not have stops before
+the first such command, says where, and fails the verification.
+
 ## the variables
 
 | variable | default | what it does |
