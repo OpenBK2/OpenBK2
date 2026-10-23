@@ -25,6 +25,43 @@ context. Read `git diff` of every touched file before building.
 - A replay records the build id that made it (`szImageId`). Find the branch that build came
   from before trusting a crash or a divergence: a command class missing from the current
   checkout loads as null.
-- `--replay=` always plays as player 0. Another viewpoint needs the console command
-  `replay "<name>" <player>` from the main menu.
-- `--setvar` only works as one token, `--setvar=name=value`.
+- `--replay=` defaults to player 0. Use `--replay-player=N` or the console command
+  `replay "<name>" <player>` for another viewpoint.
+- `--setvar=name=value` is unambiguous; current builds also accept `--setvar name=value`.
+
+## Replay disconnects and time labels
+
+- A report of `s 3895` can mean elapsed seconds, not the command segment. Read the
+  replay's checksum times and segment duration before choosing a dump time. This
+  multiplayer recording used 200 ms segments, so its 3894-second disconnect was
+  applied at common segment 19470.
+- Player removal is simulation input: it stops and transfers units and clears the
+  scenario's presence flag. Record the removal at its applied simulation boundary,
+  before that segment's orders. A synchronized network drop by itself is not a
+  replay command. `last_match_packets.txt` can establish a missing event's exact
+  tick; do not infer it from checksums or silently alter historical recordings.
+- Use isolated profiles and binaries for replay verification. Manual interaction,
+  including pausing, invalidates an unattended baseline; restart it before drawing
+  conclusions. Keep the original recording and all its checksum samples when
+  testing a recovered copy.
+
+## Intermittent replay divergence and original-build diagnostics
+
+- Repeat each baseline before attributing a difference to the selected replay
+  player. The same original executable and recording can alternate between the
+  matching and diverging result; one run per viewpoint is not a controlled result.
+- Inspect the original build's argument parser. In build 3ac99c1, quoting a simple
+  flag such as `--replay-verify` leaves the quotes in the parsed token and silently
+  disables the flag. Pass simple flags bare and confirm the verification banner.
+  That build also needs the console `replay "name" player` form for its viewpoint.
+  Launch with the isolated `bin` directory as the working directory: its startup
+  configuration paths are relative to `../Profiles`, not to the executable path.
+- RNG history record indices and the actual generator draw counter are separate
+  counters. Match call sites and actual draw counts before interpreting offsets.
+- Enlarging a history vector can change allocation layout and hide memory bugs.
+  Preserve the original allocation when adding diagnostics, or attach a debugger
+  to a normally launched isolated process shortly before the event. A debugger
+  attached at startup can itself change heap behavior.
+- Light simulation checksums cover visible unit state and shells, but not every
+  AI state, scheduling deadline or RNG state. Equal checksums do not establish
+  equal hidden simulation state immediately before a divergence.

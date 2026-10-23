@@ -4,6 +4,7 @@
 #include "CommonCommands.h"
 #include "Input/Bind.h"
 #include "Misc/2Darray.h"
+#include "ScenarioTracker.h"
 
 #include "GameX_export.h"
 
@@ -276,7 +277,14 @@ int CControlSumHistoryCommand::operator&( IBinSaver &saver )
 
 void CDropPlayerCommand::Execute()
 {
-	Singleton<IAILogic>()->NeutralizePlayer( nPlayerToDrop );
+	// Replay must update both unit ownership and the scenario's player-presence flag,
+	// using the same removal path as the live match.
+	Singleton<IScenarioTracker>()->RemovePlayer( nPlayerToDrop );
+}
+
+std::string CDropPlayerCommand::GetDebugInfo() const
+{
+	return fmt::format( "DropPlayer {}", nPlayerToDrop );
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x300A73C5, CControlSumCheckCommand )
