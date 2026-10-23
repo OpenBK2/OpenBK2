@@ -648,6 +648,16 @@ CFormationResupplyUnitState::CFormationResupplyUnitState( class CFormation *pUni
 
 void CFormationResupplyUnitState::Segment()
 {
+	// Older saves can retain a previous squad after the service target changes.
+	CSoldier *pCurrentSoldier = dynamic_cast<CSoldier *>( pUnitInQuiestion.GetPtr() );
+	if ( pSquadInQuestion && ( !pCurrentSoldier || pCurrentSoldier->GetFormation() != pSquadInQuestion ||
+	                           iCurUnitInFormation < 0 || iCurUnitInFormation >= pSquadInQuestion->Size() ||
+	                           ( *pSquadInQuestion )[iCurUnitInFormation] != pCurrentSoldier ) )
+	{
+		pSquadInQuestion = 0;
+		iCurUnitInFormation = 0;
+	}
+
 	// реакция на смещение юнита
 	if ( EFRUS_WAIT_FOR_HOME_TRANSPORT != eState )
 	{
@@ -693,15 +703,14 @@ void CFormationResupplyUnitState::Segment()
 			{
 				pUnitInQuiestion = pred.GetUnit();
 				vPointInQuestion = pUnitInQuiestion->GetCenterPlain();
-				//				EUnitRPGType type = pUnitInQuiestion->GetStats()->etype;
-				CPtr<CSoldier> pSold;
-				if ( ::IsInfantry( pUnitInQuiestion->GetStats()->etype ) &&
-				     ( pSold = static_cast_ptr<CSoldier *>( pUnitInQuiestion ) ) &&
-				     ( pSquadInQuestion = pSold->GetFormation() ) )
+				// A vehicle target must not continue the previous infantry squad's service sequence.
+				pSquadInQuestion = 0;
+				iCurUnitInFormation = 0;
+				CPtr<CSoldier> pSold = dynamic_cast_ptr<CSoldier *>( pUnitInQuiestion );
+				if ( pSold && ( pSquadInQuestion = pSold->GetFormation() ) && pSquadInQuestion->Size() > 0 )
 				{
 					pUnitInQuiestion = ( *pSquadInQuestion )[0];
 					vPointInQuestion = pUnitInQuiestion->GetCenterPlain();
-					iCurUnitInFormation = 0;
 				}
 				eState = EFRUS_START_APPROACH;
 			}
