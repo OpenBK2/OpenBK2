@@ -23,3 +23,5 @@ if(WIN32)
     set_tests_properties(BoredAcknowledgments_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
 endif()
+
+add_unit_test(ReinforcementSelection)

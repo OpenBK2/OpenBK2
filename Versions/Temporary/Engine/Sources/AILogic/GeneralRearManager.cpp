@@ -119,14 +119,7 @@ void CGeneral::CheckAvailableReinforcement()
 		//CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "Calling reinforcement %d", nReinfTypeToCall ) );
 		float fRandValue = NRandom::Random( 0.0f, fSum );
 		RecordRandomCall();
-		int i = 0;
-		for ( ; i < nARQuantity - 1; ++i )
-		{
-			if ( fReinfEff[i] <= fRandValue && fReinfEff[i + 1] > fRandValue )
-			{
-				break;
-			}
-		}
+		const int i = NReinforcement::SelectByCumulativeWeight( fReinfEff, nARQuantity, fRandValue );
 		// check if this reinforcement will increase mobile tanks nuber over the maximum allowed number
 		// don't call if it will
 		int nWorkers = theReinfArray[nParty].GetNEntries( NDb::EReinforcementType( nAvailReinfs[i] ) );
