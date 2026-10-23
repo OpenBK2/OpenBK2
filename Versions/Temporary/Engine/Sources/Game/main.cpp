@@ -38,6 +38,7 @@
 #include "WinFrame2Input.h"
 
 #include <exception>
+#include <iterator>
 #include <typeinfo>
 
 #if !BOOST_OS_WINDOWS
@@ -596,13 +597,25 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 			bReplayVerify = true;
 			continue;
 		}
-		// --setvar name=value, repeatable. Applied after the configs, so it
-		// overrides them, which is the only way to reach a variable in a run
-		// that never shows a console.
-		const std::string varPrefix = "--setvar";
-		if ( szString.compare( 0, varPrefix.size(), varPrefix ) == 0 && szString.size() > varPrefix.size() + 1 )
+		// --setvar name=value or --setvar=name=value, repeatable. Applied after
+		// the configs, so it overrides them, which is the only way to reach a
+		// variable in a run that never shows a console.
+		//
+		// Both spellings, because both are in use: the documentation and
+		// launch.sh's own options write it as two arguments, launch.sh hands the
+		// game one. The second argument is consumed here so that it never reaches
+		// the catch-all at the end of this loop, which would make a variable of
+		// the whole text.
+		const std::string varPrefix = "--setvar=";
+		const bool bSetVarSeparate = szString == "--setvar";
+		if ( bSetVarSeparate || szString.compare( 0, varPrefix.size(), varPrefix ) == 0 )
 		{
-			std::string value = szString.substr( varPrefix.size() + 1 );
+			if ( bSetVarSeparate && std::next( it ) == arguments.end() )
+			{
+				MessageBox( 0, "--setvar needs name=value after it.", "Set variable", MB_OK | MB_ICONERROR );
+				return false;
+			}
+			std::string value = bSetVarSeparate ? *++it : szString.substr( varPrefix.size() );
 			NStr::TrimBoth( value, '"' );
 			const std::string::size_type nEq = value.find( '=' );
 			if ( nEq == std::string::npos || nEq == 0 || value.find_first_of( "\"\r\n;" ) != std::string::npos )
