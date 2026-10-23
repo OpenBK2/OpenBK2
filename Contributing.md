@@ -490,6 +490,12 @@ than success. that makes it usable from a script, with one caveat: a sanitizer b
 **replaces the exit status with 66** whenever the sanitizer reported anything, so under
 `*-asan` or `*-tsan` read the "checksums matched" line instead of the status.
 
+for long recordings, `--setvar=replay_verify_speed=10` runs an unattended verification
+at the maximum normal game speed (11 times real time). it still executes every simulation
+segment and compares every recorded sample. the default, -1, leaves the speed controls
+alone; 0 through 10 select normal through maximum speed and override automatic slowdown
+only during `--replay-verify`.
+
 verify a replay against the build that recorded it before comparing anything else.
 only then is a difference between two configurations meaningful:
 

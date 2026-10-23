@@ -2,7 +2,12 @@
 
 #include "AILogic/AILogicCommand.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
+#include <list>
+#include <string>
+#include <vector>
 
 class CControlSumCheckCommand : public IAILogicCommandB2
 {
@@ -84,7 +89,7 @@ public:
 	int operator&( IBinSaver &saver ) override;
 };
 
-class CDropPlayerCommand : public IAILogicCommandB2
+class GAMEX_EXPORT CDropPlayerCommand : public IAILogicCommandB2
 {
 	OBJECT_BASIC_METHODS( CDropPlayerCommand );
 
@@ -107,6 +112,8 @@ public:
 		: nPlayerToDrop( _nPlayerToDrop )
 	{
 	}
+
+	std::string GetDebugInfo() const override;
 
 	//
 	void Execute() override;

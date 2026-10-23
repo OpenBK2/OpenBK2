@@ -85,7 +85,14 @@ void CSinglePlayerTransceiver::DoSegments()
 	// segment calling through segment timer
 	IGameTimer *pTimer = Singleton<IGameTimer>();
 
-	if ( NGlobal::GetVar( "AI_SLOWDOWN", 0 ) == 1 )
+	// Let unattended replay checks use the normal speed controls without console input.
+	// Only the wall-clock pacing changes; every recorded simulation segment still runs.
+	const int nVerifySpeed = NGlobal::GetVar( "replay_verify_speed", -1 );
+	if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 && nVerifySpeed >= 0 )
+	{
+		pTimer->SetSpeed( nVerifySpeed );
+	}
+	else if ( NGlobal::GetVar( "AI_SLOWDOWN", 0 ) == 1 )
 	{
 		const int nCurrentGameSpeed = pTimer->GetSpeed();
 		const int nUserSpeedDelta = nCurrentGameSpeed - nAdjustedGameSpeed;

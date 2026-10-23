@@ -153,7 +153,11 @@ void CMPTransceiver::PlayerRemoved( int nPlayer )
 	                                           ulMaskBefore,
 	                                           wMask,
 	                                           wWaitMask ) );
-	Singleton<IScenarioTracker>()->RemovePlayer( nPlayer );
+	// A disconnect changes the simulation just like a player command. Record it at
+	// the applied boundary, before this segment's orders, so replay also transfers the units.
+	CObj<IAILogicCommandB2> pDropCommand = new CDropPlayerCommand( nPlayer );
+	pCmdsHistory->AddCommand( nCommonSegment, pDropCommand );
+	pDropCommand->Execute();
 	NInput::PostEvent( "mission_remove_player", nPlayer, 0 );
 }
 
