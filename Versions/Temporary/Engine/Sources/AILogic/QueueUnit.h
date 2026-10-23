@@ -3,6 +3,8 @@
 
 #include "ListsSet.h"
 
+#include "AILogic_export.h"
+
 class CAICommand;
 struct IUnitState;
 
@@ -80,13 +82,13 @@ public:
 		return pState;
 	}
 
-	virtual void SetCurState( struct IUnitState *pState );
+	AILOGIC_EXPORT virtual void SetCurState( struct IUnitState *pState );
 
 	// текущая команда кладётся в голову очереди, а сверху - pCommand
-	virtual void InsertUnitCommand( class CAICommand *pCommand );
+	AILOGIC_EXPORT virtual void InsertUnitCommand( class CAICommand *pCommand );
 	// текущая команда прерывается, а в голову очереди кладётся pCommand
-	virtual void PushFrontUnitCommand( class CAICommand *pCommand );
-	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
+	AILOGIC_EXPORT virtual void PushFrontUnitCommand( class CAICommand *pCommand );
+	AILOGIC_EXPORT virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 
 	void SetCommandFinished();
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand ) = 0;
@@ -97,7 +99,7 @@ public:
 	void Segment();
 
 	// возвращает команду, лежащую верхней деке команд
-	class CAICommand *GetNextCommand() const;
+	AILOGIC_EXPORT class CAICommand *GetNextCommand() const;
 	class CAICommand *GetLastCommand() const;
 
 	// очистить очередь команд и обнулить текущее состояние
@@ -106,7 +108,7 @@ public:
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) = 0;
 
 	// в очередь перенести текущую команду pUnit и все команды из его очереди
-	void InitWCommands( CQueueUnit *pUnit );
+	AILOGIC_EXPORT void InitWCommands( CQueueUnit *pUnit );
 
 	virtual const NTimer::STime GetNextSegmTime() const
 	{
