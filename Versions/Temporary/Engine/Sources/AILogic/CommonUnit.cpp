@@ -98,10 +98,13 @@ const bool CCommonUnit::CanGoToPoint( const CVec2 &point ) const
 		return !pFormation->IsInWaitingState() || pFormation->GetState()->IsAttackingState() ||
 		       fabs2( pFormation->GetCenterPlain() - point ) < sqr( (float)SConsts::RADIUS_OF_FORMATION );
 	}
-	else if ( GetState()->GetName() == EUSN_REST )
+	else if ( GetState() && GetState()->GetName() == EUSN_REST )
 	{
-		return fabs2( checked_cast<CCommonRestState *>( GetState() )->GetGuardPoint() - point ) <
-		       sqr( SConsts::GUARD_STATE_RADIUS );
+		// Helicopter and train rest states share the name, but do not have a common guard point.
+		if ( const CCommonRestState *pRestState = dynamic_cast<const CCommonRestState *>( GetState() ) )
+		{
+			return fabs2( pRestState->GetGuardPoint() - point ) < sqr( SConsts::GUARD_STATE_RADIUS );
+		}
 	}
 
 	return true;
