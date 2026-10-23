@@ -709,7 +709,7 @@ void CGeneralTaskToSwarmToPoint::Run()
 {
 	if ( !swarmingTanks.empty() )
 	{
-		const int nGroup = theGroupLogic.GenerateGroupNumber();
+		const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 		CObjectBase **arUnits = GetLocalTempBuffer<CObjectBase *>( swarmingTanks.size() );
 		for ( int i = 0; i < swarmingTanks.size(); ++i )
 		{

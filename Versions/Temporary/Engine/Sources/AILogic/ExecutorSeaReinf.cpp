@@ -70,7 +70,7 @@ CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIU
 	{
 		ids.push_back( ( *it )->GetUniqueId() );
 	}
-	const int nGroup = theGroupLogic.GenerateGroupNumber();
+	const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 	theGroupLogic.RegisterGroup( ids, nGroup );
 
 	SAIUnitCmd cmd;

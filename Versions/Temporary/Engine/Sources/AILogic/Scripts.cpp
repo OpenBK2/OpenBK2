@@ -1892,7 +1892,7 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 						const float fShift = NRandom::Random( fDispersion );
 						RecordRandomCall();
 						tmpCmd.vPos = command.vPos + fShift * GetVectorByDirection( wDirection );
-						const int nGroup = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GenerateGroupNumber();
+						const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 						Singleton<IAILogic>()->RegisterGroup( id, nGroup );
 						Singleton<IAILogic>()->GroupCommand( &tmpCmd, nGroup, bPlaceInQueue );
 						Singleton<IAILogic>()->UnregisterGroup( nGroup );
@@ -1902,7 +1902,7 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 				}
 				else
 				{
-					nGroup = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GenerateGroupNumber();
+					nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 					Singleton<IAILogic>()->RegisterGroup( objIDs, nGroup );
 				}
 			}
@@ -1917,7 +1917,7 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 				std::vector<int> units( 1 );
 				units[0] = pUnit->GetUniqueId();
 				oldUnitsGroups.push_back( std::pair<CCommonUnit *, int>( pUnit, pUnit->GetNGroup() ) );
-				nGroup = Singleton<IAILogic>()->GenerateGroupNumber();
+				nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 				Singleton<IAILogic>()->RegisterGroup( units, nGroup );
 				if ( fDispersion != 0.0f )
 				{

@@ -275,7 +275,7 @@ void CPlayerReinforcement::SendReinforcementToPoint( std::list<std::pair<int, CO
 	}
 	if ( !ids.empty() )
 	{
-		const int nGroup = theGroupLogic.GenerateGroupNumber();
+		const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 		theGroupLogic.RegisterGroup( ids, nGroup );
 
 		SAIUnitCmd cmd;
@@ -302,7 +302,7 @@ void CPlayerReinforcement::SendReinforcementToPoint( std::list<std::pair<int, CO
 	}
 	if ( !strategicBomberIds.empty() )
 	{
-		const int nGroup = theGroupLogic.GenerateGroupNumber();
+		const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 		theGroupLogic.RegisterGroup( strategicBomberIds, nGroup );
 
 		// Called strategic bombers start with a bomb run to the requested point, but player orders can still interrupt it.

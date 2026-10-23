@@ -109,14 +109,14 @@ void CGroupLogic::DelGroup( const int nGroup )
 	groupUnits.DelQueue( nGroup );
 }
 
-uint16_t CGroupLogic::GetGroupNumberByID( const uint16_t wID )
+uint16_t CGroupLogic::GetGroupNumberByID( const uint16_t wID, const uint8_t cOwner )
 {
-	return ( ( wID << 4 ) | uint8_t( theDipl.GetMyNumber() ) ) << 1;
+	return ( ( wID << 4 ) | cOwner ) << 1;
 }
 
-uint16_t CGroupLogic::GetSpecialGroupNumberByID( const uint16_t wID )
+uint16_t CGroupLogic::GetSpecialGroupNumberByID( const uint16_t wID, const uint8_t cOwner )
 {
-	return ( ( ( wID << 4 ) | uint8_t( theDipl.GetMyNumber() ) ) << 1 ) | 1;
+	return ( ( ( wID << 4 ) | cOwner ) << 1 ) | 1;
 }
 
 uint16_t CGroupLogic::GetIdByGroupNumber( const uint16_t wGroup )
@@ -230,7 +230,32 @@ void CGroupLogic::RegisterGroup( const std::vector<int> &vIDs, const uint16_t wG
 
 const uint16_t CGroupLogic::GenerateGroupNumber()
 {
-	return GetGroupNumberByID( groupIds.Get() );
+	return GetGroupNumberByID( groupIds.Get(), uint8_t( theDipl.GetMyNumber() ) );
+}
+
+const uint16_t CGroupLogic::GenerateSimulationGroupNumber( const bool bSpecial )
+{
+	// The id has 11 bits, so the counter wraps after 2047. Nearly every group made here
+	// is unregistered by the call that made it, but a special group lives on, so a
+	// number still registered is skipped rather than reused. registeredGroups is the
+	// same on every client, so the skipping is too. Id 0 is never used: with this owner
+	// the number would not be 0, but 0 is "no group" for a unit and a nonzero id keeps
+	// any such confusion out.
+	const int nIDs = 2047;
+	uint16_t wGroup = 0;
+	for ( int nTry = 0; nTry < nIDs; ++nTry )
+	{
+		nLastSimulationGroupID = nLastSimulationGroupID % nIDs + 1;
+		const uint16_t wID = uint16_t( nLastSimulationGroupID );
+		wGroup = bSpecial ? GetSpecialGroupNumberByID( wID, SIMULATION_GROUP_OWNER )
+		                  : GetGroupNumberByID( wID, SIMULATION_GROUP_OWNER );
+		if ( registeredGroups.find( wGroup ) == registeredGroups.end() )
+		{
+			return wGroup;
+		}
+	}
+	NI_ASSERT( false, "Every simulation group number is registered" );
+	return wGroup;
 }
 
 void CGroupLogic::UnregisterSpecialGroup( const uint16_t wSpecialGroup )
@@ -361,7 +386,7 @@ void CGroupLogic::CreateSpecialGroup( const uint16_t wGroup )
 {
 	if ( wGroup != 0 )
 	{
-		const uint16_t wSpecialGroup = GetSpecialGroupNumberByID( groupIds.Get() );
+		const uint16_t wSpecialGroup = GenerateSimulationGroupNumber( true );
 		registeredGroups.insert( wSpecialGroup );
 
 		if ( wSpecialGroup >= groupUnits.GetQueuesNum() )
@@ -440,7 +465,7 @@ void CGroupLogic::SetToAmbush( CAmbushGroups::iterator &iter )
 		oldUnitsGroups.push_back( std::pair<CCommonUnit *, int>( pUnit, pUnit->GetNGroup() ) );
 	}
 
-	const int nGroup = GetSpecialGroupNumberByID( groupIds.Get() );
+	const int nGroup = GenerateSimulationGroupNumber( true );
 	Singleton<IAILogic>()->RegisterGroup( objects, nGroup );
 
 	SAIUnitCmd command( ACTION_COMMAND_AMBUSH );

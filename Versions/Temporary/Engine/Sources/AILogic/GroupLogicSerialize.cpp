@@ -22,6 +22,7 @@ int CGroupLogic::operator&( IBinSaver &saver )
 		saver.Add( 11, &firstPathUnits );
 		saver.Add( 22, &secondPathUnits );
 		saver.Add( 23, &pCollisionsCollector );
+		saver.Add( 24, &nLastSimulationGroupID );
 	}
 
 	if ( segmUnits.empty() )

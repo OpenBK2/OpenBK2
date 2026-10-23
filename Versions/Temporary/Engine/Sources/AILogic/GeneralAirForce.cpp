@@ -8,6 +8,7 @@
 #include "GeneralConsts.h"
 #include "GeneralHelper.h"
 #include "GlobalWarFog.h"
+#include "GroupLogic.h"
 #include "Guns.h"
 #include "PlayerReinforcement.h"
 #include "Stats_B2_M1/AIUnitCmd.h"
@@ -27,6 +28,7 @@ static const int TIME_WAIT_FOR_REINFORCE_SYSTEM = 1000;
 
 extern CGlobalWarFog theWarFog;
 extern CDiplomacy theDipl;
+extern CGroupLogic theGroupLogic;
 extern CUnitCreation theUnitCreation;
 extern NTimer::STime curTime;
 extern CSupremeBeing theSupremeBeing;
@@ -314,7 +316,7 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const std::list<CVec2> &vP
 
 	SAIUnitCmd cmd;
 	std::list<CVec2>::const_iterator it = vPoints.begin();
-	const int nGroupID = Singleton<IAILogic>()->GenerateGroupNumber();
+	const int nGroupID = theGroupLogic.GenerateSimulationGroupNumber();
 	cmd.fNumber = 0; // allow unit creation disable planes.
 
 	cmd.vPos = *it;
