@@ -7,8 +7,6 @@
 #include "Stats_B2_M1/ActionsRemap.h"
 #include "UnitStates.h"
 
-#include <cstdint>
-
 extern NTimer::STime curTime;
 
 CDecksSet<CObj<CAICommand>> CQueueUnit::cmds( SConsts::AI_START_VECTOR_SIZE );
@@ -59,24 +57,25 @@ void CQueueUnit::InitWCommands( CQueueUnit *pUnit )
 {
 	FreezeByState( false );
 
-	const uint16_t wThisID = GetUniqueIdQU();
-	const uint16_t wUnitID = pUnit->GetUniqueIdQU();
+	// Unit IDs keep growing during a match and must not alias another unit's queue after 65535.
+	const int nThisID = GetUniqueIdQU();
+	const int nUnitID = pUnit->GetUniqueIdQU();
 
-	DelCmdQueue( wThisID );
+	DelCmdQueue( nThisID );
 
 	if ( pUnit->GetCurCmd() && CanCommandBeExecuted( pUnit->GetCurCmd() ) )
 	{
-		cmds.Push( wThisID, pUnit->GetCurCmd() );
+		cmds.Push( nThisID, pUnit->GetCurCmd() );
 	}
 
-	while ( !cmds.IsEmpty( wUnitID ) )
+	while ( !cmds.IsEmpty( nUnitID ) )
 	{
-		CObj<CAICommand> pCmd = cmds.Peek( wUnitID );
-		PopCmd( wUnitID );
+		CObj<CAICommand> pCmd = cmds.Peek( nUnitID );
+		PopCmd( nUnitID );
 
 		if ( CanCommandBeExecuted( pCmd ) )
 		{
-			cmds.Push( wThisID, pCmd );
+			cmds.Push( nThisID, pCmd );
 		}
 	}
 }
