@@ -256,12 +256,18 @@ const bool CGroupMover::CalcPositions()
 	// reset subgroups for units
 	typedef std::map<int, CPtr<CCommonUnit>> TUnitsHashSet;
 	TUnitsHashSet sortedUnits;
-	for ( TGroup::const_iterator it = group.begin(); it != group.end(); ++it )
+	for ( TGroup::iterator it = group.begin(); it != group.end(); )
 	{
 		if ( IsValid( it->second ) )
 		{
 			it->second->SetSubGroup( -1 );
 			sortedUnits[it->second->GetUniqueID()] = it->second;
+			++it;
+		}
+		else
+		{
+			// A queued command can outlive a dead member. Remove it before indexing subgroups below.
+			it = group.erase( it );
 		}
 	}
 
