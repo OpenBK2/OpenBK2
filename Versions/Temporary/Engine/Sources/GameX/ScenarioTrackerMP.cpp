@@ -964,6 +964,17 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 
 		for ( int k = 0; k < reinfSet.size(); ++k )
 		{
+			// A reference that did not resolve arrives here as a null CDBPtr, and the
+			// loader gives no other sign that it failed: an empty href, a path that is
+			// not in the index and a target whose class is not SReinforcement all end
+			// up the same way (System/XMLChunkSaver.cpp DataChunkDBID, System/DB.h).
+			// The loop over the map's own list above already skips those; this one did
+			// not, so a single <Item href="" /> in MultiplayerConsts crashed the game.
+			if ( !reinfSet[k] )
+			{
+				continue;
+			}
+
 			if ( reinfSet[k]->eType == eType ) // Found a reinf of this type in this tech level
 			{
 				reinfs[eType] = reinfSet[k];
@@ -1000,10 +1011,25 @@ const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetStartUnits( int nPlay
 		return 0;
 	}
 
-	const NDb::STechLevelReinfSet &curTechLevel =
-			pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels[nTechLevel];
+	// nMultiplayerSide is -1 until a side is picked, and SetPlayerParty puts it back
+	// to -1 for anything out of range, so it is not an index until it has been
+	// tested. UpdateReinforcements tests it; this indexed sides[-1].
+	const int nSide = players[nPlayer].nMultiplayerSide;
+	if ( nSide < 0 || nSide >= pMPConsts->sides.size() )
+	{
+		return 0;
+	}
 
-	return curTechLevel.pStartingUnits;
+	// The tech level comes from the lobby and the list of them comes from the
+	// database, so nothing guarantees this side defines the level that was chosen.
+	// UpdateReinforcements makes the same check before using the same two indices.
+	const std::vector<NDb::STechLevelReinfSet> &techLevels = pMPConsts->sides[nSide].techLevels;
+	if ( nTechLevel >= techLevels.size() )
+	{
+		return 0;
+	}
+
+	return techLevels[nTechLevel].pStartingUnits;
 }
 
 void CScenarioTrackerMultiplayer::IncreaseReinforcementCallsLeft( int nPlayer, int nCalls )
