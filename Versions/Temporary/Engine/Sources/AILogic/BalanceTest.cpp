@@ -316,7 +316,7 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 				ids.push_back( checked_cast<CLinkObject *>( it->second )->GetUniqueId() );
 			}
 		}
-		const int nGroup = theGroupLogic.GenerateGroupNumber();
+		const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
 		theGroupLogic.RegisterGroup( ids, nGroup );
 
 		SAIUnitCmd cmd;

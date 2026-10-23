@@ -69,6 +69,9 @@ struct IAILogic : public ICommonB2M1AI
 	virtual void UnregisterGroup( const int nGroup ) = 0;
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue ) = 0;
 	virtual void UnitCommand( SAIUnitCmd *pCommand, const uint16_t wGroupID, const int nPlayer ) = 0;
+	// For the groups the local player's commands register, so for the client only.
+	// Simulation code takes CGroupLogic::GenerateSimulationGroupNumber instead, see
+	// SIMULATION_GROUP_OWNER.
 	virtual const int GenerateGroupNumber() = 0;
 
 	virtual void RequestBuildPreview( const EActionCommand eBuildCommand,

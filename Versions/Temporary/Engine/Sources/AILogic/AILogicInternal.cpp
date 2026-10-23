@@ -1049,7 +1049,7 @@ void CAILogic::LaunchStartCommand( const SAIStartCommand &startCommand, CObjectB
 	}
 	cmd.vPos = startCommand.vPos;
 
-	const uint16_t wGroup = theGroupLogic.GenerateGroupNumber();
+	const uint16_t wGroup = theGroupLogic.GenerateSimulationGroupNumber();
 	theGroupLogic.RegisterGroup( pUnitsBuffer, nSize, wGroup );
 	theGroupLogic.GroupCommand( cmd, wGroup, true );
 	theGroupLogic.UnregisterGroup( wGroup );

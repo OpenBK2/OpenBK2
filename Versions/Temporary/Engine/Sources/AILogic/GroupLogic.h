@@ -11,6 +11,31 @@ class CAIUnit;
 struct ICollisionsCollector;
 enum EActionNotify : unsigned int;
 
+// A group number is ( ( id << 4 ) | owner ) << 1, with the low bit set for a special
+// group. It is a uint16_t everywhere it travels, so the id has 11 bits and the owner 4.
+//
+// The owner is there so that numbers picked on different machines cannot clash. A
+// player's client picks the number for the groups its commands register, with the
+// player's own number as the owner and a counter only that client advances, and the
+// number then reaches every client inside the command. Simulation code that needs a
+// group of its own (arriving reinforcements, start commands, scripts, the AI general,
+// special groups) runs on every client and must pick the same number on each, so it
+// cannot use either of those: it takes ids from a counter of its own, which every
+// client advances identically and which is saved, under this owner, which no player
+// can have. Using the local player's number and counter instead made the number
+// depend on who was watching, and a replay watched as a player who issued commands
+// had those groups emptied by the simulation's own.
+//
+// Players are numbered from 0 with the neutral player last, and the largest maps have
+// ten players, so the neutral player is 10 and 11 to 15 are unused. Supporting more
+// than 14 players plus the neutral one means widening the group number: the shifts and
+// the mask in GetGroupNumberByID, GetSpecialGroupNumberByID, GetIdByGroupNumber and
+// GetPlayerByGroupNumber, this owner value, and uint16_t to something wider in
+// CGroupLogic, IAILogic (B2AI.h) and the GameX group commands (AILogicCommandInternal),
+// which are serialized into replays and sent over the network, so that is a format
+// change for both.
+static constexpr uint8_t SIMULATION_GROUP_OWNER = 15;
+
 class CFreeGroupIDs
 {
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -44,7 +69,12 @@ public:
 	int operator&( IBinSaver &saver ) override;
 
 private:
+	// Ids for the groups the local player's commands register; see
+	// SIMULATION_GROUP_OWNER for why simulation code must not draw from it.
 	CFreeGroupIDs groupIds;
+	// The last id GenerateSimulationGroupNumber handed out. Only simulation code
+	// advances it, so it is the same on every client, and it is saved.
+	int nLastSimulationGroupID = 0;
 	det_set<int> registeredGroups;
 	CQueuesSet<CPtr<CCommonUnit>> groupUnits;
 	std::list<CPtr<CCommonUnit>> followingUnits;
@@ -106,8 +136,8 @@ private:
 	void SetToAmbush( CAmbushGroups::iterator &iter );
 
 	//
-	static uint16_t GetGroupNumberByID( const uint16_t wID );
-	static uint16_t GetSpecialGroupNumberByID( const uint16_t wID );
+	static uint16_t GetGroupNumberByID( const uint16_t wID, const uint8_t cOwner );
+	static uint16_t GetSpecialGroupNumberByID( const uint16_t wID, const uint8_t cOwner );
 	static uint16_t GetIdByGroupNumber( const uint16_t wGroup );
 	static uint16_t GetPlayerByGroupNumber( const uint16_t wGroup );
 
@@ -121,7 +151,11 @@ public:
 		DestroyContents();
 	}
 
+	// For a group the local player's commands register, from the client only.
 	const uint16_t GenerateGroupNumber();
+	// For a group simulation code makes itself. Never one a player could send, and
+	// the same on every client.
+	const uint16_t GenerateSimulationGroupNumber( const bool bSpecial = false );
 	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup );
 	void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
 	void UnregisterGroup( const uint16_t wGroup );
