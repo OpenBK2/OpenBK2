@@ -22,6 +22,8 @@
 
 #include "GameX_export.h"
 
+#include <algorithm>
+
 #include <fmt/format.h>
 
 bool g_nSaveToSameSpace;
@@ -223,6 +225,38 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 					fmt::format( "replay: recorded against map checksum {:#x}, this map is {:#x}. The map has been edited since",
 			                 replayInfo.uMapCheckSum,
 			                 uMapCheckSum ) );
+		}
+	}
+
+	// Said up front as well as where playback stops, so a verification run knows
+	// from its first lines how far it can get. Commands of a type this build does
+	// not register load as null pointers; ExecuteSegmentCommands stops before the
+	// first segment holding one.
+	{
+		int nUnloaded = 0;
+		int nFirstSegment = -1;
+		for ( const auto &segment : loadedHistory )
+		{
+			for ( const CPtr<IAILogicCommandB2> &pCmd : segment.second )
+			{
+				if ( !IsValid( pCmd ) )
+				{
+					++nUnloaded;
+					if ( nFirstSegment == -1 || segment.first < nFirstSegment )
+					{
+						nFirstSegment = segment.first;
+					}
+				}
+			}
+		}
+		if ( nUnloaded > 0 )
+		{
+			ReportReplayLine( fmt::format(
+					"replay: {} recorded command(s) are of a type this build does not know, the first at segment {} (t={} "
+					"ms). Playback stops there",
+					nUnloaded,
+					nFirstSegment,
+					nFirstSegment * NGlobal::GetVar( "AI_SEGMENT_DURATION", 200 ) ) );
 		}
 	}
 
@@ -608,6 +642,22 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 				// on stdout as it is fed in, which is what narrows a divergence
 				// to the commands that ran inside the window it appeared in.
 				// The same type name and description the dump file uses.
+				// A command whose class this build does not register loads as a null
+				// pointer: the reader skips an object it cannot create. Stop before
+				// the whole segment rather than run part of it, since the simulation
+				// stops following the recording here either way.
+				const std::list<CPtr<IAILogicCommandB2>> &segmentCommands = loadedHistory[nSegment];
+				const int nUnloaded =
+						static_cast<int>( std::count_if( segmentCommands.begin(),
+				                                     segmentCommands.end(),
+				                                     []( const CPtr<IAILogicCommandB2> &pCmd ) { return !IsValid( pCmd ); } ) );
+				if ( nUnloaded > 0 )
+				{
+					StopAtUnloadedCommands( nSegment, nUnloaded );
+					bCanAddCommand = true;
+					return;
+				}
+
 				const bool bTrace = NGlobal::GetVar( "replay_trace", 0 ) != 0;
 				for ( std::list<CPtr<IAILogicCommandB2>>::iterator iter = loadedHistory[nSegment].begin();
 				      iter != loadedHistory[nSegment].end();
@@ -669,6 +719,38 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 				bGameFinished = true;
 			}
 		}
+	}
+}
+
+void CCommandsHistory::StopAtUnloadedCommands( const int nSegment, const int nUnloaded )
+{
+	const std::string szRecordedCfg = !replayInfo.szConfiguration.empty() ? replayInfo.szConfiguration : "unrecorded";
+	const std::string szRecordedId = !replayInfo.szImageId.empty() ? replayInfo.szImageId : "unrecorded";
+	const std::string szLine = fmt::format(
+			"replay stopped at segment {} (t={} ms): {} recorded command(s) there are of a type this build does not "
+			"know. It was recorded by {} build {}, and only a build with that command type can play it further",
+			nSegment,
+			nSegment * NGlobal::GetVar( "AI_SEGMENT_DURATION", 200 ),
+			nUnloaded,
+			szRecordedCfg,
+			szRecordedId );
+	ReportReplayLine( szLine );
+
+	// Nothing after this segment is fed in, and the end-of-replay report does not
+	// run: the playback did not play out.
+	bFinishedHistory = true;
+	bGameFinished = true;
+
+	if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+	{
+		// Replay.Result is left at its failure value.
+		NMainLoop::Command( CreateICExitGame() );
+	}
+	else
+	{
+		Singleton<IGameTimer>()->Pause( true, PAUSE_TYPE_USER_PAUSE );
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", NStr::ToUnicode( szLine ) ).c_str() );
 	}
 }
 
