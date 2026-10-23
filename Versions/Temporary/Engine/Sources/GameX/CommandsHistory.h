@@ -258,6 +258,10 @@ class CCommandsHistory : public ICommandsHistory
 	                         const CSegmentChecksum &_segmentChecksum );
 	bool IsEntryQualified( int nEntry ) const;
 	const bool SerializeHistory( const std::string &szFileName, const bool bRead );
+	// Ends a playback that reached a segment holding commands this build could not
+	// load, saying where and why, instead of running a simulation that no longer
+	// follows the recording.
+	void StopAtUnloadedCommands( const int nSegment, const int nUnloaded );
 
 public:
 	CCommandsHistory();
