@@ -279,4 +279,23 @@ const NDb::SMultiplayerConsts *GetMPConsts()
 	return 0;
 }
 
+const NDb::SMultiplayerSide *GetMultiplayerSide( const NDb::SMultiplayerConsts *pMPConsts, const int nCountry )
+{
+	if ( !pMPConsts || nCountry < 0 || nCountry >= pMPConsts->sides.size() )
+	{
+		return 0;
+	}
+	return &( pMPConsts->sides[nCountry] );
+}
+
+const NDb::SLadderRank *GetLadderRank( const NDb::SMultiplayerConsts *pMPConsts, const int nCountry, const int nRank )
+{
+	const NDb::SMultiplayerSide *pSide = GetMultiplayerSide( pMPConsts, nCountry );
+	if ( !pSide || nRank < 0 || nRank >= pSide->ladderRanks.size() )
+	{
+		return 0;
+	}
+	return &( pSide->ladderRanks[nRank] );
+}
+
 }; // namespace NGameX

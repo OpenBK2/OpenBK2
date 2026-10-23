@@ -13,6 +13,8 @@ struct SUIConstsB2;
 struct SAIGameConsts;
 struct SNetGameConsts;
 struct SMultiplayerConsts;
+struct SMultiplayerSide;
+struct SLadderRank;
 
 } // namespace NDb
 
@@ -30,5 +32,20 @@ const NDb::SUIConstsB2 *GetUIConsts();
 const NDb::SAIGameConsts *GetAIConsts();
 const NDb::SNetGameConsts *GetNetConsts();
 const NDb::SMultiplayerConsts *GetMPConsts();
+
+// Bounds-checked lookups into MultiplayerConsts.
+//
+// The country (race) and ladder rank indices the multiplayer screens display
+// come from the ladder server, while the arrays they index are sized by the
+// database, so the two have no guaranteed relationship: an index out of range
+// is a wire value the client has to survive, not a programming error. It does
+// not take a hostile server either, because SLadderStatistics::nRace is -1
+// until something fills it in, which is what an unanswered or partially filled
+// stats record carries.
+//
+// Return 0 when the index does not name anything, so callers test the result
+// rather than repeating the bounds check.
+const NDb::SMultiplayerSide *GetMultiplayerSide( const NDb::SMultiplayerConsts *pMPConsts, int nCountry );
+const NDb::SLadderRank *GetLadderRank( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nRank );
 
 } // namespace NGameX

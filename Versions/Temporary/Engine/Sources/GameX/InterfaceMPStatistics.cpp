@@ -237,7 +237,14 @@ void CInterfaceMPStatistics::AddPlayerItemsToList( std::list<SPlayerItemData> &t
 		ITextView *pItemScoreTotal = GetChildChecked<ITextView>( pItemWnd, "ItemScoreTotal", true );
 
 		pItemName->SetText( pItemName->GetDBText() + item.wszName );
-		pItemCountry->SetTexture( pMPConsts->sides[item.nCountry].pPartyInfo->pMinimapKeyObjectIcon );
+		// nCountry travels with the player info and indexes a database array, so
+		// nothing has checked it against that array's size. The party reference is
+		// a second way to get null here: it stays null if it did not resolve.
+		const NDb::SMultiplayerSide *pSide = NGameX::GetMultiplayerSide( pMPConsts, item.nCountry );
+		if ( pSide && pSide->pPartyInfo )
+		{
+			pItemCountry->SetTexture( pSide->pPartyInfo->pMinimapKeyObjectIcon );
+		}
 
 		CPtr<CColorBackground> pColourBgr = new CColorBackground();
 		pColourBgr->nColor = item.dwColour;
@@ -324,8 +331,12 @@ bool CInterfaceMPStatistics::OnGameAftermathMessage( struct SMPUIGameAftemathMes
 		return true;
 	}
 
-	pPlayerRankView->SetText( pPlayerRankView->GetDBText() +
-	                          GET_TEXT_PRE( pMPConsts->sides[pMsg->nCountry].ladderRanks[pMsg->nRank]., Name ) );
+	// nCountry and nRank arrive from the ladder server and index database arrays.
+	// Leave the rank line at its database text when they do not name a rank.
+	if ( const NDb::SLadderRank *pRank = NGameX::GetLadderRank( pMPConsts, pMsg->nCountry, pMsg->nRank ) )
+	{
+		pPlayerRankView->SetText( pPlayerRankView->GetDBText() + GET_TEXT_PRE( pRank->, Name ) );
+	}
 	pPlayerLevelView->SetText( pPlayerLevelView->GetDBText() + NStr::ToUnicode( std::to_string( pMsg->nLevel ) ) );
 	pExpEarnedView->SetText( pExpEarnedView->GetDBText() + NStr::ToUnicode( std::to_string( pMsg->nExpEarned ) ) );
 	pExpTotalView->SetText( pExpTotalView->GetDBText() +
@@ -394,9 +405,13 @@ void CInterfaceMPStatistics::ShowLevelPopup( int nLevel, int nLevelOld, int nCou
 	pRankUp->ShowWindow( nRank > nRankOld );
 	pRankDown->ShowWindow( nRank < nRankOld );
 	pRankSame->ShowWindow( nRank == nRankOld );
-	const NDb::SLadderRank &rank = pMPConsts->sides[nCountry].ladderRanks[nRank];
-	pRank->SetText( pRank->GetDBText() + GET_TEXT_PRE( rank., Name ) );
-	pIcon->SetTexture( rank.pTexture );
+	// Same pair of server-supplied indices as OnGameAftermathMessage, which is
+	// where this popup's arguments come from.
+	if ( const NDb::SLadderRank *pRankInfo = NGameX::GetLadderRank( pMPConsts, nCountry, nRank ) )
+	{
+		pRank->SetText( pRank->GetDBText() + GET_TEXT_PRE( pRankInfo->, Name ) );
+		pIcon->SetTexture( pRankInfo->pTexture );
+	}
 
 	pRankPopup->ShowWindow( true );
 }

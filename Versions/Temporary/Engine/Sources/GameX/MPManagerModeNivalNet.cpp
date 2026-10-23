@@ -566,6 +566,13 @@ void CMPManagerModeNivalNet::SendLadderGameAftermath( const SLadderStatistics &o
 	// Medals
 	for ( int i = 0; i < pMPConsts->sides.size(); ++i )
 	{
+		// Both medal vectors are sized by the server and this loop is sized by the
+		// database, so a side the server does not know about has no bits to compare.
+		if ( i >= oldStats.medals.size() || i >= newStats.medals.size() )
+		{
+			continue;
+		}
+
 		const NDb::SMultiplayerSide &side = pMPConsts->sides[i];
 		int nMedalChange = oldStats.medals[i] ^ newStats.medals[i];
 		for ( int j = 0; j < side.medals.size(); ++j )
@@ -587,7 +594,17 @@ const int CMPManagerModeNivalNet::GetRankFromLevel( const int nRace, const int n
 		*pwszOut = L"-";
 	}
 	int nResult = 0;
-	const std::vector<NDb::SLadderRank> &ranks = pMPConsts->sides[nRace].ladderRanks;
+	// nRace is the race field of a statistics record from the ladder server, so it
+	// indexes a database array with a value the database never agreed to. It is
+	// also -1 in a record the server did not fill in, which is what every caller
+	// here passes through on an unanswered query.
+	const NDb::SMultiplayerSide *pSide = NGameX::GetMultiplayerSide( pMPConsts, nRace );
+	if ( !pSide )
+	{
+		return nResult;
+	}
+
+	const std::vector<NDb::SLadderRank> &ranks = pSide->ladderRanks;
 	for ( int i = 0; i < ranks.size(); ++i )
 	{
 		if ( ranks[i].nLevel > nLevel )

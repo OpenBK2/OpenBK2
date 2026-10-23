@@ -14,6 +14,19 @@
 
 #include <fmt/format.h>
 
+// One per-race tally out of a ladder statistics record, or zero if the server
+// sent a shorter vector than the database has sides. Every loop over these
+// vectors here is bounded by the number of sides, which is a database quantity
+// and tells us nothing about how long the server made the vector.
+static int GetRaceStat( const std::vector<int> &stats, const int nRace )
+{
+	if ( nRace < 0 || nRace >= stats.size() )
+	{
+		return 0;
+	}
+	return stats[nRace];
+}
+
 // CInterfaceMPLadderStatistics
 
 CInterfaceMPLadderStatistics::CInterfaceMPLadderStatistics()
@@ -141,8 +154,10 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	int nLosses = 0;
 	for ( int i = 0; i < countryNames.size(); ++i )
 	{
-		nWins += info.raceWinsSolo[i] + info.raceWinsTeam[i];
-		nLosses += info.raceLossesSolo[i] + info.raceLossesTeam[i];
+		// The per-race tallies are sized by the ladder server and this loop is
+		// sized by the database, so one is not an index into the other.
+		nWins += GetRaceStat( info.raceWinsSolo, i ) + GetRaceStat( info.raceWinsTeam, i );
+		nLosses += GetRaceStat( info.raceLossesSolo, i ) + GetRaceStat( info.raceLossesTeam, i );
 		countryNames[i] = GET_TEXT_PRE( pMPConsts->sides[i]., Name );
 	}
 	int nPlayMinutes = info.nTotalPlayTime / 60;
@@ -161,13 +176,22 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	ITextView *pWinLose = GetChildChecked<ITextView>( pMain, "InfoWinLose", true );
 	ITextView *pGameTime = GetChildChecked<ITextView>( pMain, "InfoGameTime", true );
 
-	pPicture->SetTexture( pMPConsts->sides[info.nRace].ladderRanks[pMsg->nRank].pTexture );
+	// nRace and nRank are both ladder server values indexing database arrays, and
+	// nRace is -1 in a stats record the server never filled in.
+	const NDb::SLadderRank *pRankInfo = NGameX::GetLadderRank( pMPConsts, info.nRace, pMsg->nRank );
+	if ( pRankInfo )
+	{
+		pPicture->SetTexture( pRankInfo->pTexture );
+	}
 	pXP->SetText( pXP->GetDBText() + NStr::ToUnicode( fmt::format( "{}/{}", info.nXP, info.nNextLevelXP ) ) );
 	float fPBPos = info.nXP - info.nLevelXP;
 	fPBPos = ( info.nNextLevelXP - info.nLevelXP > 0 ) ? ( fPBPos / ( info.nNextLevelXP - info.nLevelXP ) ) : 1.0f;
 	pXPProgress->SetPosition( fPBPos );
 	pLevel->SetText( pLevel->GetDBText() + NStr::ToUnicode( std::to_string( info.nLevel ) ) );
-	pRank->SetText( pLevel->GetDBText() + GET_TEXT_PRE( pMPConsts->sides[info.nRace].ladderRanks[pMsg->nRank]., Name ) );
+	if ( pRankInfo )
+	{
+		pRank->SetText( pLevel->GetDBText() + GET_TEXT_PRE( pRankInfo->, Name ) );
+	}
 	pBattles->SetText( pBattles->GetDBText() + NStr::ToUnicode( std::to_string( nWins + nLosses ) ) );
 	pWinLose->SetText( pWinLose->GetDBText() + NStr::ToUnicode( fmt::format( "{}/{}", nWins, nLosses ) ) );
 	pGameTime->SetText( pGameTime->GetDBText() +
@@ -311,8 +335,8 @@ void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &i
 	int nLosses = 0;
 	for ( int i = 0; i < countryNames.size(); ++i )
 	{
-		nWins += nUseSolo * info.raceWinsSolo[i] + nUseTeam * info.raceWinsTeam[i];
-		nLosses += nUseSolo * info.raceLossesSolo[i] + nUseTeam * info.raceLossesTeam[i];
+		nWins += nUseSolo * GetRaceStat( info.raceWinsSolo, i ) + nUseTeam * GetRaceStat( info.raceWinsTeam, i );
+		nLosses += nUseSolo * GetRaceStat( info.raceLossesSolo, i ) + nUseTeam * GetRaceStat( info.raceLossesTeam, i );
 	}
 	int nPercent = ( nWins + nLosses > 0 ) ? nWins * 100 / ( nWins + nLosses ) : 0;
 	Add4Line( wszName,
@@ -321,8 +345,8 @@ void CInterfaceMPLadderStatistics::AddWinLoseSummary( const SLadderStatistics &i
 	          NStr::ToUnicode( fmt::format( "{}%", nPercent ) ) );
 	for ( int i = 0; i < countryNames.size(); ++i )
 	{
-		nWins = nUseSolo * info.raceWinsSolo[i] + nUseTeam * info.raceWinsTeam[i];
-		nLosses = nUseSolo * info.raceLossesSolo[i] + nUseTeam * info.raceLossesTeam[i];
+		nWins = nUseSolo * GetRaceStat( info.raceWinsSolo, i ) + nUseTeam * GetRaceStat( info.raceWinsTeam, i );
+		nLosses = nUseSolo * GetRaceStat( info.raceLossesSolo, i ) + nUseTeam * GetRaceStat( info.raceLossesTeam, i );
 		nPercent = ( nWins + nLosses > 0 ) ? nWins * 100 / ( nWins + nLosses ) : 0;
 		Add4Line( countryNames[i],
 		          NStr::ToUnicode( std::to_string( nWins ) ),
