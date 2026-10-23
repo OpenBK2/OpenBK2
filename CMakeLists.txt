@@ -173,6 +173,11 @@ find_package(Threads REQUIRED)
 if(MSVC)
   add_compile_options("/nologo")
   add_link_options("/nologo")
+  # The Release presets use RelWithDebInfo, whose MSVC defaults enable
+  # incremental linking. Repeated links accumulate PDB state until large modules
+  # hit LNK1140. Use full links for this configuration while keeping /debug;
+  # Debug retains incremental linking for its faster edit-build cycle.
+  add_link_options("$<$<CONFIG:RelWithDebInfo>:/INCREMENTAL:NO>")
   # Scoped to the compilers that understand them: ml/ml64 rejects each of these
   # with warning A4018 now that ASM_MASM is an enabled language.
   add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/wd4251>")
