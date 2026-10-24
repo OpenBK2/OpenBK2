@@ -257,7 +257,10 @@ static void TransformPosition( const std::vector<CVec3> &srcPos,
 	// the low bits the test looks at; uintptr_t carries the whole address instead.
 	if ( nCount > 0 && bIsSSEPresent && ( reinterpret_cast<std::uintptr_t>( &blends[0] ) & 0xf ) == 0 )
 	{
-		ASSERT( sizeof( SSSEVertexWeight ) == sizeof( SRealVertexWeight ) );
+		// The cast below reinterprets the weights as the SSE structure, which declares the same three
+		// arrays in the same order. ASSERT does not evaluate its argument here, so the size relation it
+		// claimed to check was never tested in any build; static_assert tests it at compile time.
+		static_assert( sizeof( SSSEVertexWeight ) == sizeof( SRealVertexWeight ) );
 		SSESkinning( &srcPos[0], pRes, (SSSEVertexWeight *)pWeight, blends, nCount );
 	}
 	else

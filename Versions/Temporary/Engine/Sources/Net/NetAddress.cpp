@@ -11,7 +11,9 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 {
 	int nIdx, nPort = nDefaultPort;
 	memset( &addr, 0, sizeof( addr ) );
-	ASSERT( sizeof( addr ) >= sizeof( sockaddr_in ) );
+	// addr is reinterpreted as a sockaddr_in below, so it has to be at least that large. ASSERT does
+	// not evaluate its argument here, so the relation was unchecked; it is constant, so static_assert it.
+	static_assert( sizeof( addr ) >= sizeof( sockaddr_in ) );
 	sockaddr_in &nameRemote = *(sockaddr_in *)&addr;
 
 	nameRemote.sin_family = AF_INET;

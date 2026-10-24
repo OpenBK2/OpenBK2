@@ -455,12 +455,15 @@ void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 	{
 		return;
 	}
+	// Both copies below are between fixed-size arrays of the two weight structures, so the sizes they
+	// rely on are compile-time constants. ASSERT does not evaluate its argument in this configuration,
+	// which left the relation unchecked in every build; static_assert states it where it can be caught.
+	static_assert( sizeof( SVertexWeight::cBoneIndices ) == sizeof( SRealVertexWeight::cBoneIndices ) );
+	static_assert( sizeof( SVertexWeight::fWeights ) == sizeof( SRealVertexWeight::fWeights ) );
 	for ( int k = 0; k < verts.size(); ++k )
 	{
 		const SRealVertexWeight &w = weights[posIndices[k]];
 		SVertexWeight &vw = pRes->weights[k];
-		ASSERT( sizeof( vw.cBoneIndices ) == sizeof( w.cBoneIndices ) );
-		ASSERT( sizeof( vw.fWeights ) == sizeof( w.fWeights ) );
 		memcpy( vw.cBoneIndices, w.cBoneIndices, sizeof( vw.cBoneIndices ) );
 		memcpy( vw.fWeights, w.fWeights, sizeof( vw.fWeights ) );
 	}

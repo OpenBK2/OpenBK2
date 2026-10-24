@@ -358,7 +358,9 @@ static void ScaleColors( std::vector<uint32_t> *pRes,
 	{
 		return;
 	}
-	ASSERT( sizeof( uint32_t ) == sizeof( transp[0] ) );
+	// pScaleColors reads the transparency array as 32-bit words, so its element width has to match.
+	// ASSERT does not evaluate its argument here; the relation is constant, so static_assert it.
+	static_assert( sizeof( uint32_t ) == sizeof( transp[0] ) );
 	GetLightingKernels().pScaleColors( &( *pRes )[0],
 	                                   _pSrc,
 	                                   nSrcStride,

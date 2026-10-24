@@ -2379,7 +2379,9 @@ AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STriangleList *pTris, int
 
 void AddPrimitiveGeometry( CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
 {
-	ASSERT( sizeof( S3DTriangle ) == sizeof( STriangle ) ); // is required for this function to work
+	// Required for this function to work: the two triangle types are passed through interchangeably.
+	// ASSERT does not evaluate its argument here, so state the relation where the compiler checks it.
+	static_assert( sizeof( S3DTriangle ) == sizeof( STriangle ) );
 	if ( bBan32BitIndices )
 	{
 		AddPrimitiveGeometry( &dynamicTris16, pGeom, pTris, nCount, nMask );
