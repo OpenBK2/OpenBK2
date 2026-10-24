@@ -189,8 +189,14 @@ NDb::EUserAction GetActionByCommand( EActionCommand actionCommand )
 NDb::EUserAction GetActionByAbility( NDb::EUnitSpecialAbility specialAbility )
 {
 	const int nIndex = (int)specialAbility;
+	// Bounded against the table being indexed rather than against the enum's count. The two agree
+	// once theActionsRemapAutomagic has run, and that is a file-scope object: a caller reached from
+	// another module's static initialisation sees mapAbilityToAction still empty, passes a check
+	// against _ABILITY_COUNT and indexes nothing. The assertion stays on the enum, which is what a
+	// caller passing a bad ability gets told about, and does not evaluate its argument here anyway.
 	NI_ASSERT( ( nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT ), fmt::format( "Unknown ability index: {}", nIndex ) );
-	return ( nIndex >= 0 && nIndex < NDb::_ABILITY_COUNT ) ? mapAbilityToAction[nIndex] : NDb::USER_ACTION_UNKNOWN;
+	return ( nIndex >= 0 && nIndex < static_cast<int>( mapAbilityToAction.size() ) ) ? mapAbilityToAction[nIndex]
+	                                                                                 : NDb::USER_ACTION_UNKNOWN;
 }
 
 class CActionsRemapAutomagic
