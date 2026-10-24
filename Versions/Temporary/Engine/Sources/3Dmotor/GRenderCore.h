@@ -9,6 +9,8 @@
 #include "System/Dg.h"
 #include "System/time.hpp"
 
+#include <cstdint>
+
 inline CVec3 MulPerComp4( const CVec3 &a, const CVec3 &b )
 {
 	return CVec3( a.x * b.x * 4, a.y * b.y * 4, a.z * b.z * 4 );
@@ -853,10 +855,15 @@ public:
 		const SPntLightShadowedInfo *pPSInfo;
 		IMaterial *pMaterial;
 		float f;
-		int nData;
+		// The view IsSame() compares the parameter through, so it has to be as wide as the widest
+		// member. It was an int, which covered the whole union on x86 and only the low half of a
+		// pointer on x64, so two operations carrying different pointers compared equal whenever the
+		// low 32 bits happened to agree. Every constructor sets this member or a pointer one, so all
+		// of the bytes it reads are initialised.
+		std::uintptr_t nData;
 
 		UParameter()
-			: f( 0 )
+			: nData( 0 )
 		{
 		}
 
@@ -921,8 +928,11 @@ public:
 		}
 
 		UParameter( float _f )
-			: f( _f )
+			: nData( 0 )
 		{
+			// Zero the whole union first so that the bytes a float leaves over on x64 are defined
+			// when IsSame() reads the parameter through nData.
+			f = _f;
 		}
 	};
 
@@ -961,7 +971,10 @@ public:
 
 		bool IsSame( const SOperation &a ) const
 		{
-			ASSERT( sizeof( p1.f ) == sizeof( p1 ) );
+			// The comparison below reads each parameter through nData, which only covers the whole
+			// union while nData is as wide as the widest member. ASSERT does not evaluate its
+			// argument here, which is how this stopped holding on x64; static_assert cannot.
+			static_assert( sizeof( p1.nData ) == sizeof( p1 ) );
 			return op == a.op && nPass == a.nPass && nStencilBlendMode == a.nStencilBlendMode &&
 			       nDestRegister == a.nDestRegister && nPartPriority == a.nPartPriority && p1.nData == a.p1.nData &&
 			       p2.nData == a.p2.nData && p3.nData == a.p3.nData;
