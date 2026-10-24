@@ -71,7 +71,7 @@ Icon?
 *.vcxproj.user
 .vs
 BetaRelease
-out/build
+out/
 
 # CLion
 cmake-build-*
@@ -79,7 +79,7 @@ cmake-build-*
 # CMake
 *_export.h
 
-# build folders. The presets put theirs under out/build, already ignored above.
+# build folders. The presets put theirs under out/, already ignored above.
 build/
 linux-build*/
 
