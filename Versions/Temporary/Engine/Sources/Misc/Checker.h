@@ -21,7 +21,14 @@ inline bool CheckRange( const TContainer &container, const int nIndex )
 
 #else
 
-#define CheckRange( x, y ) true
-#define CheckFixedRange( x, y, z ) true
+// Both of these expanded to the literal true, so each of the six call sites in AILogic read as a
+// range check and compiled to a statement whose value is discarded, which is the one spelling that
+// cannot be distinguished from a check that passed. ( (void)0 ) says what the configuration does.
+//
+// Even with _DO_ASSERT_SLOW these only assert and return a bool that every call site drops, so the
+// index reaches the container either way: an accessor that has to survive a bad index needs its own
+// guard, not one of these.
+#define CheckRange( x, y ) ( (void)0 )
+#define CheckFixedRange( x, y, z ) ( (void)0 )
 
 #endif // use ctrl + }
