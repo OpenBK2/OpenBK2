@@ -393,8 +393,30 @@ void CStructureSaver::RawData( void *pData, int nSize )
 	if ( IsReading() )
 	{
 		SChunkLevel &res = chunks.back();
+		// The same hole DataChunk had, in the function that reads an object's ID:
+		// ASSERT does not evaluate its argument in this configuration, so nothing
+		// checked that the stored chunk is as long as the ID being read out of it,
+		// and the copy took nSize bytes whatever the stored length was. The two
+		// readers below this one use res.nLength, which is what makes nStart plus
+		// the length safe; nStart + nSize rests on nothing.
+		//
+		// A well-formed file cannot reach it, since both sides take the width from
+		// the save's own mode, but a truncated or damaged stream can, and then
+		// LoadObject looked an ID up that carried bytes of the following chunk in
+		// its upper half. That misses the hash and leaves a null where the save
+		// recorded an object, which is the quietest possible failure.
+		//
+		// Copying what is there and zeroing the rest leaves a well-formed file
+		// identical byte for byte and makes a damaged one read the same way every
+		// time. Clamped at zero as well, rather than resting on a bound applied
+		// three calls away.
 		ASSERT( res.nLength == nSize );
-		memcpy( pData, data.GetBuffer() + res.nStart, nSize );
+		const int nAvailable = (std::max)( 0, (std::min)( res.nLength, nSize ) );
+		memcpy( pData, data.GetBuffer() + res.nStart, nAvailable );
+		if ( nAvailable < nSize )
+		{
+			memset( static_cast<unsigned char *>( pData ) + nAvailable, 0, nSize - nAvailable );
+		}
 	}
 	else
 	{
