@@ -220,6 +220,12 @@ void CAILogic::TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer
 	for ( int nID : transfers )
 	{
 		CCommonUnit *pCommonUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) );
+		// Detaching or preparing one member can unregister another one in this component,
+		// and DetachTransferredUnit reads its group without checking.
+		if ( !pCommonUnit )
+		{
+			continue;
+		}
 		theGroupLogic.DetachTransferredUnit( pCommonUnit );
 		if ( CAIUnit *pUnit = dynamic_cast<CAIUnit *>( pCommonUnit ) )
 		{
@@ -248,8 +254,18 @@ void CAILogic::TransferUnits( const std::vector<int> &unitIDs, int nSourcePlayer
 		CPtr<SFeedBackUnitsArray> pNotice = new SFeedBackUnitsArray;
 		pNotice->unitIDs = transfers;
 		pNotice->nParam = nTargetPlayer;
-		CCommonUnit *pFirstUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( transfers.front() ) );
-		pNotice->vCenterCamera = pFirstUnit->GetCenterPlain();
+		// Take the camera target from the first member that still resolves, since the ownership
+		// changes above can unregister any of them, including the lowest ID. Keep it assigned on
+		// every path: vCenterCamera has no default and is serialized with the notification.
+		pNotice->vCenterCamera = VNULL2;
+		for ( int nID : transfers )
+		{
+			if ( CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) ) )
+			{
+				pNotice->vCenterCamera = pUnit->GetCenterPlain();
+				break;
+			}
+		}
 		updater.AddUpdate( EFB_UNITS_GIVEN, -1, pNotice );
 	}
 }
