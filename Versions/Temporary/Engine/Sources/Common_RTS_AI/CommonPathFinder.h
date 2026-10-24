@@ -83,7 +83,14 @@ private:
 
 	const SVector GetStopTile( int n ) const
 	{
-		NI_ASSERT( n >= 0 && n < nLength, "Wrong number of stop point" );
+		// The bound that has to hold is against addPoints, which is what this indexes, and not
+		// against nLength, which is the path length. The two are different quantities: Init() sizes
+		// both point vectors to LONG_PATH_LENGTH + 1 and SetLimitedPathParameters() caps upperLimit,
+		// and so nLength, at LONG_PATH_LENGTH, which is why indexing by a path position is in range
+		// at all. The single caller derives n from GetPathLength() after rejecting a length of zero.
+		// Cast so that the condition still compiles clean if _DO_ASSERT_SLOW ever turns it back on:
+		// an argument this macro drops is never type-checked either.
+		NI_ASSERT( n >= 0 && n < static_cast<int>( addPoints.size() ), "Wrong number of stop point" );
 		return addPoints[n];
 	}
 
@@ -158,16 +165,33 @@ public:
 		return nLength;
 	}
 
+	// Both of these copied nLen points out under an assertion that bounded nLen against nLength, the
+	// path length, while the copy reads addPoints or stopPoints, which are separate vectors. That is
+	// a bound on a different quantity from the one that matters, and NI_ASSERT does not evaluate its
+	// argument in this configuration, so neither bound was ever applied. The source side is in range
+	// today because Init() sizes both vectors to LONG_PATH_LENGTH + 1 while nLength cannot pass
+	// LONG_PATH_LENGTH, not because of anything either function did; the clamps below state that
+	// invariant against the vector each one actually reads, and are unreachable while it holds.
+	//
+	// pBuf carries no size, so the destination stays the caller's responsibility either way.
 	void GetTiles( void *pBuf, const int nLen ) const
 	{
-		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" );
-		memcpy( pBuf, &( addPoints[0] ), nLen * sizeof( SVector ) );
+		const int nCopy = (std::min)( nLen, static_cast<int>( addPoints.size() ) );
+		if ( nCopy <= 0 )
+		{
+			return;
+		}
+		memcpy( pBuf, &( addPoints[0] ), nCopy * sizeof( SVector ) );
 	}
 
 	void GetStopPoints( void *pBuf, const int nLen ) const
 	{
-		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" );
-		memcpy( pBuf, &( stopPoints[0] ), nLen * sizeof( SVector ) );
+		const int nCopy = (std::min)( nLen, static_cast<int>( stopPoints.size() ) );
+		if ( nCopy <= 0 )
+		{
+			return;
+		}
+		memcpy( pBuf, &( stopPoints[0] ), nCopy * sizeof( SVector ) );
 	}
 
 	void MarkPathTiles();

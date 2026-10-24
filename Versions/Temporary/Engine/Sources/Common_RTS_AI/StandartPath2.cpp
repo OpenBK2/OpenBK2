@@ -139,22 +139,29 @@ const SVector CStandartPath2::GetTileWithShift( const SVector &vTile ) const
 
 void CStandartPath2::CopyPath( const int nLength )
 {
-	if ( nLength < 0 )
+	// Zero was let through and has nothing to copy, but the last line reads pathBuffer[nLength - 1],
+	// so it indexed one before the start of the buffer and stored the result as the current tile.
+	if ( nLength <= 0 )
 	{
 		return;
 	}
-	pPathFinder->GetTiles( &( pathBuffer[0] ), nLength );
-	const int nCopyTiles = (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile );
-	memcpy( &( pathTiles[0] ) + nLastPathTile,
-	        &( pathBuffer[0] ),
-	        sizeof( SVector ) * (std::min)( nLength, MAX_PATH_TILES_COUNT - nLastPathTile ) );
-	if ( nLength > nCopyTiles )
+	// pathBuffer holds MAX_PATH_TILES_COUNT tiles, GetTiles() writes as many as it is asked for into
+	// a plain pointer, and both copies below take their counts from the same number, so this is the
+	// only place the buffer's size is known at all. Both callers clamp under it today, one to
+	// SMALL_PATH_TILES_COUNT and one to MAX_PATH_TILES_COUNT less the look-forward points, which is
+	// the only reason the path fits; clamping here states that where the buffer is rather than
+	// leaving it to arithmetic in the caller.
+	const int nTiles = (std::min)( nLength, static_cast<int>( pathBuffer.size() ) );
+	pPathFinder->GetTiles( &( pathBuffer[0] ), nTiles );
+	const int nCopyTiles = (std::min)( nTiles, MAX_PATH_TILES_COUNT - nLastPathTile );
+	memcpy( &( pathTiles[0] ) + nLastPathTile, &( pathBuffer[0] ), sizeof( SVector ) * nCopyTiles );
+	if ( nTiles > nCopyTiles )
 	{
-		memcpy( &( pathTiles[0] ), &( pathBuffer[0] ) + nCopyTiles, sizeof( SVector ) * ( nLength - nCopyTiles ) );
+		memcpy( &( pathTiles[0] ), &( pathBuffer[0] ) + nCopyTiles, sizeof( SVector ) * ( nTiles - nCopyTiles ) );
 	}
-	nLastPathTile = ( nLastPathTile + nLength ) % MAX_PATH_TILES_COUNT;
+	nLastPathTile = ( nLastPathTile + nTiles ) % MAX_PATH_TILES_COUNT;
 	// чтоб можно было спрашивать
-	pathTiles[nLastPathTile] = pathBuffer[nLength - 1];
+	pathTiles[nLastPathTile] = pathBuffer[nTiles - 1];
 }
 
 const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLastKnownGoodTile )
