@@ -272,26 +272,26 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 
 		NI_VERIFY( nIndex < N_OBJECTIVES_ROW_COUNT, "Designers: too many objectives", break );
 
-		SObjective &objective = objectives[nIndex];
+		SObjective &objectiveAt = objectives[nIndex];
 		nIndex++;
-		objective.nID = nID;
-		objective.bAutoSelect = ( pST->GetObjectiveState( nID ) == EMOS_RECEIVED );
+		objectiveAt.nID = nID;
+		objectiveAt.bAutoSelect = ( pST->GetObjectiveState( nID ) == EMOS_RECEIVED );
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Header ) )
 		{
-			objective.wszHeader = GET_TEXT_PRE( pDBObjective->, Header );
+			objectiveAt.wszHeader = GET_TEXT_PRE( pDBObjective->, Header );
 		}
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Briefing ) )
 		{
-			objective.wszDescBrief = GET_TEXT_PRE( pDBObjective->, Briefing );
+			objectiveAt.wszDescBrief = GET_TEXT_PRE( pDBObjective->, Briefing );
 		}
 		if ( CHECK_TEXT_NOT_EMPTY_PRE( pDBObjective->, Description ) )
 		{
-			objective.wszDescFull = GET_TEXT_PRE( pDBObjective->, Description );
+			objectiveAt.wszDescFull = GET_TEXT_PRE( pDBObjective->, Description );
 		}
-		objective.nButtonIndex = GetButtonIndex( pST->GetObjectiveState( nID ) );
-		if ( objective.pButton )
+		objectiveAt.nButtonIndex = GetButtonIndex( pST->GetObjectiveState( nID ) );
+		if ( objectiveAt.pButton )
 		{
-			objective.pButton->SetTooltip( objective.pButton->GetDBTooltipStr() );
+			objectiveAt.pButton->SetTooltip( objectiveAt.pButton->GetDBTooltipStr() );
 		}
 	}
 

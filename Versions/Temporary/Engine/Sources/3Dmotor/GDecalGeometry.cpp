@@ -329,9 +329,9 @@ void CShadowBuilder::AddObject( const CObjectInfo &info, const SDiscretePos &_sr
 		if ( fDepthMargin < 1e10f )
 		{
 			float fDepthMax = -1e30f, fDepthMin = 1e30f;
-			for ( int k = 0; k < tri.points.size(); ++k )
+			for ( int nPoint = 0; nPoint < tri.points.size(); ++nPoint )
 			{
-				float fDepth = ( tri.points[k].point - projection.vOrigin ) * projection.vProjectDirection;
+				float fDepth = ( tri.points[nPoint].point - projection.vOrigin ) * projection.vProjectDirection;
 				fDepthMin = (std::min)( fDepth, fDepthMin );
 				fDepthMax = (std::max)( fDepth, fDepthMax );
 			}

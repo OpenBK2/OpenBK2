@@ -58,7 +58,7 @@ void CFenceState::InsertFence()
 		{
 			return;
 		}
-		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
+		if ( CPtr<CObjectBaseController> pNewObjectController = GetMapInfoEditor()->CreateController() )
 		{
 			pEditParameters->nFlags = MIMOSEP_PLAYER_INDEX;
 			GetEditParameters( pEditParameters, CHID_MAPINFO_MAPOBJECT_WINDOW );
@@ -85,16 +85,16 @@ void CFenceState::InsertFence()
 				if ( NMapInfoEditor::SSimpleObjectInfo *pSimpleObjectInfo = GetMapInfoEditor()->objectInfoCollector.Insert(
 								 static_cast<NMapInfoEditor::SSimpleObjectInfo *>( 0 ), &nSimpleObjectInfoID ) )
 				{
-					if ( !pSimpleObjectInfo->Create( &objectCreateInfo, pScene, pObjectController, pManipulator ) )
+					if ( !pSimpleObjectInfo->Create( &objectCreateInfo, pScene, pNewObjectController, pManipulator ) )
 					{
-						pObjectController->Undo( true, false, GetMapInfoEditor() );
+						pNewObjectController->Undo( true, false, GetMapInfoEditor() );
 						break;
 					}
 				}
 			}
 			//
-			pObjectController->Redo( false, true, GetMapInfoEditor() );
-			Singleton<IControllerContainer>()->Add( pObjectController );
+			pNewObjectController->Redo( false, true, GetMapInfoEditor() );
+			Singleton<IControllerContainer>()->Add( pNewObjectController );
 		}
 		//
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );

@@ -210,9 +210,9 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 		}
 
 		int nNumPlayers = 0;
-		for ( int i = 0; i < entry.info.slots.size(); ++i )
+		for ( int nSlot = 0; nSlot < entry.info.slots.size(); ++nSlot )
 		{
-			if ( entry.info.slots[i].bPresent )
+			if ( entry.info.slots[nSlot].bPresent )
 			{
 				++nNumPlayers;
 			}

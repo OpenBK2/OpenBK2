@@ -142,7 +142,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		      itAttribute != attributesList.end();
 		      ++itAttribute )
 		{
-			bool bResult = true;
+			bool bBoneResult = true;
 			//
 			std::string szAnimationName;
 			//
@@ -160,8 +160,8 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 				NStr::ToUpper( &szBoneName );
 				unsigned nNumber = INVALID_NODE_ID;
 				NDb::EAnimationType animationType = typeMayaAnimationMnemonics.Get( szBoneName, 0, &nNumber );
-				bResult = ( animationType != NDb::ANIMATION_UNKNOWN );
-				if ( bResult )
+				bBoneResult = ( animationType != NDb::ANIMATION_UNKNOWN );
+				if ( bBoneResult )
 				{
 					szAnimationType = typeAnimationMnemonics.GetMnemonic( animationType );
 					std::string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
@@ -174,14 +174,14 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 					{
 						szAnimationName = szMnemonic;
 					}
-					bResult = bResult && itAttribute->GetAttribute( "starttime", &nFirstFrame );
-					bResult = bResult && itAttribute->GetAttribute( "endtime", &nLastFrame );
+					bBoneResult = bBoneResult && itAttribute->GetAttribute( "starttime", &nFirstFrame );
+					bBoneResult = bBoneResult && itAttribute->GetAttribute( "endtime", &nLastFrame );
 					if ( itAttribute->GetAttribute( "speed", &fSpeed ) == false )
 					{
 						fSpeed = 1.0f;
 					}
 					//
-					if ( bResult )
+					if ( bBoneResult )
 					{
 						int nAABBIndex = INVALID_NODE_ID;
 						itAttribute->GetAttribute( "aabbindex", &nAABBIndex );
@@ -202,7 +202,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 				}
 			}
 			szAnimationName = szAnimationNamePrefix + szAnimationName + "_animb2.xdb";
-			if ( bResult )
+			if ( bBoneResult )
 			{
 				if ( animations.find( szAnimationName ) == animations.end() &&
 				     pFolderCallback->IsUniqueName( szAnimationTypeName, szAnimationName ) )
@@ -224,25 +224,25 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 						animations.erase( posAnimationName );
 					}
 					// Запишем свойства инимации
-					bResult = bResult && pAnimationManipulator->SetValue( "SrcName", szSrcName );
-					bResult = bResult && pAnimationManipulator->SetValue( "RootJoint", szRootJoint );
-					bResult = bResult && pAnimationManipulator->SetValue( "Type", szAnimationType );
-					bResult = bResult && pAnimationManipulator->SetValue( "FirstFrame", nFirstFrame );
-					bResult = bResult && pAnimationManipulator->SetValue( "LastFrame", nLastFrame );
-					bResult = bResult && pAnimationManipulator->SetValue( "AABBAName", szAABBAName );
-					bResult = bResult && pAnimationManipulator->SetValue( "AABBDName", szAABBDName );
-					bResult = bResult && pAnimationManipulator->SetValue( "WeaponsToUseWith",
-					                                                      CVariant( &dwWeaponBits, sizeof( dwWeaponBits ) ) );
-					bResult = bResult && pAnimationManipulator->SetValue( "Looped", bLooped );
-					bResult = bResult && pAnimationManipulator->SetValue( "ActionFrame", nActionFrame );
-					bResult = bResult && pAnimationManipulator->SetValue( "MoveSpeed", fSpeed );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "SrcName", szSrcName );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "RootJoint", szRootJoint );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "Type", szAnimationType );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "FirstFrame", nFirstFrame );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "LastFrame", nLastFrame );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "AABBAName", szAABBAName );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "AABBDName", szAABBDName );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue(
+																					 "WeaponsToUseWith", CVariant( &dwWeaponBits, sizeof( dwWeaponBits ) ) );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "Looped", bLooped );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "ActionFrame", nActionFrame );
+					bBoneResult = bBoneResult && pAnimationManipulator->SetValue( "MoveSpeed", fSpeed );
 					// Добавим анимацию в скелет
-					bResult = bResult && pManipulator->InsertNode( "Animations" );
-					bResult =
-							bResult && pManipulator->SetValue( fmt::format( "Animations.[{}]", nAnimationRefCount ), szTypeAndName );
+					bBoneResult = bBoneResult && pManipulator->InsertNode( "Animations" );
+					bBoneResult = bBoneResult &&
+					              pManipulator->SetValue( fmt::format( "Animations.[{}]", nAnimationRefCount ), szTypeAndName );
 				}
 			}
-			if ( bResult )
+			if ( bBoneResult )
 			{
 				++nAnimationRefCount;
 			}

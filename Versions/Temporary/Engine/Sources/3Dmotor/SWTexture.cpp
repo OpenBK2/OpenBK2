@@ -98,10 +98,10 @@ void LoadDxt( CSWTextureData *pValue, int nDxt, int nSizeX, int nSizeY, int nMip
 	{
 		const CArray2D<TPixel> &src = dxt[k];
 		CArray2D<NGfx::SPixel8888> &dst = pValue->mips[k];
-		int nSizeX = src.GetSizeX() * TPixel::XSize;
-		int nSizeY = src.GetSizeY() * TPixel::YSize;
-		dst.SetSizes( nSizeX, nSizeY );
-		NImage::UnpackDXT( nDxt, nSizeX, nSizeY, &src[0][0], (CArray2D<uint32_t> *)&dst );
+		int nSrcSizeX = src.GetSizeX() * TPixel::XSize;
+		int nSrcSizeY = src.GetSizeY() * TPixel::YSize;
+		dst.SetSizes( nSrcSizeX, nSrcSizeY );
+		NImage::UnpackDXT( nDxt, nSrcSizeX, nSrcSizeY, &src[0][0], (CArray2D<uint32_t> *)&dst );
 	}
 }
 

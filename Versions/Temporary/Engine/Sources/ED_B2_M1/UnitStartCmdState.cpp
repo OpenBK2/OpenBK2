@@ -1241,9 +1241,9 @@ void CUnitStartCmdState::UpdateCmdMarkers()
 			{
 				m.vTargetPos = CVec3( cmd.vTgtPos.x, cmd.vTgtPos.y, 0 );
 			}
-			for ( int i = 0; i < cmd.unitLinkIDs.size(); ++i )
+			for ( int nLink = 0; nLink < cmd.unitLinkIDs.size(); ++nLink )
 			{
-				int nObjectID = GetObjectInfoCollector()->linkIDMap[cmd.unitLinkIDs[i]];
+				int nObjectID = GetObjectInfoCollector()->linkIDMap[cmd.unitLinkIDs[nLink]];
 				SObjectInfo *pOI = GetObjectInfoCollector()->GetObjectInfo( nObjectID );
 				if ( pOI )
 				{

@@ -250,8 +250,8 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr ) const
 			//проверим, что символ удовлетворяет требованиям GameSpy NickName
 			static const std::wstring szValidSymbols =
 					L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]\\`_^{|}-";
-			static const int nLen = szValidSymbols.size();
-			for ( int i = 0; i < nLen; i++ )
+			static const int nValidLen = szValidSymbols.size();
+			for ( int i = 0; i < nValidLen; i++ )
 			{
 				if ( chr == szValidSymbols[i] )
 				{
@@ -266,8 +266,8 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr ) const
 			//проверим, что символ удовлетворяет требованиям FileName symbols
 			static const std::wstring szValidSymbols =
 					L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789[]`_^{}-!@#$%^&()+=~";
-			static const int nLen = szValidSymbols.size();
-			for ( int i = 0; i < nLen; i++ )
+			static const int nValidLen = szValidSymbols.size();
+			for ( int i = 0; i < nValidLen; i++ )
 			{
 				if ( chr == szValidSymbols[i] )
 				{
@@ -280,8 +280,8 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr ) const
 		case NDb::ETET_NUMERIC:
 		{
 			static const std::wstring szValidSymbols = L"0123456789";
-			static const int nLen = szValidSymbols.size();
-			for ( int i = 0; i < nLen; i++ )
+			static const int nValidLen = szValidSymbols.size();
+			for ( int i = 0; i < nValidLen; i++ )
 			{
 				if ( chr == szValidSymbols[i] )
 				{
@@ -293,11 +293,11 @@ bool CWindowEditLine::IsValidSymbol( const wchar_t chr ) const
 		break;
 		case NDb::ETET_LOCAL_PLAYERNAME:
 		{
-			static const std::wstring szInValidSymbols = L"&'\"<>";
-			static const int nLen = szInValidSymbols.size();
-			for ( int i = 0; i < nLen; i++ )
+			static const std::wstring szInValidSymbolsFull = L"&'\"<>";
+			static const int nInValidLen = szInValidSymbolsFull.size();
+			for ( int i = 0; i < nInValidLen; i++ )
 			{
-				if ( chr == szInValidSymbols[i] )
+				if ( chr == szInValidSymbolsFull[i] )
 				{
 					return false;
 				}
@@ -1055,8 +1055,8 @@ void CWindowEditLine::EnsureCursorVisible()
 			nBeginText--;
 			nCursorPos++;
 		}
-		const std::wstring wszTmp = wszFullText.c_str() + nBeginText;
-		SetTextToGfx( wszTmp );
+		const std::wstring wszTailText = wszFullText.c_str() + nBeginText;
+		SetTextToGfx( wszTailText );
 	}
 	else if ( GetTextWidth( nCursorPos ) > wndRect.Width() - 2 )
 	{
@@ -1074,8 +1074,8 @@ void CWindowEditLine::EnsureCursorVisible()
 			}
 			if ( !wszFullText.empty() )
 			{
-				const std::wstring wszTmp = wszFullText.c_str() + nBeginText;
-				SetTextToGfx( wszTmp );
+				const std::wstring wszTailText = wszFullText.c_str() + nBeginText;
+				SetTextToGfx( wszTailText );
 			}
 			else
 			{

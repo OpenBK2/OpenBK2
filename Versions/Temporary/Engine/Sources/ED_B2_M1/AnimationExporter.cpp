@@ -66,8 +66,8 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 	std::string szAABBAName;
 	if ( CManipulatorManager::GetValue( &szAABBAName, pManipulator, "AABBAName" ) && !szAABBAName.empty() )
 	{
-		const std::string szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
-		*pScriptText += fmt::sprintf( szScriptTemplate.c_str(),
+		const std::string szAttribsScriptTemplate = GetScriptTemplate( "ExportAttribs" );
+		*pScriptText += fmt::sprintf( szAttribsScriptTemplate.c_str(),
 		                              ( szDstPath + PARAMS_AABBA ).c_str(),
 		                              szSrcPath.c_str(),
 		                              szAABBAName.c_str(),

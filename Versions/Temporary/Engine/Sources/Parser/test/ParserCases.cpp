@@ -95,10 +95,11 @@ TEST_P( CParserCase, Parses )
 INSTANTIATE_TEST_SUITE_P( Corpus,
                           CParserCase,
                           testing::ValuesIn( CollectCases() ),
-                          []( const testing::TestParamInfo<SCase> &info )
+                          []( const testing::TestParamInfo<SCase> &caseInfo )
                           {
 														// "007.fail" -> "c007_fail"; a test name may only hold letters, digits and '_'
-														std::string szName = "c" + info.param.szName;
+														// The parameter was called info, which is what the macro calls its own.
+														std::string szName = "c" + caseInfo.param.szName;
 														std::replace( szName.begin(), szName.end(), '.', '_' );
 														return szName;
 													} );

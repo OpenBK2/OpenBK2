@@ -1715,15 +1715,15 @@ void CGScene::DrawSunFlares( CTransformStack *pTS, NGfx::CRenderContext *pRC )
 		float fScaleCoeff =
 				fSunFlareCoeff * ( 1.0f + flare.fScale * MakeSunFlareFadeCoeff( sFlare - sHalfScreenRect, sHalfScreenRect ) );
 		MakeSunFlareRect( sPos, sFlare, sDir, CVec2( fXSize, fYSize ), fScaleCoeff );
-		for ( int nTemp = 0; nTemp < 4; ++nTemp )
+		for ( int nCorner = 0; nCorner < 4; ++nCorner )
 		{
 			uint32_t dwVal = 0xFF * fSunFlareCoeff;
 			if ( flare.bFade )
 			{
-				dwVal *= MakeSunFlareFadeCoeff( sPos[nTemp] - sHalfScreenRect, sHalfScreenRect );
+				dwVal *= MakeSunFlareFadeCoeff( sPos[nCorner] - sHalfScreenRect, sHalfScreenRect );
 			}
 			/////
-			sColors[nTemp].a = sColors[nTemp].r = sColors[nTemp].g = sColors[nTemp].b = dwVal;
+			sColors[nCorner].a = sColors[nCorner].r = sColors[nCorner].g = sColors[nCorner].b = dwVal;
 		}
 		////
 		quadRender.AddRect( sPos, sColors, pTexture, CTRect<float>( 0, 0, fXSize, fYSize ) );
@@ -1886,8 +1886,8 @@ CObjectBase *CGScene::CreateDecal( ISomePart *pTarget,
 			{
 				CPtrFuncBase<CObjectInfo> *pGeom;
 				SFBTransform transform;
-				SFullGroupInfo fgInfo;
-				if ( GetGeometryObjectInfo( pTarget, &pGeom, &transform, &fgInfo ) )
+				SFullGroupInfo fgInfoOwn;
+				if ( GetGeometryObjectInfo( pTarget, &pGeom, &transform, &fgInfoOwn ) )
 				{
 					SDiscretePos trans( new CFBTransform( transform ), CVec3( 0, 0, 0 ), 0 );
 					CDecalGeometry *pDecal = new CDecalGeometry( pGeom,

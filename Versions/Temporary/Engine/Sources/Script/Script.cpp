@@ -486,13 +486,13 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 				for ( ;; ++upperIndex )
 				{
 					// Restore the stack state each iteration.
-					Script::AutoBlock block( script );
+					Script::AutoBlock blockTable( script );
 
 					// Try retrieving the table entry at upperIndex.
-					Object value = table.GetByTableIndex( upperIndex );
+					Object valueAt = table.GetByTableIndex( upperIndex );
 
 					// If it doesn't exist, then exit the loop.
-					if ( value.IsNil() )
+					if ( valueAt.IsNil() )
 					{
 						break;
 					}
@@ -504,7 +504,7 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 					}
 
 					// Write the object as an unnamed entry.
-					strRet += GetObjectAsText( NULL, value, indentLevel + 1 );
+					strRet += GetObjectAsText( NULL, valueAt, indentLevel + 1 );
 
 					// We've definitely passed the first item now.
 					firstSequential = false;
@@ -528,7 +528,7 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 
 			// Retrieve the table entry's key and value.
 			Object key = script.GetObject( script.GetTop() - 1 );
-			Object value = script.GetObject( script.GetTop() );
+			Object valueTop = script.GetObject( script.GetTop() );
 
 			// Is the key a number?
 			if ( key.IsNumber() )
@@ -563,7 +563,7 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 			// If we wrote a sequential list, the value we're about to write
 			// is not nil, and we haven't written the semicolon to separate
 			// the sequential table entries from the keyed table entries...
-			if ( hasSequential && !value.IsNil() && !wroteSemi )
+			if ( hasSequential && !valueTop.IsNil() && !wroteSemi )
 			{
 				// Then add a comma (for good measure) and the semicolon.
 				strRet += ", ;\n";
@@ -571,7 +571,7 @@ Script::GetObjectAsText( const char *name, Script::Object value, bool bDecorateO
 			}
 
 			// Write the table entry.
-			strRet += GetObjectAsText( keyName, value, indentLevel + 1 );
+			strRet += GetObjectAsText( keyName, valueTop, indentLevel + 1 );
 
 			// Add a comma after the table entry.
 			strRet += ",\n";

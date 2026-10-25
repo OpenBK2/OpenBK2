@@ -292,9 +292,9 @@ void CSelector::CalcSlots( CSlotVector *pSlots, const CMapObjectsVector &objects
 				it = find_if( it, pSlots->end(), SSameSlotCompare( pSO ) );
 				if ( it == pSlots->end() )
 				{
-					SSlot slot;
-					slot.objects.push_back( pSO );
-					pSlots->push_back( slot );
+					SSlot slotNew;
+					slotNew.objects.push_back( pSO );
+					pSlots->push_back( slotNew );
 					break;
 				}
 			}

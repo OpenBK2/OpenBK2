@@ -590,10 +590,10 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 		{
 			for ( int k = 0; k < nodeTrgsNum[g]; ++k )
 			{
-				const STriangleEx &trg = triangles[nTrgsOffs++];
+				const STriangleEx &trgRef = triangles[nTrgsOffs++];
 				NI_ASSERT( ( trg.i1 >= nVertsOffs ) && ( trg.i2 >= nVertsOffs ) && ( trg.i3 >= nVertsOffs ), "Wrong triangle" );
 				gfxInfo.patches[i].triangles.push_back(
-						STriangle( trg.i1 - nVertsOffs, trg.i2 - nVertsOffs, trg.i3 - nVertsOffs ) );
+						STriangle( trgRef.i1 - nVertsOffs, trgRef.i2 - nVertsOffs, trgRef.i3 - nVertsOffs ) );
 			}
 		}
 		nVertsOffs = nLastOffs;

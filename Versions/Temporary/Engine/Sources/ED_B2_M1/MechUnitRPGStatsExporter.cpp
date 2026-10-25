@@ -990,13 +990,13 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 		std::string szRecoilDBA = fmt::format( "platforms.[{}].guns.[{}].Recoil", nPlatformIdx, i );
 		std::string szRotatePointDBA = fmt::format( "platforms.[{}].guns.[{}].RotatePoint", nPlatformIdx, i );
 
-		CVariant v;
-		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
+		CVariant varValue;
+		if ( !pManipulator->GetValue( szLocNameDBA, &varValue ) )
 		{
 			continue;
 		}
 
-		std::string szLocatorName = v.GetStr();
+		std::string szLocatorName = varValue.GetStr();
 
 		int nIdx = 0;
 		for ( std::vector<SGunInfo>::const_iterator j = rGuns.begin(); j != rGuns.end(); ++j, ++nIdx )
@@ -1011,31 +1011,31 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 			if ( j->szShootPoint == szLocatorName )
 			{
 				bool bRes;
-				CVariant v;
+				CVariant varWrite;
 				std::string szWarnMsg;
 
-				v = pG->nDirection;
-				bRes = pManipulator->SetValue( szDirectionDBA, v );
+				varWrite = pG->nDirection;
+				bRes = pManipulator->SetValue( szDirectionDBA, varWrite );
 				szWarnMsg = "WARNING: can't write: " + szDirectionDBA;
 				NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-				v = pG->szRecoilPoint;
-				bRes = pManipulator->SetValue( szRecoilPointDBA, v );
+				varWrite = pG->szRecoilPoint;
+				bRes = pManipulator->SetValue( szRecoilPointDBA, varWrite );
 				szWarnMsg = "WARNING: can't write: " + szRecoilPointDBA;
 				NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-				v = pG->fRecoilLength;
-				bRes = pManipulator->SetValue( szRecoilLengthDBA, v );
+				varWrite = pG->fRecoilLength;
+				bRes = pManipulator->SetValue( szRecoilLengthDBA, varWrite );
 				szWarnMsg = "WARNING: can't write: " + szRecoilLengthDBA;
 				NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-				v = pG->bRecoil;
-				bRes = pManipulator->SetValue( szRecoilDBA, v );
+				varWrite = pG->bRecoil;
+				bRes = pManipulator->SetValue( szRecoilDBA, varWrite );
 				szWarnMsg = "WARNING: can't write: " + szRecoilDBA;
 				NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-				v = pG->szRotatePoint;
-				bRes = pManipulator->SetValue( szRotatePointDBA, v );
+				varWrite = pG->szRotatePoint;
+				bRes = pManipulator->SetValue( szRotatePointDBA, varWrite );
 				szWarnMsg = "WARNING: can't write: " + szRotatePointDBA;
 				NI_ASSERT( bRes, szWarnMsg.c_str() );
 
@@ -1069,36 +1069,36 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 		std::string szRotatePointDBA = fmt::format( "platforms.[{}].guns.[{}].RotatePoint", nPlatformIdx, nNewElemIdx );
 
 		bool bRes;
-		CVariant v;
+		CVariant varValue;
 		std::string szWarnMsg;
 
-		v = pG->szShootPoint;
-		bRes = pManipulator->SetValue( szLocNameDBA, v );
+		varValue = pG->szShootPoint;
+		bRes = pManipulator->SetValue( szLocNameDBA, varValue );
 		szWarnMsg = "WARNING: can't write: " + szLocNameDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-		v = pG->nDirection;
-		bRes = pManipulator->SetValue( szDirectionDBA, v );
+		varValue = pG->nDirection;
+		bRes = pManipulator->SetValue( szDirectionDBA, varValue );
 		szWarnMsg = "WARNING: can't write: " + szDirectionDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-		v = pG->szRecoilPoint;
-		bRes = pManipulator->SetValue( szRecoilPointDBA, v );
+		varValue = pG->szRecoilPoint;
+		bRes = pManipulator->SetValue( szRecoilPointDBA, varValue );
 		szWarnMsg = "WARNING: can't write: " + szRecoilPointDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-		v = pG->fRecoilLength;
-		bRes = pManipulator->SetValue( szRecoilLengthDBA, v );
+		varValue = pG->fRecoilLength;
+		bRes = pManipulator->SetValue( szRecoilLengthDBA, varValue );
 		szWarnMsg = "WARNING: can't write: " + szRecoilLengthDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-		v = pG->bRecoil;
-		bRes = pManipulator->SetValue( szRecoilDBA, v );
+		varValue = pG->bRecoil;
+		bRes = pManipulator->SetValue( szRecoilDBA, varValue );
 		szWarnMsg = "WARNING: can't write: " + szRecoilDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-		v = pG->szRotatePoint;
-		bRes = pManipulator->SetValue( szRotatePointDBA, v );
+		varValue = pG->szRotatePoint;
+		bRes = pManipulator->SetValue( szRotatePointDBA, varValue );
 		szWarnMsg = "WARNING: can't write: " + szRotatePointDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
@@ -1155,13 +1155,13 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 		std::string szConstraintDBA = fmt::format( "platforms.[{}].constraint", i );
 		std::string szConstraintVerticalDBA = fmt::format( "platforms.[{}].constraintVertical", i );
 
-		CVariant v;
-		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
+		CVariant varValue;
+		if ( !pManipulator->GetValue( szLocNameDBA, &varValue ) )
 		{
 			continue;
 		}
 
-		std::string szLocatorName = v.GetStr();
+		std::string szLocatorName = varValue.GetStr();
 
 		int nIdx = 0;
 		for ( std::vector<SPlatformInfo>::const_iterator j = rPlatforms.begin(); j != rPlatforms.end(); ++j, ++nIdx )
@@ -1199,9 +1199,9 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 			continue;
 		}
 
-		CVariant v = pP->szRotatePoint;
+		CVariant varValue = pP->szRotatePoint;
 		std::string szDBA = fmt::format( "platforms.[{}].RotatePoint", nNewElemIdx );
-		bool bRes = pManipulator->SetValue( szDBA, v );
+		bool bRes = pManipulator->SetValue( szDBA, varValue );
 		std::string szWarnMsg = "WARNING: can't write: " + szDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
@@ -1450,10 +1450,10 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator,
 		}
 
 		// set guns positions
-		CVariant v;
-		if ( pManipulator->GetValue( szPlatformName + "guns", &v ) )
+		CVariant varValue;
+		if ( pManipulator->GetValue( szPlatformName + "guns", &varValue ) )
 		{
-			const int nGuns = v;
+			const int nGuns = varValue;
 			for ( int j = 0; j < nGuns; ++j )
 			{
 				const std::string szGunName = szPlatformName + fmt::format( "guns.[{}].", j );

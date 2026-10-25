@@ -386,9 +386,9 @@ void CPolyClipper::SetPolygons( const TPolygonsList &sourceList, const TPolygons
 	for ( std::list<SPolygon>::iterator iTemp = listPolygons.begin(); iTemp != listPolygons.end(); iTemp++ )
 	{
 		SPolygon &sInPolygon = *iTemp;
-		for ( std::list<SPolygon>::iterator iTemp = listClipPolygons.begin(); iTemp != listClipPolygons.end(); iTemp++ )
+		for ( std::list<SPolygon>::iterator iClip = listClipPolygons.begin(); iClip != listClipPolygons.end(); iClip++ )
 		{
-			SPolygon &sInClipPolygon = *iTemp;
+			SPolygon &sInClipPolygon = *iClip;
 
 			SPolygon sTempPolygon, sTempClipPolygon;
 			FindIntersections( sInPolygon, sInClipPolygon, &sTempPolygon );

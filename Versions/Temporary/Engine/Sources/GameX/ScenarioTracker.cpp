@@ -1434,14 +1434,14 @@ bool CScenarioTracker::RegisterUnitKill( const SKillInfo &info )
 
 				const float fExpPart = fRestExp / nCount;
 				fRestExp = 0.0f;
-				for ( CLeaderList::iterator it = leaders.begin(); it != leaders.end(); ++it )
+				for ( CLeaderList::iterator itLeader = leaders.begin(); itLeader != leaders.end(); ++itLeader )
 				{
-					SLeaderInfo &leader = it->second;
+					SLeaderInfo &leaderOfIter = itLeader->second;
 
-					if ( leader.info.nRank + 1 < pCampaign->leaderRanks.size() )
+					if ( leaderOfIter.info.nRank + 1 < pCampaign->leaderRanks.size() )
 					{
 						float fExp = fExpPart;
-						bool bLevelUp = AddLeaderExp( &fExp, &leader, NDb::EReinforcementType( it->first ) );
+						bool bLevelUp = AddLeaderExp( &fExp, &leaderOfIter, NDb::EReinforcementType( itLeader->first ) );
 						bResult = bResult || bLevelUp;
 						fRestExp += fExp;
 					}

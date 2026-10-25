@@ -67,9 +67,9 @@ void CVisSurfPatch::UpdateGeomData()
 		data.vertices[nInd + 3].tex.y = fTexOffs;
 		data.vertices[nInd + 3].normal.w = nAlpha;
 
-		for ( int i = 0; i < 4; ++i )
+		for ( int nCorner = 0; nCorner < 4; ++nCorner )
 		{
-			SetOuterOpacity( vMaxMapCoords, &( data.vertices[nInd + i] ) );
+			SetOuterOpacity( vMaxMapCoords, &( data.vertices[nInd + nCorner] ) );
 		}
 	}
 }

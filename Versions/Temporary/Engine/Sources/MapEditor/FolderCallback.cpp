@@ -232,8 +232,8 @@ bool CFolderCallback::RemoveObject( const std::string &rszObjectTypeName,
 		bool bLocalResult = true;
 		while ( bLocalResult )
 		{
-			CFolderController folderController;
-			folderController.SetObjectSet( objectSet );
+			CFolderController subFolderController;
+			subFolderController.SetObjectSet( objectSet );
 			//
 			if ( szObjectName[szObjectName.size() - 1] == PATH_SEPARATOR_CHAR )
 			{
@@ -243,8 +243,8 @@ bool CFolderCallback::RemoveObject( const std::string &rszObjectTypeName,
 			if ( nSlashPos != std::string::npos )
 			{
 				szObjectName = szObjectName.substr( 0, nSlashPos + 1 );
-				folderController.AddRemoveOperation( szObjectName );
-				bLocalResult = folderController.Redo( true, true, 0 );
+				subFolderController.AddRemoveOperation( szObjectName );
+				bLocalResult = subFolderController.Redo( true, true, 0 );
 			}
 			else
 			{

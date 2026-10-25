@@ -1181,14 +1181,14 @@ void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SU
 			{
 				for ( int i = 1;; ++i )
 				{
-					IWindow *pWnd = pSlotsWnd->GetChild( fmt::format( "Slot{:02d}", i ), true );
-					if ( !pWnd )
+					IWindow *pSlotWnd = pSlotsWnd->GetChild( fmt::format( "Slot{:02d}", i ), true );
+					if ( !pSlotWnd )
 					{
 						break;
 					}
 					int nX;
 					int nY;
-					pWnd->GetPlacement( &nX, &nY, 0, 0 );
+					pSlotWnd->GetPlacement( &nX, &nY, 0, 0 );
 					newActionButtonSlots.push_back( CVec2( nX, nY ) );
 				}
 			}
@@ -2385,14 +2385,14 @@ bool CInterfaceMission::StepLocal( bool bAppActive )
 			}
 		}
 
-		const NTimer::STime nCurrentTime = GameTimer()->GetGameTime();
-		const NTimer::STime nDeltaTime = nCurrentTime - nLastStepTime;
+		const NTimer::STime nNowTime = GameTimer()->GetGameTime();
+		const NTimer::STime nDeltaTime = nNowTime - nLastStepTime;
 
-		UpdateWarFog( nCurrentTime, false, false );
+		UpdateWarFog( nNowTime, false, false );
 
 		UpdateChat( nDeltaTime );
 
-		nLastStepTime = nCurrentTime;
+		nLastStepTime = nNowTime;
 
 		if ( pNotifications )
 		{

@@ -96,12 +96,12 @@ bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectMani
 			//
 			std::string szObjectName;
 			std::string szMapFilesPath;
-			std::string szMiniMapMaterialName;
+			std::string szMiniMapMaterial;
 			//
 			const std::string szFolderName = NDb::GetFolderName( dbid );
 			//			bResult = bResult && CManipulatorManager::GetValue( &szMapFilesPath, pObjectManipulator, "MapFilesPath" );
-			bResult = bResult && MakeMinimapMaterialAndTexture( &szMiniMapMaterialName, szFolderName );
-			bResult = bResult && CManipulatorManager::SetValue( szMiniMapMaterialName, pObjectManipulator, "MiniMap", true );
+			bResult = bResult && MakeMinimapMaterialAndTexture( &szMiniMapMaterial, szFolderName );
+			bResult = bResult && CManipulatorManager::SetValue( szMiniMapMaterial, pObjectManipulator, "MiniMap", true );
 		}
 	}
 	return bResult;

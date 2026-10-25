@@ -555,10 +555,10 @@ void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 	{
 		if ( !bRotable )
 		{
-			const CTRect<float> rectTexture = CTRect<float>( 0.0f, 0.0f, pTmpTexture->nWidth, pTmpTexture->nHeight );
+			const CTRect<float> rectWholeTexture = CTRect<float>( 0.0f, 0.0f, pTmpTexture->nWidth, pTmpTexture->nHeight );
 
 			CRectLayout rects;
-			rects.AddRect( vPos.x, vPos.y, vSize.x, vSize.y, rectTexture, 0xFFFFFFFF );
+			rects.AddRect( vPos.x, vPos.y, vSize.x, vSize.y, rectWholeTexture, 0xFFFFFFFF );
 			VirtualToScreen( &rects );
 			pVisitor->VisitUIRect( pTmpTexture, 3, rects );
 		}
@@ -619,9 +619,9 @@ void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 			VirtualToScreen( &sPos[3] );
 
 			{
-				const CTRect<float> rectTexture =
+				const CTRect<float> rectWholeTexture =
 						CTRect<float>( 1.0f, 1.0f, pTmpTexture->nWidth - 1.0f, pTmpTexture->nHeight - 1.0f );
-				pVisitor->VisitUIRect( pTmpTexture, 3, sPos, sColors, rectTexture );
+				pVisitor->VisitUIRect( pTmpTexture, 3, sPos, sColors, rectWholeTexture );
 			}
 
 			if ( pRotableForegroundTexture )
@@ -632,10 +632,14 @@ void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 	}
 	CRectLayout rects;
 	{
-		const CTRect<float> rectTexture =
+		const CTRect<float> rectWholeTexture =
 				CTRect<float>( 0.0f, 0.0f, pInstance->placement.size.Get().x, pInstance->placement.size.Get().y );
-		rects.AddRect(
-				vPos.x, vPos.y, pInstance->placement.size.Get().x, pInstance->placement.size.Get().y, rectTexture, 0xFFFFFFFF );
+		rects.AddRect( vPos.x,
+		               vPos.y,
+		               pInstance->placement.size.Get().x,
+		               pInstance->placement.size.Get().y,
+		               rectWholeTexture,
+		               0xFFFFFFFF );
 		VirtualToScreen( &rects );
 		//{ update WarFog data
 		//}
@@ -654,16 +658,17 @@ void CWindowMiniMap::Visit( struct IUIVisitor *pVisitor )
 
 		CVec2 vMarkerPos;
 		MapToScreen( marker.vPos, &vMarkerPos );
-		const CTRect<float> rectTexture = CTRect<float>( 0.0f, 0.0f, marker.pTexture->nWidth, marker.pTexture->nHeight );
-		CRectLayout rects;
-		rects.AddRect( vPos.x + vMarkerPos.x - marker.vTexturePoint.x,
-		               vPos.y + vMarkerPos.y - marker.vTexturePoint.y,
-		               marker.pTexture->nWidth,
-		               marker.pTexture->nHeight,
-		               rectTexture,
-		               0xFFFFFFFF );
-		VirtualToScreen( &rects );
-		pVisitor->VisitUIRect( marker.pTexture, 3, rects );
+		const CTRect<float> rectWholeTexture =
+				CTRect<float>( 0.0f, 0.0f, marker.pTexture->nWidth, marker.pTexture->nHeight );
+		CRectLayout rectsMarker;
+		rectsMarker.AddRect( vPos.x + vMarkerPos.x - marker.vTexturePoint.x,
+		                     vPos.y + vMarkerPos.y - marker.vTexturePoint.y,
+		                     marker.pTexture->nWidth,
+		                     marker.pTexture->nHeight,
+		                     rectWholeTexture,
+		                     0xFFFFFFFF );
+		VirtualToScreen( &rectsMarker );
+		pVisitor->VisitUIRect( marker.pTexture, 3, rectsMarker );
 	}
 
 	pVisitor->VisitUITextureRect( pFiguresLayer, 3, rects );

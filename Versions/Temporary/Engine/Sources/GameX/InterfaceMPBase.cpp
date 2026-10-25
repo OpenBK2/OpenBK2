@@ -21,7 +21,7 @@ bool CInterfaceMPScreenBase::StepLocal( bool bAppActive )
 	{
 		while ( CPtr<SMPUIMessage> pMsg = Singleton<IMPToUIManager>()->GetUIMessage() )
 		{
-			bool bResult = HandleMessage( pMsg );
+			bool bHandled = HandleMessage( pMsg );
 			//NI_ASSERT( bResult, StrFmt( "Unhandled MP to UI message (code %d)", pMsg->eMessageType ) );
 		}
 	}

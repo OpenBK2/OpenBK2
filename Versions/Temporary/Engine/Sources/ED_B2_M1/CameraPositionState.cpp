@@ -278,9 +278,9 @@ void CCameraPositionState::Draw( IPaintContext *pPaintDC )
 			//
 			if ( bMove )
 			{
-				for ( int i = 0; i < 10; ++i )
+				for ( int nKey = 0; nKey < 10; ++nKey )
 				{
-					float fRad = i;
+					float fRad = nKey;
 					sceneDrawTool.DrawCircle(
 							vPos, SELECTION_POINT_RADIUS * ( fRad / 10 ), SELECTION_POINT_PARTS, SELECTION_COLOR, false );
 				}

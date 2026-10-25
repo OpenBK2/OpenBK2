@@ -276,8 +276,8 @@ void CNamespace::ResolveForwards()
 
 		for ( std::list<CObj<CTypeNode>>::iterator iterList = forwards.begin(); iterList != forwards.end(); ++iterList )
 		{
-			CTypeNode *pForwardNode = *iterList;
-			pForwardNode->SetRealType( pRealType );
+			CTypeNode *pListForwardNode = *iterList;
+			pListForwardNode->SetRealType( pRealType );
 		}
 	}
 }

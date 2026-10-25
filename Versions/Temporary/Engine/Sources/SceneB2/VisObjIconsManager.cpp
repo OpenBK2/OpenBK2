@@ -377,14 +377,14 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 	for ( int i = 0; i < icon.hpBars.size() - 1; ++i )
 	{
 		const SSceneObjIconInfo::SHitbar &hitbarInfo = iconInfo.smallHitbars[i];
-		SObjIcon::SHPBar &hpBar = icon.hpBars[i + 1];
-		hpBar.nOffsetX = 0;
-		hpBar.nOffsetY = 0;
-		hpBar.fLength = iconInfo.nHPBarPassengerLength;
-		hpBar.nColorIndex = DEF_HPBAR_PARTS_NUM + Clamp( hitbarInfo.nColorIndex, 0, nHPBarColorsNum - 1 );
-		hpBar.nColorIndex2 = hpBar.nColorIndex;
-		hpBar.fValue = 0.0f;
-		hpBar.fValue2 = Clamp( hitbarInfo.fValue, 0.0f, 1.0f );
+		SObjIcon::SHPBar &hpBarExtra = icon.hpBars[i + 1];
+		hpBarExtra.nOffsetX = 0;
+		hpBarExtra.nOffsetY = 0;
+		hpBarExtra.fLength = iconInfo.nHPBarPassengerLength;
+		hpBarExtra.nColorIndex = DEF_HPBAR_PARTS_NUM + Clamp( hitbarInfo.nColorIndex, 0, nHPBarColorsNum - 1 );
+		hpBarExtra.nColorIndex2 = hpBarExtra.nColorIndex;
+		hpBarExtra.fValue = 0.0f;
+		hpBarExtra.fValue2 = Clamp( hitbarInfo.fValue, 0.0f, 1.0f );
 	}
 
 	UpdateIcon( icon );

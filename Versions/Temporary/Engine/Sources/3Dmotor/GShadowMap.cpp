@@ -90,11 +90,11 @@ static void Split( SPolyhedron *pRes, const SPlane &p )
 	{
 		SPolygon d;
 		SPolygon &s = src.facets[k];
-		for ( int k = 0; k < s.vertices.size(); ++k )
+		for ( int nVertex = 0; nVertex < s.vertices.size(); ++nVertex )
 		{
-			if ( s.vertices[k].w < 0 )
+			if ( s.vertices[nVertex].w < 0 )
 			{
-				s.vertices[k] = -s.vertices[k];
+				s.vertices[nVertex] = -s.vertices[nVertex];
 			}
 		}
 		int iPrev = s.vertices.size() - 1;

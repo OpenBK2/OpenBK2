@@ -877,10 +877,13 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 	}
 	else
 	{
-		const double fDet = (double)( p2.y - p1.y ) * ( v2.z - v1.z ) - ( p2.z - p1.z ) * ( v2.y - v1.y );
-		if ( fabs( fDet ) > DEF_EPS )
+		// The three determinants are the same test in the XY, YZ and XZ
+		// projections, tried in that order; the last two were both called fDet
+		// and so shadowed the first.
+		const double fDetYZ = (double)( p2.y - p1.y ) * ( v2.z - v1.z ) - ( p2.z - p1.z ) * ( v2.y - v1.y );
+		if ( fabs( fDetYZ ) > DEF_EPS )
 		{
-			const double fInvDet = 1.0 / fDet;
+			const double fInvDet = 1.0 / fDetYZ;
 			const double t = ( (double)( v1.y - p1.y ) * ( v2.z - v1.z ) - ( v1.z - p1.z ) * ( v2.y - v1.y ) ) * fInvDet;
 			const double k = ( (double)( v1.y - p1.y ) * ( p2.z - p1.z ) - ( v1.z - p1.z ) * ( p2.y - p1.y ) ) * fInvDet;
 			if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > DEF_EPS ) && ( k < ( 1.0 - DEF_EPS ) ) )
@@ -890,10 +893,10 @@ inline bool IsIntersect( const CVec3 &p1, const CVec3 &p2, const CVec3 &v1, cons
 		}
 		else
 		{
-			const double fDet = (double)( p2.x - p1.x ) * ( v2.z - v1.z ) - ( p2.z - p1.z ) * ( v2.x - v1.x );
-			if ( fabs( fDet ) > DEF_EPS )
+			const double fDetXZ = (double)( p2.x - p1.x ) * ( v2.z - v1.z ) - ( p2.z - p1.z ) * ( v2.x - v1.x );
+			if ( fabs( fDetXZ ) > DEF_EPS )
 			{
-				const double fInvDet = 1.0 / fDet;
+				const double fInvDet = 1.0 / fDetXZ;
 				const double t = ( (double)( v1.x - p1.x ) * ( v2.z - v1.z ) - ( v1.z - p1.z ) * ( v2.x - v1.x ) ) * fInvDet;
 				const double k = ( (double)( v1.x - p1.x ) * ( p2.z - p1.z ) - ( v1.z - p1.z ) * ( p2.x - p1.x ) ) * fInvDet;
 				if ( ( t > DEF_EPS ) && ( t < ( 1.0 - DEF_EPS ) ) && ( k > DEF_EPS ) && ( k < ( 1.0 - DEF_EPS ) ) )

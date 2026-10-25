@@ -91,7 +91,7 @@ static bool CreateSingleSurfacePoints( IManipulator *pMan )
 			bool bRes = TraceModel( &surfacePoints, szGeometryName );
 			if ( bRes )
 			{
-				bool bRes = SaveSurfacePointsToDB( pMan, surfacePoints );
+				bool bSaved = SaveSurfacePointsToDB( pMan, surfacePoints );
 				NI_ASSERT( bRes, "CreateSurfacePoints(): SaveSurfacePointsToDB() failed" );
 			}
 		}

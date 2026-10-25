@@ -503,8 +503,8 @@ void CFormationsState::ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationM
 	for ( int m = 0; m < memberModelNameList.size(); ++m )
 	{
 		CVec2 pos = VNULL2;
-		CPtr<IManipulator> pSquadManip = pSquadEditor->CreateSquadManipulator();
-		GetOrderPosition( &pos, pSquadManip, m, eSelectedFormation );
+		CPtr<IManipulator> pNewSquadManip = pSquadEditor->CreateSquadManipulator();
+		GetOrderPosition( &pos, pNewSquadManip, m, eSelectedFormation );
 		positions.push_back( pos );
 	}
 

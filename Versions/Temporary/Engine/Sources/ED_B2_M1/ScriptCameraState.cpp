@@ -1035,29 +1035,32 @@ bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue,
 
 				// set to DB (sorted)
 				bool bResult = true;
-				for ( int i = 0; i < posKeys.size(); ++i )
+				for ( int nPosKey = 0; nPosKey < posKeys.size(); ++nPosKey )
 				{
+					bResult =
+							bResult &&
+							pObjectController->AddChangeOperation(
+									fmt::format( "ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].StartTime", nSeqIndex, nPosKey ),
+									(float)( posKeys[nPosKey].fStartTime ),
+									pManipulator );
 					bResult = bResult &&
 					          pObjectController->AddChangeOperation(
-												fmt::format( "ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].StartTime", nSeqIndex, i ),
-												(float)( posKeys[i].fStartTime ),
+												fmt::format(
+														"ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].PositionIndex", nSeqIndex, nPosKey ),
+												(int)( posKeys[nPosKey].nPositionIndex ),
 												pManipulator );
 					bResult =
 							bResult &&
 							pObjectController->AddChangeOperation(
-									fmt::format( "ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].PositionIndex", nSeqIndex, i ),
-									(int)( posKeys[i].nPositionIndex ),
+									fmt::format( "ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentIn", nSeqIndex, nPosKey ),
+									(bool)( posKeys[nPosKey].bIsTangentIn ),
 									pManipulator );
-					bResult = bResult &&
-					          pObjectController->AddChangeOperation(
-												fmt::format( "ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentIn", nSeqIndex, i ),
-												(bool)( posKeys[i].bIsTangentIn ),
-												pManipulator );
-					bResult = bResult &&
-					          pObjectController->AddChangeOperation(
-												fmt::format( "ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentIn", nSeqIndex, i ),
-												(bool)( posKeys[i].bIsTangentOut ),
-												pManipulator );
+					bResult =
+							bResult &&
+							pObjectController->AddChangeOperation(
+									fmt::format( "ScriptMovies.ScriptMovieSequences.[{}].posKeys.[{}].IsTangentIn", nSeqIndex, nPosKey ),
+									(bool)( posKeys[nPosKey].bIsTangentOut ),
+									pManipulator );
 				}
 				if ( bResult )
 				{

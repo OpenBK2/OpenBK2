@@ -466,8 +466,8 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 		pNumPlayersBox->RemoveAllItems();
 		for ( int i = pSelected->nPlayers; i > 1; i-- )
 		{
-			CPtr<CTextData> pData = new CTextData( i );
-			pNumPlayersBox->AddItem( pData );
+			CPtr<CTextData> pItemData = new CTextData( i );
+			pNumPlayersBox->AddItem( pItemData );
 			pNumPlayersBox->Enable( true );
 		}
 		pNumPlayersBox->Select( 0 );

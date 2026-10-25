@@ -1208,15 +1208,15 @@ void CVisualNotifications::EventLeftClick( SEvent *pEvent, bool *pErase )
 						const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
 						if ( pUIC )
 						{
-							for ( int i = 0; i < pUIC->reinfButtons.size(); ++i )
+							for ( int nButton = 0; nButton < pUIC->reinfButtons.size(); ++nButton )
 							{
-								if ( pUIC->reinfButtons[i].eType == eReinforcementType )
+								if ( pUIC->reinfButtons[nButton].eType == eReinforcementType )
 								{
 									if ( branch.wszDesc.empty() )
 									{
-										if ( CHECK_TEXT_NOT_EMPTY_PRE( pUIC->reinfButtons[i]., Desc ) )
+										if ( CHECK_TEXT_NOT_EMPTY_PRE( pUIC->reinfButtons[nButton]., Desc ) )
 										{
-											branch.wszDesc = GET_TEXT_PRE( pUIC->reinfButtons[i]., Desc );
+											branch.wszDesc = GET_TEXT_PRE( pUIC->reinfButtons[nButton]., Desc );
 										}
 									}
 								}

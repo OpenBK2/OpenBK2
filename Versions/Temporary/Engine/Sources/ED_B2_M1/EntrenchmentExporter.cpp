@@ -24,16 +24,16 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator *pManipulator,
 		{
 			return ER_FAIL;
 		}
-		if ( CPtr<IManipulator> pManipulator =
+		if ( CPtr<IManipulator> pEntManipulator =
 		         Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, CDBID( rszObjectName ) ) )
 		{
 			int nSegments = 0;
-			CManipulatorManager::GetValue( &nSegments, pManipulator, "segments" );
+			CManipulatorManager::GetValue( &nSegments, pEntManipulator, "segments" );
 			for ( int nSegmentIndex = 0; nSegmentIndex < nSegments; ++nSegmentIndex )
 			{
 				const std::string szSegmentName = fmt::format( "segments.[{}].", nSegmentIndex );
 				std::string szObjName;
-				if ( CManipulatorManager::GetValue( &szObjName, pManipulator, szSegmentName + "VisObj" ) &&
+				if ( CManipulatorManager::GetValue( &szObjName, pEntManipulator, szSegmentName + "VisObj" ) &&
 				     ( !szObjName.empty() ) )
 				{
 					CPtr<IManipulator> pVisObjMan = pResourceManager->CreateObjectManipulator( "VisObj", szObjName );
@@ -52,13 +52,13 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator *pManipulator,
 						Vis2AI( &vAABBCenter );
 						Vis2AI( &vAABBHalfSize );
 						//
-						CManipulatorManager::SetVec3( vAABBHalfSize, pManipulator, szSegmentName + "AABBHalfSize" );
+						CManipulatorManager::SetVec3( vAABBHalfSize, pEntManipulator, szSegmentName + "AABBHalfSize" );
 						CManipulatorManager::SetVec2(
-								CVec2( vAABBCenter.x, vAABBCenter.y ), pManipulator, szSegmentName + "AABBCenter" );
+								CVec2( vAABBCenter.x, vAABBCenter.y ), pEntManipulator, szSegmentName + "AABBCenter" );
 					}
 
 					// Export fireplaces
-					pManipulator->RemoveNode( "fireplaces" );
+					pEntManipulator->RemoveNode( "fireplaces" );
 
 					CGrannyBoneAttributesList attribs;
 					int nFireplaceIndex = 0;
@@ -71,7 +71,7 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator *pManipulator,
 								continue;
 							}
 
-							if ( !pManipulator->InsertNode( "fireplaces" ) )
+							if ( !pEntManipulator->InsertNode( "fireplaces" ) )
 							{
 								continue;
 							}
@@ -84,7 +84,7 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator *pManipulator,
 
 							Vis2AI( &vPos );
 
-							CManipulatorManager::SetVec2( vPos, pManipulator, szNodeName );
+							CManipulatorManager::SetVec2( vPos, pEntManipulator, szNodeName );
 
 							++nFireplaceIndex;
 						}

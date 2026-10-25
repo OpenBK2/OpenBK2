@@ -190,12 +190,12 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 
 		for ( y = 0; y < dwHeight; ++y )
 		{
-			uint32_t *pImageData = &( image[0] ) + ( dwHeight - y - 1 ) * dwWidth;
+			uint32_t *pRowData = &( image[0] ) + ( dwHeight - y - 1 ) * dwWidth;
 			for ( x = 0; x < dwWidth; ++x )
 			{
 				uint16_t data;
 				pStream->Read( &data, 2 );
-				*pImageData++ = pci.DecompColor( data ) | 0xFF000000;
+				*pRowData++ = pci.DecompColor( data ) | 0xFF000000;
 			}
 			if ( nEndOfLineSkip ) // each row is 0-padded to a 4-byte boundary
 			{
@@ -212,12 +212,12 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 
 		for ( y = 0; y < dwHeight; ++y )
 		{
-			uint32_t *pImageData = &( image[0] ) + ( dwHeight - y - 1 ) * dwWidth;
+			uint32_t *pRowData = &( image[0] ) + ( dwHeight - y - 1 ) * dwWidth;
 			for ( x = 0; x < dwWidth; ++x )
 			{
 				uint8_t d[3];
 				pStream->Read( d, 3 );
-				*pImageData++ = 0xFF000000 | ( uint32_t( d[2] ) << 16 ) | ( uint32_t( d[1] ) << 8 ) | uint32_t( d[0] );
+				*pRowData++ = 0xFF000000 | ( uint32_t( d[2] ) << 16 ) | ( uint32_t( d[1] ) << 8 ) | uint32_t( d[0] );
 			}
 
 			if ( nEndOfLineSkip ) // each row is 0-padded to a 4-byte boundary
@@ -235,15 +235,15 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 
 		for ( y = 0; y < dwHeight; ++y )
 		{
-			uint32_t *pImageData = &( image[0] ) + ( dwHeight - y - 1 ) * dwWidth;
+			uint32_t *pRowData = &( image[0] ) + ( dwHeight - y - 1 ) * dwWidth;
 			for ( x = 0; x < dwWidth / 8; ++x )
 			{
 				uint8_t d;
 				pStream->Read( &d, 1 );
-				for ( int i = 0; i < 8; ++i )
+				for ( int nBit = 0; nBit < 8; ++nBit )
 				{
 					uint32_t dwValue = ( d & 0x80 ) == 0 ? 0 : 0xFF;
-					*pImageData++ = 0xFF000000 | ( dwValue << 16 ) | ( dwValue << 8 ) | dwValue;
+					*pRowData++ = 0xFF000000 | ( dwValue << 16 ) | ( dwValue << 8 ) | dwValue;
 					d <<= 1;
 				}
 			}

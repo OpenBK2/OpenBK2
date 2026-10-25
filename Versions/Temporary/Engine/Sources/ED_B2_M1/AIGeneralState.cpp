@@ -170,20 +170,20 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 		{
 			const NDb::SReinforcePoint &currentReinfPoint = ( *itReinfPoint );
 
-			CVec3 vPos( currentParcel.vCenter + currentReinfPoint.vCenter, 0 );
-			vPos.z = GetTerrainHeight( vPos.x, vPos.y );
-			float fDir = AI2VisRad( currentReinfPoint.fDirection );
-			fDir += FP_PI2;
-			if ( fDir >= FP_2PI )
+			CVec3 vReinfPos( currentParcel.vCenter + currentReinfPoint.vCenter, 0 );
+			vReinfPos.z = GetTerrainHeight( vReinfPos.x, vReinfPos.y );
+			float fReinfDir = AI2VisRad( currentReinfPoint.fDirection );
+			fReinfDir += FP_PI2;
+			if ( fReinfDir >= FP_2PI )
 			{
-				fDir -= FP_2PI;
+				fReinfDir -= FP_2PI;
 			}
-			const CVec3 vDirPos = CreateFromPolarCoord( PARCEL_REINFORCE_RAD, fDir, 0 ) + vPos;
+			const CVec3 vReinfDirPos = CreateFromPolarCoord( PARCEL_REINFORCE_RAD, fReinfDir, 0 ) + vReinfPos;
 
-			sceneDrawTool.DrawCircle( vPos, PARCEL_REINFORCE_RAD, PARCEL_POINT_PARTS, dwParcelColor, false );
-			sceneDrawTool.DrawCircle( vPos, SELECTION_POINT_RADIUS, PARCEL_POINT_PARTS, dwParcelColor, false );
-			sceneDrawTool.DrawLine( vPos, vDirPos, dwParcelColor, false );
-			sceneDrawTool.DrawCircle( vDirPos, SELECTION_POINT_RADIUS, PARCEL_POINT_PARTS, dwParcelColor, false );
+			sceneDrawTool.DrawCircle( vReinfPos, PARCEL_REINFORCE_RAD, PARCEL_POINT_PARTS, dwParcelColor, false );
+			sceneDrawTool.DrawCircle( vReinfPos, SELECTION_POINT_RADIUS, PARCEL_POINT_PARTS, dwParcelColor, false );
+			sceneDrawTool.DrawLine( vReinfPos, vReinfDirPos, dwParcelColor, false );
+			sceneDrawTool.DrawCircle( vReinfDirPos, SELECTION_POINT_RADIUS, PARCEL_POINT_PARTS, dwParcelColor, false );
 
 			if ( ( nParcel == currentPlayer.nCurrentParcel ) && ( nPoint == currentParcel.nCurrentPoint ) )
 			{
@@ -191,7 +191,7 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 					for ( int i = 0; i < 10; ++i )
 					{
 						sceneDrawTool.DrawCircle(
-								vPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
+								vReinfPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
 					}
 				}
 				if ( bRotatePoint )
@@ -199,7 +199,7 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 					for ( int i = 0; i < 10; ++i )
 					{
 						sceneDrawTool.DrawCircle(
-								vDirPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
+								vReinfDirPos, SELECTION_POINT_RADIUS * (float)i / 10.0f, SELECTION_POINT_PARTS, dwParcelColor, false );
 					}
 				}
 			}

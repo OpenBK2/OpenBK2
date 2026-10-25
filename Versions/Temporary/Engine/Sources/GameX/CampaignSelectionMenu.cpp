@@ -575,8 +575,8 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 
 				for ( int i = 0; i < 3; ++i )
 				{
-					const NDb::SDifficultyLevel *pDifficultyLevel = pCampaign->difficultyLevels[i];
-					AddDifficultyLevel( pDifficultyLevel );
+					const NDb::SDifficultyLevel *pCurLevel = pCampaign->difficultyLevels[i];
+					AddDifficultyLevel( pCurLevel );
 				}
 			}
 			else

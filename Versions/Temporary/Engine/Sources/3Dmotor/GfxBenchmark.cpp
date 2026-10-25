@@ -116,7 +116,7 @@ static float TimeRender( NGfx::CRenderContext &rc, int nPasses, CGeometry *pGeom
 	{
 		NHPTimer::STime tBegin;
 		NHPTimer::GetTime( &tBegin );
-		for ( int i = 0; i < nPasses; ++i )
+		for ( int nPass = 0; nPass < nPasses; ++nPass )
 		{
 			rc.AddPrimitive( pGeom, pTris );
 		}

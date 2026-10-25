@@ -423,9 +423,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 		{
 			if ( ( strcmp( idChunk, "Item" ) == 0 ) || ( strcmp( idChunk, "item" ) == 0 ) )
 			{
-				if ( const NXml::CXmlNode *pNode = pReadNode->FindChild( "item" ) )
+				if ( const NXml::CXmlNode *pItemNode = pReadNode->FindChild( "item" ) )
 				{
-					const NXml::SXmlAttribute *pAttribute = pNode->GetDataAttribute();
+					const NXml::SXmlAttribute *pAttribute = pItemNode->GetDataAttribute();
 					int nCheck = 0;
 					if ( pAttribute && pAttribute->value.nSize )
 					{
@@ -470,9 +470,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, float *pfData, int nChun
 		{
 			if ( ( strcmp( idChunk, "Item" ) == 0 ) || ( strcmp( idChunk, "item" ) == 0 ) )
 			{
-				if ( const NXml::CXmlNode *pNode = pReadNode->FindChild( "item" ) )
+				if ( const NXml::CXmlNode *pItemNode = pReadNode->FindChild( "item" ) )
 				{
-					const NXml::SXmlAttribute *pAttribute = pNode->GetDataAttribute();
+					const NXml::SXmlAttribute *pAttribute = pItemNode->GetDataAttribute();
 					if ( pAttribute && pAttribute->value.nSize )
 					{
 						*pfData = ReadFloat( pAttribute->value.pszBegin, pAttribute->value.nSize );
@@ -539,9 +539,9 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 		{
 			if ( strcmp( idChunk, "Item" ) == 0 )
 			{
-				if ( const NXml::CXmlNode *pNode = pReadNode->FindChild( "item" ) )
+				if ( const NXml::CXmlNode *pItemNode = pReadNode->FindChild( "item" ) )
 				{
-					const NXml::SXmlAttribute *pAttribute = pNode->GetDataAttribute();
+					const NXml::SXmlAttribute *pAttribute = pItemNode->GetDataAttribute();
 					if ( pAttribute && pAttribute->value.nSize )
 					{
 						*pData = String2Bool( pAttribute->value.pszBegin );

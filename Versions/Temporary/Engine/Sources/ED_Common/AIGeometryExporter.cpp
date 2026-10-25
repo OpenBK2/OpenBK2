@@ -117,8 +117,10 @@ EXPORT_RESULT CAIGeometryExporter::CustomCheck( const std::string &szTypeName,
 		edgesInfo.GenerateEdgeList( triangleList, vertexList );
 		if ( !edgesInfo.IsClosed() )
 		{
+			// An empty local of this name shadowed the parameter until
+			// 2026-10-25, so the "Source file" line below named nothing at all
+			// for every unclosed AI geometry anyone has exported.
 			ILogger *pLogger = NLog::GetLogger();
-			std::string szSrcScenePath;
 			pLogger->Log( LT_ERROR, "AI Geometry is not closed\n" );
 			pLogger->Log( LT_ERROR, fmt::format( "\tObject name: {}\n", szObjName.c_str() ) );
 			pLogger->Log( LT_ERROR, fmt::format( "\tSource file: {}\n", szSrcScenePath.c_str() ) );

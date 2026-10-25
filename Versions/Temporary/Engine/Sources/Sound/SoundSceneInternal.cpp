@@ -466,7 +466,7 @@ void CSoundScene2D::RemoveSound( const uint16_t wID )
 	CSound *pSound = pCell->GetSound( wID );
 	if ( pSound )
 	{
-		const uint16_t wID = pSound->GetID();
+		const uint16_t wSoundID = pSound->GetID();
 
 		if ( pSound->IsLooped() )
 		{
@@ -475,15 +475,15 @@ void CSoundScene2D::RemoveSound( const uint16_t wID )
 		else
 		{
 			const int nFormerRadius = pCell->GetRadius();
-			pCell->RemoveSound( wID, pSFX );
+			pCell->RemoveSound( wSoundID, pSFX );
 			const int nNewRadius = pCell->GetRadius();
 			UpdatePHSMap( vCell, nFormerRadius, nNewRadius );
 		}
 
-		if ( wID )
+		if ( wSoundID )
 		{
-			soundIDs.erase( wID );
-			freeIDs.Return( wID );
+			soundIDs.erase( wSoundID );
+			freeIDs.Return( wSoundID );
 		}
 	}
 }
@@ -843,7 +843,7 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 
 		// СДЕЛАТЬ ЗАМЕНУ ЗВУКАМ И УДАЛИТЬ ИХ ИЗ ВРЕМЕННОГО СПИСКА ЗВУКОВ
 		unsigned int nStartSample = 0; // время для возобновления звука
-		NTimer::STime nStartTime = 0;
+		NTimer::STime nSoundStartTime = 0;
 		// вычислиить время старта ( в самплах )
 		for ( CSoundsList::iterator soundsIter = begin_iter; soundsIter != end_iter; ++soundsIter )
 		{
@@ -852,9 +852,9 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 			{
 				nStartSample = (std::max)( nStartSample, sound.GetSamplesPassed() );
 				const NTimer::STime tmp = sound.GetBeginTime();
-				if ( tmp < nStartTime || nStartTime == 0 )
+				if ( tmp < nSoundStartTime || nSoundStartTime == 0 )
 				{
-					nStartTime = tmp;
+					nSoundStartTime = tmp;
 				}
 			}
 		}
@@ -868,7 +868,7 @@ void CSoundScene2D::Mix( CSoundsList &curSounds,
 				if ( !sound.IsSubstituted() )
 				{
 					pSFX->StopSample( sound.GetSound() );
-					sound.Substitute( pSubstStruct, nStartTime );
+					sound.Substitute( pSubstStruct, nSoundStartTime );
 				}
 				sound.MarkStarted();
 				if ( bDelete )

@@ -271,15 +271,18 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 		}
 		if ( bRemoved )
 		{
-			std::list<SMOTessPoint>::iterator iPrev, iPrev2;
-			iPrev = poly.end();
-			iPrev--;
-			iPrev2 = iPrev;
-			iPrev2--;
-			for ( std::list<SMOTessPoint>::iterator i = poly.begin(); i != poly.end(); iPrev2 = iPrev, iPrev = i, ++i )
+			// A fresh pair, the erase above having invalidated the outer
+			// iPrev; they were called iPrev and iPrev2 as well, which read as
+			// though the loop carried on with the same iterators.
+			std::list<SMOTessPoint>::iterator iBack, iBack2;
+			iBack = poly.end();
+			iBack--;
+			iBack2 = iBack;
+			iBack2--;
+			for ( std::list<SMOTessPoint>::iterator i = poly.begin(); i != poly.end(); iBack2 = iBack, iBack = i, ++i )
 			{
-				SMOTessPoint &temp = *iPrev;
-				const SMOTessPoint &prev = *iPrev2;
+				SMOTessPoint &temp = *iBack;
+				const SMOTessPoint &prev = *iBack2;
 				const SMOTessPoint &next = *i;
 
 				CVec3 vPrev( prev.vPoint.x, prev.vPoint.y, 0 );

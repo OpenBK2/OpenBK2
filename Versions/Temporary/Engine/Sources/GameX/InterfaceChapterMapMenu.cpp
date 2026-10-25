@@ -1327,9 +1327,9 @@ void CInterfaceChapterMapMenu::OnPopupClicked( const std::string &szSender )
 			std::vector<IScenarioTracker::SChapterReinf> chapterReinfs;
 			IScenarioTracker *pST = Singleton<IScenarioTracker>();
 			pST->GetChapterCurrentReinforcements( &chapterReinfs, pST->GetLocalPlayer() );
-			for ( int i = 0; i < chapterReinfs.size(); ++i )
+			for ( int nReinf = 0; nReinf < chapterReinfs.size(); ++nReinf )
 			{
-				IScenarioTracker::SChapterReinf &reinf = chapterReinfs[i];
+				IScenarioTracker::SChapterReinf &reinf = chapterReinfs[nReinf];
 				if ( reinf.pDBReinf && pNew && reinf.pDBReinf->eType == pNew->eType &&
 				     reinf.eState == IScenarioTracker::ERS_ENABLED )
 				{

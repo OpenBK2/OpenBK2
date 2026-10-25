@@ -216,9 +216,9 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			if ( frame.fT >= part.nTStart && frame.fT < part.nTEnd && ( frame.bLastCycle || part.nTStart <= fCycleEnd ) &&
 			     ( fTStopGeneration < 0 || ( !frame.bLastCycle ) || part.nTStart < fTStopGeneration ) )
 			{
-				const SParticleFrame &frame = frames[nFrame];
+				const SParticleFrame &frameCur = frames[nFrame];
 				CVec3 pos;
-				part.pos.GetValue( frame.fT, &pos );
+				part.pos.GetValue( frameCur.fT, &pos );
 				if ( bDoWrap )
 				{
 					float fWrapSizeX = vWrap.x, fWrapSizeY = vWrap.y;
@@ -313,7 +313,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 				continue;
 			}
 			++nDst;
-			const SParticleFrame &frame = frames[nFrame];
+			const SParticleFrame &frameCur = frames[nFrame];
 
 			float rot;
 			CVec2 scale;
@@ -322,15 +322,15 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			uint32_t dwColor;
 
 			float fFog = pWarFog[( nDst - 1 ) & nWarFogStepMask] * fFade;
-			part.color.GetValue( frame.fT, fFog, &dwColor );
+			part.color.GetValue( frameCur.fT, fFog, &dwColor );
 			if ( dwColor == 0 )
 			{
 				continue;
 			}
 
-			part.rot.GetValue( frame.fT, &rot );
-			part.scale.GetValue( frame.fT, &scale );
-			part.sprite.GetValue( frame.fT, &sprite );
+			part.rot.GetValue( frameCur.fT, &rot );
+			part.scale.GetValue( frameCur.fT, &scale );
+			part.sprite.GetValue( frameCur.fT, &sprite );
 			nSprite = sprite;
 			if ( nSprite >= textures.size() )
 			{

@@ -251,13 +251,13 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const std::vector<SReinfPoint> &r
 	}
 	for ( int i = 0; i < rReinfPoints[nSelectedReinfPoint].typedTemplates.size(); ++i ) // inserting new
 	{
-		CPtr<CObjectBaseController> pObjectController = 0;
-		pObjectController = pMapInfoEditor->CreateController();
+		CPtr<CObjectBaseController> pNewObjectController = 0;
+		pNewObjectController = pMapInfoEditor->CreateController();
 
-		if ( pObjectController->AddInsertOperation( szCurReinfPt + ".TypedTemplates", NODE_ADD_INDEX, pManipulator ) )
+		if ( pNewObjectController->AddInsertOperation( szCurReinfPt + ".TypedTemplates", NODE_ADD_INDEX, pManipulator ) )
 		{
-			pObjectController->Redo( false, true, pMapInfoEditor );
-			Singleton<IControllerContainer>()->Add( pObjectController );
+			pNewObjectController->Redo( false, true, pMapInfoEditor );
+			Singleton<IControllerContainer>()->Add( pNewObjectController );
 		}
 		const std::string szCurTypedTempl = szCurReinfPt + fmt::format( ".TypedTemplates.[{}]", i );
 		CManipulatorManager::SetValue(
@@ -515,18 +515,18 @@ void CReinfPointsState::Draw( IPaintContext *pPaintDC )
 		{
 			if ( bMove && !bIsAvia )
 			{
-				for ( int i = 0; i < 10; ++i )
+				for ( int nKey = 0; nKey < 10; ++nKey )
 				{
-					float fRad = i;
+					float fRad = nKey;
 					sceneDrawTool.DrawCircle(
 							vPos, SELECTION_POINT_RADIUS * ( fRad / 10 ), SELECTION_POINT_PARTS, SELECTION_COLOR, false );
 				}
 			}
 			if ( bRotate )
 			{
-				for ( int i = 0; i < 10; ++i )
+				for ( int nKey = 0; nKey < 10; ++nKey )
 				{
-					float fRad = i;
+					float fRad = nKey;
 					sceneDrawTool.DrawCircle(
 							vDirPoint, SELECTION_POINT_RADIUS * ( fRad / 10 ), SELECTION_POINT_PARTS, SELECTION_COLOR, false );
 				}
@@ -534,9 +534,9 @@ void CReinfPointsState::Draw( IPaintContext *pPaintDC )
 			//
 			if ( bIsAvia && bMove )
 			{
-				for ( int i = 0; i < 10; ++i )
+				for ( int nKey = 0; nKey < 10; ++nKey )
 				{
-					float fRad = i;
+					float fRad = nKey;
 					sceneDrawTool.DrawCircle(
 							vAviaPos, SELECTION_POINT_RADIUS * ( fRad / 10 ), SELECTION_POINT_PARTS, SELECTION_COLOR, false );
 				}

@@ -38,13 +38,13 @@ void CHeightContainer::MarkTraceImageTile( CArray2D<uint32_t> *pImage, int x, in
 	                           y * TRACE_IMAGE_TILE_SIZE - 2,
 	                           x * TRACE_IMAGE_TILE_SIZE + 2,
 	                           y * TRACE_IMAGE_TILE_SIZE + 2 );
-	for ( int y = indices.miny; y <= indices.maxy; ++y )
+	for ( int nY = indices.miny; nY <= indices.maxy; ++nY )
 	{
-		for ( int x = indices.minx; x <= indices.maxx; ++x )
+		for ( int nX = indices.minx; nX <= indices.maxx; ++nX )
 		{
-			if ( ( x >= 0 ) && ( x < pImage->GetSizeX() ) && ( y >= 0 ) && ( y < pImage->GetSizeY() ) )
+			if ( ( nX >= 0 ) && ( nX < pImage->GetSizeX() ) && ( nY >= 0 ) && ( nY < pImage->GetSizeY() ) )
 			{
-				( *pImage )[y][x] = dwColor;
+				( *pImage )[nY][nX] = dwColor;
 			}
 		}
 	}

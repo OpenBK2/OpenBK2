@@ -161,9 +161,9 @@ static void GenerateEnum( ICode::SCodeStreams *pCode,
 	pCode->cpp << "{" << endl;
 	pCode->cpp << tab << "switch ( eValue )" << endl;
 	pCode->cpp << tab << "{" << endl;
-	for ( int i = 0; i < pEnum->entries.size(); ++i )
+	for ( int nEntry = 0; nEntry < pEnum->entries.size(); ++nEntry )
 	{
-		const NDb::NTypeDef::STypeEnum::SEnumEntry &entry = pEnum->entries[i];
+		const NDb::NTypeDef::STypeEnum::SEnumEntry &entry = pEnum->entries[nEntry];
 		pCode->cpp << tab << "case " << szQualifiedName << "::" << entry.szName << ":" << endl;
 		pCode->cpp << tab << tab << "return " << qcomma << entry.szName << qcomma << ";" << endl;
 	}
@@ -179,9 +179,9 @@ static void GenerateEnum( ICode::SCodeStreams *pCode,
 	// of which sit outside the namespace.
 	pCode->cpp << szFullQualifiedName << " " << szUnderlinedNameWithoutNDB << "( const std::string &szValue )" << endl;
 	pCode->cpp << "{" << endl;
-	for ( int i = 0; i < pEnum->entries.size(); ++i )
+	for ( int nEntry = 0; nEntry < pEnum->entries.size(); ++nEntry )
 	{
-		const NDb::NTypeDef::STypeEnum::SEnumEntry &entry = pEnum->entries[i];
+		const NDb::NTypeDef::STypeEnum::SEnumEntry &entry = pEnum->entries[nEntry];
 		pCode->cpp << tab << "if ( szValue == " << qcomma << entry.szName << qcomma << " )" << endl;
 		pCode->cpp << tab << tab << "return " << szQualifiedName << "::" << entry.szName << ";" << endl;
 	}

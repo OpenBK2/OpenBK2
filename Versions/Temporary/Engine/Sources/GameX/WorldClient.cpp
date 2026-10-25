@@ -1110,8 +1110,8 @@ void CWorldClient::MsgSetSpecialAbility( const SGameMessage &msg )
 			}
 			else
 			{
-				USER_ACTION pfnAction = GetAction( static_cast<NDb::EUserAction>( msg.nParam1 ), SActionDesc::FORCED );
-				if ( pfnAction && ( this->*pfnAction )( VNULL2, 0, true ) )
+				USER_ACTION pfnForcedAction = GetAction( static_cast<NDb::EUserAction>( msg.nParam1 ), SActionDesc::FORCED );
+				if ( pfnForcedAction && ( this->*pfnForcedAction )( VNULL2, 0, true ) )
 				{
 					SetForcedAction( static_cast<NDb::EUserAction>( msg.nParam1 ) );
 				}
@@ -1540,17 +1540,17 @@ void CWorldClient::MsgEndSelection( const SGameMessage &msg )
 				std::list<CMapObj *> objects;
 				for ( std::list<int>::iterator it = ids.begin(); it != ids.end(); ++it )
 				{
-					CMapObj *pMO = GetMapObj( *it );
-					if ( pMO && pSelector->CanSelect( pMO ) && CSelector::IsSameType( pMOSel, pMO ) )
+					CMapObj *pMOOfIter = GetMapObj( *it );
+					if ( pMOOfIter && pSelector->CanSelect( pMOOfIter ) && CSelector::IsSameType( pMOSel, pMOOfIter ) )
 					{
-						objects.push_back( pMO );
+						objects.push_back( pMOOfIter );
 					}
 				}
 
 				for ( std::list<CMapObj *>::iterator it = objects.begin(); it != objects.end(); ++it )
 				{
-					CMOSelectable *pMOSel = checked_cast<CMOSelectable *>( *it );
-					pSelector->Select( pMOSel, true );
+					CMOSelectable *pMOSelOfIter = checked_cast<CMOSelectable *>( *it );
+					pSelector->Select( pMOSelOfIter, true );
 				}
 			}
 			pSelector->DoneSelection( false, false );

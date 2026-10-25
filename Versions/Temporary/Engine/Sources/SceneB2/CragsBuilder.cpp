@@ -659,13 +659,13 @@ void CTerraGen::RemoveCrag( const int nVSOID )
 {
 	// if such crag is not exists, than skip it removing
 	std::list<STerrainInfo::SCrag>::const_iterator itCrag = terrainInfo.crags.begin();
-	for ( std::list<STerrainInfo::SCrag>::const_iterator itCrag = terrainInfo.crags.begin();
-	      itCrag != terrainInfo.crags.end();
-	      ++itCrag )
+	for ( std::list<STerrainInfo::SCrag>::const_iterator itCurCrag = terrainInfo.crags.begin();
+	      itCurCrag != terrainInfo.crags.end();
+	      ++itCurCrag )
 	{
-		if ( itCrag->nID == nVSOID )
+		if ( itCurCrag->nID == nVSOID )
 		{
-			CragManipulator( &( *itCrag ), true );
+			CragManipulator( &( *itCurCrag ), true );
 			return;
 		}
 	}

@@ -222,8 +222,8 @@ int CCoastState::InsertVSO( const std::vector<CVec3> &rControlPointList )
 						{
 							if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
 							{
-								NHPTimer::STime time = 0;
-								NHPTimer::GetTime( &time );
+								NHPTimer::STime timeStart = 0;
+								NHPTimer::GetTime( &timeStart );
 								//
 								GetMapInfoEditor()->VSOCollector.bHasCoast = true;
 								GetWaterPos( GetMapInfoEditor()->pMapInfo,
@@ -232,7 +232,7 @@ int CCoastState::InsertVSO( const std::vector<CVec3> &rControlPointList )
 								pTerraManager->UpdateWater();
 								pTerraManager->UpdateRiversDepthes();
 								//
-								DebugTrace( "CCoastState::InsertVSO(), AddCoast(): %g", NHPTimer::GetTimePassed( &time ) );
+								DebugTrace( "CCoastState::InsertVSO(), AddCoast(): %g", NHPTimer::GetTimePassed( &timeStart ) );
 								//
 								GetMapInfoEditor()->SetModified( true );
 								//

@@ -53,11 +53,11 @@ bool CMPManagerMode::HostAssignNewClient( int nClientID )
 			pClient->SendGamePacket( pGameInfoPkt, false );
 
 			// Send closed slots
-			for ( int i = 0; i < slots.size(); ++i )
+			for ( int nSlot = 0; nSlot < slots.size(); ++nSlot )
 			{
-				if ( !slots[i].bPresent && slots[i].bAccept )
+				if ( !slots[nSlot].bPresent && slots[nSlot].bAccept )
 				{
-					pClient->SendGamePacket( new CB2SlotInfoPacket( nClientID, i, slots[i] ), false );
+					pClient->SendGamePacket( new CB2SlotInfoPacket( nClientID, nSlot, slots[nSlot] ), false );
 				}
 			}
 

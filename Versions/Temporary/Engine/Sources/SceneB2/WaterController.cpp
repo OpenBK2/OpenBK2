@@ -493,7 +493,7 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode>> *pWaterNodes,
 		{
 			const CVec3 &vCurPos = curBorder[i].vPos;
 			const CVec3 &vNextPos = curBorder[i + 1].vPos;
-			const CVec3 &vCurNorm = curBorder[i].vNorm;
+			const CVec3 &vBorderNorm = curBorder[i].vNorm;
 			const CVec3 &vNextNorm = curBorder[i + 1].vNorm;
 			//const float &fCurWidth = AI2Vis( curBorder[i].fWidth );
 			//const float &fNextWidth = AI2Vis( curBorder[i + 1].fWidth );
@@ -502,7 +502,7 @@ void CWaterController::SetBorders( CArray2D<CPtr<SWaterNode>> *pWaterNodes,
 			//
 			coastPoints[nInd].Set( AI2Vis( vCurPos.x ), AI2Vis( vCurPos.y ), 1.0f, 1 );
 			coastPoints[nCoastSize - 1 - nInd].Set(
-					coastPoints[nInd].x + vCurNorm.x * fCurWidth, coastPoints[nInd].y + vCurNorm.y * fCurWidth, 1.0f, 1 );
+					coastPoints[nInd].x + vBorderNorm.x * fCurWidth, coastPoints[nInd].y + vBorderNorm.y * fCurWidth, 1.0f, 1 );
 			++nInd;
 			coastPoints[nInd].Set( AI2Vis( vNextPos.x ), AI2Vis( vNextPos.y ), 1.0f, 1 );
 			coastPoints[nCoastSize - 1 - nInd].Set(

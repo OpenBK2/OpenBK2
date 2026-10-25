@@ -598,7 +598,7 @@ void CPassabilityProfileCreator::FormPolygon()
 		//mask.DrawPoint( point.vPoint, NImage::SColor( 255, 255, 0, 0 ) );
 		//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 
-		bool bFirst = true;
+		bool bFirstInRow = true;
 		SConnectedPoint bestPoint;
 		bestPoint.nNumber = -1;
 		for ( int i = 0; i < connections.GetSizeX(); ++i )
@@ -618,11 +618,11 @@ void CPassabilityProfileCreator::FormPolygon()
 				     //						!IsPointInside( nextPoint.vPoint, predPoint.vPoint, point.vPoint ) //&&
 				     /*( bFirst || !IsPointInside( nextPoint.vPoint, point.vPoint, bestPoint.vPoint ) )*/ )
 				{
-					if ( bFirst )
+					if ( bFirstInRow )
 					{
 						//						mask.DrawPoint( bestPoint.vPoint, NImage::SColor( 255, 0, 0, 0 ) );
 						bestPoint = nextPoint;
-						bFirst = false;
+						bFirstInRow = false;
 					}
 					else
 					{

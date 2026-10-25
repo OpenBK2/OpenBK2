@@ -366,8 +366,8 @@ static HRESULT ResetDevice()
 		D3DDEVINFO_VCACHE vcache;
 		Zero( vcache );
 		IDirect3DQuery9 *pQ;
-		HRESULT hr = pDevice->CreateQuery( D3DQUERYTYPE_VCACHE, &pQ );
-		if ( SUCCEEDED( hr ) )
+		HRESULT hrQuery = pDevice->CreateQuery( D3DQUERYTYPE_VCACHE, &pQ );
+		if ( SUCCEEDED( hrQuery ) )
 		{
 			pQ->Issue( D3DISSUE_BEGIN );
 			while ( pQ->GetData( &vcache, sizeof( vcache ), D3DGETDATA_FLUSH ) != S_OK )

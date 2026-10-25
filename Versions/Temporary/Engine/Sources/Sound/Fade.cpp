@@ -87,9 +87,9 @@ void CFade::Segment()
 		break;
 		case EFS_STARTED:
 		{
-			const NTimer::STime curTime = GetAbsTime();
-			timeFaded += curTime - timeLastCall;
-			timeLastCall = curTime;
+			const NTimer::STime timeNow = GetAbsTime();
+			timeFaded += timeNow - timeLastCall;
+			timeLastCall = timeNow;
 
 			SetCurrentVolume();
 			if ( timeFaded > pFade->nFadeTime )

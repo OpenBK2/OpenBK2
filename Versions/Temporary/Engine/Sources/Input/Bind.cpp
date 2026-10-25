@@ -624,13 +624,13 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 				continue;
 			}
 
-			SActionInfo &sActionInfo = sActions[mMsg.nAction];
-			sActionInfo.bActive = mMsg.bState;
+			SActionInfo &sMsgActionInfo = sActions[mMsg.nAction];
+			sMsgActionInfo.bActive = mMsg.bState;
 			bool bSetActive = IsBindActive( *iTempMapping );
 
 			if ( ( mMsg.cType == CT_AXIS ) || ( mMsg.cType == CT_LIMAXIS ) )
 			{
-				sActionInfo.bActive = false;
+				sMsgActionInfo.bActive = false;
 			}
 
 			if ( !bSetActive )
@@ -678,14 +678,14 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 			continue;
 		}
 
-		SActionInfo &sActionInfo = sActions[mMsg.nAction];
-		sActionInfo.bActive = mMsg.bState;
+		SActionInfo &sMsgActionInfo = sActions[mMsg.nAction];
+		sMsgActionInfo.bActive = mMsg.bState;
 
 		bool bSetActive = IsBindActive( *iTempMapping );
 
 		if ( ( mMsg.cType == CT_AXIS ) || ( mMsg.cType == CT_LIMAXIS ) )
 		{
-			sActionInfo.bActive = false;
+			sMsgActionInfo.bActive = false;
 		}
 
 		if ( !bSetActive )
@@ -695,24 +695,24 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 
 		if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_KEY ) )
 		{
-			iTempMapping->sAccumulator.sKeyAccumulator.Activate( iTempMapping->nPower * sActionInfo.fCoeff, mMsg.tTime );
+			iTempMapping->sAccumulator.sKeyAccumulator.Activate( iTempMapping->nPower * sMsgActionInfo.fCoeff, mMsg.tTime );
 		}
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_AXIS ) )
 		{
 			iTempMapping->sAccumulator.sAxisAccumulator.Add(
-					iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+					iTempMapping->nPower * sMsgActionInfo.fCoeff * mMsg.nParam / sMsgActionInfo.fGranularity, mMsg.tTime );
 		}
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_LIMAXIS ) )
 		{
 			iTempMapping->sAccumulator.sLimAxisAccumulator.Add(
-					iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+					iTempMapping->nPower * sMsgActionInfo.fCoeff * mMsg.nParam / sMsgActionInfo.fGranularity, mMsg.tTime );
 		}
 		else if ( ( iTempMapping->mType == MTYPE_SLIDER ) && ( mMsg.cType == CT_POV ) )
 		{
 			if ( mMsg.nParam != -1 )
 			{
 				iTempMapping->sAccumulator.sPOVAccumulator.Activate(
-						iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
+						iTempMapping->nPower * sMsgActionInfo.fCoeff * mMsg.nParam / sMsgActionInfo.fGranularity, mMsg.tTime );
 			}
 			else
 			{
@@ -871,14 +871,14 @@ static void CommandBindInner( const std::string &szID, const std::vector<std::ws
 
 	std::vector<std::string> controlsSet;
 	controlsSet.reserve( paramsSet.size() );
-	for ( std::vector<std::wstring>::const_iterator iTemp = paramsSet.begin(); iTemp != paramsSet.end(); iTemp++ )
+	for ( std::vector<std::wstring>::const_iterator iParam = paramsSet.begin(); iParam != paramsSet.end(); iParam++ )
 	{
-		if ( iTemp->compare( L"+" ) == 0 )
+		if ( iParam->compare( L"+" ) == 0 )
 		{
 			continue;
 		}
 
-		std::string szWord( NStr::ToMBCS( *iTemp ) );
+		std::string szWord( NStr::ToMBCS( *iParam ) );
 		NStr::TrimBoth( szWord, "\t\n\r\'" );
 		controlsSet.push_back( szWord );
 	}

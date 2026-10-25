@@ -201,8 +201,8 @@ void luaV_setglobal (lua_State *L, TString *s) {
 		{
       TObject key;
 			key.SetS( s );
-			Hash *gt = L->tables[ L->nGT ];
-			*gt->SetObj( &key ) = *LObj(L, L->pCT->top - 1);
+			Hash *gtCur = L->tables[ L->nGT ];
+			*gtCur->SetObj( &key ) = *LObj(L, L->pCT->top - 1);
     }
   }
   else

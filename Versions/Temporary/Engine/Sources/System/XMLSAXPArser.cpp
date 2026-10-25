@@ -782,8 +782,9 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 		}
 		else
 		{
-			std::string szName, szText;
-			if ( ParseAttribute( &szName, &szText, stream ) == false || pVisitor->VisitAttribute( szName, szText ) == false )
+			std::string szChildName, szText;
+			if ( ParseAttribute( &szChildName, &szText, stream ) == false ||
+			     pVisitor->VisitAttribute( szChildName, szText ) == false )
 			{
 				return false;
 			}

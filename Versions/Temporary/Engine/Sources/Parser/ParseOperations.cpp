@@ -278,13 +278,13 @@ void SetTypeToVars( CLangNode *pRawVarListNode, const std::string &szTypeName )
 		{
 			if ( pVar->GetTypeOfDefault() == EST_ENUM )
 			{
-				CDynamicCast<CEnumNode> pEnum = pRealType;
-				VERIFY( pEnum != 0, "default value not compliant with variable type", return );
-				VERIFY( pEnum->GetEnumEntry( pVar->GetDefault().GetEnum() ) != 0,
+				CDynamicCast<CEnumNode> pRealEnum = pRealType;
+				VERIFY( pRealEnum != 0, "default value not compliant with variable type", return );
+				VERIFY( pRealEnum->GetEnumEntry( pVar->GetDefault().GetEnum() ) != 0,
 				        fmt::format( "entry {} doesn't exist in enum, see {}({})",
 				                     pVar->GetDefault().GetEnum(),
-				                     pEnum->GetFile(),
-				                     pEnum->GetLine() ),
+				                     pRealEnum->GetFile(),
+				                     pRealEnum->GetLine() ),
 				        return );
 			}
 			else
@@ -777,8 +777,8 @@ CLangNode *CreateTypeDefNode( CLangNode *pRawAttrListNode,
 			VERIFY( !bPointer || !pTypeDef->IsPointer(), "pointer to pointer", return 0 );
 			CTypeNode *pRealTypeNode = pTypeDef->GetReferencedType( true );
 
-			CDynamicCast<CEnumNode> pEnum = pRealTypeNode;
-			VERIFY( !bPointer || !pEnum, "pointer to enum", return 0 );
+			CDynamicCast<CEnumNode> pRealEnum = pRealTypeNode;
+			VERIFY( !bPointer || !pRealEnum, "pointer to enum", return 0 );
 
 			CDynamicCast<CComplexTypeNode> pComplexType = pRealTypeNode;
 			if ( pComplexType )
@@ -829,12 +829,12 @@ void MergeAttrList( CLangNode *pRawAttrListNode1, CLangNode *pRawAttrListNode2 )
 	      iter != pAttrListNode2->GetNodes().end();
 	      ++iter )
 	{
-		CAttributeNode *pNode = *iter;
+		CAttributeNode *pAttrNode = *iter;
 
-		if ( find( pAttrListNode1->GetNodes().begin(), pAttrListNode1->GetNodes().end(), pNode ) ==
+		if ( find( pAttrListNode1->GetNodes().begin(), pAttrListNode1->GetNodes().end(), pAttrNode ) ==
 		     pAttrListNode1->GetNodes().end() )
 		{
-			pAttrListNode1->AddNode( pNode );
+			pAttrListNode1->AddNode( pAttrNode );
 		}
 	}
 }
