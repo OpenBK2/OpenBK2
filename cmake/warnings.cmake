@@ -67,6 +67,15 @@ endfunction()
 # Two of these have no positive control yet and so rest on the weaker evidence
 # of the two, a zero count: -Wsized-deallocation and -Wstrict-null-sentinel.
 # Every other entry has been seen to fire on a snippet written for it.
+#
+# This list is the GCC list and nothing more. bk2_target_warnings picks one of
+# the two lists by compiler and does not extend either with the other, so a
+# flag written here gates no clang build, and a flag only clang accepts gates
+# nothing at all: the feature probe drops it without a word, which is what
+# makes the mistake quiet rather than a configure error. A class cleared on
+# both compilers has to be written in both lists. .diag-tmp/flag-membership.sh
+# checks each list against both compilers and is the thing to run when either
+# is touched.
 set(OBK2_WARNINGS_GCC
     -Wduplicated-cond           # if/else-if chain with a repeated condition
     -Wextra-semi                # clang's namesake is 1123 sites here, GCC's is 0
@@ -133,18 +142,6 @@ set(OBK2_WARNINGS_GCC
     # which CMake ignores, so adopting it is also the only way it reaches this
     # build.
     -Wdate-time
-    # Cleared 2026-10-17 with GCC's -Wimplicit-fallthrough=5, which is the same
-    # pass; clang reported 39 sites to GCC's 32, the extra ones being cases that
-    # fall into a default that returns. clang has only one level and it has
-    # always required the attribute rather than a comment.
-    -Wimplicit-fallthrough
-    # Cleared 2026-10-17 with GCC's -Wnon-virtual-dtor, the same pass. clang
-    # counted 87 sites where GCC counted 160, because it reports the definition
-    # and not every derived class. Its second flag catches the other half of
-    # the class, a destructor actually called on such a type, and those 11
-    # sites were records destroyed inside a std::vector.
-    -Wnon-virtual-dtor
-    -Wdelete-non-abstract-non-virtual-dtor
     # Cleared 2026-10-17, as a pair, because they are the two halves of one
     # question: does a printf-family call fit the buffer it is given.
     # -Wformat-overflow=2 was 2, both real, and one of them a defect the class
@@ -183,6 +180,12 @@ set(OBK2_WARNINGS_GCC
     # the marker, and this tree had three such comments in Russian that no
     # pattern would match; the attribute is checked by the language rather than
     # by a regex, and clang only ever accepted the attribute.
+    #
+    # The plain -Wimplicit-fallthrough stood here as well until 2026-10-25,
+    # earlier in the list and so overridden by this entry; its note recorded
+    # that the same pass cleared clang's 39 sites, GCC's 32 plus the cases that
+    # fall into a default that returns. That is a clang measurement, so it
+    # belongs in the clang list rather than as a dead token in this one.
     -Wimplicit-fallthrough=5
     # Cleared 2026-10-17. Was 160 reported sites, which were about 70 classes
     # seen twice over, once at the definition and once at every class derived
@@ -195,6 +198,16 @@ set(OBK2_WARNINGS_GCC
     # class with a virtual function already carries a vtable pointer, so this
     # adds a table entry and nothing else. The one class that needed a decision
     # is NInput::CGMORegContainer, and the reasoning is at the destructor.
+    #
+    # This entry appeared twice in this list until 2026-10-25, and
+    # -Wdelete-non-abstract-non-virtual-dtor sat beside the second copy, which
+    # is a diagnostic only clang has: g++ 14.2 rejects it, so the probe dropped
+    # it and it gated nothing anywhere, for the eight days the comment beside
+    # it claimed it covered the other half of this class. Both the duplicate
+    # and that flag are gone from here. Re-measuring it on clang, and adding it
+    # and -Wnon-virtual-dtor to the clang list where the 87 and 11 sites were
+    # actually counted, is a change of its own because it can only be gated on
+    # a fresh zero.
     -Wnon-virtual-dtor
     # Cleared 2026-10-19 together with clang's -Wenum-enum-conversion below,
     # which is the same class under a different name: GCC spells it after the
@@ -473,6 +486,10 @@ function(bk2_target_warnings target)
     else()
         set(wanted ${OBK2_WARNINGS_GCC})
         if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+            # Replaces the GCC list rather than adding to it, which is the
+            # whole reason the two lists repeat the classes they share. See the
+            # note above OBK2_WARNINGS_GCC: a flag in the list of the compiler
+            # that does not have it is dropped by the probe and gates nothing.
             set(wanted ${OBK2_WARNINGS_CLANG})
         endif()
         if(OBK2_WARNINGS_STRICT)
