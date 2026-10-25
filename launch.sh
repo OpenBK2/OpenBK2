@@ -85,6 +85,12 @@ usage()
 	                         overrides them. Repeatable.
 	      --software-vk      force the lavapipe software Vulkan device, so a run
 	                         needs no GPU. Quietens the DXVK log too.
+	      --hud [WHICH]      draw a frame rate overlay. WHICH is dxvk, the
+	                         default, which uses the HUD built into the DXVK the
+	                         game already renders through and needs nothing
+	                         installed; or mango, which enables MangoHud's
+	                         Vulkan layer. DXVK_HUD and MangoHud's own
+	                         configuration say what each one draws.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
 	      --valgrind         run under valgrind's memcheck, which reports the
@@ -105,6 +111,8 @@ usage()
 	  ./launch.sh asan+ubsan --data totalconv
 	  ./launch.sh debug --editor
 	  ./launch.sh asan+ubsan --gdb
+	  ./launch.sh release --hud
+	  ./launch.sh release --hud mango --data retail
 	  ./launch.sh release --valgrind --data retail
 	  ASAN_OPTIONS=detect_leaks=1 ./launch.sh asan+ubsan
 	USAGE
@@ -166,9 +174,18 @@ CAMPAIGN=
 VERIFY=no
 declare -a SETVARS=()
 SOFTWARE_VK=no
+HUD=
 # The lavapipe ICD, which is what makes a run possible with no GPU. Debian names
 # it without an architecture suffix.
 readonly LVP_ICD=/usr/share/vulkan/icd.d/lvp_icd.json
+# Where a MangoHud install drops its implicit layer manifest. The file name
+# carries an architecture suffix on some distributions and not on others, so it
+# is globbed rather than named.
+readonly -a MANGOHUD_LAYER_DIRS=(
+	/usr/share/vulkan/implicit_layer.d
+	/usr/local/share/vulkan/implicit_layer.d
+	"$HOME/.local/share/vulkan/implicit_layer.d"
+)
 
 if [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; then
 	CONFIG="$1"
@@ -199,6 +216,20 @@ while [ $# -gt 0 ]; do
 		              case "$2" in *=*) ;; *) die "--setvar wants NAME=VALUE, got '$2'" ;; esac
 		              SETVARS+=("--setvar=$2"); shift 2 ;;
 		--software-vk) SOFTWARE_VK=yes; shift ;;
+		--hud)        # The overlay is optional, so a bare --hud has to stay
+		              # valid and the next word is only consumed when it names
+		              # one. Anything else that is not an option is a typo
+		              # worth reporting here, rather than leaving it to be
+		              # rejected as an unknown option a turn later.
+		              HUD=dxvk
+		              if [ $# -ge 2 ] && [ "${2#-}" = "$2" ]; then
+		                  case "$2" in
+		                      dxvk|mango) HUD="$2" ;;
+		                      *)          die "--hud takes dxvk or mango, got '$2'" ;;
+		                  esac
+		                  shift
+		              fi
+		              shift ;;
 		-e|--editor)  EXE=B2_MapEditor; shift ;;
 		-g|--gdb)     USE_GDB=yes; shift ;;
 		--valgrind)   USE_VALGRIND=yes; shift ;;
@@ -353,6 +384,42 @@ if [ "$SOFTWARE_VK" = yes ]; then
 		"VK_ICD_FILENAMES=$LVP_ICD"
 	)
 fi
+
+# The frame rate overlay. DXVK's own HUD needs nothing installed, because the
+# game renders through DXVK whatever this flag says, and DXVK_HUD is a comma
+# separated list of which figures to draw: fps alone by default here, where
+# full draws every one of them.
+#
+# MangoHud is an implicit Vulkan layer and MANGOHUD=1 is what enables it, so
+# there is nothing to preload and nothing to wrap; the mangohud script on PATH
+# is for OpenGL programs, which this is not. Its own configuration is left
+# alone, since MANGOHUD_CONFIG reaches the layer through the environment
+# already and setting a value here would override the user's MangoHud.conf on
+# every run.
+case "$HUD" in
+	dxvk)
+		ENV_ARGS+=( "DXVK_HUD=${DXVK_HUD:-fps}" ) ;;
+	mango)
+		# MANGOHUD=1 only enables a layer that is installed. With no manifest
+		# to enable it is a no-op, and the run would come up with no overlay
+		# and nothing said about why, so the manifest is what is tested for.
+		mangohud_layer=
+		for dir in "${MANGOHUD_LAYER_DIRS[@]}"; do
+			for manifest in "$dir"/MangoHud*.json; do
+				[ -e "$manifest" ] && { mangohud_layer="$manifest"; break 2; }
+			done
+		done
+		[ -n "$mangohud_layer" ] ||
+			die "no MangoHud layer manifest in ${MANGOHUD_LAYER_DIRS[*]}; install mangohud, or use --hud dxvk"
+		# The layer runs threads of its own and wraps the swapchain, so it
+		# reports as races under TSan that tsan.supp was not built to cover.
+		case "$PREFIX" in
+			*-tsan)
+				printf '%s: warning: the MangoHud layer races with itself as far as TSan is concerned, and tsan.supp does not cover it\n' "$SELF" >&2 ;;
+		esac
+		ENV_ARGS+=( "MANGOHUD=1" ) ;;
+esac
+
 case "$PREFIX" in
 	*-asan)
 		ENV_ARGS+=(
