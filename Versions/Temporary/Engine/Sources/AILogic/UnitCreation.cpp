@@ -141,13 +141,13 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax,
 			// не центровые - по 2 раза
 			if ( iLimit != nSize )
 			{
-				CVec2 res( CVec2( vStartOffset.x, -vStartOffset.y ) + CVec2( -resize * i * box.y, 0 ) );
+				CVec2 resMirrored( CVec2( vStartOffset.x, -vStartOffset.y ) + CVec2( -resize * i * box.y, 0 ) );
 				if ( bRandom )
 				{
-					res.x -= box.y * NRandom::Random( 0.0f, SConsts::PLANES_START_RANDOM );
+					resMirrored.x -= box.y * NRandom::Random( 0.0f, SConsts::PLANES_START_RANDOM );
 					RecordRandomCall();
 				}
-				positions->push_back( res /*^ direction*/ );
+				positions->push_back( resMirrored /*^ direction*/ );
 				if ( positions->size() == nMax )
 				{
 					return;

@@ -1152,9 +1152,9 @@ ETryStateInterruptResult CFormationEnterBuildingState::TryInterruptState( class 
 		}
 		else
 		{
-			for ( int i = 0; i < pFormation->Size(); ++i )
+			for ( int nUnit = 0; nUnit < pFormation->Size(); ++nUnit )
 			{
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), ( *pFormation )[i], false );
+				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), ( *pFormation )[nUnit], false );
 			}
 
 			if ( IsValidObj( pBuilding ) )
@@ -1239,10 +1239,10 @@ bool CFormationEnterEntrenchmentState::IsAnyPartCloseToEntrenchment() const
 	while ( i < pFormation->Size() )
 	{
 		const CVec2 vSoldierCenter = ( *pFormation )[i]->GetCenterPlain();
-		CVec2 vClosestPoint;
-		pEntrenchment->GetClosestPoint( vSoldierCenter, &vClosestPoint );
+		CVec2 vSoldierClosestPoint;
+		pEntrenchment->GetClosestPoint( vSoldierCenter, &vSoldierClosestPoint );
 
-		if ( fabs2( vClosestPoint - vSoldierCenter ) < fFormationRadius2 )
+		if ( fabs2( vSoldierClosestPoint - vSoldierCenter ) < fFormationRadius2 )
 		{
 			return true;
 		}
@@ -1381,9 +1381,9 @@ ETryStateInterruptResult CFormationEnterEntrenchmentState::TryInterruptState( cl
 		}
 		else
 		{
-			for ( int i = 0; i < pFormation->Size(); ++i )
+			for ( int nUnit = 0; nUnit < pFormation->Size(); ++nUnit )
 			{
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), ( *pFormation )[i], false );
+				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), ( *pFormation )[nUnit], false );
 			}
 			pFormation->SetCommandFinished();
 
@@ -2306,9 +2306,9 @@ ETryStateInterruptResult CFormationEnterTransportState::TryInterruptState( class
 		}
 		else
 		{
-			for ( int i = 0; i < pFormation->Size(); ++i )
+			for ( int nUnit = 0; nUnit < pFormation->Size(); ++nUnit )
 			{
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), ( *pFormation )[i], false );
+				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_STOP ), ( *pFormation )[nUnit], false );
 			}
 
 			pTransport->Unlock();
@@ -3015,9 +3015,9 @@ void CFormationFormState::Segment()
 
 		// раздать команду всем
 		SAIUnitCmd waitCmd( ACTION_COMMAND_WAIT_TO_FORM, pMainSoldier->GetUniqueId(), 0.0f );
-		for ( int i = 0; i < pMemFormation->Size(); ++i )
+		for ( int nSoldier = 0; nSoldier < pMemFormation->Size(); ++nSoldier )
 		{
-			CSoldier *pSoldier = ( *pMemFormation )[i];
+			CSoldier *pSoldier = ( *pMemFormation )[nSoldier];
 			if ( pSoldier != pMainSoldier && pSoldier->GetFormation()->GetState()->GetName() != EUSN_WAIT_TO_FORM )
 			{
 				if ( cmd.nCmdType == ACTION_COMMAND_MOVE_TO )

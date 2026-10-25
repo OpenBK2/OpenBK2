@@ -1062,15 +1062,17 @@ void CGeneralIntendant::Segment()
 		int nTasksCreated = 0; //INTENDANT_TASKS_PER_SEGMENT
 		for ( int nCell = 0; nCell < cellsToSort.size() && nTasksCreated < INTENDANT_TASKS_PER_SEGMENT; ++nCell )
 		{
-			for ( int i = 0; i < _ERT_COUNT && nTasksCreated < INTENDANT_TASKS_PER_SEGMENT; ++i )
+			for ( int nResupplyType = 0; nResupplyType < _ERT_COUNT && nTasksCreated < INTENDANT_TASKS_PER_SEGMENT;
+			      ++nResupplyType )
 			{
 				CResupplyCellInfo *pCell = cellsToSort[nCell];
-				if ( !pCell->IsDangerous() && ( cResupplyPossible & ( 1 << i ) ) &&
-				     !pCell->IsMarkedUnderSupply( static_cast<EResupplyType>( i ) ) &&
-				     pCell->GetNNeeded( static_cast<EResupplyType>( i ) ) > 0.0f )
+				if ( !pCell->IsDangerous() && ( cResupplyPossible & ( 1 << nResupplyType ) ) &&
+				     !pCell->IsMarkedUnderSupply( static_cast<EResupplyType>( nResupplyType ) ) &&
+				     pCell->GetNNeeded( static_cast<EResupplyType>( nResupplyType ) ) > 0.0f )
 				{
 					++nTasksCreated;
-					IGeneralTask *pTask = new CGeneralTaskToResupplyCell( pCell, nParty, static_cast<EResupplyType>( i ), this );
+					IGeneralTask *pTask =
+							new CGeneralTaskToResupplyCell( pCell, nParty, static_cast<EResupplyType>( nResupplyType ), this );
 					tasks.push_back( pTask );
 				}
 			}

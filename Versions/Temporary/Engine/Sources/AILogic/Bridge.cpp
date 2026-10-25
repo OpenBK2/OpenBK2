@@ -758,8 +758,8 @@ void CFullBridge::DamageTaken( CBridgeSpan *pDamagedSpan,
 				const float fCurHPPercent = pSpan->GetHitPoints() / fCurMaxHP;
 				if ( fCurHPPercent > fNewHPPercent )
 				{
-					const float fDamage = ( fCurHPPercent - fNewHPPercent ) * fCurMaxHP;
-					pSpan->TakeDamage( fDamage, bFromExplosion, nPlayerOfShoot, pShotUnit );
+					const float fSpanDamage = ( fCurHPPercent - fNewHPPercent ) * fCurMaxHP;
+					pSpan->TakeDamage( fSpanDamage, bFromExplosion, nPlayerOfShoot, pShotUnit );
 				}
 			}
 		}

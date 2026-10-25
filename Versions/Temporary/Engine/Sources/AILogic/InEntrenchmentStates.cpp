@@ -67,8 +67,10 @@ IUnitState *CInEntrenchmentStatesFactory::ProduceState( class CQueueUnit *pUnit,
 			[[fallthrough]];
 		case ACTION_COMMAND_ATTACK_UNIT:
 		{
-			CONVERT_OBJECT( CAIUnit, pUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
-			pResult = CSoldierAttackInEtrenchState::Instance( pSoldier, pUnit, bSwarmAttack );
+			// As in InBuildingStates.cpp: the target was called pUnit and
+			// shadowed the parameter, which is the soldier taking the order.
+			CONVERT_OBJECT( CAIUnit, pTargetUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
+			pResult = CSoldierAttackInEtrenchState::Instance( pSoldier, pTargetUnit, bSwarmAttack );
 		}
 
 		break;

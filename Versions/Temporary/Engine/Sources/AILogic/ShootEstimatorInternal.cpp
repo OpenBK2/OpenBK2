@@ -101,19 +101,19 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 	if ( pTurret != 0 )
 	{
 		int nTimeVerticalAim = 0;
-		CTurret *pTurret = pGun->GetTurret();
+		CTurret *pGunTurret = pGun->GetTurret();
 		// zero saftey check
-		if ( std::abs( pTurret->GetVerRotationSpeed() ) <= 1e-9f )
+		if ( std::abs( pGunTurret->GetVerRotationSpeed() ) <= 1e-9f )
 		{
-			nTimeVerticalAim = DirsDifference( pGun->GetVerTurnConstraint(), pTurret->GetVerCurAngle() );
+			nTimeVerticalAim = DirsDifference( pGun->GetVerTurnConstraint(), pGunTurret->GetVerCurAngle() );
 		}
 		else if ( pGun->IsBallisticTrajectory() )
 		{
-			nTimeVerticalAim =
-					DirsDifference( pGun->GetVerTurnConstraint(), pTurret->GetVerCurAngle() ) / pTurret->GetVerRotationSpeed();
+			nTimeVerticalAim = DirsDifference( pGun->GetVerTurnConstraint(), pGunTurret->GetVerCurAngle() ) /
+			                   pGunTurret->GetVerRotationSpeed();
 		}
 
-		const uint16_t wGunDir = pTurret->GetHorCurAngle() + pGun->GetGun().wDirection + wUnitDir;
+		const uint16_t wGunDir = pGunTurret->GetHorCurAngle() + pGun->GetGun().wDirection + wUnitDir;
 		const uint16_t wTurnAngle = DirsDifference( wGunDir, wDirToEnemy );
 
 		if ( wTurnAngle < wDeltaAngle )
@@ -122,7 +122,7 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 		}
 		else
 		{
-			float fTurnSpeed = pTurret->GetHorRotationSpeed();
+			float fTurnSpeed = pGunTurret->GetHorRotationSpeed();
 			if ( bMovingOwner )
 			{
 				fTurnSpeed = (std::min)( fTurnSpeed, pOwner->GetTurnSpeed() );

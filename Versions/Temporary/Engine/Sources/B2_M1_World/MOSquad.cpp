@@ -216,9 +216,9 @@ void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 		}
 
 		*pActions |= pMemberActions->availUserActions;
-		for ( int i = 0; i < pMemberActions->specialAbilities.size(); ++i )
+		for ( int nAbility = 0; nAbility < pMemberActions->specialAbilities.size(); ++nAbility )
 		{
-			const NDb::SUnitSpecialAblityDesc *pDesc = pMemberActions->specialAbilities[i];
+			const NDb::SUnitSpecialAblityDesc *pDesc = pMemberActions->specialAbilities[nAbility];
 			if ( !pDesc )
 			{
 				continue;

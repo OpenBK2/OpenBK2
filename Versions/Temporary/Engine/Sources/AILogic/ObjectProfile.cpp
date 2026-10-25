@@ -157,8 +157,8 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile,
 		{
 			if ( GetAIMap()->IsTileInside( tile ) )
 			{
-				const CVec2 vLeftDown( tile.x * SAIConsts::TILE_SIZE, tile.y * SAIConsts::TILE_SIZE );
-				const CVec2 v5( vLeftDown.x + SAIConsts::TILE_SIZE / 2, vLeftDown.y + SAIConsts::TILE_SIZE / 2 );
+				const CVec2 vTileLeftDown( tile.x * SAIConsts::TILE_SIZE, tile.y * SAIConsts::TILE_SIZE );
+				const CVec2 v5( vTileLeftDown.x + SAIConsts::TILE_SIZE / 2, vTileLeftDown.y + SAIConsts::TILE_SIZE / 2 );
 				if ( IsPointInside( v5 ) )
 				{
 					tilesUnder.insert( tile );
@@ -185,10 +185,10 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile,
 
 	if ( IsPointInside( vCenter ) )
 	{
-		const SVector tile = AICellsTiles::GetTile( vCenter );
-		if ( GetAIMap()->IsTileInside( tile ) )
+		const SVector tileOfCenter = AICellsTiles::GetTile( vCenter );
+		if ( GetAIMap()->IsTileInside( tileOfCenter ) )
 		{
-			tilesUnder.insert( tile );
+			tilesUnder.insert( tileOfCenter );
 		}
 	}
 

@@ -276,10 +276,10 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 		const int nShotAnimation = GetAnimationFromAction( pInternalData->info.typeID );
 		if ( nShotAnimation != -1 )
 		{
-			CUpdatableObj *pObj = GetObjectByUniqueIdSafe<CUpdatableObj>( pInternalData->info.nObjUniqueID );
-			if ( pObj && pObj->IsRefValid() )
+			CUpdatableObj *pUpdatedObj = GetObjectByUniqueIdSafe<CUpdatableObj>( pInternalData->info.nObjUniqueID );
+			if ( pUpdatedObj && pUpdatedObj->IsRefValid() )
 			{
-				pObj->AnimationSet( nShotAnimation );
+				pUpdatedObj->AnimationSet( nShotAnimation );
 			}
 			//			checked_cast<CUpdatableObj*>(pInternalData->info.pObj.GetPtr())->AnimationSet( nShotAnimation );
 		}

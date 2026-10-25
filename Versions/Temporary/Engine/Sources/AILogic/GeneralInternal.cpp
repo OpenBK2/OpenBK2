@@ -174,8 +174,8 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 			{
 				if ( pStats->IsTransport() )
 				{
-					const int nScriptID = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetScriptID( pWorker );
-					if ( IsMobileReinforcement( nScriptID ) || ( bFromReinforcement && nScriptID == -1 ) )
+					const int nWorkerScriptID = dynamic_cast<CAILogic *>( Singleton<IAILogic>() )->GetScriptID( pWorker );
+					if ( IsMobileReinforcement( nWorkerScriptID ) || ( bFromReinforcement && nWorkerScriptID == -1 ) )
 					{
 						if ( pStats->etype == RPG_TYPE_TRN_CIVILIAN_AUTO )
 						{

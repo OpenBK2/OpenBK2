@@ -425,9 +425,9 @@ void CGroupLogic::CreateSpecialGroup( const uint16_t wGroup )
 			{
 				CFormation *pForm = checked_cast<CFormation *>( pUnit );
 				int nSold = pForm->Size();
-				for ( int i = 0; i < nSold; ++i )
+				for ( int nSoldier = 0; nSoldier < nSold; ++nSoldier )
 				{
-					CSoldier *pSold = ( *pForm )[i];
+					CSoldier *pSold = ( *pForm )[nSoldier];
 
 					DelUnitFromSpecialGroup( pSold );
 

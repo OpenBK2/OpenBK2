@@ -94,20 +94,20 @@ void CStormableObject::DelFromAttackers( CSoldier *pUnit )
 	// anao aeoeaiuo oaaeeee - i?iaa?eou, ia oaaeeee ee anao aoaeo?ueo
 	if ( nActiveAttackers == 0 )
 	{
-		int i = 0;
-		while ( i < 3 && nAttackers[i] == 0 )
+		int nPartyIdx = 0;
+		while ( nPartyIdx < 3 && nAttackers[nPartyIdx] == 0 )
 		{
-			++i;
+			++nPartyIdx;
 		}
 
-		if ( i >= 3 )
+		if ( nPartyIdx >= 3 )
 		{
 			bAttackers = false;
 
 			// eciaieou warfog aey anao caueoieeia
-			for ( int i = 0; i < GetNDefenders(); ++i )
+			for ( int nDefender = 0; nDefender < GetNDefenders(); ++nDefender )
 			{
-				GetUnit( i )->WarFogChanged();
+				GetUnit( nDefender )->WarFogChanged();
 			}
 		}
 	}

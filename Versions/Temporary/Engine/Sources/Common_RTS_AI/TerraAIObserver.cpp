@@ -91,7 +91,7 @@ void CTerraAIObserver::AddRiverCliffTiles( const std::list<SVector> &tiles )
 }
 
 void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
-                                         const int j,
+                                         const int nPoint,
                                          const float fCoeff,
                                          std::list<SVector> *pTiles,
                                          const SSingleSide &singleSide,
@@ -100,11 +100,11 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
 	const float fTileSize = (float)( pAIMap->GetTileSize() );
 	NDb::SVSOInstance revVSO = ( *pVSO );
 
-	const CVec2 vCenter1( revVSO.points[j].vPos.x, revVSO.points[j].vPos.y );
+	const CVec2 vCenter1( revVSO.points[nPoint].vPos.x, revVSO.points[nPoint].vPos.y );
 	CVec2 vCenter2;
-	if ( j + 1 < revVSO.points.size() )
+	if ( nPoint + 1 < revVSO.points.size() )
 	{
-		vCenter2.Set( revVSO.points[j + 1].vPos.x, revVSO.points[j + 1].vPos.y );
+		vCenter2.Set( revVSO.points[nPoint + 1].vPos.x, revVSO.points[nPoint + 1].vPos.y );
 	}
 	else
 	{
@@ -114,11 +114,11 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
 	CVec2 vDir( vCenter2 - vCenter1 );
 	Normalize( &vDir );
 
-	const CVec2 vNorm1( revVSO.points[j].vNorm.x, revVSO.points[j].vNorm.y );
+	const CVec2 vNorm1( revVSO.points[nPoint].vNorm.x, revVSO.points[nPoint].vNorm.y );
 	CVec2 vNorm2;
-	if ( j + 1 < revVSO.points.size() )
+	if ( nPoint + 1 < revVSO.points.size() )
 	{
-		vNorm2.Set( revVSO.points[j + 1].vNorm.x, revVSO.points[j + 1].vNorm.y );
+		vNorm2.Set( revVSO.points[nPoint + 1].vNorm.x, revVSO.points[nPoint + 1].vNorm.y );
 	}
 	else
 	{
@@ -135,10 +135,10 @@ void CTerraAIObserver::GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
 	}
 	else
 	{
-		v[1] = vCenter1 - vNorm1 * revVSO.points[j].fWidth * fCoeff;
-		v[2] = vCenter2 - vNorm2 * revVSO.points[j + 1].fWidth * fCoeff;
-		v[0] = vCenter1 + vNorm1 * revVSO.points[j].fWidth * fCoeff;
-		v[3] = vCenter2 + vNorm2 * revVSO.points[j + 1].fWidth * fCoeff;
+		v[1] = vCenter1 - vNorm1 * revVSO.points[nPoint].fWidth * fCoeff;
+		v[2] = vCenter2 - vNorm2 * revVSO.points[nPoint + 1].fWidth * fCoeff;
+		v[0] = vCenter1 + vNorm1 * revVSO.points[nPoint].fWidth * fCoeff;
+		v[3] = vCenter2 + vNorm2 * revVSO.points[nPoint + 1].fWidth * fCoeff;
 	}
 
 	v[0] -= vDir * 64;

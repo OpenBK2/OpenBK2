@@ -437,20 +437,20 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 
 	nFirstArtGun = ( i < GetNGuns() ) ? i : -1;
 
-	for ( int i = 1; i < GetNGuns(); ++i )
+	for ( int nGun = 1; nGun < GetNGuns(); ++nGun )
 	{
-		if ( GetGun( i )->GetGun().nPriority == 0 )
+		if ( GetGun( nGun )->GetGun().nPriority == 0 )
 		{
 			int j = 0;
-			while ( j < i && ( GetGun( j )->GetGun().nPriority != 0 || GetGun( j )->IsCommonEqual( GetGun( i ) ) ) )
+			while ( j < nGun && ( GetGun( j )->GetGun().nPriority != 0 || GetGun( j )->IsCommonEqual( GetGun( nGun ) ) ) )
 			{
 				++j;
 			}
 
-			if ( j < i )
+			if ( j < nGun )
 			{
-				GetGun( j )->AddParallelGun( GetGun( i ) );
-				GetGun( i )->SetToParallelGun();
+				GetGun( j )->AddParallelGun( GetGun( nGun ) );
+				GetGun( nGun )->SetToParallelGun();
 			}
 		}
 	}

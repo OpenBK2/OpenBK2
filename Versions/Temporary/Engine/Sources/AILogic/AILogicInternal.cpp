@@ -893,9 +893,9 @@ void CAILogic::InitLinks( LinkInfo &linksInfo )
 						}
 						else if ( CArtillery *pArtillery = dynamic_cast<CArtillery *>( pObj ) )
 						{
-							if ( CAITransportUnit *pTransport = dynamic_cast<CAITransportUnit *>( pUnit ) )
+							if ( CAITransportUnit *pArtTransport = dynamic_cast<CAITransportUnit *>( pUnit ) )
 							{
-								LinkArtilleryWithTransport( pArtillery, pTransport );
+								LinkArtilleryWithTransport( pArtillery, pArtTransport );
 							}
 						}
 						// линковка с юнитом
@@ -2163,10 +2163,16 @@ static void PathfinderTest( const std::string &szID, const std::vector<std::wstr
 		}
 		else
 		{
-			SVector vStartTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+			// Pick the next pair of tiles, rather than declaring a second pair
+			// that shadows the one the search above reads: these two lines
+			// said SVector vStartTile( ... ) until 2026-10-25, so every one of
+			// the 500 iterations searched the same path the first two draws
+			// chose. The draws themselves are unchanged in number and order,
+			// so the shared generator's stream is what it was.
+			vStartTile = SVector( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
 			RecordRandomCall();
 			RecordRandomCall();
-			SVector vFinishTile( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
+			vFinishTile = SVector( NRandom::Random( 0, nMaxX ), NRandom::Random( 0, nMaxY ) );
 			RecordRandomCall();
 			RecordRandomCall();
 		}

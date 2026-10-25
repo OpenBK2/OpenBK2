@@ -325,10 +325,10 @@ CEntrenchment::CEntrenchment( CObjectBase **_segments,
 				}
 			}
 
-			for ( int i = 0; i < pPart->GetSegmStats().fireplaces.size(); ++i )
+			for ( int nFireplace = 0; nFireplace < pPart->GetSegmStats().fireplaces.size(); ++nFireplace )
 			{
 				fireplaces.push_back( SFireplaceInfo(
-						vPartCenter + GetShift( pPart->GetSegmStats().fireplaces[i], vDir ), 0, pPart->GetFrameIndex() ) );
+						vPartCenter + GetShift( pPart->GetSegmStats().fireplaces[nFireplace], vDir ), 0, pPart->GetFrameIndex() ) );
 			}
 		}
 

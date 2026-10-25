@@ -64,8 +64,11 @@ IUnitState *CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAI
 		case ACTION_COMMAND_SWARM_ATTACK_UNIT:
 		case ACTION_COMMAND_ATTACK_UNIT:
 		{
-			CONVERT_OBJECT( CAIUnit, pUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
-			pResult = CSoldierAttackInBuildingState::Instance( pSoldier, pUnit );
+			// The target was declared as pUnit until 2026-10-25 and so
+			// shadowed the parameter, which is the soldier being given the
+			// order rather than the unit to attack.
+			CONVERT_OBJECT( CAIUnit, pTargetUnit, GetObjectByCmd( cmd ), "Wrong unit to attack" );
+			pResult = CSoldierAttackInBuildingState::Instance( pSoldier, pTargetUnit );
 		}
 
 		break;

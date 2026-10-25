@@ -313,8 +313,9 @@ void CMOUnitMechanical::InitAttached( const NDb::ESeason eSeason, IChooseAttache
 		for ( int j = 0; j < pStats->GetGunsSize( nID, i ); ++j )
 		{
 			const NDb::SBaseGunRPGStats &gun = pStats->GetGun( nID, i, j );
-			const NDb::SAttachedModelVisObj *pAttachedObj = gun.pAttachedGunVisObj;
-			TryToAttach( pAttachedObj, pChooseFunc, eSeason, gun.szAttachedGunLocator, ESSOT_GUNS, GetAttachedGunID( i, j ) );
+			const NDb::SAttachedModelVisObj *pGunAttachedObj = gun.pAttachedGunVisObj;
+			TryToAttach(
+					pGunAttachedObj, pChooseFunc, eSeason, gun.szAttachedGunLocator, ESSOT_GUNS, GetAttachedGunID( i, j ) );
 		}
 	}
 
@@ -1229,15 +1230,15 @@ IClientUpdatableProcess *CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 			if ( IsVisible() && !pStats->exhaustPoints.empty() && pStats->pEffectDiesel &&
 			     pStats->pEffectDiesel->GetSceneEffect() )
 			{
-				IScene *pScene = Scene();
+				IScene *pCurScene = Scene();
 				for ( int i = 0; i < pStats->exhaustPoints.size(); ++i )
 				{
-					pScene->AttachEffect( GetID(),
-					                      ESSOT_EXHAUST,
-					                      pStats->exhaustPoints[i],
-					                      pStats->pEffectDiesel->GetSceneEffect(),
-					                      time,
-					                      i == 0 ? ESAT_REPLACE_ON_TYPE : ESAT_NO_REPLACE );
+					pCurScene->AttachEffect( GetID(),
+					                         ESSOT_EXHAUST,
+					                         pStats->exhaustPoints[i],
+					                         pStats->pEffectDiesel->GetSceneEffect(),
+					                         time,
+					                         i == 0 ? ESAT_REPLACE_ON_TYPE : ESAT_NO_REPLACE );
 				}
 			}
 		}

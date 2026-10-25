@@ -2219,13 +2219,13 @@ void CPlaneShturmovikPatrolState::TryDropBombs()
 				// атака бомбами.
 				if ( !pGun->IsFiring() && pGun->GetRestTimeOfRelax() == 0 && pGun->GetNAmmo() != 0 )
 				{
-					const CVec3 vSpeed3( pPlane->GetSpeedB2() );
+					const CVec3 vCurSpeed3( pPlane->GetSpeedB2() );
 					const CVec3 vCurPoint3( pPlane->GetPosB2() );
 					const CVec2 vCurPoint2( vCurPoint3.x, vCurPoint3.y );
 					const float fTimeToFly = CBombBallisticTraj::GetTimeOfFly(
-							pPlane->GetZ() - GetHeights()->GetZ( pPlane->GetCenterPlain() ), vSpeed3.z );
+							pPlane->GetZ() - GetHeights()->GetZ( pPlane->GetCenterPlain() ), vCurSpeed3.z );
 					const CVec3 vTrajFinish(
-							CBombBallisticTraj::CalcTrajectoryFinish( vCurPoint3, vSpeed3, VNULL2, fTimeToFly ) );
+							CBombBallisticTraj::CalcTrajectoryFinish( vCurPoint3, vCurSpeed3, VNULL2, fTimeToFly ) );
 					const float fDisp = pGun->GetDispersion() * pPlane->GetCenter().z / pGun->GetFireRangeMax();
 
 					if ( fabs( CVec2( vTrajFinish.x, vTrajFinish.y ) - enemie.GetCenter() ) < fDisp * 2.0f )

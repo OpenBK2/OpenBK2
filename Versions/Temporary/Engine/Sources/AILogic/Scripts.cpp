@@ -1068,10 +1068,10 @@ bool CScripts::CanUnitLand( const SMapObjectInfo &mapObject, const CVec2 &vShift
 
 		const CVec2 realDirVec( GetVectorByDirection( mapObject.nDir ) );
 		const CVec2 dirPerp( realDirVec.y, -realDirVec.x );
-		const CVec2 vShift( realDirVec * pStats->vAABBCenter.y + dirPerp * pStats->vAABBCenter.x );
+		const CVec2 vAABBShift( realDirVec * pStats->vAABBCenter.y + dirPerp * pStats->vAABBCenter.x );
 
 		SRect unitRect;
-		unitRect.InitRect( vCenter + vShift, realDirVec, length, width );
+		unitRect.InitRect( vCenter + vAABBShift, realDirVec, length, width );
 
 		for ( CUnitsIter<0, 1> iter( 0, ANY_PARTY, vCenter, 2 * length ); !iter.IsFinished(); iter.Iterate() )
 		{
@@ -1890,10 +1890,10 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 						const float fShift = NRandom::Random( fDispersion );
 						RecordRandomCall();
 						tmpCmd.vPos = command.vPos + fShift * GetVectorByDirection( wDirection );
-						const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
-						Singleton<IAILogic>()->RegisterGroup( id, nGroup );
-						Singleton<IAILogic>()->GroupCommand( &tmpCmd, nGroup, bPlaceInQueue );
-						Singleton<IAILogic>()->UnregisterGroup( nGroup );
+						const int nSimGroup = theGroupLogic.GenerateSimulationGroupNumber();
+						Singleton<IAILogic>()->RegisterGroup( id, nSimGroup );
+						Singleton<IAILogic>()->GroupCommand( &tmpCmd, nSimGroup, bPlaceInQueue );
+						Singleton<IAILogic>()->UnregisterGroup( nSimGroup );
 						Singleton<IAILogic>()->SetNeedNewGroupNumber();
 					}
 					return 0;
@@ -2201,7 +2201,9 @@ int CScripts::GetNUnitsInArea( struct lua_State *state )
 
 	if ( script.GetObject( 2 ).IsNumberOnly() )
 	{
-		const int nPlayer = script.GetObject( 1 );
+		// The second reading of argument 1 was dropped on 2026-10-25: it
+		// shadowed the one above it with the same value, GetObject being a
+		// plain read of the stack slot.
 		CHECK_ERROR( script.GetObject( 2 ).IsNumber(), "GetNUnitsInArea : the second parameter is not a X", script );
 		CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "GetNUnitsInArea : the third parameter is not a Y", script );
 		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "GetNUnitsInArea : the fourth parameter is not a R", script );
@@ -2968,16 +2970,16 @@ int CScripts::GetNAmmo( struct lua_State *state )
 		{
 			for ( int i = 0; i < pFormation->Size(); ++i )
 			{
-				CAIUnit *pUnit = ( *pFormation )[i];
-				for ( int i = 0; i < pUnit->GetNCommonGuns(); ++i )
+				CAIUnit *pFormationUnit = ( *pFormation )[i];
+				for ( int nGun = 0; nGun < pFormationUnit->GetNCommonGuns(); ++nGun )
 				{
-					if ( pUnit->GetCommonGunStats( i ).bIsPrimary )
+					if ( pFormationUnit->GetCommonGunStats( nGun ).bIsPrimary )
 					{
-						nMainAmmo += pUnit->GetNAmmo( i );
+						nMainAmmo += pFormationUnit->GetNAmmo( nGun );
 					}
 					else
 					{
-						nSecondaryAmmo += pUnit->GetNAmmo( i );
+						nSecondaryAmmo += pFormationUnit->GetNAmmo( nGun );
 					}
 				}
 			}
@@ -3917,7 +3919,9 @@ int CScripts::GetUnitListInArea( struct lua_State *state )
 
 	if ( script.GetObject( 2 ).IsNumberOnly() )
 	{
-		const int nPlayer = script.GetObject( 1 );
+		// The second reading of argument 1 was dropped on 2026-10-25: it
+		// shadowed the one above it with the same value, GetObject being a
+		// plain read of the stack slot.
 		CHECK_ERROR( script.GetObject( 2 ).IsNumber(), "GetNUnitsInArea : the second parameter is not a X", script );
 		CHECK_ERROR( script.GetObject( 3 ).IsNumber(), "GetNUnitsInArea : the third parameter is not a Y", script );
 		CHECK_ERROR( script.GetObject( 4 ).IsNumber(), "GetNUnitsInArea : the fourth parameter is not a R", script );
@@ -3956,7 +3960,11 @@ int CScripts::GetUnitListInArea( struct lua_State *state )
 		CUnitsInScriptAreaEnumerator cnt( &script, &area );
 		EnumUnitsInScriptArea( &cnt, nPlayer, bCountPlanes );
 
-		Script script( state );
+		// A second Script wrapper over the same lua_State stood here and was
+		// never used; it shadowed the one above for its one remaining line.
+		// Removed 2026-10-25, which costs nothing: that constructor stores the
+		// state and clears the push count, and the destructor closes the state
+		// only for a wrapper that owns it.
 		return cnt.GetNUnits();
 	}
 }
@@ -5207,9 +5215,9 @@ int CScripts::GetAmmo( struct lua_State *pState )
 		for ( int i = 0; i < pFormation->Size(); ++i )
 		{
 			CAIUnit *pUnit = ( *pFormation )[i];
-			for ( int i = 0; i < pUnit->GetNCommonGuns(); ++i )
+			for ( int nGun = 0; nGun < pUnit->GetNCommonGuns(); ++nGun )
 			{
-				script.PushNumber( pUnit->GetNAmmo( i ) );
+				script.PushNumber( pUnit->GetNAmmo( nGun ) );
 				++nGuns;
 			}
 		}

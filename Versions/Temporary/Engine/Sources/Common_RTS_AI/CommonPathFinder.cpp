@@ -208,13 +208,13 @@ CCommonPathFinder::CalculateHandPath( const SVector &blockPoint, const SVector &
 		// правая рука
 		dirRight.x = -dirRight.x;
 		dirRight.y = -dirRight.y;
-		int cnt = 0;
+		int nTurns = 0;
 		do
 		{
-			++cnt;
+			++nTurns;
 			dirRight.TurnLeftUntil45();
-		} while ( cnt < 9 && CanUnitGoByDir( nBoundTileRadius, aiClass, curRightPoint, dirRight ) == FREE_NONE );
-		if ( cnt == 9 )
+		} while ( nTurns < 9 && CanUnitGoByDir( nBoundTileRadius, aiClass, curRightPoint, dirRight ) == FREE_NONE );
+		if ( nTurns == 9 )
 		{
 			nLength = startLen;
 			return SVector( -1, -1 );
@@ -272,13 +272,13 @@ CCommonPathFinder::CalculateHandPath( const SVector &blockPoint, const SVector &
 
 		dirLeft.x = -dirLeft.x;
 		dirLeft.y = -dirLeft.y;
-		cnt = 0;
+		nTurns = 0;
 		do
 		{
-			++cnt;
+			++nTurns;
 			dirLeft.TurnRightUntil45();
-		} while ( cnt < 9 && CanUnitGoByDir( nBoundTileRadius, aiClass, curLeftPoint, dirLeft ) == FREE_NONE );
-		if ( cnt == 9 )
+		} while ( nTurns < 9 && CanUnitGoByDir( nBoundTileRadius, aiClass, curLeftPoint, dirLeft ) == FREE_NONE );
+		if ( nTurns == 9 )
 		{
 			nLength = startLen;
 			return SVector( -1, -1 );
@@ -402,20 +402,20 @@ CCommonPathFinder::CalculateSimplePath( const SVector &blockPoint, const SVector
 
 		SVector dirTemp = dirRight;
 		dirRight.TurnRightUntil90();
-		int cnt = 0;
-		while ( cnt < 8 && CanUnitGoByDir( nBoundTileRadius, aiClass, curRightPoint, dirRight ) == FREE_NONE )
+		int nTurns = 0;
+		while ( nTurns < 8 && CanUnitGoByDir( nBoundTileRadius, aiClass, curRightPoint, dirRight ) == FREE_NONE )
 		{
-			++cnt;
+			++nTurns;
 			dirRight.TurnLeftUntil45();
 		}
 
-		if ( cnt >= 8 )
+		if ( nTurns >= 8 )
 		{
 			nLength = startLen;
 			return SVector( -1, -1 );
 		}
 
-		if ( cnt <= 3 )
+		if ( nTurns <= 3 )
 		{
 			const SVector dir1 = finish - curRightPoint;
 			if ( ( dirTemp * dir1 ) >= 0 && ( dirRight * dir1 ) >= 0 && CanGoTowardPoint( curRightPoint, finish ) )
@@ -447,20 +447,20 @@ CCommonPathFinder::CalculateSimplePath( const SVector &blockPoint, const SVector
 		// --------------------- левая рука -----------------------
 		dirTemp = dirLeft;
 		dirLeft.TurnLeftUntil90();
-		cnt = 0;
-		while ( cnt < 8 && CanUnitGoByDir( nBoundTileRadius, aiClass, curLeftPoint, dirLeft ) == FREE_NONE )
+		nTurns = 0;
+		while ( nTurns < 8 && CanUnitGoByDir( nBoundTileRadius, aiClass, curLeftPoint, dirLeft ) == FREE_NONE )
 		{
-			++cnt;
+			++nTurns;
 			dirLeft.TurnRightUntil45();
 		}
 
-		if ( cnt >= 8 )
+		if ( nTurns >= 8 )
 		{
 			nLength = startLen;
 			return SVector( -1, -1 );
 		}
 
-		if ( cnt <= 3 )
+		if ( nTurns <= 3 )
 		{
 			const SVector dir1 = finish - curLeftPoint;
 			if ( ( dirTemp * dir1 ) >= 0 && ( dirLeft * dir1 ) >= 0 && CanGoTowardPoint( curLeftPoint, finish ) )

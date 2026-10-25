@@ -1839,7 +1839,7 @@ void CBasicGun::Fire( const CVec2 &target, const float z, const bool bShowBombEf
 				float fAcceleration = 0;
 				CVec2 vRandAcc = VNULL2;
 
-				for ( int i = 0; i < 3; ++i )
+				for ( int nIter = 0; nIter < 3; ++nIter )
 				{
 					fTimeToFly = CBombBallisticTraj::GetTimeOfFly( vOwnerCenter3D.z - vTrajFinish.z, vSpeed3.z );
 					fDispRadius = GetDispersion() * ( pOwner->GetZ() - vTrajFinish.z ) / GetFireRangeMax();

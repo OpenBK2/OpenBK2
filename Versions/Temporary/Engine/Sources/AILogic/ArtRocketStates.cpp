@@ -378,10 +378,10 @@ void CArtRocketAttackGroundState::Segment()
 							const int nGuns = pArtillery->GetNGuns();
 							for ( int i = 0; i < nGuns; ++i )
 							{
-								CBasicGun *pGun = pArtillery->GetGun( i );
-								if ( pTurret == pGun->GetTurret() )
+								CBasicGun *pCurGun = pArtillery->GetGun( i );
+								if ( pTurret == pCurGun->GetTurret() )
 								{
-									pGun->StopFire();
+									pCurGun->StopFire();
 								}
 							}
 

@@ -285,10 +285,10 @@ void CUpdatableWorld::UpdateAcknowledgemets()
 						pSquad->GetPassangers( &passangers );
 						if ( !passangers.empty() )
 						{
-							CDynamicCast<IMOUnit> pUnit = passangers[0];
-							if ( pUnit )
+							CDynamicCast<IMOUnit> pPassangerUnit = passangers[0];
+							if ( pPassangerUnit )
 							{
-								pUnit->AIUpdateAcknowledgement( NDb::EUnitAckType( ack.nAck ), AckManager(), ack.nSet );
+								pPassangerUnit->AIUpdateAcknowledgement( NDb::EUnitAckType( ack.nAck ), AckManager(), ack.nSet );
 							}
 						}
 					}

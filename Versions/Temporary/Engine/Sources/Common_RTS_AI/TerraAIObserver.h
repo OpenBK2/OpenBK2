@@ -57,7 +57,7 @@ public:
 
 	virtual void AddVSO( const NDb::SVSOInstance *pVSO );
 	virtual void GetTilesUnderVSO( const NDb::SVSOInstance *pVSO,
-	                               const int j,
+	                               const int nPoint,
 	                               const float fCoeff,
 	                               std::list<SVector> *pTiles,
 	                               const SSingleSide &singleSide,

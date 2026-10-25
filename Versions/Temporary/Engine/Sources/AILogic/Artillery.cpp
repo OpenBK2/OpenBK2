@@ -1043,8 +1043,15 @@ const uint32_t CArtillery::GetNormale( const CVec2 &vArtCenter ) const
 		const CVec2 vTraCenter = pTransport->GetCenterPlain();
 		CVec3 vTraCenter3D( vTraCenter, GetHeights()->GetVisZ( vTraCenter.x, vTraCenter.y ) );
 
-		const CVec2 vArtCenter = GetCenterPlain();
-		const CVec3 vArtCenter3D( vArtCenter, GetHeights()->GetVisZ( vArtCenter.x, vArtCenter.y ) );
+		// This was called vArtCenter until 2026-10-25 and so shadowed the
+		// parameter, which is why the branch reads as though it used it. It
+		// does not: the towed normal is built from the gun's own centre and
+		// the transport's current hook point, both of this frame, so a caller
+		// asking for the normal at a past placement (CCommonUnit does, with
+		// vOldPlacement) gets the current one. Open question recorded rather
+		// than changed, the behaviour being what shipped.
+		const CVec2 vOwnCenter = GetCenterPlain();
+		const CVec3 vArtCenter3D( vOwnCenter, GetHeights()->GetVisZ( vOwnCenter.x, vOwnCenter.y ) );
 		const SMechUnitRPGStats *pArt = checked_cast<const SMechUnitRPGStats *>( GetStats() );
 		NI_VERIFY( fabs( pArt->vTowPoint.y ) >= FP_EPSILON,
 		           fmt::format( "DESIGNERS BUG: invalid tow point for unit {}", NDb::GetResName( pArt ) ),

@@ -454,8 +454,8 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType,
 		else
 		{
 			// Check if the reinforcement has any ships
-			const NDb::SReinforcement *pReinf = pos->second;
-			if ( pReinf->transports.size() == 0 )
+			const NDb::SReinforcement *pPosReinf = pos->second;
+			if ( pPosReinf->transports.size() == 0 )
 			{
 				const auto message = fmt::format( "Reinforcement #{} has no transport ships.", static_cast<int>( eType ) );
 				CONSOLE_BUFFER_LOG( CONSOLE_STREAM_CONSOLE, message.c_str() );

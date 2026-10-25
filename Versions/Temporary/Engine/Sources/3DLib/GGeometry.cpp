@@ -185,13 +185,13 @@ void CObjectInfo::AssignGeometry( const SData &data, std::vector<STriangle> *pGe
 		// sort them, we are not in a hurry :)
 		for ( int i = 1; i < 4; ++i )
 		{
-			for ( int k = i - 1; k >= 0; --k )
+			for ( int j = i - 1; j >= 0; --j )
 			{
-				if ( res.fWeights[k] < res.fWeights[k + 1] )
+				if ( res.fWeights[j] < res.fWeights[j + 1] )
 				{
-					std::swap( res.fWeights[k], res.fWeights[k + 1] );
-					std::swap( res.nWeights[k], res.nWeights[k + 1] );
-					std::swap( res.cBoneIndices[k], res.cBoneIndices[k + 1] );
+					std::swap( res.fWeights[j], res.fWeights[j + 1] );
+					std::swap( res.nWeights[j], res.nWeights[j + 1] );
+					std::swap( res.cBoneIndices[j], res.cBoneIndices[j + 1] );
 				}
 				else
 				{

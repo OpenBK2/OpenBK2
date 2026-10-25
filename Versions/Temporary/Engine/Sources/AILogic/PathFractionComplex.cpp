@@ -56,11 +56,11 @@ CCurFraction CPathFractionComplexBase::GetCur( const float fDist ) const
 		{
 			IPathFraction *pPathFraction = *it;
 			NI_VERIFY( IsValid( pPathFraction ), "Invalid path fraction", continue );
-			const float fTmp = fDistSoFar;
+			const float fTmpDist = fDistSoFar;
 			fDistSoFar += pPathFraction->GetLength();
 			if ( fDistSoFar > fDist )
 			{
-				return CCurFraction( pPathFraction, fTmp );
+				return CCurFraction( pPathFraction, fTmpDist );
 			}
 		}
 		return CCurFraction( substitute.back(), fTmp );

@@ -1444,11 +1444,11 @@ void CTransportUnhookArtilleryState::Segment()
 			break;
 		case TUAS_START_UNHOOK:
 		{
-			CArtillery *pArt = pTransport->GetTowedArtillery();
+			CArtillery *pTowedArt = pTransport->GetTowedArtillery();
 
 			//отпустить пушку
 			pTransport->SetTowedArtillery( 0 );
-			pArt->GetState()->TryInterruptState( 0 );
+			pTowedArt->GetState()->TryInterruptState( 0 );
 
 			if ( !pTransport->HasTowedArtilleryCrew() )
 			{
@@ -1479,10 +1479,10 @@ void CTransportUnhookArtilleryState::Segment()
 				pCrew->SetCenter( point3D );
 
 				// пусть пушку могут теперь селектить
-				pArt->SetCrew( pCrew );
+				pTowedArt->SetCrew( pCrew );
 
 				// дать команду пушке инталлироваться
-				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_INSTALL ), pArt, false );
+				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_INSTALL ), pTowedArt, false );
 
 				// все , можем уезжать, справятся без нас
 				pTransport->SetCommandFinished();
