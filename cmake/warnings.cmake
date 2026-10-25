@@ -251,6 +251,41 @@ set(OBK2_WARNINGS_GCC
     # why TypeSanitizer is silent on it. Returning by value instead means
     # checking ~675 call sites for ones that hold the reference.
     #
+    # Cleared 2026-10-25. 148 sites over the 1417 units of the editor-ON tree,
+    # which is 119 in the engine and the rest mostly in ED_B2_M1, and the
+    # count is of a declaration hiding a live one of a COMPATIBLE type, which
+    # is the subset where reading the wrong variable compiles and does
+    # something. Plain -Wshadow is not this flag: it is 637 sites on clang and
+    # includes every local that happens to share a name with a member.
+    #
+    # Nearly all of it was a nested loop reusing its index, or a scope
+    # recomputing a value under the name the enclosing scope already used, and
+    # those are now named for what they hold. Four were defects:
+    #
+    #   AILogic's PathfinderTest re-picked its random tiles into a second pair
+    #     of SVectors that shadowed the pair the search reads, so the console
+    #     command searched one path 500 times instead of 500 paths.
+    #   ED_Common's AI geometry exporter declared an empty std::string over the
+    #     parameter holding the scene path, so "Source file:" in the
+    #     not-closed error named nothing.
+    #   CScripts::GetNUnitsInArea and GetUnitListInArea each read script
+    #     argument 1 a second time into a shadowing local, and the second also
+    #     built an unused second Script wrapper over the same lua_State.
+    #
+    # And one case where the parameter is deliberately ignored,
+    # CArtillery::GetNormale in the towed branch, now says so at the site.
+    #
+    # The renames went through clang-rename rather than by hand, so which uses
+    # belong to a declaration is the compiler's answer; .diag-tmp/ir-equal.py
+    # then checked that each file's LLVM IR is unchanged, which is what catches
+    # a rename that collided with an enclosing name. The flag caught one of
+    # those by itself: two nested CVariants in MechUnitRPGStatsExporter both
+    # became varValue and the sweep reported the new shadow.
+    #
+    # GCC only. clang has no -Wshadow=compatible-local at all, rejecting it as
+    # an unknown warning option, and its nearest equivalents are the whole
+    # -Wshadow family.
+    -Wshadow=compatible-local
     # GCC only, and not by omission. clang rejects -Wstrict-aliasing=3 outright
     # as an unknown warning option, and plain -Wstrict-aliasing it accepts and
     # ignores, measured against a positive control that GCC reports. The same
@@ -438,7 +473,6 @@ set(OBK2_WARNINGS_STRICT_GCC
     # where they were measured at all: CI's GCC job builds BUILD_EDITOR=ON, so
     # an engine-only count is not the cost of adopting one of these.
     -Wcast-align=strict             # 104 engine, inert on x86 and real on ARM
-    -Wshadow=compatible-local       # 120 engine; plain -Wshadow is 637 on clang and noisy
     # Not here on purpose: -Wnull-dereference (143 sites, and nobody has read
     # 141 of them), -Wstrict-overflow (458 and documented as noisy),
     # -Wmismatched-tags (ICEs this compiler).
