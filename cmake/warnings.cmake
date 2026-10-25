@@ -364,6 +364,42 @@ set(OBK2_WARNINGS_CLANG
     # measured across all 213 units rather than extrapolated, which is a
     # mechanical pass over lockstep simulation code and wants its own session.
     -Wheader-hygiene
+    # The three classes below were cleaned on 2026-10-17 with their GCC
+    # namesakes and then listed for GCC alone, so for eight days no clang build
+    # carried them and nothing would have reported a new site. Re-measured
+    # 2026-10-25 over all 1417 units of the editor-ON clang tree, 0 units
+    # failed: 0 sites each. CI's clang job is BUILD_EDITOR=OFF, so a zero here
+    # covers it.
+    #
+    # None of the three is on by default or in -Wall -Wextra on clang 22.1
+    # except the delete half, which -Wall carries; our default level does not
+    # include -Wall, so all three genuinely add coverage rather than restating
+    # it. Controls in .diag-tmp/clang-dtor-controls.cpp, all four firing under
+    # -fsyntax-only, which is what makes the syntax-only sweep above a census
+    # rather than a floor.
+    #
+    # clang counted 87 sites to GCC's 160 at the definition and 11 more where
+    # the destructor is actually called through such a base, and 39 fallthrough
+    # sites to GCC's 32, the extra ones being cases falling into a default that
+    # returns. clang has one fallthrough level and has always wanted the
+    # attribute rather than a comment, which is why GCC is gated at =5.
+    -Wnon-virtual-dtor
+    -Wdelete-non-abstract-non-virtual-dtor
+    -Wimplicit-fallthrough
+    # Measured for the first time on 2026-10-25, having been argued over since
+    # 10-22 and never counted: 0 sites over the same 1417 units. It reports a
+    # reinterpret_cast to a base that does not sit at offset 0, which silently
+    # gives a different address from the static_cast that was meant, measured
+    # here as a four-byte difference on both compilers at every optimisation
+    # level. This tree is full of multiple inheritance, so a zero was not the
+    # expected answer.
+    #
+    # Listed although clang has it on by default, which the control confirms:
+    # that default is what kept the tree at zero without anyone watching, and
+    # listing it means a clang that changes the default cannot drop the class
+    # quietly. GCC has no equivalent at all, not even under -Wall -Wextra on
+    # the control, so there is nothing to add to the GCC list.
+    -Wreinterpret-base-class
 )
 
 # MSVC is deliberately empty. No Windows toolchain was reachable when this was
