@@ -283,6 +283,12 @@ namespace NBind
 const NTypeDef::STypeStructBase::SField *
 FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDef::STypeStructBase *pStruct )
 {
+	// A scalar/link has no child descriptor, including a trailing dot supplied
+	// by an editor iterator. Reject it before inspecting struct metadata.
+	if ( pStruct == nullptr || nCurrPos < 0 || nCurrPos >= szFullFieldName.size() )
+	{
+		return nullptr;
+	}
 	if ( pStruct->pBaseType )
 	{
 		if ( const NTypeDef::STypeStructBase::SField *pField = FindField( szFullFieldName, nCurrPos, pStruct->pBaseType ) )
@@ -314,7 +320,7 @@ FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDe
 			{
 				if ( it->pType->eType == NTypeDef::TYPE_TYPE_ARRAY )
 				{
-					if ( szFullFieldName[nPos + 1] != '[' )
+					if ( nPos + 1 >= szFullFieldName.size() || szFullFieldName[nPos + 1] != '[' )
 					{
 						return 0;
 					}
@@ -324,7 +330,7 @@ FindField( const std::string &szFullFieldName, const int nCurrPos, const NTypeDe
 					           ? &( pTypeArray->field )
 					           : FindField( szFullFieldName,
 					                        nNewPos + 1,
-					                        checked_cast_ptr<const NTypeDef::STypeStructBase *>( pTypeArray->field.pType ) );
+					                        dynamic_cast_ptr<const NTypeDef::STypeStructBase *>( pTypeArray->field.pType ) );
 				}
 				else
 				{

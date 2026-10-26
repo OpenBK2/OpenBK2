@@ -1,11 +1,13 @@
 #pragma once
 
+#include <string>
+
 #include <boost/uuid/uuid.hpp>
+
+class CDBID;
 
 namespace NDb
 {
-struct IObjMan;
-
 namespace NBind
 {
 	class CBindArray;
@@ -20,7 +22,8 @@ namespace NBind
 		boost::uuids::uuid *pGUID;
 		void *pBLOB;
 		CBindArray *pArray;
-		IObjMan *pObjMan;
+		// Keep a reference's identity when its target is removed from the editor database.
+		CDBID *pDBID;
 
 		//
 		UValue()

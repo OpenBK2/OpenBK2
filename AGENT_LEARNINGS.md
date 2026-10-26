@@ -92,3 +92,21 @@ context. Read `git diff` of every touched file before building.
   fields; an infantry formation pointer belongs inside its soldier base record.
 - PowerShell does not expand Bash brace or wildcard path operands for `rg`.
   Search a directory with `-g` filters or pass explicit paths instead.
+
+## Editor resource paths and deletion
+
+- A file picker can succeed while the property parser silently rejects its
+  result. Check the complete picker-to-controller path, including Windows drive
+  colons, and resolve game-relative sources against both the active mod and Data.
+- Deleting MPConsts reinforcement links exercised a scalar array undo path that
+  appended an empty child name and cast reference metadata to a struct. Preserve
+  the element value itself; test non-empty links, repeated removal and undo, and
+  clearing the whole array through the real property grid.
+- Editor-only database references must own their identity, not borrow raw target
+  manipulators. A deleted target can outlive its browser row in another open
+  property view. Include renaming, missing targets and saved deletions in tests.
+- Pending deletions must suppress on-disk rediscovery until Save or Discard.
+  Repeated deletion must be idempotent so recreating a name cannot leave a second
+  queued file removal that deletes the replacement.
+- For a Windows gtest that catches an access violation without a useful stack,
+  run with GTEST_CATCH_EXCEPTIONS=0 to let TestCrashTrace report the fault location.

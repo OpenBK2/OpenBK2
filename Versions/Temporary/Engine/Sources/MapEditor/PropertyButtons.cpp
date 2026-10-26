@@ -17,6 +17,7 @@
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Resources.h"
+#include "MapEditorLib/SourceFilePath.h"
 #include "MapEditorLib/StringManager.h"
 #include "Misc/StrProc.h"
 #include "PC_Constants.h"
@@ -302,10 +303,10 @@ bool BrowseFile( const NPropertyButton::SContext &rContext, std::string *pszNewT
 					NMessage::Error( error, "Import model" );
 				}
 			}
-			else if ( rContext.szName == "ModelFileName" )
+			else if ( rContext.szName == "ModelFileName" || rContext.szName == "TextureFileName" )
 			{
 				// The VisObj wizard imports after its destination name is known.
-				*pszNewText = szFullFilePath;
+				*pszNewText = NEditorSource::MakeRelative( szFullFilePath );
 				bResult = true;
 			}
 			else if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )

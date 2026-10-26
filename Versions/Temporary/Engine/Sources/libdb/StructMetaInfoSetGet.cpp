@@ -418,7 +418,9 @@ namespace NMetaInfo
 			}
 		}
 
-		data.pObjMan = pObjMan;
+		// A raw manipulator pointer becomes dangling when the referenced object
+		// is deleted. Keep its DBID independently of the target's lifetime.
+		*data.pDBID = pObjMan ? pObjMan->GetDBID() : CDBID();
 		return true;
 	}
 
@@ -501,14 +503,7 @@ namespace NMetaInfo
 	SStructMetaInfo::SField::GetValueFromOwnDBID( CVariant *pValue, uint8_t *pThis, const NBind::UValue *ownValues ) const
 	{
 		const NBind::UValue &data = ownValues[GetOwnValueIndex()];
-		if ( data.pObjMan )
-		{
-			*pValue = data.pObjMan->GetDBID();
-		}
-		else
-		{
-			*pValue = CDBID();
-		}
+		*pValue = *data.pDBID;
 		return true;
 	}
 

@@ -19,6 +19,9 @@
 
 #include "libdb_export.h"
 
+#include <set>
+#include <utility>
+
 #include <fmt/format.h>
 
 EXTERNVAR LIBDB_EXPORT CLogger theLogger;
@@ -101,7 +104,9 @@ class CEditorDatabase : public CBasicDatabase
 
 	typedef std::unordered_map<CDBID, SElement> CElementsMap;
 	CElementsMap elementsMap; // objects map
-	bool bIndexChanged;       // index was changed during elements manipulation
+	// Files are removed by the VFS observer on Save. Do not rediscover them in the meantime.
+	std::set<CDBID> removedObjects;
+	bool bIndexChanged; // index was changed during elements manipulation
 	typedef std::unordered_map<std::string, CObj<NTypeDef::STypeDef>> CTypesMap;
 	CTypesMap typesMap; // type definitions
 	NMetaInfo::CMetaInfoMap metaInfoMap;
@@ -486,6 +491,10 @@ bool CEditorDatabase::RegisterResourceFile( const std::string &szFileName )
 	CElementsMap::iterator pos = elementsMap.find( dbid );
 	if ( pos == elementsMap.end() )
 	{
+		if ( removedObjects.find( dbid ) != removedObjects.end() )
+		{
+			return false;
+		}
 		bool bRegistered = ReallyRegisterResourceFile( dbid );
 		bIndexChanged = bRegistered || IsIndexChanged();
 		return bRegistered;
@@ -666,7 +675,20 @@ void CEditorDatabase::RemoveObjectInternal( const CDBID &_dbid )
 
 bool CEditorDatabase::RemoveObject( const CDBID &_dbid )
 {
+	CDBID dbid;
+	NormalizeDBID( &dbid, _dbid );
+	if ( !IsDBIDValid( dbid ) )
+	{
+		return false;
+	}
+	// Repeated removal of a stale row must not queue duplicate file deletions;
+	// otherwise recreating that name before Save could still delete the replacement.
+	if ( removedObjects.find( dbid ) != removedObjects.end() && elementsMap.find( dbid ) == elementsMap.end() )
+	{
+		return true;
+	}
 	CBasicDatabase::ReportObjectRemoved( _dbid );
+	removedObjects.insert( dbid );
 	RemoveObjectInternal( _dbid );
 	SetIndexChanged();
 	SetDataChanged();
@@ -700,9 +722,34 @@ bool CEditorDatabase::RenameObjectInternal( const CDBID &dbidOld,
 	}
 	//
 	ReportObjectMoved( dbidOld, dbidNew );
+	removedObjects.insert( dbidOld );
 	//
 	RemoveObjectInternal( dbidOld );
 	AddNewObjectInternal( dbidNew, pReferencedObj );
+	// Generated CDBPtr fields follow the renamed resource. Editor-only fields
+	// own DBIDs, so update those references explicitly after the new name exists.
+	std::vector<CObj<IObjMan>> loaded;
+	for ( const auto &entry : elementsMap )
+	{
+		if ( entry.second.pBind && entry.second.pBind->IsLoaded() )
+		{
+			loaded.push_back( entry.second.pBind.GetPtr() );
+		}
+	}
+	// Include unsaved references, which the scan of on-disk XDBs cannot see.
+	for ( const auto &object : loaded )
+	{
+		CObj<IObjManIterator> fields = object->CreateIterator( true );
+		for ( ; fields && !fields->IsEnd(); fields->Next() )
+		{
+			CVariant value;
+			const std::string name = fields->GetName();
+			if ( object->GetValue( name, &value ) && value.GetType() == CVariant::VT_DBID && value.GetDBID() == dbidOld )
+			{
+				object->SetValue( name, dbidNew );
+			}
+		}
+	}
 	SetIndexChanged();
 	MarkChanged( dbidNew );
 	//
@@ -924,6 +971,7 @@ void CEditorDatabase::SaveChanges()
 	{
 		ResetDataChanged();
 		ReportSaveAllChanges();
+		removedObjects.clear();
 	}
 	else
 	{
@@ -933,6 +981,8 @@ void CEditorDatabase::SaveChanges()
 
 void CEditorDatabase::DropCachedResources()
 {
+	const auto deleted = std::move( removedObjects );
+	removedObjects.clear();
 	{
 		// collect new unsaved objects to remove it
 		std::list<CDBID> newObjects;
@@ -948,6 +998,11 @@ void CEditorDatabase::DropCachedResources()
 		{
 			RemoveObjectInternal( *it );
 		}
+	}
+	// Restore deleted entries before reloading references that may point at them.
+	for ( const auto &dbid : deleted )
+	{
+		RegisterResourceFile( GetFileName( dbid ) );
 	}
 	// reload all changed resources
 	for ( CElementsMap::iterator it = elementsMap.begin(); it != elementsMap.end(); ++it )

@@ -5,6 +5,8 @@
 #include "MapEditorLib/Interface_Widget.h"
 #include "Misc/Geom.h"
 
+#include "MapEditor_export.h"
+
 #include <functional>
 #include <string>
 #include <vector>
@@ -154,7 +156,8 @@ struct IGrid
 // object's name while a row is selected. pOwner is what the grid's buttons
 // open their dialogs over, and must outlive the grid; rszOptionsLabel names
 // the state file the column widths are read from and kept in.
-IGrid *CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel );
+MAPEDITOR_EXPORT IGrid *
+CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel );
 
 // The pane's contents, the grid over its status line, made straight inside
 // a wx window for a wx frame's pane rather than inside an MFC one: already

@@ -13,13 +13,31 @@
 void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNodeName, IManipulator *pObjectManipulator )
 {
 	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddInsertOperation() pObjectManipulator == 0" );
+	// A scalar or resource-link element is the value itself, not a struct with
+	// child fields. Iterating it appends an empty name and loses the undo value.
+	const SPropertyDesc *pStartDesc =
+			dynamic_cast<const SPropertyDesc *>( pObjectManipulator->GetDesc( szStartNodeName ) );
+	if ( pStartDesc )
+	{
+		const EPCIEType type = typePCIEMnemonics.Get( pStartDesc, szStartNodeName );
+		if ( type != PCIE_LIST && type != PCIE_STRUCT )
+		{
+			SValueData data;
+			data.szName = szStartNodeName;
+			if ( pObjectManipulator->GetValue( szStartNodeName, &data.value ) )
+			{
+				valueList.push_back( data );
+			}
+			return;
+		}
+	}
 	//
 	//NHPTimer::STime time = 0;
 	//NHPTimer::GetTime( &time );
 	//
 	NDb::IObjMan *pObjMan = pObjectManipulator->GetObjMan();
 	CObj<NDb::IObjMan> pSubObjMan;
-	if ( pObjMan )
+	if ( pObjMan && pStartDesc && typePCIEMnemonics.Get( pStartDesc, szStartNodeName ) == PCIE_STRUCT )
 	{
 		pSubObjMan = pObjMan->CreateManipulator( szStartNodeName );
 	}
@@ -29,7 +47,8 @@ void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNode
 		{
 			while ( !pSubObjManIterator->IsEnd() )
 			{
-				std::string szName = szStartNodeName + LEVEL_SEPARATOR_CHAR + pSubObjManIterator->GetName();
+				const std::string child = pSubObjManIterator->GetName();
+				const std::string szName = child.empty() ? szStartNodeName : szStartNodeName + LEVEL_SEPARATOR_CHAR + child;
 				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc *>( pObjectManipulator->GetDesc( szName ) ) )
 				{
 					EPCIEType nType = typePCIEMnemonics.Get( pDesc, szName );

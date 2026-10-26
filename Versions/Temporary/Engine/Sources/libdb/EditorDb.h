@@ -47,7 +47,7 @@ LIBDB_EXPORT const std::string &GetLastSaveError();
 //! Persist newly registered files without saving unrelated edited resources.
 LIBDB_EXPORT bool SaveChangedIndex();
 //! drop all cached resources
-void DropCachedResources();
+LIBDB_EXPORT void DropCachedResources();
 //! check, have we changed DB objects?
 bool HasChangedObjects();
 //! retrieve all terminal classes list

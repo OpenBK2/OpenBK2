@@ -188,22 +188,12 @@ bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath )
 	{
 		return false;
 	}
-	int nPos = rszFileName.find( ':' );
-	if ( ( nPos != std::string::npos ) && ( nPos != std::string::npos != 1 ) )
+	const size_t nPos = rszFileName.find( ':' );
+	if ( nPos != std::string::npos )
 	{
-		return false;
-	}
-	else if ( nPos == 1 )
-	{
-		if ( bAbsolutePath )
-		{
-			nPos = rszFileName.find( nPos, ':' );
-			if ( nPos != std::string::npos )
-			{
-				return false;
-			}
-		}
-		else
+		// Only a drive-letter colon is valid in an absolute source path.
+		if ( !bAbsolutePath || nPos != 1 || rszFileName.find( ':', nPos + 1 ) != std::string::npos ||
+		     !( ( rszFileName[0] >= 'A' && rszFileName[0] <= 'Z' ) || ( rszFileName[0] >= 'a' && rszFileName[0] <= 'z' ) ) )
 		{
 			return false;
 		}

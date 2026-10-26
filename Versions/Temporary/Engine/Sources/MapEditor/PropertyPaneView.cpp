@@ -152,7 +152,9 @@ bool ParseValueText( IManipulator *pManipulator,
 		case PCIE_STRING_DIR_REF:
 		case PCIE_TEXT_FILE:
 		case PCIE_NEW_TEXT_FILE:
-			if ( !rszText.empty() && !::IsValidFileName( rszText, false ) )
+			// Builder sources may be outside Data until creation imports them.
+			if ( !rszText.empty() &&
+			     !::IsValidFileName( rszText, rszName == "ModelFileName" || rszName == "TextureFileName" ) )
 			{
 				return false;
 			}

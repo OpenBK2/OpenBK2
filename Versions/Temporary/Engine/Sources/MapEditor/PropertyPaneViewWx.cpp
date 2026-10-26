@@ -1571,6 +1571,16 @@ private:
 	void OnRightClick( wxPropertyGridEvent &rEvent )
 	{
 		rEvent.Skip();
+		// A popup runs a nested event loop. Finish the wxPG event before a menu
+		// command can delete its property or rebuild the array containing it.
+		if ( pManager != nullptr )
+		{
+			pManager->CallAfter( [this]() { ShowContextMenu(); } );
+		}
+	}
+
+	void ShowContextMenu()
+	{
 		if ( ( pManager == nullptr ) || ( GetViewManipulator() == 0 ) )
 		{
 			return;

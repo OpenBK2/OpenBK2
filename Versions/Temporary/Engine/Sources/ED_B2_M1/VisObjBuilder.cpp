@@ -3,6 +3,7 @@
 #include "CommandHandlerDefines.h"
 #include "ED_Common/GltfExporter.h"
 #include "ED_Common/GltfImport.h"
+#include "libdb/Bind.h"
 #include "libdb/Db.h"
 #include "libdb/ObjMan.h"
 #include "libdb/ResourceManager.h"
@@ -13,6 +14,7 @@
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/MessageBoxes.h"
 #include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/SourceFilePath.h"
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "Misc/2Darray.h"
@@ -32,14 +34,7 @@ namespace
 {
 std::string BuilderSourcePath( const std::string &source )
 {
-	// File pickers normally return source-folder-relative names, but typed
-	// absolute paths and either platform's separators must work as well.
-	std::string path =
-			NFile::IsPathRelative( source )
-					? NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, source )
-					: source;
-	NFile::NormalizePath( &path );
-	return path;
+	return NEditorSource::Resolve( source );
 }
 
 bool PrepareResource( const std::string &type, const std::string &name, CPtr<IManipulator> *resource, bool *created )
@@ -419,6 +414,29 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator,
 	{
 		( *pszDescription ) = "<TextureType> must be filled.";
 		return false;
+	}
+	// An empty Skeleton requests a new one. A selected shared skeleton must load.
+	std::string szSkeleton;
+	CManipulatorManager::GetValue( &szSkeleton, pBuildDataManipulator, "Skeleton" );
+	if ( !szSkeleton.empty() )
+	{
+		CPtr<IManipulator> skeleton =
+				Singleton<IResourceManager>()->CreateObjectManipulator( SKELETON_TYPE_NAME, szSkeleton );
+		if ( !skeleton )
+		{
+			*pszDescription = "<Skeleton> cannot be loaded. Select an existing skeleton or clear the field.";
+			return false;
+		}
+		const auto *bind = dynamic_cast<const NDb::NBind::CBindStruct *>( skeleton->GetObjMan() );
+		NVFS::SFileStats stats;
+		// A newly created resource can be used before Save; a cached saved one
+		// must still have its backing XDB, even when the VFS index remembers it.
+		if ( bind && !bind->IsNew() &&
+		     !NVFS::GetMainVFS()->GetFileStats( &stats, NDb::GetFileName( CDBID( szSkeleton ) ) ) )
+		{
+			*pszDescription = "<Skeleton> is invalid. Can't find its resource file.";
+			return false;
+		}
 	}
 	std::string szRootMesh;
 	if ( !CManipulatorManager::GetValue( &szRootMesh, pBuildDataManipulator, "RootMesh" ) || szRootMesh.empty() )

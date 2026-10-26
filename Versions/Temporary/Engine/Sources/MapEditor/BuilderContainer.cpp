@@ -98,6 +98,14 @@ bool CBuilderContainer::RenameObject( const std::string &rszObjectTypeName,
 
 bool CBuilderContainer::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
+	// A stale browser entry has no fields for a specialised builder to inspect.
+	// Still remove its index/tree entry through the ordinary folder controller.
+	CPtr<IManipulator> resource =
+			Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, rszObjectName );
+	if ( !resource )
+	{
+		return Singleton<IFolderCallback>()->RemoveObject( rszObjectTypeName, rszObjectName, false );
+	}
 	if ( IBuilder *pBuilder = GetBuilder( rszObjectTypeName ) )
 	{
 		return pBuilder->RemoveObject( rszObjectTypeName, rszObjectName );
@@ -126,7 +134,7 @@ bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 	SUserData::CBuildDataTypeNameMap &rBuildDataTypeNameMap =
 			Singleton<IUserDataContainer>()->Get()->buildDataTypeNameMap;
 	SUserData::CBuildDataTypeNameMap::const_iterator posBuildDataTypeName =
-			rBuildDataTypeNameMap.find( *pszBuildDataName );
+			rBuildDataTypeNameMap.find( *pszBuildDataTypeName );
 	if ( posBuildDataTypeName != rBuildDataTypeNameMap.end() )
 	{
 		( *pszBuildDataName ) = posBuildDataTypeName->second;
@@ -145,7 +153,8 @@ bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 	         Singleton<IResourceManager>()->CreateObjectManipulator( *pszBuildDataTypeName, *pszBuildDataName ) )
 	{
 		SObjectSet objectSet;
-		objectSet.szObjectTypeName = ( *pszBuildDataName );
+		// Controllers must address the builder's type, not its XDB filename.
+		objectSet.szObjectTypeName = ( *pszBuildDataTypeName );
 		InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( *pszBuildDataName ) );
 		//
 		const std::string szTemporaryLabel =

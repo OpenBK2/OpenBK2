@@ -4,6 +4,8 @@
 #include "MapEditorLib/Interface_Widget.h"
 #include "Misc/Geom.h"
 
+#include "MapEditor_export.h"
+
 #include <string>
 
 struct IView;
@@ -117,10 +119,10 @@ namespace NObjectBrowser
 // dialogs open over, and must outlive the contents. nGDBBrowserID is a
 // browser pane's, which its trees give the frame when they take the focus;
 // -1 for a dialog. Owned by the caller; null on failure.
-IObjectBrowser *CreateWxIn( wxWindow *pParent,
-                            IWidget *pOwner,
-                            IObjectBrowser::IListener *pListener,
-                            IObjectBrowser::EKind eKind,
-                            wxWindow **ppWindow,
-                            int nGDBBrowserID = -1 );
+MAPEDITOR_EXPORT IObjectBrowser *CreateWxIn( wxWindow *pParent,
+                                             IWidget *pOwner,
+                                             IObjectBrowser::IListener *pListener,
+                                             IObjectBrowser::EKind eKind,
+                                             wxWindow **ppWindow,
+                                             int nGDBBrowserID = -1 );
 } // namespace NObjectBrowser

@@ -1074,7 +1074,16 @@ private:
 		{
 			dragTarget = wxTreeItemId();
 		}
+		// Native deletion emits selection events while the tree is still changing.
+		// Rebuild the properties only after no selection can contain the removed row.
+		const bool bWasCreating = bCreateControls;
+		bCreateControls = true;
 		pTree->Delete( rItem );
+		bCreateControls = bWasCreating;
+		if ( !bCreateControls )
+		{
+			SelectionChanged();
+		}
 	}
 
 	// Whether rItem is rAncestor or lies under it.

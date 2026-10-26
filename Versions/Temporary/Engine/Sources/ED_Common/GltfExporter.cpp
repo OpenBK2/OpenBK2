@@ -8,6 +8,7 @@
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/MessageBoxes.h"
+#include "MapEditorLib/SourceFilePath.h"
 #include "Misc/StrProc.h"
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
@@ -134,8 +135,9 @@ namespace
 				fs::absolute( fs::u8path( Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) ) )
 						.lexically_normal();
 		const fs::path sourcePath = fs::u8path( source ).lexically_normal();
-		fs::path relative = sourcePath;
-		if ( sourcePath.is_absolute() )
+		// Preserve the game's relative path for both base Data and active-mod models.
+		fs::path relative = fs::u8path( NEditorSource::MakeRelative( source, false ) );
+		if ( relative.is_absolute() )
 		{
 			if ( Below( sourcePath, dataRoot ) )
 			{

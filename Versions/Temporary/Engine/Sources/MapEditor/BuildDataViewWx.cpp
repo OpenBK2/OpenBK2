@@ -134,6 +134,7 @@ public:
 		pName->Bind( wxEVT_TEXT, &CBuildDataWxDialog::OnNameChanged, this );
 		pExport->Bind( wxEVT_CHECKBOX, &CBuildDataWxDialog::OnExportChanged, this );
 		pGrid->SetChangeCallback( [this]() { UpdateOkButton(); } );
+		Bind( wxEVT_BUTTON, &CBuildDataWxDialog::OnAccept, this, wxID_OK );
 	}
 
 	~CBuildDataWxDialog() override
@@ -218,11 +219,23 @@ private:
 		const bool bAccept =
 				NBuildData::CanAccept( pBuildDataParams, pBuildDataCallback, pGrid->GetView(), &szErrorMessage );
 		pStatus->SetLabelText( wxString::FromUTF8( szErrorMessage.c_str() ) );
+		// Keep the entire diagnostic available when the one-line status is clipped.
+		pStatus->SetToolTip( wxString::FromUTF8( szErrorMessage.c_str() ) );
 		if ( wxWindow *const pOk = FindWindow( wxID_OK ) )
 		{
 			pOk->Enable( bAccept );
 		}
 		bCheckingOk = false;
+	}
+
+	void OnAccept( wxCommandEvent &event )
+	{
+		// Recheck on OK too: a source file can disappear while the dialog is open.
+		UpdateOkButton();
+		if ( FindWindow( wxID_OK )->IsEnabled() )
+		{
+			event.Skip();
+		}
 	}
 
 	void OnNameChanged( wxCommandEvent & )

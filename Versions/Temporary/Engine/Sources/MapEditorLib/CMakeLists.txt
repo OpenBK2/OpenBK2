@@ -40,6 +40,7 @@ set(SOURCES
     PCIEMnemonics.cpp
     Progress.cpp
     Resources.cpp
+    SourceFilePath.cpp
     stdafx.cpp
     StoreInputState.cpp
     StringManager.cpp
