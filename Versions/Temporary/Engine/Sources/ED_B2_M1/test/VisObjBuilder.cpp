@@ -36,6 +36,7 @@
 
 #include <gtest/gtest.h>
 #include <wx/app.h>
+#include <wx/debug.h>
 #include <wx/frame.h>
 #include <wx/propgrid/manager.h>
 
@@ -442,19 +443,45 @@ TEST_F( VisObjBuilder, SavingDeletionRemovesFileAndKeepsReplacement )
 	EXPECT_NE( NDb::GetManipulator( CDBID( "replaced.xdb" ) ), nullptr );
 }
 
+class CTestWxAssertHandler
+{
+	wxAssertHandler_t previous;
+
+	static void ReportFailure(
+			const wxString &file, int line, const wxString &function, const wxString &condition, const wxString &message )
+	{
+		ADD_FAILURE_AT( file.utf8_str().data(), line ) << "wx assertion in " << function.ToStdString() << ": "
+																									 << condition.ToStdString() << ": " << message.ToStdString();
+	}
+
+public:
+	CTestWxAssertHandler()
+		: previous( wxSetAssertHandler( ReportFailure ) )
+	{
+	}
+
+	~CTestWxAssertHandler()
+	{
+		wxSetAssertHandler( previous );
+	}
+};
+
 class EditorViews : public VisObjBuilder
 {
 protected:
+	// Cover initialization and cleanup too: the default assertion dialog blocks CI.
+	CTestWxAssertHandler assertHandler;
 	bool wxStarted = false;
 	std::unique_ptr<wxFrame> frame;
+	// wx keeps the narrow argv pointers until wxEntryCleanup().
+	int argc = 1;
+	char name[sizeof( "EditorViews_test" )] = "EditorViews_test";
+	char *argv[2] = { name, nullptr };
 
 	void SetUp() override
 	{
 		VisObjBuilder::SetUp();
 		wxApp::SetInstance( new wxApp );
-		int argc = 1;
-		char name[] = "EditorViews_test";
-		char *argv[] = { name, nullptr };
 		wxStarted = wxEntryStart( argc, argv );
 		if ( !wxStarted )
 		{

@@ -110,3 +110,10 @@ context. Read `git diff` of every touched file before building.
   queued file removal that deletes the replacement.
 - For a Windows gtest that catches an access violation without a useful stack,
   run with GTEST_CATCH_EXCEPTIONS=0 to let TestCrashTrace report the fault location.
+- Release-only GUI test validation missed wxWidgets' Debug CRT `new` rewrite.
+  With module-local mimalloc overrides, that allocates on the CRT heap and frees
+  through mimalloc during wxEntryCleanup. Define `__NO_VC_CRTDBG__` in the wx
+  allocator hook, and reproduce allocator changes in CI's Debug configuration.
+- GUI fixtures must keep narrow argv storage alive through wxEntryCleanup and
+  report wx assertions to gtest across startup and teardown. A modal assertion
+  dialog otherwise hides the original failure behind a CI timeout.
