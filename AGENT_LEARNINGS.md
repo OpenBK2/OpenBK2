@@ -132,3 +132,23 @@ context. Read `git diff` of every touched file before building.
   direction vectors rather than assuming heading zero points along the X axis.
 - For unattended Windows mission runs, use an isolated profile/data overlay and
   `--setvar=force_app_always_active=1` so losing window focus cannot stall the script.
+
+## Replay command clock ordering
+
+- Multiplayer applies commands before advancing the segment timer. The replay
+  transceiver advanced it first, so CAILogic::UnitCommand refreshed curTime one
+  tick ahead and contaminated subsequent group commands in that segment.
+  In MatchFrom_2026-10-25_20-05-50, marker 8371 preceded camouflage; two fresh
+  viewpoints first disagreed with the recording at 1685000 ms. Removing only
+  that marker, or suppressing only UnitCommand's clock write in a diagnostic
+  DLL copy, independently restored all 1686 checksum/RNG samples through 28:06.
+  The clock-only diagnostic then matched all 4200 samples in the original build.
+  Fix the dispatch ordering, preserving suspended timer advancement, rather
+  than changing group allocation or dropping recorded markers.
+- Light replay checksums omit ability deadlines and scheduling state. The first
+  checksum mismatch can be later than the command that introduces the error.
+  Verify the exact original DLLs and preserve original recordings and checksums
+  when constructing a targeted diagnostic copy.
+- Do not treat that old recording as a validation oracle for a newer branch's
+  changed simulation. Prove the cause using the original build, then validate
+  the source fix with focused timer/dispatch tests against the current branch.

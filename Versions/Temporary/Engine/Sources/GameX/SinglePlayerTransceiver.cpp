@@ -138,16 +138,22 @@ void CSinglePlayerTransceiver::DoSegments()
 		pAI->NetGameStarted();
 	}
 
-	while ( pTimer->NextSegment() )
+	while ( pTimer->CanStartNextSegment() )
 	{
-		if ( !pAI->IsSuspended() )
+		if ( pAI->IsSuspended() )
 		{
-			bCommandsFromHistory = true;
-			pCmdsHistory->ExecuteSegmentCommands( nCommonSegment, this );
-			bCommandsFromHistory = false;
-			pAI->Segment();
-			++nCommonSegment;
+			pTimer->NextSegment();
+			continue;
 		}
+
+		// Match multiplayer: commands see the completed tick's time. Advancing first
+		// lets UnitCommand move curTime ahead for subsequent commands in this tick.
+		bCommandsFromHistory = true;
+		pCmdsHistory->ExecuteSegmentCommands( nCommonSegment, this );
+		bCommandsFromHistory = false;
+		pTimer->NextSegment();
+		pAI->Segment();
+		++nCommonSegment;
 	}
 }
 
