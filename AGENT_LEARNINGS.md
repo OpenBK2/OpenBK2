@@ -117,3 +117,18 @@ context. Read `git diff` of every touched file before building.
 - GUI fixtures must keep narrow argv storage alive through wxEntryCleanup and
   report wx assertions to gtest across startup and teardown. A modal assertion
   dialog otherwise hides the original failure behind a CI timeout.
+
+## Towing approach and attachment order
+
+- A nearby stopped truck must let the artillery pack and rotate toward it before
+  aiming for the authored tow point, which may be across the gun or a map border.
+  Use a one-sided stopping distance so a simulation step cannot skip a narrow band.
+- Hook proximity during a turn does not establish completed attachment geometry.
+  Verify the precision path's final position and facing before accepting it; otherwise
+  overlapping units can repeatedly turn, stop early, and restart without translating.
+- In serialized fixtures, preserve target-position chunks when changing a state's
+  phase: missing vector chunks can reset the target and trigger movement interruption.
+  Serialize SAIAngle as its nested integer record, and derive geometry from the engine's
+  direction vectors rather than assuming heading zero points along the X axis.
+- For unattended Windows mission runs, use an isolated profile/data overlay and
+  `--setvar=force_app_always_active=1` so losing window focus cannot stall the script.

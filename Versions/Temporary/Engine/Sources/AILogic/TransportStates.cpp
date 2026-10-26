@@ -1021,15 +1021,18 @@ void CTransportHookArtilleryState::Segment()
 					const float dist2 = fabs( pArtillery->GetCenterPlain() - pArtillery->GetHookPoint() ) +
 					                    fabs( pTransport->GetCenterPlain() - pTransport->GetHookPoint() );
 					const float dist1 = fabs( pArtillery->GetCenterPlain() - pTransport->GetCenterPlain() );
-					const float diff = fabs( dist2 - dist1 );
 
-					if ( !pArtillery->IsInTankPit() && diff < SConsts::GUN_CREW_TELEPORT_RADIUS )
+					// Stop even if a movement step skipped the narrow hookup distance band.
+					// A nearby idle truck must also wait for the gun to pack and turn toward it:
+					// approaching the gun's current towing point first can cross it or the map border.
+					if ( !pArtillery->IsInTankPit() && ( dist1 <= dist2 + SConsts::GUN_CREW_TELEPORT_RADIUS ||
+					                                     ( pTransport->IsIdle() && dist1 < dist2 + SConsts::TILE_SIZE * 3 ) ) )
 					{
 						pTransport->RestoreSmoothPath();
 						pTransport->Stop();
 						eState = TTGS_START_UNINSTALL;
 					}
-					else if ( pTransport->IsIdle() && ( pArtillery->IsInTankPit() || diff < SConsts::TILE_SIZE * 3 ) )
+					else if ( pTransport->IsIdle() && pArtillery->IsInTankPit() )
 					{
 						eState = TTGS_START_APPROACH_BY_CHEAT_PATH;
 					}
@@ -1088,8 +1091,10 @@ void CTransportHookArtilleryState::Segment()
 			}
 			break;
 			case TTGS_APPROACH_BY_CHEAT_PATH:
-				// Use the final hookup tolerance: the crew radius can stop this path too early forever.
-				if ( fabs( pTransport->GetHookPoint() - pArtillery->GetHookPoint() ) <= SConsts::TILE_SIZE )
+				// Nearby hooks while turning do not imply the final position and facing.
+				// Stopping early can trap overlapping units in a turn/retry loop without moving.
+				if ( pTransport->GetSmoothPath()->IsFinished() &&
+				     fabs( pTransport->GetHookPoint() - pArtillery->GetHookPoint() ) <= SConsts::TILE_SIZE )
 				{
 					pTransport->RestoreSmoothPath();
 					///eState = TTGS_APPROACHING;
