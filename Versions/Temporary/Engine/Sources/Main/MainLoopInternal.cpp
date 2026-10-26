@@ -2,6 +2,7 @@
 
 #include "libdb_export.h"
 
+#include <algorithm>
 #include <chrono>
 #include <cstdlib>
 #include <filesystem>
@@ -26,6 +27,7 @@
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/GResource.h"
+#include "System/WinFrame.h"
 
 #include <fmt/format.h>
 
@@ -296,8 +298,10 @@ static bool ProcessEvent( const SGameMessage &msg )
 
 static void LimitInterfaceFrameRate( bool bActive )
 {
-	static const int nMaxInterfaceFPS = 720;
+	static const double fMaxInterfaceFPS = 720.0;
+	static double fInterfaceFPS = fMaxInterfaceFPS;
 	static std::chrono::steady_clock::time_point timeLastFrame;
+	static std::chrono::steady_clock::time_point timeLastRefreshRateCheck;
 	static bool bHaveLastFrame = false;
 
 	IInterfaceBase *pInterface = GetTopInterface();
@@ -309,6 +313,15 @@ static void LimitInterfaceFrameRate( bool bActive )
 
 	std::chrono::steady_clock::time_point timeNow = std::chrono::steady_clock::now();
 
+	// Follow monitor/mode changes without querying the display on every GUI frame.
+	if ( !bHaveLastFrame || timeNow - timeLastRefreshRateCheck >= std::chrono::seconds( 1 ) )
+	{
+		const double fRefreshRate = NWinFrame::GetMonitorRefreshRate();
+		// Keep the previous upper bound if the display cannot report its refresh rate.
+		fInterfaceFPS = fRefreshRate > 0 ? (std::min)( fMaxInterfaceFPS, fRefreshRate + 2.0 ) : fMaxInterfaceFPS;
+		timeLastRefreshRateCheck = timeNow;
+	}
+
 	if ( !bHaveLastFrame )
 	{
 		timeLastFrame = timeNow;
@@ -318,7 +331,8 @@ static void LimitInterfaceFrameRate( bool bActive )
 
 	// Rounded up, as the tick count was, so a frame lasts at least its share of
 	// the second rather than at most.
-	const std::chrono::nanoseconds frameTime( ( 1000000000LL + nMaxInterfaceFPS - 1 ) / nMaxInterfaceFPS );
+	const auto frameTime =
+			std::chrono::ceil<std::chrono::nanoseconds>( std::chrono::duration<double>( 1.0 / fInterfaceFPS ) );
 	std::chrono::nanoseconds elapsed = timeNow - timeLastFrame;
 
 	while ( elapsed < frameTime )

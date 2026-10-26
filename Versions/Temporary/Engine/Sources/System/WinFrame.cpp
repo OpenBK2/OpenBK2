@@ -216,6 +216,34 @@ static void ApplyMouseBounds()
 #endif
 }
 
+double NWinFrame::GetMonitorRefreshRate()
+{
+	if ( !hWnd )
+	{
+		return 0;
+	}
+#if BOOST_OS_WINDOWS
+	MONITORINFOEXW monitor = {};
+	monitor.cbSize = sizeof( monitor );
+	if ( !GetMonitorInfoW( MonitorFromWindow( hWnd, MONITOR_DEFAULTTONEAREST ), &monitor ) )
+	{
+		return 0;
+	}
+	DEVMODEW mode = {};
+	mode.dmSize = sizeof( mode );
+	if ( !EnumDisplaySettingsW( monitor.szDevice, ENUM_CURRENT_SETTINGS, &mode ) )
+	{
+		return 0;
+	}
+	// Windows uses zero and one for the default rate when no frequency is reported.
+	return mode.dmDisplayFrequency > 1 ? mode.dmDisplayFrequency : 0;
+#else
+	const SDL_DisplayID nDisplay = SDL_GetDisplayForWindow( AsSdlWindow( hWnd ) );
+	const SDL_DisplayMode *pMode = nDisplay ? SDL_GetCurrentDisplayMode( nDisplay ) : nullptr;
+	return pMode && pMode->refresh_rate > 0 ? pMode->refresh_rate : 0;
+#endif
+}
+
 void NWinFrame::FitGameWindowToMonitor()
 {
 	if ( !IsGameWindow( hWnd ) )

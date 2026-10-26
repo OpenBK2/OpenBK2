@@ -71,6 +71,8 @@ SYSTEM_EXPORT HWND GetWnd();
 // Only the standalone game owns its window; editor viewports keep their layout.
 SYSTEM_EXPORT bool IsGameWindow( HWND hWindow );
 SYSTEM_EXPORT void FitGameWindowToMonitor();
+// Current refresh rate of the window's monitor in Hz, or zero if unavailable.
+SYSTEM_EXPORT double GetMonitorRefreshRate();
 SYSTEM_EXPORT void SetRenderSize( int width, int height );
 SYSTEM_EXPORT void SetMouseBounds( int left, int top, int right, int bottom, bool bAcquire );
 SYSTEM_EXPORT void GetMousePos( float *px, float *py );
