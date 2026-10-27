@@ -22,6 +22,7 @@
 #include "LoadingCounter.h"
 #include "Misc/HPTimer.h"
 #include "SuperCollider.h" // for TraceStatic(...)
+#include "WaitingList.h"   // CompactWaitingList, which WalkNotLoadedObjects is
 
 #include <thread>
 // Gfx textures, CRenderContext and the 2D effects; this came in through
@@ -504,72 +505,46 @@ static bool CheckOI( CPtrFuncBase<CObjectInfo> *pInfo ) //, SBound *pBV )
 
 void CGScene::WalkNotLoadedObjects()
 {
-	for ( std::vector<CPtr<ISomePart>>::iterator i = toBeLoaded.begin(); i != toBeLoaded.end(); )
-	{
-		ISomePart *pPart = *i;
-		if ( IsValid( pPart ) )
-		{
-			if ( pPart->HasLoadedObjectInfo() )
-			{
-				SBound bv;
-				pPart->GetObjectInfo()->CalcBound( &bv );
-				CVec3 vCenter;
-				float fR;
-				switch ( pPart->GetTransformType() )
-				{
-					case TT_SIMPLE:
-					{
-						const SFBTransform &trans = pPart->GetSimplePos();
-						trans.forward.RotateHVector( &vCenter, bv.s.ptCenter );
-						fR = sqrt( CalcRadius2( bv, trans.forward ) );
-					}
-					break;
-					case TT_NONE:
-						vCenter = bv.s.ptCenter;
-						fR = bv.s.fRadius;
-						break;
-					default:
-						fR = 0;
-						ASSERT( 0 );
-						break;
-				}
-				PlaceToOctree( pPart, pVolume, vCenter, fR, &trackers, false );
-				pDecalsManager->OnCreate( pPart );
-				i = toBeLoaded.erase( i );
-			}
-			else
-			{
-				++i;
-			}
-		}
-		else
-		{
-			i = toBeLoaded.erase( i );
-		}
-	}
-	for ( std::vector<CPtr<CStaticAnimatedPart>>::iterator i = toBeLoadedAnimated.begin();
-	      i != toBeLoadedAnimated.end(); )
-	{
-		CStaticAnimatedPart *pPart = *i;
-		if ( IsValid( pPart ) )
-		{
-			if ( pPart->HasLoadedObjectInfo() )
-			{
-				const SBound &bv = pPart->GetBound();
-				PlaceToOctree( pPart, pVolume, bv.s.ptCenter, bv.s.fRadius, &trackers, true );
-				//pDecalsManager->OnCreate( pPart );
-				i = toBeLoadedAnimated.erase( i );
-			}
-			else
-			{
-				++i;
-			}
-		}
-		else
-		{
-			i = toBeLoadedAnimated.erase( i );
-		}
-	}
+	CompactWaitingList( &toBeLoaded,
+	                    [this]( ISomePart *pPart )
+	                    {
+												SBound bv;
+												pPart->GetObjectInfo()->CalcBound( &bv );
+												// VNULL3 rather than left unwritten: the default arm below sets
+												// only the radius, so an unexpected transform type used to hand
+												// PlaceToOctree an uninitialised centre. ASSERT does not evaluate
+												// its argument in the builds anyone plays, so nothing caught it.
+												CVec3 vCenter = VNULL3;
+												float fR;
+												switch ( pPart->GetTransformType() )
+												{
+													case TT_SIMPLE:
+													{
+														const SFBTransform &trans = pPart->GetSimplePos();
+														trans.forward.RotateHVector( &vCenter, bv.s.ptCenter );
+														fR = sqrt( CalcRadius2( bv, trans.forward ) );
+													}
+													break;
+													case TT_NONE:
+														vCenter = bv.s.ptCenter;
+														fR = bv.s.fRadius;
+														break;
+													default:
+														fR = 0;
+														ASSERT( 0 );
+														break;
+												}
+												PlaceToOctree( pPart, pVolume, vCenter, fR, &trackers, false );
+												pDecalsManager->OnCreate( pPart );
+											} );
+
+	CompactWaitingList( &toBeLoadedAnimated,
+	                    [this]( CStaticAnimatedPart *pPart )
+	                    {
+												const SBound &bv = pPart->GetBound();
+												PlaceToOctree( pPart, pVolume, bv.s.ptCenter, bv.s.fRadius, &trackers, true );
+												//pDecalsManager->OnCreate( pPart );
+											} );
 }
 
 CObjectBase *CGScene::CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, const SFullGroupInfo &_ginfo )

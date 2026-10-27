@@ -68,6 +68,10 @@ if(WIN32)
 endif()
 # Spatial bounds must remain valid for camera and shadow selection on large maps.
 add_unit_test(OcTree 3DLib System Misc)
+# CompactWaitingList carries the behaviour of the erase loop it replaced: which
+# entries leave, which stay, in what order, and that each reference goes once.
+# Header only, so it needs no 3Dmotor link.
+add_unit_test(WaitingList System Misc)
 # Picking uses the collision map and its software selection grid.
 # Name gr2 directly so the test's runtime DLL copy includes Granny as well.
 add_unit_test(LargeMapSelection 3Dmotor 3DLib System Misc gr2)
