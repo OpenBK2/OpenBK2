@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Fixed `--mission`, `--campaign`, `--mod` and the other command line options being ignored on Windows when the whole argument is quoted, which is how PowerShell, `cmd` and most launchers quote anything with a space in it: `"--mission=Custom/Missions/Mission Impossible/mapinfo.xdb"` started the game at the main menu instead of the map. The command line was split by a parser that kept the quotes inside the argument, so the option was not recognised, and that also treated apostrophes and brackets as quotes, which split a path such as `Wittman's Korea` in two. It is now split by the rules Windows itself uses.
+
 - `ExtendedStats.AggressiveAttacker` enables automatic attacks for idle or guarding tanks and non-AA SPGs. They use shared side visibility and full usable weapon range, respect Hold Fire and existing orders, and aim without chasing or repositioning. Hidden, friendly, dead or unreachable targets end the automatic attack. The flag defaults to false. See `OBK2_Examples/ExtendedStats/AggressiveAttacker.xdb`.
 - Every mission start now records how long the map took to load, and in which phase, to the log and the in-game console: `map load: <record> 11x11 patches in 7.956 s (screens 0.537, ai_init 0.002, load_map 0.581, ai_after_map_load 1.718, world_update 0.471, load_graphics 4.646)`. Reports that a map loads slowly, which total conversions attract, could previously say only that the whole of it was slow; the line says whether the time went on the terrain, on creating the units, or on the models and textures. There is a `--exit-after-load` command line option that loads a map and leaves, printing the same line, for measuring one map or profiling the load; `docs/MapLoadProfiling.md` describes it.
 

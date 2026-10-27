@@ -41,7 +41,9 @@
 #include <iterator>
 #include <typeinfo>
 
-#if !BOOST_OS_WINDOWS
+#if BOOST_OS_WINDOWS
+#include <shellapi.h> // CommandLineToArgvW
+#else
 #include <cxxabi.h>
 #include <unistd.h> // getpid, for the profiling pause
 #endif
@@ -242,24 +244,31 @@ static int RunGameGuarded( const std::vector<std::string> &arguments )
 //! hands the program already.
 //!
 //! Windows does not: WinMain is given one string with the arguments still in it,
-//! so the quoting has to be undone here. Off Windows the shell has already done
-//! it, and better, because it knows what the user actually typed.
-static std::vector<std::string> SplitCommandLine( LPSTR lpCmdLine )
+//! so the quoting has to be undone here. CommandLineToArgvW undoes it by the rules
+//! the CRT and every launcher use to build it ("a b" groups, \" is a literal quote),
+//! so "--mission=Custom/Missions/Mission Impossible/mapinfo.xdb", which is how
+//! PowerShell, cmd and Python's subprocess all quote an argument with a space, is
+//! one argument with the quotes gone.
+//!
+//! The bracket-aware splitter this replaces kept the quotes inside the argument,
+//! so that spelling reached ProcessCommandLine starting with a quote, matched no
+//! prefix and was dropped, and the game started at the menus instead of the map.
+//! It also grouped on ' ( [ { <, which split a path such as Wittman's Korea.
+static std::vector<std::string> SplitCommandLine()
 {
 	std::vector<std::string> arguments;
-	for ( NStr::CStringIterator<char, std::string, NStr::CBracketSeparator<char, NStr::SBracketsQuoteTest<char>>> it(
-						lpCmdLine, ' ' );
-	      !it.IsEnd();
-	      it.Next() )
+	int nArgs = 0;
+	LPWSTR *pArgs = CommandLineToArgvW( GetCommandLineW(), &nArgs );
+	if ( pArgs == nullptr )
 	{
-		std::string szArgument;
-		it.Get( &szArgument );
-		NStr::TrimBoth( szArgument );
-		if ( !szArgument.empty() )
-		{
-			arguments.push_back( szArgument );
-		}
+		return arguments;
 	}
+	// pArgs[0] is the program itself, which main's argv[0] is too and is skipped there
+	for ( int i = 1; i < nArgs; ++i )
+	{
+		arguments.push_back( NStr::ToMBCS( std::wstring( pArgs[i] ) ) );
+	}
+	LocalFree( pArgs );
 	return arguments;
 }
 
@@ -270,11 +279,11 @@ static std::vector<std::string> SplitCommandLine( LPSTR lpCmdLine )
 // hPrevInstance has meant nothing since 16 bit Windows, nCmdShow is not consulted
 // because the window is created borderless at the desktop's size, and hInstance
 // is now asked for by the one place that wants it.
-int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int )
+int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int )
 {
 	// Cover command-line/configuration work as well as the main game loop.
 	InitCrashpad( "OpenBK2 Game", REVISION_NUMBER_STR " " BUILD_DATE_TIME_STR );
-	return RunGameGuarded( SplitCommandLine( lpCmdLine ) );
+	return RunGameGuarded( SplitCommandLine() );
 }
 
 #else
