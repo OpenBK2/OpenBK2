@@ -101,10 +101,62 @@ public:
 	}
 
 	//! The next value in [0, nMax), left uncommitted so the caller can narrow it.
-	uint32_t Decode( uint32_t nMax );
+	//!
+	//! In the class body, and with the renormalise loop hoisted out of it, so that
+	//! a caller passing a constant nMax can fold the first division away. Every
+	//! symbol in the stream is drawn through CWeightWindow::Decode, which asks for
+	//! 0x4000, and 0x4000 is a power of two, so that division is a shift whenever
+	//! the compiler can see the constant. Out of line it could not: nMax arrived in
+	//! a register and the object file carried two divides per symbol.
+	//!
+	//! The second division stays. Its divisor is this symbol's range, which is
+	//! data, so neither a shift nor a precomputed reciprocal can stand in for it.
+	uint32_t Decode( uint32_t nMax )
+	{
+		if ( m_bFailed || nMax == 0 )
+		{
+			m_bFailed = true;
+			return 0;
+		}
+		// The loop's own condition, tested here so that the loop itself can live
+		// out of line: it runs at most three times and not on every symbol, while
+		// what follows runs on all of them.
+		if ( m_nDenominator <= 0x800000 && !Renormalise() )
+		{
+			return 0;
+		}
+
+		m_nNextDenominator = m_nDenominator / nMax;
+		const uint32_t nValue = m_nNumerator / m_nNextDenominator;
+		return nValue < nMax - 1 ? nValue : nMax - 1;
+	}
 
 	//! Consume [nValue, nValue + nError) of the range Decode was called with.
-	uint32_t Commit( uint32_t nMax, uint32_t nValue, uint32_t nError );
+	//!
+	//! In the class body for the same reason: the comparison against nMax folds
+	//! away when the caller had a constant one.
+	uint32_t Commit( uint32_t nMax, uint32_t nValue, uint32_t nError )
+	{
+		m_nNumerator -= m_nNextDenominator * nValue;
+
+		if ( nValue + nError < nMax )
+		{
+			m_nDenominator = m_nNextDenominator * nError;
+		}
+		else
+		{
+			m_nDenominator -= m_nNextDenominator * nValue;
+		}
+
+		// nError is at least 1 at every call site, so this cannot happen; if it
+		// ever did, the renormalise loop would spin on a denominator that
+		// shifting never grows.
+		if ( m_nDenominator == 0 )
+		{
+			m_bFailed = true;
+		}
+		return nValue;
+	}
 
 	//! The common case: one exact value out of nMax.
 	uint32_t DecodeAndCommit( uint32_t nMax ) { return Commit( nMax, Decode( nMax ), 1 ); }
@@ -112,6 +164,12 @@ public:
 	bool Failed() const { return m_bFailed; }
 
 private:
+	//! Widen the range until it can be divided by nMax without losing it, by
+	//! shifting in bytes. False, with the failure flag set, when the stream ran
+	//! out: a well formed section never gets there, because the padding this was
+	//! handed covers the read ahead.
+	bool Renormalise();
+
 	uint32_t m_nNumerator = 0;
 	uint32_t m_nDenominator = 0;
 	uint32_t m_nNextDenominator = 1;
@@ -120,24 +178,18 @@ private:
 	bool m_bFailed = false;
 };
 
-uint32_t CDecoder::Decode( uint32_t nMax )
+// Out of line, unlike the two above: the loop runs at most three times, since
+// the denominator starts at 0x80 and each pass shifts it a byte, and it does not
+// run at all for most symbols. Keeping it here is what lets Decode be small
+// enough to inline, which is the whole point of the split.
+bool CDecoder::Renormalise()
 {
-	if ( m_bFailed || nMax == 0 )
-	{
-		m_bFailed = true;
-		return 0;
-	}
-
-	// Renormalise until the denominator is wide enough to divide by nMax without
-	// losing the range. Three bytes at most, since it starts at 0x80.
 	while ( m_nDenominator <= 0x800000 )
 	{
 		if ( m_pStream + 1 >= m_pEnd )
 		{
-			// Ran out of stream. A well formed section never gets here, because
-			// the padding this was handed covers the read ahead.
 			m_bFailed = true;
-			return 0;
+			return false;
 		}
 		m_nNumerator <<= 8;
 		m_nNumerator |= ( static_cast<uint32_t>( m_pStream[0] ) << 7 ) & 0x80;
@@ -145,33 +197,7 @@ uint32_t CDecoder::Decode( uint32_t nMax )
 		++m_pStream;
 		m_nDenominator <<= 8;
 	}
-
-	m_nNextDenominator = m_nDenominator / nMax;
-	const uint32_t nValue = m_nNumerator / m_nNextDenominator;
-	return nValue < nMax - 1 ? nValue : nMax - 1;
-}
-
-uint32_t CDecoder::Commit( uint32_t nMax, uint32_t nValue, uint32_t nError )
-{
-	m_nNumerator -= m_nNextDenominator * nValue;
-
-	if ( nValue + nError < nMax )
-	{
-		m_nDenominator = m_nNextDenominator * nError;
-	}
-	else
-	{
-		m_nDenominator -= m_nNextDenominator * nValue;
-	}
-
-	// nError is at least 1 at every call site, so this cannot happen; if it ever
-	// did, the renormalise loop above would spin on a denominator that shifting
-	// never grows.
-	if ( m_nDenominator == 0 )
-	{
-		m_bFailed = true;
-	}
-	return nValue;
+	return true;
 }
 
 //! An adaptive table of values, weighted by how often each has been seen.
