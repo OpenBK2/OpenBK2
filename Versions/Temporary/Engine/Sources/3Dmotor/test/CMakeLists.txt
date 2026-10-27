@@ -72,6 +72,10 @@ add_unit_test(OcTree 3DLib System Misc)
 # entries leave, which stay, in what order, and that each reference goes once.
 # Header only, so it needs no 3Dmotor link.
 add_unit_test(WaitingList System Misc)
+# The triangle order the GPU's vertex cache sees, and the vertex renumbering that
+# goes with it. Pins validity, cache-miss quality and exact output, so that the
+# quadratic fallback search can be replaced without changing what comes out.
+add_unit_test(TriVertexCacheOptimizer 3DLib System Misc)
 # Picking uses the collision map and its software selection grid.
 # Name gr2 directly so the test's runtime DLL copy includes Granny as well.
 add_unit_test(LargeMapSelection 3Dmotor 3DLib System Misc gr2)
