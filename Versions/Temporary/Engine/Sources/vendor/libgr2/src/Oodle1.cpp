@@ -200,6 +200,118 @@ bool CDecoder::Renormalise()
 	return true;
 }
 
+//! A vector of uint16_t that holds its first N elements inside itself and only
+//! goes to the heap past that.
+//!
+//! What the weight windows below are built from. A dictionary makes one window
+//! per kilobyte of back reference range plus 71 more, which across the shipped
+//! corpus is about 330 per stage, every one of them filled in its constructor.
+//! With std::vector that was three heap allocations per window, close to a
+//! thousand per stage before a byte was decoded, and 98.6% of the midbit windows
+//! and 83% of the size windows are never drawn from at all.
+//!
+//! N = 8 because of how large the windows actually get. Measured over the 40,978
+//! Oodle1 sections in the three installs: the range table outgrows 8 entries in
+//! 0.6% of midbit windows, 2.1% of size windows, 4.8% of highbit windows and no
+//! lowbit window. The literal windows do grow large, to 257 entries, but there
+//! are only four of them per stage.
+//!
+//! Only what CWeightWindow uses, for a trivially copyable element, which is what
+//! lets growth be a memcpy.
+template <size_t N>
+class CSmallU16Vector
+{
+public:
+	CSmallU16Vector() = default;
+
+	CSmallU16Vector( const CSmallU16Vector & ) = delete;
+	CSmallU16Vector &operator=( const CSmallU16Vector & ) = delete;
+
+	//! For std::vector<CWeightWindow>, which needs it to compile even though the
+	//! reserve ahead of every emplace_back means it never runs.
+	CSmallU16Vector( CSmallU16Vector &&other ) noexcept
+		: m_nSize( other.m_nSize )
+		, m_nCapacity( other.m_nCapacity )
+	{
+		if ( other.IsInline() )
+		{
+			memcpy( m_Inline, other.m_Inline, sizeof( m_Inline ) );
+		}
+		else
+		{
+			m_pData = other.m_pData;
+			other.m_pData = other.m_Inline;
+			other.m_nCapacity = N;
+		}
+		other.m_nSize = 0;
+	}
+
+	CSmallU16Vector &operator=( CSmallU16Vector && ) = delete;
+
+	~CSmallU16Vector()
+	{
+		if ( !IsInline() )
+		{
+			delete[] m_pData;
+		}
+	}
+
+	size_t size() const { return m_nSize; }
+	uint16_t *data() { return m_pData; }
+	const uint16_t *data() const { return m_pData; }
+	uint16_t *begin() { return m_pData; }
+	uint16_t *end() { return m_pData + m_nSize; }
+	uint16_t &operator[]( size_t i ) { return m_pData[i]; }
+	const uint16_t &operator[]( size_t i ) const { return m_pData[i]; }
+	uint16_t &back() { return m_pData[m_nSize - 1]; }
+
+	void push_back( uint16_t nValue )
+	{
+		if ( m_nSize == m_nCapacity )
+		{
+			Grow( m_nSize + 1 );
+		}
+		m_pData[m_nSize++] = nValue;
+	}
+
+	void pop_back() { --m_nSize; }
+
+	//! New elements are zero, as std::vector's would be.
+	void resize( size_t nSize )
+	{
+		if ( nSize > m_nCapacity )
+		{
+			Grow( nSize );
+		}
+		if ( nSize > m_nSize )
+		{
+			memset( m_pData + m_nSize, 0, ( nSize - m_nSize ) * sizeof( uint16_t ) );
+		}
+		m_nSize = nSize;
+	}
+
+private:
+	bool IsInline() const { return m_pData == m_Inline; }
+
+	void Grow( size_t nAtLeast )
+	{
+		const size_t nCapacity = std::max( nAtLeast, 2 * m_nCapacity );
+		uint16_t *pData = new uint16_t[nCapacity];
+		memcpy( pData, m_pData, m_nSize * sizeof( uint16_t ) );
+		if ( !IsInline() )
+		{
+			delete[] m_pData;
+		}
+		m_pData = pData;
+		m_nCapacity = nCapacity;
+	}
+
+	uint16_t m_Inline[N];
+	uint16_t *m_pData = m_Inline;
+	size_t m_nSize = 0;
+	size_t m_nCapacity = N;
+};
+
 //! An adaptive table of values, weighted by how often each has been seen.
 //!
 //! Values arrive unknown. The window keeps a slot for "something not seen
@@ -233,9 +345,10 @@ private:
 	void RebuildRanges();
 	void RebuildWeights();
 
-	std::vector<uint16_t> m_Ranges;
-	std::vector<uint16_t> m_Values;
-	std::vector<uint16_t> m_Weights;
+	// Inline rather than std::vector; CSmallU16Vector says why, and why 8.
+	CSmallU16Vector<8> m_Ranges;
+	CSmallU16Vector<8> m_Values;
+	CSmallU16Vector<8> m_Weights;
 	uint32_t m_nWeightTotal = 4;
 	uint32_t m_nCountCap = 0;
 	uint32_t m_nThreshIncrease = 4;
