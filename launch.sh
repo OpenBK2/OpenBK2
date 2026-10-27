@@ -747,7 +747,13 @@ if [ -n "$PROFILER" ]; then
 			# walk gives stacks that stop inside the engine's shared libraries.
 			# 199 Hz because dwarf copies a stack snapshot per sample and a higher
 			# rate on a process this size fills the buffer faster than it drains.
-			PROFILER_CMD=( perf record -g --call-graph=dwarf -F 199 -o "$PROFILE_PRIMARY" -- )
+			# A map load is a few seconds of a run that lasts tens, so that gives a
+			# few hundred samples inside it; BK2_PERF_EXTRA='-F 499' when the
+			# question needs more, and check the LOST count afterwards with
+			# perf report --stats.
+			declare -a perf_extra=()
+			[ -n "${BK2_PERF_EXTRA:-}" ] && read -r -a perf_extra <<<"$BK2_PERF_EXTRA"
+			PROFILER_CMD=( perf record -g --call-graph=dwarf -F 199 "${perf_extra[@]}" -o "$PROFILE_PRIMARY" -- )
 			;;
 	esac
 

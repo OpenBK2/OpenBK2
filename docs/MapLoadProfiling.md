@@ -146,7 +146,14 @@ perf gets `--call-graph=dwarf` rather than frame pointers: Release maps to
 pointer walk gives stacks that stop inside the engine's shared libraries. And
 `-F 199` rather than more, because dwarf unwinding copies a stack snapshot per
 sample and a higher rate on a process this size fills the buffer faster than it
-drains. Read the result with `perf report -i <file> --stdio --sort=dso,symbol`.
+drains. `BK2_PERF_EXTRA='-F 499'` raises it when a few hundred samples inside
+the load is not enough; `perf report --stats` reports what was lost.
+
+**On a hybrid CPU, perf records two events.** `perf evlist` shows
+`cpu_atom/cycles/P` and `cpu_core/cycles/P`, and `perf report` prints a section
+per event, so the first table on screen can be the handful of samples that
+landed on an efficiency core rather than the thousand that did the work. Check
+`perf report --stats` for the per-event counts before reading any percentage.
 
 `BK2_PERFORATOR` names the binary when it is not on PATH, and
 `BK2_PERFORATOR_EXTRA` adds flags: `--freq` to change the sampling rate,
