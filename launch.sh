@@ -60,6 +60,13 @@ usage()
 	                         prefix's own Data. A name means ~/bk2-NAME; a path
 	                         with a slash is taken as is.
 	      --list-data        list the data trees found, and exit
+	  -M, --mod NAME         attach a mod, naming a folder under the data tree's
+	                         MODs directory. Without this the profile's own
+	                         remembered choice is used, and --mod "" overrides
+	                         that back to unmodded. Attaching is remembered, so
+	                         a mod picked here persists into later runs of the
+	                         same tree until another --mod says otherwise.
+	      --list-mods        list the mods installed in the tree, and exit
 	  -m, --mission MAP      start a mission instead of showing the menus, by
 	                         passing --mission= to the game. MAP names a MapInfo
 	                         record, e.g. Custom/Missions/Razvedka/MapInfo.xdb
@@ -201,6 +208,9 @@ list_trees()
 CONFIG=debug
 EXE=Game
 TREE=
+MOD=
+MOD_GIVEN=no
+LIST_MODS=no
 USE_GDB=no
 USE_VALGRIND=no
 SHOW_ENV=no
@@ -242,6 +252,9 @@ while [ $# -gt 0 ]; do
 		              esac
 		              shift 2 ;;
 		--list-data)  printf 'data trees found:\n'; list_trees; exit 0 ;;
+		-M|--mod)     [ $# -ge 2 ] || die "$1 needs a mod folder name, or \"\" for none"
+		              MOD="$2"; MOD_GIVEN=yes; shift 2 ;;
+		--list-mods)  LIST_MODS=yes; shift ;;
 		-r|--replay)  [ $# -ge 2 ] || die "$1 needs a replay file"
 		              REPLAY="$2"; shift 2 ;;
 		-m|--mission) [ $# -ge 2 ] || die "$1 needs a MapInfo record name"
@@ -410,6 +423,46 @@ else
 		exit 1
 	fi
 	RUNDIR="$PREFIX/bin"
+fi
+
+# Mods live beside Data, in the directory the game builds from its base dir,
+# which is the parent of the directory it runs in. Spelled MODs exactly:
+# System/FilePath.h says DIR_MODS[] = "MODs", the game enumerates it with a
+# plain directory walk rather than through the VFS, and nothing folds case for
+# it off Windows.
+MODSDIR="$(dirname "$RUNDIR")/MODs"
+
+# A mod is a folder holding name.txt, which is what the game reads to decide
+# whether a directory under MODs is a mod at all: GetAllMODs skips any whose
+# name comes back empty.
+list_mods()
+{
+	local dir found=no
+	for dir in "$MODSDIR"/*; do
+		[ -f "$dir/name.txt" ] || continue
+		found=yes
+		# name.txt is UTF-16, which is what the rest of the text data is, so it
+		# needs converting before it can be printed beside the folder name.
+		printf '  %-28s %s\n' "${dir##*/}" \
+			"$(iconv -f UTF-16 -t UTF-8 "$dir/name.txt" 2>/dev/null | tr -d '\r\n' || true)"
+	done
+	[ "$found" = no ] && printf '  (none in %s)\n' "$MODSDIR"
+	return 0
+}
+
+if [ "$LIST_MODS" = yes ]; then
+	printf 'mods in %s:\n' "$MODSDIR"
+	list_mods
+	exit 0
+fi
+
+# Caught here rather than left to the game, which attaches a missing mod as if
+# it were no mod at all and then starts unmodded without saying so. A run meant
+# to measure a mod's map would have quietly measured the wrong thing.
+if [ "$MOD_GIVEN" = yes ] && [ -n "$MOD" ] && [ ! -f "$MODSDIR/$MOD/name.txt" ]; then
+	printf '%s: no mod %s in %s\nmods installed:\n' "$SELF" "$MOD" "$MODSDIR" >&2
+	list_mods >&2
+	exit 1
 fi
 
 # Sanitizer runtime options, keyed on the prefix rather than the configuration
@@ -712,6 +765,7 @@ if [ "$SHOW_ENV" = yes ]; then
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
 	[ ${#VALGRIND_CMD[@]} -gt 0 ] && printf 'valgrind=%s\n' "${VALGRIND_CMD[*]}"
 	[ ${#PROFILER_CMD[@]} -gt 0 ] && printf 'profiler=%s %s\n' "${PROFILER_CMD[*]}" "${PRIV_CMD[*]}"
+	[ "$MOD_GIVEN" = yes ] && printf 'args=--mod=%s\n' "$MOD"
 	[ -n "$MISSION" ] && printf 'args=--mission=%s\n' "$MISSION"
 	[ -n "$CAMPAIGN" ] && printf 'args=--campaign=%s\n' "$CAMPAIGN"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
@@ -731,6 +785,9 @@ declare -a CMD=("${PROFILER_CMD[@]}" "${PRIV_CMD[@]}" env "${ENV_ARGS[@]}")
 [ ${#VALGRIND_CMD[@]} -gt 0 ] && CMD+=("${VALGRIND_CMD[@]}")
 CMD+=("./$EXE")
 # Before the caller's own arguments, so an explicit --replay= after -- wins.
+# --mod among them, and an empty one still passed: --mod "" is how a run says
+# "ignore what the profile remembers and start unmodded".
+[ "$MOD_GIVEN" = yes ] && CMD+=("--mod=$MOD")
 [ -n "$MISSION" ] && CMD+=("--mission=$MISSION")
 [ -n "$CAMPAIGN" ] && CMD+=("--campaign=$CAMPAIGN")
 [ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")

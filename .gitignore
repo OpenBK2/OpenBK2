@@ -95,3 +95,13 @@ scripts/port/.gr2cache/
 
 # Python's bytecode cache; the probes in scripts/port import uiprobe.py
 __pycache__/
+
+# Mod archives staged for installation into a data tree. Hundreds of megabytes
+# each, redistributed by their authors rather than by us, and launch.sh --mod
+# reads the extracted folder under the tree's MODs, never this.
+/mods/
+
+# Profiles --profile leaves beside this script
+/profile-*.pprof
+/profile-*.html
+/profile-*.data

@@ -95,6 +95,12 @@ static bool bReplayVerify = false;
 // --exit-after-load, for the same reason: it becomes a variable the mission
 // interface reads once the map is in.
 static bool bExitAfterLoad = false;
+// --mod=, the folder under MODs to attach. Kept outside profile variables the
+// way the editor's map and mod are, since the point of it is to beat what the
+// profile remembers. The flag is separate from the string because an empty
+// --mod= is a meaningful answer, "no mod", and not the same as not asking.
+static std::string szStartMod;
+static bool bModFromCommandLine = false;
 static std::vector<std::pair<std::string, std::string>> commandLineVars;
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
@@ -373,8 +379,27 @@ static int RunGame( const std::vector<std::string> &arguments )
 	NMOD::InstantAttachMOD( "", NDb::DATABASE_MODE_GAME );
 	NProfile::LoadProfile();
 	//
-	std::string szMOD2Attach =
-			szEditorMap.empty() ? NStr::ToMBCS( NGlobal::GetVar( "current_attached_mod", "" ) ) : szEditorMod;
+	// Which mod to attach, in the order the three ways of saying it beat each
+	// other: the editor's own argument, then --mod, then what the profile
+	// remembers from the last time one was picked from the menu.
+	//
+	// --mod has to be read here rather than left to --setvar, because
+	// current_attached_mod is read on the next line and command line variables
+	// are not applied until after the configs, several steps further down. A
+	// --setvar of it would be a variable nothing goes back to look at.
+	//
+	// --mod= with nothing after it names no mod, which is how a run says "ignore
+	// the profile and start unmodded" - worth having, since attaching one is
+	// remembered and would otherwise persist into every later run.
+	std::string szMOD2Attach = NStr::ToMBCS( NGlobal::GetVar( "current_attached_mod", "" ) );
+	if ( bModFromCommandLine )
+	{
+		szMOD2Attach = szStartMod;
+	}
+	if ( !szEditorMap.empty() )
+	{
+		szMOD2Attach = szEditorMod;
+	}
 	if ( szEditorMap.empty() && !szMOD2Attach.empty() )
 	{
 		szMOD2Attach = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS, szMOD2Attach );
@@ -664,6 +689,29 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		if ( szString == "--exit-after-load" )
 		{
 			bExitAfterLoad = true;
+			continue;
+		}
+		// --mod=<folder> attaches a mod, naming a folder under MODs the way the
+		// profile's own current_attached_mod does. Without this a mod could only
+		// be chosen from the menu, because the profile is where the choice lives
+		// and --setvar is applied long after the attach has happened.
+		//
+		// The value is a relative path, so a separator is legitimate in it, but
+		// one that climbs out of MODs is not: the attach hands it to the VFS as a
+		// resource root, and anything above that folder is not a mod.
+		const std::string startModPrefix = "--mod=";
+		if ( szString.compare( 0, startModPrefix.size(), startModPrefix ) == 0 )
+		{
+			std::string value = szString.substr( startModPrefix.size() );
+			NStr::TrimBoth( value, '"' );
+			if ( value.find_first_of( "\"\r\n;" ) != std::string::npos || value.find( ".." ) != std::string::npos )
+			{
+				MessageBox(
+						0, "Invalid --mod argument, expected a folder name under MODs.", "Attach MOD", MB_OK | MB_ICONERROR );
+				return false;
+			}
+			szStartMod = value;
+			bModFromCommandLine = true;
 			continue;
 		}
 		// --setvar name=value or --setvar=name=value, repeatable. Applied after
