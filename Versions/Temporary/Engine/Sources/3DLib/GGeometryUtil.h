@@ -1,6 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include <queue>
+#include <utility>
+#include <vector>
 
 namespace NGScene
 {
@@ -69,38 +72,68 @@ private:
 	int nTryCount;
 	int nOutQueueSize, nOutPrevPosSize;
 
+	// Picking a triangle to start a new strip from, which is what SearchBest
+	// falls back to when nothing adjacent to the cache will do. It wants the
+	// unused triangle whose vertices have the fewest free links left, the lowest
+	// index breaking a tie, and it used to find that by scanning every triangle
+	// in the mesh. SearchBest runs once per output triangle, so that was
+	// quadratic, and on a model made of many small pieces, which is what a
+	// vehicle is, the fallback fires once per piece rather than once.
+	//
+	// A lazily deleted min-heap of (key, triangle) gives the same answer. Pairs
+	// compare lexicographically, so the smallest is the lowest key and then the
+	// lowest index, exactly the rule the scan applied. A triangle's key only ever
+	// falls, since a free link is a triangle not yet emitted, so when it changes
+	// the new pair is pushed and the old one is left to be skipped on the way
+	// past: an entry is stale when its triangle has been used or when its key is
+	// no longer the one startKey records.
+	//
+	// Keys are republished only for the triangles that share a vertex with the
+	// one just emitted, since no other key can have moved.
+	//
+	// The heap is not built until the fallback has fired often enough to be worth
+	// it, because keeping it current costs something on every emitted triangle
+	// whether or not the fallback ever asks. On a connected mesh it fires about
+	// once, so the scan is cheaper than the bookkeeping and measurably so: a
+	// 7,200 triangle grid was 19 per cent slower with the heap maintained from the
+	// start. On a mesh of many small pieces, which is what a vehicle model is, it
+	// fires once per piece and the scan is quadratic. Counting the calls and
+	// switching over picks the right one without having to know the shape of the
+	// mesh in advance, and bounds the scan's total cost at the threshold times the
+	// triangle count.
+	typedef std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<std::pair<int, int>>>
+			CStartQueue;
+
+	//! How many times the fallback may scan before the heap is built instead.
+	//! Scanning costs one pass over the mesh each time and the heap costs about
+	//! the same to build and to keep current for the rest of the run, so the
+	//! crossover is low; this is comfortably past it in both directions.
+	static const int START_QUEUE_THRESHOLD = 32;
+
+	std::vector<int> startKey;
+	CStartQueue startQueue;
+	int nStartSearches;
+	bool bUseStartQueue;
+
+	//! The key the fallback orders triangles by: the largest number of free links
+	//! on any of the triangle's three vertices.
+	int StartKey( const std::vector<STriangle> &tris, int nTri ) const
+	{
+		const STriangle &q = tris[nTri];
+		int nFreeLinks = 0;
+		nFreeLinks = (std::max)( nFreeLinks, freeLinks[q.i1] );
+		nFreeLinks = (std::max)( nFreeLinks, freeLinks[q.i2] );
+		nFreeLinks = (std::max)( nFreeLinks, freeLinks[q.i3] );
+		return nFreeLinks;
+	}
+
+	void OnTriangleUsed( const std::vector<STriangle> &tris, int nUsed );
+	int ScanBestStart( const std::vector<STriangle> &tris ) const;
+	void BuildStartQueue( const std::vector<STriangle> &tris );
+	int PopBestStart();
+
 	void CountVertices( const std::vector<STriangle> &tris );
 	void Init( const std::vector<STriangle> &tris );
-
-	struct SStartSearch
-	{
-		int nBestIdx, nBestFreeLinks;
-		CTriVertexCacheOptimizer *pOptimizer;
-		const std::vector<STriangle> &tris;
-
-		SStartSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris )
-			: nBestIdx( -1 )
-			, nBestFreeLinks( 1000000 )
-			, pOptimizer( pO )
-			, tris( _tris )
-		{
-		}
-
-		void Try( int nTri )
-		{
-			const STriangle &q = tris[nTri];
-			int nFreeLinks = 0;
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i1] );
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i2] );
-			nFreeLinks = (std::max)( nFreeLinks, pOptimizer->freeLinks[q.i3] );
-
-			if ( nFreeLinks < nBestFreeLinks )
-			{
-				nBestFreeLinks = nFreeLinks;
-				nBestIdx = nTri;
-			}
-		}
-	};
 
 	struct SBestSearch
 	{

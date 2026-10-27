@@ -57,6 +57,14 @@ void CTriVertexCacheOptimizer::Init( const std::vector<STriangle> &tris )
 		triPerVertex[writePtr[t.i2]++] = k;
 		triPerVertex[writePtr[t.i3]++] = k;
 	}
+	// The start queue is built only if the fallback turns out to need it often,
+	// so here it is only emptied.
+	startKey.resize( 0 );
+	startKey.resize( tris.size(), 0 );
+	startQueue = CStartQueue();
+	nStartSearches = 0;
+	bUseStartQueue = false;
+
 	lastTry.resize( tris.size(), 0 );
 	nTryCount = 0;
 	nOutQueueSize = 0;
@@ -97,20 +105,132 @@ int CTriVertexCacheOptimizer::SearchBest( const std::vector<STriangle> &tris )
 	}
 	if ( bs.nBestIdx == -1 || bs.nBestCached == 0 )
 	{
-		SStartSearch start( this, tris );
-		// start over
-		for ( int k = 0; k < tris.size(); ++k )
+		// Nothing next to what is in the cache, so start a new strip somewhere.
+		// Scanned while the fallback is rare, and through the heap once it is
+		// not; both answer the same question and the switch is one way.
+		if ( !bUseStartQueue )
 		{
-			if ( isUsed[k] )
+			++nStartSearches;
+			if ( nStartSearches < START_QUEUE_THRESHOLD )
 			{
-				continue;
+				return ScanBestStart( tris );
 			}
-			start.Try( k );
+			BuildStartQueue( tris );
 		}
-		return start.nBestIdx;
+		return PopBestStart();
 	}
 	ASSERT( bs.nBestIdx != -1 );
 	return bs.nBestIdx;
+}
+
+//! The unused triangle with the lowest key, found by looking at all of them.
+//!
+//! What the fallback always did. Kept for the runs where it fires too rarely to
+//! be worth maintaining anything, and as the definition the heap has to agree
+//! with: lowest key, and among equal keys the lowest index, which falls out of
+//! taking the first strict improvement while walking in index order.
+int CTriVertexCacheOptimizer::ScanBestStart( const std::vector<STriangle> &tris ) const
+{
+	int nBestIdx = -1;
+	int nBestKey = 1000000;
+	for ( int k = 0; k < tris.size(); ++k )
+	{
+		if ( isUsed[k] )
+		{
+			continue;
+		}
+		const int nKey = StartKey( tris, k );
+		if ( nKey < nBestKey )
+		{
+			nBestKey = nKey;
+			nBestIdx = k;
+		}
+	}
+	return nBestIdx;
+}
+
+//! Build the heap from the current keys, once the fallback has proved frequent.
+//!
+//! Every unused triangle goes in, used ones are left out rather than entered and
+//! skipped later, and the heap is built in one pass over the range rather than
+//! by pushing each entry.
+void CTriVertexCacheOptimizer::BuildStartQueue( const std::vector<STriangle> &tris )
+{
+	std::vector<std::pair<int, int>> entries;
+	entries.reserve( tris.size() );
+	for ( int k = 0; k < tris.size(); ++k )
+	{
+		if ( isUsed[k] )
+		{
+			continue;
+		}
+		startKey[k] = StartKey( tris, k );
+		entries.push_back( std::make_pair( startKey[k], k ) );
+	}
+	startQueue = CStartQueue( entries.begin(), entries.end() );
+	bUseStartQueue = true;
+}
+
+//! Republish the keys that the emission of nUsed has moved.
+//!
+//! Only triangles sharing a vertex with it can have moved, since a key reads
+//! nothing else, and emitting a triangle lowers the free link count of exactly
+//! its own three vertices. A degenerate triangle names the same vertex twice and
+//! so is walked twice; the second pass finds every key already current and
+//! pushes nothing.
+void CTriVertexCacheOptimizer::OnTriangleUsed( const std::vector<STriangle> &tris, int nUsed )
+{
+	if ( !bUseStartQueue )
+	{
+		return; // nothing to keep current yet
+	}
+	const STriangle &q = tris[nUsed];
+	const int verts[3] = { q.i1, q.i2, q.i3 };
+	for ( int i = 0; i < 3; ++i )
+	{
+		const int nVertex = verts[i];
+		for ( int k = tpvIndex[nVertex]; k < tpvIndex[nVertex + 1]; ++k )
+		{
+			const int nTri = triPerVertex[k];
+			if ( isUsed[nTri] )
+			{
+				continue;
+			}
+			const int nKey = StartKey( tris, nTri );
+			if ( nKey != startKey[nTri] )
+			{
+				startKey[nTri] = nKey;
+				startQueue.push( std::make_pair( nKey, nTri ) );
+			}
+		}
+	}
+}
+
+//! The unused triangle with the lowest key, and the lowest index among those,
+//! which is what the scan this replaces returned.
+//!
+//! Stale entries are dropped on the way past rather than when they go stale: an
+//! entry is stale once its triangle has been used, or once startKey records a
+//! different key for it, which means a later push superseded this one. The
+//! winner is left on the heap, since the caller is about to use it and it will
+//! be recognised as stale next time.
+//!
+//! -1 when nothing is left, which is what the scan returned for an exhausted
+//! mesh. The caller emits one triangle per iteration and runs for as many
+//! iterations as there are triangles, so it cannot actually happen.
+int CTriVertexCacheOptimizer::PopBestStart()
+{
+	while ( !startQueue.empty() )
+	{
+		const std::pair<int, int> top = startQueue.top();
+		if ( isUsed[top.second] || top.first != startKey[top.second] )
+		{
+			startQueue.pop();
+			continue;
+		}
+		return top.second;
+	}
+	return -1;
 }
 
 void CTriVertexCacheOptimizer::MeasureEfficiency( const std::vector<STriangle> &tris )
@@ -284,6 +404,10 @@ void CTriVertexCacheOptimizer::Optimize( std::vector<STriangle> *pTris,
 		OutputVertex( q.i2 );
 		OutputVertex( q.i3 );
 		isUsed[nBest] = true;
+		// After isUsed, so that the triangle just emitted is skipped, and after
+		// the three OutputVertex calls, which are what lowered the free links the
+		// keys are made of.
+		OnTriangleUsed( *pTris, nBest );
 		res.push_back( q );
 		//if ( bEvictedReferencedVertex )
 		//	break;
