@@ -2414,11 +2414,13 @@ namespace NDb
 		bool bForwardTowed;
 		float fVerticalOffsetAngleRad;
 		std::vector< SSpecialSight > specialSightsArray;
+		bool bAggressiveAttacker;
 
 		SExtendedStats() :
 			__dwCheckSum( 0 ),
 			bForwardTowed( false ),
-			fVerticalOffsetAngleRad( 0.0000f )
+			fVerticalOffsetAngleRad( 0.0000f ),
+			bAggressiveAttacker( false )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

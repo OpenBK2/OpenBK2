@@ -4,6 +4,8 @@
 #include "Stats_B2_M1/AIUnitCmd.h"
 #include "System/FreeIDs.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 class CCommonUnit;
@@ -144,7 +146,7 @@ private:
 public:
 	CGroupLogic() {}
 
-	void Init( ICollisionsCollector *pCollisionsCollector );
+	AILOGIC_EXPORT void Init( ICollisionsCollector *pCollisionsCollector );
 
 	void Clear()
 	{
@@ -212,3 +214,5 @@ public:
 };
 
 const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd );
+
+extern AILOGIC_EXPORT CGroupLogic theGroupLogic;

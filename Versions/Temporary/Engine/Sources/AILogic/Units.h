@@ -4,6 +4,8 @@
 #include "Misc/2Darray.h"
 #include "System/FreeIDs.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
 
 class CAIUnit;
@@ -112,7 +114,7 @@ private:
 public:
 	CUnits() {}
 
-	void Init();
+	AILOGIC_EXPORT void Init();
 
 	void Clear()
 	{
@@ -179,3 +181,5 @@ public:
 	friend class CUnitsIter<1, 1>;
 	friend class CUnitsIter<1, 0>;
 };
+
+extern AILOGIC_EXPORT CUnits units;

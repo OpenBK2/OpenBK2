@@ -502,6 +502,8 @@ public:
 
 	virtual void GetFogInfo( struct SWarFogUnitInfo *pInfo ) const;
 	bool HasSpecialSights() const;
+	AILOGIC_EXPORT bool IsAggressiveAttacker() const;
+	AILOGIC_EXPORT bool UsesAggressiveTargeting() const;
 	void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const override;
 	void WarFogChanged() override;
 

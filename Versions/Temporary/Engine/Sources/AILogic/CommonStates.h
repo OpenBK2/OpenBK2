@@ -70,6 +70,7 @@ protected:
 	bool bAim = {};
 	bool bFinish = {};
 	bool bAllowMove = {};
+	bool bStationaryAutoAttack = false;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -96,6 +97,7 @@ protected:
 		f.Add( 21, &bAim );
 		f.Add( 22, &bFinish );
 		f.Add( 23, &bAllowMove );
+		f.Add( 24, &bStationaryAutoAttack );
 		return 0;
 	}
 
@@ -127,11 +129,19 @@ protected:
 	virtual void StartAgain();
 
 public:
-	static IUnitState *Instance( class CAIUnit *pOwner, class CAIUnit *pEnemy, bool bAim, const bool bSwamAttack );
+	static IUnitState *Instance( class CAIUnit *pOwner,
+	                             class CAIUnit *pEnemy,
+	                             bool bAim,
+	                             const bool bSwamAttack,
+	                             bool bStationaryAutoAttack = false );
 
 	CMechAttackUnitState() {}
 
-	CMechAttackUnitState( class CAIUnit *pOwner, class CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack );
+	CMechAttackUnitState( class CAIUnit *pOwner,
+	                      class CAIUnit *pEnemy,
+	                      bool bAim,
+	                      const bool bSwarmAttack,
+	                      bool bStationaryAutoAttack = false );
 
 	void Segment() override;
 

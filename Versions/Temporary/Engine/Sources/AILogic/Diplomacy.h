@@ -2,7 +2,10 @@
 
 #include "Stats_B2_M1/AITypes.h"
 
+#include "AILogic_export.h"
+
 #include <cstdint>
+#include <vector>
 
 // последняя party обязательно должна быть нейтральна ко всем
 class CDiplomacy
@@ -130,3 +133,5 @@ public:
 };
 
 const int ANY_PARTY = EDI_FRIEND | EDI_ENEMY | EDI_NEUTRAL;
+
+extern AILOGIC_EXPORT CDiplomacy theDipl;

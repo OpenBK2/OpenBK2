@@ -251,6 +251,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 	const bool bMovingOwner = pOwner->CanRotate() && pOwner->CanMove() && !pOwner->NeedDeinstall();
 
 	const bool bArtilleryMech = pOwner->GetFirstArtilleryGun() != 0;
+	const bool bStationaryAutoAttack = pOwner->UsesAggressiveTargeting();
 
 	const SRect enemyRect = pEnemy->GetUnitRect();
 	// площать combat rect
@@ -270,7 +271,8 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 		const NDb::SWeaponRPGStats::SShell &shell = pGun->GetShell();
 
 		if ( ( dwForbidden & ( 1UL << i ) ) == 0 && pGun->GetNAmmo() > 0 &&
-		     shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH )
+		     shell.eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
+		     ( !bStationaryAutoAttack || pGun->CanShootToUnitWOMove( pEnemy ) ) )
 		{
 			/*
 			// либо за горизонт, либо миномёт, либо прямой наводкой
@@ -416,6 +418,14 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 
 void CTankShootEstimator::AddUnit( CAIUnit *pEnemy )
 {
+	if ( pOwner->UsesAggressiveTargeting() &&
+	     ( !IsValidObj( pEnemy ) || !pEnemy->IsVisible( pOwner->GetParty() ) ||
+	       theDipl.GetDiplStatus( pOwner->GetPlayer(), pEnemy->GetPlayer() ) != EDI_ENEMY ) )
+	{
+		// A remembered or merely revealed enemy is not a currently visible target for this feature.
+		return;
+	}
+
 	theScanLimiter.TargetScanning( pOwner->GetStats()->etype );
 
 	CBasicGun *pBestLocalGun = 0;

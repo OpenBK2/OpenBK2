@@ -5040,6 +5040,7 @@ void SExtendedStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "ForwardTowed", (uint8_t*)&bForwardTowed - pThis, sizeof(bForwardTowed), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "VerticalOffsetAngleRad", (uint8_t*)&fVerticalOffsetAngleRad - pThis, sizeof(fVerticalOffsetAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportStructArrayMetaInfo( "SpecialSightsArray", &specialSightsArray, pThis );
+	NMetaInfo::ReportMetaInfo( "AggressiveAttacker", (uint8_t*)&bAggressiveAttacker - pThis, sizeof(bAggressiveAttacker), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -5049,6 +5050,7 @@ int SExtendedStats::operator&( IXmlSaver &saver )
 	saver.Add( "ForwardTowed", &bForwardTowed );
 	saver.Add( "VerticalOffsetAngleRad", &fVerticalOffsetAngleRad );
 	saver.Add( "SpecialSightsArray", &specialSightsArray );
+	saver.Add( "AggressiveAttacker", &bAggressiveAttacker );
 
 	return 0;
 }
@@ -5058,6 +5060,7 @@ int SExtendedStats::operator&( IBinSaver &saver )
 	saver.Add( 2, &bForwardTowed );
 	saver.Add( 3, &fVerticalOffsetAngleRad );
 	saver.Add( 4, &specialSightsArray );
+	saver.Add( 5, &bAggressiveAttacker );
 
 	return 0;
 }
@@ -5070,7 +5073,7 @@ uint32_t SExtendedStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << bForwardTowed << fVerticalOffsetAngleRad << specialSightsArray;
+	checkSum << bForwardTowed << fVerticalOffsetAngleRad << specialSightsArray << bAggressiveAttacker;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

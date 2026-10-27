@@ -3,6 +3,8 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Stationary autonomous attacks need filtering during gun/target selection, not only after the winning target is chosen. `CanShootToUnit` permits movement; use `CanShootToUnitWOMove` for range and firing feasibility. Revalidate cached targets and active attacks after visibility or Hold Fire changes. Persist the stationary marker in both the command (including its copy constructor) and attack state so queue insertion and save/load cannot restore pursuit behavior.
+
 - Additional fog sectors must share the unit's visibility mask. Store the maximum covered radius in `nOldRadius` so moving, shrinking, deleting, or transferring a unit removes every old contribution exactly once. Turret angles come from simulation-time interpolation, so stationary units with platform sights need periodic fog updates too. Platform zero is the hull; platform N maps to turret N - 1, using `GetPlatform` for constructor remapping.
 - `OBJECT_NOCOPY_METHODS` constructs a default instance during factory creation and cleanup. Helper objects using it need a valid default constructor; non-owning references cannot supply that state. Resource destructors are protected, so regression fixtures should own generated resources with `CObj` instead of putting them on the stack.
 

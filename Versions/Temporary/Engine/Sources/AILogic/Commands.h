@@ -52,6 +52,8 @@ class CAICommand : public CObjectBase
 	int id = {};
 	int nFlag = {};
 	CObj<CGroupMover> pMover;
+	// Autonomous fire keeps the saved guard order and must never pursue its target.
+	bool bStationaryAutoAttack = false;
 
 public:
 	ZEND int operator&( IBinSaver &f ) override
@@ -60,6 +62,7 @@ public:
 		f.Add( 3, &id );
 		f.Add( 4, &nFlag );
 		f.Add( 5, &pMover );
+		f.Add( 6, &bStationaryAutoAttack );
 		return 0;
 	}
 
@@ -96,6 +99,16 @@ public:
 	bool IsFromAI() const
 	{
 		return unitCmd.bFromAI;
+	}
+
+	bool IsStationaryAutoAttack() const
+	{
+		return bStationaryAutoAttack;
+	}
+
+	void SetStationaryAutoAttack()
+	{
+		bStationaryAutoAttack = true;
 	}
 
 	void SetFromAI( const bool bFromAI )

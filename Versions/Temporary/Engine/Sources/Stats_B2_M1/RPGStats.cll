@@ -1515,6 +1515,8 @@ class SExtendedStats
 	float _VerticalOffsetAngleRad = 0.0;
 	// Additional sight sectors, combined with the unit's normal sight; empty by default
 	SSpecialSight _SpecialSightsArray[];
+	// Tanks and non-AA SPGs automatically fire at enemies visible to their side within weapon range, without chasing
+	bool _AggressiveAttacker = false;
 };
 
 [typeID = 0x11069B80; type_defs = "NDb::SJoggingParams;SJoggingParams"]

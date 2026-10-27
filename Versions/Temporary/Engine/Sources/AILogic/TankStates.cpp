@@ -255,15 +255,19 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 
 				if ( pTarget->IsAlive() )
 				{
-					if ( pTarget->GetStats()->IsInfantry() && checked_cast<CSoldier *>( pTarget )->IsInBuilding() )
+					if ( !pCommand->IsStationaryAutoAttack() && pTarget->GetStats()->IsInfantry() &&
+					     checked_cast<CSoldier *>( pTarget )->IsInBuilding() )
 					{
 						pResult = CSoldierAttackUnitInBuildingState::Instance(
 								pUnit, checked_cast<CSoldier *>( pTarget ), cmd.fNumber == 0, bSwarmAttack );
 					}
 					else
 					{
-						pResult = CMechAttackUnitState::Instance(
-								pUnit, checked_cast<CAIUnit *>( GetObjectByCmd( cmd ) ), cmd.fNumber == 0, bSwarmAttack );
+						pResult = CMechAttackUnitState::Instance( pUnit,
+						                                          checked_cast<CAIUnit *>( GetObjectByCmd( cmd ) ),
+						                                          cmd.fNumber == 0,
+						                                          bSwarmAttack,
+						                                          pCommand->IsStationaryAutoAttack() );
 					}
 				}
 			}

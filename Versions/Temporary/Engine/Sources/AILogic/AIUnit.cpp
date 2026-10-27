@@ -1769,6 +1769,12 @@ IObstacle *CAIUnit::LookForObstacle()
 
 const float CAIUnit::GetTargetScanRadius()
 {
+	if ( UsesAggressiveTargeting() )
+	{
+		// Shared visibility can reveal targets beyond both personal sight and the usual call-for-help radius.
+		return GetMaxFireRange();
+	}
+
 	// дальнобойное AI орудие
 	if ( theDipl.IsAIPlayer( GetPlayer() ) && GetFirstArtilleryGun() != 0 && !DoesReservePosExist() )
 	{
@@ -1813,7 +1819,12 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 			     theDipl.GetDiplStatus( GetPlayer(), pCachedEnemy->GetPlayer() ) == EDI_ENEMY )
 			{
 				AddUnitToShootEstimator( pCachedEnemy );
-				break;
+				if ( !UsesAggressiveTargeting() || GetBestShootEstimatedUnit() )
+				{
+					break;
+				}
+				// A hidden or unreachable cached enemy must not mask another valid stationary shot.
+				++it;
 			}
 			else
 			{
@@ -2034,6 +2045,23 @@ const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 {
 	if ( IsValidObj( pTarget ) && ( pCurTarget == 0 || pTarget != pCurTarget ) )
 	{
+		if ( UsesAggressiveTargeting() )
+		{
+			CBasicGun *pGun = GetBestShootEstimatedGun();
+			// Revalidate cached choices before issuing an autonomous attack, including Hold Fire changes.
+			if ( GetBehaviourFire() != SBehaviour::EFAtWill || !CanShoot() || !pTarget->IsVisible( GetParty() ) ||
+			     theDipl.GetDiplStatus( GetPlayer(), pTarget->GetPlayer() ) != EDI_ENEMY || !pGun || pGun->GetNAmmo() <= 0 ||
+			     !pGun->CanShootToUnitWOMove( pTarget ) )
+			{
+				return false;
+			}
+			CAICommand *pCommand = new CAICommand( SAIUnitCmd( ACTION_COMMAND_ATTACK_UNIT, pTarget->GetUniqueId() ) );
+			pCommand->SetFromAI( true );
+			pCommand->SetStationaryAutoAttack();
+			InsertUnitCommand( pCommand );
+			return true;
+		}
+
 		if ( GetState()->GetName() == EUSN_MECHUNIT_REST_ON_BOARD )
 		{
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_ONBOARD_ATTACK_UNIT, pTarget->GetUniqueId() ), this, false );
@@ -2081,6 +2109,13 @@ uint8_t CAIUnit::AnalyzeTargetScanInternal( CAIUnit *pCurTarget,
                                             CObjectBase *pCheckBuilding,
                                             const bool bOnlyShootWithoutMoving )
 {
+	if ( IsAggressiveAttacker() && ( GetBehaviourFire() != SBehaviour::EFAtWill ||
+	                                 ( GetState()->GetName() == EUSN_REST && !GetState()->IsRestState() ) ) )
+	{
+		// Explicit waits and Hold Fire also suppress the cached-target path below.
+		return 0;
+	}
+
 	if ( IsTimeToAnalyzeTargetScan() && theScanLimiter.CanScan() )
 	{
 		GetLastBehTime() = curTime;
@@ -2157,6 +2192,23 @@ bool CAIUnit::HasSpecialSights() const
 {
 	const auto *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
 	return pMechStats && pMechStats->pExtendedStats && !pMechStats->pExtendedStats->specialSightsArray.empty();
+}
+
+bool CAIUnit::IsAggressiveAttacker() const
+{
+	const auto *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
+	return pMechStats && pMechStats->pExtendedStats && pMechStats->pExtendedStats->bAggressiveAttacker &&
+	       ( pMechStats->IsArmor() || ( pMechStats->IsSPG() && pMechStats->etype != NDb::RPG_TYPE_SPG_AAGUN ) );
+}
+
+bool CAIUnit::UsesAggressiveTargeting() const
+{
+	if ( !IsAggressiveAttacker() || !GetState() )
+	{
+		return false;
+	}
+	// Explicit move, attack, bombardment and ability orders retain their normal targeting rules.
+	return GetState()->IsRestState() || ( GetCurCmd() && GetCurCmd()->IsStationaryAutoAttack() );
 }
 
 void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const

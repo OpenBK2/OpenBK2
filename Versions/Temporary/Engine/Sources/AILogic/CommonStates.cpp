@@ -55,12 +55,14 @@ FINISH_REGISTER
 //*										  CMechAttackUnitState												*
 //*******************************************************************
 
-IUnitState *CMechAttackUnitState::Instance( CAIUnit *pOwner, CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack )
+IUnitState *CMechAttackUnitState::Instance(
+		CAIUnit *pOwner, CAIUnit *pEnemy, bool bAim, const bool bSwarmAttack, bool bStationaryAutoAttack )
 {
-	return new CMechAttackUnitState( pOwner, pEnemy, bAim, bSwarmAttack );
+	return new CMechAttackUnitState( pOwner, pEnemy, bAim, bSwarmAttack, bStationaryAutoAttack );
 }
 
-CMechAttackUnitState::CMechAttackUnitState( CAIUnit *_pOwner, CAIUnit *_pEnemy, bool _bAim, const bool _bSwarmAttack )
+CMechAttackUnitState::CMechAttackUnitState(
+		CAIUnit *_pOwner, CAIUnit *_pEnemy, bool _bAim, const bool _bSwarmAttack, bool _bStationaryAutoAttack )
 	: CFreeFireManager( _pOwner )
 	, lastShootCheck( 0 )
 	, lastEnemyTile( -1, -1 )
@@ -80,7 +82,9 @@ CMechAttackUnitState::CMechAttackUnitState( CAIUnit *_pOwner, CAIUnit *_pEnemy, 
 	, eAttackType( EAT_POOR_PROB )
 	, nBestSide( 0 )
 	, state( ESAS_ESTIMATING )
-	, bAllowMove( g_bAgressiveMovement || theDipl.IsAIPlayer( _pOwner->GetPlayer() ) ? true : bSwarmAttack )
+	, bAllowMove( !_bStationaryAutoAttack &&
+                ( g_bAgressiveMovement || theDipl.IsAIPlayer( _pOwner->GetPlayer() ) || bSwarmAttack ) )
+	, bStationaryAutoAttack( _bStationaryAutoAttack )
 {
 	fProb.resize( 4, 0 );
 	ResetTime( pEnemy );
@@ -596,6 +600,23 @@ void CMechAttackUnitState::FinishState()
 
 void CMechAttackUnitState::Segment()
 {
+	if ( bStationaryAutoAttack )
+	{
+		// An autonomous shot never follows last-known positions or moves to improve its firing solution.
+		if ( !pUnit->IsAggressiveAttacker() || pUnit->GetBehaviourFire() != SBehaviour::EFAtWill || !pUnit->CanShoot() ||
+		     !IsValidObj( pEnemy ) || !pEnemy->IsAlive() || pEnemy->GetHitPoints() <= 0.0f ||
+		     !pEnemy->IsVisible( pUnit->GetParty() ) ||
+		     theDipl.GetDiplStatus( pUnit->GetPlayer(), pEnemy->GetPlayer() ) != EDI_ENEMY )
+		{
+			FinishState();
+			return;
+		}
+		if ( pGun && ( pGun->GetNAmmo() <= 0 || !pGun->CanShootToUnitWOMove( pEnemy ) ) )
+		{
+			StartAgain();
+		}
+	}
+
 	if ( bFinish )
 	{
 		StopFire();
@@ -607,6 +628,11 @@ void CMechAttackUnitState::Segment()
 		{
 			pUnit->ResetShootEstimator( pEnemy, false, pUnit->GetForbiddenGuns() );
 			pGun = pUnit->GetBestShootEstimatedGun();
+			if ( bStationaryAutoAttack && !pGun )
+			{
+				FinishState();
+				return;
+			}
 			const EUnitAckType eReject = pUnit->GetGunsRejectReason();
 			//CRAP{ VOT ZAPLATKA TAK ZAPLATKA. if being told to attack unit out of range, being
 			// in tankpit - leave tankpit and repeat
@@ -746,7 +772,9 @@ ETryStateInterruptResult CMechAttackUnitState::TryInterruptState( CAICommand *pC
 	}
 
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
-	if ( cmd.nCmdType == ACTION_COMMAND_ATTACK_UNIT && GetObjectByCmd( cmd ) == pEnemy )
+	// An explicit order for the same target must be able to replace autonomous stationary fire.
+	if ( cmd.nCmdType == ACTION_COMMAND_ATTACK_UNIT && GetObjectByCmd( cmd ) == pEnemy &&
+	     ( !bStationaryAutoAttack || pCommand->IsStationaryAutoAttack() ) )
 	{
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
 	}

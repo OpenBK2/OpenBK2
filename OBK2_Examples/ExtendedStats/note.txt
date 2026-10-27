@@ -7,7 +7,8 @@ MechUnitRPGStats.xdb, then add this reference inside <MechUnitRPGStats>:
 
 These settings belong to the artillery (or other mechanical unit), not its truck.
 An absent reference keeps the original behavior. Each field can be omitted to use
-its default: ForwardTowed=false, VerticalOffsetAngleRad=0.0, SpecialSightsArray empty.
+its default: ForwardTowed=false, VerticalOffsetAngleRad=0.0, SpecialSightsArray empty,
+AggressiveAttacker=false.
 
 ForwardTowed=true makes the artillery face in the truck's direction during hookup
 and towing. Author LTowingPoint at the front of the artillery model and re-export
@@ -57,6 +58,21 @@ sectors originate at the unit's normal sight position. Overlaps count only once;
 they never reduce the original view. Units hidden inside transports or buildings
 do not gain visibility from these entries.
 
+AggressiveAttacker=true lets idle or guarding tanks and non-AA SPGs acquire enemies
+visible to their side, including targets spotted by other units, throughout their
+usable weapon range. See AggressiveAttacker.xdb, or add its AggressiveAttacker field
+to your existing ExtendedStats record. Light, medium, heavy and super tanks, plus
+assault, anti-tank and super SPGs support it. AA SPGs and towed guns do not.
+
+Automatic attacks require Fire At Will, ammunition and a valid shot from the
+current position. Normal minimum/maximum range, trajectory, obstruction, armor
+penetration and aiming constraints still apply. Hull and turret rotation are
+allowed; the unit never chases a target or moves to improve its shot. It stops
+the automatic attack when the enemy becomes hidden, friendly, dead or impossible
+to shoot, or when Hold Fire is selected, then resumes its guard order. Explicit
+move, attack, bombardment, wait and ability orders retain priority and their normal
+behavior. The flag defaults to false, preserving existing unit behavior.
+
 Suggested in-game checks with your authored model:
 - Hook up, drive straight, turn in both directions, stop and deploy the artillery.
   The front towing point should remain attached to the truck's rear, also on hills.
@@ -68,3 +84,8 @@ Suggested in-game checks with your authored model:
   sector follows the selected facing while normal circular sight remains.
 - Move, destroy or transfer the observer, including with overlapping sectors;
   check that its former coverage closes when no other unit sees that area.
+- Give a tank or SPG AggressiveAttacker and use a scout to reveal an enemy beyond
+  its own sight but within weapon range. It should aim and fire without moving.
+- Hide that enemy, move it out of range or behind cover, and toggle Hold Fire.
+  Automatic fire should stop. Move and explicit attack orders should still work.
+- Save/load during automatic fire and check the same commands in a replay.

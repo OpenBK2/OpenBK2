@@ -14154,6 +14154,21 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>ca010000</Type>
+					<Name>AggressiveAttacker</Name>
+					<ChunkID>5</ChunkID>
+					<Description>Tanks and non-AA SPGs automatically fire at enemies visible to their side within weapon range, without chasing</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>04000000</Type>
+						<Data>false</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>421110480</TypeID>
 		</Item>

@@ -32,6 +32,7 @@ CAICommand::CAICommand( const CAICommand &cmd )
 	: unitCmd( cmd.unitCmd )
 	, nFlag( cmd.nFlag )
 	, pMover( cmd.pMover )
+	, bStationaryAutoAttack( cmd.bStationaryAutoAttack )
 {
 	InitCmdId();
 }

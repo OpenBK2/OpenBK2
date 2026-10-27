@@ -565,6 +565,11 @@ void CMilitaryCar::LookForTarget( CAIUnit *pCurTarget,
 {
 	CAIUnit::LookForTarget( pCurTarget, bDamageUpdated, pBestTarget, pGun );
 
+	if ( UsesAggressiveTargeting() )
+	{
+		return;
+	}
+
 	if ( GetFirstArtilleryGun() != 0 )
 	{
 		// в радиусе цели нет

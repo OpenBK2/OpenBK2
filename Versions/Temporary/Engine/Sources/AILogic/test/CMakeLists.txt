@@ -1,3 +1,13 @@
+# Exercise autonomous target selection through real tanks, weapons and saved attack states.
+add_unit_test(AggressiveAttacker AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(AggressiveAttacker_test PRIVATE
+    AGGRESSIVE_ATTACKER_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(AggressiveAttacker_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(AggressiveAttacker_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
+
 # Exercise combined fog sectors through real mechanical-unit stats and save/load.
 add_unit_test(SpecialSights AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
 target_compile_definitions(SpecialSights_test PRIVATE
