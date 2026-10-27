@@ -3,7 +3,11 @@
 #include "Misc/BitData.h"
 #include "UpdateUnitContainer.h"
 
+#include "AILogic_export.h"
+
+#include <algorithm>
 #include <cstdint>
+#include <vector>
 
 namespace NDb
 {
@@ -35,7 +39,7 @@ struct SSector
 	{
 	}
 
-	bool operator!=( const SSector &sector )
+	bool operator!=( const SSector &sector ) const
 	{
 		return ( wStartAngle != sector.wStartAngle || wEndAngle != sector.wEndAngle );
 	}
@@ -87,6 +91,25 @@ struct SSpiralPoint
 	}
 };
 
+// A unit contributes each visible tile once, even where several sight sectors overlap.
+struct SWarFogSight
+{
+	SSector sector;
+	int nRadius = 0;
+
+	int operator&( IBinSaver &saver )
+	{
+		saver.Add( 2, &sector );
+		saver.Add( 3, &nRadius );
+		return 0;
+	}
+
+	bool operator==( const SWarFogSight &other ) const
+	{
+		return nRadius == other.nRadius && !( sector != other.sector );
+	}
+};
+
 struct SWarFogUnitInfo
 {
 	ZDATA
@@ -94,6 +117,7 @@ struct SWarFogUnitInfo
 	SSector sector;
 	int nRadius = {};
 	bool bPlane = {};
+	std::vector<SWarFogSight> specialSights;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -101,6 +125,7 @@ struct SWarFogUnitInfo
 		f.Add( 3, &sector );
 		f.Add( 4, &nRadius );
 		f.Add( 5, &bPlane );
+		f.Add( 6, &specialSights );
 		return 0;
 	}
 
@@ -111,9 +136,35 @@ struct SWarFogUnitInfo
 		, bPlane( false )
 	{
 	}
+
+	int GetMaxSightRadius() const
+	{
+		int nMax = nRadius;
+		for ( const SWarFogSight &sight : specialSights )
+		{
+			nMax = (std::max)( nMax, sight.nRadius );
+		}
+		return nMax;
+	}
+
+	bool IsInSight( const SSpiralPoint &point ) const
+	{
+		if ( nRadius > 0 && point.nRadius <= nRadius && ( bPlane || point.sector.IsIntersec( sector ) ) )
+		{
+			return true;
+		}
+		for ( const SWarFogSight &sight : specialSights )
+		{
+			if ( sight.nRadius > 0 && point.nRadius <= sight.nRadius && point.sector.IsIntersec( sight.sector ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 };
 
-class CGlobalWarFog : public CAIObjectBase
+class AILOGIC_EXPORT CGlobalWarFog : public CAIObjectBase
 {
 
 	// internal stuctures
@@ -152,7 +203,7 @@ class CGlobalWarFog : public CAIObjectBase
 		void Update()
 		{
 			vOldPos = vPos;
-			nOldRadius = nRadius;
+			nOldRadius = GetMaxSightRadius();
 			updateFlag = UPD_UPDATED;
 		}
 	};
@@ -385,3 +436,5 @@ public:
 	friend class CWarFogVisibility;
 	friend class CWarFogTracer;
 };
+
+extern AILOGIC_EXPORT CGlobalWarFog theWarFog;

@@ -1492,6 +1492,19 @@ struct SJoggingParams
 
 forward class SAmphibianStats;
 
+[export]
+struct SSpecialSight
+{
+	// Start angle in radians relative to the platform facing; positive follows the unit rotation direction
+	float _AngleStartRad = 0.0;
+	// End angle in radians; intervals wrap across zero, equal endpoints disable the sight
+	float _AngleEndRad = 0.0;
+	// Extra sight range in the same units as Sight; normal sight modifiers and AIConsts WarFog MaxRadius apply
+	float _SightRange = 0.0;
+	// Exact platform RotatePoint name; empty uses hull facing, an unknown name disables this sight
+	string _PlatformName;
+};
+
 /* Resource IDs share the object factory with AI save/load classes; 0x1919A2C1 is AI_HELICOPTER. */
 [typeID = 0x1919A2D0; export]
 class SExtendedStats
@@ -1500,6 +1513,8 @@ class SExtendedStats
 	bool _ForwardTowed = false;
 	// Radians added to ballistic launch elevation; speed adjusts to reach the target, positive raises the arc
 	float _VerticalOffsetAngleRad = 0.0;
+	// Additional sight sectors, combined with the unit's normal sight; empty by default
+	SSpecialSight _SpecialSightsArray[];
 };
 
 [typeID = 0x11069B80; type_defs = "NDb::SJoggingParams;SJoggingParams"]

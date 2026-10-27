@@ -988,6 +988,11 @@ void CAIUnit::Segment()
 	{
 		CCommonUnit::Segment();
 		UpdateAmphibianWaterModifier();
+		// Turret angles are interpolated at simulation time even while the hull is stationary.
+		if ( HasSpecialSights() )
+		{
+			WarFogChanged();
+		}
 	}
 
 	bIsInTankPit = IsValidObj( pTankPit );
@@ -1018,6 +1023,11 @@ void CAIUnit::Segment()
 
 void CAIUnit::FreezeSegment()
 {
+	if ( HasSpecialSights() )
+	{
+		WarFogChanged();
+	}
+
 	if ( !theDipl.IsNetGame() )
 	{
 		if ( GetPlayer() != theDipl.GetMyNumber() && !GetStats()->IsAviation() )
@@ -2143,6 +2153,12 @@ void CAIUnit::RemoveAmbush()
 	updater.AddUpdate( 0, ACTION_NOTIFY_REMOVE_AMBUSH, this, -1 );
 }
 
+bool CAIUnit::HasSpecialSights() const
+{
+	const auto *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
+	return pMechStats && pMechStats->pExtendedStats && !pMechStats->pExtendedStats->specialSightsArray.empty();
+}
+
 void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 {
 	pInfo->vPos.x = GetCenterTile().x / AI_TILES_IN_VIS_TILE;
@@ -2150,6 +2166,85 @@ void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 	pInfo->bPlane = GetStats()->IsAviation() || IsInSolidPlace();
 	pInfo->nRadius = IsInSolidPlace() ? 0 : GetSightRadius() / SConsts::TILE_SIZE / AI_TILES_IN_VIS_TILE;
 	pInfo->sector = SSector();
+	pInfo->specialSights.clear();
+	if ( IsInSolidPlace() || !HasSpecialSights() )
+	{
+		return;
+	}
+
+	const auto *pMechStats = static_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
+	const float fFullTurn = 2.0f * PI;
+	for ( const NDb::SSpecialSight &sight : pMechStats->pExtendedStats->specialSightsArray )
+	{
+		if ( !std::isfinite( sight.fAngleStartRad ) || !std::isfinite( sight.fAngleEndRad ) ||
+		     !std::isfinite( sight.fSightRange ) || sight.fSightRange <= 0.0f ||
+		     sight.fAngleStartRad == sight.fAngleEndRad )
+		{
+			continue;
+		}
+
+		uint16_t wFacing = GetFrontDirection();
+		if ( !sight.szPlatformName.empty() )
+		{
+			bool bFound = false;
+			for ( int nPlatform = 0; nPlatform < pMechStats->GetPlatformsSize( GetUniqueId() ); ++nPlatform )
+			{
+				if ( pMechStats->GetPlatform( GetUniqueId(), nPlatform ).szRotatePoint != sight.szPlatformName )
+				{
+					continue;
+				}
+				// Platform zero is the hull; subsequent platforms correspond to simulation turrets.
+				if ( nPlatform == 0 )
+				{
+					bFound = true;
+				}
+				else if ( nPlatform <= GetNTurrets() && GetTurret( nPlatform - 1 ) )
+				{
+					wFacing += GetTurret( nPlatform - 1 )->GetHorCurAngle();
+					bFound = true;
+				}
+				break;
+			}
+			if ( !bFound )
+			{
+				continue;
+			}
+		}
+
+		const float fRange = GetStatsModifier()->sightRange.Get( sight.fSightRange );
+		if ( !std::isfinite( fRange ) || fRange <= 0.0f )
+		{
+			continue;
+		}
+		SWarFogSight extra;
+		// Clamp in floating point before conversion, including ranges too large to fit in an int.
+		extra.nRadius = int( (std::min)( fRange / AI_TILES_IN_VIS_TILE, float( theWarFog.GetMaxRadius() ) ) );
+		if ( extra.nRadius <= 0 )
+		{
+			continue;
+		}
+
+		// A complete turn is a circle. Smaller signed intervals wrap in the engine's angle space.
+		const double fSpan = double( sight.fAngleEndRad ) - double( sight.fAngleStartRad );
+		if ( std::abs( fSpan ) < fFullTurn )
+		{
+			const auto ToDirection = [fFullTurn, wFacing]( float fAngle )
+			{
+				float fWrapped = std::fmod( fAngle, fFullTurn );
+				if ( fWrapped < 0.0f )
+				{
+					fWrapped += fFullTurn;
+				}
+				return uint16_t( wFacing + int( fWrapped / fFullTurn * 65536.0f ) );
+			};
+			extra.sector = SSector( ToDirection( sight.fAngleStartRad ), ToDirection( sight.fAngleEndRad ) );
+			if ( extra.sector.wStartAngle == extra.sector.wEndAngle )
+			{
+				continue;
+			}
+		}
+		pInfo->specialSights.push_back( extra );
+	}
 }
 
 void CAIUnit::WarFogChanged()
@@ -2759,7 +2854,7 @@ void CAIUnit::SetDirection( const uint16_t wDirection )
 {
 	CBasePathUnit::SetDirection( wDirection );
 
-	if ( GetVisionAngle() != 32768 )
+	if ( GetVisionAngle() != 32768 || HasSpecialSights() )
 	{
 		WarFogChanged();
 	}

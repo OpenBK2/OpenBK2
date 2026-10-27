@@ -100,7 +100,7 @@ CGlobalWarFog::SWarForFullUnitInfo::SWarForFullUnitInfo( const SWarFogUnitInfo &
                                                          const int nSpiralLength )
 	: SWarFogUnitInfo( unitInfo )
 	, vOldPos( unitInfo.vPos )
-	, nOldRadius( unitInfo.nRadius )
+	, nOldRadius( unitInfo.GetMaxSightRadius() )
 	, nParty( _nParty )
 	, updateFlag( UPD_CREATE_NEW_UNIT )
 {
@@ -275,6 +275,10 @@ void CGlobalWarFog::AddUnit( const int nID, const SWarFogUnitInfo &updateInfo, c
 
 	units[nID] = SWarForFullUnitInfo( updateInfo, nParty, GetSpiralLength() );
 	units[nID].nRadius = (std::min)( units[nID].nRadius, GetMaxRadius() );
+	for ( SWarFogSight &sight : units[nID].specialSights )
+	{
+		sight.nRadius = Clamp( sight.nRadius, 0, GetMaxRadius() );
+	}
 	updateUnitList.Push( nID, UPD_CREATE_NEW_UNIT, 0.0f );
 }
 
@@ -310,7 +314,8 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 
 	if ( pos != units.end() && pos->second.updateFlag != UPD_DELETE_UNIT )
 	{
-		if ( pos->second.nRadius != updateInfo.nRadius || pos->second.sector != updateInfo.sector )
+		if ( pos->second.nRadius != updateInfo.nRadius || pos->second.sector != updateInfo.sector ||
+		     pos->second.specialSights != updateInfo.specialSights )
 		{
 			if ( pos->second.updateFlag == UPD_UPDATED )
 			{
@@ -319,6 +324,11 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 
 			pos->second.nRadius = (std::min)( updateInfo.nRadius, GetMaxRadius() );
 			pos->second.sector = updateInfo.sector;
+			pos->second.specialSights = updateInfo.specialSights;
+			for ( SWarFogSight &sight : pos->second.specialSights )
+			{
+				sight.nRadius = Clamp( sight.nRadius, 0, GetMaxRadius() );
+			}
 			pos->second.vPos = updateInfo.vPos;
 			updateUnitList.Push( nID, pos->second.updateFlag, mDistance( pos->second.vOldPos, pos->second.vPos ) );
 		}
@@ -412,7 +422,8 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 
 	CPtr<CWarFogVisibility> pVisibility = CreateWarFogVisibility( this, unitInfo );
 
-	const int nClsLength = lengths[(std::min)( unitInfo.nRadius, CAMOUFLAGE_RADIUS )];
+	const int nRadius = unitInfo.GetMaxSightRadius();
+	const int nClsLength = lengths[(std::min)( nRadius, CAMOUFLAGE_RADIUS )];
 	for ( int i = 0; i < nClsLength; ++i )
 	{
 		const SVector vTile = unitInfo.vPos + GetSpiralPoint( i ).vOffset;
@@ -432,7 +443,7 @@ void CGlobalWarFog::AddVisibleTiles( const int nID, SWarForFullUnitInfo &unitInf
 		}
 	}
 
-	const int nLength = lengths[unitInfo.nRadius];
+	const int nLength = lengths[nRadius];
 	for ( int i = nClsLength; i < nLength; ++i )
 	{
 		const SVector vTile = unitInfo.vPos + GetSpiralPoint( i ).vOffset;

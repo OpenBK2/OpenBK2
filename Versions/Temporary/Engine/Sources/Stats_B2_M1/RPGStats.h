@@ -2379,6 +2379,30 @@ namespace NDb
 	};
 	struct SAmphibianStats;
 
+	struct STATS_B2_M1_EXPORT SSpecialSight
+	{
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+		float fAngleStartRad;
+		float fAngleEndRad;
+		float fSightRange;
+		std::string szPlatformName;
+
+		SSpecialSight() :
+			__dwCheckSum( 0 ),
+			fAngleStartRad( 0.0000f ),
+			fAngleEndRad( 0.0000f ),
+			fSightRange( 0.0000f )
+		{ }
+		//
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
+
 	struct STATS_B2_M1_EXPORT SExtendedStats : public CResource
 	{
 		OBJECT_BASIC_METHODS( SExtendedStats )
@@ -2389,6 +2413,7 @@ namespace NDb
 	public:
 		bool bForwardTowed;
 		float fVerticalOffsetAngleRad;
+		std::vector< SSpecialSight > specialSightsArray;
 
 		SExtendedStats() :
 			__dwCheckSum( 0 ),

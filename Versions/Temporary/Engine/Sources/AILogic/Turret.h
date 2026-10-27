@@ -100,7 +100,7 @@ public:
 
 	virtual void Turn( const uint16_t wHorAngle, const uint16_t wVerAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
-	virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
+	AILOGIC_EXPORT virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
 	virtual bool TurnVer( const uint16_t wVerAngle, const bool bInstantly = false );
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GlobalWarFog.h"
+
 // CWarFogVisibility
 class CWarFogVisibility : public CObjectBase
 {
@@ -126,9 +128,37 @@ public:
 	}
 };
 
+class CVisWithSpecialSights : public CWarFogVisibility
+{
+	OBJECT_NOCOPY_METHODS( CVisWithSpecialSights );
+	const SWarFogUnitInfo *pUnitInfo = nullptr;
+	const CArray1Bit *pVisibleInfo = nullptr;
+
+public:
+	CVisWithSpecialSights() = default;
+
+	CVisWithSpecialSights( CGlobalWarFog *pWarFog, const SWarFogUnitInfo &_unitInfo )
+		: CWarFogVisibility( pWarFog )
+		, pUnitInfo( &_unitInfo )
+		, pVisibleInfo( _unitInfo.bPlane ? nullptr : &GetVisibleInfoForTile( _unitInfo.vPos ) )
+	{
+	}
+
+	const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const override
+	{
+		// Additional sectors obey the same terrain occlusion as the original ground-unit sight.
+		return pUnitInfo && pUnitInfo->IsInSight( GetSpiralPoint( nSpiralIndex ) ) &&
+		       ( pUnitInfo->bPlane ? IsTileInside( vTile ) : pVisibleInfo->GetData( nSpiralIndex ) > 0 );
+	}
+};
+
 CWarFogVisibility *CreateWarFogVisibility( CGlobalWarFog *pWarFog, const SWarFogUnitInfo &unitInfo )
 {
-	if ( unitInfo.bPlane )
+	if ( !unitInfo.specialSights.empty() )
+	{
+		return new CVisWithSpecialSights( pWarFog, unitInfo );
+	}
+	else if ( unitInfo.bPlane )
 	{
 		return new CVisForPlane( pWarFog );
 	}

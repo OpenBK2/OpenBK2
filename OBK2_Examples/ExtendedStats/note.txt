@@ -5,9 +5,9 @@ MechUnitRPGStats.xdb, then add this reference inside <MechUnitRPGStats>:
 
     <ExtendedStats href="ExtendedStats.xdb" />
 
-Both settings belong to the artillery (or other mechanical unit), not its truck.
+These settings belong to the artillery (or other mechanical unit), not its truck.
 An absent reference keeps the original behavior. Each field can be omitted to use
-its default: ForwardTowed=false and VerticalOffsetAngleRad=0.0.
+its default: ForwardTowed=false, VerticalOffsetAngleRad=0.0, SpecialSightsArray empty.
 
 ForwardTowed=true makes the artillery face in the truck's direction during hookup
 and towing. Author LTowingPoint at the front of the artillery model and re-export
@@ -31,6 +31,32 @@ trajectories retain their existing behavior. The existing interpolation between
 launch and impact terrain heights is retained. Offsets that would launch downward
 or backward cannot reach the target; those retain the original trajectory.
 
+SpecialSightsArray adds any number of sight sectors to the normal view. See
+SpecialSights.xdb for a forward hull sector and a narrower turret sector. To try
+that example, reference SpecialSights.xdb instead of ExtendedStats.xdb, or copy
+its SpecialSightsArray into your existing ExtendedStats record.
+
+Each entry has AngleStartRad, AngleEndRad and SightRange (all default to 0.0),
+and PlatformName (empty by default). Angles are relative to the selected facing:
+zero points forward and increasing angles follow the game's positive rotation.
+Negative angles and intervals crossing zero are supported. Equal endpoints
+disable the entry; a span of at least a complete turn (2*pi radians) is a circle.
+Intervals narrower than the engine's angle resolution are ignored.
+
+An empty PlatformName uses hull facing. Otherwise it must exactly match the
+RotatePoint of a platform in the unit's platforms array. Replace "turret" in the
+example with your unit's actual RotatePoint. Platform zero follows the hull;
+other platforms follow their simulation turret's horizontal rotation as well as
+the hull. Unknown names or unavailable turrets disable that entry.
+
+SightRange uses the same units as the normal Sight stat. Sight bonuses and
+penalties apply first, then AIConsts.WarFog.MaxRadius limits the effective range.
+Non-positive ranges and non-finite values are ignored. Coverage uses the existing
+fog tile and angle resolution, terrain obstruction, and camouflage rules. All
+sectors originate at the unit's normal sight position. Overlaps count only once;
+they never reduce the original view. Units hidden inside transports or buildings
+do not gain visibility from these entries.
+
 Suggested in-game checks with your authored model:
 - Hook up, drive straight, turn in both directions, stop and deploy the artillery.
   The front towing point should remain attached to the truck's rear, also on hills.
@@ -38,3 +64,7 @@ Suggested in-game checks with your authored model:
 - Fire at targets at several ranges with positive, negative and zero offsets;
   check the changed arc and speed, and that impacts remain near the selected target.
 - Save/load while towing and while aiming, and check the same sequence in replay.
+- Turn the hull, then aim the turret while stationary, and check that each extra
+  sector follows the selected facing while normal circular sight remains.
+- Move, destroy or transfer the observer, including with overlapping sectors;
+  check that its former coverage closes when no other unit sees that area.

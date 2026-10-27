@@ -501,6 +501,7 @@ public:
 	virtual void RemoveAmbush();
 
 	virtual void GetFogInfo( struct SWarFogUnitInfo *pInfo ) const;
+	bool HasSpecialSights() const;
 	void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const override;
 	void WarFogChanged() override;
 

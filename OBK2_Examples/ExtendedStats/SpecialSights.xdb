@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtendedStats>
+	<SpecialSightsArray>
+		<Item>
+			<AngleStartRad>-0.5</AngleStartRad>
+			<AngleEndRad>0.5</AngleEndRad>
+			<SightRange>30</SightRange>
+			<PlatformName />
+		</Item>
+		<Item>
+			<AngleStartRad>-0.25</AngleStartRad>
+			<AngleEndRad>0.25</AngleEndRad>
+			<SightRange>40</SightRange>
+			<PlatformName>turret</PlatformName>
+		</Item>
+	</SpecialSightsArray>
+</ExtendedStats>

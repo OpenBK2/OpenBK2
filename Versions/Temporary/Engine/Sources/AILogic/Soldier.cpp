@@ -949,6 +949,7 @@ void CSoldier::Die( const bool fromExplosion, const float fDamage )
 
 void CSoldier::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 {
+	pInfo->specialSights.clear();
 	if ( !IsInSolidPlace() )
 	{
 		pInfo->bPlane = false;

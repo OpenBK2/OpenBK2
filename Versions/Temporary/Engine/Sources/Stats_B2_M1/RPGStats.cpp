@@ -4986,6 +4986,52 @@ uint32_t SJoggingParams::CalcCheckSum() const
 
 
 
+void SSpecialSight::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+	NMetaInfo::ReportMetaInfo( szAddName + "AngleStartRad", (uint8_t*)&fAngleStartRad - pThis, sizeof(fAngleStartRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "AngleEndRad", (uint8_t*)&fAngleEndRad - pThis, sizeof(fAngleEndRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "SightRange", (uint8_t*)&fSightRange - pThis, sizeof(fSightRange), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "PlatformName", (uint8_t*)&szPlatformName - pThis, sizeof(szPlatformName), NTypeDef::TYPE_TYPE_STRING );
+}
+
+int SSpecialSight::operator&( IXmlSaver &saver )
+{
+	saver.Add( "AngleStartRad", &fAngleStartRad );
+	saver.Add( "AngleEndRad", &fAngleEndRad );
+	saver.Add( "SightRange", &fSightRange );
+	saver.Add( "PlatformName", &szPlatformName );
+
+	return 0;
+}
+
+int SSpecialSight::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &fAngleStartRad );
+	saver.Add( 3, &fAngleEndRad );
+	saver.Add( 4, &fSightRange );
+	saver.Add( 5, &szPlatformName );
+
+	return 0;
+}
+
+uint32_t SSpecialSight::CalcCheckSum() const
+{
+	CCheckSumScope scope( __dwCheckSum );
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << fAngleStartRad << fAngleEndRad << fSightRange << szPlatformName;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
 void SExtendedStats::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "ExtendedStats", typeID, sizeof(*this) );
@@ -4993,6 +5039,7 @@ void SExtendedStats::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "ForwardTowed", (uint8_t*)&bForwardTowed - pThis, sizeof(bForwardTowed), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "VerticalOffsetAngleRad", (uint8_t*)&fVerticalOffsetAngleRad - pThis, sizeof(fVerticalOffsetAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportStructArrayMetaInfo( "SpecialSightsArray", &specialSightsArray, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -5001,6 +5048,7 @@ int SExtendedStats::operator&( IXmlSaver &saver )
 	NMetaInfo::STerminalClassReporter reporter( this, saver );
 	saver.Add( "ForwardTowed", &bForwardTowed );
 	saver.Add( "VerticalOffsetAngleRad", &fVerticalOffsetAngleRad );
+	saver.Add( "SpecialSightsArray", &specialSightsArray );
 
 	return 0;
 }
@@ -5009,6 +5057,7 @@ int SExtendedStats::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &bForwardTowed );
 	saver.Add( 3, &fVerticalOffsetAngleRad );
+	saver.Add( 4, &specialSightsArray );
 
 	return 0;
 }
@@ -5021,7 +5070,7 @@ uint32_t SExtendedStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << bForwardTowed << fVerticalOffsetAngleRad;
+	checkSum << bForwardTowed << fVerticalOffsetAngleRad << specialSightsArray;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
