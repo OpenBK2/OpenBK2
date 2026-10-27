@@ -300,6 +300,36 @@ void CWeightWindow::RebuildWeights()
 	}
 }
 
+//! The index of the last range at or below nValue, which is what upper_bound
+//! minus one gives.
+//!
+//! Branchless on purpose. This is the hottest line in the decoder: on a map that
+//! instantiates every model in the database it was 15 per cent of the whole map
+//! load, and what costs is not the comparisons but branching on them. The value
+//! comes out of a range coder, so which half of the table it lands in is
+//! unpredictable by construction and a textbook binary search mispredicts at
+//! nearly every step. Written this way the comparison feeds a conditional move
+//! and the pipeline never has to guess.
+//!
+//! Semantics are exactly std::upper_bound( begin, end, nValue ) - 1, duplicates
+//! included: where several ranges share a value, because a weight was small
+//! enough to round to a zero width slot, this lands on the last of them, which is
+//! what keeps the width handed to Commit non-zero.
+//!
+//! nCount must be at least one and pRanges[0] is always 0, so there is always an
+//! element at or below the value and the result is never before the start.
+inline size_t LastRangeAtOrBelow( const uint16_t *pRanges, size_t nCount, uint16_t nValue )
+{
+	size_t nBase = 0;
+	while ( nCount > 1 )
+	{
+		const size_t nHalf = nCount / 2;
+		nBase += pRanges[nBase + nHalf] <= nValue ? nHalf : 0;
+		nCount -= nHalf;
+	}
+	return nBase;
+}
+
 CWeightWindow::SResult CWeightWindow::Decode( CDecoder &decoder )
 {
 	SResult result;
@@ -314,14 +344,15 @@ CWeightWindow::SResult CWeightWindow::Decode( CDecoder &decoder )
 	}
 
 	const uint32_t nValue = decoder.Decode( 0x4000 );
-	// upper_bound then step back gives the range containing nValue. It never
-	// returns end(), because the last range is 0x4000 and Decode caps at 0x3fff,
-	// and stepping back past equal entries is what keeps the width below non-zero.
-	const auto it = std::upper_bound( m_Ranges.begin(), m_Ranges.end(),
-	                                  static_cast<uint16_t>( nValue ) ) - 1;
-	decoder.Commit( 0x4000, *it, static_cast<uint32_t>( *std::next( it ) ) - *it );
+	// The range containing nValue. The index is never the last entry, because
+	// that one is 0x4000 and Decode caps at 0x3fff, so reading the entry after it
+	// for the upper edge is always in bounds.
+	const size_t nIndex =
+		LastRangeAtOrBelow( m_Ranges.data(), m_Ranges.size(), static_cast<uint16_t>( nValue ) );
+	decoder.Commit( 0x4000,
+	                m_Ranges[nIndex],
+	                static_cast<uint32_t>( m_Ranges[nIndex + 1] ) - m_Ranges[nIndex] );
 
-	const size_t nIndex = static_cast<size_t>( std::distance( m_Ranges.begin(), it ) );
 	++m_Weights[nIndex];
 	++m_nWeightTotal;
 
