@@ -72,6 +72,25 @@ BK2_PERFORATOR=~/projects/perforator/perforator/cmd/cli/perforator \
     --exit-after-load --profile
 ```
 
+A perforator run leaves **two** files, `profile-<stamp>.pprof` and
+`profile-<stamp>.html`, from one recording. `--format` takes a single value, and
+pprof is the one that keeps the data: the flame graph renders from it afterwards
+with `perforator profile flamegraph pprof`, while nothing turns an HTML flame
+graph back into a profile. So the HTML is to look at and the pprof is what tools
+read:
+
+```sh
+go tool pprof -top profile-<stamp>.pprof
+go tool pprof -top -cum -nodecount=40 profile-<stamp>.pprof
+go tool pprof -http=: profile-<stamp>.pprof          # graph, flame, peek, source
+perforator profile text pprof -i profile-<stamp>.pprof
+perforator diff ...                                  # against a second recording
+```
+
+`--profile-out` names a base: the extension is supplied, and a known one is
+replaced first, so `/tmp/mi`, `/tmp/mi.pprof` and `/tmp/mi.html` all name the
+same pair. perf writes `.data` for `perf report`.
+
 Both tools **launch the game themselves** rather than attaching to it, which is
 the whole reason they are wired in here. perforator takes `--pid`, `--cgroup`
 and `--whole-system`, so the obvious shape is `--pid $(pidof Game)` -- and that
@@ -111,10 +130,10 @@ sample and a higher rate on a process this size fills the buffer faster than it
 drains. Read the result with `perf report -i <file> --stdio --sort=dso,symbol`.
 
 `BK2_PERFORATOR` names the binary when it is not on PATH, and
-`BK2_PERFORATOR_EXTRA` adds flags: `--format pprof` for a pprof file rather than
-a flame graph, `--freq` to change the sampling rate, `--log-level debug` when a
-recording comes back empty. `BK2_PROFILE_SUDO` replaces or (set empty) removes
-sudo, for a binary that has been given the capabilities outright.
+`BK2_PERFORATOR_EXTRA` adds flags: `--freq` to change the sampling rate,
+`--log-level debug` when a recording comes back empty. `BK2_PROFILE_SUDO`
+replaces or (set empty) removes sudo, for a binary that has been given the
+capabilities outright.
 
 The checked-out `perforator/cmd/cli/perforator` is a symlink into
 `~/.ya/build/symres`, which is cleared when `ya` garbage collects, so it goes

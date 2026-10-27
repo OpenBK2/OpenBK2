@@ -117,9 +117,16 @@ usage()
 	                         leave root-owned files in the data tree.
 	                         BK2_PERFORATOR names the binary when it is not on
 	                         PATH.
-	      --profile-out F    where the profile goes. Default is a timestamped
-	                         file beside this script: .html for perforator,
-	                         .data for perf, which perf report reads.
+	      --profile-out F    where the profile goes. A base name: the extension
+	                         is supplied, and a known one on F is replaced, so
+	                         /tmp/mi, /tmp/mi.pprof and /tmp/mi.html all name
+	                         the same pair. Default is timestamped and beside
+	                         this script.
+	                         perforator records pprof and renders the flame
+	                         graph from it, so a run leaves both .pprof, which
+	                         go tool pprof and perforator profile text read,
+	                         and .html to look at. perf leaves .data for
+	                         perf report.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
 	      --valgrind         run under valgrind's memcheck, which reports the
@@ -605,14 +612,19 @@ fi
 declare -a PROFILER_CMD=()
 declare -a PRIV_CMD=()
 if [ -n "$PROFILER" ]; then
-	# The default output name carries the tool and the time, so a second run does
-	# not silently overwrite the first one's profile.
-	if [ -z "$PROFILE_OUT" ]; then
-		case "$PROFILER" in
-			perforator) PROFILE_OUT="$SRCDIR/profile-$(date +%Y%m%d-%H%M%S).html" ;;
-			perf)       PROFILE_OUT="$SRCDIR/profile-$(date +%Y%m%d-%H%M%S).data" ;;
-		esac
-	fi
+	# The default output name carries the time, so a second run does not silently
+	# overwrite the first one's profile.
+	[ -z "$PROFILE_OUT" ] && PROFILE_OUT="$SRCDIR/profile-$(date +%Y%m%d-%H%M%S)"
+	# A base name, with the extension supplied per tool. Stripping a known one
+	# the caller may have typed means --profile-out /tmp/mi.html does not become
+	# /tmp/mi.html.pprof, and naming either member of the pair names both.
+	PROFILE_BASE="${PROFILE_OUT%.html}"
+	PROFILE_BASE="${PROFILE_BASE%.pprof}"
+	PROFILE_BASE="${PROFILE_BASE%.data}"
+	case "$PROFILER" in
+		perforator) PROFILE_PRIMARY="$PROFILE_BASE.pprof" ;;
+		perf)       PROFILE_PRIMARY="$PROFILE_BASE.data" ;;
+	esac
 
 	case "$PROFILER" in
 		perforator)
@@ -643,9 +655,16 @@ if [ -n "$PROFILER" ]; then
 			declare -a perforator_extra=()
 			[ -n "${BK2_PERFORATOR_EXTRA:-}" ] &&
 				read -r -a perforator_extra <<<"$BK2_PERFORATOR_EXTRA"
+			# pprof and not html, even though the flame graph is what gets
+			# looked at. --format takes one value, and pprof is the one that
+			# keeps the data: the flame graph renders from it afterwards with
+			# perforator profile flamegraph, while nothing turns an HTML
+			# flame graph back into a profile. So a run leaves both, and the
+			# pprof is what go tool pprof -top and a diff against a second
+			# recording read.
 			PROFILER_CMD=( $SUDO "$PERFORATOR" record
-				--format html
-				-o "$PROFILE_OUT"
+				--format pprof
+				-o "$PROFILE_PRIMARY"
 				"${perforator_extra[@]}" -- )
 
 			# Under sudo the game would inherit root, and it writes into the data
@@ -675,7 +694,7 @@ if [ -n "$PROFILER" ]; then
 			# walk gives stacks that stop inside the engine's shared libraries.
 			# 199 Hz because dwarf copies a stack snapshot per sample and a higher
 			# rate on a process this size fills the buffer faster than it drains.
-			PROFILER_CMD=( perf record -g --call-graph=dwarf -F 199 -o "$PROFILE_OUT" -- )
+			PROFILER_CMD=( perf record -g --call-graph=dwarf -F 199 -o "$PROFILE_PRIMARY" -- )
 			;;
 	esac
 
@@ -685,7 +704,7 @@ if [ -n "$PROFILER" ]; then
 		[ -n "${!passthrough:-}" ] && ENV_ARGS+=( "$passthrough=${!passthrough}" )
 	done
 
-	printf '%s: %s profile goes to %s\n' "$SELF" "$PROFILER" "$PROFILE_OUT" >&2
+	printf '%s: %s profile goes to %s\n' "$SELF" "$PROFILER" "$PROFILE_PRIMARY" >&2
 fi
 
 if [ "$SHOW_ENV" = yes ]; then
@@ -732,12 +751,36 @@ cd "$RUNDIR" || die "cannot enter $RUNDIR"
 if [ -n "$PROFILER" ]; then
 	"${CMD[@]}"
 	status=$?
-	if [ -e "$PROFILE_OUT" ]; then
-		[ -w "$PROFILE_OUT" ] || ${BK2_PROFILE_SUDO-sudo} chown "$(id -u):$(id -g)" "$PROFILE_OUT"
-		printf '%s: profile written to %s (%s)\n' \
-			"$SELF" "$PROFILE_OUT" "$(du -h "$PROFILE_OUT" | cut -f1)" >&2
+	if [ ! -e "$PROFILE_PRIMARY" ]; then
+		printf '%s: warning: %s produced no %s\n' "$SELF" "$PROFILER" "$PROFILE_PRIMARY" >&2
+		exit "$status"
+	fi
+	# Recorded as root, so it belongs to root; a profile the user cannot open is
+	# not one they can read. Done before the render below, which runs as the user.
+	[ -w "$PROFILE_PRIMARY" ] ||
+		${BK2_PROFILE_SUDO-sudo} chown "$(id -u):$(id -g)" "$PROFILE_PRIMARY"
+	printf '%s: profile written to %s (%s)\n' \
+		"$SELF" "$PROFILE_PRIMARY" "$(du -h "$PROFILE_PRIMARY" | cut -f1)" >&2
+
+	# The flame graph, rendered from the pprof rather than recorded separately:
+	# --format takes one value, so recording both would mean running the game
+	# twice and profiling two different runs. Rendering needs no privileges, and
+	# the renderer writes the document to stdout and its diagnostics to stderr,
+	# so the redirect picks up the HTML and nothing else.
+	if [ "$PROFILER" = perforator ]; then
+		if "$PERFORATOR" profile flamegraph pprof -i "$PROFILE_PRIMARY" -f html \
+		   > "$PROFILE_BASE.html" 2>/dev/null && [ -s "$PROFILE_BASE.html" ]; then
+			printf '%s: flame graph written to %s (%s)\n' \
+				"$SELF" "$PROFILE_BASE.html" "$(du -h "$PROFILE_BASE.html" | cut -f1)" >&2
+		else
+			rm -f "$PROFILE_BASE.html"
+			printf '%s: warning: could not render a flame graph; the pprof is still there.\n' "$SELF" >&2
+			printf '%s:          %s profile flamegraph pprof -i %s -f html > out.html\n' \
+				"$SELF" "$PERFORATOR" "$PROFILE_PRIMARY" >&2
+		fi
+		printf '%s: go tool pprof -top %s\n' "$SELF" "$PROFILE_PRIMARY" >&2
 	else
-		printf '%s: warning: %s produced no %s\n' "$SELF" "$PROFILER" "$PROFILE_OUT" >&2
+		printf '%s: perf report -i %s --stdio --sort=dso,symbol\n' "$SELF" "$PROFILE_PRIMARY" >&2
 	fi
 	exit "$status"
 fi
