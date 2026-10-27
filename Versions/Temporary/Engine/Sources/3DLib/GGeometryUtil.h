@@ -1,5 +1,7 @@
 #pragma once
 
+#include "3DLib_export.h"
+
 #include <cstdint>
 #include <queue>
 #include <utility>
@@ -290,7 +292,9 @@ private:
 	void OptimizeVertexOrder( std::vector<STriangle> &tris, int *pnResVerts, std::vector<uint16_t> *pVertexReorder );
 
 public:
-	void
+	// Exported for 3Dmotor/test/TriVertexCacheOptimizer, which links 3DLib as a
+	// DLL. Everything else in the class is used only inside 3DLib.
+	_3DLIB_EXPORT void
 	Optimize( std::vector<STriangle> *pTris, std::vector<uint16_t> *pVertexReorder, int *pnResVerts, int nVCacheSize );
 };
 
