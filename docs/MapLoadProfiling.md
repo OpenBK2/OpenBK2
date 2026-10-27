@@ -91,6 +91,25 @@ perforator diff ...                                  # against a second recordin
 replaced first, so `/tmp/mi`, `/tmp/mi.pprof` and `/tmp/mi.html` all name the
 same pair. perf writes `.data` for `perf report`.
 
+### Reading the HTML without a browser
+
+perforator's pprof and its flame graph are separate recording decisions rather
+than two views of one thing, and the pprof has been the weaker of the two. The
+HTML is not a dead end though: the page carries the whole profile in
+`window.__data__`, base64 over gzip over JSON, and
+`scripts/perforator_html_to_collapsed.py` turns that into collapsed stacks,
+which is what every other tool reads.
+
+```sh
+scripts/perforator_html_to_collapsed.py profile-<stamp>.html > profile.folded
+scripts/perforator_html_to_collapsed.py profile-<stamp>.html --self | head -20
+scripts/perforator_html_to_collapsed.py profile-<stamp>.html \
+    --filter 'NewMission' --self        # self time inside the map load only
+```
+
+Weights are `eventCount`, which for a cycles profile is cycles and is what the
+flame graph's widths show; `--samples` counts each sample once instead.
+
 Both tools **launch the game themselves** rather than attaching to it, which is
 the whole reason they are wired in here. perforator takes `--pid`, `--cgroup`
 and `--whole-system`, so the obvious shape is `--pid $(pidof Game)` -- and that
