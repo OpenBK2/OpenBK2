@@ -81,6 +81,18 @@ usage()
 	                         the replay, so record with a smaller
 	                         checksumperiod to compare more finely.
 	                         See docs/TestHarness.md.
+	      --exit-after-load  load the map and leave, printing how long each phase
+	                         of loading took. Needs --mission, --campaign or
+	                         --replay, since on its own there is no map to load.
+	                         This is what makes a load profilable: it is one
+	                         blocking call, so a run that stays in the mission
+	                         afterwards goes on sampling a frame loop instead.
+	                         A profiler that attaches by process id has to be
+	                         running before the load starts, which it cannot be
+	                         if it is waiting for the id; pass
+	                         --setvar Mission.LoadProfileDelay=10 and the game
+	                         prints its id and waits that many seconds first.
+	                         docs/MapLoadProfiling.md has the recipes.
 	      --setvar N=V       set a game variable after the configs load, so it
 	                         overrides them. Repeatable.
 	      --software-vk      force the lavapipe software Vulkan device, so a run
@@ -113,6 +125,7 @@ usage()
 	  ./launch.sh asan+ubsan --gdb
 	  ./launch.sh release --hud
 	  ./launch.sh release --hud mango --data retail
+	  ./launch.sh release --data totalconv --mission Custom/Missions/Razvedka/MapInfo.xdb --exit-after-load
 	  ./launch.sh release --valgrind --data retail
 	  ASAN_OPTIONS=detect_leaks=1 ./launch.sh asan+ubsan
 	USAGE
@@ -172,6 +185,7 @@ REPLAY_PLAYER=
 MISSION=
 CAMPAIGN=
 VERIFY=no
+EXIT_AFTER_LOAD=no
 declare -a SETVARS=()
 SOFTWARE_VK=no
 HUD=
@@ -212,6 +226,7 @@ while [ $# -gt 0 ]; do
 		              case "$2" in ''|*[!0-9]*) die "$1 wants a player number, got '$2'" ;; esac
 		              REPLAY_PLAYER="$2"; shift 2 ;;
 		--verify)     VERIFY=yes; shift ;;
+		--exit-after-load) EXIT_AFTER_LOAD=yes; shift ;;
 		--setvar)     [ $# -ge 2 ] || die "$1 needs NAME=VALUE"
 		              case "$2" in *=*) ;; *) die "--setvar wants NAME=VALUE, got '$2'" ;; esac
 		              SETVARS+=("--setvar=$2"); shift 2 ;;
@@ -251,6 +266,12 @@ starters=0
 [ -n "$CAMPAIGN" ] && starters=$((starters + 1))
 [ -n "$REPLAY" ] && starters=$((starters + 1))
 [ "$starters" -gt 1 ] && die "--mission, --campaign and --replay are alternatives; pass one"
+# Without one of them the game reaches the menus, loads no map and so never
+# reaches the point this flag acts at. Refused rather than ignored, because the
+# run would otherwise sit at the main menu looking like a profiling run that
+# found nothing to profile.
+[ "$EXIT_AFTER_LOAD" = yes ] && [ "$starters" -eq 0 ] &&
+	die "--exit-after-load needs a map to load; pass --mission, --campaign or --replay"
 
 PRESET="$(resolve_preset "$CONFIG")" ||
 	die "unknown configuration '$CONFIG'. One of: $CONFIG_NAMES"
@@ -370,7 +391,10 @@ declare -a ENV_ARGS=(
 # process then never exits, so the run yields no exit status and no sanitizer
 # summary, and reads as a hung instrument. Unfixed in SDL 3.4.18 and on main.
 # Set SDL_AUDIO_DRIVER yourself to hear a verifying run anyway.
-if [ "$VERIFY" = yes ]; then
+#
+# --exit-after-load is in the same position: nobody is listening, and it exits
+# the moment the map is in, which is the idle device that deadlock needs.
+if [ "$VERIFY" = yes ] || [ "$EXIT_AFTER_LOAD" = yes ]; then
 	ENV_ARGS+=( "SDL_AUDIO_DRIVER=${SDL_AUDIO_DRIVER:-dummy}" )
 elif [ -n "${SDL_AUDIO_DRIVER:-}" ]; then
 	ENV_ARGS+=( "SDL_AUDIO_DRIVER=$SDL_AUDIO_DRIVER" )
@@ -535,6 +559,7 @@ if [ "$SHOW_ENV" = yes ]; then
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
 	[ -n "$REPLAY_PLAYER" ] && printf 'args=--replay-player=%s\n' "$REPLAY_PLAYER"
 	[ "$VERIFY" = yes ] && printf 'args=--replay-verify\n'
+	[ "$EXIT_AFTER_LOAD" = yes ] && printf 'args=--exit-after-load\n'
 	[ ${#SETVARS[@]} -gt 0 ] && printf 'args=%s\n' "${SETVARS[@]}"
 	exit 0
 fi
@@ -549,6 +574,7 @@ CMD+=("./$EXE")
 [ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")
 [ -n "$REPLAY_PLAYER" ] && CMD+=("--replay-player=$REPLAY_PLAYER")
 [ "$VERIFY" = yes ] && CMD+=("--replay-verify")
+[ "$EXIT_AFTER_LOAD" = yes ] && CMD+=("--exit-after-load")
 [ ${#SETVARS[@]} -gt 0 ] && CMD+=("${SETVARS[@]}")
 CMD+=("$@")
 

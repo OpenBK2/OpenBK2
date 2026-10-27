@@ -43,6 +43,7 @@
 
 #if !BOOST_OS_WINDOWS
 #include <cxxabi.h>
+#include <unistd.h> // getpid, for the profiling pause
 #endif
 
 #if !BOOST_OS_WINDOWS
@@ -91,11 +92,27 @@ static std::string szStartCampaign;
 // because arguments are read long before autoexec.cfg and game.cfg are, and
 // anything set here would be overwritten by them.
 static bool bReplayVerify = false;
+// --exit-after-load, for the same reason: it becomes a variable the mission
+// interface reads once the map is in.
+static bool bExitAfterLoad = false;
 static std::vector<std::pair<std::string, std::string>> commandLineVars;
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
 static int RunGame( const std::vector<std::string> &arguments );
 static int RunGameGuarded( const std::vector<std::string> &arguments );
+
+//! This process's id, for the profiling pause below to print.
+//!
+//! There is no helper for this in port/, because nothing else in the tree has
+//! wanted one; the two names differ only in spelling.
+static int CurrentProcessId()
+{
+#if BOOST_OS_WINDOWS
+	return static_cast<int>( ::GetCurrentProcessId() );
+#else
+	return static_cast<int>( ::getpid() );
+#endif
+}
 
 static void StoreBuildInfo()
 {
@@ -393,6 +410,17 @@ static int RunGame( const std::vector<std::string> &arguments )
 		// has no other way to switch it on.
 		NGlobal::SetVar( "checksum_verify", 1 );
 	}
+	// Loading a map is one blocking call, so a run that only wants to measure it
+	// has nothing to do once it returns. This is what makes the game a profiling
+	// subject: without it the process stays in the mission and the samples taken
+	// after the load bury the ones taken during it.
+	if ( bExitAfterLoad )
+	{
+		NGlobal::SetVar( "Mission.ExitAfterLoad", 1 );
+		// The phase breakdown is the number this run exists to produce, so it
+		// goes to stdout as well as to the log.
+		NGlobal::SetVar( "Mission.ReportLoadTime", 1 );
+	}
 	// Last, so an explicit --setvar overrides the defaults above as well. Routed
 	// through the console rather than SetVar so a value is typed exactly as the
 	// same line in a .cfg would be.
@@ -448,6 +476,27 @@ static int RunGame( const std::vector<std::string> &arguments )
 			command += L" " + std::to_wstring( nReplayPlayer );
 		}
 		NGlobal::ProcessCommand( command );
+	}
+	// The mission commands above only queue an interface command; the map is
+	// loaded by the first StepApp below, in one blocking call. A profiler that
+	// attaches by process id therefore has to be running before this loop starts,
+	// and polling for the process cannot win that race: by the time the id exists
+	// the load may already be under way, and the samples that matter are the ones
+	// it would have missed.
+	//
+	// So this waits, after printing the id, which is the one piece of information
+	// the attaching side needs. Zero by default, so an ordinary run never pauses;
+	// set it with --setvar Mission.LoadProfileDelay=10. Seconds rather than
+	// milliseconds because what is being waited for is a person or a script
+	// starting another program.
+	const int nLoadProfileDelay = NGlobal::GetVar( "Mission.LoadProfileDelay", 0 );
+	if ( nLoadProfileDelay > 0 )
+	{
+		fmt::print( "map load: pid {}, waiting {} s before loading so a profiler can attach\n",
+		            CurrentProcessId(),
+		            nLoadProfileDelay );
+		fflush( stdout );
+		std::this_thread::sleep_for( std::chrono::seconds( nLoadProfileDelay ) );
 	}
 	// start
 	Cursor()->Acquire( true );
@@ -604,6 +653,17 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		if ( szString == "--replay-verify" )
 		{
 			bReplayVerify = true;
+			continue;
+		}
+		// Leave as soon as the map is in, and report how long each phase of
+		// loading it took. For profiling a load: the work is one blocking call, so
+		// a run that stays in the mission afterwards goes on sampling a frame loop
+		// that has nothing to do with it. Pair with --mission, --campaign or
+		// --replay; on its own it reaches the menus and nothing is loaded, so
+		// nothing is reported and the game stays up.
+		if ( szString == "--exit-after-load" )
+		{
+			bExitAfterLoad = true;
 			continue;
 		}
 		// --setvar name=value or --setvar=name=value, repeatable. Applied after

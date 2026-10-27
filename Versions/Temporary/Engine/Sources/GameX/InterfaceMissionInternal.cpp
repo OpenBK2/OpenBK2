@@ -34,6 +34,7 @@
 #include "InterfaceNotifications.h"
 #include "libdb/Db.h"
 #include "Main/MainLoopCommands.h"
+#include "Misc/Time64.h" // GetLongTickCount, for the map load phase timings
 #include "Misc/Win32Random.h"
 #include "MissionReinforcements.h"
 #include "MissionUnitFullInfo.h"
@@ -776,6 +777,27 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 
 	szButtonsBindSection = NStr::ToMBCS( MISSION_BUTTONS_BIND_SECTION );
 
+	// Where the time goes while a map loads. This function is the whole of it -
+	// one blocking call, no frames drawn in between - so a wall clock reading
+	// between its steps is all a breakdown needs, and the phases below are the
+	// units a complaint about a slow map can be attributed to: the database and
+	// terrain in LoadMap, the units in InitAfterMapLoad, the models and textures
+	// in LoadEverything.
+	//
+	// Always measured, because six clock reads against a load measured in seconds
+	// cost nothing and a log line saying which phase was slow is what a report
+	// from a player needs to carry. GetLongTickCount is steady_clock, so a
+	// machine correcting its time cannot produce a negative phase.
+	const uint64_t nLoadStartMs = GetLongTickCount();
+	uint64_t nPhaseStartMs = nLoadStartMs;
+	std::vector<std::pair<const char *, uint64_t>> loadPhases;
+	const auto MarkLoadPhase = [&loadPhases, &nPhaseStartMs]( const char *pszPhase )
+	{
+		const uint64_t nNowMs = GetLongTickCount();
+		loadPhases.push_back( std::make_pair( pszPhase, nNowMs - nPhaseStartMs ) );
+		nPhaseStartMs = nNowMs;
+	};
+
 	pMission = _pMap;
 	pTransceiver = _pTransceiver;
 
@@ -928,6 +950,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 	pReinf->Init( pScreen, pWorld, pNotifications, pMapInfo->eSeason );
 
 	pSuperWeapon->Init( pScreen, pWorld, pMapInfo->eSeason );
+	MarkLoadPhase( "screens" );
 	//
 	if ( s_bDeepMapLoad )
 	{
@@ -941,6 +964,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 		{
 			pProgress->Step(); // step 1
 		}
+		MarkLoadPhase( "ai_init" );
 
 		if ( pProgress )
 		{
@@ -951,6 +975,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 		{
 			pProgress->UnlockRange(); // step 2
 		}
+		MarkLoadPhase( "load_map" );
 
 		if ( pProgress )
 		{
@@ -965,10 +990,12 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 		{
 			pProgress->UnlockRange(); // step 3
 		}
+		MarkLoadPhase( "ai_after_map_load" );
 	}
 	else
 	{
 		pWorld->LoadMap( pMapInfo );
+		MarkLoadPhase( "load_map" );
 	}
 	//
 	if ( s_bDeepMapLoad )
@@ -1019,6 +1046,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 
 	Singleton<IAILogic>()->PostMapLoad();
 	pWorld->Update();
+	MarkLoadPhase( "world_update" );
 
 	// загрузим всю графику до старта миссии
 	if ( pProgress )
@@ -1036,6 +1064,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 	{
 		pProgress->UnlockRange(); // step 6
 	}
+	MarkLoadPhase( "load_graphics" );
 
 	Singleton<IStatSystem>()->UpdateEntry( "MapDesigner", NStr::ToMBCS( GET_TEXT_PRE( pMapInfo->, MapDesigner ) ) );
 
@@ -1059,6 +1088,40 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 		}
 	}
 	Singleton<IMusicSystem>()->Init( pMapInfo->pMusic, 0 );
+
+	// The breakdown, as one line so that a run of several maps can be compared by
+	// reading the log rather than by instrumenting anything further. The map and
+	// its size in patches are on it because the complaint this exists to answer -
+	// that a map with many units loads slowly - is about a particular map, and a
+	// timing with no map named cannot be matched up with one.
+	//
+	// Written persistently, which is what puts it in log.txt as well as in the
+	// in-game console. Not through csSystem, which would reach the terminal here
+	// but only because CLogStream feeds DebugTrace, and that compiles away under
+	// _FINALRELEASE - the configuration a player's build is.
+	//
+	// stdout only when asked, since the game writes very little there and a
+	// profiling run is read from a terminal; --exit-after-load sets that variable.
+	{
+		std::string szPhases;
+		for ( size_t i = 0; i < loadPhases.size(); ++i )
+		{
+			szPhases += fmt::format(
+					"{}{} {:.3f}", i == 0 ? "" : ", ", loadPhases[i].first, float( loadPhases[i].second ) / 1000.0f );
+		}
+		const std::string szReport = fmt::format( "map load: {} {}x{} patches in {:.3f} s ({})",
+		                                          pMapInfo->GetDBID().ToString(),
+		                                          pMapInfo->nNumPatchesX,
+		                                          pMapInfo->nNumPatchesY,
+		                                          float( GetLongTickCount() - nLoadStartMs ) / 1000.0f,
+		                                          szPhases );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szReport.c_str(), 0xffffffff, true );
+		if ( NGlobal::GetVar( "Mission.ReportLoadTime", 0 ) != 0 )
+		{
+			fmt::print( "{}\n", szReport );
+			fflush( stdout );
+		}
+	}
 }
 
 void CInterfaceMission::MakeScreen( const NDb::SMapInfo *pMapInfo, const NDb::SUIConstsB2 *pUIConsts )
@@ -5113,6 +5176,21 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 	pInterface->NewMission( pMap, pTrans, Singleton<IScenarioTracker>(), nPlayerForWarFog );
 
 	NMainLoop::PushInterface( pInterface );
+
+	// --exit-after-load. Here rather than anywhere else because every way of
+	// starting a mission arrives at this function, so one check covers --mission,
+	// --campaign, --replay and the menus alike, and NewMission above is the whole
+	// of the load.
+	//
+	// Queued, not acted on: the interface stack is thrown away by the exit
+	// command's own Exec, which the main loop reaches on its next drain of the
+	// queue. The loading screen's destructor has by now queued the "press a key"
+	// screen ahead of it, and that is harmless - the queue is drained in order
+	// within one StepApp, so the exit undoes it before a frame is drawn.
+	if ( NGlobal::GetVar( "Mission.ExitAfterLoad", 0 ) != 0 )
+	{
+		NMainLoop::Command( CreateICExitGame() );
+	}
 }
 
 void CICMission::Configure( const char *pszConfig )
