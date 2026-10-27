@@ -166,6 +166,44 @@ The checked-out `perforator/cmd/cli/perforator` is a symlink into
 stale between sessions; launch.sh reports a dangling link as such rather than as
 "not found".
 
+### On Windows
+
+`scripts/profile/profile-map-load.cmd` is the same idea on top of the ETW tooling
+that `start-profile.cmd` and `stop-profile.cmd` use. It starts wpr's CPU profile,
+launches `Game.exe` from its install's `bin` with `--exit-after-load`, waits for
+it to exit, stops the trace and exports it. So, like perforator, the recording
+begins before the process and ends after it, and nothing has to be timed by hand.
+It needs an elevated prompt, for ETW kernel sampling:
+
+```bat
+scripts\profile\profile-map-load.cmd Custom/Missions/Razvedka/MapInfo.xdb
+scripts\profile\profile-map-load.cmd "Custom/Missions/Mission Impossible/mapinfo.xdb" --mod MPBMod6
+scripts\profile\profile-map-load.cmd <map> --setvar deep_map_load=1 --name deep
+scripts\profile\profile-map-load.cmd --campaign "Scenario/Campaigns/GER/Campaign.xdb;0;0"
+```
+
+`--rate` picks 1000 to 8000 Hz, `--game-dir` (or `BK2_GAME_DIR`) another install
+than `C:\Games\bk2\bin`, and anything after `--` goes to the game unchanged.
+`Game.exe` is a GUI program and its stdout goes nowhere, so the `map load:` line
+is read back out of `log.txt` instead.
+
+One trace becomes three reports in `scripts/profile/captures`, because xperf's
+`-symbol` keeps only the samples whose stack contains a function:
+
+| file | what it covers |
+| --- | --- |
+| `<name>-butterfly.html` | stacks under `CInterfaceMission::NewMission`: the load on the main thread, nothing before or after it |
+| `<name>-process-butterfly.html` | the whole process, database and renderer startup included |
+| `<name>-loader-butterfly.html` | `NGScene::LoaderThread`, which `load_graphics` waits on but whose stacks never contain `NewMission` |
+
+`<name>-hot.txt` puts the `map load:` line and the three hot lists in one file to
+paste. `compare-profiles.cmd` reads every `*-butterfly.html` in the folder, which
+makes it the before and after for a change to the load.
+
+Engine frames resolve through the PDB path each module was linked with. An install
+whose build directory has since been deleted resolves nothing from the engine, and
+the script warns about that before it records rather than after.
+
 ### `Mission.LoadProfileDelay`
 
 Still there, and no longer needed for either tool above, since both start the
