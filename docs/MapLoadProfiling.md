@@ -60,79 +60,79 @@ main menu. The run takes SDL's dummy audio backend for the reason `--verify`
 does: SDL's PulseAudio backend deadlocks on exit when the device is idle, which
 is exactly the state a run that exits the moment the map is in leaves it in.
 
-### The attach race, and `Mission.LoadProfileDelay`
-
-A profiler that attaches by process id cannot win against this: by the time
-`pidof Game` answers, the load may already be under way, and the samples that
-matter are the ones it missed. So the game will wait:
-
-```sh
-./launch.sh release --data totalconv \
-    --mission Custom/Missions/Razvedka/MapInfo.xdb --exit-after-load \
-    --setvar Mission.LoadProfileDelay=15
-```
-
-It prints its own process id and sleeps that many seconds before the first
-`StepApp`, which is where the load happens. Zero by default, so an ordinary run
-never pauses. The wait is after the database is open and the renderer is up, so
-what it delays is the load and nothing else.
-
-A recorder that launches the program itself -- `perf record -- ...` -- does not
-need this.
-
 ## Recording it
 
-Both recorders below need privileges this machine does not grant by default.
-`kernel.perf_event_paranoid` is 2 here and perf is refused even a `cpu-clock`
-software event, so a recording needs
+`--profile` adds the recorder, and `--profile perf` picks perf instead of the
+default perforator:
+
+```sh
+BK2_PERFORATOR=~/projects/perforator/perforator/cmd/cli/perforator \
+./launch.sh release --data totalconv \
+    --mission "Custom/Missions/Mission Impossible/mapinfo.xdb" \
+    --exit-after-load --profile
+```
+
+Both tools **launch the game themselves** rather than attaching to it, which is
+the whole reason they are wired in here. perforator takes `--pid`, `--cgroup`
+and `--whole-system`, so the obvious shape is `--pid $(pidof Game)` -- and that
+cannot win against a map load, because by the time the id exists the load may
+already be under way and the samples that matter are the ones it missed. Given a
+command after `--` it starts the process, traces that pid, and stops when the
+child exits ("Stopping the profiler because child subprocess finished"). So the
+recording begins with the process and ends with it, and there is no duration to
+guess at: a `--duration` cut short in the middle of `ai_after_map_load` looks
+like a profile of `load_map`.
+
+### Privileges, and not leaving root-owned files behind
+
+perforator is eBPF and wants root; launch.sh uses sudo for it. The game must
+**not** inherit that: it writes `Profiles`, `log.txt` and the crashpad database
+into the data tree, and one run as root makes the next run as the user fail on
+files it cannot open. So `setpriv --reuid --regid --init-groups` sits between
+the profiler and the game. setpriv execs rather than forking, so the process
+perforator registered is still the one that becomes `Game`. launch.sh refuses to
+profile with perforator if setpriv is missing rather than quietly running the
+game as root. The profile itself is written as root and chowned back afterwards,
+which is why a profiling run does not `exec`.
+
+perf needs `kernel.perf_event_paranoid` lowered instead. It is 2 on this machine
+and perf is refused even a `cpu-clock` software event, so launch.sh warns and
+tells you the sysctl:
 
 ```sh
 sudo sysctl kernel.perf_event_paranoid=1   # or -1 to see kernel frames too
 ```
 
-and perforator, which is eBPF, needs to run as root outright -- which is why
-`bk2.sh` in that checkout ends with `chown sse4 ./flame.html`. The game itself
-needs no privileges and `--exit-after-load` works without any of this; it is
-only the sampling that does.
+perf gets `--call-graph=dwarf` rather than frame pointers: Release maps to
+`RelWithDebInfo` and carries `-g`, but not `-fno-omit-frame-pointer`, so a frame
+pointer walk gives stacks that stop inside the engine's shared libraries. And
+`-F 199` rather than more, because dwarf unwinding copies a stack snapshot per
+sample and a higher rate on a process this size fills the buffer faster than it
+drains. Read the result with `perf report -i <file> --stdio --sort=dso,symbol`.
 
-### perf
+`BK2_PERFORATOR` names the binary when it is not on PATH, and
+`BK2_PERFORATOR_EXTRA` adds flags: `--format pprof` for a pprof file rather than
+a flame graph, `--freq` to change the sampling rate, `--log-level debug` when a
+recording comes back empty. `BK2_PROFILE_SUDO` replaces or (set empty) removes
+sudo, for a binary that has been given the capabilities outright.
 
-Always present, and it wraps the command, so there is no race to lose.
-`--call-graph=dwarf` rather than frame pointers: the Release presets are
-`RelWithDebInfo` and carry `-g`, but not `-fno-omit-frame-pointer`, so a frame
-pointer walk gives truncated stacks through the engine's shared libraries.
+The checked-out `perforator/cmd/cli/perforator` is a symlink into
+`~/.ya/build/symres`, which is cleared when `ya` garbage collects, so it goes
+stale between sessions; launch.sh reports a dangling link as such rather than as
+"not found".
 
-```sh
-./launch.sh release --data totalconv --mission <map> --exit-after-load --env
-# take rundir and the environment from that, then:
-cd ~/bk2-totalconv/bin
-perf record -g --call-graph=dwarf -F 199 -o /tmp/mapload.data -- \
-    env DXVK_WSI_DRIVER=SDL3 SDL_AUDIO_DRIVER=dummy \
-        LD_LIBRARY_PATH=$PWD ./Game --mission=<map> --exit-after-load
-perf report -i /tmp/mapload.data --stdio --sort=dso,symbol | head -60
-```
+### `Mission.LoadProfileDelay`
 
-`-F 199` and not more: dwarf unwinding copies a stack snapshot per sample and a
-high rate on a process this size fills the buffer faster than it drains.
-
-### perforator
-
-`perforator record` takes `--pid`, `--cgroup` or `--whole-system`; it does not
-launch a command, so this is where `Mission.LoadProfileDelay` earns its keep.
-`bk2.sh` in the perforator checkout is the existing one-liner:
+Still there, and no longer needed for either tool above, since both start the
+process. It is for a recorder that can only attach: the game prints its own
+process id and sleeps that many seconds before the first `StepApp`, after the
+database is open and the renderer is up, so what it delays is the load and
+nothing else.
 
 ```sh
-./perforator/cmd/cli/perforator record --log-level debug --debug \
-    --duration 2m -o ./flame.html --pid $(pidof Game)
+./launch.sh release --data totalconv --mission <map> --exit-after-load \
+    --setvar Mission.LoadProfileDelay=15
 ```
-
-Start the game with a delay long enough to get that running, then attach inside
-the window. `--duration` wants to outlast the load; a profile cut short in the
-middle of `ai_after_map_load` looks like a profile of `load_map`.
-
-Note that the checked-out `perforator/cmd/cli/perforator` is a symlink into
-`~/.ya/build/symres`, which is cleared when `ya` garbage collects, so it needs
-rebuilding before a session.
 
 ## Where to look when a phase is slow
 

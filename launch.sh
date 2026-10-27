@@ -103,6 +103,23 @@ usage()
 	                         installed; or mango, which enables MangoHud's
 	                         Vulkan layer. DXVK_HUD and MangoHud's own
 	                         configuration say what each one draws.
+	      --profile [TOOL]   record a CPU profile of the whole run. TOOL is
+	                         perforator, the default, or perf. Both launch the
+	                         game themselves and stop when it exits, so there is
+	                         no process to attach to and no race to lose, and the
+	                         profile covers startup as well as whatever the run
+	                         was for. Pair with --exit-after-load to profile a
+	                         map load and nothing else.
+	                         Both need privileges: perforator is eBPF and wants
+	                         root, perf wants kernel.perf_event_paranoid lowered.
+	                         sudo is used for perforator, and the game is put
+	                         back to this user with setpriv so the run does not
+	                         leave root-owned files in the data tree.
+	                         BK2_PERFORATOR names the binary when it is not on
+	                         PATH.
+	      --profile-out F    where the profile goes. Default is a timestamped
+	                         file beside this script: .html for perforator,
+	                         .data for perf, which perf report reads.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
 	      --valgrind         run under valgrind's memcheck, which reports the
@@ -186,6 +203,8 @@ MISSION=
 CAMPAIGN=
 VERIFY=no
 EXIT_AFTER_LOAD=no
+PROFILER=
+PROFILE_OUT=
 declare -a SETVARS=()
 SOFTWARE_VK=no
 HUD=
@@ -227,6 +246,21 @@ while [ $# -gt 0 ]; do
 		              REPLAY_PLAYER="$2"; shift 2 ;;
 		--verify)     VERIFY=yes; shift ;;
 		--exit-after-load) EXIT_AFTER_LOAD=yes; shift ;;
+		--profile)    # Optional argument, handled the way --hud handles its own:
+		              # a bare --profile has to stay valid, so the next word is
+		              # consumed only when it names a tool, and anything else that
+		              # is not an option is a typo worth reporting here.
+		              PROFILER=perforator
+		              if [ $# -ge 2 ] && [ "${2#-}" = "$2" ]; then
+		                  case "$2" in
+		                      perforator|perf) PROFILER="$2" ;;
+		                      *) die "--profile takes perforator or perf, got '$2'" ;;
+		                  esac
+		                  shift
+		              fi
+		              shift ;;
+		--profile-out) [ $# -ge 2 ] || die "$1 needs a file name"
+		              PROFILE_OUT="$2"; shift 2 ;;
 		--setvar)     [ $# -ge 2 ] || die "$1 needs NAME=VALUE"
 		              case "$2" in *=*) ;; *) die "--setvar wants NAME=VALUE, got '$2'" ;; esac
 		              SETVARS+=("--setvar=$2"); shift 2 ;;
@@ -258,6 +292,14 @@ done
 [ -n "$REPLAY_PLAYER" ] && [ -z "$REPLAY" ] && die "--replay-player needs --replay FILE"
 [ "$USE_GDB" = yes ] && [ "$USE_VALGRIND" = yes ] &&
 	die "--gdb and --valgrind both want to be the outer process; pass one"
+# Same reason, and in the profiler's case the point is to sample the game rather
+# than a debugger or an emulator standing in front of it.
+[ -n "$PROFILER" ] && [ "$USE_GDB" = yes ] &&
+	die "--profile and --gdb both want to be the outer process; pass one"
+[ -n "$PROFILER" ] && [ "$USE_VALGRIND" = yes ] &&
+	die "--profile would sample valgrind's emulator, not the game; pass one"
+[ -n "$PROFILE_OUT" ] && [ -z "$PROFILER" ] &&
+	die "--profile-out needs --profile"
 
 # The game takes the first of these it is given and ignores the rest, so say so
 # here rather than leaving the caller to wonder which one ran.
@@ -550,10 +592,107 @@ if [ "$USE_VALGRIND" = yes ]; then
 	printf '%s: memcheck output goes to %s/valgrind-<pid>.log\n' "$SELF" "$RUNDIR" >&2
 fi
 
+# The profiler, as the outermost process.
+#
+# Both tools here launch the game themselves rather than attaching to it, which
+# is what makes this worth wiring in at all: a profiler that attaches by process
+# id cannot win against work that starts moments after the process does, and a
+# map load is exactly that. perforator traces the child it started and stops when
+# that child exits, so the recording begins and ends with the run.
+#
+# Neither records anything useful without privileges, so both are checked for
+# here rather than failing forty lines of game output later.
+declare -a PROFILER_CMD=()
+declare -a PRIV_CMD=()
+if [ -n "$PROFILER" ]; then
+	# The default output name carries the tool and the time, so a second run does
+	# not silently overwrite the first one's profile.
+	if [ -z "$PROFILE_OUT" ]; then
+		case "$PROFILER" in
+			perforator) PROFILE_OUT="$SRCDIR/profile-$(date +%Y%m%d-%H%M%S).html" ;;
+			perf)       PROFILE_OUT="$SRCDIR/profile-$(date +%Y%m%d-%H%M%S).data" ;;
+		esac
+	fi
+
+	case "$PROFILER" in
+		perforator)
+			# BK2_PERFORATOR first, then PATH. The checkout builds the binary
+			# through ya into ~/.ya/build/symres and leaves a symlink to it, and
+			# that target is removed when ya garbage collects, so a dangling link
+			# is the normal way for this to be missing. -e follows the link and
+			# so reports exactly that.
+			PERFORATOR="${BK2_PERFORATOR:-}"
+			[ -z "$PERFORATOR" ] && PERFORATOR="$(command -v perforator 2>/dev/null)"
+			[ -n "$PERFORATOR" ] ||
+				die "no perforator on PATH; set BK2_PERFORATOR to the binary"
+			[ -e "$PERFORATOR" ] ||
+				die "$PERFORATOR is not there (a dangling symlink means ya collected the build; rebuild it)"
+			[ -x "$PERFORATOR" ] || die "$PERFORATOR is not executable"
+
+			# eBPF, so root. SUDO is overridable because a binary given the
+			# capabilities outright needs none of this.
+			SUDO="${BK2_PROFILE_SUDO-sudo}"
+			[ "$(id -u)" = 0 ] && SUDO=
+			if [ -n "$SUDO" ]; then
+				command -v "$SUDO" >/dev/null || die "no $SUDO on PATH, and perforator needs root"
+			fi
+
+			# BK2_PERFORATOR_EXTRA adds flags, the way VALGRIND_EXTRA does:
+			# --freq, --format pprof for a pprof file instead of a flame graph,
+			# --log-level debug when a recording comes back empty.
+			declare -a perforator_extra=()
+			[ -n "${BK2_PERFORATOR_EXTRA:-}" ] &&
+				read -r -a perforator_extra <<<"$BK2_PERFORATOR_EXTRA"
+			PROFILER_CMD=( $SUDO "$PERFORATOR" record
+				--format html
+				-o "$PROFILE_OUT"
+				"${perforator_extra[@]}" -- )
+
+			# Under sudo the game would inherit root, and it writes into the data
+			# tree: Profiles, log.txt, the crashpad database. One run as root and
+			# the next as the user then fails on files it cannot open. setpriv
+			# execs rather than forking, so the process perforator registered is
+			# still the one that becomes the game.
+			if [ -n "$SUDO" ]; then
+				command -v setpriv >/dev/null ||
+					die "no setpriv on PATH; without it the game would run as root and leave root-owned files in $RUNDIR"
+				PRIV_CMD=( setpriv "--reuid=$(id -u)" "--regid=$(id -g)" --init-groups )
+			fi
+			;;
+		perf)
+			command -v perf >/dev/null || die "no perf on PATH"
+			# Reported rather than raised, since raising it needs root and this
+			# is the one check whose answer the user may already have arranged.
+			paranoid="$(cat /proc/sys/kernel/perf_event_paranoid 2>/dev/null || echo unknown)"
+			case "$paranoid" in
+				-1|0|1) ;;
+				*) printf '%s: warning: kernel.perf_event_paranoid is %s, which refuses perf a sampling event.\n' \
+						"$SELF" "$paranoid" >&2
+				   printf '%s:          sudo sysctl kernel.perf_event_paranoid=1\n' "$SELF" >&2 ;;
+			esac
+			# dwarf unwinding, not frame pointers: Release maps to RelWithDebInfo
+			# and carries -g, but not -fno-omit-frame-pointer, so a frame pointer
+			# walk gives stacks that stop inside the engine's shared libraries.
+			# 199 Hz because dwarf copies a stack snapshot per sample and a higher
+			# rate on a process this size fills the buffer faster than it drains.
+			PROFILER_CMD=( perf record -g --call-graph=dwarf -F 199 -o "$PROFILE_OUT" -- )
+			;;
+	esac
+
+	# sudo resets the environment, and the game needs a display to open a window
+	# on. These are not in ENV_ARGS because an ordinary run inherits them.
+	for passthrough in DISPLAY XAUTHORITY WAYLAND_DISPLAY XDG_RUNTIME_DIR HOME; do
+		[ -n "${!passthrough:-}" ] && ENV_ARGS+=( "$passthrough=${!passthrough}" )
+	done
+
+	printf '%s: %s profile goes to %s\n' "$SELF" "$PROFILER" "$PROFILE_OUT" >&2
+fi
+
 if [ "$SHOW_ENV" = yes ]; then
 	printf '%s\n' "${ENV_ARGS[@]}"
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
 	[ ${#VALGRIND_CMD[@]} -gt 0 ] && printf 'valgrind=%s\n' "${VALGRIND_CMD[*]}"
+	[ ${#PROFILER_CMD[@]} -gt 0 ] && printf 'profiler=%s %s\n' "${PROFILER_CMD[*]}" "${PRIV_CMD[*]}"
 	[ -n "$MISSION" ] && printf 'args=--mission=%s\n' "$MISSION"
 	[ -n "$CAMPAIGN" ] && printf 'args=--campaign=%s\n' "$CAMPAIGN"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
@@ -564,7 +703,11 @@ if [ "$SHOW_ENV" = yes ]; then
 	exit 0
 fi
 
-declare -a CMD=(env "${ENV_ARGS[@]}")
+# The profiler goes outside everything, including the env that sets the run up,
+# because it is the process that launches all of it and the one that has to
+# survive the game exiting in order to write its output. PRIV_CMD sits between
+# the two: it drops root before env, and execs, so the pid does not change.
+declare -a CMD=("${PROFILER_CMD[@]}" "${PRIV_CMD[@]}" env "${ENV_ARGS[@]}")
 [ "$USE_GDB" = yes ] && CMD+=(gdb --args)
 [ ${#VALGRIND_CMD[@]} -gt 0 ] && CMD+=("${VALGRIND_CMD[@]}")
 CMD+=("./$EXE")
@@ -581,4 +724,22 @@ CMD+=("$@")
 # exec from the run directory: everything the game opens is resolved relative to
 # it, which is the point of the cd, and exec makes the exit status the game's.
 printf '+ cd %s && %s\n' "$RUNDIR" "${CMD[*]}" >&2
-cd "$RUNDIR" && exec "${CMD[@]}"
+cd "$RUNDIR" || die "cannot enter $RUNDIR"
+
+# A profiling run cannot exec, because there is work left after the profiler
+# returns: it wrote its output as root, and a file the user cannot open is not a
+# profile they can read.
+if [ -n "$PROFILER" ]; then
+	"${CMD[@]}"
+	status=$?
+	if [ -e "$PROFILE_OUT" ]; then
+		[ -w "$PROFILE_OUT" ] || ${BK2_PROFILE_SUDO-sudo} chown "$(id -u):$(id -g)" "$PROFILE_OUT"
+		printf '%s: profile written to %s (%s)\n' \
+			"$SELF" "$PROFILE_OUT" "$(du -h "$PROFILE_OUT" | cut -f1)" >&2
+	else
+		printf '%s: warning: %s produced no %s\n' "$SELF" "$PROFILER" "$PROFILE_OUT" >&2
+	fi
+	exit "$status"
+fi
+
+exec "${CMD[@]}"
