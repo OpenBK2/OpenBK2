@@ -3,6 +3,8 @@
 
 #include "InterfaceScreenBase.h"
 
+#include <chrono>
+
 extern CObj<IWindow> g_pLoadingSingleScreen;
 
 class CProgressHookHelper : public IProgressHookB2
@@ -58,6 +60,8 @@ private:
 	int nTotalFrames;
 	int nCurrFrame;
 	float fCurrProgress;
+	// when the loading screen was last presented, so progress updates can be throttled
+	std::chrono::steady_clock::time_point timeLastDraw;
 
 protected:
 	~CInterfaceLoadingBase() override;

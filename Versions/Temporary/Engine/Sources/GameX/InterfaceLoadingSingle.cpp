@@ -19,6 +19,12 @@
 #include <thread>
 
 const float MIN_PROGRESS_DELTA = 0.001f;
+// Every redraw is a Present that blocks in the driver, and progress steps come in
+// bursts: redrawing on each 0.1% of progress cost Mission Impossible 216 presents and
+// about 0.5 s of a 4.8 s load, nearly all of it in InitAfterMapLoad. The progress bar
+// still takes every update; the screen is presented at most this often (about 30 Hz,
+// 52 presents on that map), and always once progress reaches the end.
+const std::chrono::milliseconds MIN_REDRAW_INTERVAL( 33 );
 
 static int s_nTransitionEffectToMissionDuration = 400;
 static float s_fTransitionEffectToMissionLength = 0.0f; //0.1f;
@@ -294,7 +300,7 @@ void CInterfaceLoadingBase::UpdateInterior()
 		}
 	}
 
-	if ( bUpdated )
+	if ( bUpdated && ( fProgress >= 1.0f || std::chrono::steady_clock::now() - timeLastDraw >= MIN_REDRAW_INTERVAL ) )
 	{
 		Draw();
 	}
@@ -303,6 +309,7 @@ void CInterfaceLoadingBase::UpdateInterior()
 void CInterfaceLoadingBase::Draw()
 {
 	pLoadingScene->Draw();
+	timeLastDraw = std::chrono::steady_clock::now();
 }
 
 void CInterfaceLoadingBase::SetNumSteps( const int nNumSteps )
