@@ -6,6 +6,8 @@
 
 #include <cstdint>
 
+#include <boost/container/flat_map.hpp>
+
 #define DEF_TILE_MIN_ALPHA 0
 
 inline CVec3 GetPreLightColor( const NDb::STerrain *pDesc, const CVec3 &vNorm, const CVec3 &vPreLightDir )
@@ -290,10 +292,15 @@ void CTerraGen::AddTileTriangle( std::vector<NMeshData::SMeshData> *pMeshData,
 	}
 }
 
-typedef std::unordered_map<int, CVec3> CPatchNormsHash;
-typedef std::unordered_map<int, int> CPatchNormsCntHash;
-typedef std::unordered_map<int, NGScene::SVertex> CPatchVertsHash;
-typedef std::unordered_map<int, CVec3> CPatchPreLightHash;
+// Per sub-patch lookups keyed by vertex position (GetVertexHashKey) or by index. Each
+// holds a few hundred entries and is cleared for every sub-patch, so sorted vectors that
+// keep their storage beat hash maps that allocate a node for every insert. Nothing reads
+// them in iteration order in a way that matters: every entry is handled on its own.
+typedef boost::container::flat_map<int, CVec3> CPatchNormsHash;
+typedef boost::container::flat_map<int, int> CPatchNormsCntHash;
+typedef boost::container::flat_map<int, NGScene::SVertex> CPatchVertsHash;
+typedef boost::container::flat_map<int, CVec3> CPatchPreLightHash;
+typedef boost::container::flat_map<int, int> CPatchLayerVertsHash;
 
 inline int GetVertexHashKey( const CVec3 &v )
 {
@@ -339,7 +346,7 @@ inline int AddGfxVertex( CPatchVertsHash *pVertsHash,
 	return nVertKey;
 }
 
-inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash,
+inline int AddLayerVertex( CPatchLayerVertsHash *pVertsHash,
                            std::vector<NGScene::SVertex> *pDataVerts,
                            std::vector<uint32_t> *pAttr,
                            const int nInd,
@@ -347,7 +354,7 @@ inline int AddLayerVertex( std::unordered_map<int, int> *pVertsHash,
                            const float fTexScaleCoeff,
                            CPatchPreLightHash &preLightHash /* - really const!*/ )
 {
-	std::unordered_map<int, int>::const_iterator itFind = pVertsHash->find( nInd );
+	CPatchLayerVertsHash::const_iterator itFind = pVertsHash->find( nInd );
 	if ( itFind == pVertsHash->end() )
 	{
 		const int nLayerKey = pDataVerts->size();
@@ -717,8 +724,8 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 		const int nX2 = (std::min)( nTileX2 + 1, terrainInfo.tiles.GetSizeX() );
 		const int nY2 = (std::min)( nTileY2 + 1, terrainInfo.tiles.GetSizeY() );
 
-		static CPatchNormsHash patchNorms( 1024 );
-		static CPatchNormsCntHash patchNormsCnt( 1024 );
+		static CPatchNormsHash patchNorms;
+		static CPatchNormsCntHash patchNormsCnt;
 		patchNorms.clear();
 		patchNormsCnt.clear();
 
@@ -760,14 +767,21 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 			}
 		}
 
-		CPatchPreLightHash preLightHash( patchNorms.size() );
+		static CPatchPreLightHash preLightHash;
+		preLightHash.clear();
+		preLightHash.reserve( patchNorms.size() );
 		for ( CPatchNormsHash::const_iterator it = patchNorms.begin(); it != patchNorms.end(); ++it )
 		{
 			preLightHash[it->first] = GetPreLightColor( pDesc, it->second, vPreLightDir );
 		}
 
-		std::vector<std::unordered_map<int, int>> patchesVertsHash( tileTerraMasks.size() );
-		static std::unordered_map<int, NGScene::SVertex> vertsHash( 1024 );
+		static std::vector<CPatchLayerVertsHash> patchesVertsHash;
+		patchesVertsHash.resize( tileTerraMasks.size() );
+		for ( CPatchLayerVertsHash &layerVertsHash : patchesVertsHash )
+		{
+			layerVertsHash.clear();
+		}
+		static CPatchVertsHash vertsHash;
 
 		//vector<NMeshData::SMeshData> *pData = &(terrainGfxInfo.terraPatches[nPatchY][nPatchX]);
 
@@ -845,7 +859,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 						const uint8_t cA3 = (std::min)( Float2Int( ( (float)nAlpha1 + (float)nSub1 * dx3 ) * ( 1.0f - dy3 ) +
 						                                           ( (float)nAlpha3 + (float)nSub2 * dx3 ) * dy3 ),
 						                                255 );
-						std::unordered_map<int, int> &curPatchVertsHash = patchesVertsHash[nLayer];
+						CPatchLayerVertsHash &curPatchVertsHash = patchesVertsHash[nLayer];
 						const int &nRealNum = tilesOrder[nLayer].nPrevNum;
 						//NMeshData::SMeshData &curData = data[nRealNum];
 						NMeshData::SMeshData &curData = terrainGfxInfo.terraPatches[nPatchInd + p][nRealNum];

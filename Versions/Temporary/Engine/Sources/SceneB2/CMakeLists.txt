@@ -86,7 +86,7 @@ set(SOURCES
     WingScaleMutator.cpp
 )
 bk2_add_library(SceneB2 SHARED ${SOURCES})
-target_link_libraries(SceneB2 PRIVATE 3DLib 3Dmotor B2_M1_Terrain DebugTools Image Input libdb MemoryLib Misc Sound Stats_B2_M1 System UI zlib granny fmt::fmt-header-only)
+target_link_libraries(SceneB2 PRIVATE 3DLib 3Dmotor B2_M1_Terrain DebugTools Image Input libdb MemoryLib Misc Sound Stats_B2_M1 System UI zlib granny fmt::fmt-header-only Boost::container)
 if(NOT WIN32)
     # CursorInternal confines and warps the pointer through SDL
     target_link_libraries(SceneB2 PRIVATE SDL3::SDL3-shared)

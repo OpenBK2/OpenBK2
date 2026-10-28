@@ -23,6 +23,7 @@ set(BOOST_IOSTREAMS_ENABLE_ZSTD OFF)
 # A plain variable rather than a cache entry: BoostRoot only declares its own
 # cache entry when Boost is the top-level project, and reads this otherwise.
 set(BOOST_INCLUDE_LIBRARIES
+        container       # SceneB2 (flat_map)
         filesystem      # System
         interprocess    # System
         math            # Misc
