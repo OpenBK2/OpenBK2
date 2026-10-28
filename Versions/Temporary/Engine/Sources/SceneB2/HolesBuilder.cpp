@@ -10,11 +10,13 @@ static bool s_bMakeHolesForEntrenchment = true;
 void CTerraGen::MakeHoleOnTile( const std::vector<CVec3dEx> &samples,
                                 const int nTileX,
                                 const int nTileY,
-                                const bool bLeftHeighten )
+                                const bool bLeftHeighten,
+                                SHoleBuffers *pBuffers )
 {
-	std::vector<CVec3dEx> newVerts( 512 );
-	std::vector<CVec3dEx> tileVertices( 512 );
-	std::vector<STriangle> tileTriangles( 512 );
+	// emptied here and as each triangle starts, so nothing carries over from another tile
+	std::vector<CVec3dEx> &newVerts = pBuffers->newVerts;
+	std::vector<CVec3dEx> &tileVertices = pBuffers->tileVertices;
+	std::vector<STriangle> &tileTriangles = pBuffers->tileTriangles;
 
 	tileVertices.resize( 0 );
 	tileTriangles.resize( 0 );
@@ -150,6 +152,7 @@ void CTerraGen::MakeHole( const std::vector<CVec3fEx> &samples,
 
 	const int nSamplesNum = samples.size() >> 1;
 	std::vector<CVec3dEx> newSamples( 4 );
+	SHoleBuffers buffers;
 	for ( int k = 0; k < ( nSamplesNum - 1 ); ++k )
 	{
 		newSamples[0] = samples[k];
@@ -186,7 +189,7 @@ void CTerraGen::MakeHole( const std::vector<CVec3fEx> &samples,
 		{
 			for ( int i = nx1; i <= nx2; ++i )
 			{
-				MakeHoleOnTile( newSamples, i, g, bLeftHeighten );
+				MakeHoleOnTile( newSamples, i, g, bLeftHeighten, &buffers );
 			}
 		}
 	}

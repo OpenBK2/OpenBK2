@@ -204,8 +204,23 @@ class CTerraGen : public CObjectBase
 	               const int nTileX2,
 	               const int nTileY2,
 	               const bool bLeftHeighten = true );
-	void
-	MakeHoleOnTile( const std::vector<CVec3dEx> &samples, const int nTileX, const int nTileY, const bool bLeftHeighten );
+
+	// Scratch space for MakeHoleOnTile, owned by MakeHole and reused from one tile to the
+	// next. A map load makes some 200 thousand calls, each needing a handful of elements
+	// (at most 8, 25 and 30 on Mission Impossible), and building fresh 512 element vectors
+	// for every call was most of their time.
+	struct SHoleBuffers
+	{
+		std::vector<CVec3dEx> newVerts;
+		std::vector<CVec3dEx> tileVertices;
+		std::vector<STriangle> tileTriangles;
+	};
+
+	void MakeHoleOnTile( const std::vector<CVec3dEx> &samples,
+	                     const int nTileX,
+	                     const int nTileY,
+	                     const bool bLeftHeighten,
+	                     SHoleBuffers *pBuffers );
 	//
 	void UpdateRiverHeights( STerrainInfo::SRiver *pRiver, SRiverGFXInfo *pGfxInfo, const NDb::SVSOInstance *pInstance );
 	//
