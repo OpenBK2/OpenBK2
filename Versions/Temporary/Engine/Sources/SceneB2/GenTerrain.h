@@ -4,6 +4,7 @@
 #include "ExplosionsManager.h"
 #include "Misc/HPTimer.h"
 #include "NoiseManager.h"
+#include "RiverHeight.h"
 #include "Stats_B2_M1/Vis2AI.h"
 #include "SurfController.h"
 #include "TerraGen.h"
@@ -15,7 +16,6 @@
 #include <cstdint>
 
 #define DEF_CRAG_HOLE_WIDTH 0.05f
-#define DEF_RIVER_DEPTH 4.0f
 
 #define DEF_TERRA_HEIGHT 4.0f
 #define DEF_TERRA_HEIGHT_AI Vis2AI( DEF_TERRA_HEIGHT )

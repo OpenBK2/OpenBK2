@@ -3,6 +3,7 @@
 #include "B2_M1_Terrain/TerrUtils.h"
 #include "Misc/2Darray.h"
 #include "Misc/BitData.h"
+#include "Stats_B2_M1/Vis2AI.h" // VIS_TILE_SIZE, which DEF_TILE_SIZE is defined as
 
 #include <cstdint>
 

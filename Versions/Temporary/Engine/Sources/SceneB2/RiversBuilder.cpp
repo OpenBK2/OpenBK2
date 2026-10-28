@@ -27,10 +27,6 @@
 #define DEF_WATER_TEX_WORLD_SCALING 0.2f
 //#define DEF_WATER_LAYER_HEIGHT 2.0f
 //
-#define DEF_RIVER_RIDGE_WIDTH ( DEF_TILE_SIZE * 4 )
-#define DEF_RIVER_RIDGE_NULL ( DEF_TILE_SIZE * FP_SQRT_2 / DEF_RIVER_RIDGE_WIDTH )
-#define DEF_RIVER_RIDGE_COEFF ( 1.0f / ( 1.0f - DEF_RIVER_RIDGE_NULL ) )
-//
 #define DEF_DEPTH_INTERPOLATE_LEN 5
 #define DEF_DEPTH_INTERPOLATE_COEFF ( 1.0f / ( DEF_DEPTH_INTERPOLATE_LEN - 1 ) )
 //
@@ -961,84 +957,9 @@ STerrainInfo::SRiver *CTerraGen::FindRiverInfo( int nID )
 	return 0;
 }
 
-struct SRiverProfile
-{
-	float operator()( const float x ) const
-	{
-		// TODO: old riverprofile
-		if ( x <= DEF_RIVER_RIDGE_NULL )
-		{
-			return 1.0f;
-		}
-		const float tx = ( x - DEF_RIVER_RIDGE_NULL ) * DEF_RIVER_RIDGE_COEFF;
-		return 1.0f - tx * tx;
-		//return 1.0f - x * x;
-
-		// TODO: new riverprofile
-		//if ( x <= DEF_RIVER_RIDGE_NULL )
-		//	return 1.0f;
-		//const float tx = ( x - DEF_RIVER_RIDGE_NULL ) / ( 1.0f - DEF_RIVER_RIDGE_NULL );
-		//return ( 1 + cos(FP_PI * tx) ) / 2.0f;
-	}
-};
-
-struct SRiverBottomProfile
-{
-	float operator()( const float x ) const
-	{
-		return 1.0f;
-	}
-};
-
 float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
 {
-	if ( terrainInfo.rivers.empty() )
-	{
-		return 0.0f;
-	}
-
-	bool bFlag = false;
-	float fHeight = -FP_MAX_VALUE;
-	float fH;
-	SRiverProfile ridgeProfile;
-	SRiverBottomProfile bottomProfile;
-	for ( std::list<STerrainInfo::SRiver>::const_iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end();
-	      ++it )
-	{
-		if ( IsInsideBB( v, it->vBBMin, it->vBBMax ) )
-		{
-			if ( GetIncRidgeHeight( v, it->ridgeL, &fH, ridgeProfile ) )
-			{
-				fHeight = (std::max)( fHeight, fH );
-				bFlag = true;
-			}
-			if ( GetIncRidgeHeight( v, it->ridgeR, &fH, ridgeProfile ) )
-			{
-				fHeight = (std::max)( fHeight, fH );
-				bFlag = true;
-			}
-		}
-	}
-
-	if ( !bFlag )
-	{
-		for ( std::list<STerrainInfo::SRiver>::const_iterator it = terrainInfo.rivers.begin();
-		      it != terrainInfo.rivers.end();
-		      ++it )
-		{
-			if ( IsInsideBB( v, it->vBBMin, it->vBBMax ) )
-			{
-				if ( GetIncRidgeHeight( v, it->samples, &fH, bottomProfile ) )
-				{
-					fHeight = DEF_RIVER_DEPTH; //fH;
-					bFlag = true;
-					break;
-				}
-			}
-		}
-	}
-
-	return bFlag ? -fHeight : 0.0f;
+	return ::GetMaxRiverHeight( v, terrainInfo.rivers );
 }
 
 #define DEF_MAX_UPDATES_COUNT 5

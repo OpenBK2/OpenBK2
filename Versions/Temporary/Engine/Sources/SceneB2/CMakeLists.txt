@@ -91,3 +91,4 @@ if(NOT WIN32)
     # CursorInternal confines and warps the pointer through SDL
     target_link_libraries(SceneB2 PRIVATE SDL3::SDL3-shared)
 endif()
+add_subdirectory(test)
