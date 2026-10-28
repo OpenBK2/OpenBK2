@@ -26,10 +26,11 @@ namespace
 using SRiver = STerrainInfo::SRiver;
 using TRivers = std::list<SRiver>;
 
-// The code under test. A faster implementation keeps the same interface here.
-float ProductionHeight( const CVec2 &v, const TRivers &rivers )
+// The code under test: the boxes are built once per case, as UpdateHeightsAfterRivers
+// builds them once per area.
+float ProductionHeight( const CRiverHeights &riverHeights, const CVec2 &v )
 {
-	return GetMaxRiverHeight( v, rivers );
+	return riverHeights.Get( v );
 }
 
 // The original algorithm, copied from CTerraGen::GetMaxRiverHeight, TerraHeight.h and
@@ -649,6 +650,53 @@ std::vector<SScenario> MakeScenarios()
 				Strip( { CVec3( 0, 0, -0.75f ), CVec3( 6, 0, -0.75f ) }, { CVec3( 0, 6, -0.75f ), CVec3( 6, 6, -0.75f ) } );
 		add( "negative corner heights", { RawRiver( sunken, sunken, sunken ) } );
 	}
+	{
+		// Thin quads far from the origin, where a float step is about 0.004: their area
+		// is above DEF_EPS but made of few bits, so the barycentric arithmetic rounds
+		// badly, and the points along the lines of their long edges, well beyond the
+		// quad, are where that rounding can let a point pass that is nowhere near it.
+		TRivers rivers;
+		std::vector<CVec2> points;
+		const float fX = 44000.0f, fY = 43000.0f;
+		const float fStep = std::nextafter( fY, FP_MAX_VALUE ) - fY;
+		for ( int nRise = 1; nRise <= 4; ++nRise )
+		{
+			const float fY0 = fY + 200.0f * nRise;
+			const std::vector<CVec3fEx> thin = Strip(
+					{ CVec3( fX, fY0, 1 ), CVec3( fX + 10.0f, fY0 + fStep * nRise, 1 ) },
+					{ CVec3( fX + 0.5f, fY0 + fStep * ( nRise + 1 ), 0 ), CVec3( fX + 10.5f, fY0 + fStep * 2 * nRise, 0 ) } );
+			rivers.push_back( RawRiver( thin, thin, thin ) );
+			for ( int i = 0; i < 4; ++i )
+			{
+				const CVec2 vA( thin[i].x, thin[i].y );
+				for ( int j = 0; j < 4; ++j )
+				{
+					if ( i == j )
+					{
+						continue;
+					}
+					const CVec2 vDir = CVec2( thin[j].x, thin[j].y ) - vA;
+					for ( const float fFar : { -40.0f, -8.0f, -2.0f, -1.1f, 1.1f, 2.0f, 8.0f, 40.0f } )
+					{
+						const CVec2 vOnLine = vA + vDir * fFar;
+						for ( int nAcross = -6; nAcross <= 6; ++nAcross )
+						{
+							points.push_back( CVec2( vOnLine.x, vOnLine.y + fStep * nAcross ) );
+						}
+					}
+				}
+			}
+		}
+		add( "thin quads far from the origin", std::move( rivers ) );
+		// The box of each river spans its whole quad, so these points are inside it and
+		// reach the quad's triangles.
+		for ( TRivers::iterator it = scenarios.back().rivers.begin(); it != scenarios.back().rivers.end(); ++it )
+		{
+			it->vBBMin.Set( -FP_MAX_VALUE, -FP_MAX_VALUE );
+			it->vBBMax.Set( FP_MAX_VALUE, FP_MAX_VALUE );
+		}
+		scenarios.back().points.insert( scenarios.back().points.end(), points.begin(), points.end() );
+	}
 	for ( int n = 0; n < 40; ++n )
 	{
 		std::uniform_real_distribution<float> position( 0.0f, 3000.0f );
@@ -690,10 +738,11 @@ TEST( RiverHeight, MatchesTheOriginalBitForBit )
 	for ( const SScenario &scenario : Scenarios() )
 	{
 		int nMismatches = 0;
+		const CRiverHeights riverHeights( scenario.rivers );
 		for ( const CVec2 &v : scenario.points )
 		{
 			const float fExpected = NReference::GetMaxRiverHeight( v, scenario.rivers );
-			const float fActual = ProductionHeight( v, scenario.rivers );
+			const float fActual = ProductionHeight( riverHeights, v );
 			++nPoints;
 			if ( Bits( fExpected ) != Bits( fActual ) && ++nMismatches <= 5 )
 			{

@@ -183,7 +183,6 @@ class CTerraGen : public CObjectBase
 	float GetMaxCragHeight2( const CVec2 &v, const int nExcludeID1, const int nExcludeID2 ) const;
 	bool GetMaxCragHeightEx( const CVec2 &v, float *pHeight ) const;
 	//
-	float GetMaxRiverHeight( const CVec2 &v ) const;
 	//
 	float GetTrackMidHeight(
 			const float x, const float y, const float fMidX, const float fMidY, const int nTileX, const int nTileY );

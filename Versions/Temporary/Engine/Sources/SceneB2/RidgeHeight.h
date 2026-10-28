@@ -46,17 +46,26 @@ inline float GetHeightInv(
 	}
 }
 
-template <class THeightCalc>
-inline bool GetIncRidgeHeight( const CVec2 &v,
-                               const std::vector<CVec3fEx> &ridge,
-                               float *pIncHeight,
-                               const THeightCalc &heightCalc )
+// GetIncRidgeHeight that skips the quads mayContain( k ) rules out. A skipped quad has
+// to be one neither of whose triangles could contain v, since a triangle that does not
+// contain it adds nothing: then the result is the same, to the bit, as without the
+// filter, because the triangles that remain are added in the same order.
+template <class THeightCalc, class TQuadFilter>
+inline bool GetIncRidgeHeightFiltered( const CVec2 &v,
+                                       const std::vector<CVec3fEx> &ridge,
+                                       float *pIncHeight,
+                                       const THeightCalc &heightCalc,
+                                       const TQuadFilter &mayContain )
 {
 	*pIncHeight = 0.0f;
 	int nCount = 0;
 	const int nHalfSize = ( ridge.size() >> 1 ) - 1;
 	for ( int k = 0; k < nHalfSize; ++k )
 	{
+		if ( !mayContain( k ) )
+		{
+			continue;
+		}
 		const float fH1 = GetHeight( v, ridge[k + 1], ridge[ridge.size() - k - 2], ridge[k], heightCalc );
 		if ( fH1 >= 0.0f )
 		{
@@ -76,6 +85,15 @@ inline bool GetIncRidgeHeight( const CVec2 &v,
 		return true;
 	}
 	return false;
+}
+
+template <class THeightCalc>
+inline bool GetIncRidgeHeight( const CVec2 &v,
+                               const std::vector<CVec3fEx> &ridge,
+                               float *pIncHeight,
+                               const THeightCalc &heightCalc )
+{
+	return GetIncRidgeHeightFiltered( v, ridge, pIncHeight, heightCalc, []( const int ) { return true; } );
 }
 
 template <class THeightCalc>

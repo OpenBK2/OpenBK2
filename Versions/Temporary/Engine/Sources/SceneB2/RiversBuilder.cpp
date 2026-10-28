@@ -957,11 +957,6 @@ STerrainInfo::SRiver *CTerraGen::FindRiverInfo( int nID )
 	return 0;
 }
 
-float CTerraGen::GetMaxRiverHeight( const CVec2 &v ) const
-{
-	return ::GetMaxRiverHeight( v, terrainInfo.rivers );
-}
-
 #define DEF_MAX_UPDATES_COUNT 5
 
 void CTerraGen::UpdateRiversDepthes()
@@ -1779,11 +1774,13 @@ void CTerraGen::ClampUnderRivers( NMeshData::SMeshData *pData )
 
 void CTerraGen::UpdateHeightsAfterRivers( const int nTileX1, const int nTileY1, const int nTileX2, const int nTileY2 )
 {
+	// the quads' boxes are built once for the whole area, not once per vertex
+	const CRiverHeights riverHeights( terrainInfo.rivers );
 	for ( int g = nTileY1; g <= nTileY2; ++g )
 	{
 		for ( int i = nTileX1; i <= nTileX2; ++i )
 		{
-			terrainInfo.riverHeights[g][i] = GetMaxRiverHeight( CVec2( (float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE ) );
+			terrainInfo.riverHeights[g][i] = riverHeights.Get( CVec2( (float)i * DEF_TILE_SIZE, (float)g * DEF_TILE_SIZE ) );
 		}
 	}
 }
