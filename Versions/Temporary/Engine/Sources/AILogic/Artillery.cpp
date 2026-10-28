@@ -308,6 +308,13 @@ void CArtillery::SetCrew( class CFormation *_pCrew, const bool bCapture )
 
 	pCrew = _pCrew;
 	ChangePlayer( pCrew->GetPlayer() ); // принять сторону команды
+	// Serving soldiers inherit the gun's visibility instead of recalculating their own.
+	// A newly attached crew needs an update even when the already-visible gun does not change visibility.
+	CalcVisibility( true );
+	for ( uint8_t party = 0; party < 3; ++party )
+	{
+		UpdateCrewAndTruckVisibility( party, IsVisible( party ) );
+	}
 	if ( bCapture )
 	{
 		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_GUNSERVE, GetUniqueId() ), pCrew, false );

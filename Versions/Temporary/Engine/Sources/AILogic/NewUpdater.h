@@ -5,6 +5,8 @@
 #include "System/Time.h"
 #include "UpdatableObject.h"
 
+#include "AILogic_export.h"
+
 class CEventUpdater
 {
 public:
@@ -423,5 +425,7 @@ public:
 
 	void DumpSizes();
 
-	int operator&( IBinSaver &saver );
+	AILOGIC_EXPORT int operator&( IBinSaver &saver );
 };
+
+extern AILOGIC_EXPORT CEventUpdater updater;

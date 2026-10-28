@@ -158,3 +158,16 @@ context. Read `git diff` of every touched file before building.
 - Do not treat that old recording as a validation oracle for a newer branch's
   changed simulation. Prove the cause using the original build, then validate
   the source fix with focused timer/dispatch tests against the current branch.
+
+## Artillery crew visibility
+
+- Serving soldiers retain their cached visibility and rely on artillery to update
+  it. Attaching a previously hidden crew to an already-visible gun needs an explicit
+  visibility sync for every party, plus the normal client notification, even if the
+  gun's visibility did not change. Recalculate after ownership changes so the new
+  owner sees its crew immediately.
+- The infantry factory creates `CInfantry`, a subclass of `CSoldier`. Serialized
+  fixtures need both base-class chunks before the `CAIUnit` visibility fields.
+- A Windows DLL-only relink can leave the test directory's copied DLL stale when
+  the import library does not change. Check the copy's hash or timestamp and refresh
+  it before judging a regression test against the new implementation.
