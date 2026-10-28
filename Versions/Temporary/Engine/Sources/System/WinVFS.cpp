@@ -248,6 +248,43 @@ CWinVFS::~CWinVFS()
 	}
 }
 
+// Whether szPath can have a loose copy under szBasePath at all: false when one of the
+// directories it is in is missing there.
+//
+// Every file is looked for on disk the first time it is opened, in case a loose copy
+// overrides the packed one, and almost none has one: on Mission Impossible startup and
+// load opened 49,866 files and found 29 loose, at about 20 us for each failed lookup,
+// a second in all. The directories are asked about instead, from the shallowest down,
+// once each, and one missing directory rules out everything below it: the same run asks
+// 65 times. Whole components are compared, so a missing Units says nothing of UnitsX.
+// The callers hold g_WinVFSCriticalSection.
+bool CWinVFS::CanBeOnDisk( const NFile::CFilePath &szPath )
+{
+	for ( size_t nEnd = 0; nEnd < szPath.size(); ++nEnd )
+	{
+		if ( !NFile::IsFolderSeparator( szPath[nEnd] ) )
+		{
+			continue;
+		}
+		const NFile::CFilePath szDir( szPath.substr( 0, nEnd ) );
+		std::unordered_map<NFile::CFilePath, bool>::iterator pos = looseDirectories.find( szDir );
+		if ( pos == looseDirectories.end() )
+		{
+			// The second try is the case-insensitive search off Windows, as for files below.
+			std::string szRealDir;
+			const bool bExists = NFile::DoesFolderExist( szBasePath + szDir ) ||
+			                     ( NFile::ResolveDataPathCase( &szRealDir, szBasePath, szDir ) &&
+			                       NFile::DoesFolderExist( szBasePath + szRealDir ) );
+			pos = looseDirectories.emplace( szDir, bExists ).first;
+		}
+		if ( !pos->second )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 {
 	std::lock_guard csLock( g_WinVFSCriticalSection );
@@ -259,7 +296,7 @@ CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 		if ( !pos->second->IsChecked() )
 		{
 			SFileStats fileStats;
-			if ( GetWinFileStats( &fileStats, szBasePath + szPath ) != false &&
+			if ( CanBeOnDisk( szPath ) && GetWinFileStats( &fileStats, szBasePath + szPath ) != false &&
 			     pos->second->GetCheckTime() < fileStats.mtime )
 			{
 				delete pos->second;
@@ -271,6 +308,10 @@ CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 	}
 	else
 	{
+		if ( !CanBeOnDisk( szPath ) )
+		{
+			return 0;
+		}
 		// check for unregistered win-file
 		SFileStats fileStats;
 		if ( GetWinFileStats( &fileStats, szBasePath + szPath ) != false )

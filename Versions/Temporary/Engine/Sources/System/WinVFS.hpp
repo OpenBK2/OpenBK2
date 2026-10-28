@@ -160,7 +160,12 @@ class CWinVFS : public IVFS
 	NFile::CFilePath szBasePath;
 	bool bAllWinFilesChecked;
 	bool bArchiveOnly;
+	// Whether each directory under szBasePath that a lookup has needed exists on disk,
+	// keyed like streamEntriesMap, so case and separators fold. Asked once per directory
+	// for the life of the VFS: there is no hot reload.
+	std::unordered_map<NFile::CFilePath, bool> looseDirectories;
 	//
+	bool CanBeOnDisk( const NFile::CFilePath &szPath );
 	CDataStream *OpenFileDirect( const std::string &szPath );
 	// only for relative path!
 	CFileEntry *UpdateFileEntry( const NFile::CFilePath &szPath );
