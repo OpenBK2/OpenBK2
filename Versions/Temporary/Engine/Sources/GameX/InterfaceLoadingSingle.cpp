@@ -520,11 +520,19 @@ void CInterfaceLoadingSingle2D::ShowOnEnterMoveEffect()
 	}
 	GetScreen()->RunStateCommandSequience( "effect_info_panel_on_exit", GetScreen(), pContext, true );
 
+	// Each pass moves the effect on by 10 ms, so each pass should take 10 ms of real time.
+	// Drawing used to come on top of a 10 ms sleep, which stretched the effect's 410 ms to
+	// about 0.5 s. Sleeping until the next 10 ms mark, counted from the start, keeps it at
+	// its length: neither the drawing nor a sleep that overshoots adds up over the passes,
+	// and a pass that falls behind is caught up by the next ones not sleeping.
+	const std::chrono::milliseconds step( 10 );
+	std::chrono::steady_clock::time_point next = std::chrono::steady_clock::now();
 	while ( !IsEffectFinished() )
 	{
-		GetScreen()->Segment( 10 );
+		GetScreen()->Segment( int( step.count() ) );
 		Draw();
-		std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
+		next += step;
+		std::this_thread::sleep_until( next );
 	}
 
 	ShowFirstElement();
