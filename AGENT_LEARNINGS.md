@@ -171,3 +171,9 @@ context. Read `git diff` of every touched file before building.
 - A Windows DLL-only relink can leave the test directory's copied DLL stale when
   the import library does not change. Check the copy's hash or timestamp and refresh
   it before judging a regression test against the new implementation.
+
+## Multiplayer base warnings
+
+- Base-circle threats emit `EFB_KEYBUILDING_ATTACKED` in `CBuildingSimple::Segment`,
+  before friendly defenders can cancel capture progress. Recipient filtering belongs
+  only around the local feedback call; it must not gate enemy detection or capture state.

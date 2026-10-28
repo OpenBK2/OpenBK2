@@ -342,8 +342,11 @@ void CBuildingSimple::Segment()
 						}
 					}
 				}
+				// Notify the defending team in multiplayer, or just the owner in single-player.
+				// This filters local feedback only; capture state remains independent of the local player.
 				if ( nNewPlayer != nPlayer && theDipl.GetNParty( nNewPlayer ) != theDipl.GetNParty( nPlayer ) &&
-				     GetPlayer() == theDipl.GetMyNumber() )
+				     ( GetPlayer() == theDipl.GetMyNumber() ||
+				       ( theDipl.IsNetGame() && theDipl.GetNParty( GetPlayer() ) == theDipl.GetMyParty() ) ) )
 				{
 					theFeedBackSystem.AddFeedbackAndForget(
 							nUniqueID, CVec2( GetCenter().x, GetCenter().y ), EFB_KEYBUILDING_ATTACKED, -1 );
