@@ -1820,7 +1820,8 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 			     theDipl.GetDiplStatus( GetPlayer(), pCachedEnemy->GetPlayer() ) == EDI_ENEMY )
 			{
 				AddUnitToShootEstimator( pCachedEnemy );
-				if ( !UsesAggressiveTargeting() || GetBestShootEstimatedUnit() )
+				if ( ( !UsesAggressiveTargeting() && !( BlocksLooseAirAttacks() && pCachedEnemy->GetStats()->IsAviation() ) ) ||
+				     GetBestShootEstimatedUnit() )
 				{
 					break;
 				}
@@ -1910,6 +1911,19 @@ bool CAIUnit::LookForTargetInRange( CAIUnit *pCurTarget,
 	// зенитная артиллерия
 	if ( bIteratePlanes && *pBestTarget == 0 && CanShootToPlanes() )
 	{
+		if ( BlocksLooseAirAttacks() )
+		{
+			// The legacy AA estimator can choose aircraft anywhere on the map, even without a usable shot.
+			// Use the mech estimator to consider every eligible gun and keep only stationary firing solutions.
+			for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
+			{
+				AddUnitToShootEstimator( *iter );
+			}
+			*pBestTarget = GetBestShootEstimatedUnit();
+			*pGun = GetBestShootEstimatedGun();
+			return *pBestTarget;
+		}
+
 		CShootEstimatorLighAA estimatorAA;
 		estimatorAA.Init( this );
 
@@ -2046,7 +2060,7 @@ const bool CAIUnit::AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget )
 {
 	if ( IsValidObj( pTarget ) && ( pCurTarget == 0 || pTarget != pCurTarget ) )
 	{
-		if ( UsesAggressiveTargeting() )
+		if ( UsesAggressiveTargeting() || ( BlocksLooseAirAttacks() && pTarget->GetStats()->IsAviation() ) )
 		{
 			CBasicGun *pGun = GetBestShootEstimatedGun();
 			// Revalidate cached choices before issuing an autonomous attack, including Hold Fire changes.
@@ -2210,6 +2224,13 @@ bool CAIUnit::UsesAggressiveTargeting() const
 	}
 	// Explicit move, attack, bombardment and ability orders retain their normal targeting rules.
 	return GetState()->IsRestState() || ( GetCurCmd() && GetCurCmd()->IsStationaryAutoAttack() );
+}
+
+bool CAIUnit::BlocksLooseAirAttacks() const
+{
+	const auto *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
+	return pMechStats && !pMechStats->IsAviation() && pMechStats->pExtendedStats &&
+	       pMechStats->pExtendedStats->bBlockLooseAirAttacks;
 }
 
 void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const

@@ -1,6 +1,8 @@
 #include "../stdafx.h"
 
 #include "../AIClassesID.h"
+#include "../Artillery.h"
+#include "../Aviation.h"
 #include "../B2AI.h"
 #include "../Commands.h"
 #include "../Diplomacy.h"
@@ -55,6 +57,7 @@ class AggressiveAttacker : public testing::Test
 	CPtr<CUnitGuns> emptyGuns;
 	CPtr<IUnitState> rest;
 	CDBPtr<NDb::SMechUnitRPGStats> stats;
+	CDBPtr<NDb::SMechUnitRPGStats> aircraftStats;
 
 protected:
 	NDb::SExtendedStats *extended = nullptr;
@@ -65,6 +68,17 @@ protected:
 	CPtr<SCommonGunInfo> ammo;
 	CPtr<IShootEstimator> estimator;
 	std::list<CPtr<CAIUnit>> cachedTargets;
+	NTimer::STime cacheDuration = 10000;
+
+	virtual int GetOwnerType() const
+	{
+		return AI_TANK;
+	}
+
+	virtual int GetGunCeiling() const
+	{
+		return 0;
+	}
 
 	static void SetUpTestSuite()
 	{
@@ -145,8 +159,10 @@ protected:
 	void
 	PlaceUnit( CAIUnit *unit, float distance = 0, bool visible = true, uint8_t player = 1, CAICommand *command = nullptr )
 	{
-		// Load the real tank without starting movement, graphics or mission scripts.
-		CVec3 position( 80, 80 + distance, 0 );
+		// Load real units without starting movement, graphics or mission scripts.
+		const bool aircraft = dynamic_cast<CAviation *>( unit ) != nullptr;
+		CDBPtr<NDb::SMechUnitRPGStats> unitStats = aircraft ? aircraftStats : stats;
+		CVec3 position( 80, 80 + distance, aircraft ? 40 : 0 );
 		SVector tile( int( position.x / SConsts::TILE_SIZE ), int( position.y / SConsts::TILE_SIZE ) );
 		SAIAngle direction( 0 );
 		bool idle = true;
@@ -154,7 +170,6 @@ protected:
 		CPtr<CAICommand> current = command;
 		CPtr<NDb::SUnitStatsModifier> modifierPointer = modifier.GetPtr();
 		std::vector<int> visibility{ visible ? 1 : 0, 1, 0 };
-		NTimer::STime cacheDuration = 10000;
 		CPtr<CUnitGuns> unitGuns = unit == owner ? guns : emptyGuns;
 		SFields path{ [&]( IBinSaver &saver )
 		              {
@@ -188,11 +203,57 @@ protected:
 		SFields mechanical{ [&]( IBinSaver &saver )
 		                    {
 													saver.Add( 1, &ai );
-													saver.Add( 2, &stats );
+													saver.Add( 2, &unitStats );
 													saver.Add( 3, &unitGuns );
 												} };
-		LoadFields( unit, [&]( IBinSaver &saver ) { saver.Add( 1, &mechanical ); } );
+		if ( dynamic_cast<CArtillery *>( unit ) )
+		{
+			bool installed = true;
+			float operable = 1;
+			EActionNotify installAction = ACTION_NOTIFY_NONE;
+			LoadFields( unit,
+			            [&]( IBinSaver &saver )
+			            {
+										saver.Add( 1, &ai );
+										saver.Add( 2, &unitStats );
+										saver.Add( 4, &unitGuns );
+										saver.Add( 6, &installAction );
+										saver.Add( 7, &installAction );
+										saver.Add( 8, &installAction );
+										saver.Add( 9, &installed );
+										saver.Add( 17, &operable );
+									} );
+		}
+		else
+		{
+			LoadFields( unit,
+			            [&]( IBinSaver &saver )
+			            {
+										saver.Add( 1, &mechanical );
+										if ( aircraft )
+										{
+											saver.Add( 2, &unitStats );
+											saver.Add( 7, &position );
+										}
+									} );
+		}
 		unit->SetBehaviourFire( SBehaviour::EFAtWill );
+	}
+
+	CAIUnit *MakeAircraft( float distance )
+	{
+		if ( !aircraftStats )
+		{
+			auto *planeStats = MakeRecord<NDb::SMechUnitRPGStats>( "MechUnitRPGStats" );
+			planeStats->etype = NDb::RPG_TYPE_AVIA_FIGHTER;
+			planeStats->fMaxHP = 100;
+			planeStats->fPrice = 100;
+			planeStats->vAABBHalfSize = CVec2( 4, 8 );
+			aircraftStats = planeStats;
+		}
+		CAIUnit *plane = MakeObject<CAIUnit>( AI_AVIATION );
+		PlaceUnit( plane, distance );
+		return plane;
 	}
 
 	void SetUp() override
@@ -206,7 +267,7 @@ protected:
 		theDipl.SetParty( 1, 1 );
 		modifier = new NDb::SUnitStatsModifier;
 		external.emplace_back( 1000, modifier );
-		owner = MakeObject<CAIUnit>( AI_TANK );
+		owner = MakeObject<CAIUnit>( GetOwnerType() );
 		enemy = MakeObject<CAIUnit>( AI_TANK );
 		rest = MakeObject<IUnitState>( 0x1508D494 );
 		guns = MakeObject<CUnitGuns>( 0x1108D4C7 );
@@ -239,6 +300,7 @@ protected:
 		weapon->fRangeMin = 10;
 		weapon->fRangeMax = 160;
 		weapon->nAmmoPerBurst = 1;
+		weapon->nCeiling = GetGunCeiling();
 		weapon->shells.resize( 1 );
 		weapon->shells[0].etrajectory = NDb::SWeaponRPGStats::SShell::TRAJECTORY_HOWITZER;
 		weapon->shells[0].fDamagePower = 30;
@@ -260,15 +322,18 @@ protected:
 		std::vector<CPtr<SCommonGunInfo>> commonGuns{ ammo };
 		std::vector<int> beginnings{ 0 };
 		int count = 1;
+		bool antiAircraft = weapon->nCeiling > 0;
 		SFields gunCollection{ [&]( IBinSaver &saver )
 		                       {
 														 saver.Add( 2, &weapon->fRangeMax );
+														 saver.Add( 3, &antiAircraft );
 														 saver.Add( 4, &commonGuns );
 														 saver.Add( 5, &gunArray );
 														 saver.Add( 6, &beginnings );
 														 saver.Add( 7, &count );
 													 } };
-		int artilleryGun = 0;
+		// This is a regular vehicle gun; artillery-only selection has separate range restrictions.
+		int artilleryGun = -1;
 		LoadFields( guns,
 		            [&]( IBinSaver &saver )
 		            {
@@ -299,19 +364,26 @@ protected:
 
 	void ExpectTarget( CAIUnit *target )
 	{
+		SCOPED_TRACE( testing::Message() << "distance=" << fabs( enemy->GetCenterPlain() - owner->GetCenterPlain() )
+		                                 << " height=" << enemy->GetZ() << " ceiling=" << weapon->nCeiling
+		                                 << " ammo=" << ammo->nAmmo << " player=" << int( enemy->GetPlayer() )
+		                                 << " visible=" << enemy->IsVisible( 0 ) );
 		estimator->Reset( nullptr, false, 0 );
 		estimator->AddUnit( enemy );
 		EXPECT_EQ( estimator->GetBestUnit(), target );
 		EXPECT_EQ( estimator->GetBestGun(), target ? gun.GetPtr() : nullptr );
 	}
 
-	IUnitState *StartAutomaticAttack()
+	IUnitState *StartAutomaticAttack( bool stationary = true )
 	{
 		CPtr<CAICommand> command = MakeObject<CAICommand>( 0x1108D44D );
 		command->ToUnitCmd().nCmdType = ACTION_COMMAND_ATTACK_UNIT;
 		command->ToUnitCmd().nObjectID = 123;
 		command->SetFromAI( true );
-		command->SetStationaryAutoAttack();
+		if ( stationary )
+		{
+			command->SetStationaryAutoAttack();
+		}
 		enemy->nUniqueID = 123;
 		enemy->Mem2UniqueIdObjs();
 		PlaceUnit( owner, 0, true, 0, command );
@@ -551,5 +623,179 @@ TEST_F( AggressiveAttacker, SavedAutomaticAttackFinishesWhenTargetBecomesHidden 
 	PlaceUnit( enemy, 100, false );
 	attack->Segment();
 	EXPECT_TRUE( owner->IsCurCmdFinished() );
+}
+
+// Reuse the real weapon/state fixture to compare automatic aircraft fire with explicit orders.
+class BlockLooseAirAttacks : public AggressiveAttacker
+{
+protected:
+	int GetGunCeiling() const override
+	{
+		return 80;
+	}
+
+	void SetUp() override
+	{
+		AggressiveAttacker::SetUp();
+		extended->bAggressiveAttacker = false;
+		extended->bBlockLooseAirAttacks = true;
+		weapon->nCeiling = 80;
+		enemy = MakeAircraft( 100 );
+	}
+
+	void ExpectRangeLossEndsAttack()
+	{
+		IUnitState *attack = StartAutomaticAttack();
+		ASSERT_NE( attack, nullptr );
+		attack->Segment();
+		ASSERT_FALSE( owner->IsCurCmdFinished() );
+		ExpectStationaryFiring( attack );
+		RoundTrip( owner->GetCurCmd() );
+		RoundTrip( attack );
+		ExpectStationaryFiring( attack );
+		const CVec2 originalPosition = owner->GetCenterPlain();
+		PlaceUnit( enemy, 200 );
+		attack->Segment();
+		EXPECT_TRUE( owner->IsCurCmdFinished() );
+		EXPECT_EQ( owner->GetCenterPlain(), originalPosition );
+	}
+};
+
+TEST_F( BlockLooseAirAttacks, DefaultsToFalseAndMissingExtendedStatsPreserveLegacyTargeting )
+{
+	CObj<NDb::SExtendedStats> defaults = new NDb::SExtendedStats;
+	EXPECT_FALSE( defaults->bBlockLooseAirAttacks );
+	PlaceUnit( enemy, 200 );
+	owner->SetCurState( MakeObject<IUnitState>( 0x1108D4DE ) );
+	ExpectTarget( nullptr );
+	extended->bBlockLooseAirAttacks = false;
+	EXPECT_FALSE( owner->BlocksLooseAirAttacks() );
+	ExpectTarget( enemy );
+	auto *stats =
+			const_cast<NDb::SMechUnitRPGStats *>( dynamic_cast<const NDb::SMechUnitRPGStats *>( owner->GetStats() ) );
+	stats->pExtendedStats = nullptr;
+	EXPECT_FALSE( owner->BlocksLooseAirAttacks() );
+	ExpectTarget( enemy );
+}
+
+TEST_F( BlockLooseAirAttacks, RequiresEnemyWithinRangeCeilingAndAmmo )
+{
+	ExpectTarget( enemy );
+	PlaceUnit( enemy, 200 );
+	ExpectTarget( nullptr );
+	PlaceUnit( enemy, 100, true, 0 );
+	ExpectTarget( nullptr );
+	PlaceUnit( enemy, 100 );
+	weapon->nCeiling = 20;
+	ExpectTarget( nullptr );
+	weapon->nCeiling = 80;
+	ammo->nAmmo = 0;
+	ExpectTarget( nullptr );
+}
+
+TEST_F( BlockLooseAirAttacks, GroundTargetsRetainLegacyRangeRules )
+{
+	enemy = MakeObject<CAIUnit>( AI_TANK );
+	PlaceUnit( enemy, 200 );
+	owner->SetCurState( MakeObject<IUnitState>( 0x1108D4DE ) );
+	ExpectTarget( enemy );
+}
+
+TEST_F( BlockLooseAirAttacks, UnreachableCachedAircraftDoesNotMaskInRangeTarget )
+{
+	CPtr<CAIUnit> unreachable = MakeAircraft( 200 );
+	cachedTargets = { unreachable, enemy };
+	PlaceUnit( owner, 0, true, 0 );
+	CAIUnit *target = nullptr;
+	CBasicGun *selectedGun = nullptr;
+	owner->LookForTarget( nullptr, false, &target, &selectedGun );
+	EXPECT_EQ( target, enemy.GetPtr() );
+	EXPECT_EQ( selectedGun, gun.GetPtr() );
+}
+
+TEST_F( BlockLooseAirAttacks, GlobalAircraftScanRejectsDistantPlanesAndQueuesInRangeFire )
+{
+	PrepareGuard();
+	cacheDuration = 0;
+	CPtr<CAIUnit> unreachable = MakeAircraft( 200 );
+	unreachable->nUniqueID = 124;
+	for ( CAIUnit *plane : { unreachable.GetPtr(), enemy.GetPtr() } )
+	{
+		units.AddUnitToUnits( plane, plane->GetPlayer(), plane->GetStats()->etype );
+		units.AddUnitToMap( plane );
+	}
+	PlaceUnit( owner, 0, true, 0, owner->GetCurCmd() );
+	CAIUnit *target = nullptr;
+	CBasicGun *selectedGun = nullptr;
+	owner->LookForTarget( nullptr, false, &target, &selectedGun );
+	ASSERT_EQ( target, enemy.GetPtr() );
+	EXPECT_EQ( selectedGun, gun.GetPtr() );
+	ASSERT_EQ( owner->AnalyzeTargetScan( nullptr, false, false ), 3 );
+	CAICommand *command = owner->GetNextCommand();
+	ASSERT_NE( command, nullptr );
+	EXPECT_TRUE( command->IsStationaryAutoAttack() );
+	EXPECT_EQ( command->ToUnitCmd().nObjectID, enemy->GetUniqueId() );
+}
+
+TEST_F( BlockLooseAirAttacks, TankDropsAircraftAfterItLeavesRangeIncludingAfterLoad )
+{
+	ExpectRangeLossEndsAttack();
+}
+
+TEST_F( BlockLooseAirAttacks, HoldFireSuppressesCachedAndActiveAircraftAttacks )
+{
+	ExpectTarget( enemy );
+	owner->SetBehaviourFire( SBehaviour::EFNoFire );
+	EXPECT_EQ( owner->AnalyzeTargetScan( nullptr, false, false ), 0 );
+	IUnitState *attack = StartAutomaticAttack();
+	ASSERT_NE( attack, nullptr );
+	attack->Segment();
+	owner->SetBehaviourFire( SBehaviour::EFNoFire );
+	attack->Segment();
+	EXPECT_TRUE( owner->IsCurCmdFinished() );
+}
+
+TEST_F( BlockLooseAirAttacks, ExplicitAttackOverridesStationaryFireAndMayPursue )
+{
+	IUnitState *attack = StartAutomaticAttack();
+	ASSERT_NE( attack, nullptr );
+	CPtr<CAICommand> command = MakeObject<CAICommand>( 0x1108D44D );
+	command->ToUnitCmd().nCmdType = ACTION_COMMAND_ATTACK_UNIT;
+	command->ToUnitCmd().nObjectID = enemy->GetUniqueId();
+	EXPECT_EQ( attack->TryInterruptState( command ), TSIR_YES_IMMIDIATELY );
+	ASSERT_NE( StartAutomaticAttack( false ), nullptr );
+	PlaceUnit( enemy, 200 );
+	ASSERT_FALSE( owner->GetCurCmd()->IsStationaryAutoAttack() );
+	ASSERT_TRUE( owner->CanMove() );
+	ASSERT_TRUE( gun->CanShootToUnit( enemy ) );
+	estimator->Reset( enemy, false, 0 );
+	EXPECT_EQ( estimator->GetBestUnit(), enemy.GetPtr() );
+	EXPECT_EQ( estimator->GetBestGun(), gun.GetPtr() );
+}
+
+class BlockLooseAirAttacksTransport : public BlockLooseAirAttacks
+{
+	int GetOwnerType() const override
+	{
+		return AI_TRANSPORT_UNIT;
+	}
+};
+
+TEST_F( BlockLooseAirAttacksTransport, TransportFactoryPreservesStationaryAttack )
+{
+	ExpectRangeLossEndsAttack();
+}
+
+class BlockLooseAirAttacksArtillery : public BlockLooseAirAttacks
+{
+	int GetOwnerType() const override
+	{
+		return AI_ARTILLERY;
+	}
+};
+
+TEST_F( BlockLooseAirAttacksArtillery, ZeroSetupArtilleryFactoryPreservesStationaryAttack )
+{
+	ExpectRangeLossEndsAttack();
 }
 } // namespace

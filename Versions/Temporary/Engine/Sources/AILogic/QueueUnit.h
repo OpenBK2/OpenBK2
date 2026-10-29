@@ -64,7 +64,7 @@ public:
 	void Init();
 
 	bool IsEmptyCmdQueue() const;
-	CAICommand *GetCurCmd() const;
+	AILOGIC_EXPORT CAICommand *GetCurCmd() const;
 
 	const bool IsCurCmdFinished() const
 	{

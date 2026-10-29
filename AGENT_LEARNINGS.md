@@ -181,3 +181,13 @@ context. Read `git diff` of every touched file before building.
 - Base-circle threats emit `EFB_KEYBUILDING_ATTACKED` in `CBuildingSimple::Segment`,
   before friendly defenders can cancel capture progress. Recipient filtering belongs
   only around the local feedback call; it must not gate enemy detection or capture state.
+
+## Autonomous aircraft targeting
+
+- The legacy light-AA estimator can select an aircraft without any current firing
+  solution. Zero-setup artillery uses the general mech attack state, which can pursue
+  it. Restrict both acquisition and the saved automatic attack state to prevent a
+  plane leaving range from restarting pursuit; explicit orders need their own path.
+- When testing DLL-backed command queues, check exports for every new out-of-line
+  call, including existing accessors such as GetCurCmd. Missing one surfaces only at
+  the final Windows link after a large header rebuild.

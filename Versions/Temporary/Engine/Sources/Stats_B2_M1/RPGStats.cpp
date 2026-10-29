@@ -5042,6 +5042,7 @@ void SExtendedStats::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "SpecialSightsArray", &specialSightsArray, pThis );
 	NMetaInfo::ReportMetaInfo( "AggressiveAttacker", (uint8_t*)&bAggressiveAttacker - pThis, sizeof(bAggressiveAttacker), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "BinocularsPlatform", (uint8_t*)&szBinocularsPlatform - pThis, sizeof(szBinocularsPlatform), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "BlockLooseAirAttacks", (uint8_t*)&bBlockLooseAirAttacks - pThis, sizeof(bBlockLooseAirAttacks), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -5053,6 +5054,7 @@ int SExtendedStats::operator&( IXmlSaver &saver )
 	saver.Add( "SpecialSightsArray", &specialSightsArray );
 	saver.Add( "AggressiveAttacker", &bAggressiveAttacker );
 	saver.Add( "BinocularsPlatform", &szBinocularsPlatform );
+	saver.Add( "BlockLooseAirAttacks", &bBlockLooseAirAttacks );
 
 	return 0;
 }
@@ -5064,6 +5066,7 @@ int SExtendedStats::operator&( IBinSaver &saver )
 	saver.Add( 4, &specialSightsArray );
 	saver.Add( 5, &bAggressiveAttacker );
 	saver.Add( 6, &szBinocularsPlatform );
+	saver.Add( 7, &bBlockLooseAirAttacks );
 
 	return 0;
 }
@@ -5076,7 +5079,7 @@ uint32_t SExtendedStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << bForwardTowed << fVerticalOffsetAngleRad << specialSightsArray << bAggressiveAttacker << szBinocularsPlatform;
+	checkSum << bForwardTowed << fVerticalOffsetAngleRad << specialSightsArray << bAggressiveAttacker << szBinocularsPlatform << bBlockLooseAirAttacks;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

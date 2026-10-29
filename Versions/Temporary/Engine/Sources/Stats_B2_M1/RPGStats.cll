@@ -1519,6 +1519,8 @@ class SExtendedStats
 	bool _AggressiveAttacker = false;
 	// RotatePoint of the platform used for Binoculars; empty or unknown uses the hull
 	string _BinocularsPlatform = "";
+	// Autonomous aircraft attacks fire from the current position; explicit attack orders may still pursue
+	bool _BlockLooseAirAttacks = false;
 };
 
 [typeID = 0x11069B80; type_defs = "NDb::SJoggingParams;SJoggingParams"]

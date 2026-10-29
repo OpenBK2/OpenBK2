@@ -272,7 +272,8 @@ IUnitState *CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 						}
 						else
 						{
-							pResult = CMechAttackUnitState::Instance( pArtillery, pTarget, cmd.fNumber == 0, bSwarmAttack );
+							pResult = CMechAttackUnitState::Instance(
+									pArtillery, pTarget, cmd.fNumber == 0, bSwarmAttack, pCommand->IsStationaryAutoAttack() );
 						}
 					}
 					else if ( pTarget->GetStats()->IsAviation() )

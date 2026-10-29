@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- `ExtendedStats.BlockLooseAirAttacks` prevents ground mechanical units from autonomously chasing aircraft, including vehicles with zero setup time and AA-capable secondary weapons. They still attack visible enemy aircraft they can shoot from their current position, and direct attack orders retain normal pursuit. The flag defaults to false; missing ExtendedStats preserve existing behavior. See `OBK2_Examples/ExtendedStats/BlockLooseAirAttacks.xdb`.
+
 - Fixed `--mission`, `--campaign`, `--mod` and the other command line options being ignored on Windows when the whole argument is quoted, which is how PowerShell, `cmd` and most launchers quote anything with a space in it: `"--mission=Custom/Missions/Mission Impossible/mapinfo.xdb"` started the game at the main menu instead of the map. The command line was split by a parser that kept the quotes inside the argument, so the option was not recognised, and that also treated apostrophes and brackets as quotes, which split a path such as `Wittman's Korea` in two. It is now split by the rules Windows itself uses.
 
 - Fixed a turret briefly turning back toward its default angle during Binoculars. Automatic return is suppressed for the selected platform while the ability is active and resumes when it ends; other turrets retain their normal behavior.

@@ -54,6 +54,7 @@ class CTankShootEstimator : public IShootEstimator
 	//const float FindTimeToTurn( CAIUnit *pEnemy, CBasicGun *pGun ) const;
 	// выбрать gun для pEnemy
 	void ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUnit *pEnemy );
+	bool IsStationaryTarget( CAIUnit *pEnemy ) const;
 
 	const float GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) const;
 	const float GetRating( const SUnitBaseRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const;

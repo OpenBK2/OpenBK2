@@ -125,9 +125,9 @@ public:
 	void DelFormation( class CFormation *pFormation );
 
 	// добавить юнит в массив юнитов
-	void AddUnitToUnits( class CAIUnit *pUnit, const int nPlayer, const int nUnitType );
+	AILOGIC_EXPORT void AddUnitToUnits( class CAIUnit *pUnit, const int nPlayer, const int nUnitType );
 	// добавить юнит на карту
-	void AddUnitToMap( class CAIUnit *pUnit );
+	AILOGIC_EXPORT void AddUnitToMap( class CAIUnit *pUnit );
 
 	// убирает юнит отовсюду, но не отдаёт его id
 	void DeleteUnitFromMap( class CAIUnit *pUnit );

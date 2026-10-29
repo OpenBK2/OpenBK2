@@ -458,7 +458,7 @@ IUnitState *CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 					else
 					{
 						pResult = CMechAttackUnitState::Instance(
-								pUnit, dynamic_cast<CAIUnit *>( GetObjectByCmd( cmd ) ), cmd.fNumber == 0, bSwarmAttack );
+								pUnit, pTarget, cmd.fNumber == 0, bSwarmAttack, pCommand->IsStationaryAutoAttack() );
 					}
 				}
 			}

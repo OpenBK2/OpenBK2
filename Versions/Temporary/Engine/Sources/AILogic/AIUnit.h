@@ -504,6 +504,7 @@ public:
 	bool HasSpecialSights() const;
 	AILOGIC_EXPORT bool IsAggressiveAttacker() const;
 	AILOGIC_EXPORT bool UsesAggressiveTargeting() const;
+	AILOGIC_EXPORT bool BlocksLooseAirAttacks() const;
 	void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const override;
 	void WarFogChanged() override;
 

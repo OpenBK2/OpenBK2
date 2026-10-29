@@ -92,6 +92,16 @@ and is capped by AIConsts.WarFog.MaxRadius. Normal circular sight and authored
 SpecialSightsArray remain active. Terrain and camouflage rules still apply.
 Interrupting the ability removes only its cone. Its state survives save/load.
 
+BlockLooseAirAttacks prevents ground mechanical units from automatically pursuing
+aircraft. Copy <BlockLooseAirAttacks>true</BlockLooseAirAttacks> into the unit's
+ExtendedStats, or link BlockLooseAirAttacks.xdb. Automatic aircraft attacks require
+a visible enemy and a usable shot from the current position, including ammunition,
+range, ceiling, firing arc and armor penetration. Hull/turret aiming is allowed;
+the unit does not chase or reposition when the aircraft leaves range. Automatic
+acquisition respects Hold Fire. Direct attack orders can still pursue the selected aircraft.
+Ground targeting retains its normal rules. The flag is independent of
+AggressiveAttacker and defaults to false; absent ExtendedStats change nothing.
+
 Suggested in-game checks with your authored model:
 - Hook up, drive straight, turn in both directions, stop and deploy the artillery.
   The front towing point should remain attached to the truck's rear, also on hills.
@@ -111,3 +121,7 @@ Suggested in-game checks with your authored model:
 - Use Binoculars on a named turret, then with an empty or misspelled platform.
   Check hull assistance at turret limits, normal sight behind the unit, and that
   a new order removes the binocular cone. Save/load while the platform turns.
+- Give a zero-setup vehicle an AA-capable weapon and enable BlockLooseAirAttacks.
+  Fly enemy planes outside, into and back out of range: automatic fire should
+  happen only within range, without pursuit. Save/load while firing, then issue
+  a direct attack on a distant aircraft and verify that normal pursuit works.

@@ -746,10 +746,10 @@ void CMechAttackUnitState::Segment()
 	if ( bStationaryAutoAttack )
 	{
 		// An autonomous shot never follows last-known positions or moves to improve its firing solution.
-		if ( !pUnit->IsAggressiveAttacker() || pUnit->GetBehaviourFire() != SBehaviour::EFAtWill || !pUnit->CanShoot() ||
-		     !IsValidObj( pEnemy ) || !pEnemy->IsAlive() || pEnemy->GetHitPoints() <= 0.0f ||
-		     !pEnemy->IsVisible( pUnit->GetParty() ) ||
-		     theDipl.GetDiplStatus( pUnit->GetPlayer(), pEnemy->GetPlayer() ) != EDI_ENEMY )
+		if ( pUnit->GetBehaviourFire() != SBehaviour::EFAtWill || !pUnit->CanShoot() || !IsValidObj( pEnemy ) ||
+		     !pEnemy->IsAlive() || pEnemy->GetHitPoints() <= 0.0f || !pEnemy->IsVisible( pUnit->GetParty() ) ||
+		     theDipl.GetDiplStatus( pUnit->GetPlayer(), pEnemy->GetPlayer() ) != EDI_ENEMY ||
+		     ( !pUnit->IsAggressiveAttacker() && !( pUnit->BlocksLooseAirAttacks() && pEnemy->GetStats()->IsAviation() ) ) )
 		{
 			FinishState();
 			return;

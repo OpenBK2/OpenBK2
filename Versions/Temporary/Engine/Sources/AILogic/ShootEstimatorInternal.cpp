@@ -2,6 +2,7 @@
 
 #include "Artillery.h"
 #include "Building.h"
+#include "Commands.h"
 #include "Diplomacy.h"
 #include "General.h"
 #include "Guns.h"
@@ -238,6 +239,14 @@ const float CTankShootEstimator::GetRating( CAIUnit *pEnemy, CBasicGun *pGun ) c
 	return F( fEnemyHPPercent, fTimeToGo, fEnemyKillUsTime, fKillEnemyTime, pEnemy->GetStats()->fPrice );
 }
 
+bool CTankShootEstimator::IsStationaryTarget( CAIUnit *pEnemy ) const
+{
+	// Reset's current target belongs to the active attack order. Only autonomous aircraft choices are restricted.
+	return pOwner->UsesAggressiveTargeting() ||
+	       ( pOwner->BlocksLooseAirAttacks() && IsValidObj( pEnemy ) && pEnemy->GetStats()->IsAviation() &&
+	         ( pEnemy != pCurTarget || ( pOwner->GetCurCmd() && pOwner->GetCurCmd()->IsStationaryAutoAttack() ) ) );
+}
+
 void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUnit *pEnemy )
 {
 	float fBestTime = 0;
@@ -251,7 +260,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 	const bool bMovingOwner = pOwner->CanRotate() && pOwner->CanMove() && !pOwner->NeedDeinstall();
 
 	const bool bArtilleryMech = pOwner->GetFirstArtilleryGun() != 0;
-	const bool bStationaryAutoAttack = pOwner->UsesAggressiveTargeting();
+	const bool bStationaryAutoAttack = IsStationaryTarget( pEnemy );
 
 	const SRect enemyRect = pEnemy->GetUnitRect();
 	// площать combat rect
@@ -418,7 +427,7 @@ void CTankShootEstimator::ChooseGun( CBasicGun **pBestGun, int *nBestGun, CAIUni
 
 void CTankShootEstimator::AddUnit( CAIUnit *pEnemy )
 {
-	if ( pOwner->UsesAggressiveTargeting() &&
+	if ( IsStationaryTarget( pEnemy ) &&
 	     ( !IsValidObj( pEnemy ) || !pEnemy->IsVisible( pOwner->GetParty() ) ||
 	       theDipl.GetDiplStatus( pOwner->GetPlayer(), pEnemy->GetPlayer() ) != EDI_ENEMY ) )
 	{
@@ -434,7 +443,8 @@ void CTankShootEstimator::AddUnit( CAIUnit *pEnemy )
 
 	bool bChoose = true;
 	int nSoldiersCache = -1;
-	if ( pOwner->IsFreeEnemySearch() && pOwner->GetFirstArtilleryGun() != 0 )
+	if ( pOwner->IsFreeEnemySearch() && pOwner->GetFirstArtilleryGun() != 0 &&
+	     !( pOwner->BlocksLooseAirAttacks() && pEnemy->GetStats()->IsAviation() ) )
 	{
 		const float fDistToEnemy2 = fabs2( pOwner->GetCenterPlain() - vEnemyCenter );
 		// враг за горизонтом
