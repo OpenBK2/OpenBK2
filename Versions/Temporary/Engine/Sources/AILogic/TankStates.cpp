@@ -3,6 +3,7 @@
 #include "ArtilleryBulletStorage.h"
 #include "ArtilleryStates.h"
 #include "Commands.h"
+#include "CommonStates.h"
 #include "FeedbackSystem.h"
 #include "Formation.h"
 #include "GroupLogic.h"
@@ -64,7 +65,7 @@ bool CTankStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	         cmdType == ACTION_MOVE_MECH_ENTER_NOW || cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT ||
 	         cmdType == ACTION_COMMAND_WAIT || cmdType == ACTION_COMMAND_SUPPORT_FIRE ||
 	         cmdType == ACTION_MOVE_BY_FORMATION || cmdType == ACTION_COMMAND_HOLD_SECTOR ||
-	         cmdType == ACTION_COMMAND_PATROL );
+	         cmdType == ACTION_COMMAND_PATROL || cmdType == ACTION_COMMAND_USE_SPYGLASS );
 }
 
 IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
@@ -78,6 +79,9 @@ IUnitState *CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 
 	switch ( cmd.nCmdType )
 	{
+		case ACTION_COMMAND_USE_SPYGLASS:
+			pResult = new CMechUseSpyglassState( pUnit, cmd.vPos );
+			break;
 		case ACTION_COMMAND_WAIT:
 			pResult = CMechUnitRestState::Instance( pUnit, cmd.vPos, pUnit->GetDirection(), 0, cmd.fNumber );
 

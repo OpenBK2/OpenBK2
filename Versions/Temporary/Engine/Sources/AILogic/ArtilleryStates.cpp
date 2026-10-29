@@ -7,6 +7,7 @@
 #include "Aviation.h"
 #include "Commands.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "CommonStates.h"
 #include "ExecutorContainer.h"
 #include "FeedbackSystem.h"
 #include "Formation.h"
@@ -83,7 +84,8 @@ bool CArtilleryStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	         cmdType == ACTION_COMMAND_MOVE_TO_GRID || cmdType == ACTION_COMMAND_WAIT ||
 	         cmdType == ACTION_COMMAND_UNLOAD || cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT ||
 	         cmdType == ACTION_COMMAND_COUNTER_FIRE || cmdType == ACTION_COMMAND_EXACT_SHOT ||
-	         cmdType == ACTION_COMMAND_HOLD_SECTOR || cmdType == ACTION_COMMAND_SUPPORT_FIRE );
+	         cmdType == ACTION_COMMAND_HOLD_SECTOR || cmdType == ACTION_COMMAND_SUPPORT_FIRE ||
+	         cmdType == ACTION_COMMAND_USE_SPYGLASS );
 }
 
 IUnitState *CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
@@ -97,6 +99,9 @@ IUnitState *CArtilleryStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 	switch ( cmd.nCmdType )
 	{
+		case ACTION_COMMAND_USE_SPYGLASS:
+			pResult = new CMechUseSpyglassState( pArtillery, cmd.vPos );
+			break;
 		case ACTION_COMMAND_MECH_ENTER:
 		case ACTION_MOVE_MECH_ENTER_NOW:
 		{

@@ -14169,6 +14169,21 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>b1010000</Type>
+					<Name>BinocularsPlatform</Name>
+					<ChunkID>6</ChunkID>
+					<Description>RotatePoint of the platform used for Binoculars; empty or unknown uses the hull</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>03000000</Type>
+						<Data />
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>421110480</TypeID>
 		</Item>

@@ -8,6 +8,7 @@
 #include "Commands.h"
 #include "Common_RTS_AI/PathFinder.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "CommonStates.h"
 #include "DebugTools/DebugInfoManager.h"
 #include "FeedbackSystem.h"
 #include "Formation.h"
@@ -100,7 +101,8 @@ bool CTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	         cmdType == ACTION_COMMAND_UNLOAD_NOW || cmdType == ACTION_COMMAND_MECH_ENTER ||
 	         cmdType == ACTION_MOVE_MECH_ENTER_NOW || cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT ||
 	         cmdType == ACTION_COMMAND_HOLD_SECTOR || cmdType == ACTION_COMMAND_USE_FLAMETHROWER ||
-	         cmdType == ACTION_COMMAND_PATROL || cmdType == ACTION_MOVE_BY_FORMATION );
+	         cmdType == ACTION_COMMAND_PATROL || cmdType == ACTION_MOVE_BY_FORMATION ||
+	         cmdType == ACTION_COMMAND_USE_SPYGLASS );
 }
 
 IUnitState *CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class CAICommand *pCommand )
@@ -115,6 +117,9 @@ IUnitState *CTransportStatesFactory::ProduceState( class CQueueUnit *pObj, class
 
 	switch ( cmd.nCmdType )
 	{
+		case ACTION_COMMAND_USE_SPYGLASS:
+			pResult = new CMechUseSpyglassState( pUnit, cmd.vPos );
+			break;
 		case ACTION_COMMAND_MECH_ENTER:
 		case ACTION_MOVE_MECH_ENTER_NOW:
 		{

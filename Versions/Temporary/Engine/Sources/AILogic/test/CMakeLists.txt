@@ -18,6 +18,16 @@ if(WIN32)
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
 endif()
 
+# Exercise mechanical Binoculars aiming, additive visibility, interruption and save/load.
+add_unit_test(MechBinoculars AILogic Common_RTS_AI Stats_B2_M1 libdb System Misc zlib gr2)
+target_compile_definitions(MechBinoculars_test PRIVATE
+    MECH_BINOCULARS_TYPES_FILE="${CMAKE_SOURCE_DIR}/Versions/Current/Data/types.xml")
+set_tests_properties(MechBinoculars_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(MechBinoculars_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()
+
 # Exercise the real deterministic trajectory and its save/load representation.
 add_unit_test(BallisticOffset AILogic Stats_B2_M1 System Misc zlib gr2)
 set_tests_properties(BallisticOffset_test PROPERTIES TIMEOUT 60)

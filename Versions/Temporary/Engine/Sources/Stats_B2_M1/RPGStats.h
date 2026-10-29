@@ -2415,12 +2415,14 @@ namespace NDb
 		float fVerticalOffsetAngleRad;
 		std::vector< SSpecialSight > specialSightsArray;
 		bool bAggressiveAttacker;
+		std::string szBinocularsPlatform;
 
 		SExtendedStats() :
 			__dwCheckSum( 0 ),
 			bForwardTowed( false ),
 			fVerticalOffsetAngleRad( 0.0000f ),
-			bAggressiveAttacker( false )
+			bAggressiveAttacker( false ),
+			szBinocularsPlatform( "" )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }

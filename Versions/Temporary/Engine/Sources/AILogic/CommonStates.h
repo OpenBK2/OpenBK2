@@ -12,6 +12,45 @@
 class CAIUnit;
 class CSoldier;
 class CStaticObject;
+class CTurret;
+struct SWarFogUnitInfo;
+
+// Mechanical binoculars add a cone along the selected platform's current simulation facing.
+class CMechUseSpyglassState : public IUnitState, public CStatusUpdatesHelper
+{
+	OBJECT_NOCOPY_METHODS( CMechUseSpyglassState );
+
+	CPtr<CAIUnit> pUnit;
+	CPtr<CTurret> pTurret;
+	CVec2 vPoint2Look = VNULL2;
+	bool bActive = false;
+	bool bStarted = false;
+
+public:
+	int operator&( IBinSaver &saver ) override;
+
+	CMechUseSpyglassState() {}
+
+	CMechUseSpyglassState( CAIUnit *pOwner, const CVec2 &point );
+	void Segment() override;
+	ETryStateInterruptResult TryInterruptState( CAICommand *pCommand ) override;
+	void AddSight( SWarFogUnitInfo *pInfo ) const;
+
+	EUnitStateNames GetName() override
+	{
+		return EUSN_USE_SPYGLASS;
+	}
+
+	bool IsAttackingState() const override
+	{
+		return false;
+	}
+
+	const CVec2 GetPurposePoint() const override
+	{
+		return vPoint2Look;
+	}
+};
 
 class CMechAttackUnitState : public IUnitAttackingState, public CFreeFireManager, public CStandartBehaviour
 {

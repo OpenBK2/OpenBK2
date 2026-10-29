@@ -10,6 +10,7 @@
 #include "Entrenchment.h"
 #include "ExecutorContainer.h"
 #include "Formation.h"
+#include "GlobalWarFog.h"
 #include "GroupLogic.h"
 #include "GroupMoveExecutor.h"
 #include "Guns.h"
@@ -37,6 +38,7 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D482, CCommonMoveToGridState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D494, CMechUnitRestState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x31130B80, CMoveByFormationState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1915DB80, CCommonPatrolState );
+REGISTER_SAVELOAD_CLASS( AILOGIC, 0x6B290001, CMechUseSpyglassState );
 extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CHitsStore theHitsStore;
@@ -50,6 +52,147 @@ bool g_bAgressiveMovement = true;
 START_REGISTER( CommonStatesVars )
 REGISTER_VAR_EX( "aggressive_units", NGlobal::VarBoolHandler, &g_bAgressiveMovement, true, STORAGE_NONE );
 FINISH_REGISTER
+
+int CMechUseSpyglassState::operator&( IBinSaver &saver )
+{
+	saver.Add( 1, static_cast<CStatusUpdatesHelper *>( this ) );
+	saver.Add( 2, &pUnit );
+	saver.Add( 3, &pTurret );
+	saver.Add( 4, &vPoint2Look );
+	saver.Add( 5, &bActive );
+	saver.Add( 6, &bStarted );
+	return 0;
+}
+
+CMechUseSpyglassState::CMechUseSpyglassState( CAIUnit *pOwner, const CVec2 &point )
+	: CStatusUpdatesHelper( EUS_USE_SPY_GLASS, pOwner )
+	, pUnit( pOwner )
+	, vPoint2Look( point )
+	, bActive( true )
+{
+	const auto *pStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( pUnit->GetStats() );
+	if ( pStats && pStats->pExtendedStats && !pStats->pExtendedStats->szBinocularsPlatform.empty() )
+	{
+		for ( int nPlatform = 0; nPlatform < pStats->GetPlatformsSize( pUnit->GetUniqueId() ); ++nPlatform )
+		{
+			if ( pStats->GetPlatform( pUnit->GetUniqueId(), nPlatform ).szRotatePoint ==
+			     pStats->pExtendedStats->szBinocularsPlatform )
+			{
+				// Platform zero is the hull; unavailable turrets also fall back to the hull.
+				if ( nPlatform > 0 && nPlatform <= pUnit->GetNTurrets() )
+				{
+					pTurret = pUnit->GetTurret( nPlatform - 1 );
+				}
+				break;
+			}
+		}
+	}
+}
+
+void CMechUseSpyglassState::Segment()
+{
+	if ( !bActive || !IsValidObj( pUnit ) )
+	{
+		return;
+	}
+	CArtillery *pArtillery = dynamic_cast<CArtillery *>( pUnit.GetPtr() );
+	if ( !bStarted )
+	{
+		// Start after the queue installs this state, so fog updates see the active binocular cone.
+		pUnit->Stop();
+		for ( int i = 0; i < pUnit->GetNGuns(); ++i )
+		{
+			pUnit->GetGun( i )->StopFire();
+		}
+		if ( pTurret )
+		{
+			pTurret->StopTracing();
+			if ( !pArtillery || !pArtillery->IsInInstallAction() )
+			{
+				pTurret->TurnHor( pTurret->GetHorCurAngle() );
+			}
+		}
+		pUnit->SendAcknowledgement( ACK_POSITIVE );
+		pUnit->StartCamouflating();
+		bStarted = true;
+	}
+	InitStatus();
+
+	const CVec2 vToPoint = vPoint2Look - pUnit->GetCenterPlain();
+	if ( fabs2( vToPoint ) > 0.0f )
+	{
+		const uint16_t wDirection = GetDirectionByVector( vToPoint );
+		const uint16_t wRelative = wDirection - pUnit->GetFrontDirection();
+		const uint16_t wLimit = pTurret ? (std::min)( pTurret->GetHorTurnConstraint(), uint16_t( 32768 ) ) : 0;
+		// Passengers can lock a transport turret at its current angle; aim the hull around that offset.
+		const bool bTurretLocked = pTurret && !pTurret->GetRotateTurretState();
+		const uint16_t wHullDirection = wDirection - ( bTurretLocked ? pTurret->GetHorCurAngle() : 0 );
+		const bool bNeedsHull = !pTurret || bTurretLocked || DirsDifference( wRelative, 0 ) > wLimit;
+		if ( bNeedsHull && pUnit->CanRotate() && pUnit->IsIdle() && wHullDirection != pUnit->GetFrontDirection() &&
+		     pUnit->CheckTurn( 1.0f, GetVectorByDirection( wHullDirection ), false, false ) )
+		{
+			// A limited turret may need hull rotation, but binoculars never translate the vehicle.
+			if ( pArtillery )
+			{
+				// Towed guns must finish their normal packing sequence before rotating.
+				if ( !pArtillery->IsInTankPit() )
+				{
+					pArtillery->TurnToDir( wHullDirection, false, true );
+				}
+			}
+			else
+			{
+				pUnit->TurnToDirection( wHullDirection, false, true );
+			}
+		}
+		if ( pTurret && pTurret->GetRotateTurretState() && ( !pArtillery || !pArtillery->IsInInstallAction() ) )
+		{
+			const uint16_t wTurretDirection = wDirection - pUnit->GetFrontDirection();
+			const uint16_t wClamped = wTurretDirection <= 32768
+			                              ? (std::min)( wTurretDirection, wLimit )
+			                              : uint16_t( -(std::min)( 65536 - int( wTurretDirection ), int( wLimit ) ) );
+			if ( pTurret->GetHorFinalAngle() != wClamped )
+			{
+				pTurret->TurnHor( wClamped );
+			}
+		}
+	}
+	// Turret interpolation advances even when the hull is stationary.
+	pUnit->WarFogChanged();
+}
+
+ETryStateInterruptResult CMechUseSpyglassState::TryInterruptState( CAICommand *pCommand )
+{
+	bActive = false;
+	if ( pTurret )
+	{
+		pTurret->StopHorTurning();
+		pTurret->SetCanReturn();
+	}
+	pUnit->WarFogChanged();
+	pUnit->SetCommandFinished();
+	return TSIR_YES_IMMIDIATELY;
+}
+
+void CMechUseSpyglassState::AddSight( SWarFogUnitInfo *pInfo ) const
+{
+	if ( !bActive )
+	{
+		return;
+	}
+	SWarFogSight sight;
+	sight.nRadius = int( (std::min)( SConsts::SPY_GLASS_RADIUS / SConsts::TILE_SIZE / AI_TILES_IN_VIS_TILE,
+	                                 float( theWarFog.GetMaxRadius() ) ) );
+	const uint16_t wFacing = pUnit->GetFrontDirection() + ( pTurret ? pTurret->GetHorCurAngle() : 0 );
+	if ( SConsts::SPY_GLASS_ANGLE < 32768 )
+	{
+		sight.sector = SSector( wFacing - SConsts::SPY_GLASS_ANGLE, wFacing + SConsts::SPY_GLASS_ANGLE );
+	}
+	if ( sight.nRadius > 0 )
+	{
+		pInfo->specialSights.push_back( sight );
+	}
+}
 
 //*******************************************************************
 //*										  CMechAttackUnitState												*

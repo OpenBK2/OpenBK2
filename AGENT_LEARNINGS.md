@@ -3,6 +3,8 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Mechanical Binoculars use `ACTION_COMMAND_USE_SPYGLASS`; `ACTION_COMMAND_USE_BINOCULAR` is a separate legacy command. A turret's `TurnHor` does not enforce its horizontal constraint, so aim states must clamp it and use hull assistance when appropriate. For towed guns use `CArtillery::TurnToDir` to preserve packing before rotation, and leave turret control to installation actions while they run. Serialized artillery fixtures use chunks 4/5 for guns/turrets, unlike military cars' 3/4; factory-only checks cannot verify actual aiming.
+
 - Stationary autonomous attacks need filtering during gun/target selection, not only after the winning target is chosen. `CanShootToUnit` permits movement; use `CanShootToUnitWOMove` for range and firing feasibility. Revalidate cached targets and active attacks after visibility or Hold Fire changes. Persist the stationary marker in both the command (including its copy constructor) and attack state so queue insertion and save/load cannot restore pursuit behavior.
 
 - Additional fog sectors must share the unit's visibility mask. Store the maximum covered radius in `nOldRadius` so moving, shrinking, deleting, or transferring a unit removes every old contribution exactly once. Turret angles come from simulation-time interpolation, so stationary units with platform sights need periodic fog updates too. Platform zero is the hull; platform N maps to turret N - 1, using `GetPlatform` for constructor remapping.

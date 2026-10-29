@@ -8,7 +8,7 @@ MechUnitRPGStats.xdb, then add this reference inside <MechUnitRPGStats>:
 These settings belong to the artillery (or other mechanical unit), not its truck.
 An absent reference keeps the original behavior. Each field can be omitted to use
 its default: ForwardTowed=false, VerticalOffsetAngleRad=0.0, SpecialSightsArray empty,
-AggressiveAttacker=false.
+AggressiveAttacker=false, BinocularsPlatform empty.
 
 ForwardTowed=true makes the artillery face in the truck's direction during hookup
 and towing. Author LTowingPoint at the front of the artillery model and re-export
@@ -73,6 +73,25 @@ to shoot, or when Hold Fire is selected, then resumes its guard order. Explicit
 move, attack, bombardment, wait and ability orders retain priority and their normal
 behavior. The flag defaults to false, preserving existing unit behavior.
 
+BinocularsPlatform selects the platform used by the Binoculars ability on ground
+mechanical units, including tanks, SPGs, transports and towed artillery. It must
+exactly match the platform's RotatePoint name. Empty, unknown or unavailable
+platforms use platform zero (the hull). See Binoculars.xdb; replace "turret" with
+your model's RotatePoint, or copy the field into your existing ExtendedStats.
+
+Assign Binoculars in the unit's UnitActions data as for infantry: enable
+ACTION_COMMAND_USE_SPYGLASS and USER_ACTION_SPYGLASS and include the
+ABILITY_USE_BINOCULAR descriptor in SpecialAbilities at an unlocked ability level.
+BinocularsPlatform only selects the facing; it does not grant the ability.
+
+The ability stops the unit and aims the selected platform at the clicked point.
+If the turret cannot reach that direction, the hull turns when the unit can
+rotate. It does not drive toward the point. The sight cone follows the actual
+platform facing while turning, uses the infantry binocular range and cone angle,
+and is capped by AIConsts.WarFog.MaxRadius. Normal circular sight and authored
+SpecialSightsArray remain active. Terrain and camouflage rules still apply.
+Interrupting the ability removes only its cone. Its state survives save/load.
+
 Suggested in-game checks with your authored model:
 - Hook up, drive straight, turn in both directions, stop and deploy the artillery.
   The front towing point should remain attached to the truck's rear, also on hills.
@@ -89,3 +108,6 @@ Suggested in-game checks with your authored model:
 - Hide that enemy, move it out of range or behind cover, and toggle Hold Fire.
   Automatic fire should stop. Move and explicit attack orders should still work.
 - Save/load during automatic fire and check the same commands in a replay.
+- Use Binoculars on a named turret, then with an empty or misspelled platform.
+  Check hull assistance at turret limits, normal sight behind the unit, and that
+  a new order removes the binocular cone. Save/load while the platform turns.

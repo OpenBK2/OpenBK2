@@ -1517,6 +1517,8 @@ class SExtendedStats
 	SSpecialSight _SpecialSightsArray[];
 	// Tanks and non-AA SPGs automatically fire at enemies visible to their side within weapon range, without chasing
 	bool _AggressiveAttacker = false;
+	// RotatePoint of the platform used for Binoculars; empty or unknown uses the hull
+	string _BinocularsPlatform = "";
 };
 
 [typeID = 0x11069B80; type_defs = "NDb::SJoggingParams;SJoggingParams"]

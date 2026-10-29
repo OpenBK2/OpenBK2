@@ -5,6 +5,7 @@
 #include "ArtilleryStates.h"
 #include "ArtRocketStates.h"
 #include "Commands.h"
+#include "CommonStates.h"
 #include "Diplomacy.h"
 #include "FeedbackSystem.h"
 #include "GroupLogic.h"
@@ -55,7 +56,8 @@ bool CArtRocketStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 	         cmdType == ACTION_COMMAND_STAND_GROUND || cmdType == ACTION_COMMAND_MOVE_TO_GRID ||
 	         cmdType == ACTION_COMMAND_SWARM_TO || cmdType == ACTION_COMMAND_WAIT || cmdType == ACTION_COMMAND_UNLOAD ||
 	         cmdType == ACTION_COMMAND_MECH_ENTER || cmdType == ACTION_MOVE_MECH_ENTER_NOW ||
-	         cmdType == ACTION_COMMAND_HOLD_SECTOR || cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT );
+	         cmdType == ACTION_COMMAND_HOLD_SECTOR || cmdType == ACTION_MOVE_ONBOARD_ATTACK_UNIT ||
+	         cmdType == ACTION_COMMAND_USE_SPYGLASS );
 }
 
 IUnitState *CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand *pCommand )
@@ -68,6 +70,9 @@ IUnitState *CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 	switch ( cmd.nCmdType )
 	{
+		case ACTION_COMMAND_USE_SPYGLASS:
+			pResult = new CMechUseSpyglassState( pArtillery, cmd.vPos );
+			break;
 		case ACTION_COMMAND_MECH_ENTER:
 		case ACTION_MOVE_MECH_ENTER_NOW:
 		{

@@ -16,6 +16,7 @@
 #include "CombatEstimator.h"
 #include "Commands.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
+#include "CommonStates.h"
 #include "DBAIConsts.h"
 #include "ExecutorAdrenalineRush.h"
 #include "ExecutorAmbush.h"
@@ -2219,7 +2220,16 @@ void CAIUnit::GetFogInfo( SWarFogUnitInfo *pInfo ) const
 	pInfo->nRadius = IsInSolidPlace() ? 0 : GetSightRadius() / SConsts::TILE_SIZE / AI_TILES_IN_VIS_TILE;
 	pInfo->sector = SSector();
 	pInfo->specialSights.clear();
-	if ( IsInSolidPlace() || !HasSpecialSights() )
+	if ( IsInSolidPlace() )
+	{
+		return;
+	}
+	if ( const auto *pBinoculars = dynamic_cast<const CMechUseSpyglassState *>( GetState() ) )
+	{
+		// Binoculars preserve the regular circle and authored special sights.
+		pBinoculars->AddSight( pInfo );
+	}
+	if ( !HasSpecialSights() )
 	{
 		return;
 	}
