@@ -73,6 +73,11 @@ private:
 protected:
 	virtual void CheckAlive() = 0;
 
+	virtual bool CanReturnToDefault() const
+	{
+		return true;
+	}
+
 	virtual const bool IsBackGunsDirection() const
 	{
 		return false;
@@ -125,7 +130,7 @@ public:
 	}
 
 	// можно вернуть пушку к нулевому углу поворота
-	void SetCanReturn();
+	AILOGIC_EXPORT void SetCanReturn();
 
 	uint16_t GetHorCurAngle() const
 	{
@@ -162,7 +167,7 @@ public:
 		return (std::max)( GetHorEndTime(), GetVerEndTime() );
 	}
 
-	void Segment();
+	AILOGIC_EXPORT void Segment();
 
 	// сопровождать пушкой врага
 	void TraceAim( class CAIUnit *pUnit, class CBasicGun *pGun );
@@ -283,6 +288,8 @@ private:
 	}
 
 protected:
+	bool CanReturnToDefault() const override;
+
 	const bool IsBackGunsDirection() const override
 	{
 		return bBuckGunsDirection;

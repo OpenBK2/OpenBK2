@@ -3,6 +3,8 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- `CMilitaryCar::Segment` updates the ability state, then guns, then turrets. An idle gun can therefore request a turret return after Binoculars has aimed it. Suppress the return at execution time for the turret held by the active ability, rather than clearing the request only during aiming. Check cancellation and loaded states as well as unrelated turrets.
+
 - Mechanical Binoculars use `ACTION_COMMAND_USE_SPYGLASS`; `ACTION_COMMAND_USE_BINOCULAR` is a separate legacy command. A turret's `TurnHor` does not enforce its horizontal constraint, so aim states must clamp it and use hull assistance when appropriate. For towed guns use `CArtillery::TurnToDir` to preserve packing before rotation, and leave turret control to installation actions while they run. Serialized artillery fixtures use chunks 4/5 for guns/turrets, unlike military cars' 3/4; factory-only checks cannot verify actual aiming.
 
 - Stationary autonomous attacks need filtering during gun/target selection, not only after the winning target is chosen. `CanShootToUnit` permits movement; use `CanShootToUnitWOMove` for range and firing feasibility. Revalidate cached targets and active attacks after visibility or Hold Fire changes. Persist the stationary marker in both the command (including its copy constructor) and attack state so queue insertion and save/load cannot restore pursuit behavior.

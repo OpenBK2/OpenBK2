@@ -3,6 +3,8 @@
 
 - Fixed `--mission`, `--campaign`, `--mod` and the other command line options being ignored on Windows when the whole argument is quoted, which is how PowerShell, `cmd` and most launchers quote anything with a space in it: `"--mission=Custom/Missions/Mission Impossible/mapinfo.xdb"` started the game at the main menu instead of the map. The command line was split by a parser that kept the quotes inside the argument, so the option was not recognised, and that also treated apostrophes and brackets as quotes, which split a path such as `Wittman's Korea` in two. It is now split by the rules Windows itself uses.
 
+- Fixed a turret briefly turning back toward its default angle during Binoculars. Automatic return is suppressed for the selected platform while the ability is active and resumes when it ends; other turrets retain their normal behavior.
+
 - Ground mechanical units can use the Binoculars ability when assigned in their unit data. `ExtendedStats.BinocularsPlatform` selects a platform by its `RotatePoint`; empty or invalid names use the hull. The selected platform aims at the clicked point, with hull assistance at turret limits and no translation. Its sight cone adds to normal circular sight and `SpecialSightsArray`, using infantry binocular settings and the fog range cap. See `OBK2_Examples/ExtendedStats/Binoculars.xdb`.
 
 - `ExtendedStats.AggressiveAttacker` enables automatic attacks for idle or guarding tanks and non-AA SPGs. They use shared side visibility and full usable weapon range, respect Hold Fire and existing orders, and aim without chasing or repositioning. Hidden, friendly, dead or unreachable targets end the automatic attack. The flag defaults to false. See `OBK2_Examples/ExtendedStats/AggressiveAttacker.xdb`.

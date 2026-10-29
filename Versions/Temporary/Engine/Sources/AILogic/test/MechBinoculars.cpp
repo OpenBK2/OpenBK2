@@ -220,10 +220,13 @@ protected:
 	{
 		SAIAngle constraint( limit );
 		bool canRotate = true;
+		bool returnToDefault = true;
 		int platform = 1;
+		SFields defaults{ [&]( IBinSaver &saver ) { saver.Add( 9, &returnToDefault ); } };
 		LoadFields( turret,
 		            [&]( IBinSaver &saver )
 		            {
+									saver.Add( 1, &defaults );
 									saver.Add( 2, &unit );
 									saver.Add( 3, &platform );
 									saver.Add( 4, &constraint );
@@ -342,6 +345,57 @@ TEST_F( MechBinoculars, TurretAimsWithoutHullAndSightAddsToCircleAndSpecialSight
 	EXPECT_TRUE( Visible( 49152, 2 ) );
 }
 
+TEST_F( MechBinoculars, IdleReturnRequestsCannotOverrideBinocularTurret )
+{
+	extended->szBinocularsPlatform = "turret";
+	Start( 16384 );
+	for ( int i = 0; i < 3; ++i )
+	{
+		Step();
+		// An idle gun can request a return after the binocular state has aimed this tick.
+		turret->SetCanReturn();
+		turret->Segment();
+		EXPECT_EQ( turret->GetHorFinalAngle(), 16384 );
+		ExpectCone( 16384 );
+	}
+	// Interruption must release the turret even before the queue replaces the old state.
+	state->TryInterruptState( nullptr );
+	turret->Segment();
+	EXPECT_EQ( turret->GetHorFinalAngle(), 0 );
+}
+
+TEST_F( MechBinoculars, OtherTurretsCanStillReturnDuringBinoculars )
+{
+	extended->szBinocularsPlatform = "turret";
+	Start( 16384 );
+	Step();
+	CTurret *other = MakeObject<CTurret>( 0x1108D4B3 );
+	bool returnToDefault = true;
+	SFields defaults{ [&]( IBinSaver &saver ) { saver.Add( 9, &returnToDefault ); } };
+	LoadFields( other,
+	            [&]( IBinSaver &saver )
+	            {
+								saver.Add( 1, &defaults );
+								saver.Add( 2, &unit );
+							} );
+	other->CTurret::TurnHor( 32768, true );
+	other->SetCanReturn();
+	other->Segment();
+	EXPECT_EQ( other->GetHorFinalAngle(), 0 );
+	EXPECT_EQ( turret->GetHorFinalAngle(), 16384 );
+}
+
+TEST_F( MechBinoculars, HullBinocularsDoNotSuppressTurretReturn )
+{
+	Start();
+	Step();
+	turret->CTurret::TurnHor( 16384, true );
+	turret->SetCanReturn();
+	turret->Segment();
+	EXPECT_EQ( turret->GetHorFinalAngle(), 0 );
+	ExpectCone( 0 );
+}
+
 TEST_F( MechBinoculars, LimitedTurretUsesHullWithoutMoving )
 {
 	extended->szBinocularsPlatform = "turret";
@@ -403,6 +457,7 @@ TEST_F( MechBinoculars, SaveLoadKeepsPlatformTargetAndCancellation )
 	extended->szBinocularsPlatform = "turret";
 	Start( 16384 );
 	Step();
+	turret->SetCanReturn();
 	CMemoryStream stream;
 	{
 		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE, external );
@@ -419,6 +474,9 @@ TEST_F( MechBinoculars, SaveLoadKeepsPlatformTargetAndCancellation )
 	EXPECT_EQ( loaded->GetPurposePoint(), state->GetPurposePoint() );
 	state = loaded;
 	unit->SetCurState( state );
+	// The loaded state owns the platform immediately, before its next aiming update.
+	turret->Segment();
+	EXPECT_EQ( turret->GetHorFinalAngle(), 16384 );
 	Step();
 	ExpectCone( 16384 );
 	EXPECT_TRUE( Visible( 16384, 10 ) );

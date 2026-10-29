@@ -36,6 +36,11 @@ public:
 	ETryStateInterruptResult TryInterruptState( CAICommand *pCommand ) override;
 	void AddSight( SWarFogUnitInfo *pInfo ) const;
 
+	bool ControlsTurret( const CTurret *pCandidate ) const
+	{
+		return bActive && pTurret.GetPtr() == pCandidate;
+	}
+
 	EUnitStateNames GetName() override
 	{
 		return EUSN_USE_SPYGLASS;

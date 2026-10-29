@@ -3,6 +3,7 @@
 #include "AIGeometry.h"
 #include "AIUnit.h"
 #include "Building.h"
+#include "CommonStates.h"
 #include "Diplomacy.h"
 #include "Guns.h"
 #include "NewUpdater.h"
@@ -181,7 +182,7 @@ void CTurret::Segment()
 			}
 		}
 	}
-	else if ( bCanReturn && IsOwnerOperable() )
+	else if ( bCanReturn && IsOwnerOperable() && CanReturnToDefault() )
 	{
 		bCanReturn = false;
 
@@ -362,6 +363,14 @@ uint16_t CUnitTurret::GetOwnerFrontDir()
 float CUnitTurret::GetOwnerZ()
 {
 	return pOwner->GetCenter().z;
+}
+
+bool CUnitTurret::CanReturnToDefault() const
+{
+	const auto *pBinoculars = pOwner ? dynamic_cast<const CMechUseSpyglassState *>( pOwner->GetState() ) : nullptr;
+	// Idle guns can request a return after the ability's update. Check ownership when executing it,
+	// using the saved ability state so cancellation and save/load need no separate turret flag.
+	return !pBinoculars || !pBinoculars->ControlsTurret( this );
 }
 
 bool CUnitTurret::IsOwnerOperable() const
