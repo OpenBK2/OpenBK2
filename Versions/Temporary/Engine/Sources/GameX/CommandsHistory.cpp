@@ -269,6 +269,27 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		NRandom::SetRandomSeed( pStartSeed );
 	}
 
+	// The map, before anything is told to start on it. replayInfo.pMap is a
+	// CDBPtr, so it resolves lazily and comes back null when the record it names
+	// is not in the database this build has loaded: a replay recorded on another
+	// edition, or with a mod attached that is not attached now, or against data
+	// that has since been repacked. Both branches below hand it straight to a
+	// scenario tracker that dereferences it without looking, which was a
+	// segmentation fault rather than a message.
+	//
+	// Returning false is the path that already exists for a replay that cannot be
+	// loaded: CreateCommandsHistory clears History.Playing and hands back an empty
+	// history, and CICMission::PostCreate sees a replay with no map and says so
+	// before returning to the menu. Two other uses of pMap in this file already
+	// guard against null, so the possibility was known; these two were missed.
+	if ( !replayInfo.pMap )
+	{
+		ReportReplayLine(
+				fmt::format( "replay: the map it was recorded on is not in this database, so it cannot be played. "
+		                 "A different edition, a mod that is not attached, or repacked data would all do this" ) );
+		return false;
+	}
+
 	// A single-player replay has to start the way StartNewMap starts one, not
 	// the way a multiplayer game does: the tracker is already EGT_SINGLE, so
 	// SetGameType would assert, and there are no lobby slots to register
