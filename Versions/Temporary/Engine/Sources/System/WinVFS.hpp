@@ -160,12 +160,17 @@ class CWinVFS : public IVFS
 	NFile::CFilePath szBasePath;
 	bool bAllWinFilesChecked;
 	bool bArchiveOnly;
+	// Whether looseDirectories is kept at all. Only the game turns it on: the editor and
+	// the tools write files while they run, through the file creator, exporters writing
+	// directly, or the user, and a directory remembered as missing would hide all of them.
+	bool bRememberMissingDirectories = false;
 	// Whether each directory under szBasePath that a lookup has needed exists on disk,
 	// keyed like streamEntriesMap, so case and separators fold. Asked once per directory
 	// for the life of the VFS: there is no hot reload.
 	std::unordered_map<NFile::CFilePath, bool> looseDirectories;
 	//
 	bool CanBeOnDisk( const NFile::CFilePath &szPath );
+	bool GetLooseFileStats( SFileStats *pStats, NFile::CFilePath *pRealPath, const NFile::CFilePath &szPath );
 	CDataStream *OpenFileDirect( const std::string &szPath );
 	// only for relative path!
 	CFileEntry *UpdateFileEntry( const NFile::CFilePath &szPath );
@@ -174,7 +179,7 @@ class CWinVFS : public IVFS
 	CWinVFS() {}
 
 public:
-	CWinVFS( const std::string &szBasePath );
+	CWinVFS( const std::string &szBasePath, bool bRememberMissingDirectories );
 	~CWinVFS() override;
 	//
 	CDataStream *OpenFile( const std::string &szPath ) override;

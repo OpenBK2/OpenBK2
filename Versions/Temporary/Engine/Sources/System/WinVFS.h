@@ -6,7 +6,11 @@
 
 namespace NVFS
 {
-SYSTEM_EXPORT IVFS *CreateWinVFS( const std::string &szBasePath );
+// bRememberMissingDirectories: answer "is there a loose copy" for every file under a
+// directory found missing on disk from that one answer, for the life of the VFS. Saves
+// a failed lookup per packed file opened, but a file written into such a directory later
+// is never seen, so only the game, which writes no data while it runs, asks for it.
+SYSTEM_EXPORT IVFS *CreateWinVFS( const std::string &szBasePath, bool bRememberMissingDirectories = false );
 SYSTEM_EXPORT IFileCreator *CreateWinFileCreator( const std::string &szBasePath );
 
 SYSTEM_EXPORT bool GetWinFileStats( struct SFileStats *pStats, const std::string &szPath );

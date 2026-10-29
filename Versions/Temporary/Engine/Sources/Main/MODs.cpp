@@ -83,10 +83,13 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath,
 		pMainFileCreator = NVFS::CreateWinFileCreator( szBaseResourcePath );
 	}
 	//
+	// The game writes no data while it runs, so it can remember which directories have
+	// no loose files; the editor creates them as it goes and has to keep asking.
+	const bool bRememberMissingDirectories = eMode == NDb::DATABASE_MODE_GAME;
 	std::vector<CObj<NVFS::IVFS>> vfses = pMainVFS->GetVFSList();
 	if ( vfses.empty() )
 	{
-		vfses.push_back( NVFS::CreateWinVFS( szBaseResourcePath ) );
+		vfses.push_back( NVFS::CreateWinVFS( szBaseResourcePath, bRememberMissingDirectories ) );
 	}
 	// remove all VFSes but one (base storage VFS)
 	while ( vfses.size() > 1 )
@@ -97,7 +100,7 @@ void AttachMODInternal( const NFile::CFilePath &szBaseResourcePath,
 	if ( !szMODPath.empty() && szMODPath != szBaseResourcePath )
 	{
 		pMainFileCreator = NVFS::CreateWinFileCreator( szMODPath );
-		vfses.push_back( NVFS::CreateWinVFS( szMODPath ) );
+		vfses.push_back( NVFS::CreateWinVFS( szMODPath, bRememberMissingDirectories ) );
 	}
 	else if ( szMODPath.empty() )
 	{

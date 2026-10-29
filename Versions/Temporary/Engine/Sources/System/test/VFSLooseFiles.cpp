@@ -134,9 +134,10 @@ protected:
 		ASSERT_TRUE( file.good() );
 	}
 
-	CObj<NVFS::IVFS> MakeVFS()
+	// The game's VFS by default, which remembers missing directories; the editor's does not.
+	CObj<NVFS::IVFS> MakeVFS( bool bRememberMissingDirectories = true )
 	{
-		return NVFS::CreateWinVFS( directory.string() + "/" );
+		return NVFS::CreateWinVFS( directory.string() + "/", bRememberMissingDirectories );
 	}
 
 	// What the VFS serves for the path, or "<none>" when it has nothing by that name.
@@ -228,6 +229,16 @@ TEST_F( VFSLooseFiles, ALooseFileAddedLaterIsSeenByTheNextVFS )
 	CObj<NVFS::IVFS> pNextVFS = MakeVFS();
 	EXPECT_EQ( Read( pNextVFS, "Custom/Missions/New Map/map.xdb" ), "loose map" );
 	EXPECT_EQ( Read( pNextVFS, "Units/Tank/stats.xdb" ), "loose tank" );
+}
+
+// The editor writes files while it runs, so a VFS that does not remember missing
+// directories keeps asking: a file that was not there the first time is found the next.
+TEST_F( VFSLooseFiles, WithoutRememberingADirectoryCreatedLaterIsSeen )
+{
+	CObj<NVFS::IVFS> pVFS = MakeVFS( false );
+	EXPECT_EQ( Read( pVFS, "Custom/Missions/New Map/map.xdb" ), "<none>" );
+	WriteLoose( "Custom/Missions/New Map/map.xdb", "loose map" );
+	EXPECT_EQ( Read( pVFS, "Custom/Missions/New Map/map.xdb" ), "loose map" );
 }
 
 } // namespace

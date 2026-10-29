@@ -139,9 +139,10 @@ bool CWinVFS::CWinFileEntry::GetStats( SFileStats *pStats, const std::string &sz
 	return pStats == 0 ? false : GetWinFileStats( pStats, szBasePath + szRealPath );
 }
 
-CWinVFS::CWinVFS( const std::string &_szBasePath )
+CWinVFS::CWinVFS( const std::string &_szBasePath, bool _bRememberMissingDirectories )
 	: bAllWinFilesChecked( false )
 	, bArchiveOnly( false )
+	, bRememberMissingDirectories( _bRememberMissingDirectories )
 {
 	if ( _szBasePath.empty() )
 	{
@@ -257,9 +258,14 @@ CWinVFS::~CWinVFS()
 // a second in all. The directories are asked about instead, from the shallowest down,
 // once each, and one missing directory rules out everything below it: the same run asks
 // 65 times. Whole components are compared, so a missing Units says nothing of UnitsX.
+// Without bRememberMissingDirectories every file may be on disk, so each is looked for.
 // The callers hold g_WinVFSCriticalSection.
 bool CWinVFS::CanBeOnDisk( const NFile::CFilePath &szPath )
 {
+	if ( !bRememberMissingDirectories )
+	{
+		return true;
+	}
 	for ( size_t nEnd = 0; nEnd < szPath.size(); ++nEnd )
 	{
 		if ( !NFile::IsFolderSeparator( szPath[nEnd] ) )
@@ -285,9 +291,36 @@ bool CWinVFS::CanBeOnDisk( const NFile::CFilePath &szPath )
 	return true;
 }
 
+// The loose copy of szPath under szBasePath, if there is one: its stats, and in
+// *pRealPath how it is spelled on disk.
+//
+// When nothing is spelled that way, the data does not agree with the disk about
+// spelling and never had to: the shipped tree has UI/MainMenuMovie while the database
+// asks for UI/mainmenumovie, and on Windows the filesystem settled it. Ask again for
+// whatever is really there. This goes for a loose copy that overrides a packed file
+// as much as for one only on disk; the former used to skip the second try, so off
+// Windows a loose UNITS/tank/stats.xdb never replaced the packed Units/Tank/stats.xdb.
+// The callers hold g_WinVFSCriticalSection.
+bool CWinVFS::GetLooseFileStats( SFileStats *pStats, NFile::CFilePath *pRealPath, const NFile::CFilePath &szPath )
+{
+	if ( !CanBeOnDisk( szPath ) )
+	{
+		return false;
+	}
+	if ( GetWinFileStats( pStats, szBasePath + szPath ) != false )
+	{
+		*pRealPath = szPath;
+		return true;
+	}
+	return NFile::ResolveDataPathCase( pRealPath, szBasePath, szPath ) &&
+	       GetWinFileStats( pStats, szBasePath + *pRealPath ) != false;
+}
+
 CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 {
 	std::lock_guard csLock( g_WinVFSCriticalSection );
+	SFileStats fileStats;
+	NFile::CFilePath szRealPath;
 	// first, check for registered file
 	CStreamEntriesMap::iterator pos = streamEntriesMap.find( szPath );
 	if ( pos != streamEntriesMap.end() )
@@ -295,49 +328,26 @@ CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 		// check for win-file if this entry still not checked
 		if ( !pos->second->IsChecked() )
 		{
-			SFileStats fileStats;
-			if ( CanBeOnDisk( szPath ) && GetWinFileStats( &fileStats, szBasePath + szPath ) != false &&
-			     pos->second->GetCheckTime() < fileStats.mtime )
+			if ( GetLooseFileStats( &fileStats, &szRealPath, szPath ) && pos->second->GetCheckTime() < fileStats.mtime )
 			{
 				delete pos->second;
-				pos->second = new CWinFileEntry( fileStats.mtime, szBasePath, szPath );
+				pos->second = new CWinFileEntry( fileStats.mtime, szBasePath, szRealPath );
 			}
 		}
 		pos->second->SetChecked();
 		return pos->second;
 	}
-	else
+	// check for unregistered win-file
+	//
+	// Filed under the name that was asked for rather than the one that was found,
+	// because that is the lookup that has to hit next time and the key folds case
+	// anyway, so both spellings reach this one entry.
+	if ( GetLooseFileStats( &fileStats, &szRealPath, szPath ) )
 	{
-		if ( !CanBeOnDisk( szPath ) )
-		{
-			return 0;
-		}
-		// check for unregistered win-file
-		SFileStats fileStats;
-		if ( GetWinFileStats( &fileStats, szBasePath + szPath ) != false )
-		{
-			CWinFileEntry *pEntry = new CWinFileEntry( fileStats.mtime, szBasePath, szPath );
-			pEntry->SetChecked();
-			streamEntriesMap[szPath] = pEntry;
-			return pEntry;
-		}
-		// Nothing is spelled that way, but the data does not agree with the disk
-		// about spelling and never had to: the shipped tree has UI/MainMenuMovie
-		// while the database asks for UI/mainmenumovie, and on Windows the
-		// filesystem settled it. Ask again for whatever is really there.
-		//
-		// Filed under the name that was asked for rather than the one that was
-		// found, because that is the lookup that has to hit next time and the key
-		// folds case anyway, so both spellings reach this one entry.
-		NFile::CFilePath szRealPath;
-		if ( NFile::ResolveDataPathCase( &szRealPath, szBasePath, szPath ) &&
-		     GetWinFileStats( &fileStats, szBasePath + szRealPath ) != false )
-		{
-			CWinFileEntry *pEntry = new CWinFileEntry( fileStats.mtime, szBasePath, szRealPath );
-			pEntry->SetChecked();
-			streamEntriesMap[szPath] = pEntry;
-			return pEntry;
-		}
+		CWinFileEntry *pEntry = new CWinFileEntry( fileStats.mtime, szBasePath, szRealPath );
+		pEntry->SetChecked();
+		streamEntriesMap[szPath] = pEntry;
+		return pEntry;
 	}
 	return 0;
 }
@@ -663,9 +673,9 @@ bool WriteFile( IFileCreator *pCreator, const std::string &path, const CDataStre
 	}
 }
 
-IVFS *CreateWinVFS( const std::string &szBasePath )
+IVFS *CreateWinVFS( const std::string &szBasePath, bool bRememberMissingDirectories )
 {
-	return new NVFS::CWinVFS( szBasePath );
+	return new NVFS::CWinVFS( szBasePath, bRememberMissingDirectories );
 }
 
 IFileCreator *CreateWinFileCreator( const std::string &szBasePath )
