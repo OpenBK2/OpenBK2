@@ -22,7 +22,6 @@
 #include "MapEditorLib/Resources.h"
 #include "Misc/HPTimer.h"
 #include "Misc/StrProc.h"
-#include "port/messagebox.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/GeneralSettings.h"
@@ -384,7 +383,8 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	std::string szSettingsError;
 	if ( !NSettings::InitializeGeneralSettings( &szSettingsError ) )
 	{
-		MessageBox( 0, szSettingsError.c_str(), "OpenBK2 Editor", MB_OK | MB_ICONERROR );
+		// Use the editor's portable dialog, with a title available before user data is loaded.
+		NMessage::Error( szSettingsError, "OpenBK2 Editor" );
 		return false;
 	}
 	NGlobal::LoadConfig( "Profiles/startup.cfg" );

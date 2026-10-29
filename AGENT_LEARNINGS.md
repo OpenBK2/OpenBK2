@@ -3,6 +3,11 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Editor startup errors should use NMessage::Error with an explicit title before
+  user data is loaded. Including port/messagebox.h introduces an SDL dependency
+  that MapEditor does not declare. The Linux Clang CI job skips the editor, so
+  passing it does not validate changes to editor code.
+
 - Per-user profiles must be initialized before startup.cfg, including in the editor.
   Nested exec calls need a saved include context and storage class; the old handler
   prepended `..` and could reload installation defaults after profiles moved.
