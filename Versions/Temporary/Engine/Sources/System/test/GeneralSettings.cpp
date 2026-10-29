@@ -135,9 +135,13 @@ TEST_F( CGeneralSettingsTest, EditorResolvesLegacyPathsWithoutFallingBackToDefau
 	Write( install / "Editor/obsolete.xml", "installation only" );
 	for ( const auto &name : { std::string( "../editor/bitfields/aiactions.xml" ),
 	                           std::string( "Editor\\BitFields\\AIActions.xml" ),
-	                           ( install / "Editor/BitFields/AIActions.xml" ).u8string() } )
+	                           ( install / "Editor/BitFields/AIActions.xml" ).u8string(),
+	                           ( editor / "bitfields/aiactions.xml" ).u8string() } )
 	{
-		EXPECT_EQ( "user actions", Read( fs::u8path( settings.ResolveEditorPath( name ) ) ) );
+		SCOPED_TRACE( name );
+		const auto resolved = fs::u8path( settings.ResolveEditorPath( name ) );
+		EXPECT_TRUE( resolved.is_absolute() );
+		EXPECT_EQ( "user actions", Read( resolved ) );
 	}
 	EXPECT_FALSE( fs::exists( fs::u8path( settings.ResolveEditorPath( "Editor/obsolete.xml" ) ) ) );
 	const auto data = ( install / "Data/Editor/EditorOptions.xdb" ).u8string();
@@ -249,6 +253,27 @@ TEST_F( CGeneralSettingsTest, LegacyPathsAlwaysReadUserProfilesAndPreserveResour
 	EXPECT_EQ( "GameRoot.xdb", settings.ResolveResourceID( "../Data/GameRoot.xdb" ) );
 	EXPECT_EQ( "GameRoot.xdb", settings.ResolveResourceID( "..\\data\\GameRoot.xdb" ) );
 	EXPECT_EQ( "Consts/Game.xdb", settings.ResolveResourceID( "Consts/Game.xdb" ) );
+}
+
+TEST_F( CGeneralSettingsTest, ConfigPathsResolveMixedCaseFromTheirFilesystemRoot )
+{
+	const auto config = profiles / "Player/Nested/Settings.cfg";
+	Write( config, "user settings" );
+	Write( install / "Profiles/Player/Nested/Settings.cfg", "installation defaults" );
+	// Legacy and absolute paths must resolve case within the user tree on Linux.
+	for ( const auto &name : { std::string( "../profiles/player/nested/settings.cfg" ),
+	                           ( install / "Profiles/player/nested/settings.cfg" ).u8string(),
+	                           ( profiles / "player/nested/settings.cfg" ).u8string() } )
+	{
+		SCOPED_TRACE( name );
+		const auto resolved = fs::u8path( settings.ResolveConfigPath( name ) );
+		EXPECT_TRUE( resolved.is_absolute() );
+		EXPECT_EQ( "user settings", Read( resolved ) );
+	}
+	// A nested exec uses the same case resolution relative to its including file.
+	EXPECT_EQ( "user settings",
+	           Read( fs::u8path( settings.ResolveConfigPath( "nested/settings.cfg",
+	                                                         ( profiles / "Player/startup.cfg" ).u8string() ) ) ) );
 }
 
 TEST_F( CGeneralSettingsTest, NestedExecRestoresStorageAndNeverSerializesCredentials )

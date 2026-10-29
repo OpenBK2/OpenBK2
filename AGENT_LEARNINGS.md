@@ -3,6 +3,16 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- `ResolveDataPathCase` takes a base directory ending in a separator and a
+  relative path, and returns only the relative portion. For absolute settings
+  paths, split `root_path()` from `relative_path()` and restore the root after
+  resolving. Passing an absolute path with an empty base searches the CWD on
+  Linux; Windows hides the mistake because its case resolver is a no-op.
+- For standalone WSL checks, stage cached headers in native temporary storage;
+  searching many Boost include directories through `/mnt/c` is very slow.
+  Use `-iquote` for local System headers: `-I` on the case-insensitive Windows
+  mount lets `System/Time.h` shadow the standard `<time.h>` header.
+
 - Physical Editor settings and database IDs under Data/Editor are different
   namespaces. Redirect physical files, not VFS IDs, and keep szStartFolder as
   the installation root for game resources. Audit direct CFileStream/ifstream

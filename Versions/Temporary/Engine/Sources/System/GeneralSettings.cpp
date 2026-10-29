@@ -104,8 +104,14 @@ namespace
 	std::string ResolveCase( const fs::path &path )
 	{
 		std::string result;
-		const auto name = path.u8string();
-		return NFile::ResolveDataPathCase( &result, "", name ) ? result : name;
+		// The case resolver accepts a relative path and returns one. Keep the root
+		// separate so absolute settings paths are searched from it, not the CWD.
+		const auto root = path.root_path();
+		if ( NFile::ResolveDataPathCase( &result, root.u8string(), path.relative_path().u8string() ) )
+		{
+			return ( root / fs::u8path( result ) ).u8string();
+		}
+		return path.u8string();
 	}
 
 	fs::path LegacyRelative( const fs::path &path )
