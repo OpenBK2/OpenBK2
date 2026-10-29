@@ -202,7 +202,12 @@ NFile::CFilePath GetAbsolutePath( const NFile::CFilePath &path )
 	{
 		return path;
 	}
-	const std::string szMODsBaseDir = NMainLoop::GetBaseDir() + "Mods\\";
+	// The same expression GetAllMODs and ReadMODInfo build, rather than a fourth
+	// spelling of it. "Mods\\" was wrong twice off Windows: the backslash is an
+	// ordinary character in a POSIX file name, so it never separated anything,
+	// and the directory is DIR_MODS, "MODs", which a case sensitive filesystem
+	// does not match against "Mods".
+	const std::string szMODsBaseDir = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS ) + NFile::PATH_SEPARATOR;
 	NFile::CFilePath pathAbsolute;
 	MakeFullPath( &pathAbsolute, path, szMODsBaseDir );
 	NormalizePath( &pathAbsolute, pathAbsolute );
