@@ -73,6 +73,29 @@ void CGrannyMemFileLoader::RecalcValue( CFileRequest *p )
 #pragma warning( default : 4530 )
 }
 
+//! Whether a geometry file may be read on the loader thread rather than on the
+//! thread that asked for it.
+//!
+//! False since the game shipped. AddFileRequest reads anything that is not a
+//! delayed load on the calling thread, so geometry has always been fetched
+//! synchronously in the middle of creating a scene object, which is what puts
+//! reading and expanding .gr2 files on the critical path of a map load.
+//!
+//! Switchable rather than simply changed, because the thing it changes is when a
+//! resource becomes ready, and that has diverged replays before: the comment on
+//! resource_sync_load in GResource.cpp records two runs of one binary on one
+//! replay disagreeing, with the earliest difference being exactly that question.
+//! Geometry's own flag has never been anything but false, so nothing is known
+//! about it either way, which is the reason to be able to turn it back off.
+//!
+//! Read once. It is part of the resource key, so a value that changed mid-run
+//! would split one file's cache entry in two.
+static bool AllowDelayedGeometryLoad()
+{
+	static const bool bAllow = NGlobal::GetVar( "geometry_delayed_load", 0 ) != 0;
+	return bAllow;
+}
+
 void CGrannyMeshLoader::SetKey( const SPartAndSkeletonKey &_key )
 {
 	key = _key;
@@ -87,8 +110,9 @@ void CGrannyMeshLoader::SetKey( const SPartAndSkeletonKey &_key )
 		}
 		return;
 	}
-	SResKey<SGrannyFileLoaderInfo> uidKey( _key.pGeometry->uid,
-	                                       SGrannyFileLoaderInfo( "Geometries", _key.pGeometry->GetRecordID(), false ) );
+	SResKey<SGrannyFileLoaderInfo> uidKey(
+			_key.pGeometry->uid,
+			SGrannyFileLoaderInfo( "Geometries", _key.pGeometry->GetRecordID(), AllowDelayedGeometryLoad() ) );
 	pGrannyFile = shareGrannyFiles.Get( uidKey );
 	if ( key.pSkeleton )
 	{
