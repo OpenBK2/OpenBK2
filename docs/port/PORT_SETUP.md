@@ -33,7 +33,7 @@ sudo apt update && sudo apt install -y \
   libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxfixes-dev libxss-dev \
   libwayland-dev wayland-protocols libxkbcommon-dev \
   libasound2-dev libpulse-dev libudev-dev libdrm-dev libgbm-dev libgl-dev libegl-dev \
-  libcurl4-openssl-dev libssl-dev \
+  libcurl4-openssl-dev libssl-dev libsecret-1-dev \
   libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libswresample-dev
 ```
 

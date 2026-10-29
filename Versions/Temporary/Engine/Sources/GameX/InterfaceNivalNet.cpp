@@ -4,6 +4,7 @@
 #include "InterfaceMisc.h"
 #include "InterfaceNivalNet.h"
 #include "InterfaceState.h"
+#include "Main/Profiles.h"
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
 #include "SceneB2/Scene.h"
@@ -112,11 +113,14 @@ void CInterfaceNivalNet::MakeInterior()
 	pRegistrationUserName = GetChildChecked<IEditLine>( pFrameRegister, "edit_registration_username", true );
 
 	pRememberPassword = GetChildChecked<IButton>( pFrameLogin, "ButtonRememberPassword", true );
-	std::wstring wszStoredPassword = NGlobal::GetVar( "Multiplayer.NivalNet.StoredPassword", "" ).GetString();
-	std::wstring wszStoredLogin = NGlobal::GetVar( "Multiplayer.NivalNet.StoredLogin", "" ).GetString();
-	pLoginLoginEdit->SetText( wszStoredLogin.c_str() );
-	pLoginPasswordEdit->SetText( wszStoredPassword.c_str() );
-	pRememberPassword->SetState( ( wszStoredLogin == L"" ) ? 0 : 1 );
+	pLoginLoginEdit->SetText( L"" );
+	pLoginPasswordEdit->SetText( L"" );
+	bRememberLogin = NGlobal::GetVar( "Multiplayer.NivalNet.RememberLogin", 0 ) != 0;
+	pRememberPassword->SetState( bRememberLogin ? 1 : 0 );
+	if ( bRememberLogin )
+	{
+		StartCredentialRequest( NProfile::ECredentialOperation::READ );
+	}
 
 	if ( pFrameRecovery )
 	{
@@ -164,6 +168,84 @@ void CInterfaceNivalNet::UpdateInteriorLogin()
 void CInterfaceNivalNet::UpdateInteriorRegister() {}
 
 void CInterfaceNivalNet::UpdateInteriorRecover() {}
+
+void CInterfaceNivalNet::StartCredentialRequest( NProfile::ECredentialOperation operation )
+{
+	// Cancelling a previous read cannot overwrite credentials the user just typed.
+	pCredentialRequest.reset();
+	credentialOperation = operation;
+	pCredentialRequest = std::make_unique<NProfile::CCredentialRequest>( operation, loginCredentials );
+}
+
+void CInterfaceNivalNet::FinishLogin()
+{
+	bLoginSucceeded = false;
+	loginCredentials.Clear();
+	pLoginPasswordEdit->SetText( L"" );
+	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+	NMainLoop::Command( ML_COMMAND_MP_GAME_LOBBY, "" );
+}
+
+void CInterfaceNivalNet::Step( bool bAppActive )
+{
+	CInterfaceScreenBase::Step( bAppActive );
+	if ( eState == ES_NORMAL && pRememberPassword && pRememberPassword->GetState() == 0 &&
+	     NGlobal::GetVar( "Multiplayer.NivalNet.RememberLogin", 0 ) != 0 )
+	{
+		// Forget as soon as the checkbox is cleared, even without another login.
+		NGlobal::SetVar( "Multiplayer.NivalNet.RememberLogin", 0 );
+		NProfile::SaveProfile();
+		StartCredentialRequest( NProfile::ECredentialOperation::REMOVE );
+	}
+	if ( !pCredentialRequest || !pCredentialRequest->IsReady() )
+	{
+		return;
+	}
+	const auto reply = pCredentialRequest->TakeResult();
+	pCredentialRequest.reset();
+	const wchar_t *pszWarning = nullptr;
+	if ( credentialOperation == NProfile::ECredentialOperation::READ )
+	{
+		if ( reply.result == NSettings::ESecretResult::OK && eState == ES_NORMAL && *pLoginLoginEdit->GetText() == L'\0' &&
+		     *pLoginPasswordEdit->GetText() == L'\0' && pRememberPassword->GetState() == 1 )
+		{
+			pLoginLoginEdit->SetText( NStr::ToUnicode( reply.credentials.szLogin ).c_str() );
+			pLoginPasswordEdit->SetText( NStr::ToUnicode( reply.credentials.szPassword ).c_str() );
+		}
+		else if ( reply.result != NSettings::ESecretResult::OK && reply.result != NSettings::ESecretResult::NOT_FOUND )
+		{
+			pszWarning =
+					L"Saved login details could not be read. Unlock your system credential store, or enter your login details for this session.";
+		}
+	}
+	else
+	{
+		if ( credentialOperation == NProfile::ECredentialOperation::WRITE )
+		{
+			NGlobal::SetVar( "Multiplayer.NivalNet.RememberLogin", reply.result == NSettings::ESecretResult::OK ? 1 : 0 );
+			NProfile::SaveProfile();
+			if ( reply.result != NSettings::ESecretResult::OK )
+			{
+				pszWarning =
+						L"Your login succeeded, but the system credential store could not save your login details. They will be used for this session only.";
+			}
+		}
+		else if ( reply.result != NSettings::ESecretResult::OK )
+		{
+			pszWarning =
+					L"Automatic login filling is disabled, but the saved login could not be deleted from the system credential store. Unlock it and retry, or delete the OpenBK2 entry there.";
+		}
+		if ( bLoginSucceeded )
+		{
+			FinishLogin();
+		}
+	}
+	if ( pszWarning )
+	{
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", pszWarning ).c_str() );
+	}
+}
 
 void CInterfaceNivalNet::OnGetFocus( bool bFocus )
 {
@@ -242,12 +324,27 @@ bool CInterfaceNivalNet::OnConnectResultMessage( SMPUIConnectResultMessage *pMsg
 {
 	if ( pMsg->bSuccess )
 	{
-		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-		NMainLoop::Command( ML_COMMAND_MP_GAME_LOBBY, "" );
+		bLoginSucceeded = true;
+		// Registration shares this callback but has no captured login request.
+		if ( eState == ES_LOGIN && bRememberLogin && !loginCredentials.szLogin.empty() )
+		{
+			StartCredentialRequest( NProfile::ECredentialOperation::WRITE );
+			loginCredentials.Clear();
+		}
+		else if ( pCredentialRequest && credentialOperation == NProfile::ECredentialOperation::READ )
+		{
+			pCredentialRequest.reset();
+		}
+		if ( !pCredentialRequest )
+		{
+			FinishLogin();
+		}
 		return true;
 	}
 	else
 	{
+		bLoginSucceeded = false;
+		loginCredentials.Clear();
 		// Hide "connecting"
 		pWaitWindow->ShowWindow( false );
 
@@ -264,6 +361,8 @@ bool CInterfaceNivalNet::OnConnectResultMessage( SMPUIConnectResultMessage *pMsg
 
 bool CInterfaceNivalNet::OnBackReaction( const std::string &szSender )
 {
+	pCredentialRequest.reset();
+	loginCredentials.Clear();
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_NO_NET );
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
@@ -288,6 +387,18 @@ bool CInterfaceNivalNet::OnLoginReaction( const std::string &szSender )
 
 		// Show "connecting"
 		pWaitWindow->ShowWindow( true );
+		pCredentialRequest.reset();
+		bRememberLogin = pRememberPassword->GetState() == 1;
+		loginCredentials.szLogin = NStr::ToMBCS( wszLogin );
+		loginCredentials.szPassword = NStr::ToMBCS( pLoginPasswordEdit->GetText() );
+		if ( !bRememberLogin )
+		{
+			// Persist the opt-out before deletion, so a locked store cannot make
+			// a forgotten login reappear on the next launch.
+			NGlobal::SetVar( "Multiplayer.NivalNet.RememberLogin", 0 );
+			NProfile::SaveProfile();
+			StartCredentialRequest( NProfile::ECredentialOperation::REMOVE );
+		}
 
 		eState = ES_LOGIN;
 		Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILoginNivalNetMessage(

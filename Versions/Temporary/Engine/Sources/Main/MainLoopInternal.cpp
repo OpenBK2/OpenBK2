@@ -26,6 +26,7 @@
 #include "System/BasicShare.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "System/GResource.h"
 #include "System/WinFrame.h"
 
@@ -95,15 +96,12 @@ void InitMainLoop()
 	std::filesystem::remove( szLogFileName, error );
 	//
 	NI_ASSERT( !szCurrentDir.empty(), "Can't get current directory" );
-	// The parent of the working directory, which is where the data sits.
-	//
-	// Through std::filesystem rather than by appending ".." and a backslash. Off
-	// Windows a backslash is an ordinary character in a file name, so
-	// lexically_normal leaves "bin\..\" exactly as it found it and every
-	// path built on the result names a directory that does not exist. Measured:
-	// this returned "/opt/bk2/bin\..\", which is why the splash screen
-	// never loaded.
-	NFile::GetFullName( &szBaseDir, std::filesystem::path( szCurrentDir ).parent_path().string() );
+	const auto *pSettings = NSettings::GetGeneralSettings();
+	// Game/editor startup resolved the installation independently of cwd.
+	// Other tools which do not use profiles retain their existing base directory.
+	NFile::GetFullName( &szBaseDir,
+	                    pSettings ? pSettings->GetInstallRoot()
+	                              : std::filesystem::path( szCurrentDir ).parent_path().string() );
 	NFile::AppendSlash( &szBaseDir, static_cast<char>( std::filesystem::path::preferred_separator ) );
 #if BOOST_OS_WINDOWS
 	// Windows paths are case insensitive and callers compare against this, so it

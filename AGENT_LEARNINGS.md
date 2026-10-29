@@ -3,6 +3,17 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Per-user profiles must be initialized before startup.cfg, including in the editor.
+  Nested exec calls need a saved include context and storage class; the old handler
+  prepended `..` and could reload installation defaults after profiles moved.
+- Known Folder declarations are hidden by this tree's XP-era SDK target macros.
+  Keep modern Windows API adapters in a small translation unit without the legacy
+  PCH. Standalone tests that include Windows headers also need NOMINMAX before
+  Boost UUID headers; otherwise min/max macros produce misleading template errors.
+- Secret Service lookup attributes are public metadata. Store the username inside
+  the protected payload, and check locked items when deleting: password_clear only
+  removes unlocked entries. Keyring calls belong off the login UI thread.
+
 - `CMilitaryCar::Segment` updates the ability state, then guns, then turrets. An idle gun can therefore request a turret return after Binoculars has aimed it. Suppress the return at execution time for the turret held by the active ability, rather than clearing the request only during aiming. Check cancellation and loaded states as well as unrelated turrets.
 
 - Mechanical Binoculars use `ACTION_COMMAND_USE_SPYGLASS`; `ACTION_COMMAND_USE_BINOCULAR` is a separate legacy command. A turret's `TurnHor` does not enforce its horizontal constraint, so aim states must clamp it and use hull assistance when appropriate. For towed guns use `CArtillery::TurnToDir` to preserve packing before rotation, and leave turret control to installation actions while they run. Serialized artillery fixtures use chunks 4/5 for guns/turrets, unlike military cars' 3/4; factory-only checks cannot verify actual aiming.

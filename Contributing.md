@@ -69,6 +69,54 @@ copying will take a while - there are **MANY** small files.
 
 # launching the game
 
+## user profiles and saved logins
+
+The game and editor use one per-user `Profiles` directory:
+
+- Windows: `%LOCALAPPDATA%\OpenBK2\Profiles` (resolved through Known Folders).
+- Linux: `$XDG_DATA_HOME/OpenBK2/Profiles`, or `~/.local/share/OpenBK2/Profiles`
+  when `XDG_DATA_HOME` is unset, empty, or relative.
+- macOS: `~/Library/Application Support/com.OpenBK2Team.OpenBK2/Profiles`
+  for an ordinary desktop app; Foundation resolves the user domain for a sandboxed app.
+
+On first launch, the installation's `Profiles` defaults are copied into a private
+staging directory and published only after the copy completes. The installation
+template is never modified. An existing user directory wins and is never merged
+with new defaults. Missing templates, incomplete profiles and write failures are
+reported before startup configurations run.
+
+The installation is located relative to the executable (`<installation>/bin`),
+independently of the working directory. For development builds and isolated test
+runs, `OPENBK2_DATA_DIR` can name the installation root and
+`OPENBK2_USER_DATA_DIR` can name an alternate application-data directory. Both
+overrides must be absolute; the latter contains `Profiles`, not its contents.
+Set both for tests against a separate installation to avoid sharing real profiles.
+
+Legacy `exec .\profiles\...` paths resolve to the user directory. Nested config
+includes can also be relative to their including file. Resource settings such as
+`game_root = ../Data/GameRoot.xdb` resolve through the existing mod-aware database.
+
+Remembered online usernames and passwords are stored together in Windows
+Credential Manager, Linux Secret Service, or macOS Keychain. Only the remember
+preference and an opaque profile identifier are stored in ordinary files.
+Credentials are saved after successful authentication. Clearing the remember
+checkbox requests their deletion. If secure storage is unavailable, login still
+works for the current session and the game reports that it cannot remember it;
+there is no plaintext fallback. Old `StoredLogin` and `StoredPassword` config
+variables are ignored and omitted from subsequent settings saves.
+
+Linux builds require `libsecret-1-dev` (libsecret 0.19 or later). Remembering a
+login also requires an available, unlocked Secret Service provider in the user's
+desktop session, such as GNOME Keyring or a compatible KDE wallet service.
+Restoring a backup of `Profiles` on another machine does not transfer its secrets.
+
+`GeneralSettings_test` exercises migration and config resolution with temporary
+directories. `SecuredSettings_test` tests credential encoding and failure cases.
+Set `OPENBK2_TEST_NATIVE_CREDENTIALS=1` when running the latter to additionally
+write, read, replace and delete a uniquely named temporary OS credential.
+
+## executable
+
 the game executable is `bin\Game.exe`. therefore, if game was installed into `C:\Games\bk2`, then `C:\Games\bk2\bin\Game.exe` should be launched.
 
 ## straight into a mission or a campaign

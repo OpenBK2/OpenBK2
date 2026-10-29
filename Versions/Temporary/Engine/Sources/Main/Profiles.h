@@ -2,6 +2,9 @@
 
 #include "Main_export.h"
 
+#include <string>
+#include <vector>
+
 namespace NProfile
 {
 MAIN_EXPORT void LoadProfile();

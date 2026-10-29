@@ -3,9 +3,13 @@
 #include "MainLoop.h"
 #include "Misc/StrProc.h"
 #include "port/unicode.h"
+#include "ProfileCredentials.h"
 #include "Profiles.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
+
+#include <stdexcept>
 
 #if BOOST_OS_WINDOWS
 #include <objbase.h>
@@ -23,7 +27,12 @@ namespace NProfile
 {
 static std::string GetProfileRootDir()
 {
-	return NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_PROFILES );
+	const auto *pSettings = NSettings::GetGeneralSettings();
+	if ( !pSettings )
+	{
+		throw std::runtime_error( "User profiles have not been initialized." );
+	}
+	return pSettings->GetProfilesRoot();
 }
 
 // directory name with default profile settings
@@ -181,6 +190,14 @@ void ChangeProfile( const std::wstring &szProfile )
 bool RemoveProfile( const std::wstring &szProfile )
 {
 	std::string szDir = GetProfileDir( szProfile );
+	// Do not orphan a stored password when the credential store is locked.
+	if ( ForgetProfileCredentials( szDir ) != NSettings::ESecretResult::OK )
+	{
+		csSystem
+				<< "Cannot remove profile: its saved credentials could not be deleted. Unlock the credential store and retry."
+				<< endl;
+		return false;
+	}
 	NFile::DeleteDirectory( szDir );
 	return true;
 }

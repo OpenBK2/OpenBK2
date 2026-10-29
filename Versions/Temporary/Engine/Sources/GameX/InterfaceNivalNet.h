@@ -2,6 +2,9 @@
 #pragma once
 
 #include "InterfaceMPBase.h"
+#include "Main/ProfileCredentials.h"
+
+#include <memory>
 
 class CInterfaceNivalNet : public CInterfaceMPScreenBase, public IProgrammedReactionsAndChecks
 {
@@ -79,6 +82,15 @@ class CInterfaceNivalNet : public CInterfaceMPScreenBase, public IProgrammedReac
 	}
 
 private:
+	// OS credential requests are transient UI state, never part of a savegame.
+	std::unique_ptr<NProfile::CCredentialRequest> pCredentialRequest;
+	NProfile::ECredentialOperation credentialOperation = NProfile::ECredentialOperation::READ;
+	NSettings::SCredentials loginCredentials;
+	bool bLoginSucceeded = false;
+	bool bRememberLogin = false;
+	void FinishLogin();
+	void StartCredentialRequest( NProfile::ECredentialOperation operation );
+
 	void RegisterObservers();
 
 	void MakeInterior();
@@ -114,6 +126,7 @@ public:
 	CInterfaceNivalNet();
 
 	bool Init() override;
+	void Step( bool bAppActive ) override;
 	void OnGetFocus( bool bFocus ) override;
 	bool ProcessEvent( const SGameMessage &msg ) override;
 	void AfterLoad() override;

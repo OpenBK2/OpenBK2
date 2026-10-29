@@ -10,6 +10,7 @@ set(SOURCES
     MainLoopInternal.cpp
     MODs.cpp
     MultiplayerInternal.cpp
+    ProfileCredentials.cpp
     Profiles.cpp
     stdafx.cpp
 )

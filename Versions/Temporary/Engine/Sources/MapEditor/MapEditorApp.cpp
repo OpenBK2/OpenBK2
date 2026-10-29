@@ -22,8 +22,10 @@
 #include "MapEditorLib/Resources.h"
 #include "Misc/HPTimer.h"
 #include "Misc/StrProc.h"
+#include "port/messagebox.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "System/SplashScreen.h"
 
 #include "libdb_export.h"
@@ -378,14 +380,15 @@ bool CEditorApp::ParseCommandLine( const std::string &rszFileToOpen, bool bReset
 
 bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 {
-	//
-	// JoinPath and DIR_PROFILES rather than a literal, which is what
-	// Game/main.cpp already does for the same file. There were two bugs in that
-	// one string off Windows: the backslashes make the whole thing a single
-	// nonexistent filename, and "profiles" is the wrong case for the directory
-	// this tree ships. Neither is visible on Windows.
-	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "startup.cfg" ) );
-	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "editor.cfg" ) );
+	// The editor shares user profiles with the game, including nested exec paths.
+	std::string szSettingsError;
+	if ( !NSettings::InitializeGeneralSettings( &szSettingsError ) )
+	{
+		MessageBox( 0, szSettingsError.c_str(), "OpenBK2 Editor", MB_OK | MB_ICONERROR );
+		return false;
+	}
+	NGlobal::LoadConfig( "Profiles/startup.cfg" );
+	NGlobal::LoadConfig( "Profiles/editor.cfg" );
 	//
 	// The InitCommonControls that stood here is gone, and it was redundant
 	// rather than probably redundant: wxApp::Initialize calls it (src/msw/app.cpp),

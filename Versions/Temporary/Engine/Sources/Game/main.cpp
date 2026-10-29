@@ -31,6 +31,7 @@
 #include "System/Commands.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "System/GResource.h"
 #include "System/SplashScreen.h"
 #include "System/VFSOperations.h"
@@ -304,7 +305,14 @@ static int RunGame( const std::vector<std::string> &arguments )
 	(void)mi_version();
 #endif
 
-	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "startup.cfg" ) );
+	// Migration must finish before even startup.cfg can execute nested configs.
+	std::string szSettingsError;
+	if ( !NSettings::InitializeGeneralSettings( &szSettingsError ) )
+	{
+		MessageBox( 0, szSettingsError.c_str(), "OpenBK2", MB_OK | MB_ICONERROR );
+		return 0xDEAD;
+	}
+	NGlobal::LoadConfig( "Profiles/startup.cfg" );
 	StoreBuildInfo();
 
 	// Suppress the shell's own error boxes for a missing DLL or an unreadable
@@ -418,8 +426,8 @@ static int RunGame( const std::vector<std::string> &arguments )
 		NMOD::InstantAttachMOD( szMOD2Attach, NDb::DATABASE_MODE_GAME );
 	}
 	//
-	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "autoexec.cfg" ) );
-	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "game.cfg" ) );
+	NGlobal::LoadConfig( "Profiles/autoexec.cfg" );
+	NGlobal::LoadConfig( "Profiles/game.cfg" );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );

@@ -75,10 +75,7 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 	Singleton<ISFX>()->Init( hWindow, 0, SFX_OUTPUT_DSOUND, 44100, 32 );
 	//
 	NProfile::LoadProfile();
-	// JoinPath and DIR_PROFILES, as Game/main.cpp asks for the same file: the
-	// literal had both faults, the separator and the case, and off Windows
-	// either one alone is enough to lose the config.
-	NGlobal::LoadConfig( NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_PROFILES, "autoexec.cfg" ) );
+	NGlobal::LoadConfig( "Profiles/autoexec.cfg" );
 
 	// Small trick to force editor have the higthest graphic quality
 	NGlobal::ProcessCommand( L"set_quality 1" );

@@ -37,16 +37,10 @@ const int NIVAL_NET_PORT = 4200;
 
 #define HEARTBEAT_PERIOD 5000
 #define GAMES_REFRESH_PERIOD 5000
-static std::wstring s_wszStoredLogin = L"";
-static std::wstring s_wszStoredPassword = L"";
-
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x192444C0, CMPManagerModeNivalNet );
 START_REGISTER( NivalNetGVars )
-// This GVar is here to force it to be saved in user.cfg
-// Do not remove, please
-REGISTER_VAR_EX( "Multiplayer.NivalNet.StoredLogin", NGlobal::VarWStrHandler, &s_wszStoredLogin, L"", STORAGE_USER );
-REGISTER_VAR_EX(
-		"Multiplayer.NivalNet.StoredPassword", NGlobal::VarWStrHandler, &s_wszStoredPassword, L"", STORAGE_USER );
+// Only the user's preference is a regular setting. Credentials live in the OS store.
+REGISTER_VAR( "Multiplayer.NivalNet.RememberLogin", 0, 0, STORAGE_USER );
 FINISH_REGISTER
 
 CMPManagerModeNivalNet::CMPManagerModeNivalNet()
@@ -665,16 +659,7 @@ bool CMPManagerModeNivalNet::OnLoginNivalNetMessage( SMPUILoginNivalNetMessage *
 	pClient->SendPacket( pLoginPacket );
 	nMyClientID = -1;
 
-	if ( pMsg->bRememberPassword )
-	{
-		NGlobal::SetVar( "Multiplayer.NivalNet.StoredLogin", pMsg->wszLogin );
-		NGlobal::SetVar( "Multiplayer.NivalNet.StoredPassword", pMsg->wszPassword );
-	}
-	else
-	{
-		NGlobal::SetVar( "Multiplayer.NivalNet.StoredLogin", L"" );
-		NGlobal::SetVar( "Multiplayer.NivalNet.StoredPassword", L"" );
-	}
+	// The login screen persists credentials only after authentication succeeds.
 
 	eState = EGS_LOGGING_IN;
 

@@ -23,6 +23,10 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+#if BOOST_OS_MACOS
+#include <mach-o/dyld.h>
+#endif
+
 namespace NFile
 {
 
@@ -627,17 +631,17 @@ std::string GetExecutablePath()
 	// no distinct error, so the only way to tell "it fitted" from "it did not"
 	// is to grow until the answer is shorter than what was offered. 32768 is
 	// what a \\?\ path can reach, so the loop ends.
-	std::vector<char> buffer( MAX_PATH );
+	std::vector<wchar_t> buffer( MAX_PATH );
 	for ( ;; )
 	{
-		const DWORD nLength = ::GetModuleFileNameA( 0, buffer.data(), static_cast<DWORD>( buffer.size() ) );
+		const DWORD nLength = ::GetModuleFileNameW( 0, buffer.data(), static_cast<DWORD>( buffer.size() ) );
 		if ( nLength == 0 )
 		{
 			return std::string();
 		}
 		if ( nLength < buffer.size() )
 		{
-			return std::string( buffer.data(), nLength );
+			return std::filesystem::path( std::wstring( buffer.data(), nLength ) ).u8string();
 		}
 		if ( buffer.size() >= 32768 )
 		{
@@ -645,6 +649,17 @@ std::string GetExecutablePath()
 		}
 		buffer.resize( buffer.size() * 2 );
 	}
+#elif BOOST_OS_MACOS
+	uint32_t nSize = 0;
+	_NSGetExecutablePath( nullptr, &nSize );
+	std::vector<char> buffer( nSize );
+	if ( _NSGetExecutablePath( buffer.data(), &nSize ) != 0 )
+	{
+		return {};
+	}
+	std::error_code error;
+	const auto path = std::filesystem::canonical( std::filesystem::u8path( buffer.data() ), error );
+	return error ? std::string() : path.u8string();
 #else
 	// read_symlink rather than readlink: it sizes the answer itself, where
 	// readlink wants a buffer and does not say when it truncated.

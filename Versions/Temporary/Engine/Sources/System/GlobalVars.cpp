@@ -2,6 +2,7 @@
 
 #include "FilePath.h"
 #include "FileUtils.h"
+#include "GeneralSettings.h"
 #include "GlobalVars.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Helper.h"
@@ -339,9 +340,21 @@ const CValue &GetVar( const std::string &szID, const CValue &sDefault )
 }
 
 static EStorageClass eNewVarStorageClass = STORAGE_DONT_CARE;
+static std::vector<std::string> configStack;
+
+static bool IsLegacyCredential( const std::string &szName )
+{
+	return szName == "Multiplayer.NivalNet.StoredLogin" || szName == "Multiplayer.NivalNet.StoredPassword";
+}
 
 void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass storage )
 {
+	// Old configs must not reintroduce credentials into console variables,
+	// ordinary settings, or savegame serialization.
+	if ( IsLegacyCredential( szVar ) )
+	{
+		return;
+	}
 	CPtr<CRecordsMap> pHold( GetRecordsMap() );
 	TRecordsMap &recordsMap = pHold->recordsMap;
 
@@ -358,7 +371,7 @@ void SetVar( const std::string &szVar, const CValue &sValue, EStorageClass stora
 		           "different storage classes has been specified for this var" );
 	}
 	SCommandInfo &info = i->second;
-	info.storage = (std::max)( info.storage, storage );
+	info.storage = szVar == "Multiplayer.PlayerName" ? STORAGE_NONE : (std::max)( info.storage, storage );
 	const std::vector<SRecord> &records = info.data;
 	for ( int k = 0; k < records.size(); ++k )
 	{
@@ -463,23 +476,51 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 
 void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 {
-	eNewVarStorageClass = _newVarStorage;
+	const auto *pSettings = NSettings::GetGeneralSettings();
+	const std::string szResolved =
+			pSettings ? pSettings->ResolveConfigPath( szFileName, configStack.empty() ? "" : configStack.back() )
+								: szFileName;
+	if ( configStack.size() >= 32 ||
+	     std::find( configStack.begin(), configStack.end(), szResolved ) != configStack.end() )
+	{
+		csSystem << CC_ORANGE << "Recursive config include refused: " << szResolved << endl;
+		return;
+	}
+
+	// Nested exec calls inherit the caller's storage class and restore it on
+	// every return, including a missing/empty file or a recursive include.
+	struct CConfigScope
+	{
+		EStorageClass previous;
+
+		~CConfigScope()
+		{
+			eNewVarStorageClass = previous;
+			configStack.pop_back();
+		}
+	} scope{ eNewVarStorageClass };
+
+	configStack.push_back( szResolved );
+	if ( _newVarStorage != STORAGE_DONT_CARE )
+	{
+		eNewVarStorageClass = _newVarStorage;
+	}
 	std::string szBuffer;
 
-	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
+	CFileStream stream( szResolved, CFileStream::WIN_READ_ONLY );
 	const int nSize = stream.GetSize();
 	if ( nSize == 0 )
 	{
 		// Said nothing at all until now, which is how a whole startup chain of
 		// unreadable paths stayed invisible: this returns before the "Executing"
 		// line below, so a config that could not be opened left no trace.
-		csSystem << CC_ORANGE << "config not read: " << szFileName.c_str() << " (missing, empty, or unreadable)" << endl;
+		csSystem << CC_ORANGE << "config not read: " << szResolved.c_str() << " (missing, empty, or unreadable)" << endl;
 		return;
 	}
 	szBuffer.resize( nSize );
 	stream.Read( &( szBuffer[0] ), nSize );
 
-	csSystem << "Executing " << szFileName << endl;
+	csSystem << "Executing " << szResolved << endl;
 
 	std::vector<std::string> cmdsSet;
 	NStr::SplitString( szBuffer.c_str(), &cmdsSet, '\n' );
@@ -510,7 +551,6 @@ void LoadConfig( const std::string &szFileName, EStorageClass _newVarStorage )
 		NStr::ToUnicode( &wszCmd, szCmd );
 		ProcessCommand( wszCmd );
 	}
-	eNewVarStorageClass = STORAGE_DONT_CARE;
 }
 
 struct SSaveRecord
@@ -536,6 +576,10 @@ static void SaveConfig( const std::string &szFileName, EStorageClass storage )
 	for ( TRecordsMap::iterator iTemp = recordsMap.begin(); iTemp != recordsMap.end(); iTemp++ )
 	{
 		if ( iTemp->second.storage != storage )
+		{
+			continue;
+		}
+		if ( IsLegacyCredential( iTemp->first ) )
 		{
 			continue;
 		}
@@ -679,19 +723,19 @@ static void CmdLoadConfig( const std::string &szID, const std::vector<std::wstri
 {
 	for ( int nTemp = 0; nTemp < paramsSet.size(); ++nTemp )
 	{
-		// The argument is a path out of a config file, so it is spelled however its
-		// author's filesystem accepted it and not how this one does. Retail ships
-		// "exec .\profiles\consts.cfg" beside a Profiles directory, which is both
-		// separators and case wrong at once, and startup.cfg is the first thing the
-		// game reads: consts.cfg and aliases.cfg went missing before anything else
-		// happened.
-		//
-		// Respelt here because this is the boundary. LoadConfig's other callers pass
-		// paths this repository builds, which are already right and take the exact
-		// match, so forgiving this one does not forgive those.
-		const std::string szAsWritten = NFile::JoinPath( "..", NStr::ToMBCS( paramsSet[nTemp] ) );
-		std::string szOnDisk;
-		NGlobal::LoadConfig( NFile::ResolveDataPathCase( &szOnDisk, "", szAsWritten ) ? szOnDisk : szAsWritten );
+		// LoadConfig owns legacy prefix handling and the current include context.
+		std::string szPath = NStr::ToMBCS( paramsSet[nTemp] );
+		if ( !NSettings::GetGeneralSettings() )
+		{
+			// Tools without user profiles keep the original exec convention.
+			szPath = NFile::JoinPath( "..", szPath );
+			std::string szOnDisk;
+			if ( NFile::ResolveDataPathCase( &szOnDisk, "", szPath ) )
+			{
+				szPath = szOnDisk;
+			}
+		}
+		NGlobal::LoadConfig( szPath );
 	}
 }
 

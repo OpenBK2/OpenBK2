@@ -404,6 +404,14 @@ void CInterfaceProfileManager::MsgOk( const SGameMessage &msg )
 			{
 				FillScreenList();
 			}
+			else
+			{
+				NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+				                    CICMessageBox::MakeConfigString(
+																"MessageBoxWindowOk",
+																L"The profile could not be removed. Unlock your system credential store and retry." )
+				                        .c_str() );
+			}
 			break;
 		}
 

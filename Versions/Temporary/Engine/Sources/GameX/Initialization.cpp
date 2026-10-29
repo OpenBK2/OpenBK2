@@ -23,6 +23,7 @@
 #include "Sound/SFX.h"
 #include "Sound/SoundScene.h"
 #include "Stats_B2_M1/IconsSet.h"
+#include "System/GeneralSettings.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
@@ -172,6 +173,11 @@ const TYPE *GetConsts( const std::string &szVarName )
 		return 0;
 	}
 	NI_VERIFY( !NStr::IsDecNumber( szValue ), "Deprecated way to identify resources. Use DBID instead!", return 0 );
+	if ( const auto *pSettings = NSettings::GetGeneralSettings() )
+	{
+		// Legacy ../Data references remain DB-relative, preserving mod precedence.
+		szValue = pSettings->ResolveResourceID( szValue );
+	}
 	return NDb::Get<TYPE>( CDBID( szValue ) );
 }
 
