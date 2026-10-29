@@ -130,7 +130,7 @@ bool CEditorApp::CreateSingletons()
 	DebugTrace( "EditorApp() Start: %g", NHPTimer::GetTimePassed( &time ) );
 
 	//
-	const std::string &szBaseDir = NMainLoop::GetBaseDir();
+	const std::string szBaseDir = NSettings::GetGeneralSettings()->GetEditorRoot();
 	// Create logging stream
 	{
 		CDataStream *pStream = new CFileStream( NFile::JoinPath( szBaseDir, "MapEditor.log" ), CFileStream::WIN_CREATE );
@@ -384,6 +384,12 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	if ( !NSettings::InitializeGeneralSettings( &szSettingsError ) )
 	{
 		// Use the editor's portable dialog, with a title available before user data is loaded.
+		NMessage::Error( szSettingsError, "OpenBK2 Editor" );
+		return false;
+	}
+	// Copy the installed Editor defaults once, before any editor state is loaded.
+	if ( !NSettings::GetGeneralSettings()->PrepareEditor( &szSettingsError ) )
+	{
 		NMessage::Error( szSettingsError, "OpenBK2 Editor" );
 		return false;
 	}

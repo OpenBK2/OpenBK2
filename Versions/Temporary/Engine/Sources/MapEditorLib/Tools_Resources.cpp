@@ -5,6 +5,7 @@
 #include "port/unicode.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
@@ -44,7 +45,9 @@ void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszT
 		}
 		else
 		{
-			pStreamHolder->pStream = new CFileStream( rszTextPath, CFileStream::WIN_READ_ONLY );
+			// Redirect physical Editor files without changing Editor/... database IDs.
+			pStreamHolder->pStream =
+					new CFileStream( NSettings::ResolveEditorPath( rszTextPath ), CFileStream::WIN_READ_ONLY );
 		}
 	}
 }
@@ -59,7 +62,7 @@ void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rs
 		}
 		else
 		{
-			pStreamHolder->pStream = new CFileStream( rszTextPath, CFileStream::WIN_CREATE );
+			pStreamHolder->pStream = new CFileStream( NSettings::ResolveEditorPath( rszTextPath ), CFileStream::WIN_CREATE );
 		}
 	}
 }

@@ -142,92 +142,168 @@ const std::string &CGeneralSettings::GetProfilesRoot() const
 	return szProfilesRoot;
 }
 
-bool CGeneralSettings::PrepareProfiles( std::string *pszError ) const
+namespace
 {
-	// POSIX file locks synchronize processes, so also serialize local callers.
-	std::lock_guard<std::mutex> localGuard( migrationMutex );
-	try
+	bool PrepareDirectory( const fs::path &source,
+	                       const fs::path &destination,
+	                       const std::string &szName,
+	                       void ( *validate )( const fs::path & ),
+	                       std::string *pszError )
 	{
-		const auto source = Path( szInstallRoot ) / "Profiles";
-		const auto destination = Path( szProfilesRoot );
-		fs::path relative;
-		if ( !source.is_absolute() || !destination.is_absolute() ||
-		     RelativeBelow( fs::weakly_canonical( destination ), fs::weakly_canonical( source ), &relative ) ||
-		     ( Exists( source ) && Exists( destination ) && fs::equivalent( source, destination ) ) )
+		// POSIX file locks synchronize processes, so also serialize local callers.
+		std::lock_guard<std::mutex> localGuard( migrationMutex );
+		try
 		{
-			throw std::runtime_error( "The user Profiles directory must be separate from the installation Profiles." );
-		}
-		if ( !Exists( destination ) )
-		{
-			if ( !Exists( source ) )
+			fs::path relative;
+			if ( !source.is_absolute() || !destination.is_absolute() ||
+			     RelativeBelow( fs::weakly_canonical( source ), fs::weakly_canonical( destination ), &relative ) ||
+			     RelativeBelow( fs::weakly_canonical( destination ), fs::weakly_canonical( source ), &relative ) ||
+			     ( Exists( source ) && Exists( destination ) && fs::equivalent( source, destination ) ) )
 			{
-				throw std::runtime_error(
-						"Error: No Profiles folder found. Have you installed the game properly?\n\nSearched:\n" +
-						destination.u8string() + "\n" + source.u8string() );
+				throw std::runtime_error( "The user " + szName + " directory must be separate from the installation " + szName +
+				                          "." );
 			}
-			ValidateProfiles( source );
-			fs::create_directories( destination.parent_path() );
-			const auto lockPath = destination.parent_path() / ".profiles.lock";
-			{
-				std::ofstream lockFile( lockPath, std::ios::app );
-				if ( !lockFile )
-				{
-					throw std::runtime_error( "Cannot create profile migration lock: " + lockPath.u8string() );
-				}
-			}
-			boost::interprocess::file_lock lock( lockPath.u8string().c_str() );
-			boost::interprocess::scoped_lock<boost::interprocess::file_lock> guard( lock );
-			// A second process may have completed migration while we waited.
 			if ( !Exists( destination ) )
 			{
-				CTemporaryDirectory temporary;
-				const auto staging = destination.parent_path() /
-				                     ( ".Profiles-import-" + boost::uuids::to_string( boost::uuids::random_generator()() ) );
-				if ( !fs::create_directory( staging ) )
+				if ( !Exists( source ) )
 				{
-					throw std::runtime_error( "Cannot create profile staging directory." );
+					throw std::runtime_error( "Error: No " + szName +
+					                          " folder found. Have you installed the game properly?\n\nSearched:\n" +
+					                          destination.u8string() + "\n" + source.u8string() );
 				}
-				temporary.path = staging;
-				fs::permissions( staging, fs::perms::owner_all );
-				for ( const auto &entry : fs::recursive_directory_iterator( source ) )
+				validate( source );
+				fs::create_directories( destination.parent_path() );
+				const auto lockPath = destination.parent_path() / ( szName == "Profiles" ? ".profiles.lock" : ".editor.lock" );
 				{
-					const auto target = staging / entry.path().lexically_relative( source );
-					// Never retain a link into the read-only defaults or copy outside them.
-					if ( entry.is_symlink() )
+					std::ofstream lockFile( lockPath, std::ios::app );
+					if ( !lockFile )
 					{
-						throw std::runtime_error( "Profiles template contains a symbolic link: " + entry.path().u8string() );
-					}
-					if ( entry.is_directory() )
-					{
-						fs::create_directory( target );
-						fs::permissions( target, fs::perms::owner_all );
-					}
-					else if ( entry.is_regular_file() )
-					{
-						fs::copy_file( entry.path(), target );
-						fs::permissions( target, fs::perms::owner_read | fs::perms::owner_write );
-					}
-					else
-					{
-						throw std::runtime_error( "Profiles template contains an unsupported file: " + entry.path().u8string() );
+						throw std::runtime_error( "Cannot create " + szName + " migration lock: " + lockPath.u8string() );
 					}
 				}
-				ValidateProfiles( staging );
-				fs::rename( staging, destination );
-				temporary.path.clear();
+				boost::interprocess::file_lock lock( lockPath.u8string().c_str() );
+				boost::interprocess::scoped_lock<boost::interprocess::file_lock> guard( lock );
+				// A second process may have completed migration while we waited.
+				if ( !Exists( destination ) )
+				{
+					CTemporaryDirectory temporary;
+					const auto staging =
+							destination.parent_path() /
+							( "." + szName + "-import-" + boost::uuids::to_string( boost::uuids::random_generator()() ) );
+					if ( !fs::create_directory( staging ) )
+					{
+						throw std::runtime_error( "Cannot create " + szName + " staging directory." );
+					}
+					temporary.path = staging;
+					fs::permissions( staging, fs::perms::owner_all );
+					for ( const auto &entry : fs::recursive_directory_iterator( source ) )
+					{
+						const auto target = staging / entry.path().lexically_relative( source );
+						// Never retain a link into the read-only defaults or copy outside them.
+						if ( entry.is_symlink() )
+						{
+							throw std::runtime_error( szName + " template contains a symbolic link: " + entry.path().u8string() );
+						}
+						if ( entry.is_directory() )
+						{
+							fs::create_directory( target );
+							fs::permissions( target, fs::perms::owner_all );
+						}
+						else if ( entry.is_regular_file() )
+						{
+							fs::copy_file( entry.path(), target );
+							fs::permissions( target, fs::perms::owner_read | fs::perms::owner_write );
+						}
+						else
+						{
+							throw std::runtime_error( szName + " template contains an unsupported file: " + entry.path().u8string() );
+						}
+					}
+					validate( staging );
+					fs::rename( staging, destination );
+					temporary.path.clear();
+				}
 			}
-		}
-		ValidateProfiles( destination );
-		// A read-only existing directory is an error, never an installation fallback.
-		const auto probe = destination / ( ".write-test-" + boost::uuids::to_string( boost::uuids::random_generator()() ) );
-		{
-			std::ofstream file( probe, std::ios::binary );
-			if ( !file )
+			validate( destination );
+			// A read-only existing directory is an error, never an installation fallback.
+			const auto probe =
+					destination / ( ".write-test-" + boost::uuids::to_string( boost::uuids::random_generator()() ) );
 			{
-				throw std::runtime_error( "Cannot write to user Profiles: " + destination.u8string() );
+				std::ofstream file( probe, std::ios::binary );
+				if ( !file )
+				{
+					throw std::runtime_error( "Cannot write to user " + szName + ": " + destination.u8string() );
+				}
 			}
+			fs::remove( probe );
+			pszError->clear();
+			return true;
 		}
-		fs::remove( probe );
+		catch ( const std::exception &error )
+		{
+			*pszError = error.what();
+			return false;
+		}
+	}
+
+	void ValidateEditor( const fs::path &path )
+	{
+		if ( !fs::is_directory( path ) )
+		{
+			throw std::runtime_error( "Editor path is not a directory: " + path.u8string() );
+		}
+	}
+} // namespace
+
+bool CGeneralSettings::PrepareProfiles( std::string *pszError ) const
+{
+	return PrepareDirectory(
+			Path( szInstallRoot ) / "Profiles", Path( szProfilesRoot ), "Profiles", ValidateProfiles, pszError );
+}
+
+std::string CGeneralSettings::GetEditorRoot() const
+{
+	// Keep editor state beside Profiles, including explicit user-data overrides.
+	return ( Path( szProfilesRoot ).parent_path() / "Editor" ).u8string();
+}
+
+bool CGeneralSettings::PrepareEditor( std::string *pszError ) const
+{
+	return PrepareDirectory(
+			Path( szInstallRoot ) / "Editor", Path( GetEditorRoot() ), "Editor", ValidateEditor, pszError );
+}
+
+std::string CGeneralSettings::ResolveEditorPath( const std::string &szPath ) const
+{
+	const auto path = Path( szPath );
+	fs::path relative;
+	if ( ( path.is_absolute() && RelativeBelow( path, Path( szInstallRoot ) / "Editor", &relative ) ) ||
+	     ( !path.is_absolute() && RelativeBelow( LegacyRelative( path ), fs::path( "Editor" ), &relative ) ) ||
+	     ( path.is_absolute() && RelativeBelow( path, Path( GetEditorRoot() ), &relative ) ) )
+	{
+		return ResolveCase( Path( GetEditorRoot() ) / relative );
+	}
+	return szPath;
+}
+
+bool CGeneralSettings::ClearEditorIconCache( std::string *pszError ) const
+{
+	try
+	{
+		const auto editor = Path( GetEditorRoot() );
+		const auto cache = editor / "IconCache";
+		fs::path relative;
+		// Validate the fixed deletion target before removing anything. A redirected
+		// Editor or IconCache must never turn this action into deleting installation data.
+		if ( !editor.is_absolute() || !fs::is_directory( editor ) ||
+		     RelativeBelow( fs::weakly_canonical( editor ), fs::weakly_canonical( Path( szInstallRoot ) ), &relative ) ||
+		     fs::weakly_canonical( cache ).parent_path() != fs::weakly_canonical( editor ) ||
+		     fs::is_symlink( fs::symlink_status( cache ) ) )
+		{
+			throw std::runtime_error( "Cannot safely clear the editor icon cache: " + cache.u8string() );
+		}
+		// remove_all removes links inside the cache themselves, not their targets.
+		fs::remove_all( cache );
 		pszError->clear();
 		return true;
 	}
@@ -236,6 +312,12 @@ bool CGeneralSettings::PrepareProfiles( std::string *pszError ) const
 		*pszError = error.what();
 		return false;
 	}
+}
+
+std::string ResolveEditorPath( const std::string &szPath )
+{
+	const auto *settings = GetGeneralSettings();
+	return settings ? settings->ResolveEditorPath( szPath ) : szPath;
 }
 
 std::string CGeneralSettings::ResolveConfigPath( const std::string &szPath, const std::string &szIncludingFile ) const

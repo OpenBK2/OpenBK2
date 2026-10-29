@@ -11,12 +11,15 @@
 #include "Misc/StrProc.h"
 #include "port/process.h"
 #include "ResourceDefines.h"
+#include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
 #include <chrono>
 #include <cstdint>
+#include <filesystem>
 #include <fstream>
 #include <thread>
 
@@ -148,15 +151,18 @@ bool MERunScript( const std::string &rszScriptText,
 			}
 		}
 	}
-	szScriptFileName = pUserData->constUserData.szStartFolder + szScriptFileName;
-	szLogFileName = pUserData->constUserData.szStartFolder + szLogFileName;
+	// Generated exporter scripts and logs are user data too.
+	const std::string szEditorRoot =
+			NSettings::ResolveEditorPath( NFile::JoinPath( pUserData->constUserData.szStartFolder, "Editor" ) );
+	szScriptFileName = NFile::JoinPath( szEditorRoot, szScriptFileName );
+	szLogFileName = NFile::JoinPath( szEditorRoot, szLogFileName );
 	//
 	bool bResult = true;
 	{
 		// CREATE_ALWAYS and GENERIC_WRITE: truncate or make it. Binary, because
 		// the MEL script is written exactly as it was built and CreateFile did
 		// no translation either.
-		std::ofstream script( szScriptFileName, std::ios::binary | std::ios::trunc );
+		std::ofstream script( std::filesystem::u8path( szScriptFileName ), std::ios::binary | std::ios::trunc );
 		script.write( rszScriptText.c_str(), rszScriptText.size() );
 		script.close();
 		bResult = script.good();

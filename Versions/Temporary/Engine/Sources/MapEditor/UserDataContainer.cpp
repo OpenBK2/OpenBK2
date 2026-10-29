@@ -4,6 +4,7 @@
 #include "Misc/StrProc.h"
 #include "ResourceDefines.h"
 #include "System/FilePath.h"
+#include "System/GeneralSettings.h"
 #include "UserDataContainer.h"
 
 #define START_FOLDER_TOKEN "%START%\\"
@@ -99,6 +100,9 @@ void CUserDataContainer::Load()
 		NFile::AppendSlash( &userData.constUserData.szDataStorageFolder, NFile::PATH_SEPARATOR );
 		//
 		ReplaceTokens( &userData.constUserData.mayaExportData.szMayaExportPath );
+		// Resolve the base before expanding tokens in scripts and export settings.
+		userData.constUserData.mayaExportData.szMayaExportPath =
+				NSettings::ResolveEditorPath( userData.constUserData.mayaExportData.szMayaExportPath );
 		AddToken( "MayaExportPath", userData.constUserData.mayaExportData.szMayaExportPath );
 		ReplaceTokens( &userData.constUserData.mayaExportData.szMayaVersionPath );
 		AddToken( "MayaVersionPath", userData.constUserData.mayaExportData.szMayaVersionPath );

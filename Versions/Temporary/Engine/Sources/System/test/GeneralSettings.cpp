@@ -79,6 +79,105 @@ TEST_F( CGeneralSettingsTest, ExistingUserProfilesDoNotRequireTheInstallationTem
 	EXPECT_FALSE( fs::exists( install ) );
 }
 
+TEST_F( CGeneralSettingsTest, EditorCopiesTheWholeFolderOnceBesideProfiles )
+{
+	const auto editor = profiles.parent_path() / "Editor";
+	Write( install / "Editor/UserData.xml", "editor defaults" );
+	Write( install / "Editor/ResizeDialogStyles/Map.xml", "placement" );
+	Write( install / "Editor/IconCache/Units/example.xdb", "cached icon" );
+	ASSERT_TRUE( settings.PrepareEditor( &error ) ) << error;
+	EXPECT_EQ( editor.u8string(), settings.GetEditorRoot() );
+	EXPECT_EQ( "placement", Read( editor / "ResizeDialogStyles/Map.xml" ) );
+	EXPECT_EQ( "cached icon", Read( editor / "IconCache/Units/example.xdb" ) );
+	Write( editor / "UserData.xml", "user settings" );
+	Write( install / "Editor/new-default.xml", "do not merge" );
+	ASSERT_TRUE( settings.PrepareEditor( &error ) ) << error;
+	EXPECT_EQ( "user settings", Read( editor / "UserData.xml" ) );
+	EXPECT_EQ( "editor defaults", Read( install / "Editor/UserData.xml" ) );
+	EXPECT_FALSE( fs::exists( editor / "new-default.xml" ) );
+	EXPECT_FALSE( fs::exists( profiles ) );
+}
+
+TEST_F( CGeneralSettingsTest, ExistingEditorWorksWithoutAnInstallationTemplate )
+{
+	const auto editor = profiles.parent_path() / "Editor";
+	Write( editor / "UserData.xml", "keep this" );
+	ASSERT_TRUE( settings.PrepareEditor( &error ) ) << error;
+	EXPECT_EQ( "keep this", Read( editor / "UserData.xml" ) );
+	EXPECT_FALSE( fs::exists( install ) );
+}
+
+TEST_F( CGeneralSettingsTest, MissingEditorReportsBothLocations )
+{
+	EXPECT_FALSE( settings.PrepareEditor( &error ) );
+	EXPECT_NE( std::string::npos, error.find( "No Editor folder found" ) );
+	EXPECT_NE( std::string::npos, error.find( settings.GetEditorRoot() ) );
+	EXPECT_NE( std::string::npos, error.find( ( install / "Editor" ).u8string() ) );
+	EXPECT_FALSE( fs::exists( profiles.parent_path() / "Editor" ) );
+}
+
+TEST_F( CGeneralSettingsTest, EditorRejectsBlockedOrInstallationDestinations )
+{
+	Write( install / "Editor/UserData.xml", "defaults" );
+	Write( profiles.parent_path() / "Editor", "a file" );
+	EXPECT_FALSE( settings.PrepareEditor( &error ) );
+	EXPECT_EQ( "a file", Read( profiles.parent_path() / "Editor" ) );
+	const NSettings::CGeneralSettings inInstall( install.u8string(), ( install / "Profiles" ).u8string() );
+	EXPECT_FALSE( inInstall.PrepareEditor( &error ) );
+	EXPECT_FALSE( inInstall.ClearEditorIconCache( &error ) );
+	EXPECT_EQ( "defaults", Read( install / "Editor/UserData.xml" ) );
+}
+
+TEST_F( CGeneralSettingsTest, EditorResolvesLegacyPathsWithoutFallingBackToDefaults )
+{
+	const auto editor = profiles.parent_path() / "Editor";
+	Write( editor / "BitFields/AIActions.xml", "user actions" );
+	Write( install / "Editor/obsolete.xml", "installation only" );
+	for ( const auto &name : { std::string( "../editor/bitfields/aiactions.xml" ),
+	                           std::string( "Editor\\BitFields\\AIActions.xml" ),
+	                           ( install / "Editor/BitFields/AIActions.xml" ).u8string() } )
+	{
+		EXPECT_EQ( "user actions", Read( fs::u8path( settings.ResolveEditorPath( name ) ) ) );
+	}
+	EXPECT_FALSE( fs::exists( fs::u8path( settings.ResolveEditorPath( "Editor/obsolete.xml" ) ) ) );
+	const auto data = ( install / "Data/Editor/EditorOptions.xdb" ).u8string();
+	EXPECT_EQ( data, settings.ResolveEditorPath( data ) );
+	EXPECT_EQ( "Textures/icon.dds", settings.ResolveEditorPath( "Textures/icon.dds" ) );
+}
+
+TEST_F( CGeneralSettingsTest, ClearingIconsDeletesOnlyTheUserCacheAndIsRepeatable )
+{
+	const auto editor = profiles.parent_path() / "Editor";
+	Write( install / "Editor/IconCache/Units/example.xdb", "installed icon" );
+	Write( editor / "IconCache/Units/example.xdb", "user icon" );
+	Write( editor / "IconCache/Buildings/example.xdb", "another icon" );
+	Write( editor / "UserData.xml", "keep settings" );
+	Write( profiles / "player/Saves/map.sav", "keep save" );
+	ASSERT_TRUE( settings.ClearEditorIconCache( &error ) ) << error;
+	EXPECT_FALSE( fs::exists( editor / "IconCache" ) );
+	EXPECT_EQ( "installed icon", Read( install / "Editor/IconCache/Units/example.xdb" ) );
+	EXPECT_EQ( "keep settings", Read( editor / "UserData.xml" ) );
+	EXPECT_EQ( "keep save", Read( profiles / "player/Saves/map.sav" ) );
+	ASSERT_TRUE( settings.ClearEditorIconCache( &error ) ) << error;
+	ASSERT_TRUE( settings.PrepareEditor( &error ) ) << error;
+	EXPECT_FALSE( fs::exists( editor / "IconCache" ) );
+}
+
+TEST_F( CGeneralSettingsTest, ClearingIconsDoesNotFollowALinkOutsideTheEditorFolder )
+{
+	const auto editor = profiles.parent_path() / "Editor";
+	Write( root / "outside/keep.txt", "keep this" );
+	fs::create_directories( editor );
+	std::error_code linkError;
+	fs::create_directory_symlink( root / "outside", editor / "IconCache", linkError );
+	if ( linkError )
+	{
+		GTEST_SKIP() << "Directory symlinks unavailable: " << linkError.message();
+	}
+	EXPECT_FALSE( settings.ClearEditorIconCache( &error ) );
+	EXPECT_EQ( "keep this", Read( root / "outside/keep.txt" ) );
+}
+
 TEST_F( CGeneralSettingsTest, MissingBothReportsBothLocationsWithoutCreatingProfiles )
 {
 	EXPECT_FALSE( settings.PrepareProfiles( &error ) );

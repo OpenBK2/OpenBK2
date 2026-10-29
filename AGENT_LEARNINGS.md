@@ -3,6 +3,12 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Physical Editor settings and database IDs under Data/Editor are different
+  namespaces. Redirect physical files, not VFS IDs, and keep szStartFolder as
+  the installation root for game resources. Audit direct CFileStream/ifstream
+  consumers as well as the shared XML helpers. Module menus are assembled in
+  CWxMainFrame::AddMenuResources, where shared File actions can be added once.
+
 - Editor startup errors should use NMessage::Error with an explicit title before
   user data is loaded. Including port/messagebox.h introduces an SDL dependency
   that MapEditor does not declare. The Linux Clang CI job skips the editor, so

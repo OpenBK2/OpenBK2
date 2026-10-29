@@ -6,6 +6,7 @@
 #include "ScriptDictionary.hpp"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "TextEditorView.h"
 
 #include <algorithm>
@@ -86,6 +87,7 @@ void LoadLuaKeywords( SLuaKeywords *pKeywords )
 		// Legacy configuration spells this editor\luakeywords.txt, while
 		// the installed directory is Editor on case-sensitive filesystems.
 		NFile::NormalizePath( &szKeyWordsFile );
+		szKeyWordsFile = NSettings::ResolveEditorPath( szKeyWordsFile );
 		std::ifstream fKeywords( std::filesystem::u8path( szKeyWordsFile ) );
 		if ( !fKeywords.is_open() && !szKeyWordsFile.empty() )
 		{

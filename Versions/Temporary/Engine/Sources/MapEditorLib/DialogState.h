@@ -77,8 +77,8 @@ struct MAPEDITORLIB_EXPORT SDialogState
 	}
 };
 
-// Load and save go to Editor/ResizeDialogStyles/<name>.xml under the install,
-// which is where CResizeDialog has always put them. rszDialogName is the label
+// Load and save go to Editor/ResizeDialogStyles/<name>.xml under the user data directory,
+// preserving the layout previously kept in the installation. rszDialogName is the label
 // CResizeDialog's GetXMLFilePath answers with -- the dialog's class name, by
 // convention and by the DECLARE_RESIZE_DLG_WND_COMMON_METHODS macro.
 namespace NDialogState

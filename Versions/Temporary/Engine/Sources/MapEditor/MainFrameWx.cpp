@@ -20,6 +20,7 @@
 #include "MapEditorLib/WxResourceImages.h"
 #include "port/vkcodes.h"
 #include "ResourceDefines.h"
+#include "System/GeneralSettings.h"
 
 #include <fmt/printf.h>
 #include <wx/accel.h>
@@ -45,6 +46,7 @@
 #include <wx/sstream.h>
 #include <wx/statusbr.h>
 #include <wx/textdlg.h>
+#include <wx/utils.h>
 #include <wx/weakref.h>
 #include <wx/xml/xml.h>
 
@@ -447,6 +449,25 @@ void AddLayoutsMenu( wxMenuBar *pMenuBar )
 	pView->AppendSubMenu( pLayouts, "&Layouts" );
 }
 
+void AddEditorFolderMenu( wxMenuBar *pMenuBar )
+{
+	wxMenu *pFile = nullptr;
+	if ( pMenuBar->FindItem( ToWxID( ID_APP_EXIT ), &pFile ) == nullptr )
+	{
+		return;
+	}
+	// All module-specific File menus share Exit, so add these actions in one place.
+	size_t nPosition = 0;
+	while ( pFile->FindItemByPosition( nPosition )->GetId() != ToWxID( ID_APP_EXIT ) )
+	{
+		++nPosition;
+	}
+	pFile->Insert( nPosition++, ToWxID( ID_FILE_CLEAR_ICON_CACHE ), "Clear &Icon Cache", "Delete cached editor icons" );
+	pFile->Insert(
+			nPosition++, ToWxID( ID_FILE_OPEN_EDITOR_FOLDER ), "Open &Editor Folder", "Open your local editor data folder" );
+	pFile->InsertSeparator( nPosition );
+}
+
 struct SNamedLayout
 {
 	wxString name;
@@ -810,6 +831,7 @@ public:
 			if ( wxMenuBar *const pMenuBar = MenuBarFromResource( *itMenuID ) )
 			{
 				AddLayoutsMenu( pMenuBar );
+				AddEditorFolderMenu( pMenuBar );
 				menuBars[*itMenuID] = pMenuBar;
 			}
 		}
@@ -1652,6 +1674,35 @@ private:
 				// CWinApp::OnAppExit: close the main window.
 				Close();
 				return;
+			case ID_FILE_CLEAR_ICON_CACHE:
+			{
+				std::string szError;
+				const auto *settings = NSettings::GetGeneralSettings();
+				if ( settings && settings->ClearEditorIconCache( &szError ) )
+				{
+					wxMessageBox( "Icon cache cleared. Restart the editor to refresh icons already displayed.",
+					              "Clear Icon Cache",
+					              wxOK | wxICON_INFORMATION,
+					              this );
+				}
+				else
+				{
+					wxMessageBox( wxString::FromUTF8( szError.c_str() ), "Clear Icon Cache", wxOK | wxICON_ERROR, this );
+				}
+				return;
+			}
+			case ID_FILE_OPEN_EDITOR_FOLDER:
+			{
+				const auto *settings = NSettings::GetGeneralSettings();
+				if ( settings && !wxLaunchDefaultApplication( wxString::FromUTF8( settings->GetEditorRoot().c_str() ) ) )
+				{
+					wxMessageBox( "Could not open the editor folder in the file manager.",
+					              "Open Editor Folder",
+					              wxOK | wxICON_ERROR,
+					              this );
+				}
+				return;
+			}
 			case ID_VIEW_DW_PROPERTY_BROWSER:
 				if ( pPropertiesPane )
 				{
@@ -1786,6 +1837,10 @@ private:
 				return;
 			case ID_VIEW_LOAD_LAYOUT:
 				( *pbEnable ) = !namedLayouts.empty();
+				return;
+			case ID_FILE_CLEAR_ICON_CACHE:
+			case ID_FILE_OPEN_EDITOR_FOLDER:
+				( *pbEnable ) = NSettings::GetGeneralSettings() != nullptr;
 				return;
 			case ID_VIEW_DW_PROPERTY_BROWSER:
 				( *pbEnable ) = true;

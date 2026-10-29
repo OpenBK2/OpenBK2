@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "BitFieldView.h"
+#include "MapEditorLib/Tools_Resources.h"
 #include "System/VFSOperations.h"
 #include "System/XmlSaver.h"
 
@@ -27,8 +28,14 @@ bool LoadFields( const std::string &rszFieldsFile, std::vector<SField> *pFields 
 		return false;
 	}
 	pFields->clear();
-	CFileStream stream( NVFS::GetMainVFS(), rszFieldsFile.c_str() );
-	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
+	// The field definitions can be physical files in the per-user Editor folder.
+	SFileStreamHolder stream;
+	OpenStreamHolder( &stream, rszFieldsFile );
+	if ( !stream.pStream || !stream.pStream->IsOk() )
+	{
+		return false;
+	}
+	CPtr<IXmlSaver> pXS = CreateXmlSaver( stream.pStream, SAVER_MODE_READ );
 	if ( pXS == 0 )
 	{
 		NI_ASSERT( pXS != 0, fmt::format( "Can't open stream \"{}\" to read bit fields", rszFieldsFile.c_str() ) );

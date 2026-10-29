@@ -5,9 +5,15 @@
 add_unit_test(TextResourceEncoding MapEditorLib System Misc gr2)
 add_unit_test(ThumbnailAlpha MapEditorLib System Misc wx::wx)
 add_unit_test(MultiManipulator MapEditorLib libdb System Misc gr2)
+add_unit_test(EditorLocalData MapEditorLib System Misc gr2)
+if(WIN32)
+    target_compile_definitions(EditorLocalData_test PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
+    target_sources(EditorLocalData_test PRIVATE ../../Game/utf8.manifest)
+endif()
 
 # These tests load wx through MapEditorLib, but copy_runtime_dlls does
 # not see wx's DLL. See copy_wx_runtime in cmake/wxwidgets.cmake.
 copy_wx_runtime(TextResourceEncoding_test)
 copy_wx_runtime(ThumbnailAlpha_test)
 copy_wx_runtime(MultiManipulator_test)
+copy_wx_runtime(EditorLocalData_test)

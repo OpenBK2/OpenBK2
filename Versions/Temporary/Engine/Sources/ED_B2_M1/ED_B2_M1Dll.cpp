@@ -14,6 +14,7 @@
 #include "MapObjectDataExtractor.h"
 #include "SpotDataExtractor.h"
 #include "System/FilePath.h"
+#include "System/GeneralSettings.h"
 #include "TileDataExtractor.h"
 #include "VSODataExtractor.h"
 
@@ -37,7 +38,7 @@ void LoadFilters()
 		const std::string szObjectFilterFileName =
 				NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Filters.xml" );
 		{
-			CFileStream stream( szObjectFilterFileName, CFileStream::WIN_READ_ONLY );
+			CFileStream stream( NSettings::ResolveEditorPath( szObjectFilterFileName ), CFileStream::WIN_READ_ONLY );
 			if ( stream.IsOk() )
 			{
 				Singleton<IObjectFilterCollector>()->Load( &stream );
@@ -52,7 +53,7 @@ void LoadFilters()
 		const std::string szDataExtractorFileName = NFile::JoinPath(
 				Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Extractors.xml" );
 		{
-			CFileStream stream( szDataExtractorFileName, CFileStream::WIN_READ_ONLY );
+			CFileStream stream( NSettings::ResolveEditorPath( szDataExtractorFileName ), CFileStream::WIN_READ_ONLY );
 			if ( stream.IsOk() )
 			{
 				Singleton<IObjectCollector>()->Load( &stream );

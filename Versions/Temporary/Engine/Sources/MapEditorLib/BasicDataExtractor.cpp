@@ -9,6 +9,7 @@
 #include "Misc/2Darray.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "System/VFSOperations.h"
 #include "Tools_Image.h"
 #include "Tools_Resources.h"
@@ -74,8 +75,9 @@ CacheFileName( const SUserData *pUserData, const std::string &rszObjectTypeName,
 {
 	std::string szObjectPath = rszObjectName;
 	NFile::NormalizePath( &szObjectPath );
-	return NFile::JoinPath(
-			pUserData->constUserData.szStartFolder, "Editor", "IconCache", rszObjectTypeName, szObjectPath );
+	// Resolve before the existence check as well as the cache read/write.
+	return NSettings::ResolveEditorPath( NFile::JoinPath(
+			pUserData->constUserData.szStartFolder, "Editor", "IconCache", rszObjectTypeName, szObjectPath ) );
 }
 } // namespace
 

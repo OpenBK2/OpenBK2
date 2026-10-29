@@ -92,6 +92,20 @@ runs, `OPENBK2_DATA_DIR` can name the installation root and
 overrides must be absolute; the latter contains `Profiles`, not its contents.
 Set both for tests against a separate installation to avoid sharing real profiles.
 
+The map editor also keeps its `Editor` folder beside `Profiles`: for example,
+`%LOCALAPPDATA%\OpenBK2\Editor` on Windows, `~/.local/share/OpenBK2/Editor` on
+Linux, and `~/Library/Application Support/com.OpenBK2Team.OpenBK2/Editor` on
+macOS. The same application-data overrides apply. The installed `Editor` folder
+is copied once, without changing it; an existing user copy wins. If neither copy
+exists, startup reports the missing folder. Settings, dialog positions, filters,
+icon caches and the editor log use the user copy. Database resources under
+`Data/Editor` still belong to the game or active mod.
+
+**File > Clear Icon Cache** deletes the user copy's `IconCache` directory without
+touching settings or installation defaults. Icons are generated again when needed;
+restart the editor to refresh icons already displayed. **File > Open Editor Folder**
+opens the user folder in the system file manager.
+
 Legacy `exec .\profiles\...` paths resolve to the user directory. Nested config
 includes can also be relative to their including file. Resource settings such as
 `game_root = ../Data/GameRoot.xdb` resolve through the existing mod-aware database.

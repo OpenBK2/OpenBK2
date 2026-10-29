@@ -83,6 +83,10 @@
 #define ID_VIEW_SAVE_LAYOUT 922
 #define ID_VIEW_LOAD_LAYOUT 923
 
+// Shared File menu actions for local editor data.
+#define ID_FILE_CLEAR_ICON_CACHE 924
+#define ID_FILE_OPEN_EDITOR_FOLDER 925
+
 #define ID_HELP_CONTENTS 930
 #define ID_HELP_ABOUT 931
 

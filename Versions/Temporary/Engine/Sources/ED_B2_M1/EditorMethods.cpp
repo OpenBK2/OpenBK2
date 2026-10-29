@@ -14,6 +14,7 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/BinaryResources.h"
 #include "System/FileUtils.h"
+#include "System/GeneralSettings.h"
 #include "System/VFS.h"
 #include "System/VFSOperations.h"
 
@@ -145,10 +146,9 @@ bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 		return false;
 	}
 
-	// Native paths are case sensitive on Linux. This is the installed Editor
-	// directory, not the lower-case Windows spelling used by the old dialog.
-	const std::string szFileName = NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder,
-	                                                "Editor/BitFields/AIActions.xml" );
+	// Keep the legacy filename while reading the per-user Editor copy.
+	const std::string szFileName = NSettings::ResolveEditorPath( NFile::JoinPath(
+			Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor/BitFields/AIActions.xml" ) );
 
 	pCmdTypes->clear();
 

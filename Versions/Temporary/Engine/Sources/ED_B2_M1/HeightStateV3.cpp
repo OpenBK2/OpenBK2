@@ -16,6 +16,7 @@
 #include "ResourceDefines.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "System/FilePath.h"
+#include "System/GeneralSettings.h"
 #include "System/Time.h"
 #include "System/VFSOperations.h"
 
@@ -1260,7 +1261,8 @@ void CHeightStateV3::Enter()
 		// here and names nothing off Windows. The brush falls back to the
 		// gradient above when the image will not read, which is why a path that
 		// could never open looked like a deliberate default.
-		CFileStream stream( NFile::JoinPath( pUserData->constUserData.szStartFolder, "Editor", "profile.tga" ),
+		CFileStream stream( NSettings::ResolveEditorPath(
+														NFile::JoinPath( pUserData->constUserData.szStartFolder, "Editor", "profile.tga" ) ),
 		                    CFileStream::WIN_READ_ONLY );
 		if ( stream.IsOk() )
 		{
