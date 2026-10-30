@@ -166,6 +166,46 @@ TEST_F( CGeneralSettingsTest, MissingOrNonFileApplicationNameKeepsTheDefaultData
 	EXPECT_FALSE( fs::exists( data ) );
 }
 
+TEST_F( CGeneralSettingsTest, ApplicationNameUsesStrictUTF8OnEveryPlatform )
+{
+	const auto data = profiles.parent_path();
+	// Boundary values prevent accepting legacy 5/6-byte UTF-8 or rejecting valid
+	// supplementary characters just because wchar_t has a different width.
+	const std::vector<std::pair<std::string, bool>> cases = {
+		{ "\xc2\x80", true },          // U+0080
+		{ "\xdf\xbf", true },          // U+07FF
+		{ "\xe0\xa0\x80", true },      // U+0800
+		{ "\xed\x9f\xbf", true },      // U+D7FF, below the surrogate range
+		{ "\xee\x80\x80", true },      // U+E000, above the surrogate range
+		{ "\xef\xbf\xbf", true },      // U+FFFF
+		{ "\xf0\x90\x80\x80", true },  // U+10000
+		{ "\xf4\x8f\xbf\xbf", true },  // U+10FFFF
+		{ "\xf4\x90\x80\x80", false }, // U+110000, the Linux CI regression
+		{ "\xf5\x80\x80\x80", false },
+		{ "\xf8\x88\x80\x80\x80", false },
+		{ "\xfc\x84\x80\x80\x80\x80", false },
+		{ "\xed\xa0\x80", false },     // U+D800
+		{ "\xed\xbf\xbf", false },     // U+DFFF
+		{ "\xc0\xaf", false },         // Overlong 2-byte encoding
+		{ "\xe0\x9f\xbf", false },     // Overlong 3-byte encoding
+		{ "\xf0\x8f\xbf\xbf", false }, // Overlong 4-byte encoding
+		{ "\x80", false },             // Unexpected continuation
+		{ "\xc2", false },             // Truncated sequences
+		{ "\xe0\xa0", false },
+		{ "\xf0\x90\x80", false },
+		{ "\xe2\x28\xa1", false }, // Non-continuation inside a sequence
+	};
+	for ( const auto &entry : cases )
+	{
+		SCOPED_TRACE( testing::PrintToString( entry.first ) );
+		const std::string name = "variant-" + entry.first;
+		Write( install / "app_name.txt", name );
+		const auto actual = NSettings::GetApplicationDataDirectory( install.u8string(), data.u8string() );
+		const auto expected = entry.second ? ( data / fs::u8path( name ) ).u8string() : data.u8string();
+		EXPECT_EQ( expected, actual );
+	}
+}
+
 TEST_F( CGeneralSettingsTest, ApplicationVariantsKeepTheirProfilesAndEditorDataSeparate )
 {
 	const auto data = profiles.parent_path();

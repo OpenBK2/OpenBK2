@@ -2,9 +2,9 @@
 
 #include "FileUtils.h"
 #include "PlatformPaths.h"
-#include "port/unicode.h"
 
 #include <array>
+#include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -54,12 +54,70 @@ namespace
 		return path.is_absolute() ? path.lexically_normal() : std::filesystem::path();
 	}
 
+	bool IsValidUTF8( const std::string &szText )
+	{
+		// A wchar_t/iconv round trip can preserve values above U+10FFFF on Linux.
+		// Validate Unicode scalar values and shortest encodings directly (RFC 3629).
+		size_t nPosition = 0;
+		while ( nPosition < szText.size() )
+		{
+			const auto first = static_cast<unsigned char>( szText[nPosition++] );
+			if ( first < 0x80 )
+			{
+				continue;
+			}
+			size_t nContinuation;
+			uint32_t nCodePoint;
+			uint32_t nMinimum;
+			if ( first >= 0xc2 && first <= 0xdf )
+			{
+				nContinuation = 1;
+				nCodePoint = first & 0x1f;
+				nMinimum = 0x80;
+			}
+			else if ( first >= 0xe0 && first <= 0xef )
+			{
+				nContinuation = 2;
+				nCodePoint = first & 0x0f;
+				nMinimum = 0x800;
+			}
+			else if ( first >= 0xf0 && first <= 0xf4 )
+			{
+				nContinuation = 3;
+				nCodePoint = first & 0x07;
+				nMinimum = 0x10000;
+			}
+			else
+			{
+				return false;
+			}
+			if ( szText.size() - nPosition < nContinuation )
+			{
+				return false;
+			}
+			for ( size_t i = 0; i < nContinuation; ++i )
+			{
+				const auto next = static_cast<unsigned char>( szText[nPosition++] );
+				if ( ( next & 0xc0 ) != 0x80 )
+				{
+					return false;
+				}
+				nCodePoint = ( nCodePoint << 6 ) | ( next & 0x3f );
+			}
+			if ( nCodePoint < nMinimum || nCodePoint > 0x10ffff || ( nCodePoint >= 0xd800 && nCodePoint <= 0xdfff ) )
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	bool IsValidApplicationName( const std::string &szName )
 	{
 		// Apply the same portable filename rules on every OS. In particular, a
 		// Linux-valid slash-free name can still be a device or stream on Windows.
 		if ( szName.empty() || szName.size() > 255 || szName.back() == '.' ||
-		     szName.find_first_of( "<>:\"/\\|?*" ) != std::string::npos || WideToUTF8( UTF8ToWide( szName ) ) != szName )
+		     szName.find_first_of( "<>:\"/\\|?*" ) != std::string::npos || !IsValidUTF8( szName ) )
 		{
 			return false;
 		}

@@ -3,6 +3,11 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Do not validate UTF-8 by round-tripping through wchar_t. Linux iconv can
+  preserve values above U+10FFFF that Windows rejects. Validate shortest UTF-8
+  encodings and Unicode scalar ranges explicitly, with boundary tests for
+  surrogates, supplementary characters, truncation and legacy 5/6-byte forms.
+
 - Resolve app_name.txt from the installation root before selecting either user
   folder. Keep portable name validation shared across platforms, including
   Windows device names, and append the variant beneath an explicit user-data
