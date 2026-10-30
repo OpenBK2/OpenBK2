@@ -79,6 +79,8 @@ set(GR2_SOURCES
     src/Oodle1.cpp
     src/Oodle1.h
     src/Pose.cpp
+    src/SectionCache.cpp
+    src/SectionCache.h
     src/Skeleton.cpp
     src/Structures.h
     src/Trace.cpp
