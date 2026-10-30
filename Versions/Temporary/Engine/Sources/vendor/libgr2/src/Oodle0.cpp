@@ -76,6 +76,19 @@ namespace NGr2
 namespace
 {
 
+#if GR2_OODLE0_SSE2
+//! Sixteen lane suffix masks for all sixteen bins, overlapped into one array.
+//!
+//! The window of sixteen entries starting at SUFFIX_ONES + 16 - b is all ones
+//! from lane b upwards and zero below it, so this one 64-byte table serves every
+//! bin and the bin index becomes an address offset rather than a branch.
+alignas( 64 ) const uint16_t SUFFIX_ONES[32] = {
+	0,      0,      0,      0,      0,      0,      0,      0,
+	0,      0,      0,      0,      0,      0,      0,      0,
+	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
+	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff };
+#endif
+
 //! Index of the lowest set bit. Undefined for zero, which no caller passes.
 inline uint32_t LowestSetBit( uint32_t nMask )
 {
@@ -87,7 +100,6 @@ inline uint32_t LowestSetBit( uint32_t nMask )
 	return static_cast<uint32_t>( __builtin_ctz( nMask ) );
 #endif
 }
-
 
 constexpr uint32_t HEADER_SIZE = 36;
 constexpr uint32_t STAGE_COUNT = 3;
@@ -401,6 +413,17 @@ private:
 	//! pairs of bins, which is what makes a single add update two running totals.
 	void IncrementTotals( uint32_t nValue, uint32_t nAmount );
 	void AddTotalPair( uint32_t nPairIndex, uint32_t nAmount );
+
+	//! IncrementTotals for the case where both 16-bit lanes of nAmount are equal.
+	//!
+	//! Every hot caller is in that case, and it is much cheaper: with equal lanes
+	//! there is nothing for the pair packing to do, because the carry it exists to
+	//! compensate for cannot happen. No total ever reaches 65536 (the model
+	//! rescales at 16384 and the largest total measured over the corpus is 16383),
+	//! so each 16-bit lane add is independent and the whole update is "add nAmount
+	//! to the bins from BinOf( nValue ) up", which is one masked vector add.
+	void IncrementTotalsUniform( uint32_t nValue, uint32_t nAmount );
+
 	void QuickIncrement( uint32_t nValue, uint32_t nAmount );
 	void DecrementCounts( uint32_t nValue, uint32_t nAmount );
 	void Rescale();
@@ -420,6 +443,15 @@ private:
 	const uint16_t *Totals() const { return m_TotalsStore + TOTALS_PAD; }
 
 	static constexpr uint32_t TOTALS_PAD = 8;
+
+	//! A scalar mirror of Totals()[15], the sum of every count in the model.
+	//!
+	//! The sixteen bins are now written as two 128-bit stores, so reading one of
+	//! them back as a 2-byte scalar is a store-to-load forwarding stall. Nothing
+	//! outside this class needs an individual bin, and everything that used to
+	//! read Totals()[15] wanted the total, so the total is kept here as well and
+	//! the vector half is only ever touched as vectors.
+	uint16_t m_nTotal = 0;
 
 	uint32_t m_nUniqueValues = 0;
 	alignas( 16 ) uint16_t m_TotalsStore[TOTALS_PAD + 16] = {};
@@ -459,6 +491,7 @@ void CArithModel::IncrementTotals( uint32_t nValue, uint32_t nAmount )
 	if ( nValue >= m_Binning.nLastBinStart )
 	{
 		pTotals[15] = static_cast<uint16_t>( pTotals[15] + nLow );
+		m_nTotal = pTotals[15];
 		return;
 	}
 
@@ -472,18 +505,52 @@ void CArithModel::IncrementTotals( uint32_t nValue, uint32_t nAmount )
 	{
 		AddTotalPair( nPair, nAmount );
 	}
+	// Read the mirror back rather than reasoning about what the pair carry did to
+	// the last bin. This path runs once per model at most.
+	m_nTotal = pTotals[15];
+}
+
+void CArithModel::IncrementTotalsUniform( uint32_t nValue, uint32_t nAmount )
+{
+	const uint32_t nBin = BinOf( nValue );
+	uint16_t *pTotals = Totals();
+	// Bin 15 is in every suffix, so the total always moves by the whole amount.
+	m_nTotal = static_cast<uint16_t>( m_nTotal + nAmount );
+#if GR2_OODLE0_SSE2
+	const __m128i vAmount = _mm_set1_epi16( static_cast<short>( nAmount ) );
+	const __m128i vMaskLow =
+		_mm_loadu_si128( reinterpret_cast<const __m128i *>( SUFFIX_ONES + 16 - nBin ) );
+	const __m128i vMaskHigh =
+		_mm_loadu_si128( reinterpret_cast<const __m128i *>( SUFFIX_ONES + 24 - nBin ) );
+	__m128i *pLow = reinterpret_cast<__m128i *>( pTotals );
+	__m128i *pHigh = pLow + 1;
+	_mm_store_si128( pLow, _mm_add_epi16( _mm_load_si128( pLow ),
+	                                      _mm_and_si128( vMaskLow, vAmount ) ) );
+	_mm_store_si128( pHigh, _mm_add_epi16( _mm_load_si128( pHigh ),
+	                                       _mm_and_si128( vMaskHigh, vAmount ) ) );
+#else
+	for ( uint32_t i = nBin; i < 16; ++i )
+	{
+		pTotals[i] = static_cast<uint16_t>( pTotals[i] + nAmount );
+	}
+#endif
 }
 
 void CArithModel::QuickIncrement( uint32_t nValue, uint32_t nAmount )
 {
-	IncrementTotals( nValue, nAmount );
+	// Every caller of this one passes equal lanes.
+	IncrementTotalsUniform( nValue, nAmount & 0xffffu );
 	m_Counts[nValue] = static_cast<uint16_t>( m_Counts[nValue] + ( nAmount & 0xffffu ) );
 }
 
 void CArithModel::DecrementCounts( uint32_t nValue, uint32_t nAmount )
 {
+	// The one asymmetric caller, which needs the pair-packed borrow, so it goes
+	// through the general IncrementTotals rather than the uniform fast path.
 	const uint32_t nNegative = 0u - nAmount;
-	QuickIncrement( nValue, ( ( nNegative - 1 ) << 16 ) | ( nNegative & 0xffffu ) );
+	const uint32_t nPacked = ( ( nNegative - 1 ) << 16 ) | ( nNegative & 0xffffu );
+	IncrementTotals( nValue, nPacked );
+	m_Counts[nValue] = static_cast<uint16_t>( m_Counts[nValue] + ( nPacked & 0xffffu ) );
 }
 
 //! Which entry a coder count falls in, and where that entry starts.
@@ -506,7 +573,7 @@ bool CArithModel::FindPos( uint32_t nCount, uint32_t *pnPos, uint32_t *pnStart )
 	// to come first for a second reason: on a malformed stream GetCount can return
 	// any 32-bit value, and the 16-bit compares below are only meaningful once
 	// nCount is known to be under the total, hence under 16384.
-	if ( nCount >= pTotals[15] )
+	if ( nCount >= m_nTotal )
 	{
 		return false;
 	}
@@ -645,18 +712,19 @@ void CArithModel::Rescale()
 		nRunning += Bins[i];
 		pTotals[i] = static_cast<uint16_t>( nRunning );
 	}
+	m_nTotal = static_cast<uint16_t>( nRunning );
 }
 
 SSymbol CArithModel::Decompress( CArithBits &bits )
 {
 	SSymbol out;
 
-	if ( Totals()[15] >= RESCALE_TOTAL )
+	if ( m_nTotal >= RESCALE_TOTAL )
 	{
 		Rescale();
 	}
 
-	const uint32_t nScale = Totals()[15];
+	const uint32_t nScale = m_nTotal;
 	const uint32_t nCount = bits.GetCount( nScale );
 
 	uint32_t nPos = 0;
@@ -669,9 +737,12 @@ SSymbol CArithModel::Decompress( CArithBits &bits )
 
 	const uint16_t nOldCount = m_Counts[nPos];
 	// The totals are bumped before the range narrows, so the scale Remove sees is
-	// the total from before this symbol. Order matters and is not obvious.
-	IncrementTotals( nPos, 0x00010001u );
-	bits.Remove( nStart, nOldCount, Totals()[15] - 1u );
+	// the total from before this symbol. Order matters and is not obvious. That is
+	// exactly nScale: the bump adds one to the last bin unconditionally, so the old
+	// "Totals()[15] - 1" was a longer way of writing the value already in hand.
+	// The sequence is kept as it was anyway, because nothing is gained by moving it.
+	IncrementTotalsUniform( nPos, 1u );
+	bits.Remove( nStart, nOldCount, nScale );
 	m_Counts[nPos] = static_cast<uint16_t>( m_Counts[nPos] + 1 );
 
 	if ( nPos != 0 )
