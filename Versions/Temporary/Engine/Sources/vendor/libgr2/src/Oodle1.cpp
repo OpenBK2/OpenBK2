@@ -220,7 +220,27 @@ private:
 	//! shifting in bytes. False, with the failure flag set, when the stream ran
 	//! out: a well formed section never gets there, because the padding this was
 	//! handed covers the read ahead.
-	bool Renormalise();
+	//!
+	//! In the class body, not out of line. Out of line it was a call, and the
+	//! call forced the numerator, the denominator and the stream pointer out to
+	//! memory and back on the two symbols in five that need a byte.
+	bool Renormalise()
+	{
+		while ( m_nDenominator <= 0x800000 )
+		{
+			if ( m_pStream + 1 >= m_pEnd )
+			{
+				m_bFailed = true;
+				return false;
+			}
+			m_nNumerator <<= 8;
+			m_nNumerator |= ( static_cast<uint32_t>( m_pStream[0] ) << 7 ) & 0x80;
+			m_nNumerator |= ( static_cast<uint32_t>( m_pStream[1] ) >> 1 ) & 0x7f;
+			++m_pStream;
+			m_nDenominator <<= 8;
+		}
+		return true;
+	}
 
 	uint32_t m_nNumerator = 0;
 	uint32_t m_nDenominator = 0;
@@ -229,28 +249,6 @@ private:
 	const uint8_t *m_pEnd = nullptr;
 	bool m_bFailed = false;
 };
-
-// Out of line, unlike the two above: the loop runs at most three times, since
-// the denominator starts at 0x80 and each pass shifts it a byte, and it does not
-// run at all for most symbols. Keeping it here is what lets Decode be small
-// enough to inline, which is the whole point of the split.
-bool CDecoder::Renormalise()
-{
-	while ( m_nDenominator <= 0x800000 )
-	{
-		if ( m_pStream + 1 >= m_pEnd )
-		{
-			m_bFailed = true;
-			return false;
-		}
-		m_nNumerator <<= 8;
-		m_nNumerator |= ( static_cast<uint32_t>( m_pStream[0] ) << 7 ) & 0x80;
-		m_nNumerator |= ( static_cast<uint32_t>( m_pStream[1] ) >> 1 ) & 0x7f;
-		++m_pStream;
-		m_nDenominator <<= 8;
-	}
-	return true;
-}
 
 //! A vector of uint16_t that holds its first N elements inside itself and only
 //! goes to the heap past that.
