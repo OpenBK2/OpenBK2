@@ -1014,6 +1014,18 @@ bool Oodle1Decompress( const uint8_t *pCompressed, uint32_t nCompressedSize, uin
 	uint32_t nAt = 0;
 	for ( uint32_t i = 0; i < STAGE_COUNT; ++i )
 	{
+		// An empty stage needs no models. A dictionary is hundreds of weight
+		// windows, and most stages are empty: across the 4,246 sections of the
+		// shipped loose GR2 files, stage 1 decodes nothing in every single one and
+		// stage 2 in 61% of them, so 6,863 of the 12,738 dictionaries built were
+		// built for a stage with no bytes in it. The test is the loop's own
+		// condition, and construction has no effect on the stream, so skipping it
+		// decodes the same bytes.
+		if ( nAt >= nStops[i] )
+		{
+			continue;
+		}
+
 		CDictionary dictionary( params[i] );
 
 		while ( nAt < nStops[i] )
