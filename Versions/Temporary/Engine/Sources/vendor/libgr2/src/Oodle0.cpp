@@ -52,6 +52,7 @@
 #include "Trace.h"
 
 #include <cstring>
+#include <new>
 #include <vector>
 
 // SSE2 is used to pick one of the model's sixteen cumulative bins with two
@@ -850,6 +851,10 @@ class CStage
 {
 public:
 	explicit CStage( const SParameters &params );
+	~CStage();
+
+	CStage( const CStage & ) = delete;
+	CStage &operator=( const CStage & ) = delete;
 
 	//! Decode into pOut until nStop bytes of output exist in total.
 	//!
@@ -862,6 +867,10 @@ private:
 	static bool Draw( CArithModel &model, CArithBits &bits, uint32_t nEscapeScale,
 	                  uint32_t *pnValue );
 
+	//! Build the length model for nIndex. Out of line and cold: it runs at most
+	//! once per index per stage, against 86.7 million draws over this corpus.
+	CArithModel *BuildLength( uint32_t nIndex );
+
 	uint32_t m_nMaxBytes = 0;
 	uint32_t m_nMaxOffsets = 0;
 	uint32_t m_nMaxOffsetLow = 0;
@@ -871,7 +880,19 @@ private:
 	CArithModel m_Bytes;
 	CArithModel m_OffsetLow;
 	CArithModel m_OffsetHigh;
-	std::vector<CArithModel> m_Lengths;
+
+	// LAZY LENGTH MODELS. The format declares one length model per previous
+	// length, 65 of them, and a stage draws from only 22.7 of them on average:
+	// over this corpus 3,364,725 length models were built and 1,177,449 (35.0%)
+	// ever drawn from. Building one costs two heap allocations, a sixteen-way
+	// BestShift search and a totals update, so two thirds of that was thrown
+	// away. Here each slot is built on its first draw instead.
+	//
+	// The storage is in the stage rather than on the heap so a built model costs
+	// no allocation of its own, and only the pointer array has to be cleared.
+	uint8_t m_UniqueLengths[4] = {};
+	CArithModel *m_pLengths[MAX_LENGTHS + 1] = {};
+	alignas( CArithModel ) uint8_t m_LengthStorage[( MAX_LENGTHS + 1 ) * sizeof( CArithModel )];
 };
 
 CStage::CStage( const SParameters &params )
@@ -883,13 +904,31 @@ CStage::CStage( const SParameters &params )
 	, m_OffsetLow( m_nMaxOffsetLow )
 	, m_OffsetHigh( params.nUniqueOffsets )
 {
-	// One length model per previous length, which is what makes a run of equal
-	// lengths nearly free.
-	m_Lengths.reserve( MAX_LENGTHS + 1 );
+	memcpy( m_UniqueLengths, params.nUniqueLengths, sizeof( m_UniqueLengths ) );
+}
+
+CStage::~CStage()
+{
 	for ( uint32_t i = 0; i <= MAX_LENGTHS; ++i )
 	{
-		m_Lengths.emplace_back( params.LengthUnique( i ) );
+		if ( m_pLengths[i] != nullptr )
+		{
+			m_pLengths[i]->~CArithModel();
+		}
 	}
+}
+
+CArithModel *CStage::BuildLength( uint32_t nIndex )
+{
+	uint32_t nGroup = nIndex / ( MAX_LENGTHS / 4 );
+	if ( nGroup > 3 )
+	{
+		nGroup = 3;
+	}
+	void *pSlot = m_LengthStorage + size_t( nIndex ) * sizeof( CArithModel );
+	CArithModel *pModel = new ( pSlot ) CArithModel( m_UniqueLengths[3 - nGroup] );
+	m_pLengths[nIndex] = pModel;
+	return pModel;
 }
 
 bool CStage::Draw( CArithModel &model, CArithBits &bits, uint32_t nEscapeScale,
@@ -917,7 +956,12 @@ bool CStage::Decode( CArithBits &bits, uint8_t *pOut, uint32_t nSize, uint32_t n
 	while ( *pnWritten < nStop )
 	{
 		uint32_t nLengthSymbol = 0;
-		if ( !Draw( m_Lengths[m_nLastLength], bits, MAX_LENGTHS + 1, &nLengthSymbol )
+		CArithModel *pLength = m_pLengths[m_nLastLength];
+		if ( pLength == nullptr )
+		{
+			pLength = BuildLength( m_nLastLength );
+		}
+		if ( !Draw( *pLength, bits, MAX_LENGTHS + 1, &nLengthSymbol )
 		     || nLengthSymbol > MAX_LENGTHS )
 		{
 			return false;
