@@ -53,6 +53,7 @@ gr2_add_test(ReadEntireFileFromMemory)
 gr2_add_test(FileContainer)
 gr2_add_test(Oodle1)
 gr2_add_test(Oodle1Corpus)
+gr2_add_test(Oodle0Corpus)
 gr2_add_test(FileInfo)
 gr2_add_test(Animation)
 gr2_add_test(Curve)
@@ -81,6 +82,8 @@ if(EXISTS ${LIBGR2_REPO_ROOT}/Versions/Current/Data/bin)
     # which is what catches a decoder optimisation that changes a byte. Without
     # the data it skips rather than fails.
     target_compile_definitions(Oodle1Corpus_test
+        PRIVATE LIBGR2_REPO_DATA_DIR="${LIBGR2_REPO_ROOT}")
+    target_compile_definitions(Oodle0Corpus_test
         PRIVATE LIBGR2_REPO_DATA_DIR="${LIBGR2_REPO_ROOT}")
     message(STATUS "libgr2: Oodle0 tests will read ${LIBGR2_REPO_ROOT}/Versions/Current/Data")
 else()
