@@ -22,6 +22,7 @@
 #include "Identify.h"
 #include "Oodle0.h"
 #include "Oodle1.h"
+#include "SectionCache.h"
 #include "Trace.h"
 
 #include <algorithm>
@@ -273,6 +274,23 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 			// every section of this game's data, so the middle stage is always empty.
 			pFile->m_SectionData[i].assign( section.nExpandedDataSize, 0 );
 
+			// The same section bytes arrive again and again: 41,886 sections carry
+			// data in this game's files and only 16,569 are distinct, the root type
+			// section worst of all because the exporter wrote one schema into
+			// thousands of files. Expanded bytes are a pure function of these four
+			// inputs, so an identical input can be served from the cache instead of
+			// run through a decoder at tens of MB/s. SectionCache.h has the argument.
+			const SSectionKey cacheKey{ pBytes + section.nDataOffset,
+			                            section.nDataSize,
+			                            section.nFirst16Bit,
+			                            section.nFirst8Bit,
+			                            section.nExpandedDataSize,
+			                            section.nCompression };
+			if ( SectionCacheLookup( cacheKey, pFile->m_SectionData[i].data() ) )
+			{
+				continue;
+			}
+
 			const bool bOk =
 				section.nCompression == COMPRESSION_OODLE0
 					? Oodle0Decompress( pBytes + section.nDataOffset, section.nDataSize,
@@ -289,6 +307,10 @@ granny_file *granny_file::ReadFromMemory( const void *pMemory, granny_int32x nSi
 				               section.nDataSize, section.nCompression - 1,
 				               section.nExpandedDataSize );
 			}
+			// Only a successful expansion is worth keeping. Caching a failure would
+			// turn one corrupt file into a cached wrong answer for every later file
+			// that happens to share its bytes.
+			SectionCacheInsert( cacheKey, pFile->m_SectionData[i].data() );
 		}
 	}
 
