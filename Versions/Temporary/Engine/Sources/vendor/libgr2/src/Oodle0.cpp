@@ -70,6 +70,12 @@
 #include <intrin.h>
 #endif
 
+#if defined( _MSC_VER )
+// _byteswap_ulong and _BitScanReverse, both of which are intrinsics rather than
+// library calls. Neither needs an instruction set beyond the baseline.
+#include <intrin.h>
+#endif
+
 namespace NGr2
 {
 
@@ -115,18 +121,60 @@ constexpr uint32_t LONG_LENGTHS[4] = { MAX_LENGTHS * 2, MAX_LENGTHS * 3, MAX_LEN
 //! Counts are halved once their total reaches this.
 constexpr uint32_t RESCALE_TOTAL = 16384;
 
-//! Reverse the low nBits of a value. The code register is filled with these.
-uint32_t BitReverse( uint32_t nValue, uint32_t nBits )
+//! Byte-order swap, so the bit reversal below is one instruction plus three
+//! SWAR steps rather than a loop.
+inline uint32_t ByteSwap32( uint32_t nValue )
 {
-	uint32_t nResult = 0;
-	for ( uint32_t i = 0; i < nBits; ++i )
-	{
-		nResult = ( nResult << 1 ) | ( ( nValue >> i ) & 1u );
-	}
-	return nResult;
+#if defined( _MSC_VER )
+	return _byteswap_ulong( nValue );
+#elif defined( __GNUC__ ) || defined( __clang__ )
+	return __builtin_bswap32( nValue );
+#else
+	return ( nValue >> 24 ) | ( ( nValue >> 8 ) & 0x0000ff00u )
+	       | ( ( nValue << 8 ) & 0x00ff0000u ) | ( nValue << 24 );
+#endif
 }
 
-//! Bits out of a little-endian word stream, low end first.
+//! Leading zero count. Never called with zero, so bsr is enough and no LZCNT
+//! feature bit is relied on.
+inline uint32_t CountLeadingZeros32( uint32_t nValue )
+{
+#if defined( _MSC_VER )
+	unsigned long nIndex = 0;
+	_BitScanReverse( &nIndex, nValue );
+	return 31u - nIndex;
+#elif defined( __GNUC__ ) || defined( __clang__ )
+	return static_cast<uint32_t>( __builtin_clz( nValue ) );
+#else
+	uint32_t nCount = 0;
+	while ( ( nValue & 0x80000000u ) == 0 )
+	{
+		++nCount;
+		nValue <<= 1;
+	}
+	return nCount;
+#endif
+}
+
+//! Bits out of a little-endian word stream, earliest bit first.
+//!
+//! The original reader handed out bits from the low end of the word and the
+//! range coder then reversed every nibble on the way into the code register,
+//! because the code register is filled most significant bit first. Those two
+//! reversals are the same reversal: the whole stream is one MSB-first bit
+//! source, and the nibble swapping in the old renormalise loop was only there
+//! because it pulled whole bytes out of an LSB-first reader.
+//!
+//! So the accumulator is kept pre-reversed. One word is reversed as it is read,
+//! a byte swap and three SWAR steps for all thirty-two bits, where the old
+//! renormalise paid two unrolled four-bit reversal loops, about twenty-four
+//! operations, for every single byte. A read of n bits is then a shift.
+//!
+//! Word granularity, the zero padding and the failure threshold are unchanged
+//! from the original, and so is the bit accounting: m_nBitLen evolves exactly as
+//! it did, so a word is read at exactly the same point in the stream and
+//! Failed() flips on exactly the same input. The behaviour is identical on
+//! malformed streams, not merely on the ones that decode.
 class CVarBits
 {
 public:
@@ -137,27 +185,44 @@ public:
 	{
 	}
 
-	uint32_t Get( uint32_t nBits );
-	uint32_t Get1();
+	//! The next nBits bits, earliest bit in the highest position. nBits <= 31.
+	uint32_t Get( uint32_t nBits )
+	{
+		if ( m_nBitLen < nBits )
+		{
+			// m_nBitLen is at most 30 here, so this shift is 2..32 and the
+			// accumulator never holds more than 62 bits.
+			m_Acc |= uint64_t( ReadWordReversed() ) << ( 32 - m_nBitLen );
+			m_nBitLen += 32;
+		}
+		// Two shifts rather than one by 64 - nBits, which would be undefined
+		// when nBits is zero, and zero bits is the common case.
+		const uint32_t nValue = static_cast<uint32_t>( ( m_Acc >> ( 63 - nBits ) ) >> 1 );
+		m_Acc <<= nBits;
+		m_nBitLen -= nBits;
+		return nValue;
+	}
 
 	bool Failed() const { return m_bFailed; }
 
 private:
-	//! The next word, zero padded past the end, which the format relies on.
+	//! The next word with all thirty-two bits reversed, zero padded past the
+	//! end, which the format relies on.
 	//!
 	//! Reading past the end is normal at the tail and is not an error by itself.
 	//! Reading far past it is, and that is what the limit catches.
-	uint32_t ReadWord();
+	uint32_t ReadWordReversed();
 
 	const uint8_t *m_pData = nullptr;
 	uint32_t m_nSize = 0;
 	uint32_t m_nAt = 0;
-	uint32_t m_nBits = 0;
+	//! Valid bits sit at the top, bit 63 being the next one out.
+	uint64_t m_Acc = 0;
 	uint32_t m_nBitLen = 0;
 	bool m_bFailed = false;
 };
 
-uint32_t CVarBits::ReadWord()
+uint32_t CVarBits::ReadWordReversed()
 {
 	// Eight words of slack, which is more than any renormalisation can consume
 	// after the last real byte.
@@ -179,47 +244,15 @@ uint32_t CVarBits::ReadWord()
 
 	uint32_t nWord = 0;
 	memcpy( &nWord, bytes, sizeof( nWord ) );
+
+	// Reverse all thirty-two bits: the byte order, then the bits within each
+	// byte. The stream is bytes in order, each read from its low bit, so the
+	// earliest bit of the earliest byte ends up at bit 31.
+	nWord = ByteSwap32( nWord );
+	nWord = ( ( nWord & 0xaaaaaaaau ) >> 1 ) | ( ( nWord & 0x55555555u ) << 1 );
+	nWord = ( ( nWord & 0xccccccccu ) >> 2 ) | ( ( nWord & 0x33333333u ) << 2 );
+	nWord = ( ( nWord & 0xf0f0f0f0u ) >> 4 ) | ( ( nWord & 0x0f0f0f0fu ) << 4 );
 	return nWord;
-}
-
-uint32_t CVarBits::Get( uint32_t nBits )
-{
-	if ( nBits == 0 || nBits > 31 )
-	{
-		return 0;
-	}
-
-	const uint64_t nMask = ( uint64_t( 1 ) << nBits ) - 1;
-	if ( m_nBitLen >= nBits )
-	{
-		const uint32_t nValue = static_cast<uint32_t>( m_nBits & nMask );
-		m_nBits >>= nBits;
-		m_nBitLen -= nBits;
-		return nValue;
-	}
-
-	const uint32_t nWord = ReadWord();
-	const uint32_t nValue = static_cast<uint32_t>(
-		( uint64_t( m_nBits ) | ( uint64_t( nWord ) << m_nBitLen ) ) & nMask );
-	m_nBits = nWord >> ( nBits - m_nBitLen );
-	m_nBitLen = m_nBitLen + 32 - nBits;
-	return nValue;
-}
-
-uint32_t CVarBits::Get1()
-{
-	if ( m_nBitLen != 0 )
-	{
-		const uint32_t nValue = m_nBits & 1u;
-		m_nBits >>= 1;
-		--m_nBitLen;
-		return nValue;
-	}
-
-	const uint32_t nWord = ReadWord();
-	m_nBits = nWord >> 1;
-	m_nBitLen = 31;
-	return nWord & 1u;
 }
 
 //! The range coder.
@@ -229,7 +262,7 @@ public:
 	CArithBits( const uint8_t *pData, uint32_t nSize, uint32_t nAt )
 		: m_Bits( pData, nSize, nAt )
 	{
-		m_nCode = BitReverse( m_Bits.Get( 31 ), 31 );
+		m_nCode = m_Bits.Get( 31 );
 	}
 
 	//! Where the code sits within a range of nScale, before narrowing.
@@ -272,51 +305,54 @@ void CArithBits::Remove( uint32_t nStart, uint32_t nCount, uint32_t nScale )
 
 	uint32_t nHigh = m_nHigh;
 	uint32_t nLow = m_nLow;
-	uint32_t nCode = m_nCode;
 
 	const uint64_t nWidth = uint64_t( nHigh - nLow ) + 1;
 	nHigh = static_cast<uint32_t>( nLow + ( nWidth * ( uint64_t( nStart ) + nCount ) ) / nScale
 	                               - 1 );
 	nLow = static_cast<uint32_t>( nLow + ( nWidth * nStart ) / nScale );
 
-	// Renormalise. The nibble-reversed refills are the part to copy rather than
-	// reason about: the encoder wrote them that way.
-	if ( ( ( nHigh ^ nLow ) & 0x40000000u ) == 0 )
-	{
-		while ( ( ( nHigh ^ nLow ) & 0x7f800000u ) == 0 )
-		{
-			nLow <<= 8;
-			nHigh = ( nHigh << 8 ) | 0xffu;
-			const uint32_t nByte = m_Bits.Get( 8 );
-			nCode = ( nCode << 8 ) | ( BitReverse( nByte & 0x0fu, 4 ) << 4 )
-			        | BitReverse( nByte >> 4, 4 );
-		}
-		if ( ( ( nHigh ^ nLow ) & 0x78000000u ) == 0 )
-		{
-			nLow <<= 4;
-			nHigh = ( nHigh << 4 ) | 0x0fu;
-			nCode = ( nCode << 4 ) | BitReverse( m_Bits.Get( 4 ), 4 );
-		}
-		while ( ( ( nHigh ^ nLow ) & 0x40000000u ) == 0 )
-		{
-			nLow <<= 1;
-			nHigh = ( nHigh << 1 ) | 1u;
-			nCode = ( nCode << 1 ) | m_Bits.Get1();
-		}
-	}
+	// Renormalise, and absorb the underflow loop into the same shift.
+	//
+	// The original walked four data-dependent loops to find out how far to shift:
+	// eight bits at a time, then one step of four, then one bit at a time, then
+	// the underflow loop. Each of those trip counts is a leading bit count, so
+	// all of it is two counts and one shift. proof_rev0.cpp checks the identities
+	// below against the original loops over 11.5 million states, including the
+	// degenerate ones where the narrowed range inverts.
+	//
+	// nZ, the renormalise distance, is the length of the agreeing prefix of
+	// nHigh and nLow in bits 30..0. The 8-loop runs nZ >> 3 times, the 4-step
+	// runs when bit 2 of nZ is set and the 1-loop runs nZ & 3 times, which is
+	// 8 * (nZ >> 3) + 4 * ((nZ >> 2) & 1) + (nZ & 3) == nZ. The gate on bit 30 is
+	// just nZ == 0, so there is nothing left to branch on. The (x << 1) | 1 keeps
+	// the count defined when the two agree completely, where the answer is 31.
+	const uint32_t nZ = CountLeadingZeros32( ( ( nHigh ^ nLow ) << 1 ) | 1u );
 
-	// Underflow: the two straddle the midpoint without agreeing on the bit above.
-	while ( ( nLow & 0x20000000u ) != 0 && ( nHigh & 0x20000000u ) == 0 )
-	{
-		nCode ^= 0x20000000u;
-		nLow = ( nLow & 0x1fffffffu ) << 1;
-		nHigh = ( nHigh << 1 ) | 0x40000001u;
-		nCode = ( nCode << 1 ) | m_Bits.Get1();
-	}
+	// nU, the underflow distance, is the run of positions below the midpoint
+	// where nLow is one and nHigh is zero, counted down from bit 29 after the
+	// renormalise shift. Shifting the test value by nZ is the same as testing the
+	// shifted registers, and the low nZ bits it brings in are zeros, which is
+	// also why nZ + nU can never exceed 31: one reader call covers both.
+	//
+	// The shift by two does the masking: it pushes bits 29..0 up to 31..2 and
+	// drops the two above them, and the two ones it leaves at the bottom are the
+	// sentinel that keeps the count defined when the whole run is ones.
+	const uint32_t nU = CountLeadingZeros32( ~( ( ( nLow & ~nHigh ) << nZ ) << 2 ) );
 
-	m_nHigh = nHigh & MASK31;
-	m_nLow = nLow & MASK31;
-	m_nCode = nCode & MASK31;
+	// Both shifts at once. The per-iteration nCode ^= 0x20000000 telescopes into
+	// a single flip of bit 30 because every later shift walks the earlier flips
+	// out of the 31-bit window, and the underflow loop's masking of bit 30 only
+	// applies when it ran at all, which is what nKeep and nFlip carry.
+	const uint32_t nShift = nZ + nU;
+	const uint32_t nFlip = nU != 0 ? 0x40000000u : 0u;
+	const uint32_t nKeep = MASK31 ^ nFlip;
+	const uint32_t nCode = m_nCode;
+
+	// ~( ~nHigh << n ) is ( nHigh << n ) | ( ( 1 << n ) - 1 ) in one operation
+	// fewer, and it has no shift-count edge case at n == 31.
+	m_nLow = ( nLow << nShift ) & nKeep;
+	m_nHigh = ( ~( ~nHigh << nShift ) & nKeep ) | nFlip;
+	m_nCode = ( ( ( nCode << nShift ) | m_Bits.Get( nShift ) ) ^ nFlip ) & MASK31;
 }
 
 uint32_t CArithBits::GetValue( uint32_t nScale )
