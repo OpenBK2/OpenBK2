@@ -74,6 +74,8 @@
 
 #include <algorithm>
 #include <cstring>
+#include <emmintrin.h>
+#include <memory>
 #include <numeric>
 #include <vector>
 
@@ -82,6 +84,56 @@ namespace NGr2
 
 namespace
 {
+
+// The bucket index that replaces most of LastRangeAtOrBelow's work, and its three
+// shape parameters. Left as macros because the lab sweeps them; the defaults are
+// where the sweep flattened out, and the plateau is broad: INDEX_MULT 5 to 7 and
+// INDEX_MAX_BITS 11 or 12 are all within half a per cent of each other.
+#ifndef OODLE1_INDEX_MIN_BITS
+#define OODLE1_INDEX_MIN_BITS 2
+#endif
+#ifndef OODLE1_INDEX_MAX_BITS
+#define OODLE1_INDEX_MAX_BITS 11
+#endif
+#ifndef OODLE1_INDEX_MULT
+#define OODLE1_INDEX_MULT 6
+#endif
+#ifndef OODLE1_INDEX_MIN_ENTRIES
+#define OODLE1_INDEX_MIN_ENTRIES 2
+#endif
+
+constexpr uint32_t INDEX_MIN_BITS = OODLE1_INDEX_MIN_BITS;
+constexpr uint32_t INDEX_MAX_BITS = OODLE1_INDEX_MAX_BITS;
+//! Buckets per range table entry. Higher means shorter walks and a dearer build.
+constexpr size_t INDEX_MULT = OODLE1_INDEX_MULT;
+//! The buffer is sized for the widest index; a window whose table is small uses
+//! only the first 1 << IndexBitsFor( size ) entries of it, so what an index costs
+//! in cache is the width its own table earned, not this.
+constexpr size_t INDEX_CAPACITY = size_t( 1 ) << INDEX_MAX_BITS;
+//! Range tables below this keep the plain binary search. 2 means none do, which is
+//! what measured best: a 4 entry table still comes out ahead with an index, and
+//! every step up from here was slower, up to 15 per cent slower at 200. Indexing
+//! only the large tables - the four literal windows per stage, which are the only
+//! ones that reach 258 entries - throws away half the win, because the small
+//! tables are a third of all searches.
+constexpr size_t INDEX_MIN_ENTRIES = OODLE1_INDEX_MIN_ENTRIES;
+
+//! The narrowest index with INDEX_MULT buckets per range table entry.
+//!
+//! One fixed width cannot serve both ends of the range. Tables run from 2 entries
+//! to 258, and a width chosen for the big ones means building a 1024 entry index
+//! for a 4 entry table, which the profile showed costing more than the search it
+//! replaced. Scaling the width with the table is worth about 1.5 per cent over the
+//! best fixed width.
+inline uint32_t IndexBitsFor( size_t nCount )
+{
+	uint32_t nBits = INDEX_MIN_BITS;
+	while ( nBits < INDEX_MAX_BITS && ( size_t( 1 ) << nBits ) < nCount * INDEX_MULT )
+	{
+		++nBits;
+	}
+	return nBits;
+}
 
 //! The range coder the whole format is built on.
 //!
@@ -343,12 +395,34 @@ public:
 
 private:
 	void RebuildRanges();
+	void RebuildIndex();
 	void RebuildWeights();
 
 	// Inline rather than std::vector; CSmallU16Vector says why, and why 8.
 	CSmallU16Vector<8> m_Ranges;
 	CSmallU16Vector<8> m_Values;
 	CSmallU16Vector<8> m_Weights;
+	//! One slot number per bucket of the coder's value space: the answer
+	//! LastRangeAtOrBelow would give for the lowest value in that bucket, which is a
+	//! lower bound on the answer for every value in it. m_nIndexShift says how wide
+	//! the buckets are, and only the first 0x4000 >> m_nIndexShift entries are live.
+	//!
+	//! Allocated on this window's first range rebuild and null before it, which is
+	//! also what keeps the memory down: a dictionary builds about 330 windows per
+	//! stage, but 98.6 per cent of the midbit windows and 83 per cent of the size
+	//! windows are never drawn from, and a window that is never drawn from never
+	//! rebuilds its ranges and so never allocates. Measured peak RSS over the corpus
+	//! barely moves.
+	//!
+	//! Rebuilt by, and only by, RebuildRanges. That is worth stating because
+	//! CWeightWindow::Decode pushes to m_Weights and m_Values on a new value without
+	//! rebuilding anything, which grows the window but NOT m_Ranges, so the index
+	//! cannot go stale behind it. If m_Ranges ever acquires a second writer, this
+	//! has to be rebuilt there too.
+	std::unique_ptr<uint16_t[]> m_Index;
+	//! What to shift a decoded value by to get its bucket, kept rather than the bit
+	//! count so the hot path does not have to subtract.
+	uint32_t m_nIndexShift = 14;
 	uint32_t m_nWeightTotal = 4;
 	uint32_t m_nCountCap = 0;
 	uint32_t m_nThreshIncrease = 4;
@@ -391,6 +465,8 @@ void CWeightWindow::RebuildRanges()
 	}
 	m_Ranges.push_back( 0x4000 );
 
+	RebuildIndex();
+
 	if ( m_nThreshIncrease > m_nThreshIncreaseCap / 2 )
 	{
 		m_nThreshRangeRebuild = m_nWeightTotal + m_nThreshIncreaseCap;
@@ -399,6 +475,94 @@ void CWeightWindow::RebuildRanges()
 	{
 		m_nThreshIncrease *= 2;
 		m_nThreshRangeRebuild = m_nWeightTotal + m_nThreshIncrease;
+	}
+}
+
+//! Fill the bucket index from the range table just built.
+//!
+//! Bucket b holds the answer the search would give for b's lowest value, which is
+//! the last slot whose range is at or below it. Slot i qualifies for every bucket
+//! from the first one whose base is at or above m_Ranges[i] upwards, so scattering
+//! i there in increasing i and then running a maximum forwards produces exactly
+//! that, and leaves the LAST slot of a run of equal ranges in place, which is the
+//! duplicate rule the search follows.
+//!
+//! This is the half of the work that is not free. It runs once per range rebuild,
+//! which is once per 83 searches, and the first version of it - a nested loop that
+//! filled each slot's run of buckets directly - was about a tenth of Draw in the
+//! profile and raised the branch miss count by 30 million, because the inner trip
+//! count is how wide a slot is and that follows the weights. Scatter, then forward
+//! fill in SSE2, has no data dependent branch in it at all.
+void CWeightWindow::RebuildIndex()
+{
+	const size_t nCount = m_Ranges.size();
+	if ( nCount < INDEX_MIN_ENTRIES )
+	{
+		// Also releases a buffer a window that shrank back below the threshold no
+		// longer needs. Shrinking that far is rare enough not to churn.
+		m_Index.reset();
+		return;
+	}
+	if ( !m_Index )
+	{
+		// Eight past the bucket count: one for the scatter below, which can address
+		// the bucket after the last, and the rest so the vector fill can round up.
+		m_Index.reset( new uint16_t[INDEX_CAPACITY + 8] );
+	}
+
+	const uint32_t nShift = 14u - IndexBitsFor( nCount );
+	m_nIndexShift = nShift;
+	const size_t nBucketWidth = size_t( 1 ) << nShift;
+	const size_t nBuckets = size_t( 0x4000 ) >> nShift;
+
+	uint16_t *const pIndex = m_Index.get();
+	const uint16_t *const pRanges = m_Ranges.data();
+
+	// Eight past the buckets in use, not one: the vector fill below works in eights
+	// and the narrowest index has only four buckets, so it can touch seven entries
+	// beyond them. No search ever reads those, but leaving them uninitialised would
+	// still be a read of indeterminate values.
+	memset( pIndex, 0, ( nBuckets + 8 ) * sizeof( uint16_t ) );
+
+	// Slot 0 is skipped because m_Ranges[0] is always 0, so its bucket is 0 and the
+	// memset already put 0 there.
+	for ( size_t i = 1; i + 1 < nCount; ++i )
+	{
+		// The first bucket whose base is at or above this slot's range. Equal ranges
+		// land on the same bucket and the later slot wins, which is the duplicate
+		// rule. This can come out as nBuckets itself, when a slot starts exactly at
+		// 0x4000 because every weight after it rounded to zero width; the buffer has
+		// room for that write and the fill below stops short of it, so the value is
+		// discarded, which is right - a slot starting at 0x4000 is never an answer.
+		const size_t nBucket = ( size_t( pRanges[i] ) + nBucketWidth - 1 ) >> nShift;
+		pIndex[nBucket] = static_cast<uint16_t>( i );
+	}
+
+	// The forward fill, eight buckets at a time. SSE2 rather than a scalar loop
+	// because the scalar one is a maximum chained through 1024 iterations, and that
+	// chain was visible in the profile. Within a vector the chain is three shifts
+	// and maxima regardless of width, so only the carry between vectors stays
+	// serial, and there are 128 of those instead of 1024.
+	//
+	// SSE2 needs no runtime check: it is part of x86-64. Signed compares are fine
+	// here even though these are slot numbers, because a range table never exceeds
+	// 258 entries and 258 is a positive int16.
+	const size_t nFill = nBuckets < 8 ? 8 : nBuckets;
+	__m128i vRun = _mm_setzero_si128();
+	for ( size_t nBucket = 0; nBucket < nFill; nBucket += 8 )
+	{
+		__m128i v = _mm_loadu_si128( reinterpret_cast<const __m128i *>( pIndex + nBucket ) );
+		// Prefix maximum inside the vector: lane j ends up holding the maximum over
+		// lanes 0..j. _mm_slli_si128 shifts towards the higher lanes, so nothing
+		// flows backwards and a bucket can only inherit from buckets below it.
+		v = _mm_max_epi16( v, _mm_slli_si128( v, 2 ) );
+		v = _mm_max_epi16( v, _mm_slli_si128( v, 4 ) );
+		v = _mm_max_epi16( v, _mm_slli_si128( v, 8 ) );
+		v = _mm_max_epi16( v, vRun );
+		_mm_storeu_si128( reinterpret_cast<__m128i *>( pIndex + nBucket ), v );
+		// The carry into the next eight: lane 7 broadcast to all lanes.
+		const __m128i vTop = _mm_shufflehi_epi16( v, 0xff );
+		vRun = _mm_unpackhi_epi64( vTop, vTop );
 	}
 }
 
@@ -469,6 +633,32 @@ inline size_t LastRangeAtOrBelow( const uint16_t *pRanges, size_t nCount, uint16
 	return nBase;
 }
 
+//! The same answer as LastRangeAtOrBelow, reached from the bucket index.
+//!
+//! pIndex[bucket] is the answer for the bottom of nValue's bucket, so it is at or
+//! below the answer for nValue and its range is at or below nValue. Walking forward
+//! while the NEXT range is still at or below nValue therefore lands on the same
+//! slot, duplicates included, because a run of equal ranges keeps satisfying the
+//! condition until its last member. The walk is bounded by the 0x4000 sentinel,
+//! which no decoded value reaches, so it stays in bounds without a count.
+//!
+//! It stays a walk. A fixed width branch free residual of 2 to 4 cmov-ed probes
+//! was tried here, to kill the exit branch outright, and was 9 to 13 per cent
+//! slower in every shape measured even though it did cut the branch miss count by
+//! a further 4 million. With INDEX_MULT buckets to the slot the walk usually takes
+//! no step at all, so what it costs is one well predicted not-taken branch, and
+//! unconditional probes cost more than that.
+inline size_t RangeFromIndex( const uint16_t *pRanges, const uint16_t *pIndex, uint32_t nShift,
+                              uint16_t nValue )
+{
+	size_t nAt = pIndex[nValue >> nShift];
+	while ( pRanges[nAt + 1] <= nValue )
+	{
+		++nAt;
+	}
+	return nAt;
+}
+
 CWeightWindow::SResult CWeightWindow::Decode( CDecoder &decoder )
 {
 	SResult result;
@@ -486,8 +676,15 @@ CWeightWindow::SResult CWeightWindow::Decode( CDecoder &decoder )
 	// The range containing nValue. The index is never the last entry, because
 	// that one is 0x4000 and Decode caps at 0x3fff, so reading the entry after it
 	// for the upper edge is always in bounds.
+	// Through the bucket index once this window has rebuilt its ranges at least
+	// once, which turns a search of up to eight dependent steps into one indexed
+	// load and usually no step at all. Before that first rebuild there is no index
+	// yet and the table has two entries, so the plain search costs one step.
 	const size_t nIndex =
-		LastRangeAtOrBelow( m_Ranges.data(), m_Ranges.size(), static_cast<uint16_t>( nValue ) );
+		m_Index ? RangeFromIndex( m_Ranges.data(), m_Index.get(), m_nIndexShift,
+		                          static_cast<uint16_t>( nValue ) )
+		        : LastRangeAtOrBelow( m_Ranges.data(), m_Ranges.size(),
+		                              static_cast<uint16_t>( nValue ) );
 	decoder.Commit( 0x4000,
 	                m_Ranges[nIndex],
 	                static_cast<uint32_t>( m_Ranges[nIndex + 1] ) - m_Ranges[nIndex] );
