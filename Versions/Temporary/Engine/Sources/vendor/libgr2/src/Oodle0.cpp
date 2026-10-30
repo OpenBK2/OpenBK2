@@ -51,6 +51,15 @@
 
 #include "Trace.h"
 
+// Branch hints. Every test that guards a division here is overwhelmingly one
+// way, measured zero out of 628,690,344 over the corpus, and GCC lays the code
+// out backwards without being told.
+#if defined( __GNUC__ )
+#	define OODLE0_LIKELY( x ) __builtin_expect( !!( x ), 1 )
+#else
+#	define OODLE0_LIKELY( x ) ( x )
+#endif
+
 #include <cstring>
 #include <new>
 #include <vector>
@@ -107,6 +116,140 @@ inline uint32_t LowestSetBit( uint32_t nMask )
 	return static_cast<uint32_t>( __builtin_ctz( nMask ) );
 #endif
 }
+
+//! A 64-by-32 unsigned division whose quotient is known to fit in 32 bits.
+//!
+//! Every division in this decoder has a 64-bit dividend, a divisor that fits in
+//! 32 bits, and a quotient that fits in 32 bits (see DivNarrow for why). C++ has
+//! no way to say that: `uint64_t / uint32_t` promotes both operands and the
+//! compiler emits a full 64-bit divide, which on this hardware occupies the
+//! divider for about 1.7 times as long. x86's DIV with a 32-bit operand already
+//! takes a 64-bit dividend in edx:eax, so the narrow form is one instruction; it
+//! simply cannot be reached from portable C++.
+//!
+//! MSVC x86 has no intrinsic for it, so it is not offered there and the guard
+//! below compiles away: that build keeps exactly the code it had.
+#if ( defined( __GNUC__ ) && ( defined( __x86_64__ ) || defined( __i386__ ) ) ) \
+	|| ( defined( _MSC_VER ) && defined( _M_X64 ) )
+#	define OODLE0_NARROW_DIV 1
+#endif
+
+#ifdef OODLE0_NARROW_DIV
+inline uint32_t DivQuot64By32( uint64_t nDividend, uint32_t nDivisor )
+{
+#	if defined( __GNUC__ )
+	uint32_t nQuotient;
+	uint32_t nRemainder;
+	__asm__( "divl %4"
+	         : "=a"( nQuotient ), "=d"( nRemainder )
+	         : "a"( static_cast<uint32_t>( nDividend ) ),
+	           "d"( static_cast<uint32_t>( nDividend >> 32 ) ), "rm"( nDivisor )
+	         : "cc" );
+	return nQuotient;
+#	else
+	uint32_t nRemainder;
+	return _udiv64( nDividend, nDivisor, &nRemainder );
+#	endif
+}
+#endif
+
+//! floor( nDividend / nDivisor ), exactly, for any inputs with nDivisor != 0.
+//!
+//! WHY THE TEST. x86's narrow DIV raises #DE rather than truncating when the
+//! quotient will not fit in 32 bits, so it may only be issued when the high word
+//! of the dividend is below the divisor, which is exactly that condition. The
+//! invariants the coder maintains make it always true here: both dividends are
+//! width * n with n at most the scale, so the quotient is at most the width,
+//! which is at most 2^31. Measured over the 37,640 section corpus the fallback
+//! is taken zero times out of 628,690,344 divisions. It exists so that a corrupt
+//! stream that broke the invariant would get a wrong byte, as it already would,
+//! rather than a hardware exception.
+//!
+//! The divisor is taken as 64 bits because one caller's can be 2^32: a broken
+//! stream can leave low exactly one past high, and then high - low + 1 does not
+//! fit. The truncation to 32 bits is zero in that case, no dividend can be below
+//! it, and the fallback divides by the real value.
+inline uint64_t DivNarrow( uint64_t nDividend, uint64_t nDivisor )
+{
+#ifdef OODLE0_NARROW_DIV
+	const uint32_t nDivisor32 = static_cast<uint32_t>( nDivisor );
+	if ( OODLE0_LIKELY( ( nDividend >> 32 ) < nDivisor32 ) )
+	{
+		return DivQuot64By32( nDividend, nDivisor32 );
+	}
+#endif
+	return nDividend / nDivisor;
+}
+
+//! RECIPROCALS INSTEAD OF DIVIDES, for the two narrowings in Remove.
+//!
+//! They share a divisor, which is the coder's scale, and that divisor is small:
+//! it is a sum of 16-bit counts that rescaling holds under 16,386, and measured
+//! over the corpus it is below 16,384 on 99.90% of calls. Small enough to look
+//! up, which is what makes this different from computing a reciprocal per
+//! symbol: computing one needs a division, so it could never pay.
+//!
+//! THE IDENTITY, and why it is exact. For each divisor d >= 2 the table holds
+//!
+//!     M(d) = floor( ( 2^64 - 1 ) / d ) + 1,
+//!
+//! which is ceil( 2^64 / d ) for every d: writing 2^64 = q d + r, if r > 0 then
+//! floor( ( 2^64 - 1 ) / d ) is q and the sum is q + 1, and if r == 0, which is
+//! d a power of two, it is q - 1 and the sum is q. Written the other way,
+//! M d = 2^64 + e with 0 <= e <= d - 1. Then for any dividend n,
+//!
+//!     n M / 2^64 = n / d + n e / ( d 2^64 ),
+//!
+//! so the multiply overshoots the true quotient by n e / ( d 2^64 ) and nothing
+//! else. Let k = floor( n / d ). The real quotient n / d is at least k and at
+//! most k + 1 - 1/d, because ( k + 1 ) d - n is a positive integer. So the
+//! product's floor is k provided the overshoot is under 1/d, which is
+//!
+//!     n e < 2^64.
+//!
+//! Here e <= d - 1 < 16384 and the test below refuses any dividend at or above
+//! 2^48, so n e < 2^48 * 2^14 = 2^62. Four bits of margin, and the real
+//! dividends are smaller still: width is at most 2^31 and start + count is at
+//! most the scale, so n < 2^45.
+//!
+//! So no correction step is needed, unlike a floating point reciprocal, which
+//! rounds twice and lands below an integer quotient often enough to matter.
+//! s9_recip_probe.cpp has the counts.
+constexpr uint32_t RECIP_MAX = 16384;
+
+#if defined( __SIZEOF_INT128__ ) || ( defined( _MSC_VER ) && defined( _M_X64 ) )
+#	define OODLE0_MUL_HIGH 1
+#endif
+
+#ifdef OODLE0_MUL_HIGH
+//! The high half of a 64 by 64 product. One instruction on x64.
+inline uint64_t MulHigh( uint64_t nA, uint64_t nB )
+{
+#	if defined( __SIZEOF_INT128__ )
+	return static_cast<uint64_t>( ( static_cast<unsigned __int128>( nA ) * nB ) >> 64 );
+#	else
+	return __umulh( nA, nB );
+#	endif
+}
+
+struct SReciprocals
+{
+	//! Indexed by the divisor. Entries 0 and 1 are unused; the caller's test
+	//! excludes them, since M(1) would be 2^64 and does not fit.
+	uint64_t nMagic[RECIP_MAX];
+
+	constexpr SReciprocals()
+		: nMagic()
+	{
+		for ( uint32_t d = 2; d < RECIP_MAX; ++d )
+		{
+			nMagic[d] = 0xffffffffffffffffull / d + 1;
+		}
+	}
+};
+
+constexpr SReciprocals RECIPROCALS;
+#endif
 
 constexpr uint32_t HEADER_SIZE = 36;
 constexpr uint32_t STAGE_COUNT = 3;
@@ -294,7 +437,7 @@ uint32_t CArithBits::GetCount( uint32_t nScale ) const
 	// line where Python's unbounded integers were doing real work.
 	const uint64_t nRange = uint64_t( m_nHigh - m_nLow ) + 1;
 	const uint64_t nOffset = uint64_t( m_nCode - m_nLow ) + 1;
-	return static_cast<uint32_t>( ( nOffset * nScale - 1 ) / nRange );
+	return static_cast<uint32_t>( DivNarrow( nOffset * nScale - 1, nRange ) );
 }
 
 void CArithBits::Remove( uint32_t nStart, uint32_t nCount, uint32_t nScale )
@@ -308,9 +451,26 @@ void CArithBits::Remove( uint32_t nStart, uint32_t nCount, uint32_t nScale )
 	uint32_t nLow = m_nLow;
 
 	const uint64_t nWidth = uint64_t( nHigh - nLow ) + 1;
-	nHigh = static_cast<uint32_t>( nLow + ( nWidth * ( uint64_t( nStart ) + nCount ) ) / nScale
-	                               - 1 );
-	nLow = static_cast<uint32_t>( nLow + ( nWidth * nStart ) / nScale );
+	const uint64_t nNumHigh = nWidth * ( uint64_t( nStart ) + nCount );
+	const uint64_t nNumLow = nWidth * nStart;
+#ifdef OODLE0_MUL_HIGH
+	// One test for both dividends, because the second is never the larger, and
+	// one table load for both, because they share the divisor. Non short
+	// circuited so this is one branch rather than two, and it is overwhelmingly
+	// taken: 99.90% of calls by the scale, every call by the dividend.
+	if ( OODLE0_LIKELY( ( nScale - 2u < RECIP_MAX - 2u )
+	                    & ( ( nNumHigh >> 48 ) == 0 ) ) )
+	{
+		const uint64_t nMagic = RECIPROCALS.nMagic[nScale];
+		nHigh = static_cast<uint32_t>( nLow + MulHigh( nNumHigh, nMagic ) - 1 );
+		nLow = static_cast<uint32_t>( nLow + MulHigh( nNumLow, nMagic ) );
+	}
+	else
+#endif
+	{
+		nHigh = static_cast<uint32_t>( nLow + DivNarrow( nNumHigh, nScale ) - 1 );
+		nLow = static_cast<uint32_t>( nLow + DivNarrow( nNumLow, nScale ) );
+	}
 
 	// Renormalise, and absorb the underflow loop into the same shift.
 	//
