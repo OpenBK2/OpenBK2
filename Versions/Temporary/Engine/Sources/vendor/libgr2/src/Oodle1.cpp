@@ -899,6 +899,20 @@ uint32_t CDictionary::DecodeBlock( CDecoder &decoder, uint8_t *pOut, uint32_t nB
 
 	// An overlapping run, copied in chunks of exactly nOffset so that no single
 	// copy overlaps itself. This is what makes a two byte offset fill 512 bytes.
+	//
+	// The non-overlapping case first, which is most of them: lengths are small,
+	// 70 per cent at 8 bytes or under, while offsets spread to 262,144. When the
+	// offset is at least the length the chunking is a no-op, and the division and
+	// the modulo that drive it can be skipped entirely. It is the same bytes
+	// either way: nOffset > nLength gives nRepeat 0 and nRemain nLength, one copy
+	// of nLength, and nOffset == nLength gives nRepeat 1 and nRemain 0, one copy
+	// of nOffset, which is the same copy.
+	if ( nOffset >= nLength )
+	{
+		memcpy( pOut, pOut - nOffset, nLength );
+		return nLength;
+	}
+
 	const uint32_t nRepeat = nLength / nOffset;
 	const uint32_t nRemain = nLength % nOffset;
 	for ( uint32_t i = 0; i < nRepeat; ++i )
