@@ -1,12 +1,15 @@
 #include "System/BinSaver.h"
 #include "System/GeneralSettings.h"
 #include "System/GlobalVars.h"
+#include "System/PlatformPaths.h"
 
 #include <filesystem>
 #include <fstream>
 #include <iterator>
 #include <string>
 #include <thread>
+#include <utility>
+#include <vector>
 
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -70,6 +73,129 @@ TEST_F( CGeneralSettingsTest, CopiesDefaultsOnceAndKeepsTheInstallationUntouched
 	EXPECT_EQ( "user changed this\n", Read( profiles / "startup.cfg" ) );
 	EXPECT_EQ( "// defaults\n", Read( install / "Profiles/startup.cfg" ) );
 	EXPECT_FALSE( fs::exists( profiles / "added-later.cfg" ) );
+}
+
+TEST_F( CGeneralSettingsTest, ApplicationNameAddsOneFolderForProfilesAndEditor )
+{
+	const auto data = profiles.parent_path();
+	const std::vector<std::pair<std::string, std::string>> names = {
+		{ "vanilla", "vanilla" },
+		{ "vanilla\r\n", "vanilla" },
+		{ "\xef\xbb\xbf \tvanilla\r\n", "vanilla" },
+		{ "My Mod_1-2.3", "My Mod_1-2.3" },
+		{ u8"ina\u010dica \u03bb", u8"ina\u010dica \u03bb" },
+		{ "COM10", "COM10" },
+		{ "console", "console" },
+	};
+	for ( const auto &name : names )
+	{
+		SCOPED_TRACE( name.second );
+		Write( install / "app_name.txt", name.first );
+		const auto actual = NSettings::GetApplicationDataDirectory( install.u8string(), data.u8string() );
+		const auto expected = data / fs::u8path( name.second );
+		EXPECT_EQ( expected.u8string(), actual );
+		const NSettings::CGeneralSettings variant( install.u8string(), ( fs::u8path( actual ) / "Profiles" ).u8string() );
+		EXPECT_EQ( ( expected / "Profiles" ).u8string(), variant.GetProfilesRoot() );
+		EXPECT_EQ( ( expected / "Editor" ).u8string(), variant.GetEditorRoot() );
+		EXPECT_EQ( name.first, Read( install / "app_name.txt" ) );
+	}
+}
+
+TEST_F( CGeneralSettingsTest, InvalidApplicationNamesKeepTheDefaultDataRoot )
+{
+	const auto data = profiles.parent_path();
+	const std::vector<std::string> invalid = {
+		"",
+		" \t\r\n",
+		".",
+		"..",
+		"...",
+		"../other",
+		"..\\other",
+		"/absolute",
+		"C:\\other",
+		"C:other",
+		"\\\\server\\share",
+		"one/two",
+		"one\\two",
+		"name.",
+		"name<",
+		"name>",
+		"name:",
+		"name\"",
+		"name|",
+		"name?",
+		"name*",
+		"one\ntwo",
+		"one\ttwo",
+		std::string( "one\0two", 7 ),
+		"name\x7f",
+		"CON",
+		"prn",
+		"AuX",
+		"NUL.txt",
+		"con .txt",
+		"COM1",
+		"LPT9.log",
+		u8"COM\u00b9",
+		u8"LPT\u00b2.txt",
+		"CONIN$",
+		"CONOUT$",
+		"bad\xff",
+		"bad\xc0\xaf",
+		"bad\xed\xa0\x80",
+		"bad\xf4\x90\x80\x80",
+		std::string( 256, 'a' ),
+		std::string( 1024, ' ' ) + "vanilla",
+	};
+	for ( const auto &name : invalid )
+	{
+		SCOPED_TRACE( name );
+		Write( install / "app_name.txt", name );
+		EXPECT_EQ( data.u8string(), NSettings::GetApplicationDataDirectory( install.u8string(), data.u8string() ) );
+	}
+	EXPECT_FALSE( fs::exists( data ) );
+}
+
+TEST_F( CGeneralSettingsTest, MissingOrNonFileApplicationNameKeepsTheDefaultDataRoot )
+{
+	const auto data = profiles.parent_path();
+	EXPECT_EQ( data.u8string(), NSettings::GetApplicationDataDirectory( install.u8string(), data.u8string() ) );
+	fs::create_directories( install / "app_name.txt" );
+	EXPECT_EQ( data.u8string(), NSettings::GetApplicationDataDirectory( install.u8string(), data.u8string() ) );
+	EXPECT_FALSE( fs::exists( data ) );
+}
+
+TEST_F( CGeneralSettingsTest, ApplicationVariantsKeepTheirProfilesAndEditorDataSeparate )
+{
+	const auto data = profiles.parent_path();
+	MakeProfiles( install / "Profiles" );
+	Write( install / "Editor/UserData.xml", "editor defaults" );
+	Write( profiles / "startup.cfg", "unscoped profile" );
+	Write( data / "Editor/UserData.xml", "unscoped editor" );
+	for ( const auto &name : { "vanilla", "expansion" } )
+	{
+		Write( install / "app_name.txt", name );
+		const auto variantRoot =
+				fs::u8path( NSettings::GetApplicationDataDirectory( install.u8string(), data.u8string() ) );
+		const NSettings::CGeneralSettings variant( install.u8string(), ( variantRoot / "Profiles" ).u8string() );
+		ASSERT_TRUE( variant.PrepareProfiles( &error ) ) << error;
+		ASSERT_TRUE( variant.PrepareEditor( &error ) ) << error;
+		EXPECT_EQ( "// defaults\n", Read( variantRoot / "Profiles/startup.cfg" ) );
+		EXPECT_EQ( "editor defaults", Read( variantRoot / "Editor/UserData.xml" ) );
+		Write( variantRoot / "Profiles/startup.cfg", name );
+		Write( variantRoot / "Editor/UserData.xml", name );
+		ASSERT_TRUE( variant.PrepareProfiles( &error ) ) << error;
+		ASSERT_TRUE( variant.PrepareEditor( &error ) ) << error;
+	}
+	EXPECT_EQ( "vanilla", Read( data / "vanilla/Profiles/startup.cfg" ) );
+	EXPECT_EQ( "vanilla", Read( data / "vanilla/Editor/UserData.xml" ) );
+	EXPECT_EQ( "expansion", Read( data / "expansion/Profiles/startup.cfg" ) );
+	EXPECT_EQ( "expansion", Read( data / "expansion/Editor/UserData.xml" ) );
+	EXPECT_EQ( "unscoped profile", Read( profiles / "startup.cfg" ) );
+	EXPECT_EQ( "unscoped editor", Read( data / "Editor/UserData.xml" ) );
+	EXPECT_EQ( "// defaults\n", Read( install / "Profiles/startup.cfg" ) );
+	EXPECT_EQ( "editor defaults", Read( install / "Editor/UserData.xml" ) );
 }
 
 TEST_F( CGeneralSettingsTest, ExistingUserProfilesDoNotRequireTheInstallationTemplate )

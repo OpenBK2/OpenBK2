@@ -92,6 +92,23 @@ runs, `OPENBK2_DATA_DIR` can name the installation root and
 overrides must be absolute; the latter contains `Profiles`, not its contents.
 Set both for tests against a separate installation to avoid sharing real profiles.
 
+To give a game variant its own local data, put `app_name.txt` in its installation
+root, beside `bin` and `Data`. A file containing `vanilla` selects
+`%LOCALAPPDATA%\OpenBK2\vanilla\Profiles` and
+`%LOCALAPPDATA%\OpenBK2\vanilla\Editor` on Windows. Linux and macOS insert the
+same subfolder beneath their application-data roots. `OPENBK2_USER_DATA_DIR`
+replaces that root; the variant subfolder is still appended. `OPENBK2_DATA_DIR`
+also determines where `app_name.txt` is read.
+
+The file accepts one UTF-8 folder name, with an optional BOM and surrounding
+whitespace. Names can contain spaces and Unicode, but must be at most 255 UTF-8
+bytes. Path separators, control characters, trailing dots, and
+[Windows reserved characters or device names](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions)
+are rejected on every platform. Missing, unreadable,
+empty, invalid, or oversized files (1 KiB or more) keep the ordinary data root.
+Each variant uses the same first-run copy from installation defaults; existing
+data in the ordinary root or another variant is not moved or merged.
+
 The map editor also keeps its `Editor` folder beside `Profiles`: for example,
 `%LOCALAPPDATA%\OpenBK2\Editor` on Windows, `~/.local/share/OpenBK2/Editor` on
 Linux, and `~/Library/Application Support/com.OpenBK2Team.OpenBK2/Editor` on

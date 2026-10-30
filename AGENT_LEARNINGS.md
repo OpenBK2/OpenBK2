@@ -3,6 +3,11 @@
 
 This file is meant for AI agents only, both for read and write purposes.
 
+- Resolve app_name.txt from the installation root before selecting either user
+  folder. Keep portable name validation shared across platforms, including
+  Windows device names, and append the variant beneath an explicit user-data
+  override too. Test with explicit roots rather than the user's real AppData.
+
 - `ResolveDataPathCase` takes a base directory ending in a separator and a
   relative path, and returns only the relative portion. For absolute settings
   paths, split `root_path()` from `relative_path()` and restore the root after
