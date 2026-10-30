@@ -745,6 +745,8 @@ struct SParameters
 
 constexpr uint32_t PARAMETERS_SIZE = 12;
 constexpr uint32_t STAGE_COUNT = 3;
+//! 64 length windows indexed by the previous length, plus the one for 64 itself.
+constexpr uint32_t SIZE_WINDOW_COUNT = 65;
 
 //! Read one parameter block. Packed as two little-endian words and four bytes:
 //! 9 and 23 bits, then 9, 10 unused and 13 bits.
@@ -781,6 +783,22 @@ private:
 	//! Ask a window for a value, decoding it raw if the window has not seen it.
 	static uint32_t Draw( CWeightWindow &window, CDecoder &decoder, uint32_t nRawMax );
 
+	//! The two large window groups, built on first use. Everything a dictionary
+	//! decodes goes through one of these, so the test is on the hot path and the
+	//! making of the window is not.
+	CWeightWindow &SizeWindow( uint32_t nIndex )
+	{
+		CWeightWindow *pWindow = m_SizeWindows[nIndex];
+		return pWindow != nullptr ? *pWindow : MakeSizeWindow( nIndex );
+	}
+	CWeightWindow &MidbitWindow( uint32_t nIndex )
+	{
+		CWeightWindow *pWindow = m_MidbitWindows[nIndex];
+		return pWindow != nullptr ? *pWindow : MakeMidbitWindow( nIndex );
+	}
+	CWeightWindow &MakeSizeWindow( uint32_t nIndex );
+	CWeightWindow &MakeMidbitWindow( uint32_t nIndex );
+
 	uint32_t m_nDecodedSize = 0;
 	uint32_t m_nBackrefSize = 0;
 
@@ -792,9 +810,27 @@ private:
 
 	CWeightWindow m_LowbitWindow;
 	CWeightWindow m_HighbitWindow;
-	std::vector<CWeightWindow> m_MidbitWindows;
 	std::vector<CWeightWindow> m_DecodedWindows;
-	std::vector<CWeightWindow> m_SizeWindows;
+
+	//! The windows nobody may ever draw from, made on demand.
+	//!
+	//! A dictionary could use 65 size windows and one midbit window per kilobyte
+	//! of back reference range, which across the corpus is 258 of them, and it
+	//! builds three dictionaries per section against a median section of 5.7 KB.
+	//! Counted over the corpus, 4,165,326 windows were built and 211,580 were ever
+	//! drawn from: 5.1%. Filling the rest cost a constructor each and, worse, wrote
+	//! 47 KB of window state per stage that nothing then read.
+	//!
+	//! So these two groups are tables of pointers that start empty. The pool is
+	//! reserved to the largest number of windows the two groups can need, which is
+	//! what lets the pointers stay valid: nothing is ever erased and emplace_back
+	//! cannot reallocate. The reservation itself is only an allocation; the pages
+	//! are touched as windows are made.
+	std::vector<CWeightWindow> m_Pool;
+	std::vector<CWeightWindow *> m_MidbitWindows;
+	CWeightWindow *m_SizeWindows[SIZE_WINDOW_COUNT] = { nullptr };
+	//! Kept so that a size window made later gets the cap the eager one had.
+	uint8_t m_nSizesCount[4] = { 0, 0, 0, 0 };
 };
 
 CDictionary::CDictionary( const SParameters &params )
@@ -806,32 +842,44 @@ CDictionary::CDictionary( const SParameters &params )
 	, m_LowbitWindow( m_nLowbitValueMax - 1, m_nLowbitValueMax )
 	, m_HighbitWindow( m_nHighbitValueMax - 1, params.nHighbitCount + 1 )
 {
-	m_MidbitWindows.reserve( m_nHighbitValueMax );
-	for ( uint32_t i = 0; i < m_nHighbitValueMax; ++i )
-	{
-		m_MidbitWindows.emplace_back( m_nMidbitValueMax - 1, m_nMidbitValueMax );
-	}
+	// The midbit and size windows are made on first use; see the pool. All that
+	// happens here is the empty pointer table and the reservation.
+	m_MidbitWindows.assign( m_nHighbitValueMax, nullptr );
+	m_Pool.reserve( m_nHighbitValueMax + SIZE_WINDOW_COUNT );
+	memcpy( m_nSizesCount, params.nSizesCount, sizeof( m_nSizesCount ) );
 
 	// Four literal windows, one per output offset modulo 4. Structure data is full
 	// of four byte fields whose bytes have very different distributions, and this
-	// is how the codec exploits that.
+	// is how the codec exploits that. Eager: every one of them is drawn from by any
+	// section longer than four bytes.
 	m_DecodedWindows.reserve( 4 );
 	for ( uint32_t i = 0; i < 4; ++i )
 	{
 		m_DecodedWindows.emplace_back( m_nDecodedValueMax - 1, params.nDecodedCount );
 	}
+}
 
-	// 65 length windows, indexed by the previous length, so that a run of similar
-	// lengths is nearly free. The caps come in blocks of 16, longest first.
-	m_SizeWindows.reserve( 65 );
-	for ( uint32_t i = 0; i < 4; ++i )
-	{
-		for ( uint32_t j = 0; j < 16; ++j )
-		{
-			m_SizeWindows.emplace_back( 64, params.nSizesCount[3 - i] );
-		}
-	}
-	m_SizeWindows.emplace_back( 64, params.nSizesCount[0] );
+//! One of the 65 length windows, indexed by the previous length, so that a run of
+//! similar lengths is nearly free. The caps come in blocks of 16, longest first,
+//! and the 65th shares the first block's.
+//!
+//! The constructor turns nMaxValue and nCountCap into the rebuild schedule the
+//! window will follow for the rest of the stage, so these two numbers have to be
+//! the ones the eager loop passed for this index, not approximations of them.
+CWeightWindow &CDictionary::MakeSizeWindow( uint32_t nIndex )
+{
+	const uint32_t nCap = m_nSizesCount[nIndex < 64 ? 3 - nIndex / 16 : 0];
+	m_Pool.emplace_back( 64u, nCap );
+	m_SizeWindows[nIndex] = &m_Pool.back();
+	return m_Pool.back();
+}
+
+//! One of the midbit windows, one per kilobyte of back reference range.
+CWeightWindow &CDictionary::MakeMidbitWindow( uint32_t nIndex )
+{
+	m_Pool.emplace_back( m_nMidbitValueMax - 1, m_nMidbitValueMax );
+	m_MidbitWindows[nIndex] = &m_Pool.back();
+	return m_Pool.back();
 }
 
 uint32_t CDictionary::Draw( CWeightWindow &window, CDecoder &decoder, uint32_t nRawMax )
@@ -850,7 +898,7 @@ uint32_t CDictionary::Draw( CWeightWindow &window, CDecoder &decoder, uint32_t n
 uint32_t CDictionary::DecodeBlock( CDecoder &decoder, uint8_t *pOut, uint32_t nBehind,
                                    uint32_t nRoom, uint32_t nOffsetInOutput )
 {
-	m_nBackrefSize = Draw( m_SizeWindows[m_nBackrefSize], decoder, 65 );
+	m_nBackrefSize = Draw( SizeWindow( m_nBackrefSize ), decoder, 65 );
 	if ( decoder.Failed() || m_nBackrefSize > 64 )
 	{
 		return 0;
@@ -885,7 +933,7 @@ uint32_t CDictionary::DecodeBlock( CDecoder &decoder, uint8_t *pOut, uint32_t nB
 		return 0;
 	}
 	const uint32_t nMid =
-		Draw( m_MidbitWindows[nHigh], decoder, std::min( nRange / 4 + 1, 256u ) );
+		Draw( MidbitWindow( nHigh ), decoder, std::min( nRange / 4 + 1, 256u ) );
 
 	const uint32_t nOffset = ( nHigh << 10 ) + ( nMid << 2 ) + nLow + 1u;
 	if ( decoder.Failed() || nLength > nRoom || nOffset > nBehind || nOffset == 0 )
