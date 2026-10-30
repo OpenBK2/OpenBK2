@@ -52,6 +52,7 @@ endfunction()
 gr2_add_test(ReadEntireFileFromMemory)
 gr2_add_test(FileContainer)
 gr2_add_test(Oodle1)
+gr2_add_test(Oodle1Corpus)
 gr2_add_test(FileInfo)
 gr2_add_test(Animation)
 gr2_add_test(Curve)
@@ -75,6 +76,11 @@ get_filename_component(LIBGR2_REPO_ROOT
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../.. ABSOLUTE)
 if(EXISTS ${LIBGR2_REPO_ROOT}/Versions/Current/Data/bin)
     target_compile_definitions(Oodle0_test
+        PRIVATE LIBGR2_REPO_DATA_DIR="${LIBGR2_REPO_ROOT}")
+    # Oodle1Corpus_test locks a checksum over every Oodle1 section in that data,
+    # which is what catches a decoder optimisation that changes a byte. Without
+    # the data it skips rather than fails.
+    target_compile_definitions(Oodle1Corpus_test
         PRIVATE LIBGR2_REPO_DATA_DIR="${LIBGR2_REPO_ROOT}")
     message(STATUS "libgr2: Oodle0 tests will read ${LIBGR2_REPO_ROOT}/Versions/Current/Data")
 else()
