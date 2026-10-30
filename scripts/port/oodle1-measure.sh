@@ -57,12 +57,24 @@ if [ -z "$A" ] || [ -z "$B" ] || [ -z "$DIR" ] || [ ! -x "$A" ] || [ ! -x "$B" ]
 	exit 2
 fi
 
-OTHERS="$(ps -eo pid=,psr=,comm= 2>/dev/null \
-	| awk -v p="$PIN" -v me="$$" '$2 == p && $1 != me && $3 ~ /oodle1|bench/ {print $3}' \
-	| sort -u | tr '\n' ' ')"
-if [ -n "$OTHERS" ]; then
-	echo "REFUSING: cpu$PIN already busy with: $OTHERS" >&2
-	echo "  pick another P-core with PIN=n $0 ..." >&2
+# Both the target core AND ITS SMT SIBLING have to be idle. Two benchmarks on one
+# physical core share its execution units, which is not a small effect: one such
+# collision produced a measured *noise floor* of minus 15 per cent, and a second
+# made a real 11 per cent win read as a 184 per cent regression. This check
+# originally compared the processor id exactly and so was blind to the sibling.
+SIBLINGS="$(tr ',-' ' ' < /sys/devices/system/cpu/cpu$PIN/topology/thread_siblings_list 2>/dev/null)"
+SIBLINGS="${SIBLINGS:-$PIN}"
+BUSY=""
+for cpu in $SIBLINGS; do
+	found="$(ps -eo pid=,psr=,comm= 2>/dev/null \
+		| awk -v p="$cpu" -v me="$$" '$2 == p && $1 != me && $3 ~ /oodle|bench/ {print $3}' \
+		| sort -u | tr '\n' ' ')"
+	[ -n "$found" ] && BUSY="$BUSY cpu$cpu:$found"
+done
+if [ -n "$BUSY" ]; then
+	echo "REFUSING:$BUSY" >&2
+	echo "  cpu$PIN shares a physical core with:$SIBLINGS" >&2
+	echo "  pick a P-core whose sibling is also idle, with PIN=n $0 ..." >&2
 	exit 3
 fi
 
@@ -111,7 +123,11 @@ print()
 print("delta on min     %+6.2f%%   (negative means B is faster)" % d_min)
 print("delta on median  %+6.2f%%" % d_med)
 print()
-if (d_min < 0) != (d_med < 0):
+if len(a) < 5:
+    print("TOO FEW PAIRS to verdict: %d. A pass of this corpus takes seconds, so" % len(a))
+    print("  a two or three pair run has a noise floor of several per cent. Use 5 or")
+    print("  more, and measure the floor first by passing the same binary twice.")
+elif (d_min < 0) != (d_med < 0):
     print("VERDICT: min and median disagree on the sign. This is noise.")
 elif max(abs(d_min), abs(d_med)) < 1.0:
     print("VERDICT: under one per cent. At the usual noise floor, call it no change.")
