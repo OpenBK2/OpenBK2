@@ -691,11 +691,12 @@ void CNetDriver::ProcessIncomingMessages()
 
 void CNetDriver::StepInactive()
 {
-	std::vector<CNodeAddress> dest;
-	CNodeAddress broadcast;
-	pLinks->MakeBroadcastAddr( &broadcast, nGamePort );
-	if ( serverInfo.CanSendRequest( broadcast, &dest ) )
+	// The broadcast addresses are worked out only when a request is due: this
+	// runs every millisecond, and they come from enumerating the interfaces.
+	if ( serverInfo.CanSendRequest() )
 	{
+		std::vector<CNodeAddress> dest;
+		pLinks->MakeBroadcastAddrs( &dest, nGamePort );
 		for ( int i = 0; i < dest.size(); ++i )
 		{
 			CSendPacket pkt( dest[i], REQUEST_SERVER_INFO, pLinks );

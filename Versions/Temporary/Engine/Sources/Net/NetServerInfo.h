@@ -72,7 +72,8 @@ public:
 	void ProcessServerInfo( const CNodeAddress &addr, CBitStream &bits, float fServerListTimeout );
 	void WriteRequest( CBitStream *pBits );
 	// server search
-	bool CanSendRequest( const CNodeAddress &broadcast, std::vector<CNodeAddress> *pDest );
+	// Whether a new request for server info is due; they go out once a second
+	bool CanSendRequest();
 };
 
 } // namespace NNet

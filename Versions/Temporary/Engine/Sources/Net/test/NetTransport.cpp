@@ -62,9 +62,9 @@ public:
 	mutable std::deque<Datagram> incoming;
 	mutable std::vector<Datagram> outgoing;
 
-	bool MakeBroadcastAddr( CNodeAddress *, int ) const override
+	void MakeBroadcastAddrs( std::vector<CNodeAddress> *pResult, int ) const override
 	{
-		return false;
+		pResult->clear();
 	}
 
 	bool IsLocalAddr( const CNodeAddress & ) const override

@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- LAN games are found across computers on Linux. The game worked out where to broadcast its search from the address its own host name resolves to, and Debian, among others, resolves that to 127.0.1.1, so the search never left the computer and the game list stayed empty however many games were hosted next door. It now broadcasts on every network the computer is connected to, reading them from the network interfaces on Linux and Windows alike, and that also mends the address a joining player gives the host. On Windows it used to guess each network's size from its address, so a home network inside 10.0.0.0/8 was broadcast to as a whole 10.x.x.x; it now uses each network's real mask.
+
 - A second game on the same computer can now find and join a LAN game hosted by the first. Every instance asked for UDP port 4201, the second was refused it, and the LAN screen then sat on "loading game list" forever. An instance that finds the port taken now uses a free one instead: it can browse and join, and if it tries to host it says why it cannot, since other players look for games on 4201 only. When the network cannot be opened at all, the error now returns to the multiplayer menu and says which call failed, on which port, and the system's own error, for example `bind(UDP 0.0.0.0:4201) failed: error 98, Address already in use`, instead of only that a critical error happened.
 
 - Universal MOD-18's European Axis side gets a sharp flag: Hungary's, Italy's and Romania's side by side, redrawn as the mod draws its icon.

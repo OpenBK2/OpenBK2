@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
 #include "LinksManager.h"
+#include "NetInterfaces.h"
 #include "NetLowest.h"
 
+#include <algorithm>
 #include <cerrno>
 #include <cstdint>
 #include <cstring>
@@ -68,48 +70,6 @@ static struct SWSAInit
 CLinksManagerCommon::CLinksManagerCommon()
 {
 	s = INVALID_SOCKET;
-	// get host for broadcast addresses formation
-	char szHost[1024];
-	if ( gethostname( szHost, 1000 ) )
-	{
-		ASSERT( 0 );
-		return;
-	}
-	hostent *he;
-	he = gethostbyname( szHost ); // m.b. it is string comp.domain
-	if ( he == NULL )
-	{
-		ASSERT( 0 );
-		return;
-	}
-	// form addresses
-	CNodeAddress addr;
-	sockaddr_in &name = *(sockaddr_in *)&addr;
-	name.sin_family = AF_INET;
-	// hostent are broken for some unknown reason, only one address is valid
-	unsigned long *pAddr = (unsigned long *)( he->h_addr_list[0] );
-	//for ( ; *pAddr; pAddr++ )
-	{
-		name.sin_addr.s_addr = pAddr[0];
-		unsigned char *pOctets = AddressOctets( &name.sin_addr );
-		unsigned char bClass = pOctets[0];
-		if ( bClass >= 1 && bClass <= 126 )
-		{
-			pOctets[1] = 255;
-			pOctets[2] = 255;
-			pOctets[3] = 255;
-		}
-		if ( bClass >= 128 && bClass <= 191 )
-		{
-			pOctets[2] = 255;
-			pOctets[3] = 255;
-		}
-		if ( bClass >= 192 && bClass <= 223 )
-		{
-			pOctets[3] = 255;
-		}
-		broadcastAddr = addr;
-	}
 }
 
 CLinksManagerCommon::~CLinksManagerCommon()
@@ -162,49 +122,66 @@ bool CLinksManagerCommon::Init( const int nPort )
 	return true;
 }
 
-bool CLinksManagerCommon::MakeBroadcastAddr( CNodeAddress *pRes, int nPort ) const
+//! An IPv4 address and port as the CNodeAddress the driver passes around.
+static CNodeAddress MakeNodeAddress( uint32_t dwAddress, int nPort )
 {
-	*pRes = broadcastAddr;
-	sockaddr_in &name = *(sockaddr_in *)&pRes->addr;
-	name.sin_port = htons( nPort );
+	CNodeAddress addr;
+	sockaddr_in *pName = reinterpret_cast<sockaddr_in *>( addr.GetSockAddr() );
+	pName->sin_family = AF_INET;
+	pName->sin_addr.s_addr = dwAddress;
+	pName->sin_port = htons( nPort );
+	return addr;
+}
 
-	return true;
+void CLinksManagerCommon::MakeBroadcastAddrs( std::vector<CNodeAddress> *pRes, int nPort ) const
+{
+	pRes->clear();
+	// Each interface's own directed broadcast, address | ~mask, which reaches
+	// the hosts on that network and this machine as well. The old way took the
+	// first address the host name resolved to and guessed its network from the
+	// address class, which on Debian's 127.0.1.1 matched no class at all and
+	// broadcast to 127.0.1.1 itself, and on a /24 inside 10.0.0.0/8 broadcast
+	// to the whole /8.
+	std::vector<SInterfaceAddress> interfaces;
+	GetInterfaceAddresses( &interfaces );
+	std::vector<uint32_t> sent;
+	for ( const SInterfaceAddress &item : interfaces )
+	{
+		const uint32_t dwBroadcast = item.dwAddress | ~item.dwMask;
+		// Two addresses on one network share a broadcast address
+		if ( item.bBroadcast && std::find( sent.begin(), sent.end(), dwBroadcast ) == sent.end() )
+		{
+			sent.push_back( dwBroadcast );
+			pRes->push_back( MakeNodeAddress( dwBroadcast, nPort ) );
+		}
+	}
+	if ( pRes->empty() )
+	{
+		// No network at all, but a game on this machine can still be found.
+		// Systems differ in which of these two reaches it, so send to both;
+		// one that the system refuses fails quietly in Send.
+		pRes->push_back( MakeNodeAddress( htonl( INADDR_BROADCAST ), nPort ) );
+		pRes->push_back( MakeNodeAddress( htonl( 0x7FFFFFFF ), nPort ) ); // 127.255.255.255
+	}
 }
 
 bool CLinksManagerCommon::IsLocalAddr( const CNodeAddress &test ) const
 {
-	const sockaddr_in &nt = *(sockaddr_in *)&test.addr;
-	if ( nt.sin_addr.s_addr == 0x0100007f )
+	const uint32_t dwTest = reinterpret_cast<const sockaddr_in *>( &test.addr )->sin_addr.s_addr;
+	if ( AddressOctets( &reinterpret_cast<const sockaddr_in *>( &test.addr )->sin_addr )[0] == 127 )
 	{
 		return true;
 	}
-	//for ( int i = 0; i < broadcastAddr.size(); ++i )
+	// On the network of one of this machine's interfaces
+	std::vector<SInterfaceAddress> interfaces;
+	GetInterfaceAddresses( &interfaces );
+	for ( const SInterfaceAddress &item : interfaces )
 	{
-		const CNodeAddress &broad = broadcastAddr; //[ i ];
-		const sockaddr_in &nb = *(sockaddr_in *)&broad.addr;
-		uint32_t dwB = nb.sin_addr.s_addr;
-		uint32_t dwT = nt.sin_addr.s_addr;
-		uint32_t dwMask = 0;
-		for ( int k = 3; k >= 0; k-- )
-		{
-			uint32_t dwTestMask = 0xFF << k * 8;
-			if ( ( dwB & dwTestMask ) == dwTestMask )
-			{
-				dwMask |= dwTestMask;
-			}
-			else
-			{
-				break;
-			}
-		}
-		dwMask = ~dwMask;
-		const bool bTest = ( dwB & dwMask ) == ( dwT & dwMask );
-		if ( bTest )
+		if ( ( item.dwAddress & item.dwMask ) == ( dwTest & item.dwMask ) )
 		{
 			return true;
 		}
 	}
-
 	return false;
 }
 
@@ -218,20 +195,28 @@ bool CLinksManagerCommon::GetSelfAddress( CNodeAddressSet *pRes ) const
 		return false;
 	}
 	pRes->nPort = addr.sin_port;
-	char szHostName[10000];
-	gethostname( szHostName, 9999 );
-	hostent *p = gethostbyname( szHostName );
-	if ( !p || p->h_addrtype != AF_INET || p->h_length != 4 )
+	// The addresses the host and the other players may reach this machine at,
+	// sent with the login. They used to come from resolving the host name too,
+	// which on Debian gave only 127.0.1.1. Interfaces that carry broadcasts go
+	// first, since those are the local networks a LAN game is played over; a
+	// tunnel's address comes after them.
+	std::vector<SInterfaceAddress> interfaces;
+	GetInterfaceAddresses( &interfaces );
+	std::stable_partition(
+			interfaces.begin(), interfaces.end(), []( const SInterfaceAddress &item ) { return item.bBroadcast; } );
+	int nCount = 0;
+	for ( const SInterfaceAddress &item : interfaces )
 	{
-		return false;
-	}
-	for ( int k = 0; k < N_MAX_HOST_HOMES; ++k )
-	{
-		if ( !p->h_addr_list[k] )
+		if ( nCount == N_MAX_HOST_HOMES )
 		{
 			break;
 		}
-		pRes->ips[k] = *(int *)p->h_addr_list[k];
+		pRes->ips[nCount++] = static_cast<int>( item.dwAddress );
+	}
+	if ( nCount == 0 )
+	{
+		// No network: this machine is reachable only by itself
+		pRes->ips[0] = static_cast<int>( htonl( INADDR_LOOPBACK ) );
 	}
 	return true;
 }

@@ -4,6 +4,9 @@
 
 namespace NNet
 {
+class CNodeAddress;
+class CNodeAddressSet;
+
 typedef unsigned int APPLICATION_ID;
 
 struct SNetDriverConsts
@@ -29,7 +32,9 @@ struct SNetDriverConsts
 // abstraction from SOCKET
 struct ILinksManager : public CObjectBase
 {
-	virtual bool MakeBroadcastAddr( class CNodeAddress *pRes, int nPort ) const = 0;
+	// Where to send a request that every game on the local networks should see:
+	// the broadcast address of each, at nPort.
+	virtual void MakeBroadcastAddrs( std::vector<CNodeAddress> *pRes, int nPort ) const = 0;
 	virtual bool IsLocalAddr( const CNodeAddress &test ) const = 0;
 	virtual bool Send( const CNodeAddress &dst, CMemoryStream &pkt ) const = 0;
 	virtual bool Recv( class CNodeAddress *pSrc, CMemoryStream *pPkt ) const = 0;

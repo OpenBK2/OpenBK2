@@ -5,6 +5,7 @@ add_unit_test(NetTransport MemoryLib Misc System fmt::fmt-header-only SOURCES
     ../NetA4.cpp
     ../NetAcks.cpp
     ../NetAddress.cpp
+    ../NetInterfaces.cpp
     ../NetLogin.cpp
     ../NetLowest.cpp
     ../NetPeer2Peer.cpp
@@ -12,5 +13,5 @@ add_unit_test(NetTransport MemoryLib Misc System fmt::fmt-header-only SOURCES
     ../NetStream.cpp)
 target_compile_definitions(NetTransport_test PRIVATE NET_STATIC_DEFINE)
 if(WIN32)
-    target_link_libraries(NetTransport_test PRIVATE Ws2_32)
+    target_link_libraries(NetTransport_test PRIVATE Ws2_32 Iphlpapi)
 endif()

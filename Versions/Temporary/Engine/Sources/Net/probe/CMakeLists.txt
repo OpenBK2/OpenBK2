@@ -12,6 +12,7 @@ bk2_add_executable(NetProbe NO_PCH
     ../NetA4.cpp
     ../NetAcks.cpp
     ../NetAddress.cpp
+    ../NetInterfaces.cpp
     ../NetLogin.cpp
     ../NetLowest.cpp
     ../NetPeer2Peer.cpp
@@ -20,6 +21,6 @@ bk2_add_executable(NetProbe NO_PCH
 target_compile_definitions(NetProbe PRIVATE NET_STATIC_DEFINE)
 target_link_libraries(NetProbe PRIVATE MemoryLib Misc System fmt::fmt-header-only)
 if(WIN32)
-    target_link_libraries(NetProbe PRIVATE Ws2_32)
+    target_link_libraries(NetProbe PRIVATE Ws2_32 Iphlpapi)
 endif()
 install_runtime_dlls(NetProbe)

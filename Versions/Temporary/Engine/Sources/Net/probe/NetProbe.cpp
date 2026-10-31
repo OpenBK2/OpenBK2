@@ -1,6 +1,7 @@
 #include "Net/stdafx.h"
 
 #include "Net/NetA4.h"
+#include "Net/NetInterfaces.h"
 #include "Net/NetLowest.h"
 
 #include <atomic>
@@ -13,11 +14,6 @@
 #include <mutex>
 #include <string>
 #include <thread>
-
-#if !BOOST_OS_WINDOWS
-#include <ifaddrs.h>
-#include <net/if.h>
-#endif
 
 // NetProbe: the LAN half of multiplayer, without the game.
 //
@@ -152,15 +148,15 @@ public:
 		bHasBroadcastOverride = true;
 	}
 
-	bool MakeBroadcastAddr( CNodeAddress *pRes, int nPort ) const override
+	void MakeBroadcastAddrs( std::vector<CNodeAddress> *pRes, int nPort ) const override
 	{
 		if ( bHasBroadcastOverride )
 		{
-			*pRes = broadcastOverride;
-			reinterpret_cast<sockaddr_in *>( pRes->GetSockAddr() )->sin_port = htons( nPort );
-			return true;
+			pRes->assign( 1, broadcastOverride );
+			reinterpret_cast<sockaddr_in *>( ( *pRes )[0].GetSockAddr() )->sin_port = htons( nPort );
+			return;
 		}
-		return pLinks->MakeBroadcastAddr( pRes, nPort );
+		pLinks->MakeBroadcastAddrs( pRes, nPort );
 	}
 
 	bool IsLocalAddr( const CNodeAddress &test ) const override
@@ -292,25 +288,37 @@ ILinksManager *CreateLinks( const SOptions &options )
 	return pLinks;
 }
 
+//! The addresses in a list, comma separated, as the log prints them.
+std::string JoinNames( const std::vector<CNodeAddress> &addresses )
+{
+	std::string szResult;
+	for ( const CNodeAddress &addr : addresses )
+	{
+		szResult += ( szResult.empty() ? "" : ", " ) + addr.GetFastName();
+	}
+	return szResult;
+}
+
 int RunInfo( const SOptions &options )
 {
-	char szHost[1024] = "";
-	gethostname( szHost, sizeof( szHost ) - 1 );
-	Log( "host name            %s", szHost );
-	// The engine takes h_addr_list[0] of this lookup as "the" local address and
-	// derives the broadcast address from its class (LinksManager.cpp).
-	if ( const hostent *pHost = gethostbyname( szHost ) )
+	// What the links manager works from: the interfaces that are up and
+	// connected, loopback excluded (NetInterfaces.cpp).
+	std::vector<SInterfaceAddress> interfaces;
+	GetInterfaceAddresses( &interfaces );
+	for ( const SInterfaceAddress &item : interfaces )
 	{
-		for ( int i = 0; pHost->h_addr_list[i] != 0; ++i )
-		{
-			Log( "  resolves to        %s%s",
-			     Ipv4ToString( *reinterpret_cast<const in_addr *>( pHost->h_addr_list[i] ) ).c_str(),
-			     i == 0 ? "   <- the engine uses this one" : "" );
-		}
+		in_addr address;
+		address.s_addr = item.dwAddress;
+		in_addr mask;
+		mask.s_addr = item.dwMask;
+		Log( "interface address    %-15s mask %-15s%s",
+		     Ipv4ToString( address ).c_str(),
+		     Ipv4ToString( mask ).c_str(),
+		     item.bBroadcast ? "" : "  (point-to-point, no broadcast)" );
 	}
-	else
+	if ( interfaces.empty() )
 	{
-		Log( "  does not resolve; the engine has no broadcast address at all" );
+		Log( "no interface is up: games can be found on this machine only" );
 	}
 
 	CPtr<ILinksManager> pLinks = CreateLinks( options );
@@ -320,10 +328,9 @@ int RunInfo( const SOptions &options )
 	}
 	Log( "bound UDP port       %d", options.nPort );
 
-	CNodeAddress broadcast;
-	pLinks->MakeBroadcastAddr( &broadcast, options.nGamePort );
-	const std::string szBroadcast = broadcast.GetFastName();
-	Log( "engine broadcast     %s", szBroadcast.c_str() );
+	std::vector<CNodeAddress> broadcasts;
+	pLinks->MakeBroadcastAddrs( &broadcasts, options.nGamePort );
+	Log( "engine broadcasts to %s", JoinNames( broadcasts ).c_str() );
 
 	CNodeAddressSet self;
 	if ( pLinks->GetSelfAddress( &self ) )
@@ -338,44 +345,6 @@ int RunInfo( const SOptions &options )
 	{
 		Log( "engine self address  none: GetSelfAddress failed, so logins cannot be sent" );
 	}
-
-#if !BOOST_OS_WINDOWS
-	// What the machine actually has, to hold the two lines above against.
-	bool bBroadcastMatches = false;
-	ifaddrs *pList = 0;
-	if ( getifaddrs( &pList ) == 0 )
-	{
-		for ( const ifaddrs *p = pList; p != 0; p = p->ifa_next )
-		{
-			if ( p->ifa_addr == 0 || p->ifa_addr->sa_family != AF_INET )
-			{
-				continue;
-			}
-			const std::string szAddr = Ipv4ToString( reinterpret_cast<const sockaddr_in *>( p->ifa_addr )->sin_addr );
-			std::string szIfBroadcast = "-";
-			if ( ( p->ifa_flags & IFF_BROADCAST ) && p->ifa_broadaddr != 0 )
-			{
-				szIfBroadcast = Ipv4ToString( reinterpret_cast<const sockaddr_in *>( p->ifa_broadaddr )->sin_addr );
-				if ( szBroadcast.rfind( szIfBroadcast + ":", 0 ) == 0 )
-				{
-					bBroadcastMatches = true;
-				}
-			}
-			Log( "interface %-10s %-15s broadcast %s%s",
-			     p->ifa_name,
-			     szAddr.c_str(),
-			     szIfBroadcast.c_str(),
-			     ( p->ifa_flags & IFF_UP ) ? "" : " (down)" );
-		}
-		freeifaddrs( pList );
-	}
-	if ( !bBroadcastMatches )
-	{
-		Log( "WARNING: the engine broadcasts to %s, which is no interface's broadcast address. Game lists"
-		     " will only ever show games on this machine. Try: NetProbe browse --broadcast <one of the above>",
-		     szBroadcast.c_str() );
-	}
-#endif
 	return 0;
 }
 
@@ -399,11 +368,11 @@ IDriver *CreateDriver( const SOptions &options )
 		}
 		pLinks->OverrideBroadcast( addr );
 	}
-	CNodeAddress broadcast;
-	pLinks->MakeBroadcastAddr( &broadcast, options.nGamePort );
+	std::vector<CNodeAddress> broadcasts;
+	pLinks->MakeBroadcastAddrs( &broadcasts, options.nGamePort );
 	Log( "bound UDP port %d, broadcasting to %s, application id %d",
 	     options.nPort,
-	     broadcast.GetFastName().c_str(),
+	     JoinNames( broadcasts ).c_str(),
 	     options.nVersion );
 
 	CPtr<IDriver> pDriver = CreateNetDriver( SNetDriverConsts( N_LAN_TIMEOUT ), true );
