@@ -133,6 +133,18 @@
 			<Authority href="" />
 			<Image href="/Flags/Images/USSR_1936.xdb#xpointer(/FlagImage)" />
 		</Item>
+		<Item>
+			<ImageHash>0ec3902c81d2156f</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/USA_1912.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>107852b9c8bfb164</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Japan_Hinomaru1870.xdb#xpointer(/FlagImage)" />
+		</Item>
 	</Icons>
 	<TechLevels>
 		<Item>

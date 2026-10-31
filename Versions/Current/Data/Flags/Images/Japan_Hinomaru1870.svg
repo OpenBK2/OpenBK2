@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Flag of Japan, the Hinomaru, as set by Proclamation No. 57 of the Daijo-kan of
+  27 February 1870: a red disc on white, 7:10, the disc three fifths of the
+  height across and its centre one hundredth of the length toward the hoist.
+  In use until the 1999 Act on the National Flag and Anthem changed the
+  proportions to 2:3 and centred the disc. The original game's Japan icon, which
+  MPBMod6 shows for its Japan side, is this design. Red #bc002d, the value in
+  common use; the proclamation names no shade.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700" viewBox="0 0 1000 700">
+	<rect width="1000" height="700" fill="#fff"/>
+	<circle cx="490" cy="350" r="210" fill="#bc002d"/>
+</svg>

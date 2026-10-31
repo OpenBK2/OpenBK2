@@ -184,7 +184,5 @@ For reference, the sides OpenBK2 knows about and leaves alone:
 - Total Conversion: Germany (swastika), Spanish Nationalists (Francoist eagle), and
   the three coalition sides (Allies, Bulgaria with partners, China), which combine
   several flags in one icon. Composite flags are not supported yet.
-- MPBMod6: its own USA and Japan icons. Its Germany, USSR and Great Britain use
-  the original game's icons and get those sides' drawings.
 - Universal MOD-18: Deutsches Reich (swastika), and the two sides whose icon
   combines several flags (European Axis, France and smaller allies).
