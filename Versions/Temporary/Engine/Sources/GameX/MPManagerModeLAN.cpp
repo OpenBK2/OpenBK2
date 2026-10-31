@@ -10,6 +10,7 @@
 #include "MPManagerModeLAN.hpp"
 #include "MPPacketTraceLog.h"
 #include "MPTransceiver.h"
+#include "MultiplayerTestNet.h"
 #include "Server_Client_Common/ChatPackets.h"
 #include "Server_Client_Common/CommonPackets.h"
 #include "Server_Client_Common/GamePackets.h"
@@ -81,11 +82,18 @@ REGISTER_SAVELOAD_CLASS( GAMEX, 0x19256441, CRequestLANPasswordPacket );
 CMPManagerModeLAN::CMPManagerModeLAN()
 	: wGameUniqueID( 0 )
 	, eCurrentState( EGS_NOT_IN_GAME )
+	, bDriverFailureReported( false )
 {
 	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC );
 	if ( !pLANClient )
 	{
-		OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NET_DRIVER_CRITICAL_ERROR" ) );
+		// The error is not reported from here. This runs inside the LAN button's
+		// handler, which queues the game list screen right after constructing
+		// this mode, so the error's "back to the multiplayer menu" commands would
+		// run first and the list would be pushed on top of them, waiting for a
+		// game list nobody sends. Segment reports it instead, once that screen is
+		// up; until then an empty client keeps the base Segment working.
+		pClient = new CEmptyServerClient;
 		return;
 	}
 	pClient = pLANClient;
@@ -124,12 +132,20 @@ bool CMPManagerModeLAN::Segment()
 		}
 	}
 
+	// A screen steps this, so by now the screen the LAN button queued is up and
+	// the error's commands land after it. See the constructor.
+	if ( !pLANClient && !bDriverFailureReported )
+	{
+		ReportDriverFailure();
+	}
+
 	return CMPManagerMode::Segment();
 }
 
 void CMPManagerModeLAN::UpdateGameList()
 {
-	if ( eCurrentState != EGS_NOT_IN_GAME )
+	// No driver means no games. The failure is reported from Segment.
+	if ( eCurrentState != EGS_NOT_IN_GAME || !pLANClient )
 	{
 		return;
 	}
@@ -388,7 +404,7 @@ void CMPManagerModeLAN::EndGame()
 	StartNewLANDriver();
 	if ( !pLANClient )
 	{
-		OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NET_DRIVER_CRITICAL_ERROR" ) );
+		ReportDriverFailure();
 		return;
 	}
 	if ( eCurrentState == EGS_GAME_STARTED )
@@ -405,6 +421,15 @@ void CMPManagerModeLAN::StartNewLANDriver()
 	pClient = 0;
 	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC );
 	pClient = pLANClient;
+	// A new driver is a new chance to fail, and a failure of this one is reported anew.
+	bDriverFailureReported = false;
+}
+
+void CMPManagerModeLAN::ReportDriverFailure()
+{
+	bDriverFailureReported = true;
+	// Leaves pClient an empty client, so Segment keeps working without a driver.
+	OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NET_DRIVER_CRITICAL_ERROR" ) );
 }
 
 void CMPManagerModeLAN::CompileAndSendLANServerInfo()
@@ -445,7 +470,7 @@ void CMPManagerModeLAN::OnLeaveGame()
 	StartNewLANDriver();
 	if ( !pLANClient )
 	{
-		OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NET_DRIVER_CRITICAL_ERROR" ) );
+		ReportDriverFailure();
 		return;
 	}
 }

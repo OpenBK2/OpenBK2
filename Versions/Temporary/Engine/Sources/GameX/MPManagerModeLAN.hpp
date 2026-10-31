@@ -44,6 +44,9 @@ class CMPManagerModeLAN : public CMPManagerMode
 
 	uint16_t wGameUniqueID;
 	EGameState eCurrentState;
+	// Whether the failure to create pLANClient (UDP port taken, no network) has
+	// been shown to the player yet. Segment reports it once; see the constructor.
+	bool bDriverFailureReported;
 
 	//{ Messages
 	bool OnChatMessage( SMPUIChatMessage *pMsg );
@@ -98,6 +101,7 @@ class CMPManagerModeLAN : public CMPManagerMode
 	void KickPlayerFromSlot( const int nSlot ) override;
 
 	void StartNewLANDriver();
+	void ReportDriverFailure();
 	void CompileAndSendLANServerInfo();
 	void ExtractGameInfo( SNetGameInfo *pDst, NNet::IDriver::SGameInfo *pSrc );
 
