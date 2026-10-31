@@ -1960,6 +1960,77 @@ CTexture *GetTextureContainer( CTexture *pTex, STexturePlaceInfo *pPlace )
 	return pRes;
 }
 
+// Vertices in the one buffer every animated or otherwise dynamic mesh is written
+// into each time it is recomputed. The cache rounds it up to a Fibonacci number.
+//
+// When it fills, CLinearBuffer::Alloc cannot find a place the GPU has finished
+// reading, flags the buffer as thrashing and locks the whole of it with flags 0,
+// which waits until the GPU has drained everything queued; the next Flip clears
+// the cache and waits again. A replay with many tanks did that every other frame
+// at the original 768K vertices, and the two waits were about a third of the frame
+// time. A bigger buffer is the remedy, so the size is a variable rather than a
+// constant, read whenever the device's buffers are created.
+//
+// The default is 2178309, a Fibonacci number so that it is used as given: 70 MB,
+// against the 27 MB the original 768K rounded up to, and enough that the same
+// replay no longer thrashed at all. What the buffer has to hold is the dynamic
+// geometry in view, times the frames still in flight, so it grows with the units
+// on screen rather than with the size of the map. gfx_stats prints how much of
+// it is in use.
+//
+// Nothing else grows with it. Finding a place is a walk over the size classes,
+// one per Fibonacci step, so a buffer 2.6 times bigger adds two steps, and the
+// GPU only ever reads the vertices that are drawn.
+//
+// The upper bound is the index range: AddPrimitiveGeometry adds the buffer offset
+// into every index it writes, so the largest index is about the buffer's vertex
+// count, and D3D9 devices cap that at D3DCAPS9::MaxVertexIndex (0xFFFFFF on DXVK).
+// 14930352 is the largest Fibonacci number under that, so a request up to it never
+// rounds past it. Each vertex is 32 bytes (SGeomVecFull), so that ceiling is about
+// 480 MB; a 32-bit process should stay far below it.
+static const int N_DEFAULT_DYNAMIC_GEOMETRY_VERTICES = 2178309;
+// What the engine shipped with, and the floor FitDynamicGeometry falls back to.
+static const int N_ORIGINAL_DYNAMIC_GEOMETRY_VERTICES = 256 * 1024 * 3;
+static const int N_MIN_DYNAMIC_GEOMETRY_VERTICES = 64 * 1024;
+static const int N_MAX_DYNAMIC_GEOMETRY_VERTICES = 14930352;
+static int nDynamicGeometryVertices = N_DEFAULT_DYNAMIC_GEOMETRY_VERTICES;
+
+// The vertex count to build the dynamic geometry buffer with: the request, or less
+// if the device will not create a buffer that big. A failed CreateVertexBuffer in
+// CVB fails the whole device initialisation, which for a size the engine never
+// used to ask for would turn a performance setting into a game that does not
+// start, on a 32-bit process short of address space or a driver with a cap of its
+// own. So a size above the original is tried first with a throwaway buffer of the
+// exact size the cache will ask for, after its Fibonacci rounding, and halved
+// until it fits. At or below the original size nothing is tried, and creation
+// reports a failure the way it always has.
+template <class T>
+static int FitDynamicGeometry( int nRequested )
+{
+	if ( nRequested <= N_ORIGINAL_DYNAMIC_GEOMETRY_VERTICES )
+	{
+		return nRequested;
+	}
+	for ( int n = nRequested; n > N_ORIGINAL_DYNAMIC_GEOMETRY_VERTICES; n /= 2 )
+	{
+		const int nBytes = NCache::fib( NCache::GetMajorFib( n ) ) * int( sizeof( T ) );
+		NWin32Helper::com_ptr<IDirect3DVertexBuffer9> pProbe;
+		const HRESULT hr = pDevice->CreateVertexBuffer(
+				nBytes, GetUsageFlags( TBU_DYNAMIC ), 0, GetPool( TBU_DYNAMIC ), pProbe.GetAddr(), 0 );
+		if ( SUCCEEDED( hr ) )
+		{
+			if ( n != nRequested )
+			{
+				csSystem << "gfx_dynamic_geometry_vertices " << nRequested << " does not fit this device, using " << n << endl;
+			}
+			return n;
+		}
+	}
+	csSystem << "gfx_dynamic_geometry_vertices " << nRequested << " does not fit this device, using "
+					 << N_ORIGINAL_DYNAMIC_GEOMETRY_VERTICES << endl;
+	return N_ORIGINAL_DYNAMIC_GEOMETRY_VERTICES;
+}
+
 template <class T>
 void AddGeometryCache( int nSize, EBufferUsage usage, ETrueBufferUsage trueUsage, T *p = 0 )
 {
@@ -1980,7 +2051,9 @@ void InitBuffers()
 	sysTextures[D3DFMT_A8R8G8B8] = new CSurfaceRing( D3DFMT_A8R8G8B8, N_SYSMEM_TEXTURES );
 	//sysTextures[D3DFMT_R5G6B5] = new CSurfaceRing( D3DFMT_R5G6B5, N_SYSMEM_TEXTURES );
 	//trilists.Init( 220000, sizeof(S3DTriangle), S3DTriangle::ID, STATIC );
-	int nGeomBufSize = 256 * 1024 * 3;
+	// gfx_dynamic_geometry_vertices; see the comment above AddGeometryCache.
+	const int nGeomBufSize =
+			Clamp( nDynamicGeometryVertices, N_MIN_DYNAMIC_GEOMETRY_VERTICES, N_MAX_DYNAMIC_GEOMETRY_VERTICES );
 	if ( !bTnLDevice )
 	{
 		if ( bHardwareVP )
@@ -1996,12 +2069,12 @@ void InitBuffers()
 					break;
 				}
 			}
-			AddGeometryCache<SGeomVecFull>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
+			AddGeometryCache<SGeomVecFull>( FitDynamicGeometry<SGeomVecFull>( nGeomBufSize ), DYNAMIC, TBU_DYNAMIC );
 			pHold = 0;
 		}
 		else
 		{
-			AddGeometryCache<SGeomVecFull>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
+			AddGeometryCache<SGeomVecFull>( FitDynamicGeometry<SGeomVecFull>( nGeomBufSize ), DYNAMIC, TBU_DYNAMIC );
 		}
 	}
 	else
@@ -2019,12 +2092,12 @@ void InitBuffers()
 					break;
 				}
 			}
-			AddGeometryCache<SGeomVecT2C1>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
+			AddGeometryCache<SGeomVecT2C1>( FitDynamicGeometry<SGeomVecT2C1>( nGeomBufSize ), DYNAMIC, TBU_DYNAMIC );
 			pHold = 0;
 		}
 		else
 		{
-			AddGeometryCache<SGeomVecT2C1>( nGeomBufSize, DYNAMIC, TBU_DYNAMIC );
+			AddGeometryCache<SGeomVecT2C1>( FitDynamicGeometry<SGeomVecT2C1>( nGeomBufSize ), DYNAMIC, TBU_DYNAMIC );
 		}
 	}
 	if ( bBan32BitIndices )
@@ -2664,6 +2737,15 @@ REGISTER_CMD( "gfx_stats", ShowCacheStats )
 REGISTER_CMD( "gfx_fill_2d", ShowFill2D )
 REGISTER_CMD( "gfx_fill_transp", ShowFillTransp )
 REGISTER_VAR_EX( "gfx_draw_mip", NGlobal::VarBoolHandler, &bDrawMip, 0, STORAGE_NONE )
+// User storage, the way gfx_lag is: user.cfg loads before CScene::SetupMode creates
+// the device, so a value set there, or in the console, reaches InitBuffers on the
+// next start. A --setvar is applied after the device exists, so it only takes
+// effect when the device is next rebuilt; the gfx_recreate command does that.
+REGISTER_VAR_EX( "gfx_dynamic_geometry_vertices",
+                 NGlobal::VarIntHandler,
+                 &nDynamicGeometryVertices,
+                 N_DEFAULT_DYNAMIC_GEOMETRY_VERTICES,
+                 STORAGE_USER )
 REGISTER_CMD( "gfx_fill_transp", ShowFillTransp )
 FINISH_REGISTER
 } // namespace NGfx
