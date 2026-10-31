@@ -29,6 +29,8 @@
 
 #include "libdb_export.h"
 
+#include <cstdio>
+
 #include <fmt/format.h>
 
 // Singletons
@@ -377,20 +379,32 @@ bool CEditorApp::ParseCommandLine( const std::string &rszFileToOpen, bool bReset
 	return true;
 }
 
+// A failure before the main frame exists: the dialog, and the same text on
+// stderr. Here the box has no owner and no main loop is running yet, and on
+// GTK it can come and go without anyone seeing it, so without the stderr copy
+// a run that stops here (for example with no Editor folder anywhere) leaves no
+// reason in its log.
+static void ReportStartupError( const std::string &szError )
+{
+	fmt::print( stderr, "B2_MapEditor: {}\n", szError );
+	std::fflush( stderr );
+	// Use the editor's portable dialog, with a title available before user data is loaded.
+	NMessage::Error( szError, "OpenBK2 Editor" );
+}
+
 bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 {
 	// The editor shares user profiles with the game, including nested exec paths.
 	std::string szSettingsError;
 	if ( !NSettings::InitializeGeneralSettings( &szSettingsError ) )
 	{
-		// Use the editor's portable dialog, with a title available before user data is loaded.
-		NMessage::Error( szSettingsError, "OpenBK2 Editor" );
+		ReportStartupError( szSettingsError );
 		return false;
 	}
 	// Copy the installed Editor defaults once, before any editor state is loaded.
 	if ( !NSettings::GetGeneralSettings()->PrepareEditor( &szSettingsError ) )
 	{
-		NMessage::Error( szSettingsError, "OpenBK2 Editor" );
+		ReportStartupError( szSettingsError );
 		return false;
 	}
 	NGlobal::LoadConfig( "Profiles/startup.cfg" );
