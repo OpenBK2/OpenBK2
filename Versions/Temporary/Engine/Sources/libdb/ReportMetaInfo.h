@@ -38,6 +38,13 @@ namespace NMetaInfo
 	                                       const SArrayOperations *pOperations );
 	void DropMetaInfo();
 
+	// The XML name and class type id of every database class compiled into the
+	// running program, as each reports itself when its module loads. Kept apart
+	// from the rest of the meta info, which the game drops before it opens the
+	// database, so that the game database can learn the classes an installed
+	// types.xml predates (CGameDatabase::LoadTypesMap).
+	LIBDB_EXPORT const std::unordered_map<std::string, int> &GetReportedClassTypeIDs();
+
 	typedef std::unordered_map<std::string, CObj<SStructMetaInfo>> CMetaInfoMap;
 	bool CreateFullMetaInfoCopy( CMetaInfoMap *pRes );
 

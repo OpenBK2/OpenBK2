@@ -80,11 +80,30 @@ namespace NMetaInfo
 	// **
 	// ************************************************************************************************************************ //
 
+	// A function local static, because the classes report from the static
+	// initialisers of every module and nothing orders those against this file's.
+	static std::unordered_map<std::string, int> &ReportedClassTypeIDs()
+	{
+		static std::unordered_map<std::string, int> typeIDs;
+		return typeIDs;
+	}
+
+	const std::unordered_map<std::string, int> &GetReportedClassTypeIDs()
+	{
+		return ReportedClassTypeIDs();
+	}
+
 	void StartMetaInfoReport( const std::string &szTypeName, const int nTypeID, const int nStructSize )
 	{
 		StartRegister();
 		if ( s_pMetaInfo->structsStack.empty() )
 		{
+			// Only a class reports with an empty stack; the structs nested in it
+			// report from inside its report and have no type id of their own.
+			if ( nTypeID != 0 && nTypeID != -1 )
+			{
+				ReportedClassTypeIDs()[szTypeName] = nTypeID;
+			}
 			SStructMetaInfo *pInfo = new SStructMetaInfo();
 			pInfo->nStructSize = nStructSize;
 			s_pMetaInfo->knownTypes[szTypeName] = pInfo;

@@ -5,6 +5,7 @@
 #include "libdb/TypeDef.h"
 #include "Misc/Win32Helper.h"
 #include "port/time.h"
+#include "ReportMetaInfo.h"
 #include "System/VFS.h"
 #include "System/XMLReader.h"
 
@@ -242,6 +243,15 @@ bool CGameDatabase::LoadTypesMap()
 				name2typeIDmap[pTypeClass->szTypeName] = pTypeClass->nClassTypeID;
 			}
 		}
+	}
+	// types.xml is data, and an installed game's is as old as the game: the
+	// retail and add-on copies list none of the classes added since, so their
+	// records could be found but never created. Every class compiled in reported
+	// its name and id when its module loaded, so the classes types.xml does not
+	// list are taken from there. emplace leaves the ones it does list alone.
+	for ( const std::pair<const std::string, int> &classTypeID : NMetaInfo::GetReportedClassTypeIDs() )
+	{
+		name2typeIDmap.emplace( classTypeID.first, classTypeID.second );
 	}
 	return !topLevelTypes.empty();
 }
