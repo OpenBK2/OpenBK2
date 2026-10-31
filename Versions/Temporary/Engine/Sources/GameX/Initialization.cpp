@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "3Dmotor/DBScene.h"
 #include "AILogic/DBAIConsts.h"
 #include "B2_M1_World/ClientAckManager.h"
 #include "CClientGameConsts.h"
@@ -25,6 +26,9 @@
 #include "Sound/SoundScene.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "System/GeneralSettings.h"
+#include "System/Streams.h"
+#include "System/Text.h"
+#include "System/VFSOperations.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
@@ -335,6 +339,95 @@ static const NDb::SFlagImage *GetAuthorityFlag( const NDb::SFlagAuthority *pAuth
 	return 0;
 }
 
+// The record that recognises multiplayer data without flag references of its
+// own, or 0 when no installed archive supplies one.
+static const NDb::SFlagMapping *GetFlagMapping()
+{
+	return NDb::Get<NDb::SFlagMapping>( CDBID( "Flags/Mapping.xdb" ) );
+}
+
+// FNV-1a, 64 bits, of a file in the game's file system, as 16 lowercase hex
+// digits; empty when the file cannot be read. It only has to tell apart the
+// handful of icon files the mapping lists, not resist anyone.
+static std::string HashGameFile( const std::string &szFileName )
+{
+	CFileStream stream( NVFS::GetMainVFS(), szFileName );
+	if ( !stream.IsOk() || stream.GetSize() <= 0 )
+	{
+		return std::string();
+	}
+	std::vector<uint8_t> data( stream.GetSize() );
+	stream.Read( data.data(), static_cast<int>( data.size() ) );
+	uint64_t nHash = 0xcbf29ce484222325ull;
+	for ( const uint8_t c : data )
+	{
+		nHash = ( nHash ^ c ) * 0x100000001b3ull;
+	}
+	return fmt::format( "{:016x}", nHash );
+}
+
+// A tech level name as the mapping compares it: every kind of dash folded to a
+// hyphen and white space trimmed from both ends, so that the em dash of the
+// Russian editions, the en dash and the hyphen all name the same years.
+static std::wstring NormalizeTechLevelName( const std::wstring &wszName )
+{
+	std::wstring wszRes;
+	for ( const wchar_t c : wszName )
+	{
+		const bool bDash = c == L'-' || ( c >= 0x2010 && c <= 0x2015 ) || c == 0x2212;
+		wszRes += bDash ? L'-' : c;
+	}
+	const wchar_t *pszSpace = L" \t\r\n\u00a0";
+	const size_t nFirst = wszRes.find_first_not_of( pszSpace );
+	if ( nFirst == std::wstring::npos )
+	{
+		return std::wstring();
+	}
+	return wszRes.substr( nFirst, wszRes.find_last_not_of( pszSpace ) - nFirst + 1 );
+}
+
+// The first year nTechLevel represents: its own FromYear, or else the mapping's
+// entry for its name; 0 when neither knows.
+static int
+GetTechLevelYear( const NDb::SMultiplayerConsts *pMPConsts, const NDb::SFlagMapping *pMapping, const int nTechLevel )
+{
+	const NDb::SMultiplayerTechLevel &techLevel = pMPConsts->techLevels[nTechLevel];
+	if ( techLevel.nFromYear != 0 || !pMapping )
+	{
+		return techLevel.nFromYear;
+	}
+	const std::wstring wszName = NormalizeTechLevelName( NText::GetText( techLevel.szNameFileRef ) );
+	if ( wszName.empty() )
+	{
+		return 0;
+	}
+	for ( const NDb::SFlagMapping::STechLevel &entry : pMapping->techLevels )
+	{
+		if ( NormalizeTechLevelName( NStr::ToUnicode( entry.szName ) ) == wszName )
+		{
+			return entry.nFromYear;
+		}
+	}
+	return 0;
+}
+
+// The flag of the first of pTerritory's governments that has one for nYear, or 0.
+static const NDb::SFlagImage *GetTerritoryFlag( const NDb::SFlagTerritory *pTerritory, const int nYear )
+{
+	if ( !pTerritory )
+	{
+		return 0;
+	}
+	for ( const CDBPtr<NDb::SFlagAuthority> &pAuthority : pTerritory->authorities )
+	{
+		if ( const NDb::SFlagImage *pImage = GetAuthorityFlag( pAuthority, nYear ) )
+		{
+			return pImage;
+		}
+	}
+	return 0;
+}
+
 std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, const int nCountry, const int nTechLevel )
 {
 	const NDb::SMultiplayerSide *pSide = GetMultiplayerSide( pMPConsts, nCountry );
@@ -342,21 +435,47 @@ std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, const in
 	{
 		return std::string();
 	}
-	const int nYear = pMPConsts->techLevels[nTechLevel].nFromYear;
-	if ( nYear == 0 )
+	const NDb::SFlagMapping *pMapping = GetFlagMapping();
+	const int nYear = GetTechLevelYear( pMPConsts, pMapping, nTechLevel );
+
+	// The side's own references come first, so data that names its flags is
+	// never second-guessed by the mapping.
+	const NDb::SFlagImage *pImage = 0;
+	if ( pSide->pFlagAuthority || pSide->pFlagTerritory )
 	{
-		return std::string();
-	}
-	const NDb::SFlagImage *pImage = GetAuthorityFlag( pSide->pFlagAuthority, nYear );
-	if ( !pImage && pSide->pFlagTerritory )
-	{
-		for ( const CDBPtr<NDb::SFlagAuthority> &pAuthority : pSide->pFlagTerritory->authorities )
+		if ( nYear != 0 )
 		{
-			pImage = GetAuthorityFlag( pAuthority, nYear );
-			if ( pImage )
+			pImage = GetAuthorityFlag( pSide->pFlagAuthority, nYear );
+			if ( !pImage )
 			{
-				break;
+				pImage = GetTerritoryFlag( pSide->pFlagTerritory, nYear );
 			}
+		}
+	}
+	else if ( pMapping && pSide->pListItemIcon )
+	{
+		// Recognised by the bytes of its icon. Only the mapping's Image works
+		// without a year; a territory or a government needs one.
+		const std::string szHash = HashGameFile( pSide->pListItemIcon->szDestName );
+		for ( const NDb::SFlagMapping::SIcon &entry : pMapping->icons )
+		{
+			if ( szHash.empty() || entry.szImageHash != szHash )
+			{
+				continue;
+			}
+			if ( entry.pImage )
+			{
+				pImage = entry.pImage;
+			}
+			else if ( nYear != 0 )
+			{
+				pImage = GetAuthorityFlag( entry.pAuthority, nYear );
+				if ( !pImage )
+				{
+					pImage = GetTerritoryFlag( entry.pTerritory, nYear );
+				}
+			}
+			break;
 		}
 	}
 	return pImage ? std::string( pImage->szImage ) : std::string();

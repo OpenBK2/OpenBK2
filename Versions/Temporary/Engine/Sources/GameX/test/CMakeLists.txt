@@ -6,6 +6,8 @@ add_unit_test(UnitTransferCommand GameX libdb System Misc Main AILogic Stats_B2_
 add_unit_test(ReplayPlayerDrop GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 add_unit_test(ReplayCommandTiming GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 add_unit_test(UnitTransferUI UI 3Dmotor libdb System Misc gr2)
+# Resolve the flags of an installed game's sides, when one is named (see the source).
+add_unit_test(MPSideFlags GameX libdb System Misc Main AILogic Stats_B2_M1 zlib gr2)
 target_compile_definitions(UnitTransferUI_test PRIVATE
     TRANSFER_UI_GAME_DATA="${CMAKE_SOURCE_DIR}/Versions/Current/Data"
     TRANSFER_UI_PAK="${CMAKE_SOURCE_DIR}/OBK2_Examples/UnitTransferImpl/unit_transfer.pak")

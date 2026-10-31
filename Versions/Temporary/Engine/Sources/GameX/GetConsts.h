@@ -60,13 +60,16 @@ const NDb::SLadderRank *GetLadderRank( const NDb::SMultiplayerConsts *pMPConsts,
 // level cannot be played at it, which is what false means here.
 bool IsSideAvailable( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nTechLevel );
 
-// The SVG flag nCountry shows at nTechLevel, or an empty
-// path when there is none and the side's ListItemIcon texture should be used.
+// The SVG flag nCountry shows at nTechLevel, or an empty path when there is none
+// and the side's ListItemIcon texture should be used.
 //
-// The year looked up is the first one the tech level represents. A tech level
-// with no years, a side with neither FlagAuthority nor FlagTerritory, and a year
-// none of the side's flags covers all give the empty path, which is what old
-// data and mods without flag records get, so they keep their own icons.
+// The year looked up is the first one the tech level represents: its FromYear,
+// or for a tech level without one, the year Flags/Mapping.xdb gives its name. A
+// side's FlagAuthority and FlagTerritory name its flag; a side without either is
+// looked up in the same mapping by the bytes of its ListItemIcon image, which is
+// how installed games and mods, whose multiplayer consts this tree does not
+// ship, get flags. Anything none of these covers gives the empty path, so data
+// the mapping does not know keeps its own icons.
 std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nTechLevel );
 
 } // namespace NGameX
