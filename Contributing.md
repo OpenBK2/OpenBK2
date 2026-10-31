@@ -92,6 +92,14 @@ runs, `OPENBK2_DATA_DIR` can name the installation root and
 overrides must be absolute; the latter contains `Profiles`, not its contents.
 Set both for tests against a separate installation to avoid sharing real profiles.
 
+Because the root comes from the executable's path, a symlink to `Game` resolves to
+the installation it points into, not to the directory holding the link. On Linux
+`./launch.sh --data NAME` runs one build against another game's data tree
+(`~/bk2-NAME`, with `bin/` a farm of links into the install prefix), and it does
+that by setting `OPENBK2_DATA_DIR` to the tree. Each tree should carry its own
+`app_name.txt`, so its settings and player profiles stay apart from the other
+trees'. `docs/port/DATA_TREES.md` describes the layout.
+
 To give a game variant its own local data, put `app_name.txt` in its installation
 root, beside `bin` and `Data`. A file containing `vanilla` selects
 `%LOCALAPPDATA%\OpenBK2\vanilla\Profiles` and
@@ -162,7 +170,7 @@ Game.exe --replay=my_replay
 ```
 
 on Linux `./launch.sh` passes the same three through as `--mission`, `--campaign` and
-`--replay`, and takes care of the working directory:
+`--replay`, and takes care of the environment:
 
 ```sh
 ./launch.sh release --mission Custom/Missions/Alternative/MapInfo.xdb

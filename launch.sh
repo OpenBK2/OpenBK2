@@ -19,18 +19,23 @@
 #
 # How a data tree is laid out and why
 #
-# Each tree holds data only - Data/, Profiles/, splash.bmp - and its bin/ is a
-# farm of symlinks into the install prefix, rebuilt on every run. The game
-# resolves ../Data and ../Profiles from the working directory, so it is the cd
-# into the tree's own bin that selects which game's data gets loaded; the
-# symlinks only supply code. That way one build serves every tree, a rebuild is
-# picked up by all of them at once, and no tree carries its own ~700 MB copy of
-# the modules.
+# Each tree holds data only - Data/, Profiles/, splash.bmp, app_name.txt - and
+# its bin/ is a farm of symlinks into the install prefix, rebuilt on every run.
+# That way one build serves every tree, a rebuild is picked up by all of them at
+# once, and no tree carries its own ~700 MB copy of the modules.
 #
-# Known limitation: the editor asks GetExecutablePath where it lives, and
-# through a symlink that answers the install prefix, not the tree. Game does
-# not - it goes by the working directory - so --editor with --data is not
-# trustworthy yet.
+# The working directory no longer selects the data. The game and the editor
+# take their installation root from the executable's path, which through a
+# symlink resolves to the install prefix, not the tree, so a bare run from the
+# farm loads the prefix's own Data. OPENBK2_DATA_DIR names the root instead,
+# and this script sets it to the tree: Data, MODs and app_name.txt are all read
+# from there.
+#
+# Profiles/ in the tree is now only the template. Settings and player profiles
+# live in the per-user directory (~/.local/share/OpenBK2/Profiles on Linux), and
+# the tree's app_name.txt gives it a subfolder of its own there, so one game's
+# settings do not overwrite another's. Contributing.md, "user profiles and saved
+# logins", has the details.
 
 set -u -o pipefail
 
@@ -58,7 +63,9 @@ usage()
 	Options:
 	  -d, --data NAME|PATH   run against a standalone data tree instead of the
 	                         prefix's own Data. A name means ~/bk2-NAME; a path
-	                         with a slash is taken as is.
+	                         with a slash is taken as is. Passed to the game as
+	                         OPENBK2_DATA_DIR. The tree's app_name.txt picks its
+	                         own subfolder of the user Profiles directory.
 	      --list-data        list the data trees found, and exit
 	  -M, --mod NAME         attach a mod, naming a folder under the data tree's
 	                         MODs directory. Without this the profile's own
@@ -361,10 +368,15 @@ if [ -n "$TREE" ]; then
 	has_game_data "$TREE/Data" ||
 		die "$TREE/Data has no index.bin, so it is not a loadable data tree"
 
-	# The game writes into Profiles - global.cfg and the player's profile - so a
-	# tree sharing one with another tree would overwrite its settings.
-	[ -L "$TREE/Profiles" ] &&
-		printf '%s: warning: %s/Profiles is a symlink and the game writes to it\n' "$SELF" "$TREE" >&2
+	# The game writes global.cfg and the player's profile into the per-user
+	# Profiles directory, and app_name.txt is what gives a tree a subfolder of
+	# its own there. Without it the tree shares the default one with the
+	# prefix's data and with every other tree that has none, which is how one
+	# game's settings and mod choice end up in another.
+	[ -f "$TREE/app_name.txt" ] || {
+		printf '%s: warning: %s has no app_name.txt, so it shares the default user Profiles\n' "$SELF" "$TREE" >&2
+		printf '%s:          printf %%s %s > %s/app_name.txt\n' "$SELF" "${TREE##*/bk2-}" "$TREE" >&2
+	}
 
 	# Refresh the symlink farm. Previous links go first, dangling ones included,
 	# so a module that was renamed or dropped does not linger as a stale link.
@@ -400,6 +412,10 @@ if [ -n "$TREE" ]; then
 	fi
 
 	RUNDIR="$TREE/bin"
+	# The installation root the game resolves from its executable is the
+	# prefix, because the farm's links resolve there, so the tree has to be
+	# named outright or the run loads the prefix's data. Must be absolute.
+	DATA_ROOT="$(realpath "$TREE")"
 else
 	# No --data: run out of the prefix, which needs the data beside bin/.
 	# cmake --install installs code, and the font pack, and nothing else.
@@ -423,6 +439,8 @@ else
 		exit 1
 	fi
 	RUNDIR="$PREFIX/bin"
+	# The prefix is what the game finds on its own, so nothing is overridden.
+	DATA_ROOT=
 fi
 
 # Mods live beside Data, in the directory the game builds from its base dir,
@@ -484,6 +502,11 @@ declare -a ENV_ARGS=(
 	"DXVK_LOG_LEVEL=${DXVK_LOG_LEVEL:-$( [ "$SOFTWARE_VK" = yes ] && echo none || echo debug )}"
 	"LD_LIBRARY_PATH=$RUNDIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 )
+# --data's tree, as the installation root. In ENV_ARGS rather than exported so
+# it survives sudo on a profiling run, and so --env shows it.
+[ -n "$DATA_ROOT" ] && ENV_ARGS+=( "OPENBK2_DATA_DIR=$DATA_ROOT" )
+# An explicit user data root is passed on for the same reason.
+[ -n "${OPENBK2_USER_DATA_DIR:-}" ] && ENV_ARGS+=( "OPENBK2_USER_DATA_DIR=$OPENBK2_USER_DATA_DIR" )
 # A verifying run compares checksums and nobody listens to it, so it takes SDL's
 # dummy audio backend. That is not only tidiness: SDL's PulseAudio backend
 # deadlocks on exit when the device is idle, which a finished replay always is.
@@ -720,8 +743,8 @@ if [ -n "$PROFILER" ]; then
 				-o "$PROFILE_PRIMARY"
 				"${perforator_extra[@]}" -- )
 
-			# Under sudo the game would inherit root, and it writes into the data
-			# tree: Profiles, log.txt, the crashpad database. One run as root and
+			# Under sudo the game would inherit root, and it writes files: the user
+			# Profiles, log.txt in the run directory, the crashpad database. One run as root and
 			# the next as the user then fails on files it cannot open. setpriv
 			# execs rather than forking, so the process perforator registered is
 			# still the one that becomes the game.
@@ -759,7 +782,9 @@ if [ -n "$PROFILER" ]; then
 
 	# sudo resets the environment, and the game needs a display to open a window
 	# on. These are not in ENV_ARGS because an ordinary run inherits them.
-	for passthrough in DISPLAY XAUTHORITY WAYLAND_DISPLAY XDG_RUNTIME_DIR HOME; do
+	# XDG_DATA_HOME and HOME also locate the per-user Profiles directory, so
+	# without them a profiled run would read root's settings instead.
+	for passthrough in DISPLAY XAUTHORITY WAYLAND_DISPLAY XDG_RUNTIME_DIR XDG_DATA_HOME HOME; do
 		[ -n "${!passthrough:-}" ] && ENV_ARGS+=( "$passthrough=${!passthrough}" )
 	done
 
