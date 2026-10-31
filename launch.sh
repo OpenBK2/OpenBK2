@@ -117,6 +117,12 @@ usage()
 	                         installed; or mango, which enables MangoHud's
 	                         Vulkan layer. DXVK_HUD and MangoHud's own
 	                         configuration say what each one draws.
+	      --cpus LIST        pin the game to these CPUs with taskset, e.g. 0-11.
+	                         A profiled run defaults to the performance cores of
+	                         a hybrid CPU, so its threads cannot migrate onto
+	                         the efficiency cores, which run at a different
+	                         speed and record under a separate perf event. all
+	                         turns pinning off.
 	      --profile [TOOL]   record a CPU profile of the whole run. TOOL is
 	                         perforator, the default, or perf. Both launch the
 	                         game themselves and stop when it exits, so there is
@@ -235,6 +241,8 @@ PROFILE_OUT=
 declare -a SETVARS=()
 SOFTWARE_VK=no
 HUD=
+# Empty means "not given": a profiled run then picks the performance cores.
+CPUS=
 # The lavapipe ICD, which is what makes a run possible with no GPU. Debian names
 # it without an architecture suffix.
 readonly LVP_ICD=/usr/share/vulkan/icd.d/lvp_icd.json
@@ -309,6 +317,12 @@ while [ $# -gt 0 ]; do
 		                  shift
 		              fi
 		              shift ;;
+		--cpus)       [ $# -ge 2 ] || die "$1 needs a CPU list such as 0-11, or all"
+		              case "$2" in
+		                  all|[0-9]*) CPUS="$2" ;;
+		                  *) die "--cpus wants a CPU list such as 0-11, or all, got '$2'" ;;
+		              esac
+		              shift 2 ;;
 		-e|--editor)  EXE=B2_MapEditor; shift ;;
 		-g|--gdb)     USE_GDB=yes; shift ;;
 		--valgrind)   USE_VALGRIND=yes; shift ;;
@@ -804,11 +818,32 @@ if [ -n "$PROFILER" ]; then
 	printf '%s: %s profile goes to %s\n' "$SELF" "$PROFILER" "$PROFILE_PRIMARY" >&2
 fi
 
+# CPU pinning. On a hybrid CPU the kernel moves threads between performance
+# and efficiency cores as it likes, so two runs of the same replay are not
+# timed on the same hardware, and perf records each core type under an event of
+# its own (cpu_core/cycles and cpu_atom/cycles) that perf report then shows
+# one after the other. That cost a misreading once: the small efficiency-core
+# event came first and looked like the whole profile. So a profiled run is
+# pinned to the performance cores unless told otherwise. The kernel lists them
+# in /sys/devices/cpu_core/cpus; a CPU that is not hybrid has no such file and
+# is left alone. taskset execs, so the pid the profiler started is still the
+# game's.
+declare -a PIN_CMD=()
+if [ -z "$CPUS" ] && [ -n "$PROFILER" ] && [ -r /sys/devices/cpu_core/cpus ]; then
+	CPUS="$(cat /sys/devices/cpu_core/cpus)"
+fi
+if [ -n "$CPUS" ] && [ "$CPUS" != all ]; then
+	command -v taskset >/dev/null || die "no taskset on PATH (util-linux); pass --cpus all to run unpinned"
+	PIN_CMD=( taskset -c "$CPUS" )
+	printf '%s: pinned to CPUs %s\n' "$SELF" "$CPUS" >&2
+fi
+
 if [ "$SHOW_ENV" = yes ]; then
 	printf '%s\n' "${ENV_ARGS[@]}"
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
 	[ ${#VALGRIND_CMD[@]} -gt 0 ] && printf 'valgrind=%s\n' "${VALGRIND_CMD[*]}"
 	[ ${#PROFILER_CMD[@]} -gt 0 ] && printf 'profiler=%s %s\n' "${PROFILER_CMD[*]}" "${PRIV_CMD[*]}"
+	[ ${#PIN_CMD[@]} -gt 0 ] && printf 'pin=%s\n' "${PIN_CMD[*]}"
 	[ "$MOD_GIVEN" = yes ] && printf 'args=--mod=%s\n' "$MOD"
 	[ -n "$MISSION" ] && printf 'args=--mission=%s\n' "$MISSION"
 	[ -n "$CAMPAIGN" ] && printf 'args=--campaign=%s\n' "$CAMPAIGN"
@@ -824,7 +859,9 @@ fi
 # because it is the process that launches all of it and the one that has to
 # survive the game exiting in order to write its output. PRIV_CMD sits between
 # the two: it drops root before env, and execs, so the pid does not change.
-declare -a CMD=("${PROFILER_CMD[@]}" "${PRIV_CMD[@]}" env "${ENV_ARGS[@]}")
+# PIN_CMD comes after it for the same reason: taskset execs too, and the
+# affinity it sets is inherited by env, the game and every thread it starts.
+declare -a CMD=("${PROFILER_CMD[@]}" "${PRIV_CMD[@]}" "${PIN_CMD[@]}" env "${ENV_ARGS[@]}")
 [ "$USE_GDB" = yes ] && CMD+=(gdb --args)
 [ ${#VALGRIND_CMD[@]} -gt 0 ] && CMD+=("${VALGRIND_CMD[@]}")
 CMD+=("./$EXE")
