@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Example flag for a made-up faction: a white chevron on dark green, 2:3.
+
+  Put where it came from, its licence and the specification it follows here,
+  in the file itself, so it travels with the drawing.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+	<rect width="900" height="600" fill="#2f4f2f"/>
+	<path d="M0 0 L360 300 L0 600 L0 480 L216 300 L0 120 Z" fill="#fff"/>
+</svg>
