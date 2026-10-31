@@ -68,6 +68,16 @@ option(ENABLE_UBSAN "build with UndefinedBehaviorSanitizer" OFF)
 # warning on either compiler reports at any level. clang only; see
 # docs/Sanitizers.md.
 option(ENABLE_TYSAN "build with TypeSanitizer (clang only)" OFF)
+# Frame pointers, for profiling. perf's default dwarf unwinder copies a slice
+# of stack per sample and unwinds it afterwards, which works on any build but
+# costs bandwidth, so it caps the sample rate and still truncates when the stack
+# is deeper than the slice. A frame pointer walk is free per sample and has no
+# depth limit: launch.sh --profile perf with BK2_PERF_CALLGRAPH=fp uses it. It
+# only reaches as far as code built this way, though. The distribution's libc
+# and Mesa, and DXVK unless built with the same flag, use rbp as an ordinary
+# register, so a walk that starts inside the driver stops there. Off by default
+# because it takes a register from every function, a cost of a few percent.
+option(ENABLE_FRAME_POINTERS "keep frame pointers so perf can unwind with --call-graph=fp (GCC/clang)" OFF)
 
 # ASan and TSan both map shadow memory over the whole address space, and they
 # want the same regions, so a binary carrying both aborts as it starts. Said
@@ -149,6 +159,14 @@ if(ENABLE_ASAN OR ENABLE_TSAN OR ENABLE_UBSAN)
         add_compile_options(-fsanitize=${OBK2_SANITIZE_ARG} -fno-omit-frame-pointer -g)
         add_link_options(-fsanitize=${OBK2_SANITIZE_ARG})
     endif()
+endif()
+
+# The leaf flag as well, or a sample that lands in a function that calls
+# nothing loses that function's caller: the leaf never sets up a frame, so the
+# walk starts from the frame below it. MSVC has no equivalent switch on x64,
+# where the Windows unwinder reads .pdata instead.
+if(ENABLE_FRAME_POINTERS AND NOT MSVC)
+    add_compile_options(-fno-omit-frame-pointer -mno-omit-leaf-frame-pointer)
 endif()
 
 # Every engine module is a shared library and they are installed beside the

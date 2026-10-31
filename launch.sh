@@ -143,7 +143,7 @@ usage()
 	                         perf report.
 	                         perf unwinds with dwarf and a 32 KB stack copy;
 	                         BK2_PERF_CALLGRAPH replaces that, e.g. fp for a
-	                         build that keeps frame pointers.
+	                         build configured with -DENABLE_FRAME_POINTERS=ON.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
 	      --valgrind         run under valgrind's memcheck, which reports the
@@ -784,7 +784,7 @@ if [ -n "$PROFILER" ]; then
 			# under them, and a fifth could not be placed at all. The cost is
 			# four times the data per sample, which at 199 Hz is still a few
 			# hundred MB for a minute's run. BK2_PERF_CALLGRAPH replaces the
-			# whole mode, e.g. fp on a build that keeps frame pointers, where a
+			# whole mode, e.g. fp on a -DENABLE_FRAME_POINTERS=ON build, where a
 			# frame pointer walk costs nothing per sample and -F 999 is safe.
 			declare -a perf_extra=()
 			[ -n "${BK2_PERF_EXTRA:-}" ] && read -r -a perf_extra <<<"$BK2_PERF_EXTRA"
