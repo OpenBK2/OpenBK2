@@ -70,12 +70,13 @@ bool IsSideAvailable( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, in
 // how installed games and mods, whose multiplayer consts this tree does not
 // ship, get flags. Anything none of these covers gives the empty path, so data
 // the mapping does not know keeps its own icons.
-std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nTechLevel );
+// Exported for MPSideFlags_test, which checks it against an installed game.
+GAMEX_EXPORT std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nTechLevel );
 
 // The SVG drawing for the game room's "random country" item, or an empty path
 // when there is none and RandomCountryIcon should be used. The item is not a
 // side and has no years, so only Flags/Mapping.xdb can name one, by the bytes of
 // the RandomCountryIcon image, with an entry's Image.
-std::string GetRandomCountryImage( const NDb::SMultiplayerConsts *pMPConsts );
+GAMEX_EXPORT std::string GetRandomCountryImage( const NDb::SMultiplayerConsts *pMPConsts );
 
 } // namespace NGameX
