@@ -109,6 +109,30 @@
 			<Authority href="" />
 			<Image href="/Flags/Images/Spain_RepublicArms.xdb#xpointer(/FlagImage)" />
 		</Item>
+		<Item>
+			<ImageHash>ee61c83cd465e565</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Japan_RisingSunCentred.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>a3987f36be453aa9</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/UK_Union.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>d3d6b4f791b39abc</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/USA_1912.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>23ee5d080a00c8a4</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/USSR_1936.xdb#xpointer(/FlagImage)" />
+		</Item>
 	</Icons>
 	<TechLevels>
 		<Item>

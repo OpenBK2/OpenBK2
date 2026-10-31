@@ -11,7 +11,7 @@ flags, where to get drawings, and which flags OpenBK2 does not ship and why.
 `obk2_flags.pak`, installed into `Data` by the build, carries drawings and records
 under `Flags/`, and `Flags/Mapping.xdb`, which gives sharp flags to games whose
 multiplayer data it cannot edit: the original game, Fire of the Rising,
-Liberation, and Total Conversion. For a mod, it redraws what the mod's own icon
+Liberation, Total Conversion, Universal MOD-18 and MPBMod6. For a mod, it redraws what the mod's own icon
 shows and changes nothing about it: a mod's choice of flag is the mod's, even
 when it is not what history flew, since a mod may need two sides to look
 different. Sides it does not recognise keep their own icon.
@@ -186,4 +186,5 @@ For reference, the sides OpenBK2 knows about and leaves alone:
   several flags in one icon. Composite flags are not supported yet.
 - MPBMod6: its own USA and Japan icons. Its Germany, USSR and Great Britain use
   the original game's icons and get those sides' drawings.
-- Universal MOD-18: not mapped yet.
+- Universal MOD-18: Deutsches Reich (swastika), and the two sides whose icon
+  combines several flags (European Axis, France and smaller allies).

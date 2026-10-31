@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Rising Sun with a centred disc: sixteen red rays on white and a red disc in
+  the middle, 2:3. Universal MOD-18 shows this for its Japan side; it is drawn
+  to that icon's proportions and red, #be0026, rather than as the Imperial
+  Japanese Army's flag, whose disc sits toward the hoist.
+
+  Source: generated for OpenBK2 by scripts/flags/rising_sun.py; edit that and
+  run it again rather than this file.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+	<rect width="900" height="600" fill="#fff"/>
+	<path fill="#be0026" d="M450.0 300.0 L2602.9 512.0 L2602.9 88.0 Z M450.0 300.0 L2520.2 -328.0 L2357.9 -719.8 Z M450.0 300.0 L2122.3 -1072.4 L1822.4 -1372.3 Z M450.0 300.0 L1469.8 -1607.9 L1078.0 -1770.2 Z M450.0 300.0 L662.0 -1852.9 L238.0 -1852.9 Z M450.0 300.0 L-178.0 -1770.2 L-569.8 -1607.9 Z M450.0 300.0 L-922.4 -1372.3 L-1222.3 -1072.4 Z M450.0 300.0 L-1457.9 -719.8 L-1620.2 -328.0 Z M450.0 300.0 L-1702.9 88.0 L-1702.9 512.0 Z M450.0 300.0 L-1620.2 928.0 L-1457.9 1319.8 Z M450.0 300.0 L-1222.3 1672.4 L-922.4 1972.3 Z M450.0 300.0 L-569.8 2207.9 L-178.0 2370.2 Z M450.0 300.0 L238.0 2452.9 L662.0 2452.9 Z M450.0 300.0 L1078.0 2370.2 L1469.8 2207.9 Z M450.0 300.0 L1822.4 1972.3 L2122.3 1672.4 Z M450.0 300.0 L2357.9 1319.8 L2520.2 928.0 Z"/>
+	<circle cx="450" cy="300" r="135" fill="#be0026"/>
+</svg>

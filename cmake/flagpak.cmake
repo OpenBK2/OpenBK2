@@ -37,6 +37,8 @@ set(OBK2_FLAG_PAK_FILES
     Flags/Images/Italy_Republic.xdb
     Flags/Images/Japan_ArmyRisingSun.svg
     Flags/Images/Japan_ArmyRisingSun.xdb
+    Flags/Images/Japan_RisingSunCentred.svg
+    Flags/Images/Japan_RisingSunCentred.xdb
     Flags/Images/Poland.svg
     Flags/Images/Poland.xdb
     Flags/Images/Poland_PeoplesRepublicArms.svg

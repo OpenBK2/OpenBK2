@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Universal MOD-18's Japan, Great Britain, USA and USSR sides get sharp flags with `obk2_flags.pak`, each drawn as the mod draws it: Japan's Rising Sun with its disc in the middle, as the mod has it, rather than the Army flag's. Its German side, whose flag carries a swastika, and its two sides that combine several flags keep the mod's own pictures.
+
 - Total Conversion's multiplayer sides get sharp flags too, with `obk2_flags.pak` in its `Data`: fourteen of its nineteen sides, each drawn as the mod draws it, arms and all, in every tech level. Its Germany and Spanish Nationalists sides, whose flags carry a swastika and the Francoist eagle, keep the mod's own pictures, as do its three sides that combine several flags. MPBMod6's Great Britain gets the sharp Union Flag as well.
 
 - The "random country" dice in the multiplayer game room are redrawn as a sharp vector picture, in the original's arrangement of two dice with soft shadows. Every installation and mod checked uses the same dice picture, so they all get the new one with `obk2_flags.pak`.
