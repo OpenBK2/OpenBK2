@@ -161,7 +161,7 @@ that is shipped but switched off by default would carry the same risk.
 | Symbol | Why | What OpenBK2 shows instead |
 |---|---|---|
 | The swastika, in any flag or emblem (the flags of Nazi Germany from 1933 to 1945, its war ensigns, and any other flag carrying it) | In Germany, distributing or publicly using the symbols of unconstitutional organisations is an offence under section 86a of the Criminal Code (StGB). Its social-adequacy exception covers art, science, research and teaching, and since 2018 the USK may rate a game showing them case by case, but that is a decision per published game. Austria prohibits public display of these symbols under the Abzeichengesetz of 1960. | In this tree's own data, the German side shows a stand-in after the original game's own icon, without a swastika. A mod's German side that shows a swastika is left unmapped, so it keeps the mod's own icon. |
-| The flag of Francoist Spain with the eagle of St John (1938 to 1981) | Spain's Democratic Memory Law (Ley 20/2022) requires the removal of Francoist symbols from public view, with sanctions. It is not a ban on distribution, but it is the same kind of risk. Commons also has no public domain drawing of it, only CC BY-SA ones. | Total Conversion's Spanish Nationalists side is left unmapped and keeps the mod's own icon. |
+| The flag of Francoist Spain with the eagle of St John (1938 to 1981) | Spain's Democratic Memory Law (Ley 20/2022) requires the removal of Francoist symbols from public view, with sanctions. It is not a ban on distribution, but it is the same kind of risk. Commons also has no public domain drawing of it, only CC BY-SA ones. | Total Conversion's Spanish Nationalists side, and MOD-18's France and smaller allies, whose collage includes that flag, are left unmapped and keep the mod's own icons. |
 | The Ustase "U", on the flag of the Independent State of Croatia (1941 to 1945) | Austria added the symbols of the Ustase to those its Symbols Act (Symbole-Gesetz) forbids to display publicly, in 2019, on the same footing as the swastika. | Total Conversion's Bulgaria side, whose icon includes that flag beside Bulgaria's and Slovakia's, is left unmapped and keeps the mod's own icon. |
 
 These *are* shipped, and you should know that some countries restrict them:
@@ -190,5 +190,6 @@ For reference, the sides OpenBK2 knows about and leaves alone:
 - Total Conversion: Germany (swastika), Spanish Nationalists (Francoist eagle),
   Bulgaria with partners (the Ustase "U" of its Croatian flag), and the Allies,
   whose collage of about seven flags is too small to read with confidence.
-- Universal MOD-18: Deutsches Reich (swastika), and the two sides whose icon
-  combines several flags (European Axis, France and smaller allies).
+- Universal MOD-18: Deutsches Reich (swastika), and France and smaller allies,
+  whose collage includes a Spanish flag that most likely carries the Francoist
+  eagle.

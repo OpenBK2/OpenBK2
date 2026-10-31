@@ -37,6 +37,17 @@ COMPOSITES = {
             ('China_Republic', (0, 0, 160, 220), 'xMinYMin slice', None),
             ('China_PeoplesRepublic', (160, 0, 160, 220), 'xMinYMin slice', None),
         ]),
+    'Axis_Mod18': (
+        "Universal MOD-18's European Axis side: three upright strips of equal width, the "
+        "Kingdom of Hungary's state flag in its vertical form, the white band of the "
+        "Kingdom of Italy's state flag with the crowned shield of Savoy, and the flag of "
+        "Romania squeezed into its strip, as the mod's icon "
+        "(UI/Game/Menu/MPGameRoom/Countries/FlagAxis_Texture.dds) does.",
+        320, 220, [
+            ('Hungary_KingdomVertical', (0, 0, 320 / 3, 220), 'none', None),
+            ('Italy_KingdomCrowned', (320 / 3, 0, 320 / 3, 220), 'xMidYMid slice', None),
+            ('Romania', (640 / 3, 0, 320 / 3, 220), 'none', None),
+        ]),
 }
 
 

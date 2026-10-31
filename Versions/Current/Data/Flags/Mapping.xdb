@@ -151,6 +151,12 @@
 			<Authority href="" />
 			<Image href="/Flags/Images/China_TotalConversion.xdb#xpointer(/FlagImage)" />
 		</Item>
+		<Item>
+			<ImageHash>184c4317cb0ebec4</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Axis_Mod18.xdb#xpointer(/FlagImage)" />
+		</Item>
 	</Icons>
 	<TechLevels>
 		<Item>

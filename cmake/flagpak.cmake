@@ -19,6 +19,8 @@ set(OBK2_FLAG_DATA "${CMAKE_SOURCE_DIR}/Versions/Current/Data")
 set(OBK2_FLAG_PAK_FILES
     Flags/Images/Allies_Star.svg
     Flags/Images/Allies_Star.xdb
+    Flags/Images/Axis_Mod18.svg
+    Flags/Images/Axis_Mod18.xdb
     Flags/Images/China_PeoplesRepublic.svg
     Flags/Images/China_PeoplesRepublic.xdb
     Flags/Images/China_Republic.svg
@@ -37,8 +39,12 @@ set(OBK2_FLAG_PAK_FILES
     Flags/Images/Germany_StandIn.xdb
     Flags/Images/Hungary.svg
     Flags/Images/Hungary.xdb
+    Flags/Images/Hungary_KingdomVertical.svg
+    Flags/Images/Hungary_KingdomVertical.xdb
     Flags/Images/Italy_Kingdom.svg
     Flags/Images/Italy_Kingdom.xdb
+    Flags/Images/Italy_KingdomCrowned.svg
+    Flags/Images/Italy_KingdomCrowned.xdb
     Flags/Images/Italy_Republic.svg
     Flags/Images/Italy_Republic.xdb
     Flags/Images/Japan_ArmyRisingSun.svg
