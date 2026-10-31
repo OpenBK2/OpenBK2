@@ -26,7 +26,10 @@ class Document;
 //
 // The image keeps its own aspect ratio and is centred in the window rather than
 // stretched to it, so a flag has its real proportions whatever the window's
-// shape and whatever the screen's aspect ratio does to the virtual one.
+// shape and whatever the screen's aspect ratio does to the virtual one. Every
+// image is given the same width, the window's laid-out shape at its height on
+// screen, and varies in height instead, so flags of different proportions line
+// up in a list (see Visit).
 //
 // Not initialised from a UI record: whoever wants one creates it and installs it
 // with CWindow::SetBackground, the way the game room installs CColorBackground.

@@ -172,12 +172,23 @@ void CBackgroundVectorImage::Visit( IUIVisitor *pVisitor )
 	{
 		return;
 	}
-	// The largest rectangle of the image's aspect ratio that fits, centred, then
-	// snapped to whole pixels: the quad renderer subtracts the half pixel itself
-	// (C2DQuadsRenderer::FillRect), so integer corners map texels onto pixels
-	// exactly, and the texture is rendered at that same integer size.
-	float fImageX = fWidth;
-	float fImageY = fWidth / fAspect;
+	// Every image gets the same width, and its height follows from its aspect
+	// ratio, so a list of flags lines up in a column however their proportions
+	// differ. That width is the window's laid-out shape, from the virtual
+	// screen, at the window's height on screen: what the window would be if
+	// the UI were scaled by the same factor both ways. The UI stretches X and Y
+	// independently, so the window on screen is usually wider than that, and
+	// fitting the image to it instead gave a 1:2 flag its whole width and a 3:2
+	// flag less. Only an image narrower than the window's laid-out shape, which
+	// is 16:11 for the game room's 32x22 slot, is held to the window's height
+	// and comes out narrower.
+	const float fSlotX = (std::min)( fWidth, fHeight * pos.Width() / pos.Height() );
+	// Centred, then snapped to whole pixels: the quad renderer subtracts the
+	// half pixel itself (C2DQuadsRenderer::FillRect), so integer corners map
+	// texels onto pixels exactly, and the texture is rendered at that same
+	// integer size.
+	float fImageX = fSlotX;
+	float fImageY = fSlotX / fAspect;
 	if ( fImageY > fHeight )
 	{
 		fImageY = fHeight;
