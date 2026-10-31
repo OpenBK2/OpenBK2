@@ -348,6 +348,14 @@ public:
 	}
 
 	void SetBackground( IWindowPart *_pBackground ) override;
+
+	// The current background, so a caller replacing it can keep the old one and
+	// put it back later (see CBackgroundVectorImage). May be 0.
+	IWindowPart *GetBackground() const
+	{
+		return pBackground;
+	}
+
 	void SetForeground( IWindowPart *_pForeground );
 	void CopyBackground( const IWindow *pSrcWnd ) override;
 	void SetTexture( const struct NDb::STexture *pDesc ) override;

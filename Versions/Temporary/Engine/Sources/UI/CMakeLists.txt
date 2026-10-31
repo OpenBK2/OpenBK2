@@ -6,6 +6,7 @@ set(SOURCES
     BackgroundSimpleScallingTexture.cpp
     BackgroundSimpleTexture.cpp
     BackgroundTiledTexture.cpp
+    BackgroundVectorImage.cpp
     Bitmap.cpp
     ButtonGroup.cpp
     CustomCheck.cpp
@@ -78,7 +79,7 @@ set_source_files_properties(
     PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 # UI serializes SComplexSoundDesc through CDBPtr, whose RTTI is defined in Sound.
 # Link it here so standalone UI consumers (including tests) resolve that type.
-target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script Sound System zlib ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared fmt::fmt-header-only)
+target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb lunasvg MemoryLib Misc Script Sound System zlib ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(UI PRIVATE winapi)
 endif()
