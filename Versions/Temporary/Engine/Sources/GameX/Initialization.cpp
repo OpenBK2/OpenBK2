@@ -428,6 +428,41 @@ static const NDb::SFlagImage *GetTerritoryFlag( const NDb::SFlagTerritory *pTerr
 	return 0;
 }
 
+// The drawing the mapping gives pIcon, recognised by the bytes of its image
+// file, for nYear, or 0. Only an entry's Image works without a year; a
+// territory or a government needs one.
+static const NDb::SFlagImage *
+GetMappedIconFlag( const NDb::SFlagMapping *pMapping, const NDb::STexture *pIcon, const int nYear )
+{
+	if ( !pMapping || !pIcon )
+	{
+		return 0;
+	}
+	const std::string szHash = HashGameFile( pIcon->szDestName );
+	if ( szHash.empty() )
+	{
+		return 0;
+	}
+	for ( const NDb::SFlagMapping::SIcon &entry : pMapping->icons )
+	{
+		if ( entry.szImageHash != szHash )
+		{
+			continue;
+		}
+		if ( entry.pImage )
+		{
+			return entry.pImage;
+		}
+		if ( nYear == 0 )
+		{
+			return 0;
+		}
+		const NDb::SFlagImage *pImage = GetAuthorityFlag( entry.pAuthority, nYear );
+		return pImage ? pImage : GetTerritoryFlag( entry.pTerritory, nYear );
+	}
+	return 0;
+}
+
 std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, const int nCountry, const int nTechLevel )
 {
 	const NDb::SMultiplayerSide *pSide = GetMultiplayerSide( pMPConsts, nCountry );
@@ -452,32 +487,17 @@ std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, const in
 			}
 		}
 	}
-	else if ( pMapping && pSide->pListItemIcon )
+	else
 	{
-		// Recognised by the bytes of its icon. Only the mapping's Image works
-		// without a year; a territory or a government needs one.
-		const std::string szHash = HashGameFile( pSide->pListItemIcon->szDestName );
-		for ( const NDb::SFlagMapping::SIcon &entry : pMapping->icons )
-		{
-			if ( szHash.empty() || entry.szImageHash != szHash )
-			{
-				continue;
-			}
-			if ( entry.pImage )
-			{
-				pImage = entry.pImage;
-			}
-			else if ( nYear != 0 )
-			{
-				pImage = GetAuthorityFlag( entry.pAuthority, nYear );
-				if ( !pImage )
-				{
-					pImage = GetTerritoryFlag( entry.pTerritory, nYear );
-				}
-			}
-			break;
-		}
+		pImage = GetMappedIconFlag( pMapping, pSide->pListItemIcon, nYear );
 	}
+	return pImage ? std::string( pImage->szImage ) : std::string();
+}
+
+std::string GetRandomCountryImage( const NDb::SMultiplayerConsts *pMPConsts )
+{
+	const NDb::SFlagImage *pImage =
+			pMPConsts ? GetMappedIconFlag( GetFlagMapping(), pMPConsts->pRandomCountryIcon, 0 ) : 0;
 	return pImage ? std::string( pImage->szImage ) : std::string();
 }
 

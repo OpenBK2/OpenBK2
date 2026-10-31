@@ -19,8 +19,10 @@
 // OBK2_FLAGS_TEST_DATA names one's Data directory (with obk2_flags.pak in it),
 // and OBK2_FLAGS_TEST_EXPECT lists, side by side and tech level by tech level,
 // the drawing each must give: sides separated by ';', tech levels by ',', a
-// drawing by its file name without the path, '-' for none. Without the
-// variables it skips, so CI, which has no installed game, passes it over.
+// drawing by its file name without the path, '-' for none.
+// OBK2_FLAGS_TEST_RANDOM, if set, is the drawing the random country item must
+// give, in the same form. Without the first two variables the test skips, so
+// CI, which has no installed game, passes it over.
 //
 // This is what found that an installed game's types.xml, older than the flag
 // records, left Flags/Mapping.xdb found but impossible to create.
@@ -80,6 +82,11 @@ TEST( MPSideFlags, InstalledGame )
 			EXPECT_EQ( FileNameOf( NGameX::GetSideFlagImage( pMPConsts, nSide, nLevel ) ), levels[nLevel] )
 					<< "side " << nSide << ", tech level " << nLevel;
 		}
+	}
+
+	if ( const char *pszRandom = std::getenv( "OBK2_FLAGS_TEST_RANDOM" ) )
+	{
+		EXPECT_EQ( FileNameOf( NGameX::GetRandomCountryImage( pMPConsts ) ), pszRandom ) << "random country";
 	}
 
 	NDb::CloseDatabase();

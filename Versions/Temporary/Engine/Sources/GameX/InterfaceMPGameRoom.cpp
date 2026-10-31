@@ -634,8 +634,9 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 
 		//Set viewer
 		slot.pCountry->SetViewer( new CTextureViewer() );
-		CPtr<CTextureData> pRandomItem =
-				new CTextureData( pMPConsts->pRandomCountryIcon, GetScreen()->GetTextEntry( "TT_RANDOM_COUNTRY" ) );
+		CPtr<CTextureData> pRandomItem = new CTextureData( pMPConsts->pRandomCountryIcon,
+		                                                   GetScreen()->GetTextEntry( "TT_RANDOM_COUNTRY" ),
+		                                                   NGameX::GetRandomCountryImage( pMPConsts ) );
 		slot.pCountry->AddItem( pRandomItem );
 		for ( int j = 0; j < pMPConsts->sides.size(); ++j )
 		{
