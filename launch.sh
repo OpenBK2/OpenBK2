@@ -122,6 +122,10 @@ usage()
 	                         and moves MangoHud to the top right so the two do
 	                         not overlap. Set DXVK_HUD or MANGOHUD_CONFIG
 	                         yourself to override either.
+	      --frame-log        with --hud mango, log every frame to a CSV under
+	                         framelogs/ beside this script: frame time, CPU and
+	                         GPU load, memory. The overlays are only drawn, so
+	                         this is what a run leaves behind to compare.
 	      --cpus LIST        pin the game to these CPUs with taskset, e.g. 0-11.
 	                         A profiled run defaults to the performance cores of
 	                         a hybrid CPU, so its threads cannot migrate onto
@@ -246,6 +250,7 @@ PROFILE_OUT=
 declare -a SETVARS=()
 SOFTWARE_VK=no
 HUD=
+FRAME_LOG=no
 # Empty means "not given": a profiled run then picks the performance cores.
 CPUS=
 # The lavapipe ICD, which is what makes a run possible with no GPU. Debian names
@@ -322,6 +327,7 @@ while [ $# -gt 0 ]; do
 		                  shift
 		              fi
 		              shift ;;
+		--frame-log)  FRAME_LOG=yes; shift ;;
 		--cpus)       [ $# -ge 2 ] || die "$1 needs a CPU list such as 0-11, or all"
 		              case "$2" in
 		                  all|[0-9]*) CPUS="$2" ;;
@@ -349,6 +355,9 @@ done
 	die "--profile would sample valgrind's emulator, not the game; pass one"
 [ -n "$PROFILE_OUT" ] && [ -z "$PROFILER" ] &&
 	die "--profile-out needs --profile"
+# The CSV is written by the MangoHud layer, so without it there is no writer.
+[ "$FRAME_LOG" = yes ] && [ "$HUD" != mango ] &&
+	die "--frame-log is MangoHud's logger; pass --hud mango as well"
 
 # The game takes the first of these it is given and ignores the rest, so say so
 # here rather than leaving the caller to wonder which one ran.
@@ -600,8 +609,18 @@ case "$HUD" in
 		# Both overlays default to the top left. MANGOHUD_CONFIG replaces the
 		# config file unless it carries read_cfg, so read_cfg comes first and
 		# the user's MangoHud.conf still applies underneath what is set here.
-		# An explicit MANGOHUD_CONFIG wins outright.
+		# An explicit MANGOHUD_CONFIG wins outright, and then --frame-log is
+		# the caller's to spell out too.
 		mango_config="read_cfg,position=top-right"
+		if [ "$FRAME_LOG" = yes ]; then
+			# log_interval=0 logs every frame rather than a 100 ms average, which
+			# is what a stutter needs. autostart_log=1 starts logging a second in,
+			# because the layer has no key press to wait for in an unattended
+			# replay; the CSV is written when logging stops, at exit.
+			mkdir -p "$SRCDIR/framelogs" || die "cannot create $SRCDIR/framelogs"
+			mango_config+=",autostart_log=1,log_interval=0,output_folder=$SRCDIR/framelogs"
+			printf '%s: frame log goes to %s/framelogs\n' "$SELF" "$SRCDIR" >&2
+		fi
 		ENV_ARGS+=( "MANGOHUD_CONFIG=${MANGOHUD_CONFIG:-$mango_config}" ) ;;
 esac
 
