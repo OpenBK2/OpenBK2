@@ -4,18 +4,26 @@
 		<Item>
 			<NameFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level0/Text.txt" />
 			<DescriptionFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level0_desc/Text.txt" />
+			<FromYear>1939</FromYear>
+			<ToYear>1941</ToYear>
 		</Item>
 		<Item>
 			<NameFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level1/Text.txt" />
 			<DescriptionFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level1_desc/Text.txt" />
+			<FromYear>1941</FromYear>
+			<ToYear>1943</ToYear>
 		</Item>
 		<Item>
 			<NameFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level2/Text.txt" />
 			<DescriptionFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level2_desc/Text.txt" />
+			<FromYear>1943</FromYear>
+			<ToYear>1944</ToYear>
 		</Item>
 		<Item>
 			<NameFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level3/Text.txt" />
 			<DescriptionFileRef href="/Other/Text/Game/Multiplayer/TechLevels/Level3_desc/Text.txt" />
+			<FromYear>1945</FromYear>
+			<ToYear>1946</ToYear>
 		</Item>
 	</TechLevels>
 	<Sides>
@@ -169,6 +177,7 @@
 				<Item href="/Scenario/Campaigns/GER/Medals/economy3.xdb#xpointer(/Medal)" />
 				<Item href="/Scenario/Campaigns/GER/Medals/levelcaped.xdb#xpointer(/Medal)" />
 			</Medals>
+			<FlagTerritory href="/Flags/Territories/Germany.xdb#xpointer(/FlagTerritory)" />
 		</Item>
 		<Item>
 			<NameFileRef href="/Other/Text/Game/Multiplayer/Sides/USA/Text.txt" />
@@ -320,6 +329,7 @@
 				<Item href="/Scenario/Campaigns/USA/Medals/economy3.xdb#xpointer(/Medal)" />
 				<Item href="/Scenario/Campaigns/USA/Medals/levelcaped.xdb#xpointer(/Medal)" />
 			</Medals>
+			<FlagTerritory href="/Flags/Territories/USA.xdb#xpointer(/FlagTerritory)" />
 		</Item>
 		<Item>
 			<NameFileRef href="/Other/Text/Game/Multiplayer/Sides/USSR/Text.txt" />
@@ -471,6 +481,7 @@
 				<Item href="/Scenario/Campaigns/USSR/Medals/economy3.xdb#xpointer(/Medal)" />
 				<Item href="/Scenario/Campaigns/USSR/Medals/levelcaped.xdb#xpointer(/Medal)" />
 			</Medals>
+			<FlagTerritory href="/Flags/Territories/USSR.xdb#xpointer(/FlagTerritory)" />
 		</Item>
 	</Sides>
 	<RandomCountryIcon href="/UI/Game/Menu/MPGameRoom/Countries/FlagRandom_Texture.xdb#xpointer(/Texture)" />

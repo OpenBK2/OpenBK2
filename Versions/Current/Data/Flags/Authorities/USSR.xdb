@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FlagAuthority>
+	<NameFileRef href="" />
+	<Periods>
+		<Item>
+			<FromYear>1936</FromYear>
+			<ToYear>1955</ToYear>
+			<Image href="/Flags/Images/USSR_1936.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<FromYear>1955</FromYear>
+			<ToYear>1991</ToYear>
+			<Image href="/Flags/Images/USSR_1955.xdb#xpointer(/FlagImage)" />
+		</Item>
+	</Periods>
+</FlagAuthority>

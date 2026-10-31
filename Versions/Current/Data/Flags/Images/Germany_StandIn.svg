@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  German war ensign stand-in, for the German side from 1933 to 1945.
+
+  Not a historical flag. The historical flag of these years carries a swastika,
+  which OpenBK2 does not ship in any form. This follows the stand-in the
+  original game shipped for its German multiplayer side: a red field, a centred
+  black cross with a white centre line, and a white disc holding a black cross
+  pattee. The red is the original icon's, #9e2032.
+
+  Source: drawn for OpenBK2 after the original game's 32x22 and 38x38 icons
+  (UI/Game/Menu/MPGameRoom/Countries/FlagGermany_Texture.dds and
+  Scene/TexAndMats/Game/Menu/SelectCampaign/SaveLoad/German_Texture.dds).
+  Geometry: 3:2, on a 300 x 200 grid.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+	<rect width="300" height="200" fill="#9e2032"/>
+	<!-- the cross: black arms 40 wide with a white line 8 wide down their middle -->
+	<rect x="130" y="0" width="40" height="200" fill="#000"/>
+	<rect x="0" y="80" width="300" height="40" fill="#000"/>
+	<rect x="146" y="0" width="8" height="200" fill="#fff"/>
+	<rect x="0" y="96" width="300" height="8" fill="#fff"/>
+	<!-- the disc: white, ringed in black -->
+	<circle cx="150" cy="100" r="54" fill="#fff" stroke="#000" stroke-width="5"/>
+	<!-- the cross pattee: four arms flaring from 7 to 19 either side of their axis, 40 long -->
+	<path fill="#000" d="M143 93 L131 60 L169 60 L157 93 L190 81 L190 119 L157 107 L169 140 L131 140 L143 107 L110 119 L110 81 Z"/>
+</svg>

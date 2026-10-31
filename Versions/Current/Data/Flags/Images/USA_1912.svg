@@ -1,0 +1,14 @@
+<!--
+  Flag of the United States, 48 stars, in use from 1912-07-04 to 1959-07-03.
+
+  Source: https://commons.wikimedia.org/wiki/File:Flag_of_the_United_States_(1912-1959).svg
+  Author: jacobolus (Wikimedia Commons). Licence: public domain.
+  Retrieved 2026-10-31, unchanged apart from this comment; original SHA-1
+  3106fe4f9da4d21fd5aba2deb4dcb199555ba928.
+
+  Geometry checked against Executive Order 1637 (1912): hoist to fly 1 : 1.9,
+  union 0.76 by 7/13 of the hoist, star diameter 0.0616 of the hoist, stars in
+  six rows of eight. The colours are today's (#bf0a30 and #00205B), not 1912
+  shades, which were not specified numerically.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1235" height="650" viewBox="0 0 36.1 19"><defs><g id="b"><use xlink:href="#a" x=".902" y=".85"/><use xlink:href="#a" x="2.708" y=".85"/><use xlink:href="#a" x="4.513" y=".85"/><use xlink:href="#a" x="6.317" y=".85"/><use xlink:href="#a" x="8.123" y=".85"/><use xlink:href="#a" x="9.928" y=".85"/><use xlink:href="#a" x="11.732" y=".85"/><use xlink:href="#a" x="13.537" y=".85"/></g><g id="c"><use xlink:href="#b"/><use xlink:href="#b" y="1.705"/><use xlink:href="#b" y="3.41"/><use xlink:href="#b" y="5.115"/><use xlink:href="#b" y="6.82"/><use xlink:href="#b" y="8.525"/></g><path id="a" transform="scale(.58515)" fill="#fff" d="M0-1 .588.809-.952-.309H.952L-.588.809z"/></defs><path fill="#bf0a30" d="M0 0h36.1v19H0z"/><path stroke="#FFF" stroke-width="1.462" d="M0 2.192h36.1M0 5.115h36.1M0 8.038h36.1M0 10.961h36.1M0 13.884h36.1M0 16.807h36.1"/><path fill="#00205B" d="M0 0h14.44v10.23H0z"/><use xlink:href="#c"/></svg>

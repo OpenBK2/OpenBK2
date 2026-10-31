@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FlagAuthority>
+	<NameFileRef href="" />
+	<Periods>
+		<Item>
+			<FromYear>1933</FromYear>
+			<ToYear>1945</ToYear>
+			<Image href="/Flags/Images/Germany_StandIn.xdb#xpointer(/FlagImage)" />
+		</Item>
+	</Periods>
+</FlagAuthority>
