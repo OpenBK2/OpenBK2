@@ -283,6 +283,7 @@ include(cmake/exportheader.cmake)
 # build-tree directory and relies on that directory being on the include path.
 include(cmake/squish.cmake)
 include(cmake/freetype.cmake)
+include(cmake/lunasvg.cmake)
 # game data rather than code: the open fonts as a patch archive for Data
 include(cmake/fontpak.cmake)
 # also data: the custom-mission maps that are in Complete and not in the data tree
