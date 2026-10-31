@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  Union Flag of the United Kingdom, in use since 1801, in the 1:2 proportions
+  of its use at sea.
+
+  Source: https://commons.wikimedia.org/wiki/File:Flag_of_the_United_Kingdom_(1-2).svg
+  Author: Zscout370 (Wikimedia Commons), after the Acts of Union 1800.
+  Licence: public domain. Retrieved 2026-10-31, unchanged apart from this
+  comment; original SHA-1 574dcaf9b0f699c967fffb99499f89b92b75f8be.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="1200" height="600">
+<clipPath id="s">
+	<path d="M0,0 v30 h60 v-30 z"/>
+</clipPath>
+<clipPath id="t">
+	<path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/>
+</clipPath>
+<g clip-path="url(#s)">
+	<path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+	<path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+	<path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#t)" stroke="#C8102E" stroke-width="4"/>
+	<path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+	<path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+</g>
+</svg>

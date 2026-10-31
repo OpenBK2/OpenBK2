@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Flag of Sweden: a yellow Nordic cross on blue, 5:8, as set by the law of
+  22 June 1906: the cross is 2 units wide, with 5 units of blue before it and
+  9 after along the fly, 4 above and 4 below. Colours are today's values.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+	<rect width="1600" height="1000" fill="#006aa7"/>
+	<rect x="500" width="200" height="1000" fill="#fecc00"/>
+	<rect y="400" width="1600" height="200" fill="#fecc00"/>
+</svg>

@@ -3,6 +3,11 @@
 	<NameFileRef href="" />
 	<Periods>
 		<Item>
+			<FromYear>1924</FromYear>
+			<ToYear>1936</ToYear>
+			<Image href="/Flags/Images/USSR_1924.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
 			<FromYear>1936</FromYear>
 			<ToYear>1955</ToYear>
 			<Image href="/Flags/Images/USSR_1936.xdb#xpointer(/FlagImage)" />

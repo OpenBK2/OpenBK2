@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FlagAuthority>
+	<NameFileRef href="" />
+	<Periods>
+		<Item>
+			<FromYear>1861</FromYear>
+			<ToYear>1946</ToYear>
+			<Image href="/Flags/Images/Italy_Kingdom.xdb#xpointer(/FlagImage)" />
+		</Item>
+	</Periods>
+</FlagAuthority>

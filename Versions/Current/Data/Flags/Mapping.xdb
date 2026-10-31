@@ -25,6 +25,90 @@
 			<Authority href="" />
 			<Image href="/Flags/Images/Random_Dice.xdb#xpointer(/FlagImage)" />
 		</Item>
+		<Item>
+			<ImageHash>ceb5a27890835700</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/USA_1912.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>40dec75d702714c6</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/USSR_1936.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>97d8e30108403d9c</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/UK_Union.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>06e41a9f5bab02df</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Poland.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>2c5f72432aa0556e</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Poland_PeoplesRepublicArms.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>ffc06f234c7584df</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Hungary.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>375eb925e4d27b60</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Italy_Kingdom.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>67cafa123f1dab20</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Finland_StateFlag.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>1b43eb5be8dd6e2a</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Japan_ArmyRisingSun.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>e29d4c7f9faddddb</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Romania.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>3ed830e37604bf9e</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Czechoslovakia.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>4fe6600743c59c6c</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/France.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>b0888f64650048b3</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Sweden.xdb#xpointer(/FlagImage)" />
+		</Item>
+		<Item>
+			<ImageHash>136ebe0deca0a2df</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Spain_RepublicArms.xdb#xpointer(/FlagImage)" />
+		</Item>
 	</Icons>
 	<TechLevels>
 		<Item>
@@ -61,6 +145,86 @@
 			<Name>1944-1945</Name>
 			<FromYear>1944</FromYear>
 			<ToYear>1945</ToYear>
+		</Item>
+		<Item>
+			<Name>1930-36</Name>
+			<FromYear>1930</FromYear>
+			<ToYear>1936</ToYear>
+		</Item>
+		<Item>
+			<Name>1936-38</Name>
+			<FromYear>1936</FromYear>
+			<ToYear>1938</ToYear>
+		</Item>
+		<Item>
+			<Name>1938-39</Name>
+			<FromYear>1938</FromYear>
+			<ToYear>1939</ToYear>
+		</Item>
+		<Item>
+			<Name>1939-40</Name>
+			<FromYear>1939</FromYear>
+			<ToYear>1940</ToYear>
+		</Item>
+		<Item>
+			<Name>1941-42</Name>
+			<FromYear>1941</FromYear>
+			<ToYear>1942</ToYear>
+		</Item>
+		<Item>
+			<Name>1942</Name>
+			<FromYear>1942</FromYear>
+			<ToYear>1942</ToYear>
+		</Item>
+		<Item>
+			<Name>1942-43</Name>
+			<FromYear>1942</FromYear>
+			<ToYear>1943</ToYear>
+		</Item>
+		<Item>
+			<Name>1943</Name>
+			<FromYear>1943</FromYear>
+			<ToYear>1943</ToYear>
+		</Item>
+		<Item>
+			<Name>1943-44</Name>
+			<FromYear>1943</FromYear>
+			<ToYear>1944</ToYear>
+		</Item>
+		<Item>
+			<Name>1944</Name>
+			<FromYear>1944</FromYear>
+			<ToYear>1944</ToYear>
+		</Item>
+		<Item>
+			<Name>1944-45</Name>
+			<FromYear>1944</FromYear>
+			<ToYear>1945</ToYear>
+		</Item>
+		<Item>
+			<Name>1945-46</Name>
+			<FromYear>1945</FromYear>
+			<ToYear>1946</ToYear>
+		</Item>
+		<Item>
+			<Name>1946-48</Name>
+			<FromYear>1946</FromYear>
+			<ToYear>1948</ToYear>
+		</Item>
+		<Item>
+			<Name>1948-50</Name>
+			<FromYear>1948</FromYear>
+			<ToYear>1950</ToYear>
+		</Item>
+		<Item>
+			<Name>1950-1955</Name>
+			<FromYear>1950</FromYear>
+			<ToYear>1955</ToYear>
+		</Item>
+		<Item>
+			<Name>1955-58</Name>
+			<FromYear>1955</FromYear>
+			<ToYear>1958</ToYear>
 		</Item>
 	</TechLevels>
 </FlagMapping>

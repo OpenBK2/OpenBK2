@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Total Conversion's multiplayer sides get sharp flags too, with `obk2_flags.pak` in its `Data`: fourteen of its nineteen sides, each drawn as the mod draws it, arms and all, in every tech level. Its Germany and Spanish Nationalists sides, whose flags carry a swastika and the Francoist eagle, keep the mod's own pictures, as do its three sides that combine several flags. MPBMod6's Great Britain gets the sharp Union Flag as well.
+
 - The "random country" dice in the multiplayer game room are redrawn as a sharp vector picture, in the original's arrangement of two dice with soft shadows. Every installation and mod checked uses the same dice picture, so they all get the new one with `obk2_flags.pak`.
 
 - The sharp multiplayer flags work over an installed copy of the original game, Fire of the Rising and Liberation as well: put `obk2_flags.pak`, which the build installs into `Data`, beside the installed game's own archives. Those games keep their multiplayer settings in their own archives, which this does not replace; their sides are recognised by their icons and their tech levels by name. Germany shows the stand-in, the USSR its 1936 flag, and the Allies side keeps the white star emblem of the original, redrawn sharp. Mods are not recognised yet and keep their own pictures.

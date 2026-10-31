@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Flag of Czechoslovakia, 1920 to 1992: white over red with a blue triangle
+  from the hoist reaching half the length, 2:3, as set by the law of
+  30 March 1920. Colours are the values in common use.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+	<rect width="900" height="300" fill="#fff"/>
+	<rect y="300" width="900" height="300" fill="#d7141a"/>
+	<path d="M0 0 L450 300 L0 600 Z" fill="#11457e"/>
+</svg>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Civil flag of the Kingdom of Italy, 1848 to 1946: green, white and red in
+  three equal vertical bands, 2:3, with the shield of Savoy, red with a white
+  cross and a blue border, uncrowned, in the white band. The Kingdom had no
+  plain flag, so the shield is kept.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+	<defs><clipPath id="field"><path d="M348 168 H552 V330 Q552 404 450 440 Q348 404 348 330 Z"/></clipPath></defs>
+	<rect width="300" height="600" fill="#009246"/>
+	<rect x="300" width="300" height="600" fill="#fff"/>
+	<rect x="600" width="300" height="600" fill="#ce2b37"/>
+	<!-- the shield: a blue border round a red field, the white cross clipped to the field -->
+	<path d="M330 150 H570 V330 Q570 420 450 460 Q330 420 330 330 Z" fill="#0047ab"/>
+	<path d="M348 168 H552 V330 Q552 404 450 440 Q348 404 348 330 Z" fill="#ce2b37"/>
+	<g clip-path="url(#field)" fill="#fff"><rect x="428" y="150" width="44" height="320"/><rect x="330" y="262" width="240" height="44"/></g>
+</svg>

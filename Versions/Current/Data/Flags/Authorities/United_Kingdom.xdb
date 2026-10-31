@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FlagAuthority>
+	<NameFileRef href="" />
+	<Periods>
+		<Item>
+			<FromYear>1801</FromYear>
+			<ToYear>0</ToYear>
+			<Image href="/Flags/Images/UK_Union.xdb#xpointer(/FlagImage)" />
+		</Item>
+	</Periods>
+</FlagAuthority>

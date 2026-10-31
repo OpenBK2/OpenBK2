@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Civil flag of the Second Spanish Republic, 1931 to 1939 and in exile: red,
+  yellow and murrey in three equal horizontal bands, 2:3, without the state
+  flag's arms.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+	<rect width="900" height="200" fill="#da121a"/>
+	<rect y="200" width="900" height="200" fill="#ffde00"/>
+	<rect y="400" width="900" height="200" fill="#6d2c6d"/>
+</svg>

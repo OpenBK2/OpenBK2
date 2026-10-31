@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FlagTerritory>
+	<NameFileRef href="" />
+	<Authorities>
+		<Item href="/Flags/Authorities/Kingdom_of_Italy.xdb#xpointer(/FlagAuthority)" />
+		<Item href="/Flags/Authorities/Italian_Republic.xdb#xpointer(/FlagAuthority)" />
+	</Authorities>
+</FlagTerritory>

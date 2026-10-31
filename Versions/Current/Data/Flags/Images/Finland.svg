@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Flag of Finland: a blue Nordic cross on white, 11:18, as set by the law of
+  29 May 1918 as amended in 1920: the cross is 3 units wide, with 5 units of
+  white before it and 10 after along the fly, 4 above and 4 below. The plain
+  flag, without the state flag's arms. Blue #002f6c, today's value.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1100" viewBox="0 0 1800 1100">
+	<rect width="1800" height="1100" fill="#fff"/>
+	<rect x="500" width="300" height="1100" fill="#002f6c"/>
+	<rect y="400" width="1800" height="300" fill="#002f6c"/>
+</svg>

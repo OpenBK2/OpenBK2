@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Flag of Hungary: red, white and green in three equal horizontal bands, 2:3.
+  The plain national flag; the Kingdom's state flag added its arms, and from
+  1946 to 1956 the official flag carried the republic's arms, which this
+  plain drawing stands for too. Colours are today's values.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+	<rect width="900" height="200" fill="#cd2a3e"/>
+	<rect y="200" width="900" height="200" fill="#fff"/>
+	<rect y="400" width="900" height="200" fill="#436f4d"/>
+</svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Flag of Poland: white over red, in two equal bands, 5:8, as set by the act of
+  1 August 1919 and drawn since. Used for both Polish sides: the Second
+  Republic, its government in exile and the People's Republic all flew it.
+  Red #dc143c, the value in common use; the shade has been specified
+  differently over the years.
+
+  Source: drawn for OpenBK2 from the construction described above.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+	<rect width="800" height="500" fill="#fff"/>
+	<rect y="250" width="800" height="250" fill="#dc143c"/>
+</svg>
