@@ -141,6 +141,9 @@ usage()
 	                         go tool pprof and perforator profile text read,
 	                         and .html to look at. perf leaves .data for
 	                         perf report.
+	                         perf unwinds with dwarf and a 32 KB stack copy;
+	                         BK2_PERF_CALLGRAPH replaces that, e.g. fp for a
+	                         build that keeps frame pointers.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
 	      --valgrind         run under valgrind's memcheck, which reports the
@@ -774,9 +777,19 @@ if [ -n "$PROFILER" ]; then
 			# few hundred samples inside it; BK2_PERF_EXTRA='-F 499' when the
 			# question needs more, and check the LOST count afterwards with
 			# perf report --stats.
+			#
+			# 32 KB of stack per sample rather than perf's default 8 KB. The
+			# render path is deep enough that 8 KB ran out inside it: about half
+			# the main thread's samples in a replay came back without main
+			# under them, and a fifth could not be placed at all. The cost is
+			# four times the data per sample, which at 199 Hz is still a few
+			# hundred MB for a minute's run. BK2_PERF_CALLGRAPH replaces the
+			# whole mode, e.g. fp on a build that keeps frame pointers, where a
+			# frame pointer walk costs nothing per sample and -F 999 is safe.
 			declare -a perf_extra=()
 			[ -n "${BK2_PERF_EXTRA:-}" ] && read -r -a perf_extra <<<"$BK2_PERF_EXTRA"
-			PROFILER_CMD=( perf record -g --call-graph=dwarf -F 199 "${perf_extra[@]}" -o "$PROFILE_PRIMARY" -- )
+			PROFILER_CMD=( perf record "--call-graph=${BK2_PERF_CALLGRAPH:-dwarf,32768}" -F 199
+				"${perf_extra[@]}" -o "$PROFILE_PRIMARY" -- )
 			;;
 	esac
 
