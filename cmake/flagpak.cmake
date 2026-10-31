@@ -19,6 +19,12 @@ set(OBK2_FLAG_DATA "${CMAKE_SOURCE_DIR}/Versions/Current/Data")
 set(OBK2_FLAG_PAK_FILES
     Flags/Images/Allies_Star.svg
     Flags/Images/Allies_Star.xdb
+    Flags/Images/China_PeoplesRepublic.svg
+    Flags/Images/China_PeoplesRepublic.xdb
+    Flags/Images/China_Republic.svg
+    Flags/Images/China_Republic.xdb
+    Flags/Images/China_TotalConversion.svg
+    Flags/Images/China_TotalConversion.xdb
     Flags/Images/Czechoslovakia.svg
     Flags/Images/Czechoslovakia.xdb
     Flags/Images/Finland.svg

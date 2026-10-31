@@ -145,6 +145,12 @@
 			<Authority href="" />
 			<Image href="/Flags/Images/Japan_Hinomaru1870.xdb#xpointer(/FlagImage)" />
 		</Item>
+		<Item>
+			<ImageHash>e4e97818888851d1</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/China_TotalConversion.xdb#xpointer(/FlagImage)" />
+		</Item>
 	</Icons>
 	<TechLevels>
 		<Item>

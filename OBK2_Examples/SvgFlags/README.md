@@ -134,6 +134,10 @@ drawings in a pull request rather than shipping a `Flags/Mapping.xdb`.
   lines of SVG each; `Flags/Images` has many examples.
 - `scripts/flags/dice.py` shows how to generate a drawing from a script when it is
   easier to compute than to write.
+- `scripts/flags/composite.py` builds a coalition's flag, several member drawings
+  laid out in regions, into one SVG, as a mod's collage icon does. Its table of
+  composites shows the layouts it supports: a member can be cropped to keep its
+  canton or its middle, or stretched to fill its region.
 
 What the renderer (lunasvg) handles: paths and shapes, gradients, `clipPath`,
 masks, `<use>`, CSS styles. What it does not:
@@ -158,11 +162,13 @@ that is shipped but switched off by default would carry the same risk.
 |---|---|---|
 | The swastika, in any flag or emblem (the flags of Nazi Germany from 1933 to 1945, its war ensigns, and any other flag carrying it) | In Germany, distributing or publicly using the symbols of unconstitutional organisations is an offence under section 86a of the Criminal Code (StGB). Its social-adequacy exception covers art, science, research and teaching, and since 2018 the USK may rate a game showing them case by case, but that is a decision per published game. Austria prohibits public display of these symbols under the Abzeichengesetz of 1960. | In this tree's own data, the German side shows a stand-in after the original game's own icon, without a swastika. A mod's German side that shows a swastika is left unmapped, so it keeps the mod's own icon. |
 | The flag of Francoist Spain with the eagle of St John (1938 to 1981) | Spain's Democratic Memory Law (Ley 20/2022) requires the removal of Francoist symbols from public view, with sanctions. It is not a ban on distribution, but it is the same kind of risk. Commons also has no public domain drawing of it, only CC BY-SA ones. | Total Conversion's Spanish Nationalists side is left unmapped and keeps the mod's own icon. |
+| The Ustase "U", on the flag of the Independent State of Croatia (1941 to 1945) | Austria added the symbols of the Ustase to those its Symbols Act (Symbole-Gesetz) forbids to display publicly, in 2019, on the same footing as the swastika. | Total Conversion's Bulgaria side, whose icon includes that flag beside Bulgaria's and Slovakia's, is left unmapped and keeps the mod's own icon. |
 
 These *are* shipped, and you should know that some countries restrict them:
 
-- **Communist symbols.** The Soviet flag with the hammer and sickle, and the flag of
-  People's Poland with its crownless eagle, are in `obk2_flags.pak`. Several
+- **Communist symbols.** The Soviet flag with the hammer and sickle, the flag of
+  People's Poland with its crownless eagle, and the flag of the People's Republic
+  of China are in `obk2_flags.pak`. Several
   countries ban or restrict the public display or propagation of communist
   symbols, among them Lithuania, Latvia, Ukraine and Indonesia.
 
@@ -181,8 +187,8 @@ it is then your decision, under the law of wherever you publish.
 
 For reference, the sides OpenBK2 knows about and leaves alone:
 
-- Total Conversion: Germany (swastika), Spanish Nationalists (Francoist eagle), and
-  the three coalition sides (Allies, Bulgaria with partners, China), which combine
-  several flags in one icon. Composite flags are not supported yet.
+- Total Conversion: Germany (swastika), Spanish Nationalists (Francoist eagle),
+  Bulgaria with partners (the Ustase "U" of its Croatian flag), and the Allies,
+  whose collage of about seven flags is too small to read with confidence.
 - Universal MOD-18: Deutsches Reich (swastika), and the two sides whose icon
   combines several flags (European Axis, France and smaller allies).

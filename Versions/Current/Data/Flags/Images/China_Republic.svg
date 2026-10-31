@@ -1,0 +1,17 @@
+<!--
+  Flag of the Republic of China, Blue Sky, White Sun and a Wholly Red Earth,
+  national flag from 1928.
+
+  Source: https://commons.wikimedia.org/wiki/File:Flag_of_the_Republic_of_China.svg
+  Licence: public domain. Retrieved 2026-10-31, unchanged apart from this
+  comment and a byte order mark removed from its start; original SHA-1
+  784cf273d4caa8130068c0bdc730a43af7047657.
+-->
+<svg width="900" height="600" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+<path fill="#fe0000" d="M0 0h120v80H0z"/>
+<path fill="#000094" d="M0 0h60v40H0z"/>
+<path id="a" d="M30 5l4 15-4 15-4-15zM15 20l15 4 15-4-15-4z" fill="#fff"/>
+<use transform="rotate(30,30,20)" href="#a"/>
+<use transform="rotate(60,30,20)" href="#a"/>
+<circle fill="#fff" stroke="#000094" cx="30" cy="20" r="8"/>
+</svg>

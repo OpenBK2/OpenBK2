@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Total Conversion's China side gets a sharp flag: the Republic of China and the People's Republic side by side, each showing its canton, redrawn as the mod draws its icon. Sides whose picture combines several flags can now be redrawn the same way, from the drawings of their members.
+
 - MPBMod6's USA and Japan sides get sharp flags with `obk2_flags.pak` as well, so all five of its sides now have them: the 48-star flag its own icon shows, and for Japan the Hinomaru of 1870, the design of the original game's Japan icon that it uses.
 
 - Universal MOD-18's Japan, Great Britain, USA and USSR sides get sharp flags with `obk2_flags.pak`, each drawn as the mod draws it: Japan's Rising Sun with its disc in the middle, as the mod has it, rather than the Army flag's. Its German side, whose flag carries a swastika, and its two sides that combine several flags keep the mod's own pictures.
