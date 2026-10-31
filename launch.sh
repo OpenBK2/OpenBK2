@@ -474,6 +474,21 @@ else
 	DATA_ROOT=
 fi
 
+# The editor copies <root>/Editor into the per-user directory on its first run
+# (NSettings::CGeneralSettings::PrepareEditor) and refuses to start when neither
+# copy exists. No tree and no prefix ships one, and cmake --install does not
+# put it there, so link the source tree's template in. The editor only reads
+# it, once, so a link is enough and later edits to the template stay visible to
+# trees that have not been run yet.
+if [ "$EXE" = B2_MapEditor ]; then
+	EDITOR_ROOT="${DATA_ROOT:-$PREFIX}"
+	if [ ! -e "$EDITOR_ROOT/Editor" ]; then
+		# -f -n so a dangling link left by a moved checkout is replaced.
+		ln -sfn "$SRCDIR/Versions/Current/Editor" "$EDITOR_ROOT/Editor"
+		printf '%s: linked %s/Editor to the source tree'"'"'s template\n' "$SELF" "$EDITOR_ROOT"
+	fi
+fi
+
 # Mods live beside Data, in the directory the game builds from its base dir,
 # which is the parent of the directory it runs in. Spelled MODs exactly:
 # System/FilePath.h says DIR_MODS[] = "MODs", the game enumerates it with a
