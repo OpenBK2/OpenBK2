@@ -117,6 +117,11 @@ usage()
 	                         installed; or mango, which enables MangoHud's
 	                         Vulkan layer. DXVK_HUD and MangoHud's own
 	                         configuration say what each one draws.
+	                         mango also turns DXVK's HUD on for the figures only
+	                         DXVK can see, draw calls, submissions and GPU load,
+	                         and moves MangoHud to the top right so the two do
+	                         not overlap. Set DXVK_HUD or MANGOHUD_CONFIG
+	                         yourself to override either.
 	      --cpus LIST        pin the game to these CPUs with taskset, e.g. 0-11.
 	                         A profiled run defaults to the performance cores of
 	                         a hybrid CPU, so its threads cannot migrate onto
@@ -558,10 +563,10 @@ fi
 #
 # MangoHud is an implicit Vulkan layer and MANGOHUD=1 is what enables it, so
 # there is nothing to preload and nothing to wrap; the mangohud script on PATH
-# is for OpenGL programs, which this is not. Its own configuration is left
-# alone, since MANGOHUD_CONFIG reaches the layer through the environment
-# already and setting a value here would override the user's MangoHud.conf on
-# every run.
+# is for OpenGL programs, which this is not. Its own configuration is kept:
+# what is set below goes through MANGOHUD_CONFIG with read_cfg, which layers it
+# over the user's MangoHud.conf instead of replacing it, and a MANGOHUD_CONFIG
+# already in the environment is passed through untouched.
 case "$HUD" in
 	dxvk)
 		ENV_ARGS+=( "DXVK_HUD=${DXVK_HUD:-fps}" ) ;;
@@ -583,7 +588,21 @@ case "$HUD" in
 			*-tsan)
 				printf '%s: warning: the MangoHud layer races with itself as far as TSan is concerned, and tsan.supp does not cover it\n' "$SELF" >&2 ;;
 		esac
-		ENV_ARGS+=( "MANGOHUD=1" ) ;;
+		ENV_ARGS+=( "MANGOHUD=1" )
+		# Draw calls, submissions and GPU load are DXVK's figures, not
+		# MangoHud's: the layer sits below D3D9 and sees one Vulkan submission
+		# where the game made hundreds of DrawIndexedPrimitive calls, and its
+		# GPU load comes from vendor sensors that nouveau does not expose.
+		# DXVK's own gpuload measures how long its submissions keep the queue
+		# busy, which works on any driver. So DXVK's HUD carries those, and
+		# fps and frame times stay with MangoHud.
+		ENV_ARGS+=( "DXVK_HUD=${DXVK_HUD:-drawcalls,submissions,gpuload}" )
+		# Both overlays default to the top left. MANGOHUD_CONFIG replaces the
+		# config file unless it carries read_cfg, so read_cfg comes first and
+		# the user's MangoHud.conf still applies underneath what is set here.
+		# An explicit MANGOHUD_CONFIG wins outright.
+		mango_config="read_cfg,position=top-right"
+		ENV_ARGS+=( "MANGOHUD_CONFIG=${MANGOHUD_CONFIG:-$mango_config}" ) ;;
 esac
 
 case "$PREFIX" in
