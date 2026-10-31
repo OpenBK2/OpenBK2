@@ -9,17 +9,27 @@
 
 #include <fmt/format.h>
 
-CLANClient *CLANClient::Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut )
+CLANClient *
+CLANClient::Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut, std::string *pszError )
 {
 	NNet::SNetDriverConsts netConsts( _nTimeOut );
 	CPtr<NNet::IDriver> pDriver = NNet::CreateNetDriver( netConsts, true );
 	if ( !pDriver )
 	{
+		if ( pszError )
+		{
+			*pszError = "CreateNetDriver failed";
+		}
 		return 0;
 	}
 	CPtr<NNet::ILinksManager> pLinks = NNet::CreateServerLinksManager( nGamePort );
 	if ( !pLinks )
 	{
+		// The links manager knows which socket call failed and why
+		if ( pszError )
+		{
+			*pszError = NNet::GetLastLinksManagerError();
+		}
 		return 0;
 	}
 	pDriver->Init( nNetGameVersion, nGamePort, false, pLinks );

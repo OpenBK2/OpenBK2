@@ -84,7 +84,7 @@ CMPManagerModeLAN::CMPManagerModeLAN()
 	, eCurrentState( EGS_NOT_IN_GAME )
 	, bDriverFailureReported( false )
 {
-	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC );
+	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC, &szDriverError );
 	if ( !pLANClient )
 	{
 		// The error is not reported from here. This runs inside the LAN button's
@@ -419,7 +419,7 @@ void CMPManagerModeLAN::StartNewLANDriver()
 {
 	pLANClient = 0;
 	pClient = 0;
-	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC );
+	pLANClient = CLANClient::Create( NGlobal::GetVar( "NetGameVersion", 1 ), LAN_PORT, LAN_TIMEOUT_SEC, &szDriverError );
 	pClient = pLANClient;
 	// A new driver is a new chance to fail, and a failure of this one is reported anew.
 	bDriverFailureReported = false;
@@ -428,8 +428,16 @@ void CMPManagerModeLAN::StartNewLANDriver()
 void CMPManagerModeLAN::ReportDriverFailure()
 {
 	bDriverFailureReported = true;
+	// The generic text says that the network failed; the detail says which call,
+	// on which port, and the system's own error, which is what can be acted on.
+	// <br> is how UI text breaks lines; the detail itself holds no markup.
+	std::wstring wszMessage = InterfaceState()->GetTextEntry( "T_NET_DRIVER_CRITICAL_ERROR" );
+	if ( !szDriverError.empty() )
+	{
+		wszMessage += L"<br>" + NStr::ToUnicode( szDriverError );
+	}
 	// Leaves pClient an empty client, so Segment keeps working without a driver.
-	OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NET_DRIVER_CRITICAL_ERROR" ) );
+	OnCriticalNetworkError( wszMessage );
 }
 
 void CMPManagerModeLAN::CompileAndSendLANServerInfo()

@@ -3,10 +3,44 @@
 #include "LinksManager.h"
 #include "NetLowest.h"
 
+#include <cerrno>
 #include <cstdint>
+#include <cstring>
+
+#include <fmt/format.h>
 
 namespace NNet
 {
+
+// What GetLastLinksManagerError reports. Links managers are created on the main
+// thread, from the multiplayer screens, so one string serves.
+static std::string szLastLinksManagerError;
+
+//! "error <code>, <system message>" for the socket call that just failed.
+static std::string DescribeLastSocketError()
+{
+#if BOOST_OS_WINDOWS
+	const int nError = WSAGetLastError();
+	char szMessage[512] = "";
+	FormatMessageA(
+			FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 0, nError, 0, szMessage, sizeof( szMessage ), 0 );
+	std::string szText = szMessage;
+	// FormatMessage ends the text with a line break the message box would show
+	while ( !szText.empty() && ( szText.back() == '\n' || szText.back() == '\r' || szText.back() == '.' ) )
+	{
+		szText.pop_back();
+	}
+	return fmt::format( "error {}, {}", nError, szText );
+#else
+	const int nError = errno;
+	return fmt::format( "error {}, {}", nError, std::strerror( nError ) );
+#endif
+}
+
+std::string GetLastLinksManagerError()
+{
+	return szLastLinksManagerError;
+}
 
 // Winsock alone needs starting before a socket exists, and there is nothing to
 // start on POSIX, so this object is Windows-only rather than a pair of no-ops.
@@ -89,9 +123,11 @@ CLinksManagerCommon::~CLinksManagerCommon()
 
 bool CLinksManagerCommon::Init( const int nPort )
 {
+	szLastLinksManagerError.clear();
 	s = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
 	if ( s == INVALID_SOCKET )
 	{
+		szLastLinksManagerError = "socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) failed: " + DescribeLastSocketError();
 		return false;
 	}
 	sockaddr_in name;
@@ -103,6 +139,9 @@ bool CLinksManagerCommon::Init( const int nPort )
 	{
 		if ( bind( s, (sockaddr *)&name, sizeof( name ) ) != 0 )
 		{
+			// Described before closesocket, which may overwrite the error.
+			// EADDRINUSE here usually means another game instance holds the port.
+			szLastLinksManagerError = fmt::format( "bind(UDP 0.0.0.0:{}) failed: {}", nPort, DescribeLastSocketError() );
 			closesocket( s );
 			s = INVALID_SOCKET;
 			return false;

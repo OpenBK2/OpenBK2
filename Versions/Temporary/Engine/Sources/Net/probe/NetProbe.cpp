@@ -281,7 +281,7 @@ ILinksManager *CreateLinks( const SOptions &options )
 	ILinksManager *pLinks = options.nPort > 0 ? CreateServerLinksManager( options.nPort ) : CreateClientLinksManager();
 	if ( pLinks == 0 )
 	{
-		Log( "cannot open UDP port %d: %s", options.nPort, LastSocketError().c_str() );
+		Log( "cannot open UDP port %d: %s", options.nPort, GetLastLinksManagerError().c_str() );
 		if ( options.nPort == N_LAN_PORT )
 		{
 			Log( "another program, or another game instance, already holds it. The game binds %d in every"

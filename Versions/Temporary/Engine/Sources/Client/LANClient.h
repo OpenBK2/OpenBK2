@@ -27,7 +27,10 @@ public:
 
 	~CLANClient() override;
 
-	static CLANClient *Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut );
+	// On failure returns 0 and, if pszError is given, puts there why (which call
+	// failed, on which address, with the system error), for the player to see.
+	static CLANClient *
+	Create( const int nNetGameVersion, const int nGamePort, const int _nTimeOut, std::string *pszError = 0 );
 
 	class CNetPacket *GetPacket() override;
 	void SendPacket( class CNetPacket *pPacket ) override;

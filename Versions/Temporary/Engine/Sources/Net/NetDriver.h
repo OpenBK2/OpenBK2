@@ -185,6 +185,10 @@ NET_EXPORT IDriver *CreateNetDriver( const SNetDriverConsts &consts, bool bIsBro
 
 NET_EXPORT ILinksManager *CreateClientLinksManager();
 NET_EXPORT ILinksManager *CreateServerLinksManager( const int nPort );
+// Why the last Create*LinksManager returned 0: the socket call that failed, the
+// address it was given and the system's error code and message, for showing to
+// the player. Empty after a success.
+NET_EXPORT std::string GetLastLinksManagerError();
 
 NET_EXPORT void GetNOPStream( CMemoryStream *pNOP );
 

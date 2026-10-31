@@ -47,6 +47,9 @@ class CMPManagerModeLAN : public CMPManagerMode
 	// Whether the failure to create pLANClient (UDP port taken, no network) has
 	// been shown to the player yet. Segment reports it once; see the constructor.
 	bool bDriverFailureReported;
+	// Why pLANClient could not be created, from CLANClient::Create, shown under
+	// the generic error text.
+	std::string szDriverError;
 
 	//{ Messages
 	bool OnChatMessage( SMPUIChatMessage *pMsg );
