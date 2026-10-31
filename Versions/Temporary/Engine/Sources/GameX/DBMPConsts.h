@@ -17,6 +17,8 @@ namespace NDb
 	struct SAIExpLevel;
 	struct SBackground;
 	struct SMedal;
+	struct SFlagTerritory;
+	struct SFlagAuthority;
 
 	enum EHistoricalSide : int
 	{
@@ -31,11 +33,15 @@ namespace NDb
 	public:
 		NFile::CFilePath szNameFileRef;
 		NFile::CFilePath szDescriptionFileRef;
+		int nFromYear;
+		int nToYear;
 
 		#include "include_MultiplayerTechLevel.h"
 
 		SMultiplayerTechLevel() :
-			__dwCheckSum( 0 )
+			__dwCheckSum( 0 ),
+			nFromYear( 0 ),
+			nToYear( 0 )
 		{ }
 		//
 		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
@@ -99,6 +105,8 @@ namespace NDb
 		std::vector< STechLevelReinfSet > techLevels;
 		std::vector< SLadderRank > ladderRanks;
 		std::vector< CDBPtr< SMedal > > medals;
+		CDBPtr< SFlagTerritory > pFlagTerritory;
+		CDBPtr< SFlagAuthority > pFlagAuthority;
 
 		#include "include_MultiplayerSide.h"
 

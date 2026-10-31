@@ -12,6 +12,8 @@ set(SOURCES
     CustomMissions.cpp
     DBConsts.cll
     DBConsts.cpp
+    DBFlags.cll
+    DBFlags.cpp
     dbgameoptions.cll
     dbgameoptions.cpp
     DBGameRoot.cll

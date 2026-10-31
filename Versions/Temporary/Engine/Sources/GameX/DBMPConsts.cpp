@@ -41,12 +41,16 @@ void SMultiplayerTechLevel::ReportMetaInfo( const std::string &szAddName, uint8_
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "NameFileRef", (uint8_t*)&szNameFileRef - pThis, sizeof(szNameFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "DescriptionFileRef", (uint8_t*)&szDescriptionFileRef - pThis, sizeof(szDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( szAddName + "FromYear", (uint8_t*)&nFromYear - pThis, sizeof(nFromYear), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "ToYear", (uint8_t*)&nToYear - pThis, sizeof(nToYear), NTypeDef::TYPE_TYPE_INT );
 }
 
 int SMultiplayerTechLevel::operator&( IXmlSaver &saver )
 {
 	saver.Add( "NameFileRef", &szNameFileRef );
 	saver.Add( "DescriptionFileRef", &szDescriptionFileRef );
+	saver.Add( "FromYear", &nFromYear );
+	saver.Add( "ToYear", &nToYear );
 
 	return 0;
 }
@@ -55,6 +59,8 @@ int SMultiplayerTechLevel::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &szNameFileRef );
 	saver.Add( 3, &szDescriptionFileRef );
+	saver.Add( 4, &nFromYear );
+	saver.Add( 5, &nToYear );
 
 	return 0;
 }
@@ -169,6 +175,8 @@ void SMultiplayerSide::ReportMetaInfo( const std::string &szAddName, uint8_t *pT
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "TechLevels", &techLevels, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "LadderRanks", &ladderRanks, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Medals", &medals, pThis );
+	NMetaInfo::ReportMetaInfo( szAddName + "FlagTerritory", (uint8_t*)&pFlagTerritory - pThis, sizeof(pFlagTerritory), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( szAddName + "FlagAuthority", (uint8_t*)&pFlagAuthority - pThis, sizeof(pFlagAuthority), NTypeDef::TYPE_TYPE_REF );
 }
 
 int SMultiplayerSide::operator&( IXmlSaver &saver )
@@ -180,6 +188,8 @@ int SMultiplayerSide::operator&( IXmlSaver &saver )
 	saver.Add( "TechLevels", &techLevels );
 	saver.Add( "LadderRanks", &ladderRanks );
 	saver.Add( "Medals", &medals );
+	saver.Add( "FlagTerritory", &pFlagTerritory );
+	saver.Add( "FlagAuthority", &pFlagAuthority );
 
 	return 0;
 }
@@ -193,6 +203,8 @@ int SMultiplayerSide::operator&( IBinSaver &saver )
 	saver.Add( 6, &techLevels );
 	saver.Add( 7, &ladderRanks );
 	saver.Add( 8, &medals );
+	saver.Add( 9, &pFlagTerritory );
+	saver.Add( 10, &pFlagAuthority );
 
 	return 0;
 }

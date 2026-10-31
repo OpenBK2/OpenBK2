@@ -9,6 +9,8 @@ forward class STexture;
 forward class SAIExpLevel;
 forward class SBackground;
 forward class SMedal;
+forward class SFlagTerritory;
+forward class SFlagAuthority;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 enum EHistoricalSide
 {
@@ -21,6 +23,14 @@ struct SMultiplayerTechLevel
 	// tech level short name (for menu)
 	TextFileRef _NameFileRef;
 	TextFileRef _DescriptionFileRef;
+	/* The years pick the flag each side shows. They only choose a picture, so
+	   they stay out of the checksum. */
+	// first year this tech level represents; 0 when unknown
+	[no_checksum]
+	int _FromYear = 0;
+	// last year this tech level represents, inclusive; 0 when the same as the first
+	[no_checksum]
+	int _ToYear = 0;
 
 	#include "include_MultiplayerTechLevel.h"
 };
@@ -61,6 +71,16 @@ struct SMultiplayerSide
 	SLadderRank _LadderRanks[1..];
 	// medals (10)
 	SMedal *_Medals[10];
+	/* Either of these replaces ListItemIcon with a sharp flag for the tech
+	   level's years; ListItemIcon stays the fallback for a tech level without
+	   years and for old data. They only choose a picture, so
+	   they stay out of the checksum. */
+	// the territory this side fights for; its flag follows the tech level through the territory's governments
+	[no_checksum]
+	SFlagTerritory *_FlagTerritory;
+	// or one government, which wins over FlagTerritory when both are set
+	[no_checksum]
+	SFlagAuthority *_FlagAuthority;
 
 	#include "include_MultiplayerSide.h"
 };

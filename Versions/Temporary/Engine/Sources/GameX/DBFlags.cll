@@ -1,0 +1,46 @@
+#include "../game.cll"
+[hExternal] #include "System/FilePath.h"
+/* Flags in three levels: a territory (France) has the governments that claimed
+   it (Third Republic, Vichy, Free France), each of which used one or more flags
+   over time. A flag drawing is its own record, so every period and government
+   that flew the same flag shares one. Lookup is by year: a multiplayer tech
+   level carries the years it covers. */
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// One flag drawing
+[typeID = 0x1F1A6C10]
+class SFlagImage
+{
+	/* Where the drawing came from, its licence and the specification it follows
+	   are recorded in the SVG file itself, next to the drawing. */
+	// SVG file of the flag, a path in the game's file system
+	AnyDstFileRef _Image;
+};
+
+// A government or regime claiming a territory, with the flags it used
+[typeID = 0x1F1A6C11]
+class SFlagAuthority
+{
+	struct SPeriod
+	{
+		// first year this flag was in use; 0 for since before any year the game covers
+		int _FromYear = 0;
+		// last year this flag was in use, inclusive; 0 for until after any year the game covers
+		int _ToYear = 0;
+		SFlagImage *_Image;
+	};
+	TextFileRef _NameFileRef;
+	/* A year inside two periods, as a year in which the flag changed is, takes
+	   the period listed first. */
+	// the flags this government used, and when
+	SPeriod _Periods[];
+};
+
+// A territory, with the governments that claimed it
+[typeID = 0x1F1A6C12]
+class SFlagTerritory
+{
+	TextFileRef _NameFileRef;
+	// governments, most important first: a year takes the first one with a flag for it
+	SFlagAuthority *_Authorities[];
+};
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
