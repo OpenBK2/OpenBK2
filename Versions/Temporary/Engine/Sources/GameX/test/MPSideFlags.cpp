@@ -21,8 +21,10 @@
 // the drawing each must give: sides separated by ';', tech levels by ',', a
 // drawing by its file name without the path, '-' for none.
 // OBK2_FLAGS_TEST_RANDOM, if set, is the drawing the random country item must
-// give, in the same form. Without the first two variables the test skips, so
-// CI, which has no installed game, passes it over.
+// give, in the same form. OBK2_FLAGS_TEST_MOD, if set, names a mod directory
+// attached over the data, asked first as the game asks an attached mod.
+// Without the first two variables the test skips, so CI, which has no
+// installed game, passes it over.
 //
 // This is what found that an installed game's types.xml, older than the flag
 // records, left Flags/Mapping.xdb found but impossible to create.
@@ -63,7 +65,15 @@ TEST( MPSideFlags, InstalledGame )
 		GTEST_SKIP() << "OBK2_FLAGS_TEST_DATA and OBK2_FLAGS_TEST_EXPECT name no installed game";
 	}
 
-	CObj<NVFS::IVFS> pVFS = NVFS::CreateWinVFS( std::string( pszData ) + "/" );
+	CObj<NVFS::ICombinerVFS> pVFS = NVFS::CreateCombinerVFS( 0 );
+	std::vector<CObj<NVFS::IVFS>> sources;
+	sources.push_back( NVFS::CreateWinVFS( std::string( pszData ) + "/" ) );
+	if ( const char *pszMod = std::getenv( "OBK2_FLAGS_TEST_MOD" ) )
+	{
+		// Last in the list is asked first, as with an attached mod (MODs.cpp).
+		sources.push_back( NVFS::CreateWinVFS( std::string( pszMod ) + "/" ) );
+	}
+	pVFS->SetVFSList( sources );
 	NVFS::SetMainVFS( pVFS );
 	ASSERT_TRUE( NDb::OpenDatabase( pVFS, 0, NDb::DATABASE_MODE_GAME ) );
 
