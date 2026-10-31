@@ -9,7 +9,7 @@
 #include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
-#include "MapEditorLib/WxResourceImages.h"
+#include "MapEditorLib/WxSvgIcons.h"
 #include "MovieDialogs.h"
 #include "MoviesEditorData.h"
 #include "MoviesEditorView.h"
@@ -77,22 +77,6 @@ wxColour FromColorRef( COLORREF color )
 	return wxColour( static_cast<unsigned char>( color ),
 	                 static_cast<unsigned char>( color >> 8 ),
 	                 static_cast<unsigned char>( color >> 16 ) );
-}
-
-// One of the movie editor's button faces, by numeric id.
-//
-// Unmasked: these are drawn as they are, unlike the icon strips LoadStrip
-// reads.
-wxBitmap LoadDllBitmap( unsigned nResourceID )
-{
-	const wxImage image = NWxResourceImages::ReadBitmapResource( nResourceID );
-	if ( !image.IsOk() )
-	{
-		// A blank of the template's button size rather than a null bitmap,
-		// which trips a wx assertion.
-		return wxBitmap( 16, 16 );
-	}
-	return wxBitmap( image );
 }
 
 // What the timeline needs of the window around it. Small on purpose: the
@@ -588,7 +572,7 @@ class CMoviesEditorWxWindow : public CWxHostWindow, public ICommandHandler, publ
 	wxTextCtrl *pTimeEdit = nullptr;
 	wxBitmapButton *pButtons[SB_SIZE] = { nullptr };
 	wxBitmapToggleButton *pResizeToGame = nullptr;
-	wxBitmap bitmaps[SB_SIZE];
+	wxBitmapBundle bitmaps[SB_SIZE];
 	wxTimer timer;
 
 	bool bIsDataSetting = false;
@@ -869,19 +853,21 @@ private:
 
 	void LoadBitmaps()
 	{
-		bitmaps[SB_JUMP_FIRST] = LoadDllBitmap( IDB_DMOVED_JUMP_FIRST_KEY );
-		bitmaps[SB_JUMP_LAST] = LoadDllBitmap( IDB_DMOVED_JUMP_LAST_KEY );
-		bitmaps[SB_STEP_PREV] = LoadDllBitmap( IDB_DMOVED_STEP_PREV_KEY );
-		bitmaps[SB_STEP_NEXT] = LoadDllBitmap( IDB_DMOVED_STEP_NEXT_KEY );
-		bitmaps[SB_STOP] = LoadDllBitmap( IDB_DMOVED_STOP_MOVIE );
-		bitmaps[SB_PLAY] = LoadDllBitmap( IDB_DMOVED_PLAY_MOVIE );
+		// The SVG icons of MapEditorLib/res/icons, which replace the
+		// dmoved_*.bmp the MFC window loaded.
+		bitmaps[SB_JUMP_FIRST] = NWxSvgIcons::Load( "skip-back" );
+		bitmaps[SB_JUMP_LAST] = NWxSvgIcons::Load( "skip-forward" );
+		bitmaps[SB_STEP_PREV] = NWxSvgIcons::Load( "step-back" );
+		bitmaps[SB_STEP_NEXT] = NWxSvgIcons::Load( "step-forward" );
+		bitmaps[SB_STOP] = NWxSvgIcons::Load( "square" );
+		bitmaps[SB_PLAY] = NWxSvgIcons::Load( "play" );
 		// Loaded and never used, exactly as in the MFC window: the button
 		// shows the *stop* bitmap while a movie is running.
-		bitmaps[SB_PAUSE] = LoadDllBitmap( IDB_DMOVED_PAUSE_MOVIE );
-		bitmaps[SB_ADD_SEQ] = LoadDllBitmap( IDB_DMOVED_ADD_SEQ );
-		bitmaps[SB_DEL_SEQ] = LoadDllBitmap( IDB_DMOVED_DEL_SEQ );
-		bitmaps[SB_SETUP] = LoadDllBitmap( IDB_DMOVED_SETTINGS );
-		bitmaps[SB_RESIZE_WND] = LoadDllBitmap( IDB_DMOVED_CHECK_RESIZE_WND );
+		bitmaps[SB_PAUSE] = NWxSvgIcons::Load( "pause" );
+		bitmaps[SB_ADD_SEQ] = NWxSvgIcons::Load( "plus" );
+		bitmaps[SB_DEL_SEQ] = NWxSvgIcons::Load( "minus" );
+		bitmaps[SB_SETUP] = NWxSvgIcons::Load( "wrench" );
+		bitmaps[SB_RESIZE_WND] = NWxSvgIcons::Load( "scaling" );
 	}
 
 	wxBitmapButton *AddButton( wxWindow *pParent, wxSizer *pRow, int nButton, const char *pszTip )

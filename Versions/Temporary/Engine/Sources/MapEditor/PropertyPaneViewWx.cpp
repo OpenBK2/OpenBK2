@@ -13,7 +13,7 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
-#include "MapEditorLib/WxResourceImages.h"
+#include "MapEditorLib/WxSvgIcons.h"
 #include "PC_BaseDialog.h"
 #include "PropertyButtons.h"
 #include "PropertyPaneView.h"
@@ -379,31 +379,74 @@ wxPGEditor *ButtonEditor()
 	return s_pButtonEditor;
 }
 
-// An icon strip, loaded once and never freed: the grids that draw its icons
-// live until the editor closes, and a wxBitmap left to a static destructor
-// would outlive wx.
-const std::vector<wxBitmap> &Icons( UINT nResourceID )
+// The SVG icon (MapEditorLib/res/icons) of a row of each EPCIEType, in the
+// enum's order. These replace pc_types.bmp, which drew 31 types with 20
+// pictures and held a second, framed copy of each for the MFC tree's selected
+// rows; a wx grid cell has no selected image, so those were never shown.
+const char *const PC_TYPE_ICONS[PCIE_COUNT] = {
+	"file-question",       // PCIE_UNKNOWN
+	"folder",              // PCIE_FOLDER
+	"hash",                // PCIE_INT_INPUT
+	"sliders-horizontal",  // PCIE_INT_SLIDER
+	"list",                // PCIE_INT_COMBO
+	"palette",             // PCIE_INT_COLOR
+	"palette",             // PCIE_INT_COLOR_WITH_ALPHA
+	"hash",                // PCIE_FLOAT_INPUT
+	"sliders-horizontal",  // PCIE_FLOAT_SLIDER
+	"square-chevron-down", // PCIE_FLOAT_COMBO
+	"square-check",        // PCIE_BOOL_COMBO
+	"square-check",        // PCIE_BOOL_CHECKBOX
+	"square-check",        // PCIE_BOOL_SWITCHER
+	"link",                // PCIE_STRING_REF
+	"link-2",              // PCIE_STRING_MULTI_REF
+	"type",                // PCIE_STRING_INPUT
+	"notepad-text",        // PCIE_STRING_BIG_INPUT
+	"list",                // PCIE_STRING_COMBO
+	"list",                // PCIE_STRING_COMBO_REF
+	"list",                // PCIE_STRING_COMBO_MULTI_REF
+	"file-symlink",        // PCIE_STRING_FILE_REF
+	"folder-symlink",      // PCIE_STRING_DIR_REF
+	"binary",              // PCIE_BINARY_BIT_FIELD
+	"link",                // PCIE_STRING_NEW_REF
+	"link-2",              // PCIE_STRING_NEW_MULTI_REF
+	"key-round",           // PCIE_GUID
+	"notepad-text",        // PCIE_TEXT_FILE
+	"notepad-text",        // PCIE_NEW_TEXT_FILE
+	"palette",             // PCIE_VEC3_COLOR
+	"list-ordered",        // PCIE_LIST
+	"braces",              // PCIE_STRUCT
+};
+
+// The header's icons, one per column of PSZ_COLUMN_TITLES: Property, Value,
+// Description. They replace pc_header.bmp.
+const char *const PC_HEADER_ICONS[N_COLUMN_COUNT] = { "list-tree", "table", "file-text" };
+
+// The type icons, made once and never freed: the grids that draw them live
+// until the editor closes, and a bundle left to a static destructor would
+// outlive wx.
+const std::vector<wxBitmapBundle> &TypeIcons()
 {
-	static std::vector<wxBitmap> *s_pTypeIcons = nullptr;
-	static std::vector<wxBitmap> *s_pHeaderIcons = nullptr;
-	std::vector<wxBitmap> *&rpIcons = ( nResourceID == IDB_PC_TYPES_IMAGE_LIST ) ? s_pTypeIcons : s_pHeaderIcons;
-	if ( rpIcons == nullptr )
+	static std::vector<wxBitmapBundle> *s_pIcons = nullptr;
+	if ( s_pIcons == nullptr )
 	{
-		rpIcons = new std::vector<wxBitmap>( NWxResourceImages::LoadIcons( nResourceID ) );
+		s_pIcons = new std::vector<wxBitmapBundle>();
+		for ( const char *pszIcon : PC_TYPE_ICONS )
+		{
+			s_pIcons->push_back( NWxSvgIcons::Load( pszIcon ) );
+		}
 	}
-	return *rpIcons;
+	return *s_pIcons;
 }
 
-// pc_types.bmp's icon for a row of nType, the image CPCMainTreeControl gave
-// InsertTreeItem. The strip holds a second icon per type after PCIE_COUNT,
-// the tree's selected image, which a wx grid cell has no place for.
+// The icon for a row of nType, the image CPCMainTreeControl gave
+// InsertTreeItem.
 wxBitmapBundle TypeIcon( EPCIEType nType )
 {
-	const std::vector<wxBitmap> &rIcons = Icons( IDB_PC_TYPES_IMAGE_LIST );
+	const std::vector<wxBitmapBundle> &rIcons = TypeIcons();
 	// The size comparison is the whole bound: EPCIEType has no negative value,
 	// so its underlying type is unsigned and the dropped "nType >= 0" was
 	// always true.
-	return ( static_cast<size_t>( nType ) < rIcons.size() ) ? wxBitmapBundle( rIcons[nType] ) : wxBitmapBundle();
+	return ( static_cast<size_t>( nType ) < rIcons.size() ) ? rIcons[nType] : wxBitmapBundle();
 }
 
 // The types CPCMainTreeControl::PickTextColors painted the value cell of in
@@ -2312,14 +2355,14 @@ wxPropertyGridManager *CreateGridManager( wxWindow *pParent )
 	ApplyClassicLook( pGrid, pGrid->GetCellBackgroundColour() );
 	// Leave room for the value editor's border without clipping its text.
 	pGrid->SetVerticalSpacing( 2 );
-	// pc_header.bmp's icon beside each title, SetColumnImage( index, index ).
+	// PC_HEADER_ICONS beside each title, where MFC had pc_header.bmp's,
+	// SetColumnImage( index, index ).
 	// The manager does not hand out its header, which is its only
 	// wxHeaderCtrl child, and whose columns are wxHeaderColumnSimple. The
 	// bitmaps go into the columns alone: updating a column pushes its width
 	// to the native header, and the header's widths are stale until the
 	// manager works them out from the grid, which then squeezed the
 	// splitters to them. SetColumnCount below has it work them out first.
-	const std::vector<wxBitmap> &rHeaderIcons = Icons( IDB_PC_HEADER_IMAGE_LIST );
 	const wxWindowList &rChildren = pManager->GetChildren();
 	for ( wxWindowList::const_iterator itChild = rChildren.begin(); itChild != rChildren.end(); ++itChild )
 	{
@@ -2328,13 +2371,12 @@ wxPropertyGridManager *CreateGridManager( wxWindow *pParent )
 		{
 			continue;
 		}
-		for ( unsigned nColumn = 0; ( nColumn < pHeader->GetColumnCount() ) && ( nColumn < rHeaderIcons.size() );
-		      ++nColumn )
+		for ( unsigned nColumn = 0; ( nColumn < pHeader->GetColumnCount() ) && ( nColumn < N_COLUMN_COUNT ); ++nColumn )
 		{
 			if ( const wxHeaderColumnSimple *pColumn =
 			         dynamic_cast<const wxHeaderColumnSimple *>( &CHeaderColumnAccess::Column( pHeader, nColumn ) ) )
 			{
-				const_cast<wxHeaderColumnSimple *>( pColumn )->SetBitmap( rHeaderIcons[nColumn] );
+				const_cast<wxHeaderColumnSimple *>( pColumn )->SetBitmap( NWxSvgIcons::Load( PC_HEADER_ICONS[nColumn] ) );
 			}
 		}
 	}

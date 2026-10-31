@@ -33,6 +33,7 @@ set(SOURCES
     NewObjectViewWx.cpp
     ObjectCollector.cpp
     ResourceBinary.cpp
+    ResourceIcons.cpp
     ResourceMenus.cpp
     ResourceStrings.cpp
     OpenModViewWx.cpp

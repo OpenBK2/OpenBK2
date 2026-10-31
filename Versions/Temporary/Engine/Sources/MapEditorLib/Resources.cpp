@@ -2,6 +2,7 @@
 
 #include "Resources.h"
 
+#include <cstring>
 #include <vector>
 
 namespace
@@ -156,6 +157,43 @@ CToolBarTable::CToolBarTable( const SToolBarEntry *pEntries, size_t nCount )
 const SToolBarEntry *GetToolBar( unsigned nID )
 {
 	return Find<SToolBarEntry>( nID );
+}
+
+CSvgTable::CSvgTable( const SSvgEntry *pEntries, size_t nCount )
+{
+	Register( pEntries, nCount );
+}
+
+const char *GetSvg( const char *pszName )
+{
+	if ( pszName == nullptr )
+	{
+		return nullptr;
+	}
+	// Keyed by name rather than id, so not Find; a scan of a hundred-odd
+	// entries, once per icon a control creates.
+	for ( const STableOf<SSvgEntry> &rTable : TablesOf<SSvgEntry>() )
+	{
+		for ( size_t nEntry = 0; nEntry < rTable.nCount; ++nEntry )
+		{
+			if ( std::strcmp( rTable.pEntries[nEntry].pszName, pszName ) == 0 )
+			{
+				return rTable.pEntries[nEntry].pszSvg;
+			}
+		}
+	}
+	return nullptr;
+}
+
+CIconTable::CIconTable( const SIconEntry *pEntries, size_t nCount )
+{
+	Register( pEntries, nCount );
+}
+
+const char *GetCommandIcon( unsigned nCommandID )
+{
+	const SIconEntry *const pEntry = Find<SIconEntry>( nCommandID );
+	return ( pEntry != nullptr ) ? pEntry->pszIcon : nullptr;
 }
 
 bool GetString( unsigned nID, std::string *pszText )

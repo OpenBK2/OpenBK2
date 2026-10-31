@@ -24,6 +24,7 @@
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxResourceImages.h"
+#include "MapEditorLib/WxSvgIcons.h"
 #include "Misc/StrProc.h"
 #include "ObjectBrowserView.h"
 #include "RefListView.h"
@@ -31,6 +32,7 @@
 #include "SearchObjectView.h"
 #include "System/GlobalVars.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 #include <functional>
@@ -253,18 +255,26 @@ public:
 
 wxIMPLEMENT_CLASS( CSortedTreeCtrl, wxTreeCtrl );
 
-// tree_types.bmp from the editor's resources, split into its 16 pixel
-// icons with magenta as the mask, as CComboBoxGDBBrowser::InitImageLists made
-// its image list.
+// The tree's icons in EGDBOType order, then the same again for a selected
+// row, the layout CComboBoxGDBBrowser::InitImageLists gave tree_types.bmp.
+// The SVG icons (MapEditorLib/res/icons) replace that strip; its selected
+// copies were the same pictures framed in black, and a selected row is
+// already highlighted, so the second set is the first again. An unknown row
+// has a blank icon, as it always had.
 wxImageList *CreateTypeImages()
 {
 	wxImageList *const pImages = new wxImageList( 16, 16, true, GDBO_COUNT * 2 );
-	// NWxResourceImages reads the palette bitmap out as colour; the image
-	// list cuts the strip into icons.
-	const wxImage strip = NWxResourceImages::LoadStrip( IDB_TABGDBB_TREE_TYPES_IMAGE_LIST );
-	if ( strip.IsOk() )
+	wxImage blank( 16, 16 );
+	blank.InitAlpha();
+	std::fill( blank.GetAlpha(), blank.GetAlpha() + 16 * 16, static_cast<unsigned char>( 0 ) );
+	const wxBitmap icons[GDBO_COUNT] = {
+		wxBitmap( blank ), NWxSvgIcons::Render( "file" ), NWxSvgIcons::Render( "folder" ) };
+	for ( int nSet = 0; nSet < 2; ++nSet )
 	{
-		pImages->Add( wxBitmap( strip ) );
+		for ( const wxBitmap &rIcon : icons )
+		{
+			pImages->Add( rIcon );
+		}
 	}
 	return pImages;
 }
@@ -2787,7 +2797,8 @@ class CWxObjectBrowser : public IObjectBrowser, public ICommandHandler
 		return rWidths;
 	}
 
-	// The MFC trees' header: one column, "Name" with tree_header.bmp's icon,
+	// The MFC trees' header: one column, "Name" with an icon (tree_header.bmp's
+	// once, the same SVG as the property grid's first column now),
 	// as wide as the user left it -- TABGDBB_TREE_COLUMN_WIDTH's 150 until
 	// then -- and the width kept when the user drags it, as LoadHeaderWidth
 	// and SaveHeaderWidth did.
@@ -2797,11 +2808,7 @@ class CWxObjectBrowser : public IObjectBrowser, public ICommandHandler
 		const int nKeptWidth = HeaderWidths()[0];
 		wxHeaderColumnSimple column( FromNarrow( strName ), ( nKeptWidth > 0 ) ? nKeptWidth : 150 );
 		column.SetResizeable( true );
-		const std::vector<wxBitmap> icons = NWxResourceImages::LoadIcons( IDB_TABGDBB_TREE_HEADER_IMAGE_LIST );
-		if ( !icons.empty() )
-		{
-			column.SetBitmap( icons[0] );
-		}
+		column.SetBitmap( NWxSvgIcons::Load( "list-tree" ) );
 		pHeader = NWx::Child<wxHeaderCtrlSimple>( pRoot, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 		pHeader->AppendColumn( column );
 		pHeader->Bind( wxEVT_HEADER_END_RESIZE,

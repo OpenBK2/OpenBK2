@@ -5,6 +5,8 @@
 
 - Universal MOD-18's Japan, Great Britain, USA and USSR sides get sharp flags with `obk2_flags.pak`, each drawn as the mod draws it: Japan's Rising Sun with its disc in the middle, as the mod has it, rather than the Army flag's. Its German side, whose flag carries a swastika, and its two sides that combine several flags keep the mod's own pictures.
 
+- The editor's toolbar buttons, object tree, property grid and movie editor buttons have new icons, from the Lucide icon set. The old ones were 16x16 pictures in 16 colours, black-outlined, which nearly disappeared on a dark theme. The new ones are drawn in the theme's text colour and stay sharp at any size and display scaling. Four buttons with no stock picture (the forced and no-references export variants, and Save Camera) have icons composed from Lucide parts, and four map overlays (shoot areas, AI map, passability, grid) wear stand-ins until icons are drawn for them. The terrain height palette, the cursors and the Run Game crest are unchanged. `MapEditorLib/res/icons/README.md` says how to change one.
+
 - Total Conversion's multiplayer sides get sharp flags too, with `obk2_flags.pak` in its `Data`: fourteen of its nineteen sides, each drawn as the mod draws it, arms and all, in every tech level. Its Germany and Spanish Nationalists sides, whose flags carry a swastika and the Francoist eagle, keep the mod's own pictures, as do its three sides that combine several flags. MPBMod6's Great Britain gets the sharp Union Flag as well.
 
 - The "random country" dice in the multiplayer game room are redrawn as a sharp vector picture, in the original's arrangement of two dice with soft shadows. Every installation and mod checked uses the same dice picture, so they all get the new one with `obk2_flags.pak`.

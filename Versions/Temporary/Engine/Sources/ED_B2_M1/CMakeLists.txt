@@ -52,6 +52,7 @@ set(SOURCES
     EditorUpdatableWorld.cpp
     ED_B2_M1Dll.cpp
     ResourceBinary.cpp
+    ResourceIcons.cpp
     ResourceMenus.cpp
     ResourceStrings.cpp
     EffectEditor.cpp

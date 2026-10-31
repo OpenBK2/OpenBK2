@@ -5,6 +5,7 @@
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxResourceImages.h"
+#include "MapEditorLib/WxSvgIcons.h"
 #include "NativeDockHint.h"
 #include "ResourceDefines.h"
 
@@ -322,12 +323,13 @@ bool CToolBarImages::AddToolBarResource( unsigned nResourceID )
 	{
 		return false;
 	}
+	// The strip is only the fallback now, so a toolbar whose every command has
+	// an SVG icon does not need one.
 	wxImage strip = NWxResourceImages::LoadStrip( nResourceID );
-	if ( !strip.IsOk() )
+	if ( strip.IsOk() )
 	{
-		return false;
+		strip.SetMaskColour( 192, 192, 192 );
 	}
-	strip.SetMaskColour( 192, 192, 192 );
 	int nImage = 0;
 	for ( int nItem = 0; nItem < nCount; ++nItem )
 	{
@@ -336,12 +338,19 @@ bool CToolBarImages::AddToolBarResource( unsigned nResourceID )
 		{
 			continue;
 		}
+		// The square is counted whether or not it is used, so the commands
+		// after an SVG one still find their own.
 		const wxRect rect( nImage * nWidth, 0, nWidth, nHeight );
-		if ( rect.GetRight() < strip.GetWidth() )
-		{
-			bitmaps[nCommandID] = wxBitmap( strip.GetSubImage( rect ) );
-		}
 		++nImage;
+		const wxBitmapBundle icon = NWxSvgIcons::Load( NResources::GetCommandIcon( nCommandID ), nHeight );
+		if ( icon.IsOk() )
+		{
+			bitmaps[nCommandID] = icon;
+		}
+		else if ( strip.IsOk() && ( rect.GetRight() < strip.GetWidth() ) )
+		{
+			bitmaps[nCommandID] = wxBitmapBundle( wxBitmap( strip.GetSubImage( rect ) ) );
+		}
 	}
 	return true;
 }
@@ -354,14 +363,14 @@ void CToolBarImages::AddIcon( unsigned nCommandID, unsigned nIconID )
 	const wxIcon icon = icons.GetIcon( wxSize( 16, 16 ) );
 	if ( icon.IsOk() )
 	{
-		bitmaps[nCommandID] = wxBitmap( icon );
+		bitmaps[nCommandID] = wxBitmapBundle( wxBitmap( icon ) );
 	}
 }
 
-wxBitmap CToolBarImages::Get( unsigned nCommandID ) const
+wxBitmapBundle CToolBarImages::Get( unsigned nCommandID ) const
 {
-	const std::map<unsigned, wxBitmap>::const_iterator posBitmap = bitmaps.find( nCommandID );
-	return ( posBitmap != bitmaps.end() ) ? posBitmap->second : wxBitmap();
+	const std::map<unsigned, wxBitmapBundle>::const_iterator posBitmap = bitmaps.find( nCommandID );
+	return ( posBitmap != bitmaps.end() ) ? posBitmap->second : wxBitmapBundle();
 }
 
 void CToolBar::Show( bool bShow )

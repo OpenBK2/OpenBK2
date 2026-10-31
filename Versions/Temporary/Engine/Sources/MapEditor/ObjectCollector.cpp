@@ -5,7 +5,7 @@
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/Tools_Image.h"
 #include "MapEditorLib/WxImageList.h"
-#include "MapEditorLib/WxResourceImages.h"
+#include "MapEditorLib/WxSvgIcons.h"
 #include "Misc/2Darray.h"
 #include "Misc/HPTimer.h"
 #include "ObjectCollector.h"
@@ -329,22 +329,20 @@ int CObjectFilterCollector::ShowFilterCreationDialog( IWidget *pParentWidget,
 
 namespace
 {
-// The fallback icon for an object with no picture of its own. This is the
-// one part of these lists that comes from a resource rather than from the
-// data extractors, so it is the one part still waiting on the generated
-// resource tables; NWxResourceImages is where that arrives.
-wxBitmap LoadResourceBitmap( unsigned nID )
+// The fallback icon for an object with no picture of its own, at the size of
+// one list or the other: the SVG image-off (MapEditorLib/res/icons), which
+// replaces the "No icons" normal_object.bmp and its blurred 16 pixel copy.
+// The one part of these lists that does not come from the data extractors.
+wxBitmap DefaultObjectBitmap( int nSize )
 {
-	return wxBitmap( NWxResourceImages::ReadBitmapResource( nID ) );
+	return NWxSvgIcons::Render( "image-off", nSize );
 }
 } // namespace
 
 void CObjectCollector::CreateImageLists()
 {
-	const wxColour zeroColor( 0, 0, 0 );
-	//
-	const wxBitmap defaultNormalObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_NORMAL_OBJECT_IMAGE );
-	const wxBitmap defaultSmallObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_SMALL_OBJECT_IMAGE );
+	const wxBitmap defaultNormalObjectBitmap = DefaultObjectBitmap( NORMAL_IMAGE_SIZE_X );
+	const wxBitmap defaultSmallObjectBitmap = DefaultObjectBitmap( SMALL_IMAGE_SIZE_X );
 	//
 	// The lists are emptied rather than made again: the palettes' list controls
 	// hold these objects, and a new list would leave them drawing from the old
@@ -361,8 +359,10 @@ void CObjectCollector::CreateImageLists()
 	normalImageList.RemoveAll();
 	smallImageList.RemoveAll();
 	//
-	const int nDefaultNormalImageIndex = normalImageList.Add( defaultNormalObjectBitmap, zeroColor );
-	const int nDefaultSmallImageIndex = smallImageList.Add( defaultSmallObjectBitmap, zeroColor );
+	// Unmasked: the icon carries its own alpha, and black, the mask the
+	// extracted pictures use, is the colour it may well be drawn in.
+	const int nDefaultNormalImageIndex = normalImageList.Add( defaultNormalObjectBitmap );
+	const int nDefaultSmallImageIndex = smallImageList.Add( defaultSmallObjectBitmap );
 	// The lists copied them.
 	// wxBitmap frees itself, and the lists copied what they were given.
 	NI_ASSERT( nDefaultNormalImageIndex == nDefaultSmallImageIndex,

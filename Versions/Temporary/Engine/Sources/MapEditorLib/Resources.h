@@ -148,6 +148,43 @@ public:
 
 MAPEDITORLIB_EXPORT const SToolBarEntry *GetToolBar( unsigned nID );
 
+// The editor's SVG icons, by name: MapEditorLib/res/icons, embedded by
+// scripts/port/svg2table.py into ResourceSvg.cpp. The text is the file's, so
+// it draws in currentColor; NWxSvgIcons substitutes a real colour.
+struct SSvgEntry
+{
+	const char *pszName;
+	const char *pszSvg;
+};
+
+class CSvgTable
+{
+public:
+	MAPEDITORLIB_EXPORT CSvgTable( const SSvgEntry *pEntries, size_t nCount );
+};
+
+// Null when no icon has that name.
+MAPEDITORLIB_EXPORT const char *GetSvg( const char *pszName );
+
+// Which SVG icon a command's toolbar button wears, by the icon's name. Each
+// module that brings toolbars lists its own commands (ResourceIcons.cpp), as it
+// lists its toolbars; a command it does not list keeps the glyph its bitmap
+// strip gives it.
+struct SIconEntry
+{
+	unsigned nID;
+	const char *pszIcon;
+};
+
+class CIconTable
+{
+public:
+	MAPEDITORLIB_EXPORT CIconTable( const SIconEntry *pEntries, size_t nCount );
+};
+
+// Null when the command has no icon named.
+MAPEDITORLIB_EXPORT const char *GetCommandIcon( unsigned nCommandID );
+
 // The string nID, as UTF-8. Empty when there is none, which the string
 // tables never use for a real string.
 MAPEDITORLIB_EXPORT std::string GetString( unsigned nID );

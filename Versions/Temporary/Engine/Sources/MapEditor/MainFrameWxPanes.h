@@ -32,6 +32,7 @@
 #include <wx/aui/auibar.h>
 #include <wx/aui/framemanager.h>
 #include <wx/bitmap.h>
+#include <wx/bmpbndl.h>
 #include <wx/panel.h>
 #include <wx/weakref.h>
 
@@ -187,19 +188,22 @@ public:
 // command, whichever resource they came from.
 class CToolBarImages
 {
-	std::map<unsigned, wxBitmap> bitmaps;
+	// Bundles, so the SVG icons render at the toolbar's size and DPI; a
+	// bitmap from a strip or an .ico is a bundle of one.
+	std::map<unsigned, wxBitmapBundle> bitmaps;
 
 public:
-	// A TOOLBAR resource and the BITMAP of the same id, in the module the
-	// resource handle finds them: the nth button that is not a separator is
-	// the nth square of the strip. Light grey is transparent, as in every
-	// MFC toolbar bitmap.
+	// A TOOLBAR resource's commands, each with the SVG icon its module's
+	// ResourceIcons.cpp names for it (NResources::GetCommandIcon). A command
+	// with no icon named takes its square of the BITMAP of the same id
+	// instead: the nth button that is not a separator is the nth square of
+	// the strip, light grey transparent, as in every MFC toolbar bitmap.
 	bool AddToolBarResource( unsigned nResourceID );
 	// An icon for one command, over whatever picture a toolbar resource gave
 	// it, as SECToolBarManager::AddCommandIconResource.
 	void AddIcon( unsigned nCommandID, unsigned nIconID );
-	// Null when no resource gave the command a picture.
-	wxBitmap Get( unsigned nCommandID ) const;
+	// Empty when no resource gave the command a picture.
+	wxBitmapBundle Get( unsigned nCommandID ) const;
 };
 
 // The IToolBar an editor gets: a wxAuiToolBar pane of the frame's manager.
