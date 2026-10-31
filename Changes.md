@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- A second game on the same computer can now find and join a LAN game hosted by the first. Every instance asked for UDP port 4201, the second was refused it, and the LAN screen then sat on "loading game list" forever. An instance that finds the port taken now uses a free one instead: it can browse and join, and if it tries to host it says why it cannot, since other players look for games on 4201 only. When the network cannot be opened at all, the error now returns to the multiplayer menu and says which call failed, on which port, and the system's own error, for example `bind(UDP 0.0.0.0:4201) failed: error 98, Address already in use`, instead of only that a critical error happened.
+
 - Universal MOD-18's European Axis side gets a sharp flag: Hungary's, Italy's and Romania's side by side, redrawn as the mod draws its icon.
 
 - Total Conversion's China side gets a sharp flag: the Republic of China and the People's Republic side by side, each showing its canton, redrawn as the mod draws its icon. Sides whose picture combines several flags can now be redrawn the same way, from the drawings of their members.

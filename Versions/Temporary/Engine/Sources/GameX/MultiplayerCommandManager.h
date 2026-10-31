@@ -263,6 +263,9 @@ public:
 	ZDATA_( SMPUIMessage )
 	SUIGameInfo info;                 // General info (name, no. of players, etc)
 	SB2GameSpecificData specificInfo; // Specific info
+	// What exactly went wrong when eResult is not ERR_SUCCESS, shown under the
+	// reason text; empty when there is nothing to add
+	std::string szDetail;
 	std::string szPassword;
 
 	ZEND int operator&( IBinSaver &f ) override
@@ -325,6 +328,9 @@ public:
 	std::string szSessionName;
 	int nOwnSlot = {};
 	SB2GameSpecificData specificInfo; // Specific info
+	// What exactly went wrong when eResult is not ERR_SUCCESS, shown under the
+	// reason text; empty when there is nothing to add
+	std::string szDetail;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -334,6 +340,7 @@ public:
 		f.Add( 4, &szSessionName );
 		f.Add( 5, &nOwnSlot );
 		f.Add( 6, &specificInfo );
+		f.Add( 7, &szDetail );
 		return 0;
 	}
 

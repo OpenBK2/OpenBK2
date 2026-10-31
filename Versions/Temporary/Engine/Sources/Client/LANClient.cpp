@@ -23,6 +23,19 @@ CLANClient::Create( const int nNetGameVersion, const int nGamePort, const int _n
 		return 0;
 	}
 	CPtr<NNet::ILinksManager> pLinks = NNet::CreateServerLinksManager( nGamePort );
+	// Why the game port could not be had; empty when it was
+	std::string szGamePortError;
+	if ( !pLinks )
+	{
+		// Every instance asks for the same port, so a second one on the same
+		// machine is refused it. Rather than fail, take any free port: games are
+		// looked for by broadcasting to the game port and answered at whatever
+		// port the request came from, and a login works the same way, so this
+		// instance can still browse and join. It cannot host, because nobody
+		// would look for its game on this port; see IsOnGamePort.
+		szGamePortError = NNet::GetLastLinksManagerError();
+		pLinks = NNet::CreateClientLinksManager();
+	}
 	if ( !pLinks )
 	{
 		// The links manager knows which socket call failed and why
@@ -36,6 +49,7 @@ CLANClient::Create( const int nNetGameVersion, const int nGamePort, const int _n
 
 	CLANClient *pClient = new CLANClient();
 	pClient->pNetDriver = pDriver;
+	pClient->szGamePortError = szGamePortError;
 	return pClient;
 }
 

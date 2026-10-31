@@ -565,6 +565,12 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 				break;
 		}
 		std::wstring wszReason = GetScreen()->GetTextEntry( szReasonCode );
+		// The reason texts are fixed sentences from the game data; the detail
+		// says what actually failed. <br> is how UI text breaks lines.
+		if ( !pMsg->szDetail.empty() )
+		{
+			wszReason += ( wszReason.empty() ? L"" : L"<br>" ) + NStr::ToUnicode( pMsg->szDetail );
+		}
 		if ( wszReason.length() > 0 )
 		{
 			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,

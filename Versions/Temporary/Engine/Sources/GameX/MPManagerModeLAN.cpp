@@ -370,6 +370,29 @@ void CMPManagerModeLAN::OnSetMySlotNumber()
 
 void CMPManagerModeLAN::TryToCreateGame()
 {
+	// A client that had to take a spare port cannot host: other instances look
+	// for games on LAN_PORT only. The instance holding it may have quit since,
+	// so ask for the port again before giving up.
+	if ( !pLANClient->IsOnGamePort() )
+	{
+		StartNewLANDriver();
+		if ( !pLANClient )
+		{
+			ReportDriverFailure();
+			return;
+		}
+	}
+	if ( !pLANClient->IsOnGamePort() )
+	{
+		// The game room's own failure path: back to the game list, with a message box
+		SMPUIGameRoomInitMessage *pFailMsg = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
+		pFailMsg->szDetail = fmt::format( "Cannot host: {}. Another game on this computer holds the port, so this one "
+		                                  "can join games but not host one.",
+		                                  pLANClient->GetGamePortError() );
+		PushMessage( pFailMsg );
+		return;
+	}
+
 	eCurrentState = EGS_HOST;
 	pLANClient->StartGame();
 	CompileAndSendLANServerInfo();

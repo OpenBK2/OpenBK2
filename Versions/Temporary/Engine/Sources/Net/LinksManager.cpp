@@ -135,17 +135,17 @@ bool CLinksManagerCommon::Init( const int nPort )
 	name.sin_family = AF_INET;
 	name.sin_addr.s_addr = INADDR_ANY;
 	name.sin_port = htons( nPort );
-	if ( nPort > 0 )
+	// Port 0 is bound too, to a port the system picks. Unbound, the socket would
+	// get that port only at its first sendto, and until then getsockname, and so
+	// GetSelfAddress, reports port 0: the login told the host to answer at :0.
+	if ( bind( s, (sockaddr *)&name, sizeof( name ) ) != 0 )
 	{
-		if ( bind( s, (sockaddr *)&name, sizeof( name ) ) != 0 )
-		{
-			// Described before closesocket, which may overwrite the error.
-			// EADDRINUSE here usually means another game instance holds the port.
-			szLastLinksManagerError = fmt::format( "bind(UDP 0.0.0.0:{}) failed: {}", nPort, DescribeLastSocketError() );
-			closesocket( s );
-			s = INVALID_SOCKET;
-			return false;
-		}
+		// Described before closesocket, which may overwrite the error.
+		// EADDRINUSE here usually means another game instance holds the port.
+		szLastLinksManagerError = fmt::format( "bind(UDP 0.0.0.0:{}) failed: {}", nPort, DescribeLastSocketError() );
+		closesocket( s );
+		s = INVALID_SOCKET;
+		return false;
 	}
 	unsigned long dwOpt = 1;
 	ioctlsocket( s, FIONBIO, &dwOpt ); // no block

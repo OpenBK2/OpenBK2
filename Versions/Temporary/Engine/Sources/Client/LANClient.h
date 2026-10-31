@@ -18,8 +18,23 @@ class CLIENT_EXPORT CLANClient : public IServerClient
 	CObj<NNet::IDriver> pNetDriver;
 	std::list<CPtr<class CNetPacket>> packets;
 	bool bTryingConnect;
+	// Why the game port was not bound, so this client runs on another port; empty if it was
+	std::string szGamePortError;
 
 public:
+	// Whether this client holds the game port. Only then can it host: other
+	// instances look for games on that port alone.
+	bool IsOnGamePort() const
+	{
+		return szGamePortError.empty();
+	}
+
+	// The bind failure that put this client off the game port
+	const std::string &GetGamePortError() const
+	{
+		return szGamePortError;
+	}
+
 	CLANClient()
 		: bTryingConnect( false )
 	{
