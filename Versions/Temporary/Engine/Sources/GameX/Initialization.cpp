@@ -5,6 +5,7 @@
 #include "CClientGameConsts.h"
 #include "Common_RTS_AI/Pathfinders.h"
 #include "DBConsts.h"
+#include "DBFlags.h"
 #include "DBGameRoot.h"
 #include "DBMPConsts.h"
 #include "DebugTools/DebugInfoManager.h"
@@ -312,6 +313,53 @@ bool IsSideAvailable( const NDb::SMultiplayerConsts *pMPConsts, const int nCount
 		return false;
 	}
 	return !pSide->techLevels[nTechLevel].bDisabled;
+}
+
+// The flag pAuthority used in nYear, or 0. Periods are tried in the order they
+// are listed, so a year in which the flag changed takes the first.
+static const NDb::SFlagImage *GetAuthorityFlag( const NDb::SFlagAuthority *pAuthority, const int nYear )
+{
+	if ( !pAuthority )
+	{
+		return 0;
+	}
+	for ( const NDb::SFlagAuthority::SPeriod &period : pAuthority->periods )
+	{
+		const bool bStarted = period.nFromYear == 0 || period.nFromYear <= nYear;
+		const bool bNotEnded = period.nToYear == 0 || nYear <= period.nToYear;
+		if ( bStarted && bNotEnded && period.pImage )
+		{
+			return period.pImage;
+		}
+	}
+	return 0;
+}
+
+std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, const int nCountry, const int nTechLevel )
+{
+	const NDb::SMultiplayerSide *pSide = GetMultiplayerSide( pMPConsts, nCountry );
+	if ( !pSide || nTechLevel < 0 || nTechLevel >= pMPConsts->techLevels.size() )
+	{
+		return std::string();
+	}
+	const int nYear = pMPConsts->techLevels[nTechLevel].nFromYear;
+	if ( nYear == 0 )
+	{
+		return std::string();
+	}
+	const NDb::SFlagImage *pImage = GetAuthorityFlag( pSide->pFlagAuthority, nYear );
+	if ( !pImage && pSide->pFlagTerritory )
+	{
+		for ( const CDBPtr<NDb::SFlagAuthority> &pAuthority : pSide->pFlagTerritory->authorities )
+		{
+			pImage = GetAuthorityFlag( pAuthority, nYear );
+			if ( pImage )
+			{
+				break;
+			}
+		}
+	}
+	return pImage ? std::string( pImage->szImage ) : std::string();
 }
 
 }; // namespace NGameX

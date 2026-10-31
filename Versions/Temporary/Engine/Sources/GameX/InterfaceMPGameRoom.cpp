@@ -642,8 +642,9 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 			if ( pMPConsts->sides[j].pPartyInfo && NGameX::IsSideAvailable( pMPConsts, j, gameDesc.nTechLevel ) &&
 			     CHECK_TEXT_NOT_EMPTY_PRE( pMPConsts->sides[j]., Name ) )
 			{
-				CPtr<CTextureData> pData =
-						new CTextureData( pMPConsts->sides[j].pListItemIcon, GET_TEXT_PRE( pMPConsts->sides[j]., Name ) );
+				CPtr<CTextureData> pData = new CTextureData( pMPConsts->sides[j].pListItemIcon,
+				                                             GET_TEXT_PRE( pMPConsts->sides[j]., Name ),
+				                                             NGameX::GetSideFlagImage( pMPConsts, j, gameDesc.nTechLevel ) );
 				slot.pCountry->AddItem( pData );
 			}
 		}

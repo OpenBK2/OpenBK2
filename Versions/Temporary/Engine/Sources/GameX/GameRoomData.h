@@ -84,19 +84,26 @@ public:
 	ZDATA
 	CDBPtr<NDb::STexture> pTexture;
 	std::wstring wszTooltip;
+	// An SVG flag drawn instead of pTexture when not empty; pTexture stays the
+	// fallback for data without flag records.
+	std::string szVectorImage;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
 		f.Add( 2, &pTexture );
 		f.Add( 3, &wszTooltip );
+		f.Add( 4, &szVectorImage );
 		return 0;
 	}
 
 	CTextureData() {}
 
-	CTextureData( const NDb::STexture *_pTexture, const std::wstring &_wszTooltip )
+	CTextureData( const NDb::STexture *_pTexture,
+	              const std::wstring &_wszTooltip,
+	              const std::string &_szVectorImage = std::string() )
 		: pTexture( _pTexture )
 		, wszTooltip( _wszTooltip )
+		, szVectorImage( _szVectorImage )
 	{
 	}
 };

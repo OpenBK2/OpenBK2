@@ -10,6 +10,7 @@
 #include "InterfaceState.h"
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
+#include "UI/BackgroundVectorImage.h"
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
@@ -88,7 +89,30 @@ void CTextureViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDat
 
 	if ( pWnd )
 	{
-		pWnd->SetTexture( pInfo->pTexture );
+		// The combo box redraws its selected line through this viewer for every
+		// item it shows, so the same window can go from a flag to a plain texture
+		// (the random country icon) and back: the vector background is installed
+		// over the window's own one, and that one is put back when it is not needed.
+		CDynamicCast<CBackgroundVectorImage> pVector( pWnd->GetBackground() );
+		if ( !pInfo->szVectorImage.empty() )
+		{
+			if ( pVector )
+			{
+				pVector->SetFileName( pInfo->szVectorImage );
+			}
+			else
+			{
+				pWnd->SetBackground( new CBackgroundVectorImage( pInfo->szVectorImage, pWnd->GetBackground() ) );
+			}
+		}
+		else
+		{
+			if ( pVector )
+			{
+				pWnd->SetBackground( pVector->GetReplaced() );
+			}
+			pWnd->SetTexture( pInfo->pTexture );
+		}
 		pWnd->SetTooltip( pInfo->wszTooltip );
 	}
 }

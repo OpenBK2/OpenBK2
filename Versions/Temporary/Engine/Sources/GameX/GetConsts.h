@@ -2,6 +2,8 @@
 
 #include "GameX_export.h"
 
+#include <string>
+
 namespace NDb
 {
 
@@ -57,5 +59,14 @@ const NDb::SLadderRank *GetLadderRank( const NDb::SMultiplayerConsts *pMPConsts,
 // on entry would not make either use safe. A side that does not define the
 // level cannot be played at it, which is what false means here.
 bool IsSideAvailable( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nTechLevel );
+
+// The SVG flag nCountry shows at nTechLevel, or an empty
+// path when there is none and the side's ListItemIcon texture should be used.
+//
+// The year looked up is the first one the tech level represents. A tech level
+// with no years, a side with neither FlagAuthority nor FlagTerritory, and a year
+// none of the side's flags covers all give the empty path, which is what old
+// data and mods without flag records get, so they keep their own icons.
+std::string GetSideFlagImage( const NDb::SMultiplayerConsts *pMPConsts, int nCountry, int nTechLevel );
 
 } // namespace NGameX
