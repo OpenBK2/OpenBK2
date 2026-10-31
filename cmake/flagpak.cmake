@@ -21,6 +21,8 @@ set(OBK2_FLAG_PAK_FILES
     Flags/Images/Allies_Star.xdb
     Flags/Images/Germany_StandIn.svg
     Flags/Images/Germany_StandIn.xdb
+    Flags/Images/Random_Dice.svg
+    Flags/Images/Random_Dice.xdb
     Flags/Images/USA_1912.svg
     Flags/Images/USA_1912.xdb
     Flags/Images/USSR_1936.svg

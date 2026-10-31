@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Random country icon: two dice on a grey ground.
+
+  Not a flag. The multiplayer game room shows this for "random country". It
+  redraws the original game's 32x22 icon
+  (UI/Game/Menu/MPGameRoom/Countries/FlagRandom_Texture.dds), two white dice
+  with soft shadows, as a vector drawing that stays sharp at any size, in the
+  icon's 16:11 frame.
+
+  Source: generated for OpenBK2 by scripts/flags/dice.py, which says how; edit
+  that and run it again rather than this file. 320 x 220.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="220" viewBox="0 0 320 220">
+	<defs>
+	<radialGradient id="ground" cx="0.42" cy="0.38" r="0.75"><stop offset="0" stop-color="#9a9a9a"/><stop offset="1" stop-color="#595959"/></radialGradient>
+	<radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity="0.55"/><stop offset="0.6" stop-color="#000" stop-opacity="0.25"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+	</defs>
+	<rect width="320" height="220" fill="url(#ground)"/>
+	<ellipse cx="121.12" cy="171.52" rx="100.80" ry="40.32" fill="url(#shadow)"/>
+	<linearGradient id="a_f5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgb(249,249,245)"/><stop offset="1" stop-color="rgb(210,210,204)"/></linearGradient>
+	<g transform="matrix(77.6656 28.2137 56.4274 -38.8328 32.9535 75.7403)">
+	<rect x="0" y="0" width="1" height="1" rx="0.16" fill="rgb(130,130,130)"/>
+	<rect x="0.035" y="0.035" width="0.93" height="0.93" rx="0.14" fill="url(#a_f5)"/>
+	<circle cx="0.270" cy="0.270" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.270" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.500" cy="0.500" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.270" cy="0.730" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.730" r="0.095" fill="#1d1d1d"/>
+	</g>
+	<linearGradient id="a_f1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgb(181,181,177)"/><stop offset="1" stop-color="rgb(149,149,143)"/></linearGradient>
+	<g transform="matrix(77.6656 28.2137 0.0000 83.1384 32.9535 75.7403)">
+	<rect x="0" y="0" width="1" height="1" rx="0.16" fill="rgb(92,92,92)"/>
+	<rect x="0.035" y="0.035" width="0.93" height="0.93" rx="0.14" fill="url(#a_f1)"/>
+	<circle cx="0.500" cy="0.500" r="0.095" fill="#1d1d1d"/>
+	</g>
+	<linearGradient id="a_f3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgb(122,122,118)"/><stop offset="1" stop-color="rgb(96,96,90)"/></linearGradient>
+	<g transform="matrix(56.4274 -38.8328 0.0000 83.1384 110.6191 103.9540)">
+	<rect x="0" y="0" width="1" height="1" rx="0.16" fill="rgb(59,59,59)"/>
+	<rect x="0.035" y="0.035" width="0.93" height="0.93" rx="0.14" fill="url(#a_f3)"/>
+	<circle cx="0.270" cy="0.270" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.500" cy="0.500" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.730" r="0.095" fill="#1d1d1d"/>
+	</g>
+	<ellipse cx="258.48" cy="146.08" rx="88.20" ry="35.28" fill="url(#shadow)"/>
+	<linearGradient id="b_f3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgb(246,246,242)"/><stop offset="1" stop-color="rgb(208,208,202)"/></linearGradient>
+	<g transform="matrix(74.1676 -16.0399 -39.4356 -30.1667 222.6340 78.7344)">
+	<rect x="0" y="0" width="1" height="1" rx="0.16" fill="rgb(128,128,128)"/>
+	<rect x="0.035" y="0.035" width="0.93" height="0.93" rx="0.14" fill="url(#b_f3)"/>
+	<circle cx="0.270" cy="0.270" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.500" cy="0.500" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.730" r="0.095" fill="#1d1d1d"/>
+	</g>
+	<linearGradient id="b_f6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgb(122,122,118)"/><stop offset="1" stop-color="rgb(96,96,90)"/></linearGradient>
+	<g transform="matrix(74.1676 -16.0399 0.0000 76.7378 222.6340 78.7344)">
+	<rect x="0" y="0" width="1" height="1" rx="0.16" fill="rgb(59,59,59)"/>
+	<rect x="0.035" y="0.035" width="0.93" height="0.93" rx="0.14" fill="url(#b_f6)"/>
+	<circle cx="0.270" cy="0.250" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.270" cy="0.500" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.270" cy="0.750" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.250" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.500" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.750" r="0.095" fill="#1d1d1d"/>
+	</g>
+	<linearGradient id="b_f5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgb(202,202,198)"/><stop offset="1" stop-color="rgb(168,168,162)"/></linearGradient>
+	<g transform="matrix(39.4356 30.1667 0.0000 76.7378 183.1984 48.5677)">
+	<rect x="0" y="0" width="1" height="1" rx="0.16" fill="rgb(104,104,104)"/>
+	<rect x="0.035" y="0.035" width="0.93" height="0.93" rx="0.14" fill="url(#b_f5)"/>
+	<circle cx="0.270" cy="0.270" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.270" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.500" cy="0.500" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.270" cy="0.730" r="0.095" fill="#1d1d1d"/>
+	<circle cx="0.730" cy="0.730" r="0.095" fill="#1d1d1d"/>
+	</g>
+</svg>

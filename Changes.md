@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- The "random country" dice in the multiplayer game room are redrawn as a sharp vector picture, in the original's arrangement of two dice with soft shadows. Every installation and mod checked uses the same dice picture, so they all get the new one with `obk2_flags.pak`.
+
 - The sharp multiplayer flags work over an installed copy of the original game, Fire of the Rising and Liberation as well: put `obk2_flags.pak`, which the build installs into `Data`, beside the installed game's own archives. Those games keep their multiplayer settings in their own archives, which this does not replace; their sides are recognised by their icons and their tech levels by name. Germany shows the stand-in, the USSR its 1936 flag, and the Allies side keeps the white star emblem of the original, redrawn sharp. Mods are not recognised yet and keep their own pictures.
 
 - Records of a kind added after a game was released now load in that game's data. The game learned which kinds of record exist only from the `types.xml` in the data it plays, and an installed game's is as old as the game, so a new record there was found but never created. It now also knows every kind compiled into the program.

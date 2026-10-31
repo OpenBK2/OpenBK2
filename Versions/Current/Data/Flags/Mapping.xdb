@@ -19,6 +19,12 @@
 			<Authority href="" />
 			<Image href="/Flags/Images/Allies_Star.xdb#xpointer(/FlagImage)" />
 		</Item>
+		<Item>
+			<ImageHash>4fc207cc357eb342</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Random_Dice.xdb#xpointer(/FlagImage)" />
+		</Item>
 	</Icons>
 	<TechLevels>
 		<Item>
