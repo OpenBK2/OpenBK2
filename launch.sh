@@ -159,6 +159,13 @@ usage()
 	                         perf unwinds with dwarf and a 32 KB stack copy;
 	                         BK2_PERF_CALLGRAPH replaces that, e.g. fp for a
 	                         build configured with -DENABLE_FRAME_POINTERS=ON.
+	  -w, --window [WHERE]   run the game in a window rather than over the whole
+	                         screen, by passing --window= to the game. WHERE is
+	                         left or right, the top quarter of the primary
+	                         screen on that side, or WxH+X+Y. Without WHERE it
+	                         is left, or right if a game is already running, so
+	                         two runs for a multiplayer test sit side by side.
+	                         The window is borderless, so the two tile exactly.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
 	      --valgrind         run under valgrind's memcheck, which reports the
@@ -250,6 +257,8 @@ PROFILE_OUT=
 declare -a SETVARS=()
 SOFTWARE_VK=no
 HUD=
+# --window: empty for the usual whole-screen window
+WINDOW=
 FRAME_LOG=no
 # Empty means "not given": a profiled run then picks the performance cores.
 CPUS=
@@ -334,6 +343,17 @@ while [ $# -gt 0 ]; do
 		                  *) die "--cpus wants a CPU list such as 0-11, or all, got '$2'" ;;
 		              esac
 		              shift 2 ;;
+		-w|--window)  # Optional argument, as for --hud: the next word is taken
+		              # only when it is not an option, and checked here.
+		              WINDOW=auto
+		              if [ $# -ge 2 ] && [ "${2#-}" = "$2" ]; then
+		                  case "$2" in
+		                      left|right|[0-9]*x[0-9]*+[0-9]*+[0-9]*) WINDOW="$2" ;;
+		                      *) die "--window takes left, right or WxH+X+Y, got '$2'" ;;
+		                  esac
+		                  shift
+		              fi
+		              shift ;;
 		-e|--editor)  EXE=B2_MapEditor; shift ;;
 		-g|--gdb)     USE_GDB=yes; shift ;;
 		--valgrind)   USE_VALGRIND=yes; shift ;;
@@ -344,6 +364,16 @@ while [ $# -gt 0 ]; do
 done
 
 [ "$VERIFY" = yes ] && [ -z "$REPLAY" ] && die "--verify needs --replay FILE"
+[ -n "$WINDOW" ] && [ "$EXE" != Game ] && die "--window is for the game; the editor lays out its own viewport"
+# The first game takes the left quarter and a second the right, so a multiplayer
+# test needs no arguments. Any running Game counts, whichever build or tree.
+if [ "$WINDOW" = auto ]; then
+	if pgrep -x Game >/dev/null 2>&1; then
+		WINDOW=right
+	else
+		WINDOW=left
+	fi
+fi
 [ -n "$REPLAY_PLAYER" ] && [ -z "$REPLAY" ] && die "--replay-player needs --replay FILE"
 [ "$USE_GDB" = yes ] && [ "$USE_VALGRIND" = yes ] &&
 	die "--gdb and --valgrind both want to be the outer process; pass one"
@@ -898,6 +928,7 @@ if [ "$SHOW_ENV" = yes ]; then
 	[ ${#PROFILER_CMD[@]} -gt 0 ] && printf 'profiler=%s %s\n' "${PROFILER_CMD[*]}" "${PRIV_CMD[*]}"
 	[ ${#PIN_CMD[@]} -gt 0 ] && printf 'pin=%s\n' "${PIN_CMD[*]}"
 	[ "$MOD_GIVEN" = yes ] && printf 'args=--mod=%s\n' "$MOD"
+	[ -n "$WINDOW" ] && printf 'args=--window=%s\n' "$WINDOW"
 	[ -n "$MISSION" ] && printf 'args=--mission=%s\n' "$MISSION"
 	[ -n "$CAMPAIGN" ] && printf 'args=--campaign=%s\n' "$CAMPAIGN"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
@@ -922,6 +953,7 @@ CMD+=("./$EXE")
 # --mod among them, and an empty one still passed: --mod "" is how a run says
 # "ignore what the profile remembers and start unmodded".
 [ "$MOD_GIVEN" = yes ] && CMD+=("--mod=$MOD")
+[ -n "$WINDOW" ] && CMD+=("--window=$WINDOW")
 [ -n "$MISSION" ] && CMD+=("--mission=$MISSION")
 [ -n "$CAMPAIGN" ] && CMD+=("--campaign=$CAMPAIGN")
 [ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")

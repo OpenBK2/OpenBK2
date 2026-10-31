@@ -244,10 +244,119 @@ double NWinFrame::GetMonitorRefreshRate()
 #endif
 }
 
+namespace
+{
+// Where SetGameWindowPlacement put the game window. WP_MONITOR is the default:
+// the window covers the monitor, as it always has.
+enum EWindowPlacement
+{
+	WP_MONITOR,
+	WP_LEFT,
+	WP_RIGHT,
+	WP_EXPLICIT,
+};
+
+EWindowPlacement eWindowPlacement = WP_MONITOR;
+// WP_EXPLICIT's rectangle, in desktop coordinates
+int nPlacementX = 0, nPlacementY = 0, nPlacementWidth = 0, nPlacementHeight = 0;
+
+//! The rectangle SetGameWindowPlacement asked for, in desktop coordinates, or
+//! false when it asked for none and the window is to cover the monitor.
+bool GetGameWindowPlacement( int *pX, int *pY, int *pWidth, int *pHeight )
+{
+	if ( eWindowPlacement == WP_MONITOR )
+	{
+		return false;
+	}
+	if ( eWindowPlacement == WP_EXPLICIT )
+	{
+		*pX = nPlacementX;
+		*pY = nPlacementY;
+		*pWidth = nPlacementWidth;
+		*pHeight = nPlacementHeight;
+		return true;
+	}
+	// The primary display's usable area: the panels and docks are left
+	// uncovered, so both quarters are wholly visible.
+	int nLeft = 0, nTop = 0, nWidth = 1024, nHeight = 768;
+#if BOOST_OS_WINDOWS
+	MONITORINFO monitor = {};
+	monitor.cbSize = sizeof( monitor );
+	const POINT origin = { 0, 0 };
+	if ( GetMonitorInfo( MonitorFromPoint( origin, MONITOR_DEFAULTTOPRIMARY ), &monitor ) )
+	{
+		nLeft = monitor.rcWork.left;
+		nTop = monitor.rcWork.top;
+		nWidth = monitor.rcWork.right - monitor.rcWork.left;
+		nHeight = monitor.rcWork.bottom - monitor.rcWork.top;
+	}
+#else
+	SDL_Rect bounds = {};
+	const SDL_DisplayID nDisplay = SDL_GetPrimaryDisplay();
+	if ( SDL_GetDisplayUsableBounds( nDisplay, &bounds ) || SDL_GetDisplayBounds( nDisplay, &bounds ) )
+	{
+		nLeft = bounds.x;
+		nTop = bounds.y;
+		nWidth = bounds.w;
+		nHeight = bounds.h;
+	}
+#endif
+	*pWidth = nWidth / 2;
+	*pHeight = nHeight / 2;
+	*pX = eWindowPlacement == WP_LEFT ? nLeft : nLeft + nWidth - *pWidth;
+	*pY = nTop;
+	return true;
+}
+} // namespace
+
+bool NWinFrame::SetGameWindowPlacement( const std::string &szPlacement )
+{
+	if ( szPlacement == "left" )
+	{
+		eWindowPlacement = WP_LEFT;
+		return true;
+	}
+	if ( szPlacement == "right" )
+	{
+		eWindowPlacement = WP_RIGHT;
+		return true;
+	}
+	// WxH+X+Y, the X11 geometry spelling, all of it and nothing after
+	int nWidth = 0, nHeight = 0, nX = 0, nY = 0, nConsumed = 0;
+	if ( sscanf( szPlacement.c_str(), "%dx%d+%d+%d%n", &nWidth, &nHeight, &nX, &nY, &nConsumed ) == 4 &&
+	     nConsumed == static_cast<int>( szPlacement.size() ) && nWidth > 0 && nHeight > 0 )
+	{
+		eWindowPlacement = WP_EXPLICIT;
+		nPlacementX = nX;
+		nPlacementY = nY;
+		nPlacementWidth = nWidth;
+		nPlacementHeight = nHeight;
+		return true;
+	}
+	return false;
+}
+
 void NWinFrame::FitGameWindowToMonitor()
 {
 	if ( !IsGameWindow( hWnd ) )
 	{
+		return;
+	}
+	// A placement given on the command line replaces the monitor. The frame is
+	// presented scaled into whatever client area the window has, so nothing
+	// else needs to know the window is smaller.
+	int nX = 0, nY = 0, nWidth = 0, nHeight = 0;
+	if ( GetGameWindowPlacement( &nX, &nY, &nWidth, &nHeight ) )
+	{
+#if BOOST_OS_WINDOWS
+		SetWindowPos( hWnd, HWND_NOTOPMOST, nX, nY, nWidth, nHeight, SWP_NOACTIVATE | SWP_SHOWWINDOW );
+#else
+		SDL_Window *pWindow = AsSdlWindow( hWnd );
+		SDL_SetWindowFullscreen( pWindow, false );
+		SDL_SetWindowSize( pWindow, nWidth, nHeight );
+		SDL_SetWindowPosition( pWindow, nX, nY );
+		SDL_SyncWindow( pWindow );
+#endif
 		return;
 	}
 #if BOOST_OS_WINDOWS
@@ -812,14 +921,19 @@ bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *, LPC
 	// Request desktop fullscreen on the primary display before showing the
 	// window. Some window managers relocate a desktop-sized borderless window
 	// even with an explicit position if it is not already marked fullscreen.
-	const int nPosition = SDL_WINDOWPOS_CENTERED_DISPLAY( nDisplay );
+	int nX = SDL_WINDOWPOS_CENTERED_DISPLAY( nDisplay );
+	int nY = nX;
+	// A placement from the command line is used from the start, so the window
+	// does not appear over the whole screen first; it stays borderless so two
+	// instances tile edge to edge.
+	const bool bPlaced = GetGameWindowPlacement( &nX, &nY, &nWidth, &nHeight );
 	SDL_SetStringProperty( properties, SDL_PROP_WINDOW_CREATE_TITLE_STRING, pszAppName != 0 ? pszAppName : "" );
 	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, nWidth );
 	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, nHeight );
-	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, nPosition );
-	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, nPosition );
+	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, nX );
+	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, nY );
 	SDL_SetBooleanProperty( properties, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true );
-	SDL_SetBooleanProperty( properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true );
+	SDL_SetBooleanProperty( properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, !bPlaced );
 	SDL_SetBooleanProperty( properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true );
 	SDL_Window *pWindow = SDL_CreateWindowWithProperties( properties );
 	SDL_DestroyProperties( properties );

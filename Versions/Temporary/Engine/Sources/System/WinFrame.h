@@ -71,6 +71,12 @@ SYSTEM_EXPORT HWND GetWnd();
 // Only the standalone game owns its window; editor viewports keep their layout.
 SYSTEM_EXPORT bool IsGameWindow( HWND hWindow );
 SYSTEM_EXPORT void FitGameWindowToMonitor();
+// Put the game window somewhere other than over the whole monitor, for running
+// several instances side by side. "left" and "right" are the top quarter of the
+// primary display's usable area on that side, "WxH+X+Y" an explicit rectangle in
+// desktop coordinates. Call before the window is created; false if szPlacement
+// is none of these.
+SYSTEM_EXPORT bool SetGameWindowPlacement( const std::string &szPlacement );
 // Current refresh rate of the window's monitor in Hz, or zero if unavailable.
 SYSTEM_EXPORT double GetMonitorRefreshRate();
 SYSTEM_EXPORT void SetRenderSize( int width, int height );

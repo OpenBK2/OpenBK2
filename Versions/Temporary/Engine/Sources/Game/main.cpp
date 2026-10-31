@@ -740,6 +740,23 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		// game one. The second argument is consumed here so that it never reaches
 		// the catch-all at the end of this loop, which would make a variable of
 		// the whole text.
+		// --window=left|right|WxH+X+Y puts the game window in a quarter of the
+		// screen or a given rectangle rather than over the whole monitor, so two
+		// instances can run side by side for multiplayer testing. Not a game
+		// variable: those are applied after the window is made, and this has to
+		// be known before, and it is not something a profile should remember.
+		const std::string windowPrefix = "--window=";
+		if ( szString.compare( 0, windowPrefix.size(), windowPrefix ) == 0 )
+		{
+			std::string value = szString.substr( windowPrefix.size() );
+			NStr::TrimBoth( value, '"' );
+			if ( !NWinFrame::SetGameWindowPlacement( value ) )
+			{
+				MessageBox( 0, "Invalid --window argument, expected left, right or WxH+X+Y.", "Window", MB_OK | MB_ICONERROR );
+				return false;
+			}
+			continue;
+		}
 		const std::string varPrefix = "--setvar=";
 		const bool bSetVarSeparate = szString == "--setvar";
 		if ( bSetVarSeparate || szString.compare( 0, varPrefix.size(), varPrefix ) == 0 )
