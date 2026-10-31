@@ -103,4 +103,71 @@ namespace NDb
 		int operator&( IXmlSaver &saver ) override;
 		uint32_t CalcCheckSum() const override;
 	};
+
+	struct SFlagMapping : public CResource
+	{
+		OBJECT_BASIC_METHODS( SFlagMapping )
+	public:
+		enum { typeID = 0x1F1A6C13 };
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+
+		struct SIcon
+		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
+			std::string szImageHash;
+			CDBPtr< SFlagTerritory > pTerritory;
+			CDBPtr< SFlagAuthority > pAuthority;
+			CDBPtr< SFlagImage > pImage;
+
+			SIcon() :
+				__dwCheckSum( 0 )
+			{ }
+			//
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+			//
+			int operator&( IBinSaver &saver );
+			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
+		};
+
+		struct STechLevel
+		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
+			std::string szName;
+			int nFromYear;
+			int nToYear;
+
+			STechLevel() :
+				__dwCheckSum( 0 ),
+				nFromYear( 0 ),
+				nToYear( 0 )
+			{ }
+			//
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+			//
+			int operator&( IBinSaver &saver );
+			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
+		};
+		std::vector< SIcon > icons;
+		std::vector< STechLevel > techLevels;
+
+		SFlagMapping() :
+			__dwCheckSum( 0 )
+		{ }
+		//
+		int GetTypeID() const override { return typeID; }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver ) override;
+		int operator&( IXmlSaver &saver ) override;
+		uint32_t CalcCheckSum() const override;
+	};
 }

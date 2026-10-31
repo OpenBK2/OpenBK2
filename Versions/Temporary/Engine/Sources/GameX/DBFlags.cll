@@ -43,4 +43,42 @@ class SFlagTerritory
 	// governments, most important first: a year takes the first one with a flag for it
 	SFlagAuthority *_Authorities[];
 };
+
+// Flags for multiplayer data that carries no flag references of its own
+[typeID = 0x1F1A6C13]
+class SFlagMapping
+{
+	/* Installed games and mods ship their own multiplayer consts, inside their
+	   own paks, so their sides and tech levels cannot be given FlagTerritory or
+	   FromYear without replacing the whole record. They are recognised by
+	   content instead: a side by the image file of its ListItemIcon, which is the
+	   same bytes in every installation that shares the icon, and a tech level by
+	   its name. The game reads this record from Flags/Mapping.xdb, and a side's
+	   or tech level's own fields win over it. */
+	struct SIcon
+	{
+		// FNV-1a 64-bit hash of the side's ListItemIcon image file, 16 lowercase hex digits
+		string _ImageHash;
+		// the territory a side with this icon fights for
+		SFlagTerritory *_Territory;
+		// or one government, which wins over Territory when both are set
+		SFlagAuthority *_Authority;
+		// or one drawing for every year, which wins over both, for an icon that is not a flag
+		SFlagImage *_Image;
+	};
+	struct STechLevel
+	{
+		/* Compared with every kind of dash folded to a hyphen and the ends
+		   trimmed, so 1941-1942 also matches a name written with an en or em
+		   dash. */
+		// a tech level's name as the game room shows it
+		string _Name;
+		// first year a tech level with this name represents
+		int _FromYear = 0;
+		// last year it represents, inclusive; 0 when the same as the first
+		int _ToYear = 0;
+	};
+	SIcon _Icons[];
+	STechLevel _TechLevels[];
+};
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
