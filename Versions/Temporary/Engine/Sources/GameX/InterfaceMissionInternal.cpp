@@ -18,7 +18,6 @@
 
 #include "MemoryLib_export.h"
 
-#include <chrono>
 #include <thread>
 // CCommandsHistory, for save_replay: the cast to it needs the complete type,
 // and SaveReplay is on the concrete class rather than on ICommandsHistory.
@@ -2268,7 +2267,19 @@ void CInterfaceMission::UpdateWarFog( NTimer::STime nGameTime, bool bFirst, bool
 
 bool CInterfaceMission::StepLocal( bool bAppActive )
 {
-	std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+	// This was Nival's Sleep( 1 ), uncommented, on every mission frame. Nothing in
+	// the engine raises the Windows timer resolution, so it slept until the next
+	// tick, which on the single-core machines of the time reads as making room for
+	// the resource loader, sound and network threads rather than as a frame budget.
+	// On Linux it costs 1.06 ms of every frame, and on a mission frame that is
+	// already doing 14 ms of work it buys nothing.
+	//
+	// A yield keeps the first part: any thread that is ready runs before this one
+	// carries on, and with nothing ready it returns at once. The other thing a
+	// sleep here could do, keep an idle loop from spinning, is not this one's job:
+	// CInterfaceScreenBase::Step returns before calling StepLocal when the window is
+	// inactive, and the outer loop in RunGame sleeps 40 ms in that case.
+	std::this_thread::yield();
 
 	if ( IsValid( pTransceiver ) )
 	{
