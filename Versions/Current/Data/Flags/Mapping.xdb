@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FlagMapping>
+	<Icons>
+		<Item>
+			<ImageHash>5ed0ca11f75eca35</ImageHash>
+			<Territory href="/Flags/Territories/Germany.xdb#xpointer(/FlagTerritory)" />
+			<Authority href="" />
+			<Image href="" />
+		</Item>
+		<Item>
+			<ImageHash>9a23bf02fe5567bc</ImageHash>
+			<Territory href="/Flags/Territories/USSR.xdb#xpointer(/FlagTerritory)" />
+			<Authority href="" />
+			<Image href="" />
+		</Item>
+		<Item>
+			<ImageHash>069cf331da431b26</ImageHash>
+			<Territory href="" />
+			<Authority href="" />
+			<Image href="/Flags/Images/Allies_Star.xdb#xpointer(/FlagImage)" />
+		</Item>
+	</Icons>
+	<TechLevels>
+		<Item>
+			<Name>1939-1941</Name>
+			<FromYear>1939</FromYear>
+			<ToYear>1941</ToYear>
+		</Item>
+		<Item>
+			<Name>1941-1943</Name>
+			<FromYear>1941</FromYear>
+			<ToYear>1943</ToYear>
+		</Item>
+		<Item>
+			<Name>1945-1946</Name>
+			<FromYear>1945</FromYear>
+			<ToYear>1946</ToYear>
+		</Item>
+		<Item>
+			<Name>1941-1942</Name>
+			<FromYear>1941</FromYear>
+			<ToYear>1942</ToYear>
+		</Item>
+		<Item>
+			<Name>1942-1943</Name>
+			<FromYear>1942</FromYear>
+			<ToYear>1943</ToYear>
+		</Item>
+		<Item>
+			<Name>1943-1944</Name>
+			<FromYear>1943</FromYear>
+			<ToYear>1944</ToYear>
+		</Item>
+		<Item>
+			<Name>1944-1945</Name>
+			<FromYear>1944</FromYear>
+			<ToYear>1945</ToYear>
+		</Item>
+	</TechLevels>
+</FlagMapping>

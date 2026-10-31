@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- The sharp multiplayer flags work over an installed copy of the original game, Fire of the Rising and Liberation as well: put `obk2_flags.pak`, which the build installs into `Data`, beside the installed game's own archives. Those games keep their multiplayer settings in their own archives, which this does not replace; their sides are recognised by their icons and their tech levels by name. Germany shows the stand-in, the USSR its 1936 flag, and the Allies side keeps the white star emblem of the original, redrawn sharp. Mods are not recognised yet and keep their own pictures.
+
 - Records of a kind added after a game was released now load in that game's data. The game learned which kinds of record exist only from the `types.xml` in the data it plays, and an installed game's is as old as the game, so a new record there was found but never created. It now also knows every kind compiled into the program.
 
 - The country flags in the multiplayer game room are sharp at any screen resolution, and keep their real proportions. They were 32x22 pictures stretched to fit the screen, about 80x46 pixels at 2560x1600, which blurred every edge and made them a fifth too wide. A flag can now be an SVG drawing, which the game renders at exactly the size it takes on screen, and which flag a side shows follows the years of the chosen tech level: the 48-star United States flag up to 1959, the Soviet flag of 1936 and its 1955 revision. Flags with a swastika are not shipped in any form, so the German side shows a stand-in after the one the original game used. Sides, tech levels and mods without the new records keep their old pictures.

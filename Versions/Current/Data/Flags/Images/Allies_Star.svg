@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Allies emblem: a white five-pointed star in a white ring on olive drab.
+
+  Not a flag. The original game's multiplayer "Allies" side shows this emblem,
+  the Allied vehicle marking, rather than one nation's flag, because the side is
+  a coalition; this is that emblem redrawn sharp, in the icon's 16:11 frame.
+
+  Source: drawn for OpenBK2 after the original game's 32x22 icon
+  (UI/Game/Menu/MPGameRoom/Countries/FlagUSA_Texture.dds in the original game,
+  Liberation and later patches). The olive is that icon's average, #766d38.
+  Geometry: 320 x 220; ring centred, outer radius 95, 16 wide; star with its
+  points on the ring's inner edge, radius 79, inner radius 30.18 (a regular
+  pentagram).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="220" viewBox="0 0 320 220">
+	<rect width="320" height="220" fill="#766d38"/>
+	<circle cx="160" cy="110" r="87" fill="none" stroke="#fff" stroke-width="16"/>
+	<path fill="#fff" d="M160.00 31.00 L177.74 85.59 L235.13 85.59 L188.70 119.32 L206.44 173.91 L160.00 140.18 L113.56 173.91 L131.30 119.32 L84.87 85.59 L142.26 85.59 Z"/>
+</svg>

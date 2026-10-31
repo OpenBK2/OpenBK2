@@ -286,6 +286,7 @@ include(cmake/freetype.cmake)
 include(cmake/lunasvg.cmake)
 # game data rather than code: the open fonts as a patch archive for Data
 include(cmake/fontpak.cmake)
+include(cmake/flagpak.cmake)
 # also data: the custom-mission maps that are in Complete and not in the data tree
 include(cmake/testmaps.cmake)
 include(cmake/pch.cmake)
