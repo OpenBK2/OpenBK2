@@ -4,13 +4,15 @@
 #include "Diplomacy.h"
 #include "Misc/2Darray.h"
 #include "ScenarioTracker.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 
 CDiplomacy theDipl;
 
 extern CDifficultyLevel theDifficultyLevel;
 
-void CDiplomacy::Load( const std::vector<int> &_playerParty )
+void CDiplomacy::Load( const std::vector<int> &_playerParty, const NDb::SMapInfo *pMapInfo )
 {
+	isAIPlayer.assign( _playerParty.size(), 0 );
 	if ( !GetScenarioTracker() )
 	{
 		return;
@@ -22,6 +24,10 @@ void CDiplomacy::Load( const std::vector<int> &_playerParty )
 	for ( int i = 0; i < isPlayerExist.size(); ++i )
 	{
 		isPlayerExist[i] = GetScenarioTracker()->IsPlayerPresent( i );
+		if ( GetScenarioTracker()->IsCooperative() && pMapInfo && i < pMapInfo->players.size() )
+		{
+			isAIPlayer[i] = pMapInfo->players[i].ePlayerType == NDb::AI_BOT;
+		}
 		if ( GetScenarioTracker()->IsMissionActive() )
 		{
 			int nScenarioParty = GetScenarioTracker()->GetPlayerSide( i );
@@ -59,6 +65,13 @@ int CDiplomacy::operator&( IBinSaver &saver )
 		saver.Add( 3, &bNetGame );
 		saver.Add( 4, &isPlayerExist );
 	}
+	// Roles affect autonomous behavior and must survive saves and simulation checksums.
+	if ( saver.IsReading() )
+	{
+		// Older saves have no role chunk and must not inherit a previous COOP map's bots.
+		isAIPlayer.clear();
+	}
+	saver.Add( 5, &isAIPlayer );
 
 	return 0;
 }

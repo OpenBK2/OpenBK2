@@ -735,6 +735,13 @@ void CMPTransceiver::AdvanceToNextSegment()
 	pAI->Segment();
 	++nCommonSegment;
 	nSegment = nCommonSegment % pConsts->nMaxLatency;
+	const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+	if ( pTracker && pTracker->IsCooperative() && pTracker->GetScriptOutcome() >= 0 )
+	{
+		// Lua runs in lockstep. Stop at this exact completed tick, including during
+		// catch-up, without waiting for another frame or a nonexistent AI client.
+		nFinalSegment = nCommonSegment;
+	}
 	PruneRecoveryCommands();
 	//DebugTrace( "+++ Local Player %d move to segment %d (%d)", nMyLogicID, nSegment, nCommonSegment );
 }
@@ -1108,12 +1115,15 @@ void CMPTransceiver::ReportAsnycToFile( int segment )
 		}
 
 		const auto &playerInfos = scenario->GetMultiplayerInfo()->players;
-		if ( nPlayerIndex >= playerInfos.size() )
+		// The presentation list is compact; COOP map slots may interleave bots.
+		const auto playerInfo = std::find_if(
+				playerInfos.begin(), playerInfos.end(), [&]( const auto &info ) { return info.nIndex == nPlayerIndex; } );
+		if ( playerInfo == playerInfos.end() )
 		{
 			continue;
 		}
 
-		std::string playerName = WideToUTF8( playerInfos[nPlayerIndex].wszName );
+		std::string playerName = WideToUTF8( playerInfo->wszName );
 		checksumsTxt += fmt::format( "{},\t\t{},\t\t{},\t\t{},\t\t{}\n",
 		                             nPlayerIndex,
 		                             players[nPlayerIndex].nClientID,

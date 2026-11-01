@@ -376,13 +376,29 @@ static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode,
 		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
 		// a GUID field is a boost::uuids::uuid, whose bytes AddUuidChunk
 		// (System/UuidChunk.h) writes in the GUID order the chunk always held
+		const bool bPreserveDefault = field.pAttributes && field.pAttributes->attributes.find( "preserveDefault" ) !=
+		                                                       field.pAttributes->attributes.end();
+		std::string szFieldTabs = "\t";
+		if ( bPreserveDefault )
+		{
+			// Binary primitive reads otherwise zero missing chunks, unlike XML reads.
+			// Opt in per field so existing records retain their historical behavior.
+			pCode->cpp << tab << "if ( !saver.IsReading() || saver.HasChunk( " << field.nChunkID << " ) )" << endl;
+			pCode->cpp << tab << "{" << endl;
+			szFieldTabs += '\t';
+		}
 		if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_GUID )
 		{
-			pCode->cpp << tab << "AddUuidChunk( saver, " << field.nChunkID << ", &" << szCodeFieldName << " );" << endl;
+			pCode->cpp << szFieldTabs << "AddUuidChunk( saver, " << field.nChunkID << ", &" << szCodeFieldName << " );"
+								 << endl;
 		}
 		else
 		{
-			pCode->cpp << tab << "saver.Add( " << field.nChunkID << ", &" << szCodeFieldName << " );" << endl;
+			pCode->cpp << szFieldTabs << "saver.Add( " << field.nChunkID << ", &" << szCodeFieldName << " );" << endl;
+		}
+		if ( bPreserveDefault )
+		{
+			pCode->cpp << tab << "}" << endl;
 		}
 	}
 

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Client/ServerClientInterface.h"
+#include "MPCoopRules.h"
 #include "MPLANTest.h"
 #include "MPManagerMode.h"
 #include "MPPacketTraceLog.h"
@@ -22,7 +23,11 @@ bool CMPManagerMode::HostAssignNewClient( int nClientID )
 		return false;
 	}
 
-	if ( nSlotsUsed == slots.size() )
+	// Closed human slots and map-controlled holes are unavailable even when the
+	// nominal room capacity has not been reached. Count the actual roster once.
+	nSlotsUsed = NGameX::GetPresentMultiplayerPlayerCount( slots );
+	const int nAvailableSlot = NGameX::FindAvailableMultiplayerSlot( gameDesc, slots );
+	if ( nAvailableSlot < 0 )
 	{
 		CConnectGameFailed *pFailPkt = new CConnectGameFailed( nClientID, CConnectGameFailed::ER_MAX_PLAYERS_REACHED );
 		pClient->SendPacket( pFailPkt );
@@ -31,7 +36,7 @@ bool CMPManagerMode::HostAssignNewClient( int nClientID )
 
 	for ( int i = 0; i < slots.size(); ++i )
 	{
-		if ( !slots[i].bPresent && !slots[i].bAccept ) // Look for an empty slot that is not locked
+		if ( i == nAvailableSlot )
 		{
 			slots[i].bPresent = true;
 			slots[i].nClientID = nClientID;

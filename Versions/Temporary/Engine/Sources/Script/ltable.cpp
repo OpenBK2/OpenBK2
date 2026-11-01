@@ -23,6 +23,20 @@
 #include "lstring.h"
 #include "ltable.h"
 
+#include <cmath>
+
+bool luaH_checkkey( lua_State *L, const TObject *key )
+{
+	// NaN is not equal to itself and cannot be a key in the table's hash index.
+	// Reject it before insertion instead of losing it during lookup or save/load.
+	if ( key->GetType() == LUA_TNIL || ( key->GetType() == LUA_TNUMBER && std::isnan( key->GetN() ) ) )
+	{
+		lua_error( L, "table index is nil or NaN" );
+		return false;
+	}
+	return true;
+}
+
 /*
 ** returns the `main' position of an element in a table (that is, the index
 ** of its hash value)

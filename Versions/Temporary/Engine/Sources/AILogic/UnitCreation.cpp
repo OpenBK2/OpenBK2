@@ -945,7 +945,8 @@ CExistingObject *CUnitCreation::CreatePlayerFlag( int nPlayer, CStaticObject *pS
 		return 0;
 	}
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
-	if ( pScenarioTracker && pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	// COOP bases use the same party flags as CLASSIC bases.
+	if ( pScenarioTracker && pScenarioTracker->IsMultiplayer() )
 	{
 		CDBPtr<NDb::SObjectBaseRPGStats> pFlag = pScenarioTracker->GetKeyBuildingFlagObject( nPlayer );
 

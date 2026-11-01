@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MultiplayerMap>
+	<Map href="MapInfo.xdb#xpointer(/MapInfo)" />
+	<MapNameFileRef href="Name.txt" />
+	<SizeX>8</SizeX>
+	<SizeY>8</SizeY>
+	<Players>2</Players>
+	<GameType>COOP</GameType>
+	<ForcedTechLevel>-1</ForcedTechLevel>
+	<AllowedNations />
+	<DifficultyLevel>0</DifficultyLevel>
+</MultiplayerMap>

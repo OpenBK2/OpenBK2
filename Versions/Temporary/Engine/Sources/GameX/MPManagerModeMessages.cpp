@@ -10,6 +10,7 @@
 #include "Main/MainLoopCommands.h"
 #include "Misc/StringConversions.h"
 #include "Misc/StrProc.h"
+#include "MPCoopRules.h"
 #include "MPManagerMode.h"
 #include "MPPacketTraceLog.h"
 #include "MPTransceiver.h"
@@ -18,6 +19,7 @@
 #include "ScenarioTracker.h"
 #include "Server_Client_Common/ChatPackets.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -37,18 +39,34 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 	{
 		szPassword = "";
 	}
-	gameDesc.eType = SB2GameSpecificData::EGT_FLAG_CONTROL_2;
-
 	gameDesc.nPlayers = pMsg->info.nPlayersMax;
+	std::string szError;
+	if ( !NGameX::ResolveMultiplayerMapRules( &gameDesc, &szError ) )
+	{
+		auto *pFailure = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
+		pFailure->szDetail = szError;
+		PushMessage( pFailure );
+		return true;
+	}
 
 	// Arrange slots
 	slots.clear();
-	slots.resize( gameDesc.nPlayers );
-	slots[0].szName = szMPName; // Add self
-	slots[0].bPresent = true;
-	slots[0].nClientID = GetOwnClientID();
-	nHostClientID = slots[0].nClientID;
-	nOwnSlot = 0;
+	slots.resize( NGameX::GetMultiplayerSlotCount( gameDesc ) );
+	nOwnSlot = -1;
+	for ( int i = 0; i < slots.size(); ++i )
+	{
+		// Map AI/neutral slots keep their simulation IDs, but cannot accept a peer.
+		slots[i].bAccept = !NGameX::IsHumanMultiplayerSlot( gameDesc, i );
+		if ( !slots[i].bAccept && nOwnSlot < 0 )
+		{
+			nOwnSlot = i;
+		}
+	}
+	slots[nOwnSlot].szName = szMPName;
+	slots[nOwnSlot].bPresent = true;
+	slots[nOwnSlot].nClientID = GetOwnClientID();
+	slots[nOwnSlot].nCountry = NGameX::GetAllowedMultiplayerNations( gameDesc ).front();
+	nHostClientID = slots[nOwnSlot].nClientID;
 	nSlotsUsed = 1;
 
 	bGameRoomInit = false;
@@ -78,6 +96,9 @@ bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 
 			bFound = true;
 			// Init all necessary data
+			gameDesc = SB2GameSpecificData();
+			gameDesc.nPlayers = game.nMaxPlayers;
+			gameDesc.eType = static_cast<SB2GameSpecificData::EGameType>( game.nGameType );
 			slots.clear();
 			slots.resize( game.nMaxPlayers );
 			nOwnSlot = -1;
@@ -121,6 +142,18 @@ bool CMPManagerMode::OnStartGameMessage( SMPUIMessage *pMsg )
 {
 	// This happens only on the host side, so send StartGame packets to all
 	NI_VERIFY( IsGameHost(), "PRG: Should be a host to start the game", return true );
+	std::string szError;
+	if ( !NGameX::ValidateMultiplayerLobby( gameDesc, slots, &szError ) )
+	{
+		// Recheck authoritative state: UI controls are not a map-rule boundary.
+		PushMessage( new SMPUIChatMessage( "", NStr::ToUnicode( szError ) ) );
+		auto *pUpdate = new SMPUIUpdateSlotMessage;
+		pUpdate->nSlot = nOwnSlot;
+		pUpdate->info = slots[nOwnSlot];
+		PushMessage( pUpdate );
+		return true;
+	}
+	nSlotsUsed = NGameX::GetPresentMultiplayerPlayerCount( slots );
 	SendStartGamePacket();
 	StartGame();
 	return true;
@@ -156,6 +189,19 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 
 	SMPSlot &oldSlot = slots[pMsg->nSlot];
 	SMPSlot &newSlot = pMsg->info;
+	if ( !NGameX::IsHumanMultiplayerSlot( gameDesc, pMsg->nSlot ) )
+	{
+		return true;
+	}
+	if ( NGameX::IsCoopGame( gameDesc ) )
+	{
+		newSlot.nTeam = 0;
+	}
+	const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+	if ( newSlot.bPresent && std::find( nations.begin(), nations.end(), newSlot.nCountry ) == nations.end() )
+	{
+		return true;
+	}
 
 	if ( IsInGameRoom() )
 	{
@@ -166,12 +212,21 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 			{
 				KickPlayerFromSlot( pMsg->nSlot );
 				RemoveClient( oldSlot.nClientID, true );
-				--nSlotsUsed;
+				// RemoveClient already removes this peer from the room count.
 			}
 		}
 		uint16_t wOldConnectMask = oldSlot.wConnectedTo;
 		oldSlot = newSlot;
 		oldSlot.wConnectedTo = wOldConnectMask;
+		if ( IsGameHost() && !newSlot.bPresent )
+		{
+			// A kick queued the removed player's old ready/closed state. Publish the
+			// host's final open/closed choice afterwards so its own UI agrees too.
+			auto *pUpdate = new SMPUIUpdateSlotMessage;
+			pUpdate->nSlot = pMsg->nSlot;
+			pUpdate->info = oldSlot;
+			PushMessage( pUpdate );
+		}
 		pClient->SendGamePacket( new CB2SlotInfoPacket( 0, pMsg->nSlot, newSlot ), true );
 	}
 	else

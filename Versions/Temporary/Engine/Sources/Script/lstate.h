@@ -187,7 +187,8 @@ public:
 
 
 typedef std::list<CObj<CLuaThread> > CThreads;
-typedef std::unordered_map<TString, bool, TStringHash> CLuaStrings;
+// Keep interned-string serialization and collection traversal deterministic too.
+typedef det_map<TString, bool, TStringHash> CLuaStrings;
 
 
 struct lua_State

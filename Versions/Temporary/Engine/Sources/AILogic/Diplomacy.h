@@ -7,11 +7,18 @@
 #include <cstdint>
 #include <vector>
 
+class IBinSaver;
+
+namespace NDb
+{
+struct SMapInfo;
+}
+
 // последняя party обязательно должна быть нейтральна ко всем
 class CDiplomacy
 {
 public:
-	int operator&( IBinSaver &saver );
+	AILOGIC_EXPORT int operator&( IBinSaver &saver );
 
 private:
 	;
@@ -22,6 +29,8 @@ private:
 	int nMyNumber = {};
 
 	std::vector<int> isPlayerExist;
+	// COOP roles belong to map players, independently of each client's viewpoint.
+	std::vector<int> isAIPlayer;
 
 	bool bNetGame = {};
 
@@ -32,15 +41,19 @@ public:
 	{
 	}
 
-	void Load( const std::vector<int> &playerParty );
+	void Load( const std::vector<int> &playerParty, const NDb::SMapInfo *pMapInfo = nullptr );
 
 	void SetNPlayers( const int nPlayers )
 	{
 		playerParty.resize( nPlayers + 1, 0 );
 		playerParty[nPlayers] = 2;
+		isAIPlayer.assign( nPlayers + 1, 0 );
 	}
 
-	void Clear() {}
+	void Clear()
+	{
+		isAIPlayer.clear();
+	}
 
 	const int GetNPlayers() const
 	{
@@ -96,7 +109,13 @@ public:
 
 	const bool IsAIPlayer( const uint8_t cPlayer ) const
 	{
-		return !bNetGame && cPlayer != GetMyNumber();
+		if ( !bNetGame )
+		{
+			return cPlayer != GetMyNumber();
+		}
+		// The final map slot is neutral even when its authored role is invalid.
+		return cPlayer < isAIPlayer.size() && cPlayer < playerParty.size() && cPlayer != GetNeutralPlayer() &&
+		       playerParty[cPlayer] != GetNeutralParty() && isAIPlayer[cPlayer] != 0;
 	}
 
 	const uint8_t GetNeutralPlayer() const

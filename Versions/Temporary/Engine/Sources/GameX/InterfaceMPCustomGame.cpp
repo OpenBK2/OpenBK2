@@ -83,6 +83,8 @@ void CInterfaceMPCustomGame::SetFiltersData()
 	{
 		pData = new CTextData( wszAnyText );
 		pGameTypeBox->AddItem( pData );
+		pGameTypeBox->AddItem( new CTextData( L"CLASSIC" ) );
+		pGameTypeBox->AddItem( new CTextData( L"COOP" ) );
 		pGameTypeBox->Select( 0 );
 	}
 	if ( pTechLevel )
@@ -182,8 +184,8 @@ void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBas
 	}
 	NMPSetData::SetChildText( pItem, "ItemTechLevel", wszTechText );
 
-	ITextView *pTxt = GetChildChecked<ITextView>( pItem, "ItemGameType", true );
-	//NMPSetData::SetGameType( pTxt, info.pMPMap->pMap, 0/*info.nGameType*/ );
+	NMPSetData::SetChildText(
+			pItem, "ItemGameType", info.nGameType == SB2GameSpecificData::EGT_COOP ? L"COOP" : L"CLASSIC" );
 
 	NMPSetData::SetChildText(
 			pItem, "ItemMapSize", NStr::ToUnicode( fmt::format( "{} x {}", info.nSizeX, info.nSizeY ) ) );
@@ -334,6 +336,7 @@ bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
 		entry.info.szMapName = game.szMapName;
 		entry.info.nSizeX = game.nSizeX;
 		entry.info.nSizeY = game.nSizeY;
+		entry.info.nGameType = game.nGameType;
 		entry.info.nTechLevel = game.nTechLevel;
 
 		CPtr<CCustomGameListData> pData = new CCustomGameListData;
@@ -525,6 +528,10 @@ bool CInterfaceMPCustomGame::IsAllowedByFilter( const SMPGameInfo &game )
 {
 	if ( filter.nGameType )
 	{
+		if ( game.nGameType != filter.nGameType - 1 )
+		{
+			return false;
+		}
 	}
 
 	if ( filter.nTechLevel )

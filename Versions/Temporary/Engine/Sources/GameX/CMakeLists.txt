@@ -9,6 +9,7 @@ set(SOURCES
     CommandsHistory.cpp
     CommandsSender.cpp
     CommonCommands.cpp
+    CoopScriptChecksum.cpp
     CustomMissions.cpp
     DBConsts.cll
     DBConsts.cpp
@@ -81,6 +82,7 @@ set(SOURCES
     MissionWarFog.cpp
     MODSetup.cpp
     MouseTranslator.cpp
+    MPCoopRules.cpp
     MPInterfaceData.cpp
     MPLANTest.cpp
     MPLobbyData.cpp

@@ -22,6 +22,14 @@ struct SEmptyChecksumRecord
 {
 };
 
+// Exercise optional binary defaults without changing existing field behavior.
+[export]
+struct SBinaryDefaultRecord
+{
+	[preserveDefault] int _Preserved = -1;
+	int _Legacy = -1;
+};
+
 [typeID = 0x1019230D]
 class CWeapon
 {

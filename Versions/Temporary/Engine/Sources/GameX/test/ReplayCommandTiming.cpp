@@ -3,6 +3,7 @@
 #include "../AICmdsAutoMagic.h"
 #include "../Transceiver.h"
 #include "AILogic/B2AI.h"
+#include "GameX/ScenarioTracker.h"
 #include "Main/CommandsHistory.hpp"
 #include "Main/GameTimer.h"
 
@@ -12,9 +13,13 @@ namespace
 {
 struct SClockObservations
 {
+	std::vector<int> historySegments;
 	std::vector<int> commandSegments;
 	std::vector<NTimer::STime> commandTimes;
 	std::vector<NTimer::STime> simulationTimes;
+	std::vector<int> reportedOutcomes;
+	int nFinalBoundary = -1;
+	bool bPlaybackFinished = false;
 	bool bSuspended = false;
 	bool bSuspendAfterSegment = false;
 };
@@ -53,10 +58,29 @@ public:
 
 	void ExecuteSegmentCommands( const int nSegment, ITransceiver *pTransceiver ) override
 	{
+		if ( observations.bPlaybackFinished )
+		{
+			return;
+		}
+		observations.historySegments.push_back( nSegment );
+		if ( observations.nFinalBoundary >= 0 && nSegment >= observations.nFinalBoundary )
+		{
+			// Replay verification reports after the final recorded simulation tick.
+			// Observe that boundary separately from commands and simulation calls.
+			const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+			observations.reportedOutcomes.push_back( pTracker ? pTracker->GetScriptOutcome() : -1 );
+			observations.bPlaybackFinished = true;
+			return;
+		}
 		observations.commandSegments.push_back( nSegment );
 		CObj<IAILogicCommandB2> command = new CClockCommand;
 		// Exercise the real SendCommand path as replay history does.
 		pTransceiver->SendCommand( command );
+	}
+
+	bool IsPlaybackFinished() const override
+	{
+		return observations.bPlaybackFinished;
 	}
 
 	bool AddChecksumLog( const int, const uint32_t, const int ) override
@@ -327,6 +351,7 @@ protected:
 	static constexpr NTimer::STime TIME_ORIGIN = 1000;
 	CObj<IGameTimer> timer;
 	CObj<ITransceiver> transceiver;
+	CObj<IScenarioTracker> tracker;
 
 	void SetUp() override
 	{
@@ -355,11 +380,30 @@ protected:
 	void TearDown() override
 	{
 		transceiver = nullptr;
+		if ( tracker )
+		{
+			NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
+			tracker = nullptr;
+		}
 		NSingleton::UnRegisterSingleton( IGameTimer::tidTypeID );
 		timer = nullptr;
 		NGlobal::RemoveVar( "AI_SLOWDOWN" );
 		NGlobal::RemoveVar( "History.Playing" );
 		NGlobal::RemoveVar( "Replay.ExitWhenFinished" );
+	}
+
+	bool UseCoopReplayBoundary( int nFinalBoundary )
+	{
+		// Use the real mode/result state with the existing timer and transceiver.
+		tracker = CreateScenarioTrackerMultiplayer();
+		if ( !tracker )
+		{
+			return false;
+		}
+		tracker->SetGameType( IAIScenarioTracker::EGT_MULTI_COOP );
+		NSingleton::RegisterSingleton( tracker, IScenarioTracker::tidTypeID );
+		observations.nFinalBoundary = nFinalBoundary;
+		return true;
 	}
 
 	void AdvanceTo( const NTimer::STime time )
@@ -416,5 +460,71 @@ TEST_F( ReplayCommandTiming, SuspensionDuringCatchUpStopsCommandsUntilResume )
 	EXPECT_EQ( observations.commandSegments, ( std::vector<int>{ 0, 1 } ) );
 	EXPECT_EQ( observations.commandTimes, ( std::vector<NTimer::STime>{ 0, 400 } ) );
 	EXPECT_EQ( observations.simulationTimes, ( std::vector<NTimer::STime>{ 200, 600 } ) );
+}
+
+TEST_F( ReplayCommandTiming, CoopInitTimeResultStillRunsItsRecordedTick )
+{
+	ASSERT_TRUE( UseCoopReplayBoundary( 1 ) );
+	tracker->SetScriptOutcome( 0 );
+	AdvanceTo( 200 );
+	EXPECT_EQ( observations.historySegments, ( std::vector<int>{ 0 } ) );
+	EXPECT_EQ( observations.commandTimes, ( std::vector<NTimer::STime>{ 0 } ) );
+	EXPECT_EQ( observations.simulationTimes, ( std::vector<NTimer::STime>{ 200 } ) );
+	EXPECT_FALSE( observations.bPlaybackFinished );
+	EXPECT_TRUE( observations.reportedOutcomes.empty() );
+
+	AdvanceTo( 400 );
+	EXPECT_EQ( observations.historySegments, ( std::vector<int>{ 0, 1 } ) );
+	EXPECT_EQ( observations.reportedOutcomes, ( std::vector<int>{ 0 } ) );
+	EXPECT_TRUE( observations.bPlaybackFinished );
+	EXPECT_EQ( observations.simulationTimes, ( std::vector<NTimer::STime>{ 200 } ) );
+	EXPECT_EQ( timer->GetSegment(), 1 );
+	EXPECT_EQ( timer->GetSegmentTime(), 200 );
+}
+
+TEST_F( ReplayCommandTiming, CoopEarlyResultReachesTheFinalHistoryReport )
+{
+	ASSERT_TRUE( UseCoopReplayBoundary( 3 ) );
+	AdvanceTo( 200 );
+	// A replay that diverges to an early defeat must reach final verification,
+	// rather than stall forever on that result before history can report it.
+	tracker->SetScriptOutcome( 1 );
+	AdvanceTo( 600 );
+	AdvanceTo( 1000 );
+	EXPECT_EQ( observations.historySegments, ( std::vector<int>{ 0, 1, 2, 3 } ) );
+	EXPECT_EQ( observations.commandSegments, ( std::vector<int>{ 0, 1, 2 } ) );
+	EXPECT_EQ( observations.commandTimes, ( std::vector<NTimer::STime>{ 0, 200, 400 } ) );
+	EXPECT_EQ( observations.simulationTimes, ( std::vector<NTimer::STime>{ 200, 400, 600 } ) );
+	EXPECT_EQ( observations.reportedOutcomes, ( std::vector<int>{ 1 } ) );
+	EXPECT_TRUE( observations.bPlaybackFinished );
+	EXPECT_EQ( timer->GetSegment(), 3 );
+	EXPECT_EQ( timer->GetSegmentTime(), 600 );
+}
+
+TEST_F( ReplayCommandTiming, CoopCatchUpStopsAtExclusiveBoundaryWithoutAnExtraTick )
+{
+	ASSERT_TRUE( UseCoopReplayBoundary( 3 ) );
+	// Scriptless recordings finish at their recorded boundary too.
+	// The real timer caps each wall-clock delta at 500 ms. Accumulate shorter
+	// updates without dispatching so this call really has five ticks to catch up.
+	timer->Update( TIME_ORIGIN + 400 );
+	timer->Update( TIME_ORIGIN + 800 );
+	AdvanceTo( 1000 );
+	EXPECT_EQ( observations.historySegments, ( std::vector<int>{ 0, 1, 2, 3 } ) );
+	EXPECT_EQ( observations.commandSegments, ( std::vector<int>{ 0, 1, 2 } ) );
+	EXPECT_EQ( observations.simulationTimes, ( std::vector<NTimer::STime>{ 200, 400, 600 } ) );
+	EXPECT_EQ( observations.reportedOutcomes, ( std::vector<int>{ -1 } ) );
+	EXPECT_TRUE( observations.bPlaybackFinished );
+	EXPECT_EQ( timer->GetSegment(), 3 );
+	EXPECT_EQ( timer->GetSegmentTime(), 600 );
+
+	AdvanceTo( 1400 );
+	transceiver->DoSegments();
+	EXPECT_EQ( observations.historySegments, ( std::vector<int>{ 0, 1, 2, 3 } ) );
+	EXPECT_EQ( observations.reportedOutcomes, ( std::vector<int>{ -1 } ) );
+	EXPECT_EQ( observations.commandTimes, ( std::vector<NTimer::STime>{ 0, 200, 400 } ) );
+	EXPECT_EQ( observations.simulationTimes, ( std::vector<NTimer::STime>{ 200, 400, 600 } ) );
+	EXPECT_EQ( timer->GetSegment(), 3 );
+	EXPECT_EQ( timer->GetSegmentTime(), 600 );
 }
 } // namespace
