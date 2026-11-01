@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "ScriptCommandQueue.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "System/det_map.h"
 
@@ -76,6 +77,7 @@ private:
 	//Script script;
 	CPtr<IScriptWrapper> pScript;
 	CPtr<IGlobeScriptHandler> pGlobeScriptHandler;
+	CScriptCommandQueue commandQueue;
 
 	// номер группы - юниты
 	static CScriptGroups groups;
@@ -148,6 +150,8 @@ private:
 	// return false if command is invalid
 	static bool ParseCommand( struct SAIUnitCmd *pCmd, Script &sctipt, bool bIDsAreScriptIDs );
 	static int ProcessCommand( struct lua_State *state, const bool bPlaceInQueue, const bool b2NdParamIsScriptID );
+	static int QueueCooperativeCommand( Script &script, bool bPlaceInQueue, bool bIDsAreScriptIDs );
+	void ExecuteQueuedCommand( SQueuedScriptCommand &queued );
 
 	//
 	struct ICheckObjects
@@ -191,7 +195,13 @@ public:
 	void InitAreas( const NDb::SScriptArea scriptAreas[], const int nLen );
 	void Load( const std::string &szScriptFileName, const NDb::SAIGameConsts *pConsts );
 
-	void Segment();
+	AILOGIC_EXPORT void Segment();
+
+	void SerializeCommandQueue( IBinSaver &saver )
+	{
+		// Light COOP checksums need pending orders even when the rest of Lua is omitted.
+		saver.Add( 20, &commandQueue );
+	}
 
 	void CallScriptFunction( const char *pszCommand );
 
@@ -267,15 +277,15 @@ public:
 	static int Loose( struct lua_State *state );
 	//
 	// params: <command> <script group id> <necessary command parameters>; returns: none;
-	static int GiveCommand( struct lua_State *state );
+	AILOGIC_EXPORT static int GiveCommand( struct lua_State *state );
 
 	// params: <command> <script group id> <necessary command parameters>; returns: none;
-	static int GiveQCommand( struct lua_State *state );
+	AILOGIC_EXPORT static int GiveQCommand( struct lua_State *state );
 
 	// params: <command> <unit unique ID> <necessary command parameters>; returns: none;
-	static int GiveUnitCommand( struct lua_State *state );
+	AILOGIC_EXPORT static int GiveUnitCommand( struct lua_State *state );
 	// params: <command> <unit unique ID> <necessary command parameters>; returns: none;
-	static int GiveUnitQCommand( struct lua_State *state );
+	AILOGIC_EXPORT static int GiveUnitQCommand( struct lua_State *state );
 
 	// params: none; returns: none;
 	static int ShowActiveScripts( struct lua_State *state );

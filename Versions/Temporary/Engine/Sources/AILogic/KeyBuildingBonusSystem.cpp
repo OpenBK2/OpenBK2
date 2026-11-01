@@ -88,7 +88,8 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 		// take reinforcement point from nOldPlayer
 		if ( theDipl.GetNParty( i ) == nOldParty )
 		{
-			if ( GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+			// COOP bots retain map-authored cooldowns when either side captures a base.
+			if ( GetScenarioTracker()->IsMultiplayer() && !theDipl.IsAIPlayer( i ) )
 			{
 				theReinfArray.SetRecycleCoeff( i, GetScenarioTracker()->GetRecycleSpeedCoeff( nOldParty ) );
 			}
@@ -112,7 +113,7 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 		// give reinforcement point to nNewPlayer
 		if ( theDipl.GetNParty( i ) == nNewParty )
 		{
-			if ( GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_SINGLE )
+			if ( GetScenarioTracker()->IsMultiplayer() && !theDipl.IsAIPlayer( i ) )
 			{
 				theReinfArray.SetRecycleCoeff( i, GetScenarioTracker()->GetRecycleSpeedCoeff( nNewParty ) );
 			}

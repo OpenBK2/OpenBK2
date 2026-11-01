@@ -22,6 +22,11 @@ struct ICommandsHistory : public ICheckSumLog
 	virtual void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd ) = 0;
 	virtual void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver ) = 0;
 
+	virtual bool IsPlaybackFinished() const
+	{
+		return false;
+	}
+
 	//virtual bool SaveReplay( const string &szFileName );
 
 	// only remember last checksum

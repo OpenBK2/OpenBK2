@@ -153,7 +153,8 @@ void CPlayerReinforcement::InitPlayerReinforcement( int _nPlayer,
 		}
 	}
 
-	if ( pTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	// Human COOP slots use MP credits; bots keep their map-authored call and recycle setup.
+	if ( pTracker->IsMultiplayer() && !theDipl.IsAIPlayer( nPlayer ) )
 	{
 		fRecycleTimeCoeff = pTracker->GetRecycleSpeedCoeff( pTracker->GetPlayerSide( nPlayer ) );
 		timeReinfIncrease = curTime + 1000.0f * fRecycleTimeCoeff;
@@ -384,7 +385,7 @@ void CPlayerReinforcement::UpdateButtonsAfterCall( const NDb::EReinforcementType
 	{
 		timeToCall = recycleTimes[eType];
 	}
-	if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+	if ( !GetScenarioTracker()->IsMultiplayer() || theDipl.IsAIPlayer( nPlayer ) )
 	{
 		if ( theDipl.GetNParty( nPlayer ) == 1 )
 		{
@@ -596,7 +597,7 @@ void CPlayerReinforcement::Segment()
 {
 	// Reinforcement counter recycle
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
-	if ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( pScenarioTracker->IsMultiplayer() && !theDipl.IsAIPlayer( nPlayer ) )
 	{
 		if ( curTime > timeReinfIncrease )
 		{
@@ -691,7 +692,7 @@ void CPlayerReinforcement::SetRecycleCoeff( const float fNewCoeff )
 		return;
 	}
 
-	if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( GetScenarioTracker()->IsMultiplayer() && !theDipl.IsAIPlayer( nPlayer ) )
 	{
 		timeReinfIncrease = ( timeReinfIncrease - curTime ) / fRecycleTimeCoeff * fNewCoeff + curTime;
 		GetScenarioTracker()->SetReinforcementXP( nPlayer, NDb::_RT_NONE, ( timeReinfIncrease - curTime ) / 1000.0f );
@@ -904,7 +905,7 @@ void CPlayerReinforcement::GiveReinforcementCalls( int nCalls, bool bResetCounte
 {
 	IAIScenarioTracker *pScenarioTracker = GetScenarioTracker();
 
-	if ( pScenarioTracker->GetGameType() != IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( !pScenarioTracker->IsMultiplayer() || theDipl.IsAIPlayer( nPlayer ) )
 	{
 		return;
 	}
@@ -962,7 +963,7 @@ void CPlayerReinforcement::CheckReinfButton()
 	if ( bNotYetTime )
 	{
 		float fCoeff = 1.0f;
-		if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
+		if ( !GetScenarioTracker()->IsMultiplayer() || theDipl.IsAIPlayer( nPlayer ) )
 		{
 			fCoeff = fRecycleTimeCoeff;
 		}

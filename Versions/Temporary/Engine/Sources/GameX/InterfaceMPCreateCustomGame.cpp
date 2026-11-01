@@ -6,10 +6,12 @@
 #include "GameRoomData.h"
 #include "GameXClassIDs.h"
 #include "GetConsts.h"
+#include "InterfaceMisc.h"
 #include "InterfaceMPCreateCustomGame.h"
 #include "InterfaceState.h"
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
+#include "MPCoopRules.h"
 #include "SceneB2/Scene.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "System/Text.h"
@@ -80,7 +82,7 @@ void CInterfaceMPCreateCustomGame::FillMapData()
 		}
 
 		tmpInfo.wszMapName = GET_TEXT_PRE( pMPMap->, MapName );
-		tmpInfo.wszGameType = L"";
+		tmpInfo.wszGameType = pMPMap->eGameType == NDb::COOP ? L"COOP" : L"CLASSIC";
 		tmpInfo.pMPMap = pMPMap;
 
 		tmpInfo.nPlayersMax = pMPMap->nPlayers;
@@ -341,7 +343,7 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 		Draw();
 	}
 
-	SMPUICreateGameMessage *pCreateMsg = new SMPUICreateGameMessage;
+	CPtr<SMPUICreateGameMessage> pCreateMsg = new SMPUICreateGameMessage;
 
 	if ( pSessionName )
 	{
@@ -386,6 +388,18 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 	std::string szPassword = NStr::ToMBCS( pAdvancedPassword->GetText() );
 	pCreateMsg->info.bPwdReq = ( !szPassword.empty() );
 	pCreateMsg->szPassword = szPassword;
+	pCreateMsg->specificInfo.nPlayers = pCreateMsg->info.nPlayersMax;
+	std::string szError;
+	if ( !NGameX::ResolveMultiplayerMapRules( &pCreateMsg->specificInfo, &szError ) )
+	{
+		if ( pChecksumPWL )
+		{
+			pChecksumPWL->ShowWindow( false );
+		}
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		                    CICMessageBox::MakeConfigString( "MessageBoxWindowOk", NStr::ToUnicode( szError ) ).c_str() );
+		return true;
+	}
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MP_GAME_ROOM, "" );
@@ -420,6 +434,24 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	}
 
 	bEnableCreate = true;
+	const bool bCoop = pSelected->eGameType == NDb::COOP;
+	if ( pTechLevelBox )
+	{
+		pTechLevelBox->Enable( pSelected->nForcedTechLevel < 0 );
+		if ( pSelected->nForcedTechLevel >= 0 )
+		{
+			pTechLevelBox->Select( pSelected->nForcedTechLevel );
+		}
+	}
+	if ( pTimeLimit )
+	{
+		pTimeLimit->Enable( !bCoop );
+	}
+	if ( pButtonStartPosition )
+	{
+		pButtonStartPosition->Enable( !bCoop );
+		pButtonStartPosition->SetState( bCoop ? 0 : 1 );
+	}
 	wszName = GET_TEXT_PRE( pSelected->, MapName );
 
 	/*if ( pMapInfo->pLocalizedDescription ) //Map info

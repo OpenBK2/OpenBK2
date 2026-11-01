@@ -69,6 +69,48 @@ TEST( DatabaseDefaults, EmptyRecordChecksumIgnoresPreviousStorageContents )
 	}
 }
 
+TEST( DatabaseDefaults, MissingBinaryFieldsPreserveOnlyOptedInDefaults )
+{
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		// An older record has no chunks for either newly introduced field.
+		int nOldField = 123;
+		saver->Add( 100, &nOldField );
+	}
+	stream.Seek( 0 );
+	NDb::SBinaryDefaultRecord record;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		record.operator&( *saver );
+	}
+	EXPECT_EQ( record.nPreserved, -1 );
+	EXPECT_EQ( record.nLegacy, 0 );
+}
+
+TEST( DatabaseDefaults, PresentBinaryFieldsOverrideOptedInDefaults )
+{
+	for ( const int nValue : { -1, 0, 3 } )
+	{
+		CMemoryStream stream;
+		NDb::SBinaryDefaultRecord original;
+		original.nPreserved = nValue;
+		original.nLegacy = nValue;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			original.operator&( *saver );
+		}
+		stream.Seek( 0 );
+		NDb::SBinaryDefaultRecord loaded;
+		{
+			CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+			loaded.operator&( *saver );
+		}
+		EXPECT_EQ( loaded.nPreserved, nValue );
+		EXPECT_EQ( loaded.nLegacy, nValue );
+	}
+}
+
 boost::uuids::uuid Uuid( const char *pszText )
 {
 	return boost::uuids::string_generator()( pszText );

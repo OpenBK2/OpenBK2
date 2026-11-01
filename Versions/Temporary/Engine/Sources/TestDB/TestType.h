@@ -32,6 +32,27 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
+	struct TESTDB_EXPORT SBinaryDefaultRecord
+	{
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+		int nPreserved;
+		int nLegacy;
+
+		SBinaryDefaultRecord() :
+			__dwCheckSum( 0 ),
+			nPreserved( -1 ),
+			nLegacy( -1 )
+		{ }
+		//
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
+
 	struct SWeapon : public CResource
 	{
 		OBJECT_BASIC_METHODS( SWeapon )

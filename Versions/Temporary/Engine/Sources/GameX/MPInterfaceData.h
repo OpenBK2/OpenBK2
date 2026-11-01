@@ -87,6 +87,7 @@ public:
 	enum EGameType
 	{
 		EGT_FLAG_CONTROL_2,
+		EGT_COOP,
 	};
 
 	ZDATA
@@ -99,6 +100,7 @@ public:
 	int nCaptureTime = {};
 	EGameType eType = {};
 	bool bRandomPlacement = {};
+	int nDifficultyLevel = {}; // Resolved map difficulty, also preserved in replays.
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -111,6 +113,7 @@ public:
 		f.Add( 8, &nCaptureTime );
 		f.Add( 9, &eType );
 		f.Add( 10, &bRandomPlacement );
+		f.Add( 11, &nDifficultyLevel );
 		return 0;
 	}
 
@@ -137,6 +140,7 @@ public:
 		nCaptureTime = src.nCaptureTime;
 		eType = src.eType;
 		bRandomPlacement = src.bRandomPlacement;
+		nDifficultyLevel = src.nDifficultyLevel;
 		return *this;
 	}
 };

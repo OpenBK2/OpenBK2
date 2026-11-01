@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Merge these role/side fields into complete map player records; do not replace their other fields. -->
+<MapInfo>
+	<Players>
+		<Item>
+			<PlayerType>HUMAN</PlayerType>
+			<DiplomacySide>0</DiplomacySide>
+		</Item>
+		<Item>
+			<PlayerType>AI_BOT</PlayerType>
+			<DiplomacySide>1</DiplomacySide>
+		</Item>
+		<Item>
+			<PlayerType>HUMAN</PlayerType>
+			<DiplomacySide>0</DiplomacySide>
+		</Item>
+		<Item>
+			<PlayerType>HUMAN</PlayerType>
+			<DiplomacySide>2</DiplomacySide>
+		</Item>
+	</Players>
+	<ScriptFileRef href="mission.lua" />
+</MapInfo>

@@ -184,14 +184,15 @@ void CMPManagerModeNivalNet::CheckJoinGameConditions()
 			OnLeaveGame();
 			return;
 		}
-		if ( slots[0].wConnectedTo == slots[nOwnSlot].wConnectedTo )
+		const int nHostSlot = GetSlotByClientID( nHostClientID );
+		if ( nHostSlot >= 0 && slots[nHostSlot].wConnectedTo == slots[nOwnSlot].wConnectedTo )
 		{
 			eState = EGS_GAME_ROOM;
 			SendGameRoomInitMessages();
 		}
 		else
 		{
-			szDebugOut += fmt::format( "Connect( {} != {} )", slots[0].wConnectedTo, slots[nOwnSlot].wConnectedTo );
+			szDebugOut += fmt::format( "Connect( host slot {}, own mask {} )", nHostSlot, slots[nOwnSlot].wConnectedTo );
 		}
 	}
 	DebugTrace( "%s", szDebugOut.c_str() );
@@ -393,7 +394,7 @@ void CMPManagerModeNivalNet::EndGame()
 void CMPManagerModeNivalNet::SetServerGameInfo( SGameInfo *pInfo )
 {
 	pInfo->nID = nGameID;
-	pInfo->nMaxPlayers = slots.size();
+	pInfo->nMaxPlayers = gameDesc.nPlayers;
 	pInfo->nPlayers = nSlotsUsed;
 	pInfo->szMapName = NStr::ToMBCS( GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) );
 	pInfo->szName = szSessionName;
