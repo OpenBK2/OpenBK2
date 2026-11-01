@@ -10,6 +10,7 @@
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
+#include "MPCoopRules.h"
 #include "MultiplayerCommandManager.h"
 #include "port/time.h"
 #include "SceneB2/Scene.h"
@@ -25,6 +26,7 @@
 
 #include "GameX_export.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <fmt/format.h>
@@ -213,73 +215,15 @@ bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::stri
 
 int CInterfaceMPGameRoom::SelectionIndexToNationIndex( int nSelectionIndex )
 {
-	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
-	if ( !pMPConsts )
-	{
-		return 0;
-	}
-
-	int nTechLevel = gameDesc.nTechLevel;
-	const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
-
-	// IsSideAvailable also answers the sides[0] on an empty sides array that this
-	// asked for before. The tech level is the host's, not ours.
-	if ( NGameX::IsSideAvailable( pMPConsts, 0, nTechLevel ) && nSelectionIndex == 0 )
-	{
-		return 0;
-	}
-
-	// nSelectionIndex is always >= 1
-	int nValidIndex = 0;
-	for ( int i = 0; i < sides.size(); i++ )
-	{
-		if ( NGameX::IsSideAvailable( pMPConsts, i, nTechLevel ) )
-		{
-			nValidIndex++;
-		}
-
-		if ( nValidIndex == nSelectionIndex )
-		{
-			return i;
-		}
-	}
-
-	// If nation index selection is somehow wrong (it should never be), just pick a random one..
-	return 0;
+	const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+	return nSelectionIndex > 0 && nSelectionIndex <= nations.size() ? nations[nSelectionIndex - 1] : -1;
 }
 
 int CInterfaceMPGameRoom::NationIndexToSelectionIndex( int nCountryIndex )
 {
-	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
-	if ( !pMPConsts )
-	{
-		return -1;
-	}
-
-	int nTechLevel = gameDesc.nTechLevel;
-	const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
-
-	// nCountryIndex is the country in a slot update from the host, and it is the
-	// bound of a loop over the sides array rather than a subscript of it, so an
-	// out of range value walked off the end instead of being rejected. Stop at
-	// the last side: a country the database does not have selects nothing, which
-	// is what the -1 this starts from means to the caller.
-	int nLastSide = nCountryIndex;
-	if ( nLastSide >= int( sides.size() ) )
-	{
-		nLastSide = int( sides.size() ) - 1;
-	}
-
-	int nValidIndex = -1;
-	for ( int i = 0; i <= nLastSide; i++ )
-	{
-		if ( NGameX::IsSideAvailable( pMPConsts, i, nTechLevel ) )
-		{
-			nValidIndex++;
-		}
-	}
-
-	return nValidIndex;
+	const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+	const auto pos = std::find( nations.begin(), nations.end(), nCountryIndex );
+	return pos == nations.end() ? -1 : int( pos - nations.begin() );
 }
 
 bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
@@ -287,7 +231,7 @@ bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
 	int nIndex = -1;
 	for ( int i = 0; i < slots.size(); ++i )
 	{
-		if ( slots[i].pPlayerCombo->GetName() == szSender )
+		if ( slots[i].pPlayerCombo && slots[i].pPlayerCombo->GetName() == szSender )
 		{
 			nIndex = i;
 			break;
@@ -345,7 +289,7 @@ bool CInterfaceMPGameRoom::OnChangeTeamReaction()
 	// Invoked when OWN slot changes
 	// Process team change
 	SUISlot &slot = slots[nOwnSlot];
-	slot.info.nTeam = slot.pTeam->GetState();
+	slot.info.nTeam = NGameX::IsCoopGame( gameDesc ) ? 0 : slot.pTeam->GetState();
 
 	SendUpdateSlot( nOwnSlot );
 	CheckStartConditions();
@@ -422,8 +366,8 @@ bool CInterfaceMPGameRoom::OnRejectGameReaction()
 	SUISlot &slot = slots[nOwnSlot];
 	slot.info.bAccept = false;
 	slot.pColour->Enable( true );
-	slot.pCountry->Enable( true );
-	slot.pTeam->Enable( true );
+	slot.pCountry->Enable( NGameX::GetAllowedMultiplayerNations( gameDesc ).size() > 1 );
+	slot.pTeam->Enable( !NGameX::IsCoopGame( gameDesc ) );
 	if ( slot.pControlDisabler )
 	{
 		slot.pControlDisabler->ShowWindow( false );
@@ -439,23 +383,8 @@ void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 	CPtr<SMPUIUpdateSlotMessage> pMsg = new SMPUIUpdateSlotMessage;
 	if ( slots[nSlot].info.bRandomCountry )
 	{
-		const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
-		const std::vector<NDb::SMultiplayerSide> &sides = pMPConsts->sides;
-		int nTechLevel = gameDesc.nTechLevel;
-
-		// Build a list of valid nation indexes and pick a random one from there
-		std::vector<int> validIndexes;
-		for ( int i = 0; i < sides.size(); i++ )
-		{
-			if ( NGameX::IsSideAvailable( pMPConsts, i, nTechLevel ) )
-			{
-				validIndexes.push_back( i );
-			}
-		}
-
-		// Every side can be unavailable at the tech level the host chose, and now
-		// that the loop above can say so the empty list has to be handled: keep
-		// whatever country the slot already had rather than subscripting nothing.
+		// Display, Random and backend validation use the same map-filtered IDs.
+		const auto validIndexes = NGameX::GetAllowedMultiplayerNations( gameDesc );
 		if ( !validIndexes.empty() )
 		{
 			slots[nSlot].info.nCountry = validIndexes[NWin32Random::Random( validIndexes.size() )];
@@ -591,7 +520,8 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	// Store info
 	pSessionName->SetText( pSessionName->GetDBText() + NStr::ToUnicode( pMsg->szSessionName ) );
 	gameDesc = pMsg->specificInfo;
-	const int nPlayers = gameDesc.nPlayers;
+	const int nPlayers = NGameX::GetMultiplayerSlotCount( gameDesc );
+	const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
 
 	// Prepare info for slots (country list, colour list)
 	//
@@ -603,12 +533,16 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	{
 		pTechLevel->SetText( pTechLevel->GetDBText() + GET_TEXT_PRE( pMPConsts->techLevels[gameDesc.nTechLevel]., Name ) );
 	}
-	pNumPlayers->SetText( pNumPlayers->GetDBText() + NStr::ToUnicode( std::to_string( nPlayers ) ) );
+	pNumPlayers->SetText( pNumPlayers->GetDBText() + NStr::ToUnicode( std::to_string( gameDesc.nPlayers ) ) );
 	if ( gameDesc.pMPMap )
 	{
 		pMapName->SetText( pMapName->GetDBText() + GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) );
 	}
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + NStr::ToUnicode( fmt::format( "{} min", gameDesc.nTimeLimit ) ) );
+	if ( NGameX::IsCoopGame( gameDesc ) )
+	{
+		pTimeLimit->SetText( L"COOP: mission objectives determine the result" );
+	}
 	pCaptureTime->SetText( pCaptureTime->GetDBText() +
 	                       NStr::ToUnicode( fmt::format( "{} sec", gameDesc.nCaptureTime ) ) );
 	pGameSpeed->SetText( pGameSpeed->GetDBText() + NStr::ToUnicode( std::to_string( gameDesc.nGameSpeed ) ) );
@@ -627,6 +561,11 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	for ( int i = 0; i < nPlayers; ++i )
 	{
 		SUISlot &slot = slots[i];
+		if ( !NGameX::IsHumanMultiplayerSlot( gameDesc, i ) )
+		{
+			slot.info.bAccept = true;
+			continue;
+		}
 
 		// Set up list items
 		IWindow *pWnd = AddWindowCopy( pList, pSlotTemplate );
@@ -644,16 +583,12 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		                                                   GetScreen()->GetTextEntry( "TT_RANDOM_COUNTRY" ),
 		                                                   NGameX::GetRandomCountryImage( pMPConsts ) );
 		slot.pCountry->AddItem( pRandomItem );
-		for ( int j = 0; j < pMPConsts->sides.size(); ++j )
+		for ( int j : nations )
 		{
-			if ( pMPConsts->sides[j].pPartyInfo && NGameX::IsSideAvailable( pMPConsts, j, gameDesc.nTechLevel ) &&
-			     CHECK_TEXT_NOT_EMPTY_PRE( pMPConsts->sides[j]., Name ) )
-			{
-				CPtr<CTextureData> pData = new CTextureData( pMPConsts->sides[j].pListItemIcon,
-				                                             GET_TEXT_PRE( pMPConsts->sides[j]., Name ),
-				                                             NGameX::GetSideFlagImage( pMPConsts, j, gameDesc.nTechLevel ) );
-				slot.pCountry->AddItem( pData );
-			}
+			CPtr<CTextureData> pData = new CTextureData( pMPConsts->sides[j].pListItemIcon,
+			                                             GET_TEXT_PRE( pMPConsts->sides[j]., Name ),
+			                                             NGameX::GetSideFlagImage( pMPConsts, j, gameDesc.nTechLevel ) );
+			slot.pCountry->AddItem( pData );
 		}
 
 		slot.pTeam = GetChildChecked<IButton>( pWnd, "Team", true );
@@ -728,7 +663,12 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 
 bool CInterfaceMPGameRoom::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 {
-	NI_VERIFY( pMsg->nSlot < slots.size(), "PRG: nSlot passed exceeds max", return true );
+	NI_VERIFY( pMsg->nSlot >= 0 && pMsg->nSlot < slots.size(), "PRG: nSlot passed exceeds max", return true );
+	// An authoritative update can reject a start request while peers change state.
+	if ( IWindow *pPopup = GetChildChecked<IWindow>( pMain, "Initializing", false ) )
+	{
+		pPopup->ShowWindow( false );
+	}
 
 	slots[pMsg->nSlot].info = pMsg->info;
 
@@ -747,8 +687,19 @@ void CInterfaceMPGameRoom::UpdateInterior()
 	for ( int i = 0; i < slots.size(); ++i )
 	{
 		SUISlot &slot = slots[i];
+		if ( !slot.pPlayerNameText )
+		{
+			continue;
+		}
 
 		slot.pPlayerNameText->SetText( slot.pPlayerNameText->GetDBText() + NStr::ToUnicode( slot.info.szName ) );
+		const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+		if ( nations.size() == 1 )
+		{
+			slot.info.nCountry = nations.front();
+			slot.info.bRandomCountry = false;
+			slot.pCountry->Enable( false );
+		}
 		if ( slot.info.bRandomCountry )
 		{
 			slot.pCountry->Select( 0 );
@@ -764,7 +715,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 		// Hide unused slots
 		//slot.pPlayerName->ShowWindow( slot.info.bPresent );
 		slot.pCountry->ShowWindow( slot.info.bPresent );
-		slot.pTeam->ShowWindow( slot.info.bPresent );
+		slot.pTeam->ShowWindow( slot.info.bPresent && !NGameX::IsCoopGame( gameDesc ) );
 		slot.pColour->ShowWindow( slot.info.bPresent );
 		slot.pAccept->ShowWindow( slot.info.bPresent );
 
@@ -840,9 +791,6 @@ void CInterfaceMPGameRoom::UpdateInterior()
 void CInterfaceMPGameRoom::CheckStartConditions()
 {
 	bool bCanBeginGame = bHost;
-	int nTeams[2];
-	nTeams[0] = 0;
-	nTeams[1] = 0;
 	int nColourMask = 0;
 
 	enum
@@ -857,11 +805,6 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 	{
 		SUISlot &slot = slots[i];
 
-		if ( slot.info.bPresent )
-		{
-			nTeams[slot.info.nTeam] += 1;
-		}
-
 		if ( slot.info.bPresent && !slot.info.bAccept )
 		{
 			bCanBeginGame = false;
@@ -873,6 +816,12 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 
 		if ( slot.info.bPresent )
 		{
+			if ( slot.info.nColour < 0 || slot.info.nColour >= 32 )
+			{
+				bCanBeginGame = false;
+				eState = E_COLOUR;
+				continue;
+			}
 			int nSlotColourMask = 1UL << slot.info.nColour;
 			if ( nColourMask & nSlotColourMask )
 			{
@@ -883,10 +832,23 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 		}
 	}
 
-	if ( !( nTeams[0] > 0 && nTeams[1] > 0 ) )
+	std::vector<SMPSlot> lobbySlots;
+	for ( const auto &slot : slots )
+	{
+		lobbySlots.push_back( slot.info );
+	}
+	std::string szRulesError;
+	if ( !NGameX::ValidateMultiplayerLobby( gameDesc, lobbySlots, &szRulesError ) )
 	{
 		bCanBeginGame = false;
-		eState = E_SIDE;
+		if ( eState == E_OK )
+		{
+			eState = E_SIDE;
+			if ( pCantStartSide )
+			{
+				pCantStartSide->SetText( NStr::ToUnicode( szRulesError ) );
+			}
+		}
 	}
 
 	// CRAP

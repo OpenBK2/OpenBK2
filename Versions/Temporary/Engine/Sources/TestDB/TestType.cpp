@@ -47,6 +47,49 @@ uint32_t SEmptyChecksumRecord::CalcCheckSum() const
 
 
 
+void SBinaryDefaultRecord::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+	NMetaInfo::ReportMetaInfo( szAddName + "Preserved", (uint8_t*)&nPreserved - pThis, sizeof(nPreserved), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Legacy", (uint8_t*)&nLegacy - pThis, sizeof(nLegacy), NTypeDef::TYPE_TYPE_INT );
+}
+
+int SBinaryDefaultRecord::operator&( IXmlSaver &saver )
+{
+	saver.Add( "Preserved", &nPreserved );
+	saver.Add( "Legacy", &nLegacy );
+
+	return 0;
+}
+
+int SBinaryDefaultRecord::operator&( IBinSaver &saver )
+{
+	if ( !saver.IsReading() || saver.HasChunk( 2 ) )
+	{
+		saver.Add( 2, &nPreserved );
+	}
+	saver.Add( 3, &nLegacy );
+
+	return 0;
+}
+
+uint32_t SBinaryDefaultRecord::CalcCheckSum() const
+{
+	CCheckSumScope scope( __dwCheckSum );
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << nPreserved << nLegacy;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
 void SWeapon::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Weapon", typeID, sizeof(*this) );

@@ -233,3 +233,27 @@ context. Read `git diff` of every touched file before building.
 - When testing DLL-backed command queues, check exports for every new out-of-line
   call, including existing accessors such as GetCurCmd. Missing one surfaces only at
   the final Windows link after a large header rebuild.
+
+## Generated binary defaults
+
+- XML database reads retain constructor values for missing fields; raw binary
+  primitive reads zero them. Use the field-level `preserveDefault` schema marker
+  when a new nonzero default must survive reading old binary records.
+- Inspect API access and helper types before emitting generator calls. `CountChunks`
+  is private in `IBinSaver`, so generated code uses the public `HasChunk` wrapper.
+  `NCodeGen::tab` is a stream manipulator, not a string; accumulated indentation
+  needs literal tab characters. Both mistakes otherwise require another generator
+  rebuild before database source regeneration can complete.
+- The schema lexer preserves `//` as a documentation token. Attribute declarations
+  do not accept it; use `///` or a block comment if documenting `base.cll` attributes.
+
+## COOP simulation and replay boundaries
+
+- A script can declare its result during initialization. Replay must still execute
+  the recorded first tick, then stop at the recorded exclusive boundary. Stopping
+  immediately on an outcome also hides an early divergent result from verification.
+- Periodic checksums can miss a final result between samples. Persist the expected
+  outcome, including unfinished matches, and compare it at replay completion.
+- The Lua VM's object and function keys use stable VM IDs, not allocation addresses.
+  Inspect those representations before blaming pointer hashing; deterministic table
+  iteration and rejection of invalid NaN keys are separate requirements.

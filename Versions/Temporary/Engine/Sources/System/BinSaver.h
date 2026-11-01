@@ -535,6 +535,12 @@ private:
 public:
 	virtual bool IsReading() = 0;
 
+	// Optional fields can retain their constructor default when an older save omits them.
+	bool HasChunk( const chunk_id idChunk )
+	{
+		return CountChunks( idChunk ) != 0;
+	}
+
 	virtual bool IsChecksum()
 	{
 		return false;

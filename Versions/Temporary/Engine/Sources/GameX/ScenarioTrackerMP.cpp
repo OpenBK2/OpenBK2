@@ -39,6 +39,13 @@ CScenarioTrackerMultiplayer::CScenarioTrackerMultiplayer()
 {
 }
 
+bool CScenarioTrackerMultiplayer::IsMapControlledPlayer( int nPlayer ) const
+{
+	const NDb::SMapInfo *pMap = pMission ? pMission.GetPtr() : pLastMission.GetPtr();
+	return IsCooperative() && pMap && nPlayer >= 0 && nPlayer < pMap->players.size() &&
+	       pMap->players[nPlayer].nDiplomacySide != 2 && pMap->players[nPlayer].ePlayerType == NDb::AI_BOT;
+}
+
 const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetReinforcement( int nPlayer,
                                                                           NDb::EReinforcementType eType ) const
 {
@@ -58,7 +65,7 @@ const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetReinforcement( int nP
 int CScenarioTrackerMultiplayer::GetReinforcementCallsLeft( int nPlayer )
 {
 	NI_VERIFY( nPlayer >= 0 && nPlayer < players.size(), "Index out of range", return 0 );
-	if ( bNoKeyBuildings || eType == EGT_MULTI_FLAG_CONTROL )
+	if ( bNoKeyBuildings || IsMultiplayer() )
 	{
 		return players[nPlayer].nReinforcementCallsLeft;
 	}
@@ -82,7 +89,7 @@ void CScenarioTrackerMultiplayer::DecreaseReinforcementCallsLeft( int nPlayer, i
 		++players[nPlayer].nReinforcementCallsUsed;
 	}
 
-	if ( bNoKeyBuildings || eType == EGT_MULTI_FLAG_CONTROL )
+	if ( bNoKeyBuildings || IsMultiplayer() )
 	{
 		players[nPlayer].nReinforcementCallsLeft = (std::max)( players[nPlayer].nReinforcementCallsLeft - nActualCalls, 0 );
 	}
@@ -124,6 +131,8 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 	pMission = _pMission;
 	pLastMission = 0;
 	bMissionWon = false;
+	nScriptResult = 0;
+	nMultiplayerDifficulty = 0;
 
 	nSecondsToReinf = 0;
 
@@ -163,7 +172,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 	{
 		SPlayerInfo &player = players[i];
 		SearchAvalableReinforcements( pMission, &player.reinforcementTypes, 0, i );
-		if ( eType == EGT_MULTI_FLAG_CONTROL )
+		if ( IsMultiplayer() )
 		{
 			player.nReinforcementCallsLeft = pMission->players[i].nReinforcementCalls;
 		}
@@ -187,7 +196,8 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 		}
 		else
 		{
-			players[i].bPresent = false; // The rest have to be added explicitly
+			// Bots exist before map units load, without occupying a network peer slot.
+			players[i].bPresent = IsMapControlledPlayer( i );
 		}
 
 		players[i].timeKeyPointsOwned = 0;
@@ -209,6 +219,12 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo *_pMission, 
 		}
 
 		UpdateReinforcements( i );
+		if ( IsMapControlledPlayer( i ) && pUIConsts )
+		{
+			players[i].playerColor.dwColor = pUIConsts->playersColors.enemyInfo.nColor | 0xFF000000;
+			players[i].playerColor.pUnitFullInfo = pUIConsts->playersColors.enemyInfo.pUnitFullInfo;
+			players[i].playerColor.nColorIndex = 2;
+		}
 	}
 
 	NI_ASSERT( nNeutralPlayer != -1,
@@ -403,7 +419,7 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 		return 1.0f;
 	}
 
-	if ( eType == EGT_MULTI_FLAG_CONTROL )
+	if ( IsMultiplayer() )
 	{
 		float fCoeff = 1.0f;
 
@@ -858,7 +874,8 @@ IScenarioTracker::SMultiplayerInfo *CScenarioTrackerMultiplayer::GetMultiplayerI
 
 void CScenarioTrackerMultiplayer::SetPlayerParty( const int nPlayer, const int nNewSide )
 {
-	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
+	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 ||
+	     IsMapControlledPlayer( nPlayer ) )
 	{
 		return;
 	}
@@ -882,7 +899,7 @@ const NDb::SPartyDependentInfo *CScenarioTrackerMultiplayer::GetPlayerParty( con
 	           fmt::format( "PRG: Player No {} not in bounds (max {})", nPlayer, players.size() ),
 	           return 0 );
 
-	if ( GetPlayerSide( nPlayer ) == 2 ) // Neutral party is taken from map
+	if ( GetPlayerSide( nPlayer ) == 2 || IsMapControlledPlayer( nPlayer ) ) // Authored parties stay on the map.
 	{
 		CDBPtr<NDb::SMapInfo> pMapInfo;
 		if ( IsMissionActive() )
@@ -931,6 +948,12 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 {
 	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 )
 	{
+		return;
+	}
+	if ( IsMapControlledPlayer( nPlayer ) )
+	{
+		// Human tech/nation restrictions never replace the mission author's bot loadouts.
+		SearchAvalableReinforcements( pMission, &players[nPlayer].reinforcementTypes, 0, nPlayer );
 		return;
 	}
 
@@ -1006,7 +1029,8 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 
 const NDb::SReinforcement *CScenarioTrackerMultiplayer::GetStartUnits( int nPlayer ) const
 {
-	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 || nTechLevel < 0 )
+	if ( !IsMissionActive() || !IsPlayerPresent( nPlayer ) || GetPlayerSide( nPlayer ) == 2 || nTechLevel < 0 ||
+	     IsMapControlledPlayer( nPlayer ) )
 	{
 		return 0;
 	}

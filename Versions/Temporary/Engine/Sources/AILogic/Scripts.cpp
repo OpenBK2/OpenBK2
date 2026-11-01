@@ -52,7 +52,9 @@
 #include "Weather.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
+#include <limits>
 
 #include <fmt/args.h>
 #include <fmt/core.h>
@@ -448,6 +450,7 @@ void CScripts::Init( const SMapInfo *_pMapInfo )
 	pConsole = Singleton<IConsoleBuffer>();
 
 	groups.clear();
+	commandQueue.Clear();
 	attackGroups.clear();
 	groupUnits.clear();
 	reinforcs.clear();
@@ -473,6 +476,7 @@ void CScripts::Clear()
 	pConsole = 0;
 
 	groups.clear();
+	commandQueue.Clear();
 	attackGroups.clear();
 	groupUnits.clear();
 	reinforcs.clear();
@@ -601,11 +605,19 @@ bool CScripts::ParseCommand( SAIUnitCmd *pCmd, Script &script, bool bIDsAreScrip
 			break;
 		case ACTION_COMMAND_ATTACK_OBJECT:
 		{
+			CHECK_ERROR( script.GetObject( 3 ).IsNumber(),
+			             "Give ACTION_COMMAND_ATTACK_OBJECT command : the third parameter is not a target id",
+			             script );
 			const int targetId = script.GetObject( 3 );
 
 			if ( bIDsAreScriptIDs )
 			{
-				command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+				// An absent or destroyed target group is a failed order, not an empty-list dereference.
+				pScripts->DelInvalidBegin( targetId );
+				if ( !pScripts->groups[targetId].empty() )
+				{
+					command.nObjectID = pScripts->groups[targetId].back()->GetUniqueId();
+				}
 			}
 			else
 			{
@@ -1279,7 +1291,13 @@ void CScripts::Segment()
 		std::string szCommand;
 		while ( ReadFromPipe( PIPE_SCRIPT_CMDS, &szCommand, 0 ) )
 		{
-			CallScriptFunction( szCommand.c_str() );
+			// Console and rendered-camera callbacks arrive at client-specific times.
+			// Do not let them mutate the COOP VM, even by scheduling a later Lua thread.
+			const IAIScenarioTracker *pTracker = GetScenarioTracker();
+			if ( !pTracker || !pTracker->IsCooperative() )
+			{
+				CallScriptFunction( szCommand.c_str() );
+			}
 		}
 		bShowErrors = bOldShowScriptErrors;
 	}
@@ -1290,6 +1308,9 @@ void CScripts::Segment()
 	{
 		pScript->Segment();
 	}
+	// Every peer and replay drains after Lua, before the remaining simulation systems.
+	// Orders emitted by a command callback stay pending until the next segment.
+	commandQueue.Drain( [this]( SQueuedScriptCommand &command ) { ExecuteQueuedCommand( command ); } );
 	const double tPassed = NHPTimer::GetTimePassed( &time );
 
 	if ( bScriptTimeCalculate )
@@ -1767,6 +1788,9 @@ int CScripts::LandReinforcementOLD( struct lua_State *state )
 int CScripts::Draw( struct lua_State *state )
 {
 	Script script( state );
+	CHECK_ERROR( !GetScenarioTracker()->IsCooperative(),
+	             "Draw: COOP missions must finish with Win(0), Win(1), or Loose()",
+	             script );
 	NInput::PostEvent( "local_draw", 0, 0 );
 
 	return 0;
@@ -1777,6 +1801,13 @@ int CScripts::Win( struct lua_State *state )
 	Script script( state );
 
 	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "Win: the first parameter is not a number", script );
+	if ( GetScenarioTracker()->IsCooperative() )
+	{
+		const double fParty = script.GetObject( 1 ).GetNumber();
+		CHECK_ERROR( fParty == 0 || fParty == 1, "Win: COOP side must be 0 (humans) or 1 (AI)", script );
+		GetScenarioTracker()->SetScriptOutcome( int( fParty ) );
+		return 0;
+	}
 	const int nParty = script.GetObject( 1 );
 
 	if ( nParty == theDipl.GetMyParty() )
@@ -1811,6 +1842,11 @@ int CScripts::Win( struct lua_State *state )
 
 int CScripts::Loose( struct lua_State *state )
 {
+	if ( GetScenarioTracker()->IsCooperative() )
+	{
+		GetScenarioTracker()->SetScriptOutcome( 1 );
+		return 0;
+	}
 	if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 	{
 		NInput::PostEvent( "local_loose", 0, 0 );
@@ -1821,6 +1857,186 @@ int CScripts::Loose( struct lua_State *state )
 	return 0;
 }
 
+namespace
+{
+bool ScriptCommandHasDispersion( EActionCommand type )
+{
+	// Argument 3 is a target ID or an ability parameter for the other commands.
+	switch ( type )
+	{
+		case ACTION_COMMAND_MOVE_TO:
+		case ACTION_COMMAND_REVERSE_TO:
+		case ACTION_COMMAND_SWARM_TO:
+		case ACTION_COMMAND_UNLOAD:
+		case ACTION_COMMAND_LEAVE:
+		case ACTION_COMMAND_ROTATE_TO:
+		case ACTION_COMMAND_ROTATE_TO_DIR:
+		case ACTION_COMMAND_UNLOAD_NOW:
+		case ACTION_COMMAND_LEAVE_NOW:
+		case ACTION_COMMAND_PLACEMINE:
+		case ACTION_COMMAND_ART_BOMBARDMENT:
+		case ACTION_COMMAND_FIRE_ROCKETS:
+		case ACTION_COMMAND_USE_FLAMETHROWER:
+		case ACTION_COMMAND_RANGE_AREA:
+		case ACTION_COMMAND_USE_SPYGLASS:
+		case ACTION_COMMAND_DEPLOY_ARTILLERY:
+		case ACTION_COMMAND_REPAIR:
+		case ACTION_COMMAND_PATROL:
+		case ACTION_COMMAND_RESUPPLY:
+		case ACTION_COMMAND_CLEARMINE:
+			return true;
+		default:
+			return false;
+	}
+}
+} // namespace
+
+int CScripts::QueueCooperativeCommand( Script &script, bool bPlaceInQueue, bool bIDsAreScriptIDs )
+{
+	// The legacy parser uses Script::Object's implicit int conversion even for
+	// coordinates. Validate before that conversion, where NaN/overflow is undefined.
+	for ( int nArgument = 1; nArgument <= 5; ++nArgument )
+	{
+		const Script::Object argument = script.GetObject( nArgument );
+		if ( argument.IsNumber() )
+		{
+			const double value = argument.GetNumber();
+			CHECK_ERROR( std::isfinite( value ) && value >= ( std::numeric_limits<int>::min )() &&
+			                 value <= ( std::numeric_limits<int>::max )(),
+			             "Cmd: numeric parameters must be finite and within the integer range",
+			             script );
+		}
+	}
+	SQueuedScriptCommand queued;
+	if ( !ParseCommand( &queued.command, script, bIDsAreScriptIDs ) )
+	{
+		return 0;
+	}
+	CHECK_ERROR( std::isfinite( queued.command.vPos.x ) && std::isfinite( queued.command.vPos.y ) &&
+	                 std::isfinite( queued.command.fNumber ),
+	             "Cmd: command parameters must be finite",
+	             script );
+	queued.bPlaceInQueue = bPlaceInQueue;
+
+	const auto appendUnit = [&queued]( CCommonUnit *pUnit )
+	{
+		if ( !IsValid( pUnit ) || !pUnit->IsAlive() )
+		{
+			return;
+		}
+		// Snapshot the same formation that group registration would command, once.
+		CCommonUnit *pGroupUnit = pUnit->IsInFormation() ? pUnit->GetFormation() : pUnit;
+		if ( IsValid( pGroupUnit ) && pGroupUnit->IsAlive() )
+		{
+			queued.unitIDs.push_back( pGroupUnit->GetUniqueId() );
+		}
+	};
+	const int nID = script.GetObject( 2 );
+	if ( bIDsAreScriptIDs )
+	{
+		const auto group = groups.find( nID );
+		if ( group != groups.end() )
+		{
+			for ( const auto &object : group->second )
+			{
+				CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( object.GetPtr() );
+				CHECK_ERROR( pUnit || !IsValid( object ), "Cmd: cannot give a command to a non-unit", script );
+				appendUnit( pUnit );
+			}
+		}
+	}
+	else if ( nID > 0 )
+	{
+		appendUnit( dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) ) );
+	}
+	std::sort( queued.unitIDs.begin(), queued.unitIDs.end() );
+	queued.unitIDs.erase( std::unique( queued.unitIDs.begin(), queued.unitIDs.end() ), queued.unitIDs.end() );
+	if ( queued.unitIDs.empty() )
+	{
+		return 0;
+	}
+
+	const float fDispersion = ScriptCommandHasDispersion( queued.command.nCmdType ) && script.GetObject( 3 ).IsNumber()
+	                              ? float( script.GetObject( 3 ).GetNumber() )
+	                              : 0.0f;
+	CHECK_ERROR( std::isfinite( fDispersion ) && fDispersion >= 0.0f,
+	             "Cmd: dispersion must be a finite nonnegative number",
+	             script );
+	if ( fDispersion > 0.0f )
+	{
+		// Draw at issuance, in normalized unit order. Dispatch and vanished units cannot
+		// change the RNG stream seen by subsequent Lua code in this segment.
+		for ( int nUnitID : queued.unitIDs )
+		{
+			SQueuedScriptCommand single;
+			single.unitIDs.push_back( nUnitID );
+			single.command = queued.command;
+			single.bPlaceInQueue = bPlaceInQueue;
+			const uint16_t wDirection = NRandom::Random( 0, 65535 );
+			RecordRandomCall();
+			const float fShift = NRandom::Random( 0.0f, fDispersion );
+			RecordRandomCall();
+			single.command.vPos += fShift * GetVectorByDirection( wDirection );
+			pScripts->commandQueue.Add( std::move( single ) );
+		}
+	}
+	else
+	{
+		pScripts->commandQueue.Add( std::move( queued ) );
+	}
+	return 0;
+}
+
+void CScripts::ExecuteQueuedCommand( SQueuedScriptCommand &queued )
+{
+	const IAIScenarioTracker *pTracker = GetScenarioTracker();
+	if ( pTracker && pTracker->IsCooperative() && pTracker->GetScriptOutcome() >= 0 )
+	{
+		return;
+	}
+	if ( queued.command.nObjectID != 0 )
+	{
+		// Target identities are captured when Lua issues the order, not resolved again
+		// from a script group that may have been repopulated before this phase.
+		CLinkObject *pTarget = CLinkObject::GetObjectByUniqueIdSafe( queued.command.nObjectID );
+		if ( !IsValid( pTarget ) || !pTarget->IsAlive() )
+		{
+			return;
+		}
+	}
+
+	std::vector<int> liveIDs;
+	std::vector<std::pair<CPtr<CCommonUnit>, int>> oldGroups;
+	for ( int nID : queued.unitIDs )
+	{
+		CCommonUnit *pUnit = dynamic_cast<CCommonUnit *>( CLinkObject::GetObjectByUniqueIdSafe( nID ) );
+		// A formerly independent soldier may have joined a formation since issuance.
+		// Do not expand its captured identity to that new formation during registration.
+		if ( IsValid( pUnit ) && pUnit->IsAlive() && !pUnit->IsInFormation() )
+		{
+			liveIDs.push_back( nID );
+			oldGroups.emplace_back( pUnit, pUnit->GetNGroup() );
+		}
+	}
+	if ( liveIDs.empty() )
+	{
+		return;
+	}
+	const int nGroup = theGroupLogic.GenerateSimulationGroupNumber();
+	IAILogic *pAI = Singleton<IAILogic>();
+	pAI->RegisterGroup( liveIDs, nGroup );
+	pAI->GroupCommand( &queued.command, nGroup, queued.bPlaceInQueue );
+	pAI->UnregisterGroup( nGroup );
+	pAI->SetNeedNewGroupNumber();
+	for ( const auto &entry : oldGroups )
+	{
+		if ( IsValid( entry.first ) && entry.first->IsAlive() )
+		{
+			theGroupLogic.AddUnitToGroup( entry.first, entry.second );
+		}
+	}
+}
+
 int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue, const bool b2NdParamIsScriptID )
 {
 	Script script( state );
@@ -1828,7 +2044,12 @@ int CScripts::ProcessCommand( struct lua_State *state, const bool bPlaceInQueue,
 	CHECK_ERROR( script.GetObject( 1 ).IsNumber(), "GiveCommand : the first parameter is not a command", script );
 	CHECK_ERROR( script.GetObject( 2 ).IsNumber(), "GiveCommand : the second parameter is not a script id", script );
 
-	// Cmd should work only in Single and LANTest
+	if ( Singleton<IAIScenarioTracker>()->IsCooperative() )
+	{
+		return QueueCooperativeCommand( script, bPlaceInQueue, b2NdParamIsScriptID );
+	}
+
+	// CLASSIC keeps its original restriction; COOP orders are derived simulation input.
 	CHECK_ERROR( Singleton<IAIScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
 	                 NGlobal::GetVar( "LANTEST", 0 ) != 0,
 	             "Cmd: works only in single-player",
@@ -4349,14 +4570,12 @@ int CScripts::CallReinforcement( struct lua_State *state )
 
 int CScripts::GiveUnitCommand( struct lua_State *state )
 {
-	ProcessCommand( state, false, false );
-	return 1;
+	return ProcessCommand( state, false, false );
 }
 
 int CScripts::GiveUnitQCommand( struct lua_State *state )
 {
-	ProcessCommand( state, true, false );
-	return 1;
+	return ProcessCommand( state, true, false );
 }
 
 /*

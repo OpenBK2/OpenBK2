@@ -5,6 +5,7 @@
 #include "InterfaceState.h"
 #include "Misc/StringConversions.h"
 #include "Misc/StrProc.h"
+#include "MPCoopRules.h"
 #include "MPLANTest.h"
 #include "MPManagerMode.h"
 #include "MPPacketTraceLog.h"
@@ -17,20 +18,55 @@
 #include "Server_Client_Common/GamePackets.h"
 #include "System/WinFrame.h"
 
+#include <algorithm>
+
 #include <fmt/format.h>
 
 // CMPManagerMode - packet handling methods
 
 bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 {
+	// Once running, membership changes only at synchronized drop boundaries.
+	if ( IsGameRunning() )
+	{
+		return true;
+	}
 	DebugTrace( "+++ Slot Info packet from client %d for slot %d, name %s, conn %d",
 	            pPacket->nClientID,
 	            pPacket->nSlot,
 	            pPacket->info.szName.c_str(),
 	            pPacket->info.wConnectedTo );
 	// Store for myself
+	// Sparse COOP player IDs can arrive before the map description. Stage them
+	// within the protocol mask capacity, then validate against the received map.
+	if ( !gameDesc.pMPMap && pPacket->nSlot >= 0 && pPacket->nSlot < 16 && pPacket->nSlot >= slots.size() )
+	{
+		slots.resize( pPacket->nSlot + 1 );
+	}
 	NI_VERIFY(
 			pPacket->nSlot >= 0 && pPacket->nSlot < slots.size(), "PRG: Got slot info that is outside bounds", return true );
+	if ( gameDesc.pMPMap )
+	{
+		if ( !NGameX::IsHumanMultiplayerSlot( gameDesc, pPacket->nSlot ) )
+		{
+			return true;
+		}
+		if ( NGameX::IsCoopGame( gameDesc ) )
+		{
+			pPacket->info.nTeam = 0;
+		}
+		const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+		if ( pPacket->info.bPresent &&
+		     std::find( nations.begin(), nations.end(), pPacket->info.nCountry ) == nations.end() )
+		{
+			// The join handshake can precede the client learning the forced nation.
+			if ( pPacket->info.bAccept || nations.empty() )
+			{
+				return true;
+			}
+			pPacket->info.nCountry = nations.front();
+		}
+	}
 	//NI_VERIFY( IsInGameRoom(), "PRG: Received slot info while not in game room", return true );
 	if ( pPacket->info.bPresent && !IsPlayerPresent( pPacket->nSlot ) )
 	{
@@ -52,7 +88,8 @@ bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 	SMPSlot &slot = slots[pPacket->nSlot];
 	int nStoredPing = slot.nPing;
 	slot = pPacket->info;
-	slot.nClientID = pPacket->nClientID;
+	// A host sends empty/closed slots too; those entries do not own its client ID.
+	slot.nClientID = slot.bPresent ? pPacket->nClientID : -1;
 	slot.nPing = nStoredPing;
 
 	if ( nOwnSlot >= 0 )
@@ -139,10 +176,20 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 {
 	NI_VERIFY( IsInGameRoom() && !IsGameHost(), "PRG: StartGame received by not a client", return true );
 
-	//DebugTrace( "+++ StartGame packet from client %d", pPacket->nClientID );
-	if ( pPacket->slots.size() > slots.size() )
+	if ( pPacket->nClientID != nHostClientID || pPacket->slots.size() != slots.size() ||
+	     pPacket->slotRehash.size() != slots.size() )
 	{
-		slots.resize( nSlotsUsed );
+		return true;
+	}
+	std::vector<bool> used( slots.size(), false );
+	for ( int i = 0; i < slots.size(); ++i )
+	{
+		const int nTarget = pPacket->slotRehash[i];
+		if ( nTarget >= slots.size() || used[nTarget] || ( NGameX::IsCoopGame( gameDesc ) && nTarget != i ) )
+		{
+			return true;
+		}
+		used[nTarget] = true;
 	}
 	RehashSlots( pPacket->slotRehash );
 	for ( int i = 0; i < slots.size(); ++i )
@@ -150,6 +197,26 @@ bool CMPManagerMode::OnB2GameRoomStartGamePacket( class CB2GameRoomStartGamePack
 		slots[i].nCountry = pPacket->slots[i].nCountry;
 		slots[i].nTeam = pPacket->slots[i].nTeam;
 	}
+	std::string szError;
+	// The host checked readiness before broadcasting. A peer's separate ready
+	// packet may still be in flight, so it is not part of start authorization here.
+	std::vector<SMPSlot> startSlots = slots;
+	for ( auto &slot : startSlots )
+	{
+		if ( slot.bPresent )
+		{
+			slot.bAccept = true;
+		}
+	}
+	if ( !NGameX::ValidateMultiplayerLobby( gameDesc, startSlots, &szError ) )
+	{
+		auto *pFailure = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
+		pFailure->szDetail = szError;
+		PushMessage( pFailure );
+		OnLeaveGame();
+		return true;
+	}
+	nSlotsUsed = NGameX::GetPresentMultiplayerPlayerCount( slots );
 	StartGame();
 
 	return true;
@@ -165,12 +232,48 @@ bool CMPManagerMode::OnB2GameSpecificInfoPacket( class CB2GameSpecificInfoPacket
 		pPacket->info.nPlayers = -1;
 	}
 
-	if ( !IsInGameRoom() || IsGameHost() )
+	if ( !IsInGameRoom() || IsGameHost() || pPacket->nClientID != nHostClientID )
 	{
 		return true;
 	}
 
 	gameDesc = pPacket->info;
+	std::string szError;
+	if ( !NGameX::ResolveMultiplayerMapRules( &gameDesc, &szError ) )
+	{
+		auto *pFailure = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
+		pFailure->szDetail = szError;
+		PushMessage( pFailure );
+		OnLeaveGame();
+		return true;
+	}
+	slots.resize( NGameX::GetMultiplayerSlotCount( gameDesc ) );
+	const auto nations = NGameX::GetAllowedMultiplayerNations( gameDesc );
+	for ( int i = 0; i < slots.size(); ++i )
+	{
+		if ( !NGameX::IsHumanMultiplayerSlot( gameDesc, i ) )
+		{
+			slots[i].Clear();
+			slots[i].bAccept = true;
+			continue;
+		}
+		if ( NGameX::IsCoopGame( gameDesc ) )
+		{
+			slots[i].nTeam = 0;
+		}
+		if ( std::find( nations.begin(), nations.end(), slots[i].nCountry ) == nations.end() )
+		{
+			slots[i].nCountry = nations.front();
+		}
+	}
+	if ( nOwnSlot >= 0 && !NGameX::IsHumanMultiplayerSlot( gameDesc, nOwnSlot ) )
+	{
+		auto *pFailure = new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_CONNECT_FAILED );
+		pFailure->szDetail = "The host assigned an unavailable human player slot.";
+		PushMessage( pFailure );
+		OnLeaveGame();
+		return true;
+	}
 	OnGameSpecificInfo();
 
 	return true;
@@ -227,15 +330,28 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 
 bool CMPManagerMode::OnSlotNumberPacket( class CSlotNumberPacket *pPacket )
 {
+	if ( IsGameRunning() || bGameRoomInit || IsGameHost() )
+	{
+		return true;
+	}
 	DebugTrace( "+++ SlotNumber packet from client %d, assigned slot %d", pPacket->nClientID, pPacket->nSlot );
 	nHostClientID = pPacket->nClientID;
+	if ( pPacket->nSlot < 0 || pPacket->nSlot >= 16 ||
+	     ( gameDesc.pMPMap && !NGameX::IsHumanMultiplayerSlot( gameDesc, pPacket->nSlot ) ) )
+	{
+		return true;
+	}
+	if ( pPacket->nSlot >= slots.size() )
+	{
+		slots.resize( pPacket->nSlot + 1 );
+	}
 	nOwnSlot = pPacket->nSlot;
-	++nSlotsUsed;
 	slots[nOwnSlot].szName = szMPName;
 	slots[nOwnSlot].nClientID = GetOwnClientID();
-	slots[nOwnSlot].nTeam = nOwnSlot % 2;
+	slots[nOwnSlot].nTeam = NGameX::IsCoopGame( gameDesc ) ? 0 : nOwnSlot % 2;
 	slots[nOwnSlot].nColour = nOwnSlot % ( ( pMPConsts ) ? pMPConsts->playerColorInfos.size() : 4 );
 	slots[nOwnSlot].bPresent = true;
+	nSlotsUsed = NGameX::GetPresentMultiplayerPlayerCount( slots );
 	ulHostCheckSum = pPacket->ulCheckSum;
 
 	for ( std::list<int>::iterator it = pendingClients.begin(); it != pendingClients.end(); ++it )
@@ -413,6 +529,11 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 
 bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 {
+	if ( NGameX::IsCoopGame( gameDesc ) )
+	{
+		// COOP results come only from simulation Lua, never a CLASSIC human loss packet.
+		return true;
+	}
 	if ( !IsGameRunning() || !IsValid( pTransceiver ) || pPacket->nGameID != nGameID || pPacket->nSegment < 0 )
 	{
 		return true;

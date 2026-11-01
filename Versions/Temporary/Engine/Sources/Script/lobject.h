@@ -11,8 +11,10 @@
 #include "lua.h"
 
 #include "port/cdecl.h"
+#include "System/det_map.h"
 
 #include <cassert>
+#include <functional>
 
 #define LUA_INTERNALERROR(s)	assert(((void)s,0))
 #define LUA_ASSERT(c,s)		ASSERT(c)
@@ -226,40 +228,35 @@ struct Closure {
 
 struct ObjectHash
 {
-	int operator()( const TObject &key ) const
+	std::size_t operator()( const TObject &key ) const
 	{
-		unsigned long h;
 		switch ( key.GetType() )
 		{
 			case LUA_TNUMBER:
-				h = (unsigned long)(long)( key.GetN() );
-				break;
+				// Numeric keys need no narrowing conversion, which was undefined for
+				// large values. Equal positive/negative zero receive the same hash.
+				return std::hash<Number>{}( key.GetN() );
 			case LUA_TSTRING:
-				{
-					std::hash<std::string> hh;
-					h = hh( key.GetS()->GetStr() );
-				}
-				break;
+				return std::hash<std::string>{}( key.GetS()->GetStr() );
 			case LUA_TUSERDATA:
-				h = IntPoint( key.GetUData() );
-				break;
+				return std::hash<int>{}( key.GetUData() );
 			case LUA_TTABLE:
-				h = IntPoint( key.GetH() );
-				break;
+				return std::hash<int>{}( key.GetH() );
 			case LUA_TFUNCTION:
-				h = IntPoint( key.GetCL() );
-				break;
+				return std::hash<int>{}( key.GetCL() );
 			default:
 				ASSERT( 0 );
 				return 0;  /* invalid key */
 		}
-		return h;
 	}
 };
 
 struct Hash
 {
-	typedef std::unordered_map<TObject, TObject, ObjectHash> CObjHash;
+	// Lua traversal must not depend on the standard library's bucket layout.
+	// Object-valued keys contain stable VM indices; strings compare by contents.
+	// det_map also preserves this insertion order across save/load.
+	typedef det_map<TObject, TObject, ObjectHash> CObjHash;
   struct Hash *mark;  /* marked tables (point to itself when not marked) */
 
 	ZDATA

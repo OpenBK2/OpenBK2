@@ -2844,7 +2844,7 @@ int CWorldClient::GetHPBarColorIndex( const CMapObj *pMO, const int nPlayer )
 	}
 	const IScenarioTracker::SPlayerColor &color = pST->GetPlayerColor( nPlayer );
 	int nColour = color.nColorIndex;
-	if ( pST->GetGameType() == IScenarioTracker::EGT_MULTI_FLAG_CONTROL && pMO->IsKeyObject() )
+	if ( pST->IsMultiplayer() && pMO->IsKeyObject() )
 	{
 		const int nTeam = pST->GetPlayerSide( nPlayer );
 		nColour = 3;

@@ -13,7 +13,24 @@
 enum EMPGameType
 {
 	MP_GT_STANDARD,
+	MP_GT_COOP,
 	MP_GT_COUNT,
+};
+
+// Rules selected by a multiplayer map. Zero preserves existing CLASSIC maps.
+[export]
+enum EMPMapGameType
+{
+	CLASSIC,
+	COOP,
+};
+
+// COOP bots are map players, never network participants. The final player remains neutral.
+[export]
+enum EMapPlayerType
+{
+	HUMAN,
+	AI_BOT,
 };
 
 
@@ -336,6 +353,8 @@ struct SMapPlayerInfo
 	SReinforcement *_ScriptReinforcements[];
 	SScriptReinforcementEntry _ScriptReinforcementsTextID[];
 	SSuperWeaponInfo _SuperWeapon;
+	// Player controller in COOP. Ignored by CLASSIC and single-player missions.
+	EMapPlayerType _PlayerType = HUMAN;
 
 	#include "include_MapPlayerInfo.h"
 };
@@ -419,6 +438,14 @@ class SMultiplayerMap
 	int _SizeY;
 	// max number of players
 	int _Players;
+	// Multiplayer rules for this map.
+	EMPMapGameType _GameType = CLASSIC;
+	// MPConsts tech-level index, or -1 to allow the host to choose.
+	[preserveDefault] int _ForcedTechLevel = -1;
+	// Allowed MPConsts side indexes for humans. Empty allows every available nation.
+	int _AllowedNations[];
+	// Map-defined difficulty exposed to mission Lua, without automatic stat modifiers.
+	int _DifficultyLevel = 0;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

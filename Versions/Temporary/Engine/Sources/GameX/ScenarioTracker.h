@@ -3,6 +3,8 @@
 #include "AILogic/ScenarioTracker.h"
 #include "GameX/DBScenario.h"
 
+#include "GameX_export.h"
+
 #include <cstdint>
 
 // BEGIN new scenario tracker
@@ -434,6 +436,6 @@ struct IScenarioTracker : public IAIScenarioTracker
 };
 
 IScenarioTracker *CreateScenarioTracker();
-IScenarioTracker *CreateScenarioTrackerMultiplayer();
+GAMEX_EXPORT IScenarioTracker *CreateScenarioTrackerMultiplayer();
 
 // END new scenario tracker

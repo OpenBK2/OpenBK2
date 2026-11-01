@@ -22,7 +22,20 @@ namespace NDb
 	enum EMPGameType : int
 	{
 		MP_GT_STANDARD = 0,
-		MP_GT_COUNT = 1,
+		MP_GT_COOP = 1,
+		MP_GT_COUNT = 2,
+	};
+
+	enum EMPMapGameType : int
+	{
+		CLASSIC = 0,
+		COOP = 1,
+	};
+
+	enum EMapPlayerType : int
+	{
+		HUMAN = 0,
+		AI_BOT = 1,
 	};
 
 	struct SMPMapInfo
@@ -702,6 +715,7 @@ namespace NDb
 		std::vector< CDBPtr< SReinforcement > > scriptReinforcements;
 		std::vector< SScriptReinforcementEntry > scriptReinforcementsTextID;
 		SSuperWeaponInfo superWeapon;
+		EMapPlayerType ePlayerType;
 
 		#include "include_MapPlayerInfo.h"
 
@@ -710,7 +724,8 @@ namespace NDb
 			nDiplomacySide( 0 ),
 			fRecycleTimeCoefficient( 1.0000f ),
 			nReinforcementCalls( 0 ),
-			vMPStartPos( VNULL2 )
+			vMPStartPos( VNULL2 ),
+			ePlayerType( HUMAN )
 		{ }
 		//
 		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
@@ -805,12 +820,19 @@ namespace NDb
 		int nSizeX;
 		int nSizeY;
 		int nPlayers;
+		EMPMapGameType eGameType;
+		int nForcedTechLevel;
+		std::vector< int > allowedNations;
+		int nDifficultyLevel;
 
 		SMultiplayerMap() :
 			__dwCheckSum( 0 ),
 			nSizeX( 0 ),
 			nSizeY( 0 ),
-			nPlayers( 0 )
+			nPlayers( 0 ),
+			eGameType( CLASSIC ),
+			nForcedTechLevel( -1 ),
+			nDifficultyLevel( 0 )
 		{ }
 		//
 		int GetTypeID() const override { return typeID; }
@@ -1013,6 +1035,34 @@ struct SKnownEnum<NDb::EMPGameType>
 	enum { isKnown = 1 };
 	static std::string ToString( NDb::EMPGameType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EMPGameType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMPGameType( szValue ); }
+};
+
+namespace NDb
+{
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EMPMapGameType eValue );
+	STATS_B2_M1_EXPORT EMPMapGameType StringToEnum_NDb_EMPMapGameType( const std::string &szValue );
+}
+
+template <>
+struct SKnownEnum<NDb::EMPMapGameType>
+{
+	enum { isKnown = 1 };
+	static std::string ToString( NDb::EMPMapGameType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMPMapGameType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMPMapGameType( szValue ); }
+};
+
+namespace NDb
+{
+	STATS_B2_M1_EXPORT std::string EnumToString( NDb::EMapPlayerType eValue );
+	STATS_B2_M1_EXPORT EMapPlayerType StringToEnum_NDb_EMapPlayerType( const std::string &szValue );
+}
+
+template <>
+struct SKnownEnum<NDb::EMapPlayerType>
+{
+	enum { isKnown = 1 };
+	static std::string ToString( NDb::EMapPlayerType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::EMapPlayerType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EMapPlayerType( szValue ); }
 };
 
 namespace NDb

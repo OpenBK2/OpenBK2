@@ -5,6 +5,7 @@
 
 #include "AILogic/DBAIConsts.h"
 #include "AILogic/SimpleChecksumCalc.h"
+#include "CoopScriptChecksum.h"
 #include "DBMPConsts.h"
 #include "Main/DBNetConsts.h"
 #include "Main/MODs.h"
@@ -85,6 +86,12 @@ uint32_t SGameConsts::GetMPDataVersionChecksumWithMap( CDBPtr<NDb::SMultiplayerM
 	if ( !bMPMapChecksumValid || pMPChecksumMap != map )
 	{
 		nMPDataVersionChecksumWithMap = CalculateChecksum( base, map->CalcCheckSum() );
+		if ( map->eGameType == NDb::COOP )
+		{
+			// Database checksums cover file references, not the script bytes they load.
+			nMPDataVersionChecksumWithMap =
+					CalculateChecksum( nMPDataVersionChecksumWithMap, NGameX::CalculateCoopScriptChecksum( map->pMap, pAI ) );
+		}
 		pMPChecksumMap = map;
 		bMPMapChecksumValid = true;
 	}

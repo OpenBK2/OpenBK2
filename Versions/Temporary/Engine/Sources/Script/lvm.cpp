@@ -143,7 +143,12 @@ void luaV_settable (lua_State *L, StkId t, StkId key) {
   if ( LObj(L, t)->GetType() == LUA_TTABLE &&  /* `t' is a table? */
       ( ( tg = L->GetHash(t)->htag ) == LUA_TTABLE ||  /* with default tag? */
         luaT_gettm(L, tg, TM_SETTABLE) == STK_NULL) ) /* or no TM? */
-		*( L->GetHash(t)->SetObj( LObj(L, key) ) ) = *LObj(L, L->pCT->top-1);  /* do a primitive set */
+	{
+		if ( luaH_checkkey( L, LObj( L, key ) ) )
+		{
+			*( L->GetHash(t)->SetObj( LObj(L, key) ) ) = *LObj(L, L->pCT->top-1);  /* do a primitive set */
+		}
+	}
   else
 	{  /* try a `settable' tag method */
 		TObject *tObj = LObj(L, t);
@@ -544,6 +549,10 @@ void luaV_stepExecute( lua_State *L )
 				Hash *arr = L->GetHash(finaltop-1);
 				for (; n; n--) {
 					top-=2;
+					if ( !luaH_checkkey( L, LObj( L, top ) ) )
+					{
+						break;
+					}
 					*arr->SetObj( LObj(L, top) ) = *LObj(L, top+1);
 				}
 				break;

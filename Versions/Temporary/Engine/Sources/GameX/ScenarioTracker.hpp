@@ -543,6 +543,9 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	SPlayerColor playerColorNeutral;
 	NTimer::STime timeMissionStart = {};
 	CArray2D<int> reinfCallsByType;
+	// Zero means no script result, including when loading older saves.
+	int nScriptResult = 0;
+	int nMultiplayerDifficulty = 0;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -566,6 +569,8 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		f.Add( 20, &playerColorNeutral );
 		f.Add( 21, &timeMissionStart );
 		f.Add( 22, &reinfCallsByType );
+		f.Add( 23, &nScriptResult );
+		f.Add( 24, &nMultiplayerDifficulty );
 		return 0;
 	}
 
@@ -584,6 +589,7 @@ private:
 	}
 
 	void CalculateScore( const int nPlayer );
+	bool IsMapControlledPlayer( int nPlayer ) const;
 	bool AddReinfExp( float *pExp, const int nPlayer, NDb::EReinforcementType eReinfType );
 	// returns true on levelup, returns rest of exp
 
@@ -599,6 +605,30 @@ public:
 	void SetGameType( EGameType _eType ) override
 	{
 		eType = _eType;
+	}
+
+	void SetScriptOutcome( int nWinningSide ) override
+	{
+		// First result wins, so repeated or conflicting Lua callbacks are harmless.
+		if ( IsCooperative() && nScriptResult == 0 && nWinningSide >= 0 && nWinningSide <= 1 )
+		{
+			nScriptResult = nWinningSide + 1;
+		}
+	}
+
+	int GetScriptOutcome() const override
+	{
+		return nScriptResult - 1;
+	}
+
+	void SetMultiplayerDifficulty( int nDifficulty ) override
+	{
+		nMultiplayerDifficulty = nDifficulty;
+	}
+
+	int GetDifficultyLevel() const override
+	{
+		return nMultiplayerDifficulty;
 	}
 
 	// reinforcements
@@ -820,12 +850,13 @@ public:
 
 	const float GetEnemyDifficultyRCallsModifier() override
 	{
-		return 0;
+		return IsCooperative() ? 1.0f : 0.0f;
 	}
 
 	const float GetEnemyDifficultyRTimeModifier() override
 	{
-		return 0;
+		// COOP difficulty is a script parameter, so authored bot cooldowns are unchanged.
+		return IsCooperative() ? 1.0f : 0.0f;
 	}
 
 	const NDb::SPlayerRank *GetPlayerRank() const override

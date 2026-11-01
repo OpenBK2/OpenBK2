@@ -54,6 +54,12 @@ int CaptureError( lua_State *state )
 	return 0;
 }
 
+int RawSet( lua_State *state )
+{
+	lua_rawset( state, 1 );
+	return 0;
+}
+
 int EnterSynchronous( lua_State *state )
 {
 	// Model the guard luaD_call installs around synchronous native/Lua callbacks.
@@ -70,6 +76,7 @@ int LeaveSynchronous( lua_State *state )
 const SRegFunction functions[] = { { "WaitGate", WaitGate },
                                    { "Capture", Capture },
                                    { "_ERRORMESSAGE", CaptureError },
+                                   { "RawSet", RawSet },
                                    { "EnterSynchronous", EnterSynchronous },
                                    { "LeaveSynchronous", LeaveSynchronous },
                                    { "WaitForGroupInArea", CScripts::WaitForGroupInArea },
@@ -336,5 +343,46 @@ TEST_F( ScriptGroupWait, InvalidAreaArgumentsReturnSafely )
 	     "WaitForGroupInArea(0, 7, nil); Capture(2);"
 	     "WaitForGroupInArea(0, 7, 0); Capture(3);" );
 	EXPECT_EQ( events, std::vector<int>( { 1, 2, 3 } ) );
+}
+
+TEST_F( ScriptGroupWait, LuaTableTraversalFollowsInsertionOrderAcrossSave )
+{
+	Run( "ordered = {}; ordered['beta'] = 11; ordered[9] = 22;"
+	     "ordered['alpha'] = 33; ordered[1] = 44;"
+	     "for key, value in ordered do Capture(value); end;" );
+	EXPECT_EQ( events, ( std::vector<int>{ 11, 22, 33, 44 } ) );
+	SaveAndReload();
+	events.clear();
+	Run( "ordered[9] = 55; for key, value in ordered do Capture(value); end;" );
+	EXPECT_EQ( events, ( std::vector<int>{ 11, 55, 33, 44 } ) );
+}
+
+TEST_F( ScriptGroupWait, LuaObjectAndLargeNumericKeysRetainIdentityAndOrderAcrossSave )
+{
+	Run( "tableKey = {}; function functionKey() end; ordered = {};"
+	     "ordered[functionKey] = 5; ordered[tableKey] = 7;"
+	     "ordered[9007199254740992] = 9; ordered[0] = 11; ordered[-0] = 13; ordered[1/0] = 15;"
+	     "for key, value in ordered do Capture(value); end;" );
+	EXPECT_EQ( events, ( std::vector<int>{ 5, 7, 9, 13, 15 } ) );
+	SaveAndReload();
+	events.clear();
+	Run( "Capture(ordered[functionKey]); Capture(ordered[tableKey]);"
+	     "for key, value in ordered do Capture(value); end;" );
+	EXPECT_EQ( events, ( std::vector<int>{ 5, 7, 5, 7, 9, 13, 15 } ) );
+}
+
+TEST_F( ScriptGroupWait, InvalidTableKeysAreRejectedBeforeInsertion )
+{
+	for ( const char *code : { "invalid = {}; invalid[0/0] = 5; Capture(99);",
+	                           "invalid = { [0/0] = 5 }; Capture(99);",
+	                           "invalid = {}; RawSet(invalid, 0/0, 5); Capture(99);",
+	                           "invalid = {}; invalid[nil] = 5; Capture(99);" } )
+	{
+		errors.clear();
+		Run( code );
+		ASSERT_EQ( errors.size(), 1 );
+		EXPECT_NE( errors[0].find( "table index is nil or NaN" ), std::string::npos );
+		EXPECT_TRUE( events.empty() );
+	}
 }
 } // namespace

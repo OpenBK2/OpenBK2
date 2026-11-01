@@ -20,6 +20,8 @@ std::string EnumToString( NDb::EMPGameType eValue )
 	{
 	case NDb::MP_GT_STANDARD:
 		return "MP_GT_STANDARD";
+	case NDb::MP_GT_COOP:
+		return "MP_GT_COOP";
 	case NDb::MP_GT_COUNT:
 		return "MP_GT_COUNT";
 	default:
@@ -31,9 +33,55 @@ NDb::EMPGameType StringToEnum_NDb_EMPGameType( const std::string &szValue )
 {
 	if ( szValue == "MP_GT_STANDARD" )
 		return NDb::MP_GT_STANDARD;
+	if ( szValue == "MP_GT_COOP" )
+		return NDb::MP_GT_COOP;
 	if ( szValue == "MP_GT_COUNT" )
 		return NDb::MP_GT_COUNT;
 	return NDb::MP_GT_STANDARD;
+}
+
+std::string EnumToString( NDb::EMPMapGameType eValue )
+{
+	switch ( eValue )
+	{
+	case NDb::CLASSIC:
+		return "CLASSIC";
+	case NDb::COOP:
+		return "COOP";
+	default:
+		return "CLASSIC";
+	}
+}
+
+NDb::EMPMapGameType StringToEnum_NDb_EMPMapGameType( const std::string &szValue )
+{
+	if ( szValue == "CLASSIC" )
+		return NDb::CLASSIC;
+	if ( szValue == "COOP" )
+		return NDb::COOP;
+	return NDb::CLASSIC;
+}
+
+std::string EnumToString( NDb::EMapPlayerType eValue )
+{
+	switch ( eValue )
+	{
+	case NDb::HUMAN:
+		return "HUMAN";
+	case NDb::AI_BOT:
+		return "AI_BOT";
+	default:
+		return "HUMAN";
+	}
+}
+
+NDb::EMapPlayerType StringToEnum_NDb_EMapPlayerType( const std::string &szValue )
+{
+	if ( szValue == "HUMAN" )
+		return NDb::HUMAN;
+	if ( szValue == "AI_BOT" )
+		return NDb::AI_BOT;
+	return NDb::HUMAN;
 }
 
 
@@ -1295,6 +1343,7 @@ void SMapPlayerInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThi
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "ScriptReinforcements", &scriptReinforcements, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "ScriptReinforcementsTextID", &scriptReinforcementsTextID, pThis );
 	NMetaInfo::ReportStructMetaInfo( szAddName + "SuperWeapon", &superWeapon, pThis );
+	NMetaInfo::ReportMetaInfo( szAddName + "PlayerType", (uint8_t*)&ePlayerType - pThis, sizeof(ePlayerType), NTypeDef::TYPE_TYPE_ENUM );
 }
 
 int SMapPlayerInfo::operator&( IXmlSaver &saver )
@@ -1313,6 +1362,7 @@ int SMapPlayerInfo::operator&( IXmlSaver &saver )
 	saver.Add( "ScriptReinforcements", &scriptReinforcements );
 	saver.Add( "ScriptReinforcementsTextID", &scriptReinforcementsTextID );
 	saver.Add( "SuperWeapon", &superWeapon );
+	saver.Add( "PlayerType", &ePlayerType );
 
 	return 0;
 }
@@ -1333,6 +1383,7 @@ int SMapPlayerInfo::operator&( IBinSaver &saver )
 	saver.Add( 13, &scriptReinforcements );
 	saver.Add( 14, &scriptReinforcementsTextID );
 	saver.Add( 15, &superWeapon );
+	saver.Add( 16, &ePlayerType );
 
 	return 0;
 }
@@ -1345,7 +1396,7 @@ uint32_t SMapPlayerInfo::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << camera << general << pPartyInfo << reinforcementPoints << reinforcementTypes << pDefaultRank << nDiplomacySide << fRecycleTimeCoefficient << nReinforcementCalls << vMPStartPos << scriptReinforcements << scriptReinforcementsTextID << superWeapon;
+	checkSum << camera << general << pPartyInfo << reinforcementPoints << reinforcementTypes << pDefaultRank << nDiplomacySide << fRecycleTimeCoefficient << nReinforcementCalls << vMPStartPos << scriptReinforcements << scriptReinforcementsTextID << superWeapon << ePlayerType;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -1527,6 +1578,10 @@ void SMultiplayerMap::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "SizeX", (uint8_t*)&nSizeX - pThis, sizeof(nSizeX), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "SizeY", (uint8_t*)&nSizeY - pThis, sizeof(nSizeY), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "Players", (uint8_t*)&nPlayers - pThis, sizeof(nPlayers), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportMetaInfo( "GameType", (uint8_t*)&eGameType - pThis, sizeof(eGameType), NTypeDef::TYPE_TYPE_ENUM );
+	NMetaInfo::ReportMetaInfo( "ForcedTechLevel", (uint8_t*)&nForcedTechLevel - pThis, sizeof(nForcedTechLevel), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "AllowedNations", &allowedNations, pThis );
+	NMetaInfo::ReportMetaInfo( "DifficultyLevel", (uint8_t*)&nDifficultyLevel - pThis, sizeof(nDifficultyLevel), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1538,6 +1593,10 @@ int SMultiplayerMap::operator&( IXmlSaver &saver )
 	saver.Add( "SizeX", &nSizeX );
 	saver.Add( "SizeY", &nSizeY );
 	saver.Add( "Players", &nPlayers );
+	saver.Add( "GameType", &eGameType );
+	saver.Add( "ForcedTechLevel", &nForcedTechLevel );
+	saver.Add( "AllowedNations", &allowedNations );
+	saver.Add( "DifficultyLevel", &nDifficultyLevel );
 
 	return 0;
 }
@@ -1549,6 +1608,13 @@ int SMultiplayerMap::operator&( IBinSaver &saver )
 	saver.Add( 4, &nSizeX );
 	saver.Add( 5, &nSizeY );
 	saver.Add( 6, &nPlayers );
+	saver.Add( 7, &eGameType );
+	if ( !saver.IsReading() || saver.HasChunk( 8 ) )
+	{
+		saver.Add( 8, &nForcedTechLevel );
+	}
+	saver.Add( 9, &allowedNations );
+	saver.Add( 10, &nDifficultyLevel );
 
 	return 0;
 }
@@ -1561,7 +1627,7 @@ uint32_t SMultiplayerMap::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << pMap << nSizeX << nSizeY << nPlayers;
+	checkSum << pMap << nSizeX << nSizeY << nPlayers << eGameType << nForcedTechLevel << allowedNations << nDifficultyLevel;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;

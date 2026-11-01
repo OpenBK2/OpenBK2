@@ -286,7 +286,7 @@ void CMPManagerMode::AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNet
 	newGame.bPwdReq = src.bPasswordRequired;
 	newGame.nSizeX = src.nSizeX;
 	newGame.nSizeY = src.nSizeY;
-	newGame.nGameType = 0;
+	newGame.nGameType = src.nGameType;
 	newGame.nTechLevel = src.nTechLevel;
 	pList->push_back( newGame );
 }

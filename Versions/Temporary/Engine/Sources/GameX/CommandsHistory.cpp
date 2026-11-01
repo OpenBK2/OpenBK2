@@ -2,6 +2,8 @@
 
 #include "AILogic/AILogicCommand.h"
 #include "CommandsHistory.h"
+#include "CoopScriptChecksum.h"
+#include "GetConsts.h"
 #include "Transceiver.h"
 // IAILogic, for the checksum dump written when a playback diverges. Transceiver.h
 // only forward declares it.
@@ -70,6 +72,12 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		replayInfo.pMap = _pMap;
 		replayInfo.nLastCommandSegment = 0;
 		replayInfo.nLastGameSegment = 0;
+		replayInfo.nScriptResult = 0;
+		const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+		replayInfo.nMultiplayerMode = pTracker && pTracker->IsCooperative() ? 1 : 0;
+		// Capture the sources at startup, not when a replay is saved after a possible disk edit.
+		replayInfo.uScriptCheckSum =
+				replayInfo.nMultiplayerMode == 1 ? NGameX::CalculateCoopScriptChecksum( _pMap, NGameX::GetAIConsts() ) : 0;
 		// Captured at mission start rather than when the replay is written,
 		// because these can be changed from the console mid-game and what
 		// matters is what produced the samples.
@@ -289,6 +297,12 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		                 "A different edition, a mod that is not attached, or repacked data would all do this" ) );
 		return false;
 	}
+	if ( replayInfo.nMultiplayerMode == 1 &&
+	     replayInfo.uScriptCheckSum != NGameX::CalculateCoopScriptChecksum( replayInfo.pMap, NGameX::GetAIConsts() ) )
+	{
+		ReportReplayLine( "replay: COOP mission or common Lua scripts differ from the recording" );
+		return false;
+	}
 
 	// A single-player replay has to start the way StartNewMap starts one, not
 	// the way a multiplayer game does: the tracker is already EGT_SINGLE, so
@@ -335,10 +349,18 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_MULTI );
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
-	pScenarioTracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
+	if ( replayInfo.nMultiplayerMode < 0 || replayInfo.nMultiplayerMode > 1 )
+	{
+		ReportReplayLine( "replay: unsupported multiplayer game mode" );
+		return false;
+	}
+	pScenarioTracker->SetGameType( replayInfo.nMultiplayerMode == 1 ? IAIScenarioTracker::EGT_MULTI_COOP
+	                                                                : IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	pScenarioTracker->MissionStart( replayInfo.pMap, replayInfo.nTechLevel );
+	pScenarioTracker->SetMultiplayerDifficulty( replayInfo.nDifficulty );
 
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
+	scenarioInfo.wszGameType = replayInfo.nMultiplayerMode == 1 ? L"COOP" : L"CLASSIC";
 	for ( int i = 0; i < replayInfo.slots.size(); ++i )
 	{
 		const SMPSlot &slot = replayInfo.slots[i];
@@ -388,6 +410,8 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName,
 	// no players at all.
 	IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
 	replayInfo.bSinglePlayer = pTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE;
+	replayInfo.nMultiplayerMode = pTracker->IsCooperative() ? 1 : 0;
+	replayInfo.nScriptResult = pTracker->IsCooperative() ? pTracker->GetScriptOutcome() + 1 : 0;
 	// A campaign mission is entered through MissionStart, which leaves the
 	// campaign, the chapter and the difficulty as the campaign set them, where a
 	// custom mission goes through CustomMissionStart and sets them itself. The
@@ -647,9 +671,13 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 {
 	if ( !bLoadedHistory )
 	{
-		if ( nSegment > replayInfo.nLastGameSegment )
+		// COOP records an exclusive final boundary so its last script/result tick
+		// is simulated and checksummed before replay verification reports success.
+		const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+		const int nBoundary = nSegment + ( pTracker && pTracker->IsCooperative() ? 1 : 0 );
+		if ( nBoundary > replayInfo.nLastGameSegment )
 		{
-			replayInfo.nLastGameSegment = nSegment;
+			replayInfo.nLastGameSegment = nBoundary;
 		}
 	}
 	else
@@ -704,6 +732,22 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 		{
 			if ( nSegment >= replayInfo.nLastGameSegment )
 			{
+				if ( replayInfo.nMultiplayerMode == 1 )
+				{
+					// The final Lua result may fall between periodic checksum samples.
+					// Compare unfinished recordings too, so an extra replay result fails.
+					const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+					const int nActualOutcome = pTracker ? pTracker->GetScriptOutcome() : -1;
+					const int nExpectedOutcome = replayInfo.nScriptResult - 1;
+					if ( !pTracker || nActualOutcome != nExpectedOutcome )
+					{
+						bCheckSumMismatch = true;
+						ReportReplayLine( fmt::format( "replay verify: COOP outcome differs at segment {}: recorded {}, got {}",
+						                               nSegment,
+						                               nExpectedOutcome,
+						                               nActualOutcome ) );
+					}
+				}
 				//				WriteToPipe( PIPE_CHAT, "Replay finished: Last game segment executed", 0xFF00FF00, true );
 				// Reaching the end is necessary but not sufficient: a run that
 				// played out while diverging, or one that compared nothing at

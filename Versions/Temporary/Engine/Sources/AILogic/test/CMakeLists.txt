@@ -112,3 +112,12 @@ if(WIN32)
     set_tests_properties(ScriptGroupWait_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
 endif()
+
+# COOP role state must be independent of the local client and survive replay/save loading.
+add_unit_test(CooperativeDiplomacy AILogic Common_RTS_AI Stats_B2_M1 System Misc zlib gr2)
+add_unit_test(ScriptCommands AILogic Common_RTS_AI Stats_B2_M1 Script System Misc GameX libdb zlib gr2)
+set_tests_properties(CooperativeDiplomacy_test ScriptCommands_test PROPERTIES TIMEOUT 60)
+if(WIN32)
+    set_tests_properties(CooperativeDiplomacy_test ScriptCommands_test PROPERTIES
+        ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
+endif()

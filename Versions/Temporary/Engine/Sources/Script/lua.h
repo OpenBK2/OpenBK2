@@ -148,7 +148,7 @@ void  lua_newtable (lua_State *L);
 */
 void  lua_setglobal (lua_State *L, const char *name);
 void  lua_settable (lua_State *L, int index);
-void  lua_rawset (lua_State *L, int index);
+SCRIPT_EXPORT void  lua_rawset (lua_State *L, int index);
 void  lua_rawseti (lua_State *L, int index, int n);
 void  lua_setglobals (lua_State *L);
 void  lua_settagmethod (lua_State *L, int tag, const char *event);

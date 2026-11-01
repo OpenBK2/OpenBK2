@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Optional localization entries for a mod's existing UIConstsB2 record. -->
+<UIConstsB2>
+	<MPLocalizedGameTypes>
+		<Item>
+			<GameType>MP_GT_STANDARD</GameType>
+			<LocalizedTextFileRef href="Classic.txt" />
+		</Item>
+		<Item>
+			<GameType>MP_GT_COOP</GameType>
+			<LocalizedTextFileRef href="Coop.txt" />
+		</Item>
+	</MPLocalizedGameTypes>
+</UIConstsB2>

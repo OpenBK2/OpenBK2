@@ -145,6 +145,11 @@ struct SMultiplayerReplayInfo
 	// sanitizer build is the main thing the harness does, and those two ids
 	// never match however identical the sources are.
 	std::string szConfiguration;
+	// File-format value: 0 is CLASSIC for older recordings, 1 is COOP.
+	int nMultiplayerMode = 0;
+	uint32_t uScriptCheckSum = 0;
+	// Zero is unfinished, then winner + 1. An absent old chunk must not become a win.
+	int nScriptResult = 0;
 
 	ZEND int operator&( IBinSaver &f )
 	{
@@ -164,6 +169,9 @@ struct SMultiplayerReplayInfo
 		f.Add( 15, &szImageId );
 		f.Add( 16, &uMapCheckSum );
 		f.Add( 17, &szConfiguration );
+		f.Add( 18, &nMultiplayerMode );
+		f.Add( 19, &uScriptCheckSum );
+		f.Add( 20, &nScriptResult );
 		return 0;
 	}
 
@@ -200,6 +208,9 @@ struct SMultiplayerReplayInfo
 		szImageId = src.szImageId;
 		uMapCheckSum = src.uMapCheckSum;
 		szConfiguration = src.szConfiguration;
+		nMultiplayerMode = src.nMultiplayerMode;
+		uScriptCheckSum = src.uScriptCheckSum;
+		nScriptResult = src.nScriptResult;
 		return *this;
 	}
 };
@@ -280,6 +291,11 @@ public:
 
 	void AddCommand( const int nSegment, struct IAILogicCommandB2 *pCmd ) override;
 	void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver ) override;
+
+	bool IsPlaybackFinished() const override
+	{
+		return bLoadedHistory && bGameFinished;
+	}
 
 	bool AddChecksumLog( const int nGameTime, const uint32_t ulChecksum, const int nEntry ) override;
 	// Compare one playback sample against what the replay recorded for the same

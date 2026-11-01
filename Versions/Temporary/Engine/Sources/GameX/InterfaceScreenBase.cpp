@@ -415,7 +415,7 @@ bool CInterfaceScreenBase::MsgHelpScreen( const struct SGameMessage &msg )
 bool CInterfaceScreenBase::OnShowConsole( const struct SGameMessage &msg )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
-	if ( pST && pST->GetGameType() == IScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( pST && pST->IsMultiplayer() )
 	{
 		if ( NGlobal::GetVar( "mp_allow_show_console", 0 ) == 0 )
 		{

@@ -1,6 +1,7 @@
 #include "../stdafx.h"
 
 #include "AILogic/DBAIConsts.h"
+#include "GameX/CoopScriptChecksum.h"
 #include "GameX/DBConsts.h"
 #include "GameX/DBMPConsts.h"
 #include "GameX/GetConsts.h"
@@ -14,6 +15,10 @@
 
 #include <chrono>
 #include <filesystem>
+#include <fstream>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -28,6 +33,7 @@ protected:
 	std::vector<CObj<NDb::IObjMan>> records;
 	NDb::SGameConsts *pConsts = nullptr;
 	NDb::SNetGameConsts *pNet = nullptr;
+	NDb::SAIGameConsts *pAI = nullptr;
 
 	static void SetUpTestSuite()
 	{
@@ -69,7 +75,7 @@ protected:
 		NGlobal::SetVar( "MOD.RelativePath", "" );
 		pConsts = CreateRecord<NDb::SGameConsts>( "GameConsts" );
 		pNet = CreateRecord<NDb::SNetGameConsts>( "NetGameConsts" );
-		auto *pAI = CreateRecord<NDb::SAIGameConsts>( "AIGameConsts" );
+		pAI = CreateRecord<NDb::SAIGameConsts>( "AIGameConsts" );
 		auto *pMP = CreateRecord<NDb::SMultiplayerConsts>( "MultiplayerConsts" );
 		ASSERT_NE( pConsts, nullptr );
 		ASSERT_NE( pNet, nullptr );
@@ -85,9 +91,47 @@ protected:
 		ASSERT_TRUE( NDb::AddNewObject( path, CDBID( path ), records.front() ) );
 		NGlobal::SetVar( "game_consts", path );
 	}
+
+	void WriteScript( const std::string &filename, const std::string &contents )
+	{
+		std::ofstream stream( directory / filename, std::ios::binary | std::ios::trunc );
+		ASSERT_TRUE( stream.is_open() );
+		stream.write( contents.data(), std::streamsize( contents.size() ) );
+		stream.close();
+		ASSERT_TRUE( stream.good() );
+	}
 };
 
 std::filesystem::path MPDataChecksum::directory;
+
+TEST_F( MPDataChecksum, OlderBinaryMapKeepsClassicDefaultsAndUnrestrictedTechnology )
+{
+	auto *map = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	ASSERT_NE( map, nullptr );
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		// Only the pre-COOP scalar chunks are present in this legacy record.
+		int nSizeX = 64;
+		int nSizeY = 96;
+		int nPlayers = 4;
+		saver->Add( 4, &nSizeX );
+		saver->Add( 5, &nSizeY );
+		saver->Add( 6, &nPlayers );
+	}
+	stream.Seek( 0 );
+	{
+		CPtr<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		map->operator&( *saver );
+	}
+	EXPECT_EQ( map->nSizeX, 64 );
+	EXPECT_EQ( map->nSizeY, 96 );
+	EXPECT_EQ( map->nPlayers, 4 );
+	EXPECT_EQ( map->eGameType, NDb::CLASSIC );
+	EXPECT_EQ( map->nForcedTechLevel, -1 );
+	EXPECT_TRUE( map->allowedNations.empty() );
+	EXPECT_EQ( map->nDifficultyLevel, 0 );
+}
 
 TEST_F( MPDataChecksum, MenuReadsReuseSnapshotUntilTheNextAttempt )
 {
@@ -158,5 +202,78 @@ TEST_F( MPDataChecksum, MapIsHashedOncePerAttemptAndAgainWhenItChanges )
 	++pNet->nMaxLatency;
 	pConsts->RecalculateMPDataVersionChecksum();
 	EXPECT_NE( refreshed, pConsts->GetMPDataVersionChecksumWithMap( pFirst ) );
+}
+
+TEST_F( MPDataChecksum, CoopScriptFingerprintIncludesMissionBytesAndFilename )
+{
+	auto *pMap = CreateRecord<NDb::SMapInfo>( "MapInfo" );
+	ASSERT_NE( pMap, nullptr );
+	pMap->szScriptFileRef = "coop-mission.lua";
+	WriteScript( "coop-mission.lua", "function Mission() return 1 end\n" );
+	const uint32_t initial = NGameX::CalculateCoopScriptChecksum( pMap, pAI );
+	WriteScript( "coop-mission.lua", "function Mission() return 2 end\n" );
+	const uint32_t edited = NGameX::CalculateCoopScriptChecksum( pMap, pAI );
+	EXPECT_NE( initial, edited );
+	WriteScript( "coop-renamed.lua", "function Mission() return 2 end\n" );
+	pMap->szScriptFileRef = "coop-renamed.lua";
+	EXPECT_NE( edited, NGameX::CalculateCoopScriptChecksum( pMap, pAI ) );
+}
+
+TEST_F( MPDataChecksum, CoopScriptFingerprintIncludesCommonBytesNamesAndLoadOrder )
+{
+	auto *pMap = CreateRecord<NDb::SMapInfo>( "MapInfo" );
+	ASSERT_NE( pMap, nullptr );
+	pAI->commonScriptFileRefs.resize( 2 );
+	pAI->commonScriptFileRefs[0].szScriptFileRef = "coop-common-first.lua";
+	pAI->commonScriptFileRefs[1].szScriptFileRef = "coop-common-second.lua";
+	WriteScript( "coop-common-first.lua", "value = 1\n" );
+	WriteScript( "coop-common-second.lua", "value = value + 1\n" );
+	const uint32_t initial = NGameX::CalculateCoopScriptChecksum( pMap, pAI );
+	WriteScript( "coop-common-first.lua", "value = 2\n" );
+	const uint32_t edited = NGameX::CalculateCoopScriptChecksum( pMap, pAI );
+	EXPECT_NE( initial, edited );
+	WriteScript( "coop-common-copy.lua", "value = 2\n" );
+	pAI->commonScriptFileRefs[0].szScriptFileRef = "coop-common-copy.lua";
+	const uint32_t renamed = NGameX::CalculateCoopScriptChecksum( pMap, pAI );
+	EXPECT_NE( edited, renamed );
+	std::swap( pAI->commonScriptFileRefs[0], pAI->commonScriptFileRefs[1] );
+	EXPECT_NE( renamed, NGameX::CalculateCoopScriptChecksum( pMap, pAI ) );
+}
+
+TEST_F( MPDataChecksum, CoopScriptFingerprintDistinguishesUnsetMissingAndEmptyFiles )
+{
+	auto *pMap = CreateRecord<NDb::SMapInfo>( "MapInfo" );
+	ASSERT_NE( pMap, nullptr );
+	const uint32_t unset = NGameX::CalculateCoopScriptChecksum( pMap, pAI );
+	pMap->szScriptFileRef = "coop-empty.lua";
+	const uint32_t missing = NGameX::CalculateCoopScriptChecksum( pMap, pAI );
+	EXPECT_NE( unset, missing );
+	WriteScript( "coop-empty.lua", "" );
+	EXPECT_NE( missing, NGameX::CalculateCoopScriptChecksum( pMap, pAI ) );
+}
+
+TEST_F( MPDataChecksum, OnlyCoopCompatibilitySnapshotsIncludeScriptContents )
+{
+	auto *pMission = CreateRecord<NDb::SMapInfo>( "MapInfo" );
+	auto *pMap = CreateRecord<NDb::SMultiplayerMap>( "MultiplayerMap" );
+	ASSERT_NE( pMission, nullptr );
+	ASSERT_NE( pMap, nullptr );
+	pMap->pMap = pMission;
+	pMission->szScriptFileRef = "coop-snapshot.lua";
+	WriteScript( "coop-snapshot.lua", "value = 1\n" );
+	pMap->eGameType = NDb::COOP;
+	const uint32_t initial = pConsts->GetMPDataVersionChecksumWithMap( pMap );
+	WriteScript( "coop-snapshot.lua", "value = 2\n" );
+	EXPECT_EQ( initial, pConsts->GetMPDataVersionChecksumWithMap( pMap ) );
+	pConsts->RecalculateMPDataVersionChecksum();
+	EXPECT_NE( initial, pConsts->GetMPDataVersionChecksumWithMap( pMap ) );
+
+	// Existing CLASSIC compatibility checks keep their historical inputs.
+	pMap->eGameType = NDb::CLASSIC;
+	pConsts->RecalculateMPDataVersionChecksum();
+	const uint32_t classic = pConsts->GetMPDataVersionChecksumWithMap( pMap );
+	WriteScript( "coop-snapshot.lua", "value = 3\n" );
+	pConsts->RecalculateMPDataVersionChecksum();
+	EXPECT_EQ( classic, pConsts->GetMPDataVersionChecksumWithMap( pMap ) );
 }
 } // namespace

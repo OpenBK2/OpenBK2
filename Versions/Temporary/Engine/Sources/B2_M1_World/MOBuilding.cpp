@@ -280,7 +280,8 @@ void CMOBuilding::GetActions( CUserActions *pActions, EActionsType eActions ) co
 			pActions->SetAction( NDb::USER_ACTION_FILL_RU );
 		}
 
-		if ( IsKeyObject() && Singleton<IAIScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+		// Keep multiplayer key-building visuals for both CLASSIC and COOP.
+		if ( IsKeyObject() && Singleton<IAIScenarioTracker>()->IsMultiplayer() )
 		{
 			pActions->RemoveAction( NDb::USER_ACTION_BOARD );
 		}

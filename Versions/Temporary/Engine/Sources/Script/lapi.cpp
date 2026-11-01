@@ -333,7 +333,10 @@ void lua_rawset (lua_State *L, int index)
 {
   StkId t = Index(L, index);
   LUA_ASSERT( LObj(L, t)->GetType() == LUA_TTABLE, "table expected" );
-	*L->GetHash(t)->SetObj( LObj(L, L->pCT->top-2) ) = *LObj(L, L->pCT->top-1);
+	if ( luaH_checkkey( L, LObj( L, L->pCT->top - 2 ) ) )
+	{
+		*L->GetHash(t)->SetObj( LObj(L, L->pCT->top-2) ) = *LObj(L, L->pCT->top-1);
+	}
   L->pCT->top -= 2;
 }
 

@@ -2069,7 +2069,7 @@ void CInterfaceMission::UpdateChatAbs( NTimer::STime nDeltaTime )
 	}
 
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
-	if ( pST->GetGameType() == IScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( pST->IsMultiplayer() )
 	{
 		while ( true )
 		{
@@ -4252,7 +4252,7 @@ bool CInterfaceMission::OnNotificationEventBtn( const std::string &szSender, boo
 bool CInterfaceMission::OnEnterPressed( uint16_t wKeyboardFlags )
 {
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
-	if ( pST->GetGameType() != IScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( !pST->IsMultiplayer() )
 	{
 		return true;
 	}

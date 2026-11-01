@@ -763,7 +763,7 @@ void CMissionReinf::UpdateEnable()
 	}
 	nPrevReinfCount = nCount;
 
-	if ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( pScenarioTracker->IsMultiplayer() )
 	{
 		int nSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
 		if ( nSeconds > 0 )

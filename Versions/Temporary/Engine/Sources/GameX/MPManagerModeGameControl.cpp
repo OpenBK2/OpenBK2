@@ -9,6 +9,7 @@
 #include "InterfaceState.h"
 #include "Misc/StrProc.h"
 #include "Misc/Win32Random.h"
+#include "MPCoopRules.h"
 #include "MPManagerMode.h"
 #include "MPPacketTraceLog.h"
 #include "MPTransceiver.h"
@@ -48,8 +49,11 @@ void CMPManagerMode::StartGame()
 
 	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 	IScenarioTracker::SMultiplayerInfo scenarioInfo;
-	pScenarioTracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
+	scenarioInfo.wszGameType = NGameX::IsCoopGame( gameDesc ) ? L"COOP" : L"CLASSIC";
+	pScenarioTracker->SetGameType( NGameX::IsCoopGame( gameDesc ) ? IAIScenarioTracker::EGT_MULTI_COOP
+	                                                              : IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
 	pScenarioTracker->MissionStart( gameDesc.pMPMap->pMap, gameDesc.nTechLevel );
+	pScenarioTracker->SetMultiplayerDifficulty( gameDesc.nDifficultyLevel );
 
 	dwLaggers = 0;
 	dwLaggersOld = 0;
@@ -298,6 +302,25 @@ void CMPManagerMode::CheckEndGameConditions()
 {
 	if ( !IsGameRunning() )
 	{
+		return;
+	}
+
+	if ( NGameX::IsCoopGame( gameDesc ) )
+	{
+		// Every peer stops on the script's simulation boundary. There is no AI peer
+		// to announce a loss, and local frame timing must not choose the final tick.
+		const int nWinner = Singleton<IScenarioTracker>()->GetScriptOutcome();
+		if ( nWinner >= 0 && pTransceiver && pTransceiver->IsGameEnded() )
+		{
+			if ( nWinner == slots[nOwnSlot].nTeam )
+			{
+				WinGame();
+			}
+			else
+			{
+				LoseGame();
+			}
+		}
 		return;
 	}
 
@@ -664,7 +687,7 @@ void CMPManagerMode::CreateRehash( std::vector<uint8_t> *pOrder )
 		order[i] = i;
 	}
 
-	if ( !gameDesc.bRandomPlacement )
+	if ( NGameX::IsCoopGame( gameDesc ) || !gameDesc.bRandomPlacement )
 	{
 		return;
 	}
@@ -679,6 +702,11 @@ void CMPManagerMode::CreateRehash( std::vector<uint8_t> *pOrder )
 
 void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 {
+	// COOP scripts address authored map player IDs, which must never be shuffled.
+	if ( NGameX::IsCoopGame( gameDesc ) )
+	{
+		return;
+	}
 	std::string szDebugOut = "+++ Rehash slots:";
 	for ( int i = 0; i < order.size(); ++i )
 	{

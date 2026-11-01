@@ -151,6 +151,14 @@ void CSinglePlayerTransceiver::DoSegments()
 		bCommandsFromHistory = true;
 		pCmdsHistory->ExecuteSegmentCommands( nCommonSegment, this );
 		bCommandsFromHistory = false;
+		const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+		if ( pTracker && pTracker->IsCooperative() && pCmdsHistory->IsPlaybackFinished() )
+		{
+			// Stop at the recorded exclusive boundary, not on an early script result.
+			// An init-time result still gets its recorded tick; a divergence must reach
+			// verification failure rather than stall forever before the final boundary.
+			return;
+		}
 		pTimer->NextSegment();
 		pAI->Segment();
 		++nCommonSegment;

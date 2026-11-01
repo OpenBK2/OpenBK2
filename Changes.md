@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Added COOP custom multiplayer maps: at least two allied humans against map-configured AI bots, deterministic Lua orders, script-controlled victory and defeat, map tech/nation restrictions and script difficulty, and COOP replay metadata. Existing maps remain CLASSIC. Strategic generals and campaign objective UI remain outside COOP. Map and UI authoring examples are in `OBK2_Examples/CoopMode/README.md`.
+
 - The game can run in a window instead of over the whole screen, for running two copies side by side when testing multiplayer: `--window=left` and `--window=right` put it in the top quarter of the primary screen on that side, and `--window=WxH+X+Y` anywhere. The window is borderless, so two of them tile edge to edge, and the picture is scaled into it as it is into the full screen. `./launch.sh -w` passes it, choosing left for the first game and right when one is already running. Nothing about it is saved in the profile.
 
 - LAN games are found across computers on Linux. The game worked out where to broadcast its search from the address its own host name resolves to, and Debian, among others, resolves that to 127.0.1.1, so the search never left the computer and the game list stayed empty however many games were hosted next door. It now broadcasts on every network the computer is connected to, reading them from the network interfaces on Linux and Windows alike, and that also mends the address a joining player gives the host. On Windows it used to guess each network's size from its address, so a home network inside 10.0.0.0/8 was broadcast to as a whole 10.x.x.x; it now uses each network's real mask.

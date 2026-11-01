@@ -1087,7 +1087,8 @@ void CAIUnit::CalcVisibility( const bool bIgnoreTime )
 			if ( bVisibilityChanged )
 			{
 				theSupremeBeing.SetUnitVisible( this, i, bVisibility );
-				if ( theDipl.GetNeutralPlayer() != GetPlayer() && !theDipl.IsAIPlayer( GetPlayer() ) &&
+				// Strategic generals remain disabled in MP, including scripted COOP bots.
+				if ( !theDipl.IsNetGame() && theDipl.GetNeutralPlayer() != GetPlayer() && !theDipl.IsAIPlayer( GetPlayer() ) &&
 				     theDipl.IsAIPlayer( i ) )
 				{
 					pUnitInfoForGeneral->UpdateVisibility( bVisibility );

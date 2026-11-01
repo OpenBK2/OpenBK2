@@ -27,6 +27,7 @@ struct IAIScenarioTracker : public CObjectBase
 	{
 		EGT_SINGLE,
 		EGT_MULTI_FLAG_CONTROL,
+		EGT_MULTI_COOP,
 	};
 
 	struct SKillInfo
@@ -52,6 +53,27 @@ struct IAIScenarioTracker : public CObjectBase
 	{
 		NI_ASSERT( 0, "Illegal call" );
 	}
+
+	// Network participation is independent of the particular multiplayer rules.
+	bool IsMultiplayer() const
+	{
+		return GetGameType() != EGT_SINGLE;
+	}
+
+	bool IsCooperative() const
+	{
+		return GetGameType() == EGT_MULTI_COOP;
+	}
+
+	// A deterministic script result names the winning diplomacy side, not a local player.
+	virtual void SetScriptOutcome( int nWinningSide ) {}
+
+	virtual int GetScriptOutcome() const
+	{
+		return -1;
+	}
+
+	virtual void SetMultiplayerDifficulty( int nDifficulty ) {}
 
 	// reinforcements
 	virtual const NDb::SReinforcement *GetReinforcement( int nPlayer, NDb::EReinforcementType eType ) const = 0;

@@ -1225,7 +1225,7 @@ void CAILogic::Init( ICheckSumLog *_pCheckSumLog,
 	theUnitCreation.SetConsts( pConsts );
 	//theFeedBackSystem.Init( pConsts );
 
-	theDipl.Load( pMapInfo->diplomacies );
+	theDipl.Load( pMapInfo->diplomacies, pMapInfo );
 	theExecutorContainer.Init();
 
 	theStatistics.Init();
@@ -1326,9 +1326,9 @@ void CAILogic::InitAfterMapLoad( const struct NDb::SMapInfo *pMapInfo )
 		theSupremeBeing.Init( pMapInfo );
 		theSupremeBeing.GiveNewUnitsToGenerals( pUnits );
 	}
-	else if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	else if ( GetScenarioTracker()->IsMultiplayer() )
 	{
-		// Call starting units reinforcement for this game mode
+		// COOP keeps human starting armies; its tracker leaves bot armies to the map.
 		theReinfArray.PlaceInitialUnits();
 	}
 
@@ -1405,6 +1405,15 @@ void CAILogic::UpdateCheckSum( bool bSend )
 
 		//CONSOLE_BUFFER_LOG2( 10, StrFmt( "%ul", checkSum ), 0, true );
 		theShellsStore.UpdateCheckSum( &checkSum );
+
+		if ( GetScenarioTracker()->IsCooperative() )
+		{
+			// Pending scripted orders and the result can differ before unit positions do.
+			CPtr<IBinSaver> pCheckSumSaver = CreateCheckSumSaver( &checkSum, nullptr, curTime );
+			scripts.SerializeCommandQueue( *pCheckSumSaver );
+			int nScriptOutcome = GetScenarioTracker()->GetScriptOutcome();
+			pCheckSumSaver->Add( 21, &nScriptOutcome );
+		}
 
 		//CPtr<IBinSaver> pCheckSumSaver = CreateCheckSumSaver( &checkSum, pCheckSumLog, curTime );
 		//GetTerrain()->operator&( *pCheckSumSaver );

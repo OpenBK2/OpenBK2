@@ -67,7 +67,7 @@ void CBuildingSimple::AddSoldier( CSoldier *pUnit )
 {
 	CBuilding::AddSoldier( pUnit );
 
-	if ( GetScenarioTracker()->GetGameType() != IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( !GetScenarioTracker()->IsMultiplayer() )
 	{
 		ChangePlayer( pUnit->GetPlayer() );
 	}
@@ -184,8 +184,8 @@ CBuildingSimple::CBuildingSimple( const SBuildingRPGStats *pStats,
 #endif
 	//DEBUG}
 
-	if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL &&
-	     theBonusSystem.IsKeyBuilding( _nLinkID ) )
+	// COOP retains MP capture mechanics; only its mission outcome is script-controlled.
+	if ( GetScenarioTracker()->IsMultiplayer() && theBonusSystem.IsKeyBuilding( _nLinkID ) )
 	{
 		if ( !theDipl.IsPlayerExist( nPlayer ) )
 		{
@@ -246,7 +246,7 @@ void CBuildingSimple::Segment()
 		int nNewPlayer = GetPlayer();
 		bool bShouldCount = true;
 
-		if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+		if ( GetScenarioTracker()->IsMultiplayer() )
 		{
 			if ( GetHitPoints() < 0.1f * GetStats()->fMaxHP && GetPlayer() != theDipl.GetNeutralPlayer() )
 			{
@@ -262,8 +262,7 @@ void CBuildingSimple::Segment()
 		{
 			if ( theDipl.GetNParty( GetPlayer() ) == theDipl.GetNeutralParty() )
 			{
-				if ( GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL &&
-				     GetHitPoints() < GetStats()->fMaxHP * 0.9f )
+				if ( GetScenarioTracker()->IsMultiplayer() && GetHitPoints() < GetStats()->fMaxHP * 0.9f )
 				{
 					// Do nothing if in this game mode a neutral key building has less than 90% HP
 				}
@@ -439,8 +438,7 @@ void CBuildingSimple::Segment()
 
 void CBuildingSimple::CheckHitPoints()
 {
-	if ( theBonusSystem.IsKeyBuilding( nLinkID ) &&
-	     GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+	if ( theBonusSystem.IsKeyBuilding( nLinkID ) && GetScenarioTracker()->IsMultiplayer() )
 	{
 		if ( GetHitPoints() < GetStats()->fMaxHP * g_fKeyPointDamageThreshold )
 		{
@@ -472,8 +470,7 @@ void CBuildingSimple::TakeDamage( const float fDamage,
 	if ( theBonusSystem.IsKeyBuilding( nLinkID ) )
 	{
 		float fMinHP = GetMinHP();
-		if ( GetHitPoints() - fDamage < fMinHP &&
-		     GetScenarioTracker()->GetGameType() == IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL )
+		if ( GetHitPoints() - fDamage < fMinHP && GetScenarioTracker()->IsMultiplayer() )
 		{
 			ChangePlayer( theDipl.GetNeutralPlayer() );
 		}
