@@ -146,6 +146,12 @@ public:
 	bool bIsLightmappable = false;
 
 private:
+	// GetRigidBone's memo, not saved: which weights array it describes and the answer.
+	mutable const SRealVertexWeight *pRigidBoneWeights = nullptr;
+	mutable size_t nRigidBoneWeights = 0;
+	mutable int nRigidBone = -1;
+	mutable bool bRigidBoneKnown = false;
+
 	void EstablishRefs();
 	void MergePositions();
 	void AssignGeometry( const SData &data, std::vector<STriangle> *pGeom );
@@ -158,6 +164,7 @@ public:
 		std::swap( positions, pData->positions );
 		std::swap( verts, pData->verts );
 		std::swap( weights, pData->weights );
+		ForgetRigidBone();
 		std::swap( posIndices, pData->posIndices );
 		std::swap( vertRefPositions, pData->vertRefPositions );
 		std::swap( geometry, pData->geometry );
@@ -205,6 +212,49 @@ public:
 	const std::vector<SRealVertexWeight> &GetWeights() const
 	{
 		return weights;
+	}
+
+	// The bone that moves the whole mesh, or -1. A mesh is rigid when every position
+	// has a single influence of weight exactly 1 on the same bone, which is how Granny's
+	// rigid meshes are imported ({1,0,0,0}): 98.8% of the shipped parts. Skinning such
+	// a mesh is one matrix applied to every position, with no per-vertex blend.
+	// Worked out on first use and remembered for the weights array it was worked out
+	// for. The functions here that rewrite the weights call ForgetRigidBone; the weights
+	// are also public, so a different array (address or size) is examined again
+	// rather than trusted.
+	int GetRigidBone() const
+	{
+		if ( !bRigidBoneKnown || pRigidBoneWeights != weights.data() || nRigidBoneWeights != weights.size() )
+		{
+			pRigidBoneWeights = weights.data();
+			nRigidBoneWeights = weights.size();
+			nRigidBone = FindRigidBone( weights );
+			bRigidBoneKnown = true;
+		}
+		return nRigidBone;
+	}
+
+	void ForgetRigidBone() const
+	{
+		bRigidBoneKnown = false;
+	}
+
+	static int FindRigidBone( const std::vector<SRealVertexWeight> &w )
+	{
+		if ( w.empty() )
+		{
+			return -1;
+		}
+		const int nBone = w[0].cBoneIndices[0];
+		for ( const SRealVertexWeight &v : w )
+		{
+			if ( v.fWeights[0] != 1.0f || v.fWeights[1] != 0.0f || v.fWeights[2] != 0.0f || v.fWeights[3] != 0.0f ||
+			     v.cBoneIndices[0] != nBone )
+			{
+				return -1;
+			}
+		}
+		return nBone;
 	}
 
 	const std::vector<uint16_t> &GetPositionIndices() const

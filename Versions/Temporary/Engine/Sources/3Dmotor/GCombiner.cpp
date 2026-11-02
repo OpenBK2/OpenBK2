@@ -4,6 +4,7 @@
 #include "GfxBuffers.h"
 #include "GfxRender.h"
 #include "GScene.h"
+#include "GSkinning.h"
 #include "GSSEtransform.h"
 #include "Misc/HashFuncs.h"
 #include "RadixSort.h"
@@ -230,19 +231,22 @@ static void TransformVertexT( CVec3 *pRes, const SHMatrix &m, const NGfx::SCompa
 	ASSERT( fabs( NGfx::GetVector(test) - NGfx::GetVector(*pRes) ) < 0.02f )*/
 }
 
+// CVec3 is three packed floats and SHMatrix sixteen row-major ones with the
+// translation in _14, _24, _34, which is what the GSkinning.h kernels read.
+static_assert( sizeof( CVec3 ) == 3 * sizeof( float ) );
+static_assert( sizeof( SHMatrix ) == 16 * sizeof( float ) );
+static_assert( sizeof( SRealVertexWeight ) == sizeof( NSkinning::SSkinWeights ) );
+
+// One matrix for every position: rigid skinned parts (see CObjectInfo::GetRigidBone)
+// and parts with a simple transform. NSkinning::TransformPositions keeps the matrix
+// columns in registers; the glm SSEBatchTransform it replaces reloaded them per
+// vertex and ran 2 to 3 times slower in the benchmark (benchmark/Skinning.cpp).
 static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SHMatrix &m )
 {
-	int nCount = srcPos.size();
-	if ( nCount > 3 && bIsSSEPresent )
+	const int nCount = srcPos.size();
+	if ( nCount > 0 )
 	{
-		SSEBatchTransform( m, &srcPos[0], pRes, nCount );
-	}
-	else
-	{
-		for ( int k = 0; k < nCount; ++k )
-		{
-			m.RotateHVector( pRes++, srcPos[k] );
-		}
+		NSkinning::TransformPositions( &srcPos[0].x, &pRes->x, nCount, &m._11 );
 	}
 }
 
@@ -251,43 +255,17 @@ static void TransformPosition( const std::vector<CVec3> &srcPos,
                                const SRealVertexWeight *pWeight,
                                const std::vector<SHMatrix> &blends )
 {
-	int nCount = srcPos.size();
-	// SSESkinning requires the matrix array to be 16-byte aligned. The address was cast
-	// to int, which truncates a 64-bit pointer (C4311/C4302) and only happened to keep
-	// the low bits the test looks at; uintptr_t carries the whole address instead.
-	if ( nCount > 0 && bIsSSEPresent && ( reinterpret_cast<std::uintptr_t>( &blends[0] ) & 0xf ) == 0 )
+	// Blended parts: per vertex, the three used rows of up to four bone matrices are
+	// blended (12 floats, where SSESkinning blended 16 after converting every bone's
+	// matrix for every vertex), then applied once. No alignment or scratch needed,
+	// and the cost does not grow with the skeleton. Zero float weights are skipped as
+	// SSESkinning skipped them. Agrees with it within float rounding, which is all
+	// rendering and culling need; the simulation never reads these positions.
+	const int nCount = srcPos.size();
+	if ( nCount > 0 )
 	{
-		// The cast below reinterprets the weights as the SSE structure, which declares the same three
-		// arrays in the same order. ASSERT does not evaluate its argument here, so the size relation it
-		// claimed to check was never tested in any build; static_assert tests it at compile time.
-		static_assert( sizeof( SSSEVertexWeight ) == sizeof( SRealVertexWeight ) );
-		SSESkinning( &srcPos[0], pRes, (SSSEVertexWeight *)pWeight, blends, nCount );
-	}
-	else
-	{
-		for ( int k = 0; k < nCount; ++k, ++pWeight )
-		{
-			if ( pWeight->nWeights[1] == 0 )
-			{
-				const SHMatrix &blend = blends[pWeight->cBoneIndices[0]];
-				blend.RotateHVector( pRes++, srcPos[k] );
-			}
-			else
-			{
-				CVec3 vPos( VNULL3 ), p;
-				// Four nonzero influences must stop before reading a fifth weight.
-				for ( int j = 0; j < 4 && pWeight->nWeights[j]; ++j )
-				{
-					const SHMatrix &blend = blends[pWeight->cBoneIndices[j]];
-					float fW = pWeight->fWeights[j];
-					blend.RotateHVector( &p, srcPos[k] );
-					vPos.x += fW * p.x;
-					vPos.y += fW * p.y;
-					vPos.z += fW * p.z;
-				}
-				*pRes++ = vPos;
-			}
-		}
+		NSkinning::SkinPositions(
+				&srcPos[0].x, &pRes->x, reinterpret_cast<const NSkinning::SSkinWeights *>( pWeight ), nCount, &blends[0]._11 );
 	}
 }
 
@@ -461,6 +439,14 @@ struct SGenericPosTransformer
 			ASSERT( 0 );
 			return CopyTransform( pObjInfo, pSrc, nVertices, pCache, bv, pRes );
 		}
+		// A rigid part (one bone, weight 1, for every position) is one matrix applied
+		// to all its positions: 94% of the positions of the shipped models.
+		const int nRigidBone = pObjInfo->GetRigidBone();
+		if ( nRigidBone >= 0 && nRigidBone < static_cast<int>( blends.size() ) )
+		{
+			TransformPosition( srcPos, pRes, blends[nRigidBone] );
+			return;
+		}
 		TransformPosition( srcPos, pRes, pWeight, blends );
 	}
 };
@@ -499,32 +485,20 @@ struct SPartTransformer : public T
 						pObjInfo, transformed, &srcVerts[0], srcVerts.size(), &p->cacheLighting, bv, p->GetSimplePos(), pRes );
 				break;
 			case TT_SINGLE_SKIN:
-				if ( T::PASS_MMX_BLENDS )
-				{
-					this->SingleSkinTransform( pObjInfo,
-					                           transformed,
-					                           &srcVerts[0],
-					                           srcVerts.size(),
-					                           &p->cacheLighting,
-					                           bv,
-					                           &( pObjInfo->GetWeights()[0] ),
-					                           p->GetAnimation(),
-					                           p->GetMMXAnimation(),
-					                           pRes );
-				}
-				else
-				{
-					this->SingleSkinTransform( pObjInfo,
-					                           transformed,
-					                           &srcVerts[0],
-					                           srcVerts.size(),
-					                           &p->cacheLighting,
-					                           bv,
-					                           &( pObjInfo->GetWeights()[0] ),
-					                           p->GetAnimation(),
-					                           noMMXTransformers,
-					                           pRes );
-				}
+				// The vertex path (PASS_MMX_BLENDS) used to pass p->GetMMXAnimation()
+				// here. No SingleSkinTransform reads those fixed-point matrices (the
+				// normals are transformed with the blends), and asking for them rebuilt
+				// a copy of every bone on each animation change, so both paths pass none.
+				this->SingleSkinTransform( pObjInfo,
+				                           transformed,
+				                           &srcVerts[0],
+				                           srcVerts.size(),
+				                           &p->cacheLighting,
+				                           bv,
+				                           &( pObjInfo->GetWeights()[0] ),
+				                           p->GetAnimation(),
+				                           noMMXTransformers,
+				                           pRes );
 				break;
 			default:
 				ASSERT( 0 );

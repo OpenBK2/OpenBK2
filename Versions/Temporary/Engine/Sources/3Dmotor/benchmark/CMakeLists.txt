@@ -62,6 +62,19 @@ set_target_properties(IndexShift_benchmark PROPERTIES
 copy_runtime_dlls(IndexShift_benchmark)
 register_benchmark(IndexShift_benchmark)
 
+# The position skinning kernels of GSkinning.h and test/SkinningVariants.h against the
+# frozen SSESkinning / SSEBatchTransform copy in test/SkinningReference.h. Wired like
+# IndexShift_benchmark: the lighting kernel sources only for IsAVX2Present(), and the
+# AVX2 variants carry their own target attribute, so no flag goes on this file.
+bk2_add_executable(Skinning_benchmark NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL
+    Skinning.cpp ${LIGHTING_KERNEL_SOURCES})
+target_link_libraries(Skinning_benchmark PRIVATE benchmark::benchmark 3Dmotor Misc)
+set_target_properties(Skinning_benchmark PROPERTIES
+    FOLDER "benchmark"
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Skinning_benchmark)
+copy_runtime_dlls(Skinning_benchmark)
+register_benchmark(Skinning_benchmark)
+
 # The MMX reference this one measures against is assembled, not inline, so the
 # benchmark exists only where MASM does and every variant has to link it. It is also
 # the only caller of add_benchmark(), whose /arch: flags are MSVC spellings.

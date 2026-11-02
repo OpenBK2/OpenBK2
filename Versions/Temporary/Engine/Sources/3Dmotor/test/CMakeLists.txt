@@ -60,6 +60,13 @@ set_target_properties(LightingKernels_test PROPERTIES CXX_VISIBILITY_PRESET hidd
 add_unit_test(IndexShift 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
 set_target_properties(IndexShift_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# Every position skinning kernel (GSkinning.h, SkinningVariants.h) and the frozen
+# SSESkinning copy (SkinningReference.h) against a double precision oracle, inside
+# guard pages. Same wiring as IndexShift_test: the lighting kernel sources only for
+# IsAVX2Present(), hidden visibility for the same nCubicRoot reason.
+add_unit_test(Skinning 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(Skinning_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
 add_unit_test(BitOps Misc)
 # Failed GPU locks must stop before exposing writable pointers to callers.
 add_unit_test(GfxBufferLocks 3Dmotor System Misc gr2)
