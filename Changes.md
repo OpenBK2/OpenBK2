@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- COOP lobbies show `--:--` for the time limit and a styled, mode-specific minimum-player warning. Disabled reinforcement countdowns show `never`. COOP victory and defeat use the single-player camera sequence before results, which now include each map-configured AI general's localized name, kills, losses and scores. CLASSIC keeps its original lobby warning.
+
 - Added COOP custom multiplayer maps: at least two allied humans against map-configured AI bots, deterministic Lua orders, script-controlled victory and defeat, map tech/nation restrictions and script difficulty, and COOP replay metadata. Existing maps remain CLASSIC. Strategic generals and campaign objective UI remain outside COOP. Map and UI authoring examples are in `OBK2_Examples/CoopMode/README.md`.
 
 - The game can run in a window instead of over the whole screen, for running two copies side by side when testing multiplayer: `--window=left` and `--window=right` put it in the top quarter of the primary screen on that side, and `--window=WxH+X+Y` anywhere. The window is borderless, so two of them tile edge to edge, and the picture is scaled into it as it is into the full screen. `./launch.sh -w` passes it, choosing left for the first game and right when one is already running. Nothing about it is saved in the profile.

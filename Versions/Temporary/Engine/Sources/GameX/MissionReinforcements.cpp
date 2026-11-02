@@ -765,16 +765,13 @@ void CMissionReinf::UpdateEnable()
 
 	if ( pScenarioTracker->IsMultiplayer() )
 	{
-		int nSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
-		if ( nSeconds > 0 )
-		{
-			int nMinutes = nSeconds / 60;
-			nSeconds = nSeconds % 60;
-			std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) +
-			                          NStr::ToUnicode( fmt::format( "{}:{:02d}", nMinutes, nSeconds ) );
-			pRoller1->SetTooltip( wszTooltip );
-			pRoller2->SetTooltip( wszTooltip );
-		}
+		const int nSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
+		// Refresh disabled and zero timers too, rather than leaving the previous countdown visible.
+		const std::wstring wszTime =
+				nSeconds < 0 ? L"never" : NStr::ToUnicode( fmt::format( "{}:{:02d}", nSeconds / 60, nSeconds % 60 ) );
+		const std::wstring wszTooltip = InterfaceState()->GetTextEntry( "T_REINF_RECYCLE_TOOLTIP" ) + wszTime;
+		pRoller1->SetTooltip( wszTooltip );
+		pRoller2->SetTooltip( wszTooltip );
 	}
 
 	if ( Singleton<IScenarioTracker>()->IsMissionActive() )

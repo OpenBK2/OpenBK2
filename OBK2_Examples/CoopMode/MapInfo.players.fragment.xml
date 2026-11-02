@@ -9,6 +9,7 @@
 		<Item>
 			<PlayerType>AI_BOT</PlayerType>
 			<DiplomacySide>1</DiplomacySide>
+			<LocalizedPlayerNameFileRef href="AIGeneralName.txt" />
 		</Item>
 		<Item>
 			<PlayerType>HUMAN</PlayerType>

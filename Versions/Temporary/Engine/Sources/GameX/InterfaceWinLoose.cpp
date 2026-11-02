@@ -119,6 +119,12 @@ void CInterfaceWinLoose::NextScreen()
 	}
 	else
 	{
+		if ( Singleton<IScenarioTracker>()->IsCooperative() )
+		{
+			// COOP retained the finished mission for the orbit. Release it now, as
+			// CLASSIC does before statistics, so the MP screen cannot step it again.
+			NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
+		}
 		NMainLoop::Command( ML_COMMAND_HIDE_ALL_UP_TO, "Mission" );
 		NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
 		NMainLoop::Command( ML_COMMAND_MP_STATISTICS, "" );

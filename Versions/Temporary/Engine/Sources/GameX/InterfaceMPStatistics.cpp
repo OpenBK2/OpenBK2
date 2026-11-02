@@ -13,6 +13,7 @@
 #include "SceneB2/Camera.h"
 #include "SceneB2/FullScreenFader.h"
 #include "SceneB2/Scene.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "System/Text.h"
 
 #include "GameX_export.h"
@@ -20,6 +21,125 @@
 #include <fmt/format.h>
 
 const float UNFADE_TIME = 1.0f;
+
+namespace NGameX
+{
+SMPStatisticsTeams BuildMultiplayerStatistics( IScenarioTracker *pTracker, const NDb::SMultiplayerConsts *pMPConsts )
+{
+	SMPStatisticsTeams teams;
+	if ( !pTracker )
+	{
+		return teams;
+	}
+	const auto *pMPInfo = pTracker->GetMultiplayerInfo();
+	if ( !pMPInfo )
+	{
+		return teams;
+	}
+	const bool bCooperative = pTracker->IsCooperative();
+	const NDb::SMapInfo *pMap = pTracker->GetCurrentMission();
+	if ( !pMap )
+	{
+		// MissionWin/MissionCancel already moved the map and calculated every side's scores.
+		pMap = pTracker->GetLastMission();
+	}
+	int nWinningTeam = -1;
+	for ( const auto &player : pMPInfo->players )
+	{
+		if ( player.nIndex == pTracker->GetLocalPlayer() )
+		{
+			teams.wszLocalPlayerName = player.wszName;
+			nWinningTeam = player.nTeam;
+			break;
+		}
+	}
+	if ( bCooperative )
+	{
+		// The script result is independent of which human views the match or replay.
+		nWinningTeam = pTracker->GetScriptOutcome();
+		if ( nWinningTeam < 0 )
+		{
+			nWinningTeam = pTracker->IsMissionWon() ? 0 : 1;
+		}
+	}
+	else if ( !pTracker->IsMissionWon() )
+	{
+		nWinningTeam = 1 - nWinningTeam;
+	}
+	if ( nWinningTeam < 0 || nWinningTeam > 1 )
+	{
+		return teams;
+	}
+
+	const auto addPlayer = [&]( int nPlayer, const std::wstring &wszName, int nCountry, int nTeam )
+	{
+		if ( nPlayer < 0 || nTeam < 0 || nTeam > 1 )
+		{
+			return;
+		}
+		SMPStatisticsPlayer item;
+		item.wszName = wszName;
+		item.nCountry = nCountry;
+		item.dwColour = pTracker->GetPlayerColor( nPlayer ).dwColor;
+		item.nTeam = nTeam;
+		// Do not recalculate after mission end: the active map is already cleared.
+		item.nUnitsLost = pTracker->GetStatistics( nPlayer, IScenarioTracker::ESK_UNITS_LOST );
+		item.nUnitsKilled = pTracker->GetStatistics( nPlayer, IScenarioTracker::ESK_UNITS_KILLED );
+		item.nScoreTactics = pTracker->GetStatistics( nPlayer, IScenarioTracker::ESK_TACTICAL_EFFICIENCY );
+		item.nScoreStrategy = pTracker->GetStatistics( nPlayer, IScenarioTracker::ESK_STRATEGIC_EFFICIENCY );
+		item.nScore = pTracker->GetStatistics( nPlayer, IScenarioTracker::ESK_SCORE );
+		auto &team = nTeam == nWinningTeam ? teams.wonTeam : teams.lostTeam;
+		auto position = team.begin();
+		while ( position != team.end() && position->nScore > item.nScore )
+		{
+			++position;
+		}
+		team.insert( position, item );
+	};
+
+	for ( const auto &player : pMPInfo->players )
+	{
+		if ( bCooperative && pMap &&
+		     ( player.nIndex < 0 || player.nIndex >= pMap->players.size() ||
+		       pMap->players[player.nIndex].ePlayerType != NDb::HUMAN ||
+		       pMap->players[player.nIndex].nDiplomacySide == 2 ) )
+		{
+			continue;
+		}
+		addPlayer( player.nIndex, player.wszName, player.nCountry, player.nTeam );
+	}
+	if ( bCooperative && pMap )
+	{
+		for ( int nPlayer = 0; nPlayer < pMap->players.size(); ++nPlayer )
+		{
+			const auto &player = pMap->players[nPlayer];
+			if ( player.ePlayerType != NDb::AI_BOT || player.nDiplomacySide == 2 )
+			{
+				continue;
+			}
+			std::wstring wszName = NText::GetText( player.szLocalizedPlayerNameFileRef );
+			if ( wszName.empty() )
+			{
+				wszName = L"AI " + std::to_wstring( nPlayer + 1 );
+			}
+			int nCountry = -1;
+			if ( pMPConsts && player.pPartyInfo )
+			{
+				for ( int i = 0; i < pMPConsts->sides.size(); ++i )
+				{
+					if ( pMPConsts->sides[i].pPartyInfo == player.pPartyInfo )
+					{
+						nCountry = i;
+						break;
+					}
+				}
+			}
+			addPlayer( nPlayer, wszName, nCountry, pTracker->GetPlayerSide( nPlayer ) );
+		}
+	}
+	return teams;
+}
+} // namespace NGameX
 
 // CInterfaceMPStatistics
 
@@ -121,75 +241,13 @@ void CInterfaceMPStatistics::MakeInterior()
 
 void CInterfaceMPStatistics::FillTeams()
 {
-	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
-	const IScenarioTracker::SMultiplayerInfo *pMPInfo = pScenarioTracker->GetMultiplayerInfo();
-	NI_VERIFY( pMPInfo, "Missing multiplayer info", return );
-
-	const int nLocalPlayer = pScenarioTracker->GetLocalPlayer();
-	int nWinningTeam = -1;
-	int nLocalIndex = -1;
-	for ( int i = 0; i < pMPInfo->players.size(); ++i )
+	const auto teams = NGameX::BuildMultiplayerStatistics( Singleton<IScenarioTracker>(), pMPConsts );
+	wonTeam = teams.wonTeam;
+	lostTeam = teams.lostTeam;
+	if ( pPlayerNameView )
 	{
-		if ( pMPInfo->players[i].nIndex == nLocalPlayer )
-		{
-			nWinningTeam = pMPInfo->players[i].nTeam;
-			nLocalIndex = i;
-			pPlayerNameView->SetText( pPlayerNameView->GetDBText() + pMPInfo->players[i].wszName );
-			break;
-		}
+		pPlayerNameView->SetText( pPlayerNameView->GetDBText() + teams.wszLocalPlayerName );
 	}
-	if ( !pScenarioTracker->IsMissionWon() )
-	{
-		nWinningTeam = 1 - nWinningTeam;
-	}
-
-	wonTeam.clear();
-	lostTeam.clear();
-
-	for ( int i = 0; i < pMPInfo->players.size(); ++i )
-	{
-		const IScenarioTracker::SMultiplayerInfo::SPlayer &player = pMPInfo->players[i];
-		if ( player.nTeam == nWinningTeam )
-		{
-			AddPlayerToTeam( player, wonTeam );
-		}
-		else if ( player.nTeam == 1 - nWinningTeam )
-		{
-			AddPlayerToTeam( player, lostTeam );
-		}
-		else
-		{
-			NI_ASSERT( 0, "Neutral player found" );
-		}
-	}
-}
-
-void CInterfaceMPStatistics::AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player,
-                                              std::list<SPlayerItemData> &team )
-{
-	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
-	SPlayerItemData item;
-
-	// Fill the data
-	item.wszName = player.wszName;
-	item.nCountry = player.nCountry;
-	item.dwColour = pScenarioTracker->GetPlayerColor( player.nIndex ).dwColor;
-	item.nTeam = pScenarioTracker->GetPlayerSide( player.nIndex );
-	item.nUnitsLost = pScenarioTracker->GetStatistics( player.nIndex, IScenarioTracker::ESK_UNITS_LOST );
-	item.nUnitsKilled = pScenarioTracker->GetStatistics( player.nIndex, IScenarioTracker::ESK_UNITS_KILLED );
-	item.nScoreTactics = pScenarioTracker->GetStatistics( player.nIndex, IScenarioTracker::ESK_TACTICAL_EFFICIENCY );
-	item.nScoreStrategy = pScenarioTracker->GetStatistics( player.nIndex, IScenarioTracker::ESK_STRATEGIC_EFFICIENCY );
-	item.nScore = pScenarioTracker->GetStatistics( player.nIndex, IScenarioTracker::ESK_SCORE );
-
-	// Insert it appropriately
-	std::list<SPlayerItemData>::iterator it = team.begin();
-
-	while ( it != team.end() && ( *it ).nScore > item.nScore )
-	{
-		++it;
-	}
-
-	team.insert( it, item );
 }
 
 void CInterfaceMPStatistics::PopulateList()
