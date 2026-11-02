@@ -246,7 +246,9 @@ bool ValidateMultiplayerLobby( const SB2GameSpecificData &game,
 	}
 	if ( nHumans < 2 || ( !IsCoopGame( game ) && ( nTeams[0] == 0 || nTeams[1] == 0 ) ) )
 	{
-		return RejectRules( pError, "At least two players are required; CLASSIC also requires both teams." );
+		return RejectRules( pError,
+		                    IsCoopGame( game ) ? "At least two human players are required. The game will not start."
+		                                       : "All players have the same team. The game will not start." );
 	}
 	return true;
 }

@@ -1,9 +1,8 @@
 #pragma once
 
 #include "InterfaceMPBase.h"
+#include "MPStatistics.h"
 #include "ScenarioTracker.h"
-
-#include <cstdint>
 
 namespace NDb
 {
@@ -15,18 +14,7 @@ class CInterfaceMPStatistics : public CInterfaceMPScreenBase, public IProgrammed
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPStatistics );
 
-	struct SPlayerItemData
-	{
-		std::wstring wszName;
-		int nCountry;
-		uint32_t dwColour;
-		int nTeam;
-		int nUnitsLost;
-		int nUnitsKilled;
-		int nScoreTactics;
-		int nScoreStrategy;
-		int nScore;
-	};
+	using SPlayerItemData = NGameX::SMPStatisticsPlayer;
 
 	ZDATA_( CInterfaceScreenBase )
 	CDBPtr<NDb::SMultiplayerConsts> pMPConsts;
@@ -103,7 +91,6 @@ private:
 	void MakeInterior();
 	void FillTeams();
 	void PopulateList();
-	void AddPlayerToTeam( const IScenarioTracker::SMultiplayerInfo::SPlayer &player, std::list<SPlayerItemData> &team );
 	void AddPlayerItemsToList( std::list<SPlayerItemData> &team );
 
 	void MsgNext( const SGameMessage &msg );

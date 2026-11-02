@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Merge this entry into MPGameRoom_WindowScreen.xdb's existing RelatedTexts list. -->
+<WindowScreen>
+	<RelatedTexts>
+		<Item>
+			<Name>CANT_START_COOP_PLAYERS</Name>
+			<TextFileRef href="CantStartCoopPlayers.txt" />
+		</Item>
+	</RelatedTexts>
+</WindowScreen>

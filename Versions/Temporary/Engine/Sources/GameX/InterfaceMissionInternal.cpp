@@ -740,6 +740,7 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
                                     IScenarioTracker *_pScenarioTracker,
                                     int nPlayer )
 {
+	bCoopResultShown = false;
 	// clear previous chat input
 	while ( true )
 	{
@@ -2608,15 +2609,13 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 	ITextView *timeForNextReinf = GetChildChecked<ITextView>( pScreen, "RecycleHintTime", true );
 	if ( timeForNextReinf != nullptr )
 	{
-		int totalSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
-
-		int minutes = totalSeconds / 60;
-		int seconds = totalSeconds % 60;
-
-		timeForNextReinf->SetText( NStr::ToUnicode(
-				fmt::format( "<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>{}:{:02}",
-		                 minutes,
-		                 seconds ) ) );
+		const int totalSeconds = pScenarioTracker->GetReinforcementXP( pScenarioTracker->GetLocalPlayer(), NDb::_RT_NONE );
+		// A negative recycle time means no future reinforcement credit, not a countdown.
+		const std::wstring wszTime =
+				totalSeconds < 0 ? L"never"
+												 : NStr::ToUnicode( fmt::format( "{}:{:02}", totalSeconds / 60, totalSeconds % 60 ) );
+		timeForNextReinf->SetText( L"<center><font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1>" +
+		                           wszTime );
 
 		timeForNextReinf->ShowWindow( true );
 
@@ -2943,14 +2942,38 @@ void CInterfaceMission::AddAbilityButton( NDb::EUserAction eAction,
 
 void CInterfaceMission::MsgMultiplayerWin( const SGameMessage &msg )
 {
-	Singleton<IInterfaceState>()->SendCommandsToCloseAllIncluding( this );
-	NMainLoop::Command( ML_COMMAND_HIDE_ALL_UP_TO, "Mission" );
-	NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );
-	NMainLoop::Command( ML_COMMAND_MP_STATISTICS, "" );
+	ShowMultiplayerResult( true );
 }
 
 void CInterfaceMission::MsgMultiplayerLoose( const SGameMessage &msg )
 {
+	ShowMultiplayerResult( false );
+}
+
+void CInterfaceMission::ShowMultiplayerResult( bool bWin )
+{
+	if ( pScenarioTracker && pScenarioTracker->IsCooperative() )
+	{
+		// The manager has already stopped lockstep, committed the result and saved
+		// the replay. A local UI event must never finish an active COOP mission.
+		if ( bCoopResultShown || pScenarioTracker->IsMissionActive() || pScenarioTracker->GetScriptOutcome() < 0 )
+		{
+			return;
+		}
+		bCoopResultShown = true;
+		// Keep the mission scene alive for the same camera orbit, music and fade as
+		// single player. Closing only overlays also handles an open objectives/menu.
+		NMainLoop::Command( ML_COMMAND_HIDE_ALL_UP_TO, "Mission" );
+		// Do not call UpdateWinLooseState here: resetting a build action can send
+		// a cancellation command after the synchronized result boundary.
+		if ( IWindow *pScreen = GetScreen() )
+		{
+			pScreen->ShowWindow( false );
+		}
+		NMainLoop::Command( ML_COMMAND_WIN_LOOSE, bWin ? "win" : "lose" );
+		return;
+	}
+
 	Singleton<IInterfaceState>()->SendCommandsToCloseAllIncluding( this );
 	NMainLoop::Command( ML_COMMAND_HIDE_ALL_UP_TO, "Mission" );
 	NMainLoop::Command( ML_COMMAND_HIDE_UNFOCUSED_SCREEN, "" );

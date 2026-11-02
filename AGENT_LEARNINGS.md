@@ -257,3 +257,18 @@ context. Read `git diff` of every touched file before building.
 - The Lua VM's object and function keys use stable VM IDs, not allocation addresses.
   Inspect those representations before blaming pointer hashing; deterministic table
   iteration and rejection of invalid NaN keys are separate requirements.
+
+## COOP result presentation
+
+- Reuse WinLoose for the end camera while retaining Mission, then remove Mission
+  before MP statistics. Do not call UpdateWinLooseState after lockstep ends: its
+  action reset can issue a construction-cancel command from active placement.
+- HP-bar logical colors are serialized. Compare the active texture's pixels with
+  MultiplayerConsts before changing offsets: stock MP colors occupy slots 4-19,
+  and the contested/yellow slot is 20. A mod inserting yellow at slot 4 shifts
+  every displayed MP color without a code regression.
+- Check the declared interface before calling a concrete class helper through a
+  singleton. `SendCommandsToBringOnTop` is not on `IInterfaceState`; the existing
+  `ML_COMMAND_HIDE_ALL_UP_TO` command closes overlays while retaining Mission.
+- Mission-end UI must not reuse `UpdateWinLooseState` after COOP lockstep stops:
+  resetting an active engineer build tool can emit a cancellation unit command.

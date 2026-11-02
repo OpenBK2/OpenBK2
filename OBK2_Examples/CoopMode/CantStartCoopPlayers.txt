@@ -1,0 +1,1 @@
+At least two human players are required.<br>The game will not start.

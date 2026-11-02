@@ -266,6 +266,7 @@ private:
 
 	bool bScreenLoaded = {};
 	bool bNeedWarFogRecalc = {};
+	bool bCoopResultShown = false; // Local presentation only; never saved or sent to the simulation.
 
 	NTimer::STime nLastStepTime = {};
 
@@ -504,6 +505,7 @@ protected:
 	void MsgUpdateWinLooseState( const SGameMessage &msg );
 	void MsgMultiplayerWin( const SGameMessage &msg );
 	void MsgMultiplayerLoose( const SGameMessage &msg );
+	void ShowMultiplayerResult( bool bWin );
 	bool MsgOnBeforeMouseMove( const SGameMessage &msg );
 	bool MsgScrollMap( const SGameMessage &msg );
 	void MsgMessageBoxOk( const SGameMessage &msg );

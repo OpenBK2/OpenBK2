@@ -5,17 +5,21 @@
 #include "GameX/CommandsHistory.h"
 #include "GameX/DBConsts.h"
 #include "GameX/DBMPConsts.h"
+#include "GameX/MPStatistics.h"
 #include "GameX/ScenarioTracker.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "Main/GameTimer.h"
 #include "Stats_B2_M1/DBMapInfo.h"
+#include "System/Text.h"
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 
 #include <gtest/gtest.h>
 
@@ -31,6 +35,7 @@ protected:
 	NDb::SMapInfo *map = nullptr;
 	NDb::SPartyDependentInfo *botParty = nullptr;
 	NDb::SReinforcement *botReinforcement = nullptr;
+	NDb::SMultiplayerConsts *multiplayerConsts = nullptr;
 
 	template <class T>
 	T *CreateRecord( const char *pszClass )
@@ -62,7 +67,8 @@ protected:
 		ASSERT_NE( constants, nullptr );
 		NGlobal::SetVar( "game_consts", "1.xdb" );
 		constants->pAI = CreateRecord<NDb::SAIGameConsts>( "AIGameConsts" );
-		constants->pMultiplayer = CreateRecord<NDb::SMultiplayerConsts>( "MultiplayerConsts" );
+		multiplayerConsts = CreateRecord<NDb::SMultiplayerConsts>( "MultiplayerConsts" );
+		constants->pMultiplayer = multiplayerConsts;
 		map = CreateRecord<NDb::SMapInfo>( "MapInfo" );
 		botParty = CreateRecord<NDb::SPartyDependentInfo>( "PartyDependentInfo" );
 		botReinforcement = CreateRecord<NDb::SReinforcement>( "Reinforcement" );
@@ -100,7 +106,60 @@ protected:
 		std::error_code error;
 		std::filesystem::remove_all( directory, error );
 	}
+
+	void SetBotName( int nPlayer, const std::u16string &name )
+	{
+		const std::string filename = "bot" + std::to_string( nPlayer ) + ".txt";
+		{
+			std::ofstream file( directory / filename, std::ios::binary );
+			// Text resources are UTF-16LE on every platform, not native wchar_t bytes.
+			for ( char16_t character : std::u16string( 1, u'\ufeff' ) + name )
+			{
+				file.put( char( character & 0xff ) );
+				file.put( char( character >> 8 ) );
+			}
+		}
+		map->players[nPlayer].szLocalizedPlayerNameFileRef = filename;
+		NText::Reload( filename );
+	}
+
+	void SetHumanRoster()
+	{
+		IScenarioTracker::SMultiplayerInfo info;
+		for ( int nPlayer : { 0, 2 } )
+		{
+			IScenarioTracker::SMultiplayerInfo::SPlayer player;
+			player.nIndex = nPlayer;
+			player.nTeam = 0;
+			player.wszName = L"Human " + std::to_wstring( nPlayer );
+			info.players.push_back( player );
+			tracker->AddPlayer( nPlayer );
+		}
+		tracker->SetMultiplayerInfo( info );
+		tracker->SetLocalPlayer( 0 );
+	}
+
+	void RegisterKills( int nKiller, int nVictim, int nCount )
+	{
+		IAIScenarioTracker::SKillInfo kill;
+		kill.nPlayer = nKiller;
+		kill.nKilledUnitPlayer = nVictim;
+		kill.fExpPrice = 100;
+		kill.eReinfType = NDb::_RT_NONE;
+		for ( int i = 0; i < nCount; ++i )
+		{
+			tracker->RegisterUnitKill( kill );
+		}
+	}
 };
+
+const NGameX::SMPStatisticsPlayer *FindStatisticsPlayer( const std::list<NGameX::SMPStatisticsPlayer> &team,
+                                                         const std::wstring &name )
+{
+	const auto found =
+			std::find_if( team.begin(), team.end(), [&]( const auto &player ) { return player.wszName == name; } );
+	return found == team.end() ? nullptr : &*found;
+}
 
 TEST_F( CoopScenario, BotsExistWithoutHumanSlotsAndKeepAuthoredLoadouts )
 {
@@ -162,6 +221,94 @@ TEST_F( CoopScenario, SaveLoadPreservesModeDifficultyAndPendingResult )
 	EXPECT_EQ( restored->GetDifficultyLevel(), 4 );
 	EXPECT_EQ( restored->GetScriptOutcome(), 1 );
 	EXPECT_TRUE( restored->IsPlayerPresent( 3 ) );
+}
+
+TEST_F( CoopScenario, ResultTeamsIncludeNamedBotsWithFinalKillsAndLosses )
+{
+	SetBotName( 1, u"General \u017dukov" );
+	SetBotName( 3, u"General Montgomery" );
+	// Even an AI-tagged neutral must never become a competitor row.
+	map->players.back().ePlayerType = NDb::AI_BOT;
+	multiplayerConsts->sides.resize( 2 );
+	multiplayerConsts->sides[1].pPartyInfo = botParty;
+	for ( int nWinner : { 0, 1 } )
+	{
+		tracker->MissionStart( map, 0 );
+		SetHumanRoster();
+		RegisterKills( 0, 1, 1 );
+		RegisterKills( 1, 0, 2 );
+		RegisterKills( 2, 3, 3 );
+		RegisterKills( 3, 2, 1 );
+		tracker->SetScriptOutcome( nWinner );
+		if ( nWinner == 0 )
+		{
+			tracker->MissionWin();
+		}
+		else
+		{
+			tracker->MissionCancel();
+		}
+		ASSERT_EQ( tracker->GetCurrentMission(), nullptr );
+		const auto teams = NGameX::BuildMultiplayerStatistics( tracker, multiplayerConsts );
+		EXPECT_EQ( teams.wszLocalPlayerName, L"Human 0" );
+		const auto &humans = nWinner == 0 ? teams.wonTeam : teams.lostTeam;
+		const auto &bots = nWinner == 1 ? teams.wonTeam : teams.lostTeam;
+		ASSERT_EQ( humans.size(), 2 );
+		ASSERT_EQ( bots.size(), 2 );
+		const auto *first = FindStatisticsPlayer( bots, L"General \u017dukov" );
+		const auto *second = FindStatisticsPlayer( bots, L"General Montgomery" );
+		ASSERT_NE( first, nullptr );
+		ASSERT_NE( second, nullptr );
+		EXPECT_EQ( first->nCountry, 1 );
+		EXPECT_EQ( first->nTeam, 1 );
+		EXPECT_EQ( first->nUnitsKilled, 2 );
+		EXPECT_EQ( first->nUnitsLost, 1 );
+		EXPECT_EQ( second->nUnitsKilled, 1 );
+		EXPECT_EQ( second->nUnitsLost, 3 );
+		EXPECT_GT( first->nScore, second->nScore );
+		EXPECT_EQ( bots.front().wszName, first->wszName );
+		EXPECT_EQ( tracker->GetMultiplayerInfo()->players.size(), 2 );
+
+		// Save/load retains the ended mission and score snapshot. Replay viewpoints
+		// likewise use different local humans without changing the winning side.
+		CMemoryStream stream;
+		{
+			CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->AddPolymorphicBase( 1, tracker.GetPtr() );
+		}
+		CObj<IScenarioTracker> restored = CreateScenarioTrackerMultiplayer();
+		stream.Seek( 0 );
+		{
+			CObj<IBinSaver> loader = CreateBinSaver( &stream, SAVER_MODE_READ );
+			loader->AddPolymorphicBase( 1, restored.GetPtr() );
+		}
+		restored->SetLocalPlayer( 2 );
+		const auto replayTeams = NGameX::BuildMultiplayerStatistics( restored, multiplayerConsts );
+		EXPECT_EQ( replayTeams.wszLocalPlayerName, L"Human 2" );
+		const auto &replayBots = nWinner == 1 ? replayTeams.wonTeam : replayTeams.lostTeam;
+		ASSERT_EQ( replayBots.size(), 2 );
+		const auto *replayFirst = FindStatisticsPlayer( replayBots, first->wszName );
+		ASSERT_NE( replayFirst, nullptr );
+		EXPECT_EQ( replayFirst->nUnitsKilled, 2 );
+		EXPECT_EQ( replayFirst->nUnitsLost, 1 );
+		EXPECT_EQ( replayFirst->nScore, first->nScore );
+		EXPECT_EQ( restored->GetMultiplayerInfo()->players.size(), 2 );
+	}
+}
+
+TEST_F( CoopScenario, UnnamedBotsHaveDistinctFallbacksAndClassicUsesOnlyNetworkRoster )
+{
+	SetHumanRoster();
+	tracker->SetScriptOutcome( 0 );
+	tracker->MissionWin();
+	const auto teams = NGameX::BuildMultiplayerStatistics( tracker, multiplayerConsts );
+	ASSERT_EQ( teams.lostTeam.size(), 2 );
+	EXPECT_NE( FindStatisticsPlayer( teams.lostTeam, L"AI 2" ), nullptr );
+	EXPECT_NE( FindStatisticsPlayer( teams.lostTeam, L"AI 4" ), nullptr );
+	tracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
+	const auto classic = NGameX::BuildMultiplayerStatistics( tracker, multiplayerConsts );
+	EXPECT_EQ( classic.wonTeam.size(), 2 );
+	EXPECT_TRUE( classic.lostTeam.empty() );
 }
 
 TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )

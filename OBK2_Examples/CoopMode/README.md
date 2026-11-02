@@ -52,6 +52,11 @@ spawn them with the existing reinforcement script functions. Bots do not receive
 the automatic human MP starting army. Humans retain normal MP starting armies,
 base capture and reinforcement credits.
 
+Set each bot's `LocalizedPlayerNameFileRef` to its general/player name text file.
+The match results list each bot on the winning or losing team, including its
+kills, losses and scores. `AIGeneralName.txt` is an example name; multiple bots can
+use different files. The neutral player is excluded from the results.
+
 ## Mission script
 
 Point `MapInfo.ScriptFileRef` to your mission script. `mission.lua` demonstrates
@@ -72,6 +77,12 @@ Before using it, create the script groups and areas named in its comments.
 - `IsPlayerPresent(player)` lets scripts handle unoccupied or departed humans.
   On disconnect, the existing rule stops and transfers that player's units to a
   remaining ally, or neutral if no ally remains.
+
+COOP victory and defeat use the single-player camera orbit, outcome music and
+fade before showing multiplayer statistics. `FinalPositions[0]` is the victory
+camera anchor; `FinalPositions[1]`, when present, is the defeat anchor. Without
+these entries the camera orbits its current position. The usual key press skips
+the animation. Set `MusicWin` and `MusicLost` as for a single-player mission.
 
 `Cmd`, `QCmd`, `UnitCmd`, and `UnitQCmd` retain their existing arguments. In COOP
 they snapshot stable unit IDs and enqueue derived simulation orders. The queue
@@ -104,8 +115,13 @@ needed. `UIConsts.fragment.xml` provides optional localized game-type entries
 for UI data that uses `MPLocalizedGameTypes`. Merge them into the mod's existing
 list rather than replacing unrelated UI constants. The accompanying text files
 are UTF-8 examples; use your mod's normal localization workflow.
-The existing results screen lists human players; it does not yet add AI statistics
-rows, so the computer team's section can be empty.
+
+COOP's lobby time limit displays `--:--`. Its minimum-player warning uses the
+normal game text style; CLASSIC keeps its original warning. To translate the
+COOP warning, merge `MPGameRoom.relatedTexts.fragment.xml` into the existing
+`MPGameRoom_WindowScreen.xdb` `RelatedTexts` list and resolve its `TextFileRef`
+relative to that screen. An English fallback works without this optional entry.
+A disabled reinforcement-credit timer displays `never` instead of a countdown.
 
 ## Suggested mission check
 
@@ -116,6 +132,8 @@ rows, so the computer team's section can be empty.
    both clients. Confirm a scriptless copy does not end from CLASSIC rules.
 4. Repeat after one human disconnects and verify the remaining human can continue.
 5. Replay from each recorded human viewpoint with checksum verification enabled.
+6. Check victory and defeat camera sequences, including skipping them, and verify
+   both human and named AI rows in the results.
 
 The example does not create terrain, unit records, strategic general behavior or
 campaign-style objectives.
