@@ -3,6 +3,7 @@
 #include "GCombiner.h"
 #include "GfxBuffers.h"
 #include "GfxRender.h"
+#include "GNormalTransform.h"
 #include "GScene.h"
 #include "GSkinning.h"
 #include "GSSEtransform.h"
@@ -329,10 +330,13 @@ struct STGenericTransformer
 		Transpose( &transformer, trans.backward );
 
 		xformedNormals.resize( nVertices );
-		// most of these are often very small in size.. (less than 128 elements - not very worthy of parallelization here)
-		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k )
+		// One matrix for every normal: four at a time, with the matrix prepared once
+		// per part instead of once per normal. Bit-exact with MMXTransformVector, see
+		// GNormalTransform.h.
+		if ( nVertices > 0 )
 		{
-			MMXTransformVector( xformedNormals[k], pSrc[k].normal, transformer );
+			NNormals::TransformNormalsRigid(
+					&pSrc[0].normal, sizeof( SUVInfo ), &xformedNormals[0].dw, nVertices, &transformer._11 );
 		}
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
@@ -358,8 +362,24 @@ struct STGenericTransformer
 		const std::vector<uint16_t> &posIndices = pObjInfo->GetPositionIndices();
 		ASSERT( nVerties == posIndices.size() );
 		xformedNormals.resize( posIndices.size() );
+		const int nNormals = static_cast<int>( xformedNormals.size() );
+		// A rigid part (CObjectInfo::GetRigidBone, 98.8% of the shipped parts) moves
+		// every normal with one bone: transformed four at a time with the matrix
+		// prepared once, bit-exact with the per-normal MMXTransformVector the loop
+		// below runs for single-influence vertices.
+		const int nRigidBone = pObjInfo->GetRigidBone();
+		if ( nRigidBone >= 0 && nRigidBone < static_cast<int>( blends.size() ) )
+		{
+			if ( nNormals > 0 )
+			{
+				NNormals::TransformNormalsRigid(
+						&_pSrc[0].normal, sizeof( SUVInfo ), &xformedNormals[0].dw, nNormals, &blends[nRigidBone]._11 );
+			}
+			CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );
+			return;
+		}
 		const SUVInfo *pSrc = _pSrc;
-		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k, pSrc++ )
+		for ( int k = 0; k < nNormals; ++k, pSrc++ )
 		{
 			const SRealVertexWeight *pWeight = _pWeight + posIndices[k];
 			if ( pWeight->nWeights[1] == 0 )
@@ -373,7 +393,8 @@ struct STGenericTransformer
 
 				const auto &blend1 = blends[pWeight->cBoneIndices[0]];
 				const auto &blend2 = blends[pWeight->cBoneIndices[1]];
-				MMXTransformVector2( xformedNormals[k], pSrc->normal, blend1, nW1, blend2, nW2 );
+				// Bit-exact with MMXTransformVector2, about twice as fast (GNormalTransform.h).
+				xformedNormals[k].dw = NNormals::TransformNormalBlend2( pSrc->normal.dw, &blend1._11, nW1, &blend2._11, nW2 );
 			}
 			else
 			{
@@ -383,7 +404,9 @@ struct STGenericTransformer
 
 				uint8_t nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1], nW3 = pWeight->nWeights[2];
 
-				MMXTransformVector3( xformedNormals[k], pSrc->normal, blend1, nW1, blend2, nW2, blend3, nW3 );
+				// Bit-exact with MMXTransformVector3, about twice as fast (GNormalTransform.h).
+				xformedNormals[k].dw =
+						NNormals::TransformNormalBlend3( pSrc->normal.dw, &blend1._11, nW1, &blend2._11, nW2, &blend3._11, nW3 );
 			}
 		}
 		CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );
@@ -608,8 +631,12 @@ void CVBCombiner::XFormPosition()
 				SPartTransformer<SGenericPosTransformer> trans;
 				trans.DoTransform( pPart, &( ( *pRes )[0] ), *pRes );
 				// calc bv
+				// SBoundCalcer starts min and max at +-1e38. This used to set the max to
+				// 0 first, a leftover from the original MMX bound, which compared float
+				// bits as integers and needed that start; with float compares it raised
+				// the max to 0 on any axis where the whole part is negative, such as an
+				// aircraft arriving from beyond the lower map edge.
 				SBoundCalcer bc;
-				bc.ptMax = CVec3( 0, 0, 0 );
 
 				for ( int k = 0; k < nSize; ++k )
 				{
