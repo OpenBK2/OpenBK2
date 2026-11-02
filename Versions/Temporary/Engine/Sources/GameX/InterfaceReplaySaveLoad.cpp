@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "CoopPlayerInfo.h"
 #include "DBMPConsts.h"
 #include "GameRoomData.h"
 #include "GameXClassIDs.h"
@@ -13,6 +14,8 @@
 #include "Stats_B2_M1/Vis2AI.h"
 
 #include "GameX_export.h"
+
+#include <cmath>
 
 #include <fmt/format.h>
 
@@ -148,6 +151,19 @@ void CInterfaceReplaySaveLoad::MakeInterior()
 	{
 		pMinimapFlagTemplate->ShowWindow( false );
 	}
+	if ( pMinimapPanel )
+	{
+		// Older UI data keeps the name as a sibling of the marker instead of a child.
+		pMinimapNameTemplate = pMinimapPanel->GetChild( "PlayerOnMapNameView", false );
+		if ( !pMinimapNameTemplate )
+		{
+			pMinimapNameTemplate = pMinimapPanel->GetChild( "PlayerOnMapName", false );
+		}
+		if ( pMinimapNameTemplate )
+		{
+			pMinimapNameTemplate->ShowWindow( false );
+		}
+	}
 
 	GetReplays();
 	PopulateReplayList();
@@ -209,6 +225,8 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 			pItemDate->SetText( pItemDate->GetDBText() + wszDate );
 		}
 
+		// Keep this as the human count, matching lobby capacity. Authored AI players
+		// are shown in the team preview but never occupy recorded network slots.
 		int nNumPlayers = 0;
 		for ( int nSlot = 0; nSlot < entry.info.slots.size(); ++nSlot )
 		{
@@ -257,14 +275,17 @@ void CInterfaceReplaySaveLoad::MakeInfo( const SReplayEntry &entry )
 
 void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
 {
-	if ( !pPlayerItemTemplate )
+	if ( !pPlayerItemTemplate || !pPlayerList )
 	{
 		return;
 	}
 
 	const int nWinTeam = info.nWinningSide == 1 ? 1 : 0;
+	const bool bCooperative = info.nMultiplayerMode == 1;
+	const bool bTeam0Playable = NGameX::FindReplayViewpoint( info, 0 ) >= 0;
+	const bool bTeam1Playable = NGameX::FindReplayViewpoint( info, 1 ) >= 0;
 
-	// Winners
+	// Team zero is the only human viewpoint in COOP, including a human defeat.
 	IWindow *pWnd = AddWindowCopy( pPlayerList, pPlayerItemTemplate );
 	if ( !pWnd )
 	{
@@ -272,13 +293,13 @@ void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
 	}
 
 	AddPlayers( pWnd, ( nWinTeam == 0 ), 0, info );
-	pPlayerList->PushBack( pWnd, true );
-	if ( nWinTeam == 0 )
+	pPlayerList->PushBack( pWnd, bTeam0Playable );
+	if ( bTeam0Playable && ( bCooperative || nWinTeam == 0 || !bTeam1Playable ) )
 	{
 		pPlayerList->Select( pWnd );
 	}
 
-	// Losers
+	// The AI row remains visible but cannot be selected for playback.
 	pWnd = AddWindowCopy( pPlayerList, pPlayerItemTemplate );
 	if ( !pWnd )
 	{
@@ -286,8 +307,8 @@ void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
 	}
 
 	AddPlayers( pWnd, ( nWinTeam == 1 ), 1, info );
-	pPlayerList->PushBack( pWnd, true );
-	if ( nWinTeam == 1 )
+	pPlayerList->PushBack( pWnd, bTeam1Playable );
+	if ( bTeam1Playable && ( nWinTeam == 1 || !bTeam0Playable ) )
 	{
 		pPlayerList->Select( pWnd );
 	}
@@ -316,7 +337,15 @@ void CInterfaceReplaySaveLoad::AddPlayers( IWindow *pWnd, bool bWon, int nTeam, 
 		pFlag1->ShowWindow( nTeam == 1 );
 	}
 
-	std::string szNameList;
+	std::wstring wszNameList;
+	const auto appendName = [&]( const std::wstring &name )
+	{
+		if ( !wszNameList.empty() )
+		{
+			wszNameList += L", ";
+		}
+		wszNameList += name;
+	};
 	for ( int i = 0; i < info.slots.size(); ++i )
 	{
 		const SMPSlot &slot = info.slots[i];
@@ -325,37 +354,34 @@ void CInterfaceReplaySaveLoad::AddPlayers( IWindow *pWnd, bool bWon, int nTeam, 
 			continue;
 		}
 
-		if ( szNameList.length() > 0 )
+		appendName( NStr::ToUnicode( slot.szName ) );
+	}
+	if ( nTeam == 1 )
+	{
+		for ( const auto &player : NGameX::GetCoopReplayPlayers( info ) )
 		{
-			szNameList += ", ";
+			appendName( player.wszName );
 		}
-
-		szNameList += slot.szName;
 	}
 
 	ITextView *pPlayers = GetChildChecked<ITextView>( pWnd, "ItemPlayers", true );
 	if ( pPlayers )
 	{
-		pPlayers->SetText( pPlayers->GetDBText() + NStr::ToUnicode( szNameList ) );
+		pPlayers->SetText( pPlayers->GetDBText() + wszNameList );
 	}
 }
 
 void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
 {
 	const NDb::SMapInfo *pMap = info.pMap;
-	if ( pMinimapWnd )
+	if ( !pMap || !pMap->pMiniMap || !pMap->pMiniMap->pTexture || !pMinimapWnd || !pMinimapPanel ||
+	     pMap->nNumPatchesX <= 0 || pMap->nNumPatchesY <= 0 )
 	{
-		if ( pMap )
-		{
-			pMinimapWnd->SetLoadingMapParams( pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
-			                                  pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
-			pMinimapWnd->SetTexture( pMap->pMiniMap->pTexture );
-		}
-		else
-		{
-			return;
-		}
+		return;
 	}
+	pMinimapWnd->SetLoadingMapParams( pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
+	                                  pMap->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE );
+	pMinimapWnd->SetTexture( pMap->pMiniMap->pTexture );
 
 	if ( !pMinimapFlagTemplate )
 	{
@@ -366,52 +392,121 @@ void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
 	pMinimapWnd->GetPlacement( &nMinimapX, &nMinimapY, 0, 0 );
 
 	const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
-	if ( !pMPConsts )
+	const auto addMarker =
+			[&]( const CVec2 &vStartPos, const std::wstring &wszName, int nTeam, uint32_t nColor, const NDb::STexture *pIcon )
 	{
-		return;
-	}
-
-	for ( int i = 0; i < info.slots.size(); ++i )
-	{
-		const SMPSlot &slot = info.slots[i];
-
-		if ( !slot.bPresent )
+		if ( !std::isfinite( vStartPos.x ) || !std::isfinite( vStartPos.y ) )
 		{
-			continue;
+			return;
 		}
-
-		// Put on minimap
-		CVec2 vPos = pMinimapWnd->GetAIToScreen( pMap->players[i].vMPStartPos );
+		const CVec2 vPos = pMinimapWnd->GetAIToScreen( vStartPos );
 
 		IWindow *pWnd = AddWindowCopy( pMinimapPanel, pMinimapFlagTemplate );
 		if ( !pWnd )
 		{
-			continue;
+			return;
 		}
 		pWnd->ShowWindow( true );
 		pWnd->SetName( "Dynamic_Slot" );
 
-		IWindow *pTeam1Wnd = GetChildChecked<IWindow>( pWnd, "Team1", true );
-		IWindow *pTeam2Wnd = GetChildChecked<IWindow>( pWnd, "Team2", true );
-		IWindow *pColourWnd = GetChildChecked<IWindow>( pWnd, "TeamBlock", true );
-		IWindow *pIconWnd = GetChildChecked<IWindow>( pWnd, "Icon", true );
-		ITextView *pNameView = GetChildChecked<ITextView>( pWnd, "Name", true );
+		IWindow *pTeam1Wnd = pWnd->GetChild( "Team1", true );
+		IWindow *pTeam2Wnd = pWnd->GetChild( "Team2", true );
+		IWindow *pColourWnd = pWnd->GetChild( "TeamBlock", true );
+		IWindow *pIconWnd = pWnd->GetChild( "Icon", true );
+		ITextView *pNameView = dynamic_cast<ITextView *>( pWnd->GetChild( "Name", true ) );
 
 		int nSizeX, nSizeY;
 		pWnd->GetPlacement( 0, 0, &nSizeX, &nSizeY );
 		pWnd->SetPlacement(
 				nMinimapX + vPos.x - nSizeX * 0.5f, nMinimapY + vPos.y - nSizeY * 0.5f, 0, 0, EWPF_POS_X | EWPF_POS_Y );
+		if ( !pNameView && pMinimapNameTemplate )
+		{
+			IWindow *pNameWnd = AddWindowCopy( pMinimapPanel, pMinimapNameTemplate );
+			if ( pNameWnd )
+			{
+				pNameWnd->SetName( "Dynamic_Slot" );
+				pNameWnd->ShowWindow( true );
+				int nNameX, nNameY, nNameWidth;
+				pNameWnd->GetPlacement( &nNameX, &nNameY, &nNameWidth, nullptr );
+				pNameWnd->SetPlacement( nMinimapX + vPos.x - nNameWidth * 0.5f + nNameX,
+				                        nMinimapY + vPos.y - nSizeY * 0.5f + nNameY,
+				                        0,
+				                        0,
+				                        EWPF_POS_X | EWPF_POS_Y );
+				pNameView = dynamic_cast<ITextView *>( pNameWnd );
+				if ( !pNameView )
+				{
+					pNameView = dynamic_cast<ITextView *>( pNameWnd->GetChild( "Name", true ) );
+				}
+			}
+		}
 
 		CPtr<CColorBackground> pColourBgr = new CColorBackground();
-		pColourBgr->nColor = pMPConsts->playerColorInfos[slot.nColour].nColor | 0xFF000000;
-		pTeam1Wnd->ShowWindow( slot.nTeam == 0 );
-		pTeam2Wnd->ShowWindow( slot.nTeam == 1 );
+		pColourBgr->nColor = nColor;
+		if ( pTeam1Wnd )
+		{
+			pTeam1Wnd->ShowWindow( nTeam == 0 );
+		}
+		if ( pTeam2Wnd )
+		{
+			pTeam2Wnd->ShowWindow( nTeam == 1 );
+		}
+		if ( info.nMultiplayerMode == 1 && !pColourWnd )
+		{
+			// The legacy sibling-name layout has solid blue/red team blocks and
+			// no individual-colour parent. Its human side can safely become green.
+			IWindow *pTeamWnd = nTeam == 0 ? pTeam1Wnd : pTeam2Wnd;
+			if ( pTeamWnd )
+			{
+				CPtr<CColorBackground> pTeamColour = new CColorBackground();
+				pTeamColour->nColor = nTeam == 0 ? 0xff008040 : NGameX::COOP_BOT_COLOR;
+				pTeamWnd->SetBackground( pTeamColour );
+			}
+		}
+		// Team indicator textures retain their alpha mask, exposing the individual
+		// colour on TeamBlock underneath instead of covering it with a solid rectangle.
 		if ( pColourWnd )
 		{
 			pColourWnd->SetBackground( pColourBgr );
 		}
-		pIconWnd->SetTexture( pMPConsts->sides[slot.nCountry].pPartyInfo->pMinimapKeyObjectIcon );
-		pNameView->SetText( pNameView->GetDBText() + NStr::ToUnicode( slot.szName ) );
+		if ( pIconWnd )
+		{
+			pIconWnd->SetTexture( pIcon );
+			pIconWnd->ShowWindow( pIcon != nullptr );
+		}
+		if ( pNameView )
+		{
+			std::wstring wszText = pNameView->GetDBText();
+			if ( info.nMultiplayerMode == 1 && !pColourWnd )
+			{
+				// Native marker skins have only a team indicator; keep each human's
+				// chosen individual colour visible in the sibling name instead.
+				wszText += NStr::ToUnicode( fmt::format( "<color=0x{:X}>", nColor ) );
+			}
+			pNameView->SetText( wszText + wszName );
+		}
+	};
+	for ( int i = 0; i < info.slots.size() && i < pMap->players.size(); ++i )
+	{
+		const SMPSlot &slot = info.slots[i];
+		if ( !slot.bPresent || slot.nTeam < 0 || slot.nTeam > 1 )
+		{
+			continue;
+		}
+		uint32_t nColor = 0xffffffff;
+		if ( pMPConsts && slot.nColour >= 0 && slot.nColour < pMPConsts->playerColorInfos.size() )
+		{
+			nColor = pMPConsts->playerColorInfos[slot.nColour].nColor | 0xFF000000;
+		}
+		const NDb::SMultiplayerSide *pSide = NGameX::GetMultiplayerSide( pMPConsts, slot.nCountry );
+		const NDb::STexture *pIcon =
+				pSide && pSide->pPartyInfo ? pSide->pPartyInfo->pMinimapKeyObjectIcon.GetPtr() : nullptr;
+		addMarker( pMap->players[i].vMPStartPos, NStr::ToUnicode( slot.szName ), slot.nTeam, nColor, pIcon );
+	}
+	for ( const auto &player : NGameX::GetCoopReplayPlayers( info ) )
+	{
+		// Bot identity and position come from the recording, independently of later map edits.
+		addMarker( player.vMPStartPos, player.wszName, 1, NGameX::COOP_BOT_COLOR, nullptr );
 	}
 }
 
@@ -479,19 +574,16 @@ bool CInterfaceReplaySaveLoad::OnSave()
 
 bool CInterfaceReplaySaveLoad::OnLoad()
 {
-	NI_VERIFY( nSelected > -1, "PRG: No replay selected to load", return true );
+	NI_VERIFY( nSelected >= 0 && nSelected < replays.size(), "PRG: No replay selected to load", return true );
 
 	SReplayEntry &entry = replays[nSelected];
-	const int nSelectedTeamEntry = pPlayerList->GetItemNumber( pPlayerList->GetSelectedItem() );
-	const int nSelectedTeam = ( nSelectedTeamEntry == 1 ) ? 1 : 0;
-	int nPlayFor = 0;
-	for ( int i = 0; i < entry.info.slots.size(); ++i )
+	IWindow *pSelectedTeam = pPlayerList ? pPlayerList->GetSelectedItem() : nullptr;
+	const int nSelectedTeamEntry = pSelectedTeam ? pPlayerList->GetItemNumber( pSelectedTeam ) : 0;
+	const int nSelectedTeam = entry.info.nMultiplayerMode != 1 && nSelectedTeamEntry == 1 ? 1 : 0;
+	const int nPlayFor = NGameX::FindReplayViewpoint( entry.info, nSelectedTeam );
+	if ( nPlayFor < 0 )
 	{
-		if ( entry.info.slots[i].bPresent && entry.info.slots[i].nTeam == nSelectedTeam )
-		{
-			nPlayFor = i;
-			break;
-		}
+		return true;
 	}
 
 	std::string szCmd = "replay " + entry.szName + fmt::format( " {}", nPlayFor );
@@ -503,7 +595,7 @@ bool CInterfaceReplaySaveLoad::OnLoad()
 
 bool CInterfaceReplaySaveLoad::OnDelete()
 {
-	if ( nSelected < 0 )
+	if ( nSelected < 0 || nSelected >= replays.size() )
 	{
 		return true;
 	}
@@ -518,6 +610,10 @@ bool CInterfaceReplaySaveLoad::OnDelete()
 
 bool CInterfaceReplaySaveLoad::OnSelect()
 {
+	if ( !pReplayList )
+	{
+		return true;
+	}
 	IWindow *pSelected = pReplayList->GetSelectedItem();
 	for ( int i = 0; i < replays.size(); ++i )
 	{
@@ -536,7 +632,8 @@ bool CInterfaceReplaySaveLoad::OnSelect()
 			{
 				if ( pLoadBtn )
 				{
-					pLoadBtn->Enable( true );
+					pLoadBtn->Enable( NGameX::FindReplayViewpoint( replays[i].info, 0 ) >= 0 ||
+					                  NGameX::FindReplayViewpoint( replays[i].info, 1 ) >= 0 );
 				}
 			}
 			if ( pDeleteBtn )
@@ -555,12 +652,17 @@ void CInterfaceReplaySaveLoad::MsgOk( const SGameMessage &msg )
 	{
 		DoSaveReplay();
 	}
-	else if ( eQuestion == EQM_DELETE )
+	else if ( eQuestion == EQM_DELETE && nSelected >= 0 && nSelected < replays.size() )
 	{
 		NSaveLoad::DeleteReplay( replays[nSelected].szName );
 		GetReplays();
 		PopulateReplayList();
 		CleanSelectionInfo();
+		nSelected = -1;
+		if ( pLoadBtn )
+		{
+			pLoadBtn->Enable( false );
+		}
 		if ( pDeleteBtn )
 		{
 			pDeleteBtn->Enable( false );

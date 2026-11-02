@@ -38,10 +38,10 @@ private:
 	};
 
 	ZDATA
-	bool bSaveMode;
+	bool bSaveMode = false;
 	CReplayEntries replays;
-	int nSelected;
-	EQuestionMode eQuestion;
+	int nSelected = -1;
+	EQuestionMode eQuestion = EQM_NONE;
 
 	// Controls
 	CPtr<IWindow> pMain;
@@ -56,6 +56,7 @@ private:
 	CPtr<IWindow> pMinimapPanel;
 	CPtr<IMiniMap> pMinimapWnd;
 	CPtr<IWindow> pMinimapFlagTemplate;
+	CPtr<IWindow> pMinimapNameTemplate;
 	CPtr<IScrollableContainer> pPlayerList;
 	CPtr<IWindow> pPlayerItemTemplate;
 
@@ -78,6 +79,7 @@ private:
 		f.Add( 16, &pMinimapFlagTemplate );
 		f.Add( 17, &pPlayerList );
 		f.Add( 18, &pPlayerItemTemplate );
+		f.Add( 19, &pMinimapNameTemplate );
 		return 0;
 	}
 
