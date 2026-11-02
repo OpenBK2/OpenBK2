@@ -75,6 +75,13 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		replayInfo.nScriptResult = 0;
 		const IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
 		replayInfo.nMultiplayerMode = pTracker && pTracker->IsCooperative() ? 1 : 0;
+		// Resolve names once: replay presentation must survive later map/text edits.
+		replayInfo.bCoopPlayersRecorded = replayInfo.nMultiplayerMode == 1;
+		replayInfo.coopPlayers.clear();
+		if ( replayInfo.bCoopPlayersRecorded )
+		{
+			replayInfo.coopPlayers = NGameX::CollectCoopMapPlayers( _pMap );
+		}
 		// Capture the sources at startup, not when a replay is saved after a possible disk edit.
 		replayInfo.uScriptCheckSum =
 				replayInfo.nMultiplayerMode == 1 ? NGameX::CalculateCoopScriptChecksum( _pMap, NGameX::GetAIConsts() ) : 0;
