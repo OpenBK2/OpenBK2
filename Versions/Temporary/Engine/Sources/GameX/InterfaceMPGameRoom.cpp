@@ -34,6 +34,25 @@
 
 static bool s_bMPAllowStartGame;
 
+namespace
+{
+std::wstring GetLobbyMessageFormat( const ITextView *pTextView )
+{
+	// Replacing a fixed message must retain its DB font, colour and alignment.
+	const auto *pDesc = checked_cast<const NDb::SWindowTextView *>( pTextView->GetDesc() );
+	if ( pDesc->pTextFormat && CHECK_TEXT_NOT_EMPTY_PRE( pDesc->pTextFormat->, FormatString ) )
+	{
+		return GET_TEXT_PRE( pDesc->pTextFormat->, FormatString );
+	}
+	if ( pDesc->pTextString && pDesc->pTextString->pShared &&
+	     CHECK_TEXT_NOT_EMPTY_PRE( pDesc->pTextString->pShared->, FormatString ) )
+	{
+		return GET_TEXT_PRE( pDesc->pTextString->pShared->, FormatString );
+	}
+	return std::wstring();
+}
+} // namespace
+
 // CInterfaceMPGameRoom
 
 CInterfaceMPGameRoom::CInterfaceMPGameRoom()
@@ -452,7 +471,9 @@ void CInterfaceMPGameRoom::SetTimeLimit( int nTimeLimit )
 	{
 		return;
 	}
-	std::wstring wszText = NStr::ToUnicode( fmt::format( "{} min.", nTimeLimit ) );
+	// COOP has no clock limit; keep the same DB styling as the CLASSIC value.
+	const std::wstring wszText =
+			NGameX::IsCoopGame( gameDesc ) ? L"--:--" : NStr::ToUnicode( fmt::format( "{} min", nTimeLimit ) );
 	pTimeLimit->SetText( pTimeLimit->GetDBText() + wszText );
 }
 
@@ -538,11 +559,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 	{
 		pMapName->SetText( pMapName->GetDBText() + GET_TEXT_PRE( gameDesc.pMPMap->, MapName ) );
 	}
-	pTimeLimit->SetText( pTimeLimit->GetDBText() + NStr::ToUnicode( fmt::format( "{} min", gameDesc.nTimeLimit ) ) );
-	if ( NGameX::IsCoopGame( gameDesc ) )
-	{
-		pTimeLimit->SetText( L"COOP: mission objectives determine the result" );
-	}
+	SetTimeLimit( gameDesc.nTimeLimit );
 	pCaptureTime->SetText( pCaptureTime->GetDBText() +
 	                       NStr::ToUnicode( fmt::format( "{} sec", gameDesc.nCaptureTime ) ) );
 	pGameSpeed->SetText( pGameSpeed->GetDBText() + NStr::ToUnicode( std::to_string( gameDesc.nGameSpeed ) ) );
@@ -792,6 +809,8 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 {
 	bool bCanBeginGame = bHost;
 	int nColourMask = 0;
+	int nPresentPlayers = 0;
+	int nTeamMask = 0;
 
 	enum
 	{
@@ -816,6 +835,11 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 
 		if ( slot.info.bPresent )
 		{
+			++nPresentPlayers;
+			if ( slot.info.nTeam >= 0 && slot.info.nTeam < 2 )
+			{
+				nTeamMask |= 1 << slot.info.nTeam;
+			}
 			if ( slot.info.nColour < 0 || slot.info.nColour >= 32 )
 			{
 				bCanBeginGame = false;
@@ -846,7 +870,26 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 			eState = E_SIDE;
 			if ( pCantStartSide )
 			{
-				pCantStartSide->SetText( NStr::ToUnicode( szRulesError ) );
+				const bool bCoop = NGameX::IsCoopGame( gameDesc );
+				const bool bMissingPlayers = nPresentPlayers < 2 || ( !bCoop && nTeamMask != 3 );
+				if ( bMissingPlayers && !bCoop )
+				{
+					// CLASSIC keeps its original localized same-team warning.
+					pCantStartSide->SetText( pCantStartSide->GetDBText() );
+				}
+				else
+				{
+					std::wstring wszMessage = NStr::ToUnicode( szRulesError );
+					if ( bMissingPlayers )
+					{
+						wszMessage = GetScreen()->GetTextEntry( "CANT_START_COOP_PLAYERS" );
+						if ( wszMessage.empty() )
+						{
+							wszMessage = L"At least two human players are required.<br>The game will not start.";
+						}
+					}
+					pCantStartSide->SetText( GetLobbyMessageFormat( pCantStartSide ) + wszMessage );
+				}
 			}
 		}
 	}
