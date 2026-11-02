@@ -53,6 +53,13 @@ add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
 # ODR violation and aborts the test before it runs. Hidden visibility gives the
 # compiled-in kernels the table beside them and leaves the library its own.
 set_target_properties(LightingKernels_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# Every 16-bit to 32-bit index shift variant (GIndexShift.h, IndexShiftVariants.h)
+# against the scalar reference. The lighting kernel sources come along only for
+# IsAVX2Present(), so the AVX2 variants are skipped on CPUs without it; hidden
+# visibility for the same nCubicRoot reason as LightingKernels_test.
+add_unit_test(IndexShift 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(IndexShift_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
 add_unit_test(BitOps Misc)
 # Failed GPU locks must stop before exposing writable pointers to callers.
 add_unit_test(GfxBufferLocks 3Dmotor System Misc gr2)

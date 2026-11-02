@@ -49,6 +49,19 @@ set_target_properties(LightingKernels_benchmark PROPERTIES
 copy_runtime_dlls(LightingKernels_benchmark)
 register_benchmark(LightingKernels_benchmark)
 
+# The index shift variants of test/IndexShiftVariants.h, against the shipped one in
+# GIndexShift.h. Header only apart from IsAVX2Present(), which comes with the lighting
+# kernel sources; their AVX2 file already has its -mavx2 property set above. The
+# AVX2/SSE4.1 variants carry their own target attribute, so no flag goes on this file.
+bk2_add_executable(IndexShift_benchmark NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL
+    IndexShift.cpp ${LIGHTING_KERNEL_SOURCES})
+target_link_libraries(IndexShift_benchmark PRIVATE benchmark::benchmark 3Dmotor Misc)
+set_target_properties(IndexShift_benchmark PROPERTIES
+    FOLDER "benchmark"
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/IndexShift_benchmark)
+copy_runtime_dlls(IndexShift_benchmark)
+register_benchmark(IndexShift_benchmark)
+
 # The MMX reference this one measures against is assembled, not inline, so the
 # benchmark exists only where MASM does and every variant has to link it. It is also
 # the only caller of add_benchmark(), whose /arch: flags are MSVC spellings.

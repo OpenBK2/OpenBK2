@@ -3,6 +3,7 @@
 #include "Cache.h"
 #include "GfxBuffers.h"
 #include "GfxBuffersInternal.h"
+#include "GIndexShift.h"
 #include "Misc/2Darray.h"
 #include "port/debugging.h"
 #include "System/Commands.h"
@@ -1511,11 +1512,6 @@ public:
 	}
 };
 
-static BOOST_FORCEINLINE void ReallyFastShiftingTransfer( const unsigned short *pSrc, int *pDst, int nSize, int nShift )
-{
-	std::transform( pSrc, pSrc + nSize, pDst, [nShift]( uint16_t value ) { return value + nShift; } );
-}
-
 struct S32Triangle
 {
 	int n1, n2, n3;
@@ -1623,7 +1619,10 @@ public:
 
 			S32Triangle *pTri = (S32Triangle *)pDynamicTrisBuffer->pLocked;
 			pTri += nLast;
-			ReallyFastShiftingTransfer( (const unsigned short *)&pSrcTris[nSrcStart], (int *)pTri, nToDraw * 3, nVBStart );
+			// Widen the 16-bit indices into the 32-bit buffer, adding the mesh's offset in
+			// the dynamic vertex buffer. SSE2 with aligned stores, see GIndexShift.h; it
+			// replaces a std::transform that GCC -O2 left scalar.
+			ShiftIndices( (const uint16_t *)&pSrcTris[nSrcStart], (int32_t *)pTri, nToDraw * 3, nVBStart );
 
 			nLast += nToDraw;
 			nSrcStart += nToDraw;
