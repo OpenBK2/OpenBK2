@@ -861,6 +861,20 @@ void CIBCombiner::Recalc()
 		nOffset += pObjInfo->GetVertices().size();
 	}
 	ASSERT( pFill <= &triBuffer[triBuffer.size() - 1] );
+	// These triangles stay as they are until the next Recalc, which only a part
+	// being added, removed or replaced triggers, never an animation. Publish the
+	// array so the renderer can keep it in the static index cache and draw it with
+	// BaseVertexIndex rather than rebasing every index into the dynamic index buffer
+	// on every frame. Set drops the slot of the previous array.
+	if ( !pStatic )
+	{
+		pStatic = new NGfx::CStaticTriangles();
+	}
+	pStatic->Set( &triBuffer[0], static_cast<int>( pFill - &triBuffer[0] ) );
+	for ( int i = 0; i < value.size(); ++i )
+	{
+		value[i].pStatic = pStatic;
+	}
 }
 
 } // namespace NGScene

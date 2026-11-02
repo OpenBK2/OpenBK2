@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GfxBuffers.h" // CStaticTriangles, held by CIBCombiner
 #include "GLightPerVertex.h"
 #include "GRenderCore.h"
 #include "Misc/Asserts.h" // NI_UNREACHABLE
@@ -448,6 +449,9 @@ class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 	}
 
 	std::vector<STriangle> triBuffer;
+	// triBuffer as the renderer's static index cache sees it, shared by every list in
+	// value. Not saved: Recalc creates it, and runs again after a load.
+	CObj<NGfx::CStaticTriangles> pStatic;
 
 protected:
 	bool NeedUpdate() override

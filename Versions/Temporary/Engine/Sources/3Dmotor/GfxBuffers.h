@@ -354,6 +354,31 @@ struct _3DMOTOR_EXPORT INew2DTexAllocCallback
 	virtual void NewTextureWasAllocated() = 0;
 };
 
+// A triangle array that stays the same from frame to frame, shared by the
+// STriangleLists that point into it (see STriangleList::pStatic). The owner calls
+// Set whenever it rebuilds the array. AddPrimitiveGeometry uploads the whole array
+// into the static 16-bit index cache on first use and keeps the slot in pSlot; the
+// cache evicts slots it needs back, which invalidates pSlot, and the next draw
+// uploads again.
+class CStaticTriangles : public CObjectBase
+{
+	OBJECT_NOCOPY_METHODS( CStaticTriangles );
+
+public:
+	const STriangle *pTris = nullptr;
+	int nTris = 0;
+	CPtr<CObjectBase> pSlot;
+
+	void Set( const STriangle *_pTris, int _nTris )
+	{
+		pTris = _pTris;
+		nTris = _nTris;
+		// The old slot still holds the old indices; the cache reclaims it once the
+		// frames that may draw from it have retired.
+		pSlot = 0;
+	}
+};
+
 // buffers handling
 class CGeometry;
 class CTriList;
