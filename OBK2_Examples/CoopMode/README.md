@@ -57,6 +57,17 @@ The match results list each bot on the winning or losing team, including its
 kills, losses and scores. `AIGeneralName.txt` is an example name; multiple bots can
 use different files. The neutral player is excluded from the results.
 
+Set each bot's `MPStartPos` to the position where its marker should appear on the
+loading-screen minimap. Bots show their localized names on the red team, with red
+player markers; humans stay on the green team with their chosen individual colors.
+The example bot position is illustrative; adjust it to the mission's layout.
+
+New COOP replays capture bot names and `MPStartPos` values at match start. The
+replay preview shows those saved names and positions even if their source data
+is later edited. Older COOP recordings use the current map data as a fallback.
+Bot entries are presentation metadata; replay viewpoints and the replay list's
+player count still refer to humans. COOP playback always selects a human viewpoint.
+
 ## Mission script
 
 Point `MapInfo.ScriptFileRef` to your mission script. `mission.lua` demonstrates

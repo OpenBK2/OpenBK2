@@ -272,3 +272,12 @@ context. Read `git diff` of every touched file before building.
   `ML_COMMAND_HIDE_ALL_UP_TO` command closes overlays while retaining Mission.
 - Mission-end UI must not reuse `UpdateWinLooseState` after COOP lockstep stops:
   resetting an active engineer build tool can emit a cancellation unit command.
+
+## COOP loading and replay previews
+
+- Keep authored bot presentation separate from human network slots. Capture localized
+  names and start positions at match start, with a presence flag so an intentionally
+  empty snapshot is distinct from an older replay that needs map-data fallback.
+- Loading marker team textures contain transparent regions exposing the player's
+  color block underneath. Replacing them with an opaque color background hides the
+  chosen player color; select the existing green/red skin instead.

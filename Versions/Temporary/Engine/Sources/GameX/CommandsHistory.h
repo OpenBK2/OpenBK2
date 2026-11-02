@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CoopPlayerInfo.h"
 #include "Main/CommandsHistory.hpp"
 #include "MPInterfaceData.h"
 #include "System/Commands.h"
@@ -150,9 +151,17 @@ struct SMultiplayerReplayInfo
 	uint32_t uScriptCheckSum = 0;
 	// Zero is unfinished, then winner + 1. An absent old chunk must not become a win.
 	int nScriptResult = 0;
+	std::vector<NGameX::SCoopPlayerInfo> coopPlayers;
+	bool bCoopPlayersRecorded = false;
 
 	ZEND int operator&( IBinSaver &f )
 	{
+		if ( f.IsReading() )
+		{
+			// A missing vector chunk leaves its old value untouched when reusing a record.
+			coopPlayers.clear();
+			bCoopPlayersRecorded = false;
+		}
 		f.Add( 2, &pMap );
 		f.Add( 3, &slots );
 		f.Add( 4, &nTechLevel );
@@ -172,6 +181,8 @@ struct SMultiplayerReplayInfo
 		f.Add( 18, &nMultiplayerMode );
 		f.Add( 19, &uScriptCheckSum );
 		f.Add( 20, &nScriptResult );
+		f.Add( 21, &coopPlayers );
+		f.Add( 22, &bCoopPlayersRecorded );
 		return 0;
 	}
 
@@ -211,6 +222,8 @@ struct SMultiplayerReplayInfo
 		nMultiplayerMode = src.nMultiplayerMode;
 		uScriptCheckSum = src.uScriptCheckSum;
 		nScriptResult = src.nScriptResult;
+		coopPlayers = src.coopPlayers;
+		bCoopPlayersRecorded = src.bCoopPlayersRecorded;
 		return *this;
 	}
 };

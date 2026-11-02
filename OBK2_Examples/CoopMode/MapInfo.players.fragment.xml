@@ -10,6 +10,10 @@
 			<PlayerType>AI_BOT</PlayerType>
 			<DiplomacySide>1</DiplomacySide>
 			<LocalizedPlayerNameFileRef href="AIGeneralName.txt" />
+			<MPStartPos>
+				<x>512</x>
+				<y>512</y>
+			</MPStartPos>
 		</Item>
 		<Item>
 			<PlayerType>HUMAN</PlayerType>

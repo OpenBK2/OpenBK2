@@ -25,6 +25,7 @@
 #include "3Dmotor/LoadingCounter.h"
 #include "B2_M1_World/ClientAckManager.h"
 #include "CommandsHistory.h"
+#include "CoopPlayerInfo.h"
 #include "CustomMissions.h" // NCustom::VerifyMapPlayable, before a mission starts
 #include "DBGameRoot.h"
 #include "DBMPConsts.h"
@@ -823,6 +824,8 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 			else
 			{
 				CInterfaceMPLoading2D::SParams params;
+				const bool bCoop = pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_MULTI_COOP;
+				params.bCooperative = bCoop;
 
 				params.vMapAISize.x = pMapInfo->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE;
 				params.vMapAISize.y = pMapInfo->nNumPatchesY * AI_TILES_IN_PATCH * AI_TILE_SIZE;
@@ -852,7 +855,8 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 						player.wszName = scenarioPlayer.wszName;
 						player.nLevel = scenarioPlayer.nLevel;
 						player.wszRank = scenarioPlayer.wszRank;
-						player.nTeam = scenarioPlayer.nTeam;
+						player.nTeam = bCoop ? 0 : scenarioPlayer.nTeam;
+						player.dwColour = pScenarioTracker->GetPlayerColor( scenarioPlayer.nIndex ).dwColor;
 
 						if ( pMPConsts && scenarioPlayer.nCountry >= 0 && scenarioPlayer.nCountry < pMPConsts->sides.size() )
 						{
@@ -881,6 +885,25 @@ void CInterfaceMission::NewMission( const NDb::SMapInfo *_pMap,
 						else
 						{
 							player.vMinimapPos = VNULL2;
+						}
+					}
+				}
+				if ( bCoop )
+				{
+					// Map bots are presentation entries, never network participants.
+					for ( const auto &bot : NGameX::CollectCoopMapPlayers( pMapInfo ) )
+					{
+						params.players.push_back( CInterfaceMPLoading2D::SPlayer() );
+						CInterfaceMPLoading2D::SPlayer &player = params.players.back();
+						player.nPlayerIndex = bot.nPlayerIndex;
+						player.wszName = bot.wszName;
+						player.nTeam = 1;
+						player.dwColour = NGameX::COOP_BOT_COLOR;
+						player.vMinimapPos = bot.vMPStartPos;
+						const NDb::SPartyDependentInfo *pPartyInfo = pMapInfo->players[bot.nPlayerIndex].pPartyInfo;
+						if ( pPartyInfo )
+						{
+							player.pSideMinimapIcon = pPartyInfo->pMinimapKeyObjectIcon;
 						}
 					}
 				}

@@ -2,6 +2,10 @@
 
 #include "InterfaceLoadingSingle.h"
 
+#include <cstdint>
+#include <string>
+#include <vector>
+
 // Special "2D-interface" (not a descendant of CInterfaceScreenBase)
 class CInterfaceMPLoading2D : public CInterfaceLoadingBase
 {
@@ -17,6 +21,7 @@ public:
 		std::wstring wszRank;
 		int nPlayerIndex;
 		int nTeam;
+		uint32_t dwColour;
 		CVec2 vMinimapPos;
 
 		int operator&( IBinSaver &saver )
@@ -29,7 +34,9 @@ public:
 			: pSideListItemIcon( 0 )
 			, pSideMinimapIcon( 0 )
 			, nLevel( 0 )
+			, nPlayerIndex( -1 )
 			, nTeam( 0 )
+			, dwColour( 0xffffffff )
 			, vMinimapPos( VNULL2 )
 		{
 		}
@@ -43,6 +50,7 @@ public:
 		std::wstring wszMapName;
 		std::wstring wszGameType;
 		std::vector<SPlayer> players;
+		bool bCooperative;
 
 		int operator&( IBinSaver &saver )
 		{
@@ -51,8 +59,10 @@ public:
 		}
 
 		SParams()
-			: pMapPicture( 0 )
+			: vMapAISize( VNULL2 )
+			, pMapPicture( 0 )
 			, pMinimap( 0 )
+			, bCooperative( false )
 		{
 		}
 	};

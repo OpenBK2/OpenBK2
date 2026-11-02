@@ -9,6 +9,7 @@ set(SOURCES
     CommandsHistory.cpp
     CommandsSender.cpp
     CommonCommands.cpp
+    CoopPlayerInfo.cpp
     CoopScriptChecksum.cpp
     CustomMissions.cpp
     DBConsts.cll

@@ -3,6 +3,7 @@
 #include "AILogic/DBAIConsts.h"
 #include "Common_RTS_AI/Checksums.h"
 #include "GameX/CommandsHistory.h"
+#include "GameX/CoopPlayerInfo.h"
 #include "GameX/DBConsts.h"
 #include "GameX/DBMPConsts.h"
 #include "GameX/MPStatistics.h"
@@ -311,6 +312,167 @@ TEST_F( CoopScenario, UnnamedBotsHaveDistinctFallbacksAndClassicUsesOnlyNetworkR
 	EXPECT_TRUE( classic.lostTeam.empty() );
 }
 
+TEST_F( CoopScenario, BotPresentationKeepsSparseMapIdsNamesAndPositions )
+{
+	SetBotName( 1, u"General \u017dukov \u6771" );
+	SetBotName( 3, u"" );
+	map->players[1].vMPStartPos = CVec2( 12.5f, 34.25f );
+	map->players[3].vMPStartPos = CVec2( 78.75f, 90.5f );
+	// Neutral owners are excluded even when tagged as bots, anywhere in the array.
+	map->players[2].ePlayerType = NDb::AI_BOT;
+	map->players[2].nDiplomacySide = 2;
+	map->players.back().ePlayerType = NDb::AI_BOT;
+	const auto players = NGameX::CollectCoopMapPlayers( map );
+	ASSERT_EQ( players.size(), 2 );
+	EXPECT_EQ( players[0].nPlayerIndex, 1 );
+	EXPECT_EQ( players[0].wszName, L"General \u017dukov \u6771" );
+	EXPECT_EQ( players[0].vMPStartPos, CVec2( 12.5f, 34.25f ) );
+	EXPECT_EQ( players[1].nPlayerIndex, 3 );
+	EXPECT_EQ( players[1].wszName, L"AI 4" );
+	EXPECT_EQ( players[1].vMPStartPos, CVec2( 78.75f, 90.5f ) );
+	EXPECT_TRUE( NGameX::CollectCoopMapPlayers( nullptr ).empty() );
+}
+
+TEST( CoopReplay, BotMetadataRoundTripAndCopyPreserveUnicodePositionsAndHumanSlots )
+{
+	SMultiplayerReplayInfo original;
+	original.nMultiplayerMode = 1;
+	original.bCoopPlayersRecorded = true;
+	original.coopPlayers.push_back( { 1, L"General \u017dukov \u6771", CVec2( 12.5f, 34.25f ) } );
+	original.coopPlayers.push_back( { 7, L"AI 8", CVec2( 78.75f, 90.5f ) } );
+	original.slots.resize( 3 );
+	original.slots[0].bPresent = true;
+	original.slots[2].bPresent = true;
+	CMemoryStream stream;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		saver->Add( 1, &original );
+	}
+	SMultiplayerReplayInfo restored;
+	stream.Seek( 0 );
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		saver->Add( 1, &restored );
+	}
+	SMultiplayerReplayInfo copied;
+	copied = restored;
+	EXPECT_TRUE( copied.bCoopPlayersRecorded );
+	const auto players = NGameX::GetCoopReplayPlayers( copied );
+	ASSERT_EQ( players.size(), 2 );
+	EXPECT_EQ( players[0].nPlayerIndex, 1 );
+	EXPECT_EQ( players[0].wszName, L"General \u017dukov \u6771" );
+	EXPECT_EQ( players[0].vMPStartPos, CVec2( 12.5f, 34.25f ) );
+	EXPECT_EQ( players[1].nPlayerIndex, 7 );
+	EXPECT_EQ( players[1].wszName, L"AI 8" );
+	EXPECT_EQ( players[1].vMPStartPos, CVec2( 78.75f, 90.5f ) );
+	ASSERT_EQ( copied.slots.size(), 3 );
+	EXPECT_TRUE( copied.slots[0].bPresent );
+	EXPECT_FALSE( copied.slots[1].bPresent );
+	EXPECT_TRUE( copied.slots[2].bPresent );
+}
+
+TEST_F( CoopScenario, OldReplayClearsStaleBotSnapshotAndFallsBackToCurrentMap )
+{
+	SetBotName( 1, u"Authored bot" );
+	SMultiplayerReplayInfo info;
+	info.nMultiplayerMode = 1;
+	info.pMap = map;
+	CMemoryStream stream;
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		// The older replay has a COOP mode and map, but neither presentation chunk.
+		saver->Add( 2, &info.pMap );
+		saver->Add( 18, &info.nMultiplayerMode );
+	}
+	info.bCoopPlayersRecorded = true;
+	info.coopPlayers.push_back( { 99, L"Stale bot", CVec2( 1, 2 ) } );
+	stream.Seek( 0 );
+	{
+		CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+		info.operator&( *saver );
+	}
+	EXPECT_FALSE( info.bCoopPlayersRecorded );
+	EXPECT_TRUE( info.coopPlayers.empty() );
+	const auto players = NGameX::GetCoopReplayPlayers( info );
+	ASSERT_EQ( players.size(), 2 );
+	EXPECT_EQ( players[0].nPlayerIndex, 1 );
+	EXPECT_EQ( players[0].wszName, L"Authored bot" );
+	EXPECT_EQ( players[1].nPlayerIndex, 3 );
+	info.pMap = nullptr;
+	EXPECT_TRUE( NGameX::GetCoopReplayPlayers( info ).empty() );
+}
+
+TEST_F( CoopScenario, RecordedEmptyAndClassicReplaysDoNotInventBotsFromCurrentMap )
+{
+	SMultiplayerReplayInfo info;
+	info.nMultiplayerMode = 1;
+	info.pMap = map;
+	info.bCoopPlayersRecorded = true;
+	EXPECT_TRUE( NGameX::GetCoopReplayPlayers( info ).empty() );
+	info.bCoopPlayersRecorded = false;
+	EXPECT_EQ( NGameX::GetCoopReplayPlayers( info ).size(), 2 );
+	info.nMultiplayerMode = 0;
+	EXPECT_TRUE( NGameX::GetCoopReplayPlayers( info ).empty() );
+	info.bCoopPlayersRecorded = true;
+	info.coopPlayers = NGameX::CollectCoopMapPlayers( map );
+	EXPECT_TRUE( NGameX::GetCoopReplayPlayers( info ).empty() );
+}
+
+TEST_F( CoopScenario, CoopReplayViewpointUsesSparseHumansEvenWhenBotsWin )
+{
+	map->players[0].ePlayerType = NDb::AI_BOT;
+	map->players[0].nDiplomacySide = 1;
+	map->players[1].ePlayerType = NDb::HUMAN;
+	map->players[1].nDiplomacySide = 0;
+	SMultiplayerReplayInfo info;
+	info.nMultiplayerMode = 1;
+	info.nWinningSide = 1;
+	info.nScriptResult = 2;
+	info.pMap = map;
+	info.slots.resize( 6 );
+	for ( const int nPlayer : { 0, 2, 3, 4, 5 } )
+	{
+		info.slots[nPlayer].bPresent = true;
+		info.slots[nPlayer].nTeam = nPlayer == 3 ? 1 : 0;
+	}
+	// Reject a bot mislabeled team 0, the neutral owner and out-of-map indexes.
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 2 );
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), -1 );
+	info.slots[2].bPresent = false;
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), -1 );
+	info.slots[1].bPresent = true;
+	info.slots[1].nTeam = 0;
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
+	info.nWinningSide = 0;
+	info.nScriptResult = 1;
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
+}
+
+TEST_F( CoopScenario, ClassicReplayViewpointsRemainAvailableForBothTeams )
+{
+	SMultiplayerReplayInfo info;
+	info.pMap = map;
+	info.slots.resize( 3 );
+	info.slots[1].bPresent = true;
+	info.slots[1].nTeam = 0;
+	info.slots[2].bPresent = true;
+	info.slots[2].nTeam = 1;
+	// CLASSIC ignores COOP map roles and uses its recorded network roster.
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), 2 );
+	info.pMap = nullptr;
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), 2 );
+}
+
+TEST( CoopReplay, SinglePlayerReplayUsesPlayerZeroWithoutNetworkSlots )
+{
+	SMultiplayerReplayInfo info;
+	info.bSinglePlayer = true;
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 0 );
+	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), -1 );
+}
+
 TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )
 {
 	SMultiplayerReplayInfo original;
@@ -376,6 +538,54 @@ struct SReplayCompletionState
 		return 0;
 	}
 };
+
+TEST_F( CoopScenario, HistorySnapshotsBotsAtStartAndResetsThemForClassic )
+{
+	SetHumanRoster();
+	SetBotName( 1, u"Recorded \u017dukov" );
+	map->players[1].vMPStartPos = CVec2( 12.5f, 34.25f );
+	CObj<ICommandsHistory> history = dynamic_cast<ICommandsHistory *>( NObjectFactory::MakeObject( 0x1007AB80 ) );
+	ASSERT_NE( history, nullptr );
+	NSingleton::RegisterSingleton( tracker, IScenarioTracker::tidTypeID );
+	history->StartNewGame( map );
+	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
+	SetBotName( 1, u"Renamed after start" );
+	map->players[1].vMPStartPos = CVec2( 100, 200 );
+	map->players[3].ePlayerType = NDb::HUMAN;
+
+	const auto readHistoryInfo = [&]()
+	{
+		CMemoryStream stream;
+		{
+			CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+			saver->AddPolymorphicBase( 1, history.GetPtr() );
+		}
+		SReplayCompletionState state;
+		stream.Seek( 0 );
+		{
+			CObj<IBinSaver> saver = CreateBinSaver( &stream, SAVER_MODE_READ );
+			saver->Add( 1, &state );
+		}
+		return state.info;
+	};
+	const auto recorded = readHistoryInfo();
+	EXPECT_TRUE( recorded.bCoopPlayersRecorded );
+	const auto players = NGameX::GetCoopReplayPlayers( recorded );
+	ASSERT_EQ( players.size(), 2 );
+	EXPECT_EQ( players[0].wszName, L"Recorded \u017dukov" );
+	EXPECT_EQ( players[0].vMPStartPos, CVec2( 12.5f, 34.25f ) );
+	EXPECT_EQ( players[1].nPlayerIndex, 3 );
+	EXPECT_EQ( tracker->GetMultiplayerInfo()->players.size(), 2 );
+	EXPECT_TRUE( recorded.slots.empty() );
+
+	tracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
+	NSingleton::RegisterSingleton( tracker, IScenarioTracker::tidTypeID );
+	history->StartNewGame( map );
+	NSingleton::UnRegisterSingleton( IScenarioTracker::tidTypeID );
+	const auto classic = readHistoryInfo();
+	EXPECT_FALSE( classic.bCoopPlayersRecorded );
+	EXPECT_TRUE( classic.coopPlayers.empty() );
+}
 
 TEST_F( CoopScenario, ReplayCompletionChecksResultBetweenChecksumSamples )
 {
