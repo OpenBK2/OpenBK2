@@ -3,6 +3,7 @@
 #include "GCombiner.h"
 #include "GfxBuffers.h"
 #include "GfxRender.h"
+#include "GLightPerVertexKernels.h" // IsAVX2Present
 #include "GNormalTransform.h"
 #include "GScene.h"
 #include "GSkinning.h"
@@ -28,6 +29,27 @@ extern bool bLowRAM;
 // treat the branch doing it as unreachable. A real empty vector costs one static
 // object and the callee sees the same emptiness it saw before.
 static const std::vector<NGfx::SCompactTransformer> noMMXTransformers;
+
+// The rigid normal kernel for this CPU: eight normals at a time with AVX2, four with
+// SSE2. Both give the bytes MMXTransformVector gives (NormalTransform_test).
+// Picked on first use rather than during static initialisation, so the CPUID check
+// does not depend on the order translation units are initialised in.
+typedef void ( *TNormalsRigid )( const void *, int, uint32_t *, int, const float * );
+
+static TNormalsRigid NormalsRigidKernel()
+{
+	static const TNormalsRigid pKernel = []()
+	{
+#if BK2_NORMALS_AVX2
+		if ( IsAVX2Present() )
+		{
+			return &NNormals::TransformNormalsRigidAVX2;
+		}
+#endif
+		return &NNormals::TransformNormalsRigid;
+	}();
+	return pKernel;
+}
 
 // IPart
 
@@ -349,8 +371,7 @@ struct STGenericTransformer
 		// GNormalTransform.h.
 		if ( nVertices > 0 )
 		{
-			NNormals::TransformNormalsRigid(
-					&pSrc[0].normal, sizeof( SUVInfo ), &xformedNormals[0].dw, nVertices, &transformer._11 );
+			NormalsRigidKernel()( &pSrc[0].normal, sizeof( SUVInfo ), &xformedNormals[0].dw, nVertices, &transformer._11 );
 		}
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
@@ -386,7 +407,7 @@ struct STGenericTransformer
 		{
 			if ( nNormals > 0 )
 			{
-				NNormals::TransformNormalsRigid(
+				NormalsRigidKernel()(
 						&_pSrc[0].normal, sizeof( SUVInfo ), &xformedNormals[0].dw, nNormals, &blends[nRigidBone]._11 );
 			}
 			CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );

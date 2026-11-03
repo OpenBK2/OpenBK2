@@ -514,6 +514,15 @@ BK2_NORMALS_TARGET_AVX2 inline void AVX2InsertDbl1( const SNormalCall &c )
 
 #endif
 
+#if BK2_NORMALS_AVX2
+// The AVX2 kernel the engine ships (GNormalTransform.h), AVX2InsertDiv's
+// sequence, held to the same exactness as every variant here.
+BK2_NORMALS_AVX2_TARGET inline void ShippedAVX2( const SNormalCall &c )
+{
+	NNormals::TransformNormalsRigidAVX2( c.pSrc, c.nStride, c.pDst, c.nCount, c.pMatrix );
+}
+#endif
+
 // Every variant with its name, for the test and the benchmark.
 struct SNormalVariant
 {
@@ -539,6 +548,9 @@ inline const SNormalVariant *GetNormalVariants( int *pnCount )
 		{ "AVX2InsertMix", &AVX2InsertMix, true },
 		{ "AVX2InsertDbl", &AVX2InsertDbl, true },
 		{ "AVX2InsertDbl1", &AVX2InsertDbl1, true },
+#endif
+#if BK2_NORMALS_AVX2
+		{ "ShippedAVX2", &ShippedAVX2, true },
 #endif
 		{ "Scalar", &Scalar, false },
 	};
