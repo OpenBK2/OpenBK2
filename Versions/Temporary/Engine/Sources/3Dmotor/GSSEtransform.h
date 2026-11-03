@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GNormalTransform.h"
 #include "GPixelFormat.h"
 #include "MMXhelpers.h"
 #include "System/Arch.h"
@@ -321,8 +322,12 @@ static glm::vec4 LoadCompactVector( const NGfx::SCompactVector &src )
 static NGfx::SCompactVector SaveCompactVector( const glm::vec3 &src )
 {
 
+	// A zero vector normalises to NaN and a tiny one to infinity, and static_cast<int> of
+	// either is undefined: MSVC and GCC gave 0 through cvttss2si, clang gave 0x80 and 0xff.
+	// PackComponent defines the cvttss2si answer, which is also what the blend kernels of
+	// GNormalTransform.h produce.
 	auto convert = []( const float component ) -> uint8_t
-	{ return std::clamp( static_cast<int>( component * 127 ) + 128, 0, 255 ); };
+	{ return static_cast<uint8_t>( NNormals::NDetail::PackComponent( component * 127 ) ); };
 
 	return { convert( src.z ), convert( src.y ), convert( src.x ), 0 };
 }
