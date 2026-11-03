@@ -6,9 +6,10 @@
 // the live MMXTransformVector is checked against that copy as well, so the day the
 // two part this test says so instead of quietly comparing against stale code.
 //
-// Coverage: every one of the 2^24 x, y, z byte patterns (w random, it must come
-// through unchanged) through several realistic matrices (rotation with per-axis
-// scale and a large translation, the bottom row junk because nothing may read it)
+// Coverage: every one of the 2^24 x, y, z byte patterns, sampled in _DEBUG builds
+// (w random, it must come through unchanged), through several realistic matrices
+// (rotation with per-axis scale and a large translation, the bottom row junk because
+// nothing may read it)
 // and several degenerate ones (zero, singular, huge, tiny, infinite and NaN
 // translation), so the zero vector's inf/NaN path and every saturation are
 // compared too. Then every part size from 0 to 40 and random sizes up to 5000 at the
@@ -200,6 +201,31 @@ bool IsRunnable( const SNormalVariant &v )
 	return !v.bNeedsAVX2 || NGScene::IsAVX2Present();
 }
 
+// The sweep over all 2^24 patterns took twelve minutes against the debug CRT, past
+// the 600 s ctest gives a test in CI, so builds with _DEBUG take every 61st pattern.
+// The Linux jobs and every other optimised build stay exhaustive. An odd step visits
+// all values of each byte.
+#if defined( _DEBUG )
+const int nPatternStep = 61;
+#else
+const int nPatternStep = 1;
+#endif
+
+// Sampling must not lose the zero vector, whose inf/NaN path is the reason for half
+// of the degenerate matrices, so a sampled sweep ends on it.
+const uint32_t nZeroVectorPattern = 0x808080u;
+
+int PatternCount()
+{
+	return ( ( 1 << 24 ) - 1 ) / nPatternStep + 1 + ( nPatternStep > 1 ? 1 : 0 );
+}
+
+uint32_t Pattern( const int k )
+{
+	const uint32_t nPattern = static_cast<uint32_t>( k ) * static_cast<uint32_t>( nPatternStep );
+	return nPattern < ( 1u << 24 ) ? nPattern : nZeroVectorPattern;
+}
+
 #if BK2_NORMALS_SSE2
 
 // The decode table must be the division's bits, byte for byte; the kernels that use
@@ -226,12 +252,12 @@ TEST( NormalTransform, DecodeTableIsTheDivision )
 // reference's.
 TEST( NormalTransform, AllByteCombinationsBitExact )
 {
-	const int N = 1 << 24;
+	const int N = PatternCount();
 	std::vector<uint32_t> src( N ), expected( N ), live( N ), got( N );
 	std::mt19937 rng( 7 );
 	for ( int k = 0; k < N; ++k )
 	{
-		src[k] = static_cast<uint32_t>( k ) | ( ( rng() & 0xffu ) << 24 );
+		src[k] = Pattern( k ) | ( ( rng() & 0xffu ) << 24 );
 	}
 	const SNormalVariant *pVariants = nullptr;
 	const int nVariants = AvailableVariants( &pVariants );
@@ -348,9 +374,10 @@ TEST( NormalTransform, BlendMatchesGlm )
 	const int fixed[][3] = { { 128, 127, 0 }, { 200, 55, 0 }, { 100, 80, 75 }, { 85, 85, 85 } };
 	for ( const auto &w : fixed )
 	{
-		for ( uint32_t k = 0; k < ( 1u << 24 ); ++k )
+		const int nPatterns = PatternCount();
+		for ( int k = 0; k < nPatterns; ++k )
 		{
-			const uint32_t src = k | ( ( rng() & 0xffu ) << 24 );
+			const uint32_t src = Pattern( k ) | ( ( rng() & 0xffu ) << 24 );
 			CheckBlend( src, m[0], w[0], m[1], w[1], w[2] ? m[2] : nullptr, w[2], st );
 		}
 	}
