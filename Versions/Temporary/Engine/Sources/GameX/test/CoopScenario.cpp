@@ -7,6 +7,7 @@
 #include "GameX/DBConsts.h"
 #include "GameX/DBMPConsts.h"
 #include "GameX/MPStatistics.h"
+#include "GameX/ReplayPlayerInfo.h"
 #include "GameX/ScenarioTracker.h"
 #include "libdb/Db.h"
 #include "libdb/EditorDb.h"
@@ -418,59 +419,180 @@ TEST_F( CoopScenario, RecordedEmptyAndClassicReplaysDoNotInventBotsFromCurrentMa
 	EXPECT_TRUE( NGameX::GetCoopReplayPlayers( info ).empty() );
 }
 
-TEST_F( CoopScenario, CoopReplayViewpointUsesSparseHumansEvenWhenBotsWin )
+TEST_F( CoopScenario, ReplayRosterSelectsEverySparseHumanAndBotWithItsResult )
 {
-	map->players[0].ePlayerType = NDb::AI_BOT;
-	map->players[0].nDiplomacySide = 1;
-	map->players[1].ePlayerType = NDb::HUMAN;
-	map->players[1].nDiplomacySide = 0;
+	SetBotName( 1, u"General \u017dukov \u6771" );
 	SMultiplayerReplayInfo info;
 	info.nMultiplayerMode = 1;
 	info.nWinningSide = 1;
 	info.nScriptResult = 2;
 	info.pMap = map;
-	info.slots.resize( 6 );
-	for ( const int nPlayer : { 0, 2, 3, 4, 5 } )
+	info.slots.resize( 4 );
+	for ( const int nPlayer : { 0, 2 } )
 	{
 		info.slots[nPlayer].bPresent = true;
-		info.slots[nPlayer].nTeam = nPlayer == 3 ? 1 : 0;
+		info.slots[nPlayer].nTeam = 0;
+		info.slots[nPlayer].szName = "Human " + std::to_string( nPlayer );
 	}
-	// Reject a bot mislabeled team 0, the neutral owner and out-of-map indexes.
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 2 );
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), -1 );
-	info.slots[2].bPresent = false;
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), -1 );
-	info.slots[1].bPresent = true;
-	info.slots[1].nTeam = 0;
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
-	info.nWinningSide = 0;
-	info.nScriptResult = 1;
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
+	info.bCoopPlayersRecorded = true;
+	info.coopPlayers = NGameX::CollectCoopMapPlayers( map );
+	SetBotName( 1, u"Changed since recording" );
+	const auto players = NGameX::GetReplayPlayers( info );
+	ASSERT_EQ( players.size(), 4 );
+	for ( int i = 0; i < players.size(); ++i )
+	{
+		EXPECT_EQ( players[i].nPlayerIndex, i );
+		EXPECT_TRUE( players[i].bSelectable );
+		EXPECT_TRUE( NGameX::CanWatchReplayPlayer( info, i ) );
+		EXPECT_EQ( players[i].bBot, i == 1 || i == 3 );
+		EXPECT_EQ( players[i].nTeam, players[i].bBot ? 1 : 0 );
+		EXPECT_EQ( players[i].eResult, players[i].bBot ? NGameX::RPR_WINNER : NGameX::RPR_LOSER );
+	}
+	EXPECT_EQ( players[0].wszName, L"Human 0" );
+	EXPECT_EQ( players[1].wszName, L"General \u017dukov \u6771" );
+	EXPECT_EQ( players[2].wszName, L"Human 2" );
+	EXPECT_EQ( players[3].wszName, L"AI 4" );
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, -1 ) );
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 4 ) );
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 99 ) );
+	EXPECT_FALSE( info.slots[1].bPresent );
+	EXPECT_FALSE( info.slots[3].bPresent );
+	info.slots[0].bPresent = false;
+	const auto sparse = NGameX::GetReplayPlayers( info );
+	ASSERT_EQ( sparse.size(), 3 );
+	for ( int i = 0; i < sparse.size(); ++i )
+	{
+		EXPECT_EQ( sparse[i].nPlayerIndex, i + 1 );
+	}
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 0 ) );
+
+	// A stale winner field must not turn an unfinished COOP recording into a result.
+	info.nScriptResult = 0;
+	for ( const auto &player : NGameX::GetReplayPlayers( info ) )
+	{
+		EXPECT_EQ( player.eResult, NGameX::RPR_UNFINISHED );
+	}
+	info.nMultiplayerMode = 7;
+	for ( const auto &player : NGameX::GetReplayPlayers( info ) )
+	{
+		EXPECT_FALSE( player.bSelectable );
+	}
 }
 
-TEST_F( CoopScenario, ClassicReplayViewpointsRemainAvailableForBothTeams )
+TEST_F( CoopScenario, ReplayRosterPreservesUnavailableNamesButDisablesInvalidViewpoints )
+{
+	SMultiplayerReplayInfo info;
+	info.nMultiplayerMode = 1;
+	info.pMap = map;
+	info.bCoopPlayersRecorded = true;
+	info.coopPlayers = NGameX::CollectCoopMapPlayers( map );
+	info.slots.resize( 6 );
+	for ( const int nPlayer : { 0, 2, 4, 5 } )
+	{
+		info.slots[nPlayer].bPresent = true;
+		info.slots[nPlayer].nTeam = 0;
+	}
+	info.slots[0].szName = "Original human";
+	info.slots[2].nTeam = 1;
+	info.coopPlayers.push_back( { -7, L"Invalid bot", VNULL2 } );
+	info.coopPlayers.push_back( { 99, L"Missing bot", VNULL2 } );
+	map->players[1].ePlayerType = NDb::HUMAN;
+	map->players[3].nDiplomacySide = 2;
+	const auto players = NGameX::GetReplayPlayers( info );
+	ASSERT_EQ( players.size(), 8 );
+	for ( const auto &player : players )
+	{
+		EXPECT_EQ( player.bSelectable, player.nPlayerIndex == 0 );
+		EXPECT_EQ( NGameX::CanWatchReplayPlayer( info, player.nPlayerIndex ), player.nPlayerIndex == 0 );
+	}
+	info.pMap = nullptr;
+	const auto unavailable = NGameX::GetReplayPlayers( info );
+	ASSERT_EQ( unavailable.size(), players.size() );
+	for ( int i = 0; i < players.size(); ++i )
+	{
+		EXPECT_EQ( unavailable[i].wszName, players[i].wszName );
+		EXPECT_EQ( unavailable[i].nPlayerIndex, players[i].nPlayerIndex );
+		EXPECT_FALSE( unavailable[i].bSelectable );
+	}
+}
+
+TEST_F( CoopScenario, ReplayRosterRejectsDuplicateOwnersAndHonorsKnownEmptyBotSnapshot )
+{
+	SMultiplayerReplayInfo info;
+	info.nMultiplayerMode = 1;
+	info.pMap = map;
+	info.bCoopPlayersRecorded = true;
+	info.slots.resize( 1 );
+	info.slots[0].bPresent = true;
+	info.slots[0].nTeam = 0;
+	EXPECT_EQ( NGameX::GetReplayPlayers( info ).size(), 1 );
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 1 ) );
+	info.bCoopPlayersRecorded = false;
+	EXPECT_EQ( NGameX::GetReplayPlayers( info ).size(), 3 );
+	EXPECT_TRUE( NGameX::CanWatchReplayPlayer( info, 1 ) );
+	info.bCoopPlayersRecorded = true;
+	info.coopPlayers = NGameX::CollectCoopMapPlayers( map );
+	info.coopPlayers.push_back( info.coopPlayers.front() );
+	info.coopPlayers.push_back( { 0, L"Conflicting owner", VNULL2 } );
+	EXPECT_EQ( NGameX::GetReplayPlayers( info ).size(), 3 );
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 0 ) );
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 1 ) );
+	EXPECT_TRUE( NGameX::CanWatchReplayPlayer( info, 3 ) );
+}
+
+TEST_F( CoopScenario, ClassicReplayRosterUsesRecordedPlayersAndBothTeams )
 {
 	SMultiplayerReplayInfo info;
 	info.pMap = map;
-	info.slots.resize( 3 );
+	info.nWinningSide = 1;
+	info.slots.resize( 4 );
 	info.slots[1].bPresent = true;
 	info.slots[1].nTeam = 0;
 	info.slots[2].bPresent = true;
 	info.slots[2].nTeam = 1;
+	info.slots[3].bPresent = true;
+	info.slots[3].nTeam = 1;
 	// CLASSIC ignores COOP map roles and uses its recorded network roster.
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), 2 );
-	info.pMap = nullptr;
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 1 );
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), 2 );
+	const auto players = NGameX::GetReplayPlayers( info );
+	ASSERT_EQ( players.size(), 3 );
+	for ( int i = 0; i < players.size(); ++i )
+	{
+		EXPECT_EQ( players[i].nPlayerIndex, i + 1 );
+		EXPECT_TRUE( players[i].bSelectable );
+		EXPECT_FALSE( players[i].bBot );
+		EXPECT_TRUE( NGameX::CanWatchReplayPlayer( info, i + 1 ) );
+		EXPECT_EQ( players[i].eResult, i == 0 ? NGameX::RPR_LOSER : NGameX::RPR_WINNER );
+	}
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 0 ) );
+	info.nWinningSide = -1;
+	for ( const auto &player : NGameX::GetReplayPlayers( info ) )
+	{
+		EXPECT_EQ( player.eResult, NGameX::RPR_UNFINISHED );
+	}
 }
 
-TEST( CoopReplay, SinglePlayerReplayUsesPlayerZeroWithoutNetworkSlots )
+TEST_F( CoopScenario, SinglePlayerReplayRosterKeepsOriginalPlayerAndLocalizedName )
 {
 	SMultiplayerReplayInfo info;
 	info.bSinglePlayer = true;
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 0 ), 0 );
-	EXPECT_EQ( NGameX::FindReplayViewpoint( info, 1 ), -1 );
+	info.pMap = map;
+	info.nWinningSide = -1;
+	SetBotName( 0, u"Commander \u6771" );
+	const auto players = NGameX::GetReplayPlayers( info );
+	ASSERT_EQ( players.size(), 1 );
+	EXPECT_EQ( players[0].nPlayerIndex, 0 );
+	EXPECT_EQ( players[0].wszName, L"Commander \u6771" );
+	EXPECT_FALSE( players[0].bBot );
+	EXPECT_EQ( players[0].eResult, NGameX::RPR_UNFINISHED );
+	EXPECT_TRUE( NGameX::CanWatchReplayPlayer( info, 0 ) );
+	EXPECT_FALSE( NGameX::CanWatchReplayPlayer( info, 1 ) );
+	SetBotName( 0, u"" );
+	EXPECT_EQ( NGameX::GetReplayPlayers( info )[0].wszName, L"Player 1" );
+	info.pMap = nullptr;
+	const auto missingMap = NGameX::GetReplayPlayers( info );
+	ASSERT_EQ( missingMap.size(), 1 );
+	EXPECT_EQ( missingMap[0].wszName, L"Player 1" );
+	EXPECT_FALSE( missingMap[0].bSelectable );
 }
 
 TEST( CoopReplay, MetadataRoundTripPreservesModeAndResolvedDifficulty )

@@ -33,6 +33,4 @@ struct SCoopPlayerInfo
 GAMEX_EXPORT std::vector<SCoopPlayerInfo> CollectCoopMapPlayers( const NDb::SMapInfo *pMap );
 // Recorded empty lists are authoritative; only older COOP replays reread the map.
 GAMEX_EXPORT std::vector<SCoopPlayerInfo> GetCoopReplayPlayers( const SMultiplayerReplayInfo &info );
-// Select a recorded human viewpoint; COOP's AI team is presentation-only.
-GAMEX_EXPORT int FindReplayViewpoint( const SMultiplayerReplayInfo &info, int nTeam );
 } // namespace NGameX

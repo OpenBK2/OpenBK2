@@ -286,3 +286,13 @@ context. Read `git diff` of every touched file before building.
 - Loading marker team textures contain transparent regions exposing the player's
   color block underneath. Replacing them with an opaque color background hides the
   chosen player color; select the existing green/red skin instead.
+- `IScrollableContainer::GetItemNumber` derives a number from the window's allocated
+  name, not its current row position. IDs keep advancing across `RemoveItems`, so
+  replay selections must map the selected window directly to a recorded player ID.
+- A scroll row marked nonselectable can still receive a click and replace the
+  selected pointer. Disable invalid rows and validate the selected identity before
+  starting playback; clear selection explicitly before rebuilding the list.
+- A new UI test failed its first Windows compile because `interface` expands to a
+  COM macro and `CDBPtr::GetPtr` returns const data. Use a descriptive variable such
+  as `replayInterface`, and finish mutable fixture descriptors before assigning them
+  to database pointers. Include `port/time.h` when using `SSystemTime` directly.
