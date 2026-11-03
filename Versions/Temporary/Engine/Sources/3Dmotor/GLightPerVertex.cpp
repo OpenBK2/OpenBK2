@@ -229,6 +229,39 @@ static void MakeDirectionalConsts( NLightFused::SDirectionalConsts *p,
 	memcpy( p->translucentShade, &translucentShade, sizeof( p->translucentShade ) );
 }
 
+// The engine itself goes through GetFusedLightKernels() in CalcLight. These keep the
+// signatures that test/CalcDirectionalLighting.cpp and test/MultiplyOnColor.cpp call
+// (they include this file), so the Windows tests that compare against the original
+// MMX code check the kernels the engine now runs.
+[[maybe_unused]] static void CalcDirectionalLighting( const std::vector<uint16_t> &posIndices,
+                                                      const std::vector<NGfx::SCompactVector> &_normals,
+                                                      const SPerVertexLightState &ls,
+                                                      bool bTranslucent,
+                                                      const CVec3 &vTranslucentColor,
+                                                      std::vector<uint32_t> *pResColors,
+                                                      std::vector<uint32_t> *pResShadow )
+{
+	pResColors->resize( posIndices.size() );
+	pResShadow->resize( posIndices.size() );
+	if ( posIndices.empty() )
+	{
+		return;
+	}
+	NLightFused::SDirectionalConsts consts;
+	MakeDirectionalConsts( &consts, ls, bTranslucent, vTranslucentColor );
+	GetFusedLightKernels().pDirectionalLighting(
+			&_normals[0].dw, posIndices.size(), consts, &( *pResColors )[0], &( *pResShadow )[0] );
+}
+
+[[maybe_unused]] static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &mult )
+{
+	if ( mult.empty() || pRes->empty() )
+	{
+		return;
+	}
+	GetFusedLightKernels().pMultiplyOnColor( &( *pRes )[0], &mult[0], pRes->size() );
+}
+
 static void SampleWarFog( const std::vector<CVec3> &srcPos,
                           float fScale,
                           std::vector<unsigned char> *_pRes1,

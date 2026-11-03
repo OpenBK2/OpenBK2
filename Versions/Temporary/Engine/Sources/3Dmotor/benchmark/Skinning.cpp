@@ -216,7 +216,7 @@ void MakeWeights( std::mt19937 &rng, EDist eDist, int nBones, SSkinWeights *pW, 
 			r -= frac[nInfl - 1];
 			++nInfl;
 		}
-		nInfl = std::min( nInfl, nBones );
+		nInfl = (std::min)( nInfl, nBones );
 		float fSum = 0;
 		for ( int i = 0; i < nInfl; ++i )
 		{

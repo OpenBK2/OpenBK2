@@ -234,7 +234,7 @@ void MakePart(
 		}
 		for ( int i = 0; i < 4; ++i )
 		{
-			const float fByte = std::min( w.fWeights[i], 1.0f ) * 255.0f;
+			const float fByte = (std::min)( w.fWeights[i], 1.0f ) * 255.0f;
 			w.nWeights[i] = static_cast<uint8_t>( std::lround( fByte ) );
 		}
 	}
@@ -298,8 +298,8 @@ bool CheckResults( const char *pszName, const SPart &part, const float *pRes, SE
 											<< ", expected " << exact[j] << " (error " << rel << " eps of bound " << bound[j] << ")";
 				return false;
 			}
-			stats.fMaxRel = std::max( stats.fMaxRel, rel );
-			stats.fMaxAbs = std::max( stats.fMaxAbs, err );
+			stats.fMaxRel = (std::max)( stats.fMaxRel, rel );
+			stats.fMaxAbs = (std::max)( stats.fMaxAbs, err );
 			++stats.nChecked;
 		}
 	}
@@ -682,8 +682,8 @@ TEST( Skinning, AccumulateBoundsMatchesUpdateBounds )
 			{
 				for ( int j = 0; j < 3; ++j )
 				{
-					refMin[j] = std::min( refMin[j], dstRef[3 * k + j] );
-					refMax[j] = std::max( refMax[j], dstRef[3 * k + j] );
+					refMin[j] = (std::min)( refMin[j], dstRef[3 * k + j] );
+					refMax[j] = (std::max)( refMax[j], dstRef[3 * k + j] );
 				}
 			}
 			float vMin[3] = { 1e38f, 1e38f, 1e38f }, vMax[3] = { -1e38f, -1e38f, -1e38f };

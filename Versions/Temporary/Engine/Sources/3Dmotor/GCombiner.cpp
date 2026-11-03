@@ -628,7 +628,7 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 			// stays put is copied, not rebuilt, on the next recalc.
 			const bool bChanged = p->bGfxInvalidated;
 			p->bGfxInvalidated = false;
-			p->nGfxChangeRun = bChanged ? static_cast<uint8_t>( std::min( p->nGfxChangeRun + 1, 2 ) ) : 0;
+			p->nGfxChangeRun = bChanged ? static_cast<uint8_t>( (std::min)( p->nGfxChangeRun + 1, 2 ) ) : 0;
 			if ( p->nGfxChangeRun >= 2 )
 			{
 				p->gfxData.Clear();

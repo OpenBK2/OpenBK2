@@ -366,7 +366,7 @@ TEST( LightFused, MultiplyClampNeverFires )
 	{
 		for ( int b = 0; b < 256; ++b )
 		{
-			nMax = std::max( nMax, ( a * b ) >> 8 );
+			nMax = (std::max)( nMax, ( a * b ) >> 8 );
 		}
 	}
 	EXPECT_EQ( 254, nMax );
@@ -501,7 +501,7 @@ TEST( LightFused, DirectionalStreams )
 			{
 				for ( int nZero : { 0, 1, 3, 7, 8, 9, 17, 1000 } )
 				{
-					const std::vector<uint32_t> normals = NormalStream( n, fRepeat, std::min( nZero, n ) );
+					const std::vector<uint32_t> normals = NormalStream( n, fRepeat, (std::min)( nZero, n ) );
 					std::vector<uint32_t> vc( n );
 					for ( uint32_t &c : vc )
 					{
@@ -583,7 +583,7 @@ TEST( LightFused, AssembleMatchesPipeline )
 			const double fRepeat = ( nVariant & 4 ) ? 0.5 : 0.0;
 			const int nZero = ( nVariant & 8 ) ? 1 + static_cast<int>( Rand32() % 12 ) : 0;
 			// Positions: fewer than vertices, as a mesh shares them; at least one.
-			const int nPos = std::max( 1, n / 2 + static_cast<int>( Rand32() % 5 ) );
+			const int nPos = (std::max)( 1, n / 2 + static_cast<int>( Rand32() % 5 ) );
 
 			std::vector<CVec3> srcPos( nPos );
 			for ( CVec3 &p : srcPos )
@@ -610,7 +610,7 @@ TEST( LightFused, AssembleMatchesPipeline )
 				u.texU.dw = Rand32();
 				u.texV.dw = Rand32();
 			}
-			const std::vector<uint32_t> normalsRaw = NormalStream( n, fRepeat, std::min( nZero, n ) );
+			const std::vector<uint32_t> normalsRaw = NormalStream( n, fRepeat, (std::min)( nZero, n ) );
 			std::vector<NGfx::SCompactVector> normals( n );
 			std::memcpy( normals.data(), normalsRaw.data(), 4 * n );
 			std::vector<uint32_t> vc;

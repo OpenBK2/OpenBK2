@@ -136,7 +136,7 @@ void MakeSet( SPartSet &set, int nCount, double fRepeat, bool bCold )
 {
 	std::mt19937 rng( 4242 );
 	// Census: ~2.6 vertices per position.
-	const int nPos = std::max( 1, static_cast<int>( nCount / 2.6 ) );
+	const int nPos = (std::max)( 1, static_cast<int>( nCount / 2.6 ) );
 	const size_t nPartBytes = size_t( nCount ) * ( 2 + 20 + 4 + 4 + 8 + 32 + 32 + 2 ) + size_t( nPos ) * 12 + 256;
 	const int nParts = bCold ? static_cast<int>( std::max<size_t>( 2, N_COLD_BYTES / nPartBytes ) ) : 1;
 	set.parts.resize( nParts );
@@ -166,7 +166,7 @@ void MakeSet( SPartSet &set, int nCount, double fRepeat, bool bCold )
 			// Neighbouring vertices mostly share nearby positions, as an
 			// optimised mesh's do.
 			part.posIndices[k] =
-					static_cast<uint16_t>( std::min( nPos - 1, static_cast<int>( k / 2.6 ) + int( rng() % 3 ) ) );
+					static_cast<uint16_t>( (std::min)( nPos - 1, static_cast<int>( k / 2.6 ) + int( rng() % 3 ) ) );
 			NGScene::SUVInfo &u = part.uv[k];
 			std::memset( &u, 0, sizeof( u ) );
 			u.tex.nU = static_cast<short>( rng() );

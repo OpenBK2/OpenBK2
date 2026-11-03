@@ -245,7 +245,7 @@ public:
 				return static_cast<TFinal *>( pNode );
 			}
 			// Descending here needs fRadius < fLowerSize.
-			pPlace->fRadiusMax = std::min( pPlace->fRadiusMax, fLowerSize );
+			pPlace->fRadiusMax = (std::min)( pPlace->fRadiusMax, fLowerSize );
 			const float fSplit[3] = { pNode->ptBase.x + pNode->fSize * 0.5f,
 			                          pNode->ptBase.y + pNode->fSize * 0.5f,
 			                          pNode->ptBase.z + pNode->fSize * 0.5f };
@@ -256,11 +256,11 @@ public:
 				if ( fCenter[j] >= fSplit[j] )
 				{
 					nIdx += 1 << j;
-					pPlace->lo[j] = std::max( pPlace->lo[j], fSplit[j] );
+					pPlace->lo[j] = (std::max)( pPlace->lo[j], fSplit[j] );
 				}
 				else
 				{
-					pPlace->hi[j] = std::min( pPlace->hi[j], fSplit[j] );
+					pPlace->hi[j] = (std::min)( pPlace->hi[j], fSplit[j] );
 				}
 			}
 			pNode = pNode->GetOrCreateChild( nIdx );
