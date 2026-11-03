@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Replay previews now select individual players, including COOP AI bots. Rows show the player name, Winner/Loser/Unfinished status and existing team flag. Selection follows the exact recorded player ID across replay-list rebuilds, and replay names containing spaces keep the selected viewpoint. The existing GUI layout is reused.
+
 - COOP loading screens show each map AI player's name and multiplayer start position on the red team. New replays save those names and positions for their preview; older COOP replays fall back to the map data. Replay viewpoints remain human-only.
 
 - COOP lobbies show `--:--` for the time limit and a styled, mode-specific minimum-player warning. Disabled reinforcement countdowns show `never`. COOP victory and defeat use the single-player camera sequence before results, which now include each map-configured AI general's localized name, kills, losses and scores. CLASSIC keeps its original lobby warning.

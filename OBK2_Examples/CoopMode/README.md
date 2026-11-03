@@ -65,8 +65,10 @@ The example bot position is illustrative; adjust it to the mission's layout.
 New COOP replays capture bot names and `MPStartPos` values at match start. The
 replay preview shows those saved names and positions even if their source data
 is later edited. Older COOP recordings use the current map data as a fallback.
-Bot entries are presentation metadata; replay viewpoints and the replay list's
-player count still refer to humans. COOP playback always selects a human viewpoint.
+The replay preview lists individual players. Both humans and AI bots can be
+selected as viewpoints, with the first human selected initially. Bot entries stay
+outside the human network roster, and the replay list's player count still counts
+humans. A bot viewpoint retains its map-configured AI role.
 
 ## Mission script
 

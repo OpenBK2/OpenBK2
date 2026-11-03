@@ -9,15 +9,41 @@
 #include "InterfaceReplaySaveLoad.h"
 #include "Misc/StrProc.h"
 #include "MPInterfaceData.h"
+#include "ReplayPlayerInfo.h"
 #include "SaveLoadHelper.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/Vis2AI.h"
+#include "System/Text.h"
+#include "UI/DBUserInterface.h"
 
 #include "GameX_export.h"
 
 #include <cmath>
 
 #include <fmt/format.h>
+
+namespace
+{
+std::wstring GetReplayTextFormat( const ITextView *pView )
+{
+	// A fixed team caption becomes a player name, retaining only its DB styling.
+	const auto *pDesc = dynamic_cast<const NDb::SWindowTextView *>( pView->GetDesc() );
+	if ( !pDesc )
+	{
+		return {};
+	}
+	if ( pDesc->pTextFormat && CHECK_TEXT_NOT_EMPTY_PRE( pDesc->pTextFormat->, FormatString ) )
+	{
+		return GET_TEXT_PRE( pDesc->pTextFormat->, FormatString );
+	}
+	if ( pDesc->pTextString && pDesc->pTextString->pShared &&
+	     CHECK_TEXT_NOT_EMPTY_PRE( pDesc->pTextString->pShared->, FormatString ) )
+	{
+		return GET_TEXT_PRE( pDesc->pTextString->pShared->, FormatString );
+	}
+	return {};
+}
+} // namespace
 
 // CInterfaceReplaySaveLoad
 
@@ -226,7 +252,7 @@ void CInterfaceReplaySaveLoad::PopulateReplayList()
 		}
 
 		// Keep this as the human count, matching lobby capacity. Authored AI players
-		// are shown in the team preview but never occupy recorded network slots.
+		// are shown in the player preview but never occupy recorded network slots.
 		int nNumPlayers = 0;
 		for ( int nSlot = 0; nSlot < entry.info.slots.size(); ++nSlot )
 		{
@@ -249,8 +275,12 @@ void CInterfaceReplaySaveLoad::CleanSelectionInfo()
 {
 	if ( pPlayerList )
 	{
+		// RemoveItems does not clear the selected pointer or recycle its row IDs.
+		pPlayerList->Select( nullptr );
 		pPlayerList->RemoveItems();
+		pPlayerList->ResetScroller();
 	}
+	playerEntries.clear();
 
 	if ( pMinimapPanel )
 	{
@@ -269,106 +299,117 @@ void CInterfaceReplaySaveLoad::CleanSelectionInfo()
 void CInterfaceReplaySaveLoad::MakeInfo( const SReplayEntry &entry )
 {
 	CleanSelectionInfo();
-	MakeTeams( entry.info );
+	MakePlayers( entry.info );
 	MakeMinimap( entry.info );
 }
 
-void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
+void CInterfaceReplaySaveLoad::MakePlayers( const SMultiplayerReplayInfo &info )
 {
 	if ( !pPlayerItemTemplate || !pPlayerList )
 	{
 		return;
 	}
 
-	const int nWinTeam = info.nWinningSide == 1 ? 1 : 0;
-	const bool bCooperative = info.nMultiplayerMode == 1;
-	const bool bTeam0Playable = NGameX::FindReplayViewpoint( info, 0 ) >= 0;
-	const bool bTeam1Playable = NGameX::FindReplayViewpoint( info, 1 ) >= 0;
-
-	// Team zero is the only human viewpoint in COOP, including a human defeat.
-	IWindow *pWnd = AddWindowCopy( pPlayerList, pPlayerItemTemplate );
-	if ( !pWnd )
+	IWindow *pDefaultPlayer = nullptr;
+	IWindow *pFirstHuman = nullptr;
+	for ( const auto &player : NGameX::GetReplayPlayers( info ) )
 	{
-		return;
+		IWindow *pWnd = AddWindowCopy( pPlayerList, pPlayerItemTemplate );
+		if ( !pWnd )
+		{
+			continue;
+		}
+		AddPlayer( pWnd, player );
+		pPlayerList->PushBack( pWnd, player.bSelectable );
+		// A nonselectable scroll item still receives clicks unless it is disabled.
+		pWnd->Enable( player.bSelectable );
+		SPlayerEntry &entry = playerEntries.emplace_back();
+		entry.pItem = pWnd;
+		entry.nPlayerIndex = player.nPlayerIndex;
+		if ( player.bSelectable )
+		{
+			if ( !pDefaultPlayer )
+			{
+				pDefaultPlayer = pWnd;
+			}
+			if ( !pFirstHuman && !player.bBot )
+			{
+				pFirstHuman = pWnd;
+			}
+		}
 	}
-
-	AddPlayers( pWnd, ( nWinTeam == 0 ), 0, info );
-	pPlayerList->PushBack( pWnd, bTeam0Playable );
-	if ( bTeam0Playable && ( bCooperative || nWinTeam == 0 || !bTeam1Playable ) )
+	// Start with a human when available; all valid COOP bots can also be selected.
+	pPlayerList->Select( pFirstHuman ? pFirstHuman : pDefaultPlayer );
+	if ( IWindow *pSelected = pPlayerList->GetSelectedItem() )
 	{
-		pPlayerList->Select( pWnd );
-	}
-
-	// The AI row remains visible but cannot be selected for playback.
-	pWnd = AddWindowCopy( pPlayerList, pPlayerItemTemplate );
-	if ( !pWnd )
-	{
-		return;
-	}
-
-	AddPlayers( pWnd, ( nWinTeam == 1 ), 1, info );
-	pPlayerList->PushBack( pWnd, bTeam1Playable );
-	if ( bTeam1Playable && ( nWinTeam == 1 || !bTeam0Playable ) )
-	{
-		pPlayerList->Select( pWnd );
+		pPlayerList->EnsureElementVisible( pSelected );
 	}
 }
 
-void CInterfaceReplaySaveLoad::AddPlayers( IWindow *pWnd, bool bWon, int nTeam, const SMultiplayerReplayInfo &info )
+void CInterfaceReplaySaveLoad::AddPlayer( IWindow *pWnd, const NGameX::SReplayPlayerInfo &player )
 {
 	ITextView *pHeaderWon = GetChildChecked<ITextView>( pWnd, "ItemHeaderWin", true );
-	if ( pHeaderWon && !bWon )
-	{
-		pHeaderWon->ShowWindow( false );
-	}
 	ITextView *pHeaderLost = GetChildChecked<ITextView>( pWnd, "ItemHeaderLose", true );
-	if ( pHeaderLost && bWon )
+	ITextView *pNameView = pHeaderWon ? pHeaderWon : pHeaderLost;
+	if ( pHeaderLost && pHeaderLost != pNameView )
 	{
 		pHeaderLost->ShowWindow( false );
+	}
+	if ( pNameView )
+	{
+		pNameView->ShowWindow( true );
+		pNameView->SetText( GetReplayTextFormat( pNameView ) + player.wszName );
 	}
 	IWindow *pFlag0 = GetChildChecked<IWindow>( pWnd, "ItemFlag0", true );
 	if ( pFlag0 )
 	{
-		pFlag0->ShowWindow( nTeam == 0 );
+		pFlag0->ShowWindow( player.nTeam == 0 );
 	}
 	IWindow *pFlag1 = GetChildChecked<IWindow>( pWnd, "ItemFlag1", true );
 	if ( pFlag1 )
 	{
-		pFlag1->ShowWindow( nTeam == 1 );
+		pFlag1->ShowWindow( player.nTeam == 1 );
 	}
 
-	std::wstring wszNameList;
-	const auto appendName = [&]( const std::wstring &name )
+	const char *pszResultKey = "REPLAY_PLAYER_UNFINISHED";
+	const wchar_t *pszResultFallback = L"Unfinished";
+	if ( player.eResult == NGameX::RPR_WINNER )
 	{
-		if ( !wszNameList.empty() )
-		{
-			wszNameList += L", ";
-		}
-		wszNameList += name;
-	};
-	for ( int i = 0; i < info.slots.size(); ++i )
-	{
-		const SMPSlot &slot = info.slots[i];
-		if ( slot.nTeam != nTeam || !slot.bPresent )
-		{
-			continue;
-		}
-
-		appendName( NStr::ToUnicode( slot.szName ) );
+		pszResultKey = "REPLAY_PLAYER_WINNER";
+		pszResultFallback = L"Winner";
 	}
-	if ( nTeam == 1 )
+	else if ( player.eResult == NGameX::RPR_LOSER )
 	{
-		for ( const auto &player : NGameX::GetCoopReplayPlayers( info ) )
-		{
-			appendName( player.wszName );
-		}
+		pszResultKey = "REPLAY_PLAYER_LOSER";
+		pszResultFallback = L"Loser";
 	}
-
+	std::wstring wszResult = GetScreen() ? GetScreen()->GetTextEntry( pszResultKey ) : std::wstring();
+	if ( wszResult.empty() )
+	{
+		wszResult = pszResultFallback;
+	}
 	ITextView *pPlayers = GetChildChecked<ITextView>( pWnd, "ItemPlayers", true );
 	if ( pPlayers )
 	{
-		pPlayers->SetText( pPlayers->GetDBText() + wszNameList );
+		pPlayers->SetText( GetReplayTextFormat( pPlayers ) + wszResult );
 	}
+}
+
+int CInterfaceReplaySaveLoad::GetSelectedPlayer() const
+{
+	const IWindow *pSelected = pPlayerList ? pPlayerList->GetSelectedItem() : nullptr;
+	if ( pSelected )
+	{
+		// Scroll row names are allocator IDs, not positions or replay player IDs.
+		for ( const auto &entry : playerEntries )
+		{
+			if ( entry.pItem == pSelected )
+			{
+				return entry.nPlayerIndex;
+			}
+		}
+	}
+	return -1;
 }
 
 void CInterfaceReplaySaveLoad::MakeMinimap( const SMultiplayerReplayInfo &info )
@@ -577,16 +618,14 @@ bool CInterfaceReplaySaveLoad::OnLoad()
 	NI_VERIFY( nSelected >= 0 && nSelected < replays.size(), "PRG: No replay selected to load", return true );
 
 	SReplayEntry &entry = replays[nSelected];
-	IWindow *pSelectedTeam = pPlayerList ? pPlayerList->GetSelectedItem() : nullptr;
-	const int nSelectedTeamEntry = pSelectedTeam ? pPlayerList->GetItemNumber( pSelectedTeam ) : 0;
-	const int nSelectedTeam = entry.info.nMultiplayerMode != 1 && nSelectedTeamEntry == 1 ? 1 : 0;
-	const int nPlayFor = NGameX::FindReplayViewpoint( entry.info, nSelectedTeam );
-	if ( nPlayFor < 0 )
+	const int nPlayFor = GetSelectedPlayer();
+	if ( !NGameX::CanWatchReplayPlayer( entry.info, nPlayFor ) )
 	{
 		return true;
 	}
 
-	std::string szCmd = "replay " + entry.szName + fmt::format( " {}", nPlayFor );
+	// Keep a replay name containing spaces separate from the chosen player argument.
+	const std::string szCmd = fmt::format( "replay \"{}\" {}", entry.szName, nPlayFor );
 
 	NMainLoop::Command( ML_COMMAND_CLEAR_INTERFACES, "" );
 	NGlobal::ProcessCommand( NStr::ToUnicode( szCmd ) );
@@ -632,8 +671,7 @@ bool CInterfaceReplaySaveLoad::OnSelect()
 			{
 				if ( pLoadBtn )
 				{
-					pLoadBtn->Enable( NGameX::FindReplayViewpoint( replays[i].info, 0 ) >= 0 ||
-					                  NGameX::FindReplayViewpoint( replays[i].info, 1 ) >= 0 );
+					pLoadBtn->Enable( NGameX::CanWatchReplayPlayer( replays[i].info, GetSelectedPlayer() ) );
 				}
 			}
 			if ( pDeleteBtn )

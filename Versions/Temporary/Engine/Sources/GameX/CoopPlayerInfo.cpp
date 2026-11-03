@@ -56,30 +56,4 @@ std::vector<SCoopPlayerInfo> GetCoopReplayPlayers( const SMultiplayerReplayInfo 
 	return CollectCoopMapPlayers( info.pMap );
 }
 
-int FindReplayViewpoint( const SMultiplayerReplayInfo &info, int nTeam )
-{
-	if ( info.bSinglePlayer )
-	{
-		return nTeam == 0 ? 0 : -1;
-	}
-	if ( info.nMultiplayerMode == 1 && nTeam != 0 )
-	{
-		return -1;
-	}
-	const NDb::SMapInfo *pMap = info.pMap;
-	for ( int i = 0; i < info.slots.size(); ++i )
-	{
-		if ( !info.slots[i].bPresent || info.slots[i].nTeam != nTeam || ( pMap && i >= pMap->players.size() ) )
-		{
-			continue;
-		}
-		if ( info.nMultiplayerMode == 1 && pMap &&
-		     ( pMap->players[i].ePlayerType != NDb::HUMAN || pMap->players[i].nDiplomacySide != 0 ) )
-		{
-			continue;
-		}
-		return i;
-	}
-	return -1;
-}
 } // namespace NGameX
