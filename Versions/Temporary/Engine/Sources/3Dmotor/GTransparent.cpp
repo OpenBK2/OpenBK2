@@ -323,7 +323,8 @@ static void ReorderTransparent( std::vector<STriangle> *pRet,
 	////
 	std::vector<CVec3> holdPos;
 	const std::vector<CVec3> *pTransofmedPos = &pPart->xformedPositions;
-	if ( pTransofmedPos->empty() )
+	// Stale positions are kept in place rather than cleared (IPart::bXformedStale).
+	if ( pPart->bXformedStale || pTransofmedPos->empty() )
 	{
 		TransformPart( pPart, &holdPos, 0 );
 		pTransofmedPos = &holdPos;
@@ -456,6 +457,9 @@ public:
 					if ( !sorted.empty() )
 					{
 						sSortedList.pTri = &sorted[0];
+						// The copy points at its own sorted array now, not at the combiner's
+						// triangles, so it must not be drawn from the static index cache.
+						sSortedList.pStatic = nullptr;
 						////
 						pRC->AddPrimitive( pGeometry->pVertices->GetValue(), sSortedList );
 					}
@@ -558,6 +562,9 @@ void CTransparentRenderer::RealRender( const STransparentRenderContext &trc )
 					ReorderTransparent(
 							&sorted, trc.pRC->GetTransform(), pGeometry->pVertices, info.nOffset, tris[info.nOffset] );
 					sSortedList.pTri = &sorted[0];
+					// The copy points at its own sorted array now, not at the combiner's
+					// triangles, so it must not be drawn from the static index cache.
+					sSortedList.pStatic = nullptr;
 					////
 					trc.pRC->AddPrimitive( pGeometry->pVertices->GetValue(), sSortedList );
 					trc.pRC->Flush();

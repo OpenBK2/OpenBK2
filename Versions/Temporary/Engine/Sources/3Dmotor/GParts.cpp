@@ -299,7 +299,19 @@ bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTra
 	ASSERT( needBT != BT_NONE );
 	bt = needBT;
 	const SBound &bv = pBound->GetValue();
-	CVolumeNode *pNode = pVolume->GetNode( bv.s.ptCenter, bv.s.fRadius );
+	// Where GetNode from the root would place the bound. If the same comparisons
+	// decide it as last time, that is the node it found then; otherwise descend,
+	// recording the new ranges.
+	CVolumeNode *pNode = 0;
+	if ( IsValid( pPlacedNode ) && placement.IsSamePlacement( bv.s.ptCenter, bv.s.fRadius, pVolume->GetLayoutChanges() ) )
+	{
+		pNode = pPlacedNode;
+	}
+	else
+	{
+		pNode = pVolume->GetNode( bv.s.ptCenter, bv.s.fRadius, &placement );
+		pPlacedNode = pNode;
+	}
 	ASSERT( pNode );
 	if ( bt == BT_DYNAMIC )
 	{

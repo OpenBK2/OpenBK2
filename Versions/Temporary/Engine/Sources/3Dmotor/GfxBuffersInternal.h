@@ -241,7 +241,35 @@ public:
 typedef CIBFast<D3DFMT_INDEX32> CIB32Fast;
 typedef CIBFast<D3DFMT_INDEX16> CIB16Fast;
 
-// 16 bit index buffer
-//class CIB16: public CRBase<IDirect3DIndexBuffer8>
+// Large 16-bit index buffer for CLinearBuffer, the counterpart of CVB: whole-buffer
+// locks kept open until FreeLinearBuffers, so the static index cache in
+// GfxBuffers.cpp can share the vertex cache's slot allocator and frame-age rules.
+class CIB16 : public CRBase<IDirect3DIndexBuffer9>
+{
+	OBJECT_NOCOPY_METHODS( CIB16 );
+
+public:
+	CIB16() {}
+
+	// size in bytes
+	CIB16( int _nSize, ETrueBufferUsage eUsage )
+		: CRBase<IDirect3DIndexBuffer9>( _nSize )
+	{
+		// Unlike CVB this leaves bInitOk alone: the cache is an optimisation, and
+		// InitBuffers drops it and keeps drawing through the dynamic index buffer
+		// when obj stays empty.
+		HRESULT hRes = pDevice->CreateIndexBuffer(
+				nSize, GetUsageFlags( eUsage ), D3DFMT_INDEX16, GetPool( eUsage ), obj.GetAddr(), 0 );
+		if ( SUCCEEDED( hRes ) )
+		{
+			TryLockBuffer( this, eUsage );
+		}
+	}
+
+	bool IsCreated() const
+	{
+		return static_cast<IDirect3DIndexBuffer9 *>( obj ) != nullptr;
+	}
+};
 
 } // namespace NGfx

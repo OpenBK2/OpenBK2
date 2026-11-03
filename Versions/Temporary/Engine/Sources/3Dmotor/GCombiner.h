@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GfxBuffers.h" // CStaticTriangles, held by CIBCombiner
 #include "GLightPerVertex.h"
 #include "GRenderCore.h"
 #include "Misc/Asserts.h" // NI_UNREACHABLE
@@ -165,7 +166,21 @@ public:
 
 public:
 	std::vector<CVec3> xformedPositions;
+	// xformedPositions no longer matches the part's transform. ResetCachedTransform
+	// sets this instead of clearing the vector, so the next transform overwrites the
+	// elements in place: clearing made the following resize value-initialise every
+	// CVec3 only for the skinning to overwrite it, 1.5% of the main thread with many
+	// moving units. The elements are always initialised, either by that resize or by
+	// an earlier transform. Readers test this flag (XFormPosition, GTransparent).
+	bool bXformedStale = true;
 	CBuffer<char> gfxData;
+	// Whether gfxData was dropped because the part changed (ResetCachedTransform or
+	// ResetCachedLighting) since its last build, and how many builds in a row were
+	// for such a change, capped at 2. A part that keeps changing is built straight
+	// into the vertex buffer instead of through gfxData (STGfxCacheTransformer).
+	// Not saved.
+	bool bGfxInvalidated = false;
+	uint8_t nGfxChangeRun = 0;
 	CVec3 vBVMin, vBVMax;
 	float fAverageTriArea;
 
@@ -246,6 +261,7 @@ public:
 	void ResetCachedLighting()
 	{
 		gfxData.Clear();
+		bGfxInvalidated = true;
 	} // for CVBCombiner only
 };
 
@@ -448,6 +464,9 @@ class CIBCombiner : public CFuncBase<std::vector<NGfx::STriangleList>>
 	}
 
 	std::vector<STriangle> triBuffer;
+	// triBuffer as the renderer's static index cache sees it, shared by every list in
+	// value. Not saved: Recalc creates it, and runs again after a load.
+	CObj<NGfx::CStaticTriangles> pStatic;
 
 protected:
 	bool NeedUpdate() override

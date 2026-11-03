@@ -390,12 +390,19 @@ struct CInterpolateColor
 	}
 };
 
+class CStaticTriangles;
+
 struct STriangleList
 {
 	const STriangle *pTri = nullptr;
 	int nTris = 0;
 	int nBaseIndex = 0;
 	int nOffset = 0;
+	// Set by producers whose triangles stay put across frames (CIBCombiner): the
+	// whole array pTri points into, which AddPrimitiveGeometry uploads once into the
+	// static index cache and then draws with BaseVertexIndex instead of rewriting the
+	// indices every frame. Null means the dynamic 32-bit index path. Not owned.
+	CStaticTriangles *pStatic = nullptr;
 
 	STriangleList()
 		: pTri( 0 )

@@ -177,7 +177,9 @@ bool SetModeFromConfig( bool bReinit, const SUserRTInfo &_rtInfo )
 			{
 				nFSAA = 0;
 			}
-			NGlobal::SetVar( "gfx_fsaa", nFSAA / 2 );
+			// nFSAA is already halved; this used to store nFSAA / 2, so 4 samples
+			// fell back to 1, which is not a sample count, instead of to 2.
+			NGlobal::SetVar( "gfx_fsaa", nFSAA );
 			return SetModeFromConfig( true, _rtInfo );
 		}
 		float fRegResolution = NGlobal::GetVar( "gfx_register_resolution", 1 );

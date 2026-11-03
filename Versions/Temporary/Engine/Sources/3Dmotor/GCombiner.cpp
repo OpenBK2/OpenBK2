@@ -3,7 +3,10 @@
 #include "GCombiner.h"
 #include "GfxBuffers.h"
 #include "GfxRender.h"
+#include "GLightPerVertexKernels.h" // IsAVX2Present
+#include "GNormalTransform.h"
 #include "GScene.h"
+#include "GSkinning.h"
 #include "GSSEtransform.h"
 #include "Misc/HashFuncs.h"
 #include "RadixSort.h"
@@ -26,6 +29,27 @@ extern bool bLowRAM;
 // treat the branch doing it as unreachable. A real empty vector costs one static
 // object and the callee sees the same emptiness it saw before.
 static const std::vector<NGfx::SCompactTransformer> noMMXTransformers;
+
+// The rigid normal kernel for this CPU: eight normals at a time with AVX2, four with
+// SSE2. Both give the bytes MMXTransformVector gives (NormalTransform_test).
+// Picked on first use rather than during static initialisation, so the CPUID check
+// does not depend on the order translation units are initialised in.
+typedef void ( *TNormalsRigid )( const void *, int, uint32_t *, int, const float * );
+
+static TNormalsRigid NormalsRigidKernel()
+{
+	static const TNormalsRigid pKernel = []()
+	{
+#if BK2_NORMALS_AVX2
+		if ( IsAVX2Present() )
+		{
+			return &NNormals::TransformNormalsRigidAVX2;
+		}
+#endif
+		return &NNormals::TransformNormalsRigid;
+	}();
+	return pKernel;
+}
 
 // IPart
 
@@ -59,8 +83,9 @@ void IPart::RefreshObjectInfo()
 
 void IPart::ResetCachedTransform()
 {
-	xformedPositions.clear();
+	bXformedStale = true;
 	gfxData.Clear();
+	bGfxInvalidated = true;
 	cacheLighting.Clear();
 }
 
@@ -230,19 +255,35 @@ static void TransformVertexT( CVec3 *pRes, const SHMatrix &m, const NGfx::SCompa
 	ASSERT( fabs( NGfx::GetVector(test) - NGfx::GetVector(*pRes) ) < 0.02f )*/
 }
 
+// CVec3 is three packed floats and SHMatrix sixteen row-major ones with the
+// translation in _14, _24, _34, which is what the GSkinning.h kernels read.
+static_assert( sizeof( CVec3 ) == 3 * sizeof( float ) );
+static_assert( sizeof( SHMatrix ) == 16 * sizeof( float ) );
+static_assert( sizeof( SRealVertexWeight ) == sizeof( NSkinning::SSkinWeights ) );
+
+// One matrix for every position: rigid skinned parts (see CObjectInfo::GetRigidBone)
+// and parts with a simple transform. NSkinning::TransformPositions keeps the matrix
+// columns in registers; the glm SSEBatchTransform it replaces reloaded them per
+// vertex and ran 2 to 3 times slower in the benchmark (benchmark/Skinning.cpp).
 static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SHMatrix &m )
 {
-	int nCount = srcPos.size();
-	if ( nCount > 3 && bIsSSEPresent )
+	const int nCount = srcPos.size();
+	if ( nCount > 0 )
 	{
-		SSEBatchTransform( m, &srcPos[0], pRes, nCount );
+		NSkinning::TransformPositions( &srcPos[0].x, &pRes->x, nCount, &m._11 );
 	}
-	else
+}
+
+// The same, also extending the box vMin..vMax by every result. Bit for bit what
+// UpdateBounds over the results gives (NSkinning::TransformPositionsAccumulateBounds),
+// without reading the array back.
+static void
+TransformPositionBounds( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SHMatrix &m, CVec3 *pMin, CVec3 *pMax )
+{
+	const int nCount = srcPos.size();
+	if ( nCount > 0 )
 	{
-		for ( int k = 0; k < nCount; ++k )
-		{
-			m.RotateHVector( pRes++, srcPos[k] );
-		}
+		NSkinning::TransformPositionsAccumulateBounds( &srcPos[0].x, &pRes->x, nCount, &m._11, &pMin->x, &pMax->x );
 	}
 }
 
@@ -251,43 +292,17 @@ static void TransformPosition( const std::vector<CVec3> &srcPos,
                                const SRealVertexWeight *pWeight,
                                const std::vector<SHMatrix> &blends )
 {
-	int nCount = srcPos.size();
-	// SSESkinning requires the matrix array to be 16-byte aligned. The address was cast
-	// to int, which truncates a 64-bit pointer (C4311/C4302) and only happened to keep
-	// the low bits the test looks at; uintptr_t carries the whole address instead.
-	if ( nCount > 0 && bIsSSEPresent && ( reinterpret_cast<std::uintptr_t>( &blends[0] ) & 0xf ) == 0 )
+	// Blended parts: per vertex, the three used rows of up to four bone matrices are
+	// blended (12 floats, where SSESkinning blended 16 after converting every bone's
+	// matrix for every vertex), then applied once. No alignment or scratch needed,
+	// and the cost does not grow with the skeleton. Zero float weights are skipped as
+	// SSESkinning skipped them. Agrees with it within float rounding, which is all
+	// rendering and culling need; the simulation never reads these positions.
+	const int nCount = srcPos.size();
+	if ( nCount > 0 )
 	{
-		// The cast below reinterprets the weights as the SSE structure, which declares the same three
-		// arrays in the same order. ASSERT does not evaluate its argument here, so the size relation it
-		// claimed to check was never tested in any build; static_assert tests it at compile time.
-		static_assert( sizeof( SSSEVertexWeight ) == sizeof( SRealVertexWeight ) );
-		SSESkinning( &srcPos[0], pRes, (SSSEVertexWeight *)pWeight, blends, nCount );
-	}
-	else
-	{
-		for ( int k = 0; k < nCount; ++k, ++pWeight )
-		{
-			if ( pWeight->nWeights[1] == 0 )
-			{
-				const SHMatrix &blend = blends[pWeight->cBoneIndices[0]];
-				blend.RotateHVector( pRes++, srcPos[k] );
-			}
-			else
-			{
-				CVec3 vPos( VNULL3 ), p;
-				// Four nonzero influences must stop before reading a fifth weight.
-				for ( int j = 0; j < 4 && pWeight->nWeights[j]; ++j )
-				{
-					const SHMatrix &blend = blends[pWeight->cBoneIndices[j]];
-					float fW = pWeight->fWeights[j];
-					blend.RotateHVector( &p, srcPos[k] );
-					vPos.x += fW * p.x;
-					vPos.y += fW * p.y;
-					vPos.z += fW * p.z;
-				}
-				*pRes++ = vPos;
-			}
-		}
+		NSkinning::SkinPositions(
+				&srcPos[0].x, &pRes->x, reinterpret_cast<const NSkinning::SSkinWeights *>( pWeight ), nCount, &blends[0]._11 );
 	}
 }
 
@@ -351,10 +366,12 @@ struct STGenericTransformer
 		Transpose( &transformer, trans.backward );
 
 		xformedNormals.resize( nVertices );
-		// most of these are often very small in size.. (less than 128 elements - not very worthy of parallelization here)
-		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k )
+		// One matrix for every normal: four at a time, with the matrix prepared once
+		// per part instead of once per normal. Bit-exact with MMXTransformVector, see
+		// GNormalTransform.h.
+		if ( nVertices > 0 )
 		{
-			MMXTransformVector( xformedNormals[k], pSrc[k].normal, transformer );
+			NormalsRigidKernel()( &pSrc[0].normal, sizeof( SUVInfo ), &xformedNormals[0].dw, nVertices, &transformer._11 );
 		}
 
 		CalcPerVertexLight( pRes, pObjInfo, transformed, pSrc, xformedNormals, ls, pCache, bv );
@@ -380,8 +397,24 @@ struct STGenericTransformer
 		const std::vector<uint16_t> &posIndices = pObjInfo->GetPositionIndices();
 		ASSERT( nVerties == posIndices.size() );
 		xformedNormals.resize( posIndices.size() );
+		const int nNormals = static_cast<int>( xformedNormals.size() );
+		// A rigid part (CObjectInfo::GetRigidBone, 98.8% of the shipped parts) moves
+		// every normal with one bone: transformed four at a time with the matrix
+		// prepared once, bit-exact with the per-normal MMXTransformVector the loop
+		// below runs for single-influence vertices.
+		const int nRigidBone = pObjInfo->GetRigidBone();
+		if ( nRigidBone >= 0 && nRigidBone < static_cast<int>( blends.size() ) )
+		{
+			if ( nNormals > 0 )
+			{
+				NormalsRigidKernel()(
+						&_pSrc[0].normal, sizeof( SUVInfo ), &xformedNormals[0].dw, nNormals, &blends[nRigidBone]._11 );
+			}
+			CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );
+			return;
+		}
 		const SUVInfo *pSrc = _pSrc;
-		for ( int k = 0, nSize = xformedNormals.size(); k < nSize; ++k, pSrc++ )
+		for ( int k = 0; k < nNormals; ++k, pSrc++ )
 		{
 			const SRealVertexWeight *pWeight = _pWeight + posIndices[k];
 			if ( pWeight->nWeights[1] == 0 )
@@ -395,7 +428,8 @@ struct STGenericTransformer
 
 				const auto &blend1 = blends[pWeight->cBoneIndices[0]];
 				const auto &blend2 = blends[pWeight->cBoneIndices[1]];
-				MMXTransformVector2( xformedNormals[k], pSrc->normal, blend1, nW1, blend2, nW2 );
+				// Bit-exact with MMXTransformVector2, about twice as fast (GNormalTransform.h).
+				xformedNormals[k].dw = NNormals::TransformNormalBlend2( pSrc->normal.dw, &blend1._11, nW1, &blend2._11, nW2 );
 			}
 			else
 			{
@@ -405,7 +439,9 @@ struct STGenericTransformer
 
 				uint8_t nW1 = pWeight->nWeights[0], nW2 = pWeight->nWeights[1], nW3 = pWeight->nWeights[2];
 
-				MMXTransformVector3( xformedNormals[k], pSrc->normal, blend1, nW1, blend2, nW2, blend3, nW3 );
+				// Bit-exact with MMXTransformVector3, about twice as fast (GNormalTransform.h).
+				xformedNormals[k].dw =
+						NNormals::TransformNormalBlend3( pSrc->normal.dw, &blend1._11, nW1, &blend2._11, nW2, &blend3._11, nW3 );
 			}
 		}
 		CalcPerVertexLight( pRes, pObjInfo, transformed, _pSrc, xformedNormals, ls, pCache, bv );
@@ -420,6 +456,12 @@ struct SGenericPosTransformer
 	{
 		PASS_MMX_BLENDS = 0
 	};
+
+	// The box of the transformed positions, filled when one matrix moved every
+	// position (rigid and simple parts); XFormPosition then skips its own pass over
+	// the array. Seeded as SBoundCalcer seeds it, so the box is the same either way.
+	bool bHasBounds = false;
+	CVec3 vMin = CVec3( 1e38f, 1e38f, 1e38f ), vMax = CVec3( -1e38f, -1e38f, -1e38f );
 
 	void CopyTransform(
 			CObjectInfo *pObjInfo, const SUVInfo *pSrc, int nSize, SCacheLightingInfo *pCache, const SBound &bv, TRes *pRes )
@@ -441,7 +483,8 @@ struct SGenericPosTransformer
 	                      TRes *pRes )
 	{
 		const std::vector<CVec3> &srcPos = pObjInfo->GetPositions();
-		TransformPosition( srcPos, pRes, trans.forward );
+		TransformPositionBounds( srcPos, pRes, trans.forward, &vMin, &vMax );
+		bHasBounds = true;
 	}
 
 	void SingleSkinTransform( CObjectInfo *pObjInfo,
@@ -460,6 +503,15 @@ struct SGenericPosTransformer
 		{
 			ASSERT( 0 );
 			return CopyTransform( pObjInfo, pSrc, nVertices, pCache, bv, pRes );
+		}
+		// A rigid part (one bone, weight 1, for every position) is one matrix applied
+		// to all its positions: 94% of the positions of the shipped models.
+		const int nRigidBone = pObjInfo->GetRigidBone();
+		if ( nRigidBone >= 0 && nRigidBone < static_cast<int>( blends.size() ) )
+		{
+			TransformPositionBounds( srcPos, pRes, blends[nRigidBone], &vMin, &vMax );
+			bHasBounds = true;
+			return;
 		}
 		TransformPosition( srcPos, pRes, pWeight, blends );
 	}
@@ -499,32 +551,20 @@ struct SPartTransformer : public T
 						pObjInfo, transformed, &srcVerts[0], srcVerts.size(), &p->cacheLighting, bv, p->GetSimplePos(), pRes );
 				break;
 			case TT_SINGLE_SKIN:
-				if ( T::PASS_MMX_BLENDS )
-				{
-					this->SingleSkinTransform( pObjInfo,
-					                           transformed,
-					                           &srcVerts[0],
-					                           srcVerts.size(),
-					                           &p->cacheLighting,
-					                           bv,
-					                           &( pObjInfo->GetWeights()[0] ),
-					                           p->GetAnimation(),
-					                           p->GetMMXAnimation(),
-					                           pRes );
-				}
-				else
-				{
-					this->SingleSkinTransform( pObjInfo,
-					                           transformed,
-					                           &srcVerts[0],
-					                           srcVerts.size(),
-					                           &p->cacheLighting,
-					                           bv,
-					                           &( pObjInfo->GetWeights()[0] ),
-					                           p->GetAnimation(),
-					                           noMMXTransformers,
-					                           pRes );
-				}
+				// The vertex path (PASS_MMX_BLENDS) used to pass p->GetMMXAnimation()
+				// here. No SingleSkinTransform reads those fixed-point matrices (the
+				// normals are transformed with the blends), and asking for them rebuilt
+				// a copy of every bone on each animation change, so both paths pass none.
+				this->SingleSkinTransform( pObjInfo,
+				                           transformed,
+				                           &srcVerts[0],
+				                           srcVerts.size(),
+				                           &p->cacheLighting,
+				                           bv,
+				                           &( pObjInfo->GetWeights()[0] ),
+				                           p->GetAnimation(),
+				                           noMMXTransformers,
+				                           pRes );
 				break;
 			default:
 				ASSERT( 0 );
@@ -564,21 +604,44 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 			p->gfxData.Clear();
 			return;
 		}
+		int nSize = sizeof( TVertex ) * nPartVerts;
 		if ( bLowRAM )
 		{
 			int nTransformed = this->DoTransform( p, &geom[nVert], transformed );
 			ASSERT( nTransformed == nPartVerts );
 		}
+		else if ( p->gfxData.GetSize() == nSize )
+		{
+			// Unchanged since its last build: copy the cached vertices.
+			std::memcpy( &geom[nVert], &p->gfxData[0], nSize );
+		}
 		else
 		{
-			int nSize = sizeof( TVertex ) * nPartVerts;
-			if ( p->gfxData.GetSize() != nSize )
+			// Rebuild. A part dropped for a change on its last build as well keeps
+			// changing, typically every frame (a moving unit folds its placement into
+			// its bone matrices). Caching its vertices in gfxData only to copy them
+			// into the vertex buffer cost a second pass over every vertex and a free and
+			// allocation per rebuild, so such a part is built in place: the writes are
+			// sequential and never read back, which suits the write-combined memory a
+			// dynamic buffer may live in. A part built for the first time, or after a
+			// stretch without changes, still goes through gfxData, so one that then
+			// stays put is copied, not rebuilt, on the next recalc.
+			const bool bChanged = p->bGfxInvalidated;
+			p->bGfxInvalidated = false;
+			p->nGfxChangeRun = bChanged ? static_cast<uint8_t>( (std::min)( p->nGfxChangeRun + 1, 2 ) ) : 0;
+			if ( p->nGfxChangeRun >= 2 )
+			{
+				p->gfxData.Clear();
+				int nTransformed = this->DoTransform( p, &geom[nVert], transformed );
+				ASSERT( nTransformed == nPartVerts );
+			}
+			else
 			{
 				p->gfxData.Resize( nSize );
 				int nTransformed = this->DoTransform( p, (TVertex *)&p->gfxData[0], transformed );
 				ASSERT( nTransformed == nPartVerts );
+				std::memcpy( &geom[nVert], &p->gfxData[0], nSize );
 			}
-			std::memcpy( &geom[nVert], &p->gfxData[0], nSize );
 		}
 		nVert += nPartVerts;
 		ASSERT( nVert <= geom.GetSize() );
@@ -626,22 +689,41 @@ void CVBCombiner::XFormPosition()
 		// xform
 		std::vector<CVec3> *pRes = &pPart->xformedPositions;
 		int nSize = pObjInfo->GetPositions().size();
-		if ( nSize != pRes->size() )
+		if ( pPart->bXformedStale || nSize != pRes->size() )
 		{
-			pRes->resize( nSize );
+			// Resized only when the count changes; the transform below writes every
+			// element.
+			if ( nSize != pRes->size() )
+			{
+				pRes->resize( nSize );
+			}
+			pPart->bXformedStale = false;
 			if ( nSize > 0 )
 			{
 				SPartTransformer<SGenericPosTransformer> trans;
 				trans.DoTransform( pPart, &( ( *pRes )[0] ), *pRes );
 				// calc bv
+				// SBoundCalcer starts min and max at +-1e38. This used to set the max to
+				// 0 first, a leftover from the original MMX bound, which compared float
+				// bits as integers and needed that start; with float compares it raised
+				// the max to 0 on any axis where the whole part is negative, such as an
+				// aircraft arriving from beyond the lower map edge.
 				SBoundCalcer bc;
-				bc.ptMax = CVec3( 0, 0, 0 );
-
-				for ( int k = 0; k < nSize; ++k )
+				if ( trans.bHasBounds )
 				{
-					const CVec3 &v = ( *pRes )[k];
+					// Computed during the transform, from the same seeds and with the
+					// same comparisons as the loop below.
+					bc.ptMin = trans.vMin;
+					bc.ptMax = trans.vMax;
+				}
+				else
+				{
+					for ( int k = 0; k < nSize; ++k )
+					{
+						const CVec3 &v = ( *pRes )[k];
 
-					UpdateBounds( bc.ptMin, bc.ptMax, v );
+						UpdateBounds( bc.ptMin, bc.ptMax, v );
+					}
 				}
 				pPart->vBVMin = bc.ptMin;
 				pPart->vBVMax = bc.ptMax;
@@ -861,6 +943,20 @@ void CIBCombiner::Recalc()
 		nOffset += pObjInfo->GetVertices().size();
 	}
 	ASSERT( pFill <= &triBuffer[triBuffer.size() - 1] );
+	// These triangles stay as they are until the next Recalc, which only a part
+	// being added, removed or replaced triggers, never an animation. Publish the
+	// array so the renderer can keep it in the static index cache and draw it with
+	// BaseVertexIndex rather than rebasing every index into the dynamic index buffer
+	// on every frame. Set drops the slot of the previous array.
+	if ( !pStatic )
+	{
+		pStatic = new NGfx::CStaticTriangles();
+	}
+	pStatic->Set( &triBuffer[0], static_cast<int>( pFill - &triBuffer[0] ) );
+	for ( int i = 0; i < value.size(); ++i )
+	{
+		value[i].pStatic = pStatic;
+	}
 }
 
 } // namespace NGScene

@@ -163,6 +163,8 @@ void CObjectInfo::MergePositions()
 	}
 	positions = mergedPositions;
 	weights = mergedWeights;
+	// The assignment may reuse the buffer at the same size; see GetRigidBone.
+	ForgetRigidBone();
 }
 
 void CObjectInfo::AssignGeometry( const SData &data, std::vector<STriangle> *pGeom )
@@ -171,6 +173,8 @@ void CObjectInfo::AssignGeometry( const SData &data, std::vector<STriangle> *pGe
 	positions.resize( data.verts.size() );
 	verts.resize( data.verts.size() );
 	weights.resize( data.weights.size() );
+	// Rewritten in place below, possibly in the same buffer; see GetRigidBone.
+	ForgetRigidBone();
 	for ( int k = 0; k < data.weights.size(); ++k )
 	{
 		SRealVertexWeight &res = weights[k];

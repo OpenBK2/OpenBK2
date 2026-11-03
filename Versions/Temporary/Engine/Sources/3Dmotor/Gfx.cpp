@@ -606,6 +606,27 @@ void CheckBackBufferSize()
 
 static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 {
+	// gfx_fsaa is a sample count: the graphics options set 0, 2 or 4. Ask for that
+	// count by its own multisample type first. The quality level of
+	// D3DMULTISAMPLE_NONMASKABLE below means whatever the driver wants it to, and
+	// DXVK reads it as a power of two, so the old nFSAA - 1 asked for 2^3 = 8
+	// samples when the player chose 4; at 2560x1600 that cost about 2 ms a frame
+	// and made a battle GPU-bound. Type 1 is NONMASKABLE itself, hence >= 2.
+	if ( nFSAA >= 2 && nFSAA <= 16 )
+	{
+		const D3DMULTISAMPLE_TYPE type = static_cast<D3DMULTISAMPLE_TYPE>( nFSAA );
+		if ( SUCCEEDED( pD3D->CheckDeviceMultiSampleType(
+						 GetAdapterToUse(), DEVICE_TYPE, pRes->BackBufferFormat, pRes->Windowed, type, 0 ) ) &&
+		     SUCCEEDED( pD3D->CheckDeviceMultiSampleType(
+						 GetAdapterToUse(), DEVICE_TYPE, pRes->AutoDepthStencilFormat, pRes->Windowed, type, 0 ) ) )
+		{
+			pRes->MultiSampleType = type;
+			pRes->MultiSampleQuality = 0;
+			return;
+		}
+	}
+	// A count the device has no type for (3, say, or a driver that only offers
+	// vendor quality levels) keeps the original request.
 	if ( nFSAA > 0 && nMaxFSAA > 0 )
 	{
 		DWORD nFront, nDepth;

@@ -11,14 +11,17 @@ set(LIGHTING_KERNEL_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexRef.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexSSE2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexDispatch.cpp)
 
 # Same isolation rule as the engine build: only the AVX2 file gets /arch:AVX2.
 if(MSVC)
     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
         PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
 else()
     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
         PROPERTIES COMPILE_OPTIONS "-mavx2")
 endif()
 
@@ -53,6 +56,44 @@ add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
 # ODR violation and aborts the test before it runs. Hidden visibility gives the
 # compiled-in kernels the table beside them and leaves the library its own.
 set_target_properties(LightingKernels_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# Every 16-bit to 32-bit index shift variant (GIndexShift.h, IndexShiftVariants.h)
+# against the scalar reference. The lighting kernel sources come along only for
+# IsAVX2Present(), so the AVX2 variants are skipped on CPUs without it; hidden
+# visibility for the same nCubicRoot reason as LightingKernels_test.
+add_unit_test(IndexShift 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(IndexShift_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# Every position skinning kernel (GSkinning.h, SkinningVariants.h) and the frozen
+# SSESkinning copy (SkinningReference.h) against a double precision oracle, inside
+# guard pages. Same wiring as IndexShift_test: the lighting kernel sources only for
+# IsAVX2Present(), hidden visibility for the same nCubicRoot reason.
+add_unit_test(Skinning 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(Skinning_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# Every rigid normal transform kernel (GNormalTransform.h, NormalTransformVariants.h)
+# against the SSE2 MMXTransformVector bit for bit: all 2^24 byte patterns, plus part
+# sizes inside guard pages. Same wiring as Skinning_test: the lighting kernel sources
+# only for IsAVX2Present(), hidden visibility for the same nCubicRoot reason.
+add_unit_test(NormalTransform 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(NormalTransform_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# The fused war fog kernels (GWarFogSample.h) against the shipped
+# sse2LightingKernels / avx2LightingKernels coordinate and integer stages bit for
+# bit: every fraction pair, every float bit pattern, and whole parts inside guard
+# pages. Same wiring as NormalTransform_test; the AVX2 kernels carry their own
+# target attribute, so no flag goes on this file.
+add_unit_test(WarFogSample 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(WarFogSample_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# The fused directional + vertex colour + SGeomVecFull assembly kernels
+# (GLightPerVertexFused.h) against refLightingKernels, the shipped SSE2/AVX2
+# directional kernels and frozen copies of MultiplyOnColor and the output loop, bit
+# for bit: all 2^24 normal patterns, every multiply pair, whole parts inside guard
+# pages. The AVX2 set is its own translation unit and the only one given -mavx2;
+# hidden visibility for the same nCubicRoot reason as LightingKernels_test.
+add_unit_test(LightFused 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(LightFused_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
 add_unit_test(BitOps Misc)
 # Failed GPU locks must stop before exposing writable pointers to callers.
 add_unit_test(GfxBufferLocks 3Dmotor System Misc gr2)

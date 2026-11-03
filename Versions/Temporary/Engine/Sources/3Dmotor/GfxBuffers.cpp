@@ -3,6 +3,7 @@
 #include "Cache.h"
 #include "GfxBuffers.h"
 #include "GfxBuffersInternal.h"
+#include "GIndexShift.h"
 #include "Misc/2Darray.h"
 #include "port/debugging.h"
 #include "System/Commands.h"
@@ -79,6 +80,7 @@ void FreeLinearBuffers()
 }
 
 static void RealSetVertexStream( IDirect3DVertexBuffer9 *pBuf, int nStride );
+static void BindIndices( IDirect3DIndexBuffer9 *pIB );
 
 template <class TDXBuffer, class TUserObject>
 class CLinearBuffer : public CObjectBase
@@ -444,6 +446,34 @@ public:
 	int GetGeometryFormatID() override
 	{
 		return GetFormatID();
+	}
+};
+
+// One CStaticTriangles array in the static index cache. Sizes and offsets count
+// triangles (the stride is sizeof( S3DTriangle )), so the first index of the slot
+// is nStart * 3.
+class CUserIndices;
+typedef CLinearBuffer<CIB16, CUserIndices> CStaticIndexBuffer;
+
+class CUserIndices : public CLinearBufferElement<CStaticIndexBuffer, CIB16, CUserIndices>
+{
+	OBJECT_NOCOPY_METHODS( CUserIndices );
+	typedef CLinearBufferElement<CStaticIndexBuffer, CIB16, CUserIndices> TParent;
+
+public:
+	CUserIndices( CStaticIndexBuffer *_p = 0 )
+		: TParent( _p )
+	{
+	}
+
+	// Mark the slot as used this frame, so the cache neither evicts nor reuses it
+	// while the GPU may still read it.
+	void DoTouch()
+	{
+		if ( Touch() )
+		{
+			pBuffer->WasTouched( this );
+		}
 	}
 };
 
@@ -1511,11 +1541,6 @@ public:
 	}
 };
 
-static BOOST_FORCEINLINE void ReallyFastShiftingTransfer( const unsigned short *pSrc, int *pDst, int nSize, int nShift )
-{
-	std::transform( pSrc, pSrc + nSize, pDst, [nShift]( uint16_t value ) { return value + nShift; } );
-}
-
 struct S32Triangle
 {
 	int n1, n2, n3;
@@ -1623,7 +1648,10 @@ public:
 
 			S32Triangle *pTri = (S32Triangle *)pDynamicTrisBuffer->pLocked;
 			pTri += nLast;
-			ReallyFastShiftingTransfer( (const unsigned short *)&pSrcTris[nSrcStart], (int *)pTri, nToDraw * 3, nVBStart );
+			// Widen the 16-bit indices into the 32-bit buffer, adding the mesh's offset in
+			// the dynamic vertex buffer. SSE2 with aligned stores, see GIndexShift.h; it
+			// replaces a std::transform that GCC -O2 left scalar.
+			ShiftIndices( (const uint16_t *)&pSrcTris[nSrcStart], (int32_t *)pTri, nToDraw * 3, nVBStart );
 
 			nLast += nToDraw;
 			nSrcStart += nToDraw;
@@ -1635,6 +1663,13 @@ public:
 	{
 		ASSERT( ( nLines % 3 ) == 0 );
 		AddPrimitiveGeometry( (const S3DTriangle *)pIndices, nLines / 3 * 2, nVBStart, nVBSize, LINESTRIP );
+	}
+
+	// Primitives queued since the last draw. A static index cache draw has to send
+	// these first so that the draw order stays the order of submission.
+	bool HasPending() const
+	{
+		return nLast - nStart > 0;
 	}
 
 	void FlushPrimitive()
@@ -1650,6 +1685,8 @@ public:
 		}
 		if ( nLast - nStart > 0 )
 		{
+			// Static index cache draws bind their own buffer in between.
+			BindIndices( pDynamicTrisBuffer->obj );
 			HRESULT hr;
 			switch ( currentPrim )
 			{
@@ -1704,8 +1741,8 @@ class CDynamicTrisIndices16 : public CDynamicTrisBase<CDynamicTrisIndices16, CIB
 		if ( nLast - nStart > 0 )
 		{
 			HRESULT hr;
-			hr = pDevice->SetIndices( GetBuffer()->obj );
-			ASSERT( D3D_OK == hr );
+			// Through BindIndices so the tracked binding stays true.
+			BindIndices( GetBuffer()->obj );
 			switch ( _prim )
 			{
 				case TRILIST:
@@ -1841,6 +1878,28 @@ static CGeometryCacheHash geometries;
 static CDynamicTrisIndices32 dynamicTris32;
 static CDynamicTrisIndices16 dynamicTris16;
 static NWin32Helper::com_ptr<IDirect3DVertexBuffer9> pCurrentVB;
+// The index buffer bound on the device, so a switch between the dynamic and the
+// static index buffer costs a SetIndices only when it really changes.
+static NWin32Helper::com_ptr<IDirect3DIndexBuffer9> pCurrentIB;
+
+// Static index cache: the triangle arrays of CIBCombiner (STriangleList::pStatic),
+// uploaded once as 16-bit indices and drawn with BaseVertexIndex, where the dynamic
+// path widens and rebases every index into the 32-bit dynamic index buffer on every
+// frame. Same slot allocator as the dynamic vertex buffer, so a slot is reused only
+// after the frames that may draw from it have retired. Null when 32-bit indices are
+// banned, when the buffer could not be created, or between device resets.
+static CObj<CStaticIndexBuffer> pStaticIndices;
+static int nStaticIndexCapacity = 0; // in triangles, as allocated
+// gfx_static_indices switches the cache off at once, for comparison; the next
+// frames go back to the dynamic index buffer.
+static bool bStaticIndices = true;
+// gfx_static_index_triangles. Two lists per combiner are drawn (positions for
+// depth and shadows, vertices for colour), so this is sized like the dynamic vertex
+// buffer: 2178309 triangles of three 16-bit indices are 13 MB.
+static const int N_DEFAULT_STATIC_INDEX_TRIANGLES = 2178309;
+static const int N_MIN_STATIC_INDEX_TRIANGLES = 64 * 1024;
+static const int N_MAX_STATIC_INDEX_TRIANGLES = 14930352;
+static int nStaticIndexTriangles = N_DEFAULT_STATIC_INDEX_TRIANGLES;
 static CObj<CTexture> pLinearBufferMRU;
 int nCurrentFrame = NCache::N_START_RU;
 
@@ -1877,6 +1936,11 @@ void DestroyLostableBuffers()
 	dynamicTris16.Clear();
 	dynamicTris32.Clear();
 	geometries.clear();
+	// Every slot goes with the cache, which invalidates each CStaticTriangles::pSlot;
+	// the arrays upload again into the cache InitBuffers makes for the new device.
+	pStaticIndices = 0;
+	nStaticIndexCapacity = 0;
+	pCurrentIB = 0;
 	pCurrentVB = 0;
 	sysTextures.clear();
 	rtCache.clear();
@@ -1925,6 +1989,10 @@ void NextFrameBuffes( bool bOnThrashing )
 	for ( CGeometryCacheHash::iterator i = geometries.begin(); i != geometries.end(); ++i )
 	{
 		i->second->NextFrame( bOnThrashing, &bNeedFlush );
+	}
+	if ( pStaticIndices )
+	{
+		pStaticIndices->NextFrame( bOnThrashing, &bNeedFlush );
 	}
 	textureCache.NextFrame( bOnThrashing );
 	transparentCache.NextFrame( bOnThrashing );
@@ -2107,7 +2175,22 @@ void InitBuffers()
 	else
 	{
 		dynamicTris32.Init();
-		pDevice->SetIndices( dynamicTris32.GetBuffer()->obj );
+		BindIndices( dynamicTris32.GetBuffer()->obj );
+		// The static index cache needs BaseVertexIndex beyond 65535, which is what a
+		// device that bans 32-bit indices may not honour, so only this branch has it.
+		const int nTris = Clamp( nStaticIndexTriangles, N_MIN_STATIC_INDEX_TRIANGLES, N_MAX_STATIC_INDEX_TRIANGLES );
+		pStaticIndices = new CStaticIndexBuffer( nTris, sizeof( S3DTriangle ), S3DTriangle::ID, TBU_DYNAMIC );
+		if ( pStaticIndices->GetBuffer()->IsCreated() )
+		{
+			nStaticIndexCapacity = pStaticIndices->GetBuffer()->GetSize() / sizeof( S3DTriangle );
+		}
+		else
+		{
+			csSystem << "static index cache: could not create " << nTris << " triangles, using the dynamic index buffer"
+							 << endl;
+			pStaticIndices = 0;
+			nStaticIndexCapacity = 0;
+		}
 	}
 	if ( b16BitTextures )
 	{
@@ -2241,6 +2324,16 @@ static void RealSetVertexStream( IDirect3DVertexBuffer9 *pBuf, int nStride )
 	{
 		pCurrentVB = pBuf;
 		pDevice->SetStreamSource( 0, pBuf, 0, nStride );
+	}
+}
+
+static void BindIndices( IDirect3DIndexBuffer9 *pIB )
+{
+	if ( pCurrentIB != pIB )
+	{
+		pCurrentIB = pIB;
+		HRESULT hr = pDevice->SetIndices( pIB );
+		ASSERT( hr == D3D_OK );
 	}
 }
 
@@ -2450,6 +2543,135 @@ AddPrimitiveGeometry( T *pRes, CGeometry *pGeom, const STriangleList *pTris, int
 	}
 }
 
+// The slot holding p's triangles in the static index cache, uploading them first if
+// they have none: never uploaded, the array was rebuilt (CStaticTriangles::Set),
+// the cache evicted the slot, or the device was reset. Null when the array cannot be
+// cached, and the caller then uses the dynamic index buffer.
+static CUserIndices *GetStaticIndices( CStaticTriangles *p )
+{
+	// Check validity before the cast: an evicted slot has been destroyed.
+	if ( IsValid( p->pSlot ) )
+	{
+		CDynamicCast<CUserIndices> pSlot( p->pSlot );
+		if ( pSlot )
+		{
+			return pSlot;
+		}
+	}
+	if ( p->nTris <= 0 || p->nTris > nStaticIndexCapacity )
+	{
+		return 0;
+	}
+	CUserIndices *pRes = pStaticIndices->Alloc( p->nTris );
+	if ( !pRes )
+	{
+		return 0;
+	}
+	// The buffer is write-only, possibly mapped GPU memory: one sequential copy, no
+	// reads. The lock is released by FreeLinearBuffers before the next draw.
+	void *pDst = pRes->Lock();
+	memcpy( pDst, p->pTris, p->nTris * sizeof( S3DTriangle ) );
+	pRes->Unlock();
+	p->pSlot = pRes;
+	return pRes;
+}
+
+// Draw nTris triangles starting at pFirst, which lies inside pStatic's array, from
+// the static index cache. The indices are relative to vertex nBaseIndex of pGeom,
+// which BaseVertexIndex supplies. Returns false when the array cannot be cached.
+static bool
+DrawStaticIndices( CGeometry *pGeom, CStaticTriangles *pStatic, const S3DTriangle *pFirst, int nTris, int nBaseIndex )
+{
+	// The run has to lie inside the array the slot holds. A copy of a combiner's list
+	// that was pointed at other triangles but kept pStatic (the depth-sorted lists in
+	// GTransparent.cpp did) would otherwise draw the cached, unrelated indices at a
+	// meaningless offset; such a run goes through the dynamic index buffer instead.
+	const STriangle *pRunFirst = reinterpret_cast<const STriangle *>( pFirst );
+	if ( pRunFirst < pStatic->pTris || pRunFirst + nTris > pStatic->pTris + pStatic->nTris )
+	{
+		ASSERT( 0 );
+		return false;
+	}
+	CUserIndices *pSlot = GetStaticIndices( pStatic );
+	if ( !pSlot )
+	{
+		return false;
+	}
+	pSlot->DoTouch();
+	// This draw goes out now, so whatever the dynamic index buffer has queued under
+	// the same state has to go first. Then release the open buffer locks, this
+	// array's upload and the frame's vertex writes, as FlushPrimitive does.
+	if ( dynamicTris32.HasPending() )
+	{
+		dynamicTris32.FlushPrimitive();
+	}
+	if ( bWasLinearBufferLock )
+	{
+		FreeLinearBuffers();
+	}
+	BindIndices( pStaticIndices->GetBuffer()->obj );
+	const int nVBStart = pGeom->GetVBStart() + nBaseIndex;
+	const int nVBSize = pGeom->GetVBSize() - nBaseIndex;
+	const int nFirstTri =
+			pSlot->nStart + static_cast<int>( reinterpret_cast<const STriangle *>( pFirst ) - pStatic->pTris );
+	HRESULT hr = pDevice->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, nVBStart, 0, nVBSize, nFirstTri * 3, nTris );
+	ASSERT( hr == D3D_OK );
+	// Counted the way the dynamic path counts them.
+	renderStats.nVertices += nTris * 3;
+	renderStats.nTris += nTris;
+	++renderStats.nDIPs;
+	return true;
+}
+
+// The selected lists of pTris, merged into runs exactly as the template above does,
+// each run drawn from the static index cache when its list has a static array, and
+// queued into the dynamic 32-bit index buffer otherwise. One draw per run, where the
+// dynamic path batches runs of many geometries into one draw; the dynamic path
+// instead pays a widening, rebasing copy of every index on every frame.
+static void AddStaticPrimitiveGeometry( CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
+{
+	pGeom->DoTouch();
+	const int nVBStart = pGeom->GetVBStart(), nVBSize = pGeom->GetVBSize();
+	const S3DTriangle *pRunTris = 0;
+	CStaticTriangles *pRunStatic = 0;
+	int nRunBase = 0, nRunCount = 0;
+	auto flushRun = [&]()
+	{
+		// Parts without an object info leave empty lists; a draw of zero primitives
+		// is an error in D3D9.
+		if ( !pRunTris || nRunCount == 0 )
+		{
+			pRunTris = 0;
+			return;
+		}
+		if ( !pRunStatic || !DrawStaticIndices( pGeom, pRunStatic, pRunTris, nRunCount, nRunBase ) )
+		{
+			dynamicTris32.AddPrimitiveGeometry( pRunTris, nRunCount, nVBStart + nRunBase, nVBSize - nRunBase );
+		}
+		pRunTris = 0;
+	};
+	for ( int k = 0; k < nCount; ++k )
+	{
+		if ( ( nMask & ( 1 << k ) ) == 0 )
+		{
+			continue;
+		}
+		const STriangleList &t = pTris[k];
+		const S3DTriangle *pAddTris = (const S3DTriangle *)t.pTri;
+		if ( pRunTris && t.pStatic == pRunStatic && t.nBaseIndex == nRunBase && pRunTris + nRunCount == pAddTris )
+		{
+			nRunCount += t.nTris;
+			continue;
+		}
+		flushRun();
+		pRunTris = pAddTris;
+		pRunStatic = t.pStatic;
+		nRunBase = t.nBaseIndex;
+		nRunCount = t.nTris;
+	}
+	flushRun();
+}
+
 void AddPrimitiveGeometry( CGeometry *pGeom, const STriangleList *pTris, int nCount, unsigned nMask )
 {
 	// Required for this function to work: the two triangle types are passed through interchangeably.
@@ -2458,6 +2680,10 @@ void AddPrimitiveGeometry( CGeometry *pGeom, const STriangleList *pTris, int nCo
 	if ( bBan32BitIndices )
 	{
 		AddPrimitiveGeometry( &dynamicTris16, pGeom, pTris, nCount, nMask );
+	}
+	else if ( pStaticIndices && bStaticIndices )
+	{
+		AddStaticPrimitiveGeometry( pGeom, pTris, nCount, nMask );
 	}
 	else
 	{
@@ -2720,6 +2946,11 @@ static void ShowCacheStats( const std::string &szID, const std::vector<std::wstr
 		}
 		TypeStats( i->second.GetPtr() );
 	}
+	if ( pStaticIndices )
+	{
+		csSystem << "static index cache, in triangles" << endl;
+		TypeStats( pStaticIndices.GetPtr() );
+	}
 }
 
 static void ShowFill2D( const std::string &szID, const std::vector<std::wstring> &szParams )
@@ -2746,6 +2977,15 @@ REGISTER_VAR_EX( "gfx_dynamic_geometry_vertices",
                  &nDynamicGeometryVertices,
                  N_DEFAULT_DYNAMIC_GEOMETRY_VERTICES,
                  STORAGE_USER )
+// Size of the static index cache, stored and applied like
+// gfx_dynamic_geometry_vertices: it takes effect when the device is next created.
+REGISTER_VAR_EX( "gfx_static_index_triangles",
+                 NGlobal::VarIntHandler,
+                 &nStaticIndexTriangles,
+                 N_DEFAULT_STATIC_INDEX_TRIANGLES,
+                 STORAGE_USER )
+// 0 draws everything through the dynamic index buffer again, at once; for A/B runs.
+REGISTER_VAR_EX( "gfx_static_indices", NGlobal::VarBoolHandler, &bStaticIndices, 1, STORAGE_NONE )
 REGISTER_CMD( "gfx_fill_transp", ShowFillTransp )
 FINISH_REGISTER
 } // namespace NGfx
