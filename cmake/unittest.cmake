@@ -22,6 +22,16 @@ function(add_unit_test filename)
     target_link_libraries(${target_name} PRIVATE GTest::gtest_main TestCrashTrace ${ARG_UNPARSED_ARGUMENTS})
     set_target_properties(${target_name} PROPERTIES FOLDER "unittest")
 
+    # googletest only advertises this through its install interface, so a test built
+    # against the fetched DLL compiles without dllimport. Functions still link through
+    # the import library's thunks; data does not, and GTEST_FLAG_SET then fails with an
+    # unresolved FLAGS_gtest_* symbol. It goes here rather than on the gtest target
+    # because gtest_main links gtest and defines main itself, which dllimport forbids.
+    get_target_property(gtest_type GTest::gtest TYPE)
+    if(gtest_type STREQUAL "SHARED_LIBRARY")
+        target_compile_definitions(${target_name} PRIVATE GTEST_LINKED_AS_SHARED_LIBRARY=1)
+    endif()
+
     # Registered with ctest under a label, because the dependencies register around a
     # hundred and fifty tests of their own and there has to be a way to ask for only
     # this project's. Run them with:  ctest -L obk2-test
