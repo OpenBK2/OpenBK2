@@ -233,3 +233,8 @@ context. Read `git diff` of every touched file before building.
 - When testing DLL-backed command queues, check exports for every new out-of-line
   call, including existing accessors such as GetCurCmd. Missing one surfaces only at
   the final Windows link after a large header rebuild.
+
+- gtest here is a DLL on Windows but its `GTEST_LINKED_AS_SHARED_LIBRARY` is install-interface only, so tests compile without dllimport: functions link, data (`GTEST_FLAG_SET`) does not. `add_unit_test` now defines it. Never put it on the gtest target, because gtest_main defines `main` with `GTEST_API_`.
+- A benchmark or test that includes `3Dmotor/stdafx.h` gets `windows.h` without NOMINMAX; it only compiles beside `<limits>::max()` because glm's `_fixes.hpp` happens to undefine the macros. Do not read "the neighbouring benchmark compiles" as proof.
+- A test that never linked has never run. When fixing a link failure, run it under CI's configuration: `NormalTransform_test` took 17 s on Clang, 137 s on RelWithDebInfo and 727 s on Windows Debug, past ctest's 600 s. Time heavy tests in the Debug tree before pushing, and check every workflow on the commit, not only the linked job.
+- `static_cast<int>` of NaN or infinity is undefined, and clang really does differ from `cvttss2si` (0x80 and 0xff against 0). When SSE and scalar kernels agree with each other but not with a live baseline, on one compiler only, look for undefined behaviour in the baseline.
