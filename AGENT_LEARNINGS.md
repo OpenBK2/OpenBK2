@@ -277,6 +277,11 @@ context. Read `git diff` of every touched file before building.
   `ML_COMMAND_HIDE_ALL_UP_TO` command closes overlays while retaining Mission.
 - Mission-end UI must not reuse `UpdateWinLooseState` after COOP lockstep stops:
   resetting an active engineer build tool can emit a cancellation unit command.
+- Live MP normally resumes the interface timer when Mission loses focus. A COOP
+  result must latch the existing mission pause after lockstep ends and the replay
+  is saved; otherwise world SFX and game-time particles continue under WinLoose.
+  Camera, fade and music use absolute time. Keep the latch through teardown focus
+  changes; MissionBackground and new mission startup already restore sound/timers.
 
 ## COOP loading and replay previews
 

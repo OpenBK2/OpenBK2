@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- COOP victory/defeat camera sequences now pause world sounds and particle effects like single-player missions, while the outcome music, camera orbit and fade continue.
+
 - Replay previews now select individual players, including COOP AI bots. Rows show the player name, Winner/Loser/Unfinished status and existing team flag. Selection follows the exact recorded player ID across replay-list rebuilds, and replay names containing spaces keep the selected viewpoint. The existing GUI layout is reused.
 
 - COOP loading screens show each map AI player's name and multiplayer start position on the red team. New replays save those names and positions for their preview; older COOP replays fall back to the map data. Replay viewpoints remain human-only.

@@ -2677,10 +2677,12 @@ void CInterfaceMission::UpdateMultiplayerScoreBoard()
 
 void CInterfaceMission::UpdateInterfacePause()
 {
-	PauseIntermission( pScenarioTracker &&
-	                   ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
-	                     NGlobal::GetVar( "History.Playing", 0 ) ) &&
-	                   ( !IsInFocus() /*&& !IsMoveSequence() */ ) );
+	// A finalized COOP result pauses the world like single player. Keep that pause
+	// through transient refocus while the result screen and mission are removed.
+	PauseIntermission( bCoopResultShown || ( pScenarioTracker &&
+	                                         ( pScenarioTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE ||
+	                                           NGlobal::GetVar( "History.Playing", 0 ) ) &&
+	                                         !IsInFocus() ) );
 }
 
 bool CInterfaceMission::IsScreenControl( const CVec2 &vPos ) const
@@ -2984,6 +2986,9 @@ void CInterfaceMission::ShowMultiplayerResult( bool bWin )
 			return;
 		}
 		bCoopResultShown = true;
+		// Freeze game-time particles and pause SFX before starting the orbit. Camera,
+		// fade and outcome music use absolute time and continue while the world pauses.
+		UpdateInterfacePause();
 		// Keep the mission scene alive for the same camera orbit, music and fade as
 		// single player. Closing only overlays also handles an open objectives/menu.
 		NMainLoop::Command( ML_COMMAND_HIDE_ALL_UP_TO, "Mission" );

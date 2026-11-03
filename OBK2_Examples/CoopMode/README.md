@@ -92,7 +92,9 @@ Before using it, create the script groups and areas named in its comments.
   remaining ally, or neutral if no ally remains.
 
 COOP victory and defeat use the single-player camera orbit, outcome music and
-fade before showing multiplayer statistics. `FinalPositions[0]` is the victory
+fade before showing multiplayer statistics. World sounds and particle effects
+pause during this sequence; the camera, music and fade continue.
+`FinalPositions[0]` is the victory
 camera anchor; `FinalPositions[1]`, when present, is the defeat anchor. Without
 these entries the camera orbits its current position. The usual key press skips
 the animation. Set `MusicWin` and `MusicLost` as for a single-player mission.
