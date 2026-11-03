@@ -386,7 +386,7 @@ wxPGEditor *ButtonEditor()
 const char *const PC_TYPE_ICONS[PCIE_COUNT] = {
 	"file-question",       // PCIE_UNKNOWN
 	"folder",              // PCIE_FOLDER
-	"hash",                // PCIE_INT_INPUT
+	"numbers",             // PCIE_INT_INPUT
 	"sliders-horizontal",  // PCIE_INT_SLIDER
 	"list",                // PCIE_INT_COMBO
 	"palette",             // PCIE_INT_COLOR
