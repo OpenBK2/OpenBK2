@@ -5,6 +5,14 @@
 #include "InterfaceScreenBase.h"
 #include "port/time.h"
 
+#include <string>
+#include <vector>
+
+namespace NGameX
+{
+struct SReplayPlayerInfo;
+}
+
 class CInterfaceReplaySaveLoad : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceReplaySaveLoad );
@@ -29,6 +37,19 @@ private:
 	};
 
 	typedef std::vector<SReplayEntry> CReplayEntries;
+
+	struct SPlayerEntry
+	{
+		CPtr<IWindow> pItem;
+		int nPlayerIndex = -1;
+
+		int operator&( IBinSaver &f )
+		{
+			f.Add( 2, &pItem );
+			f.Add( 3, &nPlayerIndex );
+			return 0;
+		}
+	};
 
 	enum EQuestionMode
 	{
@@ -59,6 +80,7 @@ private:
 	CPtr<IWindow> pMinimapNameTemplate;
 	CPtr<IScrollableContainer> pPlayerList;
 	CPtr<IWindow> pPlayerItemTemplate;
+	std::vector<SPlayerEntry> playerEntries;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -80,6 +102,7 @@ private:
 		f.Add( 17, &pPlayerList );
 		f.Add( 18, &pPlayerItemTemplate );
 		f.Add( 19, &pMinimapNameTemplate );
+		f.Add( 20, &playerEntries );
 		return 0;
 	}
 
@@ -89,8 +112,9 @@ private:
 	void PopulateReplayList();
 	void CleanSelectionInfo();
 	void MakeInfo( const SReplayEntry &entry );
-	void MakeTeams( const SMultiplayerReplayInfo &info );
-	void AddPlayers( IWindow *pWnd, bool bWon, int nTeam, const SMultiplayerReplayInfo &info );
+	void MakePlayers( const SMultiplayerReplayInfo &info );
+	void AddPlayer( IWindow *pWnd, const NGameX::SReplayPlayerInfo &player );
+	int GetSelectedPlayer() const;
 	void MakeMinimap( const SMultiplayerReplayInfo &info );
 	void DoSaveReplay();
 

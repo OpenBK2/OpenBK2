@@ -104,6 +104,7 @@ set(SOURCES
     MultiplayerTestNet.cpp
     PlayMovieInterface.cpp
     ProfileManagerMenu.cpp
+    ReplayPlayerInfo.cpp
     SaveLoadHelper.cpp
     ScenarioTracker.cpp
     ScenarioTrackerMP.cpp
