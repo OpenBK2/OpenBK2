@@ -1,3 +1,8 @@
+# benchmark.h calls numeric_limits<>::max(), and 3Dmotor/stdafx.h includes windows.h
+# first with nothing keeping its min and max macros out. A benchmark only compiled
+# when something it included pulled in glm, whose _fixes.hpp undefines them.
+add_compile_definitions(NOMINMAX)
+
 function(add_benchmark_arch filename flag suffix)
     set(target_name ${filename}_benchmark${suffix})
     add_executable(${target_name} EXCLUDE_FROM_ALL ${filename}.cpp)
