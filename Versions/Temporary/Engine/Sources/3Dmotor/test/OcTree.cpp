@@ -4,6 +4,11 @@
 #include "3DLib/Transform.h"
 #include "3Dmotor/OcTree.h"
 
+#include <cmath>
+#include <cstdio>
+#include <limits>
+#include <random>
+
 #include <gtest/gtest.h>
 
 namespace
@@ -140,4 +145,80 @@ TEST( OcTree, LargeUpdateHintsStayAtRoot )
 	EXPECT_TRUE( root->occupied );
 	EXPECT_FALSE( root->Walk() );
 	EXPECT_EQ( root->GetNode( CVec3( 0, 0, 0 ), 1e6f ), root.GetPtr() );
+}
+
+// The placement shortcut of CAnimatedBoundPart::Update. The tracked descent has
+// to return exactly what the plain one returns, and whenever its recorded ranges
+// say a new centre and radius are placed the same, a real descent has to agree.
+// Moves are mostly small steps from the last placement, the way a unit drives,
+// with jumps, centres on split planes, signed zeros, radii at the size thresholds,
+// points outside the root that make it grow, and NaN mixed in.
+TEST( OcTree, RecordedPlacementPredictsTheDescent )
+{
+	CObj<CTestNode> root = MakeTree();
+	std::mt19937 rng( 20261103 );
+	std::uniform_real_distribution<float> unit( 0.0f, 1.0f );
+	std::uniform_int_distribution<int> kind( 0, 19 );
+	SOcTreePlacement place;
+	CTestNode *pPlaced = 0;
+	CVec3 vCenter( 100.0f, 100.0f, 10.0f );
+	float fRadius = 3.0f;
+	int nPredicted = 0, nMoves = 0;
+	for ( int k = 0; k < 200000; ++k )
+	{
+		switch ( kind( rng ) )
+		{
+			case 0:
+				vCenter = CVec3( unit( rng ) * 1000.0f - 64.0f, unit( rng ) * 1000.0f - 64.0f, unit( rng ) * 100.0f );
+				break;
+			case 1:
+				// A split plane of the root or below it, or the root's edge.
+				vCenter.x = -128.0f + 1024.0f * ( ( rng() % 9 ) / 8.0f );
+				break;
+			case 2:
+				vCenter.y = ( rng() % 2 ) ? 0.0f : -0.0f;
+				break;
+			case 3:
+				// Exactly a node's stop threshold, half its GetMaxElementSize.
+				fRadius = 0.5f * ( 0.25f * ( 1024.0f / float( 1 << ( rng() % 8 ) ) ) * sqrtf( 3.0f ) );
+				break;
+			case 4:
+				fRadius = unit( rng ) * 200.0f;
+				break;
+			case 5:
+				if ( rng() % 50 == 0 )
+				{
+					vCenter.z = std::numeric_limits<float>::quiet_NaN();
+				}
+				break;
+			case 6:
+				if ( rng() % 200 == 0 )
+				{
+					// Far outside: the root grows, which must invalidate placements.
+					vCenter = CVec3( -3000.0f * unit( rng ), 4000.0f * unit( rng ), 0.0f );
+				}
+				break;
+			default:
+				vCenter.x += ( unit( rng ) - 0.5f ) * 2.0f;
+				vCenter.y += ( unit( rng ) - 0.5f ) * 2.0f;
+				break;
+		}
+		if ( std::isnan( vCenter.z ) && kind( rng ) < 10 )
+		{
+			vCenter.z = 0.0f;
+		}
+		++nMoves;
+		if ( pPlaced && place.IsSamePlacement( vCenter, fRadius, root->GetLayoutChanges() ) )
+		{
+			++nPredicted;
+			ASSERT_EQ( root->GetNode( vCenter, fRadius ), pPlaced ) << k;
+			continue;
+		}
+		CTestNode *pPlain = root->GetNode( vCenter, fRadius );
+		pPlaced = root->GetNode( vCenter, fRadius, &place );
+		ASSERT_EQ( pPlain, pPlaced ) << k;
+	}
+	// The shortcut has to hit for the common small step, or it saves nothing.
+	EXPECT_GT( nPredicted, nMoves / 2 );
+	printf( "placements predicted: %d of %d\n", nPredicted, nMoves );
 }

@@ -348,6 +348,16 @@ public:
 		return 0;
 	}
 
+private:
+	// The node the part was last placed in and the ranges for which the descent
+	// from the root would place it there again (SOcTreePlacement). A moving unit's
+	// parts are re-placed every frame and nearly always land in the same node, and
+	// descending from the root each time was most of this function's cost. Not
+	// saved: an empty pointer means descend.
+	CPtr<CVolumeNode> pPlacedNode;
+	SOcTreePlacement placement;
+
+public:
 	CAnimatedBoundPart() {}
 
 	CAnimatedBoundPart( CPtrFuncBase<CObjectInfo> *pData,
