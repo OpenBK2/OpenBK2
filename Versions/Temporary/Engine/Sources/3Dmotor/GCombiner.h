@@ -167,6 +167,13 @@ public:
 public:
 	std::vector<CVec3> xformedPositions;
 	CBuffer<char> gfxData;
+	// Whether gfxData was dropped because the part changed (ResetCachedTransform or
+	// ResetCachedLighting) since its last build, and how many builds in a row were
+	// for such a change, capped at 2. A part that keeps changing is built straight
+	// into the vertex buffer instead of through gfxData (STGfxCacheTransformer).
+	// Not saved.
+	bool bGfxInvalidated = false;
+	uint8_t nGfxChangeRun = 0;
 	CVec3 vBVMin, vBVMax;
 	float fAverageTriArea;
 
@@ -247,6 +254,7 @@ public:
 	void ResetCachedLighting()
 	{
 		gfxData.Clear();
+		bGfxInvalidated = true;
 	} // for CVBCombiner only
 };
 

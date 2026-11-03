@@ -63,6 +63,7 @@ void IPart::ResetCachedTransform()
 {
 	xformedPositions.clear();
 	gfxData.Clear();
+	bGfxInvalidated = true;
 	cacheLighting.Clear();
 }
 
@@ -561,21 +562,44 @@ struct STGfxCacheTransformer : public SPartTransformer<STGenericTransformer<TVer
 			p->gfxData.Clear();
 			return;
 		}
+		int nSize = sizeof( TVertex ) * nPartVerts;
 		if ( bLowRAM )
 		{
 			int nTransformed = this->DoTransform( p, &geom[nVert], transformed );
 			ASSERT( nTransformed == nPartVerts );
 		}
+		else if ( p->gfxData.GetSize() == nSize )
+		{
+			// Unchanged since its last build: copy the cached vertices.
+			std::memcpy( &geom[nVert], &p->gfxData[0], nSize );
+		}
 		else
 		{
-			int nSize = sizeof( TVertex ) * nPartVerts;
-			if ( p->gfxData.GetSize() != nSize )
+			// Rebuild. A part dropped for a change on its last build as well keeps
+			// changing, typically every frame (a moving unit folds its placement into
+			// its bone matrices). Caching its vertices in gfxData only to copy them
+			// into the vertex buffer cost a second pass over every vertex and a free and
+			// allocation per rebuild, so such a part is built in place: the writes are
+			// sequential and never read back, which suits the write-combined memory a
+			// dynamic buffer may live in. A part built for the first time, or after a
+			// stretch without changes, still goes through gfxData, so one that then
+			// stays put is copied, not rebuilt, on the next recalc.
+			const bool bChanged = p->bGfxInvalidated;
+			p->bGfxInvalidated = false;
+			p->nGfxChangeRun = bChanged ? static_cast<uint8_t>( std::min( p->nGfxChangeRun + 1, 2 ) ) : 0;
+			if ( p->nGfxChangeRun >= 2 )
+			{
+				p->gfxData.Clear();
+				int nTransformed = this->DoTransform( p, &geom[nVert], transformed );
+				ASSERT( nTransformed == nPartVerts );
+			}
+			else
 			{
 				p->gfxData.Resize( nSize );
 				int nTransformed = this->DoTransform( p, (TVertex *)&p->gfxData[0], transformed );
 				ASSERT( nTransformed == nPartVerts );
+				std::memcpy( &geom[nVert], &p->gfxData[0], nSize );
 			}
-			std::memcpy( &geom[nVert], &p->gfxData[0], nSize );
 		}
 		nVert += nPartVerts;
 		ASSERT( nVert <= geom.GetSize() );
