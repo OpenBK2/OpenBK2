@@ -624,4 +624,77 @@ TEST( Skinning, RigidVariants )
 	}
 }
 
+// XFormPosition's part box, computed inside the transform, has to be bit for bit
+// what its old loop gave: UpdateBounds (std::min/std::max against the running
+// value) over the results, seeded with SBoundCalcer's +-1e38. Positions include
+// signed zeros, so ties between +0 and -0 decide which one the box keeps, and an
+// occasional NaN component, which UpdateBounds never lets into the box.
+TEST( Skinning, AccumulateBoundsMatchesUpdateBounds )
+{
+	std::mt19937 rng( 20261103 );
+	std::uniform_real_distribution<float> coord( -50.0f, 50.0f );
+	std::uniform_int_distribution<int> special( 0, 15 );
+	const float fNaN = std::numeric_limits<float>::quiet_NaN();
+	int nCases = 0;
+	for ( int nCount = 0; nCount <= 300; nCount += ( nCount < 40 ? 1 : 37 ) )
+	{
+		for ( int nRep = 0; nRep < 40; ++nRep )
+		{
+			// Identity, a pure scale or a random affine matrix: the first two pass
+			// zeros through unchanged, so the ties really happen.
+			float m[16] = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
+			if ( nRep % 3 == 1 )
+			{
+				m[0] = 2.0f;
+				m[5] = -1.0f;
+				m[10] = 0.5f;
+			}
+			else if ( nRep % 3 == 2 )
+			{
+				for ( int j = 0; j < 12; ++j )
+				{
+					m[j] = coord( rng ) / 25.0f;
+				}
+			}
+			std::vector<float> src( 3 * nCount );
+			for ( float &f : src )
+			{
+				switch ( special( rng ) )
+				{
+					case 0:
+						f = 0.0f;
+						break;
+					case 1:
+						f = -0.0f;
+						break;
+					case 2:
+						f = nRep % 5 == 0 ? fNaN : coord( rng );
+						break;
+					default:
+						f = coord( rng );
+						break;
+				}
+			}
+			std::vector<float> dstRef( 3 * nCount ), dst( 3 * nCount );
+			NSkinning::TransformPositions( src.data(), dstRef.data(), nCount, m );
+			float refMin[3] = { 1e38f, 1e38f, 1e38f }, refMax[3] = { -1e38f, -1e38f, -1e38f };
+			for ( int k = 0; k < nCount; ++k )
+			{
+				for ( int j = 0; j < 3; ++j )
+				{
+					refMin[j] = std::min( refMin[j], dstRef[3 * k + j] );
+					refMax[j] = std::max( refMax[j], dstRef[3 * k + j] );
+				}
+			}
+			float vMin[3] = { 1e38f, 1e38f, 1e38f }, vMax[3] = { -1e38f, -1e38f, -1e38f };
+			NSkinning::TransformPositionsAccumulateBounds( src.data(), dst.data(), nCount, m, vMin, vMax );
+			ASSERT_EQ( 0, std::memcmp( dst.data(), dstRef.data(), dst.size() * sizeof( float ) ) ) << nCount;
+			ASSERT_EQ( 0, std::memcmp( vMin, refMin, sizeof( vMin ) ) ) << nCount << " rep " << nRep;
+			ASSERT_EQ( 0, std::memcmp( vMax, refMax, sizeof( vMax ) ) ) << nCount << " rep " << nRep;
+			++nCases;
+		}
+	}
+	printf( "AccumulateBounds: %d cases identical to UpdateBounds\n", nCases );
+}
+
 } // namespace

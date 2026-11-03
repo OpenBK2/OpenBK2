@@ -323,7 +323,8 @@ static void ReorderTransparent( std::vector<STriangle> *pRet,
 	////
 	std::vector<CVec3> holdPos;
 	const std::vector<CVec3> *pTransofmedPos = &pPart->xformedPositions;
-	if ( pTransofmedPos->empty() )
+	// Stale positions are kept in place rather than cleared (IPart::bXformedStale).
+	if ( pPart->bXformedStale || pTransofmedPos->empty() )
 	{
 		TransformPart( pPart, &holdPos, 0 );
 		pTransofmedPos = &holdPos;

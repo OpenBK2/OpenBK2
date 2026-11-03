@@ -268,8 +268,8 @@ inline void TransformPositions( const float *pSrc, float *pDst, int nCount, cons
 
 // TransformPositions plus the axis-aligned box of the results, which XFormPosition
 // otherwise computes in a second pass over the array. pMin/pMax receive three floats
-// each and are left untouched when nCount is 0; the caller applies its own seeding
-// (XFormPosition starts ptMax at the origin).
+// each and are left untouched when nCount is 0. For a box that continues one the
+// caller has already started, see TransformPositionsAccumulateBounds.
 inline void
 TransformPositionsBounds( const float *pSrc, float *pDst, int nCount, const float *pMatrix, float *pMin, float *pMax )
 {
@@ -291,6 +291,37 @@ TransformPositionsBounds( const float *pSrc, float *pDst, int nCount, const floa
 	NDetail::StoreXYZSafe( pDst + 3 * nLast, r );
 	NDetail::StoreXYZSafe( pMin, _mm_min_ps( vMin, r ) );
 	NDetail::StoreXYZSafe( pMax, _mm_max_ps( vMax, r ) );
+}
+
+// TransformPositions that also extends the box pMin..pMax (three floats each, in
+// and out) by every result, for XFormPosition's part bounds: seed them as
+// SBoundCalcer does and the box comes out bit for bit what UpdateBounds over the
+// results gives. _mm_min_ps( r, acc ) is r < acc ? r : acc, which is std::min( acc,
+// r ) including ties of +0 and -0 and a NaN result (the old value is kept), and
+// likewise for max. Folding the box into the transform keeps each result in a
+// register instead of reading the array back in a scalar loop that was bound by the
+// latency of six dependent min/max chains, about four cycles a vertex.
+inline void TransformPositionsAccumulateBounds(
+		const float *pSrc, float *pDst, int nCount, const float *pMatrix, float *pMin, float *pMax )
+{
+	if ( nCount <= 0 )
+	{
+		return;
+	}
+	const NDetail::SColumns cols = NDetail::LoadColumns( pMatrix );
+	const int nLast = nCount - 1;
+	__m128 vMin = NDetail::LoadXYZSafe( pMin ), vMax = NDetail::LoadXYZSafe( pMax );
+	for ( int k = 0; k < nLast; ++k )
+	{
+		const __m128 r = NDetail::TransformByColumns( cols, _mm_loadu_ps( pSrc + 3 * k ) );
+		vMin = _mm_min_ps( r, vMin );
+		vMax = _mm_max_ps( r, vMax );
+		_mm_storeu_ps( pDst + 3 * k, r );
+	}
+	const __m128 r = NDetail::TransformByColumns( cols, NDetail::LoadXYZSafe( pSrc + 3 * nLast ) );
+	NDetail::StoreXYZSafe( pDst + 3 * nLast, r );
+	NDetail::StoreXYZSafe( pMin, _mm_min_ps( r, vMin ) );
+	NDetail::StoreXYZSafe( pMax, _mm_max_ps( r, vMax ) );
 }
 
 #else
@@ -320,6 +351,28 @@ TransformPositionsBounds( const float *pSrc, float *pDst, int nCount, const floa
 				pMin[j] = v;
 			}
 			if ( k == 0 || v > pMax[j] )
+			{
+				pMax[j] = v;
+			}
+		}
+	}
+}
+
+inline void TransformPositionsAccumulateBounds(
+		const float *pSrc, float *pDst, int nCount, const float *pMatrix, float *pMin, float *pMax )
+{
+	TransformPositionsScalar( pSrc, pDst, nCount, pMatrix );
+	// The comparisons of UpdateBounds: keep the old value on a tie or a NaN.
+	for ( int k = 0; k < nCount; ++k )
+	{
+		for ( int j = 0; j < 3; ++j )
+		{
+			const float v = pDst[3 * k + j];
+			if ( v < pMin[j] )
+			{
+				pMin[j] = v;
+			}
+			if ( pMax[j] < v )
 			{
 				pMax[j] = v;
 			}

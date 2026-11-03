@@ -61,7 +61,7 @@ void IPart::RefreshObjectInfo()
 
 void IPart::ResetCachedTransform()
 {
-	xformedPositions.clear();
+	bXformedStale = true;
 	gfxData.Clear();
 	bGfxInvalidated = true;
 	cacheLighting.Clear();
@@ -252,6 +252,19 @@ static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, co
 	}
 }
 
+// The same, also extending the box vMin..vMax by every result. Bit for bit what
+// UpdateBounds over the results gives (NSkinning::TransformPositionsAccumulateBounds),
+// without reading the array back.
+static void
+TransformPositionBounds( const std::vector<CVec3> &srcPos, CVec3 *pRes, const SHMatrix &m, CVec3 *pMin, CVec3 *pMax )
+{
+	const int nCount = srcPos.size();
+	if ( nCount > 0 )
+	{
+		NSkinning::TransformPositionsAccumulateBounds( &srcPos[0].x, &pRes->x, nCount, &m._11, &pMin->x, &pMax->x );
+	}
+}
+
 static void TransformPosition( const std::vector<CVec3> &srcPos,
                                CVec3 *pRes,
                                const SRealVertexWeight *pWeight,
@@ -423,6 +436,12 @@ struct SGenericPosTransformer
 		PASS_MMX_BLENDS = 0
 	};
 
+	// The box of the transformed positions, filled when one matrix moved every
+	// position (rigid and simple parts); XFormPosition then skips its own pass over
+	// the array. Seeded as SBoundCalcer seeds it, so the box is the same either way.
+	bool bHasBounds = false;
+	CVec3 vMin = CVec3( 1e38f, 1e38f, 1e38f ), vMax = CVec3( -1e38f, -1e38f, -1e38f );
+
 	void CopyTransform(
 			CObjectInfo *pObjInfo, const SUVInfo *pSrc, int nSize, SCacheLightingInfo *pCache, const SBound &bv, TRes *pRes )
 	{
@@ -443,7 +462,8 @@ struct SGenericPosTransformer
 	                      TRes *pRes )
 	{
 		const std::vector<CVec3> &srcPos = pObjInfo->GetPositions();
-		TransformPosition( srcPos, pRes, trans.forward );
+		TransformPositionBounds( srcPos, pRes, trans.forward, &vMin, &vMax );
+		bHasBounds = true;
 	}
 
 	void SingleSkinTransform( CObjectInfo *pObjInfo,
@@ -468,7 +488,8 @@ struct SGenericPosTransformer
 		const int nRigidBone = pObjInfo->GetRigidBone();
 		if ( nRigidBone >= 0 && nRigidBone < static_cast<int>( blends.size() ) )
 		{
-			TransformPosition( srcPos, pRes, blends[nRigidBone] );
+			TransformPositionBounds( srcPos, pRes, blends[nRigidBone], &vMin, &vMax );
+			bHasBounds = true;
 			return;
 		}
 		TransformPosition( srcPos, pRes, pWeight, blends );
@@ -647,9 +668,15 @@ void CVBCombiner::XFormPosition()
 		// xform
 		std::vector<CVec3> *pRes = &pPart->xformedPositions;
 		int nSize = pObjInfo->GetPositions().size();
-		if ( nSize != pRes->size() )
+		if ( pPart->bXformedStale || nSize != pRes->size() )
 		{
-			pRes->resize( nSize );
+			// Resized only when the count changes; the transform below writes every
+			// element.
+			if ( nSize != pRes->size() )
+			{
+				pRes->resize( nSize );
+			}
+			pPart->bXformedStale = false;
 			if ( nSize > 0 )
 			{
 				SPartTransformer<SGenericPosTransformer> trans;
@@ -661,12 +688,21 @@ void CVBCombiner::XFormPosition()
 				// the max to 0 on any axis where the whole part is negative, such as an
 				// aircraft arriving from beyond the lower map edge.
 				SBoundCalcer bc;
-
-				for ( int k = 0; k < nSize; ++k )
+				if ( trans.bHasBounds )
 				{
-					const CVec3 &v = ( *pRes )[k];
+					// Computed during the transform, from the same seeds and with the
+					// same comparisons as the loop below.
+					bc.ptMin = trans.vMin;
+					bc.ptMax = trans.vMax;
+				}
+				else
+				{
+					for ( int k = 0; k < nSize; ++k )
+					{
+						const CVec3 &v = ( *pRes )[k];
 
-					UpdateBounds( bc.ptMin, bc.ptMax, v );
+						UpdateBounds( bc.ptMin, bc.ptMax, v );
+					}
 				}
 				pPart->vBVMin = bc.ptMin;
 				pPart->vBVMax = bc.ptMax;

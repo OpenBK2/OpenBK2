@@ -166,6 +166,13 @@ public:
 
 public:
 	std::vector<CVec3> xformedPositions;
+	// xformedPositions no longer matches the part's transform. ResetCachedTransform
+	// sets this instead of clearing the vector, so the next transform overwrites the
+	// elements in place: clearing made the following resize value-initialise every
+	// CVec3 only for the skinning to overwrite it, 1.5% of the main thread with many
+	// moving units. The elements are always initialised, either by that resize or by
+	// an earlier transform. Readers test this flag (XFormPosition, GTransparent).
+	bool bXformedStale = true;
 	CBuffer<char> gfxData;
 	// Whether gfxData was dropped because the part changed (ResetCachedTransform or
 	// ResetCachedLighting) since its last build, and how many builds in a row were
