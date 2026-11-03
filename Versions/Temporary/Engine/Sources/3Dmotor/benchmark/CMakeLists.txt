@@ -35,13 +35,16 @@ set(LIGHTING_KERNEL_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexRef.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexSSE2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexDispatch.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
 if(MSVC)
     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
         PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
 else()
     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
         PROPERTIES COMPILE_OPTIONS "-mavx2")
 endif()
 
@@ -91,6 +94,31 @@ set_target_properties(NormalTransform_benchmark PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/NormalTransform_benchmark)
 copy_runtime_dlls(NormalTransform_benchmark)
 register_benchmark(NormalTransform_benchmark)
+
+# The fused war fog kernels of GWarFogSample.h against the shipped
+# pSampleWarFogCoords + pSampleWarFogInt path. Wired like NormalTransform_benchmark:
+# the AVX2 kernels carry their own target attribute, so no flag goes on this file.
+bk2_add_executable(WarFogSample_benchmark NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL
+    WarFogSample.cpp ${LIGHTING_KERNEL_SOURCES})
+target_link_libraries(WarFogSample_benchmark PRIVATE benchmark::benchmark 3Dmotor Misc)
+set_target_properties(WarFogSample_benchmark PROPERTIES
+    FOLDER "benchmark"
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/WarFogSample_benchmark)
+copy_runtime_dlls(WarFogSample_benchmark)
+register_benchmark(WarFogSample_benchmark)
+
+# The fused directional + vertex colour + SGeomVecFull assembly kernels of
+# GLightPerVertexFused.h against the engine's current pass sequence (shipped
+# directional kernel, MultiplyOnColor twice, the output loop, the gfxData memcpy).
+# The AVX2 set is its own translation unit, the only one given the AVX2 flag.
+bk2_add_executable(LightFused_benchmark NO_VERSION_INFO NO_INSTALL EXCLUDE_FROM_ALL
+    LightFused.cpp ${LIGHTING_KERNEL_SOURCES})
+target_link_libraries(LightFused_benchmark PRIVATE benchmark::benchmark 3Dmotor Misc)
+set_target_properties(LightFused_benchmark PROPERTIES
+    FOLDER "benchmark"
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/LightFused_benchmark)
+copy_runtime_dlls(LightFused_benchmark)
+register_benchmark(LightFused_benchmark)
 
 # The MMX reference this one measures against is assembled, not inline, so the
 # benchmark exists only where MASM does and every variant has to link it. It is also

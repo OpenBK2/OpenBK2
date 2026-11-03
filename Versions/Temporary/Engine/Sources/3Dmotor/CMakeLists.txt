@@ -50,6 +50,7 @@ set(SOURCES
     GLightPerVertex.cpp
     GLightPerVertexAVX2.cpp
     GLightPerVertexDispatch.cpp
+    GLightPerVertexFusedAVX2.cpp
     GLightPerVertexRef.cpp
     GLightPerVertexSSE2.cpp
     GLMLightState.cpp
@@ -143,22 +144,25 @@ else()
     target_link_libraries(3Dmotor PRIVATE dxvk::d3d9 SDL3::SDL3-shared)
 endif()
 
-# GLightPerVertexAVX2.cpp is the only translation unit allowed to contain AVX2
-# instructions, and it is reached only through avx2LightingKernels after
-# GetLightingKernels() has confirmed CPUID and XGETBV agree. Applying /arch:AVX2
-# any wider than this single file would put AVX2 code on paths that run before
-# and without that check.
+# GLightPerVertexAVX2.cpp and GLightPerVertexFusedAVX2.cpp are the only translation
+# units allowed to contain AVX2 instructions, and they are reached only through
+# avx2LightingKernels and avx2NoGatherFusedLightKernels after GetLightingKernels()
+# has confirmed CPUID and XGETBV agree. Applying /arch:AVX2 any wider than these
+# files would put AVX2 code on paths that run before and without that check.
 if(MSVC)
-    set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
+    set_source_files_properties(GLightPerVertexAVX2.cpp GLightPerVertexFusedAVX2.cpp
+        PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
 else()
-    set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES COMPILE_OPTIONS "-mavx2")
+    set_source_files_properties(GLightPerVertexAVX2.cpp GLightPerVertexFusedAVX2.cpp
+        PROPERTIES COMPILE_OPTIONS "-mavx2")
 endif()
 
 # GLightPerVertexAVX2.cpp is the only source in this target with a compile line
 # of its own, and MSVC rejects a translation unit whose options disagree with
 # the ones the precompiled header was built on (C2855). The file includes
 # stdafx.h itself, so dropping the PCH costs it only the parse.
-set_source_files_properties(GLightPerVertexAVX2.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+set_source_files_properties(GLightPerVertexAVX2.cpp GLightPerVertexFusedAVX2.cpp
+    PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 
 # GLightPerVertexSSE2.cpp drops the precompiled header for an unrelated reason,
 # and only a build with no optimisation needs it to.

@@ -5,8 +5,10 @@
 #include "GLightPerVertex.h"
 //#include "..\Misc\HPTimer.h"
 #include "3DLib/Bound.h"
+#include "GLightPerVertexFused.h"
 #include "GLightPerVertexKernels.h"
 #include "GSSEtransform.h"
+#include "GWarFogSample.h"
 
 #include <algorithm>
 #include <cstdint>
@@ -177,28 +179,6 @@ bool SPerVertexLightState::SetWarFog( const CArray2D<unsigned char> &_fog, float
 	return bRes;
 }
 
-static void MultiplyOnColor( std::vector<uint32_t> *pRes, const std::vector<uint32_t> &mult )
-{
-	if ( mult.empty() )
-	{
-		return;
-	}
-	uint32_t *pDst = &( *pRes )[0], *pDstEnd = pDst + pRes->size();
-	const uint32_t *pSrc = &mult[0];
-	for ( ; pDst < pDstEnd; ++pDst, ++pSrc )
-	{
-		NGfx::SPixel8888 src = *pSrc;
-		NGfx::SPixel8888 dst = *pDst;
-
-		dst.r = std::min<int>( 255, ( src.r * dst.r ) >> 8 );
-		dst.g = std::min<int>( 255, ( src.g * dst.g ) >> 8 );
-		dst.b = std::min<int>( 255, ( src.b * dst.b ) >> 8 );
-		dst.a = std::min<int>( 255, ( src.a * dst.a ) >> 8 );
-
-		*pDst = dst.dwColor;
-	}
-}
-
 // calc colors
 
 static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b )
@@ -211,27 +191,42 @@ static CVec3 MulPerComp( const CVec3 &a, const CVec3 &b )
 // translation units stay free of std::vector and CArray2D - see the note in
 // GLightPerVertexKernels.h for why that matters to the AVX2 build.
 
-static void CalcDirectionalLighting( const std::vector<uint16_t> &posIndices,
-                                     const std::vector<NGfx::SCompactVector> &_normals,
-                                     const SPerVertexLightState &ls,
-                                     bool bTranslucent,
-                                     const CVec3 &vTranslucentColor,
-                                     std::vector<uint32_t> *pResColors,
-                                     std::vector<uint32_t> *pResShadow )
+// The fused colour kernels (GLightPerVertexFused.h) of the family GetLightingKernels()
+// picked, so each CPU keeps the results of its kernel set: bit-exact with
+// pCalcDirectionalLighting, MultiplyOnColor and the output loop they replace
+// (LightFused_test). The AVX2 set without gathers: with them it was no faster with
+// the data out of cache, and gathers are slow on older AMD parts and on Intel parts
+// carrying the Gather Data Sampling mitigation.
+static const NLightFused::SFusedLightKernels &GetFusedLightKernels()
 {
-	pResColors->resize( posIndices.size() );
-	pResShadow->resize( posIndices.size() );
-	if ( posIndices.empty() )
-	{
-		return;
-	}
+	static const NLightFused::SFusedLightKernels &kernels =
+			&GetLightingKernels() == &avx2LightingKernels   ? NLightFused::avx2NoGatherFusedLightKernels
+			: &GetLightingKernels() == &sse2LightingKernels ? NLightFused::sse2FusedLightKernels
+																											: NLightFused::scalarFusedLightKernels;
+	return kernels;
+}
+
+// The light words the directional kernel reads. The translucent shade is formed the
+// way the CalcDirectionalLighting adapter this replaced formed it for
+// pCalcDirectionalLighting.
+static void MakeDirectionalConsts( NLightFused::SDirectionalConsts *p,
+                                   const SPerVertexLightState &ls,
+                                   bool bTranslucent,
+                                   const CVec3 &vTranslucentColor )
+{
+	static_assert( sizeof( NGfx::SMMXWord ) == sizeof( p->shift ) );
 	NGfx::SMMXWord translucentShade = ls.shadeColor;
 	if ( bTranslucent )
 	{
 		ConvertColor( &translucentShade, MulPerComp( ls.vLightColor, vTranslucentColor ) );
 	}
-	GetLightingKernels().pCalcDirectionalLighting(
-			&_normals[0], posIndices.size(), ls, translucentShade, &( *pResColors )[0], &( *pResShadow )[0] );
+	memcpy( p->shift, &ls.shift, sizeof( p->shift ) );
+	memcpy( p->dirLight, &ls.dirLight, sizeof( p->dirLight ) );
+	memcpy( p->ambient, &ls.ambient, sizeof( p->ambient ) );
+	memcpy( p->lightColor, &ls.lightColor, sizeof( p->lightColor ) );
+	memcpy( p->incidentShadowColor, &ls.incidentShadowColor, sizeof( p->incidentShadowColor ) );
+	memcpy( p->shadeColor, &ls.shadeColor, sizeof( p->shadeColor ) );
+	memcpy( p->translucentShade, &translucentShade, sizeof( p->translucentShade ) );
 }
 
 static void SampleWarFog( const std::vector<CVec3> &srcPos,
@@ -255,21 +250,31 @@ static void SampleWarFog( const std::vector<CVec3> &srcPos,
 		_pRes2->resize( nVertices );
 	}
 
-	static std::vector<int> tmp;
-	if ( tmp.size() < nVertices * 2 )
-	{
-		tmp.resize( nVertices * 2 );
-	}
-
-	const SLightingKernels &kernels = GetLightingKernels();
-	kernels.pSampleWarFogCoords( &srcPos[0], nVertices, fScale, &tmp[0] );
-
+	// Fused sampling (GWarFogSample.h): coordinates, cells and weights once for both
+	// grids, two 16-bit row loads per neighbourhood, gathers on AVX2. Bit-exact with
+	// the pSampleWarFogCoords + pSampleWarFogInt pair of the SSE2 and AVX2 kernel sets
+	// (WarFogSample_test), and picked by the same dispatch, so each CPU keeps the
+	// results of its kernel family. Sampling both grids, which every moving part
+	// does, was about four times faster in WarFogSample_benchmark.
+	static_assert( sizeof( CVec3 ) == 3 * sizeof( float ), "positions are packed xyz" );
+	typedef void ( *TFogSampler )(
+			const float *, int, float, int, const uint8_t *, uint8_t *, const uint8_t *, uint8_t * );
+	static const TFogSampler pSample = &GetLightingKernels() == &avx2LightingKernels   ? &NWarFog::SampleWarFogAVX2
+	                                   : &GetLightingKernels() == &sse2LightingKernels ? &NWarFog::SampleWarFogSSE2
+	                                                                                   : &NWarFog::SampleWarFogScalar;
 	ASSERT( fog1.GetSizeX() == fog1.GetSizeY() );
-	kernels.pSampleWarFogInt( &tmp[0], &fog1[0][0], fog1.GetSizeX(), &( *_pRes1 )[0], nVertices );
+	const float *pPos = &srcPos[0].x;
+	// SetWarFog keeps both grids the same size; should they ever differ, one pass per grid.
+	if ( _pRes2 && fog2.GetSizeX() == fog1.GetSizeX() )
+	{
+		pSample( pPos, nVertices, fScale, fog1.GetSizeX(), &fog1[0][0], &( *_pRes1 )[0], &fog2[0][0], &( *_pRes2 )[0] );
+		return;
+	}
+	pSample( pPos, nVertices, fScale, fog1.GetSizeX(), &fog1[0][0], &( *_pRes1 )[0], nullptr, nullptr );
 	if ( _pRes2 )
 	{
 		ASSERT( fog2.GetSizeX() == fog2.GetSizeY() );
-		kernels.pSampleWarFogInt( &tmp[0], &fog2[0][0], fog2.GetSizeX(), &( *_pRes2 )[0], nVertices );
+		pSample( pPos, nVertices, fScale, fog2.GetSizeX(), &fog2[0][0], &( *_pRes2 )[0], nullptr, nullptr );
 	}
 }
 
@@ -476,15 +481,29 @@ struct SPVLightCalcer
 
 				// calc directional
 				// ~60 clocks / vertex without same normal short cut
-				CalcDirectionalLighting(
-						posIndices, _normals, ls, pCache->bTranslucent, pCache->vTranslucentColor, pColors, pShadowColors );
+				// Directional light and the mesh's vertex colour in one pass
+				// (GLightPerVertexFused.h), bit-exact with CalcDirectionalLighting
+				// followed by MultiplyOnColor on both arrays. The engine's
+				// MultiplyOnColor alone was most of this cost: GCC leaves its per-byte
+				// loop scalar.
+				pColors->resize( nVertices );
+				pShadowColors->resize( nVertices );
+				if ( nVertices > 0 )
+				{
+					NLightFused::SDirectionalConsts consts;
+					MakeDirectionalConsts( &consts, ls, pCache->bTranslucent, pCache->vTranslucentColor );
+					ASSERT( vertexColor.empty() || vertexColor.size() >= nVertices );
+					GetFusedLightKernels().pDirectionalMultiply( &_normals[0].dw,
+					                                             nVertices,
+					                                             consts,
+					                                             vertexColor.empty() ? nullptr : &vertexColor[0],
+					                                             &( *pColors )[0],
+					                                             &( *pShadowColors )[0] );
+				}
 				if ( !pCache->bDoNotCacheLighting )
 				{
 					pCache->nDirectionalLightID = ls.nDirectionalID;
 				}
-
-				MultiplyOnColor( pShadowColors, vertexColor );
-				MultiplyOnColor( pColors, vertexColor );
 
 				// calc point lights
 				if ( !pl.empty() )
@@ -717,20 +736,25 @@ void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
 	}
 	else
 	{
-		// ~? clocks / vertex
-		int k = 0;
-		for ( const SUVInfo *pEnd = pSrc + posIndices.size(); pSrc < pEnd; ++pSrc, ++pRes, ++k )
-		{
-			NGfx::SGeomVecFull &res = *pRes;
-			const CVec3 &pos = srcPos[posIndices[k]];
-			res.pos = pos;
-			res.normal = _normals[k];
-			res.tex = pSrc->tex;
-			res.texLM = pSrc->texLM;
-			int nWarFogIndex = posIndices[k] & l.nWarFogMask;
-			res.texU.dw = ( ( *l.pShadowColors )[k] & 0xffffff ) | ( l.pWarFogOld[nWarFogIndex] << 24 );
-			res.texV.dw = ( ( *l.pColors )[k] & 0xffffff ) | ( l.pWarFogNew[nWarFogIndex] << 24 );
-		}
+		// The output loop as one kernel (GLightPerVertexFused.h): position, normal,
+		// texture coordinates, and the two colours with the war fog in their alpha,
+		// written as whole 32-byte vertices in order. Bit-exact with the loop it
+		// replaced; the colours already include the vertex colour.
+		static_assert( sizeof( NGfx::SGeomVecFull ) == sizeof( NLightFused::SVertexFull ) );
+		NLightFused::SVertexCall call;
+		call.pRes = reinterpret_cast<NLightFused::SVertexFull *>( pRes );
+		call.pStream = nullptr;
+		call.pPositions = &srcPos[0].x;
+		call.nPositions = srcPos.size();
+		call.pPosIndices = &posIndices[0];
+		call.pUV = reinterpret_cast<const uint8_t *>( pSrc );
+		call.nUVStride = sizeof( SUVInfo );
+		call.pNormals = &_normals[0].dw;
+		call.pFogOld = l.pWarFogOld;
+		call.pFogNew = l.pWarFogNew;
+		call.nFogMask = static_cast<uint32_t>( l.nWarFogMask );
+		call.nCount = posIndices.size();
+		GetFusedLightKernels().pAssembleVertices( call, nullptr, &( *l.pColors )[0], &( *l.pShadowColors )[0] );
 	}
 	//NHPTimer::GetTime( &tFinish );
 	//DbgTrc( "%g clocks per vertex, %d vertices", ((double)(tFinish - tStart)) / nVertices, nVertices );

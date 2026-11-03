@@ -11,14 +11,17 @@ set(LIGHTING_KERNEL_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexRef.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexSSE2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexDispatch.cpp)
 
 # Same isolation rule as the engine build: only the AVX2 file gets /arch:AVX2.
 if(MSVC)
     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
         PROPERTIES COMPILE_OPTIONS "/arch:AVX2")
 else()
     set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexAVX2.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertexFusedAVX2.cpp
         PROPERTIES COMPILE_OPTIONS "-mavx2")
 endif()
 
@@ -74,6 +77,23 @@ set_target_properties(Skinning_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
 add_unit_test(NormalTransform 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
 set_target_properties(NormalTransform_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# The fused war fog kernels (GWarFogSample.h) against the shipped
+# sse2LightingKernels / avx2LightingKernels coordinate and integer stages bit for
+# bit: every fraction pair, every float bit pattern, and whole parts inside guard
+# pages. Same wiring as NormalTransform_test; the AVX2 kernels carry their own
+# target attribute, so no flag goes on this file.
+add_unit_test(WarFogSample 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(WarFogSample_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
+# The fused directional + vertex colour + SGeomVecFull assembly kernels
+# (GLightPerVertexFused.h) against refLightingKernels, the shipped SSE2/AVX2
+# directional kernels and frozen copies of MultiplyOnColor and the output loop, bit
+# for bit: all 2^24 normal patterns, every multiply pair, whole parts inside guard
+# pages. The AVX2 set is its own translation unit and the only one given -mavx2;
+# hidden visibility for the same nCubicRoot reason as LightingKernels_test.
+add_unit_test(LightFused 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
+set_target_properties(LightFused_test PROPERTIES CXX_VISIBILITY_PRESET hidden)
 add_unit_test(BitOps Misc)
 # Failed GPU locks must stop before exposing writable pointers to callers.
 add_unit_test(GfxBufferLocks 3Dmotor System Misc gr2)
