@@ -642,6 +642,55 @@ void CScenarioTracker::ClearMissionScriptVars()
 	}
 }
 
+bool CScenarioTracker::SaveReplayStartState( CMemoryStream *pStream )
+{
+	// Only a campaign mission needs this. A custom mission's start state is the
+	// map, the difficulty and the tutorial flag, which the replay already
+	// carries, and that path verifies as it is.
+	if ( !pCampaign )
+	{
+		return false;
+	}
+
+	// The objective objects are left out. They are CMapObj pointers, the
+	// client's view of the map, filled in as a mission runs and still holding
+	// the previous mission's objects at this point, and nothing in the
+	// simulation reads them. Without them the snapshot is plain data: no
+	// object graph is dragged into the replay.
+	CObjectivesObjects objectivesKept;
+	std::swap( objectivesKept, objectivesObjects );
+	pStream->SetSizeDiscard( 0 );
+	{
+		// The saver writes its output out when it is destroyed, hence the scope.
+		CPtr<IBinSaver> pSaver = CreateBinSaver( pStream, SAVER_MODE_WRITE );
+		if ( IsValid( pSaver ) )
+		{
+			operator&( *pSaver );
+		}
+	}
+	std::swap( objectivesKept, objectivesObjects );
+
+	return pStream->GetSize() > 0;
+}
+
+bool CScenarioTracker::LoadReplayStartState( CMemoryStream *pStream )
+{
+	if ( pStream->GetSize() == 0 )
+	{
+		return false;
+	}
+
+	pStream->Seek( 0 );
+	CPtr<IBinSaver> pSaver = CreateBinSaver( pStream, SAVER_MODE_READ );
+	if ( !IsValid( pSaver ) )
+	{
+		return false;
+	}
+
+	operator&( *pSaver );
+	return true;
+}
+
 void CScenarioTracker::GetEnabledMissions( CMissions *_pMissions )
 {
 	if ( !pChapter )

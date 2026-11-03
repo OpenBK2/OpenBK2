@@ -13,6 +13,7 @@ struct SBackground;
 }
 enum EMissionObjectiveState : int;
 class CMapObj;
+class CMemoryStream;
 
 typedef std::vector<CDBPtr<NDb::SMapInfo>> CMissions;
 
@@ -364,6 +365,22 @@ struct IScenarioTracker : public IAIScenarioTracker
 	}
 
 	virtual void GetReinforcementCallsInfo( int nPlayer, std::vector<int> *pCallsByType ) {}
+
+	// The tracker as a mission starts, for replays. A campaign mission's start
+	// state is a function of the whole career so far: the chapter's
+	// reinforcements, the leaders and their experience, the difficulty. None of
+	// it is in the map, so a playback cannot rebuild it and has to be handed it.
+	// Both return false for a tracker that has nothing to record, which is the
+	// default; a playback then takes the path it took before.
+	virtual bool SaveReplayStartState( CMemoryStream *pStream )
+	{
+		return false;
+	}
+
+	virtual bool LoadReplayStartState( CMemoryStream *pStream )
+	{
+		return false;
+	}
 
 	//{ CRAP - убрать из интерфейса, когда будет известно, что миссия запускается только после инициализации ScenarioTracker
 	virtual void ClearMissionScriptVars() = 0;

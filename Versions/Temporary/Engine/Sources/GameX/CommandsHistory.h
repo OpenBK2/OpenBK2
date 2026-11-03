@@ -3,6 +3,7 @@
 #include "Main/CommandsHistory.hpp"
 #include "MPInterfaceData.h"
 #include "System/Commands.h"
+#include "System/Streams.h"
 
 #include <cstdint>
 
@@ -236,6 +237,13 @@ class CCommandsHistory : public ICommandsHistory
 	// Also in the save game, so a mission saved and reloaded does not lose
 	// the samples taken before the save and write a truncated replay.
 	SReplayCheckSums recordedCheckSums;
+	// The scenario tracker as the mission started, which a campaign mission
+	// needs to be played back: its starting reinforcements, leaders and
+	// experience come from the career so far, not from the map. Empty for
+	// anything else. Taken in StartNewGame rather than when the replay is
+	// written, because the tracker changes as the mission runs, and in the save
+	// game for the same reason recordedCheckSums is.
+	CMemoryStream trackerStartState;
 
 	ZEND int operator&( IBinSaver &f ) override
 	{
@@ -248,6 +256,7 @@ class CCommandsHistory : public ICommandsHistory
 		f.Add( 8, &replayInfo );
 		f.Add( 9, &dwLastCheckSum );
 		f.Add( 10, &recordedCheckSums );
+		f.Add( 11, &trackerStartState );
 		return 0;
 	}
 

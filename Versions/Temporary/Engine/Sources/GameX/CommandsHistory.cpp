@@ -76,6 +76,17 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		recordedCheckSums = SReplayCheckSums();
 		recordedCheckSums.nLightMode = NGlobal::GetVar( "light_checksum_count", 0 );
 		recordedCheckSums.nPeriod = NGlobal::GetVar( "checksumperiod", 1000 );
+		// After MissionStart and before the map is loaded, which is the point
+		// LoadHistory restores it at. The tracker leaves the stream empty for
+		// anything but a campaign mission.
+		trackerStartState.SetSizeDiscard( 0 );
+		if ( IScenarioTracker *pTracker = Singleton<IScenarioTracker>() )
+		{
+			if ( !pTracker->SaveReplayStartState( &trackerStartState ) )
+			{
+				trackerStartState.SetSizeDiscard( 0 );
+			}
+		}
 	}
 }
 
@@ -125,6 +136,15 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 	{
 		pSaverMain->Add( 5, &pStartSeed );
 	}
+	// The scenario tracker a campaign mission started from. A replay written
+	// before this chunk, or of anything but a campaign mission, leaves the
+	// stream empty, and LoadHistory then starts the mission the way it did
+	// before.
+	if ( bRead )
+	{
+		trackerStartState.SetSizeDiscard( 0 );
+	}
+	pSaverMain->Add( 6, &trackerStartState );
 
 	if ( !bRead )
 	{
@@ -306,10 +326,23 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		// difficulty through unit statistics and the AI, which is what nearly
 		// every random draw in a run is spent on.
 		//
-		// The campaign and the chapter stay unset: a replay does not carry them,
-		// and whether anything in the simulation asks for them is a question the
-		// verification itself will now answer.
-		pSingleTracker->CustomMissionStart( replayInfo.pMap, replayInfo.nDifficulty, replayInfo.bIsTutorial );
+		// A campaign mission carries the tracker as it started instead, because
+		// the campaign path's start state is not a function of these: the
+		// chapter's reinforcements, the leaders and the experience earned so far
+		// all reach the simulation. Restoring the snapshot is restoring the
+		// tracker MissionStart left, MapStart included. What MissionStart does
+		// outside the tracker is the two removals below and the clear after them.
+		const bool bTrackerRestored = replayInfo.nStartKind == 1 && trackerStartState.GetSize() > 0 &&
+		                              pSingleTracker->LoadReplayStartState( &trackerStartState );
+		if ( bTrackerRestored )
+		{
+			NGlobal::RemoveVar( "Multiplayer.Host" );
+			NGlobal::RemoveVar( "Multiplayer.Client" );
+		}
+		else
+		{
+			pSingleTracker->CustomMissionStart( replayInfo.pMap, replayInfo.nDifficulty, replayInfo.bIsTutorial );
+		}
 		// Unconditionally, not only for a campaign. CustomMissionStart leaves
 		// the temp. globals alone, so without this a playback inherits whatever
 		// the process did beforehand and stops being a function of the replay.
@@ -321,12 +354,15 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		// campaign path does, so it is the behaviour being reproduced.
 		pSingleTracker->ClearMissionScriptVars();
 
-		// Said out loud during a verification run, because it is the one known
-		// difference left between a campaign recording and its playback, and so
-		// the first thing to suspect if such a replay diverges.
+		// Said out loud during a verification run. A campaign replay without the
+		// snapshot was recorded before it existed, and its campaign state is
+		// missing, which is the first thing to suspect if it diverges.
 		if ( replayInfo.nStartKind == 1 && NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
 		{
-			ReportReplayLine( "replay: recorded in a campaign mission, whose campaign and chapter are not restored" );
+			ReportReplayLine( bTrackerRestored
+			                      ? "replay: recorded in a campaign mission, started from the campaign state it recorded"
+			                      : "replay: recorded in a campaign mission before campaign state was recorded, so it "
+			                        "is not restored. Re-record it to verify it" );
 		}
 
 		NGlobal::SetVar( "History.Playing", 1 );
