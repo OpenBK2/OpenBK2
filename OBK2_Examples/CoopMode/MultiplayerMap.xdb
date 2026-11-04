@@ -8,5 +8,4 @@
 	<GameType>COOP</GameType>
 	<ForcedTechLevel>-1</ForcedTechLevel>
 	<AllowedNations />
-	<DifficultyLevel>0</DifficultyLevel>
 </MultiplayerMap>

@@ -130,7 +130,6 @@ TEST_F( MPDataChecksum, OlderBinaryMapKeepsClassicDefaultsAndUnrestrictedTechnol
 	EXPECT_EQ( map->eGameType, NDb::CLASSIC );
 	EXPECT_EQ( map->nForcedTechLevel, -1 );
 	EXPECT_TRUE( map->allowedNations.empty() );
-	EXPECT_EQ( map->nDifficultyLevel, 0 );
 }
 
 TEST_F( MPDataChecksum, MenuReadsReuseSnapshotUntilTheNextAttempt )

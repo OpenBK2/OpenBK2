@@ -126,7 +126,15 @@ bool ResolveMultiplayerMapRules( SB2GameSpecificData *pGame,
 		return RejectRules( pError, "<val MP_RULE_UNSUPPORTED_GAME_TYPE>" );
 	}
 	pGame->eType = map.eGameType == NDb::COOP ? SB2GameSpecificData::EGT_COOP : SB2GameSpecificData::EGT_FLAG_CONTROL_2;
-	pGame->nDifficultyLevel = map.nDifficultyLevel;
+	// Difficulty is selected by the host and travels with the shared lobby settings.
+	// Keep the authored index unchanged on every peer; maps without a list use zero.
+	const auto &difficulties = map.pMap->customDifficultyLevels;
+	if ( difficulties.empty() ? pGame->nDifficultyLevel != 0
+	                          : pGame->nDifficultyLevel < 0 || pGame->nDifficultyLevel >= difficulties.size() ||
+	                                !difficulties[pGame->nDifficultyLevel] )
+	{
+		return RejectRules( pError, "<val MP_RULE_INVALID_DIFFICULTY_LEVEL>" );
+	}
 	if ( map.nForcedTechLevel < -1 || map.nForcedTechLevel >= int( pConsts->techLevels.size() ) )
 	{
 		return RejectRules( pError, "<val MP_RULE_INVALID_FORCED_TECH_LEVEL>" );
@@ -204,7 +212,7 @@ bool ValidateMultiplayerLobby( const SB2GameSpecificData &game,
 		return false;
 	}
 	if ( game.eType != resolved.eType || game.nTechLevel != resolved.nTechLevel ||
-	     game.nDifficultyLevel != resolved.nDifficultyLevel || slots.size() != GetMultiplayerSlotCount( game ) ||
+	     slots.size() != GetMultiplayerSlotCount( game ) ||
 	     ( IsCoopGame( game ) && ( game.bRandomPlacement || game.nTimeLimit != 0 ) ) )
 	{
 		return RejectRules( pError, "<val MP_RULE_LOBBY_SETTINGS_MISMATCH>" );

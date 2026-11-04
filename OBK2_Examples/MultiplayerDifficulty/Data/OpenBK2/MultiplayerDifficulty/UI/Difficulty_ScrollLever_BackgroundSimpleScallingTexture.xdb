@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<BackgroundSimpleScallingTexture>
+	<ClassTypeID>0</ClassTypeID>
+	<Texture href="/UI/Game/Menu/EscapeMenu/f10menuwindow_escmenu_slider_texture.xdb#xpointer(/Texture)" />
+	<Color>-1</Color>
+	<Size>
+		<x>16</x>
+		<y>39</y>
+	</Size>
+</BackgroundSimpleScallingTexture>

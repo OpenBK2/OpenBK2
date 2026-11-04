@@ -100,7 +100,7 @@ public:
 	int nCaptureTime = {};
 	EGameType eType = {};
 	bool bRandomPlacement = {};
-	int nDifficultyLevel = {}; // Resolved map difficulty, also preserved in replays.
+	int nDifficultyLevel = {}; // Host-selected zero-based index, synchronized and preserved in replays.
 
 	ZEND int operator&( IBinSaver &f )
 	{

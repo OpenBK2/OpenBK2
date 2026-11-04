@@ -9,10 +9,12 @@
 #include "InterfaceMisc.h"
 #include "InterfaceMPCreateCustomGame.h"
 #include "InterfaceState.h"
+#include "MessageParts.h"
 #include "Misc/2Darray.h"
 #include "Misc/StrProc.h"
 #include "MPCoopRules.h"
 #include "SceneB2/Scene.h"
+#include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "System/Text.h"
 #include "UI/CommandParam.h"
@@ -99,6 +101,8 @@ void CInterfaceMPCreateCustomGame::InitControls()
 	pButtonCreateGame = GetChildChecked<IButton>( pMain, "ButtonCreateGame", true );
 	pTechLevelBox = GetChildChecked<IComboBox>( pMain, "TechLevel", true );
 	pNumPlayersBox = GetChildChecked<IComboBox>( pMain, "NumPlayers", true );
+	// Older UI packs remain usable with the default difficulty until their menu is updated.
+	pDifficulty = dynamic_cast<IComboBox *>( pMain->GetChild( "Difficulty", true ) );
 	pSessionName = GetChildChecked<IEditLine>( pMain, "SessionName", true );
 	pList = GetChildChecked<IListControl>( pMain, "Maps", false );
 	pTimeLimit = GetChildChecked<IEditLine>( pMain, "TimeLimit", true );
@@ -153,6 +157,11 @@ void CInterfaceMPCreateCustomGame::SetControls()
 		pNumPlayersBox->SetViewer( pViewer );
 		pNumPlayersBox->Enable( false );
 	}
+	if ( pDifficulty )
+	{
+		pDifficulty->SetViewer( new CTextDataViewer() );
+	}
+	UpdateDifficulty();
 	if ( pList )
 	{
 		CPtr<CItemCustomGameListViewer> pCustomViewer = new CItemCustomGameListViewer();
@@ -369,6 +378,8 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 	}
 
 	pCreateMsg->specificInfo.nTechLevel = pTechLevelBox->GetSelectedIndex();
+	pCreateMsg->specificInfo.nDifficultyLevel =
+			pDifficulty && pDifficulty->IsVisible() ? pDifficulty->GetSelectedIndex() : 0;
 	bool bUnitExp = false;
 	CPtr<IButton> pUnitExperience = GetChildChecked<IButton>( pMain, "UnitExperience", true );
 	if ( pUnitExperience )
@@ -430,10 +441,12 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	{
 		NI_ASSERT( 0, "DATA: Invalid MP map descriptor" );
 		pSelected = 0;
+		UpdateDifficulty();
 		return true;
 	}
 
 	bEnableCreate = true;
+	UpdateDifficulty();
 	const bool bCoop = pSelected->eGameType == NDb::COOP;
 	if ( pTechLevelBox )
 	{
@@ -505,6 +518,46 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 		pNumPlayersBox->Select( 0 );
 	}
 	return true;
+}
+
+void CInterfaceMPCreateCustomGame::UpdateDifficulty()
+{
+	// Difficulty is a COOP mission option; hide both parts when the map offers no choices.
+	const bool bShow = pDifficulty && pSelected && pSelected->eGameType == NDb::COOP && pSelected->pMap &&
+	                   !pSelected->pMap->customDifficultyLevels.empty();
+	IWindow *pLabel = pMain ? pMain->GetChild( "DifficultyLabel", true ) : nullptr;
+	if ( pLabel )
+	{
+		pLabel->ShowWindow( bShow );
+	}
+	if ( !pDifficulty )
+	{
+		return;
+	}
+
+	pDifficulty->ShowWindow( bShow );
+	const int nPrevious = pDifficulty->GetSelectedIndex();
+	pDifficulty->RemoveAllItems();
+	if ( !bShow )
+	{
+		pDifficulty->AddItem( new CTextData( NGameX::GetMessagePart( NGameX::GetUIConsts(), L"MP_DIFFICULTY_DEFAULT" ) ) );
+		pDifficulty->Select( 0 );
+		pDifficulty->Enable( false );
+		return;
+	}
+
+	// Preserve authored indices, including invalid entries, so Lua receives the map's actual index.
+	// The backend rejects a null selected record when creating the match.
+	const auto &levels = pSelected->pMap->customDifficultyLevels;
+	for ( const auto &pLevel : levels )
+	{
+		const std::wstring wszName = pLevel && CHECK_TEXT_NOT_EMPTY_PRE( pLevel->, LocalizedName )
+		                                 ? GET_TEXT_PRE( pLevel->, LocalizedName )
+		                                 : L"******";
+		pDifficulty->AddItem( new CTextData( wszName ) );
+	}
+	pDifficulty->Select( nPrevious >= 0 && nPrevious < levels.size() && levels[nPrevious] ? nPrevious : 0 );
+	pDifficulty->Enable( true );
 }
 
 bool CInterfaceMPCreateCustomGame::ProcessEvent( const SGameMessage &msg )

@@ -1,0 +1,7 @@
+{
+  "OpenBK2/MultiplayerDifficulty/Text/DifficultyLabel.txt": "Difficulty",
+  "OpenBK2/MultiplayerDifficulty/Text/DifficultyTooltip.txt": "Select the difficulty for this mission.",
+  "OpenBK2/MultiplayerDifficulty/Levels/Easy.txt": "Easy",
+  "OpenBK2/MultiplayerDifficulty/Levels/Normal.txt": "Normal",
+  "OpenBK2/MultiplayerDifficulty/Levels/Hard.txt": "Hard"
+}
